@@ -5,6 +5,14 @@ Implemented: Yes
 
 Implemented in [PR #112](https://github.com/mzpkdev/pokemon-wayfarer/pull/112).
 
+The proposed [trainer world progression](trainer-world-progression.md) enrolls initial singles Gym
+battles explicitly and permits approachable opening teams, including Blue's
+experimental Gym profile with faster later Champion growth. A catalog profile
+does not restore Blue as the Viridian badge owner or change Giovanni's local
+prerequisites. Blue's rival, Dojo, and rematch parties are separately governed;
+canonical identity does not enroll them. Original FRLG/HNS parties remain
+provenance references for authored stages, not mandatory opening teams.
+
 ## Scope
 
 Integrate FRLG Cinnabar, Seafoam, and Routes 19–21 with Wayfarer's selected
@@ -108,10 +116,12 @@ state and hides only his exterior object. Entering the Gym first records the
 same introduction state, hides the unused exterior object, and selects the
 Gym's first-meeting line. Neither path hides an undefeated Gym leader.
 
-This port keeps Blue as Wayfarer's initial Viridian Gym Leader and sole Earth
-Badge giver. His invitation is local to Viridian and has no fifteen-badge,
-Cinnabar, or Blaine prerequisite. A future Kanto story may separately assign
-that Gym and badge to Giovanni; that unmerged change is not required here.
+The historical port kept Blue as Viridian Gym Leader and Earth Badge giver,
+with a local invitation and no fifteen-badge, Cinnabar, or Blaine prerequisite.
+The implemented [Viridian finale](frlg-kanto-viridian-finale.md) now assigns
+that Gym and badge to Giovanni and removes these Blue actors and invitations.
+The historical initialization and dialogue requirements in this subsection
+record the port's delivered behavior, not current Viridian ownership.
 
 Update Viridian City, Center, Gym, Pallet, and Dojo dialogue and actor flags
 that currently infer Blue's return from `FLAG_HIDE_CINNABAR_BLUE`. They must
@@ -120,11 +130,18 @@ Cinnabar meeting, eruption, or a prerequisite set of fifteen badges. Blue's
 later Dojo and League content remains independently reachable under its own
 specifications; no step here advances an unplayed rival chapter.
 
-These Viridian Blue requirements describe the delivered coastal port. The
-[future Viridian finale](frlg-kanto-viridian-finale.md) supersedes the exterior
-introduction, Blue Gym role, and related acceptance checks when implemented.
-Blue's Dojo appearance then follows Indigo's committed first Champion victory,
-independently of Giovanni.
+These Viridian Blue requirements describe the historical coastal port. The
+implemented [Viridian finale](frlg-kanto-viridian-finale.md) supersedes the
+exterior introduction, Blue Gym role, and related acceptance checks. Blue's
+current Dojo unlock follows committed Indigo victory independently of Giovanni.
+
+The proposed [Seeded Trainer Circuit](../prds/seeded-trainer-circuit.md) selects
+League participants/profiles rather than guaranteeing Blue as Indigo finalist.
+Its [runtime contract](seeded-league-circuit.md) proposes Dojo access after the
+first lifetime scheduled venue clear. If adopted, that circuit contract takes
+precedence over the Indigo-only unlock above. The delivered coastal port's
+historical Viridian behavior is already superseded by the implemented finale;
+unrelated local/rival story interactions retain their separately owned policies.
 
 ### Encounters, services, and release budget
 

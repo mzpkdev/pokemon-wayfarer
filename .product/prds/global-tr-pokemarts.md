@@ -10,9 +10,12 @@ Johto and Hoenn. A player returning to an early town should find supplies
 appropriate to their current Trainer Rating (TR). Local stock should also
 make towns recognizable and give players reasons to visit different shops.
 
-Today, shared Johto/Kanto clerk scripts select inventory using their legacy
-badge flags, while Hoenn marts largely use fixed lists and local story gates.
-Neither provides consistent resupply across the combined adventure.
+The converted-counter runtime now uses the shared player-TR essentials and
+permanent local stock specified below; release acceptance remains pending in
+the implementation specification. Legacy counters outside that enrollment keep
+their existing behavior. Proposed [trainer world progression](trainer-world-progression.md)
+changes personal NPC strength without changing player TR, the mart opener's
+snapshot, or any stock threshold.
 
 ## Design
 

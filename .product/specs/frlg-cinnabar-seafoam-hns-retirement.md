@@ -52,9 +52,12 @@ dialogue does not claim a Cinnabar meeting or eruption. Retiring Cinnabar's
 Blaine script also removes its Fighting Dojo relocation trigger. No retired
 Seafoam Gym or Secret Cave path grants another Blaine or Groudon encounter.
 
-This Blue introduction is part of the delivered coastal port. The
-[future Viridian finale](frlg-kanto-viridian-finale.md) removes Blue from the
-exterior and Gym; its acceptance checks supersede this document's Blue check.
+This Blue introduction records the historical coastal port. The implemented
+[Viridian finale](frlg-kanto-viridian-finale.md) now removes Blue from the exterior
+and Gym; its acceptance checks supersede this document's Blue check. Proposed
+[trainer world progression](trainer-world-progression.md) may author a separate
+Blue Gym profile, but that does not restore Viridian actors or enroll his rival,
+Dojo, or rematch variants. The retirement boundary remains unchanged.
 
 The Wayfarer release link map contains no layout, event, script, or wild
 encounter payload for the seven retired HNS maps. The generated standalone HNS

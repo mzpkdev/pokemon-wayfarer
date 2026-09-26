@@ -1,9 +1,23 @@
 # Wayfarer Hoenn integration
 
-Implemented: Outdated
+Implemented: Partial; content and current circuit runtime exist, full content/balance acceptance remains separate.
 
-The League policy now requires TR-based levels with unchanged Tier 3 rosters.
-The implementation still uses static League levels.
+The current [circuit producer](../../game/src/league_circuit.c) uses fixed Tier 3
+Hoenn admission and the implemented [League level resolver](../../game/src/trainer_party_scaling.c)
+uses saved player-entry TR. League levels are no longer static. Proposed
+[trainer world progression](trainer-world-progression.md) changes explicitly
+enrolled initial singles Gyms to personal NPC TR and authored stages. The
+[seeded circuit](../specs/seeded-league-circuit.md) replaces fixed Hoenn position/participants with an
+edition roster generated at first eligible registration. These successors are
+not implemented by the content port; current behavior below remains identified
+separately from the proposed direction.
+
+The current shared six-slot Gym feature is disabled by default in
+[configuration](../../game/include/config/trainer_party_scaling.h); it uses
+player TR only when enabled. Giovanni's separate five-slot projection and
+other existing Gym/double-battle policies retain their own current behavior.
+Neither generated roster data nor an experimental catalog proves enrollment
+or activation of a Gym encounter.
 
 ## Intent
 
@@ -125,8 +139,14 @@ members apply the separate [Trainer-party scaling design](trainer-party-scaling.
 to those rosters; rivals and bosses retain authored battle parties. Initial
 Gym Leader badge battles follow the separate [Gym Leader scaling design](gym-leader-scaling.md),
 while leader rematches retain authored, static parties.
-The Hoenn Elite Four and Champion use their existing Tier 3 rosters, with
-levels governed by the [League scaling design](league-scaling.md).
+Current Hoenn Elite Four and Champion battles use fixed Tier 3 source rosters
+and saved player-entry TR under [League scaling](league-scaling.md). Proposed
+seeded editions select participants by effective NPC TR and world-point role
+bands, then save authored party-stage/profile identities. Emerald source parties
+remain provenance references rather than required opening or circuit teams.
+Tate and Liza remain outside the singles pool under their current double-Gym
+policy, with their badge preserved. Rival, boss, Dojo, and rematch variants
+require separate enrollment; canonical identity does not change their policy.
 
 Ordinary Hoenn wild encounters retain Emerald's species, methods, weights, and
 locations while using the HNS Trainer Rating level projection. Hoenn badges
@@ -148,9 +168,11 @@ Hoenn destination.
 - Hoenn badges count toward global League qualification and Trainer Rating.
 - Hoenn Champion completion is independent from the shared Indigo clear and
   the Sevii Masters Challenge clear.
-- Hoenn is the fixed Tier 3 League after Indigo, the Masters Challenge, and all
-  twenty-four badges. Completing it finishes the interregional circuit without
-  finishing or resetting another region's local campaign.
+- In the current ROM, Hoenn is fixed Tier 3 after Indigo, Masters, and all
+  twenty-four badges. The proposed seeded itinerary can place Hoenn at any stop;
+  its common 24-badge first-registration gate remains a proposal. Venue-first
+  clears retain their lifetime player rewards and local completion ownership. An
+  edition never resets another region's campaign or repeats a lifetime reward.
 - Hoenn Trainers, NPCs, items, gifts, and story rewards remain consumed through
   saving, reloading, and blacking out.
 
@@ -198,9 +220,12 @@ not keep a separate healing history for every region.
   Gym Leader badge battles are separately owned by the
   [Gym Leader scaling design](gym-leader-scaling.md); leader rematches retain
   static parties.
-- The Hoenn League keeps its authored species, party sizes, moves, items,
-  abilities, and AI; its levels scale using TR locked for the run under the
-  [League scaling design](league-scaling.md).
+- The current Hoenn League preserves authored non-level metadata and scales
+  from player TR locked for the run under [League scaling](league-scaling.md).
+  The proposed successor resolves personal NPC TR at projected registration
+  world points and freezes all fifteen opponents' stages/profiles for the
+  edition. Its authored stage changes do not require automatic evolution or
+  an immutable prefix of one Emerald roster.
 - Battle Frontier, Contests, Secret Bases, Match Call, television events,
   multiplayer features, event islands, and other optional Emerald systems are
   preservation targets, not requirements for this milestone.

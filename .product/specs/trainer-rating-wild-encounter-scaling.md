@@ -8,7 +8,7 @@ scaling and unrelated mechanics remain unchanged; standalone builds retain
 their existing contract.
 
 PRD: [Trainer Rating wild encounter scaling](../prds/trainer-rating-wild-encounter-scaling.md)
-Implemented: Outdated
+Implemented: Partial; foundation and current circuit producer exist, broader acceptance remains pending.
 
 ## Scope
 
@@ -30,23 +30,25 @@ game starts at 0. Builds that have not adopted the Wayfarer circuit retain
 their existing Rating 10 floor. Every read clamps the saved value to the range
 for the active product.
 
-Before the later circuit supplies global progression, the Wayfarer foundation
-does not derive Rating from regional badge flags, a local League clear, or any
-other existing local progression fact. It initializes a new Wayfarer save to 0
-and returns the stored, clamped value. The foundation's deterministic tests may
-seed that value to exercise its consumers. No migration from earlier prerelease
-Rating behavior is required.
+The current [Wayfarer getter](../../game/src/trainer_rating.c) initializes a new
+save to 0 and reads the implemented [circuit producer](../../game/src/league_circuit.c).
+The producer derives a candidate from global badges and the three canonical
+first-clear facts, contributing +8 once for each venue. The getter compares
+that candidate with the stored rating and saves the higher value. Replays add
+no TR, and no later read lowers the high-water mark. Feature-disabled foundation
+checks can still seed a stored value; no prerelease save migration is required.
 
-Once the circuit is implemented, it derives a global candidate from its badge
-and circuit-clear facts, compares that candidate with the saved value, and stores the
-higher value. This is a high-water mark: circuit progression can increase the
-rating but no later read can reduce it.
+The proposed [trainer world progression](trainer-world-progression.md) adds a
+separate personal NPC rating with badge checkpoints and per-trainer first-clear
+growth. Ordinary wild populations continue to read the player's global TR;
+NPC baselines, profiles, ratings, and edition counts never affect this getter
+or its wild/cap/XP/obedience/mart/ordinary-Trainer/Gym-member consumers.
 
 ### Progression targets
 
-The Trainer Rating foundation persists and exposes the shared Wayfarer Rating
-before the interregional League circuit is complete. The later circuit maps the
-global badge count and fixed circuit-stage clears to that value. It starts at 0,
+The Trainer Rating foundation persists and exposes the shared player Rating.
+The current circuit maps global badge count and canonical first venue clears
+to that value. It starts at 0,
 reaches 16 after four badges and 40 after eight badges, and reaches 80 after all
 twenty-four badges and all three stage clears. Circuit starts and opponent party
 tiers are not prerequisites for the foundation, its 0 through 80 bounds, or its

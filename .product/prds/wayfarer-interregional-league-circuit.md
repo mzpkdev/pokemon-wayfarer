@@ -1,12 +1,35 @@
 # Wayfarer interregional League circuit
 
-Implemented: Outdated
+Implemented: Yes
 
-The current runtime still treats Kanto and Johto as separate League clears at
-the shared Indigo venue. The approved design below replaces that model with one
-shared Indigo League and a separate Sevii Masters Challenge.
+Proposed successor: [Seeded Trainer Circuit](seeded-trainer-circuit.md) replaces
+the fixed order and lineups with recurring editions, each with a seeded
+itinerary and rated trainer pool. All venues use comparable contender/elite/
+headliner fields, with soft rotation across editions. A proposed common 24-badge
+entry gate replaces the position-based 8/16/24 ladder. Lifetime progression rewards apply once;
+later editions provide another competition without resetting unlocks.
+That draft separates confirmed requirements from proposed defaults. The proposed [trainer world progression](trainer-world-progression.md)
+replaces static NPC baselines with personal start TR, interpolated 0/8/16/24
+badge checkpoints, and trainer-specific first-lifetime-venue-clear growth.
+Seed the circuit root and first venue order at new game. Generate all fifteen
+slots at first eligible registration:
+save `B_reg` and `L_reg`, project each stop's clear count as
+`popcount(L_reg union earlier seeded venues)`, then resolve NPC TR before band
+eligibility, 85/15 home/visitor choice, and rotation. Bands are indexed by world point and shared
+across venues at the same point. Persist every roster, TR, stage/profile, input,
+and version for unchanged edition retries and replays. Later edition count alone
+adds no strength. The common 24-badge gate and numeric balance remain proposed.
+The current fixed circuit contract below remains the ROM implementation baseline.
 
-## Intent
+The current runtime implements the fixed Indigo → Sevii Masters → Hoenn circuit
+with canonical stage clears, one shared Indigo result projected to Kanto/Johto,
+and +8 player TR per first-clear venue. Opponents remain fixed and scale from
+the player's saved entry TR; seeded/recurring behavior is not implemented.
+See the [implemented circuit contract](../specs/wayfarer-interregional-league-circuit.md)
+and [current producer](../../game/src/league_circuit.c). Campaign balance
+acceptance remains pending under [League scaling](league-scaling.md).
+
+## Current ROM intent
 
 Give Wayfarer's open world a clear long-term arc without requiring the player
 to finish one region before exploring another. Badges earned in Kanto, Johto,
@@ -167,8 +190,12 @@ Collecting all badges first remains valid:
 | Indigo and Masters cleared | 72 | 89 |
 | Circuit complete | 80 | 100 |
 
-Trainer Rating remains a high-water mark. It drives the existing wild,
-ordinary-Trainer, Gym, soft-cap, and obedience consumers. Circuit opponents use
+Trainer Rating remains a high-water mark. It drives wild, mart, ordinary-Trainer,
+Gym-member, soft-cap, and obedience consumers, plus Giovanni's current five-slot
+projection. The shared six-slot Gym feature reads player TR when enabled and is
+disabled by default. Proposed enrolled singles Gym opponents move to personal
+NPC TR; the other consumers continue to read player TR. Current fixed circuit
+opponents use
 their saved run-entry snapshot through League scaling.
 
 ## Travel and discovery

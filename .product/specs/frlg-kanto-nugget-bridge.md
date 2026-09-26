@@ -223,8 +223,8 @@ optimization if the reserve is insufficient.
 ## References
 
 - [FRLG Kanto story conflicts](../research/frlg-hns-kanto-story-conflicts.md)
-- [FRLG Kanto implementation sequence](../research/frlg-kanto-implementation-sequence.md)
-- [Machine Part chronology](frlg-kanto-machine-part-chronology.md)
+- [Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md)
+- [Machine Part repair and Power Plant](frlg-kanto-power-plant.md)
 - [FRLG Route 24 source](../../game/data/maps/Route24_Frlg/scripts.inc)
 - [HNS Route 24](../../game/data/maps/Route24_hns/map.json)
 - [HNS Route 25](../../game/data/maps/Route25_hns/scripts.inc)

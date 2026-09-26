@@ -57,8 +57,17 @@ Geography cannot determine which persistence bank a script uses. Total badges
 cannot substitute for a story completion flag or League admission rule.
 
 Each consumer declares when it samples changing state. A mart resolves its stock
-when opened. A trainer party uses its encounter snapshot. A League uses its saved
-admission Rating throughout the run and samples again on a new admission.
+when opened. Ordinary Trainers and Gym members snapshot player TR at battle
+setup. The existing six-slot Gym scaler is disabled by default; when enabled
+it uses player TR, while Giovanni has a separate five-slot player-TR projection.
+Current fixed Leagues use their saved admission Rating and sample again on
+new admission. Under proposed
+[trainer world progression](trainer-world-progression.md), enrolled initial singles
+Gyms snapshot personal NPC TR, while [seeded editions](../specs/seeded-league-circuit.md)
+save all fifteen opponents at first eligible registration from projected world
+points. Losses, retries, and replays reuse that edition's saved TR/stage/profile;
+later editions resample badge and first-lifetime-clear facts, not edition count.
+The shared curve evaluator accepts an explicit input and never produces Rating.
 
 ### Adding content
 

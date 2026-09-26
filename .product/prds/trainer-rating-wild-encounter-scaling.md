@@ -1,9 +1,24 @@
 # Trainer Rating wild encounter and party progression
 
-Implemented: Outdated
+Implemented: Partial
 
-The progression examples require the approved +8/+8/+8 circuit-stage rewards.
-The implementation still uses +15/+5/+4; the soft-cap anchors are unchanged.
+The current [circuit producer](../../game/src/league_circuit.c) implements
++8/+8/+8 first-clear contributions for Indigo, Masters, and Hoenn. Badge
+contributions and soft-cap anchors are unchanged. The Partial marker does not
+certify all wild-scaling and party-progression acceptance below.
+
+The proposed [Seeded Trainer Circuit](seeded-trainer-circuit.md) retains this
+player TR contract. If adopted, its recurring editions use separate current
+results and lifetime venue clears: lifetime rewards contribute +8 per venue
+once, and new editions never reset TR or add further progression contributions.
+Its proposed common 24-badge entry gate gives TR 56/64/72/80 across zero through
+three lifetime clears; current sub-24-badge league-clear examples do not apply
+to that proposal. Its NPC-based circuit strength does not replace player caps
+or wild scaling. The proposed [trainer world progression](trainer-world-progression.md)
+uses a separate personal start-TR baseline, badge checkpoints, and trainer-specific
+first-lifetime-clear growth for enrolled NPCs. Those NPC values never become the
+player's rating or an input to wild populations, caps, XP, obedience, marts,
+ordinary Trainers, or Gym members.
 
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes named native-utility carriers and permanent-retention
@@ -60,8 +75,7 @@ plus smaller breadth contributions from the other regions.
 
 The Trainer Rating foundation and existing circuit already supply the shared
 0 through 80 value, high-water storage, and global badge and circuit-clear
-contributions. The approved reward revision replaces the +15/+5/+4 clear
-contributions with +8/+8/+8; that reward change is pending implementation.
+contributions, including the implemented +8/+8/+8 canonical first-clear rewards.
 Repeat clears add no TR. Future regional starts remain separate work; League
 party levels follow the [League scaling design](league-scaling.md).
 

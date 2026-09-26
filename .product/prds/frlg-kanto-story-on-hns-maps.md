@@ -11,6 +11,24 @@ The [Kanto origin opening](wayfarer-kanto-origin-opening.md) separately owns
 the native Pallet sequence through Parcel delivery, Pokédex receipt, and five
 Poké Balls.
 
+Circuit-dependent successor: the proposed [Seeded Trainer Circuit](seeded-trainer-circuit.md)
+replaces the guaranteed Indigo/Masters lineups and fixed visiting-origin Blue
+League profile below with selected participants and profiles. Its
+[runtime contract](../specs/seeded-league-circuit.md) proposes Blue's Dojo unlock
+after the first lifetime scheduled venue clear, instead of Indigo only. These
+changes take precedence for circuit appearances/unlocks only if the draft is
+adopted. Local Kanto adventures, Blue's origin-specific rivalry and forward
+story progression, and Giovanni's badge role remain owned here; the current
+port and approved fixed circuit retain their existing behavior meanwhile.
+
+The proposed [trainer world progression](trainer-world-progression.md) enrolls initial singles Gym
+battles explicitly and permits approachable opening teams, including Blue's
+experimental Gym profile with faster later Champion growth. A catalog profile
+does not restore Blue as the Viridian badge owner or change Giovanni's local
+prerequisites. Blue's rival, Dojo, and rematch parties are separately governed;
+canonical identity does not enroll them. Original FRLG/HNS parties remain
+provenance references for authored stages, not mandatory opening teams.
+
 ## Intent
 
 Bring FireRed and LeafGreen's recognizable Kanto adventures to Wayfarer's

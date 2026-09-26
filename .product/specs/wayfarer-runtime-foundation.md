@@ -123,6 +123,25 @@ Existing Johto and Kanto callers keep their current result.
 
 ### Save storage and lifecycle
 
+The proposed [playthrough seed framework](playthrough-seed-framework.md) adds
+one shared root record and consumer-owned deterministic outcomes under this
+save-storage policy. The confirmed circuit direction initializes that root and edition 1
+ORDER at New Game, with explicit valid pre-registration state: no roster, no run,
+empty history/clear masks, and zero completed count. First eligible registration
+atomically saves the complete field, registration badge count and lifetime-clear
+mask, projected per-stop world points, effective TR, stage/profile references, and
+progression/content/band/resolver versions. Preserve ORDER/POOL_KIND rules
+version 1 and record ROSTER version 2 plus an explicit schedule schema version. The proposed 24-badge gate remains D4.
+Later registration after all three current results replaces that edition and its
+bounded prior-venue roster history while preserving lifetime progression.
+Registered plans freeze through retries/replays; verification uses saved
+registration inputs, and corruption cannot regenerate a field. The history is
+a selection input, not an unlimited archive. Size assertions and save-sector
+accounting must include the root, pre-registration discriminator/order, snapshot
+inputs, full registered schedule, prior history, versions, and edition/run metadata
+within the allocation below. Seed initialization, versioning, and RNG
+isolation are defined in that draft; this extension is not implemented here.
+
 The additional Hoenn banks live in `SaveBlock3` or an equivalent separately
 bounded saved structure. The implementation must not enlarge `SaveBlock1`
 past its safe allocation or shift existing HNS fields merely to create Hoenn
@@ -183,10 +202,27 @@ the applicable venue and region. A whiteout in Johto cannot relocate a Hoenn
 NPC. The Masters Gallery cannot run a regional Hall of Fame path, and entering
 the Hoenn Hall of Fame cannot reset Indigo or Masters rooms.
 
-Wayfarer's fixed circuit order is Indigo, Sevii Masters, then Hoenn. A
-first-clear result advances the circuit only after its own completion commits.
-Only Indigo may project one clear into both Kanto and Johto Champion
-recognition; no other circuit result may synthesize another region's state.
+The currently implemented circuit uses fixed Indigo, Sevii Masters, then Hoenn
+order. Its first-clear result advances only after completion commits. Only
+Indigo projects its clear into both Kanto and Johto Champion recognition.
+
+The proposed [seeded circuit runtime](seeded-league-circuit.md) separates
+current-edition results from lifetime first clears and follows a seeded saved
+order. Lifetime facts continue to own regional recognition/cleanup, persistent
+unlocks, and player TR contributions. They also supply the declared world
+progression input: `(B,C)` is global badge count and distinct lifetime venue-clear
+count. At registration, capture `B_reg`/`L_reg` and project each stop using the
+union of that mask and earlier scheduled venue IDs. This affects authored
+personal TR/stage eligibility before allocation, without reading player party,
+XP, or player TR and without edition-number inflation. Bands are authored by
+world point and shared across venues at the same point; endpoints remain D3.
+
+This draft records the confirmed projected growth, complete-edition freeze, and
+atomic registration direction. It does not implement those
+changes or approve provisional numeric curves, qualification, or band endpoints.
+Shared Indigo recognition and regional state isolation remain mandatory through
+that revision. Unsupported seed/schedule/schema states follow invalid-save
+handling under prerelease policy; do not synthesize compatibility or reroll data.
 
 ### ROM budget
 

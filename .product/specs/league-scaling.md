@@ -3,12 +3,45 @@
 PRD: [League scaling](../prds/league-scaling.md)
 Implemented: Partial
 
-The scaling engine is implemented for the current circuit. See
-[implementation evidence](../research/league-scaling-implementation.md) for
-automated results. Revised Indigo and Masters roster/venue wiring, campaign
-balance acceptance, and TR progression remain pending.
+Proposed successor: [Trainer world progression](trainer-world-progression.md) owns
+personal NPC ratings and explicitly enrolled initial singles Gyms. Each NPC's
+baseline is its start TR; badge progression interpolates personal checkpoints
+at 0/8/16/24 badges, then adds that trainer's growth per first lifetime venue
+clear and clamps to 80. This replaces the earlier static-strength proposal.
+[Seeded circuit runtime](seeded-league-circuit.md) generates all fifteen slots at first eligible
+registration, using saved badge/first-clear inputs and projected earlier stops.
+Resolved NPC TR determines eligibility before 85/15 home/visitor selection and
+rotation. Shared world-point-indexed 2/2/1 bands replace fixed bands and room
+position offsets; concrete values remain experimental. Saved opponent TR,
+party-stage/profile identities, and versions make retries and replays unchanged
+throughout an edition. Later edition count alone grants no strength. The proposed
+24-badge gate remains a proposal. The fixed runtime contract below describes
+current ROM behavior, not this unimplemented successor.
 
-## Scope and current code
+The scaling engine, fixed Indigo/Masters/Hoenn roster and venue wiring,
+persisted stage/replay/entry-TR identity, and +8-per-venue progression are
+implemented. Campaign balance acceptance remains pending. See the
+[current circuit contract](wayfarer-interregional-league-circuit.md) and
+[runtime producer](../../game/src/league_circuit.c).
+The [original scaling evidence](../research/league-scaling-implementation.md)
+records earlier automated results; its prior progression/wiring description
+does not describe the current circuit. Seeded/recurring NPC-TR scaling remains
+a proposed successor, not implemented behavior.
+
+## Proposed party and registration contract
+
+Original FRLG, Emerald, and HNS parties are provenance references. Successor
+profiles may author approachable opening teams and distinct later stages; no
+automatic evolution or immutable-prefix rule applies across stages. Blue's
+experimental Gym profile starts approachable and grows rapidly toward Champion
+strength; it does not enroll him as a Wayfarer badge opponent.
+Story, rival, Dojo, and rematch variants require separate enrollment; a shared
+canonical identity grants no scaling policy. Tate and Liza retain their existing
+double-Gym policy and badge outside the singles pool, and Red is outside the
+circuit pool. Player TR, caps, XP reduction, obedience, wild populations, marts,
+ordinary Trainers, and Gym members continue to read player progression.
+
+## Current ROM scope and code
 
 Implement TR-based levels for the fifteen fixed Indigo, Masters, and Hoenn circuit opponents in
 `IS_WAYFARER`. Preserve all existing non-level team content and admission rules.
@@ -19,8 +52,8 @@ circuit-clear contributions, high-water storage, and player progression remain o
 by the existing [circuit specification](wayfarer-interregional-league-circuit.md)
 and [party progression specification](trainer-rating-party-progression.md).
 Do not change their formulas or reward amounts as part of implementing scaling.
-Their pending revisions can be implemented independently; scaling works with
-whatever valid TR the current producer returns.
+The current producer already awards +8 per canonical first clear; scaling
+consumes its saved admission snapshot without altering those rewards.
 
 Current integration points:
 
@@ -39,10 +72,10 @@ Current integration points:
 - `game/src/data/trainers_frlg.party`, `game/src/data/trainers_hns.party`, and
   `game/src/data/trainers.party`: authoritative source parties. The FRLG
   records are imported into collision-audited Wayfarer IDs rather than linked
-  by their raw IDs. `game/test/league_tiers.c` currently asserts static levels
-  and non-level identity across difficulty settings.
+  by their raw IDs. `game/test/league_tiers.c` checks source-party and non-level
+  identity across difficulty settings.
 
-The transient recorded-clear region is not a persisted run snapshot. Keep its
+The transient recorded-clear stage is not a persisted run snapshot. Keep its
 existing Hall of Fame handoff role; do not reuse it as the run state.
 
 ## Opponent metadata
@@ -123,8 +156,9 @@ difficulty do not introduce new offsets.
 
 ## Persistent run state and lifecycle
 
-Add a save-backed Wayfarer run record containing `active`, `stage`, `mode`, and
-`ratingAtEntry`. `mode` distinguishes first-clear from replay. Use the existing Wayfarer save ownership and initialization
+Use the implemented save-backed Wayfarer run record containing `active`, `stage`,
+`replay`, and `ratingAtEntry`. `replay` distinguishes replay from first-clear mode.
+Use the existing Wayfarer save ownership and initialization
 mechanisms; it must not be a region-swapped event variable. Store only these
 facts, not derived levels or a copied roster. Existing room progression remains
 the authority for which opponents have been defeated.
@@ -155,7 +189,7 @@ the authority for which opponents have been defeated.
    Repeated completion processing must not award another contribution, switch
    the recorded result to the next stage, or skip its opponents.
 
-Initialize an inactive record on new game. Validate region, rating range, and
+Initialize an inactive record on new game. Validate stage, rating range, and
 venue/room consistency on load. Invalid or absent run state inside a circuit venue
 must safely reset the attempt and return to that venue's lobby without a clear
 or reward; do not silently capture a new rating halfway through a run. Validate
@@ -188,7 +222,7 @@ catch rules, or player stats is implied by scaling opponent levels.
 
 ## Validation and release
 
-Update static-level assertions in `game/test/league_tiers.c` while retaining
+Maintain effective-level assertions in `game/test/league_tiers.c` alongside
 its authored identity checks. Extend `game/test/league_circuit.c`, script tests,
 and the League E2E journey. Required evidence:
 

@@ -1,143 +1,100 @@
 # Gym Leader scaling
 
+Implemented: No for trainer-owned world progression. The earlier player-TR
+scaler exists in code but its general build switch is disabled by default;
+Giovanni's Wayfarer finale has a separate runtime path.
+
 ## Intent
 
-Let players challenge the 24 Gym Leaders across Kanto, Johto, and Hoenn in
-different orders while facing teams appropriate to their Trainer Rating (TR).
-Each leader keeps a recognizable, deliberately authored team: progression
-changes how many Pokémon they bring and their levels.
+Let players challenge the supported singles Gym Leaders in different orders.
+Each leader starts with an approachable authored team and develops through a
+personal curve as the world gains badges and first league clears. Their
+strength comes from their own effective TR, independently of player TR and
+party levels.
 
 ## Design
 
-Author one six-Pokémon roster for each initial badge battle, with the iconic
-ace first in retention order. Put a second ace or essential partner next, then
-the other members in order of importance to the leader's identity and tactics.
-The game retains the first N entries. Every prefix from two through six must
-work as a complete team; support required by an ace belongs in the first two.
+Use the shared [trainer world progression](trainer-world-progression.md)
+contract. Each canonical trainer has a starting `baselineTR`, personal badge
+checkpoints, first-clear growth, and authored party stages. Resolve current
+global milestones when preparing a battle, select the applicable stage, and
+convert the trainer's effective TR to levels through the shared NPC curve.
 
-Keep every member's exact authored species and form at every TR. Do not reverse
-evolutions or evolve members automatically. Preserve existing hand-authored
-movesets, including moves normally learned above the scaled level. Members
-without custom moves use their normal level-up moves at their effective level.
-New roster members need deliberately authored species, moves policy, and items.
+The baseline is not a permanent battle rating. Do not reuse the previous
+player-TR party-size thresholds or select a prefix from one immutable team.
+Author complete opening, developing, and competitive stages. Species changes
+between stages are explicit content; there is no automatic evolution or
+predecessor substitution. Teams keep recognizable aces and valid support at
+every supported world point.
 
-Use these initial party-size thresholds:
+Original FRLG, Emerald, and repository HNS parties are references, not mandatory
+opening difficulty. Later Gym Leaders need low starting ratings too. Blue's
+personal curve reaches Champion strength sooner while retaining an approachable
+opening; that experiment does not create a new Blue badge encounter.
 
-| TR before battle | Pokémon | Global badges without League clears |
-| --- | ---: | --- |
-| 0 through 7 | 2 | 0 or 1 |
-| 8 through 21 | 3 | 2 through 4 |
-| 22 through 33 | 4 | 5 or 6 |
-| 34 through 39 | 5 | 7 |
-| 40 through 80 | 6 | 8 or more |
+Freeze the selected rating and profile for the battle and any reconstruction.
+A retry at unchanged milestones has the same authored party and levels. If the
+player earns another badge or first league clear before retrying, the leader
+uses the new world point. Award the challenged Gym's badge after its battle,
+so that award never strengthens the opponent during the fight.
 
-The first two badge challenges therefore use two Pokémon; the eighth uses
-five. The next challenge after earning eight badges uses six. Badge counts
-explain these examples but are not an additional scaling input.
+## Coverage
 
-Define battle order separately from retention order. Construct the selected
-team in its authored battle order, normally placing the ace last. This is a
-roster preference, not a scripted guarantee about the last Pokémon encountered:
-existing battle AI remains free to choose replacements and make switches.
+Wayfarer still has 24 badge encounters. The proposed singles policy covers
+23 canonical badge opponents: Brock, Misty, Lt. Surge, Erika, Janine, Sabrina,
+Blaine, Giovanni; Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce, Clair;
+Roxanne, Brawly, Wattson, Flannery, Norman, Winona, and Juan. The inventory must
+map actual Wayfarer battle IDs and selectable variants, including Giovanni's
+bespoke Viridian finale.
 
-Tate and Liza share one double-battle team. Lunatone and Solrock occupy the
-first two retention slots and are both aces. At the smallest size they open
-together; larger teams can have other authored opening pairs. Their battle
-always remains a double battle.
+Tate and Liza remain outside the singles pool. Their double Gym battle and its
+badge retain the existing policy; this proposal neither removes that badge
+nor converts the battle to singles. The explorer's 24 `gymEligible` records
+include Blue and must not be mistaken for the 24 badge encounter inventory.
 
-Read TR when battle setup starts. Keep that value for the fight, including
-party reconstruction. A new attempt after a loss reads current TR again.
+Canonical pool membership never enrolls all of a character's encounters.
+Blue's opening/rival/Dojo battles, leader rematches, Giovanni's villain scenes,
+facilities, partners, and story battles keep their separate policies unless
+explicitly added to the coverage inventory. Standalone builds remain unchanged.
 
-## Boundaries
+## Teams and construction
 
-Cover the initial badge battles for all 24 leaders, including their selectable
-difficulty variants. Existing rematches, League opponents, rivals, villain
-bosses, facilities, and other story battles retain their existing behavior.
-Do not add rematch access or change badges, scripts, travel, League eligibility,
-TR gains, or player progression. Standalone builds retain their existing teams.
+Each stage supplies its exact species/forms, move policies, held items,
+abilities, IVs, EVs, natures, aces, battle order, and level offsets. Review new
+stage content deliberately rather than retaining an inappropriate endgame
+moveset on an opening Pokémon. `AUTHORED` moves keep their exact reviewed tuples;
+`LEVEL_UP` moves use the selected species' normal learnset at its effective level.
 
-Preserve authored held items, abilities, IVs, EVs, natures, trainer healing
-items, and AI settings. They do not gain TR tiers in this version. Do not
-rebalance existing custom movesets as part of implementing the scaler.
+Keep original source-member identity when constructing in battle order, so
+moves, items, abilities, and gimmicks remain attached to the correct member.
+An authored ace-last order does not force AI replacement or switching behavior.
+Preserve encounter rewards, prize-money basis, badge scripts, and AI unless
+reviewed stage content explicitly changes the relevant battle field.
 
-Trainer-species randomization retains its existing complete battle-party path;
-this version does not apply the new leader transformation in that mode. Other
-existing challenge and move-randomizer rules keep their normal precedence.
+Trainer-species randomization keeps its existing complete construction path;
+it bypasses the new stage transformation. Other explicit challenge and move
+randomizer options keep their current precedence.
 
-## Balance
+## Balance and acceptance
 
-Give leaders a separate TR-to-level curve, initially seeded with the same
-values as the player's soft cap. Changing either curve must not change the
-other implicitly.
+Use the NPC growth/level rules in the shared specification. The explorer's
+TR-0 level-12 anchor, stage thresholds, and personal checkpoints remain
+provisional. The player's cap stays separate. Historical Gym order, current
+party size, and training do not supply hidden difficulty adjustments.
 
-| TR | Ace level |
-| ---: | ---: |
-| 0 | 15 |
-| 4 | 16 |
-| 8 | 18 |
-| 16 | 23 |
-| 30 | 30 |
-| 40 | 42 |
-| 55 | 60 |
-| 65 | 80 |
-| 80 | 100 |
+Exhaust badges 0–24 and first clears 0–3 for every enrolled variant. Check
+approachable opening parties, every stage transition, postponed leaders,
+source metadata, battle reconstruction, and explicit randomizer bypass.
+Check that Gym members under their ordinary player-TR policy do not consistently
+outclass their leader. Validate the exceptional Tate/Liza battle separately.
 
-Interpolate between anchors. Aces use that level; other members have an
-authored offset of minus one or minus two. Both Tate/Liza aces use zero.
-For example, at TR 0 a leader can bring a level 13 partner and a level 15 ace;
-at TR 40 their full team spans levels 40 through 42.
-
-The original roster's absolute levels do not affect this curve. The leader's
-region, historical Gym order, and the player's current party levels or size
-also do not affect it. Training can therefore still give the player an edge.
-League clears increase TR and strengthen any remaining badge opponents.
-
-These values are the initial implementation balance, subject to later reviewed
-tuning. Evolved species with powerful custom moves can produce sharply
-different challenges at equal levels. Record those outliers during playtesting;
-do not silently replace moves, species, or add leader-specific level exceptions.
-
-## Content
-
-Expand and review the initial teams for Brock, Misty, Lt. Surge, Erika, Janine,
-Sabrina, Blaine, Blue; Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine,
-Pryce, Clair; and Roxanne, Brawly, Wattson, Flannery, Norman, Winona,
-Tate/Liza, and Juan. Tate/Liza count as one of the 24 badge encounters.
-
-Each leader needs an explicit ace designation, retention order, battle order,
-and level offsets. Reuse existing members and custom move tuples where
-possible. Review new additions and any source replacement explicitly; filling
-empty slots is content work, not a runtime random selection. This PRD defines
-the authoring contract, not the final 144 Pokémon choices. Completing and
-reviewing that roster inventory is required before production enablement.
-
-## Interactions
-
-The ordinary Trainer scaler remains responsible for ordinary Trainers and Gym
-members. Gym Leaders use a separate policy so ordinary evolution reversal and
-move replacement cannot change their authored identity.
-
-Battle experience naturally follows actual opponents and levels. Preserve
-existing prize-money inputs and badge rewards; expanding an authored roster
-must not accidentally increase money through a new highest source level.
-The feature adds no save fields or new player-facing menus or announcements.
-
-This design supersedes static-party requirements only for the initial badge
-battles in the related League and content designs. Their other opponent
-policies remain in force.
-
-## Playtesting
-
-Check each leader as an early opponent, at every team-size transition, and
-with a full roster. Pay particular attention to fully evolved aces, strong
-custom moves, healing items, support dependencies, and Tate/Liza at two members.
-Check that early Gym members do not consistently overshadow their leader.
-Compare routes that postpone League challenges with routes that take them
-as soon as eligible. Exercise party rebuilding and preparation after a loss.
+The new policy requires reviewed content and ROM playtesting before enablement.
+The browser explorer predicts parties and levels; it does not establish combat
+balance or replace the production encounter inventory.
 
 ## References
 
 - [Gym Leader scaling specification](../specs/gym-leader-scaling.md)
+- [Trainer world progression specification](../specs/trainer-world-progression.md)
 - [Ordinary Trainer and Gym-member scaling](trainer-party-scaling.md)
-- [Interregional League circuit](wayfarer-interregional-league-circuit.md)
 - [Player party progression](../specs/trainer-rating-party-progression.md)

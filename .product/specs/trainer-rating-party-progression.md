@@ -1,10 +1,27 @@
 # Trainer Rating party progression
 
 PRD: [Trainer Rating wild encounter and party progression](../prds/trainer-rating-wild-encounter-scaling.md)
-Implemented: Outdated
+Implemented: Partial
 
-The progression examples require the approved +8/+8/+8 circuit-stage rewards.
-The implementation still uses +15/+5/+4; the soft-cap anchors are unchanged.
+The current [circuit producer](../../game/src/league_circuit.c) implements
++8/+8/+8 first-clear contributions for Indigo, Masters, and Hoenn. The badge
+formula and soft-cap anchors are unchanged. These circuit inputs are current;
+the Partial marker does not certify completion of all experience, obedience,
+and cross-build acceptance listed below.
+
+The proposed [Seeded Trainer Circuit](../prds/seeded-trainer-circuit.md) retains
+this player TR and cap contract. If adopted, progression examples refer to first,
+second, and third lifetime venue clears rather than a fixed Indigo/Masters/Hoenn
+order. Its proposed common 24-badge entry gate gives TR 56/64/72/80 and soft
+caps 62/78/89/100 across zero through three lifetime clears. Sub-24-badge clear
+examples below describe the current implementation only. Recurring editions
+never reset those facts or add more +8 contributions. Proposed
+[trainer world progression](trainer-world-progression.md) gives each enrolled
+NPC a separate start-TR baseline, badge checkpoints at 0/8/16/24, and per-trainer
+growth for first lifetime venue clears, clamped to 80. These values select NPC
+strength and authored party stages only. The player's saved high-water TR,
+soft cap, XP reduction, obedience, wild encounters, marts, ordinary Trainers,
+and Gym members retain their existing player inputs and never read NPC TR.
 
 ## Scope
 
@@ -52,7 +69,7 @@ The result is clamped to 1 through 100. The curve is monotonic and produces
 these global circuit examples. The
 [circuit](wayfarer-interregional-league-circuit.md) allows all badges before any
 circuit-stage clear. The examples include the approved +8 per first-time stage
-clear, which is pending implementation. The badge formula and soft-cap curve
+clear, already implemented by the current circuit producer. The badge formula and soft-cap curve
 are unchanged:
 
 | Progress | Trainer Rating | Soft level cap |

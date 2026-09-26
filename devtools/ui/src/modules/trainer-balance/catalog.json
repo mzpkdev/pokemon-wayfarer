@@ -1,0 +1,3037 @@
+[
+  {
+    "id": "brock",
+    "name": "Brock",
+    "region": "Kanto",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Indigo"],
+    "source": {
+      "label": "FRLG local reference",
+      "path": "game/src/data/trainers_frlg.party",
+      "trainerId": "TRAINER_LEADER_BROCK",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Geodude",
+        "level": 12,
+        "moves": ["Tackle", "Defense Curl"],
+        "item": null
+      },
+      {
+        "species": "Onix",
+        "level": 14,
+        "moves": ["Tackle", "Bind", "Rock Tomb"],
+        "item": null
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Aerodactyl",
+        "level": 66,
+        "moves": ["Ancient Power", "Sky Attack", "Earthquake", "Fire Fang"],
+        "item": "Hard Stone"
+      },
+      {
+        "species": "Kabutops",
+        "level": 66,
+        "moves": ["Surf", "Ancient Power", "Night Slash", "Swords Dance"],
+        "item": "Scope Lens"
+      },
+      {
+        "species": "Omastar",
+        "level": 66,
+        "moves": ["Ancient Power", "Ice Beam", "Surf", "Toxic"],
+        "item": "Focus Band"
+      },
+      {
+        "species": "Relicanth",
+        "level": 66,
+        "moves": ["Hydro Pump", "Rock Slide", "Curse", "Thunderbolt"],
+        "item": "Hard Stone"
+      },
+      {
+        "species": "Kleavor",
+        "level": 66,
+        "moves": ["Swords Dance", "Stone Axe", "X Scissor", "Agility"],
+        "item": "Quick Claw"
+      },
+      {
+        "species": "Golem",
+        "level": 66,
+        "moves": ["Curse", "Stone Edge", "Body Slam", "Earthquake"],
+        "item": "Quick Claw"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[4] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[5] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[0] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Geodude", "Onix"],
+    "suggestedStartTR": 2,
+    "suggestedMatureTR": 52
+  },
+  {
+    "id": "misty",
+    "name": "Misty",
+    "region": "Kanto",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "source": {
+      "label": "FRLG local reference",
+      "path": "game/src/data/trainers_frlg.party",
+      "trainerId": "TRAINER_LEADER_MISTY",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Staryu",
+        "level": 18,
+        "moves": ["Tackle", "Harden", "Recover", "Water Pulse"],
+        "item": null
+      },
+      {
+        "species": "Starmie",
+        "level": 21,
+        "moves": ["Swift", "Recover", "Rapid Spin", "Water Pulse"],
+        "item": null
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Golduck",
+        "level": 62,
+        "moves": ["Aqua Tail", "Psychic", "Wonder Room", "Cross Chop"],
+        "item": null
+      },
+      {
+        "species": "Quagsire",
+        "level": 62,
+        "moves": ["Muddy Water", "Amnesia", "Earthquake", "Rain Dance"],
+        "item": "Quick Claw"
+      },
+      {
+        "species": "Vaporeon",
+        "level": 61,
+        "moves": ["Hydro Pump", "Ice Beam", "Acid Armor", "Shadow Ball"],
+        "item": "Leftovers"
+      },
+      {
+        "species": "Milotic",
+        "level": 61,
+        "moves": ["Hydro Pump", "Ice Beam", "Rest", "Sleep Talk"],
+        "item": null
+      },
+      {
+        "species": "Lapras",
+        "level": 62,
+        "moves": ["Hydro Pump", "Ice Beam", "Rain Dance", "Reflect"],
+        "item": "Never Melt Ice"
+      },
+      {
+        "species": "Starmie",
+        "level": 63,
+        "moves": ["Surf", "Psychic", "Recover", "Thunderbolt"],
+        "item": "Mystic Water"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[4] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[5] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Staryu", "Psyduck"],
+    "suggestedStartTR": 3,
+    "suggestedMatureTR": 52
+  },
+  {
+    "id": "lt-surge",
+    "name": "Lt. Surge",
+    "region": "Kanto",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "source": {
+      "label": "FRLG local reference",
+      "path": "game/src/data/trainers_frlg.party",
+      "trainerId": "TRAINER_LEADER_LT_SURGE",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Voltorb",
+        "level": 21,
+        "moves": ["Sonic Boom", "Tackle", "Screech", "Shock Wave"],
+        "item": null
+      },
+      {
+        "species": "Pikachu",
+        "level": 18,
+        "moves": ["Quick Attack", "Thunder Wave", "Double Team", "Shock Wave"],
+        "item": null
+      },
+      {
+        "species": "Raichu",
+        "level": 24,
+        "moves": ["Quick Attack", "Thunder Wave", "Double Team", "Shock Wave"],
+        "item": null
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Electrode",
+        "level": 57,
+        "moves": ["Shock Wave", "Rain Dance", "Thunder Wave", "Explosion"],
+        "item": "Focus Band"
+      },
+      {
+        "species": "Magnezone",
+        "level": 59,
+        "moves": ["Thunder", "Reflect", "Rain Dance", "Double Edge"],
+        "item": null
+      },
+      {
+        "species": "Lanturn",
+        "level": 58,
+        "moves": ["Ion Deluge", "Hydro Pump", "Discharge", "Confuse Ray"],
+        "item": "Leftovers"
+      },
+      {
+        "species": "Manectric",
+        "level": 58,
+        "moves": ["Wild Charge", "Charge", "Crunch", "Electric Terrain"],
+        "item": null
+      },
+      {
+        "species": "Electivire",
+        "level": 59,
+        "moves": ["Thunderbolt", "Fire Punch", "Ice Punch", "Submission"],
+        "item": "Scope Lens"
+      },
+      {
+        "species": "Raichu",
+        "level": 60,
+        "moves": ["Thunder", "Rain Dance", "Body Slam", "Surf"],
+        "item": "Magnet"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[4] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[5] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Voltorb", "Pikachu"],
+    "suggestedStartTR": 3,
+    "suggestedMatureTR": 52
+  },
+  {
+    "id": "erika",
+    "name": "Erika",
+    "region": "Kanto",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "source": {
+      "label": "FRLG local reference",
+      "path": "game/src/data/trainers_frlg.party",
+      "trainerId": "TRAINER_LEADER_ERIKA",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Victreebel",
+        "level": 29,
+        "moves": ["Stun Spore", "Acid", "Poison Powder", "Giga Drain"],
+        "item": null
+      },
+      {
+        "species": "Tangela",
+        "level": 24,
+        "moves": ["Poison Powder", "Constrict", "Ingrain", "Giga Drain"],
+        "item": null
+      },
+      {
+        "species": "Vileplume",
+        "level": 29,
+        "moves": ["Sleep Powder", "Acid", "Stun Spore", "Giga Drain"],
+        "item": null
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Jumpluff",
+        "level": 61,
+        "moves": ["Acrobatics", "U Turn", "Sleep Powder", "Leech Seed"],
+        "item": "Focus Band"
+      },
+      {
+        "species": "Roserade",
+        "level": 60,
+        "moves": ["Synthesis", "Grass Whistle", "Toxic", "Petal Dance"],
+        "item": null
+      },
+      {
+        "species": "Tangrowth",
+        "level": 60,
+        "moves": ["Power Whip", "Wring Out", "Grassy Terrain", "Tickle"],
+        "item": null
+      },
+      {
+        "species": "Victreebel",
+        "level": 62,
+        "moves": ["Sludge Bomb", "Leaf Blade", "Swords Dance", "Sleep Powder"],
+        "item": "Poison Barb"
+      },
+      {
+        "species": "Venusaur",
+        "level": 61,
+        "moves": ["Sunny Day", "Solar Beam", "Sludge Bomb", "Sleep Powder"],
+        "item": "Leftovers"
+      },
+      {
+        "species": "Bellossom",
+        "level": 62,
+        "moves": ["Petal Blizzard", "Quiver Dance", "Stun Spore", "Attract"],
+        "item": "Miracle Seed"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[4] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[5] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Oddish", "Bellsprout"],
+    "suggestedStartTR": 3,
+    "suggestedMatureTR": 53
+  },
+  {
+    "id": "janine",
+    "name": "Janine",
+    "region": "Kanto",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "source": {
+      "label": "HNS local reference",
+      "path": "game/src/data/trainers_hns.party",
+      "trainerId": "TRAINER_JANINE_HNS",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Weezing",
+        "level": 63,
+        "moves": ["Sludge Bomb", "Flamethrower", "Belch", "Amnesia"],
+        "item": "Leftovers"
+      },
+      {
+        "species": "Muk",
+        "level": 62,
+        "moves": ["Minimize", "Gunk Shot", "Toxic", "Acid Armor"],
+        "item": null
+      },
+      {
+        "species": "Swalot",
+        "level": 61,
+        "moves": ["Swallow", "Stockpile", "Amnesia", "Spit Up"],
+        "item": null
+      },
+      {
+        "species": "Nidoqueen",
+        "level": 62,
+        "moves": ["Earthquake", "Cross Poison", "Thunder", "Superpower"],
+        "item": "Quick Claw"
+      },
+      {
+        "species": "Crobat",
+        "level": 63,
+        "moves": ["Air Slash", "Venoshock", "Toxic", "Confuse Ray"],
+        "item": null
+      },
+      {
+        "species": "Venomoth",
+        "level": 64,
+        "moves": ["Signal Beam", "Poison Fang", "Toxic", "Double Team"],
+        "item": "Bright Powder"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Weezing",
+        "level": 63,
+        "moves": ["Sludge Bomb", "Flamethrower", "Belch", "Amnesia"],
+        "item": "Leftovers"
+      },
+      {
+        "species": "Muk",
+        "level": 62,
+        "moves": ["Minimize", "Gunk Shot", "Toxic", "Acid Armor"],
+        "item": null
+      },
+      {
+        "species": "Swalot",
+        "level": 61,
+        "moves": ["Swallow", "Stockpile", "Amnesia", "Spit Up"],
+        "item": null
+      },
+      {
+        "species": "Nidoqueen",
+        "level": 62,
+        "moves": ["Earthquake", "Cross Poison", "Thunder", "Superpower"],
+        "item": "Quick Claw"
+      },
+      {
+        "species": "Venomoth",
+        "level": 64,
+        "moves": ["Signal Beam", "Poison Fang", "Toxic", "Double Team"],
+        "item": "Bright Powder"
+      },
+      {
+        "species": "Crobat",
+        "level": 63,
+        "moves": ["Air Slash", "Venoshock", "Toxic", "Confuse Ray"],
+        "item": null
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[5] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[4] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Venonat", "Koffing"],
+    "suggestedStartTR": 4,
+    "suggestedMatureTR": 53
+  },
+  {
+    "id": "sabrina",
+    "name": "Sabrina",
+    "region": "Kanto",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "source": {
+      "label": "FRLG local reference",
+      "path": "game/src/data/trainers_frlg.party",
+      "trainerId": "TRAINER_LEADER_SABRINA",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Kadabra",
+        "level": 38,
+        "moves": ["Psybeam", "Reflect", "Future Sight", "Calm Mind"],
+        "item": null
+      },
+      {
+        "species": "Mr. Mime",
+        "level": 37,
+        "moves": ["Barrier", "Psybeam", "Baton Pass", "Calm Mind"],
+        "item": null
+      },
+      {
+        "species": "Venomoth",
+        "level": 38,
+        "moves": ["Psybeam", "Gust", "Leech Life", "Supersonic"],
+        "item": null
+      },
+      {
+        "species": "Alakazam",
+        "level": 43,
+        "moves": ["Psychic", "Recover", "Future Sight", "Calm Mind"],
+        "item": null
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Mr. Mime",
+        "level": 65,
+        "moves": ["Magical Leaf", "Psychic", "Substitute", "Reflect"],
+        "item": "Quick Claw"
+      },
+      {
+        "species": "Jynx",
+        "level": 64,
+        "moves": ["Psychic", "Ice Beam", "Lovely Kiss", "Grass Knot"],
+        "item": null
+      },
+      {
+        "species": "Slowbro",
+        "level": 64,
+        "moves": ["Rest", "Sleep Talk", "Submission", "Surf"],
+        "item": "Chesto Berry"
+      },
+      {
+        "species": "Wobbuffet",
+        "level": 64,
+        "moves": ["Mirror Coat", "Counter", "Safeguard", "Destiny Bond"],
+        "item": "Leftovers"
+      },
+      {
+        "species": "Espeon",
+        "level": 65,
+        "moves": ["Psychic", "Morning Sun", "Future Sight", "Power Gem"],
+        "item": null
+      },
+      {
+        "species": "Alakazam",
+        "level": 66,
+        "moves": ["Shadow Ball", "Psychic", "Recover", "Calm Mind"],
+        "item": "Twisted Spoon"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[4] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[5] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Abra", "Drowzee"],
+    "suggestedStartTR": 4,
+    "suggestedMatureTR": 54
+  },
+  {
+    "id": "blaine",
+    "name": "Blaine",
+    "region": "Kanto",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "source": {
+      "label": "FRLG local reference",
+      "path": "game/src/data/trainers_frlg.party",
+      "trainerId": "TRAINER_LEADER_BLAINE",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Growlithe",
+        "level": 42,
+        "moves": ["Bite", "Roar", "Take Down", "Fire Blast"],
+        "item": null
+      },
+      {
+        "species": "Ponyta",
+        "level": 40,
+        "moves": ["Stomp", "Bounce", "Fire Spin", "Fire Blast"],
+        "item": null
+      },
+      {
+        "species": "Rapidash",
+        "level": 42,
+        "moves": ["Stomp", "Bounce", "Fire Spin", "Fire Blast"],
+        "item": null
+      },
+      {
+        "species": "Arcanine",
+        "level": 47,
+        "moves": ["Bite", "Roar", "Take Down", "Fire Blast"],
+        "item": null
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Houndoom",
+        "level": 66,
+        "moves": ["Fire Blast", "Sunny Day", "Thunder Fang", "Crunch"],
+        "item": "Miracle Seed"
+      },
+      {
+        "species": "Magcargo",
+        "level": 65,
+        "moves": ["Flamethrower", "Recover", "Amnesia", "Hypnosis"],
+        "item": "Leftovers"
+      },
+      {
+        "species": "Torkoal",
+        "level": 67,
+        "moves": ["Curse", "Iron Defense", "Withdraw", "Heat Wave"],
+        "item": "White Herb"
+      },
+      {
+        "species": "Camerupt",
+        "level": 67,
+        "moves": ["Earth Power", "Eruption", "Yawn", "Amnesia"],
+        "item": "Charcoal"
+      },
+      {
+        "species": "Rapidash",
+        "level": 66,
+        "moves": ["Bounce", "Sunny Day", "Flare Blitz", "Solar Beam"],
+        "item": "Quick Claw"
+      },
+      {
+        "species": "Magmortar",
+        "level": 65,
+        "moves": ["Thunder Punch", "Fire Blast", "Psychic", "Confuse Ray"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[4] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[5] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[1] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Growlithe", "Ponyta"],
+    "suggestedStartTR": 4,
+    "suggestedMatureTR": 54
+  },
+  {
+    "id": "giovanni",
+    "name": "Giovanni",
+    "region": "Kanto",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Indigo"],
+    "source": {
+      "label": "FRLG local reference",
+      "path": "game/src/data/trainers_frlg.party",
+      "trainerId": "TRAINER_LEADER_GIOVANNI",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Rhyhorn",
+        "level": 45,
+        "moves": ["Take Down", "Rock Blast", "Scary Face", "Earthquake"],
+        "item": null
+      },
+      {
+        "species": "Dugtrio",
+        "level": 42,
+        "moves": ["Slash", "Sand Tomb", "Mud Slap", "Earthquake"],
+        "item": null
+      },
+      {
+        "species": "Nidoqueen",
+        "level": 44,
+        "moves": ["Body Slam", "Double Kick", "Poison Sting", "Earthquake"],
+        "item": null
+      },
+      {
+        "species": "Nidoking",
+        "level": 45,
+        "moves": ["Thrash", "Double Kick", "Poison Sting", "Earthquake"],
+        "item": null
+      },
+      {
+        "species": "Rhyhorn",
+        "level": 50,
+        "moves": ["Take Down", "Rock Blast", "Scary Face", "Earthquake"],
+        "item": null
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Rhyhorn",
+        "level": 45,
+        "moves": ["Take Down", "Rock Blast", "Scary Face", "Earthquake"],
+        "item": null
+      },
+      {
+        "species": "Dugtrio",
+        "level": 42,
+        "moves": ["Slash", "Sand Tomb", "Mud Slap", "Earthquake"],
+        "item": null
+      },
+      {
+        "species": "Nidoqueen",
+        "level": 44,
+        "moves": ["Body Slam", "Double Kick", "Poison Sting", "Earthquake"],
+        "item": null
+      },
+      {
+        "species": "Nidoking",
+        "level": 45,
+        "moves": ["Thrash", "Double Kick", "Poison Sting", "Earthquake"],
+        "item": null
+      },
+      {
+        "species": "Rhyhorn",
+        "level": 50,
+        "moves": ["Take Down", "Rock Blast", "Scary Face", "Earthquake"],
+        "item": null
+      }
+    ],
+    "competitiveSource": "Experimental reuse of game/src/data/trainers_frlg.party:TRAINER_LEADER_GIOVANNI; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
+    "earlyParty": ["Sandshrew", "Rhyhorn"],
+    "suggestedStartTR": 5,
+    "suggestedMatureTR": 55
+  },
+  {
+    "id": "blue",
+    "name": "Blue",
+    "region": "Kanto",
+    "role": "Champion",
+    "gymEligible": true,
+    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "source": {
+      "label": "FRLG local reference",
+      "path": "game/src/data/trainers_frlg.party",
+      "trainerId": "TRAINER_CHAMPION_FIRST_SQUIRTLE",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. FRLG first Champion Squirtle starter branch selected explicitly; Blue remains Gym eligible in this prototype. His authored TR checkpoints at 0/8/16/24 badges are 6/54/57/59: an approachable opening followed by faster growth toward Champion strength. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Pidgeot",
+        "level": 59,
+        "moves": ["Aerial Ace", "Feather Dance", "Sand Attack", "Whirlwind"],
+        "item": null
+      },
+      {
+        "species": "Alakazam",
+        "level": 57,
+        "moves": ["Psychic", "Future Sight", "Recover", "Reflect"],
+        "item": null
+      },
+      {
+        "species": "Rhydon",
+        "level": 59,
+        "moves": ["Take Down", "Earthquake", "Rock Tomb", "Scary Face"],
+        "item": null
+      },
+      {
+        "species": "Arcanine",
+        "level": 59,
+        "moves": ["Extreme Speed", "Flamethrower", "Roar", "Bite"],
+        "item": null
+      },
+      {
+        "species": "Exeggutor",
+        "level": 61,
+        "moves": ["Giga Drain", "Egg Bomb", "Sleep Powder", "Light Screen"],
+        "item": null
+      },
+      {
+        "species": "Blastoise",
+        "level": 63,
+        "moves": ["Hydro Pump", "Rain Dance", "Skull Bash", "Bite"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Pidgeot",
+        "level": 59,
+        "moves": ["Aerial Ace", "Feather Dance", "Sand Attack", "Whirlwind"],
+        "item": null
+      },
+      {
+        "species": "Alakazam",
+        "level": 57,
+        "moves": ["Psychic", "Future Sight", "Recover", "Reflect"],
+        "item": null
+      },
+      {
+        "species": "Rhydon",
+        "level": 59,
+        "moves": ["Take Down", "Earthquake", "Rock Tomb", "Scary Face"],
+        "item": null
+      },
+      {
+        "species": "Arcanine",
+        "level": 59,
+        "moves": ["Extreme Speed", "Flamethrower", "Roar", "Bite"],
+        "item": null
+      },
+      {
+        "species": "Exeggutor",
+        "level": 61,
+        "moves": ["Giga Drain", "Egg Bomb", "Sleep Powder", "Light Screen"],
+        "item": null
+      },
+      {
+        "species": "Blastoise",
+        "level": 63,
+        "moves": ["Hydro Pump", "Rain Dance", "Skull Bash", "Bite"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental reuse of game/src/data/trainers_frlg.party:TRAINER_CHAMPION_FIRST_SQUIRTLE; source species/levels/moves/items retained.",
+    "earlyParty": ["Pidgey", "Eevee"],
+    "suggestedStartTR": 6,
+    "suggestedMatureTR": 59,
+    "badgeTRCheckpoints": [6, 54, 57, 59]
+  },
+  {
+    "id": "lorelei",
+    "name": "Lorelei",
+    "region": "Kanto",
+    "role": "Elite Four",
+    "gymEligible": false,
+    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "source": {
+      "label": "FRLG local reference",
+      "path": "game/src/data/trainers_frlg.party",
+      "trainerId": "TRAINER_ELITE_FOUR_LORELEI",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams."
+    },
+    "referenceParty": [
+      {
+        "species": "Dewgong",
+        "level": 52,
+        "moves": ["Ice Beam", "Surf", "Hail", "Safeguard"],
+        "item": null
+      },
+      {
+        "species": "Cloyster",
+        "level": 51,
+        "moves": ["Spikes", "Protect", "Hail", "Dive"],
+        "item": null
+      },
+      {
+        "species": "Slowbro",
+        "level": 52,
+        "moves": ["Ice Beam", "Surf", "Amnesia", "Yawn"],
+        "item": null
+      },
+      {
+        "species": "Jynx",
+        "level": 54,
+        "moves": ["Ice Punch", "Double Slap", "Lovely Kiss", "Attract"],
+        "item": null
+      },
+      {
+        "species": "Lapras",
+        "level": 54,
+        "moves": ["Confuse Ray", "Ice Beam", "Surf", "Body Slam"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Dewgong",
+        "level": 52,
+        "moves": ["Ice Beam", "Surf", "Hail", "Safeguard"],
+        "item": null
+      },
+      {
+        "species": "Cloyster",
+        "level": 51,
+        "moves": ["Spikes", "Protect", "Hail", "Dive"],
+        "item": null
+      },
+      {
+        "species": "Slowbro",
+        "level": 52,
+        "moves": ["Ice Beam", "Surf", "Amnesia", "Yawn"],
+        "item": null
+      },
+      {
+        "species": "Jynx",
+        "level": 54,
+        "moves": ["Ice Punch", "Double Slap", "Lovely Kiss", "Attract"],
+        "item": null
+      },
+      {
+        "species": "Lapras",
+        "level": 54,
+        "moves": ["Confuse Ray", "Ice Beam", "Surf", "Body Slam"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental reuse of game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LORELEI; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
+    "earlyParty": [],
+    "suggestedStartTR": 50,
+    "suggestedMatureTR": 57
+  },
+  {
+    "id": "bruno",
+    "name": "Bruno",
+    "region": "Kanto",
+    "role": "Elite Four",
+    "gymEligible": false,
+    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "source": {
+      "label": "FRLG local reference",
+      "path": "game/src/data/trainers_frlg.party",
+      "trainerId": "TRAINER_ELITE_FOUR_BRUNO",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams."
+    },
+    "referenceParty": [
+      {
+        "species": "Onix",
+        "level": 51,
+        "moves": ["Earthquake", "Rock Tomb", "Iron Tail", "Roar"],
+        "item": null
+      },
+      {
+        "species": "Hitmonchan",
+        "level": 53,
+        "moves": ["Sky Uppercut", "Mach Punch", "Rock Tomb", "Counter"],
+        "item": null
+      },
+      {
+        "species": "Hitmonlee",
+        "level": 53,
+        "moves": ["Mega Kick", "Foresight", "Brick Break", "Facade"],
+        "item": null
+      },
+      {
+        "species": "Onix",
+        "level": 54,
+        "moves": ["Double Edge", "Earthquake", "Iron Tail", "Sand Tomb"],
+        "item": null
+      },
+      {
+        "species": "Machamp",
+        "level": 56,
+        "moves": ["Cross Chop", "Bulk Up", "Scary Face", "Rock Tomb"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Onix",
+        "level": 51,
+        "moves": ["Earthquake", "Rock Tomb", "Iron Tail", "Roar"],
+        "item": null
+      },
+      {
+        "species": "Hitmonchan",
+        "level": 53,
+        "moves": ["Sky Uppercut", "Mach Punch", "Rock Tomb", "Counter"],
+        "item": null
+      },
+      {
+        "species": "Hitmonlee",
+        "level": 53,
+        "moves": ["Mega Kick", "Foresight", "Brick Break", "Facade"],
+        "item": null
+      },
+      {
+        "species": "Onix",
+        "level": 54,
+        "moves": ["Double Edge", "Earthquake", "Iron Tail", "Sand Tomb"],
+        "item": null
+      },
+      {
+        "species": "Machamp",
+        "level": 56,
+        "moves": ["Cross Chop", "Bulk Up", "Scary Face", "Rock Tomb"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental reuse of game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_BRUNO; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
+    "earlyParty": [],
+    "suggestedStartTR": 52,
+    "suggestedMatureTR": 56
+  },
+  {
+    "id": "agatha",
+    "name": "Agatha",
+    "region": "Kanto",
+    "role": "Elite Four",
+    "gymEligible": false,
+    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "source": {
+      "label": "FRLG local reference",
+      "path": "game/src/data/trainers_frlg.party",
+      "trainerId": "TRAINER_ELITE_FOUR_AGATHA",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams."
+    },
+    "referenceParty": [
+      {
+        "species": "Gengar",
+        "level": 54,
+        "moves": ["Shadow Punch", "Confuse Ray", "Toxic", "Double Team"],
+        "item": null
+      },
+      {
+        "species": "Golbat",
+        "level": 54,
+        "moves": ["Confuse Ray", "Poison Fang", "Air Cutter", "Bite"],
+        "item": null
+      },
+      {
+        "species": "Haunter",
+        "level": 53,
+        "moves": ["Hypnosis", "Dream Eater", "Curse", "Mean Look"],
+        "item": null
+      },
+      {
+        "species": "Arbok",
+        "level": 56,
+        "moves": ["Sludge Bomb", "Screech", "Iron Tail", "Bite"],
+        "item": null
+      },
+      {
+        "species": "Gengar",
+        "level": 58,
+        "moves": ["Shadow Ball", "Sludge Bomb", "Hypnosis", "Nightmare"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Gengar",
+        "level": 54,
+        "moves": ["Shadow Punch", "Confuse Ray", "Toxic", "Double Team"],
+        "item": null
+      },
+      {
+        "species": "Golbat",
+        "level": 54,
+        "moves": ["Confuse Ray", "Poison Fang", "Air Cutter", "Bite"],
+        "item": null
+      },
+      {
+        "species": "Haunter",
+        "level": 53,
+        "moves": ["Hypnosis", "Dream Eater", "Curse", "Mean Look"],
+        "item": null
+      },
+      {
+        "species": "Arbok",
+        "level": 56,
+        "moves": ["Sludge Bomb", "Screech", "Iron Tail", "Bite"],
+        "item": null
+      },
+      {
+        "species": "Gengar",
+        "level": 58,
+        "moves": ["Shadow Ball", "Sludge Bomb", "Hypnosis", "Nightmare"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental reuse of game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_AGATHA; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
+    "earlyParty": [],
+    "suggestedStartTR": 53,
+    "suggestedMatureTR": 58
+  },
+  {
+    "id": "koga",
+    "name": "Koga",
+    "region": "Johto",
+    "role": "Elite Four",
+    "gymEligible": false,
+    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "source": {
+      "label": "HNS local reference",
+      "path": "game/src/data/trainers_hns.party",
+      "trainerId": "TRAINER_KOGA_1_HNS",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Start TR follows the earlier canonical encounter calibration; this stronger HNS party is comparison evidence, not the prototype start-level target."
+    },
+    "referenceParty": [
+      {
+        "species": "Ariados",
+        "level": 50,
+        "moves": ["Megahorn", "Giga Drain", "Double Team", "Toxic"],
+        "item": "Kings Rock"
+      },
+      {
+        "species": "Qwilfish",
+        "level": 51,
+        "moves": ["Aqua Tail", "Toxic", "Protect", "Poison Jab"],
+        "item": null
+      },
+      {
+        "species": "Muk",
+        "level": 50,
+        "moves": ["Minimize", "Fire Blast", "Gunk Shot", "Toxic"],
+        "item": "Leftovers"
+      },
+      {
+        "species": "Venomoth",
+        "level": 51,
+        "moves": ["Leech Life", "Psychic", "Poison Fang", "Sleep Powder"],
+        "item": null
+      },
+      {
+        "species": "Crobat",
+        "level": 52,
+        "moves": ["Double Team", "Toxic", "Bite", "Confuse Ray"],
+        "item": "Bright Powder"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Ariados",
+        "level": 50,
+        "moves": ["Megahorn", "Giga Drain", "Double Team", "Toxic"],
+        "item": "Kings Rock"
+      },
+      {
+        "species": "Qwilfish",
+        "level": 51,
+        "moves": ["Aqua Tail", "Toxic", "Protect", "Poison Jab"],
+        "item": null
+      },
+      {
+        "species": "Muk",
+        "level": 50,
+        "moves": ["Minimize", "Fire Blast", "Gunk Shot", "Toxic"],
+        "item": "Leftovers"
+      },
+      {
+        "species": "Venomoth",
+        "level": 51,
+        "moves": ["Leech Life", "Psychic", "Poison Fang", "Sleep Powder"],
+        "item": null
+      },
+      {
+        "species": "Crobat",
+        "level": 52,
+        "moves": ["Double Team", "Toxic", "Bite", "Confuse Ray"],
+        "item": "Bright Powder"
+      }
+    ],
+    "competitiveSource": "Experimental reuse of game/src/data/trainers_hns.party:TRAINER_KOGA_1_HNS; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
+    "earlyParty": [],
+    "suggestedStartTR": 42,
+    "suggestedMatureTR": 55
+  },
+  {
+    "id": "lance",
+    "name": "Lance",
+    "region": "Kanto",
+    "role": "Champion",
+    "gymEligible": false,
+    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "source": {
+      "label": "FRLG local reference",
+      "path": "game/src/data/trainers_frlg.party",
+      "trainerId": "TRAINER_ELITE_FOUR_LANCE",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams."
+    },
+    "referenceParty": [
+      {
+        "species": "Gyarados",
+        "level": 56,
+        "moves": ["Hyper Beam", "Dragon Rage", "Twister", "Bite"],
+        "item": null
+      },
+      {
+        "species": "Dragonair",
+        "level": 54,
+        "moves": ["Hyper Beam", "Safeguard", "Dragon Rage", "Outrage"],
+        "item": null
+      },
+      {
+        "species": "Dragonair",
+        "level": 54,
+        "moves": ["Hyper Beam", "Safeguard", "Thunder Wave", "Outrage"],
+        "item": null
+      },
+      {
+        "species": "Aerodactyl",
+        "level": 58,
+        "moves": ["Hyper Beam", "Ancient Power", "Wing Attack", "Scary Face"],
+        "item": null
+      },
+      {
+        "species": "Dragonite",
+        "level": 60,
+        "moves": ["Hyper Beam", "Safeguard", "Outrage", "Wing Attack"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Gyarados",
+        "level": 56,
+        "moves": ["Hyper Beam", "Dragon Rage", "Twister", "Bite"],
+        "item": null
+      },
+      {
+        "species": "Dragonair",
+        "level": 54,
+        "moves": ["Hyper Beam", "Safeguard", "Dragon Rage", "Outrage"],
+        "item": null
+      },
+      {
+        "species": "Dragonair",
+        "level": 54,
+        "moves": ["Hyper Beam", "Safeguard", "Thunder Wave", "Outrage"],
+        "item": null
+      },
+      {
+        "species": "Aerodactyl",
+        "level": 58,
+        "moves": ["Hyper Beam", "Ancient Power", "Wing Attack", "Scary Face"],
+        "item": null
+      },
+      {
+        "species": "Dragonite",
+        "level": 60,
+        "moves": ["Hyper Beam", "Safeguard", "Outrage", "Wing Attack"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental reuse of game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LANCE; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
+    "earlyParty": [],
+    "suggestedStartTR": 55,
+    "suggestedMatureTR": 60
+  },
+  {
+    "id": "falkner",
+    "name": "Falkner",
+    "region": "Johto",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Indigo"],
+    "source": {
+      "label": "HNS local reference",
+      "path": "game/src/data/trainers_hns.party",
+      "trainerId": "TRAINER_FALKNER_1_HNS",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Pidgey",
+        "level": 8,
+        "moves": ["Tackle", "Sand Attack", "Quick Attack"],
+        "item": null
+      },
+      {
+        "species": "Noctowl",
+        "level": 11,
+        "moves": ["Tackle", "Mud Slap", "Peck"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Skarmory",
+        "level": 63,
+        "moves": ["Stealth Rock", "Drill Peck", "Metal Sound", "Steel Wing"],
+        "item": null
+      },
+      {
+        "species": "Swellow",
+        "level": 63,
+        "moves": ["Endeavor", "Double Team", "Brave Bird", "Steel Wing"],
+        "item": "Focus Band"
+      },
+      {
+        "species": "Pidgeot",
+        "level": 65,
+        "moves": ["Tailwind", "Aerial Ace", "Extreme Speed", "Sand Attack"],
+        "item": null
+      },
+      {
+        "species": "Pelipper",
+        "level": 68,
+        "moves": ["Roost", "Brine", "Steel Wing", "Hurricane"],
+        "item": null
+      },
+      {
+        "species": "Pidgey",
+        "level": 8,
+        "moves": ["Tackle", "Sand Attack", "Quick Attack"],
+        "item": null
+      },
+      {
+        "species": "Noctowl",
+        "level": 11,
+        "moves": ["Tackle", "Mud Slap", "Peck"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[4] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[5] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_FALKNER_1_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_FALKNER_1_HNS[1] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Pidgey", "Hoothoot"],
+    "suggestedStartTR": 1,
+    "suggestedMatureTR": 52
+  },
+  {
+    "id": "bugsy",
+    "name": "Bugsy",
+    "region": "Johto",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Indigo"],
+    "source": {
+      "label": "HNS local reference",
+      "path": "game/src/data/trainers_hns.party",
+      "trainerId": "TRAINER_BUGSY_1_HNS",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Pineco",
+        "level": 15,
+        "moves": ["Pin Missile", "Headbutt", "Rollout", "Harden"],
+        "item": null
+      },
+      {
+        "species": "Ledian",
+        "level": 15,
+        "moves": ["Thunder Punch", "Comet Punch", "Supersonic", "Reflect"],
+        "item": null
+      },
+      {
+        "species": "Scyther",
+        "level": 16,
+        "moves": ["Quick Attack", "Fury Cutter", "U Turn", "Pursuit"],
+        "item": "Berry Juice"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Ledian",
+        "level": 15,
+        "moves": ["Thunder Punch", "Comet Punch", "Supersonic", "Reflect"],
+        "item": null
+      },
+      {
+        "species": "Forretress",
+        "level": 63,
+        "moves": ["Iron Defense", "Rapid Spin", "Gyro Ball", "Earthquake"],
+        "item": null
+      },
+      {
+        "species": "Yanmega",
+        "level": 63,
+        "moves": ["Air Slash", "Screech", "U Turn", "Night Slash"],
+        "item": "Berry Juice"
+      },
+      {
+        "species": "Scizor",
+        "level": 64,
+        "moves": ["Bullet Punch", "X Scissor", "Iron Head", "Swords Dance"],
+        "item": null
+      },
+      {
+        "species": "Pineco",
+        "level": 15,
+        "moves": ["Pin Missile", "Headbutt", "Rollout", "Harden"],
+        "item": null
+      },
+      {
+        "species": "Scyther",
+        "level": 16,
+        "moves": ["Quick Attack", "Fury Cutter", "U Turn", "Pursuit"],
+        "item": "Berry Juice"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_BUGSY_1_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BUGSY_1_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BUGSY_1_HNS[2] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Caterpie", "Weedle"],
+    "suggestedStartTR": 2,
+    "suggestedMatureTR": 52
+  },
+  {
+    "id": "whitney",
+    "name": "Whitney",
+    "region": "Johto",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Indigo"],
+    "source": {
+      "label": "HNS local reference",
+      "path": "game/src/data/trainers_hns.party",
+      "trainerId": "TRAINER_WHITNEY_1_HNS",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Clefairy",
+        "level": 20,
+        "moves": ["Headbutt", "Charm", "Sweet Kiss", "Metronome"],
+        "item": null
+      },
+      {
+        "species": "Teddiursa",
+        "level": 20,
+        "moves": ["Fury Swipes", "Fake Tears", "Lick", "Mud Slap"],
+        "item": null
+      },
+      {
+        "species": "Miltank",
+        "level": 21,
+        "moves": ["Rollout", "Attract", "Stomp", "Milk Drink"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Teddiursa",
+        "level": 20,
+        "moves": ["Fury Swipes", "Fake Tears", "Lick", "Mud Slap"],
+        "item": null
+      },
+      {
+        "species": "Delcatty",
+        "level": 64,
+        "moves": ["Double Edge", "Fake Out", "Attract", "Play Rough"],
+        "item": "Chesto Berry"
+      },
+      {
+        "species": "Blissey",
+        "level": 63,
+        "moves": ["Sing", "Light Screen", "Attract", "Soft Boiled"],
+        "item": null
+      },
+      {
+        "species": "Tauros",
+        "level": 64,
+        "moves": ["Thrash", "Work Up", "Rage", "Giga Impact"],
+        "item": null
+      },
+      {
+        "species": "Clefairy",
+        "level": 20,
+        "moves": ["Headbutt", "Charm", "Sweet Kiss", "Metronome"],
+        "item": null
+      },
+      {
+        "species": "Miltank",
+        "level": 21,
+        "moves": ["Rollout", "Attract", "Stomp", "Milk Drink"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_WHITNEY_1_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_WHITNEY_2_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_WHITNEY_2_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_WHITNEY_2_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_WHITNEY_1_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_WHITNEY_1_HNS[2] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Clefairy", "Meowth"],
+    "suggestedStartTR": 3,
+    "suggestedMatureTR": 52
+  },
+  {
+    "id": "morty",
+    "name": "Morty",
+    "region": "Johto",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "source": {
+      "label": "HNS local reference",
+      "path": "game/src/data/trainers_hns.party",
+      "trainerId": "TRAINER_MORTY_1_HNS",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Haunter",
+        "level": 24,
+        "moves": ["Hypnosis", "Nightmare", "Curse", "Night Shade"],
+        "item": null
+      },
+      {
+        "species": "Stantler",
+        "level": 23,
+        "moves": ["Swift", "Hypnosis", "Nightmare", "Leer"],
+        "item": null
+      },
+      {
+        "species": "Misdreavus",
+        "level": 24,
+        "moves": ["Shadow Ball", "Pain Split", "Perish Song", "Psywave"],
+        "item": null
+      },
+      {
+        "species": "Gengar",
+        "level": 25,
+        "moves": ["Hypnosis", "Shadow Ball", "Mean Look", "Dream Eater"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Misdreavus",
+        "level": 24,
+        "moves": ["Shadow Ball", "Pain Split", "Perish Song", "Psywave"],
+        "item": null
+      },
+      {
+        "species": "Stantler",
+        "level": 23,
+        "moves": ["Swift", "Hypnosis", "Nightmare", "Leer"],
+        "item": null
+      },
+      {
+        "species": "Sableye",
+        "level": 64,
+        "moves": ["Quash", "Foul Play", "Shadow Claw", "Power Gem"],
+        "item": null
+      },
+      {
+        "species": "Mismagius",
+        "level": 63,
+        "moves": ["Shadow Ball", "Magical Leaf", "Pain Split", "Perish Song"],
+        "item": null
+      },
+      {
+        "species": "Haunter",
+        "level": 24,
+        "moves": ["Hypnosis", "Nightmare", "Curse", "Night Shade"],
+        "item": null
+      },
+      {
+        "species": "Gengar",
+        "level": 25,
+        "moves": ["Hypnosis", "Shadow Ball", "Mean Look", "Dream Eater"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MORTY_2_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MORTY_2_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[3] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Gastly", "Misdreavus"],
+    "suggestedStartTR": 3,
+    "suggestedMatureTR": 53
+  },
+  {
+    "id": "chuck",
+    "name": "Chuck",
+    "region": "Johto",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "source": {
+      "label": "HNS local reference",
+      "path": "game/src/data/trainers_hns.party",
+      "trainerId": "TRAINER_CHUCK_1_HNS",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Hitmontop",
+        "level": 30,
+        "moves": ["Triple Kick", "Rolling Kick", "Dig", "Pursuit"],
+        "item": null
+      },
+      {
+        "species": "Primeape",
+        "level": 29,
+        "moves": ["Low Kick", "Karate Chop", "Ice Punch", "Rage"],
+        "item": null
+      },
+      {
+        "species": "Sudowoodo",
+        "level": 30,
+        "moves": ["Rock Slide", "Wood Hammer", "Low Kick", "Faint Attack"],
+        "item": null
+      },
+      {
+        "species": "Poliwrath",
+        "level": 31,
+        "moves": ["Hypnosis", "Mind Reader", "Surf", "Dynamic Punch"],
+        "item": "Black Belt"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Primeape",
+        "level": 29,
+        "moves": ["Low Kick", "Karate Chop", "Ice Punch", "Rage"],
+        "item": null
+      },
+      {
+        "species": "Sudowoodo",
+        "level": 30,
+        "moves": ["Rock Slide", "Wood Hammer", "Low Kick", "Faint Attack"],
+        "item": null
+      },
+      {
+        "species": "Hitmonchan",
+        "level": 64,
+        "moves": ["Fire Punch", "Sky Uppercut", "Thunder Punch", "Mach Punch"],
+        "item": "Scope Lens"
+      },
+      {
+        "species": "Breloom",
+        "level": 65,
+        "moves": ["Mach Punch", "Seed Bomb", "Sky Uppercut", "Drain Punch"],
+        "item": null
+      },
+      {
+        "species": "Hitmontop",
+        "level": 30,
+        "moves": ["Triple Kick", "Rolling Kick", "Dig", "Pursuit"],
+        "item": null
+      },
+      {
+        "species": "Poliwrath",
+        "level": 31,
+        "moves": ["Hypnosis", "Mind Reader", "Surf", "Dynamic Punch"],
+        "item": "Black Belt"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CHUCK_2_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CHUCK_2_HNS[4] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[3] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Machop", "Makuhita"],
+    "suggestedStartTR": 4,
+    "suggestedMatureTR": 53
+  },
+  {
+    "id": "jasmine",
+    "name": "Jasmine",
+    "region": "Johto",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "source": {
+      "label": "HNS local reference",
+      "path": "game/src/data/trainers_hns.party",
+      "trainerId": "TRAINER_JASMINE_1_HNS",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Skarmory",
+        "level": 35,
+        "moves": ["Spikes", "Drill Peck", "Swagger", "Steel Wing"],
+        "item": null
+      },
+      {
+        "species": "Corsola",
+        "level": 35,
+        "moves": ["Rain Dance", "Brine", "Recover", "Ancient Power"],
+        "item": null
+      },
+      {
+        "species": "Magneton",
+        "level": 35,
+        "moves": ["Thunderbolt", "Tri Attack", "Rain Dance", "Thunder"],
+        "item": null
+      },
+      {
+        "species": "Scizor",
+        "level": 36,
+        "moves": ["Bullet Punch", "Metal Claw", "Agility", "Swords Dance"],
+        "item": "Focus Band"
+      },
+      {
+        "species": "Steelix",
+        "level": 36,
+        "moves": ["Crunch", "Earthquake", "Rock Slide", "Iron Tail"],
+        "item": "Quick Claw"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Corsola",
+        "level": 35,
+        "moves": ["Rain Dance", "Brine", "Recover", "Ancient Power"],
+        "item": null
+      },
+      {
+        "species": "Magneton",
+        "level": 35,
+        "moves": ["Thunderbolt", "Tri Attack", "Rain Dance", "Thunder"],
+        "item": null
+      },
+      {
+        "species": "Scizor",
+        "level": 36,
+        "moves": ["Bullet Punch", "Metal Claw", "Agility", "Swords Dance"],
+        "item": "Focus Band"
+      },
+      {
+        "species": "Mawile",
+        "level": 65,
+        "moves": ["Flash Cannon", "Iron Defense", "Baton Pass", "Play Rough"],
+        "item": null
+      },
+      {
+        "species": "Skarmory",
+        "level": 35,
+        "moves": ["Spikes", "Drill Peck", "Swagger", "Steel Wing"],
+        "item": null
+      },
+      {
+        "species": "Steelix",
+        "level": 36,
+        "moves": ["Crunch", "Earthquake", "Rock Slide", "Iron Tail"],
+        "item": "Quick Claw"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JASMINE_2_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[4] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Magnemite", "Aron"],
+    "suggestedStartTR": 4,
+    "suggestedMatureTR": 53
+  },
+  {
+    "id": "pryce",
+    "name": "Pryce",
+    "region": "Johto",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Indigo"],
+    "source": {
+      "label": "HNS local reference",
+      "path": "game/src/data/trainers_hns.party",
+      "trainerId": "TRAINER_PRYCE_1_HNS",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Dewgong",
+        "level": 31,
+        "moves": ["Aqua Ring", "Aurora Beam", "Rain Dance", "Aqua Jet"],
+        "item": null
+      },
+      {
+        "species": "Sneasel",
+        "level": 32,
+        "moves": ["Faint Attack", "Metal Claw", "Hone Claws", "Avalanche"],
+        "item": null
+      },
+      {
+        "species": "Jynx",
+        "level": 31,
+        "moves": ["Ice Punch", "Psychic", "Rain Dance", "Lovely Kiss"],
+        "item": null
+      },
+      {
+        "species": "Piloswine",
+        "level": 33,
+        "moves": ["Headbutt", "Earthquake", "Ancient Power", "Ice Fang"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Dewgong",
+        "level": 31,
+        "moves": ["Aqua Ring", "Aurora Beam", "Rain Dance", "Aqua Jet"],
+        "item": null
+      },
+      {
+        "species": "Jynx",
+        "level": 31,
+        "moves": ["Ice Punch", "Psychic", "Rain Dance", "Lovely Kiss"],
+        "item": null
+      },
+      {
+        "species": "Cloyster",
+        "level": 33,
+        "moves": ["Surf", "Spikes", "Aurora Beam", "Rain Dance"],
+        "item": null
+      },
+      {
+        "species": "Froslass",
+        "level": 64,
+        "moves": ["Shadow Ball", "Blizzard", "Will O Wisp", "Destiny Bond"],
+        "item": null
+      },
+      {
+        "species": "Sneasel",
+        "level": 32,
+        "moves": ["Faint Attack", "Metal Claw", "Hone Claws", "Avalanche"],
+        "item": null
+      },
+      {
+        "species": "Piloswine",
+        "level": 33,
+        "moves": ["Headbutt", "Earthquake", "Ancient Power", "Ice Fang"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_PRYCE_1_2_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_PRYCE_2_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[3] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Seel", "Swinub"],
+    "suggestedStartTR": 4,
+    "suggestedMatureTR": 54
+  },
+  {
+    "id": "clair",
+    "name": "Clair",
+    "region": "Johto",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Indigo"],
+    "source": {
+      "label": "HNS local reference",
+      "path": "game/src/data/trainers_hns.party",
+      "trainerId": "TRAINER_CLAIR_1_HNS",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Dragonair",
+        "level": 42,
+        "moves": ["Thunder Wave", "Thunderbolt", "Flamethrower", "Dragon Tail"],
+        "item": null
+      },
+      {
+        "species": "Gyarados",
+        "level": 43,
+        "moves": ["Bite", "Waterfall", "Fly", "Ice Fang"],
+        "item": "Focus Band"
+      },
+      {
+        "species": "Lapras",
+        "level": 43,
+        "moves": ["Brine", "Ice Beam", "Body Slam", "Rest"],
+        "item": "Chesto Berry"
+      },
+      {
+        "species": "Dudunsparce",
+        "level": 44,
+        "moves": ["Glare", "Ancient Power", "Rest", "Poison Jab"],
+        "item": "Sitrus Berry"
+      },
+      {
+        "species": "Kingdra",
+        "level": 45,
+        "moves": ["Agility", "Surf", "Hyper Beam", "Dragon Pulse"],
+        "item": "Leftovers"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Gyarados",
+        "level": 43,
+        "moves": ["Bite", "Waterfall", "Fly", "Ice Fang"],
+        "item": "Focus Band"
+      },
+      {
+        "species": "Lapras",
+        "level": 43,
+        "moves": ["Brine", "Ice Beam", "Body Slam", "Rest"],
+        "item": "Chesto Berry"
+      },
+      {
+        "species": "Dudunsparce",
+        "level": 44,
+        "moves": ["Glare", "Ancient Power", "Rest", "Poison Jab"],
+        "item": "Sitrus Berry"
+      },
+      {
+        "species": "Shelgon",
+        "level": 64,
+        "moves": ["Thunder Wave", "Zen Headbutt", "Flamethrower", "Dragon Claw"],
+        "item": "Sitrus Berry"
+      },
+      {
+        "species": "Dragonair",
+        "level": 42,
+        "moves": ["Thunder Wave", "Thunderbolt", "Flamethrower", "Dragon Tail"],
+        "item": null
+      },
+      {
+        "species": "Kingdra",
+        "level": 45,
+        "moves": ["Agility", "Surf", "Hyper Beam", "Dragon Pulse"],
+        "item": "Leftovers"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CLAIR_2_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[4] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Dratini", "Horsea"],
+    "suggestedStartTR": 5,
+    "suggestedMatureTR": 54
+  },
+  {
+    "id": "will",
+    "name": "Will",
+    "region": "Johto",
+    "role": "Elite Four",
+    "gymEligible": false,
+    "homeLeagues": ["Indigo"],
+    "source": {
+      "label": "HNS local reference",
+      "path": "game/src/data/trainers_hns.party",
+      "trainerId": "TRAINER_WILL_1_HNS",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Start TR follows the earlier canonical encounter calibration; this stronger HNS party is comparison evidence, not the prototype start-level target."
+    },
+    "referenceParty": [
+      {
+        "species": "Girafarig",
+        "level": 48,
+        "moves": ["Zen Headbutt", "Nasty Plot", "Agility", "Baton Pass"],
+        "item": null
+      },
+      {
+        "species": "Slowking",
+        "level": 49,
+        "moves": ["Amnesia", "Fire Punch", "Surf", "Psychic"],
+        "item": null
+      },
+      {
+        "species": "Espeon",
+        "level": 48,
+        "moves": ["Psychic", "Shadow Ball", "Reflect", "Headbutt"],
+        "item": null
+      },
+      {
+        "species": "Slowbro",
+        "level": 49,
+        "moves": ["Curse", "Rock Smash", "Body Slam", "Zen Headbutt"],
+        "item": "Quick Claw"
+      },
+      {
+        "species": "Xatu",
+        "level": 50,
+        "moves": ["Air Slash", "Recover", "Confuse Ray", "Psychic"],
+        "item": "Twisted Spoon"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Girafarig",
+        "level": 48,
+        "moves": ["Zen Headbutt", "Nasty Plot", "Agility", "Baton Pass"],
+        "item": null
+      },
+      {
+        "species": "Slowking",
+        "level": 49,
+        "moves": ["Amnesia", "Fire Punch", "Surf", "Psychic"],
+        "item": null
+      },
+      {
+        "species": "Espeon",
+        "level": 48,
+        "moves": ["Psychic", "Shadow Ball", "Reflect", "Headbutt"],
+        "item": null
+      },
+      {
+        "species": "Slowbro",
+        "level": 49,
+        "moves": ["Curse", "Rock Smash", "Body Slam", "Zen Headbutt"],
+        "item": "Quick Claw"
+      },
+      {
+        "species": "Xatu",
+        "level": 50,
+        "moves": ["Air Slash", "Recover", "Confuse Ray", "Psychic"],
+        "item": "Twisted Spoon"
+      }
+    ],
+    "competitiveSource": "Experimental reuse of game/src/data/trainers_hns.party:TRAINER_WILL_1_HNS; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
+    "earlyParty": [],
+    "suggestedStartTR": 40,
+    "suggestedMatureTR": 55
+  },
+  {
+    "id": "karen",
+    "name": "Karen",
+    "region": "Johto",
+    "role": "Elite Four",
+    "gymEligible": false,
+    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "source": {
+      "label": "HNS local reference",
+      "path": "game/src/data/trainers_hns.party",
+      "trainerId": "TRAINER_KAREN_1_HNS",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Start TR follows the earlier canonical encounter calibration; this stronger HNS party is comparison evidence, not the prototype start-level target."
+    },
+    "referenceParty": [
+      {
+        "species": "Umbreon",
+        "level": 54,
+        "moves": ["Faint Attack", "Double Team", "Baton Pass", "Moonlight"],
+        "item": "Sitrus Berry"
+      },
+      {
+        "species": "Gengar",
+        "level": 53,
+        "moves": ["Shadow Ball", "Hypnosis", "Dream Eater", "Confuse Ray"],
+        "item": null
+      },
+      {
+        "species": "Vileplume",
+        "level": 53,
+        "moves": ["Sleep Powder", "Giga Drain", "Leech Seed", "Substitute"],
+        "item": "Leftovers"
+      },
+      {
+        "species": "Honchkrow",
+        "level": 53,
+        "moves": ["Air Slash", "Faint Attack", "Steel Wing", "Haze"],
+        "item": "Sharp Beak"
+      },
+      {
+        "species": "Houndoom",
+        "level": 55,
+        "moves": ["Flamethrower", "Crunch", "Iron Tail", "Reversal"],
+        "item": "Black Glasses"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Umbreon",
+        "level": 54,
+        "moves": ["Faint Attack", "Double Team", "Baton Pass", "Moonlight"],
+        "item": "Sitrus Berry"
+      },
+      {
+        "species": "Gengar",
+        "level": 53,
+        "moves": ["Shadow Ball", "Hypnosis", "Dream Eater", "Confuse Ray"],
+        "item": null
+      },
+      {
+        "species": "Vileplume",
+        "level": 53,
+        "moves": ["Sleep Powder", "Giga Drain", "Leech Seed", "Substitute"],
+        "item": "Leftovers"
+      },
+      {
+        "species": "Honchkrow",
+        "level": 53,
+        "moves": ["Air Slash", "Faint Attack", "Steel Wing", "Haze"],
+        "item": "Sharp Beak"
+      },
+      {
+        "species": "Houndoom",
+        "level": 55,
+        "moves": ["Flamethrower", "Crunch", "Iron Tail", "Reversal"],
+        "item": "Black Glasses"
+      }
+    ],
+    "competitiveSource": "Experimental reuse of game/src/data/trainers_hns.party:TRAINER_KAREN_1_HNS; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
+    "earlyParty": [],
+    "suggestedStartTR": 44,
+    "suggestedMatureTR": 57
+  },
+  {
+    "id": "roxanne",
+    "name": "Roxanne",
+    "region": "Hoenn",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Hoenn"],
+    "source": {
+      "label": "Emerald local reference",
+      "path": "game/src/data/trainers.party",
+      "trainerId": "TRAINER_ROXANNE_1",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Geodude",
+        "level": 12,
+        "moves": ["Tackle", "Defense Curl", "Rock Throw", "Rock Tomb"],
+        "item": null
+      },
+      {
+        "species": "Geodude",
+        "level": 12,
+        "moves": ["Tackle", "Defense Curl", "Rock Throw", "Rock Tomb"],
+        "item": null
+      },
+      {
+        "species": "Nosepass",
+        "level": 15,
+        "moves": ["Block", "Harden", "Tackle", "Rock Tomb"],
+        "item": "Oran Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Geodude",
+        "level": 12,
+        "moves": ["Tackle", "Defense Curl", "Rock Throw", "Rock Tomb"],
+        "item": null
+      },
+      {
+        "species": "Kabuto",
+        "level": 35,
+        "moves": ["Swords Dance", "Ice Beam", "Surf", "Rock Slide"],
+        "item": "Sitrus Berry"
+      },
+      {
+        "species": "Onix",
+        "level": 35,
+        "moves": ["Iron Tail", "Explosion", "Roar", "Rock Slide"],
+        "item": null
+      },
+      {
+        "species": "Omanyte",
+        "level": 37,
+        "moves": ["Protect", "Ice Beam", "Rock Slide", "Surf"],
+        "item": null
+      },
+      {
+        "species": "Geodude",
+        "level": 12,
+        "moves": ["Tackle", "Defense Curl", "Rock Throw", "Rock Tomb"],
+        "item": null
+      },
+      {
+        "species": "Nosepass",
+        "level": 15,
+        "moves": ["Block", "Harden", "Tackle", "Rock Tomb"],
+        "item": "Oran Berry"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers.party:TRAINER_ROXANNE_1[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_ROXANNE_2[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_ROXANNE_2[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_ROXANNE_3[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_ROXANNE_1[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_ROXANNE_1[2] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Geodude", "Nosepass"],
+    "suggestedStartTR": 3,
+    "suggestedMatureTR": 52
+  },
+  {
+    "id": "brawly",
+    "name": "Brawly",
+    "region": "Hoenn",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Hoenn"],
+    "source": {
+      "label": "Emerald local reference",
+      "path": "game/src/data/trainers.party",
+      "trainerId": "TRAINER_BRAWLY_1",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Machop",
+        "level": 16,
+        "moves": ["Karate Chop", "Low Kick", "Seismic Toss", "Bulk Up"],
+        "item": null
+      },
+      {
+        "species": "Meditite",
+        "level": 16,
+        "moves": ["Focus Punch", "Light Screen", "Reflect", "Bulk Up"],
+        "item": null
+      },
+      {
+        "species": "Makuhita",
+        "level": 19,
+        "moves": ["Arm Thrust", "Vital Throw", "Reversal", "Bulk Up"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Meditite",
+        "level": 16,
+        "moves": ["Focus Punch", "Light Screen", "Reflect", "Bulk Up"],
+        "item": null
+      },
+      {
+        "species": "Hitmontop",
+        "level": 35,
+        "moves": ["Pursuit", "Counter", "Protect", "Triple Kick"],
+        "item": null
+      },
+      {
+        "species": "Machamp",
+        "level": 33,
+        "moves": ["Karate Chop", "Rock Slide", "Focus Punch", "Bulk Up"],
+        "item": "Sitrus Berry"
+      },
+      {
+        "species": "Hariyama",
+        "level": 37,
+        "moves": ["Fake Out", "Focus Punch", "Belly Drum", "Earthquake"],
+        "item": "Sitrus Berry"
+      },
+      {
+        "species": "Machop",
+        "level": 16,
+        "moves": ["Karate Chop", "Low Kick", "Seismic Toss", "Bulk Up"],
+        "item": null
+      },
+      {
+        "species": "Makuhita",
+        "level": 19,
+        "moves": ["Arm Thrust", "Vital Throw", "Reversal", "Bulk Up"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers.party:TRAINER_BRAWLY_1[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_BRAWLY_2[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_BRAWLY_2[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_BRAWLY_2[3] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_BRAWLY_1[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_BRAWLY_1[2] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Machop", "Makuhita"],
+    "suggestedStartTR": 3,
+    "suggestedMatureTR": 52
+  },
+  {
+    "id": "wattson",
+    "name": "Wattson",
+    "region": "Hoenn",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Hoenn"],
+    "source": {
+      "label": "Emerald local reference",
+      "path": "game/src/data/trainers.party",
+      "trainerId": "TRAINER_WATTSON_1",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Voltorb",
+        "level": 20,
+        "moves": ["Rollout", "Spark", "Self Destruct", "Shock Wave"],
+        "item": null
+      },
+      {
+        "species": "Electrike",
+        "level": 20,
+        "moves": ["Shock Wave", "Leer", "Quick Attack", "Howl"],
+        "item": null
+      },
+      {
+        "species": "Magneton",
+        "level": 22,
+        "moves": ["Supersonic", "Shock Wave", "Thunder Wave", "Sonic Boom"],
+        "item": null
+      },
+      {
+        "species": "Manectric",
+        "level": 24,
+        "moves": ["Quick Attack", "Thunder Wave", "Shock Wave", "Howl"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Voltorb",
+        "level": 20,
+        "moves": ["Rollout", "Spark", "Self Destruct", "Shock Wave"],
+        "item": null
+      },
+      {
+        "species": "Electrike",
+        "level": 20,
+        "moves": ["Shock Wave", "Leer", "Quick Attack", "Howl"],
+        "item": null
+      },
+      {
+        "species": "Electrode",
+        "level": 36,
+        "moves": ["Rollout", "Thunder", "Explosion", "Rain Dance"],
+        "item": null
+      },
+      {
+        "species": "Ampharos",
+        "level": 46,
+        "moves": ["Thunder", "Protect", "Thunder Wave", "Light Screen"],
+        "item": null
+      },
+      {
+        "species": "Magneton",
+        "level": 22,
+        "moves": ["Supersonic", "Shock Wave", "Thunder Wave", "Sonic Boom"],
+        "item": null
+      },
+      {
+        "species": "Manectric",
+        "level": 24,
+        "moves": ["Quick Attack", "Thunder Wave", "Shock Wave", "Howl"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers.party:TRAINER_WATTSON_1[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WATTSON_1[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WATTSON_2[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WATTSON_4[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WATTSON_1[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WATTSON_1[3] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Voltorb", "Electrike"],
+    "suggestedStartTR": 3,
+    "suggestedMatureTR": 53
+  },
+  {
+    "id": "flannery",
+    "name": "Flannery",
+    "region": "Hoenn",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Hoenn"],
+    "source": {
+      "label": "Emerald local reference",
+      "path": "game/src/data/trainers.party",
+      "trainerId": "TRAINER_FLANNERY_1",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Numel",
+        "level": 24,
+        "moves": ["Overheat", "Take Down", "Magnitude", "Sunny Day"],
+        "item": null
+      },
+      {
+        "species": "Slugma",
+        "level": 24,
+        "moves": ["Overheat", "Smog", "Light Screen", "Sunny Day"],
+        "item": null
+      },
+      {
+        "species": "Camerupt",
+        "level": 26,
+        "moves": ["Overheat", "Tackle", "Sunny Day", "Attract"],
+        "item": null
+      },
+      {
+        "species": "Torkoal",
+        "level": 29,
+        "moves": ["Overheat", "Sunny Day", "Body Slam", "Attract"],
+        "item": "White Herb"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Slugma",
+        "level": 24,
+        "moves": ["Overheat", "Smog", "Light Screen", "Sunny Day"],
+        "item": null
+      },
+      {
+        "species": "Camerupt",
+        "level": 26,
+        "moves": ["Overheat", "Tackle", "Sunny Day", "Attract"],
+        "item": null
+      },
+      {
+        "species": "Magcargo",
+        "level": 38,
+        "moves": ["Overheat", "Attract", "Light Screen", "Rock Slide"],
+        "item": "White Herb"
+      },
+      {
+        "species": "Ponyta",
+        "level": 36,
+        "moves": ["Flamethrower", "Attract", "Solar Beam", "Bounce"],
+        "item": null
+      },
+      {
+        "species": "Numel",
+        "level": 24,
+        "moves": ["Overheat", "Take Down", "Magnitude", "Sunny Day"],
+        "item": null
+      },
+      {
+        "species": "Torkoal",
+        "level": 29,
+        "moves": ["Overheat", "Sunny Day", "Body Slam", "Attract"],
+        "item": "White Herb"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers.party:TRAINER_FLANNERY_1[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_FLANNERY_1[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_FLANNERY_2[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_FLANNERY_2[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_FLANNERY_1[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_FLANNERY_1[3] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Numel", "Slugma"],
+    "suggestedStartTR": 4,
+    "suggestedMatureTR": 53
+  },
+  {
+    "id": "norman",
+    "name": "Norman",
+    "region": "Hoenn",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Hoenn"],
+    "source": {
+      "label": "Emerald local reference",
+      "path": "game/src/data/trainers.party",
+      "trainerId": "TRAINER_NORMAN_1",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Spinda",
+        "level": 27,
+        "moves": ["Teeter Dance", "Psybeam", "Facade", "Encore"],
+        "item": null
+      },
+      {
+        "species": "Vigoroth",
+        "level": 27,
+        "moves": ["Slash", "Facade", "Encore", "Feint Attack"],
+        "item": null
+      },
+      {
+        "species": "Linoone",
+        "level": 29,
+        "moves": ["Slash", "Belly Drum", "Facade", "Headbutt"],
+        "item": null
+      },
+      {
+        "species": "Slaking",
+        "level": 31,
+        "moves": ["Counter", "Yawn", "Facade", "Feint Attack"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Spinda",
+        "level": 27,
+        "moves": ["Teeter Dance", "Psybeam", "Facade", "Encore"],
+        "item": null
+      },
+      {
+        "species": "Linoone",
+        "level": 29,
+        "moves": ["Slash", "Belly Drum", "Facade", "Headbutt"],
+        "item": null
+      },
+      {
+        "species": "Kangaskhan",
+        "level": 45,
+        "moves": ["Fake Out", "Dizzy Punch", "Endure", "Reversal"],
+        "item": null
+      },
+      {
+        "species": "Tauros",
+        "level": 57,
+        "moves": ["Take Down", "Protect", "Fire Blast", "Earthquake"],
+        "item": null
+      },
+      {
+        "species": "Vigoroth",
+        "level": 27,
+        "moves": ["Slash", "Facade", "Encore", "Feint Attack"],
+        "item": null
+      },
+      {
+        "species": "Slaking",
+        "level": 31,
+        "moves": ["Counter", "Yawn", "Facade", "Feint Attack"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers.party:TRAINER_NORMAN_1[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_NORMAN_1[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_NORMAN_3[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_NORMAN_5[3] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_NORMAN_1[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_NORMAN_1[3] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Slakoth", "Zigzagoon"],
+    "suggestedStartTR": 4,
+    "suggestedMatureTR": 53
+  },
+  {
+    "id": "winona",
+    "name": "Winona",
+    "region": "Hoenn",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Hoenn"],
+    "source": {
+      "label": "Emerald local reference",
+      "path": "game/src/data/trainers.party",
+      "trainerId": "TRAINER_WINONA_1",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Swablu",
+        "level": 29,
+        "moves": ["Perish Song", "Mirror Move", "Safeguard", "Aerial Ace"],
+        "item": null
+      },
+      {
+        "species": "Tropius",
+        "level": 29,
+        "moves": ["Sunny Day", "Aerial Ace", "Solar Beam", "Synthesis"],
+        "item": null
+      },
+      {
+        "species": "Pelipper",
+        "level": 30,
+        "moves": ["Water Gun", "Supersonic", "Protect", "Aerial Ace"],
+        "item": null
+      },
+      {
+        "species": "Skarmory",
+        "level": 31,
+        "moves": ["Sand Attack", "Fury Attack", "Steel Wing", "Aerial Ace"],
+        "item": null
+      },
+      {
+        "species": "Altaria",
+        "level": 33,
+        "moves": ["Earthquake", "Dragon Breath", "Dragon Dance", "Aerial Ace"],
+        "item": "Oran Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Tropius",
+        "level": 29,
+        "moves": ["Sunny Day", "Aerial Ace", "Solar Beam", "Synthesis"],
+        "item": null
+      },
+      {
+        "species": "Pelipper",
+        "level": 30,
+        "moves": ["Water Gun", "Supersonic", "Protect", "Aerial Ace"],
+        "item": null
+      },
+      {
+        "species": "Skarmory",
+        "level": 31,
+        "moves": ["Sand Attack", "Fury Attack", "Steel Wing", "Aerial Ace"],
+        "item": null
+      },
+      {
+        "species": "Dratini",
+        "level": 40,
+        "moves": ["Thunder Wave", "Thunderbolt", "Protect", "Ice Beam"],
+        "item": "Sitrus Berry"
+      },
+      {
+        "species": "Swablu",
+        "level": 29,
+        "moves": ["Perish Song", "Mirror Move", "Safeguard", "Aerial Ace"],
+        "item": null
+      },
+      {
+        "species": "Altaria",
+        "level": 33,
+        "moves": ["Earthquake", "Dragon Breath", "Dragon Dance", "Aerial Ace"],
+        "item": "Oran Berry"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers.party:TRAINER_WINONA_1[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WINONA_1[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WINONA_1[3] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WINONA_2[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WINONA_1[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WINONA_1[4] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Swablu", "Taillow"],
+    "suggestedStartTR": 4,
+    "suggestedMatureTR": 54
+  },
+  {
+    "id": "juan",
+    "name": "Juan",
+    "region": "Hoenn",
+    "role": "Gym Leader",
+    "gymEligible": true,
+    "homeLeagues": ["Hoenn"],
+    "source": {
+      "label": "Emerald local reference",
+      "path": "game/src/data/trainers.party",
+      "trainerId": "TRAINER_JUAN_1",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+    },
+    "referenceParty": [
+      {
+        "species": "Luvdisc",
+        "level": 41,
+        "moves": ["Water Pulse", "Attract", "Sweet Kiss", "Flail"],
+        "item": null
+      },
+      {
+        "species": "Whiscash",
+        "level": 41,
+        "moves": ["Rain Dance", "Water Pulse", "Amnesia", "Earthquake"],
+        "item": null
+      },
+      {
+        "species": "Sealeo",
+        "level": 43,
+        "moves": ["Encore", "Body Slam", "Aurora Beam", "Water Pulse"],
+        "item": null
+      },
+      {
+        "species": "Crawdaunt",
+        "level": 43,
+        "moves": ["Water Pulse", "Crabhammer", "Taunt", "Leer"],
+        "item": null
+      },
+      {
+        "species": "Kingdra",
+        "level": 46,
+        "moves": ["Water Pulse", "Double Team", "Ice Beam", "Rest"],
+        "item": "Chesto Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Whiscash",
+        "level": 41,
+        "moves": ["Rain Dance", "Water Pulse", "Amnesia", "Earthquake"],
+        "item": null
+      },
+      {
+        "species": "Sealeo",
+        "level": 43,
+        "moves": ["Encore", "Body Slam", "Aurora Beam", "Water Pulse"],
+        "item": null
+      },
+      {
+        "species": "Crawdaunt",
+        "level": 43,
+        "moves": ["Water Pulse", "Crabhammer", "Taunt", "Leer"],
+        "item": null
+      },
+      {
+        "species": "Walrein",
+        "level": 48,
+        "moves": ["Water Pulse", "Body Slam", "Protect", "Ice Beam"],
+        "item": null
+      },
+      {
+        "species": "Luvdisc",
+        "level": 41,
+        "moves": ["Water Pulse", "Attract", "Sweet Kiss", "Flail"],
+        "item": null
+      },
+      {
+        "species": "Kingdra",
+        "level": 46,
+        "moves": ["Water Pulse", "Double Team", "Ice Beam", "Rest"],
+        "item": "Chesto Berry"
+      }
+    ],
+    "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers.party:TRAINER_JUAN_1[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_JUAN_1[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_JUAN_1[3] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_JUAN_2[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_JUAN_1[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_JUAN_1[4] (offset 0, ace true, AUTHORED)",
+    "earlyParty": ["Horsea", "Barboach"],
+    "suggestedStartTR": 5,
+    "suggestedMatureTR": 54
+  },
+  {
+    "id": "sidney",
+    "name": "Sidney",
+    "region": "Hoenn",
+    "role": "Elite Four",
+    "gymEligible": false,
+    "homeLeagues": ["Hoenn"],
+    "source": {
+      "label": "Emerald local reference",
+      "path": "game/src/data/trainers.party",
+      "trainerId": "TRAINER_SIDNEY",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams."
+    },
+    "referenceParty": [
+      {
+        "species": "Mightyena",
+        "level": 46,
+        "moves": ["Roar", "Double Edge", "Sand Attack", "Crunch"],
+        "item": null
+      },
+      {
+        "species": "Shiftry",
+        "level": 48,
+        "moves": ["Torment", "Double Team", "Swagger", "Extrasensory"],
+        "item": null
+      },
+      {
+        "species": "Cacturne",
+        "level": 46,
+        "moves": ["Leech Seed", "Feint Attack", "Needle Arm", "Cotton Spore"],
+        "item": null
+      },
+      {
+        "species": "Crawdaunt",
+        "level": 48,
+        "moves": ["Surf", "Swords Dance", "Strength", "Facade"],
+        "item": null
+      },
+      {
+        "species": "Absol",
+        "level": 49,
+        "moves": ["Aerial Ace", "Rock Slide", "Swords Dance", "Slash"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Mightyena",
+        "level": 46,
+        "moves": ["Roar", "Double Edge", "Sand Attack", "Crunch"],
+        "item": null
+      },
+      {
+        "species": "Shiftry",
+        "level": 48,
+        "moves": ["Torment", "Double Team", "Swagger", "Extrasensory"],
+        "item": null
+      },
+      {
+        "species": "Cacturne",
+        "level": 46,
+        "moves": ["Leech Seed", "Feint Attack", "Needle Arm", "Cotton Spore"],
+        "item": null
+      },
+      {
+        "species": "Crawdaunt",
+        "level": 48,
+        "moves": ["Surf", "Swords Dance", "Strength", "Facade"],
+        "item": null
+      },
+      {
+        "species": "Absol",
+        "level": 49,
+        "moves": ["Aerial Ace", "Rock Slide", "Swords Dance", "Slash"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental reuse of game/src/data/trainers.party:TRAINER_SIDNEY; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
+    "earlyParty": [],
+    "suggestedStartTR": 46,
+    "suggestedMatureTR": 55
+  },
+  {
+    "id": "phoebe",
+    "name": "Phoebe",
+    "region": "Hoenn",
+    "role": "Elite Four",
+    "gymEligible": false,
+    "homeLeagues": ["Hoenn"],
+    "source": {
+      "label": "Emerald local reference",
+      "path": "game/src/data/trainers.party",
+      "trainerId": "TRAINER_PHOEBE",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams."
+    },
+    "referenceParty": [
+      {
+        "species": "Dusclops",
+        "level": 48,
+        "moves": ["Shadow Punch", "Confuse Ray", "Curse", "Protect"],
+        "item": null
+      },
+      {
+        "species": "Banette",
+        "level": 49,
+        "moves": ["Shadow Ball", "Grudge", "Will O Wisp", "Feint Attack"],
+        "item": null
+      },
+      {
+        "species": "Sableye",
+        "level": 50,
+        "moves": ["Shadow Ball", "Double Team", "Night Shade", "Feint Attack"],
+        "item": null
+      },
+      {
+        "species": "Banette",
+        "level": 49,
+        "moves": ["Shadow Ball", "Psychic", "Thunderbolt", "Facade"],
+        "item": null
+      },
+      {
+        "species": "Dusclops",
+        "level": 51,
+        "moves": ["Shadow Ball", "Ice Beam", "Rock Slide", "Earthquake"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Dusclops",
+        "level": 48,
+        "moves": ["Shadow Punch", "Confuse Ray", "Curse", "Protect"],
+        "item": null
+      },
+      {
+        "species": "Banette",
+        "level": 49,
+        "moves": ["Shadow Ball", "Grudge", "Will O Wisp", "Feint Attack"],
+        "item": null
+      },
+      {
+        "species": "Sableye",
+        "level": 50,
+        "moves": ["Shadow Ball", "Double Team", "Night Shade", "Feint Attack"],
+        "item": null
+      },
+      {
+        "species": "Banette",
+        "level": 49,
+        "moves": ["Shadow Ball", "Psychic", "Thunderbolt", "Facade"],
+        "item": null
+      },
+      {
+        "species": "Dusclops",
+        "level": 51,
+        "moves": ["Shadow Ball", "Ice Beam", "Rock Slide", "Earthquake"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental reuse of game/src/data/trainers.party:TRAINER_PHOEBE; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
+    "earlyParty": [],
+    "suggestedStartTR": 47,
+    "suggestedMatureTR": 56
+  },
+  {
+    "id": "glacia",
+    "name": "Glacia",
+    "region": "Hoenn",
+    "role": "Elite Four",
+    "gymEligible": false,
+    "homeLeagues": ["Hoenn"],
+    "source": {
+      "label": "Emerald local reference",
+      "path": "game/src/data/trainers.party",
+      "trainerId": "TRAINER_GLACIA",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams."
+    },
+    "referenceParty": [
+      {
+        "species": "Sealeo",
+        "level": 50,
+        "moves": ["Encore", "Body Slam", "Hail", "Ice Ball"],
+        "item": null
+      },
+      {
+        "species": "Glalie",
+        "level": 50,
+        "moves": ["Light Screen", "Crunch", "Icy Wind", "Ice Beam"],
+        "item": null
+      },
+      {
+        "species": "Sealeo",
+        "level": 52,
+        "moves": ["Attract", "Double Edge", "Hail", "Blizzard"],
+        "item": null
+      },
+      {
+        "species": "Glalie",
+        "level": 52,
+        "moves": ["Shadow Ball", "Explosion", "Hail", "Ice Beam"],
+        "item": null
+      },
+      {
+        "species": "Walrein",
+        "level": 53,
+        "moves": ["Surf", "Body Slam", "Ice Beam", "Sheer Cold"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Sealeo",
+        "level": 50,
+        "moves": ["Encore", "Body Slam", "Hail", "Ice Ball"],
+        "item": null
+      },
+      {
+        "species": "Glalie",
+        "level": 50,
+        "moves": ["Light Screen", "Crunch", "Icy Wind", "Ice Beam"],
+        "item": null
+      },
+      {
+        "species": "Sealeo",
+        "level": 52,
+        "moves": ["Attract", "Double Edge", "Hail", "Blizzard"],
+        "item": null
+      },
+      {
+        "species": "Glalie",
+        "level": 52,
+        "moves": ["Shadow Ball", "Explosion", "Hail", "Ice Beam"],
+        "item": null
+      },
+      {
+        "species": "Walrein",
+        "level": 53,
+        "moves": ["Surf", "Body Slam", "Ice Beam", "Sheer Cold"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental reuse of game/src/data/trainers.party:TRAINER_GLACIA; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
+    "earlyParty": [],
+    "suggestedStartTR": 49,
+    "suggestedMatureTR": 57
+  },
+  {
+    "id": "drake",
+    "name": "Drake",
+    "region": "Hoenn",
+    "role": "Elite Four",
+    "gymEligible": false,
+    "homeLeagues": ["Hoenn"],
+    "source": {
+      "label": "Emerald local reference",
+      "path": "game/src/data/trainers.party",
+      "trainerId": "TRAINER_DRAKE",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams."
+    },
+    "referenceParty": [
+      {
+        "species": "Shelgon",
+        "level": 52,
+        "moves": ["Rock Tomb", "Dragon Claw", "Protect", "Double Edge"],
+        "item": null
+      },
+      {
+        "species": "Altaria",
+        "level": 54,
+        "moves": ["Double Edge", "Dragon Breath", "Dragon Dance", "Aerial Ace"],
+        "item": null
+      },
+      {
+        "species": "Kingdra",
+        "level": 53,
+        "moves": ["Smokescreen", "Dragon Dance", "Surf", "Body Slam"],
+        "item": null
+      },
+      {
+        "species": "Flygon",
+        "level": 53,
+        "moves": ["Flamethrower", "Crunch", "Dragon Breath", "Earthquake"],
+        "item": null
+      },
+      {
+        "species": "Salamence",
+        "level": 55,
+        "moves": ["Flamethrower", "Dragon Claw", "Rock Slide", "Crunch"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Shelgon",
+        "level": 52,
+        "moves": ["Rock Tomb", "Dragon Claw", "Protect", "Double Edge"],
+        "item": null
+      },
+      {
+        "species": "Altaria",
+        "level": 54,
+        "moves": ["Double Edge", "Dragon Breath", "Dragon Dance", "Aerial Ace"],
+        "item": null
+      },
+      {
+        "species": "Kingdra",
+        "level": 53,
+        "moves": ["Smokescreen", "Dragon Dance", "Surf", "Body Slam"],
+        "item": null
+      },
+      {
+        "species": "Flygon",
+        "level": 53,
+        "moves": ["Flamethrower", "Crunch", "Dragon Breath", "Earthquake"],
+        "item": null
+      },
+      {
+        "species": "Salamence",
+        "level": 55,
+        "moves": ["Flamethrower", "Dragon Claw", "Rock Slide", "Crunch"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental reuse of game/src/data/trainers.party:TRAINER_DRAKE; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
+    "earlyParty": [],
+    "suggestedStartTR": 51,
+    "suggestedMatureTR": 58
+  },
+  {
+    "id": "wallace",
+    "name": "Wallace",
+    "region": "Hoenn",
+    "role": "Champion",
+    "gymEligible": false,
+    "homeLeagues": ["Hoenn"],
+    "source": {
+      "label": "Emerald local reference",
+      "path": "game/src/data/trainers.party",
+      "trainerId": "TRAINER_WALLACE",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams."
+    },
+    "referenceParty": [
+      {
+        "species": "Wailord",
+        "level": 57,
+        "moves": ["Rain Dance", "Water Spout", "Double Edge", "Blizzard"],
+        "item": null
+      },
+      {
+        "species": "Tentacruel",
+        "level": 55,
+        "moves": ["Toxic", "Hydro Pump", "Sludge Bomb", "Ice Beam"],
+        "item": null
+      },
+      {
+        "species": "Ludicolo",
+        "level": 56,
+        "moves": ["Giga Drain", "Surf", "Leech Seed", "Double Team"],
+        "item": null
+      },
+      {
+        "species": "Whiscash",
+        "level": 56,
+        "moves": ["Earthquake", "Surf", "Amnesia", "Hyper Beam"],
+        "item": null
+      },
+      {
+        "species": "Gyarados",
+        "level": 56,
+        "moves": ["Dragon Dance", "Earthquake", "Hyper Beam", "Surf"],
+        "item": null
+      },
+      {
+        "species": "Milotic",
+        "level": 58,
+        "moves": ["Recover", "Surf", "Ice Beam", "Toxic"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Wailord",
+        "level": 57,
+        "moves": ["Rain Dance", "Water Spout", "Double Edge", "Blizzard"],
+        "item": null
+      },
+      {
+        "species": "Tentacruel",
+        "level": 55,
+        "moves": ["Toxic", "Hydro Pump", "Sludge Bomb", "Ice Beam"],
+        "item": null
+      },
+      {
+        "species": "Ludicolo",
+        "level": 56,
+        "moves": ["Giga Drain", "Surf", "Leech Seed", "Double Team"],
+        "item": null
+      },
+      {
+        "species": "Whiscash",
+        "level": 56,
+        "moves": ["Earthquake", "Surf", "Amnesia", "Hyper Beam"],
+        "item": null
+      },
+      {
+        "species": "Gyarados",
+        "level": 56,
+        "moves": ["Dragon Dance", "Earthquake", "Hyper Beam", "Surf"],
+        "item": null
+      },
+      {
+        "species": "Milotic",
+        "level": 58,
+        "moves": ["Recover", "Surf", "Ice Beam", "Toxic"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental reuse of game/src/data/trainers.party:TRAINER_WALLACE; source species/levels/moves/items retained.",
+    "earlyParty": [],
+    "suggestedStartTR": 53,
+    "suggestedMatureTR": 59
+  },
+  {
+    "id": "steven",
+    "name": "Steven",
+    "region": "Hoenn",
+    "role": "Champion",
+    "gymEligible": false,
+    "homeLeagues": ["Hoenn"],
+    "source": {
+      "label": "Emerald local reference",
+      "path": "game/src/data/trainers.party",
+      "trainerId": "TRAINER_STEVEN",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Emerald optional late battle (levels 75–78), not the Ruby/Sapphire Champion party. Prototype start TR 53 retains the earlier RS-equivalent calibration; the stronger reference does not set the prototype baseline."
+    },
+    "referenceParty": [
+      {
+        "species": "Skarmory",
+        "level": 77,
+        "moves": ["Toxic", "Aerial Ace", "Spikes", "Steel Wing"],
+        "item": null
+      },
+      {
+        "species": "Claydol",
+        "level": 75,
+        "moves": ["Reflect", "Light Screen", "Ancient Power", "Earthquake"],
+        "item": null
+      },
+      {
+        "species": "Aggron",
+        "level": 76,
+        "moves": ["Thunder", "Earthquake", "Solar Beam", "Dragon Claw"],
+        "item": null
+      },
+      {
+        "species": "Cradily",
+        "level": 76,
+        "moves": ["Giga Drain", "Ancient Power", "Ingrain", "Confuse Ray"],
+        "item": null
+      },
+      {
+        "species": "Armaldo",
+        "level": 76,
+        "moves": ["Water Pulse", "Ancient Power", "Aerial Ace", "Slash"],
+        "item": null
+      },
+      {
+        "species": "Metagross",
+        "level": 78,
+        "moves": ["Earthquake", "Psychic", "Meteor Mash", "Shadow Ball"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveParty": [
+      {
+        "species": "Skarmory",
+        "level": 77,
+        "moves": ["Toxic", "Aerial Ace", "Spikes", "Steel Wing"],
+        "item": null
+      },
+      {
+        "species": "Claydol",
+        "level": 75,
+        "moves": ["Reflect", "Light Screen", "Ancient Power", "Earthquake"],
+        "item": null
+      },
+      {
+        "species": "Aggron",
+        "level": 76,
+        "moves": ["Thunder", "Earthquake", "Solar Beam", "Dragon Claw"],
+        "item": null
+      },
+      {
+        "species": "Cradily",
+        "level": 76,
+        "moves": ["Giga Drain", "Ancient Power", "Ingrain", "Confuse Ray"],
+        "item": null
+      },
+      {
+        "species": "Armaldo",
+        "level": 76,
+        "moves": ["Water Pulse", "Ancient Power", "Aerial Ace", "Slash"],
+        "item": null
+      },
+      {
+        "species": "Metagross",
+        "level": 78,
+        "moves": ["Earthquake", "Psychic", "Meteor Mash", "Shadow Ball"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "competitiveSource": "Experimental reuse of game/src/data/trainers.party:TRAINER_STEVEN; source species/levels/moves/items retained.",
+    "earlyParty": [],
+    "suggestedStartTR": 53,
+    "suggestedMatureTR": 60
+  }
+]
