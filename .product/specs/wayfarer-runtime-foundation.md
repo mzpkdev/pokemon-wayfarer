@@ -123,6 +123,11 @@ Existing Johto and Kanto callers keep their current result.
 
 ### Save storage and lifecycle
 
+The proposed [playthrough seed framework](playthrough-seed-framework.md) adds
+one shared root record and consumer-owned deterministic outcomes under this
+save-storage policy. Its initialization, versioning, and RNG isolation are
+defined in that draft; the extension is not implemented by this document.
+
 The additional Hoenn banks live in `SaveBlock3` or an equivalent separately
 bounded saved structure. The implementation must not enlarge `SaveBlock1`
 past its safe allocation or shift existing HNS fields merely to create Hoenn

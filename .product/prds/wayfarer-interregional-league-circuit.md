@@ -2,6 +2,11 @@
 
 Implemented: Outdated
 
+Proposed successor: [Seeded Trainer Circuit](seeded-trainer-circuit.md) replaces
+the fixed order and lineups with a seeded itinerary and rated trainer pool.
+That draft separates confirmed requirements from proposed defaults. This document
+remains the approved baseline until the successor is adopted.
+
 The current runtime still treats Kanto and Johto as separate League clears at
 the shared Indigo venue. The approved design below replaces that model with one
 shared Indigo League and a separate Sevii Masters Challenge.

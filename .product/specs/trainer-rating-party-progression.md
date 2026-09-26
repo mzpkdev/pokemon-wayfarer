@@ -6,6 +6,11 @@ Implemented: Outdated
 The progression examples require the approved +8/+8/+8 circuit-stage rewards.
 The implementation still uses +15/+5/+4; the soft-cap anchors are unchanged.
 
+The proposed [Seeded Trainer Circuit](../prds/seeded-trainer-circuit.md) retains
+this player TR and cap contract. If adopted, progression examples refer to first,
+second, and third circuit clears rather than a fixed Indigo/Masters/Hoenn order;
+NPC baseline TR remains a separate strength input.
+
 ## Scope
 
 This specification defines the Wayfarer soft level cap, numerical experience

@@ -4,6 +4,12 @@ PRD: [Wayfarer interregional League circuit](../prds/wayfarer-interregional-leag
 
 Implemented: Yes
 
+Proposed successor: [Seeded circuit runtime](seeded-league-circuit.md), with
+[trainer selection and strength](circuit-trainer-pool.md). The parent
+[draft PRD](../prds/seeded-trainer-circuit.md) records confirmed requirements and
+remaining design decisions. This document remains the approved baseline until
+that successor is adopted.
+
 The runtime now uses one persisted circuit stage identity for FRLG Indigo,
 Sevii Masters, and Hoenn. Regional Champion flags are projections of committed
 circuit clears rather than the source of circuit progression.

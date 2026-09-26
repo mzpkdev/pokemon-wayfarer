@@ -3,6 +3,11 @@
 PRD: [League scaling](../prds/league-scaling.md)
 Implemented: Partial
 
+Proposed successor: [Circuit trainer pool and strength](circuit-trainer-pool.md)
+replaces the fixed allowlist and player-entry-TR calculation under draft
+decision D1. [Seeded circuit runtime](seeded-league-circuit.md) owns the proposed
+run lifecycle. This document remains the approved baseline until adoption.
+
 The scaling engine is implemented for the current circuit. See
 [implementation evidence](../research/league-scaling-implementation.md) for
 automated results. Revised Indigo and Masters roster/venue wiring, campaign
