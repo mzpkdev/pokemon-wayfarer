@@ -1092,6 +1092,19 @@ static bool8 TryStartWarpEventScript(struct MapPosition *position, u16 metatileB
     }
 
 #if IS_WAYFARER
+    // FRLG's three Viridian Gym exit events sit on walkable doorway tiles.
+    // Their source metatiles do not satisfy the HNS warp-behavior check.
+    if (gMapHeader.mapLayoutId == LAYOUT_VIRIDIAN_CITY_GYM
+     && warpEventId >= 0 && warpEventId <= 2
+     && position->x - MAP_OFFSET == 16 + warpEventId
+     && position->y - MAP_OFFSET == 22)
+    {
+        StoreInitialPlayerAvatarState();
+        SetupWarp(&gMapHeader, warpEventId, position);
+        DoWarp();
+        return TRUE;
+    }
+
     // The preview Seafoam entrances have exit events on non-warp metatiles.
     // Honor only those two declared exits; the cave's other tiles keep their
     // normal behavior requirements.

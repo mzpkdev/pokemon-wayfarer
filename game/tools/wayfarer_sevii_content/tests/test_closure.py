@@ -140,6 +140,30 @@ class WayfarerSeviiClosureTests(unittest.TestCase):
         with self.assertRaisesRegex(CLOSURE.ClosureError, "script data source lacks gStringVar4"):
             CLOSURE.build_script_closure(self.root, manifest)
 
+    def test_external_insertion_preserves_original_source_pin(self):
+        source = self.root / "data/event_scripts.s"
+        original = "\t.include \"data/maps/Reviewed.inc\"\nReviewed::\n\tend\n"
+        source.write_text(original)
+        row = {
+            "label": "Reviewed", "kind": "script_symbol", "path": "data/event_scripts.s",
+            "sha256": sha(original),
+            "allowed_insertion": {
+                "after": "\t.include \"data/maps/Reviewed.inc\"\n",
+                "text": "\t.include \"data/maps/NewGym.inc\"\n",
+            },
+        }
+        source.write_text(original.replace(row["allowed_insertion"]["after"],
+                                           row["allowed_insertion"]["after"] + row["allowed_insertion"]["text"]))
+        CLOSURE._external_rows(self.root, "story", [row])
+
+        source.write_text(source.read_text().replace("\tend\n", "\tnop\n\tend\n"))
+        with self.assertRaisesRegex(CLOSURE.ClosureError, "external source drifted"):
+            CLOSURE._external_rows(self.root, "story", [row])
+
+        source.write_text(row["allowed_insertion"]["text"] + original)
+        with self.assertRaisesRegex(CLOSURE.ClosureError, "external source drifted"):
+            CLOSURE._external_rows(self.root, "story", [row])
+
     def test_rejects_external_source_path_escape(self):
         manifest = self.manifest()
         manifest["script_modules"]["environment"]["allowed_externals"] = [{

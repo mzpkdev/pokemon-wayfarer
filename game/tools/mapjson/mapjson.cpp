@@ -1440,6 +1440,8 @@ string generate_map_events_text(Json map_data) {
                     quantity = "1";
                 }
                 string underfoot = json_to_string(bg_event, "underfoot", true);
+                if (version == "wayfarer" && !json_to_string(bg_event, "wayfarer_underfoot", true).empty())
+                    underfoot = get_wayfarer_override(bg_event, "underfoot");
                 if (underfoot.empty()) {
                     underfoot = "FALSE";
                 }
@@ -1452,7 +1454,7 @@ string generate_map_events_text(Json map_data) {
                      << json_to_string(bg_event, "y") << ", "
                      << json_to_string(bg_event, "elevation") << ", "
                      << json_to_string(bg_event, "item") << ", "
-                     << json_to_string(bg_event, "flag") << ", "
+                     << get_wayfarer_override(bg_event, "flag") << ", "
                      << quantity << ", "
                      << underfoot << "\n";
             }

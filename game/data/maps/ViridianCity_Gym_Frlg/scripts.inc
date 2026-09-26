@@ -1,6 +1,208 @@
 ViridianCity_Gym_Frlg_MapScripts::
 	.byte 0
 
+#if IS_WAYFARER
+ViridianCity_Gym_EventScript_Giovanni::
+ViridianCity_Gym_EventScript_GiovanniWayfarer::
+	lock
+	faceplayer
+	goto_if_set FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS, ViridianCity_Gym_EventScript_GiovanniDeparted
+	goto_if_defeated TRAINER_VIRIDIAN_GYM_GIOVANNI_HNS, ViridianCity_Gym_EventScript_GiveEarthquake
+	goto_if_not_defeated TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS, ViridianCity_Gym_EventScript_GiovanniHideoutMissing
+	goto_if_unset FLAG_CELADON_ROCKET_HIDEOUT_SILPH_SCOPE_RECEIVED_HNS, ViridianCity_Gym_EventScript_GiovanniScopeMissing
+	goto_if_unset FLAG_SILPH_LIBERATED_HNS, ViridianCity_Gym_EventScript_GiovanniSilphMissing
+	specialvar VAR_RESULT, WayfarerCanStartOrdinaryBattleForScript
+	goto_if_eq VAR_RESULT, FALSE, ViridianCity_Gym_EventScript_NoUsableParty
+	msgbox ViridianCity_Gym_Text_GiovanniWayfarerIntro, MSGBOX_DEFAULT
+	trainerbattle_no_intro TRAINER_VIRIDIAN_GYM_GIOVANNI_HNS, ViridianCity_Gym_Text_GiovanniWayfarerDefeat
+	specialvar VAR_RESULT, GetBattleOutcome
+	goto_if_ne VAR_RESULT, B_OUTCOME_WON, ViridianCity_Gym_EventScript_EndAfterBattle
+	setflag FLAG_DEFEATED_VIRIDIAN_GYM
+	goto_if_set FLAG_BADGE16_GET, ViridianCity_Gym_EventScript_GiveEarthquake
+	message ViridianCity_Gym_Text_ReceivedEarthBadgeWayfarer
+	waitmessage
+	call Common_EventScript_PlayGymBadgeFanfare
+	setflag FLAG_BADGE16_GET
+	addvar VAR_NUM_BADGES, 1
+	setvar VAR_0x8008, 16
+	call Common_EventScript_SetGymTrainers_hns
+	goto ViridianCity_Gym_EventScript_GiveEarthquake
+
+ViridianCity_Gym_EventScript_GiveEarthquake::
+	msgbox ViridianCity_Gym_Text_EarthquakeOffer, MSGBOX_DEFAULT
+	checkitemspace ITEM_TM_EARTHQUAKE
+	goto_if_eq VAR_RESULT, FALSE, ViridianCity_Gym_EventScript_NoRoomForEarthquake
+	additem ITEM_TM_EARTHQUAKE
+	goto_if_eq VAR_RESULT, FALSE, ViridianCity_Gym_EventScript_NoRoomForEarthquake
+	msgreceiveditem ViridianCity_Gym_Text_ReceivedEarthquake, ITEM_TM_EARTHQUAKE, 1, MUS_OBTAIN_ITEM
+	msgbox ViridianCity_Gym_Text_GiovanniDeparture, MSGBOX_DEFAULT
+	setflag FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS
+	closemessage
+	fadescreen FADE_TO_BLACK
+	removeobject LOCALID_VIRIDIAN_GIOVANNI
+	fadescreen FADE_FROM_BLACK
+	release
+	end
+
+ViridianCity_Gym_EventScript_GiovanniHideoutMissing::
+	goto_if_unset FLAG_SILPH_LIBERATED_HNS, ViridianCity_Gym_EventScript_GiovanniBothMissing
+	msgbox ViridianCity_Gym_Text_HideoutMissing, MSGBOX_DEFAULT
+	release
+	end
+
+ViridianCity_Gym_EventScript_GiovanniBothMissing::
+	msgbox ViridianCity_Gym_Text_BothMissing, MSGBOX_DEFAULT
+	release
+	end
+
+ViridianCity_Gym_EventScript_GiovanniScopeMissing::
+	msgbox ViridianCity_Gym_Text_ScopeMissing, MSGBOX_DEFAULT
+	release
+	end
+
+ViridianCity_Gym_EventScript_GiovanniSilphMissing::
+	msgbox ViridianCity_Gym_Text_SilphMissing, MSGBOX_DEFAULT
+	release
+	end
+
+ViridianCity_Gym_EventScript_NoUsableParty::
+	msgbox ViridianCity_Gym_Text_NoUsableParty, MSGBOX_DEFAULT
+	release
+	end
+
+ViridianCity_Gym_EventScript_NoRoomForEarthquake::
+	msgbox ViridianCity_Gym_Text_NoRoomForEarthquake, MSGBOX_DEFAULT
+	release
+	end
+
+ViridianCity_Gym_EventScript_GiovanniDeparted::
+	release
+	end
+
+ViridianCity_Gym_EventScript_EndAfterBattle::
+	release
+	end
+
+ViridianCity_Gym_EventScript_Jason::
+	goto_if_defeated TRAINER_VIRIDIAN_GYM_JASON_HNS, ViridianCity_Gym_EventScript_JasonPost
+	specialvar VAR_RESULT, WayfarerCanStartOrdinaryBattleForScript
+	goto_if_eq VAR_RESULT, FALSE, ViridianCity_Gym_EventScript_OrdinaryNoParty
+ViridianCity_Gym_EventScript_Jason_TrainerBattle::
+	trainerbattle_single TRAINER_VIRIDIAN_GYM_JASON_HNS, ViridianCity_Gym_Text_JasonIntro, ViridianCity_Gym_Text_JasonDefeat
+ViridianCity_Gym_EventScript_JasonPost::
+	msgbox ViridianCity_Gym_Text_JasonPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+ViridianCity_Gym_EventScript_Cole::
+	goto_if_defeated TRAINER_VIRIDIAN_GYM_COLE_HNS, ViridianCity_Gym_EventScript_ColePost
+	specialvar VAR_RESULT, WayfarerCanStartOrdinaryBattleForScript
+	goto_if_eq VAR_RESULT, FALSE, ViridianCity_Gym_EventScript_OrdinaryNoParty
+ViridianCity_Gym_EventScript_Cole_TrainerBattle::
+	trainerbattle_single TRAINER_VIRIDIAN_GYM_COLE_HNS, ViridianCity_Gym_Text_ColeIntro, ViridianCity_Gym_Text_ColeDefeat
+ViridianCity_Gym_EventScript_ColePost::
+	msgbox ViridianCity_Gym_Text_ColePostBattle, MSGBOX_AUTOCLOSE
+	end
+
+ViridianCity_Gym_EventScript_Atsushi::
+	goto_if_defeated TRAINER_VIRIDIAN_GYM_ATSUSHI_HNS, ViridianCity_Gym_EventScript_AtsushiPost
+	specialvar VAR_RESULT, WayfarerCanStartOrdinaryBattleForScript
+	goto_if_eq VAR_RESULT, FALSE, ViridianCity_Gym_EventScript_OrdinaryNoParty
+ViridianCity_Gym_EventScript_Atsushi_TrainerBattle::
+	trainerbattle_single TRAINER_VIRIDIAN_GYM_ATSUSHI_HNS, ViridianCity_Gym_Text_AtsushiIntro, ViridianCity_Gym_Text_AtsushiDefeat
+ViridianCity_Gym_EventScript_AtsushiPost::
+	msgbox ViridianCity_Gym_Text_AtsushiPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+ViridianCity_Gym_EventScript_Kiyo::
+	goto_if_defeated TRAINER_VIRIDIAN_GYM_KIYO_HNS, ViridianCity_Gym_EventScript_KiyoPost
+	specialvar VAR_RESULT, WayfarerCanStartOrdinaryBattleForScript
+	goto_if_eq VAR_RESULT, FALSE, ViridianCity_Gym_EventScript_OrdinaryNoParty
+ViridianCity_Gym_EventScript_Kiyo_TrainerBattle::
+	trainerbattle_single TRAINER_VIRIDIAN_GYM_KIYO_HNS, ViridianCity_Gym_Text_KiyoIntro, ViridianCity_Gym_Text_KiyoDefeat
+ViridianCity_Gym_EventScript_KiyoPost::
+	msgbox ViridianCity_Gym_Text_KiyoPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+ViridianCity_Gym_EventScript_Takashi::
+	goto_if_defeated TRAINER_VIRIDIAN_GYM_TAKASHI_HNS, ViridianCity_Gym_EventScript_TakashiPost
+	specialvar VAR_RESULT, WayfarerCanStartOrdinaryBattleForScript
+	goto_if_eq VAR_RESULT, FALSE, ViridianCity_Gym_EventScript_OrdinaryNoParty
+ViridianCity_Gym_EventScript_Takashi_TrainerBattle::
+	trainerbattle_single TRAINER_VIRIDIAN_GYM_TAKASHI_HNS, ViridianCity_Gym_Text_TakashiIntro, ViridianCity_Gym_Text_TakashiDefeat
+ViridianCity_Gym_EventScript_TakashiPost::
+	msgbox ViridianCity_Gym_Text_TakashiPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+ViridianCity_Gym_EventScript_Samuel::
+	goto_if_defeated TRAINER_VIRIDIAN_GYM_SAMUEL_HNS, ViridianCity_Gym_EventScript_SamuelPost
+	specialvar VAR_RESULT, WayfarerCanStartOrdinaryBattleForScript
+	goto_if_eq VAR_RESULT, FALSE, ViridianCity_Gym_EventScript_OrdinaryNoParty
+ViridianCity_Gym_EventScript_Samuel_TrainerBattle::
+	trainerbattle_single TRAINER_VIRIDIAN_GYM_SAMUEL_HNS, ViridianCity_Gym_Text_SamuelIntro, ViridianCity_Gym_Text_SamuelDefeat
+ViridianCity_Gym_EventScript_SamuelPost::
+	msgbox ViridianCity_Gym_Text_SamuelPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+ViridianCity_Gym_EventScript_Yuji::
+	goto_if_defeated TRAINER_VIRIDIAN_GYM_YUJI_HNS, ViridianCity_Gym_EventScript_YujiPost
+	specialvar VAR_RESULT, WayfarerCanStartOrdinaryBattleForScript
+	goto_if_eq VAR_RESULT, FALSE, ViridianCity_Gym_EventScript_OrdinaryNoParty
+ViridianCity_Gym_EventScript_Yuji_TrainerBattle::
+	trainerbattle_single TRAINER_VIRIDIAN_GYM_YUJI_HNS, ViridianCity_Gym_Text_YujiIntro, ViridianCity_Gym_Text_YujiDefeat
+ViridianCity_Gym_EventScript_YujiPost::
+	msgbox ViridianCity_Gym_Text_YujiPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+ViridianCity_Gym_EventScript_Warren::
+	goto_if_defeated TRAINER_VIRIDIAN_GYM_WARREN_HNS, ViridianCity_Gym_EventScript_WarrenPost
+	specialvar VAR_RESULT, WayfarerCanStartOrdinaryBattleForScript
+	goto_if_eq VAR_RESULT, FALSE, ViridianCity_Gym_EventScript_OrdinaryNoParty
+ViridianCity_Gym_EventScript_Warren_TrainerBattle::
+	trainerbattle_single TRAINER_VIRIDIAN_GYM_WARREN_HNS, ViridianCity_Gym_Text_WarrenIntro, ViridianCity_Gym_Text_WarrenDefeat
+ViridianCity_Gym_EventScript_WarrenPost::
+	msgbox ViridianCity_Gym_Text_WarrenPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+ViridianCity_Gym_EventScript_OrdinaryNoParty::
+	msgbox ViridianCity_Gym_Text_NoUsableParty, MSGBOX_AUTOCLOSE
+	end
+
+ViridianCity_FrlgGym_EventScript_GymGuy::
+	lock
+	faceplayer
+	goto_if_set FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS, ViridianCity_Gym_EventScript_GymGuyPostVictory
+	goto_if_set FLAG_DEFEATED_VIRIDIAN_GYM, ViridianCity_Gym_EventScript_GymGuyBadgeWon
+	goto_if_not_defeated TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS, ViridianCity_Gym_EventScript_GymGuyEarly
+	goto_if_unset FLAG_CELADON_ROCKET_HIDEOUT_SILPH_SCOPE_RECEIVED_HNS, ViridianCity_Gym_EventScript_GymGuyEarly
+	goto_if_unset FLAG_SILPH_LIBERATED_HNS, ViridianCity_Gym_EventScript_GymGuyEarly
+	msgbox ViridianCity_Gym_Text_GymGuyReadyWayfarer, MSGBOX_DEFAULT
+	release
+	end
+ViridianCity_Gym_EventScript_GymGuyEarly::
+	msgbox ViridianCity_Gym_Text_GymGuyEarlyWayfarer, MSGBOX_DEFAULT
+	release
+	end
+ViridianCity_Gym_EventScript_GymGuyBadgeWon::
+	msgbox ViridianCity_Gym_Text_GymGuyRewardPending, MSGBOX_DEFAULT
+	release
+	end
+ViridianCity_Gym_EventScript_GymGuyPostVictory::
+	msgbox ViridianCity_Gym_Text_GymGuyPostVictoryWayfarer, MSGBOX_DEFAULT
+	release
+	end
+
+ViridianCity_FrlgGym_EventScript_GymStatue::
+	lockall
+	goto_if_set FLAG_BADGE16_GET, ViridianCity_FrlgGym_EventScript_GymStatuePostVictory
+	msgbox ViridianCity_Gym_Text_GymStatueWayfarer, MSGBOX_DEFAULT
+	releaseall
+	end
+ViridianCity_FrlgGym_EventScript_GymStatuePostVictory::
+	msgbox ViridianCity_Gym_Text_GymStatuePlayerWonWayfarer, MSGBOX_DEFAULT
+	releaseall
+	end
+
+#else
 ViridianCity_Gym_EventScript_Giovanni::
 	famechecker FAMECHECKER_GIOVANNI, FCPICKSTATE_COLORED, UpdatePickStateFromSpecialVar8005
 	trainerbattle_single TRAINER_LEADER_GIOVANNI, ViridianCity_Gym_Text_GiovanniIntro, ViridianCity_Gym_Text_GiovanniDefeat, ViridianCity_Gym_EventScript_DefeatedGiovanni, NO_MUSIC
@@ -103,6 +305,77 @@ ViridianCity_Gym_EventScript_GymStatuePostVictory::
 	msgbox ViridianCity_Gym_Text_GymStatuePlayerWon
 	releaseall
 	end
+
+
+#endif
+
+#if IS_WAYFARER
+ViridianCity_Gym_Text_GiovanniWayfarerIntro::
+	.string "GIOVANNI: We meet again.\p"
+	.string "The VIRIDIAN GYM is my final\n"
+	.string "challenge to you. Show me all\l"
+	.string "you have learned!$"
+ViridianCity_Gym_Text_GiovanniWayfarerDefeat::
+	.string "GIOVANNI: An intense battle.\n"
+	.string "You have earned your victory.$"
+ViridianCity_Gym_Text_ReceivedEarthBadgeWayfarer::
+	.string "GIOVANNI gave you the\n"
+	.string "EARTHBADGE!$"
+ViridianCity_Gym_Text_EarthquakeOffer::
+	.string "GIOVANNI: The EARTHBADGE is\n"
+	.string "yours. Take this TM as well.\p"
+	.string "It teaches EARTHQUAKE.$"
+ViridianCity_Gym_Text_ReceivedEarthquake::
+	.string "{PLAYER} received a TM for\n"
+	.string "EARTHQUAKE from GIOVANNI.$"
+ViridianCity_Gym_Text_GiovanniDeparture::
+	.string "GIOVANNI: My time as this GYM's\n"
+	.string "LEADER is over. Farewell.$"
+ViridianCity_Gym_Text_HideoutMissing::
+	.string "GIOVANNI: Settle our business\n"
+	.string "in CELADON's ROCKET HIDEOUT\l"
+	.string "before you challenge me here.$"
+ViridianCity_Gym_Text_BothMissing::
+	.string "GIOVANNI: Our business in the\n"
+	.string "CELADON ROCKET HIDEOUT and\l"
+	.string "SILPH CO. is unfinished.$"
+ViridianCity_Gym_Text_ScopeMissing::
+	.string "GIOVANNI: The SILPH SCOPE is\n"
+	.string "still waiting in my hideout.\l"
+	.string "Claim it before we battle.$"
+ViridianCity_Gym_Text_SilphMissing::
+	.string "GIOVANNI: SILPH CO. is still\n"
+	.string "occupied. Free it, then return.$"
+ViridianCity_Gym_Text_NoUsableParty::
+	.string "Bring a POKéMON able to battle\n"
+	.string "before you challenge me.$"
+ViridianCity_Gym_Text_NoRoomForEarthquake::
+	.string "GIOVANNI: Make room in your BAG.\n"
+	.string "Your EARTHQUAKE TM awaits.$"
+ViridianCity_Gym_Text_GymGuyEarlyWayfarer::
+	.string "Yo! Champ in the making!\p"
+	.string "The LEADER is waiting on matters\n"
+	.string "in CELADON and SILPH CO.\p"
+	.string "You can still explore this GYM's\n"
+	.string "arrow maze and challenge us.$"
+ViridianCity_Gym_Text_GymGuyReadyWayfarer::
+	.string "The LEADER is ready now!\n"
+	.string "Watch the floor arrows and keep\l"
+	.string "a GROUND-type counter handy.$"
+ViridianCity_Gym_Text_GymGuyRewardPending::
+	.string "You won the EARTHBADGE!\n"
+	.string "GIOVANNI still has a TM for you.$"
+ViridianCity_Gym_Text_GymGuyPostVictoryWayfarer::
+	.string "GIOVANNI has left, but this\n"
+	.string "GYM and its maze remain open.$"
+ViridianCity_Gym_Text_GymStatueWayfarer::
+	.string "VIRIDIAN POKéMON GYM\n"
+	.string "LEADER: GIOVANNI$"
+ViridianCity_Gym_Text_GymStatuePlayerWonWayfarer::
+	.string "VIRIDIAN POKéMON GYM\n"
+	.string "LEADER: GIOVANNI\p"
+	.string "WINNING TRAINER: {PLAYER}$"
+#endif
 
 ViridianCity_Gym_Text_GiovanniIntro::
 	.string "Fwahahaha!\n"
@@ -263,6 +536,7 @@ ViridianCity_Gym_Text_GymGuyPostVictory::
 	.string "Blow me away! GIOVANNI was the\n"
 	.string "GYM LEADER of VIRIDIAN?$"
 
+#if !IS_WAYFARER
 ViridianCity_Gym_Text_GymStatue::
 	.string "VIRIDIAN POKéMON GYM\n"
 	.string "LEADER: ?\p"
@@ -274,4 +548,4 @@ ViridianCity_Gym_Text_GymStatuePlayerWon::
 	.string "LEADER: GIOVANNI\p"
 	.string "WINNING TRAINERS:\n"
 	.string "{RIVAL}, {PLAYER}$"
-
+#endif

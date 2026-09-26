@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 RECORDS = {
     "trainers_hns.h": ("TRAINER_ABE_HNS", "TRAINER_QUINN_HNS"),
     "trainers.h": ("TRAINER_SAWYER_1",),
+    "trainers_wayfarer_local.h": ("TRAINER_VIRIDIAN_GYM_GIOVANNI_HNS",),
 }
 
 
@@ -36,6 +37,6 @@ if __name__ == "__main__":
     if args.check:
         if target.read_text() != expected:
             raise SystemExit("Trainer scaling production fixtures are stale; regenerate them")
-        print("Trainer scaling production fixtures match trainerproc output (3 records)")
+        print("Trainer scaling production fixtures match trainerproc output (4 records)")
     else:
         target.write_text(expected)

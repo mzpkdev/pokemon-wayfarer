@@ -911,3 +911,285 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 Zubat
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+
+=== TRAINER_VIRIDIAN_GYM_JASON_HNS ===
+Name: JASON
+Class: Tamer Frlg
+Pic: Tamer Frlg
+Gender: Male
+Music: Hiker
+Double Battle: No
+AI: Check Bad Move
+
+Rhyhorn
+Level: 43
+IVs: 4 HP / 4 Atk / 4 Def / 4 SpA / 4 SpD / 4 Spe
+
+=== TRAINER_VIRIDIAN_GYM_COLE_HNS ===
+Name: COLE
+Class: Tamer Frlg
+Pic: Tamer Frlg
+Gender: Male
+Music: Hiker
+Double Battle: No
+AI: Check Bad Move
+
+Arbok
+Level: 39
+IVs: 4 HP / 4 Atk / 4 Def / 4 SpA / 4 SpD / 4 Spe
+
+Tauros
+Level: 39
+IVs: 4 HP / 4 Atk / 4 Def / 4 SpA / 4 SpD / 4 Spe
+
+=== TRAINER_VIRIDIAN_GYM_ATSUSHI_HNS ===
+Name: ATSUSHI
+Class: Black Belt Frlg
+Pic: Black Belt Frlg
+Gender: Male
+Music: Intense
+Double Battle: No
+AI: Check Bad Move
+
+Machop @ Black Belt
+Level: 40
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+
+Machoke @ Black Belt
+Level: 40
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+
+=== TRAINER_VIRIDIAN_GYM_KIYO_HNS ===
+Name: KIYO
+Class: Black Belt Frlg
+Pic: Black Belt Frlg
+Gender: Male
+Music: Intense
+Double Battle: No
+AI: Check Bad Move
+
+Machoke @ Black Belt
+Level: 43
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+
+=== TRAINER_VIRIDIAN_GYM_TAKASHI_HNS ===
+Name: TAKASHI
+Class: Black Belt Frlg
+Pic: Black Belt Frlg
+Gender: Male
+Music: Intense
+Double Battle: No
+AI: Check Bad Move
+
+Machoke @ Black Belt
+Level: 38
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+
+Machop @ Black Belt
+Level: 38
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+
+Machoke @ Black Belt
+Level: 38
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+
+=== TRAINER_VIRIDIAN_GYM_SAMUEL_HNS ===
+Name: SAMUEL
+Class: Cooltrainer Frlg
+Pic: Cooltrainer M Frlg
+Gender: Male
+Music: Cool
+Items: Super Potion
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability
+
+Sandslash
+Level: 37
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Slash
+- Swift
+- Sand Attack
+- Poison Sting
+
+Sandslash
+Level: 37
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Slash
+- Swift
+- Sand Attack
+- Poison Sting
+
+Rhyhorn
+Level: 38
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Take Down
+- Rock Blast
+- Fury Attack
+- Scary Face
+
+Nidorino
+Level: 39
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Fury Attack
+- Horn Attack
+- Poison Sting
+- Double Kick
+
+Nidoking
+Level: 39
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Thrash
+- Double Kick
+- Poison Sting
+- Focus Energy
+
+=== TRAINER_VIRIDIAN_GYM_YUJI_HNS ===
+Name: YUJI
+Class: Cooltrainer Frlg
+Pic: Cooltrainer M Frlg
+Gender: Male
+Music: Cool
+Items: Hyper Potion
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability
+
+Sandslash
+Level: 38
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Slash
+- Swift
+- Sand Attack
+- Poison Sting
+
+Graveler
+Level: 38
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Rock Blast
+- Magnitude
+- Mud Sport
+- Defense Curl
+
+Onix
+Level: 38
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Dragon Breath
+- Sandstorm
+- Rock Throw
+- Bind
+
+Graveler
+Level: 38
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Rock Blast
+- Magnitude
+- Rollout
+- Defense Curl
+
+Marowak
+Level: 38
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Bonemerang
+- Headbutt
+- Leer
+- Growl
+
+=== TRAINER_VIRIDIAN_GYM_WARREN_HNS ===
+Name: WARREN
+Class: Cooltrainer Frlg
+Pic: Cooltrainer M Frlg
+Gender: Male
+Music: Cool
+Items: Hyper Potion
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability
+
+Marowak
+Level: 37
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Bonemerang
+- Headbutt
+- Leer
+- Growl
+
+Marowak
+Level: 37
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Bonemerang
+- Headbutt
+- Leer
+- Growl
+
+Rhyhorn
+Level: 38
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Take Down
+- Rock Blast
+- Fury Attack
+- Scary Face
+
+Nidorina
+Level: 39
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Fury Swipes
+- Bite
+- Poison Sting
+- Double Kick
+
+Nidoqueen
+Level: 39
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Body Slam
+- Bite
+- Poison Sting
+- Double Kick
+
+=== TRAINER_VIRIDIAN_GYM_GIOVANNI_HNS ===
+Name: GIOVANNI
+Class: Leader Frlg
+Pic: Leader Giovanni Frlg
+Gender: Male
+Music: Aqua
+Items: Hyper Potion / Hyper Potion / Full Heal
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability
+
+Rhyhorn
+Level: 45
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Take Down
+- Rock Blast
+- Scary Face
+- Earthquake
+
+Dugtrio
+Level: 42
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Slash
+- Sand Tomb
+- Mud Slap
+- Earthquake
+
+Nidoqueen
+Level: 44
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Body Slam
+- Double Kick
+- Poison Sting
+- Earthquake
+
+Nidoking
+Level: 45
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Thrash
+- Double Kick
+- Poison Sting
+- Earthquake
+
+Rhyhorn
+Level: 50
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Take Down
+- Rock Blast
+- Scary Face
+- Earthquake

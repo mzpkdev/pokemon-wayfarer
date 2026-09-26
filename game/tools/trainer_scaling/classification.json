@@ -2288,7 +2288,7 @@
     },
     {
       "id": "TRAINER_BLUE_HNS",
-      "policy": "GYM_LEADER",
+      "policy": "EXCLUDED",
       "region": "Kanto",
       "evidence": [
         {
@@ -2301,8 +2301,7 @@
           "symbol": "TRAINER_BLUE_HNS"
         }
       ],
-      "reason": "Authored boss, rival, facility head, or special story opponent.",
-      "role_review": "Gym membership takes precedence for this shared ID at every location."
+      "reason": "Retired Wayfarer Viridian Gym encounter; Blue remains Indigo Champion and a separate Dojo opponent."
     },
     {
       "id": "TRAINER_BOB_HNS",
@@ -23400,6 +23399,106 @@
           "symbol": "TRAINER_NUGGET_BRIDGE_ROCKET_HNS"
         }
       ]
+    },
+    {
+      "id": "TRAINER_VIRIDIAN_GYM_TAKASHI_HNS",
+      "policy": "GYM_MEMBER",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer_local.party",
+          "symbol": "TRAINER_VIRIDIAN_GYM_TAKASHI_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_VIRIDIAN_GYM_YUJI_HNS",
+      "policy": "GYM_MEMBER",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer_local.party",
+          "symbol": "TRAINER_VIRIDIAN_GYM_YUJI_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_VIRIDIAN_GYM_ATSUSHI_HNS",
+      "policy": "GYM_MEMBER",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer_local.party",
+          "symbol": "TRAINER_VIRIDIAN_GYM_ATSUSHI_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_VIRIDIAN_GYM_JASON_HNS",
+      "policy": "GYM_MEMBER",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer_local.party",
+          "symbol": "TRAINER_VIRIDIAN_GYM_JASON_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_VIRIDIAN_GYM_COLE_HNS",
+      "policy": "GYM_MEMBER",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer_local.party",
+          "symbol": "TRAINER_VIRIDIAN_GYM_COLE_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_VIRIDIAN_GYM_KIYO_HNS",
+      "policy": "GYM_MEMBER",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer_local.party",
+          "symbol": "TRAINER_VIRIDIAN_GYM_KIYO_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_VIRIDIAN_GYM_SAMUEL_HNS",
+      "policy": "GYM_MEMBER",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer_local.party",
+          "symbol": "TRAINER_VIRIDIAN_GYM_SAMUEL_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_VIRIDIAN_GYM_WARREN_HNS",
+      "policy": "GYM_MEMBER",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer_local.party",
+          "symbol": "TRAINER_VIRIDIAN_GYM_WARREN_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_VIRIDIAN_GYM_GIOVANNI_HNS",
+      "policy": "GYM_LEADER",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer_local.party",
+          "symbol": "TRAINER_VIRIDIAN_GYM_GIOVANNI_HNS"
+        }
+      ],
+      "reason": "Viridian finale uses the dedicated five-slot Gym Leader scaling path"
     }
   ],
   "move_exceptions": []

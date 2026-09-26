@@ -30,17 +30,14 @@ CinnabarIsland_Text_Blaine:
 
 
 
+#if !IS_WAYFARER
 CinnabarIsland_EventScript_Blue::
 	lock
 	faceplayer
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	goto CinnabarIsland_EventScript_BlueActive
-#else
 	goto_if_eq VAR_NUM_BADGES, 15, CinnabarIsland_EventScript_BlueActive
 	msgbox CinnabarIsland_Text_BlueBefore, MSGBOX_NPC
 	release
 	end
-#endif
 CinnabarIsland_EventScript_BlueActive::
 	msgbox CinnabarIsland_Text_Blue, MSGBOX_NPC
 	fadescreenswapbuffers FADE_TO_BLACK
@@ -105,6 +102,7 @@ CinnabarIsland_Text_Blue:
 	.string "If you want to battle me, come to\n"
 	.string "the VIRIDIAN GYM.\p"
 	.string "I'll take you on then.$"
+#endif
 
 CinnabarIsland_EventScript_Sign::
 	msgbox CinnabarIsland_Text_Sign, MSGBOX_SIGN

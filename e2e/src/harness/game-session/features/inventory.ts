@@ -3,6 +3,8 @@ import { type SessionRuntime } from "../runtime"
 
 const keyItemsPocketId = 5
 const saveBlock2EncryptionKeyOffset = 0xac
+// global.h gives SaveBlock2.frontier.battlePoints an absolute save offset of 0xEB8.
+const saveBlock2BattlePointsOffset = 0xeb8
 const keyItemsCapacity = 60
 const itemSlotSize = 4
 // SkyEmu encodes each requested byte as a query parameter. Keep requests
@@ -29,6 +31,7 @@ export type InventoryApi = {
    */
   contains: (item: Item | Hm) => Promise<boolean>
   count: (item: Item | Hm) => Promise<number>
+  battlePoints: () => Promise<number>
   /**
    * Test-fixture support for a retry-safe reward: make exactly one native Bag
    * slot available without resetting the save or any event flags.
@@ -123,12 +126,19 @@ export const createInventoryApi = (runtime: SessionRuntime): InventoryApi => ({
     }
     return count
   },
+  battlePoints: async () => {
+    const saveBlock2 = await runtime.readUint32(runtime.address("gSaveBlock2Ptr"))
+    return runtime.readUint16(saveBlock2 + saveBlock2BattlePointsOffset)
+  },
   freeSlot: async (name) => {
     const pocket = await readBagPocket(runtime, fillablePocketIds[name])
     const slots = await readPocketSlots(runtime, pocket)
     for (let slot = 0; slot < pocket.capacity; slot++) {
       if (uint16(slots, slot * itemSlotSize) !== 0) {
-        await runtime.writeBytes(pocket.itemSlots + slot * itemSlotSize, new Uint8Array(itemSlotSize))
+        await runtime.writeBytes(
+          pocket.itemSlots + slot * itemSlotSize,
+          new Uint8Array(itemSlotSize),
+        )
         return
       }
     }

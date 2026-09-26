@@ -1697,6 +1697,8 @@ bool8 HasTrainerBeenFought(u16 trainerId)
         return WayfarerSSAnneTrainerDefeatGet(anneDefeatSlot);
     if (trainerId >= TRAINER_WAYFARER_LOCAL_FIRST && trainerId <= TRAINER_WAYFARER_LOCAL_LAST)
         return FlagGet(WAYFARER_LOCAL_DEFEAT_FLAG_FIRST + trainerId - TRAINER_WAYFARER_LOCAL_FIRST);
+    if (trainerId >= TRAINER_VIRIDIAN_GYM_FIRST && trainerId <= TRAINER_VIRIDIAN_GYM_LAST)
+        return FlagGet(VIRIDIAN_GYM_DEFEAT_FLAG_FIRST + trainerId - TRAINER_VIRIDIAN_GYM_FIRST);
     hideoutDefeatFlag = WayfarerCeladonHideoutTrainerDefeatFlag(trainerId);
     if (hideoutDefeatFlag != 0)
         return FlagGet(hideoutDefeatFlag);
@@ -1753,6 +1755,11 @@ void SetTrainerFlag(u16 trainerId)
     if (trainerId >= TRAINER_WAYFARER_LOCAL_FIRST && trainerId <= TRAINER_WAYFARER_LOCAL_LAST)
     {
         FlagSet(WAYFARER_LOCAL_DEFEAT_FLAG_FIRST + trainerId - TRAINER_WAYFARER_LOCAL_FIRST);
+        return;
+    }
+    if (trainerId >= TRAINER_VIRIDIAN_GYM_FIRST && trainerId <= TRAINER_VIRIDIAN_GYM_LAST)
+    {
+        FlagSet(VIRIDIAN_GYM_DEFEAT_FLAG_FIRST + trainerId - TRAINER_VIRIDIAN_GYM_FIRST);
         return;
     }
     hideoutDefeatFlag = WayfarerCeladonHideoutTrainerDefeatFlag(trainerId);
@@ -1817,6 +1824,11 @@ void ClearTrainerFlag(u16 trainerId)
     if (trainerId >= TRAINER_WAYFARER_LOCAL_FIRST && trainerId <= TRAINER_WAYFARER_LOCAL_LAST)
     {
         FlagClear(WAYFARER_LOCAL_DEFEAT_FLAG_FIRST + trainerId - TRAINER_WAYFARER_LOCAL_FIRST);
+        return;
+    }
+    if (trainerId >= TRAINER_VIRIDIAN_GYM_FIRST && trainerId <= TRAINER_VIRIDIAN_GYM_LAST)
+    {
+        FlagClear(VIRIDIAN_GYM_DEFEAT_FLAG_FIRST + trainerId - TRAINER_VIRIDIAN_GYM_FIRST);
         return;
     }
     hideoutDefeatFlag = WayfarerCeladonHideoutTrainerDefeatFlag(trainerId);

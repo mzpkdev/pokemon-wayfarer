@@ -6,7 +6,7 @@ import re
 import unittest
 
 GAME = Path(__file__).resolve().parents[2]
-GYMS = [('VioletCity_Gym_hns', 'VioletCity_Gym_EventScript_Falkner', 2, 0), ('AzaleaTown_Gym_hns', 'AzaleaTown_Gym_EventScript_Bugsy', 2, 1), ('GoldenrodCity_Gym_hns', 'GoldenrodCity_Gym_EventScript_Whitney', 2, 2), ('EcruteakCity_Gym_hns', 'EcruteakCity_Gym_EventScript_Morty', 2, 3), ('CianwoodGym_hns', 'CianwoodGym_EventScript_Chuck', 2, 4), ('OlivineCity_Gym_hns', 'OlivineCity_Gym_EventScript_Jasmine', 2, 5), ('MahoganyTown_Gym_hns', 'MahoganyTown_Gym_EventScript_Pryce', 2, 6), ('BlackthornCity_Gym_hns', 'BlackthornGym_EventScript_Clair', 2, 7), ('PewterCity_Gym_hns', 'PewterCity_Gym_EventScript_Brock', 1, 0), ('CeruleanCity_Gym_hns', 'CeruleanCity_Gym_EventScript_Misty', 1, 1), ('VermilionCity_Gym_hns', 'VermilionCity_Gym_EventScript_Surge', 1, 2), ('CeladonCity_Gym_hns', 'CeladonCity_Gym_EventScript_Erika', 1, 3), ('SaffronCity_Gym_hns', 'SaffronCity_Gym_EventScript_Sabrina', 1, 4), ('FuchsiaCity_Gym_hns', 'FuchsiaCity_Gym_EventScript_Janine', 1, 5), ('SeafoamIslands_Gym_hns', 'SeafoamIslands_Gym_EventScript_Blaine', 1, 6), ('ViridianCity_Gym_hns', 'ViridianCity_Gym_EventScript_Blue', 1, 7), ('RustboroCity_Gym', 'RustboroCity_Gym_EventScript_Roxanne', 3, 0), ('DewfordTown_Gym', 'DewfordTown_Gym_EventScript_Brawly', 3, 1), ('MauvilleCity_Gym', 'MauvilleCity_Gym_EventScript_Wattson', 3, 2), ('LavaridgeTown_Gym_1F', 'LavaridgeTown_Gym_1F_EventScript_Flannery', 3, 3), ('PetalburgCity_Gym', 'PetalburgCity_Gym_EventScript_NormanBattle', 3, 4), ('FortreeCity_Gym', 'FortreeCity_Gym_EventScript_Winona', 3, 5), ('MossdeepCity_Gym', 'MossdeepCity_Gym_EventScript_TateAndLiza', 3, 6), ('SootopolisCity_Gym_1F', 'SootopolisCity_Gym_1F_EventScript_Juan', 3, 7), ('GoldenrodCity_Gym_hns', 'GoldenrodCity_Gym_EventScript_WhitneyBadge', 2, 2), ('DragonsDen_Shrine_hns', 'DragonsDen_Shrine_EventScript_ElderOfferQuiz', 2, 7)]
+GYMS = [('VioletCity_Gym_hns', 'VioletCity_Gym_EventScript_Falkner', 2, 0), ('AzaleaTown_Gym_hns', 'AzaleaTown_Gym_EventScript_Bugsy', 2, 1), ('GoldenrodCity_Gym_hns', 'GoldenrodCity_Gym_EventScript_Whitney', 2, 2), ('EcruteakCity_Gym_hns', 'EcruteakCity_Gym_EventScript_Morty', 2, 3), ('CianwoodGym_hns', 'CianwoodGym_EventScript_Chuck', 2, 4), ('OlivineCity_Gym_hns', 'OlivineCity_Gym_EventScript_Jasmine', 2, 5), ('MahoganyTown_Gym_hns', 'MahoganyTown_Gym_EventScript_Pryce', 2, 6), ('BlackthornCity_Gym_hns', 'BlackthornGym_EventScript_Clair', 2, 7), ('PewterCity_Gym_hns', 'PewterCity_Gym_EventScript_Brock', 1, 0), ('CeruleanCity_Gym_hns', 'CeruleanCity_Gym_EventScript_Misty', 1, 1), ('VermilionCity_Gym_hns', 'VermilionCity_Gym_EventScript_Surge', 1, 2), ('CeladonCity_Gym_hns', 'CeladonCity_Gym_EventScript_Erika', 1, 3), ('SaffronCity_Gym_hns', 'SaffronCity_Gym_EventScript_Sabrina', 1, 4), ('FuchsiaCity_Gym_hns', 'FuchsiaCity_Gym_EventScript_Janine', 1, 5), ('SeafoamIslands_Gym_hns', 'SeafoamIslands_Gym_EventScript_Blaine', 1, 6), ('ViridianCity_Gym_Frlg', 'ViridianCity_Gym_EventScript_Giovanni', 1, 7), ('RustboroCity_Gym', 'RustboroCity_Gym_EventScript_Roxanne', 3, 0), ('DewfordTown_Gym', 'DewfordTown_Gym_EventScript_Brawly', 3, 1), ('MauvilleCity_Gym', 'MauvilleCity_Gym_EventScript_Wattson', 3, 2), ('LavaridgeTown_Gym_1F', 'LavaridgeTown_Gym_1F_EventScript_Flannery', 3, 3), ('PetalburgCity_Gym', 'PetalburgCity_Gym_EventScript_NormanBattle', 3, 4), ('FortreeCity_Gym', 'FortreeCity_Gym_EventScript_Winona', 3, 5), ('MossdeepCity_Gym', 'MossdeepCity_Gym_EventScript_TateAndLiza', 3, 6), ('SootopolisCity_Gym_1F', 'SootopolisCity_Gym_1F_EventScript_Juan', 3, 7), ('GoldenrodCity_Gym_hns', 'GoldenrodCity_Gym_EventScript_WhitneyBadge', 2, 2), ('DragonsDen_Shrine_hns', 'DragonsDen_Shrine_EventScript_ElderOfferQuiz', 2, 7)]
 
 
 def script(name):
@@ -38,6 +38,8 @@ class CircuitScriptTests(unittest.TestCase):
         award_count = 0
         for name in {row[0] for row in GYMS}:
             source = script(name)
+            if name == "ViridianCity_Gym_Frlg":
+                source = source.split("#if IS_WAYFARER", 1)[1].split("#else", 1)[0]
             award_count += len(re.findall(r"setflag FLAG_BADGE\d+_GET\n", source))
             self.assertNotIn("LeagueCircuit_EventScript_CheckQualification", source)
         self.assertEqual(award_count, 24)
@@ -85,19 +87,7 @@ class CircuitScriptTests(unittest.TestCase):
             block(script("Mahoganytown_hns"), "Mahoganytown_OnLoad"),
         )
 
-    def test_blue_invitation_and_wattson_relocation_are_order_independent(self):
-        cinnabar = block(script("CinnabarIsland_hns"), "CinnabarIsland_EventScript_Blue")
-        circuit_invitation = cinnabar.split("#else", 1)[0]
-        self.assertNotIn("VAR_NUM_BADGES", circuit_invitation)
-        active = block(script("CinnabarIsland_hns"), "CinnabarIsland_EventScript_BlueActive")
-        self.assertIn("setflag FLAG_HIDE_CINNABAR_BLUE", active)
-        self.assertIn("clearflag FLAG_HIDE_VIRIDIAN_BLUE", active)
-        blue_intro = script("ViridianCity_Gym_hns").split("ViridianCity_Gym_Text_LeaderBlue_Before:\n", 1)[1]
-        blue_intro = blue_intro.split("ViridianCity_Gym_Text_LeaderBlue_Win:", 1)[0]
-        circuit_intro = blue_intro.split("#else", 1)[0]
-        self.assertNotIn("JOHTO CHAMP", circuit_intro)
-        self.assertNotIn("conquered all", circuit_intro)
-
+    def test_wattson_relocation_is_order_independent(self):
         helper = block(script("MauvilleCity_Gym"), "MauvilleCity_Gym_EventScript_TryRelocateWattson")
         self.assertIn("goto_if_unset FLAG_DEFEATED_PETALBURG_GYM", helper)
         self.assertIn("goto_if_unset FLAG_BADGE03_GET", helper)
@@ -136,7 +126,6 @@ class CircuitScriptTests(unittest.TestCase):
     def test_unearned_badges_skip_legacy_rematch_dispatch(self):
         cases = (
             ("CianwoodGym_hns", "FLAG_BADGE05_GET", "CianwoodGym_EventScript_ChuckOfficialChallenge", "FLAG_HIDE_DOJO_CHUCK", "TRAINER_CHUCK_1_HNS"),
-            ("ViridianCity_Gym_hns", "FLAG_BADGE16_GET", "ViridianCity_Gym_EventScript_BlueOfficialChallenge", "FLAG_HIDE_DOJO_BLUE", "TRAINER_BLUE_HNS"),
             ("BlackthornCity_Gym_hns", "FLAG_BADGE08_GET", "BlackthornGym_EventScript_ClairOfficialChallenge", "FLAG_IS_CHAMPION", "TRAINER_CLAIR_1_HNS"),
         )
         for name, badge, target, legacy_gate, trainer in cases:
@@ -146,9 +135,14 @@ class CircuitScriptTests(unittest.TestCase):
                 self.assertLess(source.index(branch), source.index(legacy_gate))
                 self.assertLess(source.index(legacy_gate), source.index(target + "::"))
                 self.assertIn(trainer, source.split(target + "::", 1)[1])
-        source = script("ViridianCity_Gym_hns")
-        self.assertNotIn("call_if_set FLAG_BADGE15_GET, ViridianCity_Gym_EventScript_MoveDefeatedBlaine", source)
-        self.assertIn("#if !IS_WAYFARER\n\tsetflag FLAG_HIDE_SEAFOAM_BLAINE", source)
+
+    def test_viridian_blue_is_excluded(self):
+        for name, script_name in (("ViridianCity_hns", "ViridianCity_EventScript_BlueIntro"),
+                                  ("CinnabarIsland_hns", "CinnabarIsland_EventScript_Blue"),
+                                  ("ViridianCity_Gym_hns", "ViridianCity_Gym_EventScript_Blue")):
+            events = json.loads((GAME / "data/maps" / name / "map.json").read_text())["object_events"]
+            blue = next(event for event in events if event["script"] == script_name)
+            self.assertTrue(blue["wayfarer_exclude"])
 
     def test_fixed_room_selection_uses_saved_run_and_recovers_invalid_state(self):
         masters = (GAME / "data/scripts/wayfarer_masters_league.inc").read_text()

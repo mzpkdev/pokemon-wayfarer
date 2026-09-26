@@ -1,20 +1,10 @@
 ViridianCity_Gym_hns_MapScripts::
 	.byte 0
 
+#if !IS_WAYFARER
 ViridianCity_Gym_EventScript_Blue::
 	lock
 	faceplayer
-#if IS_WAYFARER
-	goto_if_set FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED_COAST, ViridianCity_Gym_EventScript_BlueKnown
-	setflag FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED_COAST
-	setflag FLAG_WAYFARER_HIDE_VIRIDIAN_BLUE_INTRO_COAST
-	msgbox ViridianCity_Gym_Text_BlueFirstMeeting, MSGBOX_DEFAULT
-	goto ViridianCity_Gym_EventScript_BlueKnown
-ViridianCity_Gym_EventScript_BlueKnown::
-#endif
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	goto_if_unset FLAG_BADGE16_GET, ViridianCity_Gym_EventScript_BlueOfficialChallenge
-#endif
 	goto_if_unset FLAG_HIDE_DOJO_BLUE, ViridianCity_Gym_EventScript_BlueAtDojo
 	goto_if_set FLAG_DEFEATED_VIRIDIAN_GYM, ViridianCity_Gym_EventScript_BlueGotoDojo
 	goto_if_set FLAG_DEFEATED_VIRIDIAN_GYM, ViridianCity_Gym_EventScript_Blue_Defeated
@@ -35,10 +25,8 @@ ViridianCity_Gym_EventScript_BlueOfficialChallenge::
 	call Common_EventScript_SetGymTrainers_hns
 	closemessage
 	setflag FLAG_HIDE_LEAGUE_BLACKBELT
-#if !IS_WAYFARER
 	setflag FLAG_HIDE_SEAFOAM_BLAINE
 	clearflag FLAG_HIDE_CINNABAR_BLAINE
-#endif
 	setvar VAR_OAK_MT_SILVER_CALL, 1
 	release
 	end
@@ -68,11 +56,6 @@ ViridianCity_Gym_EventScript_BlueAtDojo::
 	end
 
 ViridianCity_Gym_Text_LeaderBlue_Before:
-#if IS_WAYFARER
-	.string "BLUE: You made it.\p"
-	.string "I'll know how good you are when\n"
-	.string "we battle. Ready, {PLAYER}?$"
-#else
 	.string "BLUE: Yo! Finally got here, huh?\p"
 	.string "I wasn't in the mood at CINNABAR,\p"
 	.string "but now I'm ready to battle you.\p"
@@ -85,14 +68,6 @@ ViridianCity_Gym_Text_LeaderBlue_Before:
 	.string "I'll know if you are good or not by\n"
 	.string "battling you right now.\p"
 	.string "Ready, JOHTO CHAMP?$"
-#endif
-
-#if IS_WAYFARER
-ViridianCity_Gym_Text_BlueFirstMeeting:
-	.string "BLUE: First time here? I'm BLUE,\n"
-	.string "VIRIDIAN's GYM LEADER.\p"
-	.string "Come on, let's see what you've got.$"
-#endif
 
 ViridianCity_Gym_Text_LeaderBlue_Win:
 	.string "BLUE: What?\p"
@@ -124,6 +99,7 @@ ViridianCity_Gym_Text_LeaderBlue_Epilogue:
 	.string "BLUE: Listen, you.\p"
 	.string "You'd better not lose until I beat\n"
 	.string "you. Got it?$"
+#endif
 
 
 ViridianCity_Gym_EventScript_GymGuy::
@@ -136,6 +112,11 @@ ViridianCity_Gym_EventScript_GymGuyAfter::
 	end
 
 ViridianCity_Gym_Text_Guide:
+#if IS_WAYFARER
+	.string "Yo, CHAMP in making!\p"
+	.string "VIRIDIAN's GYM is open to explore,\n"
+	.string "even when GIOVANNI is away.$"
+#else
 	.string "Yo, CHAMP in making!\p"
 	.string "How's it going? Looks like you're on\n"
 	.string "a roll.\p"
@@ -143,6 +124,7 @@ ViridianCity_Gym_Text_Guide:
 	.string "the CHAMPION three years ago.\p"
 	.string "He's no pushover.\p"
 	.string "Give it everything you've got!$"
+#endif
 
 ViridianCity_Gym_Text_Guide_Win:
 	.string "Man, you are truly tough…\p"
@@ -163,16 +145,28 @@ ViridianCity_Gym_EventScript_GymStatuePostVictory::
 	end
 
 ViridianCity_Gym_Text_GymStatue::
+#if IS_WAYFARER
+	.string "VIRIDIAN POKéMON GYM\n"
+	.string "LEADER: GIOVANNI$"
+#else
     .string "VIRIDIAN POKéMON GYM\n"
     .string "LEADER: BLUE\p"
 	.string "WINNING TRAINERS:\n"
 	.string "BLUE, RED$"
+#endif
 
 ViridianCity_Gym_Text_GymStatuePlayerWon::
+#if IS_WAYFARER
+	.string "VIRIDIAN POKéMON GYM\n"
+	.string "LEADER: GIOVANNI\p"
+	.string "WINNING TRAINERS:\n"
+	.string "{PLAYER}$"
+#else
     .string "VIRIDIAN POKéMON GYM\n"
     .string "LEADER: BLUE\p"
     .string "WINNING TRAINERS:\n"
 	.string "BLUE, RED, {PLAYER}$"
+#endif
 
 
 #if !IS_WAYFARER
