@@ -13,7 +13,7 @@ export type TrainerOnlySnapshot = {
   outcome: number
 }
 
-const abiVersion = 19
+const abiVersion = 20
 const expectedRequestSize = 372
 const expectedResultSize = 16
 const expectedStateSize = 448
@@ -50,7 +50,12 @@ export const commands = {
   observeVar: 11,
   setVar: 12,
 } as const
-export const fullPocketMasks = { items: 1 << 0, keyItems: 1 << 1, tmHm: 1 << 2, balls: 1 << 3 } as const
+export const fullPocketMasks = {
+  items: 1 << 0,
+  keyItems: 1 << 1,
+  tmHm: 1 << 2,
+  balls: 1 << 3,
+} as const
 
 export const gamePhases = ["boot", "overworld", "dialogue", "battle"] as const
 export const arrangePhases = [
@@ -275,8 +280,10 @@ export type StateSnapshot = {
   trainerRating: number
   trainerCardState: number
   leagueRunActive: boolean
-  leagueRunRegion: number
+  leagueRunStage: number
   leagueRunRating: number
+  leagueRunReplay: boolean
+  regionalChampionMask: number
   starterChooseStage: number
   playerAppearanceId: number
   appearanceCandidate: number
@@ -843,8 +850,10 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     trainerRating: bytes[350]!,
     trainerCardState: bytes[351]!,
     leagueRunActive: bytes[352] === 1,
-    leagueRunRegion: bytes[353]!,
+    leagueRunStage: bytes[353]!,
     leagueRunRating: bytes[354]!,
+    leagueRunReplay: bytes[441] !== 0,
+    regionalChampionMask: bytes[442]!,
     starterChooseStage: bytes[373]!,
     playerAppearanceId: bytes[382]!,
     appearanceCandidate: bytes[383]!,

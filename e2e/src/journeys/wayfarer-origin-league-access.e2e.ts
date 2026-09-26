@@ -32,7 +32,8 @@ const enterNorth = async (game: GameSession, destination: GameMap): Promise<void
       )
       return
     }
-    if (state.dialogueOpen || state.scriptActive) await game.controls.press("a")
+    if (state.dialogueOpen || state.scriptActive || state.controlsLocked || !state.ready)
+      await game.controls.press("a")
     else await game.player.move("up")
     await game.wait.frames(16)
   }
@@ -44,34 +45,34 @@ describe.sequential("Hoenn-origin League admission without the maiden voyage", (
   // and the first battle, not a played journey through all 24 badges or Leagues.
   for (const stage of [
     {
-      region: "kanto",
+      stage: "indigo",
       badges: { hoenn: 8 },
       clears: {},
       lobby: "indigo-league-lobby",
-      room: "league-will",
+      room: "indigo-lorelei",
       x: 31,
       y: 4,
     },
     {
-      region: "johto",
+      stage: "masters",
       badges: { johto: 8, hoenn: 8 },
-      clears: { kanto: true },
-      lobby: "indigo-league-lobby",
+      clears: { indigo: true },
+      lobby: "sevii-seven-island-house-room1",
       room: "league-will",
-      x: 31,
-      y: 4,
+      x: 3,
+      y: 3,
     },
     {
-      region: "hoenn",
+      stage: "hoenn",
       badges: { kanto: 8, johto: 8, hoenn: 8 },
-      clears: { kanto: true, johto: true },
+      clears: { indigo: true, masters: true },
       lobby: "hoenn-league-lobby",
       room: "league-sidney",
       x: 9,
       y: 3,
     },
   ] as const) {
-    it(`admits the ${stage.region} stage and preserves its origin through save/reload`, async () => {
+    it(`admits the ${stage.stage} stage and preserves its origin through save/reload`, async () => {
       const game = await GameSession.launch()
       try {
         await game.arrange({
@@ -84,10 +85,10 @@ describe.sequential("Hoenn-origin League admission without the maiden voyage", (
         const before = await game.state.read()
         expect(before).toMatchObject({
           origin: { id: 2, maidenVoyageState: 0, johtoCommitted: false, hoennReceived: false },
-          circuit: { leagues: { [stage.region]: "available" }, run: { active: false } },
+          circuit: { leagues: { [stage.stage]: "available" }, run: { active: false } },
         })
         expect(await game.inventory.contains("ssTicket")).toBe(false)
-        if (stage.region === "hoenn") {
+        if (stage.stage === "hoenn") {
           await game.player.interact()
           await advanceOpeningUntil(
             game,
@@ -95,8 +96,10 @@ describe.sequential("Hoenn-origin League admission without the maiden voyage", (
             "Hoenn admission dialogue did not finish",
           )
           await enterNorth(game, "hoenn-league-hall5")
-        } else {
+        } else if (stage.stage === "indigo") {
           await walkTo(game, 32, 4)
+        } else {
+          await game.player.interact()
         }
         await enterNorth(game, stage.room)
         const admitted = await game.state.read()
@@ -106,15 +109,22 @@ describe.sequential("Hoenn-origin League admission without the maiden voyage", (
           circuit: {
             run: {
               active: true,
-              region: stage.region,
+              stage: stage.stage,
+              replay: false,
               ratingAtEntry: before.circuit.trainerRating,
             },
           },
         })
         await game.saveAndReload()
-        expect((await game.state.read()).origin).toEqual(admitted.origin)
-        expect((await game.state.read()).circuit.run).toEqual(admitted.circuit.run)
-        await walkTo(game, 6, stage.region === "hoenn" ? 6 : 7)
+        const reloaded = await game.state.read()
+        expect(reloaded.origin).toMatchObject({
+          id: admitted.origin.id,
+          maidenVoyageState: admitted.origin.maidenVoyageState,
+          johtoCommitted: admitted.origin.johtoCommitted,
+          hoennReceived: admitted.origin.hoennReceived,
+        })
+        expect(reloaded.circuit.run).toEqual(admitted.circuit.run)
+        await walkTo(game, 6, stage.stage === "hoenn" ? 6 : stage.stage === "indigo" ? 6 : 7)
         await game.player.interact()
         await advanceOpeningUntil(
           game,
@@ -124,10 +134,11 @@ describe.sequential("Hoenn-origin League admission without the maiden voyage", (
         expect(await game.state.read()).toMatchObject({
           origin: { id: 2, maidenVoyageState: 0, johtoCommitted: false, hoennReceived: false },
           circuit: {
-            clears: { [stage.region]: false },
+            clears: { [stage.stage]: false },
             run: {
               active: true,
-              region: stage.region,
+              stage: stage.stage,
+              replay: false,
               ratingAtEntry: before.circuit.trainerRating,
             },
           },

@@ -1,5 +1,5 @@
 {
-  "integration": "Shared HNS venue uses *_1_HNS for Kanto Tier 1 and *_2_HNS for Johto Tier 2. Gym Leader scaling adds eight HNS trainer IDs before the fixed Hoenn range, so the retained Hoenn League IDs use its updated offset; their species, items, moves, AI, and party sizes remain unchanged. Rerun trainer-party-scaling classification inventory after integration.",
+  "integration": "Indigo uses five collision-audited Wayfarer IDs imported from FRLG first-clear source parties, with Blue's visitor roster fixed to the Blastoise variant. Masters keeps exact HNS *_2_HNS parties, and Hoenn keeps exact Emerald parties. Rerun the League source and trainer scaling generators after source changes.",
   "trainers": [
     {
       "trainer": "TRAINER_SIDNEY",
@@ -104,70 +104,75 @@
       "rosterSha256": "b9b6c414e2de06af370e91e04d7598d688a4e36381a40044b641dfbb08ac38e9"
     },
     {
-      "trainer": "TRAINER_WILL_1_HNS",
-      "id": 433,
+      "trainer": "TRAINER_WAYFARER_INDIGO_LORELEI",
+      "sourceTrainer": "TRAINER_ELITE_FOUR_LORELEI",
+      "id": 1795,
       "tier": 1,
       "levels": [
-        48,
-        49,
-        48,
-        49,
-        50
-      ],
-      "rosterSha256": "8fbfa6734e8a72b656c2a72052e9b9507f050963eaa3122b6653eef4876b337a"
-    },
-    {
-      "trainer": "TRAINER_KOGA_1_HNS",
-      "id": 439,
-      "tier": 1,
-      "levels": [
-        50,
-        51,
-        50,
-        51,
-        52
-      ],
-      "rosterSha256": "7823d7361c412b2e040c1d5215e98d517592b72d30c1498d3d789633667eb868"
-    },
-    {
-      "trainer": "TRAINER_BRUNO_1_HNS",
-      "id": 435,
-      "tier": 1,
-      "levels": [
-        53,
         52,
-        53,
-        53,
+        51,
+        52,
+        54,
         54
       ],
-      "rosterSha256": "7906ad6da6f26d31f548260412d5e4311a8b94275f83711a1cb738469ec4f6cb"
+      "rosterSha256": "7d0206ac252d4e209cd0c999abf132ba589a19dc2226332a6f05081ef7a36e98"
     },
     {
-      "trainer": "TRAINER_KAREN_1_HNS",
-      "id": 437,
+      "trainer": "TRAINER_WAYFARER_INDIGO_BRUNO",
+      "sourceTrainer": "TRAINER_ELITE_FOUR_BRUNO",
+      "id": 1796,
       "tier": 1,
       "levels": [
-        54,
+        51,
         53,
         53,
-        53,
-        55
-      ],
-      "rosterSha256": "cfafad50b874e28978ea7b656f2aeb58f9270f91bcdc0f01c461085192bfc89a"
-    },
-    {
-      "trainer": "TRAINER_LANCE_1_HNS",
-      "id": 441,
-      "tier": 1,
-      "levels": [
-        54,
-        55,
-        54,
-        55,
         54,
         56
       ],
-      "rosterSha256": "1524d6efb19c4cb0f07d3d7298849cd5f86f855cc13793535f1b20412b9a33b3"
+      "rosterSha256": "4df0c1641af72a7ed479f110bade7b91f78982186943873f6bef2d844e118ac5"
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_INDIGO_AGATHA",
+      "sourceTrainer": "TRAINER_ELITE_FOUR_AGATHA",
+      "id": 1797,
+      "tier": 1,
+      "levels": [
+        54,
+        54,
+        53,
+        56,
+        58
+      ],
+      "rosterSha256": "1eb01d1a1a0725eded92df98ceba87bc46f4d5bde2c61f044b380c6d9dc9393a"
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_INDIGO_LANCE",
+      "sourceTrainer": "TRAINER_ELITE_FOUR_LANCE",
+      "id": 1798,
+      "tier": 1,
+      "levels": [
+        56,
+        54,
+        54,
+        58,
+        60
+      ],
+      "rosterSha256": "d85e802e6d8ffee9d94a55b8d84f0ca1d2aa986236d33a7287d3093bbab5cbe0"
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_INDIGO_BLUE",
+      "sourceTrainer": "TRAINER_CHAMPION_FIRST_SQUIRTLE",
+      "id": 1799,
+      "tier": 1,
+      "levels": [
+        59,
+        57,
+        59,
+        59,
+        61,
+        63
+      ],
+      "rosterSha256": "2aa877f7b4a4f46afc7dbb61aac7e950de885909116c6d44aecb5f0c3fb022da"
     },
     {
       "trainer": "TRAINER_WILL_2_HNS",

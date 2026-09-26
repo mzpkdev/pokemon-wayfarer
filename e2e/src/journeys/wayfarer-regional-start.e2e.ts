@@ -42,7 +42,7 @@ for (const origin of ["johto", "hoenn"] as const) {
           circuit: {
             trainerRating: 0,
             badges: { total: 0 },
-            clears: { kanto: false, johto: false, hoenn: false },
+            clears: { indigo: false, masters: false, hoenn: false },
           },
         })
         await game.saveAndReload()

@@ -39,6 +39,7 @@ enum WayfarerDiveMapContext WayfarerGetDiveMapContext(s16 mapGroup, s16 mapNum);
 bool8 WayfarerIsDiveAuthorizedForMap(s16 mapGroup, s16 mapNum);
 bool8 WayfarerIsDiveAuthorizedForCurrentMap(void);
 u16 WayfarerGetCurrentRegionForScript(void);
+u16 WayfarerGetKantoBadgeCountForScript(void);
 u16 WayfarerGetHoennBadgeCountForScript(void);
 u16 WayfarerShouldWhiteOutToLavaridge(void);
 u16 WayfarerPrepareHoennEntry(void);

@@ -17,12 +17,13 @@ from typing import Iterable
 
 EVENT_KINDS = ("object_events", "warp_events", "coord_events", "bg_events")
 OVERLAY_EVENT_KINDS = ("object_events", "coord_events", "bg_events")
-DOMAINS = ("exploration", "ordinary_trainers", "story", "trainer_tower")
+DOMAINS = ("exploration", "ordinary_trainers", "story", "trainer_tower", "masters")
 DOMAIN_OWNERS = {
     "exploration": "exploration",
     "ordinary_trainers": "ordinary_trainer",
     "story": "story",
     "trainer_tower": "trainer_tower",
+    "masters": "masters",
 }
 OWNER_DOMAINS = {owner: domain for domain, owner in DOMAIN_OWNERS.items()}
 ALLOWED_OVERRIDES = {
@@ -310,6 +311,7 @@ def _validate_script_modules(modules: object) -> dict[str, dict]:
             "ordinary_trainer": "trainers/",
             "story": "story/",
             "trainer_tower": "trainer_tower/",
+            "masters": "masters/",
         }.get(owner, "")
         relative_include = include.removeprefix("data/scripts/wayfarer_sevii/")
         if owner_directory and not relative_include.startswith(owner_directory):

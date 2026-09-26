@@ -44,7 +44,7 @@ const arrangeAtSudowoodo = async (
     // Level 100 Lapras must obey so encounter outcomes do not depend on disobedience RNG.
     circuit: {
       badges: { kanto: 8, johto: 8, hoenn: 8 },
-      clears: { kanto: true, johto: true, hoenn: true },
+      clears: { indigo: true, masters: true, hoenn: true },
     },
     bag: { items: { squirtBottle: 1, ...(options.prepareCatch ? { masterBall: 1 } : {}) } },
     pc: options.prepareCatch

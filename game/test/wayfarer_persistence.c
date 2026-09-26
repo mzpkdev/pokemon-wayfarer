@@ -444,7 +444,7 @@ TEST("Wayfarer heal locations update saved region through map provenance")
               REGION_JOHTO);
 }
 
-TEST("Wayfarer HNS Indigo provenance remains Johto for healing and GameClear")
+TEST("Wayfarer Masters maps use Kanto while legacy Indigo healing remains Johto")
 {
     MainCallback testCallback = gMain.callback2;
 
@@ -456,7 +456,7 @@ TEST("Wayfarer HNS Indigo provenance remains Johto for healing and GameClear")
     FlagClear(FLAG_IS_KANTO_CHAMPION);
     FlagClear(FLAG_SYS_GAME_CLEAR);
 
-    EXPECT_EQ(WayfarerGetCurrentMapRegion(), REGION_JOHTO);
+    EXPECT_EQ(WayfarerGetCurrentMapRegion(), REGION_KANTO);
 #if !WAYFARER_LEAGUE_CIRCUIT_ENABLED
     GameClear();
     SetMainCallback2(testCallback);
@@ -589,6 +589,26 @@ TEST("Wayfarer regional badges and League state are isolated")
     SetGameClearStateForRegion(REGION_HOENN, FALSE);
     EXPECT(GetGameClearStateForRegion(REGION_KANTO));
     EXPECT(!GetGameClearStateForRegion(REGION_HOENN));
+}
+
+TEST("Oak's Kanto badge count ignores Johto and Hoenn progress")
+{
+    u8 badge;
+
+    for (badge = 0; badge < 8; badge++)
+    {
+        SetBadgeStateForRegion(REGION_KANTO, badge, FALSE);
+        SetBadgeStateForRegion(REGION_JOHTO, badge, TRUE);
+        SetBadgeStateForRegion(REGION_HOENN, badge, TRUE);
+    }
+    EXPECT_EQ(WayfarerGetKantoBadgeCountForScript(), 0);
+
+    for (badge = 0; badge < 8; badge++)
+    {
+        SetBadgeStateForRegion(REGION_KANTO, badge, TRUE);
+        EXPECT_EQ(WayfarerGetKantoBadgeCountForScript(), badge + 1);
+    }
+    EXPECT_EQ(WayfarerGetKantoBadgeCountForScript(), 8);
 }
 
 TEST("Wayfarer Hoenn visited state is region aware")
@@ -921,6 +941,32 @@ TEST("Wayfarer all four appearances round trip through flash away from home")
         EXPECT_EQ(WayfarerGetConfirmedPendingAppearance(), APPEARANCE_NONE);
         EXPECT(WayfarerPersistentStateIsValid());
     }
+}
+
+TEST("Wayfarer save loader rejects prerelease version nine without migration")
+{
+    u8 loadStatus;
+    u16 visibleStatus;
+    bool8 flashWritten;
+
+    ASSUME(gPokemonStoragePtr != NULL);
+    PrepareOriginFlashFixture();
+    gSaveBlock1Ptr->saveVersion = 9;
+    HandleSavingData(SAVE_NORMAL);
+    flashWritten = gDamagedSaveSectors == 0;
+
+    ClearSav1();
+    ClearSav2();
+    ClearSav3();
+    gSaveFileStatus = SAVE_STATUS_OK;
+    loadStatus = LoadGameSave(SAVE_NORMAL);
+    visibleStatus = gSaveFileStatus;
+
+    ClearSaveData();
+    Save_ResetSaveCounters();
+    EXPECT(flashWritten);
+    EXPECT_EQ(loadStatus, SAVE_STATUS_CORRUPT);
+    EXPECT_EQ(visibleStatus, SAVE_STATUS_CORRUPT);
 }
 
 TEST("Wayfarer save loader rejects unknown current-version origin without repairing story state")

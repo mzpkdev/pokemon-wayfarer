@@ -36,6 +36,10 @@ ChampionRoom_OnFrame::
 
 ChampionRoom_CloseDoor::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	specialvar VAR_0x8004, LeagueCircuit_GetRunStage
+	goto_if_ne VAR_0x8004, CIRCUIT_STAGE_MASTERS, LeagueCircuit_EventScript_MastersEntryDenied
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_MastersEntryDenied
 	specialvar VAR_RESULT, LeagueCircuit_IsCurrentRoomDefeated
 	goto_if_eq VAR_RESULT, TRUE, ChampionRoom_ResumeCompleted
 #endif
@@ -65,6 +69,9 @@ ChampionRoom_Trigger::
 	end
 
 PokemonLeague_WillsRoom_EventScript_Lance::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	goto WayfarerMasters_EventScript_Lance
+#endif
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 	specialvar VAR_RESULT, LeagueCircuit_IsCurrentRoomDefeated
 	goto_if_eq VAR_RESULT, TRUE, ChampionRoom_ResumeCompleted

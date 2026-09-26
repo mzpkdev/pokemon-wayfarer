@@ -17,7 +17,7 @@ from typing import Any
 
 
 SCRIPT_ROOT = "data/scripts/wayfarer_sevii/"
-OWNERS = {"exploration", "ordinary_trainer", "story", "trainer_tower"}
+OWNERS = {"exploration", "ordinary_trainer", "story", "trainer_tower", "masters"}
 SHARED_EXPLORATION_EVENT_LABELS = {"EventScript_StrengthBoulder"}
 LABEL = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 LABEL_DEF = re.compile(r"(?m)^([A-Za-z_][A-Za-z0-9_]*):{1,2}\s*(?:@.*)?$")
@@ -95,6 +95,7 @@ def _owned_path(value: Any, *, field: str, owner: str | None = None) -> str:
             "ordinary_trainer": "trainers/",
             "story": "story/",
             "trainer_tower": "trainer_tower/",
+            "masters": "masters/",
         }
         required = roots.get(owner)
         if required is not None and not relative.startswith(required):

@@ -19,7 +19,15 @@ def parties(wayfarer):
         ['cpp', '-P', '-traditional-cpp', '-DPOKEMON_WAYFARER' if wayfarer else '-DEMERALD', '-'],
         input=source, text=True, capture_output=True, check=True,
     ).stdout
-    return dict(re.findall(r'=== (TRAINER_\w+) ===\n(.*?)(?=\n===|\Z)', processed, re.S))
+    result = dict(re.findall(r'=== (TRAINER_\w+) ===\n(.*?)(?=\n===|\Z)', processed, re.S))
+    if wayfarer:
+        frlg = (GAME / 'src/data/trainers_frlg.party').read_text()
+        source_records = dict(re.findall(r'=== (TRAINER_\w+) ===\n(.*?)(?=\n===|\Z)', frlg, re.S))
+        for row in INVENTORY:
+            if row['tier'] == 1:
+                body = source_records[row['sourceTrainer']]
+                result[row['trainer']] = body.replace('Name: TERRY', 'Name: BLUE', 1) if row['trainer'].endswith('_BLUE') else body
+    return result
 
 
 class LeagueTiersTest(unittest.TestCase):
@@ -65,6 +73,8 @@ class LeagueTiersTest(unittest.TestCase):
         for wayfarer in (False, True):
             generated = parties(wayfarer)
             for row in INVENTORY:
+                if row['tier'] == 1 and not wayfarer:
+                    continue
                 with self.subTest(wayfarer=wayfarer, trainer=row['trainer']):
                     body = generated[row['trainer']]
                     levels = list(map(int, re.findall(r'^Level: (\d+)$', body, re.M)))
@@ -86,11 +96,14 @@ class LeagueTiersTest(unittest.TestCase):
     def test_all_existing_ids_remain_unchanged(self):
         hns = (GAME / 'include/constants/opponents_hns.h').read_text()
         emerald = (GAME / 'include/constants/opponents.h').read_text()
+        indigo = (GAME / 'include/constants/wayfarer_indigo_trainers.h').read_text()
         offset = int(re.search(r'#define WAYFARER_HOENN_TRAINER_OFFSET\s+(\d+)', emerald)[1])
         for row in INVENTORY:
             if row['tier'] == 3:
                 source = re.search(r'#define '+row['trainer']+r'\s+TRAINER_EMERALD_ID\((\d+)\)', emerald)
                 actual = offset + int(source[1])
+            elif row['tier'] == 1:
+                actual = int(re.search(r'#define '+row['trainer']+r'\s+(\d+)', indigo)[1])
             else:
                 actual = int(re.search(r'#define '+row['trainer']+r'\s+(\d+)', hns)[1])
             self.assertEqual(actual, row['id'])

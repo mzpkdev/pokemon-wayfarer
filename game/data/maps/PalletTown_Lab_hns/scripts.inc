@@ -9,7 +9,12 @@ PalletTown_Lab_EventScript_Oak::
 	msgbox PalletTown_Lab_Text_OakWelcomeKanto, MSGBOX_DEFAULT
 	msgbox PalletTown_Lab_Text_OakLabGoodbye, MSGBOX_DEFAULT
 	setvar VAR_PALLETTOWN_LABSTATE, 1
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	specialvar VAR_RESULT, WayfarerGetKantoBadgeCountForScript
+	goto_if_ge VAR_RESULT, 8, PalletTown_Lab_EventScript_Oak16Badges
+#else
 	goto_if_ge VAR_NUM_BADGES, 16, PalletTown_Lab_EventScript_OakBadgeCheck
+#endif
 	closemessage
 	release
 	end
@@ -22,8 +27,14 @@ PalletTown_Lab_EventScript_OakGiveNatDex_ForPlaytesters::
 	return
 
 PalletTown_Lab_EventScript_OakBadgeCheck::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	specialvar VAR_RESULT, WayfarerGetKantoBadgeCountForScript
+	goto_if_ge VAR_RESULT, 8, PalletTown_Lab_EventScript_Oak16Badges
+	goto_if_ge VAR_RESULT, 1, PalletTown_Lab_EventScript_Oak9Badges
+#else
 	goto_if_ge VAR_NUM_BADGES, 16, PalletTown_Lab_EventScript_Oak16Badges
 	goto_if_ge VAR_NUM_BADGES, 9, PalletTown_Lab_EventScript_Oak9Badges
+#endif
 	msgbox PalletTown_Lab_Text_OakNoKantoBadges, MSGBOX_DEFAULT
 	closemessage
 	release

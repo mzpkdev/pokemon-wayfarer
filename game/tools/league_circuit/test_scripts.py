@@ -151,21 +151,32 @@ class CircuitScriptTests(unittest.TestCase):
         self.assertIn("#if !IS_WAYFARER\n\tsetflag FLAG_HIDE_SEAFOAM_BLAINE", source)
 
     def test_fixed_room_selection_uses_saved_run_and_recovers_invalid_state(self):
-        for room in ("Wills", "Kogas", "Brunos", "Karens", "Champions"):
-            source = script("PokemonLeague_" + room + "Room_hns")
-            self.assertIn("LeagueCircuit_ValidateRun", source)
-            self.assertNotIn("LeagueCircuit_GetRequiredRegion", source)
-            self.assertNotIn("LeagueCircuit_IsEligible", source)
-            if room != "Champions":
-                self.assertLess(source.index("LeagueCircuit_ValidateRun", source.index("_EventScript_")), source.index("goto_if_ge VAR_LEAGUE_STATE"))
-            for pending in source.split("specialvar VAR_0x8004, LeagueCircuit_GetRunRegion")[1:]:
-                gate = pending.split("specialvar VAR_RESULT, LeagueCircuit_ValidateRun", 1)[0]
-                self.assertIn("goto_if_eq VAR_0x8004, REGION_HOENN, LeagueCircuit_EventScript_IndigoEntryDenied", gate)
-                self.assertIn("goto_if_eq VAR_0x8004, REGION_NONE, LeagueCircuit_EventScript_IndigoEntryDenied", gate)
-            self.assertRegex(source, r"goto_if_eq VAR_0x8004, REGION_JOHTO, \w+Rematch")
+        masters = (GAME / "data/scripts/wayfarer_masters_league.inc").read_text()
+        for index, trainer in enumerate(("WILL", "KOGA", "BRUNO", "KAREN", "LANCE")):
+            with self.subTest(stage="masters", trainer=trainer):
+                self.assertIn(f"setvar VAR_0x8005, {index}", masters)
+                self.assertIn(f"trainerbattle_no_intro TRAINER_{trainer}_2_HNS", masters)
+        self.assertEqual(masters.count("LeagueCircuit_ValidateRoomBattle"), 5)
+        self.assertEqual(masters.count("LeagueCircuit_RecordRoomVictory"), 5)
+
+        indigo = (GAME / "data/scripts/wayfarer_indigo_league.inc").read_text()
+        for index, trainer in enumerate(("LORELEI", "BRUNO", "AGATHA", "LANCE", "BLUE")):
+            with self.subTest(stage="indigo", trainer=trainer):
+                self.assertIn(f"setvar VAR_0x8005, {index}", indigo)
+                self.assertIn(f"trainerbattle_no_intro TRAINER_WAYFARER_INDIGO_{trainer}", indigo)
+        self.assertEqual(indigo.count("LeagueCircuit_ValidateRoomBattle"), 5)
+        self.assertEqual(indigo.count("LeagueCircuit_RecordRoomVictory"), 5)
+
+        graphics = (GAME / "src/data/object_events/object_event_graphics_info_pointers.h").read_text()
+        wayfarer_closure = graphics.split("#if HAS_SEVII_CONTENT", 1)[1]
+        for actor in ("LORELEI", "BRUNO", "AGATHA", "LANCE"):
+            with self.subTest(graphics=actor):
+                self.assertIn(f"[OBJ_EVENT_GFX_{actor}]", wayfarer_closure)
+
         for room in ("Sidneys", "Phoebes", "Glacias", "Drakes", "Champions"):
             source = script("EverGrandeCity_" + room + "Room")
-            self.assertIn("LeagueCircuit_ValidateRun", source)
+            self.assertIn("LeagueCircuit_ValidateRoomBattle", source)
+            self.assertIn("LeagueCircuit_RecordRoomVictory", source)
             self.assertNotIn("LeagueCircuit_IsEligible", source)
             self.assertIn("goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied", source)
 
@@ -177,17 +188,25 @@ class CircuitScriptTests(unittest.TestCase):
 
     def test_champion_completion_and_hall_of_fame_validate_before_effects(self):
         champion = script("EverGrandeCity_ChampionsRoom")
-        self.assertLess(champion.index("trainerbattle_no_intro TRAINER_WALLACE"), champion.index("special LeagueCircuit_MarkChampionDefeated"))
-        self.assertLess(champion.index("special LeagueCircuit_MarkChampionDefeated"), champion.index("goto EverGrandeCity_ChampionsRoom_EventScript_Defeated"))
-        for name, effect in (("PokemonLeague_HallOfFame_hns", "special GivePartyMonChampionRibbon"),
-                             ("EverGrandeCity_HallOfFame", "dofieldeffect FLDEFF_HALL_OF_FAME_RECORD")):
-            source = script(name)
-            self.assertLess(source.index("LeagueCircuit_ValidateRun"), source.index(effect))
-            self.assertNotIn("LeagueCircuit_GetRequiredRegion", source)
-        common = (GAME / "data/scripts/league_circuit.inc").read_text()
-        completion = block(common, "LeagueCircuit_EventScript_IndigoHallOfFame")
-        self.assertLess(completion.index("LeagueCircuit_GetRunRegion"), completion.index("LeagueCircuit_RecordClear"))
-        self.assertLess(completion.index("LeagueCircuit_RecordClear"), completion.index("goto_if_eq VAR_0x8004, REGION_KANTO"))
+        victory = "specialvar VAR_RESULT, LeagueCircuit_RecordRoomVictory"
+        self.assertLess(champion.index("trainerbattle_no_intro TRAINER_WALLACE"), champion.index(victory))
+        self.assertLess(champion.index(victory), champion.index("goto EverGrandeCity_ChampionsRoom_EventScript_Defeated"))
+
+        indigo = (GAME / "data/scripts/wayfarer_indigo_league.inc").read_text()
+        self.assertLess(indigo.index("LeagueCircuit_CanCompleteRun"),
+                        indigo.index("FLDEFF_HALL_OF_FAME_RECORD_FRLG"))
+        self.assertLess(indigo.index("FLDEFF_HALL_OF_FAME_RECORD_FRLG"),
+                        indigo.index("LeagueCircuit_CommitAndRegisterIndigo"))
+        masters = (GAME / "data/scripts/wayfarer_masters_league.inc").read_text()
+        self.assertLess(masters.index("LeagueCircuit_CanCompleteRun"),
+                        masters.index("LeagueCircuit_CommitRunClear"))
+        self.assertLess(masters.index("LeagueCircuit_CommitRunClear"),
+                        masters.index("warp MAP_SEVEN_ISLAND_HOUSE_ROOM1", masters.index("WayfarerMasters_EventScript_Gallery")))
+        hoenn = script("EverGrandeCity_HallOfFame")
+        self.assertLess(hoenn.index("LeagueCircuit_CanCompleteRun"),
+                        hoenn.index("dofieldeffect FLDEFF_HALL_OF_FAME_RECORD"))
+        self.assertLess(hoenn.index("dofieldeffect FLDEFF_HALL_OF_FAME_RECORD"),
+                        hoenn.index("LeagueCircuit_CommitRunClear"))
 
     def test_defeated_rooms_restore_exits_and_champions_do_not_refight_on_resume(self):
         wills = script("PokemonLeague_WillsRoom_hns")
@@ -210,39 +229,56 @@ class CircuitScriptTests(unittest.TestCase):
                 self.assertIn("goto_if_eq VAR_RESULT, TRUE, " + prefix + "_ResumeCompleted", guard)
             self.assertIn("HALL_OF_FAME", block(source, prefix + "_ResumeCompleted"))
 
-    def test_indigo_clear_preserves_normal_scene_and_uses_region_cleanup(self):
-        source = (GAME / "data/scripts/league_circuit.inc").read_text()
-        clear = source.split("LeagueCircuit_EventScript_IndigoHallOfFame::", 1)[1]
-        self.assertLess(clear.index("LeagueCircuit_RecordClear"), clear.index("special GameClear"))
-        self.assertIn("SetGameClearFlags", clear)
-        self.assertIn("SetFirstGameClearFlags", clear)
-        self.assertIn("setvar VAR_LEAGUE_STATE, 1", clear)
-        self.assertLess(clear.index("LeagueCircuit_RecordClear"), clear.index("setvar VAR_LEAGUE_STATE, 1"))
-        self.assertLess(clear.index("setvar VAR_LEAGUE_STATE, 1"), clear.index("special GameClear"))
-        self.assertIn("HEAL_LOCATION_INDIGO_PLATEAU_HNS", clear)
-        self.assertIn("LeagueCircuit_RecordClear", script("EverGrandeCity_HallOfFame"))
+    def test_indigo_clear_uses_one_frlg_record_without_full_credits(self):
+        source = (GAME / "data/scripts/wayfarer_indigo_league.inc").read_text()
+        first_clear = block(source, "WayfarerIndigo_HallCeremony")
+        replay = block(source, "WayfarerIndigo_HallReplay")
+        self.assertIn("FLDEFF_HALL_OF_FAME_RECORD_FRLG", first_clear)
+        self.assertIn("LeagueCircuit_CommitAndRegisterIndigo", first_clear)
+        self.assertNotIn("GameClear", source)
+        self.assertNotIn("GivePartyMonChampionRibbon", replay)
+        self.assertNotIn("FLDEFF_HALL_OF_FAME_RECORD_FRLG", replay)
+        self.assertLess(source.index("WayfarerIndigo_HallReplay::"),
+                        source.index("WayfarerIndigo_HallCommit::"))
+        self.assertIn("LeagueCircuit_CommitRunClear", block(source, "WayfarerIndigo_HallCommit"))
 
-        champion = script("PokemonLeague_ChampionsRoom_hns")
-        self.assertIn("PokemonLeague_ChampionsRoom_Text_BattleAfter", champion)
-        self.assertIn("PokemonLeague_ChampionsRoom_Movement_MaryEnter", champion)
-        hof = script("PokemonLeague_HallOfFame_hns")
-        for command in (
-            "PokemonLeague_HallOfFame_Movement_LanceEnter",
-            "GivePartyMonChampionRibbon",
-            "FLDEFF_HALL_OF_FAME_RECORD_FRLG",
-            "LeagueCircuit_EventScript_IndigoHallOfFame",
-        ):
-            self.assertIn(command, hof)
+        commit = (GAME / "src/post_battle_event_funcs.c").read_text()
+        commit = commit.split("u16 LeagueCircuit_CommitAndRegisterIndigo(void)", 1)[1].split("\nint GameClear(void)", 1)[0]
+        self.assertLess(commit.index("sIndigoHallOfFameCommitPending = TRUE"),
+                        commit.index("SetMainCallback2(CB2_DoHallOfFameScreenFrlg)"))
+        self.assertIn("CommitCircuitRun(CIRCUIT_STAGE_INDIGO)", commit)
+        self.assertIn("SetContinueGameWarpToHealLocation(HEAL_LOCATION_INDIGO_PLATEAU_HNS)", commit)
+        hall = (GAME / "src/hall_of_fame_frlg.c").read_text()
+        save = hall.split("static void Task_Hof_TrySaveData(u8 taskId)\n{", 1)[1].split("\n}", 1)[0]
+        self.assertLess(save.index("CommitPendingIndigoHallOfFame"),
+                        save.index("TrySavingData(SAVE_HALL_OF_FAME)"))
+        self.assertIn("ResolveIndigoHallOfFameSaveAttempt(saveStatus == SAVE_STATUS_OK", save)
+        self.assertIn("gDamagedSaveSectors != 0", save)
+        self.assertGreaterEqual(save.count("gTasks[taskId].func = Task_Hof_DelayAfterSave"), 2)
+        retry = (GAME / "src/save_failed_screen.c").read_text()
+        self.assertIn("ResolveIndigoHallOfFameSaveAttempt(TRUE, FALSE)", retry)
+        self.assertGreaterEqual(retry.count("ResolveIndigoHallOfFameSaveAttempt(FALSE, FALSE)"), 2)
+        flash = (GAME / "src/save.c").read_text()
+        transaction = flash.split("if (IsIndigoHallOfFameSaveTransactionActive()", 1)[1].split("else", 1)[0]
+        self.assertLess(transaction.index("HandleWriteSectorNBytes(SECTOR_ID_HOF_1"),
+                        transaction.index("WriteSaveSectorOrSlot(FULL_SAVE_SLOT"))
+        self.assertIn("if (!gDamagedSaveSectors)", transaction)
+        self.assertIn("TryIncrementIndigoHallOfFameSaveCount()", flash)
 
-        kanto_cleanup = block(hof, "PokemonLeague_HallOfFame_EventScript_SetGameClearFlags")
-        circuit_cleanup = re.sub(
-            r"#if !\(IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED\).*?#endif",
-            "",
-            kanto_cleanup,
-            flags=re.DOTALL,
-        )
-        for flag in ("FLAG_HIDE_LATIOS", "FLAG_HIDE_LATIAS", "FLAG_HIDE_RAYQUAZA", "FLAG_HIDE_GROUDON", "FLAG_HIDE_KYOGRE"):
-            self.assertNotIn(flag, circuit_cleanup)
+    def test_red_keeps_non_circuit_completion_and_indigo_hides_early_oak(self):
+        red = block(script("MtSilver_SummitDay_hns"), "MtSilver_SummitDay_EventScript_RedOnDefeat")
+        self.assertIn("WayfarerRedGameClear", red)
+        self.assertIn("GameClear", red)
+        clear = (GAME / "src/post_battle_event_funcs.c").read_text()
+        self.assertIn("int WayfarerRedGameClear(void)", clear)
+        self.assertIn("sUseNonCircuitGameClear = TRUE", clear)
+
+        champion = json.loads((GAME / "data/maps/PokemonLeague_ChampionsRoom_Frlg/map.json").read_text())
+        oak = next(event for event in champion["object_events"]
+                   if event["local_id"] == "LOCALID_CHAMPIONS_ROOM_PROF_OAK")
+        self.assertTrue(oak["wayfarer_exclude"])
+        hall = json.loads((GAME / "data/maps/PokemonLeague_HallOfFame_Frlg/map.json").read_text())
+        self.assertTrue(hall["object_events"][0]["wayfarer_exclude"])
 
     def test_corridor_bypass_leaves_story_unwritten(self):
         gate = script("ReceptionGate_hns").split("ReceptionGate_Trigger::\n", 1)[1].split("#endif", 1)[0]
@@ -278,9 +314,9 @@ class CircuitScriptTests(unittest.TestCase):
         clear = (GAME / "src/post_battle_event_funcs.c").read_text()
         self.assertIn("SetContinueGameWarpToHealLocation(HEAL_LOCATION_INDIGO_PLATEAU_HNS)", clear)
         self.assertIn("SetContinueGameWarpToHealLocation(HEAL_LOCATION_EVER_GRANDE_CITY_POKEMON_LEAGUE)", clear)
-        self.assertIn("LeagueCircuit_EventScript_IndigoHallOfFame", script("PokemonLeague_HallOfFame_hns"))
-        self.assertIn("LeagueCircuit_RecordClear", (GAME / "data/scripts/league_circuit.inc").read_text())
-        self.assertIn("LeagueCircuit_RecordClear", script("EverGrandeCity_HallOfFame"))
+        self.assertIn("LeagueCircuit_CommitAndRegisterIndigo", (GAME / "data/scripts/wayfarer_indigo_league.inc").read_text())
+        self.assertIn("LeagueCircuit_CommitRunClear", (GAME / "data/scripts/wayfarer_masters_league.inc").read_text())
+        self.assertIn("LeagueCircuit_CommitRunClear", script("EverGrandeCity_HallOfFame"))
 
         indigo = json.loads((GAME / "data/maps/IndigoPlateau_PokemonCenter_hns/map.json").read_text())
         self.assertIn("MAP_INDIGO_PLATEAU_HNS", {warp["dest_map"] for warp in indigo["warp_events"]})

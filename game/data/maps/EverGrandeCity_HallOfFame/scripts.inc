@@ -17,8 +17,12 @@ EverGrandeCity_HallOfFame_OnFrame:
 
 EverGrandeCity_HallOfFame_EventScript_EnterHallOfFame::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
+	specialvar VAR_RESULT, LeagueCircuit_CanCompleteRun
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
+	specialvar VAR_RESULT, LeagueCircuit_HasClearedStage
+	goto_if_eq VAR_RESULT, TRUE, EverGrandeCity_HallOfFame_EventScript_WayfarerReplay
 #endif
 	lockall
 	applymovement LOCALID_HALL_OF_FAME_WALLACE, EverGrandeCity_HallOfFame_Movement_WalkIntoHallOfFame1
@@ -47,9 +51,9 @@ EverGrandeCity_HallOfFame_EventScript_EnterHallOfFame::
 	delay 40
 	setvar VAR_TEMP_1, 1
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	setvar VAR_0x8004, REGION_HOENN
-	specialvar VAR_RESULT, LeagueCircuit_RecordClear
-	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
+	specialvar VAR_RESULT, LeagueCircuit_CommitRunClear
+	goto_if_ne VAR_RESULT, CIRCUIT_COMMIT_FIRST_CLEAR, LeagueCircuit_EventScript_HoennEntryDenied
 #endif
 	call EverGrandeCity_HallOfFame_EventScript_SetGameClearFlags
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
@@ -64,6 +68,19 @@ EverGrandeCity_HallOfFame_EventScript_EnterHallOfFame::
 	goto_if_eq VAR_RESULT, MALE, EverGrandeCity_HallOfFame_EventScript_GameClearMale
 	goto_if_eq VAR_RESULT, FEMALE, EverGrandeCity_HallOfFame_EventScript_GameClearFemale
 	end
+
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+EverGrandeCity_HallOfFame_EventScript_WayfarerReplay::
+	lockall
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
+	specialvar VAR_RESULT, LeagueCircuit_CommitRunClear
+	goto_if_ne VAR_RESULT, CIRCUIT_COMMIT_REPLAY, LeagueCircuit_EventScript_HoennEntryDenied
+	setvar VAR_TEMP_1, 1
+	warp MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F, 9, 5
+	waitstate
+	releaseall
+	end
+#endif
 
 EverGrandeCity_HallOfFame_EventScript_GameClearMale::
 	setrespawn HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F

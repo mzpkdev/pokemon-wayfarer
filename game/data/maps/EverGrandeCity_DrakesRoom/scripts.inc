@@ -39,8 +39,9 @@ EverGrandeCity_DrakesRoom_EventScript_CloseDoor::
 
 EverGrandeCity_DrakesRoom_EventScript_Drake::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	setvar VAR_0x8004, REGION_HOENN
-	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
+	setvar VAR_0x8005, 3
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
 #endif
 	lock
@@ -58,6 +59,12 @@ EverGrandeCity_DrakesRoom_EventScript_PostBattleSpeech::
 	end
 
 EverGrandeCity_DrakesRoom_EventScript_Defeated::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
+	setvar VAR_0x8005, 3
+	specialvar VAR_RESULT, LeagueCircuit_RecordRoomVictory
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
+#endif
 	setvar VAR_0x8004, FANCOUNTER_DEFEATED_DRAKE
 	special Script_TryGainNewFanFromCounter
 	setflag FLAG_DEFEATED_ELITE_4_DRAKE
@@ -94,4 +101,3 @@ EverGrandeCity_DrakesRoom_Text_PostBattleSpeech:
 	.string "TRAINERS and grow strong.\p"
 	.string "Go! Go onwards!\n"
 	.string "The CHAMPION is waiting!$"
-

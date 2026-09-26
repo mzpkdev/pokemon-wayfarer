@@ -48,6 +48,11 @@ SECTIONS {
         *libnosys.a:*.o(COMMON);
     } > IWRAM
 
+    /* sp_sys starts at IWRAM_END - 0x1C0 (src/crt0.s) and grows down into
+     * .iwram.bss, so reserve room for the deepest call chains. */
+    ASSERT(ADDR(.iwram.bss) + SIZEOF(.iwram.bss) <= ORIGIN(IWRAM) + 0x8000 - 0x1C0 - 0x800,
+           "IWRAM .bss leaves less than 2 KB of system stack; move large buffers to EWRAM or the heap")
+
     /* BEGIN ROM DATA */
 
     __rom_start = ORIGIN(ROM);

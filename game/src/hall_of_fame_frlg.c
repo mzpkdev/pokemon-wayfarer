@@ -10,6 +10,7 @@
 #include "graphics.h"
 #include "hall_of_fame.h"
 #include "hall_of_fame_frlg.h"
+#include "league_circuit.h"
 #include "m4a.h"
 #include "main.h"
 #include "malloc.h"
@@ -30,6 +31,7 @@
 #include "constants/maps.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "config/league_circuit.h"
 
 #define HALL_OF_FAME_MAX_TEAMS 50
 #define HALL_OF_FAME_BG_PAL    RGB(22, 24, 29)
@@ -64,7 +66,9 @@ static void Task_Hof_WaitAndPrintPlayerInfo(u8 taskId);
 static void Task_Hof_ExitOnKeyPressed(u8 taskId);
 static void Task_Hof_HandlePaletteOnExit(u8 taskId);
 static void Task_Hof_HandleExit(u8 taskId);
+#if !IS_WAYFARER
 static void SetWarpsToRollCredits(void);
+#endif
 static void Task_HofPC_CopySaveData(u8 taskId);
 static void Task_HofPC_DrawSpritesPrintText(u8 taskId);
 static void Task_HofPC_PrintMonInfo(u8 taskId);
@@ -433,21 +437,33 @@ static void Task_Hof_InitTeamSaveData(u8 taskId)
             memset(gHoFSaveBuffer, 0, SECTOR_SIZE * NUM_HOF_SECTORS);
     }
 
-    for (i = 0; i < HALL_OF_FAME_MAX_TEAMS; i++, lastSavedTeam++)
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+    if (IsIndigoHallOfFameSaveTransactionActive())
     {
-        if (lastSavedTeam->mon[0].species == SPECIES_NONE)
-            break;
+        // The saved stat is the committed record count. Reuse this slot if a
+        // previous attempt wrote the Hall sectors but lost power before the
+        // clear-bearing full slot was written. At capacity, overwrite the
+        // final slot so a retry remains idempotent instead of shifting twice.
+        i = min(GetGameStat(GAME_STAT_ENTERED_HOF), HALL_OF_FAME_MAX_TEAMS - 1);
+        lastSavedTeam += i;
     }
-    if (i >= HALL_OF_FAME_MAX_TEAMS)
+    else
+#endif
     {
-        struct HallofFameTeam *afterTeam = gHoFSaveBuffer;
-        struct HallofFameTeam *beforeTeam = gHoFSaveBuffer;
-        afterTeam++;
-        for (i = 0; i < HALL_OF_FAME_MAX_TEAMS - 1; i++, beforeTeam++, afterTeam++)
+        for (i = 0; i < HALL_OF_FAME_MAX_TEAMS; i++, lastSavedTeam++)
         {
-            *beforeTeam = *afterTeam;
+            if (lastSavedTeam->mon[0].species == SPECIES_NONE)
+                break;
         }
-        lastSavedTeam--;
+        if (i >= HALL_OF_FAME_MAX_TEAMS)
+        {
+            struct HallofFameTeam *afterTeam = gHoFSaveBuffer;
+            struct HallofFameTeam *beforeTeam = gHoFSaveBuffer;
+            afterTeam++;
+            for (i = 0; i < HALL_OF_FAME_MAX_TEAMS - 1; i++, beforeTeam++, afterTeam++)
+                *beforeTeam = *afterTeam;
+            lastSavedTeam--;
+        }
     }
     *lastSavedTeam = *sHofMonPtr;
 
@@ -466,8 +482,28 @@ static void FreeAllHoFMem(void)
 
 static void Task_Hof_TrySaveData(u8 taskId)
 {
+    u8 saveStatus;
     gGameContinueCallback = CB2_DoHallOfFameScreenDontSaveDataFrlg;
-    TrySavingData(SAVE_HALL_OF_FAME);
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+    if (!CommitPendingIndigoHallOfFame())
+    {
+        FinishIndigoHallOfFameSaveTransaction(FALSE);
+        gTasks[taskId].func = Task_Hof_DelayAfterSave;
+        gTasks[taskId].data[3] = 32;
+        return;
+    }
+#endif
+    saveStatus = TrySavingData(SAVE_HALL_OF_FAME);
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+    ResolveIndigoHallOfFameSaveAttempt(saveStatus == SAVE_STATUS_OK,
+                                       saveStatus != SAVE_STATUS_OK && gDamagedSaveSectors != 0);
+    if (saveStatus != SAVE_STATUS_OK)
+    {
+        gTasks[taskId].func = Task_Hof_DelayAfterSave;
+        gTasks[taskId].data[3] = 32;
+        return;
+    }
+#endif
     PlaySE(SE_SAVE);
     gTasks[taskId].func = Task_Hof_DelayAfterSave;
     gTasks[taskId].data[3] = 32;
@@ -693,10 +729,18 @@ static void Task_Hof_HandleExit(u8 taskId)
         DestroyTask(taskId);
         FreeAllHoFMem();
 
+#if IS_WAYFARER
+        SetWarpDestination(MAP_GROUP(MAP_INDIGO_PLATEAU_POKEMON_CENTER_HNS),
+                           MAP_NUM(MAP_INDIGO_PLATEAU_POKEMON_CENTER_HNS), 0, -1, -1);
+        DoWarp();
+        ResetInitialPlayerAvatarState();
+#else
         SetWarpsToRollCredits();
+#endif
     }
 }
 
+#if !IS_WAYFARER
 static void SetWarpsToRollCredits(void)
 {
     VarSet(VAR_MAP_SCENE_INDIGO_PLATEAU_EXTERIOR, 1);
@@ -706,6 +750,7 @@ static void SetWarpsToRollCredits(void)
     DoWarp();
     ResetInitialPlayerAvatarState();
 }
+#endif
 
 void CB2_InitHofPC(void)
 {

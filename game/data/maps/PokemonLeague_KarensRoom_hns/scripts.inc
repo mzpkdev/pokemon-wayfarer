@@ -10,6 +10,9 @@ PokemonLeague_KarensRoom_OnResume::
 	end
 
 PokemonLeague_KarensRoom_EventScript_Karen::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	goto WayfarerMasters_EventScript_Karen
+#endif
 	lock 
 	faceplayer
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
@@ -117,4 +120,3 @@ PokemonLeague_KarensRoom_Text_Defeat:
     .string "I like your style. You understand\n"
     .string "what's important.\p"
     .string "Go on--the CHAMPION is waiting.$"
-

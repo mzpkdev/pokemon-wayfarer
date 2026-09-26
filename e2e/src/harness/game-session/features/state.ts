@@ -3,6 +3,7 @@ import {
   hms,
   items,
   leagueRegions,
+  circuitStages,
   maps,
   moves,
   species,
@@ -88,10 +89,16 @@ export type GameState = {
   }
   circuit: {
     badges: Record<(typeof leagueRegions)[number], number> & { total: number }
-    clears: Record<(typeof leagueRegions)[number], boolean>
-    leagues: Record<(typeof leagueRegions)[number], (typeof leagueStatuses)[number]>
+    clears: Record<(typeof circuitStages)[number], boolean>
+    leagues: Record<(typeof circuitStages)[number], (typeof leagueStatuses)[number]>
+    regionalChampions: Record<(typeof leagueRegions)[number], boolean>
     trainerRating: number
-    run: { active: boolean; region: (typeof leagueRegions)[number] | null; ratingAtEntry: number }
+    run: {
+      active: boolean
+      stage: (typeof circuitStages)[number] | null
+      replay: boolean
+      ratingAtEntry: number
+    }
   }
   fieldMove: {
     move: Move | "unknown"
@@ -321,18 +328,25 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
           total: snapshot.globalBadgeCount,
         } as GameState["circuit"]["badges"],
         clears: Object.fromEntries(
-          leagueRegions.map((region, index) => [region, snapshot.leagueClears[index] ?? false]),
+          circuitStages.map((stage, index) => [stage, snapshot.leagueClears[index] ?? false]),
         ) as GameState["circuit"]["clears"],
         leagues: Object.fromEntries(
-          leagueRegions.map((region, index) => [
-            region,
+          circuitStages.map((stage, index) => [
+            stage,
             leagueStatuses[snapshot.leagueStatuses[index] ?? 0] ?? "locked",
           ]),
         ) as GameState["circuit"]["leagues"],
+        regionalChampions: Object.fromEntries(
+          leagueRegions.map((region, index) => [
+            region,
+            (snapshot.regionalChampionMask & (1 << index)) !== 0,
+          ]),
+        ) as GameState["circuit"]["regionalChampions"],
         trainerRating: snapshot.trainerRating,
         run: {
           active: snapshot.leagueRunActive,
-          region: leagueRegions[snapshot.leagueRunRegion - 1] ?? null,
+          stage: circuitStages[snapshot.leagueRunStage - 1] ?? null,
+          replay: snapshot.leagueRunReplay,
           ratingAtEntry: snapshot.leagueRunRating,
         },
       },

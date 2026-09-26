@@ -5,6 +5,7 @@ import {
   hms,
   items,
   leagueRegions,
+  circuitStages,
   storyFlags,
   storyVars,
   textSpeeds,
@@ -14,6 +15,7 @@ import {
   type Hm,
   type Item,
   type LeagueRegion,
+  type CircuitStage,
   type StoryFlag,
   type StoryVar,
   type TextSpeed,
@@ -80,7 +82,7 @@ export type ArrangeGame = {
   }
   circuit?: {
     badges?: Partial<Record<LeagueRegion, number>>
-    clears?: Partial<Record<LeagueRegion, boolean>>
+    clears?: Partial<Record<CircuitStage, boolean>>
   }
 }
 
@@ -120,7 +122,7 @@ export const createArrangeApi = (runtime: SessionRuntime, mailbox: MailboxApi): 
     const regionalBadgeCounts = leagueRegions.map(
       (region) => options.circuit?.badges?.[region] ?? 0,
     )
-    const leagueClears = leagueRegions.map((region) => options.circuit?.clears?.[region] ?? false)
+    const leagueClears = circuitStages.map((stage) => options.circuit?.clears?.[stage] ?? false)
     const currentBox = options.pc?.currentBox ?? 0
     if (vars.length > maxPatches) {
       throw new Error(`Test ROM supports at most ${maxPatches} var overrides`)

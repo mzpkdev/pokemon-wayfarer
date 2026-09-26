@@ -2,6 +2,7 @@
   "id": "MAP_POKEMON_LEAGUE_AGATHAS_ROOM",
   "name": "PokemonLeague_AgathasRoom_Frlg",
   "game_version": "frlg",
+  "wayfarer_include": true,
   "layout": "LAYOUT_POKEMON_LEAGUE_AGATHAS_ROOM",
   "music": "MUS_RG_POKE_TOWER",
   "region": "REGION_KANTO",
@@ -29,6 +30,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PokemonLeague_AgathasRoom_EventScript_Agatha",
+      "wayfarer_script": "WayfarerIndigo_EventScript_Agatha",
       "flag": "0"
     }
   ],

@@ -11,6 +11,7 @@
 #include "window.h"
 #include "menu.h"
 #include "save.h"
+#include "league_circuit.h"
 #include "starter_choose.h"
 #include "gba/flash_internal.h"
 #include "text_window.h"
@@ -263,6 +264,10 @@ static void CB2_WipeSave(void)
     {
         if (WipeSectors(gDamagedSaveSectors))
         {
+#if IS_WAYFARER
+            if (sSaveFailedType == SAVE_HALL_OF_FAME)
+                ResolveIndigoHallOfFameSaveAttempt(FALSE, FALSE);
+#endif
             FillWindowPixelBuffer(sWindowIds[TEXT_WIN_ID], PIXEL_FILL(1));
             SaveFailedScreenTextPrint(gText_BackupMemoryDamaged, 1, 0);
             SetMainCallback2(CB2_GameplayCannotBeContinued);
@@ -282,13 +287,21 @@ static void CB2_WipeSave(void)
         wipeTries++;
     }
 
-    if (wipeTries == 3)
+    if (gDamagedSaveSectors != 0)
     {
+#if IS_WAYFARER
+        if (sSaveFailedType == SAVE_HALL_OF_FAME)
+            ResolveIndigoHallOfFameSaveAttempt(FALSE, FALSE);
+#endif
         FillWindowPixelBuffer(sWindowIds[TEXT_WIN_ID], PIXEL_FILL(1));
         SaveFailedScreenTextPrint(gText_BackupMemoryDamaged, 1, 0);
     }
     else
     {
+#if IS_WAYFARER
+        if (sSaveFailedType == SAVE_HALL_OF_FAME)
+            ResolveIndigoHallOfFameSaveAttempt(TRUE, FALSE);
+#endif
         FillWindowPixelBuffer(sWindowIds[TEXT_WIN_ID], PIXEL_FILL(1));
 
         if (gGameContinueCallback == NULL)

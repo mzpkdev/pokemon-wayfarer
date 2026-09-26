@@ -74,6 +74,7 @@ class WayfarerSeviiContentSchemaTests(unittest.TestCase):
                 "ordinary_trainers": {"owner": "ordinary_trainer", "enabled": False, "inventory": []},
                 "story": {"owner": "story", "enabled": False, "inventory": []},
                 "trainer_tower": {"owner": "trainer_tower", "enabled": False, "inventory": []},
+                "masters": {"owner": "masters", "enabled": False, "inventory": []},
             },
             "script_modules": {},
             "maps": [{

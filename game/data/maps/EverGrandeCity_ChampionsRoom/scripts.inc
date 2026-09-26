@@ -67,15 +67,19 @@ EverGrandeCity_ChampionsRoom_EventScript_Wallace::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 	specialvar VAR_RESULT, LeagueCircuit_IsCurrentRoomDefeated
 	goto_if_eq VAR_RESULT, TRUE, EverGrandeCity_ChampionsRoom_ResumeCompleted
-	setvar VAR_0x8004, REGION_HOENN
-	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
+	setvar VAR_0x8005, 4
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
 #endif
 	playbgm MUS_ENCOUNTER_CHAMPION, FALSE
 	msgbox EverGrandeCity_ChampionsRoom_Text_IntroSpeech, MSGBOX_DEFAULT
 	trainerbattle_no_intro TRAINER_WALLACE, EverGrandeCity_ChampionsRoom_Text_Defeat
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	special LeagueCircuit_MarkChampionDefeated
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
+	setvar VAR_0x8005, 4
+	specialvar VAR_RESULT, LeagueCircuit_RecordRoomVictory
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
 #endif
 	goto EverGrandeCity_ChampionsRoom_EventScript_Defeated
 	end
@@ -373,4 +377,3 @@ EverGrandeCity_ChampionsRoom_Text_BrendanCongratulations:
 	.string "It can't be helped if that's the rule.\p"
 	.string "{PLAYER}, way to go!\n"
 	.string "Congratulations!$"
-

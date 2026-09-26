@@ -2,6 +2,7 @@
   "id": "MAP_POKEMON_LEAGUE_BRUNOS_ROOM",
   "name": "PokemonLeague_BrunosRoom_Frlg",
   "game_version": "frlg",
+  "wayfarer_include": true,
   "layout": "LAYOUT_POKEMON_LEAGUE_BRUNOS_ROOM",
   "music": "MUS_RG_ROCKET_HIDEOUT",
   "region": "REGION_KANTO",
@@ -30,6 +31,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PokemonLeague_BrunosRoom_EventScript_Bruno",
+      "wayfarer_script": "WayfarerIndigo_EventScript_Bruno",
       "flag": "0"
     }
   ],

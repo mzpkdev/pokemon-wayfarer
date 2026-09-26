@@ -38,8 +38,9 @@ EverGrandeCity_PhoebesRoom_EventScript_CloseDoor::
 
 EverGrandeCity_PhoebesRoom_EventScript_Phoebe::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	setvar VAR_0x8004, REGION_HOENN
-	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
+	setvar VAR_0x8005, 1
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
 #endif
 	lock
@@ -57,6 +58,12 @@ EverGrandeCity_PhoebesRoom_EventScript_PostBattleSpeech::
 	end
 
 EverGrandeCity_PhoebesRoom_EventScript_Defeated::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
+	setvar VAR_0x8005, 1
+	specialvar VAR_RESULT, LeagueCircuit_RecordRoomVictory
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
+#endif
 	setflag FLAG_DEFEATED_ELITE_4_PHOEBE
 	call PokemonLeague_EliteFour_SetAdvanceToNextRoomMetatiles
 	msgbox EverGrandeCity_PhoebesRoom_Text_PostBattleSpeech, MSGBOX_DEFAULT
@@ -86,4 +93,3 @@ EverGrandeCity_PhoebesRoom_Text_PostBattleSpeech:
 	.string "Yup, I'd like to see how far your bond\n"
 	.string "will carry you.\p"
 	.string "Go ahead, move on to the next room.$"
-

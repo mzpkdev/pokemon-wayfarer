@@ -15,6 +15,7 @@
  *    output since the previous P/E/K/F/A and increment the number of
  *    passes/expected fails/known fails/assumption fails/fails.
  */
+#include <errno.h>
 #include <fcntl.h>
 #include <math.h>
 #include <poll.h>
@@ -25,6 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #ifndef __APPLE__
@@ -118,6 +120,7 @@ static unsigned runners_digits = 0;
 static struct Runner *runners = NULL;
 static char rom_dir[FILENAME_MAX];
 static bool report_enabled = false;
+static bool quiet_successes = false;
 static struct Report report = { 0, 0, NULL };
 
 // TODO: Build the symbol table on demand.
@@ -525,10 +528,17 @@ static void handle_read(int i, struct Runner *runner)
 add_to_results:
                     runner->results++;
                     record_result(i, runner, soc[1], soc + 2, eol - soc - 2);
-                    soc += 2;
-                    fprintf(stdout, "[%0*d] %s: ", runners_digits, i, runner->test_name);
-                    fwrite(soc, 1, eol - soc, stdout);
-                    fprint_buffer(stdout, runner->output_buffer, runner->output_buffer_size);
+                    if (!quiet_successes || soc[1] != 'P' || runner->output_buffer_size != 0)
+                    {
+                        soc += 2;
+                        fprintf(stdout, "[%0*d] %s: ", runners_digits, i, runner->test_name);
+                        fwrite(soc, 1, eol - soc, stdout);
+                        fprint_buffer(stdout, runner->output_buffer, runner->output_buffer_size);
+                    }
+                    else if (runner->passes % 1000 == 0)
+                    {
+                        fprintf(stdout, "[%0*d] %d tests passed\n", runners_digits, i, runner->passes);
+                    }
                     strcpy(runner->test_name, "WAITING...");
                     runner->output_buffer_size = 0;
                     break;
@@ -718,6 +728,9 @@ int main(int argc, char *argv[])
         const char *v = getenv("MAKE_TERMOUT");
         tty = v && v[0] == '\0';
     }
+    // A complete machine-readable report makes one console line per passing
+    // test redundant and can exceed hosted CI log limits.
+    quiet_successes = report_enabled && !tty;
 
     if (tty)
     {
@@ -924,9 +937,12 @@ int main(int argc, char *argv[])
                 }
             }
 #endif
-            // stdbuf is required because otherwise mgba never flushes
-            // stdout.
-            if (execlp("stdbuf", "stdbuf", "-oL", argv[1], "-l15", "-ClogLevel.gba.dma=16", "-Rr0", runners[i].rom_path, NULL) == -1)
+            // stdbuf is required because otherwise mgba never flushes stdout.
+            // Test ROMs have no GPIO cartridge, so suppress that expected warning
+            // before it overwhelms bounded CI logs.
+            if (execlp("stdbuf", "stdbuf", "-oL", argv[1], "-l15",
+                       "-ClogLevel.gba.dma=16", "-ClogLevel.gba.hardware=16",
+                       "-Rr0", runners[i].rom_path, NULL) == -1)
             {
                 perror("execl stdbuf mgba-rom-test failed");
                 _exit(2);
@@ -955,6 +971,12 @@ int main(int argc, char *argv[])
         pollfds[i].fd = runners[i].outfd;
         pollfds[i].events = POLLIN;
     }
+    struct timespec last_heartbeat = {0};
+    if (quiet_successes && clock_gettime(CLOCK_MONOTONIC, &last_heartbeat) == -1)
+    {
+        perror("clock_gettime failed");
+        exit(2);
+    }
     while (openfds > 0)
     {
         if (tty)
@@ -975,11 +997,34 @@ int main(int argc, char *argv[])
                 fprintf(stdout, "\e[%dF\e[J", scrollback);
         }
 
-        if (poll(pollfds, nrunners, -1) == -1)
+        int poll_result;
+        do
+            poll_result = poll(pollfds, nrunners, quiet_successes ? 1000 : -1);
+        while (poll_result == -1 && errno == EINTR);
+        if (poll_result == -1)
         {
             perror("poll failed");
             exit(2);
         }
+
+        struct timespec now;
+        if (quiet_successes && clock_gettime(CLOCK_MONOTONIC, &now) == -1)
+        {
+            perror("clock_gettime failed");
+            exit(2);
+        }
+        if (quiet_successes
+         && (now.tv_sec > last_heartbeat.tv_sec + 60
+          || (now.tv_sec == last_heartbeat.tv_sec + 60
+           && now.tv_nsec >= last_heartbeat.tv_nsec)))
+        {
+            int completed = 0;
+            for (int i = 0; i < nrunners; i++)
+                completed += runners[i].results;
+            fprintf(stdout, "Mechanics tests in progress: %d completed\n", completed);
+            last_heartbeat = now;
+        }
+
         for (int i = 0; i < nrunners; i++)
         {
             if (pollfds[i].revents & POLLIN)

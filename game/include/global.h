@@ -344,7 +344,8 @@ struct ChallengeSettings
 struct LeagueRunState
 {
     u8 active;
-    u8 region;
+    u8 stage;
+    u8 replay;
     u8 ratingAtEntry;
 };
 
@@ -360,6 +361,7 @@ struct WayfarerHoennPersistentState
     u8 visitedLocations[WAYFARER_HOENN_VISITED_COUNT / 8];
     u8 badges;
     u8 leagueFlags;
+    u8 indigoRoomDefeats;
     u8 visitedRegions;
     u8 initialized;
     u8 currentRegion;

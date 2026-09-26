@@ -51,7 +51,7 @@ struct LeagueScalingRoster
 {
     u16 trainerId;
     u16 ownerId;
-    u8 region;
+    u8 stage;
     u8 encounterIndex;
     s8 encounterOffset;
     u8 count;

@@ -10,6 +10,9 @@ PokemonLeague_BrunosRoom_OnResume::
 	end
 
 PokemonLeague_BrunosRoom_EventScript_Bruno::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	goto WayfarerMasters_EventScript_Bruno
+#endif
 	lock 
 	faceplayer
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
