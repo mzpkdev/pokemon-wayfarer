@@ -3,8 +3,9 @@
 Implemented: No; the balance explorer is implemented, while the ROM still uses
 the existing Gym and League scaling policies.
 Design status: Trainer-owned ratings, approachable Gym openings, and personal
-growth are the accepted direction. Numeric balance and production team content
-remain provisional. Projected whole-edition registration snapshots are confirmed.
+growth with one seeded personal modifier per save are the accepted direction. Numeric balance and production team content
+remain provisional. Each league competition locks only its own participants and
+strength at entry; a loss ends that competition and requires waiting for the next.
 
 ## Intent
 
@@ -20,6 +21,18 @@ Each supported canonical trainer has an authored starting rating, called
 badges and first-ever league venue clears. The trainer's baseline stays authored;
 their effective rating changes. Training Pokémon, changing the player's party,
 waiting, reloading, or registering another edition does not itself raise NPC TR.
+
+At new game, the shared seed establishes each canonical trainer's stable growth
+modifier. The initial range is 90–110% of their authored growth. Keep their
+starting baseline unchanged; scale their badge growth and first-clear bonuses
+above it together. One trainer may develop faster in one save and slower in
+another. This modifies the personal curve rather than replacing it: Blue still
+has an authored fast rise. Aliases and appearances share the same modifier.
+
+The rate never rerolls after a badge, loss, reload or new competition. Reaching
+TR 80 caps further strength growth; trainers need not all reach that ceiling.
+For example, baseline 10 plus normal growth 30 produces TR 37/40/43 at
+90/100/110%. Finalize balance against the full range before enabling it.
 
 The same milestone can raise the player's progression TR and an NPC's personal
 TR through separate rules. Never use the player's TR as the NPC rating input.
@@ -50,19 +63,30 @@ facility battles. Red remains separate. Tate and Liza stay outside the singles
 pool; their existing double Gym encounter and badge remain available under its
 current policy. The Gym coverage inventory owns these explicit boundaries.
 
-For leagues, seed the first travel order at new game, then generate the whole
-edition at eligible registration. For each scheduled stop, project the number
-of lifetime venue clears after completing its mandatory predecessors. Apply
-that world point to every candidate before TR eligibility and regional draws.
-Save all selected trainers, ratings, stages, and profiles together. This lets
-later first-edition stops reflect first-clear growth without moving the target
-during an attempt. Retries and replays use the registered version.
+For leagues, seed the first travel order at new game. When the player enters an
+available competition, resolve only that venue's five participants from the
+actual badge count and lifetime clears at entry. Save their ratings, stages,
+and profiles for that competition. Future venues have no selected lineup or
+locked strength; they use the milestones reached when the player enters them.
+There is no projection of future badges or clears.
 
-Use role bands authored for the projected world point, shared across venues at
-that point. Content validation must prove the local pool can fill all roles
+The active competition keeps its saved participants and strength through saves,
+reloads, and battle reconstruction. A loss ends it and releases that active lock.
+The player must wait for the next competition before entering again; the next
+event can have a different field and uses then-current world milestones. World
+trainers continue to grow with badges and first clears between events. Waiting
+or advancing a competition number alone does not increase TR.
+
+Use role bands authored for the actual entry world point, shared across venues
+at that point. Content validation must prove the local pool can fill all roles
 through progression and TR saturation. Never widen a band during generation to
-repair missing candidates. Recurring editions change participation; edition
-count alone does not raise strength after lifetime growth is exhausted.
+repair missing candidates. Recurrence changes participation without adding
+strength after lifetime growth is exhausted.
+
+Signup timing and the waiting mechanism are not decided. Roughly 8/16/24 global
+badges for successive circuit stops is tentative guidance, not a fixed gate.
+Implementation must resolve those choices without restoring a whole-circuit lock
+or treating a registration retry as a new competition.
 
 ## Balance explorer
 
@@ -71,7 +95,8 @@ singles trainers at 0–24 badges and 0–3 first clears. Its editable curves, s
 NPC level anchors, source references, and saved experiments support content
 review. Blue's current experimental checkpoints are 6/54/57/59 at 0/8/16/24
 badges; the default first-clear increment is six. These are tuning inputs, not
-approved production balance.
+approved production balance. The explorer currently models the neutral 100%
+growth rate; seeded growth modifiers and controls are not implemented yet.
 
 The explorer predicts species, party size, and levels. It does not validate
 combat difficulty, moves, items, AI, league eligibility, or a complete production
@@ -87,10 +112,14 @@ species must be reviewed before enabling ROM content.
   default stage transitions; report exceptions as content failures.
 - Check early, delayed, and post-league Gym encounters, including members that
   may be stronger than their leader. Equal levels do not prove equal difficulty.
-- Confirm seed-independent growth and repeatable battle plans at unchanged
-  world points. Existing Pokémon battle RNG retains its current behavior.
-- Prove feasible championship role pools and measure field variety separately.
-  Validate first-entry, subsequent-stop, and fully progressed editions against
+- Confirm immutable seed-derived growth rates and repeatable battle plans at
+  unchanged world points within a save. Check baseline preservation, 100%
+  equivalence, and all rates from 90–110%. Existing Pokémon battle RNG retains its current behavior.
+- Prove feasible championship role pools across heterogeneous personal modifiers,
+  including stage/band transitions; sampled seeds alone do not prove coverage.
+  Measure field variety separately.
+  Validate first-entry, replacement competitions after losses, subsequent stops,
+  and fully progressed editions against
   the unchanged player-cap curve.
 
 ## References

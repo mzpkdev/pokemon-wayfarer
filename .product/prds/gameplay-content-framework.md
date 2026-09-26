@@ -63,10 +63,14 @@ it uses player TR, while Giovanni has a separate five-slot player-TR projection.
 Current fixed Leagues use their saved admission Rating and sample again on
 new admission. Under proposed
 [trainer world progression](trainer-world-progression.md), enrolled initial singles
-Gyms snapshot personal NPC TR, while [seeded editions](../specs/seeded-league-circuit.md)
-save all fifteen opponents at first eligible registration from projected world
-points. Losses, retries, and replays reuse that edition's saved TR/stage/profile;
-later editions resample badge and first-lifetime-clear facts, not edition count.
+Gyms snapshot personal NPC TR, while each [seeded league competition](../specs/seeded-league-circuit.md)
+selects and saves only its five opponents at entry from live badge and
+first-lifetime-clear facts under the immutable seed-derived personal growth
+policy. Enrolled aliases share a canonical person's fixed percentage, and
+snapshots retain percentage/policy version alongside TR and teams. Reload and reconstruction retain that active event's
+TR/teams; a loss terminates it and releases the active lock. A next competition
+requires waiting and resamples live milestones. Future venues remain unselected;
+event sequence differs from circuit edition, and edition count adds no TR.
 The shared curve evaluator accepts an explicit input and never produces Rating.
 
 ### Adding content

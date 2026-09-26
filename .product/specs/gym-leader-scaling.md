@@ -55,9 +55,14 @@ every covered variant.
 
 After eligibility and variant resolution, capture global badge count and the
 three-venue lifetime-clear mask from the shared runtime. Evaluate the canonical
-trainer's personal curve; do not read player `GetTrainerRating()` as the NPC
-rating input. Snapshot effective TR, selected stage/profile, content versions,
-and resulting member plan before constructing the opponent.
+trainer's personal curve through [trainer world progression](trainer-world-progression.md),
+including its immutable root-derived `growthPercent` and pinned growth-policy
+version. The root exists at new game before any Gym preparation. Do not read
+player `GetTrainerRating()` as the NPC rating input. Snapshot effective TR,
+growth percentage/policy version, selected stage/profile, content versions,
+and resulting member plan before constructing the opponent. Verify the saved
+percentage against root, canonical identity, and pinned policy; aliases share
+one value, and battles or badges cannot reroll it.
 
 Select the highest stage threshold not exceeding effective TR. Stage count,
 species, and order come from the authored profile; they do not come from the
@@ -69,8 +74,9 @@ level anchors, offset validation, and monotonic transition requirements.
 
 All reconstruction in that battle uses the same plan. Clear transient state at
 teardown; a new attempt resolves current milestones again. At an unchanged world
-point, no new membership, level jitter, or profile choice occurs. Ordinary
-Pokémon battle RNG continues as before. Badge/first-clear rewards are committed
+point within the same save/policy, no new membership, level jitter, or profile
+choice occurs. Different roots may produce different effective TR at that point.
+Ordinary Pokémon battle RNG continues as before. Badge/first-clear rewards are committed
 after battle and affect only later world encounters.
 
 ## Stage member metadata
@@ -143,7 +149,11 @@ Required checks cover:
 
 1. Personal curve anchors, rounding ties, clamps, monotonic growth, stage
    boundaries and adjacent values, nondecreasing default size/minimum level,
-   and unchanged player cap/ordinary trainer policies.
+   and unchanged player cap/ordinary trainer policies. Cover 90/100/110% growth,
+   unchanged baseline, combined badge/first-clear growth, saturation, root-bound
+   percentage/policy verification, and shared canonical values across aliases.
+   Same-save retries retain the percentage; different roots may differ at the
+   same milestone without introducing battle-time rerolls.
 2. Exact member metadata, move policies at every supported level, non-identity
    battle ordering, gimmick remapping, actual counts, and unused-slot clearing.
 3. Repeated construction in one battle, unchanged-milestone retries, progression

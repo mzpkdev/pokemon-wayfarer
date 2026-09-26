@@ -11,12 +11,15 @@ The proposed [Seeded Trainer Circuit](seeded-trainer-circuit.md) retains this
 player TR contract. If adopted, its recurring editions use separate current
 results and lifetime venue clears: lifetime rewards contribute +8 per venue
 once, and new editions never reset TR or add further progression contributions.
-Its proposed common 24-badge entry gate gives TR 56/64/72/80 across zero through
-three lifetime clears; current sub-24-badge league-clear examples do not apply
-to that proposal. Its NPC-based circuit strength does not replace player caps
-or wild scaling. The proposed [trainer world progression](trainer-world-progression.md)
+Registration thresholds remain undecided; approximately 8/16/24 global badges
+by scheduled stop is tentative. Player TR still follows actual badges and
+committed first lifetime clears, so sub-24-badge clears remain relevant balance
+cases. A lost competition grants no clear or TR contribution. Its NPC-based
+circuit strength does not replace player caps or wild scaling. The proposed [trainer world progression](trainer-world-progression.md)
 uses a separate personal start-TR baseline, badge checkpoints, and trainer-specific
-first-lifetime-clear growth for enrolled NPCs. Those NPC values never become the
+first-lifetime-clear growth for enrolled NPCs. An immutable seed-derived
+personal percentage scales combined growth while preserving each starting
+baseline. Those NPC values never become the
 player's rating or an input to wild populations, caps, XP, obedience, marts,
 ordinary Trainers, or Gym members.
 

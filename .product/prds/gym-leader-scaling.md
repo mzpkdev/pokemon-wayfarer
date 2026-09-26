@@ -16,9 +16,12 @@ party levels.
 
 Use the shared [trainer world progression](trainer-world-progression.md)
 contract. Each canonical trainer has a starting `baselineTR`, personal badge
-checkpoints, first-clear growth, and authored party stages. Resolve current
-global milestones when preparing a battle, select the applicable stage, and
-convert the trainer's effective TR to levels through the shared NPC curve.
+checkpoints, first-clear growth, and authored party stages. A seed-derived
+personal growth percentage (90–110%) scales growth while leaving the baseline
+unchanged; it is fixed per save and canonical person across enrolled aliases.
+Resolve current global milestones through that shared growth policy when
+preparing a battle, select the stage, and convert effective TR through the NPC
+level curve. The shared root must exist at new game before Gym preparation.
 
 The baseline is not a permanent battle rating. Do not reuse the previous
 player-TR party-size thresholds or select a prefix from one immutable team.

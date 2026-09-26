@@ -7,8 +7,12 @@ Hoenn admission and the implemented [League level resolver](../../game/src/train
 uses saved player-entry TR. League levels are no longer static. Proposed
 [trainer world progression](trainer-world-progression.md) changes explicitly
 enrolled initial singles Gyms to personal NPC TR and authored stages. The
-[seeded circuit](../specs/seeded-league-circuit.md) replaces fixed Hoenn position/participants with an
-edition roster generated at first eligible registration. These successors are
+[seeded circuit](../specs/seeded-league-circuit.md) replaces fixed Hoenn position/participants with a
+five-opponent competition roster selected at that venue's entry from live
+milestones under the shared immutable seed-derived personal growth policy.
+Snapshots retain growth percentage/policy version; aliases share their canonical
+person's curve. Future venues remain unselected; loss ends the competition and
+requires waiting for the next event at the same venue. These successors are
 not implemented by the content port; current behavior below remains identified
 separately from the proposed direction.
 
@@ -170,7 +174,9 @@ Hoenn destination.
   the Sevii Masters Challenge clear.
 - In the current ROM, Hoenn is fixed Tier 3 after Indigo, Masters, and all
   twenty-four badges. The proposed seeded itinerary can place Hoenn at any stop;
-  its common 24-badge first-registration gate remains a proposal. Venue-first
+  registration thresholds are undecided, with approximately 8/16/24 global
+  badges by stop tentative. A loss ends that venue's competition and requires
+  waiting for the next event there; only a win advances the order. Venue-first
   clears retain their lifetime player rewards and local completion ownership. An
   edition never resets another region's campaign or repeats a lifetime reward.
 - Hoenn Trainers, NPCs, items, gifts, and story rewards remain consumed through
@@ -222,10 +228,12 @@ not keep a separate healing history for every region.
   static parties.
 - The current Hoenn League preserves authored non-level metadata and scales
   from player TR locked for the run under [League scaling](league-scaling.md).
-  The proposed successor resolves personal NPC TR at projected registration
-  world points and freezes all fifteen opponents' stages/profiles for the
-  edition. Its authored stage changes do not require automatic evolution or
-  an immutable prefix of one Emerald roster.
+  The proposed successor resolves personal NPC TR from live milestones at
+  entry and freezes only the current competition's five opponents and teams.
+  Reload and reconstruction preserve that event; loss ends it and releases the
+  active lock. A later competition may select different opponents and strength.
+  Its authored stage changes do not require automatic evolution or an immutable
+  prefix of one Emerald roster.
 - Battle Frontier, Contests, Secret Bases, Match Call, television events,
   multiplayer features, event islands, and other optional Emerald systems are
   preservation targets, not requirements for this milestone.

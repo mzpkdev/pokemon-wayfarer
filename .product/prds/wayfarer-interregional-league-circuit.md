@@ -2,24 +2,31 @@
 
 Implemented: Yes
 
-Proposed successor: [Seeded Trainer Circuit](seeded-trainer-circuit.md) replaces
-the fixed order and lineups with recurring editions, each with a seeded
-itinerary and rated trainer pool. All venues use comparable contender/elite/
-headliner fields, with soft rotation across editions. A proposed common 24-badge
-entry gate replaces the position-based 8/16/24 ladder. Lifetime progression rewards apply once;
-later editions provide another competition without resetting unlocks.
-That draft separates confirmed requirements from proposed defaults. The proposed [trainer world progression](trainer-world-progression.md)
-replaces static NPC baselines with personal start TR, interpolated 0/8/16/24
-badge checkpoints, and trainer-specific first-lifetime-venue-clear growth.
-Seed the circuit root and first venue order at new game. Generate all fifteen
-slots at first eligible registration:
-save `B_reg` and `L_reg`, project each stop's clear count as
-`popcount(L_reg union earlier seeded venues)`, then resolve NPC TR before band
-eligibility, 85/15 home/visitor choice, and rotation. Bands are indexed by world point and shared
-across venues at the same point. Persist every roster, TR, stage/profile, input,
-and version for unchanged edition retries and replays. Later edition count alone
-adds no strength. The common 24-badge gate and numeric balance remain proposed.
-The current fixed circuit contract below remains the ROM implementation baseline.
+Proposed successor: [Seeded Trainer Circuit](seeded-trainer-circuit.md) replaces the fixed
+order and lineups with recurring circuit editions and a rated trainer pool.
+Seed the root and full venue order at new game; future venues have no selected
+participants or strength snapshots. Each current league competition selects
+its five opponents only at entry, using live global badges and lifetime venue
+clears under [trainer world progression](trainer-world-progression.md), including
+that canonical person's immutable seed-derived growth percentage. Resolve NPC
+TR before world-point role eligibility, 85/15 home/visitor selection, and rotation.
+Save the selected TR, growth percentage/policy version, teams/stage/profile
+references, inputs, and versions for
+that competition only; reconstruction and reload retain the active event.
+
+A loss ends the competition and releases its active lock. The player must wait
+for the next competition at the same venue; winning advances the seeded order.
+That next event may select different opponents and strength from current
+milestones. Lost events contribute to rotation history. Event sequence and
+circuit edition are separate identities. Edition count alone adds no strength,
+and recurring circuits do not reset lifetime unlocks or repeat +8 player-TR
+first-clear rewards. Exhibition replays are outside the successor scope.
+
+Registration thresholds remain undecided; approximately 8/16/24 global badges
+by scheduled stop is tentative. Waiting duration and availability rules remain
+open. The [seeded runtime](../specs/seeded-league-circuit.md) owns these event boundaries;
+numeric growth and role-band balance remain provisional. The current fixed
+circuit contract below remains the ROM implementation baseline.
 
 The current runtime implements the fixed Indigo → Sevii Masters → Hoenn circuit
 with canonical stage clears, one shared Indigo result projected to Kanto/Johto,

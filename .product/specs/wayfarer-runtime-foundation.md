@@ -124,23 +124,53 @@ Existing Johto and Kanto callers keep their current result.
 ### Save storage and lifecycle
 
 The proposed [playthrough seed framework](playthrough-seed-framework.md) adds
-one shared root record and consumer-owned deterministic outcomes under this
-save-storage policy. The confirmed circuit direction initializes that root and edition 1
-ORDER at New Game, with explicit valid pre-registration state: no roster, no run,
-empty history/clear masks, and zero completed count. First eligible registration
-atomically saves the complete field, registration badge count and lifetime-clear
-mask, projected per-stop world points, effective TR, stage/profile references, and
-progression/content/band/resolver versions. Preserve ORDER/POOL_KIND rules
-version 1 and record ROSTER version 2 plus an explicit schedule schema version. The proposed 24-badge gate remains D4.
-Later registration after all three current results replaces that edition and its
-bounded prior-venue roster history while preserving lifetime progression.
-Registered plans freeze through retries/replays; verification uses saved
-registration inputs, and corruption cannot regenerate a field. The history is
-a selection input, not an unlimited archive. Size assertions and save-sector
-accounting must include the root, pre-registration discriminator/order, snapshot
-inputs, full registered schedule, prior history, versions, and edition/run metadata
-within the allocation below. Seed initialization, versioning, and RNG
-isolation are defined in that draft; this extension is not implemented here.
+one shared root and consumer-owned deterministic outcomes under this storage
+policy. Initialize that root and pin the NPC growth-policy version at New Game,
+before any Gym can prepare a battle; derive immutable per-canonical-trainer
+90–110% growth through [trainer world progression](trainer-world-progression.md).
+The confirmed circuit also initializes edition 1 ORDER then, with a valid
+order-only state: no competition snapshot/run, empty participant history and clear masks, and zero completed count. Only successful
+entry/registration for the CURRENT individual venue competition atomically saves
+five opponents, actual entry badges/lifetime-clear mask, effective TR,
+growth percentages and pinned policy version, stage/profile references,
+immutable allocation/history inputs, content/rule versions, and matching run. Future venue lineups and projected milestones are
+never saved. Registration thresholds and event cadence remain unresolved; around
+8/16/24 badges for successive first-circuit stops is tentative user intent.
+
+Separate circuit edition/order/results from per-venue competition identity,
+availability, active/waiting/closed state, and attempt progress. Event keys use
+edition ID, stable venue ID and one-based per-venue competition ordinal within
+the edition. ORDER remains rules version 1; proposed POOL_KIND version 2 and
+ROSTER version 3 distinguish the new event allocation. An explicit schema
+version/discriminator must reject the obsolete entire-edition snapshot layout.
+Active competition teams/TR remain fixed through reconstruction, reload and
+departure. A loss atomically concludes that event, records participation history,
+releases the snapshot/run, and persists waiting/unavailable state without victory
+rewards; only the adopted availability rule can make a new competition enterable.
+Reload, preview, cancel and failed entry cannot advance identities or reroll.
+D6 owns the unresolved waiting/availability rule; no RTC/day/step wait mechanism
+is approved here.
+
+Save bounded loss-aware participant history: each venue's latest concluded
+five-character field/event/outcome and current-edition per-venue character unions.
+Active snapshots also preserve their pre-entry allocation history inputs for
+verification. Rollover after three wins stages/commits only the next edition and
+order, resets current results/unions, and preserves lifetime progression and
+latest venue history. Rollover never snapshots future fields or promises immediate
+event availability. Closed winning-team records may remain, but exhibition combat
+against obsolete snapshots is outside the approved lifecycle.
+
+Size assertions and save-sector accounting must include root, order/result state,
+competition identities/availability, at most one active five-slot snapshot and
+its inputs (including per-slot growth percentages/policy version), the save's
+pinned growth policy, bounded history/unions, run progress and transaction metadata
+within the allocation below. Derivation may avoid a full saved trainer-percentage
+table; root/canonical identity/pinned policy remain authoritative. Verification
+checks percentages against those facts and evaluates captured growth inputs
+without resampling current milestones. Verification reads saved inputs without
+rebuilding a missing field or changing content versions. Seed initialization, key encoding,
+and RNG isolation are defined by the draft framework; this extension is not
+implemented here.
 
 The additional Hoenn banks live in `SaveBlock3` or an equivalent separately
 bounded saved structure. The implementation must not enlarge `SaveBlock1`
@@ -207,22 +237,30 @@ order. Its first-clear result advances only after completion commits. Only
 Indigo projects its clear into both Kanto and Johto Champion recognition.
 
 The proposed [seeded circuit runtime](seeded-league-circuit.md) separates
-current-edition results from lifetime first clears and follows a seeded saved
-order. Lifetime facts continue to own regional recognition/cleanup, persistent
-unlocks, and player TR contributions. They also supply the declared world
-progression input: `(B,C)` is global badge count and distinct lifetime venue-clear
-count. At registration, capture `B_reg`/`L_reg` and project each stop using the
-union of that mask and earlier scheduled venue IDs. This affects authored
-personal TR/stage eligibility before allocation, without reading player party,
-XP, or player TR and without edition-number inflation. Bands are authored by
-world point and shared across venues at the same point; endpoints remain D3.
+current-edition results, per-venue competition lifecycle, and lifetime first
+clears, following a seeded saved order. Lifetime facts own regional recognition,
+cleanup, unlocks, and player TR contributions. They also provide NPC world
+progression input `(B,C)`: actual global badges and distinct lifetime venue-clear
+count at individual competition entry. Resolve authored personal TR/stage before
+allocation using these captured live inputs, without projecting future wins,
+reading player party/XP/player TR, or adding strength from edition/event number.
+Bands are authored by world point and shared across venues at that point;
+endpoints remain D3. Enrolled world Gyms continue using live milestone growth.
 
-This draft records the confirmed projected growth, complete-edition freeze, and
-atomic registration direction. It does not implement those
-changes or approve provisional numeric curves, qualification, or band endpoints.
-Shared Indigo recognition and regional state isolation remain mandatory through
-that revision. Unsupported seed/schedule/schema states follow invalid-save
-handling under prerelease policy; do not synthesize compatibility or reroll data.
+Winning a competition advances the current order position. Losing leaves the
+same venue current and waits for its next event, with no venue clear or +8 player
+TR contribution. The active event's snapshot stays stable until conclusion;
+later competition entries use then-current world progression. Only the first
+lifetime win at each venue adds the existing +8 player TR. Save event outcomes,
+loss-aware participation history, availability facts and closure/reward phases
+atomically, with stale-event callbacks rejected.
+
+This draft records the confirmed individual-competition snapshot and loss/wait
+direction. It does not implement it or approve registration timing, waiting
+mechanism, departure/resume policy, numeric curves or band endpoints. Shared
+Indigo recognition and regional isolation remain mandatory. Unsupported
+seed/order/event/schema states follow invalid-save handling under prerelease
+policy; do not synthesize compatibility, replacement fields, or availability.
 
 ### ROM budget
 
@@ -289,6 +327,19 @@ Static and automated checks must prove all of the following:
    size category.
 12. Representative map loads and transitions run without heap corruption or a
     second simultaneous map decompression buffer.
+
+The proposed seed/competition extension additionally requires save round-trip and
+transaction tests for order-only, available, active, waiting-after-loss and
+completed-edition states. Prove at most one five-slot field, no future snapshots,
+loss-aware history updates exactly once, no ordinal advancement on reload/cancel,
+and atomic entry/closure/availability/rollover. Reject obsolete whole-edition
+schemas and damaged authoritative state without roster or availability generation.
+Test actual entry badge/clear inputs across the adopted thresholds once D4/D6
+are resolved. Verify root availability before Gyms, pinned policy round-trip,
+root-bound per-slot percentages, alias consistency, unchanged baseline and
+90/100/110% combined-growth cases; corrupted percentage/policy data must fail
+validation rather than redraw. Verify expanded records satisfy the same sector
+and runtime bounds. These proposed checks do not claim the new lifecycle is implemented.
 
 ## References
 

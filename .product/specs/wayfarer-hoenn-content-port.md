@@ -15,8 +15,12 @@ Hoenn admission and the implemented [League level resolver](../../game/src/train
 uses saved player-entry TR. League levels are no longer static. Proposed
 [trainer world progression](trainer-world-progression.md) changes explicitly
 enrolled initial singles Gyms to personal NPC TR and authored stages. The
-[seeded circuit](seeded-league-circuit.md) replaces fixed Hoenn position/participants with an
-edition roster generated at first eligible registration. These successors are
+[seeded circuit](seeded-league-circuit.md) replaces fixed Hoenn position/participants with a
+five-opponent competition roster selected at that venue's entry from live
+milestones under the shared immutable seed-derived personal growth policy.
+Snapshots retain growth percentage/policy version; aliases share their canonical
+person's curve. Future venues remain unselected; loss ends the competition and
+requires waiting for the next event at the same venue. These successors are
 not implemented by the content port; current behavior below remains identified
 separately from the proposed direction.
 
@@ -388,15 +392,20 @@ saved player-entry TR under [League scaling](league-scaling.md). Hoenn-specific
 Champion/game-clear ownership and local cleanup remain in force.
 
 The proposed [seeded circuit](seeded-league-circuit.md) allows Hoenn at any seeded
-stop. First eligible registration saves badge count and the lifetime-clear set
-for the whole fifteen-slot edition. Each stop projects the distinct clear count
-from that set union earlier itinerary venues, resolves personal NPC TR, then
-selects band-eligible home/visitor candidates with rotation. Save TR, selected
-stage/profile, versions, and inputs so retries and replays do not grow opponents.
-Later editions add no strength by count alone. World-point bands and NPC growth
-are owned by [trainer world progression](trainer-world-progression.md); numeric
-balance and the shared 24-badge gate remain proposed. Completion still owns
-this venue's result and regional effects, independently of who was selected.
+stop. At entry, select only the current competition's five opponents from
+live badges and first-lifetime-clear facts. Resolve personal NPC TR before
+band-eligible home/visitor selection and rotation; save TR, teams/stage/profile,
+versions, and inputs for active-event reload and reconstruction. Future venues
+remain unselected. A loss terminates the competition and releases its active
+lock; the player must wait for the next event at this same venue. The next event
+may select different opponents and strength, with lost events in rotation
+history. Winning advances the seeded order. Event sequence differs from circuit
+edition, and edition count alone adds no strength. World-point bands and NPC
+growth are owned by [trainer world progression](trainer-world-progression.md).
+Registration thresholds are undecided, with approximately 8/16/24 badges by
+stop tentative; waiting/cadence and numeric balance remain open. Exhibition
+replay design is outside this successor scope. Completion still owns this
+venue's result and regional effects, independently of who was selected.
 
 Completing it must:
 
@@ -450,7 +459,7 @@ Static and automated validation must prove all of the following:
    a distinct defeat bit. Non-League Hoenn source parties other than enrolled
    initial Gym Leader rosters match Emerald, while Hoenn League parties match
    the current fixed Tier 3 content. When implementing the proposed successor,
-   validate selected NPC stages and saved edition inputs instead; original
+   validate selected NPC stages and saved competition-entry inputs instead; original
    Emerald parties serve as provenance references. Eligible ordinary battle parties then apply the
    separate Trainer-party projection; initial Gym Leader badge battles follow
    the Gym Leader scaling specification. Hoenn League battle levels follow the

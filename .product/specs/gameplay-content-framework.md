@@ -258,11 +258,15 @@ his separate five-slot player-TR projection. Current fixed Leagues use their
 persisted admission value. Proposed
 [trainer world progression](trainer-world-progression.md) supplies personal NPC TR
 to enrolled initial singles Gyms and the [seeded circuit](seeded-league-circuit.md).
-That circuit saves all fifteen resolved opponents at first eligible registration,
-using registration badges/first-clear facts and projected earlier venue clears.
-Saved TR/stage/profile identities and versions persist through retries and replays;
-new editions alone add no TR. Consumers and lifecycle code own those samples,
-projection, eligibility, and persistence; the evaluator remains a pure function
+Each current competition saves only five resolved opponents at entry, using
+live badges and first-lifetime-clear facts through the shared immutable
+seed-derived personal growth policy. Gym and competition snapshots include
+percentage/policy version; aliases share the same canonical percentage.
+Saved TR, teams/stage/profile identities, inputs, and versions persist through active-event reconstruction
+and reload. A loss terminates the event and releases its active lock; the next
+competition requires waiting and samples current milestones. Future venues
+remain unselected, and edition count alone adds no TR. Consumers and lifecycle
+code own those samples, eligibility, and persistence; the evaluator remains a pure function
 of explicit curve ID and rating. Host Gym/League audits consume the same curve
 points; keep independent golden expected results for equivalence tests.
 

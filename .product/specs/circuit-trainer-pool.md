@@ -2,12 +2,13 @@
 
 PRD: [Seeded Trainer Circuit](../prds/seeded-trainer-circuit.md)
 Implemented: No
-Design status: Draft; trainer-owned world progression with projected growth and
-complete-edition registration lock (D1), recurring championships, and
+Design status: Draft; trainer-owned world progression with a single-competition
+entry lock and loss ending that event (D1), recurring championships, and
 title-agnostic finals (D2) are approved directions. Content/bands (D3), common
-qualification (D4), and rotation tuning/acceptance (D5) remain under review.
+qualification (D4), rotation tuning/acceptance (D5), and competition
+availability/waiting (D6) remain under review.
 
-The confirmed registration snapshot follows [Trainer world progression](trainer-world-progression.md).
+The confirmed competition-entry snapshot follows [Trainer world progression](trainer-world-progression.md).
 Numeric personal growth, role-band endpoints, and qualification remain draft contracts;
 the [balance explorer](../../devtools/ui/README.md#trainer-balance-explorer)
 provides provisional numeric experiments rather than approved ROM content.
@@ -16,8 +17,9 @@ provides provisional numeric experiments rather than approved ROM content.
 
 Own the trainer registry, character uniqueness, team profiles, seeded destination
 and participant selection, regional pool selection, and NPC-TR-based party strength
-for each `IS_WAYFARER` circuit edition. The [runtime specification](seeded-league-circuit.md) owns
-edition registration, schedule persistence, qualification, room flow, completion, rewards, and UI.
+for each `IS_WAYFARER` league competition. The [runtime specification](seeded-league-circuit.md) owns
+competition availability/entry, snapshot persistence, circuit traversal, qualification,
+room flow, completion, rewards, and UI.
 The [playthrough seed framework](playthrough-seed-framework.md) owns root
 initialization/persistence, keyed derivation, and unbiased bounded draws. This
 specification is its first consumer and owns only circuit decision rules.
@@ -53,27 +55,48 @@ to canonical characters. Gym, rival, Champion, rematch, and regional versions of
 the same person share `characterId`. Bruno and Lance each remain one character.
 No duplicate entry, costume, or team variant can increase selection weight or
 bypass uniqueness within a lineup. The same canonical person may be selected
-in multiple leagues; each checks TR/content eligibility, while scheduled
+in multiple leagues; each checks TR/content eligibility, while completed
 appearances reduce selection weight as specified below. Two people with similar
 names remain distinct.
 
-For world point `(B,C)`, interpolate the trainer's personal badge checkpoints
-with nearest-integer, halves-up rounding, then resolve:
+For world point `(B,C)`, interpolate authored badge checkpoints with the
+existing nearest-integer, halves-up rule to obtain `badgeTR(B)`. Each canonical
+trainer also has one save-specific growth percentage, shared with their Gym
+appearances and derived from the playthrough root:
 
 ```text
-effectiveTR = clamp(personalTR(B) + leagueGrowth * C, 0, 80)
+growthPercent = 90 + Uniform(21)  // integers 90 through 110 inclusive
+authoredGrowth = (badgeTR(B) - baselineTR) + leagueGrowth * C
+scaledGrowth = floor((authoredGrowth * growthPercent + 50) / 100)
+effectiveTR = min(80, baselineTR + scaledGrowth)
 B = number of global badges, 0–24
 C = count of distinct lifetime venue first clears, 0–3
 ```
 
-Require `badgeTRCheckpoints[0] = baselineTR`. Baseline TR is the starting value,
-not permanent strength. Badge and first-clear
-milestones intentionally affect this world progression; current player TR,
-party, XP, historical title, edition number, elapsed time, and encounters do not.
-Rating saturation at 80 is explicit. Registering a later edition supplies new
-keys and a current milestone snapshot, but never adds an edition bonus. The
-explorer's curves, checkpoint values, growth rates, and team compositions remain
-provisional. The shared progression specification owns final authoring bounds.
+Require `badgeTRCheckpoints[0] = baselineTR` and nonnegative authored growth.
+Scale the combined badge and first-clear growth, then round once; never scale the
+baseline or round each growth component separately. At B = C = 0, every save
+retains the exact authored baseline. At 100%, the previous authored formula is
+reproduced exactly. Use wide integer intermediates; saturation at 80 is explicit.
+The accepted initial modifier range is 90–110%; production curves, stages and
+its balance impact still require measurement.
+
+The [seed framework](playthrough-seed-framework.md#trainer-growth-consumer)
+registers TRAINER_GROWTH domain 2, GROWTH_RATE decision 1/version 1,
+`entityLo = characterId`, `entityHi = 0`, `occurrenceId = drawId = 0`.
+Canonical character IDs fit `u32`; aliases share that identity and modifier.
+The save pins the growth-policy version at new game before any Gym can resolve
+strength. Derivation may be lazy and pure, but it cannot reroll per badge, visit,
+competition or edition. Catalog array positions, venue/history and live milestones
+are not modifier-key inputs. Store the percentage and policy version (or an
+unambiguous reference) with captured event inputs; validate it against the root.
+
+Badge and first-clear milestones intentionally affect world progression; the
+fixed percentage changes their rate between saves. Player TR, party, XP,
+historical title, edition/event counts and elapsed time add no strength.
+Entering a later event captures actual milestones, not a new modifier. The
+explorer's current curves remain provisional and its unmodified output is the
+neutral 100% experiment; modifier support is not implemented there.
 
 Home leagues describe sensible regional competitive participation, rather than
 current map location or blanket geographic origin. D3 reviews each authored
@@ -138,7 +161,7 @@ does not guarantee enrollment or a particular role. The headliner is the stronge
 selected trainer by TR because of the ordered bands.
 
 A character is eligible for a role when enabled, presentation/profile validation
-passes, and their effective TR at the projected stop world point lies in that role's authored
+passes, and their effective TR at the captured competition-entry world point lies in that role's authored
 band for that world point. Resolve both TR and stage/profile before eligibility,
 then classify home/visitor pools. No home character bypasses a band. Badges and
 lifetime first clears are declared growth and band inputs; eligibility does not
@@ -146,16 +169,20 @@ inspect player TR, starter, origin, story flags, party, XP, or difficulty option
 an inventory reason; never adjust a rating merely to fill a vacant slot.
 
 At a given `(B,C)`, the same authored bands apply to Indigo, Sevii Masters, and
-Hoenn. Endpoints may change only through the reviewed world point table. Projected
-first clears can place successive stops at different world points. There are no
-venue-specific tiers, edition multipliers, runtime band widening, or adaptation
-to the player's party/TR. The seeded order changes which venue receives each
-projected point and the allocation traversal. The
-runtime owner defines common qualification under D4.
+Hoenn. Endpoints may change only through the reviewed world point table. Actual
+badges and first clears earned between competitions can place later entries at
+different world points. There are no venue-specific tiers, edition multipliers,
+runtime band widening, or adaptation to the player's party/TR. The seeded order
+determines travel, not a projected difficulty schedule. The runtime owner
+defines qualification under D4 and competition availability/waiting under D6.
 
 Before enabling the catalog, prove at least two distinct TR/content-qualified
 home contenders, two home elites, and one home headliner for each venue at every
-supported registration/projected point, including C 0–3 and TR saturation. Disjoint
+supported competition-entry world point, including C 0–3, every supported heterogeneous assignment of integer
+90–110% growth modifiers, stage transitions and TR saturation. Checking only
+90%/110% endpoints or giving every trainer the same percentage is insufficient.
+Use exhaustive reasoning or a conservative proven bound over the whole range;
+seed simulations alone are not feasibility proof. Disjoint
 role bands and within-venue uniqueness make these counts sufficient: earlier
 slots cannot exhaust the home pool needed for any later slot, even if every
 selection uses home candidates. Positive rotation weights never remove a
@@ -172,10 +199,10 @@ credible per-venue role coverage cannot be authored.
 
 ### TR-first home/visitor selection and participation rotation
 
-For each venue at its projected world point and role, first form the TR/content-eligible candidate list and
+For the entered venue at its captured live world point and role, first form the TR/content-eligible candidate list and
 partition it by `homeLeagues`: candidates with that venue in their set are home;
-all others are visitors. At each slot, remove characters already scheduled at
-that venue before choosing a pool. There is no per-visitor lore exclusion draw.
+all others are visitors. At each slot, remove characters already selected in
+this competition before choosing a pool. There is no per-visitor lore exclusion draw.
 
 When both eligible pools are nonempty, use an independent seeded `POOL_KIND`
 draw `Uniform(100)`: values 0–84 select home, and 85–99 select visitor. This
@@ -202,190 +229,158 @@ All eligible candidates in the chosen pool start with flat `baseWeight = 1`.
 Proposed D5 rotation tuning is:
 
 ```text
-withinEditionFactor[scheduledAppearances] = [16, 4, 1]  // counts 0, 1, 2
-priorVenueFactor = 1 if selected at this venue in the prior completed edition
+currentCircuitFactor[earlierVenueAppearances] = [16, 4, 1]  // counts 0, 1, 2
+priorVenueFactor = 1 if in this venue's immediately previous completed competition
                    2 otherwise
-selectionWeight = baseWeight * withinEditionFactor * priorVenueFactor
+selectionWeight = baseWeight * currentCircuitFactor * priorVenueFactor
 ```
 
-`scheduledAppearances` counts assignments already made anywhere in this new
-edition, not battles entered, fought, or won. At most two earlier appearances
-are possible when selecting at the third venue because a person cannot repeat
-inside a venue. Every weight remains positive: across-venue repeats are legal
-but less likely, and no person is exhausted for future editions.
+`earlierVenueAppearances` counts distinct other venues in this circuit edition
+where the character appeared in any completed competition, including losses.
+It does not count individual battles or future assignments. Ignore the current
+venue for this factor: its immediately previous completed event is represented
+by `priorVenueFactor`. Earlier-venue participation is accumulated as bounded
+canonical-character sets per venue; a person counts once per earlier venue even
+if they appeared in several losing competitions there. The count is therefore
+0–2, retaining positive weights without an unbounded event archive. At a new
+edition, clear these current-circuit sets and retain latest prior-venue fields.
 
-The runtime supplies the immediately prior completed edition's five canonical
-character IDs per stable venue, tagged with the predecessor edition ID. Edition
-1 uses empty history. For a later edition, require that predecessor to equal
-`editionId - 1`, with exactly five distinct valid canonical IDs per stable venue;
-reject missing or inconsistent input. A prior appearance at
-another venue does not trigger `priorVenueFactor`. History has no cumulative or
-lifetime count. A trainer absent from this venue's previous edition gets the
-full prior-venue factor even if they appeared there in older editions.
+The runtime supplies the latest completed competition's five distinct canonical
+IDs and event identity per stable venue, or an explicit never-competed marker.
+Completion means WIN or LOSS. History starts empty at new game; it is not
+required to come from `editionId - 1`. If this venue had no completed event, every
+candidate receives prior-venue factor 2. A returner's penalty expires when they
+are absent from that venue's next completed field. A prior appearance at another
+venue affects the current-circuit factor only, never `priorVenueFactor`.
 
-On successful next registration, the old edition becomes this history atomically
-with committing the next schedule. Defeats, retries, replays, and venue clears do
-not alter history or weights. The runtime owns history persistence and the
-transaction; generation reads an immutable input snapshot.
+The entry transaction captures immutable history inputs before selection. On
+WIN or LOSS, atomically update this venue's latest field and current-circuit
+participation set while retiring the active event. A loss leaves the current
+circuit venue unchanged and requires a later available competition; it does not
+permit replaying the retired lineup. Reloading the same active event or querying
+menus changes neither history nor weights. History committed after the event
+cannot be substituted for its saved pre-entry inputs during verification.
 
 Roughly two returning and three changed opponents per venue is a soft tuning
 target where the catalog supports it. Identical consecutive fields and repeated
 entrants remain valid. Never redraw, force replacements, weaken TR limits, or
-advance edition identity to manufacture novelty. Category availability, role pool
-size, soft weights, history, and prior allocations determine final inclusion.
+advance an event identity to manufacture novelty. Category availability, role
+pool size, soft weights, and completed participation determine final inclusion.
 
 ### Foundation consumer protocol and deterministic generation
 
-At new game, establish the shared root and resolve edition 1 ORDER only. Preserve
-a valid pre-registration state with no roster. Generate edition 1's whole field
-at its first eligible registration; D4's 24-badge gate remains proposed. Generate
-a later edition only through registration after all three current results commit. Edition identity
-is a `u32` beginning at 1; it is not a retry count, timestamp, or mutable random
-cursor. The proposed foundation stores one 64-bit root as two
-`u32` words plus seed-format/derivation-version metadata in shared Wayfarer
-persistence. The circuit stores no copied root, independent seed, or persistent
-random cursor. Tests/debug tooling may inject a root through the foundation;
-no player-facing seed-entry UI is required in version 1.
+At new game, establish the shared root and save edition 1's complete venue ORDER
+only. Do not generate participants or projected strength for any future venue.
+A circuit edition traverses three venues; each venue may host multiple separate
+competitions before the player wins there. Only the currently entered competition
+owns a five-trainer snapshot. A loss retires it and returns the player to waiting
+for the next competition at that same venue. A win advances circuit traversal.
+The exact availability/wait mechanism and entry gates remain undecided; possible
+first entries near 8/16/24 badges are guidance, not approved thresholds.
 
-Use the framework's pure keyed `KeyedU32` semantics and unbiased `Uniform(n)`
-operation, not a private circuit PRNG. Each draw is keyed by root, stable numeric
-domain ID, decision rules version, decision ID, stable `entityId` (`u64`),
-`occurrenceId` (`u32`), semantic `drawId` (`u32`), and the framework's internal
-rejection index (`u32`). The foundation pins fixed little-endian encoding and
-the exact hash/mixer with golden vectors before this feature is enabled. These
-names describe the required interface, not APIs already implemented in the ROM.
+Edition identity is a `u32` beginning at 1. Each `(editionId, venueId)` has a
+1-based `u32` competition ordinal allocated under the runtime's persisted
+availability rule. Registration calls, reopening/cancelling menus, previews,
+and reloads do not allocate ordinals or make another event available. Loss ends
+an event; only the adopted availability transition can create the next identity.
+Reject overflow rather than wrapping. No cadence or timer is invented here.
+The shared foundation stores one 64-bit root plus seed metadata. The circuit
+stores no copied seed or persistent random cursor.
 
-Use framework domain `CIRCUIT = 1`, with active decisions `ORDER = 1`,
-`ROSTER = 2`, and `POOL_KIND = 5`. ORDER and POOL_KIND rules remain version 1;
-ROSTER rules are version 2 for projected progression-aware eligibility.
-`VISITOR_POLICY = 3` and `LORE_FILTER = 4` are retired; never reuse either ID.
-ORDER uses campaign `entityId = 0`; ROSTER and POOL_KIND use the stable venue ID
-(Indigo = 1, Masters = 2, Hoenn = 3) as their `u64` entity. All use
-`occurrenceId = editionId`; retry/replay/abandonment never creates another
-occurrence. Preserve these semantic IDs. The progression-aware candidate protocol
-changes ROSTER interpretation; save its version 2 and an explicit schedule schema
-version. Version only affected decisions. No prerelease
-migration is required. Resolve keys independently so no
-feature-wide or global random sequence is advanced. Ordinary Pokémon RNG is
-neither consumed nor reseeded, including by root initialization. Future features
-opt in under their own domains.
+Use framework `KeyedU32` and unbiased `Uniform(n)` with domain `CIRCUIT = 1`.
+The active numeric decision IDs remain ORDER = 1, ROSTER = 2, POOL_KIND = 5;
+VISITOR_POLICY = 3 and LORE_FILTER = 4 remain retired. Pin the following keys:
 
-Use semantic draw IDs directly. ORDER uses Fisher–Yates index 2 then index 1.
-POOL_KIND and ROSTER use the allocated battle slot (0 through 4) as their draw
-ID. Venue entities keep these keys stable when travel position changes. The two
-decisions have independent keys; choosing a category does not consume or alter
-its ROSTER draw. The home-only case consumes no POOL_KIND draw or substitute
-semantic draw. A rejection required for unbiased sampling increments only that
-draw's internal rejection index; it cannot perturb later decisions. Eligibility,
-classification, weight lookup, and feasibility checks consume no draws. Existing
-`LocalRandomSeed`/`LocalRandom32` may be used only inside one atomic decision when
-explicitly pinned by the framework; this protocol does not use them or introduce
-another stateful generator.
+| Decision | Rules version | Entity words | Occurrence | Semantic draw |
+| --- | ---: | --- | --- | --- |
+| ORDER | 1 | `entityLo = 0`, `entityHi = 0` | `editionId` | Fisher–Yates index 2, then 1 |
+| POOL_KIND | 2 | `entityLo = venueId`, `entityHi = editionId` | `competitionOrdinal` | Allocation slot 0–4 |
+| ROSTER | 3 | `entityLo = venueId`, `entityHi = editionId` | `competitionOrdinal` | Allocation slot 0–4 |
+
+Stable venue IDs remain Indigo = 1, Masters = 2, Hoenn = 3. Packing the edition
+in the entity's high word and venue in its low word mixes the whole event identity
+without changing the framework's fixed key encoding. Revised POOL_KIND/ROSTER
+versions reflect their new event scope; ORDER remains unchanged. Save an explicit
+new competition-state schema discriminator incompatible with old whole-edition
+snapshots. No prerelease migration or old-algorithm registry is required.
+
+Each slot's category and person draws have independent keys. Home-only slots
+consume no POOL_KIND draw. Rejection increments only the framework's internal
+rejection index, never the event ordinal or another semantic draw. Eligibility,
+classification, history, and feasibility consume no circuit draws. Trainer growth
+uses its independently keyed, fixed TRAINER_GROWTH decision; it cannot advance
+category or roster draws. Ordinary Pokémon RNG is neither consumed nor reseeded, including at root initialization.
+Future features opt in under separate domains; no private circuit PRNG is added.
 
 Use this fixed generation procedure:
 
-1. Validate the root, edition/order, versioned catalog and world point role bands,
-   prior-edition history, and registration eligibility. Capture immutable
-   `B_reg`, lifetime clear mask `L_reg`, history, and all generation versions.
-   Reuse edition 1's saved new-game order. For a later edition, Fisher–Yates
-   shuffle `[Indigo, Masters, Hoenn]` at indices 2 then 1 using ORDER
-   `Uniform(i + 1)`. All six orders remain reachable without origin weighting.
-2. For saved stop i, set `B_i = B_reg` and
-   `C_i = popcount(L_reg union venue IDs scheduled before i)`. This projects
-   first-clear growth within the edition without counting a venue twice. Resolve
-   each candidate's effective TR and stage/profile at `(B_i,C_i)` before applying
-   that world's role bands and content checks. Build fixed home/visitor lists
-   for each venue from those eligible candidates. Previously cleared lifetime
-   venues do not add projected growth; later editions with all facts true use
-   C = 3 at every stop.
-3. Generate the whole circuit together in battle-slot priority `[4, 2, 3, 0, 1]`.
-   For each slot, visit the three venues in saved seeded order (positions 1, 2,
-   then 3). Initialize one local appearance counter per canonical person to zero
-   and one selected-character set per venue. Traversal is part of the contract:
-   headliners are allocated first, then elites, then contenders.
-4. At each slot/venue, remove anyone already selected at that venue from its
-   role's home and visitor pools. Reject an empty home pool. If visitors remain,
-   draw `Uniform(100)` under POOL_KIND with `entityId = venueId`,
-   `occurrenceId = editionId`, and `drawId = battleSlot`: 0–84 chooses home,
-   85–99 visitor. Otherwise choose home without a POOL_KIND draw.
-5. Enumerate the chosen pool in ascending stable `characterId` order and compute
-   each candidate's positive weight from their local scheduled count and this
-   venue's prior-edition history. Sum weights using checked arithmetic, draw
-   framework `Uniform(totalWeight)` under ROSTER with `entityId = venueId`,
-   `occurrenceId = editionId`, and `drawId = battleSlot`, and choose the candidate
-   whose cumulative half-open interval contains the draw. Retain their already
-   resolved stage/profile and projected TR, mark the person in this venue's selected set, and increment their
-   local scheduled count. Other venues' assignments change weights, never home
-   classification or TR suitability.
-6. After allocation, sort the contender pair (slots 0–1) and elite pair
-   (slots 2–3) by ascending snapshotted TR, breaking ties by ascending
-   `characterId`. Keep the headliner in slot 4. The allocation draw IDs remain
-   those used before this presentation sort; no extra draw or title-based reorder
-   occurs.
-7. Return edition ID, ORDER/POOL_KIND/ROSTER rules versions, catalog version,
-   shuffled venues, and each ordered battle's role, character/profile references,
-   effective TR, stage/profile and progression versions, projected point, and
-   registration snapshot inputs to the runtime owner. Persist the resolved whole schedule
-   alongside a valid foundation root before roster UI or battle dispatch can consume it. Runtime
-   atomically commits the new edition and its predecessor history; generation
-   does not increment or consume an edition ID or mutate persistent history.
+1. Validate the foundation root, saved edition/order/current venue, available
+   competition identity, catalog, shared role bands, content, and entry eligibility.
+   Capture actual live `B_entry`, lifetime clear mask `L_entry`, immutable rotation
+   history inputs, growth-policy version and all progression/profile/band/resolver
+   versions. Derive candidate modifiers purely against that root/policy. This captures
+   entry into one competition, not signup for the whole circuit. Reuse the saved
+   venue order. Later editions derive ORDER once at their runtime-owned rollover
+   using the same Fisher–Yates indices; do not generate a future roster there.
+2. Set `B = B_entry` and `C = popcount(L_entry)`. Resolve every candidate's
+   effective TR using its fixed percentage and stage/profile at this actual world
+   point before role bands and content checks. Do not project clears or badges for this or later venues.
+   Build fixed home/visitor lists for only the current venue.
+3. Allocate slots in priority `[4, 2, 3, 0, 1]`: headliner, elites, contenders.
+   Keep one selected-character set for this event. History factors remain fixed
+   throughout allocation; do not count selected people as completed appearances.
+4. At each allocation slot, remove people already selected in this event from
+   both role pools. Reject an empty home pool. When visitors remain, draw
+   POOL_KIND `Uniform(100)` with the event key above: 0–84 selects home, 85–99
+   visitor. Otherwise use home with no category draw.
+5. Enumerate the chosen pool by ascending stable `characterId`, compute positive
+   weights from captured completed-event history, and use checked sums. Draw
+   ROSTER `Uniform(totalWeight)` for that slot and select the matching cumulative
+   half-open interval. Retain their resolved TR/stage/profile and mark selected.
+6. Sort the contender pair and elite pair by ascending saved effective TR then
+   ascending canonical ID. Keep the headliner in slot 4. Draw IDs refer to
+   allocation slots before this presentation sort; consume no additional draws.
+7. Return the full event identity, five ordered plans, actual captured world
+   point, fixed growth percentages/policy version, pre-entry history, and all
+   rules/content/schema versions. The runtime
+   atomically saves this one active event before revealing participants or battle
+   dispatch. No future venue snapshot is returned. Failure preserves availability,
+   ordinal, history, and prior committed state without a partial active field.
 
-POOL_KIND's 85/15 probability describes allocation slots before the pair sort,
-not each displayed room after it. Sorting may move a home entrant and visitor
-past one another. Validate a saved schedule by purely reproducing canonical
-allocation and sorting from its versioned inputs, then comparing the complete
-result; do not compare a displayed slot directly with that slot number's
-POOL_KIND draw. This verification cannot replace the saved schedule or repair
-a mismatch; the runtime's invalid-save handling owns failure.
+POOL_KIND's 85/15 probability describes allocation slots before sorting, not
+room position afterward. Read-only verification reproduces canonical allocation
+and sorting from saved pre-entry inputs, compares the full active snapshot, and
+never replaces it. Do not validate a room occupant against that room number's
+raw category draw. Corruption uses invalid-save handling, never generation.
 
-A different edition supplies different keys, not a guarantee of a different
-permutation or roster. Repeated orders/entrants are valid outcomes; never redraw
-or advance the occurrence to force novelty. Loading a pre-registration save and
-registering again with the same root/next edition/inputs gives the same outcome.
-Do not expose an uncommitted next schedule through preview/skip/cancel paths.
+Different editions or competition ordinals provide new keys, not guaranteed
+novel lineups. For the same root, event identity, versions, entry milestones and
+history, loading before entry reproduces the same result; loading an active event
+reads its saved plan. A changed badge/clear milestone before a later entry can
+legitimately change eligibility, strength, and participants. Future venue fields
+remain unresolved until their own entry. Do not expose preview/skip/cancel paths
+that allocate identities or generate a new uncommitted field.
 
-Catalog enumeration/source order, asset loading, maps visited, menu opens,
-fights, queries, and unrelated opted-in feature calls or content must not affect
-these decisions. With the same root, edition, decision versions, registration milestones/history,
-and versioned semantic inputs,
-an unresolved draw is repeatable even before its first saved resolution. After
-resolution, the saved schedule is authoritative; loading never redraws it.
+Catalog source order, unrelated feature calls, menus, asset loading, and normal
+RNG cannot alter these decisions. Relevant completed-event history and candidate
+changes can affect later competition selections; this is declared input coupling,
+not a shared draw cursor. Canonical allocation within a single event is fixed.
+Raw ORDER depends only on root, edition and its rules; raw category words depend
+on root, full event identity, slot and POOL_KIND rules. Catalog/history/growth-modifier input changes
+cannot perturb those raw words, though they can affect whether a category draw
+is needed or which weighted person is selected. Version only affected decisions.
 
-Catalog versions validate persisted references and reproduce generation inputs;
-do not put a global or catalog version into every random key. A changed roster's
-membership, home assignments, eligibility, ratings, weights, or prior-edition
-history can legitimately change allocation outcomes. Because shared scheduled counts are updated in the
-canonical traversal, relevant changes at an earlier allocation can affect later
-venues, including venues whose own candidate lists are unchanged. There is no
-cross-venue roster independence guarantee and no freedom to reorder allocation.
-Unrelated features, source enumeration order, and content outside the circuit's
-semantic inputs cannot affect its outcome.
-
-Raw ORDER and POOL_KIND keyed results remain independent of catalog size,
-home assignments, and history. The same root, respective rule versions, and
-edition produce the same venue order and raw venue/slot category draws. Inputs
-can change whether the category draw is needed, the effective bucket, or the
-weighted roster outcome; raw-key independence does not guarantee identical
-fields. Increment only the affected decision rules version when its protocol or
-selection rules change. Root derivation version remains foundation-owned;
-schedule schema, active decision versions, and catalog version remain explicit.
-Follow prerelease save policy rather than rebuilding or reinterpreting registered
-schedules.
-
-A missing home role candidate or invalid profile is a generation failure. Never
-allow within-venue duplicates, ignore rating limits, invent home leagues,
-substitute fixed lineups, fall back to visitors for a missing home pool, or redraw
-ORDER/POOL_KIND to repair content. Reject incomplete content in build validation.
-A runtime failure cannot commit a playable new save with a partial schedule;
-report initialization or registration failure while preserving existing committed
-state. Per-venue validation must prove home-only role counts; seed sampling alone
-does not establish that property.
+Invalid home coverage or profiles fail content validation and entry. Never ignore
+TR, duplicate people, invent home leagues, substitute a fixed field, force visitors,
+or reroll a key to repair content. Prove home-only feasibility for every supported
+entry `(B,C)` once gates are adopted, including intermediate badge counts and
+saturation; checking 24 badges or projected circuit points alone is insufficient.
 
 ### NPC TR to battle strength
 
-Use the selected trainer's saved projected effective TR and stage/profile as
-the inputs to circuit strength, including retries and replays. Do not reevaluate
-from live badges or clears after registration. The experimental NPC curve is:
+Use the selected trainer's saved competition-entry effective TR and stage/profile as
+the inputs to circuit strength, throughout that event and save/reload. Do not reevaluate
+from live badges or clears after event entry. The experimental NPC curve is:
 
 ```text
 (0,12), (4,16), (8,18), (16,23), (30,30),
@@ -394,7 +389,7 @@ from live badges or clears after registration. The experimental NPC curve is:
 
 These numeric anchors are provisional and independent of the player's existing
 soft-cap curve, which retains `(0,15)`. Store the resolver/content version with
-the edition so its party plans remain reproducible.
+the active event so its party plans remain reproducible.
 
 For adjacent anchors `(r0,l0)` and `(r1,l1)`, clamp input to 0–80, then compute:
 
@@ -417,7 +412,7 @@ Remove the old encounter-position offsets `[-4,-3,-2,-1,+1]` from this policy.
 The ordered role bands and ascending TR within pairs supply progression through
 a field. Room position, historical title, current player TR, player party, and source absolute levels add
 no extra level adjustment. A trainer with the same stage/profile, resolver version, and effective TR has
-the same party in every eligible circuit appearance. Different projected
+the same party in every eligible circuit appearance. Different actual entry
 world points can give the same person different saved plans within one edition.
 
 Examples: TR 40 gives an ace level of 42; TR 56 gives 62; TR 72 gives 89.
@@ -425,7 +420,7 @@ Support offsets are applied afterward. Final field level ranges depend on D3's
 approved eligibility endpoints. These examples are formula expectations,
 not claims that the resulting encounters are balanced.
 
-Construct and reconstruct through the same schedule-bound profile plan. Resolve
+Construct and reconstruct through the same saved active-event profile plan. Resolve
 the actual selected trainer and roster owner before applying the circuit policy;
 do not identify enrollment from trainer class, map, or a shared party pointer.
 Ordinary/debug battles outside a valid run retain their existing behavior and
@@ -453,7 +448,7 @@ canonical aliases, home leagues and rationale, specialties, starting TR, persona
 checkpoints/first-clear growth, world point role bands, eligibility/exclusion
 reasons, exact stage/profile content, graphics/text coverage,
 and provenance. It must also
-record the catalog and ORDER/POOL_KIND/ROSTER rules versions. D3 approval covers
+record the catalog, growth-policy and ORDER/POOL_KIND/ROSTER rules versions. D3 approval covers
 concrete ratings and teams; titles or canonical reputation alone do not
 establish balanced values.
 
@@ -464,8 +459,10 @@ Required automated evidence:
   metadata, double-battle flags, overlapping/nonascending role bands, and
   out-of-band entries presented as eligible.
 - Prove home-only feasibility of two contenders, two elites, and one headliner
-  per venue at every supported registration/projected point, including C 0–3
-  and saturation. Check TR-first exclusion, multiple valid homes, and within-venue
+  per venue at every supported competition-entry world point, including C 0–3,
+  every supported heterogeneous 90–110% modifier assignment, stage eligibility
+  and saturation. Prove coverage over the entire integer range; endpoint-only
+  checks and root sampling are insufficient. Check TR-first exclusion, multiple valid homes, and within-venue
   uniqueness. Insufficient home role catalogs must fail without partial
   persistence, visitor substitution, or retries; visitors cannot hide missing
   home coverage. Prove home candidates remain available after all valid earlier
@@ -477,7 +474,7 @@ Required automated evidence:
   guest selections or a visitor headliner. Verify visitors keep their full rating
   and strength, and home candidates still receive repeat/history penalties.
 - Cover a home/visitor pair whose TR sort reverses its allocation order. Load
-  verification must accept its saved sorted schedule while rejecting a changed
+  verification must accept its saved sorted event field while rejecting a changed
   entrant; it must neither compare category keys to displayed slots nor replace
   committed content.
 - Pin root vectors including all-zero (`lo = hi = 0`) and all-one
@@ -486,33 +483,33 @@ Required automated evidence:
   weight sums, canonical traversal, within-pair presentation sorting, persisted
   catalog/reference versions, and the framework golden vectors. Verify root
   initialization and circuit resolution do not mutate Pokémon RNG.
-- Pin editions 1, 2, and boundary `u32` identities. Edition 1 has empty history;
-  later editions require exactly the predecessor's completed venue lineups.
-  Check same-venue history factor, scheduled-count factors 0/1/2, absence resetting
-  the prior-venue penalty, and positive weights permitting repeats. History must
-  remain unchanged by defeat, replay, queries, or individual venue clears.
-- Resolve the same next edition twice from identical root/catalog/rating/history
-  inputs, including save/reload before registration: order, assignments, sorting,
-  stages/profiles, projected world points, and TR snapshots must match. Generation cannot consume an edition ID
-  or update persistent history. Preserve legal repeated orders and full fields
-  without novelty retries.
+- Pin editions 1/2 and boundary `u32` identities, and competition ordinals
+  1/2 and overflow. Assert entity low/high words and occurrence mix the whole
+  event identity in both category and roster vectors; ORDER retains edition-only
+  keys. Test current-circuit factors 0/1/2, previous-event returner factors,
+  WIN/LOSS history updates, empty never-competed history, and bounded per-venue
+  unions. Repeated losses cannot overflow or permanently exclude candidates.
+- Resolve the same available competition twice from identical inputs, including
+  reload before entry: allocation, sorting, stages, actual world point and saved
+  TR match. Queries/cancelled entry cannot allocate another identity. A loss retires
+  the event; no immediate retry or replay is offered. Later availability creates
+  a new ordinal at the same venue without guaranteeing a different field. Failure
+  preserves identity, availability and history. No future lineup is generated.
 - Resolve identical inputs around unrelated feature calls, menu opens, fights,
-  queries, and save/load. Reorder registry/source records without changing semantic
-  inputs and assert identical results. Verify lookups consume no semantic draws.
-  Change an earlier allocation's relevant candidates/history in controlled
-  fixtures and allow later rosters to change through scheduled counts. Assert
-  ORDER and raw POOL_KIND keys remain identical. Do not assert that
-  different allocation traversals or changes at another venue preserve rosters.
+  queries and save/load. Canonical source reordering preserves results. Relevant
+  completed-event history can change a later field, while raw ORDER/category keys
+  remain unchanged for their same identities. Changing badges/clears between
+  events legitimately changes TR and eligibility; an active event remains fixed.
 - Add eligible visitors or vary home assignments/history in controlled fixtures.
   Assert raw category draws remain unchanged; effective category availability,
   selected bucket, and roster may change with inputs. Do not confuse 85%/15%
   category odds with per-person inclusion or exact field composition. Use exact
-  fixtures for flat base weights and positive within-edition/history factors,
+  fixtures for flat base weights and positive current-circuit/prior-competition factors,
   applied only after selecting the bucket; frequency thresholds cannot replace
   those deterministic tests.
 - Sweep at least 10,000 documented roots over at least ten consecutive editions
-  using production content, every supported world point, and valid predecessor
-  history. Report order counts,
+  using production content, every supported entry world point, and valid completed-event
+  history, with both wins and multiple losses at a venue. Report order counts,
   per-venue returning/changed opponents, identical consecutive fields, shared
   opponents within each circuit, home/visitor share, home-only fallbacks, category
   outcomes when both pools exist, role/field strength, per-character inclusion relative to eligible opportunities, and absence over
@@ -520,15 +517,21 @@ Required automated evidence:
   invariants. D5 sets quantitative acceptance after measuring these distributions;
   there is no all-current-elites or 80%-per-character attendance target within a
   single circuit. Feasibility counts do not establish sufficient variety.
+- Pin growth-key vectors for all percentage outcomes, canonical aliases, both
+  root words and policy versions. Verify B=C=0 preserves baseline, 100% reproduces
+  the old formula, combined growth rounds once, and modifier derivation never
+  changes raw ORDER/POOL_KIND/ROSTER values for unchanged circuit keys. Gyms and
+  competitions use the same canonical percentage; badges, visits and losses
+  cannot redraw it. Validate captured percentages against root/policy on reload.
 - Exhaust integer TR 0–80 for interpolation, saturation, signed offsets, and
   monotonicity. Construct every enabled profile, preserve source identity and
   non-level metadata, and verify identical party reconstruction.
 - For identical world point, stage/profile, resolver version, and TR, prove strength
   identical across editions and venues. Band tables are shared at the same
-  world point and never widened at runtime. Cover projected clear growth within
-  edition 1 and C = 3 saturation in later editions, with no edition inflation.
+  world point and never widened at runtime. Cover actual badge/first-clear growth between
+  events and C = 3 saturation, with no edition/ordinal inflation.
 - Vary live player TR, party, badges, clears, location history, and gameplay RNG around a saved
-  schedule; human participants and ordinary circuit strength remain unchanged.
+  active event; human participants and ordinary circuit strength remain unchanged.
   Cover species-randomizer bypass separately and verify lifecycle.
 - Verify selected-trainer money, XP, AI, healing items, graphics, and dialogue
   follow the selected profile, including a former fixed room occupant's absence.
@@ -540,10 +543,12 @@ reserve policy. Report balance playtesting separately from structural validation
 ## Open questions
 
 The parent PRD and [trainer progression proposal](trainer-world-progression.md)
-own the remaining decisions. D1 confirms projected growth and freezing the
-complete edition at registration. D3 must approve concrete progression content, world point band endpoints, profiles, and
-balance evidence. D4 still owns the proposed 24-badge first-registration gate;
-D5 owns rotation factors and variety acceptance. Title-agnostic finals and
+own the remaining decisions. D1 confirms freezing only the entered competition
+and retiring it on loss. D3 must approve concrete progression content, world point
+band endpoints, profiles and balance evidence. D4 owns signup/entry gates and
+progression balance; first entries near 8/16/24 badges are tentative guidance, not
+adopted requirements. D5 owns rotation factors and variety acceptance. D6 owns
+competition availability/waiting; no real-time/calendar cadence is approved. Title-agnostic finals and
 recurring championships remain approved. No generation can ship before home-only
 coverage and variety are established at all supported points. More regions or
 doubles require an explicit revision.

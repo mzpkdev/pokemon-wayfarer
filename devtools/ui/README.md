@@ -72,9 +72,12 @@ contain lower evolutions or five-member Elite Four teams, making those gaps
 visible for content authoring. Stage thresholds, growth rates and checkpoint
 ratings are provisional, not approved ROM behavior. The current ROM scaler is
 unchanged. The [world progression contract](../../.product/specs/trainer-world-progression.md)
-defines personal growth and the confirmed battle/edition snapshot boundaries;
-numeric production balance remains provisional. The explorer does not implement
-circuit registration, projected eligibility, or saved league schedules.
+defines personal growth and battle/current-competition snapshot boundaries;
+numeric production balance remains provisional. The approved world design now
+scales each trainer's growth with an immutable seed-derived 90–110% percentage;
+this explorer uses a neutral **100%** and has no seed-modifier controls. It does
+not implement competition entry, opponent selection, waiting after a loss,
+or saved event teams.
 
 Default NPC levels start at 12 at TR 0, allowing Brock's TR 2 team to match
 Geodude 12 / Onix 14. Gym leaders start with two-member prototypes and develop
@@ -83,12 +86,14 @@ through stages at TR 28 and 48. Four personal TR checkpoints cover 0, 8, 16 and
 an editable six TR by default, with visible saturation warnings at TR 80.
 The existing player TR formula and soft-cap curve remain separate. World-point
 controls allow exploratory combinations without enforcing league entry gates.
-Growth is deterministic; seed variation and league lineup generation are not
-part of this first tool.
+Displayed growth is the deterministic neutral-100% authoring reference;
+seed-derived personal growth variation and league lineup generation are not
+implemented by this tool.
 
 Gym eligibility does not dictate a trainer's development speed. An optional
 catalog `badgeTRCheckpoints` tuple authors their four checkpoints directly.
-Blue uses TR **6 / 54 / 57 / 59** at **0 / 8 / 16 / 24 badges**, giving ace
+At neutral 100% growth, Blue uses TR **6 / 54 / 57 / 59** at
+**0 / 8 / 16 / 24 badges**, giving ace
 levels **17 / 59 / 64 / 68** before league-clear growth. His opening remains
 approachable, but his eight-badge team is near the other Champions rather than
 the ordinary Gym curve. This deliberately puts him above the player's level-42

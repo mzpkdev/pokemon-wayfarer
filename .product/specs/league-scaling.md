@@ -5,18 +5,26 @@ Implemented: Partial
 
 Proposed successor: [Trainer world progression](trainer-world-progression.md) owns
 personal NPC ratings and explicitly enrolled initial singles Gyms. Each NPC's
-baseline is its start TR; badge progression interpolates personal checkpoints
-at 0/8/16/24 badges, then adds that trainer's growth per first lifetime venue
-clear and clamps to 80. This replaces the earlier static-strength proposal.
-[Seeded circuit runtime](seeded-league-circuit.md) generates all fifteen slots at first eligible
-registration, using saved badge/first-clear inputs and projected earlier stops.
+baseline is its unchanged start TR. The shared world-progression authority
+interpolates personal badge checkpoints and scales combined badge/first-clear
+growth by an immutable seed-derived personal percentage (90–110%). The same
+canonical person uses that curve across enrolled Gym and league aliases;
+percent and growth-policy version are fixed for the save, never rerolled per
+event or badge. This replaces the earlier static-strength proposal.
+[Seeded circuit runtime](seeded-league-circuit.md) selects only the current league
+competition's five opponents at entry, using live badge/first-clear inputs.
 Resolved NPC TR determines eligibility before 85/15 home/visitor selection and
 rotation. Shared world-point-indexed 2/2/1 bands replace fixed bands and room
-position offsets; concrete values remain experimental. Saved opponent TR,
-party-stage/profile identities, and versions make retries and replays unchanged
-throughout an edition. Later edition count alone grants no strength. The proposed
-24-badge gate remains a proposal. The fixed runtime contract below describes
-current ROM behavior, not this unimplemented successor.
+position offsets; concrete values remain experimental. Save selected opponent
+TR, teams/stage/profile identities, inputs, and versions for the active event.
+Reload and reconstruction preserve it; future venues remain unselected.
+A loss ends that competition, releases the active lock, and requires waiting
+for the next event at the same venue. New competitions resample live milestones
+and include lost events in rotation history. Winning advances the seeded order.
+Later edition count alone grants no strength. Registration thresholds are
+undecided, with approximately 8/16/24 badges by stop tentative; waiting/cadence
+and exhibition replay design remain open. The fixed runtime contract below
+describes current ROM behavior, not this unimplemented successor.
 
 The scaling engine, fixed Indigo/Masters/Hoenn roster and venue wiring,
 persisted stage/replay/entry-TR identity, and +8-per-venue progression are
