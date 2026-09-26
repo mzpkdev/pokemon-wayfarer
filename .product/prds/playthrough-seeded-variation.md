@@ -52,8 +52,11 @@ circuit's trainer pool may change newly generated rosters, but must not change
 the independently keyed venue order or an unchanged trainer/league pair's lore
 draw within the same edition. Explicit constraints inside one lineup still
 apply: selecting a trainer removes that character from its remaining four
-places. It does not remove the trainer from another league; cross-league
-appearances are allowed.
+places. Cross-league appearances remain possible, with a soft penalty based
+on scheduled appearances elsewhere in the edition. This intentionally couples
+roster allocations; pure keys do not imply independent selection inputs. The
+previous completed edition's lineup at the same venue also affects roster weights.
+Neither constraint changes ORDER or raw trainer/venue lore draws.
 
 ### Stable outcomes and meaningful new occurrences
 
@@ -104,20 +107,26 @@ is no independent saved circuit seed or cursor that other features can advance.
 
 After completing all three leagues, the player may register for the next edition.
 That transition generates a complete schedule using the next edition identity
-and commits both together. It preserves the root, lifetime unlocks, and
-first-clear progression rewards. A failed registration preserves the completed
-edition. Waiting, losing, abandoning an attempt, or replaying cannot skip to
+and the outgoing edition's rosters as participation history. Commit the new
+identity, whole schedule, and bounded prior-venue history together. Preserve the
+root, lifetime unlocks, and first-clear progression rewards. A failed registration
+preserves the completed edition and its existing history. Waiting, losing, abandoning an attempt, or replaying cannot skip to
 another draw. Loading a save from before registration and registering again
-produces the same next edition for the same rules and content.
+produces the same next edition for the same rules, content, and history inputs.
 
 An edition fixes its order, lore decisions, and lineups through every attempt.
 A later edition may produce different results; distinct keys do not guarantee
-different orders or participants. Familiar trainers can return. No repeat
-avoidance reroll or automatic NPC TR growth is part of recurrence.
+different orders or participants. Soft weighting encourages roughly two returning
+and three different opponents per venue, without a quota or a repeat-avoidance
+reroll. Missing a venue for one edition clears its previous-participation penalty;
+trainers are never permanently excluded. Initial baseline TR remains stable.
+Future modest rating dynamics require a separate design and cannot change a
+published schedule; recurrence does not automatically increase NPC TR.
 
 All existing circuit rules remain in its PRD, including uniqueness within each
-lineup, regional selection preference, rating-based strength, and remaining
-content and balance choices. This framework does not settle those decisions.
+lineup, the TR-first lore filter, shared contender/elite/headliner role bands,
+and rotating participation. The circuit owns remaining catalog, qualification,
+and balance choices; the seed framework does not decide their values.
 
 ## Boundaries
 

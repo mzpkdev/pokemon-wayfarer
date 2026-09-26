@@ -126,9 +126,12 @@ Existing Johto and Kanto callers keep their current result.
 The proposed [playthrough seed framework](playthrough-seed-framework.md) adds
 one shared root record and consumer-owned deterministic outcomes under this
 save-storage policy. Recurring circuits retain that root and atomically replace
-their current edition schedule while preserving lifetime progression. Seed
-initialization, versioning, and RNG isolation are defined in that draft; the
-extension is not implemented by this document.
+their current schedule and immediately previous completed edition's canonical
+roster IDs by venue while preserving lifetime progression. The bounded history
+is a selection input, not an unlimited record of past teams. Size assertions
+and save-sector accounting must include the root, both records, and edition/run
+metadata within the allocation below. Seed initialization, versioning, and RNG
+isolation are defined in that draft; this extension is not implemented here.
 
 The additional Hoenn banks live in `SaveBlock3` or an equivalent separately
 bounded saved structure. The implementation must not enlarge `SaveBlock1`

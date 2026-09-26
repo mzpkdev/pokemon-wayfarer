@@ -12,8 +12,12 @@ and cross-build acceptance listed below.
 The proposed [Seeded Trainer Circuit](../prds/seeded-trainer-circuit.md) retains
 this player TR and cap contract. If adopted, progression examples refer to first,
 second, and third lifetime venue clears rather than a fixed Indigo/Masters/Hoenn
-order. Recurring editions never reset those facts or add more +8 contributions;
-NPC baseline TR remains a separate, fixed strength input.
+order. Its proposed common 24-badge entry gate gives TR 56/64/72/80 and soft
+caps 62/78/89/100 across zero through three lifetime clears. Sub-24-badge clear
+examples below describe the current implementation only. Recurring editions
+never reset those facts or add more +8 contributions. NPC baseline TR remains
+a separate strength input, stable initially; future modest changes are outside
+this player progression contract.
 
 ## Scope
 

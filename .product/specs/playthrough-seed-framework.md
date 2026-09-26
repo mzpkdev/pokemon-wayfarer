@@ -236,10 +236,10 @@ for all three decisions:
 | --- | --- | --- |
 | ORDER, ID 1 | Entity zero; occurrence = editionId | Fisher–Yates step index, 2 then 1 |
 | LORE_FILTER, ID 4 | Canonical character identity; occurrence = editionId | Venue ID: Indigo = 1, Masters = 2, Hoenn = 3; after TR eligibility, an unaffiliated candidate is dropped when `Uniform(2) == 0` |
-| ROSTER, ID 2 | Entity zero; occurrence = editionId | `(position << 8) \| temporarySlot`, position 3–1 and slot 0–4 |
+| ROSTER, ID 2 | Stable venue ID: Indigo = 1, Masters = 2, Hoenn = 3; occurrence = editionId | Battle slot 0–4 |
 
 The [pool spec](circuit-trainer-pool.md) owns allocation order, TR eligibility,
-authored league affiliations, rating weights, feasibility, and final sorting.
+authored league affiliations, rotation weights, feasibility, and final sorting.
 Use explicit ORDER, LORE_FILTER, and ROSTER rules versions. Evaluate TR first;
 a lore affiliation cannot admit a trainer whose rating is outside the band.
 Eligible affiliated trainers pass the lore step without a draw. Other eligible
@@ -247,28 +247,47 @@ trainers face one 50% drop decision per character/venue/edition; a removed train
 may still survive for another venue. The gate is not a 50% appearance chance,
 a visitor quota, or a decision to remove a character globally.
 
+All venues use the same ordered disjoint role TR bands: contender slots 0–1,
+elite slots 2–3, headliner slot 4. Numeric endpoints remain D3 tuning. Travel
+position does not choose difficulty. The pool spec allocates battle-slot
+priority `[4,2,3,0,1]`, and for each slot visits venues in saved travel order.
+Sort only within contender/elite pairs by TR then canonical ID. Headliner
+appointment is title-agnostic. Rules versions remain 1 in this unimplemented draft.
+
 Feasibility checks are pure and consume no keyed draws. ORDER and a given pair's
 raw LORE_FILTER value do not depend on unrelated catalog entries or their
 versions. Changing that pair's TR eligibility or authored affiliation can
 legitimately change whether the lore draw applies. ROSTER uses the retained
-candidates and rating weights through the consumer algorithm. Choose five
+candidates, canonical scheduled-occurrence counts within this edition, and
+immediately prior completed-edition IDs at the same venue. Proposed D5 weight
+is base 1 times within-edition factor `[16,4,1]` for scheduled counts 0/1/2,
+times prior-venue factor 1 for a returner or 2 otherwise. Empty edition-1 history
+creates no returning penalty. Approximately two returners and three new trainers
+is a soft goal, not a quota, exclusion, or reroll condition. Choose five
 distinct canonical characters per lineup; a character selected there remains
 eligible for every other league whose TR and lore checks they pass. There is
-no global used-character set or cross-league repeat penalty. Choices within
-one lineup affect its remaining slots, without depleting another venue's pool.
+no global used-character exclusion, but rotation weights softly discourage
+repeat appointments. ROSTER decisions are jointly dependent through scheduled
+counts/history: changing relevant candidates at one venue can affect later
+choices elsewhere. Semantic keyed calls remain pure; there is no shared RNG
+cursor, and unrelated features cannot perturb those inputs or draws.
 Neither lore gates nor order can be redrawn to repair a roster shortage.
 
-Persist edition 1 with its resolved order and fifteen character/profile/TR
+Persist edition 1 with its resolved order and fifteen role/character/profile/TR
 selections at new game through the [runtime spec](seeded-league-circuit.md).
 After all three leagues are completed and no run or ceremony is pending, the
-player can register for edition `editionId + 1`. Derive its complete schedule
-under that occurrence, then commit the new edition identity, schedule, and fresh
-edition progress together. Do not consume an edition number if generation or
-registration fails. Reject counter overflow without wrapping or replacing the
+player can register for edition `editionId + 1`. Snapshot the completed current
+edition's five character IDs by stable venue and edition ID into staged history.
+Derive the next complete schedule using that history and occurrence, then commit
+history, new edition identity, schedule, and fresh edition progress together,
+preserving completed-count invariants. If generation or registration fails,
+retain both old current state and old history without consuming an edition
+number. Reject counter overflow without wrapping or replacing the
 previous completed edition.
 
 Loading a save from before registration must reproduce the same next edition
-under the same root, keys, rules, and content. Losses, exits, retries, replays,
+under the same root, keys, rules, content, and staged prior-venue history.
+Losses, exits, retries, replays,
 time, and menu queries cannot advance the edition. Do not expose a separately
 generated next-edition preview or allow skipping an unfinished edition. Starting
 a new edition retains lifetime progression, unlocks, and first-clear accounting;
@@ -277,8 +296,14 @@ the runtime spec owns those transactions and their recovery.
 The root lives once in shared persistence; the circuit stores neither another
 seed nor a draw cursor. Loading a valid schedule reads it instead of regenerating
 it. Unrelated features and ordinary gameplay RNG cannot change it. Only the
-current edition's complete schedule is required in the save; recurrence does
-not justify an unbounded archive of prior schedules.
+current edition's complete schedule and immediately previous completed edition's
+five character IDs per stable venue are required in the save. History is empty
+for edition 1; thereafter `history.editionId = editionId - 1`. It preserves
+authoritative generation inputs, not full old schedules/parties or an unbounded
+archive. Validate its schema, canonical references, per-venue uniqueness,
+venue mapping, and edition relation; corrupt history cannot silently clear or
+redraw. Gameplay, replay, and room defeats do not mutate history. Resolved
+current slots use saved profiles/baseline TR rather than reallocating from it.
 
 Different edition identities may produce the same order or participants. Never
 reroll to force novelty or infer strength growth from an occurrence number.
@@ -334,14 +359,19 @@ Required implementation evidence:
   unchanged character/venue pair's LORE_FILTER draw for the same root, edition,
   and respective rules versions. Test TR rejection before lore, affiliated bypass,
   the 50% drop boundary, and venue-local rather than global exclusion.
-  Permit repeated characters across qualifying leagues, reject duplicates
-  within a lineup, and prove generating one lineup cannot deplete another.
+  Permit repeated characters across qualifying leagues and reject duplicates
+  within a lineup. Test positive repeat/history weights: earlier assignments
+  may change later weights but cannot remove eligible people at another venue.
+  Pin the canonical joint traversal and role counts; do not assert cross-venue
+  roster independence.
 - Exercise the circuit's actual recurring lifecycle: edition 1 at new game,
   registration for edition 2 after completion, and reloads both before and after
   registration. Pin vectors that include edition identity; verify it is mixed
   into ORDER, LORE_FILTER, and ROSTER without requiring every output to differ.
   Failed generation, duplicate callbacks, unfinished editions, and overflow
-  cannot consume or skip an edition. Verify unchanged root/global RNG state and
+  cannot consume or skip an edition. Verify atomic prior-venue history updates,
+  empty edition-1 history, predecessor identity, and failure preserving both
+  old schedule and old history. Verify unchanged root/global RNG state and
   preservation of lifetime rewards and unlocks across rollover.
 - Reject missing roots and unsupported versions without a reroll. Verify valid
   all-zero roots, initialized-record reuse, copied saves, and genuine New Game.

@@ -11,7 +11,10 @@ The proposed [Seeded Trainer Circuit](seeded-trainer-circuit.md) retains this
 player TR contract. If adopted, its recurring editions use separate current
 results and lifetime venue clears: lifetime rewards contribute +8 per venue
 once, and new editions never reset TR or add further progression contributions.
-Its NPC-based circuit strength does not replace player caps or wild scaling.
+Its proposed common 24-badge entry gate gives TR 56/64/72/80 across zero through
+three lifetime clears; current sub-24-badge league-clear examples do not apply
+to that proposal. Its NPC-based circuit strength does not replace player caps
+or wild scaling.
 
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes named native-utility carriers and permanent-retention

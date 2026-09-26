@@ -4,7 +4,9 @@ Implemented: Yes
 
 Proposed successor: [Seeded Trainer Circuit](seeded-trainer-circuit.md) replaces
 the fixed order and lineups with recurring editions, each with a seeded
-itinerary and rated trainer pool. Lifetime progression rewards apply once;
+itinerary and rated trainer pool. All venues use comparable contender/elite/
+headliner fields, with soft rotation across editions. A proposed common 24-badge
+entry gate replaces the position-based 8/16/24 ladder. Lifetime progression rewards apply once;
 later editions provide another competition without resetting unlocks.
 That draft separates confirmed requirements from proposed defaults. This document
 remains the approved baseline until the successor is adopted.

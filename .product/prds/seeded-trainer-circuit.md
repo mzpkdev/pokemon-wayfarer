@@ -1,346 +1,303 @@
 # Seeded Trainer Circuit
 
 Implemented: No
-Design status: Draft; confirmed requirements and proposed defaults are separated below.
+Design status: Draft; the regional-championship direction is approved. Numeric
+balance, qualification, and supporting implementation defaults remain under review.
 
 ## Intent
 
-Make Wayfarer's circuit a recurring competition among recognizable trainers.
-A new game draws its first itinerary and opponents from shared data; completing
-each three-league edition lets the player register for another seeded edition.
-Each field remains a challenge the player can learn and prepare for.
-An opponent's own Trainer Rating determines both where they can compete and
-their battle strength.
+Make Indigo, Sevii Masters, and Hoenn recurring regional championships with
+recognizable competitors and changing fields. Each edition contains all three
+venues in a seeded travel order. Every venue offers a comparable competition:
+two contender fights, two elite fights, and one headliner. Travel position no
+longer makes a whole league weak, intermediate, or strong.
+
+Trainer Rating describes a competitor's strength. Participation changes between
+editions without requiring large rating swings. Returning trainers remain part
+of the world; an edition should expose a selection of the pool rather than try
+to include every established Elite Four member and Champion.
 
 ## Design
 
-### Confirmed requirements
+### Approved direction
 
-- Replace the preset League lineups with a pool of notable Gym Leaders,
-  Elite Four members, and Champions.
-- Each trainer has an authored baseline Trainer Rating (NPC TR). It affects
-  both selection into a competition and strength in battle.
-- Each league lineup contains five distinct characters, including across
-  alternate teams, Trainer IDs, or titles. The same character may appear in
-  multiple leagues when independently TR-qualified and lore-admitted at each.
-- Check TR suitability first. A trainer who fits a league's lore still cannot
-  bypass its competitive rating requirements.
-- After TR eligibility, each trainer without a sensible affiliation to that
-  league has exactly a 50% seeded chance of being dropped from its candidate
-  list. Affiliated trainers pass this filter. Trainers may have multiple
-  sensible league affiliations, supported by explicit lore rationale.
-- Each circuit edition contains three leagues. The first edition provides
-  progression; after completing all three, the player manually starts the next
-  edition without a time calendar or wait.
-- Derive each edition's entire order and rosters from the same playthrough root
-  and edition identity. Retain them through retries, replays, and save/load;
-  loss or abandonment cannot advance the edition or produce another draw.
-- NPC TR remains fixed authored strength. Later editions do not automatically
-  inflate ratings or levels, and player strength does not adapt opponents upward.
-- Use one long-term playthrough root seed for opted-in authored Wayfarer
-  variation. The circuit is its first consumer; future features opt in
-  individually and cannot perturb circuit decisions.
-- Repeating an unresolved decision with the same seed, key, and inputs gives
-  the same outcome. Saving and reloading cannot provide a new circuit draw.
-  Existing Pokémon gameplay RNG and randomizer behavior remain unchanged.
+- Replace fixed lineups with a shared pool of recognizable Gym Leaders, Elite
+  Four members, and Champions. Each canonical person has an authored baseline TR
+  that determines competitive eligibility and battle strength.
+- All three venues use the same strength roles: two contenders, two elite
+  competitors, and one headliner. Roles depend on TR, not historical titles.
+  A qualified Gym Leader may be a headliner. Seeded travel order remains mandatory
+  for edition results but does not change the role bands or opponent strength.
+- Keep ratings stable in the initial version. Future modest dynamic TR is a
+  separate design; variety must work without it. Editions and player progress
+  never automatically inflate opponents.
+- Apply TR eligibility first. An unsuitable trainer cannot qualify through
+  local affiliation, lack of alternatives, or a desire for roster turnover.
+- Then apply the existing lore filter: an affiliated trainer passes; each
+  unaffiliated trainer has exactly a 50% seeded chance of being dropped for that
+  venue and edition. Explicit, justified affiliations may include several venues.
+- Five distinct canonical people appear within a league. Cross-venue appearances
+  within an edition remain possible but receive a soft selection penalty.
+  Alternate teams, Trainer IDs, costumes, and titles do not bypass identity.
+- Encourage partial turnover between editions. Roughly two returning and three
+  different opponents per venue is a tuning target, not a reserved-slot quota.
+  Recent participation reduces selection weight; missing an edition at that
+  venue removes the previous-participation penalty. No lifetime exclusion exists.
+- Complete all three leagues before manually registering for the next edition.
+  No calendar wait, automatic rollover, skip, or cancel-to-reroll path applies.
+- Derive the whole schedule from the shared playthrough root, edition identity,
+  and defined content/history inputs. Retries, replays, and reloads retain it.
+  Existing Pokémon gameplay RNG and randomizers keep their current behavior.
 
-### Proposed defaults
+### Strength and field composition
 
-The remaining rules form a concrete draft for review. They are recommendations,
-not individually approved decisions. D1 is resolved by fixed NPC strength;
-D2–D3 under **Open questions** and the supporting defaults remain reviewable.
+Propose three ordered, non-overlapping inclusive NPC TR bands, shared by every
+venue and edition. D3 owns their numeric endpoints and the content review.
 
-Use the three existing destinations: Indigo League, Sevii Masters, and Hoenn
-League. Each appears once. Circuit position controls admission and expected
-strength; the destination controls its location and local ceremony.
+| Battle slots | Role | Slots per venue |
+| --- | --- | ---: |
+| 1–2 | Contender | 2 |
+| 3–4 | Elite competitor | 2 |
+| 5 | Headliner | 1 |
 
-| Position | First-edition qualification | First-ever venue-clear reward |
-| --- | --- | --- |
-| 1 | At least 8 global badges | +8 player TR |
-| 2 | At least 16 global badges and position 1 cleared | +8 player TR |
-| 3 | All 24 badges and positions 1–2 cleared | +8 player TR |
+A trainer's baseline places them in a role; their title does not. Sort the
+contender pair and elite pair by TR, with stable character identity breaking
+ties. The headliner band is above both other bands. Do not use the old whole-league
+position targets 40/56/72, or lower a trainer's baseline just to increase attendance.
 
-For example, a seed may produce Hoenn, Indigo, then Masters. Hoenn hosts the
-opening field, Indigo the middle field, and Masters the strongest field. That
-sequence is mandatory for edition results. Exploration and earning badges remain
-independent of the itinerary; all 24 badges can be collected before position 1.
+Each trainer has one reviewed six-member competitive singles profile. TR sets
+levels independently of the player's TR or party; authored species, moves,
+items, ace, and AI supply the recognizable challenge. The same profile and
+saved TR give the same strength across eligible appearances. Initial Gym,
+story, rival, and personal rematch encounters remain separate.
 
-Generate all three five-opponent lineups alongside the itinerary. Store the
-resolved choices for the current edition. Draw each league independently without replacement
-within its five-person lineup; there is no global exclusion or repeat penalty.
-Gym battles, story encounters, and personal rematches remain separate
-appearances and do not consume a circuit place.
+Initial membership is supported Kanto, Johto, and Hoenn characters under D3.
+Red remains a separate mastery encounter. Paired/double-battle characters such
+as Tate and Liza require another format decision and are excluded initially.
+Story availability does not remove a trainer from sanctioned competition.
 
-Use fixed NPC strength (resolved D1). Each position selects from
-an appropriate NPC TR range. A trainer's rating determines their team levels,
-independently of the player's rating or party. Their authored competitive team,
-specialty, ace, moves, items, and AI give that strength a recognizable identity.
-Their NPC TR does not rise after player victories or fall after defeats.
+### Rotation between and within editions
 
-Within each competition, order the selected trainers by NPC TR. The strongest
-selected trainer is the final opponent, regardless of whether their background
-is Gym Leader, Elite Four member, or Champion (D2). Historical titles do not
-reserve a slot. Red remains a separate mastery encounter after all three clears
-and is excluded from the pool.
+Build the three fields together. A trainer scheduled at another venue receives
+less weight, but remains eligible. The immediately preceding completed edition's
+lineup at the same venue supplies the returning-participant signal. Missing that
+venue for one edition clears that signal, even if the trainer competed elsewhere.
+Gym battles, losses, replays, and room visits do not count as participation inputs.
 
-First form the TR-suitable candidate list for each scheduled venue. Then apply
-one seeded lore filter per canonical character and venue: an affiliated trainer
-passes; an unaffiliated trainer stays only when `Uniform(2) = 1` and is dropped
-when it is 0. The result is fixed for that edition and cannot be retried after a loss
-or reload. Select from the retained feasible candidates using only the proposed
-rating-proximity weight; there is no affiliation bonus or visitor quota.
+Propose flat base weight inside each approved TR role, replacing the previous
+sharp target-proximity weighting. Under D5, initially test these integer factors:
 
-Author `leagueAffiliations` directly as a set of Indigo, Sevii Masters, and
-Hoenn, with a rationale per trainer. More than one affiliation is allowed;
-current map region or a blanket Kanto/Johto/Hoenn mapping does not assign it.
-Membership affects the lore filter, never strength or TR suitability. Do not
-invent affiliations to make an undersupplied catalog pass validation.
+| Condition | Factor |
+| --- | ---: |
+| Already scheduled at zero / one / two venues in this edition | 16 / 4 / 1 |
+| Appeared at this venue in the immediately previous edition | 1 |
+| Did not appear there, or this is edition 1 | 2 |
 
-The 50% rule is per-candidate retention, not final appearance probability.
-Multiple unaffiliated trainers may be selected in one field. A large global
-pool can still crowd out affiliated candidates after filtering; measure the
-actual field composition during balance review without altering the gate.
+Multiply the applicable factors. All retained candidates have positive weight;
+no soft preference can restore a lore-filtered trainer or override a TR band.
+The pool spec pins the allocation traversal and keys. Earlier allocations can
+affect later roster weights, so individual venue rosters are intentionally coupled.
 
-The initial pool uses supported Kanto, Johto, and Hoenn characters with reviewed
-competitive singles teams (D3). Author six-member circuit profiles so battle
-size is consistent across roles. Paired battles such as Tate and Liza require a
-separate format decision and are excluded from this first version. Story
-availability does not decide participation: the circuit is a sanctioned
-appearance, separate from a trainer's local Gym or quest role.
+For example, Blue may headline Indigo in edition 1, Lance in edition 2, and
+Blue again in edition 3. Neither permanent exclusion nor changed TR is required.
+An identical consecutive field is still legal: never redraw or consume a new
+edition ID to force the turnover target. These weights are proposed tuning
+values, not evidence that the target has been achieved.
 
-### Attempts and replays
+The 50% lore rule is candidate retention, not appearance probability. There is
+no extra home multiplier, visitor quota, or forced local count. Review actual
+regional composition: a large outsider pool can overwhelm the intended local
+character even after the filter. Authored affiliations need lore rationale;
+current map location and a need to fill slots are insufficient.
+
+### Qualification and progression
+
+A common championship standard replaces the old 8/16/24 admission ladder.
+Propose requiring all 24 global badges before entering the first championship
+(D4). Subsequent stops require the preceding current-edition result, with no
+additional badge or TR threshold. Earning badges and exploring remain independent
+of the published seeded itinerary.
+
+Retain the proposed once-per-venue progression reward: each first-ever venue
+clear contributes +8 player TR, at most three times for the playthrough. Under
+the existing badge curve, the shared 24-badge gate means player TR progresses
+56 → 64 → 72 → 80 across those clears. The corresponding soft caps are
+62 → 78 → 89 → 100. There is no separate 48/64/80 earliest-clear route in this
+proposal. Later editions provide results and ordinary battle rewards, not more TR.
+
+This leaves a player progression advantage: any venue can be the first stop at
+cap 62, and later editions face a fully progressed player. D3/D4 must validate
+both situations together. The prior illustrative NPC baselines are not adopted,
+and qualification does not prove that any particular lineup is balanced. Keep
+this as an explicit pre-implementation balance gate; do not hide the difference
+through player-adaptive enemies or edition inflation.
+
+### Attempts, replays, and subsequent editions
 
 Losing or leaving resets that competition's room progress. Returning faces the
-same people, in the same order, with the same team profiles and NPC TR. Saving,
-reloading, earning badges, and changing parties cannot reroll the field or raise
-its strength. Ordinary battle RNG still operates normally.
+same people, order, profiles, and assigned TR. Ordinary battle RNG still operates.
+Cleared venues remain replayable until registration replaces the edition.
+Replays grant ordinary battle rewards but no extra edition result, progression
+TR, Hall of Fame entry, Champion Ribbon, or completion credits.
 
-Cleared competitions remain replayable with the same lineups and strength.
-Replays grant ordinary battle rewards, but no additional progression TR,
-circuit clear, Hall of Fame entry, Champion Ribbon, or completion credits.
-An edition rollover replaces the schedule; it is separate from replay admission.
-NPC rating changes and stronger rematch profiles remain separate future features.
+Propose registration at any venue reception after all three results commit and
+no run or ceremony is pending. Derive the next schedule using the outgoing
+completed edition's lineups as prior-venue history. Atomically commit the new
+edition ID, schedule, that history, and fresh current-clear state. Failure keeps
+both the old schedule and its old history, and consumes no edition ID. Counter
+overflow refuses registration without changing the save.
 
-### Subsequent editions
+Persist the current schedule, immediately previous completed edition's canonical
+roster IDs by venue, and a bounded completed-edition count. Do not store unlimited
+old teams or a lifetime participation blacklist. The history preserves the
+selection inputs for reproduction; new-game edition 1 uses empty history.
+Badges, lifetime clears, TR high-water state, recognition, regional cleanup,
+and Blue/Red access survive rollover.
 
-The player may register for edition 2 only after completing edition 1, then
-edition 3 after edition 2, and so on. There is no skip, future-edition preview,
-cancel-to-reroll path, or automatic rollover. The same seed and edition always
-resolve the same choices, including after loading a save made before registration.
-A later edition may coincidentally repeat the previous order or entrants; do
-not reroll to force novelty.
-
-Propose registration at any venue reception after the current edition is
-complete and no run or ceremony is pending. Generate the whole next schedule,
-then atomically commit its edition ID, schedule, and fresh current-clear state.
-Failure leaves the completed edition available and consumes no edition ID.
-Edition counter overflow refuses registration and preserves the save.
-
-All 24 badges are already earned by later editions. The seeded venue sequence
-remains mandatory, with the same position TR targets and approved eligibility
-ranges as edition 1. No stronger endgame band or edition multiplier is implied.
-Badges, lifetime clears, player TR, regional titles and cleanup, and Blue/Red
-unlocks survive rollover. Later editions provide competitive results and
-ordinary battle rewards rather than repeatable progression TR.
-
-Propose persisting only the current schedule and a bounded completed-edition
-count, without an unlimited itinerary/team history. The completed current
-edition stays replayable until registration replaces it. Record each venue's
-result and increment the completed-edition count once per edition.
-
-Propose one new winning-team Hall of Fame record and Champion Ribbon flow for
-Indigo and Hoenn per edition result. Masters always uses its Gallery and never
-awards regional recognition, Hall of Fame, or a Champion Ribbon. Regional
-story cleanup and progression rewards apply only on each venue's first-ever
-clear. Full story credits follow edition 1's final result; later editions use
-a brief completion presentation. Same-edition replays produce no additional
-records or ceremony rewards. New prize currencies/items and detailed prestige
-presentation beyond the count require separate content and balance work.
+Propose one new winning-team Hall of Fame and Champion Ribbon flow for Indigo
+and Hoenn per edition result. Masters uses its Gallery without regional
+recognition, Hall of Fame, or a Ribbon. Apply regional cleanup only on a venue's
+first-ever clear. Full story credits follow edition 1's final result; later
+editions use a brief completion presentation. Prize currencies/items and more
+prestige systems require separate content and balance work.
 
 ## Boundaries
 
-This changes Wayfarer's circuit selection, order, opponent strength, and their
-dependent presentation and unlocks. It preserves the three venues, global badge
-accounting, independent travel, and the player's existing TR progression model.
-NPC TR is a new authored strength measure; it is not an Elo system and does not
-replace the player's badge-and-clear-derived rating.
+This replaces fixed lineups, position-based qualification and difficulty, and
+player-entry-TR opponent scaling for Wayfarer's circuit. It preserves the three
+venues, independent exploration, global badge accounting, and the player's
+badge-and-lifetime-clear TR formula. Future NPC rating updates do not replace
+that player progression system.
 
-Ordinary trainers, initial Gym battles, wild encounters, player caps, obedience,
-local adventures, and their scaling policies retain their own contracts.
-Reusing a character in the pool does not enroll their other encounters in the
-circuit policy. Standalone Emerald, FRLG, and HNS behavior remains unchanged.
+Ordinary trainers, initial Gyms, wild encounters, player caps, obedience, and
+local adventures retain their own policies. Pool membership does not enroll a
+character's other encounters in circuit scaling. Standalone Emerald, FRLG, and
+HNS remain unchanged.
 
-The [playthrough seed framework](../specs/playthrough-seed-framework.md) owns
-the root seed, derivation protocol, and unbiased bounded draws. This feature
-owns its current edition, resolved schedule, and named circuit decisions. It does not move
-existing battle randomness, encounters, or randomizers onto the new framework.
+The [shared seed framework](../specs/playthrough-seed-framework.md) owns the root,
+derivation, and unbiased draws. The circuit owns its edition, current schedule,
+bounded history, and decision rules. A future dynamic-TR design must define
+when ratings change and how they are snapshotted for selection and combat;
+it cannot retroactively change a published schedule. Initial baseline ratings
+stay fixed until that separate design is adopted.
 
-## Balance
+## Content and balance
 
-Position strength is calibrated against the earliest intended admission points:
-player TR 40, 56, and 72 in edition 1 under the retained +8-per-venue progression. The pool
-specification defines inclusive NPC rating ranges around these balance anchors;
-D3 must settle their endpoints with the catalog review. Ranges may overlap,
-allowing one fixed-rating trainer to qualify at more than one position. Membership
-cannot bypass the ranges, and repetition is never forced by upscaling a weak
-trainer. These are design values, not playtested results.
+Review canonical identities/aliases, affiliations and lore rationale, ratings,
+role bands, exact six-member profiles, presentation, and source provenance together.
+At equal preparation a higher-rated trainer should usually be harder, while
+matchups can still produce upsets. Titles alone do not establish balanced ratings.
 
-At equal preparation, a higher-rated selected trainer should usually be the
-harder opponent. Team matchup can still produce upsets; TR is not a prediction
-that the higher number always wins. Review team quality alongside levels so a
-weak profile does not receive an impressive number without matching strength.
+Prove every venue can fill its two contender, two elite, and one headliner slots
+with distinct TR-qualified affiliated characters even if every outsider drops.
+With the proposed disjoint bands this requires at least 2/2/1 affiliated people
+in the respective roles per venue. Minimum feasibility is not enough for variety:
+a lone eligible affiliated headliner will recur whenever visitors cannot fill
+that role. D3 must author enough credible alternatives and measure the result.
+Never repair a shortfall by weakening TR limits, inventing affiliations,
+restoring dropped candidates, or substituting a fixed lineup.
 
-The player can outgrow an early competition by earning additional badges and
-training first. With all 24 badges before any clear, player TR is 56 rather than
-40 at opening admission. The first field remains unchanged. This preparation
-advantage is intentional under D1, and must be playtested rather than erased
-through hidden player scaling. Later editions face a fully progressed player
-without automatic NPC inflation; repeat enjoyment, challenge, and field variety
-need separate playtesting under those same strength rules.
+Evaluate at least 10,000 documented roots over ten consecutive editions, including:
 
-## Content
+- adjacent-edition roster overlap by venue, targeting roughly two returning
+  opponents where content supports it;
+- same-edition cross-venue repeats and role-level variety;
+- per-character selection and eligible opportunities, plus absence runs across
+  multiple editions so repeatedly overlooked characters are visible;
+- regional composition and strength distribution by venue and role;
+- each venue as the first championship at the proposed qualification point,
+  and later editions after full player progression.
 
-Each pool entry needs one canonical character identity, visible name, explicit
-league affiliations and rationale, NPC TR, a competitive party profile, battle and overworld graphics,
-and circuit-appropriate dialogue. Existing encounter IDs may supply assets and
-authored content; they do not define uniqueness.
+There is no requirement that every current Elite Four/Champion appears within
+one circuit, no 80% individual-per-circuit target, and no complete-attendance
+quota. Those earlier experimental targets are superseded. Define quantitative
+rotation acceptance under D5 after catalog review; seeded variety is compatible
+with occasional repeats and familiar returning opponents.
 
-The exact initial membership, trainer-by-trainer ratings, and six-member teams
-remain an explicit content deliverable under D3. The draft does not claim that
-every existing source party is already suitable. Before enabling the feature,
-review an inventory proving supported presentation, compatible battle formats,
-and at least five distinct TR-qualified affiliated characters for every
-venue/position pairing across all six venue orders. This covers the worst case
-where every unaffiliated candidate is dropped. Each venue needs its own valid
-five-person list. The current catalog is not assumed to satisfy it. D3 must review
-affiliations, ratings, and teams together; generation cannot restore dropped
-trainers, widen TR eligibility, or invent affiliations to fill a shortfall.
+## Presentation and regional integration
 
-## Presentation
+Show the current edition and full itinerary on the Trainer Card from new game,
+with qualification and Locked, Available, or Cleared state. A card/reception
+roster view shows all five names, assigned TR, specialties, and battle order
+before entry, including future stops. Movesets and held items are not revealed
+by default. Preview is a read-only view of the saved schedule.
 
-Show the full current edition's seeded itinerary on the Trainer Card from the beginning, with
-edition number, qualification and Locked, Available, or Cleared state. A roster view reachable
-from the card or each venue's reception lists all five names, their NPC TR,
-specialties, and battle order before entry, including locked future stops.
-Do not disclose full movesets or held items by default.
+Distinguish player progression TR from opponent strength in context. Actors,
+portraits, names, dialogue, battles, and ceremonies follow selected characters.
+Rooms must not claim a displaced fixed opponent occupies them. A Gym Leader
+headliner is presented as the final opponent without inventing Champion history.
 
-Label the player's progression value and opponent rating clearly in context.
-The displayed opponent TR must be the same value used to construct that fight.
-Previewing the schedule never generates, mutates, or rerolls it.
+Indigo projects shared Kanto/Johto Champion recognition on its first-ever clear;
+Hoenn owns its regional recognition and cleanup; Masters owns its result without
+regional Champion status. Edition 1 completes after the third result regardless
+of venue. Red unlocks after all three lifetime venue clears and stays available.
 
-Room actors, portraits, names, dialogue, battle introductions, and ceremony
-references follow the selected character. Retained themed rooms must not claim
-that a displaced fixed trainer occupies them. A Gym Leader finalist is presented
-as the competition's final opponent; the draw does not rewrite their history or
-claim they were already the reigning Champion.
+Retain the proposed Blue Saffron Dojo unlock after the first committed lifetime
+circuit clear, regardless of venue or Blue's participation. Audit dialogue that
+assumes he must have been Indigo's final opponent. His other authored encounters
+retain their own roles and reward rules.
 
-## Interactions
+## Persistence and deterministic decisions
 
-Indigo still grants the shared Kanto/Johto Champion recognition on its first-ever
-clear. Hoenn grants its own regional recognition and performs its local cleanup
-on its first-ever clear. Masters grants its dedicated result without a regional
-Champion title, Hall of Fame entry, or Champion Ribbon, even when it is last.
+Persist a valid shared root and complete schedule before gameplay can consume
+them. The foundation proposes a 64-bit root in two u32 words plus format and
+derivation metadata. Do not copy it into circuit state or store a random cursor.
 
-Run full completion credits after edition 1's third result, regardless of venue.
-Unlock Red after all three lifetime venue clears and retain access across
-editions. Completing Hoenn early must not prematurely finish the edition;
-finishing at Masters must not omit edition completion.
+Edition IDs are u32 starting at 1. ORDER, LORE_FILTER, and ROSTER use that edition
+as occurrence identity, with distinct keys and draft rules versions 1. The
+runtime owns schedule schema, versioned profile/TR references, prior-edition
+history, and catalog metadata. The pool spec owns stable venue/slot roster keys
+and canonical joint allocation. Same root, edition, decision versions, and
+content/history inputs reproduce the same unresolved schedule.
 
-Propose unlocking Blue's Saffron Dojo appearance after the first committed
-circuit clear. It does not require drawing or defeating Blue, who may be absent
-from the circuit. Remove dialogue that assumes Blue is always Indigo's final
-opponent. His independently authored rival and story encounters retain their
-own roles; story uses of his current Champion title need an explicit text audit.
+Roster changes can propagate through the joint allocation, but cannot change
+ORDER or an existing character/venue's raw LORE_FILTER result. Unrelated seeded
+features, source enumeration order, queries, elapsed time, gameplay RNG, and
+save/load cannot perturb the outcome. Saved schedules remain authoritative.
+Missing, corrupt, or incompatible roots, schedules, and required history use
+invalid-save handling; loading must not erase history or generate replacements.
 
-Keep player TR at `badgeContribution + 8 * distinctLifetimeVenueClears`, with the
-existing high-water rule and ceiling of 80. Each venue contributes once for the
-whole playthrough, for at most three +8 contributions. New editions, individual
-opponents, repeat ceremonies, losses, and replays contribute nothing.
-
-## Constraints
-
-Persist the generated schedule alongside a valid playthrough root before play
-can consume either. The foundation proposes a 64-bit root, stored once in shared
-Wayfarer persistence as two 32-bit words with seed-format and derivation-version
-metadata. The circuit stores no independent seed or persistent random cursor;
-it stores edition ID, current resolved character/profile choices and schema, ORDER/LORE_FILTER/ROSTER decision,
-and catalog versions for reliable resume and reproduction.
-
-Edition IDs are `u32`, starting at 1; ORDER, LORE_FILTER, and ROSTER all use
-`occurrenceId = editionId`. Their draft rules versions remain 1. Circuit order,
-per-character lore filtering, and roster allocation use separate keyed
-decisions. With the same root, edition, and respective rules versions, roster catalog
-changes cannot reroll venue order or existing character/venue filter draws.
-Unrelated seeded feature calls or content, menu opens, fights,
-queries, gameplay RNG, elapsed time, starter choice, and save/load cannot alter
-these circuit decisions. Legitimate roster membership/weight changes may alter
-new-edition roster draws; they cannot rewrite an existing saved schedule.
-
-Missing or damaged roots and schedules follow invalid-save/new-game handling,
-never regeneration on load. The framework's hash/mixer and golden vectors must
-be pinned before enabling the feature; choosing the implementation is an
-engineering requirement rather than another user-facing design choice.
-
-Use existing venue layouts and respect the normal ROM reserve and RAM budgets.
-No direct `map.bin` editing is part of this feature. Existing prerelease saves
-need no migration; use the repository's save-version policy when implementing.
+Pin the foundation's portable primitive and golden vectors before enabling the
+feature. Follow ROM/RAM reserve policies and prerelease save-version policy;
+no old prerelease-save migration or direct map.bin editing is required.
 
 ### Adoption and related contracts
 
-The fixed circuit is implemented; seeded selection and recurring editions are
-proposed changes. Until this draft is adopted, the existing contracts below
-remain the implementation baseline. Adoption gives the new pool, circuit
-runtime, and shared seed specifications precedence only for the changed rules
-listed here. Their content and balance gates still apply before implementation.
+The existing fixed circuit is implemented; this successor remains unimplemented.
+Its approved design direction does not silently rewrite current runtime behavior.
+Adoption gives the new specifications precedence for the changes below after
+remaining content, qualification, and balance decisions are settled.
 
 | Existing contract | Proposed replacement | Behavior retained |
 | --- | --- | --- |
-| Interregional circuit [PRD](wayfarer-interregional-league-circuit.md) and [spec](../specs/wayfarer-interregional-league-circuit.md) | Fixed venue order and named lineups become seeded editions; current results are separate from lifetime clears; edition and story completion have distinct ceremonies. | Three venues, shared Kanto/Johto Indigo recognition, regional cleanup ownership, and independent travel. |
-| League scaling [PRD](league-scaling.md) and [spec](../specs/league-scaling.md) | Player-entry TR, room offsets, and fixed encounter membership give way to selected NPC baseline TR and authored circuit profiles. | Ordinary trainer/Gym policies and explicit randomizer overrides. |
-| Player TR [PRD](trainer-rating-wild-encounter-scaling.md) and [party-progression spec](../specs/trainer-rating-party-progression.md) | Clear examples refer to the first three lifetime venue clears in seeded order; later editions grant no further progression TR. | Badge contribution, one +8 award per venue, high-water rule, ceiling 80, and player cap/obedience formulas. |
-| [Runtime foundation](../specs/wayfarer-runtime-foundation.md) | Add the shared playthrough root and edition-owned schedule/results; first-clear facts remain lifetime state. | Shared save ownership, regional projections, and prerelease save policy. |
-| [Viridian finale and Blue Dojo](../specs/frlg-kanto-viridian-finale.md) | Proposed Dojo access follows the first committed lifetime circuit clear, regardless of venue or Blue's participation. | Giovanni's local finale, Blue's authored Dojo encounter, and its existing reward rules. |
-| [Kanto story PRD](frlg-kanto-story-on-hns-maps.md) and [Cinnabar/Seafoam integration](../specs/frlg-cinnabar-seafoam-integration.md) | References to guaranteed Indigo opponents, Blue's fixed Champion party, and Indigo-only Dojo access defer to the selected circuit profiles and proposed unlock above. | Local quest ownership, rival encounters outside the circuit, Gym roles, and coast content. |
+| Interregional circuit [PRD](wayfarer-interregional-league-circuit.md) and [spec](../specs/wayfarer-interregional-league-circuit.md) | Seeded regional championships replace fixed order/lineups and the 8/16/24 position ladder; common role bands and rotating fields replace position difficulty. | Three venues, shared Indigo recognition, regional cleanup ownership, independent travel. |
+| League scaling [PRD](league-scaling.md) and [spec](../specs/league-scaling.md) | Snapshot NPC TR and authored role-qualified profiles replace player-entry TR, room offsets, and fixed encounter membership. | Ordinary trainer/Gym policies and explicit randomizer overrides. |
+| Player TR [PRD](trainer-rating-wild-encounter-scaling.md) and [spec](../specs/trainer-rating-party-progression.md) | Proposed common 24-badge entry gives TR 56/64/72/80; later editions add no progression TR. | Badge curve, one +8 per lifetime venue clear, high-water rule, ceiling 80, cap/obedience formulas. |
+| [Runtime foundation](../specs/wayfarer-runtime-foundation.md) | Add shared root, current edition schedule/results, and bounded prior-venue history. | Lifetime facts, shared save ownership, regional projections, prerelease save policy. |
+| [Viridian finale and Blue Dojo](../specs/frlg-kanto-viridian-finale.md) | Dojo access follows the first committed lifetime circuit clear regardless of venue/Blue participation. | Giovanni finale, Blue's authored Dojo battle and rewards. |
+| [Kanto story](frlg-kanto-story-on-hns-maps.md) and [Cinnabar/Seafoam](../specs/frlg-cinnabar-seafoam-integration.md) | Fixed Indigo opponent and Indigo-only Dojo assumptions defer to selected profiles and the proposed unlock. | Local quests, independent rival encounters, Gym roles, coast content. |
 
-Historical implementation reports remain evidence for the builds they tested;
-they do not establish that this proposed successor has been implemented.
+Historical reports remain evidence for the builds tested, not evidence that
+this proposed successor is implemented.
 
-## Playtesting
+## Decisions before implementation
 
-- Do all six destination orders work at minimum qualification and after earning
-  all badges first, without requiring the clear currently being attempted?
-- Does NPC TR communicate meaningful strength across different team styles?
-- Are opening fields manageable and late fields demanding across sampled seeds?
-- Are later editions enjoyable against a fully progressed player without NPC
-  inflation? Does the approved catalog supply enough variety across editions?
-- Does the TR-first lore filter produce convincing fields across catalog sizes?
-  Report affiliated/unaffiliated shares without assuming a local majority or
-  treating 50% retention as final appearance probability.
-- Does a non-Champion finalist feel credible, and does the ending still work
-  when Masters is the final destination?
-- Can players understand qualification and prepare for the published lineup,
-  including after a loss or a long break from the save?
-- Do equivalent keyed decisions and committed schedules stay stable across
-  reloads and unrelated opted-in variation, while ordinary Pokémon RNG still
-  behaves as before?
+D1 is resolved for the initial version: stable baseline NPC TR and no player or
+edition inflation. Future modest rating dynamics are a separate feature.
+D2 is resolved: role-qualified headliners do not require a Champion title.
+The recurring regional-championship structure and soft rotation are approved.
 
-## Open questions
-
-D1 is resolved: NPC TR and strength remain fixed, including across editions.
-
-| ID | Decision still requiring review | Proposed default used by the specs |
+| ID | Remaining decision | Proposed default |
 | --- | --- | --- |
-| D2 | Can any qualified character be a finalist, or must the slot be Champion-qualified? | Highest selected NPC TR, with no title restriction. |
-| D3 | Initial character scope, league affiliations and rationale, concrete roster, ratings, eligibility ranges, and teams? | Supported Kanto/Johto/Hoenn singles characters first; approve inclusive TR ranges and five qualified affiliated candidates per venue/position. |
+| D3 | Concrete catalog, affiliations, role ranges, profiles, strength balance, and sufficient alternatives? | Supported Kanto/Johto/Hoenn singles characters; three ordered disjoint TR bands shared by all venues; prove affiliated-only 2/2/1 feasibility and separately validate variety. |
+| D4 | Common qualification and first-entry/later-edition balance? | All 24 badges before the first championship; seeded predecessor clears thereafter; retain lifetime +8 per venue and existing player cap formula. |
+| D5 | Rotation factors and quantitative acceptance across editions? | Flat in-role weights; factors 16/4/1 for current-edition appearances and 1/2 for previous-venue participation; target roughly 2 returning/3 changed without quotas or rerolls. |
 
-Supporting defaults also proposed here are the 8/16/24 mandatory progression,
-+8 first-ever venue rewards, six-member singles teams,
-affiliated-only feasibility validation, unchanged-strength replays, a separate
-Red encounter, first-stop Blue Dojo access, and advance roster disclosure.
-Recurring-edition defaults needing review include reception registration,
-current-schedule-only storage and a bounded completed count, per-edition Indigo/
-Hoenn winning-team records and Ribbon flows, and brief later completion
-presentation. D2/D3 and these defaults must be settled before implementation.
+Supporting defaults remain reviewable: six-member singles teams, unchanged-strength
+replays, reception registration, bounded history and aggregate records, per-edition
+Indigo/Hoenn winning-team records and Ribbons, brief later completion presentation,
+first-clear Blue Dojo access, separate Red, and advance roster disclosure.
+D3–D5 and supporting defaults must be settled before implementation.
 
 ## References
 

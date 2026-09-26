@@ -5,8 +5,11 @@ Implemented: Partial
 
 Proposed successor: [Circuit trainer pool and strength](circuit-trainer-pool.md)
 replaces the fixed allowlist and player-entry-TR calculation with each NPC's
-authored baseline TR, retained across recurring editions. [Seeded circuit
-runtime](seeded-league-circuit.md) owns the proposed edition and run lifecycle.
+authored baseline TR. Shared contender/elite/headliner bands replace
+position-based difficulty, with soft rotation between editions. Baselines stay
+stable initially; future modest rating dynamics require a separate design.
+[Seeded circuit runtime](seeded-league-circuit.md) owns the proposed edition and
+run lifecycle, including a common 24-badge qualification proposal.
 This document remains the implementation baseline until adoption.
 
 The scaling engine, fixed Indigo/Masters/Hoenn roster and venue wiring,
