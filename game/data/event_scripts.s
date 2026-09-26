@@ -645,6 +645,7 @@ gStdScripts_End::
 	.include "data/maps/RocketHideout_B3F_Frlg/scripts.inc"
 	.include "data/maps/RocketHideout_B4F_Frlg/scripts.inc"
 	.include "data/maps/RocketHideout_Elevator_Frlg/scripts.inc"
+	.include "data/maps/ViridianCity_Gym_Frlg/scripts.inc"
 	.include "data/wayfarer_sevii_event_scripts.inc"
 	.include "data/scripts/pokemon_league.inc"
 	.include "data/scripts/wayfarer_indigo_league.inc"

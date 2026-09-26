@@ -285,4 +285,14 @@ CinnabarIsland_Gym_SetGymTrainers_hns::
 	return
 
 ViridianCity_Gym_SetGymTrainers_hns::
+#if IS_WAYFARER
+	settrainerflag TRAINER_VIRIDIAN_GYM_TAKASHI_HNS
+	settrainerflag TRAINER_VIRIDIAN_GYM_YUJI_HNS
+	settrainerflag TRAINER_VIRIDIAN_GYM_ATSUSHI_HNS
+	settrainerflag TRAINER_VIRIDIAN_GYM_JASON_HNS
+	settrainerflag TRAINER_VIRIDIAN_GYM_COLE_HNS
+	settrainerflag TRAINER_VIRIDIAN_GYM_KIYO_HNS
+	settrainerflag TRAINER_VIRIDIAN_GYM_SAMUEL_HNS
+	settrainerflag TRAINER_VIRIDIAN_GYM_WARREN_HNS
+#endif
 	return

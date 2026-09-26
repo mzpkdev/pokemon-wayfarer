@@ -4,7 +4,7 @@ PRD: [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md)
 
 Supporting requirements: [independent story beats](../prds/frlg-kanto-independent-story-beats.md) and [shared Indigo circuit](wayfarer-interregional-league-circuit.md).
 
-Implemented: No. This is the selected Wayfarer story port; the current Blue Gym remains in the ROM until implementation.
+Implemented: Yes. The Wayfarer Viridian Gym/Giovanni finale and first-committed-Indigo Dojo unlock are implemented and [validated](../research/viridian-finale-implementation.md) on the shared FRLG/Blue Indigo circuit.
 
 ## Gym and access
 

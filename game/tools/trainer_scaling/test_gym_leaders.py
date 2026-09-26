@@ -14,12 +14,12 @@ class GymLeaderRosterTests(unittest.TestCase):
         cls.projections = cls.inventory["projections"]
 
     def test_exact_initial_identity_and_record_coverage(self):
-        self.assertEqual(self.inventory["encounterIdentities"], 24)
-        self.assertEqual(self.inventory["resolvedVariants"], 30)
-        self.assertEqual(len({row["identity"] for row in self.rosters}), 24)
-        self.assertEqual(len({row["trainer"] for row in self.rosters}), 30)
+        self.assertEqual(self.inventory["encounterIdentities"], 23)
+        self.assertEqual(self.inventory["resolvedVariants"], 29)
+        self.assertEqual(len({row["identity"] for row in self.rosters}), 23)
+        self.assertEqual(len({row["trainer"] for row in self.rosters}), 29)
         self.assertEqual({row["identity"] for row in self.rosters}, {
-            "Brock", "Misty", "Lt. Surge", "Erika", "Janine", "Sabrina", "Blaine", "Blue",
+            "Brock", "Misty", "Lt. Surge", "Erika", "Janine", "Sabrina", "Blaine",
             "Falkner", "Bugsy", "Whitney", "Morty", "Chuck", "Jasmine", "Pryce", "Clair",
             "Roxanne", "Brawly", "Wattson", "Flannery", "Norman", "Winona", "Tate/Liza", "Juan",
         })
@@ -83,16 +83,15 @@ class GymLeaderRosterTests(unittest.TestCase):
         self.assertEqual(tate_early["outputSourceIndices"], [0, 1])
         self.assertEqual([member["species"] for member in tate_early["members"]], ["SPECIES_LUNATONE", "SPECIES_SOLROCK"])
 
-    def test_active_janine_blue_and_excluded_aliases_are_reported(self):
+    def test_active_janine_and_excluded_aliases_are_reported(self):
         by_identity = {row["identity"]: row for row in self.rosters}
         self.assertEqual(by_identity["Janine"]["trainer"], "TRAINER_JANINE_HNS")
         self.assertEqual(by_identity["Janine"]["members"][0]["species"], "SPECIES_CROBAT")
-        self.assertEqual(by_identity["Blue"]["trainer"], "TRAINER_BLUE_HNS")
-        self.assertEqual(by_identity["Blue"]["members"][0]["species"], "SPECIES_PIDGEOT")
+        self.assertNotIn("Blue", by_identity)
         self.assertEqual({alias for row in self.rosters for alias in row["aliases"] if alias.endswith("_DOJO_HNS")}, {
             "TRAINER_BROCK_DOJO_HNS", "TRAINER_MISTY_DOJO_HNS", "TRAINER_LTSURGE_DOJO_HNS",
             "TRAINER_ERIKA_DOJO_HNS", "TRAINER_JANINE_DOJO_HNS", "TRAINER_SABRINA_DOJO_HNS",
-            "TRAINER_BLAINE_DOJO_HNS", "TRAINER_BLUE_DOJO_HNS"})
+            "TRAINER_BLAINE_DOJO_HNS"})
 
 
 if __name__ == "__main__":

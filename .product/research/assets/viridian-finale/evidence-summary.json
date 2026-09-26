@@ -1,0 +1,109 @@
+{
+  "base": "a646c8a7b1e8a18734b377bbb038ca93332484cb",
+  "runtime_inputs": {
+    "game/data/event_scripts.s": "866e8bd5f971bb12a5869c5055b1b83563cadb320b5730b2ca6af2ec232feaa0",
+    "game/data/layouts/layouts.json": "a02503e855bc23f2dd6f74894d55ce1e5d7bff4943b8580177797ca73d518967",
+    "game/data/maps/CinnabarIsland_hns/map.json": "80e4e639d68f7467a7347d615e695483a9c0c739b231cbd4fe2b5ef329dde226",
+    "game/data/maps/CinnabarIsland_hns/scripts.inc": "79b30f236b494226efe25999a32df67e1d7fbf84534186dafe6b766755e400a3",
+    "game/data/maps/PalletTown_House2_hns/scripts.inc": "d76b0f884b3640cb9aa517aa974f8157da8dd0d23f258dedb21725f824113a32",
+    "game/data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc": "19db693a46f810590a8b9854370e1c57b69dc62f2f8fbb17f65e32a0eca33477",
+    "game/data/maps/ViridianCity_Gym_Frlg/map.json": "f04b84d0f98225db5f2815127b5ba956f32472c03f18d801b2c933505ab8822b",
+    "game/data/maps/ViridianCity_Gym_Frlg/scripts.inc": "a2b5e886edf5c8d034a03652e8b6658dbfd89a367c1a936c26d2f22f99fe35d2",
+    "game/data/maps/ViridianCity_Gym_hns/map.json": "9f35e3ed6106b423cd5e23e89fb726f57817b19325317fd2d79643218be6d12b",
+    "game/data/maps/ViridianCity_Gym_hns/scripts.inc": "00a4479b93bd8332a73ceab1867d480f4f7ff17b5bcb9997638a499973725c21",
+    "game/data/maps/ViridianCity_PokemonCenter_hns/scripts.inc": "baa6290b9b1526485e28ab96e940aa24797ecef2fa4f69669efb9cf0cb4864c0",
+    "game/data/maps/ViridianCity_hns/map.json": "164e2f3a30f49b3553989741aae7b4d0af22f5bf42e4174f9185320acffb2bca",
+    "game/data/maps/ViridianCity_hns/scripts.inc": "08abe880b570219ea03e32bcd60ff4d016ddaa66bf9f5870305d652aa65c2fb2",
+    "game/data/scripts/new_game.inc": "6a0010579d5054e6c76aebc482d1927b438aa69c55ce356700c65692e6b252c8",
+    "game/data/scripts/set_gym_trainers.inc": "61c4d12bc189359439efea199f17dd55d52e4af971859aca1718d93f74f96701",
+    "game/include/constants/flags_hns.h": "02544d189e056acc7ce1337cb4a194a49f7cb267fd80836be4897dc095a25bef",
+    "game/include/constants/opponents.h": "e78c8e70995ad3dd144861698630de655162de68520e9c6c2d51b24435f67ddf",
+    "game/include/constants/wayfarer_viridian_trainers.h": "6f9883d8560f54704b9952a472ab5de398bc7672ad4fe682c7d25c4e1751e924",
+    "game/include/league_circuit.h": "e74dc16e1a7049ff4334a715df30c8b204f19a493e677050dcdf6931a10a8dfd",
+    "game/src/battle_main.c": "4e72ec591522568d741cd69cb2e21237ec55b5cdb9b7255b8b791fc669f29193",
+    "game/src/battle_setup.c": "16722cf1a4222573886ec80390ee20d4241933824d146dec60cdd9b50c45fb4e",
+    "game/src/data/object_events/object_event_graphics_info_pointers.h": "8580e3aedbb16c08ad9e8575ef7bad262cba35f801a08d675034aac0cf779097",
+    "game/src/data/trainer_scaling/audit.md": "26ee09d5b7391b69aa986ea21654cca241c6c8ad763f182b7d1276f52d49208d",
+    "game/src/data/trainer_scaling/gym_leaders.h": "d16d54119bb7ad7692e1ef8d940840673ebd2add85bbb80a7a8644a3b9e8a9b7",
+    "game/src/data/trainer_scaling/gym_leaders.json": "6c5f54b4a7743b4479759b6b634d04060f4be1ab0e4c05e789815f937d32cd64",
+    "game/src/data/trainer_scaling/gym_leaders.md": "80bded4b3cd9bea569ac3e8bef2e24fe4309881fb0ac7ca0e07cb424a9c01533",
+    "game/src/data/trainer_scaling/inventory.json": "0d67663338f004579364923fa602abf70f87b6849c7dc6f08983b28c13a3e0bc",
+    "game/src/data/trainer_scaling/policies.h": "d9cc4596cd624f5699bca077b51f40bdbf7079aec7d4844ed51d9ecc8344c0b3",
+    "game/src/data/trainers_wayfarer_local.h": "4636998902f5a4d7bf486060984a320be20fd654730702353e7bc92b407ad26d",
+    "game/src/data/trainers_wayfarer_local.party": "e39c1d0b8ef178500b68f08ab312177316944e345279e53e06709b4246cc98f3",
+    "game/src/data/wayfarer_sevii_maps.json": "8a564d148b06eb02557101093504ac03bd6caffdebebafd30773a46881bf217d",
+    "game/src/field_control_avatar.c": "3b050d489c427bc4ace92ef740cb79f8853bd8305c945b93c7b098c3f6f45525",
+    "game/src/league_circuit.c": "49dc9d86f312abe48edac8fcd2ac82b05244e3265789d6861ba7d28a57e79506",
+    "game/src/wayfarer_local_adventures.c": "59c72614e1a0e0951f89af90487c2332b7eb5398ea0afc06c28fbc909a9af045",
+    "game/test/extract_trainer_scaling_fixtures.py": "7bdac5b5e7359f525203d648329920b76c7f8faf1877599b901a23531fe79741",
+    "game/test/league_circuit.c": "400a0a44ac28ea3dc3d16247311b37bbc12fc03953e4a241cb66196dd14687da",
+    "game/test/trainer_scaling_production_fixtures.h": "e14ed26cbec0b7b90e9f4c748b40504739b7ac84b50efd4975953c1825d04857",
+    "game/test/viridian_finale.c": "61fe96dddeee5ba0085f39ee5602d93e96ba54d9f2e085839939f3bb12bbf7ef",
+    "game/tools/league_circuit/test_scripts.py": "73300bc2179bec65201dd0c852f2ebfc77a03a89c9131c072e33c3ca1c99c83a",
+    "game/tools/mapjson/mapjson.cpp": "0d1e28dd8f68ea9b92ed8bd248efc2bbf4a8a46791784fc29b9222e0dd19c4eb",
+    "game/tools/trainer_scaling/classification.json": "3e07dc7e95912a96ecc8d740c53dd57ce34a96b23ac7d44f5f9fd8e536c51f67",
+    "game/tools/trainer_scaling/gym_leaders.py": "27484467da9d19c3c80014c532a554a42c875d30d80d276016f3e7d032cd7290",
+    "game/tools/trainer_scaling/test_gym_leaders.py": "b6422af1a002c443299df230a0c46543389d2c2c4266780cae7f0c707c1a4752",
+    "game/tools/trainer_scaling/test_viridian.py": "67657adf95949dde97acbc41088082ff57094cf110a0fd5dd450da6076c85cb6",
+    "game/tools/traversal/tests/test_hns_open_world_traversal.py": "1c7c92ce239999c0cac54899112fe3f62963c1d4831bce11109bd06ae8a5ebcc",
+    "game/tools/wayfarer_sevii_content/baseline.json": "234bd7822b8de427ef1bc460175877f446381a3e434a727077d78ff1c65f5c0d",
+    "game/tools/wayfarer_sevii_content/closure.py": "9a80a295534cf2be69cfeadb2023826a98861fcb29372e0f23dc6a2e05a46a08",
+    "game/tools/wayfarer_sevii_content/tests/test_closure.py": "316e631a35115a1fae7d59755d9108dca9f28a35f2abaaf1924eb37ed177848e",
+    "game/tools/wayfarer_sevii_port/event_island_baseline.json": "eb3d3f98473ab6a1e35449d39346e472a93e9456694875e6a2ebba0b94ca1077"
+  },
+  "harness_inputs": {
+    "e2e/src/harness/game-session/catalog.ts": "a89f61d0009da1cb5b7be04d380159e1eed54697b7a17e89b3bf3471ad9138e1",
+    "e2e/src/harness/game-session/features/inventory.ts": "6f3db1b978fe81827b00de364568dcd257d45bd6e911543f45b868bc7df80803",
+    "e2e/src/journeys/wayfarer-league-circuit.e2e.ts": "7cb3d9f5e241f231a693f46f16df012afdaaa6220059ad701ab281538fec89ff",
+    "e2e/src/journeys/wayfarer-viridian-finale.e2e.ts": "f7593a7304fab8c4dc22191dbb6fdebe7e134ed582e52f684b8aa1075c9d61bb"
+  },
+  "roms": {
+    "e2e_sha256": "4f57fcda8804ee95cd6089bd4a417c9a2388b518e1cbe55d480b3886cc72ed66",
+    "symbols_sha256": "9bdc74d15ae94cb40df286b0708d77d04298fd1270909b23ed6dce8c300b3b99",
+    "release_sha256": "a411cbcae7b0f91633003602b45f7415385bd3a2e400adea5f57d71b4eb2d82f"
+  },
+  "release": {
+    "capacity_end_address": "0x0A000000",
+    "end_address": "0x09E35D84",
+    "start_address": "0x08000000",
+    "unused_bytes": 1876604,
+    "used_bytes": 31677828,
+    "wayfarer_release_limit_address": "0x09F80000",
+    "wayfarer_release_limit_enforced": true
+  },
+  "map_binary": {
+    "base": "a646c8a7b1",
+    "layout_sha256": "65964beff473668a3b4490be8905b9f8882243931b2abbaf210ed8d119451406",
+    "matches_base": true,
+    "changed_map_bins": []
+  },
+  "tests": {
+    "finale_r7": {
+      "passed": 21,
+      "log_sha256": "bb6be4b9fb7f224d86ae21a89093a45fca9ebff41bd77ab8b49741ea44468975"
+    },
+    "dojo_r6": {
+      "passed": 3,
+      "log_sha256": "4772706a4c1cb8e0c32efd20999d43e31151e0d463fdb4e32cd11a3e97343849"
+    },
+    "unchanged_league_cases_r4": 12,
+    "native_r6": {
+      "viridian": 5,
+      "dojo": 1,
+      "league": 26,
+      "trainer_scaling": 22
+    },
+    "trainer_static_r7": 46,
+    "adventure_traversal_regressions_r6": 54,
+    "kanto_traversal_admission_r7": 23
+  },
+  "retained_evidence": "r6 to r7 changes only the exact Gym exit fallback and its static bounds test; native party/state/Dojo inputs unchanged. Final r7 finale and Kanto traversal validate navigation. Twelve earlier League cases are unchanged; three changed cases passed final focused run.",
+  "review": {
+    "verdict": "No actionable gameplay/source findings in frozen r7 scope",
+    "method": "Independent source review and supplied logs; no independent emulator run",
+    "report_sha256": "f6702bf709898c06721e74a8ca750a8a3f5fff58c0ee3aa4e968d8a0c5480f5d",
+    "packaging": "Resolved; report links and log hashes verified independently.",
+    "packaging_report_sha256": "84490b9d0b9edaa4c0bb01e4c37451baf8b7154a3f3394b9fbe07defb4b1fc77"
+  },
+  "remaining_dependency": "Resolved: PR136 shared FRLG/Blue Indigo runtime merged; the Dojo unlock reads its HasCommittedFirstIndigoVictory() seam."
+}

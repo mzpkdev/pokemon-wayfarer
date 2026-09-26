@@ -4,6 +4,23 @@
 
 #if IS_WAYFARER
 
+extern const u8 ViridianCity_Gym_EventScript_Jason[];
+extern const u8 ViridianCity_Gym_EventScript_Jason_TrainerBattle[];
+extern const u8 ViridianCity_Gym_EventScript_Cole[];
+extern const u8 ViridianCity_Gym_EventScript_Cole_TrainerBattle[];
+extern const u8 ViridianCity_Gym_EventScript_Atsushi[];
+extern const u8 ViridianCity_Gym_EventScript_Atsushi_TrainerBattle[];
+extern const u8 ViridianCity_Gym_EventScript_Kiyo[];
+extern const u8 ViridianCity_Gym_EventScript_Kiyo_TrainerBattle[];
+extern const u8 ViridianCity_Gym_EventScript_Takashi[];
+extern const u8 ViridianCity_Gym_EventScript_Takashi_TrainerBattle[];
+extern const u8 ViridianCity_Gym_EventScript_Samuel[];
+extern const u8 ViridianCity_Gym_EventScript_Samuel_TrainerBattle[];
+extern const u8 ViridianCity_Gym_EventScript_Yuji[];
+extern const u8 ViridianCity_Gym_EventScript_Yuji_TrainerBattle[];
+extern const u8 ViridianCity_Gym_EventScript_Warren[];
+extern const u8 ViridianCity_Gym_EventScript_Warren_TrainerBattle[];
+
 extern const u8 WayfarerMtMoon_EventScript_Grunt1[];
 extern const u8 WayfarerMtMoon_EventScript_Grunt1TrainerBattle[];
 extern const u8 WayfarerMtMoon_EventScript_Grunt2[];
@@ -76,6 +93,14 @@ extern const u8 SilphCo_11F_EventScript_Grunt2_TrainerBattle[];
 struct LocalAdventureSightScript { const u8 *start; const u8 *battle; };
 static const struct LocalAdventureSightScript sSightScripts[] =
 {
+    {ViridianCity_Gym_EventScript_Jason, ViridianCity_Gym_EventScript_Jason_TrainerBattle},
+    {ViridianCity_Gym_EventScript_Cole, ViridianCity_Gym_EventScript_Cole_TrainerBattle},
+    {ViridianCity_Gym_EventScript_Atsushi, ViridianCity_Gym_EventScript_Atsushi_TrainerBattle},
+    {ViridianCity_Gym_EventScript_Kiyo, ViridianCity_Gym_EventScript_Kiyo_TrainerBattle},
+    {ViridianCity_Gym_EventScript_Takashi, ViridianCity_Gym_EventScript_Takashi_TrainerBattle},
+    {ViridianCity_Gym_EventScript_Samuel, ViridianCity_Gym_EventScript_Samuel_TrainerBattle},
+    {ViridianCity_Gym_EventScript_Yuji, ViridianCity_Gym_EventScript_Yuji_TrainerBattle},
+    {ViridianCity_Gym_EventScript_Warren, ViridianCity_Gym_EventScript_Warren_TrainerBattle},
     {WayfarerMtMoon_EventScript_Grunt1, WayfarerMtMoon_EventScript_Grunt1TrainerBattle},
     {WayfarerMtMoon_EventScript_Grunt2, WayfarerMtMoon_EventScript_Grunt2TrainerBattle},
     {WayfarerMtMoon_EventScript_Grunt3, WayfarerMtMoon_EventScript_Grunt3TrainerBattle},

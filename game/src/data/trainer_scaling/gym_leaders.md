@@ -1,6 +1,6 @@
 # Gym Leader scaling roster inventory
 
-This generated inventory covers all 24 initial badge identities and all 30 resolved active source records. It is structural evidence, not a claim that required ROM playtesting has succeeded.
+This generated inventory covers 23 six-slot initial badge identities and 29 resolved active source records. Viridian Giovanni's five-slot finale is handled separately. This is structural evidence, not a claim that required ROM playtesting has succeeded.
 
 The complete 0–80 Trainer Rating table, including retained source indices, output order, levels, moves, items, aces, and legacy money basis, is in `gym_leaders.json` alongside this report.
 
@@ -108,21 +108,6 @@ Initial script: `data/maps/SeafoamIslands_Gym_hns/scripts.inc`. Resolved owner: 
 | 5 | 3 | Support | -2 | `TRAINER_BLAINE_HNS` slot 5 | CAMERUPT | EARTH_POWER, ERUPTION, YAWN, AMNESIA | CHARCOAL |
 
 Excluded aliases: `TRAINER_BLAINE_DOJO_HNS`. Runtime rematch overrides: none.
-
-## Blue — `TRAINER_BLUE_HNS`
-
-Initial script: `data/maps/ViridianCity_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_BLUE_HNS`. Legacy money basis: level 69, class `TRAINER_CLASS_LEADER_KANTO_HNS`, legacy size 6.
-
-| Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
-| ---: | ---: | --- | ---: | --- | --- | --- | --- |
-| 0 | 5 | Ace | 0 | `TRAINER_BLUE_HNS` slot 1 | PIDGEOT | HURRICANE, GIGA_IMPACT, AIR_SLASH, FEATHER_DANCE | SHARP_BEAK |
-| 1 | 4 | Support | -2 | `TRAINER_BLUE_HNS` slot 5 | ARCANINE | FLAMETHROWER, CURSE, CRUNCH, EXTREME_SPEED | SILK_SCARF |
-| 2 | 0 | Support | -2 | `TRAINER_BLUE_HNS` slot 0 | RHYPERIOR | DRILL_RUN, STONE_EDGE, REST, TOXIC | SITRUS_BERRY |
-| 3 | 1 | Support | -2 | `TRAINER_BLUE_HNS` slot 2 | MACHAMP | CROSS_CHOP, ROCK_SLIDE, EARTHQUAKE, DUAL_CHOP | SCOPE_LENS |
-| 4 | 2 | Support | -2 | `TRAINER_BLUE_HNS` slot 3 | EXEGGUTOR | LEECH_SEED, TRICK_ROOM, PSYCHIC, SEED_BOMB | LEFTOVERS |
-| 5 | 3 | Support | -2 | `TRAINER_BLUE_HNS` slot 4 | TYRANITAR | STONE_EDGE, PAYBACK, CRUNCH, THUNDER_FANG | FOCUS_BAND |
-
-Excluded aliases: `TRAINER_BLUE_DOJO_HNS`. Runtime rematch overrides: none.
 
 ## Falkner — `TRAINER_FALKNER_1_HNS`
 

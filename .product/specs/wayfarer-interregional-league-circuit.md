@@ -454,6 +454,11 @@ Champion victory, including when Indigo precedes Giovanni. A battle start or
 loss does not unlock it. This reads Indigo's canonical first-clear fact and
 does not change the shared eight-global-badge admission or add a circuit reward.
 
+The [Viridian implementation](../research/viridian-finale-implementation.md)
+projects Blue's Dojo visibility from `HasCommittedFirstIndigoVictory()` on each
+Dojo entry. League commit and Hall of Fame rollback never touch the Dojo flag,
+so a rolled-back first victory leaves Blue hidden.
+
 ## Validation
 
 ### Static and mechanics coverage

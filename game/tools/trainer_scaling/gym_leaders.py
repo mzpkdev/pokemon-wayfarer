@@ -50,7 +50,8 @@ def roster(identity, region, trainer, script, members, *, double=False,
                 aliases=list(aliases), runtimeOverrides=list(runtime_overrides))
 
 
-# The 24 named identities have 30 resolved initial-battle source records.
+# The 23 remaining six-slot identities have 29 resolved initial-battle records.
+# Viridian Giovanni uses the five FRLG source slots in the finale battle path.
 # Each tuple is (identity, active Trainer ID, source-slot index) followed by
 # explicit battle metadata.  All current authored custom moves are retained;
 # no slot relies on a generated level-up tuple in this first roster review.
@@ -90,11 +91,6 @@ ROSTERS = (
         member("TRAINER_BLAINE_HNS", 2, 0), member("TRAINER_BLAINE_HNS", 3, 1),
         member("TRAINER_BLAINE_HNS", 4, 2), member("TRAINER_BLAINE_HNS", 5, 3)),
         aliases=("TRAINER_BLAINE_DOJO_HNS",)),
-    roster("Blue", "Kanto", "TRAINER_BLUE_HNS", "data/maps/ViridianCity_Gym_hns/scripts.inc", (
-        member("TRAINER_BLUE_HNS", 1, 5, ace=True), member("TRAINER_BLUE_HNS", 5, 4),
-        member("TRAINER_BLUE_HNS", 0, 0), member("TRAINER_BLUE_HNS", 2, 1),
-        member("TRAINER_BLUE_HNS", 3, 2), member("TRAINER_BLUE_HNS", 4, 3)),
-        aliases=("TRAINER_BLUE_DOJO_HNS",)),
 
     roster("Falkner", "Johto", "TRAINER_FALKNER_1_HNS", "data/maps/VioletCity_Gym_hns/scripts.inc", (
         member("TRAINER_FALKNER_1_HNS", 1, 5, ace=True), member("TRAINER_FALKNER_1_HNS", 0, 4),
@@ -308,7 +304,7 @@ def resolve(records, ids):
                                            trainerClass=legacy.get("money_trainer_class"),
                                            partySize=legacy.get("partySize"),
                                            nullParty=legacy.get("money_party_null"))))
-    expected = {"Brock", "Misty", "Lt. Surge", "Erika", "Janine", "Sabrina", "Blaine", "Blue",
+    expected = {"Brock", "Misty", "Lt. Surge", "Erika", "Janine", "Sabrina", "Blaine",
                 "Falkner", "Bugsy", "Whitney", "Morty", "Chuck", "Jasmine", "Pryce", "Clair",
                 "Roxanne", "Brawly", "Wattson", "Flannery", "Norman", "Winona", "Tate/Liza", "Juan"}
     if identities != expected:
@@ -323,7 +319,8 @@ def validate_policy_inventory(resolved):
     enrolled = {record["trainer"] for record in resolved}
     manifest_enrolled = {trainer for trainer, policy in policies.items()
                          if policy == "GYM_LEADER"}
-    if enrolled != manifest_enrolled:
+    finale = "TRAINER_VIRIDIAN_GYM_GIOVANNI_HNS"
+    if policies.get(finale) != "GYM_LEADER" or enrolled != manifest_enrolled - {finale}:
         raise ValidationError("Gym Leader policy inventory differs from authored roster table")
     excluded_contexts = {item for record in resolved
                          for item in record["aliases"] + record["runtimeOverrides"]}
@@ -393,7 +390,7 @@ def report_rows(resolved):
 
 
 def render_markdown(resolved):
-    lines = ["# Gym Leader scaling roster inventory", "", "This generated inventory covers all 24 initial badge identities and all 30 resolved active source records. It is structural evidence, not a claim that required ROM playtesting has succeeded.", "", "The complete 0–80 Trainer Rating table, including retained source indices, output order, levels, moves, items, aces, and legacy money basis, is in `gym_leaders.json` alongside this report.", ""]
+    lines = ["# Gym Leader scaling roster inventory", "", "This generated inventory covers 23 six-slot initial badge identities and 29 resolved active source records. Viridian Giovanni's five-slot finale is handled separately. This is structural evidence, not a claim that required ROM playtesting has succeeded.", "", "The complete 0–80 Trainer Rating table, including retained source indices, output order, levels, moves, items, aces, and legacy money basis, is in `gym_leaders.json` alongside this report.", ""]
     for record in resolved:
         lines.extend((f"## {record['identity']} — `{record['trainer']}`", "", f"Initial script: `{record['script']}`. Resolved owner: `{record['owner']}`. Legacy money basis: level {record['moneyBasis']['authoredLevel']}, class `{record['moneyBasis']['trainerClass']}`, legacy size {record['moneyBasis']['partySize']}.", "", "| Retention | Battle order | Role | Offset | Source | Species | Moves | Item |", "| ---: | ---: | --- | ---: | --- | --- | --- | --- |"))
         for entry in record["expanded"]:
@@ -422,7 +419,7 @@ def generate(check=False):
     validate_policy_inventory(resolved)
     write(HEADER, render_header(resolved), check)
     write(REPORT, render_markdown(resolved), check)
-    inventory = dict(version=1, encounterIdentities=24, resolvedVariants=len(resolved),
+    inventory = dict(version=1, encounterIdentities=23, resolvedVariants=len(resolved),
                      partySizeThresholds=[dict(beforeRating=threshold, partySize=size) for threshold, size in SIZE_THRESHOLDS],
                      levelAnchors=[dict(rating=rating, aceLevel=ace_level) for rating, ace_level in LEADER_ANCHORS],
                      rosters=[dict(identity=row["identity"], region=row["region"], trainer=row["trainer"], owner=row["owner"], script=row["script"], aliases=row["aliases"], runtimeOverrides=row["runtimeOverrides"], legacyPartySize=row["legacy"]["partySize"], moneyBasis=row["moneyBasis"], isDoubleBattle=row["isDoubleBattle"], members=[dict(sourceIndex=entry["sourceIndex"], sourceOwner=entry["sourceOwner"], sourceSlot=entry["sourceSlot"], species=entry["mon"]["species"], moves=entry["mon"].get("moves", []), item=entry["mon"].get("heldItem", "ITEM_NONE"), battleOrder=entry["battleOrder"], isAce=entry["isAce"], levelOffset=entry["levelOffset"], movePolicy=entry["movePolicy"]) for entry in row["expanded"]]) for row in resolved],

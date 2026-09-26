@@ -5283,6 +5283,7 @@
       "secondary_tileset": "gTileset_ViridianGym",
       "border_filepath": "data/layouts/ViridianCity_Gym_Frlg/border.bin",
       "blockdata_filepath": "data/layouts/ViridianCity_Gym_Frlg/map.bin",
+      "wayfarer_include": true,
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",

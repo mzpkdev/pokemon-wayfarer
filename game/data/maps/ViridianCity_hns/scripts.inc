@@ -48,8 +48,7 @@ ViridianCity_EventScript_GrampsDoubted::
 
 VirianCity_EventScript_GymGramps::
 #if IS_WAYFARER
-	goto_if_set FLAG_DEFEATED_VIRIDIAN_GYM, VirianCity_EventScript_GymGrampsBlue
-	goto_if_set FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED_COAST, VirianCity_EventScript_GymGrampsBlue
+	goto_if_set FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS, VirianCity_EventScript_GymGrampsBlue
 #else
 	goto_if_set FLAG_HIDE_CINNABAR_BLUE, VirianCity_EventScript_GymGrampsBlue
 #endif
@@ -57,20 +56,20 @@ VirianCity_EventScript_GymGramps::
 	end
 
 VirianCity_EventScript_GymGrampsBlue::
+#if IS_WAYFARER
+	msgbox ViridianCity_Text_GrampsNearGym_GiovanniDeparted, MSGBOX_NPC
+#else
 	msgbox ViridianCity_Text_GrampsNearGym_BlueReturned, MSGBOX_NPC
+#endif
 	end
 
+#if !IS_WAYFARER
 ViridianCity_EventScript_BlueIntro::
 	lock
 	faceplayer
 	msgbox ViridianCity_Text_BlueIntro, MSGBOX_DEFAULT
-#if IS_WAYFARER
-	setflag FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED_COAST
-	setflag FLAG_WAYFARER_HIDE_VIRIDIAN_BLUE_INTRO_COAST
-#else
 	setflag FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED
 	setflag FLAG_HIDE_VIRIDIAN_BLUE_INTRO
-#endif
 	removeobject LOCALID_VIRIDIAN_BLUE_INTRO
 	release
 	end
@@ -80,6 +79,7 @@ ViridianCity_Text_BlueIntro:
 	.string "I'm BLUE, the GYM LEADER here.\p"
 	.string "Looking for a battle? Come inside\n"
 	.string "and show me what you've got.$"
+#endif
 
 ViridianCity_EventScript_Fisher::
 	goto_if_set FLAG_GOT_VIRIDIAN_TM_DREAM_EATER, ViridianCity_EventScript_FisherAfter
@@ -129,9 +129,9 @@ ViridianCity_Text_CoffeeGramps_Doubted:
 
 ViridianCity_Text_GrampsNearGym:
 #if IS_WAYFARER
-	.string "BLUE leads the GYM here.\p"
-	.string "He's right inside if you want to\n"
-	.string "challenge him.$"
+	.string "GIOVANNI leads the GYM here.\p"
+	.string "The doors are open, so take a\n"
+	.string "look inside.$"
 #else
 	.string "This GYM didn't have a LEADER\n"
 	.string "until recently.\p"
@@ -139,10 +139,18 @@ ViridianCity_Text_GrampsNearGym:
 	.string "the LEADER, but he's often away.$"
 #endif
 
+#if !IS_WAYFARER
 ViridianCity_Text_GrampsNearGym_BlueReturned:
 	.string "Are you going to battle the\n"
 	.string "LEADER?\p"
 	.string "Good luck to you. You'll need it.$"
+#endif
+
+#if IS_WAYFARER
+ViridianCity_Text_GrampsNearGym_GiovanniDeparted:
+	.string "GIOVANNI has left the GYM.\p"
+	.string "You can still go inside.$"
+#endif
 
 ViridianCity_Text_DreamEaterFisherNew:
 	.string "…Zzzzz…\p" 
@@ -180,7 +188,7 @@ ViridianCity_Text_Sign:
 ViridianCity_Text_GymSign:
 	.string "VIRIDIAN CITY POKéMON GYM\n"
 #if IS_WAYFARER
-	.string "LEADER: BLUE$"
+	.string "LEADER: GIOVANNI$"
 #else
 	.string "LEADER: …\p"
 	.string "The rest of the text is illegible…$"
