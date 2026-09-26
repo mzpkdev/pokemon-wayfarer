@@ -72,6 +72,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_VIRIDIAN_KANTO_GYM_OLD_MAN",
       "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_2_HNS",
       "x": 34,
       "y": 11,
@@ -343,6 +344,34 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "EventScript_CutTree",
       "flag": "FLAG_TEMP_2"
+    },
+    {
+      "local_id": "LOCALID_VIRIDIAN_KANTO_GRANDDAUGHTER",
+      "graphics_id": "OBJ_EVENT_GFX_LASS_HNS",
+      "x": 24,
+      "y": 21,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "ViridianCity_EventScript_KantoGranddaughter",
+      "flag": "FLAG_TEMP_4"
+    },
+    {
+      "local_id": "LOCALID_VIRIDIAN_KANTO_BOY",
+      "graphics_id": "OBJ_EVENT_GFX_LITTLE_BOY_HNS",
+      "x": 19,
+      "y": 41,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "ViridianCity_EventScript_KantoBoy",
+      "flag": "FLAG_TEMP_4"
     }
   ],
   "warp_events": [
@@ -384,7 +413,17 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 43,
+      "y": 15,
+      "elevation": 0,
+      "var": "VAR_TEMP_1",
+      "var_value": "1",
+      "script": "ViridianCity_EventScript_KantoGymDoorLocked"
+    }
+  ],
   "bg_events": [
     {
       "type": "sign",

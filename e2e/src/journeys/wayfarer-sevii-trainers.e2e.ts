@@ -283,7 +283,7 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
         name: "Garret",
         position: { map: "sevii-six-island-pattern-bush", x: 50, y: 6 },
         facing: "right",
-        postBattleText: "Theres a girl near the BUSH",
+        postBattleText: "There’s a girl near the BUSH",
       },
     ] as const
 
@@ -333,7 +333,7 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
       const base = await rematchGame.state.read()
       expect(base.battle.enemy!.level).toBeGreaterThan(0)
       const baseOpponentId = await readTrainerOpponentId(rematchGame)
-      await finishTrainerVictory(rematchGame, "clear that youre skilled", "base Sharon battle")
+      await finishTrainerVictory(rematchGame, "clear that you’re skilled", "base Sharon battle")
 
       await chargeVsSeekerOnKindleRoad(rematchGame)
       await useVsSeekerFromBag(rematchGame, true)
@@ -346,7 +346,7 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
       const firstRematchOpponentId = await readTrainerOpponentId(rematchGame)
       expect(firstRematchOpponentId).toBe(1539)
       expect(firstRematchOpponentId).not.toBe(baseOpponentId)
-      await finishTrainerVictory(rematchGame, "clear that youre skilled", "first Sharon rematch")
+      await finishTrainerVictory(rematchGame, "clear that you’re skilled", "first Sharon rematch")
 
       await chargeVsSeekerOnKindleRoad(rematchGame)
       await useVsSeekerFromBag(rematchGame, false)
@@ -358,7 +358,7 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
       expect(finalRematch).toMatchObject({ battle: { active: true } })
       expect(finalRematch.battle.enemy!.level).toBeGreaterThan(0)
       expect(await readTrainerOpponentId(rematchGame)).toBe(1540)
-      await finishTrainerVictory(rematchGame, "clear that youre skilled", "final Sharon rematch")
+      await finishTrainerVictory(rematchGame, "clear that you’re skilled", "final Sharon rematch")
     } finally {
       await rematchGame.close()
     }

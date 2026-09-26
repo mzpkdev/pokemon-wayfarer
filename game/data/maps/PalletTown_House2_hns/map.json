@@ -15,6 +15,7 @@
   "connections": 0,
   "object_events": [
     {
+      "local_id": "LOCALID_PALLET_HOUSE2_DAISY",
       "graphics_id": "OBJ_EVENT_GFX_GIRL_1_HNS",
       "x": 5,
       "y": 4,
@@ -38,7 +39,48 @@
     }
   ],
   "coord_events": [],
-  "bg_events": [],
+  "bg_events": [
+    {
+      "type": "sign",
+      "x": 6,
+      "y": 4,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "PalletTown_House2_EventScript_KantoTownMap"
+    },
+    {
+      "type": "sign",
+      "x": 9,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+      "script": "PalletTown_House2_EventScript_KantoBookshelf"
+    },
+    {
+      "type": "sign",
+      "x": 10,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+      "script": "PalletTown_House2_EventScript_KantoBookshelf"
+    },
+    {
+      "type": "sign",
+      "x": 2,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+      "script": "PalletTown_House2_EventScript_KantoPicture"
+    },
+    {
+      "type": "sign",
+      "x": 3,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+      "script": "PalletTown_House2_EventScript_KantoPicture"
+    }
+  ],
   "game_version": "hns",
   "region": "REGION_KANTO"
 }

@@ -26,6 +26,9 @@ struct ScriptContext
 void InitScriptContext(struct ScriptContext *ctx, void *cmdTable, void *cmdTableEnd);
 u8 SetupBytecodeScript(struct ScriptContext *ctx, const u8 *ptr);
 void SetupNativeScript(struct ScriptContext *ctx, bool8 (*ptr)(void));
+#ifdef E2E_TESTING
+bool8 ScriptContext_IsWaitingOnNative(bool8 (*ptr)(void));
+#endif
 void StopScript(struct ScriptContext *ctx);
 bool8 RunScriptCommand(struct ScriptContext *ctx);
 void ScriptJump(struct ScriptContext *ctx, const u8 *ptr);

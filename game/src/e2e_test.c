@@ -53,7 +53,7 @@ EWRAM_DATA volatile struct E2ETestState gE2ETestState;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
-    .version = 20,
+    .version = 23,
     .requestSize = sizeof(struct E2ETestRequest),
     .resultSize = sizeof(struct E2ETestResult),
     .stateSize = sizeof(struct E2ETestState),
@@ -69,7 +69,8 @@ STATIC_ASSERT(offsetof(struct E2ETestRequest, decoratedSecretBase) == 370, E2ETe
 STATIC_ASSERT(offsetof(struct E2ETestRequest, status) == 87, E2ETestRequestStatusOffset);
 STATIC_ASSERT(sizeof(struct E2ETestResult) == 16, E2ETestResultSize);
 STATIC_ASSERT(offsetof(struct E2ETestResult, status) == 14, E2ETestResultStatusOffset);
-STATIC_ASSERT(sizeof(struct E2ETestState) == 448, E2ETestStateSize);
+STATIC_ASSERT(sizeof(struct E2ETestObservedObjectEvent) == 12, E2ETestObservedObjectEventSize);
+STATIC_ASSERT(sizeof(struct E2ETestState) == 1684, E2ETestStateSize);
 STATIC_ASSERT(offsetof(struct E2ETestState, playerAppearanceId) == 382, E2ETestAppearanceIdOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, appearanceCandidate) == 383, E2ETestAppearanceCandidateOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, appearanceConfirmed) == 384, E2ETestAppearanceConfirmedOffset);
@@ -80,6 +81,11 @@ STATIC_ASSERT(offsetof(struct E2ETestState, partyHp) == 404, E2ETestPartyHpOffse
 STATIC_ASSERT(offsetof(struct E2ETestState, partyStatus) == 416, E2ETestPartyStatusOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, leagueRunReplay) == 441, E2ETestLeagueRunReplayOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, regionalChampionMask) == 442, E2ETestRegionalChampionMaskOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, fullDialogueText) == 452, E2ETestFullDialogueTextOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, objectEvents) == 972, E2ETestObjectEventsOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, battleDialogueSequence) == 1164, E2ETestBattleDialogueSequenceOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, battleDialogueText) == 1168, E2ETestBattleDialogueTextOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, awaitingButton) == 1680, E2ETestAwaitingButtonOffset);
 STATIC_ASSERT(sizeof(struct E2ETestAbi) == 16, E2ETestAbiSize);
 
 enum E2ETestInternalStage
@@ -112,6 +118,14 @@ static EWRAM_DATA bool32 sLastFieldMoveUnlocked;
 static EWRAM_DATA u8 sLastDialogueMessage;
 static EWRAM_DATA u32 sDialogueSequence;
 static EWRAM_DATA u8 sLastDialogueText[E2E_TEST_FIELD_MESSAGE_TEXT_LENGTH];
+static EWRAM_DATA u8 sLastFullDialogueText[E2E_TEST_FULL_FIELD_MESSAGE_TEXT_LENGTH];
+static EWRAM_DATA u32 sBattleDialogueSequence;
+static EWRAM_DATA u8 sLastBattleDialogueText[E2E_TEST_BATTLE_MESSAGE_TEXT_LENGTH];
+static EWRAM_DATA u8 sChoiceKind;
+static EWRAM_DATA u8 sChoiceCursor;
+static EWRAM_DATA u8 sChoiceOptionCount;
+static EWRAM_DATA u16 sChoiceResult;
+static EWRAM_DATA u16 sDisplayedMonSpecies;
 static EWRAM_DATA struct E2ETestBagItem sObservedBagItems[E2E_TEST_MAX_BAG_ITEMS];
 static EWRAM_DATA struct E2ETestPcSlot sObservedPcSlots[E2E_TEST_MAX_PC_SLOTS];
 static EWRAM_DATA u8 sObservedBagItemCount;
@@ -193,6 +207,52 @@ void E2ETest_RecordExpandedFieldMessage(const u8 *str)
     sLastDialogueText[i] = EOS;
     for (i++; i < E2E_TEST_FIELD_MESSAGE_TEXT_LENGTH; i++)
         sLastDialogueText[i] = EOS;
+
+    for (i = 0; i < E2E_TEST_FULL_FIELD_MESSAGE_TEXT_LENGTH - 1 && str[i] != EOS; i++)
+        sLastFullDialogueText[i] = str[i];
+    sLastFullDialogueText[i] = EOS;
+    for (i++; i < E2E_TEST_FULL_FIELD_MESSAGE_TEXT_LENGTH; i++)
+        sLastFullDialogueText[i] = EOS;
+}
+
+void E2ETest_RecordBattleMessage(const u8 *str)
+{
+    u32 i;
+
+    if (str[0] == EOS)
+        return;
+
+    sBattleDialogueSequence++;
+    for (i = 0; i < E2E_TEST_BATTLE_MESSAGE_TEXT_LENGTH - 1 && str[i] != EOS; i++)
+        sLastBattleDialogueText[i] = str[i];
+    sLastBattleDialogueText[i] = EOS;
+    for (i++; i < E2E_TEST_BATTLE_MESSAGE_TEXT_LENGTH; i++)
+        sLastBattleDialogueText[i] = EOS;
+}
+
+void E2ETest_RecordChoice(u8 kind, u8 cursor, u8 optionCount)
+{
+    sChoiceKind = kind;
+    sChoiceCursor = cursor;
+    sChoiceOptionCount = optionCount;
+    sChoiceResult = 0xFFFF;
+}
+
+void E2ETest_RecordChoiceResult(u16 result)
+{
+    sChoiceResult = result;
+}
+
+void E2ETest_ClearChoice(void)
+{
+    sChoiceKind = E2E_TEST_CHOICE_NONE;
+    sChoiceCursor = 0xFF;
+    sChoiceOptionCount = 0;
+}
+
+void E2ETest_RecordDisplayedMonPic(u16 species)
+{
+    sDisplayedMonSpecies = species;
 }
 
 void E2ETest_RecordCapture(u16 species)
@@ -224,6 +284,12 @@ static void ResetObservations(void)
     sLastDialogueMessage = E2E_TEST_DIALOGUE_NONE;
     sDialogueSequence = 0;
     memset(sLastDialogueText, EOS, sizeof(sLastDialogueText));
+    memset(sLastFullDialogueText, EOS, sizeof(sLastFullDialogueText));
+    sBattleDialogueSequence = 0;
+    memset(sLastBattleDialogueText, EOS, sizeof(sLastBattleDialogueText));
+    E2ETest_ClearChoice();
+    sChoiceResult = 0xFFFF;
+    sDisplayedMonSpecies = SPECIES_NONE;
     sCaughtSpecies = SPECIES_NONE;
     sCatchSwapState = E2E_TEST_CATCH_SWAP_NONE;
     sCatchSwapCursor = 0;
@@ -1257,6 +1323,34 @@ static void RecordSecretBaseState(void)
     gE2ETestState.secretBaseDecorationFingerprint = fingerprint;
 }
 
+static void RecordObjectEvents(void)
+{
+    u32 i;
+
+    gE2ETestState.objectEventCount = 0;
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    {
+        const struct ObjectEvent *objectEvent = &gObjectEvents[i];
+        struct E2ETestObservedObjectEvent *observed;
+
+        if (!objectEvent->active)
+            continue;
+        observed = (struct E2ETestObservedObjectEvent *)&gE2ETestState.objectEvents[gE2ETestState.objectEventCount++];
+        // Object-event coordinates carry the engine's border offset; expose the
+        // same map-coordinate system used by map JSON and the player snapshot.
+        observed->x = objectEvent->currentCoords.x - MAP_OFFSET;
+        observed->y = objectEvent->currentCoords.y - MAP_OFFSET;
+        observed->localId = objectEvent->localId;
+        observed->mapGroup = objectEvent->mapGroup;
+        observed->mapNum = objectEvent->mapNum;
+        observed->movementType = objectEvent->movementType;
+        observed->movementDirection = objectEvent->movementDirection;
+        observed->facingDirection = objectEvent->facingDirection;
+        observed->visible = !objectEvent->invisible;
+        observed->moving = objectEvent->singleMovementActive || objectEvent->heldMovementActive;
+    }
+}
+
 static void UpdateState(void)
 {
     bool32 overworld = gMain.callback1 == CB1_Overworld && gMain.callback2 == CB2_Overworld;
@@ -1302,6 +1396,7 @@ static void UpdateState(void)
     gE2ETestState.controlsLocked = TRUE;
     gE2ETestState.scriptActive = FALSE;
     gE2ETestState.dialogueOpen = FALSE;
+    gE2ETestState.awaitingButton = FALSE;
     gE2ETestState.facing = 0;
     gE2ETestState.avatarFlags = 0;
     gE2ETestState.avatarSurfing = FALSE;
@@ -1319,6 +1414,15 @@ static void UpdateState(void)
     gE2ETestState.dialogueMessage = sLastDialogueMessage;
     gE2ETestState.dialogueSequence = sDialogueSequence;
     memcpy((void *)gE2ETestState.dialogueText, sLastDialogueText, sizeof(sLastDialogueText));
+    memcpy((void *)gE2ETestState.fullDialogueText, sLastFullDialogueText, sizeof(sLastFullDialogueText));
+    gE2ETestState.battleDialogueSequence = sBattleDialogueSequence;
+    memcpy((void *)gE2ETestState.battleDialogueText, sLastBattleDialogueText, sizeof(sLastBattleDialogueText));
+    gE2ETestState.choiceKind = sChoiceKind;
+    gE2ETestState.choiceCursor = sChoiceCursor;
+    gE2ETestState.choiceOptionCount = sChoiceOptionCount;
+    gE2ETestState.choiceResult = sChoiceResult;
+    gE2ETestState.displayedMonSpecies = sDisplayedMonSpecies;
+    gE2ETestState.objectEventCount = 0;
     gE2ETestState.partyEggMask = 0;
     gE2ETestState.partyFaintedMask = 0;
     gE2ETestState.battleEnemySpecies = SPECIES_NONE;
@@ -1447,6 +1551,9 @@ static void UpdateState(void)
         gE2ETestState.leagueRunStage = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.stage;
         gE2ETestState.leagueRunRating = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.ratingAtEntry;
         gE2ETestState.leagueRunReplay = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.replay;
+        gE2ETestState.palletOpeningPhase = gSaveBlock3Ptr->wayfarerPalletOpening.phase;
+        gE2ETestState.palletStarterSlot = gSaveBlock3Ptr->wayfarerPalletOpening.starterSlot;
+        gE2ETestState.palletOpeningReceipts = gSaveBlock3Ptr->wayfarerPalletOpening.receipts;
     }
 #endif
     trainerCardState = E2ETest_GetTrainerCardState();
@@ -1459,6 +1566,7 @@ static void UpdateState(void)
     gE2ETestState.partyCount = gPlayerPartyCount;
     gE2ETestState.money = GetMoney(&gSaveBlock1Ptr->money);
     gE2ETestState.hmsOverwrite = HMsOverwriteOptionActive();
+    RecordObjectEvents();
     RecordSecretBaseState();
     for (i = 0; i < E2E_TEST_MAX_PARTY; i++)
     {
@@ -1584,6 +1692,7 @@ static void UpdateState(void)
     gE2ETestState.controlsLocked = ArePlayerFieldControlsLocked();
     gE2ETestState.scriptActive = ScriptContext_IsEnabled();
     gE2ETestState.dialogueOpen = !IsFieldMessageBoxHidden();
+    gE2ETestState.awaitingButton = E2ETest_IsScriptWaitingForButton();
     gE2ETestState.facing = GetPlayerFacingDirection();
     gE2ETestState.avatarFlags = GetPlayerAvatarFlags();
     gE2ETestState.avatarSurfing = TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING);

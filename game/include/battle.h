@@ -1059,6 +1059,17 @@ extern bool8 gLastUsedBallMenuPresent;
 extern u8 gPartyCriticalHits[PARTY_SIZE];
 extern u8 gCategoryIconSpriteId;
 
+// FRLG's Oak in-battle tutorial (Oak/old man player controller and its hooks).
+// FRLG runs it for its first battle. Other builds run it only for a first
+// battle against a trainer: Wayfarer's Pallet-origin first Blue battle
+// (trainerbattle_earlyrival with RIVAL_BATTLE_TUTORIAL). Hoenn's wild Birch
+// first battle keeps its own behavior.
+static inline bool32 IsOakBattleTutorial(void)
+{
+    return (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
+        && (IS_FRLG || (gBattleTypeFlags & BATTLE_TYPE_TRAINER));
+}
+
 static inline bool32 IsBattlerAlive(enum BattlerId battler)
 {
     if (battler >= gBattlersCount)

@@ -476,8 +476,8 @@ describe.sequential("Wayfarer Celadon Rocket Hideout", () => {
       { x: 3, y: 3, facing: "up", text: /GAME CORNER/i },
       { x: 16, y: 3, facing: "up", text: /COINS/i },
       { x: 18, y: 3, facing: "up", text: /Welcome/i },
-      { x: 4, y: 6, facing: "right", text: /You cant play/i },
-      { x: 16, y: 7, facing: "right", text: /You cant play/i },
+      { x: 4, y: 6, facing: "right", text: /You can’t play/i },
+      { x: 16, y: 7, facing: "right", text: /You can’t play/i },
       { x: 12, y: 3, facing: "up", text: /odds/i },
     ] as const
     for (const service of services) {

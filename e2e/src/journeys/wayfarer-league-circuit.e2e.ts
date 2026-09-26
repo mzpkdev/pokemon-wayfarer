@@ -118,13 +118,12 @@ const startTrainerBattle = async (
   for (let attempt = 0; attempt < 360; attempt++) {
     const state = await game.state.read()
     if (state.battle.ui === "action-menu") return
-    if (
-      state.dialogueOpen ||
-      state.scriptActive ||
-      state.controlsLocked ||
-      !state.ready ||
-      state.battle.ui === "text"
-    )
+    // Inside a battle, advance text only; a press while the action menu
+    // opens would pick FIGHT before the menu is ever observed.
+    if (state.battle.active) {
+      if (state.battle.ui === "text") await game.controls.press("a")
+      else await game.wait.frames(4)
+    } else if (state.dialogueOpen || state.scriptActive || state.controlsLocked || !state.ready)
       await game.controls.press("a")
     else await game.wait.frames(10)
   }

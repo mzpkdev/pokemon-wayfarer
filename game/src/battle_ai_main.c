@@ -7086,7 +7086,9 @@ static s32 AI_Safari(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
 // First battle logic
 static s32 AI_FirstBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 score)
 {
-    if (!IS_FRLG && gAiLogicData->hpPercents[battlerDef] <= 20)
+    // Birch's wild Zigzagoon flees before the player's Pokemon can faint.
+    // Oak's tutorial rival fights on, so that battle can be lost.
+    if (!IsOakBattleTutorial() && gAiLogicData->hpPercents[battlerDef] <= 20)
         AI_Flee();
 
     return score;

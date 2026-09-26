@@ -70,6 +70,16 @@ u8 SetupBytecodeScript(struct ScriptContext *ctx, const u8 *ptr)
     return 1;
 }
 
+#ifdef E2E_TESTING
+// Lets the E2E harness see a script parked on a given native wait.
+bool8 ScriptContext_IsWaitingOnNative(bool8 (*ptr)(void))
+{
+    return sGlobalScriptContextStatus == CONTEXT_RUNNING
+        && sGlobalScriptContext.mode == SCRIPT_MODE_NATIVE
+        && sGlobalScriptContext.nativePtr == ptr;
+}
+#endif
+
 void SetupNativeScript(struct ScriptContext *ctx, bool8 (*ptr)(void))
 {
     ctx->mode = SCRIPT_MODE_NATIVE;

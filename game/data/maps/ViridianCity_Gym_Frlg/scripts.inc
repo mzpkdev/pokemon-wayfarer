@@ -1,5 +1,42 @@
 ViridianCity_Gym_Frlg_MapScripts::
+#if IS_WAYFARER
+	map_script MAP_SCRIPT_ON_TRANSITION, ViridianCity_Gym_KantoOnTransition
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, ViridianCity_Gym_KantoOnFrame
+#endif
 	.byte 0
+
+#if IS_WAYFARER
+@ The Pallet-origin opening keeps Viridian's Gym closed. The town's door
+@ trigger refuses a northward approach; this catches any other entry and
+@ returns the player to the doorstep. Not FRLG text: FRLG never reaches it.
+ViridianCity_Gym_KantoOnTransition:
+	setvar VAR_TEMP_1, 0
+	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
+	goto_if_eq VAR_RESULT, FALSE, ViridianCity_Gym_KantoTransitionDone
+	specialvar VAR_RESULT, WayfarerKanto_IsOpeningComplete
+	goto_if_eq VAR_RESULT, TRUE, ViridianCity_Gym_KantoTransitionDone
+	setvar VAR_TEMP_1, 1
+ViridianCity_Gym_KantoTransitionDone:
+	end
+
+ViridianCity_Gym_KantoOnFrame:
+	map_script_2 VAR_TEMP_1, 1, ViridianCity_Gym_KantoRefuseEntry
+	.2byte 0
+
+ViridianCity_Gym_KantoRefuseEntry:
+	lockall
+	setvar VAR_TEMP_1, 0
+	msgbox ViridianCity_Gym_Text_KantoClosed, MSGBOX_DEFAULT
+	closemessage
+	warp MAP_VIRIDIAN_CITY_HNS, 43, 15
+	waitstate
+	releaseall
+	end
+
+ViridianCity_Gym_Text_KantoClosed:
+	.string "The GYM is closed for now.\p"
+	.string "Come back another time.$"
+#endif
 
 #if IS_WAYFARER
 ViridianCity_Gym_EventScript_Giovanni::

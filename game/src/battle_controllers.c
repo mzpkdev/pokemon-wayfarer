@@ -262,7 +262,7 @@ static void InitBtlControllersInternal(void)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_0)] = SetControllerToSafari;
             else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_0)] = IS_FRLG ? SetControllerToOakOrOldMan : SetControllerToWally;
-            else if (IS_FRLG && (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE))
+            else if (IsOakBattleTutorial())
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_0]] = SetControllerToOakOrOldMan;
             else if (isAIvsAI)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_0)] = SetControllerToPlayerPartner;
@@ -2181,7 +2181,7 @@ void Controller_WaitForHealthBar(enum BattlerId battler)
         if (IsOnPlayerSide(battler))
             HandleLowHpMusicChange(GetBattlerMon(battler), battler);
 
-        if (IS_FRLG && GetBattlerSide(battler) == B_SIDE_OPPONENT && !BtlCtrl_OakOldMan_TestState2Flag(1) && (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE))
+        if (IsOakBattleTutorial() && GetBattlerSide(battler) == B_SIDE_OPPONENT && !BtlCtrl_OakOldMan_TestState2Flag(1))
         {
             BtlCtrl_OakOldMan_SetState2Flag(1);
             gBattlerControllerFuncs[battler] = PrintOakText_InflictingDamageIsKey;

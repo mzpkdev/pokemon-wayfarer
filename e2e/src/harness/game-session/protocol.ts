@@ -13,10 +13,10 @@ export type TrainerOnlySnapshot = {
   outcome: number
 }
 
-const abiVersion = 20
+const abiVersion = 23
 const expectedRequestSize = 372
 const expectedResultSize = 16
-const expectedStateSize = 448
+const expectedStateSize = 1684
 const expectedRequestStatusOffset = 87
 const expectedResultStatusOffset = 14
 
@@ -27,6 +27,10 @@ export const maxBagItems = 8
 export const maxPcSlots = 8
 export const maxPartyMenuActions = 8
 export const maxFieldMessageTextLength = 32
+/** Finite ROM-side capture size for a complete expanded field message. */
+export const maxFullFieldMessageTextLength = 512
+export const maxBattleMessageTextLength = 512
+export const maxObjectEvents = 16
 export const leagueCount = 3
 export const totalPcBoxes = 14
 export const pcBoxCapacity = 30
@@ -151,6 +155,7 @@ export const battleUiStates = [
   "text",
   "move-menu",
 ] as const
+export const choiceKinds = ["none", "yes-no", "multichoice", "starter"] as const
 
 export type SessionAbi = {
   requestSize: number
@@ -215,6 +220,18 @@ export type ArrangeRequest = Omit<CommandRequest, "command" | "useRngSeed" | "wi
   wildMon?: MonFixtureWire
 }
 export type ObservedPcSlot = MonFixtureWire & { box: number; slot: number }
+export type ObservedObjectEvent = {
+  localId: number
+  mapGroup: number
+  mapNum: number
+  x: number
+  y: number
+  movementType: number
+  movementDirection: number
+  facingDirection: number
+  visible: boolean
+  moving: boolean
+}
 
 export type StateSnapshot = {
   frame: number
@@ -244,6 +261,16 @@ export type StateSnapshot = {
   dialogueMessage: number
   dialogueSequence: number
   dialogueText: number[]
+  fullDialogueText: number[]
+  battleDialogueSequence: number
+  battleDialogueText: number[]
+  objectEvents: ObservedObjectEvent[]
+  choiceKind: number
+  choiceCursor: number
+  choiceOptionCount: number
+  choiceResult: number
+  displayedMonSpecies: number
+  awaitingButton: boolean
   partySpecies: number[]
   partyMoves: number[][]
   partyEggMask: number
@@ -313,6 +340,9 @@ export type StateSnapshot = {
   littlerootTownState: number
   secretBaseDecorationCount: number
   secretBaseDecorationFingerprint: number
+  palletOpeningPhase: number
+  palletStarterSlot: number
+  palletOpeningReceipts: number
 }
 
 const emptyMon = (): MonFixtureWire => ({ species: 0, moves: [0, 0, 0, 0], level: 0, egg: false })
@@ -769,6 +799,19 @@ const parseObservedPcSlot = (bytes: Uint8Array, offset: number): ObservedPcSlot 
   slot: bytes[offset + 13]!,
 })
 
+const parseObservedObjectEvent = (bytes: Uint8Array, offset: number): ObservedObjectEvent => ({
+  x: int16(bytes, offset),
+  y: int16(bytes, offset + 2),
+  localId: bytes[offset + 4]!,
+  mapGroup: bytes[offset + 5]!,
+  mapNum: bytes[offset + 6]!,
+  movementType: bytes[offset + 7]!,
+  movementDirection: bytes[offset + 8]!,
+  facingDirection: bytes[offset + 9]!,
+  visible: bytes[offset + 10] !== 0,
+  moving: bytes[offset + 11] !== 0,
+})
+
 export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
   const partySpecies = Array.from({ length: maxParty }, (_, index) => uint16(bytes, 18 + index * 2))
   const partyMoves = Array.from({ length: maxParty }, (_, partyIndex) =>
@@ -777,6 +820,7 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     ),
   )
   const pcSlotCount = Math.min(bytes[332]!, maxPcSlots)
+  const objectEventCount = Math.min(bytes[964]!, maxObjectEvents)
   return {
     frame: uint32(bytes, 0),
     mapGroup: uint16(bytes, 4),
@@ -815,6 +859,18 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     partyFaintedMask: bytes[111]!,
     dialogueSequence: uint32(bytes, 120),
     dialogueText: Array.from(bytes.slice(124, 124 + maxFieldMessageTextLength)),
+    fullDialogueText: Array.from(bytes.slice(452, 452 + maxFullFieldMessageTextLength)),
+    battleDialogueSequence: uint32(bytes, 1164),
+    battleDialogueText: Array.from(bytes.slice(1168, 1168 + maxBattleMessageTextLength)),
+    objectEvents: Array.from({ length: objectEventCount }, (_, index) =>
+      parseObservedObjectEvent(bytes, 972 + index * 12),
+    ),
+    choiceKind: bytes[965]!,
+    choiceCursor: bytes[966]!,
+    choiceOptionCount: bytes[967]!,
+    choiceResult: uint16(bytes, 968),
+    displayedMonSpecies: uint16(bytes, 970),
+    awaitingButton: bytes[1680] === 1,
     pcSlots: Array.from({ length: pcSlotCount }, (_, index) =>
       parseObservedPcSlot(bytes, 176 + index * 16),
     ),
@@ -882,6 +938,9 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     partyStatus: Array.from({ length: maxParty }, (_, index) => uint32(bytes, 416 + index * 4)),
     secretBaseDecorationCount: bytes[440]!,
     secretBaseDecorationFingerprint: uint32(bytes, 444),
+    palletOpeningPhase: bytes[448]!,
+    palletStarterSlot: bytes[449]!,
+    palletOpeningReceipts: uint16(bytes, 450),
     trainerOnly: {
       active: bytes[386] !== 0,
       initialCatchFactor: bytes[387]!,

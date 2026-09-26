@@ -12,6 +12,7 @@
 #include "pokedex.h"
 #include "script.h"
 #include "wayfarer_persistence.h"
+#include "wayfarer_kanto_opening.h"
 #include "constants/heal_locations.h"
 #include "constants/maps.h"
 #include "constants/pokedex.h"
@@ -31,6 +32,7 @@ static u8 LittlerootRecovery(void)
         ? HEAL_LOCATION_LITTLEROOT_TOWN_MAYS_HOUSE_2F
         : HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F;
 }
+static u8 PalletRecovery(void) { return HEAL_LOCATION_PALLET_HOME_WAYFARER; }
 static bool8 NewBarkAqua(void) { return VarGet(VAR_SSAQUA_STATE) >= 8; }
 static bool8 LittlerootAqua(void) { return FlagGet(FLAG_HOENN_STARTER_RECEIVED); }
 static bool8 NoTicket(void) { return FALSE; }
@@ -44,6 +46,11 @@ static void InitializeLittleroot(void)
     FlagClear(FLAG_HIDE_SILVER_NEWBARKTOWN);
     RunScriptImmediately(WayfarerHoennOrigin_EventScript_InitializeBaseline);
     WayfarerSetHoennStateInitialized(TRUE);
+}
+static void InitializePallet(void)
+{
+    Dex_SetActiveRegion(DEX_REGION_KANTO);
+    WayfarerKanto_InitializeOpening();
 }
 
 static const struct WayfarerOriginProfile sOriginProfiles[] =
@@ -65,6 +72,16 @@ static const struct WayfarerOriginProfile sOriginProfiles[] =
         .initialRecovery = LittlerootRecovery, .initialize = InitializeLittleroot,
         .openingCallback = ExecuteTruckSequence,
         .regularAqua = LittlerootAqua, .slateportTicket = LittlerootAqua, .maidenVoyage = FALSE,
+    },
+    {
+        .id = ORIGIN_PALLET, .selectionLabel = COMPOUND_STRING("KANTO"), .entryRegion = REGION_KANTO,
+        .mapGroup = MAP_GROUP(MAP_PALLET_TOWN_REDS_HOUSE_2F_HNS),
+        .mapNum = MAP_NUM(MAP_PALLET_TOWN_REDS_HOUSE_2F_HNS),
+        .warpId = WARP_ID_NONE, .x = 5, .y = 5,
+        .scenePolicies = {ORIGIN_SCENE_VISITOR, ORIGIN_SCENE_VISITOR, ORIGIN_SCENE_VISITOR, ORIGIN_SCENE_VISITOR},
+        .initialRecovery = PalletRecovery, .initialize = InitializePallet,
+        .openingCallback = FieldCB_WarpExitFadeFromBlack,
+        .regularAqua = NoTicket, .slateportTicket = NoTicket, .maidenVoyage = FALSE,
     },
 };
 
@@ -270,7 +287,7 @@ bool8 Test_WayfarerRegisterOriginProfile(const struct WayfarerOriginProfile *pro
         sTestProfile = NULL;
         return TRUE;
     }
-    if (profile->id <= ORIGIN_LITTLEROOT || !IsProfileValid(profile))
+    if (profile->id <= ORIGIN_PALLET || !IsProfileValid(profile))
         return FALSE;
     sTestProfile = profile;
     return TRUE;

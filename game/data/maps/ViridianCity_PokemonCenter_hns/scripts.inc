@@ -8,12 +8,28 @@ ViridianCity_PokemonCenter_OnTransition::
 
 ViridianCity_PokemonCenter_EventScript_CooltrainerM::
 #if IS_WAYFARER
+	@ Only the Pallet-origin opening swaps in its Route 1 line.
+	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
+	goto_if_eq VAR_RESULT, FALSE, ViridianCity_PokemonCenter_EventScript_CooltrainerMNative
+	specialvar VAR_RESULT, WayfarerKanto_IsOpeningComplete
+	goto_if_eq VAR_RESULT, FALSE, ViridianCity_PokemonCenter_EventScript_KantoVisitor
+ViridianCity_PokemonCenter_EventScript_CooltrainerMNative:
 	goto_if_set FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS, ViridianCity_PokemonCenter_EventScript_CooltrainerMBlue
 #else
 	goto_if_set FLAG_HIDE_CINNABAR_BLUE, ViridianCity_PokemonCenter_EventScript_CooltrainerMBlue
 #endif
 	msgbox ViridianCity_PokemonCenter_Text_1FCooltrainerM, MSGBOX_NPC
 	end
+
+#if IS_WAYFARER
+ViridianCity_PokemonCenter_EventScript_KantoVisitor::
+	msgbox ViridianCity_PokemonCenter_Text_KantoVisitor, MSGBOX_NPC
+	end
+
+ViridianCity_PokemonCenter_Text_KantoVisitor:
+	.string "This POKéMON CENTER is a good\n"
+	.string "place to rest before ROUTE 1.$"
+#endif
 
 ViridianCity_PokemonCenter_EventScript_CooltrainerMBlue::
 	msgbox ViridianCity_PokemonCenter_Text_1FCooltrainerM_BlueReturned, MSGBOX_NPC

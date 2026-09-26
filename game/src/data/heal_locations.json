@@ -668,6 +668,16 @@
       "map": "MAP_ROUTE4_HNS",
       "x": 12,
       "y": 6
+    },
+    {
+      "id": "HEAL_LOCATION_PALLET_HOME_WAYFARER",
+      "source": "HNS",
+      "wayfarer_only": true,
+      "map": "MAP_PALLET_TOWN_REDS_HOUSE_1F_HNS",
+      "x": 7,
+      "y": 6,
+      "respawn_map": "MAP_PALLET_TOWN_REDS_HOUSE_1F_HNS",
+      "respawn_npc": "0"
     }
   ]
 }

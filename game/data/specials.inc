@@ -777,6 +777,27 @@ gSpecials::
     def_special WayfarerGrantRunningShoes
     def_special WayfarerHasSharedPokedex
     def_special WayfarerGrantSharedPokedex
+    def_special WayfarerKanto_IsPalletOrigin
+    def_special WayfarerKanto_GetPhase
+    def_special WayfarerKanto_GetStarterSlot
+    def_special WayfarerKanto_GetCounterSlot
+    def_special WayfarerKanto_GetSelectedStarterSpecies
+    def_special WayfarerKanto_BufferSelectedStarterType
+    def_special WayfarerKanto_HasReceipt
+    def_special WayfarerKanto_IsOpeningComplete
+    def_special WayfarerKanto_TryStageInterception
+    def_special WayfarerKanto_CommitLabStarterChoice
+    def_special WayfarerKanto_CommitStarterSlot
+    def_special WayfarerKanto_TryGiveStarter
+    def_special WayfarerKanto_ResolveFirstBattle
+    def_special WayfarerKanto_TryReceiveParcel
+    def_special WayfarerKanto_TryAcceptParcel
+    def_special WayfarerKanto_CommitBlueArrival
+    def_special WayfarerKanto_TryGrantPokedex
+    def_special WayfarerKanto_TryGrantPokeBalls
+    def_special WayfarerKanto_CommitPresentationDone
+    def_special WayfarerKanto_CompleteOpening
+    def_special WayfarerKanto_StageLab
     def_special WayfarerCanStartOrdinaryBattleForScript
     def_special WayfarerGetRocketHideoutElevatorFloorForScript
     def_special DrawWayfarerVermilionPortMenu
