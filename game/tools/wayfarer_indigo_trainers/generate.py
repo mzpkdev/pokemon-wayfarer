@@ -14,8 +14,8 @@ coast = importlib.util.module_from_spec(_coast_spec)
 _coast_spec.loader.exec_module(coast)
 
 BASE = 1795
-# Trainer-flag slots 661-702 belong to local Kanto IDs and 703-711 are held
-# for the Viridian Gym. Indigo must never fall through to the appended-HNS
+# Trainer-flag slots 661-702 belong to local Kanto IDs and 703-711 to the
+# Viridian Gym. Indigo must never fall through to the appended-HNS
 # remap, which would land on system flags past TRAINER_FLAGS_END.
 DEFEAT_SLOT_FIRST = 712
 SOURCES = (
