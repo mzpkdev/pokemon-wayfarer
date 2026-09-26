@@ -3,7 +3,9 @@
 Implemented: Outdated
 
 Proposed successor: [Seeded Trainer Circuit](seeded-trainer-circuit.md) replaces
-the fixed order and lineups with a seeded itinerary and rated trainer pool.
+the fixed order and lineups with recurring editions, each with a seeded
+itinerary and rated trainer pool. Lifetime progression rewards apply once;
+later editions provide another competition without resetting unlocks.
 That draft separates confirmed requirements from proposed defaults. This document
 remains the approved baseline until the successor is adopted.
 

@@ -6,15 +6,18 @@ Implemented: No
 
 Draft successor to the fixed-order [interregional circuit](wayfarer-interregional-league-circuit.md).
 The parent PRD distinguishes confirmed requirements from proposed defaults and
-owns unresolved decisions D1–D3. The behavior below specifies the proposed
-runtime contract; writing it does not approve those defaults or authorize implementation.
+owns resolved fixed strength (D1), unresolved D2/D3, and supporting defaults.
+The recurring core is approved; the registration interface, record storage,
+ceremony rewards, and presentation defaults below remain proposed. This document
+does not authorize implementation of unresolved defaults.
 
 ## Scope
 
-This specification owns schedule persistence, admission, active runs, first-clear
-transactions, retries and replays, recovery, player-facing information, regional
+This specification owns edition registration, schedule persistence, admission,
+active runs, edition-result and lifetime-clear transactions, retries and replays,
+recovery, player-facing information, regional
 integration, and journey acceptance. The sibling [trainer pool specification](circuit-trainer-pool.md)
-owns canonical trainer identity, eligible team profiles, region affinity,
+owns canonical trainer identity, eligible team profiles, league affiliations,
 keyed circuit order/allocation decisions, and the NPC TR-to-level calculation.
 The [shared playthrough seed framework](playthrough-seed-framework.md) owns
 the root seed, its initialization/persistence and version, pure keyed draws,
@@ -31,7 +34,7 @@ owners except for the explicit dependencies below.
 ### Venue and position identity
 
 Use a stable venue identity distinct from geographic region and schedule
-position. The saved schedule contains each of Indigo, Masters, and Hoenn once.
+position. Each edition's saved schedule contains Indigo, Masters, and Hoenn once.
 Positions 1, 2, and 3 determine qualification and competitive tier. Venue
 identity determines the map chain, ceremony, regional recognition, and return
 location. Trainer identity determines the opponent presented in each room.
@@ -51,6 +54,7 @@ two `u32` words with seed-format/derivation-version metadata in shared Wayfarer
 persistence. Circuit initialization must not consume or reseed Pokémon RNG.
 Save the resolved schedule alongside the valid root, with circuit metadata:
 
+- one-based `editionId` (`u32`, initialized to 1);
 - schedule schema version, separate ORDER/LORE_FILTER/ROSTER rules versions, and
   trainer catalog/content version;
 - three ordered venue identities; and
@@ -76,8 +80,10 @@ map region. Multiple unaffiliated participants may be selected; there is no
 visitor quota or separately mutable visitor count. The pool specification owns
 filter keys, rating weights, candidate constraints, and independent venue allocation.
 
-Generation is a new-game operation. The sibling's semantic keys determine the
-same unresolved outcome for the same root, decision versions, and inputs, even
+Generate edition 1 at new game and later schedules only through registration.
+The sibling's semantic keys use `occurrenceId = editionId` for ORDER, ROSTER,
+and LORE_FILTER; all draft rules versions remain 1. They determine the
+same unresolved outcome for the same root, edition, decision versions, and inputs, even
 before first resolution. Once resolved, the saved schedule is authoritative.
 Saving, loading, ordinary gameplay RNG, admission, losing, leaving, completion,
 and replay cannot reorder venues or reroll slots, profiles, or assigned ratings.
@@ -85,34 +91,74 @@ A content update cannot silently
 reinterpret an existing schedule through a different trainer-content version.
 Unrelated opted-in seeded features, their calls/content, menu opens, fights,
 and queries cannot perturb circuit outcomes. Roster catalog changes may alter
-new-game roster draws but cannot change ORDER or existing character/venue
-LORE_FILTER draws for the same
-root and respective rules versions. Global/catalog versions must not be added
+new-edition roster draws but cannot change ORDER or existing character/venue
+LORE_FILTER draws for the same root, edition, and respective rules versions.
+Global/catalog versions must not be added
 to every random key.
 
-Store canonical first-clear facts by venue, separate from Champion projections
-and room defeat state. New game initializes all three false and no active run.
-Derive the next position from the contiguous cleared prefix of the saved order;
-do not keep a separately mutable progress index or reward count. A cleared
-later venue with an uncleared predecessor is invalid circuit state.
+Store separate canonical current-edition venue results and lifetime first-clear
+facts, independent of Champion projections and room defeat state. New game
+initializes both three-venue masks false, no active run, and completed count 0.
+Derive the next position from the current-edition contiguous cleared prefix;
+a later venue result without its predecessor is invalid. Lifetime facts remain
+true across rollover and provide progression rewards, recognition, and unlocks.
+
+Propose persisting only the current schedule plus a bounded `u32` aggregate
+completed-edition count, not unlimited old schedules/teams. Count exactly once
+when the current edition's third result commits. Consistent state has
+`completedCount = editionId - 1` while unfinished and `completedCount = editionId`
+when complete. This count tracks edition results, never player TR.
+
+### Registering the next edition
+
+After all three current results commit, the player manually registers for the
+next edition. There is no calendar, waiting period, automatic rollover, skip,
+next-edition preview, or cancel-to-reroll path. Propose offering registration
+at every venue reception while preserving current-edition replay until rollover.
+Refuse registration if the edition is incomplete, a run is active, or a ceremony
+or result transaction is pending.
+
+1. Bind the registration request to its expected current edition ID. Validate
+   that it still matches the saved complete edition, and reject
+   `editionId = 0xFFFFFFFF` without changing the save. Derive
+   `nextEditionId = editionId + 1` without committing it.
+2. Stage and validate the entire schedule using the same playthrough root and
+   next edition ID. Failure retains the complete current edition and consumes
+   no edition ID. No staged schedule is presented to the player.
+3. Revalidate the expected source edition and registration eligibility, then
+   atomically persist next ID, full schedule, and empty current-edition result
+   mask; reset attempt progress. A duplicate or stale request cannot act on a
+   newer edition. Preserve lifetime clears, completed count, badges, player
+   TR/high-water, regional titles/cleanup, and Blue/Red access.
+4. Return with the committed current itinerary. A crash/save interruption exposes
+   either the prior complete edition or the full new edition, never mixed IDs,
+   partial rosters, inherited room wins, or a counter advanced without its schedule.
+
+Registration retries, including loading a pre-registration save, resolve the
+same next-edition keys/inputs. A new edition may coincidentally repeat order or
+entrants; do not reroll to guarantee novelty. No alternate occurrence may be
+used to recover from a failed transaction. No prerelease migration is required.
 
 ### Qualification and travel
 
 Derive global badges from the three existing regional badge sets. A badge is
 counted once, never spent, and never gated by circuit progress. The proposed
-first-clear predicates are:
+edition-result predicates are:
 
 | Schedule position | Admission |
 | --- | --- |
-| 1 | At least 8 global badges; venue not cleared |
-| 2 | At least 16 global badges; position 1 cleared; venue not cleared |
-| 3 | All 24 badges; positions 1 and 2 cleared; venue not cleared |
+| 1 | At least 8 global badges; no result for this venue in current edition |
+| 2 | At least 16 global badges; current position 1 result; no current venue result |
+| 3 | All 24 badges; current positions 1–2 results; no current venue result |
 
-Only the next uncleared scheduled venue admits a first-clear run. Visiting a
+Only the next uncleared scheduled venue admits an edition-result run. Visiting a
 later venue early reveals its requirements without starting a run. Badge
 origin, player origin, local quest state, Champion status, or a generic
 game-clear flag cannot replace the qualification facts. Cleared venues offer
-replays regardless of later progress; replay mode is selected explicitly.
+replays regardless of later progress; replay mode is selected explicitly. Lifetime
+clears do not satisfy current-edition prerequisites. Later editions already have
+24 badges but still require the three venues in their newly seeded order, using
+the same position TR targets/ranges; they are not new difficulty tiers.
 
 All twenty-four badges remain obtainable before any circuit clear. At 24
 badges the player still completes the three scheduled venues in order. Existing
@@ -129,17 +175,17 @@ recovery must connect to the ordinary travel network.
 
 ### Active-run record and battle dispatch
 
-Persist an active-run record containing active status, schedule position, venue,
-and first-clear/replay mode. Persist sufficient room defeat state to identify a
+Persist an active-run record containing active status, edition ID, schedule
+position, venue, and edition-result/replay mode. Persist sufficient room defeat state to identify a
 contiguous prefix of the five actual scheduled opponent slots. Existing room
 progression may remain its authority if it validates against this record.
-Progression is keyed by venue and actual slot, never a global character defeat
+Progression is keyed by edition, venue, and actual slot, never a global character defeat
 flag or shared Trainer-ID defeat flag. Defeating the same person in another
 league cannot skip this slot, complete this run, or grant this venue's clear/reward.
 
 There is no difficulty input from player `ratingAtEntry`. If retained for
 diagnostics, it must not affect team selection or effective opponent levels.
-Under proposed D1, the saved NPC baseline TR and selected profile determine
+Under resolved D1, the saved NPC baseline TR and selected profile determine
 strength through the sibling specification, including on replays and party
 reconstruction. Reusing a map or changing live player TR cannot change them.
 
@@ -149,7 +195,7 @@ reconstruction. Reusing a map or changing live player TR cannot change them.
    the matching run before entering its first room.
 3. Resume and normal room transitions preserve the run and defeated prefix.
    They cannot perform admission again or regenerate content.
-4. Each battle validates run, venue, position, room, and expected slot, then
+4. Each battle validates edition, run, venue, position, room, and expected slot, then
    resolves the scheduled character/profile. The slot supplies party, class,
    portrait, sprite, name, introduction, defeat text, music, and authored AI
    through audited content references. Fixed room-owner Trainer IDs do not
@@ -171,39 +217,52 @@ reroll the schedule, change circuit qualification, or create duplicate
 character appointments within a lineup. Out-of-context debug battles cannot create runs,
 advance slots, or record clears.
 
-### First-clear and ceremony transaction
+### Edition-result and lifetime-clear transaction
 
-Commit a first clear only for a valid first-clear run at the next scheduled
-position after all five victories. The transaction records the canonical venue
-clear, establishes its required regional projections, applies its once-only
-ceremony effects, and resets its run/progression before the completion save and
-return. Derived player TR reads the committed clear facts.
+Commit a venue result only for a valid edition-result run at the next current
+position after all five victories. The transaction records that edition/venue
+result, applies required once-only effects, and resets run/progression before
+the completion save/return. If this venue's lifetime fact is still false, commit
+it and its first-ever effects in the same transaction. A lifetime fact cannot
+replace this edition's result. Reject callbacks from a stale edition.
 
-| Venue cleared, at any position | First-clear effects |
-| --- | --- |
-| Indigo | One canonical clear; shared Kanto/Johto Champion and game-clear recognition; one FRLG Hall of Fame registration and Champion Ribbon flow |
-| Masters | One canonical Masters clear and Gallery presentation; no regional Champion/game-clear result, Hall of Fame registration, Champion Ribbon, or regional story cleanup |
-| Hoenn | One canonical clear; Hoenn Champion/game-clear recognition; one Emerald Hall of Fame registration and Champion Ribbon flow; Hoenn-owned regional cleanup |
+The following ceremony/record defaults remain proposed:
 
-Every first clear contributes +8 player TR exactly once. Preserve the existing
-badge contribution, ceiling of 80, and high-water behavior. Regional Champion
-projections are not additional clears. Repeated callbacks, ceremony re-entry,
-replays, individual victories, and Red add no circuit TR.
+| Venue, at any position | Once per edition venue result | First-ever lifetime effects |
+| --- | --- | --- |
+| Indigo | One FRLG winning-team Hall of Fame registration and Champion Ribbon flow | Shared Kanto/Johto Champion and game-clear recognition; +8 player TR |
+| Masters | Gallery result/presentation; no Hall of Fame or Champion Ribbon | Lifetime Masters clear; +8 player TR; no regional Champion/game-clear result or story cleanup |
+| Hoenn | One Emerald winning-team Hall of Fame registration and Champion Ribbon flow | Hoenn Champion/game-clear recognition, Hoenn-owned regional cleanup, and +8 player TR |
 
-Full completion credits follow the third committed first clear, whichever venue
-it is. A first or second Hoenn clear runs Hoenn's regional ceremony and cleanup
-without full credits. A third Indigo clear runs its regional ceremony followed
-by full credits. A third Masters clear runs its Gallery and full credits while
-still awarding no regional title, Ribbon, or Hall of Fame record. The full
-credits trigger cannot replace, repeat, or relocate regional cleanup.
+Masters cannot grant regional status, Hall of Fame, Ribbon, or cleanup in any
+edition, even as the final venue. Later Indigo/Hoenn results may record a new
+winning team but cannot repeat lifetime recognition or story cleanup. Existing
+Ribbon ownership rules apply; this does not create stackable Ribbon copies.
+Ordinary battle rewards remain available on every attempt and replay. New
+currencies, prizes/items, and detailed prestige UI require separate design.
 
-Completion processing must be idempotent across duplicate callbacks, map loads,
-save/load, and interrupted ceremony handling. Retained clear state cannot lose
-its +8 contribution or required once-only ceremony result; unfinished attempts
-cannot acquire rewards. A pending completion/ceremony marker may be used if
-needed for reliable resume, but it must identify the same venue and schedule
-position and cannot admit the next venue before the transaction is complete.
-The implementation must document the actual save/ceremony commit boundary.
+Only each venue's first-ever clear contributes +8 player TR, at most three
+contributions for the playthrough. Preserve badge contribution, ceiling 80,
+and high-water behavior. Derive rewards from lifetime facts; current-edition
+mask resets cannot lower or re-award TR. Regional projections, later editions,
+repeat callbacks, individual victories, replays, and Red add nothing.
+
+The third committed result completes the current edition and increments its
+aggregate completed count exactly once. Full story credits follow only edition
+1's third result, whichever venue it is. Hoenn early still performs its own
+first-ever regional cleanup without full credits. Masters final still runs
+Gallery and credits without regional awards. Later editions use a proposed
+brief completion presentation and leave full story credits and cleanup alone.
+
+Completion processing must be idempotent across callbacks, loads, interrupted
+ceremonies, and saves. Retained current results cannot lose their required
+record effects; retained lifetime facts cannot lose their TR or recognition;
+unfinished attempts cannot acquire either. Any pending result/ceremony marker
+must identify edition, venue, position, and completion phase. Finish the same
+transaction before admitting another result or registration. A stale marker
+cannot attach to a new schedule or grant its rewards. The implementation must
+document the actual save/ceremony commit boundary; no forced autosave is required
+solely to prevent rerolls because loading an earlier boundary reuses the same keys.
 
 ### Loss, exit, and replay
 
@@ -212,33 +271,39 @@ only its room progress, and returns to its own connected lobby: Indigo's League
 lobby, Room 1 of the Masters House, or Hoenn's native lobby. Audit every back
 warp, voluntary exit, healing/blackout target, Dig, Escape Rope, and ceremony
 return. Never route Masters to the HNS Indigo lobby. These outcomes preserve
-schedule, committed clears, titles, and player TR.
+edition ID, schedule, current results, lifetime clears, titles, and player TR.
 
 Retry starts at slot 1 with the same five participants, profiles, battle order,
 and levels. Loading a valid unfinished run resumes its saved progress rather
 than restarting or granting victories.
 
 A replay uses that venue's original scheduled tier, roster, and levels. Replay
-victory may show the ordinary exit presentation, but records no new first clear,
+victory may show the ordinary exit presentation, but records no new venue result,
 circuit TR, circuit Hall of Fame registration, Champion Ribbon, full credits,
 regional cleanup, or Blue unlock reward. It does not move or consume the next
-first-clear position. Proposed stronger postgame rematches are outside scope.
+edition-result position. Replay cannot register the next edition. The current
+schedule remains replayable until manual rollover; old schedules are not retained.
+Proposed stronger postgame rematches are outside scope.
 
 ### Load validation and damaged state
 
 Validate the shared root and its format/derivation version before circuit
-dispatch. Validate schedule schema, ORDER/LORE_FILTER/ROSTER rules and catalog
+dispatch. Validate edition ID, schedule schema, ORDER/LORE_FILTER/ROSTER rules and catalog
 versions, venue permutation, slot/profile eligibility, five-character
 uniqueness within each venue, rating ranges, TR-first lore-filter admission,
 and resolvable content references. Validate
-clear-prefix consistency and any pending
-completion. Validate an active run against the saved position, venue, mode,
+current-clear-prefix consistency, lifetime facts, completed count, and any pending
+completion. Validate an active run against the saved edition, position, venue, mode,
 current room, actual opponent slot, and contiguous defeat progress.
+Every current venue result requires that venue's lifetime fact. In committed
+edition-1 state, the current and lifetime masks must match; editions after 1
+require all three lifetime facts already true. Invalid aggregate or edition
+relationships use invalid-save handling, not invented completion or rollover.
 
 With a valid schedule and clear state, missing or invalid active-run state
 inside a challenge resets that attempt and returns to its own lobby without
 rewards. An active record outside its permitted venue/ceremony locations ends
-the attempt. Recovery preserves the valid schedule and canonical clears and
+the attempt. Recovery preserves the valid edition/schedule, current results, and lifetime clears and
 must not replace the missing record with a fresh live-rating snapshot.
 
 A missing, damaged, or unsupported root cannot be initialized or replaced on
@@ -254,9 +319,11 @@ compatibility path solely to retain old fixed-order saves.
 ### Itinerary, lineups, and dialogue
 
 Provide a local Trainer Card circuit view available from the beginning that
-shows global badges, the complete seeded order, qualification for each position,
+shows global badges, current edition number, the complete seeded order, qualification for each position,
 and each venue's Locked/Available/Cleared state. Mark the next required stop and
-append Circuit complete only after all three canonical clears.
+append Edition complete only after all three current results. Propose showing
+the bounded completed-edition total. Registration becomes available only when
+that edition is complete, with no preview of uncommitted future schedules.
 
 Provide each venue's complete five-person lineup in battle order, with trainer
 name, authored specialty, and NPC TR, before entry. It must remain inspectable
@@ -279,15 +346,15 @@ announcements are required at opening, badge awards, or unrelated interactions.
 
 ### Story dependencies and integration audit
 
-Red remains outside the pool. His Mt. Silver admission reads all three canonical
-venue clears, independent of schedule order or projected regional flags. Keep
+Red remains outside the pool. His Mt. Silver admission reads all three lifetime
+venue clears, independent of current edition results, order, or projected regional flags. Keep
 his authored encounter and reward/repeat behavior unchanged.
 
-The proposed Blue Dojo dependency is the first committed scheduled clear,
+The proposed Blue Dojo dependency is the first committed lifetime circuit clear,
 regardless of venue or whether Blue was drawn anywhere. Keep its authored party
 and existing Battle Point rules; circuit completion grants no extra Dojo reward.
 Starting or losing a challenge, a raw battle victory, and an unfinished ceremony
-do not unlock it. Audit dialogue that assumes defeating Blue or Indigo, while
+do not unlock it. Blue and Red access persist through all rollovers. Audit dialogue that assumes defeating Blue or Indigo, while
 preserving Giovanni's Earth Badge ownership and local finale.
 
 Audit existing checks that equate Indigo with position 1, Masters with position
@@ -334,15 +401,15 @@ that these checks have run:
    five-character per-venue uniqueness rule using characters with multiple
    source IDs. Allow a qualified character across multiple lineups; its
    profile/TR strength stays fixed and victories/rewards are accounted by
-   venue and slot independently. A previous win cannot skip its next appearance.
+   edition, venue, and slot independently. A previous win cannot skip its next appearance.
    Resolve identical circuit keys/inputs before and after unrelated seeded
    feature calls/content, menu opens, fights, and queries; assert identical
    unresolved outcomes as well as committed schedules. Change roster content
-   and prove the same root and respective rules versions retain venue order
+   and prove the same root, edition, and respective rules versions retain venue order
    and existing character/venue lore-filter outcomes. Cover all-zero
    and all-one 64-bit roots (`lo = hi = 0` and `lo = hi = 0xFFFFFFFF`) and
    verify ordinary Pokémon RNG is untouched by root/schedule initialization.
-4. Inject wrong venue/position/mode, missing records, noncontiguous defeat flags,
+4. Inject wrong edition/venue/position/mode, missing records, noncontiguous defeat flags,
    and invalid room-slot combinations. Recover valid schedules to the right
    lobby without rewards. Inject schedule/version/reference/clear-prefix
    damage and verify invalid-save handling without silent generation. Inject
@@ -350,14 +417,17 @@ that these checks have run:
    valid-looking schedule and acquired clears; loading cannot create a root,
    redraw a schedule, or change committed outcomes.
 5. Interrupt and repeat completion handling around the commit boundary. Verify
-   exactly one canonical clear and +8 contribution, no partial/duplicate
-   regional recognition or ceremony effects, and no accidental next-position
-   clear. Verify player TR milestones 48/64/80 at earliest first clears and
-   56/64/72/80 on the all-badges-first route.
+   exactly one current venue result and, only if first-ever, one lifetime fact
+   and +8 contribution. No partial/duplicate recognition or ceremony effects,
+   completed-count increments, or accidental next-position result is allowed.
+   Verify edition-1 TR milestones 48/64/80 at earliest clears and 56/64/72/80
+   on the all-badges-first route; later editions never change progression TR.
 6. Complete each venue in each position. Indigo projects one shared Kanto/Johto
    result and one regional ceremony; Hoenn performs only its own regional
    cleanup; Masters never grants regional status, Ribbon, or Hall of Fame.
-   Full credits appear only after position 3 and never after a replay.
+   Full credits appear only after edition 1 position 3 and never on later
+   editions or replays. Later Indigo/Hoenn results apply proposed winning-team
+   records/Ribbon flows once per edition, never repeat lifetime cleanup.
 7. Prove Blue unlocks after the first committed clear with each opening venue,
    including schedules without Blue, independently of Giovanni. Prove Red
    remains locked with any missing clear and unlocks after all three.
@@ -376,6 +446,26 @@ that these checks have run:
    S.S. Aqua/ferry state, optional Sevii content, and ordinary battles for
    regressions caused by venue reordering. Shared-engine changes must preserve
    standalone FRLG, HNS, and Emerald authored League behavior.
+10. Finish an edition in every final venue and register at each reception.
+    Refuse incomplete/active-run/pending-ceremony registration, edition skip,
+    future preview, and overflow. Inject failures before generation, after
+    staging, and around commit/save boundaries. Preserve either the entire
+    old complete edition or entire new edition, never consume a counter on
+    failure. Loading a pre-registration save and registering again must yield
+    the same next schedule; cancellation cannot provide another candidate.
+    A duplicate or delayed registration request bound to a prior edition cannot
+    start another edition, including after that newer edition is completed.
+11. Verify all three decisions use the one-based edition occurrence and respond
+    to a changed edition key, without asserting every order/roster must differ.
+    Permit identical consecutive schedules and prohibit forced-novelty rerolls.
+    Loss, abandonment, retry, replay, and loading cannot increment edition.
+    Rollover resets only current results/attempt state; retain lifetime facts,
+    badges, TR/high-water, Blue/Red access, regional titles/cleanup, and completed
+    count. Reject stale-edition battle/result callbacks and pending markers.
+    Later editions remain sequential at 24 badges, with the same targets/ranges,
+    profiles/TR, and no automatic difficulty growth. Verify aggregate count
+    consistency and once-only increment across duplicate final callbacks.
+    Reject edition-1 saves whose current and lifetime clear masks differ.
 
 Extend relevant [mechanics coverage](../../game/test/league_circuit.c),
 [script coverage](../../game/test/league_circuit_scripts.c),
@@ -389,14 +479,16 @@ Release remains blocked on resolving parent PRD decisions, the foundation's
 fixed derivation/hash encoding and golden vectors, an audited feasible
 pool for every position/venue permutation, and successful save/transaction,
 travel, presentation, and journey evidence. Emulator playtesting must assess
-actual battle attrition and the player's between-stop training demands under
-D1; structural checks alone do not establish balance.
+actual battle attrition, edition-1 training demands, and later-edition enjoyment
+and variety against a progressed player under fixed D1 strength; structural
+checks alone do not establish balance.
 
 ## Open questions
 
-See parent PRD D1 for player-independent strength, D2 for finalist eligibility,
-and D3 for the initial roster and ratings. The parent also owns review of the
-supplementary defaults: new-game fixation of all slots,
+See resolved parent PRD D1 for fixed player-independent strength, open D2 for
+finalist eligibility, and open D3 for roster/ratings/eligibility ranges. The parent
+also owns review of supplementary defaults: edition fixation of all slots,
 admission thresholds, replay policy, Blue unlock, regional
-ceremonies, credits, and itinerary visibility. Any revision must update this
+ceremonies, credits, itinerary visibility, reception registration, bounded
+aggregate records, and per-edition winning-team records/Ribbon flows. Any revision must update this
 runtime contract and the sibling pool specification together.

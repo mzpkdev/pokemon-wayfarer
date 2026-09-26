@@ -2,14 +2,15 @@
 
 PRD: [Seeded Trainer Circuit](../prds/seeded-trainer-circuit.md)
 Implemented: No
-Design status: Draft implementing the PRD's proposed defaults, including D1–D3.
+Design status: Draft; recurring core and fixed strength (D1) are approved;
+D2–D3 and supporting defaults remain under review.
 
 ## Scope
 
 Own the trainer registry, character uniqueness, team profiles, seeded destination
 and participant selection, lore filtering, and NPC-TR-based party strength
-for `IS_WAYFARER`. The [runtime specification](seeded-league-circuit.md) owns
-schedule persistence, qualification, room flow, completion, rewards, and UI.
+for each `IS_WAYFARER` circuit edition. The [runtime specification](seeded-league-circuit.md) owns
+edition registration, schedule persistence, qualification, room flow, completion, rewards, and UI.
 The [playthrough seed framework](playthrough-seed-framework.md) owns root
 initialization/persistence, keyed derivation, and unbiased bounded draws. This
 specification is its first consumer and owns only circuit decision rules.
@@ -45,7 +46,8 @@ in multiple leagues; each checks TR and lore independently, without global
 exclusion or an anti-repeat penalty. Two people with similar names remain distinct.
 
 The registry is static content, not a mutable world ranking. No player encounter
-changes baseline TR. NPCs have no player badge contribution or high-water state.
+changes baseline TR. New editions do not inflate NPC TR or effective strength.
+NPCs have no player badge contribution or high-water state.
 League affiliations describe sensible competitive participation, rather than
 current map location or blanket geographic origin. Review their lore rationale
 under D3; neither appearing on a map nor needing more candidates establishes
@@ -79,10 +81,10 @@ content and baseline rating must be reviewed together.
 
 ### Position bands and eligibility
 
-Position targets remain proposed balance anchors. D3 must approve the inclusive
+Position targets remain proposed balance anchors for every edition. D3 must approve the inclusive
 TR eligibility endpoints for each position alongside the catalog and teams:
 
-| Circuit position | Target NPC TR | Eligible baseline TR | Player TR at earliest entry |
+| Circuit position | Target NPC TR | Eligible baseline TR | Player TR at earliest edition-1 entry |
 | --- | ---: | ---: | ---: |
 | 1 | 40 | Inclusive range pending D3 | 40 |
 | 2 | 56 | Inclusive range pending D3 | 56 |
@@ -102,6 +104,9 @@ same profile, fixed TR, and strength across qualifying appearances, subject to
 explicit challenge overrides. Ratings outside all approved ranges cannot appear;
 the inventory must record them as excluded. The earlier disjoint numeric bands
 are superseded and are not implementation defaults.
+Later editions retain the same position targets and approved ranges. Do not
+substitute stronger endgame bands, apply an edition multiplier, or adapt to the
+player's lifetime TR; later-edition challenge and variety require playtesting.
 
 Before enabling the catalog, prove at least five distinct TR-qualified affiliated
 characters for every venue/position pairing across all six orders. This covers
@@ -121,11 +126,11 @@ For each scheduled venue, first form its TR/content-eligible candidate list.
 An eligible character whose `leagueAffiliations` contains that venue passes the
 lore filter. Every other eligible character has exactly a 50% seeded chance of
 being dropped from that venue's list: framework `Uniform(2) = 0` drops them,
-and `Uniform(2) = 1` retains them. Resolve this once per canonical character and
-venue at new game; a candidate lookup, retry, or reload cannot draw again.
+and `Uniform(2) = 1` retains them. Resolve this once per canonical character,
+venue, and edition; a candidate lookup, retry, or reload cannot draw again.
 
 The gate is independent of circuit position, other candidates, and pool size.
-Adding characters does not change existing character/venue filter outcomes.
+Adding characters does not change existing character/venue/edition filter outcomes.
 Multiple sensible league affiliations are allowed, supported by explicit lore
 rationale; a character passes each affiliated venue's filter without receiving
 extra weight or bypassing TR suitability.
@@ -152,8 +157,11 @@ reinterpreting or weakening the confirmed gate.
 
 ### Foundation consumer protocol and deterministic generation
 
-Generate once during new-game initialization after the framework establishes
-a valid playthrough root. The proposed foundation stores one 64-bit root as two
+Generate edition 1 during new-game initialization after the framework establishes
+a valid playthrough root. Generate a later edition only for an authorized
+registration transaction after the current edition is complete. Edition identity
+is a `u32` beginning at 1; it is not a retry count, timestamp, or mutable random
+cursor. The proposed foundation stores one 64-bit root as two
 `u32` words plus seed-format/derivation-version metadata in shared Wayfarer
 persistence. The circuit stores no copied root, independent seed, or persistent
 random cursor. Tests/debug tooling may inject a root through the foundation;
@@ -170,8 +178,10 @@ names describe the required interface, not APIs already implemented in the ROM.
 Use framework domain `CIRCUIT = 1`, with `ORDER = 1`, `ROSTER = 2`, and
 `LORE_FILTER = 4`, initially at rules version 1 each. `VISITOR_POLICY = 3` is
 retired; never reuse its ID. ORDER and ROSTER use campaign `entityId = 0`;
-LORE_FILTER uses the canonical character ID as its `u64` entity. All use `occurrenceId = 0`;
-a retry/replay never creates a new occurrence. Resolve keys independently so no feature-wide or global random
+LORE_FILTER uses the canonical character ID as its `u64` entity. All use
+`occurrenceId = editionId`; retry/replay/abandonment never creates another
+occurrence. All three rules versions remain 1 because this draft is unimplemented;
+no prerelease migration is required. Resolve keys independently so no feature-wide or global random
 sequence is advanced. Ordinary Pokémon RNG is neither consumed nor reseeded,
 including by root initialization. Future features opt in under their own domains.
 
@@ -213,14 +223,22 @@ Use this fixed generation procedure:
 6. Sort each completed lineup by ascending baseline TR, breaking ties by
    ascending `characterId`. The last trainer is the finalist. Do not add a
    second random draw or a title-based reorder.
-7. Return ORDER, LORE_FILTER, and ROSTER rules versions, catalog version, shuffled
+7. Return edition ID, ORDER, LORE_FILTER, and ROSTER rules versions, catalog version, shuffled
    venue list, and ordered character/profile references with their baseline
    ratings to the runtime owner. Persist the resolved whole schedule alongside
-   the valid foundation root before a save or UI can consume it.
+   the valid foundation root before a save or UI can consume it. The runtime
+   atomically stages and commits the full new edition; generation must not
+   increment or consume an edition ID itself.
+
+A different edition supplies different keys, not a guarantee of a different
+permutation or roster. Repeated orders/entrants are valid outcomes; never redraw
+or advance the occurrence to force novelty. Loading a pre-registration save and
+registering again with the same root/next edition/inputs gives the same outcome.
+Do not expose an uncommitted next schedule through preview/skip/cancel paths.
 
 Catalog enumeration/source order, asset loading, maps visited, menu opens,
 fights, queries, and unrelated opted-in feature calls or content must not affect
-these decisions. With the same root, decision versions, and semantic inputs,
+these decisions. With the same root, edition, decision versions, and semantic inputs,
 an unresolved draw is repeatable even before its first saved resolution. After
 resolution, the saved schedule is authoritative; loading never redraws it.
 
@@ -231,7 +249,7 @@ ROSTER outcomes at each affected league. Candidate changes relevant to both
 leagues may affect both; candidates eligible only for another venue cannot alter
 this league's list or draw. Unrelated table changes and source ordering cannot. ORDER and
 LORE_FILTER draws are independent of roster catalog size: the same root and
-respective rules versions give the same venue order and raw character/venue
+respective rules versions and edition give the same venue order and raw character/venue
 filter outcomes across added candidates. A changed affiliation changes whether
 that character needs the gate; it does not redraw its key. Increment only the affected
 decision rules version when its draw protocol or selection rules change. Root
@@ -251,7 +269,7 @@ proof of that property.
 
 ### NPC TR to battle strength
 
-Under D1, use the selected trainer's saved baseline TR as the only rating input
+Under resolved D1, use the selected trainer's saved baseline TR as the only rating input
 to the circuit level resolver. Proposed independent anchor data:
 
 ```text
@@ -333,12 +351,18 @@ Required automated evidence:
   versions, semantic draw IDs, rejection boundaries, exact weighted intervals,
   tie order, catalog/reference versions, and the framework's golden vectors.
   Verify root initialization and circuit resolution do not mutate Pokémon RNG.
+- Pin editions 1, 2, and boundary `u32` identities through all three occurrence
+  keys. Changing edition must change the derivation input, but need not produce
+  a distinct order or field; preserve legitimate consecutive repeats without
+  novelty retries. Registration generation cannot commit/consume an edition ID.
+  Save/reload before registration and resolve the same next edition twice:
+  schedule/profile/TR outcomes must match exactly.
 - Resolve identical keys/inputs before and after unrelated seeded feature calls,
   menu opens, fights, queries, content-table changes, and save/load. Assert
   identical venue order and rosters without relying on prior persistence.
   Change roster membership/weights in controlled fixtures and prove ORDER and
   LORE_FILTER outcomes for existing character/venue pairs stay identical with
-  the same root and respective versions, while ROSTER follows changed inputs.
+  the same root, edition, and respective versions, while ROSTER follows changed inputs.
   Add many eligible unaffiliated candidates without changing any existing
   pair's gate; report the resulting final field share rather than imposing a cap.
   Generate leagues in different traversal orders and vary candidates relevant
@@ -353,6 +377,9 @@ Required automated evidence:
 - Exhaust all integer TR values 0–80 for interpolation, saturation, offsets, and
   monotonicity. Construct every enabled profile, preserve source identity and
   non-level metadata, and verify reconstruction produces the same effective party.
+- For the same profile/TR, prove effective strength identical across later
+  editions and all qualifying venues. Reuse position targets/approved eligibility
+  ranges without edition inflation, player adaptation, or endgame substitution.
 - Vary player TR, party, badges, location history, and gameplay RNG around the
   same persisted schedule; human participants and ordinary circuit strength must
   stay unchanged. Cover species-randomizer bypass separately and verify lifecycle.
@@ -365,10 +392,11 @@ reserve policy. Report balance playtesting separately from structural validation
 
 ## Open questions
 
-D1–D3 and supporting defaults are centralized in the parent PRD. The exact
+D1–D3 and supporting defaults are centralized in the parent PRD.
+Fixed NPC strength under D1 is resolved; D2/D3 remain open. The exact
 production catalog and balance acceptance remain prerequisites for enabling
-generation. A decision to scale toward player TR, reserve Champion-only finals,
-add more regions, or support doubles requires revising this specification rather
+generation. Reversing fixed NPC strength, reserving Champion-only finals,
+adding more regions, or supporting doubles requires revising this specification rather
 than adding an undocumented selection exception.
 
 ## References

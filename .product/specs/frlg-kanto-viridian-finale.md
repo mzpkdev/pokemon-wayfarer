@@ -26,8 +26,8 @@ Blue is removed from Viridian's exterior introduction and Gym scripts, objects, 
 
 The proposed [Seeded Trainer Circuit](../prds/seeded-trainer-circuit.md) changes
 this unlock to the first committed scheduled clear and removes guaranteed Blue
-participation at Indigo. That proposal is pending adoption; the current approved
-Indigo-specific contract follows below.
+participation at Indigo. It persists across later circuit editions. That proposal
+is pending adoption; the current approved Indigo-specific contract follows below.
 
 Keep Blue's existing repeatable Saffron Fighting Dojo battle, authored Wayfarer party, and current Battle Point reward rules. Unlock his Dojo appearance when the **first Indigo Champion victory is committed** by the shared circuit. Starting or losing the Champion battle, entering the Hall of Fame room without a committed clear, defeating Giovanni, receiving the Earth Badge, or choosing an origin does not unlock him. Indigo can be cleared before the Viridian finale; in that order, Blue is available at the Dojo while Giovanni still leads the Gym. A later Indigo replay does not duplicate an unlock or add Battle Points. The Dojo attendant may mention Blue, but no separate invitation or quest is required. Remove Dojo dialogue that presumes a Viridian battle the player never had.
 

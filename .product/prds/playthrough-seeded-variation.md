@@ -26,6 +26,9 @@ depending on the circuit or changing its results.
   not provide a fresh random outcome.
 - Allow more variation between playthroughs as additional features adopt the
   framework.
+- Support recurring circuit editions under that same seed. Completing an
+  edition unlocks the player's choice to start the next; retrying or reloading
+  does not create another edition.
 - Preserve existing Pokémon randomness. Adoption is explicit for each new
   feature; this is not a replacement of the game's existing RNG systems.
 
@@ -47,9 +50,10 @@ Separate decisions also stay independent as development continues. Adding a
 new reward feature must not change existing circuit orders. Changing the
 circuit's trainer pool may change newly generated rosters, but must not change
 the independently keyed venue order or an unchanged trainer/league pair's lore
-draw. Explicit constraints inside one lineup still apply: selecting a trainer
-removes that character from its remaining four places. It does not remove the
-trainer from another league; cross-league appearances are allowed.
+draw within the same edition. Explicit constraints inside one lineup still
+apply: selecting a trainer removes that character from its remaining four
+places. It does not remove the trainer from another league; cross-league
+appearances are allowed.
 
 ### Stable outcomes and meaningful new occurrences
 
@@ -58,12 +62,12 @@ its content at new game:
 
 | Pattern | Identity and lifetime | Example |
 | --- | --- | --- |
-| Playthrough-wide choice | One named decision for the entire save | The circuit itinerary and its complete roster assignment |
+| Playthrough-wide choice | One named decision for the entire save | An optional future authored world variant |
 | One-time entity choice | Named decision plus a stable content identity | An optional future quest's authored reward variant |
-| Repeated event | Named decision, entity, and an explicit progression occurrence | An optional future competition edition unlocked by a real milestone |
+| Repeated event | Named decision, entity, and an explicit progression occurrence | A circuit edition, with its complete itinerary and roster assignment |
 
-The latter two examples illustrate framework capability; they do not authorize
-or specify those gameplay features.
+The first two examples illustrate framework capability; they do not authorize
+or specify those gameplay features. Recurring circuits are the first consumer.
 
 Each consumer must define which inputs it uses and when they become fixed.
 Re-entering a map, inspecting a menu, declining an offer, retrying a failed
@@ -91,16 +95,29 @@ story produces the same events.
 
 ### Circuit adoption
 
-At new game, the circuit derives its venue order, each eligible unaffiliated
-trainer/league pair's lore filter, and its roster assignment as separately keyed
-decisions from the shared seed. TR eligibility is checked before the lore
-filter; authored league affiliations can overlap. Persist the complete schedule before
-it is exposed to gameplay. There is no independent saved circuit seed and no
-circuit-wide cursor that other features can advance.
+At new game, the circuit generates edition 1. Its venue order, each eligible
+unaffiliated trainer/league pair's lore filter, and roster assignment are
+separately keyed decisions under the shared seed and edition identity. TR
+eligibility is checked before the lore filter; authored league affiliations can
+overlap. Persist the complete schedule before it is exposed to gameplay. There
+is no independent saved circuit seed or cursor that other features can advance.
 
-All existing circuit rules remain in its PRD, including uniqueness within each lineup,
-regional selection preference, rating-based strength, and the unresolved
-D1–D3 choices. This framework does not settle those balance/content decisions.
+After completing all three leagues, the player may register for the next edition.
+That transition generates a complete schedule using the next edition identity
+and commits both together. It preserves the root, lifetime unlocks, and
+first-clear progression rewards. A failed registration preserves the completed
+edition. Waiting, losing, abandoning an attempt, or replaying cannot skip to
+another draw. Loading a save from before registration and registering again
+produces the same next edition for the same rules and content.
+
+An edition fixes its order, lore decisions, and lineups through every attempt.
+A later edition may produce different results; distinct keys do not guarantee
+different orders or participants. Familiar trainers can return. No repeat
+avoidance reroll or automatic NPC TR growth is part of recurrence.
+
+All existing circuit rules remain in its PRD, including uniqueness within each
+lineup, regional selection preference, rating-based strength, and remaining
+content and balance choices. This framework does not settle those decisions.
 
 ## Boundaries
 
@@ -117,8 +134,9 @@ random rolls remain ordinary battle RNG.
 The framework supplies deterministic decisions, not a generic quest engine,
 world simulator, reward ledger, or universal saved dictionary. Features own
 their eligibility, occurrence rules, resolved results, and reward accounting.
-Players retain normal saving and loading. Seed entry, seed sharing UI, seasons,
-and converting existing random systems are outside this initial scope.
+Players retain normal saving and loading. Seed entry, seed sharing UI,
+calendar-based seasons, and converting existing random systems are outside this
+initial scope. Player-started circuit editions require no real-world schedule.
 
 ## Presentation
 
@@ -127,8 +145,9 @@ property, available to debug and reproduction tooling. A future seed-sharing
 interface can be added separately.
 
 Features explain their own stable content through their normal interfaces.
-For example, the circuit shows its saved itinerary and lineups. Do not expose
-hashes, internal keys, or generation counters in ordinary player flows.
+For example, the circuit shows its current edition, saved itinerary, and lineups.
+A player-facing edition number describes progression; internal hashes, keys,
+and draw counters do not belong in ordinary player flows.
 
 ## Constraints
 
@@ -159,6 +178,8 @@ Measure the implementation's ROM, RAM, and execution cost before enabling it.
   numbers attached to otherwise identical playthroughs?
 - Are intentionally progression-dependent choices understandable, with no
   accidental incentive to wait, open menus, or churn failed attempts?
+- Does completing an edition permit a new circuit while reloads before or after
+  registration, losses, and replays preserve the appropriate edition's draw?
 - Does each feature still feel coherent and fair under its generated content?
 
 ## References

@@ -5,8 +5,9 @@ Implemented: Partial
 
 Proposed successor: [Seeded Trainer Circuit](seeded-trainer-circuit.md) uses
 each selected NPC's baseline TR for strength instead of player-entry TR.
-That choice is draft decision D1; this scaling contract remains the approved
-baseline until the successor is adopted.
+Its recurring editions retain authored NPC ratings without automatic increases.
+The fixed-NPC direction is confirmed; this scaling contract remains the
+implementation baseline until the successor is adopted.
 
 See [implementation evidence](../research/league-scaling-implementation.md) for
 test results and the remaining gameplay validation. TR progression revisions

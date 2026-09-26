@@ -125,8 +125,10 @@ Existing Johto and Kanto callers keep their current result.
 
 The proposed [playthrough seed framework](playthrough-seed-framework.md) adds
 one shared root record and consumer-owned deterministic outcomes under this
-save-storage policy. Its initialization, versioning, and RNG isolation are
-defined in that draft; the extension is not implemented by this document.
+save-storage policy. Recurring circuits retain that root and atomically replace
+their current edition schedule while preserving lifetime progression. Seed
+initialization, versioning, and RNG isolation are defined in that draft; the
+extension is not implemented by this document.
 
 The additional Hoenn banks live in `SaveBlock3` or an equivalent separately
 bounded saved structure. The implementation must not enlarge `SaveBlock1`

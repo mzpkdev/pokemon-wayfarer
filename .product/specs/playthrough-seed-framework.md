@@ -45,7 +45,8 @@ them. Do not expose an initialized circuit under an uninitialized root.
 
 Loading validates the marker and supported versions. Repeated initialization
 calls on the same initialized game do not replace the seed. New Game creates a
-new root; Continue, region changes, defeat, replay, and save copying preserve it.
+new root; Continue, region changes, defeat, replay, starting a new circuit
+edition, and save copying preserve it.
 If a continuing save lacks a valid root, use ordinary invalid/incompatible-save
 handling. Never repair it with a fresh seed. Prerelease save migration is not
 required, and no seed inference from old fixed-roster saves is required.
@@ -59,7 +60,7 @@ Resolve a random word through a pure function of the root and this key:
 | `domainId` | Stable explicit numeric namespace for a feature, such as circuit. |
 | `decisionId` | Stable named decision within that feature, such as venue order. |
 | `decisionVersion` | Rules/interpretation version for this decision only. |
-| `entityLo`, `entityHi` | Stable 64-bit content identity; zero for a declared whole-playthrough decision. |
+| `entityLo`, `entityHi` | Stable 64-bit content identity; zero for a declared decision without a specific entity, including a whole-circuit draw. |
 | `occurrenceId` | Explicit 32-bit occurrence; zero for a one-time decision. |
 | `drawId` | Semantic 32-bit subdecision, such as a fixed shuffle step or allocation slot. |
 | `rejectionIndex` | Internal 32-bit index used only to obtain another word for the same bounded draw. |
@@ -227,20 +228,22 @@ baseline would require a separately reviewed policy.
 
 ### Circuit as the first consumer
 
-The circuit uses domain 1 and three independently keyed decisions:
+The circuit uses domain 1 and three independently keyed decisions. Its saved
+`editionId` is an unsigned 32-bit value starting at 1 and is the `occurrenceId`
+for all three decisions:
 
 | Decision | Entity / occurrence | Draw identity |
 | --- | --- | --- |
-| ORDER, ID 1 | Both zero for this playthrough | Fisher–Yates step index, 2 then 1 |
-| LORE_FILTER, ID 4 | Canonical character identity; occurrence zero | Venue ID: Indigo = 1, Masters = 2, Hoenn = 3; after TR eligibility, an unaffiliated candidate is dropped when `Uniform(2) == 0` |
-| ROSTER, ID 2 | Both zero for this playthrough | `(position << 8) | temporarySlot`, position 3–1 and slot 0–4 |
+| ORDER, ID 1 | Entity zero; occurrence = editionId | Fisher–Yates step index, 2 then 1 |
+| LORE_FILTER, ID 4 | Canonical character identity; occurrence = editionId | Venue ID: Indigo = 1, Masters = 2, Hoenn = 3; after TR eligibility, an unaffiliated candidate is dropped when `Uniform(2) == 0` |
+| ROSTER, ID 2 | Entity zero; occurrence = editionId | `(position << 8) \| temporarySlot`, position 3–1 and slot 0–4 |
 
 The [pool spec](circuit-trainer-pool.md) owns allocation order, TR eligibility,
 authored league affiliations, rating weights, feasibility, and final sorting.
 Use explicit ORDER, LORE_FILTER, and ROSTER rules versions. Evaluate TR first;
 a lore affiliation cannot admit a trainer whose rating is outside the band.
 Eligible affiliated trainers pass the lore step without a draw. Other eligible
-trainers face one 50% drop decision per character/venue pair; a removed trainer
+trainers face one 50% drop decision per character/venue/edition; a removed trainer
 may still survive for another venue. The gate is not a 50% appearance chance,
 a visitor quota, or a decision to remove a character globally.
 
@@ -255,11 +258,32 @@ no global used-character set or cross-league repeat penalty. Choices within
 one lineup affect its remaining slots, without depleting another venue's pool.
 Neither lore gates nor order can be redrawn to repair a roster shortage.
 
-Persist the resolved order and fifteen character/profile/TR selections at new
-game through the [runtime spec](seeded-league-circuit.md). The root lives once
-in shared persistence; the circuit stores neither another seed nor a draw
-cursor. Loading a valid schedule reads it instead of regenerating it. New
-features, ordinary gameplay RNG use, or preview calls cannot change it.
+Persist edition 1 with its resolved order and fifteen character/profile/TR
+selections at new game through the [runtime spec](seeded-league-circuit.md).
+After all three leagues are completed and no run or ceremony is pending, the
+player can register for edition `editionId + 1`. Derive its complete schedule
+under that occurrence, then commit the new edition identity, schedule, and fresh
+edition progress together. Do not consume an edition number if generation or
+registration fails. Reject counter overflow without wrapping or replacing the
+previous completed edition.
+
+Loading a save from before registration must reproduce the same next edition
+under the same root, keys, rules, and content. Losses, exits, retries, replays,
+time, and menu queries cannot advance the edition. Do not expose a separately
+generated next-edition preview or allow skipping an unfinished edition. Starting
+a new edition retains lifetime progression, unlocks, and first-clear accounting;
+the runtime spec owns those transactions and their recovery.
+
+The root lives once in shared persistence; the circuit stores neither another
+seed nor a draw cursor. Loading a valid schedule reads it instead of regenerating
+it. Unrelated features and ordinary gameplay RNG cannot change it. Only the
+current edition's complete schedule is required in the save; recurrence does
+not justify an unbounded archive of prior schedules.
+
+Different edition identities may produce the same order or participants. Never
+reroll to force novelty or infer strength growth from an occurrence number.
+The three decision protocols remain version 1 in this unimplemented draft;
+no previous circuit-key version or prerelease-save migration is required.
 
 ### Existing Pokémon RNG boundary
 
@@ -307,11 +331,18 @@ Required implementation evidence:
 - For the circuit, test cross-feature calls before/between/after generation,
   save/load and UI queries, plus all six venue orders and existing circuit
   acceptance. Changing unrelated roster content cannot alter ORDER or an
-  unchanged character/venue pair's LORE_FILTER draw for the same root and
-  respective rules versions. Test TR rejection before lore, affiliated bypass,
+  unchanged character/venue pair's LORE_FILTER draw for the same root, edition,
+  and respective rules versions. Test TR rejection before lore, affiliated bypass,
   the 50% drop boundary, and venue-local rather than global exclusion.
   Permit repeated characters across qualifying leagues, reject duplicates
   within a lineup, and prove generating one lineup cannot deplete another.
+- Exercise the circuit's actual recurring lifecycle: edition 1 at new game,
+  registration for edition 2 after completion, and reloads both before and after
+  registration. Pin vectors that include edition identity; verify it is mixed
+  into ORDER, LORE_FILTER, and ROSTER without requiring every output to differ.
+  Failed generation, duplicate callbacks, unfinished editions, and overflow
+  cannot consume or skip an edition. Verify unchanged root/global RNG state and
+  preservation of lifetime rewards and unlocks across rollover.
 - Reject missing roots and unsupported versions without a reroll. Verify valid
   all-zero roots, initialized-record reuse, copied saves, and genuine New Game.
 - Measure root/consumer save size, transient RAM/stack, ROM cost, and runtime
