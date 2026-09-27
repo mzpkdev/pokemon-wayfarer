@@ -5,13 +5,20 @@ import {
   LEVEL_OFFSET,
   MAX_ANCHORS,
   OLD_VERSION_REJECTION,
+  LEVEL_CAP_ANCHORS,
+  MAX_BADGES,
   WORLD_PROGRESS_CHECKPOINTS,
+  badgeMatch,
+  badgeTR,
   createExperiment,
   evolutionIndex,
   evolutionStatus,
   gymLadder,
   isGymLeader,
   leagueLineup,
+  levelCap,
+  milestoneEnd,
+  milestones,
   resolveTrainer,
   rosterGaps,
   serializeExperiment,
@@ -61,6 +68,12 @@ const anchorsOf = (experiment: Experiment, id: ScalerId): Anchor[] =>
 /** A form field name for a scaler (archetype names contain spaces). */
 export const scalerField = (id: ScalerId): string => id.replaceAll(" ", "-")
 const storageKey = "wayfarer-trainer-balance-v8"
+/** The chart runs across player TR 0 to at least this. */
+export const CHART_MIN_END = Math.max(200, LEVEL_CAP_ANCHORS.at(-1)?.[0] ?? 0)
+/** The chart never runs past this player TR; a higher player TR is marked at the right edge. */
+export const CHART_MAX_END = 400
+/** The player TR slider's range; the number field takes any larger whole TR. */
+export const PLAYER_TR_SLIDER_MAX = 200
 const firstTrainer = catalog[0]
 if (!firstTrainer) throw new Error("The trainer catalog is empty.")
 const initialTrainerId = firstTrainer.id
@@ -79,7 +92,8 @@ export const movesText = (moves: RosterSlot["moves"]): string =>
 
 export class BalanceLab {
   #_experiment = $state<Experiment>(createExperiment(catalog))
-  badges = $state(0)
+  /** The player TR: world progress for notable trainers and the input to world scaling. */
+  playerTR = $state(0)
   query = $state("")
   region = $state("All regions")
   role = $state("All trainers")
@@ -88,8 +102,19 @@ export class BalanceLab {
   error = $state("")
   notice = $state("")
 
-  world = $derived(worldLevels(this.#_experiment, { badges: this.badges }))
-  playerTR = $derived(this.world.tr)
+  world = $derived(worldLevels(this.#_experiment, this.playerTR))
+  /** Where the player TR sits on the badge formula. */
+  badgeMatch = $derived(badgeMatch(this.playerTR))
+  /** The badge count the player TR matches exactly, or null between badge counts and past 24. */
+  badges = $derived(this.badgeMatch.kind === "exact" ? this.badgeMatch.badges : null)
+  /** The badge slider position: the highest badge count at or below the player TR. */
+  badgeFloor = $derived(
+    this.badgeMatch.kind === "exact"
+      ? this.badgeMatch.badges
+      : this.badgeMatch.kind === "between"
+        ? this.badgeMatch.lower
+        : MAX_BADGES,
+  )
   /** World progress is the player TR as notable trainers see it. */
   worldProgress = $derived(this.world.tr)
   cap = $derived(this.world.cap)
@@ -136,6 +161,32 @@ export class BalanceLab {
       return { world, tr, teamLevel, team }
     }),
   )
+  /** Every world progress where the selected trainer's team changes. */
+  milestones = $derived(milestones(this.selected.trainer, this.#_experiment, evolution))
+  /**
+   * The chart series: the selected trainer's team level and the level cap at each whole player TR
+   * from 0 to at least CHART_MIN_END, further (up to CHART_MAX_END) when the player TR or the
+   * milestones go past it. Nothing changes past the milestones, so a higher player TR is flat.
+   */
+  chart = $derived.by(() => {
+    const end = Math.min(
+      CHART_MAX_END,
+      Math.max(
+        CHART_MIN_END,
+        Math.ceil(this.playerTR / 20) * 20,
+        Math.ceil(milestoneEnd(this.#_experiment, this.settings.archetype) / 20) * 20,
+      ),
+    )
+    return Array.from({ length: end + 1 }, (_, world) => {
+      const { tr, teamLevel } = resolveTrainer(
+        this.selected.trainer,
+        this.#_experiment,
+        world,
+        evolution,
+      )
+      return { world, tr, teamLevel, cap: levelCap(world) }
+    })
+  })
   aboveCap = $derived(this.allRows.filter((row) => row.teamLevel > this.cap).length)
 
   constructor() {
@@ -205,8 +256,18 @@ export class BalanceLab {
     this.#_persist()
   }
 
+  /** A badge preset: sets the player TR from the badge formula. */
   setBadges = (badges: number): void => {
-    this.badges = Number.isFinite(badges) ? Math.min(24, Math.max(0, Math.round(badges))) : 0
+    this.playerTR = badgeTR(
+      Number.isFinite(badges) ? Math.min(MAX_BADGES, Math.max(0, Math.round(badges))) : 0,
+    )
+    this.#_persist()
+  }
+
+  /** Sets the player TR directly: any whole number of 0 or more (TR has no upper limit). */
+  setPlayerTR = (value: number): void => {
+    if (!Number.isFinite(value)) return
+    this.playerTR = Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, Math.round(value)))
     this.#_persist()
   }
 
@@ -337,7 +398,7 @@ export class BalanceLab {
       {
         tool: "wayfarer-trainer-balance",
         version: EXPERIMENT_VERSION,
-        point: { badges: this.badges },
+        point: { playerTR: this.playerTR },
         selectedTrainer: this.selectedId,
         experiment: JSON.parse(serializeExperiment(this.#_experiment)),
       },
@@ -358,19 +419,25 @@ export class BalanceLab {
       if (data?.tool !== "wayfarer-trainer-balance" || data.version !== EXPERIMENT_VERSION)
         throw new Error(`This is not a version ${EXPERIMENT_VERSION} Wayfarer balance experiment.`)
       const experiment = validateExperiment(data.experiment, catalog)
+      // The point is a player TR; earlier version 8 files saved 0–24 badges instead.
       const point = data.point
-      if (
-        !point ||
-        !Number.isInteger(point.badges) ||
-        point.badges < 0 ||
-        point.badges > 24 ||
-        Object.keys(point).length !== 1
-      )
-        throw new Error("The player point must be 0–24 badges.")
+      const keys = point && typeof point === "object" ? Object.keys(point) : []
+      const playerTR =
+        keys.length === 1 && keys[0] === "playerTR" && Number.isSafeInteger(point.playerTR)
+          ? (point.playerTR as number)
+          : keys.length === 1 &&
+              keys[0] === "badges" &&
+              Number.isInteger(point.badges) &&
+              point.badges >= 0 &&
+              point.badges <= MAX_BADGES
+            ? badgeTR(point.badges)
+            : -1
+      if (playerTR < 0)
+        throw new Error("The player point must be a player TR of 0 or more (or 0–24 badges).")
       if (!catalog.some((trainer) => trainer.id === data.selectedTrainer))
         throw new Error("Unknown selected trainer.")
       this.#_experiment = experiment
-      this.badges = point.badges
+      this.playerTR = playerTR
       this.selectedId = data.selectedTrainer
       this.error = ""
       this.notice = message

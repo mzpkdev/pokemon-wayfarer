@@ -10,7 +10,12 @@ import {
   LEVEL_CAP_ANCHORS,
   NEAR_BAND,
   NO_EVOLUTION,
+  MAX_BADGES,
+  MILESTONE_SCAN_LIMIT,
   WORLD_PROGRESS_CHECKPOINTS,
+  badgeMatch,
+  badgeMatchText,
+  badgeTR,
   buildTeam,
   createExperiment,
   evolutionIndex,
@@ -18,6 +23,10 @@ import {
   growthTR,
   gymLadder,
   leagueLineup,
+  levelCap,
+  milestoneEnd,
+  milestoneText,
+  milestones,
   playerRating,
   resolveTrainer,
   rosterGaps,
@@ -375,7 +384,7 @@ describe("player readout", () => {
 
   it("reads the level cap and world scaling from the player TR", () => {
     const experiment = createExperiment(catalog)
-    const at = (badges: number) => worldLevels(experiment, { badges })
+    const at = (badges: number) => worldLevels(experiment, badgeTR(badges))
     expect([0, 4, 8, 16, 24].map(at)).toEqual([
       { tr: 0, cap: 15, wild: 6, regularTrainer: 9 },
       { tr: 40, cap: 28, wild: 24, regularTrainer: 27 },
@@ -386,6 +395,182 @@ describe("player readout", () => {
     // Early game presses against the cap; late game regular trainers fall well below it.
     expect([at(4).wild - at(4).cap, at(4).regularTrainer - at(4).cap]).toEqual([-4, -1])
     expect([at(24).wild - at(24).cap, at(24).regularTrainer - at(24).cap]).toEqual([-22, -18])
+  })
+})
+
+describe("player TR and badge presets", () => {
+  it("maps each badge preset to its player TR and back", () => {
+    for (let badges = 0; badges <= MAX_BADGES; badges += 1) {
+      const tr = badgeTR(badges)
+      expect(tr).toBe(playerRating({ badges }))
+      expect(badgeMatch(tr)).toEqual({ kind: "exact", badges })
+    }
+    expect([0, 8, 16, 24].map(badgeTR)).toEqual([0, 80, 120, 160])
+    expect(badgeMatchText(badgeMatch(10))).toBe("1 badge")
+    expect(badgeMatchText(badgeMatch(80))).toBe("8 badges")
+  })
+
+  it("places off-badge TR between badge counts or beyond 24 badges", () => {
+    // TR 95 is exactly 11 badges (80 + 3 × 5); 97 falls between 11 and 12.
+    expect(badgeMatch(95)).toEqual({ kind: "exact", badges: 11 })
+    expect(badgeMatch(97)).toEqual({ kind: "between", lower: 11, upper: 12 })
+    expect(badgeMatch(5)).toEqual({ kind: "between", lower: 0, upper: 1 })
+    expect(badgeMatch(83)).toEqual({ kind: "between", lower: 8, upper: 9 })
+    expect(badgeMatch(170)).toEqual({ kind: "beyond", badges: 24 })
+    expect(badgeMatch(300)).toEqual({ kind: "beyond", badges: 24 })
+    expect(badgeMatchText(badgeMatch(97))).toBe("between 11 and 12 badges")
+    expect(badgeMatchText(badgeMatch(300))).toBe("beyond 24 badges")
+    expect(() => badgeMatch(-1)).toThrow("non-negative whole number")
+    expect(() => badgeMatch(12.5)).toThrow("non-negative whole number")
+  })
+
+  it("resolves world scaling and notable trainers at off-badge player TR", () => {
+    const experiment = createExperiment(catalog)
+    // TR 95 (11 badges) and 97 (between 11 and 12): linear between the TR 80 and TR 120 anchors.
+    expect(worldLevels(experiment, 95)).toEqual({ tr: 95, cap: 59, wild: 47, regularTrainer: 51 })
+    expect(worldLevels(experiment, 97)).toEqual({ tr: 97, cap: 61, wild: 48, regularTrainer: 52 })
+    // Past 24 badges the level cap and world scaling stay flat at their ceiling TR (160).
+    expect(worldLevels(experiment, 170)).toEqual({ ...worldLevels(experiment, 160), tr: 170 })
+    expect(worldLevels(experiment, 300)).toEqual({
+      tr: 300,
+      cap: 100,
+      wild: 78,
+      regularTrainer: 82,
+    })
+    expect([levelCap(95), levelCap(170), levelCap(300)]).toEqual([59, 100, 100])
+    const brock = catalog.find((record) => record.id === "brock")!
+    const blue = catalog.find((record) => record.id === "blue")!
+    const tr = (record: TrainerRecord, world: number) =>
+      resolveTrainer(record, experiment, world, evolution).tr
+    // Steady Brock (20 → 95): 20 + 75 × 95/160 = 64.5, halves up. Flat past 160.
+    expect([tr(brock, 95), tr(brock, 170), tr(brock, 300)]).toEqual([65, 95, 95])
+    // Rival Blue (0 → 170): 53% + 23 × 15/40 % at 95 = 61.625% of 170 = 104.8.
+    expect([tr(blue, 95), tr(blue, 170), tr(blue, 300)]).toEqual([105, 170, 170])
+    expect(
+      gymLadder(catalog, experiment, 95).find((row) => row.trainer.id === "brock"),
+    ).toMatchObject({
+      tr: 65,
+      gap: -30,
+      mark: "below",
+    })
+    expect(leagueLineup(catalog, experiment, 300, evolution)).toEqual(
+      leagueLineup(catalog, experiment, 160, evolution).map((row) => ({
+        ...row,
+        worldProgress: 300,
+      })),
+    )
+  })
+})
+
+describe("milestones", () => {
+  const record = (id: string) => catalog.find((entry) => entry.id === id)!
+  const timeline = (id: string) => milestones(record(id), defaults, evolution)
+
+  it("lists Brock's team changes from world progress 0 to his peak TR", () => {
+    const brock = timeline("brock")
+    expect(brock[0]).toEqual({
+      worldProgress: 0,
+      tr: 20,
+      teamLevel: 14,
+      cap: 15,
+      events: [{ kind: "start", team: ["Onix", "Geodude"], aboveCap: false }],
+    })
+    // TR 29 is the first TR at team size 3: steady Brock reaches it at world progress 19.
+    expect(brock.find((m) => m.events.some((e) => e.kind === "join"))).toMatchObject({
+      worldProgress: 19,
+      tr: 29,
+      events: [{ kind: "join", slot: 3, species: "Aerodactyl" }],
+    })
+    // Onix becomes Steelix when the team level reaches 35 (TR 64, world progress 68).
+    const steelix = brock.find((m) =>
+      m.events.some((e) => e.kind === "evolve" && e.to === "Steelix"),
+    )!
+    expect([steelix.worldProgress, steelix.tr, steelix.teamLevel]).toEqual([68, 52, 35])
+    expect(resolveTrainer(record("brock"), defaults, 67, evolution).team[0]?.species).toBe("Onix")
+    expect(brock.at(-1)).toMatchObject({
+      worldProgress: 159,
+      tr: 95,
+      events: [{ kind: "peak", tr: 95, reached: true }],
+    })
+    expect(brock.map(milestoneText)).toEqual([
+      "0: Onix, Geodude",
+      "19: 3rd slot (Aerodactyl) joins",
+      "38: Geodude → Graveler",
+      "51: 4th slot (Kabuto) joins",
+      "68: Onix → Steelix",
+      "87: Graveler → Golem",
+      "95: Kabuto → Kabutops",
+      "108: 5th slot (Omastar) joins",
+      "159: peak TR 95",
+    ])
+  })
+
+  it("marks Blue's level cap crossing and peak TR", () => {
+    expect(timeline("blue").map(milestoneText)).toEqual([
+      "0: Eevee",
+      "9: 2nd slot (Pidgey) joins",
+      "23: 3rd slot (Abra) joins",
+      "25: Pidgey → Pidgeotto, Abra → Kadabra",
+      "28: team level Lv 25 passes the level cap Lv 24",
+      "36: 4th slot (Rhyhorn) joins",
+      "51: Pidgeotto → Pidgeot",
+      "61: 5th slot (Arcanine) joins",
+      "62: Rhyhorn → Rhydon",
+      "66: Kadabra → Alakazam",
+      "84: Rhydon → Rhyperior",
+      "86: 6th slot (Exeggutor) joins",
+      "160: peak TR 170",
+    ])
+  })
+
+  it("agrees with the resolved team at every world progress it scans", () => {
+    for (const id of ["brock", "blue", "erika", "lance"]) {
+      const list = timeline(id)
+      const points = new Set(list.map((m) => m.worldProgress))
+      const end = milestoneEnd(defaults, defaults.trainers[id]!.archetype)
+      for (let world = 1; world <= end; world += 1) {
+        const before = resolveTrainer(record(id), defaults, world - 1, evolution)
+        const now = resolveTrainer(record(id), defaults, world, evolution)
+        const changed =
+          now.team.length !== before.team.length ||
+          now.team.some((member, index) => member.species !== before.team[index]?.species)
+        if (changed) expect([id, world, points.has(world)]).toEqual([id, world, true])
+      }
+    }
+  })
+
+  it("ignores ties with the level cap, so rounding cannot flicker a crossing", () => {
+    // Erika's team level runs within one level of the cap from world progress 35 to 67.
+    const crossings = timeline("erika").filter((m) => m.events.some((e) => e.kind === "cap"))
+    expect(crossings.map(milestoneText)).toEqual([
+      "35: team level Lv 27 passes the level cap Lv 26",
+      "67: team level Lv 42 drops below the level cap Lv 43",
+    ])
+  })
+
+  it("notes a trainer already above the level cap at world progress 0", () => {
+    expect(milestoneText(timeline("lorelei")[0]!)).toBe(
+      "0: Lapras, Seel, Shellder (team level above the level cap)",
+    )
+  })
+
+  it("reports a growth scaler that stops short of 100% and scans only to the ceilings", () => {
+    const fixture = trainer("fixture", 10, six, { archetype: "plateau", peakTR: 60 })
+    const experiment = experimentWith([fixture])
+    experiment.archetypes.plateau = [
+      [0, 0],
+      [40, 50],
+    ]
+    const list = milestones(fixture, experiment, NO_EVOLUTION)
+    // Growth stops at 50% (TR 35) at world progress 40; the level cap ceiling is TR 160.
+    expect(milestoneEnd(experiment, "plateau")).toBe(160)
+    expect(list.at(-1)?.events.at(-1)).toEqual({ kind: "peak", tr: 35, reached: false })
+    expect(list.at(-1)?.worldProgress).toBe(160)
+    experiment.archetypes.plateau = [
+      [0, 0],
+      [1_000_000, 100],
+    ]
+    expect(milestoneEnd(experiment, "plateau")).toBe(MILESTONE_SCAN_LIMIT)
   })
 })
 

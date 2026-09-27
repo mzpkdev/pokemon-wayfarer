@@ -4,6 +4,8 @@ import type {
   EvolutionData,
   Experiment,
   LadderRow,
+  Milestone,
+  MilestoneEvent,
   ResolvedTrainer,
   RosterSlot,
   TeamMember,
@@ -224,15 +226,46 @@ export const trainerRating = (
 ): number =>
   growthTR(experiment.archetypes[settings.archetype], settings.startTR, settings.peakTR, world)
 
-/** The player's level cap. A readout for comparison: it never feeds notable trainer results. */
-export const levelCap = (point: WorldPoint): number => scale(LEVEL_CAP_ANCHORS, playerRating(point))
+/** The player's level cap at a player TR. A readout for comparison: it never feeds notable trainer results. */
+export const levelCap = (playerTR: number): number => scale(LEVEL_CAP_ANCHORS, playerTR)
+
+export const MAX_BADGES = 24
+/** The player TR a badge count gives: the badge presets of the player TR control. */
+export const badgeTR = (badges: number): number => playerRating({ badges })
+
+/** How a player TR sits on the badge formula: exactly a badge count, between two, or past 24. */
+export type BadgeMatch =
+  | { kind: "exact"; badges: number }
+  | { kind: "between"; lower: number; upper: number }
+  | { kind: "beyond"; badges: typeof MAX_BADGES }
+
+/** Matches a player TR to the badge formula. TR has no upper limit; the formula stops at 24 badges. */
+export const badgeMatch = (playerTR: number): BadgeMatch => {
+  const tr = progress(playerTR)
+  if (tr > badgeTR(MAX_BADGES)) return { kind: "beyond", badges: MAX_BADGES }
+  let lower = 0
+  for (let badges = 0; badges <= MAX_BADGES; badges += 1) {
+    const at = badgeTR(badges)
+    if (at === tr) return { kind: "exact", badges }
+    if (at < tr) lower = badges
+  }
+  return { kind: "between", lower, upper: lower + 1 }
+}
+
+/** "8 badges", "between 9 and 10 badges" or "beyond 24 badges". */
+export const badgeMatchText = (match: BadgeMatch): string =>
+  match.kind === "exact"
+    ? `${match.badges} ${match.badges === 1 ? "badge" : "badges"}`
+    : match.kind === "between"
+      ? `between ${match.lower} and ${match.upper} badges`
+      : `beyond ${match.badges} badges`
 
 /** World scaling from player TR: the level cap, the wild level curve and the regular trainer level curve. */
 export const worldLevels = (
   experiment: Pick<Experiment, "wildLevel" | "routeTrainerLevel">,
-  point: WorldPoint,
+  playerTR: number,
 ) => {
-  const tr = playerRating(point)
+  const tr = progress(playerTR)
   return {
     tr,
     cap: scale(LEVEL_CAP_ANCHORS, tr),
@@ -390,6 +423,107 @@ export const resolveTrainer = (
     warnings,
   }
 }
+
+/** The milestone scan stops here even if an archetype's growth ceiling is authored further out. */
+export const MILESTONE_SCAN_LIMIT = 2000
+
+/**
+ * The world progress at and past which nothing about a trainer's team or the
+ * level cap changes: the later of the archetype growth ceiling and the level
+ * cap ceiling TR (at most MILESTONE_SCAN_LIMIT). Trainer TR never rises past
+ * the growth ceiling.
+ */
+export const milestoneEnd = (experiment: Pick<Experiment, "archetypes">, archetype: Archetype) =>
+  Math.min(
+    MILESTONE_SCAN_LIMIT,
+    Math.max(experiment.archetypes[archetype].at(-1)?.[0] ?? 0, LEVEL_CAP_ANCHORS.at(-1)?.[0] ?? 0),
+  )
+
+/**
+ * Every world progress (player TR) where a notable trainer's team changes,
+ * scanning whole world progress from 0 to milestoneEnd: the starting team, a
+ * roster slot joining, a member's stage changing, the team level crossing the
+ * level cap (strictly above it, or strictly below it again; equal keeps the
+ * side), and trainer TR reaching peak TR (or stopping short of it).
+ */
+export const milestones = (
+  trainer: TrainerRecord,
+  experiment: Experiment,
+  evolution: Evolution,
+): Milestone[] => {
+  const settings = experiment.trainers[trainer.id]
+  if (!settings) throw new Error(`Missing trainer settings: ${trainer.id}`)
+  const end = milestoneEnd(experiment, settings.archetype)
+  const result: Milestone[] = []
+  let previous: ResolvedTrainer | undefined
+  let previousAbove = false
+  let peakSeen = false
+  for (let world = 0; world <= end; world += 1) {
+    const current = resolveTrainer(trainer, experiment, world, evolution)
+    const cap = levelCap(world)
+    // Equal to the level cap keeps the previous side, so rounding cannot flicker the crossing.
+    const above: boolean =
+      current.teamLevel === cap && previous ? previousAbove : current.teamLevel > cap
+    const events: MilestoneEvent[] = []
+    if (!previous)
+      events.push({ kind: "start", team: current.team.map((m) => m.species), aboveCap: above })
+    else {
+      for (const member of current.team) {
+        const before = previous.team[member.slot - 1]
+        if (!before) events.push({ kind: "join", slot: member.slot, species: member.species })
+        else if (before.species !== member.species)
+          events.push({
+            kind: "evolve",
+            slot: member.slot,
+            from: before.species,
+            to: member.species,
+          })
+      }
+      if (above !== previousAbove) events.push({ kind: "cap", aboveCap: above })
+    }
+    if (!peakSeen && current.tr >= settings.peakTR) {
+      peakSeen = true
+      events.push({ kind: "peak", tr: current.tr, reached: true })
+    } else if (!peakSeen && world === end)
+      events.push({ kind: "peak", tr: current.tr, reached: false })
+    if (events.length)
+      result.push({
+        worldProgress: world,
+        tr: current.tr,
+        teamLevel: current.teamLevel,
+        cap,
+        events,
+      })
+    previous = current
+    previousAbove = above
+  }
+  return result
+}
+
+const ordinal = (value: number): string =>
+  `${value}${value % 10 === 1 && value !== 11 ? "st" : value % 10 === 2 && value !== 12 ? "nd" : value % 10 === 3 && value !== 13 ? "rd" : "th"}`
+
+/** One event as timeline text, e.g. "3rd slot (Aerodactyl) joins" or "Onix → Steelix". */
+export const milestoneEventText = (event: MilestoneEvent, milestone: Milestone): string => {
+  switch (event.kind) {
+    case "start":
+      return `${event.team.join(", ")}${event.aboveCap ? " (team level above the level cap)" : ""}`
+    case "join":
+      return `${ordinal(event.slot)} slot (${event.species}) joins`
+    case "evolve":
+      return `${event.from} → ${event.to}`
+    case "cap":
+      return event.aboveCap
+        ? `team level Lv ${milestone.teamLevel} passes the level cap Lv ${milestone.cap}`
+        : `team level Lv ${milestone.teamLevel} drops below the level cap Lv ${milestone.cap}`
+    case "peak":
+      return event.reached ? `peak TR ${event.tr}` : `TR stops at ${event.tr}, short of peak TR`
+  }
+}
+
+/** A milestone as timeline text: "104: Onix → Steelix". */
+export const milestoneText = (milestone: Milestone): string =>
+  `${milestone.worldProgress}: ${milestone.events.map((event) => milestoneEventText(event, milestone)).join(", ")}`
 
 /**
  * The league lineup from one global pool of league-eligible trainers at a

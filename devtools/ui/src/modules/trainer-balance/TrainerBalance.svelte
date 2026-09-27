@@ -1,8 +1,18 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { ARCHETYPES, LEVEL_OFFSET, NEAR_BAND, ROSTER_SIZE, LEAGUES } from "./engine.js"
+  import {
+    ARCHETYPES,
+    LEVEL_OFFSET,
+    NEAR_BAND,
+    ROSTER_SIZE,
+    LEAGUES,
+    badgeMatchText,
+    milestoneEventText,
+  } from "./engine.js"
+  import TeamLevelChart from "./TeamLevelChart.svelte"
   import {
     BalanceLab,
+    PLAYER_TR_SLIDER_MAX,
     catalog,
     lineText,
     movesText,
@@ -75,7 +85,7 @@
     const url = URL.createObjectURL(new Blob([lab.exportText()], { type: "application/json" }))
     const link = document.createElement("a")
     link.href = url
-    link.download = `wayfarer-balance-b${lab.badges}.json`
+    link.download = `wayfarer-balance-tr${lab.playerTR}.json`
     link.click()
     setTimeout(() => URL.revokeObjectURL(url), 1000)
   }
@@ -123,7 +133,7 @@
   <div class="world-panel">
     <div class="badge-count">
       <span class="eyebrow">Player badges</span>
-      <div><strong data-testid="badge-count">{lab.badges}</strong><span>/ 24</span></div>
+      <div><strong data-testid="badge-count">{lab.badges ?? "–"}</strong><span>/ 24</span></div>
     </div>
     <div class="badge-slider">
       <label for="badge-progress" class="visually-hidden">Badges earned</label>
@@ -133,7 +143,7 @@
         min="0"
         max="24"
         step="1"
-        value={lab.badges}
+        value={lab.badgeFloor}
         oninput={(event) => lab.setBadges(event.currentTarget.valueAsNumber)}
       />
       <div class="slider-ticks">
@@ -144,9 +154,31 @@
             aria-label={`Set ${badge} badges`}>{badge}</button
           >{/each}
       </div>
+      <div class="tr-control">
+        <label for="player-tr-input">Player TR</label><input
+          id="player-tr-input"
+          type="number"
+          min="0"
+          step="1"
+          value={lab.playerTR}
+          oninput={(event) => lab.setPlayerTR(event.currentTarget.valueAsNumber)}
+        /><input
+          type="range"
+          aria-label="Player TR slider"
+          min="0"
+          max={PLAYER_TR_SLIDER_MAX}
+          step="1"
+          value={Math.min(lab.playerTR, PLAYER_TR_SLIDER_MAX)}
+          oninput={(event) => lab.setPlayerTR(event.currentTarget.valueAsNumber)}
+        /><span class="badge-match" data-testid="badge-match"
+          >{lab.badgeMatch.kind === "exact" ? "matches " : ""}{badgeMatchText(lab.badgeMatch)}</span
+        >
+      </div>
       <span class="hint"
-        >Player TR: badges 1–8 give +10, 9–24 give +5, league wins give nothing. It sets the level
-        cap and world scaling, and it is the world progress notable trainers grow with.</span
+        >Badges are presets for the player TR: badges 1–8 give +10, 9–24 give +5, league wins give
+        nothing (24 badges = TR 160). Type any TR in between or past 160; TR has no upper limit. It
+        sets the level cap and world scaling, and it is the world progress notable trainers grow
+        with.</span
       >
     </div>
     <div class="world-facts">
@@ -403,6 +435,38 @@
             >{/each}
         </tbody>
       </table>
+      <div class="section-label">
+        <h3>Milestones</h3>
+        <span>Player TR where {lab.selected.trainer.name}’s team changes</span>
+      </div>
+      <ol class="timeline" data-testid="milestones">
+        {#each lab.milestones as milestone, index (milestone.worldProgress)}{@const next =
+            lab.milestones[index + 1]}
+          <li
+            class:current={milestone.worldProgress === lab.playerTR}
+            class:past={milestone.worldProgress < lab.playerTR}
+            aria-current={milestone.worldProgress === lab.playerTR ? "step" : undefined}
+            data-testid={`milestone-${milestone.worldProgress}`}
+          >
+            <span class="timeline-at">{milestone.worldProgress}</span><span
+              >{milestone.events
+                .map((event) => milestoneEventText(event, milestone))
+                .join(" · ")}</span
+            >
+          </li>
+          {#if milestone.worldProgress < lab.playerTR && (!next || next.worldProgress > lab.playerTR)}<li
+              class="timeline-now"
+              data-testid="milestone-now"
+            >
+              <span class="timeline-at">{lab.playerTR}</span><span>Player TR now</span>
+            </li>{/if}{/each}
+      </ol>
+      <TeamLevelChart
+        name={lab.selected.trainer.name}
+        points={lab.chart}
+        milestones={lab.milestones}
+        playerTR={lab.playerTR}
+      />
       <dl class="stat-grid">
         <div>
           <dt>Team level</dt>
@@ -858,6 +922,69 @@
     width: 100%;
     accent-color: var(--accent);
     cursor: pointer;
+  }
+  .tr-control {
+    display: grid;
+    grid-template-columns: auto 84px minmax(90px, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    margin: 4px 0 8px;
+    font-size: 12px;
+  }
+  .tr-control label {
+    color: var(--color-cartographer-muted);
+    font-size: 10px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+  .tr-control input[type="number"] {
+    width: 100%;
+    padding: 6px 8px;
+    font-variant-numeric: tabular-nums;
+  }
+  .badge-match {
+    color: var(--accent);
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .timeline {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 8px;
+    display: grid;
+    gap: 3px;
+    font-size: 12px;
+  }
+  .timeline li {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 8px;
+    padding: 4px 8px;
+    border-left: 2px solid #2b3037;
+    line-height: 1.45;
+  }
+  .timeline li.past {
+    color: var(--color-cartographer-muted);
+  }
+  .timeline li.current {
+    border-left-color: var(--accent);
+    background: #333025;
+  }
+  .timeline-at {
+    font-family: var(--font-cartographer-mono);
+    font-size: 11px;
+    color: var(--color-cartographer-muted);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .timeline li.current .timeline-at,
+  .timeline-now .timeline-at {
+    color: var(--accent);
+  }
+  .timeline li.timeline-now {
+    border-left-color: var(--accent);
+    color: var(--accent);
+    font-size: 11px;
   }
   .slider-ticks {
     display: flex;
@@ -1653,6 +1780,13 @@
   @media (max-width: 480px) {
     .balance-lab {
       padding-top: 23px;
+    }
+    .tr-control {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+    .tr-control input[type="range"],
+    .tr-control .badge-match {
+      grid-column: 1 / -1;
     }
     .filters {
       flex-wrap: wrap;

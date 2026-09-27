@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises"
+
 import { expect, test, type Page } from "webanvil/e2e"
 
 /** Sets the selected trainer's growth through the growth form. */
@@ -114,6 +116,117 @@ test("grows each trainer with world progress and round-trips an exported experim
   await page.reload()
   await expect(order.nth(2)).toContainText("Onix")
   await expect(page.getByTestId("badge-count")).toHaveText("8")
+  expect(errors).toEqual([])
+})
+
+test("sets the player TR directly, with badges as presets, and reads old badge points", async ({
+  page,
+}) => {
+  await page.goto("/#trainer-balance")
+  const input = page.getByLabel("Player TR", { exact: true })
+  await expect(input).toHaveValue("0")
+  await expect(page.getByTestId("badge-match")).toHaveText("matches 0 badges")
+  // A badge preset sets the player TR from the badge formula.
+  await page.getByRole("button", { name: "Set 12 badges", exact: true }).click()
+  await expect(input).toHaveValue("100")
+  await expect(page.getByTestId("badge-match")).toHaveText("matches 12 badges")
+  // TR 95 is exactly 11 badges; TR 97 is between badge counts.
+  await input.fill("95")
+  await expect(page.getByTestId("badge-count")).toHaveText("11")
+  await input.fill("97")
+  await expect(page.getByTestId("badge-count")).toHaveText("–")
+  await expect(page.getByTestId("badge-match")).toHaveText("between 11 and 12 badges")
+  await expect(page.getByLabel("Badges earned", { exact: true })).toHaveValue("11")
+  // Everything that reads world progress follows the typed TR.
+  await expect(page.getByTestId("player-tr")).toHaveText("97")
+  await expect(page.getByTestId("world-progress")).toHaveText("97")
+  await expect(page.getByTestId("level-cap")).toHaveText("Lv. 61")
+  await expect(page.getByTestId("wild-level")).toHaveText("Lv. 48")
+  await expect(page.getByTestId("regular-trainer-level")).toHaveText("Lv. 52")
+  // Steady Brock (20 → 95) at world progress 97: 20 + 75 × 97/160 = 65.5, halves up.
+  await expect(page.getByTestId("selected-tr")).toHaveText("65")
+  await expect(page.getByTestId("tr-brock")).toHaveText("65")
+  await expect(page.getByTestId("ladder-brock")).toContainText("below -32")
+  await expect(page.getByTestId("league-lineup").locator(":scope > li")).toHaveCount(5)
+  // The slider runs 0–200; the field takes any larger TR, which is past 24 badges.
+  await page.getByLabel("Player TR slider", { exact: true }).fill("170")
+  await expect(input).toHaveValue("170")
+  await expect(page.getByTestId("badge-match")).toHaveText("beyond 24 badges")
+  await input.fill("300")
+  await expect(page.getByTestId("player-tr")).toHaveText("300")
+  await expect(page.getByTestId("level-cap")).toHaveText("Lv. 100")
+  await expect(page.getByTestId("selected-tr")).toHaveText("95")
+  await expect(page.getByTestId("badge-match")).toHaveText("beyond 24 badges")
+  await page.reload()
+  await expect(input).toHaveValue("300")
+
+  // An earlier version 8 export saved badges instead of a player TR; it still imports.
+  const downloadPromise = page.waitForEvent("download")
+  await page.getByRole("button", { name: "Export experiment", exact: true }).click()
+  const exported = await (await downloadPromise).path()
+  if (!exported) throw new Error("Export did not produce a file")
+  const saved = JSON.parse(await readFile(exported, "utf8"))
+  expect(saved.point).toEqual({ playerTR: 300 })
+  await page.getByLabel("Import experiment file", { exact: true }).setInputFiles({
+    name: "badges.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify({ ...saved, point: { badges: 16 } })),
+  })
+  await expect(input).toHaveValue("120")
+  await expect(page.getByTestId("badge-count")).toHaveText("16")
+})
+
+test("shows the selected trainer's milestones and a team level chart", async ({ page }) => {
+  const errors: string[] = []
+  page.on("pageerror", (error) => errors.push(error.message))
+  await page.goto("/#trainer-balance")
+  const timeline = page.getByTestId("milestones").locator(":scope > li")
+  await expect(timeline.first()).toHaveText(/^0\s*Onix, Geodude$/)
+  await expect(page.getByTestId("milestone-19")).toHaveText(/19\s*3rd slot \(Aerodactyl\) joins/)
+  await expect(page.getByTestId("milestone-68")).toHaveText(/68\s*Onix → Steelix/)
+  await expect(timeline.last()).toHaveText(/159\s*peak TR 95/)
+  await expect(timeline.first()).toHaveAttribute("aria-current", "step")
+  await expect(page.getByTestId("milestone-now")).toHaveCount(0)
+  // At 8 badges (player TR 80) the marker sits between Onix → Steelix (68) and Graveler → Golem (87).
+  await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
+  await expect(page.getByTestId("milestone-now")).toHaveText(/80\s*Player TR now/)
+  await expect(page.getByTestId("milestone-68").locator("+ li")).toHaveAttribute(
+    "data-testid",
+    "milestone-now",
+  )
+  await page.getByLabel("Player TR", { exact: true }).fill("68")
+  await expect(page.getByTestId("milestone-68")).toHaveAttribute("aria-current", "step")
+  await expect(page.getByTestId("milestone-now")).toHaveCount(0)
+
+  const chart = page.getByTestId("level-chart")
+  await expect(chart).toBeVisible()
+  await expect(chart).toContainText("Brock’s team level")
+  await expect(chart).toContainText("Level cap")
+  await expect(chart.getByText("Player TR (world progress)", { exact: true })).toBeVisible()
+  await expect(chart.getByText("Player TR 68", { exact: true })).toBeVisible()
+  for (const id of ["chart-team", "chart-cap"])
+    expect(await page.getByTestId(id).getAttribute("d")).toMatch(
+      /^M[\d.]+,[\d.]+(L[\d.]+,[\d.]+){200}$/,
+    )
+  // Keyboard and pointer both read values off the chart.
+  const reader = chart.getByRole("slider")
+  await reader.focus()
+  await expect(page.getByTestId("chart-tooltip")).toContainText("Player TR 68")
+  await expect(page.getByTestId("chart-tooltip")).toContainText("Lv 35 team level (TR 52)")
+  await page.keyboard.press("ArrowRight")
+  await expect(reader).toHaveAttribute(
+    "aria-valuetext",
+    /^Player TR 69: team level Lv 35, level cap Lv 44$/,
+  )
+  await reader.blur()
+  await reader.hover()
+  await expect(page.getByTestId("chart-tooltip")).toContainText(/Player TR \d+/)
+  await page.getByRole("button", { name: "Blue Kanto · Champion", exact: true }).click()
+  await expect(chart).toContainText("Blue’s team level")
+  await expect(timeline.last()).toHaveText(/160\s*peak TR 170/)
+  await expect(page.getByTestId("milestone-28")).toHaveText(
+    /28\s*team level Lv 25 passes the level cap Lv 24/,
+  )
   expect(errors).toEqual([])
 })
 

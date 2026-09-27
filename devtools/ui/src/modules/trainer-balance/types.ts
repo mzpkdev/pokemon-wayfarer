@@ -111,3 +111,23 @@ export type ResolvedTrainer = {
 /** Where a Gym Leader sits against the player TR: more than 10 below, within 10, or more than 10 above. */
 export type LadderMark = "below" | "near" | "above"
 export type LadderRow = { trainer: TrainerRecord; tr: number; gap: number; mark: LadderMark }
+/** One change to a notable trainer's team as world progress rises. */
+export type MilestoneEvent =
+  /** The team at world progress 0, in roster order, and whether its team level is above the level cap. */
+  | { kind: "start"; team: string[]; aboveCap: boolean }
+  /** A roster slot joins the team (team size steps up), at the stage its level supports. */
+  | { kind: "join"; slot: number; species: string }
+  /** A team member's stage changes along its evolution line. */
+  | { kind: "evolve"; slot: number; from: string; to: string }
+  /** The team level moves strictly above the level cap, or strictly below it again. */
+  | { kind: "cap"; aboveCap: boolean }
+  /** Trainer TR reaches peak TR, or (when growth stops short of 100%) stops below it. */
+  | { kind: "peak"; tr: number; reached: boolean }
+/** The world progress (player TR) where a notable trainer's team changes, with what changed. */
+export type Milestone = {
+  worldProgress: number
+  tr: number
+  teamLevel: number
+  cap: number
+  events: MilestoneEvent[]
+}

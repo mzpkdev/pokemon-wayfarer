@@ -102,9 +102,12 @@ trainer's team. The player TR is never computed from a notable trainer's TR.
   authored stage uses the authored moves; one that stepped down uses
   `LEVEL_UP`.
 
-The world panel sets player badges (0–24). It shows the player TR on the
-rescaled formula (badges 1–8 give +10 each, badges 9–24 +5 each, league wins
-give nothing, so 24 badges = TR 160), the level cap it sets, and world
+The world panel sets the player TR: a number field and a 0–200 slider (type
+any larger whole TR; TR has no upper limit). Badges (0–24) are presets that
+set the player TR on the rescaled formula (badges 1–8 give +10 each, badges
+9–24 +5 each, league wins give nothing, so 24 badges = TR 160). A typed TR
+shows the badge count it matches, "between N and N+1 badges" or "beyond 24
+badges". The panel shows the level cap the player TR sets, and world
 scaling: the wild level curve (0, 6) (40, 24) (80, 40) (120, 58) (160, 78)
 and the regular trainer level curve (0, 9) (40, 27) (80, 44) (120, 62)
 (160, 82), each with its gap to the level cap, and world progress (equal to
@@ -113,13 +116,32 @@ progress, their start TR → peak TR, archetype,
 team level, team size, the gap between team level and the level cap, and how
 many roster slots are filled. The trainer panel edits start TR, archetype
 and peak TR, shows the trainer's TR, team level and each roster slot's stage
-and level at world progress 0 / 40 / 80 / 120 / 160, the team at the current
+and level at world progress 0 / 40 / 80 / 120 / 160, the trainer's
+**milestones**, a chart of their team level against the level cap across
+player TR 0–200 (the current player TR and the milestones marked; hover or
+focus it and use the arrow keys to read values), the team at the current
 TR in battle order (a stepped-down member shows its authored stage, e.g.
 "Onix → Steelix at Lv 35"), and a roster editor: reorder roster slots, edit
 species, offset, moves and item, and add or remove roster slots. Each roster
 slot shows its line with evolution levels and warns when the species is not a
 final stage or has no evolution data in the catalog. **Edit settings as JSON** covers ability and
 nature too.
+
+**Milestones** list every player TR (world progress) where the trainer's
+team changes, scanning each whole world progress from 0 to the later of the
+archetype growth ceiling and the level cap ceiling (TR 160): the starting
+team, a roster slot joining (team size steps up), a member's stage changing
+along its evolution line, the team level moving strictly above the level cap
+or strictly below it again (equal keeps the side, so rounding cannot flicker),
+and peak TR reached. The player's current TR is marked in the list. Brock
+reads "0: Onix, Geodude · 19: 3rd slot (Aerodactyl) joins · 38: Geodude →
+Graveler · 51: 4th slot (Kabuto) joins · 68: Onix → Steelix · 87: Graveler →
+Golem · 95: Kabuto → Kabutops · 108: 5th slot (Omastar) joins · 159: peak TR
+95".
+
+Exports and the saved browser state keep version 8 and store the point as
+`{ "playerTR": n }`. Earlier version 8 files with `{ "badges": n }` still
+import and set the matching player TR.
 
 **Tate & Liza** are one entry (role Gym Leader duo, Hoenn) with one start TR,
 archetype, peak TR and six-slot roster (Solrock and Lunatone as the signature
