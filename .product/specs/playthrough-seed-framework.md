@@ -79,7 +79,8 @@ and ROSTER version 4 for one competition per (edition, venue). IDs 3
 (VISITOR_POLICY) and 4 (LORE_FILTER) are retired and never reused. Reserve
 TRAINER_GROWTH domain ID 2 with GROWTH_ARC decision ID 1, decision version 2
 (separate from the pinned growth-policy version), independently of the circuit
-decisions. This does not require support for unshipped old algorithms.
+decisions. Reserve TRAINER_ROSTER domain ID 3 with FILLER_JITTER decision ID 1,
+rules version 1. This does not require support for unshipped old algorithms.
 
 Entity identity comes from stable authored content IDs, not pointers, table
 positions, localized text, generated map numbering, or the order in which
@@ -277,6 +278,31 @@ consumer changes neither root derivation nor any circuit key. Arcs can
 legitimately change which trainers fit a league role window under the same raw
 circuit draws.
 
+### Trainer roster consumer
+
+Each roster filler gets one immutable jitter per canonical trainer per save,
+added to its authored base score when the
+[progression spec](trainer-world-progression.md#filler-composition) ranks
+fillers:
+
+| Key field | Value |
+| --- | --- |
+| `domainId` | TRAINER_ROSTER = 3 |
+| `decisionId` | FILLER_JITTER = 1 |
+| `decisionVersion` | 1 |
+| `entityLo`, `entityHi` | Canonical `characterId` (u32), stable `fillerId` (u32) |
+| `occurrenceId`, `drawId` | 0, 0 |
+
+```text
+jitter = Uniform(JITTER + 1, fillerJitterKey)
+```
+
+This is a one-time entity choice, derived lazily and never saved. `JITTER`
+belongs to the pinned growth-policy version, not the key. The key contains no
+badge count, edition, venue, flag, trade, or party, so gameplay influence acts
+only through the progression spec's modifiers, and adding fillers or trainers
+leaves existing jitters, GROWTH_ARC arcs, and circuit keys unchanged.
+
 ### Circuit as the first consumer
 
 The circuit uses domain 1 and three independently keyed decisions. `editionId`
@@ -368,6 +394,9 @@ Required implementation evidence:
   Gyms, lazy repeated derivation is stable, new trainer keys do not alter
   existing arcs or any raw circuit key, and unsupported policy or corrupt
   references cannot reroll.
+- Pin FILLER_JITTER key vectors for both root words, `characterId` and
+  `fillerId` bounds, and `Uniform(31)` boundaries and rejection; verify added
+  fillers or trainers leave existing jitters unchanged.
 - For the circuit, pin all six orders and full POOL_KIND/ROSTER keys including
   both entity words, editions 1/2, venues 1–3, slots 0–4, and boundary values.
   Test category boundaries 84/85, no POOL_KIND call at Masters, with an empty

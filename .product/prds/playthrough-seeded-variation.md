@@ -100,6 +100,9 @@ for the whole save. [Trainer world progression](trainer-world-progression.md)
 and its [specification](../specs/trainer-world-progression.md) own arcs,
 standing, and levels.
 
+Which supporting Pokémon a trainer brings also varies per save, through a
+stable per-trainer, per-Pokémon draw owned by the same progression docs.
+
 ### Circuit fields
 
 Each circuit edition visits the three leagues in a seeded order, and each

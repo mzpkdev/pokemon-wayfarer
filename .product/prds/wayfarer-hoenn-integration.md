@@ -7,7 +7,7 @@ Hoenn admission and the implemented [League level resolver](../../game/src/train
 uses saved player-entry TR. League levels are no longer static. Proposed
 [trainer world progression](trainer-world-progression.md) changes explicitly
 enrolled initial singles Gyms to world-cap standing, seeded growth arcs, and
-authored stages. The [seeded circuit](../specs/seeded-league-circuit.md)
+authored rosters. The [seeded circuit](../specs/seeded-league-circuit.md)
 replaces fixed Hoenn position and participants with a five-trainer field
 selected and frozen at that venue's entry; a loss retries the same field. These
 successors are
@@ -228,7 +228,7 @@ not keep a separate healing history for every region.
   The proposed successor freezes the current competition's five opponents,
   teams, and levels at entry from the world cap and each trainer's standing.
   Reload, reconstruction, and retries after a loss preserve that field.
-  Its authored stage changes do not require automatic evolution or an immutable
+  Its authored rosters evolve only along authored lines and need no immutable
   prefix of one Emerald roster.
 - Battle Frontier, Contests, Secret Bases, Match Call, television events,
   multiplayer features, event islands, and other optional Emerald systems are

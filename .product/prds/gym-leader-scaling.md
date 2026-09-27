@@ -26,11 +26,12 @@ and the gap never widens as the journey goes on. A few strong leaders in each
 region (Giovanni, Sabrina, Clair, Morty, Norman, Winona, and Juan) sit closer
 to the cap, so in some saves one of them can headline a championship.
 
-Teams grow in hand-authored stages as the world earns badges: two Pokémon at
-the start, three by around three badges, four by around six, and five or six
-later. Each stage is a complete reviewed team with a recognizable ace.
-Evolutions and new teammates appear only where authored; a team never shrinks
-and its weakest member never gets weaker. Original FRLG, Emerald, and HNS
+Each leader has a hand-written roster of aces and fillers, and brings more of
+it as their own strength grows: two Pokémon at the start, then more as the
+world earns badges, up to a full six. A leader on a fast arc grows their team
+sooner. The recognizable ace always comes last, and fillers vary per save.
+[Trainer world progression](trainer-world-progression.md#true-potential-aces-and-fillers)
+owns the roster rules. A team never shrinks. Original FRLG, Emerald, and HNS
 parties are references, not required opening teams.
 
 The team is set when the battle starts and kept for the whole fight. Retrying
@@ -53,11 +54,11 @@ own policies unless explicitly added.
 
 ## Teams and construction
 
-Each stage supplies exact species, moves, items, abilities, stats, ace, and
-battle order, reviewed for its stage rather than inheriting an endgame moveset.
+Rosters supply exact species, evolution paths, moves, items, abilities, and
+aces, reviewed for every team size rather than inheriting an endgame moveset.
 Moves, items, and abilities stay attached to the right Pokémon when a team is
 reordered. Rewards, prize money, badge scripts, and AI are preserved unless a
-stage deliberately changes them. Trainer-species randomization keeps its
+roster deliberately changes them. Trainer-species randomization keeps its
 existing path; other randomizer and challenge options keep their precedence.
 
 ## Boundaries

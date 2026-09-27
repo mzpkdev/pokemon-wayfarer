@@ -3,7 +3,7 @@
 Implemented: No. The current ROM keeps its existing Gym and League scaling
 until this design is adopted; the balance explorer is provisional tooling.
 Design status: "Living rivals" is the accepted direction. Per-trainer strength,
-growth arcs, team stages, and hint content are provisional content under review.
+growth arcs, rosters, and hint content are provisional content under review.
 
 ## Intent
 
@@ -59,16 +59,33 @@ Players discover arcs in the world. Gym dialogue, gossip from townsfolk, and
 league lineup previews carry lines such as "Clair has been training nonstop."
 No menu shows a trainer's arc or numbers.
 
-### Teams grow with the journey
+### True potential: aces and fillers
 
-Teams change in authored stages as the world earns badges. An early Gym Leader
-fields two Pokémon, three by around three badges, four by around six, and a
-full team later on. Stages are written by hand: an opening Pokémon may be
-replaced by its evolution or by a different teammate, but nothing evolves or
-joins automatically. A team never shrinks and its weakest member never gets
-weaker as the world advances. Only in the post-game, once levels reach their
-ceiling, can a rival whose form is fading drop a level or two between editions.
-League appearances always use the trainer's full competitive team.
+Every trainer has a true potential: a hand-written roster of one to three
+signature aces plus a wider pool of supporting Pokémon, the fillers. How much of
+it you face grows with the trainer's own strength. A leader met early brings two
+Pokémon, and a full team of six appears once they are strong enough. Because
+strength follows each trainer's arc, a fast riser fields a bigger team sooner.
+League trainers follow the same rule, so a mid-game contender may bring four or
+five while the headliner brings six. A team never shrinks as the world advances.
+Only in the post-game, once levels reach their ceiling, can a rival whose form
+is fading drop a level or two between editions.
+
+Aces come first: the top ace is always there, and a trainer with more aces
+brings them out as the team grows. The ace you face last is the one the
+trainer is known for. Every Pokémon evolves along a hand-written path, so
+Brock's Onix can become Steelix once it is strong enough.
+
+Fillers vary from save to save. Each trainer has favourites, but which of
+them make the team differs between playthroughs, and what you do in the world
+can nudge it. For example, telling a trainer where to find a Pokémon they have
+been looking for could bring it onto their team. Once a filler has joined, it
+stays as the team grows; only something you do can swap it out.
+
+In future content, trainers may accept gifts that help a Pokémon evolve or offer
+trades: your traded Pokémon keeps its name and identity, joins their team, and
+grows with them. [Trainer roster influence](trainer-roster-influence.md) owns
+these hooks. A trainer never trades away an ace.
 
 FRLG, Emerald, and HNS parties are references for recognizable content and
 strength, not mandatory opening teams. Brock can open with a small Geodude and
@@ -82,10 +99,11 @@ anything new gives the same team at the same levels; earning a badge or first
 league clear elsewhere first means the leader has grown too. The badge is
 awarded after the battle, so it never strengthens the leader mid-fight.
 
-A league competition freezes its five trainers and their strength when the
-player enters. Losing lets the player retry the same field as often as they
-like; badges earned in between make the retry easier. The
-[Seeded Trainer Circuit](seeded-trainer-circuit.md) owns league fields.
+A league competition freezes its five trainers, their teams, and their strength
+when the player enters; nothing done between attempts changes them. Losing lets
+the player retry the same field as often as they like; badges earned in between
+make the retry easier. The [Seeded Trainer Circuit](seeded-trainer-circuit.md)
+owns league fields.
 
 ## Boundaries
 
@@ -113,12 +131,13 @@ moves, items, AI, and combat difficulty belong to playtesting.
 
 ## Open questions
 
-- Each trainer's standing, allowed arcs, arc shapes, team stages, competitive
-  team, and hint lines are content under review.
+- Each trainer's standing, allowed arcs, arc shapes, roster (aces, supporting
+  pool, and their favourites), and hint lines are content under review.
 
 ## References
 
 - [Trainer world progression specification](../specs/trainer-world-progression.md)
 - [Gym Leader scaling](gym-leader-scaling.md)
+- [Trainer roster influence](trainer-roster-influence.md)
 - [Seeded Trainer Circuit](seeded-trainer-circuit.md)
 - [Player progression](../specs/trainer-rating-party-progression.md)

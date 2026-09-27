@@ -11,7 +11,7 @@ teams. Blue's growth there applies only to his league appearances; it does not
 restore Blue as the Viridian badge owner or change Giovanni's local
 prerequisites. Blue's rival, Dojo, and Gym-ID battles keep their own policies;
 canonical identity does not enroll them. Original FRLG/HNS parties remain
-provenance references for authored stages, not mandatory opening teams.
+provenance references for authored rosters, not mandatory opening teams.
 
 ## Scope
 
@@ -136,12 +136,13 @@ exterior introduction, Blue Gym role, and related acceptance checks. Blue's
 current Dojo unlock follows committed Indigo victory independently of Giovanni.
 
 The proposed [Seeded Trainer Circuit](../prds/seeded-trainer-circuit.md) selects
-League participants/profiles rather than guaranteeing Blue as Indigo finalist.
-Its [runtime contract](seeded-league-circuit.md) proposes Dojo access after the
-first lifetime scheduled venue clear. If adopted, that circuit contract takes
-precedence over the Indigo-only unlock above. The delivered coastal port's
-historical Viridian behavior is already superseded by the implemented finale;
-unrelated local/rival story interactions retain their separately owned policies.
+League participants and roster teams rather than guaranteeing Blue as Indigo
+finalist. Its [runtime contract](seeded-league-circuit.md) proposes Dojo access
+after the first lifetime scheduled venue clear. If adopted, that circuit
+contract takes precedence over the Indigo-only unlock above. The delivered
+coastal port's historical Viridian behavior is already superseded by the
+implemented finale; unrelated local/rival story interactions retain their
+separately owned policies.
 
 ### Encounters, services, and release budget
 

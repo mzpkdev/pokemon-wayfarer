@@ -35,7 +35,7 @@ ordinary transformation. The dedicated six-slot Gym feature is disabled by
 use player TR when enabled. Disabled paths retain existing authored behavior.
 Giovanni's initial Viridian battle separately uses a bespoke five-slot player-TR
 projection in [party construction](../../game/src/battle_main.c). Proposed
-world-cap NPC strength and explicit party stages belong to the world-progression
+world-cap NPC strength and authored rosters belong to the world-progression
 and Gym specifications. `LEAGUE` currently routes the fifteen enrolled circuit
 runtime IDs to the separate [League scaling specification](league-scaling.md),
 including its run-context validation and authored fallback when scaling is

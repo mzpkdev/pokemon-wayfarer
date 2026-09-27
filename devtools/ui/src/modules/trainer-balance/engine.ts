@@ -1,14 +1,22 @@
 import type {
+  AceForm,
   ArcId,
   ArcTuple,
   Experiment,
-  PartyMember,
-  ReferenceMember,
+  FillerScore,
+  LineStage,
+  Modifier,
   ResolvedTrainer,
   Role,
   RoleFeasibility,
   RoleWindows,
-  TeamStage,
+  Roster,
+  RosterAce,
+  RosterContext,
+  RosterFiller,
+  RosterGap,
+  SizeStep,
+  TeamMember,
   TrainerRecord,
   TrainerSettings,
   VenueFeasibility,
@@ -43,21 +51,22 @@ export const VENUES: readonly { venue: VenueId; pool: "home" | "open" }[] = [
   { venue: "Hoenn", pool: "home" },
   { venue: "Sevii Masters", pool: "open" },
 ]
-/** Gym stage schedule: minimum global badges -> party size. */
-export const GYM_STAGE_SCHEDULE: readonly [number, number][] = [
-  [0, 2],
-  [3, 3],
-  [6, 4],
-  [10, 5],
-  [16, 6],
+/** sizeFor(strengthLevel) defaults: Lv <20 -> 2, >=20 -> 3, >=30 -> 4, >=45 -> 5, >=60 -> 6. */
+export const DEFAULT_SIZE_TABLE: readonly SizeStep[] = [
+  { minLevel: 1, size: 2 },
+  { minLevel: 20, size: 3 },
+  { minLevel: 30, size: 4 },
+  { minLevel: 45, size: 5 },
+  { minLevel: 60, size: 6 },
 ]
-const GYM_STAGE_LABELS = [
-  "Opening team",
-  "Developing team",
-  "Rising team",
-  "Established team",
-  "Competitive team",
-]
+/** Filler jitter is uniform over 0..JITTER. */
+export const DEFAULT_JITTER = 30
+export const MAX_JITTER = 100
+export const MAX_ACES = 3
+export const MAX_FILLERS = 20
+export const MAX_SEED = 0xffffffff
+export const DEFAULT_CONTEXT: RosterContext = { seed: 1, flags: [] }
+export const FILLER_OFFSET = { min: -6, max: 0, default: -2 } as const
 
 // The player's soft-cap curve. The world cap reuses it unchanged.
 const PLAYER_ANCHORS: LevelAnchor[] = [
@@ -179,104 +188,13 @@ export const sortArcs = (arcs: ArcId[]): ArcId[] =>
 const defaultArc = (allowed: ArcId[]): ArcId =>
   allowed.includes("steady") ? "steady" : (allowed[0] ?? "steady")
 
-type SourcedMember = ReferenceMember & { sourceAce: number }
-const sourced = (party: ReferenceMember[]): SourcedMember[] => {
-  const ace = Math.max(...party.map((member) => member.level))
-  return party.map((member) => ({ ...member, sourceAce: ace }))
-}
-const toParty = (members: SourcedMember[]): PartyMember[] =>
-  members.map((member) => ({
-    species: member.species,
-    levelOffset: clamp(member.level - member.sourceAce, -30, 0),
-  }))
-
-/**
- * A mid-journey Gym party of `size`: the strongest reference members first,
- * then competitive members whose species count is not already represented.
- * Offsets stay relative to each member's own source ace.
- */
-const mixedParty = (trainer: TrainerRecord, size: number): PartyMember[] => {
-  const reference = sourced(trainer.referenceParty)
-  const keep = new Set(
-    reference
-      .map((member, index) => ({ member, index }))
-      .toSorted((a, b) => b.member.level - a.member.level || a.index - b.index)
-      .slice(0, size)
-      .map(({ index }) => index),
-  )
-  const result = reference.filter((_, index) => keep.has(index))
-  const seen = new Map<string, number>()
-  for (const member of sourced(trainer.competitiveParty)) {
-    const count = (seen.get(member.species) ?? 0) + 1
-    seen.set(member.species, count)
-    if (
-      result.length < size &&
-      result.filter((entry) => entry.species === member.species).length < count
-    )
-      result.push(member)
-  }
-  return toParty(result)
-}
-
-/**
- * Party size never drops by schedule; raising every offset to at least the
- * previous stage's weakest offset keeps the weakest member's level from
- * dropping at a stage change whenever the ace level does not drop.
- */
-const preserveStageFloor = (stages: TeamStage[]): TeamStage[] => {
-  for (let index = 1; index < stages.length; index += 1) {
-    const previous = stages[index - 1]
-    const current = stages[index]
-    if (!previous || !current) throw new Error("Team stages must not contain missing entries")
-    const floor = Math.min(...previous.party.map((member) => member.levelOffset))
-    current.party = current.party.map((member) => ({
-      ...member,
-      levelOffset: Math.max(member.levelOffset, floor),
-    }))
-  }
-  return stages
-}
-
-export const defaultStages = (trainer: TrainerRecord): TeamStage[] => {
-  const competitive = toParty(sourced(trainer.competitiveParty))
-  const stages: TeamStage[] = []
-  if (trainer.gymEligible) {
-    GYM_STAGE_SCHEDULE.forEach(([minBadges, target], index) => {
-      const size = Math.min(target, competitive.length)
-      if (stages.length && size <= (stages.at(-1)?.party.length ?? 0)) return
-      const party =
-        index === 0 && trainer.earlyParty.length
-          ? trainer.earlyParty.map((species, slot, list) => ({
-              species,
-              levelOffset: slot === list.length - 1 ? 0 : -2,
-            }))
-          : size === competitive.length
-            ? competitive
-            : mixedParty(trainer, size)
-      const label =
-        size === competitive.length ? "Competitive team" : (GYM_STAGE_LABELS[index] ?? "Team")
-      stages.push({ minBadges, label: `${label} (${party.length})`, party })
-    })
-  } else {
-    const reference = toParty(sourced(trainer.referenceParty))
-    stages.push({ minBadges: 0, label: `Reference team (${reference.length})`, party: reference })
-    if (JSON.stringify(reference) !== JSON.stringify(competitive))
-      stages.push({
-        minBadges: 8,
-        label: `Competitive team (${competitive.length})`,
-        party: competitive,
-      })
-  }
-  return preserveStageFloor(stages)
-}
-
 export const defaultTrainerSettings = (trainer: TrainerRecord): TrainerSettings => {
   const allowedArcs = sortArcs(trainer.allowedArcs)
   return {
     bias: trainer.bias,
     allowedArcs,
     arc: defaultArc(allowedArcs),
-    stages: defaultStages(trainer),
+    roster: structuredClone(trainer.roster),
   }
 }
 
@@ -285,37 +203,177 @@ export const createExperiment = (catalog: TrainerRecord[]): Experiment => {
   for (const trainer of catalog) trainers[trainer.id] = defaultTrainerSettings(trainer)
   return validateExperiment(
     {
-      version: 3,
+      version: 4,
       arcs: structuredClone(DEFAULT_ARCS),
       roleWindows: { ...DEFAULT_ROLE_WINDOWS },
       headroom: DEFAULT_HEADROOM,
+      sizeTable: structuredClone(DEFAULT_SIZE_TABLE),
+      jitter: DEFAULT_JITTER,
+      modifiers: [],
       trainers,
     },
     catalog,
   )
 }
 
-const stageAt = (settings: TrainerSettings, badges: number) => {
-  const index = settings.stages.findLastIndex((entry) => entry.minBadges <= badges)
-  const stage = settings.stages[index]
-  if (!stage) throw new Error("Missing initial team stage")
-  return { stage, index }
+/** sizeFor(strength level): the last row whose minLevel is at most the strength level. */
+export const sizeFor = (table: readonly SizeStep[], strengthLevel: number): number =>
+  table.findLast((step) => step.minLevel <= strengthLevel)?.size ?? table[0]?.size ?? 1
+
+/**
+ * The maximum number of aces at a size: 1–3 members -> 1, 4–5 -> 2, 6 -> 3.
+ * Unused ace slots go to fillers, so a single-ace roster still reaches 6.
+ */
+export const aceAllowance = (size: number): number => (size >= 6 ? 3 : size >= 4 ? 2 : 1)
+
+/**
+ * Explorer jitter: FNV-1a over seed, trainer and filler, uniform over
+ * 0..max. The ROM draws Uniform(JITTER + 1) from the seed framework key
+ * (TRAINER_ROSTER / FILLER_JITTER, entityLo = characterId, entityHi = fillerId),
+ * so explorer values are stable per seed but do not match ROM values.
+ */
+export const fillerJitter = (
+  seed: number,
+  trainerId: string,
+  fillerId: string,
+  max: number,
+): number => {
+  let hash = 0x811c9dc5
+  for (const char of `${seed}|${trainerId}|${fillerId}`) {
+    hash ^= char.codePointAt(0) ?? 0
+    hash = Math.imul(hash, 0x01000193) >>> 0
+  }
+  return hash % (max + 1)
 }
 
-const aceAt = (settings: TrainerSettings, experiment: Experiment, arc: ArcId, point: WorldPoint) =>
-  levelBase(point, experiment.headroom) +
-  standingAt(settings, experiment, arc, progressIndex(point))
+/** The species a line has reached at `level`. */
+export const formAt = <T extends LineStage>(line: readonly T[], level: number): T => {
+  const form = line.findLast((stage) => stage.level <= level) ?? line[0]
+  if (!form) throw new Error("An evolution line needs at least one species")
+  return form
+}
 
-const minLevelAt = (
+export const modifierDelta = (
+  modifiers: readonly Modifier[],
+  flags: readonly string[],
+  trainerId: string,
+  fillerId: string,
+): number =>
+  modifiers
+    .filter((m) => m.trainer === trainerId && m.filler === fillerId && flags.includes(m.flag))
+    .reduce((sum, m) => sum + m.delta, 0)
+
+const byId = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0)
+
+/**
+ * Scores every filler (baseScore + jitter + active modifiers) and ranks the
+ * eligible ones by score, then fillerId. Scores never depend on size, so the
+ * top-K is contained in the top-(K + 1).
+ */
+export const scoreFillers = (
+  trainerId: string,
+  roster: Roster,
+  experiment: Pick<Experiment, "jitter" | "modifiers">,
+  context: RosterContext,
+): FillerScore[] => {
+  const scored = roster.fillers.map((filler): FillerScore => {
+    const jitter = fillerJitter(context.seed, trainerId, filler.id, experiment.jitter)
+    const modifier = modifierDelta(experiment.modifiers, context.flags, trainerId, filler.id)
+    return {
+      filler,
+      eligible: filler.requiresFlag === null || context.flags.includes(filler.requiresFlag),
+      jitter,
+      modifier,
+      score: filler.baseScore + jitter + modifier,
+      rank: null,
+      inTeam: false,
+    }
+  })
+  scored
+    .filter((entry) => entry.eligible)
+    .toSorted((a, b) => b.score - a.score || byId(a.filler.id, b.filler.id))
+    .forEach((entry, index) => {
+      entry.rank = index + 1
+    })
+  return scored
+}
+
+/** Members at size 6 (allowance 3): aces used plus unlocked fillers, at most 6. */
+export const rosterReach = (roster: Roster, flags: readonly string[]): number => {
+  const aces = Math.min(aceAllowance(6), roster.aces.length)
+  const fillers = roster.fillers.filter(
+    (filler) => filler.requiresFlag === null || flags.includes(filler.requiresFlag),
+  ).length
+  return aces + Math.min(fillers, 6 - aces)
+}
+
+const aceMoves = (form: AceForm) => (form.moves.length ? form.moves.join(" · ") : "Unauthored")
+const fillerMoves = (filler: RosterFiller) =>
+  filler.signatureMove ? `LEVEL_UP + ${filler.signatureMove}` : "LEVEL_UP"
+
+/**
+ * Composes the team at a strength level: aces first in priority order, up to
+ * min(allowance, aces), then the top fillers by score for every other slot. Battle order is fillers by
+ * ascending score, then aces in reverse priority (the top ace last).
+ */
+export const composeTeam = (
+  trainerId: string,
+  roster: Roster,
+  experiment: Pick<Experiment, "jitter" | "modifiers" | "sizeTable">,
+  strengthLevel: number,
+  context: RosterContext,
+) => {
+  const size = sizeFor(experiment.sizeTable, strengthLevel)
+  const allowance = aceAllowance(size)
+  const aces: RosterAce[] = roster.aces.slice(0, Math.min(allowance, size))
+  const fillerScores = scoreFillers(trainerId, roster, experiment, context)
+  const picked = fillerScores
+    .filter((entry) => entry.rank !== null && entry.rank <= size - aces.length)
+    .toSorted((a, b) => (b.rank ?? 0) - (a.rank ?? 0))
+  for (const entry of picked) entry.inTeam = true
+  const party: TeamMember[] = [
+    ...picked.map(({ filler, score }): TeamMember => {
+      const level = clamp(strengthLevel + filler.levelOffset, 1, 100)
+      return {
+        kind: "filler",
+        id: filler.id,
+        species: formAt(filler.line, level).species,
+        level,
+        levelOffset: filler.levelOffset,
+        score,
+        moves: fillerMoves(filler),
+      }
+    }),
+    ...aces
+      .map((ace, index): TeamMember => {
+        const form = formAt(ace.line, strengthLevel)
+        return {
+          kind: "ace",
+          id: ace.id,
+          species: form.species,
+          level: strengthLevel,
+          levelOffset: 0,
+          priority: index + 1,
+          moves: aceMoves(form),
+        }
+      })
+      .toReversed(),
+  ]
+  return { size, allowance, acesUsed: aces.length, fillerScores, party }
+}
+
+const strengthAt = (
   settings: TrainerSettings,
   experiment: Experiment,
   arc: ArcId,
   point: WorldPoint,
-) => {
-  const ace = clamp(aceAt(settings, experiment, arc, point), 1, 100)
-  const { stage } = stageAt(settings, point.badges)
-  return Math.min(...stage.party.map((member) => clamp(ace + member.levelOffset, 1, 100)))
-}
+) =>
+  clamp(
+    levelBase(point, experiment.headroom) +
+      standingAt(settings, experiment, arc, progressIndex(point)),
+    1,
+    100,
+  )
 
 /** The previous step on the progress index: one badge back, or one edition back. */
 const previousPoint = (point: NormalPoint): NormalPoint | null =>
@@ -330,6 +388,7 @@ export const resolveTrainer = (
   experiment: Experiment,
   point: WorldPoint,
   arcOverride?: ArcId,
+  context: RosterContext = DEFAULT_CONTEXT,
 ): ResolvedTrainer => {
   const world = normalizePoint(point)
   const settings = experiment.trainers[trainer.id]
@@ -339,62 +398,67 @@ export const resolveTrainer = (
   const standing = standingAt(settings, experiment, arc, progress)
   const cap = worldCap(world)
   const base = levelBase(world, experiment.headroom)
-  const rawAce = base + standing
-  const aceLevel = clamp(rawAce, 1, 100)
-  const { stage, index } = stageAt(settings, world.badges)
+  const rawStrength = base + standing
+  const strengthLevel = clamp(rawStrength, 1, 100)
+  const team = composeTeam(trainer.id, settings.roster, experiment, strengthLevel, context)
   const warnings: string[] = []
-  if (rawAce > 100) warnings.push(`Ace level ${rawAce} clamped to 100.`)
-  if (rawAce < 1) warnings.push(`Ace level ${rawAce} clamped to 1.`)
-  const party = stage.party.map((member) => {
-    const rawLevel = aceLevel + member.levelOffset
-    if (rawLevel < 1 || rawLevel > 100)
-      warnings.push(`${member.species} level clipped to the 1–100 range.`)
-    return { ...member, level: clamp(rawLevel, 1, 100) }
-  })
+  if (rawStrength > 100) warnings.push(`Strength level ${rawStrength} clamped to 100.`)
+  if (rawStrength < 1) warnings.push(`Strength level ${rawStrength} clamped to 1.`)
+  for (const member of team.party)
+    if (member.kind === "filler" && strengthLevel + member.levelOffset < 1)
+      warnings.push(`${member.species} level clipped to 1.`)
+  if (team.party.length < team.size)
+    warnings.push(
+      `The roster fills ${team.party.length} of ${team.size} slots: add fillers or unlock flagged ones.`,
+    )
   const before = previousPoint(world)
-  if (
-    before &&
-    minLevelAt(settings, experiment, arc, before) > Math.min(...party.map((m) => m.level))
-  )
-    warnings.push("The weakest member's level dropped since the previous progress step.")
+  if (before && strengthAt(settings, experiment, arc, before) > strengthLevel)
+    warnings.push("The strength level dropped since the previous progress step.")
   return {
     trainer,
     arc,
     progress,
     standing,
-    aceLevel,
+    strengthLevel,
     worldCap: cap,
     levelBase: base,
-    gap: aceLevel - cap,
+    gap: strengthLevel - cap,
     role: classifyRole(standing, experiment.roleWindows),
-    stage: stage.label,
-    stageIndex: index,
-    party,
+    ...team,
     warnings,
   }
 }
 
-export const hasCompetitiveProfile = (trainer: TrainerRecord): boolean =>
-  trainer.competitiveParty.length === 6
+/** Rosters that cannot reach six members at max size under the given flags. */
+export const rosterGaps = (
+  catalog: TrainerRecord[],
+  experiment: Experiment,
+  flags: readonly string[] = [],
+): RosterGap[] =>
+  catalog.flatMap((trainer) => {
+    const roster = experiment.trainers[trainer.id]?.roster
+    if (!roster) throw new Error(`Missing trainer settings: ${trainer.id}`)
+    const reach = rosterReach(roster, flags)
+    return reach < 6 ? [{ id: trainer.id, name: trainer.name, reach }] : []
+  })
 
 /**
  * Per venue and role at progress index p: candidates in-window under every
  * allowed arc (guaranteed), under some allowed arc (possible), and under the
- * currently selected arc. Standing depends on p only, not on league clears
- * or the level headroom.
+ * currently selected arc. Every roster is a candidate (sizes follow the ace
+ * level); rosters that cannot reach six at max size are listed as gaps.
+ * Standing depends on p only, not on league clears or the level headroom.
  */
 export const venueFeasibility = (
   catalog: TrainerRecord[],
   experiment: Experiment,
   progress: number,
-  options: { includeIncomplete?: boolean } = {},
-): VenueFeasibility[] =>
-  VENUES.map(({ venue, pool }) => {
-    const members = catalog.filter(
+  flags: readonly string[] = [],
+): VenueFeasibility[] => {
+  const gaps = rosterGaps(catalog, experiment, flags)
+  return VENUES.map(({ venue, pool }) => {
+    const candidates = catalog.filter(
       (trainer) => pool === "open" || trainer.homeLeagues.includes(venue),
-    )
-    const candidates = members.filter(
-      (trainer) => options.includeIncomplete || hasCompetitiveProfile(trainer),
     )
     const roles = candidates.map((trainer) => {
       const settings = experiment.trainers[trainer.id]
@@ -407,7 +471,7 @@ export const venueFeasibility = (
       venue,
       pool,
       candidates: candidates.length,
-      excluded: members.filter((trainer) => !candidates.includes(trainer)).map((t) => t.name),
+      gaps: gaps.filter((gap) => candidates.some((trainer) => trainer.id === gap.id)),
       roles: ROLES.map((role): RoleFeasibility => {
         const guaranteed = roles.filter((entry) => entry.all.every((r) => r === role)).length
         return {
@@ -421,6 +485,7 @@ export const venueFeasibility = (
       }),
     }
   })
+}
 
 export type GymCapSummary = {
   count: number
@@ -433,7 +498,7 @@ export type GymCapSummary = {
   /**
    * Blue is "ahead" when every allowed arc puts his ace above levelBase. Below
    * the ceiling (worldCap <= 100 - headroom) levelBase is the cap, so this is
-   * the ace − cap > 0 check; at the ceiling it is ace > levelBase.
+   * the strength − cap > 0 check; at the ceiling it is strength > levelBase.
    */
   blue: {
     gaps: { arc: ArcId; gap: number; baseGap: number }[]
@@ -460,7 +525,7 @@ export const gymCapSummary = (
   const blueGaps = blueTrainer
     ? (experiment.trainers.blue?.allowedArcs ?? []).map((arc) => {
         const resolved = resolveTrainer(blueTrainer, experiment, point, arc)
-        return { arc, gap: resolved.gap, baseGap: resolved.aceLevel - resolved.levelBase }
+        return { arc, gap: resolved.gap, baseGap: resolved.strengthLevel - resolved.levelBase }
       })
     : []
   return {
@@ -512,17 +577,155 @@ const arcId = (value: unknown, path: string): ArcId => {
   return value as ArcId
 }
 
+const nullable = (value: unknown, max: number, path: string): string | null =>
+  value === null ? null : label(value, max, path)
+const flagName = (value: unknown, path: string): string => {
+  const flag = label(value, 60, path)
+  if (flag.trim() !== flag) fail(`${path} must not start or end with spaces`)
+  return flag
+}
+const ID_PATTERN = /^[a-z0-9-]{1,40}$/
+const memberId = (value: unknown, path: string): string => {
+  if (typeof value !== "string" || !ID_PATTERN.test(value))
+    fail(`${path} must be a lowercase slug (a-z, 0-9, -) of at most 40 characters`)
+  return value as string
+}
+const list = (value: unknown, min: number, max: number, path: string): unknown[] => {
+  if (!Array.isArray(value) || value.length < min || value.length > max)
+    fail(`${path} must list ${min}–${max} entries`)
+  return value as unknown[]
+}
+/** Evolution lines start at level 1, evolve at increasing levels and never repeat a species. */
+const line = <T extends LineStage>(
+  value: unknown,
+  path: string,
+  read: (stage: Record<string, unknown>, where: string, base: LineStage) => T,
+  keys: readonly string[],
+): T[] => {
+  const stages = list(value, 1, 6, `${path}.line`).map((entry, index) => {
+    const where = `${path}.line[${index}]`
+    const stage = object(entry, where)
+    exactKeys(stage, keys, where)
+    return read(stage, where, {
+      species: label(stage.species, 100, `${where}.species`),
+      level: integer(stage.level, 1, 100, `${where}.level`),
+    })
+  })
+  if (stages[0]?.level !== 1) fail(`${path}: the first species of a line starts at level 1`)
+  stages.forEach((stage, index) => {
+    const previous = stages[index - 1]
+    if (previous && stage.level <= previous.level)
+      fail(`${path}: evolve levels must increase along the line`)
+  })
+  if (new Set(stages.map((stage) => stage.species)).size !== stages.length)
+    fail(`${path}: a line must not repeat a species`)
+  return stages
+}
+const ACE_FORM_KEYS = ["species", "level", "moves", "item", "ability", "nature"] as const
+const FILLER_KEYS = [
+  "id",
+  "line",
+  "baseScore",
+  "levelOffset",
+  "moves",
+  "signatureMove",
+  "requiresFlag",
+] as const
+
+const roster = (value: unknown, path: string): Roster => {
+  const input = object(value, path)
+  exactKeys(input, ["prototype", "aces", "fillers"], path)
+  if (typeof input.prototype !== "boolean") fail(`${path}.prototype must be true or false`)
+  const aces = list(input.aces, 1, MAX_ACES, `${path}.aces`).map((entry, index): RosterAce => {
+    const where = `${path}.aces[${index}]`
+    const ace = object(entry, where)
+    exactKeys(ace, ["id", "line"], where)
+    return {
+      id: memberId(ace.id, `${where}.id`),
+      line: line(
+        ace.line,
+        where,
+        (stage, at, base): AceForm => ({
+          ...base,
+          moves: list(stage.moves, 0, 4, `${at}.moves`).map((move, slot) =>
+            label(move, 40, `${at}.moves[${slot}]`),
+          ),
+          item: nullable(stage.item, 60, `${at}.item`),
+          ability: nullable(stage.ability, 60, `${at}.ability`),
+          nature: nullable(stage.nature, 30, `${at}.nature`),
+        }),
+        ACE_FORM_KEYS,
+      ),
+    }
+  })
+  const fillers = list(input.fillers, 0, MAX_FILLERS, `${path}.fillers`).map(
+    (entry, index): RosterFiller => {
+      const where = `${path}.fillers[${index}]`
+      const filler = object(entry, where)
+      exactKeys(filler, FILLER_KEYS, where)
+      if (filler.moves !== "LEVEL_UP") fail(`${where}.moves must be "LEVEL_UP"`)
+      return {
+        id: memberId(filler.id, `${where}.id`),
+        line: line(filler.line, where, (_stage, _at, base) => base, ["species", "level"]),
+        baseScore: integer(filler.baseScore, 0, 100, `${where}.baseScore`),
+        levelOffset: integer(
+          filler.levelOffset,
+          FILLER_OFFSET.min,
+          FILLER_OFFSET.max,
+          `${where}.levelOffset`,
+        ),
+        moves: "LEVEL_UP",
+        signatureMove: nullable(filler.signatureMove, 40, `${where}.signatureMove`),
+        requiresFlag:
+          filler.requiresFlag === null
+            ? null
+            : flagName(filler.requiresFlag, `${where}.requiresFlag`),
+      }
+    },
+  )
+  const ids = [...aces, ...fillers].map((entry) => entry.id)
+  if (new Set(ids).size !== ids.length) fail(`${path}: ace and filler IDs must be unique`)
+  return { prototype: input.prototype as boolean, aces, fillers }
+}
+
+const sizeTable = (value: unknown): SizeStep[] => {
+  const steps = list(value, 1, 10, "sizeTable").map((entry, index): SizeStep => {
+    const step = object(entry, `sizeTable[${index}]`)
+    exactKeys(step, ["minLevel", "size"], `sizeTable[${index}]`)
+    return {
+      minLevel: integer(step.minLevel, 1, 100, `sizeTable[${index}].minLevel`),
+      size: integer(step.size, 1, 6, `sizeTable[${index}].size`),
+    }
+  })
+  if (steps[0]?.minLevel !== 1) fail("sizeTable must start at level 1")
+  steps.forEach((step, index) => {
+    const previous = steps[index - 1]
+    if (previous && step.minLevel <= previous.minLevel)
+      fail("sizeTable levels must increase uniquely")
+    if (previous && step.size < previous.size)
+      fail("sizeTable sizes must not decrease, so growth never removes a member")
+  })
+  return steps
+}
+
 export const V1_REJECTION =
-  "Version 1 experiments use the retired trainer-rating model and cannot be imported. Start from the version 3 defaults."
+  "Version 1 experiments use the retired trainer-rating model and cannot be imported. Start from the version 4 defaults."
 export const V2_REJECTION =
-  "Version 2 experiments predate post-game arcs (p = 0–48) and level headroom and cannot be imported. Start from the version 3 defaults."
+  "Version 2 experiments predate post-game arcs (p = 0–48) and level headroom and cannot be imported. Start from the version 4 defaults."
+export const V3_REJECTION =
+  "Version 3 experiments use badge-keyed team stages, which rosters of aces and fillers replace, and cannot be imported. Start from the version 4 defaults."
 
 export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Experiment => {
   const input = object(value, "root")
   if (input.version === 1) fail(V1_REJECTION)
   if (input.version === 2) fail(V2_REJECTION)
-  if (input.version !== 3) fail("version must be 3")
-  exactKeys(input, ["version", "arcs", "roleWindows", "headroom", "trainers"], "root")
+  if (input.version === 3) fail(V3_REJECTION)
+  if (input.version !== 4) fail("version must be 4")
+  exactKeys(
+    input,
+    ["version", "arcs", "roleWindows", "headroom", "sizeTable", "jitter", "modifiers", "trainers"],
+    "root",
+  )
 
   const inputArcs = object(input.arcs, "arcs")
   exactKeys(inputArcs, ARC_IDS, "arcs")
@@ -556,7 +759,7 @@ export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Ex
   const trainers: Experiment["trainers"] = Object.create(null)
   for (const id of ids) {
     const settings = object(inputTrainers[id], `trainers.${id}`)
-    exactKeys(settings, ["bias", "allowedArcs", "arc", "stages"], `trainers.${id}`)
+    exactKeys(settings, ["bias", "allowedArcs", "arc", "roster"], `trainers.${id}`)
     const bias = integer(settings.bias, -6, 6, `${id}.bias`)
     if (
       !Array.isArray(settings.allowedArcs) ||
@@ -571,41 +774,49 @@ export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Ex
     if (allowedArcs.length !== listed.length) fail(`${id}.allowedArcs must not repeat arcs`)
     const arc = arcId(settings.arc, `${id}.arc`)
     if (!allowedArcs.includes(arc)) fail(`${id}.arc must be one of its allowed arcs`)
-    if (!Array.isArray(settings.stages) || !settings.stages.length || settings.stages.length > 25)
-      fail(`${id}.stages must have 1–25 stages`)
-    const stages: TeamStage[] = Array.from(settings.stages as unknown[], (entry, index) => {
-      const stage = object(entry, `${id}.stages[${index}]`)
-      exactKeys(stage, ["minBadges", "label", "party"], `${id}.stages[${index}]`)
-      if (!Array.isArray(stage.party) || !stage.party.length || stage.party.length > 6)
-        fail(`${id}.stage party must have 1–6 members`)
-      const party: PartyMember[] = Array.from(stage.party as unknown[], (entry, slot) => {
-        const member = object(entry, `${id}.party[${slot}]`)
-        exactKeys(member, ["species", "levelOffset"], `${id}.party[${slot}]`)
-        return {
-          species: label(member.species, 100, `${id}.species`),
-          levelOffset: integer(member.levelOffset, -30, 0, `${id}.levelOffset`),
-        }
-      })
-      if (!party.some((member) => member.levelOffset === 0))
-        fail(`${id}.stage party needs an ace with levelOffset 0`)
-      return {
-        minBadges: integer(stage.minBadges, 0, 24, `${id}.minBadges`),
-        label: label(stage.label, 100, `${id}.label`),
-        party,
-      }
-    })
-    if (stages[0]?.minBadges !== 0) fail(`${id}.first stage must start at 0 badges`)
-    stages.forEach((stage, index) => {
-      const previous = stages[index - 1]
-      if (index && (!previous || stage.minBadges <= previous.minBadges))
-        fail(`${id}.stages badge thresholds must increase uniquely`)
-      if (previous && stage.party.length < previous.party.length)
-        fail(`${id}.stage party sizes must not decrease`)
-    })
-    trainers[id] = { bias, allowedArcs, arc, stages }
+    trainers[id] = { bias, allowedArcs, arc, roster: roster(settings.roster, `${id}.roster`) }
   }
-  return { version: 3, arcs, roleWindows, headroom, trainers }
+
+  const modifiers = list(input.modifiers, 0, 200, "modifiers").map((entry, index): Modifier => {
+    const where = `modifiers[${index}]`
+    const modifier = object(entry, where)
+    exactKeys(modifier, ["flag", "trainer", "filler", "delta"], where)
+    const trainer = label(modifier.trainer, 40, `${where}.trainer`)
+    const filler = label(modifier.filler, 40, `${where}.filler`)
+    if (!trainers[trainer]?.roster.fillers.some((f) => f.id === filler))
+      fail(`${where} must name a filler in that trainer's roster`)
+    return {
+      flag: flagName(modifier.flag, `${where}.flag`),
+      trainer,
+      filler,
+      delta: integer(modifier.delta, -100, 100, `${where}.delta`),
+    }
+  })
+
+  return {
+    version: 4,
+    arcs,
+    roleWindows,
+    headroom,
+    sizeTable: sizeTable(input.sizeTable),
+    jitter: integer(input.jitter, 0, MAX_JITTER, "jitter"),
+    modifiers,
+    trainers,
+  }
 }
+
+/** Every gameplay flag the experiment mentions: modifier flags and filler requirements. */
+export const knownFlags = (experiment: Experiment): string[] =>
+  [
+    ...new Set([
+      ...experiment.modifiers.map((modifier) => modifier.flag),
+      ...Object.values(experiment.trainers).flatMap((settings) =>
+        settings.roster.fillers.flatMap((filler) =>
+          filler.requiresFlag ? [filler.requiresFlag] : [],
+        ),
+      ),
+    ]),
+  ].toSorted(byId)
 
 export const serializeExperiment = (experiment: Experiment): string =>
   JSON.stringify(experiment, null, 2)

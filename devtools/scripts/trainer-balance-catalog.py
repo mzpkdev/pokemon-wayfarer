@@ -2,7 +2,9 @@
 """Regenerate the experimental explorer catalog from local trainerproc sources.
 
 No network, ROM build, or temporary calibration files are required. Reference
-moves/items describe authored sources only; prototype parties are not ROM teams.
+moves/items describe authored sources only. Each trainer gets a PROTOTYPE
+Living Rivals roster (contract section 9: aces and a filler pool) derived from
+its competitive or reference party; real rosters are authored later.
 """
 from __future__ import annotations
 
@@ -10,19 +12,35 @@ import argparse
 import importlib.util
 import json
 from pathlib import Path
+import re
 import subprocess
+import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
 GAME = ROOT / "game"
 OUTPUT = ROOT / "devtools/ui/src/modules/trainer-balance/catalog.json"
 GYMS = GAME / "src/data/trainer_scaling/gym_leaders.json"
+SPECIES_INFO = GAME / "src/data/pokemon/species_info"
+# Prototype roster defaults (contract section 9). Fillers are authored later.
+PROTOTYPE_BASE_SCORE = 50
+DEFAULT_FILLER_OFFSET = -2
+# Evolutions without a level (stones, trades, friendship) get a provisional
+# authored level: max(NON_LEVEL_EVOLVE, previous stage level + NON_LEVEL_STEP).
+NON_LEVEL_EVOLVE = 32
+NON_LEVEL_STEP = 10
+# Baby pre-evolutions are not added to prototype lines.
+BABIES = {"SPECIES_PICHU", "SPECIES_CLEFFA", "SPECIES_IGGLYBUFF", "SPECIES_TYROGUE", "SPECIES_SMOOCHUM",
+          "SPECIES_ELEKID", "SPECIES_MAGBY", "SPECIES_AZURILL", "SPECIES_WYNAUT", "SPECIES_BUDEW",
+          "SPECIES_CHINGLING", "SPECIES_BONSLY", "SPECIES_MIME_JR", "SPECIES_HAPPINY", "SPECIES_MUNCHLAX",
+          "SPECIES_MANTYKE", "SPECIES_RIOLU", "SPECIES_TOXEL"}
 # Canonical growth-arc order (arc id = index). allowedArcs are stored in this
 # order so source reordering never changes a seeded arc choice.
 ARCS = ["steady", "early", "late", "plateau", "rival"]
 # name, region, role, reference family/ID, home leagues (Indigo/Hoenn only;
 # Sevii Masters is an open invitational), standing bias, allowed growth arcs,
-# handwritten two-slot early species. Bias/arcs are Living Rivals D3 proposals:
+# handwritten early species (added as extra prototype fillers when no
+# roster line already covers them). Bias/arcs are Living Rivals D3 proposals:
 # Gym -2 (strong leaders -1: Giovanni, Sabrina, Morty, Clair, Norman, Winona,
 # Juan, so each region has a Gym Leader who can headline in some saves),
 # Elite Four 0, Champion +2, Blue +1.
@@ -95,11 +113,60 @@ def load_sources():
     return sources
 
 
+def load_evolutions():
+    """Map each evolved species token to (pre-evolution, method, parameter).
+
+    Reads the first `.evolutions = EVOLUTION(...)` entry that produces each
+    species from game/src/data/pokemon/species_info. Only the relationship
+    and EVO_LEVEL thresholds are used; conditions are ignored.
+    """
+    previous = {}
+    for path in sorted(SPECIES_INFO.glob("gen_*_families.h")):
+        text = path.read_text()
+        heads = list(re.finditer(r"^\s*\[(SPECIES_\w+)\]\s*=", text, re.M))
+        for index, head in enumerate(heads):
+            end = heads[index + 1].start() if index + 1 < len(heads) else len(text)
+            block = re.search(r"\.evolutions\s*=\s*EVOLUTION\((.*?)\),\s*\n", text[head.end():end], re.S)
+            if not block:
+                continue
+            for entry in re.finditer(r"\{(EVO_\w+),\s*([^,]+),\s*(SPECIES_\w+)", block.group(1)):
+                previous.setdefault(entry.group(3), (head.group(1), entry.group(1), entry.group(2).strip()))
+    if not previous:
+        raise ValueError("no evolutions found in species_info")
+    return previous
+
+
 def display(value, prefix):
     if not isinstance(value, str) or not value.startswith(prefix):
         raise ValueError(f"invalid source token: {value!r}")
     text = value[len(prefix):].replace("_", " ").title()
     return {"Mr Mime": "Mr. Mime", "Farfetchd": "Farfetch’d", "Ho Oh": "Ho-Oh", "Porygon Z": "Porygon-Z"}.get(text, text)
+
+
+def species_token(name):
+    return "SPECIES_" + name.upper().replace(". ", "_").replace(" ", "_").replace("’", "").replace("-", "_")
+
+
+def slug(name):
+    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+
+
+def evolution_line(token, evolutions):
+    """Species line ending at `token`, as [(species token, level reached)]."""
+    chain = [token]
+    methods = []
+    while chain[0] in evolutions and evolutions[chain[0]][0] not in BABIES:
+        source, method, parameter = evolutions[chain[0]]
+        chain.insert(0, source)
+        methods.insert(0, (method, parameter))
+    line = [(chain[0], 1)]
+    for species, (method, parameter) in zip(chain[1:], methods):
+        previous = line[-1][1]
+        level = int(parameter) if method == "EVO_LEVEL" and parameter.isdigit() and int(parameter) > 0 else 0
+        if level <= previous:
+            level = max(NON_LEVEL_EVOLVE, previous + NON_LEVEL_STEP)
+        line.append((species, level))
+    return line
 
 
 def member(slot):
@@ -125,15 +192,100 @@ def party(records, trainer):
     size = record.get("partySize")
     if not isinstance(size, int) or not 1 <= size <= 6 or size != len(slots):
         raise ValueError(f"invalid source party size: {trainer}")
-    return [member(slot) for slot in slots]
+    return slots
+
+
+def ace_entry(slot, evolutions):
+    """An ace: its species line, with the source moves/item/ability/nature on the final form."""
+    authored = member(slot)
+    ability = slot.get("ability")
+    nature = slot.get("nature")
+    line = []
+    for token, level in evolution_line(slot["species"], evolutions):
+        final = token == slot["species"]
+        line.append({"species": display(token, "SPECIES_"), "level": level,
+                     "moves": authored["moves"] if final else [],
+                     "item": authored["item"] if final else None,
+                     "ability": display(ability, "ABILITY_") if final and ability and ability != "ABILITY_NONE" else None,
+                     # trainerproc emits NATURE_HARDY when a party omits the nature.
+                     "nature": display(nature, "NATURE_") if final and nature and nature != "NATURE_HARDY" else None})
+    return {"id": slug(authored["species"]), "line": line}
+
+
+def filler_entry(token, offset, evolutions, ids):
+    base = slug(display(token, "SPECIES_"))
+    identifier, count = base, 1
+    while identifier in ids:
+        count += 1
+        identifier = f"{base}-{count}"
+    ids.add(identifier)
+    return {"id": identifier,
+            "line": [{"species": display(species, "SPECIES_"), "level": level} for species, level in evolution_line(token, evolutions)],
+            "baseScore": PROTOTYPE_BASE_SCORE, "levelOffset": max(-6, min(0, offset)), "moves": "LEVEL_UP",
+            "signatureMove": None, "requiresFlag": None}
+
+
+def build_roster(members, early, evolutions):
+    """Prototype roster from (slot, isAce, levelOffset) members plus early species."""
+    aces = [ace_entry(slot, evolutions) for slot, is_ace, _ in members if is_ace]
+    ids = {ace["id"] for ace in aces}
+    fillers = [filler_entry(slot["species"], offset, evolutions, ids) for slot, is_ace, offset in members if not is_ace]
+    covered = {stage["species"] for entry in aces + fillers for stage in entry["line"]}
+    for name in early:
+        if name not in covered:
+            fillers.append(filler_entry(species_token(name), DEFAULT_FILLER_OFFSET, evolutions, ids))
+            covered.update(stage["species"] for stage in fillers[-1]["line"])
+    return {"prototype": True, "aces": aces, "fillers": fillers}
+
+
+def validate_line(line, where, authored):
+    if not isinstance(line, list) or not line:
+        raise ValueError(f"{where}: line needs at least one species")
+    if line[0]["level"] != 1:
+        raise ValueError(f"{where}: the first species of a line starts at level 1")
+    for previous, stage in zip(line, line[1:]):
+        if not isinstance(stage["level"], int) or not previous["level"] < stage["level"] <= 100:
+            raise ValueError(f"{where}: evolve levels must increase within 2-100")
+    if len({stage["species"] for stage in line}) != len(line):
+        raise ValueError(f"{where}: line repeats a species")
+    if authored and any(len(stage["moves"]) > 4 for stage in line):
+        raise ValueError(f"{where}: at most four authored moves per form")
+
+
+def validate_roster(name, roster):
+    aces, fillers = roster["aces"], roster["fillers"]
+    if not 1 <= len(aces) <= 3:
+        raise ValueError(f"{name}: a roster needs 1-3 aces")
+    ids = [entry["id"] for entry in aces + fillers]
+    if len(set(ids)) != len(ids) or not all(re.fullmatch(r"[a-z0-9-]+", i) for i in ids):
+        raise ValueError(f"{name}: ace and filler IDs must be unique lowercase slugs")
+    for ace in aces:
+        validate_line(ace["line"], f"{name}/{ace['id']}", True)
+    for filler in fillers:
+        validate_line(filler["line"], f"{name}/{filler['id']}", False)
+        if not isinstance(filler["levelOffset"], int) or not -6 <= filler["levelOffset"] <= 0:
+            raise ValueError(f"{name}/{filler['id']}: levelOffset must be an integer from -6 to 0")
+        if not isinstance(filler["baseScore"], int) or not 0 <= filler["baseScore"] <= 100:
+            raise ValueError(f"{name}/{filler['id']}: baseScore must be an integer from 0 to 100")
+        if filler["moves"] != "LEVEL_UP" or filler["requiresFlag"] not in (None,) and not str(filler["requiresFlag"]).strip():
+            raise ValueError(f"{name}/{filler['id']}: invalid moves policy or requiresFlag")
+
+
+def max_size(roster):
+    """Members at size 6 (ace allowance 3) with no gameplay flags set."""
+    aces = min(3, len(roster["aces"]))
+    unlocked = sum(1 for filler in roster["fillers"] if filler["requiresFlag"] is None)
+    return aces + min(unlocked, 6 - aces)
 
 
 def generate():
     sources = load_sources()
+    evolutions = load_evolutions()
     curated = json.loads(GYMS.read_text())
     if curated.get("version") != 1:
         raise ValueError("unsupported gym catalog")
     result = []
+    gaps = []
     for name, region, role, family, trainer, homes, bias, arcs, early in ROSTER:
         if not isinstance(bias, int) or not -6 <= bias <= 6:
             raise ValueError(f"bias must be an integer from -6 to 6: {name}")
@@ -142,24 +294,22 @@ def generate():
         if not set(homes) <= {"Indigo", "Hoenn"}:
             raise ValueError(f"home leagues are Indigo/Hoenn only; Sevii Masters is open: {name}")
         records = sources[family]
-        reference = party(records, trainer)
+        reference_slots = party(records, trainer)
         note = "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams."
         if family == "HNS":
             note += " HNS local variant, not a HeartGold/SoulSilver canonical party."
         if name == "Blue":
-            note += " FRLG first Champion Squirtle starter branch selected explicitly; Blue remains Gym eligible in this prototype."
+            note += " FRLG first Champion Squirtle starter branch selected explicitly."
             note += " Standing bias +1 with only fast arcs (early, rival) keeps him a few levels above the world cap wherever it is at most 96 (all of edition 1). At the level ceiling the check is against the level base instead."
-        if early:
-            note += " Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
         if name in ["Koga", "Will", "Karen"]:
             note += " This stronger HNS party is comparison evidence; explorer levels follow the world cap plus standing, not these authored levels."
         if name == "Steven":
             note += " Emerald optional late battle (levels 75–78), not the Ruby/Sapphire Champion party. Explorer levels follow the world cap plus standing, not these authored levels."
-        roster = next((row for row in curated["rosters"] if row["identity"] == name), None)
-        if roster:
-            competitive = []
+        curated_roster = next((row for row in curated["rosters"] if row["identity"] == name), None)
+        if curated_roster:
+            members = []
             provenance = []
-            for entry in sorted(roster["members"], key=lambda entry: entry["battleOrder"]):
+            for entry in sorted(curated_roster["members"], key=lambda entry: entry["battleOrder"]):
                 owner, index = entry["sourceOwner"], entry["sourceSlot"]
                 source_family = "HNS" if owner.endswith("_HNS") else "Emerald"
                 source = sources[source_family].get(owner)
@@ -168,24 +318,34 @@ def generate():
                 slot = source["slots"][index]
                 if slot["species"] != entry["species"] or slot.get("moves", []) != entry["moves"] or slot.get("heldItem", "ITEM_NONE") != entry["item"]:
                     raise ValueError(f"stale curated species/moves/item: {owner}:{index}")
-                competitive.append(member(slot))
-                provenance.append(f"{source['source']}:{owner}[{index}] (offset {entry['levelOffset']}, ace {str(entry['isAce']).lower()}, {entry['movePolicy']})")
-            if len(competitive) != 6:
-                raise ValueError(f"curated six-slot party required: {name}")
-            competitive_source = "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. " + "; ".join(provenance)
+                members.append((slot, bool(entry["isAce"]), entry["levelOffset"]))
+                provenance.append(f"{source['source']}:{owner}[{index}]")
+            if len(members) != 6 or sum(is_ace for _, is_ace, _ in members) != 1:
+                raise ValueError(f"curated six-slot party with one ace required: {name}")
+            origin = "the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (its ace and level offsets, clamped to -6..0): " + "; ".join(provenance)
         else:
-            competitive = reference
-            competitive_source = f"Experimental reuse of {records[trainer]['source']}:{trainer}; source species/levels/moves/items retained."
-            if len(competitive) < 6:
-                competitive_source += " Incomplete final circuit party: source has fewer than six members; no invented sixth slot."
-        result.append({"id": name.lower().replace(". ", "-").replace(" ", "-"), "name": name, "region": region, "role": role,
-                       "gymEligible": bool(early), "homeLeagues": homes,
+            top = max(slot["lvl"] for slot in reference_slots)
+            ace_index = max(index for index, slot in enumerate(reference_slots) if slot["lvl"] == top)
+            members = [(slot, index == ace_index, slot["lvl"] - top) for index, slot in enumerate(reference_slots)]
+            origin = f"{records[trainer]['source']}:{trainer} (ace = highest-level member, last on ties; filler offsets = source level − ace level, clamped to -6..0)"
+        roster = build_roster(members, early, evolutions)
+        validate_roster(name, roster)
+        size = max_size(roster)
+        if size < 6:
+            gaps.append(f"{name} {size}/6")
+        roster_source = (f"PROTOTYPE roster derived from {origin}."
+                         f" Every other member is a filler line with baseScore {PROTOTYPE_BASE_SCORE};"
+                         + (f" handwritten early species not already on a line ({', '.join(early)}) are extra fillers at offset {DEFAULT_FILLER_OFFSET};" if early else "")
+                         + " lines and EVO_LEVEL thresholds come from game/src/data/pokemon/species_info, and stone, trade or"
+                         f" friendship evolutions use max({NON_LEVEL_EVOLVE}, previous level + {NON_LEVEL_STEP}). Only the final ace form"
+                         " carries source moves/item/ability/nature. Fillers use LEVEL_UP as a label: level-up learnsets are not resolved.")
+        result.append({"id": slug(name), "name": name, "region": region, "role": role, "homeLeagues": homes,
                        "source": {"label": f"{family} local reference", "path": records[trainer]["source"], "trainerId": trainer, "note": note},
-                       "referenceParty": reference, "competitiveParty": competitive, "competitiveSource": competitive_source,
-                       "earlyParty": early, "bias": bias, "allowedArcs": arcs})
+                       "referenceParty": [member(slot) for slot in reference_slots],
+                       "roster": roster, "rosterSource": roster_source, "bias": bias, "allowedArcs": arcs})
     if len(result) != 37 or len({row["id"] for row in result}) != 37:
         raise ValueError("catalog must contain exactly 37 unique trainers")
-    return json.dumps(result, indent=2, ensure_ascii=False) + "\n"
+    return json.dumps(result, indent=2, ensure_ascii=False) + "\n", gaps
 
 
 def main():
@@ -193,7 +353,7 @@ def main():
     parser.add_argument("--check", action="store_true", help="fail if the committed catalog differs from local source extraction")
     args = parser.parse_args()
     try:
-        content = generate()
+        content, gaps = generate()
         if args.check:
             # UI formatting owns whitespace; check the complete extracted data.
             canonical = lambda text: json.dumps(json.loads(text), sort_keys=True)
@@ -203,6 +363,9 @@ def main():
             OUTPUT.parent.mkdir(parents=True, exist_ok=True)
             OUTPUT.write_text(content)
         print(f"37 experimental trainers: {'checked' if args.check else 'generated'} {OUTPUT.relative_to(ROOT)}")
+        if gaps:
+            # Content gaps for roster authoring, not failures.
+            print(f"warning: {len(gaps)} prototype rosters cannot reach 6 at max size: {', '.join(gaps)}", file=sys.stderr)
     except (ValueError, OSError, KeyError, IndexError) as error:
         parser.exit(1, f"trainer balance catalog: {error}\n")
 

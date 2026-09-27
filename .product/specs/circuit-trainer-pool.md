@@ -8,13 +8,14 @@ remain provisional.
 
 ## Scope
 
-Own the circuit registry, canonical identity, competitive profiles, home
-leagues, role windows, per-slot selection, rotation weights, and battle
-construction for each `IS_WAYFARER` league competition.
+Own the circuit registry, canonical identity, home leagues, role windows,
+per-slot selection, rotation weights, and battle construction for each
+`IS_WAYFARER` league competition.
 
 - [Trainer world progression](trainer-world-progression.md) owns `worldCap`,
-  standing, bias, growth arcs, team stages, and the level formula. This spec
-  consumes a candidate's standing and ace level; it never restates them.
+  standing, bias, growth arcs, rosters and team composition, and the level
+  formula. This spec consumes a candidate's standing, strength level, and
+  composed team; it never restates them.
 - The [circuit runtime](seeded-league-circuit.md) owns signup, competition
   identity, entry capture, retry, results, persistence, and presentation.
 - The [seed framework](playthrough-seed-framework.md) owns the root, keyed
@@ -33,12 +34,12 @@ Author a versioned, machine-readable registry:
 | `displayName` | Existing localized name or an authored circuit name. |
 | `specialty` | Authored public type or style label; never inferred from trainer class. |
 | `homeLeagues` | Authored venue set with a lore rationale per trainer; may be empty or hold several. Only Indigo and Hoenn read it; Masters ignores membership. |
-| `competitiveProfileId` | Reviewed six-member singles profile used for every league slot, independent of Gym stage. Absent means not league-eligible. |
 | `presentationId` | Audited graphics, introduction, defeat, and after-battle text. |
 | `enabled` | Build-time inclusion, with an authored reason when disabled. |
 
-Growth fields (bias, allowed arcs, stages) live in the progression catalog
-keyed by the same `characterId`.
+Growth fields (bias, allowed arcs, roster) live in the progression catalog
+keyed by the same `characterId`. A trainer without a valid roster is not
+league-eligible.
 
 Maintain an alias inventory linking existing Trainer IDs and source roster
 owners to canonical characters. Gym, rival, Champion, rematch, and regional
@@ -56,20 +57,15 @@ is disabled (separate mastery encounter). Tate and Liza are excluded
 (double battle). Story availability neither removes a trainer from the pool
 nor enrolls their story encounters.
 
-## Competitive profiles
+## League teams
 
-A league slot always uses the trainer's reviewed six-member competitive
-profile, whatever their current Gym stage. Author the sixth member and full
-movesets explicitly; never pad with duplicates or reuse incomplete source
-parties.
-
-A resolved profile contains exact species/forms, four-move sets, held items,
-abilities, IVs, EVs, natures, gender/ball metadata, battle order, trainer
-inventory, AI, and member level offsets (−30..0, at least one ace at 0).
-Record runtime Trainer ID, source roster owner, original member indices, and
-profile/content version. Preserve source identity through ordering and gimmick
-remapping. Content is immutable at runtime; do not edit shared Gym/story
-parties or invent moves to make a profile eligible.
+League slots use the same [roster rule](trainer-world-progression.md#rosters) as
+Gyms, at the trainer's frozen event strength: team size follows their strength
+level, so a mid-game contender may bring four or five while the headliner brings
+six. There is no separate six-member competitive profile. Record runtime Trainer
+ID, source roster owner, and roster/content version, and preserve member
+identity through ordering and gimmick remapping. Content is immutable at
+runtime; do not edit shared Gym/story parties.
 
 ## Roles
 
@@ -86,17 +82,17 @@ progress index `p_event`; venue and position add nothing, and editions matter
 only through `p`. After final ordering, a slot's role label follows its battle
 position in this table.
 
-A candidate is **selectable** when enabled, presentation and competitive
-profile validate, and they are not already chosen in this field.
+A candidate is **selectable** when enabled, presentation and roster validate,
+and they are not already chosen in this field.
 
 ## Selection
 
 Inputs, captured or read by the runtime at entry: event identity
 `(editionId, venueId)`, `B_event`, `C_event`, `p_event`, `worldCap_event`,
-every candidate's arc and standing at `p_event`, versions, and the saved
-rotation history.
+every candidate's arc and standing at `p_event`, the gameplay flags and trade
+records that compose teams, versions, and the saved rotation history.
 Nothing reads player TR, party, starter, story flags, or live milestones
-after entry.
+after entry; roster flags affect only team composition, never selection.
 
 Allocate battle slots in priority `[4, 2, 3, 0, 1]` (headliner, elites,
 contenders). For each slot being allocated:
@@ -173,7 +169,7 @@ history, catalog) can legitimately change a not-yet-entered field but never
 the raw ORDER or category words for the same identity.
 
 The procedure returns the event identity, five ordered slot plans (role,
-`characterId`, arc, standing, profile reference, fallback flag), the captured
+`characterId`, arc, standing, composed team, fallback flag), the captured
 inputs, and all rules/content versions. The runtime saves them atomically
 before reveal. Read-only verification reproduces allocation and final ordering
 from the saved inputs and compares; it never replaces a saved field.
@@ -181,43 +177,44 @@ from the saved inputs and compares; it never replaces a saved field.
 ## Battle strength
 
 Each slot fights at its real strength, frozen for the event: the progression
-spec's ace level from `levelBase_event` and standing, clamped and applied to
-member offsets. There is no per-role fudge and no room-position offset (the
-old `[-4,-3,-2,-1,+1]` offsets are removed). The field always ramps, because
-the final order guarantees non-decreasing standing; after a fallback, levels
-may sit closer together than the role windows suggest.
+spec's strength level from `levelBase_event` and standing, clamped and applied
+to member offsets. There is no per-role fudge and no room-position offset (the
+old `[-4,-3,-2,-1,+1]` offsets are removed). The field always ramps, because the
+final order guarantees non-decreasing standing; after a fallback, levels may sit
+closer together than the role windows suggest.
 
 Construct and reconstruct from the saved slot plan. Resolve the selected
 trainer and roster owner before applying circuit policy; never identify
 enrollment from class, map, or a shared party pointer. Debug and ordinary
 battles cannot create circuit records.
 
-Preserve authored species/forms and all non-level fields; no evolution
-reversal or automatic move replacement. Challenge settings keep their
-overrides. The trainer species randomizer may bypass authored parties as it
-does today but still uses the saved people, order, and results; authored-team
-guarantees exclude that mode. XP uses actual species and levels. Prize money
-uses the profile's inventoried source reward basis and class, not the old room
-occupant, and the sixth member must not shift it.
+Use the frozen composed team: forms from authored lines, moves from the roster
+policies, and roster-authored non-level fields; no evolution reversal or
+automatic move replacement. Challenge settings keep their overrides. The
+trainer species randomizer may bypass authored parties as it does today but
+still uses the saved people, order, and results; authored-team guarantees
+exclude that mode. XP uses actual species and levels. Prize money
+uses the trainer's inventoried source reward basis and class, not the old room
+occupant, and team size must not shift it.
 
 ## Validation
 
 The deliverable includes a checked-in inventory: aliases, home leagues and
-rationales, specialties, competitive profiles, presentation coverage,
+rationales, specialties, roster references, presentation coverage,
 exclusion reasons, provenance, and catalog and rules versions.
 
 - Reject duplicate characters or aliases, unresolved source IDs, missing
-  assets, invalid offsets, incomplete or non-six-member competitive profiles,
-  and double-battle flags.
+  assets, invalid offsets, rosters that cannot reach six at maximum size, and
+  double-battle flags.
 - **Feasibility.** For every venue × signup-reachable `(B, C, p)` × role,
   report in-window candidate counts under every allowed arc (guaranteed) and
   under some allowed arc (possible), plus the fallback rate over at least
   10,000 seeded roots. Fallbacks must be rare and documented.
 - **Full rosters first (D3).** Feasibility depends on which trainers have
-  reviewed six-member competitive profiles. The prototype catalog lacks many,
-  so its current fallback risks are not tuning evidence. Author the full
-  rosters, then rerun feasibility. Adjust arcs, biases, or windows only for
-  gaps that remain after that.
+  reviewed rosters. The prototype catalog lacks many, so its current fallback
+  risks are not tuning evidence. Author the full rosters, then rerun
+  feasibility. Adjust arcs, biases, or windows only for gaps that remain after
+  that.
 - **Variety.** Over at least 10,000 roots × 10 editions with wins, report
   returning/new trainers per venue, cross-venue repetition, headliner
   distribution (including Gym Leader headliners from every region at a
@@ -233,9 +230,9 @@ exclusion reasons, provenance, and catalog and rules versions.
 - **Keys.** Pin vectors for zero and all-ones roots, editions 1/2 and `u32`
   bounds, all three venues, rules versions, weighted intervals, and checked
   sums. Verify no Pokémon RNG use.
-- **Construction.** Build every enabled profile at level bounds, preserve
-  source identity and metadata, reconstruct identically, and verify money, XP,
-  AI, graphics, and dialogue follow the selected trainer.
+- **Construction.** Build every enabled roster at every team size and level
+  bound, preserve member identity and metadata, reconstruct identically, and
+  verify money, XP, AI, graphics, and dialogue follow the selected trainer.
 
 Run the trainer/scaling mechanics and circuit E2E suites, build Wayfarer and
 affected standalone configurations, and measure ROM/RAM against the reserve
@@ -243,7 +240,7 @@ policy. Report balance playtesting separately from structural checks.
 
 ## Open questions
 
-The PRD owns D3 (catalog and profiles), D5 (rotation and variety acceptance),
+The PRD owns D3 (catalog and rosters), D5 (rotation and variety acceptance),
 and D7 (role windows). More regions or doubles require a revision.
 
 ## References

@@ -68,8 +68,9 @@ Each trainer has an integer **standing** relative to the world cap:
 - `standing = bias + arcDelta(arc, p)`.
 - `levelBase = min(worldCap(B, C), 100 - headroom)`, with a default headroom
   of 4 (editable in the global settings).
-- `aceLevel = clamp(levelBase + standing, 1, 100)`; members add their level
-  offsets (-30 to 0) and are clamped to 1–100.
+- `strengthLevel = clamp(levelBase + standing, 1, 100)`. The top ace sits at
+  the strength level, fillers add their level offset (-6 to 0), and team size
+  follows the strength level (see rosters below).
 - `worldCap(B, C)` is the player soft cap from the unchanged player TR formula
   and cap curve, using only badges and first league clears (`C`). Clears affect
   levels only through the world cap.
@@ -95,28 +96,76 @@ plateau, rival). Blue only gets fast arcs (early, rival). These defaults are
 content under review, not approved balance.
 
 The pool table shows each trainer's arc (a selector limited to their allowed
-arcs), standing, ace level, a signed **ace − cap** gap, role and party size.
+arcs), standing, strength level, a signed **strength − cap** gap, role and team size.
 Roles come from standing windows: contender at most -2, elite -1 to +1,
 headliner at least +2. The explorer shows a preview arc per trainer (steady
 when allowed, otherwise the first allowed arc). It does not sample arcs from a
-seed. The selected trainer panel shows the same values, the party, and a chart
-of the ace level under each allowed arc against the world cap across p 0–48.
+seed. The selected trainer panel shows the same values, the team, the roster,
+and a chart of the strength level under each allowed arc against the world cap across p 0–48.
 The chart's edition-1 part uses the selected clears, and its post-game part
 (p 32–48) uses 24 badges and three clears. The world panel shows p, the world
 cap and the level base.
 
-Gym-eligible trainers grow through badge-keyed stages of 2 / 3 / 4 / 5 / 6
-members at 0 / 3 / 6 / 10 / 16 badges. The opening stage uses the handwritten
-two-species early party. Middle stages combine the strongest reference members
-with competitive members, and the last stage is the six-member competitive
-profile. A trainer with a shorter competitive profile stops at its size.
-Offsets never fall below the previous stage's weakest offset, so party size and
-the weakest member's level never drop with default arcs. Other trainers use
-their reference party from 0 badges.
+### Rosters of aces and fillers
 
-The summary strip reports the mean, minimum and maximum ace − cap for Gym
+Each trainer has a **roster**, its true potential. Badge-keyed team stages are
+gone.
+
+- **Aces**: one to three, in priority order. Each has an evolution line with
+  evolve levels (the level where each later species is reached) and authored
+  moves, held item, ability and nature per form.
+- **Fillers**: a pool of species lines, each with a `baseScore` (0–100), a
+  level offset (-6 to 0, default -2), a `LEVEL_UP` moves policy with an
+  optional signature move, and an optional `requiresFlag`. A flagged filler
+  stays out until its gameplay flag is set.
+
+Composition at the current world point:
+
+- Team size is `sizeFor(strength level)`, an editable table: below Lv. 20 → 2,
+  20 → 3, 30 → 4, 45 → 5, 60 → 6. Sizes must not decrease.
+- The **ace allowance** is a maximum tied to size: 1–3 members → 1 ace, 4–5 → 2,
+  6 → 3. Aces fill first in priority order, up to min(allowance, aces), and
+  every other slot takes a filler. A single-ace trainer at strength 65 fields
+  1 ace + 5 fillers. The panel spells out how many ace slots went to fillers.
+- Fillers are ranked by `score = baseScore + jitter + active modifiers`, with
+  ties broken by filler ID, and the top `size − aces used` join. Scores do not
+  depend on size, so growth never removes a filler. Only a modifier or flag
+  change can displace one.
+- Jitter is uniform over 0..JITTER (default 30, editable). The explorer hashes
+  the **Save seed** input with the trainer and filler IDs (FNV-1a), so a seed
+  always gives the same teams. The ROM draws it from the TRAINER_ROSTER /
+  FILLER_JITTER seed-framework key instead, so the numbers differ from the game.
+- Members evolve along their line at their own level (an ace at the strength
+  level, a filler at strength + offset).
+- Battle order: fillers by ascending score, then aces in reverse priority, so
+  the top ace comes last.
+- **Modifiers** add a delta (-100 to +100) to one trainer's filler while a
+  gameplay flag is set. The **Gameplay flags** bar lists every flag that a
+  modifier or `requiresFlag` mentions, and toggles it for the whole pool.
+
+The trainer panel shows the team (species, form, level, ace priority or filler
+score, and moves), the size, max aces, aces used and fillers, and the roster:
+aces with their lines and whether they play, and each filler's base, jitter,
+modifier, score, rank and whether it is in the team (or locked by a flag).
+
+The catalog ships **prototype** rosters, marked as such, for the roster
+authoring session to replace. The catalog script derives them from each
+trainer's competitive party (the curated six in
+`game/src/data/trainer_scaling/gym_leaders.json`, including its ace and level
+offsets) or otherwise its reference party (the highest-level member is the
+ace, last on ties, and filler offsets are the source level gap clamped to -6..0).
+Every other member becomes a filler line with base score 50. Handwritten early
+Gym species that no line already covers are added as extra fillers. Lines and
+`EVO_LEVEL` thresholds come from `game/src/data/pokemon/species_info`, without
+baby pre-evolutions. Stone, trade and friendship evolutions use
+max(32, previous level + 10) as a placeholder evolve level. Only the final ace
+form carries the source moves, item, ability and nature. Level-up learnsets
+are not resolved (the local learnset tables sit behind generation config
+branches), so fillers show `LEVEL_UP` as a label.
+
+The summary strip reports the mean, minimum and maximum strength − cap for Gym
 Leaders on their selected arcs, and the extremes across every allowed arc.
-Ace − cap always compares with the player cap, so at the ceiling Gym Leaders
+Strength − cap always compares with the player cap, so at the ceiling Gym Leaders
 read about -6. The Blue check asks whether Blue is above the level base under
 every allowed arc. Wherever the cap is at most 96 the base is the cap, so this
 is the "a step above the cap" target and shows **Yes**. At the ceiling it
@@ -128,37 +177,45 @@ compares with the base instead and shows **At ceiling** (default arcs: early
 candidates fall in each role window under **every** allowed arc (guaranteed),
 under **some** allowed arc (possible) and under the selected arcs (current).
 Indigo and Hoenn count their authored home pool. Sevii Masters is an open
-invitational, so it counts every candidate and ignores home leagues. League
-slots need a six-member competitive profile, so five-member profiles are
-excluded and listed unless **Count five-member profiles** is checked. A role
+invitational, so it counts every candidate and ignores home leagues. Every
+trainer is a candidate and brings a team sized by their strength level.
+Validation needs every roster to reach six at max size (up to three aces plus
+unlocked fillers under the current flags), so each venue lists its shorter
+rosters as content gaps. With the prototype rosters these are Lorelei, Bruno,
+Agatha, Koga, Lance, Will, Karen, Sidney, Phoebe, Glacia and Drake (5/6). A role
 whose guaranteed count is below its need (two contenders, two elites, one
 headliner) is flagged as a fallback risk. Standing depends only on p, so
 league clears and the headroom do not change these counts. The explorer does not generate
 league lineups or simulate the seeded draws.
 
-Edit a trainer's bias and allowed arcs in **Tune this trainer**, or their
-complete settings, including team stages, as JSON. Team stages stay keyed by
-global badges, not p. Arc tuples, the two role window thresholds and the level
-headroom are editable under **Growth arcs, role windows & experiment
-settings**. Experiments persist in browser storage. JSON export and import
-(format version 3) also keep the world point, including completed editions,
-and the selected trainer. Version 1 files (retired trainer-rating model) and
-version 2 files (four-checkpoint arcs, no headroom) are rejected with a
-message. There is no migration.
-Reset restores the prototype defaults. **Restore this trainer’s defaults**
-updates only the selected trainer.
+Edit a trainer's bias and allowed arcs in **Tune this trainer**. **Edit
+roster** reorders aces and edits evolve levels, filler base scores, offsets,
+signature moves, `requiresFlag` and the prototype marker. **Edit settings as
+JSON** covers everything else, such as adding or removing aces and fillers or
+authoring ace moves, items, abilities and natures. Arc tuples, role windows,
+level headroom, the team size table, JITTER and modifiers are editable under
+**Growth arcs, role windows & experiment settings**. Experiments persist in
+browser storage. JSON export and import (format version 4) round-trip the
+experiment (including rosters, the size table, jitter and modifiers), the world
+point, the seed, the set flags and the selected trainer. Version 1 (retired
+trainer-rating model), version 2 (four-checkpoint arcs, no headroom) and
+version 3 (badge-keyed team stages) files are rejected with a message. There is
+no migration. Reset restores the prototype defaults. **Restore this trainer’s
+defaults** updates only the selected trainer.
 
-The tool models species, party size and levels. It does not simulate moves,
-items, abilities, stats, AI, matchup difficulty or battle outcomes. Reference
-moves and items describe source parties only. Team stages are explicit
-prototypes: species do not automatically evolve. Several later rosters still
-contain lower evolutions or five-member Elite Four teams, making those gaps
-visible for content authoring. The current ROM scaler is unchanged.
+The tool models species, team size and levels. It does not simulate moves,
+items, abilities, stats, AI, matchup difficulty or battle outcomes, and it does
+not model evolution-item gifts or trades (a trade becomes an ordinary filler
+entry with a score boost). Reference moves and items describe source parties
+only. The current ROM scaler is unchanged.
 
 The catalog uses local FRLG, Emerald and HNS source records, including their
 provenance and explicit variant notes. HNS is not substituted with HGSS;
 Steven's local Emerald postgame party is labeled as such. The catalog script
-owns each trainer's bias, allowed arcs and home pools. Regenerate or verify
+owns each trainer's bias, allowed arcs, home pools and prototype roster. It
+validates ace counts (1–3), unique member IDs, evolve levels, offsets and base
+scores, and prints the rosters that cannot reach six as a warning, not a
+failure. Regenerate or verify
 the checked-in catalog from the repository root (requires Python 3, `cc`, `cpp`):
 
 ```sh

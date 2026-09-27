@@ -122,7 +122,7 @@ Trainer records follow these rules:
   creation; rivals and bosses remain excluded. Initial Gym Leader badge battles
   use the separate [Gym Leader scaling](gym-leader-scaling.md), which owns their
   current six-slot rosters and player-TR selection. Proposed enrolled singles
-  Gyms instead use world-cap standing and independently authored party stages;
+  Gyms instead use world-cap standing and independently authored rosters;
   source Emerald parties are provenance, not mandatory opening teams. Tate and
   Liza retain their current double-Gym policy and badge outside the singles
   pool. Rival, story, Dojo, and rematch variants are separately enrolled or
@@ -435,14 +435,15 @@ Static and automated validation must prove all of the following:
 6. The adapted opening skips Emerald's replacement-player initialization and
    preserves the Wayfarer player, family, home, clock, party, Bag, money,
    Pokédex, storage, options, and Trainer ID.
-7. Every Trainer reference resolves to the expected authored source party and
-   a distinct defeat bit. Non-League Hoenn source parties other than enrolled
+7. Every Trainer reference resolves to the expected authored source party and a
+   distinct defeat bit. Non-League Hoenn source parties other than enrolled
    initial Gym Leader rosters match Emerald, while Hoenn League parties match
    the current fixed Tier 3 content. When implementing the proposed successor,
-   validate selected NPC stages and saved competition-entry inputs instead; original
-   Emerald parties serve as provenance references. Eligible ordinary battle parties then apply the
-   separate Trainer-party projection; initial Gym Leader badge battles follow
-   the Gym Leader scaling specification. Hoenn League battle levels follow the
+   validate composed NPC rosters and saved competition-entry inputs instead;
+   original Emerald parties serve as provenance references. Eligible ordinary
+   battle parties then apply the separate Trainer-party projection; initial Gym
+   Leader badge battles follow the Gym Leader scaling specification. Hoenn
+   League battle levels follow the
    [League scaling specification](league-scaling.md) using the run snapshot.
 8. Every ordinary HNS and Hoenn Trainer remains below ID 2,048, every partner
    Trainer remains at or above 2,048, and partner battles resolve correctly.

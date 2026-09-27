@@ -13,7 +13,7 @@ Poké Balls.
 
 Circuit-dependent successor: the proposed [Seeded Trainer Circuit](seeded-trainer-circuit.md)
 replaces the guaranteed Indigo/Masters lineups and fixed visiting-origin Blue
-League profile below with selected participants and profiles. Its
+League profile below with selected participants and roster teams. Its
 [runtime contract](../specs/seeded-league-circuit.md) proposes Blue's Dojo unlock
 after the first lifetime scheduled venue clear, instead of Indigo only. These
 changes take precedence for circuit appearances/unlocks only if the draft is
@@ -27,7 +27,7 @@ teams. Blue's growth there applies only to his league appearances; it does not
 restore Blue as the Viridian badge owner or change Giovanni's local
 prerequisites. Blue's rival, Dojo, and Gym-ID battles keep their own policies;
 canonical identity does not enroll them. Original FRLG/HNS parties remain
-provenance references for authored stages, not mandatory opening teams.
+provenance references for authored rosters, not mandatory opening teams.
 
 ## Intent
 

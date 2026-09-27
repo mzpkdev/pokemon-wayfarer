@@ -133,8 +133,8 @@ then, with a valid order-only state: no competition snapshot or run, empty
 participation history and clear masks, and zero completed count. Only the first
 successful entry to the CURRENT venue's competition atomically saves five
 opponents, the entry badges and lifetime-clear mask, progress index, worldCap,
-each slot's arc and standing, the pinned policy version, competitive profile
-references, content/rule versions, and a matching run. Future
+each slot's arc, standing, and composed team, the pinned policy version,
+content/rule versions, and a matching run. Future
 venue lineups and projected milestones are never saved. Signup thresholds (D4)
 are owned by the [seeded league circuit](seeded-league-circuit.md).
 

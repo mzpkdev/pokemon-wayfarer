@@ -167,7 +167,7 @@ now removes that introduction and Blue's Gym role. Proposed
 [trainer world progression](trainer-world-progression.md) enrolls Blue only
 in league slots; it assigns him no badge, and his rival, Dojo, and rematch
 variants keep their policies. Giovanni's initial singles Gym may use world-cap
-standing and distinct authored stages; his Hideout/Silph boss encounters retain
+standing and an authored roster; his Hideout/Silph boss encounters retain
 their separately owned policies. Preserve genuinely necessary
 character-development order by withholding later scenes until their predecessors
 are complete. Do not relocate chapters or select a different chapter dynamically

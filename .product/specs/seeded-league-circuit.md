@@ -18,7 +18,7 @@ integration. The PRD owns the player-facing lifecycle.
 - [Circuit trainer pool](circuit-trainer-pool.md) owns selection, roles,
   rotation, keys, and battle construction.
 - [Trainer world progression](trainer-world-progression.md) owns `worldCap`,
-  arcs, standing, and levels.
+  arcs, standing, rosters, and levels.
 - The [seed framework](playthrough-seed-framework.md) owns the root and draws.
 
 ## Venues and positions
@@ -52,12 +52,14 @@ its ORDER. No lineup exists yet. The circuit saves:
 
 The active snapshot holds `(editionId, venueId)`, `B_event`, `L_event`,
 `p_event`, `worldCap_event`, the pinned growth-policy version,
-catalog/profile/rules versions, and five ordered slots. Each slot stores
-role, `characterId`, arc, standing, competitive profile reference, and
-fallback flag. Levels and full parties are not stored when versioned
-references reproduce them. Candidates' arcs and standings are pure functions
-of the root, pinned policy, and `p_event`, so verification rederives them
-rather than storing all of them. Rotation reads the saved per-venue fields;
+catalog/roster/rules versions, and five ordered slots. Each slot stores role,
+`characterId`, arc, standing, fallback flag, and the trainer's composed team:
+per member, its reference (`aceId` or `fillerId`), species/form, level, and
+moves, in battle order. Freezing the team means trades, gifts, or modifiers
+earned during retries never change the field. Other member fields come from the
+versioned roster or trade record. Candidates' arcs and standings are pure
+functions of the root, pinned policy, and `p_event`, so verification rederives
+them rather than storing all of them. Rotation reads the saved per-venue fields;
 only a win changes them, and that win also releases the snapshot, so the
 snapshot does not copy them.
 
@@ -102,11 +104,11 @@ never resolved early.
 ### Retry
 
 A loss, blackout, or voluntary exit ends the run, not the competition. Return
-the player to the venue's own lobby with the snapshot unchanged and run
-progress reset, so the next attempt starts at slot 1 against the same five at
-the same levels. Record no participation, result, or reward. The player may
-retry at once or leave, earn badges, and return any number of times; badges
-earned meanwhile raise the player's cap but never touch the snapshot. Save and
+the player to the venue's own lobby with the snapshot unchanged and run progress
+reset, so the next attempt starts at slot 1 against the same five with the same
+teams and levels. Record no participation, result, or reward. The player may
+retry at once or leave, earn badges, and return any number of times; badges,
+flags, gifts, and trades earned meanwhile never touch the snapshot. Save and
 reload preserve it. There is no waiting state or availability rule.
 
 ### Win
@@ -141,16 +143,18 @@ cannot skip a slot.
 
 1. Validate root, order, snapshot, signup, run, and destination before
    locking an entrance or changing room state.
-2. Each battle validates edition, venue, room, and expected slot. Versioned
-   references supply party, class, sprite, portrait, name, introduction,
-   defeat text, music, and AI. Fixed room-owner IDs never pick opponents.
+2. Each battle validates edition, venue, room, and expected slot. The stored
+   team and versioned references supply party, class, sprite, portrait, name,
+   introduction, defeat text, music, and AI. Fixed room-owner IDs never pick
+   opponents.
 3. A victory advances one slot exactly once. A loss follows Retry.
 4. Room and ceremony transitions keep the competition identity until the win
    commits.
 
-Live badges, clears, player TR, party, and XP never mutate an active snapshot.
-Party randomizers keep their precedence but cannot reroll participants or
-identity. Debug battles cannot create runs, advance slots, or grant clears.
+Live badges, clears, flags, trade records, player TR, party, and XP never mutate
+an active snapshot. Party randomizers keep their precedence but cannot reroll
+participants or identity. Debug battles cannot create runs, advance slots, or
+grant clears.
 
 ## Ceremonies and records
 
@@ -175,16 +179,18 @@ lifetime mask, completed count, history, and pending transactions before any
 dispatch. A state with no active snapshot is normal (before first entry or
 between venues); never generate content on load.
 
-An active snapshot must match the current edition and venue, have
-`B_event` in 0–24, `L_event` within valid lifetime bits, and `p_event`
-consistent with `B_event` and the completed count, not exceed or contradict
-live monotone facts, use the pinned growth policy, hold five distinct
-characters in ascending standing order, and resolve every reference. Verify
-each slot's arc against the root, and recompute `worldCap_event`, standings,
-selection, and final ordering from the captured inputs read-only. Draw IDs
-are pre-sort battle slot indices, so room indices cannot validate POOL_KIND
-directly. History fields must hold five distinct known characters and valid
-editions, and a venue's current-edition field must match a set result bit.
+An active snapshot must match the current edition and venue, have `B_event` in
+0–24, `L_event` within valid lifetime bits, and `p_event` consistent with
+`B_event` and the completed count, not exceed or contradict live monotone facts,
+use the pinned growth policy, hold five distinct characters in ascending
+standing order, and resolve every reference. Verify each slot's arc against the
+root, and recompute `worldCap_event`, standings, selection, and final ordering
+from the captured inputs read-only. Stored teams must be valid for their roster
+and version (known members, legal forms, levels, and moves); they are never
+recomposed from live flags or trades. Draw IDs are pre-sort battle slot indices,
+so room indices cannot validate POOL_KIND directly. History fields must hold
+five distinct known characters and valid editions, and a venue's current-edition
+field must match a set result bit.
 
 A valid snapshot with damaged transient run state recovers to its own lobby
 with progress reset and the field kept. Missing or corrupt root, order,
@@ -265,9 +271,9 @@ Required implementation evidence (not yet run):
    badges before the next venue changes its world point; future venues are
    never resolved. Inject failures before, during, and at commit.
 3. Lose at each slot: the snapshot is unchanged, progress resets, nothing is
-   recorded, and the player returns to the right lobby. Earn a badge and retry:
-   identical five trainers and levels. Repeat many times, including reloads and
-   voluntary exits.
+   recorded, and the player returns to the right lobby. Earn a badge, set a
+   roster modifier flag, or trade, then retry: identical five trainers, teams,
+   and levels. Repeat many times, including reloads and voluntary exits.
 4. Win: exactly one result, history update, and ceremony; only the first
    lifetime win grants +8 TR, recognition, and cleanup. Interrupt and repeat
    ceremony commits.

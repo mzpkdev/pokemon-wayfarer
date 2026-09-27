@@ -25,8 +25,9 @@ old progression/wiring description predates the current circuit.
 ## Proposed party and registration contract
 
 Original FRLG, Emerald, and HNS parties are provenance references. Successor
-profiles may author approachable opening teams and distinct later stages; no
-automatic evolution or immutable-prefix rule applies across stages. Blue's
+rosters may author approachable opening teams that grow with each trainer's
+strength; evolution follows authored lines, and no immutable-prefix rule
+applies. Blue's
 growth applies only to his league appearances; he is not a Wayfarer badge
 opponent. Story, rival, Dojo, and rematch variants require separate enrollment;
 a shared canonical identity grants no scaling policy. Tate and Liza retain

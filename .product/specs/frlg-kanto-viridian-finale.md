@@ -18,8 +18,9 @@ levels under the current bespoke five-slot player-TR projection in
 [party construction](../../game/src/battle_main.c), independent of the disabled
 shared six-slot Gym feature. Proposed [trainer world progression](trainer-world-progression.md)
 explicitly enrolls Giovanni's initial singles badge battle with world-cap
-standing, a seeded growth arc, and approachable authored opening stages. This five-member source remains
-provenance, not a required early party or immutable prefix for every stage.
+standing, a seeded growth arc, and an authored roster whose early teams are
+approachable. This five-member source remains provenance, not a required early
+party or immutable prefix for every team size.
 Giovanni's Hideout/Silph boss variants remain independently governed. Preserve
 battle identity and truthful local dialogue in either model.
 
@@ -54,7 +55,7 @@ teams. Blue's growth there applies only to his league appearances; it does not
 restore Blue as the Viridian badge owner or change Giovanni's local
 prerequisites. Blue's rival, Dojo, and Gym-ID battles keep their own policies;
 canonical identity does not enroll them. Original FRLG/HNS parties remain
-provenance references for authored stages, not mandatory opening teams.
+provenance references for authored rosters, not mandatory opening teams.
 
 ## Source anchors
 

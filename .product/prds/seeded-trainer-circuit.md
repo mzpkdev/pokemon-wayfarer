@@ -30,9 +30,11 @@ that ramps from two contenders, through two elites, to one headliner.
 2. On entry, Hoenn's five-trainer field is decided and frozen. The two
    contenders sit a little under the player's level cap, the two elites near
    it, and the headliner (Steven this time) at or slightly above it. Lobby
-   gossip hints that one of the elites "has been training nonstop."
+   gossip hints that one of the elites "has been training nonstop." Teams are
+   still growing this early: the contenders bring four Pokémon each, and
+   Steven brings five.
 3. The player beats four and loses to Steven. Nothing is lost: the same five
-   trainers at the same levels wait for them.
+   trainers with the same teams and levels wait for them.
 4. They leave, win a ninth badge, level up, and return. The field has not
    moved, so the retry is easier. They win. It is their first Hoenn clear, so
    their own progression gets its usual boost.
@@ -55,8 +57,10 @@ Gym Leaders rises far enough to headline; an Elite Four member who has stalled
 can be a contender. Everyone fights at their real current strength, and each
 field has five different people. The battles always climb from weakest to
 strongest; when a venue runs short of trainers at the right strength,
-neighbouring battles may sit closer together in level. League battles always
-use the trainer's full six-member competitive team.
+neighbouring battles may sit closer together in level. League teams follow
+the same rule as Gyms: each trainer brings as much of their roster as their
+strength allows, so contenders may bring fewer than six. The teams are frozen
+with the field.
 
 **Regional flavour.** Indigo and Hoenn each have an authored home roster.
 Each slot usually goes to a home trainer, with a smaller chance of a visitor.
@@ -94,11 +98,11 @@ circuit order.
 
 [Trainer world progression](trainer-world-progression.md) owns how trainers
 grow: each trainer's strength follows the world's progress rather than the
-player's party, with a per-save growth arc hinted in the world rather than
-shown as a label. Every trainer's first encounter is the same in every save.
-The same model drives Gym Leaders (near the player's cap on average, with
-teams that grow with badges) and Blue (a step above the cap, never a wall).
-This PRD covers only how the circuit uses those trainers.
+player's party, with a per-save growth arc hinted in the world rather than shown
+as a label. Every trainer's first encounter is the same in every save. The same
+model drives Gym Leaders (near the player's cap on average, with teams that grow
+with their strength) and Blue (a step above the cap, never a wall). This PRD
+covers only how the circuit uses those trainers.
 
 ## Records and recognition
 
@@ -136,7 +140,7 @@ combat balance: moves, items, and AI.
 - [Seeded circuit runtime](../specs/seeded-league-circuit.md): signup,
   entry, retry, results, ceremonies, persistence, and presentation.
 - [Trainer world progression specification](../specs/trainer-world-progression.md):
-  growth model, arcs, stages, and levels.
+  growth model, arcs, rosters, and levels.
 
 ## Decisions
 
@@ -147,7 +151,7 @@ retrying the same frozen field, with no waiting mechanism.
 
 | ID | Open decision | Proposed default |
 | --- | --- | --- |
-| D3 | Per-trainer bias, allowed arcs, arc shapes, team stages, competitive teams, and hint lines | Balance explorer catalog defaults. Author full competitive rosters first, then rerun feasibility; the prototype's gaps are not tuning evidence |
+| D3 | Per-trainer bias, allowed arcs, arc shapes, rosters (aces, evolution lines, moves, filler pools, base scores, offsets), and hint lines | Balance explorer catalog defaults. Author full rosters first, then rerun feasibility; the prototype's gaps are not tuning evidence |
 | D4 | Signup thresholds | About 8/16/24 global badges by circuit position, plus a win at the previous venue |
 | D5 | Rotation factors and variety acceptance | Weight ×16/×4/×1 for 0/1/2 earlier venues this edition; ×2 if absent from this venue's last field; wins only |
 | D7 | Role windows (levels relative to the world's cap) | Contender −2 or lower, elite −1 to +1, headliner +2 or higher |
