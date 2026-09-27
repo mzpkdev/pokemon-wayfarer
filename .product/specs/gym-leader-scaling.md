@@ -1,6 +1,6 @@
 # Gym Leader scaling
 
-PRD: [Gym Leader scaling](../prds/gym-leader-scaling.md)
+PRD: [Well-known trainers](../prds/well-known-trainers.md)
 Implemented: No for the v0 model. The earlier player-TR scaler is present in
 code but `B_GYM_LEADER_SCALING` defaults to `FALSE`; Giovanni's Wayfarer finale
 uses a separate implemented projection. Current code keeps that behavior until
@@ -12,7 +12,7 @@ Design status: v0 target contract for singles badge encounters.
 This specification owns Gym badge-encounter coverage and is the single
 authority for battle construction: its member-metadata, construction, reward,
 and override rules apply to every battle with a well-known character, not only
-Gym battles. [Well-known trainer rating](trainer-world-progression.md) owns the
+Gym battles. [Well-known trainers](well-known-trainers.md) owns the
 well-known inventory, the every-battle rule, trainer TR, scalers, rosters, team
 resolution, and the battle snapshot; this document does not restate them. A Gym battle uses the leader's own TR, team, and levels with
 no Gym-specific adjustment. Adoption replaces the old player-TR input and
@@ -27,7 +27,8 @@ canonical character IDs, and roster references. Exactly one battle policy may
 own an encounter. Resolve the ID and context before consulting trainer data; never infer enrollment
 from display name, class, region, or a party pointer.
 
-The target covers the 23 singles badge opponents listed in the PRD, including
+The target covers the 23 singles badge opponents listed in the
+[PRD](../prds/well-known-trainers.md#gym-battles), including
 Giovanni's Viridian finale through its actual Wayfarer trainer ID. The current
 generated six-slot inventory (23 identities including Tate/Liza, Giovanni
 handled separately) is not this manifest and must not be copied without an
@@ -41,7 +42,7 @@ to its single party.
 Blue's `gymEligible` content metadata creates no badge encounter; his HNS Gym
 ID is excluded in Wayfarer. A leader's battles outside their badge encounter
 are not in this inventory; the
-[well-known inventory](trainer-world-progression.md#well-known-inventory)
+[well-known inventory](well-known-trainers.md#well-known-inventory)
 routes them to the same plan, built under this document's construction rules.
 Facilities, partners, link/recorded/external battles, tutorials, and other
 special contexts stay excluded, and raw party entry points cannot bypass the
@@ -53,7 +54,7 @@ C, and report the source and canonical mapping of every covered encounter.
 ## Plan resolution
 
 After eligibility resolution, obtain the member plan from the
-[battle snapshot](trainer-world-progression.md#battle-snapshot): the leader's
+[battle snapshot](well-known-trainers.md#battle-snapshot): the leader's
 TR and resolved team, frozen for the battle. Never read `GetTrainerRating()`,
 party levels, badges, historical Gym order, or the old 8/22/34/40 player-TR
 thresholds. Each leader has one complete reviewed roster.
@@ -110,7 +111,7 @@ version, member entries, output order, count, species, levels, moves, items,
 and prize-money basis. Check:
 
 1. The model obligations in
-   [well-known trainer rating](trainer-world-progression.md#validation) for
+   [Well-known trainers](well-known-trainers.md#validation) for
    every Gym Leader.
 2. Member metadata, move policies at every supported level, non-identity
    ordering, gimmick remapping, actual counts, and unused-slot clearing.
@@ -133,13 +134,13 @@ and playtest acceptance separately from implementation status.
 ## Later
 
 - Gym-specific behavior that follows a changing leader TR is owned by the
-  model's [Later](trainer-world-progression.md#later) list.
+  model's [Later](well-known-trainers.md#later) list.
 
 ## References
 
-- [Well-known trainer rating](trainer-world-progression.md)
+- [Well-known trainers](well-known-trainers.md)
 - [Current Gym scaler switch](../../game/include/config/trainer_party_scaling.h)
 - [Current source inventory generator](../../game/tools/trainer_scaling/gym_leaders.py)
 - [Trainer party construction](../../game/src/battle_main.c)
 - [Ordinary trainer scaling](trainer-party-scaling.md)
-- [Circuit trainer pool](circuit-trainer-pool.md)
+- [Leagues](leagues.md)

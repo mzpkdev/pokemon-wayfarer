@@ -5,7 +5,7 @@ Implemented: No
 Design status: Parked: not part of v0.
 
 Design note only. v0 rosters are one fixed ordered list with no dynamic picks
-([well-known trainer rating](trainer-world-progression.md#rosters)). Every
+([Well-known trainers](well-known-trainers.md#rosters)). Every
 hook below depends on a future dynamic-roster rule (for example scored
 supporting picks with an `ace` flag) that v0 does not have; restate the hooks
 against that rule when it is designed.
@@ -50,5 +50,5 @@ randomness is drawn, so reloads cannot change a roster.
 
 ## References
 
-- [Well-known trainer rating](trainer-world-progression.md)
+- [Well-known trainers](well-known-trainers.md)
 - [Playthrough seed framework](playthrough-seed-framework.md)

@@ -12,9 +12,9 @@ the native Pallet sequence through Parcel delivery, Pokédex receipt, and five
 Poké Balls.
 
 Circuit-dependent successor: the proposed
-[Trainer Circuit](seeded-trainer-circuit.md) replaces the guaranteed Indigo/Masters
+[Leagues](leagues.md) design replaces the guaranteed Indigo/Masters
 lineups and fixed visiting-origin Blue League profile below with the global top
-five by TR. Its [runtime contract](../specs/seeded-league-circuit.md) keeps
+five by TR. Its [runtime contract](../specs/leagues.md) keeps
 Blue's Dojo unlock on the first committed Indigo win. These changes take
 precedence for circuit appearances only if the draft is adopted. Local Kanto
 adventures, Blue's origin-specific rivalry and forward story progression, and
@@ -22,7 +22,7 @@ Giovanni's badge role remain owned here; the current port and approved fixed
 circuit retain their existing behavior meanwhile.
 
 Giovanni's and Blue's battles follow the proposed
-[well-known trainer rating](trainer-world-progression.md); Blue gains no badge.
+[well-known trainers](well-known-trainers.md) model; Blue gains no badge.
 
 ## Intent
 

@@ -9,16 +9,8 @@ formula and soft-cap anchors are unchanged. These circuit inputs are current;
 the Partial marker does not certify completion of all experience, obedience,
 and cross-build acceptance listed below.
 
-The proposed [Trainer Circuit](../prds/seeded-trainer-circuit.md) keeps this
-player TR formula and cap contract: badges plus +8 per committed first venue
-clear, and nothing for a loss. In the target, TR is uncapped: each TR-driven
-consumer is a scaler whose value stays flat past its last anchor, so the soft
-cap stays at Lv 100 past TR 80. Under the proposed
-[well-known trainer rating](trainer-world-progression.md), well-known trainers
-use this document's soft-cap anchors for team level but have their own
-authored, fixed TR and never read the player's. The player's saved high-water
-TR, soft cap, XP reduction, obedience, wild encounters, marts, ordinary
-Trainers, and Gym members retain their existing player inputs.
+The v0 TR target (uncapped TR, scalers, and well-known trainers' separate
+TR) is in [Player Trainer Rating](player-trainer-rating.md).
 
 ## Scope
 

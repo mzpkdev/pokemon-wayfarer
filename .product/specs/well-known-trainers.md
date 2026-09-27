@@ -1,6 +1,6 @@
-# Well-known trainer rating
+# Well-known trainers
 
-PRD: [Well-known trainer rating](../prds/trainer-world-progression.md)
+PRD: [Well-known trainers](../prds/well-known-trainers.md)
 Implemented: No. The current ROM keeps its existing Gym and League scaling
 until adoption; the browser explorer is provisional tooling.
 Design status: v0 target contract. The model is accepted; each trainer's TR
@@ -11,19 +11,19 @@ review.
 
 This specification is the single owner of the v0 well-known trainer model:
 the well-known inventory, the rule that routes every battle with a well-known
-character to their TR plan, trainer TR, scalers, the v0 trainer scalers,
-rosters, team resolution, the battle snapshot, and their validation. Consumers
-link here rather than restating it.
+character to their TR plan, trainer TR, the v0 trainer scalers, rosters, team
+resolution, the battle snapshot, and their validation. Consumers link here
+rather than restating it.
 
 - [Gym Leader scaling](gym-leader-scaling.md) owns badge-encounter coverage and
   is the single authority for battle construction (source-member identity,
   `AUTHORED`/`LEVEL_UP` moves, rewards and AI, randomizer precedence). Those
   rules apply to every well-known battle, not only Gym battles.
-- [League circuit runtime](seeded-league-circuit.md) and
-  [circuit trainer pool](circuit-trainer-pool.md) own league fields and their
-  lifecycle.
-- [Player progression](trainer-rating-party-progression.md) owns the player's
-  TR and soft-cap curve.
+- [Leagues](leagues.md) owns league fields and their lifecycle.
+- [Player Trainer Rating](player-trainer-rating.md) owns the player's TR and
+  the scaler definition;
+  [party progression](trainer-rating-party-progression.md) owns the soft-cap
+  curve.
 - [Trainer roster influence](trainer-roster-influence.md) is parked and not
   part of v0.
 
@@ -64,35 +64,18 @@ encounter always uses this model.
   that changes it, so a trainer fields the same team in every battle and every
   save. Known v0 consequence: Blue's early rival fights and his late ones use
   the same team.
-- **Uncapped.** TR is a non-negative integer with no upper limit. Nothing
-  hardcodes 80; today's content happens to span about 0–80. Units are unchanged.
+- **Uncapped.** Trainer TR uses the player's uncapped scale and units
+  ([range](player-trainer-rating.md#range)).
 
-## Scalers
+## Trainer scalers
 
-Every TR-driven property is a **scaler**: an authored table of anchors
-`(tr, value)` with the first at TR 0, strictly increasing TRs, and
-non-decreasing values. Between adjacent anchors `(t0, v0)` and `(t1, v1)`, with
-floor division (halves round up):
-
-```text
-d     = t1 - t0
-value = v0 + floor((2 * (tr - t0) * (v1 - v0) + d) / (2 * d))
-```
-
-At or above the last anchor the value **stays flat**. Each scaler therefore has
-its own natural cap (the last value), reached at an authored saturation TR (the
-last anchor's TR). A **step** scaler instead holds each anchor's value until
-the next anchor. Scalers are versioned catalog content; runtime never repairs
-or extrapolates them.
-
-### v0 scalers
+Team level and team size are scalers as defined in
+[Player Trainer Rating](player-trainer-rating.md#scalers).
 
 | Scaler | Form | Range | Natural cap | Saturates at |
 | --- | --- | --- | --- | --- |
 | Team level (well-known trainers) | interpolated | Lv 15 → 100 | Lv 100 | TR 80 |
 | Team size (well-known trainers) | step | 2 → 6 | 6 | TR 55 (provisional) |
-| Player soft cap | interpolated | Lv 15 → 100 | Lv 100 | TR 80 (existing curve) |
-| Wild, static, ordinary trainers | existing policies | existing | existing | existing |
 
 **Team level** uses the same anchors as the
 [player soft-cap curve](trainer-rating-party-progression.md#soft-level-cap-curve),
@@ -151,19 +134,18 @@ resolved battle field the plan uses (species/form, level, moves, item,
 ability, nature, IVs/EVs, and battle order). Reconstruction within the battle
 reuses that plan; teardown clears it. A retry produces an identical team
 (battle RNG may still differ). League entry captures the selected trainers'
-plans in the field, which stays locked until the venue is won; the circuit
-specifications own that lifecycle. Invalid content or a
+plans in the field, which stays locked until the venue is won;
+[Leagues](leagues.md#frozen-field) owns that lifecycle. Invalid content or a
 failed resolution fails preparation; never substitute player TR, another
 trainer, or a random team. With fixed TRs every snapshot of a trainer is equal
 in v0; the snapshot is the boundary a future TR-change rule must respect.
 
 ## Validation
 
-- Scalers: first anchor at TR 0, strictly increasing TRs, non-decreasing
-  values within the natural range; interpolation and half-up rounding at every
-  anchor, midpoint, and adjacent TR; flat above the last anchor, including very
-  large TRs; team-level anchors equal the player soft-cap anchors; team-size
-  steps at 10/11, 29/30, 41/42, and 54/55.
+- Scalers: both pass the
+  [scaler checks](player-trainer-rating.md#validation); team-level anchors
+  equal the player soft-cap anchors; team-size steps at 10/11, 29/30, 41/42,
+  and 54/55.
 - Rosters: exactly six entries per trainer; offsets in −6..0; at least one
   offset-0 entry among the first `teamSize(0)` entries (entry 1 at offset 0 is
   the simplest satisfying rule); valid species/forms; `AUTHORED` entries have
@@ -206,8 +188,8 @@ implementations stay active until then.
 
 ## References
 
-- [Player progression](trainer-rating-party-progression.md)
+- [Player Trainer Rating](player-trainer-rating.md)
+- [Leagues](leagues.md)
 - [Gym Leader scaling](gym-leader-scaling.md)
-- [League circuit runtime](seeded-league-circuit.md)
-- [Circuit trainer pool](circuit-trainer-pool.md)
+- [Player progression](trainer-rating-party-progression.md)
 - [Trainer roster influence](trainer-roster-influence.md)

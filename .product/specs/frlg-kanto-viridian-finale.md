@@ -17,7 +17,7 @@ Nidoqueen 44, Nidoking 45, Rhyhorn 50, retaining both Rhyhorn. These are source
 levels under the current bespoke five-slot player-TR projection in
 [party construction](../../game/src/battle_main.c), independent of the disabled
 shared six-slot Gym feature. The proposed
-[well-known trainer rating](trainer-world-progression.md) builds Giovanni's
+[well-known trainers](well-known-trainers.md) model builds Giovanni's
 badge battle from his own authored, fixed TR and six-entry roster. This
 five-member source remains provenance, not a required early party or immutable
 prefix for every team size.
@@ -34,7 +34,7 @@ Blue is removed from Viridian's exterior introduction and Gym scripts, objects, 
 
 ## Blue at the Saffron Dojo
 
-The proposed [Trainer Circuit](../prds/seeded-trainer-circuit.md) fields the
+The proposed [Leagues](../prds/leagues.md) design fields the
 global top five by TR, so Blue is no longer guaranteed at Indigo. It keeps this
 unlock on the first committed Indigo win, whether or not Blue was fielded.
 
@@ -49,7 +49,7 @@ Keep Blue's existing repeatable Saffron Fighting Dojo battle, authored Wayfarer 
 - Generate selected maps, warps, Trainer and item dependencies, and a release ROM; inspect the rendered FRLG maze and HNS city doorway. Source assets and screenshots are not runtime proof.
 
 Giovanni's and Blue's battles follow the proposed
-[well-known trainer rating](trainer-world-progression.md); Blue gains no badge.
+[well-known trainers](well-known-trainers.md) model; Blue gains no badge.
 
 ## Source anchors
 

@@ -5,10 +5,10 @@ Implemented: Partial; content and current circuit runtime exist, full content/ba
 The current [circuit producer](../../game/src/league_circuit.c) uses fixed Tier 3
 Hoenn admission and the implemented [League level resolver](../../game/src/trainer_party_scaling.c)
 uses saved player-entry TR. League levels are no longer static. Under the
-proposed [well-known trainer rating](trainer-world-progression.md), well-known
+proposed [well-known trainers](well-known-trainers.md) model, well-known
 trainers have their own authored, fixed TR that sets team level and size in
 every battle, with a six-entry roster. The
-[circuit runtime](../specs/seeded-league-circuit.md) replaces Hoenn's fixed
+[Leagues runtime](../specs/leagues.md) replaces Hoenn's fixed
 participants with the global top five by TR, strongest last; after a loss the
 venue is locked to that field until won. These successors are
 not implemented by the content port; current behavior below remains identified
@@ -139,11 +139,11 @@ than enrolled initial Gym Leader badge battles retain their Emerald-authored
 source rosters, items, AI, and battle formats. Ordinary Trainers and Gym
 members apply the separate [Trainer-party scaling design](trainer-party-scaling.md)
 to those rosters; rivals and bosses retain authored battle parties. Initial
-Gym Leader badge battles follow the separate [Gym Leader scaling design](gym-leader-scaling.md),
+Gym Leader badge battles follow the separate [Gym battle design](well-known-trainers.md#gym-battles),
 while leader rematches retain authored, static parties.
 Current Hoenn Elite Four and Champion battles use fixed Tier 3 source rosters
 and saved player-entry TR under [League scaling](league-scaling.md). The
-proposed [circuit trainer pool](../specs/circuit-trainer-pool.md) instead fields
+proposed [Leagues selection](../specs/leagues.md#selection-and-order) instead fields
 the global top five by TR. Emerald source parties remain provenance references
 rather than required opening or circuit teams. Tate and Liza remain outside the
 singles pool under their current double-Gym policy, with their badge preserved.
@@ -169,7 +169,7 @@ Hoenn destination.
 - Hoenn Champion completion is independent from the shared Indigo clear and
   the Sevii Masters Challenge clear.
 - In the current ROM, Hoenn is fixed Tier 3 after Indigo, Masters, and all
-  twenty-four badges. The proposed [Trainer Circuit](seeded-trainer-circuit.md)
+  twenty-four badges. The proposed [Leagues](leagues.md) design
   keeps the current signup and venue order until designed; a loss locks Hoenn
   to the same field until won. Venue-first clears retain their lifetime player
   rewards and local completion ownership.
@@ -218,7 +218,7 @@ not keep a separate healing history for every region.
 - Ordinary Trainer and Gym-member scaling is owned by the
   [Trainer-party scaling design](trainer-party-scaling.md). Enrolled initial
   Gym Leader badge battles are separately owned by the
-  [Gym Leader scaling design](gym-leader-scaling.md); leader rematches retain
+  [Gym battle design](well-known-trainers.md#gym-battles); leader rematches retain
   static parties.
 - The current Hoenn League preserves authored non-level metadata and scales
   from player TR locked for the run under [League scaling](league-scaling.md).

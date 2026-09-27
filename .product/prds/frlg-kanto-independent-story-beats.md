@@ -164,7 +164,7 @@ Keep FRLG's rival scenes at their existing locations except for Blue's
 one-time Cinnabar introduction. The historical coastal port moved it to the
 Viridian Gym entrance; the implemented [Viridian finale](../specs/frlg-kanto-viridian-finale.md)
 now removes that introduction and Blue's Gym role. The proposed
-[well-known trainer rating](trainer-world-progression.md) gives Blue and
+[well-known trainers](well-known-trainers.md) model gives Blue and
 Giovanni their own authored, fixed TR for every battle with them; it assigns
 Blue no badge. Preserve genuinely necessary
 character-development order by withholding later scenes until their predecessors

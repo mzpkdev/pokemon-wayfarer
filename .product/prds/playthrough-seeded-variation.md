@@ -88,5 +88,5 @@ owned by each feature.
 ## References
 
 - [Playthrough seed framework specification](../specs/playthrough-seed-framework.md)
-- [Trainer Circuit PRD](seeded-trainer-circuit.md)
-- [Well-known trainer rating PRD](trainer-world-progression.md)
+- [Leagues PRD](leagues.md)
+- [Well-known trainers PRD](well-known-trainers.md)

@@ -5,11 +5,9 @@ Implemented: Partial; runtime policies exist, campaign balance acceptance remain
 
 Current ROM routing includes [League scaling](league-scaling.md) with saved player-entry TR;
 League levels are no longer static. See [the level resolver](../../game/src/trainer_party_scaling.c)
-and [the circuit producer](../../game/src/league_circuit.c). The
-[PRD](../prds/trainer-party-scaling.md) summarizes the proposed
-[well-known trainer rating](trainer-world-progression.md) boundary; ordinary
-Trainers and Gym members keep this document's player-TR snapshot and never read
-a well-known trainer's TR.
+and [the circuit producer](../../game/src/league_circuit.c). The v0 TR
+target (uncapped TR, scalers, and well-known trainers' separate TR) is in
+[Player Trainer Rating](player-trainer-rating.md).
 
 ## Scope and authority
 
@@ -36,7 +34,7 @@ use player TR when enabled. Disabled paths retain existing authored behavior.
 Giovanni's initial Viridian battle separately uses a bespoke five-slot player-TR
 projection in [party construction](../../game/src/battle_main.c). Proposed
 well-known trainer TR and rosters belong to the
-[well-known trainer rating](trainer-world-progression.md) and Gym
+[Well-known trainers](well-known-trainers.md) and Gym
 specifications. `LEAGUE` currently routes the fifteen enrolled circuit
 runtime IDs to the separate [League scaling specification](league-scaling.md),
 including its run-context validation and authored fallback when scaling is

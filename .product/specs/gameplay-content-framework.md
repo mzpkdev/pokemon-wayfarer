@@ -256,9 +256,9 @@ player TR at their existing sample boundaries. Existing six-slot Gym plans use
 player TR when `B_GYM_LEADER_SCALING` is enabled; it is disabled by default.
 Giovanni retains his separate five-slot player-TR projection. Current fixed
 Leagues use their persisted admission value. The proposed
-[well-known trainer rating](trainer-world-progression.md) instead derives
+[well-known trainers](well-known-trainers.md) model instead derives
 well-known trainers' team level and size, in every battle with them including
-the [league circuit](seeded-league-circuit.md), from each trainer's own
+the [league circuit](leagues.md), from each trainer's own
 authored, fixed TR, never from player TR. Team plans snapshot at battle setup;
 each league field is captured at entry and stays locked until the venue is
 won; a loss, leaving, or reload keeps it. Consumers and lifecycle code

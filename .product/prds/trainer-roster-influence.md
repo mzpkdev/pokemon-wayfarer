@@ -4,7 +4,7 @@ Implemented: No
 Design status: Parked: not part of v0.
 
 This is a design note kept for later. v0 trainers field a fixed team from one
-hand-written list ([well-known trainer rating](trainer-world-progression.md)),
+hand-written list ([Well-known trainers](well-known-trainers.md)),
 so there is nothing for the player to influence yet. These ideas depend on a
 future rule that lets trainers pick some supporting Pokémon dynamically.
 
@@ -31,4 +31,4 @@ future rule that lets trainers pick some supporting Pokémon dynamically.
 ## References
 
 - [Trainer roster influence specification](../specs/trainer-roster-influence.md)
-- [Well-known trainer rating](trainer-world-progression.md)
+- [Well-known trainers](well-known-trainers.md)

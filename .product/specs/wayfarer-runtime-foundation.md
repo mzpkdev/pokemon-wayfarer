@@ -123,7 +123,7 @@ Existing Johto and Kanto callers keep their current result.
 
 ### Save storage and lifecycle
 
-The proposed [circuit runtime](seeded-league-circuit.md) adds, under this
+The proposed [Leagues runtime](leagues.md#saved-state) adds, under this
 storage policy, at most one locked league field (its venue, the pool's content
 versions, and five slots in battle order, each holding `characterId`, TR, and
 the composed team) plus active-run progress (venue and defeated prefix). There
@@ -201,12 +201,12 @@ The currently implemented circuit uses fixed Indigo, Sevii Masters, then Hoenn
 order. Its first-clear result advances only after completion commits. Only
 Indigo projects its clear into both Kanto and Johto Champion recognition.
 
-The proposed [circuit runtime](seeded-league-circuit.md) keeps current
+The proposed [Leagues runtime](leagues.md) keeps current
 admission, venue order, and lifetime first clears with their regional
 recognition, cleanup, unlocks, and player TR contributions. It changes only
 who is fielded and what happens after a loss: each venue fields the global top
 five well-known trainers by their authored, fixed TR under
-[well-known trainer rating](trainer-world-progression.md), strongest last,
+[Well-known trainers](well-known-trainers.md), strongest last,
 without reading player party, XP, or TR. Well-known trainers in Gyms use the
 same model at battle setup.
 

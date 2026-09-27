@@ -3,12 +3,8 @@
 PRD: [League scaling](../prds/league-scaling.md)
 Implemented: Partial
 
-Proposed successor: the [PRD](../prds/league-scaling.md) summarizes the
-top-five-by-TR fields and fixed per-trainer TR that replace this contract upon
-adoption; [well-known trainer rating](trainer-world-progression.md), the
-[circuit trainer pool](circuit-trainer-pool.md), and the
-[circuit runtime](seeded-league-circuit.md) own them. Everything below
-describes current ROM behavior.
+Everything below describes current ROM behavior; the proposed successor is
+[Leagues](leagues.md).
 
 The scaling engine, fixed Indigo/Masters/Hoenn roster and venue wiring,
 persisted stage/replay/entry-TR identity, and +8-per-venue progression are

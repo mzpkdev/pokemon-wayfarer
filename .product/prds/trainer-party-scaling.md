@@ -4,12 +4,9 @@ Implemented: Partial; runtime policies exist, campaign balance acceptance remain
 
 Current ROM routing includes [League scaling](league-scaling.md) with saved player-entry TR;
 League levels are no longer static. See [the level resolver](../../game/src/trainer_party_scaling.c)
-and [the circuit producer](../../game/src/league_circuit.c). The proposed
-[well-known trainer rating](trainer-world-progression.md) gives well-known
-trainers their own authored, fixed TR that sets team level and size in every
-battle with them. Ordinary Trainers and Gym members retain this document's
-player-TR snapshot and transformation rules; they never read a well-known
-trainer's TR.
+and [the circuit producer](../../game/src/league_circuit.c). The v0 TR
+target (uncapped TR, scalers, and well-known trainers' separate TR) is in
+[Player Trainer Rating](player-trainer-rating.md).
 
 The current shared six-slot Gym feature is disabled by default in
 [configuration](../../game/include/config/trainer_party_scaling.h); it uses
@@ -94,7 +91,7 @@ Defeated Trainers remain defeated under existing rules; this feature adds no
 rematch availability or repeatable farming system.
 
 Gym Leaders remain outside this automatic system. Their enrolled initial badge
-battles follow the separate [Gym Leader scaling design](gym-leader-scaling.md);
+battles follow the separate [Gym battle design](well-known-trainers.md#gym-battles);
 the ordinary scaler continues to exclude them, and leader rematches retain
 their authored, static parties. Rivals, villain bosses and admins, Elite Four
 members, Champions, other authored story bosses, tutorials, and battle
@@ -128,7 +125,7 @@ active. Moves must be valid for the resulting randomized species and level.
 
 This design supersedes the interregional League circuit's static-party rule
 only for ordinary Trainers and Gym members. Initial Gym Leader badge battles
-are owned by the separate [Gym Leader scaling design](gym-leader-scaling.md),
+are owned by the separate [Gym battle design](well-known-trainers.md#gym-battles),
 while leader rematches remain static. League rosters stay authored and their
 levels follow the separate [League scaling design](league-scaling.md). Player
 Rating advancement belongs to the implemented circuit producer. Host

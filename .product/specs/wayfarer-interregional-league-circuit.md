@@ -4,12 +4,8 @@ PRD: [Wayfarer interregional League circuit](../prds/wayfarer-interregional-leag
 
 Implemented: Yes
 
-Proposed successor: the [PRD](../prds/wayfarer-interregional-league-circuit.md)
-summarizes the top-five-by-TR fields and loss lock that replace this
-contract's lineups upon adoption; the [circuit runtime](seeded-league-circuit.md),
-[circuit trainer pool](circuit-trainer-pool.md), and
-[well-known trainer rating](trainer-world-progression.md) own it. The contract
-below remains the ROM implementation baseline.
+This contract remains the ROM implementation baseline; the proposed target
+is [Leagues](leagues.md).
 
 The runtime now uses one persisted circuit stage identity for FRLG Indigo,
 Sevii Masters, and Hoenn. Regional Champion flags are projections of committed

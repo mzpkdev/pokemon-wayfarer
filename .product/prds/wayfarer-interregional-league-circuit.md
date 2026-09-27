@@ -2,15 +2,8 @@
 
 Implemented: Yes
 
-Proposed successor: the [Trainer Circuit](seeded-trainer-circuit.md)
-replaces the fixed lineups. Each venue fields the global top five well-known
-trainers by TR, strongest last, each at their own authored, fixed TR per
-[well-known trainer rating](trainer-world-progression.md), never player TR.
-After a loss the venue is locked to the same field until the player wins it.
-Signup, venue order, replays, records, ceremonies, and unlocks stay as below
-until designed. The [circuit runtime](../specs/seeded-league-circuit.md) owns
-entry, the loss lock, and the win commit. The current fixed circuit contract
-below remains the ROM implementation baseline.
+This is the record of today's implemented circuit; the proposed target is
+[Leagues](leagues.md).
 
 The current runtime implements the fixed Indigo → Sevii Masters → Hoenn circuit
 with canonical stage clears, one shared Indigo result projected to Kanto/Johto,
@@ -186,7 +179,7 @@ ordinary-Trainer, Gym-member, soft-cap, and obedience consumers, plus Giovanni's
 current five-slot projection. The shared six-slot Gym feature reads player TR
 when enabled and is disabled by default. Proposed well-known trainers
 instead use their own fixed TR under
-[well-known trainer rating](trainer-world-progression.md); the other consumers
+[Well-known trainers](well-known-trainers.md); the other consumers
 continue to read player TR. Current fixed circuit opponents use their saved
 run-entry snapshot through League scaling.
 

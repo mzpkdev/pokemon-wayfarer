@@ -62,9 +62,9 @@ setup. The existing six-slot Gym scaler is disabled by default; when enabled it
 uses player TR, while Giovanni has a separate five-slot player-TR projection.
 Current fixed Leagues use their saved admission Rating and sample again on new
 admission. Under the proposed
-[well-known trainer rating](trainer-world-progression.md), well-known trainers
+[well-known trainers](well-known-trainers.md) model, well-known trainers
 snapshot a team from their own authored, fixed TR at battle setup, never player
-TR, and each [league field](../specs/seeded-league-circuit.md) is captured at
+TR, and each [league field](../specs/leagues.md#frozen-field) is captured at
 entry and stays locked until the venue is won; a loss, leaving, or reload
 keeps it. The shared curve
 evaluator accepts an explicit input and never produces

@@ -15,8 +15,8 @@ Hoenn admission, the [League level resolver](../../game/src/trainer_party_scalin
 uses saved player-entry TR, and the shared six-slot Gym feature is disabled by
 default in [configuration](../../game/include/config/trainer_party_scaling.h).
 The [PRD](../prds/wayfarer-hoenn-integration.md) summarizes the proposed
-[well-known trainer rating](trainer-world-progression.md) and
-[circuit runtime](seeded-league-circuit.md) successors, which this content port
+[well-known trainers](well-known-trainers.md) and [Leagues](leagues.md)
+successors, which this content port
 does not implement.
 
 ## Scope
@@ -378,10 +378,10 @@ committed Indigo and Masters first clears. Its authored source rosters use
 saved player-entry TR under [League scaling](league-scaling.md). Hoenn-specific
 Champion/game-clear ownership and local cleanup remain in force.
 
-The proposed [circuit runtime](seeded-league-circuit.md) keeps current
+The proposed [Leagues runtime](leagues.md) keeps current
 admission and venue order and owns the locked five-trainer field and retries
-after a loss; the [circuit trainer pool](circuit-trainer-pool.md) fields the
-global top five by TR, and [well-known trainer rating](trainer-world-progression.md)
+after a loss; [Leagues selection](leagues.md#selection-and-order) fields the
+global top five by TR, and [Well-known trainers](well-known-trainers.md)
 owns their TR and teams. Completion still owns this
 venue's result and regional effects, independently of who was selected.
 

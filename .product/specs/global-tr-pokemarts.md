@@ -5,10 +5,8 @@ Implemented: Partial; converted-counter runtime is enabled, release acceptance r
 
 The current [circuit producer](../../game/src/league_circuit.c) already contributes
 +8 once for each canonical venue's first clear. Replays add no player TR. The
-proposed [well-known trainer rating](trainer-world-progression.md) gives
-well-known trainers their own TR without changing the getter or stock tiers
-below. Mart openers continue to snapshot player TR; they never read a
-well-known trainer's TR.
+v0 TR target (uncapped TR, scalers, and well-known trainers' separate TR) is in
+[Player Trainer Rating](player-trainer-rating.md).
 
 ## Scope
 

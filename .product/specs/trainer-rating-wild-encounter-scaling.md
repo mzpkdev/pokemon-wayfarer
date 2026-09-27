@@ -38,9 +38,8 @@ that candidate with the stored rating and saves the higher value. Replays add
 no TR, and no later read lowers the high-water mark. Feature-disabled foundation
 checks can still seed a stored value; no prerelease save migration is required.
 
-The [player progression target](trainer-rating-party-progression.md) covers
-uncapped TR and well-known trainers' separate ratings, which never affect this
-getter or its consumers.
+The v0 TR target (uncapped TR, scalers, and well-known trainers' separate
+TR) is in [Player Trainer Rating](player-trainer-rating.md).
 
 ### Progression targets
 

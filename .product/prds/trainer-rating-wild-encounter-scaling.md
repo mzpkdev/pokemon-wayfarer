@@ -7,11 +7,8 @@ The current [circuit producer](../../game/src/league_circuit.c) implements
 contributions and soft-cap anchors are unchanged. The Partial marker does not
 certify all wild-scaling and party-progression acceptance below.
 
-The proposed [Trainer Circuit](seeded-trainer-circuit.md) and
-[well-known trainer rating](trainer-world-progression.md) leave this player TR
-and its wild-encounter use unchanged; the
-[player progression target](../specs/trainer-rating-party-progression.md)
-describes uncapped TR and well-known trainers' separate ratings.
+The v0 TR target (uncapped TR, scalers, and well-known trainers' separate
+TR) is in [Player Trainer Rating](player-trainer-rating.md).
 
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes named native-utility carriers and permanent-retention

@@ -3,15 +3,8 @@
 Status: Scaling engine and fixed circuit wiring implemented; campaign balance acceptance pending.
 Implemented: Partial
 
-Proposed successor: under the
-[well-known trainer rating](trainer-world-progression.md), each well-known
-trainer has an authored, fixed TR that sets team level and size in every
-battle, never player TR or party. The [Trainer Circuit](seeded-trainer-circuit.md)
-replaces the fixed rosters: each venue fields the global top five by TR,
-strongest last, and after a loss the venue is locked to that field until won;
-the [circuit runtime](../specs/seeded-league-circuit.md) owns that lifecycle.
-The fixed runtime contract below describes current ROM behavior, not this
-unimplemented successor.
+This document describes current ROM behavior; the proposed successor is
+[Leagues](leagues.md).
 
 The fixed Indigo/Masters/Hoenn roster and venue wiring, stage/replay identity,
 entry-TR snapshot, and +8-per-venue progression are implemented. See the
@@ -20,12 +13,6 @@ and [runtime producer](../../game/src/league_circuit.c).
 The [original scaling evidence](../research/league-scaling-implementation.md)
 records earlier automated results and the remaining gameplay validation; its
 old progression/wiring description predates the current circuit.
-
-## Proposed party and registration contract
-
-Rosters, team size, and levels for league opponents follow the
-[well-known trainer rating](trainer-world-progression.md); the
-[Trainer Circuit](seeded-trainer-circuit.md) owns who is fielded.
 
 ## Current ROM intent
 
@@ -135,5 +122,5 @@ replace species, moves, items, or AI in this implementation.
 
 - [League scaling specification](../specs/league-scaling.md)
 - [Interregional League circuit](wayfarer-interregional-league-circuit.md)
-- [Gym Leader scaling](gym-leader-scaling.md)
+- [Well-known trainers: Gym battles](well-known-trainers.md#gym-battles)
 - [Player party progression](../specs/trainer-rating-party-progression.md)

@@ -1,4 +1,4 @@
-# Trainer Circuit
+# Leagues
 
 Implemented: No
 Design status: v0 approved: top-five-by-TR fields drawn from one global pool,
@@ -12,6 +12,12 @@ world rather than fixed room occupants. Each opponent fights as the same
 person the player meets elsewhere, at their own Trainer Rating (TR) and with
 their own team, so a league battle and a Gym battle with Clair are the same
 Clair.
+
+On adoption, Leagues replaces today's fixed lineups and their levels scaled
+from the player's entry TR
+([League scaling](league-scaling.md),
+[interregional League circuit](wayfarer-interregional-league-circuit.md)),
+which remain the record of the current ROM.
 
 ## Design
 
@@ -32,8 +38,9 @@ strongest last.
 
 **Strength.** Each opponent uses their own TR, team, and levels, exactly as in
 any other battle with them. There is no league-specific adjustment.
-[Well-known trainer rating](trainer-world-progression.md) owns trainer TR,
-the scalers that turn TR into team level and size, and rosters.
+[Well-known trainers](well-known-trainers.md) owns trainer TR, the scalers
+that turn TR into team level and size, and rosters. The player's TR never
+enters it.
 
 **Losing.** The field is set when the player enters and stays locked to the
 same five trainers with the same teams until the player beats the venue. A
@@ -86,12 +93,13 @@ trainers follow their own rating.
 
 ## Specifications
 
-- [Circuit trainer pool](../specs/circuit-trainer-pool.md): registry,
-  eligibility, selection, ordering, and battle construction.
-- [Circuit runtime](../specs/seeded-league-circuit.md): entry, the field lock,
-  the win commit, saved state, and load validation.
-- [Well-known trainer rating specification](../specs/trainer-world-progression.md):
-  TR, scalers, and rosters.
+- [Leagues specification](../specs/leagues.md): registry, eligibility,
+  selection, ordering, the frozen field, battle construction, the win commit,
+  saved state, and load validation.
+- [Well-known trainers specification](../specs/well-known-trainers.md): TR,
+  scalers, and rosters.
+- [Player Trainer Rating specification](../specs/player-trainer-rating.md):
+  the player's TR, including its +8 first-clear contributions.
 
 ## Later
 
@@ -105,7 +113,8 @@ trainers follow their own rating.
 
 ## References
 
-- [Well-known trainer rating](trainer-world-progression.md)
+- [Player Trainer Rating](player-trainer-rating.md)
+- [Well-known trainers](well-known-trainers.md)
 - [Interregional League circuit](wayfarer-interregional-league-circuit.md)
 - [League scaling](league-scaling.md)
 - [Playthrough-seeded variation](playthrough-seeded-variation.md) (parked)

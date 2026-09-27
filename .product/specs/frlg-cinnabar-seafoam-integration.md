@@ -6,7 +6,7 @@ Implemented: Yes
 Implemented in [PR #112](https://github.com/mzpkdev/pokemon-wayfarer/pull/112).
 
 Giovanni's and Blue's battles follow the proposed
-[well-known trainer rating](trainer-world-progression.md); Blue gains no badge.
+[well-known trainers](well-known-trainers.md) model; Blue gains no badge.
 
 ## Scope
 
@@ -130,9 +130,9 @@ implemented [Viridian finale](frlg-kanto-viridian-finale.md) supersedes the
 exterior introduction, Blue Gym role, and related acceptance checks. Blue's
 current Dojo unlock follows committed Indigo victory independently of Giovanni.
 
-The proposed [Trainer Circuit](../prds/seeded-trainer-circuit.md) fields the
+The proposed [Leagues](../prds/leagues.md) design fields the
 global top five by TR rather than guaranteeing Blue as Indigo finalist. Its
-[runtime contract](seeded-league-circuit.md) keeps Blue's Dojo unlock on the
+[runtime contract](leagues.md) keeps Blue's Dojo unlock on the
 first committed Indigo win, whether or not Blue was fielded. The delivered
 coastal port's historical Viridian behavior is already superseded by the
 implemented finale; unrelated local/rival story interactions retain their
