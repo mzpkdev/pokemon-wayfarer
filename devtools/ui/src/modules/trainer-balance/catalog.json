@@ -1,58 +1,68 @@
 {
   "evolution": {
     "chains": {
+      "Abomasnow": ["Snover", 40, "Abomasnow"],
       "Absol": ["Absol"],
       "Aerodactyl": ["Aerodactyl"],
       "Aggron": ["Aron", 32, "Lairon", 42, "Aggron"],
       "Alakazam": ["Abra", 16, "Kadabra", 42, "Alakazam"],
       "Altaria": ["Swablu", 35, "Altaria"],
       "Ampharos": ["Mareep", 15, "Flaaffy", 30, "Ampharos"],
-      "Annihilape": ["Mankey", 28, "Primeape", 45, "Annihilape"],
       "Arbok": ["Ekans", 22, "Arbok"],
       "Arcanine": ["Growlithe", 35, "Arcanine"],
       "Ariados": ["Spinarak", 22, "Ariados"],
       "Armaldo": ["Anorith", 40, "Armaldo"],
       "Banette": ["Shuppet", 37, "Banette"],
+      "Bastiodon": ["Shieldon", 30, "Bastiodon"],
+      "Beedrill": ["Weedle", 7, "Kakuna", 10, "Beedrill"],
       "Bellossom": ["Oddish", 21, "Gloom", 36, "Bellossom"],
       "Blissey": ["Chansey", 40, "Blissey"],
       "Breloom": ["Shroomish", 23, "Breloom"],
+      "Bronzong": ["Bronzor", 33, "Bronzong"],
+      "Butterfree": ["Caterpie", 7, "Metapod", 10, "Butterfree"],
       "Cacturne": ["Cacnea", 32, "Cacturne"],
       "Camerupt": ["Numel", 33, "Camerupt"],
+      "Charizard": ["Charmander", 16, "Charmeleon", 36, "Charizard"],
       "Claydol": ["Baltoy", 36, "Claydol"],
       "Clefable": ["Clefairy", 36, "Clefable"],
       "Cloyster": ["Shellder", 34, "Cloyster"],
-      "Corsola": ["Corsola"],
       "Cradily": ["Lileep", 40, "Cradily"],
       "Crawdaunt": ["Corphish", 30, "Crawdaunt"],
       "Crobat": ["Zubat", 22, "Golbat", 38, "Crobat"],
-      "Delcatty": ["Skitty", 30, "Delcatty"],
       "Dewgong": ["Seel", 34, "Dewgong"],
+      "Dodrio": ["Doduo", 31, "Dodrio"],
       "Dragonite": ["Dratini", 30, "Dragonair", 55, "Dragonite"],
-      "Dudunsparce": ["Dunsparce", 32, "Dudunsparce"],
+      "Drifblim": ["Drifloon", 28, "Drifblim"],
       "Dugtrio": ["Diglett", 26, "Dugtrio"],
       "Dusknoir": ["Duskull", 37, "Dusclops", 50, "Dusknoir"],
-      "Eevee": ["Eevee"],
       "Electivire": ["Electabuzz", 45, "Electivire"],
       "Electrode": ["Voltorb", 30, "Electrode"],
       "Espeon": ["Eevee", 30, "Espeon"],
       "Exeggutor": ["Exeggcute", 34, "Exeggutor"],
-      "Farigiraf": ["Girafarig", 40, "Farigiraf"],
+      "Flareon": ["Eevee", 30, "Flareon"],
       "Flygon": ["Trapinch", 35, "Vibrava", 45, "Flygon"],
       "Forretress": ["Pineco", 31, "Forretress"],
       "Froslass": ["Snorunt", 42, "Froslass"],
+      "Gallade": ["Ralts", 20, "Kirlia", 30, "Gallade"],
+      "Garchomp": ["Gible", 24, "Gabite", 48, "Garchomp"],
       "Gardevoir": ["Ralts", 20, "Kirlia", 30, "Gardevoir"],
       "Gengar": ["Gastly", 25, "Haunter", 42, "Gengar"],
+      "Girafarig": ["Girafarig"],
+      "Glaceon": ["Eevee", 30, "Glaceon"],
       "Glalie": ["Snorunt", 42, "Glalie"],
       "Golduck": ["Psyduck", 33, "Golduck"],
       "Golem": ["Geodude", 25, "Graveler", 38, "Golem"],
       "Grumpig": ["Spoink", 32, "Grumpig"],
       "Gyarados": ["Magikarp", 20, "Gyarados"],
       "Hariyama": ["Makuhita", 24, "Hariyama"],
+      "Heracross": ["Heracross"],
       "Hitmonchan": ["Hitmonchan"],
       "Hitmonlee": ["Hitmonlee"],
       "Hitmontop": ["Hitmontop"],
       "Honchkrow": ["Murkrow", 36, "Honchkrow"],
       "Houndoom": ["Houndour", 24, "Houndoom"],
+      "Hypno": ["Drowzee", 26, "Hypno"],
+      "Jolteon": ["Eevee", 30, "Jolteon"],
       "Jumpluff": ["Hoppip", 18, "Skiploom", 27, "Jumpluff"],
       "Jynx": ["Jynx"],
       "Kabutops": ["Kabuto", 40, "Kabutops"],
@@ -60,18 +70,19 @@
       "Kingdra": ["Horsea", 32, "Seadra", 45, "Kingdra"],
       "Lanturn": ["Chinchou", 27, "Lanturn"],
       "Lapras": ["Lapras"],
-      "Ledian": ["Ledyba", 18, "Ledian"],
       "Linoone": ["Zigzagoon", 20, "Linoone"],
+      "Lucario": ["Lucario"],
       "Ludicolo": ["Lotad", 14, "Lombre", 36, "Ludicolo"],
       "Lunatone": ["Lunatone"],
       "Luvdisc": ["Luvdisc"],
+      "Luxray": ["Shinx", 15, "Luxio", 30, "Luxray"],
       "Machamp": ["Machop", 28, "Machoke", 38, "Machamp"],
       "Magcargo": ["Slugma", 38, "Magcargo"],
       "Magmortar": ["Magmar", 45, "Magmortar"],
       "Magnezone": ["Magnemite", 30, "Magneton", 45, "Magnezone"],
       "Mamoswine": ["Swinub", 33, "Piloswine", 45, "Mamoswine"],
       "Manectric": ["Electrike", 26, "Manectric"],
-      "Mawile": ["Mawile"],
+      "Marowak": ["Cubone", 28, "Marowak"],
       "Medicham": ["Meditite", 37, "Medicham"],
       "Metagross": ["Beldum", 20, "Metang", 45, "Metagross"],
       "Mightyena": ["Poochyena", 18, "Mightyena"],
@@ -82,44 +93,49 @@
       "Muk": ["Grimer", 38, "Muk"],
       "Nidoking": ["Nidoran♂", 16, "Nidorino", 36, "Nidoking"],
       "Nidoqueen": ["Nidoran♀", 16, "Nidorina", 36, "Nidoqueen"],
+      "Ninetales": ["Vulpix", 35, "Ninetales"],
       "Noctowl": ["Hoothoot", 20, "Noctowl"],
       "Omastar": ["Omanyte", 40, "Omastar"],
+      "Parasect": ["Paras", 24, "Parasect"],
       "Pelipper": ["Wingull", 25, "Pelipper"],
+      "Persian": ["Meowth", 28, "Persian"],
       "Pidgeot": ["Pidgey", 18, "Pidgeotto", 36, "Pidgeot"],
+      "Politoed": ["Poliwag", 25, "Poliwhirl", 36, "Politoed"],
       "Poliwrath": ["Poliwag", 25, "Poliwhirl", 36, "Poliwrath"],
+      "Primeape": ["Mankey", 28, "Primeape"],
       "Probopass": ["Nosepass", 40, "Probopass"],
-      "Quagsire": ["Wooper", 20, "Quagsire"],
-      "Qwilfish": ["Qwilfish"],
       "Raichu": ["Pikachu", 30, "Raichu"],
+      "Rampardos": ["Cranidos", 30, "Rampardos"],
       "Rapidash": ["Ponyta", 40, "Rapidash"],
+      "Relicanth": ["Relicanth"],
       "Rhyperior": ["Rhyhorn", 42, "Rhydon", 55, "Rhyperior"],
-      "Roserade": ["Roselia", 36, "Roserade"],
+      "Rotom": ["Rotom"],
       "Sableye": ["Sableye"],
       "Salamence": ["Bagon", 30, "Shelgon", 50, "Salamence"],
-      "Sandslash": ["Sandshrew", 22, "Sandslash"],
       "Scizor": ["Scyther", 40, "Scizor"],
+      "Sharpedo": ["Carvanha", 30, "Sharpedo"],
+      "Shedinja": ["Nincada", 20, "Shedinja"],
       "Shiftry": ["Seedot", 14, "Nuzleaf", 36, "Shiftry"],
       "Skarmory": ["Skarmory"],
       "Slaking": ["Slakoth", 18, "Vigoroth", 36, "Slaking"],
       "Slowbro": ["Slowpoke", 37, "Slowbro"],
-      "Slowking": ["Slowpoke", 37, "Slowking"],
+      "Snorlax": ["Snorlax"],
       "Solrock": ["Solrock"],
       "Spinda": ["Spinda"],
+      "Spiritomb": ["Spiritomb"],
+      "Staraptor": ["Starly", 14, "Staravia", 34, "Staraptor"],
       "Starmie": ["Staryu", 30, "Starmie"],
       "Steelix": ["Onix", 35, "Steelix"],
       "Sudowoodo": ["Sudowoodo"],
-      "Swalot": ["Gulpin", 26, "Swalot"],
       "Swellow": ["Taillow", 22, "Swellow"],
       "Tangrowth": ["Tangela", 40, "Tangrowth"],
-      "Tauros": ["Tauros"],
       "Tentacruel": ["Tentacool", 30, "Tentacruel"],
       "Torkoal": ["Torkoal"],
+      "Toxicroak": ["Croagunk", 37, "Toxicroak"],
       "Tropius": ["Tropius"],
       "Umbreon": ["Eevee", 30, "Umbreon"],
-      "Ursaluna": ["Teddiursa", 30, "Ursaring", 50, "Ursaluna"],
-      "Vaporeon": ["Eevee", 30, "Vaporeon"],
+      "Ursaring": ["Teddiursa", 30, "Ursaring"],
       "Venomoth": ["Venonat", 31, "Venomoth"],
-      "Venusaur": ["Bulbasaur", 16, "Ivysaur", 32, "Venusaur"],
       "Victreebel": ["Bellsprout", 21, "Weepinbell", 36, "Victreebel"],
       "Vileplume": ["Oddish", 21, "Gloom", 36, "Vileplume"],
       "Wailord": ["Wailmer", 40, "Wailord"],
@@ -127,12 +143,11 @@
       "Weavile": ["Sneasel", 38, "Weavile"],
       "Weezing": ["Koffing", 35, "Weezing"],
       "Whiscash": ["Barboach", 30, "Whiscash"],
-      "Wobbuffet": ["Wobbuffet"],
-      "Wyrdeer": ["Stantler", 40, "Wyrdeer"],
+      "Wigglytuff": ["Jigglypuff", 36, "Wigglytuff"],
       "Xatu": ["Natu", 25, "Xatu"],
       "Yanmega": ["Yanma", 36, "Yanmega"]
     },
-    "notFinal": ["Eevee"]
+    "notFinal": ["Girafarig", "Primeape", "Ursaring"]
   },
   "trainers": [
     {
@@ -177,18 +192,18 @@
           "nature": null
         },
         {
-          "species": "Rhyperior",
+          "species": "Golem",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
+          "moves": ["Curse", "Stone Edge", "Body Slam", "Earthquake"],
+          "item": "Quick Claw",
           "ability": null,
           "nature": null
         },
         {
-          "species": "Aerodactyl",
+          "species": "Crobat",
           "levelOffset": -2,
-          "isAce": true,
+          "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
@@ -198,8 +213,8 @@
           "species": "Kabutops",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
+          "moves": ["Surf", "Ancient Power", "Night Slash", "Swords Dance"],
+          "item": "Scope Lens",
           "ability": null,
           "nature": null
         },
@@ -207,22 +222,22 @@
           "species": "Omastar",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
+          "moves": ["Ancient Power", "Ice Beam", "Surf", "Toxic"],
+          "item": "Focus Band",
           "ability": null,
           "nature": null
         },
         {
-          "species": "Golem",
-          "levelOffset": -2,
+          "species": "Aerodactyl",
+          "levelOffset": 0,
           "isAce": true,
-          "moves": ["Curse", "Stone Edge", "Body Slam", "Earthquake"],
-          "item": "Quick Claw",
+          "moves": ["Ancient Power", "Sky Attack", "Earthquake", "Fire Fang"],
+          "item": "Hard Stone",
           "ability": null,
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[1]; game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[2]; game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[3]; game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[4]; game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[5]; game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[0]. Golem (roster slot 6) keeps the source moves/item/ability/nature; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 Pokémon; only the first 6 are kept. Brock (user): Steelix (ace) at offset 0, Rhyperior, Aerodactyl (ace), Kabutops, Omastar and Golem (ace, keeping the source battle content); Relicanth and Kleavor dropped off."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Crobat [anime Zubat]. Aces (Steelix, Aerodactyl) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Golem (game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[0]), Kabutops (game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[2]), Omastar (game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[3]), Aerodactyl (game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[1]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "misty",
@@ -269,6 +284,24 @@
           "species": "Golduck",
           "levelOffset": -2,
           "isAce": false,
+          "moves": ["Aqua Tail", "Psychic", "Wonder Room", "Cross Chop"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Gyarados",
+          "levelOffset": 0,
+          "isAce": true,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Politoed",
+          "levelOffset": -2,
+          "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
@@ -277,33 +310,15 @@
         {
           "species": "Lapras",
           "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Quagsire",
-          "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
+          "moves": ["Hydro Pump", "Ice Beam", "Rain Dance", "Reflect"],
+          "item": "Never Melt Ice",
           "ability": null,
           "nature": null
         },
         {
-          "species": "Vaporeon",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Milotic",
-          "levelOffset": -2,
+          "species": "Kingdra",
+          "levelOffset": 0,
           "isAce": true,
           "moves": "LEVEL_UP",
           "item": null,
@@ -311,7 +326,7 @@
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[0]; game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[1]; game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[2]; game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[3]; game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[4]; game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[5]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). PLACEHOLDER ace slots (section 10): Starmie, Lapras, Milotic in roster slots 1/3/6, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Golduck [anime Psyduck], Politoed [anime Poliwag], Lapras [HGSS], Kingdra [anime Horsea]. Aces (Starmie, Gyarados, Kingdra) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Starmie (game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[5]), Golduck (game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[0]), Lapras (game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[4]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "lt-surge",
@@ -364,22 +379,31 @@
           "species": "Electrode",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
+          "moves": ["Shock Wave", "Rain Dance", "Thunder Wave", "Explosion"],
+          "item": "Focus Band",
           "ability": null,
           "nature": null
         },
         {
           "species": "Electivire",
-          "levelOffset": -2,
+          "levelOffset": 0,
           "isAce": true,
-          "moves": "LEVEL_UP",
+          "moves": ["Thunderbolt", "Fire Punch", "Ice Punch", "Submission"],
+          "item": "Scope Lens",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Magnezone",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Thunder", "Reflect", "Rain Dance", "Double Edge"],
           "item": null,
           "ability": null,
           "nature": null
         },
         {
-          "species": "Lanturn",
+          "species": "Jolteon",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -388,16 +412,7 @@
           "nature": null
         },
         {
-          "species": "Magnezone",
-          "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Manectric",
+          "species": "Luxray",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -406,7 +421,7 @@
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[0]; game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[1]; game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[2]; game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[3]; game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[4]; game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[5]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). PLACEHOLDER ace slots (section 10): Raichu, Electivire, Magnezone in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Raichu [anime]. Aces (Raichu, Electivire) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Raichu (game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[5]), Electrode (game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[0]), Electivire (game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[4]), Magnezone (game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[1]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "erika",
@@ -447,36 +462,9 @@
       "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 28 (placeholder start TR in the 18–40 Gym band by archetype), steady (keeps a fixed fraction of the player's pace), peak TR 150.",
       "roster": [
         {
-          "species": "Bellossom",
+          "species": "Vileplume",
           "levelOffset": 0,
           "isAce": true,
-          "moves": ["Petal Blizzard", "Quiver Dance", "Stun Spore", "Attract"],
-          "item": "Miracle Seed",
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Jumpluff",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Victreebel",
-          "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Roserade",
-          "levelOffset": -2,
-          "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
@@ -486,22 +474,49 @@
           "species": "Tangrowth",
           "levelOffset": -2,
           "isAce": false,
+          "moves": ["Power Whip", "Wring Out", "Grassy Terrain", "Tickle"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Victreebel",
+          "levelOffset": 0,
+          "isAce": true,
+          "moves": ["Sludge Bomb", "Leaf Blade", "Swords Dance", "Sleep Powder"],
+          "item": "Poison Barb",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Jumpluff",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Acrobatics", "U Turn", "Sleep Powder", "Leech Seed"],
+          "item": "Focus Band",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Parasect",
+          "levelOffset": -2,
+          "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
           "nature": null
         },
         {
-          "species": "Venusaur",
+          "species": "Bellossom",
           "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
+          "isAce": false,
+          "moves": ["Petal Blizzard", "Quiver Dance", "Stun Spore", "Attract"],
+          "item": "Miracle Seed",
           "ability": null,
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[0]; game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[1]; game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[2]; game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[4]; game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[3]; game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[5]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). PLACEHOLDER ace slots (section 10): Bellossom, Victreebel, Venusaur in roster slots 1/3/6, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Vileplume [FRLG ace / anime Gloom], Tangrowth [anime Tangela], Jumpluff [HGSS]. Aces (Vileplume, Victreebel) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Tangrowth (game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[2]), Victreebel (game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[4]), Jumpluff (game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[0]), Bellossom (game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[5]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "janine",
@@ -560,6 +575,24 @@
       "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 27 (placeholder start TR in the 18–40 Gym band by archetype), early bloomer (a rising star: fast early, then slows), peak TR 100.",
       "roster": [
         {
+          "species": "Venomoth",
+          "levelOffset": 0,
+          "isAce": true,
+          "moves": ["Signal Beam", "Poison Fang", "Toxic", "Double Team"],
+          "item": "Bright Powder",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Ariados",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
           "species": "Crobat",
           "levelOffset": 0,
           "isAce": true,
@@ -569,52 +602,34 @@
           "nature": null
         },
         {
+          "species": "Weezing",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Sludge Bomb", "Flamethrower", "Belch", "Amnesia"],
+          "item": "Leftovers",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Toxicroak",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
           "species": "Muk",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Weezing",
-          "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Swalot",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Venomoth",
-          "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Nidoqueen",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Minimize", "Gunk Shot", "Toxic", "Acid Armor"],
           "item": null,
           "ability": null,
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[0]; game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[1]; game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[2]; game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[3]; game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[5]; game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[4]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). PLACEHOLDER ace slots (section 10): Crobat, Weezing, Venomoth in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Toxicroak [ninja theme]. Aces (Venomoth, Crobat) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Venomoth (game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[5]), Crobat (game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[4]), Weezing (game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[0]), Muk (game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[1]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "sabrina",
@@ -670,43 +685,43 @@
           "nature": null
         },
         {
-          "species": "Jynx",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
           "species": "Mr. Mime",
           "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Slowbro",
-          "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
+          "moves": ["Magical Leaf", "Psychic", "Substitute", "Reflect"],
+          "item": "Quick Claw",
           "ability": null,
           "nature": null
         },
         {
           "species": "Espeon",
-          "levelOffset": -2,
+          "levelOffset": 0,
           "isAce": true,
+          "moves": ["Psychic", "Morning Sun", "Future Sight", "Power Gem"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Gengar",
+          "levelOffset": -2,
+          "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
           "nature": null
         },
         {
-          "species": "Wobbuffet",
+          "species": "Hypno",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Venomoth",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -715,7 +730,7 @@
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[0]; game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[1]; game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[2]; game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[3]; game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[4]; game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[5]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 Pokémon; only the first 6 are kept. PLACEHOLDER ace slots (section 10): Alakazam, Mr. Mime, Espeon in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Alakazam [anime Kadabra], Espeon [HGSS], Gengar [anime Haunter], Venomoth [FRLG]. Aces (Alakazam, Espeon) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Alakazam (game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[5]), Mr. Mime (game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[0]), Espeon (game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[4]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "blaine",
@@ -771,43 +786,43 @@
           "nature": null
         },
         {
+          "species": "Rapidash",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Bounce", "Sunny Day", "Flare Blitz", "Solar Beam"],
+          "item": "Quick Claw",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Arcanine",
+          "levelOffset": 0,
+          "isAce": true,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Ninetales",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
           "species": "Magcargo",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
+          "moves": ["Flamethrower", "Recover", "Amnesia", "Hypnosis"],
+          "item": "Leftovers",
           "ability": null,
           "nature": null
         },
         {
-          "species": "Houndoom",
-          "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Torkoal",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Rapidash",
-          "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Camerupt",
+          "species": "Flareon",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -816,7 +831,7 @@
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[2]; game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[3]; game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[4]; game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[5]; game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[0]; game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[1]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 Pokémon; only the first 6 are kept. PLACEHOLDER ace slots (section 10): Magmortar, Houndoom, Rapidash in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Magmortar [anime Magmar], Ninetales [anime], Magcargo [HGSS]. Aces (Magmortar, Arcanine) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Magmortar (game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[1]), Rapidash (game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[0]), Magcargo (game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[3]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "giovanni",
@@ -878,8 +893,35 @@
           "nature": null
         },
         {
-          "species": "Rhyperior",
-          "levelOffset": -5,
+          "species": "Dugtrio",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Slash", "Sand Tomb", "Mud Slap", "Earthquake"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Nidoqueen",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Body Slam", "Double Kick", "Poison Sting", "Earthquake"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Persian",
+          "levelOffset": 0,
+          "isAce": true,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Marowak",
+          "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
@@ -888,42 +930,15 @@
         },
         {
           "species": "Nidoking",
-          "levelOffset": -5,
+          "levelOffset": 0,
           "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Dugtrio",
-          "levelOffset": -6,
-          "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Nidoqueen",
-          "levelOffset": -6,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Sandslash",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Thrash", "Double Kick", "Poison Sting", "Earthquake"],
           "item": null,
           "ability": null,
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers_frlg.party:TRAINER_LEADER_GIOVANNI (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Handwritten early species Sandshrew fill the remaining roster slots at offset -2. Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Rhyhorn -> Rhyperior, Rhyhorn -> Rhyperior, Sandshrew -> Sandslash. PLACEHOLDER ace slots (section 10): Rhyperior, Nidoking, Nidoqueen in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Persian [anime]. Aces (Rhyperior, Persian, Nidoking) at offset 0, fillers at -2. Species in the reference party keep that source slot's moves/item/ability/nature: Dugtrio (game/src/data/trainers_frlg.party:TRAINER_LEADER_GIOVANNI[1]), Nidoqueen (game/src/data/trainers_frlg.party:TRAINER_LEADER_GIOVANNI[2]), Nidoking (game/src/data/trainers_frlg.party:TRAINER_LEADER_GIOVANNI[3]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "blue",
@@ -982,7 +997,7 @@
       "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 0, rival (starts at 0 and stays about 10 ahead of the player from 4 badges), peak TR 170.",
       "roster": [
         {
-          "species": "Eevee",
+          "species": "Umbreon",
           "levelOffset": 0,
           "isAce": true,
           "moves": "LEVEL_UP",
@@ -992,7 +1007,25 @@
         },
         {
           "species": "Pidgeot",
-          "levelOffset": -4,
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Aerial Ace", "Feather Dance", "Sand Attack", "Whirlwind"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Alakazam",
+          "levelOffset": 0,
+          "isAce": true,
+          "moves": ["Psychic", "Future Sight", "Recover", "Reflect"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Nidoking",
+          "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
@@ -1000,17 +1033,8 @@
           "nature": null
         },
         {
-          "species": "Alakazam",
-          "levelOffset": -6,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Rhyperior",
-          "levelOffset": -4,
+          "species": "Scizor",
+          "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
@@ -1019,24 +1043,15 @@
         },
         {
           "species": "Arcanine",
-          "levelOffset": -4,
+          "levelOffset": 0,
           "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Exeggutor",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Extreme Speed", "Flamethrower", "Roar", "Bite"],
           "item": null,
           "ability": null,
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers_frlg.party:TRAINER_CHAMPION_FIRST_SQUIRTLE (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 Pokémon; only the first 6 are kept. Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Rhydon -> Rhyperior. PLACEHOLDER ace slots (section 10): Eevee, Alakazam, Arcanine in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order. Roster slot 1: starter replaced by Eevee for now (user), LEVEL_UP with no item; not a final stage (allowed)."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Umbreon [Eevee early], Pidgeot [games]. Aces (Umbreon, Alakazam, Arcanine) at offset 0, fillers at -2. Species in the reference party keep that source slot's moves/item/ability/nature: Pidgeot (game/src/data/trainers_frlg.party:TRAINER_CHAMPION_FIRST_SQUIRTLE[0]), Alakazam (game/src/data/trainers_frlg.party:TRAINER_CHAMPION_FIRST_SQUIRTLE[1]), Arcanine (game/src/data/trainers_frlg.party:TRAINER_CHAMPION_FIRST_SQUIRTLE[3]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "lorelei",
@@ -1101,22 +1116,31 @@
           "species": "Dewgong",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Ice Beam", "Surf", "Hail", "Safeguard"],
           "item": null,
           "ability": null,
           "nature": null
         },
         {
           "species": "Cloyster",
-          "levelOffset": -3,
+          "levelOffset": 0,
           "isAce": true,
-          "moves": "LEVEL_UP",
+          "moves": ["Spikes", "Protect", "Hail", "Dive"],
           "item": null,
           "ability": null,
           "nature": null
         },
         {
           "species": "Slowbro",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Ice Beam", "Surf", "Amnesia", "Yawn"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Glaceon",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -1126,15 +1150,15 @@
         },
         {
           "species": "Jynx",
-          "levelOffset": 0,
-          "isAce": true,
-          "moves": "LEVEL_UP",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Ice Punch", "Double Slap", "Lovely Kiss", "Attract"],
           "item": null,
           "ability": null,
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LORELEI (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). PLACEHOLDER ace slots (section 10): Lapras, Cloyster, Jynx in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Lapras, Cloyster) at offset 0, fillers at -2. Species in the reference party keep that source slot's moves/item/ability/nature: Lapras (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LORELEI[4]), Dewgong (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LORELEI[0]), Cloyster (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LORELEI[1]), Slowbro (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LORELEI[2]), Jynx (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LORELEI[3]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "bruno",
@@ -1196,8 +1220,8 @@
           "nature": null
         },
         {
-          "species": "Steelix",
-          "levelOffset": -5,
+          "species": "Hitmontop",
+          "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
@@ -1205,10 +1229,10 @@
           "nature": null
         },
         {
-          "species": "Hitmonchan",
-          "levelOffset": -3,
+          "species": "Hitmonlee",
+          "levelOffset": 0,
           "isAce": true,
-          "moves": "LEVEL_UP",
+          "moves": ["Mega Kick", "Foresight", "Brick Break", "Facade"],
           "item": null,
           "ability": null,
           "nature": null
@@ -1223,16 +1247,25 @@
           "nature": null
         },
         {
-          "species": "Hitmonlee",
-          "levelOffset": -3,
-          "isAce": true,
+          "species": "Hitmonchan",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Sky Uppercut", "Mach Punch", "Rock Tomb", "Counter"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Primeape",
+          "levelOffset": -2,
+          "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_BRUNO (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Onix -> Steelix, Onix -> Steelix. PLACEHOLDER ace slots (section 10): Machamp, Hitmonchan, Hitmonlee in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Steelix [FRLG Onix]. Aces (Machamp, Hitmonlee) at offset 0, fillers at -2. Species in the reference party keep that source slot's moves/item/ability/nature: Machamp (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_BRUNO[4]), Hitmonlee (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_BRUNO[2]), Hitmonchan (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_BRUNO[1]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "agatha",
@@ -1288,34 +1321,7 @@
           "species": "Gengar",
           "levelOffset": 0,
           "isAce": true,
-          "moves": ["Shadow Ball", "Sludge Bomb", "Hypnosis", "Nightmare"],
-          "item": "Sitrus Berry",
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Gengar",
-          "levelOffset": -4,
-          "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Crobat",
-          "levelOffset": -4,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Gengar",
-          "levelOffset": -5,
-          "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Shadow Punch", "Confuse Ray", "Toxic", "Double Team"],
           "item": null,
           "ability": null,
           "nature": null
@@ -1323,6 +1329,42 @@
         {
           "species": "Arbok",
           "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Sludge Bomb", "Screech", "Iron Tail", "Bite"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Crobat",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Marowak",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Mismagius",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Dusknoir",
+          "levelOffset": 0,
           "isAce": true,
           "moves": "LEVEL_UP",
           "item": null,
@@ -1330,7 +1372,7 @@
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_AGATHA (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Golbat -> Crobat, Haunter -> Gengar. PLACEHOLDER ace slots (section 10): Gengar, Crobat, Arbok in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Marowak [lore: Pokemon Tower]. Aces (Gengar, Dusknoir) at offset 0, fillers at -2. Species in the reference party keep that source slot's moves/item/ability/nature: Gengar (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_AGATHA[0]), Arbok (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_AGATHA[3]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "koga",
@@ -1395,6 +1437,15 @@
           "species": "Ariados",
           "levelOffset": -2,
           "isAce": false,
+          "moves": ["Megahorn", "Giga Drain", "Double Team", "Toxic"],
+          "item": "Kings Rock",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Forretress",
+          "levelOffset": -2,
+          "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
@@ -1403,24 +1454,24 @@
         {
           "species": "Muk",
           "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Qwilfish",
-          "levelOffset": -1,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
+          "moves": ["Minimize", "Fire Blast", "Gunk Shot", "Toxic"],
+          "item": "Leftovers",
           "ability": null,
           "nature": null
         },
         {
           "species": "Venomoth",
-          "levelOffset": -1,
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Leech Life", "Psychic", "Poison Fang", "Sleep Powder"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Weezing",
+          "levelOffset": 0,
           "isAce": true,
           "moves": "LEVEL_UP",
           "item": null,
@@ -1428,7 +1479,7 @@
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers_hns.party:TRAINER_KOGA_1_HNS (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). PLACEHOLDER ace slots (section 10): Crobat, Muk, Venomoth in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Forretress [HGSS]. Aces (Crobat, Weezing) at offset 0, fillers at -2. Species in the reference party keep that source slot's moves/item/ability/nature: Crobat (game/src/data/trainers_hns.party:TRAINER_KOGA_1_HNS[4]), Ariados (game/src/data/trainers_hns.party:TRAINER_KOGA_1_HNS[0]), Muk (game/src/data/trainers_hns.party:TRAINER_KOGA_1_HNS[2]), Venomoth (game/src/data/trainers_hns.party:TRAINER_KOGA_1_HNS[3]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "lance",
@@ -1490,28 +1541,10 @@
           "nature": null
         },
         {
-          "species": "Dragonite",
-          "levelOffset": -6,
-          "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
           "species": "Gyarados",
-          "levelOffset": -4,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Dragonite",
-          "levelOffset": -6,
+          "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Hyper Beam", "Dragon Rage", "Twister", "Bite"],
           "item": null,
           "ability": null,
           "nature": null
@@ -1519,14 +1552,41 @@
         {
           "species": "Aerodactyl",
           "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Hyper Beam", "Ancient Power", "Wing Attack", "Scary Face"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Charizard",
+          "levelOffset": 0,
           "isAce": true,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
           "nature": null
+        },
+        {
+          "species": "Kingdra",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Dragonite",
+          "levelOffset": 0,
+          "isAce": true,
+          "moves": ["Hyper Beam", "Safeguard", "Outrage", "Wing Attack"],
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LANCE (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Dragonair -> Dragonite, Dragonair -> Dragonite. PLACEHOLDER ace slots (section 10): Dragonite, Gyarados, Aerodactyl in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Charizard [HGSS], Dragonite [iconic duplicate]. Aces (Dragonite, Charizard, Dragonite) at offset 0, fillers at -2. Species in the reference party keep that source slot's moves/item/ability/nature: Dragonite (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LANCE[4]), Gyarados (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LANCE[0]), Aerodactyl (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LANCE[3]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "falkner",
@@ -1561,34 +1621,25 @@
       "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 22 (placeholder start TR in the 18–40 Gym band by archetype), early bloomer (a rising star: fast early, then slows), peak TR 80.",
       "roster": [
         {
-          "species": "Noctowl",
+          "species": "Pidgeot",
           "levelOffset": 0,
           "isAce": true,
+          "moves": ["Tailwind", "Aerial Ace", "Extreme Speed", "Sand Attack"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Noctowl",
+          "levelOffset": -2,
+          "isAce": false,
           "moves": ["Tackle", "Mud Slap", "Peck"],
           "item": "Sitrus Berry",
           "ability": null,
           "nature": null
         },
         {
-          "species": "Swellow",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Pidgeot",
-          "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Pelipper",
+          "species": "Dodrio",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -1598,15 +1649,24 @@
         },
         {
           "species": "Skarmory",
-          "levelOffset": -2,
+          "levelOffset": 0,
           "isAce": true,
+          "moves": ["Stealth Rock", "Drill Peck", "Metal Sound", "Steel Wing"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Xatu",
+          "levelOffset": -2,
+          "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
           "nature": null
         },
         {
-          "species": "Pidgeot",
+          "species": "Honchkrow",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -1615,7 +1675,7 @@
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[1]; game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[2]; game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[4]; game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[5]; game/src/data/trainers_hns.party:TRAINER_FALKNER_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_FALKNER_1_HNS[1]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Pidgey -> Pidgeot. PLACEHOLDER ace slots (section 10): Noctowl, Pidgeot, Skarmory in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Pidgeot, Skarmory) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Pidgeot (game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[4]), Noctowl (game/src/data/trainers_hns.party:TRAINER_FALKNER_1_HNS[1]), Skarmory (game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[1]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "bugsy",
@@ -1659,15 +1719,33 @@
           "species": "Scizor",
           "levelOffset": 0,
           "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": "Berry Juice",
+          "moves": ["Bullet Punch", "X Scissor", "Iron Head", "Swords Dance"],
+          "item": null,
           "ability": null,
           "nature": null
         },
         {
-          "species": "Ledian",
+          "species": "Beedrill",
           "levelOffset": -2,
           "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Butterfree",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Heracross",
+          "levelOffset": 0,
+          "isAce": true,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
@@ -1676,32 +1754,14 @@
         {
           "species": "Yanmega",
           "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Scizor",
-          "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
+          "moves": ["Air Slash", "Screech", "U Turn", "Night Slash"],
+          "item": "Berry Juice",
           "ability": null,
           "nature": null
         },
         {
-          "species": "Forretress",
-          "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Forretress",
+          "species": "Ariados",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -1710,7 +1770,7 @@
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_BUGSY_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[1]; game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[2]; game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[3]; game/src/data/trainers_hns.party:TRAINER_BUGSY_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_BUGSY_1_HNS[2]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 8 Pokémon; only the first 6 are kept. Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Scyther -> Scizor, Pineco -> Forretress. PLACEHOLDER ace slots (section 10): Scizor, Yanmega, Forretress in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Scizor [anime Scyther]. Aces (Scizor, Heracross) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Scizor (game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[3]), Yanmega (game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[2]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "whitney",
@@ -1760,7 +1820,7 @@
           "nature": null
         },
         {
-          "species": "Ursaluna",
+          "species": "Clefable",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -1769,16 +1829,25 @@
           "nature": null
         },
         {
-          "species": "Clefable",
+          "species": "Wigglytuff",
           "levelOffset": -2,
-          "isAce": true,
+          "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
           "nature": null
         },
         {
-          "species": "Delcatty",
+          "species": "Ursaring",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Girafarig",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -1788,24 +1857,15 @@
         },
         {
           "species": "Blissey",
-          "levelOffset": -2,
+          "levelOffset": 0,
           "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Tauros",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Sing", "Light Screen", "Attract", "Soft Boiled"],
           "item": null,
           "ability": null,
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_WHITNEY_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_WHITNEY_2_HNS[1]; game/src/data/trainers_hns.party:TRAINER_WHITNEY_2_HNS[2]; game/src/data/trainers_hns.party:TRAINER_WHITNEY_2_HNS[3]; game/src/data/trainers_hns.party:TRAINER_WHITNEY_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_WHITNEY_1_HNS[2]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 Pokémon; only the first 6 are kept. Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Teddiursa -> Ursaluna, Clefairy -> Clefable. PLACEHOLDER ace slots (section 10): Miltank, Clefable, Blissey in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Clefable [anime Clefairy]. Aces (Miltank, Blissey) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Miltank (game/src/data/trainers_hns.party:TRAINER_WHITNEY_1_HNS[2]), Blissey (game/src/data/trainers_hns.party:TRAINER_WHITNEY_2_HNS[2]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "morty",
@@ -1861,7 +1921,25 @@
           "nature": null
         },
         {
-          "species": "Wyrdeer",
+          "species": "Drifblim",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Mismagius",
+          "levelOffset": 0,
+          "isAce": true,
+          "moves": ["Shadow Ball", "Magical Leaf", "Pain Split", "Perish Song"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Spiritomb",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -1873,40 +1951,22 @@
           "species": "Sableye",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Quash", "Foul Play", "Shadow Claw", "Power Gem"],
           "item": null,
           "ability": null,
           "nature": null
         },
         {
-          "species": "Mismagius",
-          "levelOffset": -2,
+          "species": "Dusknoir",
+          "levelOffset": 0,
           "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Mismagius",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Gengar",
-          "levelOffset": -2,
-          "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[2]; game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_MORTY_2_HNS[0]; game/src/data/trainers_hns.party:TRAINER_MORTY_2_HNS[3]; game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[3]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Misdreavus -> Mismagius, Stantler -> Wyrdeer, Haunter -> Gengar. PLACEHOLDER ace slots (section 10): Gengar, Mismagius in roster slots 1/4, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Gengar, Mismagius, Dusknoir) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Gengar (game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[3]), Mismagius (game/src/data/trainers_hns.party:TRAINER_MORTY_2_HNS[3]), Sableye (game/src/data/trainers_hns.party:TRAINER_MORTY_2_HNS[0]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "chuck",
@@ -1962,28 +2022,10 @@
           "nature": null
         },
         {
-          "species": "Sudowoodo",
+          "species": "Primeape",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Annihilape",
-          "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Hitmonchan",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Low Kick", "Karate Chop", "Ice Punch", "Rage"],
           "item": null,
           "ability": null,
           "nature": null
@@ -1991,6 +2033,15 @@
         {
           "species": "Hitmontop",
           "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Triple Kick", "Rolling Kick", "Dig", "Pursuit"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Machamp",
+          "levelOffset": 0,
           "isAce": true,
           "moves": "LEVEL_UP",
           "item": null,
@@ -1998,16 +2049,25 @@
           "nature": null
         },
         {
-          "species": "Breloom",
+          "species": "Heracross",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
           "nature": null
+        },
+        {
+          "species": "Lucario",
+          "levelOffset": 0,
+          "isAce": true,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[2]; game/src/data/trainers_hns.party:TRAINER_CHUCK_2_HNS[0]; game/src/data/trainers_hns.party:TRAINER_CHUCK_2_HNS[4]; game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[3]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 8 Pokémon; only the first 6 are kept. Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Primeape -> Annihilape. PLACEHOLDER ace slots (section 10): Poliwrath, Annihilape, Hitmontop in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Poliwrath, Machamp, Lucario) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Poliwrath (game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[3]), Primeape (game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[1]), Hitmontop (game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[0]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "jasmine",
@@ -2069,27 +2129,18 @@
           "nature": null
         },
         {
-          "species": "Corsola",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
           "species": "Magnezone",
           "levelOffset": -2,
-          "isAce": true,
+          "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
           "nature": null
         },
         {
-          "species": "Scizor",
-          "levelOffset": -2,
-          "isAce": false,
+          "species": "Ampharos",
+          "levelOffset": 0,
+          "isAce": true,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
@@ -2098,14 +2149,23 @@
         {
           "species": "Skarmory",
           "levelOffset": -2,
-          "isAce": true,
+          "isAce": false,
+          "moves": ["Spikes", "Drill Peck", "Swagger", "Steel Wing"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Forretress",
+          "levelOffset": -2,
+          "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
           "nature": null
         },
         {
-          "species": "Mawile",
+          "species": "Bronzong",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -2114,7 +2174,7 @@
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[2]; game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[3]; game/src/data/trainers_hns.party:TRAINER_JASMINE_2_HNS[1]; game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[4]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 Pokémon; only the first 6 are kept. Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Magneton -> Magnezone. PLACEHOLDER ace slots (section 10): Steelix, Magnezone, Skarmory in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Ampharos [lore: Amphy]. Aces (Steelix, Ampharos) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Steelix (game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[4]), Skarmory (game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[0]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "pryce",
@@ -2165,15 +2225,6 @@
           "levelOffset": 0,
           "isAce": true,
           "moves": "LEVEL_UP",
-          "item": "Sitrus Berry",
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Jynx",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
           "nature": null
@@ -2181,8 +2232,8 @@
         {
           "species": "Dewgong",
           "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
+          "isAce": false,
+          "moves": ["Aqua Ring", "Aurora Beam", "Rain Dance", "Aqua Jet"],
           "item": null,
           "ability": null,
           "nature": null
@@ -2191,14 +2242,14 @@
           "species": "Cloyster",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Surf", "Spikes", "Aurora Beam", "Rain Dance"],
           "item": null,
           "ability": null,
           "nature": null
         },
         {
           "species": "Weavile",
-          "levelOffset": -2,
+          "levelOffset": 0,
           "isAce": true,
           "moves": "LEVEL_UP",
           "item": null,
@@ -2206,7 +2257,16 @@
           "nature": null
         },
         {
-          "species": "Froslass",
+          "species": "Jynx",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Ice Punch", "Psychic", "Rain Dance", "Lovely Kiss"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Abomasnow",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -2215,7 +2275,7 @@
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[2]; game/src/data/trainers_hns.party:TRAINER_PRYCE_1_2_HNS[0]; game/src/data/trainers_hns.party:TRAINER_PRYCE_2_HNS[3]; game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[3]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Piloswine -> Mamoswine, Sneasel -> Weavile. PLACEHOLDER ace slots (section 10): Mamoswine, Dewgong, Weavile in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Mamoswine [anime Piloswine]. Aces (Mamoswine, Weavile) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Dewgong (game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[0]), Cloyster (game/src/data/trainers_hns.party:TRAINER_PRYCE_1_2_HNS[0]), Jynx (game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[2]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "clair",
@@ -2277,7 +2337,7 @@
           "nature": null
         },
         {
-          "species": "Gyarados",
+          "species": "Dragonite",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -2286,8 +2346,17 @@
           "nature": null
         },
         {
-          "species": "Dragonite",
+          "species": "Gyarados",
           "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Bite", "Waterfall", "Fly", "Ice Fang"],
+          "item": "Focus Band",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Salamence",
+          "levelOffset": 0,
           "isAce": true,
           "moves": "LEVEL_UP",
           "item": null,
@@ -2295,7 +2364,7 @@
           "nature": null
         },
         {
-          "species": "Lapras",
+          "species": "Flygon",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -2304,17 +2373,8 @@
           "nature": null
         },
         {
-          "species": "Dudunsparce",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Salamence",
-          "levelOffset": -2,
+          "species": "Garchomp",
+          "levelOffset": 0,
           "isAce": true,
           "moves": "LEVEL_UP",
           "item": null,
@@ -2322,7 +2382,7 @@
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[2]; game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[3]; game/src/data/trainers_hns.party:TRAINER_CLAIR_2_HNS[3]; game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[4]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Shelgon -> Salamence, Dragonair -> Dragonite. PLACEHOLDER ace slots (section 10): Kingdra, Dragonite, Salamence in roster slots 1/3/6, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Dragonite [anime Dragonair]. Aces (Kingdra, Salamence, Garchomp) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Kingdra (game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[4]), Gyarados (game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[1]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "will",
@@ -2384,26 +2444,8 @@
           "nature": null
         },
         {
-          "species": "Farigiraf",
+          "species": "Jynx",
           "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Espeon",
-          "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Slowking",
-          "levelOffset": -1,
           "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
@@ -2412,7 +2454,34 @@
         },
         {
           "species": "Slowbro",
-          "levelOffset": -1,
+          "levelOffset": 0,
+          "isAce": true,
+          "moves": ["Curse", "Rock Smash", "Body Slam", "Zen Headbutt"],
+          "item": "Quick Claw",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Exeggutor",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Bronzong",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Gardevoir",
+          "levelOffset": 0,
           "isAce": true,
           "moves": "LEVEL_UP",
           "item": null,
@@ -2420,7 +2489,7 @@
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers_hns.party:TRAINER_WILL_1_HNS (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Girafarig -> Farigiraf. PLACEHOLDER ace slots (section 10): Xatu, Espeon, Slowbro in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Xatu, Slowbro, Gardevoir) at offset 0, fillers at -2. Species in the reference party keep that source slot's moves/item/ability/nature: Xatu (game/src/data/trainers_hns.party:TRAINER_WILL_1_HNS[4]), Slowbro (game/src/data/trainers_hns.party:TRAINER_WILL_1_HNS[3]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "karen",
@@ -2473,29 +2542,11 @@
       "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 30, steady (keeps a fixed fraction of the player's pace), peak TR 155.",
       "roster": [
         {
-          "species": "Houndoom",
+          "species": "Umbreon",
           "levelOffset": 0,
           "isAce": true,
-          "moves": ["Flamethrower", "Crunch", "Iron Tail", "Reversal"],
-          "item": "Black Glasses",
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Gengar",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Umbreon",
-          "levelOffset": -1,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
+          "moves": ["Faint Attack", "Double Team", "Baton Pass", "Moonlight"],
+          "item": "Sitrus Berry",
           "ability": null,
           "nature": null
         },
@@ -2503,22 +2554,49 @@
           "species": "Vileplume",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
+          "moves": ["Sleep Powder", "Giga Drain", "Leech Seed", "Substitute"],
+          "item": "Leftovers",
           "ability": null,
           "nature": null
         },
         {
           "species": "Honchkrow",
           "levelOffset": -2,
-          "isAce": true,
+          "isAce": false,
+          "moves": ["Air Slash", "Faint Attack", "Steel Wing", "Haze"],
+          "item": "Sharp Beak",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Gengar",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Shadow Ball", "Hypnosis", "Dream Eater", "Confuse Ray"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Weavile",
+          "levelOffset": -2,
+          "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
           "nature": null
+        },
+        {
+          "species": "Houndoom",
+          "levelOffset": 0,
+          "isAce": true,
+          "moves": ["Flamethrower", "Crunch", "Iron Tail", "Reversal"],
+          "item": "Black Glasses",
+          "ability": null,
+          "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers_hns.party:TRAINER_KAREN_1_HNS (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). PLACEHOLDER ace slots (section 10): Houndoom, Umbreon, Honchkrow in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Vileplume [HGSS], Gengar [HGSS]. Aces (Umbreon, Houndoom) at offset 0, fillers at -2. Species in the reference party keep that source slot's moves/item/ability/nature: Umbreon (game/src/data/trainers_hns.party:TRAINER_KAREN_1_HNS[0]), Vileplume (game/src/data/trainers_hns.party:TRAINER_KAREN_1_HNS[2]), Honchkrow (game/src/data/trainers_hns.party:TRAINER_KAREN_1_HNS[3]), Gengar (game/src/data/trainers_hns.party:TRAINER_KAREN_1_HNS[1]), Houndoom (game/src/data/trainers_hns.party:TRAINER_KAREN_1_HNS[4]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "roxanne",
@@ -2563,7 +2641,25 @@
           "levelOffset": 0,
           "isAce": true,
           "moves": "LEVEL_UP",
-          "item": "Oran Berry",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Sudowoodo",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Relicanth",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
           "ability": null,
           "nature": null
         },
@@ -2577,16 +2673,7 @@
           "nature": null
         },
         {
-          "species": "Steelix",
-          "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Kabutops",
+          "species": "Bastiodon",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -2595,25 +2682,16 @@
           "nature": null
         },
         {
-          "species": "Omastar",
-          "levelOffset": -2,
+          "species": "Rampardos",
+          "levelOffset": 0,
           "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Golem",
-          "levelOffset": -2,
-          "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_ROXANNE_1[1]; game/src/data/trainers.party:TRAINER_ROXANNE_2[1]; game/src/data/trainers.party:TRAINER_ROXANNE_2[2]; game/src/data/trainers.party:TRAINER_ROXANNE_3[0]; game/src/data/trainers.party:TRAINER_ROXANNE_1[0]; game/src/data/trainers.party:TRAINER_ROXANNE_1[2]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Nosepass -> Probopass, Geodude -> Golem, Kabuto -> Kabutops, Onix -> Steelix, Omanyte -> Omastar, Geodude -> Golem. PLACEHOLDER ace slots (section 10): Probopass, Steelix, Omastar in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Rampardos [fossil lessons]. Aces (Probopass, Rampardos) at offset 0, fillers at -2. No roster species is in the curated composition in game/src/data/trainer_scaling/gym_leaders.json; other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "brawly",
@@ -2657,13 +2735,40 @@
           "species": "Hariyama",
           "levelOffset": 0,
           "isAce": true,
-          "moves": "LEVEL_UP",
+          "moves": ["Fake Out", "Focus Punch", "Belly Drum", "Earthquake"],
           "item": "Sitrus Berry",
           "ability": null,
           "nature": null
         },
         {
+          "species": "Breloom",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
           "species": "Medicham",
+          "levelOffset": 0,
+          "isAce": true,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Machamp",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Karate Chop", "Rock Slide", "Focus Punch", "Bulk Up"],
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Gallade",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -2674,41 +2779,14 @@
         {
           "species": "Hitmontop",
           "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Hariyama",
-          "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Machamp",
-          "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Machamp",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Pursuit", "Counter", "Protect", "Triple Kick"],
           "item": null,
           "ability": null,
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_BRAWLY_1[1]; game/src/data/trainers.party:TRAINER_BRAWLY_2[2]; game/src/data/trainers.party:TRAINER_BRAWLY_2[0]; game/src/data/trainers.party:TRAINER_BRAWLY_2[3]; game/src/data/trainers.party:TRAINER_BRAWLY_1[0]; game/src/data/trainers.party:TRAINER_BRAWLY_1[2]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Makuhita -> Hariyama, Meditite -> Medicham, Machop -> Machamp. PLACEHOLDER ace slots (section 10): Hariyama, Hitmontop, Machamp in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Hariyama, Medicham) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Hariyama (game/src/data/trainers.party:TRAINER_BRAWLY_2[3]), Machamp (game/src/data/trainers.party:TRAINER_BRAWLY_2[0]), Hitmontop (game/src/data/trainers.party:TRAINER_BRAWLY_2[2]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "wattson",
@@ -2767,14 +2845,14 @@
           "species": "Electrode",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Rollout", "Thunder", "Explosion", "Rain Dance"],
           "item": null,
           "ability": null,
           "nature": null
         },
         {
           "species": "Magnezone",
-          "levelOffset": -2,
+          "levelOffset": 0,
           "isAce": true,
           "moves": "LEVEL_UP",
           "item": null,
@@ -2782,7 +2860,16 @@
           "nature": null
         },
         {
-          "species": "Manectric",
+          "species": "Lanturn",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Rotom",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -2793,23 +2880,14 @@
         {
           "species": "Ampharos",
           "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Electrode",
-          "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Thunder", "Protect", "Thunder Wave", "Light Screen"],
           "item": null,
           "ability": null,
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_WATTSON_1[0]; game/src/data/trainers.party:TRAINER_WATTSON_1[1]; game/src/data/trainers.party:TRAINER_WATTSON_2[1]; game/src/data/trainers.party:TRAINER_WATTSON_4[1]; game/src/data/trainers.party:TRAINER_WATTSON_1[2]; game/src/data/trainers.party:TRAINER_WATTSON_1[3]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Voltorb -> Electrode, Electrike -> Manectric, Magneton -> Magnezone. PLACEHOLDER ace slots (section 10): Manectric, Magnezone, Ampharos in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Manectric, Magnezone) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Manectric (game/src/data/trainers.party:TRAINER_WATTSON_1[3]), Electrode (game/src/data/trainers.party:TRAINER_WATTSON_2[1]), Ampharos (game/src/data/trainers.party:TRAINER_WATTSON_4[1]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "flannery",
@@ -2868,22 +2946,31 @@
           "species": "Magcargo",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
+          "moves": ["Overheat", "Attract", "Light Screen", "Rock Slide"],
+          "item": "White Herb",
           "ability": null,
           "nature": null
         },
         {
           "species": "Camerupt",
-          "levelOffset": -2,
+          "levelOffset": 0,
           "isAce": true,
+          "moves": ["Overheat", "Tackle", "Sunny Day", "Attract"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Houndoom",
+          "levelOffset": -2,
+          "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
           "nature": null
         },
         {
-          "species": "Magcargo",
+          "species": "Ninetales",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -2894,15 +2981,6 @@
         {
           "species": "Rapidash",
           "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Camerupt",
-          "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
@@ -2910,7 +2988,7 @@
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_FLANNERY_1[1]; game/src/data/trainers.party:TRAINER_FLANNERY_1[2]; game/src/data/trainers.party:TRAINER_FLANNERY_2[0]; game/src/data/trainers.party:TRAINER_FLANNERY_2[1]; game/src/data/trainers.party:TRAINER_FLANNERY_1[0]; game/src/data/trainers.party:TRAINER_FLANNERY_1[3]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Slugma -> Magcargo, Ponyta -> Rapidash, Numel -> Camerupt. PLACEHOLDER ace slots (section 10): Torkoal, Camerupt, Rapidash in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Torkoal [anime]. Aces (Torkoal, Camerupt) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Torkoal (game/src/data/trainers.party:TRAINER_FLANNERY_1[3]), Magcargo (game/src/data/trainers.party:TRAINER_FLANNERY_2[0]), Camerupt (game/src/data/trainers.party:TRAINER_FLANNERY_1[2]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "norman",
@@ -2966,25 +3044,34 @@
           "nature": null
         },
         {
+          "species": "Linoone",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Slash", "Belly Drum", "Facade", "Headbutt"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
           "species": "Spinda",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Teeter Dance", "Psybeam", "Facade", "Encore"],
           "item": null,
           "ability": null,
           "nature": null
         },
         {
           "species": "Kangaskhan",
-          "levelOffset": -2,
+          "levelOffset": 0,
           "isAce": true,
-          "moves": "LEVEL_UP",
+          "moves": ["Fake Out", "Dizzy Punch", "Endure", "Reversal"],
           "item": null,
           "ability": null,
           "nature": null
         },
         {
-          "species": "Linoone",
+          "species": "Swellow",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -2993,17 +3080,8 @@
           "nature": null
         },
         {
-          "species": "Tauros",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Slaking",
-          "levelOffset": -2,
+          "species": "Snorlax",
+          "levelOffset": 0,
           "isAce": true,
           "moves": "LEVEL_UP",
           "item": null,
@@ -3011,7 +3089,7 @@
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_NORMAN_1[0]; game/src/data/trainers.party:TRAINER_NORMAN_1[2]; game/src/data/trainers.party:TRAINER_NORMAN_3[2]; game/src/data/trainers.party:TRAINER_NORMAN_5[3]; game/src/data/trainers.party:TRAINER_NORMAN_1[1]; game/src/data/trainers.party:TRAINER_NORMAN_1[3]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Vigoroth -> Slaking. PLACEHOLDER ace slots (section 10): Slaking, Kangaskhan, Slaking in roster slots 1/3/6, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Slaking, Kangaskhan, Snorlax) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Slaking (game/src/data/trainers.party:TRAINER_NORMAN_1[3]), Linoone (game/src/data/trainers.party:TRAINER_NORMAN_1[2]), Spinda (game/src/data/trainers.party:TRAINER_NORMAN_1[0]), Kangaskhan (game/src/data/trainers.party:TRAINER_NORMAN_3[2]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "winona",
@@ -3076,16 +3154,7 @@
           "species": "Tropius",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Skarmory",
-          "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
+          "moves": ["Sunny Day", "Aerial Ace", "Solar Beam", "Synthesis"],
           "item": null,
           "ability": null,
           "nature": null
@@ -3094,22 +3163,31 @@
           "species": "Pelipper",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Water Gun", "Supersonic", "Protect", "Aerial Ace"],
           "item": null,
           "ability": null,
           "nature": null
         },
         {
-          "species": "Dragonite",
+          "species": "Swellow",
           "levelOffset": -2,
-          "isAce": true,
+          "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
           "nature": null
         },
         {
-          "species": "Altaria",
+          "species": "Skarmory",
+          "levelOffset": 0,
+          "isAce": true,
+          "moves": ["Sand Attack", "Fury Attack", "Steel Wing", "Aerial Ace"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Staraptor",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -3118,7 +3196,7 @@
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_WINONA_1[1]; game/src/data/trainers.party:TRAINER_WINONA_1[2]; game/src/data/trainers.party:TRAINER_WINONA_1[3]; game/src/data/trainers.party:TRAINER_WINONA_2[0]; game/src/data/trainers.party:TRAINER_WINONA_1[0]; game/src/data/trainers.party:TRAINER_WINONA_1[4]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 Pokémon; only the first 6 are kept. Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Dratini -> Dragonite, Swablu -> Altaria. PLACEHOLDER ace slots (section 10): Altaria, Skarmory, Dragonite in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Altaria, Skarmory) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Altaria (game/src/data/trainers.party:TRAINER_WINONA_1[4]), Tropius (game/src/data/trainers.party:TRAINER_WINONA_1[1]), Pelipper (game/src/data/trainers.party:TRAINER_WINONA_1[2]), Skarmory (game/src/data/trainers.party:TRAINER_WINONA_1[3]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "tate-liza",
@@ -3186,7 +3264,7 @@
           "species": "Claydol",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Earthquake", "Ancient Power", "Psychic", "Light Screen"],
           "item": null,
           "ability": null,
           "nature": null
@@ -3195,16 +3273,7 @@
           "species": "Xatu",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Gardevoir",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Psychic", "Sunny Day", "Confuse Ray", "Calm Mind"],
           "item": null,
           "ability": null,
           "nature": null
@@ -3217,9 +3286,18 @@
           "item": null,
           "ability": null,
           "nature": null
+        },
+        {
+          "species": "Gardevoir",
+          "levelOffset": 0,
+          "isAce": true,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER duo roster derived from Emerald source slots (roster slots 1-2 are the Solrock and Lunatone signature pair at offset 0; roster slots 3-6 are PLACEHOLDER Hoenn Psychic/Rock picks): game/src/data/trainers.party:TRAINER_TATE_AND_LIZA_1[3]; game/src/data/trainers.party:TRAINER_TATE_AND_LIZA_1[2]; game/src/data/trainers.party:TRAINER_TATE_AND_LIZA_1[0]; game/src/data/trainers.party:TRAINER_TATE_AND_LIZA_1[1]; game/src/data/trainers.party:TRAINER_KATELYNN[0]; game/src/data/trainers.party:TRAINER_VALERIE_5[2]. Roster slots 1-2 keep the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). PLACEHOLDER ace slots (section 10): Solrock, Lunatone in roster slots 1/2, chosen as the strongest or most iconic members; filler slots keep their order. Fought as a double battle: both leaders send Pokémon from this one roster in order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Solrock, Lunatone, Gardevoir) at offset 0, fillers at -2. Species in the reference party keep that source slot's moves/item/ability/nature: Solrock (game/src/data/trainers.party:TRAINER_TATE_AND_LIZA_1[3]), Lunatone (game/src/data/trainers.party:TRAINER_TATE_AND_LIZA_1[2]), Claydol (game/src/data/trainers.party:TRAINER_TATE_AND_LIZA_1[0]), Xatu (game/src/data/trainers.party:TRAINER_TATE_AND_LIZA_1[1]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved). Fought as a double battle: both leaders send Pokémon from this one roster in order."
     },
     {
       "id": "juan",
@@ -3281,10 +3359,28 @@
           "nature": null
         },
         {
+          "species": "Luvdisc",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Water Pulse", "Attract", "Sweet Kiss", "Flail"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
           "species": "Whiscash",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Rain Dance", "Water Pulse", "Amnesia", "Earthquake"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Walrein",
+          "levelOffset": 0,
+          "isAce": true,
+          "moves": ["Water Pulse", "Body Slam", "Protect", "Ice Beam"],
           "item": null,
           "ability": null,
           "nature": null
@@ -3292,41 +3388,23 @@
         {
           "species": "Crawdaunt",
           "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
+          "isAce": false,
+          "moves": ["Water Pulse", "Crabhammer", "Taunt", "Leer"],
           "item": null,
           "ability": null,
           "nature": null
         },
         {
-          "species": "Walrein",
+          "species": "Politoed",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Luvdisc",
-          "levelOffset": -2,
-          "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Walrein",
-          "levelOffset": -2,
-          "isAce": true,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_JUAN_1[1]; game/src/data/trainers.party:TRAINER_JUAN_1[2]; game/src/data/trainers.party:TRAINER_JUAN_1[3]; game/src/data/trainers.party:TRAINER_JUAN_2[2]; game/src/data/trainers.party:TRAINER_JUAN_1[0]; game/src/data/trainers.party:TRAINER_JUAN_1[4]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Sealeo -> Walrein. PLACEHOLDER ace slots (section 10): Kingdra, Crawdaunt, Walrein in roster slots 1/3/6, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Luvdisc [flamboyance]. Aces (Kingdra, Walrein) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's moves/item/ability/nature: Kingdra (game/src/data/trainers.party:TRAINER_JUAN_1[4]), Luvdisc (game/src/data/trainers.party:TRAINER_JUAN_1[0]), Whiscash (game/src/data/trainers.party:TRAINER_JUAN_1[1]), Walrein (game/src/data/trainers.party:TRAINER_JUAN_2[2]), Crawdaunt (game/src/data/trainers.party:TRAINER_JUAN_1[3]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "sidney",
@@ -3389,34 +3467,43 @@
         },
         {
           "species": "Mightyena",
-          "levelOffset": -3,
+          "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Roar", "Double Edge", "Sand Attack", "Crunch"],
           "item": null,
           "ability": null,
           "nature": null
         },
         {
           "species": "Shiftry",
-          "levelOffset": -1,
-          "isAce": true,
-          "moves": "LEVEL_UP",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Torment", "Double Team", "Swagger", "Extrasensory"],
           "item": null,
           "ability": null,
           "nature": null
         },
         {
           "species": "Cacturne",
-          "levelOffset": -3,
+          "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Leech Seed", "Feint Attack", "Needle Arm", "Cotton Spore"],
           "item": null,
           "ability": null,
           "nature": null
         },
         {
           "species": "Crawdaunt",
-          "levelOffset": -1,
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Surf", "Swords Dance", "Strength", "Facade"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Sharpedo",
+          "levelOffset": 0,
           "isAce": true,
           "moves": "LEVEL_UP",
           "item": null,
@@ -3424,7 +3511,7 @@
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers.party:TRAINER_SIDNEY (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). PLACEHOLDER ace slots (section 10): Absol, Shiftry, Crawdaunt in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Absol, Sharpedo) at offset 0, fillers at -2. Species in the reference party keep that source slot's moves/item/ability/nature: Absol (game/src/data/trainers.party:TRAINER_SIDNEY[4]), Mightyena (game/src/data/trainers.party:TRAINER_SIDNEY[0]), Shiftry (game/src/data/trainers.party:TRAINER_SIDNEY[1]), Cacturne (game/src/data/trainers.party:TRAINER_SIDNEY[2]), Crawdaunt (game/src/data/trainers.party:TRAINER_SIDNEY[3]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "phoebe",
@@ -3481,30 +3568,30 @@
           "levelOffset": 0,
           "isAce": true,
           "moves": "LEVEL_UP",
-          "item": "Sitrus Berry",
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Dusknoir",
-          "levelOffset": -3,
-          "isAce": false,
-          "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
           "nature": null
         },
         {
           "species": "Sableye",
-          "levelOffset": -1,
-          "isAce": true,
-          "moves": "LEVEL_UP",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Shadow Ball", "Double Team", "Night Shade", "Feint Attack"],
           "item": null,
           "ability": null,
           "nature": null
         },
         {
           "species": "Banette",
+          "levelOffset": 0,
+          "isAce": true,
+          "moves": ["Shadow Ball", "Grudge", "Will O Wisp", "Feint Attack"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Froslass",
           "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
@@ -3513,16 +3600,25 @@
           "nature": null
         },
         {
-          "species": "Banette",
+          "species": "Drifblim",
           "levelOffset": -2,
-          "isAce": true,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Shedinja",
+          "levelOffset": -2,
+          "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
           "ability": null,
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers.party:TRAINER_PHOEBE (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Dusclops -> Dusknoir, Dusclops -> Dusknoir. PLACEHOLDER ace slots (section 10): Dusknoir, Sableye, Banette in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Shedinja [gimmick]. Aces (Dusknoir, Banette) at offset 0, fillers at -2. Species in the reference party keep that source slot's moves/item/ability/nature: Sableye (game/src/data/trainers.party:TRAINER_PHOEBE[2]), Banette (game/src/data/trainers.party:TRAINER_PHOEBE[1]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "glacia",
@@ -3584,8 +3680,35 @@
           "nature": null
         },
         {
-          "species": "Walrein",
-          "levelOffset": -3,
+          "species": "Glalie",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Light Screen", "Crunch", "Icy Wind", "Ice Beam"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Froslass",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Abomasnow",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Weavile",
+          "levelOffset": -2,
           "isAce": false,
           "moves": "LEVEL_UP",
           "item": null,
@@ -3594,33 +3717,15 @@
         },
         {
           "species": "Walrein",
-          "levelOffset": -1,
+          "levelOffset": 0,
           "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Glalie",
-          "levelOffset": -3,
-          "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Glalie",
-          "levelOffset": -1,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
+          "moves": ["Surf", "Body Slam", "Ice Beam", "Sheer Cold"],
+          "item": "Sitrus Berry",
           "ability": null,
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers.party:TRAINER_GLACIA (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Sealeo -> Walrein, Sealeo -> Walrein. PLACEHOLDER ace slots (section 10): Walrein, Walrein, Glalie in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Walrein [iconic duplicate]. Aces (Walrein, Walrein) at offset 0, fillers at -2. Species in the reference party keep that source slot's moves/item/ability/nature: Walrein (game/src/data/trainers.party:TRAINER_GLACIA[4]), Glalie (game/src/data/trainers.party:TRAINER_GLACIA[1]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "drake",
@@ -3682,19 +3787,10 @@
           "nature": null
         },
         {
-          "species": "Salamence",
-          "levelOffset": -3,
-          "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
           "species": "Altaria",
-          "levelOffset": -1,
-          "isAce": true,
-          "moves": "LEVEL_UP",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Double Edge", "Dragon Breath", "Dragon Dance", "Aerial Ace"],
           "item": null,
           "ability": null,
           "nature": null
@@ -3703,14 +3799,32 @@
           "species": "Kingdra",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Smokescreen", "Dragon Dance", "Surf", "Body Slam"],
           "item": null,
           "ability": null,
           "nature": null
         },
         {
           "species": "Flygon",
+          "levelOffset": 0,
+          "isAce": true,
+          "moves": ["Flamethrower", "Crunch", "Dragon Breath", "Earthquake"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Gyarados",
           "levelOffset": -2,
+          "isAce": false,
+          "moves": "LEVEL_UP",
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Dragonite",
+          "levelOffset": 0,
           "isAce": true,
           "moves": "LEVEL_UP",
           "item": null,
@@ -3718,7 +3832,7 @@
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers.party:TRAINER_DRAKE (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): Shelgon -> Salamence. PLACEHOLDER ace slots (section 10): Salamence, Altaria, Flygon in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Salamence, Flygon, Dragonite) at offset 0, fillers at -2. Species in the reference party keep that source slot's moves/item/ability/nature: Salamence (game/src/data/trainers.party:TRAINER_DRAKE[4]), Altaria (game/src/data/trainers.party:TRAINER_DRAKE[1]), Kingdra (game/src/data/trainers.party:TRAINER_DRAKE[2]), Flygon (game/src/data/trainers.party:TRAINER_DRAKE[3]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "wallace",
@@ -3787,9 +3901,18 @@
         },
         {
           "species": "Wailord",
-          "levelOffset": -1,
+          "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Rain Dance", "Water Spout", "Double Edge", "Blizzard"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Tentacruel",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Toxic", "Hydro Pump", "Sludge Bomb", "Ice Beam"],
           "item": null,
           "ability": null,
           "nature": null
@@ -3797,26 +3920,8 @@
         {
           "species": "Ludicolo",
           "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Tentacruel",
-          "levelOffset": -3,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Gyarados",
-          "levelOffset": -2,
-          "isAce": true,
-          "moves": "LEVEL_UP",
+          "moves": ["Giga Drain", "Surf", "Leech Seed", "Double Team"],
           "item": null,
           "ability": null,
           "nature": null
@@ -3825,13 +3930,22 @@
           "species": "Whiscash",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Earthquake", "Surf", "Amnesia", "Hyper Beam"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Gyarados",
+          "levelOffset": 0,
+          "isAce": true,
+          "moves": ["Dragon Dance", "Earthquake", "Hyper Beam", "Surf"],
           "item": null,
           "ability": null,
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers.party:TRAINER_WALLACE (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). PLACEHOLDER ace slots (section 10): Milotic, Ludicolo, Gyarados in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Gyarados [RS team]. Aces (Milotic, Gyarados) at offset 0, fillers at -2. Species in the reference party keep that source slot's moves/item/ability/nature: Milotic (game/src/data/trainers.party:TRAINER_WALLACE[5]), Wailord (game/src/data/trainers.party:TRAINER_WALLACE[0]), Tentacruel (game/src/data/trainers.party:TRAINER_WALLACE[1]), Ludicolo (game/src/data/trainers.party:TRAINER_WALLACE[2]), Whiscash (game/src/data/trainers.party:TRAINER_WALLACE[3]), Gyarados (game/src/data/trainers.party:TRAINER_WALLACE[4]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     },
     {
       "id": "steven",
@@ -3899,19 +4013,28 @@
           "nature": null
         },
         {
-          "species": "Claydol",
-          "levelOffset": -3,
+          "species": "Skarmory",
+          "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Toxic", "Aerial Ace", "Spikes", "Steel Wing"],
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Claydol",
+          "levelOffset": -2,
+          "isAce": false,
+          "moves": ["Reflect", "Light Screen", "Ancient Power", "Earthquake"],
           "item": null,
           "ability": null,
           "nature": null
         },
         {
           "species": "Aggron",
-          "levelOffset": -2,
+          "levelOffset": 0,
           "isAce": true,
-          "moves": "LEVEL_UP",
+          "moves": ["Thunder", "Earthquake", "Solar Beam", "Dragon Claw"],
           "item": null,
           "ability": null,
           "nature": null
@@ -3920,16 +4043,7 @@
           "species": "Cradily",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
-          "item": null,
-          "ability": null,
-          "nature": null
-        },
-        {
-          "species": "Skarmory",
-          "levelOffset": -1,
-          "isAce": true,
-          "moves": "LEVEL_UP",
+          "moves": ["Giga Drain", "Ancient Power", "Ingrain", "Confuse Ray"],
           "item": null,
           "ability": null,
           "nature": null
@@ -3938,13 +4052,13 @@
           "species": "Armaldo",
           "levelOffset": -2,
           "isAce": false,
-          "moves": "LEVEL_UP",
+          "moves": ["Water Pulse", "Ancient Power", "Aerial Ace", "Slash"],
           "item": null,
           "ability": null,
           "nature": null
         }
       ],
-      "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers.party:TRAINER_STEVEN (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). PLACEHOLDER ace slots (section 10): Metagross, Aggron, Skarmory in roster slots 1/3/5, chosen as the strongest or most iconic members; filler slots keep their order."
+      "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Armaldo [RS team]. Aces (Metagross, Aggron) at offset 0, fillers at -2. Species in the reference party keep that source slot's moves/item/ability/nature: Metagross (game/src/data/trainers.party:TRAINER_STEVEN[5]), Skarmory (game/src/data/trainers.party:TRAINER_STEVEN[0]), Claydol (game/src/data/trainers.party:TRAINER_STEVEN[1]), Aggron (game/src/data/trainers.party:TRAINER_STEVEN[2]), Cradily (game/src/data/trainers.party:TRAINER_STEVEN[3]), Armaldo (game/src/data/trainers.party:TRAINER_STEVEN[4]); other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
     }
   ]
 }

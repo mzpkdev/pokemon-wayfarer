@@ -32,11 +32,12 @@ test("grows each trainer with world progress and round-trips an exported experim
   await expect(page.getByTestId("selected-level")).toHaveText("Lv. 18")
   await expect(page.getByTestId("team-size")).toHaveText("2")
   await expect(order).toHaveCount(2)
-  // Final stages step down to the stage their level supports: Rhyperior is Rhyhorn at Lv 16,
+  // Final stages step down to the stage their level supports: Golem is Geodude at Lv 16,
   // Steelix is Onix at Lv 18. The filler slot fights first and the ace (roster slot 1) last.
-  await expect(order.nth(0)).toContainText("Rhyhorn→ Rhyperior at Lv 55")
+  await expect(order.nth(0)).toContainText("Geodude→ Golem at Lv 38")
   await expect(order.nth(0)).toContainText("Lv. 16")
-  await expect(order.nth(0)).toContainText("Offset -2 · LEVEL_UP")
+  // Stepped down, Golem uses LEVEL_UP instead of its source moves but keeps its item.
+  await expect(order.nth(0)).toContainText("Offset -2 · LEVEL_UP · Quick Claw")
   await expect(page.getByTestId("ace-2")).toHaveCount(0)
   await expect(order.nth(1)).toContainText("Onix→ Steelix at Lv 35Ace")
   await expect(order.nth(1)).toContainText("Lv. 18")
@@ -46,22 +47,21 @@ test("grows each trainer with world progress and round-trips an exported experim
     /Slot 1\s*Ace\s*Onix\s*Lv 18\s*Onix\s*Lv 30\s*Steelix\s*Lv 41\s*Steelix\s*Lv 51\s*Steelix\s*Lv 63/,
   )
   await expect(page.getByTestId("growth-slot-2")).toHaveText(
-    /Slot 2\s*Rhyhorn\s*Lv 16\s*Rhyhorn\s*Lv 28\s*Rhyhorn\s*Lv 39\s*Rhydon\s*Lv 49\s*Rhyperior\s*Lv 61/,
+    /Slot 2\s*Geodude\s*Lv 16\s*Graveler\s*Lv 28\s*Golem\s*Lv 39\s*Golem\s*Lv 49\s*Golem\s*Lv 61/,
   )
-  // The slot-6 Golem ace joins only at team size 6 (TR 96), so only by world progress 160.
+  // The slot-6 Aerodactyl ace (offset 0) joins only at team size 6 (TR 96), so only by world
+  // progress 160.
   await expect(page.getByTestId("growth-slot-6")).toHaveText(
-    /Slot 6\s*Ace\s*—\s*—\s*—\s*—\s*Golem\s*Lv 61/,
+    /Slot 6\s*Ace\s*—\s*—\s*—\s*—\s*Aerodactyl\s*Lv 63/,
   )
-  await expect(page.getByTestId("slot-line-2")).toHaveText(
-    "Rhyhorn → Rhydon Lv 42 → Rhyperior Lv 55",
-  )
+  await expect(page.getByTestId("slot-line-2")).toHaveText("Geodude → Graveler Lv 25 → Golem Lv 38")
   await expect(page.getByTestId("stage-warning-1")).toHaveCount(0)
 
-  // Reorder and edit roster slots; the team is always the first N. The ace flag moves with the
-  // slot, so two aces fight in reverse list order.
+  // Reorder and edit roster slots; the team is always the first N. The filler Crobat (Zubat at
+  // Lv 16) moves up into the team.
   await page.getByRole("button", { name: "Move roster slot 3 up", exact: true }).click()
-  await expect(order.nth(0)).toContainText("Aerodactyl")
-  await expect(order.nth(0)).toContainText("Ace")
+  await expect(order.nth(0)).toContainText("Zubat→ Crobat at Lv 38")
+  await expect(order.nth(0)).not.toContainText("Ace")
   await page.getByLabel("Roster slot 2 species", { exact: true }).fill("Onix")
   await page.getByLabel("Roster slot 2 level offset", { exact: true }).fill("-6")
   await page.getByLabel("Roster slot 2 moves", { exact: true }).fill("Rock Throw, Bind")
@@ -108,11 +108,15 @@ test("grows each trainer with world progress and round-trips an exported experim
   await expect(order).toHaveCount(6)
   await expect(order.last()).toContainText("Steelix")
   await expect(order.last()).toContainText("Lv. 100")
-  // Fillers first (Omastar, Kabutops, Rhyperior), then aces (Golem, Onix, Steelix).
+  // Fillers first (Omastar, Kabutops, Golem, Onix), then aces (Aerodactyl, Steelix).
   await expect(order.first()).toContainText("Omastar")
   await expect(order.first()).toContainText("Lv. 98")
-  await expect(order.nth(3)).toContainText("GolemAce")
-  await expect(order.nth(3)).toContainText("Quick Claw")
+  await expect(order.nth(2)).toContainText("Golem")
+  await expect(order.nth(2)).toContainText("Quick Claw")
+  await expect(order.nth(3)).toContainText("Onix")
+  await expect(order.nth(3)).toContainText("Lv. 94")
+  await expect(order.nth(4)).toContainText("AerodactylAce")
+  await expect(order.nth(4)).toContainText("Hard Stone")
   await setGrowth(page, { archetype: "steady", peak: "100" })
   await expect(page.getByTestId("selected-tr")).toHaveText("63")
 
@@ -122,7 +126,7 @@ test("grows each trainer with world progress and round-trips an exported experim
   if (!exportedPath) throw new Error("Export did not produce a file")
   await page.getByText("Scalers & experiment settings", { exact: true }).click()
   await page.getByRole("button", { name: "Reset all to catalog defaults", exact: true }).click()
-  await expect(order.nth(2)).toContainText("Aerodactyl")
+  await expect(order.nth(2)).toContainText("Golem")
   await page.getByLabel("Import experiment file", { exact: true }).setInputFiles(exportedPath)
   await expect(order.nth(2)).toContainText("Onix")
   await page.reload()
@@ -194,19 +198,25 @@ test("shows the selected trainer's milestones and a team level chart", async ({ 
   await page.goto("/#trainer-balance")
   const timeline = page.getByTestId("milestones").locator(":scope > li")
   await expect(timeline.first()).toHaveText(
-    /^0\s*Onix, Rhyhorn \(team level above the level cap\)$/,
+    /^0\s*Onix, Geodude \(team level above the level cap\)$/,
   )
-  await expect(page.getByTestId("milestone-8")).toHaveText(/8\s*3rd slot \(Aerodactyl\) ace joins/)
+  await expect(page.getByTestId("milestone-8")).toHaveText(/8\s*3rd slot \(Zubat\) joins/)
   await expect(page.getByTestId("milestone-40")).toHaveText(/40\s*4th slot \(Kabuto\) joins/)
   await expect(page.getByTestId("milestone-57")).toHaveText(/57\s*Onix → Steelix/)
-  await expect(page.getByTestId("milestone-151")).toHaveText(/151\s*6th slot \(Golem\) ace joins/)
+  await expect(page.getByTestId("milestone-151")).toHaveText(
+    /151\s*6th slot \(Aerodactyl\) ace joins/,
+  )
   await expect(timeline.last()).toHaveText(/159\s*peak TR 100/)
   await expect(timeline.first()).toHaveAttribute("aria-current", "step")
   await expect(page.getByTestId("milestone-now")).toHaveCount(0)
-  // At 8 badges (player TR 80) the marker sits between Onix → Steelix (57) and Kabuto → Kabutops (85).
+  // At 8 badges (player TR 80) the marker sits between Graveler → Golem, Golbat → Crobat (76)
+  // and Kabuto → Kabutops (85).
   await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
   await expect(page.getByTestId("milestone-now")).toHaveText(/80\s*Player TR now/)
-  await expect(page.getByTestId("milestone-57").locator("+ li")).toHaveAttribute(
+  await expect(page.getByTestId("milestone-76")).toHaveText(
+    /76\s*Graveler → Golem · Golbat → Crobat/,
+  )
+  await expect(page.getByTestId("milestone-76").locator("+ li")).toHaveAttribute(
     "data-testid",
     "milestone-now",
   )
@@ -253,12 +263,14 @@ test("grows Blue with the rival scaler and shows each trainer's TR at the checkp
   await page.getByRole("button", { name: "Blue Kanto · Champion", exact: true }).click()
   await expect(page.getByTestId("growth-blue")).toHaveText("0 → 170")
   await expect(page.getByTestId("archetype-blue")).toHaveText("rival")
-  // The Pallet fight: TR 0, one Eevee at Lv 5.
+  // The Pallet fight: TR 0, one Eevee at Lv 5 (his signature Umbreon steps down).
   await expect(page.getByTestId("selected-tr")).toHaveText("0")
   await expect(page.getByTestId("team-size")).toHaveText("1")
-  await expect(page.getByTestId("battle-order").locator("li")).toHaveText([/Eevee.*Lv\. 5/s])
-  // Blue's Eevee is a user choice: allowed, with the final-stage warning.
-  await expect(page.getByTestId("stage-warning-1")).toContainText("Eevee is not a final stage")
+  await expect(page.getByTestId("battle-order").locator("li")).toHaveText([
+    /Eevee→ Umbreon at Lv 30.*Lv\. 5/s,
+  ])
+  // Umbreon is a final stage, so there is no final-stage warning.
+  await expect(page.getByTestId("stage-warning-1")).toHaveCount(0)
   await expect(page.getByLabel("Lead", { exact: true })).toHaveCount(0)
   await expect(page.getByTestId("growth-table").locator("tbody tr").first()).toHaveText(
     /TR\s*0\s*49\s*90\s*129\s*170/,
@@ -321,7 +333,7 @@ test("puts the top five by TR at the current world progress in the lineup, stron
   await expect(page.getByTestId("league-range")).toHaveText("TR 130 … 132")
   await expect(page.getByTestId("league-match-1")).toContainText("Norman")
   await expect(page.getByTestId("league-match-1")).toContainText("TR 130 · Lv. 81 · 6 Pokémon")
-  await expect(page.getByTestId("league-match-5")).toContainText("TR 132 · Lv. 83 · 5 Pokémon")
+  await expect(page.getByTestId("league-match-5")).toContainText("TR 132 · Lv. 83 · 6 Pokémon")
   // A plateau Brock with peak TR 150 moves into match 5 and drops Steven.
   await setGrowth(page, { archetype: "plateau", peak: "150" })
   await expect(page.getByTestId("league-match-5")).toContainText("Brock")
@@ -342,42 +354,44 @@ test("marks ace slots and fights them last, with slot 1 locked and at most three
   await page.goto("/#trainer-balance")
   const order = page.getByTestId("battle-order").locator("li")
   await expect(page.getByTestId("order-rule")).toContainText("Join order is list order")
-  await expect(page.getByTestId("order-rule")).toContainText("1–3 aces (3 now)")
-  // Brock at TR 100 fields all six: Steelix (ace), Rhyperior, Aerodactyl (ace), Kabutops,
-  // Omastar, Golem (ace). Fillers fight first, aces last, each in reverse list order.
+  await expect(page.getByTestId("order-rule")).toContainText("1–3 aces (2 now)")
+  // Brock at TR 100 fields all six: Steelix (ace), Golem, Crobat, Kabutops, Omastar,
+  // Aerodactyl (ace). Fillers fight first, aces last, each in reverse list order.
   await setGrowth(page, { start: "100", peak: "100" })
   await expect(page.getByTestId("team-size")).toHaveText("6")
   await expect(order).toHaveText([
     /^#5\s*Omastar(?!Ace)/,
     /^#4\s*Kabutops(?!Ace)/,
-    /^#2\s*Rhyperior(?!Ace)/,
-    /^#6\s*GolemAce/,
-    /^#3\s*AerodactylAce/,
+    /^#3\s*Crobat(?!Ace)/,
+    /^#2\s*Golem(?!Ace)/,
+    /^#6\s*AerodactylAce/,
     /^#1\s*SteelixAce/,
   ])
-  await expect(page.getByRole("group", { name: "Roster slot 3 · ace · in team" })).toBeVisible()
+  await expect(page.getByRole("group", { name: "Roster slot 6 · ace · in team" })).toBeVisible()
   const ace = (slot: number) => page.getByLabel(`Roster slot ${slot} ace`, { exact: true })
   await expect(ace(1)).toBeChecked()
   await expect(ace(1)).toBeDisabled()
-  // A fourth ace is refused with a clear message.
+  // Kabutops becomes the third ace; a fourth ace is refused with a clear message.
   await ace(4).click()
+  await expect(page.getByTestId("order-rule")).toContainText("(3 now)")
+  await ace(5).click()
   await expect(page.getByRole("alert")).toContainText(
     "A roster has at most 3 aces (roster slot 1 plus two more). Clear another ace first.",
   )
-  await expect(ace(4)).not.toBeChecked()
-  // Golem becomes a filler slot and Kabutops an ace.
+  await expect(ace(5)).not.toBeChecked()
+  // Aerodactyl becomes a filler slot and Omastar an ace.
   await ace(6).click()
   await expect(page.getByRole("status")).toContainText(
-    "Golem (roster slot 6) is now a filler slot.",
+    "Aerodactyl (roster slot 6) is now a filler slot.",
   )
-  await ace(4).click()
+  await ace(5).click()
   await expect(page.getByTestId("order-rule")).toContainText("(3 now)")
   await expect(order).toHaveText([
-    /^#6\s*Golem(?!Ace)/,
-    /^#5\s*Omastar/,
-    /^#2\s*Rhyperior/,
+    /^#6\s*Aerodactyl(?!Ace)/,
+    /^#3\s*Crobat/,
+    /^#2\s*Golem/,
+    /^#5\s*OmastarAce/,
     /^#4\s*KabutopsAce/,
-    /^#3\s*AerodactylAce/,
     /^#1\s*SteelixAce/,
   ])
   await expect(page.getByTestId("growth-slot-4")).toHaveText(/^Slot 4\s*Ace/)
@@ -388,7 +402,9 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 8 file
   page,
 }) => {
   await page.goto("/#trainer-balance")
-  await expect(page.getByTestId("roster-gap-count")).toHaveText("11")
+  // Every catalog roster lists six Pokémon.
+  await expect(page.getByTestId("roster-gap-count")).toHaveText("0")
+  await expect(page.getByTestId("roster-gap-list")).toHaveText("Every roster lists 6 Pokémon")
   await expect(page.getByTestId("roster-incomplete")).toHaveCount(0)
 
   await page.getByLabel("Roster slot 1 level offset", { exact: true }).fill("-1")
@@ -480,6 +496,8 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 8 file
   await expect(page.getByTestId("selected-tr")).toHaveText("25")
 
   await page.getByRole("button", { name: "Lorelei Kanto · Elite Four", exact: true }).click()
+  await page.getByRole("button", { name: "Remove roster slot 6", exact: true }).click()
+  await expect(page.getByTestId("roster-gap-count")).toHaveText("1")
   await expect(page.getByTestId("roster-incomplete")).toBeVisible()
   await expect(page.getByTestId("roster-length")).toHaveText("5 / 6")
   await expect(page.getByTestId("warnings")).toContainText("lists 5 of 6 Pokémon")
@@ -491,7 +509,7 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 8 file
   )
   await expect(page.getByTestId("roster-length")).toHaveText("6 / 6")
   await expect(page.getByTestId("roster-incomplete")).toHaveCount(0)
-  await expect(page.getByTestId("roster-gap-count")).toHaveText("10")
+  await expect(page.getByTestId("roster-gap-count")).toHaveText("0")
   await expect(page.getByRole("button", { name: "Add roster slot", exact: true })).toHaveCount(0)
 })
 

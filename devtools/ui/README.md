@@ -70,7 +70,7 @@ trainer's team. The player TR is never computed from a notable trainer's TR.
   0 / 60 / 100 / 100 / 100. The **rival** is an ordinary archetype with an
   extra anchor: 0 / 20 / 40 / 80 / 120 / 160 → 0 / 15 / 29 / 53 / 76 / 100%.
   Blue (rival, start TR 0, peak TR 170) is TR 0 at Pallet (one Eevee at
-  Lv 5), TR 26 at world progress 20 (two Pokémon, team level 18), TR 49 at
+  Lv 5, his signature Umbreon stepped down), TR 26 at world progress 20 (two Pokémon, team level 18), TR 49 at
   40, then 9–10 ahead of the player until he reaches 170. Peak TR must be at
   least start TR.
 
@@ -93,8 +93,9 @@ trainer's team. The player TR is never computed from a notable trainer's TR.
   order and the author sets the rhythm (e.g. ace, filler, ace, filler, filler,
   ace). Each member's level is clamp(team level + offset, 1, 100). **Battle
   order** is the filler slots in reverse list order, then the aces in reverse
-  list order, so roster slot 1 is always fought last. Brock at team size 6
-  fights Omastar, Kabutops, Rhyperior, Golem, Aerodactyl, Steelix.
+  list order, so roster slot 1 is always fought last. Brock (Steelix ace,
+  Golem, Crobat, Kabutops, Omastar, Aerodactyl ace) at team size 6 fights
+  Omastar, Kabutops, Crobat, Golem, Aerodactyl, Steelix.
 - **Evolution (downward only)**: a member whose level is below its stage's
   evolution level steps down its predecessor chain until the level supports
   the stage. It never evolves forward. Level evolutions use their
@@ -102,7 +103,7 @@ trainer's team. The player TR is never computed from a notable trainer's TR.
   other) use the shared evolution-level table in the catalog script, which
   covers only evolutions without a level in the game data. Baby pre-evolutions
   are not stepped down to. Brock at start TR 25 (team level 18) fields Onix
-  Lv 18 and Rhyhorn Lv 16; his Steelix appears from Lv 35 and Rhydon from Lv 42. A member at its
+  Lv 18 and Geodude Lv 16; his Graveler appears from Lv 25, Steelix from Lv 35 and Golem from Lv 38. A member at its
   authored stage uses the authored moves; one that stepped down uses
   `LEVEL_UP`.
 
@@ -140,13 +141,14 @@ team, a roster slot joining (team size steps up; "ace joins" or "joins"), a memb
 along its evolution line, the team level moving strictly above the level cap
 or strictly below it again (equal keeps the side, so rounding cannot flicker),
 and peak TR reached. The player's current TR is marked in the list. Brock
-reads "0: Onix, Rhyhorn (team level above the level cap) · 8: 3rd slot
-(Aerodactyl) ace joins · 40: 4th slot (Kabuto) joins · 49: team level Lv 32
-drops below the level cap Lv 33 · 57: Onix → Steelix · 85: Kabuto → Kabutops ·
-93: Rhyhorn → Rhydon · 98: 5th slot (Omastar) joins · 140: Rhydon →
-Rhyperior · 151: 6th slot (Golem) ace joins · 159: peak TR 100". His late ace
-Golem (roster slot 6) joins only at team size 6 (TR 96, team level 60), which
-his placeholder peak TR 100 reaches at world progress 151.
+reads "0: Onix, Geodude (team level above the level cap) · 8: 3rd slot
+(Zubat) joins · 19: Zubat → Golbat · 27: Geodude → Graveler · 40: 4th slot
+(Kabuto) joins · 49: team level Lv 32 drops below the level cap Lv 33 · 57:
+Onix → Steelix · 76: Graveler → Golem, Golbat → Crobat · 85: Kabuto →
+Kabutops · 98: 5th slot (Omastar) joins · 151: 6th slot (Aerodactyl) ace
+joins · 159: peak TR 100". His late ace Aerodactyl (roster slot 6) joins only
+at team size 6 (TR 96, team level 60), which his placeholder peak TR 100
+reaches at world progress 151.
 
 Exports and the saved browser state use version 9 (rosters carry `isAce`)
 and store the point as `{ "playerTR": n }`; a `{ "badges": n }` point still
@@ -154,7 +156,7 @@ imports and sets the matching player TR.
 
 **Tate & Liza** are one entry (role Gym Leader duo, Hoenn) with one start TR,
 archetype, peak TR and six-slot roster (Solrock and Lunatone as the signature
-pair, both at offset 0). They are fought as a double battle: both leaders send
+pair, both aces at offset 0, with Gardevoir as the third ace). They are fought as a double battle: both leaders send
 Pokémon from the shared roster in order, with team size from the same table.
 The explorer marks them as a double battle. They follow every notable trainer
 rule but are league-ineligible (`leagueEligible: false`; leagues are singles
@@ -198,8 +200,8 @@ archetypes, other sources of world progress and lineup rules beyond the top
 five are out of scope for v0. The
 scaler the ROM uses today is unchanged.
 
-The catalog's growth and rosters are **placeholders**, for the authoring
-session to replace. The growth defaults live in the catalog script's `GROWTH`
+The catalog's growth and roster battle content are **placeholders**, for the
+authoring session to replace. The growth defaults live in the catalog script's `GROWTH`
 table, chosen by lore (veterans such as Bruno, Agatha, Lorelei, Pryce and
 Chuck plateau; rising stars such as Whitney and Falkner bloom early; Clair,
 Winona, Juan and Sabrina bloom late; most others are steady; Champions and
@@ -219,31 +221,23 @@ three Gym Leaders near and above the player at every checkpoint and three below
 from world progress 80. At world progress 0 all 24 are above (every start TR
 is past the near band), and the lowest three are two Pokémon at or under the
 level cap; at 40 none is below yet, but at least three are at or under the
-player TR. Rosters flatten
-the earlier ace/filler prototype: its ace (now the signature Pokémon) first,
-then the other members in order, cut to six, then each species converted to
-the final stage of its line (a converted slot uses `LEVEL_UP` with no
-ability; branching lines take the script's `FINAL_CHOICE`, e.g. Scyther →
-Scizor). Blue's roster slot 1 stays Eevee (a user choice, flagged as not a
-final stage). Each placeholder roster then gets 1–3 ace slots from the
-script's `ACES` table: roster slot 1 plus the trainer's strongest or most
-iconic members, interleaved at roster slots 1/3/5 (or 1/3/6 for a late ace)
-with the filler slots keeping their order; Morty has two aces (1/4), and Tate
-& Liza keep their Solrock and Lunatone signature pair together as aces in
-slots 1–2. Brock's roster is Steelix (ace, signature Pokémon), Rhyperior,
-Aerodactyl (ace), Kabutops, Omastar and Golem (ace, keeping its source battle
-content). That prototype came
-from each trainer's competitive party (the curated six in
-`game/src/data/trainer_scaling/gym_leaders.json`) or otherwise its reference
-party (the highest-level member is roster slot 1; other offsets are the source level
-gap clamped to -6..0). Handwritten early species fill in where no line covers
-them. Roster slot 1 keeps its source moves, item, ability and nature; the rest
-use `LEVEL_UP` as a label (learnsets are not resolved). Eleven rosters have
-only five roster slots (Lorelei, Bruno, Agatha, Koga, Lance, Will, Karen, Sidney, Phoebe,
-Glacia, Drake). The explorer flags them as incomplete, and the catalog script
-prints them as a warning, not a failure. Tate & Liza's roster is Solrock, Lunatone,
-Claydol and Xatu from their Emerald party, then placeholder Hoenn Psychic
-picks Gardevoir and Grumpig from other Emerald parties.
+player TR. Rosters are the user-directed roster draft v1 (identity and anime
+picks) in the script's `DRAFT` table: six roster slots per trainer in join
+order, 1–3 aces at offset 0 (roster slot 1, the signature Pokémon, always
+one), fillers at offset -2. Off-type, anime or lore picks carry a tag (e.g.
+Misty's Golduck `[anime Psyduck]`) that the roster provenance note lists. Every
+species must resolve in `species_info` and `species.h`, or the script fails.
+Brock's roster is Steelix (ace), Golem, Crobat, Kabutops, Omastar and
+Aerodactyl (ace); Blue's is Umbreon (ace, Eevee early), Pidgeot, Alakazam
+(ace), Nidoking, Scizor and Arcanine (ace). Battle content is a placeholder: a
+roster slot whose species is in the trainer's source party (the curated
+composition in `game/src/data/trainer_scaling/gym_leaders.json`, otherwise its
+reference party) keeps that source slot's moves, item, ability and nature;
+every other slot uses `LEVEL_UP` (a label: learnsets are not resolved) with no
+item. Every roster lists six Pokémon; the explorer still flags a roster edited
+below six as incomplete, and the script would warn about one. Four draft
+picks are not final stages in this game (Primeape, Ursaring and Girafarig have
+later-generation evolutions): allowed, and the script prints them as a warning.
 
 The catalog uses local FRLG, Emerald and HNS source records, including their
 provenance and explicit variant notes. HNS is not substituted with HGSS;
@@ -257,8 +251,8 @@ game's level wins), requires a table entry for every non-level edge on a roster 
 and checks that levels increase along each line with no ambiguous ancestry or
 cycles. Table rows are `authored` (the contract examples: Onix → Steelix 35,
 Staryu → Starmie 30, Growlithe → Arcanine 35) or `placeholder`;
-the script prints the placeholders, the conversions and a warning for roster
-slots that are not final stages. The catalog records each roster species'
+the script prints the placeholders, the roster slots that kept source battle
+content and a warning for roster slots that are not final stages. The catalog records each roster species'
 chain compactly under `evolution.chains` (e.g. `["Geodude", 25, "Graveler",
 38, "Golem"]`), which the explorer indexes; the saved experiment format is
 unchanged. Regenerate or verify the checked-in catalog from the repository root

@@ -3,10 +3,10 @@
 
 No network, ROM build, or temporary calibration files are required. Reference
 moves/items describe authored sources only. Each trainer gets placeholder growth
-(start TR, archetype, peak TR) and a placeholder v0 roster (one ordered list of up to six roster slots) flattened
-from the earlier ace/filler prototype, converted to final stages (contract
-section 9), with 1-3 ace slots (contract section 10) interleaved by the ACES
-table. Real rosters are authored later; a roster short of six or a slot that
+(start TR, archetype, peak TR) and the user-directed roster draft v1 (DRAFT: six
+ordered roster slots, identity/anime picks, 1-3 aces). A slot keeps authored
+source battle content only when its species is in the trainer's source party;
+otherwise it uses LEVEL_UP with no item. A roster short of six or a slot that
 is not a final stage is a warning, not a failure.
 
 The catalog also records each roster species' predecessor chain with evolution
@@ -41,47 +41,46 @@ BABIES = {"SPECIES_PICHU", "SPECIES_CLEFFA", "SPECIES_IGGLYBUFF", "SPECIES_TYROG
           "SPECIES_ELEKID", "SPECIES_MAGBY", "SPECIES_AZURILL", "SPECIES_WYNAUT", "SPECIES_BUDEW",
           "SPECIES_CHINGLING", "SPECIES_BONSLY", "SPECIES_MIME_JR", "SPECIES_HAPPINY", "SPECIES_MUNCHLAX",
           "SPECIES_MANTYKE", "SPECIES_RIOLU", "SPECIES_TOXEL"}
-# name, region, role, reference family/ID, handwritten early species (appended
-# when no roster line already covers them).
+# name, region, role, reference family/ID.
 ROSTER = [
-    ('Brock', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_BROCK', ['Geodude', 'Onix']),
-    ('Misty', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_MISTY', ['Staryu', 'Psyduck']),
-    ('Lt. Surge', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_LT_SURGE', ['Voltorb', 'Pikachu']),
-    ('Erika', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_ERIKA', ['Oddish', 'Bellsprout']),
-    ('Janine', 'Kanto', 'Gym Leader', 'HNS', 'TRAINER_JANINE_HNS', ['Venonat', 'Koffing']),
-    ('Sabrina', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_SABRINA', ['Abra', 'Drowzee']),
-    ('Blaine', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_BLAINE', ['Growlithe', 'Ponyta']),
-    ('Giovanni', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_GIOVANNI', ['Sandshrew', 'Rhyhorn']),
-    ('Blue', 'Kanto', 'Champion', 'FRLG', 'TRAINER_CHAMPION_FIRST_SQUIRTLE', ['Pidgey', 'Eevee']),
-    ('Lorelei', 'Kanto', 'Elite Four', 'FRLG', 'TRAINER_ELITE_FOUR_LORELEI', []),
-    ('Bruno', 'Kanto', 'Elite Four', 'FRLG', 'TRAINER_ELITE_FOUR_BRUNO', []),
-    ('Agatha', 'Kanto', 'Elite Four', 'FRLG', 'TRAINER_ELITE_FOUR_AGATHA', []),
-    ('Koga', 'Johto', 'Elite Four', 'HNS', 'TRAINER_KOGA_1_HNS', []),
-    ('Lance', 'Kanto', 'Champion', 'FRLG', 'TRAINER_ELITE_FOUR_LANCE', []),
-    ('Falkner', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_FALKNER_1_HNS', ['Pidgey', 'Hoothoot']),
-    ('Bugsy', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_BUGSY_1_HNS', ['Caterpie', 'Weedle']),
-    ('Whitney', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_WHITNEY_1_HNS', ['Clefairy', 'Meowth']),
-    ('Morty', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_MORTY_1_HNS', ['Gastly', 'Misdreavus']),
-    ('Chuck', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_CHUCK_1_HNS', ['Machop', 'Makuhita']),
-    ('Jasmine', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_JASMINE_1_HNS', ['Magnemite', 'Aron']),
-    ('Pryce', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_PRYCE_1_HNS', ['Seel', 'Swinub']),
-    ('Clair', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_CLAIR_1_HNS', ['Dratini', 'Horsea']),
-    ('Will', 'Johto', 'Elite Four', 'HNS', 'TRAINER_WILL_1_HNS', []),
-    ('Karen', 'Johto', 'Elite Four', 'HNS', 'TRAINER_KAREN_1_HNS', []),
-    ('Roxanne', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_ROXANNE_1', ['Geodude', 'Nosepass']),
-    ('Brawly', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_BRAWLY_1', ['Machop', 'Makuhita']),
-    ('Wattson', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_WATTSON_1', ['Voltorb', 'Electrike']),
-    ('Flannery', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_FLANNERY_1', ['Numel', 'Slugma']),
-    ('Norman', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_NORMAN_1', ['Slakoth', 'Zigzagoon']),
-    ('Winona', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_WINONA_1', ['Swablu', 'Taillow']),
-    ('Tate & Liza', 'Hoenn', 'Gym Leader duo', 'Emerald', 'TRAINER_TATE_AND_LIZA_1', []),
-    ('Juan', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_JUAN_1', ['Horsea', 'Barboach']),
-    ('Sidney', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_SIDNEY', []),
-    ('Phoebe', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_PHOEBE', []),
-    ('Glacia', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_GLACIA', []),
-    ('Drake', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_DRAKE', []),
-    ('Wallace', 'Hoenn', 'Champion', 'Emerald', 'TRAINER_WALLACE', []),
-    ('Steven', 'Hoenn', 'Champion', 'Emerald', 'TRAINER_STEVEN', []),
+    ('Brock', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_BROCK'),
+    ('Misty', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_MISTY'),
+    ('Lt. Surge', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_LT_SURGE'),
+    ('Erika', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_ERIKA'),
+    ('Janine', 'Kanto', 'Gym Leader', 'HNS', 'TRAINER_JANINE_HNS'),
+    ('Sabrina', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_SABRINA'),
+    ('Blaine', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_BLAINE'),
+    ('Giovanni', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_GIOVANNI'),
+    ('Blue', 'Kanto', 'Champion', 'FRLG', 'TRAINER_CHAMPION_FIRST_SQUIRTLE'),
+    ('Lorelei', 'Kanto', 'Elite Four', 'FRLG', 'TRAINER_ELITE_FOUR_LORELEI'),
+    ('Bruno', 'Kanto', 'Elite Four', 'FRLG', 'TRAINER_ELITE_FOUR_BRUNO'),
+    ('Agatha', 'Kanto', 'Elite Four', 'FRLG', 'TRAINER_ELITE_FOUR_AGATHA'),
+    ('Koga', 'Johto', 'Elite Four', 'HNS', 'TRAINER_KOGA_1_HNS'),
+    ('Lance', 'Kanto', 'Champion', 'FRLG', 'TRAINER_ELITE_FOUR_LANCE'),
+    ('Falkner', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_FALKNER_1_HNS'),
+    ('Bugsy', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_BUGSY_1_HNS'),
+    ('Whitney', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_WHITNEY_1_HNS'),
+    ('Morty', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_MORTY_1_HNS'),
+    ('Chuck', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_CHUCK_1_HNS'),
+    ('Jasmine', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_JASMINE_1_HNS'),
+    ('Pryce', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_PRYCE_1_HNS'),
+    ('Clair', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_CLAIR_1_HNS'),
+    ('Will', 'Johto', 'Elite Four', 'HNS', 'TRAINER_WILL_1_HNS'),
+    ('Karen', 'Johto', 'Elite Four', 'HNS', 'TRAINER_KAREN_1_HNS'),
+    ('Roxanne', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_ROXANNE_1'),
+    ('Brawly', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_BRAWLY_1'),
+    ('Wattson', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_WATTSON_1'),
+    ('Flannery', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_FLANNERY_1'),
+    ('Norman', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_NORMAN_1'),
+    ('Winona', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_WINONA_1'),
+    ('Tate & Liza', 'Hoenn', 'Gym Leader duo', 'Emerald', 'TRAINER_TATE_AND_LIZA_1'),
+    ('Juan', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_JUAN_1'),
+    ('Sidney', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_SIDNEY'),
+    ('Phoebe', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_PHOEBE'),
+    ('Glacia', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_GLACIA'),
+    ('Drake', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_DRAKE'),
+    ('Wallace', 'Hoenn', 'Champion', 'Emerald', 'TRAINER_WALLACE'),
+    ('Steven', 'Hoenn', 'Champion', 'Emerald', 'TRAINER_STEVEN'),
 ]
 
 
@@ -119,14 +118,7 @@ GROWTH = {
     "Wallace": (48, "late bloomer", 190), "Steven": (50, "late bloomer", 195),
 }
 # The Gym Leader duo: one entry fought as a double battle, league-ineligible.
-# Roster (Emerald source slots): the Solrock/Lunatone signature pair at offset 0
-# with their source battle content, then PLACEHOLDER Hoenn Psychic/Rock picks.
-DUOS = {"Tate & Liza": [("TRAINER_TATE_AND_LIZA_1", 3, "SPECIES_SOLROCK", True),
-                        ("TRAINER_TATE_AND_LIZA_1", 2, "SPECIES_LUNATONE", True),
-                        ("TRAINER_TATE_AND_LIZA_1", 0, "SPECIES_CLAYDOL", False),
-                        ("TRAINER_TATE_AND_LIZA_1", 1, "SPECIES_XATU", False),
-                        ("TRAINER_KATELYNN", 0, "SPECIES_GARDEVOIR", False),
-                        ("TRAINER_VALERIE_5", 2, "SPECIES_GRUMPIG", False)]}
+DUOS = {"Tate & Liza"}
 # Section 9 shared evolution-level table: (predecessor, species, level, status).
 # The table covers only evolutions without a level in the game data (item,
 # trade, friendship, other); they step down below this level like level
@@ -141,19 +133,27 @@ EVOLUTION_LEVELS = [
     ("Eevee", "Vaporeon", 30, "placeholder"),
     ("Eevee", "Espeon", 30, "placeholder"),
     ("Eevee", "Umbreon", 30, "placeholder"),
+    ("Eevee", "Jolteon", 30, "placeholder"),
+    ("Eevee", "Flareon", 30, "placeholder"),
+    ("Eevee", "Glaceon", 30, "placeholder"),
+    ("Nincada", "Shedinja", 20, "placeholder"),
+    ("Kirlia", "Gallade", 30, "placeholder"),
     ("Pikachu", "Raichu", 30, "placeholder"),
     ("Feebas", "Milotic", 30, "placeholder"),
     ("Skitty", "Delcatty", 30, "placeholder"),
     ("Dunsparce", "Dudunsparce", 32, "placeholder"),
     ("Exeggcute", "Exeggutor", 34, "placeholder"),
     ("Shellder", "Cloyster", 34, "placeholder"),
+    ("Vulpix", "Ninetales", 35, "placeholder"),
     ("Clefairy", "Clefable", 36, "placeholder"),
+    ("Jigglypuff", "Wigglytuff", 36, "placeholder"),
     ("Gloom", "Vileplume", 36, "placeholder"),
     ("Gloom", "Bellossom", 36, "placeholder"),
     ("Weepinbell", "Victreebel", 36, "placeholder"),
     ("Nidorina", "Nidoqueen", 36, "placeholder"),
     ("Nidorino", "Nidoking", 36, "placeholder"),
     ("Poliwhirl", "Poliwrath", 36, "placeholder"),
+    ("Poliwhirl", "Politoed", 36, "placeholder"),
     ("Roselia", "Roserade", 36, "placeholder"),
     ("Yanma", "Yanmega", 36, "placeholder"),
     ("Misdreavus", "Mismagius", 36, "placeholder"),
@@ -180,55 +180,91 @@ EVOLUTION_LEVELS = [
     ("Dusclops", "Dusknoir", 50, "placeholder"),
     ("Rhydon", "Rhyperior", 55, "placeholder"),
 ]
-# Section 10 PLACEHOLDER ace slots: name -> (extra aces, ace roster slots). Roster
-# slot 1 (the signature Pokémon) is always an ace; each extra ace is picked by its
-# position and species in the converted placeholder list (checked, so a stale
-# pick fails) as the trainer's strongest or most iconic member. The aces take the
-# listed roster slots in order and the filler slots keep their order around them,
-# so aces join spread out (join order = list order). Brock is authored directly.
-# Tate & Liza keep their Solrock/Lunatone signature pair together in slots 1-2.
-SPREAD, LATE = (1, 3, 5), (1, 3, 6)
-ACES = {
-    "Misty": ([(6, "Lapras"), (5, "Milotic")], LATE),
-    "Lt. Surge": ([(6, "Electivire"), (3, "Magnezone")], SPREAD),
-    "Erika": ([(5, "Victreebel"), (6, "Venusaur")], LATE),
-    "Janine": ([(2, "Weezing"), (6, "Venomoth")], SPREAD),
-    "Sabrina": ([(2, "Mr. Mime"), (6, "Espeon")], SPREAD),
-    "Blaine": ([(2, "Houndoom"), (6, "Rapidash")], SPREAD),
-    "Giovanni": ([(5, "Nidoking"), (4, "Nidoqueen")], SPREAD),
-    "Blue": ([(3, "Alakazam"), (5, "Arcanine")], SPREAD),
-    "Lorelei": ([(3, "Cloyster"), (5, "Jynx")], SPREAD),
-    "Bruno": ([(3, "Hitmonchan"), (4, "Hitmonlee")], SPREAD),
-    "Agatha": ([(3, "Crobat"), (5, "Arbok")], SPREAD),
-    "Koga": ([(4, "Muk"), (5, "Venomoth")], SPREAD),
-    "Lance": ([(2, "Gyarados"), (5, "Aerodactyl")], SPREAD),
-    "Falkner": ([(4, "Pidgeot"), (2, "Skarmory")], SPREAD),
-    "Bugsy": ([(4, "Yanmega"), (3, "Forretress")], SPREAD),
-    "Whitney": ([(6, "Clefable"), (4, "Blissey")], SPREAD),
-    "Morty": ([(2, "Mismagius")], (1, 4)),
-    "Chuck": ([(2, "Annihilape"), (6, "Hitmontop")], SPREAD),
-    "Jasmine": ([(3, "Magnezone"), (6, "Skarmory")], SPREAD),
-    "Pryce": ([(2, "Dewgong"), (6, "Weavile")], SPREAD),
-    "Clair": ([(6, "Dragonite"), (5, "Salamence")], LATE),
-    "Will": ([(4, "Espeon"), (5, "Slowbro")], SPREAD),
-    "Karen": ([(2, "Umbreon"), (5, "Honchkrow")], SPREAD),
-    "Roxanne": ([(4, "Steelix"), (5, "Omastar")], SPREAD),
-    "Brawly": ([(3, "Hitmontop"), (4, "Machamp")], SPREAD),
-    "Wattson": ([(6, "Magnezone"), (5, "Ampharos")], SPREAD),
-    "Flannery": ([(3, "Camerupt"), (5, "Rapidash")], SPREAD),
-    "Norman": ([(4, "Kangaskhan"), (6, "Slaking")], LATE),
-    "Winona": ([(4, "Skarmory"), (5, "Dragonite")], SPREAD),
-    "Tate & Liza": ([(2, "Lunatone")], (1, 2)),
-    "Juan": ([(4, "Crawdaunt"), (3, "Walrein")], LATE),
-    "Sidney": ([(3, "Shiftry"), (5, "Crawdaunt")], SPREAD),
-    "Phoebe": ([(4, "Sableye"), (5, "Banette")], SPREAD),
-    "Glacia": ([(4, "Walrein"), (5, "Glalie")], SPREAD),
-    "Drake": ([(3, "Altaria"), (5, "Flygon")], SPREAD),
-    "Wallace": ([(4, "Ludicolo"), (6, "Gyarados")], SPREAD),
-    "Steven": ([(4, "Aggron"), (2, "Skarmory")], SPREAD),
+# The user-directed roster draft v1 (identity/anime picks): name -> six roster
+# slots in join order as (species, isAce[, tag]). Roster slot 1 is the signature
+# Pokémon (an ace at offset 0); other aces are at offset 0 and fillers at -2.
+# Tags record off-type, anime or lore picks. Battle content is a placeholder: a
+# slot keeps the authored moves/item/ability/nature of the same species in the
+# trainer's source party, otherwise it uses LEVEL_UP with no item.
+DRAFT = {
+    "Brock": [("Steelix", True), ("Golem", False), ("Crobat", False, "anime Zubat"),
+              ("Kabutops", False), ("Omastar", False), ("Aerodactyl", True)],
+    "Misty": [("Starmie", True), ("Golduck", False, "anime Psyduck"), ("Gyarados", True),
+              ("Politoed", False, "anime Poliwag"), ("Lapras", False, "HGSS"), ("Kingdra", True, "anime Horsea")],
+    "Lt. Surge": [("Raichu", True, "anime"), ("Electrode", False), ("Electivire", True),
+                  ("Magnezone", False), ("Jolteon", False), ("Luxray", False)],
+    "Erika": [("Vileplume", True, "FRLG ace / anime Gloom"), ("Tangrowth", False, "anime Tangela"), ("Victreebel", True),
+              ("Jumpluff", False, "HGSS"), ("Parasect", False), ("Bellossom", False)],
+    "Janine": [("Venomoth", True), ("Ariados", False), ("Crobat", True),
+               ("Weezing", False), ("Toxicroak", False, "ninja theme"), ("Muk", False)],
+    "Sabrina": [("Alakazam", True, "anime Kadabra"), ("Mr. Mime", False), ("Espeon", True, "HGSS"),
+                ("Gengar", False, "anime Haunter"), ("Hypno", False), ("Venomoth", False, "FRLG")],
+    "Blaine": [("Magmortar", True, "anime Magmar"), ("Rapidash", False), ("Arcanine", True),
+               ("Ninetales", False, "anime"), ("Magcargo", False, "HGSS"), ("Flareon", False)],
+    "Giovanni": [("Rhyperior", True), ("Dugtrio", False), ("Nidoqueen", False),
+                 ("Persian", True, "anime"), ("Marowak", False), ("Nidoking", True)],
+    "Falkner": [("Pidgeot", True), ("Noctowl", False), ("Dodrio", False),
+                ("Skarmory", True), ("Xatu", False), ("Honchkrow", False)],
+    "Bugsy": [("Scizor", True, "anime Scyther"), ("Beedrill", False), ("Butterfree", False),
+              ("Heracross", True), ("Yanmega", False), ("Ariados", False)],
+    "Whitney": [("Miltank", True), ("Clefable", False, "anime Clefairy"), ("Wigglytuff", False),
+                ("Ursaring", False), ("Girafarig", False), ("Blissey", True)],
+    "Morty": [("Gengar", True), ("Drifblim", False), ("Mismagius", True),
+              ("Spiritomb", False), ("Sableye", False), ("Dusknoir", True)],
+    "Chuck": [("Poliwrath", True), ("Primeape", False), ("Hitmontop", False),
+              ("Machamp", True), ("Heracross", False), ("Lucario", True)],
+    "Jasmine": [("Steelix", True), ("Magnezone", False), ("Ampharos", True, "lore: Amphy"),
+                ("Skarmory", False), ("Forretress", False), ("Bronzong", False)],
+    "Pryce": [("Mamoswine", True, "anime Piloswine"), ("Dewgong", False), ("Cloyster", False),
+              ("Weavile", True), ("Jynx", False), ("Abomasnow", False)],
+    "Clair": [("Kingdra", True), ("Dragonite", False, "anime Dragonair"), ("Gyarados", False),
+              ("Salamence", True), ("Flygon", False), ("Garchomp", True)],
+    "Roxanne": [("Probopass", True), ("Sudowoodo", False), ("Relicanth", False),
+                ("Golem", False), ("Bastiodon", False), ("Rampardos", True, "fossil lessons")],
+    "Brawly": [("Hariyama", True), ("Breloom", False), ("Medicham", True),
+               ("Machamp", False), ("Gallade", False), ("Hitmontop", False)],
+    "Wattson": [("Manectric", True), ("Electrode", False), ("Magnezone", True),
+                ("Lanturn", False), ("Rotom", False), ("Ampharos", False)],
+    "Flannery": [("Torkoal", True, "anime"), ("Magcargo", False), ("Camerupt", True),
+                 ("Houndoom", False), ("Ninetales", False), ("Rapidash", False)],
+    "Norman": [("Slaking", True), ("Linoone", False), ("Spinda", False),
+               ("Kangaskhan", True), ("Swellow", False), ("Snorlax", True)],
+    "Winona": [("Altaria", True), ("Tropius", False), ("Pelipper", False),
+               ("Swellow", False), ("Skarmory", True), ("Staraptor", False)],
+    "Tate & Liza": [("Solrock", True), ("Lunatone", True), ("Claydol", False),
+                    ("Xatu", False), ("Grumpig", False), ("Gardevoir", True)],
+    "Juan": [("Kingdra", True), ("Luvdisc", False, "flamboyance"), ("Whiscash", False),
+             ("Walrein", True), ("Crawdaunt", False), ("Politoed", False)],
+    "Lorelei": [("Lapras", True), ("Dewgong", False), ("Cloyster", True),
+                ("Slowbro", False), ("Glaceon", False), ("Jynx", False)],
+    "Bruno": [("Machamp", True), ("Hitmontop", False), ("Hitmonlee", True),
+              ("Steelix", False, "FRLG Onix"), ("Hitmonchan", False), ("Primeape", False)],
+    "Agatha": [("Gengar", True), ("Arbok", False), ("Crobat", False),
+               ("Marowak", False, "lore: Pokemon Tower"), ("Mismagius", False), ("Dusknoir", True)],
+    "Koga": [("Crobat", True), ("Ariados", False), ("Forretress", False, "HGSS"),
+             ("Muk", False), ("Venomoth", False), ("Weezing", True)],
+    "Will": [("Xatu", True), ("Jynx", False), ("Slowbro", True),
+             ("Exeggutor", False), ("Bronzong", False), ("Gardevoir", True)],
+    "Karen": [("Umbreon", True), ("Vileplume", False, "HGSS"), ("Honchkrow", False),
+              ("Gengar", False, "HGSS"), ("Weavile", False), ("Houndoom", True)],
+    "Sidney": [("Absol", True), ("Mightyena", False), ("Shiftry", False),
+               ("Cacturne", False), ("Crawdaunt", False), ("Sharpedo", True)],
+    "Phoebe": [("Dusknoir", True), ("Sableye", False), ("Banette", True),
+               ("Froslass", False), ("Drifblim", False), ("Shedinja", False, "gimmick")],
+    "Glacia": [("Walrein", True), ("Glalie", False), ("Froslass", False),
+               ("Abomasnow", False), ("Weavile", False), ("Walrein", True, "iconic duplicate")],
+    "Drake": [("Salamence", True), ("Altaria", False), ("Kingdra", False),
+              ("Flygon", True), ("Gyarados", False), ("Dragonite", True)],
+    "Lance": [("Dragonite", True), ("Gyarados", False), ("Aerodactyl", False),
+              ("Charizard", True, "HGSS"), ("Kingdra", False), ("Dragonite", True, "iconic duplicate")],
+    "Wallace": [("Milotic", True), ("Wailord", False), ("Tentacruel", False),
+                ("Ludicolo", False), ("Whiscash", False), ("Gyarados", True, "RS team")],
+    "Steven": [("Metagross", True), ("Skarmory", False), ("Claydol", False),
+               ("Aggron", True), ("Cradily", False), ("Armaldo", False, "RS team")],
+    "Blue": [("Umbreon", True, "Eevee early"), ("Pidgeot", False, "games"), ("Alakazam", True),
+             ("Nidoking", False), ("Scizor", False), ("Arcanine", True)],
 }
-# Branching lines where a placeholder species is not already final: the canonical final stage.
-FINAL_CHOICE = {"Scyther": "Scizor", "Ursaring": "Ursaluna"}
+DRAFT_NOTE = "user-directed roster draft v1 (identity/anime picks); battle content placeholder"
 GROWTH_NOTE = {
     "steady": "steady (keeps a fixed fraction of the player's pace)",
     "early bloomer": "early bloomer (a rising star: fast early, then slows)",
@@ -375,27 +411,6 @@ def evolution_chain(token, edges, previous, table):
     return chain
 
 
-def final_stage(token, edges):
-    """The final stage of the line through `token`; a branch needs a FINAL_CHOICE entry."""
-    seen = {token}
-    while True:
-        targets = sorted({target for source, target in edges if source == token})
-        if not targets:
-            return token
-        name = display(token, "SPECIES_")
-        if len(targets) > 1:
-            if name not in FINAL_CHOICE:
-                raise ValueError(f"{name} branches ({', '.join(targets)}): add a FINAL_CHOICE entry")
-            token = species_token(FINAL_CHOICE[name])
-            if token not in targets:
-                raise ValueError(f"FINAL_CHOICE {name}: {FINAL_CHOICE[name]} is not one of its evolutions")
-        else:
-            token = targets[0]
-        if token in seen:
-            raise ValueError(f"{name}: evolution cycle")
-        seen.add(token)
-
-
 def display(value, prefix):
     if not isinstance(value, str) or not value.startswith(prefix):
         raise ValueError(f"invalid source token: {value!r}")
@@ -438,75 +453,45 @@ def party(records, trainer):
     return slots
 
 
-def line_species(token, previous):
-    """Display names of the species line ending at `token` (babies excluded)."""
-    chain = [token]
-    while previous.get(chain[0]) and previous[chain[0]][0] not in BABIES and previous[chain[0]][0] not in chain:
-        chain.insert(0, previous[chain[0]][0])
-    return {display(species, "SPECIES_") for species in chain}
-
-
 def optional(value, prefix, empty):
     return display(value, prefix) if value and value != empty else None
 
 
-def build_roster(members, early, evolutions):
-    """Flatten (slot, isAce, levelOffset) members: aces first, then the rest, then early species.
+def known_species():
+    """Species tokens defined in species.h that also have a species_info entry."""
+    defined = set(re.findall(r"^#define\s+(SPECIES_\w+)\s+\S", SPECIES_CONSTANTS.read_text(), re.M))
+    entries = {head for path in SPECIES_INFO.glob("*.h")
+               for head in re.findall(r"^\s*\[(SPECIES_\w+)\]\s*=", path.read_text(), re.M)}
+    return defined & entries
 
-    Mirrors the earlier prototype order (aces, fillers, handwritten early
-    fillers not covered by a line). Each roster slot takes the species at the end of
-    its line (the source species). Aces keep their source moves, item,
-    ability and nature at offset 0; everything else uses LEVEL_UP.
+
+def draft_roster(name, source_slots, known):
+    """The DRAFT roster as catalog roster slots, plus "species (source slot)" for kept content.
+
+    `source_slots` is [(slot, provenance)]. A species must resolve in the game
+    data. A slot whose species is in the source party keeps that source slot's
+    moves/item/ability/nature (first match); every other slot uses LEVEL_UP
+    with no item, ability or nature.
     """
-    entries = []
-    covered = set()
-    for slot, is_ace, offset in sorted(members, key=lambda entry: not entry[1]):
-        authored = member(slot)
-        covered |= line_species(slot["species"], evolutions)
-        entries.append({"species": authored["species"],
-                        "levelOffset": 0 if is_ace else max(OFFSET_MIN, min(OFFSET_MAX, offset)),
-                        "isAce": False,
-                        "moves": (authored["moves"] or "LEVEL_UP") if is_ace else "LEVEL_UP",
-                        "item": authored["item"] if is_ace else None,
-                        "ability": optional(slot.get("ability"), "ABILITY_", "ABILITY_NONE") if is_ace else None,
-                        # trainerproc emits NATURE_HARDY when a party omits the nature.
-                        "nature": optional(slot.get("nature"), "NATURE_", "NATURE_HARDY") if is_ace else None})
-    extras = []
-    for name in early:
-        if name not in covered:
-            token = species_token(name)
-            covered |= line_species(token, evolutions)
-            extras.append(display(token, "SPECIES_"))
-            entries.append({"species": extras[-1], "levelOffset": DEFAULT_OFFSET, "isAce": False,
-                            "moves": "LEVEL_UP", "item": None, "ability": None, "nature": None})
-    return entries[:ROSTER_SIZE], len(entries), [name for name in extras if any(e["species"] == name for e in entries[:ROSTER_SIZE])]
-
-
-def interleave(name, roster):
-    """Marks the ACES picks as ace slots and moves them to their listed roster slots.
-
-    Roster slot 1 stays first and is an ace; the filler slots keep their order.
-    Returns the new roster and the ace species in roster order.
-    """
-    if name not in ACES:
-        raise ValueError(f"{name}: add an ACES entry (roster slot 1 plus up to two more aces)")
-    picks, slots = ACES[name]
-    chosen = [0]
-    for position, species in picks:
-        index = position - 1
-        if not 0 < index < len(roster) or roster[index]["species"] != species or index in chosen:
-            raise ValueError(f"ACES {name}: roster slot {position} is not {species} (stale pick)")
-        chosen.append(index)
-    if len(slots) != len(chosen) or slots[0] != 1 or list(slots) != sorted(set(slots)) or slots[-1] > len(roster):
-        raise ValueError(f"ACES {name}: list one increasing roster slot per ace, starting at 1")
-    aces = iter([roster[index] for index in chosen])
-    fillers = iter([entry for index, entry in enumerate(roster) if index not in chosen])
-    result = []
-    for position in range(1, len(roster) + 1):
-        entry = next(aces) if position in slots else next(fillers)
-        entry["isAce"] = position in slots
-        result.append(entry)
-    return result, [entry["species"] for entry in result if entry["isAce"]]
+    if name not in DRAFT:
+        raise ValueError(f"{name}: add a DRAFT roster")
+    roster, kept = [], []
+    for index, (species, is_ace, *tag) in enumerate(DRAFT[name]):
+        token = species_token(species)
+        if token not in known:
+            raise ValueError(f"DRAFT {name}[{index + 1}]: species {species!r} does not resolve in species_info/species.h")
+        source, where = next(((slot, where) for slot, where in source_slots if slot["species"] == token), (None, None))
+        entry = {"species": display(token, "SPECIES_"), "levelOffset": 0 if is_ace else DEFAULT_OFFSET,
+                 "isAce": is_ace, "moves": "LEVEL_UP", "item": None, "ability": None, "nature": None}
+        if source is not None:
+            authored = member(source)
+            kept.append(f"{entry['species']} ({where})")
+            entry.update(moves=authored["moves"] or "LEVEL_UP", item=authored["item"],
+                         ability=optional(source.get("ability"), "ABILITY_", "ABILITY_NONE"),
+                         # trainerproc emits NATURE_HARDY when a party omits the nature.
+                         nature=optional(source.get("nature"), "NATURE_", "NATURE_HARDY"))
+        roster.append(entry)
+    return roster, kept
 
 
 def validate_roster(name, roster):
@@ -536,17 +521,18 @@ def generate():
     sources = load_sources()
     edges, previous = load_evolutions()
     table = evolution_table(edges)
+    known = known_species()
     chains = {}
-    conversions = []
+    kept = []
     non_final = []
     curated = json.loads(GYMS.read_text())
     if curated.get("version") != 1:
         raise ValueError("unsupported gym catalog")
     result = []
     gaps = []
-    if set(GROWTH) != {row[0] for row in ROSTER}:
-        raise ValueError("GROWTH must list exactly the catalog trainers")
-    for name, region, role, family, trainer, early in ROSTER:
+    if set(GROWTH) != {row[0] for row in ROSTER} or set(DRAFT) != set(GROWTH):
+        raise ValueError("GROWTH and DRAFT must list exactly the catalog trainers")
+    for name, region, role, family, trainer in ROSTER:
         growth = GROWTH[name]
         validate_growth(name, growth)
         start, archetype, peak = growth
@@ -566,21 +552,11 @@ def generate():
             note += " Emerald Mossdeep double battle; one shared entry for both leaders, league-ineligible (leagues are singles only)."
         if name == "Steven":
             note += " Emerald optional late battle (levels 75–78), not the Ruby/Sapphire Champion party. Explorer levels follow TR, not these authored levels."
+        # The source party: the curated composition in gym_leaders.json (the
+        # trainer's own authored parties), else the reference party.
         curated_roster = next((row for row in curated["rosters"] if row["identity"] == name), None)
-        if name in DUOS:
-            members = []
-            provenance = []
-            for owner, index, species, is_signature in DUOS[name]:
-                source = sources[family].get(owner)
-                if source is None or not 0 <= index < len(source["slots"]) or source["slots"][index]["species"] != species:
-                    raise ValueError(f"missing or stale duo source slot: {owner}:{index} ({species})")
-                members.append((source["slots"][index], is_signature, DEFAULT_OFFSET))
-                provenance.append(f"{source['source']}:{owner}[{index}]")
-            origin = ("Emerald source slots (roster slots 1-2 are the Solrock and Lunatone signature pair at offset 0;"
-                      " roster slots 3-6 are PLACEHOLDER Hoenn Psychic/Rock picks): " + "; ".join(provenance))
-        elif curated_roster:
-            members = []
-            provenance = []
+        if curated_roster:
+            source_slots = []
             for entry in sorted(curated_roster["members"], key=lambda entry: entry["battleOrder"]):
                 owner, index = entry["sourceOwner"], entry["sourceSlot"]
                 source_family = "HNS" if owner.endswith("_HNS") else "Emerald"
@@ -590,53 +566,17 @@ def generate():
                 slot = source["slots"][index]
                 if slot["species"] != entry["species"] or slot.get("moves", []) != entry["moves"] or slot.get("heldItem", "ITEM_NONE") != entry["item"]:
                     raise ValueError(f"stale curated species/moves/item: {owner}:{index}")
-                members.append((slot, bool(entry["isAce"]), entry["levelOffset"]))
-                provenance.append(f"{source['source']}:{owner}[{index}]")
-            if len(members) != 6 or sum(is_ace for _, is_ace, _ in members) != 1:
-                raise ValueError(f"curated six-slot party with one ace required: {name}")
-            origin = "the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): " + "; ".join(provenance)
+                source_slots.append((slot, f"{source['source']}:{owner}[{index}]"))
+            origin = "the curated composition in game/src/data/trainer_scaling/gym_leaders.json"
         else:
-            top = max(slot["lvl"] for slot in reference_slots)
-            ace_index = max(index for index, slot in enumerate(reference_slots) if slot["lvl"] == top)
-            members = [(slot, index == ace_index, slot["lvl"] - top) for index, slot in enumerate(reference_slots)]
-            origin = f"{records[trainer]['source']}:{trainer} (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0)"
-        roster, total, extras = build_roster(members, early, previous)
+            source_slots = [(slot, f"{records[trainer]['source']}:{trainer}[{index}]") for index, slot in enumerate(reference_slots)]
+            origin = "the reference party"
+        roster, kept_slots = draft_roster(name, source_slots, known)
+        kept.append((name, [text.split(" (")[0] for text in kept_slots]))
         # A duo is fought as its source double battle; leagues are singles only.
         double = records[trainer].get("battleType") == "TRAINER_BATTLE_TYPE_DOUBLES"
         if double != (name in DUOS) or (role == "Gym Leader duo") != (name in DUOS):
             raise ValueError(f"{name}: only a listed duo is a Gym Leader duo fought as a double battle")
-        if name == "Blue":
-            # One fixed six regardless of the player's starter: the source starter is replaced.
-            roster[0] = {"species": "Eevee", "levelOffset": 0, "isAce": False, "moves": "LEVEL_UP",
-                         "item": None, "ability": None, "nature": None}
-        # Section 9: roster slots author final stages. Convert each placeholder
-        # species to the final stage of its line (Blue's Eevee stays, user choice).
-        converted = []
-        for index, entry in enumerate(roster):
-            if name == "Blue" and index == 0:
-                continue
-            final = display(final_stage(species_token(entry["species"]), edges), "SPECIES_")
-            if final != entry["species"]:
-                converted.append(f"{entry['species']} -> {final}")
-                # Source moves and ability belong to the source species, not the new final stage.
-                entry.update(species=final, moves="LEVEL_UP", ability=None)
-        if name == "Brock":
-            # Brock (user, contract section 10): Steelix (ace), Rhyperior, Aerodactyl (ace),
-            # Kabutops, Omastar, Golem (ace), all final stages. Golem keeps its source battle
-            # content; the placeholder Aerodactyl, Kabutops and Omastar slots carry over;
-            # Relicanth and Kleavor drop off.
-            by_species = {entry["species"]: entry for entry in roster}
-            fresh = lambda species, offset=DEFAULT_OFFSET: {
-                "species": species, "levelOffset": offset, "isAce": False, "moves": "LEVEL_UP",
-                "item": None, "ability": None, "nature": None}
-            golem = {**by_species["Golem"], "levelOffset": DEFAULT_OFFSET}
-            roster = [{**fresh("Steelix", 0), "isAce": True}, fresh("Rhyperior"),
-                      {**by_species["Aerodactyl"], "isAce": True}, by_species["Kabutops"],
-                      by_species["Omastar"], {**golem, "isAce": True}]
-            aces = [entry["species"] for entry in roster if entry["isAce"]]
-        else:
-            roster, aces = interleave(name, roster)
-        conversions.append((name, converted))
         for index, entry in enumerate(roster):
             token = species_token(entry["species"])
             chain = evolution_chain(token, edges, previous, table)
@@ -647,18 +587,14 @@ def generate():
         validate_roster(name, roster)
         if len(roster) < ROSTER_SIZE:
             gaps.append(f"{name} {len(roster)}/{ROSTER_SIZE}")
-        signature = ("Roster slots 1-2 keep" if name in DUOS else "Golem (roster slot 6) keeps" if name == "Brock"
-                     else "Roster slot 1 keeps")
-        roster_source = ((f"PLACEHOLDER duo roster derived from {origin}." if name in DUOS
-                          else f"PLACEHOLDER roster flattened from the earlier prototype, derived from {origin}.")
-                         + f" {signature} the source moves/item/ability/nature{'' if name == 'Brock' else ' at offset 0'}; other roster slots use LEVEL_UP"
-                         " (a label: level-up learnsets are not resolved)."
-                         + (f" Handwritten early species {', '.join(extras)} fill the remaining roster slots at offset {DEFAULT_OFFSET}." if extras else "")
-                         + (f" The flattened list had {total} Pokémon; only the first {ROSTER_SIZE} are kept." if total > ROSTER_SIZE else "")
-                         + (f" Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): {', '.join(converted)}." if converted else "")
-                         + (" Brock (user): Steelix (ace) at offset 0, Rhyperior, Aerodactyl (ace), Kabutops, Omastar and Golem (ace, keeping the source battle content); Relicanth and Kleavor dropped off." if name == "Brock" else
-                            f" PLACEHOLDER ace slots (section 10): {', '.join(aces)} in roster slots {'/'.join(map(str, ACES[name][1]))}, chosen as the strongest or most iconic members; filler slots keep their order.")
-                         + (" Roster slot 1: starter replaced by Eevee for now (user), LEVEL_UP with no item; not a final stage (allowed)." if name == "Blue" else "")
+        tags = [f"{species} [{tag[0]}]" for species, _, *tag in DRAFT[name] if tag]
+        unique_kept = list(dict.fromkeys(kept_slots))
+        roster_source = (f"{DRAFT_NOTE}."
+                         + (f" Tags: {', '.join(tags)}." if tags else "")
+                         + f" Aces ({', '.join(entry['species'] for entry in roster if entry['isAce'])}) at offset 0, fillers at {DEFAULT_OFFSET}."
+                         + (f" Species in {origin} keep that source slot's moves/item/ability/nature: {', '.join(unique_kept)};"
+                            if unique_kept else f" No roster species is in {origin};")
+                         + " other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
                          + (" Fought as a double battle: both leaders send Pokémon from this one roster in order." if name in DUOS else ""))
         result.append({"id": slug(name), "name": name, "region": region, "role": role,
                        "doubleBattle": double, "leagueEligible": not double,
@@ -680,7 +616,7 @@ def generate():
                  "notFinal": sorted(stage for stage in chains
                                     if any(source == species_token(stage) for source, _ in edges))}
     return json.dumps({"evolution": evolution, "trainers": result}, indent=2, ensure_ascii=False) + "\n", gaps, {
-        "conversions": conversions, "non_final": non_final,
+        "kept": kept, "non_final": non_final,
         "placeholders": [f"{source}->{target} {level}" for source, target, level, status in EVOLUTION_LEVELS if status == "placeholder"]}
 
 
@@ -699,16 +635,16 @@ def main():
             OUTPUT.parent.mkdir(parents=True, exist_ok=True)
             OUTPUT.write_text(content)
         print(f"{CATALOG_SIZE} experimental notable trainer entries: {'checked' if args.check else 'generated'} {OUTPUT.relative_to(ROOT)}")
-        for name, converted in report["conversions"]:
-            if converted:
-                print(f"converted {name}: {', '.join(converted)}")
+        for name, species in report["kept"]:
+            if species:
+                print(f"source battle content kept by {name}: {', '.join(species)}")
         print(f"{len(report['placeholders'])} placeholder evolution levels: {', '.join(report['placeholders'])}")
         if report["non_final"]:
             # Section 9 recommends final stages; any authored stage is allowed.
             print(f"warning: {len(report['non_final'])} roster slots are not final stages: {', '.join(report['non_final'])}", file=sys.stderr)
         if gaps:
-            # v0 requires six roster slots, but rosters are authored next: warn, don't fail.
-            print(f"warning: {len(gaps)} placeholder rosters have fewer than {ROSTER_SIZE} Pokémon: {', '.join(gaps)}", file=sys.stderr)
+            # v0 requires six roster slots: warn, don't fail.
+            print(f"warning: {len(gaps)} rosters have fewer than {ROSTER_SIZE} Pokémon: {', '.join(gaps)}", file=sys.stderr)
     except (ValueError, OSError, KeyError, IndexError) as error:
         parser.exit(1, f"trainer balance catalog: {error}\n")
 
