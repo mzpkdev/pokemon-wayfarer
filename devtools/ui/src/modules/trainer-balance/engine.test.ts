@@ -22,6 +22,7 @@ import {
   evolutionStatus,
   growthTR,
   gymLadder,
+  isGymLeader,
   leagueLineup,
   levelCap,
   milestoneEnd,
@@ -253,7 +254,7 @@ describe("teams", () => {
     expect(resolved).toEqual(
       resolveTrainer(brock, defaults, playerRating({ badges: 8 }), evolution),
     )
-    expect(resolved.tr).toBe(58)
+    expect(resolved.tr).toBe(60)
     // Resolution takes a world progress number and the shared evolution data, so a party or
     // level cap cannot be passed in.
     expect(resolveTrainer.length).toBe(4)
@@ -316,7 +317,7 @@ describe("evolution", () => {
     })
   })
 
-  it("resolves Brock: Onix and Geodude at start TR 20, Steelix from Lv 35 and Golem from Lv 38", () => {
+  it("resolves Brock: Onix and Geodude at Lv 14, Steelix from Lv 35 and Golem from Lv 38", () => {
     const roster = defaults.trainers.brock!.roster
     const team = (level: number) =>
       buildTeam(roster, level, 2, evolution).team.map((member) => [member.species, member.level])
@@ -442,15 +443,15 @@ describe("player TR and badge presets", () => {
     const blue = catalog.find((record) => record.id === "blue")!
     const tr = (record: TrainerRecord, world: number) =>
       resolveTrainer(record, experiment, world, evolution).tr
-    // Steady Brock (20 → 95): 20 + 75 × 95/160 = 64.5, halves up. Flat past 160.
-    expect([tr(brock, 95), tr(brock, 170), tr(brock, 300)]).toEqual([65, 95, 95])
+    // Steady Brock (25 → 95): 25 + 70 × 95/160 = 66.56. Flat past 160.
+    expect([tr(brock, 95), tr(brock, 170), tr(brock, 300)]).toEqual([67, 95, 95])
     // Rival Blue (0 → 170): 53% + 23 × 15/40 % at 95 = 61.625% of 170 = 104.8.
     expect([tr(blue, 95), tr(blue, 170), tr(blue, 300)]).toEqual([105, 170, 170])
     expect(
       gymLadder(catalog, experiment, 95).find((row) => row.trainer.id === "brock"),
     ).toMatchObject({
-      tr: 65,
-      gap: -30,
+      tr: 67,
+      gap: -28,
       mark: "below",
     })
     expect(leagueLineup(catalog, experiment, 300, evolution)).toEqual(
@@ -470,37 +471,38 @@ describe("milestones", () => {
     const brock = timeline("brock")
     expect(brock[0]).toEqual({
       worldProgress: 0,
-      tr: 20,
-      teamLevel: 14,
+      tr: 25,
+      teamLevel: 18,
       cap: 15,
-      events: [{ kind: "start", team: ["Onix", "Geodude"], aboveCap: false }],
+      events: [{ kind: "start", team: ["Onix", "Geodude"], aboveCap: true }],
     })
-    // TR 29 is the first TR at team size 3: steady Brock reaches it at world progress 19.
+    // TR 29 is the first TR at team size 3: steady Brock reaches it at world progress 8.
     expect(brock.find((m) => m.events.some((e) => e.kind === "join"))).toMatchObject({
-      worldProgress: 19,
+      worldProgress: 8,
       tr: 29,
       events: [{ kind: "join", slot: 3, species: "Aerodactyl" }],
     })
-    // Onix becomes Steelix when the team level reaches 35 (TR 64, world progress 68).
+    // Onix becomes Steelix when the team level reaches 35 (TR 52, world progress 61).
     const steelix = brock.find((m) =>
       m.events.some((e) => e.kind === "evolve" && e.to === "Steelix"),
     )!
-    expect([steelix.worldProgress, steelix.tr, steelix.teamLevel]).toEqual([68, 52, 35])
-    expect(resolveTrainer(record("brock"), defaults, 67, evolution).team[0]?.species).toBe("Onix")
+    expect([steelix.worldProgress, steelix.tr, steelix.teamLevel]).toEqual([61, 52, 35])
+    expect(resolveTrainer(record("brock"), defaults, 60, evolution).team[0]?.species).toBe("Onix")
     expect(brock.at(-1)).toMatchObject({
       worldProgress: 159,
       tr: 95,
       events: [{ kind: "peak", tr: 95, reached: true }],
     })
     expect(brock.map(milestoneText)).toEqual([
-      "0: Onix, Geodude",
-      "19: 3rd slot (Aerodactyl) joins",
-      "38: Geodude → Graveler",
-      "51: 4th slot (Kabuto) joins",
-      "68: Onix → Steelix",
-      "87: Graveler → Golem",
-      "95: Kabuto → Kabutops",
-      "108: 5th slot (Omastar) joins",
+      "0: Onix, Geodude (team level above the level cap)",
+      "8: 3rd slot (Aerodactyl) joins",
+      "29: Geodude → Graveler",
+      "43: 4th slot (Kabuto) joins",
+      "47: team level Lv 31 drops below the level cap Lv 32",
+      "61: Onix → Steelix",
+      "82: Graveler → Golem",
+      "91: Kabuto → Kabutops",
+      "104: 5th slot (Omastar) joins",
       "159: peak TR 95",
     ])
   })
@@ -540,11 +542,11 @@ describe("milestones", () => {
   })
 
   it("ignores ties with the level cap, so rounding cannot flicker a crossing", () => {
-    // Erika's team level runs within one level of the cap from world progress 35 to 67.
+    // Erika's team level runs within one level of the cap from world progress 108 to 128 and
+    // ties it from 113 to 122, but it crosses once: she starts above the cap and drops below.
     const crossings = timeline("erika").filter((m) => m.events.some((e) => e.kind === "cap"))
     expect(crossings.map(milestoneText)).toEqual([
-      "35: team level Lv 27 passes the level cap Lv 26",
-      "67: team level Lv 42 drops below the level cap Lv 43",
+      "121: team level Lv 75 drops below the level cap Lv 76",
     ])
   })
 
@@ -708,22 +710,26 @@ describe("placeholder balance targets", () => {
       expect(ladder).toHaveLength(24)
       expect(ladder.map((row) => row.trainer.id)).toContain("tate-liza")
       const count = (mark: string) => ladder.filter((row) => row.mark === mark).length
-      expect(count("near")).toBeGreaterThanOrEqual(3)
       expect(count("above")).toBeGreaterThanOrEqual(3)
-      // No TR is below 0, so at world progress 0 the openers are the accessible leaders:
-      // two Pokémon at or under the level cap.
-      if (world === 0)
-        for (const id of ["brock", "falkner", "roxanne"]) {
-          const opener = resolveTrainer(
-            catalog.find((record) => record.id === id)!,
-            defaults,
-            0,
-            evolution,
-          )
+      if (world === 0) {
+        // Every start TR is in the Gym band (18–40), above NEAR_BAND, so every Gym Leader is
+        // above the player at world progress 0. The lowest three are the approachable openers:
+        // two Pokémon at or under the level cap.
+        expect(count("above")).toBe(24)
+        for (const row of ladder.slice(0, 3)) {
+          const opener = resolveTrainer(row.trainer, defaults, 0, evolution)
           expect(opener.size).toBe(2)
           expect(opener.teamLevel).toBeLessThanOrEqual(cap(0))
         }
-      else expect(count("below")).toBeGreaterThanOrEqual(3)
+      } else if (world === 40) {
+        // The lowest late bloomer still sits near the player at world progress 40, so none is
+        // below yet; the low end is at least three Gym Leaders at or under the player TR.
+        expect(count("near")).toBeGreaterThanOrEqual(3)
+        expect(ladder.filter((row) => row.gap <= 0).length).toBeGreaterThanOrEqual(3)
+      } else {
+        expect(count("near")).toBeGreaterThanOrEqual(3)
+        expect(count("below")).toBeGreaterThanOrEqual(3)
+      }
       for (const row of ladder) expect(Math.abs(row.gap) <= NEAR_BAND).toBe(row.mark === "near")
     },
   )
@@ -739,17 +745,36 @@ describe("placeholder balance targets", () => {
     }
   })
 
-  it("keeps the early Gym openers classic-like: Brock at start TR 20 is Lv 14 and Lv 12", () => {
+  it("starts every Gym Leader in the 18–40 band by archetype", () => {
+    const bands: Record<string, [number, number]> = {
+      "late bloomer": [18, 24],
+      "early bloomer": [22, 30],
+      steady: [24, 34],
+      plateau: [30, 40],
+    }
+    const gyms = catalog.filter(isGymLeader)
+    expect(gyms).toHaveLength(24)
+    for (const record of gyms) {
+      const [low, high] = bands[record.archetype]!
+      expect([record.id, record.startTR >= low && record.startTR <= high]).toEqual([
+        record.id,
+        true,
+      ])
+    }
+  })
+
+  it("opens every Gym Leader at team level 12 or more, within 16 levels of each other", () => {
+    const levels = catalog
+      .filter(isGymLeader)
+      .map((record) => resolveTrainer(record, defaults, 0, evolution).teamLevel)
+    for (const level of levels) expect(level).toBeGreaterThanOrEqual(12)
+    expect(Math.max(...levels) - Math.min(...levels)).toBeLessThanOrEqual(16)
+    // Brock (steady, start TR 25) opens at Lv 18 with Onix and Geodude.
     const brock = at(0).find((row) => row.trainer.id === "brock")!
-    expect([brock.tr, brock.teamLevel, brock.size]).toEqual([20, 14, 2])
+    expect([brock.tr, brock.teamLevel, brock.size]).toEqual([25, 18, 2])
     expect(brock.team.map((member) => [member.species, member.level])).toEqual([
-      ["Onix", 14],
-      ["Geodude", 12],
-    ])
-    const roxanne = at(0).find((row) => row.trainer.id === "roxanne")!
-    expect(roxanne.battleOrder.map((member) => [member.species, member.level])).toEqual([
-      ["Geodude", 12],
-      ["Nosepass", 14],
+      ["Onix", 18],
+      ["Geodude", 16],
     ])
   })
 
@@ -780,22 +805,22 @@ describe("placeholder balance targets", () => {
 describe("league lineup", () => {
   it("picks the top five by TR in ascending battle order, strongest last", () => {
     expect(lineupAt(80)).toEqual([
-      ["Giovanni", 93, 58],
       ["Bruno", 94, 59],
-      ["Will", 94, 59],
-      ["Norman", 94, 59],
+      ["Giovanni", 95, 59],
       ["Agatha", 95, 59],
+      ["Jasmine", 95, 59],
+      ["Norman", 95, 59],
     ])
-    expect(leagueLineup(catalog, defaults, 80, evolution).at(-1)?.trainer.name).toBe("Agatha")
+    expect(leagueLineup(catalog, defaults, 80, evolution).at(-1)?.trainer.name).toBe("Norman")
   })
 
   it("computes the lineup at the world progress it is entered at", () => {
     expect(lineupAt(120)).toEqual([
+      ["Norman", 130, 81],
       ["Steven", 130, 81],
-      ["Norman", 131, 82],
-      ["Giovanni", 132, 83],
+      ["Giovanni", 131, 82],
+      ["Jasmine", 131, 82],
       ["Lance", 132, 83],
-      ["Jasmine", 132, 83],
     ])
     expect(lineupAt(160)).toEqual([
       ["Clair", 185, 100],
@@ -836,6 +861,9 @@ describe("catalog", () => {
       expect(Object.hasOwn(record, "lead")).toBe(false)
       expect(record.leagueEligible).toBe(!record.doubleBattle)
       expect(record.trSource).toContain("PLACEHOLDER")
+      expect(
+        record.trSource.includes("placeholder start TR in the 18–40 Gym band by archetype"),
+      ).toBe(isGymLeader(record))
       expect(record.roster[0]?.levelOffset).toBe(0)
       expect(record.roster.length).toBeLessThanOrEqual(6)
     }
@@ -845,7 +873,7 @@ describe("catalog", () => {
     }
     expect(growth("Blue")).toEqual([0, "rival", 170])
     expect(catalog.filter((record) => record.archetype === "rival")).toHaveLength(1)
-    expect(growth("Brock")).toEqual([20, "steady", 95])
+    expect(growth("Brock")).toEqual([25, "steady", 95])
     expect(growth("Lance")).toEqual([48, "late bloomer", 200])
     expect(Object.keys(experiment.trainers)).toHaveLength(38)
     expect(catalog.some((record) => record.id.startsWith("red"))).toBe(false)

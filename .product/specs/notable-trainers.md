@@ -289,6 +289,11 @@ rules (placeholders tuned in the explorer):
   160 the team-level and level-cap scalers both reach their Lv 100 ceiling, so
   the lineup meets the cap. Challenge beyond that needs a quality scaler
   (Later).
+- **Start TR means how established a trainer is** when the journey begins.
+  Blue (who leaves Pallet with the player) starts at TR 0. Gym Leaders are
+  established: placeholder starts sit in TR 18–40 (opening team about Lv
+  13–28, never below Lv 12), spread by archetype rather than original Gym
+  order. The Elite Four and Champions start higher.
 - **Gym ladder.** At every world progress point, some Gym Leaders sit below
   the player's TR (accessible), some near it, and some clearly above
   (challenges). The hardest leaders at 24 badges are late bloomers or

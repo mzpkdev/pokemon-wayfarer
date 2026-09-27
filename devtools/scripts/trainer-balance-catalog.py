@@ -87,27 +87,31 @@ ROSTER = [
 # balance targets: name -> (start TR, archetype, peak TR). Every archetype,
 # rival included, is a growth scaler. Lore: veterans plateau, rising stars bloom
 # early, the strongest leaders bloom late, most others are steady; Champions and
-# Lance get the highest peaks. Early Gym openers start high enough that their
-# opening teams stay classic-like on the team level scaler's low end.
+# Lance get the highest peaks. Gym Leaders (the duo included) start in the
+# GYM_START_BAND by archetype, not by Gym order: late bloomers 18-24, early
+# bloomers 22-30, steady 24-34, plateaus 30-40, varied a little by lore. League
+# eligible steadies keep start + peak <= 190 so they stay at TR 95 or less at
+# world progress 80.
 ARCHETYPES = ("steady", "early bloomer", "late bloomer", "plateau", "rival")
+GYM_START_BAND = (18, 40)
 GROWTH = {
-    "Brock": (20, "steady", 95), "Misty": (4, "steady", 110),
-    "Lt. Surge": (6, "steady", 120), "Erika": (6, "steady", 150),
-    "Janine": (8, "early bloomer", 100), "Sabrina": (25, "late bloomer", 180),
-    "Blaine": (15, "plateau", 90), "Giovanni": (16, "steady", 170),
+    "Brock": (25, "steady", 95), "Misty": (26, "steady", 110),
+    "Lt. Surge": (30, "steady", 120), "Erika": (28, "steady", 150),
+    "Janine": (27, "early bloomer", 100), "Sabrina": (24, "late bloomer", 180),
+    "Blaine": (37, "plateau", 90), "Giovanni": (24, "steady", 166),
     "Blue": (0, "rival", 170),
     "Lorelei": (40, "plateau", 92), "Bruno": (45, "plateau", 94),
     "Agatha": (50, "plateau", 95), "Koga": (30, "steady", 150),
     "Lance": (48, "late bloomer", 200),
-    "Falkner": (14, "early bloomer", 80), "Bugsy": (3, "steady", 100),
-    "Whitney": (4, "early bloomer", 95), "Morty": (8, "steady", 150),
-    "Chuck": (12, "plateau", 85), "Jasmine": (12, "steady", 172),
-    "Pryce": (18, "plateau", 92), "Clair": (12, "late bloomer", 185),
+    "Falkner": (22, "early bloomer", 80), "Bugsy": (24, "steady", 100),
+    "Whitney": (26, "early bloomer", 95), "Morty": (28, "steady", 150),
+    "Chuck": (34, "plateau", 85), "Jasmine": (24, "steady", 166),
+    "Pryce": (40, "plateau", 92), "Clair": (21, "late bloomer", 185),
     "Will": (30, "early bloomer", 110), "Karen": (30, "steady", 155),
-    "Roxanne": (20, "steady", 90), "Brawly": (4, "early bloomer", 90),
-    "Wattson": (8, "plateau", 75), "Flannery": (6, "early bloomer", 100),
-    "Norman": (20, "steady", 168), "Winona": (10, "late bloomer", 172),
-    "Tate & Liza": (22, "steady", 160), "Juan": (22, "late bloomer", 185),
+    "Roxanne": (24, "steady", 90), "Brawly": (24, "early bloomer", 90),
+    "Wattson": (32, "plateau", 75), "Flannery": (23, "early bloomer", 100),
+    "Norman": (26, "steady", 164), "Winona": (18, "late bloomer", 172),
+    "Tate & Liza": (30, "steady", 170), "Juan": (23, "late bloomer", 185),
     "Sidney": (25, "early bloomer", 105), "Phoebe": (25, "steady", 150),
     "Glacia": (40, "plateau", 90), "Drake": (45, "plateau", 93),
     "Wallace": (48, "late bloomer", 190), "Steven": (50, "late bloomer", 195),
@@ -463,6 +467,9 @@ def generate():
         growth = GROWTH[name]
         validate_growth(name, growth)
         start, archetype, peak = growth
+        gym = role.startswith("Gym Leader")
+        if gym and not GYM_START_BAND[0] <= start <= GYM_START_BAND[1]:
+            raise ValueError(f"{name}: Gym Leader start TR must be in {GYM_START_BAND[0]}-{GYM_START_BAND[1]}")
         records = sources[family]
         reference_slots = party(records, trainer)
         note = "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams."
@@ -566,7 +573,9 @@ def generate():
                        "source": {"label": f"{family} local reference", "path": records[trainer]["source"], "trainerId": trainer, "note": note},
                        "referenceParty": [member(slot) for slot in reference_slots],
                        "startTR": start, "archetype": archetype, "peakTR": peak,
-                       "trSource": f"PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR {start}, {GROWTH_NOTE[archetype]}, peak TR {peak}.",
+                       "trSource": f"PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR {start}"
+                                   + (f" (placeholder start TR in the {GYM_START_BAND[0]}–{GYM_START_BAND[1]} Gym band by archetype)" if gym else "")
+                                   + f", {GROWTH_NOTE[archetype]}, peak TR {peak}.",
                        "roster": roster, "rosterSource": roster_source})
     # 37 characters plus the Tate & Liza duo.
     if len(result) != CATALOG_SIZE or len({row["id"] for row in result}) != CATALOG_SIZE:

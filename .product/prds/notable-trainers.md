@@ -31,7 +31,13 @@ special cases.
 
 ### They keep pace with your journey
 
-Notable trainers grow as your journey goes on, each in their own way:
+Each notable trainer starts from how established they already are when your
+journey begins. Blue leaves Pallet the same day you do, so he starts from
+nothing. Gym Leaders are established trainers, so none of them is a pushover
+even at the start, and the Elite Four and Champions start higher still.
+
+From there, notable trainers grow as your journey goes on, each in their own
+way:
 
 - **The steady Gym Leader** keeps a fixed share of your pace, from their
   starting strength to their best.

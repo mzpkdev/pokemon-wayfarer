@@ -97,8 +97,8 @@ trainer's team. The player TR is never computed from a notable trainer's TR.
   `species_info` threshold; non-level evolutions (item, trade, friendship,
   other) use the shared evolution-level table in the catalog script, which
   covers only evolutions without a level in the game data. Baby pre-evolutions
-  are not stepped down to. Brock at start TR 20 (team level 14) fields Onix
-  Lv 14 and Geodude Lv 12; his Steelix appears from Lv 35 and Golem from Lv 38. A member at its
+  are not stepped down to. Brock at start TR 25 (team level 18) fields Onix
+  Lv 18 and Geodude Lv 16; his Steelix appears from Lv 35 and Golem from Lv 38. A member at its
   authored stage uses the authored moves; one that stepped down uses
   `LEVEL_UP`.
 
@@ -134,10 +134,11 @@ team, a roster slot joining (team size steps up), a member's stage changing
 along its evolution line, the team level moving strictly above the level cap
 or strictly below it again (equal keeps the side, so rounding cannot flicker),
 and peak TR reached. The player's current TR is marked in the list. Brock
-reads "0: Onix, Geodude · 19: 3rd slot (Aerodactyl) joins · 38: Geodude →
-Graveler · 51: 4th slot (Kabuto) joins · 68: Onix → Steelix · 87: Graveler →
-Golem · 95: Kabuto → Kabutops · 108: 5th slot (Omastar) joins · 159: peak TR
-95".
+reads "0: Onix, Geodude (team level above the level cap) · 8: 3rd slot
+(Aerodactyl) joins · 29: Geodude → Graveler · 43: 4th slot (Kabuto) joins ·
+47: team level Lv 31 drops below the level cap Lv 32 · 61: Onix → Steelix ·
+82: Graveler → Golem · 91: Kabuto → Kabutops · 104: 5th slot (Omastar) joins ·
+159: peak TR 95".
 
 Exports and the saved browser state keep version 8 and store the point as
 `{ "playerTR": n }`. Earlier version 8 files with `{ "badges": n }` still
@@ -162,10 +163,10 @@ compute it. Ties keep catalog order. The
 five are shown as matches 1–5, ascending TR with the strongest last, each with
 their own team and levels. v0 uses one pool, so Indigo, Sevii Masters and Hoenn
 all use the same lineup. With the catalog defaults, at world progress 80
-(8 badges, level cap Lv 50) the lineup is Giovanni (TR 93), Bruno, Will,
-Norman (TR 94) and Agatha (TR 95), team level 58–59. At 120 (level cap Lv 75)
-it is Steven (TR 130), Norman, Giovanni, Lance and Jasmine (TR 131–132), team
-level 81–83. At 160 it is Clair, Juan, Wallace, Steven and Lance (TR
+(8 badges, level cap Lv 50) the lineup is Bruno (TR 94), Giovanni, Agatha,
+Jasmine and Norman (TR 95), team level 59. At 120 (level cap Lv 75) it is
+Norman and Steven (TR 130), Giovanni and Jasmine (TR 131) and Lance (TR 132),
+team level 81–83. At 160 it is Clair, Juan, Wallace, Steven and Lance (TR
 185–200), team level 100: the team level scaler stops at Lv 100, the same as
 the level cap there, so the lineup can match the cap but not exceed it.
 
@@ -193,14 +194,23 @@ session to replace. The growth defaults live in the catalog script's `GROWTH`
 table, chosen by lore (veterans such as Bruno, Agatha, Lorelei, Pryce and
 Chuck plateau; rising stars such as Whitney and Falkner bloom early; Clair,
 Winona, Juan and Sabrina bloom late; most others are steady; Champions and
-Lance have the highest peaks). The region openers start high enough to stay
-classic-like on the team level low end: Brock and Roxanne at start TR 20 (two
-Pokémon at Lv 14 and 12), Falkner at 14 (Lv 11 and 9). The defaults are tuned
-to the v0 balance targets, which `engine.test.ts` checks: the lineup at TR
-85–95 at world progress 80, 2–8 levels above the level cap at 120, Lv 100 at
-160, at least three Gym Leaders below, near and above the player at every
-checkpoint (at world progress 0 the openers are two Pokémon at or under the
-level cap), and Blue about 10 ahead from world progress 40. Rosters flatten
+Lance have the highest peaks). Every Gym Leader entry (Tate & Liza included)
+has a placeholder start TR in the 18–40 Gym band, set by archetype rather than
+Gym order and varied a little by lore: late bloomers 18–24, early bloomers
+22–30, steady 24–34, plateaus 30–40 (the script rejects a Gym Leader start TR
+outside 18–40). At world progress 0 that is team level Lv 13 (Winona, TR 18)
+to Lv 28 (Pryce, TR 40), two or three Pokémon; Brock at start TR 25 opens at
+Lv 18. League-eligible steady Gym Leaders keep start + peak TR at most 190 so
+they stay at TR 95 or less at world progress 80. The defaults are tuned to the
+v0 balance targets, which `engine.test.ts` checks: the lineup at TR 85–95 at
+world progress 80, 2–8 levels above the level cap at 120, Lv 100 at 160, every
+Gym Leader opening at team level 12 or more and within 16 levels of each other,
+and Blue about 10 ahead from world progress 40. The Gym ladder has at least
+three Gym Leaders near and above the player at every checkpoint and three below
+from world progress 80. At world progress 0 all 24 are above (every start TR
+is past the near band), and the lowest three are two Pokémon at or under the
+level cap; at 40 none is below yet, but at least three are at or under the
+player TR. Rosters flatten
 the earlier ace/filler prototype: its ace (now the signature Pokémon) first,
 then the other members in order, cut to six, then each species converted to
 the final stage of its line (a converted slot uses `LEVEL_UP` with no

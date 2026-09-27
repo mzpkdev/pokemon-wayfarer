@@ -163,10 +163,10 @@
           "item": null
         }
       ],
-      "startTR": 20,
+      "startTR": 25,
       "archetype": "steady",
       "peakTR": 95,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 20, steady (keeps a fixed fraction of the player's pace), peak TR 95.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 25 (placeholder start TR in the 18–40 Gym band by archetype), steady (keeps a fixed fraction of the player's pace), peak TR 95.",
       "roster": [
         {
           "species": "Steelix",
@@ -246,10 +246,10 @@
           "item": null
         }
       ],
-      "startTR": 4,
+      "startTR": 26,
       "archetype": "steady",
       "peakTR": 110,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 4, steady (keeps a fixed fraction of the player's pace), peak TR 110.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 26 (placeholder start TR in the 18–40 Gym band by archetype), steady (keeps a fixed fraction of the player's pace), peak TR 110.",
       "roster": [
         {
           "species": "Starmie",
@@ -335,10 +335,10 @@
           "item": null
         }
       ],
-      "startTR": 6,
+      "startTR": 30,
       "archetype": "steady",
       "peakTR": 120,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 6, steady (keeps a fixed fraction of the player's pace), peak TR 120.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 30 (placeholder start TR in the 18–40 Gym band by archetype), steady (keeps a fixed fraction of the player's pace), peak TR 120.",
       "roster": [
         {
           "species": "Raichu",
@@ -424,10 +424,10 @@
           "item": null
         }
       ],
-      "startTR": 6,
+      "startTR": 28,
       "archetype": "steady",
       "peakTR": 150,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 6, steady (keeps a fixed fraction of the player's pace), peak TR 150.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 28 (placeholder start TR in the 18–40 Gym band by archetype), steady (keeps a fixed fraction of the player's pace), peak TR 150.",
       "roster": [
         {
           "species": "Bellossom",
@@ -531,10 +531,10 @@
           "item": "Bright Powder"
         }
       ],
-      "startTR": 8,
+      "startTR": 27,
       "archetype": "early bloomer",
       "peakTR": 100,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 8, early bloomer (a rising star: fast early, then slows), peak TR 100.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 27 (placeholder start TR in the 18–40 Gym band by archetype), early bloomer (a rising star: fast early, then slows), peak TR 100.",
       "roster": [
         {
           "species": "Crobat",
@@ -626,10 +626,10 @@
           "item": null
         }
       ],
-      "startTR": 25,
+      "startTR": 24,
       "archetype": "late bloomer",
       "peakTR": 180,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 25, late bloomer (a strong leader: slow start, strong finish), peak TR 180.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 24 (placeholder start TR in the 18–40 Gym band by archetype), late bloomer (a strong leader: slow start, strong finish), peak TR 180.",
       "roster": [
         {
           "species": "Alakazam",
@@ -721,10 +721,10 @@
           "item": null
         }
       ],
-      "startTR": 15,
+      "startTR": 37,
       "archetype": "plateau",
       "peakTR": 90,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 15, plateau (a veteran who reaches their peak early and stops), peak TR 90.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 37 (placeholder start TR in the 18–40 Gym band by archetype), plateau (a veteran who reaches their peak early and stops), peak TR 90.",
       "roster": [
         {
           "species": "Magmortar",
@@ -822,10 +822,10 @@
           "item": null
         }
       ],
-      "startTR": 16,
+      "startTR": 24,
       "archetype": "steady",
-      "peakTR": 170,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 16, steady (keeps a fixed fraction of the player's pace), peak TR 170.",
+      "peakTR": 166,
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 24 (placeholder start TR in the 18–40 Gym band by archetype), steady (keeps a fixed fraction of the player's pace), peak TR 166.",
       "roster": [
         {
           "species": "Rhyperior",
@@ -1477,10 +1477,10 @@
           "item": "Sitrus Berry"
         }
       ],
-      "startTR": 14,
+      "startTR": 22,
       "archetype": "early bloomer",
       "peakTR": 80,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 14, early bloomer (a rising star: fast early, then slows), peak TR 80.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 22 (placeholder start TR in the 18–40 Gym band by archetype), early bloomer (a rising star: fast early, then slows), peak TR 80.",
       "roster": [
         {
           "species": "Noctowl",
@@ -1566,10 +1566,10 @@
           "item": "Berry Juice"
         }
       ],
-      "startTR": 3,
+      "startTR": 24,
       "archetype": "steady",
       "peakTR": 100,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 3, steady (keeps a fixed fraction of the player's pace), peak TR 100.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 24 (placeholder start TR in the 18–40 Gym band by archetype), steady (keeps a fixed fraction of the player's pace), peak TR 100.",
       "roster": [
         {
           "species": "Scizor",
@@ -1655,10 +1655,10 @@
           "item": "Sitrus Berry"
         }
       ],
-      "startTR": 4,
+      "startTR": 26,
       "archetype": "early bloomer",
       "peakTR": 95,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 4, early bloomer (a rising star: fast early, then slows), peak TR 95.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 26 (placeholder start TR in the 18–40 Gym band by archetype), early bloomer (a rising star: fast early, then slows), peak TR 95.",
       "roster": [
         {
           "species": "Miltank",
@@ -1750,10 +1750,10 @@
           "item": "Sitrus Berry"
         }
       ],
-      "startTR": 8,
+      "startTR": 28,
       "archetype": "steady",
       "peakTR": 150,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 8, steady (keeps a fixed fraction of the player's pace), peak TR 150.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 28 (placeholder start TR in the 18–40 Gym band by archetype), steady (keeps a fixed fraction of the player's pace), peak TR 150.",
       "roster": [
         {
           "species": "Gengar",
@@ -1845,10 +1845,10 @@
           "item": "Black Belt"
         }
       ],
-      "startTR": 12,
+      "startTR": 34,
       "archetype": "plateau",
       "peakTR": 85,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 12, plateau (a veteran who reaches their peak early and stops), peak TR 85.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 34 (placeholder start TR in the 18–40 Gym band by archetype), plateau (a veteran who reaches their peak early and stops), peak TR 85.",
       "roster": [
         {
           "species": "Poliwrath",
@@ -1946,10 +1946,10 @@
           "item": "Quick Claw"
         }
       ],
-      "startTR": 12,
+      "startTR": 24,
       "archetype": "steady",
-      "peakTR": 172,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 12, steady (keeps a fixed fraction of the player's pace), peak TR 172.",
+      "peakTR": 166,
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 24 (placeholder start TR in the 18–40 Gym band by archetype), steady (keeps a fixed fraction of the player's pace), peak TR 166.",
       "roster": [
         {
           "species": "Steelix",
@@ -2041,10 +2041,10 @@
           "item": "Sitrus Berry"
         }
       ],
-      "startTR": 18,
+      "startTR": 40,
       "archetype": "plateau",
       "peakTR": 92,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 18, plateau (a veteran who reaches their peak early and stops), peak TR 92.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 40 (placeholder start TR in the 18–40 Gym band by archetype), plateau (a veteran who reaches their peak early and stops), peak TR 92.",
       "roster": [
         {
           "species": "Mamoswine",
@@ -2142,10 +2142,10 @@
           "item": "Leftovers"
         }
       ],
-      "startTR": 12,
+      "startTR": 21,
       "archetype": "late bloomer",
       "peakTR": 185,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 12, late bloomer (a strong leader: slow start, strong finish), peak TR 185.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 21 (placeholder start TR in the 18–40 Gym band by archetype), late bloomer (a strong leader: slow start, strong finish), peak TR 185.",
       "roster": [
         {
           "species": "Kingdra",
@@ -2417,10 +2417,10 @@
           "item": "Oran Berry"
         }
       ],
-      "startTR": 20,
+      "startTR": 24,
       "archetype": "steady",
       "peakTR": 90,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 20, steady (keeps a fixed fraction of the player's pace), peak TR 90.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 24 (placeholder start TR in the 18–40 Gym band by archetype), steady (keeps a fixed fraction of the player's pace), peak TR 90.",
       "roster": [
         {
           "species": "Probopass",
@@ -2506,10 +2506,10 @@
           "item": "Sitrus Berry"
         }
       ],
-      "startTR": 4,
+      "startTR": 24,
       "archetype": "early bloomer",
       "peakTR": 90,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 4, early bloomer (a rising star: fast early, then slows), peak TR 90.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 24 (placeholder start TR in the 18–40 Gym band by archetype), early bloomer (a rising star: fast early, then slows), peak TR 90.",
       "roster": [
         {
           "species": "Hariyama",
@@ -2601,10 +2601,10 @@
           "item": "Sitrus Berry"
         }
       ],
-      "startTR": 8,
+      "startTR": 32,
       "archetype": "plateau",
       "peakTR": 75,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 8, plateau (a veteran who reaches their peak early and stops), peak TR 75.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 32 (placeholder start TR in the 18–40 Gym band by archetype), plateau (a veteran who reaches their peak early and stops), peak TR 75.",
       "roster": [
         {
           "species": "Manectric",
@@ -2696,10 +2696,10 @@
           "item": "White Herb"
         }
       ],
-      "startTR": 6,
+      "startTR": 23,
       "archetype": "early bloomer",
       "peakTR": 100,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 6, early bloomer (a rising star: fast early, then slows), peak TR 100.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 23 (placeholder start TR in the 18–40 Gym band by archetype), early bloomer (a rising star: fast early, then slows), peak TR 100.",
       "roster": [
         {
           "species": "Torkoal",
@@ -2791,10 +2791,10 @@
           "item": "Sitrus Berry"
         }
       ],
-      "startTR": 20,
+      "startTR": 26,
       "archetype": "steady",
-      "peakTR": 168,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 20, steady (keeps a fixed fraction of the player's pace), peak TR 168.",
+      "peakTR": 164,
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 26 (placeholder start TR in the 18–40 Gym band by archetype), steady (keeps a fixed fraction of the player's pace), peak TR 164.",
       "roster": [
         {
           "species": "Slaking",
@@ -2892,10 +2892,10 @@
           "item": "Oran Berry"
         }
       ],
-      "startTR": 10,
+      "startTR": 18,
       "archetype": "late bloomer",
       "peakTR": 172,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 10, late bloomer (a strong leader: slow start, strong finish), peak TR 172.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 18 (placeholder start TR in the 18–40 Gym band by archetype), late bloomer (a strong leader: slow start, strong finish), peak TR 172.",
       "roster": [
         {
           "species": "Altaria",
@@ -2987,10 +2987,10 @@
           "item": "Sitrus Berry"
         }
       ],
-      "startTR": 22,
+      "startTR": 30,
       "archetype": "steady",
-      "peakTR": 160,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 22, steady (keeps a fixed fraction of the player's pace), peak TR 160.",
+      "peakTR": 170,
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 30 (placeholder start TR in the 18–40 Gym band by archetype), steady (keeps a fixed fraction of the player's pace), peak TR 170.",
       "roster": [
         {
           "species": "Solrock",
@@ -3088,10 +3088,10 @@
           "item": "Chesto Berry"
         }
       ],
-      "startTR": 22,
+      "startTR": 23,
       "archetype": "late bloomer",
       "peakTR": 185,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 22, late bloomer (a strong leader: slow start, strong finish), peak TR 185.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 23 (placeholder start TR in the 18–40 Gym band by archetype), late bloomer (a strong leader: slow start, strong finish), peak TR 185.",
       "roster": [
         {
           "species": "Kingdra",

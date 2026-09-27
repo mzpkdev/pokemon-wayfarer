@@ -25,26 +25,26 @@ test("grows each trainer with world progress and round-trips an exported experim
   await expect(page.getByTestId("level-cap")).toHaveText("Lv. 15")
   await expect(page.getByTestId("world-progress")).toHaveText("0")
   const order = page.getByTestId("battle-order").locator("li")
-  // Brock (start TR 20, steady, peak TR 95) at world progress 0: TR 20, team level 14, size 2.
-  await expect(page.getByTestId("selected-tr")).toHaveText("20")
-  await expect(page.getByTestId("growth-brock")).toHaveText("20 → 95")
+  // Brock (start TR 25, steady, peak TR 95) at world progress 0: TR 25, team level 18, size 2.
+  await expect(page.getByTestId("selected-tr")).toHaveText("25")
+  await expect(page.getByTestId("growth-brock")).toHaveText("25 → 95")
   await expect(page.getByTestId("archetype-brock")).toHaveText("steady")
-  await expect(page.getByTestId("selected-level")).toHaveText("Lv. 14")
+  await expect(page.getByTestId("selected-level")).toHaveText("Lv. 18")
   await expect(page.getByTestId("team-size")).toHaveText("2")
   await expect(order).toHaveCount(2)
   // Final stages step down to the stage their level supports, and a stepped-down member uses
-  // LEVEL_UP instead of the authored moves: Golem is Geodude at Lv 12, Steelix is Onix at Lv 14.
+  // LEVEL_UP instead of the authored moves: Golem is Geodude at Lv 16, Steelix is Onix at Lv 18.
   await expect(order.nth(0)).toContainText("Geodude→ Golem at Lv 38")
-  await expect(order.nth(0)).toContainText("Lv. 12")
+  await expect(order.nth(0)).toContainText("Lv. 16")
   await expect(order.nth(0)).toContainText("Offset -2 · LEVEL_UP · Quick Claw")
   await expect(order.nth(1)).toContainText("Onix→ Steelix at Lv 35")
-  await expect(order.nth(1)).toContainText("Lv. 14")
+  await expect(order.nth(1)).toContainText("Lv. 18")
   // The growth table shows each roster slot's stage at the world progress checkpoints.
   await expect(page.getByTestId("growth-slot-1")).toHaveText(
-    /Slot 1\s*Onix\s*Lv 14\s*Onix\s*Lv 27\s*Steelix\s*Lv 38\s*Steelix\s*Lv 48\s*Steelix\s*Lv 59/,
+    /Slot 1\s*Onix\s*Lv 18\s*Onix\s*Lv 30\s*Steelix\s*Lv 39\s*Steelix\s*Lv 49\s*Steelix\s*Lv 59/,
   )
   await expect(page.getByTestId("growth-slot-2")).toHaveText(
-    /Slot 2\s*Geodude\s*Lv 12\s*Graveler\s*Lv 25\s*Graveler\s*Lv 36\s*Golem\s*Lv 46\s*Golem\s*Lv 57/,
+    /Slot 2\s*Geodude\s*Lv 16\s*Graveler\s*Lv 28\s*Graveler\s*Lv 37\s*Golem\s*Lv 47\s*Golem\s*Lv 57/,
   )
   await expect(page.getByTestId("growth-slot-6")).toHaveText(/Slot 6\s*—\s*—\s*—\s*—\s*—/)
   await expect(page.getByTestId("slot-line-2")).toHaveText("Geodude → Graveler Lv 25 → Golem Lv 38")
@@ -59,7 +59,7 @@ test("grows each trainer with world progress and round-trips an exported experim
   await page.getByLabel("Roster slot 2 item", { exact: true }).fill("Hard Stone")
   await page.getByRole("button", { name: "Apply roster", exact: true }).click()
   await expect(order.nth(0)).toContainText("Onix")
-  await expect(order.nth(0)).toContainText("Lv. 8")
+  await expect(order.nth(0)).toContainText("Lv. 12")
   await expect(order.nth(0)).toContainText("Rock Throw, Bind · Hard Stone")
   // An earlier stage is allowed but flagged, and it never evolves forward.
   await expect(page.getByTestId("stage-warning-2")).toHaveText(
@@ -75,20 +75,20 @@ test("grows each trainer with world progress and round-trips an exported experim
   await expect(page.getByTestId("wild-gap")).toHaveText("-10 vs cap")
   await expect(page.getByTestId("regular-trainer-level")).toHaveText("Lv. 44")
   await expect(page.getByTestId("regular-trainer-gap")).toHaveText("-6 vs cap")
-  await expect(page.getByTestId("selected-tr")).toHaveText("58")
-  await expect(page.getByTestId("tr-brock")).toHaveText("58")
-  await expect(page.getByTestId("selected-level")).toHaveText("Lv. 38")
+  await expect(page.getByTestId("selected-tr")).toHaveText("60")
+  await expect(page.getByTestId("tr-brock")).toHaveText("60")
+  await expect(page.getByTestId("selected-level")).toHaveText("Lv. 39")
   await expect(page.getByTestId("team-size")).toHaveText("4")
-  await expect(page.getByTestId("gap-brock")).toHaveText("-12")
+  await expect(page.getByTestId("gap-brock")).toHaveText("-11")
   await expect(page.getByTestId("growth-table").locator("tbody tr").first()).toHaveText(
-    /TR\s*20\s*39\s*58\s*76\s*95/,
+    /TR\s*25\s*43\s*60\s*78\s*95/,
   )
   await expect(order).toHaveCount(4)
   await expect(order.nth(2)).toContainText("Onix")
-  await expect(order.nth(2)).toContainText("Lv. 32")
+  await expect(order.nth(2)).toContainText("Lv. 33")
   await expect(order.nth(3)).toContainText("Steelix")
   await expect(order.nth(3)).not.toContainText("→")
-  await expect(order.nth(3)).toContainText("Lv. 38")
+  await expect(order.nth(3)).toContainText("Lv. 39")
 
   // TR is uncapped; the scalers stay flat past their last anchor (TR 160).
   await setGrowth(page, { archetype: "plateau", peak: "200" })
@@ -102,7 +102,7 @@ test("grows each trainer with world progress and round-trips an exported experim
   await expect(order.first()).toContainText("Relicanth")
   await expect(order.first()).toContainText("Lv. 98")
   await setGrowth(page, { archetype: "steady", peak: "95" })
-  await expect(page.getByTestId("selected-tr")).toHaveText("58")
+  await expect(page.getByTestId("selected-tr")).toHaveText("60")
 
   const downloadPromise = page.waitForEvent("download")
   await page.getByRole("button", { name: "Export experiment", exact: true }).click()
@@ -143,10 +143,10 @@ test("sets the player TR directly, with badges as presets, and reads old badge p
   await expect(page.getByTestId("level-cap")).toHaveText("Lv. 61")
   await expect(page.getByTestId("wild-level")).toHaveText("Lv. 48")
   await expect(page.getByTestId("regular-trainer-level")).toHaveText("Lv. 52")
-  // Steady Brock (20 → 95) at world progress 97: 20 + 75 × 97/160 = 65.5, halves up.
-  await expect(page.getByTestId("selected-tr")).toHaveText("65")
-  await expect(page.getByTestId("tr-brock")).toHaveText("65")
-  await expect(page.getByTestId("ladder-brock")).toContainText("below -32")
+  // Steady Brock (25 → 95) at world progress 97: 25 + 70 × 97/160 = 67.44.
+  await expect(page.getByTestId("selected-tr")).toHaveText("67")
+  await expect(page.getByTestId("tr-brock")).toHaveText("67")
+  await expect(page.getByTestId("ladder-brock")).toContainText("below -30")
   await expect(page.getByTestId("league-lineup").locator(":scope > li")).toHaveCount(5)
   // The slider runs 0–200; the field takes any larger TR, which is past 24 badges.
   await page.getByLabel("Player TR slider", { exact: true }).fill("170")
@@ -181,21 +181,23 @@ test("shows the selected trainer's milestones and a team level chart", async ({ 
   page.on("pageerror", (error) => errors.push(error.message))
   await page.goto("/#trainer-balance")
   const timeline = page.getByTestId("milestones").locator(":scope > li")
-  await expect(timeline.first()).toHaveText(/^0\s*Onix, Geodude$/)
-  await expect(page.getByTestId("milestone-19")).toHaveText(/19\s*3rd slot \(Aerodactyl\) joins/)
-  await expect(page.getByTestId("milestone-68")).toHaveText(/68\s*Onix → Steelix/)
+  await expect(timeline.first()).toHaveText(
+    /^0\s*Onix, Geodude \(team level above the level cap\)$/,
+  )
+  await expect(page.getByTestId("milestone-8")).toHaveText(/8\s*3rd slot \(Aerodactyl\) joins/)
+  await expect(page.getByTestId("milestone-61")).toHaveText(/61\s*Onix → Steelix/)
   await expect(timeline.last()).toHaveText(/159\s*peak TR 95/)
   await expect(timeline.first()).toHaveAttribute("aria-current", "step")
   await expect(page.getByTestId("milestone-now")).toHaveCount(0)
-  // At 8 badges (player TR 80) the marker sits between Onix → Steelix (68) and Graveler → Golem (87).
+  // At 8 badges (player TR 80) the marker sits between Onix → Steelix (61) and Graveler → Golem (82).
   await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
   await expect(page.getByTestId("milestone-now")).toHaveText(/80\s*Player TR now/)
-  await expect(page.getByTestId("milestone-68").locator("+ li")).toHaveAttribute(
+  await expect(page.getByTestId("milestone-61").locator("+ li")).toHaveAttribute(
     "data-testid",
     "milestone-now",
   )
-  await page.getByLabel("Player TR", { exact: true }).fill("68")
-  await expect(page.getByTestId("milestone-68")).toHaveAttribute("aria-current", "step")
+  await page.getByLabel("Player TR", { exact: true }).fill("61")
+  await expect(page.getByTestId("milestone-61")).toHaveAttribute("aria-current", "step")
   await expect(page.getByTestId("milestone-now")).toHaveCount(0)
 
   const chart = page.getByTestId("level-chart")
@@ -203,7 +205,7 @@ test("shows the selected trainer's milestones and a team level chart", async ({ 
   await expect(chart).toContainText("Brock’s team level")
   await expect(chart).toContainText("Level cap")
   await expect(chart.getByText("Player TR (world progress)", { exact: true })).toBeVisible()
-  await expect(chart.getByText("Player TR 68", { exact: true })).toBeVisible()
+  await expect(chart.getByText("Player TR 61", { exact: true })).toBeVisible()
   for (const id of ["chart-team", "chart-cap"])
     expect(await page.getByTestId(id).getAttribute("d")).toMatch(
       /^M[\d.]+,[\d.]+(L[\d.]+,[\d.]+){200}$/,
@@ -211,12 +213,12 @@ test("shows the selected trainer's milestones and a team level chart", async ({ 
   // Keyboard and pointer both read values off the chart.
   const reader = chart.getByRole("slider")
   await reader.focus()
-  await expect(page.getByTestId("chart-tooltip")).toContainText("Player TR 68")
+  await expect(page.getByTestId("chart-tooltip")).toContainText("Player TR 61")
   await expect(page.getByTestId("chart-tooltip")).toContainText("Lv 35 team level (TR 52)")
   await page.keyboard.press("ArrowRight")
   await expect(reader).toHaveAttribute(
     "aria-valuetext",
-    /^Player TR 69: team level Lv 35, level cap Lv 44$/,
+    /^Player TR 62: team level Lv 35, level cap Lv 40$/,
   )
   await reader.blur()
   await reader.hover()
@@ -265,19 +267,21 @@ test("ranks the Gym Leaders against the player TR in the Gym ladder", async ({ p
   const ladder = page.getByTestId("gym-ladder").locator(":scope > li")
   await expect(ladder).toHaveCount(24)
   await expect(page.getByTestId("ladder-tate-liza")).toContainText("Tate & Liza · double battle")
-  // At world progress 0 the openers start at TR 20 (two Pokémon at Lv 14, under the level cap).
-  await expect(page.getByTestId("ladder-counts")).toHaveText("0 below · 11 near · 13 above")
-  await expect(ladder.first()).toContainText("Bugsy")
-  await expect(page.getByTestId("ladder-brock")).toContainText("TR 20")
-  await expect(page.getByTestId("ladder-brock")).toContainText("above +20")
-  await expect(ladder.last()).toContainText("Sabrina")
-  await expect(ladder.last()).toContainText("above +25")
+  // At world progress 0 every Gym Leader starts in the 18–40 Gym band, so all are above the
+  // player: late bloomer Winona lowest (TR 18), plateau Pryce highest (TR 40).
+  await expect(page.getByTestId("ladder-counts")).toHaveText("0 below · 0 near · 24 above")
+  await expect(ladder.first()).toContainText("Winona")
+  await expect(ladder.first()).toContainText("above +18")
+  await expect(page.getByTestId("ladder-brock")).toContainText("TR 25")
+  await expect(page.getByTestId("ladder-brock")).toContainText("above +25")
+  await expect(ladder.last()).toContainText("Pryce")
+  await expect(ladder.last()).toContainText("above +40")
   await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
-  await expect(page.getByTestId("ladder-counts")).toHaveText("10 below · 9 near · 5 above")
-  await expect(ladder.last()).toContainText("Norman")
-  await expect(page.getByTestId("ladder-brock")).toContainText("below -22")
+  await expect(page.getByTestId("ladder-counts")).toHaveText("9 below · 10 near · 5 above")
+  await expect(ladder.last()).toContainText("Tate & Liza")
+  await expect(page.getByTestId("ladder-brock")).toContainText("below -20")
   await page.getByRole("button", { name: "Set 24 badges", exact: true }).click()
-  await expect(page.getByTestId("ladder-counts")).toHaveText("14 below · 5 near · 5 above")
+  await expect(page.getByTestId("ladder-counts")).toHaveText("14 below · 6 near · 4 above")
   await expect(ladder.last()).toContainText("Juan")
   await expect(ladder.last()).toContainText("TR 185")
 })
@@ -289,21 +293,21 @@ test("puts the top five by TR at the current world progress in the lineup, stron
   const matches = page.getByTestId("league-lineup").locator(":scope > li")
   await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
   await expect(matches).toHaveCount(5)
-  for (const [index, name] of ["Giovanni", "Bruno", "Will", "Norman", "Agatha"].entries())
+  for (const [index, name] of ["Bruno", "Giovanni", "Agatha", "Jasmine", "Norman"].entries())
     await expect(matches.nth(index).locator("h3")).toContainText(name)
   await expect(page.getByTestId("league-names")).toContainText(
     "Indigo, Sevii Masters, Hoenn all use this lineup",
   )
-  // Beatable at 8 badges (level cap Lv 50): the lineup runs TR 93–95, team level 58–59.
-  await expect(page.getByTestId("league-range")).toHaveText("TR 93 … 95")
-  await expect(page.getByTestId("league-match-1")).toContainText("TR 93 · Lv. 58 · 5 Pokémon")
+  // Beatable at 8 badges (level cap Lv 50): the lineup runs TR 94–95, team level 59.
+  await expect(page.getByTestId("league-range")).toHaveText("TR 94 … 95")
+  await expect(page.getByTestId("league-match-1")).toContainText("TR 94 · Lv. 59 · 5 Pokémon")
   await expect(page.getByTestId("league-match-5")).toContainText("TR 95 · Lv. 59 · 5 Pokémon")
   // At 16 badges (level cap Lv 75) the lineup is a little above the cap.
   await page.getByRole("button", { name: "Set 16 badges", exact: true }).click()
   await expect(page.getByTestId("league-range")).toHaveText("TR 130 … 132")
-  await expect(page.getByTestId("league-match-1")).toContainText("Steven")
+  await expect(page.getByTestId("league-match-1")).toContainText("Norman")
   await expect(page.getByTestId("league-match-1")).toContainText("TR 130 · Lv. 81 · 6 Pokémon")
-  await expect(page.getByTestId("league-match-5")).toContainText("TR 132 · Lv. 83 · 6 Pokémon")
+  await expect(page.getByTestId("league-match-5")).toContainText("TR 132 · Lv. 83 · 5 Pokémon")
   // A plateau Brock with peak TR 150 moves into match 5 and drops Steven.
   await setGrowth(page, { archetype: "plateau", peak: "150" })
   await expect(page.getByTestId("league-match-5")).toContainText("Brock")
@@ -334,7 +338,7 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 7 file
   await expect(page.getByRole("alert")).toContainText("Start TR must be a whole number")
   await setGrowth(page, { start: "50", peak: "40" })
   await expect(page.getByRole("alert")).toContainText("Peak TR must be at least start TR")
-  await expect(page.getByTestId("selected-tr")).toHaveText("20")
+  await expect(page.getByTestId("selected-tr")).toHaveText("25")
   await expect(page.getByTestId("archetype-brock")).toHaveText("steady")
 
   const importFile = (version: number, body: object) =>
@@ -396,7 +400,7 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 7 file
     "Version 7 experiments give the rival a fixed lead",
   )
   await expect(page.getByTestId("badge-count")).toHaveText("0")
-  await expect(page.getByTestId("selected-tr")).toHaveText("20")
+  await expect(page.getByTestId("selected-tr")).toHaveText("25")
 
   await page.getByRole("button", { name: "Lorelei Kanto · Elite Four", exact: true }).click()
   await expect(page.getByTestId("roster-incomplete")).toBeVisible()
@@ -425,11 +429,11 @@ test("edits the trainer, world and archetype scalers globally", async ({ page })
   await page.getByLabel("Team level anchor 1 value", { exact: true }).fill("30")
   await page.getByRole("button", { name: "Apply scalers", exact: true }).click()
   await expect(page.getByRole("alert")).toContainText("values must not decrease")
-  // Falkner is TR 14: from (0, 8) to (20, 14) that is Lv. 12.2, so Lv. 12.
-  await expect(page.getByTestId("level-falkner")).toHaveText("Lv. 11")
-  await page.getByLabel("Team level anchor 1 value", { exact: true }).fill("8")
+  // Winona is TR 18: from (0, 5) to (20, 14) that is Lv. 13.1; from (0, 10) it is Lv. 13.6.
+  await expect(page.getByTestId("level-winona")).toHaveText("Lv. 13")
+  await page.getByLabel("Team level anchor 1 value", { exact: true }).fill("10")
   await page.getByRole("button", { name: "Apply scalers", exact: true }).click()
-  await expect(page.getByTestId("level-falkner")).toHaveText("Lv. 12")
+  await expect(page.getByTestId("level-winona")).toHaveText("Lv. 14")
 
   // The wild and regular trainer level curves read the player TR and move only the world scaling readout.
   await page.getByRole("button", { name: "Set 4 badges", exact: true }).click()
