@@ -82,7 +82,8 @@ owned by each feature.
 - Seeded league order.
 - Seeded league lineups, with rotation and recurring editions.
 - Per-save trainer growth arcs.
-- Per-save roster filler scores and jitter.
+- Per-save variation in which supporting Pokémon fill a trainer's filler
+  slots ([Trainer roster influence](trainer-roster-influence.md)).
 - Other per-save world variants, each approved as its own feature.
 
 ## References

@@ -91,8 +91,8 @@ slot, never an accidental output index.
 Build and validate the full battle snapshot before allocating opponent members.
 Use its actual count for construction, returned party size, opening slots,
 switch candidates, send-out order, and gimmick reconstruction; clear unused
-slots and reject references to absent members. The reversed order does not force
-switches or replacement AI; reject incompatible ace-lock flags in content
+slots and reject references to absent members. The derived battle order does
+not force switches or replacement AI; reject incompatible ace-lock flags in content
 validation.
 
 Preserve each encounter's prize-money basis, including Giovanni's special path,

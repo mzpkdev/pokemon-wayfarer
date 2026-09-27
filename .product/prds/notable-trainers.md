@@ -90,17 +90,23 @@ first league; later leagues stay a real fight a little above your level cap,
 and at the very end both sides meet at level 100 ([Leagues](leagues.md)). Each Pokémon has a small, hand-set
 level difference, so a team feels shaped rather than uniform.
 
-### The signature Pokémon comes last
+### Their stars come last
 
 Every trainer has one hand-picked list of six Pokémon, the same in every battle
 and every save; Blue brings the same six whichever starter you chose. A small
 team is the start of that list, and each step up adds the next one. The first
-Pokémon on the list is their signature Pokémon: it is on every team they bring,
-and you always face it last.
+Pokémon on the list is their signature Pokémon: it is on every team they bring.
+
+The signature Pokémon and up to two more are the trainer's aces, their stars.
+The rest are supporting Pokémon that join between them as the trainer grows.
+You face the supporting Pokémon first and the aces last, with the signature
+Pokémon at the very end. Where each ace sits in the list decides when it first
+appears, so a trainer can keep one back until their team is full and reveal it
+late in your journey.
 
 Lists name each Pokémon at its final form, such as Brock's Steelix and Golem.
 Stronger forms appear only once they've reached the right level: until then a
-Pokémon comes as an earlier form, so Brock opens with Onix and Geodude and
+Pokémon comes as an earlier form, so Brock opens with Onix and Rhyhorn and
 brings Steelix once his team reaches level 35. Pokémon never evolve past what
 the list names, and a trainer can name an earlier form on purpose, like Blue's
 Eevee. Hand-picked moves belong to the named form; an earlier form uses its
@@ -176,8 +182,8 @@ belong to playtesting.
 - Some of your progress counting more than other progress for how trainers
   grow.
 - Trainers who also grow from their own battles.
-- Signature and supporting Pokémon that vary from save to save.
-- Player influence: nudges, gifts, and trades
+- Supporting Pokémon that vary from save to save or with what you do, and
+  trades that put one of your Pokémon on a trainer's team; aces never change
   ([Trainer roster influence](trainer-roster-influence.md)).
 - Better items, moves, and AI once teams reach level 100.
 - Tighter level spreads at the top.

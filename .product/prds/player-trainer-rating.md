@@ -110,6 +110,10 @@ changes yours.
 - **Roster slot (1-6):** one position in that list.
 - **Signature Pokémon:** roster slot 1, the Pokémon a trainer is known for. It
   is on every team they bring and is always fought last.
+- **Ace:** one of a trainer's one to three star Pokémon, the signature
+  Pokémon included; aces are fought last.
+- **Filler slot:** any roster slot that isn't an ace; its Pokémon is fought
+  before the aces.
 - **Battle snapshot:** the team fixed when a battle starts and kept for the
   whole fight.
 - **League:** Indigo, Sevii Masters, or Hoenn.

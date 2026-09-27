@@ -5,12 +5,17 @@ export type ReferenceMember = {
   item: string | null
 }
 
-/** One roster slot. Roster slot 1 (the signature Pokémon) is at offset 0 and is fought last. */
+/**
+ * One roster slot. Roster slot 1 (the signature Pokémon) is an ace at offset 0 and is fought
+ * last. Every non-ace slot is a filler slot.
+ */
 export type RosterSlot = {
   /** The authored stage, normally a final stage; a member below its evolution level steps down. */
   species: string
   /** -6..0 from the team level. */
   levelOffset: number
+  /** An ace slot: fought after the filler slots. Roster slot 1 is always an ace; 1–3 per roster. */
+  isAce: boolean
   /** Authored moves (1–4), or the latest level-up moves at its level. */
   moves: string[] | "LEVEL_UP"
   item: string | null
@@ -66,7 +71,7 @@ export type TrainerSettings = {
 /** A scaler anchor: [TR, value]. */
 export type Anchor = [number, number]
 export type Experiment = {
-  version: 8
+  version: 9
   /** Team level by TR: linear between anchors, halves up, flat past the last. */
   teamLevel: Anchor[]
   /** Team size by TR, same rules; paired anchors make it a step table. */
@@ -102,7 +107,7 @@ export type ResolvedTrainer = {
   size: number
   /** The first `size` roster slots, in roster order. */
   team: TeamMember[]
-  /** The team reversed: roster slot 1 comes last. */
+  /** Filler slots in reverse roster order, then aces in reverse roster order: roster slot 1 comes last. */
   battleOrder: TeamMember[]
   /** Roster slots authored (v0 requires 6). */
   rosterLength: number
@@ -116,7 +121,7 @@ export type MilestoneEvent =
   /** The team at world progress 0, in roster order, and whether its team level is above the level cap. */
   | { kind: "start"; team: string[]; aboveCap: boolean }
   /** A roster slot joins the team (team size steps up), at the stage its level supports. */
-  | { kind: "join"; slot: number; species: string }
+  | { kind: "join"; slot: number; species: string; isAce: boolean }
   /** A team member's stage changes along its evolution line. */
   | { kind: "evolve"; slot: number; from: string; to: string }
   /** The team level moves strictly above the level cap, or strictly below it again. */

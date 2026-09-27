@@ -3,6 +3,7 @@ import {
   ARCHETYPES,
   EXPERIMENT_VERSION,
   LEVEL_OFFSET,
+  MAX_ACES,
   MAX_ANCHORS,
   OLD_VERSION_REJECTION,
   LEVEL_CAP_ANCHORS,
@@ -67,7 +68,7 @@ const anchorsOf = (experiment: Experiment, id: ScalerId): Anchor[] =>
   isGrowth(id) ? experiment.archetypes[id] : experiment[id]
 /** A form field name for a scaler (archetype names contain spaces). */
 export const scalerField = (id: ScalerId): string => id.replaceAll(" ", "-")
-const storageKey = "wayfarer-trainer-balance-v8"
+const storageKey = "wayfarer-trainer-balance-v9"
 /** The chart runs across player TR 0 to at least this. */
 export const CHART_MIN_END = Math.max(200, LEVEL_CAP_ANCHORS.at(-1)?.[0] ?? 0)
 /** The chart never runs past this player TR; a higher player TR is marked at the right edge. */
@@ -292,7 +293,7 @@ export class BalanceLab {
       return `Updated ${this.#_name(this.selectedId)}’s growth.`
     })
 
-  /** Swaps a roster slot with its neighbour; roster slot 1 must stay at offset 0. */
+  /** Swaps a roster slot with its neighbour; roster slot 1 must stay an ace at offset 0. */
   moveSlot = (index: number, direction: -1 | 1): void =>
     this.#_edit("Could not reorder the roster.", (next) => {
       const roster = this.#_roster(next)
@@ -310,6 +311,7 @@ export class BalanceLab {
       roster.push({
         species: "Unown",
         levelOffset: LEVEL_OFFSET.default,
+        isAce: false,
         moves: "LEVEL_UP",
         item: null,
         ability: null,
@@ -323,6 +325,30 @@ export class BalanceLab {
       const [removed] = this.#_roster(next).splice(index, 1)
       return removed ? `Removed ${removed.species}.` : undefined
     })
+
+  /**
+   * Marks a roster slot as an ace or a filler slot. Roster slot 1 is always an ace, and a
+   * roster has at most MAX_ACES. Returns whether the change was accepted.
+   */
+  setAce = (index: number, isAce: boolean): boolean => {
+    let accepted = false
+    this.#_edit("Could not change the ace slots.", (next) => {
+      const roster = this.#_roster(next)
+      const slot = roster[index]
+      if (!slot || slot.isAce === isAce) return undefined
+      if (index === 0) throw new Error("Roster slot 1 is the signature Pokémon and always an ace.")
+      if (isAce && roster.filter((entry) => entry.isAce).length >= MAX_ACES)
+        throw new Error(
+          `A roster has at most ${MAX_ACES} aces (roster slot 1 plus two more). Clear another ace first.`,
+        )
+      slot.isAce = isAce
+      accepted = true
+      return isAce
+        ? `${slot.species} (roster slot ${index + 1}) is now an ace.`
+        : `${slot.species} (roster slot ${index + 1}) is now a filler slot.`
+    })
+    return accepted
+  }
 
   /** Reads species, offset, moves and item for every roster slot from the roster form. */
   applyRoster = (form: HTMLFormElement): void =>
@@ -419,7 +445,8 @@ export class BalanceLab {
       if (data?.tool !== "wayfarer-trainer-balance" || data.version !== EXPERIMENT_VERSION)
         throw new Error(`This is not a version ${EXPERIMENT_VERSION} Wayfarer balance experiment.`)
       const experiment = validateExperiment(data.experiment, catalog)
-      // The point is a player TR; earlier version 8 files saved 0–24 badges instead.
+      // The point is a player TR; early version 8 files saved 0–24 badges instead, and a
+      // badge point is still read.
       const point = data.point
       const keys = point && typeof point === "object" ? Object.keys(point) : []
       const playerTR =

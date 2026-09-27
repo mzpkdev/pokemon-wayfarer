@@ -33,7 +33,7 @@ separate UI package only when it has a real independent consumer.
 module (`#trainer-balance`). Trainer balance bundles its catalog and can run
 directly with `pnpm --filter @wayfarer/ui dev`, without building map catalogs.
 It edits each notable trainer's growth (start TR, archetype, peak TR) and
-six-slot roster (38 entries, including the Tate & Liza double battle duo) and
+six-slot roster with 1–3 ace slots fought last (38 entries, including the Tate & Liza double battle duo) and
 the scalers, shows each trainer's TR at the chosen player TR (world
 progress; badges are presets, and any TR can be typed), with members below
 their stage's evolution level stepping down their line, each trainer's

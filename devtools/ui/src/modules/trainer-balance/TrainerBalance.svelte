@@ -3,6 +3,7 @@
   import {
     ARCHETYPES,
     LEVEL_OFFSET,
+    MAX_ACES,
     NEAR_BAND,
     ROSTER_SIZE,
     LEAGUES,
@@ -215,10 +216,11 @@
       archetype’s growth scaler, the same rule for every archetype. Team level and team size are
       scalers of that trainer TR (anchor tables, linear between anchors, halves rounded up, flat
       past the last anchor, the ceiling TR; TR itself is uncapped). The team is the first N roster
-      slots at team level + offset, and battle order is the team reversed, so roster slot 1 comes
-      last. Rosters author final stages; a member below its stage’s evolution level steps down its
-      line (the shared evolution-level table covers non-level evolutions). Moves, items, AI and win
-      rates are not simulated.</span
+      slots at team level + offset (join order is list order). Battle order puts the filler slots
+      first and the aces last, each in reverse list order, so roster slot 1 comes last. Rosters
+      author final stages; a member below its stage’s evolution level steps down its line (the
+      shared evolution-level table covers non-level evolutions). Moves, items, AI and win rates are
+      not simulated.</span
     >
   </div>
 
@@ -423,11 +425,13 @@
                 class:current={point.world === lab.worldProgress}>{point.teamLevel}</td
               >{/each}</tr
           >
-          {#each lab.settings.roster as _, index (index)}<tr
+          {#each lab.settings.roster as slot, index (index)}<tr
               class="growth-slot"
               data-testid={`growth-slot-${index + 1}`}
-              ><th>Slot {index + 1}</th>{#each lab.growth as point}{@const member =
-                  point.team[index]}<td class:current={point.world === lab.worldProgress}
+              ><th
+                >Slot {index + 1}{#if slot.isAce}<span class="ace-chip">Ace</span>{/if}</th
+              >{#each lab.growth as point}{@const member = point.team[index]}<td
+                  class:current={point.world === lab.worldProgress}
                   >{#if member}<span class="growth-species">{member.species}</span><small
                       >Lv {member.level}</small
                     >{:else}<span class="muted">—</span>{/if}</td
@@ -491,7 +495,7 @@
       </dl>
       <div class="section-label">
         <h3>Team at TR {lab.selected.tr} (world progress {lab.worldProgress})</h3>
-        <span>Battle order: roster slot 1 last</span>
+        <span>Battle order: filler slots, then aces; roster slot 1 last</span>
       </div>
       <ol class="party" data-testid="battle-order">
         {#each lab.selected.battleOrder as member (member.slot)}<li
@@ -504,6 +508,8 @@
                     class="evolves-into"
                     data-testid={`evolves-${member.slot}`}
                     >→ {member.authoredSpecies} at Lv {member.authoredAt}</span
+                  >{/if}{#if member.isAce}<span class="ace-chip" data-testid={`ace-${member.slot}`}
+                    >Ace</span
                   >{/if}</strong
               ><small
                 >Offset {member.levelOffset} · {movesText(member.moves)}{member.item
@@ -540,7 +546,10 @@
         >
           {#each lab.settings.roster as slot, index (index)}
             <fieldset class:in-team={index < lab.selected.size}>
-              <legend>Roster slot {index + 1}{index < lab.selected.size ? " · in team" : ""}</legend
+              <legend
+                >Roster slot {index + 1}{slot.isAce ? " · ace" : ""}{index < lab.selected.size
+                  ? " · in team"
+                  : ""}</legend
               >
               <div class="line-inputs">
                 <label class="wide"
@@ -562,6 +571,20 @@
                     required
                     value={slot.levelOffset}
                   /></label
+                ><label class="ace-toggle"
+                  ><input
+                    aria-label={`Roster slot ${index + 1} ace`}
+                    type="checkbox"
+                    checked={slot.isAce}
+                    disabled={index === 0}
+                    title={index === 0
+                      ? "Roster slot 1 is the signature Pokémon and always an ace"
+                      : undefined}
+                    onchange={(event) => {
+                      const input = event.currentTarget
+                      if (!lab.setAce(index, input.checked)) input.checked = !input.checked
+                    }}
+                  />Ace</label
                 ><label class="wide"
                   >Moves<input
                     aria-label={`Roster slot ${index + 1} moves`}
@@ -615,6 +638,13 @@
           </div>
         </form>
       {/key}
+      <p class="hint" data-testid="order-rule">
+        Join order is list order: the team is always the first N roster slots. Battle order puts the
+        filler slots first and the aces last, each in reverse list order, so roster slot 1 is fought
+        last. Roster slot 1 is always an ace; a roster has 1–{MAX_ACES} aces ({lab.settings.roster.filter(
+          (slot) => slot.isAce,
+        ).length} now).
+      </p>
       <p class="hint">
         Roster slot 1 must stay at offset 0; offsets run {LEVEL_OFFSET.min} to {LEVEL_OFFSET.max}.
         Moves are LEVEL_UP or up to four names separated by commas. v0 needs exactly {ROSTER_SIZE}
@@ -1464,6 +1494,19 @@
   }
   .party li.signature {
     border-color: #4d4331;
+  }
+  .ace-chip {
+    color: var(--accent);
+    border: 1px solid #665239;
+    border-radius: 4px;
+    padding: 0 5px;
+    margin-left: 6px;
+    font-size: 10px;
+    font-weight: 400;
+  }
+  .ace-toggle input {
+    accent-color: var(--accent);
+    margin: 0;
   }
   .prototype-chip {
     color: var(--accent);

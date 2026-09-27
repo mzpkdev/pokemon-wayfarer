@@ -16,6 +16,7 @@ import {
   badgeMatch,
   badgeMatchText,
   badgeTR,
+  battleOrderOf,
   buildTeam,
   createExperiment,
   evolutionIndex,
@@ -54,9 +55,10 @@ import type {
 const data = catalogData as Catalog
 const catalog = data.trainers
 const evolution = evolutionIndex(data.evolution)
-const slot = (species: string, levelOffset = -2): RosterSlot => ({
+const slot = (species: string, levelOffset = -2, isAce = levelOffset === 0): RosterSlot => ({
   species,
   levelOffset,
+  isAce,
   moves: "LEVEL_UP",
   item: null,
   ability: null,
@@ -187,6 +189,53 @@ describe("teams", () => {
     expect(battleOrder.map((member) => member.slot)).toEqual([4, 3, 2, 1])
   })
 
+  it("fights filler slots first and aces last, each in reverse list order", () => {
+    const brock = defaults.trainers.brock!.roster
+    const order = (size: number) =>
+      buildTeam(brock, 100, size, evolution).battleOrder.map((member) => member.species)
+    expect(brock.map((rosterSlot) => [rosterSlot.species, rosterSlot.isAce])).toEqual([
+      ["Steelix", true],
+      ["Rhyperior", false],
+      ["Aerodactyl", true],
+      ["Kabutops", false],
+      ["Omastar", false],
+      ["Golem", true],
+    ])
+    expect(order(6)).toEqual(["Omastar", "Kabutops", "Rhyperior", "Golem", "Aerodactyl", "Steelix"])
+    expect(order(5)).toEqual(["Omastar", "Kabutops", "Rhyperior", "Aerodactyl", "Steelix"])
+    expect(order(4)).toEqual(["Kabutops", "Rhyperior", "Aerodactyl", "Steelix"])
+    expect(order(3)).toEqual(["Rhyperior", "Aerodactyl", "Steelix"])
+    expect(order(2)).toEqual(["Rhyperior", "Steelix"])
+    expect(order(1)).toEqual(["Steelix"])
+    // Aces only: plain reverse; the order never depends on species or level.
+    const aces = [slot("A", 0), slot("B", -1, true), slot("C", -6, true)]
+    expect(battleOrderOf(aces).map((member) => member.species)).toEqual(["C", "B", "A"])
+  })
+
+  it("unlocks roster slots by team size in list order: Golem only at size 6", () => {
+    const brock = defaults.trainers.brock!.roster
+    const team = (size: number) =>
+      buildTeam(brock, 100, size, evolution).team.map((member) => member.species)
+    for (let size = 1; size <= 5; size += 1) expect(team(size)).not.toContain("Golem")
+    expect(team(6)).toContain("Golem")
+    expect(team(3)).toEqual(["Steelix", "Rhyperior", "Aerodactyl"])
+    // Steady Brock (25 → 100) reaches TR 96, the first TR at team size 6, at world progress 151:
+    // 25 + 75 × 151/160 = 95.78. At 150 he is TR 95 (25 + 70.31), still team size 5.
+    const record = catalog.find((entry) => entry.id === "brock")!
+    const at = (world: number) => resolveTrainer(record, defaults, world, evolution)
+    const before = at(150)
+    const joined = at(151)
+    expect([before.tr, before.size, before.team.map((member) => member.species)]).toEqual([
+      95,
+      5,
+      ["Steelix", "Rhyperior", "Aerodactyl", "Kabutops", "Omastar"],
+    ])
+    // Team level at TR 96 is 50 + 16 × 25/40 = 60, so Golem (offset -2) joins at Lv 58 as Golem.
+    expect([joined.tr, joined.size, joined.teamLevel]).toEqual([96, 6, 60])
+    expect(joined.team[5]).toMatchObject({ slot: 6, species: "Golem", level: 58, isAce: true })
+    expect(at(400).size).toBe(6)
+  })
+
   it("adds each offset to the team level and clamps to 1–100", () => {
     const roster = [slot("Steelix", 0), slot("Golem", -6), slot("Onix", -3)]
     expect(buildTeam(roster, 42, 3, NO_EVOLUTION).team.map((member) => member.level)).toEqual([
@@ -254,7 +303,8 @@ describe("teams", () => {
     expect(resolved).toEqual(
       resolveTrainer(brock, defaults, playerRating({ badges: 8 }), evolution),
     )
-    expect(resolved.tr).toBe(60)
+    // Steady Brock (25 → 100) at world progress 80: 25 + 75 × 80/160 = 62.5, rounded up.
+    expect(resolved.tr).toBe(63)
     // Resolution takes a world progress number and the shared evolution data, so a party or
     // level cap cannot be passed in.
     expect(resolveTrainer.length).toBe(4)
@@ -317,25 +367,25 @@ describe("evolution", () => {
     })
   })
 
-  it("resolves Brock: Onix and Geodude at Lv 14, Steelix from Lv 35 and Golem from Lv 38", () => {
+  it("resolves Brock: Onix and Rhyhorn at Lv 14, Steelix from Lv 35 and Rhydon from Lv 42", () => {
     const roster = defaults.trainers.brock!.roster
     const team = (level: number) =>
       buildTeam(roster, level, 2, evolution).team.map((member) => [member.species, member.level])
     expect(team(14)).toEqual([
       ["Onix", 14],
-      ["Geodude", 12],
+      ["Rhyhorn", 12],
     ])
     expect(team(35)).toEqual([
       ["Steelix", 35],
-      ["Graveler", 33],
+      ["Rhyhorn", 33],
     ])
-    expect(team(39)).toEqual([
-      ["Steelix", 39],
-      ["Graveler", 37],
+    expect(team(43)).toEqual([
+      ["Steelix", 43],
+      ["Rhyhorn", 41],
     ])
-    expect(team(40)).toEqual([
-      ["Steelix", 40],
-      ["Golem", 38],
+    expect(team(44)).toEqual([
+      ["Steelix", 44],
+      ["Rhydon", 42],
     ])
     // The rule reads each member’s level, whatever the world progress.
     const brock = catalog.find((record) => record.id === "brock")!
@@ -443,15 +493,15 @@ describe("player TR and badge presets", () => {
     const blue = catalog.find((record) => record.id === "blue")!
     const tr = (record: TrainerRecord, world: number) =>
       resolveTrainer(record, experiment, world, evolution).tr
-    // Steady Brock (25 → 95): 25 + 70 × 95/160 = 66.56. Flat past 160.
-    expect([tr(brock, 95), tr(brock, 170), tr(brock, 300)]).toEqual([67, 95, 95])
+    // Steady Brock (25 → 100): 25 + 75 × 95/160 = 69.53. Flat past 160.
+    expect([tr(brock, 95), tr(brock, 170), tr(brock, 300)]).toEqual([70, 100, 100])
     // Rival Blue (0 → 170): 53% + 23 × 15/40 % at 95 = 61.625% of 170 = 104.8.
     expect([tr(blue, 95), tr(blue, 170), tr(blue, 300)]).toEqual([105, 170, 170])
     expect(
       gymLadder(catalog, experiment, 95).find((row) => row.trainer.id === "brock"),
     ).toMatchObject({
-      tr: 67,
-      gap: -28,
+      tr: 70,
+      gap: -25,
       mark: "below",
     })
     expect(leagueLineup(catalog, experiment, 300, evolution)).toEqual(
@@ -474,36 +524,47 @@ describe("milestones", () => {
       tr: 25,
       teamLevel: 18,
       cap: 15,
-      events: [{ kind: "start", team: ["Onix", "Geodude"], aboveCap: true }],
+      events: [{ kind: "start", team: ["Onix", "Rhyhorn"], aboveCap: true }],
     })
     // TR 29 is the first TR at team size 3: steady Brock reaches it at world progress 8.
     expect(brock.find((m) => m.events.some((e) => e.kind === "join"))).toMatchObject({
       worldProgress: 8,
       tr: 29,
-      events: [{ kind: "join", slot: 3, species: "Aerodactyl" }],
+      events: [{ kind: "join", slot: 3, species: "Aerodactyl", isAce: true }],
     })
-    // Onix becomes Steelix when the team level reaches 35 (TR 52, world progress 61).
+    // Onix becomes Steelix when the team level reaches 35 (TR 52, world progress 57).
     const steelix = brock.find((m) =>
       m.events.some((e) => e.kind === "evolve" && e.to === "Steelix"),
     )!
-    expect([steelix.worldProgress, steelix.tr, steelix.teamLevel]).toEqual([61, 52, 35])
-    expect(resolveTrainer(record("brock"), defaults, 60, evolution).team[0]?.species).toBe("Onix")
+    expect([steelix.worldProgress, steelix.tr, steelix.teamLevel]).toEqual([57, 52, 35])
+    expect(resolveTrainer(record("brock"), defaults, 56, evolution).team[0]?.species).toBe("Onix")
+    // TR 96 (team size 6) at world progress 151 brings in the slot-6 Golem ace at team level 60.
+    expect(
+      brock.find((m) => m.events.some((e) => e.kind === "join" && e.species === "Golem")),
+    ).toMatchObject({
+      worldProgress: 151,
+      tr: 96,
+      teamLevel: 60,
+      events: [{ kind: "join", slot: 6, species: "Golem", isAce: true }],
+    })
+    // 25 + 75 × 159/160 = 99.53 rounds up to peak TR 100.
     expect(brock.at(-1)).toMatchObject({
       worldProgress: 159,
-      tr: 95,
-      events: [{ kind: "peak", tr: 95, reached: true }],
+      tr: 100,
+      events: [{ kind: "peak", tr: 100, reached: true }],
     })
     expect(brock.map(milestoneText)).toEqual([
-      "0: Onix, Geodude (team level above the level cap)",
-      "8: 3rd slot (Aerodactyl) joins",
-      "29: Geodude → Graveler",
-      "43: 4th slot (Kabuto) joins",
-      "47: team level Lv 31 drops below the level cap Lv 32",
-      "61: Onix → Steelix",
-      "82: Graveler → Golem",
-      "91: Kabuto → Kabutops",
-      "104: 5th slot (Omastar) joins",
-      "159: peak TR 95",
+      "0: Onix, Rhyhorn (team level above the level cap)",
+      "8: 3rd slot (Aerodactyl) ace joins",
+      "40: 4th slot (Kabuto) joins",
+      "49: team level Lv 32 drops below the level cap Lv 33",
+      "57: Onix → Steelix",
+      "85: Kabuto → Kabutops",
+      "93: Rhyhorn → Rhydon",
+      "98: 5th slot (Omastar) joins",
+      "140: Rhydon → Rhyperior",
+      "151: 6th slot (Golem) ace joins",
+      "159: peak TR 100",
     ])
   })
 
@@ -511,12 +572,12 @@ describe("milestones", () => {
     expect(timeline("blue").map(milestoneText)).toEqual([
       "0: Eevee",
       "9: 2nd slot (Pidgey) joins",
-      "23: 3rd slot (Abra) joins",
+      "23: 3rd slot (Abra) ace joins",
       "25: Pidgey → Pidgeotto, Abra → Kadabra",
       "28: team level Lv 25 passes the level cap Lv 24",
       "36: 4th slot (Rhyhorn) joins",
       "51: Pidgeotto → Pidgeot",
-      "61: 5th slot (Arcanine) joins",
+      "61: 5th slot (Arcanine) ace joins",
       "62: Rhyhorn → Rhydon",
       "66: Kadabra → Alakazam",
       "84: Rhydon → Rhyperior",
@@ -581,6 +642,29 @@ describe("roster validation", () => {
   it("accepts six roster slots with roster slot 1 at offset 0", () => {
     expect(validateRoster(valid, "roster")).toEqual(valid)
   })
+  it("accepts one to three aces, roster slot 1 always among them", () => {
+    const withAces = (...aces: number[]) =>
+      valid.map((rosterSlot, index) => ({
+        ...rosterSlot,
+        isAce: index === 0 || aces.includes(index),
+      }))
+    expect(validateRoster(withAces(), "roster").filter((s) => s.isAce)).toHaveLength(1)
+    expect(validateRoster(withAces(2, 5), "roster").filter((s) => s.isAce)).toHaveLength(3)
+    expect(() => validateRoster(withAces(2, 4, 5), "roster")).toThrow(
+      "a roster has at most 3 aces (roster slot 1 plus two more)",
+    )
+    expect(() =>
+      validateRoster([{ ...valid[0]!, isAce: false }, ...valid.slice(1)], "roster"),
+    ).toThrow("roster slot 1 (the signature Pokémon) must be an ace")
+    for (const record of catalog) {
+      const aces = record.roster.filter((rosterSlot) => rosterSlot.isAce).length
+      expect([record.id, record.roster[0]?.isAce, aces >= 1 && aces <= 3]).toEqual([
+        record.id,
+        true,
+        true,
+      ])
+    }
+  })
   it("accepts a short roster, which the explorer reports as a gap", () => {
     expect(validateRoster(valid.slice(0, 5), "roster")).toHaveLength(5)
     const short = trainer("short", 0, six.slice(0, 4))
@@ -602,6 +686,25 @@ describe("roster validation", () => {
     ["no moves", [{ ...slot("Steelix", 0), moves: [] }], "moves"],
     ["a blank species", [slot(" ", 0)], "species"],
     ["an unknown key", [{ ...slot("Steelix", 0), ace: true }], "unknown fields"],
+    [
+      "a missing ace flag",
+      [
+        {
+          species: "Steelix",
+          levelOffset: 0,
+          moves: "LEVEL_UP",
+          item: null,
+          ability: null,
+          nature: null,
+        },
+      ],
+      "missing or unknown fields",
+    ],
+    [
+      "a non-boolean ace flag",
+      [{ ...slot("Steelix", 0), isAce: 1 }],
+      "isAce must be true or false",
+    ],
   ])("rejects %s", (_name, roster, message) => {
     expect(() => validateRoster(roster, "roster")).toThrow(message)
   })
@@ -769,12 +872,12 @@ describe("placeholder balance targets", () => {
       .map((record) => resolveTrainer(record, defaults, 0, evolution).teamLevel)
     for (const level of levels) expect(level).toBeGreaterThanOrEqual(12)
     expect(Math.max(...levels) - Math.min(...levels)).toBeLessThanOrEqual(16)
-    // Brock (steady, start TR 25) opens at Lv 18 with Onix and Geodude.
+    // Brock (steady, start TR 25) opens at Lv 18 with Onix and Rhyhorn.
     const brock = at(0).find((row) => row.trainer.id === "brock")!
     expect([brock.tr, brock.teamLevel, brock.size]).toEqual([25, 18, 2])
     expect(brock.team.map((member) => [member.species, member.level])).toEqual([
       ["Onix", 18],
-      ["Geodude", 16],
+      ["Rhyhorn", 16],
     ])
   })
 
@@ -873,7 +976,7 @@ describe("catalog", () => {
     }
     expect(growth("Blue")).toEqual([0, "rival", 170])
     expect(catalog.filter((record) => record.archetype === "rival")).toHaveLength(1)
-    expect(growth("Brock")).toEqual([25, "steady", 95])
+    expect(growth("Brock")).toEqual([25, "steady", 100])
     expect(growth("Lance")).toEqual([48, "late bloomer", 200])
     expect(Object.keys(experiment.trainers)).toHaveLength(38)
     expect(catalog.some((record) => record.id.startsWith("red"))).toBe(false)
@@ -928,15 +1031,22 @@ describe("catalog", () => {
     )
     expect(notFinal).toEqual(["blue[1] Eevee"])
     const brock = catalog.find((record) => record.id === "brock")!
-    expect(brock.roster.map((rosterSlot) => [rosterSlot.species, rosterSlot.levelOffset])).toEqual([
-      ["Steelix", 0],
-      ["Golem", -2],
-      ["Aerodactyl", -2],
-      ["Kabutops", -2],
-      ["Omastar", -2],
-      ["Relicanth", -2],
+    expect(
+      brock.roster.map((rosterSlot) => [
+        rosterSlot.species,
+        rosterSlot.levelOffset,
+        rosterSlot.isAce,
+      ]),
+    ).toEqual([
+      ["Steelix", 0, true],
+      ["Rhyperior", -2, false],
+      ["Aerodactyl", -2, true],
+      ["Kabutops", -2, false],
+      ["Omastar", -2, false],
+      ["Golem", -2, true],
     ])
-    expect(brock.roster[1]?.moves).not.toBe("LEVEL_UP")
+    // Golem keeps its source battle content.
+    expect(brock.roster[5]?.moves).not.toBe("LEVEL_UP")
   })
 
   it("lists the rosters short of six as content gaps", () => {
@@ -969,6 +1079,15 @@ describe("experiment import", () => {
     restored.archetypes.steady[1]![1] = 40
     expect(experiment.trainers.fixture!.startTR).toBe(3)
     expect(experiment.archetypes.steady[1]).toEqual([40, 25])
+  })
+
+  it("rejects version 8, which had no ace slots", () => {
+    const v8 = base()
+    v8.version = 8
+    for (const rosterSlot of v8.trainers.fixture.roster) delete rosterSlot.isAce
+    expect(() => validateExperiment(v8, records)).toThrow(
+      "Version 8 experiments have no ace slots (isAce)",
+    )
   })
 
   it("rejects version 7, which gave the rival a fixed lead", () => {

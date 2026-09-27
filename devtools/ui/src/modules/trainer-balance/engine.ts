@@ -15,6 +15,8 @@ import type {
 } from "./types.js"
 
 export const ROSTER_SIZE = 6
+/** Aces per roster: roster slot 1 plus up to two more. */
+export const MAX_ACES = 3
 export const LEVEL_OFFSET = { min: -6, max: 0, default: -2 } as const
 export const LINEUP_SIZE = 5
 export const LEAGUES = ["Indigo", "Sevii Masters", "Hoenn"] as const
@@ -355,10 +357,20 @@ export const stageAt = (
 }
 
 /**
- * Team = the first N roster slots (N = team size at TR); level =
- * clamp(team level + offset, 1, 100); battle order = the team reversed. Each
- * member steps down to the stage its level supports; authored moves belong to
- * the authored stage, so a member that stepped down uses LEVEL_UP.
+ * Battle order: the filler slots in reverse roster order, then the aces in
+ * reverse roster order, so roster slot 1 (the signature Pokémon) is always last.
+ */
+export const battleOrderOf = <T extends Pick<RosterSlot, "isAce">>(team: readonly T[]): T[] => [
+  ...team.filter((member) => !member.isAce).toReversed(),
+  ...team.filter((member) => member.isAce).toReversed(),
+]
+
+/**
+ * Team = the first N roster slots (N = team size at TR), so join order is list
+ * order; level = clamp(team level + offset, 1, 100); battle order puts the aces
+ * last (battleOrderOf). Each member steps down to the stage its level supports;
+ * authored moves belong to the authored stage, so a member that stepped down
+ * uses LEVEL_UP.
  */
 export const buildTeam = (
   roster: readonly RosterSlot[],
@@ -379,7 +391,7 @@ export const buildTeam = (
       authoredAt: stage.authoredAt,
     }
   })
-  return { team, battleOrder: team.toReversed() }
+  return { team, battleOrder: battleOrderOf(team) }
 }
 
 /**
@@ -470,7 +482,13 @@ export const milestones = (
     else {
       for (const member of current.team) {
         const before = previous.team[member.slot - 1]
-        if (!before) events.push({ kind: "join", slot: member.slot, species: member.species })
+        if (!before)
+          events.push({
+            kind: "join",
+            slot: member.slot,
+            species: member.species,
+            isAce: member.isAce,
+          })
         else if (before.species !== member.species)
           events.push({
             kind: "evolve",
@@ -503,13 +521,13 @@ export const milestones = (
 const ordinal = (value: number): string =>
   `${value}${value % 10 === 1 && value !== 11 ? "st" : value % 10 === 2 && value !== 12 ? "nd" : value % 10 === 3 && value !== 13 ? "rd" : "th"}`
 
-/** One event as timeline text, e.g. "3rd slot (Aerodactyl) joins" or "Onix → Steelix". */
+/** One event as timeline text, e.g. "3rd slot (Aerodactyl) ace joins", "4th slot (Kabutops) joins" or "Onix → Steelix". */
 export const milestoneEventText = (event: MilestoneEvent, milestone: Milestone): string => {
   switch (event.kind) {
     case "start":
       return `${event.team.join(", ")}${event.aboveCap ? " (team level above the level cap)" : ""}`
     case "join":
-      return `${ordinal(event.slot)} slot (${event.species}) joins`
+      return `${ordinal(event.slot)} slot (${event.species}) ${event.isAce ? "ace joins" : "joins"}`
     case "evolve":
       return `${event.from} → ${event.to}`
     case "cap":
@@ -584,7 +602,7 @@ export const createExperiment = (catalog: TrainerRecord[]): Experiment => {
   for (const trainer of catalog) trainers[trainer.id] = defaultTrainerSettings(trainer)
   return validateExperiment(
     {
-      version: 8,
+      version: EXPERIMENT_VERSION,
       teamLevel: structuredClone(DEFAULT_TEAM_LEVEL),
       teamSize: structuredClone(DEFAULT_TEAM_SIZE),
       wildLevel: structuredClone(DEFAULT_WILD_LEVEL),
@@ -650,7 +668,8 @@ const anchors = (value: unknown, min: number, max: number, path: string): Anchor
 
 const rosterSlot = (value: unknown, path: string): RosterSlot => {
   const input = object(value, path)
-  exactKeys(input, ["species", "levelOffset", "moves", "item", "ability", "nature"], path)
+  exactKeys(input, ["species", "levelOffset", "isAce", "moves", "item", "ability", "nature"], path)
+  if (typeof input.isAce !== "boolean") fail(`${path}.isAce must be true or false`)
   const moves =
     input.moves === "LEVEL_UP"
       ? "LEVEL_UP"
@@ -665,6 +684,7 @@ const rosterSlot = (value: unknown, path: string): RosterSlot => {
       LEVEL_OFFSET.max,
       `${path}.levelOffset`,
     ),
+    isAce: input.isAce as boolean,
     moves,
     item: nullable(input.item, 60, `${path}.item`),
     ability: nullable(input.ability, 60, `${path}.ability`),
@@ -673,15 +693,19 @@ const rosterSlot = (value: unknown, path: string): RosterSlot => {
 }
 
 /**
- * v0 rosters list up to six roster slots, and roster slot 1 is at offset 0 so the
- * signature Pokémon plays at the team level at every size. Fewer than six is
- * a content gap the explorer flags (see rosterGaps), not an import error.
+ * v0 rosters list up to six roster slots, and roster slot 1 is an ace at offset 0
+ * so the signature Pokémon plays at the team level at every size and is fought
+ * last. A roster has 1–3 aces. Fewer than six slots is a content gap the explorer
+ * flags (see rosterGaps), not an import error.
  */
 export const validateRoster = (value: unknown, path: string): RosterSlot[] => {
   if (!Array.isArray(value) || value.length < 1 || value.length > ROSTER_SIZE)
     fail(`${path} must list 1–${ROSTER_SIZE} Pokémon (v0 requires ${ROSTER_SIZE})`)
   const slots = (value as unknown[]).map((slot, index) => rosterSlot(slot, `${path}[${index + 1}]`))
   if (slots[0]?.levelOffset !== 0) fail(`${path}: roster slot 1 must have level offset 0`)
+  if (!slots[0]?.isAce) fail(`${path}: roster slot 1 (the signature Pokémon) must be an ace`)
+  if (slots.filter((slot) => slot.isAce).length > MAX_ACES)
+    fail(`${path}: a roster has at most ${MAX_ACES} aces (roster slot 1 plus two more)`)
   return slots
 }
 
@@ -709,15 +733,17 @@ export const rosterGaps = (
     return length < ROSTER_SIZE ? [{ id: trainer.id, name: trainer.name, length }] : []
   })
 
-export const EXPERIMENT_VERSION = 8
+export const EXPERIMENT_VERSION = 9
 export const OLD_VERSION_REJECTION = (version: number): string =>
-  version === 7
-    ? "Version 7 experiments give the rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. Start from the version 8 defaults."
-    : version === 6
-      ? "Version 6 experiments give each notable trainer one fixed TR and cannot be imported. Start from the version 8 defaults (start TR, archetype and peak TR)."
-      : version === 5
-        ? "Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. Start from the version 8 defaults."
-        : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. Start from the version 8 defaults.`
+  version === 8
+    ? "Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. Start from the version 9 defaults."
+    : version === 7
+      ? "Version 7 experiments give the rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. Start from the version 9 defaults."
+      : version === 6
+        ? "Version 6 experiments give each notable trainer one fixed TR and cannot be imported. Start from the version 9 defaults (start TR, archetype and peak TR)."
+        : version === 5
+          ? "Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. Start from the version 9 defaults."
+          : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. Start from the version 9 defaults.`
 
 export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Experiment => {
   const input = object(value, "root")

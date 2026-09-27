@@ -160,5 +160,6 @@ When un-parked, required evidence:
   (earlier draft: domain 1, ROSTER and POOL_KIND).
 - Trainer growth consumer: one growth arc per trainer per save (earlier draft:
   domain 2, GROWTH_ARC).
-- Roster consumer: per-save filler jitter (earlier draft: domain 3,
-  FILLER_JITTER).
+- Roster consumer: per-save filler weight variation
+  ([roster influence](trainer-roster-influence.md#weighted-pools); earlier
+  draft: domain 3, FILLER_JITTER).

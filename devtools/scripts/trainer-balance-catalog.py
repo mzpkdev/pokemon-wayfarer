@@ -5,7 +5,8 @@ No network, ROM build, or temporary calibration files are required. Reference
 moves/items describe authored sources only. Each trainer gets placeholder growth
 (start TR, archetype, peak TR) and a placeholder v0 roster (one ordered list of up to six roster slots) flattened
 from the earlier ace/filler prototype, converted to final stages (contract
-section 9). Real rosters are authored later; a roster short of six or a slot that
+section 9), with 1-3 ace slots (contract section 10) interleaved by the ACES
+table. Real rosters are authored later; a roster short of six or a slot that
 is not a final stage is a warning, not a failure.
 
 The catalog also records each roster species' predecessor chain with evolution
@@ -31,6 +32,7 @@ GYMS = GAME / "src/data/trainer_scaling/gym_leaders.json"
 SPECIES_INFO = GAME / "src/data/pokemon/species_info"
 SPECIES_CONSTANTS = GAME / "include/constants/species.h"
 ROSTER_SIZE = 6
+MAX_ACES = 3
 CATALOG_SIZE = 38
 OFFSET_MIN, OFFSET_MAX = -6, 0
 DEFAULT_OFFSET = -2
@@ -95,7 +97,7 @@ ROSTER = [
 ARCHETYPES = ("steady", "early bloomer", "late bloomer", "plateau", "rival")
 GYM_START_BAND = (18, 40)
 GROWTH = {
-    "Brock": (25, "steady", 95), "Misty": (26, "steady", 110),
+    "Brock": (25, "steady", 100), "Misty": (26, "steady", 110),
     "Lt. Surge": (30, "steady", 120), "Erika": (28, "steady", 150),
     "Janine": (27, "early bloomer", 100), "Sabrina": (24, "late bloomer", 180),
     "Blaine": (37, "plateau", 90), "Giovanni": (24, "steady", 166),
@@ -178,6 +180,53 @@ EVOLUTION_LEVELS = [
     ("Dusclops", "Dusknoir", 50, "placeholder"),
     ("Rhydon", "Rhyperior", 55, "placeholder"),
 ]
+# Section 10 PLACEHOLDER ace slots: name -> (extra aces, ace roster slots). Roster
+# slot 1 (the signature Pokémon) is always an ace; each extra ace is picked by its
+# position and species in the converted placeholder list (checked, so a stale
+# pick fails) as the trainer's strongest or most iconic member. The aces take the
+# listed roster slots in order and the filler slots keep their order around them,
+# so aces join spread out (join order = list order). Brock is authored directly.
+# Tate & Liza keep their Solrock/Lunatone signature pair together in slots 1-2.
+SPREAD, LATE = (1, 3, 5), (1, 3, 6)
+ACES = {
+    "Misty": ([(6, "Lapras"), (5, "Milotic")], LATE),
+    "Lt. Surge": ([(6, "Electivire"), (3, "Magnezone")], SPREAD),
+    "Erika": ([(5, "Victreebel"), (6, "Venusaur")], LATE),
+    "Janine": ([(2, "Weezing"), (6, "Venomoth")], SPREAD),
+    "Sabrina": ([(2, "Mr. Mime"), (6, "Espeon")], SPREAD),
+    "Blaine": ([(2, "Houndoom"), (6, "Rapidash")], SPREAD),
+    "Giovanni": ([(5, "Nidoking"), (4, "Nidoqueen")], SPREAD),
+    "Blue": ([(3, "Alakazam"), (5, "Arcanine")], SPREAD),
+    "Lorelei": ([(3, "Cloyster"), (5, "Jynx")], SPREAD),
+    "Bruno": ([(3, "Hitmonchan"), (4, "Hitmonlee")], SPREAD),
+    "Agatha": ([(3, "Crobat"), (5, "Arbok")], SPREAD),
+    "Koga": ([(4, "Muk"), (5, "Venomoth")], SPREAD),
+    "Lance": ([(2, "Gyarados"), (5, "Aerodactyl")], SPREAD),
+    "Falkner": ([(4, "Pidgeot"), (2, "Skarmory")], SPREAD),
+    "Bugsy": ([(4, "Yanmega"), (3, "Forretress")], SPREAD),
+    "Whitney": ([(6, "Clefable"), (4, "Blissey")], SPREAD),
+    "Morty": ([(2, "Mismagius")], (1, 4)),
+    "Chuck": ([(2, "Annihilape"), (6, "Hitmontop")], SPREAD),
+    "Jasmine": ([(3, "Magnezone"), (6, "Skarmory")], SPREAD),
+    "Pryce": ([(2, "Dewgong"), (6, "Weavile")], SPREAD),
+    "Clair": ([(6, "Dragonite"), (5, "Salamence")], LATE),
+    "Will": ([(4, "Espeon"), (5, "Slowbro")], SPREAD),
+    "Karen": ([(2, "Umbreon"), (5, "Honchkrow")], SPREAD),
+    "Roxanne": ([(4, "Steelix"), (5, "Omastar")], SPREAD),
+    "Brawly": ([(3, "Hitmontop"), (4, "Machamp")], SPREAD),
+    "Wattson": ([(6, "Magnezone"), (5, "Ampharos")], SPREAD),
+    "Flannery": ([(3, "Camerupt"), (5, "Rapidash")], SPREAD),
+    "Norman": ([(4, "Kangaskhan"), (6, "Slaking")], LATE),
+    "Winona": ([(4, "Skarmory"), (5, "Dragonite")], SPREAD),
+    "Tate & Liza": ([(2, "Lunatone")], (1, 2)),
+    "Juan": ([(4, "Crawdaunt"), (3, "Walrein")], LATE),
+    "Sidney": ([(3, "Shiftry"), (5, "Crawdaunt")], SPREAD),
+    "Phoebe": ([(4, "Sableye"), (5, "Banette")], SPREAD),
+    "Glacia": ([(4, "Walrein"), (5, "Glalie")], SPREAD),
+    "Drake": ([(3, "Altaria"), (5, "Flygon")], SPREAD),
+    "Wallace": ([(4, "Ludicolo"), (6, "Gyarados")], SPREAD),
+    "Steven": ([(4, "Aggron"), (2, "Skarmory")], SPREAD),
+}
 # Branching lines where a placeholder species is not already final: the canonical final stage.
 FINAL_CHOICE = {"Scyther": "Scizor", "Ursaring": "Ursaluna"}
 GROWTH_NOTE = {
@@ -416,6 +465,7 @@ def build_roster(members, early, evolutions):
         covered |= line_species(slot["species"], evolutions)
         entries.append({"species": authored["species"],
                         "levelOffset": 0 if is_ace else max(OFFSET_MIN, min(OFFSET_MAX, offset)),
+                        "isAce": False,
                         "moves": (authored["moves"] or "LEVEL_UP") if is_ace else "LEVEL_UP",
                         "item": authored["item"] if is_ace else None,
                         "ability": optional(slot.get("ability"), "ABILITY_", "ABILITY_NONE") if is_ace else None,
@@ -427,9 +477,36 @@ def build_roster(members, early, evolutions):
             token = species_token(name)
             covered |= line_species(token, evolutions)
             extras.append(display(token, "SPECIES_"))
-            entries.append({"species": extras[-1], "levelOffset": DEFAULT_OFFSET, "moves": "LEVEL_UP",
-                            "item": None, "ability": None, "nature": None})
+            entries.append({"species": extras[-1], "levelOffset": DEFAULT_OFFSET, "isAce": False,
+                            "moves": "LEVEL_UP", "item": None, "ability": None, "nature": None})
     return entries[:ROSTER_SIZE], len(entries), [name for name in extras if any(e["species"] == name for e in entries[:ROSTER_SIZE])]
+
+
+def interleave(name, roster):
+    """Marks the ACES picks as ace slots and moves them to their listed roster slots.
+
+    Roster slot 1 stays first and is an ace; the filler slots keep their order.
+    Returns the new roster and the ace species in roster order.
+    """
+    if name not in ACES:
+        raise ValueError(f"{name}: add an ACES entry (roster slot 1 plus up to two more aces)")
+    picks, slots = ACES[name]
+    chosen = [0]
+    for position, species in picks:
+        index = position - 1
+        if not 0 < index < len(roster) or roster[index]["species"] != species or index in chosen:
+            raise ValueError(f"ACES {name}: roster slot {position} is not {species} (stale pick)")
+        chosen.append(index)
+    if len(slots) != len(chosen) or slots[0] != 1 or list(slots) != sorted(set(slots)) or slots[-1] > len(roster):
+        raise ValueError(f"ACES {name}: list one increasing roster slot per ace, starting at 1")
+    aces = iter([roster[index] for index in chosen])
+    fillers = iter([entry for index, entry in enumerate(roster) if index not in chosen])
+    result = []
+    for position in range(1, len(roster) + 1):
+        entry = next(aces) if position in slots else next(fillers)
+        entry["isAce"] = position in slots
+        result.append(entry)
+    return result, [entry["species"] for entry in result if entry["isAce"]]
 
 
 def validate_roster(name, roster):
@@ -442,11 +519,17 @@ def validate_roster(name, roster):
             raise ValueError(f"{where}: species is required")
         if not isinstance(entry["levelOffset"], int) or not OFFSET_MIN <= entry["levelOffset"] <= OFFSET_MAX:
             raise ValueError(f"{where}: levelOffset must be an integer from {OFFSET_MIN} to {OFFSET_MAX}")
+        if not isinstance(entry["isAce"], bool):
+            raise ValueError(f"{where}: isAce must be true or false")
         moves = entry["moves"]
         if moves != "LEVEL_UP" and not (isinstance(moves, list) and 1 <= len(moves) <= 4):
             raise ValueError(f"{where}: moves must be LEVEL_UP or 1-4 authored moves")
     if roster[0]["levelOffset"] != 0:
         raise ValueError(f"{name}: roster slot 1 must have level offset 0")
+    if not roster[0]["isAce"]:
+        raise ValueError(f"{name}: roster slot 1 (the signature Pokémon) must be an ace")
+    if sum(entry["isAce"] for entry in roster) > MAX_ACES:
+        raise ValueError(f"{name}: a roster has 1-{MAX_ACES} aces")
 
 
 def generate():
@@ -524,7 +607,7 @@ def generate():
             raise ValueError(f"{name}: only a listed duo is a Gym Leader duo fought as a double battle")
         if name == "Blue":
             # One fixed six regardless of the player's starter: the source starter is replaced.
-            roster[0] = {"species": "Eevee", "levelOffset": 0, "moves": "LEVEL_UP",
+            roster[0] = {"species": "Eevee", "levelOffset": 0, "isAce": False, "moves": "LEVEL_UP",
                          "item": None, "ability": None, "nature": None}
         # Section 9: roster slots author final stages. Convert each placeholder
         # species to the final stage of its line (Blue's Eevee stays, user choice).
@@ -538,13 +621,21 @@ def generate():
                 # Source moves and ability belong to the source species, not the new final stage.
                 entry.update(species=final, moves="LEVEL_UP", ability=None)
         if name == "Brock":
-            # Brock (user): Steelix is the signature Pokémon and Golem keeps its source
-            # battle content in roster slot 2; the rest keeps its order, so Kleavor drops off.
-            golem = next(entry for entry in roster if entry["species"] == "Golem")
-            golem["levelOffset"] = DEFAULT_OFFSET
-            rest = [entry for entry in roster if entry is not golem]
-            roster = [{"species": "Steelix", "levelOffset": 0, "moves": "LEVEL_UP", "item": None,
-                       "ability": None, "nature": None}, golem, *rest][:ROSTER_SIZE]
+            # Brock (user, contract section 10): Steelix (ace), Rhyperior, Aerodactyl (ace),
+            # Kabutops, Omastar, Golem (ace), all final stages. Golem keeps its source battle
+            # content; the placeholder Aerodactyl, Kabutops and Omastar slots carry over;
+            # Relicanth and Kleavor drop off.
+            by_species = {entry["species"]: entry for entry in roster}
+            fresh = lambda species, offset=DEFAULT_OFFSET: {
+                "species": species, "levelOffset": offset, "isAce": False, "moves": "LEVEL_UP",
+                "item": None, "ability": None, "nature": None}
+            golem = {**by_species["Golem"], "levelOffset": DEFAULT_OFFSET}
+            roster = [{**fresh("Steelix", 0), "isAce": True}, fresh("Rhyperior"),
+                      {**by_species["Aerodactyl"], "isAce": True}, by_species["Kabutops"],
+                      by_species["Omastar"], {**golem, "isAce": True}]
+            aces = [entry["species"] for entry in roster if entry["isAce"]]
+        else:
+            roster, aces = interleave(name, roster)
         conversions.append((name, converted))
         for index, entry in enumerate(roster):
             token = species_token(entry["species"])
@@ -556,7 +647,7 @@ def generate():
         validate_roster(name, roster)
         if len(roster) < ROSTER_SIZE:
             gaps.append(f"{name} {len(roster)}/{ROSTER_SIZE}")
-        signature = ("Roster slots 1-2 keep" if name in DUOS else "Golem (roster slot 2) keeps" if name == "Brock"
+        signature = ("Roster slots 1-2 keep" if name in DUOS else "Golem (roster slot 6) keeps" if name == "Brock"
                      else "Roster slot 1 keeps")
         roster_source = ((f"PLACEHOLDER duo roster derived from {origin}." if name in DUOS
                           else f"PLACEHOLDER roster flattened from the earlier prototype, derived from {origin}.")
@@ -565,7 +656,8 @@ def generate():
                          + (f" Handwritten early species {', '.join(extras)} fill the remaining roster slots at offset {DEFAULT_OFFSET}." if extras else "")
                          + (f" The flattened list had {total} Pokémon; only the first {ROSTER_SIZE} are kept." if total > ROSTER_SIZE else "")
                          + (f" Converted to final stages (section 9; converted roster slots use LEVEL_UP with no ability): {', '.join(converted)}." if converted else "")
-                         + (" Brock (user): Steelix is roster slot 1 at offset 0 and Golem roster slot 2 keeps the source battle content; Kleavor dropped off." if name == "Brock" else "")
+                         + (" Brock (user): Steelix (ace) at offset 0, Rhyperior, Aerodactyl (ace), Kabutops, Omastar and Golem (ace, keeping the source battle content); Relicanth and Kleavor dropped off." if name == "Brock" else
+                            f" PLACEHOLDER ace slots (section 10): {', '.join(aces)} in roster slots {'/'.join(map(str, ACES[name][1]))}, chosen as the strongest or most iconic members; filler slots keep their order.")
                          + (" Roster slot 1: starter replaced by Eevee for now (user), LEVEL_UP with no item; not a final stage (allowed)." if name == "Blue" else "")
                          + (" Fought as a double battle: both leaders send Pokémon from this one roster in order." if name in DUOS else ""))
         result.append({"id": slug(name), "name": name, "region": region, "role": role,

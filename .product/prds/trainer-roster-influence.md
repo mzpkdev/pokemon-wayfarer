@@ -3,29 +3,33 @@
 Implemented: No
 Design status: Parked: not part of v0.
 
-This is a design note kept for later. v0 trainers build their team from one
-fixed hand-written list ([Notable trainers](notable-trainers.md)), so there is
-nothing for the player to influence yet. These ideas depend on a future rule
-that lets trainers pick some supporting Pokémon dynamically.
+This is a design note kept for later. In v0 every notable trainer has one
+fixed list of six Pokémon: their aces, the stars they're known for, and the
+supporting Pokémon in between ([Notable trainers](notable-trainers.md)). These
+ideas let the supporting places change; the aces never do.
 
 ## Ideas
 
-- **Nudges.** Conversations, quests, or favours make a trainer more or less
-  keen on a supporting Pokémon. Telling Misty where Lapras lives could put
-  Lapras on her team next time she has room. Nudges never touch signature
-  Pokémon or team size, and are permanent for the save.
-- **Evolution gifts.** A trainer accepts an item such as a Water Stone, and
-  that Pokémon appears evolved from then on.
-- **Trades.** A trainer asks for a species and gives a supporting Pokémon in
-  return, never a signature one. The Pokémon you give keeps who it is:
+- **Supporting Pokémon that vary.** Each trainer has a wider group of
+  supporting Pokémon to pick from. Their favourites fill the supporting places
+  in their list, and the favourites can differ a little from save to save. As
+  a trainer grows, new supporting Pokémon join and the ones already there
+  stay. Some strong choices wait until the trainer is strong enough.
+- **Nudges.** What you do can make a trainer keener on a supporting Pokémon.
+  Telling Misty where Lapras lives could put Lapras on her team the next time
+  you meet. Nudges are permanent for the save.
+- **Trades.** A trainer asks for a species and gives one of their supporting
+  Pokémon in return, never an ace. The Pokémon you give keeps who it is:
   nickname, shininess, gender, nature, ability, ball, and original trainer. It
-  becomes a strong favourite on their team and grows with them. It keeps every
-  move it knew and learns new ones only by levelling up; its new trainer never
-  teaches it anything.
+  becomes a favourite on their team, never appears weaker than when you gave it
+  away, and evolves as the trainer grows. It keeps its moves and learns new ones
+  only by levelling up; its new trainer never teaches it anything.
+- **Evolution gifts.** A trainer accepts an item such as a Water Stone, and a
+  supporting Pokémon appears evolved from then on.
 
 ## Open questions
 
-- Which interactions, gifts, and trades to author, and for which trainers.
+- Which groups, nudges, and trades to author, and for which trainers.
 - The total trade budget in the save.
 
 ## References
