@@ -3,7 +3,7 @@
 
 No network, ROM build, or temporary calibration files are required. Reference
 moves/items describe authored sources only. Each trainer gets placeholder growth
-(start TR, archetype, peak TR, and a lead for the rival) and a placeholder v0 roster (one ordered list of up to six roster slots) flattened
+(start TR, archetype, peak TR) and a placeholder v0 roster (one ordered list of up to six roster slots) flattened
 from the earlier ace/filler prototype. Real rosters are authored later; a roster
 short of six is a content-gap warning, not a failure.
 """
@@ -24,6 +24,7 @@ OUTPUT = ROOT / "devtools/ui/src/modules/trainer-balance/catalog.json"
 GYMS = GAME / "src/data/trainer_scaling/gym_leaders.json"
 SPECIES_INFO = GAME / "src/data/pokemon/species_info"
 ROSTER_SIZE = 6
+CATALOG_SIZE = 38
 OFFSET_MIN, OFFSET_MAX = -6, 0
 DEFAULT_OFFSET = -2
 # Baby pre-evolutions do not count when checking whether a line covers a species.
@@ -64,6 +65,7 @@ ROSTER = [
     ('Flannery', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_FLANNERY_1', ['Numel', 'Slugma']),
     ('Norman', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_NORMAN_1', ['Slakoth', 'Zigzagoon']),
     ('Winona', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_WINONA_1', ['Swablu', 'Taillow']),
+    ('Tate & Liza', 'Hoenn', 'Gym Leader duo', 'Emerald', 'TRAINER_TATE_AND_LIZA_1', []),
     ('Juan', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_JUAN_1', ['Horsea', 'Barboach']),
     ('Sidney', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_SIDNEY', []),
     ('Phoebe', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_PHOEBE', []),
@@ -74,45 +76,56 @@ ROSTER = [
 ]
 
 
-# Placeholder growth (contract section 7), tuned in the explorer to the balance
-# targets: name -> (start TR, archetype, peak TR, lead). Only the rival has a lead.
-# Lore: veterans plateau, rising stars bloom early, the strongest leaders bloom
-# late, most others are steady; Champions and Lance get the highest peaks.
+# Placeholder growth (contract sections 7 and 8), tuned in the explorer to the
+# balance targets: name -> (start TR, archetype, peak TR). Every archetype,
+# rival included, is a growth scaler. Lore: veterans plateau, rising stars bloom
+# early, the strongest leaders bloom late, most others are steady; Champions and
+# Lance get the highest peaks. Early Gym openers start high enough that their
+# opening teams stay classic-like on the team level scaler's low end.
 ARCHETYPES = ("steady", "early bloomer", "late bloomer", "plateau", "rival")
 GROWTH = {
-    "Brock": (2, "steady", 95, None), "Misty": (4, "steady", 110, None),
-    "Lt. Surge": (6, "steady", 120, None), "Erika": (6, "steady", 150, None),
-    "Janine": (8, "early bloomer", 100, None), "Sabrina": (25, "late bloomer", 180, None),
-    "Blaine": (15, "plateau", 90, None), "Giovanni": (16, "steady", 170, None),
-    "Blue": (10, "rival", 180, 10),
-    "Lorelei": (40, "plateau", 92, None), "Bruno": (45, "plateau", 94, None),
-    "Agatha": (50, "plateau", 95, None), "Koga": (30, "steady", 150, None),
-    "Lance": (48, "late bloomer", 200, None),
-    "Falkner": (1, "early bloomer", 80, None), "Bugsy": (3, "steady", 100, None),
-    "Whitney": (4, "early bloomer", 95, None), "Morty": (8, "steady", 150, None),
-    "Chuck": (12, "plateau", 85, None), "Jasmine": (12, "steady", 172, None),
-    "Pryce": (18, "plateau", 92, None), "Clair": (20, "late bloomer", 185, None),
-    "Will": (30, "early bloomer", 110, None), "Karen": (30, "steady", 155, None),
-    "Roxanne": (2, "steady", 90, None), "Brawly": (4, "early bloomer", 90, None),
-    "Wattson": (8, "plateau", 75, None), "Flannery": (6, "early bloomer", 100, None),
-    "Norman": (20, "steady", 168, None), "Winona": (15, "late bloomer", 172, None),
-    "Juan": (22, "late bloomer", 185, None),
-    "Sidney": (25, "early bloomer", 105, None), "Phoebe": (25, "steady", 150, None),
-    "Glacia": (40, "plateau", 90, None), "Drake": (45, "plateau", 93, None),
-    "Wallace": (48, "late bloomer", 190, None), "Steven": (50, "late bloomer", 195, None),
+    "Brock": (20, "steady", 95), "Misty": (4, "steady", 110),
+    "Lt. Surge": (6, "steady", 120), "Erika": (6, "steady", 150),
+    "Janine": (8, "early bloomer", 100), "Sabrina": (25, "late bloomer", 180),
+    "Blaine": (15, "plateau", 90), "Giovanni": (16, "steady", 170),
+    "Blue": (0, "rival", 170),
+    "Lorelei": (40, "plateau", 92), "Bruno": (45, "plateau", 94),
+    "Agatha": (50, "plateau", 95), "Koga": (30, "steady", 150),
+    "Lance": (48, "late bloomer", 200),
+    "Falkner": (14, "early bloomer", 80), "Bugsy": (3, "steady", 100),
+    "Whitney": (4, "early bloomer", 95), "Morty": (8, "steady", 150),
+    "Chuck": (12, "plateau", 85), "Jasmine": (12, "steady", 172),
+    "Pryce": (18, "plateau", 92), "Clair": (12, "late bloomer", 185),
+    "Will": (30, "early bloomer", 110), "Karen": (30, "steady", 155),
+    "Roxanne": (20, "steady", 90), "Brawly": (4, "early bloomer", 90),
+    "Wattson": (8, "plateau", 75), "Flannery": (6, "early bloomer", 100),
+    "Norman": (20, "steady", 168), "Winona": (10, "late bloomer", 172),
+    "Tate & Liza": (22, "steady", 160), "Juan": (22, "late bloomer", 185),
+    "Sidney": (25, "early bloomer", 105), "Phoebe": (25, "steady", 150),
+    "Glacia": (40, "plateau", 90), "Drake": (45, "plateau", 93),
+    "Wallace": (48, "late bloomer", 190), "Steven": (50, "late bloomer", 195),
 }
+# The Gym Leader duo: one entry fought as a double battle, league-ineligible.
+# Roster (Emerald source slots): the Solrock/Lunatone signature pair at offset 0
+# with their source battle content, then PLACEHOLDER Hoenn Psychic/Rock picks.
+DUOS = {"Tate & Liza": [("TRAINER_TATE_AND_LIZA_1", 3, "SPECIES_SOLROCK", True),
+                        ("TRAINER_TATE_AND_LIZA_1", 2, "SPECIES_LUNATONE", True),
+                        ("TRAINER_TATE_AND_LIZA_1", 0, "SPECIES_CLAYDOL", False),
+                        ("TRAINER_TATE_AND_LIZA_1", 1, "SPECIES_XATU", False),
+                        ("TRAINER_KATELYNN", 0, "SPECIES_GARDEVOIR", False),
+                        ("TRAINER_VALERIE_5", 2, "SPECIES_GRUMPIG", False)]}
 GROWTH_NOTE = {
     "steady": "steady (keeps a fixed fraction of the player's pace)",
     "early bloomer": "early bloomer (a rising star: fast early, then slows)",
     "late bloomer": "late bloomer (a strong leader: slow start, strong finish)",
     "plateau": "plateau (a veteran who reaches their peak early and stops)",
-    "rival": "rival (stays a lead ahead of world progress until their peak)",
+    "rival": "rival (starts at 0 and stays about 10 ahead of the player from 4 badges)",
 }
 
 
 def validate_growth(name, growth):
-    """Start and peak TR are non-negative integers, peak >= start; only a rival has a lead."""
-    start, archetype, peak, lead = growth
+    """Start and peak TR are non-negative integers with peak >= start."""
+    start, archetype, peak = growth
     if archetype not in ARCHETYPES:
         raise ValueError(f"{name}: unknown archetype {archetype!r}")
     for label, value in (("start TR", start), ("peak TR", peak)):
@@ -120,11 +133,6 @@ def validate_growth(name, growth):
             raise ValueError(f"{name}: {label} must be a non-negative integer")
     if peak < start:
         raise ValueError(f"{name}: peak TR must be at least start TR")
-    if archetype == "rival":
-        if not isinstance(lead, int) or isinstance(lead, bool) or lead < 0:
-            raise ValueError(f"{name}: a rival needs a non-negative integer lead")
-    elif lead is not None:
-        raise ValueError(f"{name}: only a rival has a lead")
 
 
 def command(args, **kwargs):
@@ -292,7 +300,7 @@ def generate():
     for name, region, role, family, trainer, early in ROSTER:
         growth = GROWTH[name]
         validate_growth(name, growth)
-        start, archetype, peak, lead = growth
+        start, archetype, peak = growth
         records = sources[family]
         reference_slots = party(records, trainer)
         note = "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams."
@@ -302,10 +310,23 @@ def generate():
             note += " FRLG first Champion Squirtle starter branch selected explicitly."
         if name in ["Koga", "Will", "Karen"]:
             note += " This stronger HNS party is comparison evidence; explorer levels follow TR, not these authored levels."
+        if name in DUOS:
+            note += " Emerald Mossdeep double battle; one shared entry for both leaders, league-ineligible (leagues are singles only)."
         if name == "Steven":
             note += " Emerald optional late battle (levels 75–78), not the Ruby/Sapphire Champion party. Explorer levels follow TR, not these authored levels."
         curated_roster = next((row for row in curated["rosters"] if row["identity"] == name), None)
-        if curated_roster:
+        if name in DUOS:
+            members = []
+            provenance = []
+            for owner, index, species, is_signature in DUOS[name]:
+                source = sources[family].get(owner)
+                if source is None or not 0 <= index < len(source["slots"]) or source["slots"][index]["species"] != species:
+                    raise ValueError(f"missing or stale duo source slot: {owner}:{index} ({species})")
+                members.append((source["slots"][index], is_signature, DEFAULT_OFFSET))
+                provenance.append(f"{source['source']}:{owner}[{index}]")
+            origin = ("Emerald source slots (roster slots 1-2 are the Solrock and Lunatone signature pair at offset 0;"
+                      " roster slots 3-6 are PLACEHOLDER Hoenn Psychic/Rock picks): " + "; ".join(provenance))
+        elif curated_roster:
             members = []
             provenance = []
             for entry in sorted(curated_roster["members"], key=lambda entry: entry["battleOrder"]):
@@ -328,6 +349,10 @@ def generate():
             members = [(slot, index == ace_index, slot["lvl"] - top) for index, slot in enumerate(reference_slots)]
             origin = f"{records[trainer]['source']}:{trainer} (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0)"
         roster, total, extras = build_roster(members, early, evolutions)
+        # A duo is fought as its source double battle; leagues are singles only.
+        double = records[trainer].get("battleType") == "TRAINER_BATTLE_TYPE_DOUBLES"
+        if double != (name in DUOS) or (role == "Gym Leader duo") != (name in DUOS):
+            raise ValueError(f"{name}: only a listed duo is a Gym Leader duo fought as a double battle")
         if name == "Blue":
             # One fixed six regardless of the player's starter: the source starter is replaced.
             roster[0] = {"species": "Eevee", "levelOffset": 0, "moves": "LEVEL_UP",
@@ -335,20 +360,25 @@ def generate():
         validate_roster(name, roster)
         if len(roster) < ROSTER_SIZE:
             gaps.append(f"{name} {len(roster)}/{ROSTER_SIZE}")
-        roster_source = (f"PLACEHOLDER roster flattened from the earlier prototype, derived from {origin}."
-                         " Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP"
+        signature = "Roster slots 1-2 keep" if name in DUOS else "Roster slot 1 keeps"
+        roster_source = ((f"PLACEHOLDER duo roster derived from {origin}." if name in DUOS
+                          else f"PLACEHOLDER roster flattened from the earlier prototype, derived from {origin}.")
+                         + f" {signature} the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP"
                          " (a label: level-up learnsets are not resolved)."
                          + (f" Handwritten early species {', '.join(extras)} fill the remaining roster slots at offset {DEFAULT_OFFSET}." if extras else "")
                          + (f" The flattened list had {total} Pokémon; only the first {ROSTER_SIZE} are kept." if total > ROSTER_SIZE else "")
-                         + (" Roster slot 1: starter replaced by Eevee for now (user), LEVEL_UP with no item." if name == "Blue" else ""))
+                         + (" Roster slot 1: starter replaced by Eevee for now (user), LEVEL_UP with no item." if name == "Blue" else "")
+                         + (" Fought as a double battle: both leaders send Pokémon from this one roster in order." if name in DUOS else ""))
         result.append({"id": slug(name), "name": name, "region": region, "role": role,
+                       "doubleBattle": double, "leagueEligible": not double,
                        "source": {"label": f"{family} local reference", "path": records[trainer]["source"], "trainerId": trainer, "note": note},
                        "referenceParty": [member(slot) for slot in reference_slots],
-                       "startTR": start, "archetype": archetype, "peakTR": peak, "lead": lead,
-                       "trSource": f"PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR {start}, {GROWTH_NOTE[archetype]}, peak TR {peak}" + (f", lead {lead}." if lead is not None else "."),
+                       "startTR": start, "archetype": archetype, "peakTR": peak,
+                       "trSource": f"PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR {start}, {GROWTH_NOTE[archetype]}, peak TR {peak}.",
                        "roster": roster, "rosterSource": roster_source})
-    if len(result) != 37 or len({row["id"] for row in result}) != 37:
-        raise ValueError("catalog must contain exactly 37 unique trainers")
+    # 37 characters plus the Tate & Liza duo.
+    if len(result) != CATALOG_SIZE or len({row["id"] for row in result}) != CATALOG_SIZE:
+        raise ValueError(f"catalog must contain exactly {CATALOG_SIZE} unique entries")
     return json.dumps(result, indent=2, ensure_ascii=False) + "\n", gaps
 
 
@@ -366,7 +396,7 @@ def main():
         else:
             OUTPUT.parent.mkdir(parents=True, exist_ok=True)
             OUTPUT.write_text(content)
-        print(f"37 experimental trainers: {'checked' if args.check else 'generated'} {OUTPUT.relative_to(ROOT)}")
+        print(f"{CATALOG_SIZE} experimental notable trainer entries: {'checked' if args.check else 'generated'} {OUTPUT.relative_to(ROOT)}")
         if gaps:
             # v0 requires six roster slots, but rosters are authored next: warn, don't fail.
             print(f"warning: {len(gaps)} placeholder rosters have fewer than {ROSTER_SIZE} Pokémon: {', '.join(gaps)}", file=sys.stderr)

@@ -53,7 +53,7 @@
       min: 1,
       max: 100,
     },
-    ...(["steady", "early bloomer", "late bloomer", "plateau"] as const).map((id) => ({
+    ...ARCHETYPES.map((id) => ({
       id,
       title: `${id[0]?.toUpperCase()}${id.slice(1)} growth`,
       by: "world progress",
@@ -63,8 +63,6 @@
       max: 100,
     })),
   ]
-  const growthLabel = (row: { startTR: number; peakTR: number; lead: number | null }): string =>
-    row.lead === null ? `${row.startTR} → ${row.peakTR}` : `lead ${row.lead} → ${row.peakTR}`
   const download = (): void => {
     const url = URL.createObjectURL(new Blob([lab.exportText()], { type: "application/json" }))
     const link = document.createElement("a")
@@ -85,8 +83,6 @@
     }
     input.value = ""
   }
-  /** The archetype chosen in the growth form; follows the stored value until changed. */
-  let growthArchetype = $derived(lab.settings.archetype)
   onMount(lab.load)
 </script>
 
@@ -176,11 +172,11 @@
   <div class="model-note">
     <span class="note-dot"></span><span
       >TR v0: each notable trainer grows with world progress from start TR to peak TR along their
-      archetype’s growth scaler; the rival stays a lead ahead until their peak. Team level and team
-      size are scalers of that trainer TR (anchor tables, linear between anchors, halves rounded up,
-      flat past the last anchor, the ceiling TR; TR itself is uncapped). The team is the first N
-      roster slots at team level + offset, and battle order is the team reversed, so roster slot 1
-      comes last. Moves, items, AI and win rates are not simulated.</span
+      archetype’s growth scaler, the same rule for every archetype. Team level and team size are
+      scalers of that trainer TR (anchor tables, linear between anchors, halves rounded up, flat
+      past the last anchor, the ceiling TR; TR itself is uncapped). The team is the first N roster
+      slots at team level + offset, and battle order is the team reversed, so roster slot 1 comes
+      last. Moves, items, AI and win rates are not simulated.</span
     >
   </div>
 
@@ -256,14 +252,16 @@
                     type="button"
                     aria-pressed={row.trainer.id === lab.selectedId}
                     onclick={() => lab.select(row.trainer.id)}
-                    ><strong>{row.trainer.name}</strong><span
-                      >{row.trainer.region} · {row.trainer.role}</span
-                    ></button
+                    ><strong
+                      >{row.trainer.name}{#if row.trainer.doubleBattle}<span
+                          class="prototype-chip double-chip">Double battle</span
+                        >{/if}</strong
+                    ><span>{row.trainer.region} · {row.trainer.role}</span></button
                   ></td
                 >
                 <td class="numeric current-tr" data-testid={`tr-${row.trainer.id}`}>{row.tr}</td>
                 <td class="numeric muted" data-testid={`growth-${row.trainer.id}`}
-                  >{growthLabel(row)}</td
+                  >{row.startTR} → {row.peakTR}</td
                 >
                 <td class="muted" data-testid={`archetype-${row.trainer.id}`}>{row.archetype}</td>
                 <td
@@ -297,7 +295,8 @@
           </div>{/if}
       </div>
       <div class="pool-footer">
-        {lab.rows.length} trainers shown <span>Singles only · Red and Tate & Liza excluded</span>
+        {lab.rows.length} trainers shown
+        <span>Red excluded · Tate & Liza fight doubles and skip leagues</span>
       </div>
     </section>
 
@@ -305,12 +304,21 @@
       <div class="selected-heading">
         <div>
           <span class="eyebrow">{lab.selected.trainer.region} · {lab.selected.trainer.role}</span>
-          <h2>{lab.selected.trainer.name}</h2>
+          <h2>
+            {lab.selected.trainer.name}{#if lab.selected.trainer.doubleBattle}<span
+                class="prototype-chip double-chip"
+                data-testid="double-battle">Double battle</span
+              >{/if}
+          </h2>
         </div>
         <div class="tr-badge">
           <span>TR</span><strong data-testid="selected-tr">{lab.selected.tr}</strong>
         </div>
       </div>
+      {#if lab.selected.trainer.doubleBattle}<p class="hint" data-testid="double-battle-note">
+          A double battle: both leaders send Pokémon from the shared roster in order. Leagues are
+          singles only, so this entry is not in the league pool.
+        </p>{/if}
       <p class="hint provenance">{lab.selected.trainer.trSource}</p>
       {#key lab.settings}
         <form
@@ -333,7 +341,7 @@
               value={lab.settings.startTR}
             /></label
           ><label
-            >Archetype<select aria-label="Archetype" name="archetype" bind:value={growthArchetype}
+            >Archetype<select aria-label="Archetype" name="archetype" value={lab.settings.archetype}
               >{#each ARCHETYPES as archetype}<option value={archetype}>{archetype}</option
                 >{/each}</select
             ></label
@@ -347,24 +355,12 @@
               required
               value={lab.settings.peakTR}
             /></label
-          >{#if growthArchetype === "rival"}<label
-              >Lead<input
-                aria-label="Lead"
-                name="lead"
-                type="number"
-                min="0"
-                step="1"
-                required
-                value={lab.settings.lead ?? 10}
-              /></label
-            >{/if}
+          >
           <button type="submit">Apply growth</button>
         </form>
       {/key}
       <p class="hint">
-        {growthArchetype === "rival"
-          ? "Rival: TR = min(peak TR, world progress + lead). Start TR is not read."
-          : "TR = start TR + (peak TR − start TR) × the archetype’s growth %, halves rounded up."}
+        TR = start TR + (peak TR − start TR) × the archetype’s growth %, halves rounded up.
       </p>
       <table class="growth-table" data-testid="growth-table">
         <thead
@@ -550,8 +546,7 @@
         <summary>Edit settings as JSON</summary>
         <p class="hint">
           Edit the growth and every roster slot setting, including ability and nature. Moves are
-          <code>"LEVEL_UP"</code> or a list of one to four names; <code>lead</code> is
-          <code>null</code> unless the archetype is <code>"rival"</code>.
+          <code>"LEVEL_UP"</code> or a list of one to four names.
         </p>
         <label class="visually-hidden" for="team-editor">Trainer settings JSON</label><textarea
           id="team-editor"
@@ -570,7 +565,8 @@
   <section class="league" aria-label="Gym ladder">
     <div class="panel-title">
       <h2>
-        Gym ladder <span>{lab.ladder.length} Gym Leaders at world progress {lab.worldProgress}</span
+        Gym ladder <span
+          >{lab.ladder.length} Gym Leader entries at world progress {lab.worldProgress}</span
         >
       </h2>
       <span class="hint" data-testid="ladder-counts"
@@ -586,8 +582,9 @@
     <ol class="ladder" data-testid="gym-ladder">
       {#each lab.ladder as row (row.trainer.id)}
         <li class="ladder-row {row.mark}" data-testid={`ladder-${row.trainer.id}`}>
-          <span>{row.trainer.name}</span><span class="numeric">TR {row.tr}</span><span
-            class="gap-chip {row.mark === 'near' ? 'even' : row.mark}"
+          <span>{row.trainer.name}{row.trainer.doubleBattle ? " · double battle" : ""}</span><span
+            class="numeric">TR {row.tr}</span
+          ><span class="gap-chip {row.mark === 'near' ? 'even' : row.mark}"
             >{row.mark} {signed(row.gap)}</span
           >
         </li>
@@ -607,9 +604,10 @@
       >
     </div>
     <p class="hint league-note">
-      Entering a league computes each notable trainer’s TR at the current world progress and takes
-      the top five. Battle order runs by ascending TR, strongest last. Ties keep catalog order. Each
-      opponent uses their own TR, team and levels.
+      Entering a league computes each league-eligible notable trainer’s TR at the current world
+      progress and takes the top five (Tate & Liza fight doubles, so they are not in the pool).
+      Battle order runs by ascending TR, strongest last. Ties keep catalog order. Each opponent uses
+      their own TR, team and levels.
     </p>
     <ol class="league-grid" data-testid="league-lineup">
       {#each lab.league as row, index (row.trainer.id)}
@@ -634,12 +632,13 @@
       Each scaler maps TR to a value through anchors: linear between them, halves rounded up, and
       flat past the last anchor. That anchor’s TR is the ceiling TR: a higher TR is never clamped
       but stops adding level or size. Anchors start at TR 0, rise in TR and never decrease in value.
-      Team level and team size read each notable trainer’s own TR. Team level defaults to the level
-      cap anchors (Lv 100 at TR 160); team size uses paired anchors to make a step table (0–15 → 2,
-      16–43 → 3, 44–70 → 4, 71–95 → 5, 96+ → 6). The wild level curve and regular trainer level
-      curve are world scaling: they read the player’s TR and only feed the readout above. The four
-      archetype growth scalers read world progress and give the growth % (0% at world progress 0)
-      from start TR toward peak TR; the rival has no scaler.
+      Team level and team size read each notable trainer’s own TR. Team level has its own low end
+      (Lv 5 at TR 0, Lv 14 at TR 20) and matches the level cap anchors from TR 40 (Lv 100 at TR
+      160); team size uses paired anchors to make a step table (0–10 → 1, 11–28 → 2, 29–43 → 3,
+      44–70 → 4, 71–95 → 5, 96+ → 6). The wild level curve and regular trainer level curve are world
+      scaling: they read the player’s TR and only feed the readout above. The five archetype growth
+      scalers, the rival included, read world progress and give the growth % (0% at world progress
+      0) from start TR toward peak TR.
     </p>
     {#key lab.anchors}
       <form
@@ -1454,6 +1453,15 @@
   .incomplete-chip {
     color: #ffb8bc;
     border-color: #a15e64;
+  }
+  .double-chip {
+    color: #9fd0ff;
+    border-color: #3e6485;
+  }
+  .trainer-select .double-chip {
+    display: inline;
+    margin-top: 0;
+    color: #9fd0ff;
   }
   .roster-form {
     margin: 10px 0 0;

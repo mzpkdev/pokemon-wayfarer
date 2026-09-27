@@ -125,8 +125,9 @@ Trainer records follow these rules:
   separate [Gym Leader scaling](gym-leader-scaling.md), which owns their current
   six-slot rosters and player-TR selection. Proposed singles Gym Leaders instead
   use their own TR, grown from world progress, and six-slot roster; source
-  Emerald parties are provenance, not mandatory opening teams. Tate and Liza
-  retain their current double-Gym policy and badge outside the singles pool.
+  Emerald parties are provenance, not mandatory opening teams. Proposed Tate
+  and Liza are one notable duo that keeps its double battle and badge and stays
+  out of league lineups.
   Today's Hoenn League retains its Tier 3 source rosters and applies the
   separate [League scaling specification](league-scaling.md) to their battle
   levels. Species, party sizes, moves, items, abilities, and AI remain authored.

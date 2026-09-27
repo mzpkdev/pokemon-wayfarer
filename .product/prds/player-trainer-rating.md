@@ -88,10 +88,9 @@ changes yours.
   bloomer, plateau, or rival.
 - **Start TR / peak TR:** a notable trainer's TR at the very start of your
   journey, and the most they can ever reach.
-- **Lead:** for a rival only, how far ahead of your TR they stay.
 - **Never decreases:** once earned, TR is never lowered.
-- **Notable trainer:** a Gym Leader, Elite Four member, Champion, or Blue (37
-  people in v0), each with their own TR.
+- **Notable trainer:** a Gym Leader, Elite Four member, Champion, or Blue, each
+  with their own TR: 38 entries in v0 (37 people plus the Tate & Liza duo).
 - **Regular trainer:** every other trainer you battle.
 - **Gym member:** a regular trainer who works in a Gym.
 - **Level cap:** the level your Pokémon can reach before they earn less

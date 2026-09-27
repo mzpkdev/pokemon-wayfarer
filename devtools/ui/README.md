@@ -47,8 +47,8 @@ browser test.
 
 ## Trainer balance explorer
 
-Open `#trainer-balance` to author the 37 notable trainers under the TR v0
-model. The module bundles its trainer catalog, so it works without generating
+Open `#trainer-balance` to author the 38 notable trainer entries (37
+characters plus the Tate & Liza duo) under the TR v0 model. The module bundles its trainer catalog, so it works without generating
 the map catalogs:
 
 ```sh
@@ -62,24 +62,27 @@ trainer's team. The player TR is never computed from a notable trainer's TR.
 
 - **Growth**: each trainer has a **start TR** (their TR at world progress 0),
   an **archetype** and a **peak TR** (the most they can ever reach). For
-  steady, early bloomer, late bloomer and plateau, trainer TR = start TR +
-  roundHalfUp((peak TR − start TR) × growth % / 100), where the growth % is
-  that archetype's scaler over world progress (read exactly, flat past the
-  last anchor). Defaults at world progress 0 / 40 / 80 / 120 / 160: steady
-  0 / 25 / 50 / 75 / 100, early bloomer 0 / 50 / 80 / 95 / 100, late bloomer
-  0 / 10 / 25 / 55 / 100, plateau 0 / 60 / 100 / 100 / 100. The **rival**
-  (Blue only) instead has a **lead**: trainer TR = min(peak TR, world
-  progress + lead). Peak TR must be at least start TR, and only the rival has
-  a lead.
+  every archetype, trainer TR = start TR + roundHalfUp((peak TR − start TR) ×
+  growth % / 100), where the growth % is that archetype's scaler over world
+  progress (read exactly, flat past the last anchor). Defaults at world
+  progress 0 / 40 / 80 / 120 / 160: steady 0 / 25 / 50 / 75 / 100, early
+  bloomer 0 / 50 / 80 / 95 / 100, late bloomer 0 / 10 / 25 / 55 / 100, plateau
+  0 / 60 / 100 / 100 / 100. The **rival** is an ordinary archetype with an
+  extra anchor: 0 / 20 / 40 / 80 / 120 / 160 → 0 / 15 / 29 / 53 / 76 / 100%.
+  Blue (rival, start TR 0, peak TR 170) is TR 0 at Pallet (one Eevee at
+  Lv 5), TR 26 at world progress 20 (two Pokémon, team level 18), TR 49 at
+  40, then 9–10 ahead of the player until he reaches 170. Peak TR must be at
+  least start TR.
 
 - **Scalers** turn TR into values. Each is an editable table of anchors
   (TR, value), linear between anchors with halves rounded up, and flat past
   the last anchor, whose TR is the scaler's ceiling TR. TR itself is never
   clamped.
-- **Team level** uses the level cap anchors: (0, 15) (40, 28) (80, 50)
-  (120, 75) (160, 100). TR 200 still gives Lv 100.
-- **Team size** is a step table built from paired anchors: TR 0–15 → 2,
-  16–43 → 3, 44–70 → 4, 71–95 → 5, 96+ → 6.
+- **Team level** has its own low end, then the level cap anchors from TR 40:
+  (0, 5) (20, 14) (40, 28) (80, 50) (120, 75) (160, 100). TR 200 still gives
+  Lv 100. The level cap itself is unchanged.
+- **Team size** is a step table built from paired anchors: TR 0–10 → 1,
+  11–28 → 2, 29–43 → 3, 44–70 → 4, 71–95 → 5, 96+ → 6.
 - **Roster**: one ordered list of six roster slots per trainer. Each roster
   slot has a species, a level offset (-6 to 0), moves (`LEVEL_UP` or one to
   four authored moves), a held item, and an optional ability and nature.
@@ -95,40 +98,51 @@ scaling: the wild level curve (0, 6) (40, 24) (80, 40) (120, 58) (160, 78)
 and the regular trainer level curve (0, 9) (40, 27) (80, 44) (120, 62)
 (160, 82), each with its gap to the level cap, and world progress (equal to
 the player TR). The trainer list shows each trainer's TR at the current world
-progress, their start TR → peak TR (lead → peak TR for the rival), archetype,
+progress, their start TR → peak TR, archetype,
 team level, team size, the gap between team level and the level cap, and how
-many roster slots are filled. The trainer panel edits start TR, archetype,
-peak TR and lead, shows the trainer's TR and team level at world progress
+many roster slots are filled. The trainer panel edits start TR, archetype
+and peak TR, shows the trainer's TR and team level at world progress
 0 / 40 / 80 / 120 / 160, the team at the current TR in battle order, and a
 roster editor: reorder roster slots, edit species, offset, moves and item, and
 add or remove roster slots. **Edit settings as JSON** covers ability and
 nature too.
 
-**Gym ladder** lists the 23 Gym Leaders at the current world progress,
-sorted by TR, each marked below, near (within 10 of the player TR) or above.
+**Tate & Liza** are one entry (role Gym Leader duo, Hoenn) with one start TR,
+archetype, peak TR and six-slot roster (Solrock and Lunatone as the signature
+pair, both at offset 0). They are fought as a double battle: both leaders send
+Pokémon from the shared roster in order, with team size from the same table.
+The explorer marks them as a double battle. They follow every notable trainer
+rule but are league-ineligible (`leagueEligible: false`; leagues are singles
+only).
+
+**Gym ladder** lists the 24 Gym Leader entries (Tate & Liza included) at the
+current world progress, sorted by TR, each marked below, near (within 10 of
+the player TR) or above.
 
 **League lineup** previews the top five trainers by TR at the current world
-progress from one global pool of all 37 (the catalog has no Red or Tate &
-Liza), as entering a league would compute it. Ties keep catalog order. The
+progress from one global pool of the 37 league-eligible entries (the catalog
+has no Red, and Tate & Liza are ineligible), as entering a league would
+compute it. Ties keep catalog order. The
 five are shown as matches 1–5, ascending TR with the strongest last, each with
 their own team and levels. v0 uses one pool, so Indigo, Sevii Masters and Hoenn
 all use the same lineup. With the catalog defaults, at world progress 80
 (8 badges, level cap Lv 50) the lineup is Giovanni (TR 93), Bruno, Will,
 Norman (TR 94) and Agatha (TR 95), team level 58–59. At 120 (level cap Lv 75)
-it is Blue (TR 130), Norman, Giovanni, Lance and Jasmine (TR 131–132), team
+it is Steven (TR 130), Norman, Giovanni, Lance and Jasmine (TR 131–132), team
 level 81–83. At 160 it is Clair, Juan, Wallace, Steven and Lance (TR
 185–200), team level 100: the team level scaler stops at Lv 100, the same as
 the level cap there, so the lineup can match the cap but not exceed it.
 
-All eight scaler tables (team level, team size, wild level, regular trainer
-level, and the steady, early bloomer, late bloomer and plateau growth
+All nine scaler tables (team level, team size, wild level, regular trainer
+level, and the steady, early bloomer, late bloomer, plateau and rival growth
 scalers) are editable under **Scalers & experiment settings**. Anchors start at 0,
 rise and never decrease in value; growth scalers run 0–100% and start at 0%.
 Experiments persist in browser storage. JSON export and import (format
-version 7) round-trip the experiment (growth, rosters and the eight
-scalers), the player badges and the selected trainer. Files from versions 1–6
-are rejected with a message (version 6 gave each notable trainer one fixed TR;
-version 5 used the retired 0–80 player TR scale).
+version 8) round-trip the experiment (growth, rosters and the nine
+scalers), the player badges and the selected trainer. Files from versions 1–7
+are rejected with a message (version 7 gave the rival a fixed lead, copied the
+level cap into team level and had no Tate & Liza; version 6 gave each notable
+trainer one fixed TR; version 5 used the retired 0–80 player TR scale).
 There is no migration. Reset restores the catalog defaults. **Restore this
 trainer’s defaults** updates only the selected trainer.
 
@@ -143,11 +157,14 @@ session to replace. The growth defaults live in the catalog script's `GROWTH`
 table, chosen by lore (veterans such as Bruno, Agatha, Lorelei, Pryce and
 Chuck plateau; rising stars such as Whitney and Falkner bloom early; Clair,
 Winona, Juan and Sabrina bloom late; most others are steady; Champions and
-Lance have the highest peaks) and tuned to the v0 balance targets, which
-`engine.test.ts` checks: the lineup at TR 85–95 at world progress 80, 2–8
-levels above the level cap at 120, at least three Gym Leaders below, near
-and above the player at every checkpoint (openers such as Brock at TR 1–2 at
-world progress 0), and Blue 10 ahead. Rosters flatten
+Lance have the highest peaks). The region openers start high enough to stay
+classic-like on the team level low end: Brock and Roxanne at start TR 20 (two
+Pokémon at Lv 14 and 12), Falkner at 14 (Lv 11 and 9). The defaults are tuned
+to the v0 balance targets, which `engine.test.ts` checks: the lineup at TR
+85–95 at world progress 80, 2–8 levels above the level cap at 120, Lv 100 at
+160, at least three Gym Leaders below, near and above the player at every
+checkpoint (at world progress 0 the openers are two Pokémon at or under the
+level cap), and Blue about 10 ahead from world progress 40. Rosters flatten
 the earlier ace/filler prototype: its ace (now the signature Pokémon) first,
 then the other members in order, each at the end of its species line and cut to six. That prototype came
 from each trainer's competitive party (the curated six in
@@ -158,13 +175,16 @@ them. Roster slot 1 keeps its source moves, item, ability and nature; the rest
 use `LEVEL_UP` as a label (learnsets are not resolved). Eleven rosters have
 only five roster slots (Lorelei, Bruno, Agatha, Koga, Lance, Will, Karen, Sidney, Phoebe,
 Glacia, Drake). The explorer flags them as incomplete, and the catalog script
-prints them as a warning, not a failure.
+prints them as a warning, not a failure. Tate & Liza's roster is Solrock, Lunatone,
+Claydol and Xatu from their Emerald party, then placeholder Hoenn Psychic
+picks Gardevoir and Grumpig from other Emerald parties.
 
 The catalog uses local FRLG, Emerald and HNS source records, including their
 provenance and explicit variant notes. HNS is not substituted with HGSS;
 Steven's local Emerald postgame party is labeled as such. The catalog script
-validates growth (start and peak TR, archetype, the rival's lead), roster length (at most six), offsets, moves and roster slot 1
-at offset 0. Regenerate or verify the checked-in catalog from the repository root
+validates growth (start and peak TR, archetype), roster length (at most six), offsets, moves and roster slot 1
+at offset 0, and that the catalog has exactly 38 entries with only the Tate &
+Liza duo fought as a double battle. Regenerate or verify the checked-in catalog from the repository root
 (requires Python 3, `cc`, `cpp`):
 
 ```sh

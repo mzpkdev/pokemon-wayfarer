@@ -41,19 +41,23 @@ Notable trainers grow as your journey goes on, each in their own way:
   late in the game.
 - **The veteran** reaches their best early and stops there; eventually you
   overtake them.
-- **Blue** is always a step ahead of you, until he reaches his best.
+- **Blue** starts level with you and pulls a step ahead over your first
+  badges, then stays there until he reaches his best.
 
-They only move when you do. A big step, like one of your first badges, moves
+Everyone grows by the same rule: only the shape, the starting strength, and
+the best differ. They only move when you do. A big step, like one of your first badges, moves
 them a lot; a small one barely moves them; wandering around moves nobody, and
 saving and reloading changes nothing. Every trainer has a best they never go
 past. Their growth is the same in every save.
 
 ### Who is notable
 
-In this first version the notable trainers are 37 people: the 23 singles
-Gym Leaders, the Kanto, Johto, and Hoenn Elite Four, Lance, Wallace, Steven,
-and Blue. Everyone else, including Red and Tate and Liza, keeps their current
-rules.
+In this first version there are 38 notable trainers: 37 people (the 23
+singles Gym Leaders, the Kanto, Johto, and Hoenn Elite Four, Lance, Wallace,
+Steven, and Blue) plus Tate and Liza as one duo. Tate and Liza share one
+strength and one list of six Pokémon, grow like everyone else, and still fight
+you together in their double battle. Leagues are singles only, so they never
+appear in one. Everyone else, including Red, keeps their current rules.
 
 ### No ceiling
 
@@ -69,9 +73,11 @@ playtesting.
 
 ### Bigger and stronger teams at higher TR
 
-A higher TR means both higher levels and a bigger team, on the same curve as
-your level cap. A low-rated trainer brings two Pokémon; a team grows by one at
-roughly levels 20, 30, 45, and 60; a trainer rated like a player with all 24
+A higher TR means both higher levels and a bigger team. Early fights are fair:
+the lowest-rated trainers bring a single Pokémon, so Blue's first fight is one
+on one at your level (level 5), and he pulls ahead over your first badges.
+For trainers rated like a player with four badges or more, levels follow the
+same curve as your level cap, and a trainer rated like a player with all 24
 badges brings a full six at level 100. When you have eight badges, the
 strongest trainers are meant to sit a little above you, so you can win your
 first league; later leagues stay a real fight a little above your level cap,
@@ -112,13 +118,13 @@ after the battle. Until adoption, the ROM keeps today's behavior: the earlier
 player-TR Gym scaler exists in code but is disabled by default, and Giovanni's
 Wayfarer finale has its own path.
 
-Wayfarer has 24 badge encounters. This design covers the 23 singles badge
-opponents: Brock, Misty, Lt. Surge, Erika, Janine, Sabrina, Blaine, Giovanni
+Wayfarer has 24 badge encounters, and this design covers all of them: Brock, Misty, Lt. Surge, Erika, Janine, Sabrina, Blaine, Giovanni
 (his Viridian finale); Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce,
-Clair; Roxanne, Brawly, Wattson, Flannery, Norman, Winona, and Juan.
+Clair; Roxanne, Brawly, Wattson, Flannery, Norman, Winona, Tate and Liza, and
+Juan.
 
-Tate and Liza's double battle keeps its existing policy and badge; it is not
-converted to singles. Blue has no badge encounter in Wayfarer.
+Tate and Liza stay a double battle, with both of them sending out Pokémon from
+their shared list in order. Blue has no badge encounter in Wayfarer.
 
 Each leader's hand-written team supplies exact species, moves, items, and
 abilities, which stay attached to the right Pokémon when a team is reordered.
@@ -131,7 +137,6 @@ path; other randomizer and challenge options keep their precedence.
 - Your own TR, level cap, experience, obedience, wild and static encounters,
   shops, regular trainers, and Gym members follow your TR under their own
   rules ([Player Trainer Rating](player-trainer-rating.md)).
-- Tate and Liza keep their existing double Gym battle.
 - The same TR decides every battle with a notable trainer; how each
   battle is built stays with the
   [Gym Leader scaling specification](../specs/gym-leader-scaling.md).
@@ -148,7 +153,7 @@ belong to playtesting.
 
 ## Later
 
-- More notable trainers, such as Red or Tate and Liza.
+- More notable trainers, such as Red.
 - A meaning for the "next Gym's highest or lowest level" cap options in an
   open world.
 - Growth shapes that differ from save to save, and other per-save variety.

@@ -26,8 +26,9 @@ which remain the record of Today.
 rooms, and ceremonies. Each holds a five-match singles lineup.
 
 **Pool.** One global pool serves all three leagues: every notable singles
-trainer. Red (separate mastery encounter) and Tate & Liza (double battle) are
-excluded. Region, title, and home league play no part.
+trainer. Tate & Liza are notable but fight only as a double battle, so they
+are left out; Red (separate mastery encounter) is not notable. Region, title,
+and home league play no part.
 
 **Lineup.** When the player enters a league, each pool trainer's current TR
 is worked out, and the lineup is the five with the highest. Ties fall in

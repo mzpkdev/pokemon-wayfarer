@@ -4,6 +4,7 @@ import catalogData from "./catalog.json"
 import {
   DEFAULT_ARCHETYPE_GROWTH,
   DEFAULT_REGULAR_TRAINER_LEVEL,
+  DEFAULT_TEAM_LEVEL,
   DEFAULT_TEAM_SIZE,
   DEFAULT_WILD_LEVEL,
   LEVEL_CAP_ANCHORS,
@@ -44,18 +45,19 @@ const trainer = (
   id: string,
   tr: number,
   species = six,
-  growth: { archetype?: Archetype; peakTR?: number; lead?: number | null } = {},
+  growth: { archetype?: Archetype; peakTR?: number } = {},
 ): TrainerRecord => ({
   id,
   name: id,
   region: "Kanto",
   role: "Gym Leader",
+  doubleBattle: false,
+  leagueEligible: true,
   source: { label: "Fixture", path: "fixture", trainerId: "TEST", note: "Test data" },
   referenceParty: [],
   startTR: tr,
   archetype: growth.archetype ?? "steady",
   peakTR: growth.peakTR ?? tr,
-  lead: growth.lead ?? null,
   trSource: "Fixture",
   roster: species.map((name, index) => slot(name, index === 0 ? 0 : -2)),
   rosterSource: "Fixture",
@@ -109,16 +111,30 @@ describe("scalers", () => {
     ).toBe(85)
   })
 
-  it("uses the level cap anchors for team level", () => {
+  it("gives team level its own low end and the level cap anchors from TR 40", () => {
     const experiment = experimentWith([trainer("fixture", 0)])
-    for (let tr = 0; tr <= 200; tr += 1)
+    expect(DEFAULT_TEAM_LEVEL).toEqual([
+      [0, 5],
+      [20, 14],
+      [40, 28],
+      [80, 50],
+      [120, 75],
+      [160, 100],
+    ])
+    expect([0, 10, 20, 26, 30].map((tr) => teamLevelFor(experiment, tr))).toEqual([
+      5, 10, 14, 18, 21,
+    ])
+    for (let tr = 40; tr <= 200; tr += 1)
       expect(teamLevelFor(experiment, tr)).toBe(scale(LEVEL_CAP_ANCHORS, tr))
+    // The level cap itself is unchanged.
+    expect(scale(LEVEL_CAP_ANCHORS, 0)).toBe(15)
   })
 
-  it("steps team size: 0–15 -> 2, 16–43 -> 3, 44–70 -> 4, 71–95 -> 5, 96+ -> 6", () => {
+  it("steps team size: 0–10 -> 1, 11–28 -> 2, 29–43 -> 3, 44–70 -> 4, 71–95 -> 5, 96+ -> 6", () => {
     const sizes = (trs: number[]) => trs.map((tr) => scale(DEFAULT_TEAM_SIZE, tr))
-    expect(sizes([0, 8, 15])).toEqual([2, 2, 2])
-    expect(sizes([16, 30, 43])).toEqual([3, 3, 3])
+    expect(sizes([0, 5, 10])).toEqual([1, 1, 1])
+    expect(sizes([11, 20, 28])).toEqual([2, 2, 2])
+    expect(sizes([29, 35, 43])).toEqual([3, 3, 3])
     expect(sizes([44, 70])).toEqual([4, 4])
     expect(sizes([71, 95])).toEqual([5, 5])
     expect(sizes([96, 160, 500])).toEqual([6, 6, 6])
@@ -150,15 +166,24 @@ describe("teams", () => {
     expect(buildTeam(roster, 100, 3).team.map((member) => member.level)).toEqual([100, 94, 97])
   })
 
-  it("resolves a trainer from their own TR: TR 0 is two members, TR 160 is six at Lv 100", () => {
+  it("resolves a trainer from their own TR: TR 0 is one member, TR 160 is six at Lv 100", () => {
     const low = trainer("low", 0)
+    const mid = trainer("mid", 20)
     const high = trainer("high", 160)
-    const experiment = experimentWith([low, high])
+    const experiment = experimentWith([low, mid, high])
     const early = resolveTrainer(low, experiment, 0)
-    expect([early.teamLevel, early.size]).toEqual([15, 2])
+    expect([early.teamLevel, early.size]).toEqual([5, 1])
     expect(early.battleOrder.map((member) => [member.species, member.level])).toEqual([
-      ["Golem", 13],
-      ["Steelix", 15],
+      ["Steelix", 5],
+    ])
+    expect(
+      resolveTrainer(mid, experiment, 0).battleOrder.map((member) => [
+        member.species,
+        member.level,
+      ]),
+    ).toEqual([
+      ["Golem", 12],
+      ["Steelix", 14],
     ])
     const late = resolveTrainer(high, experiment, 0)
     expect([late.teamLevel, late.size]).toEqual([100, 6])
@@ -193,7 +218,7 @@ describe("teams", () => {
     const brock = catalog.find((record) => record.id === "brock")!
     const resolved = resolveTrainer(brock, defaults, world)
     expect(resolved).toEqual(resolveTrainer(brock, defaults, playerRating({ badges: 8 })))
-    expect(resolved.tr).toBe(49)
+    expect(resolved.tr).toBe(58)
     // Resolution takes a number, so a party or level cap cannot be passed in.
     expect(resolveTrainer.length).toBe(3)
   })
@@ -261,10 +286,8 @@ describe("roster validation", () => {
 describe("archetype growth", () => {
   const growth = DEFAULT_ARCHETYPE_GROWTH
   const fixtureExperiment = createExperiment([trainer("fixture", 0)])
-  const trAt =
-    (archetype: Archetype, start: number, peak: number, lead: number | null = null) =>
-    (world: number) =>
-      trainerRating(fixtureExperiment, { startTR: start, archetype, peakTR: peak, lead }, world)
+  const trAt = (archetype: Archetype, start: number, peak: number) => (world: number) =>
+    trainerRating(fixtureExperiment, { startTR: start, archetype, peakTR: peak }, world)
 
   it.each([
     ["steady", [0, 25, 50, 75, 100]],
@@ -278,6 +301,12 @@ describe("archetype growth", () => {
       expect(growth[name].map(([world]) => world)).toEqual([...WORLD_PROGRESS_CHECKPOINTS])
     },
   )
+
+  it("reads the rival as an ordinary growth scaler: 0/20/40/80/120/160 -> 0/15/29/53/76/100%", () => {
+    expect([0, 20, 40, 80, 120, 160].map(trAt("rival", 0, 100))).toEqual([0, 15, 29, 53, 76, 100])
+    // The same start + (peak - start) x growth% rule as every archetype, so a start TR counts.
+    expect(trAt("rival", 20, 120)(80)).toBe(73)
+  })
 
   it("interpolates midpoints exactly and rounds halves up once", () => {
     // Steady 0 -> 100 at world progress 20 is 12.5%: 12.5 rounds up to 13.
@@ -294,22 +323,11 @@ describe("archetype growth", () => {
   })
 
   it("stays flat past world progress 160 and keeps start at 0", () => {
-    for (const name of ["steady", "early bloomer", "late bloomer", "plateau"] as const) {
+    for (const name of ["steady", "early bloomer", "late bloomer", "plateau", "rival"] as const) {
       const read = trAt(name, 12, 172)
       expect(read(0)).toBe(12)
       expect([read(160), read(200), read(1_000_000)]).toEqual([172, 172, 172])
     }
-  })
-
-  it("keeps the rival a lead ahead until the peak, then holds the peak", () => {
-    const blue = trAt("rival", 10, 180, 10)
-    expect([0, 1, 40, 80, 120, 160, 169, 170, 171, 400].map(blue)).toEqual([
-      10, 11, 50, 90, 130, 170, 179, 180, 180, 180,
-    ])
-    const record = catalog.find((entry) => entry.id === "blue")!
-    for (let world = 0; world <= 170; world += 1)
-      expect(resolveTrainer(record, defaults, world).tr - world).toBe(10)
-    expect(() => trAt("rival", 10, 180, null)(0)).toThrow("A rival needs a lead")
   })
 
   it("never lowers a trainer TR as world progress rises", () => {
@@ -362,18 +380,26 @@ describe("placeholder balance targets", () => {
   })
 
   it.each([...WORLD_PROGRESS_CHECKPOINTS])(
-    "spreads the 23 Gym Leaders below, near and above the player at world progress %i",
+    "spreads the 24 Gym Leader entries below, near and above the player at world progress %i",
     (world) => {
       const ladder = gymLadder(catalog, defaults, world)
-      expect(ladder).toHaveLength(23)
+      expect(ladder).toHaveLength(24)
+      expect(ladder.map((row) => row.trainer.id)).toContain("tate-liza")
       const count = (mark: string) => ladder.filter((row) => row.mark === mark).length
       expect(count("near")).toBeGreaterThanOrEqual(3)
       expect(count("above")).toBeGreaterThanOrEqual(3)
-      // No TR is below 0, so at world progress 0 the openers are the accessible leaders.
+      // No TR is below 0, so at world progress 0 the openers are the accessible leaders:
+      // two Pokémon at or under the level cap.
       if (world === 0)
-        expect(ladder.filter((row) => row.tr <= 5).map((row) => row.trainer.name)).toEqual(
-          expect.arrayContaining(["Brock", "Falkner", "Roxanne"]),
-        )
+        for (const id of ["brock", "falkner", "roxanne"]) {
+          const opener = resolveTrainer(
+            catalog.find((record) => record.id === id)!,
+            defaults,
+            0,
+          )
+          expect(opener.size).toBe(2)
+          expect(opener.teamLevel).toBeLessThanOrEqual(cap(0))
+        }
       else expect(count("below")).toBeGreaterThanOrEqual(3)
       for (const row of ladder) expect(Math.abs(row.gap) <= NEAR_BAND).toBe(row.mark === "near")
     },
@@ -390,11 +416,38 @@ describe("placeholder balance targets", () => {
     }
   })
 
-  it("keeps Blue 10 ahead of the player at every checkpoint", () => {
-    const blue = at(0).find((row) => row.trainer.id === "blue")!
-    expect(blue.lead).toBe(10)
-    for (const world of WORLD_PROGRESS_CHECKPOINTS)
-      expect(resolveTrainer(blue.trainer, defaults, world).tr).toBe(world + 10)
+  it("keeps the early Gym openers classic-like: Brock at start TR 20 is Lv 14 and Lv 12", () => {
+    const brock = at(0).find((row) => row.trainer.id === "brock")!
+    expect([brock.tr, brock.teamLevel, brock.size]).toEqual([20, 14, 2])
+    expect(brock.team.map((member) => member.level)).toEqual([14, 12])
+    const roxanne = at(0).find((row) => row.trainer.id === "roxanne")!
+    expect(roxanne.battleOrder.map((member) => [member.species, member.level])).toEqual([
+      ["Geodude", 12],
+      ["Nosepass", 14],
+    ])
+  })
+
+  it("starts Blue at one Eevee at Lv 5 and grows him with the rival scaler", () => {
+    const blue = (world: number) => at(world).find((row) => row.trainer.id === "blue")!
+    const pallet = blue(0)
+    expect([pallet.tr, pallet.size, pallet.teamLevel]).toEqual([0, 1, 5])
+    expect(pallet.battleOrder.map((member) => [member.species, member.level])).toEqual([
+      ["Eevee", 5],
+    ])
+    // Cerulean, about world progress 20: TR about 25 (25.5 rounds up), two Pokémon near Lv 18.
+    const cerulean = blue(20)
+    expect([cerulean.tr, cerulean.size, cerulean.teamLevel]).toEqual([26, 2, 18])
+    expect(blue(40).tr).toBe(49)
+  })
+
+  it("keeps Blue about 10 ahead of the player from world progress 40 until his peak", () => {
+    const record = catalog.find((entry) => entry.id === "blue")!
+    for (let world = 40; world <= 160; world += 1) {
+      const gap = resolveTrainer(record, defaults, world).tr - world
+      expect(gap).toBeGreaterThanOrEqual(9)
+      expect(gap).toBeLessThanOrEqual(10)
+    }
+    expect(resolveTrainer(record, defaults, 400).tr).toBe(170)
   })
 })
 
@@ -412,7 +465,7 @@ describe("league lineup", () => {
 
   it("computes the lineup at the world progress it is entered at", () => {
     expect(lineupAt(120)).toEqual([
-      ["Blue", 130, 81],
+      ["Steven", 130, 81],
       ["Norman", 131, 82],
       ["Giovanni", 132, 83],
       ["Lance", 132, 83],
@@ -427,6 +480,17 @@ describe("league lineup", () => {
     ])
   })
 
+  it("leaves league-ineligible entries out of the pool, however strong", () => {
+    const duo = { ...trainer("duo", 150), leagueEligible: false, doubleBattle: true }
+    const records = [duo, ...["a", "b", "c", "d", "e"].map((id) => trainer(id, 40))]
+    const lineup = leagueLineup(records, experimentWith(records), 0)
+    expect(lineup.map((row) => row.trainer.id)).toEqual(["a", "b", "c", "d", "e"])
+    for (const world of WORLD_PROGRESS_CHECKPOINTS)
+      expect(leagueLineup(catalog, defaults, world).map((row) => row.trainer.id)).not.toContain(
+        "tate-liza",
+      )
+  })
+
   it("breaks ties by array order, with no tie-break logic", () => {
     const records = ["a", "b", "c", "d", "e", "f", "g"].map((id, index) =>
       trainer(id, index === 6 ? 90 : 40),
@@ -437,27 +501,48 @@ describe("league lineup", () => {
 })
 
 describe("catalog", () => {
-  it("ships 37 trainers with placeholder TRs and valid rosters of at most six", () => {
-    expect(catalog).toHaveLength(37)
+  it("ships 38 entries (37 characters and the Tate & Liza duo) with placeholder TRs and valid rosters of at most six", () => {
+    expect(catalog).toHaveLength(38)
     const experiment = createExperiment(catalog)
     for (const record of catalog) {
       expect(Number.isInteger(record.startTR) && record.startTR >= 0).toBe(true)
       expect(record.peakTR).toBeGreaterThanOrEqual(record.startTR)
-      expect(record.lead === null).toBe(record.archetype !== "rival")
+      expect(Object.hasOwn(record, "lead")).toBe(false)
+      expect(record.leagueEligible).toBe(!record.doubleBattle)
       expect(record.trSource).toContain("PLACEHOLDER")
       expect(record.roster[0]?.levelOffset).toBe(0)
       expect(record.roster.length).toBeLessThanOrEqual(6)
     }
     const growth = (name: string) => {
       const record = catalog.find((entry) => entry.name === name)!
-      return [record.startTR, record.archetype, record.peakTR, record.lead]
+      return [record.startTR, record.archetype, record.peakTR]
     }
-    expect(growth("Blue")).toEqual([10, "rival", 180, 10])
+    expect(growth("Blue")).toEqual([0, "rival", 170])
     expect(catalog.filter((record) => record.archetype === "rival")).toHaveLength(1)
-    expect(growth("Brock")).toEqual([2, "steady", 95, null])
-    expect(growth("Lance")).toEqual([48, "late bloomer", 200, null])
-    expect(Object.keys(experiment.trainers)).toHaveLength(37)
-    expect(catalog.some((record) => /^(red|tate)/.test(record.id))).toBe(false)
+    expect(growth("Brock")).toEqual([20, "steady", 95])
+    expect(growth("Lance")).toEqual([48, "late bloomer", 200])
+    expect(Object.keys(experiment.trainers)).toHaveLength(38)
+    expect(catalog.some((record) => record.id.startsWith("red"))).toBe(false)
+  })
+
+  it("adds Tate & Liza as one league-ineligible Gym Leader duo fought as a double battle", () => {
+    const duo = catalog.find((record) => record.id === "tate-liza")!
+    expect(duo).toMatchObject({
+      name: "Tate & Liza",
+      role: "Gym Leader duo",
+      region: "Hoenn",
+      doubleBattle: true,
+      leagueEligible: false,
+    })
+    expect(duo.roster).toHaveLength(6)
+    expect(duo.roster.slice(0, 2).map((slot) => [slot.species, slot.levelOffset])).toEqual([
+      ["Solrock", 0],
+      ["Lunatone", 0],
+    ])
+    expect(duo.rosterSource).toContain("PLACEHOLDER")
+    expect(catalog.filter((record) => record.doubleBattle).map((record) => record.id)).toEqual([
+      "tate-liza",
+    ])
   })
 
   it("lists the rosters short of six as content gaps", () => {
@@ -490,6 +575,16 @@ describe("experiment import", () => {
     restored.archetypes.steady[1]![1] = 40
     expect(experiment.trainers.fixture!.startTR).toBe(3)
     expect(experiment.archetypes.steady[1]).toEqual([40, 25])
+  })
+
+  it("rejects version 7, which gave the rival a fixed lead", () => {
+    const v7 = base()
+    v7.version = 7
+    delete v7.archetypes.rival
+    v7.trainers.fixture.lead = null
+    expect(() => validateExperiment(v7, records)).toThrow(
+      "Version 7 experiments give the rival a fixed lead",
+    )
   })
 
   it("rejects version 6, which gave each notable trainer one fixed TR", () => {
@@ -539,10 +634,8 @@ describe("experiment import", () => {
 
   it.each([
     ["a peak below the start", { startTR: 10, peakTR: 9 }, "peak TR must be at least start TR"],
-    ["a rival without a lead", { archetype: "rival", lead: null }, "a rival needs a lead"],
-    ["a lead on a non-rival", { archetype: "plateau", lead: 5 }, "only a rival has a lead"],
+    ["the retired lead", { archetype: "rival", lead: 10 }, "missing or unknown fields"],
     ["an unknown archetype", { archetype: "arc" }, "archetype must be one of"],
-    ["a negative lead", { archetype: "rival", lead: -1 }, "non-negative whole number"],
     ["the retired fixed TR", { tr: 3 }, "missing or unknown fields"],
   ])("rejects %s", (_name, change, message) => {
     const input = base()
@@ -554,6 +647,9 @@ describe("experiment import", () => {
     const input = base()
     delete input.archetypes.plateau
     expect(() => validateExperiment(input, records)).toThrow("missing or unknown fields")
+    const noRival = base()
+    delete noRival.archetypes.rival
+    expect(() => validateExperiment(noRival, records)).toThrow("missing or unknown fields")
     const grows = (steady: unknown) =>
       validateExperiment({ ...base(), archetypes: { ...base().archetypes, steady } }, records)
     expect(() => grows([[0, 5]])).toThrow("0% at world progress 0")

@@ -17,16 +17,19 @@ export type RosterSlot = {
   nature: string | null
 }
 
-/** Archetypes whose growth is a scaler over world progress. */
-export type GrowthArchetype = "steady" | "early bloomer" | "late bloomer" | "plateau"
-/** A notable trainer's growth shape; the rival follows world progress plus a lead. */
-export type Archetype = GrowthArchetype | "rival"
+/** A notable trainer's growth shape: a scaler over world progress giving growth %. */
+export type Archetype = "steady" | "early bloomer" | "late bloomer" | "plateau" | "rival"
 
 export type TrainerRecord = {
   id: string
   name: string
   region: "Kanto" | "Johto" | "Hoenn"
-  role: "Gym Leader" | "Elite Four" | "Champion"
+  /** A duo is two leaders sharing one entry, fought as a double battle. */
+  role: "Gym Leader" | "Gym Leader duo" | "Elite Four" | "Champion"
+  /** Fought as a double battle (the duo's Pokémon come from the shared roster in order). */
+  doubleBattle: boolean
+  /** In the global league pool. Leagues are singles only, so a duo is not. */
+  leagueEligible: boolean
   source: { label: string; path: string; trainerId: string; note: string }
   referenceParty: ReferenceMember[]
   /** Trainer TR at world progress 0: a non-negative integer with no upper limit. */
@@ -34,8 +37,6 @@ export type TrainerRecord = {
   archetype: Archetype
   /** The highest TR this trainer can ever reach (not a scaler's ceiling TR). */
   peakTR: number
-  /** Rival only: TR kept ahead of world progress. */
-  lead: number | null
   trSource: string
   /** Exactly six ordered roster slots in v0; shorter catalog rosters are content gaps. */
   roster: RosterSlot[]
@@ -46,13 +47,12 @@ export type TrainerSettings = {
   startTR: number
   archetype: Archetype
   peakTR: number
-  lead: number | null
   roster: RosterSlot[]
 }
 /** A scaler anchor: [TR, value]. */
 export type Anchor = [number, number]
 export type Experiment = {
-  version: 7
+  version: 8
   /** Team level by TR: linear between anchors, halves up, flat past the last. */
   teamLevel: Anchor[]
   /** Team size by TR, same rules; paired anchors make it a step table. */
@@ -61,8 +61,8 @@ export type Experiment = {
   wildLevel: Anchor[]
   /** The regular trainer level curve by player TR (saved as `routeTrainerLevel`). */
   routeTrainerLevel: Anchor[]
-  /** Growth % by world progress for each archetype except the rival. */
-  archetypes: Record<GrowthArchetype, Anchor[]>
+  /** Growth % by world progress for each archetype. */
+  archetypes: Record<Archetype, Anchor[]>
   trainers: Record<string, TrainerSettings>
 }
 /** Player progress. Its player TR is the world progress notable trainers grow with. */
@@ -80,7 +80,6 @@ export type ResolvedTrainer = {
   startTR: number
   archetype: Archetype
   peakTR: number
-  lead: number | null
   teamLevel: number
   size: number
   /** The first `size` roster slots, in roster order. */

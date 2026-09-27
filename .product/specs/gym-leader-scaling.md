@@ -5,7 +5,7 @@ Implemented: No for the v0 model. The earlier player Trainer Rating (TR)
 scaler is present in code but `B_GYM_LEADER_SCALING` defaults to `FALSE`;
 Giovanni's Wayfarer finale uses a separate implemented projection. Today's
 code keeps that behavior until adoption.
-Design status: v0 contract for singles badge encounters.
+Design status: v0 contract for all 24 badge encounters.
 
 ## Scope and authority
 
@@ -30,17 +30,20 @@ canonical character IDs, and roster references. Exactly one battle policy may
 own an encounter. Resolve the ID and context before consulting trainer data;
 never infer enrollment from display name, class, region, or a party pointer.
 
-v0 covers the 23 singles badge opponents listed in the
-[PRD](../prds/notable-trainers.md#gym-battles), including
-Giovanni's Viridian finale through its actual Wayfarer trainer ID. Today's
+v0 covers all 24 badge encounters listed in the
+[PRD](../prds/notable-trainers.md#gym-battles): the 23 singles badge opponents,
+including Giovanni's Viridian finale through its actual Wayfarer trainer ID,
+and the Tate & Liza duo. Every badge encounter follows notable TR. Today's
 generated six-slot inventory (23 identities including Tate/Liza, Giovanni
 handled separately) is not this manifest and must not be copied without an
 explicit mapping.
 
-The twenty-fourth badge remains Tate/Liza's existing double battle. Keep its
-current flag-dependent construction and rewards, test both scaling paths where
-applicable, and do not convert it to singles or apply two-opponent size limits
-to its single party.
+The twenty-fourth badge is Tate & Liza's double battle, covered as the
+[notable duo entry](notable-trainers.md#notable-trainer-inventory): the duo's
+TR sets the team size and levels, and both trainers' Pokémon come from the
+shared roster in roster order. Construction keeps its double-battle specifics:
+do not convert it to singles, keep its rewards and badge, and fill both
+trainers' parties from the one battle snapshot.
 
 Blue's `gymEligible` content metadata creates no badge encounter; his HNS Gym ID
 is excluded in Wayfarer. A leader's battles outside their badge encounter are
@@ -110,7 +113,8 @@ another trainer, or a random team.
 
 ## Validation
 
-Report all 23 singles identities: canonical/source identity, TR, roster version,
+Report all 24 badge identities (23 singles leaders and the Tate & Liza duo):
+canonical/source identity, TR, roster version,
 member roster slots, output order, count, species, levels, moves, items, and
 prize-money basis. Check:
 
@@ -123,7 +127,8 @@ prize-money basis. Check:
    only after the fight.
 4. Giovanni's Viridian finale encounter; Blue's excluded Gym ID; no enrollment
    from `gymEligible` alone.
-5. Tate/Liza's double battle and badge, randomizer bypass, disabled-switch
+5. Tate & Liza's double battle drawn from the duo roster in order at every
+   team size, its badge, randomizer bypass, disabled-switch
    behavior, unchanged standalone parties, and rematches resolved from the
    leader's TR.
 6. Emulator playtests of low- and high-rated leaders, Gym-member comparisons,

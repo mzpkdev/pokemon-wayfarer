@@ -33,7 +33,8 @@ separate UI package only when it has a real independent consumer.
 module (`#trainer-balance`). Trainer balance bundles its catalog and can run
 directly with `pnpm --filter @wayfarer/ui dev`, without building map catalogs.
 It edits each notable trainer's growth (start TR, archetype, peak TR) and
-six-slot roster and the scalers, shows each trainer's TR at the chosen world
+six-slot roster (38 entries, including the Tate & Liza double battle duo) and
+the scalers, shows each trainer's TR at the chosen world
 progress, the Gym ladder and the league lineup, and compares team levels with
 the level cap; see [the UI README](ui/README.md#trainer-balance-explorer) for assumptions
 and catalog regeneration. The map modules consume

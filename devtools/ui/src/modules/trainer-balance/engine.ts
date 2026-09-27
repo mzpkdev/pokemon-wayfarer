@@ -2,7 +2,6 @@ import type {
   Anchor,
   Archetype,
   Experiment,
-  GrowthArchetype,
   LadderRow,
   ResolvedTrainer,
   RosterSlot,
@@ -18,7 +17,7 @@ export const LINEUP_SIZE = 5
 export const LEAGUES = ["Indigo", "Sevii Masters", "Hoenn"] as const
 export const MAX_ANCHORS = 20
 
-/** The level cap curve (24 badges = TR 160). Notable trainer team level uses the same anchors. */
+/** The level cap curve (24 badges = TR 160). */
 export const LEVEL_CAP_ANCHORS: readonly Anchor[] = [
   [0, 15],
   [40, 28],
@@ -26,12 +25,25 @@ export const LEVEL_CAP_ANCHORS: readonly Anchor[] = [
   [120, 75],
   [160, 100],
 ]
-export const DEFAULT_TEAM_LEVEL: readonly Anchor[] = LEVEL_CAP_ANCHORS
-/** Step table as paired anchors: 0–15 -> 2, 16–43 -> 3, 44–70 -> 4, 71–95 -> 5, 96+ -> 6. */
+/**
+ * Notable trainer team level: its own low end below TR 40 (Lv 5 at TR 0), then
+ * the level cap anchors from TR 40 up. The level cap itself is unchanged.
+ */
+export const DEFAULT_TEAM_LEVEL: readonly Anchor[] = [
+  [0, 5],
+  [20, 14],
+  [40, 28],
+  [80, 50],
+  [120, 75],
+  [160, 100],
+]
+/** Step table as paired anchors: 0–10 -> 1, 11–28 -> 2, 29–43 -> 3, 44–70 -> 4, 71–95 -> 5, 96+ -> 6. */
 export const DEFAULT_TEAM_SIZE: readonly Anchor[] = [
-  [0, 2],
-  [15, 2],
-  [16, 3],
+  [0, 1],
+  [10, 1],
+  [11, 2],
+  [28, 2],
+  [29, 3],
   [43, 3],
   [44, 4],
   [70, 4],
@@ -56,16 +68,16 @@ export const DEFAULT_REGULAR_TRAINER_LEVEL: readonly Anchor[] = [
   [160, 82],
 ]
 
-/** Archetypes whose growth is a scaler over world progress, in display order. */
-export const GROWTH_ARCHETYPES: readonly GrowthArchetype[] = [
+/** Archetypes, each a growth scaler over world progress, in display order. */
+export const ARCHETYPES: readonly Archetype[] = [
   "steady",
   "early bloomer",
   "late bloomer",
   "plateau",
+  "rival",
 ]
-export const ARCHETYPES: readonly Archetype[] = [...GROWTH_ARCHETYPES, "rival"]
-/** Growth % by world progress (contract section 7): 0 / 40 / 80 / 120 / 160. */
-export const DEFAULT_ARCHETYPE_GROWTH: Readonly<Record<GrowthArchetype, readonly Anchor[]>> = {
+/** Growth % by world progress: 0 / 40 / 80 / 120 / 160 (the rival also at 20). */
+export const DEFAULT_ARCHETYPE_GROWTH: Readonly<Record<Archetype, readonly Anchor[]>> = {
   steady: [
     [0, 0],
     [40, 25],
@@ -92,6 +104,14 @@ export const DEFAULT_ARCHETYPE_GROWTH: Readonly<Record<GrowthArchetype, readonly
     [40, 60],
     [80, 100],
     [120, 100],
+    [160, 100],
+  ],
+  rival: [
+    [0, 0],
+    [20, 15],
+    [40, 29],
+    [80, 53],
+    [120, 76],
     [160, 100],
   ],
 }
@@ -193,25 +213,15 @@ export const growthTR = (
 }
 
 /**
- * A notable trainer's TR at a world progress: the archetype scaler between
- * start and peak TR, or for the rival min(peak, world progress + lead).
+ * A notable trainer's TR at a world progress: their archetype's growth scaler
+ * between start and peak TR. The same rule holds for every archetype.
  */
 export const trainerRating = (
   experiment: Pick<Experiment, "archetypes">,
-  settings: Pick<TrainerSettings, "startTR" | "archetype" | "peakTR" | "lead">,
+  settings: Pick<TrainerSettings, "startTR" | "archetype" | "peakTR">,
   world: number,
-): number => {
-  if (settings.archetype === "rival") {
-    if (settings.lead === null) throw new Error("A rival needs a lead")
-    return Math.min(settings.peakTR, progress(world) + settings.lead)
-  }
-  return growthTR(
-    experiment.archetypes[settings.archetype],
-    settings.startTR,
-    settings.peakTR,
-    world,
-  )
-}
+): number =>
+  growthTR(experiment.archetypes[settings.archetype], settings.startTR, settings.peakTR, world)
 
 /** The player's level cap. A readout for comparison: it never feeds notable trainer results. */
 export const levelCap = (point: WorldPoint): number => scale(LEVEL_CAP_ANCHORS, playerRating(point))
@@ -275,7 +285,6 @@ export const resolveTrainer = (
     startTR: settings.startTR,
     archetype: settings.archetype,
     peakTR: settings.peakTR,
-    lead: settings.lead,
     teamLevel,
     size,
     team,
@@ -286,9 +295,9 @@ export const resolveTrainer = (
 }
 
 /**
- * The league lineup from one global pool at a world progress: the top five by
- * TR (ties keep catalog order), returned in battle order, ascending TR with the
- * strongest last.
+ * The league lineup from one global pool of league-eligible trainers at a
+ * world progress: the top five by TR (ties keep catalog order), returned in
+ * battle order, ascending TR with the strongest last.
  */
 export const leagueLineup = (
   catalog: TrainerRecord[],
@@ -296,14 +305,19 @@ export const leagueLineup = (
   world: number,
 ): ResolvedTrainer[] =>
   catalog
+    .filter((trainer) => trainer.leagueEligible)
     .map((trainer) => resolveTrainer(trainer, experiment, world))
     .toSorted((a, b) => b.tr - a.tr)
     .slice(0, LINEUP_SIZE)
     .toSorted((a, b) => a.tr - b.tr)
 
+/** Gym Leaders, including a Gym Leader duo. */
+export const isGymLeader = (trainer: TrainerRecord): boolean =>
+  trainer.role === "Gym Leader" || trainer.role === "Gym Leader duo"
+
 /**
- * The Gym Leaders at a world progress, ascending TR (ties keep catalog order),
- * each marked below, near (within NEAR_BAND) or above the player TR.
+ * The Gym Leaders (duo included) at a world progress, ascending TR (ties keep
+ * catalog order), each marked below, near (within NEAR_BAND) or above the player TR.
  */
 export const gymLadder = (
   catalog: TrainerRecord[],
@@ -311,7 +325,7 @@ export const gymLadder = (
   world: number,
 ): LadderRow[] =>
   catalog
-    .filter((trainer) => trainer.role === "Gym Leader")
+    .filter(isGymLeader)
     .map((trainer): LadderRow => {
       const settings = experiment.trainers[trainer.id]
       if (!settings) throw new Error(`Missing trainer settings: ${trainer.id}`)
@@ -330,7 +344,6 @@ export const defaultTrainerSettings = (trainer: TrainerRecord): TrainerSettings 
   startTR: trainer.startTR,
   archetype: trainer.archetype,
   peakTR: trainer.peakTR,
-  lead: trainer.lead,
   roster: structuredClone(trainer.roster),
 })
 
@@ -339,7 +352,7 @@ export const createExperiment = (catalog: TrainerRecord[]): Experiment => {
   for (const trainer of catalog) trainers[trainer.id] = defaultTrainerSettings(trainer)
   return validateExperiment(
     {
-      version: 7,
+      version: 8,
       teamLevel: structuredClone(DEFAULT_TEAM_LEVEL),
       teamSize: structuredClone(DEFAULT_TEAM_SIZE),
       wildLevel: structuredClone(DEFAULT_WILD_LEVEL),
@@ -440,7 +453,7 @@ export const validateRoster = (value: unknown, path: string): RosterSlot[] => {
   return slots
 }
 
-/** Start and peak TR are whole numbers with peak >= start; a rival needs a lead, others have none. */
+/** Start and peak TR are whole numbers with peak >= start. */
 const growthSettings = (
   settings: Record<string, unknown>,
   id: string,
@@ -451,10 +464,7 @@ const growthSettings = (
   if (!ARCHETYPES.includes(archetype))
     fail(`${id}.archetype must be one of ${ARCHETYPES.join(", ")}`)
   if (peakTR < startTR) fail(`${id}: peak TR must be at least start TR`)
-  if (archetype === "rival" && settings.lead === null) fail(`${id}: a rival needs a lead`)
-  if (archetype !== "rival" && settings.lead !== null) fail(`${id}: only a rival has a lead`)
-  const lead = settings.lead === null ? null : tr(settings.lead, `${id}.lead`)
-  return { startTR, archetype, peakTR, lead }
+  return { startTR, archetype, peakTR }
 }
 
 /** Rosters short of the required six. */
@@ -467,13 +477,15 @@ export const rosterGaps = (
     return length < ROSTER_SIZE ? [{ id: trainer.id, name: trainer.name, length }] : []
   })
 
-export const EXPERIMENT_VERSION = 7
+export const EXPERIMENT_VERSION = 8
 export const OLD_VERSION_REJECTION = (version: number): string =>
-  version === 6
-    ? "Version 6 experiments give each notable trainer one fixed TR and cannot be imported. Start from the version 7 defaults (start TR, archetype and peak TR)."
-    : version === 5
-      ? "Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. Start from the version 7 defaults."
-      : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. Start from the version 7 defaults.`
+  version === 7
+    ? "Version 7 experiments give the rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. Start from the version 8 defaults."
+    : version === 6
+      ? "Version 6 experiments give each notable trainer one fixed TR and cannot be imported. Start from the version 8 defaults (start TR, archetype and peak TR)."
+      : version === 5
+        ? "Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. Start from the version 8 defaults."
+        : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. Start from the version 8 defaults.`
 
 export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Experiment => {
   const input = object(value, "root")
@@ -500,16 +512,16 @@ export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Ex
   const trainers: Experiment["trainers"] = Object.create(null)
   for (const id of ids) {
     const settings = object(inputTrainers[id], `trainers.${id}`)
-    exactKeys(settings, ["startTR", "archetype", "peakTR", "lead", "roster"], `trainers.${id}`)
+    exactKeys(settings, ["startTR", "archetype", "peakTR", "roster"], `trainers.${id}`)
     trainers[id] = {
       ...growthSettings(settings, id),
       roster: validateRoster(settings.roster, `${id}.roster`),
     }
   }
   const inputArchetypes = object(input.archetypes, "archetypes")
-  exactKeys(inputArchetypes, GROWTH_ARCHETYPES, "archetypes")
+  exactKeys(inputArchetypes, ARCHETYPES, "archetypes")
   const archetypes = Object.fromEntries(
-    GROWTH_ARCHETYPES.map((name) => {
+    ARCHETYPES.map((name) => {
       const points = anchors(inputArchetypes[name], 0, 100, `${name} growth`)
       if (points[0]?.[1] !== 0) fail(`${name} growth must be 0% at world progress 0`)
       return [name, points]

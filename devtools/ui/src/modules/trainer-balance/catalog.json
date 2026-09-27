@@ -4,6 +4,8 @@
     "name": "Brock",
     "region": "Kanto",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
@@ -24,11 +26,10 @@
         "item": null
       }
     ],
-    "startTR": 2,
+    "startTR": 20,
     "archetype": "steady",
     "peakTR": 95,
-    "lead": null,
-    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 2, steady (keeps a fixed fraction of the player's pace), peak TR 95.",
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 20, steady (keeps a fixed fraction of the player's pace), peak TR 95.",
     "roster": [
       {
         "species": "Golem",
@@ -86,6 +87,8 @@
     "name": "Misty",
     "region": "Kanto",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
@@ -109,7 +112,6 @@
     "startTR": 4,
     "archetype": "steady",
     "peakTR": 110,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 4, steady (keeps a fixed fraction of the player's pace), peak TR 110.",
     "roster": [
       {
@@ -168,6 +170,8 @@
     "name": "Lt. Surge",
     "region": "Kanto",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
@@ -197,7 +201,6 @@
     "startTR": 6,
     "archetype": "steady",
     "peakTR": 120,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 6, steady (keeps a fixed fraction of the player's pace), peak TR 120.",
     "roster": [
       {
@@ -256,6 +259,8 @@
     "name": "Erika",
     "region": "Kanto",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
@@ -285,7 +290,6 @@
     "startTR": 6,
     "archetype": "steady",
     "peakTR": 150,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 6, steady (keeps a fixed fraction of the player's pace), peak TR 150.",
     "roster": [
       {
@@ -344,6 +348,8 @@
     "name": "Janine",
     "region": "Kanto",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
@@ -391,7 +397,6 @@
     "startTR": 8,
     "archetype": "early bloomer",
     "peakTR": 100,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 8, early bloomer (a rising star: fast early, then slows), peak TR 100.",
     "roster": [
       {
@@ -450,6 +455,8 @@
     "name": "Sabrina",
     "region": "Kanto",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
@@ -485,7 +492,6 @@
     "startTR": 25,
     "archetype": "late bloomer",
     "peakTR": 180,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 25, late bloomer (a strong leader: slow start, strong finish), peak TR 180.",
     "roster": [
       {
@@ -544,6 +550,8 @@
     "name": "Blaine",
     "region": "Kanto",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
@@ -579,7 +587,6 @@
     "startTR": 15,
     "archetype": "plateau",
     "peakTR": 90,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 15, plateau (a veteran who reaches their peak early and stops), peak TR 90.",
     "roster": [
       {
@@ -638,6 +645,8 @@
     "name": "Giovanni",
     "region": "Kanto",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
@@ -679,7 +688,6 @@
     "startTR": 16,
     "archetype": "steady",
     "peakTR": 170,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 16, steady (keeps a fixed fraction of the player's pace), peak TR 170.",
     "roster": [
       {
@@ -738,6 +746,8 @@
     "name": "Blue",
     "region": "Kanto",
     "role": "Champion",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
@@ -782,11 +792,10 @@
         "item": "Sitrus Berry"
       }
     ],
-    "startTR": 10,
+    "startTR": 0,
     "archetype": "rival",
-    "peakTR": 180,
-    "lead": 10,
-    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 10, rival (stays a lead ahead of world progress until their peak), peak TR 180, lead 10.",
+    "peakTR": 170,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 0, rival (starts at 0 and stays about 10 ahead of the player from 4 badges), peak TR 170.",
     "roster": [
       {
         "species": "Eevee",
@@ -844,6 +853,8 @@
     "name": "Lorelei",
     "region": "Kanto",
     "role": "Elite Four",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
@@ -885,7 +896,6 @@
     "startTR": 40,
     "archetype": "plateau",
     "peakTR": 92,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 40, plateau (a veteran who reaches their peak early and stops), peak TR 92.",
     "roster": [
       {
@@ -936,6 +946,8 @@
     "name": "Bruno",
     "region": "Kanto",
     "role": "Elite Four",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
@@ -977,7 +989,6 @@
     "startTR": 45,
     "archetype": "plateau",
     "peakTR": 94,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 45, plateau (a veteran who reaches their peak early and stops), peak TR 94.",
     "roster": [
       {
@@ -1028,6 +1039,8 @@
     "name": "Agatha",
     "region": "Kanto",
     "role": "Elite Four",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
@@ -1069,7 +1082,6 @@
     "startTR": 50,
     "archetype": "plateau",
     "peakTR": 95,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 50, plateau (a veteran who reaches their peak early and stops), peak TR 95.",
     "roster": [
       {
@@ -1120,6 +1132,8 @@
     "name": "Koga",
     "region": "Johto",
     "role": "Elite Four",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
@@ -1161,7 +1175,6 @@
     "startTR": 30,
     "archetype": "steady",
     "peakTR": 150,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 30, steady (keeps a fixed fraction of the player's pace), peak TR 150.",
     "roster": [
       {
@@ -1212,6 +1225,8 @@
     "name": "Lance",
     "region": "Kanto",
     "role": "Champion",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
@@ -1253,7 +1268,6 @@
     "startTR": 48,
     "archetype": "late bloomer",
     "peakTR": 200,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 48, late bloomer (a strong leader: slow start, strong finish), peak TR 200.",
     "roster": [
       {
@@ -1304,6 +1318,8 @@
     "name": "Falkner",
     "region": "Johto",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
@@ -1324,11 +1340,10 @@
         "item": "Sitrus Berry"
       }
     ],
-    "startTR": 1,
+    "startTR": 14,
     "archetype": "early bloomer",
     "peakTR": 80,
-    "lead": null,
-    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 1, early bloomer (a rising star: fast early, then slows), peak TR 80.",
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 14, early bloomer (a rising star: fast early, then slows), peak TR 80.",
     "roster": [
       {
         "species": "Noctowl",
@@ -1386,6 +1401,8 @@
     "name": "Bugsy",
     "region": "Johto",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
@@ -1415,7 +1432,6 @@
     "startTR": 3,
     "archetype": "steady",
     "peakTR": 100,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 3, steady (keeps a fixed fraction of the player's pace), peak TR 100.",
     "roster": [
       {
@@ -1474,6 +1490,8 @@
     "name": "Whitney",
     "region": "Johto",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
@@ -1503,7 +1521,6 @@
     "startTR": 4,
     "archetype": "early bloomer",
     "peakTR": 95,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 4, early bloomer (a rising star: fast early, then slows), peak TR 95.",
     "roster": [
       {
@@ -1562,6 +1579,8 @@
     "name": "Morty",
     "region": "Johto",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
@@ -1597,7 +1616,6 @@
     "startTR": 8,
     "archetype": "steady",
     "peakTR": 150,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 8, steady (keeps a fixed fraction of the player's pace), peak TR 150.",
     "roster": [
       {
@@ -1656,6 +1674,8 @@
     "name": "Chuck",
     "region": "Johto",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
@@ -1691,7 +1711,6 @@
     "startTR": 12,
     "archetype": "plateau",
     "peakTR": 85,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 12, plateau (a veteran who reaches their peak early and stops), peak TR 85.",
     "roster": [
       {
@@ -1750,6 +1769,8 @@
     "name": "Jasmine",
     "region": "Johto",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
@@ -1791,7 +1812,6 @@
     "startTR": 12,
     "archetype": "steady",
     "peakTR": 172,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 12, steady (keeps a fixed fraction of the player's pace), peak TR 172.",
     "roster": [
       {
@@ -1850,6 +1870,8 @@
     "name": "Pryce",
     "region": "Johto",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
@@ -1885,7 +1907,6 @@
     "startTR": 18,
     "archetype": "plateau",
     "peakTR": 92,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 18, plateau (a veteran who reaches their peak early and stops), peak TR 92.",
     "roster": [
       {
@@ -1944,6 +1965,8 @@
     "name": "Clair",
     "region": "Johto",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
@@ -1982,11 +2005,10 @@
         "item": "Leftovers"
       }
     ],
-    "startTR": 20,
+    "startTR": 12,
     "archetype": "late bloomer",
     "peakTR": 185,
-    "lead": null,
-    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 20, late bloomer (a strong leader: slow start, strong finish), peak TR 185.",
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 12, late bloomer (a strong leader: slow start, strong finish), peak TR 185.",
     "roster": [
       {
         "species": "Kingdra",
@@ -2044,6 +2066,8 @@
     "name": "Will",
     "region": "Johto",
     "role": "Elite Four",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
@@ -2085,7 +2109,6 @@
     "startTR": 30,
     "archetype": "early bloomer",
     "peakTR": 110,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 30, early bloomer (a rising star: fast early, then slows), peak TR 110.",
     "roster": [
       {
@@ -2136,6 +2159,8 @@
     "name": "Karen",
     "region": "Johto",
     "role": "Elite Four",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
@@ -2177,7 +2202,6 @@
     "startTR": 30,
     "archetype": "steady",
     "peakTR": 155,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 30, steady (keeps a fixed fraction of the player's pace), peak TR 155.",
     "roster": [
       {
@@ -2228,6 +2252,8 @@
     "name": "Roxanne",
     "region": "Hoenn",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
@@ -2254,11 +2280,10 @@
         "item": "Oran Berry"
       }
     ],
-    "startTR": 2,
+    "startTR": 20,
     "archetype": "steady",
     "peakTR": 90,
-    "lead": null,
-    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 2, steady (keeps a fixed fraction of the player's pace), peak TR 90.",
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 20, steady (keeps a fixed fraction of the player's pace), peak TR 90.",
     "roster": [
       {
         "species": "Nosepass",
@@ -2316,6 +2341,8 @@
     "name": "Brawly",
     "region": "Hoenn",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
@@ -2345,7 +2372,6 @@
     "startTR": 4,
     "archetype": "early bloomer",
     "peakTR": 90,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 4, early bloomer (a rising star: fast early, then slows), peak TR 90.",
     "roster": [
       {
@@ -2404,6 +2430,8 @@
     "name": "Wattson",
     "region": "Hoenn",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
@@ -2439,7 +2467,6 @@
     "startTR": 8,
     "archetype": "plateau",
     "peakTR": 75,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 8, plateau (a veteran who reaches their peak early and stops), peak TR 75.",
     "roster": [
       {
@@ -2498,6 +2525,8 @@
     "name": "Flannery",
     "region": "Hoenn",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
@@ -2533,7 +2562,6 @@
     "startTR": 6,
     "archetype": "early bloomer",
     "peakTR": 100,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 6, early bloomer (a rising star: fast early, then slows), peak TR 100.",
     "roster": [
       {
@@ -2592,6 +2620,8 @@
     "name": "Norman",
     "region": "Hoenn",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
@@ -2627,7 +2657,6 @@
     "startTR": 20,
     "archetype": "steady",
     "peakTR": 168,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 20, steady (keeps a fixed fraction of the player's pace), peak TR 168.",
     "roster": [
       {
@@ -2686,6 +2715,8 @@
     "name": "Winona",
     "region": "Hoenn",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
@@ -2724,11 +2755,10 @@
         "item": "Oran Berry"
       }
     ],
-    "startTR": 15,
+    "startTR": 10,
     "archetype": "late bloomer",
     "peakTR": 172,
-    "lead": null,
-    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 15, late bloomer (a strong leader: slow start, strong finish), peak TR 172.",
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 10, late bloomer (a strong leader: slow start, strong finish), peak TR 172.",
     "roster": [
       {
         "species": "Altaria",
@@ -2782,10 +2812,107 @@
     "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_WINONA_1[1]; game/src/data/trainers.party:TRAINER_WINONA_1[2]; game/src/data/trainers.party:TRAINER_WINONA_1[3]; game/src/data/trainers.party:TRAINER_WINONA_2[0]; game/src/data/trainers.party:TRAINER_WINONA_1[0]; game/src/data/trainers.party:TRAINER_WINONA_1[4]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 Pokémon; only the first 6 are kept."
   },
   {
+    "id": "tate-liza",
+    "name": "Tate & Liza",
+    "region": "Hoenn",
+    "role": "Gym Leader duo",
+    "doubleBattle": true,
+    "leagueEligible": false,
+    "source": {
+      "label": "Emerald local reference",
+      "path": "game/src/data/trainers.party",
+      "trainerId": "TRAINER_TATE_AND_LIZA_1",
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Emerald Mossdeep double battle; one shared entry for both leaders, league-ineligible (leagues are singles only)."
+    },
+    "referenceParty": [
+      {
+        "species": "Claydol",
+        "level": 41,
+        "moves": ["Earthquake", "Ancient Power", "Psychic", "Light Screen"],
+        "item": null
+      },
+      {
+        "species": "Xatu",
+        "level": 41,
+        "moves": ["Psychic", "Sunny Day", "Confuse Ray", "Calm Mind"],
+        "item": null
+      },
+      {
+        "species": "Lunatone",
+        "level": 42,
+        "moves": ["Light Screen", "Psychic", "Hypnosis", "Calm Mind"],
+        "item": "Sitrus Berry"
+      },
+      {
+        "species": "Solrock",
+        "level": 42,
+        "moves": ["Sunny Day", "Solar Beam", "Psychic", "Flamethrower"],
+        "item": "Sitrus Berry"
+      }
+    ],
+    "startTR": 22,
+    "archetype": "steady",
+    "peakTR": 160,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 22, steady (keeps a fixed fraction of the player's pace), peak TR 160.",
+    "roster": [
+      {
+        "species": "Solrock",
+        "levelOffset": 0,
+        "moves": ["Sunny Day", "Solar Beam", "Psychic", "Flamethrower"],
+        "item": "Sitrus Berry",
+        "ability": null,
+        "nature": null
+      },
+      {
+        "species": "Lunatone",
+        "levelOffset": 0,
+        "moves": ["Light Screen", "Psychic", "Hypnosis", "Calm Mind"],
+        "item": "Sitrus Berry",
+        "ability": null,
+        "nature": null
+      },
+      {
+        "species": "Claydol",
+        "levelOffset": -2,
+        "moves": "LEVEL_UP",
+        "item": null,
+        "ability": null,
+        "nature": null
+      },
+      {
+        "species": "Xatu",
+        "levelOffset": -2,
+        "moves": "LEVEL_UP",
+        "item": null,
+        "ability": null,
+        "nature": null
+      },
+      {
+        "species": "Gardevoir",
+        "levelOffset": -2,
+        "moves": "LEVEL_UP",
+        "item": null,
+        "ability": null,
+        "nature": null
+      },
+      {
+        "species": "Grumpig",
+        "levelOffset": -2,
+        "moves": "LEVEL_UP",
+        "item": null,
+        "ability": null,
+        "nature": null
+      }
+    ],
+    "rosterSource": "PLACEHOLDER duo roster derived from Emerald source slots (roster slots 1-2 are the Solrock and Lunatone signature pair at offset 0; roster slots 3-6 are PLACEHOLDER Hoenn Psychic/Rock picks): game/src/data/trainers.party:TRAINER_TATE_AND_LIZA_1[3]; game/src/data/trainers.party:TRAINER_TATE_AND_LIZA_1[2]; game/src/data/trainers.party:TRAINER_TATE_AND_LIZA_1[0]; game/src/data/trainers.party:TRAINER_TATE_AND_LIZA_1[1]; game/src/data/trainers.party:TRAINER_KATELYNN[0]; game/src/data/trainers.party:TRAINER_VALERIE_5[2]. Roster slots 1-2 keep the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Fought as a double battle: both leaders send Pokémon from this one roster in order."
+  },
+  {
     "id": "juan",
     "name": "Juan",
     "region": "Hoenn",
     "role": "Gym Leader",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
@@ -2827,7 +2954,6 @@
     "startTR": 22,
     "archetype": "late bloomer",
     "peakTR": 185,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 22, late bloomer (a strong leader: slow start, strong finish), peak TR 185.",
     "roster": [
       {
@@ -2886,6 +3012,8 @@
     "name": "Sidney",
     "region": "Hoenn",
     "role": "Elite Four",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
@@ -2927,7 +3055,6 @@
     "startTR": 25,
     "archetype": "early bloomer",
     "peakTR": 105,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 25, early bloomer (a rising star: fast early, then slows), peak TR 105.",
     "roster": [
       {
@@ -2978,6 +3105,8 @@
     "name": "Phoebe",
     "region": "Hoenn",
     "role": "Elite Four",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
@@ -3019,7 +3148,6 @@
     "startTR": 25,
     "archetype": "steady",
     "peakTR": 150,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 25, steady (keeps a fixed fraction of the player's pace), peak TR 150.",
     "roster": [
       {
@@ -3070,6 +3198,8 @@
     "name": "Glacia",
     "region": "Hoenn",
     "role": "Elite Four",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
@@ -3111,7 +3241,6 @@
     "startTR": 40,
     "archetype": "plateau",
     "peakTR": 90,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 40, plateau (a veteran who reaches their peak early and stops), peak TR 90.",
     "roster": [
       {
@@ -3162,6 +3291,8 @@
     "name": "Drake",
     "region": "Hoenn",
     "role": "Elite Four",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
@@ -3203,7 +3334,6 @@
     "startTR": 45,
     "archetype": "plateau",
     "peakTR": 93,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 45, plateau (a veteran who reaches their peak early and stops), peak TR 93.",
     "roster": [
       {
@@ -3254,6 +3384,8 @@
     "name": "Wallace",
     "region": "Hoenn",
     "role": "Champion",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
@@ -3301,7 +3433,6 @@
     "startTR": 48,
     "archetype": "late bloomer",
     "peakTR": 190,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 48, late bloomer (a strong leader: slow start, strong finish), peak TR 190.",
     "roster": [
       {
@@ -3360,6 +3491,8 @@
     "name": "Steven",
     "region": "Hoenn",
     "role": "Champion",
+    "doubleBattle": false,
+    "leagueEligible": true,
     "source": {
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
@@ -3407,7 +3540,6 @@
     "startTR": 50,
     "archetype": "late bloomer",
     "peakTR": 195,
-    "lead": null,
     "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 50, late bloomer (a strong leader: slow start, strong finish), peak TR 195.",
     "roster": [
       {

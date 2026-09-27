@@ -4,7 +4,7 @@ PRD: [Notable trainers](../prds/notable-trainers.md)
 Implemented: No. Today, the ROM keeps its existing Gym and league scaling
 until adoption; the browser explorer is placeholder tooling.
 Design status: v0 contract. The model is accepted; each trainer's growth
-values (start TR, archetype, peak TR, lead) and roster, and every anchor marked
+values (start TR, archetype, peak TR) and roster, and every anchor marked
 placeholder, are catalog content under review.
 
 ## Ownership and scope
@@ -41,12 +41,19 @@ Standalone builds are unchanged.
 
 ## Notable trainer inventory
 
-The v0 inventory is the 37 characters in the explorer catalog: the 23 singles
-Gym Leaders (per
-[Gym Leader scaling](gym-leader-scaling.md#coverage-and-identity)), the Kanto,
-Johto, and Hoenn Elite Four, Lance, Wallace, Steven, and Blue. Red, Tate & Liza,
-and every other character are not notable trainers in v0 and keep their current
-policies.
+The v0 inventory is 38 entries in the explorer catalog: 37 characters (the 23
+singles Gym Leaders, the Kanto, Johto, and Hoenn Elite Four, Lance, Wallace,
+Steven, and Blue) plus the Tate & Liza duo
+([badge coverage](gym-leader-scaling.md#coverage-and-identity)). Red and every
+other character are not notable trainers in v0 and keep their current policies.
+
+**Tate & Liza** are one notable entry with one `characterId`, one set of growth
+values (start TR, archetype, peak TR), and one ordered six-slot roster. They
+are fought as their existing double battle: team size comes from the same
+table, and both trainers' Pokémon are drawn from the shared roster in roster
+order. Every notable rule applies to them (world progress, battle snapshot,
+construction); they are league-ineligible because leagues are singles only
+([Leagues](leagues.md#registry-and-eligibility)).
 
 Mapping each encounter ID of these characters (Gym, overworld, rematch,
 league, and story battles) to its `characterId` is an implementation inventory
@@ -90,12 +97,11 @@ Each trainer authors:
 
 | Field | Contract |
 | --- | --- |
-| Start TR | Non-rival only: non-negative integer, the trainer's TR at world progress 0. |
+| Start TR | Non-negative integer: the trainer's TR at world progress 0. |
 | Archetype | `steady`, `early bloomer`, `late bloomer`, `plateau`, or `rival`. |
 | Peak TR | Integer ≥ start TR: the most the trainer can ever reach. Distinct from a scaler's ceiling TR. |
-| Lead | Rival only: non-negative integer TR kept ahead of world progress. |
 
-The four growth archetypes are global scalers over world progress
+The five archetypes are global scalers over world progress
 ([scaler definition](player-trainer-rating.md#scalers)), interpolated, giving
 a growth fraction in percent (0–100):
 
@@ -105,32 +111,29 @@ a growth fraction in percent (0–100):
 | Early bloomer | 0 / 50 / 80 / 95 / 100 | Fast early, then slows: a mid-game wall |
 | Late bloomer | 0 / 10 / 25 / 55 / 100 | Slow start, strong finish: a late challenge |
 | Plateau | 0 / 60 / 100 / 100 / 100 | Reaches the peak early and stops: a veteran the player overtakes |
+| Rival | 0 / 29 / 53 / 76 / 100, plus 15 at world progress 20 | Level with the player at the start, then about 10 TR ahead (with start 0, peak 170) |
 
-With `wp` the world progress, `fraction` the archetype scaler's value, and
-floor division (halves round up):
+The growth rule is the same for every notable trainer, whatever the
+archetype. With `wp` the world progress, `fraction` the archetype scaler's
+value, and floor division (halves round up):
 
 ```text
 trainerTR = start + floor(((peak - start) * fraction(wp) + 50) / 100)
 ```
 
 Past the last anchor the fraction stays at 100, so the trainer stays at peak
-TR. Archetypes are authored globally for v0.
-
-The **rival** archetype ignores start TR and the scalers:
-
-```text
-trainerTR = min(peak, wp + lead)
-```
-
-Blue is the only rival in v0, with a lead of about +10 (placeholder).
+TR. Archetypes are authored globally for v0, and any trainer may use any of
+them. Blue uses the rival archetype with start TR 0 and peak TR 170
+(placeholder): TR 0 in Pallet Town, about 25 at world progress 20 (Cerulean),
+about 50 at world progress 40, then about 10 ahead of the player until 170.
 
 Examples (placeholder values):
 
-| Trainer | wp 0 | wp 40 | wp 80 | wp 81 | wp 90 | wp 160 | wp 300 |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Steady, start 20, peak 100 | 20 | 40 | 60 | 61 | 65 | 100 | 100 |
-| Plateau, start 50, peak 90 | 50 | 74 | 90 | 90 | 90 | 90 | 90 |
-| Rival, lead 10, peak 150 | 10 | 50 | 90 | 91 | 100 | 150 | 150 |
+| Trainer | wp 0 | wp 20 | wp 40 | wp 80 | wp 81 | wp 90 | wp 160 | wp 300 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Steady, start 20, peak 100 | 20 | 30 | 40 | 60 | 61 | 65 | 100 | 100 |
+| Plateau, start 50, peak 90 | 50 | 62 | 74 | 90 | 90 | 90 | 90 | 90 |
+| Rival (Blue), start 0, peak 170 | 0 | 26 | 49 | 90 | 92 | 100 | 170 | 170 |
 
 From world progress 80, a +10 gain moves the steady trainer 5 TR and a +1
 gain moves them 1 TR; the plateau trainer, already at peak, does not move.
@@ -142,26 +145,27 @@ Team level and team size are scalers as defined in
 
 | Scaler | Form | Range | Ceiling | Ceiling TR |
 | --- | --- | --- | --- | --- |
-| Team level (notable trainers) | interpolated | Lv 15 → 100 | Lv 100 | TR 160 (placeholder) |
-| Team size (notable trainers) | step | 2 → 6 | 6 | TR 96 (placeholder) |
+| Team level (notable trainers) | interpolated | Lv 5 → 100 | Lv 100 | TR 160 (placeholder) |
+| Team size (notable trainers) | step | 1 → 6 | 6 | TR 96 (placeholder) |
 
-**Team level** uses the same anchors as the
+**Team level** has its own anchors (placeholder). Below TR 40 it is no longer a
+copy of the level cap curve: it starts lower, so early notable fights are fair.
+From TR 40 up it equals the
 [v0 level cap curve](trainer-rating-party-progression.md#v0-level-cap-curve),
 so a trainer at TR 80 and a player capped at TR 80 (8 badges) mean the same
-level:
+level. The level cap itself is unchanged.
 
 ```text
-(0,15) (40,28) (80,50) (120,75) (160,100)
+(0,5) (20,14) (40,28) (80,50) (120,75) (160,100)
 ```
 
-**Team size** (step, placeholder): TR 0–15 → 2, 16–43 → 3, 44–70 → 4,
-71–95 → 5, 96+ → 6. The steps line up with roughly Lv 20/30/45/60 on the level
-curve.
+**Team size** (step, placeholder): TR 0–10 → 1, 11–28 → 2, 29–43 → 3,
+44–70 → 4, 71–95 → 5, 96+ → 6.
 
-| TR | 0 | 20 | 50 | 71 | 85 | 95 | 120 | 160 | 300 |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| teamLevel | 15 | 22 | 34 | 45 | 53 | 59 | 75 | 100 | 100 |
-| teamSize | 2 | 3 | 4 | 5 | 5 | 5 | 6 | 6 | 6 |
+| TR | 0 | 10 | 11 | 20 | 25 | 29 | 50 | 71 | 85 | 95 | 120 | 160 | 300 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| teamLevel | 5 | 10 | 10 | 14 | 18 | 20 | 34 | 45 | 53 | 59 | 75 | 100 | 100 |
+| teamSize | 1 | 1 | 2 | 2 | 2 | 3 | 4 | 5 | 5 | 5 | 6 | 6 | 6 |
 
 ## Rosters
 
@@ -191,7 +195,17 @@ battleOrder = team reversed                          // slot N first, slot 1 las
 
 Roster slot 1 is the **signature Pokémon**: present from TR 0 and always fought
 last. Example: at TR 50 with offsets `0, −2, −2, −4, −1, −3`, the team is roster
-slots 1–4 at Lv 34/32/32/30, sent out in order 4, 3, 2, 1. Source FRLG, Emerald,
+slots 1–4 at Lv 34/32/32/30, sent out in order 4, 3, 2, 1.
+
+Early examples (placeholder content):
+
+| Battle | Trainer TR | Team |
+| --- | ---: | --- |
+| Blue in Pallet Town (world progress 0) | 0 | Eevee Lv 5 |
+| Blue at Cerulean (world progress about 20) | about 25 | two Pokémon at about Lv 18 |
+| Brock at world progress 0 (start TR 20) | 20 | Onix Lv 14 (offset 0), Geodude Lv 12 (offset −2) |
+
+Source FRLG, Emerald,
 and HNS parties are provenance and balance references; their levels never
 override this resolver. As world progress rises, a trainer's team gains
 levels and later roster slots; it never loses them.
@@ -218,24 +232,26 @@ TR, another trainer, or a random team.
 
 - Scalers: both pass the
   [scaler checks](player-trainer-rating.md#validation); team-level anchors
-  equal the v0 level cap anchors; team-size steps at 15/16, 43/44,
-  70/71, and 95/96.
-- Rosters: exactly six roster slots per trainer; offsets in −6..0; at least
-  one offset-0 slot among the first `teamSize(0)` slots (slot 1 at offset 0 is
-  the simplest satisfying rule); valid species/forms; `AUTHORED` slots have
+  equal the v0 level cap anchors from TR 40 up; team-size steps at 10/11,
+  28/29, 43/44, 70/71, and 95/96.
+- Rosters: exactly six roster slots per trainer; offsets in −6..0; slot 1 at
+  offset 0 (`teamSize(0)` is 1); valid species/forms; `AUTHORED` slots have
   one to four legal moves; `LEVEL_UP` yields a usable move at every reachable
   level.
-- Archetypes: each growth archetype passes the scaler checks, with anchors at
-  world progress 0/40/80/120/160, 0% at the first, and 100% at the last.
-- Catalog: the inventory holds exactly the 37 v0 characters; each has one
-  roster and valid growth values (non-negative integers, start TR ≤ peak TR
-  for non-rivals, a lead only and always for the rival, Blue the only rival);
-  every enrolled encounter ID maps to exactly one `characterId`.
+- Archetypes: each archetype passes the scaler checks, with anchors at world
+  progress 0/40/80/120/160 (the rival adds 20), 0% at the first, and 100% at
+  the last.
+- Catalog: the inventory holds exactly the 38 v0 entries (37 characters and
+  the Tate & Liza duo); each has one roster and valid growth values
+  (non-negative integers, start TR ≤ peak TR); every enrolled encounter ID maps to exactly one `characterId`.
 - Growth, for every trainer at world progress 0–200 and a very large value:
   TR is non-decreasing in world progress and never exceeds peak TR; a
-  non-rival equals start TR at world progress 0; the rival equals
-  `world progress + lead` until that reaches peak TR, then stays at peak;
-  results match the examples above, including the +10 and +1 steps.
+  trainer equals start TR at world progress 0 and peak TR from world progress
+  160; every archetype, the rival included, uses the one growth rule; results
+  match the examples above, including the +10 and +1 steps and the early Blue
+  and Brock fights.
+- Tate & Liza: their double battle draws both trainers' Pokémon from the shared
+  roster in order, at the table's team size; they never enter a league lineup.
 - Resolution report per trainer at world progress 0, 40, 80, 120, and 160: TR,
   size, member slots, levels, moves, and battle order, each level in 1–100 and
   the order reversed.
@@ -263,7 +279,10 @@ rules (placeholders tuned in the explorer):
   the player's TR (accessible), some near it, and some clearly above
   (challenges). The hardest leaders at 24 badges are late bloomers or
   high-peak steadies.
-- **Rival.** Blue stays about 10 TR ahead of the player until his peak.
+- **Rival.** Blue starts level with the player, pulls about 10 TR ahead by 4
+  badges, and stays there until his peak TR of 170.
+- **Early fights.** At world progress 0 notable fights are small and near the
+  player's level (Blue brings one Pokémon at Lv 5).
 
 The [explorer](../../devtools/ui/README.md#trainer-balance-explorer) is
 placeholder evidence and predicts species, sizes, and levels only. Playtesting
@@ -274,11 +293,12 @@ implementations stay active until then.
 ## Open questions
 
 - Each trainer's growth values and roster on the new scale, the archetype
-  anchors, and the placeholder team-size steps (content review).
+  anchors, and the placeholder team-level low end and team-size steps (content
+  review).
 
 ## Later
 
-- Notable trainer status for more characters, such as Red or Tate & Liza.
+- Notable trainer status for more characters, such as Red.
 - A definition of the "next Gym's highest/lowest level" cap in an open world.
 - Archetypes rolled per save (seeded), and other per-save seeded variation of
   trainers.

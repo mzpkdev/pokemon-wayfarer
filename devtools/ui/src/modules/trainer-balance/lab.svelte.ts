@@ -1,13 +1,14 @@
 import catalogData from "./catalog.json"
 import {
+  ARCHETYPES,
   EXPERIMENT_VERSION,
-  GROWTH_ARCHETYPES,
   LEVEL_OFFSET,
   MAX_ANCHORS,
   OLD_VERSION_REJECTION,
   WORLD_PROGRESS_CHECKPOINTS,
   createExperiment,
   gymLadder,
+  isGymLeader,
   leagueLineup,
   resolveTrainer,
   rosterGaps,
@@ -21,7 +22,6 @@ import type {
   Anchor,
   Archetype,
   Experiment,
-  GrowthArchetype,
   RosterSlot,
   TrainerRecord,
   TrainerSettings,
@@ -30,21 +30,20 @@ import type {
 export const catalog = catalogData as TrainerRecord[]
 type TRScalerId = "teamLevel" | "teamSize" | "wildLevel" | "routeTrainerLevel"
 /** TR scalers by their experiment key; archetype growth scalers by archetype name. */
-export type ScalerId = TRScalerId | GrowthArchetype
+export type ScalerId = TRScalerId | Archetype
 export const SCALER_IDS: readonly ScalerId[] = [
   "teamLevel",
   "teamSize",
   "wildLevel",
   "routeTrainerLevel",
-  ...GROWTH_ARCHETYPES,
+  ...ARCHETYPES,
 ]
-const isGrowth = (id: ScalerId): id is GrowthArchetype =>
-  (GROWTH_ARCHETYPES as readonly string[]).includes(id)
+const isGrowth = (id: ScalerId): id is Archetype => (ARCHETYPES as readonly string[]).includes(id)
 const anchorsOf = (experiment: Experiment, id: ScalerId): Anchor[] =>
   isGrowth(id) ? experiment.archetypes[id] : experiment[id]
 /** A form field name for a scaler (archetype names contain spaces). */
 export const scalerField = (id: ScalerId): string => id.replaceAll(" ", "-")
-const storageKey = "wayfarer-trainer-balance-v7"
+const storageKey = "wayfarer-trainer-balance-v8"
 const firstTrainer = catalog[0]
 if (!firstTrainer) throw new Error("The trainer catalog is empty.")
 const initialTrainerId = firstTrainer.id
@@ -92,9 +91,7 @@ export class BalanceLab {
       return (
         (this.region === "All regions" || trainer.region === this.region) &&
         (this.role === "All trainers" ||
-          (this.role === "Gym Leaders"
-            ? trainer.role === "Gym Leader"
-            : trainer.role === this.role)) &&
+          (this.role === "Gym Leaders" ? isGymLeader(trainer) : trainer.role === this.role)) &&
         (!query || `${trainer.name} ${trainer.region}`.toLowerCase().includes(query))
       )
     }),
@@ -189,7 +186,7 @@ export class BalanceLab {
     this.#_persist()
   }
 
-  /** Reads start TR, archetype, peak TR and lead from the growth form. A rival needs a lead. */
+  /** Reads start TR, archetype and peak TR from the growth form. */
   applyGrowth = (form: HTMLFormElement): void =>
     this.#_edit("Could not change the growth.", (next) => {
       const settings = next.trainers[this.selectedId]
@@ -206,10 +203,7 @@ export class BalanceLab {
       const startTR = whole("startTR", "Start TR")
       const peakTR = whole("peakTR", "Peak TR")
       if (peakTR < startTR) throw new Error("Peak TR must be at least start TR.")
-      const leadText = String(data.get("lead") ?? "").trim()
-      if (archetype === "rival" && !leadText) throw new Error("A rival needs a lead.")
-      const lead = archetype === "rival" ? whole("lead", "Lead") : null
-      Object.assign(settings, { startTR, archetype, peakTR, lead })
+      Object.assign(settings, { startTR, archetype, peakTR })
       return `Updated ${this.#_name(this.selectedId)}’s growth.`
     })
 

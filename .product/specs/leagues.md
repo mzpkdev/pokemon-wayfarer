@@ -62,9 +62,10 @@ cannot appear in a lineup twice. People with similar names remain distinct.
 
 A trainer is **eligible** when they are a notable trainer with valid growth
 values and a valid roster, fight in singles, are enabled, and have validated
-presentation. Red and Tate & Liza are not notable trainers in v0, so they are
-league-ineligible and keep their current policies: Red his separate mastery
-encounter, Tate & Liza their double battle. Region, title, and story
+presentation. Tate & Liza are a notable duo but fight only as a double battle,
+so the singles-only rule makes them league-ineligible. Red is not a notable
+trainer in v0, so he is league-ineligible and keeps his separate mastery
+encounter. Region, title, and story
 availability neither add nor remove a trainer. League eligibility does not
 change story battles, which follow the
 [every-battle rule](notable-trainers.md#trainer-rating).

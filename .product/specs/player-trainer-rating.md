@@ -109,7 +109,7 @@ Intent:
 - **Challenge from notable trainers.** The late challenge comes from Gyms,
   leagues, and overworld meetings with
   [notable trainers](notable-trainers.md#trainer-scalers), whose team level
-  reuses the level cap anchors.
+  matches the level cap from TR 40 up.
 
 The Mart tiers keep today's badge milestones: each current threshold maps to
 the v0 TR at the same badge count. Obedience, the half-experience rule that
@@ -129,8 +129,8 @@ reads a notable trainer's TR:
 | Poké Mart stock (counter-open snapshot) | [Global TR Poké Marts](global-tr-pokemarts.md) |
 | World progress: each notable trainer's TR (battle snapshot, or the locked lineup when entering a league) | [Notable trainers](notable-trainers.md#growth-with-world-progress) |
 
-Notable trainers use the level cap anchors for team level, applied to their
-own TR; nothing they do changes the getter, the saved value, or any consumer
+Notable trainers use their own team-level scaler, equal to the level cap from
+TR 40 up, applied to their own TR; nothing they do changes the getter, the saved value, or any consumer
 above. Standalone builds are unchanged.
 
 ## Validation

@@ -148,9 +148,9 @@ use fixed Tier 3 source rosters and the player's TR saved when entering the
 league, under [League scaling](league-scaling.md). The proposed
 [Leagues selection](../specs/leagues.md#selection-and-order) instead picks a
 lineup of the global top five by TR. Emerald source parties remain provenance
-references rather than required opening or circuit teams. Tate and Liza remain
-outside the singles pool under their current double-Gym policy, with their badge
-preserved.
+references rather than required opening or circuit teams. In the proposed design,
+Tate and Liza are one notable duo that keeps its double battle and badge;
+leagues are singles only, so the duo stays out of league lineups.
 
 Ordinary Hoenn wild encounters retain Emerald's species, methods, weights, and
 locations while using the HNS TR level projection. Hoenn badges
