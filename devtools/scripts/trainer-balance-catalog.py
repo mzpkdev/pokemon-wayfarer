@@ -3,8 +3,8 @@
 
 No network, ROM build, or temporary calibration files are required. Reference
 moves/items describe authored sources only. Each trainer gets an authored TR and
-a PROVISIONAL v0 roster (one ordered list of up to six entries) flattened from
-the earlier ace/filler prototype. Real rosters are authored later; a roster
+a placeholder v0 roster (one ordered list of up to six roster slots) flattened
+from the earlier ace/filler prototype. Real rosters are authored later; a roster
 short of six is a content-gap warning, not a failure.
 """
 from __future__ import annotations
@@ -38,7 +38,7 @@ BABIES = {"SPECIES_PICHU", "SPECIES_CLEFFA", "SPECIES_IGGLYBUFF", "SPECIES_TYROG
 # The old TR is suggestedStartTR from the first explorer catalog (commit
 # c3c83991ec, before the Living Rivals rework): Gym 1-5, Blue 6, Elite Four
 # 40-53, Champions 53-55, on the retired 0-80 player TR scale. new_scale_tr()
-# converts it to the rescaled player TR (contract section 6). Provisional
+# converts it to the rescaled player TR (contract section 6). Placeholder
 # until the authoring session sets real values.
 ROSTER = [
     ('Brock', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_BROCK', 2, ['Geodude', 'Onix']),
@@ -81,7 +81,7 @@ ROSTER = [
 ]
 
 
-# Retired 0-80 cap curve and the rescaled one (24 badges = TR 160).
+# Retired 0-80 level-cap curve and the rescaled one (24 badges = TR 160).
 OLD_CAP = [(0, 15), (4, 16), (8, 18), (16, 23), (30, 30), (40, 42), (55, 60), (65, 80), (80, 100)]
 NEW_CAP = [(0, 15), (40, 28), (80, 50), (120, 75), (160, 100)]
 LEAGUE_OLD, LEAGUE_NEW = (40, 55), (70, 95)
@@ -112,13 +112,13 @@ def inverse(anchors, level):
 def new_scale_tr(role, old):
     """Return (new TR, how it was converted).
 
-    Gym Leaders and Blue keep their team level (old cap-curve level -> the TR
-    giving it on the new cap curve); Elite Four and Champions map old 40-55
+    Gym Leaders and Blue keep their team level (old level-cap curve level -> the
+    TR giving it on the new level-cap curve); Elite Four and Champions map old 40-55
     linearly onto new 70-95, so the league top five land near TR 85-95.
     """
     if role == "Gym Leader" or old < LEAGUE_OLD[0]:
         level = curve(OLD_CAP, old)
-        return half_up(inverse(NEW_CAP, level)), f"by level equivalence (old cap-curve Lv {float(level):g} -> the TR giving it on the new cap curve)"
+        return half_up(inverse(NEW_CAP, level)), f"by level equivalence (old level-cap curve Lv {float(level):g} -> the TR giving it on the new level-cap curve)"
     (a, b), (c, d) = LEAGUE_OLD, LEAGUE_NEW
     return half_up(c + Fraction(old - a, b - a) * (d - c)), f"by mapping the old league band {a}-{b} linearly onto {c}-{d}"
 
@@ -232,7 +232,7 @@ def build_roster(members, early, evolutions):
     """Flatten (slot, isAce, levelOffset) members: aces first, then the rest, then early species.
 
     Mirrors the earlier prototype order (aces, fillers, handwritten early
-    fillers not covered by a line). Each entry takes the species at the end of
+    fillers not covered by a line). Each roster slot takes the species at the end of
     its line (the source species). Aces keep their source moves, item,
     ability and nature at offset 0; everything else uses LEVEL_UP.
     """
@@ -260,9 +260,9 @@ def build_roster(members, early, evolutions):
 
 
 def validate_roster(name, roster):
-    """v0 roster rules. More than six or a bad entry fails; fewer than six only warns."""
+    """v0 roster rules. More than six or a bad roster slot fails; fewer than six only warns."""
     if not 1 <= len(roster) <= ROSTER_SIZE:
-        raise ValueError(f"{name}: a roster lists 1-{ROSTER_SIZE} entries")
+        raise ValueError(f"{name}: a roster lists 1-{ROSTER_SIZE} Pokémon")
     for index, entry in enumerate(roster):
         where = f"{name}[{index + 1}]"
         if not isinstance(entry["species"], str) or not entry["species"].strip():
@@ -273,7 +273,7 @@ def validate_roster(name, roster):
         if moves != "LEVEL_UP" and not (isinstance(moves, list) and 1 <= len(moves) <= 4):
             raise ValueError(f"{where}: moves must be LEVEL_UP or 1-4 authored moves")
     if roster[0]["levelOffset"] != 0:
-        raise ValueError(f"{name}: entry 1 must have level offset 0")
+        raise ValueError(f"{name}: roster slot 1 must have level offset 0")
 
 
 def generate():
@@ -316,12 +316,12 @@ def generate():
                 provenance.append(f"{source['source']}:{owner}[{index}]")
             if len(members) != 6 or sum(is_ace for _, is_ace, _ in members) != 1:
                 raise ValueError(f"curated six-slot party with one ace required: {name}")
-            origin = "the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): " + "; ".join(provenance)
+            origin = "the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): " + "; ".join(provenance)
         else:
             top = max(slot["lvl"] for slot in reference_slots)
             ace_index = max(index for index, slot in enumerate(reference_slots) if slot["lvl"] == top)
             members = [(slot, index == ace_index, slot["lvl"] - top) for index, slot in enumerate(reference_slots)]
-            origin = f"{records[trainer]['source']}:{trainer} (entry 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0)"
+            origin = f"{records[trainer]['source']}:{trainer} (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0)"
         roster, total, extras = build_roster(members, early, evolutions)
         if name == "Blue":
             # One fixed six regardless of the player's starter: the source starter is replaced.
@@ -330,17 +330,17 @@ def generate():
         validate_roster(name, roster)
         if len(roster) < ROSTER_SIZE:
             gaps.append(f"{name} {len(roster)}/{ROSTER_SIZE}")
-        roster_source = (f"PROVISIONAL roster flattened from the earlier prototype, derived from {origin}."
-                         " Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP"
+        roster_source = (f"PLACEHOLDER roster flattened from the earlier prototype, derived from {origin}."
+                         " Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP"
                          " (a label: level-up learnsets are not resolved)."
-                         + (f" Handwritten early species {', '.join(extras)} fill the remaining slots at offset {DEFAULT_OFFSET}." if extras else "")
-                         + (f" The flattened list had {total} entries; only the first {ROSTER_SIZE} are kept." if total > ROSTER_SIZE else "")
-                         + (" Entry 1: starter replaced by Eevee for now (user), LEVEL_UP with no item." if name == "Blue" else ""))
+                         + (f" Handwritten early species {', '.join(extras)} fill the remaining roster slots at offset {DEFAULT_OFFSET}." if extras else "")
+                         + (f" The flattened list had {total} Pokémon; only the first {ROSTER_SIZE} are kept." if total > ROSTER_SIZE else "")
+                         + (" Roster slot 1: starter replaced by Eevee for now (user), LEVEL_UP with no item." if name == "Blue" else ""))
         result.append({"id": slug(name), "name": name, "region": region, "role": role,
                        "source": {"label": f"{family} local reference", "path": records[trainer]["source"], "trainerId": trainer, "note": note},
                        "referenceParty": [member(slot) for slot in reference_slots],
                        "tr": tr,
-                       "trSource": f"PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR {old_tr} (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted {conversion}.",
+                       "trSource": f"PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR {old_tr} (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted {conversion}.",
                        "roster": roster, "rosterSource": roster_source})
     if len(result) != 37 or len({row["id"] for row in result}) != 37:
         raise ValueError("catalog must contain exactly 37 unique trainers")
@@ -363,8 +363,8 @@ def main():
             OUTPUT.write_text(content)
         print(f"37 experimental trainers: {'checked' if args.check else 'generated'} {OUTPUT.relative_to(ROOT)}")
         if gaps:
-            # v0 requires six entries, but rosters are authored next: warn, don't fail.
-            print(f"warning: {len(gaps)} provisional rosters have fewer than {ROSTER_SIZE} entries: {', '.join(gaps)}", file=sys.stderr)
+            # v0 requires six roster slots, but rosters are authored next: warn, don't fail.
+            print(f"warning: {len(gaps)} placeholder rosters have fewer than {ROSTER_SIZE} Pokémon: {', '.join(gaps)}", file=sys.stderr)
     except (ValueError, OSError, KeyError, IndexError) as error:
         parser.exit(1, f"trainer balance catalog: {error}\n")
 

@@ -2,14 +2,14 @@ import { describe, expect, it } from "vitest"
 
 import catalogData from "./catalog.json"
 import {
-  DEFAULT_ROUTE_TRAINER_LEVEL,
+  DEFAULT_REGULAR_TRAINER_LEVEL,
   DEFAULT_TEAM_SIZE,
   DEFAULT_WILD_LEVEL,
-  PLAYER_CAP_ANCHORS,
+  LEVEL_CAP_ANCHORS,
   buildTeam,
   createExperiment,
-  leagueField,
-  playerCap,
+  leagueLineup,
+  levelCap,
   playerRating,
   resolveTrainer,
   rosterGaps,
@@ -21,10 +21,10 @@ import {
   validateRoster,
   worldLevels,
 } from "./engine.js"
-import type { Experiment, RosterEntry, TrainerRecord } from "./types.js"
+import type { Experiment, RosterSlot, TrainerRecord } from "./types.js"
 
 const catalog = catalogData as TrainerRecord[]
-const entry = (species: string, levelOffset = -2): RosterEntry => ({
+const slot = (species: string, levelOffset = -2): RosterSlot => ({
   species,
   levelOffset,
   moves: "LEVEL_UP",
@@ -42,14 +42,14 @@ const trainer = (id: string, tr: number, species = six): TrainerRecord => ({
   referenceParty: [],
   tr,
   trSource: "Fixture",
-  roster: species.map((name, index) => entry(name, index === 0 ? 0 : -2)),
+  roster: species.map((name, index) => slot(name, index === 0 ? 0 : -2)),
   rosterSource: "Fixture",
 })
 const experimentWith = (records: TrainerRecord[]): Experiment => createExperiment(records)
 
 describe("scalers", () => {
   it("interpolates linearly between anchors with halves rounded up", () => {
-    const anchors = PLAYER_CAP_ANCHORS
+    const anchors = LEVEL_CAP_ANCHORS
     expect(scale(anchors, 0)).toBe(15)
     expect(scale(anchors, 1)).toBe(15) // 15.325
     expect(scale(anchors, 2)).toBe(16) // 15.65
@@ -59,9 +59,13 @@ describe("scalers", () => {
   })
 
   it.each([
-    ["player soft cap", PLAYER_CAP_ANCHORS, [15, 22, 28, 39, 50, 63, 75, 88, 100]],
-    ["wild level target", DEFAULT_WILD_LEVEL, [6, 15, 24, 32, 40, 49, 58, 68, 78]],
-    ["route trainer baseline", DEFAULT_ROUTE_TRAINER_LEVEL, [9, 18, 27, 36, 44, 53, 62, 72, 82]],
+    ["level cap", LEVEL_CAP_ANCHORS, [15, 22, 28, 39, 50, 63, 75, 88, 100]],
+    ["wild level curve", DEFAULT_WILD_LEVEL, [6, 15, 24, 32, 40, 49, 58, 68, 78]],
+    [
+      "regular trainer level curve",
+      DEFAULT_REGULAR_TRAINER_LEVEL,
+      [9, 18, 27, 36, 44, 53, 62, 72, 82],
+    ],
   ])("reads the %s at anchors 0/40/80/120/160 and midpoints", (_name, anchors, levels) => {
     expect([0, 20, 40, 60, 80, 100, 120, 140, 160].map((tr) => scale(anchors, tr))).toEqual(levels)
     expect(scale(anchors, 400)).toBe(levels.at(-1))
@@ -74,7 +78,7 @@ describe("scalers", () => {
     expect(teamLevelFor(experiment, 240)).toBe(100)
     expect(teamSizeFor(experiment, 120)).toBe(6)
     expect(teamLevelFor(experiment, 1_000_000)).toBe(100)
-    // A scaler that saturates later keeps rising past TR 160: TR is not capped.
+    // A scaler with a later ceiling TR keeps rising past TR 160: TR is not capped.
     expect(
       scale(
         [
@@ -86,10 +90,10 @@ describe("scalers", () => {
     ).toBe(85)
   })
 
-  it("uses the player soft-cap anchors for team level", () => {
+  it("uses the level cap anchors for team level", () => {
     const experiment = experimentWith([trainer("fixture", 0)])
     for (let tr = 0; tr <= 200; tr += 1)
-      expect(teamLevelFor(experiment, tr)).toBe(scale(PLAYER_CAP_ANCHORS, tr))
+      expect(teamLevelFor(experiment, tr)).toBe(scale(LEVEL_CAP_ANCHORS, tr))
   })
 
   it("steps team size: 0–15 -> 2, 16–43 -> 3, 44–70 -> 4, 71–95 -> 5, 96+ -> 6", () => {
@@ -103,7 +107,7 @@ describe("scalers", () => {
 })
 
 describe("teams", () => {
-  it("takes the first N entries and fights them in reverse order", () => {
+  it("takes the first N roster slots and fights them in reverse order", () => {
     const { team, battleOrder } = buildTeam(trainer("fixture", 0).roster, 30, 4)
     expect(team.map((member) => member.species)).toEqual([
       "Steelix",
@@ -121,7 +125,7 @@ describe("teams", () => {
   })
 
   it("adds each offset to the team level and clamps to 1–100", () => {
-    const roster = [entry("Steelix", 0), entry("Golem", -6), entry("Onix", -3)]
+    const roster = [slot("Steelix", 0), slot("Golem", -6), slot("Onix", -3)]
     expect(buildTeam(roster, 42, 3).team.map((member) => member.level)).toEqual([42, 36, 39])
     expect(buildTeam(roster, 3, 3).team.map((member) => member.level)).toEqual([3, 1, 1])
     expect(buildTeam(roster, 100, 3).team.map((member) => member.level)).toEqual([100, 94, 97])
@@ -143,13 +147,13 @@ describe("teams", () => {
     expect(late.warnings).toEqual([])
   })
 
-  it("flags a short roster and fields what exists", () => {
+  it("flags a short roster and uses what exists", () => {
     const short = trainer("short", 120, six.slice(0, 5))
     const resolved = resolveTrainer(short, experimentWith([short]))
     expect(resolved.size).toBe(6)
     expect(resolved.team).toHaveLength(5)
     expect(resolved.warnings).toEqual([
-      "The roster lists 5 of 6 entries: add 1 more.",
+      "The roster lists 5 of 6 Pokémon: add 1 more.",
       "The team fills 5 of 6 slots.",
     ])
   })
@@ -159,7 +163,7 @@ describe("teams", () => {
     const experiment = experimentWith([blue])
     const before = resolveTrainer(blue, experiment)
     expect(playerRating({ badges: 24 })).toBe(160)
-    expect(playerCap({ badges: 24 })).toBe(100)
+    expect(levelCap({ badges: 24 })).toBe(100)
     expect(resolveTrainer(blue, experiment)).toEqual(before)
     expect(before.teamLevel).toBe(17)
   })
@@ -177,25 +181,25 @@ describe("player readout", () => {
     expect(Object.keys(createExperiment(catalog))).not.toContain("leagueClears")
   })
 
-  it("reads the cap, wild target and route-trainer baseline from the player TR", () => {
+  it("reads the level cap and world scaling from the player TR", () => {
     const experiment = createExperiment(catalog)
     const at = (badges: number) => worldLevels(experiment, { badges })
     expect([0, 4, 8, 16, 24].map(at)).toEqual([
-      { tr: 0, cap: 15, wild: 6, routeTrainer: 9 },
-      { tr: 40, cap: 28, wild: 24, routeTrainer: 27 },
-      { tr: 80, cap: 50, wild: 40, routeTrainer: 44 },
-      { tr: 120, cap: 75, wild: 58, routeTrainer: 62 },
-      { tr: 160, cap: 100, wild: 78, routeTrainer: 82 },
+      { tr: 0, cap: 15, wild: 6, regularTrainer: 9 },
+      { tr: 40, cap: 28, wild: 24, regularTrainer: 27 },
+      { tr: 80, cap: 50, wild: 40, regularTrainer: 44 },
+      { tr: 120, cap: 75, wild: 58, regularTrainer: 62 },
+      { tr: 160, cap: 100, wild: 78, regularTrainer: 82 },
     ])
-    // Early game presses against the cap; late game routes fall well below it.
-    expect([at(4).wild - at(4).cap, at(4).routeTrainer - at(4).cap]).toEqual([-4, -1])
-    expect([at(24).wild - at(24).cap, at(24).routeTrainer - at(24).cap]).toEqual([-22, -18])
+    // Early game presses against the cap; late game regular trainers fall well below it.
+    expect([at(4).wild - at(4).cap, at(4).regularTrainer - at(4).cap]).toEqual([-4, -1])
+    expect([at(24).wild - at(24).cap, at(24).regularTrainer - at(24).cap]).toEqual([-22, -18])
   })
 })
 
 describe("roster validation", () => {
   const valid = trainer("fixture", 0).roster
-  it("accepts six entries with entry 1 at offset 0", () => {
+  it("accepts six roster slots with roster slot 1 at offset 0", () => {
     expect(validateRoster(valid, "roster")).toEqual(valid)
   })
   it("accepts a short roster, which the explorer reports as a gap", () => {
@@ -206,41 +210,41 @@ describe("roster validation", () => {
     ])
   })
   it.each([
-    ["seven entries", [...valid, entry("Onix")], "1–6 entries"],
-    ["no entries", [], "1–6 entries"],
+    ["seven roster slots", [...valid, slot("Onix")], "1–6 Pokémon"],
+    ["no roster slots", [], "1–6 Pokémon"],
     [
-      "entry 1 off 0",
-      [entry("Steelix", -1), ...valid.slice(1)],
-      "entry 1 must have level offset 0",
+      "roster slot 1 off 0",
+      [slot("Steelix", -1), ...valid.slice(1)],
+      "roster slot 1 must have level offset 0",
     ],
-    ["an offset below -6", [valid[0], entry("Golem", -7)], "levelOffset"],
-    ["an offset above 0", [valid[0], entry("Golem", 1)], "levelOffset"],
-    ["five moves", [{ ...entry("Steelix", 0), moves: ["A", "B", "C", "D", "E"] }], "moves"],
-    ["no moves", [{ ...entry("Steelix", 0), moves: [] }], "moves"],
-    ["a blank species", [entry(" ", 0)], "species"],
-    ["an unknown field", [{ ...entry("Steelix", 0), ace: true }], "unknown fields"],
+    ["an offset below -6", [valid[0], slot("Golem", -7)], "levelOffset"],
+    ["an offset above 0", [valid[0], slot("Golem", 1)], "levelOffset"],
+    ["five moves", [{ ...slot("Steelix", 0), moves: ["A", "B", "C", "D", "E"] }], "moves"],
+    ["no moves", [{ ...slot("Steelix", 0), moves: [] }], "moves"],
+    ["a blank species", [slot(" ", 0)], "species"],
+    ["an unknown key", [{ ...slot("Steelix", 0), ace: true }], "unknown fields"],
   ])("rejects %s", (_name, roster, message) => {
     expect(() => validateRoster(roster, "roster")).toThrow(message)
   })
 })
 
-describe("league field", () => {
-  it("fields the top five by TR in ascending battle order, strongest last", () => {
-    const field = leagueField(catalog, createExperiment(catalog))
-    expect(field.map((row) => [row.trainer.name, row.tr, row.teamLevel])).toEqual([
+describe("league lineup", () => {
+  it("picks the top five by TR in ascending battle order, strongest last", () => {
+    const lineup = leagueLineup(catalog, createExperiment(catalog))
+    expect(lineup.map((row) => [row.trainer.name, row.tr, row.teamLevel])).toEqual([
       ["Bruno", 90, 56],
       ["Agatha", 92, 58],
       ["Wallace", 92, 58],
       ["Steven", 92, 58],
       ["Lance", 95, 59],
     ])
-    expect(field.at(-1)?.battleOrder.at(-1)?.species).toBe("Dragonite")
+    expect(lineup.at(-1)?.battleOrder.at(-1)?.species).toBe("Dragonite")
   })
 
   it("keeps the first league within reach at 8 badges: TR 85–95, team level near cap Lv 50", () => {
-    const field = leagueField(catalog, createExperiment(catalog))
-    expect(playerCap({ badges: 8 })).toBe(50)
-    for (const row of field) {
+    const lineup = leagueLineup(catalog, createExperiment(catalog))
+    expect(levelCap({ badges: 8 })).toBe(50)
+    for (const row of lineup) {
       expect(row.tr).toBeGreaterThanOrEqual(85)
       expect(row.tr).toBeLessThanOrEqual(95)
       expect(row.teamLevel).toBeGreaterThanOrEqual(53)
@@ -252,18 +256,18 @@ describe("league field", () => {
     const records = ["a", "b", "c", "d", "e", "f", "g"].map((id, index) =>
       trainer(id, index === 6 ? 90 : 40),
     )
-    const field = leagueField(records, experimentWith(records))
-    expect(field.map((row) => row.trainer.id)).toEqual(["a", "b", "c", "d", "g"])
+    const lineup = leagueLineup(records, experimentWith(records))
+    expect(lineup.map((row) => row.trainer.id)).toEqual(["a", "b", "c", "d", "g"])
   })
 })
 
 describe("catalog", () => {
-  it("ships 37 trainers with provisional TRs and valid rosters of at most six", () => {
+  it("ships 37 trainers with placeholder TRs and valid rosters of at most six", () => {
     expect(catalog).toHaveLength(37)
     const experiment = createExperiment(catalog)
     for (const record of catalog) {
       expect(Number.isInteger(record.tr) && record.tr >= 0).toBe(true)
-      expect(record.trSource).toContain("PROVISIONAL")
+      expect(record.trSource).toContain("PLACEHOLDER")
       expect(record.roster[0]?.levelOffset).toBe(0)
       expect(record.roster.length).toBeLessThanOrEqual(6)
     }
@@ -321,7 +325,7 @@ describe("experiment import", () => {
     )
   })
 
-  it("requires the wild and route-trainer scalers", () => {
+  it("requires the wild and regular trainer scalers", () => {
     const input = base()
     delete input.wildLevel
     expect(() => validateExperiment(input, records)).toThrow("missing or unknown fields")

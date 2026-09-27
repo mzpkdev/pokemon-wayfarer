@@ -29,7 +29,7 @@ Cianwood and Cinnabar.
 
 It does not open Route 44, Ice Path, Blackthorn, the League corridor, Mt.
 Silver, Alola, or Sinjoh early. It does not change wild encounters, fishing
-odds, native learnsets, optional field-move routes, ordinary trainer placement
+odds, native learnsets, optional field-move routes, regular trainer placement
 or sight range, battle scaling, or recovery after the player loses access to
 their last Surf user.
 
@@ -170,7 +170,8 @@ Apply the following script changes:
 6. Remove the `VAR_SSAQUA_STATE = 0` write from every circuit completion path,
    including the legacy `PokemonLeague_HallOfFame_hns` path while it exists.
    Indigo, Masters, and Hoenn completion must not change voyage state. Preserve
-   unrelated first-clear effects until their owning circuit port replaces them.
+   unrelated first-league-win effects until their owning circuit port replaces
+   them.
 7. In `SSAqua_1F_hns`, delete the Kanto progress flag heap from `LeaveBoat`.
    Run the arrival announcement at state 6 and set state 7 after it finishes.
    The door sailor permits disembarkation at state 7. Disembarking sets only

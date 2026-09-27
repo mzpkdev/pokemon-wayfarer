@@ -67,7 +67,7 @@ capture belongs to Hoenn's Terra Cave and its separate story rules.
 
 Replace Wayfarer's HNS route selection and empty coast-preview events with
 the complete FRLG route content. Preserve the FRLG route layouts and their
-ordinary Trainers, non-Trainer NPCs, signs, hidden items, Surf and fishing
+regular trainers, non-Trainer NPCs, signs, hidden items, Surf and fishing
 encounters, and Route 21 land encounters. The two FRLG Route 21 maps form one
 continuous Pallet-to-Cinnabar crossing. Trainer battles use Wayfarer's scaling
 and defeat-state rules, and route encounter sources follow its combined
@@ -96,7 +96,7 @@ This Blue introduction and Gym path describe the historical coastal port. The
 implemented [Viridian finale](../specs/frlg-kanto-viridian-finale.md) now
 supersedes them: Giovanni owns the FRLG Gym and Earth Badge, Blue is absent from
 Viridian, and his current Dojo unlock follows committed Indigo victory. The
-proposed [well-known trainers](well-known-trainers.md) model gives Blue
+proposed [notable trainers](notable-trainers.md) model gives Blue
 and Blaine their own authored, fixed TR and roster for every battle with them;
 it does not restore Blue as Viridian's badge owner. The port's source parties
 remain provenance references, not mandatory opening teams.
@@ -119,7 +119,8 @@ requirements.
   Groudon or Kyogre encounter, a Bill-triggered Sevii unlock, or a new
   campaign order.
 - Existing Hoenn Groudon story and capture rules, global badge accounting,
-  Trainer Rating, and regional League admission remain owned by their designs.
+  Trainer Rating (TR), and regional League admission remain owned by their
+  designs.
 
 ## Interactions
 

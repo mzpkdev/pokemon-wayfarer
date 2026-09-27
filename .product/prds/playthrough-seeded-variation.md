@@ -46,10 +46,10 @@ inputs.
 Each consumer defines its inputs and when they become fixed. Re-entering a map,
 inspecting a menu, declining an offer, retrying, saving, loading, or waiting
 does not create a new occurrence. A result with lasting consequences is
-committed to the owning feature's save state before it is revealed; loading
-from before the reveal reproduces it from the same key and inputs. A promised
-fixed outcome cannot be rebuilt from the player's current party, TR, time, or
-location at each reveal. A meaningful change of eligibility, such as a
+committed to the owning feature's save state before it is revealed; loading from
+before the reveal reproduces it from the same key and inputs. A promised fixed
+outcome cannot be rebuilt from the player's current party, Trainer Rating (TR),
+time, or location at each reveal. A meaningful change of eligibility, such as a
 different quest choice, can legitimately lead to a different outcome.
 
 ## Boundaries
@@ -79,8 +79,8 @@ owned by each feature.
 
 ## Later
 
-- Seeded venue order for the league circuit.
-- Seeded league fields per venue, with rotation and recurring editions.
+- Seeded league order.
+- Seeded league lineups, with rotation and recurring editions.
 - Per-save trainer growth arcs.
 - Per-save roster filler scores and jitter.
 - Other per-save world variants, each approved as its own feature.
@@ -89,4 +89,4 @@ owned by each feature.
 
 - [Playthrough seed framework specification](../specs/playthrough-seed-framework.md)
 - [Leagues PRD](leagues.md)
-- [Well-known trainers PRD](well-known-trainers.md)
+- [Notable trainers PRD](notable-trainers.md)

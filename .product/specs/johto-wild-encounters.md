@@ -22,8 +22,8 @@ authored level curve; raises Generation II probability by rearranging the
 existing weighted slots; and defines the reports and tests that protect time
 identity, native-HM access, and the Kanto border ecology.
 
-It does not change encounter runtime selection, encounter rates, Trainer
-Rating, rod quality, region access, special acquisitions, terrain, hidden
+It does not change encounter runtime selection, encounter rates, Trainer Rating
+(TR), rod quality, region access, special acquisitions, terrain, hidden
 encounters, facilities outside the frozen profile manifest, or randomized
 species behavior.
 
@@ -229,12 +229,12 @@ Pineco profile.
 
 ### Effective portfolio calculation
 
-Run each authored slot through production Trainer Rating eligibility, level
+Run each authored slot through production TR eligibility, level
 projection, and predecessor resolution. The report retains the authored slot,
 authored species, projected level outcomes, eligibility, and resulting species
 so every probability can be traced back to its source.
 
-For Wayfarer Ratings 0, 16, 40, 48, 56, 64, 72, and 80, renormalize eligible
+For Wayfarer TR values 0, 16, 40, 48, 56, 64, 72, and 80, renormalize eligible
 weights and repeat the authored portfolio calculation by effective species.
 The results must meet:
 
@@ -255,7 +255,7 @@ but this rebalance does not require or introduce that runtime behavior.
 Ability attraction, Lures, and randomizer behavior are off for portfolio
 acceptance. Produce a separate comparison with Hoenn Sound off and on. Every
 land and Surf species probability must be identical in both states at every
-sampled Rating.
+sampled TR.
 
 ### Time identity and fallback
 
@@ -284,33 +284,33 @@ Copy only the Johto-owned HNS rows from the native-HM specification into
 at Vermilion and Cinnabar belong to the Kanto specification and do not enter
 this array. Each record names species, utility moves, qualifying base labels,
 method, applicable times, qualifying authored level ranges, and the required
-Wayfarer Rating range. Most records are required from 0 through 80; Mantine's
+Wayfarer TR range. Most records are required from 0 through 80; Mantine's
 intentional protected range is 10 through 80.
 
 The protected species are Gligar, Aipom, Chinchou, Mareep, Wooper, Snubbull,
 Miltank, Marill, and Mantine. For every named slot and authored level, the
 production projection must yield an eligible family member with the required
-utility moves at every Rating in that record's required range. The species must
+utility moves at every TR in that record's required range. The species must
 remain obtainable in every qualifying place and time named by the current
 native-HM inventory.
 
 Mantine's global `minimumOrdinaryWildLevel` is 14. An authored level-15
-Mantine can project to level 14 at Rating 10, so 14 is the minimum valid floor
+Mantine can project to level 14 at TR 10, so 14 is the minimum valid floor
 for this protected inventory. Do not implement this as a Johto-only runtime
-exception, change the authored levels, weaken the Rating 10 through 80 anchor,
+exception, change the authored levels, weaken the TR 10 through 80 anchor,
 or add Mantyke or another predecessor resolution. Mantine is not a required
-low-rating anchor: its rows may be ineligible below Rating 10. The Olivine port
+low-TR anchor: its rows may be ineligible below TR 10. The Olivine port
 and Cianwood Chinchou records are the explicit early HNS Whirlpool anchor.
-They must remain eligible with Flash, Surf, and Whirlpool at every Rating from
+They must remain eligible with Flash, Surf, and Whirlpool at every TR from
 0 through 80.
 
-These Rating ranges are on the current scale. On the
-[target TR scale](player-trainer-rating.md#formula-v0-target) the v0 target
+These TR ranges are on today's scale. On the
+[v0 TR scale](player-trainer-rating.md#formula-v0) the v0
 ranges are TR 0 through 160 (0 to 24 badges) for the full records and TR 25
 through 160 (≈ 2.5 to 24 badges) for Mantine. Both need data re-verification
-against the [target wild curve](trainer-rating-wild-encounter-scaling.md#v0-target-curve),
+against the [v0 wild level curve](trainer-rating-wild-encounter-scaling.md#v0-wild-level-curve),
 including whether 14 is still the right Mantine floor; this specification does
-not yet claim either protection on the target scale.
+not yet claim either protection on the v0 scale.
 
 Aipom remains available through the Rock Smash-backed Headbutt profiles for
 Azalea Town and Route 33 at authored level 10. Its set of qualifying Headbutt
@@ -322,7 +322,7 @@ The Standard Rod source keeps Chinchou at exactly 11 percent of successful Old
 Rod encounters in every Olivine port day and night profile and exactly 12
 percent in Cianwood by day, with Lure off and every slot eligible. Those values
 are exactly 2.75 and 3 percent per unmodified cast. All affected records in
-`game/src/data/standard_rod_fishing.json` remain exact at every Rating from 0
+`game/src/data/standard_rod_fishing.json` remain exact at every TR from 0
 through 80.
 
 ### Radio and ordinary readers
@@ -348,7 +348,7 @@ contains:
 - The recorded pre-change baseline and final authored slot data under identical
   membership, weights, classification, and normalization.
 - Exact authored and effective species and generation portfolios, with each
-  rod quality and all eight Rating milestones.
+  rod quality and all eight TR milestones.
 - The ordered change ledger, portfolio snapshots after each stage, additions
   and removals, habitat evidence, and protected-anchor effects.
 - Day and night leading species, shared probabilities, distances, and every
@@ -387,7 +387,7 @@ radio, Pokédex, and DexNav objects, then build one HNS release ROM.
 Playtest fresh Johto starts at day and night, Surf, all three rod qualities,
 Headbutt, Rock Smash, the Olivine and Cianwood Chinchou sources, every native-HM
 anchor route, one transition route, Mt. Silver, National Park, and the Johto
-Safari Zone. Record map, time, method, rod quality, Rating, attempts, and
+Safari Zone. Record map, time, method, rod quality, TR, attempts, and
 observed species. Confirm special acquisitions and encounter rates did not
 change.
 

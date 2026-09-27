@@ -24,8 +24,8 @@ connect Johto to its neighboring region.
 
 The result should suit an open-world campaign. Players may enter an area from
 several directions and at different stages, so encounter identity comes from
-species, habitat, method, time of day, and rarity. Trainer Rating continues to
-own encounter levels and progression scaling.
+species, habitat, method, time of day, and rarity. Trainer Rating (TR) continues
+to own encounter levels and progression scaling.
 
 ## Design
 
@@ -42,10 +42,10 @@ this order:
 
 The native HM coverage inventory constrains every reweighting and replacement.
 Gligar, Aipom, Chinchou, Mareep, Wooper, Snubbull, Miltank, Marill, and Mantine
-must retain every qualifying map, time variant, authored level, and Trainer
-Rating outcome named by that design. A slot that supplies required coverage is
-not a replacement candidate unless the same change preserves the complete
-coverage contract.
+must retain every qualifying map, time variant, authored level, and TR outcome
+named by that design. A slot that supplies required coverage is not a
+replacement candidate unless the same change preserves the complete coverage
+contract.
 
 Species replacement is the exception. It must preserve the area's habitat and
 day or night identity. A forest, cave, coast, lake, route, and settlement edge
@@ -59,7 +59,7 @@ region's most visible local character.
 
 Cross-generation families count as one ecological family for placement. A
 Generation I base species does not need to disappear from Johto because it
-evolves into a Generation II species. The authored stage, Trainer Rating
+evolves into a Generation II species. The authored stage, TR
 resolution, and the habitat should decide which member appears.
 
 Day and night variants retain their current purpose. A time change may alter
@@ -156,12 +156,12 @@ night route may be dominated by one Generation II nocturnal species, and a
 transition area may be evenly mixed. The aggregate result must meet the
 targets without flattening those local identities.
 
-The acceptance report measures authored selection probability before Trainer
-Rating changes levels or resolves a species to a predecessor. It includes only
-active runtime slots, drops `SPECIES_NONE`, renormalizes the remaining entries,
-and uses the real slot weights for each encounter method. Each active map,
-time, and method profile contributes one normalized distribution to its method
-portfolio so duplicate source rows do not receive accidental extra weight.
+The acceptance report measures authored selection probability before TR changes
+levels or resolves a species to a predecessor. It includes only active runtime
+slots, drops `SPECIES_NONE`, renormalizes the remaining entries, and uses the
+real slot weights for each encounter method. Each active map, time, and method
+profile contributes one normalized distribution to its method portfolio so
+duplicate source rows do not receive accidental extra weight.
 
 The audited Johto topology contains 366 nonzero-rate records: 123 land, 90
 Surf, 89 fishing, and 64 Rock Smash or Headbutt interaction records. Three Surf
@@ -184,7 +184,7 @@ three individual quality results. Each quality must assign at least 10% of its
 regional successful-catch probability to Generation II so a valid average
 cannot hide an unusable rod tier.
 
-A second Wayfarer report samples the effective species outcomes at Ratings 0,
+A second Wayfarer report samples the effective species outcomes at TR values 0,
 16, 40, 48, 56, 64, 72, and 80. At every sampled rating, effective Generation II probability
 must remain between 30% and 45% overall, 35% and 55% for land, 15% and 35% for
 Surf, 10% and 30% for equal-quality fishing, and 45% and 70% for interaction
@@ -252,7 +252,7 @@ mountain habitat.
 
 ## Interactions
 
-- Trainer Rating selects eligible entries, projects levels, and resolves
+- TR selects eligible entries, projects levels, and resolves
   unsupported evolved species after authored slot selection. This PRD does not
   duplicate or override that logic.
 - Standard Rod keeps one ten-entry fishing population per profile. Old, Good,
@@ -269,19 +269,19 @@ mountain habitat.
   Mantine inventory remains binding.
 - Mantine uses the global minimum ordinary wild level of 14. This is the
   minimum floor that keeps an authored level-15 Mantine eligible when it
-  projects to level 14 at Rating 10. The correction does not change its
+  projects to level 14 at TR 10. The correction does not change its
   authored levels or add Mantyke predecessor behavior. Mantine is protected
-  from Rating 10 through 80 and is not the required low-rating Whirlpool
+  from TR 10 through 80 and is not the required low-TR Whirlpool
   source.
 - The Olivine and Cianwood Chinchou sources remain traversal-safe. Every
   required source must preserve the exact Standard Rod records: 11% of
   successful Old Rod encounters for every Olivine day and night profile, and
   12% for the Cianwood daytime profile. With the 25% Old Rod bite rate, these
   remain 2.75% and 3% per unmodified cast respectively. Together with the HNS
-  Chinchou learnset, these are the required Rating 0 through 80 Whirlpool
+  Chinchou learnset, these are the required TR 0 through 80 Whirlpool
   guarantee.
-- These Rating ranges are on today's scale. On the
-  [v0 target scale](player-trainer-rating.md#how-you-earn-it) they become TR 0
+- These TR ranges are on today's scale. On the
+  [v0 scale](player-trainer-rating.md#how-you-earn-it) they become TR 0
   through 160 (0 to 24 badges), and Mantine's becomes TR 25 through 160
   (about 2.5 to 24 badges). Both must be re-checked against the new wild curve,
   including Mantine's level-14 floor, before either protection is claimed there.
@@ -312,7 +312,7 @@ population, and any profile that the engine cannot bind to its intended map or
 time.
 
 Changes must preserve valid species identifiers, level ranges, method entry
-counts, encounter-rate fields, generated header bindings, Trainer Rating
+counts, encounter-rate fields, generated header bindings, TR
 metadata, Standard Rod accessibility records, and deterministic generator
 output.
 
@@ -335,13 +335,13 @@ The Johto rebalance is accepted when all of the following are true:
   and duplicate-slot consolidation with a habitat reason.
 - A day-and-night diff confirms that existing time identities remain visible
   and identifies every runtime fallback.
-- Effective outcome reports at the eight Trainer Rating milestones meet the
+- Effective outcome reports at the eight TR milestones meet the
   numeric overall, method, and individual-rod guardrails.
 - Across every Johto-owned profile, report zero Generation III species in
   active authored slots. In every non-randomized effective population, allow
   only Wynaut or Azurill produced by predecessor resolution from an authored
   Generation II family entry; report zero probability for every other
-  Generation III species. Apply this at every Trainer Rating, day and night,
+  Generation III species. Apply this at every TR, day and night,
   encounter method, and Standard Rod quality, with Hoenn Sound off and on.
 - Classify Generation III from base National Dex numbers 252 through 386. Count
   a resolved Wynaut or Azurill with its Generation II family and report its
@@ -352,10 +352,10 @@ The Johto rebalance is accepted when all of the following are true:
   Headbutt map coverage and aggregate probability do not regress.
 - Every qualifying native HM profile still contains its named Gligar, Aipom,
   Chinchou, Mareep, Wooper, Snubbull, Miltank, or Marill anchor at the required
-  authored levels and at every Wayfarer Rating from 0 through 80. The protected
+  authored levels and at every Wayfarer TR from 0 through 80. The protected
   Mantine profiles retain their named anchor at the required authored levels
-  from Rating 10 through 80. The Olivine and Cianwood Chinchou profiles provide
-  the required Whirlpool route at every Rating from 0 through 80.
+  from TR 10 through 80. The Olivine and Cianwood Chinchou profiles provide
+  the required Whirlpool route at every TR from 0 through 80.
 - Gifts, statics, babies, starters, fossils, prizes, and legendaries have not
   been added to ordinary encounter tables merely to satisfy a target.
 - Encounter generation and its existing deterministic tests pass with no
@@ -382,11 +382,11 @@ day and night. Each run should answer these questions:
   requirements?
 - Do Routes 26 through 28, Tohjo Falls, and Mt. Silver feel like a gradual
   ecological transition rather than an abrupt roster swap?
-- At early, midgame, League, and postgame Trainer Ratings, do the same places
+- At early, midgame, League, and postgame TR values, do the same places
   keep their identity while levels remain appropriate?
 
 Playtest notes should record the map, time, method, rod quality when relevant,
-Trainer Rating, number of attempts, and observed species. Probability reports
+TR, number of attempts, and observed species. Probability reports
 prove the authored distribution; playtesting decides whether that distribution
 is noticeable and enjoyable.
 

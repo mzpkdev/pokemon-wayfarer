@@ -12,12 +12,12 @@ on Wayfarer's explorable Sevii maps. It adapts their dependencies so each local
 adventure can be discovered independently while preserving its internal order.
 
 The [Sevii content overlay](sevii-content-overlay.md) owns event selection,
-script linkage, state ownership, and generated audits. Ordinary route Trainers
+script linkage, state ownership, and generated audits. Regular route trainers
 and Trainer Tower belong to their separate specifications.
 
 The merged exploration behavior remains authoritative. Story never grants,
 revokes, or gates the numbered-island ferry; never disables PC storage; and
-never requires Blaine, a mainland League clear, the National Pokédex, or the
+never requires Blaine, a mainland league win, the National Pokédex, or the
 Ruby to visit an island.
 
 ## Story entry points
@@ -176,7 +176,7 @@ These exclusions settle the PRD's communications-effects question.
 ### Lorelei and Icefall Cave
 
 Restore Lorelei and the three Rocket actors in Icefall Cave without requiring
-Celio, either gem, Giovanni, or a League clear. Preserve the cave traversal and
+Celio, either gem, Giovanni, or a league win. Preserve the cave traversal and
 the source battle against Rocket Grunt 45. Loss or departure leaves that battle
 and all actors needed to continue pending.
 
@@ -203,9 +203,9 @@ offering is accepted, then grant the original source reward through a separate
 receipt. A full destination pocket preserves the reward claim.
 
 Restore the Water Labyrinth Egg giver. Preserve the source friendship test and
-Togepi Egg. Do not add a Trainer Rating or story gate. When the party is full,
-retain the offer until a party slot is free; do not redirect the Egg to the PC.
-Record receipt only after the Egg exists in the party.
+Togepi Egg. Do not add a Trainer Rating (TR) or story gate. When the party is
+full, retain the offer until a party slot is free; do not redirect the Egg to
+the PC. Record receipt only after the Egg exists in the party.
 
 ### Tutors, trades, and passive island actors
 
@@ -236,8 +236,8 @@ Trainer party for this scene.
 
 Restore Moltres at the Mt. Ember summit. Use the shared bird threshold
 `WAYFARER_BIRD_CAPTURE_TR = 55`, consistent with Articuno and Zapdos. TR 55 is
-the current-scale value; v0 target: TR 120 (≈ 16 badges) on the
-[target TR scale](player-trainer-rating.md#formula-v0-target).
+today's value; v0: TR 120 (≈ 16 badges) on the
+[v0 TR scale](player-trainer-rating.md#formula-v0).
 
 - Below TR 55, interaction explains that the Pokémon is too dangerous and ends
   without starting a battle or hiding Moltres.
@@ -252,10 +252,10 @@ either other bird.
 ## Battle ownership
 
 Story Trainers retain source parties, battle types, AI, items, and prize money.
-Classify Rocket grunts that exist only as independent guards as ordinary scaling
-when the trainer-scaling inventory supports their exact IDs. Classify bikers,
-administrators, Gideon, Selphy, and Lorelei's opponent as story-owned and
-exclude them from automatic ordinary scaling. Record every battle
+Classify Rocket grunts that exist only as independent guards as regular trainer
+scaling when the trainer-scaling inventory supports their exact IDs. Classify
+bikers, administrators, Gideon, Selphy, and Lorelei's opponent as story-owned
+and exclude them from automatic regular trainer scaling. Record every battle
 classification explicitly.
 
 All objective battles commit progression only after a win. A native loss or draw

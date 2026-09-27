@@ -136,7 +136,7 @@ Apply these output rules:
 | Event class | Wayfarer output |
 | --- | --- |
 | Warps and outdoor connections | Retain, except for an explicit destination repair needed to return to Wayfarer's HNS Vermilion port. |
-| Sight and talk Trainers | Omit from the baseline; add only through the ordinary-Trainer layer. |
+| Sight and talk Trainers | Omit from the baseline; add only through the regular trainer layer. |
 | Story actors and cutscenes | Omit from the baseline; add only through the story layer. |
 | Passive flavor NPCs | Omit unless selected by a delivered content layer. |
 | Signs and fixed labels | Retain only when the script has no story read, story write, item delivery, battle, or movement scene. |
@@ -258,7 +258,7 @@ helpers with these authoritative Wayfarer predicates:
   check of the current HNS Vermilion route.
 - `WayfarerCanSailToNavelRock` is true only when `FLAG_SYS_GAME_CLEAR` is set
   and the Bag contains `ITEM_MYSTIC_TICKET`. This preserves the effective
-  League-clear and ticket ownership requirements of the Emerald ferry while
+  league-win and ticket ownership requirements of the Emerald ferry while
   making the requested Vermilion connection usable in Wayfarer. Do not read,
   allocate, set, or clear `FLAG_ENABLE_SHIP_NAVEL_ROCK`: it is the constant
   zero in the selected HNS flag catalog and cannot represent persistent
@@ -294,7 +294,7 @@ accept the new ungated Sevii branch before the Aqua gate while still proving
 that the regular Hoenn route calls `WayfarerCanUseRegularAqua` and
 `WayfarerPrepareHoennEntry` in its original order.
 
-No pass, item, badge, League clear, Pokedex milestone, or story flag authorizes
+No pass, item, badge, league win, Pokedex milestone, or story flag authorizes
 the numbered-island menu. This rule does not relax the existing event-ticket
 requirements for Birth Island or Navel Rock. Cancel leaves the player on the
 walkable side of the sailor. A departure cannot change S.S. Aqua, S.S. Anne,
@@ -397,7 +397,7 @@ before starting the next.
    generated audit with no map enabled in the release link.
 2. Enable the seven hubs, harbors, Pokemon Centers, Marts, houses, Day Care,
    and the Vermilion ferry integration. Connect the existing ticket-gated
-   Birth Island route and League-clear, ticket-gated Navel Rock route without
+   Birth Island route and league-win, ticket-gated Navel Rock route without
    changing their content. Prove
    numbered-island entry, return, healing, and blackout behavior.
 3. Enable outdoor routes and their direct connections, with story and Trainer

@@ -33,7 +33,7 @@ class, graphics, map names, or an absence of known exceptions.
 
 | Area | Authoring outcome | Player outcome |
 | --- | --- | --- |
-| Progression | One definition for each named Rating curve, consumed by gameplay and audits | Existing levels, rounding, offsets, and timing remain exact |
+| Progression | One definition for each named Trainer Rating (TR) curve, consumed by gameplay and audits | Existing levels, rounding, offsets, and timing remain exact |
 | NPC services | One declaration per rod contributor or converted mart interaction; membership and bindings derive from it | All currently supported regional contributors work, rewards remain repeat-safe, and towns retain their stock |
 | Encounters (future) | Separately approved shared encounter and story profiles supply only their declared behavior | Each adopted encounter retains its explicitly validated consequences |
 
@@ -57,18 +57,17 @@ Geography cannot determine which persistence bank a script uses. Total badges
 cannot substitute for a story completion flag or League admission rule.
 
 Each consumer declares when it samples changing state. A mart resolves its stock
-when opened. Ordinary Trainers and Gym members snapshot player TR at battle
+when opened. Regular trainers and Gym members snapshot player TR at battle
 setup. The existing six-slot Gym scaler is disabled by default; when enabled it
 uses player TR, while Giovanni has a separate five-slot player-TR projection.
-Current fixed Leagues use their saved admission Rating and sample again on new
-admission. Under the proposed
-[well-known trainers](well-known-trainers.md) model, well-known trainers
-snapshot a team from their own authored, fixed TR at battle setup, never player
-TR, and each [league field](../specs/leagues.md#frozen-field) is captured at
-entry and stays locked until the venue is won; a loss, leaving, or reload
-keeps it. The shared curve
-evaluator accepts an explicit input and never produces
-Rating.
+Today's fixed Leagues use their saved admission TR and sample again on new
+admission. Under the proposed [notable trainers](notable-trainers.md) model,
+notable trainers snapshot a team from their own authored, fixed TR at battle
+setup, never player TR, and each league's
+[locked lineup](../specs/leagues.md#locked-lineup) is captured when the player
+enters and stays locked until the league is won; a loss, leaving, or reload
+keeps it. The shared curve evaluator accepts an explicit input and never
+produces TR.
 
 ### Adding content
 
@@ -87,7 +86,7 @@ authorize a new outcome for it.
 
 ## Boundaries
 
-This work does not change Rating production, League rewards, badge access,
+This work does not change TR production, League rewards, badge access,
 feature enablement, encounter odds, rosters, learnsets, catalog membership, or
 dialogue. Existing feature specifications continue to own those decisions.
 Where a specification describes pending behavior, migration preserves the

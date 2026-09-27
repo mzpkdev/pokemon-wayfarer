@@ -5,18 +5,18 @@ Implemented: No
 Design status: Parked: not part of v0.
 
 Design note only. v0 rosters are one fixed ordered list with no dynamic picks
-([Well-known trainers](well-known-trainers.md#rosters)). Every
+([Notable trainers](notable-trainers.md#rosters)). Every
 hook below depends on a future dynamic-roster rule (for example scored
 supporting picks with an `ace` flag) that v0 does not have; restate the hooks
 against that rule when it is designed.
 
 ## Hooks
 
-- **Modifiers.** Authored rows `(modifierId, flag, characterId, member,
-  delta)`, active while a persistent save flag is set, with deltas for the
-  same member summing. They only reorder dynamic picks; they never change
-  signature members, team size, or TR. A set flag applies at the next
-  resolution and never alters a frozen battle or league snapshot.
+- **Modifiers.** Authored rows `(modifierId, flag, characterId, member, delta)`,
+  active while a persistent save flag is set, with deltas for the same member
+  summing. They only reorder dynamic picks; they never change signature members,
+  team size, or Trainer Rating (TR). A set flag applies at the next resolution
+  and never alters a frozen battle or league snapshot.
 - **Evolution gifts.** One offer per `(giftId, characterId, member, item,
   form, flag)`. Giving the item consumes it and sets the flag; while set, the
   member is at least `form` whatever its level. Permanent for the save.
@@ -50,5 +50,5 @@ randomness is drawn, so reloads cannot change a roster.
 
 ## References
 
-- [Well-known trainers](well-known-trainers.md)
+- [Notable trainers](notable-trainers.md)
 - [Playthrough seed framework](playthrough-seed-framework.md)

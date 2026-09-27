@@ -154,9 +154,9 @@ When un-parked, required evidence:
 
 ## Later
 
-- Circuit consumer: seeded venue order per edition (earlier draft: domain 1,
+- League consumer: seeded league order per edition (earlier draft: domain 1,
   ORDER).
-- Circuit consumer: seeded fields with home/visitor draws and rotation
+- League consumer: seeded lineups with home/visitor draws and rotation
   (earlier draft: domain 1, ROSTER and POOL_KIND).
 - Trainer growth consumer: one growth arc per trainer per save (earlier draft:
   domain 2, GROWTH_ARC).

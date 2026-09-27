@@ -1,9 +1,10 @@
-# Well-known trainers
+# Notable trainers
 
-Implemented: No. The current ROM keeps its existing Gym and League scaling
-until this design is adopted; the balance explorer is provisional tooling.
-Design status: v0 accepted. Each trainer's rating and team, and the exact
-growth steps, are provisional content under review.
+Implemented: No. Today, the ROM keeps its existing Gym and league scaling
+until this design is adopted; the balance explorer is placeholder tooling.
+Design status: v0 accepted. Each trainer's TR and team, and the exact growth
+steps, are placeholder content under review. Terms follow the
+[glossary](player-trainer-rating.md#glossary).
 
 ## Intent
 
@@ -17,7 +18,7 @@ a glance roughly how you compare.
 
 ### Their own rating, on your scale
 
-You have a Trainer Rating (TR); so does every well-known trainer. Neither is
+You have a Trainer Rating (TR); so does every notable trainer. Neither is
 worked out from the other: your training, badges, or party never make a
 trainer stronger or weaker. Their TR uses the same scale as yours, so a leader
 rated like a player with eight badges brings Pokémon around the level your own
@@ -30,9 +31,9 @@ special cases. In this first version each trainer's TR is set by hand and does
 not change, so their team is the same every time and in every save. That
 includes Blue: his early rival fights and his late ones bring the same team.
 
-### Who is well-known
+### Who is notable
 
-In this first version the well-known trainers are 37 people: the 23 singles
+In this first version the notable trainers are 37 people: the 23 singles
 Gym Leaders, the Kanto, Johto, and Hoenn Elite Four, Lance, Wallace, Steven,
 and Blue. Everyone else, including Red and Tate and Liza, keeps their current
 rules.
@@ -44,7 +45,7 @@ Like yours, a trainer's TR has no ceiling
 trainers span roughly the same range as the player, but stronger future
 content can go higher.
 
-Every trainer's rating is a placeholder for now, set on the new badge scale
+Every trainer's TR is a placeholder for now, set on the new badge scale
 ([Player Trainer Rating](player-trainer-rating.md)) and re-set with
 playtesting.
 
@@ -63,8 +64,8 @@ level difference, so a team feels shaped rather than uniform.
 Every trainer has one hand-picked list of six Pokémon, the same in every
 battle; Blue brings the same six whichever starter you chose. A small team is
 the start of that list, and each step up adds the next one. The first Pokémon
-on the list is the one the trainer is known for: it is on every team they
-field, and you always face it last.
+on the list is their signature Pokémon: it is on every team they bring, and
+you always face it last.
 
 FRLG, Emerald, and HNS parties are references for recognizable content, not
 required teams. Challenge options such as trainer items, trainer IVs and EVs,
@@ -74,8 +75,8 @@ and the level cap apply on top, as they do today.
 
 A battle's team is set when it starts and kept for the whole fight. Retrying
 brings the same team at the same levels. League opponents also fight with
-their own rating and team; [Leagues](leagues.md) decides who is in each field,
-which is set when you enter and kept until you win.
+their own TR and team; [Leagues](leagues.md) decides who is in each lineup,
+which is set when you enter a league and kept until you win.
 
 ## Gym battles
 
@@ -86,7 +87,7 @@ clear goal to build towards.
 A Gym battle uses the leader's own TR, team, and levels. The Gym adds nothing
 on top: the same leader met anywhere else is the same trainer at the same
 strength. The badge is awarded after the battle. Until adoption, the ROM keeps
-today's behavior: the earlier player-rating Gym scaler exists in code but is
+today's behavior: the earlier player-TR Gym scaler exists in code but is
 disabled by default, and Giovanni's Wayfarer finale has its own path.
 
 Wayfarer has 24 badge encounters. This design covers the 23 singles badge
@@ -106,10 +107,10 @@ path; other randomizer and challenge options keep their precedence.
 ## Boundaries
 
 - Your own TR, level cap, experience, obedience, wild and static encounters,
-  shops, ordinary trainers, and Gym members follow your TR under their own
+  shops, regular trainers, and Gym members follow your TR under their own
   rules ([Player Trainer Rating](player-trainer-rating.md)).
 - Tate and Liza keep their existing double Gym battle.
-- The same rating decides every battle with a well-known trainer; how each
+- The same TR decides every battle with a notable trainer; how each
   battle is built stays with the
   [Gym Leader scaling specification](../specs/gym-leader-scaling.md).
 - Standalone builds are unchanged.
@@ -125,12 +126,12 @@ belong to playtesting.
 
 ## Later
 
-- More well-known trainers, such as Red or Tate and Liza.
+- More notable trainers, such as Red or Tate and Liza.
 - A meaning for the "next Gym's highest or lowest level" cap options in an
   open world.
 - Trainers whose TR grows through their own battles, journeys, or time.
 - Growth arcs and other per-save variety in how trainers develop.
-- Aces and supporting Pokémon that vary from save to save.
+- Signature and supporting Pokémon that vary from save to save.
 - Player influence: nudges, gifts, and trades
   ([Trainer roster influence](trainer-roster-influence.md)).
 - Pokémon that evolve along a trainer's own line.
@@ -139,7 +140,7 @@ belong to playtesting.
 
 ## Specifications
 
-- [Well-known trainers specification](../specs/well-known-trainers.md):
+- [Notable trainers specification](../specs/notable-trainers.md):
   inventory, TR, scalers, rosters, and the battle snapshot.
 - [Gym Leader scaling](../specs/gym-leader-scaling.md): badge-encounter
   coverage and battle construction.
@@ -148,5 +149,5 @@ belong to playtesting.
 
 - [Player Trainer Rating](player-trainer-rating.md)
 - [Leagues](leagues.md)
-- [Ordinary Trainer and Gym-member scaling](trainer-party-scaling.md)
+- [Regular trainer and Gym member scaling](trainer-party-scaling.md)
 - [Player progression](../specs/trainer-rating-party-progression.md)

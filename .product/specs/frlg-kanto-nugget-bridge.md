@@ -86,7 +86,7 @@ The order is Cale, Ali, Timmy, Reli, then Ethan. Direct interaction with the
 first undefeated Trainer in that order offers its source-derived challenge.
 Speaking to a later undefeated Trainer first gives a short order-preserving
 message that names the next challenger and starts no battle. A defeated Trainer
-uses post-battle dialogue. This uses the five individual ordinary Trainer defeat
+uses post-battle dialogue. This uses the five individual regular trainer defeat
 states as the ordered progression; no new scene variable or shared Rocket
 variable is needed.
 
@@ -120,7 +120,7 @@ usable party:
    the already received Nugget and leaves the recruiter battle retryable.
 4. On a usable party, present the Rocket recruitment dialogue and start the
    ordinary Rocket battle. Only
-   `B_OUTCOME_WON` completes the recruiter's ordinary Trainer defeat state and
+   `B_OUTCOME_WON` completes the recruiter's regular trainer defeat state and
    enables its post-battle dialogue. Any non-win leaves the recruiter present
    and retryable. The prize receipt remains set and is never repeated.
 
@@ -147,11 +147,11 @@ no new save field, migration, or global item policy is required.
 ## Trainer identity and scaling
 
 Append the following six Wayfarer Trainers after the current Kanto adventure
-trainer range. Preserve the source class, portrait,
-gender metadata, encounter music, single-battle type, `Check Bad Move` AI, and
-zero-IV authored normal parties. All six are ordinary scripted Trainers and
-use the existing `ORDINARY` Trainer Rating scaling policy. None is an objective
-boss exclusion and this milestone does not alter shared scaling rules.
+trainer range. Preserve the source class, portrait, gender metadata, encounter
+music, single-battle type, `Check Bad Move` AI, and zero-IV authored normal
+parties. All six are ordinary scripted Trainers and use the existing `ORDINARY`
+Trainer Rating (TR) scaling policy. None is an objective boss exclusion and this
+milestone does not alter shared scaling rules.
 
 | Runtime ID | Wayfarer symbol | FRLG source | Authored normal party |
 | --- | --- | --- | --- |
@@ -214,7 +214,7 @@ state-4 transition, then continue north on `x=18`. Exercise states 4 and 5
 directly as well, to prove no new actor overlaps or blocks the retained scene
 or its ordinary path. The visual check must confirm that every selected tile is
 dry, walkable in its intended direction, and renders at elevation zero over the
-elevation-three bridge. Run focused map, story, ordinary-Trainer, item-pocket,
+elevation-three bridge. Run focused map, story, regular trainer, item-pocket,
 scaling, and relevant Machine Part regression checks, then obtain native critic
 review. Record the incremental release-ROM size and remaining physical free
 space after the milestone; do not silently cut content or begin unrelated

@@ -3,23 +3,22 @@
 PRD: [Poké Marts across the three regions](../prds/global-tr-pokemarts.md)
 Implemented: Partial; converted-counter runtime is enabled, release acceptance remains pending.
 
-The current [circuit producer](../../game/src/league_circuit.c) already contributes
-+8 once for each canonical venue's first clear. Replays add no player TR. The
-v0 TR target (rescaled formula, uncapped TR, scalers, and well-known trainers'
-separate TR) is in [Player Trainer Rating](player-trainer-rating.md); this
-document owns the target thresholds in
-[v0 target thresholds](#v0-target-thresholds). The thresholds elsewhere in this
-document are current ROM behavior.
+Today's [circuit producer](../../game/src/league_circuit.c) already
+contributes +8 once for each canonical league's first league win. Replays add
+no player TR. The v0 TR design (rescaled formula, uncapped TR, scalers, and
+notable trainers' separate TR) is in
+[Player Trainer Rating](player-trainer-rating.md); this document owns the v0
+thresholds in [v0 thresholds](#v0-thresholds). The thresholds elsewhere in this
+document are Today.
 
 ## Scope
 
-Implement shared Trainer Rating essentials and permanent local stock for the
-Wayfarer counters enumerated below. Kanto uses active HNS maps plus the
+Implement shared Trainer Rating (TR) essentials and permanent local stock for
+the Wayfarer counters enumerated below. Kanto uses active HNS maps plus the
 implemented FRLG Cinnabar counter defined below. Johto uses HNS maps and Hoenn
-uses imported Emerald maps. This
-specification defines the catalog, bindings, script changes, runtime contract
-and acceptance.
-It does not authorize changes to Pokémon species, teams, movesets or learnsets.
+uses imported Emerald maps. This specification defines the catalog, bindings,
+script changes, runtime contract and acceptance. It does not authorize changes
+to Pokémon species, teams, movesets or learnsets.
 
 Source baseline: `f7a2b95b7bde184141cf5b91215dc4e7ab9068a6`. The core production
 implementation is merged and enabled by default. Emulator validation and release
@@ -31,9 +30,10 @@ with the retention rules below before extending the implementation.
 ### Essentials and global progression
 
 Read `GetTrainerRating()` once when a converted counter opens. Use the greatest
-threshold less than or equal to that value. The getter's existing saved high-water
-behavior and League calculation remain authoritative. Never count badge flags,
-infer TR from the current region, or require a particular League clear.
+threshold less than or equal to that value. The getter's existing behavior (TR
+never decreases) and League calculation remain authoritative. Never count
+badge flags, infer TR from the current region, or require a particular league
+win.
 
 | Tier | Minimum TR | Newly included item constants |
 | --- | --- | --- |
@@ -78,14 +78,14 @@ These explicit TR thresholds replace the old badge thresholds for converted
 counters. Normal play does not receive the supplement. Existing challenge
 item-use restrictions, Expensive pricing and all specialist stock stay intact.
 
-### v0 target thresholds
+### v0 thresholds
 
-On the [target TR scale](player-trainer-rating.md#formula-v0-target) each
-threshold moves to the target TR at the same badge point as today (tier 5,
-today reached at 16 badges plus the Indigo clear, moves to 16 badges). Tier
+On the [v0 TR scale](player-trainer-rating.md#formula-v0) each
+threshold moves to the v0 TR at the same badge point as today (tier 5, today
+reached at 16 badges plus the first Indigo win, moves to 16 badges). Tier
 contents, order, and every other rule are unchanged:
 
-| Tier | Current minimum TR | Target minimum TR | Target reached at |
+| Tier | Today minimum TR | v0 minimum TR | v0 reached at |
 | --- | ---: | ---: | --- |
 | 0 | 0 | 0 | New game |
 | 1 | 4 | 10 | 1 badge |
@@ -95,7 +95,7 @@ contents, order, and every other rule are unchanged:
 | 5 | 55 | 120 | 16 badges |
 
 The Pokémon Center challenge supplement follows the same mapping: TR 0, 40,
-70, and 120 for Ether, Elixir, Max Ether, and Max Elixir. The target tier is a
+70, and 120 for Ether, Elixir, Max Ether, and Max Elixir. The v0 tier is a
 step [scaler](player-trainer-rating.md#scalers), flat at tier 5 above TR 120.
 
 ### Local stock authority and retention
@@ -229,7 +229,7 @@ new signature goods.
 | `TrainerHill_Entrance` / clerk at (14,9) | `TrainerHill_Entrance_EventScript_Clerk`; full essentials plus union of authored X/battle items |
 
 HNS Trainer Hill's first clerk at (14,9) remains a battle-item specialist.
-BP exchanges, décor and challenge-admission NPCs are excluded. Venue access
+BP exchanges, décor and challenge-admission NPCs are excluded. Facility access
 and facility rules stay authored; once a listed clerk is accessible, its stock
 has no additional game-clear gate. Any listed facility map excluded by the
 Wayfarer build receives an explicit inactive classification in the manifest,
@@ -444,10 +444,10 @@ largest list is Mauville in challenge mode at TR 55 or above: 31 unique IDs,
 including eight distinct signature/retained goods. Treat future capacity
 growth as a checked data change. Cover threshold minus one, threshold and threshold plus one;
 normal/challenge switching; equal TR with Johto-only, Kanto-only, Hoenn-only
-and mixed progress; 24 badges without League clears (TR 56) and eight badges
-plus the first League clear (TR 48). The TR 56 case has all essentials; the
+and mixed progress; 24 badges without league wins (TR 56) and eight badges
+plus the first league win (TR 48). The TR 56 case has all essentials; the
 TR 48 case has the TR 45 tier and excludes Max Potion and Full Restore, which
-unlock at TR 55. These are the current-scale thresholds.
+unlock at TR 55. These are today's thresholds.
 Use the real global TR path in integration tests, not only a stubbed tier input.
 
 Verify the 19 common items cannot appear early through signatures or retained

@@ -33,7 +33,7 @@ start of every phase.
 | NPC service binding | New optional `game/data/maps/<map>/gameplay.json` | Validate live script/event binding; emit membership and lookup views |
 | Mart stock and local specialties | Existing `game/src/data/wayfarer_marts.h` | Preserve stock authority; replace only duplicated binding ownership |
 | Encounter semantic declaration | Same map sidecar, or new `game/data/gameplay/shared.json` for genuinely shared script callers | Compile typed policy and validate legacy evidence |
-| Player state and mutations | Existing Rating, rod, origin, League, battle, and persistence APIs | Pass explicit inputs and call established operations |
+| Player state and mutations | Existing Trainer Rating (TR), rod, origin, League, battle, and persistence APIs | Pass explicit inputs and call established operations |
 
 Do not store these facts in one runtime struct. Host records may be rich and
 joined; runtime representations are owned by each consuming domain.
@@ -218,14 +218,14 @@ interactions, not a new combined reward/shop flow.
 
 ### 4. Progression adoption
 
-`progression.json` defines named curves with `id`, `points` (Rating/value pairs),
+`progression.json` defines named curves with `id`, `points` (TR/value pairs),
 and `interpolation: "nearest_half_up"`. V1 accepts monotonically nondecreasing
 integer values in 0..100, strictly increasing integer Ratings in 0..80, and
 endpoints at 0 and 80. No runtime floating point is used.
 
 Migrate these named baseline curves:
 
-| Rating | 0 | 4 | 8 | 16 | 30 | 40 | 55 | 65 | 80 |
+| TR | 0 | 4 | 8 | 16 | 30 | 40 | 55 | 65 | 80 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `wild_baseline` | 5 | 6 | 8 | 13 | 20 | 32 | 50 | 70 | 90 |
 | `ordinary_trainer_baseline` | 7 | 8 | 10 | 15 | 22 | 34 | 52 | 72 | 92 |
@@ -249,21 +249,20 @@ Invalid IDs return failure without changing `out`; a consumer follows its curren
 invalid/disabled path and never substitutes an unrelated curve.
 
 Preserve authored-level retention, Gym-member additions, slot offsets,
-party-size thresholds, clamping order, and product-specific Rating getter
-behavior. Do not move Rating production or challenge policy into the evaluator.
-The Rating input is explicit: marts, ordinary Trainers, and Gym members read
-player TR at their existing sample boundaries. Existing six-slot Gym plans use
-player TR when `B_GYM_LEADER_SCALING` is enabled; it is disabled by default.
-Giovanni retains his separate five-slot player-TR projection. Current fixed
-Leagues use their persisted admission value. The proposed
-[well-known trainers](well-known-trainers.md) model instead derives
-well-known trainers' team level and size, in every battle with them including
-the [league circuit](leagues.md), from each trainer's own
-authored, fixed TR, never from player TR. Team plans snapshot at battle setup;
-each league field is captured at entry and stays locked until the venue is
-won; a loss, leaving, or reload keeps it. Consumers and lifecycle code
-own those samples, eligibility, and persistence; the evaluator remains a pure
-function of explicit curve ID and rating. Host Gym/League audits consume the
+party-size thresholds, clamping order, and product-specific TR getter behavior.
+Do not move TR production or challenge policy into the evaluator. The TR input
+is explicit: marts, regular trainers, and Gym members read player TR at their
+existing sample boundaries. Existing six-slot Gym scaling uses player TR when
+`B_GYM_LEADER_SCALING` is enabled; it is disabled by default. Giovanni retains
+his separate five-slot player-TR projection. Today's fixed Leagues use their
+persisted admission value. The proposed [notable trainers](notable-trainers.md)
+model instead derives notable trainers' team level and size, in every battle
+with them including [leagues](leagues.md), from each trainer's own authored,
+fixed TR, never from player TR. Battle snapshots are taken at battle setup; each
+league's locked lineup is captured when the player enters and stays locked until
+the league is won; a loss, leaving, or reload keeps it. Consumers and lifecycle
+code own those samples, eligibility, and persistence; the evaluator remains a
+pure function of explicit curve ID and TR. Host Gym/League audits consume the
 same curve points; keep independent golden expected results for equivalence
 tests.
 
@@ -340,12 +339,13 @@ declarations nor a reviewed fallback fails coverage validation.
 
 `GYM_LEADER` delegates to the existing dedicated Gym roster compiler, retention
 and ordering rules, and `B_GYM_LEADER_SCALING` gate. It never falls through to
-ordinary scaling when that gate is disabled. Migrating its classification does
-not require converting every leader's outcome script. League, rival, and facility
-IDs classified `EXCLUDED` retain their existing separately owned special handling;
-excluded here means excluded from the ordinary/Gym policy projection, not disabled
-in every gameplay system. Validate against the complete selected baseline policy
-enum rather than silently mapping new upstream categories to an existing value.
+regular trainer scaling when that gate is disabled. Migrating its classification
+does not require converting every leader's outcome script. League, rival, and
+facility IDs classified `EXCLUDED` retain their existing separately owned
+special handling; excluded here means excluded from the ordinary/Gym policy
+projection, not disabled in every gameplay system. Validate against the complete
+selected baseline policy enum rather than silently mapping new upstream
+categories to an existing value.
 
 The `legacy` adapter stores reviewed policy and command provenance in the host
 inventory. Import current classification evidence and reviewed caller fingerprints;
@@ -480,7 +480,7 @@ measured savings claims.
 | Phase | Deliverable | Exit evidence |
 | --- | --- | --- |
 | A | Build adapters, schema validation, inventory, deterministic outputs, baseline reports | Repeated clean generation is byte-identical; wrong-product and stale inputs rejected; zero runtime delta |
-| B | Shared progression source and migrated gameplay/host consumers | Exact outputs at every Rating 0..80, clamped inputs, curve boundaries, existing modifiers, and unchanged snapshot lifecycle |
+| B | Shared progression source and migrated gameplay/host consumers | Exact outputs at every TR 0..80, clamped inputs, curve boundaries, existing modifiers, and unchanged snapshot lifecycle |
 | C | Rod and mart declarations, generated membership/bindings, updated audits | All selected contributors/counters covered; transaction and catalog equivalence; authoring exercises pass |
 | D | Trainer inventory/adapter and required scaling migration coverage | Scaling equivalence, caller validation, native-routing preservation, and final resource gates |
 
@@ -502,13 +502,14 @@ available, and that an old-handler declaration fails resolution. A source event
 change must invalidate its reviewed fingerprint. This tests the import contract
 without depending on PR #92 or importing its content into this task.
 
-For progression, compare all Rating values, trainer authored levels 1..100 for
-each existing scaling policy, existing Gym/League offset ranges, and wild effective
-population regressions. Exercise League admission, Rating changes during the run,
-save/load, defeat, and retry. For rods, exercise every distinct three-giver order
-in Wayfarer (120), duplicates, completed progression, transaction failure, shortcut
-preservation, and mixed-region save/load. For marts, compare all profiles across
-0..80 and relevant challenge settings including exact item ordering and terminator.
+For progression, compare all TR values, trainer authored levels 1..100 for each
+existing scaling policy, existing Gym/League offset ranges, and wild effective
+population regressions. Exercise League admission, TR changes during the run,
+save/load, defeat, and retry. For rods, exercise every distinct three-giver
+order in Wayfarer (120), duplicates, completed progression, transaction failure,
+shortcut preservation, and mixed-region save/load. For marts, compare all
+profiles across 0..80 and relevant challenge settings including exact item
+ordering and terminator.
 
 For current encounter inventory, compare all generated scaling assignments against
 the native caller baseline and prove that newly discovered callers cannot gain

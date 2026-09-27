@@ -8,7 +8,16 @@ Implemented: Yes (2026-09-24). The Wayfarer port is covered by focused source, n
 
 ## Place and content
 
-The HNS Power Plant remains an operating facility with its existing Route 10 exterior, entrance hall, back room, workers, manager, Magneton trade, and Machine Part repair. Its older generating hall remains behind the staffed section. One existing worker in `Route10_PowerPlantEntrance_hns` offers a fade transition into the FRLG `PowerPlant_Frlg` interior. The old hall is explorable before or after repair, without a badge, Machine Part state, radio upgrade, another Rocket investigation, or League clear. Declining the worker's offer changes no state. Choose the worker and arrival tiles only after checking collision, facing, movement, and existing interactions; this specification does not assert coordinates.
+The HNS Power Plant remains an operating facility with its existing Route 10
+exterior, entrance hall, back room, workers, manager, Magneton trade, and
+Machine Part repair. Its older generating hall remains behind the staffed
+section. One existing worker in `Route10_PowerPlantEntrance_hns` offers a fade
+transition into the FRLG `PowerPlant_Frlg` interior. The old hall is explorable
+before or after repair, without a badge, Machine Part state, radio upgrade,
+another Rocket investigation, or league win. Declining the worker's offer
+changes no state. Choose the worker and arrival tiles only after checking
+collision, facing, movement, and existing interactions; this specification does
+not assert coordinates.
 
 Reuse the complete 49×40 FRLG hall layout and maze, its ordinary wild encounters, five visible items (Max Potion, TM17, TM25, Thunder Stone, Elixir), two hidden items (Max Elixir, Thunder Stone), and two Electrode decoys. Preserve their one-time item and encounter state across exits, save/reload, and failed Bag handoffs. Select the map, encounters, required assets, scripts, and map identity for Wayfarer explicitly; their source presence is not proof of runtime inclusion. This port reuses the existing layout binaries: it edits no `map.bin` and imports no FRLG Route 10 exterior.
 
@@ -22,7 +31,15 @@ Repair continues to enable its existing consumers: Misty's Route 25 date and Gym
 
 ## Zapdos
 
-Move the single Wayfarer Route 10 exterior Zapdos encounter into the FRLG hall's source position. Remove its exterior object and interaction so there is only one Zapdos. Exploration and approach remain available below Trainer Rating (TR) 55. Below TR 55, interaction gives a brief readiness message without starting battle or changing Zapdos state. At TR 55 or above, start the fixed level 50 static Zapdos battle; TR is an eligibility check, not a level-scaling or capture-rate change. No Articuno, Rocket, Machine Part, badge, or League condition is added. TR 55 is the current-scale threshold; v0 target: TR 120 (≈ 16 badges) on the [target TR scale](player-trainer-rating.md#formula-v0-target).
+Move the single Wayfarer Route 10 exterior Zapdos encounter into the FRLG hall's
+source position. Remove its exterior object and interaction so there is only one
+Zapdos. Exploration and approach remain available below Trainer Rating (TR) 55.
+Below TR 55, interaction gives a brief readiness message without starting battle
+or changing Zapdos state. At TR 55 or above, start the fixed level 50 static
+Zapdos battle; TR is an eligibility check, not a level-scaling or capture-rate
+change. No Articuno, Rocket, Machine Part, badge, or League condition is added.
+TR 55 is today's threshold; v0: TR 120 (≈ 16 badges) on the
+[v0 TR scale](player-trainer-rating.md#formula-v0).
 
 Use FRLG's Zapdos outcome policy, with Wayfarer's TR gate added before battle:
 

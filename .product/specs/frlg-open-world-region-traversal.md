@@ -27,7 +27,7 @@ state isolation needed for early Sevii arrival.
 
 It does not open Indigo Plateau or event-only islands, remove HM requirements
 from optional content, redesign the S.S. Anne or Sevii campaign stories, change
-wild encounters, ordinary trainer placement or sight range, or provide
+wild encounters, regular trainer placement or sight range, or provide
 emergency recovery after the player loses access to their last native Surf
 user.
 

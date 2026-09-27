@@ -13,10 +13,10 @@ make towns recognizable and give players reasons to visit different shops.
 The converted-counter runtime now uses the shared player-TR essentials and
 permanent local stock specified below; release acceptance remains pending in
 the implementation specification. Legacy counters outside that enrollment keep
-their existing behavior. The v0 TR target (a new badge scale, uncapped TR,
-scalers, and well-known trainers' separate TR) is in
+their existing behavior. The v0 TR design (a new badge scale, uncapped TR,
+scalers, and notable trainers' separate TR) is in
 [Player Trainer Rating](player-trainer-rating.md); its effect on marts is
-under [v0 target](#v0-target).
+under [v0](#v0).
 
 ## Design
 
@@ -26,7 +26,7 @@ counters supply that catalog together: balls and status cures on the left,
 HP medicine and repels on the right. All other converted locations have a
 full-service counter. Stock expands when the player reaches a
 threshold, keeps all earlier items, and remains available at every higher TR.
-The source of the player's badges or League clears does not affect stock at
+The source of the player's badges or league wins does not affect stock at
 the same TR.
 
 | Minimum TR | Additions to essentials |
@@ -47,14 +47,14 @@ For example, a TR 4 visitor to Cherrygrove and Mossdeep can buy Great Balls
 and Super Potions in both towns. Their specialty stock differs. On returning
 to Cherrygrove at TR 55, the player can buy Full Restores there too.
 
-### v0 target
+### v0
 
 On the new TR scale the thresholds become TR 0, 10, 40, 70, 80, and 120, so
 each tier still opens at the same badge point: Great Balls after the first
 badge, Super Repels after four, Ultra Balls after seven, Full Heals after
 eight, and Max Potions and Full Restores after sixteen. The tier contents and
 the rest of this design are unchanged. The thresholds in the table above stay
-the current ROM's until adoption.
+Today's until adoption.
 
 ### Local character
 
@@ -84,9 +84,9 @@ their existing specialist floors. General-counter evolution stones and other
 nonessential goods remain available. A department store earns its appeal
 through breadth and convenience.
 
-Cash marts at League venues, Trainer Hill and the Battle Frontier also receive
-TR essentials where the specification identifies an existing resupply clerk.
-Specialist counters in the same building keep their separate services.
+Cash marts in League buildings, Trainer Hill and the Battle Frontier also
+receive TR essentials where the specification identifies an existing resupply
+clerk. Specialist counters in the same building keep their separate services.
 
 ### Story and access
 

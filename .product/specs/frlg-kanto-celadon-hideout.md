@@ -47,7 +47,7 @@ item receipt use separate saved flags.
 ## Battles and rewards
 
 Retain all 13 FRLG parties: entrance Grunt 7, interior Grunts 8–18, and Giovanni.
-The 12 grunts use current ordinary trainer scaling. Giovanni uses the authored
+The 12 grunts use current regular trainer scaling. Giovanni uses the authored
 boss policy. Allocate independent trainer defeat state through the current
 Wayfarer trainer framework.
 

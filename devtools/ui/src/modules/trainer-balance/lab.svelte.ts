@@ -5,14 +5,14 @@ import {
   MAX_ANCHORS,
   OLD_VERSION_REJECTION,
   createExperiment,
-  leagueField,
+  leagueLineup,
   resolveTrainer,
   rosterGaps,
   serializeExperiment,
   validateExperiment,
   worldLevels,
 } from "./engine.js"
-import type { Anchor, Experiment, RosterEntry, TrainerRecord, TrainerSettings } from "./types.js"
+import type { Anchor, Experiment, RosterSlot, TrainerRecord, TrainerSettings } from "./types.js"
 
 export const catalog = catalogData as TrainerRecord[]
 export type ScalerId = "teamLevel" | "teamSize" | "wildLevel" | "routeTrainerLevel"
@@ -28,7 +28,7 @@ if (!firstTrainer) throw new Error("The trainer catalog is empty.")
 const initialTrainerId = firstTrainer.id
 
 /** "LEVEL_UP" (or blank) keeps the level-up policy; otherwise moves split on commas or dots. */
-export const parseMoves = (text: string): RosterEntry["moves"] => {
+export const parseMoves = (text: string): RosterSlot["moves"] => {
   const value = text.trim()
   if (!value || value.toUpperCase() === "LEVEL_UP") return "LEVEL_UP"
   return value
@@ -36,7 +36,7 @@ export const parseMoves = (text: string): RosterEntry["moves"] => {
     .map((move) => move.trim())
     .filter(Boolean)
 }
-export const movesText = (moves: RosterEntry["moves"]): string =>
+export const movesText = (moves: RosterSlot["moves"]): string =>
   moves === "LEVEL_UP" ? "LEVEL_UP" : moves.join(", ")
 
 export class BalanceLab {
@@ -74,14 +74,13 @@ export class BalanceLab {
     }),
   )
   selected = $derived.by(() => {
-    const row =
-      this.allRows.find((entry) => entry.trainer.id === this.selectedId) ?? this.allRows[0]
+    const row = this.allRows.find((row) => row.trainer.id === this.selectedId) ?? this.allRows[0]
     if (!row) throw new Error("The trainer catalog is empty.")
     return row
   })
   settings = $derived(this.#_settings(this.selected.trainer.id))
   gaps = $derived(rosterGaps(catalog, this.#_experiment))
-  league = $derived(leagueField(catalog, this.#_experiment))
+  league = $derived(leagueLineup(catalog, this.#_experiment))
   aboveCap = $derived(this.allRows.filter((row) => row.teamLevel > this.cap).length)
 
   constructor() {
@@ -128,7 +127,7 @@ export class BalanceLab {
     }
   }
 
-  #_roster = (next: Experiment): RosterEntry[] => {
+  #_roster = (next: Experiment): RosterSlot[] => {
     const roster = next.trainers[this.selectedId]?.roster
     if (!roster) throw new Error("Unknown selected trainer.")
     return roster
@@ -167,20 +166,20 @@ export class BalanceLab {
       return `${this.#_name(id)} is now TR ${tr}.`
     })
 
-  /** Swaps an entry with its neighbour; entry 1 must stay at offset 0. */
-  moveEntry = (index: number, direction: -1 | 1): void =>
+  /** Swaps a roster slot with its neighbour; roster slot 1 must stay at offset 0. */
+  moveSlot = (index: number, direction: -1 | 1): void =>
     this.#_edit("Could not reorder the roster.", (next) => {
       const roster = this.#_roster(next)
-      const entry = roster[index]
+      const moved = roster[index]
       const other = roster[index + direction]
-      if (!entry || !other) return undefined
+      if (!moved || !other) return undefined
       roster[index] = other
-      roster[index + direction] = entry
-      return `Moved ${entry.species} to entry ${index + direction + 1}.`
+      roster[index + direction] = moved
+      return `Moved ${moved.species} to roster slot ${index + direction + 1}.`
     })
 
-  addEntry = (): void =>
-    this.#_edit("Could not add an entry.", (next) => {
+  addSlot = (): void =>
+    this.#_edit("Could not add a roster slot.", (next) => {
       const roster = this.#_roster(next)
       roster.push({
         species: "Unown",
@@ -190,26 +189,26 @@ export class BalanceLab {
         ability: null,
         nature: null,
       })
-      return `Added entry ${roster.length}. Rename its species in the roster editor.`
+      return `Added roster slot ${roster.length}. Rename its species in the roster editor.`
     })
 
-  removeEntry = (index: number): void =>
-    this.#_edit("Could not remove the entry.", (next) => {
+  removeSlot = (index: number): void =>
+    this.#_edit("Could not remove the roster slot.", (next) => {
       const [removed] = this.#_roster(next).splice(index, 1)
       return removed ? `Removed ${removed.species}.` : undefined
     })
 
-  /** Reads species, offset, moves and item for every entry from the roster form. */
+  /** Reads species, offset, moves and item for every roster slot from the roster form. */
   applyRoster = (form: HTMLFormElement): void =>
     this.#_edit("Could not apply the roster.", (next) => {
       const data = new FormData(form)
       const text = (name: string) => String(data.get(name) ?? "").trim()
-      this.#_roster(next).forEach((entry, index) => {
-        entry.species = text(`entry-${index}-species`)
-        const offset = text(`entry-${index}-offset`)
-        entry.levelOffset = offset === "" ? Number.NaN : Number(offset)
-        entry.moves = parseMoves(text(`entry-${index}-moves`))
-        entry.item = text(`entry-${index}-item`) || null
+      this.#_roster(next).forEach((slot, index) => {
+        slot.species = text(`slot-${index}-species`)
+        const offset = text(`slot-${index}-offset`)
+        slot.levelOffset = offset === "" ? Number.NaN : Number(offset)
+        slot.moves = parseMoves(text(`slot-${index}-moves`))
+        slot.item = text(`slot-${index}-item`) || null
       })
       return `Updated ${this.selected.trainer.name}’s roster.`
     })

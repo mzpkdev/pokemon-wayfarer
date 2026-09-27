@@ -8,17 +8,32 @@ Implemented: Yes. The Wayfarer Viridian Gym/Giovanni finale and first-committed-
 
 ## Gym and access
 
-Keep the HNS Viridian City exterior and existing Gym doorway. Select the complete FRLG `ViridianCity_Gym_Frlg` 20×24 layout and arrow maze, its eight ordinary Trainers, guide, Giovanni, and both doorway directions for Wayfarer. Reuse the existing layout binary; event, warp, script, Trainer, asset, and map selection must not edit `map.bin`. Audit selected-map inclusion and rendered collision before choosing arrival positions. The Gym can be entered and explored before Giovanni is available, and remains traversable after he departs. Trainers use ordinary Wayfarer scaling and one-time defeat state; importing FRLG script names does not make their raw Trainer IDs safe to reuse.
+Keep the HNS Viridian City exterior and existing Gym doorway. Select the
+complete FRLG `ViridianCity_Gym_Frlg` 20×24 layout and arrow maze, its eight
+regular trainers, guide, Giovanni, and both doorway directions for Wayfarer.
+Reuse the existing layout binary; event, warp, script, Trainer, asset, and map
+selection must not edit `map.bin`. Audit selected-map inclusion and rendered
+collision before choosing arrival positions. The Gym can be entered and explored
+before Giovanni is available, and remains traversable after he departs. Trainers
+use ordinary Wayfarer scaling and one-time defeat state; importing FRLG script
+names does not make their raw Trainer IDs safe to reuse.
 
-Giovanni's challenge becomes available once the Celadon Rocket Hideout is resolved **and** Silph Co. is liberated, in either order. The Hideout's Giovanni battle and Silph Scope reward, and Silph's Giovanni battle and liberation, are the two local prerequisites. Pokémon Tower/Fuji, either Snorlax, any specific badge count, Trainer Rating, an Indigo clear, and unrelated regional progress are not prerequisites. Entering early gives truthful local guidance without granting a victory or closing the Gym. A loss leaves Giovanni available to retry and does not award a badge, TM, or finale state.
+Giovanni's challenge becomes available once the Celadon Rocket Hideout is
+resolved **and** Silph Co. is liberated, in either order. The Hideout's Giovanni
+battle and Silph Scope reward, and Silph's Giovanni battle and liberation, are
+the two local prerequisites. Pokémon Tower/Fuji, either Snorlax, any specific
+badge count, Trainer Rating (TR), an Indigo clear, and unrelated regional
+progress are not prerequisites. Entering early gives truthful local guidance
+without granting a victory or closing the Gym. A loss leaves Giovanni available
+to retry and does not award a badge, TM, or finale state.
 
 The current finale uses the FRLG final Gym source order: Rhyhorn 45, Dugtrio 42,
 Nidoqueen 44, Nidoking 45, Rhyhorn 50, retaining both Rhyhorn. These are source
 levels under the current bespoke five-slot player-TR projection in
 [party construction](../../game/src/battle_main.c), independent of the disabled
 shared six-slot Gym feature. The proposed
-[well-known trainers](well-known-trainers.md) model builds Giovanni's
-badge battle from his own authored, fixed TR and six-entry roster. This
+[notable trainers](notable-trainers.md) model builds Giovanni's
+badge battle from his own authored, fixed TR and six-slot roster. This
 five-member source remains provenance, not a required early party or immutable
 prefix for every team size.
 Under that model his Hideout and Silph battles also use his TR. Preserve
@@ -26,7 +41,15 @@ battle identity and truthful local dialogue in either model.
 
 ## Victory, reward, and departure
 
-Giovanni awards the single Kanto Earth Badge through existing Wayfarer badge accounting: one first-award badge and Trainer Rating contribution, with no duplicate from reload, repeated interaction, or another Gym owner. He also offers the TM that teaches **Earthquake**, selected by move semantics rather than assuming FRLG's TM26 number matches Wayfarer's item numbering. Prior ownership does not count as this reward's delivery; give one copy on the first successful handoff. A full Bag leaves that TM claimable at Giovanni. He departs only after delivery succeeds, and his departure is permanent. The badge is not granted a second time during a deferred TM claim.
+Giovanni awards the single Kanto Earth Badge through existing Wayfarer badge
+accounting: one first-award badge and TR contribution, with no duplicate from
+reload, repeated interaction, or another Gym owner. He also offers the TM that
+teaches **Earthquake**, selected by move semantics rather than assuming FRLG's
+TM26 number matches Wayfarer's item numbering. Prior ownership does not count as
+this reward's delivery; give one copy on the first successful handoff. A full
+Bag leaves that TM claimable at Giovanni. He departs only after delivery
+succeeds, and his departure is permanent. The badge is not granted a second time
+during a deferred TM claim.
 
 Giovanni's defeat must not run the source script's broad `FLAG_HIDE_MISC_KANTO_ROCKETS` cleanup, mark optional Rocket incidents complete, erase unfinished rewards, or make the Tower or Silph story state regress. Keep the Gym, guide, arrows, and entrance usable after departure. No Blue succession, Giovanni rematch, other Viridian Leader, or repeat Earth Badge/TM path follows. Existing FRLG Gym Trainer post-victory handling must be mapped to stable Wayfarer state; it must not create repeatable ordinary battles.
 
@@ -34,22 +57,34 @@ Blue is removed from Viridian's exterior introduction and Gym scripts, objects, 
 
 ## Blue at the Saffron Dojo
 
-The proposed [Leagues](../prds/leagues.md) design fields the
-global top five by TR, so Blue is no longer guaranteed at Indigo. It keeps this
-unlock on the first committed Indigo win, whether or not Blue was fielded.
+The proposed [Leagues](../prds/leagues.md) design picks a lineup of the global
+top five by TR, so Blue is no longer guaranteed at Indigo. It keeps this unlock
+on the first committed Indigo win, whether or not Blue was in the lineup.
 
-Keep Blue's existing repeatable Saffron Fighting Dojo battle, authored Wayfarer party, and current Battle Point reward rules. Unlock his Dojo appearance when the **first Indigo Champion victory is committed** by the shared circuit. Starting or losing the Champion battle, entering the Hall of Fame room without a committed clear, defeating Giovanni, receiving the Earth Badge, or choosing an origin does not unlock him. Indigo can be cleared before the Viridian finale; in that order, Blue is available at the Dojo while Giovanni still leads the Gym. A later Indigo replay does not duplicate an unlock or add Battle Points. The Dojo attendant may mention Blue, but no separate invitation or quest is required. Remove Dojo dialogue that presumes a Viridian battle the player never had.
+Keep Blue's existing repeatable Saffron Fighting Dojo battle, authored Wayfarer
+party, and current Battle Point reward rules. Unlock his Dojo appearance when
+the **first Indigo Champion victory is committed** by the shared circuit.
+Starting or losing the Champion battle, entering the Hall of Fame room without a
+committed league win, defeating Giovanni, receiving the Earth Badge, or choosing
+an origin does not unlock him. Indigo can be won before the Viridian finale; in
+that order, Blue is available at the Dojo while Giovanni still leads the Gym. A
+later Indigo replay does not duplicate an unlock or add Battle Points. The Dojo
+attendant may mention Blue, but no separate invitation or quest is required.
+Remove Dojo dialogue that presumes a Viridian battle the player never had.
 
 ## Acceptance
 
-- Enter and leave the full arrow maze before either investigation, after each alone, after both in either order, and after Giovanni leaves. Check all Gym warps both ways, guide, eight Trainers, collision, save/reload, and loss/retry.
+- Enter and leave the full arrow maze before either investigation, after each
+  alone, after both in either order, and after Giovanni leaves. Check all Gym
+  warps both ways, guide, eight Trainers, collision, save/reload, and
+  loss/retry.
 - Confirm the exact five-species source team and Wayfarer Gym scaling. Win once; verify one Earth Badge/TR contribution, one Earthquake TM, a full-Bag retry, prior TM ownership, and permanent departure only after delivery. No repeated battle or reward follows.
 - Finish Indigo before Giovanni and Giovanni before Indigo. Shared Indigo admission still requires at least eight global badges, with no Viridian badge prerequisite. Blue's Dojo appearance follows only a committed first Indigo win in both orders; declines, losses, replays, save/reload, party choice, and BP delivery keep existing Dojo rules without bonus reward.
 - Verify no Blue object or invitation remains in Viridian or Cinnabar, while Blue still appears as Indigo Champion. Leave Tower/Fuji, Snorlax, optional Rocket scenes, and unrelated League/region state untouched by the Gym finale.
 - Generate selected maps, warps, Trainer and item dependencies, and a release ROM; inspect the rendered FRLG maze and HNS city doorway. Source assets and screenshots are not runtime proof.
 
 Giovanni's and Blue's battles follow the proposed
-[well-known trainers](well-known-trainers.md) model; Blue gains no badge.
+[notable trainers](notable-trainers.md) model; Blue gains no badge.
 
 ## Source anchors
 

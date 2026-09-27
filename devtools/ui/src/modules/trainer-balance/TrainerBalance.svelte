@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { LEVEL_OFFSET, ROSTER_SIZE, VENUES } from "./engine.js"
+  import { LEVEL_OFFSET, ROSTER_SIZE, LEAGUES } from "./engine.js"
   import { BalanceLab, catalog, movesText, type ScalerId } from "./lab.svelte.js"
 
   const lab = new BalanceLab()
@@ -14,7 +14,7 @@
     { id: "wildLevel", title: "Wild level", by: "Player TR", unit: "Lv.", max: 100 },
     {
       id: "routeTrainerLevel",
-      title: "Route trainer level",
+      title: "Regular trainer level",
       by: "Player TR",
       unit: "Lv.",
       max: 100,
@@ -56,8 +56,8 @@
       </div>
       <h1>Trainer balance</h1>
       <p>
-        Author each well-known trainer’s TR and six-entry roster, and see the team, levels and
-        league field they produce. Compare against the player cap at any badge count.
+        Author each notable trainer’s TR and six-slot roster, and see the team, levels and league
+        lineup they produce. Compare against the level cap at any badge count.
       </p>
     </div>
     <div class="actions">
@@ -99,8 +99,8 @@
           >{/each}
       </div>
       <span class="hint"
-        >Player TR: badges 1–8 give +10, 9–24 give +5, league wins give nothing. It scales the cap,
-        wild levels and route trainers, never a well-known trainer’s team.</span
+        >Player TR: badges 1–8 give +10, 9–24 give +5, league wins give nothing. It drives the level
+        cap and world scaling (wild and regular trainer levels), never a notable trainer’s team.</span
       >
     </div>
     <div class="world-facts">
@@ -109,9 +109,7 @@
         >
       </div>
       <div>
-        <span class="eyebrow">Player cap</span><strong data-testid="player-cap"
-          >Lv. {lab.cap}</strong
-        >
+        <span class="eyebrow">Level cap</span><strong data-testid="level-cap">Lv. {lab.cap}</strong>
       </div>
       <div>
         <span class="eyebrow">Wild level</span><strong data-testid="wild-level"
@@ -119,10 +117,10 @@
         ><small data-testid="wild-gap">{signed(lab.world.wild - lab.cap)} vs cap</small>
       </div>
       <div>
-        <span class="eyebrow">Route trainers</span><strong data-testid="route-trainer-level"
-          >Lv. {lab.world.routeTrainer}</strong
-        ><small data-testid="route-trainer-gap"
-          >{signed(lab.world.routeTrainer - lab.cap)} vs cap</small
+        <span class="eyebrow">Regular trainers</span><strong data-testid="regular-trainer-level"
+          >Lv. {lab.world.regularTrainer}</strong
+        ><small data-testid="regular-trainer-gap"
+          >{signed(lab.world.regularTrainer - lab.cap)} vs cap</small
         >
       </div>
     </div>
@@ -130,11 +128,11 @@
 
   <div class="model-note">
     <span class="note-dot"></span><span
-      >TR v0: every well-known trainer has an authored, fixed TR. Team level and team size are
-      scalers of that TR (anchor tables, linear between anchors, halves rounded up, flat past the
-      last anchor; TR itself is uncapped). The team is the first N roster entries at team level +
-      offset, and battle order is the team reversed, so entry 1 comes last. Moves, items, AI and win
-      rates are not simulated.</span
+      >TR v0: every notable trainer has an authored, fixed TR. Team level and team size are scalers
+      of that TR (anchor tables, linear between anchors, halves rounded up, flat past the last
+      anchor, the ceiling TR; TR itself is uncapped). The team is the first N roster slots at team
+      level + offset, and battle order is the team reversed, so roster slot 1 comes last. Moves,
+      items, AI and win rates are not simulated.</span
     >
   </div>
 
@@ -150,16 +148,16 @@
       <span class="hint" data-testid="roster-gap-list"
         >{lab.gaps.length
           ? `Short of ${ROSTER_SIZE}: ${lab.gaps.map((gap) => `${gap.name} ${gap.length}/${ROSTER_SIZE}`).join(", ")}`
-          : `Every roster lists ${ROSTER_SIZE} entries`}</span
+          : `Every roster lists ${ROSTER_SIZE} Pokémon`}</span
       >
     </div>
     <div>
-      <span class="eyebrow">Above the player cap</span>
+      <span class="eyebrow">Above the level cap</span>
       <strong data-testid="above-cap">{lab.aboveCap}</strong>
       <span class="hint">Trainers whose team level exceeds Lv. {lab.cap}</span>
     </div>
     <div>
-      <span class="eyebrow">League field</span>
+      <span class="eyebrow">League lineup</span>
       <strong data-testid="league-range"
         >TR {lab.league[0]?.tr ?? "—"} … {lab.league.at(-1)?.tr ?? "—"}</strong
       >
@@ -170,8 +168,8 @@
   <div class="workspace">
     <section class="pool-panel" aria-label="Trainer pool">
       <div class="panel-title">
-        <h2>Well-known trainers <span>{catalog.length}</span></h2>
-        <span class="hint">Gap vs player cap Lv. {lab.cap}</span>
+        <h2>Notable trainers <span>{catalog.length}</span></h2>
+        <span class="hint">Gap vs level cap Lv. {lab.cap}</span>
       </div>
       <div class="filters">
         <input
@@ -294,10 +292,12 @@
       </dl>
       <div class="section-label">
         <h3>Team at TR {lab.selected.tr}</h3>
-        <span>Battle order: entry 1 last</span>
+        <span>Battle order: roster slot 1 last</span>
       </div>
       <ol class="party" data-testid="battle-order">
-        {#each lab.selected.battleOrder as member (member.slot)}<li class:ace={member.slot === 1}>
+        {#each lab.selected.battleOrder as member (member.slot)}<li
+            class:signature={member.slot === 1}
+          >
             <span class="slot">#{member.slot}</span>
             <div class="member-name">
               <strong>{member.species}</strong><small
@@ -333,62 +333,63 @@
             lab.applyRoster(event.currentTarget)
           }}
         >
-          {#each lab.settings.roster as entry, index (index)}
+          {#each lab.settings.roster as slot, index (index)}
             <fieldset class:in-team={index < lab.selected.size}>
-              <legend>Entry {index + 1}{index < lab.selected.size ? " · in team" : ""}</legend>
+              <legend>Roster slot {index + 1}{index < lab.selected.size ? " · in team" : ""}</legend
+              >
               <div class="line-inputs">
                 <label class="wide"
                   >Species<input
-                    aria-label={`Entry ${index + 1} species`}
-                    name={`entry-${index}-species`}
+                    aria-label={`Roster slot ${index + 1} species`}
+                    name={`slot-${index}-species`}
                     type="text"
                     required
-                    value={entry.species}
+                    value={slot.species}
                   /></label
                 ><label
                   >Offset<input
-                    aria-label={`Entry ${index + 1} level offset`}
-                    name={`entry-${index}-offset`}
+                    aria-label={`Roster slot ${index + 1} level offset`}
+                    name={`slot-${index}-offset`}
                     type="number"
                     min={LEVEL_OFFSET.min}
                     max={LEVEL_OFFSET.max}
                     step="1"
                     required
-                    value={entry.levelOffset}
+                    value={slot.levelOffset}
                   /></label
                 ><label class="wide"
                   >Moves<input
-                    aria-label={`Entry ${index + 1} moves`}
-                    name={`entry-${index}-moves`}
+                    aria-label={`Roster slot ${index + 1} moves`}
+                    name={`slot-${index}-moves`}
                     type="text"
                     placeholder="LEVEL_UP"
-                    value={movesText(entry.moves)}
+                    value={movesText(slot.moves)}
                   /></label
                 ><label class="wide"
                   >Item<input
-                    aria-label={`Entry ${index + 1} item`}
-                    name={`entry-${index}-item`}
+                    aria-label={`Roster slot ${index + 1} item`}
+                    name={`slot-${index}-item`}
                     type="text"
                     placeholder="none"
-                    value={entry.item ?? ""}
+                    value={slot.item ?? ""}
                   /></label
                 >
-                <div class="entry-tools">
+                <div class="slot-tools">
                   <button
                     type="button"
-                    aria-label={`Move entry ${index + 1} up`}
+                    aria-label={`Move roster slot ${index + 1} up`}
                     disabled={index === 0}
-                    onclick={() => lab.moveEntry(index, -1)}>↑</button
+                    onclick={() => lab.moveSlot(index, -1)}>↑</button
                   ><button
                     type="button"
-                    aria-label={`Move entry ${index + 1} down`}
+                    aria-label={`Move roster slot ${index + 1} down`}
                     disabled={index === lab.settings.roster.length - 1}
-                    onclick={() => lab.moveEntry(index, 1)}>↓</button
+                    onclick={() => lab.moveSlot(index, 1)}>↓</button
                   ><button
                     type="button"
-                    aria-label={`Remove entry ${index + 1}`}
+                    aria-label={`Remove roster slot ${index + 1}`}
                     disabled={lab.settings.roster.length === 1}
-                    onclick={() => lab.removeEntry(index)}>Remove</button
+                    onclick={() => lab.removeSlot(index)}>Remove</button
                   >
                 </div>
               </div>
@@ -398,14 +399,15 @@
             <button type="submit">Apply roster</button>
             {#if lab.settings.roster.length < ROSTER_SIZE}<button
                 type="button"
-                onclick={lab.addEntry}>Add entry</button
+                onclick={lab.addSlot}>Add roster slot</button
               >{/if}
           </div>
         </form>
       {/key}
       <p class="hint">
-        Entry 1 must stay at offset 0; offsets run {LEVEL_OFFSET.min} to {LEVEL_OFFSET.max}. Moves
-        are LEVEL_UP or up to four names separated by commas. v0 needs exactly {ROSTER_SIZE} entries.
+        Roster slot 1 must stay at offset 0; offsets run {LEVEL_OFFSET.min} to {LEVEL_OFFSET.max}.
+        Moves are LEVEL_UP or up to four names separated by commas. v0 needs exactly {ROSTER_SIZE}
+        roster slots.
       </p>
 
       <details class="reference-panel">
@@ -428,7 +430,7 @@
       <details class="advanced-panel">
         <summary>Edit settings as JSON</summary>
         <p class="hint">
-          Edit the TR and every roster field, including ability and nature. Moves are
+          Edit the TR and every roster slot setting, including ability and nature. Moves are
           <code>"LEVEL_UP"</code> or a list of one to four names.
         </p>
         <label class="visually-hidden" for="team-editor">Trainer settings JSON</label><textarea
@@ -447,20 +449,20 @@
 
   <section class="league" aria-label="League preview">
     <div class="panel-title">
-      <h2>League field <span>top {lab.league.length} by TR</span></h2>
-      <span class="hint" data-testid="league-venues"
-        >One global pool, so {VENUES.join(", ")} all field this five in v0.</span
+      <h2>League lineup <span>top {lab.league.length} by TR</span></h2>
+      <span class="hint" data-testid="league-names"
+        >One global pool, so {LEAGUES.join(", ")} all use this lineup in v0.</span
       >
     </div>
     <p class="hint league-note">
       Battle order runs by ascending TR, strongest last. Ties keep catalog order. Each opponent uses
       their own TR, team and levels.
     </p>
-    <ol class="league-grid" data-testid="league-field">
+    <ol class="league-grid" data-testid="league-lineup">
       {#each lab.league as row, index (row.trainer.id)}
-        <li class="venue-card" data-testid={`league-match-${index + 1}`}>
-          <div class="venue-heading">
-            <h3><span class="muted">{index + 1}.</span> {row.trainer.name}</h3>
+        <li class="match-card" data-testid={`league-match-${index + 1}`}>
+          <div class="match-heading">
+            <h3><span class="muted">Match {index + 1}</span> {row.trainer.name}</h3>
             <span class="hint">TR {row.tr} · Lv. {row.teamLevel} · {row.team.length} Pokémon</span>
           </div>
           <ol class="league-team">
@@ -477,12 +479,12 @@
     <summary>Scalers & experiment settings</summary>
     <p>
       Each scaler maps TR to a value through anchors: linear between them, halves rounded up, and
-      flat past the last anchor, so a higher TR is never clamped but stops adding level or size.
-      Anchors start at TR 0, rise in TR and never decrease in value. Team level and team size read
-      each well-known trainer’s own TR. Team level defaults to the player soft-cap anchors (Lv 100
-      at TR 160); team size uses paired anchors to make a step table (0–15 → 2, 16–43 → 3, 44–70 →
-      4, 71–95 → 5, 96+ → 6). Wild level and route trainer level read the player’s TR and only feed
-      the world readout.
+      flat past the last anchor. That anchor’s TR is the ceiling TR: a higher TR is never clamped
+      but stops adding level or size. Anchors start at TR 0, rise in TR and never decrease in value.
+      Team level and team size read each notable trainer’s own TR. Team level defaults to the level
+      cap anchors (Lv 100 at TR 160); team size uses paired anchors to make a step table (0–15 → 2,
+      16–43 → 3, 44–70 → 4, 71–95 → 5, 96+ → 6). The wild level curve and regular trainer level
+      curve are world scaling: they read the player’s TR and only feed the readout above.
     </p>
     {#key lab.anchors}
       <form
@@ -549,8 +551,8 @@
       </form>
     {/key}
     <p class="hint">
-      Catalog TRs and rosters are provisional. How TR changes, seeded variation and league signup
-      are out of scope for v0. This is separate from the ROM’s current scaler.
+      Catalog TRs and rosters are placeholders. How TR changes, seeded variation and entering a
+      league are out of scope for v0. This is separate from the scaler the ROM uses today.
     </p>
   </details>
 </section>
@@ -1085,14 +1087,14 @@
     font-variant-numeric: tabular-nums;
     overflow-wrap: anywhere;
   }
-  .venue-card {
+  .match-card {
     min-width: 0;
     border: 1px solid #2d333a;
     border-radius: 6px;
     background: var(--color-cartographer-field);
     overflow-x: auto;
   }
-  .venue-heading {
+  .match-heading {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
@@ -1146,7 +1148,7 @@
     font-size: 10px;
     overflow-wrap: anywhere;
   }
-  .party li.ace {
+  .party li.signature {
     border-color: #4d4331;
   }
   .prototype-chip {
@@ -1232,12 +1234,12 @@
   .roster-form fieldset.in-team {
     border-color: #4d4331;
   }
-  .entry-tools {
+  .slot-tools {
     display: flex;
     gap: 6px;
     margin-left: auto;
   }
-  .entry-tools button {
+  .slot-tools button {
     padding: 4px 9px;
   }
   .roster-actions {

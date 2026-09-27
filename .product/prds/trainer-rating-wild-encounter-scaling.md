@@ -2,15 +2,15 @@
 
 Implemented: Partial
 
-The current [circuit producer](../../game/src/league_circuit.c) implements
-+8/+8/+8 first-clear contributions for Indigo, Masters, and Hoenn. Badge
-contributions and soft-cap anchors are unchanged. The Partial marker does not
+Today's [circuit producer](../../game/src/league_circuit.c) implements
++8/+8/+8 first-league-win contributions for Indigo, Masters, and Hoenn. Badge
+contributions and level cap anchors are unchanged. The Partial marker does not
 certify all wild-scaling and party-progression acceptance below.
 
-The v0 TR target (a new badge scale, uncapped TR, scalers, and well-known
+The v0 TR design (a new badge scale, uncapped TR, scalers, and notable
 trainers' separate TR) is in [Player Trainer Rating](player-trainer-rating.md);
-its effect on wild Pokémon and the level cap is under
-[v0 target](#v0-target). The rest of this document describes the current ROM.
+its effect on wild Pokémon and the level cap is under [v0](#v0). The rest of
+this document describes Today.
 
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes named native-utility carriers and permanent-retention
@@ -22,56 +22,55 @@ standalone builds retain their existing contract.
 
 Keep ordinary wild encounters relevant as a player advances through a campaign,
 while limiting how quickly an underqualified Trainer can raise or command a
-high-level Pokémon. One global Trainer Rating should give every supported region
-in a ROM build the same progression baseline without rewriting its authored
-encounter tables.
+high-level Pokémon. One global Trainer Rating (TR) should give every supported
+region in a ROM build the same progression baseline without rewriting its
+authored encounter tables.
 
 ## Design
 
-Trainer Rating is a persistent progression value, and the system never lowers a
-saved rating. A new Wayfarer game starts at 0.
+TR is a persistent progression value that never decreases: the system never
+lowers a saved TR. A new Wayfarer game starts at 0.
 
 Every ordinary encounter profile compiled into Emerald, FireRed/LeafGreen, or
-HNS uses the same rating. The system adjusts encounter levels and can return an
+HNS uses the same TR. The system adjusts encounter levels and can return an
 over-levelled evolved species to an eligible predecessor. It also respects
 specific species floors.
 
-Wayfarer also maps Trainer Rating to a soft level cap. A Pokémon at or above
-the cap receives half the numerical experience it would otherwise earn. The cap
-also controls whether a high-level Pokémon obeys its Trainer. Raising Trainer
-Rating raises the cap, so a Pokémon that previously disobeyed can become
-obedient.
+Wayfarer also maps TR to a level cap. The cap is soft: a Pokémon at or above it
+receives half the numerical experience it would otherwise earn. The cap also
+controls whether a high-level Pokémon obeys its Trainer. Raising TR raises the
+cap, so a Pokémon that previously disobeyed can become obedient.
 
 Wayfarer uses one global twenty-four-badge circuit across Kanto, Johto, and
-Hoenn. Badge origin does not affect League qualification or rating. The approved
+Hoenn. Badge origin does not affect League qualification or TR. The approved
 [circuit](wayfarer-interregional-league-circuit.md) allows all badges to precede
-any circuit-stage clear. These examples use +8 for each first-time stage clear
-and the unchanged soft-cap curve; they do not prescribe a badge schedule:
+any league win. These examples use +8 for each first league win and the
+unchanged level cap curve; they do not prescribe a badge schedule:
 
-| Progress | Trainer Rating | Soft level cap |
+| Progress | TR | Level cap |
 | --- | ---: | ---: |
 | New game | 0 | 15 |
-| 4 total badges, no clears | 16 | 23 |
-| 8 total badges, no clears | 40 | 42 |
-| 8 total badges, Indigo cleared | 48 | 52 |
-| 16 total badges, Indigo cleared | 56 | 62 |
-| 16 total badges, Indigo and Masters cleared | 64 | 78 |
-| 24 total badges, no clears | 56 | 62 |
-| 24 total badges, Indigo cleared | 64 | 78 |
-| 24 total badges, Indigo and Masters cleared | 72 | 89 |
-| 24 total badges, all three circuit stages cleared | 80 | 100 |
+| 4 total badges, no league wins | 16 | 23 |
+| 8 total badges, no league wins | 40 | 42 |
+| 8 total badges, Indigo won | 48 | 52 |
+| 16 total badges, Indigo won | 56 | 62 |
+| 16 total badges, Indigo and Masters won | 64 | 78 |
+| 24 total badges, no league wins | 56 | 62 |
+| 24 total badges, Indigo won | 64 | 78 |
+| 24 total badges, Indigo and Masters won | 72 | 89 |
+| 24 total badges, all three leagues won | 80 | 100 |
 
 The interregional League circuit defines the exact badge and League
 contributions. This replaces the earlier concept of one full regional campaign
 plus smaller breadth contributions from the other regions.
 
-The Trainer Rating foundation and existing circuit already supply the shared
-0 through 80 value, high-water storage, and global badge and circuit-clear
-contributions, including the implemented +8/+8/+8 canonical first-clear rewards.
-Repeat clears add no TR. Future regional starts remain separate work; League
-party levels follow the [League scaling design](league-scaling.md).
+The TR foundation and existing circuit already supply the shared 0 through 80
+value, storage that never decreases, and global badge and first-league-win
+contributions, including the implemented +8/+8/+8 canonical first-league-win
+rewards. Repeat league wins add no TR. Future regional starts remain separate
+work; League party levels follow the [League scaling design](league-scaling.md).
 
-The soft-cap curve is independently tunable. Its initial milestone values copy
+The level cap curve is independently tunable. Its initial milestone values copy
 the current wild encounter anchor plus 10 levels, but later encounter-balance
 changes do not automatically change party progression.
 
@@ -84,45 +83,47 @@ Feebas, Battle Pike encounters, or Battle Pyramid encounters.
 The system does not change authored encounter data or define trainer battle
 scaling.
 
-Adding an HNS Hoenn warp does not enroll Hoenn encounters in this system. Those profiles must be compiled for the active build first. Once they target
+Adding an HNS Hoenn warp does not enroll Hoenn encounters in this system.
+Those profiles must be compiled for the active build first. Once they target
 Wayfarer, ordinary profiles use the existing global scaling automatically.
-Hoenn badges and the Hoenn League contribute to Wayfarer rating through the
+Hoenn badges and the Hoenn League contribute to Wayfarer TR through the
 interregional circuit.
 
 ## Balance
 
-Wayfarer starts at Rating 0 so the value represents an unproven Trainer before
-the first badge. Its encounter curve must still keep starter-area populations
-viable at Rating 0. Today the first eight badges supply 40 TR; each later badge
-supplies one. Each first-time circuit-stage clear supplies +8, for +24 across the
-circuit and TR 80
-after all badges and clears. This distributes League advancement evenly,
-while the unchanged soft-cap curve determines the resulting level increases.
+Wayfarer starts at TR 0 so the value represents an unproven Trainer before the
+first badge. Its encounter curve must still keep starter-area populations viable
+at TR 0. Today the first eight badges supply 40 TR; each later badge supplies
+one. Each first league win supplies +8, for +24 across the circuit and TR 80
+after all badges and league wins. This distributes League advancement evenly,
+while the unchanged level cap curve determines the resulting level increases.
 
-Rating 0 must not remove a native utility catch that supplies an approved core
-route. HNS Chinchou is the approved all-rating Whirlpool source: the Olivine
+TR 0 must not remove a native utility catch that supplies an approved core
+route. HNS Chinchou is the approved all-TR Whirlpool source: the Olivine
 port and Cianwood fishing records retain Chinchou, and its HNS level-up schedule
 supplies Flash, Surf, and Whirlpool from level 5 through level 100. Kanto's
 level-5 Chinchou records retain the same compatibility for its native-Surf
 route.
 
-The soft cap should slow over-levelling without making a long-term partner
+The level cap should slow over-levelling without making a long-term partner
 unreliable. A same-OT Pokémon first obtained within the Trainer's cap remains
 obedient if it later grows beyond the cap, even though its experience gain
 slows. A same-OT Pokémon obtained above the cap may disobey until the cap covers
 its met level. A foreign-OT Pokémon may disobey whenever its current level is
 above the cap.
 
-### v0 target
+### v0
 
-On the new TR scale, wild Pokémon follow their own curve instead of sitting a
-fixed 10 levels under the soft cap. With a few badges they press close to the
-cap, about 4 levels under it at four badges, so the early world is dangerous.
-Later they fall behind: with all 24 badges they sit about 22 levels under the
-cap, and routes are no threat. The soft cap itself rises with every badge to
-level 100 at 24 badges, and League wins no longer raise it. The exact curves
-are in the [wild scaling](../specs/trainer-rating-wild-encounter-scaling.md#v0-target-curve)
-and [party progression](../specs/trainer-rating-party-progression.md#v0-target-curve)
+On the new TR scale, wild Pokémon follow their own wild level curve instead of
+sitting a fixed 10 levels under the level cap. With a few badges they press
+close to the cap, about 4 levels under it at four badges, so the early world is
+dangerous. Later they fall behind: with all 24 badges they sit about 22 levels
+under the cap, and routes are no threat. The level cap itself rises with every
+badge to level 100 at 24 badges, and League wins no longer raise it. The exact
+curves are in the
+[wild scaling](../specs/trainer-rating-wild-encounter-scaling.md#v0-wild-level-curve)
+and
+[party progression](../specs/trainer-rating-party-progression.md#v0-level-cap-curve)
 specifications.
 
 How a wild encounter's level is worked out does not change: it still never
@@ -163,7 +164,7 @@ Global species floors then apply to every non-randomized ordinary wild populatio
 | Tauros | 25 | FireRed, Safari Zone West, land grass, 25 |
 | Relicanth | 25 | Emerald, Underwater Route 124, water/surf, 30-35 |
 | Sneasel | 30 | LeafGreen, Four Island Icefall Cave 1F, land grass, 30 |
-| Mantine | 14 | HNS, Whirl Islands, water/surf, authored 15-19 and projected 14 at Rating 10 |
+| Mantine | 14 | HNS, Whirl Islands, water/surf, authored 15-19 and projected 14 at TR 10 |
 | Bagon | 20 | Emerald, Meteor Falls B1F 2R, land grass, 25-35 |
 | Tropius | 20 | Emerald, Route 119, land grass, 25-27 |
 | Absol | 20 | Emerald, Route 120, land grass, 25-27 |
@@ -172,11 +173,10 @@ Global species floors then apply to every non-randomized ordinary wild populatio
 Each example identifies an ordinary encounter that motivated review of the global floor. It does not limit the floor to that map, method, build, or level range.
 
 Mantine's floor is 14 because an authored level-15 Mantine can project to
-level 14 at Rating 10. The floor applies globally. It does not add a
-Johto-only exception, change authored encounter levels, or introduce Mantyke
-predecessor resolution. Mantine is protected from Rating 10 through 80, but it
-is not a required Rating 0 Whirlpool anchor and may be ineligible below its
-floor at lower ratings.
+level 14 at TR 10. The floor applies globally. It does not add a Johto-only
+exception, change authored encounter levels, or introduce Mantyke predecessor
+resolution. Mantine is protected from TR 10 through 80, but it is not a required
+TR 0 Whirlpool anchor and may be ineligible below its floor at lower TR.
 
 Ordinary-population readers use the same effective population as an actual encounter. This includes the Pokédex area display, Match Call, radio, local ambient species selection, and ordinary land or water DexNav populations. Hidden DexNav populations stay authored and unscaled.
 
@@ -184,9 +184,9 @@ In randomizer mode, the selected slot's level still scales, while the existing r
 
 ### Party progression
 
-A Pokémon whose current level is at or above the soft cap receives half of its
+A Pokémon whose current level is at or above the level cap receives half of its
 otherwise-awarded covered numerical experience. Exp. Candy and Rare
-Candy bypass the soft cap: Exp. Candy grants its full displayed numerical award
+Candy bypass the level cap: Exp. Candy grants its full displayed numerical award
 and Rare Candy grants its normal level increase. The party-progression technical
 specification defines the remaining covered experience sources, exact ordering,
 threshold crossing, and rounding.
@@ -194,8 +194,8 @@ threshold crossing, and rounding.
 Obedience uses the Pokémon's ownership and acquisition history:
 
 - A same-OT Pokémon checks the level at which it was met against the current
-  soft cap.
-- A foreign-OT Pokémon checks its current level against the current soft cap.
+  level cap.
+- A foreign-OT Pokémon checks its current level against the current level cap.
 - A Pokémon exactly at the cap obeys.
 - Eggs obey.
 
@@ -205,31 +205,32 @@ purpose; introducing party progression does not replace the catch penalty.
 
 ## Constraints
 
-Trainer Rating uses the existing save-block layout. No migration or preservation
-of earlier prerelease Rating behavior is required. Wayfarer clamps the stored
-value to the inclusive range 0 through 80; the later circuit preserves the
-higher of the stored and globally derived values.
+TR uses the existing save-block layout. No migration or preservation of earlier
+prerelease TR behavior is required. Wayfarer clamps the stored value to the
+inclusive range 0 through 80; the later circuit preserves the higher of the
+stored and globally derived values.
 
-The soft-cap curve must remain separate from the wild encounter curve so either
+The level cap curve must remain separate from the wild level curve so either
 can be tuned without silently changing the other.
 
 ## Playtesting
 
-Playtesting should confirm that Wayfarer encounters feel appropriate at Rating
-0 and at every badge and League milestone through Rating 80 (TR 160, 24
-badges, in the v0 target). Coverage should
-include land, water, Rock Smash, fishing, time-based, ability-influenced, lure,
-Altering Cave, and HNS Hoenn Sound encounters, plus the ordinary population
-readers.
+Playtesting should confirm that Wayfarer encounters feel appropriate at TR 0 and
+at every badge and League milestone through TR 80 (TR 160, 24 badges, in v0).
+Coverage should include land, water, Rock Smash, fishing, time-based,
+ability-influenced, lure, Altering Cave, and HNS Hoenn Sound encounters, plus
+the ordinary population readers.
 
-It should also check that excluded sources remain unchanged, that a later rating never produces a lower projected encounter outcome, and that existing saves migrate without losing progression.
+It should also check that excluded sources remain unchanged, that a later TR
+never produces a lower projected encounter outcome, and that existing saves
+migrate without losing progression.
 
 Party-progression playtesting should cover every milestone cap, Pokémon just
 below, exactly at, and just above each cap, same-OT Pokémon obtained on both
 sides of the cap, foreign-OT Pokémon, Eggs, Exp. Candy, and Rare Candy. It
-should confirm that both Candy types retain their ordinary rewards, that
-raising Trainer Rating restores obedience when the relevant level falls within
-the new cap, and that the missing-badge catch penalty remains active.
+should confirm that both Candy types retain their ordinary rewards, that raising
+TR restores obedience when the relevant level falls within the new cap, and that
+the missing-badge catch penalty remains active.
 
 ## References
 

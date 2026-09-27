@@ -124,16 +124,16 @@ Existing Johto and Kanto callers keep their current result.
 ### Save storage and lifecycle
 
 The proposed [Leagues runtime](leagues.md#saved-state) adds, under this
-storage policy, at most one locked league field (its venue, the pool's content
-versions, and five slots in battle order, each holding `characterId`, TR, and
-the composed team) plus active-run progress (venue and defeated prefix). There
-is no seed, edition, rotation or field history, or progress index. Well-known
-trainers' TRs are authored content, so New Game saves nothing for them. An
-explicit schema discriminator rejects obsolete layouts. The locked field stays
-unchanged through reconstruction, reload, departure, and losses; a win
+storage policy, at most one locked lineup (its league, the pool's content
+versions, and five matches in battle order, each holding `characterId`, TR,
+and the composed team) plus active-run progress (league and defeated prefix).
+There is no seed, edition, rotation or lineup history, or progress index.
+Notable trainers' TRs are authored content, so New Game saves nothing for them.
+An explicit schema discriminator rejects obsolete layouts. The locked lineup
+stays unchanged through reconstruction, reload, departure, and losses; a win
 releases it. Size assertions and save-sector accounting must include the
-locked field, run progress, and transaction metadata within the allocation
-below. A corrupt locked field is an invalid save; a content version change
+locked lineup, run progress, and transaction metadata within the allocation
+below. A corrupt locked lineup is an invalid save; a content version change
 instead drops the lock. This extension is not
 implemented here.
 
@@ -181,40 +181,39 @@ dispatch consume this same resolved context.
 
 Johto, Kanto, and Hoenn have separate badge, story, Trainer, item, NPC, and
 campaign state. The shared Indigo League is the deliberate Champion exception:
-its one canonical clear establishes the Champion title recognized by both
-Kanto and Johto. That projection is one circuit result and one reward, not two
-independent regional League clears. The Sevii Masters Challenge has dedicated
+its one canonical league win establishes the Champion title recognized by
+both Kanto and Johto. That projection is one circuit result and one reward, not
+two independent regional league wins. The Sevii Masters Challenge has dedicated
 circuit state and no regional Champion or game-clear meaning.
 
 The interregional circuit aggregates regional badges and its canonical Indigo,
-Masters, and Hoenn first-clear facts for qualification and Trainer Rating.
-Circuit results never limit badge collection. Hoenn scripts that reveal local
-postgame content must still check Hoenn Champion or Hoenn game-clear state, not
-Indigo, Masters, or a generic global flag.
+Masters, and Hoenn first-league-win facts for qualification and Trainer Rating
+(TR). Circuit results never limit badge collection. Hoenn scripts that reveal
+local postgame content must still check Hoenn Champion or Hoenn game-clear
+state, not Indigo, Masters, or a generic global flag.
 
 Whiteout, Hall of Fame, daily reset, and new-game code must dispatch cleanup to
-the applicable venue and region. A whiteout in Johto cannot relocate a Hoenn
+the applicable league and region. A whiteout in Johto cannot relocate a Hoenn
 NPC. The Masters Gallery cannot run a regional Hall of Fame path, and entering
 the Hoenn Hall of Fame cannot reset Indigo or Masters rooms.
 
-The currently implemented circuit uses fixed Indigo, Sevii Masters, then Hoenn
-order. Its first-clear result advances only after completion commits. Only
-Indigo projects its clear into both Kanto and Johto Champion recognition.
+Today's circuit uses fixed Indigo, Sevii Masters, then Hoenn order. Its
+first-league-win result advances only after completion commits. Only Indigo
+projects its win into both Kanto and Johto Champion recognition.
 
-The proposed [Leagues runtime](leagues.md) keeps current
-admission, venue order, and lifetime first clears with their regional
-recognition, cleanup, and unlocks. It changes only
-who is fielded and what happens after a loss: each venue fields the global top
-five well-known trainers by their authored, fixed TR under
-[Well-known trainers](well-known-trainers.md), strongest last,
-without reading player party, XP, or TR. Well-known trainers in Gyms use the
-same model at battle setup.
+The proposed [Leagues runtime](leagues.md) keeps today's admission, league
+order, and first league wins with their regional recognition, cleanup, and
+unlocks. It changes only who is in the lineup and what happens after a loss:
+each league's lineup is the global top five notable trainers by their
+authored, fixed TR under [Notable trainers](notable-trainers.md), strongest
+last, without reading player party, XP, or TR. Notable trainers in Gyms use
+the same model at battle setup.
 
-Winning commits the venue result and any lifetime first clear, and releases
-the locked field. In the target a win adds no player TR
-([Player Trainer Rating](player-trainer-rating.md)); the current ROM's +8 per
-first clear stays until adoption. Losing leaves the venue
-locked to the same field, with no clear or reward; the player may retry
+Winning commits the league result and any first league win, and releases the
+locked lineup. In v0 a win adds no player TR
+([Player Trainer Rating](player-trainer-rating.md)); Today's +8 per first
+league win stays until adoption. Losing keeps the same locked lineup, with no
+league win or reward; the player may retry
 immediately or later. Save wins and ceremony phases atomically, with stale
 callbacks rejected.
 
@@ -289,13 +288,13 @@ Static and automated checks must prove all of the following:
 12. Representative map loads and transitions run without heap corruption or a
     second simultaneous map decompression buffer.
 
-The proposed locked-field extension additionally requires save round-trip and
-transaction tests for no-field, active, and locked-after-loss states. Prove at
-most one locked five-slot field, an unchanged field after a loss and reload,
-idempotent entry, and atomic entry and win. Reject obsolete schemas and damaged
-authoritative state without regenerating a field. Verify the records satisfy
-the same sector and runtime bounds. These proposed checks do not claim the new
-lifecycle is implemented.
+The proposed locked-lineup extension additionally requires save round-trip and
+transaction tests for no-lineup, active, and locked-after-loss states. Prove at
+most one locked five-match lineup, an unchanged lineup after a loss and reload,
+idempotent and atomic entering of a league, and an atomic win. Reject obsolete
+schemas and damaged authoritative state without regenerating a lineup. Verify
+the records satisfy the same sector and runtime bounds. These proposed checks do
+not claim the new lifecycle is implemented.
 
 ## References
 

@@ -62,16 +62,16 @@ exterior connects directly to FRLG Route 19.
 
 Carry the FRLG route object and background-event content, adapting source
 references to the selected Wayfarer maps. The source roster contains twelve
-Trainer objects on Route 19, ten on Route 20, five on Route 21 North, and
-five on Route 21 South. Route 19's Lia/Luc and Route 21 North's Lil/Ian are
-paired double battles: either sibling starts the pair's shared battle and
-defeat identity, including its authored two-Pokémon party requirement and
-rematch path. Do not register each sibling as a separate victory or reward.
-Retain the other Trainers' authored party identities, approach
-geometry, sight ranges, intro and post-battle dialogue, and one-time defeat
-state. Map their parties through Wayfarer's Trainer Rating scaling and trainer
-defeat systems. Preserve source rematches where supported by Wayfarer's
-rematch rules; do not create a second battle identity for an HNS counterpart.
+Trainer objects on Route 19, ten on Route 20, five on Route 21 North, and five
+on Route 21 South. Route 19's Lia/Luc and Route 21 North's Lil/Ian are paired
+double battles: either sibling starts the pair's shared battle and defeat
+identity, including its authored two-Pokémon party requirement and rematch path.
+Do not register each sibling as a separate victory or reward. Retain the other
+Trainers' authored party identities, approach geometry, sight ranges, intro and
+post-battle dialogue, and one-time defeat state. Map their parties through
+Wayfarer's Trainer Rating (TR) scaling and trainer defeat systems. Preserve
+source rematches where supported by Wayfarer's rematch rules; do not create a
+second battle identity for an HNS counterpart.
 
 Retain Route 20's Camper and two Seafoam signs, Route 19's route sign, Route
 20's hidden Stardust, and Route 21 North's hidden Pearl. Each hidden item has
@@ -113,13 +113,13 @@ Surf and fishing tables on the matching FRLG layouts. Reuse the HNS Route 21
 land, Surf, and fishing tables for both FRLG North and South, retaining both
 playable map bindings. Copy donor slots and level ranges exactly into
 Wayfarer-owned encounter rows; leave standalone HNS rows unchanged. Apply
-Wayfarer's Standard Rod and Trainer Rating rules. No encounter header in the
+Wayfarer's Standard Rod and TR rules. No encounter header in the
 Wayfarer release points to a route that is absent or unreachable.
 
 ## Acceptance
 
 1. Generate the Wayfarer catalog and Kanto encounter audit with four selected
-   route map identities, 32 ordinary route Trainer objects, source-equivalent
+   route map identities, 32 regular route trainer objects, source-equivalent
    non-Trainer objects, and no duplicate active HNS route content. Route 19
    Cave and the disconnected FRLG unused house are not Wayfarer destinations;
    Hoenn Marine Cave's Kyogre encounter remains reachable through its owner.
@@ -136,7 +136,7 @@ Wayfarer release points to a route that is absent or unreachable.
    Talk to the Camper and read the signs; collect Stardust and Pearl once,
    including after travel and save/reload.
 4. Verify land, Surf, and each rod method on the maps that author them, in day
-   and night conditions and at representative Trainer Ratings. Confirm the
+   and night conditions and at representative TR values. Confirm the
    FRLG version species merge and encounter provenance audit still pass.
 5. Enter and leave Seafoam through both Route 20 doors. Unfinished boulder
    chains reset on Route 20; stopped currents remain solved. Neither door nor

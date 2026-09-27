@@ -31,10 +31,10 @@ are needed.
 | --- | --- | --- |
 | Lostelle and Three Island trouble | The biker confrontation, investigation and clues, Berry Forest encounter, and reunion with her father. | Discover and complete the adventure without Bill's Meteorite delivery, Blaine, or the original forced first trip. Keep its internal sequence and existing local actors. |
 | Bill's Meteorite delivery | Bill gives the Meteorite; Lostelle's father receives it and gives the Moon Stone. | Keep separate from travel entitlement and the rescue's activation. Delivery can follow the reunion immediately or on a later visit when the player has the item. |
-| Lorelei and Icefall Cave | Explore the cave, help Lorelei confront the poachers, and complete the rescue. | No Celio, mainland Giovanni, or League-clear prerequisite. Preserve applicable cave and field-move preparation. |
+| Lorelei and Icefall Cave | Explore the cave, help Lorelei confront the poachers, and complete the rescue. | No Celio, mainland Giovanni, or league-win prerequisite. Preserve applicable cave and field-move preparation. |
 | Selphy and Lost Cave | Find Selphy, complete the existing battle, and accompany her return home. | Make this a local adventure. Her later Pokémon requests remain its direct follow-up. |
 | Memorial Pillar | Learn about Tectonix, leave Lemonade, and receive the existing reward. | Preserve the local item requirement and reward giver without unrelated progress checks. |
-| Water Labyrinth Egg | The existing giver recognizes care for the player's Pokémon and offers the Egg. | Preserve the friendship and delivery-capacity requirements. Do not add a campaign or TR gate. |
+| Water Labyrinth Egg | The existing giver recognizes care for the player's Pokémon and offers the Egg. | Preserve the friendship and delivery-capacity requirements. Do not add a campaign or Trainer Rating (TR) gate. |
 | Tanoby Key and Ruins | Solve the boulder puzzle and enable the existing Unown appearances. | Keep the puzzle-to-encounter connection without Celio or Rocket completion requirements. |
 | Smaller services and challenges | Existing tutors, Pokémon-showing requests, and facilities. | Retain their local eligibility. Celio's quest must not become a blanket requirement to use island services. |
 
@@ -237,7 +237,7 @@ coverage boundary.
 - Leave and return during each rescue and delivery. All established ferry
   destinations and PC storage remain available, and departure never completes
   the adventure.
-- Begin Celio's request without the original first-trip errands, a League clear,
+- Begin Celio's request without the original first-trip errands, a league win,
   or an unrelated Pokédex milestone. Complete the two investigation branches
   in both orders and deliver the gems in both possible orders.
 - Approach the Warehouse with neither password, each password alone, and both.
@@ -273,7 +273,7 @@ and reward scenes without learning a replacement plot.
 - Celio's repair conclusion is local presentation only. It changes no network,
   storage, Pokédex, Champion, League, cave, or travel entitlement.
 - Moltres uses the shared bird-capture threshold `WAYFARER_BIRD_CAPTURE_TR = 55`
-  (current scale; v0 target: TR 120, ≈ 16 badges).
+  (today's scale; v0: TR 120, ≈ 16 badges).
 
 The [technical specification](../specs/sevii-independent-story-beats.md) records
 the delivered state, transaction, battle-ownership, and dialogue behavior.

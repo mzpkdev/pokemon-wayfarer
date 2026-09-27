@@ -5,7 +5,7 @@ Status: no story-scene integration.
 
 Trainer-only is only the explicit, map-local wild-encounter mechanic described in
 [the core specification](trainer-only-encounters.md). This project has no
-ordinary-trainer caller registry, refusal dialogue, rival deferral, scene
+regular trainer caller registry, refusal dialogue, rival deferral, scene
 continuation, rollback table, recovery policy, or story-specific empty-party
 handling.
 

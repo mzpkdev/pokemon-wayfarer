@@ -6,7 +6,7 @@ Implemented: Yes
 Implemented in [PR #112](https://github.com/mzpkdev/pokemon-wayfarer/pull/112).
 
 Giovanni's and Blue's battles follow the proposed
-[well-known trainers](well-known-trainers.md) model; Blue gains no badge.
+[notable trainers](notable-trainers.md) model; Blue gains no badge.
 
 ## Scope
 
@@ -95,13 +95,13 @@ Arriving before visiting the Center must not create an invalid recovery point.
 ### Blue at Viridian
 
 Place one Blue introduction on the walkable Viridian City exterior beside the
-Gym entrance. The player can speak to him without visiting Cinnabar or
-beating Blaine. He gives a first-meeting line and invites the player inside;
-the introduction records once, then his exterior object leaves. If the player
-enters the Gym first, its encounter supplies a truthful first meeting and
-retires the unused exterior introduction. Neither path duplicates a battle,
-badge, item, or Trainer Rating reward. The exterior interaction cannot block
-the Gym doorway or ordinary city travel.
+Gym entrance. The player can speak to him without visiting Cinnabar or beating
+Blaine. He gives a first-meeting line and invites the player inside; the
+introduction records once, then his exterior object leaves. If the player enters
+the Gym first, its encounter supplies a truthful first meeting and retires the
+unused exterior introduction. Neither path duplicates a battle, badge, item, or
+Trainer Rating (TR) reward. The exterior interaction cannot block the Gym
+doorway or ordinary city travel.
 
 Initialize the Gym leader visible on a new Wayfarer save; do not wait for the
 removed Cinnabar script to clear `FLAG_HIDE_VIRIDIAN_BLUE`. Give the exterior
@@ -130,10 +130,10 @@ implemented [Viridian finale](frlg-kanto-viridian-finale.md) supersedes the
 exterior introduction, Blue Gym role, and related acceptance checks. Blue's
 current Dojo unlock follows committed Indigo victory independently of Giovanni.
 
-The proposed [Leagues](../prds/leagues.md) design fields the
-global top five by TR rather than guaranteeing Blue as Indigo finalist. Its
+The proposed [Leagues](../prds/leagues.md) design picks a lineup of
+the global top five by TR rather than guaranteeing Blue as Indigo finalist. Its
 [runtime contract](leagues.md) keeps Blue's Dojo unlock on the
-first committed Indigo win, whether or not Blue was fielded. The delivered
+first committed Indigo win, whether or not Blue was in the lineup. The delivered
 coastal port's historical Viridian behavior is already superseded by the
 implemented finale; unrelated local/rival story interactions retain their
 separately owned policies.

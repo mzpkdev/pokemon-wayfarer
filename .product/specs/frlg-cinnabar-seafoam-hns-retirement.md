@@ -55,7 +55,7 @@ Seafoam Gym or Secret Cave path grants another Blaine or Groudon encounter.
 This Blue introduction records the historical coastal port. The implemented
 [Viridian finale](frlg-kanto-viridian-finale.md) now removes Blue from the exterior
 and Gym; its acceptance checks supersede this document's Blue check. The
-proposed [well-known trainers](well-known-trainers.md) model gives Blue
+proposed [notable trainers](notable-trainers.md) model gives Blue
 his own fixed TR but no badge; it does not restore Viridian actors. The
 retirement boundary remains unchanged.
 
@@ -85,8 +85,9 @@ content.
 The final port must preserve native-Surf access between Pallet and Cinnabar
 through the selected FRLG Route 21 North and South maps. Its ordinary coastal
 wild ecology follows the existing Kanto FireRed and LeafGreen merge, authored
-day-and-night, and Trainer Rating policies. The full port's implementation and
-acceptance requirements remain owned by the coastal and route specifications.
+day-and-night, and Trainer Rating (TR) policies. The full port's implementation
+and acceptance requirements remain owned by the coastal and route
+specifications.
 
 ## References
 

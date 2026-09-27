@@ -1,16 +1,16 @@
 # Player Trainer Rating
 
-Implemented: Partial. Today's badge and first-clear formula, its saved
-high-water value, and every consumer listed below exist. The new badge scale,
-uncapped TR, and the world curves that follow it are the v0 target.
+Implemented: Partial. Today's badge and first-league-win formula, its saved
+value that never decreases, and every consumer listed below exist. The new
+badge scale, uncapped TR, and the world scaling that follows it are v0.
 Design status: v0 accepted. How TR is earned and how the world answers it are
-approved; the exact numbers are provisional and tuned by playtesting.
+approved; the exact numbers are placeholders tuned by playtesting.
 
 ## Intent
 
 Give the player one measure of how far their career has come, and let the
 world answer to it. Every badge raises it; the level cap, wild Pokémon,
-ordinary trainers, and shops follow it, whatever order the player explores in.
+regular trainers, and shops follow it, whatever order the player explores in.
 The early world should feel dangerous, the late world should feel like home
 ground, and the real tests should come from the trainers everyone knows.
 
@@ -26,76 +26,113 @@ trainers, and better shops.
 
 Every badge counts, whichever region it comes from. Your first eight badges
 each give a big step up; every badge after that still gives a smaller one, all
-the way to the last. TR never goes down: losses and replays add nothing, and a
+the way to the last. TR never decreases: losses and replays add nothing, and a
 later check never lowers what you have earned. A new game starts at 0.
 
 League wins give you nothing. A league is a test of what you have built, not a
 source of power: winning one proves you are ready, and your next step still
 comes from badges.
 
-Today's ROM still uses the earlier formula, where each first League venue win
+Today, the ROM still uses the earlier formula, where each first league win
 also raised TR and the total stopped at a fixed ceiling. It stays in place
 until the new scale is adopted.
 
 ### No ceiling
 
-In the target, TR has no upper limit. All 24 badges take you to the top of
-today's content, but stronger future content can go higher.
+In v0, TR has no upper limit. All 24 badges take you to the top of today's
+content, but stronger future content can go higher.
 
-Everything TR drives has its own natural limit instead. Your level cap, for
-example, rises with every badge until it reaches level 100 with all 24 badges
-and then stays there. Future content can add new things that keep growing past
-today's range, so extra TR still means something.
+Everything TR drives has its own ceiling instead. Your level cap, for example,
+rises with every badge until it reaches level 100 with all 24 badges and then
+stays there. Future content can add new things that keep growing past today's
+range, so extra TR still means something.
 
 ### How the world answers
 
 - **Early on, the world is dangerous.** With a handful of badges, wild Pokémon
-  and route trainers sit just under your level cap. Every fight on the road
+  and regular trainers sit just under your level cap. Every fight on the road
   matters.
-- **Late on, routes are no threat.** With many badges, your cap climbs far
-  ahead of the wild and of ordinary trainers. You travel freely.
-- **The challenge comes from people you know.** Gym Leaders, league fields,
-  and famous trainers met on the road bring the late-game fights, at their own
-  strength ([Well-known trainers](well-known-trainers.md)).
+- **Late on, routes are no threat.** With many badges, your level cap climbs
+  far ahead of the wild and of regular trainers. You travel freely.
+- **The challenge comes from people you know.** Gym Leaders, league lineups,
+  and notable trainers met on the road bring the late-game fights, at their
+  own strength ([Notable trainers](notable-trainers.md)).
 
 ### What your TR drives
 
-- **Your level cap, experience, and obedience.** A higher TR raises your soft
-  level cap; Pokémon past it earn less experience and may disobey
+- **Your level cap, experience, and obedience.** A higher TR raises your level
+  cap. The cap is soft: Pokémon past it earn less experience and may disobey
   ([wild encounter and party progression](trainer-rating-wild-encounter-scaling.md)).
 - **Wild and static encounters**
   ([wild encounter scaling](trainer-rating-wild-encounter-scaling.md)).
-- **Ordinary trainers and Gym members**
-  ([ordinary Trainer and Gym-member scaling](trainer-party-scaling.md)).
+- **Regular trainers and Gym members**
+  ([regular trainer and Gym member scaling](trainer-party-scaling.md)).
 - **Poké Mart stock**, unlocking at the same badge counts as today
   ([Poké Marts](global-tr-pokemarts.md)).
 
-Your TR never makes a well-known trainer stronger or weaker: they have their
-own rating ([Well-known trainers](well-known-trainers.md)), and League fields
-are drawn from those ratings ([Leagues](leagues.md)).
+Your TR never makes a notable trainer stronger or weaker: they have their own
+TR ([Notable trainers](notable-trainers.md)), and league lineups are drawn
+from those ratings ([Leagues](leagues.md)).
+
+## Glossary
+
+- **Trainer Rating (TR):** a hidden measure of strength. You have one, and so
+  does every notable trainer; after first use, docs just say TR.
+- **Player TR / trainer TR:** yours, or a notable trainer's, where it matters
+  which.
+- **Never decreases:** once earned, TR is never lowered.
+- **Notable trainer:** a Gym Leader, Elite Four member, Champion, or Blue (37
+  people in v0), each with their own TR.
+- **Regular trainer:** every other trainer you battle.
+- **Gym member:** a regular trainer who works in a Gym.
+- **Level cap:** the level your Pokémon can reach before they earn less
+  experience and may disobey.
+- **World scaling:** wild Pokémon and regular trainers following your TR.
+- **Wild level curve / regular trainer level curve:** how wild Pokémon and
+  regular trainers' levels follow your TR.
+- **Authored level bonus:** a small, hand-set level bump for one regular
+  trainer.
+- **Ceiling:** the point where something TR drives stops growing, and the TR
+  at which that happens.
+- **Roster:** a notable trainer's ordered list of six Pokémon.
+- **Roster slot (1-6):** one position in that list.
+- **Signature Pokémon:** roster slot 1, the Pokémon a trainer is known for. It
+  is on every team they bring and is always fought last.
+- **Battle snapshot:** the team fixed when a battle starts and kept for the
+  whole fight.
+- **League:** Indigo, Sevii Masters, or Hoenn.
+- **Lineup:** the five opponents of a league.
+- **Locked lineup:** the lineup kept from when you enter a league until you win
+  it.
+- **Match 1-5:** a position in the lineup.
+- **First league win:** your first win at a given league.
+- **Challenge options:** the opt-in challenge menu.
+- **Today / v0 / Later:** what the game does now, the accepted design, and
+  ideas deferred for now.
+- **Placeholder:** a value waiting to be authored or tuned.
 
 ## Boundaries
 
 - Each consumer keeps its own rules and owns its own curve; this document only
   gathers what they share.
-- Obedience, reduced experience past the cap, and Candy rules keep working the
-  same way; they follow the cap wherever it sits.
-- Well-known trainers' ratings never read yours, and yours never reads theirs.
+- Obedience, reduced experience past the level cap, and Candy rules keep
+  working the same way; they follow the level cap wherever it sits.
+- Notable trainers' TR never reads yours, and yours never reads theirs.
 - Standalone builds keep their existing progression.
 
 ## Later
 
 - More ways to earn TR: renown, and exploration or catching paths.
-- Scalers that saturate beyond today's range, arriving with the content that
-  pushes TR higher.
+- Scalers whose ceilings lie beyond today's range, arriving with the content
+  that pushes TR higher.
 - Further tuning of the treadmill (the world scaling alongside the player's
   growth) and the widening world gap, now that late routes fall behind.
 
 ## References
 
 - [Player Trainer Rating specification](../specs/player-trainer-rating.md)
-- [Well-known trainers](well-known-trainers.md)
+- [Notable trainers](notable-trainers.md)
 - [Leagues](leagues.md)
 - [Wild encounter and party progression](trainer-rating-wild-encounter-scaling.md)
-- [Ordinary Trainer and Gym-member scaling](trainer-party-scaling.md)
+- [Regular trainer and Gym member scaling](trainer-party-scaling.md)
 - [Poké Marts](global-tr-pokemarts.md)

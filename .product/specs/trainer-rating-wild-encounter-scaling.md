@@ -8,58 +8,56 @@ scaling and unrelated mechanics remain unchanged; standalone builds retain
 their existing contract.
 
 PRD: [Trainer Rating wild encounter scaling](../prds/trainer-rating-wild-encounter-scaling.md)
-Implemented: Partial; foundation and current circuit producer exist, broader acceptance remains pending.
+Implemented: Partial; foundation and Today's circuit producer exist, broader acceptance remains pending.
 
 ## Scope
 
-This specification defines persistent Trainer Rating, build-specific
+This specification defines persistent Trainer Rating (TR), build-specific
 progression sources, and the effective ordinary wild population for Emerald,
 FireRed, LeafGreen, and HNS. It does not define new regional content or Trainer
-battle scaling. The Wayfarer soft level cap, experience reduction, and
-obedience behavior belong to the separate Trainer Rating party progression
-specification. Wayfarer reuses the encounter projection but replaces the
-rating's progression inputs through the interregional League circuit
-specification.
+battle scaling. The Wayfarer level cap, experience reduction, and obedience
+behavior belong to the separate TR party progression specification. Wayfarer
+reuses the encounter projection but replaces the TR's progression inputs through
+the interregional League circuit specification.
 
 ## Behavior
 
 ### Trainer Rating lifecycle
 
-Wayfarer Trainer Rating is an inclusive value from 0 through 80. A new Wayfarer
-game starts at 0. Builds that have not adopted the Wayfarer circuit retain
-their existing Rating 10 floor. Every read clamps the saved value to the range
-for the active product.
+Wayfarer TR is an inclusive value from 0 through 80. A new Wayfarer game starts
+at 0. Builds that have not adopted the Wayfarer circuit retain their existing TR
+10 floor. Every read clamps the saved value to the range for the active product.
 
-The current [Wayfarer getter](../../game/src/trainer_rating.c) initializes a new
-save to 0 and reads the implemented [circuit producer](../../game/src/league_circuit.c).
-The producer derives a candidate from global badges and the three canonical
-first-clear facts, contributing +8 once for each venue. The getter compares
-that candidate with the stored rating and saves the higher value. Replays add
-no TR, and no later read lowers the high-water mark. Feature-disabled foundation
-checks can still seed a stored value; no prerelease save migration is required.
+Today's [Wayfarer getter](../../game/src/trainer_rating.c) initializes a new
+save to 0 and reads the implemented
+[circuit producer](../../game/src/league_circuit.c). The producer derives a
+candidate from global badges and the three canonical first-league-win facts,
+contributing +8 once for each league. The getter compares that candidate with
+the stored TR and saves the higher value, the saved high-water value. Replays
+add no TR, and no later read lowers it. Feature-disabled foundation checks can
+still seed a stored value; no prerelease save migration is required.
 
-The v0 TR target (rescaled formula, uncapped TR, scalers, and well-known
+The v0 TR design (rescaled formula, uncapped TR, scalers, and notable
 trainers' separate TR) is in [Player Trainer Rating](player-trainer-rating.md);
-this document owns the target wild curve in [v0 target curve](#v0-target-curve).
-Everything else here is current ROM behavior.
+this document owns the v0 wild level curve in
+[v0 wild level curve](#v0-wild-level-curve). Everything else here is Today.
 
 ### Progression targets
 
-The Trainer Rating foundation persists and exposes the shared player Rating.
-The current circuit maps global badge count and canonical first venue clears
-to that value. It starts at 0,
-reaches 16 after four badges and 40 after eight badges, and reaches 80 after all
-twenty-four badges and all three stage clears. Circuit starts and opponent party
-tiers are not prerequisites for the foundation, its 0 through 80 bounds, or its
-consumers.
+The TR foundation persists and exposes the shared player TR. Today's circuit
+maps global badge count and canonical first league wins to that value. It starts
+at 0, reaches 16 after four badges and 40 after eight badges, and reaches 80
+after all twenty-four badges and all three first league wins. Circuit starts and
+opponent party tiers are not prerequisites for the foundation, its 0 through 80
+bounds, or its consumers.
 
 Builds that have not adopted the Wayfarer circuit retain their current
 progression. Each of the first four regional badges contributes 4 points, and
-each of the next four contributes 6. Their Rating 10 floor keeps the first two
-badge totals at 10. The first League clear raises the rating to 55. Their
+each of the next four contributes 6. Their TR 10 floor keeps the first two
+badge totals at 10. The first League win raises TR to 55. Their
 current substantial postgame target is 65.
 
-| Build | First League | Postgame condition for Rating 65 |
+| Build | First League | Postgame condition for TR 65 |
 | --- | --- | --- |
 | Emerald | Champion | Birch's post-Champion National Dex upgrade |
 | FireRed/LeafGreen | Hall of Fame clear | Sapphire recovered |
@@ -67,7 +65,7 @@ current substantial postgame target is 65.
 
 HNS awards one additional point for each Kanto badge and two for the Kanto
 Champion. No progression source outside the Wayfarer circuit currently reaches
-the Rating 80 cap.
+the TR 80 cap.
 
 ### Eligible profiles
 
@@ -83,14 +81,17 @@ Sinjoh is distinct from Sinnoh. None of the current builds contains a full Sinno
 
 Adding a map connection or warp to HNS does not make a new region eligible. Its
 ordinary profiles must explicitly target the HNS build. Once that data is
-compiled into HNS, the existing global Trainer Rating pipeline applies without
-a new scaling implementation. In Wayfarer, Hoenn badges and League completion
-enter the rating through the interregional circuit rather than this
-build-specific table.
+compiled into HNS, the existing global TR pipeline applies without a new scaling
+implementation. In Wayfarer, Hoenn badges and League completion enter TR through
+the interregional circuit rather than this build-specific table.
 
 ### Effective ordinary population
 
-For a selected authored slot, the game first determines the authored level using the existing encounter rules. It then projects that level through the generated scaling curve for the current Trainer Rating. The projection uses the cumulative highest result through the current rating, so an increased Trainer Rating cannot reduce the projected level. Results are clamped to valid wild levels.
+For a selected authored slot, the game first determines the authored level using
+the existing encounter rules. It then projects that level through the generated
+scaling curve for the current TR. The projection uses the cumulative highest
+result through the current TR, so an increased TR cannot reduce the projected
+level. Results are clamped to valid wild levels.
 
 The selected slot and its authored source remain the basis for ordinary encounter selection. Existing selection mechanics stay intact, including encounter weights, rod partitions, time of day, ability effects, lures, Altering Cave, and HNS Hoenn Sound. Pressure, Vital Spirit, and lure-level effects choose the authored level before projection.
 
@@ -109,7 +110,7 @@ Global species floors apply to every non-randomized ordinary wild population aft
 | Tauros | 25 | FireRed, Safari Zone West, land grass, 25 |
 | Relicanth | 25 | Emerald, Underwater Route 124, water/surf, 30-35 |
 | Sneasel | 30 | LeafGreen, Four Island Icefall Cave 1F, land grass, 30 |
-| Mantine | 14 | HNS, Whirl Islands, water/surf, authored 15-19 and projected 14 at Rating 10 |
+| Mantine | 14 | HNS, Whirl Islands, water/surf, authored 15-19 and projected 14 at TR 10 |
 | Bagon | 20 | Emerald, Meteor Falls B1F 2R, land grass, 25-35 |
 | Tropius | 20 | Emerald, Route 119, land grass, 25-27 |
 | Absol | 20 | Emerald, Route 120, land grass, 25-27 |
@@ -118,22 +119,24 @@ Global species floors apply to every non-randomized ordinary wild population aft
 Each example identifies an ordinary encounter that motivated review of the global floor. It does not limit the floor to that map, method, build, or level range.
 
 Mantine's global floor is exactly 14. An authored level-15 Mantine projects to
-level 14 at Rating 10, so any higher floor would make a protected HNS native-HM
+level 14 at TR 10, so any higher floor would make a protected HNS native-HM
 source ineligible. This correction does not create a regional runtime branch,
 change authored levels, or add Mantyke or another predecessor rule. Mantine is
-protected from Rating 10 through 80; it is not an all-rating traversal anchor,
-and lower ratings may exclude it because of the global floor. HNS Chinchou is
-the approved Rating 0 through 80 Whirlpool source.
+protected from TR 10 through 80; it is not an all-TR traversal anchor, and
+lower TR may exclude it because of the global floor. HNS Chinchou is the
+approved TR 0 through 80 Whirlpool source.
 
-In wild-randomizer mode, the existing randomized species mapping continues to run from the original selected slot. Its level still projects through Trainer Rating, but predecessor resolution and species-floor eligibility filtering are bypassed.
+In wild-randomizer mode, the existing randomized species mapping continues to
+run from the original selected slot. Its level still projects through TR, but
+predecessor resolution and species-floor eligibility filtering are bypassed.
 
-### v0 target curve
+### v0 wild level curve
 
-On the [target TR scale](player-trainer-rating.md#formula-v0-target) the
-projection targets the wild encounter level scaler below instead of the
-current anchors (the soft cap minus 10). Anchors are provisional:
+On the [v0 TR scale](player-trainer-rating.md#formula-v0) the
+projection follows the wild level curve below instead of today's anchors (the
+level cap minus 10). Anchors are placeholders:
 
-| Badges | Target TR | Wild level target | Soft cap | Gap to cap |
+| Badges | v0 TR | Wild level curve | Level cap | Gap to cap |
 | ---: | ---: | ---: | ---: | ---: |
 | 0 | 0 | 6 | 15 | −9 |
 | 4 | 40 | 24 | 28 | −4 |
@@ -144,17 +147,17 @@ current anchors (the soft cap minus 10). Anchors are provisional:
 The curve interpolates as a [scaler](player-trainer-rating.md#scalers) and
 stays flat past TR 160. Early wild Pokémon press close to the cap; late ones
 fall well behind it. The projection mechanics are unchanged: authored level
-projected through the curve, cumulative high-water, evolution downshift, and
+projected through the curve, cumulative maximum, evolution downshift, and
 eligible-weight selection. Species floors are levels, so their values are
 unaffected.
 
-The Mantine and Chinchou protection notes above are stated on the current
-scale (Mantine from Rating 10 through 80, Chinchou from Rating 0 through 80).
-By badge equivalence the v0 target ranges are TR 25 through 160 for Mantine
-(Rating 10 ≈ 2.5 badges) and TR 0 through 160 for Chinchou (0 to 24 badges).
-Both need data re-verification against the new curve before adoption,
-including whether 14 is still the right Mantine floor; this document does not yet claim either protection on the
-target scale.
+The Mantine and Chinchou protection notes above are stated on today's scale
+(Mantine from TR 10 through 80, Chinchou from TR 0 through 80). By badge
+equivalence the v0 ranges are TR 25 through 160 for Mantine (today's TR 10 ≈
+2.5 badges) and TR 0 through 160 for Chinchou (0 to 24 badges). Both need data
+re-verification against the new curve before adoption, including whether 14 is
+still the right Mantine floor; this document does not yet claim either
+protection on the v0 scale.
 
 ### Consumers of the effective population
 
@@ -166,11 +169,13 @@ All ordinary consumers resolve the same effective population:
 - Local ambient species selection.
 - Ordinary land and water DexNav populations.
 
-Ordinary DexNav selection preserves its ordinary source and level-range weighting, including fallback lure mirroring. Hidden DexNav entries remain authored and unscaled.
+Ordinary DexNav selection preserves its ordinary source and level-range
+weighting, including fallback lure mirroring. Hidden DexNav entries remain
+authored and unscaled.
 
 ### Excluded sources
 
-The following retain their authored behavior and do not use Trainer Rating scaling:
+The following retain their authored behavior and do not use TR scaling:
 
 - Hidden DexNav encounters.
 - Fixed and scripted encounters.
@@ -181,7 +186,11 @@ The following retain their authored behavior and do not use Trainer Rating scali
 
 ### Validation
 
-Validation must include deterministic checks for Trainer Rating progression, save migration, level projection, predecessor resolution, species floors, eligible-weight selection, excluded sources, and ordinary population consumers. Generated encounter data must reproduce authored profiles before scaling and produce a balance audit for every covered build.
+Validation must include deterministic checks for TR progression, save migration,
+level projection, predecessor resolution, species floors, eligible-weight
+selection, excluded sources, and ordinary population consumers. Generated
+encounter data must reproduce authored profiles before scaling and produce a
+balance audit for every covered build.
 
 Compile the affected encounter objects for Emerald, FireRed, LeafGreen, and HNS. Build at least one complete release ROM after generation, then playtest the progression milestones and ordinary encounter mechanics described in the parent PRD.
 

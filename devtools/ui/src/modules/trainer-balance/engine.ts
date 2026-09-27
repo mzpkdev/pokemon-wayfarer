@@ -2,7 +2,7 @@ import type {
   Anchor,
   Experiment,
   ResolvedTrainer,
-  RosterEntry,
+  RosterSlot,
   TeamMember,
   TrainerRecord,
   TrainerSettings,
@@ -11,19 +11,19 @@ import type {
 
 export const ROSTER_SIZE = 6
 export const LEVEL_OFFSET = { min: -6, max: 0, default: -2 } as const
-export const LEAGUE_FIELD = 5
-export const VENUES = ["Indigo", "Sevii Masters", "Hoenn"] as const
+export const LINEUP_SIZE = 5
+export const LEAGUES = ["Indigo", "Sevii Masters", "Hoenn"] as const
 export const MAX_ANCHORS = 20
 
-/** The player soft-cap curve (24 badges = TR 160). Well-known trainer team level uses the same anchors. */
-export const PLAYER_CAP_ANCHORS: readonly Anchor[] = [
+/** The level cap curve (24 badges = TR 160). Notable trainer team level uses the same anchors. */
+export const LEVEL_CAP_ANCHORS: readonly Anchor[] = [
   [0, 15],
   [40, 28],
   [80, 50],
   [120, 75],
   [160, 100],
 ]
-export const DEFAULT_TEAM_LEVEL: readonly Anchor[] = PLAYER_CAP_ANCHORS
+export const DEFAULT_TEAM_LEVEL: readonly Anchor[] = LEVEL_CAP_ANCHORS
 /** Step table as paired anchors: 0–15 -> 2, 16–43 -> 3, 44–70 -> 4, 71–95 -> 5, 96+ -> 6. */
 export const DEFAULT_TEAM_SIZE: readonly Anchor[] = [
   [0, 2],
@@ -36,7 +36,7 @@ export const DEFAULT_TEAM_SIZE: readonly Anchor[] = [
   [95, 5],
   [96, 6],
 ]
-/** Wild encounter level target by player TR (replaces "cap - 10"). */
+/** The wild level curve by player TR (replaces "cap - 10"). */
 export const DEFAULT_WILD_LEVEL: readonly Anchor[] = [
   [0, 6],
   [40, 24],
@@ -44,8 +44,8 @@ export const DEFAULT_WILD_LEVEL: readonly Anchor[] = [
   [120, 58],
   [160, 78],
 ]
-/** Ordinary (route) trainer baseline level by player TR, before identity and Gym-member adjustments. */
-export const DEFAULT_ROUTE_TRAINER_LEVEL: readonly Anchor[] = [
+/** The regular trainer level curve by player TR, before authored level bonuses and Gym-member adjustments. */
+export const DEFAULT_REGULAR_TRAINER_LEVEL: readonly Anchor[] = [
   [0, 9],
   [40, 27],
   [80, 44],
@@ -101,11 +101,10 @@ export const playerRating = (point: WorldPoint): number => {
   return 10 * Math.min(badges, 8) + 5 * Math.max(0, badges - 8)
 }
 
-/** The player soft cap. A readout for comparison: it never feeds trainer results. */
-export const playerCap = (point: WorldPoint): number =>
-  scale(PLAYER_CAP_ANCHORS, playerRating(point))
+/** The player's level cap. A readout for comparison: it never feeds notable trainer results. */
+export const levelCap = (point: WorldPoint): number => scale(LEVEL_CAP_ANCHORS, playerRating(point))
 
-/** Player-TR world curves: the soft cap, the wild level target and the route-trainer baseline. */
+/** World scaling from player TR: the level cap, the wild level curve and the regular trainer level curve. */
 export const worldLevels = (
   experiment: Pick<Experiment, "wildLevel" | "routeTrainerLevel">,
   point: WorldPoint,
@@ -113,22 +112,22 @@ export const worldLevels = (
   const tr = playerRating(point)
   return {
     tr,
-    cap: scale(PLAYER_CAP_ANCHORS, tr),
+    cap: scale(LEVEL_CAP_ANCHORS, tr),
     wild: scale(experiment.wildLevel, tr),
-    routeTrainer: scale(experiment.routeTrainerLevel, tr),
+    regularTrainer: scale(experiment.routeTrainerLevel, tr),
   }
 }
 
 /**
- * Team = the first N roster entries (N = team size at TR); level =
+ * Team = the first N roster slots (N = team size at TR); level =
  * clamp(team level + offset, 1, 100); battle order = the team reversed.
  */
-export const buildTeam = (roster: readonly RosterEntry[], teamLevel: number, size: number) => {
+export const buildTeam = (roster: readonly RosterSlot[], teamLevel: number, size: number) => {
   const team = roster.slice(0, size).map(
-    (entry, index): TeamMember => ({
-      ...entry,
+    (rosterSlot, index): TeamMember => ({
+      ...rosterSlot,
       slot: index + 1,
-      level: clamp(teamLevel + entry.levelOffset, 1, 100),
+      level: clamp(teamLevel + rosterSlot.levelOffset, 1, 100),
     }),
   )
   return { team, battleOrder: team.toReversed() }
@@ -144,7 +143,7 @@ export const resolveTrainer = (trainer: TrainerRecord, experiment: Experiment): 
   const warnings: string[] = []
   if (settings.roster.length < ROSTER_SIZE)
     warnings.push(
-      `The roster lists ${settings.roster.length} of ${ROSTER_SIZE} entries: add ${ROSTER_SIZE - settings.roster.length} more.`,
+      `The roster lists ${settings.roster.length} of ${ROSTER_SIZE} Pokémon: add ${ROSTER_SIZE - settings.roster.length} more.`,
     )
   if (team.length < size) warnings.push(`The team fills ${team.length} of ${size} slots.`)
   for (const member of team)
@@ -162,14 +161,14 @@ export const resolveTrainer = (trainer: TrainerRecord, experiment: Experiment): 
 }
 
 /**
- * The league field from one global pool: the top five by TR (ties keep
+ * The league lineup from one global pool: the top five by TR (ties keep
  * catalog order), returned in battle order, ascending TR with the strongest last.
  */
-export const leagueField = (catalog: TrainerRecord[], experiment: Experiment): ResolvedTrainer[] =>
+export const leagueLineup = (catalog: TrainerRecord[], experiment: Experiment): ResolvedTrainer[] =>
   catalog
     .map((trainer) => resolveTrainer(trainer, experiment))
     .toSorted((a, b) => b.tr - a.tr)
-    .slice(0, LEAGUE_FIELD)
+    .slice(0, LINEUP_SIZE)
     .toSorted((a, b) => a.tr - b.tr)
 
 export const defaultTrainerSettings = (trainer: TrainerRecord): TrainerSettings => ({
@@ -186,7 +185,7 @@ export const createExperiment = (catalog: TrainerRecord[]): Experiment => {
       teamLevel: structuredClone(DEFAULT_TEAM_LEVEL),
       teamSize: structuredClone(DEFAULT_TEAM_SIZE),
       wildLevel: structuredClone(DEFAULT_WILD_LEVEL),
-      routeTrainerLevel: structuredClone(DEFAULT_ROUTE_TRAINER_LEVEL),
+      routeTrainerLevel: structuredClone(DEFAULT_REGULAR_TRAINER_LEVEL),
       trainers,
     },
     catalog,
@@ -230,10 +229,10 @@ const nullable = (value: unknown, max: number, path: string): string | null =>
 const anchors = (value: unknown, min: number, max: number, path: string): Anchor[] => {
   if (!Array.isArray(value) || value.length < 1 || value.length > MAX_ANCHORS)
     fail(`${path} must list 1–${MAX_ANCHORS} anchors`)
-  const points = (value as unknown[]).map((entry, index): Anchor => {
+  const points = (value as unknown[]).map((point, index): Anchor => {
     const where = `${path}[${index}]`
-    if (!Array.isArray(entry) || entry.length !== 2) fail(`${where} must be [TR, value]`)
-    const [at, result] = entry as unknown[]
+    if (!Array.isArray(point) || point.length !== 2) fail(`${where} must be [TR, value]`)
+    const [at, result] = point as unknown[]
     return [tr(at, `${where} TR`), integer(result, min, max, `${where} value`)]
   })
   if (points[0]?.[0] !== 0) fail(`${path} must start at TR 0`)
@@ -245,43 +244,41 @@ const anchors = (value: unknown, min: number, max: number, path: string): Anchor
   return points
 }
 
-const rosterEntry = (value: unknown, path: string): RosterEntry => {
-  const entry = object(value, path)
-  exactKeys(entry, ["species", "levelOffset", "moves", "item", "ability", "nature"], path)
+const rosterSlot = (value: unknown, path: string): RosterSlot => {
+  const input = object(value, path)
+  exactKeys(input, ["species", "levelOffset", "moves", "item", "ability", "nature"], path)
   const moves =
-    entry.moves === "LEVEL_UP"
+    input.moves === "LEVEL_UP"
       ? "LEVEL_UP"
-      : Array.isArray(entry.moves) && entry.moves.length >= 1 && entry.moves.length <= 4
-        ? entry.moves.map((move: unknown, slot) => label(move, 40, `${path}.moves[${slot}]`))
+      : Array.isArray(input.moves) && input.moves.length >= 1 && input.moves.length <= 4
+        ? input.moves.map((move: unknown, slot) => label(move, 40, `${path}.moves[${slot}]`))
         : fail(`${path}.moves must be "LEVEL_UP" or 1–4 moves`)
   return {
-    species: label(entry.species, 100, `${path}.species`),
+    species: label(input.species, 100, `${path}.species`),
     levelOffset: integer(
-      entry.levelOffset,
+      input.levelOffset,
       LEVEL_OFFSET.min,
       LEVEL_OFFSET.max,
       `${path}.levelOffset`,
     ),
     moves,
-    item: nullable(entry.item, 60, `${path}.item`),
-    ability: nullable(entry.ability, 60, `${path}.ability`),
-    nature: nullable(entry.nature, 30, `${path}.nature`),
+    item: nullable(input.item, 60, `${path}.item`),
+    ability: nullable(input.ability, 60, `${path}.ability`),
+    nature: nullable(input.nature, 30, `${path}.nature`),
   }
 }
 
 /**
- * v0 rosters list up to six entries, and entry 1 is at offset 0 so the
+ * v0 rosters list up to six roster slots, and roster slot 1 is at offset 0 so the
  * signature Pokémon plays at the team level at every size. Fewer than six is
  * a content gap the explorer flags (see rosterGaps), not an import error.
  */
-export const validateRoster = (value: unknown, path: string): RosterEntry[] => {
+export const validateRoster = (value: unknown, path: string): RosterSlot[] => {
   if (!Array.isArray(value) || value.length < 1 || value.length > ROSTER_SIZE)
-    fail(`${path} must list 1–${ROSTER_SIZE} entries (v0 requires ${ROSTER_SIZE})`)
-  const entries = (value as unknown[]).map((entry, index) =>
-    rosterEntry(entry, `${path}[${index + 1}]`),
-  )
-  if (entries[0]?.levelOffset !== 0) fail(`${path}: entry 1 must have level offset 0`)
-  return entries
+    fail(`${path} must list 1–${ROSTER_SIZE} Pokémon (v0 requires ${ROSTER_SIZE})`)
+  const slots = (value as unknown[]).map((slot, index) => rosterSlot(slot, `${path}[${index + 1}]`))
+  if (slots[0]?.levelOffset !== 0) fail(`${path}: roster slot 1 must have level offset 0`)
+  return slots
 }
 
 /** Rosters short of the required six. */

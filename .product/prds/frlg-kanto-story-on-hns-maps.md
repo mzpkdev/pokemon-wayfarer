@@ -11,18 +11,18 @@ The [Kanto origin opening](wayfarer-kanto-origin-opening.md) separately owns
 the native Pallet sequence through Parcel delivery, Pokédex receipt, and five
 Poké Balls.
 
-Circuit-dependent successor: the proposed
+League-dependent successor: the proposed
 [Leagues](leagues.md) design replaces the guaranteed Indigo/Masters
 lineups and fixed visiting-origin Blue League profile below with the global top
-five by TR. Its [runtime contract](../specs/leagues.md) keeps
+five by Trainer Rating (TR). Its [runtime contract](../specs/leagues.md) keeps
 Blue's Dojo unlock on the first committed Indigo win. These changes take
-precedence for circuit appearances only if the draft is adopted. Local Kanto
+precedence for league appearances only if the draft is adopted. Local Kanto
 adventures, Blue's origin-specific rivalry and forward story progression, and
 Giovanni's badge role remain owned here; the current port and approved fixed
 circuit retain their existing behavior meanwhile.
 
 Giovanni's and Blue's battles follow the proposed
-[well-known trainers](well-known-trainers.md) model; Blue gains no badge.
+[notable trainers](notable-trainers.md) model; Blue gains no badge.
 
 ## Intent
 
@@ -110,7 +110,7 @@ In particular:
 - Bill provides a route to the S.S. Ticket and Anne boarding; an existing
   Ticket also permits boarding. The coastal port owns the Mansion's local Key
   and Blaine connection without triggering Bill's Sevii trip.
-- Unrelated badges, League clears, or regional campaigns do not activate these
+- Unrelated badges, league wins, or regional campaigns do not activate these
   adventures. Retain ordinary field preparation and necessary local puzzles.
 
 An early visit introduces the problem without completing it. Returning later
@@ -157,7 +157,7 @@ keeps its repair condition. No exterior replacement or `map.bin` edit is part
 of this port.
 
 Move the only Route 10 Zapdos into the old hall. Players can explore it before
-Trainer Rating 55; the fixed level 50 battle becomes available at TR 55. Zapdos
+TR 55; the fixed level 50 battle becomes available at TR 55. Zapdos
 uses FRLG outcomes: catch or KO resolves it permanently, while running,
 teleporting, or blacking out leaves it available on return. League completion
 does not respawn it. The [Power Plant specification](../specs/frlg-kanto-power-plant.md)
@@ -253,7 +253,7 @@ chapters remain retired rather than returning after a loss.
 
 Starting Blue's Champion encounter follows the same forward-progression rule.
 Winning records the normal League completion and leaves all earlier rival
-encounters retired. League entry remains governed by the existing circuit,
+encounters retired. Entering a league remains governed by the existing circuit,
 without requiring the earlier rivalry or the Kanto regional story. A visitor
 meeting Blue for the first time at the League receives an introduction; a
 Kanto-origin player receives dialogue appropriate to the encounters actually
@@ -301,7 +301,7 @@ badge identity and one first-award contribution to TR; Giovanni departs after
 the Earthquake TM is delivered and has no rematch or successor. Blue's existing
 repeatable Dojo battle instead unlocks on the first committed Indigo Champion
 victory, independently of Giovanni and player origin. No new TR, badge-count,
-or League-clear condition is introduced for the Earth Badge. The delivered
+or league-win condition is introduced for the Earth Badge. The delivered
 coastal port's Blue Gym remains current runtime until this story port lands;
 the [finale specification](../specs/frlg-kanto-viridian-finale.md) supersedes
 its Viridian invitation and Gym requirements then.
@@ -313,7 +313,7 @@ Repeated conversations cannot repeatedly award one-time items or Pokémon.
 Bag and party capacity failures leave rewards claimable later.
 
 Retain the independent-story design's readiness requirements for the Master
-Ball and legendary captures. Zapdos's battle threshold is TR 55 (v0 target:
+Ball and legendary captures. Zapdos's battle threshold is TR 55 (v0:
 TR 120, ≈ 16 badges); other
 unsettled thresholds are decided separately. A deferred Master Ball does not
 delay Silph's rescue or Giovanni's finale. No Sevii

@@ -3,18 +3,19 @@
 Status: Scaling engine and fixed circuit wiring implemented; campaign balance acceptance pending.
 Implemented: Partial
 
-This document describes current ROM behavior; the proposed successor is
+This document describes Today; the v0 successor is
 [Leagues](leagues.md).
 
-The fixed Indigo/Masters/Hoenn roster and venue wiring, stage/replay identity,
-entry-TR snapshot, and +8-per-venue progression are implemented. See the
-[current circuit contract](../specs/wayfarer-interregional-league-circuit.md)
-and [runtime producer](../../game/src/league_circuit.c).
-The [original scaling evidence](../research/league-scaling-implementation.md)
-records earlier automated results and the remaining gameplay validation; its
-old progression/wiring description predates the current circuit.
+The fixed Indigo/Masters/Hoenn roster and league wiring, stage/replay identity,
+TR snapshot taken when entering a league, and +8-per-league progression are
+implemented. See
+[Today's circuit contract](../specs/wayfarer-interregional-league-circuit.md)
+and [runtime producer](../../game/src/league_circuit.c). The
+[original scaling evidence](../research/league-scaling-implementation.md)
+records earlier automated results and the remaining gameplay validation; its old
+progression/wiring description predates the current circuit.
 
-## Current ROM intent
+## Today's intent
 
 Keep the Indigo League, Sevii Masters Challenge, and Hoenn League appropriate to a player's
 career whether they enter as soon as eligible or collect all twenty-four badges
@@ -24,7 +25,7 @@ from the first opponent to the final opponent.
 ## Design
 
 Scale opponent levels from Trainer Rating (TR), captured when the player starts
-a circuit run. Keep that rating and stage identity for the entire run, including
+a circuit run. Keep that TR and stage identity for the entire run, including
 save/load and battle reconstruction. A fresh attempt after a loss or departure
 uses the player's current TR. Training during a run never raises its difficulty.
 
@@ -36,7 +37,7 @@ evolution, roster expansion, or move replacement is part of this change.
 Preserve existing challenge-mode precedence.
 
 Use a separately tunable League baseline curve, initially seeded with the
-player soft-cap anchors. It must not change implicitly when the player cap or
+level cap anchors. It must not change implicitly when the level cap or
 Gym Leader curve changes.
 
 | TR | League baseline |
@@ -51,8 +52,8 @@ Gym Leader curve changes.
 | 65 | 80 |
 | 80 | 100 |
 
-These TR values are on the current scale and have no v0 target conversion: in
-the target, League opponents use their own TR from [Leagues](leagues.md), not
+These TR values are on today's scale and have no v0 conversion: in
+v0, League opponents use their own TR from [Leagues](leagues.md), not
 the player's.
 
 Interpolate between anchors, rounding halves upward. Each opponent has one
@@ -84,47 +85,48 @@ These examples use an input TR directly, independent of how the player earned it
 | 72 | 89 | 85 | 90 |
 | 80 | 100 | 96 | 100 |
 
-Trainer Rating advancement belongs to the existing
+TR advancement belongs to the existing
 [interregional League circuit](wayfarer-interregional-league-circuit.md) and
 [player progression](../specs/trainer-rating-party-progression.md) documents.
 This feature consumes the current TR without changing badge contributions,
-circuit rewards, the player soft cap, XP reduction, or obedience. Progression
-changes remain outside scaling; the current producer already awards +8 for each
-of the three canonical first clears.
+circuit rewards, the level cap, XP reduction, or obedience. Progression
+changes remain outside scaling; Today's producer already awards +8 for each
+of the three canonical first league wins.
 
 ## Boundaries and presentation
 
 Keep the fixed Indigo to Masters to Hoenn sequence, 8/16/24 badge admission
-minimums, prerequisite clears, unrestricted badge collection, travel, and
+minimums, prerequisite league wins, unrestricted badge collection, travel, and
 healing rules. Indigo uses the FRLG rooms and roster, Masters uses the HNS rooms
 and roster from Seven Island, and Hoenn retains its Emerald challenge. Indigo
 and Hoenn keep their Hall of Fame behavior; the Masters Gallery is not a Hall of
 Fame. No new menu, TR popup, difficulty choice, or automatic circuit
 announcement is required.
 
-Initial Gym battles remain governed by the Gym Leader design. Ordinary
-Trainers, Gym members, story bosses, facilities, and rematches retain their
+Initial Gym battles remain governed by the Gym Leader design. Regular
+trainers, Gym members, story bosses, facilities, and rematches retain their
 existing scaling policies. This design supersedes static levels for the fifteen
 circuit opponents only; it preserves their authored non-level content.
-First-clear and replay runs use the same scaling policy and roster. Replays
+First-league-win and replay runs use the same scaling policy and roster. Replays
 take a fresh admission snapshot and do not repeat circuit progression.
 
 ## Acceptance and balance
 
-Verify both earliest-entry and all-badges-first routes, plus intermediate
-entry timings. Test full runs, loss/retry, save/load, replay, the Seven Island
-Masters transition, and return to regional travel. Preserve the clear/reward
-handoff for the correct stage and never change a run's opponents retroactively.
+Verify both enter-as-soon-as-eligible and all-badges-first routes, plus
+intermediate timings. Test full runs, loss/retry, save/load, replay, the Seven
+Island Masters transition, and return to regional travel. Preserve the
+league-win/reward handoff for the correct stage and never change a run's
+opponents retroactively.
 
 Playtest attrition over five battles, strong authored moves at Indigo's earliest
-levels, and the training needed after each clear. Compare remaining Gyms before
-and after a clear. Equal TR does not guarantee equal difficulty across authored
-teams. Record roster outliers for a separate balance review; do not silently
-replace species, moves, items, or AI in this implementation.
+levels, and the training needed after each league win. Compare remaining Gyms
+before and after a league win. Equal TR does not guarantee equal difficulty
+across authored teams. Record roster outliers for a separate balance review; do
+not silently replace species, moves, items, or AI in this implementation.
 
 ## References
 
 - [League scaling specification](../specs/league-scaling.md)
 - [Interregional League circuit](wayfarer-interregional-league-circuit.md)
-- [Well-known trainers: Gym battles](well-known-trainers.md#gym-battles)
+- [Notable trainers: Gym battles](notable-trainers.md#gym-battles)
 - [Player party progression](../specs/trainer-rating-party-progression.md)

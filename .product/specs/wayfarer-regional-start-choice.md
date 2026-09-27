@@ -14,7 +14,7 @@ authored scenes through Parcel delivery, Pokédex receipt, and five Poké Balls.
 
 The runtime foundation continues to own the composite map catalog, persistent
 namespaces, and active-region dispatch. Existing progression specifications
-continue to own Trainer Rating, encounters, field moves, and League rules.
+continue to own Trainer Rating (TR), encounters, field moves, and League rules.
 
 This is the regional-start extension anticipated by the Hoenn integration and
 League documents. On implementation it supersedes their Johto-only entry
@@ -215,7 +215,7 @@ where necessary so later blanket clears cannot erase regional initialization:
 
 1. Capture confirmed origin and challenge settings; clear the ordinary new-game
    save state, party, inventory, records, and event storage as today.
-2. Initialize shared Wayfarer state, Trainer Rating, money, PC items, berries,
+2. Initialize shared Wayfarer state, TR, money, PC items, berries,
    and other global defaults once. Preserve the current default money of 3,000.
 3. Establish the HNS world baseline once for all origins. Initialize the
    separate Hoenn bank as uninitialized with no starter choice or receipt.
@@ -248,7 +248,7 @@ overwrite Hoenn's home, visited bits, or opening variables.
 | HNS region context | Johto | Johto as a latent HNS context, without marking it visited | Kanto |
 | Hoenn initialized | False | True, after its native baseline has been installed | False |
 | Home recovery | Existing New Bark home heal location | Existing gender-appropriate Littleroot player-house heal location | Existing HNS Pallet/Red's House heal location |
-| Party, badges, League clears | Empty party; zero badges and clears | Empty party; zero badges and clears | Empty party; zero badges and clears |
+| Party, badges, league wins | Empty party; zero badges and league wins | Empty party; zero badges and league wins | Empty party; zero badges and league wins |
 | Starter state | All choices uncommitted; all receipts false | All choices uncommitted; all receipts false | All choices uncommitted; all receipts false |
 | Aqua maiden-voyage state | Existing fresh HNS value | Same fresh value; do not write 8 | Existing fresh HNS value; Kanto travel policy is outside this opening |
 

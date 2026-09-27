@@ -25,7 +25,7 @@
       }
     ],
     "tr": 2,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 2 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.5 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 2 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.5 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Golem",
@@ -76,7 +76,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[1]; game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[2]; game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[3]; game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[4]; game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[5]; game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[0]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 entries; only the first 6 are kept."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[1]; game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[2]; game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[3]; game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[4]; game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[5]; game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[0]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 Pokémon; only the first 6 are kept."
   },
   {
     "id": "misty",
@@ -104,7 +104,7 @@
       }
     ],
     "tr": 2,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.75 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.75 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Starmie",
@@ -155,7 +155,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[0]; game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[1]; game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[2]; game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[3]; game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[4]; game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[5]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[0]; game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[1]; game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[2]; game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[3]; game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[4]; game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[5]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "lt-surge",
@@ -189,7 +189,7 @@
       }
     ],
     "tr": 2,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.75 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.75 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Raichu",
@@ -240,7 +240,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[0]; game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[1]; game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[2]; game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[3]; game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[4]; game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[5]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[0]; game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[1]; game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[2]; game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[3]; game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[4]; game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[5]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "erika",
@@ -274,7 +274,7 @@
       }
     ],
     "tr": 2,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.75 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.75 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Bellossom",
@@ -325,7 +325,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[0]; game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[1]; game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[2]; game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[4]; game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[3]; game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[5]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[0]; game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[1]; game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[2]; game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[4]; game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[3]; game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[5]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "janine",
@@ -377,7 +377,7 @@
       }
     ],
     "tr": 3,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Crobat",
@@ -428,7 +428,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[0]; game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[1]; game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[2]; game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[3]; game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[5]; game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[4]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[0]; game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[1]; game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[2]; game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[3]; game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[5]; game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[4]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "sabrina",
@@ -468,7 +468,7 @@
       }
     ],
     "tr": 3,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Alakazam",
@@ -519,7 +519,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[0]; game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[1]; game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[2]; game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[3]; game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[4]; game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[5]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 entries; only the first 6 are kept."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[0]; game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[1]; game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[2]; game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[3]; game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[4]; game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[5]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 Pokémon; only the first 6 are kept."
   },
   {
     "id": "blaine",
@@ -559,7 +559,7 @@
       }
     ],
     "tr": 3,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Magmortar",
@@ -610,7 +610,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[2]; game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[3]; game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[4]; game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[5]; game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[0]; game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[1]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 entries; only the first 6 are kept."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[2]; game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[3]; game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[4]; game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[5]; game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[0]; game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[1]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 Pokémon; only the first 6 are kept."
   },
   {
     "id": "giovanni",
@@ -656,7 +656,7 @@
       }
     ],
     "tr": 5,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 5 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16.5 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 5 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16.5 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Rhyhorn",
@@ -707,7 +707,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from game/src/data/trainers_frlg.party:TRAINER_LEADER_GIOVANNI (entry 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved). Handwritten early species Sandshrew fill the remaining slots at offset -2."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers_frlg.party:TRAINER_LEADER_GIOVANNI (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). Handwritten early species Sandshrew fill the remaining roster slots at offset -2."
   },
   {
     "id": "blue",
@@ -759,7 +759,7 @@
       }
     ],
     "tr": 6,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 6 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 17 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 6 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 17 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Eevee",
@@ -810,7 +810,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from game/src/data/trainers_frlg.party:TRAINER_CHAMPION_FIRST_SQUIRTLE (entry 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 entries; only the first 6 are kept. Entry 1: starter replaced by Eevee for now (user), LEVEL_UP with no item."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers_frlg.party:TRAINER_CHAMPION_FIRST_SQUIRTLE (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 Pokémon; only the first 6 are kept. Roster slot 1: starter replaced by Eevee for now (user), LEVEL_UP with no item."
   },
   {
     "id": "lorelei",
@@ -856,7 +856,7 @@
       }
     ],
     "tr": 87,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 50 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 50 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Lapras",
@@ -899,7 +899,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LORELEI (entry 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LORELEI (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "bruno",
@@ -945,7 +945,7 @@
       }
     ],
     "tr": 90,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 52 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 52 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Machamp",
@@ -988,7 +988,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_BRUNO (entry 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_BRUNO (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "agatha",
@@ -1034,7 +1034,7 @@
       }
     ],
     "tr": 92,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 53 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 53 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Gengar",
@@ -1077,7 +1077,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_AGATHA (entry 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_AGATHA (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "koga",
@@ -1123,7 +1123,7 @@
       }
     ],
     "tr": 73,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 42 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 42 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Crobat",
@@ -1166,7 +1166,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from game/src/data/trainers_hns.party:TRAINER_KOGA_1_HNS (entry 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers_hns.party:TRAINER_KOGA_1_HNS (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "lance",
@@ -1212,7 +1212,7 @@
       }
     ],
     "tr": 95,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 55 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 55 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Dragonite",
@@ -1255,7 +1255,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LANCE (entry 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LANCE (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "falkner",
@@ -1283,7 +1283,7 @@
       }
     ],
     "tr": 1,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 1 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.25 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 1 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.25 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Noctowl",
@@ -1334,7 +1334,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[1]; game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[2]; game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[4]; game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[5]; game/src/data/trainers_hns.party:TRAINER_FALKNER_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_FALKNER_1_HNS[1]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[1]; game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[2]; game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[4]; game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[5]; game/src/data/trainers_hns.party:TRAINER_FALKNER_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_FALKNER_1_HNS[1]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "bugsy",
@@ -1368,7 +1368,7 @@
       }
     ],
     "tr": 2,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 2 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.5 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 2 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.5 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Scyther",
@@ -1419,7 +1419,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_BUGSY_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[1]; game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[2]; game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[3]; game/src/data/trainers_hns.party:TRAINER_BUGSY_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_BUGSY_1_HNS[2]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 8 entries; only the first 6 are kept."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_BUGSY_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[1]; game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[2]; game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[3]; game/src/data/trainers_hns.party:TRAINER_BUGSY_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_BUGSY_1_HNS[2]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 8 Pokémon; only the first 6 are kept."
   },
   {
     "id": "whitney",
@@ -1453,7 +1453,7 @@
       }
     ],
     "tr": 2,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.75 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.75 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Miltank",
@@ -1504,7 +1504,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_WHITNEY_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_WHITNEY_2_HNS[1]; game/src/data/trainers_hns.party:TRAINER_WHITNEY_2_HNS[2]; game/src/data/trainers_hns.party:TRAINER_WHITNEY_2_HNS[3]; game/src/data/trainers_hns.party:TRAINER_WHITNEY_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_WHITNEY_1_HNS[2]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 entries; only the first 6 are kept."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_WHITNEY_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_WHITNEY_2_HNS[1]; game/src/data/trainers_hns.party:TRAINER_WHITNEY_2_HNS[2]; game/src/data/trainers_hns.party:TRAINER_WHITNEY_2_HNS[3]; game/src/data/trainers_hns.party:TRAINER_WHITNEY_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_WHITNEY_1_HNS[2]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 Pokémon; only the first 6 are kept."
   },
   {
     "id": "morty",
@@ -1544,7 +1544,7 @@
       }
     ],
     "tr": 2,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.75 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.75 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Gengar",
@@ -1595,7 +1595,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[2]; game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_MORTY_2_HNS[0]; game/src/data/trainers_hns.party:TRAINER_MORTY_2_HNS[3]; game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[3]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[2]; game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_MORTY_2_HNS[0]; game/src/data/trainers_hns.party:TRAINER_MORTY_2_HNS[3]; game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[3]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "chuck",
@@ -1635,7 +1635,7 @@
       }
     ],
     "tr": 3,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Poliwrath",
@@ -1686,7 +1686,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[2]; game/src/data/trainers_hns.party:TRAINER_CHUCK_2_HNS[0]; game/src/data/trainers_hns.party:TRAINER_CHUCK_2_HNS[4]; game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[3]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 8 entries; only the first 6 are kept."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[2]; game/src/data/trainers_hns.party:TRAINER_CHUCK_2_HNS[0]; game/src/data/trainers_hns.party:TRAINER_CHUCK_2_HNS[4]; game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[3]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 8 Pokémon; only the first 6 are kept."
   },
   {
     "id": "jasmine",
@@ -1732,7 +1732,7 @@
       }
     ],
     "tr": 3,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Steelix",
@@ -1783,7 +1783,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[2]; game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[3]; game/src/data/trainers_hns.party:TRAINER_JASMINE_2_HNS[1]; game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[4]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 entries; only the first 6 are kept."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[2]; game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[3]; game/src/data/trainers_hns.party:TRAINER_JASMINE_2_HNS[1]; game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[4]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 Pokémon; only the first 6 are kept."
   },
   {
     "id": "pryce",
@@ -1823,7 +1823,7 @@
       }
     ],
     "tr": 3,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Piloswine",
@@ -1874,7 +1874,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[2]; game/src/data/trainers_hns.party:TRAINER_PRYCE_1_2_HNS[0]; game/src/data/trainers_hns.party:TRAINER_PRYCE_2_HNS[3]; game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[3]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[2]; game/src/data/trainers_hns.party:TRAINER_PRYCE_1_2_HNS[0]; game/src/data/trainers_hns.party:TRAINER_PRYCE_2_HNS[3]; game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[3]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "clair",
@@ -1920,7 +1920,7 @@
       }
     ],
     "tr": 5,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 5 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16.5 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 5 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16.5 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Kingdra",
@@ -1971,7 +1971,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[2]; game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[3]; game/src/data/trainers_hns.party:TRAINER_CLAIR_2_HNS[3]; game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[4]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[1]; game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[2]; game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[3]; game/src/data/trainers_hns.party:TRAINER_CLAIR_2_HNS[3]; game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[0]; game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[4]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "will",
@@ -2017,7 +2017,7 @@
       }
     ],
     "tr": 70,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 40 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 40 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Xatu",
@@ -2060,7 +2060,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from game/src/data/trainers_hns.party:TRAINER_WILL_1_HNS (entry 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers_hns.party:TRAINER_WILL_1_HNS (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "karen",
@@ -2106,7 +2106,7 @@
       }
     ],
     "tr": 77,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 44 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 44 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Houndoom",
@@ -2149,7 +2149,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from game/src/data/trainers_hns.party:TRAINER_KAREN_1_HNS (entry 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers_hns.party:TRAINER_KAREN_1_HNS (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "roxanne",
@@ -2183,7 +2183,7 @@
       }
     ],
     "tr": 2,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.75 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.75 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Nosepass",
@@ -2234,7 +2234,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_ROXANNE_1[1]; game/src/data/trainers.party:TRAINER_ROXANNE_2[1]; game/src/data/trainers.party:TRAINER_ROXANNE_2[2]; game/src/data/trainers.party:TRAINER_ROXANNE_3[0]; game/src/data/trainers.party:TRAINER_ROXANNE_1[0]; game/src/data/trainers.party:TRAINER_ROXANNE_1[2]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_ROXANNE_1[1]; game/src/data/trainers.party:TRAINER_ROXANNE_2[1]; game/src/data/trainers.party:TRAINER_ROXANNE_2[2]; game/src/data/trainers.party:TRAINER_ROXANNE_3[0]; game/src/data/trainers.party:TRAINER_ROXANNE_1[0]; game/src/data/trainers.party:TRAINER_ROXANNE_1[2]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "brawly",
@@ -2268,7 +2268,7 @@
       }
     ],
     "tr": 2,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.75 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.75 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Makuhita",
@@ -2319,7 +2319,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_BRAWLY_1[1]; game/src/data/trainers.party:TRAINER_BRAWLY_2[2]; game/src/data/trainers.party:TRAINER_BRAWLY_2[0]; game/src/data/trainers.party:TRAINER_BRAWLY_2[3]; game/src/data/trainers.party:TRAINER_BRAWLY_1[0]; game/src/data/trainers.party:TRAINER_BRAWLY_1[2]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_BRAWLY_1[1]; game/src/data/trainers.party:TRAINER_BRAWLY_2[2]; game/src/data/trainers.party:TRAINER_BRAWLY_2[0]; game/src/data/trainers.party:TRAINER_BRAWLY_2[3]; game/src/data/trainers.party:TRAINER_BRAWLY_1[0]; game/src/data/trainers.party:TRAINER_BRAWLY_1[2]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "wattson",
@@ -2359,7 +2359,7 @@
       }
     ],
     "tr": 2,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.75 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.75 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Manectric",
@@ -2410,7 +2410,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_WATTSON_1[0]; game/src/data/trainers.party:TRAINER_WATTSON_1[1]; game/src/data/trainers.party:TRAINER_WATTSON_2[1]; game/src/data/trainers.party:TRAINER_WATTSON_4[1]; game/src/data/trainers.party:TRAINER_WATTSON_1[2]; game/src/data/trainers.party:TRAINER_WATTSON_1[3]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_WATTSON_1[0]; game/src/data/trainers.party:TRAINER_WATTSON_1[1]; game/src/data/trainers.party:TRAINER_WATTSON_2[1]; game/src/data/trainers.party:TRAINER_WATTSON_4[1]; game/src/data/trainers.party:TRAINER_WATTSON_1[2]; game/src/data/trainers.party:TRAINER_WATTSON_1[3]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "flannery",
@@ -2450,7 +2450,7 @@
       }
     ],
     "tr": 3,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Torkoal",
@@ -2501,7 +2501,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_FLANNERY_1[1]; game/src/data/trainers.party:TRAINER_FLANNERY_1[2]; game/src/data/trainers.party:TRAINER_FLANNERY_2[0]; game/src/data/trainers.party:TRAINER_FLANNERY_2[1]; game/src/data/trainers.party:TRAINER_FLANNERY_1[0]; game/src/data/trainers.party:TRAINER_FLANNERY_1[3]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_FLANNERY_1[1]; game/src/data/trainers.party:TRAINER_FLANNERY_1[2]; game/src/data/trainers.party:TRAINER_FLANNERY_2[0]; game/src/data/trainers.party:TRAINER_FLANNERY_2[1]; game/src/data/trainers.party:TRAINER_FLANNERY_1[0]; game/src/data/trainers.party:TRAINER_FLANNERY_1[3]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "norman",
@@ -2541,7 +2541,7 @@
       }
     ],
     "tr": 3,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Slaking",
@@ -2592,7 +2592,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_NORMAN_1[0]; game/src/data/trainers.party:TRAINER_NORMAN_1[2]; game/src/data/trainers.party:TRAINER_NORMAN_3[2]; game/src/data/trainers.party:TRAINER_NORMAN_5[3]; game/src/data/trainers.party:TRAINER_NORMAN_1[1]; game/src/data/trainers.party:TRAINER_NORMAN_1[3]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_NORMAN_1[0]; game/src/data/trainers.party:TRAINER_NORMAN_1[2]; game/src/data/trainers.party:TRAINER_NORMAN_3[2]; game/src/data/trainers.party:TRAINER_NORMAN_5[3]; game/src/data/trainers.party:TRAINER_NORMAN_1[1]; game/src/data/trainers.party:TRAINER_NORMAN_1[3]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "winona",
@@ -2638,7 +2638,7 @@
       }
     ],
     "tr": 3,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Altaria",
@@ -2689,7 +2689,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_WINONA_1[1]; game/src/data/trainers.party:TRAINER_WINONA_1[2]; game/src/data/trainers.party:TRAINER_WINONA_1[3]; game/src/data/trainers.party:TRAINER_WINONA_2[0]; game/src/data/trainers.party:TRAINER_WINONA_1[0]; game/src/data/trainers.party:TRAINER_WINONA_1[4]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 entries; only the first 6 are kept."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_WINONA_1[1]; game/src/data/trainers.party:TRAINER_WINONA_1[2]; game/src/data/trainers.party:TRAINER_WINONA_1[3]; game/src/data/trainers.party:TRAINER_WINONA_2[0]; game/src/data/trainers.party:TRAINER_WINONA_1[0]; game/src/data/trainers.party:TRAINER_WINONA_1[4]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved). The flattened list had 7 Pokémon; only the first 6 are kept."
   },
   {
     "id": "juan",
@@ -2735,7 +2735,7 @@
       }
     ],
     "tr": 5,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 5 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16.5 -> the TR giving it on the new cap curve).",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 5 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16.5 -> the TR giving it on the new level-cap curve).",
     "roster": [
       {
         "species": "Kingdra",
@@ -2786,7 +2786,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (ace first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_JUAN_1[1]; game/src/data/trainers.party:TRAINER_JUAN_1[2]; game/src/data/trainers.party:TRAINER_JUAN_1[3]; game/src/data/trainers.party:TRAINER_JUAN_2[2]; game/src/data/trainers.party:TRAINER_JUAN_1[0]; game/src/data/trainers.party:TRAINER_JUAN_1[4]. Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from the curated six-slot composition in game/src/data/trainer_scaling/gym_leaders.json (signature Pokémon first, then battle order; its level offsets clamped to -6..0): game/src/data/trainers.party:TRAINER_JUAN_1[1]; game/src/data/trainers.party:TRAINER_JUAN_1[2]; game/src/data/trainers.party:TRAINER_JUAN_1[3]; game/src/data/trainers.party:TRAINER_JUAN_2[2]; game/src/data/trainers.party:TRAINER_JUAN_1[0]; game/src/data/trainers.party:TRAINER_JUAN_1[4]. Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "sidney",
@@ -2832,7 +2832,7 @@
       }
     ],
     "tr": 80,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 46 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 46 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Absol",
@@ -2875,7 +2875,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from game/src/data/trainers.party:TRAINER_SIDNEY (entry 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers.party:TRAINER_SIDNEY (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "phoebe",
@@ -2921,7 +2921,7 @@
       }
     ],
     "tr": 82,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 47 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 47 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Dusclops",
@@ -2964,7 +2964,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from game/src/data/trainers.party:TRAINER_PHOEBE (entry 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers.party:TRAINER_PHOEBE (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "glacia",
@@ -3010,7 +3010,7 @@
       }
     ],
     "tr": 85,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 49 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 49 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Walrein",
@@ -3053,7 +3053,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from game/src/data/trainers.party:TRAINER_GLACIA (entry 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers.party:TRAINER_GLACIA (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "drake",
@@ -3099,7 +3099,7 @@
       }
     ],
     "tr": 88,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 51 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 51 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Salamence",
@@ -3142,7 +3142,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from game/src/data/trainers.party:TRAINER_DRAKE (entry 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers.party:TRAINER_DRAKE (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "wallace",
@@ -3194,7 +3194,7 @@
       }
     ],
     "tr": 92,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 53 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 53 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Milotic",
@@ -3245,7 +3245,7 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from game/src/data/trainers.party:TRAINER_WALLACE (entry 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers.party:TRAINER_WALLACE (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   },
   {
     "id": "steven",
@@ -3297,7 +3297,7 @@
       }
     ],
     "tr": 92,
-    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 53 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 53 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Metagross",
@@ -3348,6 +3348,6 @@
         "nature": null
       }
     ],
-    "rosterSource": "PROVISIONAL roster flattened from the earlier prototype, derived from game/src/data/trainers.party:TRAINER_STEVEN (entry 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Entry 1 keeps the source moves/item/ability/nature at offset 0; other entries use LEVEL_UP (a label: level-up learnsets are not resolved)."
+    "rosterSource": "PLACEHOLDER roster flattened from the earlier prototype, derived from game/src/data/trainers.party:TRAINER_STEVEN (roster slot 1 = highest-level member, last on ties; other offsets = source level − its level, clamped to -6..0). Roster slot 1 keeps the source moves/item/ability/nature at offset 0; other roster slots use LEVEL_UP (a label: level-up learnsets are not resolved)."
   }
 ]

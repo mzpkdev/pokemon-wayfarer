@@ -84,7 +84,7 @@ Each placed Rocket object uses the existing `OBJ_EVENT_GFX_ROCKET_M`. It preserv
 four authored FRLG parties and the four encounter, defeat, and repeat dialogue
 sets. The grunts have normal trainer sight only on optional side routes. They
 never gate Miguel, fossils, a warp, or an exit. Defeating one records only that
-ordinary Trainer's own defeat state and replaces its battle text with its
+regular trainer's own defeat state and replaces its battle text with its
 post-battle dialogue.
 
 Miguel uses the available `OBJ_EVENT_GFX_SCIENTIST_M_HNS` overworld adaptation
@@ -179,13 +179,14 @@ The current Wayfarer runtime IDs are 1768 through 1772.
 | 1772 | `TRAINER_MT_MOON_MIGUEL_HNS` | `TRAINER_SUPER_NERD_MIGUEL` (79) | Grimer 12, Voltorb 12, Koffing 12 | `EXCLUDED` |
 
 The Rocket grunts are eligible ordinary scripted Trainers. Miguel is a local
-objective boss, so he remains authored and excluded from ordinary scaling.
-Standalone HNS retains `TRAINERS_COUNT_HNS = 661`. These Wayfarer trainer IDs
-must have independent defeat storage and must not enter Hoenn's fixed 639 through
-1492 ID bank. Extend the exact count/range assertions, trainer-state tests,
-trainer source-party parity fixture, and the reviewed scaling manifest. The
-FRLG Rocket class and portrait are available; Miguel's FRLG
-trainer class and portrait are already global. No map graphics import is needed.
+objective boss, so he remains authored and excluded from regular trainer
+scaling. Standalone HNS retains `TRAINERS_COUNT_HNS = 661`. These Wayfarer
+trainer IDs must have independent defeat storage and must not enter Hoenn's
+fixed 639 through 1492 ID bank. Extend the exact count/range assertions,
+trainer-state tests, trainer source-party parity fixture, and the reviewed
+scaling manifest. The FRLG Rocket class and portrait are available; Miguel's
+FRLG trainer class and portrait are already global. No map graphics import is
+needed.
 
 For direct grunt interaction, run the usable-party check before `trainerbattle`.
 Because a normal-sight script probe stops at that check, extend the existing

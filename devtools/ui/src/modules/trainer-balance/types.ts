@@ -5,8 +5,8 @@ export type ReferenceMember = {
   item: string | null
 }
 
-/** One roster slot. Entry 1 (the signature Pokémon) is at offset 0 and is fought last. */
-export type RosterEntry = {
+/** One roster slot. Roster slot 1 (the signature Pokémon) is at offset 0 and is fought last. */
+export type RosterSlot = {
   species: string
   /** -6..0 from the team level. */
   levelOffset: number
@@ -27,12 +27,12 @@ export type TrainerRecord = {
   /** Authored, fixed trainer rating: a non-negative integer with no upper limit. */
   tr: number
   trSource: string
-  /** Exactly six ordered entries in v0; shorter catalog rosters are content gaps. */
-  roster: RosterEntry[]
+  /** Exactly six ordered roster slots in v0; shorter catalog rosters are content gaps. */
+  roster: RosterSlot[]
   rosterSource: string
 }
 
-export type TrainerSettings = { tr: number; roster: RosterEntry[] }
+export type TrainerSettings = { tr: number; roster: RosterSlot[] }
 /** A scaler anchor: [TR, value]. */
 export type Anchor = [number, number]
 export type Experiment = {
@@ -41,15 +41,15 @@ export type Experiment = {
   teamLevel: Anchor[]
   /** Team size by TR, same rules; paired anchors make it a step table. */
   teamSize: Anchor[]
-  /** Wild encounter level target by player TR. */
+  /** The wild level curve by player TR. */
   wildLevel: Anchor[]
-  /** Ordinary (route) trainer baseline level by player TR. */
+  /** The regular trainer level curve by player TR (saved as `routeTrainerLevel`). */
   routeTrainerLevel: Anchor[]
   trainers: Record<string, TrainerSettings>
 }
-/** Player progress, used for the player TR and world-curve readout only. */
+/** Player progress, used for the player TR and world scaling readout only. */
 export type WorldPoint = { badges: number }
-export type TeamMember = RosterEntry & {
+export type TeamMember = RosterSlot & {
   /** 1-based roster position. */
   slot: number
   level: number
@@ -59,11 +59,11 @@ export type ResolvedTrainer = {
   tr: number
   teamLevel: number
   size: number
-  /** The first `size` roster entries, in roster order. */
+  /** The first `size` roster slots, in roster order. */
   team: TeamMember[]
-  /** The team reversed: entry 1 comes last. */
+  /** The team reversed: roster slot 1 comes last. */
   battleOrder: TeamMember[]
-  /** Roster entries authored (v0 requires 6). */
+  /** Roster slots authored (v0 requires 6). */
   rosterLength: number
   warnings: string[]
 }
