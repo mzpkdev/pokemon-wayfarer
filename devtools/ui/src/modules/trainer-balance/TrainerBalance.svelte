@@ -1,25 +1,70 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { LEVEL_OFFSET, ROSTER_SIZE, LEAGUES } from "./engine.js"
-  import { BalanceLab, catalog, movesText, type ScalerId } from "./lab.svelte.js"
+  import { ARCHETYPES, LEVEL_OFFSET, NEAR_BAND, ROSTER_SIZE, LEAGUES } from "./engine.js"
+  import { BalanceLab, catalog, movesText, scalerField, type ScalerId } from "./lab.svelte.js"
 
   const lab = new BalanceLab()
   const ticks = [0, 4, 8, 12, 16, 20, 24]
   let importInput: HTMLInputElement
   const signed = (value: number): string => (value > 0 ? `+${value}` : `${value}`)
   const tone = (gap: number): string => (gap > 0 ? "above" : gap < 0 ? "below" : "even")
-  const scalers: { id: ScalerId; title: string; by: string; unit: string; max: number }[] = [
-    { id: "teamLevel", title: "Team level", by: "Trainer TR", unit: "Lv.", max: 100 },
-    { id: "teamSize", title: "Team size", by: "Trainer TR", unit: "Size", max: ROSTER_SIZE },
-    { id: "wildLevel", title: "Wild level", by: "Player TR", unit: "Lv.", max: 100 },
+  const scalers: {
+    id: ScalerId
+    title: string
+    by: string
+    at: string
+    unit: string
+    min: number
+    max: number
+  }[] = [
+    {
+      id: "teamLevel",
+      title: "Team level",
+      by: "trainer TR",
+      at: "TR",
+      unit: "Lv.",
+      min: 1,
+      max: 100,
+    },
+    {
+      id: "teamSize",
+      title: "Team size",
+      by: "trainer TR",
+      at: "TR",
+      unit: "Size",
+      min: 1,
+      max: ROSTER_SIZE,
+    },
+    {
+      id: "wildLevel",
+      title: "Wild level",
+      by: "player TR",
+      at: "TR",
+      unit: "Lv.",
+      min: 1,
+      max: 100,
+    },
     {
       id: "routeTrainerLevel",
       title: "Regular trainer level",
-      by: "Player TR",
+      by: "player TR",
+      at: "TR",
       unit: "Lv.",
+      min: 1,
       max: 100,
     },
+    ...(["steady", "early bloomer", "late bloomer", "plateau"] as const).map((id) => ({
+      id,
+      title: `${id[0]?.toUpperCase()}${id.slice(1)} growth`,
+      by: "world progress",
+      at: "World",
+      unit: "%",
+      min: 0,
+      max: 100,
+    })),
   ]
+  const growthLabel = (row: { startTR: number; peakTR: number; lead: number | null }): string =>
+    row.lead === null ? `${row.startTR} → ${row.peakTR}` : `lead ${row.lead} → ${row.peakTR}`
   const download = (): void => {
     const url = URL.createObjectURL(new Blob([lab.exportText()], { type: "application/json" }))
     const link = document.createElement("a")
@@ -40,11 +85,8 @@
     }
     input.value = ""
   }
-  /** Applies a TR edit, then shows the stored value (unchanged if the edit was rejected). */
-  const editTR = (id: string, input: HTMLInputElement): void => {
-    lab.setTR(id, input.value)
-    input.value = String(lab.allRows.find((row) => row.trainer.id === id)?.tr ?? input.value)
-  }
+  /** The archetype chosen in the growth form; follows the stored value until changed. */
+  let growthArchetype = $derived(lab.settings.archetype)
   onMount(lab.load)
 </script>
 
@@ -56,8 +98,8 @@
       </div>
       <h1>Trainer balance</h1>
       <p>
-        Author each notable trainer’s TR and six-slot roster, and see the team, levels and league
-        lineup they produce. Compare against the level cap at any badge count.
+        Author each notable trainer’s growth (start TR, archetype, peak TR) and six-slot roster, and
+        see their TR, team, the Gym ladder and the league lineup at any world progress.
       </p>
     </div>
     <div class="actions">
@@ -99,14 +141,19 @@
           >{/each}
       </div>
       <span class="hint"
-        >Player TR: badges 1–8 give +10, 9–24 give +5, league wins give nothing. It drives the level
-        cap and world scaling (wild and regular trainer levels), never a notable trainer’s team.</span
+        >Player TR: badges 1–8 give +10, 9–24 give +5, league wins give nothing. It sets the level
+        cap and world scaling, and it is the world progress notable trainers grow with.</span
       >
     </div>
     <div class="world-facts">
       <div>
         <span class="eyebrow">Player TR</span><strong data-testid="player-tr">{lab.playerTR}</strong
         >
+      </div>
+      <div>
+        <span class="eyebrow">World progress</span><strong data-testid="world-progress"
+          >{lab.worldProgress}</strong
+        ><small>= player TR</small>
       </div>
       <div>
         <span class="eyebrow">Level cap</span><strong data-testid="level-cap">Lv. {lab.cap}</strong>
@@ -128,11 +175,12 @@
 
   <div class="model-note">
     <span class="note-dot"></span><span
-      >TR v0: every notable trainer has an authored, fixed TR. Team level and team size are scalers
-      of that TR (anchor tables, linear between anchors, halves rounded up, flat past the last
-      anchor, the ceiling TR; TR itself is uncapped). The team is the first N roster slots at team
-      level + offset, and battle order is the team reversed, so roster slot 1 comes last. Moves,
-      items, AI and win rates are not simulated.</span
+      >TR v0: each notable trainer grows with world progress from start TR to peak TR along their
+      archetype’s growth scaler; the rival stays a lead ahead until their peak. Team level and team
+      size are scalers of that trainer TR (anchor tables, linear between anchors, halves rounded up,
+      flat past the last anchor, the ceiling TR; TR itself is uncapped). The team is the first N
+      roster slots at team level + offset, and battle order is the team reversed, so roster slot 1
+      comes last. Moves, items, AI and win rates are not simulated.</span
     >
   </div>
 
@@ -161,7 +209,8 @@
       <strong data-testid="league-range"
         >TR {lab.league[0]?.tr ?? "—"} … {lab.league.at(-1)?.tr ?? "—"}</strong
       >
-      <span class="hint">Top five by TR from one global pool</span>
+      <span class="hint">Top five by TR at world progress {lab.worldProgress}, one global pool</span
+      >
     </div>
   </section>
 
@@ -169,7 +218,9 @@
     <section class="pool-panel" aria-label="Trainer pool">
       <div class="panel-title">
         <h2>Notable trainers <span>{catalog.length}</span></h2>
-        <span class="hint">Gap vs level cap Lv. {lab.cap}</span>
+        <span class="hint"
+          >TR at world progress {lab.worldProgress} · gap vs level cap Lv. {lab.cap}</span
+        >
       </div>
       <div class="filters">
         <input
@@ -192,9 +243,8 @@
         <table class="pool-table">
           <thead
             ><tr
-              ><th>Trainer</th><th>TR</th><th>Team level</th><th>Size</th><th>Lv − cap</th><th
-                >Roster</th
-              ></tr
+              ><th>Trainer</th><th>TR</th><th>Start → peak</th><th>Archetype</th><th>Team level</th
+              ><th>Size</th><th>Lv − cap</th><th>Roster</th></tr
             ></thead
           >
           <tbody>
@@ -211,17 +261,11 @@
                     ></button
                   ></td
                 >
-                <td
-                  ><input
-                    class="tr-input"
-                    type="number"
-                    min="0"
-                    step="1"
-                    aria-label={`${row.trainer.name} TR`}
-                    value={row.tr}
-                    onchange={(event) => editTR(row.trainer.id, event.currentTarget)}
-                  /></td
+                <td class="numeric current-tr" data-testid={`tr-${row.trainer.id}`}>{row.tr}</td>
+                <td class="numeric muted" data-testid={`growth-${row.trainer.id}`}
+                  >{growthLabel(row)}</td
                 >
+                <td class="muted" data-testid={`archetype-${row.trainer.id}`}>{row.archetype}</td>
                 <td
                   ><span class="level-pill" data-testid={`level-${row.trainer.id}`}
                     >Lv. {row.teamLevel}</span
@@ -268,6 +312,81 @@
         </div>
       </div>
       <p class="hint provenance">{lab.selected.trainer.trSource}</p>
+      {#key lab.settings}
+        <form
+          class="growth-form"
+          data-testid="growth-editor"
+          novalidate
+          onsubmit={(event) => {
+            event.preventDefault()
+            lab.applyGrowth(event.currentTarget)
+          }}
+        >
+          <label
+            >Start TR<input
+              aria-label="Start TR"
+              name="startTR"
+              type="number"
+              min="0"
+              step="1"
+              required
+              value={lab.settings.startTR}
+            /></label
+          ><label
+            >Archetype<select aria-label="Archetype" name="archetype" bind:value={growthArchetype}
+              >{#each ARCHETYPES as archetype}<option value={archetype}>{archetype}</option
+                >{/each}</select
+            ></label
+          ><label
+            >Peak TR<input
+              aria-label="Peak TR"
+              name="peakTR"
+              type="number"
+              min="0"
+              step="1"
+              required
+              value={lab.settings.peakTR}
+            /></label
+          >{#if growthArchetype === "rival"}<label
+              >Lead<input
+                aria-label="Lead"
+                name="lead"
+                type="number"
+                min="0"
+                step="1"
+                required
+                value={lab.settings.lead ?? 10}
+              /></label
+            >{/if}
+          <button type="submit">Apply growth</button>
+        </form>
+      {/key}
+      <p class="hint">
+        {growthArchetype === "rival"
+          ? "Rival: TR = min(peak TR, world progress + lead). Start TR is not read."
+          : "TR = start TR + (peak TR − start TR) × the archetype’s growth %, halves rounded up."}
+      </p>
+      <table class="growth-table" data-testid="growth-table">
+        <thead
+          ><tr
+            ><th>World progress</th>{#each lab.growth as point}<th
+                class:current={point.world === lab.worldProgress}>{point.world}</th
+              >{/each}</tr
+          ></thead
+        >
+        <tbody>
+          <tr
+            ><th>TR</th>{#each lab.growth as point}<td
+                class:current={point.world === lab.worldProgress}>{point.tr}</td
+              >{/each}</tr
+          >
+          <tr
+            ><th>Team level</th>{#each lab.growth as point}<td
+                class:current={point.world === lab.worldProgress}>{point.teamLevel}</td
+              >{/each}</tr
+          >
+        </tbody>
+      </table>
       <dl class="stat-grid">
         <div>
           <dt>Team level</dt>
@@ -291,7 +410,7 @@
         </div>
       </dl>
       <div class="section-label">
-        <h3>Team at TR {lab.selected.tr}</h3>
+        <h3>Team at TR {lab.selected.tr} (world progress {lab.worldProgress})</h3>
         <span>Battle order: roster slot 1 last</span>
       </div>
       <ol class="party" data-testid="battle-order">
@@ -430,8 +549,9 @@
       <details class="advanced-panel">
         <summary>Edit settings as JSON</summary>
         <p class="hint">
-          Edit the TR and every roster slot setting, including ability and nature. Moves are
-          <code>"LEVEL_UP"</code> or a list of one to four names.
+          Edit the growth and every roster slot setting, including ability and nature. Moves are
+          <code>"LEVEL_UP"</code> or a list of one to four names; <code>lead</code> is
+          <code>null</code> unless the archetype is <code>"rival"</code>.
         </p>
         <label class="visually-hidden" for="team-editor">Trainer settings JSON</label><textarea
           id="team-editor"
@@ -447,16 +567,49 @@
     </aside>
   </div>
 
+  <section class="league" aria-label="Gym ladder">
+    <div class="panel-title">
+      <h2>
+        Gym ladder <span>{lab.ladder.length} Gym Leaders at world progress {lab.worldProgress}</span
+        >
+      </h2>
+      <span class="hint" data-testid="ladder-counts"
+        >{lab.ladder.filter((row) => row.mark === "below").length} below · {lab.ladder.filter(
+          (row) => row.mark === "near",
+        ).length} near · {lab.ladder.filter((row) => row.mark === "above").length} above</span
+      >
+    </div>
+    <p class="hint league-note">
+      Sorted by TR. Near means within {NEAR_BAND} of the player TR ({lab.playerTR}); below and above
+      are further away.
+    </p>
+    <ol class="ladder" data-testid="gym-ladder">
+      {#each lab.ladder as row (row.trainer.id)}
+        <li class="ladder-row {row.mark}" data-testid={`ladder-${row.trainer.id}`}>
+          <span>{row.trainer.name}</span><span class="numeric">TR {row.tr}</span><span
+            class="gap-chip {row.mark === 'near' ? 'even' : row.mark}"
+            >{row.mark} {signed(row.gap)}</span
+          >
+        </li>
+      {/each}
+    </ol>
+  </section>
+
   <section class="league" aria-label="League preview">
     <div class="panel-title">
-      <h2>League lineup <span>top {lab.league.length} by TR</span></h2>
+      <h2>
+        League lineup <span
+          >top {lab.league.length} by TR at world progress {lab.worldProgress}</span
+        >
+      </h2>
       <span class="hint" data-testid="league-names"
         >One global pool, so {LEAGUES.join(", ")} all use this lineup in v0.</span
       >
     </div>
     <p class="hint league-note">
-      Battle order runs by ascending TR, strongest last. Ties keep catalog order. Each opponent uses
-      their own TR, team and levels.
+      Entering a league computes each notable trainer’s TR at the current world progress and takes
+      the top five. Battle order runs by ascending TR, strongest last. Ties keep catalog order. Each
+      opponent uses their own TR, team and levels.
     </p>
     <ol class="league-grid" data-testid="league-lineup">
       {#each lab.league as row, index (row.trainer.id)}
@@ -484,7 +637,9 @@
       Team level and team size read each notable trainer’s own TR. Team level defaults to the level
       cap anchors (Lv 100 at TR 160); team size uses paired anchors to make a step table (0–15 → 2,
       16–43 → 3, 44–70 → 4, 71–95 → 5, 96+ → 6). The wild level curve and regular trainer level
-      curve are world scaling: they read the player’s TR and only feed the readout above.
+      curve are world scaling: they read the player’s TR and only feed the readout above. The four
+      archetype growth scalers read world progress and give the growth % (0% at world progress 0)
+      from start TR toward peak TR; the rival has no scaler.
     </p>
     {#key lab.anchors}
       <form
@@ -498,14 +653,14 @@
             <div class="scaler" data-testid={`scaler-${scaler.id}`}>
               <h3>{scaler.title} <span class="muted">by {scaler.by}</span></h3>
               <table class="arc-table">
-                <thead><tr><th>TR</th><th>{scaler.unit}</th><th></th></tr></thead>
+                <thead><tr><th>{scaler.at}</th><th>{scaler.unit}</th><th></th></tr></thead>
                 <tbody>
                   {#each lab.anchors[scaler.id] as [at, value], index}
                     <tr>
                       <td
                         >{#if index === 0}<span class="muted">0</span>{:else}<input
-                            aria-label={`${scaler.title} anchor ${index + 1} TR`}
-                            name={`${scaler.id}-tr-${index}`}
+                            aria-label={`${scaler.title} anchor ${index + 1} ${scaler.at === "TR" ? "TR" : "world progress"}`}
+                            name={`${scalerField(scaler.id)}-tr-${index}`}
                             type="number"
                             min="1"
                             step="1"
@@ -516,9 +671,9 @@
                       <td
                         ><input
                           aria-label={`${scaler.title} anchor ${index + 1} value`}
-                          name={`${scaler.id}-value-${index}`}
+                          name={`${scalerField(scaler.id)}-value-${index}`}
                           type="number"
-                          min="1"
+                          min={scaler.min}
                           max={scaler.max}
                           step="1"
                           required
@@ -551,8 +706,8 @@
       </form>
     {/key}
     <p class="hint">
-      Catalog TRs and rosters are placeholders. How TR changes, seeded variation and entering a
-      league are out of scope for v0. This is separate from the scaler the ROM uses today.
+      Catalog growth and rosters are placeholders. Seeded archetypes and lineup rules beyond the top
+      five are out of scope for v0. This is separate from the scaler the ROM uses today.
     </p>
   </details>
 </section>
@@ -1213,9 +1368,81 @@
   button.small {
     padding: 4px 9px;
   }
-  .tr-input {
-    width: 68px;
+  .current-tr {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .growth-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 14px;
+    font-size: 11px;
+    margin: 0 0 4px;
+  }
+  .growth-form label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-cartographer-muted);
+  }
+  .growth-form input {
+    width: 64px;
     padding: 5px 6px;
+  }
+  .growth-form select {
+    padding: 5px 24px 5px 8px;
+  }
+  .growth-form button {
+    padding: 5px 10px;
+  }
+  .growth-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin: 4px 0 20px;
+    font-variant-numeric: tabular-nums;
+  }
+  .growth-table th {
+    position: static;
+    background: transparent;
+    padding: 5px 6px;
+    white-space: nowrap;
+  }
+  .growth-table td {
+    border-top: 1px solid #2b3037;
+    padding: 5px 6px;
+  }
+  .growth-table td:first-child {
+    padding: 5px 6px;
+  }
+  .growth-table .current {
+    color: var(--accent);
+  }
+  .ladder {
+    list-style: none;
+    margin: 0;
+    padding: 0 18px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 6px 14px;
+  }
+  .ladder-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    border: 1px solid #2d333a;
+    border-radius: 5px;
+    background: var(--color-cartographer-field);
+    padding: 6px 8px;
+  }
+  .ladder-row > span:first-child {
+    flex: 1;
+    min-width: 0;
+  }
+  .ladder-row.near {
+    border-color: #4d4331;
   }
   td.incomplete,
   .risk-text {

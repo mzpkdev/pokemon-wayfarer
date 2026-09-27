@@ -24,8 +24,11 @@
         "item": null
       }
     ],
-    "tr": 2,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 2 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.5 -> the TR giving it on the new level-cap curve).",
+    "startTR": 2,
+    "archetype": "steady",
+    "peakTR": 95,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 2, steady (keeps a fixed fraction of the player's pace), peak TR 95.",
     "roster": [
       {
         "species": "Golem",
@@ -103,8 +106,11 @@
         "item": null
       }
     ],
-    "tr": 2,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.75 -> the TR giving it on the new level-cap curve).",
+    "startTR": 4,
+    "archetype": "steady",
+    "peakTR": 110,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 4, steady (keeps a fixed fraction of the player's pace), peak TR 110.",
     "roster": [
       {
         "species": "Starmie",
@@ -188,8 +194,11 @@
         "item": null
       }
     ],
-    "tr": 2,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.75 -> the TR giving it on the new level-cap curve).",
+    "startTR": 6,
+    "archetype": "steady",
+    "peakTR": 120,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 6, steady (keeps a fixed fraction of the player's pace), peak TR 120.",
     "roster": [
       {
         "species": "Raichu",
@@ -273,8 +282,11 @@
         "item": null
       }
     ],
-    "tr": 2,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.75 -> the TR giving it on the new level-cap curve).",
+    "startTR": 6,
+    "archetype": "steady",
+    "peakTR": 150,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 6, steady (keeps a fixed fraction of the player's pace), peak TR 150.",
     "roster": [
       {
         "species": "Bellossom",
@@ -376,8 +388,11 @@
         "item": "Bright Powder"
       }
     ],
-    "tr": 3,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16 -> the TR giving it on the new level-cap curve).",
+    "startTR": 8,
+    "archetype": "early bloomer",
+    "peakTR": 100,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 8, early bloomer (a rising star: fast early, then slows), peak TR 100.",
     "roster": [
       {
         "species": "Crobat",
@@ -467,8 +482,11 @@
         "item": null
       }
     ],
-    "tr": 3,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16 -> the TR giving it on the new level-cap curve).",
+    "startTR": 25,
+    "archetype": "late bloomer",
+    "peakTR": 180,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 25, late bloomer (a strong leader: slow start, strong finish), peak TR 180.",
     "roster": [
       {
         "species": "Alakazam",
@@ -558,8 +576,11 @@
         "item": null
       }
     ],
-    "tr": 3,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16 -> the TR giving it on the new level-cap curve).",
+    "startTR": 15,
+    "archetype": "plateau",
+    "peakTR": 90,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 15, plateau (a veteran who reaches their peak early and stops), peak TR 90.",
     "roster": [
       {
         "species": "Magmortar",
@@ -655,8 +676,11 @@
         "item": null
       }
     ],
-    "tr": 5,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 5 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16.5 -> the TR giving it on the new level-cap curve).",
+    "startTR": 16,
+    "archetype": "steady",
+    "peakTR": 170,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 16, steady (keeps a fixed fraction of the player's pace), peak TR 170.",
     "roster": [
       {
         "species": "Rhyhorn",
@@ -758,8 +782,11 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 6,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 6 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 17 -> the TR giving it on the new level-cap curve).",
+    "startTR": 10,
+    "archetype": "rival",
+    "peakTR": 180,
+    "lead": 10,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 10, rival (stays a lead ahead of world progress until their peak), peak TR 180, lead 10.",
     "roster": [
       {
         "species": "Eevee",
@@ -855,8 +882,11 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 87,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 50 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "startTR": 40,
+    "archetype": "plateau",
+    "peakTR": 92,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 40, plateau (a veteran who reaches their peak early and stops), peak TR 92.",
     "roster": [
       {
         "species": "Lapras",
@@ -944,8 +974,11 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 90,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 52 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "startTR": 45,
+    "archetype": "plateau",
+    "peakTR": 94,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 45, plateau (a veteran who reaches their peak early and stops), peak TR 94.",
     "roster": [
       {
         "species": "Machamp",
@@ -1033,8 +1066,11 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 92,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 53 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "startTR": 50,
+    "archetype": "plateau",
+    "peakTR": 95,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 50, plateau (a veteran who reaches their peak early and stops), peak TR 95.",
     "roster": [
       {
         "species": "Gengar",
@@ -1122,8 +1158,11 @@
         "item": "Bright Powder"
       }
     ],
-    "tr": 73,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 42 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "startTR": 30,
+    "archetype": "steady",
+    "peakTR": 150,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 30, steady (keeps a fixed fraction of the player's pace), peak TR 150.",
     "roster": [
       {
         "species": "Crobat",
@@ -1211,8 +1250,11 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 95,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 55 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "startTR": 48,
+    "archetype": "late bloomer",
+    "peakTR": 200,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 48, late bloomer (a strong leader: slow start, strong finish), peak TR 200.",
     "roster": [
       {
         "species": "Dragonite",
@@ -1282,8 +1324,11 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 1,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 1 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.25 -> the TR giving it on the new level-cap curve).",
+    "startTR": 1,
+    "archetype": "early bloomer",
+    "peakTR": 80,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 1, early bloomer (a rising star: fast early, then slows), peak TR 80.",
     "roster": [
       {
         "species": "Noctowl",
@@ -1367,8 +1412,11 @@
         "item": "Berry Juice"
       }
     ],
-    "tr": 2,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 2 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.5 -> the TR giving it on the new level-cap curve).",
+    "startTR": 3,
+    "archetype": "steady",
+    "peakTR": 100,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 3, steady (keeps a fixed fraction of the player's pace), peak TR 100.",
     "roster": [
       {
         "species": "Scyther",
@@ -1452,8 +1500,11 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 2,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.75 -> the TR giving it on the new level-cap curve).",
+    "startTR": 4,
+    "archetype": "early bloomer",
+    "peakTR": 95,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 4, early bloomer (a rising star: fast early, then slows), peak TR 95.",
     "roster": [
       {
         "species": "Miltank",
@@ -1543,8 +1594,11 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 2,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.75 -> the TR giving it on the new level-cap curve).",
+    "startTR": 8,
+    "archetype": "steady",
+    "peakTR": 150,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 8, steady (keeps a fixed fraction of the player's pace), peak TR 150.",
     "roster": [
       {
         "species": "Gengar",
@@ -1634,8 +1688,11 @@
         "item": "Black Belt"
       }
     ],
-    "tr": 3,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16 -> the TR giving it on the new level-cap curve).",
+    "startTR": 12,
+    "archetype": "plateau",
+    "peakTR": 85,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 12, plateau (a veteran who reaches their peak early and stops), peak TR 85.",
     "roster": [
       {
         "species": "Poliwrath",
@@ -1731,8 +1788,11 @@
         "item": "Quick Claw"
       }
     ],
-    "tr": 3,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16 -> the TR giving it on the new level-cap curve).",
+    "startTR": 12,
+    "archetype": "steady",
+    "peakTR": 172,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 12, steady (keeps a fixed fraction of the player's pace), peak TR 172.",
     "roster": [
       {
         "species": "Steelix",
@@ -1822,8 +1882,11 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 3,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16 -> the TR giving it on the new level-cap curve).",
+    "startTR": 18,
+    "archetype": "plateau",
+    "peakTR": 92,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 18, plateau (a veteran who reaches their peak early and stops), peak TR 92.",
     "roster": [
       {
         "species": "Piloswine",
@@ -1919,8 +1982,11 @@
         "item": "Leftovers"
       }
     ],
-    "tr": 5,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 5 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16.5 -> the TR giving it on the new level-cap curve).",
+    "startTR": 20,
+    "archetype": "late bloomer",
+    "peakTR": 185,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 20, late bloomer (a strong leader: slow start, strong finish), peak TR 185.",
     "roster": [
       {
         "species": "Kingdra",
@@ -2016,8 +2082,11 @@
         "item": "Twisted Spoon"
       }
     ],
-    "tr": 70,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 40 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "startTR": 30,
+    "archetype": "early bloomer",
+    "peakTR": 110,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 30, early bloomer (a rising star: fast early, then slows), peak TR 110.",
     "roster": [
       {
         "species": "Xatu",
@@ -2105,8 +2174,11 @@
         "item": "Black Glasses"
       }
     ],
-    "tr": 77,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 44 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "startTR": 30,
+    "archetype": "steady",
+    "peakTR": 155,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 30, steady (keeps a fixed fraction of the player's pace), peak TR 155.",
     "roster": [
       {
         "species": "Houndoom",
@@ -2182,8 +2254,11 @@
         "item": "Oran Berry"
       }
     ],
-    "tr": 2,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.75 -> the TR giving it on the new level-cap curve).",
+    "startTR": 2,
+    "archetype": "steady",
+    "peakTR": 90,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 2, steady (keeps a fixed fraction of the player's pace), peak TR 90.",
     "roster": [
       {
         "species": "Nosepass",
@@ -2267,8 +2342,11 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 2,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.75 -> the TR giving it on the new level-cap curve).",
+    "startTR": 4,
+    "archetype": "early bloomer",
+    "peakTR": 90,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 4, early bloomer (a rising star: fast early, then slows), peak TR 90.",
     "roster": [
       {
         "species": "Makuhita",
@@ -2358,8 +2436,11 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 2,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 15.75 -> the TR giving it on the new level-cap curve).",
+    "startTR": 8,
+    "archetype": "plateau",
+    "peakTR": 75,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 8, plateau (a veteran who reaches their peak early and stops), peak TR 75.",
     "roster": [
       {
         "species": "Manectric",
@@ -2449,8 +2530,11 @@
         "item": "White Herb"
       }
     ],
-    "tr": 3,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16 -> the TR giving it on the new level-cap curve).",
+    "startTR": 6,
+    "archetype": "early bloomer",
+    "peakTR": 100,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 6, early bloomer (a rising star: fast early, then slows), peak TR 100.",
     "roster": [
       {
         "species": "Torkoal",
@@ -2540,8 +2624,11 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 3,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16 -> the TR giving it on the new level-cap curve).",
+    "startTR": 20,
+    "archetype": "steady",
+    "peakTR": 168,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 20, steady (keeps a fixed fraction of the player's pace), peak TR 168.",
     "roster": [
       {
         "species": "Slaking",
@@ -2637,8 +2724,11 @@
         "item": "Oran Berry"
       }
     ],
-    "tr": 3,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16 -> the TR giving it on the new level-cap curve).",
+    "startTR": 15,
+    "archetype": "late bloomer",
+    "peakTR": 172,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 15, late bloomer (a strong leader: slow start, strong finish), peak TR 172.",
     "roster": [
       {
         "species": "Altaria",
@@ -2734,8 +2824,11 @@
         "item": "Chesto Berry"
       }
     ],
-    "tr": 5,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 5 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old level-cap curve Lv 16.5 -> the TR giving it on the new level-cap curve).",
+    "startTR": 22,
+    "archetype": "late bloomer",
+    "peakTR": 185,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 22, late bloomer (a strong leader: slow start, strong finish), peak TR 185.",
     "roster": [
       {
         "species": "Kingdra",
@@ -2831,8 +2924,11 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 80,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 46 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "startTR": 25,
+    "archetype": "early bloomer",
+    "peakTR": 105,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 25, early bloomer (a rising star: fast early, then slows), peak TR 105.",
     "roster": [
       {
         "species": "Absol",
@@ -2920,8 +3016,11 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 82,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 47 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "startTR": 25,
+    "archetype": "steady",
+    "peakTR": 150,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 25, steady (keeps a fixed fraction of the player's pace), peak TR 150.",
     "roster": [
       {
         "species": "Dusclops",
@@ -3009,8 +3108,11 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 85,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 49 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "startTR": 40,
+    "archetype": "plateau",
+    "peakTR": 90,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 40, plateau (a veteran who reaches their peak early and stops), peak TR 90.",
     "roster": [
       {
         "species": "Walrein",
@@ -3098,8 +3200,11 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 88,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 51 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "startTR": 45,
+    "archetype": "plateau",
+    "peakTR": 93,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 45, plateau (a veteran who reaches their peak early and stops), peak TR 93.",
     "roster": [
       {
         "species": "Salamence",
@@ -3193,8 +3298,11 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 92,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 53 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "startTR": 48,
+    "archetype": "late bloomer",
+    "peakTR": 190,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 48, late bloomer (a strong leader: slow start, strong finish), peak TR 190.",
     "roster": [
       {
         "species": "Milotic",
@@ -3296,8 +3404,11 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 92,
-    "trSource": "PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR 53 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
+    "startTR": 50,
+    "archetype": "late bloomer",
+    "peakTR": 195,
+    "lead": null,
+    "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 50, late bloomer (a strong leader: slow start, strong finish), peak TR 195.",
     "roster": [
       {
         "species": "Metagross",

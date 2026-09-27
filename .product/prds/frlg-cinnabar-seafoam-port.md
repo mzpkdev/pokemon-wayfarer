@@ -97,7 +97,7 @@ implemented [Viridian finale](../specs/frlg-kanto-viridian-finale.md) now
 supersedes them: Giovanni owns the FRLG Gym and Earth Badge, Blue is absent from
 Viridian, and his current Dojo unlock follows committed Indigo victory. The
 proposed [notable trainers](notable-trainers.md) model gives Blue
-and Blaine their own authored, fixed TR and roster for every battle with them;
+and Blaine their own growing TR and roster for every battle with them;
 it does not restore Blue as Viridian's badge owner. The port's source parties
 remain provenance references, not mandatory opening teams.
 

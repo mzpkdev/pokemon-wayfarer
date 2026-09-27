@@ -204,9 +204,10 @@ projects its win into both Kanto and Johto Champion recognition.
 The proposed [Leagues runtime](leagues.md) keeps today's admission, league
 order, and first league wins with their regional recognition, cleanup, and
 unlocks. It changes only who is in the lineup and what happens after a loss:
-each league's lineup is the global top five notable trainers by their
-authored, fixed TR under [Notable trainers](notable-trainers.md), strongest
-last, without reading player party, XP, or TR. Notable trainers in Gyms use
+each league's lineup is the global top five notable trainers by their TR
+when the player enters, grown from world progress under
+[Notable trainers](notable-trainers.md), strongest last, without reading
+player party or XP. Notable trainers in Gyms use
 the same model at battle setup.
 
 Winning commits the league result and any first league win, and releases the

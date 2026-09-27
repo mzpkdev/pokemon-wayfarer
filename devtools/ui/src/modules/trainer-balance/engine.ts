@@ -1,6 +1,9 @@
 import type {
   Anchor,
+  Archetype,
   Experiment,
+  GrowthArchetype,
+  LadderRow,
   ResolvedTrainer,
   RosterSlot,
   TeamMember,
@@ -53,6 +56,50 @@ export const DEFAULT_REGULAR_TRAINER_LEVEL: readonly Anchor[] = [
   [160, 82],
 ]
 
+/** Archetypes whose growth is a scaler over world progress, in display order. */
+export const GROWTH_ARCHETYPES: readonly GrowthArchetype[] = [
+  "steady",
+  "early bloomer",
+  "late bloomer",
+  "plateau",
+]
+export const ARCHETYPES: readonly Archetype[] = [...GROWTH_ARCHETYPES, "rival"]
+/** Growth % by world progress (contract section 7): 0 / 40 / 80 / 120 / 160. */
+export const DEFAULT_ARCHETYPE_GROWTH: Readonly<Record<GrowthArchetype, readonly Anchor[]>> = {
+  steady: [
+    [0, 0],
+    [40, 25],
+    [80, 50],
+    [120, 75],
+    [160, 100],
+  ],
+  "early bloomer": [
+    [0, 0],
+    [40, 50],
+    [80, 80],
+    [120, 95],
+    [160, 100],
+  ],
+  "late bloomer": [
+    [0, 0],
+    [40, 10],
+    [80, 25],
+    [120, 55],
+    [160, 100],
+  ],
+  plateau: [
+    [0, 0],
+    [40, 60],
+    [80, 100],
+    [120, 100],
+    [160, 100],
+  ],
+}
+/** World progress points the explorer reports each trainer TR at: 0, 4, 8, 16 and 24 badges. */
+export const WORLD_PROGRESS_CHECKPOINTS = [0, 40, 80, 120, 160] as const
+/** A Gym Leader within this many TR of the player TR is near; further away is below or above. */
+export const NEAR_BAND = 10
+
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value))
 const finite = (value: number, label: string) => {
   if (!Number.isFinite(value)) throw new Error(`${label} must be finite`)
@@ -101,6 +148,71 @@ export const playerRating = (point: WorldPoint): number => {
   return 10 * Math.min(badges, 8) + 5 * Math.max(0, badges - 8)
 }
 
+/**
+ * World progress: the player TR as the world sees it. Notable trainers grow
+ * with it; it is never computed from any notable trainer TR.
+ */
+export const worldProgress = (point: WorldPoint): number => playerRating(point)
+
+const progress = (value: number): number => {
+  if (!Number.isSafeInteger(value) || value < 0)
+    throw new Error("World progress must be a non-negative whole number")
+  return value
+}
+
+/**
+ * Growth along an archetype scaler: start + roundHalfUp((peak - start) *
+ * growth% / 100), with growth% read exactly (no intermediate rounding) and flat
+ * past the last anchor.
+ */
+export const growthTR = (
+  growth: readonly Anchor[],
+  startTR: number,
+  peakTR: number,
+  world: number,
+): number => {
+  const at = progress(world)
+  const first = growth[0]
+  const last = growth.at(-1)
+  if (!first || !last) throw new Error("A scaler needs at least one anchor")
+  // growth% = numerator / denominator.
+  let numerator = BigInt(last[1])
+  let denominator = 1n
+  if (at <= first[0]) numerator = BigInt(first[1])
+  else if (at < last[0]) {
+    const index = growth.findIndex(([x]) => x >= at)
+    const lower = growth[index - 1]
+    const upper = growth[index]
+    if (!lower || !upper) throw new Error("Scaler anchors must not contain missing points")
+    denominator = BigInt(upper[0] - lower[0])
+    numerator = BigInt(lower[1]) * denominator + BigInt(at - lower[0]) * BigInt(upper[1] - lower[1])
+  }
+  const divisor = 100n * denominator
+  const gain = (2n * BigInt(peakTR - startTR) * numerator + divisor) / (2n * divisor)
+  return startTR + Number(gain)
+}
+
+/**
+ * A notable trainer's TR at a world progress: the archetype scaler between
+ * start and peak TR, or for the rival min(peak, world progress + lead).
+ */
+export const trainerRating = (
+  experiment: Pick<Experiment, "archetypes">,
+  settings: Pick<TrainerSettings, "startTR" | "archetype" | "peakTR" | "lead">,
+  world: number,
+): number => {
+  if (settings.archetype === "rival") {
+    if (settings.lead === null) throw new Error("A rival needs a lead")
+    return Math.min(settings.peakTR, progress(world) + settings.lead)
+  }
+  return growthTR(
+    experiment.archetypes[settings.archetype],
+    settings.startTR,
+    settings.peakTR,
+    world,
+  )
+}
+
 /** The player's level cap. A readout for comparison: it never feeds notable trainer results. */
 export const levelCap = (point: WorldPoint): number => scale(LEVEL_CAP_ANCHORS, playerRating(point))
 
@@ -133,12 +245,20 @@ export const buildTeam = (roster: readonly RosterSlot[], teamLevel: number, size
   return { team, battleOrder: team.toReversed() }
 }
 
-/** A trainer's team from their own TR alone. The player's TR is not an input. */
-export const resolveTrainer = (trainer: TrainerRecord, experiment: Experiment): ResolvedTrainer => {
+/**
+ * A trainer's team at a world progress: their own TR from their growth, then
+ * the team from that TR alone. Nothing else about the player is read.
+ */
+export const resolveTrainer = (
+  trainer: TrainerRecord,
+  experiment: Experiment,
+  world: number,
+): ResolvedTrainer => {
   const settings = experiment.trainers[trainer.id]
   if (!settings) throw new Error(`Missing trainer settings: ${trainer.id}`)
-  const teamLevel = teamLevelFor(experiment, settings.tr)
-  const size = teamSizeFor(experiment, settings.tr)
+  const tr = trainerRating(experiment, settings, world)
+  const teamLevel = teamLevelFor(experiment, tr)
+  const size = teamSizeFor(experiment, tr)
   const { team, battleOrder } = buildTeam(settings.roster, teamLevel, size)
   const warnings: string[] = []
   if (settings.roster.length < ROSTER_SIZE)
@@ -150,7 +270,12 @@ export const resolveTrainer = (trainer: TrainerRecord, experiment: Experiment): 
     if (teamLevel + member.levelOffset < 1) warnings.push(`${member.species} level clipped to 1.`)
   return {
     trainer,
-    tr: settings.tr,
+    worldProgress: world,
+    tr,
+    startTR: settings.startTR,
+    archetype: settings.archetype,
+    peakTR: settings.peakTR,
+    lead: settings.lead,
     teamLevel,
     size,
     team,
@@ -161,18 +286,51 @@ export const resolveTrainer = (trainer: TrainerRecord, experiment: Experiment): 
 }
 
 /**
- * The league lineup from one global pool: the top five by TR (ties keep
- * catalog order), returned in battle order, ascending TR with the strongest last.
+ * The league lineup from one global pool at a world progress: the top five by
+ * TR (ties keep catalog order), returned in battle order, ascending TR with the
+ * strongest last.
  */
-export const leagueLineup = (catalog: TrainerRecord[], experiment: Experiment): ResolvedTrainer[] =>
+export const leagueLineup = (
+  catalog: TrainerRecord[],
+  experiment: Experiment,
+  world: number,
+): ResolvedTrainer[] =>
   catalog
-    .map((trainer) => resolveTrainer(trainer, experiment))
+    .map((trainer) => resolveTrainer(trainer, experiment, world))
     .toSorted((a, b) => b.tr - a.tr)
     .slice(0, LINEUP_SIZE)
     .toSorted((a, b) => a.tr - b.tr)
 
+/**
+ * The Gym Leaders at a world progress, ascending TR (ties keep catalog order),
+ * each marked below, near (within NEAR_BAND) or above the player TR.
+ */
+export const gymLadder = (
+  catalog: TrainerRecord[],
+  experiment: Experiment,
+  world: number,
+): LadderRow[] =>
+  catalog
+    .filter((trainer) => trainer.role === "Gym Leader")
+    .map((trainer): LadderRow => {
+      const settings = experiment.trainers[trainer.id]
+      if (!settings) throw new Error(`Missing trainer settings: ${trainer.id}`)
+      const tr = trainerRating(experiment, settings, world)
+      const gap = tr - world
+      return {
+        trainer,
+        tr,
+        gap,
+        mark: gap < -NEAR_BAND ? "below" : gap > NEAR_BAND ? "above" : "near",
+      }
+    })
+    .toSorted((a, b) => a.tr - b.tr)
+
 export const defaultTrainerSettings = (trainer: TrainerRecord): TrainerSettings => ({
-  tr: trainer.tr,
+  startTR: trainer.startTR,
+  archetype: trainer.archetype,
+  peakTR: trainer.peakTR,
+  lead: trainer.lead,
   roster: structuredClone(trainer.roster),
 })
 
@@ -181,11 +339,12 @@ export const createExperiment = (catalog: TrainerRecord[]): Experiment => {
   for (const trainer of catalog) trainers[trainer.id] = defaultTrainerSettings(trainer)
   return validateExperiment(
     {
-      version: 6,
+      version: 7,
       teamLevel: structuredClone(DEFAULT_TEAM_LEVEL),
       teamSize: structuredClone(DEFAULT_TEAM_SIZE),
       wildLevel: structuredClone(DEFAULT_WILD_LEVEL),
       routeTrainerLevel: structuredClone(DEFAULT_REGULAR_TRAINER_LEVEL),
+      archetypes: structuredClone(DEFAULT_ARCHETYPE_GROWTH) as Experiment["archetypes"],
       trainers,
     },
     catalog,
@@ -281,6 +440,23 @@ export const validateRoster = (value: unknown, path: string): RosterSlot[] => {
   return slots
 }
 
+/** Start and peak TR are whole numbers with peak >= start; a rival needs a lead, others have none. */
+const growthSettings = (
+  settings: Record<string, unknown>,
+  id: string,
+): Omit<TrainerSettings, "roster"> => {
+  const startTR = tr(settings.startTR, `${id}.startTR`)
+  const peakTR = tr(settings.peakTR, `${id}.peakTR`)
+  const archetype = settings.archetype as Archetype
+  if (!ARCHETYPES.includes(archetype))
+    fail(`${id}.archetype must be one of ${ARCHETYPES.join(", ")}`)
+  if (peakTR < startTR) fail(`${id}: peak TR must be at least start TR`)
+  if (archetype === "rival" && settings.lead === null) fail(`${id}: a rival needs a lead`)
+  if (archetype !== "rival" && settings.lead !== null) fail(`${id}: only a rival has a lead`)
+  const lead = settings.lead === null ? null : tr(settings.lead, `${id}.lead`)
+  return { startTR, archetype, peakTR, lead }
+}
+
 /** Rosters short of the required six. */
 export const rosterGaps = (
   catalog: TrainerRecord[],
@@ -291,20 +467,30 @@ export const rosterGaps = (
     return length < ROSTER_SIZE ? [{ id: trainer.id, name: trainer.name, length }] : []
   })
 
-export const EXPERIMENT_VERSION = 6
+export const EXPERIMENT_VERSION = 7
 export const OLD_VERSION_REJECTION = (version: number): string =>
-  version === 5
-    ? "Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. Start from the version 6 defaults."
-    : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. Start from the version 6 defaults.`
+  version === 6
+    ? "Version 6 experiments give each notable trainer one fixed TR and cannot be imported. Start from the version 7 defaults (start TR, archetype and peak TR)."
+    : version === 5
+      ? "Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. Start from the version 7 defaults."
+      : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. Start from the version 7 defaults.`
 
 export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Experiment => {
   const input = object(value, "root")
-  if (typeof input.version === "number" && input.version >= 1 && input.version <= 5)
+  if (typeof input.version === "number" && input.version >= 1 && input.version < EXPERIMENT_VERSION)
     fail(OLD_VERSION_REJECTION(input.version))
   if (input.version !== EXPERIMENT_VERSION) fail(`version must be ${EXPERIMENT_VERSION}`)
   exactKeys(
     input,
-    ["version", "teamLevel", "teamSize", "wildLevel", "routeTrainerLevel", "trainers"],
+    [
+      "version",
+      "teamLevel",
+      "teamSize",
+      "wildLevel",
+      "routeTrainerLevel",
+      "archetypes",
+      "trainers",
+    ],
     "root",
   )
   const inputTrainers = object(input.trainers, "trainers")
@@ -314,18 +500,28 @@ export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Ex
   const trainers: Experiment["trainers"] = Object.create(null)
   for (const id of ids) {
     const settings = object(inputTrainers[id], `trainers.${id}`)
-    exactKeys(settings, ["tr", "roster"], `trainers.${id}`)
+    exactKeys(settings, ["startTR", "archetype", "peakTR", "lead", "roster"], `trainers.${id}`)
     trainers[id] = {
-      tr: tr(settings.tr, `${id}.tr`),
+      ...growthSettings(settings, id),
       roster: validateRoster(settings.roster, `${id}.roster`),
     }
   }
+  const inputArchetypes = object(input.archetypes, "archetypes")
+  exactKeys(inputArchetypes, GROWTH_ARCHETYPES, "archetypes")
+  const archetypes = Object.fromEntries(
+    GROWTH_ARCHETYPES.map((name) => {
+      const points = anchors(inputArchetypes[name], 0, 100, `${name} growth`)
+      if (points[0]?.[1] !== 0) fail(`${name} growth must be 0% at world progress 0`)
+      return [name, points]
+    }),
+  ) as Experiment["archetypes"]
   return {
     version: EXPERIMENT_VERSION,
     teamLevel: anchors(input.teamLevel, 1, 100, "teamLevel"),
     teamSize: anchors(input.teamSize, 1, ROSTER_SIZE, "teamSize"),
     wildLevel: anchors(input.wildLevel, 1, 100, "wildLevel"),
     routeTrainerLevel: anchors(input.routeTrainerLevel, 1, 100, "routeTrainerLevel"),
+    archetypes,
     trainers,
   }
 }

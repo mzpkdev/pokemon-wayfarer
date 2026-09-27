@@ -69,10 +69,13 @@ range, so extra TR still means something.
   ([regular trainer and Gym member scaling](trainer-party-scaling.md)).
 - **Poké Mart stock**, unlocking at the same badge counts as today
   ([Poké Marts](global-tr-pokemarts.md)).
+- **World progress.** Notable trainers read your TR as world progress and
+  grow with it, each in their own way and up to their own best
+  ([Notable trainers](notable-trainers.md)). League lineups are drawn from
+  their TR when you enter ([Leagues](leagues.md)).
 
-Your TR never makes a notable trainer stronger or weaker: they have their own
-TR ([Notable trainers](notable-trainers.md)), and league lineups are drawn
-from those ratings ([Leagues](leagues.md)).
+Your TR is never worked out from a notable trainer's TR, and nothing they do
+changes yours.
 
 ## Glossary
 
@@ -80,6 +83,12 @@ from those ratings ([Leagues](leagues.md)).
   does every notable trainer; after first use, docs just say TR.
 - **Player TR / trainer TR:** yours, or a notable trainer's, where it matters
   which.
+- **World progress:** your TR as notable trainers see it; they grow with it.
+- **Archetype:** a notable trainer's growth shape: steady, early bloomer, late
+  bloomer, plateau, or rival.
+- **Start TR / peak TR:** a notable trainer's TR at the very start of your
+  journey, and the most they can ever reach.
+- **Lead:** for a rival only, how far ahead of your TR they stay.
 - **Never decreases:** once earned, TR is never lowered.
 - **Notable trainer:** a Gym Leader, Elite Four member, Champion, or Blue (37
   people in v0), each with their own TR.
@@ -117,7 +126,8 @@ from those ratings ([Leagues](leagues.md)).
   gathers what they share.
 - Obedience, reduced experience past the level cap, and Candy rules keep
   working the same way; they follow the level cap wherever it sits.
-- Notable trainers' TR never reads yours, and yours never reads theirs.
+- Yours never reads a notable trainer's TR; theirs reads yours only as world
+  progress, through their own growth shape.
 - Standalone builds keep their existing progression.
 
 ## Later

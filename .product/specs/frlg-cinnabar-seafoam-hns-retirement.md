@@ -56,7 +56,7 @@ This Blue introduction records the historical coastal port. The implemented
 [Viridian finale](frlg-kanto-viridian-finale.md) now removes Blue from the exterior
 and Gym; its acceptance checks supersede this document's Blue check. The
 proposed [notable trainers](notable-trainers.md) model gives Blue
-his own fixed TR but no badge; it does not restore Viridian actors. The
+his own TR but no badge; it does not restore Viridian actors. The
 retirement boundary remains unchanged.
 
 The Wayfarer release link map contains no layout, event, script, or wild

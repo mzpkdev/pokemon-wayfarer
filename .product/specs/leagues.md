@@ -2,10 +2,10 @@
 
 PRD: [Leagues](../prds/leagues.md)
 Implemented: No
-Design status: v0 approved: one global pool, top five by Trainer Rating (TR),
-ascending battle order, a lineup captured when the player enters and locked
-until the league is won, and a win that commits the league result. Signup
-and league order stay as Today's
+Design status: v0 approved: one global pool, top five by Trainer Rating (TR)
+at the moment the player enters, ascending battle order, a lineup captured
+when the player enters and locked until the league is won, and a win that
+commits the league result. Signup and league order stay as Today's
 [interregional circuit](wayfarer-interregional-league-circuit.md) until
 designed.
 
@@ -17,9 +17,9 @@ league, active runs and dispatch, the win commit, saved state, load
 validation, presentation, and regional integration.
 
 - [Notable trainers](notable-trainers.md) owns notable trainers, their
-  TR, the team-level and team-size scalers, rosters, and team composition. This
-  spec reads a trainer's TR and composed team; it never restates how they are
-  computed.
+  TR and its growth with world progress, the team-level and team-size scalers,
+  rosters, and team composition. This spec reads a trainer's TR and composed
+  team; it never restates how they are computed.
 - [Player Trainer Rating](player-trainer-rating.md) owns the player's TR. In
   v0 a league win adds no player TR; Today's +8 per first league win stays
   documented in the circuit spec until adoption.
@@ -60,8 +60,8 @@ owners to canonical characters. Gym, rival, Champion, rematch, and regional
 encounters of one person share one `characterId` and one roster, so aliases
 cannot appear in a lineup twice. People with similar names remain distinct.
 
-A trainer is **eligible** when they are a notable trainer with an authored
-TR and a valid roster, fight in singles, are enabled, and have validated
+A trainer is **eligible** when they are a notable trainer with valid growth
+values and a valid roster, fight in singles, are enabled, and have validated
 presentation. Red and Tate & Liza are not notable trainers in v0, so they are
 league-ineligible and keep their current policies: Red his separate mastery
 encounter, Tate & Liza their double battle. Region, title, and story
@@ -74,16 +74,20 @@ change story battles, which follow the
 One global pool of eligible trainers serves every league. When the player
 enters:
 
-1. Sort the pool by TR, highest first.
+1. Compute each eligible trainer's TR at the current world progress
+   ([Notable trainers](notable-trainers.md#growth-with-world-progress)) and
+   sort the pool by it, highest first.
 2. Take the first five. Equal TRs keep whatever order the registry iteration
    and sort produce; there is no tie-break rule.
 3. Order the five by ascending TR for battle, so the highest TR fights last.
    Equal TRs again take whatever order the sort produces.
 
-League, region, home membership, title, player TR, party, and history play
-no part. Every league may therefore have the same five, and v0 accepts that.
-The procedure consumes no randomness and reads no seed. Other leagues are
-never resolved early.
+League, region, home membership, title, party, and history play no part;
+player TR enters only as world progress, through each trainer's TR. Trainers
+grow at different rates, so the lineup changes naturally between leagues as
+world progress rises; leagues may still share some or all of the five, and v0
+accepts that. The procedure consumes no randomness and reads no seed. Other
+leagues are never resolved early.
 
 Because ties have no rule, a changed registry order or sort can reorder tied
 trainers in a lineup the player has not entered yet. The locked lineup keeps
@@ -100,8 +104,8 @@ before reveal.
 
 The lineup stays locked until the league is won; a loss or leaving keeps it.
 Every retry at that league, including after reload, reconstructs battles from
-the saved lineup and never reselects or recomposes. With fixed TRs this equals
-locking after a loss. If the content version changes while a lineup is locked,
+the saved lineup and never reselects or recomposes, even after the player's TR
+rises. If the content version changes while a lineup is locked,
 the lock is dropped and the next time the player enters, a new lineup is
 captured (prerelease policy; the save stays valid).
 
@@ -133,8 +137,9 @@ A failure leaves the prior state intact; a crash exposes either the old state
 or the complete locked lineup. Denied or cancelled requests change nothing and
 reveal nothing.
 
-Replays of a won league reselect the lineup deterministically; fixed TRs make
-it identical to the won lineup. A replay stores nothing beyond the existing
+Replays of a won league reselect the lineup deterministically from the current
+world progress, so it matches the won lineup only if world progress has not
+changed. A replay stores nothing beyond the existing
 replay run record and never locks the league. Whether a replay is available
 while another league is locked follows Today's circuit rules.
 
@@ -286,13 +291,16 @@ Existing code to review, not new APIs:
 
 The first league must be beatable after 8 badges. An 8-badge player sits at
 TR 80 with a level cap of Lv 50
-([Player Trainer Rating](player-trainer-rating.md#player-tr-scalers-v0)), so the
-placeholder catalog puts the top five around TR 85–95, a team level of about
-53–59 ([Notable trainers](notable-trainers.md#trainer-scalers)). Every trainer
-TR is a placeholder, so this is a content constraint checked by the catalog
-report and playtesting, not a runtime rule. League wins add no player TR, and
-every league may have the same five, so later leagues are easy for a player
-with more badges; v0 accepts that.
+([Player Trainer Rating](player-trainer-rating.md#player-tr-scalers-v0)), so at
+world progress 80 the placeholder catalog puts the top five around TR 85–95, a
+team level of about 53–59
+([Notable trainers](notable-trainers.md#trainer-scalers)). Later leagues stay
+a real fight: at world progress 120 the top five sit a little above the
+player's level cap, not a wall; at 160 both team level and level cap reach
+Lv 100, so the lineup meets the cap. These are content constraints on the
+trainers' growth values, owned with the other
+[balance targets](notable-trainers.md#balance-targets) and checked by the
+catalog report and playtesting, not runtime rules.
 
 ## Acceptance
 
@@ -301,10 +309,12 @@ exclusion reasons, provenance, and content versions. Required implementation
 evidence (not yet run):
 
 1. **Registry.** Reject duplicate characters or aliases, unresolved source
-   IDs, missing assets, double-battle flags, and trainers without an authored
-   TR or valid roster. The build must hold at least five eligible trainers.
-2. **Selection.** Fixtures for the top five over distinct TRs, ties at the
-   fifth-place boundary, and ties inside the lineup; the battle order is
+   IDs, missing assets, double-battle flags, and trainers without valid
+   growth values or a valid roster. The build must hold at least five eligible
+   trainers.
+2. **Selection.** Fixtures at several world progress values, including one
+   where growth reorders the top five: the top five over distinct TRs, ties at
+   the fifth-place boundary, and ties inside the lineup; the battle order is
    non-decreasing in TR with the highest last; excluded and disabled trainers
    never appear; aliases never appear twice.
 3. **Fresh state.** A new game has no locked lineup; load, display, and
@@ -315,12 +325,14 @@ evidence (not yet run):
 5. **Loss.** Lose at each match: the locked lineup is unchanged, progress
    resets, nothing is recorded, and the player blacks out to the usual target.
    Earn a badge and level up, then retry: identical five trainers, teams, and
-   levels. Repeat with reloads and voluntary exits.
+   levels, although every trainer's current TR has risen. Repeat with reloads
+   and voluntary exits.
 6. **Win.** Exactly one league win and ceremony; only the first league win
    grants first-league-win effects; no win changes player TR; the locked
    lineup is released. Interrupt and repeat ceremony commits.
-7. **Replay.** Replays of a won league reselect an identical lineup, store
-   nothing beyond the existing replay run record, and never lock it.
+7. **Replay.** Replays of a won league reselect from the current world
+   progress (an identical lineup when it is unchanged), store nothing beyond
+   the existing replay run record, and never lock it.
 8. **Construction and presentation.** Build every eligible trainer's team,
    preserve member identity and metadata, and reconstruct identically from the
    saved lineup. Names, sprites, portraits, text, music, AI, money, XP, and

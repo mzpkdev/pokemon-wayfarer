@@ -33,9 +33,9 @@ levels under the current bespoke five-slot player-TR projection in
 [party construction](../../game/src/battle_main.c), independent of the disabled
 shared six-slot Gym feature. The proposed
 [notable trainers](notable-trainers.md) model builds Giovanni's
-badge battle from his own authored, fixed TR and six-slot roster. This
-five-member source remains provenance, not a required early party or immutable
-prefix for every team size.
+badge battle from his own TR, grown from world progress, and six-slot roster.
+This five-member source remains provenance, not a required early party or
+immutable prefix for every team size.
 Under that model his Hideout and Silph battles also use his TR. Preserve
 battle identity and truthful local dialogue in either model.
 

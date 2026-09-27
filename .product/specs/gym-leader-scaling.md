@@ -9,17 +9,19 @@ Design status: v0 contract for singles badge encounters.
 
 ## Scope and authority
 
-This specification owns Gym badge-encounter coverage and is the single
-authority for battle construction: its member-metadata, construction, reward,
-and override rules apply to every battle with a notable character, not only
-Gym battles. [Notable trainers](notable-trainers.md) owns the notable trainer
-inventory, the every-battle rule, trainer TR, scalers, rosters, team
-resolution, and the battle snapshot; this document does not restate them. A
-Gym battle uses the leader's own TR, team, and levels with no Gym-specific
-adjustment. Adoption replaces the old player-TR input and prefix-size
-selection only for enrolled encounters. Regular trainers, Gym members, wild
-encounters, the level cap, TR rewards, rematch availability, and entering a
-league keep their owning contracts.
+This specification owns Gym badge-encounter coverage and is the single authority
+for battle construction: its member-metadata, construction, reward, and override
+rules apply to every battle with a notable character, not only Gym battles.
+[Notable trainers](notable-trainers.md) owns the notable trainer inventory, the
+every-battle rule, trainer TR and its growth with world progress, scalers,
+rosters, team resolution, the battle snapshot, and the Gym ladder
+[balance target](notable-trainers.md#balance-targets); this document does not
+restate them. A Gym battle uses the leader's TR at the current world progress,
+snapshotted at battle start, with their team and levels and no Gym-specific
+adjustment. Adoption replaces the old player-TR input and prefix-size selection
+only for enrolled encounters. Regular trainers, Gym members, wild encounters,
+the level cap, TR rewards, rematch availability, and entering a league keep
+their owning contracts.
 
 ## Coverage and identity
 
@@ -55,10 +57,11 @@ C, and report the source and canonical mapping of every covered encounter.
 ## Battle snapshot resolution
 
 After eligibility resolution, obtain the members from the
-[battle snapshot](notable-trainers.md#battle-snapshot): the leader's TR and
-resolved team, frozen for the battle. Never read `GetTrainerRating()`, party
-levels, badges, historical Gym order, or the old 8/22/34/40 player-TR
-thresholds. Each leader has one complete reviewed roster.
+[battle snapshot](notable-trainers.md#battle-snapshot): the leader's TR at
+the current world progress and the resolved team, frozen for the battle. Read
+player TR only through that owner's growth rule; never use it as the leader's
+TR, and never read party levels, badges, historical Gym order, or the old
+8/22/34/40 player-TR thresholds. Each leader has one complete reviewed roster.
 
 ## Member metadata
 
@@ -134,8 +137,8 @@ and playtest acceptance separately from implementation status.
 
 ## Later
 
-- Gym-specific behavior that follows a changing leader TR is owned by the
-  model's [Later](notable-trainers.md#later) list.
+- Further leader growth rules (per-save archetypes, growth from their own
+  battles) are owned by the model's [Later](notable-trainers.md#later) list.
 
 ## References
 

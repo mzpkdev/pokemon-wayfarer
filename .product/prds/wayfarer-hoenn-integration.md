@@ -8,8 +8,8 @@ Hoenn admission, and the implemented
 [League level resolver](../../game/src/trainer_party_scaling.c) uses the
 player's Trainer Rating (TR) saved when entering a league. League levels are no
 longer static. Under the proposed [notable trainers](notable-trainers.md)
-model, notable trainers have their own authored, fixed TR that sets team level
-and size in every battle, with a six-slot roster. The
+model, notable trainers have their own TR, growing with world progress, that
+sets team level and size in every battle, with a six-slot roster. The
 [Leagues runtime](../specs/leagues.md) replaces Hoenn's fixed participants
 with the global top five by TR, strongest last; after a loss the league keeps
 that locked lineup until won. These successors are not implemented by the
@@ -226,11 +226,10 @@ not keep a separate healing history for every region.
   static parties.
 - Today's Hoenn League preserves authored non-level metadata and scales from
   player TR locked for the run under [League scaling](league-scaling.md). The
-  proposed successor locks the five opponents, teams, and levels when the
-  player enters, each from that trainer's own fixed TR and roster. Reload,
-  reconstruction, and retries after a loss preserve that locked lineup.
-  Rosters are authored per trainer and need no immutable prefix of one Emerald
-  roster.
+  proposed successor locks the five opponents, teams, and levels when the player
+  enters, each from that trainer's own TR at that moment and roster. Reload,
+  reconstruction, and retries after a loss preserve that locked lineup. Rosters
+  are authored per trainer and need no immutable prefix of one Emerald roster.
 - Battle Frontier, Contests, Secret Bases, Match Call, television events,
   multiplayer features, event islands, and other optional Emerald systems are
   preservation targets, not requirements for this milestone.

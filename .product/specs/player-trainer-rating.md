@@ -27,8 +27,9 @@ link here for the shared model.
 
 - **Hidden.** TR is never shown to the player as a number; the Trainer Card
   and dialogue never display it.
-- **Independent.** Player TR is never computed from a notable trainer's TR,
-  and no notable trainer's TR is computed from it.
+- **One direction.** Player TR is never computed from a notable trainer's
+  TR. Notable trainers read player TR as **world progress** through their own
+  archetype ([growth](notable-trainers.md#growth-with-world-progress)).
 - **Never decreases.** `GetTrainerRating()` derives a candidate from current
   facts, compares it with the saved value, and keeps the higher. A new
   Wayfarer game starts at 0; nothing lowers the saved value.
@@ -126,10 +127,11 @@ reads a notable trainer's TR:
 | Wild and static encounter levels | [Wild encounter scaling](trainer-rating-wild-encounter-scaling.md) |
 | Regular trainers and Gym members (battle snapshot) | [Trainer party scaling](trainer-party-scaling.md) |
 | Poké Mart stock (counter-open snapshot) | [Global TR Poké Marts](global-tr-pokemarts.md) |
+| World progress: each notable trainer's TR (battle snapshot, or the locked lineup when entering a league) | [Notable trainers](notable-trainers.md#growth-with-world-progress) |
 
-Notable trainers use the level cap anchors for team level but have their own
-authored, fixed TR; nothing they do changes the getter, the saved value, or
-any consumer above. Standalone builds are unchanged.
+Notable trainers use the level cap anchors for team level, applied to their
+own TR; nothing they do changes the getter, the saved value, or any consumer
+above. Standalone builds are unchanged.
 
 ## Validation
 

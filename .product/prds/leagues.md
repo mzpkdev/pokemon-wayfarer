@@ -29,19 +29,21 @@ rooms, and ceremonies. Each holds a five-match singles lineup.
 trainer. Red (separate mastery encounter) and Tate & Liza (double battle) are
 excluded. Region, title, and home league play no part.
 
-**Lineup.** Each league's lineup is the five pool trainers with the highest
-TR. Ties fall in whatever order iteration returns; there is no tie-break rule.
-Because the pool is shared, every league may have the same five people, and v0
-accepts that.
+**Lineup.** When the player enters a league, each pool trainer's current TR
+is worked out, and the lineup is the five with the highest. Ties fall in
+whatever order iteration returns; there is no tie-break rule. The lineup is
+then locked until the league is won. Trainers grow at their own pace as the
+player progresses, so the next league's lineup changes naturally; leagues may
+still share some of the same people, and v0 accepts that.
 
 **Battle order.** Ascending TR: the weakest of the five fights first and the
 strongest last.
 
 **Strength.** Each opponent uses their own TR, team, and levels, exactly as in
 any other battle with them. There is no league-specific adjustment.
-[Notable trainers](notable-trainers.md) owns trainer TR, the scalers
-that turn TR into team level and size, and rosters. The player's TR never
-enters it.
+[Notable trainers](notable-trainers.md) owns trainer TR and how it grows,
+the scalers that turn TR into team level and size, and rosters. The player's
+TR enters only through how far each trainer has grown.
 
 **Losing.** The lineup is set when the player enters the league and stays
 locked to the same five trainers with the same teams until the player wins the
@@ -55,11 +57,12 @@ is a test, not a source of power
 ([Player Trainer Rating](player-trainer-rating.md)). Today, the ROM still adds
 TR for a first league win until that design is adopted.
 
-**Balance.** The first league must be winnable with eight badges. The five
-strongest trainers are set a little above an eight-badge player, so their
-teams sit a few levels over that player's cap. Because a league win adds no
-TR and lineups can repeat, later leagues are easier for a player with more
-badges; v0 accepts that.
+**Balance.** The first league must be winnable with eight badges. At that
+point the five strongest trainers sit a little above the player, so their
+teams are a few levels over the player's cap. Later leagues stay a real fight:
+their lineups sit a little above the player's level cap, not a wall. With all
+24 badges both sides reach level 100, so the final lineup meets you at the
+cap; tougher endgame teams (better items, stats, movesets) are Later.
 
 ## Sample playthrough
 
@@ -70,8 +73,9 @@ badges; v0 accepts that.
    holds that locked lineup.
 3. They leave, win another badge, level up, and return to the same five with
    the same teams. This time they win, and the league result is committed.
-4. At the next league the lineup may be the same five people. In v0 that is
-   expected.
+4. At the next league, entered with more badges, the lineup is worked out
+   again from everyone's current TR. Late bloomers may have climbed in and
+   veterans dropped out; some of the same people may return.
 
 ## Records and recognition
 

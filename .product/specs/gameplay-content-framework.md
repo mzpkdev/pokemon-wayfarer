@@ -257,14 +257,14 @@ existing sample boundaries. Existing six-slot Gym scaling uses player TR when
 his separate five-slot player-TR projection. Today's fixed Leagues use their
 persisted admission value. The proposed [notable trainers](notable-trainers.md)
 model instead derives notable trainers' team level and size, in every battle
-with them including [leagues](leagues.md), from each trainer's own authored,
-fixed TR, never from player TR. Battle snapshots are taken at battle setup; each
-league's locked lineup is captured when the player enters and stays locked until
-the league is won; a loss, leaving, or reload keeps it. Consumers and lifecycle
-code own those samples, eligibility, and persistence; the evaluator remains a
-pure function of explicit curve ID and TR. Host Gym/League audits consume the
-same curve points; keep independent golden expected results for equivalence
-tests.
+with them including [leagues](leagues.md), from each trainer's own TR, which
+grows with world progress, never from player TR used directly. Battle snapshots
+are taken at battle setup; each league's locked lineup is captured when the
+player enters and stays locked until the league is won; a loss, leaving, or
+reload keeps it. Consumers and lifecycle code own those samples, eligibility,
+and persistence; the evaluator remains a pure function of explicit curve ID and
+TR. Host Gym/League audits consume the same curve points; keep independent
+golden expected results for equivalence tests.
 
 ### 5. Service adoption
 

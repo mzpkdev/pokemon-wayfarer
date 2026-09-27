@@ -1,28 +1,50 @@
 import catalogData from "./catalog.json"
 import {
   EXPERIMENT_VERSION,
+  GROWTH_ARCHETYPES,
   LEVEL_OFFSET,
   MAX_ANCHORS,
   OLD_VERSION_REJECTION,
+  WORLD_PROGRESS_CHECKPOINTS,
   createExperiment,
+  gymLadder,
   leagueLineup,
   resolveTrainer,
   rosterGaps,
   serializeExperiment,
+  teamLevelFor,
+  trainerRating,
   validateExperiment,
   worldLevels,
 } from "./engine.js"
-import type { Anchor, Experiment, RosterSlot, TrainerRecord, TrainerSettings } from "./types.js"
+import type {
+  Anchor,
+  Archetype,
+  Experiment,
+  GrowthArchetype,
+  RosterSlot,
+  TrainerRecord,
+  TrainerSettings,
+} from "./types.js"
 
 export const catalog = catalogData as TrainerRecord[]
-export type ScalerId = "teamLevel" | "teamSize" | "wildLevel" | "routeTrainerLevel"
+type TRScalerId = "teamLevel" | "teamSize" | "wildLevel" | "routeTrainerLevel"
+/** TR scalers by their experiment key; archetype growth scalers by archetype name. */
+export type ScalerId = TRScalerId | GrowthArchetype
 export const SCALER_IDS: readonly ScalerId[] = [
   "teamLevel",
   "teamSize",
   "wildLevel",
   "routeTrainerLevel",
+  ...GROWTH_ARCHETYPES,
 ]
-const storageKey = "wayfarer-trainer-balance-v6"
+const isGrowth = (id: ScalerId): id is GrowthArchetype =>
+  (GROWTH_ARCHETYPES as readonly string[]).includes(id)
+const anchorsOf = (experiment: Experiment, id: ScalerId): Anchor[] =>
+  isGrowth(id) ? experiment.archetypes[id] : experiment[id]
+/** A form field name for a scaler (archetype names contain spaces). */
+export const scalerField = (id: ScalerId): string => id.replaceAll(" ", "-")
+const storageKey = "wayfarer-trainer-balance-v7"
 const firstTrainer = catalog[0]
 if (!firstTrainer) throw new Error("The trainer catalog is empty.")
 const initialTrainerId = firstTrainer.id
@@ -52,14 +74,18 @@ export class BalanceLab {
 
   world = $derived(worldLevels(this.#_experiment, { badges: this.badges }))
   playerTR = $derived(this.world.tr)
+  /** World progress is the player TR as notable trainers see it. */
+  worldProgress = $derived(this.world.tr)
   cap = $derived(this.world.cap)
-  anchors = $derived({
-    teamLevel: this.#_experiment.teamLevel,
-    teamSize: this.#_experiment.teamSize,
-    wildLevel: this.#_experiment.wildLevel,
-    routeTrainerLevel: this.#_experiment.routeTrainerLevel,
-  })
-  allRows = $derived(catalog.map((trainer) => resolveTrainer(trainer, this.#_experiment)))
+  anchors = $derived(
+    Object.fromEntries(SCALER_IDS.map((id) => [id, anchorsOf(this.#_experiment, id)])) as Record<
+      ScalerId,
+      Anchor[]
+    >,
+  )
+  allRows = $derived(
+    catalog.map((trainer) => resolveTrainer(trainer, this.#_experiment, this.worldProgress)),
+  )
   rows = $derived(
     this.allRows.filter(({ trainer }) => {
       const query = this.query.trim().toLowerCase()
@@ -80,7 +106,15 @@ export class BalanceLab {
   })
   settings = $derived(this.#_settings(this.selected.trainer.id))
   gaps = $derived(rosterGaps(catalog, this.#_experiment))
-  league = $derived(leagueLineup(catalog, this.#_experiment))
+  league = $derived(leagueLineup(catalog, this.#_experiment, this.worldProgress))
+  ladder = $derived(gymLadder(catalog, this.#_experiment, this.worldProgress))
+  /** The selected trainer's TR and team level at each world progress checkpoint. */
+  growth = $derived(
+    WORLD_PROGRESS_CHECKPOINTS.map((world) => {
+      const tr = trainerRating(this.#_experiment, this.settings, world)
+      return { world, tr, teamLevel: teamLevelFor(this.#_experiment, tr) }
+    }),
+  )
   aboveCap = $derived(this.allRows.filter((row) => row.teamLevel > this.cap).length)
 
   constructor() {
@@ -155,15 +189,28 @@ export class BalanceLab {
     this.#_persist()
   }
 
-  setTR = (id: string, value: string): void =>
-    this.#_edit("Could not change the TR.", (next) => {
-      const settings = next.trainers[id]
-      if (!settings) throw new Error("Unknown trainer.")
-      const tr = Number(value.trim())
-      if (!value.trim() || !Number.isSafeInteger(tr) || tr < 0)
-        throw new Error("TR must be a whole number of 0 or more.")
-      settings.tr = tr
-      return `${this.#_name(id)} is now TR ${tr}.`
+  /** Reads start TR, archetype, peak TR and lead from the growth form. A rival needs a lead. */
+  applyGrowth = (form: HTMLFormElement): void =>
+    this.#_edit("Could not change the growth.", (next) => {
+      const settings = next.trainers[this.selectedId]
+      if (!settings) throw new Error("Unknown selected trainer.")
+      const data = new FormData(form)
+      const whole = (name: string, label: string): number => {
+        const text = String(data.get(name) ?? "").trim()
+        const value = Number(text)
+        if (!text || !Number.isSafeInteger(value) || value < 0)
+          throw new Error(`${label} must be a whole number of 0 or more.`)
+        return value
+      }
+      const archetype = String(data.get("archetype")) as Archetype
+      const startTR = whole("startTR", "Start TR")
+      const peakTR = whole("peakTR", "Peak TR")
+      if (peakTR < startTR) throw new Error("Peak TR must be at least start TR.")
+      const leadText = String(data.get("lead") ?? "").trim()
+      if (archetype === "rival" && !leadText) throw new Error("A rival needs a lead.")
+      const lead = archetype === "rival" ? whole("lead", "Lead") : null
+      Object.assign(settings, { startTR, archetype, peakTR, lead })
+      return `Updated ${this.#_name(this.selectedId)}’s growth.`
     })
 
   /** Swaps a roster slot with its neighbour; roster slot 1 must stay at offset 0. */
@@ -223,35 +270,40 @@ export class BalanceLab {
     this.#_edit("Could not apply the scalers.", (next) => {
       const data = new FormData(form)
       const read = (scaler: ScalerId) =>
-        next[scaler].map(
+        anchorsOf(next, scaler).map(
           (_, index): Anchor => [
-            index === 0 ? 0 : Number(data.get(`${scaler}-tr-${index}`)),
-            Number(data.get(`${scaler}-value-${index}`)),
+            index === 0 ? 0 : Number(data.get(`${scalerField(scaler)}-tr-${index}`)),
+            Number(data.get(`${scalerField(scaler)}-value-${index}`)),
           ],
         )
-      for (const scaler of SCALER_IDS) next[scaler] = read(scaler)
+      for (const scaler of SCALER_IDS) {
+        const anchors = read(scaler)
+        if (isGrowth(scaler)) next.archetypes[scaler] = anchors
+        else next[scaler] = anchors
+      }
       return "Updated the scalers."
     })
 
   addAnchor = (scaler: ScalerId): void =>
     this.#_edit("Could not add an anchor.", (next) => {
-      const last = next[scaler].at(-1)
+      const anchors = anchorsOf(next, scaler)
+      const last = anchors.at(-1)
       if (!last) return undefined
-      if (next[scaler].length >= MAX_ANCHORS)
+      if (anchors.length >= MAX_ANCHORS)
         throw new Error(`A scaler has at most ${MAX_ANCHORS} anchors.`)
-      next[scaler].push([last[0] + 10, last[1]])
+      anchors.push([last[0] + 10, last[1]])
       return "Added an anchor. Edit its TR and value, then apply the scalers."
     })
 
   removeAnchor = (scaler: ScalerId, index: number): void =>
     this.#_edit("Could not remove the anchor.", (next) => {
       if (index === 0) return undefined
-      next[scaler].splice(index, 1)
+      anchorsOf(next, scaler).splice(index, 1)
       return "Removed the anchor."
     })
 
   reset = (): void => {
-    this.#_accept(createExperiment(catalog), "Restored the catalog TRs, rosters and scalers.")
+    this.#_accept(createExperiment(catalog), "Restored the catalog growth, rosters and scalers.")
   }
 
   resetTrainer = (): void =>
@@ -259,7 +311,7 @@ export class BalanceLab {
       const defaults = createExperiment(catalog).trainers[this.selectedId]
       if (!defaults) throw new Error("Unknown selected trainer.")
       next.trainers[this.selectedId] = defaults
-      return `Restored ${this.selected.trainer.name}’s catalog TR and roster. Other trainers and the scalers are unchanged.`
+      return `Restored ${this.selected.trainer.name}’s catalog growth and roster. Other trainers and the scalers are unchanged.`
     })
 
   exportText = (): string =>
@@ -282,7 +334,7 @@ export class BalanceLab {
         data?.tool === "wayfarer-trainer-balance" &&
         typeof data.version === "number" &&
         data.version >= 1 &&
-        data.version <= 5
+        data.version < EXPERIMENT_VERSION
       )
         throw new Error(OLD_VERSION_REJECTION(data.version))
       if (data?.tool !== "wayfarer-trainer-balance" || data.version !== EXPERIMENT_VERSION)

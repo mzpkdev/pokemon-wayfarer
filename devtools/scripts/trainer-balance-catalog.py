@@ -2,18 +2,16 @@
 """Regenerate the experimental explorer catalog from local trainerproc sources.
 
 No network, ROM build, or temporary calibration files are required. Reference
-moves/items describe authored sources only. Each trainer gets an authored TR and
-a placeholder v0 roster (one ordered list of up to six roster slots) flattened
+moves/items describe authored sources only. Each trainer gets placeholder growth
+(start TR, archetype, peak TR, and a lead for the rival) and a placeholder v0 roster (one ordered list of up to six roster slots) flattened
 from the earlier ace/filler prototype. Real rosters are authored later; a roster
 short of six is a content-gap warning, not a failure.
 """
 from __future__ import annotations
 
 import argparse
-from fractions import Fraction
 import importlib.util
 import json
-import math
 from pathlib import Path
 import re
 import subprocess
@@ -33,95 +31,100 @@ BABIES = {"SPECIES_PICHU", "SPECIES_CLEFFA", "SPECIES_IGGLYBUFF", "SPECIES_TYROG
           "SPECIES_ELEKID", "SPECIES_MAGBY", "SPECIES_AZURILL", "SPECIES_WYNAUT", "SPECIES_BUDEW",
           "SPECIES_CHINGLING", "SPECIES_BONSLY", "SPECIES_MIME_JR", "SPECIES_HAPPINY", "SPECIES_MUNCHLAX",
           "SPECIES_MANTYKE", "SPECIES_RIOLU", "SPECIES_TOXEL"}
-# name, region, role, reference family/ID, OLD-scale TR, handwritten early
-# species (appended when no roster line already covers them).
-# The old TR is suggestedStartTR from the first explorer catalog (commit
-# c3c83991ec, before the Living Rivals rework): Gym 1-5, Blue 6, Elite Four
-# 40-53, Champions 53-55, on the retired 0-80 player TR scale. new_scale_tr()
-# converts it to the rescaled player TR (contract section 6). Placeholder
-# until the authoring session sets real values.
+# name, region, role, reference family/ID, handwritten early species (appended
+# when no roster line already covers them).
 ROSTER = [
-    ('Brock', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_BROCK', 2, ['Geodude', 'Onix']),
-    ('Misty', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_MISTY', 3, ['Staryu', 'Psyduck']),
-    ('Lt. Surge', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_LT_SURGE', 3, ['Voltorb', 'Pikachu']),
-    ('Erika', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_ERIKA', 3, ['Oddish', 'Bellsprout']),
-    ('Janine', 'Kanto', 'Gym Leader', 'HNS', 'TRAINER_JANINE_HNS', 4, ['Venonat', 'Koffing']),
-    ('Sabrina', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_SABRINA', 4, ['Abra', 'Drowzee']),
-    ('Blaine', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_BLAINE', 4, ['Growlithe', 'Ponyta']),
-    ('Giovanni', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_GIOVANNI', 5, ['Sandshrew', 'Rhyhorn']),
-    ('Blue', 'Kanto', 'Champion', 'FRLG', 'TRAINER_CHAMPION_FIRST_SQUIRTLE', 6, ['Pidgey', 'Eevee']),
-    ('Lorelei', 'Kanto', 'Elite Four', 'FRLG', 'TRAINER_ELITE_FOUR_LORELEI', 50, []),
-    ('Bruno', 'Kanto', 'Elite Four', 'FRLG', 'TRAINER_ELITE_FOUR_BRUNO', 52, []),
-    ('Agatha', 'Kanto', 'Elite Four', 'FRLG', 'TRAINER_ELITE_FOUR_AGATHA', 53, []),
-    ('Koga', 'Johto', 'Elite Four', 'HNS', 'TRAINER_KOGA_1_HNS', 42, []),
-    ('Lance', 'Kanto', 'Champion', 'FRLG', 'TRAINER_ELITE_FOUR_LANCE', 55, []),
-    ('Falkner', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_FALKNER_1_HNS', 1, ['Pidgey', 'Hoothoot']),
-    ('Bugsy', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_BUGSY_1_HNS', 2, ['Caterpie', 'Weedle']),
-    ('Whitney', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_WHITNEY_1_HNS', 3, ['Clefairy', 'Meowth']),
-    ('Morty', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_MORTY_1_HNS', 3, ['Gastly', 'Misdreavus']),
-    ('Chuck', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_CHUCK_1_HNS', 4, ['Machop', 'Makuhita']),
-    ('Jasmine', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_JASMINE_1_HNS', 4, ['Magnemite', 'Aron']),
-    ('Pryce', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_PRYCE_1_HNS', 4, ['Seel', 'Swinub']),
-    ('Clair', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_CLAIR_1_HNS', 5, ['Dratini', 'Horsea']),
-    ('Will', 'Johto', 'Elite Four', 'HNS', 'TRAINER_WILL_1_HNS', 40, []),
-    ('Karen', 'Johto', 'Elite Four', 'HNS', 'TRAINER_KAREN_1_HNS', 44, []),
-    ('Roxanne', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_ROXANNE_1', 3, ['Geodude', 'Nosepass']),
-    ('Brawly', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_BRAWLY_1', 3, ['Machop', 'Makuhita']),
-    ('Wattson', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_WATTSON_1', 3, ['Voltorb', 'Electrike']),
-    ('Flannery', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_FLANNERY_1', 4, ['Numel', 'Slugma']),
-    ('Norman', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_NORMAN_1', 4, ['Slakoth', 'Zigzagoon']),
-    ('Winona', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_WINONA_1', 4, ['Swablu', 'Taillow']),
-    ('Juan', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_JUAN_1', 5, ['Horsea', 'Barboach']),
-    ('Sidney', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_SIDNEY', 46, []),
-    ('Phoebe', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_PHOEBE', 47, []),
-    ('Glacia', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_GLACIA', 49, []),
-    ('Drake', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_DRAKE', 51, []),
-    ('Wallace', 'Hoenn', 'Champion', 'Emerald', 'TRAINER_WALLACE', 53, []),
-    ('Steven', 'Hoenn', 'Champion', 'Emerald', 'TRAINER_STEVEN', 53, []),
+    ('Brock', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_BROCK', ['Geodude', 'Onix']),
+    ('Misty', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_MISTY', ['Staryu', 'Psyduck']),
+    ('Lt. Surge', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_LT_SURGE', ['Voltorb', 'Pikachu']),
+    ('Erika', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_ERIKA', ['Oddish', 'Bellsprout']),
+    ('Janine', 'Kanto', 'Gym Leader', 'HNS', 'TRAINER_JANINE_HNS', ['Venonat', 'Koffing']),
+    ('Sabrina', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_SABRINA', ['Abra', 'Drowzee']),
+    ('Blaine', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_BLAINE', ['Growlithe', 'Ponyta']),
+    ('Giovanni', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_GIOVANNI', ['Sandshrew', 'Rhyhorn']),
+    ('Blue', 'Kanto', 'Champion', 'FRLG', 'TRAINER_CHAMPION_FIRST_SQUIRTLE', ['Pidgey', 'Eevee']),
+    ('Lorelei', 'Kanto', 'Elite Four', 'FRLG', 'TRAINER_ELITE_FOUR_LORELEI', []),
+    ('Bruno', 'Kanto', 'Elite Four', 'FRLG', 'TRAINER_ELITE_FOUR_BRUNO', []),
+    ('Agatha', 'Kanto', 'Elite Four', 'FRLG', 'TRAINER_ELITE_FOUR_AGATHA', []),
+    ('Koga', 'Johto', 'Elite Four', 'HNS', 'TRAINER_KOGA_1_HNS', []),
+    ('Lance', 'Kanto', 'Champion', 'FRLG', 'TRAINER_ELITE_FOUR_LANCE', []),
+    ('Falkner', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_FALKNER_1_HNS', ['Pidgey', 'Hoothoot']),
+    ('Bugsy', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_BUGSY_1_HNS', ['Caterpie', 'Weedle']),
+    ('Whitney', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_WHITNEY_1_HNS', ['Clefairy', 'Meowth']),
+    ('Morty', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_MORTY_1_HNS', ['Gastly', 'Misdreavus']),
+    ('Chuck', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_CHUCK_1_HNS', ['Machop', 'Makuhita']),
+    ('Jasmine', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_JASMINE_1_HNS', ['Magnemite', 'Aron']),
+    ('Pryce', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_PRYCE_1_HNS', ['Seel', 'Swinub']),
+    ('Clair', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_CLAIR_1_HNS', ['Dratini', 'Horsea']),
+    ('Will', 'Johto', 'Elite Four', 'HNS', 'TRAINER_WILL_1_HNS', []),
+    ('Karen', 'Johto', 'Elite Four', 'HNS', 'TRAINER_KAREN_1_HNS', []),
+    ('Roxanne', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_ROXANNE_1', ['Geodude', 'Nosepass']),
+    ('Brawly', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_BRAWLY_1', ['Machop', 'Makuhita']),
+    ('Wattson', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_WATTSON_1', ['Voltorb', 'Electrike']),
+    ('Flannery', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_FLANNERY_1', ['Numel', 'Slugma']),
+    ('Norman', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_NORMAN_1', ['Slakoth', 'Zigzagoon']),
+    ('Winona', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_WINONA_1', ['Swablu', 'Taillow']),
+    ('Juan', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_JUAN_1', ['Horsea', 'Barboach']),
+    ('Sidney', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_SIDNEY', []),
+    ('Phoebe', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_PHOEBE', []),
+    ('Glacia', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_GLACIA', []),
+    ('Drake', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_DRAKE', []),
+    ('Wallace', 'Hoenn', 'Champion', 'Emerald', 'TRAINER_WALLACE', []),
+    ('Steven', 'Hoenn', 'Champion', 'Emerald', 'TRAINER_STEVEN', []),
 ]
 
 
-# Retired 0-80 level-cap curve and the rescaled one (24 badges = TR 160).
-OLD_CAP = [(0, 15), (4, 16), (8, 18), (16, 23), (30, 30), (40, 42), (55, 60), (65, 80), (80, 100)]
-NEW_CAP = [(0, 15), (40, 28), (80, 50), (120, 75), (160, 100)]
-LEAGUE_OLD, LEAGUE_NEW = (40, 55), (70, 95)
+# Placeholder growth (contract section 7), tuned in the explorer to the balance
+# targets: name -> (start TR, archetype, peak TR, lead). Only the rival has a lead.
+# Lore: veterans plateau, rising stars bloom early, the strongest leaders bloom
+# late, most others are steady; Champions and Lance get the highest peaks.
+ARCHETYPES = ("steady", "early bloomer", "late bloomer", "plateau", "rival")
+GROWTH = {
+    "Brock": (2, "steady", 95, None), "Misty": (4, "steady", 110, None),
+    "Lt. Surge": (6, "steady", 120, None), "Erika": (6, "steady", 150, None),
+    "Janine": (8, "early bloomer", 100, None), "Sabrina": (25, "late bloomer", 180, None),
+    "Blaine": (15, "plateau", 90, None), "Giovanni": (16, "steady", 170, None),
+    "Blue": (10, "rival", 180, 10),
+    "Lorelei": (40, "plateau", 92, None), "Bruno": (45, "plateau", 94, None),
+    "Agatha": (50, "plateau", 95, None), "Koga": (30, "steady", 150, None),
+    "Lance": (48, "late bloomer", 200, None),
+    "Falkner": (1, "early bloomer", 80, None), "Bugsy": (3, "steady", 100, None),
+    "Whitney": (4, "early bloomer", 95, None), "Morty": (8, "steady", 150, None),
+    "Chuck": (12, "plateau", 85, None), "Jasmine": (12, "steady", 172, None),
+    "Pryce": (18, "plateau", 92, None), "Clair": (20, "late bloomer", 185, None),
+    "Will": (30, "early bloomer", 110, None), "Karen": (30, "steady", 155, None),
+    "Roxanne": (2, "steady", 90, None), "Brawly": (4, "early bloomer", 90, None),
+    "Wattson": (8, "plateau", 75, None), "Flannery": (6, "early bloomer", 100, None),
+    "Norman": (20, "steady", 168, None), "Winona": (15, "late bloomer", 172, None),
+    "Juan": (22, "late bloomer", 185, None),
+    "Sidney": (25, "early bloomer", 105, None), "Phoebe": (25, "steady", 150, None),
+    "Glacia": (40, "plateau", 90, None), "Drake": (45, "plateau", 93, None),
+    "Wallace": (48, "late bloomer", 190, None), "Steven": (50, "late bloomer", 195, None),
+}
+GROWTH_NOTE = {
+    "steady": "steady (keeps a fixed fraction of the player's pace)",
+    "early bloomer": "early bloomer (a rising star: fast early, then slows)",
+    "late bloomer": "late bloomer (a strong leader: slow start, strong finish)",
+    "plateau": "plateau (a veteran who reaches their peak early and stops)",
+    "rival": "rival (stays a lead ahead of world progress until their peak)",
+}
 
 
-def half_up(value):
-    return math.floor(value + Fraction(1, 2))
-
-
-def curve(anchors, tr):
-    """Unrounded level at `tr` (linear between anchors, flat outside)."""
-    if tr <= anchors[0][0]:
-        return Fraction(anchors[0][1])
-    for (lo_tr, lo_lv), (hi_tr, hi_lv) in zip(anchors, anchors[1:]):
-        if tr <= hi_tr:
-            return lo_lv + Fraction(tr - lo_tr, hi_tr - lo_tr) * (hi_lv - lo_lv)
-    return Fraction(anchors[-1][1])
-
-
-def inverse(anchors, level):
-    """The TR at which a strictly rising curve reaches `level`."""
-    for (lo_tr, lo_lv), (hi_tr, hi_lv) in zip(anchors, anchors[1:]):
-        if level <= hi_lv:
-            return lo_tr + (level - lo_lv) * Fraction(hi_tr - lo_tr, hi_lv - lo_lv)
-    return Fraction(anchors[-1][0])
-
-
-def new_scale_tr(role, old):
-    """Return (new TR, how it was converted).
-
-    Gym Leaders and Blue keep their team level (old level-cap curve level -> the
-    TR giving it on the new level-cap curve); Elite Four and Champions map old 40-55
-    linearly onto new 70-95, so the league top five land near TR 85-95.
-    """
-    if role == "Gym Leader" or old < LEAGUE_OLD[0]:
-        level = curve(OLD_CAP, old)
-        return half_up(inverse(NEW_CAP, level)), f"by level equivalence (old level-cap curve Lv {float(level):g} -> the TR giving it on the new level-cap curve)"
-    (a, b), (c, d) = LEAGUE_OLD, LEAGUE_NEW
-    return half_up(c + Fraction(old - a, b - a) * (d - c)), f"by mapping the old league band {a}-{b} linearly onto {c}-{d}"
-
+def validate_growth(name, growth):
+    """Start and peak TR are non-negative integers, peak >= start; only a rival has a lead."""
+    start, archetype, peak, lead = growth
+    if archetype not in ARCHETYPES:
+        raise ValueError(f"{name}: unknown archetype {archetype!r}")
+    for label, value in (("start TR", start), ("peak TR", peak)):
+        if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+            raise ValueError(f"{name}: {label} must be a non-negative integer")
+    if peak < start:
+        raise ValueError(f"{name}: peak TR must be at least start TR")
+    if archetype == "rival":
+        if not isinstance(lead, int) or isinstance(lead, bool) or lead < 0:
+            raise ValueError(f"{name}: a rival needs a non-negative integer lead")
+    elif lead is not None:
+        raise ValueError(f"{name}: only a rival has a lead")
 
 
 def command(args, **kwargs):
@@ -284,10 +287,12 @@ def generate():
         raise ValueError("unsupported gym catalog")
     result = []
     gaps = []
-    for name, region, role, family, trainer, old_tr, early in ROSTER:
-        tr, conversion = new_scale_tr(role, old_tr)
-        if not isinstance(tr, int) or tr < 0:
-            raise ValueError(f"TR must be a non-negative integer: {name}")
+    if set(GROWTH) != {row[0] for row in ROSTER}:
+        raise ValueError("GROWTH must list exactly the catalog trainers")
+    for name, region, role, family, trainer, early in ROSTER:
+        growth = GROWTH[name]
+        validate_growth(name, growth)
+        start, archetype, peak, lead = growth
         records = sources[family]
         reference_slots = party(records, trainer)
         note = "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams."
@@ -339,8 +344,8 @@ def generate():
         result.append({"id": slug(name), "name": name, "region": region, "role": role,
                        "source": {"label": f"{family} local reference", "path": records[trainer]["source"], "trainerId": trainer, "note": note},
                        "referenceParty": [member(slot) for slot in reference_slots],
-                       "tr": tr,
-                       "trSource": f"PLACEHOLDER TR on the rescaled player TR scale (24 badges = TR 160): old-scale TR {old_tr} (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted {conversion}.",
+                       "startTR": start, "archetype": archetype, "peakTR": peak, "lead": lead,
+                       "trSource": f"PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR {start}, {GROWTH_NOTE[archetype]}, peak TR {peak}" + (f", lead {lead}." if lead is not None else "."),
                        "roster": roster, "rosterSource": roster_source})
     if len(result) != 37 or len({row["id"] for row in result}) != 37:
         raise ValueError("catalog must contain exactly 37 unique trainers")

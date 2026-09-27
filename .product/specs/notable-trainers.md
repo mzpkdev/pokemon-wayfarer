@@ -3,16 +3,17 @@
 PRD: [Notable trainers](../prds/notable-trainers.md)
 Implemented: No. Today, the ROM keeps its existing Gym and league scaling
 until adoption; the browser explorer is placeholder tooling.
-Design status: v0 contract. The model is accepted; each trainer's Trainer Rating
-(TR) and roster, and every anchor marked placeholder, are catalog content under
-review.
+Design status: v0 contract. The model is accepted; each trainer's growth
+values (start TR, archetype, peak TR, lead) and roster, and every anchor marked
+placeholder, are catalog content under review.
 
 ## Ownership and scope
 
 This specification is the single owner of the v0 notable trainer model: the
 notable trainer inventory, the rule that routes every battle with a notable
-character to their TR and roster, trainer TR, the v0 trainer scalers, rosters,
-team resolution, the battle snapshot, and their validation. Consumers link here
+character to their Trainer Rating (TR) and roster, trainer TR and its growth
+with world progress, the archetypes, the v0 trainer scalers, rosters, team
+resolution, the battle snapshot, and their validation. Consumers link here
 rather than restating it.
 
 - [Gym Leader scaling](gym-leader-scaling.md) owns badge-encounter coverage and
@@ -27,9 +28,10 @@ rather than restating it.
 - [Trainer roster influence](trainer-roster-influence.md) is parked and not
   part of v0.
 
-v0 supersedes every earlier NPC growth model in full: no world cap,
-`levelBase` or headroom, progress index, standing or bias, growth arcs or arc
-seeds, signature-plus-filler picks, filler scores or jitter, evolution by
+v0 supersedes every earlier NPC growth model in full; the only growth is
+[growth with world progress](#growth-with-world-progress). There is no world
+cap, `levelBase` or headroom, progress index, standing or bias, growth arcs or
+arc seeds, signature-plus-filler picks, filler scores or jitter, evolution by
 line, trades or gifts, and none of the older `baselineTR`, badge checkpoints,
 `effectiveTR`, or TR role bands. Player TR, the level cap, experience,
 obedience, wild and static encounters, marts, regular trainers, and Gym
@@ -53,27 +55,85 @@ encounter always uses this model.
 
 ## Trainer rating
 
-- **Independent.** The player has one TR and each notable trainer has their
-  own. Neither is ever computed from the other. Resolving a trainer never reads
-  `GetTrainerRating()`, the saved player TR, party levels, badges, or league
-  wins.
+- **Own TR, read from world progress.** The player has one TR and each notable
+  trainer has their own. Player TR is never computed from a trainer's TR. A
+  trainer's TR is computed from **world progress** (the player's TR, below)
+  through that trainer's own growth values; resolving a trainer reads
+  `GetTrainerRating()` for that and never reads party levels, badges, league
+  wins, or another trainer.
 - **Source of truth for every battle.** Gym, overworld, rematch, league, and
   story battles with a trainer all build from that trainer's TR and roster.
   Story battles include Blue's rival fights, Giovanni's Rocket battles, and the
   Saffron Dojo. There is no battle-specific adjustment, role bonus, or
   exception. Every encounter ID of a character resolves to one canonical
   `characterId`, one TR, and one roster.
-- **Authored and fixed.** Each trainer's TR is a catalog value. v0 has no rule
-  that changes it, so a trainer brings the same team in every battle and every
-  save. Known v0 consequence: Blue's early rival fights and his late ones use
-  the same team.
+- **Grows with world progress.** A trainer's TR rises as the player
+  progresses, in that trainer's own shape, up to their peak TR
+  ([growth](#growth-with-world-progress)). Rosters are the same in every save.
 - **Uncapped.** Trainer TR uses the player's v0 scale and units: 24
   badges put the player at TR 160, and nothing caps it
   ([range](player-trainer-rating.md#range)).
-- **Placeholders.** Every notable trainer's TR is a placeholder authored on
-  the new scale and is re-authored with playtesting. The
-  [league balance target](leagues.md#balance-target) constrains the top of the
-  catalog.
+- **Placeholders.** Every trainer's growth values are placeholders authored
+  on the new scale, tuned in the explorer, and re-authored with playtesting
+  against the [balance targets](#balance-targets).
+
+## Growth with world progress
+
+**World progress** is the player's TR as the world sees it: the value
+`GetTrainerRating()` returns, with every source counted. A trainer's TR is a
+pure function of world progress and catalog content. There are no ticks and no
+saved trainer state: gains are proportional to the player's (a +10 badge moves
+a trainer far, a +1 source barely), idling moves nobody, and a reload changes
+nothing.
+
+Each trainer authors:
+
+| Field | Contract |
+| --- | --- |
+| Start TR | Non-rival only: non-negative integer, the trainer's TR at world progress 0. |
+| Archetype | `steady`, `early bloomer`, `late bloomer`, `plateau`, or `rival`. |
+| Peak TR | Integer ≥ start TR: the most the trainer can ever reach. Distinct from a scaler's ceiling TR. |
+| Lead | Rival only: non-negative integer TR kept ahead of world progress. |
+
+The four growth archetypes are global scalers over world progress
+([scaler definition](player-trainer-rating.md#scalers)), interpolated, giving
+a growth fraction in percent (0–100):
+
+| Archetype | World progress 0 / 40 / 80 / 120 / 160 → growth % | Feel |
+| --- | --- | --- |
+| Steady | 0 / 25 / 50 / 75 / 100 | Keeps a fixed fraction of the player's pace |
+| Early bloomer | 0 / 50 / 80 / 95 / 100 | Fast early, then slows: a mid-game wall |
+| Late bloomer | 0 / 10 / 25 / 55 / 100 | Slow start, strong finish: a late challenge |
+| Plateau | 0 / 60 / 100 / 100 / 100 | Reaches the peak early and stops: a veteran the player overtakes |
+
+With `wp` the world progress, `fraction` the archetype scaler's value, and
+floor division (halves round up):
+
+```text
+trainerTR = start + floor(((peak - start) * fraction(wp) + 50) / 100)
+```
+
+Past the last anchor the fraction stays at 100, so the trainer stays at peak
+TR. Archetypes are authored globally for v0.
+
+The **rival** archetype ignores start TR and the scalers:
+
+```text
+trainerTR = min(peak, wp + lead)
+```
+
+Blue is the only rival in v0, with a lead of about +10 (placeholder).
+
+Examples (placeholder values):
+
+| Trainer | wp 0 | wp 40 | wp 80 | wp 81 | wp 90 | wp 160 | wp 300 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Steady, start 20, peak 100 | 20 | 40 | 60 | 61 | 65 | 100 | 100 |
+| Plateau, start 50, peak 90 | 50 | 74 | 90 | 90 | 90 | 90 | 90 |
+| Rival, lead 10, peak 150 | 10 | 50 | 90 | 91 | 100 | 150 | 150 |
+
+From world progress 80, a +10 gain moves the steady trainer 5 TR and a +1
+gain moves them 1 TR; the plateau trainer, already at peak, does not move.
 
 ## Trainer scalers
 
@@ -133,22 +193,26 @@ Roster slot 1 is the **signature Pokémon**: present from TR 0 and always fought
 last. Example: at TR 50 with offsets `0, −2, −2, −4, −1, −3`, the team is roster
 slots 1–4 at Lv 34/32/32/30, sent out in order 4, 3, 2, 1. Source FRLG, Emerald,
 and HNS parties are provenance and balance references; their levels never
-override this resolver. Because TR is fixed in v0, each trainer's team is fixed.
+override this resolver. As world progress rises, a trainer's team gains
+levels and later roster slots; it never loses them.
 
 ## Battle snapshot
 
-At battle setup, after resolving encounter identity, capture the `characterId`,
-TR, scaler and roster content versions, and the resolved team before
-constructing the opponent: per member, the roster slot index and every resolved
-battle value the snapshot uses (species/form, level, moves, item, ability,
-nature, IVs/EVs, and battle order). Reconstruction within the battle reuses that
-snapshot; teardown clears it. A retry produces an identical team (battle RNG may
-still differ). Entering a league captures the selected trainers' battle
-snapshots in the lineup, which stays locked until the league is won;
+At battle setup, after resolving encounter identity, compute the trainer's TR at
+the current world progress and capture the `characterId`, that TR, the world
+progress, scaler, archetype, and roster content versions, and the resolved team
+before constructing the opponent: per member, the roster slot index and every
+resolved battle value the snapshot uses (species/form, level, moves, item,
+ability, nature, IVs/EVs, and battle order). Reconstruction within the battle
+reuses that snapshot; teardown clears it, and world progress gained during the
+battle never changes it. A retry at the same world progress produces an
+identical team (battle RNG may still differ); a retry after the player gained TR
+uses the higher world progress. Entering a league computes every candidate's TR
+at that moment and captures the selected trainers' battle snapshots in the
+lineup, which stays locked until the league is won;
 [Leagues](leagues.md#locked-lineup) owns that lifecycle. Invalid content or a
-failed resolution fails preparation; never substitute player TR, another
-trainer, or a random team. With fixed TRs every snapshot of a trainer is equal
-in v0; the snapshot is the boundary a future TR-change rule must respect.
+failed resolution fails preparation; never substitute player TR for a trainer's
+TR, another trainer, or a random team.
 
 ## Validation
 
@@ -161,15 +225,45 @@ in v0; the snapshot is the boundary a future TR-change rule must respect.
   the simplest satisfying rule); valid species/forms; `AUTHORED` slots have
   one to four legal moves; `LEVEL_UP` yields a usable move at every reachable
   level.
+- Archetypes: each growth archetype passes the scaler checks, with anchors at
+  world progress 0/40/80/120/160, 0% at the first, and 100% at the last.
 - Catalog: the inventory holds exactly the 37 v0 characters; each has one
-  non-negative integer TR and one roster; every enrolled encounter ID maps to
-  exactly one `characterId`.
-- Resolution report per trainer: TR, size, member slots, levels, moves, and
-  battle order, each level in 1–100 and the order reversed.
-- Determinism: resolution is a pure function of TR and content, independent of
-  player TR, party, badges, league wins, save seed, query order, and battle RNG.
-- Snapshot: repeated construction within one battle and retries reproduce the
-  same battle snapshot; invalid content fails preparation without a fallback.
+  roster and valid growth values (non-negative integers, start TR ≤ peak TR
+  for non-rivals, a lead only and always for the rival, Blue the only rival);
+  every enrolled encounter ID maps to exactly one `characterId`.
+- Growth, for every trainer at world progress 0–200 and a very large value:
+  TR is non-decreasing in world progress and never exceeds peak TR; a
+  non-rival equals start TR at world progress 0; the rival equals
+  `world progress + lead` until that reaches peak TR, then stays at peak;
+  results match the examples above, including the +10 and +1 steps.
+- Resolution report per trainer at world progress 0, 40, 80, 120, and 160: TR,
+  size, member slots, levels, moves, and battle order, each level in 1–100 and
+  the order reversed.
+- Determinism: trainer TR and resolution are pure functions of world progress
+  and content, independent of party, badges or league wins beyond their effect
+  on player TR, save seed, query order, call history, reloads, and battle RNG.
+- Snapshot: repeated construction within one battle and retries at the same
+  world progress reproduce the same battle snapshot; TR gained mid-battle
+  changes nothing; invalid content fails preparation without a fallback.
+
+## Balance targets
+
+Content constraints checked by the catalog report and playtesting, not runtime
+rules (placeholders tuned in the explorer):
+
+- **First league.** At world progress 80 (8 badges, level cap Lv 50), the
+  league top five sit around TR 85–95 (team level about 53–59), so the first
+  league is beatable at 8 badges.
+- **Later leagues.** At world progress 120 the top five sit a little above
+  the player's level cap (about cap +2 to +8): a real fight, not a wall. At
+  160 the team-level and level-cap scalers both reach their Lv 100 ceiling, so
+  the lineup meets the cap. Challenge beyond that needs a quality scaler
+  (Later).
+- **Gym ladder.** At every world progress point, some Gym Leaders sit below
+  the player's TR (accessible), some near it, and some clearly above
+  (challenges). The hardest leaders at 24 badges are late bloomers or
+  high-peak steadies.
+- **Rival.** Blue stays about 10 TR ahead of the player until his peak.
 
 The [explorer](../../devtools/ui/README.md#trainer-balance-explorer) is
 placeholder evidence and predicts species, sizes, and levels only. Playtesting
@@ -179,15 +273,18 @@ implementations stay active until then.
 
 ## Open questions
 
-- Each trainer's TR and roster on the new scale, and the placeholder
-  team-size steps (content review).
+- Each trainer's growth values and roster on the new scale, the archetype
+  anchors, and the placeholder team-size steps (content review).
 
 ## Later
 
 - Notable trainer status for more characters, such as Red or Tate & Liza.
 - A definition of the "next Gym's highest/lowest level" cap in an open world.
-- How NPC TR changes: own battles, journeys, a world clock.
-- Growth arcs and other per-save seeded variation of trainers.
+- Archetypes rolled per save (seeded), and other per-save seeded variation of
+  trainers.
+- Per-trainer speed multipliers and custom growth curves.
+- Weighting TR sources differently for world progress.
+- Notable trainers also growing from their own battles.
 - Signature Pokémon vs fillers with dynamic filler picks (an `ace` flag
   returns).
 - Player influence: modifiers, gifts, and trades
