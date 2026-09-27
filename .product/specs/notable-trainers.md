@@ -3,9 +3,11 @@
 PRD: [Notable trainers](../prds/notable-trainers.md)
 Implemented: No. Today, the ROM keeps its existing Gym and league scaling
 until adoption; the browser explorer is placeholder tooling.
-Design status: v0 contract. The model is accepted; each trainer's growth
-values (start TR, archetype, peak TR) and roster, and every anchor marked
-placeholder, are catalog content under review.
+Design status: v0 contract. The model is accepted. Rosters are approved
+content (draft v1: species, order, and aces); their battle content (moves,
+items) is still placeholder where a slot doesn't match its source party. Growth
+values (start TR, archetype, peak TR) and every anchor marked placeholder are
+catalog content under review.
 
 ## Ownership and scope
 
@@ -84,7 +86,8 @@ encounter always uses this model.
   ([range](player-trainer-rating.md#range)).
 - **Placeholders.** Every trainer's growth values are placeholders authored
   on the new scale, tuned in the explorer, and re-authored with playtesting
-  against the [balance targets](#balance-targets).
+  against the [balance targets](#balance-targets). Rosters are approved
+  draft v1 content; only their battle content remains placeholder.
 
 ## Growth with world progress
 
@@ -206,27 +209,27 @@ as a late reveal. Roster slot 1 is the **signature Pokémon**: an ace, present
 from TR 0, and always fought last. Offsets stay per slot, whatever the flag.
 
 **Battle order** sends filler slots first, in reverse list order, then aces,
-in reverse list order. Example (Brock's placeholder roster, species at their
-authored final stage): Steelix (ace), Rhyperior, Aerodactyl (ace), Kabutops,
-Omastar, Golem (ace).
+in reverse list order. Example (Brock's draft v1 roster, species at their
+authored final stage): Steelix (ace), Golem, Crobat, Kabutops, Omastar,
+Aerodactyl (ace).
 
 | Team size | Slot that joins | Battle order |
 | ---: | --- | --- |
 | 1 | Steelix (ace) | Steelix |
-| 2 | Rhyperior | Rhyperior, Steelix |
-| 3 | Aerodactyl (ace) | Rhyperior, Aerodactyl, Steelix |
-| 4 | Kabutops | Kabutops, Rhyperior, Aerodactyl, Steelix |
-| 5 | Omastar | Omastar, Kabutops, Rhyperior, Aerodactyl, Steelix |
-| 6 | Golem (ace) | Omastar, Kabutops, Rhyperior, Golem, Aerodactyl, Steelix |
+| 2 | Golem | Golem, Steelix |
+| 3 | Crobat | Crobat, Golem, Steelix |
+| 4 | Kabutops | Kabutops, Crobat, Golem, Steelix |
+| 5 | Omastar | Omastar, Kabutops, Crobat, Golem, Steelix |
+| 6 | Aerodactyl (ace) | Omastar, Kabutops, Crobat, Golem, Aerodactyl, Steelix |
 
 Members step down by level through the
 [downward rule](player-trainer-rating.md#evolution-stages) and never evolve
 forward. Authored moves belong to the authored stage: at or above it the member
 uses them, and a stepped-down member uses its stage's `LEVEL_UP` set at its
 level, as regular trainers do. Brock's slot 1 Steelix (offset 0) appears as
-Onix until his team level reaches 35; his slot 2 Rhyperior (offset −2) is
-Rhyhorn until Lv 42 and Rhydon from 42; his slot 6 Golem ace is Geodude below
-Lv 25, Graveler from 25, and Golem from 38.
+Onix until his team level reaches 35; his slot 2 Golem (offset −2) is Geodude
+below Lv 25, Graveler from 25, and Golem from 38; his slot 6 Aerodactyl ace has
+no earlier stage and joins as Aerodactyl.
 
 Early examples (placeholder content):
 
@@ -234,7 +237,7 @@ Early examples (placeholder content):
 | --- | ---: | --- |
 | Blue in Pallet Town (world progress 0) | 0 | Eevee Lv 5 |
 | Blue at Cerulean (world progress about 20) | about 25 | two Pokémon at about Lv 18 |
-| Brock at world progress 0 (start TR 20) | 20 | Onix Lv 14 (slot 1 Steelix, offset 0), Rhyhorn Lv 12 (slot 2 Rhyperior, offset −2) |
+| Brock at world progress 0 (start TR 25) | 25 | Onix Lv 18 (slot 1 Steelix, offset 0), Geodude Lv 16 (slot 2 Golem, offset −2) |
 
 Source FRLG, Emerald,
 and HNS parties are provenance and balance references; their levels never
@@ -283,7 +286,7 @@ TR, another trainer, or a random team.
   trainer equals start TR at world progress 0 and peak TR from world progress
   160; every archetype, the rival included, uses the one growth rule; results
   match the examples above, including the +10 and +1 steps and the early Blue
-  and Brock fights (Brock's stepped-down Onix and Rhyhorn).
+  and Brock fights (Brock's stepped-down Onix and Geodude).
 - Tate & Liza: their double battle draws both trainers' Pokémon from the shared
   roster in order, at the table's team size; they never enter a league lineup.
 - Resolution report per trainer at world progress 0, 40, 80, 120, and 160: TR,
@@ -333,9 +336,10 @@ implementations stay active until then.
 
 ## Open questions
 
-- Each trainer's growth values and roster on the new scale, the archetype
-  anchors, and the placeholder team-level low end and team-size steps (content
-  review).
+- Each trainer's growth values on the new scale, the archetype anchors, and
+  the placeholder team-level low end and team-size steps (content review).
+- Battle content (moves, items, abilities) for roster slots that don't match
+  their source party, especially aces.
 
 ## Later
 

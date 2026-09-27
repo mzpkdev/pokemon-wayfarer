@@ -2,8 +2,10 @@
 
 Implemented: No. Today, the ROM keeps its existing Gym and league scaling
 until this design is adopted; the balance explorer is placeholder tooling.
-Design status: v0 accepted. Each trainer's TR, growth, and team, and the
-exact team-size steps, are placeholder content under review. Terms follow the
+Design status: v0 accepted. Every trainer's team is approved (draft v1:
+who they bring, in what order, and which are aces); their hand-picked moves
+and items, their growth numbers, and the exact team-size steps are still
+placeholder content under review. Terms follow the
 [glossary](player-trainer-rating.md#glossary).
 
 ## Intent
@@ -72,7 +74,8 @@ Like yours, a trainer's TR has no ceiling
 trainers span roughly the same range as the player, but stronger future
 content can go higher.
 
-Every trainer's starting strength, growth, and best are placeholders for now,
+Every trainer's team is set; their starting strength, growth, and best are
+placeholders for now,
 set on the new badge scale
 ([Player Trainer Rating](player-trainer-rating.md)) and re-set with
 playtesting.
@@ -106,7 +109,7 @@ late in your journey.
 
 Lists name each Pokémon at its final form, such as Brock's Steelix and Golem.
 Stronger forms appear only once they've reached the right level: until then a
-Pokémon comes as an earlier form, so Brock opens with Onix and Rhyhorn and
+Pokémon comes as an earlier form, so Brock opens with Onix and Geodude and
 brings Steelix once his team reaches level 35. Pokémon never evolve past what
 the list names, and a trainer can name an earlier form on purpose, like Blue's
 Eevee. Hand-picked moves belong to the named form; an earlier form uses its
