@@ -95,13 +95,11 @@ must follow their own rules rather than depend on visiting Cinnabar.
 This Blue introduction and Gym path describe the historical coastal port. The
 implemented [Viridian finale](../specs/frlg-kanto-viridian-finale.md) now
 supersedes them: Giovanni owns the FRLG Gym and Earth Badge, Blue is absent from
-Viridian, and his current Dojo unlock follows committed Indigo victory. Under
-the proposed [trainer world progression](trainer-world-progression.md), Blue's
-growth applies only to his league appearances; it does not restore him as
-Viridian's badge owner, and his rival, Dojo, and rematch battles keep their own
-policies. Blaine's explicitly enrolled initial singles Gym uses an authored
-roster at world-cap standing in that proposal; the port's source parties remain
-provenance references, not mandatory opening teams.
+Viridian, and his current Dojo unlock follows committed Indigo victory. The
+proposed [well-known trainer rating](trainer-world-progression.md) gives Blue
+and Blaine their own authored, fixed TR and roster for every battle with them;
+it does not restore Blue as Viridian's badge owner. The port's source parties
+remain provenance references, not mandatory opening teams.
 
 Blaine's victory does not summon Bill or start a voyage. Bill's Meteorite
 delivery and all Sevii travel and stories retain their independently owned

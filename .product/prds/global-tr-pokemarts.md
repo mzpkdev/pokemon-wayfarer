@@ -13,9 +13,10 @@ make towns recognizable and give players reasons to visit different shops.
 The converted-counter runtime now uses the shared player-TR essentials and
 permanent local stock specified below; release acceptance remains pending in
 the implementation specification. Legacy counters outside that enrollment keep
-their existing behavior. Proposed [trainer world progression](trainer-world-progression.md)
-changes enrolled NPC strength without changing player TR, the mart opener's
-snapshot, or any stock threshold.
+their existing behavior. The proposed
+[well-known trainer rating](trainer-world-progression.md) gives well-known
+trainers their own TR without changing player TR, the mart opener's snapshot,
+or any stock threshold.
 
 ## Design
 

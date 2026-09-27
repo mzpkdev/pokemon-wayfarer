@@ -3,41 +3,26 @@
 Implemented: No. The earlier player-rating Gym scaler exists in code but is
 disabled by default, and Giovanni's Wayfarer finale has its own path. The ROM
 keeps that behavior until this design is adopted.
-Design status: Accepted direction under the living-rivals model; team content
-and numbers are provisional.
+Design status: v0 accepted; each leader's rating and team are provisional.
 
 ## Intent
 
 Let players take the Gyms in any order and always find a fair, recognizable
-fight. A leader challenged first opens with a small, approachable team; a
-leader postponed until late has grown with the world and fields a full team
-near the player's cap. Leaders feel like living rivals: in one save Whitney
-shot ahead early, in another she is still finding her feet, and townsfolk and
-the leader's own dialogue hint at which.
+fight. Each leader has a known strength: a low-rated leader is a good first
+challenge, and a high-rated one is a clear goal to build towards.
 
 ## Design
 
-Gym Leaders use [trainer world progression](trainer-world-progression.md): a
-leader's strength follows the world's badges and first league clears, never
-the player's party or training. Each leader sits a little under the cap on
-average, then follows a growth arc chosen once per save from a few that suit
-them. Fast arcs put a leader a little above the cap, slow arcs a little below,
-and the gap never widens as the journey goes on. A few strong leaders in each
-region (Giovanni, Sabrina, Clair, Morty, Norman, Winona, and Juan) sit closer
-to the cap, so in some saves one of them can headline a championship.
-
-Each leader has a hand-written roster of aces and fillers, and brings more of
-it as their own strength grows: two Pokémon at the start, then more as the
-world earns badges, up to a full six. A leader on a fast arc grows their team
-sooner. The recognizable ace always comes last, and fillers vary per save.
-[Trainer world progression](trainer-world-progression.md#true-potential-aces-and-fillers)
-owns the roster rules. A team never shrinks. Original FRLG, Emerald, and HNS
-parties are references, not required opening teams.
+A Gym battle uses the leader's own Trainer Rating, team, and levels, exactly as
+[well-known trainer rating](trainer-world-progression.md) describes. The Gym
+adds nothing on top: the same leader met anywhere else is the same trainer at
+the same strength. A higher-rated leader brings more Pokémon at higher levels,
+and the leader's signature Pokémon always comes last. Original FRLG, Emerald,
+and HNS parties are references, not required teams.
 
 The team is set when the battle starts and kept for the whole fight. Retrying
-without new progress brings the same team at the same levels; a badge or
-first league clear earned elsewhere first means the leader has grown. The
-challenged Gym's badge is awarded after the battle.
+brings the same team at the same levels. The badge is awarded after the
+battle.
 
 ## Coverage
 
@@ -47,19 +32,16 @@ opponents: Brock, Misty, Lt. Surge, Erika, Janine, Sabrina, Blaine, Giovanni
 Clair; Roxanne, Brawly, Wattson, Flannery, Norman, Winona, and Juan.
 
 Tate and Liza's double battle keeps its existing policy and badge; it is not
-converted to singles. Blue's growth applies only to his league appearances;
-Wayfarer has no Blue badge encounter. Rematches, Giovanni's villain
-scenes, Blue's rival and Dojo battles, facilities, and story battles keep their
-own policies unless explicitly added.
+converted to singles. Blue has no badge encounter in Wayfarer.
 
 ## Teams and construction
 
-Rosters supply exact species, evolution paths, moves, items, abilities, and
-aces, reviewed for every team size rather than inheriting an endgame moveset.
-Moves, items, and abilities stay attached to the right Pokémon when a team is
-reordered. Rewards, prize money, badge scripts, and AI are preserved unless a
-roster deliberately changes them. Trainer-species randomization keeps its
-existing path; other randomizer and challenge options keep their precedence.
+Each leader's hand-written team supplies exact species, moves, items, and
+abilities. Moves, items, and abilities stay attached to the right Pokémon when
+a team is reordered. Rewards, prize money, badge scripts, and AI are preserved
+unless a team deliberately changes them. Trainer-species randomization keeps
+its existing path; other randomizer and challenge options keep their
+precedence.
 
 ## Boundaries
 
@@ -69,17 +51,20 @@ existing path; other randomizer and challenge options keep their precedence.
 
 ## Balance
 
-Target: leaders average a couple of levels under the cap, spread within a few
-levels either side. The
-[explorer](../../devtools/ui/README.md#trainer-balance-explorer) is being
-reworked to show arcs and each leader's gap to the cap; it predicts species,
-team size, and levels only. Combat balance needs reviewed content and ROM
-playtesting before enablement, including checks that Gym members do not
-routinely outclass their leader.
+Leader ratings and teams need content review and ROM playtesting before
+enablement, including checks that Gym members do not routinely outclass their
+leader. The
+[explorer](../../devtools/ui/README.md#trainer-balance-explorer) predicts
+species, team size, and levels only.
+
+## Later
+
+- Leaders whose rating grows over the journey, and per-save variety between
+  leaders ([Later](trainer-world-progression.md#later)).
 
 ## References
 
 - [Gym Leader scaling specification](../specs/gym-leader-scaling.md)
-- [Trainer world progression](trainer-world-progression.md)
+- [Well-known trainer rating](trainer-world-progression.md)
 - [Ordinary Trainer and Gym-member scaling](trainer-party-scaling.md)
 - [Player party progression](../specs/trainer-rating-party-progression.md)

@@ -1,84 +1,56 @@
 import catalogData from "./catalog.json"
 import {
-  ARC_CHECKPOINTS,
-  ARC_IDS,
-  MAX_EDITIONS,
-  DEFAULT_CONTEXT,
-  MAX_SEED,
+  LEVEL_OFFSET,
+  MAX_ANCHORS,
+  OLD_VERSION_REJECTION,
   createExperiment,
-  editionsAvailable,
-  gymCapSummary,
-  knownFlags,
-  levelBase as baseLevel,
+  leagueField,
+  playerCap,
   playerRating,
-  progressIndex,
   resolveTrainer,
   rosterGaps,
   serializeExperiment,
   validateExperiment,
-  venueFeasibility,
-  V1_REJECTION,
-  V2_REJECTION,
-  V3_REJECTION,
-  worldCap,
 } from "./engine.js"
-import type {
-  ArcId,
-  Experiment,
-  RosterContext,
-  RosterFiller,
-  TrainerRecord,
-  TrainerSettings,
-  WorldPoint,
-} from "./types.js"
+import type { Anchor, Experiment, RosterEntry, TrainerRecord, TrainerSettings } from "./types.js"
 
 export const catalog = catalogData as TrainerRecord[]
-const storageKey = "wayfarer-trainer-balance-v4"
-/** Chart x positions: p = 0–24 in edition 1, then each completed edition at (24, 3). */
-const CHART_PROGRESS = [...Array.from({ length: 25 }, (_, p) => p), 32, 40, 48]
+export type ScalerId = "teamLevel" | "teamSize"
+const storageKey = "wayfarer-trainer-balance-v5"
 const firstTrainer = catalog[0]
 if (!firstTrainer) throw new Error("The trainer catalog is empty.")
 const initialTrainerId = firstTrainer.id
+
+/** "LEVEL_UP" (or blank) keeps the level-up policy; otherwise moves split on commas or dots. */
+export const parseMoves = (text: string): RosterEntry["moves"] => {
+  const value = text.trim()
+  if (!value || value.toUpperCase() === "LEVEL_UP") return "LEVEL_UP"
+  return value
+    .split(/[,·]/)
+    .map((move) => move.trim())
+    .filter(Boolean)
+}
+export const movesText = (moves: RosterEntry["moves"]): string =>
+  moves === "LEVEL_UP" ? "LEVEL_UP" : moves.join(", ")
 
 export class BalanceLab {
   #_experiment = $state<Experiment>(createExperiment(catalog))
   badges = $state(0)
   leagueClears = $state(0)
-  completedEditions = $state(0)
   query = $state("")
   region = $state("All regions")
   role = $state("All trainers")
-  seed = $state(DEFAULT_CONTEXT.seed)
-  flags = $state<string[]>([])
   selectedId = $state(initialTrainerId)
   editor = $state("")
   error = $state("")
   notice = $state("")
 
-  point = $derived({
-    badges: this.badges,
-    leagueClears: this.leagueClears,
-    completedEditions: this.completedEditions,
-  })
-  editionsEnabled = $derived(editionsAvailable(this.point))
-  progress = $derived(progressIndex(this.point))
+  point = $derived({ badges: this.badges, leagueClears: this.leagueClears })
   playerTR = $derived(playerRating(this.point))
-  cap = $derived(worldCap(this.point))
-  levelBase = $derived(baseLevel(this.point, this.#_experiment.headroom))
-  arcs = $derived(this.#_experiment.arcs)
-  roleWindows = $derived(this.#_experiment.roleWindows)
-  headroom = $derived(this.#_experiment.headroom)
-  sizeTable = $derived(this.#_experiment.sizeTable)
-  jitter = $derived(this.#_experiment.jitter)
-  modifiers = $derived(this.#_experiment.modifiers)
-  context = $derived<RosterContext>({ seed: this.seed, flags: this.flags })
-  /** Flags the experiment mentions, plus any set flag no longer mentioned. */
-  knownFlags = $derived([...new Set([...knownFlags(this.#_experiment), ...this.flags])].toSorted())
-  allRows = $derived(
-    catalog.map((trainer) =>
-      resolveTrainer(trainer, this.#_experiment, this.point, undefined, this.context),
-    ),
-  )
+  cap = $derived(playerCap(this.point))
+  teamLevel = $derived(this.#_experiment.teamLevel)
+  teamSize = $derived(this.#_experiment.teamSize)
+  allRows = $derived(catalog.map((trainer) => resolveTrainer(trainer, this.#_experiment)))
   rows = $derived(
     this.allRows.filter(({ trainer }) => {
       const query = this.query.trim().toLowerCase()
@@ -88,10 +60,7 @@ export class BalanceLab {
           (this.role === "Gym Leaders"
             ? trainer.role === "Gym Leader"
             : trainer.role === this.role)) &&
-        (!query ||
-          `${trainer.name} ${trainer.region} ${trainer.homeLeagues.join(" ")}`
-            .toLowerCase()
-            .includes(query))
+        (!query || `${trainer.name} ${trainer.region}`.toLowerCase().includes(query))
       )
     }),
   )
@@ -102,26 +71,9 @@ export class BalanceLab {
     return row
   })
   settings = $derived(this.#_settings(this.selected.trainer.id))
-  feasibility = $derived(venueFeasibility(catalog, this.#_experiment, this.progress, this.flags))
-  gaps = $derived(rosterGaps(catalog, this.#_experiment, this.flags))
-  gymSummary = $derived(gymCapSummary(catalog, this.#_experiment, this.point))
-  /** p 0–24 use the selected clears; p 32/40/48 are post-game editions at (24, 3). */
-  curve = $derived(
-    CHART_PROGRESS.map((progress) => {
-      const point =
-        progress <= 24
-          ? { badges: progress, leagueClears: this.leagueClears }
-          : { badges: 24, leagueClears: 3, completedEditions: (progress - 24) / 8 }
-      const aces = Object.fromEntries(
-        this.settings.allowedArcs.map((arc) => [
-          arc,
-          resolveTrainer(this.selected.trainer, this.#_experiment, point, arc, this.context)
-            .strengthLevel,
-        ]),
-      ) as Partial<Record<ArcId, number>>
-      return { progress, aces, cap: worldCap(point) }
-    }),
-  )
+  gaps = $derived(rosterGaps(catalog, this.#_experiment))
+  league = $derived(leagueField(catalog, this.#_experiment))
+  aboveCap = $derived(this.allRows.filter((row) => row.teamLevel > this.cap).length)
 
   constructor() {
     this.#_syncEditors()
@@ -133,8 +85,7 @@ export class BalanceLab {
     return settings
   }
 
-  arcsFor = (id: string): ArcId[] => this.#_settings(id).allowedArcs
-  fillersFor = (id: string): RosterFiller[] => this.#_settings(id).roster.fillers
+  #_name = (id: string): string => catalog.find((trainer) => trainer.id === id)?.name ?? id
 
   #_syncEditors = (): void => {
     this.editor = JSON.stringify(this.#_experiment.trainers[this.selectedId], null, 2)
@@ -158,31 +109,20 @@ export class BalanceLab {
     this.#_persist()
   }
 
-  #_point = (value: unknown): Required<WorldPoint> => {
-    if (!value || typeof value !== "object") throw new Error("Missing world progression.")
-    const point = value as WorldPoint
-    if (
-      !Number.isInteger(point.badges) ||
-      point.badges < 0 ||
-      point.badges > 24 ||
-      !Number.isInteger(point.leagueClears) ||
-      point.leagueClears < 0 ||
-      point.leagueClears > 3 ||
-      !Number.isInteger(point.completedEditions) ||
-      (point.completedEditions ?? 0) < 0 ||
-      (point.completedEditions ?? 0) > MAX_EDITIONS
-    )
-      throw new Error(
-        `Use 0–24 badges, 0–3 first league clears and 0–${MAX_EDITIONS} completed editions.`,
-      )
-    if (point.completedEditions && (point.badges !== 24 || point.leagueClears !== 3))
-      throw new Error("Completed editions need 24 badges and 3 first league clears.")
-    return point as Required<WorldPoint>
+  #_edit = (fallback: string, change: (next: Experiment) => string | undefined): void => {
+    try {
+      const next = this.#_clone()
+      const message = change(next)
+      if (message) this.#_accept(next, message)
+    } catch (error) {
+      this.error = error instanceof Error ? error.message : fallback
+    }
   }
 
-  /** A completed edition implies 24 badges and 3 clears; leaving that point resets it. */
-  #_syncEditions = (): void => {
-    if (this.badges !== 24 || this.leagueClears !== 3) this.completedEditions = 0
+  #_roster = (next: Experiment): RosterEntry[] => {
+    const roster = next.trainers[this.selectedId]?.roster
+    if (!roster) throw new Error("Unknown selected trainer.")
+    return roster
   }
 
   load = (): void => {
@@ -204,222 +144,128 @@ export class BalanceLab {
 
   setBadges = (badges: number): void => {
     this.badges = Number.isFinite(badges) ? Math.min(24, Math.max(0, Math.round(badges))) : 0
-    this.#_syncEditions()
     this.#_persist()
   }
 
   setClears = (clears: number): void => {
     this.leagueClears = Number.isFinite(clears) ? Math.min(3, Math.max(0, Math.round(clears))) : 0
-    this.#_syncEditions()
     this.#_persist()
   }
 
-  /** Clamped to 0–3 (3 = "3 or more"); only non-zero at 24 badges and 3 clears. */
-  setEditions = (editions: number): void => {
-    this.completedEditions =
-      this.editionsEnabled && Number.isFinite(editions)
-        ? Math.min(MAX_EDITIONS, Math.max(0, Math.round(editions)))
-        : 0
-    this.#_persist()
-  }
-
-  setArc = (id: string, arc: string): void => {
-    try {
-      const next = this.#_clone()
+  setTR = (id: string, value: string): void =>
+    this.#_edit("Could not change the TR.", (next) => {
       const settings = next.trainers[id]
       if (!settings) throw new Error("Unknown trainer.")
-      settings.arc = arc as ArcId
-      const name = catalog.find((trainer) => trainer.id === id)?.name ?? id
-      this.#_accept(next, `${name} now follows the ${arc} arc.`)
-    } catch (error) {
-      this.error = error instanceof Error ? error.message : "Could not change the arc."
-    }
-  }
+      const tr = Number(value.trim())
+      if (!value.trim() || !Number.isSafeInteger(tr) || tr < 0)
+        throw new Error("TR must be a whole number of 0 or more.")
+      settings.tr = tr
+      return `${this.#_name(id)} is now TR ${tr}.`
+    })
 
-  applyTrainer = (form: HTMLFormElement): void => {
-    try {
+  /** Swaps an entry with its neighbour; entry 1 must stay at offset 0. */
+  moveEntry = (index: number, direction: -1 | 1): void =>
+    this.#_edit("Could not reorder the roster.", (next) => {
+      const roster = this.#_roster(next)
+      const entry = roster[index]
+      const other = roster[index + direction]
+      if (!entry || !other) return undefined
+      roster[index] = other
+      roster[index + direction] = entry
+      return `Moved ${entry.species} to entry ${index + direction + 1}.`
+    })
+
+  addEntry = (): void =>
+    this.#_edit("Could not add an entry.", (next) => {
+      const roster = this.#_roster(next)
+      roster.push({
+        species: "Unown",
+        levelOffset: LEVEL_OFFSET.default,
+        moves: "LEVEL_UP",
+        item: null,
+        ability: null,
+        nature: null,
+      })
+      return `Added entry ${roster.length}. Rename its species in the roster editor.`
+    })
+
+  removeEntry = (index: number): void =>
+    this.#_edit("Could not remove the entry.", (next) => {
+      const [removed] = this.#_roster(next).splice(index, 1)
+      return removed ? `Removed ${removed.species}.` : undefined
+    })
+
+  /** Reads species, offset, moves and item for every entry from the roster form. */
+  applyRoster = (form: HTMLFormElement): void =>
+    this.#_edit("Could not apply the roster.", (next) => {
       const data = new FormData(form)
-      const next = this.#_clone()
-      const settings = next.trainers[this.selectedId]
-      if (!settings) throw new Error("Unknown selected trainer.")
-      settings.bias = Number(data.get("bias"))
-      settings.allowedArcs = ARC_IDS.filter((arc) => data.get(`allow-${arc}`) === "on")
-      const [first] = settings.allowedArcs
-      if (!first) throw new Error("Allow at least one growth arc.")
-      if (!settings.allowedArcs.includes(settings.arc)) settings.arc = first
-      this.#_accept(next, `Updated ${this.selected.trainer.name}’s standing.`)
-    } catch (error) {
-      this.error = error instanceof Error ? error.message : "Could not apply the standing."
-    }
-  }
-
-  applyTeam = (): void => {
-    try {
-      const next = this.#_clone()
-      next.trainers[this.selectedId] = JSON.parse(this.editor)
-      this.#_accept(next, `Updated ${this.selected.trainer.name}’s settings.`)
-    } catch (error) {
-      this.error = error instanceof Error ? error.message : "Could not apply the settings."
-    }
-  }
-
-  /** Swaps an ace with its neighbour; priority decides which aces fill the allowance. */
-  moveAce = (index: number, direction: -1 | 1): void => {
-    try {
-      const next = this.#_clone()
-      const aces = next.trainers[this.selectedId]?.roster.aces
-      const ace = aces?.[index]
-      const other = aces?.[index + direction]
-      if (!aces || !ace || !other) return
-      aces[index] = other
-      aces[index + direction] = ace
-      this.#_accept(next, `Moved ${ace.id} to ace priority ${index + direction + 1}.`)
-    } catch (error) {
-      this.error = error instanceof Error ? error.message : "Could not reorder the aces."
-    }
-  }
-
-  /** Reads evolve levels, base scores, offsets, signature moves and flags from the roster form. */
-  applyRoster = (form: HTMLFormElement): void => {
-    try {
-      const data = new FormData(form)
-      const next = this.#_clone()
-      const roster = next.trainers[this.selectedId]?.roster
-      if (!roster) throw new Error("Unknown selected trainer.")
       const text = (name: string) => String(data.get(name) ?? "").trim()
-      const number = (name: string) => {
-        const value = text(name)
-        return value === "" ? Number.NaN : Number(value)
-      }
-      for (const ace of roster.aces)
-        ace.line.forEach((stage, index) => {
-          if (index) stage.level = number(`ace-${ace.id}-level-${index}`)
-        })
-      for (const filler of roster.fillers) {
-        filler.line.forEach((stage, index) => {
-          if (index) stage.level = number(`filler-${filler.id}-level-${index}`)
-        })
-        filler.baseScore = number(`filler-${filler.id}-score`)
-        filler.levelOffset = number(`filler-${filler.id}-offset`)
-        filler.signatureMove = text(`filler-${filler.id}-signature`) || null
-        filler.requiresFlag = text(`filler-${filler.id}-flag`) || null
-      }
-      roster.prototype = data.get("roster-prototype") === "on"
-      this.#_accept(next, `Updated ${this.selected.trainer.name}’s roster.`)
-    } catch (error) {
-      this.error = error instanceof Error ? error.message : "Could not apply the roster."
-    }
-  }
+      this.#_roster(next).forEach((entry, index) => {
+        entry.species = text(`entry-${index}-species`)
+        const offset = text(`entry-${index}-offset`)
+        entry.levelOffset = offset === "" ? Number.NaN : Number(offset)
+        entry.moves = parseMoves(text(`entry-${index}-moves`))
+        entry.item = text(`entry-${index}-item`) || null
+      })
+      return `Updated ${this.selected.trainer.name}’s roster.`
+    })
 
-  setSeed = (value: string): void => {
-    const seed = Number(value.trim())
-    if (!value.trim() || !Number.isInteger(seed) || seed < 0 || seed > MAX_SEED) {
-      this.error = `Use a whole-number seed from 0 to ${MAX_SEED}.`
-      return
-    }
-    this.seed = seed
-    this.error = ""
-    this.#_persist()
-  }
+  applyTeam = (): void =>
+    this.#_edit("Could not apply the settings.", (next) => {
+      next.trainers[this.selectedId] = JSON.parse(this.editor)
+      return `Updated ${this.selected.trainer.name}’s settings.`
+    })
 
-  toggleFlag = (flag: string, on: boolean): void => {
-    this.flags = on
-      ? [...new Set([...this.flags, flag])].toSorted()
-      : this.flags.filter((entry) => entry !== flag)
-    this.#_persist()
-  }
-
-  applyRosterRules = (form: HTMLFormElement): void => {
-    try {
+  applyScalers = (form: HTMLFormElement): void =>
+    this.#_edit("Could not apply the scalers.", (next) => {
       const data = new FormData(form)
-      const next = this.#_clone()
-      next.sizeTable = next.sizeTable.map((step, index) => ({
-        minLevel: index === 0 ? 1 : Number(data.get(`size-level-${index}`)),
-        size: Number(data.get(`size-${index}`)),
-      }))
-      next.jitter = Number(data.get("jitter"))
-      this.#_accept(next, "Updated the team size table and filler jitter.")
-    } catch (error) {
-      this.error = error instanceof Error ? error.message : "Could not apply the size table."
-    }
-  }
+      const read = (scaler: ScalerId) =>
+        next[scaler].map(
+          (_, index): Anchor => [
+            index === 0 ? 0 : Number(data.get(`${scaler}-tr-${index}`)),
+            Number(data.get(`${scaler}-value-${index}`)),
+          ],
+        )
+      next.teamLevel = read("teamLevel")
+      next.teamSize = read("teamSize")
+      return "Updated the team level and team size scalers."
+    })
 
-  addModifier = (form: HTMLFormElement): void => {
-    try {
-      const data = new FormData(form)
-      const next = this.#_clone()
-      const [trainer, filler] = String(data.get("modifier-target") ?? "").split("/")
-      const modifier = {
-        flag: String(data.get("modifier-flag") ?? "").trim(),
-        trainer: trainer ?? "",
-        filler: filler ?? "",
-        delta: Number(data.get("modifier-delta")),
-      }
-      next.modifiers.push(modifier)
-      this.#_accept(
-        next,
-        `Added ${modifier.flag} → ${modifier.trainer}/${modifier.filler} ${modifier.delta > 0 ? "+" : ""}${modifier.delta}.`,
-      )
-    } catch (error) {
-      this.error = error instanceof Error ? error.message : "Could not add the modifier."
-    }
-  }
+  addAnchor = (scaler: ScalerId): void =>
+    this.#_edit("Could not add an anchor.", (next) => {
+      const last = next[scaler].at(-1)
+      if (!last) return undefined
+      if (next[scaler].length >= MAX_ANCHORS)
+        throw new Error(`A scaler has at most ${MAX_ANCHORS} anchors.`)
+      next[scaler].push([last[0] + 10, last[1]])
+      return "Added an anchor. Edit its TR and value, then apply the scalers."
+    })
 
-  removeModifier = (index: number): void => {
-    const next = this.#_clone()
-    next.modifiers.splice(index, 1)
-    this.#_accept(next, "Removed the modifier.")
-  }
-
-  applyWorld = (form: HTMLFormElement): void => {
-    try {
-      const data = new FormData(form)
-      const next = this.#_clone()
-      for (const arc of ARC_IDS)
-        next.arcs[arc] = ARC_CHECKPOINTS.map((progress) =>
-          progress === 0 ? 0 : Number(data.get(`arc-${arc}-${progress}`)),
-        ) as Experiment["arcs"][ArcId]
-      next.roleWindows = {
-        contenderMax: Number(data.get("contender-max")),
-        headlinerMin: Number(data.get("headliner-min")),
-      }
-      next.headroom = Number(data.get("headroom"))
-      this.#_accept(
-        next,
-        "Updated the growth arcs, role windows and level headroom. The world cap is unchanged.",
-      )
-    } catch (error) {
-      this.error = error instanceof Error ? error.message : "Could not apply the arcs."
-    }
-  }
+  removeAnchor = (scaler: ScalerId, index: number): void =>
+    this.#_edit("Could not remove the anchor.", (next) => {
+      if (index === 0) return undefined
+      next[scaler].splice(index, 1)
+      return "Removed the anchor."
+    })
 
   reset = (): void => {
-    this.#_accept(createExperiment(catalog), "Restored the experimental defaults for all trainers.")
+    this.#_accept(createExperiment(catalog), "Restored the catalog TRs, rosters and scalers.")
   }
 
-  resetTrainer = (): void => {
-    const next = this.#_clone()
-    const defaults = createExperiment(catalog).trainers[this.selectedId]
-    if (!defaults) throw new Error("Unknown selected trainer.")
-    next.trainers[this.selectedId] = defaults
-    this.#_accept(
-      next,
-      `Restored ${this.selected.trainer.name}’s current defaults. Other trainers, arcs and role windows are unchanged.`,
-    )
-  }
+  resetTrainer = (): void =>
+    this.#_edit("Could not restore the trainer.", (next) => {
+      const defaults = createExperiment(catalog).trainers[this.selectedId]
+      if (!defaults) throw new Error("Unknown selected trainer.")
+      next.trainers[this.selectedId] = defaults
+      return `Restored ${this.selected.trainer.name}’s catalog TR and roster. Other trainers and the scalers are unchanged.`
+    })
 
   exportText = (): string =>
     JSON.stringify(
       {
         tool: "wayfarer-trainer-balance",
-        version: 4,
-        point: {
-          badges: this.badges,
-          leagueClears: this.leagueClears,
-          completedEditions: this.completedEditions,
-        },
-        seed: this.seed,
-        flags: this.flags,
+        version: 5,
+        point: { badges: this.badges, leagueClears: this.leagueClears },
         selectedTrainer: this.selectedId,
         experiment: JSON.parse(serializeExperiment(this.#_experiment)),
       },
@@ -430,33 +276,32 @@ export class BalanceLab {
   importText = (text: string, message = "Imported experiment."): void => {
     try {
       const data = JSON.parse(text)
-      if (data?.tool === "wayfarer-trainer-balance" && data.version === 1)
-        throw new Error(V1_REJECTION)
-      if (data?.tool === "wayfarer-trainer-balance" && data.version === 2)
-        throw new Error(V2_REJECTION)
-      if (data?.tool === "wayfarer-trainer-balance" && data.version === 3)
-        throw new Error(V3_REJECTION)
-      if (data?.tool !== "wayfarer-trainer-balance" || data.version !== 4) {
-        throw new Error("This is not a version 4 Wayfarer balance experiment.")
-      }
-      const experiment = validateExperiment(data.experiment, catalog)
-      const point = this.#_point(data.point)
-      if (!Number.isInteger(data.seed) || data.seed < 0 || data.seed > MAX_SEED)
-        throw new Error(`The seed must be a whole number from 0 to ${MAX_SEED}.`)
       if (
-        !Array.isArray(data.flags) ||
-        data.flags.some((flag: unknown) => typeof flag !== "string" || !flag.trim())
+        data?.tool === "wayfarer-trainer-balance" &&
+        typeof data.version === "number" &&
+        data.version >= 1 &&
+        data.version <= 4
       )
-        throw new Error("Flags must be a list of flag names.")
-      if (!catalog.some((trainer) => trainer.id === data.selectedTrainer)) {
+        throw new Error(OLD_VERSION_REJECTION(data.version))
+      if (data?.tool !== "wayfarer-trainer-balance" || data.version !== 5)
+        throw new Error("This is not a version 5 Wayfarer balance experiment.")
+      const experiment = validateExperiment(data.experiment, catalog)
+      const point = data.point
+      if (
+        !point ||
+        !Number.isInteger(point.badges) ||
+        point.badges < 0 ||
+        point.badges > 24 ||
+        !Number.isInteger(point.leagueClears) ||
+        point.leagueClears < 0 ||
+        point.leagueClears > 3
+      )
+        throw new Error("Use 0–24 badges and 0–3 first league clears.")
+      if (!catalog.some((trainer) => trainer.id === data.selectedTrainer))
         throw new Error("Unknown selected trainer.")
-      }
       this.#_experiment = experiment
       this.badges = point.badges
       this.leagueClears = point.leagueClears
-      this.completedEditions = point.completedEditions
-      this.seed = data.seed
-      this.flags = [...new Set(data.flags as string[])].toSorted()
       this.selectedId = data.selectedTrainer
       this.error = ""
       this.notice = message

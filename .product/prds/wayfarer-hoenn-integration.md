@@ -4,13 +4,13 @@ Implemented: Partial; content and current circuit runtime exist, full content/ba
 
 The current [circuit producer](../../game/src/league_circuit.c) uses fixed Tier 3
 Hoenn admission and the implemented [League level resolver](../../game/src/trainer_party_scaling.c)
-uses saved player-entry TR. League levels are no longer static. Proposed
-[trainer world progression](trainer-world-progression.md) changes explicitly
-enrolled initial singles Gyms to world-cap standing, seeded growth arcs, and
-authored rosters. The [seeded circuit](../specs/seeded-league-circuit.md)
-replaces fixed Hoenn position and participants with a five-trainer field
-selected and frozen at that venue's entry; a loss retries the same field. These
-successors are
+uses saved player-entry TR. League levels are no longer static. Under the
+proposed [well-known trainer rating](trainer-world-progression.md), well-known
+trainers have their own authored, fixed TR that sets team level and size in
+every battle, with a six-entry roster. The
+[circuit runtime](../specs/seeded-league-circuit.md) replaces Hoenn's fixed
+participants with the global top five by TR, strongest last; after a loss the
+venue is locked to that field until won. These successors are
 not implemented by the content port; current behavior below remains identified
 separately from the proposed direction.
 
@@ -142,13 +142,11 @@ to those rosters; rivals and bosses retain authored battle parties. Initial
 Gym Leader badge battles follow the separate [Gym Leader scaling design](gym-leader-scaling.md),
 while leader rematches retain authored, static parties.
 Current Hoenn Elite Four and Champion battles use fixed Tier 3 source rosters
-and saved player-entry TR under [League scaling](league-scaling.md). Proposed
-seeded editions select participants by standing relative to the world cap under
-the [circuit trainer pool](../specs/circuit-trainer-pool.md). Emerald source parties
-remain provenance references rather than required opening or circuit teams.
-Tate and Liza remain outside the singles pool under their current double-Gym
-policy, with their badge preserved. Rival, boss, Dojo, and rematch variants
-require separate enrollment; canonical identity does not change their policy.
+and saved player-entry TR under [League scaling](league-scaling.md). The
+proposed [circuit trainer pool](../specs/circuit-trainer-pool.md) instead fields
+the global top five by TR. Emerald source parties remain provenance references
+rather than required opening or circuit teams. Tate and Liza remain outside the
+singles pool under their current double-Gym policy, with their badge preserved.
 
 Ordinary Hoenn wild encounters retain Emerald's species, methods, weights, and
 locations while using the HNS Trainer Rating level projection. Hoenn badges
@@ -171,11 +169,10 @@ Hoenn destination.
 - Hoenn Champion completion is independent from the shared Indigo clear and
   the Sevii Masters Challenge clear.
 - In the current ROM, Hoenn is fixed Tier 3 after Indigo, Masters, and all
-  twenty-four badges. The proposed seeded itinerary can place Hoenn at any stop
-  under the [Seeded Trainer Circuit](seeded-trainer-circuit.md)'s signup rules.
-  A loss retries the same field; only a win advances the order. Venue-first
-  clears retain their lifetime player rewards and local completion ownership. An
-  edition never resets another region's campaign or repeats a lifetime reward.
+  twenty-four badges. The proposed [Trainer Circuit](seeded-trainer-circuit.md)
+  keeps the current signup and venue order until designed; a loss locks Hoenn
+  to the same field until won. Venue-first clears retain their lifetime player
+  rewards and local completion ownership.
 - Hoenn Trainers, NPCs, items, gifts, and story rewards remain consumed through
   saving, reloading, and blacking out.
 
@@ -225,11 +222,10 @@ not keep a separate healing history for every region.
   static parties.
 - The current Hoenn League preserves authored non-level metadata and scales
   from player TR locked for the run under [League scaling](league-scaling.md).
-  The proposed successor freezes the current competition's five opponents,
-  teams, and levels at entry from the world cap and each trainer's standing.
-  Reload, reconstruction, and retries after a loss preserve that field.
-  Its authored rosters evolve only along authored lines and need no immutable
-  prefix of one Emerald roster.
+  The proposed successor locks the five opponents, teams, and levels at entry,
+  each from that trainer's own fixed TR and roster. Reload, reconstruction,
+  and retries after a loss preserve that field. Rosters are authored per entry
+  and need no immutable prefix of one Emerald roster.
 - Battle Frontier, Contests, Secret Bases, Match Call, television events,
   multiplayer features, event islands, and other optional Emerald systems are
   preservation targets, not requirements for this milestone.

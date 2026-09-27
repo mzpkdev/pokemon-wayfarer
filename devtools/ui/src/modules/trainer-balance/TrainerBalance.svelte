@@ -1,43 +1,24 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { ARC_CHECKPOINTS, ARC_IDS, FILLER_OFFSET, MAX_EDITIONS, MAX_JITTER } from "./engine.js"
-  import { BalanceLab, catalog } from "./lab.svelte.js"
-  import type { ArcId, LineStage, Role } from "./types.js"
+  import { LEVEL_OFFSET, ROSTER_SIZE, VENUES } from "./engine.js"
+  import { BalanceLab, catalog, movesText, type ScalerId } from "./lab.svelte.js"
+  import type { Anchor } from "./types.js"
 
   const lab = new BalanceLab()
   const ticks = [0, 4, 8, 12, 16, 20, 24]
   let importInput: HTMLInputElement
   const signed = (value: number): string => (value > 0 ? `+${value}` : `${value}`)
   const tone = (gap: number): string => (gap > 0 ? "above" : gap < 0 ? "below" : "even")
-  const slug = (value: string): string => value.toLowerCase().replaceAll(" ", "-")
-  const roleLabel: Record<Role, string> = {
-    contender: "Contender",
-    elite: "Elite",
-    headliner: "Headliner",
-  }
-  const windowLabel = (role: Role): string =>
-    role === "contender"
-      ? `≤ ${signed(lab.roleWindows.contenderMax)}`
-      : role === "headliner"
-        ? `≥ ${signed(lab.roleWindows.headlinerMin)}`
-        : lab.roleWindows.contenderMax + 1 === lab.roleWindows.headlinerMin - 1
-          ? signed(lab.roleWindows.contenderMax + 1)
-          : `${signed(lab.roleWindows.contenderMax + 1)} … ${signed(lab.roleWindows.headlinerMin - 1)}`
-  const x = (progress: number): number => 24 + progress * 6.5
-  const y = (level: number): number => 140 - level * 1.2
-  const capLine = (): string =>
-    lab.curve.map((point) => `${x(point.progress)},${y(point.cap)}`).join(" ")
-  const arcLine = (arc: ArcId): string =>
-    lab.curve.map((point) => `${x(point.progress)},${y(point.aces[arc] ?? 0)}`).join(" ")
-  const editionLabel = (editions: number): string =>
-    editions === MAX_EDITIONS ? `${editions}+` : `${editions}`
-  const blueStatus = (): string =>
-    !lab.gymSummary.blue?.ahead ? "No" : lab.gymSummary.blue.atCeiling ? "At ceiling" : "Yes"
+  const scalers: { id: ScalerId; title: string; unit: string; max: number }[] = [
+    { id: "teamLevel", title: "Team level", unit: "Lv.", max: 100 },
+    { id: "teamSize", title: "Team size", unit: "Size", max: ROSTER_SIZE },
+  ]
+  const anchorsFor = (id: ScalerId): Anchor[] => (id === "teamLevel" ? lab.teamLevel : lab.teamSize)
   const download = (): void => {
     const url = URL.createObjectURL(new Blob([lab.exportText()], { type: "application/json" }))
     const link = document.createElement("a")
     link.href = url
-    link.download = `wayfarer-balance-p${lab.progress}.json`
+    link.download = `wayfarer-balance-b${lab.badges}.json`
     link.click()
     setTimeout(() => URL.revokeObjectURL(url), 1000)
   }
@@ -53,23 +34,24 @@
     }
     input.value = ""
   }
-  const lineText = (line: LineStage[]): string =>
-    line
-      .map((stage, index) => (index ? `${stage.species} (${stage.level})` : stage.species))
-      .join(" → ")
-  const plural = (count: number, word: string): string =>
-    `${count} ${word}${count === 1 ? "" : "s"}`
+  /** Applies a TR edit, then shows the stored value (unchanged if the edit was rejected). */
+  const editTR = (id: string, input: HTMLInputElement): void => {
+    lab.setTR(id, input.value)
+    input.value = String(lab.allRows.find((row) => row.trainer.id === id)?.tr ?? input.value)
+  }
   onMount(lab.load)
 </script>
 
 <section class="balance-lab" aria-label="Trainer balance explorer">
   <header class="lab-header">
     <div>
-      <div class="eyebrow">Wayfarer / design tools <span class="prototype">Experimental</span></div>
+      <div class="eyebrow">
+        Wayfarer / design tools <span class="prototype">Experimental · v0</span>
+      </div>
       <h1>Trainer balance</h1>
       <p>
-        Move through the badge journey. See where each rival stands against the world cap, and
-        whether every league can fill its field.
+        Author each well-known trainer’s TR and six-entry roster, and see the team, levels and
+        league field they produce. Compare against the player cap at any badge count.
       </p>
     </div>
     <div class="actions">
@@ -88,7 +70,7 @@
 
   <div class="world-panel">
     <div class="badge-count">
-      <span class="eyebrow">Badges earned</span>
+      <span class="eyebrow">Player badges</span>
       <div><strong data-testid="badge-count">{lab.badges}</strong><span>/ 24</span></div>
     </div>
     <div class="badge-slider">
@@ -111,7 +93,7 @@
           >{/each}
       </div>
       <span class="hint"
-        >Progress is global. Every trainer develops, including leaders you haven’t challenged.</span
+        >For comparison only. The player’s TR never changes a trainer’s team or levels.</span
       >
     </div>
     <div class="world-facts">
@@ -123,136 +105,62 @@
           >{#each [0, 1, 2, 3] as clears}<option value={clears}>{clears} / 3</option>{/each}</select
         ></label
       >
-      <label title="Fully completed circuit editions. Needs 24 badges and 3 first clears."
-        >Completed editions<select
-          aria-label="Completed editions"
-          aria-describedby="editions-hint"
-          value={lab.completedEditions}
-          disabled={!lab.editionsEnabled}
-          onchange={(event) => lab.setEditions(Number(event.currentTarget.value))}
-          >{#each Array.from({ length: MAX_EDITIONS + 1 }, (_, index) => index) as editions}<option
-              value={editions}>{editionLabel(editions)}</option
-            >{/each}</select
-        ></label
-      >
-      <div>
-        <span class="eyebrow">Progress p</span><strong data-testid="progress-index"
-          >{lab.progress}</strong
-        >
-      </div>
       <div>
         <span class="eyebrow">Player TR</span><strong data-testid="player-tr">{lab.playerTR}</strong
         >
       </div>
       <div>
-        <span class="eyebrow">World cap</span><strong data-testid="player-cap">Lv. {lab.cap}</strong
-        >
-      </div>
-      <div>
-        <span class="eyebrow">Level base</span><strong
-          data-testid="level-base"
-          class:ceiling={lab.levelBase < lab.cap}>Lv. {lab.levelBase}</strong
+        <span class="eyebrow">Player cap</span><strong data-testid="player-cap"
+          >Lv. {lab.cap}</strong
         >
       </div>
     </div>
-    <span class="hint editions-hint" id="editions-hint"
-      >{lab.editionsEnabled
-        ? "Post-game: each completed edition adds 8 to p (up to 3, p = 48), then standings stop changing."
-        : "Completed editions unlock at 24 badges and 3 first clears, since finishing an edition needs both."}
-      Level base = min(world cap, 100 − headroom {lab.headroom}).</span
-    >
   </div>
 
   <div class="model-note">
     <span class="note-dot"></span><span
-      >Living Rivals model: strength level = level base + standing, where standing = bias + growth
-      arc at p = badges + 8 × completed editions, and level base = min(world cap, 100 − headroom).
-      The top ace sits at the strength level, and team size follows it. The world cap is the player
-      soft cap from badges and first clears alone. This models species, team size and levels; moves,
-      items, AI and win rates are not simulated.</span
+      >TR v0: every well-known trainer has an authored, fixed TR. Team level and team size are
+      scalers of that TR (anchor tables, linear between anchors, halves rounded up, flat past the
+      last anchor; TR itself is uncapped). The team is the first N roster entries at team level +
+      offset, and battle order is the team reversed, so entry 1 comes last. Moves, items, AI and win
+      rates are not simulated.</span
     >
   </div>
 
   {#if lab.error}<div role="alert" class="message error">{lab.error}</div>{/if}
   {#if lab.notice}<div role="status" class="message">{lab.notice}</div>{/if}
 
-  <section class="roster-bar" aria-label="Save seed and gameplay flags">
-    <label
-      >Save seed<input
-        aria-label="Save seed"
-        type="text"
-        inputmode="numeric"
-        value={lab.seed}
-        onchange={(event) => lab.setSeed(event.currentTarget.value)}
-      /></label
-    >
-    <fieldset class="flag-choices">
-      <legend>Gameplay flags</legend>
-      {#each lab.knownFlags as flag (flag)}<label
-          ><input
-            type="checkbox"
-            aria-label={`Flag ${flag}`}
-            checked={lab.flags.includes(flag)}
-            onchange={(event) => lab.toggleFlag(flag, event.currentTarget.checked)}
-          />{flag}</label
-        >{:else}<span class="hint"
-          >None yet. Add a modifier or a filler requirement to create a flag.</span
-        >{/each}
-    </fieldset>
-    <span class="hint"
-      >Filler jitter is 0–{lab.jitter}. The explorer hashes seed + trainer + filler; the ROM draws
-      it from the TRAINER_ROSTER / FILLER_JITTER seed key, so values differ from the game.</span
-    >
-  </section>
-
-  <section class="summary-strip" aria-label="Gym and cap summary">
+  <section class="summary-strip" aria-label="Roster and cap summary">
     <div>
-      <span class="eyebrow">Gym leaders · strength − cap</span>
-      <strong class="gap-value {tone(Math.round(lab.gymSummary.mean))}" data-testid="gym-gap-mean"
-        >{lab.gymSummary.mean > 0 ? "+" : ""}{lab.gymSummary.mean.toFixed(1)}</strong
+      <span class="eyebrow">Incomplete rosters</span>
+      <strong class="gap-value {lab.gaps.length ? 'risk' : 'even'}" data-testid="roster-gap-count"
+        >{lab.gaps.length}</strong
       >
-      <span class="hint">Mean of {lab.gymSummary.count} leaders on their selected arcs</span>
+      <span class="hint" data-testid="roster-gap-list"
+        >{lab.gaps.length
+          ? `Short of ${ROSTER_SIZE}: ${lab.gaps.map((gap) => `${gap.name} ${gap.length}/${ROSTER_SIZE}`).join(", ")}`
+          : `Every roster lists ${ROSTER_SIZE} entries`}</span
+      >
     </div>
     <div>
-      <span class="eyebrow">Range</span>
-      <strong data-testid="gym-gap-range"
-        >{signed(lab.gymSummary.min)} … {signed(lab.gymSummary.max)}</strong
-      >
-      <span class="hint"
-        >Every allowed arc: {signed(lab.gymSummary.arcMin)} … {signed(lab.gymSummary.arcMax)}</span
-      >
+      <span class="eyebrow">Above the player cap</span>
+      <strong data-testid="above-cap">{lab.aboveCap}</strong>
+      <span class="hint">Trainers whose team level exceeds Lv. {lab.cap}</span>
     </div>
-    {#if lab.gymSummary.blue}
-      <div>
-        <span class="eyebrow"
-          >{lab.gymSummary.blue.atCeiling
-            ? "Blue above the level base"
-            : "Blue ahead of the cap"}</span
-        >
-        <strong
-          class="gap-value {lab.gymSummary.blue.ahead ? 'above' : 'risk'}"
-          data-testid="blue-check">{blueStatus()}</strong
-        >
-        <span class="hint"
-          >{#if lab.gymSummary.blue.atCeiling}vs base Lv. {lab.gymSummary.blue.levelBase}: {lab.gymSummary.blue.gaps
-              .map(({ arc, baseGap }) => `${arc} ${signed(baseGap)}`)
-              .join(" · ")}{:else}{lab.gymSummary.blue.gaps
-              .map(({ arc, gap }) => `${arc} ${signed(gap)}`)
-              .join(" · ")}{/if}{lab.gymSummary.blue.ahead ? "" : " · needs tuning"}</span
-        >
-      </div>
-    {/if}
+    <div>
+      <span class="eyebrow">League field</span>
+      <strong data-testid="league-range"
+        >TR {lab.league[0]?.tr ?? "—"} … {lab.league.at(-1)?.tr ?? "—"}</strong
+      >
+      <span class="hint">Top five by TR from one global pool</span>
+    </div>
   </section>
 
   <div class="workspace">
     <section class="pool-panel" aria-label="Trainer pool">
       <div class="panel-title">
-        <h2>The pool <span>{catalog.length}</span></h2>
-        <span class="hint"
-          >Levels at world cap Lv. {lab.cap}{lab.levelBase < lab.cap
-            ? ` · base Lv. ${lab.levelBase}`
-            : ""}</span
-        >
+        <h2>Well-known trainers <span>{catalog.length}</span></h2>
+        <span class="hint">Gap vs player cap Lv. {lab.cap}</span>
       </div>
       <div class="filters">
         <input
@@ -275,8 +183,9 @@
         <table class="pool-table">
           <thead
             ><tr
-              ><th>Trainer</th><th>Arc</th><th>Standing</th><th>Strength</th><th>Strength − cap</th
-              ><th>Role</th><th>Team</th></tr
+              ><th>Trainer</th><th>TR</th><th>Team level</th><th>Size</th><th>Lv − cap</th><th
+                >Roster</th
+              ></tr
             ></thead
           >
           <tbody>
@@ -294,28 +203,30 @@
                   ></td
                 >
                 <td
-                  ><select
-                    class="arc-select"
-                    aria-label={`${row.trainer.name} arc`}
-                    value={row.arc}
-                    disabled={lab.arcsFor(row.trainer.id).length < 2}
-                    onchange={(event) => lab.setArc(row.trainer.id, event.currentTarget.value)}
-                    >{#each lab.arcsFor(row.trainer.id) as arc}<option value={arc}>{arc}</option
-                      >{/each}</select
+                  ><input
+                    class="tr-input"
+                    type="number"
+                    min="0"
+                    step="1"
+                    aria-label={`${row.trainer.name} TR`}
+                    value={row.tr}
+                    onchange={(event) => editTR(row.trainer.id, event.currentTarget)}
+                  /></td
+                >
+                <td
+                  ><span class="level-pill" data-testid={`level-${row.trainer.id}`}
+                    >Lv. {row.teamLevel}</span
                   ></td
                 >
-                <td class="numeric standing">{signed(row.standing)}</td>
-                <td><span class="level-pill">Lv. {row.strengthLevel}</span></td>
+                <td class="numeric" data-testid={`size-${row.trainer.id}`}>{row.size}</td>
                 <td
-                  ><span class="gap-chip {tone(row.gap)}" data-testid={`gap-${row.trainer.id}`}
-                    >{signed(row.gap)}</span
+                  ><span
+                    class="gap-chip {tone(row.teamLevel - lab.cap)}"
+                    data-testid={`gap-${row.trainer.id}`}>{signed(row.teamLevel - lab.cap)}</span
                   ></td
                 >
-                <td><span class="role-chip {row.role}">{roleLabel[row.role]}</span></td>
-                <td
-                  class="numeric"
-                  title={`${plural(row.acesUsed, "ace")} + ${plural(row.party.length - row.acesUsed, "filler")}`}
-                  >{row.party.length}<span class="muted"> / 6</span></td
+                <td class="numeric" class:incomplete={row.rosterLength < ROSTER_SIZE}
+                  >{row.rosterLength}<span class="muted"> / {ROSTER_SIZE}</span></td
                 >
               </tr>
             {/each}
@@ -333,7 +244,7 @@
           </div>{/if}
       </div>
       <div class="pool-footer">
-        {lab.rows.length} trainers shown <span>Singles only · Tate & Liza excluded</span>
+        {lab.rows.length} trainers shown <span>Singles only · Red and Tate & Liza excluded</span>
       </div>
     </section>
 
@@ -344,82 +255,44 @@
           <h2>{lab.selected.trainer.name}</h2>
         </div>
         <div class="tr-badge">
-          <span>Standing</span><strong data-testid="selected-standing"
-            >{signed(lab.selected.standing)}</strong
-          >
+          <span>TR</span><strong data-testid="selected-tr">{lab.selected.tr}</strong>
         </div>
       </div>
-      <div class="home-leagues">
-        Home pool: {lab.selected.trainer.homeLeagues.join(" · ") || "none"} · Sevii Masters is open to
-        all
-      </div>
+      <p class="hint provenance">{lab.selected.trainer.trSource}</p>
       <dl class="stat-grid">
         <div>
-          <dt>Arc</dt>
-          <dd data-testid="selected-arc">{lab.selected.arc}</dd>
+          <dt>Team level</dt>
+          <dd data-testid="selected-level">Lv. {lab.selected.teamLevel}</dd>
         </div>
-        <div>
-          <dt>Strength</dt>
-          <dd data-testid="selected-strength">Lv. {lab.selected.strengthLevel}</dd>
-        </div>
-        <div>
-          <dt>Strength − cap</dt>
-          <dd class="gap-value {tone(lab.selected.gap)}" data-testid="selected-gap">
-            {signed(lab.selected.gap)}
-          </dd>
-        </div>
-        <div>
-          <dt>Role</dt>
-          <dd data-testid="selected-role">{roleLabel[lab.selected.role]}</dd>
-        </div>
-      </dl>
-      <dl class="stat-grid team-grid">
         <div>
           <dt>Team size</dt>
           <dd data-testid="team-size">{lab.selected.size}</dd>
         </div>
         <div>
-          <dt>Max aces</dt>
-          <dd data-testid="ace-allowance">{lab.selected.allowance}</dd>
+          <dt>Lv − cap</dt>
+          <dd class="gap-value {tone(lab.selected.teamLevel - lab.cap)}" data-testid="selected-gap">
+            {signed(lab.selected.teamLevel - lab.cap)}
+          </dd>
         </div>
         <div>
-          <dt>Aces used</dt>
-          <dd data-testid="aces-used">{lab.selected.acesUsed}</dd>
-        </div>
-        <div>
-          <dt>Fillers</dt>
-          <dd data-testid="filler-count">{lab.selected.party.length - lab.selected.acesUsed}</dd>
+          <dt>Roster</dt>
+          <dd data-testid="roster-length" class:risk-text={lab.selected.rosterLength < ROSTER_SIZE}>
+            {lab.selected.rosterLength} / {ROSTER_SIZE}
+          </dd>
         </div>
       </dl>
-      <p class="hint allowance-note" data-testid="allowance-note">
-        Size {lab.selected.size} from strength Lv. {lab.selected.strengthLevel}. Up to {plural(
-          lab.selected.allowance,
-          "ace",
-        )} may play; {lab.selected.trainer.name} has {plural(
-          lab.settings.roster.aces.length,
-          "ace",
-        )}{lab.selected.allowance > lab.selected.acesUsed
-          ? `, so ${plural(lab.selected.allowance - lab.selected.acesUsed, "unused ace slot")} ${lab.selected.allowance - lab.selected.acesUsed === 1 ? "goes" : "go"} to fillers`
-          : ""}.
-      </p>
       <div class="section-label">
-        <h3>
-          Team at {lab.badges} badges{lab.completedEditions
-            ? ` · ${editionLabel(lab.completedEditions)} editions`
-            : ""}
-        </h3>
-        <span>Battle order: fillers by score, top ace last</span>
+        <h3>Team at TR {lab.selected.tr}</h3>
+        <span>Battle order: entry 1 last</span>
       </div>
-      <ol class="party" data-testid="generated-party">
-        {#each lab.selected.party as member, index (member.id)}<li
-            class:ace={member.kind === "ace"}
-          >
-            <span class="slot">{String(index + 1).padStart(2, "0")}</span>
+      <ol class="party" data-testid="battle-order">
+        {#each lab.selected.battleOrder as member (member.slot)}<li class:ace={member.slot === 1}>
+            <span class="slot">#{member.slot}</span>
             <div class="member-name">
               <strong>{member.species}</strong><small
-                >{member.kind === "ace"
-                  ? `Ace ${member.priority}`
-                  : `Filler · score ${member.score}`} · {member.moves}</small
+                >Offset {member.levelOffset} · {movesText(member.moves)}{member.item
+                  ? ` · ${member.item}`
+                  : ""}</small
               >
             </div>
             <span class="member-level" class:over-cap={member.level > lab.cap}
@@ -427,104 +300,102 @@
             >
           </li>{/each}
       </ol>
-      {#if lab.selected.warnings.length > 0}<ul class="warnings">
+      {#if lab.selected.warnings.length > 0}<ul class="warnings" data-testid="warnings">
           {#each lab.selected.warnings as warning}<li>{warning}</li>{/each}
         </ul>{/if}
 
       <div class="section-label">
         <h3>
-          Roster{#if lab.settings.roster.prototype}<span class="prototype-chip">Prototype</span
+          Roster{#if lab.selected.rosterLength < ROSTER_SIZE}<span
+              class="prototype-chip incomplete-chip"
+              data-testid="roster-incomplete">Incomplete</span
             >{/if}
         </h3>
-        <span
-          >{plural(lab.settings.roster.aces.length, "ace")} · {plural(
-            lab.settings.roster.fillers.length,
-            "filler",
-          )}</span
+        <span>First {lab.selected.size} play at this TR</span>
+      </div>
+      {#key lab.settings}
+        <form
+          class="roster-form"
+          data-testid="roster-editor"
+          onsubmit={(event) => {
+            event.preventDefault()
+            lab.applyRoster(event.currentTarget)
+          }}
         >
-      </div>
-      <table class="roster-table" data-testid="roster-aces">
-        <thead><tr><th>Ace</th><th>Line (evolve level)</th><th>In team</th></tr></thead>
-        <tbody>
-          {#each lab.settings.roster.aces as ace, index (ace.id)}
-            <tr class:in-team={index < lab.selected.acesUsed}>
-              <td class="numeric">{index + 1}</td>
-              <td>{lineText(ace.line)}</td>
-              <td>{index < lab.selected.acesUsed ? "Yes" : "No"}</td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
-      <div class="roster-scroll cartographer-scrollbar">
-        <table class="roster-table" data-testid="roster-fillers">
-          <thead
-            ><tr
-              ><th>Filler line</th><th>Base</th><th>Jitter</th><th>Mod</th><th>Score</th><th
-                >Rank</th
-              ><th>In team</th></tr
-            ></thead
-          >
-          <tbody>
-            {#each lab.selected.fillerScores as entry (entry.filler.id)}
-              <tr
-                class:in-team={entry.inTeam}
-                class:locked={!entry.eligible}
-                data-testid={`filler-${entry.filler.id}`}
-              >
-                <td
-                  >{lineText(entry.filler.line)}{#if entry.filler.requiresFlag}<small
-                      >Needs {entry.filler.requiresFlag}</small
-                    >{/if}</td
+          {#each lab.settings.roster as entry, index (index)}
+            <fieldset class:in-team={index < lab.selected.size}>
+              <legend>Entry {index + 1}{index < lab.selected.size ? " · in team" : ""}</legend>
+              <div class="line-inputs">
+                <label class="wide"
+                  >Species<input
+                    aria-label={`Entry ${index + 1} species`}
+                    name={`entry-${index}-species`}
+                    type="text"
+                    required
+                    value={entry.species}
+                  /></label
+                ><label
+                  >Offset<input
+                    aria-label={`Entry ${index + 1} level offset`}
+                    name={`entry-${index}-offset`}
+                    type="number"
+                    min={LEVEL_OFFSET.min}
+                    max={LEVEL_OFFSET.max}
+                    step="1"
+                    required
+                    value={entry.levelOffset}
+                  /></label
+                ><label class="wide"
+                  >Moves<input
+                    aria-label={`Entry ${index + 1} moves`}
+                    name={`entry-${index}-moves`}
+                    type="text"
+                    placeholder="LEVEL_UP"
+                    value={movesText(entry.moves)}
+                  /></label
+                ><label class="wide"
+                  >Item<input
+                    aria-label={`Entry ${index + 1} item`}
+                    name={`entry-${index}-item`}
+                    type="text"
+                    placeholder="none"
+                    value={entry.item ?? ""}
+                  /></label
                 >
-                <td class="numeric">{entry.filler.baseScore}</td>
-                <td class="numeric">{entry.jitter}</td>
-                <td class="numeric">{entry.modifier ? signed(entry.modifier) : "0"}</td>
-                <td class="numeric score">{entry.score}</td>
-                <td class="numeric">{entry.rank ?? "—"}</td>
-                <td>{entry.inTeam ? "Yes" : entry.eligible ? "No" : "Locked"}</td>
-              </tr>
-            {:else}
-              <tr><td colspan="7" class="muted">No fillers. Add them in the JSON editor.</td></tr>
-            {/each}
-          </tbody>
-        </table>
-      </div>
-
-      <div class="section-label">
-        <h3>Progress journey</h3>
-        <div class="legend">
-          <span class="ace-key">{lab.selected.arc}</span
-          >{#if lab.settings.allowedArcs.length > 1}<span class="alt-key">Other allowed arcs</span
-            >{/if}<span class="cap-key">World cap</span>
-        </div>
-      </div>
-      <svg
-        class="growth-chart"
-        viewBox="0 0 360 163"
-        role="img"
-        aria-label={`${lab.selected.trainer.name} strength level per allowed arc and the world cap from progress 0 to 48; progress 32 to 48 are completed editions at 24 badges and 3 clears`}
-      >
-        {#each [20, 40, 60, 80, 100] as level}<line
-            x1="24"
-            x2="336"
-            y1={y(level)}
-            y2={y(level)}
-            class="chart-grid"
-          /><text x="2" y={y(level) + 4}>{level}</text>{/each}
-        <polyline points={capLine()} class="cap-line" />
-        {#each lab.settings.allowedArcs.filter((arc) => arc !== lab.selected.arc) as arc}<polyline
-            points={arcLine(arc)}
-            class="alt-line"
-          />{/each}
-        <polyline points={arcLine(lab.selected.arc)} class="ace-line" />
-        <line x1={x(24)} x2={x(24)} y1="18" y2="140" class="chart-grid" />
-        <text x={x(36)} y="14" text-anchor="middle">post-game editions</text>
-        <line x1={x(lab.progress)} x2={x(lab.progress)} y1="18" y2="140" class="position-line" />
-        <circle cx={x(lab.progress)} cy={y(lab.selected.strengthLevel)} r="4" class="ace-dot" />
-        {#each ARC_CHECKPOINTS as progress}<text x={x(progress)} y="158" text-anchor="middle"
-            >{progress}</text
-          >{/each}
-      </svg>
+                <div class="entry-tools">
+                  <button
+                    type="button"
+                    aria-label={`Move entry ${index + 1} up`}
+                    disabled={index === 0}
+                    onclick={() => lab.moveEntry(index, -1)}>↑</button
+                  ><button
+                    type="button"
+                    aria-label={`Move entry ${index + 1} down`}
+                    disabled={index === lab.settings.roster.length - 1}
+                    onclick={() => lab.moveEntry(index, 1)}>↓</button
+                  ><button
+                    type="button"
+                    aria-label={`Remove entry ${index + 1}`}
+                    disabled={lab.settings.roster.length === 1}
+                    onclick={() => lab.removeEntry(index)}>Remove</button
+                  >
+                </div>
+              </div>
+            </fieldset>
+          {/each}
+          <div class="actions roster-actions">
+            <button type="submit">Apply roster</button>
+            {#if lab.settings.roster.length < ROSTER_SIZE}<button
+                type="button"
+                onclick={lab.addEntry}>Add entry</button
+              >{/if}
+          </div>
+        </form>
+      {/key}
+      <p class="hint">
+        Entry 1 must stay at offset 0; offsets run {LEVEL_OFFSET.min} to {LEVEL_OFFSET.max}. Moves
+        are LEVEL_UP or up to four names separated by commas. v0 needs exactly {ROSTER_SIZE} entries.
+      </p>
 
       <details class="reference-panel">
         <summary>Compare source party <span>{lab.selected.trainer.source.label}</span></summary>
@@ -543,451 +414,130 @@
         <p class="hint">Roster provenance: {lab.selected.trainer.rosterSource}</p>
       </details>
 
-      <details class="tuning-panel" open>
-        <summary>Tune this trainer</summary>
-        {#key lab.settings}
-          <form
-            onsubmit={(event) => {
-              event.preventDefault()
-              lab.applyTrainer(event.currentTarget)
-            }}
-          >
-            <div class="growth-input">
-              <label
-                >Standing bias<input
-                  aria-label="Standing bias"
-                  name="bias"
-                  type="number"
-                  min="-6"
-                  max="6"
-                  step="1"
-                  required
-                  value={lab.settings.bias}
-                /></label
-              ><button type="submit">Apply standing</button>
-            </div>
-            <fieldset class="arc-choices">
-              <legend>Allowed arcs</legend>
-              {#each ARC_IDS as arc}<label
-                  ><input
-                    type="checkbox"
-                    name={`allow-${arc}`}
-                    aria-label={`Allow ${arc} arc`}
-                    checked={lab.settings.allowedArcs.includes(arc)}
-                  />{arc}</label
-                >{/each}
-            </fieldset>
-          </form>
-        {/key}
+      <details class="advanced-panel">
+        <summary>Edit settings as JSON</summary>
         <p class="hint">
-          Standing is bias plus the arc’s delta at the current progress index p. Changes are saved
-          in this browser and included in exports.
+          Edit the TR and every roster field, including ability and nature. Moves are
+          <code>"LEVEL_UP"</code> or a list of one to four names.
         </p>
-        <button type="button" onclick={lab.resetTrainer}>Restore this trainer’s defaults</button>
-        <details class="advanced">
-          <summary>Edit roster</summary>
-          <p class="hint">
-            Aces fill first in priority order. Evolve levels are the level where each later species
-            on a line is reached. Fillers score base + jitter + modifiers; offsets run {FILLER_OFFSET.min}
-            to {FILLER_OFFSET.max}. A filler with a flag stays out until the flag is set.
-          </p>
-          <ol class="ace-order">
-            {#each lab.settings.roster.aces as ace, index (ace.id)}<li>
-                <span>{index + 1}. {ace.line.at(-1)?.species}</span><button
-                  type="button"
-                  aria-label={`Move ${ace.id} up`}
-                  disabled={index === 0}
-                  onclick={() => lab.moveAce(index, -1)}>↑</button
-                ><button
-                  type="button"
-                  aria-label={`Move ${ace.id} down`}
-                  disabled={index === lab.settings.roster.aces.length - 1}
-                  onclick={() => lab.moveAce(index, 1)}>↓</button
-                >
-              </li>{/each}
-          </ol>
-          {#key lab.settings}
-            <form
-              class="roster-form"
-              onsubmit={(event) => {
-                event.preventDefault()
-                lab.applyRoster(event.currentTarget)
-              }}
-            >
-              {#each lab.settings.roster.aces as ace (ace.id)}
-                <fieldset>
-                  <legend>Ace {ace.id}</legend>
-                  <div class="line-inputs">
-                    {#each ace.line as stage, index}{#if index}<label
-                          >{stage.species} at<input
-                            aria-label={`${ace.id} evolves to ${stage.species} at`}
-                            name={`ace-${ace.id}-level-${index}`}
-                            type="number"
-                            min="2"
-                            max="100"
-                            step="1"
-                            required
-                            value={stage.level}
-                          /></label
-                        >{:else}<span>{stage.species}</span>{/if}{/each}
-                  </div>
-                </fieldset>
-              {/each}
-              {#each lab.settings.roster.fillers as filler (filler.id)}
-                <fieldset>
-                  <legend>Filler {filler.id}</legend>
-                  <div class="line-inputs">
-                    <label
-                      >Base<input
-                        aria-label={`${filler.id} base score`}
-                        name={`filler-${filler.id}-score`}
-                        type="number"
-                        min="0"
-                        max="100"
-                        step="1"
-                        required
-                        value={filler.baseScore}
-                      /></label
-                    ><label
-                      >Offset<input
-                        aria-label={`${filler.id} level offset`}
-                        name={`filler-${filler.id}-offset`}
-                        type="number"
-                        min={FILLER_OFFSET.min}
-                        max={FILLER_OFFSET.max}
-                        step="1"
-                        required
-                        value={filler.levelOffset}
-                      /></label
-                    >{#each filler.line as stage, index}{#if index}<label
-                          >{stage.species} at<input
-                            aria-label={`${filler.id} evolves to ${stage.species} at`}
-                            name={`filler-${filler.id}-level-${index}`}
-                            type="number"
-                            min="2"
-                            max="100"
-                            step="1"
-                            required
-                            value={stage.level}
-                          /></label
-                        >{/if}{/each}
-                    <label class="wide"
-                      >Signature move<input
-                        aria-label={`${filler.id} signature move`}
-                        name={`filler-${filler.id}-signature`}
-                        type="text"
-                        value={filler.signatureMove ?? ""}
-                      /></label
-                    ><label class="wide"
-                      >Requires flag<input
-                        aria-label={`${filler.id} requires flag`}
-                        name={`filler-${filler.id}-flag`}
-                        type="text"
-                        placeholder="none"
-                        value={filler.requiresFlag ?? ""}
-                      /></label
-                    >
-                  </div>
-                </fieldset>
-              {/each}
-              <label class="prototype-toggle"
-                ><input
-                  type="checkbox"
-                  name="roster-prototype"
-                  aria-label="Prototype roster"
-                  checked={lab.settings.roster.prototype}
-                />Prototype roster (clear once authored)</label
-              >
-              <button type="submit">Apply roster</button>
-            </form>
-          {/key}
-        </details>
-        <details class="advanced">
-          <summary>Edit settings as JSON</summary>
-          <p class="hint">
-            Add or remove aces and fillers, rename species, or author moves, items, abilities and
-            natures per ace form. IDs are lowercase slugs, unique within the roster.
-          </p>
-          <label class="visually-hidden" for="team-editor">Trainer settings JSON</label><textarea
-            id="team-editor"
-            spellcheck="false"
-            bind:value={lab.editor}></textarea><button type="button" onclick={lab.applyTeam}
-            >Apply settings</button
+        <label class="visually-hidden" for="team-editor">Trainer settings JSON</label><textarea
+          id="team-editor"
+          spellcheck="false"
+          bind:value={lab.editor}></textarea>
+        <div class="actions roster-actions">
+          <button type="button" onclick={lab.applyTeam}>Apply settings</button><button
+            type="button"
+            onclick={lab.resetTrainer}>Restore this trainer’s defaults</button
           >
-        </details>
+        </div>
       </details>
     </aside>
   </div>
 
-  <section class="feasibility" aria-label="League feasibility">
+  <section class="league" aria-label="League preview">
     <div class="panel-title">
-      <h2>League feasibility <span>at p = {lab.progress}</span></h2>
-      <span class="hint" data-testid="roster-gap-count"
-        >{lab.gaps.length
-          ? `${plural(lab.gaps.length, "roster")} can’t reach 6 at max size`
-          : "Every roster reaches 6 at max size"}</span
+      <h2>League field <span>top {lab.league.length} by TR</span></h2>
+      <span class="hint" data-testid="league-venues"
+        >One global pool, so {VENUES.join(", ")} all field this five in v0.</span
       >
     </div>
-    <p class="hint feasibility-note">
-      Guaranteed: in the role window under every allowed arc. Possible: under some allowed arc.
-      Current: under the selected arcs. Every trainer is a candidate and brings a team sized by
-      their strength level. Validation needs every roster to reach 6 at max size (up to 3 aces plus
-      unlocked fillers), so shorter rosters are listed as content gaps. Standing depends on p
-      (badges + 8 × completed editions) only, so league clears and headroom do not change these
-      counts.
+    <p class="hint league-note">
+      Battle order runs by ascending TR, strongest last. Ties keep catalog order. Each opponent uses
+      their own TR, team and levels.
     </p>
-    <div class="venue-grid">
-      {#each lab.feasibility as venue (venue.venue)}
-        <div class="venue-card" data-testid={`feasibility-${slug(venue.venue)}`}>
+    <ol class="league-grid" data-testid="league-field">
+      {#each lab.league as row, index (row.trainer.id)}
+        <li class="venue-card" data-testid={`league-match-${index + 1}`}>
           <div class="venue-heading">
-            <h3>{venue.venue}</h3>
-            <span class="hint"
-              >{venue.pool === "open" ? "Open invitational" : "Home pool"} · {venue.candidates} candidates</span
-            >
+            <h3><span class="muted">{index + 1}.</span> {row.trainer.name}</h3>
+            <span class="hint">TR {row.tr} · Lv. {row.teamLevel} · {row.team.length} Pokémon</span>
           </div>
-          <table class="feasibility-table">
-            <thead
-              ><tr
-                ><th>Role</th><th>Window</th><th>Need</th><th>Guaranteed</th><th>Possible</th><th
-                  >Current</th
-                ></tr
-              ></thead
-            >
-            <tbody>
-              {#each venue.roles as entry (entry.role)}
-                <tr
-                  class:risk={entry.fallbackRisk}
-                  data-testid={`${slug(venue.venue)}-${entry.role}`}
-                >
-                  <td
-                    >{roleLabel[entry.role]}{#if entry.fallbackRisk}<span class="risk-flag"
-                        >Fallback risk</span
-                      >{/if}</td
-                  >
-                  <td class="numeric muted">{windowLabel(entry.role)}</td>
-                  <td class="numeric">{entry.need}</td>
-                  <td class="numeric guaranteed">{entry.guaranteed}</td>
-                  <td class="numeric">{entry.possible}</td>
-                  <td class="numeric">{entry.current}</td>
-                </tr>
-              {/each}
-            </tbody>
-          </table>
-          {#if venue.gaps.length}<p class="hint excluded" data-testid={`gaps-${slug(venue.venue)}`}>
-              Rosters short of 6: {venue.gaps.map((gap) => `${gap.name} ${gap.reach}/6`).join(", ")}
-            </p>{/if}
-        </div>
+          <ol class="league-team">
+            {#each row.battleOrder as member (member.slot)}<li>
+                <span>{member.species}</span><span class="member-level">Lv. {member.level}</span>
+              </li>{/each}
+          </ol>
+        </li>
       {/each}
-    </div>
+    </ol>
   </section>
 
   <details class="global-settings">
-    <summary>Growth arcs, role windows & experiment settings</summary>
+    <summary>Scalers & experiment settings</summary>
     <p>
-      Each arc is an arcDelta tuple at progress p = 0 / 8 / 16 / 24 / 32 / 40 / 48, interpolated
-      linearly and rounded half up. p is badges in edition 1 (0–24); editions 2, 3 and 4+ enter at p
-      = 32, 40 and 48, after which standings stop changing. Every arc stays 0 at p = 0, so first
-      encounters match in every save. The player cap is unchanged. League clears can be combined
-      with any badge count here; this tool does not enforce entry requirements.
+      Each scaler maps TR to a value through anchors: linear between them, halves rounded up, and
+      flat past the last anchor, so a higher TR is never clamped but stops adding level or size.
+      Anchors start at TR 0, rise in TR and never decrease in value. Team level defaults to the
+      player soft-cap anchors; team size uses paired anchors to make a step table (0–10 → 2, 11–29 →
+      3, 30–41 → 4, 42–54 → 5, 55+ → 6).
     </p>
-    {#key lab.arcs}
+    {#key [lab.teamLevel, lab.teamSize]}
       <form
         onsubmit={(event) => {
           event.preventDefault()
-          lab.applyWorld(event.currentTarget)
+          lab.applyScalers(event.currentTarget)
         }}
       >
-        <div class="arc-scroll cartographer-scrollbar">
-          <table class="arc-table">
-            <thead
-              ><tr
-                ><th>Arc</th>{#each ARC_CHECKPOINTS as progress}<th>p = {progress}</th>{/each}</tr
-              ></thead
-            >
-            <tbody>
-              {#each ARC_IDS as arc}
-                <tr>
-                  <th scope="row">{arc}</th>
-                  {#each ARC_CHECKPOINTS as progress, index}<td
-                      >{#if progress === 0}<span class="muted">0</span>{:else}<input
-                          aria-label={`${arc} arc at p ${progress}`}
-                          name={`arc-${arc}-${progress}`}
+        <div class="scaler-grid">
+          {#each scalers as scaler (scaler.id)}
+            <div class="scaler" data-testid={`scaler-${scaler.id}`}>
+              <h3>{scaler.title}</h3>
+              <table class="arc-table">
+                <thead><tr><th>TR</th><th>{scaler.unit}</th><th></th></tr></thead>
+                <tbody>
+                  {#each anchorsFor(scaler.id) as [at, value], index}
+                    <tr>
+                      <td
+                        >{#if index === 0}<span class="muted">0</span>{:else}<input
+                            aria-label={`${scaler.title} anchor ${index + 1} TR`}
+                            name={`${scaler.id}-tr-${index}`}
+                            type="number"
+                            min="1"
+                            step="1"
+                            required
+                            value={at}
+                          />{/if}</td
+                      >
+                      <td
+                        ><input
+                          aria-label={`${scaler.title} anchor ${index + 1} value`}
+                          name={`${scaler.id}-value-${index}`}
                           type="number"
-                          min="-12"
-                          max="12"
+                          min="1"
+                          max={scaler.max}
                           step="1"
                           required
-                          value={lab.arcs[arc][index]}
-                        />{/if}</td
-                    >{/each}
-                </tr>
-              {/each}
-            </tbody>
-          </table>
-        </div>
-        <div class="window-inputs">
-          <label
-            >Contender at most<input
-              aria-label="Contender maximum standing"
-              name="contender-max"
-              type="number"
-              min="-12"
-              max="12"
-              step="1"
-              required
-              value={lab.roleWindows.contenderMax}
-            /></label
-          >
-          <label
-            >Headliner at least<input
-              aria-label="Headliner minimum standing"
-              name="headliner-min"
-              type="number"
-              min="-12"
-              max="12"
-              step="1"
-              required
-              value={lab.roleWindows.headlinerMin}
-            /></label
-          >
-          <span class="hint">Elite covers the standings in between.</span>
-        </div>
-        <div class="window-inputs">
-          <label
-            >Level headroom<input
-              aria-label="Level headroom"
-              name="headroom"
-              type="number"
-              min="0"
-              max="20"
-              step="1"
-              required
-              value={lab.headroom}
-            /></label
-          >
-          <span class="hint"
-            >Level base = min(world cap, 100 − headroom). No effect while the cap is at most {100 -
-              lab.headroom}; at the ceiling it leaves room for elites and headliners above
-            contenders. Ace − cap still compares with the player cap.</span
-          >
+                          {value}
+                        /></td
+                      >
+                      <td
+                        >{#if index > 0}<button
+                            type="button"
+                            class="small"
+                            aria-label={`Remove ${scaler.title} anchor ${index + 1}`}
+                            onclick={() => lab.removeAnchor(scaler.id, index)}>Remove</button
+                          >{/if}</td
+                      >
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+              <button type="button" class="small" onclick={() => lab.addAnchor(scaler.id)}
+                >Add {scaler.title.toLowerCase()} anchor</button
+              >
+            </div>
+          {/each}
         </div>
         <div class="actions">
-          <button type="submit">Apply arcs, windows & headroom</button><button
-            type="button"
-            onclick={lab.reset}>Reset all trainer defaults</button
+          <button type="submit">Apply scalers</button><button type="button" onclick={lab.reset}
+            >Reset all to catalog defaults</button
           >
         </div>
       </form>
     {/key}
-    <h3 class="settings-heading">Team size, jitter & modifiers</h3>
-    <p>
-      Team size = sizeFor(strength level). The ace allowance is a maximum tied to size (1–3 members:
-      1, 4–5: 2, 6: 3), and unused ace slots go to fillers. Sizes must not decrease, so with fixed
-      scores growth never removes a filler.
-    </p>
-    {#key lab.sizeTable}
-      <form
-        onsubmit={(event) => {
-          event.preventDefault()
-          lab.applyRosterRules(event.currentTarget)
-        }}
-      >
-        <div class="window-inputs size-inputs">
-          {#each lab.sizeTable as step, index}<label
-              >{#if index === 0}From Lv. 1{:else}From Lv.<input
-                  aria-label={`Size row ${index + 1} minimum strength level`}
-                  name={`size-level-${index}`}
-                  type="number"
-                  min="2"
-                  max="100"
-                  step="1"
-                  required
-                  value={step.minLevel}
-                />{/if}<input
-                aria-label={`Size row ${index + 1} team size`}
-                name={`size-${index}`}
-                type="number"
-                min="1"
-                max="6"
-                step="1"
-                required
-                value={step.size}
-              /></label
-            >{/each}
-        </div>
-        <div class="window-inputs">
-          <label
-            >Filler jitter (JITTER)<input
-              aria-label="Filler jitter"
-              name="jitter"
-              type="number"
-              min="0"
-              max={MAX_JITTER}
-              step="1"
-              required
-              value={lab.jitter}
-            /></label
-          ><button type="submit">Apply sizes & jitter</button>
-        </div>
-      </form>
-    {/key}
-    <p>
-      Modifiers add a delta to one trainer’s filler score while a gameplay flag is set (for example
-      telling Misty where Lapras lives). Toggle flags above the pool.
-    </p>
-    {#if lab.modifiers.length}<ul class="modifier-list" data-testid="modifier-list">
-        {#each lab.modifiers as modifier, index}<li>
-            <span
-              >{modifier.flag} → {modifier.trainer}/{modifier.filler}
-              <strong>{signed(modifier.delta)}</strong></span
-            ><button
-              type="button"
-              aria-label={`Remove modifier ${index + 1}`}
-              onclick={() => lab.removeModifier(index)}>Remove</button
-            >
-          </li>{/each}
-      </ul>{/if}
-    <form
-      class="window-inputs"
-      onsubmit={(event) => {
-        event.preventDefault()
-        lab.addModifier(event.currentTarget)
-      }}
-    >
-      <label
-        >Flag<input
-          aria-label="Modifier flag"
-          name="modifier-flag"
-          type="text"
-          required
-          placeholder="FLAG_NAME"
-        /></label
-      >
-      <label
-        >Filler<select aria-label="Modifier filler" name="modifier-target" required
-          >{#each catalog as trainer (trainer.id)}<optgroup label={trainer.name}
-              >{#each lab.fillersFor(trainer.id) as filler (filler.id)}<option
-                  value={`${trainer.id}/${filler.id}`}>{trainer.name} · {filler.id}</option
-                >{/each}</optgroup
-            >{/each}</select
-        ></label
-      >
-      <label
-        >Delta<input
-          aria-label="Modifier delta"
-          name="modifier-delta"
-          type="number"
-          min="-100"
-          max="100"
-          step="1"
-          required
-          value="40"
-        /></label
-      ><button type="submit">Add modifier</button>
-    </form>
     <p class="hint">
-      Arcs are shown for a chosen preview, not sampled from a seed. League lineup generation is not
-      implemented. This is separate from the ROM’s current scaler.
+      Catalog TRs and rosters are provisional. How TR changes, seeded variation and league signup
+      are out of scope for v0. This is separate from the ROM’s current scaler.
     </p>
   </details>
 </section>
@@ -1006,7 +556,6 @@
   .panel-title,
   .selected-heading,
   .section-label,
-  .growth-input,
   .pool-footer {
     display: flex;
     justify-content: space-between;
@@ -1149,17 +698,6 @@
     margin-top: 5px;
     font-variant-numeric: tabular-nums;
   }
-  .world-facts strong.ceiling {
-    color: var(--accent);
-  }
-  .editions-hint {
-    grid-column: 1 / -1;
-    margin-top: -14px;
-  }
-  .arc-scroll {
-    max-width: 100%;
-    overflow-x: auto;
-  }
   .model-note {
     display: flex;
     gap: 9px;
@@ -1229,7 +767,7 @@
     padding: 9px 11px;
   }
   .filters select {
-    min-width: 110px;
+    min-width: 128px;
   }
   .pool-scroll {
     max-height: 670px;
@@ -1337,11 +875,6 @@
     font-size: 28px;
     font-weight: 500;
   }
-  .home-leagues {
-    font-size: 10px;
-    color: var(--color-cartographer-muted);
-    margin: 11px 0 22px;
-  }
   h3 {
     font-size: 12px;
     font-weight: 500;
@@ -1390,49 +923,6 @@
     padding-left: 16px;
     margin: -6px 0 20px;
     line-height: 1.5;
-  }
-  .legend {
-    display: flex;
-    gap: 10px;
-    font-size: 10px;
-  }
-  .ace-key {
-    color: var(--accent);
-  }
-  .cap-key {
-    color: #99adbd;
-  }
-  .growth-chart {
-    width: 100%;
-    margin: 10px 0 16px;
-  }
-  .growth-chart text {
-    fill: #a4abb4;
-    font-size: 9px;
-  }
-  .chart-grid {
-    stroke: #2d343d;
-    stroke-width: 1;
-  }
-  .cap-line {
-    fill: none;
-    stroke: #99adbd;
-    stroke-width: 1.5;
-    stroke-dasharray: 4 3;
-  }
-  .ace-line {
-    fill: none;
-    stroke: var(--accent);
-    stroke-width: 2;
-  }
-  .position-line {
-    stroke: #646260;
-    stroke-dasharray: 2 3;
-  }
-  .ace-dot {
-    fill: var(--accent);
-    stroke: var(--surface);
-    stroke-width: 2;
   }
   details {
     border-top: 1px solid var(--line);
@@ -1483,24 +973,6 @@
     font-size: 11px;
     overflow-wrap: anywhere;
   }
-  .growth-input label {
-    color: var(--color-cartographer-muted);
-    font-size: 10px;
-  }
-  .growth-input label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .growth-input input {
-    width: 51px;
-    padding: 7px;
-  }
-  .advanced {
-    border: 0;
-    padding: 0;
-    margin: 12px 0 0;
-  }
   textarea {
     display: block;
     width: 100%;
@@ -1511,18 +983,12 @@
     margin: 10px 0;
     resize: vertical;
   }
-  .advanced textarea {
-    min-height: 250px;
-  }
   .global-settings {
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 8px;
     padding: 16px 20px;
     margin-top: 24px;
-  }
-  .global-settings label {
-    font-size: 12px;
   }
   .global-settings .actions {
     justify-content: flex-start;
@@ -1583,28 +1049,6 @@
     background: #2b3037;
     color: var(--color-cartographer-ink);
   }
-  .role-chip {
-    font-size: 11px;
-    color: var(--color-cartographer-muted);
-  }
-  .role-chip.headliner {
-    color: var(--accent);
-  }
-  .role-chip.elite {
-    color: #99adbd;
-  }
-  .standing {
-    color: var(--accent);
-    font-weight: 600;
-  }
-  .arc-select {
-    padding: 5px 24px 5px 7px;
-    font-size: 11px;
-  }
-  .arc-select:disabled {
-    opacity: 0.75;
-    cursor: default;
-  }
   .stat-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1628,53 +1072,6 @@
     font-variant-numeric: tabular-nums;
     overflow-wrap: anywhere;
   }
-  .alt-key {
-    color: #8a7a5c;
-  }
-  .alt-line {
-    fill: none;
-    stroke: #8a7a5c;
-    stroke-width: 1.25;
-    opacity: 0.8;
-  }
-  .arc-choices {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 14px;
-    border: 0;
-    padding: 0;
-    margin: 0 0 12px;
-  }
-  .arc-choices legend {
-    color: var(--color-cartographer-muted);
-    font-size: 10px;
-    margin-bottom: 6px;
-  }
-  .arc-choices label {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 12px;
-  }
-  .arc-choices input {
-    accent-color: var(--accent);
-  }
-  .feasibility {
-    margin-top: 24px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: var(--surface);
-    padding-bottom: 18px;
-  }
-  .feasibility-note {
-    margin: 0 18px 14px;
-  }
-  .venue-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-    padding: 0 18px;
-  }
   .venue-card {
     min-width: 0;
     border: 1px solid #2d333a;
@@ -1689,38 +1086,6 @@
     flex-wrap: wrap;
     gap: 6px;
     padding: 12px 12px 8px;
-  }
-  .feasibility-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-  }
-  .feasibility-table th {
-    position: static;
-    background: transparent;
-    padding: 6px 8px;
-  }
-  .feasibility-table td {
-    padding: 8px;
-  }
-  .feasibility-table td:first-child,
-  .feasibility-table th:first-child {
-    padding-left: 12px;
-  }
-  .guaranteed {
-    font-weight: 600;
-  }
-  tr.risk .guaranteed {
-    color: #ffb8bc;
-  }
-  .risk-flag {
-    display: block;
-    color: #ffb8bc;
-    font-size: 10px;
-    margin-top: 2px;
-  }
-  .excluded {
-    margin: 8px 12px 10px;
   }
   .arc-table {
     border-collapse: collapse;
@@ -1737,11 +1102,6 @@
     flex-wrap: wrap;
     justify-content: flex-start;
   }
-  .arc-table th[scope="row"] {
-    color: var(--color-cartographer-ink);
-    font-size: 12px;
-    padding-left: 0;
-  }
   .arc-table td {
     border-top: 0;
     padding: 4px 8px;
@@ -1749,77 +1109,9 @@
   .arc-table td:first-child {
     padding: 4px 8px;
   }
-  .arc-table input,
-  .window-inputs input {
+  .arc-table input {
     width: 60px;
     padding: 6px 7px;
-  }
-  .window-inputs {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px 18px;
-    margin: 6px 0 12px;
-  }
-  .window-inputs label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-    color: var(--color-cartographer-muted);
-  }
-  .roster-bar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px 24px;
-    padding: 14px 18px;
-    margin-bottom: 24px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: var(--surface);
-  }
-  .roster-bar > label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-    color: var(--color-cartographer-muted);
-  }
-  .roster-bar input[type="text"] {
-    width: 110px;
-    padding: 7px 9px;
-  }
-  .roster-bar > .hint {
-    flex: 1 1 260px;
-  }
-  .flag-choices {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 6px 14px;
-    border: 0;
-    padding: 0;
-    margin: 0;
-    min-width: 0;
-  }
-  .flag-choices legend {
-    float: left;
-    margin-right: 10px;
-    color: var(--color-cartographer-muted);
-    font-size: 11px;
-  }
-  .flag-choices label {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    font-family: var(--font-cartographer-mono);
-    overflow-wrap: anywhere;
-  }
-  .flag-choices input,
-  .prototype-toggle input {
-    accent-color: var(--accent);
   }
   input[type="text"] {
     border: 1px solid var(--line);
@@ -1829,12 +1121,6 @@
     font: inherit;
     font-size: 12px;
     min-width: 0;
-  }
-  .team-grid {
-    margin-bottom: 6px;
-  }
-  .allowance-note {
-    margin: 0 0 16px;
   }
   .member-name {
     display: flex;
@@ -1857,66 +1143,6 @@
     padding: 1px 6px;
     margin-left: 8px;
     font-size: 10px;
-  }
-  .roster-scroll {
-    max-width: 100%;
-    overflow-x: auto;
-    margin-bottom: 20px;
-  }
-  .roster-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 11px;
-    margin: 8px 0 12px;
-  }
-  .roster-table th {
-    position: static;
-    background: transparent;
-    padding: 6px 8px;
-  }
-  .roster-table th:first-child,
-  .roster-table td:first-child {
-    padding-left: 4px;
-  }
-  .roster-table td {
-    padding: 7px 8px;
-  }
-  .roster-table small {
-    display: block;
-    color: var(--accent);
-    font-size: 10px;
-  }
-  .roster-table tr.in-team td:last-child {
-    color: #b9d8be;
-  }
-  .roster-table tr.locked {
-    color: var(--color-cartographer-muted);
-  }
-  .roster-table .score {
-    font-weight: 600;
-  }
-  .ace-order {
-    list-style: none;
-    padding: 0;
-    margin: 10px 0;
-    display: grid;
-    gap: 5px;
-  }
-  .ace-order li {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-  }
-  .ace-order span {
-    flex: 1;
-  }
-  .ace-order button {
-    padding: 4px 9px;
-  }
-  .ace-order button:disabled {
-    opacity: 0.4;
-    cursor: default;
   }
   .roster-form fieldset {
     border: 1px solid #2d333a;
@@ -1954,46 +1180,6 @@
     width: 100%;
     padding: 5px 7px;
   }
-  .prototype-toggle {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    margin: 6px 0 10px;
-  }
-  .settings-heading {
-    margin-top: 18px;
-  }
-  .size-inputs input {
-    margin-left: 4px;
-  }
-  .modifier-list {
-    list-style: none;
-    padding: 0;
-    margin: 8px 0;
-    display: grid;
-    gap: 5px;
-    font-size: 12px;
-  }
-  .modifier-list li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    font-family: var(--font-cartographer-mono);
-    overflow-wrap: anywhere;
-  }
-  .modifier-list button {
-    padding: 4px 9px;
-  }
-  .window-inputs select {
-    padding: 6px 26px 6px 8px;
-    max-width: 260px;
-  }
-  .window-inputs input[type="text"] {
-    width: 170px;
-    padding: 6px 7px;
-  }
   .visually-hidden {
     position: absolute;
     width: 1px;
@@ -2005,10 +1191,93 @@
     white-space: nowrap;
     border: 0;
   }
+  button:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  button.small {
+    padding: 4px 9px;
+  }
+  .tr-input {
+    width: 68px;
+    padding: 5px 6px;
+  }
+  td.incomplete,
+  .risk-text {
+    color: #ffb8bc;
+  }
+  .provenance {
+    margin: 8px 0 18px;
+  }
+  .incomplete-chip {
+    color: #ffb8bc;
+    border-color: #a15e64;
+  }
+  .roster-form {
+    margin: 10px 0 0;
+  }
+  .roster-form fieldset.in-team {
+    border-color: #4d4331;
+  }
+  .entry-tools {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+  }
+  .entry-tools button {
+    padding: 4px 9px;
+  }
+  .roster-actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    margin: 8px 0;
+  }
+  .advanced-panel textarea {
+    min-height: 250px;
+  }
+  .league {
+    margin-top: 24px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    padding-bottom: 18px;
+  }
+  .league-note {
+    margin: 0 18px 14px;
+  }
+  .league-grid {
+    list-style: none;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+    padding: 0 18px;
+  }
+  .league-team {
+    list-style: none;
+    margin: 0;
+    padding: 0 12px 12px;
+    display: grid;
+    gap: 4px;
+    font-size: 12px;
+  }
+  .league-team li {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    border-top: 1px solid #2b3037;
+    padding-top: 4px;
+  }
+  .scaler-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 48px;
+    margin: 10px 0 12px;
+  }
+  .scaler h3 {
+    margin-top: 6px;
+  }
   @media (max-width: 1150px) {
-    .venue-grid {
-      grid-template-columns: 1fr;
-    }
     .world-panel {
       gap: 18px;
       grid-template-columns: 90px minmax(150px, 1fr);
@@ -2034,9 +1303,6 @@
       flex: 1;
     }
     .pool-footer {
-      flex-wrap: wrap;
-    }
-    .growth-input {
       flex-wrap: wrap;
     }
   }

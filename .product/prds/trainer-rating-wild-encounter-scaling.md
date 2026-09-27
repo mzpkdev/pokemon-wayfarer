@@ -7,19 +7,11 @@ The current [circuit producer](../../game/src/league_circuit.c) implements
 contributions and soft-cap anchors are unchanged. The Partial marker does not
 certify all wild-scaling and party-progression acceptance below.
 
-The proposed [Seeded Trainer Circuit](seeded-trainer-circuit.md) retains this
-player TR contract. If adopted, its recurring editions use separate current
-results and lifetime venue clears: lifetime rewards contribute +8 per venue
-once, and new editions never reset TR or add further progression contributions.
-Signup thresholds remain provisional (about 8/16/24 global badges by circuit
-position plus a predecessor win). Player TR still follows actual badges and
-committed first lifetime clears, so sub-24-badge clears remain relevant balance
-cases. A lost competition grants no clear or TR contribution. The proposed
-[trainer world progression](trainer-world-progression.md) sets enrolled NPC
-strength from the world cap for canonical milestones plus each trainer's
-standing and seeded growth arc. It never becomes the player's rating or an
-input to wild populations, caps, XP, obedience, marts, ordinary Trainers, or
-Gym members.
+The proposed [Trainer Circuit](seeded-trainer-circuit.md) and
+[well-known trainer rating](trainer-world-progression.md) leave this player TR
+and its wild-encounter use unchanged; the
+[player progression target](../specs/trainer-rating-party-progression.md)
+describes uncapped TR and well-known trainers' separate ratings.
 
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes named native-utility carriers and permanent-retention

@@ -255,13 +255,13 @@ The Rating input is explicit: marts, ordinary Trainers, and Gym members read
 player TR at their existing sample boundaries. Existing six-slot Gym plans use
 player TR when `B_GYM_LEADER_SCALING` is enabled; it is disabled by default.
 Giovanni retains his separate five-slot player-TR projection. Current fixed
-Leagues use their persisted admission value. Proposed
-[trainer world progression](trainer-world-progression.md) instead derives
-enrolled initial singles Gym and [seeded circuit](seeded-league-circuit.md)
-levels from the world cap for canonical badge and first-clear milestones plus
-each trainer's standing and seeded arc, never from player TR. Gym plans snapshot
-at battle setup; each competition freezes its five-trainer field at entry and
-keeps it through reload and retries after a loss. Consumers and lifecycle code
+Leagues use their persisted admission value. The proposed
+[well-known trainer rating](trainer-world-progression.md) instead derives
+well-known trainers' team level and size, in every battle with them including
+the [league circuit](seeded-league-circuit.md), from each trainer's own
+authored, fixed TR, never from player TR. Team plans snapshot at battle setup;
+each league field is captured at entry and stays locked until the venue is
+won; a loss, leaving, or reload keeps it. Consumers and lifecycle code
 own those samples, eligibility, and persistence; the evaluator remains a pure
 function of explicit curve ID and rating. Host Gym/League audits consume the
 same curve points; keep independent golden expected results for equivalence

@@ -2,24 +2,20 @@
 
 Implemented: Yes
 
-Proposed successor: [Seeded Trainer Circuit](seeded-trainer-circuit.md) replaces
-the fixed order and lineups with recurring circuit editions and a seeded trainer
-pool. Each edition visits Indigo, Sevii Masters, and Hoenn in a seeded order,
-and each (edition, venue) holds one competition whose five-trainer field is
-selected and frozen at entry. A loss retries the same field; only a win
-advances. Trainer strength follows
-[trainer world progression](trainer-world-progression.md): the world cap for
-canonical badges and first clears plus each trainer's standing and seeded growth
-arc, never player TR. Recurring editions do not reset lifetime unlocks or repeat
-+8 player-TR first-clear rewards; exhibition replays are outside the successor
-scope. The [seeded runtime](../specs/seeded-league-circuit.md) owns signup,
-entry, retry, and win. The current fixed circuit contract below remains the ROM
-implementation baseline.
+Proposed successor: the [Trainer Circuit](seeded-trainer-circuit.md)
+replaces the fixed lineups. Each venue fields the global top five well-known
+trainers by TR, strongest last, each at their own authored, fixed TR per
+[well-known trainer rating](trainer-world-progression.md), never player TR.
+After a loss the venue is locked to the same field until the player wins it.
+Signup, venue order, replays, records, ceremonies, and unlocks stay as below
+until designed. The [circuit runtime](../specs/seeded-league-circuit.md) owns
+entry, the loss lock, and the win commit. The current fixed circuit contract
+below remains the ROM implementation baseline.
 
 The current runtime implements the fixed Indigo → Sevii Masters → Hoenn circuit
 with canonical stage clears, one shared Indigo result projected to Kanto/Johto,
 and +8 player TR per first-clear venue. Opponents remain fixed and scale from
-the player's saved entry TR; seeded/recurring behavior is not implemented.
+the player's saved entry TR; the successor is not implemented.
 See the [implemented circuit contract](../specs/wayfarer-interregional-league-circuit.md)
 and [current producer](../../game/src/league_circuit.c). Campaign balance
 acceptance remains pending under [League scaling](league-scaling.md).
@@ -188,9 +184,9 @@ Collecting all badges first remains valid:
 Trainer Rating remains a high-water mark. It drives wild, mart,
 ordinary-Trainer, Gym-member, soft-cap, and obedience consumers, plus Giovanni's
 current five-slot projection. The shared six-slot Gym feature reads player TR
-when enabled and is disabled by default. Proposed enrolled singles Gym opponents
-instead follow the world cap under
-[trainer world progression](trainer-world-progression.md); the other consumers
+when enabled and is disabled by default. Proposed well-known trainers
+instead use their own fixed TR under
+[well-known trainer rating](trainer-world-progression.md); the other consumers
 continue to read player TR. Current fixed circuit opponents use their saved
 run-entry snapshot through League scaling.
 

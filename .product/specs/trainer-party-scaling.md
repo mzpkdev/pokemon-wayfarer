@@ -7,9 +7,9 @@ Current ROM routing includes [League scaling](league-scaling.md) with saved play
 League levels are no longer static. See [the level resolver](../../game/src/trainer_party_scaling.c)
 and [the circuit producer](../../game/src/league_circuit.c). The
 [PRD](../prds/trainer-party-scaling.md) summarizes the proposed
-[trainer world progression](trainer-world-progression.md) boundary; ordinary
+[well-known trainer rating](trainer-world-progression.md) boundary; ordinary
 Trainers and Gym members keep this document's player-TR snapshot and never read
-NPC standing or arcs.
+a well-known trainer's TR.
 
 ## Scope and authority
 
@@ -35,8 +35,9 @@ ordinary transformation. The dedicated six-slot Gym feature is disabled by
 use player TR when enabled. Disabled paths retain existing authored behavior.
 Giovanni's initial Viridian battle separately uses a bespoke five-slot player-TR
 projection in [party construction](../../game/src/battle_main.c). Proposed
-world-cap NPC strength and authored rosters belong to the world-progression
-and Gym specifications. `LEAGUE` currently routes the fifteen enrolled circuit
+well-known trainer TR and rosters belong to the
+[well-known trainer rating](trainer-world-progression.md) and Gym
+specifications. `LEAGUE` currently routes the fifteen enrolled circuit
 runtime IDs to the separate [League scaling specification](league-scaling.md),
 including its run-context validation and authored fallback when scaling is
 disabled. Those fifteen positions cover seventeen possible source parties:

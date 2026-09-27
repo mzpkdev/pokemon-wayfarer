@@ -11,23 +11,18 @@ The [Kanto origin opening](wayfarer-kanto-origin-opening.md) separately owns
 the native Pallet sequence through Parcel delivery, Pokédex receipt, and five
 Poké Balls.
 
-Circuit-dependent successor: the proposed [Seeded Trainer Circuit](seeded-trainer-circuit.md)
-replaces the guaranteed Indigo/Masters lineups and fixed visiting-origin Blue
-League profile below with selected participants and roster teams. Its
-[runtime contract](../specs/seeded-league-circuit.md) proposes Blue's Dojo unlock
-after the first lifetime scheduled venue clear, instead of Indigo only. These
-changes take precedence for circuit appearances/unlocks only if the draft is
-adopted. Local Kanto adventures, Blue's origin-specific rivalry and forward
-story progression, and Giovanni's badge role remain owned here; the current
-port and approved fixed circuit retain their existing behavior meanwhile.
+Circuit-dependent successor: the proposed
+[Trainer Circuit](seeded-trainer-circuit.md) replaces the guaranteed Indigo/Masters
+lineups and fixed visiting-origin Blue League profile below with the global top
+five by TR. Its [runtime contract](../specs/seeded-league-circuit.md) keeps
+Blue's Dojo unlock on the first committed Indigo win. These changes take
+precedence for circuit appearances only if the draft is adopted. Local Kanto
+adventures, Blue's origin-specific rivalry and forward story progression, and
+Giovanni's badge role remain owned here; the current port and approved fixed
+circuit retain their existing behavior meanwhile.
 
-The proposed [trainer world progression](trainer-world-progression.md)
-enrolls initial singles Gym battles explicitly and permits approachable opening
-teams. Blue's growth there applies only to his league appearances; it does not
-restore Blue as the Viridian badge owner or change Giovanni's local
-prerequisites. Blue's rival, Dojo, and Gym-ID battles keep their own policies;
-canonical identity does not enroll them. Original FRLG/HNS parties remain
-provenance references for authored rosters, not mandatory opening teams.
+Giovanni's and Blue's battles follow the proposed
+[well-known trainer rating](trainer-world-progression.md); Blue gains no badge.
 
 ## Intent
 

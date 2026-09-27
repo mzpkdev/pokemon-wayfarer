@@ -1,389 +1,213 @@
-# Trainer world progression
+# Well-known trainer rating
 
-PRD: [Trainer world progression](../prds/trainer-world-progression.md)
+PRD: [Well-known trainer rating](../prds/trainer-world-progression.md)
 Implemented: No. The current ROM keeps its existing Gym and League scaling
 until adoption; the browser explorer is provisional tooling.
-Design status: Target contract. The standing/arc model and the roster model
-(aces, fillers, size by strength) are accepted; every numeric default below is
-provisional catalog content (D3) unless stated.
+Design status: v0 target contract. The model is accepted; each trainer's TR
+and roster, and every anchor marked provisional, are catalog content under
+review.
 
 ## Ownership and scope
 
-This specification is the single owner of NPC growth for enrolled Wayfarer
-encounters: the world cap, the progress index, level headroom, per-trainer
-standing, seeded growth arcs, rosters and team composition, level
-resolution, and the Gym-encounter snapshot. Consumers link here rather than
-restating it.
+This specification is the single owner of the v0 well-known trainer model:
+the well-known inventory, the rule that routes every battle with a well-known
+character to their TR plan, trainer TR, scalers, the v0 trainer scalers,
+rosters, team resolution, the battle snapshot, and their validation. Consumers
+link here rather than restating it.
 
 - [Gym Leader scaling](gym-leader-scaling.md) owns badge-encounter coverage and
-  battle construction.
-- [Circuit trainer pool](circuit-trainer-pool.md) owns league eligibility, role
-  windows, home/visitor selection, and rotation.
-- [Seeded league circuit](seeded-league-circuit.md) owns signup, competition
-  identity, entry and result transactions, and retries.
-- [Trainer roster influence](trainer-roster-influence.md) owns modifier
-  hooks, evolution-item gifts, and trade offers and records.
+  is the single authority for battle construction (source-member identity,
+  `AUTHORED`/`LEVEL_UP` moves, rewards and AI, randomizer precedence). Those
+  rules apply to every well-known battle, not only Gym battles.
+- [League circuit runtime](seeded-league-circuit.md) and
+  [circuit trainer pool](circuit-trainer-pool.md) own league fields and their
+  lifecycle.
 - [Player progression](trainer-rating-party-progression.md) owns the player's
-  rating and soft cap, which this model reads only as a pure function.
+  TR and soft-cap curve.
+- [Trainer roster influence](trainer-roster-influence.md) is parked and not
+  part of v0.
 
-The earlier NPC trainer-rating model is superseded in full: no `baselineTR`,
-badge TR checkpoints, `leagueGrowth`, NPC TR-to-level anchors, `effectiveTR`,
-90–110% growth modifier, or TR role bands. Player TR, soft cap, experience,
-obedience, wild, mart, ordinary-trainer, and Gym-member policies are unchanged.
-Standalone builds keep their existing contracts.
+v0 supersedes every earlier NPC growth model in full: no world cap,
+`levelBase` or headroom, progress index, standing or bias, growth arcs or arc
+seeds, aces and fillers, filler scores or jitter, evolution by line, trades or
+gifts, and none of the older `baselineTR`, badge checkpoints, `effectiveTR`, or
+TR role bands. Player TR, the soft cap, experience, obedience, wild and static
+encounters, marts, ordinary trainers, and Gym members keep their current
+policies, which read player TR. Standalone builds are unchanged.
 
-## World point and world cap
+## Well-known inventory
 
-`B` is the count of distinct global badges (0–24). `L` is the lifetime
-first-clear mask over Indigo, Sevii Masters, and Hoenn; `C = popcount(L)`
-(0–3). Both come from the shared runtime's canonical facts, never from local
-clear flags, titles, current-edition results, or encounter counts. A badge or
-first clear commits through its existing reward transaction and affects only
-later encounters. Replays, losses, reloads, and later edition clears add
-nothing to `B` or `C`; completed editions advance only the progress index.
+The v0 inventory is the 37 characters in the explorer catalog: the 23 singles
+Gym Leaders (per [Gym Leader scaling](gym-leader-scaling.md#coverage-and-identity)),
+the Kanto, Johto, and Hoenn Elite Four, Lance, Wallace, Steven, and Blue. Red,
+Tate & Liza, and every other character are not well-known in v0 and keep their
+current policies.
 
-```text
-milestoneTR(B, C) = clamp(the circuit producer's candidate rating for B
-                          badges and C first clears, 0, 80)
-worldCap(B, C)    = softCap(milestoneTR(B, C))
-```
+Mapping each encounter ID of these characters (Gym, overworld, rematch,
+league, and story battles) to its `characterId` is an implementation inventory
+task owned here. Exactly one battle policy owns an encounter; a mapped
+encounter always uses this model.
 
-`softCap` is the player cap table and half-up interpolation in
-[player progression](trainer-rating-party-progression.md#soft-level-cap-curve);
-the candidate rating includes +8 per first clear. The resolver is pure in
-`(B, C)`. It never calls `GetTrainerRating()`, reads or updates the saved
-high-water rating, or looks at party levels, training, or play time.
+## Trainer rating
 
-| (B, C) | (0,0) | (4,0) | (8,0) | (8,1) | (16,1) | (16,2) | (24,2) | (24,3) |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| worldCap | 15 | 23 | 42 | 52 | 62 | 78 | 89 | 100 |
+- **Independent.** The player has one TR and each well-known trainer has their
+  own. Neither is ever computed from the other. Resolving a trainer never reads
+  `GetTrainerRating()`, the saved high-water rating, party levels, badges, or
+  clears.
+- **Source of truth for every battle.** Gym, overworld, rematch, league, and
+  story battles with a trainer all build from that trainer's TR and roster.
+  Story battles include Blue's rival fights, Giovanni's Rocket battles, and the
+  Saffron Dojo. There is no battle-specific adjustment, role bonus, or
+  exception. Every encounter ID of a character resolves to one canonical
+  `characterId`, one TR, and one roster.
+- **Authored and fixed.** Each trainer's TR is a catalog value. v0 has no rule
+  that changes it, so a trainer fields the same team in every battle and every
+  save. Known v0 consequence: Blue's early rival fights and his late ones use
+  the same team.
+- **Uncapped.** TR is a non-negative integer with no upper limit. Nothing
+  hardcodes 80; today's content happens to span about 0–80. Units are unchanged.
 
-**NPCs follow the world, not the player's party.** The world cap is the level a
-player would be capped at from milestones alone. Because it ignores the
-player's actual rating and party, grinding or under-levelling cannot move any
-NPC, while the same milestone still raises the player's cap and every trainer
-together.
+## Scalers
 
-### Progress index
-
-Arcs read a progress index `p` rather than `B`, so rivals keep developing
-through the first few circuit editions:
-
-```text
-E = min(completedEditions, 3)
-p = B + 8 * E                 // 0..48
-```
-
-`completedEditions` is the circuit runtime's committed count of fully
-completed editions (all three venues won and ceremonies finished). Completing
-edition 1 requires 24 badges, so edition 1 spans p = 0–24, edition 2 entries
-use p = 32, edition 3 p = 40, and edition 4 onward p = 48, after which
-standings stop changing (rotation still varies fields). Gyms read the same
-`p`; in practice every Gym is beaten before edition 2, and rematches are not
-enrolled.
-
-### Level headroom
+Every TR-driven property is a **scaler**: an authored table of anchors
+`(tr, value)` with the first at TR 0, strictly increasing TRs, and
+non-decreasing values. Between adjacent anchors `(t0, v0)` and `(t1, v1)`, with
+floor division (halves round up):
 
 ```text
-HEADROOM        = 4                                 // provisional
-levelBase(B, C) = min(worldCap(B, C), 100 - HEADROOM)
+d     = t1 - t0
+value = v0 + floor((2 * (tr - t0) * (v1 - v0) + d) / (2 * d))
 ```
 
-Every edition-1 field (entered with at most two first clears) has
-`worldCap <= 96`, where `levelBase = worldCap` and nothing changes. At (24,3), where worldCap is 100,
-the base is 96, so post-game fields stay ramped just below level 100:
-contenders at or below 94, elites 95–97, and the headliner 98–100. Standing,
-roles, and windows are unchanged because they read standing, not levels.
+At or above the last anchor the value **stays flat**. Each scaler therefore has
+its own natural cap (the last value), reached at an authored saturation TR (the
+last anchor's TR). A **step** scaler instead holds each anchor's value until
+the next anchor. Scalers are versioned catalog content; runtime never repairs
+or extrapolates them.
 
-## Standing
+### v0 scalers
 
-Each canonical trainer has an integer standing in levels relative to the cap:
+| Scaler | Form | Range | Natural cap | Saturates at |
+| --- | --- | --- | --- | --- |
+| Team level (well-known trainers) | interpolated | Lv 15 → 100 | Lv 100 | TR 80 |
+| Team size (well-known trainers) | step | 2 → 6 | 6 | TR 55 (provisional) |
+| Player soft cap | interpolated | Lv 15 → 100 | Lv 100 | TR 80 (existing curve) |
+| Wild, static, ordinary trainers | existing policies | existing | existing | existing |
+
+**Team level** uses the same anchors as the
+[player soft-cap curve](trainer-rating-party-progression.md#soft-level-cap-curve),
+so a trainer at TR 40 and a player capped at TR 40 mean the same level:
 
 ```text
-standing(t, p)            = t.bias + arcDelta(t.arc, p)
-strengthLevel(t, B, C, p) = clamp(levelBase(B, C) + standing(t, p), 1, 100)
+(0,15) (4,16) (8,18) (16,23) (30,30) (40,42) (55,60) (65,80) (80,100)
 ```
 
-The **strength level** is the level the trainer's team is built around: the top
-ace sits at it, and it sets team size. `C` enters only through `levelBase`;
-there is no per-trainer first-clear growth. `bias` is authored per trainer in
--6..+6. Role defaults:
+**Team size** (step, provisional): TR 0–10 → 2, 11–29 → 3, 30–41 → 4,
+42–54 → 5, 55+ → 6. The steps line up with roughly Lv 20/30/45/60 on the level
+curve.
 
-| Role | Default bias | Notes |
-| --- | ---: | --- |
-| Gym Leader | -2 | Giovanni, Sabrina, Clair, Morty, Norman, Winona, and Juan default to -1 |
-| Elite Four | 0 | |
-| Champion | +2 | |
-| Blue | +1 | With fast-only arcs, "always a step ahead" |
-
-The -1 leaders give each region a Gym Leader who can headline in some saves,
-while the Gym mean stays near -2. Role and title choose only the authored
-default; runtime never derives bias from title, Gym order, home league, or
-source Trainer ID.
-
-## Growth arcs
-
-An arc is an authored integer `arcDelta` tuple at progress checkpoints
-p = 0/8/16/24/32/40/48. Arc IDs are stable and never reused:
-
-| ID | Arc | 0 | 8 | 16 | 24 | 32 | 40 | 48 | Flavour |
-| ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| 1 | steady | 0 | 0 | 0 | 0 | 0 | 0 | 0 | Keeps pace with the world |
-| 2 | early | 0 | +3 | +2 | +1 | 0 | 0 | 0 | Rises fast, then settles at the world's pace |
-| 3 | late | 0 | -2 | 0 | +3 | +3 | +2 | +2 | Slow start, strong finish |
-| 4 | plateau | 0 | +1 | -1 | -3 | -3 | -2 | -1 | Veteran who stops improving |
-| 5 | rival | 0 | +2 | +3 | +3 | +3 | +3 | +3 | Relentless climb |
-
-Every arc is 0 at p=0, so each trainer's first encounter is identical in every
-save. For neighboring checkpoints `(p0, a0)` and `(p1, a1)` around `p`, with
-floor division (halves round toward positive infinity):
-
-```text
-d = p1 - p0
-arcDelta = a0 + floor((2 * (p - p0) * (a1 - a0) + d) / (2 * d))
-```
-
-At p=48 use the final checkpoint. Examples: Brock (bias -2) at (0,0) has
-strength level 13. Clair (bias -1) at (8,0) has 44 on early, 41 on steady. Blue
-on rival at (16,1) has 62 + 1 + 3 = 66, and at (24,3) in edition 2 (p=32) has
-96 + 1 + 3 = 100.
-
-Each trainer authors `allowedArcs`: two or three lore-fitting arcs. Blue allows
-only {rival, early}. Veterans (for example Bruno, Agatha, Lorelei, Pryce, Chuck,
-Wattson) include plateau; rising stars (for example Whitney, Falkner, Clair,
-Winona) include early. Build validation rejects empty, duplicated, or unknown
-entries and sorts the list by arc ID, so source reordering changes nothing.
-
-### Arc seed
-
-The arc is one immutable choice per canonical trainer per save, derived from
-the [shared seed framework](playthrough-seed-framework.md):
-
-```text
-arc = allowedArcs[Uniform(len(allowedArcs), growthArcKey)]
-```
-
-| Key field | Value |
-| --- | --- |
-| `domainId` | TRAINER_GROWTH = 2 |
-| `decisionId` | GROWTH_ARC = 1 (renames GROWTH_RATE) |
-| `decisionVersion` | 2 (draw layout) |
-| `entityLo`, `entityHi` | canonical `characterId`, 0 |
-| `occurrenceId`, `drawId` | 0, 0 |
-
-The key's `decisionVersion` describes only the draw layout. It is separate from
-the **growth-policy version**, which covers arc tuples, allowed-arc lists, bias,
-headroom, and [rosters](#rosters). Pin the growth-policy version at new game,
-before any enrolled encounter. Derive lazily and without side effects; asking
-again returns the same arc. Aliases, Gym encounters, and league appearances of
-one character share it. It never rerolls on a badge, clear, loss, reload, region
-change, or edition. The key contains no badge count, venue, edition, history,
-catalog position, party, or player rating, so adding trainers cannot perturb
-existing arcs. Ordinary Pokémon RNG is never used. Tuple, bias, or headroom
-changes bump only the growth-policy version. Allowed-list changes bump the
-policy version too; the draw key stays unchanged, so a changed list changes the
-outcome by design. A save pinned to an unsupported policy follows prerelease
-save rejection rather than migration.
-
-### Arc hints
-
-Arcs are presentation-visible only through hint lines keyed by
-`(characterId, arc, phase)`, where `phase` is the arc segment containing `p`:
-0–7, 8–15, 16–23, 24–31, 32–39, 40–47, or 48. Gym dialogue, NPC gossip, and league lineup previews select
-from these lines. No UI shows arc names, bias, standing, or the cap gap. Hint
-text is D3 content; a missing line falls back to the encounter's ordinary text.
+| TR | 0 | 12 | 35 | 50 | 60 | 80 | 200 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| teamLevel | 15 | 21 | 36 | 54 | 70 | 100 | 100 |
+| teamSize | 2 | 3 | 4 | 5 | 6 | 6 | 6 |
 
 ## Rosters
 
-Each canonical trainer authors a **roster**: their true potential. How much of
-it they field grows with their own strength. Rosters replace badge-keyed team
-stages and the league-only six-member competitive profile. The roster format,
-`sizeFor`, the ace allowance, `JITTER`, and all roster content belong to the
-pinned growth-policy version.
+Every well-known trainer authors **exactly one ordered list of six entries**.
+Rosters do not differ by battle, starter, or difficulty: Blue has one fixed
+six whatever the player's starter. The game has no per-difficulty trainer data
+([difficulty constants](../../game/include/constants/difficulty.h));
+challenge-menu options (trainer items, trainer IVs/EVs including badge
+scaling, level cap, experience, and so on) layer on top as they do today.
 
-### Roster format
-
-| Part | Fields |
+| Field | Contract |
 | --- | --- |
-| Aces | 1–3 in authored priority order. Each has a stable `aceId`, an evolution line, and per form (or per level band) exactly authored moves, held item, ability, and nature. Aces sit at offset 0 and are never tradable. |
-| Filler pool | Entries with a stable `fillerId` (unique in the roster, never reused), an evolution line, `baseScore` (0–100), moves policy, `levelOffset` (−6..0, default −2), and optional `requiresFlag`. A trade adds a traded filler entry. |
+| Species/form | Authored per entry; runtime never evolves or substitutes it. |
+| `levelOffset` | Integer −6..0, default −2. |
+| Moves policy | `AUTHORED` (exact moves) or `LEVEL_UP` (latest four level-up moves of the species at its level, per the existing constructor). |
+| Battle content | Held item, ability, nature, and IVs/EVs per the existing construction rules; unset fields use constructor defaults. |
 
-An **evolution line** is an ordered list of species/forms, each after the first
-with an authored evolve level, for example Onix → Steelix at Lv 35. A member
-takes the last form whose evolve level is at most its level. Every evolution
-is authored per line; runtime never infers one from species data.
-
-An authored filler's moves policy is `LEVEL_UP`: the latest four level-up
-moves of its current form at its level, oldest first. An optional authored
-signature move takes the last slot, replacing the latest level-up move unless
-already known. Traded fillers use `TRADED` ([below](#traded-fillers)). A
-filler may author item, ability, and nature per line; unset fields use the
-existing constructor defaults. A filler with `requiresFlag` is ineligible
-until that gameplay flag is set (for example, a cross-region species unlocked
-by giving away a ticket).
-
-### Team size and aces
+Resolution for a trainer with rating `tr`:
 
 ```text
-size        = sizeFor(strengthLevel)                 // table below
-allowance   = 1 if size <= 3, 2 if size <= 5, else 3 // maximum aces
-acesUsed    = min(allowance, number of aces)
-fillerSlots = size - acesUsed
+N           = teamSize(tr)
+team        = entries[1..N]                          // the first N entries
+memberLevel = clamp(teamLevel(tr) + entry.levelOffset, 1, 100)
+battleOrder = team reversed                          // entry N first, entry 1 last
 ```
 
-| `strengthLevel` | < 20 | 20–29 | 30–44 | 45–59 | ≥ 60 |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `sizeFor` (provisional) | 2 | 3 | 4 | 5 | 6 |
+Entry 1 is the **signature Pokémon**: present from TR 0 and always fought last.
+Example: at TR 35 with offsets `0, −2, −2, −4, −1, −3`, the team is entries
+1–4 at Lv 36/34/34/32, sent out in order 4, 3, 2, 1. Source FRLG, Emerald, and
+HNS parties are provenance and balance references; their levels never override
+this resolver. Because TR is fixed in v0, each trainer's team is fixed.
 
-The table is shared by Gyms and leagues, so a fast-rising trainer fields a
-bigger team sooner and a mid-game contender may bring four or five while the
-headliner brings six. Aces fill first, in priority order. The allowance is a
-maximum, not a reservation: unused ace slots go to fillers, so a single-ace
-trainer still reaches six (strength level 65: one ace and five fillers).
+## Battle snapshot
 
-### Filler composition
-
-```text
-jitter(t, f) = Uniform(JITTER + 1, fillerJitterKey)  // JITTER = 30, provisional
-score(t, f)  = f.baseScore + jitter(t, f) + sum of active modifier deltas
-```
-
-| Key field | Value |
-| --- | --- |
-| `domainId` | TRAINER_ROSTER = 3 |
-| `decisionId` | FILLER_JITTER = 1 |
-| `decisionVersion` | 1 |
-| `entityLo`, `entityHi` | canonical `characterId`, `fillerId` |
-| `occurrenceId`, `drawId` | 0, 0 |
-
-On every resolution (Gym setup, league entry, explorer), rank eligible fillers
-by descending score, breaking ties by ascending `fillerId`, and take the first
-`fillerSlots`. Eligible means not gated by an unset `requiresFlag` and not
-traded away. Nothing is saved: the inputs are the root, gameplay flags, the
-world point, trade records, and the pinned policy.
-
-**Containment.** With fixed scores and eligibility, the top K fillers are
-contained in the top K+1, and `fillerSlots` never falls as `size` grows, so
-growth never removes a filler. Only a changed modifier, flag, or trade can
-displace one; that is the intended player influence.
-
-**Modifiers.** An authored table of rows
-`(modifierId, flag, characterId, fillerId, delta)`, with signed integer deltas.
-A row is active while its flag is set; active deltas for the same filler sum.
-For example, telling Misty where Lapras lives could give Misty's Lapras +40.
-The [roster influence spec](trainer-roster-influence.md) owns the gameplay
-hooks that set these flags; concrete interactions are future content.
-
-### Levels and battle order
-
-```text
-memberLevel = clamp(strengthLevel + member.levelOffset, 1, 100)
-```
-
-Aces use offset 0. Default battle order: fillers first in ascending rank (the
-lowest-scored first), then aces in reverse priority, so the top ace comes last.
-Source parties are provenance and balance references; their absolute levels
-never override this resolver.
-
-### Traded fillers
-
-A trade (offers and records: [roster influence](trainer-roster-influence.md))
-removes the given filler from the pool and adds an ordinary filler entry for
-the player's Pokémon. The entry's `fillerId`, evolution line, and offset
-(default −2) come from the offer; its species, identity, and moves come from
-the trade record. Its score is the usual formula with
-`baseScore = 100 + TRADE_BOOST` (`TRADE_BOOST = 100`, provisional), so top-K
-normally includes it first. A strong modifier could outrank it; that is
-accepted. It follows its line from its post-trade form and never drops below
-that form.
-
-`TRADED` moves (keep all, learn level-up only): start from the four slots held
-at the trade, oldest first. For each level from `tradeLevel + 1` up to
-`memberLevel`, in order, take the level-up moves of the form held at that
-level, in learnset order; skip moves already known, otherwise fill an empty
-slot or replace the oldest move. The trainer never teaches TMs. The result is a
-pure function of the trade record and the current level.
-
-### Resolution rules
-
-For every arc and `C`, as `p` increases, team size must not drop. Validate
-authored content against this; never repair it at runtime. Once `levelBase`
-stops rising at the headroom ceiling (post-game), levels follow the arc alone
-and may fall between editions by design: a fading early bloomer or a veteran
-past their peak is part of the living-rivals story. Every post-game strength
-level is at least 60, so teams stay at six.
-
-## Snapshot boundaries
-
-### Gym encounters
-
-After resolving encounter identity and variant, capture `(B, L)`, `p`, the
-pinned growth-policy version, the derived arc, standing, worldCap and levelBase,
-content versions, and the composed team (member references, species/forms,
-levels, and moves) from current flags and trade records before constructing the
-opponent. Reconstruction within the battle reuses that plan; teardown clears it.
-A retry with unchanged milestones, flags, and trades produces identical
-membership, levels, and moves (battle RNG may still differ). A badge, first
-clear, flag, or trade earned before the retry legitimately changes the plan. The
-badge is awarded after the battle. Invalid content or a failed derivation fails
-preparation; never substitute player TR, a default arc, or another trainer.
-
-### League competitions
-
-Entry into a competition freezes, for that `(edition, venue)`, the world point,
-`p_event`, worldCap and levelBase, and every candidate's arc and standing; each
-selected trainer's composed team (member references, species/forms, levels,
-and moves) is frozen with it. A trainer fights at `levelBase_event + standing`
-under the same roster rule as Gyms, with no per-role adjustment. A loss
-retries the same frozen field; modifiers or trades earned in between do not
-change it. Only a win advances. The
-[seeded league circuit](seeded-league-circuit.md) and
-[circuit trainer pool](circuit-trainer-pool.md) own that lifecycle, the role
-windows on standing, and selection.
+At battle setup, after resolving encounter identity, capture the
+`characterId`, TR, scaler and roster content versions, and the resolved team
+before constructing the opponent: per member, the roster entry index and every
+resolved battle field the plan uses (species/form, level, moves, item,
+ability, nature, IVs/EVs, and battle order). Reconstruction within the battle
+reuses that plan; teardown clears it. A retry produces an identical team
+(battle RNG may still differ). League entry captures the selected trainers'
+plans in the field, which stays locked until the venue is won; the circuit
+specifications own that lifecycle. Invalid content or a
+failed resolution fails preparation; never substitute player TR, another
+trainer, or a random team. With fixed TRs every snapshot of a trainer is equal
+in v0; the snapshot is the boundary a future TR-change rule must respect.
 
 ## Validation
 
-- For every trainer × p 0–48 × C 0–3 × each allowed arc: arc interpolation
-  and rounding at every checkpoint and adjacent value, clamps, headroom at
-  (24,3), non-dropping team size, and identical p=0 encounters across arcs.
-- Rosters: every roster reaches six at maximum size with no flags or trades
-  (`min(3, aces)` plus flag-free fillers ≥ 6); 1–3 aces; unique, stable
-  `fillerId`s; score, offset, and flag references in range; modifier rows
-  naming existing trainers and fillers.
-- Containment: under fixed scores, for every roster and every size step, no
-  selected filler is removed, including with a traded filler; property-test
-  over at least 10,000 roots.
-- Evolution lines: evolve levels strictly increase within 2–100, each step is a
-  real evolution of the previous form, forms never regress as level rises, and
-  every ace form or band has moves, item, ability, and nature; `LEVEL_UP` yields
-  a usable move at every reachable level.
-- Traded-filler moves: fixture vectors from trade records at several levels,
-  including duplicates, evolution mid-range, and levels at or below the trade
-  level; the result at level L equals stepping level by level and ignores
-  query history.
-- Reload stability: composition is a pure function of root, flags, world point,
-  trade records, and policy; reloads, repeated queries, and query order never
-  change it, and a frozen league team ignores later flags and trades.
-- FILLER_JITTER key vectors for zero and all-ones roots, `characterId` and
-  `fillerId` bounds, `Uniform(31)` boundaries and rejection, and independence
-  from GROWTH_ARC and circuit keys.
-- worldCap equals `softCap(milestoneTR)` at all 100 world points, including the
-  reference table, and is independent of saved player TR and party.
-- Arc derivation: key vectors, `Uniform` boundaries, canonical list ordering,
-  stability across reloads, aliases, and editions, and independence from
-  lookup order, catalog additions, and ordinary battle RNG.
-- Gym/cap report: the ace-minus-cap distribution per B across all arcs. Target a
-  Gym mean near -2 with spread within about ±3, no widening as `C` grows, and
-  Blue always above 0. Where worldCap exceeds 96 (only (24,3)), the Blue and
-  headliner checks compare against `levelBase` instead of worldCap, including
-  the explorer's (24,3) Blue check.
-- League role feasibility, fallback rate, and variety are owned by the
-  [pool specification](circuit-trainer-pool.md), using standings from here.
+- Scalers: first anchor at TR 0, strictly increasing TRs, non-decreasing
+  values within the natural range; interpolation and half-up rounding at every
+  anchor, midpoint, and adjacent TR; flat above the last anchor, including very
+  large TRs; team-level anchors equal the player soft-cap anchors; team-size
+  steps at 10/11, 29/30, 41/42, and 54/55.
+- Rosters: exactly six entries per trainer; offsets in −6..0; at least one
+  offset-0 entry among the first `teamSize(0)` entries (entry 1 at offset 0 is
+  the simplest satisfying rule); valid species/forms; `AUTHORED` entries have
+  one to four legal moves; `LEVEL_UP` yields a usable move at every reachable
+  level.
+- Catalog: the inventory holds exactly the 37 v0 characters; each has one
+  non-negative integer TR and one roster; every enrolled encounter ID maps to
+  exactly one `characterId`.
+- Resolution report per trainer: TR, size, member entries, levels, moves, and
+  battle order, each level in 1–100 and the order reversed.
+- Determinism: resolution is a pure function of TR and content, independent of
+  player TR, party, badges, clears, save seed, query order, and battle RNG.
+- Snapshot: repeated construction within one battle and retries reproduce the
+  same plan; invalid content fails preparation without a fallback.
 
-The [explorer](../../devtools/ui/README.md#trainer-balance-explorer) is being
-reworked to model arcs, the cap gap, rosters, and venue feasibility; until then
-it is provisional evidence. It predicts species, sizes, and levels only.
-Playtesting owns combat balance (moves, items, AI). Finalize catalog content,
-hint lines, and playtest evidence before enabling this policy; the existing Gym
-and League implementations remain active until then and are not alternative
-targets.
+The [explorer](../../devtools/ui/README.md#trainer-balance-explorer) is
+provisional evidence and predicts species, sizes, and levels only. Playtesting
+owns combat balance (moves, items, AI). Finalize catalog content and playtest
+evidence before enabling this policy; the existing Gym and League
+implementations stay active until then.
+
+## Open questions
+
+- Each trainer's TR and roster, and the provisional team-size steps (content
+  review).
+
+## Later
+
+- Well-known status for more characters, such as Red or Tate & Liza.
+- A definition of the "next Gym's highest/lowest level" cap in an open world.
+- How NPC TR changes: own battles, journeys, a world clock.
+- Growth arcs and other per-save seeded variation of trainers.
+- Aces vs fillers with dynamic filler picks (an `ace` flag returns).
+- Player influence: modifiers, gifts, and trades
+  ([roster influence](trainer-roster-influence.md)).
+- Evolution by line instead of per-entry species.
+- Quality scalers beyond Lv 100 (items, IVs/EVs, movesets, AI) that saturate
+  later, so extra TR stays meaningful.
+- Offsets that shrink as TR rises.
+
+## References
+
+- [Player progression](trainer-rating-party-progression.md)
+- [Gym Leader scaling](gym-leader-scaling.md)
+- [League circuit runtime](seeded-league-circuit.md)
+- [Circuit trainer pool](circuit-trainer-pool.md)
+- [Trainer roster influence](trainer-roster-influence.md)

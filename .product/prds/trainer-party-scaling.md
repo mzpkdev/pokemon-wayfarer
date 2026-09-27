@@ -5,11 +5,11 @@ Implemented: Partial; runtime policies exist, campaign balance acceptance remain
 Current ROM routing includes [League scaling](league-scaling.md) with saved player-entry TR;
 League levels are no longer static. See [the level resolver](../../game/src/trainer_party_scaling.c)
 and [the circuit producer](../../game/src/league_circuit.c). The proposed
-[trainer world progression](trainer-world-progression.md) changes enrolled initial singles Gym and
-circuit opponents to world-cap standing, seeded growth arcs, and authored
-rosters. Ordinary Trainers and Gym members retain this document's player-TR
-snapshot and transformation rules; they never read NPC standing or arcs.
-Story, rival, Dojo, and rematch variants are not enrolled by canonical identity.
+[well-known trainer rating](trainer-world-progression.md) gives well-known
+trainers their own authored, fixed TR that sets team level and size in every
+battle with them. Ordinary Trainers and Gym members retain this document's
+player-TR snapshot and transformation rules; they never read a well-known
+trainer's TR.
 
 The current shared six-slot Gym feature is disabled by default in
 [configuration](../../game/include/config/trainer_party_scaling.h); it uses

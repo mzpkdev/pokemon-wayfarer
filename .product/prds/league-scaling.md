@@ -3,15 +3,14 @@
 Status: Scaling engine and fixed circuit wiring implemented; campaign balance acceptance pending.
 Implemented: Partial
 
-Proposed successor: [Trainer world progression](trainer-world-progression.md)
-owns NPC strength for enrolled Gym and league encounters: the world cap for the
-canonical badge and first-clear milestones plus each trainer's authored standing
-and seeded growth arc, never player TR or party. The
-[Seeded Trainer Circuit](seeded-trainer-circuit.md) replaces the fixed rosters
-with seeded five-trainer fields, one competition per edition and venue, frozen
-at entry and retried unchanged after a loss; the
-[seeded runtime](../specs/seeded-league-circuit.md) owns that lifecycle. The
-fixed runtime contract below describes current ROM behavior, not this
+Proposed successor: under the
+[well-known trainer rating](trainer-world-progression.md), each well-known
+trainer has an authored, fixed TR that sets team level and size in every
+battle, never player TR or party. The [Trainer Circuit](seeded-trainer-circuit.md)
+replaces the fixed rosters: each venue fields the global top five by TR,
+strongest last, and after a loss the venue is locked to that field until won;
+the [circuit runtime](../specs/seeded-league-circuit.md) owns that lifecycle.
+The fixed runtime contract below describes current ROM behavior, not this
 unimplemented successor.
 
 The fixed Indigo/Masters/Hoenn roster and venue wiring, stage/replay identity,
@@ -24,17 +23,9 @@ old progression/wiring description predates the current circuit.
 
 ## Proposed party and registration contract
 
-Original FRLG, Emerald, and HNS parties are provenance references. Successor
-rosters may author approachable opening teams that grow with each trainer's
-strength; evolution follows authored lines, and no immutable-prefix rule
-applies. Blue's
-growth applies only to his league appearances; he is not a Wayfarer badge
-opponent. Story, rival, Dojo, and rematch variants require separate enrollment;
-a shared canonical identity grants no scaling policy. Tate and Liza retain
-their existing double-Gym policy and badge outside the singles pool, and Red is
-outside the circuit pool. Player TR, caps, XP reduction, obedience, wild
-populations, marts, ordinary Trainers, and Gym members continue to read player
-progression.
+Rosters, team size, and levels for league opponents follow the
+[well-known trainer rating](trainer-world-progression.md); the
+[Trainer Circuit](seeded-trainer-circuit.md) owns who is fielded.
 
 ## Current ROM intent
 

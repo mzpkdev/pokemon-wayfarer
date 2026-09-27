@@ -16,12 +16,12 @@ The current finale uses the FRLG final Gym source order: Rhyhorn 45, Dugtrio 42,
 Nidoqueen 44, Nidoking 45, Rhyhorn 50, retaining both Rhyhorn. These are source
 levels under the current bespoke five-slot player-TR projection in
 [party construction](../../game/src/battle_main.c), independent of the disabled
-shared six-slot Gym feature. Proposed [trainer world progression](trainer-world-progression.md)
-explicitly enrolls Giovanni's initial singles badge battle with world-cap
-standing, a seeded growth arc, and an authored roster whose early teams are
-approachable. This five-member source remains provenance, not a required early
-party or immutable prefix for every team size.
-Giovanni's Hideout/Silph boss variants remain independently governed. Preserve
+shared six-slot Gym feature. The proposed
+[well-known trainer rating](trainer-world-progression.md) builds Giovanni's
+badge battle from his own authored, fixed TR and six-entry roster. This
+five-member source remains provenance, not a required early party or immutable
+prefix for every team size.
+Under that model his Hideout and Silph battles also use his TR. Preserve
 battle identity and truthful local dialogue in either model.
 
 ## Victory, reward, and departure
@@ -34,10 +34,9 @@ Blue is removed from Viridian's exterior introduction and Gym scripts, objects, 
 
 ## Blue at the Saffron Dojo
 
-The proposed [Seeded Trainer Circuit](../prds/seeded-trainer-circuit.md) changes
-this unlock to the first committed scheduled clear and removes guaranteed Blue
-participation at Indigo. It persists across later circuit editions. That proposal
-is pending adoption; the current approved Indigo-specific contract follows below.
+The proposed [Trainer Circuit](../prds/seeded-trainer-circuit.md) fields the
+global top five by TR, so Blue is no longer guaranteed at Indigo. It keeps this
+unlock on the first committed Indigo win, whether or not Blue was fielded.
 
 Keep Blue's existing repeatable Saffron Fighting Dojo battle, authored Wayfarer party, and current Battle Point reward rules. Unlock his Dojo appearance when the **first Indigo Champion victory is committed** by the shared circuit. Starting or losing the Champion battle, entering the Hall of Fame room without a committed clear, defeating Giovanni, receiving the Earth Badge, or choosing an origin does not unlock him. Indigo can be cleared before the Viridian finale; in that order, Blue is available at the Dojo while Giovanni still leads the Gym. A later Indigo replay does not duplicate an unlock or add Battle Points. The Dojo attendant may mention Blue, but no separate invitation or quest is required. Remove Dojo dialogue that presumes a Viridian battle the player never had.
 
@@ -49,13 +48,8 @@ Keep Blue's existing repeatable Saffron Fighting Dojo battle, authored Wayfarer 
 - Verify no Blue object or invitation remains in Viridian or Cinnabar, while Blue still appears as Indigo Champion. Leave Tower/Fuji, Snorlax, optional Rocket scenes, and unrelated League/region state untouched by the Gym finale.
 - Generate selected maps, warps, Trainer and item dependencies, and a release ROM; inspect the rendered FRLG maze and HNS city doorway. Source assets and screenshots are not runtime proof.
 
-The proposed [trainer world progression](trainer-world-progression.md)
-enrolls initial singles Gym battles explicitly and permits approachable opening
-teams. Blue's growth there applies only to his league appearances; it does not
-restore Blue as the Viridian badge owner or change Giovanni's local
-prerequisites. Blue's rival, Dojo, and Gym-ID battles keep their own policies;
-canonical identity does not enroll them. Original FRLG/HNS parties remain
-provenance references for authored rosters, not mandatory opening teams.
+Giovanni's and Blue's battles follow the proposed
+[well-known trainer rating](trainer-world-progression.md); Blue gains no badge.
 
 ## Source anchors
 

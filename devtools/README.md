@@ -32,8 +32,8 @@ separate UI package only when it has a real independent consumer.
 `ui` contains Cartographer, Metatiles, Docs, and an experimental Trainer balance
 module (`#trainer-balance`). Trainer balance bundles its catalog and can run
 directly with `pnpm --filter @wayfarer/ui dev`, without building map catalogs.
-Its badge slider, growth arcs, standings and league feasibility panel help
-compare the pool against the world cap; see [the UI README](ui/README.md#trainer-balance-explorer) for assumptions
+It edits each well-known trainer's TR and six-entry roster and the TR scalers,
+previews the league field, and compares team levels with the player cap; see [the UI README](ui/README.md#trainer-balance-explorer) for assumptions
 and catalog regeneration. The map modules consume
 the static catalog and terrain images created by the CLI tools. Docs bundles
 Markdown files below `.product/` through Vite and omits `__NAME__.md` templates

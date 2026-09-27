@@ -5,10 +5,10 @@ PRD: [Wayfarer interregional League circuit](../prds/wayfarer-interregional-leag
 Implemented: Yes
 
 Proposed successor: the [PRD](../prds/wayfarer-interregional-league-circuit.md)
-summarizes the seeded circuit that replaces this fixed contract upon adoption;
-the [seeded runtime](seeded-league-circuit.md),
+summarizes the top-five-by-TR fields and loss lock that replace this
+contract's lineups upon adoption; the [circuit runtime](seeded-league-circuit.md),
 [circuit trainer pool](circuit-trainer-pool.md), and
-[trainer world progression](trainer-world-progression.md) own it. The contract
+[well-known trainer rating](trainer-world-progression.md) own it. The contract
 below remains the ROM implementation baseline.
 
 The runtime now uses one persisted circuit stage identity for FRLG Indigo,

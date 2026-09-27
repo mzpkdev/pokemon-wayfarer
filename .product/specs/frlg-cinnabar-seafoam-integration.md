@@ -5,13 +5,8 @@ Implemented: Yes
 
 Implemented in [PR #112](https://github.com/mzpkdev/pokemon-wayfarer/pull/112).
 
-The proposed [trainer world progression](trainer-world-progression.md)
-enrolls initial singles Gym battles explicitly and permits approachable opening
-teams. Blue's growth there applies only to his league appearances; it does not
-restore Blue as the Viridian badge owner or change Giovanni's local
-prerequisites. Blue's rival, Dojo, and Gym-ID battles keep their own policies;
-canonical identity does not enroll them. Original FRLG/HNS parties remain
-provenance references for authored rosters, not mandatory opening teams.
+Giovanni's and Blue's battles follow the proposed
+[well-known trainer rating](trainer-world-progression.md); Blue gains no badge.
 
 ## Scope
 
@@ -135,11 +130,10 @@ implemented [Viridian finale](frlg-kanto-viridian-finale.md) supersedes the
 exterior introduction, Blue Gym role, and related acceptance checks. Blue's
 current Dojo unlock follows committed Indigo victory independently of Giovanni.
 
-The proposed [Seeded Trainer Circuit](../prds/seeded-trainer-circuit.md) selects
-League participants and roster teams rather than guaranteeing Blue as Indigo
-finalist. Its [runtime contract](seeded-league-circuit.md) proposes Dojo access
-after the first lifetime scheduled venue clear. If adopted, that circuit
-contract takes precedence over the Indigo-only unlock above. The delivered
+The proposed [Trainer Circuit](../prds/seeded-trainer-circuit.md) fields the
+global top five by TR rather than guaranteeing Blue as Indigo finalist. Its
+[runtime contract](seeded-league-circuit.md) keeps Blue's Dojo unlock on the
+first committed Indigo win, whether or not Blue was fielded. The delivered
 coastal port's historical Viridian behavior is already superseded by the
 implemented finale; unrelated local/rival story interactions retain their
 separately owned policies.

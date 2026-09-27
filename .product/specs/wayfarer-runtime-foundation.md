@@ -123,50 +123,18 @@ Existing Johto and Kanto callers keep their current result.
 
 ### Save storage and lifecycle
 
-The proposed [playthrough seed framework](playthrough-seed-framework.md) adds
-one shared root and consumer-owned deterministic outcomes under this storage
-policy. Initialize that root and pin the NPC growth-policy version at New Game,
-before any Gym can prepare a battle; per-canonical-trainer growth arcs derive
-lazily from it through [trainer world progression](trainer-world-progression.md)
-and need no saved table. The confirmed circuit also initializes edition 1 ORDER
-then, with a valid order-only state: no competition snapshot or run, empty
-participation history and clear masks, and zero completed count. Only the first
-successful entry to the CURRENT venue's competition atomically saves five
-opponents, the entry badges and lifetime-clear mask, progress index, worldCap,
-each slot's arc, standing, and composed team, the pinned policy version,
-content/rule versions, and a matching run. Future
-venue lineups and projected milestones are never saved. Signup thresholds (D4)
-are owned by the [seeded league circuit](seeded-league-circuit.md).
-
-There is exactly one competition per (edition, venue), keyed by edition ID and
-stable venue ID; there is no per-venue competition ordinal, availability, or
-waiting state. ORDER remains rules version 1; POOL_KIND version 3 and ROSTER
-version 4 distinguish the (edition, venue, slot) allocation. An explicit schema
-version/discriminator must reject obsolete snapshot layouts. The active field,
-its trainers, and their levels remain frozen through reconstruction, reload,
-departure, and losses. A loss records no participation and no reward and leaves
-the same field enterable for immediate or later retry. Reload, preview, cancel,
-and failed entry cannot advance identities or reroll; entry is idempotent per
-(edition, venue).
-
-Save bounded participation history from won events only: each venue's latest
-won five-character field and edition. Rotation derives everything else from
-those fields, and the active snapshot does not copy them. Rollover after three
-wins and ceremonies commits only the next edition and seeded order, resets
-current results, and preserves lifetime progression and latest venue history. Rollover never snapshots future
-fields. Closed winning-team records may remain, but exhibition combat against
-past fields is outside the approved lifecycle.
-
-Size assertions and save-sector accounting must include root, order/result
-state, at most one active five-slot snapshot and its inputs (including per-slot
-arc and standing and the captured worldCap), the save's pinned growth policy,
-bounded history, run progress, and transaction metadata within the
-allocation below. Arcs are rederived from root, canonical identity, and pinned
-policy rather than saved as a table; verification checks saved slots against
-those facts and the captured entry milestones without resampling current
-milestones, rebuilding a missing field, or changing content versions. A corrupt
-active snapshot is an invalid save. Seed initialization, key encoding, and RNG
-isolation are defined by the draft framework; this extension is not
+The proposed [circuit runtime](seeded-league-circuit.md) adds, under this
+storage policy, at most one locked league field (its venue, the pool's content
+versions, and five slots in battle order, each holding `characterId`, TR, and
+the composed team) plus active-run progress (venue and defeated prefix). There
+is no seed, edition, rotation or field history, or progress index. Well-known
+trainers' TRs are authored content, so New Game saves nothing for them. An
+explicit schema discriminator rejects obsolete layouts. The locked field stays
+unchanged through reconstruction, reload, departure, and losses; a win
+releases it. Size assertions and save-sector accounting must include the
+locked field, run progress, and transaction metadata within the allocation
+below. A corrupt locked field is an invalid save; a content version change
+instead drops the lock. This extension is not
 implemented here.
 
 The additional Hoenn banks live in `SaveBlock3` or an equivalent separately
@@ -233,32 +201,25 @@ The currently implemented circuit uses fixed Indigo, Sevii Masters, then Hoenn
 order. Its first-clear result advances only after completion commits. Only
 Indigo projects its clear into both Kanto and Johto Champion recognition.
 
-The proposed [seeded circuit runtime](seeded-league-circuit.md) separates
-current-edition results, the active competition, and lifetime first clears,
-following a seeded saved order. Lifetime facts own regional recognition,
-cleanup, unlocks, and player TR contributions. They also provide the NPC world
-point `(B,C)`: actual global badges and distinct lifetime venue-clear count at
-competition entry. [Trainer world progression](trainer-world-progression.md)
-turns it, with the completed-edition count as the progress index, into
-worldCap and each trainer's standing, without projecting future wins, reading
-player party/XP/player TR, or adding strength from the edition number itself.
-Role windows on standing belong to the
-[circuit trainer pool](circuit-trainer-pool.md) and remain D7. Enrolled world
-Gyms resolve the same model at battle setup.
+The proposed [circuit runtime](seeded-league-circuit.md) keeps current
+admission, venue order, and lifetime first clears with their regional
+recognition, cleanup, unlocks, and player TR contributions. It changes only
+who is fielded and what happens after a loss: each venue fields the global top
+five well-known trainers by their authored, fixed TR under
+[well-known trainer rating](trainer-world-progression.md), strongest last,
+without reading player party, XP, or TR. Well-known trainers in Gyms use the
+same model at battle setup.
 
-Winning a competition commits the venue result, participation history, and any
-lifetime first clear with its existing +8 player TR, then advances the current
-order position. Losing leaves the same venue and frozen field current, with no
-venue clear, reward, or participation; the player may retry immediately or
-later. Save wins, history, and closure/reward phases atomically, with stale
+Winning commits the venue result and any lifetime first clear with its
+existing +8 player TR, and releases the locked field. Losing leaves the venue
+locked to the same field, with no clear or reward; the player may retry
+immediately or later. Save wins and ceremony phases atomically, with stale
 callbacks rejected.
 
-This draft records the confirmed per-venue snapshot and retry-after-loss
-direction. It does not implement it or approve signup thresholds, rotation
-factors, role windows, or catalog content. Shared Indigo recognition and
-regional isolation remain mandatory. Unsupported seed/order/schema states
-follow invalid-save handling under prerelease policy; do not synthesize
-compatibility or replacement fields.
+This draft does not implement that direction or approve signup thresholds or
+catalog content. Shared Indigo recognition and regional isolation remain
+mandatory. Unsupported schema states follow invalid-save handling under
+prerelease policy; do not synthesize compatibility or replacement fields.
 
 ### ROM budget
 
@@ -326,19 +287,13 @@ Static and automated checks must prove all of the following:
 12. Representative map loads and transitions run without heap corruption or a
     second simultaneous map decompression buffer.
 
-The proposed seed/competition extension additionally requires save round-trip
-and transaction tests for order-only, active, active-after-loss, and
-completed-edition states. Prove at most one five-slot field, no future
-snapshots, idempotent entry per (edition, venue), an unchanged field and history
-after a loss and reload, won-event history updated exactly once, and atomic
-entry/win/rollover. Reject obsolete schemas and damaged authoritative state
-without roster generation. Test actual entry badge/clear inputs across the
-adopted thresholds once D4 is resolved. Verify root availability before Gyms,
-pinned policy round-trip, root-bound per-slot arcs, alias consistency,
-identical first (p=0) encounters across arcs, and saved worldCap matching the entry
-milestones; corrupted arc/policy data must fail validation rather than redraw.
-Verify expanded records satisfy the same sector and runtime bounds. These
-proposed checks do not claim the new lifecycle is implemented.
+The proposed locked-field extension additionally requires save round-trip and
+transaction tests for no-field, active, and locked-after-loss states. Prove at
+most one locked five-slot field, an unchanged field after a loss and reload,
+idempotent entry, and atomic entry and win. Reject obsolete schemas and damaged
+authoritative state without regenerating a field. Verify the records satisfy
+the same sector and runtime bounds. These proposed checks do not claim the new
+lifecycle is implemented.
 
 ## References
 

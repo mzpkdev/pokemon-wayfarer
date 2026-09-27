@@ -1,254 +1,142 @@
-# Circuit trainer pool, selection, and rotation
+# Circuit trainer pool and selection
 
-PRD: [Seeded Trainer Circuit](../prds/seeded-trainer-circuit.md)
+PRD: [Trainer Circuit](../prds/seeded-trainer-circuit.md)
 Implemented: No
-Design status: Draft. Standing-based roles and title-agnostic headliners (D2)
-are approved. Catalog content (D3), rotation tuning (D5), and role windows (D7)
-remain provisional.
+Design status: v0 approved: one global pool, top five by TR, ascending battle
+order, and a field captured at entry and locked until the venue is won.
 
 ## Scope
 
-Own the circuit registry, canonical identity, home leagues, role windows,
-per-slot selection, rotation weights, and battle construction for each
-`IS_WAYFARER` league competition.
+Own the circuit registry, eligibility, field selection, battle ordering, the
+frozen field's contents, and battle construction for each `IS_WAYFARER`
+league venue.
 
-- [Trainer world progression](trainer-world-progression.md) owns `worldCap`,
-  standing, bias, growth arcs, rosters and team composition, and the level
-  formula. This spec consumes a candidate's standing, strength level, and
-  composed team; it never restates them.
-- The [circuit runtime](seeded-league-circuit.md) owns signup, competition
-  identity, entry capture, retry, results, persistence, and presentation.
-- The [seed framework](playthrough-seed-framework.md) owns the root, keyed
-  derivation, and unbiased `Uniform(n)`.
+- [Well-known trainer rating](trainer-world-progression.md) owns well-known
+  trainers, their TR, the team-level and team-size scalers, rosters, and team
+  composition. This spec reads a trainer's TR and composed team; it never
+  restates how they are computed.
+- The [circuit runtime](seeded-league-circuit.md) owns entry, the field lock,
+  the win commit, persistence, and presentation.
 
-This replaces the fixed allowlist and player-entry-TR level policy in
-[League scaling](league-scaling.md) upon adoption.
+Upon adoption this replaces the fixed lineups and player-entry-TR level policy
+in [League scaling](league-scaling.md).
 
-## Registry and identity
+## Registry and eligibility
 
 Author a versioned, machine-readable registry:
 
 | Field | Contract |
 | --- | --- |
-| `characterId` | Stable `u32` identity for one person, independent of Trainer IDs, title, party, or region. |
+| `characterId` | Stable `u32` identity for one person, shared with the progression registry and independent of Trainer IDs, title, party, or region. |
 | `displayName` | Existing localized name or an authored circuit name. |
-| `specialty` | Authored public type or style label; never inferred from trainer class. |
-| `homeLeagues` | Authored venue set with a lore rationale per trainer; may be empty or hold several. Only Indigo and Hoenn read it; Masters ignores membership. |
 | `presentationId` | Audited graphics, introduction, defeat, and after-battle text. |
 | `enabled` | Build-time inclusion, with an authored reason when disabled. |
 
-Growth fields (bias, allowed arcs, roster) live in the progression catalog
-keyed by the same `characterId`. A trainer without a valid roster is not
-league-eligible.
-
 Maintain an alias inventory linking existing Trainer IDs and source roster
 owners to canonical characters. Gym, rival, Champion, rematch, and regional
-versions of one person share `characterId` (Bruno and Lance each remain one
-person). Aliases, costumes, and team variants cannot add selection weight or
-bypass within-field uniqueness. People with similar names remain distinct.
+encounters of one person share one `characterId` and one roster, so aliases
+cannot enter a field twice. People with similar names remain distinct.
 
-Home leagues describe sensible regional competitive participation, not map
-location. Neither appearing on a map nor a thin candidate pool establishes
-home membership. Home status affects pool classification only, never
-strength.
-
-The initial pool is the existing 37 singles trainers, pending D3 review. Red
-is disabled (separate mastery encounter). Tate and Liza are excluded
-(double battle). Story availability neither removes a trainer from the pool
-nor enrolls their story encounters.
-
-## League teams
-
-League slots use the same [roster rule](trainer-world-progression.md#rosters) as
-Gyms, at the trainer's frozen event strength: team size follows their strength
-level, so a mid-game contender may bring four or five while the headliner brings
-six. There is no separate six-member competitive profile. Record runtime Trainer
-ID, source roster owner, and roster/content version, and preserve member
-identity through ordering and gimmick remapping. Content is immutable at
-runtime; do not edit shared Gym/story parties.
-
-## Roles
-
-| Battle slots (zero-based) | Role | Count | Standing window (D7, provisional) |
-| --- | --- | ---: | --- |
-| 0–1 | Contender | 2 | ≤ −2 |
-| 2–3 | Elite | 2 | −1..+1 |
-| 4 | Headliner | 1 | ≥ +2 |
-
-Windows are disjoint and cover every integer, so each candidate has exactly one
-role at a given standing. They are shared by all venues and editions. Titles
-never grant or deny a role. Standing is read at the competition's captured
-progress index `p_event`; venue and position add nothing, and editions matter
-only through `p`. After final ordering, a slot's role label follows its battle
-position in this table.
-
-A candidate is **selectable** when enabled, presentation and roster validate,
-and they are not already chosen in this field.
+A trainer is **eligible** when they are a well-known trainer with an authored
+TR and a valid roster, fight in singles, are enabled, and have validated
+presentation. Red and Tate & Liza are not well-known in v0, so they are
+league-ineligible and keep their current policies: Red his separate mastery
+encounter, Tate & Liza their double battle. Region, title, and story
+availability neither add nor remove a trainer. Circuit eligibility does not
+change story battles, which follow the
+[every-battle rule](trainer-world-progression.md#trainer-rating).
 
 ## Selection
 
-Inputs, captured or read by the runtime at entry: event identity
-`(editionId, venueId)`, `B_event`, `C_event`, `p_event`, `worldCap_event`,
-every candidate's arc and standing at `p_event`, the gameplay flags and trade
-records that compose teams, versions, and the saved rotation history.
-Nothing reads player TR, party, starter, story flags, or live milestones
-after entry; roster flags affect only team composition, never selection.
+One global pool of eligible trainers serves every venue. At entry:
 
-Allocate battle slots in priority `[4, 2, 3, 0, 1]` (headliner, elites,
-contenders). For each slot being allocated:
+1. Sort the pool by TR, highest first.
+2. Take the first five. Equal TRs keep whatever order the registry iteration
+   and sort produce; there is no tie-break rule.
+3. Order the five by ascending TR for battle, so the highest TR fights last.
+   Equal TRs again take whatever order the sort produces.
 
-1. **Window.** Take selectable candidates whose standing is in the slot's
-   role window.
-2. **Pool.** At Indigo and Hoenn, partition into home (venue in
-   `homeLeagues`) and visitor. If both are non-empty, draw POOL_KIND
-   `Uniform(100)`: 0–84 home, 85–99 visitor. If only one is non-empty, use it
-   with no draw. Masters uses one pool and never draws POOL_KIND.
-3. **Person.** Enumerate the chosen pool by ascending `characterId`, compute
-   rotation weights with checked sums, draw ROSTER `Uniform(totalWeight)`, and
-   take the matching half-open cumulative interval.
-4. **Fallback.** If step 1 is empty, pick deterministically with no draw: the
-   selectable candidate whose standing is nearest the window (smallest
-   distance outside it), preferring home over visitor at equal distance at
-   Indigo/Hoenn, then lowest `characterId`. Mark the slot as a fallback in
-   the plan. Fallbacks are legal; validation reports their rate.
+Venue, region, home membership, title, player TR, party, and history play no
+part. Every venue may therefore field the same five, and v0 accepts that. The
+procedure consumes no randomness and reads no seed.
 
-Then order the field: the final battle order is all five chosen trainers
-sorted by ascending standing, with lower `characterId` breaking ties, and each
-slot's role label follows its final position. Because windows are disjoint,
-this equals role order whenever no fallback happened; with a fallback it still
-guarantees a non-decreasing ramp. The draw ID is the zero-based battle slot
-index being allocated, before final ordering; ordering consumes no draws.
+Because ties have no rule, a changed registry order or sort can reorder tied
+trainers in a field not yet entered. The frozen field below keeps any entered
+field stable.
 
-The 85/15 split is a per-slot category chance, not an individual appearance
-probability or a quota. Several visitors, including the headliner, may appear.
-There is no visitor cap, reserved guest, home multiplier, title preference, or
-guaranteed named trainer.
+## Frozen field
 
-## Rotation
+Entry captures, for each of the five in battle order: `characterId`, their TR,
+and their composed team, plus the registry and roster content versions. Per
+member, the team holds the roster entry index and every resolved battle field
+the plan uses: species/form, level, moves, item, ability, nature, IVs/EVs, and
+battle order. The runtime saves this atomically before reveal. The field stays
+locked until the venue is won; a loss or leaving keeps it. Every retry at that
+venue, including after reload, reconstructs battles from the saved field and
+never reselects or recomposes. With fixed TRs this equals locking after a loss.
 
-All candidates in the chosen pool start at base weight 1 (D5, provisional):
+If the content version changes while a field is locked, the lock is dropped
+and the next entry captures a new field (prerelease policy; the save stays
+valid).
 
-```text
-crossVenue  = [16, 4, 1][venues won earlier this edition whose field included them]
-priorField  = 1 if in this venue's field from the previous edition, else 2
-weight      = crossVenue * priorField
-```
+## Battle construction
 
-Only won competitions record participation, so history is each venue's
-latest won five-person field plus its edition. `crossVenue` counts other
-venues whose latest field belongs to the current edition (0–2). `priorField`
-reads this venue's field when it belongs to `editionId − 1`; in edition 1
-every candidate gets 2. Weights stay positive; rotation never removes a
-candidate or overrides the window or pool draw.
+Each slot fights with the trainer's own team at their own TR, as
+[well-known trainer rating](trainer-world-progression.md) composes it for any
+battle: there is no league-specific level offset, role adjustment, or
+six-member competitive profile. The old `[-4,-3,-2,-1,+1]` room offsets are
+removed.
 
-The target is roughly two returning and three new trainers at a venue
-between editions. It is a tuning target, not a quota: identical consecutive
-fields are valid. Never redraw or alter identity to force novelty.
+Construct from the saved field. Resolve the selected trainer and roster owner
+before applying circuit policy; never identify enrollment from class, map, or
+a shared party pointer. Record runtime Trainer ID, source roster owner, and
+content version, and preserve member identity through ordering and gimmick
+remapping. Content is immutable at runtime; do not edit shared Gym or story
+parties. Debug and ordinary battles cannot create circuit records.
 
-## Keys and determinism
-
-Use framework `KeyedU32` with domain CIRCUIT = 1. Semantic IDs ORDER = 1,
-ROSTER = 2, and POOL_KIND = 5 remain; retired IDs 3 and 4 are never reused.
-
-| Decision | Rules version | Entity words | Occurrence | Draw ID |
-| --- | ---: | --- | --- | --- |
-| ORDER | 1 | `0`, `0` | `editionId` | Fisher–Yates index 2, then 1 |
-| POOL_KIND | 3 | `entityLo = venueId`, `entityHi = editionId` | 0 | Battle slot index being allocated (0–4, before final ordering) |
-| ROSTER | 4 | `entityLo = venueId`, `entityHi = editionId` | 0 | Battle slot index being allocated (0–4, before final ordering) |
-
-Venue IDs are Indigo = 1, Masters = 2, Hoenn = 3. The competition ordinal is
-gone; each `(editionId, venueId)` has exactly one competition.
-
-Category and person draws per slot have independent keys. Rejection sampling
-advances only the framework's internal index. Eligibility, pools, weights,
-fallbacks, and final ordering consume no draws. Arc derivation uses its own
-TRAINER_GROWTH keys and cannot perturb circuit words. Ordinary Pokémon RNG is
-neither consumed nor reseeded. Catalog source order, menus, unrelated seeded
-features, and reloads cannot change a result. Changed inputs (milestones,
-history, catalog) can legitimately change a not-yet-entered field but never
-the raw ORDER or category words for the same identity.
-
-The procedure returns the event identity, five ordered slot plans (role,
-`characterId`, arc, standing, composed team, fallback flag), the captured
-inputs, and all rules/content versions. The runtime saves them atomically
-before reveal. Read-only verification reproduces allocation and final ordering
-from the saved inputs and compares; it never replaces a saved field.
-
-## Battle strength
-
-Each slot fights at its real strength, frozen for the event: the progression
-spec's strength level from `levelBase_event` and standing, clamped and applied
-to member offsets. There is no per-role fudge and no room-position offset (the
-old `[-4,-3,-2,-1,+1]` offsets are removed). The field always ramps, because the
-final order guarantees non-decreasing standing; after a fallback, levels may sit
-closer together than the role windows suggest.
-
-Construct and reconstruct from the saved slot plan. Resolve the selected
-trainer and roster owner before applying circuit policy; never identify
-enrollment from class, map, or a shared party pointer. Debug and ordinary
-battles cannot create circuit records.
-
-Use the frozen composed team: forms from authored lines, moves from the roster
-policies, and roster-authored non-level fields; no evolution reversal or
-automatic move replacement. Challenge settings keep their overrides. The
-trainer species randomizer may bypass authored parties as it does today but
-still uses the saved people, order, and results; authored-team guarantees
-exclude that mode. XP uses actual species and levels. Prize money
-uses the trainer's inventoried source reward basis and class, not the old room
-occupant, and team size must not shift it.
+Challenge settings keep their overrides. The trainer species randomizer may
+bypass authored parties as it does today but still uses the saved people and
+order. XP uses actual species and levels. Prize money uses the trainer's
+inventoried source reward basis and class, not the old room occupant, and team
+size must not shift it.
 
 ## Validation
 
-The deliverable includes a checked-in inventory: aliases, home leagues and
-rationales, specialties, roster references, presentation coverage,
-exclusion reasons, provenance, and catalog and rules versions.
+Check in an inventory: aliases, roster references, presentation coverage,
+exclusion reasons, provenance, and content versions.
 
 - Reject duplicate characters or aliases, unresolved source IDs, missing
-  assets, invalid offsets, rosters that cannot reach six at maximum size, and
-  double-battle flags.
-- **Feasibility.** For every venue × signup-reachable `(B, C, p)` × role,
-  report in-window candidate counts under every allowed arc (guaranteed) and
-  under some allowed arc (possible), plus the fallback rate over at least
-  10,000 seeded roots. Fallbacks must be rare and documented.
-- **Full rosters first (D3).** Feasibility depends on which trainers have
-  reviewed rosters. The prototype catalog lacks many, so its current fallback
-  risks are not tuning evidence. Author the full rosters, then rerun
-  feasibility. Adjust arcs, biases, or windows only for gaps that remain after
-  that.
-- **Variety.** Over at least 10,000 roots × 10 editions with wins, report
-  returning/new trainers per venue, cross-venue repetition, headliner
-  distribution (including Gym Leader headliners from every region at a
-  nonzero rate), and home/visitor share. D5 sets acceptance after
-  measurement.
-- **Selection.** Test POOL_KIND boundaries 0/84/85/99 and rejection; one-pool
-  slots and Masters consume no category draw; category choice is independent of
-  pool sizes and weights; fallback ordering and tie-breaks; a field whose final
-  order differs from allocation order, including after a fallback, verifies
-  correctly with role labels following final positions.
-- **Rotation.** Exact fixtures for factors 16/4/1 and 1/2, edition 1 with no
-  history, and losses recording nothing.
-- **Keys.** Pin vectors for zero and all-ones roots, editions 1/2 and `u32`
-  bounds, all three venues, rules versions, weighted intervals, and checked
-  sums. Verify no Pokémon RNG use.
-- **Construction.** Build every enabled roster at every team size and level
-  bound, preserve member identity and metadata, reconstruct identically, and
+  assets, double-battle flags, and trainers without an authored TR or valid
+  roster. The build must hold at least five eligible trainers.
+- **Selection.** Fixtures for the top five over distinct TRs, ties at the
+  fifth-place boundary, and ties inside the field; the battle order is
+  non-decreasing in TR with the highest last; excluded and disabled trainers
+  never appear; aliases never appear twice.
+- **Frozen field.** Enter, lose, leave, retry, and reload: the saved field and
+  teams are reused unchanged. Change the content version while a field is
+  locked: the lock is dropped and the next entry captures a new field.
+- **Construction.** Build every eligible trainer's team, preserve member
+  identity and metadata, reconstruct identically from the saved field, and
   verify money, XP, AI, graphics, and dialogue follow the selected trainer.
 
 Run the trainer/scaling mechanics and circuit E2E suites, build Wayfarer and
 affected standalone configurations, and measure ROM/RAM against the reserve
 policy. Report balance playtesting separately from structural checks.
 
-## Open questions
+## Later
 
-The PRD owns D3 (catalog and rosters), D5 (rotation and variety acceptance),
-and D7 (role windows). More regions or doubles require a revision.
+- Seeded keys and draws for selection.
+- Role windows and standing-based slots.
+- Rotation weights between editions.
+- Home leagues and the 85/15 home/visitor draw.
+- Nearest-standing fallback for empty role windows.
+- Seeded venue order.
 
 ## References
 
-- [Seeded Trainer Circuit PRD](../prds/seeded-trainer-circuit.md)
-- [Trainer world progression](trainer-world-progression.md)
-- [Seeded circuit runtime](seeded-league-circuit.md)
-- [Shared playthrough seed framework](playthrough-seed-framework.md)
+- [Trainer Circuit PRD](../prds/seeded-trainer-circuit.md)
+- [Well-known trainer rating](trainer-world-progression.md)
+- [Circuit runtime](seeded-league-circuit.md)
 - [Existing League scaling contract](league-scaling.md)
 - [Party construction](../../game/src/battle_main.c)
 - [Scaling policy and roster validation](../../game/src/trainer_party_scaling.c)

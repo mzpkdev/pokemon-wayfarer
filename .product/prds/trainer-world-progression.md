@@ -1,143 +1,108 @@
-# Trainer world progression
+# Well-known trainer rating
 
 Implemented: No. The current ROM keeps its existing Gym and League scaling
 until this design is adopted; the balance explorer is provisional tooling.
-Design status: "Living rivals" is the accepted direction. Per-trainer strength,
-growth arcs, rosters, and hint content are provisional content under review.
+Design status: v0 accepted. Each trainer's rating and team, and the exact
+growth steps, are provisional content under review.
 
 ## Intent
 
-Make familiar trainers feel alive. Gym Leaders, Elite Four members, Champions,
-and Blue grow alongside the player's journey, each with a personality of their
-own, so that two saves tell different stories: "Clair got scary this save,"
-while Bruno has settled into a comfortable veteran's pace. Players can take
-Gyms in any order without meeting a late-game team too early, and a postponed
-leader is still a real fight.
+Make familiar trainers feel like people with a place in the world. Gym
+Leaders, Elite Four members, Champions, and Blue each have a strength of their
+own, measured the same way as the player's. Whenever you meet one of them,
+anywhere, you face the same trainer at the same strength, and you can tell at
+a glance roughly how you compare.
 
 ## Design
 
-### NPCs follow the world, not the player's party
+### Their own rating, on your scale
 
-Every trainer's strength is measured against the world's level cap: the soft
-cap a player would have from badges and first league clears alone. Earning a
-badge or clearing a league for the first time moves the world forward, and
-every trainer moves with it. Grinding, training, swapping party members, or
-waiting never does. Players cannot make opponents harder by over-levelling,
-and cannot make them easier by under-levelling.
+You have a Trainer Rating (TR); so does every well-known trainer. Neither is
+worked out from the other: your training, badges, or party never make a
+trainer stronger or weaker. Their TR uses the same scale as yours, so a leader
+at TR 40 brings Pokémon around the level your own cap reaches at TR 40.
 
-### Standing and growth arcs
+A trainer's TR decides every battle with them: their Gym, a meeting on the
+road, a story battle, a rematch, or a league. Story battles include Blue's
+rival fights, Giovanni's Rocket battles, and the Saffron Dojo. There are no
+special cases. In this first version each trainer's TR is set by hand and does
+not change, so their team is the same every time and in every save. That
+includes Blue: his early rival fights and his late ones bring the same team.
 
-Each trainer sits at a personal standing relative to the cap. Gym Leaders sit
-a little under it on average, Elite Four members at it, Champions above it, and
-Blue a step above the cap at every point in the game. Blue grows this way only
-in his league appearances; his rival and Dojo battles keep their own teams.
+### Who is well-known
 
-On top of that standing, each trainer follows a growth arc chosen once per
-save from a short list that fits who they are:
+In this first version the well-known trainers are 37 people: the 23 singles
+Gym Leaders, the Kanto, Johto, and Hoenn Elite Four, Lance, Wallace, Steven,
+and Blue. Everyone else, including Red and Tate and Liza, keeps their current
+rules.
 
-- **Steady**: keeps pace with the world.
-- **Early**: rises fast, then others catch up.
-- **Late**: slow start, strong finish.
-- **Plateau**: a veteran who stops improving.
-- **Rival**: a relentless climb.
+### No ceiling
 
-Veterans such as Bruno or Pryce can plateau; rising stars such as Whitney or
-Clair can take off early; Blue only ever climbs fast. The arc never changes
-within a save, and it follows the trainer everywhere: their Gym, their league
-appearances, and any other enrolled encounter. Every arc starts level, so a
-trainer's very first encounter is the same in every save.
+TR has no ceiling. Today's trainers span roughly the same range as the player,
+but stronger future content can go higher.
 
-Arcs keep running for the first few circuit editions after the journey ends.
-A fast starter may have peaked and drifted back, a slow starter may finally be
-at their best, and a veteran may find a second wind. After about three
-completed editions everyone settles, and only rotation keeps the fields
-changing.
+### Bigger and stronger teams at higher TR
 
-### Arcs are hinted, never labelled
+A higher TR means both higher levels and a bigger team. A low-rated trainer
+brings two Pokémon; a top-rated one brings a full six, around level 100. Each
+Pokémon has a small, hand-set level difference, so a team feels shaped rather
+than uniform.
 
-Players discover arcs in the world. Gym dialogue, gossip from townsfolk, and
-league lineup previews carry lines such as "Clair has been training nonstop."
-No menu shows a trainer's arc or numbers.
+### The signature Pokémon comes last
 
-### True potential: aces and fillers
+Every trainer has one hand-picked list of six Pokémon, the same in every
+battle; Blue brings the same six whichever starter you chose. A small team is
+the start of that list, and each step up adds the next one. The first Pokémon
+on the list is the one the trainer is known for: it is on every team they
+field, and you always face it last.
 
-Every trainer has a true potential: a hand-written roster of one to three
-signature aces plus a wider pool of supporting Pokémon, the fillers. How much of
-it you face grows with the trainer's own strength. A leader met early brings two
-Pokémon, and a full team of six appears once they are strong enough. Because
-strength follows each trainer's arc, a fast riser fields a bigger team sooner.
-League trainers follow the same rule, so a mid-game contender may bring four or
-five while the headliner brings six. A team never shrinks as the world advances.
-Only in the post-game, once levels reach their ceiling, can a rival whose form
-is fading drop a level or two between editions.
-
-Aces come first: the top ace is always there, and a trainer with more aces
-brings them out as the team grows. The ace you face last is the one the
-trainer is known for. Every Pokémon evolves along a hand-written path, so
-Brock's Onix can become Steelix once it is strong enough.
-
-Fillers vary from save to save. Each trainer has favourites, but which of
-them make the team differs between playthroughs, and what you do in the world
-can nudge it. For example, telling a trainer where to find a Pokémon they have
-been looking for could bring it onto their team. Once a filler has joined, it
-stays as the team grows; only something you do can swap it out.
-
-In future content, trainers may accept gifts that help a Pokémon evolve or offer
-trades: your traded Pokémon keeps its name and identity, joins their team, and
-grows with them. [Trainer roster influence](trainer-roster-influence.md) owns
-these hooks. A trainer never trades away an ace.
-
-FRLG, Emerald, and HNS parties are references for recognizable content and
-strength, not mandatory opening teams. Brock can open with a small Geodude and
-Onix team that a fresh player can handle.
+FRLG, Emerald, and HNS parties are references for recognizable content, not
+required teams. Challenge options such as trainer items, trainer IVs and EVs,
+and the level cap apply on top, as they do today.
 
 ## Encounters
 
-A Gym battle takes its opponent from the world as it stands when the battle
-starts and keeps that team for the whole fight. Retrying without earning
-anything new gives the same team at the same levels; earning a badge or first
-league clear elsewhere first means the leader has grown too. The badge is
-awarded after the battle, so it never strengthens the leader mid-fight.
-
-A league competition freezes its five trainers, their teams, and their strength
-when the player enters; nothing done between attempts changes them. Losing lets
-the player retry the same field as often as they like; badges earned in between
-make the retry easier. The [Seeded Trainer Circuit](seeded-trainer-circuit.md)
-owns league fields.
+A battle's team is set when it starts and kept for the whole fight. Retrying
+brings the same team at the same levels. League opponents also fight with
+their own rating and team; the [Trainer Circuit](seeded-trainer-circuit.md)
+decides who is in each field, which is set when you enter and kept until you
+win.
 
 ## Boundaries
 
-- The player's own rating, soft cap, experience, obedience, wild encounters,
-  shops, ordinary trainers, and Gym members are unchanged.
-- Only explicitly enrolled encounters use this model. Story, rival, Dojo,
-  rematch, and facility battles keep their policies; Red stays separate.
+- Your own TR, level cap, experience, obedience, wild and static encounters,
+  shops, ordinary trainers, and Gym members keep their current rules, which
+  follow your TR.
 - Tate and Liza keep their existing double Gym battle.
+- The same rating decides every battle with a well-known trainer; how each
+  battle is built stays with
+  [Gym Leader scaling](../specs/gym-leader-scaling.md).
 - Standalone builds are unchanged.
 
 ## Balance
 
-Gym Leaders stay near the cap on average: fast arcs a little above, slow arcs a
-little below, and the gap does not widen as clears pile up. Blue is always a
-few levels ahead and never a wall. Once the player's cap reaches level 100,
-trainers are held a few levels lower so that league fields still ramp just
-below 100, and Blue and the headliners stay a step above that base rather than
-above level 100. All numbers remain provisional until content
-review and playtesting.
+Each trainer's TR and team are content under review. The
+[explorer](../../devtools/ui/README.md#trainer-balance-explorer) predicts
+species, team size, and levels only; moves, items, AI, and combat difficulty
+belong to playtesting.
 
-The [explorer](../../devtools/ui/README.md#trainer-balance-explorer) is being
-reworked to model arcs, each trainer's gap to the cap, and whether each league
-venue can fill its field. It predicts species, team size, and levels only;
-moves, items, AI, and combat difficulty belong to playtesting.
+## Later
 
-## Open questions
-
-- Each trainer's standing, allowed arcs, arc shapes, roster (aces, supporting
-  pool, and their favourites), and hint lines are content under review.
+- More well-known trainers, such as Red or Tate and Liza.
+- A meaning for the "next Gym's highest or lowest level" cap options in an
+  open world.
+- Trainers whose TR grows through their own battles, journeys, or time.
+- Growth arcs and other per-save variety in how trainers develop.
+- Aces and supporting Pokémon that vary from save to save.
+- Player influence: nudges, gifts, and trades
+  ([Trainer roster influence](trainer-roster-influence.md)).
+- Pokémon that evolve along a trainer's own line.
+- Better items, moves, and AI once teams reach level 100.
+- Tighter level spreads at the top.
 
 ## References
 
-- [Trainer world progression specification](../specs/trainer-world-progression.md)
+- [Well-known trainer rating specification](../specs/trainer-world-progression.md)
 - [Gym Leader scaling](gym-leader-scaling.md)
-- [Trainer roster influence](trainer-roster-influence.md)
-- [Seeded Trainer Circuit](seeded-trainer-circuit.md)
+- [Trainer Circuit](seeded-trainer-circuit.md)
 - [Player progression](../specs/trainer-rating-party-progression.md)

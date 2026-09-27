@@ -1,165 +1,112 @@
-# Seeded Trainer Circuit
+# Trainer Circuit
 
 Implemented: No
-Design status: Living rivals, recurring championships in a seeded order,
-standing-based roles, and unlimited retry of a frozen field are approved.
-Numeric balance, trainer content, signup thresholds, rotation tuning, and role
-windows remain under review (D3, D4, D5, D7).
+Design status: v0 approved: top-five-by-TR fields drawn from one global pool,
+ascending battle order, and a venue locked to its field until won. Signup,
+venue order, and everything seeded are out of scope for v0.
 
 ## Intent
 
-Familiar trainers should feel alive. Across a save, the people the player met
-as Gym Leaders keep training, and some of them get noticeably stronger than
-others. When the player walks into a championship, the field is a mix of old
-acquaintances and rising names, and the question is "who got scary this time?"
-rather than "which fixed roster is next?" In one save Clair rises early and
-is soon strong enough to headline; in another she keeps a steady pace as an
-elite, and Whitney's fast start is the story instead. Rivals keep developing
-through the first few editions after the player's journey ends, so the
-post-game fields still change shape.
+League fields should be made of the strongest well-known trainers in the
+world rather than fixed room occupants. Each opponent fights as the same
+person the player meets elsewhere, at their own Trainer Rating (TR) and with
+their own team, so a league battle and a Gym battle with Clair are the same
+Clair.
 
-Indigo, Sevii Masters, and Hoenn are recurring championships. Each circuit
-edition visits all three in a seeded order, so no region is permanently the
-easy one or the final boss. Every championship is a five-battle singles field
-that ramps from two contenders, through two elites, to one headliner.
+## Design
+
+**Venues.** Indigo, Sevii Masters, and Hoenn keep their public entrances,
+rooms, and ceremonies. Each holds a five-battle singles field.
+
+**Pool.** One global pool serves all three venues: every well-known singles
+trainer. Red (separate mastery encounter) and Tate & Liza (double battle) are
+excluded. Region, title, and home venue play no part.
+
+**Field.** Each venue fields the five pool trainers with the highest TR. Ties
+fall in whatever order iteration returns; there is no tie-break rule. Because
+the pool is shared, every venue may field the same five people, and v0 accepts
+that.
+
+**Battle order.** Ascending TR: the weakest of the five fights first and the
+strongest last.
+
+**Strength.** Each opponent uses their own TR, team, and levels, exactly as in
+any other battle with them. There is no league-specific adjustment.
+[Well-known trainer rating](trainer-world-progression.md) owns trainer TR,
+the scalers that turn TR into team level and size, and rosters.
+
+**Losing.** The field is set when the player enters and stays locked to the
+same five trainers with the same teams until the player beats the venue. A
+loss blacks the player out as usual, and neither a loss nor leaving changes
+the field. They can retry at once or leave, train, and come back as often as
+they like; saving and reloading keep the field.
+
+**Winning.** A win commits the venue result. Its first-ever win keeps the
+current first-clear effects, including the player's +8 TR.
 
 ## Sample playthrough
 
-1. The player collects their eighth badge and signs up for the first stop on
-   their seeded order: Hoenn.
-2. On entry, Hoenn's five-trainer field is decided and frozen. The two
-   contenders sit a little under the player's level cap, the two elites near
-   it, and the headliner (Steven this time) at or slightly above it. Lobby
-   gossip hints that one of the elites "has been training nonstop." Teams are
-   still growing this early: the contenders bring four Pokémon each, and
-   Steven brings five.
-3. The player beats four and loses to Steven. Nothing is lost: the same five
-   trainers with the same teams and levels wait for them.
-4. They leave, win a ninth badge, level up, and return. The field has not
-   moved, so the retry is easier. They win. It is their first Hoenn clear, so
-   their own progression gets its usual boost.
-5. Around sixteen badges they sign up for Sevii Masters, an open invitational
-   that draws from Kanto, Johto, and Hoenn alike. The world has grown, so the
-   field is stronger, and it has only a couple of faces from Hoenn. Janine, a
-   slow starter in this save, fills a contender slot.
-6. Around twenty-four badges they win Indigo and complete the edition with its
-   ceremonies. A new edition begins with a new seeded order.
-7. In the second edition, Janine turns up as an elite: her slow start has
-   become a strong finish. In a save where she started fast instead, she would
-   have peaked early and settled back.
-
-## How a championship works
-
-**Fields.** Five slots per venue: contenders in battles 1–2, elites in 3–4, the
-headliner in 5. A trainer's role comes from how strong they are at that moment
-relative to the world, not from their title. In some saves one of a few strong
-Gym Leaders rises far enough to headline; an Elite Four member who has stalled
-can be a contender. Everyone fights at their real current strength, and each
-field has five different people. The battles always climb from weakest to
-strongest; when a venue runs short of trainers at the right strength,
-neighbouring battles may sit closer together in level. League teams follow
-the same rule as Gyms: each trainer brings as much of their roster as their
-strength allows, so contenders may bring fewer than six. The teams are frozen
-with the field.
-
-**Regional flavour.** Indigo and Hoenn each have an authored home roster.
-Each slot usually goes to a home trainer, with a smaller chance of a visitor.
-There is no visitor quota and no guest slot. Sevii Masters is an open
-invitational: every eligible trainer from any region is equally welcome.
-
-**Losing.** A loss never ends the championship. The field and its levels are
-frozen from the player's first entry until they win. The player can retry at
-once or leave, earn badges, train, and come back as often as they like. Saving
-and reloading keeps the same field.
-
-**Winning.** A win records the result and opens the next venue in the
-order. The first-ever win at each venue gives the player the existing
-progression reward, which also raises the world's level for later fields.
-After all three venues and their ceremonies, the next edition starts with a
-new seeded order and fresh fields.
-
-**Post-game.** Rivals keep developing across the first few editions after
-the journey: a fast starter may have peaked and a slow starter may finally hit
-their stride. After that their strength settles, and rotation keeps the
-fields fresh. Once the player's cap reaches level 100, fields stay ramped just
-below it: contenders a few levels under 100, and the headliner at or near it.
-
-**Variety between editions.** Rotation gently favours people the player has
-not just faced. The target is roughly two returning and three new trainers at
-a venue between editions, with no quotas and no rerolls. Headliner variety
-comes from trainers' own development, not from forced rotation.
-
-**Signup.** The first stop opens around eight global badges, and later stops
-around sixteen and twenty-four, each also requiring a win at the previous
-venue in this edition (D4). Travel and badge collection never depend on the
-circuit order.
-
-## Living rivals
-
-[Trainer world progression](trainer-world-progression.md) owns how trainers
-grow: each trainer's strength follows the world's progress rather than the
-player's party, with a per-save growth arc hinted in the world rather than shown
-as a label. Every trainer's first encounter is the same in every save. The same
-model drives Gym Leaders (near the player's cap on average, with teams that grow
-with their strength) and Blue (a step above the cap, never a wall). This PRD
-covers only how the circuit uses those trainers.
+1. The player qualifies for their first venue under the current circuit rules
+   and enters. The five highest-TR well-known trainers are fielded, weakest
+   first, each with the team they would bring anywhere else.
+2. They beat four and lose to the fifth. They black out, and the venue now
+   holds that same field.
+3. They leave, win another badge, level up, and return to the same five with
+   the same teams. This time they win, and the venue is committed.
+4. At the next venue the field may be the same five people. In v0 that is
+   expected.
 
 ## Records and recognition
 
-- Indigo's first-ever win grants shared Kanto/Johto Champion recognition;
-  Hoenn owns its own recognition and regional cleanup; Masters records its
-  result in the Masters Gallery and never grants a regional Champion title.
-- Indigo and Hoenn wins each run one winning-team Hall of Fame and Champion
-  Ribbon flow per edition. Regional cleanup happens once per lifetime.
-- The first edition's final win plays full credits; later editions use a
-  brief completion presentation.
-- Red unlocks after all three venues have been won at least once and stays
-  available. Blue's Saffron Dojo battle unlocks after the first venue win of
-  any kind.
-- A headliner who is a Gym Leader is presented as the final opponent without
-  inventing Champion history. Dialogue never assumes who occupies a venue or
-  which venue ends the circuit.
+Current circuit behaviour stays until designed; see the
+[interregional League circuit](wayfarer-interregional-league-circuit.md).
 
-## Scope
+- Indigo's first win grants the shared Kanto/Johto Champion recognition with
+  one Hall of Fame registration and Champion Ribbon flow.
+- Masters records its result in the Masters Gallery and never grants a
+  regional Champion title, Hall of Fame registration, or Ribbon.
+- Hoenn keeps its own Champion recognition, Hall of Fame, and regional
+  cleanup, and its first clear runs the full completion credits.
+- Red unlocks after all three venues have been won. Blue's Saffron Dojo battle
+  unlocks after the first Indigo win.
+- Whoever fights last is presented as the final opponent without inventing
+  Champion history. Dialogue never assumes a fixed person in any room.
 
-In: Indigo, Sevii Masters, and Hoenn; supported Kanto, Johto, and Hoenn
-trainers; singles only. Out: Tate and Liza (double battle); Red (separate
-mastery encounter); exhibition replays of past fields; new prizes or
-currencies. Player progression, wild encounters, shops, ordinary trainers,
-standalone builds, and unenrolled story or rematch battles keep their current
-contracts.
+## Boundaries
 
-The [balance explorer](../../devtools/ui/README.md#trainer-balance-explorer)
-predicts species, party sizes, and levels for review. Playtesting still owns
-combat balance: moves, items, and AI.
+In: the three venues, well-known Kanto, Johto, and Hoenn singles trainers,
+field selection, battle order, and the field lock.
+
+Out of scope for v0: signup and qualification, venue order, seeding, rotation,
+repeat editions, and home crowds. The current circuit's signup, order, replay,
+record, ceremony, and unlock rules stay as they are until designed. Player TR
+keeps its current formula. Wild encounters, shops, ordinary trainers, and
+standalone builds keep their current contracts; other battles with well-known
+trainers follow their own rating.
 
 ## Specifications
 
-- [Circuit trainer pool](../specs/circuit-trainer-pool.md): registry, roles,
-  selection, rotation, and battle construction.
-- [Seeded circuit runtime](../specs/seeded-league-circuit.md): signup,
-  entry, retry, results, ceremonies, persistence, and presentation.
-- [Trainer world progression specification](../specs/trainer-world-progression.md):
-  growth model, arcs, rosters, and levels.
+- [Circuit trainer pool](../specs/circuit-trainer-pool.md): registry,
+  eligibility, selection, ordering, and battle construction.
+- [Circuit runtime](../specs/seeded-league-circuit.md): entry, the field lock,
+  the win commit, saved state, and load validation.
+- [Well-known trainer rating specification](../specs/trainer-world-progression.md):
+  TR, scalers, and rosters.
 
-## Decisions
+## Later
 
-Resolved: D1, growth follows per-save arcs relative to the world
-([trainer world progression](trainer-world-progression.md)). D2, headliners
-are chosen by current standing, not title. D6 is deleted: a loss means
-retrying the same frozen field, with no waiting mechanism.
-
-| ID | Open decision | Proposed default |
-| --- | --- | --- |
-| D3 | Per-trainer bias, allowed arcs, arc shapes, rosters (aces, evolution lines, moves, filler pools, base scores, offsets), and hint lines | Balance explorer catalog defaults. Author full rosters first, then rerun feasibility; the prototype's gaps are not tuning evidence |
-| D4 | Signup thresholds | About 8/16/24 global badges by circuit position, plus a win at the previous venue |
-| D5 | Rotation factors and variety acceptance | Weight ×16/×4/×1 for 0/1/2 earlier venues this edition; ×2 if absent from this venue's last field; wins only |
-| D7 | Role windows (levels relative to the world's cap) | Contender −2 or lower, elite −1 to +1, headliner +2 or higher |
+- Signup and qualification gates designed for this circuit.
+- Seeded venue order, per-save variation, rotation, and recurring editions.
+- Home crowds with an 85/15 home/visitor draw, and Masters as an open
+  invitational.
+- Role windows (contender, elite, headliner) and standing-based selection.
+- Matchmaking fields around the player's TR.
+- Off-screen NPC leagues, TV and Match Call news, and NPC badge records.
 
 ## References
 
-- [Trainer world progression](trainer-world-progression.md)
-- [Playthrough-seeded variation](playthrough-seeded-variation.md)
-- [Shared playthrough seed framework](../specs/playthrough-seed-framework.md)
-- [Gym Leader scaling](gym-leader-scaling.md)
+- [Well-known trainer rating](trainer-world-progression.md)
+- [Interregional League circuit](wayfarer-interregional-league-circuit.md)
+- [League scaling](league-scaling.md)
+- [Playthrough-seeded variation](playthrough-seeded-variation.md) (parked)
 - [Player progression](../specs/trainer-rating-party-progression.md)

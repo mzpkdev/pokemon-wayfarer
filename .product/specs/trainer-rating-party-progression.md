@@ -9,21 +9,16 @@ formula and soft-cap anchors are unchanged. These circuit inputs are current;
 the Partial marker does not certify completion of all experience, obedience,
 and cross-build acceptance listed below.
 
-The proposed [Seeded Trainer Circuit](../prds/seeded-trainer-circuit.md) retains
-this player TR and cap contract. If adopted, progression examples refer to first,
-second, and third lifetime venue clears rather than a fixed Indigo/Masters/Hoenn
-order. Signup thresholds remain provisional (about 8/16/24 global badges by
-circuit position plus a predecessor win). Player TR and caps use actual badge
-and committed first-lifetime-clear facts; sub-24-badge clears remain relevant
-balance cases. Losing a competition grants no clear or TR contribution.
-Recurring editions never reset those facts or add more +8 contributions.
-Proposed [trainer world progression](trainer-world-progression.md) derives
-enrolled NPC strength from a world cap: this document's soft cap evaluated
-purely from canonical badges and first clears, never from the saved TR, party,
-or training, plus each trainer's standing and seeded growth arc. It changes
-nothing here: the player's saved high-water TR, soft cap, XP reduction,
-obedience, wild encounters, marts, ordinary Trainers, and Gym members retain
-their existing player inputs.
+The proposed [Trainer Circuit](../prds/seeded-trainer-circuit.md) keeps this
+player TR formula and cap contract: badges plus +8 per committed first venue
+clear, and nothing for a loss. In the target, TR is uncapped: each TR-driven
+consumer is a scaler whose value stays flat past its last anchor, so the soft
+cap stays at Lv 100 past TR 80. Under the proposed
+[well-known trainer rating](trainer-world-progression.md), well-known trainers
+use this document's soft-cap anchors for team level but have their own
+authored, fixed TR and never read the player's. The player's saved high-water
+TR, soft cap, XP reduction, obedience, wild encounters, marts, ordinary
+Trainers, and Gym members retain their existing player inputs.
 
 ## Scope
 
