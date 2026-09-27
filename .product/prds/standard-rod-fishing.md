@@ -170,7 +170,9 @@ bite rate, averaging no more than 50 casts. Lure use is not required.
 The selected nearby-source report owns the qualifying catches and includes
 Surf and the Den's required Whirlpool acquisition. Ineligible-entry filtering
 must preserve a qualifying nearby known-move source at every Trainer Rating
-from 0 through 80 under that contract.
+from 0 through 80 under that contract. That is today's scale; on the
+[v0 target scale](player-trainer-rating.md#how-you-earn-it) the range becomes
+TR 0 through 160 (0 to 24 badges), to be re-checked against the new wild curve.
 
 An upgrade should be noticeable during ordinary play. Good Rod should make the
 former Good and Super entries collectively more common than they are with Old

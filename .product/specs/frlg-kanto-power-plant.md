@@ -22,7 +22,7 @@ Repair continues to enable its existing consumers: Misty's Route 25 date and Gym
 
 ## Zapdos
 
-Move the single Wayfarer Route 10 exterior Zapdos encounter into the FRLG hall's source position. Remove its exterior object and interaction so there is only one Zapdos. Exploration and approach remain available below Trainer Rating (TR) 55. Below TR 55, interaction gives a brief readiness message without starting battle or changing Zapdos state. At TR 55 or above, start the fixed level 50 static Zapdos battle; TR is an eligibility check, not a level-scaling or capture-rate change. No Articuno, Rocket, Machine Part, badge, or League condition is added.
+Move the single Wayfarer Route 10 exterior Zapdos encounter into the FRLG hall's source position. Remove its exterior object and interaction so there is only one Zapdos. Exploration and approach remain available below Trainer Rating (TR) 55. Below TR 55, interaction gives a brief readiness message without starting battle or changing Zapdos state. At TR 55 or above, start the fixed level 50 static Zapdos battle; TR is an eligibility check, not a level-scaling or capture-rate change. No Articuno, Rocket, Machine Part, badge, or League condition is added. TR 55 is the current-scale threshold; v0 target: TR 120 (≈ 16 badges) on the [target TR scale](player-trainer-rating.md#formula-v0-target).
 
 Use FRLG's Zapdos outcome policy, with Wayfarer's TR gate added before battle:
 

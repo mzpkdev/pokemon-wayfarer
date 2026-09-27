@@ -304,6 +304,14 @@ and Cianwood Chinchou records are the explicit early HNS Whirlpool anchor.
 They must remain eligible with Flash, Surf, and Whirlpool at every Rating from
 0 through 80.
 
+These Rating ranges are on the current scale. On the
+[target TR scale](player-trainer-rating.md#formula-v0-target) the v0 target
+ranges are TR 0 through 160 (0 to 24 badges) for the full records and TR 25
+through 160 (≈ 2.5 to 24 badges) for Mantine. Both need data re-verification
+against the [target wild curve](trainer-rating-wild-encounter-scaling.md#v0-target-curve),
+including whether 14 is still the right Mantine floor; this specification does
+not yet claim either protection on the target scale.
+
 Aipom remains available through the Rock Smash-backed Headbutt profiles for
 Azalea Town and Route 33 at authored level 10. Its set of qualifying Headbutt
 profiles may not shrink. Its aggregate normalized probability across that

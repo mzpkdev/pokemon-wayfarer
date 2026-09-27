@@ -49,7 +49,16 @@ the field. They can retry at once or leave, train, and come back as often as
 they like; saving and reloading keep the field.
 
 **Winning.** A win commits the venue result. Its first-ever win keeps the
-current first-clear effects, including the player's +8 TR.
+current first-clear records, ceremonies, and unlocks, but gives the player no
+TR: a league is a test, not a source of power
+([Player Trainer Rating](player-trainer-rating.md)). Today's ROM still adds
+TR for a first venue win until that design is adopted.
+
+**Balance.** The first league must be winnable with eight badges. The five
+strongest trainers are set a little above an eight-badge player, so their
+teams sit a few levels over that player's cap. Because a league win adds no
+TR and fields can repeat, later venues are easier for a player with more
+badges; v0 accepts that.
 
 ## Sample playthrough
 
@@ -87,9 +96,10 @@ field selection, battle order, and the field lock.
 Out of scope for v0: signup and qualification, venue order, seeding, rotation,
 repeat editions, and home crowds. The current circuit's signup, order, replay,
 record, ceremony, and unlock rules stay as they are until designed. Player TR
-keeps its current formula. Wild encounters, shops, ordinary trainers, and
-standalone builds keep their current contracts; other battles with well-known
-trainers follow their own rating.
+follows [Player Trainer Rating](player-trainer-rating.md), where league wins
+add nothing. Wild encounters, shops, ordinary trainers, and standalone builds
+follow their own contracts; other battles with well-known trainers follow
+their own rating.
 
 ## Specifications
 
@@ -99,7 +109,7 @@ trainers follow their own rating.
 - [Well-known trainers specification](../specs/well-known-trainers.md): TR,
   scalers, and rosters.
 - [Player Trainer Rating specification](../specs/player-trainer-rating.md):
-  the player's TR, including its +8 first-clear contributions.
+  the player's TR, which league wins do not raise in the target.
 
 ## Later
 

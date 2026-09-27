@@ -313,7 +313,8 @@ Repeated conversations cannot repeatedly award one-time items or Pokémon.
 Bag and party capacity failures leave rewards claimable later.
 
 Retain the independent-story design's readiness requirements for the Master
-Ball and legendary captures. Zapdos's battle threshold is TR 55; other
+Ball and legendary captures. Zapdos's battle threshold is TR 55 (v0 target:
+TR 120, ≈ 16 badges); other
 unsettled thresholds are decided separately. A deferred Master Ball does not
 delay Silph's rescue or Giovanni's finale. No Sevii
 delivery requirement is imported for Mewtwo.

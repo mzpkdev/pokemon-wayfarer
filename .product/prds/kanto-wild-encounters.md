@@ -487,7 +487,9 @@ Playtesting should answer these questions:
 - At Wayfarer Rating 0, confirm the land populations for Routes 1, 2, 3, and 22,
   Viridian Forest, and every Mt. Moon floor produce no encounter above level
   12. This ceiling is the current projection of the highest level 12 source
-  role in that opening set.
+  role in that opening set. Rating 0 stays TR 0 on the
+  [v0 target scale](player-trainer-rating.md#how-you-earn-it), but the new wild
+  curve changes the projection, so the ceiling must be re-checked there.
 - Confirm the mainland day and night union contains 105 to 120 distinct ordinary
   species and Generation IV onward never exceeds 5 percent of regional
   probability.

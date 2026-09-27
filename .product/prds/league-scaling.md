@@ -51,6 +51,10 @@ Gym Leader curve changes.
 | 65 | 80 |
 | 80 | 100 |
 
+These TR values are on the current scale and have no v0 target conversion: in
+the target, League opponents use their own TR from [Leagues](leagues.md), not
+the player's.
+
 Interpolate between anchors, rounding halves upward. Each opponent has one
 explicit ace; the specification identifies its existing source slot.
 

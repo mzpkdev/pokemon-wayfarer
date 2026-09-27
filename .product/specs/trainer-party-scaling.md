@@ -6,8 +6,10 @@ Implemented: Partial; runtime policies exist, campaign balance acceptance remain
 Current ROM routing includes [League scaling](league-scaling.md) with saved player-entry TR;
 League levels are no longer static. See [the level resolver](../../game/src/trainer_party_scaling.c)
 and [the circuit producer](../../game/src/league_circuit.c). The v0 TR
-target (uncapped TR, scalers, and well-known trainers' separate TR) is in
-[Player Trainer Rating](player-trainer-rating.md).
+target (rescaled formula, uncapped TR, scalers, and well-known trainers'
+separate TR) is in [Player Trainer Rating](player-trainer-rating.md); this
+document owns the target baseline in [v0 target baseline](#v0-target-baseline).
+Everything else here is current ROM behavior.
 
 ## Scope and authority
 
@@ -120,6 +122,26 @@ opponents in a two-Trainer battle share this snapshot but retain independent
 policies. A boss paired with an ordinary Trainer remains unscaled while the
 ordinary Trainer scales. Reuse the snapshot if setup reconstructs a party;
 discard it after the battle. Retry after a loss starts a new snapshot.
+
+## v0 target baseline
+
+On the [target TR scale](player-trainer-rating.md#formula-v0-target) the
+Trainer baseline uses these provisional anchors instead of the table above,
+interpolated as a [scaler](player-trainer-rating.md#scalers) and flat past
+TR 160:
+
+| Badges | Target TR | Trainer baseline | Soft cap | Gap to cap |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 0 | 9 | 15 | −6 |
+| 4 | 40 | 27 | 28 | −1 |
+| 8 | 80 | 44 | 50 | −6 |
+| 16 | 120 | 62 | 75 | −13 |
+| 24 | 160 | 82 | 100 | −18 |
+
+Route trainers press close to the cap early and fall behind late; the late
+challenge comes from [well-known trainers](well-known-trainers.md). The
+identity adjustment, the Gym-member +2, the 1–100 clamp, and the battle-start
+snapshot are unchanged and apply on top of this baseline.
 
 ## Species, moves, and per-Pokémon fields
 

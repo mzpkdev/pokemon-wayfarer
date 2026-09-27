@@ -1,22 +1,28 @@
 import catalogData from "./catalog.json"
 import {
+  EXPERIMENT_VERSION,
   LEVEL_OFFSET,
   MAX_ANCHORS,
   OLD_VERSION_REJECTION,
   createExperiment,
   leagueField,
-  playerCap,
-  playerRating,
   resolveTrainer,
   rosterGaps,
   serializeExperiment,
   validateExperiment,
+  worldLevels,
 } from "./engine.js"
 import type { Anchor, Experiment, RosterEntry, TrainerRecord, TrainerSettings } from "./types.js"
 
 export const catalog = catalogData as TrainerRecord[]
-export type ScalerId = "teamLevel" | "teamSize"
-const storageKey = "wayfarer-trainer-balance-v5"
+export type ScalerId = "teamLevel" | "teamSize" | "wildLevel" | "routeTrainerLevel"
+export const SCALER_IDS: readonly ScalerId[] = [
+  "teamLevel",
+  "teamSize",
+  "wildLevel",
+  "routeTrainerLevel",
+]
+const storageKey = "wayfarer-trainer-balance-v6"
 const firstTrainer = catalog[0]
 if (!firstTrainer) throw new Error("The trainer catalog is empty.")
 const initialTrainerId = firstTrainer.id
@@ -36,7 +42,6 @@ export const movesText = (moves: RosterEntry["moves"]): string =>
 export class BalanceLab {
   #_experiment = $state<Experiment>(createExperiment(catalog))
   badges = $state(0)
-  leagueClears = $state(0)
   query = $state("")
   region = $state("All regions")
   role = $state("All trainers")
@@ -45,11 +50,15 @@ export class BalanceLab {
   error = $state("")
   notice = $state("")
 
-  point = $derived({ badges: this.badges, leagueClears: this.leagueClears })
-  playerTR = $derived(playerRating(this.point))
-  cap = $derived(playerCap(this.point))
-  teamLevel = $derived(this.#_experiment.teamLevel)
-  teamSize = $derived(this.#_experiment.teamSize)
+  world = $derived(worldLevels(this.#_experiment, { badges: this.badges }))
+  playerTR = $derived(this.world.tr)
+  cap = $derived(this.world.cap)
+  anchors = $derived({
+    teamLevel: this.#_experiment.teamLevel,
+    teamSize: this.#_experiment.teamSize,
+    wildLevel: this.#_experiment.wildLevel,
+    routeTrainerLevel: this.#_experiment.routeTrainerLevel,
+  })
   allRows = $derived(catalog.map((trainer) => resolveTrainer(trainer, this.#_experiment)))
   rows = $derived(
     this.allRows.filter(({ trainer }) => {
@@ -147,11 +156,6 @@ export class BalanceLab {
     this.#_persist()
   }
 
-  setClears = (clears: number): void => {
-    this.leagueClears = Number.isFinite(clears) ? Math.min(3, Math.max(0, Math.round(clears))) : 0
-    this.#_persist()
-  }
-
   setTR = (id: string, value: string): void =>
     this.#_edit("Could not change the TR.", (next) => {
       const settings = next.trainers[id]
@@ -226,9 +230,8 @@ export class BalanceLab {
             Number(data.get(`${scaler}-value-${index}`)),
           ],
         )
-      next.teamLevel = read("teamLevel")
-      next.teamSize = read("teamSize")
-      return "Updated the team level and team size scalers."
+      for (const scaler of SCALER_IDS) next[scaler] = read(scaler)
+      return "Updated the scalers."
     })
 
   addAnchor = (scaler: ScalerId): void =>
@@ -264,8 +267,8 @@ export class BalanceLab {
     JSON.stringify(
       {
         tool: "wayfarer-trainer-balance",
-        version: 5,
-        point: { badges: this.badges, leagueClears: this.leagueClears },
+        version: EXPERIMENT_VERSION,
+        point: { badges: this.badges },
         selectedTrainer: this.selectedId,
         experiment: JSON.parse(serializeExperiment(this.#_experiment)),
       },
@@ -280,11 +283,11 @@ export class BalanceLab {
         data?.tool === "wayfarer-trainer-balance" &&
         typeof data.version === "number" &&
         data.version >= 1 &&
-        data.version <= 4
+        data.version <= 5
       )
         throw new Error(OLD_VERSION_REJECTION(data.version))
-      if (data?.tool !== "wayfarer-trainer-balance" || data.version !== 5)
-        throw new Error("This is not a version 5 Wayfarer balance experiment.")
+      if (data?.tool !== "wayfarer-trainer-balance" || data.version !== EXPERIMENT_VERSION)
+        throw new Error(`This is not a version ${EXPERIMENT_VERSION} Wayfarer balance experiment.`)
       const experiment = validateExperiment(data.experiment, catalog)
       const point = data.point
       if (
@@ -292,16 +295,13 @@ export class BalanceLab {
         !Number.isInteger(point.badges) ||
         point.badges < 0 ||
         point.badges > 24 ||
-        !Number.isInteger(point.leagueClears) ||
-        point.leagueClears < 0 ||
-        point.leagueClears > 3
+        Object.keys(point).length !== 1
       )
-        throw new Error("Use 0–24 badges and 0–3 first league clears.")
+        throw new Error("The player point must be 0–24 badges.")
       if (!catalog.some((trainer) => trainer.id === data.selectedTrainer))
         throw new Error("Unknown selected trainer.")
       this.#_experiment = experiment
       this.badges = point.badges
-      this.leagueClears = point.leagueClears
       this.selectedId = data.selectedTrainer
       this.error = ""
       this.notice = message

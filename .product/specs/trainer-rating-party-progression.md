@@ -9,8 +9,11 @@ formula and soft-cap anchors are unchanged. These circuit inputs are current;
 the Partial marker does not certify completion of all experience, obedience,
 and cross-build acceptance listed below.
 
-The v0 TR target (uncapped TR, scalers, and well-known trainers' separate
-TR) is in [Player Trainer Rating](player-trainer-rating.md).
+The v0 TR target (rescaled formula, uncapped TR, scalers, and well-known
+trainers' separate TR) is in [Player Trainer Rating](player-trainer-rating.md);
+this document owns the target soft-cap curve in
+[v0 target curve](#v0-target-curve). Everything else below is current ROM
+behavior.
 
 ## Scope
 
@@ -78,6 +81,25 @@ These initial values equal the current wild encounter level anchor plus 10.
 The party curve remains separate source data. Changing wild encounter anchors
 does not change party caps, and changing party caps does not change wild
 encounters.
+
+### v0 target curve
+
+On the [target TR scale](player-trainer-rating.md#formula-v0-target) the soft
+cap uses these provisional anchors, interpolated as a
+[scaler](player-trainer-rating.md#scalers) and flat at Lv 100 from TR 160. It
+is no longer tied to the wild curve plus 10:
+
+| Badges | Target TR | Soft level cap |
+| ---: | ---: | ---: |
+| 0 | 0 | 15 |
+| 4 | 40 | 28 |
+| 8 | 80 | 50 |
+| 16 | 120 | 75 |
+| 24 | 160 | 100 |
+
+League wins no longer move the cap. Experience reduction, obedience, Exp.
+Candy, Rare Candy, and the missing-badge catch penalty are unchanged; they
+read whatever cap this curve yields.
 
 ### Numerical experience
 

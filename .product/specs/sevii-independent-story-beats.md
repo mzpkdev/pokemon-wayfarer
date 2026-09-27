@@ -235,7 +235,9 @@ Trainer party for this scene.
 ## Moltres
 
 Restore Moltres at the Mt. Ember summit. Use the shared bird threshold
-`WAYFARER_BIRD_CAPTURE_TR = 55`, consistent with Articuno and Zapdos.
+`WAYFARER_BIRD_CAPTURE_TR = 55`, consistent with Articuno and Zapdos. TR 55 is
+the current-scale value; v0 target: TR 120 (≈ 16 badges) on the
+[target TR scale](player-trainer-rating.md#formula-v0-target).
 
 - Below TR 55, interaction explains that the Pokémon is too dangerous and ends
   without starting a battle or hiding Moltres.

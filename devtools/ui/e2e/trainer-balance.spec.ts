@@ -8,8 +8,9 @@ test("builds teams from each trainer's own TR and round-trips an exported experi
   await page.goto("/#trainer-balance")
   await expect(page.getByRole("heading", { name: "Trainer balance", exact: true })).toBeVisible()
   await expect(page.getByTestId("player-cap")).toHaveText("Lv. 15")
+  await expect(page.getByLabel("First league clears")).toHaveCount(0)
   const order = page.getByTestId("battle-order").locator("li")
-  // Brock TR 2: team level 16 (15.5 rounds up), size 2; entry 1 comes last.
+  // Brock TR 2: team level 16 (15.65 rounds to 16), size 2; entry 1 comes last.
   await expect(page.getByTestId("selected-tr")).toHaveText("2")
   await expect(page.getByTestId("selected-level")).toHaveText("Lv. 16")
   await expect(page.getByTestId("team-size")).toHaveText("2")
@@ -21,16 +22,20 @@ test("builds teams from each trainer's own TR and round-trips an exported experi
 
   // The player's progress is a readout only: Brock's team does not move.
   await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
-  await expect(page.getByTestId("player-tr")).toHaveText("40")
-  await expect(page.getByTestId("player-cap")).toHaveText("Lv. 42")
+  await expect(page.getByTestId("player-tr")).toHaveText("80")
+  await expect(page.getByTestId("player-cap")).toHaveText("Lv. 50")
+  await expect(page.getByTestId("wild-level")).toHaveText("Lv. 40")
+  await expect(page.getByTestId("wild-gap")).toHaveText("-10 vs cap")
+  await expect(page.getByTestId("route-trainer-level")).toHaveText("Lv. 44")
+  await expect(page.getByTestId("route-trainer-gap")).toHaveText("-6 vs cap")
   await expect(page.getByTestId("selected-level")).toHaveText("Lv. 16")
-  await expect(page.getByTestId("gap-brock")).toHaveText("-26")
+  await expect(page.getByTestId("gap-brock")).toHaveText("-34")
 
-  // TR is uncapped; the scalers stay flat past their last anchor.
+  // TR is uncapped; the scalers stay flat past their last anchor (TR 160).
   const tr = page.getByLabel("Brock TR", { exact: true })
-  await tr.fill("120")
+  await tr.fill("200")
   await tr.press("Enter")
-  await expect(page.getByTestId("selected-tr")).toHaveText("120")
+  await expect(page.getByTestId("selected-tr")).toHaveText("200")
   await expect(page.getByTestId("level-brock")).toHaveText("Lv. 100")
   await expect(page.getByTestId("size-brock")).toHaveText("6")
   await expect(order).toHaveCount(6)
@@ -78,18 +83,23 @@ test("fields the top five by TR from one pool, strongest last", async ({ page })
   await expect(page.getByTestId("league-venues")).toContainText(
     "Indigo, Sevii Masters, Hoenn all field this five",
   )
-  await expect(page.getByTestId("league-match-5")).toContainText("TR 55 · Lv. 60 · 5 Pokémon")
+  // Beatable at 8 badges (cap Lv 50): the field runs TR 90–95, team level 56–59.
+  await expect(page.getByTestId("league-range")).toHaveText("TR 90 … 95")
+  await expect(page.getByTestId("league-match-1")).toContainText("TR 90 · Lv. 56 · 5 Pokémon")
+  await expect(page.getByTestId("league-match-5")).toContainText("TR 95 · Lv. 59 · 5 Pokémon")
   await expect(page.getByTestId("league-match-5").locator("li").last()).toContainText("Dragonite")
   // Raising Brock above everyone moves him into the last match and drops Bruno.
   const tr = page.getByLabel("Brock TR", { exact: true })
-  await tr.fill("60")
+  await tr.fill("100")
   await tr.press("Enter")
   await expect(page.getByTestId("league-match-5")).toContainText("Brock")
   await expect(page.getByTestId("league-match-1")).toContainText("Agatha")
   await expect(page.getByTestId("league-field")).not.toContainText("Bruno")
 })
 
-test("flags incomplete rosters and rejects invalid edits and version 4 files", async ({ page }) => {
+test("flags incomplete rosters and rejects invalid edits and version 4 and 5 files", async ({
+  page,
+}) => {
   await page.goto("/#trainer-balance")
   await expect(page.getByTestId("roster-gap-count")).toHaveText("11")
   await expect(page.getByTestId("roster-incomplete")).toHaveCount(0)
@@ -123,6 +133,22 @@ test("flags incomplete rosters and rejects invalid edits and version 4 files", a
   await expect(page.getByRole("alert")).toContainText(
     "Version 4 experiments use a retired trainer model",
   )
+  await page.getByLabel("Import experiment file", { exact: true }).setInputFiles({
+    name: "v5.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(
+      JSON.stringify({
+        tool: "wayfarer-trainer-balance",
+        version: 5,
+        point: { badges: 8, leagueClears: 1 },
+        selectedTrainer: "blue",
+        experiment: { version: 5, teamLevel: [[0, 15]], teamSize: [[0, 2]], trainers: {} },
+      }),
+    ),
+  })
+  await expect(page.getByRole("alert")).toContainText(
+    "Version 5 experiments use the retired 0–80 player TR scale",
+  )
   await expect(page.getByTestId("badge-count")).toHaveText("0")
   await expect(page.getByTestId("selected-tr")).toHaveText("2")
 
@@ -139,21 +165,42 @@ test("flags incomplete rosters and rejects invalid edits and version 4 files", a
   await expect(page.getByRole("button", { name: "Add entry", exact: true })).toHaveCount(0)
 })
 
-test("edits the team level and team size scalers globally", async ({ page }) => {
+test("edits the trainer and world scalers globally", async ({ page }) => {
   await page.goto("/#trainer-balance")
   await page.getByText("Scalers & experiment settings", { exact: true }).click()
-  await expect(page.getByTestId("size-blue")).toHaveText("2")
-  // Without the (10, 2) anchor, size ramps from (0, 2) to (11, 3): TR 6 rounds to 3.
-  await page.getByRole("button", { name: "Remove Team size anchor 2", exact: true }).click()
-  await expect(page.getByTestId("size-blue")).toHaveText("3")
-  await page.getByLabel("Team level anchor 1 value", { exact: true }).fill("20")
+  await expect(page.getByTestId("size-lance")).toHaveText("5")
+  // Without the (95, 5) anchor, size ramps from (71, 5) to (96, 6): TR 95 rounds to 6.
+  await page.getByRole("button", { name: "Remove Team size anchor 8", exact: true }).click()
+  await expect(page.getByTestId("size-lance")).toHaveText("6")
+  await page.getByLabel("Team level anchor 1 value", { exact: true }).fill("30")
   await page.getByRole("button", { name: "Apply scalers", exact: true }).click()
   await expect(page.getByRole("alert")).toContainText("values must not decrease")
   await page.getByLabel("Team level anchor 1 value", { exact: true }).fill("16")
   await page.getByRole("button", { name: "Apply scalers", exact: true }).click()
   await expect(page.getByTestId("level-falkner")).toHaveText("Lv. 16")
+
+  // The wild and route-trainer curves read the player TR and move only the world readout.
+  await page.getByRole("button", { name: "Set 4 badges", exact: true }).click()
+  await expect(page.getByTestId("player-tr")).toHaveText("40")
+  await expect(page.getByTestId("player-cap")).toHaveText("Lv. 28")
+  await expect(page.getByTestId("wild-gap")).toHaveText("-4 vs cap")
+  await expect(page.getByTestId("route-trainer-gap")).toHaveText("-1 vs cap")
+  await page.getByLabel("Wild level anchor 2 value", { exact: true }).fill("28")
+  await page.getByLabel("Route trainer level anchor 2 value", { exact: true }).fill("30")
+  await page.getByRole("button", { name: "Apply scalers", exact: true }).click()
+  await expect(page.getByTestId("wild-level")).toHaveText("Lv. 28")
+  await expect(page.getByTestId("route-trainer-gap")).toHaveText("+2 vs cap")
+  await expect(page.getByTestId("level-falkner")).toHaveText("Lv. 16")
+
+  await page.getByRole("button", { name: "Set 24 badges", exact: true }).click()
+  await expect(page.getByTestId("player-tr")).toHaveText("160")
+  await expect(page.getByTestId("player-cap")).toHaveText("Lv. 100")
   await page.getByRole("button", { name: "Reset all to catalog defaults", exact: true }).click()
-  await expect(page.getByTestId("size-blue")).toHaveText("2")
+  await expect(page.getByTestId("size-lance")).toHaveText("5")
+  await expect(page.getByTestId("wild-level")).toHaveText("Lv. 78")
+  await expect(page.getByTestId("wild-gap")).toHaveText("-22 vs cap")
+  await expect(page.getByTestId("route-trainer-level")).toHaveText("Lv. 82")
+  await expect(page.getByTestId("route-trainer-gap")).toHaveText("-18 vs cap")
 })
 
 test("keeps controls and teams usable at a narrow viewport", async ({ page }) => {

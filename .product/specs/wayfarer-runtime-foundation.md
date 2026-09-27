@@ -203,15 +203,17 @@ Indigo projects its clear into both Kanto and Johto Champion recognition.
 
 The proposed [Leagues runtime](leagues.md) keeps current
 admission, venue order, and lifetime first clears with their regional
-recognition, cleanup, unlocks, and player TR contributions. It changes only
+recognition, cleanup, and unlocks. It changes only
 who is fielded and what happens after a loss: each venue fields the global top
 five well-known trainers by their authored, fixed TR under
 [Well-known trainers](well-known-trainers.md), strongest last,
 without reading player party, XP, or TR. Well-known trainers in Gyms use the
 same model at battle setup.
 
-Winning commits the venue result and any lifetime first clear with its
-existing +8 player TR, and releases the locked field. Losing leaves the venue
+Winning commits the venue result and any lifetime first clear, and releases
+the locked field. In the target a win adds no player TR
+([Player Trainer Rating](player-trainer-rating.md)); the current ROM's +8 per
+first clear stays until adoption. Losing leaves the venue
 locked to the same field, with no clear or reward; the player may retry
 immediately or later. Save wins and ceremony phases atomically, with stale
 callbacks rejected.

@@ -375,6 +375,10 @@ stage was previously cleared.
 
 ## Trainer Rating
 
+This is the current formula. The v0 target moves TR to the new badge scale in
+[Player Trainer Rating](player-trainer-rating.md#formula-v0-target) and
+removes league TR.
+
 Let `b` be global badge count. Preserve the badge contribution:
 
 ```text

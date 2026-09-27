@@ -280,6 +280,11 @@ mountain habitat.
   remain 2.75% and 3% per unmodified cast respectively. Together with the HNS
   Chinchou learnset, these are the required Rating 0 through 80 Whirlpool
   guarantee.
+- These Rating ranges are on today's scale. On the
+  [v0 target scale](player-trainer-rating.md#how-you-earn-it) they become TR 0
+  through 160 (0 to 24 badges), and Mantine's becomes TR 25 through 160
+  (about 2.5 to 24 badges). Both must be re-checked against the new wild curve,
+  including Mantine's level-14 floor, before either protection is claimed there.
 - Time-of-day selection, ability-based slot influence, Lures, repel checks,
   and ordinary population readers continue to operate on the rebalanced
   profiles.

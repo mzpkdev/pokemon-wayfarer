@@ -2,18 +2,24 @@
   import { onMount } from "svelte"
   import { LEVEL_OFFSET, ROSTER_SIZE, VENUES } from "./engine.js"
   import { BalanceLab, catalog, movesText, type ScalerId } from "./lab.svelte.js"
-  import type { Anchor } from "./types.js"
 
   const lab = new BalanceLab()
   const ticks = [0, 4, 8, 12, 16, 20, 24]
   let importInput: HTMLInputElement
   const signed = (value: number): string => (value > 0 ? `+${value}` : `${value}`)
   const tone = (gap: number): string => (gap > 0 ? "above" : gap < 0 ? "below" : "even")
-  const scalers: { id: ScalerId; title: string; unit: string; max: number }[] = [
-    { id: "teamLevel", title: "Team level", unit: "Lv.", max: 100 },
-    { id: "teamSize", title: "Team size", unit: "Size", max: ROSTER_SIZE },
+  const scalers: { id: ScalerId; title: string; by: string; unit: string; max: number }[] = [
+    { id: "teamLevel", title: "Team level", by: "Trainer TR", unit: "Lv.", max: 100 },
+    { id: "teamSize", title: "Team size", by: "Trainer TR", unit: "Size", max: ROSTER_SIZE },
+    { id: "wildLevel", title: "Wild level", by: "Player TR", unit: "Lv.", max: 100 },
+    {
+      id: "routeTrainerLevel",
+      title: "Route trainer level",
+      by: "Player TR",
+      unit: "Lv.",
+      max: 100,
+    },
   ]
-  const anchorsFor = (id: ScalerId): Anchor[] => (id === "teamLevel" ? lab.teamLevel : lab.teamSize)
   const download = (): void => {
     const url = URL.createObjectURL(new Blob([lab.exportText()], { type: "application/json" }))
     const link = document.createElement("a")
@@ -93,18 +99,11 @@
           >{/each}
       </div>
       <span class="hint"
-        >For comparison only. The player’s TR never changes a trainer’s team or levels.</span
+        >Player TR: badges 1–8 give +10, 9–24 give +5, league wins give nothing. It scales the cap,
+        wild levels and route trainers, never a well-known trainer’s team.</span
       >
     </div>
     <div class="world-facts">
-      <label
-        >First league clears<select
-          aria-label="First league clears"
-          value={lab.leagueClears}
-          onchange={(event) => lab.setClears(Number(event.currentTarget.value))}
-          >{#each [0, 1, 2, 3] as clears}<option value={clears}>{clears} / 3</option>{/each}</select
-        ></label
-      >
       <div>
         <span class="eyebrow">Player TR</span><strong data-testid="player-tr">{lab.playerTR}</strong
         >
@@ -112,6 +111,18 @@
       <div>
         <span class="eyebrow">Player cap</span><strong data-testid="player-cap"
           >Lv. {lab.cap}</strong
+        >
+      </div>
+      <div>
+        <span class="eyebrow">Wild level</span><strong data-testid="wild-level"
+          >Lv. {lab.world.wild}</strong
+        ><small data-testid="wild-gap">{signed(lab.world.wild - lab.cap)} vs cap</small>
+      </div>
+      <div>
+        <span class="eyebrow">Route trainers</span><strong data-testid="route-trainer-level"
+          >Lv. {lab.world.routeTrainer}</strong
+        ><small data-testid="route-trainer-gap"
+          >{signed(lab.world.routeTrainer - lab.cap)} vs cap</small
         >
       </div>
     </div>
@@ -467,11 +478,13 @@
     <p>
       Each scaler maps TR to a value through anchors: linear between them, halves rounded up, and
       flat past the last anchor, so a higher TR is never clamped but stops adding level or size.
-      Anchors start at TR 0, rise in TR and never decrease in value. Team level defaults to the
-      player soft-cap anchors; team size uses paired anchors to make a step table (0–10 → 2, 11–29 →
-      3, 30–41 → 4, 42–54 → 5, 55+ → 6).
+      Anchors start at TR 0, rise in TR and never decrease in value. Team level and team size read
+      each well-known trainer’s own TR. Team level defaults to the player soft-cap anchors (Lv 100
+      at TR 160); team size uses paired anchors to make a step table (0–15 → 2, 16–43 → 3, 44–70 →
+      4, 71–95 → 5, 96+ → 6). Wild level and route trainer level read the player’s TR and only feed
+      the world readout.
     </p>
-    {#key [lab.teamLevel, lab.teamSize]}
+    {#key lab.anchors}
       <form
         onsubmit={(event) => {
           event.preventDefault()
@@ -481,11 +494,11 @@
         <div class="scaler-grid">
           {#each scalers as scaler (scaler.id)}
             <div class="scaler" data-testid={`scaler-${scaler.id}`}>
-              <h3>{scaler.title}</h3>
+              <h3>{scaler.title} <span class="muted">by {scaler.by}</span></h3>
               <table class="arc-table">
                 <thead><tr><th>TR</th><th>{scaler.unit}</th><th></th></tr></thead>
                 <tbody>
-                  {#each anchorsFor(scaler.id) as [at, value], index}
+                  {#each lab.anchors[scaler.id] as [at, value], index}
                     <tr>
                       <td
                         >{#if index === 0}<span class="muted">0</span>{:else}<input
@@ -680,22 +693,22 @@
     display: flex;
     flex-wrap: wrap;
     gap: 24px;
-    align-items: center;
+    align-items: flex-start;
     border-left: 1px solid var(--line);
     padding-left: 24px;
-  }
-  .world-facts label {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    font-size: 11px;
-    color: var(--color-cartographer-muted);
   }
   .world-facts strong {
     display: block;
     font-size: 23px;
     font-weight: 500;
     margin-top: 5px;
+    font-variant-numeric: tabular-nums;
+  }
+  .world-facts small {
+    display: block;
+    margin-top: 2px;
+    color: var(--color-cartographer-muted);
+    font-size: 11px;
     font-variant-numeric: tabular-nums;
   }
   .model-note {
@@ -1362,6 +1375,8 @@
       margin-left: 4px;
     }
     .world-facts {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
     }
     .world-facts strong {

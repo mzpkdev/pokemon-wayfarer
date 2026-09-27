@@ -13,9 +13,10 @@ make towns recognizable and give players reasons to visit different shops.
 The converted-counter runtime now uses the shared player-TR essentials and
 permanent local stock specified below; release acceptance remains pending in
 the implementation specification. Legacy counters outside that enrollment keep
-their existing behavior. The v0 TR target (uncapped TR, scalers, and
-well-known trainers' separate TR) is in
-[Player Trainer Rating](player-trainer-rating.md).
+their existing behavior. The v0 TR target (a new badge scale, uncapped TR,
+scalers, and well-known trainers' separate TR) is in
+[Player Trainer Rating](player-trainer-rating.md); its effect on marts is
+under [v0 target](#v0-target).
 
 ## Design
 
@@ -45,6 +46,15 @@ including both halves of Lilycove's split catalog.
 For example, a TR 4 visitor to Cherrygrove and Mossdeep can buy Great Balls
 and Super Potions in both towns. Their specialty stock differs. On returning
 to Cherrygrove at TR 55, the player can buy Full Restores there too.
+
+### v0 target
+
+On the new TR scale the thresholds become TR 0, 10, 40, 70, 80, and 120, so
+each tier still opens at the same badge point: Great Balls after the first
+badge, Super Repels after four, Ultra Balls after seven, Full Heals after
+eight, and Max Potions and Full Restores after sixteen. The tier contents and
+the rest of this design are unchanged. The thresholds in the table above stay
+the current ROM's until adoption.
 
 ### Local character
 

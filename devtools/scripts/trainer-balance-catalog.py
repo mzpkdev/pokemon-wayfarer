@@ -10,8 +10,10 @@ short of six is a content-gap warning, not a failure.
 from __future__ import annotations
 
 import argparse
+from fractions import Fraction
 import importlib.util
 import json
+import math
 from pathlib import Path
 import re
 import subprocess
@@ -31,11 +33,13 @@ BABIES = {"SPECIES_PICHU", "SPECIES_CLEFFA", "SPECIES_IGGLYBUFF", "SPECIES_TYROG
           "SPECIES_ELEKID", "SPECIES_MAGBY", "SPECIES_AZURILL", "SPECIES_WYNAUT", "SPECIES_BUDEW",
           "SPECIES_CHINGLING", "SPECIES_BONSLY", "SPECIES_MIME_JR", "SPECIES_HAPPINY", "SPECIES_MUNCHLAX",
           "SPECIES_MANTYKE", "SPECIES_RIOLU", "SPECIES_TOXEL"}
-# name, region, role, reference family/ID, PROVISIONAL TR, handwritten early
+# name, region, role, reference family/ID, OLD-scale TR, handwritten early
 # species (appended when no roster line already covers them).
-# TR = suggestedStartTR from the first explorer catalog (commit c3c83991ec,
-# before the Living Rivals rework): Gym 1-5, Blue 6, Elite Four 40-53,
-# Champions 53-55. Provisional until the authoring session sets real values.
+# The old TR is suggestedStartTR from the first explorer catalog (commit
+# c3c83991ec, before the Living Rivals rework): Gym 1-5, Blue 6, Elite Four
+# 40-53, Champions 53-55, on the retired 0-80 player TR scale. new_scale_tr()
+# converts it to the rescaled player TR (contract section 6). Provisional
+# until the authoring session sets real values.
 ROSTER = [
     ('Brock', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_BROCK', 2, ['Geodude', 'Onix']),
     ('Misty', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_MISTY', 3, ['Staryu', 'Psyduck']),
@@ -75,6 +79,49 @@ ROSTER = [
     ('Wallace', 'Hoenn', 'Champion', 'Emerald', 'TRAINER_WALLACE', 53, []),
     ('Steven', 'Hoenn', 'Champion', 'Emerald', 'TRAINER_STEVEN', 53, []),
 ]
+
+
+# Retired 0-80 cap curve and the rescaled one (24 badges = TR 160).
+OLD_CAP = [(0, 15), (4, 16), (8, 18), (16, 23), (30, 30), (40, 42), (55, 60), (65, 80), (80, 100)]
+NEW_CAP = [(0, 15), (40, 28), (80, 50), (120, 75), (160, 100)]
+LEAGUE_OLD, LEAGUE_NEW = (40, 55), (70, 95)
+
+
+def half_up(value):
+    return math.floor(value + Fraction(1, 2))
+
+
+def curve(anchors, tr):
+    """Unrounded level at `tr` (linear between anchors, flat outside)."""
+    if tr <= anchors[0][0]:
+        return Fraction(anchors[0][1])
+    for (lo_tr, lo_lv), (hi_tr, hi_lv) in zip(anchors, anchors[1:]):
+        if tr <= hi_tr:
+            return lo_lv + Fraction(tr - lo_tr, hi_tr - lo_tr) * (hi_lv - lo_lv)
+    return Fraction(anchors[-1][1])
+
+
+def inverse(anchors, level):
+    """The TR at which a strictly rising curve reaches `level`."""
+    for (lo_tr, lo_lv), (hi_tr, hi_lv) in zip(anchors, anchors[1:]):
+        if level <= hi_lv:
+            return lo_tr + (level - lo_lv) * Fraction(hi_tr - lo_tr, hi_lv - lo_lv)
+    return Fraction(anchors[-1][0])
+
+
+def new_scale_tr(role, old):
+    """Return (new TR, how it was converted).
+
+    Gym Leaders and Blue keep their team level (old cap-curve level -> the TR
+    giving it on the new cap curve); Elite Four and Champions map old 40-55
+    linearly onto new 70-95, so the league top five land near TR 85-95.
+    """
+    if role == "Gym Leader" or old < LEAGUE_OLD[0]:
+        level = curve(OLD_CAP, old)
+        return half_up(inverse(NEW_CAP, level)), f"by level equivalence (old cap-curve Lv {float(level):g} -> the TR giving it on the new cap curve)"
+    (a, b), (c, d) = LEAGUE_OLD, LEAGUE_NEW
+    return half_up(c + Fraction(old - a, b - a) * (d - c)), f"by mapping the old league band {a}-{b} linearly onto {c}-{d}"
+
 
 
 def command(args, **kwargs):
@@ -237,7 +284,8 @@ def generate():
         raise ValueError("unsupported gym catalog")
     result = []
     gaps = []
-    for name, region, role, family, trainer, tr, early in ROSTER:
+    for name, region, role, family, trainer, old_tr, early in ROSTER:
+        tr, conversion = new_scale_tr(role, old_tr)
         if not isinstance(tr, int) or tr < 0:
             raise ValueError(f"TR must be a non-negative integer: {name}")
         records = sources[family]
@@ -292,7 +340,7 @@ def generate():
                        "source": {"label": f"{family} local reference", "path": records[trainer]["source"], "trainerId": trainer, "note": note},
                        "referenceParty": [member(slot) for slot in reference_slots],
                        "tr": tr,
-                       "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+                       "trSource": f"PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR {old_tr} (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted {conversion}.",
                        "roster": roster, "rosterSource": roster_source})
     if len(result) != 37 or len({row["id"] for row in result}) != 37:
         raise ValueError("catalog must contain exactly 37 unique trainers")

@@ -82,6 +82,12 @@ does not receive the utility role.
 
 Trainer Rating projects ordinary encounters above their authored levels. The authored additions must therefore preserve every assigned utility move in the active four-move set at every level from the anchor's lowest qualifying level through level 100. This is deliberately stronger than checking only the listed authored ranges and covers every current projection, including the convergence toward level 90 at Rating 80.
 
+The Rating 0 to 80 ranges above are on the current scale. v0 target: TR 0 to
+160 (0 to 24 badges) on the [target TR scale](player-trainer-rating.md#formula-v0-target).
+The Chinchou ranges need data re-verification against the
+[target wild curve](trainer-rating-wild-encounter-scaling.md#v0-target-curve)
+before this specification claims them there.
+
 ### Anchor schedules
 
 Add the following entries to the anchor species. `L` means level. Multiple moves at one level are inserted in the displayed order after existing entries at that level.

@@ -152,7 +152,8 @@ boundary in Cerulean Cave. It must enforce the readiness requirement without
 requiring completion of Sevii's unrelated delivery chain. No new League-clear
 condition is introduced by this PRD.
 
-The Wayfarer Power Plant port sets Zapdos's battle threshold at TR 55. Exact
+The Wayfarer Power Plant port sets Zapdos's battle threshold at TR 55 on the
+current scale (v0 target: TR 120, ≈ 16 badges). Exact
 thresholds for the Master Ball, Articuno, and Mewtwo remain balance decisions
 against the wider journey. Mewtwo's threshold is higher than the birds'; do not
 assume the Master Ball shares either threshold. All alternate activation paths

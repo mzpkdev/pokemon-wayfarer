@@ -317,7 +317,12 @@ Trainer Rating specification. The redesign adds no Kanto profile offset.
 At Rating 10, effective land encounters on Routes 1, 2, 3, and 22, Viridian
 Forest, and every manifest-owned Mt. Moon profile must be level 12 or lower.
 The check enumerates every authored level in every slot, including ability and
-Lure level selection inputs before projection.
+Lure level selection inputs before projection. Rating 10 is the current scale;
+v0 target: TR 25 (≈ 2.5 badges) on the
+[target TR scale](player-trainer-rating.md#formula-v0-target). The level-12
+ceiling needs data re-verification against the
+[target wild curve](trainer-rating-wild-encounter-scaling.md#v0-target-curve)
+and is not yet claimed there.
 
 ### Night authoring
 
@@ -392,8 +397,9 @@ The six Wayfarer records for Vermilion City, Vermilion port outside, and the
 selected FRLG Cinnabar Island, by day and night, remain in
 `game/src/data/standard_rod_fishing.json`. For each record, Chinchou is
 exactly 11 percent of successful Old Rod encounters with Lure off at every
-Wayfarer Rating from 0 through 80. The 25 percent bite rate makes it exactly
-2.75 percent per unmodified cast. Kanto changes must not alter the Johto-owned
+Wayfarer Rating from 0 through 80 (current scale; v0 target: TR 0 through 160,
+0 to 24 badges, to be re-verified on the target wild curve). The 25 percent
+bite rate makes it exactly 2.75 percent per unmodified cast. Kanto changes must not alter the Johto-owned
 Olivine and Cianwood accessibility records in the same file.
 
 Every qualifying Kanto Chinchou catch knows Surf. Wayfarer Rating 0 produces a

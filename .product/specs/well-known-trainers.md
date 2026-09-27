@@ -32,8 +32,10 @@ v0 supersedes every earlier NPC growth model in full: no world cap,
 seeds, aces and fillers, filler scores or jitter, evolution by line, trades or
 gifts, and none of the older `baselineTR`, badge checkpoints, `effectiveTR`, or
 TR role bands. Player TR, the soft cap, experience, obedience, wild and static
-encounters, marts, ordinary trainers, and Gym members keep their current
-policies, which read player TR. Standalone builds are unchanged.
+encounters, marts, ordinary trainers, and Gym members read player TR under
+their own policies and v0 curves
+([Player Trainer Rating](player-trainer-rating.md#player-tr-scalers-v0)).
+Standalone builds are unchanged.
 
 ## Well-known inventory
 
@@ -64,8 +66,13 @@ encounter always uses this model.
   that changes it, so a trainer fields the same team in every battle and every
   save. Known v0 consequence: Blue's early rival fights and his late ones use
   the same team.
-- **Uncapped.** Trainer TR uses the player's uncapped scale and units
+- **Uncapped.** Trainer TR uses the player's target scale and units: 24
+  badges put the player at TR 160, and nothing caps it
   ([range](player-trainer-rating.md#range)).
+- **Placeholders.** Every well-known trainer's TR is a provisional placeholder
+  authored on the new scale and is re-authored with playtesting. The
+  [league balance target](leagues.md#balance-target) constrains the top of the
+  catalog.
 
 ## Trainer scalers
 
@@ -74,25 +81,26 @@ Team level and team size are scalers as defined in
 
 | Scaler | Form | Range | Natural cap | Saturates at |
 | --- | --- | --- | --- | --- |
-| Team level (well-known trainers) | interpolated | Lv 15 → 100 | Lv 100 | TR 80 |
-| Team size (well-known trainers) | step | 2 → 6 | 6 | TR 55 (provisional) |
+| Team level (well-known trainers) | interpolated | Lv 15 → 100 | Lv 100 | TR 160 (provisional) |
+| Team size (well-known trainers) | step | 2 → 6 | 6 | TR 96 (provisional) |
 
 **Team level** uses the same anchors as the
-[player soft-cap curve](trainer-rating-party-progression.md#soft-level-cap-curve),
-so a trainer at TR 40 and a player capped at TR 40 mean the same level:
+[v0 player soft-cap curve](trainer-rating-party-progression.md#v0-target-curve),
+so a trainer at TR 80 and a player capped at TR 80 (8 badges) mean the same
+level:
 
 ```text
-(0,15) (4,16) (8,18) (16,23) (30,30) (40,42) (55,60) (65,80) (80,100)
+(0,15) (40,28) (80,50) (120,75) (160,100)
 ```
 
-**Team size** (step, provisional): TR 0–10 → 2, 11–29 → 3, 30–41 → 4,
-42–54 → 5, 55+ → 6. The steps line up with roughly Lv 20/30/45/60 on the level
+**Team size** (step, provisional): TR 0–15 → 2, 16–43 → 3, 44–70 → 4,
+71–95 → 5, 96+ → 6. The steps line up with roughly Lv 20/30/45/60 on the level
 curve.
 
-| TR | 0 | 12 | 35 | 50 | 60 | 80 | 200 |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| teamLevel | 15 | 21 | 36 | 54 | 70 | 100 | 100 |
-| teamSize | 2 | 3 | 4 | 5 | 6 | 6 | 6 |
+| TR | 0 | 20 | 50 | 71 | 85 | 95 | 120 | 160 | 300 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| teamLevel | 15 | 22 | 34 | 45 | 53 | 59 | 75 | 100 | 100 |
+| teamSize | 2 | 3 | 4 | 5 | 5 | 5 | 6 | 6 | 6 |
 
 ## Rosters
 
@@ -120,8 +128,8 @@ battleOrder = team reversed                          // entry N first, entry 1 l
 ```
 
 Entry 1 is the **signature Pokémon**: present from TR 0 and always fought last.
-Example: at TR 35 with offsets `0, −2, −2, −4, −1, −3`, the team is entries
-1–4 at Lv 36/34/34/32, sent out in order 4, 3, 2, 1. Source FRLG, Emerald, and
+Example: at TR 50 with offsets `0, −2, −2, −4, −1, −3`, the team is entries
+1–4 at Lv 34/32/32/30, sent out in order 4, 3, 2, 1. Source FRLG, Emerald, and
 HNS parties are provenance and balance references; their levels never override
 this resolver. Because TR is fixed in v0, each trainer's team is fixed.
 
@@ -144,8 +152,8 @@ in v0; the snapshot is the boundary a future TR-change rule must respect.
 
 - Scalers: both pass the
   [scaler checks](player-trainer-rating.md#validation); team-level anchors
-  equal the player soft-cap anchors; team-size steps at 10/11, 29/30, 41/42,
-  and 54/55.
+  equal the v0 player soft-cap anchors; team-size steps at 15/16, 43/44,
+  70/71, and 95/96.
 - Rosters: exactly six entries per trainer; offsets in −6..0; at least one
   offset-0 entry among the first `teamSize(0)` entries (entry 1 at offset 0 is
   the simplest satisfying rule); valid species/forms; `AUTHORED` entries have
@@ -169,8 +177,8 @@ implementations stay active until then.
 
 ## Open questions
 
-- Each trainer's TR and roster, and the provisional team-size steps (content
-  review).
+- Each trainer's TR and roster on the new scale, and the provisional
+  team-size steps (content review).
 
 ## Later
 

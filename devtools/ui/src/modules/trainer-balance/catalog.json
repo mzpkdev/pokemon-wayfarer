@@ -25,7 +25,7 @@
       }
     ],
     "tr": 2,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 2 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.5 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Golem",
@@ -103,8 +103,8 @@
         "item": null
       }
     ],
-    "tr": 3,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 2,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.75 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Starmie",
@@ -188,8 +188,8 @@
         "item": null
       }
     ],
-    "tr": 3,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 2,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.75 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Raichu",
@@ -273,8 +273,8 @@
         "item": null
       }
     ],
-    "tr": 3,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 2,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.75 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Bellossom",
@@ -376,8 +376,8 @@
         "item": "Bright Powder"
       }
     ],
-    "tr": 4,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 3,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Crobat",
@@ -467,8 +467,8 @@
         "item": null
       }
     ],
-    "tr": 4,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 3,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Alakazam",
@@ -558,8 +558,8 @@
         "item": null
       }
     ],
-    "tr": 4,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 3,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Magmortar",
@@ -656,7 +656,7 @@
       }
     ],
     "tr": 5,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 5 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16.5 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Rhyhorn",
@@ -759,7 +759,7 @@
       }
     ],
     "tr": 6,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 6 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 17 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Eevee",
@@ -855,8 +855,8 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 50,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 87,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 50 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Lapras",
@@ -944,8 +944,8 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 52,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 90,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 52 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Machamp",
@@ -1033,8 +1033,8 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 53,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 92,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 53 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Gengar",
@@ -1122,8 +1122,8 @@
         "item": "Bright Powder"
       }
     ],
-    "tr": 42,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 73,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 42 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Crobat",
@@ -1211,8 +1211,8 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 55,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 95,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 55 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Dragonite",
@@ -1283,7 +1283,7 @@
       }
     ],
     "tr": 1,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 1 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.25 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Noctowl",
@@ -1368,7 +1368,7 @@
       }
     ],
     "tr": 2,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 2 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.5 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Scyther",
@@ -1452,8 +1452,8 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 3,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 2,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.75 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Miltank",
@@ -1543,8 +1543,8 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 3,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 2,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.75 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Gengar",
@@ -1634,8 +1634,8 @@
         "item": "Black Belt"
       }
     ],
-    "tr": 4,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 3,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Poliwrath",
@@ -1731,8 +1731,8 @@
         "item": "Quick Claw"
       }
     ],
-    "tr": 4,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 3,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Steelix",
@@ -1822,8 +1822,8 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 4,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 3,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Piloswine",
@@ -1920,7 +1920,7 @@
       }
     ],
     "tr": 5,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 5 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16.5 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Kingdra",
@@ -2016,8 +2016,8 @@
         "item": "Twisted Spoon"
       }
     ],
-    "tr": 40,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 70,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 40 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Xatu",
@@ -2105,8 +2105,8 @@
         "item": "Black Glasses"
       }
     ],
-    "tr": 44,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 77,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 44 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Houndoom",
@@ -2182,8 +2182,8 @@
         "item": "Oran Berry"
       }
     ],
-    "tr": 3,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 2,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.75 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Nosepass",
@@ -2267,8 +2267,8 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 3,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 2,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.75 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Makuhita",
@@ -2358,8 +2358,8 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 3,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 2,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 3 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 15.75 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Manectric",
@@ -2449,8 +2449,8 @@
         "item": "White Herb"
       }
     ],
-    "tr": 4,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 3,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Torkoal",
@@ -2540,8 +2540,8 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 4,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 3,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Slaking",
@@ -2637,8 +2637,8 @@
         "item": "Oran Berry"
       }
     ],
-    "tr": 4,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 3,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 4 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Altaria",
@@ -2735,7 +2735,7 @@
       }
     ],
     "tr": 5,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 5 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by level equivalence (old cap-curve Lv 16.5 -> the TR giving it on the new cap curve).",
     "roster": [
       {
         "species": "Kingdra",
@@ -2831,8 +2831,8 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 46,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 80,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 46 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Absol",
@@ -2920,8 +2920,8 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 47,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 82,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 47 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Dusclops",
@@ -3009,8 +3009,8 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 49,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 85,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 49 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Walrein",
@@ -3098,8 +3098,8 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 51,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 88,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 51 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Salamence",
@@ -3193,8 +3193,8 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 53,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 92,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 53 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Milotic",
@@ -3296,8 +3296,8 @@
         "item": "Sitrus Berry"
       }
     ],
-    "tr": 53,
-    "trSource": "PROVISIONAL: suggestedStartTR from the first explorer catalog (commit c3c83991ec), before the Living Rivals rework.",
+    "tr": 92,
+    "trSource": "PROVISIONAL placeholder on the rescaled player TR (24 badges = TR 160): old-scale TR 53 (suggestedStartTR, first explorer catalog, commit c3c83991ec) converted by mapping the old league band 40-55 linearly onto 70-95.",
     "roster": [
       {
         "species": "Metagross",

@@ -19,12 +19,12 @@ load validation, presentation, and regional integration.
   TR, the team-level and team-size scalers, rosters, and team composition. This
   spec reads a trainer's TR and composed team; it never restates how they are
   computed.
-- [Player Trainer Rating](player-trainer-rating.md) owns the player's TR,
-  including the +8 first-clear contribution a win triggers.
+- [Player Trainer Rating](player-trainer-rating.md) owns the player's TR. In
+  the target a league win adds no player TR; the current ROM's +8 per first
+  venue clear stays documented in the circuit spec until adoption.
 - The current [interregional circuit spec](wayfarer-interregional-league-circuit.md)
-  keeps admission, venue order, replays, first-clear facts, player TR
-  contributions, and ceremonies. This spec changes only who is fielded and
-  what happens after a loss.
+  keeps admission, venue order, replays, first-clear facts, and ceremonies.
+  This spec changes only who is fielded and what happens after a loss.
 
 Upon adoption this replaces the fixed lineups and player-entry-TR level policy
 in [League scaling](league-scaling.md), which stays the record of current ROM
@@ -150,7 +150,7 @@ change can alter a team (see [Load validation](#load-validation)).
 After five victories, one transaction atomically:
 
 - records the venue clear and, if it is the first, its current first-clear
-  effects, including the player's +8 TR;
+  effects other than player TR, which a win never changes;
 - queues the current ceremony; and
 - releases the locked field and run.
 
@@ -278,6 +278,18 @@ Existing code to review, not new APIs:
   [Sevii content manifest](../../game/src/data/wayfarer_sevii_maps.json), and
   [Blue Dojo scripts](../../game/data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc).
 
+## Balance target
+
+The first league must be beatable after 8 badges. An 8-badge player sits at
+TR 80 with a soft cap of Lv 50
+([Player Trainer Rating](player-trainer-rating.md#player-tr-scalers-v0)), so the
+provisional catalog puts the top five around TR 85–95, a team level of about
+53–59 ([Well-known trainers](well-known-trainers.md#trainer-scalers)). Every
+well-known TR is a placeholder, so this is a content constraint checked by the
+catalog report and playtesting, not a runtime rule. League wins add no player
+TR, and every venue may field the same five, so later leagues are easy for a
+player with more badges; v0 accepts that.
+
 ## Acceptance
 
 Check in an inventory: aliases, roster references, presentation coverage,
@@ -299,9 +311,9 @@ evidence (not yet run):
    resets, nothing is recorded, and the player blacks out to the usual target.
    Earn a badge and level up, then retry: identical five trainers, teams, and
    levels. Repeat with reloads and voluntary exits.
-6. **Win.** Exactly one clear and ceremony; only the first win grants +8 TR
-   and first-clear effects; the locked field is released. Interrupt and repeat
-   ceremony commits.
+6. **Win.** Exactly one clear and ceremony; only the first win grants
+   first-clear effects; no win changes player TR; the locked field is
+   released. Interrupt and repeat ceremony commits.
 7. **Replay.** Replays of a won venue reselect an identical field, store
    nothing beyond the existing replay run record, and never lock it.
 8. **Construction and presentation.** Build every eligible trainer's team,

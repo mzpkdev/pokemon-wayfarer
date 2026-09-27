@@ -272,7 +272,8 @@ and reward scenes without learning a replacement plot.
   milestone is complete; Lorelei also recognizes an already-cleared Warehouse.
 - Celio's repair conclusion is local presentation only. It changes no network,
   storage, Pokédex, Champion, League, cave, or travel entitlement.
-- Moltres uses the shared bird-capture threshold `WAYFARER_BIRD_CAPTURE_TR = 55`.
+- Moltres uses the shared bird-capture threshold `WAYFARER_BIRD_CAPTURE_TR = 55`
+  (current scale; v0 target: TR 120, ≈ 16 badges).
 
 The [technical specification](../specs/sevii-independent-story-beats.md) records
 the delivered state, transaction, battle-ownership, and dialogue behavior.

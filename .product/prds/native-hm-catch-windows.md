@@ -111,6 +111,10 @@ never add probabilities from different places or methods. For fishing, 8%
 means 2% per unmodified cast at the Old Rod's 25% bite rate. Land-encounter
 probability is conditional on encountering a Pokemon, not on each step.
 
+TR 0-80 is today's scale. On the [v0 target scale](player-trainer-rating.md#how-you-earn-it)
+the range becomes TR 0-160 (0 to 24 badges). The 8% floor must be re-checked
+against the new wild curve before it is claimed there.
+
 Dragon's Den requires local Whirlpool acquisition before the shrine obstacle,
 after Clair's defeat, with Surf already available. Blackthorn's Surf acquisition
 also has a qualifying local source at every tested TR and time. The local carrier

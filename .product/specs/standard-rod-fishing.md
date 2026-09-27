@@ -270,7 +270,9 @@ contract defines no permanent named-carrier records for other builds.
 
 The wild encounter generator's deterministic balance report
 covers every Wayfarer map profile and time-of-day variant at every
-integer Trainer Rating from 0 through 80. For every quality it reports:
+integer Trainer Rating from 0 through 80 (current scale; v0 target: 0 through
+160, 0 to 24 badges, on the [target TR scale](player-trainer-rating.md#formula-v0-target)).
+For every quality it reports:
 
 - Raw entry weights and eligible entries.
 - Renormalized entry and aggregate species probabilities.
@@ -280,6 +282,10 @@ integer Trainer Rating from 0 through 80. For every quality it reports:
   50, and 75 percent base bite rates.
 - Expected unmodified casts for qualifying fishing catches in the selected
   catch-window scenarios.
+
+The traversal results need data re-verification against the
+[target wild curve](trainer-rating-wild-encounter-scaling.md#v0-target-curve)
+before they are claimed on the target scale.
 
 Wayfarer uses the selected catch-window scenarios to validate traversal
 accessibility. Generation fails if profile shape or totals drift, an eligible

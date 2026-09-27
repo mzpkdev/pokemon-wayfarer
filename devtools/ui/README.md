@@ -62,10 +62,10 @@ player's TR never feeds trainer results.
 - **Scalers** turn TR into values. Each is an editable table of anchors
   (TR, value), linear between anchors with halves rounded up, and flat past
   the last anchor. TR itself is never clamped.
-- **Team level** uses the player soft-cap anchors: (0, 15) (4, 16) (8, 18)
-  (16, 23) (30, 30) (40, 42) (55, 60) (65, 80) (80, 100). TR 120 gives Lv 100.
-- **Team size** is a step table built from paired anchors: TR 0–10 → 2,
-  11–29 → 3, 30–41 → 4, 42–54 → 5, 55+ → 6.
+- **Team level** uses the player soft-cap anchors: (0, 15) (40, 28) (80, 50)
+  (120, 75) (160, 100). TR 200 still gives Lv 100.
+- **Team size** is a step table built from paired anchors: TR 0–15 → 2,
+  16–43 → 3, 44–70 → 4, 71–95 → 5, 96+ → 6.
 - **Roster**: one ordered list of six entries per trainer. Each entry has a
   species, a level offset (-6 to 0), moves (`LEVEL_UP` or one to four authored
   moves), a held item, and an optional ability and nature. Entry 1 must be at
@@ -74,9 +74,13 @@ player's TR never feeds trainer results.
   clamp(team level + offset, 1, 100). **Battle order** is the team reversed,
   so entry 1 is fought last.
 
-The world panel sets player badges (0–24) and first league clears (0–3). It
-shows the player TR (unchanged formula) and the player cap for comparison
-only. The trainer list shows each trainer's TR (editable in place), team
+The world panel sets player badges (0–24). It shows the player TR on the
+rescaled formula (badges 1–8 give +10 each, badges 9–24 +5 each, league wins
+give nothing, so 24 badges = TR 160) and the player-TR world curves: the soft
+cap, the wild encounter level target (0, 6) (40, 24) (80, 40) (120, 58)
+(160, 78), and the ordinary route-trainer baseline (0, 9) (40, 27) (80, 44)
+(120, 62) (160, 82), each with its gap to the cap. None of these feed a
+well-known trainer's team. The trainer list shows each trainer's TR (editable in place), team
 level, team size, the gap between team level and the player cap, and how many
 roster entries exist. The trainer panel shows the team at the current TR in
 battle order and a roster editor: reorder entries, edit species, offset, moves
@@ -87,14 +91,17 @@ and nature too.
 all 37 (the catalog has no Red or Tate & Liza). Ties keep catalog order. The
 five are shown in battle order, ascending TR with the strongest last, each with
 their own team and levels. v0 uses one pool, so Indigo, Sevii Masters and Hoenn
-all field the same five. With the catalog defaults they are Bruno (52), Agatha
-(53), Wallace (53), Steven (53) and Lance (55).
+all field the same five. With the catalog defaults they are Bruno (TR 90,
+Lv 56), Agatha, Wallace and Steven (TR 92, Lv 58) and Lance (TR 95, Lv 59),
+beatable at 8 badges (cap Lv 50).
 
-Both scaler tables are editable under **Scalers & experiment settings**.
-Anchors start at TR 0, rise in TR and never decrease in value. Experiments
-persist in browser storage. JSON export and import (format version 5)
-round-trip the experiment (TRs, rosters and both scalers), the player point and
-the selected trainer. Files from versions 1–4 are rejected with a message.
+All four scaler tables (team level, team size, wild level, route trainer level)
+are editable under **Scalers & experiment settings**. Anchors start at TR 0,
+rise in TR and never decrease in value. Experiments persist in browser storage.
+JSON export and import (format version 6) round-trip the experiment (TRs,
+rosters and the four scalers), the player badges and the selected trainer.
+Files from versions 1–5 are rejected with a message (version 5 used the
+retired 0–80 player TR scale).
 There is no migration. Reset restores the catalog defaults. **Restore this
 trainer’s defaults** updates only the selected trainer.
 
@@ -104,8 +111,12 @@ changes, seeded variation and league signup are out of scope for v0. The
 current ROM scaler is unchanged.
 
 The catalog's TRs and rosters are **provisional**, for the roster authoring
-session to replace. TRs are the start ratings from the first explorer catalog
-(Gym Leaders 1–5, Blue 6, Elite Four 40–53, Champions 53–55). Rosters flatten
+session to replace. TRs start from the ratings in the first explorer catalog
+(old scale: Gym Leaders 1–5, Blue 6, Elite Four 40–53, Champions 53–55) and
+the catalog script converts them to the rescaled player TR. Gym Leaders and
+Blue keep their team level (old cap-curve level, then the TR giving that level
+on the new cap curve), landing at TR 1–6. Elite Four and Champions map old
+40–55 linearly onto 70–95. Rosters flatten
 the earlier ace/filler prototype: the ace first, then the other members in
 order, each at the end of its species line and cut to six. That prototype came
 from each trainer's competitive party (the curated six in

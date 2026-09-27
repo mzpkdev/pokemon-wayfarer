@@ -7,8 +7,10 @@ The current [circuit producer](../../game/src/league_circuit.c) implements
 contributions and soft-cap anchors are unchanged. The Partial marker does not
 certify all wild-scaling and party-progression acceptance below.
 
-The v0 TR target (uncapped TR, scalers, and well-known trainers' separate
-TR) is in [Player Trainer Rating](player-trainer-rating.md).
+The v0 TR target (a new badge scale, uncapped TR, scalers, and well-known
+trainers' separate TR) is in [Player Trainer Rating](player-trainer-rating.md);
+its effect on wild Pokémon and the level cap is under
+[v0 target](#v0-target). The rest of this document describes the current ROM.
 
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes named native-utility carriers and permanent-retention
@@ -91,7 +93,7 @@ interregional circuit.
 
 Wayfarer starts at Rating 0 so the value represents an unproven Trainer before
 the first badge. Its encounter curve must still keep starter-area populations
-viable at Rating 0. The first eight badges supply 40 TR; each later badge
+viable at Rating 0. Today the first eight badges supply 40 TR; each later badge
 supplies one. Each first-time circuit-stage clear supplies +8, for +24 across the
 circuit and TR 80
 after all badges and clears. This distributes League advancement evenly,
@@ -110,6 +112,27 @@ obedient if it later grows beyond the cap, even though its experience gain
 slows. A same-OT Pokémon obtained above the cap may disobey until the cap covers
 its met level. A foreign-OT Pokémon may disobey whenever its current level is
 above the cap.
+
+### v0 target
+
+On the new TR scale, wild Pokémon follow their own curve instead of sitting a
+fixed 10 levels under the soft cap. With a few badges they press close to the
+cap, about 4 levels under it at four badges, so the early world is dangerous.
+Later they fall behind: with all 24 badges they sit about 22 levels under the
+cap, and routes are no threat. The soft cap itself rises with every badge to
+level 100 at 24 badges, and League wins no longer raise it. The exact curves
+are in the [wild scaling](../specs/trainer-rating-wild-encounter-scaling.md#v0-target-curve)
+and [party progression](../specs/trainer-rating-party-progression.md#v0-target-curve)
+specifications.
+
+How a wild encounter's level is worked out does not change: it still never
+drops as TR rises, evolved species still step back to a predecessor when the
+level is too low, and species minimum levels still apply. Obedience, reduced
+experience past the cap, and Candy rules also work as today. The Mantine and
+Chinchou utility-catch guarantees in this document are stated on today's scale.
+On the new scale their ranges become TR 25 through 160 for Mantine (about 2.5
+to 24 badges) and TR 0 through 160 for Chinchou, and both must be re-checked
+on the new curve, including Mantine's level-14 floor, before adoption.
 
 ## Content
 
@@ -193,7 +216,8 @@ can be tuned without silently changing the other.
 ## Playtesting
 
 Playtesting should confirm that Wayfarer encounters feel appropriate at Rating
-0 and at every badge and League milestone through Rating 80. Coverage should
+0 and at every badge and League milestone through Rating 80 (TR 160, 24
+badges, in the v0 target). Coverage should
 include land, water, Rock Smash, fishing, time-based, ability-influenced, lure,
 Altering Cave, and HNS Hoenn Sound encounters, plus the ordinary population
 readers.

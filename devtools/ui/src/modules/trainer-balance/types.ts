@@ -36,15 +36,19 @@ export type TrainerSettings = { tr: number; roster: RosterEntry[] }
 /** A scaler anchor: [TR, value]. */
 export type Anchor = [number, number]
 export type Experiment = {
-  version: 5
+  version: 6
   /** Team level by TR: linear between anchors, halves up, flat past the last. */
   teamLevel: Anchor[]
   /** Team size by TR, same rules; paired anchors make it a step table. */
   teamSize: Anchor[]
+  /** Wild encounter level target by player TR. */
+  wildLevel: Anchor[]
+  /** Ordinary (route) trainer baseline level by player TR. */
+  routeTrainerLevel: Anchor[]
   trainers: Record<string, TrainerSettings>
 }
-/** Player progress, used for the player TR/cap readout only. */
-export type WorldPoint = { badges: number; leagueClears: number }
+/** Player progress, used for the player TR and world-curve readout only. */
+export type WorldPoint = { badges: number }
 export type TeamMember = RosterEntry & {
   /** 1-based roster position. */
   slot: number

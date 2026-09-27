@@ -5,8 +5,11 @@ Implemented: Partial; converted-counter runtime is enabled, release acceptance r
 
 The current [circuit producer](../../game/src/league_circuit.c) already contributes
 +8 once for each canonical venue's first clear. Replays add no player TR. The
-v0 TR target (uncapped TR, scalers, and well-known trainers' separate TR) is in
-[Player Trainer Rating](player-trainer-rating.md).
+v0 TR target (rescaled formula, uncapped TR, scalers, and well-known trainers'
+separate TR) is in [Player Trainer Rating](player-trainer-rating.md); this
+document owns the target thresholds in
+[v0 target thresholds](#v0-target-thresholds). The thresholds elsewhere in this
+document are current ROM behavior.
 
 ## Scope
 
@@ -74,6 +77,26 @@ consume this supplement. Match the existing nonzero-setting interpretation.
 These explicit TR thresholds replace the old badge thresholds for converted
 counters. Normal play does not receive the supplement. Existing challenge
 item-use restrictions, Expensive pricing and all specialist stock stay intact.
+
+### v0 target thresholds
+
+On the [target TR scale](player-trainer-rating.md#formula-v0-target) each
+threshold moves to the target TR at the same badge point as today (tier 5,
+today reached at 16 badges plus the Indigo clear, moves to 16 badges). Tier
+contents, order, and every other rule are unchanged:
+
+| Tier | Current minimum TR | Target minimum TR | Target reached at |
+| --- | ---: | ---: | --- |
+| 0 | 0 | 0 | New game |
+| 1 | 4 | 10 | 1 badge |
+| 2 | 16 | 40 | 4 badges |
+| 3 | 30 | 70 | 7 badges |
+| 4 | 40 | 80 | 8 badges |
+| 5 | 55 | 120 | 16 badges |
+
+The Pokémon Center challenge supplement follows the same mapping: TR 0, 40,
+70, and 120 for Ether, Elixir, Max Ether, and Max Elixir. The target tier is a
+step [scaler](player-trainer-rating.md#scalers), flat at tier 5 above TR 120.
 
 ### Local stock authority and retention
 
@@ -424,7 +447,7 @@ normal/challenge switching; equal TR with Johto-only, Kanto-only, Hoenn-only
 and mixed progress; 24 badges without League clears (TR 56) and eight badges
 plus the first League clear (TR 48). The TR 56 case has all essentials; the
 TR 48 case has the TR 45 tier and excludes Max Potion and Full Restore, which
-unlock at TR 55. Mart thresholds are unchanged.
+unlock at TR 55. These are the current-scale thresholds.
 Use the real global TR path in integration tests, not only a stubbed tier input.
 
 Verify the 19 common items cannot appear early through signatures or retained

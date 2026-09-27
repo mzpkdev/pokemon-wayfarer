@@ -101,6 +101,9 @@ Expose a pure `GetLeagueScalingBaseline(rating)` function with its own anchors:
 (40,42), (55,60), (65,80), (80,100)
 ```
 
+These anchors are on the current TR scale and have no v0 target conversion; in
+the target, League opponents use their own TR from [Leagues](leagues.md).
+
 Clamp input TR to 0 through 80. Between adjacent anchors `(r0,l0)` and
 `(r1,l1)`, use integer arithmetic wide enough for the intermediate product:
 

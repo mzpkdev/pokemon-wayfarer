@@ -194,6 +194,13 @@ mode, with applicable day/night profiles and each Standard Rod quality checked
 separately. Do not substitute a daytime witness for a night gap or require the
 player to wait. Hoenn's static encounter profile is evaluated in both clock
 cases rather than inventing a separate night population.
+
+TR 0-80 throughout this specification is the current scale. v0 target: TR
+0-160 (0 to 24 badges) on the [target TR scale](player-trainer-rating.md#formula-v0-target).
+The coverage results here, including the TR 35 Super Rod cells (≈ 7 badges,
+target TR 72), were computed on the current curve and need data
+re-verification against the [target wild curve](trainer-rating-wild-encounter-scaling.md#v0-target-curve);
+this specification does not yet claim them on the target scale.
 Water encounters cannot certify acquisition before Surf. The inventory must
 also verify rod and capture preparation assumptions; it does not promise
 recovery after a player deliberately loses their last usable Surf carrier.

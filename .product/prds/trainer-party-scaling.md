@@ -5,8 +5,9 @@ Implemented: Partial; runtime policies exist, campaign balance acceptance remain
 Current ROM routing includes [League scaling](league-scaling.md) with saved player-entry TR;
 League levels are no longer static. See [the level resolver](../../game/src/trainer_party_scaling.c)
 and [the circuit producer](../../game/src/league_circuit.c). The v0 TR
-target (uncapped TR, scalers, and well-known trainers' separate TR) is in
-[Player Trainer Rating](player-trainer-rating.md).
+target (a new badge scale, uncapped TR, scalers, and well-known trainers'
+separate TR) is in [Player Trainer Rating](player-trainer-rating.md); its
+effect on ordinary trainers is under [v0 target](#v0-target).
 
 The current shared six-slot Gym feature is disabled by default in
 [configuration](../../game/include/config/trainer_party_scaling.h); it uses
@@ -81,6 +82,17 @@ design discussion. Tune them against actual Trainer inventories and playtests.
 Final levels cannot exceed 100. The party soft cap is not a ceiling on enemy
 levels. Some early Gym members can exceed the player's cap; party size,
 species, moves, and held items must be considered when testing those fights.
+
+### v0 target
+
+On the new TR scale, ordinary trainers follow a new baseline. With a few
+badges they sit right under your level cap, about one level below it at four
+badges, so early routes are real fights. Later they fall behind: with all 24
+badges they sit about 18 levels under the cap, and routes are no threat. The
+late challenge comes from [well-known trainers](well-known-trainers.md)
+instead. Authored levels still nudge each Pokémon, and Gym members still get
+their two-level bonus on top. The exact anchors are in the
+[technical specification](../specs/trainer-party-scaling.md#v0-target-baseline).
 
 ## Coverage and exclusions
 

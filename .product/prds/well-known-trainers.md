@@ -20,7 +20,8 @@ a glance roughly how you compare.
 You have a Trainer Rating (TR); so does every well-known trainer. Neither is
 worked out from the other: your training, badges, or party never make a
 trainer stronger or weaker. Their TR uses the same scale as yours, so a leader
-at TR 40 brings Pokémon around the level your own cap reaches at TR 40.
+rated like a player with eight badges brings Pokémon around the level your own
+cap reaches with eight badges.
 
 A trainer's TR decides every battle with them: their Gym, a meeting on the
 road, a story battle, a rematch, or a league. Story battles include Blue's
@@ -43,12 +44,19 @@ Like yours, a trainer's TR has no ceiling
 trainers span roughly the same range as the player, but stronger future
 content can go higher.
 
+Every trainer's rating is a placeholder for now, set on the new badge scale
+([Player Trainer Rating](player-trainer-rating.md)) and re-set with
+playtesting.
+
 ### Bigger and stronger teams at higher TR
 
-A higher TR means both higher levels and a bigger team. A low-rated trainer
-brings two Pokémon; a top-rated one brings a full six, around level 100. Each
-Pokémon has a small, hand-set level difference, so a team feels shaped rather
-than uniform.
+A higher TR means both higher levels and a bigger team, on the same curve as
+your level cap. A low-rated trainer brings two Pokémon; a team grows by one at
+roughly levels 20, 30, 45, and 60; a trainer rated like a player with all 24
+badges brings a full six at level 100. The strongest trainers are meant to
+sit a little above the eight-badge mark, so a player with eight badges can win
+their first league ([Leagues](leagues.md)). Each Pokémon has a small, hand-set
+level difference, so a team feels shaped rather than uniform.
 
 ### The signature Pokémon comes last
 
@@ -98,8 +106,8 @@ path; other randomizer and challenge options keep their precedence.
 ## Boundaries
 
 - Your own TR, level cap, experience, obedience, wild and static encounters,
-  shops, ordinary trainers, and Gym members keep their current rules, which
-  follow your TR.
+  shops, ordinary trainers, and Gym members follow your TR under their own
+  rules ([Player Trainer Rating](player-trainer-rating.md)).
 - Tate and Liza keep their existing double Gym battle.
 - The same rating decides every battle with a well-known trainer; how each
   battle is built stays with the

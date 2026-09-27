@@ -140,6 +140,9 @@ first-clear unlock. Ordinary battle rewards remain unchanged.
 
 ## Trainer Rating
 
+This is the current formula. The v0 target moves TR to the new badge scale in
+[Player Trainer Rating](player-trainer-rating.md) and removes league TR.
+
 The existing badge contribution remains unchanged. First clears contribute:
 
 | Clear | Trainer Rating |

@@ -244,7 +244,9 @@ party. Wayfarer does not correct that mismatch with Trainer scaling.
 
 Wild levels continue to follow Trainer Rating. Hoenn badges raise the global
 Wayfarer rating, and clearing the Hoenn League as the third circuit stage
-completes it at Rating 80.
+completes it at Rating 80. That is the current scale; in the
+[v0 target](player-trainer-rating.md#how-you-earn-it) League clears add no TR
+and all 24 badges give TR 160.
 Other Hoenn story milestones do not raise the rating. Rewards remain attached
 to their original Hoenn interactions.
 

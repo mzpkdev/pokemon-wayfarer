@@ -15,30 +15,42 @@ export const LEAGUE_FIELD = 5
 export const VENUES = ["Indigo", "Sevii Masters", "Hoenn"] as const
 export const MAX_ANCHORS = 20
 
-/** The player soft-cap curve. Well-known trainer team level uses the same anchors. */
+/** The player soft-cap curve (24 badges = TR 160). Well-known trainer team level uses the same anchors. */
 export const PLAYER_CAP_ANCHORS: readonly Anchor[] = [
   [0, 15],
-  [4, 16],
-  [8, 18],
-  [16, 23],
-  [30, 30],
-  [40, 42],
-  [55, 60],
-  [65, 80],
-  [80, 100],
+  [40, 28],
+  [80, 50],
+  [120, 75],
+  [160, 100],
 ]
 export const DEFAULT_TEAM_LEVEL: readonly Anchor[] = PLAYER_CAP_ANCHORS
-/** Step table as paired anchors: 0–10 -> 2, 11–29 -> 3, 30–41 -> 4, 42–54 -> 5, 55+ -> 6. */
+/** Step table as paired anchors: 0–15 -> 2, 16–43 -> 3, 44–70 -> 4, 71–95 -> 5, 96+ -> 6. */
 export const DEFAULT_TEAM_SIZE: readonly Anchor[] = [
   [0, 2],
-  [10, 2],
-  [11, 3],
-  [29, 3],
-  [30, 4],
-  [41, 4],
-  [42, 5],
-  [54, 5],
-  [55, 6],
+  [15, 2],
+  [16, 3],
+  [43, 3],
+  [44, 4],
+  [70, 4],
+  [71, 5],
+  [95, 5],
+  [96, 6],
+]
+/** Wild encounter level target by player TR (replaces "cap - 10"). */
+export const DEFAULT_WILD_LEVEL: readonly Anchor[] = [
+  [0, 6],
+  [40, 24],
+  [80, 40],
+  [120, 58],
+  [160, 78],
+]
+/** Ordinary (route) trainer baseline level by player TR, before identity and Gym-member adjustments. */
+export const DEFAULT_ROUTE_TRAINER_LEVEL: readonly Anchor[] = [
+  [0, 9],
+  [40, 27],
+  [80, 44],
+  [120, 62],
+  [160, 82],
 ]
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value))
@@ -75,23 +87,37 @@ export const teamLevelFor = (experiment: Pick<Experiment, "teamLevel">, tr: numb
 export const teamSizeFor = (experiment: Pick<Experiment, "teamSize">, tr: number): number =>
   scale(experiment.teamSize, tr)
 
-/** Clamps badges to 0–24 and first league clears to 0–3. */
+/** Clamps badges to 0–24. */
 export const normalizePoint = (point: WorldPoint): WorldPoint => ({
   badges: clamp(Math.round(finite(point.badges, "Badges")), 0, 24),
-  leagueClears: clamp(Math.round(finite(point.leagueClears, "League clears")), 0, 3),
 })
 
-/** The player's TR (unchanged formula: badges plus first venue clears). */
+/**
+ * The player's TR on the rescaled formula: badges 1–8 give +10 each, badges
+ * 9–24 +5 each, league wins nothing. 24 badges = TR 160; TR has no upper limit.
+ */
 export const playerRating = (point: WorldPoint): number => {
-  const { badges, leagueClears } = normalizePoint(point)
-  const badgeRating =
-    badges <= 4 ? 4 * badges : badges <= 8 ? 16 + 6 * (badges - 4) : 40 + badges - 8
-  return clamp(badgeRating + 8 * leagueClears, 0, 80)
+  const { badges } = normalizePoint(point)
+  return 10 * Math.min(badges, 8) + 5 * Math.max(0, badges - 8)
 }
 
 /** The player soft cap. A readout for comparison: it never feeds trainer results. */
 export const playerCap = (point: WorldPoint): number =>
   scale(PLAYER_CAP_ANCHORS, playerRating(point))
+
+/** Player-TR world curves: the soft cap, the wild level target and the route-trainer baseline. */
+export const worldLevels = (
+  experiment: Pick<Experiment, "wildLevel" | "routeTrainerLevel">,
+  point: WorldPoint,
+) => {
+  const tr = playerRating(point)
+  return {
+    tr,
+    cap: scale(PLAYER_CAP_ANCHORS, tr),
+    wild: scale(experiment.wildLevel, tr),
+    routeTrainer: scale(experiment.routeTrainerLevel, tr),
+  }
+}
 
 /**
  * Team = the first N roster entries (N = team size at TR); level =
@@ -156,9 +182,11 @@ export const createExperiment = (catalog: TrainerRecord[]): Experiment => {
   for (const trainer of catalog) trainers[trainer.id] = defaultTrainerSettings(trainer)
   return validateExperiment(
     {
-      version: 5,
+      version: 6,
       teamLevel: structuredClone(DEFAULT_TEAM_LEVEL),
       teamSize: structuredClone(DEFAULT_TEAM_SIZE),
+      wildLevel: structuredClone(DEFAULT_WILD_LEVEL),
+      routeTrainerLevel: structuredClone(DEFAULT_ROUTE_TRAINER_LEVEL),
       trainers,
     },
     catalog,
@@ -266,15 +294,22 @@ export const rosterGaps = (
     return length < ROSTER_SIZE ? [{ id: trainer.id, name: trainer.name, length }] : []
   })
 
+export const EXPERIMENT_VERSION = 6
 export const OLD_VERSION_REJECTION = (version: number): string =>
-  `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. Start from the version 5 defaults.`
+  version === 5
+    ? "Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. Start from the version 6 defaults."
+    : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. Start from the version 6 defaults.`
 
 export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Experiment => {
   const input = object(value, "root")
-  if (typeof input.version === "number" && input.version >= 1 && input.version <= 4)
+  if (typeof input.version === "number" && input.version >= 1 && input.version <= 5)
     fail(OLD_VERSION_REJECTION(input.version))
-  if (input.version !== 5) fail("version must be 5")
-  exactKeys(input, ["version", "teamLevel", "teamSize", "trainers"], "root")
+  if (input.version !== EXPERIMENT_VERSION) fail(`version must be ${EXPERIMENT_VERSION}`)
+  exactKeys(
+    input,
+    ["version", "teamLevel", "teamSize", "wildLevel", "routeTrainerLevel", "trainers"],
+    "root",
+  )
   const inputTrainers = object(input.trainers, "trainers")
   const ids = catalog.map((trainer) => trainer.id)
   if (new Set(ids).size !== ids.length) fail("catalog contains duplicate trainer IDs")
@@ -289,9 +324,11 @@ export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Ex
     }
   }
   return {
-    version: 5,
+    version: EXPERIMENT_VERSION,
     teamLevel: anchors(input.teamLevel, 1, 100, "teamLevel"),
     teamSize: anchors(input.teamSize, 1, ROSTER_SIZE, "teamSize"),
+    wildLevel: anchors(input.wildLevel, 1, 100, "wildLevel"),
+    routeTrainerLevel: anchors(input.routeTrainerLevel, 1, 100, "routeTrainerLevel"),
     trainers,
   }
 }

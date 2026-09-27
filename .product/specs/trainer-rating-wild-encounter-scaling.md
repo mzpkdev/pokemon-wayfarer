@@ -38,8 +38,10 @@ that candidate with the stored rating and saves the higher value. Replays add
 no TR, and no later read lowers the high-water mark. Feature-disabled foundation
 checks can still seed a stored value; no prerelease save migration is required.
 
-The v0 TR target (uncapped TR, scalers, and well-known trainers' separate
-TR) is in [Player Trainer Rating](player-trainer-rating.md).
+The v0 TR target (rescaled formula, uncapped TR, scalers, and well-known
+trainers' separate TR) is in [Player Trainer Rating](player-trainer-rating.md);
+this document owns the target wild curve in [v0 target curve](#v0-target-curve).
+Everything else here is current ROM behavior.
 
 ### Progression targets
 
@@ -124,6 +126,35 @@ and lower ratings may exclude it because of the global floor. HNS Chinchou is
 the approved Rating 0 through 80 Whirlpool source.
 
 In wild-randomizer mode, the existing randomized species mapping continues to run from the original selected slot. Its level still projects through Trainer Rating, but predecessor resolution and species-floor eligibility filtering are bypassed.
+
+### v0 target curve
+
+On the [target TR scale](player-trainer-rating.md#formula-v0-target) the
+projection targets the wild encounter level scaler below instead of the
+current anchors (the soft cap minus 10). Anchors are provisional:
+
+| Badges | Target TR | Wild level target | Soft cap | Gap to cap |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 0 | 6 | 15 | −9 |
+| 4 | 40 | 24 | 28 | −4 |
+| 8 | 80 | 40 | 50 | −10 |
+| 16 | 120 | 58 | 75 | −17 |
+| 24 | 160 | 78 | 100 | −22 |
+
+The curve interpolates as a [scaler](player-trainer-rating.md#scalers) and
+stays flat past TR 160. Early wild Pokémon press close to the cap; late ones
+fall well behind it. The projection mechanics are unchanged: authored level
+projected through the curve, cumulative high-water, evolution downshift, and
+eligible-weight selection. Species floors are levels, so their values are
+unaffected.
+
+The Mantine and Chinchou protection notes above are stated on the current
+scale (Mantine from Rating 10 through 80, Chinchou from Rating 0 through 80).
+By badge equivalence the v0 target ranges are TR 25 through 160 for Mantine
+(Rating 10 ≈ 2.5 badges) and TR 0 through 160 for Chinchou (0 to 24 badges).
+Both need data re-verification against the new curve before adoption,
+including whether 14 is still the right Mantine floor; this document does not yet claim either protection on the
+target scale.
 
 ### Consumers of the effective population
 
