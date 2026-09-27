@@ -57,6 +57,10 @@ range, so extra TR still means something.
 - **The challenge comes from people you know.** Gym Leaders, league lineups,
   and notable trainers met on the road bring the late-game fights, at their
   own strength ([Notable trainers](notable-trainers.md)).
+- **Stronger forms appear only once they've reached the right level, for
+  everyone.** A wild Pokémon, a regular trainer's, or a notable trainer's
+  below that level appears as an earlier form
+  ([evolution stages](../specs/player-trainer-rating.md#evolution-stages)).
 
 ### What your TR drives
 

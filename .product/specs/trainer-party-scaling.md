@@ -160,6 +160,13 @@ have no inferred reverse relationship. Do not forward-evolve base species.
 Preserve exact forms unless a validated predecessor edge specifies otherwise.
 Report powerful species with no numeric predecessor for balance review.
 
+**v0.** The paragraphs above describe Today. In v0 predecessor resolution
+follows the shared
+[downward rule](player-trainer-rating.md#evolution-stages), which also steps
+down non-level evolutions through the shared evolution-level table (an
+effective Lv 30 Alakazam becomes Kadabra). Forms, wild-floor exclusion, and no
+forward evolution are unchanged.
+
 The default move policy for every eligible slot is `LEVEL_UP`: create its
 normal four-move set for the final species and effective level using the current
 learnset. Bypass `CustomTrainerPartyAssignMoves` for these slots, including
@@ -291,6 +298,11 @@ passes. Keep one build-time feature switch that restores authored construction
 for rollback; it must bypass level, species, and move transformation together.
 No save migration is required. Formula changes must regenerate the report and
 repeat affected balance checks.
+
+## Later
+
+- Forward evolution for regular trainers: late routes currently show
+  high-level unevolved species.
 
 ## References
 

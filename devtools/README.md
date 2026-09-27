@@ -35,7 +35,8 @@ directly with `pnpm --filter @wayfarer/ui dev`, without building map catalogs.
 It edits each notable trainer's growth (start TR, archetype, peak TR) and
 six-slot roster (38 entries, including the Tate & Liza double battle duo) and
 the scalers, shows each trainer's TR at the chosen world
-progress, the Gym ladder and the league lineup, and compares team levels with
+progress (members below their stage's evolution level step down their line),
+the Gym ladder and the league lineup, and compares team levels with
 the level cap; see [the UI README](ui/README.md#trainer-balance-explorer) for assumptions
 and catalog regeneration. The map modules consume
 the static catalog and terrain images created by the CLI tools. Docs bundles

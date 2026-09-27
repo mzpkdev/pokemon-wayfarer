@@ -1,7 +1,15 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { ARCHETYPES, LEVEL_OFFSET, NEAR_BAND, ROSTER_SIZE, LEAGUES } from "./engine.js"
-  import { BalanceLab, catalog, movesText, scalerField, type ScalerId } from "./lab.svelte.js"
+  import {
+    BalanceLab,
+    catalog,
+    lineText,
+    movesText,
+    scalerField,
+    stageWarning,
+    type ScalerId,
+  } from "./lab.svelte.js"
 
   const lab = new BalanceLab()
   const ticks = [0, 4, 8, 12, 16, 20, 24]
@@ -176,7 +184,9 @@
       scalers of that trainer TR (anchor tables, linear between anchors, halves rounded up, flat
       past the last anchor, the ceiling TR; TR itself is uncapped). The team is the first N roster
       slots at team level + offset, and battle order is the team reversed, so roster slot 1 comes
-      last. Moves, items, AI and win rates are not simulated.</span
+      last. Rosters author final stages; a member below its stage’s evolution level steps down its
+      line (the shared evolution-level table covers non-level evolutions). Moves, items, AI and win
+      rates are not simulated.</span
     >
   </div>
 
@@ -381,6 +391,16 @@
                 class:current={point.world === lab.worldProgress}>{point.teamLevel}</td
               >{/each}</tr
           >
+          {#each lab.settings.roster as _, index (index)}<tr
+              class="growth-slot"
+              data-testid={`growth-slot-${index + 1}`}
+              ><th>Slot {index + 1}</th>{#each lab.growth as point}{@const member =
+                  point.team[index]}<td class:current={point.world === lab.worldProgress}
+                  >{#if member}<span class="growth-species">{member.species}</span><small
+                      >Lv {member.level}</small
+                    >{:else}<span class="muted">—</span>{/if}</td
+                >{/each}</tr
+            >{/each}
         </tbody>
       </table>
       <dl class="stat-grid">
@@ -415,7 +435,13 @@
           >
             <span class="slot">#{member.slot}</span>
             <div class="member-name">
-              <strong>{member.species}</strong><small
+              <strong
+                >{member.species}{#if member.authoredAt !== null}<span
+                    class="evolves-into"
+                    data-testid={`evolves-${member.slot}`}
+                    >→ {member.authoredSpecies} at Lv {member.authoredAt}</span
+                  >{/if}</strong
+              ><small
                 >Offset {member.levelOffset} · {movesText(member.moves)}{member.item
                   ? ` · ${member.item}`
                   : ""}</small
@@ -489,6 +515,12 @@
                     value={slot.item ?? ""}
                   /></label
                 >
+                <p class="slot-line" data-testid={`slot-line-${index + 1}`}>
+                  {lineText(slot.species)}{#if stageWarning(slot.species)}<span
+                      class="stage-warning"
+                      data-testid={`stage-warning-${index + 1}`}>{stageWarning(slot.species)}</span
+                    >{/if}
+                </p>
                 <div class="slot-tools">
                   <button
                     type="button"
@@ -522,7 +554,8 @@
       <p class="hint">
         Roster slot 1 must stay at offset 0; offsets run {LEVEL_OFFSET.min} to {LEVEL_OFFSET.max}.
         Moves are LEVEL_UP or up to four names separated by commas. v0 needs exactly {ROSTER_SIZE}
-        roster slots.
+        roster slots. Author final stages: a member below its stage’s evolution level steps down its line
+        (never forward) and then uses LEVEL_UP instead of the authored moves.
       </p>
 
       <details class="reference-panel">
@@ -1416,6 +1449,33 @@
     padding: 5px 6px;
   }
   .growth-table .current {
+    color: var(--accent);
+  }
+  .growth-slot td {
+    line-height: 1.25;
+  }
+  .growth-slot small {
+    display: block;
+    color: var(--color-cartographer-muted);
+    font-size: 10px;
+  }
+  .growth-species {
+    overflow-wrap: anywhere;
+  }
+  .evolves-into {
+    margin-left: 6px;
+    color: var(--color-cartographer-muted);
+    font-size: 11px;
+    font-weight: 400;
+  }
+  .slot-line {
+    flex: 1 1 100%;
+    margin: 0;
+    color: var(--color-cartographer-muted);
+    font-size: 10px;
+  }
+  .stage-warning {
+    display: block;
     color: var(--accent);
   }
   .ladder {

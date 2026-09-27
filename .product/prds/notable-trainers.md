@@ -92,6 +92,15 @@ team is the start of that list, and each step up adds the next one. The first
 Pokémon on the list is their signature Pokémon: it is on every team they bring,
 and you always face it last.
 
+Lists name each Pokémon at its final form, such as Brock's Steelix and Golem.
+Stronger forms appear only once they've reached the right level: until then a
+Pokémon comes as an earlier form, so Brock opens with Onix and Geodude and
+brings Steelix once his team reaches level 35. Pokémon never evolve past what
+the list names, and a trainer can name an earlier form on purpose, like Blue's
+Eevee. Hand-picked moves belong to the named form; an earlier form uses its
+usual moves for its level
+([evolution stages](../specs/player-trainer-rating.md#evolution-stages)).
+
 FRLG, Emerald, and HNS parties are references for recognizable content, not
 required teams. Challenge options such as trainer items, trainer IVs and EVs,
 and the level cap apply on top, as they do today.
@@ -126,7 +135,7 @@ Juan.
 Tate and Liza stay a double battle, with both of them sending out Pokémon from
 their shared list in order. Blue has no badge encounter in Wayfarer.
 
-Each leader's hand-written team supplies exact species, moves, items, and
+Each leader's hand-written team supplies species, moves, items, and
 abilities, which stay attached to the right Pokémon when a team is reordered.
 Rewards, prize money, badge scripts, and AI are preserved unless a team
 deliberately changes them. Trainer-species randomization keeps its existing
@@ -164,7 +173,6 @@ belong to playtesting.
 - Signature and supporting Pokémon that vary from save to save.
 - Player influence: nudges, gifts, and trades
   ([Trainer roster influence](trainer-roster-influence.md)).
-- Pokémon that evolve along a trainer's own line.
 - Better items, moves, and AI once teams reach level 100.
 - Tighter level spreads at the top.
 

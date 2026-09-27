@@ -9,9 +9,12 @@ import {
   DEFAULT_WILD_LEVEL,
   LEVEL_CAP_ANCHORS,
   NEAR_BAND,
+  NO_EVOLUTION,
   WORLD_PROGRESS_CHECKPOINTS,
   buildTeam,
   createExperiment,
+  evolutionIndex,
+  evolutionStatus,
   growthTR,
   gymLadder,
   leagueLineup,
@@ -20,6 +23,7 @@ import {
   rosterGaps,
   scale,
   serializeExperiment,
+  stageAt,
   teamLevelFor,
   teamSizeFor,
   trainerRating,
@@ -28,9 +32,18 @@ import {
   worldLevels,
   worldProgress,
 } from "./engine.js"
-import type { Archetype, Experiment, RosterSlot, TrainerRecord, WorldPoint } from "./types.js"
+import type {
+  Archetype,
+  Catalog,
+  Experiment,
+  RosterSlot,
+  TrainerRecord,
+  WorldPoint,
+} from "./types.js"
 
-const catalog = catalogData as TrainerRecord[]
+const data = catalogData as Catalog
+const catalog = data.trainers
+const evolution = evolutionIndex(data.evolution)
 const slot = (species: string, levelOffset = -2): RosterSlot => ({
   species,
   levelOffset,
@@ -64,9 +77,14 @@ const trainer = (
 })
 const experimentWith = (records: TrainerRecord[]): Experiment => createExperiment(records)
 const defaults = createExperiment(catalog)
-const at = (world: number) => catalog.map((record) => resolveTrainer(record, defaults, world))
+const at = (world: number) =>
+  catalog.map((record) => resolveTrainer(record, defaults, world, evolution))
 const lineupAt = (world: number) =>
-  leagueLineup(catalog, defaults, world).map((row) => [row.trainer.name, row.tr, row.teamLevel])
+  leagueLineup(catalog, defaults, world, evolution).map((row) => [
+    row.trainer.name,
+    row.tr,
+    row.teamLevel,
+  ])
 
 describe("scalers", () => {
   it("interpolates linearly between anchors with halves rounded up", () => {
@@ -143,7 +161,7 @@ describe("scalers", () => {
 
 describe("teams", () => {
   it("takes the first N roster slots and fights them in reverse order", () => {
-    const { team, battleOrder } = buildTeam(trainer("fixture", 0).roster, 30, 4)
+    const { team, battleOrder } = buildTeam(trainer("fixture", 0).roster, 30, 4, NO_EVOLUTION)
     expect(team.map((member) => member.species)).toEqual([
       "Steelix",
       "Golem",
@@ -161,9 +179,15 @@ describe("teams", () => {
 
   it("adds each offset to the team level and clamps to 1–100", () => {
     const roster = [slot("Steelix", 0), slot("Golem", -6), slot("Onix", -3)]
-    expect(buildTeam(roster, 42, 3).team.map((member) => member.level)).toEqual([42, 36, 39])
-    expect(buildTeam(roster, 3, 3).team.map((member) => member.level)).toEqual([3, 1, 1])
-    expect(buildTeam(roster, 100, 3).team.map((member) => member.level)).toEqual([100, 94, 97])
+    expect(buildTeam(roster, 42, 3, NO_EVOLUTION).team.map((member) => member.level)).toEqual([
+      42, 36, 39,
+    ])
+    expect(buildTeam(roster, 3, 3, NO_EVOLUTION).team.map((member) => member.level)).toEqual([
+      3, 1, 1,
+    ])
+    expect(buildTeam(roster, 100, 3, NO_EVOLUTION).team.map((member) => member.level)).toEqual([
+      100, 94, 97,
+    ])
   })
 
   it("resolves a trainer from their own TR: TR 0 is one member, TR 160 is six at Lv 100", () => {
@@ -171,13 +195,13 @@ describe("teams", () => {
     const mid = trainer("mid", 20)
     const high = trainer("high", 160)
     const experiment = experimentWith([low, mid, high])
-    const early = resolveTrainer(low, experiment, 0)
+    const early = resolveTrainer(low, experiment, 0, NO_EVOLUTION)
     expect([early.teamLevel, early.size]).toEqual([5, 1])
     expect(early.battleOrder.map((member) => [member.species, member.level])).toEqual([
       ["Steelix", 5],
     ])
     expect(
-      resolveTrainer(mid, experiment, 0).battleOrder.map((member) => [
+      resolveTrainer(mid, experiment, 0, NO_EVOLUTION).battleOrder.map((member) => [
         member.species,
         member.level,
       ]),
@@ -185,7 +209,7 @@ describe("teams", () => {
       ["Golem", 12],
       ["Steelix", 14],
     ])
-    const late = resolveTrainer(high, experiment, 0)
+    const late = resolveTrainer(high, experiment, 0, NO_EVOLUTION)
     expect([late.teamLevel, late.size]).toEqual([100, 6])
     expect(late.battleOrder.at(-1)).toMatchObject({ species: "Steelix", level: 100 })
     expect(late.warnings).toEqual([])
@@ -193,7 +217,7 @@ describe("teams", () => {
 
   it("flags a short roster and uses what exists", () => {
     const short = trainer("short", 120, six.slice(0, 5))
-    const resolved = resolveTrainer(short, experimentWith([short]), 0)
+    const resolved = resolveTrainer(short, experimentWith([short]), 0, NO_EVOLUTION)
     expect(resolved.size).toBe(6)
     expect(resolved.team).toHaveLength(5)
     expect(resolved.warnings).toEqual([
@@ -216,11 +240,124 @@ describe("teams", () => {
     const world = worldProgress(point)
     expect(world).toBe(80)
     const brock = catalog.find((record) => record.id === "brock")!
-    const resolved = resolveTrainer(brock, defaults, world)
-    expect(resolved).toEqual(resolveTrainer(brock, defaults, playerRating({ badges: 8 })))
+    const resolved = resolveTrainer(brock, defaults, world, evolution)
+    expect(resolved).toEqual(
+      resolveTrainer(brock, defaults, playerRating({ badges: 8 }), evolution),
+    )
     expect(resolved.tr).toBe(58)
-    // Resolution takes a number, so a party or level cap cannot be passed in.
-    expect(resolveTrainer.length).toBe(3)
+    // Resolution takes a world progress number and the shared evolution data, so a party or
+    // level cap cannot be passed in.
+    expect(resolveTrainer.length).toBe(4)
+  })
+})
+
+describe("evolution", () => {
+  const line = (...chain: (string | number)[]) =>
+    evolutionIndex({ chains: { [String(chain.at(-1))]: chain }, notFinal: [] })
+  const stages = (species: string, levels: number[]) =>
+    levels.map((level) => stageAt(evolution, species, level).species)
+
+  it("steps down through a non-level edge from the shared table: Steelix is Onix below 35", () => {
+    expect(stages("Steelix", [1, 14, 34, 35, 36, 100])).toEqual([
+      "Onix",
+      "Onix",
+      "Onix",
+      "Steelix",
+      "Steelix",
+      "Steelix",
+    ])
+    expect(stageAt(evolution, "Steelix", 34)).toEqual({ species: "Onix", authoredAt: 35 })
+    expect(stageAt(evolution, "Steelix", 35)).toEqual({ species: "Steelix", authoredAt: null })
+  })
+
+  it("steps down through several edges: Golem to Graveler (level, 38) to Geodude (level, 25)", () => {
+    expect(stages("Golem", [12, 24, 25, 37, 38, 80])).toEqual([
+      "Geodude",
+      "Geodude",
+      "Graveler",
+      "Graveler",
+      "Golem",
+      "Golem",
+    ])
+    expect(stageAt(evolution, "Golem", 30)).toEqual({ species: "Graveler", authoredAt: 38 })
+  })
+
+  it("never evolves forward: an authored earlier stage stays at any level", () => {
+    expect(stages("Onix", [5, 35, 100])).toEqual(["Onix", "Onix", "Onix"])
+    expect(stages("Graveler", [10, 40, 100])).toEqual(["Geodude", "Graveler", "Graveler"])
+    expect(stages("Eevee", [5, 100])).toEqual(["Eevee", "Eevee"])
+    // A species with no catalog data never changes.
+    expect(stageAt(evolution, "Missingno", 1)).toEqual({ species: "Missingno", authoredAt: null })
+  })
+
+  it("keeps authored moves only at the authored stage and falls back to LEVEL_UP below it", () => {
+    const golem: RosterSlot = { ...slot("Golem", 0), moves: ["Rock Slide", "Earthquake"] }
+    const member = (level: number) => buildTeam([golem], level, 1, evolution).team[0]!
+    expect(member(37)).toMatchObject({
+      species: "Graveler",
+      authoredSpecies: "Golem",
+      authoredAt: 38,
+      moves: "LEVEL_UP",
+    })
+    expect(member(38)).toMatchObject({
+      species: "Golem",
+      authoredSpecies: "Golem",
+      authoredAt: null,
+      moves: ["Rock Slide", "Earthquake"],
+    })
+  })
+
+  it("resolves Brock: Onix and Geodude at start TR 20, Steelix from Lv 35 and Golem from Lv 38", () => {
+    const roster = defaults.trainers.brock!.roster
+    const team = (level: number) =>
+      buildTeam(roster, level, 2, evolution).team.map((member) => [member.species, member.level])
+    expect(team(14)).toEqual([
+      ["Onix", 14],
+      ["Geodude", 12],
+    ])
+    expect(team(35)).toEqual([
+      ["Steelix", 35],
+      ["Graveler", 33],
+    ])
+    expect(team(39)).toEqual([
+      ["Steelix", 39],
+      ["Graveler", 37],
+    ])
+    expect(team(40)).toEqual([
+      ["Steelix", 40],
+      ["Golem", 38],
+    ])
+    // The rule reads each member’s level, whatever the world progress.
+    const brock = catalog.find((record) => record.id === "brock")!
+    for (const world of WORLD_PROGRESS_CHECKPOINTS) {
+      const resolved = resolveTrainer(brock, defaults, world, evolution)
+      expect(resolved.team[0]?.species).toBe(resolved.teamLevel >= 35 ? "Steelix" : "Onix")
+    }
+  })
+
+  it("validates the chains: one level per edge, increasing along the line, no cycles", () => {
+    expect(() =>
+      evolutionIndex({
+        chains: {
+          Golem: ["Geodude", 25, "Graveler", 38, "Golem"],
+          Graveler: ["Geodude", 26, "Graveler"],
+        },
+        notFinal: [],
+      }),
+    ).toThrow("conflicting evolution levels")
+    expect(() => line("Geodude", 40, "Graveler", 25, "Golem")).toThrow("must increase")
+    expect(() => line("Geodude", 25, "Graveler", 25, "Golem")).toThrow("must increase")
+    expect(() => line("Onix", 20, "Steelix", 35, "Onix")).toThrow("evolution cycle")
+    expect(() => line("Onix", "Steelix")).toThrow("alternate species and levels")
+    expect(() => line("Onix", 101, "Steelix")).toThrow("from 1 to 100")
+    expect(line("Onix", 35, "Steelix").lines.get("Onix")).toEqual([{ species: "Onix", level: 1 }])
+  })
+
+  it("marks earlier stages and listed species as not final", () => {
+    expect(evolutionStatus(evolution, "Steelix")).toEqual({ known: true, final: true })
+    expect(evolutionStatus(evolution, "Onix")).toEqual({ known: true, final: false })
+    expect(evolutionStatus(evolution, "Eevee")).toEqual({ known: true, final: false })
+    expect(evolutionStatus(evolution, "Missingno")).toEqual({ known: false, final: true })
   })
 })
 
@@ -334,7 +471,7 @@ describe("archetype growth", () => {
     for (const record of catalog) {
       let previous = -1
       for (let world = 0; world <= 200; world += 1) {
-        const tr = resolveTrainer(record, defaults, world).tr
+        const tr = resolveTrainer(record, defaults, world, evolution).tr
         expect(tr).toBeGreaterThanOrEqual(previous)
         expect(tr).toBeLessThanOrEqual(record.peakTR)
         previous = tr
@@ -353,7 +490,7 @@ describe("placeholder balance targets", () => {
 
   it("puts the first league at TR 85–95 at world progress 80 (8 badges, level cap 50)", () => {
     expect(worldProgress({ badges: 8 })).toBe(80)
-    for (const row of leagueLineup(catalog, defaults, 80)) {
+    for (const row of leagueLineup(catalog, defaults, 80, evolution)) {
       expect(row.tr).toBeGreaterThanOrEqual(85)
       expect(row.tr).toBeLessThanOrEqual(95)
       expect(row.teamLevel).toBeGreaterThanOrEqual(53)
@@ -363,7 +500,7 @@ describe("placeholder balance targets", () => {
 
   it("puts the lineup a little above the level cap at world progress 120", () => {
     expect(cap(120)).toBe(75)
-    for (const row of leagueLineup(catalog, defaults, 120)) {
+    for (const row of leagueLineup(catalog, defaults, 120, evolution)) {
       expect(row.teamLevel - cap(120)).toBeGreaterThanOrEqual(2)
       expect(row.teamLevel - cap(120)).toBeLessThanOrEqual(8)
     }
@@ -373,7 +510,7 @@ describe("placeholder balance targets", () => {
     // The level cap is Lv 100 at world progress 160 and team level stops at Lv 100 too, so the
     // lineup can only match the cap there. Every member sits past the team level ceiling TR.
     expect(cap(160)).toBe(100)
-    for (const row of leagueLineup(catalog, defaults, 160)) {
+    for (const row of leagueLineup(catalog, defaults, 160, evolution)) {
       expect(row.tr).toBeGreaterThan(160)
       expect(row.teamLevel).toBe(cap(160))
     }
@@ -396,6 +533,7 @@ describe("placeholder balance targets", () => {
             catalog.find((record) => record.id === id)!,
             defaults,
             0,
+            evolution,
           )
           expect(opener.size).toBe(2)
           expect(opener.teamLevel).toBeLessThanOrEqual(cap(0))
@@ -419,7 +557,10 @@ describe("placeholder balance targets", () => {
   it("keeps the early Gym openers classic-like: Brock at start TR 20 is Lv 14 and Lv 12", () => {
     const brock = at(0).find((row) => row.trainer.id === "brock")!
     expect([brock.tr, brock.teamLevel, brock.size]).toEqual([20, 14, 2])
-    expect(brock.team.map((member) => member.level)).toEqual([14, 12])
+    expect(brock.team.map((member) => [member.species, member.level])).toEqual([
+      ["Onix", 14],
+      ["Geodude", 12],
+    ])
     const roxanne = at(0).find((row) => row.trainer.id === "roxanne")!
     expect(roxanne.battleOrder.map((member) => [member.species, member.level])).toEqual([
       ["Geodude", 12],
@@ -443,11 +584,11 @@ describe("placeholder balance targets", () => {
   it("keeps Blue about 10 ahead of the player from world progress 40 until his peak", () => {
     const record = catalog.find((entry) => entry.id === "blue")!
     for (let world = 40; world <= 160; world += 1) {
-      const gap = resolveTrainer(record, defaults, world).tr - world
+      const gap = resolveTrainer(record, defaults, world, evolution).tr - world
       expect(gap).toBeGreaterThanOrEqual(9)
       expect(gap).toBeLessThanOrEqual(10)
     }
-    expect(resolveTrainer(record, defaults, 400).tr).toBe(170)
+    expect(resolveTrainer(record, defaults, 400, evolution).tr).toBe(170)
   })
 })
 
@@ -460,7 +601,7 @@ describe("league lineup", () => {
       ["Norman", 94, 59],
       ["Agatha", 95, 59],
     ])
-    expect(leagueLineup(catalog, defaults, 80).at(-1)?.trainer.name).toBe("Agatha")
+    expect(leagueLineup(catalog, defaults, 80, evolution).at(-1)?.trainer.name).toBe("Agatha")
   })
 
   it("computes the lineup at the world progress it is entered at", () => {
@@ -483,19 +624,19 @@ describe("league lineup", () => {
   it("leaves league-ineligible entries out of the pool, however strong", () => {
     const duo = { ...trainer("duo", 150), leagueEligible: false, doubleBattle: true }
     const records = [duo, ...["a", "b", "c", "d", "e"].map((id) => trainer(id, 40))]
-    const lineup = leagueLineup(records, experimentWith(records), 0)
+    const lineup = leagueLineup(records, experimentWith(records), 0, NO_EVOLUTION)
     expect(lineup.map((row) => row.trainer.id)).toEqual(["a", "b", "c", "d", "e"])
     for (const world of WORLD_PROGRESS_CHECKPOINTS)
-      expect(leagueLineup(catalog, defaults, world).map((row) => row.trainer.id)).not.toContain(
-        "tate-liza",
-      )
+      expect(
+        leagueLineup(catalog, defaults, world, evolution).map((row) => row.trainer.id),
+      ).not.toContain("tate-liza")
   })
 
   it("breaks ties by array order, with no tie-break logic", () => {
     const records = ["a", "b", "c", "d", "e", "f", "g"].map((id, index) =>
       trainer(id, index === 6 ? 90 : 40),
     )
-    const lineup = leagueLineup(records, experimentWith(records), 0)
+    const lineup = leagueLineup(records, experimentWith(records), 0, NO_EVOLUTION)
     expect(lineup.map((row) => row.trainer.id)).toEqual(["a", "b", "c", "d", "g"])
   })
 })
@@ -543,6 +684,46 @@ describe("catalog", () => {
     expect(catalog.filter((record) => record.doubleBattle).map((record) => record.id)).toEqual([
       "tate-liza",
     ])
+  })
+
+  it("records the section 9 table levels and the game's own levels for level evolutions", () => {
+    const edges = (species: string[]) =>
+      species.map((name) => data.evolution.chains[name]?.slice(-3))
+    // Shared table rows: evolutions without a level in the game data.
+    expect(edges(["Steelix", "Starmie", "Arcanine"])).toEqual([
+      ["Onix", 35, "Steelix"],
+      ["Staryu", 30, "Starmie"],
+      ["Growlithe", 35, "Arcanine"],
+    ])
+    // Trade evolutions this game also gives a level: the game's level wins.
+    expect(edges(["Alakazam", "Gengar", "Golem", "Machamp"])).toEqual([
+      ["Kadabra", 42, "Alakazam"],
+      ["Haunter", 42, "Gengar"],
+      ["Graveler", 38, "Golem"],
+      ["Machoke", 38, "Machamp"],
+    ])
+  })
+
+  it("authors final stages in every roster slot except Blue's Eevee, each with a chain", () => {
+    const notFinal = catalog.flatMap((record) =>
+      record.roster.flatMap((rosterSlot, index) => {
+        expect(evolution.lines.has(rosterSlot.species)).toBe(true)
+        return evolutionStatus(evolution, rosterSlot.species).final
+          ? []
+          : [`${record.id}[${index + 1}] ${rosterSlot.species}`]
+      }),
+    )
+    expect(notFinal).toEqual(["blue[1] Eevee"])
+    const brock = catalog.find((record) => record.id === "brock")!
+    expect(brock.roster.map((rosterSlot) => [rosterSlot.species, rosterSlot.levelOffset])).toEqual([
+      ["Steelix", 0],
+      ["Golem", -2],
+      ["Aerodactyl", -2],
+      ["Kabutops", -2],
+      ["Omastar", -2],
+      ["Relicanth", -2],
+    ])
+    expect(brock.roster[1]?.moves).not.toBe("LEVEL_UP")
   })
 
   it("lists the rosters short of six as content gaps", () => {

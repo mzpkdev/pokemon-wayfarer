@@ -7,6 +7,7 @@ export type ReferenceMember = {
 
 /** One roster slot. Roster slot 1 (the signature Pokémon) is at offset 0 and is fought last. */
 export type RosterSlot = {
+  /** The authored stage, normally a final stage; a member below its evolution level steps down. */
   species: string
   /** -6..0 from the team level. */
   levelOffset: number
@@ -43,6 +44,19 @@ export type TrainerRecord = {
   rosterSource: string
 }
 
+/** Evolution data the catalog records for the roster species. */
+export type EvolutionData = {
+  /**
+   * Each roster species' predecessor chain, ascending: [base, level, stage 2, level, …, species].
+   * Each level is the evolution level of the stage after it (level evolutions from species_info,
+   * others from the shared evolution-level table).
+   */
+  chains: Record<string, (string | number)[]>
+  /** Roster species that are not final stages (earlier chain stages are not final either). */
+  notFinal: string[]
+}
+export type Catalog = { evolution: EvolutionData; trainers: TrainerRecord[] }
+
 export type TrainerSettings = {
   startTR: number
   archetype: Archetype
@@ -71,6 +85,10 @@ export type TeamMember = RosterSlot & {
   /** 1-based roster position. */
   slot: number
   level: number
+  /** The roster slot's authored stage; `species` is the stage at this level. */
+  authoredSpecies: string
+  /** The level the authored stage is reached at, when `species` is an earlier stage; else null. */
+  authoredAt: number | null
 }
 export type ResolvedTrainer = {
   trainer: TrainerRecord

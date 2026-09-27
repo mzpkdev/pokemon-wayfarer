@@ -97,6 +97,11 @@ instead. Authored levels still nudge each Pokémon, and Gym members still get
 their two-level bonus on top. The exact anchors are in the
 [technical specification](../specs/trainer-party-scaling.md#v0-regular-trainer-level-curve).
 
+Evolved species also step back through trade, stone, and friendship
+evolutions in v0, each through one shared authored level
+([evolution stages](../specs/player-trainer-rating.md#evolution-stages));
+today only level evolutions step back. Base species still never evolve.
+
 ## Coverage and exclusions
 
 Cover regular opposing trainers throughout the content compiled into Wayfarer,
@@ -166,6 +171,11 @@ solely because every Trainer gains levels.
 
 The first implementation must deliver an inventory and balance report as well
 as runtime code. Passing formulas alone does not establish playable balance.
+
+## Later
+
+- Forward evolution for regular trainers: late routes currently show
+  high-level unevolved species.
 
 ## References
 

@@ -7,27 +7,44 @@ import {
   OLD_VERSION_REJECTION,
   WORLD_PROGRESS_CHECKPOINTS,
   createExperiment,
+  evolutionIndex,
+  evolutionStatus,
   gymLadder,
   isGymLeader,
   leagueLineup,
   resolveTrainer,
   rosterGaps,
   serializeExperiment,
-  teamLevelFor,
-  trainerRating,
   validateExperiment,
   worldLevels,
 } from "./engine.js"
 import type {
   Anchor,
   Archetype,
+  Catalog,
   Experiment,
   RosterSlot,
   TrainerRecord,
   TrainerSettings,
 } from "./types.js"
 
-export const catalog = catalogData as TrainerRecord[]
+const data = catalogData as Catalog
+export const catalog: TrainerRecord[] = data.trainers
+/** The catalog's predecessor chains, indexed by every stage on them. */
+export const evolution = evolutionIndex(data.evolution)
+
+/** A species' line with evolution levels, e.g. "Geodude → Graveler Lv 25 → Golem Lv 38". */
+export const lineText = (species: string): string =>
+  (evolution.lines.get(species) ?? [{ species, level: 1 }])
+    .map((stage, index) => (index === 0 ? stage.species : `${stage.species} Lv ${stage.level}`))
+    .join(" → ")
+/** The roster editor's evolution warning for an authored species, if any. */
+export const stageWarning = (species: string): string | null => {
+  const { known, final } = evolutionStatus(evolution, species)
+  if (!known) return `No evolution data for ${species} in the catalog, so it never steps down.`
+  if (!final) return `${species} is not a final stage. Roster slots normally author final stages.`
+  return null
+}
 type TRScalerId = "teamLevel" | "teamSize" | "wildLevel" | "routeTrainerLevel"
 /** TR scalers by their experiment key; archetype growth scalers by archetype name. */
 export type ScalerId = TRScalerId | Archetype
@@ -83,7 +100,9 @@ export class BalanceLab {
     >,
   )
   allRows = $derived(
-    catalog.map((trainer) => resolveTrainer(trainer, this.#_experiment, this.worldProgress)),
+    catalog.map((trainer) =>
+      resolveTrainer(trainer, this.#_experiment, this.worldProgress, evolution),
+    ),
   )
   rows = $derived(
     this.allRows.filter(({ trainer }) => {
@@ -103,13 +122,18 @@ export class BalanceLab {
   })
   settings = $derived(this.#_settings(this.selected.trainer.id))
   gaps = $derived(rosterGaps(catalog, this.#_experiment))
-  league = $derived(leagueLineup(catalog, this.#_experiment, this.worldProgress))
+  league = $derived(leagueLineup(catalog, this.#_experiment, this.worldProgress, evolution))
   ladder = $derived(gymLadder(catalog, this.#_experiment, this.worldProgress))
-  /** The selected trainer's TR and team level at each world progress checkpoint. */
+  /** The selected trainer's TR, team level and team (by roster slot) at each world progress checkpoint. */
   growth = $derived(
     WORLD_PROGRESS_CHECKPOINTS.map((world) => {
-      const tr = trainerRating(this.#_experiment, this.settings, world)
-      return { world, tr, teamLevel: teamLevelFor(this.#_experiment, tr) }
+      const { tr, teamLevel, team } = resolveTrainer(
+        this.selected.trainer,
+        this.#_experiment,
+        world,
+        evolution,
+      )
+      return { world, tr, teamLevel, team }
     }),
   )
   aboveCap = $derived(this.allRows.filter((row) => row.teamLevel > this.cap).length)

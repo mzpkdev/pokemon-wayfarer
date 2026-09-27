@@ -21,8 +21,9 @@ rather than restating it.
   `AUTHORED`/`LEVEL_UP` moves, rewards and AI, randomizer precedence). Those
   rules apply to every notable trainer battle, not only Gym battles.
 - [Leagues](leagues.md) owns league lineups and their lifecycle.
-- [Player Trainer Rating](player-trainer-rating.md) owns the player's TR and
-  the scaler definition;
+- [Player Trainer Rating](player-trainer-rating.md) owns the player's TR,
+  the scaler definition, and the downward rule and shared evolution-level table
+  ([evolution stages](player-trainer-rating.md#evolution-stages));
   [party progression](trainer-rating-party-progression.md) owns the level cap
   curve.
 - [Trainer roster influence](trainer-roster-influence.md) is parked and not
@@ -31,8 +32,8 @@ rather than restating it.
 v0 supersedes every earlier NPC growth model in full; the only growth is
 [growth with world progress](#growth-with-world-progress). There is no world
 cap, `levelBase` or headroom, progress index, standing or bias, growth arcs or
-arc seeds, signature-plus-filler picks, filler scores or jitter, evolution by
-line, trades or gifts, and none of the older `baselineTR`, badge checkpoints,
+arc seeds, signature-plus-filler picks, filler scores or jitter, trades or
+gifts, and none of the older `baselineTR`, badge checkpoints,
 `effectiveTR`, or TR role bands. Player TR, the level cap, experience,
 obedience, wild and static encounters, marts, regular trainers, and Gym
 members read player TR under their own policies and v0 curves
@@ -179,9 +180,9 @@ scaling, level cap, experience, and so on) layer on top as they do today.
 
 | Field | Contract |
 | --- | --- |
-| Species/form | Authored per roster slot; runtime never evolves or substitutes it. |
+| Species/form | Authored per roster slot, recommended at its final stage (validation warns otherwise; any stage is allowed, such as Blue's Eevee). Runtime never substitutes another line; below the stage's evolution level the member steps down ([evolution stages](player-trainer-rating.md#evolution-stages)). |
 | `levelOffset` | Integer −6..0, default −2. |
-| Moves policy | `AUTHORED` (exact moves) or `LEVEL_UP` (latest four level-up moves of the species at its level, per the existing constructor). |
+| Moves policy | `AUTHORED` (exact moves for the authored stage) or `LEVEL_UP` (latest four level-up moves of the species at its level, per the existing constructor). A stepped-down member always uses `LEVEL_UP` for its stage. |
 | Battle content | Held item, ability, nature, and IVs/EVs per the existing construction rules; unset fields use constructor defaults. |
 
 Resolution for a trainer with TR `tr`:
@@ -190,6 +191,8 @@ Resolution for a trainer with TR `tr`:
 N           = teamSize(tr)
 team        = entries[1..N]                          // the first N roster slots
 memberLevel = clamp(teamLevel(tr) + entry.levelOffset, 1, 100)
+species     = stepDown(entry.species, memberLevel)   // the downward rule
+movesPolicy = species == entry.species ? entry.movesPolicy : LEVEL_UP
 battleOrder = team reversed                          // slot N first, slot 1 last
 ```
 
@@ -197,13 +200,21 @@ Roster slot 1 is the **signature Pokémon**: present from TR 0 and always fought
 last. Example: at TR 50 with offsets `0, −2, −2, −4, −1, −3`, the team is roster
 slots 1–4 at Lv 34/32/32/30, sent out in order 4, 3, 2, 1.
 
+Members step down by level through the
+[downward rule](player-trainer-rating.md#evolution-stages) and never evolve
+forward. Authored moves belong to the authored stage: at or above it the member
+uses them, and a stepped-down member uses its stage's `LEVEL_UP` set at its
+level, as regular trainers do. Brock's slot 1 Steelix (offset 0) appears as
+Onix until his team level reaches 35; his slot 2 Golem (offset −2) is Geodude
+below Lv 25, Graveler from 25, and Golem from 38.
+
 Early examples (placeholder content):
 
 | Battle | Trainer TR | Team |
 | --- | ---: | --- |
 | Blue in Pallet Town (world progress 0) | 0 | Eevee Lv 5 |
 | Blue at Cerulean (world progress about 20) | about 25 | two Pokémon at about Lv 18 |
-| Brock at world progress 0 (start TR 20) | 20 | Onix Lv 14 (offset 0), Geodude Lv 12 (offset −2) |
+| Brock at world progress 0 (start TR 20) | 20 | Onix Lv 14 (slot 1 Steelix, offset 0), Geodude Lv 12 (slot 2 Golem, offset −2) |
 
 Source FRLG, Emerald,
 and HNS parties are provenance and balance references; their levels never
@@ -214,7 +225,8 @@ levels and later roster slots; it never loses them.
 
 At battle setup, after resolving encounter identity, compute the trainer's TR at
 the current world progress and capture the `characterId`, that TR, the world
-progress, scaler, archetype, and roster content versions, and the resolved team
+progress, scaler, archetype, roster, and evolution-level table content
+versions, and the resolved team
 before constructing the opponent: per member, the roster slot index and every
 resolved battle value the snapshot uses (species/form, level, moves, item,
 ability, nature, IVs/EVs, and battle order). Reconstruction within the battle
@@ -235,9 +247,10 @@ TR, another trainer, or a random team.
   equal the v0 level cap anchors from TR 40 up; team-size steps at 10/11,
   28/29, 43/44, 70/71, and 95/96.
 - Rosters: exactly six roster slots per trainer; offsets in −6..0; slot 1 at
-  offset 0 (`teamSize(0)` is 1); valid species/forms; `AUTHORED` slots have
-  one to four legal moves; `LEVEL_UP` yields a usable move at every reachable
-  level.
+  offset 0 (`teamSize(0)` is 1); valid species/forms; a warning for each slot
+  not at a final stage; `AUTHORED` slots have one to four legal moves for the
+  authored stage; `LEVEL_UP` yields a usable move at every reachable level and
+  stage, stepped-down stages included.
 - Archetypes: each archetype passes the scaler checks, with anchors at world
   progress 0/40/80/120/160 (the rival adds 20), 0% at the first, and 100% at
   the last.
@@ -249,11 +262,12 @@ TR, another trainer, or a random team.
   trainer equals start TR at world progress 0 and peak TR from world progress
   160; every archetype, the rival included, uses the one growth rule; results
   match the examples above, including the +10 and +1 steps and the early Blue
-  and Brock fights.
+  and Brock fights (Brock's stepped-down Onix and Geodude).
 - Tate & Liza: their double battle draws both trainers' Pokémon from the shared
   roster in order, at the table's team size; they never enter a league lineup.
 - Resolution report per trainer at world progress 0, 40, 80, 120, and 160: TR,
-  size, member slots, levels, moves, and battle order, each level in 1–100 and
+  size, member slots, species after stepping down, levels, moves, and battle
+  order, each level in 1–100 and
   the order reversed.
 - Determinism: trainer TR and resolution are pure functions of world progress
   and content, independent of party, badges or league wins beyond their effect
@@ -309,7 +323,6 @@ implementations stay active until then.
   returns).
 - Player influence: modifiers, gifts, and trades
   ([roster influence](trainer-roster-influence.md)).
-- Evolution by line instead of per-slot species.
 - Quality scalers beyond Lv 100 (items, IVs/EVs, movesets, AI) with a higher
   ceiling TR, so extra TR stays meaningful.
 - Offsets that shrink as TR rises.

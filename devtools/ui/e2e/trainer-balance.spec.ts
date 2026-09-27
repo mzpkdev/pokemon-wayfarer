@@ -30,14 +30,27 @@ test("grows each trainer with world progress and round-trips an exported experim
   await expect(page.getByTestId("selected-level")).toHaveText("Lv. 14")
   await expect(page.getByTestId("team-size")).toHaveText("2")
   await expect(order).toHaveCount(2)
-  await expect(order.nth(0)).toContainText("Aerodactyl")
+  // Final stages step down to the stage their level supports, and a stepped-down member uses
+  // LEVEL_UP instead of the authored moves: Golem is Geodude at Lv 12, Steelix is Onix at Lv 14.
+  await expect(order.nth(0)).toContainText("Geodude→ Golem at Lv 38")
   await expect(order.nth(0)).toContainText("Lv. 12")
-  await expect(order.nth(1)).toContainText("Golem")
+  await expect(order.nth(0)).toContainText("Offset -2 · LEVEL_UP · Quick Claw")
+  await expect(order.nth(1)).toContainText("Onix→ Steelix at Lv 35")
   await expect(order.nth(1)).toContainText("Lv. 14")
+  // The growth table shows each roster slot's stage at the world progress checkpoints.
+  await expect(page.getByTestId("growth-slot-1")).toHaveText(
+    /Slot 1\s*Onix\s*Lv 14\s*Onix\s*Lv 27\s*Steelix\s*Lv 38\s*Steelix\s*Lv 48\s*Steelix\s*Lv 59/,
+  )
+  await expect(page.getByTestId("growth-slot-2")).toHaveText(
+    /Slot 2\s*Geodude\s*Lv 12\s*Graveler\s*Lv 25\s*Graveler\s*Lv 36\s*Golem\s*Lv 46\s*Golem\s*Lv 57/,
+  )
+  await expect(page.getByTestId("growth-slot-6")).toHaveText(/Slot 6\s*—\s*—\s*—\s*—\s*—/)
+  await expect(page.getByTestId("slot-line-2")).toHaveText("Geodude → Graveler Lv 25 → Golem Lv 38")
+  await expect(page.getByTestId("stage-warning-1")).toHaveCount(0)
 
   // Reorder and edit roster slots; the team is always the first N.
   await page.getByRole("button", { name: "Move roster slot 3 up", exact: true }).click()
-  await expect(order.nth(0)).toContainText("Kabutops")
+  await expect(order.nth(0)).toContainText("Aerodactyl")
   await page.getByLabel("Roster slot 2 species", { exact: true }).fill("Onix")
   await page.getByLabel("Roster slot 2 level offset", { exact: true }).fill("-6")
   await page.getByLabel("Roster slot 2 moves", { exact: true }).fill("Rock Throw, Bind")
@@ -46,6 +59,10 @@ test("grows each trainer with world progress and round-trips an exported experim
   await expect(order.nth(0)).toContainText("Onix")
   await expect(order.nth(0)).toContainText("Lv. 8")
   await expect(order.nth(0)).toContainText("Rock Throw, Bind · Hard Stone")
+  // An earlier stage is allowed but flagged, and it never evolves forward.
+  await expect(page.getByTestId("stage-warning-2")).toHaveText(
+    "Onix is not a final stage. Roster slots normally author final stages.",
+  )
 
   // World progress is the player TR; Brock grows with it along his archetype.
   await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
@@ -67,6 +84,9 @@ test("grows each trainer with world progress and round-trips an exported experim
   await expect(order).toHaveCount(4)
   await expect(order.nth(2)).toContainText("Onix")
   await expect(order.nth(2)).toContainText("Lv. 32")
+  await expect(order.nth(3)).toContainText("Steelix")
+  await expect(order.nth(3)).not.toContainText("→")
+  await expect(order.nth(3)).toContainText("Lv. 38")
 
   // TR is uncapped; the scalers stay flat past their last anchor (TR 160).
   await setGrowth(page, { archetype: "plateau", peak: "200" })
@@ -75,9 +95,9 @@ test("grows each trainer with world progress and round-trips an exported experim
   await expect(page.getByTestId("level-brock")).toHaveText("Lv. 100")
   await expect(page.getByTestId("size-brock")).toHaveText("6")
   await expect(order).toHaveCount(6)
-  await expect(order.last()).toContainText("Golem")
+  await expect(order.last()).toContainText("Steelix")
   await expect(order.last()).toContainText("Lv. 100")
-  await expect(order.first()).toContainText("Kleavor")
+  await expect(order.first()).toContainText("Relicanth")
   await expect(order.first()).toContainText("Lv. 98")
   await setGrowth(page, { archetype: "steady", peak: "95" })
   await expect(page.getByTestId("selected-tr")).toHaveText("58")
@@ -88,7 +108,7 @@ test("grows each trainer with world progress and round-trips an exported experim
   if (!exportedPath) throw new Error("Export did not produce a file")
   await page.getByText("Scalers & experiment settings", { exact: true }).click()
   await page.getByRole("button", { name: "Reset all to catalog defaults", exact: true }).click()
-  await expect(order.nth(2)).toContainText("Aerodactyl")
+  await expect(order.nth(2)).toContainText("Graveler")
   await page.getByLabel("Import experiment file", { exact: true }).setInputFiles(exportedPath)
   await expect(order.nth(2)).toContainText("Onix")
   await page.reload()
@@ -108,6 +128,8 @@ test("grows Blue with the rival scaler and shows each trainer's TR at the checkp
   await expect(page.getByTestId("selected-tr")).toHaveText("0")
   await expect(page.getByTestId("team-size")).toHaveText("1")
   await expect(page.getByTestId("battle-order").locator("li")).toHaveText([/Eevee.*Lv\. 5/s])
+  // Blue's Eevee is a user choice: allowed, with the final-stage warning.
+  await expect(page.getByTestId("stage-warning-1")).toContainText("Eevee is not a final stage")
   await expect(page.getByLabel("Lead", { exact: true })).toHaveCount(0)
   await expect(page.getByTestId("growth-table").locator("tbody tr").first()).toHaveText(
     /TR\s*0\s*49\s*90\s*129\s*170/,
@@ -270,6 +292,9 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 7 file
   await page.getByRole("button", { name: "Add roster slot", exact: true }).click()
   await page.getByLabel("Roster slot 6 species", { exact: true }).fill("Articuno")
   await page.getByRole("button", { name: "Apply roster", exact: true }).click()
+  await expect(page.getByTestId("stage-warning-6")).toHaveText(
+    "No evolution data for Articuno in the catalog, so it never steps down.",
+  )
   await expect(page.getByTestId("roster-length")).toHaveText("6 / 6")
   await expect(page.getByTestId("roster-incomplete")).toHaveCount(0)
   await expect(page.getByTestId("roster-gap-count")).toHaveText("10")

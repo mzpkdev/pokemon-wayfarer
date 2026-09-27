@@ -70,8 +70,11 @@ TR, and never read party levels, badges, historical Gym order, or the old
 
 Keep a stable member identity (the roster slot) separate from output position.
 The battle snapshot supplies battle order, levels, species/forms, and moves:
-`AUTHORED` moves exactly as written, `LEVEL_UP` moves from the existing
-constructor. Validate content rather than silently dropping a member.
+`AUTHORED` moves exactly as written when the member appears as its authored
+stage, and `LEVEL_UP` moves from the existing constructor otherwise, including
+a member stepped down by the
+[evolution stages](player-trainer-rating.md#evolution-stages) rule. Validate
+content rather than silently dropping a member.
 
 Copy roster-authored items, abilities, natures, IVs/EVs, trainer inventory,
 and AI through the existing constructor; the model never synthesizes those

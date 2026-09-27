@@ -159,6 +159,16 @@ re-verification against the new curve before adoption, including whether 14 is
 still the right Mantine floor; this document does not yet claim either
 protection on the v0 scale.
 
+### v0 evolution stages
+
+In v0 the predecessor resolution above follows the shared
+[downward rule](player-trainer-rating.md#evolution-stages), which also steps
+down non-level evolutions (trade, stone, friendship, other) through the shared
+evolution-level table: a projected Lv 25 Starmie resolves to Staryu (evolution
+level 30). Today's rule above covers numeric level evolutions only, and
+non-level evolutions have no reverse. Randomized populations, fixed and scripted encounters stay
+excluded, and species floors still apply after resolution.
+
 ### Consumers of the effective population
 
 All ordinary consumers resolve the same effective population:
@@ -193,6 +203,11 @@ encounter data must reproduce authored profiles before scaling and produce a
 balance audit for every covered build.
 
 Compile the affected encounter objects for Emerald, FireRed, LeafGreen, and HNS. Build at least one complete release ROM after generation, then playtest the progression milestones and ordinary encounter mechanics described in the parent PRD.
+
+## Later
+
+- Forward evolution for wild encounters: late routes currently show
+  high-level unevolved species.
 
 ## References
 

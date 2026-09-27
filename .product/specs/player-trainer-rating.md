@@ -11,8 +11,8 @@ is a placeholder tuned by playtesting.
 
 This specification owns the player's TR as the foundation other systems read:
 what it is, how it is earned, its scale, the **scaler** concept every
-TR-driven property uses, the v0 player-TR scalers, and the list of what player
-TR drives. Consumers keep their own current behavior and their own curves, and
+TR-driven property uses, the v0 player-TR scalers, the shared
+[evolution stages](#evolution-stages), and the list of what player TR drives. Consumers keep their own current behavior and their own curves, and
 link here for the shared model.
 
 - The [interregional League circuit](wayfarer-interregional-league-circuit.md#trainer-rating)
@@ -116,6 +116,51 @@ the v0 TR at the same badge count. Obedience, the half-experience rule that
 makes the level cap soft, Exp. Candy and Rare Candy rules, and species floors
 are unchanged, because they are relative to the level cap or authored.
 
+## Evolution stages
+
+A world-scaling asset shared by every scaled population. This section owns
+the downward rule and the shared evolution-level table; consumers link here.
+
+**Downward rule.** A Pokémon whose level is below its stage's evolution level
+steps down its predecessor chain, one stage at a time, until the level supports
+the stage. There is never forward evolution: a low stage at a high level stays
+as it is.
+
+**Evolution level.** The table covers only evolutions without a level in the
+game data; level evolutions use the game's own levels. A non-level evolution
+(trade, stone, friendship, or other) uses its one global entry in the **shared
+evolution-level table**, so the downward rule treats it like a level evolution.
+Examples (placeholders, reviewed as content):
+
+| Evolution | Method | Evolution level |
+| --- | --- | ---: |
+| Onix → Steelix | trade | 35 |
+| Staryu → Starmie | stone | 30 |
+| Growlithe → Arcanine | stone | 35 |
+
+So a Steelix below Lv 35 appears as Onix. Graveler → Golem is a level
+evolution in the game data (Lv 38), so it is not in the table: a Golem at Lv 30
+appears as Graveler (below 38, at least 25), and at Lv 12 as Geodude.
+
+**Format.** One row per non-level edge: predecessor, successor, evolution
+level. The table is versioned catalog content like the scalers; runtime never
+repairs or infers it.
+
+**Validation.** Every non-level edge in the evolution data has exactly one
+level; a table row for an edge that already has a level in the game data fails; levels increase along a line (each edge above the edge into its
+predecessor); the predecessor graph has no cycles; a species with more than one
+possible predecessor has its ancestry resolved explicitly, and an unresolved
+one fails validation.
+
+| Consumer | Uses it for |
+| --- | --- |
+| [Notable trainers](notable-trainers.md#rosters) | Roster slots, authored at final stages, stepped down by member level |
+| [Regular trainers and Gym members](trainer-party-scaling.md#species-moves-and-per-pokémon-fields) | Authored species at the effective level |
+| [Wild encounters](trainer-rating-wild-encounter-scaling.md#v0-evolution-stages) | Ordinary non-randomized encounters at the projected level |
+
+Today, regular trainers and wild encounters step down numeric level evolutions
+only, and non-level evolutions have no reverse; the table is v0.
+
 ## What player TR drives
 
 Each consumer reads `GetTrainerRating()` under its own policy and never
@@ -144,6 +189,8 @@ above. Standalone builds are unchanged.
   add nothing; the saved value never decreases.
 - v0 range: with the 80 clamps removed, every consumer reads its v0 scaler
   for TR 0–160 and its last-anchor value above 160.
+- Evolution stages: the table passes the checks in
+  [Evolution stages](#evolution-stages).
 - Consumer checks stay with their owners listed above.
 
 ## Later

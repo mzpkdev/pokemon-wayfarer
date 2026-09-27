@@ -128,7 +128,11 @@ specifications.
 
 How a wild encounter's level is worked out does not change: it still never
 drops as TR rises, evolved species still step back to a predecessor when the
-level is too low, and species minimum levels still apply. Obedience, reduced
+level is too low, and species minimum levels still apply. Stepping back now
+also covers trade, stone, and friendship evolutions, each through one shared
+authored level
+([evolution stages](../specs/player-trainer-rating.md#evolution-stages)); today
+only level evolutions step back. Obedience, reduced
 experience past the cap, and Candy rules also work as today. The Mantine and
 Chinchou utility-catch guarantees in this document are stated on today's scale.
 On the new scale their ranges become TR 25 through 160 for Mantine (about 2.5
@@ -231,6 +235,11 @@ sides of the cap, foreign-OT Pokémon, Eggs, Exp. Candy, and Rare Candy. It
 should confirm that both Candy types retain their ordinary rewards, that raising
 TR restores obedience when the relevant level falls within the new cap, and that
 the missing-badge catch penalty remains active.
+
+## Later
+
+- Forward evolution for wild Pokémon: late routes currently show high-level
+  unevolved species.
 
 ## References
 

@@ -1,6 +1,7 @@
 import type {
   Anchor,
   Archetype,
+  EvolutionData,
   Experiment,
   LadderRow,
   ResolvedTrainer,
@@ -240,36 +241,131 @@ export const worldLevels = (
   }
 }
 
+/** One stage of a line: the level it is reached at (1 for the base stage). */
+export type Stage = { species: string; level: number }
+/** Every stage on the catalog's chains with its line up to it, and the stages that evolve further. */
+export type Evolution = {
+  lines: ReadonlyMap<string, readonly Stage[]>
+  notFinal: ReadonlySet<string>
+}
+/** No evolution data: every species is its own line and never steps down. */
+export const NO_EVOLUTION: Evolution = { lines: new Map(), notFinal: new Set() }
+
+/**
+ * Indexes the catalog's predecessor chains by every stage on them. A chain
+ * alternates species and levels; each edge has one level, levels increase
+ * along the line, and no species repeats (no cycles).
+ */
+export const evolutionIndex = (data: EvolutionData): Evolution => {
+  const lines = new Map<string, Stage[]>()
+  const notFinal = new Set(data.notFinal)
+  for (const [species, chain] of Object.entries(data.chains)) {
+    const where = `Evolution chain for ${species}`
+    if (chain.length % 2 !== 1 || chain.at(-1) !== species)
+      throw new Error(`${where} must alternate species and levels and end at ${species}`)
+    const line: Stage[] = []
+    for (let index = 0; index < chain.length; index += 2) {
+      const name = chain[index]
+      const level = index === 0 ? 1 : chain[index - 1]
+      if (typeof name !== "string" || !name) throw new Error(`${where} has a missing species`)
+      if (typeof level !== "number" || !Number.isInteger(level) || level < 1 || level > 100)
+        throw new Error(`${where}: ${name} needs an evolution level from 1 to 100`)
+      if (line.some((stage) => stage.species === name))
+        throw new Error(`${where} repeats ${name} (an evolution cycle)`)
+      const previous = line.at(-1)
+      if (previous && level <= previous.level)
+        throw new Error(`${where}: evolution levels must increase along the line`)
+      line.push({ species: name, level })
+      const known = lines.get(name)
+      const prefix = line.slice()
+      if (
+        known &&
+        (known.length !== prefix.length ||
+          known.some(
+            (stage, at) =>
+              stage.species !== prefix[at]?.species || stage.level !== prefix[at]?.level,
+          ))
+      )
+        throw new Error(`${name} has conflicting evolution levels or predecessors`)
+      lines.set(name, prefix)
+      if (previous) notFinal.add(previous.species)
+    }
+  }
+  return { lines, notFinal }
+}
+
+/** Whether a species has catalog evolution data and whether it is a final stage. */
+export const evolutionStatus = (evolution: Evolution, species: string) => ({
+  known: evolution.lines.has(species),
+  final: !evolution.notFinal.has(species),
+})
+
+/**
+ * The downward rule: the authored stage steps down its predecessor chain until
+ * the level is at least that stage's evolution level. It never evolves forward.
+ */
+export const stageAt = (
+  evolution: Evolution,
+  species: string,
+  level: number,
+): { species: string; authoredAt: number | null } => {
+  const line = evolution.lines.get(species)
+  const authored = line?.at(-1)
+  if (!line || !authored) return { species, authoredAt: null }
+  let index = line.length - 1
+  while (index > 0 && level < (line[index]?.level ?? 1)) index -= 1
+  const stage = line[index] ?? authored
+  return {
+    species: stage.species,
+    authoredAt: stage.species === species ? null : authored.level,
+  }
+}
+
 /**
  * Team = the first N roster slots (N = team size at TR); level =
- * clamp(team level + offset, 1, 100); battle order = the team reversed.
+ * clamp(team level + offset, 1, 100); battle order = the team reversed. Each
+ * member steps down to the stage its level supports; authored moves belong to
+ * the authored stage, so a member that stepped down uses LEVEL_UP.
  */
-export const buildTeam = (roster: readonly RosterSlot[], teamLevel: number, size: number) => {
-  const team = roster.slice(0, size).map(
-    (rosterSlot, index): TeamMember => ({
+export const buildTeam = (
+  roster: readonly RosterSlot[],
+  teamLevel: number,
+  size: number,
+  evolution: Evolution,
+) => {
+  const team = roster.slice(0, size).map((rosterSlot, index): TeamMember => {
+    const level = clamp(teamLevel + rosterSlot.levelOffset, 1, 100)
+    const stage = stageAt(evolution, rosterSlot.species, level)
+    return {
       ...rosterSlot,
+      species: stage.species,
+      moves: stage.species === rosterSlot.species ? rosterSlot.moves : "LEVEL_UP",
       slot: index + 1,
-      level: clamp(teamLevel + rosterSlot.levelOffset, 1, 100),
-    }),
-  )
+      level,
+      authoredSpecies: rosterSlot.species,
+      authoredAt: stage.authoredAt,
+    }
+  })
   return { team, battleOrder: team.toReversed() }
 }
 
 /**
  * A trainer's team at a world progress: their own TR from their growth, then
- * the team from that TR alone. Nothing else about the player is read.
+ * the team from that TR alone, each member at the stage its level supports.
+ * Nothing else about the player is read.
  */
 export const resolveTrainer = (
   trainer: TrainerRecord,
   experiment: Experiment,
   world: number,
+  evolution: Evolution,
 ): ResolvedTrainer => {
   const settings = experiment.trainers[trainer.id]
   if (!settings) throw new Error(`Missing trainer settings: ${trainer.id}`)
   const tr = trainerRating(experiment, settings, world)
   const teamLevel = teamLevelFor(experiment, tr)
   const size = teamSizeFor(experiment, tr)
-  const { team, battleOrder } = buildTeam(settings.roster, teamLevel, size)
+  const { team, battleOrder } = buildTeam(settings.roster, teamLevel, size, evolution)
   const warnings: string[] = []
   if (settings.roster.length < ROSTER_SIZE)
     warnings.push(
@@ -277,7 +373,8 @@ export const resolveTrainer = (
     )
   if (team.length < size) warnings.push(`The team fills ${team.length} of ${size} slots.`)
   for (const member of team)
-    if (teamLevel + member.levelOffset < 1) warnings.push(`${member.species} level clipped to 1.`)
+    if (teamLevel + member.levelOffset < 1)
+      warnings.push(`${member.authoredSpecies} level clipped to 1.`)
   return {
     trainer,
     worldProgress: world,
@@ -303,10 +400,11 @@ export const leagueLineup = (
   catalog: TrainerRecord[],
   experiment: Experiment,
   world: number,
+  evolution: Evolution,
 ): ResolvedTrainer[] =>
   catalog
     .filter((trainer) => trainer.leagueEligible)
-    .map((trainer) => resolveTrainer(trainer, experiment, world))
+    .map((trainer) => resolveTrainer(trainer, experiment, world, evolution))
     .toSorted((a, b) => b.tr - a.tr)
     .slice(0, LINEUP_SIZE)
     .toSorted((a, b) => a.tr - b.tr)

@@ -84,12 +84,23 @@ trainer's team. The player TR is never computed from a notable trainer's TR.
 - **Team size** is a step table built from paired anchors: TR 0–10 → 1,
   11–28 → 2, 29–43 → 3, 44–70 → 4, 71–95 → 5, 96+ → 6.
 - **Roster**: one ordered list of six roster slots per trainer. Each roster
-  slot has a species, a level offset (-6 to 0), moves (`LEVEL_UP` or one to
-  four authored moves), a held item, and an optional ability and nature.
-  Roster slot 1 (the signature Pokémon) must be at offset 0.
+  slot has a species (normally a final stage, such as Steelix), a level
+  offset (-6 to 0), moves (`LEVEL_UP` or one to four authored moves), a held
+  item, and an optional ability and nature. Roster slot 1 (the signature
+  Pokémon) must be at offset 0.
 - **Team** = the first N roster slots (N = team size). Each member's level is
   clamp(team level + offset, 1, 100). **Battle order** is the team reversed,
   so roster slot 1 is fought last.
+- **Evolution (downward only)**: a member whose level is below its stage's
+  evolution level steps down its predecessor chain until the level supports
+  the stage. It never evolves forward. Level evolutions use their
+  `species_info` threshold; non-level evolutions (item, trade, friendship,
+  other) use the shared evolution-level table in the catalog script, which
+  covers only evolutions without a level in the game data. Baby pre-evolutions
+  are not stepped down to. Brock at start TR 20 (team level 14) fields Onix
+  Lv 14 and Geodude Lv 12; his Steelix appears from Lv 35 and Golem from Lv 38. A member at its
+  authored stage uses the authored moves; one that stepped down uses
+  `LEVEL_UP`.
 
 The world panel sets player badges (0–24). It shows the player TR on the
 rescaled formula (badges 1–8 give +10 each, badges 9–24 +5 each, league wins
@@ -101,10 +112,13 @@ the player TR). The trainer list shows each trainer's TR at the current world
 progress, their start TR → peak TR, archetype,
 team level, team size, the gap between team level and the level cap, and how
 many roster slots are filled. The trainer panel edits start TR, archetype
-and peak TR, shows the trainer's TR and team level at world progress
-0 / 40 / 80 / 120 / 160, the team at the current TR in battle order, and a
-roster editor: reorder roster slots, edit species, offset, moves and item, and
-add or remove roster slots. **Edit settings as JSON** covers ability and
+and peak TR, shows the trainer's TR, team level and each roster slot's stage
+and level at world progress 0 / 40 / 80 / 120 / 160, the team at the current
+TR in battle order (a stepped-down member shows its authored stage, e.g.
+"Onix → Steelix at Lv 35"), and a roster editor: reorder roster slots, edit
+species, offset, moves and item, and add or remove roster slots. Each roster
+slot shows its line with evolution levels and warns when the species is not a
+final stage or has no evolution data in the catalog. **Edit settings as JSON** covers ability and
 nature too.
 
 **Tate & Liza** are one entry (role Gym Leader duo, Hoenn) with one start TR,
@@ -166,7 +180,12 @@ to the v0 balance targets, which `engine.test.ts` checks: the lineup at TR
 checkpoint (at world progress 0 the openers are two Pokémon at or under the
 level cap), and Blue about 10 ahead from world progress 40. Rosters flatten
 the earlier ace/filler prototype: its ace (now the signature Pokémon) first,
-then the other members in order, each at the end of its species line and cut to six. That prototype came
+then the other members in order, cut to six, then each species converted to
+the final stage of its line (a converted slot uses `LEVEL_UP` with no
+ability; branching lines take the script's `FINAL_CHOICE`, e.g. Scyther →
+Scizor). Blue's roster slot 1 stays Eevee (a user choice, flagged as not a
+final stage). Brock's roster is Steelix (signature Pokémon), Golem (keeping
+its source battle content), Aerodactyl, Kabutops, Omastar and Relicanth. That prototype came
 from each trainer's competitive party (the curated six in
 `game/src/data/trainer_scaling/gym_leaders.json`) or otherwise its reference
 party (the highest-level member is roster slot 1; other offsets are the source level
@@ -184,7 +203,18 @@ provenance and explicit variant notes. HNS is not substituted with HGSS;
 Steven's local Emerald postgame party is labeled as such. The catalog script
 validates growth (start and peak TR, archetype), roster length (at most six), offsets, moves and roster slot 1
 at offset 0, and that the catalog has exactly 38 entries with only the Tate &
-Liza duo fought as a double battle. Regenerate or verify the checked-in catalog from the repository root
+Liza duo fought as a double battle. It also validates the shared
+evolution-level table (one level per edge, each a real `species_info`
+evolution without an `EVO_LEVEL`; a row for a level evolution fails, since the
+game's level wins), requires a table entry for every non-level edge on a roster line,
+and checks that levels increase along each line with no ambiguous ancestry or
+cycles. Table rows are `authored` (the contract examples: Onix → Steelix 35,
+Staryu → Starmie 30, Growlithe → Arcanine 35) or `placeholder`;
+the script prints the placeholders, the conversions and a warning for roster
+slots that are not final stages. The catalog records each roster species'
+chain compactly under `evolution.chains` (e.g. `["Geodude", 25, "Graveler",
+38, "Golem"]`), which the explorer indexes; the saved experiment format is
+unchanged. Regenerate or verify the checked-in catalog from the repository root
 (requires Python 3, `cc`, `cpp`):
 
 ```sh
