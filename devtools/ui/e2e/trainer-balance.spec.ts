@@ -627,23 +627,29 @@ test("simulates league invitations: the gate, who calls, answers, fatigue and ch
   expect(saved.version).toBe(20)
   expect(saved.league).toEqual({
     choices: ["decline", "win", "win", "win", "decline"],
-    split: { Kanto: 0, Johto: 0, Hoenn: 8 },
+    split: { total: 8, Kanto: 0, Johto: 0, Hoenn: 8 },
   })
   // Import reads the league settings whatever their key order.
-  await page.getByLabel("Import experiment file", { exact: true }).setInputFiles({
-    name: "reordered.json",
-    mimeType: "application/json",
-    buffer: Buffer.from(
-      JSON.stringify({
-        ...saved,
-        league: { split: { Hoenn: 8, Kanto: 0, Johto: 0 }, choices: saved.league.choices },
-      }),
-    ),
+  const importLeague = async (name: string, league: object) => {
+    await page.getByLabel("Import experiment file", { exact: true }).setInputFiles({
+      name,
+      mimeType: "application/json",
+      buffer: Buffer.from(JSON.stringify({ ...saved, league })),
+    })
+    await expect(page.getByRole("status")).toHaveText("Imported experiment.")
+    await expect(page.getByTestId("badge-split-note")).toHaveText(
+      "Badge split set by hand: Kanto 0, Johto 0, Hoenn 8.",
+    )
+  }
+  await importLeague("reordered.json", {
+    split: { Hoenn: 8, total: 8, Kanto: 0, Johto: 0 },
+    choices: saved.league.choices,
   })
-  await expect(page.getByRole("status")).toHaveText("Imported experiment.")
-  await expect(page.getByTestId("badge-split-note")).toHaveText(
-    "Badge split set by hand: Kanto 0, Johto 0, Hoenn 8.",
-  )
+  // A split saved without its badge total belongs to the saved player TR's total.
+  await importLeague("no-total.json", {
+    choices: saved.league.choices,
+    split: { Kanto: 0, Johto: 0, Hoenn: 8 },
+  })
   // 16 badges, Kanto 8 and Hoenn 8: win Indigo and Hoenn and the caretaker calls from the Sevii
   // Masters; declining the rest lets trainers reign, and one who reigns at both becomes a Master.
   // A new badge total drops the split set by hand, which follows the badge total again.
@@ -653,6 +659,29 @@ test("simulates league invitations: the gate, who calls, answers, fatigue and ch
   )
   await setBadges("Johto", "0")
   await setBadges("Hoenn", "8")
+  const handSplit = "Badge split set by hand: Kanto 8, Johto 0, Hoenn 8."
+  await expect(page.getByTestId("badge-split-note")).toHaveText(handSplit)
+  // Typing a player TR key by key passes through other badge totals (1, then 12) but keeps the
+  // split, which applies again at its own badge total (122 still gives 16 badges).
+  await tr.fill("")
+  await tr.pressSequentially("122")
+  await expect(page.getByTestId("badge-split-note")).toHaveText(handSplit)
+  await tr.press("Enter")
+  await expect(page.getByTestId("badge-split-note")).toHaveText(handSplit)
+  // Committing a player TR at another badge total drops it for good.
+  await tr.fill("125")
+  await tr.press("Enter")
+  await expect(page.getByTestId("badge-split-note")).toHaveText(
+    "Badge split from the 17 badges of the player TR, filling Kanto, Johto, then Hoenn (8 each).",
+  )
+  await tr.fill("120")
+  await tr.press("Enter")
+  await expect(page.getByTestId("badge-split-note")).toHaveText(
+    "Badge split from the 16 badges of the player TR, filling Kanto, Johto, then Hoenn (8 each).",
+  )
+  await setBadges("Johto", "0")
+  await setBadges("Hoenn", "8")
+  await expect(page.getByTestId("badge-split-note")).toHaveText(handSplit)
   await page.getByLabel("Invitations", { exact: true }).fill("12")
   await page.getByLabel("Invitations", { exact: true }).press("Enter")
   await answer(1, "win")

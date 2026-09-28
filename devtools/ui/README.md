@@ -236,8 +236,10 @@ trainer has a `movePool` of `{ "move", "fromLevel"? }` entries, a
 `homeRegion`, the `traveller` and `aloof` trait flags and a `playStyle`)
 and store the point as `{ "playerTR": n }` and the invitation simulator
 settings as `{ "choices": ["win" | "lose" | "decline", …], "split": null |
-{ "Kanto": n, "Johto": n, "Hoenn": n } }` (the answers to 1–24 invitations, and
-the badge split: null follows the badge total, or 0–8 badges per region); a
+{ "total": n, "Kanto": n, "Johto": n, "Hoenn": n } }` (the answers to 1–24
+invitations, and the badge split: null follows the badge total, or the badge
+total (0–24) it was set for with 0–8 badges per region; a split with no
+`total` belongs to the saved player TR's badge total); a
 `{ "badges": n }` point still imports and sets the matching player TR. The
 call counter lives only in the simulation (the saved settings are the answers
 and the split), and team size keeps its `[TR, size]` anchors, so neither
@@ -320,8 +322,12 @@ call is due but no league is eligible, no call is made and the countdown
 keeps waiting, re-checked at every later day. **Invitations**
 (default 8, up to 24) sets how many; the **Kanto**, **Johto** and **Hoenn**
 fields set the badge split (by default the badge floor of the player TR,
-filling Kanto, then Johto, then Hoenn, 8 each; **Follow badge total**
-restores it, and so does any change to the badge total). Each number field
+filling Kanto, then Johto, then Hoenn, 8 each). A split set by hand is saved
+with its badge total and applies only while the player TR gives that total:
+typing or dragging the player TR through other totals keeps it, and it applies
+again back at its total. **Follow badge total** drops it, and so do a badge
+preset or slider move to another total and a committed player TR (Enter,
+leaving the field, or releasing the slider) at another total. Each number field
 shows the value the simulation uses: an entry out of range is refused (or,
 for the player TR, clamped to 0 or more) and the field reverts to it. Which league calls ([Leagues spec](../../.product/specs/leagues.md#which-league-calls)):
 a league calls only where the player is known: Indigo with at least one Kanto
@@ -500,10 +506,10 @@ most 190, and the Veteran Lt. Surge peaks at TR 95, so they stay at TR 95 or les
 at world progress 80. The Elite Four and Champions start above the Gym band,
 at TR 41 or more (the script's `ELITE_START_MIN`; it rejects a lower start),
 except Blue, the Rival, who leaves Pallet with the player at TR 0. The members
-who once started inside the band start at TR 41–50 by lore, each league's
-first member lowest, with their peaks unchanged: Will and Sidney 41 (from 30
-and 25), Lorelei 42 (from 40), Phoebe 43 (from 25), Koga and Glacia 44 (from
-30 and 40) and Karen 47 (from 30), the last before the Champion; Bruno (45),
+who once started inside the band start at TR 41–50 by lore, with their peaks
+unchanged (the lowest Elite Four start per region: Will and Sidney 41, from 30
+and 25, and Lorelei 42, from 40; then Phoebe 43, from 25, Koga and Glacia 44,
+from 30 and 40, and Karen 47, from 30); Bruno (45),
 Drake (45), Wallace (48), Steven (50), Agatha (95) and Lance (200) already
 started above it. The defaults are tuned to the
 v0 balance targets, which `engine.test.ts` checks: every
@@ -539,7 +545,7 @@ is no base lineup, fatigue still applying, Lance skipping fresh 8- and
 16-badge Indigo events and fighting last at a fresh 24-badge event, and no aloof lineup member more than 10 levels
 above the base lineup level at Indigo or Hoenn), and the Masters (never
 calling before wins at both Indigo and Hoenn; the aloof rule off, so an aloof
-trainer attends however far above the field; a Master, someone who reigned at
+trainer attends however far above the other trainers; a Master, someone who reigned at
 both Indigo and Hoenn, seated over a higher-scoring trainer who is not one;
 more than five Masters seated by league score; reigns recorded at Indigo and
 Hoenn only, never for a Masters title). Home regions and the travellers live in the

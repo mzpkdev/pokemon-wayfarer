@@ -16,7 +16,7 @@ last, at league events the player joins by invitation; after a loss the
 player waits for Hoenn's next invitation. These
 successors are not implemented by the
 content port; Today's behavior below remains identified separately from the
-proposed direction.
+v0 design.
 
 The current shared six-slot Gym feature is disabled by default in
 [configuration](../../game/include/config/trainer_party_scaling.h); it uses
@@ -233,7 +233,7 @@ not keep a separate healing history for every region.
   [every-battle rule](../specs/notable-trainers.md#trainer-rating).
 - Today's Hoenn League preserves authored non-level metadata and scales from
   player TR locked for the run under [League scaling](league-scaling.md). The
-  proposed successor freezes the five opponents, teams, and levels for the
+  v0 successor design freezes the five opponents, teams, and levels for the
   event when the player accepts its invitation, each from that trainer's own
   TR at that moment and roster. Reload and reconstruction during the run preserve that event
   lineup. Rosters

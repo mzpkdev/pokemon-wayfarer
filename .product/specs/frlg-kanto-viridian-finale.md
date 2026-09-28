@@ -31,8 +31,8 @@ The current finale uses the FRLG final Gym source order: Rhyhorn 45, Dugtrio 42,
 Nidoqueen 44, Nidoking 45, Rhyhorn 50, retaining both Rhyhorn. These are source
 levels under the current bespoke five-slot player-TR projection in
 [party construction](../../game/src/battle_main.c), independent of the disabled
-shared six-slot Gym feature. The proposed
-[notable trainers](notable-trainers.md) model builds Giovanni's
+shared six-slot Gym feature. The v0
+[notable trainers](notable-trainers.md) design builds Giovanni's
 badge battle from his own TR, grown from world progress, and six-slot roster.
 This five-member source remains provenance, not a required early party or
 immutable prefix for every team size.
@@ -83,8 +83,8 @@ Remove Dojo dialogue that presumes a Viridian battle the player never had.
 - Verify no Blue object or invitation remains in Viridian or Cinnabar, while Blue still appears as Indigo Champion. Leave Tower/Fuji, Snorlax, optional Rocket scenes, and unrelated League/region state untouched by the Gym finale.
 - Generate selected maps, warps, Trainer and item dependencies, and a release ROM; inspect the rendered FRLG maze and HNS city doorway. Source assets and screenshots are not runtime proof.
 
-Giovanni's and Blue's battles follow the proposed
-[notable trainers](notable-trainers.md) model; Blue gains no badge.
+Giovanni's and Blue's battles follow the v0
+[notable trainers](notable-trainers.md) design; Blue gains no badge.
 
 ## Source anchors
 

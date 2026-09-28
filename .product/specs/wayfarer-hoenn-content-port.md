@@ -17,7 +17,7 @@ Hoenn admission, the
 player's Trainer Rating (TR) saved when entering a league, and the shared
 six-slot Gym feature is disabled by default in
 [configuration](../../game/include/config/trainer_party_scaling.h). The
-[PRD](../prds/wayfarer-hoenn-integration.md) summarizes the proposed
+[PRD](../prds/wayfarer-hoenn-integration.md) summarizes the v0
 [notable trainers](notable-trainers.md) and [Leagues](leagues.md) successors,
 which this content port does not implement.
 
@@ -438,7 +438,7 @@ Static and automated validation must prove all of the following:
 7. Every Trainer reference resolves to the expected authored source party and a
    distinct defeat bit. Non-League Hoenn source parties other than enrolled
    initial Gym Leader rosters match Emerald, while Hoenn League parties match
-      today's fixed Tier 3 content. When implementing the proposed successor,
+      today's fixed Tier 3 content. When implementing the v0 successor design,
    validate resolved rosters and the saved event lineup instead; original
    Emerald parties serve as provenance references. Eligible regular trainer
    battle parties then apply the separate Trainer-party projection; initial Gym

@@ -120,7 +120,10 @@ Days come from the game's in-game day clock; leagues add no clock of their own.
 [clock.c](../../game/src/clock.c)) follows the real-time clock (RTC). The game
 is moving to an in-game clock with no RTC, and this design depends on it:
 adopting Leagues requires that clock, and every day below is an in-game day from
-it. **Days never affect anyone's strength**: every TR stays a function of world
+it. All Leagues needs from that clock is a **day count** that advances with
+play, which Leagues reads only through the forward-counting
+[countdown](#countdown); the length of a day is owned by the in-game clock
+design, which is not yet written. **Days never affect anyone's strength**: every TR stays a function of world
 progress, and days only schedule invitations. The order of calls never reads
 days: it comes from a monotonic [call counter](#which-league-calls), so a day
 counter that goes backwards cannot reorder the leagues.
@@ -143,8 +146,8 @@ long the player takes.
 
 The countdown counts only **forward day advances**. It saves the **days
 remaining** (7 when it starts or restarts) and the **last counted day** (the
-day counter's value when the countdown last looked). On each check (the daily
-update, and after a load):
+day counter's value when the countdown last looked). On each check (whenever
+the day count advances, and after a load):
 
 ```text
 today = day counter
@@ -200,7 +203,7 @@ ties.
 
 **No eligible league.** If the player qualifies while no league knows them
 (possible only with a future TR source that needs no badge), no call is made:
-the countdown stays due, and each daily update checks again, until a league
+the countdown stays due, and each day advance checks again, until a league
 knows them and calls.
 
 ### Accept
@@ -283,10 +286,10 @@ committed before reveal, so nothing after it reselects.
 
 The five selected when the player accepts are the event's lineup, frozen for
 that event however long it waits. Accepting captures, for each of the five in
-battle order: `characterId`, their TR, and their composed team, plus the event
-lineup's **content versions**: the league registry, the rosters, world progress
-and the scalers, the growth archetypes, the evolution-level table, the move
-pools and learnsets, and the play styles and AI tiers. Per member, the team
+battle order: `characterId`, their TR, and their composed team. The lineup
+stores no content versions of its own: the league state's
+[content versions](#saved-state) cover it, and they match the build whenever
+an event is accepted. Per member, the team
 holds the roster slot index and every resolved battle value the battle snapshot
 uses: species/form, level, moves, item, ability, nature, IVs/EVs, and battle
 order. It is saved atomically with the accepted event before reveal, and every
@@ -350,9 +353,13 @@ Add:
   its league and its [event lineup](#event-lineup);
 - the **call counter**, and per league its **last call number** (none, or a
   call number), read for [which league calls](#which-league-calls);
+- the league state's **content versions**, one set for all of the state
+  below: the league registry, the rosters, world progress and the scalers, the
+  growth archetypes, the evolution-level table, the move pools and learnsets,
+  and the play styles and AI tiers, written at New Game and rewritten after
+  each [content-change cleanup](#load-validation);
 - the **most recent resolved lineup**: the five `characterId`s of the most
-  recent resolved event, with the same set of content versions as an
-  [event lineup](#event-lineup), read for fatigue; empty on a new game;
+  recent resolved event, read for fatigue; empty on a new game;
 - per league, the **reigning champion** (none, the player, or a
   `characterId`);
 - per notable trainer, the two [reign flags](#reign-records) (has reigned at
@@ -367,14 +374,15 @@ resolved lineup, the reign flags, and the Gallery counts, and no stored day
 other than the countdown's last counted day. At most one accepted event and
 one active run exist. New Game saves the not-qualified state, a call counter
 of 0, no last call number, reigning champion, or most recent resolved lineup,
-every reign flag clear, and every Gallery count 0. Save an explicit schema
+every reign flag clear, every Gallery count 0, and the build's content
+versions. Save an explicit schema
 discriminator for this layout; prerelease saves need no migration.
 
 ## Lifecycle
 
 ### Qualifying and the call
 
-After any player TR change, and on the daily update, a not-qualified player
+After any player TR change, and on each day advance, a not-qualified player
 whose TR is at least 80 starts counting down: 7 days remaining, with the
 current day as the last counted day.
 
@@ -476,7 +484,11 @@ parties.
 Challenge options keep their overrides. Party randomizers keep their
 precedence but cannot reroll participants: the trainer species randomizer may
 bypass authored parties as it does today but still uses the saved people and
-order. XP uses actual species and levels. Prize money uses the trainer's
+order. Its legacy party for a selected trainer is that trainer's own authored
+source party, the party of their inventoried source roster owner (Brock's Gym
+party for Brock in match 1 at Indigo, Lorelei's League party for Lorelei), as
+today's constructor randomizes the party of the trainer it builds; another
+room occupant's old fixed party never stands in. XP uses actual species and levels. Prize money uses the trainer's
 inventoried source reward basis and class, not the old room occupant, and team
 size must not shift it.
 
@@ -517,14 +529,18 @@ never generates a lineup or places a call.
 - An active run exists only with an accepted event and names a match within
   its lineup.
 
-If any content version saved with the event lineup or the most recent
-resolved lineup differs from the build's, turn an accepted event back into an
-unanswered invitation from the same league (dropping its lineup
-and any run), so the call rings again; clear the most recent resolved lineup,
-so the next selection has no fatigue; clear a reigning champion who is no
-longer an eligible character; and drop the reign flags and Gallery counts of
-characters no longer in the registry, keeping the rest. This is the
-prerelease policy, not an invalid save.
+On every load, before the checks above, drop the reign flags and Gallery
+counts of characters no longer in the registry, keeping the rest, and clear a
+reigning champion who is no longer in the registry; this runs whatever the
+versions say, so a save that crossed several content builds still loads. If
+any saved league content version differs from the build's, also, still before
+those checks, turn an accepted event back into an unanswered invitation from
+the same league (dropping its lineup and any run), so the call rings again;
+clear the most
+recent resolved lineup, so the next selection has no fatigue; clear a
+reigning champion who is no longer an eligible character; then rewrite the
+saved content versions as the build's. This is the prerelease policy, not an
+invalid save.
 
 A valid active run with damaged run progress recovers to its own lobby with
 progress reset and the event lineup kept, so the attempt restarts at match 1.
@@ -606,7 +622,8 @@ Existing code to review, not new APIs:
 
 - [Save ownership and initialization](../../game/src/wayfarer_persistence.c)
   and [run/save structures](../../game/include/global.h).
-- [The day counter's daily update](../../game/src/clock.c) and
+- The planned in-game clock's day count (no design yet; Today's RTC day
+  counter and daily update live in [clock.c](../../game/src/clock.c)) and
   [phone calls](../../game/src/match_call.c).
 - [Circuit admission and lifecycle](../../game/src/league_circuit.c),
   [script wrappers](../../game/src/league_circuit_scripts.c),
@@ -742,8 +759,12 @@ evidence (not yet run):
     rejected, and so are a trainer reigning at the Masters with a Gallery count
     of 0 and the player reigning at a league without its lifetime win. A content
     version change turns an accepted event back into an unanswered invitation,
-    clears the most recent resolved lineup, and drops the reign flags and
-    Gallery counts of removed characters.
+    clears the most recent resolved lineup, drops the reign flags and Gallery
+    counts of removed characters, and rewrites the saved content versions. A
+    double update loads too: a save that went through one content change and
+    was saved again before the next event resolved, then loaded under a build
+    that removes a character who reigns at Hoenn or has a Gallery count, is
+    pruned, not rejected.
 13. **Standalone.** FRLG, HNS, and Emerald League behavior, travel, recovery,
     and phone calls are unchanged.
 

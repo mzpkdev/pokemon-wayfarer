@@ -152,8 +152,8 @@ changes yours.
 - **Move pool:** a notable trainer's ordered list of the moves they like; the
   aces pick first.
 - **Dormant entry:** a move-pool entry that no current team member takes:
-  none can use it yet, or every one that can already knows it or holds four
-  pool moves. It wakes once a member can take it.
+  none can use it yet, every one that can already holds four pool moves, or
+  it is an entry whose move the member already took from an earlier entry. It wakes once a member can take it.
 - **Battle snapshot:** the team fixed when a battle starts and kept for the
   whole fight.
 - **League:** Indigo, Sevii Masters, or Hoenn.

@@ -135,9 +135,9 @@ ROSTER = [
 # peak <= 190 so they stay at TR 95 or less at world progress 80. The Elite
 # Four and Champions start above the Gym band (ELITE_START_MIN), except Blue,
 # the Rival, who leaves Pallet with the player at TR 0; the members who once
-# sat inside the band start at TR 41-50 by lore, with each region's lowest
-# Elite Four start first (Will and Sidney 41, Lorelei 42, Phoebe 43, Koga and Glacia 44, Karen
-# 47, the last before the Champion).
+# sat inside the band start at TR 41-50 by lore (lowest Elite Four start per
+# region: Will and Sidney 41, Lorelei 42; then Phoebe 43, Koga and Glacia 44,
+# Karen 47).
 ARCHETYPES = ("steady", "prodigy", "sleeper", "veteran", "rival",
               "legend", "star", "comeback", "burst")
 GYM_START_BAND = (18, 40)

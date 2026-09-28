@@ -112,14 +112,30 @@ const regionBadges = (value: unknown): value is number =>
 /** Whether an object has exactly these keys, in any order. */
 const sameKeys = (value: object, keys: readonly string[]): boolean =>
   Object.keys(value).sort().join() === [...keys].sort().join()
-/** Reads a saved badge split: null (the default from the badge total) or Kanto, Johto and Hoenn. */
-const badgeSplit = (value: unknown): BadgeSplit | null | undefined => {
+/** A badge split set by hand, with the badge total it was set for. */
+type SplitOverride = { total: number; split: BadgeSplit }
+/** The badge slider position for a player TR: the highest badge count at or below it. */
+const badgeFloorOf = (playerTR: number): number => {
+  const match = badgeMatch(playerTR)
+  return match.kind === "exact" ? match.badges : match.kind === "between" ? match.lower : MAX_BADGES
+}
+/**
+ * Reads a saved badge split: null (the default from the badge total), or its badge total with
+ * Kanto, Johto and Hoenn. A split saved without a total (earlier version 20 files) belongs to the
+ * saved player TR's badge total, since it was dropped whenever that total changed.
+ */
+const splitOverride = (value: unknown, playerTR: number): SplitOverride | null | undefined => {
   if (value === null) return null
   if (!value || typeof value !== "object") return undefined
-  const split = value as Record<string, unknown>
-  return sameKeys(split, HOME_REGIONS) &&
-    HOME_REGIONS.every((region) => regionBadges(split[region]))
-    ? (split as BadgeSplit)
+  const { total, ...split } = value as Record<string, unknown>
+  if (
+    !sameKeys(split, HOME_REGIONS) ||
+    !HOME_REGIONS.every((region) => regionBadges(split[region]))
+  )
+    return undefined
+  if (!("total" in value)) return { total: badgeFloorOf(playerTR), split: split as BadgeSplit }
+  return Number.isInteger(total) && (total as number) >= 0 && (total as number) <= MAX_BADGES
+    ? { total: total as number, split: split as BadgeSplit }
     : undefined
 }
 /** The chart runs across player TR 0 to at least this. */
@@ -202,8 +218,11 @@ export class BalanceLab {
   invitationChoices = $state<InvitationChoice[]>(
     Array.from({ length: INVITATIONS.default }, () => DEFAULT_CHOICE),
   )
-  /** The badges by region the leagues count; null follows the badge total (Kanto, Johto, Hoenn). */
-  badgeSplitOverride = $state<BadgeSplit | null>(null)
+  /**
+   * The badges by region set by hand, with the badge total they were set for; null follows the
+   * badge total (Kanto, Johto, Hoenn).
+   */
+  badgeSplitOverride = $state<SplitOverride | null>(null)
   /** The invitation (0-based) whose event the lineup and score table show. */
   invitationIndex = $state(0)
   editor = $state("")
@@ -216,13 +235,7 @@ export class BalanceLab {
   /** The badge count the player TR matches exactly, or null between badge counts and past 24. */
   badges = $derived(this.badgeMatch.kind === "exact" ? this.badgeMatch.badges : null)
   /** The badge slider position: the highest badge count at or below the player TR. */
-  badgeFloor = $derived(
-    this.badgeMatch.kind === "exact"
-      ? this.badgeMatch.badges
-      : this.badgeMatch.kind === "between"
-        ? this.badgeMatch.lower
-        : MAX_BADGES,
-  )
+  badgeFloor = $derived(badgeFloorOf(this.playerTR))
   /** World progress is the player TR as notable trainers see it. */
   worldProgress = $derived(this.world.tr)
   cap = $derived(this.world.cap)
@@ -255,8 +268,17 @@ export class BalanceLab {
   })
   settings = $derived(this.#_settings(this.selected.trainer.id))
   gaps = $derived(rosterGaps(catalog, this.#_experiment))
-  /** The badges by region: the saved split, or the badge total filling Kanto, Johto, then Hoenn. */
-  badgeSplit = $derived(this.badgeSplitOverride ?? defaultBadgeSplit(this.badgeFloor))
+  /**
+   * Whether the split set by hand applies: only while the player TR gives the badge total it was
+   * set for, so typing through other totals on the way to a TR never loses it.
+   */
+  badgeSplitSet = $derived(this.badgeSplitOverride?.total === this.badgeFloor)
+  /** The badges by region: the split set by hand, or the badge total filling Kanto, Johto, then Hoenn. */
+  badgeSplit = $derived(
+    this.badgeSplitSet && this.badgeSplitOverride
+      ? this.badgeSplitOverride.split
+      : defaultBadgeSplit(this.badgeFloor),
+  )
   /**
    * The league invitations at the current world progress (days never change strength): who calls
    * and why, each event's frozen lineup, the fatigue source, the result and the reigning champion.
@@ -434,27 +456,35 @@ export class BalanceLab {
     this.#_persist()
   }
 
-  /**
-   * Moves the player TR; a badge split set by hand follows the badge total again once the badge
-   * total changes, so a split set for one badge total never carries over to another.
-   */
-  #_movePlayerTR = (playerTR: number): void => {
-    const floor = this.badgeFloor
-    this.playerTR = playerTR
-    if (this.badgeFloor !== floor) this.badgeSplitOverride = null
+  /** Drops a badge split set by hand once the player TR settles on another badge total. */
+  #_dropStaleSplit = (): void => {
+    if (this.badgeSplitOverride && !this.badgeSplitSet) this.badgeSplitOverride = null
+  }
+
+  /** A badge preset: sets the player TR from the badge formula; a new badge total drops the split. */
+  setBadges = (badges: number): void => {
+    this.playerTR = badgeTR(
+      Number.isFinite(badges) ? Math.min(MAX_BADGES, Math.max(0, Math.round(badges))) : 0,
+    )
+    this.#_dropStaleSplit()
     this.#_persist()
   }
 
-  /** A badge preset: sets the player TR from the badge formula. */
-  setBadges = (badges: number): void =>
-    this.#_movePlayerTR(
-      badgeTR(Number.isFinite(badges) ? Math.min(MAX_BADGES, Math.max(0, Math.round(badges))) : 0),
-    )
-
-  /** Sets the player TR directly: any whole number of 0 or more (TR has no upper limit). */
+  /**
+   * Sets the player TR directly while it is typed or dragged: any whole number of 0 or more (TR
+   * has no upper limit). The split set by hand is kept, and applies again at its badge total.
+   */
   setPlayerTR = (value: number): void => {
     if (!Number.isFinite(value)) return
-    this.#_movePlayerTR(Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, Math.round(value))))
+    this.playerTR = Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, Math.round(value)))
+    this.#_persist()
+  }
+
+  /** Commits a typed or dragged player TR: a new badge total drops the split set by hand. */
+  commitPlayerTR = (): void => {
+    if (!this.badgeSplitOverride || this.badgeSplitSet) return
+    this.#_dropStaleSplit()
+    this.#_persist()
   }
 
   /** Sets how many invitations the simulator answers (1 to INVITATIONS.max). */
@@ -482,7 +512,10 @@ export class BalanceLab {
   setRegionBadges = (region: HomeRegion, value: number): void => {
     const badges = Math.round(value)
     if (!regionBadges(badges)) return
-    this.badgeSplitOverride = { ...this.badgeSplit, [region]: badges }
+    this.badgeSplitOverride = {
+      total: this.badgeFloor,
+      split: { ...this.badgeSplit, [region]: badges },
+    }
     this.#_persist()
   }
 
@@ -742,7 +775,13 @@ export class BalanceLab {
         tool: "wayfarer-trainer-balance",
         version: EXPERIMENT_VERSION,
         point: { playerTR: this.playerTR },
-        league: { choices: this.invitationChoices, split: this.badgeSplitOverride },
+        league: {
+          choices: this.invitationChoices,
+          split: this.badgeSplitOverride && {
+            total: this.badgeSplitOverride.total,
+            ...this.badgeSplitOverride.split,
+          },
+        },
         selectedTrainer: this.selectedId,
         experiment: JSON.parse(serializeExperiment(this.#_experiment)),
       },
@@ -786,7 +825,8 @@ export class BalanceLab {
         league && typeof league === "object" && sameKeys(league, ["choices", "split"])
           ? league.choices
           : null
-      const split = league && typeof league === "object" ? badgeSplit(league.split) : undefined
+      const split =
+        league && typeof league === "object" ? splitOverride(league.split, playerTR) : undefined
       if (
         !Array.isArray(choices) ||
         invitationCount(choices.length) === null ||
@@ -794,7 +834,7 @@ export class BalanceLab {
         split === undefined
       )
         throw new Error(
-          `The league settings must be the answers to 1–${INVITATIONS.max} invitations (win, lose or decline) and a badge split (null, or Kanto, Johto and Hoenn badges from 0 to ${REGION_BADGES}).`,
+          `The league settings must be the answers to 1–${INVITATIONS.max} invitations (win, lose or decline) and a badge split (null, or its badge total from 0 to ${MAX_BADGES} with Kanto, Johto and Hoenn badges from 0 to ${REGION_BADGES}).`,
         )
       this.#_keepSaved = false
       this.#_experiment = experiment

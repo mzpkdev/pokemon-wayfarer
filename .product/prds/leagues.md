@@ -63,7 +63,9 @@ goes backwards, the countdown neither moves on nor starts over.
 **Depends on the in-game clock.** Today the game's day counter follows the
 cartridge's real-time clock (RTC). The game is moving to an in-game clock with
 no RTC, and Leagues depends on it: league days are in-game days, and Leagues
-can't be adopted before that clock is.
+can't be adopted before that clock is. Leagues needs only a day count from it
+that moves forward as you play; how long a day lasts is up to the in-game
+clock's design, which hasn't been written yet.
 
 **Who calls.** Only a league that knows the player calls: Indigo once they
 hold a Kanto or Johto badge, Hoenn once they hold a Hoenn badge, and the Sevii

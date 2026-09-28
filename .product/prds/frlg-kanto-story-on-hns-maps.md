@@ -22,8 +22,8 @@ adventures, Blue's origin-specific rivalry and forward story progression, and
 Giovanni's badge role remain owned here; the current port and approved fixed
 circuit retain their existing behavior meanwhile.
 
-Giovanni's and Blue's battles follow the proposed
-[notable trainers](notable-trainers.md) model; Blue gains no badge.
+Giovanni's and Blue's battles follow the v0
+[notable trainers](notable-trainers.md) design; Blue gains no badge.
 
 ## Intent
 

@@ -471,8 +471,8 @@ moves by the time it could learn it.
 
 At battle setup, after resolving encounter identity, compute the trainer's TR at
 the current world progress and capture the `characterId`, that TR, the world
-progress, scaler, archetype, roster, and evolution-level table content
-versions, and the resolved team
+progress, scaler, archetype, roster, evolution-level table, move pool, and
+learnset content versions, and the resolved team
 before constructing the opponent: per member, the roster slot index and every
 resolved battle value the snapshot uses (species/form, level, moves, item,
 ability, nature, IVs/EVs, and battle order). Reconstruction within the battle
@@ -483,7 +483,8 @@ identical team (battle RNG may still differ); a retry after the player gained TR
 uses the higher world progress. Accepting a league invitation computes every
 eligible trainer's TR and league score at that moment and captures the
 selected trainers' battle snapshots in the event lineup, frozen for that
-event. Declining also computes the event lineup (and the league scores) at
+event; there the league state's
+[content versions](leagues.md#saved-state) stand in for each snapshot's own. Declining also computes the event lineup (and the league scores) at
 that moment, but captures no teams.
 [Leagues](leagues.md#event-lineup) owns that lifecycle. Invalid content or a
 failed resolution fails preparation; never substitute player TR for a trainer's

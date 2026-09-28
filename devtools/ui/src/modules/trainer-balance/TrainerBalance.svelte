@@ -256,7 +256,10 @@
             lab.setPlayerTR(event.currentTarget.valueAsNumber)
             reflect(event.currentTarget, lab.playerTR)
           }}
-          onchange={(event) => reflect(event.currentTarget, lab.playerTR, true)}
+          onchange={(event) => {
+            lab.commitPlayerTR()
+            reflect(event.currentTarget, lab.playerTR, true)
+          }}
         /><input
           type="range"
           aria-label="Player TR slider"
@@ -265,6 +268,7 @@
           step="1"
           value={Math.min(lab.playerTR, PLAYER_TR_SLIDER_MAX)}
           oninput={(event) => lab.setPlayerTR(event.currentTarget.valueAsNumber)}
+          onchange={lab.commitPlayerTR}
         /><span class="badge-match" data-testid="badge-match"
           >{lab.badgeMatch.kind === "exact" ? "matches " : ""}{badgeMatchText(lab.badgeMatch)}</span
         >
@@ -1098,7 +1102,7 @@
             /></label
           >
         {/each}
-        {#if lab.badgeSplitOverride}
+        {#if lab.badgeSplitSet}
           <button type="button" class="day-button" onclick={lab.resetBadgeSplit}
             >Follow badge total</button
           >
@@ -1106,7 +1110,7 @@
       </div>
     </div>
     <p class="hint league-note" data-testid="badge-split-note">
-      {lab.badgeSplitOverride
+      {lab.badgeSplitSet
         ? `Badge split set by hand: ${HOME_REGIONS.map((region) => `${region} ${lab.badgeSplit[region]}`).join(", ")}${
             HOME_REGIONS.reduce((sum, region) => sum + lab.badgeSplit[region], 0) === lab.badgeFloor
               ? ""

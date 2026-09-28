@@ -151,8 +151,8 @@ flags = Basic
 The last three lines are the engine's own additions in its flag setup (the
 automatic double-battle flag and the two auto-includes); the resolver
 reproduces them because it writes after that setup. Resolution is a pure
-function of play style, trainer TR, aces, the boss flag, and the battle type:
-no save seed, RNG, player party, or call history.
+function of play style, trainer TR, aces, the boss flag, the battle type, and
+trainer-species randomization: no save seed, RNG, player party, or call history.
 
 Examples (placeholder growth; badges → world progress 0 / 40 / 80 / 120 / 160):
 
@@ -220,7 +220,8 @@ encounter's authored AI line along with its party
 - AI skill boundaries: TR 29/30, 69/70, and 109/110 change tier; nothing
   changes past 110.
 - Ace protection: one ace gives Ace Pokemon, two or more Double Ace Pokemon,
-  never both; zero aces is invalid content (slot 1 is always an ace).
+  never both; zero aces is invalid content (slot 1 is always an ace); neither
+  flag under trainer-species randomization.
 - A resolved-flags report per trainer at world progress 0, 40, 80, 120, and
   160: TR, AI skill tier, aces in the team, and the flag list, matching the
   examples above.

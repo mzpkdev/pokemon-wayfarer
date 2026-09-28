@@ -5,8 +5,8 @@ Implemented: Yes
 
 Implemented in [PR #112](https://github.com/mzpkdev/pokemon-wayfarer/pull/112).
 
-Giovanni's and Blue's battles follow the proposed
-[notable trainers](notable-trainers.md) model; Blue gains no badge.
+Giovanni's and Blue's battles follow the v0
+[notable trainers](notable-trainers.md) design; Blue gains no badge.
 
 ## Scope
 
