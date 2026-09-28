@@ -241,7 +241,8 @@ test("the pool draft gives every trainer 8-12 ordered entries with tiered from l
       if ("fromLevel" in entry)
         assert.ok([20, 30, 38, 40, 45, 55].includes(entry.fromLevel), `${name} ${entry.move}`)
   }
-  assert.deepEqual(pools.Brock.slice(0, 3), [
+  assert.deepEqual(pools.Brock.slice(0, 4), [
+    { move: "Bind" },
     { move: "Stealth Rock" },
     { move: "Sandstorm", fromLevel: 20 },
     { move: "Curse" },

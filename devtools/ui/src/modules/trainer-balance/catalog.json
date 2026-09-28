@@ -4519,6 +4519,9 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Crobat [anime Zubat]. Aces (Steelix, Aerodactyl) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Golem (game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[0]), Kabutops (game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[2]), Omastar (game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[3]), Aerodactyl (game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[1]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
+          "move": "Bind"
+        },
+        {
           "move": "Stealth Rock"
         },
         {

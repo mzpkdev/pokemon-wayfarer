@@ -148,10 +148,10 @@ trainer's team. The player TR is never computed from a notable trainer's TR.
   (Meowth) at Lv 30"); or every eligible member already has it or four pool
   moves ("taken"). It wakes when a member that can use it joins, evolves or
   reaches the level. Resolution is a pure function of the team and the pool,
-  with no randomness. At 0 badges Brock's Onix claims Stealth Rock (already in
-  its level-up moves) and takes Curse from his pool (next to Rock Tomb and
-  Rage), and his Geodude keeps Rollout, Magnitude, Strength and Rock Throw;
-  Sandstorm waits for its from level (Lv 20), Earthquake for its learn level
+  with no randomness. At 0 badges Brock's Onix takes Bind (a Lv 1 level-up
+  move) and Curse from his pool and claims Stealth Rock (already in its
+  level-up moves), next to Rage, and his Geodude keeps Rollout, Magnitude,
+  Strength and Rock Throw; Sandstorm waits for its from level (Lv 20), Earthquake for its learn level
   (Lv 34), Heavy Slam is only an Onix egg move until Golem joins, and Cross
   Poison stays dormant until Crobat joins (no one can learn it yet). From Lv
   34 his Graveler takes Earthquake through its earlier form Geodude.
@@ -331,7 +331,7 @@ Brawly's Spore (Shroomish Lv 40), Lance's Extreme Speed and Wallace's Mirror
 Coat (egg moves, from Lv 30) legal. A draft move no roster line can learn by
 any of these is replaced by the closest legal move that keeps the gimmick (a
 comment in the table names it); Brock's pool is
-Stealth Rock, Sandstorm (from Lv 20), Curse (for Iron Defense), Stone Edge,
+Bind, Stealth Rock, Sandstorm (from Lv 20), Curse (for Iron Defense), Stone Edge,
 Earthquake, Rock Slide, Heavy Slam, Rock Blast, Cross Poison and Explosion.
 An old move name (Faint Attack) is stored as the move itself (Feint Attack).
 The script warns about pool entries

@@ -839,14 +839,15 @@ describe("move pools", () => {
       ])
     // An entry without a from level goes only to a member whose current species or an earlier
     // form learns it by level-up, once it reaches the learn level. At world progress 0 Onix (the
-    // ace) takes Curse and claims Stealth Rock, which it already knows; Geodude is below its
-    // Earthquake learn level.
+    // ace) takes Bind (a Lv 1 level-up move) and Curse and claims Stealth Rock, which it already
+    // knows; Geodude is below its Earthquake learn level.
     expect(moves(0)).toEqual([
-      ["Onix", ["Curse*", "Rock Tomb", "Rage", "Stealth Rock*"]],
+      ["Onix", ["Bind*", "Curse*", "Rage", "Stealth Rock*"]],
       ["Geodude", ["Rollout", "Magnitude", "Strength", "Rock Throw"]],
     ])
     const early = resolveTrainer(brock, defaults, 0, evolution, learnsets)
-    expect(early.pool[0]).toMatchObject({ move: "Stealth Rock", slot: 1, species: "Onix" })
+    expect(early.pool[0]).toMatchObject({ move: "Bind", slot: 1, species: "Onix" })
+    expect(early.pool[1]).toMatchObject({ move: "Stealth Rock", slot: 1, species: "Onix" })
     const reasons = new Map(early.dormant.map((entry) => [entry.move, dormantReasonText(entry)]))
     // Sandstorm has a from level: Onix learns it by level-up only at Lv 52, Golem only by TM.
     expect(reasons.get("Sandstorm")).toBe("below from level Lv 20")
@@ -1718,6 +1719,7 @@ describe("catalog", () => {
     )
     // Curse stands in for Iron Defense, which no roster line learns.
     expect(brock.movePool).toEqual([
+      { move: "Bind" },
       { move: "Stealth Rock" },
       { move: "Sandstorm", fromLevel: 20 },
       { move: "Curse" },

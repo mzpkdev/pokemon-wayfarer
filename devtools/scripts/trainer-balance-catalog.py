@@ -307,9 +307,10 @@ DRAFT_NOTE = "user-directed roster draft v1 (identity/anime picks); battle conte
 # TM/tutor or egg move) is replaced by the closest legal move that keeps the
 # gimmick.
 POOL_DRAFT = {
-    # Curse for Iron Defense (no roster line learns it).
+    # Curse for Iron Defense (no roster line learns it). Bind: Red/Blue Onix nod,
+    # traps under Sandstorm/Stealth Rock.
     "Brock": ("hazards and sand walls (Sturdy walls, Stealth Rock, chip)", [
-        "Stealth Rock", ("Sandstorm", 20), "Curse", "Stone Edge", "Earthquake", "Rock Slide", "Heavy Slam",
+        "Bind", "Stealth Rock", ("Sandstorm", 20), "Curse", "Stone Edge", "Earthquake", "Rock Slide", "Heavy Slam",
         "Rock Blast", "Cross Poison", "Explosion"]),
     "Misty": ("rain-boosted glass cannons", [
         ("Rain Dance", 20), "Surf", "Hydro Pump", ("Thunder", 45), "Psychic", "Recover", "Rapid Spin",

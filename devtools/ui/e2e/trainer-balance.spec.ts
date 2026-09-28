@@ -603,12 +603,12 @@ test("resolves each member's moves from the move pool, lists dormant entries and
   await page.goto("/#trainer-balance")
   const moves = (slot: number) => page.getByTestId(`moves-${slot}`).locator("li")
   // Brock at world progress 0. An entry without a from level goes only to a member whose current
-  // species or an earlier form learns it by level-up, from the learn level: the Onix ace claims
-  // Stealth Rock, which it already knows, and takes Curse; Geodude is below its Earthquake learn
-  // level, so it keeps its level-up moves.
+  // species or an earlier form learns it by level-up, from the learn level: the Onix ace takes Bind
+  // (a Lv 1 level-up move) and Curse and claims Stealth Rock, which it already knows; Geodude is
+  // below its Earthquake learn level, so it keeps its level-up moves.
   await expect(moves(1)).toHaveText([
+    /^Bind\s*pool$/,
     /^Curse\s*pool$/,
-    /^Rock Tomb\s*level-up$/,
     /^Rage\s*level-up$/,
     /^Stealth Rock\s*pool$/,
   ])
@@ -622,22 +622,23 @@ test("resolves each member's moves from the move pool, lists dormant entries and
     "user-directed pool draft v1: hazards and sand walls",
   )
   await expect(page.getByTestId("pool-status-1")).toHaveText("→ #1 Onix")
-  await expect(page.getByTestId("pool-status-3")).toHaveText("→ #1 Onix")
-  await expect(page.getByTestId("pool-status-2")).toHaveText("dormant")
-  await expect(page.getByTestId("dormant-2")).toHaveText(
+  await expect(page.getByTestId("pool-status-2")).toHaveText("→ #1 Onix")
+  await expect(page.getByTestId("pool-status-4")).toHaveText("→ #1 Onix")
+  await expect(page.getByTestId("pool-status-3")).toHaveText("dormant")
+  await expect(page.getByTestId("dormant-3")).toHaveText(
     /Sandstorm\s*from Lv 20\s*below from level Lv 20/,
   )
-  await expect(page.getByTestId("dormant-5")).toHaveText(/Earthquake\s*below its learn level Lv 34/)
+  await expect(page.getByTestId("dormant-6")).toHaveText(/Earthquake\s*below its learn level Lv 34/)
   // Golem learns Heavy Slam by level-up, but Geodude is not Golem yet; for Onix it is an egg move.
-  await expect(page.getByTestId("dormant-7")).toHaveText(
+  await expect(page.getByTestId("dormant-8")).toHaveText(
     /Heavy Slam\s*egg move: needs a from level/,
   )
   // The pool editor names the earliest level-up learner (an earlier form counts), or says the
   // entry needs a from level.
-  await expect(page.getByTestId("pool-learning-5")).toHaveText(
+  await expect(page.getByTestId("pool-learning-6")).toHaveText(
     "Level-up: Golem, earlier form (Geodude) at Lv 34",
   )
-  await expect(page.getByTestId("pool-learning-2")).toHaveText(
+  await expect(page.getByTestId("pool-learning-3")).toHaveText(
     "Any learner from Lv 20 (level-up: Steelix at Lv 52)",
   )
   await expect(page.getByTestId("milestone-6")).toContainText("Sandstorm wakes (Onix)")
@@ -645,15 +646,15 @@ test("resolves each member's moves from the move pool, lists dormant entries and
   await expect(page.getByTestId("milestone-61")).toContainText("Earthquake wakes (Graveler)")
 
   // A from level lets a TM learner take an entry, and holds an entry back until it.
-  await page.getByLabel("Pool entry 5 from level", { exact: true }).fill("16")
-  await page.getByLabel("Pool entry 3 from level", { exact: true }).fill("20")
+  await page.getByLabel("Pool entry 6 from level", { exact: true }).fill("16")
+  await page.getByLabel("Pool entry 4 from level", { exact: true }).fill("20")
   await page.getByRole("button", { name: "Apply move pool", exact: true }).click()
   await expect(page.getByRole("status")).toContainText("Updated Brock’s move pool.")
-  await expect(page.getByTestId("pool-status-5")).toHaveText("→ #1 Onix")
-  await expect(page.getByTestId("pool-learning-5")).toHaveText(
+  await expect(page.getByTestId("pool-status-6")).toHaveText("→ #1 Onix")
+  await expect(page.getByTestId("pool-learning-6")).toHaveText(
     "Any learner from Lv 16 (level-up: Golem, earlier form (Geodude) at Lv 34)",
   )
-  await expect(page.getByTestId("dormant-3")).toHaveText(
+  await expect(page.getByTestId("dormant-4")).toHaveText(
     /Curse\s*from Lv 20\s*below from level Lv 20/,
   )
 
@@ -665,36 +666,36 @@ test("resolves each member's moves from the move pool, lists dormant entries and
   )
   await page.getByLabel("New pool move", { exact: true }).fill("toxic")
   await page.getByRole("button", { name: "Add to pool", exact: true }).click()
-  await expect(page.getByRole("status")).toContainText("Added Toxic as pool entry 11.")
-  await expect(page.getByTestId("pool-learning-11")).toHaveText(
+  await expect(page.getByRole("status")).toContainText("Added Toxic as pool entry 12.")
+  await expect(page.getByTestId("pool-learning-12")).toHaveText(
     "TM/tutor only — needs a from level",
   )
   await page.getByLabel("New pool move", { exact: true }).fill("iron defense")
   await page.getByLabel("New pool from level", { exact: true }).fill("40")
   await page.getByRole("button", { name: "Add to pool", exact: true }).click()
-  await expect(page.getByRole("status")).toContainText("Added Iron Defense as pool entry 12.")
-  await expect(page.getByLabel("Pool entry 12 move", { exact: true })).toHaveValue("Iron Defense")
-  await expect(page.getByLabel("Pool entry 12 from level", { exact: true })).toHaveValue("40")
-  await expect(page.getByTestId("pool-learning-12")).toHaveText("No roster line learns it")
+  await expect(page.getByRole("status")).toContainText("Added Iron Defense as pool entry 13.")
+  await expect(page.getByLabel("Pool entry 13 move", { exact: true })).toHaveValue("Iron Defense")
+  await expect(page.getByLabel("Pool entry 13 from level", { exact: true })).toHaveValue("40")
+  await expect(page.getByTestId("pool-learning-13")).toHaveText("No roster line learns it")
   await expect(page.getByLabel("New pool move", { exact: true })).toHaveValue("")
   // Spikes is only an egg move on Brock's lines, so it needs a from level too.
   await page.getByLabel("New pool move", { exact: true }).fill("spikes")
   await page.getByRole("button", { name: "Add to pool", exact: true }).click()
-  await expect(page.getByTestId("pool-learning-13")).toHaveText("Egg move: needs a from level")
-  await page.getByLabel("Pool entry 13 from level", { exact: true }).fill("20")
+  await expect(page.getByTestId("pool-learning-14")).toHaveText("Egg move: needs a from level")
+  await page.getByLabel("Pool entry 14 from level", { exact: true }).fill("20")
   await page.getByRole("button", { name: "Apply move pool", exact: true }).click()
-  await expect(page.getByTestId("pool-learning-13")).toHaveText("Egg move: from Lv 20")
+  await expect(page.getByTestId("pool-learning-14")).toHaveText("Egg move: from Lv 20")
 
   // Pool order is identity: reorder and remove entries.
-  await page.getByRole("button", { name: "Move pool entry 2 up", exact: true }).click()
-  await expect(page.getByLabel("Pool entry 1 move", { exact: true })).toHaveValue("Sandstorm")
-  await page.getByRole("button", { name: "Remove pool entry 1", exact: true }).click()
-  await expect(page.getByLabel("Pool entry 1 move", { exact: true })).toHaveValue("Stealth Rock")
-  await expect(page.getByLabel("Pool entry 11 move", { exact: true })).toHaveValue("Iron Defense")
+  await page.getByRole("button", { name: "Move pool entry 3 up", exact: true }).click()
+  await expect(page.getByLabel("Pool entry 2 move", { exact: true })).toHaveValue("Sandstorm")
+  await page.getByRole("button", { name: "Remove pool entry 2", exact: true }).click()
+  await expect(page.getByLabel("Pool entry 2 move", { exact: true })).toHaveValue("Stealth Rock")
+  await expect(page.getByLabel("Pool entry 12 move", { exact: true })).toHaveValue("Iron Defense")
   await page.reload()
-  await expect(page.getByLabel("Pool entry 11 move", { exact: true })).toHaveValue("Iron Defense")
-  await expect(page.getByLabel("Pool entry 4 from level", { exact: true })).toHaveValue("16")
-  await expect(page.getByLabel("Pool entry 2 from level", { exact: true })).toHaveValue("20")
+  await expect(page.getByLabel("Pool entry 12 move", { exact: true })).toHaveValue("Iron Defense")
+  await expect(page.getByLabel("Pool entry 5 from level", { exact: true })).toHaveValue("16")
+  await expect(page.getByLabel("Pool entry 3 from level", { exact: true })).toHaveValue("20")
   expect(errors).toEqual([])
 })
 
