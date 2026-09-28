@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import {
+    ALOOF_MARGIN,
     ARCHETYPES,
     FATIGUE,
     HOME_REGIONS,
@@ -448,6 +449,15 @@
               value={lab.settings.travel}
               onchange={(event) => lab.setHomeTravel("travel", event.currentTarget.value)}
               >{#each TRAVEL_STYLES as style}<option>{style}</option>{/each}</select
+            ></label
+          ><label class="aloof-toggle"
+            ><input
+              type="checkbox"
+              aria-label="Aloof"
+              checked={lab.settings.aloof}
+              onchange={(event) => lab.setAloof(event.currentTarget.checked)}
+            />Aloof<span class="hint"
+              >joins a league only when their team level is at most the field level + {ALOOF_MARGIN}</span
             ></label
           >
         </div>
@@ -927,16 +937,33 @@
       Travel cost is 0 at home (a trainer whose home region is a location region, or anyone at the
       neutral Sevii Masters); away it is {AWAY_COST.homebody} for a homebody and {AWAY_COST.traveller}
       for a traveller. Fatigue is {FATIGUE} for a trainer in the lineup of the league entered just before.
-      The league score is floor(TR × willingness / 100); the top {LINEUP_SIZE} (ties in catalog order,
-      standing in for characterId) make the lineup, which fights by ascending TR, strongest last. There
-      is no randomness; the ROM locks the lineup until won.
+      The league score is floor(TR × willingness / 100). The top {LINEUP_SIZE} trainers who are not aloof
+      set the field level (their strongest team level); an aloof trainer joins only when their team level
+      is at most the field level + {ALOOF_MARGIN}, and aloof trainers are never compared with each
+      other. The top {LINEUP_SIZE} of everyone who joins (ties in catalog order, standing in for characterId)
+      make the lineup, which fights by ascending TR, strongest last. There is no randomness; the ROM locks
+      the lineup until won.
     </p>
     {#each lab.leagues as entry (entry.league)}
       <div class="league-entry" data-testid={`league-${slug(entry.league)}`}>
         <h3>
           {entry.league}
-          <span class="muted">world progress {entry.world} · {locationRegions(entry.league)}</span>
+          <span class="muted"
+            >world progress {entry.world} · {locationRegions(entry.league)} · field Lv {entry.fieldLevel ??
+              "—"}</span
+          >
         </h3>
+        <ul class="aloof-list" data-testid={`aloof-${slug(entry.league)}`}>
+          {#each entry.entrants.filter((entrant) => entrant.aloof) as entrant (entrant.trainer.id)}
+            <li
+              class:skips={!entrant.joins}
+              data-testid={`aloof-${slug(entry.league)}-${entrant.trainer.id}`}
+            >
+              {entrant.trainer.name} aloof: team Lv {entrant.teamLevel} vs field Lv {entry.fieldLevel ??
+                "—"} + {ALOOF_MARGIN} → {entrant.joins ? "joins" : "skips"}
+            </li>
+          {/each}
+        </ul>
         <ol class="league-grid" data-testid={`lineup-${slug(entry.league)}`}>
           {#each entry.matches as row, index (row.trainer.id)}
             <li class="match-card" data-testid={`match-${slug(entry.league)}-${index + 1}`}>
@@ -960,25 +987,29 @@
           <table class="entrant-table" data-testid={`entrants-${slug(entry.league)}`}>
             <thead
               ><tr
-                ><th>Rank</th><th>Trainer</th><th>TR</th><th>Home region</th><th>Travel style</th
+                ><th>Rank</th><th>Trainer</th><th>TR</th><th>Team level</th><th>Home region</th><th
+                  >Travel style</th
                 ><th>Location</th><th>Travel cost</th><th>Fatigue</th><th>Willingness</th><th
                   >League score</th
-                ><th>Lineup</th></tr
+                ><th>Aloof</th><th>Lineup</th></tr
               ></thead
             >
             <tbody>
               {#each entry.entrants as entrant (entrant.trainer.id)}
                 <tr
                   class:in-lineup={entrant.inLineup}
+                  class:skips={!entrant.joins}
                   data-testid={`entrant-${slug(entry.league)}-${entrant.trainer.id}`}
-                  ><td class="numeric">{entrant.rank}</td><td>{entrant.trainer.name}</td><td
+                  ><td class="numeric">{entrant.rank ?? "—"}</td><td>{entrant.trainer.name}</td><td
                     class="numeric">{entrant.tr}</td
-                  ><td>{entrant.homeRegion}</td><td>{entrant.travel}</td><td
-                    >{entrant.willingness.home ? "at home" : "away"}</td
-                  ><td class="numeric">{entrant.willingness.travelCost}</td><td class="numeric"
-                    >{entrant.willingness.fatigue}</td
-                  ><td class="numeric">{entrant.willingness.score}</td><td class="numeric score"
-                    >{entrant.score}</td
+                  ><td class="numeric">{entrant.teamLevel}</td><td>{entrant.homeRegion}</td><td
+                    >{entrant.travel}</td
+                  ><td>{entrant.willingness.home ? "at home" : "away"}</td><td class="numeric"
+                    >{entrant.willingness.travelCost}</td
+                  ><td class="numeric">{entrant.willingness.fatigue}</td><td class="numeric"
+                    >{entrant.willingness.score}</td
+                  ><td class="numeric score">{entrant.score}</td><td
+                    >{entrant.aloof ? (entrant.joins ? "joins" : "skips") : ""}</td
                   ><td>{entrant.inLineup ? "in lineup" : ""}</td></tr
                 >
               {/each}
@@ -1076,8 +1107,8 @@
       </form>
     {/key}
     <p class="hint">
-      Catalog growth, rosters, home regions and travel styles are placeholders. Seeded archetypes
-      are out of scope for v0. This is separate from the scaler the ROM uses today.
+      Catalog growth, rosters, home regions, travel styles and aloof traits are placeholders. Seeded
+      archetypes are out of scope for v0. This is separate from the scaler the ROM uses today.
     </p>
   </details>
 </section>
@@ -1978,6 +2009,11 @@
   .growth-form button {
     padding: 5px 10px;
   }
+  .growth-form .aloof-toggle input {
+    width: auto;
+    padding: 0;
+    margin: 0;
+  }
   .growth-table {
     width: 100%;
     border-collapse: collapse;
@@ -2164,6 +2200,22 @@
   }
   .entrant-table tr.in-lineup .score {
     color: var(--accent);
+  }
+  .entrant-table tr.skips td {
+    color: var(--color-cartographer-muted);
+  }
+  .aloof-list {
+    list-style: none;
+    margin: 0 18px 12px;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .aloof-list li.skips {
+    color: var(--color-cartographer-muted);
   }
   .league-team {
     list-style: none;

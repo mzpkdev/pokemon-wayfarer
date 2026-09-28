@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 
 import catalogData from "./catalog.json"
 import {
+  ALOOF_MARGIN,
   ARCHETYPES,
   ARCHETYPE_KIND,
   DEFAULT_ARCHETYPE_GROWTH,
@@ -94,6 +95,7 @@ const trainer = (
     peakTR?: number
     homeRegion?: HomeRegion
     travel?: TravelStyle
+    aloof?: boolean
   } = {},
 ): TrainerRecord => ({
   id,
@@ -101,6 +103,7 @@ const trainer = (
   region: "Kanto",
   homeRegion: growth.homeRegion ?? "Kanto",
   travel: growth.travel ?? "homebody",
+  aloof: growth.aloof ?? false,
   role: "Gym Leader",
   doubleBattle: false,
   leagueEligible: true,
@@ -1586,7 +1589,7 @@ describe("league lineups", () => {
     expect(entrant.willingness).toEqual({ home: true, travelCost: 0, fatigue: 50, score: 50 })
   })
 
-  it("scores everyone at their TR at the neutral Sevii Masters, so the top five by TR make it", () => {
+  it("scores everyone at their TR at the neutral Sevii Masters, so the top five by TR who join make it", () => {
     for (const world of WORLD_PROGRESS_CHECKPOINTS) {
       const candidates = leagueCandidates(catalog, defaults, world)
       const ranking = rankLeague("Sevii Masters", world, candidates, new Set())
@@ -1594,7 +1597,11 @@ describe("league lineups", () => {
         expect(entrant.willingness.home).toBe(true)
         expect(entrant.score).toBe(entrant.tr)
       }
+      const joining = new Set(
+        ranking.entrants.filter((entrant) => entrant.joins).map((entrant) => entrant.trainer.id),
+      )
       const byTR = candidates
+        .filter((candidate) => joining.has(candidate.trainer.id))
         .toSorted((a, b) => b.tr - a.tr || a.order - b.order)
         .slice(0, 5)
         .map((candidate) => candidate.trainer.id)
@@ -1610,8 +1617,15 @@ describe("league lineups", () => {
       for (const ranking of leagueSequence(catalog, defaults, leagueWorlds(at))) {
         expect(ranking.entrants).toHaveLength(eligible)
         expect(ranking.entrants.map((entrant) => entrant.trainer.id)).not.toContain("tate-liza")
-        const scores = ranking.entrants.map((entrant) => entrant.score)
+        // Those who join come first, highest score first and ranked 1..n; the aloof who skip follow.
+        const joins = ranking.entrants.map((entrant) => entrant.joins)
+        expect(joins).toEqual(joins.toSorted((a, b) => Number(b) - Number(a)))
+        const joining = ranking.entrants.filter((entrant) => entrant.joins)
+        const scores = joining.map((entrant) => entrant.score)
         expect(scores).toEqual(scores.toSorted((a, b) => b - a))
+        expect(joining.map((entrant) => entrant.rank)).toEqual(joining.map((_, index) => index + 1))
+        for (const entrant of ranking.entrants.filter((row) => !row.joins))
+          expect(entrant).toMatchObject({ aloof: true, rank: null, inLineup: false })
         const ids = ranking.lineup.map((entrant) => entrant.trainer.id)
         expect(new Set(ids).size).toBe(5)
         expect(
@@ -1668,6 +1682,110 @@ describe("league lineups", () => {
     )
   })
 
+  describe("aloof trainers", () => {
+    // Team level = TR + 1, so each fixture's team level reads straight off its TR.
+    const levelled = (records: TrainerRecord[]): Experiment => ({
+      ...experimentWith(records),
+      teamLevel: [
+        [0, 1],
+        [99, 100],
+      ],
+    })
+    const rank = (records: TrainerRecord[], previous: string[] = [], league = "Indigo" as const) =>
+      rankLeague(league, 0, leagueCandidates(records, levelled(records), 0), new Set(previous))
+    const field = ["a", "b", "c", "d", "e"].map((id) => trainer(id, 50))
+    const ids = (entrants: { trainer: TrainerRecord }[]) =>
+      entrants.map((entrant) => entrant.trainer.id)
+
+    it("joins at exactly the field level + the margin and skips one level above it", () => {
+      expect(ALOOF_MARGIN).toBe(10)
+      const ranking = rank([
+        ...field,
+        trainer("at", 60, six, { aloof: true }),
+        trainer("over", 61, six, { aloof: true }),
+      ])
+      // The field: the top five non-aloof by league score, strongest team level Lv 51.
+      expect(ranking.fieldLevel).toBe(51)
+      const at = ranking.entrants.find((entrant) => entrant.trainer.id === "at")!
+      const over = ranking.entrants.find((entrant) => entrant.trainer.id === "over")!
+      expect(at).toMatchObject({ teamLevel: 61, joins: true, rank: 1, inLineup: true })
+      expect(over).toMatchObject({ teamLevel: 62, joins: false, rank: null, inLineup: false })
+      // The skipping trainer is listed after everyone who joins, and never fights.
+      expect(ids(ranking.entrants).at(-1)).toBe("over")
+      expect(ids(ranking.lineup)).toEqual(["a", "b", "c", "d", "at"])
+    })
+
+    it("compares the aloof with the non-aloof field only, never with each other", () => {
+      const ranking = rank([
+        ...field,
+        trainer("x", 60, six, { aloof: true }),
+        trainer("w", 70, six, { aloof: true }),
+      ])
+      // x (Lv 61) outscores the field but is aloof, so it does not raise the field level; w (Lv 71)
+      // would pass against x (61 + 10) but is judged against the field (51 + 10) and skips.
+      expect(ranking.fieldLevel).toBe(51)
+      expect(ranking.entrants.find((entrant) => entrant.trainer.id === "x")!.joins).toBe(true)
+      expect(ranking.entrants.find((entrant) => entrant.trainer.id === "w")!.joins).toBe(false)
+      // A non-aloof trainer is never judged, however far above the field.
+      const strong = rank([...field, trainer("strong", 99)])
+      expect(strong.entrants.find((entrant) => entrant.trainer.id === "strong")).toMatchObject({
+        joins: true,
+        rank: 1,
+      })
+    })
+
+    it("still applies fatigue: to the field that sets the level and to the aloof trainer's score", () => {
+      const records = [
+        trainer("a", 80),
+        ...["b", "c", "d", "e", "f"].map((id) => trainer(id, 50)),
+        trainer("x", 88, six, { aloof: true }),
+      ]
+      // Fresh, a (Lv 81) is in the field, so x (Lv 89) joins.
+      const fresh = rank(records)
+      expect(fresh.fieldLevel).toBe(81)
+      expect(fresh.entrants.find((entrant) => entrant.trainer.id === "x")!.joins).toBe(true)
+      // a fatigued scores 40 and leaves the field's top five: the field level drops and x skips.
+      const tired = rank(records, ["a"])
+      expect(tired.fieldLevel).toBe(51)
+      expect(tired.entrants.find((entrant) => entrant.trainer.id === "x")!.joins).toBe(false)
+      // x fatigued still joins (team level, not league score, decides) but scores 44 and drops out.
+      const tiredAloof = rank(records, ["x"])
+      expect(tiredAloof.entrants.find((entrant) => entrant.trainer.id === "x")).toMatchObject({
+        joins: true,
+        score: 44,
+        inLineup: false,
+      })
+      expect(ids(tiredAloof.lineup)).toEqual(["b", "c", "d", "e", "a"])
+    })
+
+    it("keeps Lance out of the early leagues and fields him late in the standard sequence", () => {
+      const [indigo, masters, hoenn] = leagueSequence(catalog, defaults, leagueWorlds())
+      const lance = (ranking: typeof indigo) =>
+        ranking!.entrants.find((entrant) => entrant.trainer.id === "lance")!
+      // A Legend at TR 200 (Lv 100) is far above the Indigo and Masters fields.
+      expect(lance(indigo)).toMatchObject({
+        tr: 200,
+        teamLevel: 100,
+        joins: false,
+        inLineup: false,
+      })
+      expect(lance(masters)).toMatchObject({ joins: false, inLineup: false })
+      expect(lance(hoenn)).toMatchObject({ joins: true, inLineup: true })
+      expect(hoenn!.lineup.at(-1)!.trainer.id).toBe("lance")
+    })
+
+    it("never fields an aloof trainer more than the margin above the field", () => {
+      for (const at of [null, 0, 40, 80, 97, 120, 160, 200])
+        for (const ranking of leagueSequence(catalog, defaults, leagueWorlds(at))) {
+          expect(ranking.fieldLevel).not.toBeNull()
+          for (const entrant of ranking.entrants.filter((row) => row.aloof))
+            expect(entrant.joins).toBe(entrant.teamLevel <= ranking.fieldLevel! + ALOOF_MARGIN)
+          for (const entrant of ranking.lineup.filter((row) => row.aloof))
+            expect(entrant.teamLevel - ranking.fieldLevel!).toBeLessThanOrEqual(ALOOF_MARGIN)
+        }
+    })
+  })
+
   it("is deterministic: no seed, the same inputs give the same lineups in any input order", () => {
     const worlds = leagueWorlds()
     expect(leagueSequence(catalog, defaults, worlds)).toEqual(
@@ -1704,7 +1822,7 @@ describe("catalog", () => {
     expect(growth("Blue")).toEqual([0, "rival", 170])
     expect(catalog.filter((record) => record.archetype === "rival")).toHaveLength(1)
     expect(growth("Brock")).toEqual([25, "steady", 100])
-    expect(growth("Lance")).toEqual([48, "sleeper", 200])
+    expect(growth("Lance")).toEqual([200, "legend", 200])
     for (const record of catalog)
       if (record.archetype === "legend") expect(record.peakTR).toBe(record.startTR)
     expect(Object.keys(experiment.trainers)).toHaveLength(38)
@@ -1714,21 +1832,20 @@ describe("catalog", () => {
   it("applies the §11 archetype reassignment and leaves everyone else unchanged", () => {
     const byArchetype = (archetype: Archetype) =>
       catalog.filter((record) => record.archetype === archetype).map((record) => record.name)
-    expect(byArchetype("star")).toEqual(["Misty", "Bugsy", "Whitney", "Flannery", "Tate & Liza"])
-    expect(byArchetype("comeback")).toEqual(["Blaine", "Bruno", "Pryce"])
-    expect(byArchetype("burst")).toEqual(["Giovanni", "Chuck", "Brawly"])
-    expect(byArchetype("legend")).toEqual(["Agatha"])
-    expect(byArchetype("veteran")).toEqual(["Lt. Surge", "Lorelei", "Wattson", "Glacia", "Drake"])
-    expect(byArchetype("sleeper")).toEqual([
-      "Sabrina",
-      "Lance",
-      "Morty",
-      "Clair",
-      "Winona",
-      "Juan",
+    expect(byArchetype("star")).toEqual([
+      "Misty",
+      "Bugsy",
+      "Whitney",
+      "Flannery",
+      "Tate & Liza",
       "Wallace",
-      "Steven",
     ])
+    expect(byArchetype("comeback")).toEqual(["Blaine", "Bruno", "Pryce"])
+    expect(byArchetype("burst")).toEqual(["Giovanni", "Chuck", "Brawly", "Steven"])
+    expect(byArchetype("legend")).toEqual(["Agatha", "Lance"])
+    expect(byArchetype("veteran")).toEqual(["Lt. Surge", "Lorelei", "Wattson", "Glacia", "Drake"])
+    // §16: the Champions follow lore, so no Champion is a Sleeper.
+    expect(byArchetype("sleeper")).toEqual(["Sabrina", "Morty", "Clair", "Winona", "Juan"])
     expect(byArchetype("prodigy")).toEqual(["Janine", "Falkner", "Will", "Sidney"])
     expect(byArchetype("steady")).toEqual([
       "Brock",
@@ -1743,6 +1860,36 @@ describe("catalog", () => {
     expect(byArchetype("rival")).toEqual(["Blue"])
     const agatha = catalog.find((record) => record.name === "Agatha")!
     expect([agatha.startTR, agatha.peakTR]).toEqual([95, 95])
+  })
+
+  it("gives the Champions their §16 lore archetypes: Lance a Legend at 200, Steven a Burst, Wallace a Star", () => {
+    const growth = (id: string) => {
+      const record = catalog.find((entry) => entry.id === id)!
+      return [record.startTR, record.archetype, record.peakTR]
+    }
+    expect(growth("lance")).toEqual([200, "legend", 200])
+    expect(growth("steven")).toEqual([50, "burst", 195])
+    expect(growth("wallace")).toEqual([48, "star", 190])
+    for (const world of [0, 80, 160, 300])
+      expect(trainerRating(defaults, defaults.trainers.lance!, world)).toBe(200)
+  })
+
+  it("assigns the §16 aloof trait, independent of archetype and travel style", () => {
+    expect(catalog.filter((record) => record.aloof).map((record) => record.name)).toEqual([
+      "Sabrina",
+      "Agatha",
+      "Lance",
+      "Clair",
+      "Karen",
+      "Glacia",
+      "Wallace",
+      "Steven",
+    ])
+    for (const record of catalog) {
+      expect(typeof record.aloof).toBe("boolean")
+      expect(defaults.trainers[record.id]!.aloof).toBe(record.aloof)
+      if (record.aloof) expect(record.leagueEligible).toBe(true)
+    }
   })
 
   it("adds Tate & Liza as one league-ineligible Gym Leader duo fought as a double battle", () => {
@@ -2005,6 +2152,27 @@ describe("experiment import", () => {
     restored.archetypes.steady[1]![1] = 40
     expect(experiment.trainers.fixture!.startTR).toBe(3)
     expect(experiment.archetypes.steady[1]).toEqual([40, 25])
+  })
+
+  it("rejects version 14, which had no aloof trait", () => {
+    const v14 = base()
+    v14.version = 14
+    delete v14.trainers.fixture.aloof
+    expect(() => validateExperiment(v14, records)).toThrow(
+      "Version 14 experiments have no aloof trait and the old Sleeper Champions",
+    )
+  })
+
+  it("requires an aloof trait of true or false per trainer", () => {
+    const missing = base()
+    delete missing.trainers.fixture.aloof
+    expect(() => validateExperiment(missing, records)).toThrow("missing or unknown fields")
+    const wrong = base()
+    wrong.trainers.fixture.aloof = "yes"
+    expect(() => validateExperiment(wrong, records)).toThrow("fixture.aloof must be true or false")
+    const aloof = base()
+    aloof.trainers.fixture.aloof = true
+    expect(validateExperiment(aloof, records).trainers.fixture!.aloof).toBe(true)
   })
 
   it("rejects version 13, which saved a league seed for the seeded lineup draw", () => {

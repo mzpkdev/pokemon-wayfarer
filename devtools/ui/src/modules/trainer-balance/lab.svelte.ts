@@ -87,7 +87,7 @@ const anchorsOf = (experiment: Experiment, id: ScalerId): Anchor[] =>
  */
 export const scalerKind = (id: ScalerId): ScalerKind =>
   isGrowth(id) ? ARCHETYPE_KIND[id] : "interpolated"
-const storageKey = "wayfarer-trainer-balance-v14"
+const storageKey = "wayfarer-trainer-balance-v15"
 /** Where the leagues are entered: each at its own badge point (8 / 16 / 24), or all at the player TR. */
 export type LeagueEntryPoint = "badges" | "player"
 /** The chart runs across player TR 0 to at least this. */
@@ -377,6 +377,15 @@ export class BalanceLab {
       return `${this.#_name(this.selectedId)} is now a ${value}.`
     })
 
+  /** Sets whether the selected trainer is aloof. */
+  setAloof = (aloof: boolean): void =>
+    this.#_edit("Could not change the aloof trait.", (next) => {
+      const settings = next.trainers[this.selectedId]
+      if (!settings) throw new Error("Unknown selected trainer.")
+      settings.aloof = aloof
+      return `${this.#_name(this.selectedId)} is now ${aloof ? "aloof" : "not aloof"}.`
+    })
+
   /** Reads start TR, archetype and peak TR from the growth form. */
   applyGrowth = (form: HTMLFormElement): void =>
     this.#_edit("Could not change the growth.", (next) => {
@@ -564,7 +573,7 @@ export class BalanceLab {
   reset = (): void => {
     this.#_accept(
       createExperiment(catalog, learnsets.moves),
-      "Restored the catalog growth, rosters, move pools, home regions, travel styles and scalers.",
+      "Restored the catalog growth, rosters, move pools, home regions, travel styles, aloof traits and scalers.",
     )
   }
 
@@ -573,7 +582,7 @@ export class BalanceLab {
       const defaults = createExperiment(catalog, learnsets.moves).trainers[this.selectedId]
       if (!defaults) throw new Error("Unknown selected trainer.")
       next.trainers[this.selectedId] = defaults
-      return `Restored ${this.selected.trainer.name}’s catalog growth, roster, move pool, home region and travel style. Other trainers and the scalers are unchanged.`
+      return `Restored ${this.selected.trainer.name}’s catalog growth, roster, move pool, home region, travel style and aloof trait. Other trainers and the scalers are unchanged.`
     })
 
   exportText = (): string =>

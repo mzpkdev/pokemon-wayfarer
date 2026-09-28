@@ -2,7 +2,8 @@
 
 Implemented: No
 Design status: v0 approved: each lineup is the five strongest trainers who
-are willing to come (favouring those at home and fresh), with no randomness;
+are willing to come (favouring those at home and fresh, with aloof trainers
+joining only an elite enough field), with no randomness;
 ascending battle order; and a locked lineup kept until the league is won.
 Balance is informational for now. Signup and league order are out of scope for v0.
 Terms follow the [glossary](player-trainer-rating.md#glossary).
@@ -43,8 +44,20 @@ current TR, scaled down by how unwilling they are to come. Trainers prefer to
 play at home: a homebody rarely makes the trip to a league away from home,
 while a traveller roams almost as readily as they play at home. Someone who
 was in the lineup of the last league the player entered is tired and less
-keen on this one. The five highest league scores make the lineup. Nobody is
-ruled out: a strong enough trainer shows up even far from home or tired.
+keen on this one.
+
+Some proud trainers are aloof: they won't bother with a league whose field is
+far below them, but they join once the field is elite. The field is the five
+best trainers by league score who are not aloof, and the field level is the
+highest team level among them. An aloof trainer joins only if their own team
+level is no more than 10 above the field level; aloof trainers only measure
+themselves against that field, never against each other. The Champions
+are aloof, so early leagues go ahead without them, and they turn up once the
+field is strong enough to deserve them.
+
+Everyone still eligible is then ranked by league score, and the five highest
+make the lineup. Apart from the aloof, nobody is ruled out: a strong enough
+trainer shows up even far from home or tired.
 There is no dice roll, so the same world progress and the same last league
 always give the same lineup. It is worked out on the first entry and then
 locked until the league is won. A replay after winning works it out again
@@ -72,8 +85,8 @@ is a test, not a source of power
 TR for a first league win until that design is adopted.
 
 **Balance.** Informational for now: the balance explorer reports each
-trainer's league score and the resulting lineup at each league, and tuning
-comes later. The lineup comes from the strongest trainers of the moment, so it tends to sit a little above the player; with all 24 badges both
+trainer's league score, the field level, which aloof trainers join or skip,
+and the resulting lineup at each league, and tuning comes later. The lineup comes from the strongest trainers of the moment, so it tends to sit a little above the player; with all 24 badges both
 sides reach level 100, and tougher endgame teams (better items, stats,
 movesets) are Later.
 
@@ -91,7 +104,9 @@ movesets) are Later.
 4. At Sevii Masters, entered with more badges, league scores are worked out
    again from everyone's current TR. Sleepers may have climbed in and Veterans
    dropped out. Anyone from anywhere is at home here, but the five who just
-   played Indigo are tired and mostly sit this one out.
+   played Indigo are tired and mostly sit this one out. An aloof Champion who
+   skipped Indigo may still find this field too far below them and wait for
+   a stronger one, such as Hoenn's at the end of the journey.
 
 ## Records and recognition
 
@@ -112,7 +127,8 @@ Today's circuit behaviour stays until designed; see the
 ## Boundaries
 
 In: the three leagues, notable Kanto, Johto, and Hoenn singles trainers,
-home and away, the league score and lineup, battle order, and the locked
+home and away, the league score, aloof trainers and the field level, the
+lineup, battle order, and the locked
 lineup.
 
 Out of scope for v0: signup and qualification, league order, rotation, repeat
@@ -130,15 +146,16 @@ own TR.
   fatigue, the league score, lineup selection, ordering, the locked lineup, battle
   construction, the win commit, saved state, and load validation.
 - [Notable trainers specification](../specs/notable-trainers.md): TR, home
-  regions, travel styles and willingness, scalers, and rosters.
+  regions, travel styles and willingness, the aloof trait, scalers, and
+  rosters.
 - [Player Trainer Rating specification](../specs/player-trainer-rating.md):
   the player's TR, which league wins do not raise in v0.
 
 ## Later
 
 - Signup and qualification gates designed for these leagues.
-- Balancing tools: tuning travel cost and fatigue against the lineup
-  reports, and league balance targets.
+- Balancing tools: tuning travel cost, fatigue, and the aloof margin against
+  the lineup reports, and league balance targets.
 - Seeded lineups ([Playthrough-seeded variation](playthrough-seeded-variation.md)),
   seeded league order, rotation, and recurring editions.
 - Role windows (such as elite and headliner) and standing-based selection.

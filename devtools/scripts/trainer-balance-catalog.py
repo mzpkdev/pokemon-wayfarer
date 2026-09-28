@@ -27,7 +27,8 @@ extraction needs a C preprocessor (arm-none-eabi-cpp, else cpp).
 
 Each trainer also records a home region (Kanto, Johto or Hoenn) and a travel
 style (homebody or traveller) from the section 14 lore tables (HOME_REGION,
-TRAVELLERS), which the explorer's league score reads.
+TRAVELLERS), which the explorer's league score reads, and the section 16
+aloof trait (ALOOF), which only the explorer's league lineup rule reads.
 """
 from __future__ import annotations
 
@@ -117,8 +118,9 @@ ROSTER = [
 # Rival included, is a growth scaler. The lore-based assignments are approved
 # (section 11): Veterans peak early, Stars explode mid-journey, Comebacks
 # stall and return stronger, Bursts train in jumps, the strongest leaders are
-# Sleepers, Agatha is a Legend, most others are Steady; Champions and Lance get
-# the highest peaks. Gym Leaders (the duo included) start in the GYM_START_BAND
+# Sleepers, Agatha is a Legend, most others are Steady. The Champions follow
+# lore (section 16): Lance is a Legend fixed at TR 200, Steven a Burst and
+# Wallace a Star; they and Lance have the highest peaks. Gym Leaders (the duo included) start in the GYM_START_BAND
 # by archetype (GYM_ARCHETYPE_BANDS), not by Gym order, varied a little by lore;
 # no Gym Leader is a Legend. League-eligible Steadies and Bursts keep start +
 # peak <= 190 so they stay at TR 95 or less at world progress 80.
@@ -139,7 +141,7 @@ GROWTH = {
     "Blue": (0, "rival", 170),
     "Lorelei": (40, "veteran", 92), "Bruno": (45, "comeback", 94),
     "Agatha": (95, "legend", 95), "Koga": (30, "steady", 150),
-    "Lance": (48, "sleeper", 200),
+    "Lance": (200, "legend", 200),
     "Falkner": (22, "prodigy", 80), "Bugsy": (24, "star", 100),
     "Whitney": (26, "star", 95), "Morty": (26, "sleeper", 171),
     "Chuck": (34, "burst", 85), "Jasmine": (24, "steady", 166),
@@ -151,7 +153,7 @@ GROWTH = {
     "Tate & Liza": (26, "star", 170), "Juan": (23, "sleeper", 185),
     "Sidney": (25, "prodigy", 105), "Phoebe": (25, "steady", 150),
     "Glacia": (40, "veteran", 90), "Drake": (45, "veteran", 93),
-    "Wallace": (48, "sleeper", 190), "Steven": (50, "sleeper", 195),
+    "Wallace": (48, "star", 190), "Steven": (50, "burst", 195),
 }
 # The Gym Leader duo: one entry fought as a double battle, league-ineligible.
 DUOS = {"Tate & Liza"}
@@ -174,6 +176,13 @@ HOME_REGION = {
 }
 TRAVELLERS = {"Brock", "Misty", "Blue", "Lance", "Steven", "Wallace", "Will", "Karen", "Bruno", "Glacia",
               "Giovanni", "Koga", "Bugsy", "Brawly", "Drake"}
+# Section 16 aloof trait (lore, reviewable), independent of archetype and
+# travel style: an aloof trainer won't join a league whose field is well below
+# their level. Only the league lineup rule reads it. The Champions only grace
+# elite fields; Agatha is Oak's proud old rival; Glacia came to Hoenn seeking
+# worthy opponents; Clair is a proud dragon tamer; Sabrina is cold and
+# distant; Karen ("strong Pokémon, weak Pokémon") disdains weak fields.
+ALOOF = {"Lance", "Wallace", "Steven", "Agatha", "Glacia", "Clair", "Sabrina", "Karen"}
 # Section 9 shared evolution-level table: (predecessor, species, level, status).
 # The table covers only evolutions without a level in the game data (item,
 # trade, friendship, other); they step down below this level like level
@@ -539,6 +548,16 @@ def validate_home_travel(name, home, travel):
         raise ValueError(f"{name}: home region must be one of {', '.join(HOME_REGIONS)}")
     if travel not in TRAVEL_STYLES:
         raise ValueError(f"{name}: travel style must be one of {', '.join(TRAVEL_STYLES)}")
+
+
+def validate_aloof(aloof, catalog, duos):
+    """ALOOF names only catalog trainers, and never a duo (leagues are singles only)."""
+    unknown = sorted(set(aloof) - set(catalog))
+    if unknown:
+        raise ValueError(f"ALOOF lists trainers not in the catalog: {', '.join(unknown)}")
+    ineligible = sorted(set(aloof) & set(duos))
+    if ineligible:
+        raise ValueError(f"ALOOF lists league-ineligible duos: {', '.join(ineligible)}")
 
 
 def validate_gym_start(name, growth):
@@ -1133,6 +1152,7 @@ def generate():
         raise ValueError("GROWTH, DRAFT and POOL_DRAFT must list exactly the catalog trainers")
     if set(HOME_REGION) != set(GROWTH) or not TRAVELLERS <= set(GROWTH):
         raise ValueError("HOME_REGION must list exactly the catalog trainers and TRAVELLERS only catalog trainers")
+    validate_aloof(ALOOF, GROWTH, DUOS)
     for name, region, role, family, trainer in ROSTER:
         growth = GROWTH[name]
         validate_growth(name, growth)
@@ -1202,7 +1222,7 @@ def generate():
                          + " other roster slots have no item. Roster slots carry no moves: members draw them from the move pool."
                          + (" Fought as a double battle: both leaders send Pokémon from this one roster in order." if name in DUOS else ""))
         result.append({"id": slug(name), "name": name, "region": region, "role": role,
-                       "homeRegion": home, "travel": travel,
+                       "homeRegion": home, "travel": travel, "aloof": name in ALOOF,
                        "doubleBattle": double, "leagueEligible": not double,
                        "source": {"label": f"{family} local reference", "path": records[trainer]["source"], "trainerId": trainer, "note": note},
                        "referenceParty": [member(slot) for slot in reference_slots],

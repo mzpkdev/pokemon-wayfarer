@@ -113,19 +113,46 @@ except ValueError as error:
   }
 }
 
-test("the growth table applies the section 11 archetype reassignment", () => {
+test("the growth table applies the section 11 archetype reassignment and the section 16 Champions", () => {
   const growth = run("{name: list(value) for name, value in module.GROWTH.items()}")
   const named = (archetype) =>
     Object.keys(growth).filter((name) => growth[name][1] === archetype)
-  assert.deepEqual(named("star"), ["Misty", "Bugsy", "Whitney", "Flannery", "Tate & Liza"])
+  assert.deepEqual(named("star"), ["Misty", "Bugsy", "Whitney", "Flannery", "Tate & Liza", "Wallace"])
   assert.deepEqual(named("comeback"), ["Blaine", "Bruno", "Pryce"])
-  assert.deepEqual(named("burst"), ["Giovanni", "Chuck", "Brawly"])
-  assert.deepEqual(named("legend"), ["Agatha"])
+  assert.deepEqual(named("burst"), ["Giovanni", "Chuck", "Brawly", "Steven"])
+  assert.deepEqual(named("legend"), ["Agatha", "Lance"])
   assert.equal(growth["Lt. Surge"][1], "veteran")
   assert.equal(growth["Morty"][1], "sleeper")
   assert.deepEqual(growth["Agatha"], [95, "legend", 95])
   assert.deepEqual(growth["Brock"], [25, "steady", 100])
   assert.deepEqual(growth["Blue"], [0, "rival", 170])
+})
+
+test("the Champions follow lore (section 16): Lance a Legend at 200, Steven a Burst, Wallace a Star", () => {
+  const growth = run("{name: list(value) for name, value in module.GROWTH.items()}")
+  assert.deepEqual(growth["Lance"], [200, "legend", 200])
+  assert.deepEqual(growth["Steven"], [50, "burst", 195])
+  assert.deepEqual(growth["Wallace"], [48, "star", 190])
+  const sleepers = Object.keys(growth).filter((name) => growth[name][1] === "sleeper")
+  assert.deepEqual(sleepers, ["Sabrina", "Morty", "Clair", "Winona", "Juan"])
+})
+
+test("the aloof trait follows the section 16 assignments and names only league-eligible trainers", () => {
+  assert.deepEqual(run("sorted(module.ALOOF)"), [
+    "Agatha",
+    "Clair",
+    "Glacia",
+    "Karen",
+    "Lance",
+    "Sabrina",
+    "Steven",
+    "Wallace",
+  ])
+  const validate = (aloof) =>
+    run("module.validate_aloof(set(args), module.GROWTH, module.DUOS)", aloof)
+  assert.equal(validate(["Lance", "Karen"]), null)
+  assert.equal(validate(["Lance", "Red"]), "ALOOF lists trainers not in the catalog: Red")
+  assert.equal(validate(["Tate & Liza"]), "ALOOF lists league-ineligible duos: Tate & Liza")
 })
 
 test("home regions and travel styles follow the section 14 assignments", () => {

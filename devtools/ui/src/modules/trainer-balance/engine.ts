@@ -52,6 +52,8 @@ export const AWAY_COST: Readonly<Record<TravelStyle, number>> = { homebody: 80, 
 /** Willingness lost by a trainer in the previous league's lineup. */
 export const FATIGUE = 50
 export const WILLINGNESS_FLOOR = 5
+/** Levels (not TR) an aloof trainer's team level may sit above the field level and still join. */
+export const ALOOF_MARGIN = 10
 export const MAX_ANCHORS = 20
 /** Moves a Pokémon knows, and pool moves a member takes. */
 export const MAX_MOVES = 4
@@ -1017,14 +1019,31 @@ export const leagueCandidates = (
     const settings = experiment.trainers[trainer.id]
     if (!settings) throw new Error(`Missing trainer settings: ${trainer.id}`)
     const tr = trainerRating(experiment, settings, world)
-    return [{ trainer, tr, homeRegion: settings.homeRegion, travel: settings.travel, order }]
+    return [
+      {
+        trainer,
+        tr,
+        homeRegion: settings.homeRegion,
+        travel: settings.travel,
+        aloof: settings.aloof,
+        teamLevel: teamLevelFor(experiment, tr),
+        order,
+      },
+    ]
   })
+
+/** Whether an aloof trainer joins: their team level is at most the field level + ALOOF_MARGIN. */
+export const aloofJoins = (teamLevel: number, fieldLevel: number | null): boolean =>
+  fieldLevel !== null && teamLevel <= fieldLevel + ALOOF_MARGIN
 
 /**
  * Entering a league: each eligible trainer's willingness (fatigued when in `previous`, the lineup of
- * the league entered just before) and league score, ranked highest score first (ties by catalog
- * order). The top LINEUP_SIZE are the lineup, which fights in ascending TR, strongest last (ties by
- * catalog order). No randomness: the same inputs always give the same lineup.
+ * the league entered just before) and league score. The top LINEUP_SIZE non-aloof trainers by
+ * league score set the field level (their strongest team level); an aloof trainer joins only when
+ * their team level is at most the field level + ALOOF_MARGIN, compared with that field and never
+ * with other aloof trainers. Everyone who joins is ranked highest score first (ties by catalog
+ * order), and the top LINEUP_SIZE are the lineup, which fights in ascending TR, strongest last (ties
+ * by catalog order). No randomness: the same inputs always give the same lineup.
  */
 export const rankLeague = (
   league: League,
@@ -1032,16 +1051,32 @@ export const rankLeague = (
   candidates: readonly LeagueCandidate[],
   previous: ReadonlySet<string>,
 ): LeagueRanking => {
-  const entrants = candidates
+  const byScore = (a: { score: number; order: number }, b: { score: number; order: number }) =>
+    b.score - a.score || a.order - b.order
+  const scored = candidates
     .map((candidate) => {
       const will = willingness(league, candidate, previous.has(candidate.trainer.id))
       return { ...candidate, willingness: will, score: leagueScore(candidate.tr, will.score) }
     })
-    .toSorted((a, b) => b.score - a.score || a.order - b.order)
-    .map((entrant, index) => ({ ...entrant, rank: index + 1, inLineup: index < LINEUP_SIZE }))
+    .toSorted(byScore)
+  const field = scored.filter((entrant) => !entrant.aloof).slice(0, LINEUP_SIZE)
+  const fieldLevel = field.length ? Math.max(...field.map((entrant) => entrant.teamLevel)) : null
+  const judged = scored.map((entrant) => ({
+    ...entrant,
+    joins: !entrant.aloof || aloofJoins(entrant.teamLevel, fieldLevel),
+  }))
+  const entrants = [
+    ...judged
+      .filter((entrant) => entrant.joins)
+      .map((entrant, index) => ({ ...entrant, rank: index + 1, inLineup: index < LINEUP_SIZE })),
+    ...judged
+      .filter((entrant) => !entrant.joins)
+      .map((entrant) => ({ ...entrant, rank: null, inLineup: false })),
+  ]
   return {
     league,
     world,
+    fieldLevel,
     entrants,
     lineup: entrants
       .filter((entrant) => entrant.inLineup)
@@ -1117,6 +1152,7 @@ export const defaultTrainerSettings = (trainer: TrainerRecord): TrainerSettings 
   movePool: structuredClone(trainer.movePool),
   homeRegion: trainer.homeRegion,
   travel: trainer.travel,
+  aloof: trainer.aloof,
 })
 
 export const createExperiment = (
@@ -1257,7 +1293,7 @@ export const validateMovePool = (
 const growthSettings = (
   settings: Record<string, unknown>,
   id: string,
-): Omit<TrainerSettings, "roster" | "movePool" | "homeRegion" | "travel"> => {
+): Omit<TrainerSettings, "roster" | "movePool" | "homeRegion" | "travel" | "aloof"> => {
   const startTR = tr(settings.startTR, `${id}.startTR`)
   const peakTR = tr(settings.peakTR, `${id}.peakTR`)
   const archetype = settings.archetype as Archetype
@@ -1279,28 +1315,30 @@ export const rosterGaps = (
     return length < ROSTER_SIZE ? [{ id: trainer.id, name: trainer.name, length }] : []
   })
 
-export const EXPERIMENT_VERSION = 14
+export const EXPERIMENT_VERSION = 15
 const START_OVER = `Start from the version ${EXPERIMENT_VERSION} defaults`
 export const OLD_VERSION_REJECTION = (version: number): string =>
-  version === 13
-    ? `Version 13 experiments save a league seed for the retired seeded lineup draw, so they cannot be imported. ${START_OVER}.`
-    : version === 12
-      ? `Version 12 experiments have no home regions or travel styles and assume fixed league lineups, so they cannot be imported. ${START_OVER}.`
-      : version === 11
-        ? `Version 11 experiments author moves per roster slot and have no move pools, so they cannot be imported. ${START_OVER}.`
-        : version === 10
-          ? `Version 10 experiments use the old archetype names (early bloomer, late bloomer, plateau, fixed, rising star, second wind, bursts), so they cannot be imported. ${START_OVER}.`
-          : version === 9
-            ? `Version 9 experiments have only five archetypes (no Legend, Star, Comeback or Burst step scaler) and the old archetype assignments, so they cannot be imported. ${START_OVER}.`
-            : version === 8
-              ? `Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. ${START_OVER}.`
-              : version === 7
-                ? `Version 7 experiments give the Rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. ${START_OVER}.`
-                : version === 6
-                  ? `Version 6 experiments give each notable trainer one fixed TR and cannot be imported. ${START_OVER} (start TR, archetype and peak TR).`
-                  : version === 5
-                    ? `Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. ${START_OVER}.`
-                    : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. ${START_OVER}.`
+  version === 14
+    ? `Version 14 experiments have no aloof trait and the old Sleeper Champions, so they cannot be imported. ${START_OVER}.`
+    : version === 13
+      ? `Version 13 experiments save a league seed for the retired seeded lineup draw, so they cannot be imported. ${START_OVER}.`
+      : version === 12
+        ? `Version 12 experiments have no home regions or travel styles and assume fixed league lineups, so they cannot be imported. ${START_OVER}.`
+        : version === 11
+          ? `Version 11 experiments author moves per roster slot and have no move pools, so they cannot be imported. ${START_OVER}.`
+          : version === 10
+            ? `Version 10 experiments use the old archetype names (early bloomer, late bloomer, plateau, fixed, rising star, second wind, bursts), so they cannot be imported. ${START_OVER}.`
+            : version === 9
+              ? `Version 9 experiments have only five archetypes (no Legend, Star, Comeback or Burst step scaler) and the old archetype assignments, so they cannot be imported. ${START_OVER}.`
+              : version === 8
+                ? `Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. ${START_OVER}.`
+                : version === 7
+                  ? `Version 7 experiments give the Rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. ${START_OVER}.`
+                  : version === 6
+                    ? `Version 6 experiments give each notable trainer one fixed TR and cannot be imported. ${START_OVER} (start TR, archetype and peak TR).`
+                    : version === 5
+                      ? `Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. ${START_OVER}.`
+                      : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. ${START_OVER}.`
 
 /** Validates an experiment against the catalog; with `moves`, every move pool name must be one of them. */
 export const validateExperiment = (
@@ -1335,7 +1373,7 @@ export const validateExperiment = (
     const settings = object(inputTrainers[id], `trainers.${id}`)
     exactKeys(
       settings,
-      ["startTR", "archetype", "peakTR", "roster", "movePool", "homeRegion", "travel"],
+      ["startTR", "archetype", "peakTR", "roster", "movePool", "homeRegion", "travel", "aloof"],
       `trainers.${id}`,
     )
     const growth = growthSettings(settings, id)
@@ -1347,11 +1385,13 @@ export const validateExperiment = (
       movePool: validateMovePool(settings.movePool, `${id}.movePool`, moves),
       homeRegion: settings.homeRegion as HomeRegion,
       travel: settings.travel as TravelStyle,
+      aloof: settings.aloof as boolean,
     }
     if (!HOME_REGIONS.includes(settings.homeRegion as HomeRegion))
       fail(`${id}.homeRegion must be one of ${HOME_REGIONS.join(", ")}`)
     if (!TRAVEL_STYLES.includes(settings.travel as TravelStyle))
       fail(`${id}.travel must be one of ${TRAVEL_STYLES.join(", ")}`)
+    if (typeof settings.aloof !== "boolean") fail(`${id}.aloof must be true or false`)
   }
   const inputArchetypes = object(input.archetypes, "archetypes")
   exactKeys(inputArchetypes, ARCHETYPES, "archetypes")

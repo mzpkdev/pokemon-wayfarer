@@ -142,8 +142,14 @@ changes yours.
 - **Fatigue:** 50 if the trainer was in the lineup of the last league the
   player entered.
 - **Willingness:** max(5, 100 − travel cost − fatigue).
+- **Aloof:** a notable trainer who won't join a league whose field is well
+  below their level.
+- **Field level:** the highest team level among a league's five best
+  non-aloof trainers by league score; an aloof trainer joins only if their
+  team level is at most the field level + 10.
 - **League score:** floor(TR × willingness / 100); a league's lineup is the
-  five highest, ties by ascending characterId, locked until won.
+  five highest among those who join, ties by ascending characterId, locked
+  until won.
 - **Match 1-5:** a position in the lineup.
 - **First league win:** your first win at a given league.
 - **Challenge options:** the opt-in challenge menu.

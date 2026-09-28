@@ -53,14 +53,15 @@ way:
 - **The Rival**, Blue, starts level with you and pulls a step ahead over your
   first badges, then stays there until he reaches his best.
 - **The Legend** never changes and waits at the top: already at their best,
-  they wait for you to catch up, like Agatha.
+  they wait for you to catch up, like Agatha and Lance.
 - **The Star** explodes mid-journey: they start modestly, explode in the
-  middle of your journey, then settle at their best, like Misty and Whitney.
+  middle of your journey, then settle at their best, like Misty, Whitney, and
+  Wallace.
 - **The Comeback** stalls, then returns stronger: they grow fast early, stall
   for a long stretch, then surge again late, like Blaine, Pryce, and Bruno.
 - **The Burst** trains in jumps at milestones: they keep pace on average but
   get stronger all at once at milestones in your journey, like Chuck,
-  Giovanni, and Brawly.
+  Giovanni, Brawly, and Steven.
 
 Everyone grows by the same rule: only the shape, the starting strength, and
 the best differ. They only move when you do. A big step, like one of your first badges, moves
@@ -92,6 +93,21 @@ Bugsy, Will, Koga, and Karen from Johto; and Brawly, Glacia, Drake, Wallace,
 and Steven from Hoenn. Everyone else is a homebody. These picks follow the
 trainers' stories and are open to review
 ([assignments](../specs/notable-trainers.md#home-region-and-travel)).
+
+### Aloof
+
+Some proud trainers are **aloof**: they won't bother with a league whose field
+is far below them, but they join once the field is elite. Being aloof has
+nothing to do with how a trainer grows or how far they travel, and in this
+first version only leagues pay attention to it
+([Leagues](leagues.md)).
+
+The aloof trainers are the Champions Lance, Wallace, and Steven, who only
+grace elite fields; Agatha, Oak's proud old rival; Glacia, who came to Hoenn
+looking for worthy opponents; Clair, the proud dragon tamer; cold, distant
+Sabrina; and Karen, whose "strong Pokémon, weak Pokémon" disdains weak
+fields. Everyone else is not aloof. These picks are open to review
+([assignments](../specs/notable-trainers.md#aloof)).
 
 ### No ceiling
 
@@ -216,6 +232,8 @@ belong to playtesting.
 - More notable trainers, such as Red.
 - Notable trainers met around the world according to their travel style:
   homebodies stay in their home region and travellers roam.
+- Aloof trainers keeping their distance around the world too, not only from
+  leagues.
 - Hints in the world about who is too strong for you right now: Gym guides,
   gossip, or a line on your Trainer Card.
 - Concrete feel checks for playtesters, such as winning the first Gym with a

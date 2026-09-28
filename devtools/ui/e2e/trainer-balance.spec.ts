@@ -350,13 +350,13 @@ test("ranks every eligible trainer by league score and fields the top five, stro
   const eligible = 37
   // The standard sequence enters each league at its own badge point: 8, 16 and 24 badges.
   await expect(page.getByTestId("league-indigo").locator("h3").first()).toContainText(
-    "world progress 80 · Kanto + Johto",
+    "world progress 80 · Kanto + Johto · field Lv 59",
   )
   await expect(page.getByTestId("league-sevii-masters").locator("h3").first()).toContainText(
-    "world progress 120 · neutral location",
+    "world progress 120 · neutral location · field Lv 81",
   )
   await expect(page.getByTestId("league-hoenn").locator("h3").first()).toContainText(
-    "world progress 160 · Hoenn",
+    "world progress 160 · Hoenn · field Lv 100",
   )
   for (const league of ["indigo", "sevii-masters", "hoenn"]) {
     await expect(page.getByTestId(`lineup-${league}`).locator(":scope > li")).toHaveCount(5)
@@ -381,9 +381,10 @@ test("ranks every eligible trainer by league score and fields the top five, stro
   // League score = floor(TR × willingness / 100). Norman (Hoenn, homebody) is away at Indigo;
   // Drake (Hoenn, traveller) pays only 10.
   await expect(page.getByTestId("entrant-indigo-norman").locator("td")).toHaveText([
-    "30",
+    "27",
     "Norman",
     "95",
+    "59",
     "Hoenn",
     "homebody",
     "away",
@@ -392,11 +393,13 @@ test("ranks every eligible trainer by league score and fields the top five, stro
     "20",
     "19",
     "",
+    "",
   ])
   await expect(page.getByTestId("entrant-indigo-drake").locator("td")).toHaveText([
-    "13",
+    "12",
     "Drake",
     "93",
+    "58",
     "Hoenn",
     "traveller",
     "away",
@@ -405,6 +408,31 @@ test("ranks every eligible trainer by league score and fields the top five, stro
     "90",
     "83",
     "",
+    "",
+  ])
+  // Aloof: the top five non-aloof set the field level (Lv 59 at Indigo). Agatha (Lv 59) joins;
+  // Lance, a Legend at TR 200 (Lv 100), skips and is not ranked.
+  await expect(page.getByTestId("aloof-indigo-agatha")).toHaveText(
+    "Agatha aloof: team Lv 59 vs field Lv 59 + 10 → joins",
+  )
+  await expect(page.getByTestId("aloof-indigo-lance")).toHaveText(
+    "Lance aloof: team Lv 100 vs field Lv 59 + 10 → skips",
+  )
+  await expect(page.getByTestId("aloof-indigo").locator("li")).toHaveCount(8)
+  await expect(page.getByTestId("entrant-indigo-lance").locator("td")).toHaveText([
+    "—",
+    "Lance",
+    "200",
+    "100",
+    "Kanto",
+    "traveller",
+    "at home",
+    "0",
+    "0",
+    "100",
+    "200",
+    "skips",
+    "",
   ])
   await expect(page.getByTestId("entrant-indigo-jasmine").locator("td").last()).toHaveText(
     "in lineup",
@@ -412,9 +440,10 @@ test("ranks every eligible trainer by league score and fields the top five, stro
   // Fatigue: Giovanni fought at Indigo, so he carries 50 fatigue into the Sevii Masters, a
   // neutral location where everyone is at home.
   await expect(page.getByTestId("entrant-sevii-masters-giovanni").locator("td")).toHaveText([
-    "33",
+    "30",
     "Giovanni",
     "131",
+    "82",
     "Kanto",
     "traveller",
     "at home",
@@ -423,29 +452,31 @@ test("ranks every eligible trainer by league score and fields the top five, stro
     "50",
     "65",
     "",
+    "",
   ])
+  // The Champions wait for an elite field: they skip the Sevii Masters (field Lv 81) and meet at Hoenn.
   await expect
     .poll(() => names("sevii-masters"))
-    .toEqual([
-      "Match 1 Wallace",
-      "Match 2 Blue",
-      "Match 3 Norman",
-      "Match 4 Steven",
-      "Match 5 Lance",
-    ])
+    .toEqual(["Match 1 Erika", "Match 2 Koga", "Match 3 Karen", "Match 4 Blue", "Match 5 Norman"])
+  await expect(page.getByTestId("aloof-sevii-masters-steven")).toHaveText(
+    "Steven aloof: team Lv 99 vs field Lv 81 + 10 → skips",
+  )
   await expect
     .poll(() => names("hoenn"))
     .toEqual([
-      "Match 1 Phoebe",
-      "Match 2 Karen",
-      "Match 3 Giovanni",
-      "Match 4 Winona",
-      "Match 5 Juan",
+      "Match 1 Winona",
+      "Match 2 Juan",
+      "Match 3 Wallace",
+      "Match 4 Steven",
+      "Match 5 Lance",
     ])
+  await expect(page.getByTestId("aloof-hoenn-lance")).toHaveText(
+    "Lance aloof: team Lv 100 vs field Lv 100 + 10 → joins",
+  )
   // The same inputs give the same lineups after a reload: there is no randomness.
   await page.reload()
   await expect(page.getByTestId("match-indigo-5")).toContainText("Jasmine")
-  await expect(page.getByTestId("match-hoenn-5")).toContainText("Juan")
+  await expect(page.getByTestId("match-hoenn-5")).toContainText("Lance")
   // Entering every league at the player TR moves all three to it.
   await page.getByRole("button", { name: "Set 12 badges", exact: true }).click()
   await page.getByLabel("League entry point", { exact: true }).selectOption("player")
@@ -461,14 +492,24 @@ test("ranks every eligible trainer by league score and fields the top five, stro
   await expect(page.getByLabel("Home region", { exact: true })).toHaveValue("Hoenn")
   await page.getByLabel("Travel style", { exact: true }).selectOption("traveller")
   const norman = page.getByTestId("entrant-indigo-norman").locator("td")
-  await expect(norman.nth(8)).toHaveText("90")
-  await expect(norman.nth(9)).toHaveText("85")
+  await expect(norman.nth(9)).toHaveText("90")
+  await expect(norman.nth(10)).toHaveText("85")
   // At home in Johto he scores his full 95 and takes the fifth place from Will.
   await page.getByLabel("Home region", { exact: true }).selectOption("Johto")
-  await expect(norman.nth(5)).toHaveText("at home")
-  await expect(norman.nth(9)).toHaveText("95")
+  await expect(norman.nth(6)).toHaveText("at home")
+  await expect(norman.nth(10)).toHaveText("95")
   await expect(page.getByTestId("entrant-indigo-will").locator("td").last()).toHaveText("")
   await expect(page.getByTestId("lineup-indigo")).toContainText("Norman")
+  // The trainer editor carries the aloof flag: Lance is aloof; unticked, he joins Indigo and
+  // fights last there.
+  await page.getByRole("button", { name: /^Lance/ }).click()
+  await expect(page.getByLabel("Aloof", { exact: true })).toBeChecked()
+  await page.getByLabel("Aloof", { exact: true }).uncheck()
+  await expect(page.getByTestId("aloof-indigo-lance")).toHaveCount(0)
+  await expect(page.getByTestId("match-indigo-5")).toContainText("Lance")
+  await expect(page.getByTestId("entrant-indigo-lance").locator("td").first()).toHaveText("1")
+  await page.getByLabel("Aloof", { exact: true }).check()
+  await expect(page.getByTestId("aloof-indigo-lance")).toContainText("skips")
   // Tate & Liza fight a double battle, so even far ahead they are never ranked.
   await page.getByRole("button", { name: /^Tate & Liza/ }).click()
   await expect(page.getByTestId("double-battle")).toHaveText("Double battle")
@@ -529,7 +570,7 @@ test("marks ace slots and fights them last, with slot 1 locked and at most three
   await expect(page.getByTestId("growth-slot-6")).not.toContainText("Ace")
 })
 
-test("flags incomplete rosters and rejects invalid edits and version 4 to 13 files", async ({
+test("flags incomplete rosters and rejects invalid edits and version 4 to 14 files", async ({
   page,
 }) => {
   await page.goto("/#trainer-balance")
@@ -706,6 +747,22 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 13 fil
   await expect(page.getByRole("alert")).toContainText(
     "Version 13 experiments save a league seed for the retired seeded lineup draw",
   )
+  await importFile(14, {
+    point: { playerTR: 80 },
+    league: { at: "badges" },
+    experiment: {
+      version: 14,
+      teamLevel: [[0, 15]],
+      teamSize: [[0, 2]],
+      wildLevel: [[0, 6]],
+      routeTrainerLevel: [[0, 9]],
+      archetypes: {},
+      trainers: {},
+    },
+  })
+  await expect(page.getByRole("alert")).toContainText(
+    "Version 14 experiments have no aloof trait and the old Sleeper Champions",
+  )
   await expect(page.getByTestId("badge-count")).toHaveText("0")
   await expect(page.getByTestId("selected-tr")).toHaveText("25")
 
@@ -834,11 +891,11 @@ test("resolves each member's moves from the move pool, lists dormant entries and
 test("edits the trainer, world and archetype scalers globally", async ({ page }) => {
   await page.goto("/#trainer-balance")
   await page.getByText("Scalers & experiment settings", { exact: true }).click()
-  // Lance is TR 48 at world progress 0.
-  await expect(page.getByTestId("size-lance")).toHaveText("4")
+  // Wallace is TR 48 at world progress 0.
+  await expect(page.getByTestId("size-wallace")).toHaveText("4")
   // Without the (44, 4) anchor, size ramps from (43, 3) to (56, 4): TR 48 rounds to 3.
   await page.getByRole("button", { name: "Remove Team size anchor 7", exact: true }).click()
-  await expect(page.getByTestId("size-lance")).toHaveText("3")
+  await expect(page.getByTestId("size-wallace")).toHaveText("3")
   await page.getByLabel("Team level anchor 1 value", { exact: true }).fill("30")
   await page.getByRole("button", { name: "Apply scalers", exact: true }).click()
   await expect(page.getByRole("alert")).toContainText("values must not decrease")
@@ -860,12 +917,14 @@ test("edits the trainer, world and archetype scalers globally", async ({ page })
   await expect(page.getByTestId("wild-level")).toHaveText("Lv. 28")
   await expect(page.getByTestId("regular-trainer-gap")).toHaveText("+2 vs cap")
 
-  // Archetype growth scalers read world progress: the Sleeper Lance (48 → 200) at 8 badges.
+  // Archetype growth scalers read world progress: the Sleeper Juan (23 → 185) at 8 badges; the
+  // Legend Lance stays at TR 200.
   await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
-  await expect(page.getByTestId("tr-lance")).toHaveText("86")
+  await expect(page.getByTestId("tr-juan")).toHaveText("64")
+  await expect(page.getByTestId("tr-lance")).toHaveText("200")
   await page.getByLabel("Sleeper growth anchor 3 value", { exact: true }).fill("50")
   await page.getByRole("button", { name: "Apply scalers", exact: true }).click()
-  await expect(page.getByTestId("tr-lance")).toHaveText("124")
+  await expect(page.getByTestId("tr-juan")).toHaveText("104")
   await page.getByLabel("Steady growth anchor 1 value", { exact: true }).fill("5")
   await page.getByRole("button", { name: "Apply scalers", exact: true }).click()
   await expect(page.getByRole("alert")).toContainText(

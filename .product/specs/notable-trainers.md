@@ -7,8 +7,8 @@ Design status: v0 contract. The model is accepted. Rosters are approved
 content (draft v1: species, order, and aces); their battle content (move
 pools, and items where a slot doesn't match its source party) is still
 placeholder. Growth
-values (start TR, archetype, peak TR), home regions and travel styles, and
-every anchor marked placeholder are catalog content under review.
+values (start TR, archetype, peak TR), home regions, travel styles, the aloof
+trait, and every anchor marked placeholder are catalog content under review.
 
 **Catalog as design reference.** "Catalog" in this spec means the
 [balance explorer](../../devtools/ui/README.md#trainer-balance-explorer)'s
@@ -19,7 +19,8 @@ in game code, and the validation rules here apply to that code.
 ## Ownership and scope
 
 This specification is the single owner of the v0 notable trainer model: the
-notable trainer inventory, home regions, travel styles, and willingness, the
+notable trainer inventory, home regions, travel styles, willingness, and the
+aloof trait, the
 rule that routes every battle with a notable character to their Trainer Rating
 (TR) and roster, trainer TR and its growth with world progress, the
 archetypes, the v0 trainer scalers, rosters, move pools, team resolution, the
@@ -99,6 +100,28 @@ willingness = max(5, 100 - travelCost - fatigue)
 in v0 only leagues do. [Leagues](leagues.md#selection-and-order) owns the
 league location regions, fatigue, and the league score that reads willingness.
 
+## Aloof
+
+Each entry authors an **aloof** trait (`true` or `false`), independent of
+archetype and travel style: an aloof trainer won't join a league whose field
+is well below their level. The trait only marks the trainer; in v0 only the
+[league lineup rule](leagues.md#selection-and-order) reads it, comparing the
+trainer's team level with the league's field level. Assignments follow lore
+(each a strong trainer with a proud or distant persona) and are reviewable
+content:
+
+| Aloof trainer | Reason |
+| --- | --- |
+| Lance, Wallace, Steven | Champions only grace elite fields. |
+| Agatha | Oak's proud old rival. |
+| Glacia | Came to Hoenn seeking worthy opponents. |
+| Clair | A proud dragon tamer. |
+| Sabrina | Cold and distant. |
+| Karen | "Strong Pokémon, weak Pokémon": disdains weak fields. |
+
+Everyone else is not aloof. The Tate & Liza duo is never aloof, since leagues
+are singles only.
+
 ## Trainer rating
 
 - **Own TR, read from world progress.** The player has one TR and each notable
@@ -177,6 +200,12 @@ assignments are approved, and the growth numbers are placeholders. Blue is
 the Rival, with start TR 0 and peak TR 170
 (placeholder): TR 0 in Pallet Town, about 25 at world progress 20 (Cerulean),
 about 50 at world progress 40, then about 10 ahead of the player until 170.
+
+The Champions follow lore too: **Lance** is a Legend who never changes, at
+TR 200 throughout (start TR = peak TR = 200); **Steven** is a Burst (start
+TR 50, peak TR 195); and **Wallace** is a Star (start TR 48, peak TR 190),
+all placeholder values. Their strength early in the journey is kept in check by
+the [aloof](#aloof) trait, not by their archetype.
 
 Examples (placeholder values):
 
@@ -428,9 +457,11 @@ TR, another trainer, or a random team.
   interpolated.
 - Catalog: the inventory holds exactly the 38 v0 entries (37 characters and
   the Tate & Liza duo); each has one roster, one home region, one travel
-  style, and valid growth values
+  style, one aloof trait, and valid growth values
   (non-negative integers, start TR ≤ peak TR, and peak TR = start TR for a
   Legend); no Gym Leader is a Legend; every enrolled encounter ID maps to exactly one `characterId`.
+- Aloof: the aloof trait is `true` exactly for the trainers in the
+  [aloof table](#aloof), each league-eligible.
 - Travel: home regions and travel styles match the assignments table; for
   every trainer, willingness is 100 at home, 90 (traveller) or 20 (homebody)
   away, and never below 5 with fatigue added.
@@ -501,6 +532,8 @@ implementations stay active until then.
 - Notable trainer status for more characters, such as Red.
 - Overworld locations for notable trainers, read through willingness:
   homebodies stay in their home region and travellers roam.
+- An overworld use of the aloof trait, such as aloof trainers keeping away
+  from weak areas.
 - Difficulty signposting: in-world hints about who is too strong (Gym guides,
   NPC gossip, a Trainer Card line), since TR is hidden.
 - Testable feel targets for playtesting (first Gym winnable with a lightly

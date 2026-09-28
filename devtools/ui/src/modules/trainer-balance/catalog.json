@@ -4442,6 +4442,7 @@
       "role": "Gym Leader",
       "homeRegion": "Kanto",
       "travel": "traveller",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -4564,6 +4565,7 @@
       "role": "Gym Leader",
       "homeRegion": "Kanto",
       "travel": "traveller",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -4684,6 +4686,7 @@
       "role": "Gym Leader",
       "homeRegion": "Kanto",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -4813,6 +4816,7 @@
       "role": "Gym Leader",
       "homeRegion": "Kanto",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -4938,6 +4942,7 @@
       "role": "Gym Leader",
       "homeRegion": "Kanto",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5088,6 +5093,7 @@
       "role": "Gym Leader",
       "homeRegion": "Kanto",
       "travel": "homebody",
+      "aloof": true,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5219,6 +5225,7 @@
       "role": "Gym Leader",
       "homeRegion": "Kanto",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5353,6 +5360,7 @@
       "role": "Gym Leader",
       "homeRegion": "Kanto",
       "travel": "traveller",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5491,6 +5499,7 @@
       "role": "Champion",
       "homeRegion": "Kanto",
       "travel": "traveller",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5640,6 +5649,7 @@
       "role": "Elite Four",
       "homeRegion": "Kanto",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5778,6 +5788,7 @@
       "role": "Elite Four",
       "homeRegion": "Kanto",
       "travel": "traveller",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5916,6 +5927,7 @@
       "role": "Elite Four",
       "homeRegion": "Kanto",
       "travel": "homebody",
+      "aloof": true,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6056,6 +6068,7 @@
       "role": "Elite Four",
       "homeRegion": "Johto",
       "travel": "traveller",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6204,6 +6217,7 @@
       "role": "Champion",
       "homeRegion": "Kanto",
       "travel": "traveller",
+      "aloof": true,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6244,10 +6258,10 @@
           "item": "Sitrus Berry"
         }
       ],
-      "startTR": 48,
-      "archetype": "sleeper",
+      "startTR": 200,
+      "archetype": "legend",
       "peakTR": 200,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 48, a Sleeper (underestimated, strong at the end: slow start, strong finish), peak TR 200.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 200, a Legend (never changes, waits at the top: TR stays at start TR, so peak TR equals start TR), peak TR 200.",
       "roster": [
         {
           "species": "Dragonite",
@@ -6343,6 +6357,7 @@
       "role": "Gym Leader",
       "homeRegion": "Johto",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6464,6 +6479,7 @@
       "role": "Gym Leader",
       "homeRegion": "Johto",
       "travel": "traveller",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6588,6 +6604,7 @@
       "role": "Gym Leader",
       "homeRegion": "Johto",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6714,6 +6731,7 @@
       "role": "Gym Leader",
       "homeRegion": "Johto",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6851,6 +6869,7 @@
       "role": "Gym Leader",
       "homeRegion": "Johto",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6986,6 +7005,7 @@
       "role": "Gym Leader",
       "homeRegion": "Johto",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7126,6 +7146,7 @@
       "role": "Gym Leader",
       "homeRegion": "Johto",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7259,6 +7280,7 @@
       "role": "Gym Leader",
       "homeRegion": "Johto",
       "travel": "homebody",
+      "aloof": true,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7405,6 +7427,7 @@
       "role": "Elite Four",
       "homeRegion": "Johto",
       "travel": "traveller",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7543,6 +7566,7 @@
       "role": "Elite Four",
       "homeRegion": "Johto",
       "travel": "traveller",
+      "aloof": true,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7681,6 +7705,7 @@
       "role": "Gym Leader",
       "homeRegion": "Hoenn",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7814,6 +7839,7 @@
       "role": "Gym Leader",
       "homeRegion": "Hoenn",
       "travel": "traveller",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7941,6 +7967,7 @@
       "role": "Gym Leader",
       "homeRegion": "Hoenn",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8075,6 +8102,7 @@
       "role": "Gym Leader",
       "homeRegion": "Hoenn",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8210,6 +8238,7 @@
       "role": "Gym Leader",
       "homeRegion": "Hoenn",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8345,6 +8374,7 @@
       "role": "Gym Leader",
       "homeRegion": "Hoenn",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8485,6 +8515,7 @@
       "role": "Gym Leader duo",
       "homeRegion": "Hoenn",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": true,
       "leagueEligible": false,
       "source": {
@@ -8620,6 +8651,7 @@
       "role": "Gym Leader",
       "homeRegion": "Hoenn",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8767,6 +8799,7 @@
       "role": "Elite Four",
       "homeRegion": "Hoenn",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8909,6 +8942,7 @@
       "role": "Elite Four",
       "homeRegion": "Hoenn",
       "travel": "homebody",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -9050,6 +9084,7 @@
       "role": "Elite Four",
       "homeRegion": "Hoenn",
       "travel": "traveller",
+      "aloof": true,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -9191,6 +9226,7 @@
       "role": "Elite Four",
       "homeRegion": "Hoenn",
       "travel": "traveller",
+      "aloof": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -9329,6 +9365,7 @@
       "role": "Champion",
       "homeRegion": "Hoenn",
       "travel": "traveller",
+      "aloof": true,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -9376,9 +9413,9 @@
         }
       ],
       "startTR": 48,
-      "archetype": "sleeper",
+      "archetype": "star",
       "peakTR": 190,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 48, a Sleeper (underestimated, strong at the end: slow start, strong finish), peak TR 190.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 48, a Star (explodes mid-journey: slow start, explodes, then levels off), peak TR 190.",
       "roster": [
         {
           "species": "Milotic",
@@ -9479,6 +9516,7 @@
       "role": "Champion",
       "homeRegion": "Hoenn",
       "travel": "traveller",
+      "aloof": true,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -9526,9 +9564,9 @@
         }
       ],
       "startTR": 50,
-      "archetype": "sleeper",
+      "archetype": "burst",
       "peakTR": 195,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 50, a Sleeper (underestimated, strong at the end: slow start, strong finish), peak TR 195.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 50, a Burst (trains in jumps at milestones: a step scaler, Steady on average, jumping at 4, 8, 16 and 24 badges), peak TR 195.",
       "roster": [
         {
           "species": "Metagross",

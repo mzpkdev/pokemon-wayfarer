@@ -64,6 +64,8 @@ export type TrainerRecord = {
   region: "Kanto" | "Johto" | "Hoenn"
   homeRegion: HomeRegion
   travel: TravelStyle
+  /** Aloof: won't join a league whose field is well below their level (only the lineup rule reads it). */
+  aloof: boolean
   /** A duo is two leaders sharing one entry, fought as a double battle. */
   role: "Gym Leader" | "Gym Leader duo" | "Elite Four" | "Champion"
   /** Fought as a double battle (the duo's Pokémon come from the shared roster in order). */
@@ -133,11 +135,12 @@ export type TrainerSettings = {
   movePool: PoolEntry[]
   homeRegion: HomeRegion
   travel: TravelStyle
+  aloof: boolean
 }
 /** A scaler anchor: [TR, value]. */
 export type Anchor = [number, number]
 export type Experiment = {
-  version: 14
+  version: 15
   /** Team level by TR: linear between anchors, halves up, flat past the last. */
   teamLevel: Anchor[]
   /** Team size by TR, same rules; paired anchors make it a step table. */
@@ -253,6 +256,9 @@ export type LeagueCandidate = {
   tr: number
   homeRegion: HomeRegion
   travel: TravelStyle
+  aloof: boolean
+  /** The team level at this TR. */
+  teamLevel: number
   /** Catalog position: stands in for characterId when breaking ties. */
   order: number
 }
@@ -260,16 +266,29 @@ export type LeagueCandidate = {
 export type LeagueEntrant = LeagueCandidate & {
   willingness: Willingness
   score: number
-  /** 1 for the highest league score; ties by catalog order. */
-  rank: number
+  /**
+   * False only for an aloof trainer whose team level is above the field level + ALOOF_MARGIN (or
+   * who has no field to compare with): they skip this league.
+   */
+  joins: boolean
+  /** 1 for the highest league score among those who join; ties by catalog order. Null when skipping. */
+  rank: number | null
   inLineup: boolean
 }
-/** One league entry: every eligible trainer ranked by league score, and the top five in battle order. */
+/**
+ * One league entry: every eligible trainer ranked by league score, the field level the aloof are
+ * compared with, and the top five in battle order.
+ */
 export type LeagueRanking = {
   league: League
   /** World progress when the player enters. */
   world: number
-  /** Every eligible trainer, highest league score first. */
+  /**
+   * The strongest team level among the top five non-aloof trainers by league score; null when no
+   * non-aloof trainer is eligible.
+   */
+  fieldLevel: number | null
+  /** Every eligible trainer: those who join, highest league score first, then the aloof who skip. */
   entrants: LeagueEntrant[]
   /** The top five by league score, ascending TR, strongest last. */
   lineup: LeagueEntrant[]
