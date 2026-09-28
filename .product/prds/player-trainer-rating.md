@@ -159,7 +159,7 @@ changes yours.
   for league invitations. TR never decreases, so it happens once.
 - **Known (by a league):** a league knows you once you hold a badge from its
   region: Indigo with a Kanto or Johto badge, Hoenn with a Hoenn badge. Sevii
-  Masters knows you after any league win. Only a league that knows you calls.
+  Masters knows you once you are a Master. Only a league that knows you calls.
 - **Invitation:** a league's phone call inviting you to its next event. Once
   you qualify, a league that knows you calls every seven in-game days, the
   leagues taking turns
@@ -175,6 +175,13 @@ changes yours.
 - **Reigning champion:** who holds a league's title until its next event: you
   if you won the last one, otherwise the strongest trainer of that event's
   lineup.
+- **Master:** anyone, you or a notable trainer, who has been champion at both
+  Indigo and Hoenn at some point, whether or not they reign now; a Masters
+  title never counts. The Sevii Masters calls you once you are a Master, and
+  gives notable trainers who are Masters guaranteed seats
+  ([reign records](../specs/leagues.md#reign-records)).
+- **Masters Gallery:** the Sevii Masters' record of every Masters event's
+  winner, including events you declined.
 - **Home region:** a notable trainer's region (Kanto, Johto, or Hoenn).
 - **Trait:** an opt-in yes/no behaviour of a notable trainer; every trait
   defaults to no. v0 has two: traveller and aloof.
@@ -200,12 +207,14 @@ changes yours.
   ([travel](../specs/notable-trainers.md#home-region-and-travel)).
 - **Aloof:** a trait; an aloof trainer joins a league only when its base
   lineup is close enough to their own team level, and skips it when there is
-  no base lineup ([selection](../specs/leagues.md#selection-and-order)).
-- **Base lineup:** a league event's five best trainers by league score who
-  are not aloof, picked before any aloof trainer is considered.
+  no base lineup ([selection](../specs/leagues.md#selection-and-order)). The
+  rule is off at the Sevii Masters.
+- **Base lineup:** an Indigo or Hoenn event's five best trainers by league
+  score who are not aloof, picked before any aloof trainer is considered.
 - **Base lineup level:** the highest team level in the base lineup.
 - **League score:** a trainer's TR scaled down by their willingness; the
-  event lineup is the five highest among those who join
+  event lineup is the five highest among those who join, after any Masters'
+  guaranteed seats at the Sevii Masters
   ([selection](../specs/leagues.md#selection-and-order)).
 - **Match 1-5:** a position in the lineup.
 - **First league win:** your first win at a given league, which brings its

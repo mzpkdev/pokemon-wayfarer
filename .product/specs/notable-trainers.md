@@ -150,7 +150,8 @@ strong trainer with a proud or distant persona):
 | Karen | "Strong Pokémon, weak Pokémon": disdains weak company. |
 
 Everyone else is not aloof. The Tate & Liza duo is never aloof, since leagues
-are singles only.
+are singles only. The aloof rule does not apply at the Sevii Masters
+([Leagues selection](leagues.md#selection-and-order)).
 
 ## Trainer AI
 

@@ -52,14 +52,14 @@
     LOCATION_REGIONS[league]?.join(" + ") ?? "neutral location"
   type SimulatedInvitation = (typeof lab.simulation.invitations)[number]
   const CHOICE_TEXT = { win: "accept & win", lose: "accept & lose", decline: "decline" } as const
-  const reasonText = (
+  const choiceReason = (
     invitation: SimulatedInvitation,
     badges: typeof lab.simulation.badges,
   ): string => {
     const count = `Indigo ${badges.Indigo}, Hoenn ${badges.Hoenn}`
     switch (invitation.reason) {
       case "only eligible":
-        return `only eligible (${count}${invitation.eligible.includes("Sevii Masters") ? "" : "; no league win"})`
+        return `only eligible (${count})`
       case "least recently called":
         return `least recently called (${invitation.eligible
           .map((league) => {
@@ -73,6 +73,20 @@
         return `tie (never called, ${count}) → Indigo`
     }
   }
+  /** Why a league calls, and whether the Masters knows the player (Indigo and Hoenn both won). */
+  const reasonText = (
+    invitation: SimulatedInvitation,
+    badges: typeof lab.simulation.badges,
+  ): string =>
+    `${choiceReason(invitation, badges)}${
+      invitation.league === "Sevii Masters"
+        ? "; the caretaker calls: Indigo and Hoenn both won"
+        : invitation.eligible.includes("Sevii Masters")
+          ? ""
+          : "; the Masters needs Indigo and Hoenn wins"
+    }`
+  const trainerName = (id: string): string =>
+    catalog.find((trainer) => trainer.id === id)?.name ?? id
   const resultText = (invitation: SimulatedInvitation): string =>
     invitation.result === "win"
       ? invitation.firstWin
@@ -1088,14 +1102,16 @@
       while an invitation or accepted event is pending (here the player arrives the day they accept).
       The countdown counts only forward day advances: a clock turned back neither advances nor resets
       it. A league calls only where the player is known: Indigo with a Kanto or Johto badge, Hoenn with
-      a Hoenn badge, the Sevii Masters after any league win; with none, no call is made and the countdown
-      keeps waiting. Each call takes the next number on a call counter, and among the eligible leagues
-      the one whose last call has the lowest number calls (never counts as least recent); ties go to the
-      most badges (Indigo = Kanto + Johto, Hoenn = Hoenn; the Masters has none), then to Indigo. A single
-      eligible league calls every time. Accepting freezes the lineup, and the event waits for the player:
-      one attempt, a loss ends it. Declining runs it without them. The reigning champion is the player
-      after a win, otherwise the lineup’s strongest (last in battle order). Days never change anyone’s
-      strength.
+      a Hoenn badge, and the Sevii Masters, whose caretaker calls, once the player has won both Indigo
+      and Hoenn; with none, no call is made and the countdown keeps waiting. Each call takes the next
+      number on a call counter, and among the eligible leagues the one whose last call has the lowest
+      number calls (never counts as least recent); ties go to the most badges (Indigo = Kanto + Johto,
+      Hoenn = Hoenn; the Masters has none), then to Indigo. A single eligible league calls every time.
+      Accepting freezes the lineup, and the event waits for the player: one attempt, a loss ends it. Declining
+      runs it without them. The reigning champion is the player after a win, otherwise the lineup’s strongest
+      (last in battle order). A Master is anyone, the player or a notable trainer, who has been champion
+      at both Indigo and Hoenn (a Masters title never counts). The Masters Gallery records every Masters
+      event’s winner. Days never change anyone’s strength.
     </p>
     <p class="hint league-note">
       Each event gives every league-eligible trainer (singles only: no Red, no Tate & Liza) a
@@ -1109,7 +1125,10 @@
       their team level is at most the base lineup level + {ALOOF_MARGIN}, aloof trainers are never
       compared with each other, and with no base lineup every aloof trainer skips. The top {LINEUP_SIZE}
       of everyone who joins (ties in catalog order, standing in for characterId) make the lineup, which
-      fights by ascending TR, strongest last. There is no randomness.
+      fights by ascending TR, strongest last. At the Sevii Masters the aloof rule is off (everyone joins,
+      so there is no base lineup), and notable trainers who are Masters get guaranteed seats, the highest
+      league scores first when more than {LINEUP_SIZE} are Masters; the seats left go to the highest league
+      scores. There is no randomness.
     </p>
     {#if !lab.simulation.qualified}
       <p class="hint league-note" data-testid="not-qualified">
@@ -1128,6 +1147,27 @@
             )}
           </li>
         {/each}
+      </ul>
+      <ul class="aloof-list" data-testid="reigns">
+        <li data-testid="reigned">
+          Reigned after invitation {lab.invitationChoices.length}: Indigo {lab.simulation.reigned.Indigo.map(
+            trainerName,
+          ).join(", ") || "—"}; Hoenn {lab.simulation.reigned.Hoenn.map(trainerName).join(", ") ||
+            "—"}
+        </li>
+        <li data-testid="masters">
+          Notable Masters: {lab.simulation.masters.map(trainerName).join(", ") || "none yet"}
+        </li>
+        <li data-testid="masters-gallery">
+          Masters Gallery: {lab.simulation.invitations.some(
+            (invitation) => invitation.league === "Sevii Masters",
+          )
+            ? lab.simulation.invitations
+                .filter((invitation) => invitation.league === "Sevii Masters")
+                .map((invitation) => `#${invitation.number} ${championText(invitation.champion)}`)
+                .join(", ")
+            : "no Masters event yet"}
+        </li>
       </ul>
       <div class="entrant-scroll">
         <table class="entrant-table" data-testid="invitations">
@@ -1157,7 +1197,10 @@
                   >{reasonText(invitation, lab.simulation.badges)}</td
                 ><td data-testid={`invitation-${invitation.number}-lineup`}
                   >{invitation.ranking.lineup
-                    .map((entrant) => `${entrant.trainer.name} ${entrant.score}`)
+                    .map(
+                      (entrant) =>
+                        `${entrant.trainer.name} ${entrant.score}${entrant.seat === "Master" ? " (Master)" : ""}`,
+                    )
                     .join(", ")}</td
                 ><td data-testid={`invitation-${invitation.number}-fatigue`}
                   >{invitation.fatigueFrom
@@ -1189,8 +1232,11 @@
         <h3>
           Invitation {lab.event.number} (day {lab.event.day}): {lab.event.league}
           <span class="muted"
-            >world progress {lab.event.ranking.world} · {locationRegions(lab.event.league)} · base lineup
-            Lv {lab.event.ranking.baseLineupLevel ?? "—"} · fatigued from {lab.event.fatigueFrom
+            >world progress {lab.event.ranking.world} · {locationRegions(lab.event.league)} · {lab
+              .event.ranking.aloofRule
+              ? `base lineup Lv ${lab.event.ranking.baseLineupLevel ?? "—"}`
+              : `aloof rule off at the Masters · ${lab.event.ranking.masterSeats} Master seat${lab.event.ranking.masterSeats === 1 ? "" : "s"}`}
+            · fatigued from {lab.event.fatigueFrom
               ? `invitation ${lab.event.fatigueFrom.number} (${lab.event.fatigueFrom.league})`
               : "no earlier event"}</span
           >
@@ -1198,10 +1244,15 @@
         <ul class="aloof-list" data-testid="event-aloof">
           {#each lab.event.ranking.entrants.filter((entrant) => entrant.aloof) as entrant (entrant.trainer.id)}
             <li class:skips={!entrant.joins} data-testid={`event-aloof-${entrant.trainer.id}`}>
-              {entrant.trainer.name} aloof: team Lv {entrant.teamLevel} vs base lineup Lv {lab.event
-                .ranking.baseLineupLevel ?? "—"} + {ALOOF_MARGIN} → {entrant.joins
-                ? "joins"
-                : "skips"}
+              {#if lab.event.ranking.aloofRule}
+                {entrant.trainer.name} aloof: team Lv {entrant.teamLevel} vs base lineup Lv {lab
+                  .event.ranking.baseLineupLevel ?? "—"} + {ALOOF_MARGIN} → {entrant.joins
+                  ? "joins"
+                  : "skips"}
+              {:else}
+                {entrant.trainer.name} aloof: team Lv {entrant.teamLevel}, aloof rule off at the
+                Masters → joins
+              {/if}
             </li>
           {/each}
         </ul>
@@ -1209,7 +1260,13 @@
           {#each lab.event.matches as row, index (row.trainer.id)}
             <li class="match-card" data-testid={`event-match-${index + 1}`}>
               <div class="match-heading">
-                <h3><span class="muted">Match {index + 1}</span> {row.trainer.name}</h3>
+                <h3>
+                  <span class="muted">Match {index + 1}</span>
+                  {row.trainer.name}{#if lab.event.ranking.lineup[index]?.seat === "Master"}<span
+                      class="title-chip"
+                      data-testid={`event-match-${index + 1}-seat`}>Master seat</span
+                    >{/if}
+                </h3>
                 <span class="hint"
                   >TR {row.tr} · score {lab.event.ranking.lineup[index]?.score} · Lv. {row.teamLevel}
                   · {row.team.length} Pokémon</span
@@ -1232,7 +1289,7 @@
                   >Traveller</th
                 ><th>Location</th><th>Travel cost</th><th>Fatigue</th><th>Willingness</th><th
                   >League score</th
-                ><th>Aloof</th><th>Lineup</th></tr
+                ><th>Aloof</th><th>Reigned</th><th>Lineup</th></tr
               ></thead
             >
             <tbody>
@@ -1250,8 +1307,28 @@
                   ><td class="numeric">{entrant.willingness.fatigue}</td><td class="numeric"
                     >{entrant.willingness.score}</td
                   ><td class="numeric score">{entrant.score}</td><td
-                    >{entrant.aloof ? (entrant.joins ? "joins" : "skips") : ""}</td
-                  ><td>{entrant.inLineup ? "in lineup" : ""}</td></tr
+                    >{entrant.aloof
+                      ? lab.event.ranking.aloofRule
+                        ? entrant.joins
+                          ? "joins"
+                          : "skips"
+                        : "joins (aloof rule off at the Masters)"
+                      : ""}</td
+                  ><td
+                    >{entrant.master
+                      ? "Master"
+                      : entrant.reigned.Indigo
+                        ? "Indigo"
+                        : entrant.reigned.Hoenn
+                          ? "Hoenn"
+                          : ""}</td
+                  ><td
+                    >{entrant.seat === "Master"
+                      ? "in lineup (Master seat)"
+                      : entrant.inLineup
+                        ? "in lineup"
+                        : ""}</td
+                  ></tr
                 >
               {/each}
             </tbody>
@@ -2010,6 +2087,15 @@
   }
   .party > li.signature {
     border-color: #4d4331;
+  }
+  .title-chip {
+    color: #9fd0ff;
+    border: 1px solid #3e6485;
+    border-radius: 4px;
+    padding: 0 5px;
+    margin-left: 6px;
+    font-size: 10px;
+    font-weight: 400;
   }
   .ace-chip {
     color: var(--accent);

@@ -31,6 +31,7 @@ import type {
   RegionalLeague,
   ReigningChampion,
   RosterSlot,
+  Seat,
   ScalerKind,
   TeamMember,
   TrainerRecord,
@@ -1228,6 +1229,27 @@ export const leagueCandidates = (
   })
 
 /**
+ * The Sevii Masters: an off-the-record club for champions, not an official league. The aloof rule
+ * is off there, and notable trainers who are Masters get guaranteed seats.
+ */
+export const MASTERS: League = "Sevii Masters"
+
+/** No one has reigned anywhere yet: the reign records of a new game. */
+export const NO_REIGNS: Readonly<Record<RegionalLeague, ReadonlySet<string>>> = {
+  Indigo: new Set(),
+  Hoenn: new Set(),
+}
+
+/**
+ * Whether a notable trainer is a Master: they have been champion at both Indigo and Hoenn at some
+ * point (not necessarily now). A Masters title never counts.
+ */
+export const isMaster = (
+  reigned: Readonly<Record<RegionalLeague, ReadonlySet<string>>>,
+  id: string,
+): boolean => reigned.Indigo.has(id) && reigned.Hoenn.has(id)
+
+/**
  * Whether an aloof trainer joins: their team level is at most the base lineup level + ALOOF_MARGIN.
  * With no base lineup (null) they skip.
  */
@@ -1236,48 +1258,80 @@ export const aloofJoins = (teamLevel: number, baseLineupLevel: number | null): b
 
 /**
  * A league event's lineup: each eligible trainer's willingness (fatigued when in `previous`, the
- * lineup of the most recent resolved league event) and league score. The top LINEUP_SIZE non-aloof trainers by
- * league score are the base lineup, whose strongest team level is the base lineup level; an aloof
- * trainer joins only when their team level is at most the base lineup level + ALOOF_MARGIN,
- * compared with the base lineup and never with other aloof trainers (with no base lineup, every
- * aloof trainer skips). Everyone who joins is ranked highest score first (ties by catalog
- * order), and the top LINEUP_SIZE are the lineup, which fights in ascending TR, strongest last (ties
- * by catalog order). No randomness: the same inputs always give the same lineup.
+ * lineup of the most recent resolved league event) and league score. At Indigo and Hoenn the top
+ * LINEUP_SIZE non-aloof trainers by league score are the base lineup, whose strongest team level is
+ * the base lineup level; an aloof trainer joins only when their team level is at most the base
+ * lineup level + ALOOF_MARGIN, compared with the base lineup and never with other aloof trainers
+ * (with no base lineup, every aloof trainer skips). At the Sevii Masters the aloof rule is off (no
+ * base lineup; everyone joins), and Masters (`reigned`: who has been champion at Indigo and at
+ * Hoenn; both make a Master) get guaranteed seats, the highest league scores first when more than
+ * LINEUP_SIZE are Masters. Everyone who joins is ranked highest score first (ties by catalog
+ * order); the seats left after the guaranteed ones go to the highest scores. The lineup fights in
+ * ascending TR, strongest last (ties by catalog order). No randomness: the same inputs always give
+ * the same lineup.
  */
 export const rankLeague = (
   league: League,
   world: number,
   candidates: readonly LeagueCandidate[],
   previous: ReadonlySet<string>,
+  reigned: Readonly<Record<RegionalLeague, ReadonlySet<string>>> = NO_REIGNS,
 ): LeagueRanking => {
   const byScore = (a: { score: number; order: number }, b: { score: number; order: number }) =>
     b.score - a.score || a.order - b.order
+  const atMasters = league === MASTERS
   const scored = candidates
     .map((candidate) => {
-      const will = willingness(league, candidate, previous.has(candidate.trainer.id))
-      return { ...candidate, willingness: will, score: leagueScore(candidate.tr, will.score) }
+      const id = candidate.trainer.id
+      const will = willingness(league, candidate, previous.has(id))
+      return {
+        ...candidate,
+        reigned: { Indigo: reigned.Indigo.has(id), Hoenn: reigned.Hoenn.has(id) },
+        master: isMaster(reigned, id),
+        willingness: will,
+        score: leagueScore(candidate.tr, will.score),
+      }
     })
     .toSorted(byScore)
-  const baseLineup = scored.filter((entrant) => !entrant.aloof).slice(0, LINEUP_SIZE)
+  const baseLineup = atMasters
+    ? []
+    : scored.filter((entrant) => !entrant.aloof).slice(0, LINEUP_SIZE)
   const baseLineupLevel = baseLineup.length
     ? Math.max(...baseLineup.map((entrant) => entrant.teamLevel))
     : null
   const judged = scored.map((entrant) => ({
     ...entrant,
-    joins: !entrant.aloof || aloofJoins(entrant.teamLevel, baseLineupLevel),
+    joins: atMasters || !entrant.aloof || aloofJoins(entrant.teamLevel, baseLineupLevel),
   }))
+  const joining = judged.filter((entrant) => entrant.joins)
+  const guaranteed = new Set(
+    (atMasters ? joining.filter((entrant) => entrant.master) : [])
+      .slice(0, LINEUP_SIZE)
+      .map((entrant) => entrant.trainer.id),
+  )
+  const open = new Set(
+    joining
+      .filter((entrant) => !guaranteed.has(entrant.trainer.id))
+      .slice(0, LINEUP_SIZE - guaranteed.size)
+      .map((entrant) => entrant.trainer.id),
+  )
+  const seat = (id: string): Seat | null =>
+    guaranteed.has(id) ? "Master" : open.has(id) ? "league score" : null
   const entrants = [
-    ...judged
-      .filter((entrant) => entrant.joins)
-      .map((entrant, index) => ({ ...entrant, rank: index + 1, inLineup: index < LINEUP_SIZE })),
+    ...joining.map((entrant, index) => {
+      const taken = seat(entrant.trainer.id)
+      return { ...entrant, rank: index + 1, seat: taken, inLineup: taken !== null }
+    }),
     ...judged
       .filter((entrant) => !entrant.joins)
-      .map((entrant) => ({ ...entrant, rank: null, inLineup: false })),
+      .map((entrant) => ({ ...entrant, rank: null, seat: null, inLineup: false })),
   ]
   return {
     league,
     world,
+    aloofRule: !atMasters,
     baseLineupLevel,
+    masterSeats: guaranteed.size,
     entrants,
     lineup: entrants
       .filter((entrant) => entrant.inLineup)
@@ -1306,12 +1360,19 @@ export const leagueBadges = (split: BadgeSplit): RegionalBadges => ({
 })
 
 /**
- * The leagues that may call, in LEAGUES order: Indigo with at least one Kanto or Johto badge, Hoenn
- * with at least one Hoenn badge, and the Sevii Masters after any lifetime league win.
+ * Whether the Sevii Masters knows the player: they have won both Indigo and Hoenn at least once
+ * (lifetime wins, in any order).
  */
-export const eligibleLeagues = (badges: RegionalBadges, lifetimeWin: boolean): League[] =>
+export const mastersKnows = (lifetimeWins: ReadonlySet<League>): boolean =>
+  lifetimeWins.has("Indigo") && lifetimeWins.has("Hoenn")
+
+/**
+ * The leagues that may call, in LEAGUES order: Indigo with at least one Kanto or Johto badge, Hoenn
+ * with at least one Hoenn badge, and the Sevii Masters once it knows the player (mastersKnows).
+ */
+export const eligibleLeagues = (badges: RegionalBadges, knownByMasters: boolean): League[] =>
   LEAGUES.filter((league) =>
-    league === "Sevii Masters" ? lifetimeWin : badges[league as RegionalLeague] > 0,
+    league === MASTERS ? knownByMasters : badges[league as RegionalLeague] > 0,
   )
 
 /**
@@ -1324,10 +1385,10 @@ export const eligibleLeagues = (badges: RegionalBadges, lifetimeWin: boolean): L
  */
 export const callingLeague = (
   badges: RegionalBadges,
-  lifetimeWin: boolean,
+  knownByMasters: boolean,
   lastCall: Record<League, number | null>,
 ): { league: League; reason: CallReason; eligible: League[] } | null => {
-  const eligible = eligibleLeagues(badges, lifetimeWin)
+  const eligible = eligibleLeagues(badges, knownByMasters)
   const [only] = eligible
   if (only === undefined) return null
   if (eligible.length === 1) return { league: only, reason: "only eligible", eligible }
@@ -1378,13 +1439,13 @@ export const observeDay = (clock: InvitationClock, today: number): InvitationClo
 export const placeCall = (
   clock: InvitationClock,
   badges: RegionalBadges,
-  lifetimeWin: boolean,
+  knownByMasters: boolean,
 ): {
   clock: InvitationClock
   call: (ReturnType<typeof callingLeague> & { sequence: number }) | null
 } => {
   if (clock.countdown !== 0) return { clock, call: null }
-  const call = callingLeague(badges, lifetimeWin, clock.lastCall)
+  const call = callingLeague(badges, knownByMasters, clock.lastCall)
   if (call === null) return { clock, call: null }
   const sequence = clock.calls + 1
   return {
@@ -1414,9 +1475,11 @@ export const resolveInvitation = (clock: InvitationClock): InvitationClock => ({
  * event is pending. Each call takes the next call sequence number, which orders the round-robin.
  * `choices[i]` answers invitation i. The lineup is computed at acceptance or decline, fatigued by
  * the lineup of the most recent resolved event, and frozen. The reigning champion is the player
- * after a win, otherwise the lineup's strongest member (last in battle order). With no eligible
- * league no call is made; badges and wins are fixed within a simulation, so none ever follows.
- * No randomness.
+ * after a win, otherwise the lineup's strongest member (last in battle order); a trainer who has
+ * reigned at both Indigo and Hoenn is a Master for good, guaranteed a seat at later Sevii Masters
+ * events (a Masters title never counts). The Masters calls only once the player has won both
+ * Indigo and Hoenn. With no eligible league no call is made; badges are fixed
+ * within a simulation, so none ever follows. No randomness.
  */
 export const simulateInvitations = (
   catalog: readonly TrainerRecord[],
@@ -1427,15 +1490,24 @@ export const simulateInvitations = (
   waits: readonly number[] = [],
 ): InvitationSimulation => {
   const badges = leagueBadges(split)
-  if (!qualifies(playerTR)) return { qualified: false, badges, invitations: [] }
+  if (!qualifies(playerTR))
+    return {
+      qualified: false,
+      badges,
+      invitations: [],
+      reigned: { Indigo: [], Hoenn: [] },
+      masters: [],
+    }
   const candidates = leagueCandidates(catalog, experiment, playerTR)
   const lifetimeWins = new Set<League>()
+  const reigned: Record<RegionalLeague, Set<string>> = { Indigo: new Set(), Hoenn: new Set() }
+  const masters: string[] = []
   const invitations: Invitation[] = []
   let clock = startInvitationClock(0)
   for (const [index, choice] of choices.entries()) {
     const before = invitations.at(-1)
     const due = clock.day + (clock.countdown ?? 0)
-    const placed = placeCall(observeDay(clock, due), badges, lifetimeWins.size > 0)
+    const placed = placeCall(observeDay(clock, due), badges, mastersKnows(lifetimeWins))
     if (placed.call === null) break
     const { league, reason, eligible, sequence } = placed.call
     const lastCall = { ...clock.lastCall }
@@ -1445,6 +1517,7 @@ export const simulateInvitations = (
       playerTR,
       candidates,
       new Set(before?.ranking.lineup.map((entrant) => entrant.trainer.id)),
+      reigned,
     )
     const strongest = ranking.lineup.at(-1)
     if (!strongest) throw new Error(`${league} has no lineup for invitation ${index + 1}.`)
@@ -1454,6 +1527,12 @@ export const simulateInvitations = (
     const won = choice === "win"
     const firstWin = won && !lifetimeWins.has(league)
     if (won) lifetimeWins.add(league)
+    else if (league !== MASTERS) {
+      const id = strongest.trainer.id
+      const wasMaster = isMaster(reigned, id)
+      reigned[league as RegionalLeague].add(id)
+      if (!wasMaster && isMaster(reigned, id)) masters.push(id)
+    }
     invitations.push({
       number: index + 1,
       day: due,
@@ -1474,7 +1553,13 @@ export const simulateInvitations = (
     })
     clock = resolveInvitation(observeDay(clock, due + wait))
   }
-  return { qualified: true, badges, invitations }
+  return {
+    qualified: true,
+    badges,
+    invitations,
+    reigned: { Indigo: [...reigned.Indigo], Hoenn: [...reigned.Hoenn] },
+    masters,
+  }
 }
 
 /** Each league's reigning champion after its latest resolved event (null before its first). */

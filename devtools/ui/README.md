@@ -294,6 +294,17 @@ aloof), every aloof trainer skips. Everyone who joins is then ranked by league
 score as above. An aloof trainer who skips is listed unranked at the end of
 the table.
 
+The **Sevii Masters** ([Leagues spec](../../.product/specs/leagues.md#reign-records))
+is an off-the-record club, not an official league. The aloof rule is off
+there: there is no base lineup, and every aloof trainer joins ("joins (aloof
+rule off at the Masters)"). A **Master** is anyone who has been champion at
+both Indigo and Hoenn; a Masters title never counts. The simulator records,
+for each notable trainer, whether they have reigned at Indigo and at Hoenn
+(the event's strongest takes the title whenever the player loses or
+declines). Notable trainers who are Masters get guaranteed seats at the
+Masters, the highest league scores first when more than five are Masters,
+fatigue included; the remaining seats go to the highest league scores.
+
 The simulator runs at the player's world progress (days never change anyone's
 strength). The player qualifies at player TR 80 (today exactly 8 badges; the
 explorer counts the qualifying moment as day 0); below it the panel says no
@@ -311,8 +322,9 @@ fields set the badge split (by default the badge floor of the player TR,
 filling Kanto, then Johto, then Hoenn, 8 each; **Follow badge total**
 restores it). Which league calls ([Leagues spec](../../.product/specs/leagues.md#which-league-calls)):
 a league calls only where the player is known: Indigo with at least one Kanto
-or Johto badge, Hoenn with at least one Hoenn badge, and the Sevii Masters
-after any league win. With no badges at all the panel says no league calls.
+or Johto badge, Hoenn with at least one Hoenn badge, and the Sevii Masters,
+whose caretaker calls, once the player is a Master (they have won both
+Indigo and Hoenn in the run). With no badges at all the panel says no league calls.
 Calls are ordered by a monotonic **call counter**, never by days: each call
 takes the next sequence number (1, 2, 3, …) and each league remembers the
 number of its last call, so a clock turned back cannot reorder them. Among the
@@ -322,21 +334,32 @@ number, calls (a league that never called counts as least recent); ties go to th
 league), then to Indigo. So the first call comes from the eligible league with
 the most badges, and a single eligible league calls every time. Each row shows
 the invitation, its day, the league and why ("only eligible (Indigo 8, Hoenn
-0; no league win)", "least recently called (Indigo call 1, Sevii Masters
-never)", "tie (never called) → most badges (Indigo 16, Hoenn 8)" or "tie
-(never called, Indigo 4, Hoenn 4) → Indigo"), the lineup in battle order with league scores,
+0); the Masters needs Indigo and Hoenn wins", "least recently called (Indigo
+call 1, Sevii Masters never, Hoenn call 2); the caretaker calls: Indigo and
+Hoenn both won", "tie (never called) → most badges (Indigo 16, Hoenn 8)" or
+"tie (never called, Indigo 4, Hoenn 4) → Indigo"; the Masters note follows
+every reason until the Masters can call), the lineup in battle order with
+league scores (a Master seat marked "(Master)"),
 the invitation whose lineup it fatigues, an **Answer** (accept & win, accept &
 lose, or decline; decline by default), the result (first win, repeat win,
 loss, declined) and the reigning champion: the player after a win, otherwise
 the lineup's strongest member (last in battle order). A line above the table
-names each league's reigning champion after the last invitation. An answer
-changes who calls next (a win opens the Masters), never a lineup's rule.
+names each league's reigning champion after the last invitation, and another
+who has reigned at Indigo and at Hoenn, the notable Masters, and the Masters
+Gallery (every Masters event's winner, "#3 Lance (TR 200)" or "#12 the
+player"). An answer changes who calls next (wins at both Indigo and Hoenn open
+the Masters) and who reigns, which decides the Masters' guaranteed seats; it
+never changes a rule.
 **Show invitation N** selects an event; below the table it shows the base
 lineup level, each aloof trainer's check ("team Lv X vs base lineup Lv Y + 10
-→ joins/skips"), the lineup with teams, levels and league scores, and every
-eligible trainer's rank, TR, team level, home region, whether they are a
-traveller, at home or away, travel cost, fatigue, willingness, league score,
-whether an aloof trainer joins or skips, and whether they are in the lineup.
+→ joins/skips"; at the Masters "aloof rule off at the Masters · N Master
+seats" and "team Lv X, aloof rule off at the Masters → joins"), the lineup
+with teams, levels and league scores (a "Master seat" tag on a guaranteed
+seat), and every eligible trainer's rank, TR, team level, home region,
+whether they are a traveller, at home or away, travel cost, fatigue,
+willingness, league score, whether an aloof trainer joins or skips, where
+they have reigned (Master, Indigo or Hoenn), and whether they are in the
+lineup ("in lineup (Master seat)" for a guaranteed seat).
 The summary strip names the Indigo finalist (the strongest of a fresh Indigo
 lineup at the current world progress). With the catalog defaults (lineup in
 battle order, league score in brackets where fatigue or travel lowers it; the
@@ -354,22 +377,32 @@ reigning champion last):
   every one: day 7 Hoenn (only eligible, declined; Glacia, Sidney, Drake,
   Norman, Phoebe, all at home; Phoebe reigns), day 14 Hoenn again (only
   eligible; Juan, Wattson, Blue (81), Giovanni (85), Will (86); first win),
-  day 21 the Sevii Masters (never called; Lt. Surge, Agatha, Koga, Phoebe, Karen;
-  first win), then Hoenn and the Masters alternate (repeat wins). Indigo, with
-  no Kanto or Johto badge, never calls.
-- 16 badges, all Kanto and Johto, accepting and winning everything: day 7
-  Indigo, Koga, Karen, Blue, Giovanni, Jasmine (first win); day 14 the
-  Masters, Clair, Juan, Erika, Phoebe, Norman (first win; the Indigo five are
-  tired); then Indigo and the Masters alternate. Hoenn never calls. Declining
-  everything instead has Indigo call every time, alternating that lineup
-  (champion Jasmine) with Morty, Will, Sabrina, Clair and Erika (champion
-  Erika); the Champions (Lv 99–100) skip every base lineup (Lv 75–82).
+  then Hoenn every week, alternating those two lineups (repeat wins). Indigo,
+  with no Kanto or Johto badge, never calls, so the player never wins it and
+  the Masters never calls.
+- 16 badges, all Kanto and Johto, accepting and winning everything: Indigo
+  calls every time, alternating Koga, Karen, Blue, Giovanni, Jasmine (first
+  win) with Morty, Will, Sabrina, Clair, Erika. Hoenn and the Masters never
+  call. Declining everything instead gives the same two lineups (champions
+  Jasmine and Erika); the Champions (Lv 99–100) skip every base lineup
+  (Lv 75–82).
+- 16 badges, Kanto 8 and Hoenn 8 (the [Leagues PRD](../../.product/prds/leagues.md#sample-playthrough)
+  sample), winning the first two invitations and declining the rest: day 7
+  Indigo (tie → Indigo; first win), day 14 Hoenn (first win), day 21 the
+  Masters (the caretaker calls; the aloof rule off, so Giovanni, Jasmine,
+  Steven, Wallace, Lance; Lance reigns and goes in the Gallery). Blue reigns
+  at Indigo on day 28, Giovanni (a traveller) at Hoenn on day 35 and at
+  Indigo on day 49, which makes him a Master; at the day 63 Masters his seat
+  is guaranteed, and on day 84, tired from Hoenn (league score 65), he keeps
+  it over Blue (129).
 - 24 badges (world progress 160, base lineup Lv 100, every aloof trainer
   joins), declining everything: Indigo (tie → most badges), Morty, Sabrina,
   Clair, Steven (175), Lance (Lance); Hoenn (least recently called: never),
   Norman (164), Blue (153), Winona (172), Juan, Wallace (Wallace); and so on
   alternately. Lance, a Kanto traveller, fights last at every Indigo event,
-  each fatigued only by the Hoenn event before.
+  each fatigued only by the Hoenn event before. With no win the Masters never
+  calls, and no one is a Master: Lance reigns only at Indigo, Wallace only at
+  Hoenn.
 
 Lance, a Legend at TR 200 (team Lv 100), first joins a league at world
 progress 135 (base lineup Lv 91) when no fatigue holds the base lineup back.
@@ -482,7 +515,7 @@ three are at or under the player TR. League lineups have no fixed targets: they 
 the tests check the league score and its flooring, the top-five selection and
 tie-break, the invitation gate (none at player TR 79, calls from 80), which
 league calls (known-there eligibility: no badges in a region means that
-league never calls, the Masters only after a win; the least recently called
+league never calls, the Masters only after wins at both Indigo and Hoenn; the least recently called
 eligible league, round-robin over three; ties to the most badges, then
 Indigo; a single eligible league calling again and again), the call counter
 (each call takes the next sequence number; a clock turned back reorders
@@ -495,8 +528,13 @@ TR), and
 the aloof rule (joining at exactly the base lineup level + 10 and skipping
 one level above, never compared with other aloof trainers, skipping when there
 is no base lineup, fatigue still applying, Lance skipping fresh 8- and
-16-badge events and fighting last at a fresh 24-badge event, and no aloof lineup member more than 10 levels
-above the base lineup level). Home regions and the travellers live in the
+16-badge Indigo events and fighting last at a fresh 24-badge event, and no aloof lineup member more than 10 levels
+above the base lineup level at Indigo or Hoenn), and the Masters (never
+calling before wins at both Indigo and Hoenn; the aloof rule off, so an aloof
+trainer attends however far above the field; a Master, someone who reigned at
+both Indigo and Hoenn, seated over a higher-scoring trainer who is not one;
+more than five Masters seated by league score; reigns recorded at Indigo and
+Hoenn only, never for a Masters title). Home regions and the travellers live in the
 script's `HOME_REGION` table and `TRAVELLERS` set, and the aloof trainers in its `ALOOF` set (which may name only
 league-eligible catalog trainers). Play styles live in its `PLAY_STYLES`
 table (the script rejects an unknown style and a trainer with none or more

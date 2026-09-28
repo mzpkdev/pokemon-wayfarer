@@ -43,6 +43,8 @@ import {
   QUALIFYING_TR,
   callingLeague,
   eligibleLeagues,
+  isMaster,
+  mastersKnows,
   defaultBadgeSplit,
   leagueBadges,
   leagueCandidates,
@@ -1691,6 +1693,8 @@ describe("league lineups", () => {
       for (const entrant of ranking.entrants) {
         expect(entrant.willingness.home).toBe(true)
         expect(entrant.score).toBe(entrant.tr)
+        // The aloof rule is off at the Masters: everyone joins.
+        expect(entrant.joins).toBe(true)
       }
       const joining = new Set(
         ranking.entrants.filter((entrant) => entrant.joins).map((entrant) => entrant.trainer.id),
@@ -1777,6 +1781,8 @@ describe("league lineups", () => {
         qualified: false,
         badges: { Indigo: 0, Hoenn: 8 },
         invitations: [],
+        reigned: { Indigo: [], Hoenn: [] },
+        masters: [],
       })
       const at80 = simulate(80, hoennFirst, decline(8))
       expect(at80.qualified).toBe(true)
@@ -1798,7 +1804,7 @@ describe("league lineups", () => {
         invitation.reason,
       ])
 
-    it("lets a league call only where the player is known, and the Masters only after a win", () => {
+    it("lets a league call only where the player is known", () => {
       expect(eligibleLeagues({ Indigo: 0, Hoenn: 8 }, false)).toEqual(["Hoenn"])
       expect(eligibleLeagues({ Indigo: 1, Hoenn: 0 }, false)).toEqual(["Indigo"])
       expect(eligibleLeagues({ Indigo: 16, Hoenn: 1 }, true)).toEqual([
@@ -1817,21 +1823,56 @@ describe("league lineups", () => {
         qualified: true,
         badges: { Indigo: 0, Hoenn: 0 },
         invitations: [],
+        reigned: { Indigo: [], Hoenn: [] },
+        masters: [],
       })
-      // Losses and declines never open the Masters; the first win does.
-      const run = simulate(80, hoennFirst, ["lose", "decline", "win", "decline"]).invitations
-      expect(run.map((invitation) => invitation.eligible)).toEqual([
-        ["Hoenn"],
-        ["Hoenn"],
-        ["Hoenn"],
-        ["Sevii Masters", "Hoenn"],
+    })
+
+    it("keeps the Masters from calling until the player has won both Indigo and Hoenn", () => {
+      expect(mastersKnows(new Set())).toBe(false)
+      expect(mastersKnows(new Set(["Hoenn"]))).toBe(false)
+      expect(mastersKnows(new Set(["Indigo", "Sevii Masters"]))).toBe(false)
+      expect(mastersKnows(new Set(["Hoenn", "Indigo"]))).toBe(true)
+      // Wins at Hoenn alone never open the Masters, however many.
+      expect(new Set(leagues(80, hoennFirst, ["win", "win", "lose", "win"]))).toEqual(
+        new Set(["Hoenn"]),
+      )
+      // Known in both regions: losses, declines and a single league's wins keep it closed; the
+      // Masters calls after the second of the two wins, in either order.
+      const mixed = { Kanto: 3, Johto: 0, Hoenn: 5 }
+      const run = simulate(80, mixed, [
+        "lose",
+        "decline",
+        "win",
+        "win",
+        "win",
+        "decline",
+      ]).invitations
+      expect(run.map((invitation) => [invitation.league, invitation.result])).toEqual([
+        ["Hoenn", "loss"],
+        ["Indigo", "declined"],
+        ["Hoenn", "win"],
+        ["Indigo", "win"],
+        ["Sevii Masters", "win"],
+        ["Hoenn", "declined"],
       ])
-      expect(run.map((invitation) => invitation.league)).toEqual([
+      expect(run.map((invitation) => invitation.eligible.includes("Sevii Masters"))).toEqual([
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+      ])
+      const indigoFirst = simulate(80, mixed, ["decline", "win", "win"]).invitations
+      expect(indigoFirst.map((invitation) => invitation.league)).toEqual([
         "Hoenn",
+        "Indigo",
         "Hoenn",
-        "Hoenn",
+      ])
+      expect(simulate(80, mixed, ["decline", "win", "win", "decline"]).invitations[3]!.league).toBe(
         "Sevii Masters",
-      ])
+      )
     })
 
     it("lets a single eligible league call again and again", () => {
@@ -1857,11 +1898,11 @@ describe("league lineups", () => {
         league: "Sevii Masters",
         reason: "least recently called",
       })
-      // 16 Kanto/Johto + 8 Hoenn badges, winning the first call: Indigo, Hoenn, the Masters, then
-      // the same order again.
-      expect(calls(160, defaultBadgeSplit(24), ["win", ...decline(7)])).toEqual([
+      // 16 Kanto/Johto + 8 Hoenn badges, winning the first two calls (Indigo and Hoenn): Indigo,
+      // Hoenn, the Masters, then the same order again.
+      expect(calls(160, defaultBadgeSplit(24), ["win", "win", ...decline(6)])).toEqual([
         ["Indigo", "tie: most badges"],
-        ["Hoenn", "tie: most badges"],
+        ["Hoenn", "least recently called"],
         ["Sevii Masters", "least recently called"],
         ["Indigo", "least recently called"],
         ["Hoenn", "least recently called"],
@@ -1869,7 +1910,7 @@ describe("league lineups", () => {
         ["Indigo", "least recently called"],
         ["Hoenn", "least recently called"],
       ])
-      const run = simulate(160, defaultBadgeSplit(24), ["win", ...decline(3)]).invitations
+      const run = simulate(160, defaultBadgeSplit(24), ["win", "win", ...decline(2)]).invitations
       // Each call takes the next sequence number; lastCall is the state before the call.
       expect(run.map((invitation) => [invitation.sequence, invitation.lastCall])).toEqual([
         [1, never],
@@ -2036,7 +2077,7 @@ describe("league lineups", () => {
       const again = simulate(120, kantoJohto, ["lose", "lose", "lose", "lose", "lose"]).invitations
       expect(again[1]!.league).toBe("Indigo")
       expect(again[3]!.league).toBe("Indigo")
-      expect(invitations[3]!.league).toBe("Sevii Masters")
+      expect(invitations[3]!.league).toBe("Indigo")
       expect(invitations[1]!.ranking).toEqual(again[1]!.ranking)
     })
 
@@ -2049,6 +2090,7 @@ describe("league lineups", () => {
         "win",
         "decline",
       ]).invitations
+      // After Indigo and Hoenn are won, the Masters calls.
       for (const invitation of invitations)
         expect(invitation.champion).toEqual(
           invitation.choice === "win"
@@ -2065,8 +2107,8 @@ describe("league lineups", () => {
         ["Indigo", "declined", false],
         ["Hoenn", "loss", false],
         ["Indigo", "win", true],
-        ["Sevii Masters", "win", true],
         ["Hoenn", "win", true],
+        ["Sevii Masters", "win", true],
         ["Indigo", "declined", false],
       ])
       // Declining an elite endgame event crowns aloof Lance, the strongest who joins.
@@ -2074,6 +2116,11 @@ describe("league lineups", () => {
         kind: "trainer",
         entrant: { trainer: { id: "lance" } },
       })
+      // Trainers who took a regional title are recorded per league.
+      expect(
+        simulate(160, defaultBadgeSplit(24), ["decline", "lose", "win", "win", "win", "decline"])
+          .reigned,
+      ).toEqual({ Indigo: ["lance", "wallace"], Hoenn: ["wallace"] })
       expect(reigningChampions(invitations)).toEqual({
         Indigo: invitations[5]!.champion,
         Hoenn: { kind: "player" },
@@ -2181,6 +2228,33 @@ describe("league lineups", () => {
       expect(ids(one.lineup)).toEqual(["a", "x"])
     })
 
+    it("lets an aloof trainer attend the Masters however far above the field", () => {
+      const records = [...baseLineup, trainer("x", 99, six, { aloof: true })]
+      // At Indigo x (Lv 100) is far above the base lineup (Lv 51 + 10) and skips.
+      expect(rank(records).entrants.find((entrant) => entrant.trainer.id === "x")!.joins).toBe(
+        false,
+      )
+      const masters = rank(records, [], "Sevii Masters")
+      expect(masters).toMatchObject({
+        aloofRule: false,
+        baseLineupLevel: null,
+        masterSeats: 0,
+      })
+      expect(masters.entrants.find((entrant) => entrant.trainer.id === "x")).toMatchObject({
+        joins: true,
+        rank: 1,
+        seat: "league score",
+        inLineup: true,
+      })
+      expect(ids(masters.lineup)).toEqual(["a", "b", "c", "d", "x"])
+      // With only aloof trainers eligible there is no base lineup, yet the Masters still fields them.
+      const aloofOnly = [
+        trainer("y", 50, six, { aloof: true }),
+        trainer("z", 10, six, { aloof: true }),
+      ]
+      expect(ids(rank(aloofOnly, [], "Sevii Masters").lineup)).toEqual(["z", "y"])
+    })
+
     it("still applies fatigue: to the base lineup that sets the level and to the aloof trainer's score", () => {
       const records = [
         trainer("a", 80),
@@ -2205,7 +2279,7 @@ describe("league lineups", () => {
       expect(ids(tiredAloof.lineup)).toEqual(["b", "c", "d", "e", "a"])
     })
 
-    it("keeps Lance out of early events and fields him at an elite endgame event", () => {
+    it("keeps Lance out of early regional events and fields him at an elite endgame event", () => {
       const fresh = (league: (typeof LEAGUES)[number], world: number) =>
         rankLeague(league, world, leagueCandidates(catalog, defaults, world), new Set())
       const indigo = fresh("Indigo", 80)
@@ -2214,27 +2288,163 @@ describe("league lineups", () => {
       const endgame = fresh("Indigo", 160)
       const lance = (ranking: typeof indigo) =>
         ranking!.entrants.find((entrant) => entrant.trainer.id === "lance")!
-      // A Legend at TR 200 (Lv 100) is far above the Indigo and Masters base lineups.
+      // A Legend at TR 200 (Lv 100) is far above the Indigo base lineup.
       expect(lance(indigo)).toMatchObject({
         tr: 200,
         teamLevel: 100,
         joins: false,
         inLineup: false,
       })
-      expect(lance(masters)).toMatchObject({ joins: false, inLineup: false })
+      // The aloof rule is off at the Masters: Lance attends and, the strongest, fights last.
+      expect(masters.aloofRule).toBe(false)
+      expect(lance(masters)).toMatchObject({ joins: true, inLineup: true })
+      expect(masters.lineup.at(-1)!.trainer.id).toBe("lance")
       expect(lance(endgame)).toMatchObject({ joins: true, inLineup: true })
       expect(endgame.lineup.at(-1)!.trainer.id).toBe("lance")
     })
 
-    it("never fields an aloof trainer more than the margin above the base lineup level", () => {
+    it("never fields an aloof trainer more than the margin above the base lineup level at Indigo or Hoenn", () => {
       for (const world of [0, 40, 80, 97, 120, 160, 200])
         for (const ranking of eventChain(world)) {
+          if (ranking.league === "Sevii Masters") {
+            expect(ranking).toMatchObject({ aloofRule: false, baseLineupLevel: null })
+            for (const entrant of ranking.entrants) expect(entrant.joins).toBe(true)
+            continue
+          }
+          expect(ranking.aloofRule).toBe(true)
           expect(ranking.baseLineupLevel).not.toBeNull()
           for (const entrant of ranking.entrants.filter((row) => row.aloof))
             expect(entrant.joins).toBe(entrant.teamLevel <= ranking.baseLineupLevel! + ALOOF_MARGIN)
           for (const entrant of ranking.lineup.filter((row) => row.aloof))
             expect(entrant.teamLevel - ranking.baseLineupLevel!).toBeLessThanOrEqual(ALOOF_MARGIN)
         }
+    })
+  })
+
+  describe("Masters at the Sevii Masters", () => {
+    const reignedBoth = (ids: string[]) => ({ Indigo: new Set(ids), Hoenn: new Set(ids) })
+    const rank = (
+      records: TrainerRecord[],
+      reigned: { Indigo: Set<string>; Hoenn: Set<string> },
+      league: (typeof LEAGUES)[number] = "Sevii Masters",
+      previous: string[] = [],
+    ) =>
+      rankLeague(
+        league,
+        0,
+        leagueCandidates(records, experimentWith(records), 0),
+        new Set(previous),
+        reigned,
+      )
+    const ids = (entrants: { trainer: TrainerRecord }[]) =>
+      entrants.map((entrant) => entrant.trainer.id)
+
+    it("makes a Master of a trainer who has reigned at both Indigo and Hoenn", () => {
+      const reigned = { Indigo: new Set(["both", "indigo"]), Hoenn: new Set(["both", "hoenn"]) }
+      expect(isMaster(reigned, "both")).toBe(true)
+      expect(isMaster(reigned, "indigo")).toBe(false)
+      expect(isMaster(reigned, "hoenn")).toBe(false)
+      const records = [
+        ...["a", "b", "c", "d", "e"].map((id) => trainer(id, 90)),
+        ...["both", "indigo", "hoenn"].map((id) => trainer(id, 40)),
+      ]
+      const masters = rank(records, reigned)
+      expect(masters.masterSeats).toBe(1)
+      expect(masters.entrants.find((entrant) => entrant.trainer.id === "indigo")).toMatchObject({
+        reigned: { Indigo: true, Hoenn: false },
+        master: false,
+        inLineup: false,
+      })
+      expect(ids(masters.lineup)).toEqual(["both", "a", "b", "c", "d"])
+    })
+
+    it("guarantees a Master a seat over a higher-scoring trainer who is not one", () => {
+      const records = [
+        ...["a", "b", "c", "d", "e", "f"].map((id, index) => trainer(id, 90 - index)),
+        trainer("master", 40),
+      ]
+      const masters = rank(records, reignedBoth(["master"]))
+      expect(masters.masterSeats).toBe(1)
+      expect(masters.entrants.find((entrant) => entrant.trainer.id === "master")).toMatchObject({
+        master: true,
+        rank: 7,
+        seat: "Master",
+        inLineup: true,
+      })
+      // The four open seats go to the highest league scores; e (86) loses its seat to the Master.
+      expect(masters.entrants.find((entrant) => entrant.trainer.id === "e")).toMatchObject({
+        master: false,
+        rank: 5,
+        seat: null,
+        inLineup: false,
+      })
+      expect(ids(masters.lineup)).toEqual(["master", "d", "c", "b", "a"])
+      // Fatigue still lowers a Master's league score, but the seat stays guaranteed.
+      const tired = rank(records, reignedBoth(["master"]), "Sevii Masters", ["master"])
+      expect(tired.entrants.find((entrant) => entrant.trainer.id === "master")).toMatchObject({
+        score: 20,
+        seat: "Master",
+      })
+      // Indigo and Hoenn give Masters no seat: the top five by league score.
+      const indigo = rank(records, reignedBoth(["master"]), "Indigo")
+      expect(indigo.masterSeats).toBe(0)
+      expect(indigo.entrants.find((entrant) => entrant.trainer.id === "master")).toMatchObject({
+        master: true,
+        seat: null,
+        inLineup: false,
+      })
+      expect(ids(indigo.lineup)).toEqual(["e", "d", "c", "b", "a"])
+    })
+
+    it("ranks Masters by league score when more than five are Masters", () => {
+      const records = [
+        trainer("top", 150),
+        ...["m1", "m2", "m3", "m4", "m5", "m6", "m7"].map((id, index) => trainer(id, 40 + index)),
+      ]
+      const reigned = reignedBoth(["m1", "m2", "m3", "m4", "m5", "m6", "m7"])
+      const masters = rank(records, reigned)
+      expect(masters.masterSeats).toBe(5)
+      // Every seat is guaranteed: the five highest-scoring Masters (m7..m3); the strongest trainer,
+      // not a Master, and the two lowest Masters are left out.
+      expect(ids(masters.lineup)).toEqual(["m3", "m4", "m5", "m6", "m7"])
+      for (const entrant of masters.lineup) expect(entrant.seat).toBe("Master")
+      expect(masters.entrants.find((entrant) => entrant.trainer.id === "top")).toMatchObject({
+        rank: 1,
+        seat: null,
+        inLineup: false,
+      })
+      // Fatigue reorders the Masters: m7 tired (score 23) falls below m2 (41).
+      expect(ids(rank(records, reigned, "Sevii Masters", ["m7"]).lineup)).toEqual([
+        "m2",
+        "m3",
+        "m4",
+        "m5",
+        "m6",
+      ])
+    })
+
+    it("records reigns at Indigo and Hoenn, never the Masters, and seats the Masters they make", () => {
+      // 16 badges (Kanto 8, Hoenn 8): win Indigo and Hoenn, then decline everything.
+      const run = simulateInvitations(catalog, defaults, 120, { Kanto: 8, Johto: 0, Hoenn: 8 }, [
+        "win",
+        "win",
+        ...Array.from({ length: 10 }, () => "decline" as const),
+      ])
+      expect(run.invitations.map((invitation) => invitation.league)).toEqual(
+        Array.from({ length: 4 }, () => ["Indigo", "Hoenn", "Sevii Masters"]).flat(),
+      )
+      // Lance takes every declined Masters title, but a Masters title never counts.
+      expect(run.reigned).toEqual({ Indigo: ["blue", "giovanni"], Hoenn: ["giovanni", "norman"] })
+      expect(run.masters).toEqual(["giovanni"])
+      const entrantAt = (index: number, id: string) =>
+        run.invitations[index]!.ranking.entrants.find((entrant) => entrant.trainer.id === id)!
+      // At the first Masters event Giovanni takes a seat by league score; he then reigns at Hoenn
+      // (invitation 5) and Indigo (7), so he is a Master by invitation 9.
+      expect(entrantAt(2, "giovanni")).toMatchObject({ master: false, seat: "league score" })
+      expect(entrantAt(8, "giovanni")).toMatchObject({ master: true, seat: "Master" })
+      // Tired from Hoenn at invitation 12 (score 65), he keeps his seat over Blue (129).
+      expect(entrantAt(11, "giovanni")).toMatchObject({ score: 65, seat: "Master" })
+      expect(entrantAt(11, "blue")).toMatchObject({ score: 129, rank: 5, seat: null })
     })
   })
 

@@ -331,17 +331,29 @@ export type LeagueCandidate = {
   /** Catalog position: stands in for characterId when breaking ties. */
   order: number
 }
+/**
+ * How a trainer takes a lineup seat: guaranteed as a Master (the Sevii Masters only), or by league
+ * score among the seats left.
+ */
+export type Seat = "Master" | "league score"
 /** A candidate scored for one league: willingness, league score floor(TR × willingness / 100), and rank. */
 export type LeagueEntrant = LeagueCandidate & {
+  /** Whether this trainer has been champion at Indigo and at Hoenn before this event. */
+  reigned: Record<RegionalLeague, boolean>
+  /** A Master: has reigned at both Indigo and Hoenn (for good; a Masters title never counts). */
+  master: boolean
   willingness: Willingness
   score: number
   /**
    * False only for an aloof trainer whose team level is above the base lineup level + ALOOF_MARGIN
-   * (or who has no base lineup to compare with): they skip this league.
+   * (or who has no base lineup to compare with): they skip this league. Always true at the Sevii
+   * Masters, where the aloof rule is off.
    */
   joins: boolean
   /** 1 for the highest league score among those who join; ties by catalog order. Null when skipping. */
   rank: number | null
+  /** The seat this trainer takes in the lineup; null when not in it. */
+  seat: Seat | null
   inLineup: boolean
 }
 /**
@@ -352,14 +364,19 @@ export type LeagueRanking = {
   league: League
   /** World progress when the lineup is computed (the player accepts or declines). */
   world: number
+  /** Whether the aloof rule applies: at Indigo and Hoenn, never at the Sevii Masters. */
+  aloofRule: boolean
   /**
    * The base lineup level: the strongest team level in the base lineup (the top five non-aloof
-   * trainers by league score); null when there is no base lineup (no non-aloof trainer is eligible).
+   * trainers by league score); null when there is no base lineup (no non-aloof trainer is eligible,
+   * or the aloof rule is off).
    */
   baseLineupLevel: number | null
+  /** Seats guaranteed to Masters (the Sevii Masters only; at most five). */
+  masterSeats: number
   /** Every eligible trainer: those who join, highest league score first, then the aloof who skip. */
   entrants: LeagueEntrant[]
-  /** The top five by league score, ascending TR, strongest last. */
+  /** The five seated (Masters first at the Sevii Masters, then by league score), ascending TR, strongest last. */
   lineup: LeagueEntrant[]
 }
 /** The leagues that count badges: Indigo (Kanto + Johto) and Hoenn. */
@@ -392,7 +409,10 @@ export type Invitation = {
   resolvedDay: number
   league: League
   reason: CallReason
-  /** The leagues that could call, in LEAGUES order (known-there eligibility, Masters after a win). */
+  /**
+   * The leagues that could call, in LEAGUES order (known-there eligibility; the Masters once Indigo
+   * and Hoenn have both been won).
+   */
   eligible: League[]
   /** This call's sequence number: each call takes the next one (1 for the first). */
   sequence: number
@@ -434,4 +454,8 @@ export type InvitationSimulation = {
   qualified: boolean
   badges: RegionalBadges
   invitations: Invitation[]
+  /** Who has reigned at Indigo and at Hoenn after the last invitation, in order of first reign. */
+  reigned: Record<RegionalLeague, string[]>
+  /** Notable trainers who are Masters after the last invitation, in the order they became one. */
+  masters: string[]
 }

@@ -195,7 +195,8 @@ TRAVELLERS = {"Brock", "Misty", "Blue", "Lance", "Steven", "Wallace", "Will", "B
               "Giovanni", "Bugsy", "Brawly", "Drake"}
 # Aloof trait (Notable trainers spec: Aloof; lore, reviewable), independent of archetype and the
 # traveller trait: an aloof trainer won't join a league whose base lineup is
-# well below their level. Only the league lineup rule reads it. The Champions
+# well below their level (the Sevii Masters, elite by definition, is exempt).
+# Only the league lineup rule reads it. The Champions
 # only grace elite leagues; Agatha is Oak's proud old rival; Glacia came to
 # Hoenn seeking worthy opponents; Clair is a proud dragon tamer; Sabrina is
 # cold and distant; Karen ("strong Pokémon, weak Pokémon") disdains weak

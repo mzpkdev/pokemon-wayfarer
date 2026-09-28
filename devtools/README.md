@@ -43,7 +43,8 @@ checkpoint report (TR, team level, stages, moves, battle order, dormant entries
 and AI tier at world progress 0, 40, 80, 120 and 160), milestones and a team
 level vs level cap chart, the Gym ladder, league lineups (willingness and
 league score rankings, the base lineup level and each aloof trainer's check)
-and simulated league invitations (ordered by a call counter), each trainer's play style and resolved Trainer AI flags at their TR, and compares team levels with the level cap; see [the UI README](ui/README.md#trainer-balance-explorer) for assumptions
+and simulated league invitations (ordered by a call counter, with reigns,
+Masters and the Sevii Masters' guaranteed seats), each trainer's play style and resolved Trainer AI flags at their TR, and compares team levels with the level cap; see [the UI README](ui/README.md#trainer-balance-explorer) for assumptions
 and catalog regeneration. The map modules consume
 the static catalog and terrain images created by the CLI tools. Docs bundles
 Markdown files below `.product/` through Vite and omits `__NAME__.md` templates

@@ -106,7 +106,9 @@ once it is strong enough. The aloof trainers are the Champions Lance, Wallace, a
 only grace elite leagues; Agatha, Oak's proud old rival; Glacia, who came to
 Hoenn looking for worthy opponents; Clair, the proud dragon tamer; cold,
 distant Sabrina; and Karen, whose "strong Pokémon, weak Pokémon" disdains
-weak company. Everyone else is not aloof.
+weak company. Everyone else is not aloof. The Sevii Masters is the exception:
+it is the elite company they seek, so they always come there
+([Leagues](leagues.md)).
 
 These picks follow the trainers' stories and are open to review
 ([assignments](../specs/notable-trainers.md#traits)).

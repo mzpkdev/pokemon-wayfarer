@@ -399,6 +399,7 @@ test("ranks every eligible trainer by league score and fields the top five, stro
     "19",
     "",
     "",
+    "",
   ])
   await expect(entrant("drake")).toHaveText([
     "12",
@@ -412,6 +413,7 @@ test("ranks every eligible trainer by league score and fields the top five, stro
     "0",
     "90",
     "83",
+    "",
     "",
     "",
   ])
@@ -441,6 +443,7 @@ test("ranks every eligible trainer by league score and fields the top five, stro
     "200",
     "skips",
     "",
+    "",
   ])
   await expect(entrant("karen").last()).toHaveText("in lineup")
   await expect(entrant("jasmine").last()).toHaveText("")
@@ -449,11 +452,11 @@ test("ranks every eligible trainer by league score and fields the top five, stro
   // that knows the player, so it calls every time, and each event's strongest reigns.
   await expect(page.getByTestId("invitations").locator("tbody tr")).toHaveCount(8)
   await expect(page.getByTestId("invitation-1-reason")).toHaveText(
-    "only eligible (Indigo 8, Hoenn 0; no league win)",
+    "only eligible (Indigo 8, Hoenn 0); the Masters needs Indigo and Hoenn wins",
   )
   await expect(page.getByTestId("invitation-2-league")).toHaveText("Indigo")
   await expect(page.getByTestId("invitation-2-reason")).toHaveText(
-    "only eligible (Indigo 8, Hoenn 0; no league win)",
+    "only eligible (Indigo 8, Hoenn 0); the Masters needs Indigo and Hoenn wins",
   )
   await expect(page.getByTestId("invitation-1-champion")).toHaveText("Karen (TR 101)")
   await expect(page.getByTestId("invitation-2-champion")).toHaveText("Jasmine (TR 95)")
@@ -552,54 +555,51 @@ test("simulates league invitations: the gate, who calls, answers, fatigue and ch
   )
   await expect(page.getByTestId("invitation-1")).toContainText("7Hoenn")
   await expect(page.getByTestId("invitation-1-reason")).toHaveText(
-    "only eligible (Indigo 0, Hoenn 8; no league win)",
+    "only eligible (Indigo 0, Hoenn 8); the Masters needs Indigo and Hoenn wins",
   )
   await expect(page.getByTestId("invitation-1-result")).toHaveText("declined")
   await expect(page.getByTestId("invitation-1-champion")).toHaveText("Phoebe (TR 97)")
-  // Accept and win the next three: Hoenn again (the only league that knows the player), then the
-  // Masters, eligible after that win and never called, then Hoenn, called less recently.
+  // Accept and win the next three: Hoenn every time, the only league that knows the player. Hoenn
+  // wins alone never open the Masters, which needs both Indigo and Hoenn.
   await answer(2, "win")
   await answer(3, "win")
   await answer(4, "win")
   await expect(page.getByTestId("invitation-2-league")).toHaveText("Hoenn")
   await expect(page.getByTestId("invitation-2-reason")).toHaveText(
-    "only eligible (Indigo 0, Hoenn 8; no league win)",
+    "only eligible (Indigo 0, Hoenn 8); the Masters needs Indigo and Hoenn wins",
   )
   await expect(page.getByTestId("invitation-2-result")).toHaveText("first win")
   await expect(page.getByTestId("invitation-2-champion")).toHaveText("the player")
   await expect(page.getByTestId("invitation-2-fatigue")).toHaveText("#1 Hoenn")
-  await expect(page.getByTestId("invitation-3")).toContainText("21Sevii Masters")
-  await expect(page.getByTestId("invitation-3-reason")).toHaveText(
-    "least recently called (Sevii Masters never, Hoenn call 2)",
-  )
-  await expect(page.getByTestId("invitation-3-result")).toHaveText("first win")
+  await expect(page.getByTestId("invitation-3")).toContainText("21Hoenn")
+  await expect(page.getByTestId("invitation-3-result")).toHaveText("repeat win")
   await expect(page.getByTestId("invitation-4-league")).toHaveText("Hoenn")
   await expect(page.getByTestId("invitation-4-reason")).toHaveText(
-    "least recently called (Sevii Masters call 3, Hoenn call 2)",
+    "only eligible (Indigo 0, Hoenn 8); the Masters needs Indigo and Hoenn wins",
   )
   await expect(page.getByTestId("invitation-4-result")).toHaveText("repeat win")
-  await page.getByRole("button", { name: "Show invitation 3", exact: true }).click()
-  await expect(page.getByTestId("event").locator("h3").first()).toContainText(
-    "Invitation 3 (day 21): Sevii Masters",
-  )
-  await expect(page.getByTestId("event").locator("h3").first()).toContainText(
-    "fatigued from invitation 2 (Hoenn)",
-  )
   await page.getByLabel("Invitations", { exact: true }).fill("5")
   await page.getByLabel("Invitations", { exact: true }).press("Enter")
   await expect(page.getByTestId("invitations").locator("tbody tr")).toHaveCount(5)
-  await expect(page.getByTestId("invitation-5-league")).toHaveText("Sevii Masters")
+  await expect(page.getByTestId("invitation-5-league")).toHaveText("Hoenn")
   await expect(page.getByTestId("champion-indigo")).toHaveText(
     "Indigo reigning champion after invitation 5: —",
   )
   await expect(page.getByTestId("champion-hoenn")).toHaveText(
-    "Hoenn reigning champion after invitation 5: the player",
+    "Hoenn reigning champion after invitation 5: Phoebe (TR 97)",
+  )
+  await expect(page.getByTestId("reigned")).toHaveText(
+    "Reigned after invitation 5: Indigo —; Hoenn Phoebe",
+  )
+  await expect(page.getByTestId("masters")).toHaveText("Notable Masters: none yet")
+  await expect(page.getByTestId("masters-gallery")).toHaveText(
+    "Masters Gallery: no Masters event yet",
   )
   // The answers and the split persist; the same inputs give the same invitations.
   await page.reload()
   await expect(page.getByTestId("invitations").locator("tbody tr")).toHaveCount(5)
   await expect(page.getByLabel("Answer invitation 2", { exact: true })).toHaveValue("win")
-  await expect(page.getByTestId("invitation-3-league")).toHaveText("Sevii Masters")
+  await expect(page.getByTestId("invitation-3-league")).toHaveText("Hoenn")
   // They round-trip through export.
   const downloadPromise = page.waitForEvent("download")
   await page.getByRole("button", { name: "Export experiment", exact: true }).click()
@@ -611,7 +611,68 @@ test("simulates league invitations: the gate, who calls, answers, fatigue and ch
     choices: ["decline", "win", "win", "win", "decline"],
     split: { Kanto: 0, Johto: 0, Hoenn: 8 },
   })
+  // 16 badges, Kanto 8 and Hoenn 8: win Indigo and Hoenn and the caretaker calls from the Sevii
+  // Masters; declining the rest lets trainers reign, and one who reigns at both becomes a Master.
+  await tr.fill("120")
+  await setBadges("Kanto", "8")
+  await setBadges("Hoenn", "8")
+  await page.getByLabel("Invitations", { exact: true }).fill("12")
+  await page.getByLabel("Invitations", { exact: true }).press("Enter")
+  await answer(1, "win")
+  await answer(2, "win")
+  for (const number of [3, 4, 5]) await answer(number, "decline")
+  await answer(12, "win")
+  await expect(page.getByTestId("invitation-1-reason")).toHaveText(
+    "tie (never called, Indigo 8, Hoenn 8) → Indigo; the Masters needs Indigo and Hoenn wins",
+  )
+  await expect(page.getByTestId("invitation-2-league")).toHaveText("Hoenn")
+  await expect(page.getByTestId("invitation-3")).toContainText("21Sevii Masters")
+  await expect(page.getByTestId("invitation-3-reason")).toHaveText(
+    "least recently called (Indigo call 1, Sevii Masters never, Hoenn call 2); the caretaker calls: Indigo and Hoenn both won",
+  )
+  // The aloof Champions skip Indigo but attend the Masters, where the aloof rule is off.
+  await expect(page.getByTestId("invitation-3-lineup")).toHaveText(
+    "Giovanni 131, Jasmine 131, Steven 159, Wallace 176, Lance 200",
+  )
+  await expect(page.getByTestId("invitation-3-champion")).toHaveText("Lance (TR 200)")
+  await expect(page.getByTestId("reigned")).toHaveText(
+    "Reigned after invitation 12: Indigo Blue, Giovanni; Hoenn Giovanni, Norman",
+  )
+  await expect(page.getByTestId("masters")).toHaveText("Notable Masters: Giovanni")
+  await expect(page.getByTestId("masters-gallery")).toHaveText(
+    "Masters Gallery: #3 Lance (TR 200), #6 Lance (TR 200), #9 Lance (TR 200), #12 the player",
+  )
+  // Giovanni, tired from Hoenn (score 65), keeps a Master seat over Blue (129).
+  await expect(page.getByTestId("invitation-12-lineup")).toHaveText(
+    "Giovanni 65 (Master), Jasmine 131, Steven 159, Wallace 176, Lance 200",
+  )
+  await expect(page.getByTestId("invitation-12-result")).toHaveText("first win")
+  await page.getByRole("button", { name: "Show invitation 1", exact: true }).click()
+  await expect(page.getByTestId("event-aloof-lance")).toContainText("→ skips")
+  await page.getByRole("button", { name: "Show invitation 3", exact: true }).click()
+  await expect(page.getByTestId("event").locator("h3").first()).toContainText(
+    "aloof rule off at the Masters · 0 Master seats",
+  )
+  await expect(page.getByTestId("event-aloof-lance")).toHaveText(
+    "Lance aloof: team Lv 100, aloof rule off at the Masters → joins",
+  )
+  await page.getByRole("button", { name: "Show invitation 12", exact: true }).click()
+  await expect(page.getByTestId("event").locator("h3").first()).toContainText(
+    "Invitation 12 (day 84): Sevii Masters world progress 120 · neutral location · aloof rule off at the Masters · 1 Master seat · fatigued from invitation 11 (Hoenn)",
+  )
+  await expect(page.getByTestId("event-match-1-seat")).toHaveText("Master seat")
+  await expect(page.getByTestId("event-match-2-seat")).toHaveCount(0)
+  const entrant = (id: string) => page.getByTestId(`event-entrant-${id}`).locator("td")
+  await expect(entrant("giovanni").nth(10)).toHaveText("65")
+  await expect(entrant("giovanni").nth(12)).toHaveText("Master")
+  await expect(entrant("giovanni").last()).toHaveText("in lineup (Master seat)")
+  await expect(entrant("blue").nth(10)).toHaveText("129")
+  await expect(entrant("blue").nth(12)).toHaveText("Indigo")
+  await expect(entrant("blue").last()).toHaveText("")
+  await expect(entrant("steven").nth(11)).toHaveText("joins (aloof rule off at the Masters)")
+  await expect(entrant("steven").last()).toHaveText("in lineup")
   // No badges at all: no league knows the player, so none calls.
+  await setBadges("Kanto", "0")
   await setBadges("Hoenn", "0")
   await expect(page.getByTestId("not-qualified")).toHaveText(
     "No league calls: the player holds no badges, so no league knows them.",
@@ -622,14 +683,14 @@ test("simulates league invitations: the gate, who calls, answers, fatigue and ch
   await setBadges("Hoenn", "8")
   await expect(page.getByTestId("invitation-1-league")).toHaveText("Hoenn")
   await expect(page.getByTestId("invitation-1-reason")).toHaveText(
-    "tie (never called) → most badges (Indigo 1, Hoenn 8)",
+    "tie (never called) → most badges (Indigo 1, Hoenn 8); the Masters needs Indigo and Hoenn wins",
   )
   await expect(page.getByTestId("invitation-2-league")).toHaveText("Indigo")
   await expect(page.getByTestId("invitation-2-reason")).toHaveText(
-    "least recently called (Indigo never, Hoenn call 1)",
+    "least recently called (Indigo never, Hoenn call 1); the Masters needs Indigo and Hoenn wins",
   )
   // Following the badge total again: 16 badges are Kanto and Johto, so only Indigo calls. A loss
-  // ends the event, its strongest reigns, and the Masters stays closed without a win.
+  // ends the event, its strongest reigns, and the Masters stays closed without both wins.
   await page.getByRole("button", { name: "Follow badge total", exact: true }).click()
   await page.getByRole("button", { name: "Set 16 badges", exact: true }).click()
   await answer(1, "lose")
@@ -638,7 +699,7 @@ test("simulates league invitations: the gate, who calls, answers, fatigue and ch
   await expect(page.getByTestId("invitation-1-result")).toHaveText("loss")
   await expect(page.getByTestId("invitation-1-champion")).toHaveText("Jasmine (TR 131)")
   await expect(page.getByTestId("invitation-2-reason")).toHaveText(
-    "only eligible (Indigo 16, Hoenn 0; no league win)",
+    "only eligible (Indigo 16, Hoenn 0); the Masters needs Indigo and Hoenn wins",
   )
   await expect(page.getByTestId("invitation-2-league")).toHaveText("Indigo")
   // All 24 badges: declining the elite Indigo event crowns aloof Lance.
