@@ -7,7 +7,8 @@ export type ReferenceMember = {
 
 /**
  * One roster slot. Roster slot 1 (the signature Pokémon) is an ace at offset 0 and is fought
- * last. Every non-ace slot is a filler slot.
+ * last. Every non-ace slot is a filler slot. Roster slots carry no moves: members draw them from
+ * the trainer's move pool.
  */
 export type RosterSlot = {
   /** The authored stage, normally a final stage; a member below its evolution level steps down. */
@@ -16,8 +17,6 @@ export type RosterSlot = {
   levelOffset: number
   /** An ace slot: fought after the filler slots. Roster slot 1 is always an ace; 1–3 per roster. */
   isAce: boolean
-  /** Authored moves (1–4), or the latest level-up moves at its level. */
-  moves: string[] | "LEVEL_UP"
   item: string | null
   ability: string | null
   nature: string | null
@@ -40,6 +39,12 @@ export type Archetype =
  */
 export type ScalerKind = "interpolated" | "step"
 
+/**
+ * One move pool entry: a move the trainer likes, from a level (none means from Lv 1). An entry
+ * goes to at most one member; list a move twice to let two members carry it.
+ */
+export type PoolEntry = { move: string; fromLevel?: number }
+
 export type TrainerRecord = {
   id: string
   name: string
@@ -61,6 +66,9 @@ export type TrainerRecord = {
   /** Exactly six ordered roster slots in v0; shorter catalog rosters are content gaps. */
   roster: RosterSlot[]
   rosterSource: string
+  /** The trainer's one ordered move pool: top entries reach the aces first. */
+  movePool: PoolEntry[]
+  movePoolSource: string
 }
 
 /** Evolution data the catalog records for the roster species. */
@@ -74,18 +82,40 @@ export type EvolutionData = {
   /** Roster species that are not final stages (earlier chain stages are not final either). */
   notFinal: string[]
 }
-export type Catalog = { evolution: EvolutionData; trainers: TrainerRecord[] }
+/**
+ * Learnsets for every stage on every roster line, as the Wayfarer ROM builds them. Moves are
+ * indices into `moves`.
+ */
+export type LearnsetData = {
+  /** Every valid move name, sorted. */
+  moves: string[]
+  species: Record<
+    string,
+    {
+      /** Flattened [level, move, level, move, …] in the game's order; level 0 is an evolution move. */
+      levelUp: number[]
+      /** The TM/tutor (teachable) list. */
+      teachable: number[]
+    }
+  >
+}
+export type Catalog = {
+  evolution: EvolutionData
+  learnsets: LearnsetData
+  trainers: TrainerRecord[]
+}
 
 export type TrainerSettings = {
   startTR: number
   archetype: Archetype
   peakTR: number
   roster: RosterSlot[]
+  movePool: PoolEntry[]
 }
 /** A scaler anchor: [TR, value]. */
 export type Anchor = [number, number]
 export type Experiment = {
-  version: 11
+  version: 12
   /** Team level by TR: linear between anchors, halves up, flat past the last. */
   teamLevel: Anchor[]
   /** Team size by TR, same rules; paired anchors make it a step table. */
@@ -100,6 +130,24 @@ export type Experiment = {
 }
 /** Player progress. Its player TR is the world progress notable trainers grow with. */
 export type WorldPoint = { badges: number }
+/** One resolved move: from the move pool or the default level-up moveset. */
+export type ResolvedMove = { move: string; source: "pool" | "level-up" }
+/**
+ * Why a pool entry is dormant: no current member can learn it, every learner is below its from
+ * level, or every eligible learner already knows it or has four pool moves.
+ */
+export type DormantReason = "unlearnable" | "level" | "taken"
+/** A pool entry at one team: the member that took it, or why it is dormant. */
+export type PoolStatus = {
+  /** 0-based position in the pool. */
+  index: number
+  move: string
+  fromLevel: number
+  /** The roster slot of the member that took it, or null when dormant. */
+  slot: number | null
+  species: string | null
+  reason: DormantReason | null
+}
 export type TeamMember = RosterSlot & {
   /** 1-based roster position. */
   slot: number
@@ -108,6 +156,8 @@ export type TeamMember = RosterSlot & {
   authoredSpecies: string
   /** The level the authored stage is reached at, when `species` is an earlier stage; else null. */
   authoredAt: number | null
+  /** Up to four moves in move-slot order, each from the pool or the level-up moveset. */
+  moves: ResolvedMove[]
 }
 export type ResolvedTrainer = {
   trainer: TrainerRecord
@@ -123,6 +173,10 @@ export type ResolvedTrainer = {
   team: TeamMember[]
   /** Filler slots in reverse roster order, then aces in reverse roster order: roster slot 1 comes last. */
   battleOrder: TeamMember[]
+  /** Every move pool entry at this team, in pool order. */
+  pool: PoolStatus[]
+  /** The pool entries no member took. */
+  dormant: PoolStatus[]
   /** Roster slots authored (v0 requires 6). */
   rosterLength: number
   warnings: string[]
@@ -140,6 +194,8 @@ export type MilestoneEvent =
   | { kind: "evolve"; slot: number; from: string; to: string }
   /** The team level moves strictly above the level cap, or strictly below it again. */
   | { kind: "cap"; aboveCap: boolean }
+  /** A dormant move pool entry is assigned for the first time. */
+  | { kind: "wake"; move: string; slot: number; species: string }
   /** Trainer TR reaches peak TR, or (when growth stops short of 100%) stops below it. */
   | { kind: "peak"; tr: number; reached: boolean }
 /** The world progress (player TR) where a notable trainer's team changes, with what changed. */

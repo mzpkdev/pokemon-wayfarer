@@ -6,6 +6,7 @@ import {
   LEVEL_OFFSET,
   MAX_ACES,
   MAX_ANCHORS,
+  MAX_POOL_ENTRIES,
   OLD_VERSION_REJECTION,
   LEVEL_CAP_ANCHORS,
   MAX_BADGES,
@@ -18,6 +19,7 @@ import {
   gymLadder,
   isGymLeader,
   leagueLineup,
+  learnsetIndex,
   levelCap,
   milestoneEnd,
   milestones,
@@ -32,6 +34,7 @@ import type {
   Archetype,
   Catalog,
   Experiment,
+  PoolEntry,
   RosterSlot,
   ScalerKind,
   TrainerRecord,
@@ -42,6 +45,10 @@ const data = catalogData as Catalog
 export const catalog: TrainerRecord[] = data.trainers
 /** The catalog's predecessor chains, indexed by every stage on them. */
 export const evolution = evolutionIndex(data.evolution)
+/** Every roster line stage's learnsets, and the valid move names. */
+export const learnsets = learnsetIndex(data.learnsets)
+/** Valid move names, sorted, for the move pool editor. */
+export const moveNames: readonly string[] = data.learnsets.moves
 
 /** A species' line with evolution levels, e.g. "Geodude → Graveler Lv 25 → Golem Lv 38". */
 export const lineText = (species: string): string =>
@@ -74,7 +81,7 @@ const anchorsOf = (experiment: Experiment, id: ScalerId): Anchor[] =>
  */
 export const scalerKind = (id: ScalerId): ScalerKind =>
   isGrowth(id) ? ARCHETYPE_KIND[id] : "interpolated"
-const storageKey = "wayfarer-trainer-balance-v11"
+const storageKey = "wayfarer-trainer-balance-v12"
 /** The chart runs across player TR 0 to at least this. */
 export const CHART_MIN_END = Math.max(200, LEVEL_CAP_ANCHORS.at(-1)?.[0] ?? 0)
 /** The chart never runs past this player TR; a higher player TR is marked at the right edge. */
@@ -85,20 +92,25 @@ const firstTrainer = catalog[0]
 if (!firstTrainer) throw new Error("The trainer catalog is empty.")
 const initialTrainerId = firstTrainer.id
 
-/** "LEVEL_UP" (or blank) keeps the level-up policy; otherwise moves split on commas or dots. */
-export const parseMoves = (text: string): RosterSlot["moves"] => {
-  const value = text.trim()
-  if (!value || value.toUpperCase() === "LEVEL_UP") return "LEVEL_UP"
-  return value
-    .split(/[,·]/)
-    .map((move) => move.trim())
-    .filter(Boolean)
+/** Reads a move pool entry's fields: a known move name and an optional from level (blank is Lv 1). */
+export const poolEntry = (moveText: string, fromText: string, where: string): PoolEntry => {
+  const move = moveText.trim()
+  if (!move) throw new Error(`${where}: enter a move name.`)
+  // Names match regardless of case; the pool stores the game's spelling.
+  const name = learnsets.moves.has(move)
+    ? move
+    : moveNames.find((known) => known.toLowerCase() === move.toLowerCase())
+  if (!name) throw new Error(`${where}: “${move}” is not a move in the game data.`)
+  const from = fromText.trim()
+  if (!from) return { move: name }
+  const fromLevel = Number(from)
+  if (!Number.isInteger(fromLevel) || fromLevel < 1 || fromLevel > 100)
+    throw new Error(`${where}: the from level must be a whole number from 1 to 100, or blank.`)
+  return { move: name, fromLevel }
 }
-export const movesText = (moves: RosterSlot["moves"]): string =>
-  moves === "LEVEL_UP" ? "LEVEL_UP" : moves.join(", ")
 
 export class BalanceLab {
-  #_experiment = $state<Experiment>(createExperiment(catalog))
+  #_experiment = $state<Experiment>(createExperiment(catalog, learnsets.moves))
   /** The player TR: world progress for notable trainers and the input to world scaling. */
   playerTR = $state(0)
   query = $state("")
@@ -133,7 +145,7 @@ export class BalanceLab {
   )
   allRows = $derived(
     catalog.map((trainer) =>
-      resolveTrainer(trainer, this.#_experiment, this.worldProgress, evolution),
+      resolveTrainer(trainer, this.#_experiment, this.worldProgress, evolution, learnsets),
     ),
   )
   rows = $derived(
@@ -154,7 +166,9 @@ export class BalanceLab {
   })
   settings = $derived(this.#_settings(this.selected.trainer.id))
   gaps = $derived(rosterGaps(catalog, this.#_experiment))
-  league = $derived(leagueLineup(catalog, this.#_experiment, this.worldProgress, evolution))
+  league = $derived(
+    leagueLineup(catalog, this.#_experiment, this.worldProgress, evolution, learnsets),
+  )
   ladder = $derived(gymLadder(catalog, this.#_experiment, this.worldProgress))
   /** The selected trainer's TR, team level and team (by roster slot) at each world progress checkpoint. */
   growth = $derived(
@@ -164,12 +178,13 @@ export class BalanceLab {
         this.#_experiment,
         world,
         evolution,
+        learnsets,
       )
       return { world, tr, teamLevel, team }
     }),
   )
   /** Every world progress where the selected trainer's team changes. */
-  milestones = $derived(milestones(this.selected.trainer, this.#_experiment, evolution))
+  milestones = $derived(milestones(this.selected.trainer, this.#_experiment, evolution, learnsets))
   /**
    * The chart series: the selected trainer's team level and the level cap at each whole player TR
    * from 0 to at least CHART_MIN_END, further (up to CHART_MAX_END) when the player TR or the
@@ -223,7 +238,7 @@ export class BalanceLab {
   #_clone = (): Experiment => JSON.parse(serializeExperiment(this.#_experiment)) as Experiment
 
   #_accept = (candidate: unknown, message: string): void => {
-    this.#_experiment = validateExperiment(candidate, catalog)
+    this.#_experiment = validateExperiment(candidate, catalog, learnsets.moves)
     this.error = ""
     this.notice = message
     this.#_syncEditors()
@@ -244,6 +259,12 @@ export class BalanceLab {
     const roster = next.trainers[this.selectedId]?.roster
     if (!roster) throw new Error("Unknown selected trainer.")
     return roster
+  }
+
+  #_pool = (next: Experiment): PoolEntry[] => {
+    const pool = next.trainers[this.selectedId]?.movePool
+    if (!pool) throw new Error("Unknown selected trainer.")
+    return pool
   }
 
   load = (): void => {
@@ -320,7 +341,6 @@ export class BalanceLab {
         species: "Unown",
         levelOffset: LEVEL_OFFSET.default,
         isAce: false,
-        moves: "LEVEL_UP",
         item: null,
         ability: null,
         nature: null,
@@ -358,7 +378,7 @@ export class BalanceLab {
     return accepted
   }
 
-  /** Reads species, offset, moves and item for every roster slot from the roster form. */
+  /** Reads species, offset and item for every roster slot from the roster form. */
   applyRoster = (form: HTMLFormElement): void =>
     this.#_edit("Could not apply the roster.", (next) => {
       const data = new FormData(form)
@@ -367,10 +387,58 @@ export class BalanceLab {
         slot.species = text(`slot-${index}-species`)
         const offset = text(`slot-${index}-offset`)
         slot.levelOffset = offset === "" ? Number.NaN : Number(offset)
-        slot.moves = parseMoves(text(`slot-${index}-moves`))
         slot.item = text(`slot-${index}-item`) || null
       })
       return `Updated ${this.selected.trainer.name}’s roster.`
+    })
+
+  /** Reads every move pool entry's move and from level from the move pool form. */
+  applyPool = (form: HTMLFormElement): void =>
+    this.#_edit("Could not apply the move pool.", (next) => {
+      const data = new FormData(form)
+      const text = (name: string) => String(data.get(name) ?? "")
+      const pool = this.#_pool(next)
+      pool.forEach((_, index) => {
+        pool[index] = poolEntry(
+          text(`pool-${index}-move`),
+          text(`pool-${index}-from`),
+          `Pool entry ${index + 1}`,
+        )
+      })
+      return `Updated ${this.selected.trainer.name}’s move pool.`
+    })
+
+  /** Adds a move to the bottom of the pool. Returns whether it was added. */
+  addPoolEntry = (move: string, fromLevel: string): boolean => {
+    let added = false
+    this.#_edit("Could not add the move.", (next) => {
+      const pool = this.#_pool(next)
+      if (pool.length >= MAX_POOL_ENTRIES)
+        throw new Error(`A move pool lists at most ${MAX_POOL_ENTRIES} entries.`)
+      const entry = poolEntry(move, fromLevel, "New pool entry")
+      pool.push(entry)
+      added = true
+      return `Added ${entry.move} as pool entry ${pool.length}.`
+    })
+    return added
+  }
+
+  /** Swaps a pool entry with its neighbour: pool order is identity, top entries reach the aces first. */
+  movePoolEntry = (index: number, direction: -1 | 1): void =>
+    this.#_edit("Could not reorder the move pool.", (next) => {
+      const pool = this.#_pool(next)
+      const moved = pool[index]
+      const other = pool[index + direction]
+      if (!moved || !other) return undefined
+      pool[index] = other
+      pool[index + direction] = moved
+      return `Moved ${moved.move} to pool entry ${index + direction + 1}.`
+    })
+
+  removePoolEntry = (index: number): void =>
+    this.#_edit("Could not remove the pool entry.", (next) => {
+      const [removed] = this.#_pool(next).splice(index, 1)
+      return removed ? `Removed ${removed.move} from the move pool.` : undefined
     })
 
   applyTeam = (): void =>
@@ -416,15 +484,18 @@ export class BalanceLab {
     })
 
   reset = (): void => {
-    this.#_accept(createExperiment(catalog), "Restored the catalog growth, rosters and scalers.")
+    this.#_accept(
+      createExperiment(catalog, learnsets.moves),
+      "Restored the catalog growth, rosters, move pools and scalers.",
+    )
   }
 
   resetTrainer = (): void =>
     this.#_edit("Could not restore the trainer.", (next) => {
-      const defaults = createExperiment(catalog).trainers[this.selectedId]
+      const defaults = createExperiment(catalog, learnsets.moves).trainers[this.selectedId]
       if (!defaults) throw new Error("Unknown selected trainer.")
       next.trainers[this.selectedId] = defaults
-      return `Restored ${this.selected.trainer.name}’s catalog growth and roster. Other trainers and the scalers are unchanged.`
+      return `Restored ${this.selected.trainer.name}’s catalog growth, roster and move pool. Other trainers and the scalers are unchanged.`
     })
 
   exportText = (): string =>
@@ -452,7 +523,7 @@ export class BalanceLab {
         throw new Error(OLD_VERSION_REJECTION(data.version))
       if (data?.tool !== "wayfarer-trainer-balance" || data.version !== EXPERIMENT_VERSION)
         throw new Error(`This is not a version ${EXPERIMENT_VERSION} Wayfarer balance experiment.`)
-      const experiment = validateExperiment(data.experiment, catalog)
+      const experiment = validateExperiment(data.experiment, catalog, learnsets.moves)
       // The point is a player TR; early version 8 files saved 0–24 badges instead, and a
       // badge point is still read.
       const point = data.point

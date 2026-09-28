@@ -4,11 +4,14 @@
     ARCHETYPES,
     LEVEL_OFFSET,
     MAX_ACES,
+    MAX_MOVES,
+    MAX_POOL_ENTRIES,
     NEAR_BAND,
     ROSTER_SIZE,
     LEAGUES,
     archetypeName,
     badgeMatchText,
+    dormantReasonText,
     milestoneEventText,
   } from "./engine.js"
   import TeamLevelChart from "./TeamLevelChart.svelte"
@@ -17,7 +20,7 @@
     PLAYER_TR_SLIDER_MAX,
     catalog,
     lineText,
-    movesText,
+    moveNames,
     scalerKind,
     stageWarning,
     type ScalerId,
@@ -103,6 +106,13 @@
     }
     input.value = ""
   }
+  const addPoolEntry = (event: SubmitEvent): void => {
+    event.preventDefault()
+    const form = event.currentTarget as HTMLFormElement
+    const data = new FormData(form)
+    if (lab.addPoolEntry(String(data.get("move") ?? ""), String(data.get("fromLevel") ?? "")))
+      form.reset()
+  }
   onMount(lab.load)
 </script>
 
@@ -114,8 +124,9 @@
       </div>
       <h1>Trainer balance</h1>
       <p>
-        Author each notable trainer’s growth (start TR, archetype, peak TR) and six-slot roster, and
-        see their TR, team, the Gym ladder and the league lineup at any world progress.
+        Author each notable trainer’s growth (start TR, archetype, peak TR), six-slot roster and
+        move pool, and see their TR, team, the Gym ladder and the league lineup at any world
+        progress.
       </p>
     </div>
     <div class="actions">
@@ -220,8 +231,9 @@
       slots at team level + offset (join order is list order). Battle order puts the filler slots
       first and the aces last, each in reverse list order, so roster slot 1 comes last. Rosters
       author final stages; a member below its stage’s evolution level steps down its line (the
-      shared evolution-level table covers non-level evolutions). Moves, items, AI and win rates are
-      not simulated.</span
+      shared evolution-level table covers non-level evolutions). Moves come from each trainer’s move
+      pool: members start from their level-up moves, then the aces pick first. Items, AI and win
+      rates are not simulated.</span
     >
   </div>
 
@@ -515,11 +527,15 @@
                   >{/if}{#if member.isAce}<span class="ace-chip" data-testid={`ace-${member.slot}`}
                     >Ace</span
                   >{/if}</strong
-              ><small
-                >Offset {member.levelOffset} · {movesText(member.moves)}{member.item
-                  ? ` · ${member.item}`
-                  : ""}</small
-              >
+              ><small>Offset {member.levelOffset}{member.item ? ` · ${member.item}` : ""}</small>
+              <ul class="move-list" data-testid={`moves-${member.slot}`}>
+                {#each member.moves as move, index (index)}<li
+                    class="move-chip"
+                    class:pool={move.source === "pool"}
+                  >
+                    {move.move}<span class="move-source">{move.source}</span>
+                  </li>{:else}<li class="muted">No moves</li>{/each}
+              </ul>
             </div>
             <span class="member-level" class:over-cap={member.level > lab.cap}
               >Lv. {member.level}</span
@@ -529,6 +545,22 @@
       {#if lab.selected.warnings.length > 0}<ul class="warnings" data-testid="warnings">
           {#each lab.selected.warnings as warning}<li>{warning}</li>{/each}
         </ul>{/if}
+      <div class="section-label">
+        <h3>Dormant pool moves</h3>
+        <span>Entries no member takes at TR {lab.selected.tr}</span>
+      </div>
+      {#if lab.selected.dormant.length}<ul class="dormant-list" data-testid="dormant">
+          {#each lab.selected.dormant as entry (entry.index)}<li
+              data-testid={`dormant-${entry.index + 1}`}
+            >
+              <span class="slot">{entry.index + 1}</span><strong>{entry.move}</strong
+              >{#if entry.fromLevel > 1}<small>from Lv {entry.fromLevel}</small>{/if}<span
+                class="dormant-reason">{dormantReasonText(entry)}</span
+              >
+            </li>{/each}
+        </ul>{:else}<p class="hint dormant-none" data-testid="dormant">
+          None: every pool entry is assigned.
+        </p>{/if}
 
       <div class="section-label">
         <h3>
@@ -590,14 +622,6 @@
                     }}
                   />Ace</label
                 ><label class="wide"
-                  >Moves<input
-                    aria-label={`Roster slot ${index + 1} moves`}
-                    name={`slot-${index}-moves`}
-                    type="text"
-                    placeholder="LEVEL_UP"
-                    value={movesText(slot.moves)}
-                  /></label
-                ><label class="wide"
                   >Item<input
                     aria-label={`Roster slot ${index + 1} item`}
                     name={`slot-${index}-item`}
@@ -651,9 +675,118 @@
       </p>
       <p class="hint">
         Roster slot 1 must stay at offset 0; offsets run {LEVEL_OFFSET.min} to {LEVEL_OFFSET.max}.
-        Moves are LEVEL_UP or up to four names separated by commas. v0 needs exactly {ROSTER_SIZE}
-        roster slots. Author final stages: a member below its stage’s evolution level steps down its line
-        (never forward) and then uses LEVEL_UP instead of the authored moves.
+        v0 needs exactly {ROSTER_SIZE} roster slots. Author final stages: a member below its stage’s evolution
+        level steps down its line (never forward). Roster slots carry no moves; members draw them from
+        the move pool below, checked against their current species.
+      </p>
+
+      <div class="section-label">
+        <h3>Move pool <span class="muted">{lab.settings.movePool.length} entries</span></h3>
+        <span>Aces pick first, then fillers, each in list order</span>
+      </div>
+      <p class="hint" data-testid="pool-source">{lab.selected.trainer.movePoolSource}</p>
+      <datalist id="move-names"
+        >{#each moveNames as name (name)}<option value={name}></option>{/each}</datalist
+      >
+      {#key lab.settings}
+        <form
+          class="pool-form"
+          data-testid="pool-editor"
+          novalidate
+          onsubmit={(event) => {
+            event.preventDefault()
+            lab.applyPool(event.currentTarget)
+          }}
+        >
+          <ol class="pool-list">
+            {#each lab.settings.movePool as entry, index (index)}{@const status =
+                lab.selected.pool[index]}
+              <li class:dormant={status?.slot === null} data-testid={`pool-entry-${index + 1}`}>
+                <span class="slot">{index + 1}</span><input
+                  class="pool-move"
+                  aria-label={`Pool entry ${index + 1} move`}
+                  name={`pool-${index}-move`}
+                  type="text"
+                  list="move-names"
+                  autocomplete="off"
+                  required
+                  value={entry.move}
+                /><label
+                  >From<input
+                    aria-label={`Pool entry ${index + 1} from level`}
+                    name={`pool-${index}-from`}
+                    type="number"
+                    min="1"
+                    max="100"
+                    step="1"
+                    placeholder="1"
+                    value={entry.fromLevel ?? ""}
+                  /></label
+                ><span class="pool-status" data-testid={`pool-status-${index + 1}`}
+                  >{#if status?.slot != null}→ #{status.slot}
+                    {status.species}{:else}dormant{/if}</span
+                >
+                <div class="slot-tools">
+                  <button
+                    type="button"
+                    aria-label={`Move pool entry ${index + 1} up`}
+                    disabled={index === 0}
+                    onclick={() => lab.movePoolEntry(index, -1)}>↑</button
+                  ><button
+                    type="button"
+                    aria-label={`Move pool entry ${index + 1} down`}
+                    disabled={index === lab.settings.movePool.length - 1}
+                    onclick={() => lab.movePoolEntry(index, 1)}>↓</button
+                  ><button
+                    type="button"
+                    aria-label={`Remove pool entry ${index + 1}`}
+                    onclick={() => lab.removePoolEntry(index)}>Remove</button
+                  >
+                </div>
+              </li>
+            {:else}<li class="muted pool-empty">
+                The pool is empty: every member keeps its level-up moves.
+              </li>{/each}
+          </ol>
+          {#if lab.settings.movePool.length}<div class="actions roster-actions">
+              <button type="submit">Apply move pool</button>
+            </div>{/if}
+        </form>
+      {/key}
+      {#if lab.settings.movePool.length < MAX_POOL_ENTRIES}<form
+          class="pool-add"
+          data-testid="pool-add"
+          novalidate
+          onsubmit={addPoolEntry}
+        >
+          <label class="wide"
+            >Add move<input
+              aria-label="New pool move"
+              name="move"
+              type="text"
+              list="move-names"
+              autocomplete="off"
+              placeholder="e.g. Earthquake"
+            /></label
+          ><label
+            >From Lv<input
+              aria-label="New pool from level"
+              name="fromLevel"
+              type="number"
+              min="1"
+              max="100"
+              step="1"
+              placeholder="1"
+            /></label
+          ><button type="submit">Add to pool</button>
+        </form>{/if}
+      <p class="hint" data-testid="pool-rule">
+        Each member starts from its level-up moves (the last {MAX_MOVES} learned by its level). Then the
+        aces, then the fillers, each in list order, walk the pool top to bottom and take every unassigned
+        entry whose from level they have reached and that their current species can learn (level-up at
+        any level, or TM/tutor) and does not already know, up to {MAX_MOVES}. Pool moves fill empty
+        slots, then replace the oldest level-up moves. An entry goes to one member; list a move
+        twice for two. A blank from level means Lv 1.
       </p>
 
       <details class="reference-panel">
@@ -676,8 +809,8 @@
       <details class="advanced-panel">
         <summary>Edit settings as JSON</summary>
         <p class="hint">
-          Edit the growth and every roster slot setting, including ability and nature. Moves are
-          <code>"LEVEL_UP"</code> or a list of one to four names.
+          Edit the growth, every roster slot setting (including ability and nature) and the move
+          pool: a list of <code>{"{"} "move": …, "fromLevel": … {"}"}</code> entries, from level optional.
         </p>
         <label class="visually-hidden" for="team-editor">Trainer settings JSON</label><textarea
           id="team-editor"
@@ -1262,7 +1395,7 @@
     display: grid;
     gap: 5px;
   }
-  .party li {
+  .party > li {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -1504,7 +1637,7 @@
     font-size: 10px;
     overflow-wrap: anywhere;
   }
-  .party li.signature {
+  .party > li.signature {
     border-color: #4d4331;
   }
   .ace-chip {
@@ -1515,6 +1648,134 @@
     margin-left: 6px;
     font-size: 10px;
     font-weight: 400;
+  }
+  .move-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 0;
+    margin: 4px 0 0;
+    font-size: 11px;
+  }
+  .move-chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 5px;
+    border: 1px solid #2d333a;
+    border-radius: 4px;
+    padding: 1px 6px;
+  }
+  .move-chip.pool {
+    border-color: #665239;
+  }
+  .move-source {
+    color: var(--color-cartographer-muted);
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .move-chip.pool .move-source {
+    color: var(--accent);
+  }
+  .dormant-list,
+  .pool-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 20px;
+    display: grid;
+    gap: 5px;
+    font-size: 12px;
+  }
+  .dormant-list li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 10px;
+    border: 1px solid #2d333a;
+    border-radius: 5px;
+    padding: 7px 10px;
+    background: var(--color-cartographer-field);
+  }
+  .dormant-list strong {
+    font-weight: 500;
+  }
+  .dormant-list small {
+    color: var(--color-cartographer-muted);
+    font-size: 10px;
+  }
+  .dormant-reason {
+    margin-left: auto;
+    color: var(--accent);
+    font-size: 11px;
+  }
+  .dormant-none {
+    margin: 6px 0 20px;
+  }
+  .pool-list {
+    margin: 10px 0 0;
+  }
+  .pool-list li {
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr) auto 104px auto;
+    align-items: center;
+    gap: 6px 8px;
+    border: 1px solid #2d333a;
+    border-radius: 5px;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+  .pool-list li.dormant {
+    border-style: dashed;
+  }
+  .pool-list label,
+  .pool-add label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-cartographer-muted);
+  }
+  .pool-list input[type="number"],
+  .pool-add input[type="number"] {
+    width: 48px;
+    padding: 5px 6px;
+  }
+  .pool-move {
+    min-width: 0;
+    padding: 5px 7px;
+  }
+  .pool-status {
+    color: #b9d8be;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .pool-list li.dormant .pool-status {
+    color: var(--accent);
+  }
+  .pool-list li.pool-empty {
+    display: block;
+    border-style: dashed;
+  }
+  .pool-list .slot-tools {
+    margin-left: 0;
+  }
+  .pool-add {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 14px;
+    font-size: 11px;
+    margin: 8px 0;
+  }
+  .pool-add label.wide {
+    flex: 1 1 150px;
+  }
+  .pool-add label.wide input {
+    width: 100%;
+    padding: 5px 7px;
+  }
+  .pool-add button {
+    padding: 5px 10px;
   }
   .ace-toggle input {
     accent-color: var(--accent);
@@ -1841,6 +2102,12 @@
     }
   }
   @media (max-width: 480px) {
+    .pool-list li {
+      grid-template-columns: 18px minmax(0, 1fr) auto;
+    }
+    .pool-list .pool-status {
+      grid-column: 2;
+    }
     .balance-lab {
       padding-top: 23px;
     }

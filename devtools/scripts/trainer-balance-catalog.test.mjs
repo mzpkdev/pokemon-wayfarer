@@ -69,7 +69,6 @@ test("the roster validation requires roster slot 1 as an ace and at most three a
     species: "Onix",
     levelOffset,
     isAce,
-    moves: "LEVEL_UP",
   })
   const roster = (...aces) =>
     [0, 1, 2, 3, 4, 5].map((index) => slot(index === 0 || aces.includes(index), index ? -2 : 0))
@@ -81,6 +80,10 @@ test("the roster validation requires roster slot 1 as an ace and at most three a
     "Fixture: roster slot 1 (the signature Pokémon) must be an ace",
   )
   assert.equal(validateRoster([slot("yes", 0)]), "Fixture[1]: isAce must be true or false")
+  assert.equal(
+    validateRoster([{ ...slot(true, 0), moves: "LEVEL_UP" }]),
+    "Fixture[1]: roster slots carry no moves (they come from the move pool)",
+  )
 })
 
 // Loads the catalog script and runs `call` (a Python expression over `module`
@@ -156,5 +159,86 @@ test("Gym Leaders start in their archetype's sub-band and are never Legends", ()
   assert.equal(
     validate([41, "rival", 100]),
     "Fixture: Gym Leader start TR must be in 18-40 for rival (Gym band 18-40)",
+  )
+})
+
+test("learnsets are read from the preprocessed game data for the Wayfarer build", () => {
+  const data = run(
+    `(lambda result: {"valid": len(result[0]), "aliases": result[1].get("MOVE_FAINT_ATTACK"),
+      "tackle": "MOVE_TACKLE" in result[0], "zmove": "MOVE_BREAKNECK_BLITZ" in result[0],
+      "learnsets": {token: {"levelUp": value["levelUp"][:4], "size": len(value["levelUp"]),
+                            "earthquake": "MOVE_EARTHQUAKE" in value["teachable"],
+                            "stealthRock": any(move == "MOVE_STEALTH_ROCK" for _, move in value["levelUp"])}
+                    for token, value in result[2].items()}})(module.load_learnsets(args))`,
+    ["SPECIES_ONIX", "SPECIES_GEODUDE", "SPECIES_ZUBAT"],
+  )
+  assert.equal(data.tackle, true)
+  // Z-Moves and Max Moves follow MOVES_COUNT and are not pool moves; old names are aliases.
+  assert.equal(data.zmove, false)
+  assert.equal(data.aliases, "MOVE_FEINT_ATTACK")
+  assert.ok(data.valid > 800)
+  // P_LVL_UP_LEARNSETS is GEN_7: Onix opens with Mud Sport, Tackle, Harden and Bind.
+  assert.deepEqual(data.learnsets.SPECIES_ONIX.levelUp, [
+    [1, "MOVE_MUD_SPORT"],
+    [1, "MOVE_TACKLE"],
+    [1, "MOVE_HARDEN"],
+    [1, "MOVE_BIND"],
+  ])
+  assert.equal(data.learnsets.SPECIES_ONIX.stealthRock, true)
+  assert.deepEqual(data.learnsets.SPECIES_GEODUDE.levelUp.slice(0, 2), [
+    [1, "MOVE_TACKLE"],
+    [1, "MOVE_DEFENSE_CURL"],
+  ])
+  // Earthquake is a TM for Onix and Geodude, not Zubat.
+  assert.equal(data.learnsets.SPECIES_ONIX.earthquake, true)
+  assert.equal(data.learnsets.SPECIES_GEODUDE.earthquake, true)
+  assert.equal(data.learnsets.SPECIES_ZUBAT.earthquake, false)
+})
+
+test("the default moveset keeps the last four level-up moves, skipping evolution and known moves", () => {
+  const learnset = [
+    [0, "EVOLVE"],
+    [1, "A"],
+    [1, "B"],
+    [5, "C"],
+    [9, "A"],
+    [12, "D"],
+    [15, "E"],
+    [20, "F"],
+  ]
+  assert.deepEqual(run("module.default_moveset(args, 1)", learnset), ["A", "B"])
+  assert.deepEqual(run("module.default_moveset(args, 19)", learnset), ["B", "C", "D", "E"])
+})
+
+test("placeholder pools list the previous per-slot moves, aces first, once per slot", () => {
+  const roster = [true, false, false, true].map((isAce) => ({ isAce }))
+  const moves = [["Rock Slide"], ["Earthquake", "Rock Slide"], [], ["Earthquake", "Earthquake"]]
+  assert.deepEqual(run("module.placeholder_pool(args[0], args[1])", [roster, moves]), [
+    { move: "Rock Slide" },
+    { move: "Earthquake" },
+    { move: "Earthquake" },
+    { move: "Rock Slide" },
+  ])
+})
+
+test("move pool validation requires known moves and from levels 1-100", () => {
+  const validate = (pool) =>
+    run("module.validate_pool('Fixture', args, {'Earthquake', 'Stone Edge'})", pool)
+  assert.equal(validate([{ move: "Earthquake" }, { move: "Stone Edge", fromLevel: 40 }]), null)
+  assert.equal(
+    validate([{ move: "Earthshake" }]),
+    "Fixture move pool [1]: unknown move 'Earthshake'",
+  )
+  assert.equal(
+    validate([{ move: "Earthquake", fromLevel: 0 }]),
+    "Fixture move pool [1]: fromLevel must be an integer from 1 to 100",
+  )
+  assert.equal(
+    validate([{ move: "Earthquake", fromLevel: 101 }]),
+    "Fixture move pool [1]: fromLevel must be an integer from 1 to 100",
+  )
+  assert.equal(
+    validate([{ move: "Earthquake", level: 5 }]),
+    "Fixture move pool [1]: an entry is a move and an optional fromLevel",
   )
 })

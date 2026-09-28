@@ -24,7 +24,7 @@ test("grows each trainer with world progress and round-trips an exported experim
   await expect(page.getByRole("heading", { name: "Trainer balance", exact: true })).toBeVisible()
   await expect(page.getByTestId("level-cap")).toHaveText("Lv. 15")
   await expect(page.getByTestId("world-progress")).toHaveText("0")
-  const order = page.getByTestId("battle-order").locator("li")
+  const order = page.getByTestId("battle-order").locator(":scope > li")
   // Brock (start TR 25, a Steady, peak TR 100) at world progress 0: TR 25, team level 18, size 2.
   await expect(page.getByTestId("selected-tr")).toHaveText("25")
   await expect(page.getByTestId("growth-brock")).toHaveText("25 → 100")
@@ -61,8 +61,8 @@ test("grows each trainer with world progress and round-trips an exported experim
   // Steelix is Onix at Lv 18. The filler slot fights first and the ace (roster slot 1) last.
   await expect(order.nth(0)).toContainText("Geodude→ Golem at Lv 38")
   await expect(order.nth(0)).toContainText("Lv. 16")
-  // Stepped down, Golem uses LEVEL_UP instead of its source moves but keeps its item.
-  await expect(order.nth(0)).toContainText("Offset -2 · LEVEL_UP · Quick Claw")
+  // Stepped down, Golem keeps its roster slot's item; its moves come from the move pool.
+  await expect(order.nth(0)).toContainText("Offset -2 · Quick Claw")
   await expect(page.getByTestId("ace-2")).toHaveCount(0)
   await expect(order.nth(1)).toContainText("Onix→ Steelix at Lv 35Ace")
   await expect(order.nth(1)).toContainText("Lv. 18")
@@ -89,12 +89,13 @@ test("grows each trainer with world progress and round-trips an exported experim
   await expect(order.nth(0)).not.toContainText("Ace")
   await page.getByLabel("Roster slot 2 species", { exact: true }).fill("Onix")
   await page.getByLabel("Roster slot 2 level offset", { exact: true }).fill("-6")
-  await page.getByLabel("Roster slot 2 moves", { exact: true }).fill("Rock Throw, Bind")
   await page.getByLabel("Roster slot 2 item", { exact: true }).fill("Hard Stone")
   await page.getByRole("button", { name: "Apply roster", exact: true }).click()
   await expect(order.nth(0)).toContainText("Onix")
   await expect(order.nth(0)).toContainText("Lv. 12")
-  await expect(order.nth(0)).toContainText("Rock Throw, Bind · Hard Stone")
+  await expect(order.nth(0)).toContainText("Offset -6 · Hard Stone")
+  // Roster slots carry no moves.
+  await expect(page.getByLabel("Roster slot 2 moves", { exact: true })).toHaveCount(0)
   // An earlier stage is allowed but flagged, and it never evolves forward.
   await expect(page.getByTestId("stage-warning-2")).toHaveText(
     "Onix is not a final stage. Roster slots normally author final stages.",
@@ -291,7 +292,7 @@ test("grows Blue with the Rival scaler and shows each trainer's TR at the checkp
   // The Pallet fight: TR 0, one Eevee at Lv 5 (his signature Umbreon steps down).
   await expect(page.getByTestId("selected-tr")).toHaveText("0")
   await expect(page.getByTestId("team-size")).toHaveText("1")
-  await expect(page.getByTestId("battle-order").locator("li")).toHaveText([
+  await expect(page.getByTestId("battle-order").locator(":scope > li")).toHaveText([
     /Eevee→ Umbreon at Lv 30.*Lv\. 5/s,
   ])
   // Umbreon is a final stage, so there is no final-stage warning.
@@ -380,7 +381,7 @@ test("marks ace slots and fights them last, with slot 1 locked and at most three
   page,
 }) => {
   await page.goto("/#trainer-balance")
-  const order = page.getByTestId("battle-order").locator("li")
+  const order = page.getByTestId("battle-order").locator(":scope > li")
   await expect(page.getByTestId("order-rule")).toContainText("Join order is list order")
   await expect(page.getByTestId("order-rule")).toContainText("1–3 aces (2 now)")
   // Brock at TR 100 fields all six: Steelix (ace), Golem, Crobat, Kabutops, Omastar,
@@ -426,7 +427,7 @@ test("marks ace slots and fights them last, with slot 1 locked and at most three
   await expect(page.getByTestId("growth-slot-6")).not.toContainText("Ace")
 })
 
-test("flags incomplete rosters and rejects invalid edits and version 4 to 10 files", async ({
+test("flags incomplete rosters and rejects invalid edits and version 4 to 11 files", async ({
   page,
 }) => {
   await page.goto("/#trainer-balance")
@@ -557,6 +558,21 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 10 fil
   await expect(page.getByRole("alert")).toContainText(
     "Version 10 experiments use the old archetype names",
   )
+  await importFile(11, {
+    point: { playerTR: 80 },
+    experiment: {
+      version: 11,
+      teamLevel: [[0, 15]],
+      teamSize: [[0, 2]],
+      wildLevel: [[0, 6]],
+      routeTrainerLevel: [[0, 9]],
+      archetypes: {},
+      trainers: {},
+    },
+  })
+  await expect(page.getByRole("alert")).toContainText(
+    "Version 11 experiments author moves per roster slot and have no move pools",
+  )
   await expect(page.getByTestId("badge-count")).toHaveText("0")
   await expect(page.getByTestId("selected-tr")).toHaveText("25")
 
@@ -576,6 +592,77 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 10 fil
   await expect(page.getByTestId("roster-incomplete")).toHaveCount(0)
   await expect(page.getByTestId("roster-gap-count")).toHaveText("0")
   await expect(page.getByRole("button", { name: "Add roster slot", exact: true })).toHaveCount(0)
+})
+
+test("resolves each member's moves from the move pool, lists dormant entries and edits the pool", async ({
+  page,
+}) => {
+  const errors: string[] = []
+  page.on("pageerror", (error) => errors.push(error.message))
+  await page.goto("/#trainer-balance")
+  const moves = (slot: number) => page.getByTestId(`moves-${slot}`).locator("li")
+  // Brock at world progress 0: the Onix ace picks from the pool first; Geodude replaces its two
+  // oldest level-up moves with what it can learn from the rest.
+  await expect(moves(1)).toHaveText([
+    /^Earthquake\s*pool$/,
+    /^Curse\s*pool$/,
+    /^Stone Edge\s*pool$/,
+    /^Body Slam\s*pool$/,
+  ])
+  await expect(moves(2)).toHaveText([
+    /^Earthquake\s*pool$/,
+    /^Toxic\s*pool$/,
+    /^Strength\s*level-up$/,
+    /^Rock Throw\s*level-up$/,
+  ])
+  await expect(page.getByTestId("pool-source")).toContainText(
+    "Placeholder pool from previous per-slot moves",
+  )
+  await expect(page.getByTestId("pool-status-3")).toHaveText("→ #1 Onix")
+  await expect(page.getByTestId("pool-status-2")).toHaveText("dormant")
+  await expect(page.getByTestId("dormant-2")).toHaveText(/Sky Attack\s*no one can learn it/)
+  // Kabuto joins at world progress 40 and wakes the moves nobody could use before.
+  await expect(page.getByTestId("milestone-40")).toContainText(
+    "4th slot (Kabuto) joins · Ancient Power wakes (Kabuto) · Surf wakes (Kabuto)",
+  )
+  await expect(page.getByTestId("milestone-57")).toHaveText(
+    /57\s*Onix → Steelix · Fire Fang wakes \(Steelix\)/,
+  )
+
+  // A from level holds an entry back: the second Earthquake goes to Onix instead.
+  await page.getByLabel("Pool entry 3 from level", { exact: true }).fill("20")
+  await page.getByRole("button", { name: "Apply move pool", exact: true }).click()
+  await expect(page.getByRole("status")).toContainText("Updated Brock’s move pool.")
+  await expect(page.getByTestId("dormant-3")).toHaveText(
+    /Earthquake\s*from Lv 20\s*below from level Lv 20/,
+  )
+  await expect(page.getByTestId("pool-status-8")).toHaveText("→ #1 Onix")
+  await expect(page.getByTestId("moves-2")).not.toContainText("Earthquake")
+
+  // Unknown names are refused; names match regardless of case.
+  await page.getByLabel("Pool entry 1 move", { exact: true }).fill("Earthshake")
+  await page.getByRole("button", { name: "Apply move pool", exact: true }).click()
+  await expect(page.getByRole("alert")).toContainText(
+    "Pool entry 1: “Earthshake” is not a move in the game data.",
+  )
+  await page.getByLabel("New pool move", { exact: true }).fill("hyper beam")
+  await page.getByLabel("New pool from level", { exact: true }).fill("40")
+  await page.getByRole("button", { name: "Add to pool", exact: true }).click()
+  await expect(page.getByRole("status")).toContainText("Added Hyper Beam as pool entry 17.")
+  await expect(page.getByLabel("Pool entry 17 move", { exact: true })).toHaveValue("Hyper Beam")
+  await expect(page.getByLabel("Pool entry 17 from level", { exact: true })).toHaveValue("40")
+  await expect(page.getByLabel("New pool move", { exact: true })).toHaveValue("")
+
+  // Pool order is identity: reorder and remove entries.
+  await page.getByRole("button", { name: "Move pool entry 2 up", exact: true }).click()
+  await expect(page.getByLabel("Pool entry 1 move", { exact: true })).toHaveValue("Sky Attack")
+  await page.getByRole("button", { name: "Remove pool entry 1", exact: true }).click()
+  await expect(page.getByLabel("Pool entry 1 move", { exact: true })).toHaveValue("Ancient Power")
+  await expect(page.getByLabel("Pool entry 16 move", { exact: true })).toHaveValue("Hyper Beam")
+  await page.reload()
+  await expect(page.getByLabel("Pool entry 16 move", { exact: true })).toHaveValue("Hyper Beam")
+  await expect(page.getByLabel("Pool entry 2 from level", { exact: true })).toHaveValue("20")
+  expect(errors).toEqual([])
 })
 
 test("edits the trainer, world and archetype scalers globally", async ({ page }) => {

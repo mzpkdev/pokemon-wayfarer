@@ -1,11 +1,16 @@
 import type {
   Anchor,
   Archetype,
+  DormantReason,
   EvolutionData,
   Experiment,
   LadderRow,
+  LearnsetData,
   Milestone,
   MilestoneEvent,
+  PoolEntry,
+  PoolStatus,
+  ResolvedMove,
   ResolvedTrainer,
   RosterSlot,
   ScalerKind,
@@ -22,6 +27,10 @@ export const LEVEL_OFFSET = { min: -6, max: 0, default: -2 } as const
 export const LINEUP_SIZE = 5
 export const LEAGUES = ["Indigo", "Sevii Masters", "Hoenn"] as const
 export const MAX_ANCHORS = 20
+/** Moves a Pokémon knows, and pool moves a member takes. */
+export const MAX_MOVES = 4
+/** Entries a move pool may list. */
+export const MAX_POOL_ENTRIES = 64
 
 /** The level cap curve (24 badges = TR 160). */
 export const LEVEL_CAP_ANCHORS: readonly Anchor[] = [
@@ -441,33 +450,166 @@ export const battleOrderOf = <T extends Pick<RosterSlot, "isAce">>(team: readonl
   ...team.filter((member) => member.isAce).toReversed(),
 ]
 
+/** One species' learnsets: level-up moves in the game's order, and every move it can learn. */
+export type Learnset = {
+  levelUp: readonly (readonly [level: number, move: string])[]
+  /** Its level-up learnset at any level, plus its TM/tutor list. */
+  learnable: ReadonlySet<string>
+}
+/** Every valid move name and each catalog species' learnsets. */
+export type Learnsets = { moves: ReadonlySet<string>; species: ReadonlyMap<string, Learnset> }
+/** No learnset data: no member learns anything, and move names are not checked. */
+export const NO_LEARNSETS: Learnsets = { moves: new Set(), species: new Map() }
+
+/** Indexes the catalog's compact learnsets (move indices into `moves`). */
+export const learnsetIndex = (data: LearnsetData): Learnsets => {
+  const name = (index: number, species: string): string => {
+    const move = data.moves[index]
+    if (move === undefined) throw new Error(`Learnset for ${species} lists an unknown move`)
+    return move
+  }
+  const species = new Map<string, Learnset>()
+  for (const [id, { levelUp, teachable }] of Object.entries(data.species)) {
+    if (levelUp.length % 2 !== 0)
+      throw new Error(`Level-up learnset for ${id} must pair levels and moves`)
+    const pairs: [number, string][] = []
+    for (let index = 0; index < levelUp.length; index += 2)
+      pairs.push([levelUp[index] ?? 0, name(levelUp[index + 1] ?? -1, id)])
+    species.set(id, {
+      levelUp: pairs,
+      learnable: new Set([
+        ...pairs.map(([, move]) => move),
+        ...teachable.map((move) => name(move, id)),
+      ]),
+    })
+  }
+  return { moves: new Set(data.moves), species }
+}
+
+/**
+ * The constructor's default moveset: the last four level-up moves learned by `level`, oldest
+ * first. It walks the learnset in order until a move above the level, skips evolution moves
+ * (level 0) and moves already known, and drops the oldest when full.
+ */
+export const defaultMoveset = (learnset: Learnset | undefined, level: number): string[] => {
+  const moves: string[] = []
+  for (const [learned, move] of learnset?.levelUp ?? []) {
+    if (learned > level) break
+    if (learned === 0 || moves.includes(move)) continue
+    if (moves.length === MAX_MOVES) moves.shift()
+    moves.push(move)
+  }
+  return moves
+}
+
+/** What the move pool resolver reads about a member: its current species and level. */
+type PoolMember = Pick<TeamMember, "slot" | "species" | "level" | "isAce">
+
+/**
+ * Resolves the move pool for a team whose species and levels are final (stepping down
+ * included). Each member starts from its default level-up moveset. Members are visited aces
+ * first, then fillers, each in list order; each walks the pool top to bottom and takes every
+ * entry that is unassigned, has from level ≤ its level, is learnable by its current species
+ * (level-up learnset at any level, or TM/tutor list) and not already in its moveset, up to four.
+ * Pool moves fill empty move slots, then replace the oldest level-up moves. An entry nobody
+ * takes is dormant. No randomness: a pure function of the team and the pool.
+ */
+export const resolveMovePool = (
+  team: readonly PoolMember[],
+  pool: readonly PoolEntry[],
+  learnsets: Learnsets,
+): { moves: Map<number, ResolvedMove[]>; pool: PoolStatus[] } => {
+  const taken: (PoolMember | null)[] = pool.map(() => null)
+  const moves = new Map<number, ResolvedMove[]>()
+  const visit = [
+    ...team.filter((member) => member.isAce),
+    ...team.filter((member) => !member.isAce),
+  ]
+  for (const member of visit) {
+    const learnset = learnsets.species.get(member.species)
+    const base = defaultMoveset(learnset, member.level)
+    const known = new Set(base)
+    const picks: string[] = []
+    pool.forEach((entry, index) => {
+      if (picks.length === MAX_MOVES || taken[index]) return
+      if ((entry.fromLevel ?? 1) > member.level) return
+      if (!learnset?.learnable.has(entry.move) || known.has(entry.move)) return
+      picks.push(entry.move)
+      known.add(entry.move)
+      taken[index] = member
+    })
+    const resolved: ResolvedMove[] = base.map((move) => ({ move, source: "level-up" }))
+    let oldest = 0
+    for (const move of picks) {
+      if (resolved.length < MAX_MOVES) resolved.push({ move, source: "pool" })
+      else resolved[oldest++] = { move, source: "pool" }
+    }
+    moves.set(member.slot, resolved)
+  }
+  const status = pool.map((entry, index): PoolStatus => {
+    const fromLevel = entry.fromLevel ?? 1
+    const member = taken[index]
+    if (member)
+      return {
+        index,
+        move: entry.move,
+        fromLevel,
+        slot: member.slot,
+        species: member.species,
+        reason: null,
+      }
+    const learners = team.filter((other) =>
+      learnsets.species.get(other.species)?.learnable.has(entry.move),
+    )
+    const reason: DormantReason = !learners.length
+      ? "unlearnable"
+      : learners.every((other) => other.level < fromLevel)
+        ? "level"
+        : "taken"
+    return { index, move: entry.move, fromLevel, slot: null, species: null, reason }
+  })
+  return { moves, pool: status }
+}
+
+/** A dormant entry's reason as text, e.g. "below from level Lv 40". */
+export const dormantReasonText = (status: Pick<PoolStatus, "reason" | "fromLevel">): string =>
+  status.reason === "unlearnable"
+    ? "no one can learn it"
+    : status.reason === "level"
+      ? `below from level Lv ${status.fromLevel}`
+      : "taken: every learner already knows it or has four pool moves"
+
 /**
  * Team = the first N roster slots (N = team size at TR), so join order is list
  * order; level = clamp(team level + offset, 1, 100); battle order puts the aces
- * last (battleOrderOf). Each member steps down to the stage its level supports;
- * authored moves belong to the authored stage, so a member that stepped down
- * uses LEVEL_UP.
+ * last (battleOrderOf). Each member steps down to the stage its level supports,
+ * then the move pool resolves against every member's current species and level.
  */
 export const buildTeam = (
   roster: readonly RosterSlot[],
   teamLevel: number,
   size: number,
   evolution: Evolution,
+  pool: readonly PoolEntry[] = [],
+  learnsets: Learnsets = NO_LEARNSETS,
 ) => {
-  const team = roster.slice(0, size).map((rosterSlot, index): TeamMember => {
+  const members = roster.slice(0, size).map((rosterSlot, index) => {
     const level = clamp(teamLevel + rosterSlot.levelOffset, 1, 100)
     const stage = stageAt(evolution, rosterSlot.species, level)
     return {
       ...rosterSlot,
       species: stage.species,
-      moves: stage.species === rosterSlot.species ? rosterSlot.moves : "LEVEL_UP",
       slot: index + 1,
       level,
       authoredSpecies: rosterSlot.species,
       authoredAt: stage.authoredAt,
     }
   })
-  return { team, battleOrder: battleOrderOf(team) }
+  const resolved = resolveMovePool(members, pool, learnsets)
+  const team = members.map(
+    (member): TeamMember => ({ ...member, moves: resolved.moves.get(member.slot) ?? [] }),
+  )
+  return { team, battleOrder: battleOrderOf(team), pool: resolved.pool }
 }
 
 /**
@@ -480,13 +622,21 @@ export const resolveTrainer = (
   experiment: Experiment,
   world: number,
   evolution: Evolution,
+  learnsets: Learnsets = NO_LEARNSETS,
 ): ResolvedTrainer => {
   const settings = experiment.trainers[trainer.id]
   if (!settings) throw new Error(`Missing trainer settings: ${trainer.id}`)
   const tr = trainerRating(experiment, settings, world)
   const teamLevel = teamLevelFor(experiment, tr)
   const size = teamSizeFor(experiment, tr)
-  const { team, battleOrder } = buildTeam(settings.roster, teamLevel, size, evolution)
+  const { team, battleOrder, pool } = buildTeam(
+    settings.roster,
+    teamLevel,
+    size,
+    evolution,
+    settings.movePool,
+    learnsets,
+  )
   const warnings: string[] = []
   if (settings.roster.length < ROSTER_SIZE)
     warnings.push(
@@ -496,6 +646,10 @@ export const resolveTrainer = (
   for (const member of team)
     if (teamLevel + member.levelOffset < 1)
       warnings.push(`${member.authoredSpecies} level clipped to 1.`)
+  if (learnsets.species.size)
+    for (const member of team)
+      if (!learnsets.species.has(member.species))
+        warnings.push(`No learnset data for ${member.species} in the catalog, so it has no moves.`)
   return {
     trainer,
     worldProgress: world,
@@ -507,6 +661,8 @@ export const resolveTrainer = (
     size,
     team,
     battleOrder,
+    pool,
+    dormant: pool.filter((entry) => entry.slot === null),
     rosterLength: settings.roster.length,
     warnings,
   }
@@ -538,6 +694,7 @@ export const milestones = (
   trainer: TrainerRecord,
   experiment: Experiment,
   evolution: Evolution,
+  learnsets: Learnsets = NO_LEARNSETS,
 ): Milestone[] => {
   const settings = experiment.trainers[trainer.id]
   if (!settings) throw new Error(`Missing trainer settings: ${trainer.id}`)
@@ -546,8 +703,10 @@ export const milestones = (
   let previous: ResolvedTrainer | undefined
   let previousAbove = false
   let peakSeen = false
+  // Pool entries assigned at some world progress so far; an entry wakes the first time.
+  const assigned = new Set<number>()
   for (let world = 0; world <= end; world += 1) {
-    const current = resolveTrainer(trainer, experiment, world, evolution)
+    const current = resolveTrainer(trainer, experiment, world, evolution, learnsets)
     const cap = levelCap(world)
     // Equal to the level cap keeps the previous side, so rounding cannot flicker the crossing.
     const above: boolean =
@@ -573,8 +732,12 @@ export const milestones = (
             to: member.species,
           })
       }
+      for (const entry of current.pool)
+        if (entry.slot !== null && entry.species !== null && !assigned.has(entry.index))
+          events.push({ kind: "wake", move: entry.move, slot: entry.slot, species: entry.species })
       if (above !== previousAbove) events.push({ kind: "cap", aboveCap: above })
     }
+    for (const entry of current.pool) if (entry.slot !== null) assigned.add(entry.index)
     if (!peakSeen && current.tr >= settings.peakTR) {
       peakSeen = true
       events.push({ kind: "peak", tr: current.tr, reached: true })
@@ -597,7 +760,10 @@ export const milestones = (
 const ordinal = (value: number): string =>
   `${value}${value % 10 === 1 && value !== 11 ? "st" : value % 10 === 2 && value !== 12 ? "nd" : value % 10 === 3 && value !== 13 ? "rd" : "th"}`
 
-/** One event as timeline text, e.g. "3rd slot (Aerodactyl) ace joins", "4th slot (Kabutops) joins" or "Onix → Steelix". */
+/**
+ * One event as timeline text, e.g. "3rd slot (Aerodactyl) ace joins", "4th slot (Kabutops) joins",
+ * "Onix → Steelix" or "Earthquake wakes (Golem)".
+ */
 export const milestoneEventText = (event: MilestoneEvent, milestone: Milestone): string => {
   switch (event.kind) {
     case "start":
@@ -606,6 +772,8 @@ export const milestoneEventText = (event: MilestoneEvent, milestone: Milestone):
       return `${ordinal(event.slot)} slot (${event.species}) ${event.isAce ? "ace joins" : "joins"}`
     case "evolve":
       return `${event.from} → ${event.to}`
+    case "wake":
+      return `${event.move} wakes (${event.species})`
     case "cap":
       return event.aboveCap
         ? `team level Lv ${milestone.teamLevel} passes the level cap Lv ${milestone.cap}`
@@ -629,10 +797,11 @@ export const leagueLineup = (
   experiment: Experiment,
   world: number,
   evolution: Evolution,
+  learnsets: Learnsets = NO_LEARNSETS,
 ): ResolvedTrainer[] =>
   catalog
     .filter((trainer) => trainer.leagueEligible)
-    .map((trainer) => resolveTrainer(trainer, experiment, world, evolution))
+    .map((trainer) => resolveTrainer(trainer, experiment, world, evolution, learnsets))
     .toSorted((a, b) => b.tr - a.tr)
     .slice(0, LINEUP_SIZE)
     .toSorted((a, b) => a.tr - b.tr)
@@ -671,9 +840,13 @@ export const defaultTrainerSettings = (trainer: TrainerRecord): TrainerSettings 
   archetype: trainer.archetype,
   peakTR: trainer.peakTR,
   roster: structuredClone(trainer.roster),
+  movePool: structuredClone(trainer.movePool),
 })
 
-export const createExperiment = (catalog: TrainerRecord[]): Experiment => {
+export const createExperiment = (
+  catalog: TrainerRecord[],
+  moves: ReadonlySet<string> = NO_LEARNSETS.moves,
+): Experiment => {
   const trainers: Experiment["trainers"] = Object.create(null)
   for (const trainer of catalog) trainers[trainer.id] = defaultTrainerSettings(trainer)
   return validateExperiment(
@@ -687,6 +860,7 @@ export const createExperiment = (catalog: TrainerRecord[]): Experiment => {
       trainers,
     },
     catalog,
+    moves,
   )
 }
 
@@ -744,14 +918,10 @@ const anchors = (value: unknown, min: number, max: number, path: string): Anchor
 
 const rosterSlot = (value: unknown, path: string): RosterSlot => {
   const input = object(value, path)
-  exactKeys(input, ["species", "levelOffset", "isAce", "moves", "item", "ability", "nature"], path)
+  if (Object.hasOwn(input, "moves"))
+    fail(`${path}: roster slots carry no moves (members draw them from the move pool)`)
+  exactKeys(input, ["species", "levelOffset", "isAce", "item", "ability", "nature"], path)
   if (typeof input.isAce !== "boolean") fail(`${path}.isAce must be true or false`)
-  const moves =
-    input.moves === "LEVEL_UP"
-      ? "LEVEL_UP"
-      : Array.isArray(input.moves) && input.moves.length >= 1 && input.moves.length <= 4
-        ? input.moves.map((move: unknown, slot) => label(move, 40, `${path}.moves[${slot}]`))
-        : fail(`${path}.moves must be "LEVEL_UP" or 1–4 moves`)
   return {
     species: label(input.species, 100, `${path}.species`),
     levelOffset: integer(
@@ -761,7 +931,6 @@ const rosterSlot = (value: unknown, path: string): RosterSlot => {
       `${path}.levelOffset`,
     ),
     isAce: input.isAce as boolean,
-    moves,
     item: nullable(input.item, 60, `${path}.item`),
     ability: nullable(input.ability, 60, `${path}.ability`),
     nature: nullable(input.nature, 30, `${path}.nature`),
@@ -785,11 +954,34 @@ export const validateRoster = (value: unknown, path: string): RosterSlot[] => {
   return slots
 }
 
+/**
+ * One ordered move pool: at most MAX_POOL_ENTRIES entries, each a move name (a valid move when
+ * `moves` lists any) and an optional from level in 1–100.
+ */
+export const validateMovePool = (
+  value: unknown,
+  path: string,
+  moves: ReadonlySet<string> = NO_LEARNSETS.moves,
+): PoolEntry[] => {
+  if (!Array.isArray(value) || value.length > MAX_POOL_ENTRIES)
+    fail(`${path} must list at most ${MAX_POOL_ENTRIES} entries`)
+  return (value as unknown[]).map((item, index): PoolEntry => {
+    const where = `${path}[${index + 1}]`
+    const input = object(item, where)
+    exactKeys(input, Object.hasOwn(input, "fromLevel") ? ["move", "fromLevel"] : ["move"], where)
+    const move = label(input.move, 40, `${where}.move`)
+    if (moves.size && !moves.has(move)) fail(`${where}: unknown move "${move}"`)
+    return Object.hasOwn(input, "fromLevel")
+      ? { move, fromLevel: integer(input.fromLevel, 1, 100, `${where}.fromLevel`) }
+      : { move }
+  })
+}
+
 /** Start and peak TR are whole numbers with peak >= start, and peak = start for a Legend. */
 const growthSettings = (
   settings: Record<string, unknown>,
   id: string,
-): Omit<TrainerSettings, "roster"> => {
+): Omit<TrainerSettings, "roster" | "movePool"> => {
   const startTR = tr(settings.startTR, `${id}.startTR`)
   const peakTR = tr(settings.peakTR, `${id}.peakTR`)
   const archetype = settings.archetype as Archetype
@@ -811,23 +1003,31 @@ export const rosterGaps = (
     return length < ROSTER_SIZE ? [{ id: trainer.id, name: trainer.name, length }] : []
   })
 
-export const EXPERIMENT_VERSION = 11
+export const EXPERIMENT_VERSION = 12
+const START_OVER = `Start from the version ${EXPERIMENT_VERSION} defaults`
 export const OLD_VERSION_REJECTION = (version: number): string =>
-  version === 10
-    ? "Version 10 experiments use the old archetype names (early bloomer, late bloomer, plateau, fixed, rising star, second wind, bursts), so they cannot be imported. Start from the version 11 defaults."
-    : version === 9
-      ? "Version 9 experiments have only five archetypes (no Legend, Star, Comeback or Burst step scaler) and the old archetype assignments, so they cannot be imported. Start from the version 11 defaults."
-      : version === 8
-        ? "Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. Start from the version 11 defaults."
-        : version === 7
-          ? "Version 7 experiments give the Rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. Start from the version 11 defaults."
-          : version === 6
-            ? "Version 6 experiments give each notable trainer one fixed TR and cannot be imported. Start from the version 11 defaults (start TR, archetype and peak TR)."
-            : version === 5
-              ? "Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. Start from the version 11 defaults."
-              : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. Start from the version 11 defaults.`
+  version === 11
+    ? `Version 11 experiments author moves per roster slot and have no move pools, so they cannot be imported. ${START_OVER}.`
+    : version === 10
+      ? `Version 10 experiments use the old archetype names (early bloomer, late bloomer, plateau, fixed, rising star, second wind, bursts), so they cannot be imported. ${START_OVER}.`
+      : version === 9
+        ? `Version 9 experiments have only five archetypes (no Legend, Star, Comeback or Burst step scaler) and the old archetype assignments, so they cannot be imported. ${START_OVER}.`
+        : version === 8
+          ? `Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. ${START_OVER}.`
+          : version === 7
+            ? `Version 7 experiments give the Rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. ${START_OVER}.`
+            : version === 6
+              ? `Version 6 experiments give each notable trainer one fixed TR and cannot be imported. ${START_OVER} (start TR, archetype and peak TR).`
+              : version === 5
+                ? `Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. ${START_OVER}.`
+                : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. ${START_OVER}.`
 
-export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Experiment => {
+/** Validates an experiment against the catalog; with `moves`, every move pool name must be one of them. */
+export const validateExperiment = (
+  value: unknown,
+  catalog: TrainerRecord[],
+  moves: ReadonlySet<string> = NO_LEARNSETS.moves,
+): Experiment => {
   const input = object(value, "root")
   if (typeof input.version === "number" && input.version >= 1 && input.version < EXPERIMENT_VERSION)
     fail(OLD_VERSION_REJECTION(input.version))
@@ -853,11 +1053,15 @@ export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Ex
   for (const trainer of catalog) {
     const id = trainer.id
     const settings = object(inputTrainers[id], `trainers.${id}`)
-    exactKeys(settings, ["startTR", "archetype", "peakTR", "roster"], `trainers.${id}`)
+    exactKeys(settings, ["startTR", "archetype", "peakTR", "roster", "movePool"], `trainers.${id}`)
     const growth = growthSettings(settings, id)
     if (growth.archetype === "legend" && isGymLeader(trainer))
       fail(`${id}: a Gym Leader cannot be a Legend`)
-    trainers[id] = { ...growth, roster: validateRoster(settings.roster, `${id}.roster`) }
+    trainers[id] = {
+      ...growth,
+      roster: validateRoster(settings.roster, `${id}.roster`),
+      movePool: validateMovePool(settings.movePool, `${id}.movePool`, moves),
+    }
   }
   const inputArchetypes = object(input.archetypes, "archetypes")
   exactKeys(inputArchetypes, ARCHETYPES, "archetypes")

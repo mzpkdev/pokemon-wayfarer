@@ -5,14 +5,20 @@ No network, ROM build, or temporary calibration files are required. Reference
 moves/items describe authored sources only. Each trainer gets placeholder growth
 (start TR, archetype, peak TR) and the user-directed roster draft v1 (DRAFT: six
 ordered roster slots, identity/anime picks, 1-3 aces). A slot keeps authored
-source battle content only when its species is in the trainer's source party;
-otherwise it uses LEVEL_UP with no item. A roster short of six or a slot that
-is not a final stage is a warning, not a failure.
+source item/ability/nature only when its species is in the trainer's source
+party; otherwise it has no item. Roster slots carry no moves: each trainer has
+one ordered move pool, a placeholder built from those source slots' moves. A
+roster short of six or a slot that is not a final stage is a warning, not a
+failure.
 
 The catalog also records each roster species' predecessor chain with evolution
 levels: species_info EVO_LEVEL thresholds, or the shared evolution-level table
 (EVOLUTION_LEVELS) for non-level evolutions. The explorer steps a member down
-that chain until its level supports the stage.
+that chain until its level supports the stage. For every stage on those lines
+it records the level-up learnset and the TM/tutor (teachable) list as the
+Wayfarer ROM builds them (see load_learnsets), which the explorer's move pool
+resolver reads. Learnset extraction needs a C preprocessor
+(arm-none-eabi-cpp, else cpp).
 """
 from __future__ import annotations
 
@@ -21,6 +27,7 @@ import importlib.util
 import json
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -31,6 +38,18 @@ OUTPUT = ROOT / "devtools/ui/src/modules/trainer-balance/catalog.json"
 GYMS = GAME / "src/data/trainer_scaling/gym_leaders.json"
 SPECIES_INFO = GAME / "src/data/pokemon/species_info"
 SPECIES_CONSTANTS = GAME / "include/constants/species.h"
+GLOBAL_HEADER = GAME / "include/global.h"
+POKEMON_C = GAME / "src/pokemon.c"
+# Learnsets are read as the Wayfarer ROM builds them: the Makefile's
+# GAME_VERSION and CPPFLAGS for BUILD=wayfarer (TEST=0, the legacy multiboot
+# capabilities off, POKEMON_HNS added). -iquote src stands in for pokemon.c's
+# own directory, which a quoted include searches first.
+LEARNSET_BUILD = "POKEMON_WAYFARER"
+LEARNSET_CPPFLAGS = ["-P", "-iquote", "include", "-iquote", "src", "-Wno-trigraphs", "-DMODERN=1", "-DTESTING=0",
+                     f"-D{LEARNSET_BUILD}", "-std=gnu17", "-DENABLE_COLOSSEUM_MULTIBOOT=0",
+                     "-DENABLE_BERRY_GLITCH_FIX_MULTIBOOT=0", "-DENABLE_EREADER_TRANSFER=0", "-DPOKEMON_HNS"]
+MAX_POOL_MOVES = 64
+POOL_NOTE = "placeholder pool from previous per-slot moves"
 ROSTER_SIZE = 6
 MAX_ACES = 3
 CATALOG_SIZE = 38
@@ -192,8 +211,9 @@ EVOLUTION_LEVELS = [
 # slots in join order as (species, isAce[, tag]). Roster slot 1 is the signature
 # Pokémon (an ace at offset 0); other aces are at offset 0 and fillers at -2.
 # Tags record off-type, anime or lore picks. Battle content is a placeholder: a
-# slot keeps the authored moves/item/ability/nature of the same species in the
-# trainer's source party, otherwise it uses LEVEL_UP with no item.
+# slot keeps the authored item/ability/nature of the same species in the
+# trainer's source party, otherwise it has no item; the source slots' moves
+# seed the placeholder move pool.
 DRAFT = {
     "Brock": [("Steelix", True), ("Golem", False), ("Crobat", False, "anime Zubat"),
               ("Kabutops", False), ("Omastar", False), ("Aerodactyl", True)],
@@ -340,6 +360,160 @@ def load_sources():
             command([str(binary), "-i", f"src/data/{filename}", "-o", str(header), "-"], input=preprocessed)
             sources[label] = module.parse_output(header.read_text(), f"game/src/data/{filename}")
     return sources
+
+
+def c_block(text, start):
+    """The end of the brace block opening at text[start] ("{"), skipping string and char literals."""
+    depth, index, quote = 0, start, None
+    while index < len(text):
+        char = text[index]
+        if quote:
+            if char == "\\":
+                index += 1
+            elif char == quote:
+                quote = None
+        elif char in "\"'":
+            quote = char
+        elif char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return index
+        index += 1
+    raise ValueError("unbalanced braces in the preprocessed learnset data")
+
+
+def learnset_translation_unit():
+    """The C source the learnsets are preprocessed from, built from the game's own files.
+
+    global.h's leading include block (minus constants/maps.h, which needs the
+    generated map headers and only defines map constants), then pokemon.c's own
+    P_LVL_UP_LEARNSETS #if chain that picks the level-up learnset header, the
+    generated teachable header and species_info.h, as pokemon.c includes them.
+    """
+    includes = []
+    for line in GLOBAL_HEADER.read_text().splitlines():
+        if line.startswith("#include") and "constants/maps.h" not in line:
+            includes.append(line)
+        if "config/save.h" in line:
+            break
+    source = POKEMON_C.read_text()
+    chain = re.search(r"^#if P_LVL_UP_LEARNSETS\b.*?^#endif", source, re.M | re.S)
+    if not chain or '#include "data/pokemon/teachable_learnsets.h"' not in source[chain.end():]:
+        raise ValueError("pokemon.c no longer selects level-up learnsets through P_LVL_UP_LEARNSETS")
+    return "\n".join([*includes, chain.group(0), '#include "data/pokemon/teachable_learnsets.h"',
+                      '#include "data/pokemon/species_info.h"'])
+
+
+def load_learnsets(tokens):
+    """Each species token's level-up learnset and teachable (TM/tutor) list, as the Wayfarer ROM builds them.
+
+    The teachable header is generated by the game's own learnset helpers
+    (make_tutors.py, make_teaching_types.py, make_teachables.py --build
+    POKEMON_WAYFARER, the Makefile's recipe for BUILD=wayfarer) into a scratch
+    copy of their inputs, so nothing is written under game/. The level-up
+    learnsets, the teachable arrays and species_info are then run through the
+    C preprocessor with the Makefile's CPPFLAGS for that build, so every
+    generation-config #if resolves as it does in the ROM, and the expanded
+    arrays are parsed. Returns (valid move tokens, {old move name: move
+    token}, {species token: {"levelUp": [(level, move token)], "teachable":
+    [move token]}}); level 0 is an evolution move.
+    """
+    with tempfile.TemporaryDirectory(prefix="trainer-balance-learnsets-") as directory:
+        work = Path(directory)
+        (work / "src/data/pokemon").mkdir(parents=True)
+        (work / "tools/learnset_helpers").mkdir(parents=True)  # make_tutors.py touches its sibling here
+        (work / "build").mkdir()
+        for name in ("include", "data"):
+            (work / name).symlink_to(GAME / name)
+        for name in ("species_info", "species_info.h", "all_learnables.json", "special_movesets.json"):
+            (work / "src/data/pokemon" / name).symlink_to(GAME / "src/data/pokemon" / name)
+        helpers = GAME / "tools/learnset_helpers"
+        command([sys.executable, str(helpers / "make_tutors.py"), "build/all_tutors.json"], cwd=work)
+        command([sys.executable, str(helpers / "make_teaching_types.py"), "build/all_teaching_types.json"], cwd=work)
+        command([sys.executable, str(helpers / "make_teachables.py"), "--build", LEARNSET_BUILD, "build"], cwd=work)
+        header = work / "src/data/pokemon/teachable_learnsets.h"
+        if not header.is_file():
+            raise ValueError("make_teachables.py wrote no teachable_learnsets.h (is P_LEARNSET_HELPER_TEACHABLE off?)")
+        # The unit sits beside its own data/pokemon/teachable_learnsets.h, which a
+        # quoted include finds before game/src (the directory pokemon.c lives in).
+        unit = work / "cpp/learnsets.c"
+        (unit.parent / "data/pokemon").mkdir(parents=True)
+        (unit.parent / "data/pokemon/teachable_learnsets.h").write_text(header.read_text())
+        markers = "".join(f"\n__WAYFARER_SPECIES__ {token}" for token in tokens)
+        unit.write_text(learnset_translation_unit() + markers + "\n")
+        preprocessor = "arm-none-eabi-cpp" if shutil.which("arm-none-eabi-cpp") else "cpp"
+        text = command([preprocessor, *LEARNSET_CPPFLAGS, str(unit)], cwd=GAME)
+    ids = re.findall(r"^__WAYFARER_SPECIES__ (\S+)$", text, re.M)
+    if len(ids) != len(tokens) or not all(value.isdigit() for value in ids):
+        raise ValueError("could not resolve roster species IDs in the preprocessed data")
+    moves_enum = re.search(r"enum __attribute__\(\(packed\)\) Move\s*\{(.*?)\};", text, re.S)
+    if not moves_enum:
+        raise ValueError("enum Move not found in the preprocessed data")
+    members = re.findall(r"^\s*(\w+)(?:\s*=\s*([^,\n]+))?,", moves_enum.group(1), re.M)
+    names = [name for name, _ in members]
+    if "MOVES_COUNT" not in names:
+        raise ValueError("enum Move has no MOVES_COUNT")
+    # Real moves: MOVE_NONE < move < MOVES_COUNT (Z-Moves and Max Moves follow
+    # it). An old name defined as another move (MOVE_FAINT_ATTACK =
+    # MOVE_FEINT_ATTACK) is an alias of that move, not a move of its own.
+    aliases = {name: value.strip() for name, value in members if value and value.strip().startswith("MOVE_")}
+    valid = [name for name in names[:names.index("MOVES_COUNT")]
+             if name.startswith("MOVE_") and name != "MOVE_NONE" and name not in aliases]
+    level_up = {}
+    for name, body in re.findall(r"static const struct LevelUpMove (s\w+LevelUpLearnset)\[\] = \{(.*?)\};", text, re.S):
+        items = re.findall(r"\{([^{}]*)\}", body)
+        entries = [re.fullmatch(r"\s*\.move = (\w+), \.level = (\d+)\s*", item) for item in items]
+        if not entries or any(entry is None for entry in entries) or entries[-1].group(1) != "0xFFFF":
+            raise ValueError(f"unexpected level-up learnset layout: {name}")
+        level_up[name] = [(int(level), move) for move, level in (entry.groups() for entry in entries[:-1])]
+    teachable = {}
+    for name, body in re.findall(r"static const u16 (s\w+TeachableLearnset)\[\] = \{(.*?)\};", text, re.S):
+        items = [item.strip() for item in body.split(",") if item.strip()]
+        if not items or items[-1] != "0xFFFF":
+            raise ValueError(f"unexpected teachable learnset layout: {name}")
+        teachable[name] = items[:-1]
+    table = text.index("{", text.index("gSpeciesInfo[] ="))
+    entries = {}
+    # Top-level designated initializers "[id] = { ... }"; a later one for the
+    # same species overrides an earlier one, as in C (HNS overrides).
+    index, quote, depth = table, None, 0
+    head = re.compile(r"\[(\d+)\] =\s*\{")
+    while True:
+        char = text[index]
+        if quote:
+            if char == "\\":
+                index += 1
+            elif char == quote:
+                quote = None
+        elif char in "\"'":
+            quote = char
+        elif char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                break
+        elif char == "[" and depth == 1 and (match := head.match(text, index)):
+            end = c_block(text, match.end() - 1)
+            entries[match.group(1)] = text[match.end() - 1:end + 1]
+            index = end
+        index += 1
+    result = {}
+    for token, species_id in zip(tokens, ids):
+        entry = entries.get(species_id)
+        level_name = re.search(r"\.levelUpLearnset = (\w+),", entry or "")
+        teach_name = re.search(r"\.teachableLearnset = (\w+),", entry or "")
+        if not entry or not level_name or not teach_name:
+            raise ValueError(f"{display(token, 'SPECIES_')}: no learnsets in species_info")
+        for name, known in ((level_name.group(1), level_up), (teach_name.group(1), teachable)):
+            if name not in known:
+                raise ValueError(f"{display(token, 'SPECIES_')}: learnset {name} not found")
+            if any(move not in valid for move in (known[name] if known is teachable else [move for _, move in known[name]])):
+                raise ValueError(f"{display(token, 'SPECIES_')}: {name} lists an unknown move")
+        result[token] = {"levelUp": level_up[level_name.group(1)], "teachable": teachable[teach_name.group(1)]}
+    return valid, aliases, result
 
 
 def load_evolutions():
@@ -494,32 +668,87 @@ def known_species():
 
 
 def draft_roster(name, source_slots, known):
-    """The DRAFT roster as catalog roster slots, plus "species (source slot)" for kept content.
+    """The DRAFT roster as catalog roster slots, each slot's previous moves, and "species (source slot)" for kept content.
 
     `source_slots` is [(slot, provenance)]. A species must resolve in the game
     data. A slot whose species is in the source party keeps that source slot's
-    moves/item/ability/nature (first match); every other slot uses LEVEL_UP
-    with no item, ability or nature.
+    item/ability/nature (first match) and reports its authored moves, which
+    seed the placeholder move pool; every other slot has no item, ability,
+    nature or moves.
     """
     if name not in DRAFT:
         raise ValueError(f"{name}: add a DRAFT roster")
-    roster, kept = [], []
+    roster, moves, kept = [], [], []
     for index, (species, is_ace, *tag) in enumerate(DRAFT[name]):
         token = species_token(species)
         if token not in known:
             raise ValueError(f"DRAFT {name}[{index + 1}]: species {species!r} does not resolve in species_info/species.h")
         source, where = next(((slot, where) for slot, where in source_slots if slot["species"] == token), (None, None))
         entry = {"species": display(token, "SPECIES_"), "levelOffset": 0 if is_ace else DEFAULT_OFFSET,
-                 "isAce": is_ace, "moves": "LEVEL_UP", "item": None, "ability": None, "nature": None}
+                 "isAce": is_ace, "item": None, "ability": None, "nature": None}
+        slot_moves = []
         if source is not None:
             authored = member(source)
             kept.append(f"{entry['species']} ({where})")
-            entry.update(moves=authored["moves"] or "LEVEL_UP", item=authored["item"],
+            slot_moves = authored["moves"]
+            entry.update(item=authored["item"],
                          ability=optional(source.get("ability"), "ABILITY_", "ABILITY_NONE"),
                          # trainerproc emits NATURE_HARDY when a party omits the nature.
                          nature=optional(source.get("nature"), "NATURE_", "NATURE_HARDY"))
         roster.append(entry)
-    return roster, kept
+        moves.append(slot_moves)
+    return roster, moves, kept
+
+
+def placeholder_pool(roster, slot_moves):
+    """The placeholder move pool from the previous per-slot moves.
+
+    Slots in order, ace slots first, then filler slots; each slot's moves in
+    its order, once per slot, so a move stays twice only when two slots had it.
+    """
+    order = [index for index, entry in enumerate(roster) if entry["isAce"]] + \
+            [index for index, entry in enumerate(roster) if not entry["isAce"]]
+    return [{"move": move} for index in order for move in dict.fromkeys(slot_moves[index])]
+
+
+def validate_pool(name, pool, moves):
+    """One ordered pool: valid move names, an optional from level in 1-100, at most MAX_POOL_MOVES entries."""
+    if not isinstance(pool, list) or len(pool) > MAX_POOL_MOVES:
+        raise ValueError(f"{name}: a move pool lists at most {MAX_POOL_MOVES} entries")
+    for index, entry in enumerate(pool):
+        where = f"{name} move pool [{index + 1}]"
+        if not isinstance(entry, dict) or not set(entry) <= {"move", "fromLevel"} or "move" not in entry:
+            raise ValueError(f"{where}: an entry is a move and an optional fromLevel")
+        if entry["move"] not in moves:
+            raise ValueError(f"{where}: unknown move {entry['move']!r}")
+        level = entry.get("fromLevel", 1)
+        if not isinstance(level, int) or isinstance(level, bool) or not 1 <= level <= 100:
+            raise ValueError(f"{where}: fromLevel must be an integer from 1 to 100")
+
+
+def default_moveset(level_up, level):
+    """The constructor's default moveset (GiveBoxMonInitialMoveset): the last four level-up moves learned by `level`.
+
+    Walks the learnset in order until a move above `level`, skips evolution
+    moves (level 0) and moves already known, and drops the oldest when full.
+    """
+    moves = []
+    for learned, move in level_up:
+        if learned > level:
+            break
+        if learned == 0 or move in moves:
+            continue
+        moves = (moves if len(moves) < 4 else moves[1:]) + [move]
+    return moves
+
+
+def validate_usable_moves(name, chain, learnsets):
+    """Every member has at least one usable move at every reachable level and stage, stepped-down stages included."""
+    for position, (token, _) in enumerate(chain):
+        # The lowest level at which the downward rule leaves the member at this stage.
+        reached = 1 if position == 0 else chain[position][1]
+        if not default_moveset(learnsets[token]["levelUp"], reached):
+            raise ValueError(f"{name}: {display(token, 'SPECIES_')} has no level-up move at Lv {reached}")
 
 
 def validate_roster(name, roster):
@@ -534,9 +763,8 @@ def validate_roster(name, roster):
             raise ValueError(f"{where}: levelOffset must be an integer from {OFFSET_MIN} to {OFFSET_MAX}")
         if not isinstance(entry["isAce"], bool):
             raise ValueError(f"{where}: isAce must be true or false")
-        moves = entry["moves"]
-        if moves != "LEVEL_UP" and not (isinstance(moves, list) and 1 <= len(moves) <= 4):
-            raise ValueError(f"{where}: moves must be LEVEL_UP or 1-4 authored moves")
+        if "moves" in entry:
+            raise ValueError(f"{where}: roster slots carry no moves (they come from the move pool)")
     if roster[0]["levelOffset"] != 0:
         raise ValueError(f"{name}: roster slot 1 must have level offset 0")
     if not roster[0]["isAce"]:
@@ -545,12 +773,51 @@ def validate_roster(name, roster):
         raise ValueError(f"{name}: a roster has 1-{MAX_ACES} aces")
 
 
+def learnset_data(lines, trainers):
+    """Compact learnsets for every stage on every roster line, and the move pools checked against them.
+
+    Returns ({"moves": [name], "species": {species: {"levelUp": [level, move
+    index, ...], "teachable": [move index]}}}, pool entries that no stage on
+    the trainer's roster lines can learn). Level-up pairs keep the game's
+    order; level 0 is an evolution move.
+    """
+    tokens = sorted({token for chain in lines.values() for token, _ in chain})
+    valid, aliases, learnsets = load_learnsets(tokens)
+    names = {token: display(token, "MOVE_") for token in valid}
+    # Source parties may use an old move name; the pool stores the move itself.
+    canonical = {display(alias, "MOVE_"): names[target] for alias, target in aliases.items() if target in names}
+    for trainer in trainers:
+        for entry in trainer["movePool"]:
+            entry["move"] = canonical.get(entry["move"], entry["move"])
+    if len(set(names.values())) != len(names):
+        raise ValueError("two moves share a display name")
+    moves = sorted(names.values())
+    position = {name: index for index, name in enumerate(moves)}
+    for species, chain in lines.items():
+        validate_usable_moves(species, chain, learnsets)
+    species = {}
+    for token in tokens:
+        data = learnsets[token]
+        species[display(token, "SPECIES_")] = {
+            "levelUp": [part for level, move in data["levelUp"] for part in (level, position[names[move]])],
+            "teachable": sorted({position[names[move]] for move in data["teachable"]})}
+    unlearnable = []
+    for trainer in trainers:
+        validate_pool(trainer["name"], trainer["movePool"], position)
+        stages = [token for entry in trainer["roster"] for token, _ in lines[entry["species"]]]
+        learnable = {names[move] for token in stages
+                     for move in [move for _, move in learnsets[token]["levelUp"]] + learnsets[token]["teachable"]}
+        unlearnable += [f"{trainer['name']} {entry['move']}" for entry in trainer["movePool"] if entry["move"] not in learnable]
+    return {"moves": moves, "species": species}, unlearnable
+
+
 def generate():
     sources = load_sources()
     edges, previous = load_evolutions()
     table = evolution_table(edges)
     known = known_species()
     chains = {}
+    lines = {}
     kept = []
     non_final = []
     curated = json.loads(GYMS.read_text())
@@ -599,7 +866,8 @@ def generate():
         else:
             source_slots = [(slot, f"{records[trainer]['source']}:{trainer}[{index}]") for index, slot in enumerate(reference_slots)]
             origin = "the reference party"
-        roster, kept_slots = draft_roster(name, source_slots, known)
+        roster, slot_moves, kept_slots = draft_roster(name, source_slots, known)
+        pool = placeholder_pool(roster, slot_moves)
         kept.append((name, [text.split(" (")[0] for text in kept_slots]))
         # A duo is fought as its source double battle; leagues are singles only.
         double = records[trainer].get("battleType") == "TRAINER_BATTLE_TYPE_DOUBLES"
@@ -610,6 +878,7 @@ def generate():
             chain = evolution_chain(token, edges, previous, table)
             if any(source == token for source, _ in edges):
                 non_final.append(f"{name}[{index + 1}] {entry['species']}")
+            lines[entry["species"]] = chain
             chains[entry["species"]] = [part for position, (species, level) in enumerate(chain)
                                         for part in ([level] if position else []) + [display(species, "SPECIES_")]]
         validate_roster(name, roster)
@@ -620,9 +889,9 @@ def generate():
         roster_source = (f"{DRAFT_NOTE}."
                          + (f" Tags: {', '.join(tags)}." if tags else "")
                          + f" Aces ({', '.join(entry['species'] for entry in roster if entry['isAce'])}) at offset 0, fillers at {DEFAULT_OFFSET}."
-                         + (f" Species in {origin} keep that source slot's moves/item/ability/nature: {', '.join(unique_kept)};"
+                         + (f" Species in {origin} keep that source slot's item/ability/nature: {', '.join(unique_kept)};"
                             if unique_kept else f" No roster species is in {origin};")
-                         + " other roster slots use LEVEL_UP with no item (a label: level-up learnsets are not resolved)."
+                         + " other roster slots have no item. Roster slots carry no moves: members draw them from the move pool."
                          + (" Fought as a double battle: both leaders send Pokémon from this one roster in order." if name in DUOS else ""))
         result.append({"id": slug(name), "name": name, "region": region, "role": role,
                        "doubleBattle": double, "leagueEligible": not double,
@@ -632,7 +901,11 @@ def generate():
                        "trSource": f"PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR {start}"
                                    + (f" (placeholder start TR in the {GYM_START_BAND[0]}–{GYM_START_BAND[1]} Gym band by archetype)" if gym else "")
                                    + f", {GROWTH_NOTE[archetype]}, peak TR {peak}.",
-                       "roster": roster, "rosterSource": roster_source})
+                       "roster": roster, "rosterSource": roster_source, "movePool": pool,
+                       "movePoolSource": f"{POOL_NOTE[0].upper()}{POOL_NOTE[1:]}: the source slots' moves"
+                                         " (species in the source party), ace slots first, then filler slots, each in slot order;"
+                                         " a move is listed once per slot that had it. No from levels."
+                                         + ("" if pool else " No roster species is in the source party, so the pool is empty.")})
     # 37 characters plus the Tate & Liza duo.
     if len(result) != CATALOG_SIZE or len({row["id"] for row in result}) != CATALOG_SIZE:
         raise ValueError(f"catalog must contain exactly {CATALOG_SIZE} unique entries")
@@ -643,8 +916,10 @@ def generate():
     evolution = {"chains": dict(sorted(chains.items())),
                  "notFinal": sorted(stage for stage in chains
                                     if any(source == species_token(stage) for source, _ in edges))}
-    return json.dumps({"evolution": evolution, "trainers": result}, indent=2, ensure_ascii=False) + "\n", gaps, {
-        "kept": kept, "non_final": non_final,
+    learnsets, unlearnable = learnset_data(lines, result)
+    return json.dumps({"evolution": evolution, "learnsets": learnsets, "trainers": result},
+                      indent=2, ensure_ascii=False) + "\n", gaps, {
+        "kept": kept, "non_final": non_final, "unlearnable": unlearnable,
         "placeholders": [f"{source}->{target} {level}" for source, target, level, status in EVOLUTION_LEVELS if status == "placeholder"]}
 
 
@@ -667,6 +942,10 @@ def main():
             if species:
                 print(f"source battle content kept by {name}: {', '.join(species)}")
         print(f"{len(report['placeholders'])} placeholder evolution levels: {', '.join(report['placeholders'])}")
+        if report["unlearnable"]:
+            # Learnability is the resolver's rule: such an entry stays dormant, it is not invalid.
+            print(f"warning: {len(report['unlearnable'])} move pool entries no roster line can learn (always dormant):"
+                  f" {', '.join(report['unlearnable'])}", file=sys.stderr)
         if report["non_final"]:
             # Section 9 recommends final stages; any authored stage is allowed.
             print(f"warning: {len(report['non_final'])} roster slots are not final stages: {', '.join(report['non_final'])}", file=sys.stderr)

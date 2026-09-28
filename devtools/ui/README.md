@@ -99,10 +99,10 @@ trainer's team. The player TR is never computed from a notable trainer's TR.
   11–28 → 2, 29–43 → 3, 44–70 → 4, 71–95 → 5, 96+ → 6.
 - **Roster**: one ordered list of six roster slots per trainer. Each roster
   slot has a species (normally a final stage, such as Steelix), a level
-  offset (-6 to 0), moves (`LEVEL_UP` or one to four authored moves), a held
-  item, an optional ability and nature, and an ace flag (`isAce`). Roster
-  slot 1 (the signature Pokémon) must be an ace at offset 0, and a roster has
-  1–3 aces; every other slot is a filler slot.
+  offset (-6 to 0), a held item, an optional ability and nature, and an ace
+  flag (`isAce`). Roster slots carry no moves. Roster slot 1 (the signature
+  Pokémon) must be an ace at offset 0, and a roster has 1–3 aces; every other
+  slot is a filler slot.
 - **Team** = the first N roster slots (N = team size), so join order is list
   order and the author sets the rhythm (e.g. ace, filler, ace, filler, filler,
   ace). Each member's level is clamp(team level + offset, 1, 100). **Battle
@@ -117,9 +117,26 @@ trainer's team. The player TR is never computed from a notable trainer's TR.
   other) use the shared evolution-level table in the catalog script, which
   covers only evolutions without a level in the game data. Baby pre-evolutions
   are not stepped down to. Brock at start TR 25 (team level 18) fields Onix
-  Lv 18 and Geodude Lv 16; his Graveler appears from Lv 25, Steelix from Lv 35 and Golem from Lv 38. A member at its
-  authored stage uses the authored moves; one that stepped down uses
-  `LEVEL_UP`.
+  Lv 18 and Geodude Lv 16; his Graveler appears from Lv 25, Steelix from Lv 35 and Golem from Lv 38.
+- **Move pool**: each trainer authors one ordered list of moves they like,
+  each with an optional from level (blank is Lv 1). After every member's
+  species and level are resolved (stepping down included), each member starts
+  from its default level-up moveset: the constructor's last four level-up
+  moves learned by its level, for its current species, oldest first. Then the
+  aces, then the fillers, each in list order, walk the pool top to bottom and
+  take every entry that is unassigned, has a from level at or below the
+  member's level, is learnable by the member's current species (in its
+  level-up learnset at any level, or in its TM/tutor list) and is not already
+  in its moveset, up to four. Pool moves fill empty move slots, then replace
+  the oldest level-up moves. An entry goes to at most one member, so a move
+  listed twice can go to two members. An entry nobody takes is **dormant**:
+  nobody on the team can learn it, every learner is below its from level, or
+  every eligible learner already knows it or has four pool moves ("taken"). It
+  wakes when a member that can use it joins, evolves or reaches the level.
+  Resolution is a pure function of the team and the pool, with no randomness.
+  Brock's placeholder pool at 0 badges gives his Onix Earthquake, Curse, Stone
+  Edge and Body Slam and his Geodude Earthquake and Toxic next to Strength and
+  Rock Throw; Sky Attack stays dormant (no one can learn it).
 
 The world panel sets the player TR: a number field and a 0–200 slider (type
 any larger whole TR; TR has no upper limit). Badges (0–24) are presets that
@@ -140,13 +157,19 @@ and level at world progress 0 / 40 / 80 / 120 / 160 (aces marked), the trainer's
 player TR 0–200 (the current player TR and the milestones marked; hover or
 focus it and use the arrow keys to read values), the team at the current
 TR in battle order (aces marked; a stepped-down member shows its authored
-stage, e.g. "Onix → Steelix at Lv 35"), and a roster editor: reorder roster
-slots, edit species, offset, moves and item, toggle each slot's ace flag
+stage, e.g. "Onix → Steelix at Lv 35"; each member lists its resolved moves,
+each tagged `pool` or `level-up`), the **dormant** pool entries at the current
+player TR with the reason for each (no one can learn it, below from level, or
+taken), a roster editor: reorder roster
+slots, edit species, offset and item, toggle each slot's ace flag
 (roster slot 1 is locked as an ace; a fourth ace is refused with a message),
-and add or remove roster slots. Each roster
+and add or remove roster slots, and a **move pool editor**: reorder, add and
+remove entries, edit each move name (checked against the game's move list,
+any case) and optional from level; each entry shows the member that took it at
+the current TR or "dormant". Each roster
 slot shows its line with evolution levels and warns when the species is not a
-final stage or has no evolution data in the catalog. **Edit settings as JSON** covers ability and
-nature too.
+final stage or has no evolution data in the catalog. **Edit settings as JSON** covers ability,
+nature and the move pool too.
 
 **Milestones** list every player TR (world progress) where the trainer's
 team changes, scanning each whole world progress from 0 to the later of the
@@ -154,18 +177,22 @@ archetype growth ceiling and the level cap ceiling (TR 160): the starting
 team, a roster slot joining (team size steps up; "ace joins" or "joins"), a member's stage changing
 along its evolution line, the team level moving strictly above the level cap
 or strictly below it again (equal keeps the side, so rounding cannot flicker),
-and peak TR reached. The player's current TR is marked in the list. Brock
+a dormant move pool entry assigned for the first time ("Earthquake wakes
+(Golem)"), and peak TR reached. The player's current TR is marked in the list. Brock
 reads "0: Onix, Geodude (team level above the level cap) · 8: 3rd slot
 (Zubat) joins · 19: Zubat → Golbat · 27: Geodude → Graveler · 40: 4th slot
-(Kabuto) joins · 49: team level Lv 32 drops below the level cap Lv 33 · 57:
-Onix → Steelix · 76: Graveler → Golem, Golbat → Crobat · 85: Kabuto →
-Kabutops · 98: 5th slot (Omastar) joins · 151: 6th slot (Aerodactyl) ace
-joins · 159: peak TR 100". His late ace Aerodactyl (roster slot 6) joins only
+(Kabuto) joins, Ancient Power wakes (Kabuto), Surf wakes (Kabuto), Ice Beam
+wakes (Kabuto) · 49: team level Lv 32 drops below the level cap Lv 33 · 57:
+Onix → Steelix, Fire Fang wakes (Steelix) · 76: Graveler → Golem, Golbat →
+Crobat · 85: Kabuto → Kabutops, Night Slash wakes (Kabutops), Swords Dance
+wakes (Kabutops) · 98: 5th slot (Omastar) joins, Surf wakes (Omastar) · 151:
+6th slot (Aerodactyl) ace joins · 159: peak TR 100". His late ace Aerodactyl (roster slot 6) joins only
 at team size 6 (TR 96, team level 60), which his placeholder peak TR 100
 reaches at world progress 151.
 
-Exports and the saved browser state use version 11 (nine archetypes with the
-single-word identifiers above; rosters carry `isAce`)
+Exports and the saved browser state use version 12 (nine archetypes with the
+single-word identifiers above; rosters carry `isAce` and no moves; each
+trainer has a `movePool` of `{ "move", "fromLevel"? }` entries)
 and store the point as `{ "playerTR": n }`; a `{ "badges": n }` point still
 imports and sets the matching player TR.
 
@@ -200,11 +227,15 @@ level, and the Steady, Prodigy, Sleeper, Veteran, Rival, Legend, Star,
 Comeback and Burst growth scalers) are editable under
 **Scalers & experiment settings**, each labeled interpolated or step. Anchors
 start at 0, rise and never decrease in value; growth scalers run 0–100% and
-start at 0%. Experiments persist in browser storage. JSON export and import
-(format version 11) round-trip the experiment (growth, rosters with their ace
-flags and the thirteen scalers), the player TR and the selected trainer. The
-importer also rejects a Legend whose peak TR differs from start TR and a
-Gym Leader Legend. Files from versions 1–10 are rejected with a message (version
+start at 0%. Experiments persist in browser storage (key
+`wayfarer-trainer-balance-v12`). JSON export and import
+(format version 12) round-trip the experiment (growth, rosters with their ace
+flags, move pools and the thirteen scalers), the player TR and the selected trainer. The
+importer also rejects a Legend whose peak TR differs from start TR, a
+Gym Leader Legend, a roster slot with moves, an unknown move name, a from level
+outside 1–100 and a pool of more than 64 entries. Files from versions 1–11 are
+rejected with a message (version 11 authored moves per roster slot and had no
+move pools; version
 10 used the old archetype names; version
 9 had only five archetypes and the old assignments; version 8 had no ace slots and fought the team
 simply reversed; version 7 gave the Rival a fixed lead, copied the
@@ -213,8 +244,10 @@ trainer one fixed TR; version 5 used the retired 0–80 player TR scale).
 There is no migration. Reset restores the catalog defaults. **Restore this
 trainer’s defaults** updates only the selected trainer.
 
-The tool models species, team size and levels. It does not simulate moves,
-items, abilities, stats, AI, matchup difficulty or battle outcomes. Seeded
+The tool models species, team size, levels and each member's moves from the
+move pool. It does not simulate items, abilities, stats, AI, matchup
+difficulty or battle outcomes, and it skips the randomizer precedence (a
+species or learnset randomizer keeps the plain level-up moveset in the ROM). Seeded
 archetypes, other sources of world progress and lineup rules beyond the top
 five are out of scope for v0. The
 scaler the ROM uses today is unchanged.
@@ -258,18 +291,45 @@ Aerodactyl (ace); Blue's is Umbreon (ace, Eevee early), Pidgeot, Alakazam
 (ace), Nidoking, Scizor and Arcanine (ace). Battle content is a placeholder: a
 roster slot whose species is in the trainer's source party (the curated
 composition in `game/src/data/trainer_scaling/gym_leaders.json`, otherwise its
-reference party) keeps that source slot's moves, item, ability and nature;
-every other slot uses `LEVEL_UP` (a label: learnsets are not resolved) with no
-item. Every roster lists six Pokémon; the explorer still flags a roster edited
+reference party) keeps that source slot's item, ability and nature; every
+other slot has no item. Each trainer's move pool is a placeholder pool from
+the previous per-slot moves (`movePoolSource` says so): those source slots'
+moves, ace slots first, then filler slots, each in slot order, a move listed
+once per slot that had it (so it appears twice only when two slots had it),
+with no from levels. Old move names in the source parties (Faint Attack) are
+stored as the move itself (Feint Attack). The script warns about pool entries
+no stage on the trainer's roster lines can learn (they stay dormant). Every roster lists six Pokémon; the explorer still flags a roster edited
 below six as incomplete, and the script would warn about one. Four draft
 picks are not final stages in this game (Primeape, Ursaring and Girafarig have
 later-generation evolutions): allowed, and the script prints them as a warning.
+
+**Learnsets.** The catalog records, for every stage on every roster line, the
+level-up learnset (move and level, level 0 being an evolution move) and the
+TM/tutor (teachable) list, as the Wayfarer ROM builds them, under
+`learnsets` (`moves` is the sorted list of valid move names; each species
+stores `levelUp` as flattened `[level, move index, …]` pairs in the game's
+order and `teachable` as move indices). The script runs the game's own
+learnset helpers (`make_tutors.py`, `make_teaching_types.py`,
+`make_teachables.py --build POKEMON_WAYFARER`, the Makefile's recipe for
+`BUILD=wayfarer`) in a scratch copy of their inputs, so nothing is written
+under `game/`, to produce `teachable_learnsets.h`. It then runs the C
+preprocessor (`arm-none-eabi-cpp`, else `cpp`) with the Makefile's
+`CPPFLAGS` for that build (`-DPOKEMON_WAYFARER -DPOKEMON_HNS -DMODERN=1
+-DTESTING=0`, the legacy multiboot capabilities off) over global.h's leading
+include block (without `constants/maps.h`, which needs generated map
+headers), pokemon.c's own `P_LVL_UP_LEARNSETS` `#if` chain (currently
+`GEN_7`), the teachable header and `species_info.h`, and parses the expanded
+arrays, so every generation-config `#if` resolves as it does in the ROM. Valid
+moves are the `enum Move` members before `MOVES_COUNT` (no Z-Moves or Max
+Moves), aliases excluded. The script fails if any roster stage lacks a
+learnset or has no level-up move at the lowest level it can appear at.
 
 The catalog uses local FRLG, Emerald and HNS source records, including their
 provenance and explicit variant notes. HNS is not substituted with HGSS;
 Steven's local Emerald postgame party is labeled as such. The catalog script
 validates growth (start and peak TR, archetype, peak TR = start TR for a
-Legend, the Gym sub-bands, no Gym Leader Legend), roster length (at most six), offsets, moves, roster slot 1
+Legend, the Gym sub-bands, no Gym Leader Legend), roster length (at most six), offsets, no per-slot moves,
+move pools (known move names, from levels 1–100, at most 64 entries), roster slot 1
 as an ace at offset 0, 1–3 aces per roster, and that the catalog has exactly 38 entries with only the Tate &
 Liza duo fought as a double battle. It also validates the shared
 evolution-level table (one level per edge, each a real `species_info`
@@ -283,7 +343,7 @@ content and a warning for roster slots that are not final stages. The catalog re
 chain compactly under `evolution.chains` (e.g. `["Geodude", 25, "Graveler",
 38, "Golem"]`), which the explorer indexes; the saved experiment format is
 unchanged. Regenerate or verify the checked-in catalog from the repository root
-(requires Python 3, `cc`, `cpp`):
+(requires Python 3, `cc`, `cpp`; `arm-none-eabi-cpp` is used for learnsets when installed):
 
 ```sh
 python3 devtools/scripts/trainer-balance-catalog.py
