@@ -75,7 +75,7 @@ range, so extra TR still means something.
   ([Poké Marts](global-tr-pokemarts.md)).
 - **World progress.** Notable trainers read your TR as world progress and
   grow with it, each in their own way and up to their own best
-  ([Notable trainers](notable-trainers.md)). League lineups are drawn from
+  ([Notable trainers](notable-trainers.md)). League lineups come from
   their TR when you enter ([Leagues](leagues.md)).
 
 Your TR is never worked out from a notable trainer's TR, and nothing they do
@@ -142,10 +142,8 @@ changes yours.
 - **Fatigue:** 50 if the trainer was in the lineup of the last league the
   player entered.
 - **Willingness:** max(5, 100 − travel cost − fatigue).
-- **Contenders:** the 10 strongest notable trainers by TR considered for a
-  league.
-- **Lineup draw:** choosing 5 of the contenders weighted by willingness, from
-  the playthrough seed, locked until won.
+- **League score:** floor(TR × willingness / 100); a league's lineup is the
+  five highest, ties by ascending characterId, locked until won.
 - **Match 1-5:** a position in the lineup.
 - **First league win:** your first win at a given league.
 - **Challenge options:** the opt-in challenge menu.

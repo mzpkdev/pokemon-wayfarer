@@ -11,8 +11,9 @@ longer static. Under the proposed [notable trainers](notable-trainers.md)
 model, notable trainers have their own TR, growing with world progress, that
 sets team level and size in every battle, with a six-slot roster. The
 [Leagues runtime](../specs/leagues.md) replaces Hoenn's fixed participants
-with a seeded lineup draw of five from the ten strongest by TR, strongest
-last; after a loss the league keeps that locked lineup until won. These successors are not implemented by the
+with the top five by league score (TR scaled by willingness), strongest
+last; after a loss the league keeps that locked lineup until won. These
+successors are not implemented by the
 content port; Today's behavior below remains identified separately from the
 proposed direction.
 
@@ -146,8 +147,8 @@ badge battles follow the separate
 retain authored, static parties. Current Hoenn Elite Four and Champion battles
 use fixed Tier 3 source rosters and the player's TR saved when entering the
 league, under [League scaling](league-scaling.md). The proposed
-[Leagues selection](../specs/leagues.md#selection-and-order) instead draws a
-seeded lineup of five from the ten strongest by TR, favouring trainers at
+[Leagues selection](../specs/leagues.md#selection-and-order) instead picks the
+top five by league score (TR scaled by willingness), favouring trainers at
 home. Emerald source parties remain provenance
 references rather than required opening or circuit teams. In the proposed design,
 Tate and Liza are one notable duo that keeps its double battle and badge;

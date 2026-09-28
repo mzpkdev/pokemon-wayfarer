@@ -5,7 +5,6 @@ import {
   EXPERIMENT_VERSION,
   HOME_REGIONS,
   LEVEL_OFFSET,
-  MAX_SEED,
   TRAVEL_STYLES,
   MAX_ACES,
   MAX_ANCHORS,
@@ -14,7 +13,6 @@ import {
   LEVEL_CAP_ANCHORS,
   MAX_BADGES,
   WORLD_PROGRESS_CHECKPOINTS,
-  appearanceOdds,
   badgeMatch,
   badgeTR,
   createExperiment,
@@ -89,11 +87,9 @@ const anchorsOf = (experiment: Experiment, id: ScalerId): Anchor[] =>
  */
 export const scalerKind = (id: ScalerId): ScalerKind =>
   isGrowth(id) ? ARCHETYPE_KIND[id] : "interpolated"
-const storageKey = "wayfarer-trainer-balance-v13"
+const storageKey = "wayfarer-trainer-balance-v14"
 /** Where the leagues are entered: each at its own badge point (8 / 16 / 24), or all at the player TR. */
 export type LeagueEntryPoint = "badges" | "player"
-const isSeed = (value: unknown): value is number =>
-  typeof value === "number" && Number.isInteger(value) && value >= 0 && value <= MAX_SEED
 /** The chart runs across player TR 0 to at least this. */
 export const CHART_MIN_END = Math.max(200, LEVEL_CAP_ANCHORS.at(-1)?.[0] ?? 0)
 /** The chart never runs past this player TR; a higher player TR is marked at the right edge. */
@@ -170,8 +166,6 @@ export class BalanceLab {
   region = $state("All regions")
   role = $state("All trainers")
   selectedId = $state(initialTrainerId)
-  /** The playthrough seed the sample league lineups draw from. */
-  leagueSeed = $state(1)
   leagueAt = $state<LeagueEntryPoint>("badges")
   editor = $state("")
   error = $state("")
@@ -224,17 +218,15 @@ export class BalanceLab {
   gaps = $derived(rosterGaps(catalog, this.#_experiment))
   /** World progress for each league in the standard entry sequence. */
   leagueWorlds = $derived(leagueWorlds(this.leagueAt === "player" ? this.playerTR : null))
-  /** The sample sequence for the league seed, each lineup resolved at its league's world progress. */
+  /** The standard sequence ranked by league score, each lineup resolved at its league's world progress. */
   leagues = $derived(
-    leagueSequence(catalog, this.#_experiment, this.leagueWorlds, this.leagueSeed).map((draw) => ({
-      ...draw,
-      matches: draw.lineup.map((entry) =>
-        resolveTrainer(entry.trainer, this.#_experiment, draw.world, evolution, learnsets),
+    leagueSequence(catalog, this.#_experiment, this.leagueWorlds).map((ranking) => ({
+      ...ranking,
+      matches: ranking.lineup.map((entrant) =>
+        resolveTrainer(entrant.trainer, this.#_experiment, ranking.world, evolution, learnsets),
       ),
     })),
   )
-  /** Appearance odds per trainer per league over many seeded runs of the standard sequence. */
-  odds = $derived(appearanceOdds(catalog, this.#_experiment, this.leagueWorlds))
   ladder = $derived(gymLadder(catalog, this.#_experiment, this.worldProgress))
   /** The selected trainer's TR, team level and team (by roster slot) at each world progress checkpoint. */
   growth = $derived(
@@ -364,20 +356,6 @@ export class BalanceLab {
     this.playerTR = Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, Math.round(value)))
     this.#_persist()
   }
-
-  /** Sets the league seed: a whole number from 0 to MAX_SEED. */
-  setLeagueSeed = (value: number): void => {
-    if (!isSeed(value)) {
-      this.error = `The league seed must be a whole number from 0 to ${MAX_SEED}.`
-      return
-    }
-    this.error = ""
-    this.leagueSeed = value
-    this.#_persist()
-  }
-
-  /** Draws a fresh random league seed. */
-  rollLeagueSeed = (): void => this.setLeagueSeed(Math.floor(Math.random() * (MAX_SEED + 1)))
 
   setLeagueAt = (at: LeagueEntryPoint): void => {
     this.leagueAt = at
@@ -604,7 +582,7 @@ export class BalanceLab {
         tool: "wayfarer-trainer-balance",
         version: EXPERIMENT_VERSION,
         point: { playerTR: this.playerTR },
-        league: { seed: this.leagueSeed, at: this.leagueAt },
+        league: { at: this.leagueAt },
         selectedTrainer: this.selectedId,
         experiment: JSON.parse(serializeExperiment(this.#_experiment)),
       },
@@ -647,16 +625,12 @@ export class BalanceLab {
       if (
         !league ||
         typeof league !== "object" ||
-        Object.keys(league).sort().join() !== "at,seed" ||
-        !isSeed(league.seed) ||
+        Object.keys(league).join() !== "at" ||
         (league.at !== "badges" && league.at !== "player")
       )
-        throw new Error(
-          `The league settings must be a seed from 0 to ${MAX_SEED} and an entry point (badges or player).`,
-        )
+        throw new Error("The league settings must be an entry point (badges or player).")
       this.#_experiment = experiment
       this.playerTR = playerTR
-      this.leagueSeed = league.seed
       this.leagueAt = league.at
       this.selectedId = data.selectedTrainer
       this.error = ""

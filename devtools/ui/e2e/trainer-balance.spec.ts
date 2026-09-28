@@ -340,15 +340,17 @@ test("ranks the Gym Leaders against the player TR in the Gym ladder", async ({ p
   await expect(ladder.last()).toContainText("TR 185")
 })
 
-test("draws seeded league lineups from the top 10 contenders by willingness, with appearance odds", async ({
+test("ranks every eligible trainer by league score and fields the top five, strongest last", async ({
   page,
 }) => {
   await page.goto("/#trainer-balance")
   const names = async (league: string) =>
     page.getByTestId(`lineup-${league}`).locator(":scope > li h3").allInnerTexts()
+  // Every catalog trainer but the Tate & Liza duo is league-eligible.
+  const eligible = 37
   // The standard sequence enters each league at its own badge point: 8, 16 and 24 badges.
   await expect(page.getByTestId("league-indigo").locator("h3").first()).toContainText(
-    "world progress 80 · Kanto + Johto · entry 1",
+    "world progress 80 · Kanto + Johto",
   )
   await expect(page.getByTestId("league-sevii-masters").locator("h3").first()).toContainText(
     "world progress 120 · neutral location",
@@ -358,24 +360,28 @@ test("draws seeded league lineups from the top 10 contenders by willingness, wit
   )
   for (const league of ["indigo", "sevii-masters", "hoenn"]) {
     await expect(page.getByTestId(`lineup-${league}`).locator(":scope > li")).toHaveCount(5)
-    await expect(page.getByTestId(`contenders-${league}`).locator("tbody tr")).toHaveCount(10)
-    await expect(page.getByTestId(`odds-${league}`).locator("tbody tr")).toHaveCount(10)
-    await expect(page.getByTestId(`odds-total-${league}`)).toHaveText("500%")
+    await expect(page.getByTestId(`entrants-${league}`).locator("tbody tr")).toHaveCount(eligible)
+    await expect(
+      page.getByTestId(`entrants-${league}`).locator("tbody tr", { hasText: "in lineup" }),
+    ).toHaveCount(5)
   }
-  // Seed 1: the Indigo lineup fights by ascending TR, strongest last (ties in catalog order).
-  await expect(page.getByLabel("League seed", { exact: true })).toHaveValue("1")
+  await expect(page.getByLabel("League seed", { exact: true })).toHaveCount(0)
+  // Indigo fights by ascending TR, strongest last (equal TRs in catalog order).
   await expect
     .poll(() => names("indigo"))
     .toEqual([
-      "Match 1 Blue",
-      "Match 2 Lorelei",
-      "Match 3 Drake",
-      "Match 4 Lt. Surge",
-      "Match 5 Giovanni",
+      "Match 1 Will",
+      "Match 2 Lt. Surge",
+      "Match 3 Giovanni",
+      "Match 4 Agatha",
+      "Match 5 Jasmine",
     ])
-  await expect(page.getByTestId("match-indigo-5")).toContainText("TR 95 · Lv. 59 · 6 Pokémon")
-  // Willingness: Norman (Hoenn, homebody) is away at Indigo; Drake (Hoenn, traveller) pays 10.
-  await expect(page.getByTestId("contender-indigo-norman").locator("td")).toHaveText([
+  await expect(page.getByTestId("match-indigo-5")).toContainText("TR 95 · score 95 · Lv. 59")
+  await expect(page.getByTestId("league-finalist")).toHaveText("Jasmine 95")
+  // League score = floor(TR × willingness / 100). Norman (Hoenn, homebody) is away at Indigo;
+  // Drake (Hoenn, traveller) pays only 10.
+  await expect(page.getByTestId("entrant-indigo-norman").locator("td")).toHaveText([
+    "30",
     "Norman",
     "95",
     "Hoenn",
@@ -384,9 +390,11 @@ test("draws seeded league lineups from the top 10 contenders by willingness, wit
     "80",
     "0",
     "20",
+    "19",
     "",
   ])
-  await expect(page.getByTestId("contender-indigo-drake").locator("td")).toHaveText([
+  await expect(page.getByTestId("entrant-indigo-drake").locator("td")).toHaveText([
+    "13",
     "Drake",
     "93",
     "Hoenn",
@@ -395,30 +403,49 @@ test("draws seeded league lineups from the top 10 contenders by willingness, wit
     "10",
     "0",
     "90",
-    "drawn",
+    "83",
+    "",
   ])
-  // Fatigue: Blue and Giovanni fought at Indigo, so they carry 50 fatigue into the Sevii Masters,
-  // a neutral location where everyone is at home.
-  await expect(page.getByTestId("contender-sevii-masters-blue").locator("td")).toHaveText([
-    "Blue",
-    "129",
+  await expect(page.getByTestId("entrant-indigo-jasmine").locator("td").last()).toHaveText(
+    "in lineup",
+  )
+  // Fatigue: Giovanni fought at Indigo, so he carries 50 fatigue into the Sevii Masters, a
+  // neutral location where everyone is at home.
+  await expect(page.getByTestId("entrant-sevii-masters-giovanni").locator("td")).toHaveText([
+    "33",
+    "Giovanni",
+    "131",
     "Kanto",
     "traveller",
     "at home",
     "0",
     "50",
     "50",
+    "65",
     "",
   ])
-  // Another seed draws another lineup; the seed survives a reload.
-  await page.getByLabel("League seed", { exact: true }).fill("2")
-  await page.getByLabel("League seed", { exact: true }).press("Enter")
   await expect
-    .poll(() => names("indigo"))
-    .toEqual(["Match 1 Blue", "Match 2 Lorelei", "Match 3 Karen", "Match 4 Will", "Match 5 Agatha"])
+    .poll(() => names("sevii-masters"))
+    .toEqual([
+      "Match 1 Wallace",
+      "Match 2 Blue",
+      "Match 3 Norman",
+      "Match 4 Steven",
+      "Match 5 Lance",
+    ])
+  await expect
+    .poll(() => names("hoenn"))
+    .toEqual([
+      "Match 1 Phoebe",
+      "Match 2 Karen",
+      "Match 3 Giovanni",
+      "Match 4 Winona",
+      "Match 5 Juan",
+    ])
+  // The same inputs give the same lineups after a reload: there is no randomness.
   await page.reload()
-  await expect(page.getByLabel("League seed", { exact: true })).toHaveValue("2")
-  await expect(page.getByTestId("match-indigo-5")).toContainText("Agatha")
+  await expect(page.getByTestId("match-indigo-5")).toContainText("Jasmine")
+  await expect(page.getByTestId("match-hoenn-5")).toContainText("Juan")
   // Entering every league at the player TR moves all three to it.
   await page.getByRole("button", { name: "Set 12 badges", exact: true }).click()
   await page.getByLabel("League entry point", { exact: true }).selectOption("player")
@@ -429,23 +456,27 @@ test("draws seeded league lineups from the top 10 contenders by willingness, wit
   await expect(page.getByTestId("league-hoenn").locator("h3").first()).toContainText(
     "world progress 160",
   )
-  // Norman as a traveller pays only 10 away from Hoenn.
+  // Norman as a traveller pays only 10 away from Hoenn: floor(95 × 90 / 100) = 85.
   await page.getByRole("button", { name: /^Norman/ }).click()
   await expect(page.getByLabel("Home region", { exact: true })).toHaveValue("Hoenn")
   await page.getByLabel("Travel style", { exact: true }).selectOption("traveller")
-  await expect(page.getByTestId("contender-indigo-norman").locator("td").nth(7)).toHaveText("90")
+  const norman = page.getByTestId("entrant-indigo-norman").locator("td")
+  await expect(norman.nth(8)).toHaveText("90")
+  await expect(norman.nth(9)).toHaveText("85")
+  // At home in Johto he scores his full 95 and takes the fifth place from Will.
   await page.getByLabel("Home region", { exact: true }).selectOption("Johto")
-  await expect(page.getByTestId("contender-indigo-norman").locator("td").nth(4)).toHaveText(
-    "at home",
-  )
-  // Tate & Liza fight a double battle, so even far ahead they are never a contender.
+  await expect(norman.nth(5)).toHaveText("at home")
+  await expect(norman.nth(9)).toHaveText("95")
+  await expect(page.getByTestId("entrant-indigo-will").locator("td").last()).toHaveText("")
+  await expect(page.getByTestId("lineup-indigo")).toContainText("Norman")
+  // Tate & Liza fight a double battle, so even far ahead they are never ranked.
   await page.getByRole("button", { name: /^Tate & Liza/ }).click()
   await expect(page.getByTestId("double-battle")).toHaveText("Double battle")
   await expect(page.getByTestId("double-battle-note")).toContainText("not in the league pool")
   await setGrowth(page, { archetype: "veteran", peak: "300" })
   await expect(page.getByTestId("tr-tate-liza")).toHaveText("300")
   for (const league of ["indigo", "sevii-masters", "hoenn"])
-    await expect(page.getByTestId(`contenders-${league}`)).not.toContainText("Tate")
+    await expect(page.getByTestId(`entrants-${league}`)).not.toContainText("Tate")
 })
 
 test("marks ace slots and fights them last, with slot 1 locked and at most three aces", async ({
@@ -498,7 +529,7 @@ test("marks ace slots and fights them last, with slot 1 locked and at most three
   await expect(page.getByTestId("growth-slot-6")).not.toContainText("Ace")
 })
 
-test("flags incomplete rosters and rejects invalid edits and version 4 to 12 files", async ({
+test("flags incomplete rosters and rejects invalid edits and version 4 to 13 files", async ({
   page,
 }) => {
   await page.goto("/#trainer-balance")
@@ -658,6 +689,22 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 12 fil
   })
   await expect(page.getByRole("alert")).toContainText(
     "Version 12 experiments have no home regions or travel styles",
+  )
+  await importFile(13, {
+    point: { playerTR: 80 },
+    league: { seed: 1, at: "badges" },
+    experiment: {
+      version: 13,
+      teamLevel: [[0, 15]],
+      teamSize: [[0, 2]],
+      wildLevel: [[0, 6]],
+      routeTrainerLevel: [[0, 9]],
+      archetypes: {},
+      trainers: {},
+    },
+  })
+  await expect(page.getByRole("alert")).toContainText(
+    "Version 13 experiments save a league seed for the retired seeded lineup draw",
   )
   await expect(page.getByTestId("badge-count")).toHaveText("0")
   await expect(page.getByTestId("selected-tr")).toHaveText("25")
@@ -865,6 +912,6 @@ test("keeps controls and teams usable at a narrow viewport", async ({ page }) =>
   await expect(page.getByTestId("growth-editor")).toBeVisible()
   await expect(page.getByTestId("gym-ladder")).toBeVisible()
   await expect(page.getByTestId("lineup-indigo")).toBeVisible()
-  await expect(page.getByTestId("league-odds")).toBeVisible()
+  await expect(page.getByTestId("entrants-indigo")).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })

@@ -27,7 +27,7 @@ extraction needs a C preprocessor (arm-none-eabi-cpp, else cpp).
 
 Each trainer also records a home region (Kanto, Johto or Hoenn) and a travel
 style (homebody or traveller) from the section 14 lore tables (HOME_REGION,
-TRAVELLERS), which the explorer's seeded league draw reads.
+TRAVELLERS), which the explorer's league score reads.
 """
 from __future__ import annotations
 

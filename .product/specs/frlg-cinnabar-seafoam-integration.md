@@ -130,8 +130,8 @@ implemented [Viridian finale](frlg-kanto-viridian-finale.md) supersedes the
 exterior introduction, Blue Gym role, and related acceptance checks. Blue's
 current Dojo unlock follows committed Indigo victory independently of Giovanni.
 
-The proposed [Leagues](../prds/leagues.md) design draws a seeded lineup
-from the strongest trainers by TR rather than guaranteeing Blue as Indigo
+The proposed [Leagues](../prds/leagues.md) design picks the strongest
+willing trainers by TR rather than guaranteeing Blue as Indigo
 finalist. Its
 [runtime contract](leagues.md) keeps Blue's Dojo unlock on the
 first committed Indigo win, whether or not Blue was in the lineup. The delivered

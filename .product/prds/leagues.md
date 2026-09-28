@@ -1,11 +1,10 @@
 # Leagues
 
 Implemented: No
-Design status: v0 approved: each lineup is a seeded draw of five from the ten
-strongest trainers, weighted by willingness (favouring those at home and
-fresh); ascending
-battle order; and a locked lineup kept until the league is won. Balance is
-informational for now. Signup and league order are out of scope for v0.
+Design status: v0 approved: each lineup is the five strongest trainers who
+are willing to come (favouring those at home and fresh), with no randomness;
+ascending battle order; and a locked lineup kept until the league is won.
+Balance is informational for now. Signup and league order are out of scope for v0.
 Terms follow the [glossary](player-trainer-rating.md#glossary).
 
 ## Intent
@@ -38,17 +37,18 @@ league is a location: Indigo belongs to Kanto and Johto, and Hoenn to Hoenn,
 so trainers from there are at home. Sevii Masters is neutral ground, where
 everyone is at home.
 
-**Lineup.** When the player enters a league, the ten strongest trainers by
-current TR are the contenders, and five of them are drawn. Trainers prefer to
+**Lineup.** The strongest trainers who are willing to come make the lineup.
+When the player enters a league, every trainer gets a league score: their
+current TR, scaled down by how unwilling they are to come. Trainers prefer to
 play at home: a homebody rarely makes the trip to a league away from home,
 while a traveller roams almost as readily as they play at home. Someone who
-was in the lineup of the last league the player entered is tired and likely
-to skip this one. Nobody is ruled out: even a tired homebody far from home has
-a small chance. The draw comes from the playthrough seed, so it differs
-between saves but never changes on reload
-([Playthrough-seeded variation](playthrough-seeded-variation.md)). It happens
-once, on the first entry, and the lineup is then locked until the league is
-won. A replay after winning draws a fresh lineup.
+was in the lineup of the last league the player entered is tired and less
+keen on this one. The five highest league scores make the lineup. Nobody is
+ruled out: a strong enough trainer shows up even far from home or tired.
+There is no dice roll, so the same world progress and the same last league
+always give the same lineup. It is worked out on the first entry and then
+locked until the league is won. A replay after winning works it out again
+from the current state.
 
 **Battle order.** Ascending TR: the weakest of the five fights first and the
 strongest last.
@@ -71,25 +71,25 @@ is a test, not a source of power
 ([Player Trainer Rating](player-trainer-rating.md)). Today, the ROM still adds
 TR for a first league win until that design is adopted.
 
-**Balance.** Informational for now: the balance explorer reports how likely
-each trainer is to appear at each league and which lineups are likely, and
-tuning comes later. The lineup is drawn from the strongest trainers of the
-moment, so it tends to sit a little above the player; with all 24 badges both
+**Balance.** Informational for now: the balance explorer reports each
+trainer's league score and the resulting lineup at each league, and tuning
+comes later. The lineup comes from the strongest trainers of the moment, so it tends to sit a little above the player; with all 24 badges both
 sides reach level 100, and tougher endgame teams (better items, stats,
 movesets) are Later.
 
 ## Sample playthrough
 
 1. The player qualifies for Indigo under today's circuit rules and enters.
-   Five of the ten strongest trainers are drawn: mostly Kanto and Johto
-   trainers, perhaps with a travelling Steven. They fight weakest first, each
+   The lineup is the five strongest who are willing to come: Kanto and Johto
+   trainers at home, unless a traveller from Hoenn is strong enough to beat
+   them even after the trip. They fight weakest first, each
    with the team they would bring anywhere else.
 2. They win matches 1-4 and lose match 5. They black out, and the league now
    holds that locked lineup.
 3. They leave, win another badge, level up, and return to the same five with
    the same teams. This time they win, and the league result is committed.
-4. At Sevii Masters, entered with more badges, new contenders are worked out
-   from everyone's current TR. Sleepers may have climbed in and Veterans
+4. At Sevii Masters, entered with more badges, league scores are worked out
+   again from everyone's current TR. Sleepers may have climbed in and Veterans
    dropped out. Anyone from anywhere is at home here, but the five who just
    played Indigo are tired and mostly sit this one out.
 
@@ -112,7 +112,8 @@ Today's circuit behaviour stays until designed; see the
 ## Boundaries
 
 In: the three leagues, notable Kanto, Johto, and Hoenn singles trainers,
-home and away, the seeded lineup draw, battle order, and the locked lineup.
+home and away, the league score and lineup, battle order, and the locked
+lineup.
 
 Out of scope for v0: signup and qualification, league order, rotation, repeat
 editions, and balance targets for leagues. The current circuit's signup,
@@ -126,21 +127,20 @@ own TR.
 ## Specifications
 
 - [Leagues specification](../specs/leagues.md): registry, eligibility,
-  contenders, fatigue, the lineup draw, ordering, the locked lineup, battle
+  fatigue, the league score, lineup selection, ordering, the locked lineup, battle
   construction, the win commit, saved state, and load validation.
 - [Notable trainers specification](../specs/notable-trainers.md): TR, home
   regions, travel styles and willingness, scalers, and rosters.
 - [Player Trainer Rating specification](../specs/player-trainer-rating.md):
   the player's TR, which league wins do not raise in v0.
-- [Playthrough seed framework](../specs/playthrough-seed-framework.md): the
-  root seed and keyed draw behind lineups.
 
 ## Later
 
 - Signup and qualification gates designed for these leagues.
-- Balancing tools: tuning travel cost, fatigue, and the number of contenders
-  against appearance odds, and league balance targets.
-- Seeded league order, rotation, and recurring editions.
+- Balancing tools: tuning travel cost and fatigue against the lineup
+  reports, and league balance targets.
+- Seeded lineups ([Playthrough-seeded variation](playthrough-seeded-variation.md)),
+  seeded league order, rotation, and recurring editions.
 - Role windows (such as elite and headliner) and standing-based selection.
 - Matchmaking lineups around the player's TR.
 - Off-screen NPC leagues, TV and Match Call news, and NPC badge records.
@@ -151,5 +151,4 @@ own TR.
 - [Notable trainers](notable-trainers.md)
 - [Interregional League circuit](wayfarer-interregional-league-circuit.md)
 - [League scaling](league-scaling.md)
-- [Playthrough-seeded variation](playthrough-seeded-variation.md)
 - [Player progression](../specs/trainer-rating-party-progression.md)

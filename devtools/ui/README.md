@@ -213,12 +213,12 @@ slot (Aerodactyl) ace joins · 159: peak TR 100". His late ace Aerodactyl
 (roster slot 6) joins at team size 6 (TR 71, team level 45), which his
 placeholder growth reaches at world progress 98.
 
-Exports and the saved browser state use version 13 (nine archetypes with the
+Exports and the saved browser state use version 14 (nine archetypes with the
 single-word identifiers above; rosters carry `isAce` and no moves; each
 trainer has a `movePool` of `{ "move", "fromLevel"? }` entries, a
 `homeRegion` and a `travel` style)
 and store the point as `{ "playerTR": n }` and the league settings as
-`{ "seed": n, "at": "badges" | "player" }`; a `{ "badges": n }` point still
+`{ "at": "badges" | "player" }`; a `{ "badges": n }` point still
 imports and sets the matching player TR.
 
 **Tate & Liza** are one entry (role Gym Leader duo, Hoenn) with one start TR,
@@ -233,40 +233,42 @@ only).
 current world progress, sorted by TR, each marked below, near (within 10 of
 the player TR) or above.
 
-**Seeded leagues** model the league lineup draw. Each league is a location:
-Indigo's location regions are Kanto and Johto, Hoenn's is Hoenn, and the
-Sevii Masters is a neutral location where everyone is at home. The catalog
-gives each notable trainer a home region and a travel style (`homeRegion`,
-`travel`; the section 14 lore assignments, editable per trainer). Entering a
-league takes its **contenders**, the 10 strongest league-eligible trainers by
-TR at that world progress (singles only: the catalog has no Red and Tate &
-Liza are ineligible), and gives each a **willingness** of max(5, 100 − travel
-cost − fatigue). Travel cost is 0 at home, 80 for a homebody away and 10 for
-a traveller away; fatigue is 50 for a trainer in the lineup of the league
-entered just before (by entry sequence, not location order). The **lineup
-draw** takes five contenders without replacement, weighted by willingness,
-from a small deterministic PRNG keyed by seed + league + entry occurrence
-(the ROM keys the same decision from the playthrough seed, draws it on first
-entry and locks it until won, so explorer lineups need not match ROM draws).
-The five fight by ascending TR, strongest last (ties in catalog order).
+**League lineups** rank every eligible trainer by league score. Each league is
+a location: Indigo's location regions are Kanto and Johto, Hoenn's is Hoenn,
+and the Sevii Masters is a neutral location where everyone is at home. The
+catalog gives each notable trainer a home region and a travel style
+(`homeRegion`, `travel`; the section 14 lore assignments, editable per
+trainer). Entering a league gives every league-eligible trainer (singles
+only: the catalog has no Red and Tate & Liza are ineligible) a
+**willingness** of max(5, 100 − travel cost − fatigue). Travel cost is 0 at
+home, 80 for a homebody away and 10 for a traveller away; fatigue is 50 for a
+trainer in the lineup of the league entered just before (by entry sequence,
+not location order). The **league score** is floor(TR × willingness / 100);
+the top five by score make the lineup (ties in catalog order, standing in for
+`characterId`), which fights by ascending TR, strongest last (equal TRs in
+catalog order). There is no seed or randomness: the same world progress and
+previous lineup always give the same five (the ROM computes the lineup on
+first entry and locks it until won).
 
-The panel runs the standard entry sequence Indigo → Sevii Masters → Hoenn
-(first entry each), entered at each league's badge point (8, 16 and 24
-badges: world progress 80, 120 and 160) or, with **Enter at**, all at the
-player TR. For an editable **League seed** (or **New seed**) it shows each
-league's sample lineup with teams and levels, and its contenders with TR,
-home region, travel style, at home or away, travel cost, fatigue,
-willingness and whether they were drawn. **Appearance odds** give each
-contender's share of 2,000 seeded runs (seeds 0–1999) in which they are in
-each league's lineup; every league's shares total 500% (five per run). With
-the catalog defaults at the standard badge points, Indigo's contenders are
-near even (about 54–56% each) except the away trainers: Drake, a Hoenn
-traveller, about 50%, and Norman, a Hoenn homebody, about 14%. The Sevii
-Masters has no travel cost, so only fatigue from the Indigo lineup spreads
-it (about 42–55%). At Hoenn the home trainers Winona and Juan lead (about
-74%), the travellers Wallace, Steven, Blue, Giovanni and Lance follow (about
-53–61%), and the Johto and Kanto homebodies Morty, Sabrina and Clair trail
-(about 21–25%).
+The panel runs the standard entry sequence Indigo → Sevii Masters → Hoenn,
+entered at each league's badge point (8, 16 and 24 badges: world progress
+80, 120 and 160) or, with **Enter at**, all at the player TR. For each league
+it shows the lineup with teams, levels and league scores, and every eligible
+trainer's rank, TR, home region, travel style, at home or away, travel cost,
+fatigue, willingness, league score and whether they are in the lineup. The
+summary strip names the Indigo finalist. With the catalog defaults at the
+standard badge points (battle order, league score in brackets):
+
+- Indigo (80): Will (94), Lt. Surge (95), Giovanni (95), Agatha (95), Jasmine
+  (95). Everyone at home; the best away trainer, Drake (a Hoenn traveller,
+  TR 93), scores 83 and ranks 13th.
+- Sevii Masters (120): Wallace (126), Blue (129), Norman (130), Steven (130),
+  Lance (132). No travel cost, so the score is the TR except for Indigo's
+  five, now fatigued (Giovanni, TR 131, scores 65).
+- Hoenn (160): Phoebe (150), Karen (139), Giovanni (149), Winona (172), Juan
+  (185). The home trainers lead; the travellers Giovanni and Karen (score 90%
+  of TR) take the last two places, while the Masters five (Lance, Blue,
+  Steven, Wallace, Norman) are fatigued and drop out.
 
 All thirteen scaler tables (team level, team size, wild level, regular trainer
 level, and the Steady, Prodigy, Sleeper, Veteran, Rival, Legend, Star,
@@ -274,15 +276,16 @@ Comeback and Burst growth scalers) are editable under
 **Scalers & experiment settings**, each labeled interpolated or step. Anchors
 start at 0, rise and never decrease in value; growth scalers run 0–100% and
 start at 0%. Experiments persist in browser storage (key
-`wayfarer-trainer-balance-v13`). JSON export and import
-(format version 13) round-trip the experiment (growth, rosters with their ace
+`wayfarer-trainer-balance-v14`). JSON export and import
+(format version 14) round-trip the experiment (growth, rosters with their ace
 flags, move pools, home regions, travel styles and the thirteen scalers), the
-player TR, the league seed and entry point, and the selected trainer. The
+player TR, the league entry point, and the selected trainer. The
 importer also rejects a Legend whose peak TR differs from start TR, a
 Gym Leader Legend, a roster slot with moves, an unknown move name, a from level
 outside 1–100, a pool of more than 64 entries, and an unknown home region or
-travel style. Files from versions 1–12 are
-rejected with a message (version 12 had no home regions or travel styles and
+travel style. Files from versions 1–13 are
+rejected with a message (version 13 saved a league seed for the retired
+seeded lineup draw; version 12 had no home regions or travel styles and
 assumed fixed league lineups; version 11 authored moves per roster slot and had no
 move pools; version
 10 used the old archetype names; version
@@ -328,9 +331,9 @@ three Gym Leaders near and above the player at every checkpoint and three below
 from world progress 80. At world progress 0 all 24 are above (every start TR
 is past the near band), and the lowest three are two Pokémon at or under the
 level cap; at 40 none is below yet, but at least three are at or under the
-player TR. League lineups have no fixed targets any more: the appearance odds
-are informational, and the tests only check that every lineup has five
-distinct eligible contenders and that each league's odds sum to five. Home
+player TR. League lineups have no fixed targets: they are informational, and
+the tests check the league score and its flooring, the top-five selection and
+tie-break, fatigue through the sequence, Sevii neutrality and determinism. Home
 regions and travel styles live in the script's `HOME_REGION` and `TRAVELLERS`
 tables. Rosters are the user-directed roster draft v1 (identity and anime
 picks) in the script's `DRAFT` table: six roster slots per trainer in join

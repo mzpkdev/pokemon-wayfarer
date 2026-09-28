@@ -1,8 +1,8 @@
 # Playthrough-seeded variation
 
 Implemented: No
-Design status: v0: one consumer (league lineups). Other seeded features stay
-Later.
+Design status: Parked: no v0 consumer. The framework design below is kept for
+when a seeded feature is approved; nothing in v0 reads a seed.
 
 ## Intent
 
@@ -52,17 +52,6 @@ outcome cannot be rebuilt from the player's current party, Trainer Rating (TR),
 time, or location at each reveal. A meaningful change of eligibility, such as a
 different quest choice, can legitimately lead to a different outcome.
 
-### First use: league lineups
-
-In v0 the seed decides one thing: which five contenders make each league
-lineup ([Leagues](leagues.md)). The root seed is created at new game, and each
-lineup is one decision keyed on the league and which lineup this is there
-(the first, then one more for each replay). It is drawn on first entry and saved before the
-lineup is revealed, so reloading, losing, or waiting never re-rolls it. A
-replay after winning is the league's next occurrence and draws afresh. There
-is no running random sequence behind it, so nothing else the player does
-changes the draw.
-
 ## Boundaries
 
 Battle accuracy, damage, critical hits, secondary effects, capture rolls,
@@ -90,7 +79,10 @@ owned by each feature.
 
 ## Later
 
-- Seeded league order, rotation, and recurring editions.
+- Seeded league order.
+- Seeded league lineups, varying which willing trainers come per save
+  ([Leagues](leagues.md) picks them deterministically in v0), with rotation
+  and recurring editions.
 - Per-save trainer growth arcs.
 - Per-save variation in which supporting Pokémon fill a trainer's filler
   slots ([Trainer roster influence](trainer-roster-influence.md)).

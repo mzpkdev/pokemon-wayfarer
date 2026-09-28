@@ -127,16 +127,14 @@ The proposed [Leagues runtime](leagues.md#saved-state) adds, under this
 storage policy, at most one locked lineup (its league, the pool's content
 versions, and five matches in battle order, each holding `characterId`, TR,
 and the composed team) plus active-run progress (league and defeated prefix).
-It also keeps a draw counter per league and the previous lineup for
-fatigue; the root seed belongs to the
-[playthrough seed framework](playthrough-seed-framework.md). There is no
-edition, rotation history, other lineup history, or progress index.
+It also keeps the previous lineup for fatigue. There is no seed, edition,
+rotation history, other lineup history, or progress index.
 Notable trainers' TRs are authored content, so New Game saves nothing for them.
 An explicit schema discriminator rejects obsolete layouts. The locked lineup
 stays unchanged through reconstruction, reload, departure, and losses; a win
 releases it. Size assertions and save-sector accounting must include the
-locked lineup, draw counters, previous lineup, run progress, and transaction
-metadata within the allocation below. A corrupt locked lineup is an invalid save; a content version change
+locked lineup, previous lineup, run progress, and transaction metadata within
+the allocation below. A corrupt locked lineup is an invalid save; a content version change
 instead drops the lock. This extension is not
 implemented here.
 
@@ -207,8 +205,8 @@ projects its win into both Kanto and Johto Champion recognition.
 The proposed [Leagues runtime](leagues.md) keeps today's admission, league
 order, and first league wins with their regional recognition, cleanup, and
 unlocks. It changes only who is in the lineup and what happens after a loss:
-each league's lineup is a seeded draw of five from the ten strongest notable
-trainers by their TR when the player enters, grown from world progress under
+each league's lineup is the top five notable trainers by league score (their
+TR when the player enters, scaled by willingness), grown from world progress under
 [Notable trainers](notable-trainers.md), strongest last, without reading
 player party or XP. Notable trainers in Gyms use
 the same model at battle setup.

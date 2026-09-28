@@ -114,8 +114,8 @@ on one at your level (level 5), and he pulls ahead over your first badges.
 For trainers rated like a player with four badges or more, levels follow the
 same curve as your level cap. Every notable trainer eventually fields a full
 team of six, and a trainer rated like a player with all 24 badges brings six
-at level 100. League lineups are drawn from the strongest trainers of the
-moment; how hard each league feels is reported for now and tuned later
+at level 100. League lineups are the strongest trainers of the moment who
+are willing to come; how hard each league feels is reported for now and tuned later
 ([Leagues](leagues.md)). Each Pokémon has a small, hand-set level
 difference, so a team feels shaped rather than uniform.
 

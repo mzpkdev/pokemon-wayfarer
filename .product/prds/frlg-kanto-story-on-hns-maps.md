@@ -13,8 +13,9 @@ Poké Balls.
 
 League-dependent successor: the proposed
 [Leagues](leagues.md) design replaces the guaranteed Indigo/Masters
-lineups and fixed visiting-origin Blue League profile below with a seeded
-lineup draw from the strongest trainers by Trainer Rating (TR). Its [runtime contract](../specs/leagues.md) keeps
+lineups and fixed visiting-origin Blue League profile below with the
+strongest willing trainers by Trainer Rating (TR). Its
+[runtime contract](../specs/leagues.md) keeps
 Blue's Dojo unlock on the first committed Indigo win. These changes take
 precedence for league appearances only if the draft is adopted. Local Kanto
 adventures, Blue's origin-specific rivalry and forward story progression, and

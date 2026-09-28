@@ -137,7 +137,7 @@ export type TrainerSettings = {
 /** A scaler anchor: [TR, value]. */
 export type Anchor = [number, number]
 export type Experiment = {
-  version: 13
+  version: 14
   /** Team level by TR: linear between anchors, halves up, flat past the last. */
   teamLevel: Anchor[]
   /** Team size by TR, same rules; paired anchors make it a step table. */
@@ -247,30 +247,30 @@ export type Milestone = {
  * traveller. Fatigue is 50 for a trainer in the previous league's lineup.
  */
 export type Willingness = { home: boolean; travelCost: number; fatigue: number; score: number }
-/** A league-eligible trainer among a league's contenders, at the world progress the league is entered at. */
+/** A league-eligible trainer at the world progress a league is entered at. */
 export type LeagueCandidate = {
   trainer: TrainerRecord
   tr: number
   homeRegion: HomeRegion
   travel: TravelStyle
-  /** Catalog position: breaks TR ties. */
+  /** Catalog position: stands in for characterId when breaking ties. */
   order: number
 }
-export type Contender = LeagueCandidate & { willingness: Willingness; drawn: boolean }
-/** One league entry: its top-10 contenders with willingness, and the five drawn in battle order. */
-export type LeagueDraw = {
+/** A candidate scored for one league: willingness, league score floor(TR × willingness / 100), and rank. */
+export type LeagueEntrant = LeagueCandidate & {
+  willingness: Willingness
+  score: number
+  /** 1 for the highest league score; ties by catalog order. */
+  rank: number
+  inLineup: boolean
+}
+/** One league entry: every eligible trainer ranked by league score, and the top five in battle order. */
+export type LeagueRanking = {
   league: League
   /** World progress when the player enters. */
   world: number
-  /** The league's entry occurrence (1 on first entry; a replay after winning draws with the next). */
-  occurrence: number
-  contenders: Contender[]
-  /** The five drawn, ascending TR, strongest last. */
-  lineup: Contender[]
-}
-/** How often each contender appears in one league's lineup over many seeded runs. */
-export type LeagueOdds = {
-  league: League
-  world: number
-  rows: { trainer: TrainerRecord; tr: number; appearances: number; share: number }[]
+  /** Every eligible trainer, highest league score first. */
+  entrants: LeagueEntrant[]
+  /** The top five by league score, ascending TR, strongest last. */
+  lineup: LeagueEntrant[]
 }
