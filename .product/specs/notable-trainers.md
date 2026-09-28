@@ -128,7 +128,7 @@ close to home. The travellers:
 | Home region | Travellers |
 | --- | --- |
 | Kanto | Brock, Misty, Giovanni, Blue, Bruno, Lance |
-| Johto | Bugsy, Will, Koga, Karen |
+| Johto | Bugsy, Will |
 | Hoenn | Brawly, Glacia, Drake, Wallace, Steven |
 
 Everyone else is not a traveller.

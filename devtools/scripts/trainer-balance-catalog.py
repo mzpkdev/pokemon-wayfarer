@@ -189,9 +189,10 @@ HOME_REGION = {
 }
 # Traveller trait (Notable trainers spec: Traveller; lore, reviewable): away,
 # a traveller pays a travel cost of 10 instead of the default 80. Also reserved
-# for a future overworld spawning rule. Everyone else is not a traveller.
-TRAVELLERS = {"Brock", "Misty", "Blue", "Lance", "Steven", "Wallace", "Will", "Karen", "Bruno", "Glacia",
-              "Giovanni", "Koga", "Bugsy", "Brawly", "Drake"}
+# for a future overworld spawning rule. Everyone else is not a traveller. Karen
+# (she guards Indigo) and Koga (a Fuchsia ninja) stay put.
+TRAVELLERS = {"Brock", "Misty", "Blue", "Lance", "Steven", "Wallace", "Will", "Bruno", "Glacia",
+              "Giovanni", "Bugsy", "Brawly", "Drake"}
 # Aloof trait (Notable trainers spec: Aloof; lore, reviewable), independent of archetype and the
 # traveller trait: an aloof trainer won't join a league whose base lineup is
 # well below their level. Only the league lineup rule reads it. The Champions

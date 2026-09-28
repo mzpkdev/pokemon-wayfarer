@@ -555,7 +555,7 @@ test("simulates league invitations: the gate, who calls, answers, fatigue and ch
     "only eligible (Indigo 0, Hoenn 8; no league win)",
   )
   await expect(page.getByTestId("invitation-1-result")).toHaveText("declined")
-  await expect(page.getByTestId("invitation-1-champion")).toHaveText("Karen (TR 101)")
+  await expect(page.getByTestId("invitation-1-champion")).toHaveText("Phoebe (TR 97)")
   // Accept and win the next three: Hoenn again (the only league that knows the player), then the
   // Masters, eligible after that win and never called, then Hoenn, called less recently.
   await answer(2, "win")

@@ -97,9 +97,8 @@ anything to do with how a trainer grows.
 
 A **traveller** goes wherever the action is: being away costs them very
 little willingness. The travellers are Brock, Misty, Giovanni, Blue, Bruno,
-and Lance from Kanto; Bugsy, Will, Koga, and Karen from Johto; and Brawly,
-Glacia, Drake, Wallace, and Steven from Hoenn. Everyone else stays close to
-home.
+and Lance from Kanto; Bugsy and Will from Johto; and Brawly, Glacia, Drake,
+Wallace, and Steven from Hoenn. Everyone else stays close to home.
 
 Some proud trainers are **aloof**: they won't bother with a league whose base
 lineup (its best trainers who aren't aloof) is far below them, but they join

@@ -259,8 +259,6 @@ test("home regions and the traveller trait follow the Home region and travel lor
       "Drake",
       "Giovanni",
       "Glacia",
-      "Karen",
-      "Koga",
       "Lance",
       "Misty",
       "Steven",

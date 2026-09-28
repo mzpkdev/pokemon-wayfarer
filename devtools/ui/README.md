@@ -351,10 +351,10 @@ reigning champion last):
   skip. The next event, with those five tired, fields Erika, Blue, Lorelei,
   Agatha and Jasmine (champion Jasmine), and the two lineups alternate.
 - 8 Hoenn badges, declining the first invitation, then accepting and winning
-  every one: day 7 Hoenn (only eligible, declined; Sidney, Drake, Norman,
-  Phoebe, Karen (90); Karen reigns), day 14 Hoenn again (only eligible; Blue
-  (81), Glacia, Giovanni (85), Will (86), Koga (87); first win), day 21 the
-  Sevii Masters (never called; Lt. Surge, Agatha, Jasmine, Phoebe, Karen;
+  every one: day 7 Hoenn (only eligible, declined; Glacia, Sidney, Drake,
+  Norman, Phoebe, all at home; Phoebe reigns), day 14 Hoenn again (only
+  eligible; Juan, Wattson, Blue (81), Giovanni (85), Will (86); first win),
+  day 21 the Sevii Masters (never called; Lt. Surge, Agatha, Koga, Phoebe, Karen;
   first win), then Hoenn and the Masters alternate (repeat wins). Indigo, with
   no Kanto or Johto badge, never calls.
 - 16 badges, all Kanto and Johto, accepting and winning everything: day 7

@@ -151,20 +151,21 @@ teams (better items, stats, movesets) are Later.
 1. A player starts in Hoenn and earns all eight Hoenn badges: TR 80, so they
    qualify. A week of in-game days later the phone rings: Hoenn, the only
    league that knows them, invites them. They feel unready and decline. The
-   event runs without them: Sidney, Drake, Norman, Phoebe, and Karen, a Johto
-   traveller who is the strongest of the five, so Karen is Hoenn's reigning
-   champion.
+   event runs without them: Glacia, Sidney, Drake, Norman, and Phoebe, all
+   Hoenn trainers at home. Phoebe is the strongest of the five, so she is
+   Hoenn's reigning champion.
 2. Seven days later Hoenn calls again, still the only league that knows them.
    They accept. The five are fixed on the spot, and everyone from the
-   declined event is tired: Blue, Glacia, Giovanni, Will, and Koga, mostly
-   travellers from Kanto and Johto. The event waits while they train.
+   declined event is tired, so they are Juan, Wattson, Blue, Giovanni, and
+   Will: two Hoenn Gym Leaders and three travellers from Kanto and Johto.
+   The event waits while they train.
 3. They arrive and fight, weakest first, each opponent with the team they
    would bring anywhere else. They win: it is their first Hoenn win, with the
    full completion credits, and they reign at Hoenn.
 4. A week after that win, Sevii Masters calls: a league win opened it, and it
    has never called. Anyone from anywhere is at home there. The aloof
    Champions find the base lineup too far below them and stay away, while
-   Agatha, aloof too, is close enough to join: Lt. Surge, Agatha, Jasmine,
+   Agatha, aloof too, is close enough to join: Lt. Surge, Agatha, Koga,
    Phoebe, and Karen. They accept and win, and reign at the Masters, which
    records the win in its gallery without a regional title.
 5. Hoenn calls next, having called longest ago, and from then on Hoenn and
