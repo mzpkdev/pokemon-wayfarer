@@ -1748,9 +1748,9 @@ describe("catalog", () => {
   it("restores the draft moves that earlier forms and egg moves make legal", () => {
     const pool = (id: string) => catalog.find((record) => record.id === id)!.movePool
     const entry = (id: string, move: string) => pool(id).find((item) => item.move === move)
-    // Level-up on an earlier form needs no from level: Meowth Lv 30, Misdreavus Lv 46, Shroomish Lv 40.
+    // Level-up on an earlier form needs no from level: Meowth Lv 30, Misdreavus Lv 32, Shroomish Lv 40.
     expect(entry("giovanni", "Pay Day")).toEqual({ move: "Pay Day" })
-    expect(entry("morty", "Perish Song")).toEqual({ move: "Perish Song" })
+    expect(entry("morty", "Pain Split")).toEqual({ move: "Pain Split" })
     expect(entry("brawly", "Spore")).toEqual({ move: "Spore" })
     // Egg moves take a from level by tier.
     expect(entry("lance", "Extreme Speed")).toEqual({ move: "Extreme Speed", fromLevel: 30 })

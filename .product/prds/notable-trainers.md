@@ -132,6 +132,8 @@ they learn naturally arrive on their natural schedule; special moves wait
 until the level set for them. Some
 moves wait unused until the right Pokémon joins the team, evolves, or grows
 into them ([move pools](../specs/notable-trainers.md#move-pools)).
+Each trainer leans on at most one frustrating trick, such as sleep, evasion,
+or trapping, so no single battle stacks them.
 
 FRLG, Emerald, and HNS parties are references for recognizable content, not
 required teams. Challenge options such as trainer items, trainer IVs and EVs,

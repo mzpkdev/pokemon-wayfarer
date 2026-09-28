@@ -324,6 +324,24 @@ learn level, so they need a from level, and it alone decides their timing.
   roster slot. Traded Pokémon (Later) keep their own record moves and don't
   draw from the pool ([roster influence](trainer-roster-influence.md#trades)).
 
+**Frustration rule.** When authoring a pool, draw on at most one
+frustration category per trainer, and keep the trainer's most iconic one:
+
+- sleep (Hypnosis, Sleep Powder, Spore, Lovely Kiss, Yawn, and the like);
+- evasion (Double Team, Minimize, and accuracy drops such as Smokescreen or
+  Sand Attack);
+- OHKO (Sheer Cold, Fissure, Horn Drill, Guillotine);
+- trapping (Bind- and Wrap-style moves, Mean Look, Block, and the like);
+- Perish Song;
+- Destiny Bond;
+- infatuation and confusion (Attract, Swagger, Confuse Ray, Sweet Kiss,
+  Dynamic Punch, and the like).
+
+Paralysis, burns, hazards, and Toxic are not categories, but a pool with
+evasion never also lists Toxic or Toxic Spikes. The catalog script holds the
+move-to-category map and rejects a pool that breaks the rule. The rule covers
+pool entries; a member's natural level-up moves are not checked.
+
 Example (illustrative only; learnsets not checked): Brock's pool is Stone
 Edge (from Lv 40), Earthquake, Stealth Rock, Iron Defense, Rock Slide,
 Earthquake, Rock Slide. His slot 1 ace picks first and takes the entries it is

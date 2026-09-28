@@ -271,6 +271,35 @@ test("move pool validation requires known moves and from levels 1-100", () => {
   )
 })
 
+test("a move pool draws on at most one frustration category and never pairs evasion with Toxic", () => {
+  const validate = (moves) =>
+    run(
+      "module.validate_frustration('Fixture', args)",
+      moves.map((move) => ({ move })),
+    )
+  // One category (sleep, listed twice), and moves that are no category (paralysis, burns, hazards, Toxic).
+  assert.equal(validate(["Hypnosis", "Sleep Powder", "Thunder Wave", "Will O Wisp", "Spikes", "Toxic"]), null)
+  assert.equal(validate(["Double Team", "Minimize", "Substitute"]), null)
+  assert.equal(
+    validate(["Hypnosis", "Dream Eater", "Destiny Bond", "Perish Song"]),
+    "Fixture move pool: at most one frustration category, found sleep: Hypnosis; Destiny Bond: Destiny Bond; Perish Song: Perish Song",
+  )
+  assert.equal(
+    validate(["Attract", "Sheer Cold"]),
+    "Fixture move pool: at most one frustration category, found infatuation/confusion: Attract; OHKO: Sheer Cold",
+  )
+  assert.equal(
+    validate(["Toxic Spikes", "Double Team", "Toxic"]),
+    "Fixture move pool: evasion (Double Team) never pairs with Toxic, Toxic Spikes",
+  )
+})
+
+test("every drafted move pool passes the frustration rule", () => {
+  const program =
+    "[name for name in module.POOL_DRAFT if module.validate_frustration(name, module.draft_pool(name)) is not None]"
+  assert.deepEqual(run(program), [])
+})
+
 test("the pool warnings flag unlearnable entries and TM/tutor or egg entries without a from level", () => {
   const pool = [
     { move: "Earthquake" },

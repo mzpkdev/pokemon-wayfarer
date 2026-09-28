@@ -326,13 +326,15 @@ an egg move, or to hold back a strong move a line learns by level-up too early,
 by tier: status and utility 20; attacks under 90 power and setup 30 (Shell
 Smash, Belly Drum and Quiver Dance 40); 90–100 power 38; 110+ power or a heavy
 drawback 45; OHKO 55. Earlier forms and egg moves make draft moves such as
-Giovanni's Pay Day (Meowth Lv 30), Morty's Perish Song (Misdreavus Lv 46),
-Brawly's Spore (Shroomish Lv 40), Lance's Extreme Speed and Wallace's Mirror
-Coat (egg moves, from Lv 30) legal. A draft move no roster line can learn by
+Giovanni's Pay Day (Meowth Lv 30), Brawly's Spore (Shroomish Lv 40), Lance's
+Extreme Speed and Wallace's Mirror Coat (egg moves, from Lv 30) legal. A draft move no roster line can learn by
 any of these is replaced by the closest legal move that keeps the gimmick (a
 comment in the table names it); Brock's pool is
 Bind, Stealth Rock, Sandstorm (from Lv 20), Curse (for Iron Defense), Stone Edge,
 Earthquake, Rock Slide, Heavy Slam, Rock Blast, Cross Poison and Explosion.
+The script fails when a pool draws on more than one frustration category (its
+`FRUSTRATION` map: sleep, evasion, OHKO, trapping, Perish Song, Destiny Bond,
+infatuation/confusion) or pairs evasion with Toxic or Toxic Spikes.
 An old move name (Faint Attack) is stored as the move itself (Feint Attack).
 The script warns about pool entries
 no stage on the trainer's roster lines can learn, and about entries without a

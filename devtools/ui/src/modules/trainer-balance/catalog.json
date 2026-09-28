@@ -5031,14 +5031,6 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Toxicroak [ninja theme]. Aces (Venomoth, Crobat) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Venomoth (game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[5]), Crobat (game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[4]), Weezing (game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[0]), Muk (game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[1]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Toxic",
-          "fromLevel": 20
-        },
-        {
-          "move": "Toxic Spikes",
-          "fromLevel": 20
-        },
-        {
           "move": "Double Team",
           "fromLevel": 20
         },
@@ -5047,27 +5039,37 @@
           "fromLevel": 20
         },
         {
-          "move": "Sludge Bomb"
+          "move": "Sludge Bomb",
+          "fromLevel": 38
+        },
+        {
+          "move": "Quiver Dance"
         },
         {
           "move": "U Turn",
           "fromLevel": 30
         },
         {
+          "move": "Cross Poison"
+        },
+        {
+          "move": "Double Team",
+          "fromLevel": 20
+        },
+        {
           "move": "Poison Jab"
         },
         {
-          "move": "Cross Poison"
+          "move": "Sucker Punch"
         },
         {
           "move": "Smokescreen"
         },
         {
-          "move": "Protect",
-          "fromLevel": 20
+          "move": "Minimize"
         }
       ],
-      "movePoolSource": "user-directed pool draft v1: ninja poison and evasion"
+      "movePoolSource": "user-directed pool draft v1: evasion ninja"
     },
     {
       "id": "sabrina",
@@ -5725,7 +5727,7 @@
           "fromLevel": 30
         },
         {
-          "move": "Perish Song"
+          "move": "Body Slam"
         },
         {
           "move": "Blizzard"
@@ -5993,16 +5995,20 @@
           "move": "Curse"
         },
         {
-          "move": "Destiny Bond"
-        },
-        {
-          "move": "Hypnosis"
-        },
-        {
-          "move": "Dream Eater"
-        },
-        {
           "move": "Shadow Ball"
+        },
+        {
+          "move": "Hex"
+        },
+        {
+          "move": "Will O Wisp"
+        },
+        {
+          "move": "Pain Split",
+          "fromLevel": 20
+        },
+        {
+          "move": "Shadow Sneak"
         },
         {
           "move": "Glare"
@@ -6011,11 +6017,10 @@
           "move": "Haze"
         },
         {
-          "move": "Bonemerang"
+          "move": "Leech Life"
         },
         {
-          "move": "Will O Wisp",
-          "fromLevel": 20
+          "move": "Bonemerang"
         }
       ],
       "movePoolSource": "user-directed pool draft v1: trap and drain"
@@ -6126,37 +6131,45 @@
           "fromLevel": 20
         },
         {
-          "move": "Toxic Spikes"
-        },
-        {
-          "move": "Spikes"
-        },
-        {
-          "move": "Minimize"
-        },
-        {
-          "move": "Double Team",
-          "fromLevel": 20
-        },
-        {
           "move": "Substitute",
           "fromLevel": 20
         },
         {
-          "move": "Sludge Bomb"
+          "move": "Protect",
+          "fromLevel": 20
+        },
+        {
+          "move": "Haze"
         },
         {
           "move": "Will O Wisp",
           "fromLevel": 20
         },
         {
-          "move": "Sticky Web"
+          "move": "Toxic Spikes"
+        },
+        {
+          "move": "Spikes"
+        },
+        {
+          "move": "Sludge Bomb"
+        },
+        {
+          "move": "Pain Split",
+          "fromLevel": 20
+        },
+        {
+          "move": "Toxic",
+          "fromLevel": 20
         },
         {
           "move": "Explosion"
+        },
+        {
+          "move": "Sticky Web"
         }
       ],
-      "movePoolSource": "user-directed pool draft v1: poison stall and evasion"
+      "movePoolSource": "user-directed pool draft v1: Toxic stall"
     },
     {
       "id": "lance",
@@ -6765,23 +6778,29 @@
           "move": "Shadow Ball"
         },
         {
-          "move": "Curse"
-        },
-        {
-          "move": "Destiny Bond",
-          "fromLevel": 20
+          "move": "Hex"
         },
         {
           "move": "Will O Wisp"
         },
         {
-          "move": "Hex"
+          "move": "Pain Split"
         },
         {
-          "move": "Confuse Ray"
+          "move": "Mystical Fire"
         },
         {
-          "move": "Perish Song"
+          "move": "Curse"
+        },
+        {
+          "move": "Shadow Sneak"
+        },
+        {
+          "move": "Calm Mind",
+          "fromLevel": 30
+        },
+        {
+          "move": "Nasty Plot"
         },
         {
           "move": "Night Shade"
@@ -7296,35 +7315,44 @@
           "move": "Dragon Dance"
         },
         {
-          "move": "Outrage"
-        },
-        {
-          "move": "Rain Dance",
-          "fromLevel": 20
-        },
-        {
-          "move": "Hydro Pump"
-        },
-        {
           "move": "Dragon Pulse"
         },
         {
-          "move": "Thunder Wave"
+          "move": "Dragon Dance",
+          "fromLevel": 30
         },
         {
-          "move": "Earthquake"
+          "move": "Outrage"
+        },
+        {
+          "move": "Dragon Claw"
         },
         {
           "move": "Dragon Rush"
         },
         {
+          "move": "Earthquake",
+          "fromLevel": 38
+        },
+        {
+          "move": "Earthquake",
+          "fromLevel": 38
+        },
+        {
+          "move": "Thunder Wave"
+        },
+        {
           "move": "Aqua Tail"
         },
         {
-          "move": "Dragon Claw"
+          "move": "Waterfall"
+        },
+        {
+          "move": "Swords Dance",
+          "fromLevel": 30
         }
       ],
-      "movePoolSource": "user-directed pool draft v1: rain dragons and Dragon Dance"
+      "movePoolSource": "user-directed pool draft v1: pure dragons and Dragon Dance"
     },
     {
       "id": "will",
@@ -7445,13 +7473,13 @@
           "fromLevel": 20
         },
         {
-          "move": "Confuse Ray"
+          "move": "Wish"
         },
         {
           "move": "Future Sight"
         },
         {
-          "move": "Lovely Kiss"
+          "move": "Avalanche"
         },
         {
           "move": "Yawn"
@@ -7692,24 +7720,7 @@
           "fromLevel": 30
         },
         {
-          "move": "Stealth Rock",
-          "fromLevel": 20
-        },
-        {
-          "move": "Sandstorm"
-        },
-        {
           "move": "Power Gem"
-        },
-        {
-          "move": "Metal Burst"
-        },
-        {
-          "move": "Head Smash",
-          "fromLevel": 45
-        },
-        {
-          "move": "Rock Polish"
         },
         {
           "move": "Earth Power"
@@ -7718,11 +7729,33 @@
           "move": "Thunder Wave"
         },
         {
-          "move": "Wood Hammer",
+          "move": "Head Smash",
           "fromLevel": 45
+        },
+        {
+          "move": "Rock Polish",
+          "fromLevel": 30
+        },
+        {
+          "move": "Ancient Power"
+        },
+        {
+          "move": "Zen Headbutt"
+        },
+        {
+          "move": "Counter"
+        },
+        {
+          "move": "Metal Burst"
+        },
+        {
+          "move": "Iron Defense"
+        },
+        {
+          "move": "Ancient Power"
         }
       ],
-      "movePoolSource": "user-directed pool draft v1: the fossil lesson: Sturdy counters and hazards"
+      "movePoolSource": "user-directed pool draft v1: the fossil lesson: Sturdy counters"
     },
     {
       "id": "brawly",
@@ -8624,18 +8657,7 @@
           "fromLevel": 30
         },
         {
-          "move": "Rain Dance",
-          "fromLevel": 20
-        },
-        {
-          "move": "Dragon Dance"
-        },
-        {
-          "move": "Hydro Pump"
-        },
-        {
-          "move": "Scald",
-          "fromLevel": 30
+          "move": "Swagger"
         },
         {
           "move": "Attract"
@@ -8644,21 +8666,35 @@
           "move": "Charm"
         },
         {
-          "move": "Aqua Jet",
+          "move": "Scald",
           "fromLevel": 30
         },
         {
-          "move": "Aqua Jet",
-          "fromLevel": 30
+          "move": "Dragon Pulse"
+        },
+        {
+          "move": "Ice Beam",
+          "fromLevel": 38
+        },
+        {
+          "move": "Surf"
         },
         {
           "move": "Crabhammer"
         },
         {
-          "move": "Sheer Cold"
+          "move": "Razor Shell"
+        },
+        {
+          "move": "Aqua Jet",
+          "fromLevel": 30
+        },
+        {
+          "move": "Aqua Jet",
+          "fromLevel": 30
         }
       ],
-      "movePoolSource": "user-directed pool draft v1: flamboyant rain and charm"
+      "movePoolSource": "user-directed pool draft v1: flamboyant charm and confusion"
     },
     {
       "id": "sidney",

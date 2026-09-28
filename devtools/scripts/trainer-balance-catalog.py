@@ -7,8 +7,10 @@ moves/items describe authored sources only. Each trainer gets placeholder growth
 ordered roster slots, identity/anime picks, 1-3 aces). A slot keeps authored
 source item/ability/nature only when its species is in the trainer's source
 party; otherwise it has no item. Roster slots carry no moves: each trainer has
-one ordered move pool, the user-directed pool draft v1 (POOL_DRAFT). A roster
-short of six or a slot that is not a final stage is a warning, not a failure.
+one ordered move pool, the user-directed pool draft v1 (POOL_DRAFT). A pool
+that draws on more than one frustration category (FRUSTRATION), or pairs
+evasion with Toxic or Toxic Spikes, fails generation. A roster short of six or
+a slot that is not a final stage is a warning, not a failure.
 
 The catalog also records each roster species' predecessor chain with evolution
 levels: species_info EVO_LEVEL thresholds, or the shared evolution-level table
@@ -322,10 +324,10 @@ POOL_DRAFT = {
     "Erika": ("status and sleep under sun", [
         "Sleep Powder", "Stun Spore", "Leech Seed", "Giga Drain", "Sunny Day", "Solar Beam",
         ("Sludge Bomb", 38), "Synthesis", "Petal Dance", "Toxic"]),
-    # Toxic Spikes: an egg move of the Venonat line (the ace), so from 20.
-    "Janine": ("ninja poison and evasion", [
-        ("Toxic", 20), ("Toxic Spikes", 20), ("Double Team", 20), ("Substitute", 20), "Sludge Bomb",
-        ("U Turn", 30), "Poison Jab", "Cross Poison", "Smokescreen", ("Protect", 20)]),
+    # Evasion ninja, no Toxic. Double Team twice: the ace Venomoth takes the first, Crobat the second.
+    "Janine": ("evasion ninja", [
+        ("Double Team", 20), ("Substitute", 20), ("Sludge Bomb", 38), "Quiver Dance", ("U Turn", 30),
+        "Cross Poison", ("Double Team", 20), "Poison Jab", "Sucker Punch", "Smokescreen", "Minimize"]),
     "Sabrina": ("mind control", [
         "Calm Mind", "Psychic", "Hypnosis", "Reflect", ("Light Screen", 20), "Future Sight", "Shadow Ball",
         "Barrier", "Psyshock", "Dazzling Gleam"]),
@@ -347,11 +349,10 @@ POOL_DRAFT = {
     "Whitney": ("Rollout and Milk Drink (the classic wall)", [
         "Rollout", "Milk Drink", ("Attract", 20), "Body Slam", "Stomp", "Metronome", ("Soft Boiled", 20),
         "Moonblast", "Hyper Voice", "Heal Bell"]),
-    # Perish Song: Mismagius learns it from its earlier form Misdreavus (Lv 46). Destiny Bond: an egg move
-    # of the Misdreavus line, so from 20 (the ace Gengar is full by then).
+    # Hex above Will O Wisp so the ace Gengar fills up; Dusknoir takes Will O Wisp and Curse.
     "Morty": ("sleep, dream and curse", [
-        "Hypnosis", "Dream Eater", "Shadow Ball", "Curse", ("Destiny Bond", 20), "Will O Wisp", "Hex",
-        "Confuse Ray", "Perish Song", "Night Shade"]),
+        "Hypnosis", "Dream Eater", "Shadow Ball", "Hex", "Will O Wisp", "Pain Split", "Mystical Fire", "Curse",
+        "Shadow Sneak", ("Calm Mind", 30), "Nasty Plot", "Night Shade"]),
     # Mach Punch: an egg move of the Hitmontop line (Tyrogue), so from 30.
     "Chuck": ("waterfall-trained power", [
         "Dynamic Punch", "Bulk Up", ("Close Combat", 45), ("Mach Punch", 30), ("Focus Punch", 45),
@@ -364,13 +365,16 @@ POOL_DRAFT = {
     "Pryce": ("hail and old-master patience", [
         "Hail", "Blizzard", "Ice Shard", "Icicle Crash", "Earthquake", ("Aurora Veil", 20), "Rest",
         ("Sleep Talk", 20), "Ice Beam", ("Freeze Dry", 30)]),
-    # Dragon Claw for Draco Meteor (no roster line learns it).
-    "Clair": ("rain dragons and Dragon Dance", [
-        "Dragon Dance", "Outrage", ("Rain Dance", 20), "Hydro Pump", "Dragon Pulse", "Thunder Wave",
-        "Earthquake", "Dragon Rush", "Aqua Tail", "Dragon Claw"]),
-    "Roxanne": ("the fossil lesson: Sturdy counters and hazards", [
-        ("Rock Tomb", 30), ("Stealth Rock", 20), "Sandstorm", "Power Gem", "Metal Burst", ("Head Smash", 45),
-        "Rock Polish", "Earth Power", "Thunder Wave", ("Wood Hammer", 45)]),
+    # Dragon Claw for Draco Meteor (no roster line learns it). Dragon Dance twice (the second an egg move of
+    # the Bagon line, from 30): Kingdra and Salamence. Earthquake twice (TM, from 38): Salamence takes the
+    # first, Garchomp the second.
+    "Clair": ("pure dragons and Dragon Dance", [
+        "Dragon Dance", "Dragon Pulse", ("Dragon Dance", 30), "Outrage", "Dragon Claw", "Dragon Rush",
+        ("Earthquake", 38), ("Earthquake", 38), "Thunder Wave", "Aqua Tail", "Waterfall", ("Swords Dance", 30)]),
+    # Ancient Power twice: Rampardos and Relicanth.
+    "Roxanne": ("the fossil lesson: Sturdy counters", [
+        ("Rock Tomb", 30), "Power Gem", "Earth Power", "Thunder Wave", ("Head Smash", 45), ("Rock Polish", 30),
+        "Ancient Power", "Zen Headbutt", "Counter", "Metal Burst", "Iron Defense", "Ancient Power"]),
     # Spore: Breloom learns it from its earlier form Shroomish (Lv 40).
     "Brawly": ("the surfer brawler: Fake Out and Bulk Up", [
         "Fake Out", "Bulk Up", "Close Combat", ("Drain Punch", 30), "Mach Punch", "Spore", ("Bullet Seed", 30),
@@ -397,28 +401,31 @@ POOL_DRAFT = {
         ("Calm Mind", 30), ("Earthquake", 38), "Rock Slide", "Explosion", ("Trick Room", 20), "Heal Pulse",
         "Psychic", ("Reflect", 20), ("Light Screen", 20), "Cosmic Power"]),
     # Aqua Jet: an egg move of the Luvdisc and Corphish lines, so from 30; twice, so Crawdaunt takes the second.
-    # Dragon Dance above Hydro Pump so Kingdra takes it.
-    "Juan": ("flamboyant rain and charm", [
-        ("Water Pulse", 30), ("Rain Dance", 20), "Dragon Dance", "Hydro Pump", ("Scald", 30), "Attract",
-        "Charm", ("Aqua Jet", 30), ("Aqua Jet", 30), "Crabhammer", "Sheer Cold"]),
+    # Ice Beam above Surf so the ace Kingdra fills up and Walrein takes Surf.
+    "Juan": ("flamboyant charm and confusion", [
+        ("Water Pulse", 30), "Swagger", "Attract", "Charm", ("Scald", 30), "Dragon Pulse", ("Ice Beam", 38),
+        "Surf", "Crabhammer", "Razor Shell", ("Aqua Jet", 30), ("Aqua Jet", 30)]),
     # Freeze Dry: an egg move for the ace Lapras, so from 30.
     "Lorelei": ("ice and Shell Smash", [
-        "Shell Smash", "Icicle Spear", ("Freeze Dry", 30), "Perish Song", "Blizzard", "Ice Beam", "Lovely Kiss",
+        "Shell Smash", "Icicle Spear", ("Freeze Dry", 30), "Body Slam", "Blizzard", "Ice Beam", "Lovely Kiss",
         "Slack Off", ("Aurora Veil", 20), "Rest"]),
     # Feint for Fake Out (no roster line learns it).
     "Bruno": ("No Guard punches and Bulk Up", [
         "Dynamic Punch", "Bulk Up", "Close Combat", "High Jump Kick", "Mach Punch", ("Fire Punch", 30),
         "Ice Punch", "Thunder Punch", "Feint", ("Earthquake", 38)]),
+    # Pain Split: an egg move of the Duskull line, so from 20.
     "Agatha": ("trap and drain", [
-        "Mean Look", "Curse", "Destiny Bond", "Hypnosis", "Dream Eater", "Shadow Ball", "Glare", "Haze",
-        "Bonemerang", ("Will O Wisp", 20)]),
-    "Koga": ("poison stall and evasion", [
-        ("Toxic", 20), "Toxic Spikes", "Spikes", "Minimize", ("Double Team", 20), ("Substitute", 20),
-        "Sludge Bomb", ("Will O Wisp", 20), "Sticky Web", "Explosion"]),
-    # Confuse Ray above Future Sight so the ace Xatu takes it.
+        "Mean Look", "Curse", "Shadow Ball", "Hex", "Will O Wisp", ("Pain Split", 20), "Shadow Sneak", "Glare",
+        "Haze", "Leech Life", "Bonemerang"]),
+    # Toxic stall, no evasion. Toxic twice: the ace Crobat takes the first, Ariados the second. Pain Split: an
+    # egg move of the Koffing line, so from 20.
+    "Koga": ("Toxic stall", [
+        ("Toxic", 20), ("Substitute", 20), ("Protect", 20), "Haze", ("Will O Wisp", 20), "Toxic Spikes", "Spikes",
+        "Sludge Bomb", ("Pain Split", 20), ("Toxic", 20), "Explosion", "Sticky Web"]),
+    # Wish above Future Sight so the ace Xatu takes it. Avalanche: Jynx's Trick Room-friendly attack.
     "Will": ("psychic masquerade: Trick Room and screens", [
-        ("Trick Room", 20), "Calm Mind", "Psychic", "Reflect", ("Light Screen", 20), "Confuse Ray",
-        "Future Sight", "Lovely Kiss", "Yawn", "Moonblast"]),
+        ("Trick Room", 20), "Calm Mind", "Psychic", "Reflect", ("Light Screen", 20), "Wish",
+        "Future Sight", "Avalanche", "Yawn", "Moonblast"]),
     # Wish: an egg move of the Eevee line (the ace), so from 20. Brave Bird: an egg move of the Murkrow line, so
     # from 45.
     "Karen": ("disruption. \"Strong Pokémon, weak Pokémon.\"", [
@@ -460,6 +467,22 @@ POOL_DRAFT = {
         ("Dark Pulse", 30), "Moonlight", "Psychic", "Calm Mind", "Extreme Speed", "Flare Blitz", "Bullet Punch",
         "Swords Dance", "Earth Power", "Megahorn", "Hurricane", "Roost"]),
 }
+# Frustration categories (spec: move pools): a pool draws on at most one, and
+# never pairs evasion with Toxic or Toxic Spikes. Paralysis, burns, hazards and
+# Toxic are not categories. A move maps to its category's name.
+FRUSTRATION = {move: category for category, moves in {
+    "sleep": ["Hypnosis", "Sleep Powder", "Spore", "Lovely Kiss", "Yawn", "Sing", "Grass Whistle", "Dark Void"],
+    "evasion": ["Double Team", "Minimize", "Smokescreen", "Sand Attack", "Flash", "Kinesis", "Mud Slap"],
+    "OHKO": ["Sheer Cold", "Fissure", "Horn Drill", "Guillotine"],
+    "trapping": ["Bind", "Wrap", "Fire Spin", "Whirlpool", "Sand Tomb", "Clamp", "Infestation", "Magma Storm",
+                 "Snap Trap", "Thunder Cage", "Mean Look", "Block", "Spider Web", "Jaw Lock", "Anchor Shot",
+                 "Spirit Shackle", "Octolock"],
+    "Perish Song": ["Perish Song"],
+    "Destiny Bond": ["Destiny Bond"],
+    "infatuation/confusion": ["Attract", "Swagger", "Flatter", "Confuse Ray", "Supersonic", "Sweet Kiss",
+                              "Teeter Dance", "Dynamic Punch"],
+}.items() for move in moves}
+TOXIC_MOVES = ("Toxic", "Toxic Spikes")
 GROWTH_NOTE = {
     "steady": "a Steady (keeps a fixed fraction of the player's pace)",
     "prodigy": "a Prodigy (brilliant early, then evens out: fast early, then slows)",
@@ -929,6 +952,22 @@ def validate_pool(name, pool, moves):
             raise ValueError(f"{where}: fromLevel must be an integer from 1 to 100")
 
 
+def validate_frustration(name, pool):
+    """At most one frustration category per pool (FRUSTRATION), and no evasion with Toxic or Toxic Spikes."""
+    found = {}
+    for entry in pool:
+        category = FRUSTRATION.get(entry["move"])
+        if category:
+            found.setdefault(category, []).append(entry["move"])
+    if len(found) > 1:
+        listed = "; ".join(f"{category}: {', '.join(moves)}" for category, moves in found.items())
+        raise ValueError(f"{name} move pool: at most one frustration category, found {listed}")
+    toxic = [move for move in TOXIC_MOVES if any(entry["move"] == move for entry in pool)]
+    if "evasion" in found and toxic:
+        raise ValueError(f"{name} move pool: evasion ({', '.join(found['evasion'])}) never pairs with"
+                         f" {', '.join(toxic)}")
+
+
 def default_moveset(level_up, level):
     """The constructor's default moveset (GiveBoxMonInitialMoveset): the last four level-up moves learned by `level`.
 
@@ -1033,6 +1072,7 @@ def learnset_data(lines, trainers, previous):
     tm_only = []
     for trainer in trainers:
         validate_pool(trainer["name"], trainer["movePool"], position)
+        validate_frustration(trainer["name"], trainer["movePool"])
         roster_stages = [token for entry in trainer["roster"] for token, _ in lines[entry["species"]]]
         level_up = {names[move] for token in roster_stages for _, move in learnsets[token]["levelUp"]}
         learnable = (level_up | {names[move] for token in roster_stages for move in learnsets[token]["teachable"]}
