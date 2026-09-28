@@ -95,8 +95,9 @@ A higher TR means both higher levels and a bigger team. Early fights are fair:
 the lowest-rated trainers bring a single Pokémon, so Blue's first fight is one
 on one at your level (level 5), and he pulls ahead over your first badges.
 For trainers rated like a player with four badges or more, levels follow the
-same curve as your level cap, and a trainer rated like a player with all 24
-badges brings a full six at level 100. When you have eight badges, the
+same curve as your level cap. Every notable trainer eventually fields a full
+team of six, and a trainer rated like a player with all 24 badges brings six
+at level 100. When you have eight badges, the
 strongest trainers are meant to sit a little above you, so you can win your
 first league; later leagues stay a real fight a little above your level cap,
 and at the very end both sides meet at level 100 ([Leagues](leagues.md)). Each Pokémon has a small, hand-set
@@ -124,9 +125,11 @@ the list names, and a trainer can name an earlier form on purpose, like Blue's
 Eevee ([evolution stages](../specs/player-trainer-rating.md#evolution-stages)).
 
 Each trainer has a signature set of moves they like. Their Pokémon start
-from their usual moves for their level and swap in the signature moves they
-can use, and the aces get first pick. Moves they learn naturally arrive on
-their natural schedule; special moves wait until the level set for them. Some
+from their usual moves for their level, keep the signature moves they
+already know, and swap in the others they can use; the aces get first pick.
+A Pokémon can also use moves from its earlier forms or from breeding. Moves
+they learn naturally arrive on their natural schedule; special moves wait
+until the level set for them. Some
 moves wait unused until the right Pokémon joins the team, evolves, or grows
 into them ([move pools](../specs/notable-trainers.md#move-pools)).
 

@@ -14,12 +14,14 @@ The catalog also records each roster species' predecessor chain with evolution
 levels: species_info EVO_LEVEL thresholds, or the shared evolution-level table
 (EVOLUTION_LEVELS) for non-level evolutions. The explorer steps a member down
 that chain until its level supports the stage. For every stage on those lines
-it records the level-up learnset and the TM/tutor (teachable) list as the
-Wayfarer ROM builds them (see load_learnsets), which the explorer's move pool
-resolver reads. A pool entry without a from level goes only to a member that
-learns the move by level-up, so an entry every roster line learns only by
-TM/tutor is a warning (it needs a from level), as is one no line can learn. Learnset extraction needs a C preprocessor
-(arm-none-eabi-cpp, else cpp).
+it records the level-up learnset and the TM/tutor (teachable) list, and for
+each line's first stage the egg moves of the species its Egg hatches as, all
+as the Wayfarer ROM builds them (see load_learnsets), which the explorer's
+move pool resolver reads. A pool entry without a from level goes only to a
+member that learns the move by level-up (its own species or an earlier form),
+so an entry every roster line learns only by TM/tutor or as an egg move is a
+warning (it needs a from level), as is one no line can learn. Learnset
+extraction needs a C preprocessor (arm-none-eabi-cpp, else cpp).
 """
 from __future__ import annotations
 
@@ -295,12 +297,15 @@ DRAFT = {
 DRAFT_NOTE = "user-directed roster draft v1 (identity/anime picks); battle content placeholder"
 # The user-directed move pool draft v1: name -> (gimmick, ordered entries). An
 # entry is a move, or (move, from level) when a roster line the entry is meant
-# for learns it only by TM/tutor, or to hold back a strong move a line learns
-# by level-up too early. From levels by tier: status and utility 20; attacks
-# under 90 power and setup 30 (Shell Smash, Belly Drum, Quiver Dance 40);
-# 90-100 power 38; 110+ power or a heavy drawback 45; OHKO 55. Order is
-# identity: top entries reach the aces first. A draft move no roster line can
-# learn is replaced by the closest legal move that keeps the gimmick.
+# for learns it only by TM/tutor or as an egg move, or to hold back a strong
+# move a line learns by level-up too early. From levels by tier: status and
+# utility 20; attacks under 90 power and setup 30 (Shell Smash, Belly Drum,
+# Quiver Dance 40); 90-100 power 38; 110+ power or a heavy drawback 45; OHKO
+# 55. Order is content: top entries reach the aces first, so an ace's own moves
+# sit above moves meant for later members, and a move listed twice goes to two
+# members. A draft move no roster line can learn (by level-up on any stage,
+# TM/tutor or egg move) is replaced by the closest legal move that keeps the
+# gimmick.
 POOL_DRAFT = {
     # Curse for Iron Defense (no roster line learns it).
     "Brock": ("hazards and sand walls (Sturdy walls, Stealth Rock, chip)", [
@@ -309,52 +314,55 @@ POOL_DRAFT = {
     "Misty": ("rain-boosted glass cannons", [
         ("Rain Dance", 20), "Surf", "Hydro Pump", ("Thunder", 45), "Psychic", "Recover", "Rapid Spin",
         "Ice Beam", "Dragon Dance", "Disable"]),
+    # Flash Cannon twice: Electrode takes the first, Magnezone the second.
     "Lt. Surge": ("paralysis and pivoting", [
         "Thunder Wave", "Thunderbolt", ("Volt Switch", 30), "Discharge", "Light Screen", "Thunder Punch",
-        ("Ice Punch", 30), "Flash Cannon", "Explosion", "Charge Beam"]),
+        ("Ice Punch", 30), "Flash Cannon", "Explosion", "Charge Beam", "Flash Cannon"]),
     "Erika": ("status and sleep under sun", [
         "Sleep Powder", "Stun Spore", "Leech Seed", "Giga Drain", "Sunny Day", "Solar Beam",
         ("Sludge Bomb", 38), "Synthesis", "Petal Dance", "Toxic"]),
-    # Poison Powder for Toxic Spikes (no roster line learns it).
+    # Toxic Spikes: an egg move of the Venonat line (the ace), so from 20.
     "Janine": ("ninja poison and evasion", [
-        ("Toxic", 20), "Poison Powder", ("Double Team", 20), ("Substitute", 20), "Sludge Bomb", ("U Turn", 30),
-        "Poison Jab", "Cross Poison", "Smokescreen", ("Protect", 20)]),
+        ("Toxic", 20), ("Toxic Spikes", 20), ("Double Team", 20), ("Substitute", 20), "Sludge Bomb",
+        ("U Turn", 30), "Poison Jab", "Cross Poison", "Smokescreen", ("Protect", 20)]),
     "Sabrina": ("mind control", [
         "Calm Mind", "Psychic", "Hypnosis", "Reflect", ("Light Screen", 20), "Future Sight", "Shadow Ball",
         "Barrier", "Psyshock", "Dazzling Gleam"]),
-    # Recover for Morning Sun (no roster line learns it).
+    # Morning Sun: an egg move of the Ponyta and Growlithe lines, so from 20.
     "Blaine": ("sun and raw fire", [
         "Sunny Day", "Flamethrower", "Fire Blast", ("Will O Wisp", 20), "Flare Blitz", "Extreme Speed",
-        ("Solar Beam", 45), "Lava Plume", ("Overheat", 45), "Recover"]),
-    # Power Gem for Pay Day (only Meowth learns it, at Lv 30, after evolving at 28).
+        ("Solar Beam", 45), "Lava Plume", ("Overheat", 45), ("Morning Sun", 20)]),
+    # Pay Day: Persian learns it from its earlier form Meowth (Lv 30).
     "Giovanni": ("ground brutes and the boss's cat", [
-        "Earthquake", "Stone Edge", "Megahorn", ("Swords Dance", 30), "Fake Out", "Power Gem", "Nasty Plot",
+        "Earthquake", "Stone Edge", "Megahorn", ("Swords Dance", 30), "Fake Out", "Pay Day", "Nasty Plot",
         "Sucker Punch", "Earth Power", ("Sludge Wave", 38)]),
-    # Fly for Brave Bird (no roster line learns it); Whirlwind for Defog (no roster line learns it).
+    # Brave Bird and Defog: egg moves of the Pidgey line (the ace), so from 45 and 20.
     "Falkner": ("speed and Tailwind", [
-        "Tailwind", ("Fly", 38), "Roost", "Air Slash", "Hurricane", "Feather Dance", ("U Turn", 30),
-        "Drill Peck", "Mirror Move", "Whirlwind"]),
+        "Tailwind", ("Brave Bird", 45), "Roost", "Air Slash", "Hurricane", "Feather Dance", ("U Turn", 30),
+        "Drill Peck", "Mirror Move", ("Defog", 20)]),
     "Bugsy": ("setup and pivot bugs", [
         "Fury Cutter", "Swords Dance", "Bullet Punch", "U Turn", "Megahorn", "Close Combat", "Quiver Dance",
         "Sleep Powder", "Bug Buzz", "Sticky Web"]),
     "Whitney": ("Rollout and Milk Drink (the classic wall)", [
         "Rollout", "Milk Drink", ("Attract", 20), "Body Slam", "Stomp", "Metronome", ("Soft Boiled", 20),
         "Moonblast", "Hyper Voice", "Heal Bell"]),
-    # Mean Look for Perish Song (only Misdreavus learns it, at Lv 46, after evolving at 36).
+    # Perish Song: Mismagius learns it from its earlier form Misdreavus (Lv 46). Destiny Bond: an egg move
+    # of the Misdreavus line, so from 20 (the ace Gengar is full by then).
     "Morty": ("sleep, dream and curse", [
-        "Hypnosis", "Dream Eater", "Shadow Ball", "Curse", "Destiny Bond", "Will O Wisp", "Hex", "Confuse Ray",
-        "Mean Look", "Night Shade"]),
-    # Quick Attack for Mach Punch (no roster line learns it).
+        "Hypnosis", "Dream Eater", "Shadow Ball", "Curse", ("Destiny Bond", 20), "Will O Wisp", "Hex",
+        "Confuse Ray", "Perish Song", "Night Shade"]),
+    # Mach Punch: an egg move of the Hitmontop line (Tyrogue), so from 30.
     "Chuck": ("waterfall-trained power", [
-        "Dynamic Punch", "Bulk Up", ("Close Combat", 45), "Quick Attack", ("Focus Punch", 45),
+        "Dynamic Punch", "Bulk Up", ("Close Combat", 45), ("Mach Punch", 30), ("Focus Punch", 45),
         ("Waterfall", 30), ("Ice Punch", 30), "Triple Kick", "Cross Chop", "Aura Sphere"]),
+    # Spikes twice: Skarmory takes the first, Forretress the second.
     "Jasmine": ("iron defense and hazards", [
-        "Iron Tail", "Iron Defense", "Spikes", "Stealth Rock", "Rapid Spin", "Gyro Ball", ("Thunderbolt", 38),
-        "Thunder Wave", "Flash Cannon", "Heavy Slam"]),
-    # Aurora Beam for Freeze Dry (no roster line learns it).
+        "Iron Tail", "Iron Defense", "Spikes", "Spikes", "Stealth Rock", "Rapid Spin", "Gyro Ball",
+        ("Thunderbolt", 38), "Thunder Wave", "Flash Cannon", "Heavy Slam"]),
+    # Freeze Dry: an egg move of the Swinub line (the ace), so from 30.
     "Pryce": ("hail and old-master patience", [
         "Hail", "Blizzard", "Ice Shard", "Icicle Crash", "Earthquake", ("Aurora Veil", 20), "Rest",
-        ("Sleep Talk", 20), "Ice Beam", "Aurora Beam"]),
+        ("Sleep Talk", 20), "Ice Beam", ("Freeze Dry", 30)]),
     # Dragon Claw for Draco Meteor (no roster line learns it).
     "Clair": ("rain dragons and Dragon Dance", [
         "Dragon Dance", "Outrage", ("Rain Dance", 20), "Hydro Pump", "Dragon Pulse", "Thunder Wave",
@@ -362,34 +370,39 @@ POOL_DRAFT = {
     "Roxanne": ("the fossil lesson: Sturdy counters and hazards", [
         ("Rock Tomb", 30), ("Stealth Rock", 20), "Sandstorm", "Power Gem", "Metal Burst", ("Head Smash", 45),
         "Rock Polish", "Earth Power", "Thunder Wave", ("Wood Hammer", 45)]),
-    # Stun Spore for Spore (only Shroomish learns it, at Lv 40, after evolving at 23).
+    # Spore: Breloom learns it from its earlier form Shroomish (Lv 40).
     "Brawly": ("the surfer brawler: Fake Out and Bulk Up", [
-        "Fake Out", "Bulk Up", "Close Combat", ("Drain Punch", 30), "Mach Punch", "Stun Spore",
-        ("Bullet Seed", 30), "Ice Punch", "Knock Off", ("Surf", 38)]),
+        "Fake Out", "Bulk Up", "Close Combat", ("Drain Punch", 30), "Mach Punch", "Spore", ("Bullet Seed", 30),
+        "Ice Punch", "Knock Off", ("Surf", 38)]),
+    # Magnezone fills up (Magnet Rise, Light Screen, Flash Cannon, Thunder) above Explosion, so Electrode takes
+    # it.
     "Wattson": ("Wahaha! Paralysis and Explosion", [
-        "Thunder Wave", ("Volt Switch", 30), "Discharge", ("Thunderbolt", 38), ("Explosion", 45),
-        "Magnet Rise", "Light Screen", "Flash Cannon", "Charge", ("Thunder", 45)]),
+        "Thunder Wave", ("Volt Switch", 30), "Discharge", ("Thunderbolt", 38), "Magnet Rise", "Light Screen",
+        "Flash Cannon", ("Thunder", 45), ("Explosion", 45), "Charge"]),
+    # Yawn: an egg move for the ace Torkoal, so from 20; above Overheat so Torkoal takes it.
     "Flannery": ("sun and Eruption", [
-        ("Sunny Day", 20), "Eruption", ("Overheat", 45), "Lava Plume", ("Will O Wisp", 20), "Yawn",
+        ("Sunny Day", 20), "Eruption", ("Yawn", 20), ("Overheat", 45), "Lava Plume", ("Will O Wisp", 20),
         ("Solar Beam", 45), "Earth Power", "Heat Wave", "Rapid Spin"]),
-    # Quick Attack for Extreme Speed (no roster line learns it).
+    # Extreme Speed: an egg move of the Zigzagoon line, so from 30. Belly Drum twice: Snorlax takes the first,
+    # Linoone the second.
     "Norman": ("Facade and Belly Drum normals", [
-        ("Facade", 30), "Slack Off", "Belly Drum", "Quick Attack", "Fake Out", "Body Slam", "Double Edge",
-        "Hammer Arm", "Encore", "Rest"]),
+        ("Facade", 30), "Slack Off", "Belly Drum", ("Extreme Speed", 30), "Fake Out", "Body Slam", "Belly Drum",
+        "Double Edge", "Hammer Arm", "Encore", "Rest"]),
     "Winona": ("graceful flyers: Roost and Dragon Dance", [
         ("Aerial Ace", 30), ("Roost", 20), "Dragon Dance", ("Brave Bird", 45), ("Hurricane", 45), "Tailwind",
         "Spikes", "Whirlwind", "Cotton Guard", "Sky Attack"]),
-    # Heal Pulse for Helping Hand (no roster line learns it).
+    # Heal Pulse for Helping Hand (no roster line learns it). Explosion above Trick Room so Solrock takes it.
     "Tate & Liza": ("double-battle sync: Levitate + Earthquake, Trick Room", [
-        ("Calm Mind", 30), ("Earthquake", 38), "Rock Slide", ("Trick Room", 20), "Heal Pulse", "Psychic",
-        ("Reflect", 20), ("Light Screen", 20), "Explosion", "Cosmic Power"]),
-    # Razor Shell for Aqua Jet (no roster line learns it).
+        ("Calm Mind", 30), ("Earthquake", 38), "Rock Slide", "Explosion", ("Trick Room", 20), "Heal Pulse",
+        "Psychic", ("Reflect", 20), ("Light Screen", 20), "Cosmic Power"]),
+    # Aqua Jet: an egg move of the Luvdisc and Corphish lines, so from 30; twice, so Crawdaunt takes the second.
+    # Dragon Dance above Hydro Pump so Kingdra takes it.
     "Juan": ("flamboyant rain and charm", [
-        ("Water Pulse", 30), ("Rain Dance", 20), ("Scald", 30), "Hydro Pump", "Dragon Dance", "Attract",
-        "Charm", "Razor Shell", "Crabhammer", "Sheer Cold"]),
-    # Aurora Beam for Freeze Dry (no roster line learns it).
+        ("Water Pulse", 30), ("Rain Dance", 20), "Dragon Dance", "Hydro Pump", ("Scald", 30), "Attract",
+        "Charm", ("Aqua Jet", 30), ("Aqua Jet", 30), "Crabhammer", "Sheer Cold"]),
+    # Freeze Dry: an egg move for the ace Lapras, so from 30.
     "Lorelei": ("ice and Shell Smash", [
-        "Shell Smash", "Icicle Spear", "Aurora Beam", "Perish Song", "Blizzard", "Ice Beam", "Lovely Kiss",
+        "Shell Smash", "Icicle Spear", ("Freeze Dry", 30), "Perish Song", "Blizzard", "Ice Beam", "Lovely Kiss",
         "Slack Off", ("Aurora Veil", 20), "Rest"]),
     # Feint for Fake Out (no roster line learns it).
     "Bruno": ("No Guard punches and Bulk Up", [
@@ -401,45 +414,50 @@ POOL_DRAFT = {
     "Koga": ("poison stall and evasion", [
         ("Toxic", 20), "Toxic Spikes", "Spikes", "Minimize", ("Double Team", 20), ("Substitute", 20),
         "Sludge Bomb", ("Will O Wisp", 20), "Sticky Web", "Explosion"]),
+    # Confuse Ray above Future Sight so the ace Xatu takes it.
     "Will": ("psychic masquerade: Trick Room and screens", [
-        ("Trick Room", 20), "Calm Mind", "Psychic", "Reflect", ("Light Screen", 20), "Future Sight",
-        "Confuse Ray", "Lovely Kiss", "Yawn", "Moonblast"]),
-    # Confuse Ray for Wish (no roster line learns it); Fly for Brave Bird (no roster line learns it).
+        ("Trick Room", 20), "Calm Mind", "Psychic", "Reflect", ("Light Screen", 20), "Confuse Ray",
+        "Future Sight", "Lovely Kiss", "Yawn", "Moonblast"]),
+    # Wish: an egg move of the Eevee line (the ace), so from 20. Brave Bird: an egg move of the Murkrow line, so
+    # from 45.
     "Karen": ("disruption. \"Strong Pokémon, weak Pokémon.\"", [
-        "Foul Play", "Moonlight", "Confuse Ray", "Taunt", "Nasty Plot", "Dark Pulse", "Sucker Punch",
-        "Sleep Powder", "Shadow Ball", ("Fly", 38)]),
-    # Brick Break for Superpower (no roster line learns it).
+        "Foul Play", "Moonlight", ("Wish", 20), "Taunt", "Nasty Plot", "Dark Pulse", "Sucker Punch",
+        "Sleep Powder", "Shadow Ball", ("Brave Bird", 45)]),
+    # Aqua Jet twice (the second an egg move of the Corphish line, from 30): Sharpedo and Crawdaunt. Superpower:
+    # an egg move of the Corphish line, so from 45.
     "Sidney": ("dark aggression and priority", [
         "Sucker Punch", "Swords Dance", "Knock Off", "Night Slash", "Crunch", "Taunt", ("Protect", 20),
-        "Aqua Jet", ("Brick Break", 30), "Leaf Blade"]),
-    # Grudge for Pain Split (no roster line learns it); Detect for Recover (no roster line learns it);
-    # Hail for Spikes (no roster line learns it).
+        "Aqua Jet", ("Aqua Jet", 30), ("Superpower", 45), "Leaf Blade"]),
+    # Pain Split, Recover and Spikes: egg moves (Duskull, Sableye, Snorunt lines), so from 20. Dusknoir fills up
+    # (Ice Beam) above Shadow Sneak, so Banette takes it.
     "Phoebe": ("burns and grudges", [
-        "Will O Wisp", "Shadow Sneak", "Destiny Bond", "Grudge", "Shadow Claw", "Detect", ("Trick Room", 20),
-        "Hail", ("Ice Beam", 38), "Curse"]),
-    # Icy Wind for Spikes (no roster line learns it).
+        "Will O Wisp", ("Pain Split", 20), ("Trick Room", 20), ("Ice Beam", 38), "Shadow Sneak", "Destiny Bond",
+        "Shadow Claw", ("Recover", 20), ("Spikes", 20), "Curse"]),
+    # Spikes: an egg move of the Snorunt line, so from 20.
     "Glacia": ("hail and Sheer Cold", [
         "Hail", "Blizzard", ("Aurora Veil", 20), ("Sheer Cold", 55), "Freeze Dry", "Ice Shard", "Protect",
-        ("Surf", 38), "Icy Wind", ("Explosion", 45)]),
+        ("Surf", 38), ("Spikes", 20), ("Explosion", 45)]),
     "Drake": ("sea-captain dragons", [
         "Dragon Claw", "Dragon Dance", "Outrage", "Earthquake", ("Waterfall", 30), "Flamethrower", "Crunch",
         "Dragon Pulse", ("Roost", 20), "Hydro Pump"]),
-    # Agility for Extreme Speed (no roster line learns it).
+    # Extreme Speed: an egg move of the Dratini line, so from 30. Dragon Rush above Fire Blast so the ace fills
+    # up and Charizard takes Fire Blast.
     "Lance": ("Hyper Beam Dragonite and speed", [
-        "Hyper Beam", "Agility", "Dragon Dance", "Outrage", "Thunder Wave", ("Fire Blast", 45),
-        ("Earthquake", 38), "Waterfall", "Roost", "Dragon Rush"]),
-    # Aqua Ring for Mirror Coat (no roster line learns it).
+        "Hyper Beam", ("Extreme Speed", 30), "Dragon Dance", "Outrage", "Thunder Wave", "Dragon Rush",
+        ("Fire Blast", 45), ("Earthquake", 38), "Waterfall", "Roost"]),
+    # Mirror Coat: an egg move for the ace Milotic (Feebas), so from 30. Giga Drain twice: Tentacruel takes the
+    # first, Ludicolo the second.
     "Wallace": ("rain, bulk and beauty", [
-        "Rain Dance", ("Scald", 30), "Recover", "Aqua Ring", "Water Spout", ("Giga Drain", 30), "Toxic Spikes",
-        "Earthquake", "Dragon Dance", ("Ice Beam", 38)]),
-    # Double Edge for Head Smash (no roster line learns it); Ingrain for Recover (no roster line learns it).
+        "Rain Dance", ("Scald", 30), "Recover", ("Mirror Coat", 30), "Water Spout", ("Giga Drain", 30),
+        ("Giga Drain", 30), "Toxic Spikes", "Earthquake", "Dragon Dance", ("Ice Beam", 38)]),
+    # Head Smash and Recover: egg moves of the Aron and Lileep lines, so from 45 and 20.
     "Steven": ("Stealth Rock and Meteor Mash", [
-        "Meteor Mash", "Bullet Punch", ("Stealth Rock", 20), ("Earthquake", 38), "Double Edge", "Spikes",
-        ("Roost", 20), "Rapid Spin", "Ingrain", ("Swords Dance", 30)]),
-    # Dark Pulse for Foul Play (no roster line learns it).
+        "Meteor Mash", "Bullet Punch", ("Stealth Rock", 20), ("Earthquake", 38), ("Head Smash", 45), "Spikes",
+        ("Roost", 20), "Rapid Spin", ("Recover", 20), ("Swords Dance", 30)]),
+    # Dark Pulse for Foul Play (no roster line learns it: no level-up, TM/tutor or egg move).
     "Blue": ("Gary's all-rounder: priority and coverage", [
-        ("Dark Pulse", 30), "Moonlight", "Psychic", "Calm Mind", "Extreme Speed", "Flare Blitz",
-        "Bullet Punch", "Swords Dance", "Earth Power", "Megahorn", "Hurricane", "Roost"]),
+        ("Dark Pulse", 30), "Moonlight", "Psychic", "Calm Mind", "Extreme Speed", "Flare Blitz", "Bullet Punch",
+        "Swords Dance", "Earth Power", "Megahorn", "Hurricane", "Roost"]),
 }
 GROWTH_NOTE = {
     "steady": "a Steady (keeps a fixed fraction of the player's pace)",
@@ -538,7 +556,8 @@ def learnset_translation_unit():
     global.h's leading include block (minus constants/maps.h, which needs the
     generated map headers and only defines map constants), then pokemon.c's own
     P_LVL_UP_LEARNSETS #if chain that picks the level-up learnset header, the
-    generated teachable header and species_info.h, as pokemon.c includes them.
+    generated teachable header, the egg move header and species_info.h, as
+    pokemon.c includes them.
     """
     includes = []
     for line in GLOBAL_HEADER.read_text().splitlines():
@@ -550,12 +569,14 @@ def learnset_translation_unit():
     chain = re.search(r"^#if P_LVL_UP_LEARNSETS\b.*?^#endif", source, re.M | re.S)
     if not chain or '#include "data/pokemon/teachable_learnsets.h"' not in source[chain.end():]:
         raise ValueError("pokemon.c no longer selects level-up learnsets through P_LVL_UP_LEARNSETS")
+    if '#include "data/pokemon/egg_moves.h"' not in source[chain.end():]:
+        raise ValueError("pokemon.c no longer includes data/pokemon/egg_moves.h")
     return "\n".join([*includes, chain.group(0), '#include "data/pokemon/teachable_learnsets.h"',
-                      '#include "data/pokemon/species_info.h"'])
+                      '#include "data/pokemon/egg_moves.h"', '#include "data/pokemon/species_info.h"'])
 
 
 def load_learnsets(tokens):
-    """Each species token's level-up learnset and teachable (TM/tutor) list, as the Wayfarer ROM builds them.
+    """Each species token's level-up learnset, teachable (TM/tutor) list and egg moves, as the Wayfarer ROM builds them.
 
     The teachable header is generated by the game's own learnset helpers
     (make_tutors.py, make_teaching_types.py, make_teachables.py --build
@@ -564,9 +585,13 @@ def load_learnsets(tokens):
     learnsets, the teachable arrays and species_info are then run through the
     C preprocessor with the Makefile's CPPFLAGS for that build, so every
     generation-config #if resolves as it does in the ROM, and the expanded
-    arrays are parsed. Returns (valid move tokens, {old move name: move
-    token}, {species token: {"levelUp": [(level, move token)], "teachable":
-    [move token]}}); level 0 is an evolution move.
+    arrays are parsed. Egg moves come the same way: pokemon.c's own
+    data/pokemon/egg_moves.h arrays, through each species_info entry's
+    .eggMoveLearnset (none means no egg moves, as GetSpeciesEggMoves falls
+    back to SPECIES_NONE's empty list). Returns (valid move tokens, {old move
+    name: move token}, {species token: {"levelUp": [(level, move token)],
+    "teachable": [move token], "egg": [move token]}}); level 0 is an
+    evolution move.
     """
     with tempfile.TemporaryDirectory(prefix="trainer-balance-learnsets-") as directory:
         work = Path(directory)
@@ -590,9 +615,14 @@ def load_learnsets(tokens):
         (unit.parent / "data/pokemon").mkdir(parents=True)
         (unit.parent / "data/pokemon/teachable_learnsets.h").write_text(header.read_text())
         markers = "".join(f"\n__WAYFARER_SPECIES__ {token}" for token in tokens)
-        unit.write_text(learnset_translation_unit() + markers + "\n")
+        # daycare.c swaps an incense baby Egg for its parent species only below Gen 9 incense breeding.
+        incense = "\n#if P_INCENSE_BREEDING < GEN_9\n__WAYFARER_INCENSE_BREEDING__\n#endif"
+        unit.write_text(learnset_translation_unit() + markers + incense + "\n")
         preprocessor = "arm-none-eabi-cpp" if shutil.which("arm-none-eabi-cpp") else "cpp"
         text = command([preprocessor, *LEARNSET_CPPFLAGS, str(unit)], cwd=GAME)
+    if re.search(r"^__WAYFARER_INCENSE_BREEDING__$", text, re.M):
+        raise ValueError("P_INCENSE_BREEDING is below Gen 9, so an incense baby's Egg may hatch as its parent"
+                         " species (daycare.c AlterEggSpeciesWithIncenseItem): egg moves are not resolvable")
     ids = re.findall(r"^__WAYFARER_SPECIES__ (\S+)$", text, re.M)
     if len(ids) != len(tokens) or not all(value.isdigit() for value in ids):
         raise ValueError("could not resolve roster species IDs in the preprocessed data")
@@ -622,6 +652,14 @@ def load_learnsets(tokens):
         if not items or items[-1] != "0xFFFF":
             raise ValueError(f"unexpected teachable learnset layout: {name}")
         teachable[name] = items[:-1]
+    egg = {}
+    for name, body in re.findall(r"static const u16 (s\w+EggMoveLearnset)\[\] = \{(.*?)\};", text, re.S):
+        items = [item.strip() for item in body.split(",") if item.strip()]
+        if not items or items[-1] != "0xFFFF":
+            raise ValueError(f"unexpected egg move learnset layout: {name}")
+        egg[name] = items[:-1]
+    if not egg:
+        raise ValueError("no egg move learnsets in the preprocessed data")
     table = text.index("{", text.index("gSpeciesInfo[] ="))
     entries = {}
     # Top-level designated initializers "[id] = { ... }"; a later one for the
@@ -653,14 +691,21 @@ def load_learnsets(tokens):
         entry = entries.get(species_id)
         level_name = re.search(r"\.levelUpLearnset = (\w+),", entry or "")
         teach_name = re.search(r"\.teachableLearnset = (\w+),", entry or "")
+        egg_name = re.search(r"\.eggMoveLearnset = (\w+),", entry or "")
         if not entry or not level_name or not teach_name:
             raise ValueError(f"{display(token, 'SPECIES_')}: no learnsets in species_info")
+        if egg_name and egg_name.group(1) not in egg:
+            raise ValueError(f"{display(token, 'SPECIES_')}: egg moves {egg_name.group(1)} not found")
+        eggs = egg[egg_name.group(1)] if egg_name else []
+        if any(move not in valid for move in eggs):
+            raise ValueError(f"{display(token, 'SPECIES_')}: {egg_name.group(1)} lists an unknown move")
         for name, known in ((level_name.group(1), level_up), (teach_name.group(1), teachable)):
             if name not in known:
                 raise ValueError(f"{display(token, 'SPECIES_')}: learnset {name} not found")
             if any(move not in valid for move in (known[name] if known is teachable else [move for _, move in known[name]])):
                 raise ValueError(f"{display(token, 'SPECIES_')}: {name} lists an unknown move")
-        result[token] = {"levelUp": level_up[level_name.group(1)], "teachable": teachable[teach_name.group(1)]}
+        result[token] = {"levelUp": level_up[level_name.group(1)], "teachable": teachable[teach_name.group(1)],
+                         "egg": eggs}
     return valid, aliases, result
 
 
@@ -725,6 +770,24 @@ def evolution_table(edges):
             raise ValueError(f"{where}: status must be authored or placeholder")
         table[key] = (level, status == "placeholder")
     return table
+
+
+def egg_species(token, previous):
+    """The species a line's Egg hatches as: daycare.c GetEggSpecies walks predecessors back to the root, babies included.
+
+    With Gen 9 incense breeding (checked in load_learnsets) no incense item
+    changes it. Ancestry must be unambiguous.
+    """
+    seen = {token}
+    while previous.get(token):
+        sources = previous[token]
+        if len(sources) > 1:
+            raise ValueError(f"{display(token, 'SPECIES_')}: ambiguous predecessors {', '.join(sources)}")
+        token = sources[0]
+        if token in seen:
+            raise ValueError(f"{display(token, 'SPECIES_')}: evolution cycle")
+        seen.add(token)
+    return token
 
 
 def evolution_chain(token, edges, previous, table):
@@ -916,9 +979,10 @@ def pool_warnings(pool, level_up, learnable):
     """A pool's always-dormant entries, given the moves its roster lines learn.
 
     `level_up` holds the moves some stage learns by level-up and `learnable`
-    every move some stage can learn. Returns (entries no stage can learn,
-    entries without a from level that every learner gets only by TM/tutor),
-    each as move names in pool order.
+    every move some stage can learn (level-up, TM/tutor, or an egg move of the
+    line). Returns (entries no stage can learn, entries without a from level
+    that every learner gets only by TM/tutor or as an egg move), each as move
+    names in pool order.
     """
     unlearnable = [entry["move"] for entry in pool if entry["move"] not in learnable]
     tm_only = [entry["move"] for entry in pool
@@ -926,16 +990,22 @@ def pool_warnings(pool, level_up, learnable):
     return unlearnable, tm_only
 
 
-def learnset_data(lines, trainers):
+def learnset_data(lines, trainers, previous):
     """Compact learnsets for every stage on every roster line, and the move pools checked against them.
 
     Returns ({"moves": [name], "species": {species: {"levelUp": [level, move
-    index, ...], "teachable": [move index]}}}, pool entries that no stage on
-    the trainer's roster lines can learn, and pool entries without a from level
-    that those lines learn only by TM/tutor). Level-up pairs keep the game's
-    order; level 0 is an evolution move.
+    index, ...], "teachable": [move index][, "egg": [move index]]}}}, pool
+    entries that no stage on the trainer's roster lines can learn, and pool
+    entries without a from level that those lines learn only by TM/tutor or as
+    egg moves). Level-up pairs keep the game's order; level 0 is an evolution
+    move. Each line's first stage carries "egg": the egg moves of the species
+    the line's Egg hatches as (egg_species, e.g. Pichu for Pikachu), empty
+    when it has none.
     """
-    tokens = sorted({token for chain in lines.values() for token, _ in chain})
+    stages = {token for chain in lines.values() for token, _ in chain}
+    bases = {chain[0][0] for chain in lines.values()}
+    hatches = {base: egg_species(base, previous) for base in bases}
+    tokens = sorted(stages | set(hatches.values()))
     valid, aliases, learnsets = load_learnsets(tokens)
     names = {token: display(token, "MOVE_") for token in valid}
     # Source parties may use an old move name; the pool stores the move itself.
@@ -950,18 +1020,23 @@ def learnset_data(lines, trainers):
     for species, chain in lines.items():
         validate_usable_moves(species, chain, learnsets)
     species = {}
-    for token in tokens:
+    for token in sorted(stages):
         data = learnsets[token]
         species[display(token, "SPECIES_")] = {
             "levelUp": [part for level, move in data["levelUp"] for part in (level, position[names[move]])],
             "teachable": sorted({position[names[move]] for move in data["teachable"]})}
+        if token in bases:
+            species[display(token, "SPECIES_")]["egg"] = sorted(
+                {position[names[move]] for move in learnsets[hatches[token]]["egg"]})
     unlearnable = []
     tm_only = []
     for trainer in trainers:
         validate_pool(trainer["name"], trainer["movePool"], position)
-        stages = [token for entry in trainer["roster"] for token, _ in lines[entry["species"]]]
-        level_up = {names[move] for token in stages for _, move in learnsets[token]["levelUp"]}
-        learnable = level_up | {names[move] for token in stages for move in learnsets[token]["teachable"]}
+        roster_stages = [token for entry in trainer["roster"] for token, _ in lines[entry["species"]]]
+        level_up = {names[move] for token in roster_stages for _, move in learnsets[token]["levelUp"]}
+        learnable = (level_up | {names[move] for token in roster_stages for move in learnsets[token]["teachable"]}
+                     | {names[move] for entry in trainer["roster"]
+                        for move in learnsets[hatches[lines[entry["species"]][0][0]]]["egg"]})
         never, needs_from = pool_warnings(trainer["movePool"], level_up, learnable)
         unlearnable += [f"{trainer['name']} {move}" for move in never]
         tm_only += [f"{trainer['name']} {move}" for move in needs_from]
@@ -1070,7 +1145,7 @@ def generate():
     evolution = {"chains": dict(sorted(chains.items())),
                  "notFinal": sorted(stage for stage in chains
                                     if any(source == species_token(stage) for source, _ in edges))}
-    learnsets, unlearnable, tm_only = learnset_data(lines, result)
+    learnsets, unlearnable, tm_only = learnset_data(lines, result, previous)
     return json.dumps({"evolution": evolution, "learnsets": learnsets, "trainers": result},
                       indent=2, ensure_ascii=False) + "\n", gaps, {
         "kept": kept, "non_final": non_final, "unlearnable": unlearnable, "tm_only": tm_only,
@@ -1101,8 +1176,9 @@ def main():
             print(f"warning: {len(report['unlearnable'])} move pool entries no roster line can learn (always dormant):"
                   f" {', '.join(report['unlearnable'])}", file=sys.stderr)
         if report["tm_only"]:
-            # Without a from level only a level-up learner takes an entry: dormant until one is set.
+            # Without a from level only a level-up learner (own or earlier form) takes an entry: dormant until one is set.
             print(f"warning: {len(report['tm_only'])} move pool entries every roster line learns only by TM/tutor"
+                  " or as an egg move"
                   f" and have no from level (always dormant; set a from level): {', '.join(report['tm_only'])}",
                   file=sys.stderr)
         if report["non_final"]:

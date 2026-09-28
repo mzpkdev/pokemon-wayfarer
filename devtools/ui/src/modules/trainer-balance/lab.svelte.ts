@@ -114,8 +114,9 @@ export const poolEntry = (moveText: string, fromText: string, where: string): Po
 }
 
 /**
- * The pool editor's hint for one entry: whether some stage on the roster's lines learns the move
- * by level-up, or only by TM/tutor and so needs a from level.
+ * The pool editor's hint for one entry: the roster's earliest level-up learner (own species or
+ * an earlier form, e.g. "Level-up: Persian, earlier form (Meowth) at Lv 30"), or a move learned
+ * only by TM/tutor or as an egg move, which needs a from level.
  */
 export const poolLearningHint = (
   entry: PoolEntry,
@@ -123,16 +124,29 @@ export const poolLearningHint = (
 ): { text: string; needsFrom: boolean } => {
   const learning = poolLearning(entry.move, roster, evolution, learnsets)
   const from = entry.fromLevel
-  if (learning === "unlearnable") return { text: "No roster line learns it", needsFrom: false }
-  if (learning === "tm-only")
+  if (learning.kind === "unlearnable") return { text: "No roster line learns it", needsFrom: false }
+  if (learning.kind !== "level-up") {
+    const label = learning.kind === "egg" ? "Egg move" : "TM/tutor only"
     return from === undefined
-      ? { text: "TM/tutor only — needs a from level", needsFrom: true }
-      : { text: `TM/tutor only: from Lv ${from}`, needsFrom: false }
+      ? {
+          text:
+            learning.kind === "egg"
+              ? "Egg move: needs a from level"
+              : `${label} — needs a from level`,
+          needsFrom: true,
+        }
+      : { text: `${label}: from Lv ${from}`, needsFrom: false }
+  }
+  const at = learning.level === 0 ? "on evolving" : `at Lv ${learning.level}`
+  const learner =
+    learning.form === learning.species
+      ? `${learning.species} ${at}`
+      : `${learning.species}, earlier form (${learning.form}) ${at}`
   return {
     text:
       from === undefined
-        ? "Level-up on the roster: arrives at the learn level"
-        : `Level-up or TM/tutor learners from Lv ${from}`,
+        ? `Level-up: ${learner}`
+        : `Any learner from Lv ${from} (level-up: ${learner})`,
     needsFrom: false,
   }
 }

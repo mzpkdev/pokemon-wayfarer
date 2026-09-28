@@ -35,7 +35,7 @@ directly with `pnpm --filter @wayfarer/ui dev`, without building map catalogs.
 It edits each notable trainer's growth (start TR, one of nine archetypes from
 Steady, Prodigy, Sleeper, Veteran, Rival, Legend, Star, Comeback and Burst, peak TR) and
 six-slot roster with 1–3 ace slots fought last (38 entries, including the Tate & Liza double battle duo), their
-move pool (resolved against the Wayfarer learnsets the catalog extracts, with dormant entries listed) and
+move pool (resolved against the Wayfarer learnsets and egg moves the catalog extracts, with dormant entries listed) and
 the scalers, shows each trainer's TR at the chosen player TR (world
 progress; badges are presets, and any TR can be typed), with members below
 their stage's evolution level stepping down their line, each trainer's

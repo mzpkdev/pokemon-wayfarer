@@ -67,17 +67,17 @@ test("grows each trainer with world progress and round-trips an exported experim
   await expect(order.nth(1)).toContainText("Onix→ Steelix at Lv 35Ace")
   await expect(order.nth(1)).toContainText("Lv. 18")
   // The growth table shows each roster slot's stage at the world progress checkpoints: TR 25, 44,
-  // 63, 81 and 100 (team level 18, 30, 41, 51 and 63; team size 2, 4, 4, 5 and 6).
+  // 63, 81 and 100 (team level 18, 30, 41, 51 and 63; team size 2, 4, 5, 6 and 6).
   await expect(page.getByTestId("growth-slot-1")).toHaveText(
     /Slot 1\s*Ace\s*Onix\s*Lv 18\s*Onix\s*Lv 30\s*Steelix\s*Lv 41\s*Steelix\s*Lv 51\s*Steelix\s*Lv 63/,
   )
   await expect(page.getByTestId("growth-slot-2")).toHaveText(
     /Slot 2\s*Geodude\s*Lv 16\s*Graveler\s*Lv 28\s*Golem\s*Lv 39\s*Golem\s*Lv 49\s*Golem\s*Lv 61/,
   )
-  // The slot-6 Aerodactyl ace (offset 0) joins only at team size 6 (TR 96), so only by world
-  // progress 160.
+  // The slot-6 Aerodactyl ace (offset 0) joins only at team size 6 (TR 71), so from world
+  // progress 120.
   await expect(page.getByTestId("growth-slot-6")).toHaveText(
-    /Slot 6\s*Ace\s*—\s*—\s*—\s*—\s*Aerodactyl\s*Lv 63/,
+    /Slot 6\s*Ace\s*—\s*—\s*—\s*Aerodactyl\s*Lv 51\s*Aerodactyl\s*Lv 63/,
   )
   await expect(page.getByTestId("slot-line-2")).toHaveText("Geodude → Graveler Lv 25 → Golem Lv 38")
   await expect(page.getByTestId("stage-warning-1")).toHaveCount(0)
@@ -113,17 +113,17 @@ test("grows each trainer with world progress and round-trips an exported experim
   await expect(page.getByTestId("selected-tr")).toHaveText("63")
   await expect(page.getByTestId("tr-brock")).toHaveText("63")
   await expect(page.getByTestId("selected-level")).toHaveText("Lv. 41")
-  await expect(page.getByTestId("team-size")).toHaveText("4")
+  await expect(page.getByTestId("team-size")).toHaveText("5")
   await expect(page.getByTestId("gap-brock")).toHaveText("-9")
   await expect(page.getByTestId("growth-table").locator("tbody tr").first()).toHaveText(
     /TR\s*25\s*44\s*63\s*81\s*100/,
   )
-  await expect(order).toHaveCount(4)
-  await expect(order.nth(2)).toContainText("Onix")
-  await expect(order.nth(2)).toContainText("Lv. 35")
-  await expect(order.nth(3)).toContainText("Steelix")
-  await expect(order.nth(3)).not.toContainText("→")
-  await expect(order.nth(3)).toContainText("Lv. 41")
+  await expect(order).toHaveCount(5)
+  await expect(order.nth(3)).toContainText("Onix")
+  await expect(order.nth(3)).toContainText("Lv. 35")
+  await expect(order.nth(4)).toContainText("Steelix")
+  await expect(order.nth(4)).not.toContainText("→")
+  await expect(order.nth(4)).toContainText("Lv. 41")
 
   // TR is uncapped; the scalers stay flat past their last anchor (TR 160).
   await setGrowth(page, { archetype: "veteran", peak: "200" })
@@ -152,11 +152,11 @@ test("grows each trainer with world progress and round-trips an exported experim
   if (!exportedPath) throw new Error("Export did not produce a file")
   await page.getByText("Scalers & experiment settings", { exact: true }).click()
   await page.getByRole("button", { name: "Reset all to catalog defaults", exact: true }).click()
-  await expect(order.nth(2)).toContainText("Golem")
+  await expect(order.nth(3)).toContainText("Golem")
   await page.getByLabel("Import experiment file", { exact: true }).setInputFiles(exportedPath)
-  await expect(order.nth(2)).toContainText("Onix")
+  await expect(order.nth(3)).toContainText("Onix")
   await page.reload()
-  await expect(order.nth(2)).toContainText("Onix")
+  await expect(order.nth(3)).toContainText("Onix")
   await expect(page.getByTestId("badge-count")).toHaveText("8")
   expect(errors).toEqual([])
 })
@@ -229,8 +229,9 @@ test("shows the selected trainer's milestones and a team level chart", async ({ 
   await expect(page.getByTestId("milestone-8")).toHaveText(/8\s*3rd slot \(Zubat\) joins/)
   await expect(page.getByTestId("milestone-40")).toHaveText(/40\s*4th slot \(Kabuto\) joins/)
   await expect(page.getByTestId("milestone-57")).toHaveText(/57\s*Onix → Steelix/)
-  await expect(page.getByTestId("milestone-151")).toHaveText(
-    /151\s*6th slot \(Aerodactyl\) ace joins/,
+  await expect(page.getByTestId("milestone-68")).toHaveText(/68\s*5th slot \(Omanyte\) joins/)
+  await expect(page.getByTestId("milestone-98")).toHaveText(
+    /98\s*6th slot \(Aerodactyl\) ace joins/,
   )
   await expect(timeline.last()).toHaveText(/159\s*peak TR 100/)
   await expect(timeline.first()).toHaveAttribute("aria-current", "step")
@@ -355,8 +356,8 @@ test("puts the top five by TR at the current world progress in the lineup, stron
   // Surge has reached his peak, the Burst Giovanni has just jumped to 50%, and the Legend Agatha
   // never grows.
   await expect(page.getByTestId("league-range")).toHaveText("TR 95 … 95")
-  await expect(page.getByTestId("league-match-1")).toContainText("TR 95 · Lv. 59 · 5 Pokémon")
-  await expect(page.getByTestId("league-match-5")).toContainText("TR 95 · Lv. 59 · 5 Pokémon")
+  await expect(page.getByTestId("league-match-1")).toContainText("TR 95 · Lv. 59 · 6 Pokémon")
+  await expect(page.getByTestId("league-match-5")).toContainText("TR 95 · Lv. 59 · 6 Pokémon")
   // At 16 badges (level cap Lv 75) the lineup is a little above the cap.
   await page.getByRole("button", { name: "Set 16 badges", exact: true }).click()
   await expect(page.getByTestId("league-range")).toHaveText("TR 130 … 132")
@@ -602,13 +603,14 @@ test("resolves each member's moves from the move pool, lists dormant entries and
   await page.goto("/#trainer-balance")
   const moves = (slot: number) => page.getByTestId(`moves-${slot}`).locator("li")
   // Brock at world progress 0. An entry without a from level goes only to a member whose current
-  // species learns it by level-up, from the learn level: the Onix ace takes Curse (it already knows
-  // Stealth Rock), and Geodude is below its Earthquake learn level, so it keeps its level-up moves.
+  // species or an earlier form learns it by level-up, from the learn level: the Onix ace claims
+  // Stealth Rock, which it already knows, and takes Curse; Geodude is below its Earthquake learn
+  // level, so it keeps its level-up moves.
   await expect(moves(1)).toHaveText([
     /^Curse\s*pool$/,
     /^Rock Tomb\s*level-up$/,
     /^Rage\s*level-up$/,
-    /^Stealth Rock\s*level-up$/,
+    /^Stealth Rock\s*pool$/,
   ])
   await expect(moves(2)).toHaveText([
     /^Rollout\s*level-up$/,
@@ -619,25 +621,28 @@ test("resolves each member's moves from the move pool, lists dormant entries and
   await expect(page.getByTestId("pool-source")).toContainText(
     "user-directed pool draft v1: hazards and sand walls",
   )
+  await expect(page.getByTestId("pool-status-1")).toHaveText("→ #1 Onix")
   await expect(page.getByTestId("pool-status-3")).toHaveText("→ #1 Onix")
   await expect(page.getByTestId("pool-status-2")).toHaveText("dormant")
   await expect(page.getByTestId("dormant-2")).toHaveText(
     /Sandstorm\s*from Lv 20\s*below from level Lv 20/,
   )
   await expect(page.getByTestId("dormant-5")).toHaveText(/Earthquake\s*below its learn level Lv 34/)
-  // Only Golem learns Heavy Slam, and Geodude is not Golem yet.
-  await expect(page.getByTestId("dormant-7")).toHaveText(/Heavy Slam\s*no one can learn it/)
-  // The pool editor says per entry whether a roster line learns it by level-up or it needs a
-  // from level.
+  // Golem learns Heavy Slam by level-up, but Geodude is not Golem yet; for Onix it is an egg move.
+  await expect(page.getByTestId("dormant-7")).toHaveText(
+    /Heavy Slam\s*egg move: needs a from level/,
+  )
+  // The pool editor names the earliest level-up learner (an earlier form counts), or says the
+  // entry needs a from level.
   await expect(page.getByTestId("pool-learning-5")).toHaveText(
-    "Level-up on the roster: arrives at the learn level",
+    "Level-up: Golem, earlier form (Geodude) at Lv 34",
   )
   await expect(page.getByTestId("pool-learning-2")).toHaveText(
-    "Level-up or TM/tutor learners from Lv 20",
+    "Any learner from Lv 20 (level-up: Steelix at Lv 52)",
   )
   await expect(page.getByTestId("milestone-6")).toContainText("Sandstorm wakes (Onix)")
-  // Golem learns Earthquake by level-up; once it leaves its default moveset, the pool returns it.
-  await expect(page.getByTestId("milestone-157")).toContainText("Earthquake wakes (Golem)")
+  // Graveler learns Earthquake through its earlier form Geodude (Lv 34).
+  await expect(page.getByTestId("milestone-61")).toContainText("Earthquake wakes (Graveler)")
 
   // A from level lets a TM learner take an entry, and holds an entry back until it.
   await page.getByLabel("Pool entry 5 from level", { exact: true }).fill("16")
@@ -646,7 +651,7 @@ test("resolves each member's moves from the move pool, lists dormant entries and
   await expect(page.getByRole("status")).toContainText("Updated Brock’s move pool.")
   await expect(page.getByTestId("pool-status-5")).toHaveText("→ #1 Onix")
   await expect(page.getByTestId("pool-learning-5")).toHaveText(
-    "Level-up or TM/tutor learners from Lv 16",
+    "Any learner from Lv 16 (level-up: Golem, earlier form (Geodude) at Lv 34)",
   )
   await expect(page.getByTestId("dormant-3")).toHaveText(
     /Curse\s*from Lv 20\s*below from level Lv 20/,
@@ -672,6 +677,13 @@ test("resolves each member's moves from the move pool, lists dormant entries and
   await expect(page.getByLabel("Pool entry 12 from level", { exact: true })).toHaveValue("40")
   await expect(page.getByTestId("pool-learning-12")).toHaveText("No roster line learns it")
   await expect(page.getByLabel("New pool move", { exact: true })).toHaveValue("")
+  // Spikes is only an egg move on Brock's lines, so it needs a from level too.
+  await page.getByLabel("New pool move", { exact: true }).fill("spikes")
+  await page.getByRole("button", { name: "Add to pool", exact: true }).click()
+  await expect(page.getByTestId("pool-learning-13")).toHaveText("Egg move: needs a from level")
+  await page.getByLabel("Pool entry 13 from level", { exact: true }).fill("20")
+  await page.getByRole("button", { name: "Apply move pool", exact: true }).click()
+  await expect(page.getByTestId("pool-learning-13")).toHaveText("Egg move: from Lv 20")
 
   // Pool order is identity: reorder and remove entries.
   await page.getByRole("button", { name: "Move pool entry 2 up", exact: true }).click()
@@ -691,7 +703,7 @@ test("edits the trainer, world and archetype scalers globally", async ({ page })
   await page.getByText("Scalers & experiment settings", { exact: true }).click()
   // Lance is TR 48 at world progress 0.
   await expect(page.getByTestId("size-lance")).toHaveText("4")
-  // Without the (44, 4) anchor, size ramps from (43, 3) to (70, 4): TR 48 rounds to 3.
+  // Without the (44, 4) anchor, size ramps from (43, 3) to (56, 4): TR 48 rounds to 3.
   await page.getByRole("button", { name: "Remove Team size anchor 7", exact: true }).click()
   await expect(page.getByTestId("size-lance")).toHaveText("3")
   await page.getByLabel("Team level anchor 1 value", { exact: true }).fill("30")

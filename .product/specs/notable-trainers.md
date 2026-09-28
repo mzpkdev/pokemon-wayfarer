@@ -169,7 +169,7 @@ Team level and team size are scalers as defined in
 | Scaler | Form | Range | Ceiling | Ceiling TR |
 | --- | --- | --- | --- | --- |
 | Team level (notable trainers) | interpolated | Lv 5 → 100 | Lv 100 | TR 160 (placeholder) |
-| Team size (notable trainers) | step | 1 → 6 | 6 | TR 96 (placeholder) |
+| Team size (notable trainers) | step | 1 → 6 | 6 | TR 71 (placeholder) |
 
 **Team level** has its own anchors (placeholder). Below TR 40 it is no longer a
 copy of the level cap curve: it starts lower, so early notable fights are fair.
@@ -183,12 +183,12 @@ level. The level cap itself is unchanged.
 ```
 
 **Team size** (step, placeholder): TR 0–10 → 1, 11–28 → 2, 29–43 → 3,
-44–70 → 4, 71–95 → 5, 96+ → 6.
+44–56 → 4, 57–70 → 5, 71+ → 6.
 
-| TR | 0 | 10 | 11 | 20 | 25 | 29 | 50 | 71 | 85 | 95 | 120 | 160 | 300 |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| teamLevel | 5 | 10 | 10 | 14 | 18 | 20 | 34 | 45 | 53 | 59 | 75 | 100 | 100 |
-| teamSize | 1 | 1 | 2 | 2 | 2 | 3 | 4 | 5 | 5 | 5 | 6 | 6 | 6 |
+| TR | 0 | 10 | 11 | 28 | 29 | 43 | 44 | 56 | 57 | 70 | 71 | 120 | 160 | 300 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| teamLevel | 5 | 10 | 10 | 20 | 20 | 30 | 30 | 37 | 37 | 45 | 45 | 75 | 100 | 100 |
+| teamSize | 1 | 1 | 2 | 2 | 3 | 3 | 4 | 4 | 5 | 5 | 6 | 6 | 6 | 6 |
 
 ## Rosters
 
@@ -268,10 +268,10 @@ levels and later roster slots; it never loses them.
 Each notable trainer authors **one ordered move pool**: a per-trainer list,
 separate from the roster, of the moves they like. An entry is a move plus an
 optional **from level**. Without one, the entry follows the natural schedule:
-it waits for the member's own level-up learn level. With one, it is a special
-move that any learner, TM/tutor included, gets from that level. There is no
-shared flag: an entry goes to at most one member, so a move listed twice can
-go to two members.
+it waits for the member's natural learn level. With one, it is a special
+move that any learner, TM/tutor and egg moves included, gets from that level.
+There is no shared flag: an entry goes to at most one member, so a move
+listed twice can go to two members.
 
 Resolution runs at battle start, after every member's species and level are
 resolved (stepping down included):
@@ -280,33 +280,42 @@ resolved (stepping down included):
    last four level-up moves learned by its level.
 2. Visit members **aces first, then fillers, each in list order**. For each
    member, walk the pool top to bottom and take every entry that is
-   unassigned, not already in its moveset, and eligible for the member's
-   **current species** at its level. Stop at four pool moves.
-   - **No from level:** the species learns the move **by level-up** and the
-     member's level ≥ that learn level. If the learnset lists the move at
-     several levels, the lowest counts; an evolution move (level 0) is
-     available whenever the species is present. A member that could get the
-     move only by TM/tutor can't take the entry.
-   - **With a from level:** the species learns the move by level-up at any
-     level or through its TM/tutor list, and the member's level ≥ the from
-     level.
-3. Pool moves fill empty move slots, then **replace the oldest level-up moves
-   first**, so the newest natural moves stay.
+   unassigned and eligible for the member at its level. Stop at four pool
+   moves.
+   - **Claim:** if the member already knows the entry's move from its
+     level-up moveset, it claims the entry: the entry counts toward its four
+     pool moves, and that move is protected from replacement.
+   - **Otherwise** the member takes the entry as a new pool move.
+3. Pool moves fill empty move slots, then **replace the oldest unprotected
+   level-up moves first**, so claimed moves and the newest natural moves stay.
 
-Pool order is identity: top entries reach the aces first. TM and tutor moves
-have no learn level, so they need a from level, and it alone decides their
-timing.
+**Eligibility.** A member can learn a move when its **current species or any
+earlier form in its evolution line** learns it by level-up, when its current
+species learns it by TM/tutor, or when it is an egg move of the line's base
+species. The **natural learn level** is the lowest level-up level across the
+current species and its earlier forms; an evolution move counts as level 0.
+
+- **No from level:** eligible only by level-up (own or earlier forms), once
+  the member's level ≥ the natural learn level. A member that could get the
+  move only by TM/tutor or as an egg move can't take the entry.
+- **With a from level:** eligible by any of the ways above, once the member's
+  level ≥ the from level.
+
+Pool order is identity: top entries reach the aces first. It also routes
+moves, so authors place the moves the ace can use above moves meant for a
+later member, and the ace fills up first. TM, tutor, and egg moves have no
+learn level, so they need a from level, and it alone decides their timing.
 
 - **Dormant entries.** An entry no current member takes is dormant: no member
   can learn it; it has no from level and the members learn it only by
-  TM/tutor (TM/tutor only — needs a from level); every eligible member is
+  TM/tutor or as an egg move (these need a from level); every eligible member is
   below its from level or, without one, its learn level; or every eligible
   member already knows it or has four pool moves. It wakes when a member that
   can use it joins, evolves, or reaches the level (Later, also when a traded
   Pokémon joins). Nothing is saved; resolution is a pure function of the team
   and the pool.
 - **Stepping down.** No special case: learnability is always checked against
-  the current species.
+  the current species and its earlier forms, never a later form.
 - **Randomizers.** When a species or learnset randomizer option applies, the
   pool is skipped and members keep the plain level-up moveset, as today;
   [Gym Leader scaling](gym-leader-scaling.md#overrides-and-enablement) owns
@@ -321,9 +330,11 @@ Earthquake, Rock Slide. His slot 1 ace picks first and takes the entries it is
 eligible for, up to four; Golem then takes from what is left. Two Earthquake
 entries let two members carry it. The Earthquake entries have no from level,
 so each waits until a member whose species learns Earthquake by level-up
-reaches that learn level; a member that could learn it only by TM never takes
-them. Stone Edge has a from level, so it waits until some member that can
-learn it at all, TM included, reaches Lv 40.
+reaches that learn level (an earlier form's level-up counts); a member that
+could learn it only by TM never takes them. If Golem already knows Rock Slide
+from its level-up moveset, it claims a Rock Slide entry and keeps the move.
+Stone Edge has a from level, so it waits until some member that can learn it
+at all, TM or egg move included, reaches Lv 40.
 
 ## Battle snapshot
 
@@ -349,7 +360,7 @@ TR, another trainer, or a random team.
 - Scalers: both pass the
   [scaler checks](player-trainer-rating.md#validation); team-level anchors
   equal the v0 level cap anchors from TR 40 up; team-size steps at 10/11,
-  28/29, 43/44, 70/71, and 95/96.
+  28/29, 43/44, 56/57, and 70/71.
 - Rosters: exactly six roster slots per trainer; offsets in −6..0; slot 1 at
   offset 0 (`teamSize(0)` is 1); slot 1 is an ace and each roster has one to
   three aces; valid species/forms; a warning for each slot
@@ -357,11 +368,13 @@ TR, another trainer, or a random team.
   reachable level and stage, stepped-down stages included.
 - Move pools: one ordered pool per trainer; every entry is a valid move; from
   levels are in 1–100; eligibility is checked against the member's current
-  species (without a from level, its level-up learnset at the lowest learn
-  level, evolution moves at level 0; with one, its level-up learnset at any
-  level or its TM/tutor list). A warning, not a failure, for each entry no
-  stage on the trainer's roster lines can learn, and for each entry without a
-  from level that every learner on those lines gets only by TM/tutor.
+  species and its earlier forms (without a from level, their level-up
+  learnsets at the natural learn level, evolution moves at level 0; with one,
+  also the current species' TM/tutor list and the base species' egg moves);
+  a move the member already knows claims its entry and is never replaced. A
+  warning, not a failure, for each entry no stage on the trainer's roster
+  lines can learn, and for each entry without a from level that every learner
+  on those lines gets only by TM/tutor or as an egg move.
 - Archetypes: each archetype passes the scaler checks, with anchors at world
   progress 0/40/80/120/160 (the Rival adds 20; the Legend has only 0 and 160), 0%
   at the first, and 100% at the last (Legend: 0% at both); values are
@@ -419,6 +432,8 @@ rules (placeholders tuned in the explorer):
   badges, and stays there until his peak TR of 170.
 - **Early fights.** At world progress 0 notable fights are small and near the
   player's level (Blue brings one Pokémon at Lv 5).
+- **Full teams.** Every notable trainer reaches a full team of six at their
+  peak TR: every peak TR is at least 71.
 
 The [explorer](../../devtools/ui/README.md#trainer-balance-explorer) is
 placeholder evidence and predicts species, sizes, and levels only. Playtesting

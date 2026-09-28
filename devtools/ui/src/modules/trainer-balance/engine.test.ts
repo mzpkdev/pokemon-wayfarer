@@ -36,6 +36,7 @@ import {
   milestoneEnd,
   milestoneText,
   milestones,
+  moveSource,
   poolLearning,
   playerRating,
   resolveMovePool,
@@ -183,14 +184,14 @@ describe("scalers", () => {
     expect(scale(anchors, 20, "step")).toBe(0)
   })
 
-  it("steps team size: 0–10 -> 1, 11–28 -> 2, 29–43 -> 3, 44–70 -> 4, 71–95 -> 5, 96+ -> 6", () => {
+  it("steps team size: 0–10 -> 1, 11–28 -> 2, 29–43 -> 3, 44–56 -> 4, 57–70 -> 5, 71+ -> 6", () => {
     const sizes = (trs: number[]) => trs.map((tr) => scale(DEFAULT_TEAM_SIZE, tr))
     expect(sizes([0, 5, 10])).toEqual([1, 1, 1])
     expect(sizes([11, 20, 28])).toEqual([2, 2, 2])
     expect(sizes([29, 35, 43])).toEqual([3, 3, 3])
-    expect(sizes([44, 70])).toEqual([4, 4])
-    expect(sizes([71, 95])).toEqual([5, 5])
-    expect(sizes([96, 160, 500])).toEqual([6, 6, 6])
+    expect(sizes([44, 50, 56])).toEqual([4, 4, 4])
+    expect(sizes([57, 63, 70])).toEqual([5, 5, 5])
+    expect(sizes([71, 96, 160, 500])).toEqual([6, 6, 6, 6])
   })
 })
 
@@ -242,20 +243,20 @@ describe("teams", () => {
     for (let size = 1; size <= 5; size += 1) expect(team(size)).not.toContain("Aerodactyl")
     expect(team(6)).toContain("Aerodactyl")
     expect(team(3)).toEqual(["Steelix", "Golem", "Crobat"])
-    // Steady Brock (25 → 100) reaches TR 96, the first TR at team size 6, at world progress 151:
-    // 25 + 75 × 151/160 = 95.78. At 150 he is TR 95 (25 + 70.31), still team size 5.
+    // Steady Brock (25 → 100) reaches TR 71, the first TR at team size 6, at world progress 98:
+    // 25 + 75 × 98/160 = 70.94. At 97 he is TR 70 (25 + 45.47), still team size 5.
     const record = catalog.find((entry) => entry.id === "brock")!
     const at = (world: number) => resolveTrainer(record, defaults, world, evolution)
-    const before = at(150)
-    const joined = at(151)
+    const before = at(97)
+    const joined = at(98)
     expect([before.tr, before.size, before.team.map((member) => member.species)]).toEqual([
-      95,
+      70,
       5,
       ["Steelix", "Golem", "Crobat", "Kabutops", "Omastar"],
     ])
-    // Team level at TR 96 is 50 + 16 × 25/40 = 60, so the Aerodactyl ace (offset 0) joins at Lv 60.
-    expect([joined.tr, joined.size, joined.teamLevel]).toEqual([96, 6, 60])
-    expect(joined.team[5]).toMatchObject({ slot: 6, species: "Aerodactyl", level: 60, isAce: true })
+    // Team level at TR 71 is 28 + 31 × 22/40 = 45.05, so the Aerodactyl ace (offset 0) joins at Lv 45.
+    expect([joined.tr, joined.size, joined.teamLevel]).toEqual([71, 6, 45])
+    expect(joined.team[5]).toMatchObject({ slot: 6, species: "Aerodactyl", level: 45, isAce: true })
     expect(at(400).size).toBe(6)
   })
 
@@ -449,20 +450,21 @@ describe("evolution", () => {
   })
 })
 
-/** Fixture learnsets: level-up [level, move] pairs in order, plus TM/tutor moves. */
+/** Fixture learnsets: level-up [level, move] pairs in order, plus TM/tutor and egg moves. */
 const learnsetsOf = (
-  species: Record<string, { levelUp: [number, string][]; teachable?: string[] }>,
+  species: Record<string, { levelUp: [number, string][]; teachable?: string[]; egg?: string[] }>,
 ): Learnsets => ({
   moves: new Set(
-    Object.values(species).flatMap(({ levelUp, teachable = [] }) => [
+    Object.values(species).flatMap(({ levelUp, teachable = [], egg = [] }) => [
       ...levelUp.map(([, move]) => move),
       ...teachable,
+      ...egg,
     ]),
   ),
   species: new Map(
-    Object.entries(species).map(([name, { levelUp, teachable = [] }]) => [
+    Object.entries(species).map(([name, { levelUp, teachable = [], egg = [] }]) => [
       name,
-      learnsetOf(levelUp, teachable),
+      learnsetOf(levelUp, teachable, egg),
     ]),
   ),
 })
@@ -479,7 +481,7 @@ describe("move pools", () => {
   // Each species knows four level-up moves by Lv 20: A1–A4, B1–B4, C1–C4.
   const basic = (
     prefix: string,
-    extra: { levelUp?: [number, string][]; teachable?: string[] } = {},
+    extra: { levelUp?: [number, string][]; teachable?: string[]; egg?: string[] } = {},
   ) => ({
     levelUp: [
       [1, `${prefix}1`],
@@ -489,6 +491,7 @@ describe("move pools", () => {
       ...(extra.levelUp ?? []),
     ] as [number, string][],
     teachable: extra.teachable ?? [],
+    egg: extra.egg ?? [],
   })
 
   it("gives the constructor's default moveset: the last four level-up moves by the level, oldest first", () => {
@@ -540,6 +543,7 @@ describe("move pools", () => {
         species: null,
         reason: "level",
         waitLevel: 40,
+        waitForm: null,
       },
     ])
     expect(dormantReasonText(low.pool[0]!)).toBe("below from level Lv 40")
@@ -596,11 +600,11 @@ describe("move pools", () => {
       waitLevel: 30,
     })
     expect(dormantReasonText(early.pool[0]!)).toBe("below its learn level Lv 30")
-    // From Lv 30 it is in reach; at Lv 34 it has left the default moveset, so the pool brings it back.
-    expect(resolveMovePool([member(1, "A", 30)], pool, data).pool[0]).toMatchObject({
-      slot: null,
-      reason: "taken",
-    })
+    // From Lv 30 it is in reach and already in the default moveset, so the member claims it.
+    const known = resolveMovePool([member(1, "A", 30)], pool, data)
+    expect(known.pool[0]).toMatchObject({ slot: 1, reason: null })
+    expect(movesOf(known, 1)).toEqual(["A2 level-up", "A3 level-up", "A4 level-up", "Late pool"])
+    // At Lv 34 it has left the default moveset, so the pool brings it back.
     expect(movesOf(resolveMovePool([member(1, "A", 34)], pool, data), 1)).toEqual([
       "Late pool",
       "L2 level-up",
@@ -663,25 +667,107 @@ describe("move pools", () => {
     expect(movesOf(evolved, 1)).toEqual(["E1 level-up", "Evo pool"])
   })
 
-  it("skips a move the member already knows, leaving the entry for another member", () => {
-    const data = learnsetsOf({ A: basic("A", { teachable: ["B1"] }), B: basic("B") })
+  it("claims a move the member already knows from level-up: it counts and is protected", () => {
+    const data = learnsetsOf({
+      A: basic("A", { teachable: ["B1", "P1", "P2", "P3", "P4"] }),
+      B: basic("B"),
+    })
     const result = resolveMovePool(
       [member(1, "A", 20), member(2, "B", 20, false)],
-      [{ move: "B1", fromLevel: 1 }, { move: "A1" }],
+      [{ move: "B1", fromLevel: 1 }, { move: "A1" }, { move: "A1" }],
       data,
     )
-    // A doesn't know B1 and takes it; A1 is already in A's level-up moveset and B can't learn it.
+    // A takes B1 and claims A1, which it knows from level-up; the second A1 has no other learner.
     expect(result.pool.map((entry) => [entry.slot, entry.reason])).toEqual([
+      [1, null],
       [1, null],
       [null, "taken"],
     ])
-    expect(dormantReasonText(result.pool[1]!)).toBe(
-      "taken: every learner already knows it or has four pool moves",
+    expect(movesOf(result, 1)).toEqual(["A1 pool", "B1 pool", "A3 level-up", "A4 level-up"])
+    expect(dormantReasonText(result.pool[2]!)).toBe(
+      "taken: every learner already has it or four pool moves",
     )
+    // A claimed move stays when later picks replace the oldest level-up moves, and the claim
+    // counts toward the four: the fifth eligible entry stays dormant.
+    const picks = ["P1", "P2", "P3", "P4"].map((move) => ({ move, fromLevel: 1 }))
+    const full = resolveMovePool([member(1, "A", 20)], [{ move: "A1" }, ...picks], data)
+    expect(movesOf(full, 1)).toEqual(["A1 pool", "P1 pool", "P2 pool", "P3 pool"])
+    expect(full.pool.at(-1)).toMatchObject({ move: "P4", slot: null, reason: "taken" })
+    // A claim needs an eligible entry: below its from level, A1 is not claimed.
+    const held = resolveMovePool([member(1, "A", 20)], [{ move: "A1", fromLevel: 30 }], data)
+    expect(held.pool[0]).toMatchObject({ slot: null, reason: "level" })
+    expect(movesOf(held, 1)).toEqual(["A1 level-up", "A2 level-up", "A3 level-up", "A4 level-up"])
     // Two copies of one move never both go to one member.
     const b1 = { move: "B1", fromLevel: 1 }
     const twice = resolveMovePool([member(1, "A", 20)], [b1, b1], data)
     expect(twice.pool.map((entry) => entry.slot)).toEqual([1, null])
+  })
+
+  it("learns by level-up through earlier forms, at the lowest learn level on the line", () => {
+    const line = evolutionIndex({ chains: { Big: ["Small", 20, "Big"] }, notFinal: [] })
+    const data = learnsetsOf({
+      Small: basic("S", {
+        levelUp: [
+          [30, "Old"],
+          [25, "Both"],
+        ],
+      }),
+      Big: basic("G", { levelUp: [[40, "Both"]] }),
+    })
+    const big = (level: number, pool: { move: string; fromLevel?: number }[]) =>
+      resolveMovePool([member(1, "Big", level)], pool, data, line)
+    // Big never learns Old itself: its earlier form Small does, at Lv 30.
+    const early = big(29, [{ move: "Old" }])
+    expect(early.pool[0]).toMatchObject({ reason: "level", waitLevel: 30, waitForm: "Small" })
+    expect(dormantReasonText(early.pool[0]!)).toBe(
+      "below its learn level: earlier form (Small) at Lv 30",
+    )
+    expect(big(30, [{ move: "Old" }]).pool[0]).toMatchObject({ slot: 1, species: "Big" })
+    // Both is Lv 25 on Small and Lv 40 on Big: the lowest counts.
+    expect(big(25, [{ move: "Both" }]).pool[0]?.slot).toBe(1)
+    // Without evolution data only the member's own species counts.
+    expect(resolveMovePool([member(1, "Big", 35)], [{ move: "Old" }], data).pool[0]).toMatchObject({
+      reason: "unlearnable",
+    })
+    expect(moveSource("Big", "Old", data, line)).toEqual({
+      kind: "level-up",
+      level: 30,
+      form: "Small",
+    })
+    expect(moveSource("Big", "Both", data, line)).toEqual({
+      kind: "level-up",
+      level: 25,
+      form: "Small",
+    })
+  })
+
+  it("takes a line's egg moves only with a from level, for every stage on the line", () => {
+    const line = evolutionIndex({ chains: { Big: ["Small", 20, "Big"] }, notFinal: [] })
+    const data = learnsetsOf({
+      Small: basic("S", { egg: ["Egg", "Both"] }),
+      Big: basic("G", { teachable: ["Both"] }),
+    })
+    const team = (level: number, pool: { move: string; fromLevel?: number }[]) =>
+      resolveMovePool([member(1, "Big", level)], pool, data, line)
+    // The egg moves are recorded on the line's first stage and count for Big too.
+    expect(moveSource("Big", "Egg", data, line)).toEqual({ kind: "egg" })
+    expect(moveSource("Small", "Egg", data, line)).toEqual({ kind: "egg" })
+    // TM/tutor comes before egg: Big learns Both by TM, Small only as an egg move.
+    expect(moveSource("Big", "Both", data, line)).toEqual({ kind: "tm" })
+    expect(moveSource("Small", "Both", data, line)).toEqual({ kind: "egg" })
+    const dormant = team(50, [{ move: "Egg" }])
+    expect(dormant.pool[0]).toMatchObject({ slot: null, reason: "egg" })
+    expect(dormantReasonText(dormant.pool[0]!)).toBe("egg move: needs a from level")
+    expect(team(29, [{ move: "Egg", fromLevel: 30 }]).pool[0]).toMatchObject({ reason: "level" })
+    expect(team(30, [{ move: "Egg", fromLevel: 30 }]).pool[0]).toMatchObject({ slot: 1 })
+    // A move some member learns by TM/tutor and another only as an egg move reads as TM/tutor only.
+    const mixed = resolveMovePool(
+      [member(1, "Big", 50), member(2, "Small", 10, false)],
+      [{ move: "Both" }],
+      data,
+      line,
+    )
+    expect(mixed.pool[0]).toMatchObject({ reason: "tm-only" })
   })
 
   it("fills empty move slots first, then replaces the oldest level-up moves", () => {
@@ -751,37 +837,37 @@ describe("move pools", () => {
         entry.species,
         entry.moves.map(({ move, source }) => `${move}${source === "pool" ? "*" : ""}`),
       ])
-    // An entry without a from level goes only to a member whose current species learns it by
-    // level-up, once it reaches the learn level. At world progress 0 Onix (the ace) takes Curse;
-    // it already knows Stealth Rock, and Geodude is below its Earthquake learn level.
+    // An entry without a from level goes only to a member whose current species or an earlier
+    // form learns it by level-up, once it reaches the learn level. At world progress 0 Onix (the
+    // ace) takes Curse and claims Stealth Rock, which it already knows; Geodude is below its
+    // Earthquake learn level.
     expect(moves(0)).toEqual([
-      ["Onix", ["Curse*", "Rock Tomb", "Rage", "Stealth Rock"]],
+      ["Onix", ["Curse*", "Rock Tomb", "Rage", "Stealth Rock*"]],
       ["Geodude", ["Rollout", "Magnitude", "Strength", "Rock Throw"]],
     ])
     const early = resolveTrainer(brock, defaults, 0, evolution, learnsets)
+    expect(early.pool[0]).toMatchObject({ move: "Stealth Rock", slot: 1, species: "Onix" })
     const reasons = new Map(early.dormant.map((entry) => [entry.move, dormantReasonText(entry)]))
-    expect(reasons.get("Stealth Rock")).toBe(
-      "taken: every learner already knows it or has four pool moves",
-    )
     // Sandstorm has a from level: Onix learns it by level-up only at Lv 52, Golem only by TM.
     expect(reasons.get("Sandstorm")).toBe("below from level Lv 20")
     expect(reasons.get("Earthquake")).toBe("below its learn level Lv 34")
-    // Only Golem and Crobat learn these, and neither has joined yet.
-    expect(reasons.get("Heavy Slam")).toBe("no one can learn it")
+    // Heavy Slam is an Onix egg move (Golem learns it by level-up, but has not joined yet).
+    expect(reasons.get("Heavy Slam")).toBe("egg move: needs a from level")
+    // Only Crobat learns Cross Poison, and it has not joined yet.
     expect(reasons.get("Cross Poison")).toBe("no one can learn it")
     const timeline = milestones(brock, defaults, evolution, learnsets).map(milestoneText)
     expect(timeline).toContain("6: Sandstorm wakes (Onix)")
+    // Graveler learns Earthquake from its earlier form Geodude (Lv 34).
+    expect(timeline).toContain("61: Earthquake wakes (Graveler)")
     expect(timeline).toContain(
       "76: Graveler → Golem, Golbat → Crobat, Heavy Slam wakes (Golem), Cross Poison wakes (Crobat)",
     )
-    // Golem learns Earthquake by level-up; once it leaves its default moveset, the pool brings it back.
-    expect(timeline).toContain("157: Earthquake wakes (Golem)")
     // The pool editor's hint reads every stage on the roster lines.
     const learning = (move: string) => poolLearning(move, brock.roster, evolution, learnsets)
     expect([learning("Earthquake"), learning("Toxic"), learning("Iron Defense")]).toEqual([
-      "level-up",
-      "tm-only",
-      "unlearnable",
+      { kind: "level-up", species: "Golem", form: "Geodude", level: 34 },
+      { kind: "tm-only" },
+      { kind: "unlearnable" },
     ])
     // Without learnsets nothing is assigned, so nothing wakes.
     expect(milestones(brock, defaults, evolution).map(milestoneText).join()).not.toContain("wakes")
@@ -934,13 +1020,13 @@ describe("milestones", () => {
     )!
     expect([steelix.worldProgress, steelix.tr, steelix.teamLevel]).toEqual([57, 52, 35])
     expect(resolveTrainer(record("brock"), defaults, 56, evolution).team[0]?.species).toBe("Onix")
-    // TR 96 (team size 6) at world progress 151 brings in the slot-6 Aerodactyl ace at team level 60.
+    // TR 71 (team size 6) at world progress 98 brings in the slot-6 Aerodactyl ace at team level 45.
     expect(
       brock.find((m) => m.events.some((e) => e.kind === "join" && e.species === "Aerodactyl")),
     ).toMatchObject({
-      worldProgress: 151,
-      tr: 96,
-      teamLevel: 60,
+      worldProgress: 98,
+      tr: 71,
+      teamLevel: 45,
       events: [{ kind: "join", slot: 6, species: "Aerodactyl", isAce: true }],
     })
     // 25 + 75 × 159/160 = 99.53 rounds up to peak TR 100.
@@ -957,10 +1043,10 @@ describe("milestones", () => {
       "40: 4th slot (Kabuto) joins",
       "49: team level Lv 32 drops below the level cap Lv 33",
       "57: Onix → Steelix",
+      "68: 5th slot (Omanyte) joins",
       "76: Graveler → Golem, Golbat → Crobat",
-      "85: Kabuto → Kabutops",
-      "98: 5th slot (Omastar) joins",
-      "151: 6th slot (Aerodactyl) ace joins",
+      "85: Kabuto → Kabutops, Omanyte → Omastar",
+      "98: 6th slot (Aerodactyl) ace joins",
       "159: peak TR 100",
     ])
   })
@@ -974,10 +1060,10 @@ describe("milestones", () => {
       "28: team level Lv 25 passes the level cap Lv 24",
       "35: Eevee → Umbreon",
       "36: 4th slot (Nidorino) joins",
+      "48: 5th slot (Scyther) joins",
       "49: Pidgeotto → Pidgeot, Nidorino → Nidoking",
-      "55: Kadabra → Alakazam",
-      "61: 5th slot (Scizor) joins",
-      "86: 6th slot (Arcanine) ace joins",
+      "55: Kadabra → Alakazam, Scyther → Scizor",
+      "61: 6th slot (Arcanine) ace joins",
       "160: peak TR 170",
     ])
   })
@@ -1351,6 +1437,25 @@ describe("placeholder balance targets", () => {
     expect(blue(40).tr).toBe(49)
   })
 
+  it("gives every notable trainer a full team of six at their peak TR", () => {
+    for (const record of catalog) {
+      const settings = defaults.trainers[record.id]!
+      expect([record.id, teamSizeFor(defaults, settings.peakTR)]).toEqual([record.id, 6])
+      const peak = resolveTrainer(
+        record,
+        defaults,
+        milestoneEnd(defaults, settings.archetype),
+        evolution,
+      )
+      expect([record.id, peak.tr, peak.size, peak.team.length]).toEqual([
+        record.id,
+        settings.peakTR,
+        6,
+        6,
+      ])
+    }
+  })
+
   it("keeps Blue about 10 ahead of the player from world progress 40 until his peak", () => {
     const record = catalog.find((entry) => entry.id === "blue")!
     for (let world = 40; world <= 160; world += 1) {
@@ -1592,6 +1697,20 @@ describe("catalog", () => {
     expect(learnsets.moves.has("Feint Attack")).toBe(true)
   })
 
+  it("records each line's egg moves on its first stage, from the species its Egg hatches as", () => {
+    const egg = (species: string) => [...learnsets.species.get(species)!.egg]
+    for (const [species, line] of evolution.lines)
+      if (line[0]?.species !== species) expect([species, egg(species)]).toEqual([species, []])
+    // Dratini, Feebas and Meowth lay their own Eggs.
+    expect(egg("Dratini")).toContain("Extreme Speed")
+    expect(egg("Feebas")).toContain("Mirror Coat")
+    expect(egg("Meowth")).toContain("Foul Play")
+    // A Pikachu Egg hatches as Pichu, so the Pikachu line has Pichu's egg moves.
+    expect(egg("Pikachu")).toEqual(expect.arrayContaining(["Fake Out", "Wish", "Encore"]))
+    // Egg moves count for later stages: Dragonite learns Extreme Speed as an egg move.
+    expect(moveSource("Dragonite", "Extreme Speed", learnsets, evolution)).toEqual({ kind: "egg" })
+  })
+
   it("uses the user-directed pool draft: 8–12 ordered entries, from levels only where needed", () => {
     const brock = catalog.find((record) => record.id === "brock")!
     expect(brock.movePoolSource).toBe(
@@ -1618,9 +1737,45 @@ describe("catalog", () => {
       for (const entry of record.movePool) {
         const learning = poolLearning(entry.move, record.roster, evolution, learnsets)
         const where = `${record.id} ${entry.move}`
-        expect(learning, where).not.toBe("unlearnable")
-        if (learning === "tm-only") expect(entry.fromLevel, where).toBeDefined()
+        expect(learning.kind, where).not.toBe("unlearnable")
+        if (learning.kind !== "level-up") expect(entry.fromLevel, where).toBeDefined()
       }
+    }
+  })
+
+  it("restores the draft moves that earlier forms and egg moves make legal", () => {
+    const pool = (id: string) => catalog.find((record) => record.id === id)!.movePool
+    const entry = (id: string, move: string) => pool(id).find((item) => item.move === move)
+    // Level-up on an earlier form needs no from level: Meowth Lv 30, Misdreavus Lv 46, Shroomish Lv 40.
+    expect(entry("giovanni", "Pay Day")).toEqual({ move: "Pay Day" })
+    expect(entry("morty", "Perish Song")).toEqual({ move: "Perish Song" })
+    expect(entry("brawly", "Spore")).toEqual({ move: "Spore" })
+    // Egg moves take a from level by tier.
+    expect(entry("lance", "Extreme Speed")).toEqual({ move: "Extreme Speed", fromLevel: 30 })
+    expect(entry("wallace", "Mirror Coat")).toEqual({ move: "Mirror Coat", fromLevel: 30 })
+    const persian = resolveTrainer(
+      catalog.find((record) => record.id === "giovanni")!,
+      defaults,
+      80,
+      evolution,
+      learnsets,
+    ).team.find((member) => member.species === "Persian")!
+    expect(persian.moves).toContainEqual({ move: "Pay Day", source: "pool" })
+  })
+
+  it("routes Lance's gimmick moves by pool order: Hyper Beam on Dragonite, Fire Blast on Charizard", () => {
+    const lance = catalog.find((record) => record.id === "lance")!
+    const holder = (world: number, move: string) =>
+      resolveTrainer(lance, defaults, world, evolution, learnsets).team.find((member) =>
+        member.moves.some((known) => known.move === move && known.source === "pool"),
+      )?.authoredSpecies
+    for (const world of [80, 120, 160]) expect(holder(world, "Fire Blast")).toBe("Charizard")
+    for (const world of [120, 160]) {
+      const ace = resolveTrainer(lance, defaults, world, evolution, learnsets).team[0]!
+      expect(ace.species).toBe("Dragonite")
+      expect(ace.moves.map((move) => move.move)).toEqual(
+        expect.arrayContaining(["Hyper Beam", "Extreme Speed"]),
+      )
     }
   })
 

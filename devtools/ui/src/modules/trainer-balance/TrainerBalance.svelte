@@ -792,12 +792,14 @@
       <p class="hint" data-testid="pool-rule">
         Each member starts from its level-up moves (the last {MAX_MOVES} learned by its level). Then the
         aces, then the fillers, each in list order, walk the pool top to bottom and take every unassigned
-        entry they are eligible for and don't already know, up to {MAX_MOVES}. An entry without a
-        from level goes only to a member whose current species learns it by level-up, once it
-        reaches the lowest learn level (evolution moves at once); a TM/tutor-only move needs a from
-        level. An entry with a from level goes to any level-up or TM/tutor learner from that level.
-        Pool moves fill empty slots, then replace the oldest level-up moves. An entry goes to one
-        member; list a move twice for two.
+        entry they are eligible for, up to {MAX_MOVES}; a move a member already knows from level-up
+        is claimed (it counts and stays). An entry without a from level goes only to a member whose
+        current species or an earlier form learns it by level-up, once it reaches the lowest such
+        learn level (evolution moves at once); a TM/tutor or egg move needs a from level. An entry
+        with a from level goes to any learner (level-up, TM/tutor or the line's egg moves) from that
+        level. Pool moves fill empty slots, then replace the oldest unclaimed level-up moves. An
+        entry goes to one member; list a move twice for two, and put an ace's own moves above moves
+        meant for later members.
       </p>
 
       <details class="reference-panel">

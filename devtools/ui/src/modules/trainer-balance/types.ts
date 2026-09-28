@@ -41,9 +41,10 @@ export type ScalerKind = "interpolated" | "step"
 
 /**
  * One move pool entry: a move the trainer likes, and an optional from level. Without one, a
- * member takes it only if its current species learns the move by level-up, once it reaches the
- * lowest learn level; with one, a level-up or TM/tutor learner takes it from that level. An
- * entry goes to at most one member; list a move twice to let two members carry it.
+ * member takes it only if its current species or an earlier form of its line learns the move by
+ * level-up, once it reaches the lowest such learn level; with one, any learner (that level-up,
+ * its species' TM/tutor list, or its line's egg moves) takes it from that level. An entry goes
+ * to at most one member; list a move twice to let two members carry it.
  */
 export type PoolEntry = { move: string; fromLevel?: number }
 
@@ -98,6 +99,11 @@ export type LearnsetData = {
       levelUp: number[]
       /** The TM/tutor (teachable) list. */
       teachable: number[]
+      /**
+       * On a line's first stage only: the egg moves of the species the line's Egg hatches as
+       * (e.g. Pichu for Pikachu).
+       */
+      egg?: number[]
     }
   >
 }
@@ -132,14 +138,18 @@ export type Experiment = {
 }
 /** Player progress. Its player TR is the world progress notable trainers grow with. */
 export type WorldPoint = { badges: number }
-/** One resolved move: from the move pool or the default level-up moveset. */
+/**
+ * One resolved move: from the move pool (a level-up move a pool entry claims counts as a pool
+ * move) or the default level-up moveset.
+ */
 export type ResolvedMove = { move: string; source: "pool" | "level-up" }
 /**
  * Why a pool entry is dormant: no current member can learn it; it has no from level and current
- * members learn it only by TM/tutor; every eligible member is below its from level (or, without
- * one, its learn level); or every eligible member already knows it or has four pool moves.
+ * members learn it only by TM/tutor, or only as an egg move; every eligible member is below its
+ * from level (or, without one, its learn level); or every eligible member already has it or four
+ * pool moves.
  */
-export type DormantReason = "unlearnable" | "tm-only" | "level" | "taken"
+export type DormantReason = "unlearnable" | "tm-only" | "egg" | "level" | "taken"
 /** A pool entry at one team: the member that took it, or why it is dormant. */
 export type PoolStatus = {
   /** 0-based position in the pool. */
@@ -153,6 +163,11 @@ export type PoolStatus = {
   reason: DormantReason | null
   /** For a "level" entry, the lowest level an eligible member would need; else null. */
   waitLevel: number | null
+  /**
+   * For a "level" entry without a from level, the earlier form whose level-up learnset sets
+   * waitLevel, when it is not the member's current species; else null.
+   */
+  waitForm: string | null
 }
 export type TeamMember = RosterSlot & {
   /** 1-based roster position. */

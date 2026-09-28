@@ -195,6 +195,28 @@ test("learnsets are read from the preprocessed game data for the Wayfarer build"
   assert.equal(data.learnsets.SPECIES_ZUBAT.earthquake, false)
 })
 
+test("egg moves are read from egg_moves.h through each species' species_info entry", () => {
+  const egg = run(
+    `(lambda result: {token: value["egg"] for token, value in result[2].items()})(module.load_learnsets(args))`,
+    ["SPECIES_DRATINI", "SPECIES_DRAGONITE", "SPECIES_PIKACHU", "SPECIES_PICHU"],
+  )
+  assert.ok(egg.SPECIES_DRATINI.includes("MOVE_EXTREME_SPEED"))
+  // Evolved species and Pikachu have no egg move list of their own; Pichu does.
+  assert.deepEqual(egg.SPECIES_DRAGONITE, [])
+  assert.deepEqual(egg.SPECIES_PIKACHU, [])
+  assert.ok(egg.SPECIES_PICHU.includes("MOVE_WISH"))
+})
+
+test("a line's Egg hatches as the root of its evolution tree, babies included", () => {
+  assert.deepEqual(
+    run(
+      "(lambda evolutions: [module.egg_species(token, evolutions[1]) for token in args])(module.load_evolutions())",
+      ["SPECIES_RAICHU", "SPECIES_PIKACHU", "SPECIES_DRAGONITE", "SPECIES_SNORLAX", "SPECIES_ONIX"],
+    ),
+    ["SPECIES_PICHU", "SPECIES_PICHU", "SPECIES_DRATINI", "SPECIES_MUNCHLAX", "SPECIES_ONIX"],
+  )
+})
+
 test("the default moveset keeps the last four level-up moves, skipping evolution and known moves", () => {
   const learnset = [
     [0, "EVOLVE"],
@@ -248,19 +270,21 @@ test("move pool validation requires known moves and from levels 1-100", () => {
   )
 })
 
-test("the pool warnings flag unlearnable entries and TM/tutor-only entries without a from level", () => {
+test("the pool warnings flag unlearnable entries and TM/tutor or egg entries without a from level", () => {
   const pool = [
     { move: "Earthquake" },
     { move: "Toxic" },
     { move: "Toxic", fromLevel: 30 },
+    { move: "Spikes" },
     { move: "Sky Attack" },
   ]
+  // Toxic is a TM move and Spikes an egg move: both are learnable, but not by level-up.
   assert.deepEqual(
     run("module.pool_warnings(args[0], set(args[1]), set(args[2]))", [
       pool,
       ["Earthquake"],
-      ["Earthquake", "Toxic"],
+      ["Earthquake", "Toxic", "Spikes"],
     ]),
-    [["Sky Attack"], ["Toxic"]],
+    [["Sky Attack"], ["Toxic", "Spikes"]],
   )
 })
