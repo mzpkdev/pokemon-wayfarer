@@ -50,6 +50,46 @@ export type PoolEntry = { move: string; fromLevel?: number }
 
 /** A notable trainer's home region: a league location whose location regions include it counts the trainer at home. */
 export type HomeRegion = "Kanto" | "Johto" | "Hoenn"
+/**
+ * A notable trainer's play style: their battle identity, exactly one per trainer. Each adds its AI
+ * flags on top of the Basic bundle (Trainer AI).
+ */
+export type PlayStyle =
+  | "gambler"
+  | "bomber"
+  | "sweeper"
+  | "field_marshal"
+  | "hexer"
+  | "turtle"
+  | "brawler"
+  | "tactician"
+/** An engine AI flag, by its display name (game/include/constants/battle_ai.h). */
+export type AiFlag =
+  | "Check Bad Move"
+  | "Try To Faint"
+  | "Check Viability"
+  | "Force Setup First Turn"
+  | "Risky"
+  | "Try To 2HKO"
+  | "Double Battle"
+  | "HP Aware"
+  | "Powerful Status"
+  | "Will Suicide"
+  | "Prefer Status Moves"
+  | "Stall"
+  | "Smart Switching"
+  | "Ace Pokemon"
+  | "Omniscient"
+  | "Smart Mon Choices"
+  | "Conservative"
+  | "Double Ace Pokemon"
+  | "Weigh Ability Prediction"
+  | "Prefer Highest Damage Move"
+  | "Predict Switch"
+  | "Predict Incoming Mon"
+  | "Predict Move"
+  | "Assume STAB"
+  | "Assume Status Moves"
 /** The leagues, in the standard entry sequence. */
 export type League = "Indigo" | "Sevii Masters" | "Hoenn"
 
@@ -65,6 +105,10 @@ export type TrainerRecord = {
   traveller: boolean
   /** Aloof: won't join a league whose base lineup is well below their level (only the lineup rule reads it). */
   aloof: boolean
+  /** The authored play style (Trainer AI). */
+  playStyle: PlayStyle
+  /** The boss flag: Omniscient AI, authored (Lance only in v0). */
+  bossOmniscient: boolean
   /** A duo is two leaders sharing one entry, fought as a double battle. */
   role: "Gym Leader" | "Gym Leader duo" | "Elite Four" | "Champion"
   /** Fought as a double battle (the duo's Pokémon come from the shared roster in order). */
@@ -135,11 +179,12 @@ export type TrainerSettings = {
   homeRegion: HomeRegion
   traveller: boolean
   aloof: boolean
+  playStyle: PlayStyle
 }
 /** A scaler anchor: [TR, value]. */
 export type Anchor = [number, number]
 export type Experiment = {
-  version: 16
+  version: 17
   /** Team level by TR: linear between anchors, halves up, flat past the last. */
   teamLevel: Anchor[]
   /** Team size by TR, same rules; paired anchors make it a step table. */
@@ -216,7 +261,23 @@ export type ResolvedTrainer = {
   dormant: PoolStatus[]
   /** Roster slots authored (v0 requires 6). */
   rosterLength: number
+  /** The AI flags this battle writes, from play style, TR, the team's aces and the boss flag. */
+  ai: ResolvedAi
   warnings: string[]
+}
+/** One AI skill tier: a step of the AI skill scaler over trainer TR. */
+export type AiSkillTier = { tier: number; name: string; fromTR: number; flags: readonly AiFlag[] }
+/**
+ * A trainer's resolved AI flags for one battle: Basic, then the play style, the AI skill tier at
+ * their TR, ace protection from the resolved team's aces, the boss flag, and the engine's
+ * double-battle flag; in engine bit order.
+ */
+export type ResolvedAi = {
+  playStyle: PlayStyle
+  skill: AiSkillTier
+  /** Aces in the resolved team (at least 1: roster slot 1 is an ace). */
+  aces: number
+  flags: AiFlag[]
 }
 /** Where a Gym Leader sits against the player TR: more than 10 below, within 10, or more than 10 above. */
 export type LadderMark = "below" | "near" | "above"

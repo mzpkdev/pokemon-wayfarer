@@ -78,9 +78,10 @@ Write the resolved moves through the existing constructor; randomizer options
 keep their precedence ([overrides](#overrides-and-enablement)). Validate
 content rather than silently dropping a member.
 
-Copy roster-authored items, abilities, natures, IVs/EVs, trainer inventory,
-and AI through the existing constructor; the model never synthesizes those
-fields.
+Copy roster-authored items, abilities, natures, IVs/EVs, and trainer
+inventory through the existing constructor; the model never synthesizes those
+fields. The AI flags are not copied from the encounter's authored AI line:
+[Trainer AI](trainer-ai.md) resolves them from the battle snapshot.
 
 Use member identity for member-data lookups, `GeneratePartyHash`, and retained
 randomizer/personality inputs; use output positions for party writes and active
@@ -94,8 +95,12 @@ Build and validate the full battle snapshot before allocating opponent members.
 Use its actual count for construction, returned party size, opening slots,
 switch candidates, send-out order, and gimmick reconstruction; clear unused
 slots and reject references to absent members. The derived battle order does
-not force switches or replacement AI; reject incompatible ace-lock flags in content
-validation.
+not force switches. The resolved AI flags, ace protection included, come from
+[Trainer AI](trainer-ai.md): written once per battle through the engine's
+per-battle override point after construction and the standard flag setup
+([runtime](trainer-ai.md#runtime-and-the-override-point)). Content validation
+rejects an enrolled encounter's authored AI line that would reorder the party
+([flag hazards](trainer-ai.md#flag-hazards)).
 
 Preserve each encounter's prize-money basis, including Giovanni's special path,
 independently of team size and source levels. Experience follows the actual
@@ -121,7 +126,7 @@ another trainer, or a random team.
 Report all 24 badge identities (23 singles leaders and the Tate & Liza duo):
 canonical/source identity, TR, roster version,
 member roster slots, output order, count, species, levels, moves, items, and
-prize-money basis. Check:
+prize-money basis, and the resolved AI flags. Check:
 
 1. The model obligations in
    [Notable trainers](notable-trainers.md#validation) for
@@ -153,6 +158,7 @@ and playtest acceptance separately from implementation status.
 ## References
 
 - [Notable trainers](notable-trainers.md)
+- [Trainer AI](trainer-ai.md)
 - [Today's Gym scaler switch](../../game/include/config/trainer_party_scaling.h)
 - [Today's source inventory generator](../../game/tools/trainer_scaling/gym_leaders.py)
 - [Trainer party construction](../../game/src/battle_main.c)

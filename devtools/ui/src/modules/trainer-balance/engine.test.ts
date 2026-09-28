@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest"
 
 import catalogData from "./catalog.json"
 import {
+  AI_FLAG_BITS,
+  AI_SKILL_TIERS,
   ALOOF_MARGIN,
   ARCHETYPES,
   ARCHETYPE_KIND,
@@ -16,7 +18,11 @@ import {
   MAX_BADGES,
   MILESTONE_SCAN_LIMIT,
   NO_LEARNSETS,
+  PLAY_STYLES,
+  PLAY_STYLE_INFO,
   WORLD_PROGRESS_CHECKPOINTS,
+  aceProtection,
+  aiSkillTier,
   badgeMatch,
   badgeMatchText,
   badgeTR,
@@ -44,6 +50,7 @@ import {
   poolLearning,
   rankLeague,
   playerRating,
+  resolveAi,
   resolveMovePool,
   resolveTrainer,
   rosterGaps,
@@ -62,12 +69,14 @@ import {
   type Learnsets,
 } from "./engine.js"
 import type {
+  AiFlag,
   Archetype,
   Catalog,
   Experiment,
   RosterSlot,
   TrainerRecord,
   HomeRegion,
+  PlayStyle,
   WorldPoint,
 } from "./types.js"
 
@@ -95,6 +104,8 @@ const trainer = (
     homeRegion?: HomeRegion
     traveller?: boolean
     aloof?: boolean
+    playStyle?: PlayStyle
+    bossOmniscient?: boolean
   } = {},
 ): TrainerRecord => ({
   id,
@@ -103,6 +114,8 @@ const trainer = (
   homeRegion: growth.homeRegion ?? "Kanto",
   traveller: growth.traveller ?? false,
   aloof: growth.aloof ?? false,
+  playStyle: growth.playStyle ?? "tactician",
+  bossOmniscient: growth.bossOmniscient ?? false,
   role: "Gym Leader",
   doubleBattle: false,
   leagueEligible: true,
@@ -1819,6 +1832,132 @@ describe("league lineups", () => {
   })
 })
 
+describe("trainer AI", () => {
+  const basic: AiFlag[] = ["Check Bad Move", "Try To Faint", "Check Viability"]
+  const flags = (
+    tr: number,
+    aces = 1,
+    playStyle: PlayStyle = "tactician",
+    extra: { bossOmniscient?: boolean; doubleBattle?: boolean } = {},
+  ) =>
+    resolveAi({
+      playStyle,
+      tr,
+      aces,
+      bossOmniscient: extra.bossOmniscient ?? false,
+      doubleBattle: extra.doubleBattle ?? false,
+    }).flags
+
+  it("steps the AI skill tier at TR 30, 70 and 110", () => {
+    expect(AI_SKILL_TIERS.map((tier) => [tier.fromTR, tier.name])).toEqual([
+      [0, "None"],
+      [30, "Aware"],
+      [70, "Smart"],
+      [110, "Predictive"],
+    ])
+    for (const [tr, tier] of [
+      [0, 0],
+      [29, 0],
+      [30, 1],
+      [69, 1],
+      [70, 2],
+      [109, 2],
+      [110, 3],
+      [500, 3],
+    ] as const)
+      expect(aiSkillTier(tr).tier).toBe(tier)
+    const tactician: AiFlag[] = [...basic, "HP Aware", "Ace Pokemon"]
+    const sorted = (list: AiFlag[]) => list.toSorted((a, b) => AI_FLAG_BITS[a] - AI_FLAG_BITS[b])
+    const aware = sorted([...tactician, "Smart Mon Choices", "Assume STAB"])
+    const smart = sorted([
+      ...aware,
+      "Smart Switching",
+      "Assume Status Moves",
+      "Weigh Ability Prediction",
+    ])
+    const predictive = sorted([...smart, "Predict Switch", "Predict Incoming Mon", "Predict Move"])
+    expect(flags(29)).toEqual(sorted(tactician))
+    expect(flags(30)).toEqual(aware)
+    expect(flags(69)).toEqual(aware)
+    expect(flags(70)).toEqual(smart)
+    expect(flags(109)).toEqual(smart)
+    expect(flags(110)).toEqual(predictive)
+  })
+
+  it("protects the last ace for one ace and the last two for two or more", () => {
+    expect(aceProtection(1)).toBe("Ace Pokemon")
+    expect(aceProtection(2)).toBe("Double Ace Pokemon")
+    expect(aceProtection(3)).toBe("Double Ace Pokemon")
+    // Slot 1 is always an ace, so a resolved team never has none.
+    expect(() => aceProtection(0)).toThrow("at least one ace")
+    expect(flags(0, 1)).toContain("Ace Pokemon")
+    expect(flags(0, 1)).not.toContain("Double Ace Pokemon")
+    for (const aces of [2, 3]) {
+      expect(flags(0, aces)).toContain("Double Ace Pokemon")
+      expect(flags(0, aces)).not.toContain("Ace Pokemon")
+    }
+  })
+
+  it("counts the resolved team's aces, not the roster's", () => {
+    // Aces in slots 1 and 4: one ace until the team reaches four members.
+    const record = {
+      ...trainer("aces", 0),
+      roster: six.map((name, index) => slot(name, index === 0 || index === 3 ? 0 : -2)),
+    }
+    const size = (tr: number) =>
+      resolveTrainer(
+        { ...record, startTR: tr, peakTR: tr },
+        experimentWith([{ ...record, startTR: tr, peakTR: tr }]),
+        0,
+        NO_EVOLUTION,
+      )
+    expect(size(43).size).toBe(3)
+    expect(size(43).ai).toMatchObject({ aces: 1 })
+    expect(size(43).ai.flags).toContain("Ace Pokemon")
+    expect(size(44).size).toBe(4)
+    expect(size(44).ai).toMatchObject({ aces: 2 })
+    expect(size(44).ai.flags).toContain("Double Ace Pokemon")
+  })
+
+  it("adds Omniscient only for a boss and keeps the double-battle flag", () => {
+    expect(flags(0)).not.toContain("Omniscient")
+    expect(flags(0, 1, "tactician", { bossOmniscient: true })).toContain("Omniscient")
+    expect(flags(0)).not.toContain("Double Battle")
+    expect(flags(0, 1, "field_marshal", { doubleBattle: true })).toContain("Double Battle")
+  })
+
+  it("gives each style its flags on top of Basic, never Risky with Conservative or Stall", () => {
+    expect(PLAY_STYLES).toHaveLength(8)
+    expect(
+      Object.fromEntries(PLAY_STYLES.map((style) => [style, PLAY_STYLE_INFO[style].flags])),
+    ).toEqual({
+      gambler: ["Risky"],
+      bomber: ["Risky", "Will Suicide"],
+      sweeper: ["Force Setup First Turn"],
+      field_marshal: ["Powerful Status"],
+      hexer: ["Prefer Status Moves", "HP Aware"],
+      turtle: ["Conservative", "HP Aware"],
+      brawler: ["Try To 2HKO", "Prefer Highest Damage Move"],
+      tactician: ["HP Aware"],
+    })
+    for (const style of PLAY_STYLES)
+      for (const tr of [0, 30, 70, 110])
+        for (const aces of [1, 2, 3])
+          for (const bossOmniscient of [false, true]) {
+            const resolved = flags(tr, aces, style, { bossOmniscient })
+            for (const flag of [...basic, ...PLAY_STYLE_INFO[style].flags])
+              expect(resolved).toContain(flag)
+            expect(resolved.includes("Risky") && resolved.includes("Conservative")).toBe(false)
+            expect(resolved).not.toContain("Stall")
+            // Other styles' own flags never leak in.
+            const own = new Set<AiFlag>(PLAY_STYLE_INFO[style].flags)
+            for (const other of PLAY_STYLES)
+              for (const flag of PLAY_STYLE_INFO[other].flags)
+                if (!own.has(flag) && flag !== "HP Aware") expect(resolved).not.toContain(flag)
+          }
+  })
+})
+
 describe("catalog", () => {
   it("ships 38 entries (37 characters and the Tate & Liza duo) with placeholder TRs and valid rosters of at most six", () => {
     expect(catalog).toHaveLength(38)
@@ -1892,6 +2031,72 @@ describe("catalog", () => {
     expect(growth("wallace")).toEqual([48, "star", 190])
     for (const world of [0, 80, 160, 300])
       expect(trainerRating(defaults, defaults.trainers.lance!, world)).toBe(200)
+  })
+
+  it("assigns the §18 play styles and the boss flag", () => {
+    const named = (style: PlayStyle) =>
+      catalog.filter((record) => record.playStyle === style).map((record) => record.name)
+    expect(Object.fromEntries(PLAY_STYLES.map((style) => [style, named(style)]))).toEqual({
+      gambler: ["Lt. Surge", "Blaine", "Flannery", "Winona"],
+      bomber: ["Wattson"],
+      sweeper: ["Lorelei", "Bugsy", "Clair", "Norman", "Sidney", "Drake"],
+      field_marshal: ["Brock", "Misty", "Falkner", "Will", "Tate & Liza", "Steven"],
+      hexer: ["Erika", "Janine", "Sabrina", "Agatha", "Koga", "Morty", "Karen", "Juan", "Phoebe"],
+      turtle: ["Whitney", "Jasmine", "Pryce", "Roxanne", "Glacia", "Wallace"],
+      brawler: ["Giovanni", "Bruno", "Chuck", "Brawly"],
+      tactician: ["Blue", "Lance"],
+    })
+    expect(catalog.filter((record) => record.bossOmniscient).map((record) => record.name)).toEqual([
+      "Lance",
+    ])
+    for (const record of catalog)
+      expect(defaults.trainers[record.id]!.playStyle).toBe(record.playStyle)
+  })
+
+  it("resolves every trainer's AI flags at world progress 0, 40, 80, 120 and 160", () => {
+    for (const world of WORLD_PROGRESS_CHECKPOINTS)
+      for (const row of at(world)) {
+        const aces = row.team.filter((member) => member.isAce).length
+        expect(row.ai).toEqual(
+          resolveAi({
+            playStyle: row.trainer.playStyle,
+            tr: row.tr,
+            aces,
+            bossOmniscient: row.trainer.bossOmniscient,
+            doubleBattle: row.trainer.doubleBattle,
+          }),
+        )
+        expect(row.ai.skill).toEqual(aiSkillTier(row.tr))
+      }
+    const lance = at(0).find((row) => row.trainer.name === "Lance")!
+    // A Legend at TR 200 with three aces: Double Ace protects two; the third is a known limit.
+    expect(lance.ai).toMatchObject({ aces: 3, skill: { name: "Predictive" } })
+    expect(lance.ai.flags).toEqual([
+      "Check Bad Move",
+      "Try To Faint",
+      "Check Viability",
+      "HP Aware",
+      "Smart Switching",
+      "Omniscient",
+      "Smart Mon Choices",
+      "Double Ace Pokemon",
+      "Weigh Ability Prediction",
+      "Predict Switch",
+      "Predict Incoming Mon",
+      "Predict Move",
+      "Assume STAB",
+      "Assume Status Moves",
+    ])
+    const brock = at(0).find((row) => row.trainer.name === "Brock")!
+    expect(brock.ai.flags).toEqual([
+      "Check Bad Move",
+      "Try To Faint",
+      "Check Viability",
+      "Powerful Status",
+      "Ace Pokemon",
+    ])
+    const duo = at(0).find((row) => row.trainer.doubleBattle)!
+    expect(duo.ai.flags).toContain("Double Battle")
   })
 
   it("assigns the §16 aloof trait, independent of archetype and the traveller trait", () => {
@@ -2173,6 +2378,32 @@ describe("experiment import", () => {
     restored.archetypes.steady[1]![1] = 40
     expect(experiment.trainers.fixture!.startTR).toBe(3)
     expect(experiment.archetypes.steady[1]).toEqual([40, 25])
+  })
+
+  it("rejects version 16, which had no play styles", () => {
+    const v16 = base()
+    v16.version = 16
+    delete v16.trainers.fixture.playStyle
+    expect(() => validateExperiment(v16, records)).toThrow(
+      "Version 16 experiments have no play styles (Trainer AI)",
+    )
+  })
+
+  it("requires one of the eight play styles per trainer", () => {
+    const missing = base()
+    delete missing.trainers.fixture.playStyle
+    expect(() => validateExperiment(missing, records)).toThrow("missing or unknown fields")
+    const wrong = base()
+    wrong.trainers.fixture.playStyle = "staller"
+    expect(() => validateExperiment(wrong, records)).toThrow(
+      "fixture.playStyle must be one of gambler, bomber, sweeper, field_marshal, hexer, turtle, brawler, tactician",
+    )
+    const boss = base()
+    boss.trainers.fixture.bossOmniscient = true
+    expect(() => validateExperiment(boss, records)).toThrow("missing or unknown fields")
+    const bomber = base()
+    bomber.trainers.fixture.playStyle = "bomber"
+    expect(validateExperiment(bomber, records).trainers.fixture!.playStyle).toBe("bomber")
   })
 
   it("rejects version 15, which saved a travel style instead of the traveller trait", () => {

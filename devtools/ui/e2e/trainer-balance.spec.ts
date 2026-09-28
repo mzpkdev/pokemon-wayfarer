@@ -524,6 +524,88 @@ test("ranks every eligible trainer by league score and fields the top five, stro
     await expect(page.getByTestId(`entrants-${league}`)).not.toContainText("Tate")
 })
 
+test("shows each trainer's play style and resolved AI flags, and edits the style", async ({
+  page,
+}) => {
+  await page.goto("/#trainer-balance")
+  const flags = page.getByTestId("ai-flags").locator("li")
+  const style = page.getByLabel("Play style", { exact: true })
+  // Brock at world progress 0: TR 25 (AI skill None), a Field marshal, one ace in a team of two.
+  await expect(style).toHaveValue("field_marshal")
+  await expect(style.locator("option")).toHaveText([
+    "Gambler",
+    "Bomber",
+    "Sweeper",
+    "Field marshal",
+    "Hexer",
+    "Turtle",
+    "Brawler",
+    "Tactician",
+  ])
+  await expect(page.getByTestId("play-style-description")).toContainText(
+    "Adds Powerful Status on top of Basic.",
+  )
+  await expect(page.getByTestId("ai-skill")).toHaveText(
+    "AI skill None (tier 0, TR 0+) · 1 ace in the team",
+  )
+  await expect(flags).toHaveText([
+    "Check Bad Move",
+    "Try To Faint",
+    "Check Viability",
+    "Powerful Status",
+    "Ace Pokemon",
+  ])
+  // At 8 badges Brock is TR 63: the Aware tier adds Smart Mon Choices and Assume STAB.
+  await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
+  await expect(page.getByTestId("selected-tr")).toHaveText("63")
+  await expect(page.getByTestId("ai-skill")).toHaveText(
+    "AI skill Aware (tier 1, TR 30+) · 1 ace in the team",
+  )
+  await expect(flags).toHaveText([
+    "Check Bad Move",
+    "Try To Faint",
+    "Check Viability",
+    "Powerful Status",
+    "Ace Pokemon",
+    "Smart Mon Choices",
+    "Assume STAB",
+  ])
+  // Lance, the boss: a Tactician at TR 200 with three aces (Double Ace protects the last two).
+  await page.getByRole("button", { name: /^Lance/ }).click()
+  await expect(style).toHaveValue("tactician")
+  await expect(page.getByTestId("ai-skill")).toHaveText(
+    "AI skill Predictive (tier 3, TR 110+) · 3 aces in the team · boss",
+  )
+  await expect(flags).toHaveText([
+    "Check Bad Move",
+    "Try To Faint",
+    "Check Viability",
+    "HP Aware",
+    "Smart Switching",
+    "Omniscient",
+    "Smart Mon Choices",
+    "Double Ace Pokemon",
+    "Weigh Ability Prediction",
+    "Predict Switch",
+    "Predict Incoming Mon",
+    "Predict Move",
+    "Assume STAB",
+    "Assume Status Moves",
+  ])
+  // Wattson the Bomber, edited to a Turtle: Risky and Will Suicide give way to Conservative.
+  await page.getByRole("button", { name: /^Wattson/ }).click()
+  await expect(style).toHaveValue("bomber")
+  await expect(flags.filter({ hasText: "Will Suicide" })).toHaveCount(1)
+  await style.selectOption("turtle")
+  await expect(page.getByRole("status")).toContainText("Wattson is now a Turtle.")
+  await expect(flags.filter({ hasText: "Conservative" })).toHaveCount(1)
+  await expect(flags.filter({ hasText: /^Risky$/ })).toHaveCount(0)
+  await expect(flags.filter({ hasText: "Will Suicide" })).toHaveCount(0)
+  await page.reload()
+  await page.getByRole("button", { name: /^Wattson/ }).click()
+  await expect(style).toHaveValue("turtle")
+})
+
 test("marks ace slots and fights them last, with slot 1 locked and at most three aces", async ({
   page,
 }) => {
@@ -574,7 +656,7 @@ test("marks ace slots and fights them last, with slot 1 locked and at most three
   await expect(page.getByTestId("growth-slot-6")).not.toContainText("Ace")
 })
 
-test("flags incomplete rosters and rejects invalid edits and version 4 to 15 files", async ({
+test("flags incomplete rosters and rejects invalid edits and version 4 to 16 files", async ({
   page,
 }) => {
   await page.goto("/#trainer-balance")
@@ -782,6 +864,22 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 15 fil
   })
   await expect(page.getByRole("alert")).toContainText(
     "Version 15 experiments save a travel style instead of the traveller trait",
+  )
+  await importFile(16, {
+    point: { playerTR: 80 },
+    league: { at: "badges" },
+    experiment: {
+      version: 16,
+      teamLevel: [[0, 15]],
+      teamSize: [[0, 2]],
+      wildLevel: [[0, 6]],
+      routeTrainerLevel: [[0, 9]],
+      archetypes: {},
+      trainers: {},
+    },
+  })
+  await expect(page.getByRole("alert")).toContainText(
+    "Version 16 experiments have no play styles (Trainer AI)",
   )
   await expect(page.getByTestId("badge-count")).toHaveText("0")
   await expect(page.getByTestId("selected-tr")).toHaveText("25")

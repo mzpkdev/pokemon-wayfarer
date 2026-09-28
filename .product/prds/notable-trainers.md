@@ -169,6 +169,13 @@ into them ([move pools](../specs/notable-trainers.md#move-pools)).
 Each trainer leans on at most one frustrating trick, such as sleep, evasion,
 or trapping, so no single battle stacks them.
 
+### They battle in their own style
+
+Every notable trainer has a play style that fits their story, such as
+Brock's wall of rocks or Whitney's stubborn Miltank. Stronger trainers play
+smarter, their aces are held back until the end, and a rare boss like Lance
+knows everything about your party ([Trainer AI](trainer-ai.md)).
+
 FRLG, Emerald, and HNS parties are references for recognizable content, not
 required teams. Challenge options such as trainer items, trainer IVs and EVs,
 and the level cap apply on top, as they do today.
@@ -206,8 +213,9 @@ their shared list in order. Blue has no badge encounter in Wayfarer.
 Each leader's hand-written team supplies species, items, and abilities, and
 their signature moves supply the moves; all of it stays attached to the right
 Pokémon when a team is reordered.
-Rewards, prize money, badge scripts, and AI are preserved unless a team
-deliberately changes them. Trainer-species randomization keeps its existing
+Rewards, prize money, and badge scripts are preserved unless a team
+deliberately changes them; how the leader battles comes from
+[Trainer AI](trainer-ai.md). Trainer-species randomization keeps its existing
 path; other randomizer and challenge options keep their precedence.
 
 ## Boundaries
@@ -226,8 +234,8 @@ Each trainer's TR and team are content under review. Leader ratings and teams
 need ROM playtesting before enablement, including checks that Gym members do
 not routinely outclass their leader. The
 [explorer](../../devtools/ui/README.md#trainer-balance-explorer) predicts
-species, team size, and levels only; moves, items, AI, and combat difficulty
-belong to playtesting.
+species, team size, levels, moves, and each trainer's AI settings; items, how
+well they play, and combat difficulty belong to playtesting.
 
 ## Later
 
@@ -250,7 +258,8 @@ belong to playtesting.
 - Supporting Pokémon that vary from save to save or with what you do, and
   trades that put one of your Pokémon on a trainer's team; aces never change
   ([Trainer roster influence](trainer-roster-influence.md)).
-- Better items, moves, and AI once teams reach level 100.
+- Better items and moves once teams reach level 100; smarter AI is
+  [Trainer AI](trainer-ai.md#later)'s.
 - Tighter level spreads at the top.
 
 ## Specifications
@@ -259,10 +268,13 @@ belong to playtesting.
   inventory, TR and its growth, scalers, rosters, and the battle snapshot.
 - [Gym Leader scaling](../specs/gym-leader-scaling.md): badge-encounter
   coverage and battle construction.
+- [Trainer AI specification](../specs/trainer-ai.md): play styles, AI skill,
+  ace protection, and the boss flag.
 
 ## References
 
 - [Player Trainer Rating](player-trainer-rating.md)
 - [Leagues](leagues.md)
+- [Trainer AI](trainer-ai.md)
 - [Regular trainer and Gym member scaling](trainer-party-scaling.md)
 - [Player progression](../specs/trainer-rating-party-progression.md)

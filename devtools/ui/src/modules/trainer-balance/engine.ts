@@ -1,4 +1,6 @@
 import type {
+  AiFlag,
+  AiSkillTier,
   Anchor,
   Archetype,
   DormantReason,
@@ -14,7 +16,9 @@ import type {
   Milestone,
   MilestoneEvent,
   PoolEntry,
+  PlayStyle,
   PoolStatus,
+  ResolvedAi,
   ResolvedMove,
   ResolvedTrainer,
   RosterSlot,
@@ -205,6 +209,173 @@ export const DEFAULT_ARCHETYPE_GROWTH: Readonly<Record<Archetype, readonly Ancho
     [160, 100],
   ],
 }
+/** Each AI flag's bit in the engine (game/include/constants/battle_ai.h): the resolved order. */
+export const AI_FLAG_BITS: Readonly<Record<AiFlag, number>> = {
+  "Check Bad Move": 0,
+  "Try To Faint": 1,
+  "Check Viability": 2,
+  "Force Setup First Turn": 3,
+  Risky: 4,
+  "Try To 2HKO": 5,
+  "Double Battle": 7,
+  "HP Aware": 8,
+  "Powerful Status": 9,
+  "Will Suicide": 11,
+  "Prefer Status Moves": 12,
+  Stall: 13,
+  "Smart Switching": 14,
+  "Ace Pokemon": 15,
+  Omniscient: 16,
+  "Smart Mon Choices": 17,
+  Conservative: 18,
+  "Double Ace Pokemon": 20,
+  "Weigh Ability Prediction": 21,
+  "Prefer Highest Damage Move": 22,
+  "Predict Switch": 23,
+  "Predict Incoming Mon": 24,
+  "Predict Move": 26,
+  "Assume STAB": 28,
+  "Assume Status Moves": 29,
+}
+/** The Basic bundle every notable trainer always has: style flags are scored inside it. */
+export const BASIC_AI_FLAGS: readonly AiFlag[] = [
+  "Check Bad Move",
+  "Try To Faint",
+  "Check Viability",
+]
+/** The play styles, in display order. */
+export const PLAY_STYLES: readonly PlayStyle[] = [
+  "gambler",
+  "bomber",
+  "sweeper",
+  "field_marshal",
+  "hexer",
+  "turtle",
+  "brawler",
+  "tactician",
+]
+/** Each play style's name, AI flags on top of Basic, and how it plays. */
+export const PLAY_STYLE_INFO: Readonly<
+  Record<PlayStyle, { name: string; flags: readonly AiFlag[]; playsLike: string }>
+> = {
+  gambler: {
+    name: "Gambler",
+    flags: ["Risky"],
+    playsLike: "Swings for big damage over accuracy and takes risks.",
+  },
+  bomber: {
+    name: "Bomber",
+    flags: ["Risky", "Will Suicide"],
+    playsLike: "A gambler who also trades Pokémon away with Explosion-style moves.",
+  },
+  sweeper: {
+    name: "Sweeper",
+    flags: ["Force Setup First Turn"],
+    playsLike: "Sets up on the first turn, then sweeps.",
+  },
+  field_marshal: {
+    name: "Field marshal",
+    flags: ["Powerful Status"],
+    playsLike: "Controls the field first: weather, hazards, screens and terrain.",
+  },
+  hexer: {
+    name: "Hexer",
+    flags: ["Prefer Status Moves", "HP Aware"],
+    playsLike: "Wears you down with status moves, timed by HP.",
+  },
+  turtle: {
+    name: "Turtle",
+    flags: ["Conservative", "HP Aware"],
+    playsLike: "Plays safe for the long game: expects low rolls and manages HP.",
+  },
+  brawler: {
+    name: "Brawler",
+    flags: ["Try To 2HKO", "Prefer Highest Damage Move"],
+    playsLike: "Hits as hard as it can to knock you out in two.",
+  },
+  tactician: {
+    name: "Tactician",
+    flags: ["HP Aware"],
+    playsLike: "No gimmick: reads both sides' HP and picks the move for the moment.",
+  },
+}
+/** A play style's display name. */
+export const playStyleName = (style: PlayStyle): string => PLAY_STYLE_INFO[style].name
+/**
+ * The AI skill scaler (step, placeholder): each tier holds from its TR until the next and adds its
+ * flags to every tier below it.
+ */
+export const AI_SKILL_TIERS: readonly AiSkillTier[] = [
+  { tier: 0, name: "None", fromTR: 0, flags: [] },
+  { tier: 1, name: "Aware", fromTR: 30, flags: ["Smart Mon Choices", "Assume STAB"] },
+  {
+    tier: 2,
+    name: "Smart",
+    fromTR: 70,
+    flags: ["Smart Switching", "Assume Status Moves", "Weigh Ability Prediction"],
+  },
+  {
+    tier: 3,
+    name: "Predictive",
+    fromTR: 110,
+    flags: ["Predict Switch", "Predict Incoming Mon", "Predict Move"],
+  },
+]
+/** The AI skill tier at a trainer TR (a step scaler: flat past the last tier). */
+export const aiSkillTier = (tr: number): AiSkillTier => {
+  const tier = scale(
+    AI_SKILL_TIERS.map((entry): Anchor => [entry.fromTR, entry.tier]),
+    tr,
+    "step",
+  )
+  const found = AI_SKILL_TIERS[tier]
+  if (!found) throw new Error(`Unknown AI skill tier ${tier}`)
+  return found
+}
+/** Ace protection: Ace Pokemon for exactly one ace in the resolved team, Double Ace for two or more. */
+export const aceProtection = (aces: number): AiFlag => {
+  if (!Number.isInteger(aces) || aces < 1)
+    throw new Error("A resolved team has at least one ace (roster slot 1)")
+  return aces === 1 ? "Ace Pokemon" : "Double Ace Pokemon"
+}
+/**
+ * A trainer's AI flags for one battle, a pure function of play style, trainer TR, the resolved
+ * team's aces and the authored boss flag: Basic + style + AI skill tiers up to their TR + ace
+ * protection + Omniscient for a boss, then the engine's own additions (the double-battle flag,
+ * Smart Mon Choices with Smart Switching, Predict Switch with Predict Incoming Mon). Sorted in
+ * engine bit order. Never Risky with Conservative, never Stall.
+ */
+export const resolveAi = (input: {
+  playStyle: PlayStyle
+  tr: number
+  aces: number
+  bossOmniscient: boolean
+  doubleBattle: boolean
+}): ResolvedAi => {
+  const style = PLAY_STYLE_INFO[input.playStyle]
+  if (!style) throw new Error(`Unknown play style ${input.playStyle}`)
+  const skill = aiSkillTier(input.tr)
+  const flags = new Set<AiFlag>([
+    ...BASIC_AI_FLAGS,
+    ...style.flags,
+    ...AI_SKILL_TIERS.filter((entry) => entry.tier <= skill.tier).flatMap((entry) => entry.flags),
+    aceProtection(input.aces),
+  ])
+  if (input.bossOmniscient) flags.add("Omniscient")
+  if (input.doubleBattle) flags.add("Double Battle")
+  if (flags.has("Smart Switching")) flags.add("Smart Mon Choices")
+  if (flags.has("Predict Incoming Mon")) flags.add("Predict Switch")
+  if (flags.has("Risky") && flags.has("Conservative"))
+    throw new Error("Risky and Conservative cancel each other")
+  if (flags.has("Stall")) throw new Error("Stall is unfinished in the engine")
+  return {
+    playStyle: input.playStyle,
+    skill,
+    aces: input.aces,
+    flags: [...flags].toSorted((a, b) => AI_FLAG_BITS[a] - AI_FLAG_BITS[b]),
+  }
+}
+
 /** World progress points the explorer reports each trainer TR at: 0, 4, 8, 16 and 24 badges. */
 export const WORLD_PROGRESS_CHECKPOINTS = [0, 40, 80, 120, 160] as const
 /** A Gym Leader within this many TR of the player TR is near; further away is below or above. */
@@ -855,6 +1026,13 @@ export const resolveTrainer = (
     pool,
     dormant: pool.filter((entry) => entry.slot === null),
     rosterLength: settings.roster.length,
+    ai: resolveAi({
+      playStyle: settings.playStyle,
+      tr,
+      aces: team.filter((member) => member.isAce).length,
+      bossOmniscient: trainer.bossOmniscient,
+      doubleBattle: trainer.doubleBattle,
+    }),
     warnings,
   }
 }
@@ -1159,6 +1337,7 @@ export const defaultTrainerSettings = (trainer: TrainerRecord): TrainerSettings 
   homeRegion: trainer.homeRegion,
   traveller: trainer.traveller,
   aloof: trainer.aloof,
+  playStyle: trainer.playStyle,
 })
 
 export const createExperiment = (
@@ -1299,7 +1478,10 @@ export const validateMovePool = (
 const growthSettings = (
   settings: Record<string, unknown>,
   id: string,
-): Omit<TrainerSettings, "roster" | "movePool" | "homeRegion" | "traveller" | "aloof"> => {
+): Omit<
+  TrainerSettings,
+  "roster" | "movePool" | "homeRegion" | "traveller" | "aloof" | "playStyle"
+> => {
   const startTR = tr(settings.startTR, `${id}.startTR`)
   const peakTR = tr(settings.peakTR, `${id}.peakTR`)
   const archetype = settings.archetype as Archetype
@@ -1321,32 +1503,34 @@ export const rosterGaps = (
     return length < ROSTER_SIZE ? [{ id: trainer.id, name: trainer.name, length }] : []
   })
 
-export const EXPERIMENT_VERSION = 16
+export const EXPERIMENT_VERSION = 17
 const START_OVER = `Start from the version ${EXPERIMENT_VERSION} defaults`
 export const OLD_VERSION_REJECTION = (version: number): string =>
-  version === 15
-    ? `Version 15 experiments save a travel style instead of the traveller trait, so they cannot be imported. ${START_OVER}.`
-    : version === 14
-      ? `Version 14 experiments have no aloof trait and the old Sleeper Champions, so they cannot be imported. ${START_OVER}.`
-      : version === 13
-        ? `Version 13 experiments save a league seed for the retired seeded lineup draw, so they cannot be imported. ${START_OVER}.`
-        : version === 12
-          ? `Version 12 experiments have no home regions or traveller trait and assume fixed league lineups, so they cannot be imported. ${START_OVER}.`
-          : version === 11
-            ? `Version 11 experiments author moves per roster slot and have no move pools, so they cannot be imported. ${START_OVER}.`
-            : version === 10
-              ? `Version 10 experiments use the old archetype names (early bloomer, late bloomer, plateau, fixed, rising star, second wind, bursts), so they cannot be imported. ${START_OVER}.`
-              : version === 9
-                ? `Version 9 experiments have only five archetypes (no Legend, Star, Comeback or Burst step scaler) and the old archetype assignments, so they cannot be imported. ${START_OVER}.`
-                : version === 8
-                  ? `Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. ${START_OVER}.`
-                  : version === 7
-                    ? `Version 7 experiments give the Rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. ${START_OVER}.`
-                    : version === 6
-                      ? `Version 6 experiments give each notable trainer one fixed TR and cannot be imported. ${START_OVER} (start TR, archetype and peak TR).`
-                      : version === 5
-                        ? `Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. ${START_OVER}.`
-                        : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. ${START_OVER}.`
+  version === 16
+    ? `Version 16 experiments have no play styles (Trainer AI), so they cannot be imported. ${START_OVER}.`
+    : version === 15
+      ? `Version 15 experiments save a travel style instead of the traveller trait, so they cannot be imported. ${START_OVER}.`
+      : version === 14
+        ? `Version 14 experiments have no aloof trait and the old Sleeper Champions, so they cannot be imported. ${START_OVER}.`
+        : version === 13
+          ? `Version 13 experiments save a league seed for the retired seeded lineup draw, so they cannot be imported. ${START_OVER}.`
+          : version === 12
+            ? `Version 12 experiments have no home regions or traveller trait and assume fixed league lineups, so they cannot be imported. ${START_OVER}.`
+            : version === 11
+              ? `Version 11 experiments author moves per roster slot and have no move pools, so they cannot be imported. ${START_OVER}.`
+              : version === 10
+                ? `Version 10 experiments use the old archetype names (early bloomer, late bloomer, plateau, fixed, rising star, second wind, bursts), so they cannot be imported. ${START_OVER}.`
+                : version === 9
+                  ? `Version 9 experiments have only five archetypes (no Legend, Star, Comeback or Burst step scaler) and the old archetype assignments, so they cannot be imported. ${START_OVER}.`
+                  : version === 8
+                    ? `Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. ${START_OVER}.`
+                    : version === 7
+                      ? `Version 7 experiments give the Rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. ${START_OVER}.`
+                      : version === 6
+                        ? `Version 6 experiments give each notable trainer one fixed TR and cannot be imported. ${START_OVER} (start TR, archetype and peak TR).`
+                        : version === 5
+                          ? `Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. ${START_OVER}.`
+                          : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. ${START_OVER}.`
 
 /** Validates an experiment against the catalog; with `moves`, every move pool name must be one of them. */
 export const validateExperiment = (
@@ -1381,7 +1565,17 @@ export const validateExperiment = (
     const settings = object(inputTrainers[id], `trainers.${id}`)
     exactKeys(
       settings,
-      ["startTR", "archetype", "peakTR", "roster", "movePool", "homeRegion", "traveller", "aloof"],
+      [
+        "startTR",
+        "archetype",
+        "peakTR",
+        "roster",
+        "movePool",
+        "homeRegion",
+        "traveller",
+        "aloof",
+        "playStyle",
+      ],
       `trainers.${id}`,
     )
     const growth = growthSettings(settings, id)
@@ -1394,11 +1588,14 @@ export const validateExperiment = (
       homeRegion: settings.homeRegion as HomeRegion,
       traveller: settings.traveller as boolean,
       aloof: settings.aloof as boolean,
+      playStyle: settings.playStyle as PlayStyle,
     }
     if (!HOME_REGIONS.includes(settings.homeRegion as HomeRegion))
       fail(`${id}.homeRegion must be one of ${HOME_REGIONS.join(", ")}`)
     if (typeof settings.traveller !== "boolean") fail(`${id}.traveller must be true or false`)
     if (typeof settings.aloof !== "boolean") fail(`${id}.aloof must be true or false`)
+    if (!PLAY_STYLES.includes(settings.playStyle as PlayStyle))
+      fail(`${id}.playStyle must be one of ${PLAY_STYLES.join(", ")}`)
   }
   const inputArchetypes = object(input.archetypes, "archetypes")
   exactKeys(inputArchetypes, ARCHETYPES, "archetypes")

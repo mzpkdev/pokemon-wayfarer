@@ -29,8 +29,10 @@ rather than restating it.
 
 - [Gym Leader scaling](gym-leader-scaling.md) owns badge-encounter coverage and
   is the single authority for battle construction (source-member identity,
-  writing the resolved moves, rewards and AI, randomizer precedence). Those
+  writing the resolved moves, rewards, randomizer precedence). Those
   rules apply to every notable trainer battle, not only Gym battles.
+- [Trainer AI](trainer-ai.md) owns the AI flags of every notable trainer
+  battle: the play style, AI skill, ace protection, and the boss flag.
 - [Leagues](leagues.md) owns league lineups and their lifecycle.
 - [Player Trainer Rating](player-trainer-rating.md) owns the player's TR,
   the scaler definition, and the downward rule and shared evolution-level table
@@ -139,6 +141,14 @@ strong trainer with a proud or distant persona):
 
 Everyone else is not aloof. The Tate & Liza duo is never aloof, since leagues
 are singles only.
+
+## Trainer AI
+
+Each entry also authors exactly one **play style** (its battle identity) and
+a boolean **boss flag** (`bossOmniscient`, Lance only in v0).
+[Trainer AI](trainer-ai.md) owns both, the style assignments, and the AI
+flags each battle resolves from them, the trainer's TR, and the resolved
+team's aces.
 
 ## Trainer rating
 
@@ -438,7 +448,8 @@ versions, and the resolved team
 before constructing the opponent: per member, the roster slot index and every
 resolved battle value the snapshot uses (species/form, level, moves, item,
 ability, nature, IVs/EVs, and battle order). Reconstruction within the battle
-reuses that snapshot; teardown clears it, and world progress gained during the
+reuses that snapshot, and the battle's AI flags are resolved alongside it
+([Trainer AI](trainer-ai.md#runtime-and-the-override-point)); teardown clears it, and world progress gained during the
 battle never changes it. A retry at the same world progress produces an
 identical team (battle RNG may still differ); a retry after the player gained TR
 uses the higher world progress. Entering a league computes every eligible trainer's TR
@@ -475,7 +486,8 @@ TR, another trainer, or a random team.
   interpolated.
 - Catalog: the inventory holds exactly the 38 v0 entries (37 characters and
   the Tate & Liza duo); each has one roster, one home region, a boolean
-  `traveller` and `aloof` trait, and valid growth values
+  `traveller` and `aloof` trait, one play style and a boolean boss flag
+  ([Trainer AI](trainer-ai.md#validation)), and valid growth values
   (non-negative integers, start TR ≤ peak TR, and peak TR = start TR for a
   Legend); no Gym Leader is a Legend; every enrolled encounter ID maps to exactly one `characterId`.
 - Aloof: the aloof trait is `true` exactly for the trainers in the
@@ -535,8 +547,9 @@ rules (placeholders tuned in the explorer):
   peak TR: every peak TR is at least 71.
 
 The [explorer](../../devtools/ui/README.md#trainer-balance-explorer) is
-placeholder evidence and predicts species, sizes, and levels only. Playtesting
-owns combat balance (moves, items, AI). Finalize catalog content and playtest
+placeholder evidence and predicts species, sizes, levels, moves, and the
+resolved AI flags. Playtesting owns combat balance (moves, items, how the AI
+plays). Finalize catalog content and playtest
 evidence before enabling this policy; the existing Gym and league
 implementations stay active until then.
 
@@ -568,8 +581,9 @@ implementations stay active until then.
 - Filler pools (weighted picks with seeded variation and gameplay-flag
   modifiers) and trades that fill filler slots; aces stay fixed
   ([roster influence](trainer-roster-influence.md)).
-- Quality scalers beyond Lv 100 (items, IVs/EVs, movesets, AI) with a higher
-  ceiling TR, so extra TR stays meaningful.
+- Quality scalers beyond Lv 100 (items, IVs/EVs, movesets) with a higher
+  ceiling TR, so extra TR stays meaningful; AI skill tiers belong to
+  [Trainer AI](trainer-ai.md#later).
 - Offsets that shrink as TR rises.
 
 ## References
@@ -577,5 +591,6 @@ implementations stay active until then.
 - [Player Trainer Rating](player-trainer-rating.md)
 - [Leagues](leagues.md)
 - [Gym Leader scaling](gym-leader-scaling.md)
+- [Trainer AI](trainer-ai.md)
 - [Player progression](trainer-rating-party-progression.md)
 - [Trainer roster influence](trainer-roster-influence.md)

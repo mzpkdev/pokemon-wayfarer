@@ -9,6 +9,8 @@ import {
   MAX_ANCHORS,
   MAX_POOL_ENTRIES,
   OLD_VERSION_REJECTION,
+  PLAY_STYLES,
+  playStyleName,
   LEVEL_CAP_ANCHORS,
   MAX_BADGES,
   WORLD_PROGRESS_CHECKPOINTS,
@@ -38,6 +40,7 @@ import type {
   Catalog,
   Experiment,
   HomeRegion,
+  PlayStyle,
   PoolEntry,
   RosterSlot,
   ScalerKind,
@@ -85,7 +88,7 @@ const anchorsOf = (experiment: Experiment, id: ScalerId): Anchor[] =>
  */
 export const scalerKind = (id: ScalerId): ScalerKind =>
   isGrowth(id) ? ARCHETYPE_KIND[id] : "interpolated"
-const storageKey = "wayfarer-trainer-balance-v16"
+const storageKey = "wayfarer-trainer-balance-v17"
 /** Where the leagues are entered: each at its own badge point (8 / 16 / 24), or all at the player TR. */
 export type LeagueEntryPoint = "badges" | "player"
 /** The chart runs across player TR 0 to at least this. */
@@ -388,6 +391,16 @@ export class BalanceLab {
       return `${this.#_name(this.selectedId)} is now ${aloof ? "aloof" : "not aloof"}.`
     })
 
+  /** Sets the selected trainer's play style. */
+  setPlayStyle = (value: string): void =>
+    this.#_edit("Could not change the play style.", (next) => {
+      const settings = next.trainers[this.selectedId]
+      if (!settings) throw new Error("Unknown selected trainer.")
+      if (!PLAY_STYLES.includes(value as PlayStyle)) throw new Error("Unknown play style.")
+      settings.playStyle = value as PlayStyle
+      return `${this.#_name(this.selectedId)} is now a ${playStyleName(value as PlayStyle)}.`
+    })
+
   /** Reads start TR, archetype and peak TR from the growth form. */
   applyGrowth = (form: HTMLFormElement): void =>
     this.#_edit("Could not change the growth.", (next) => {
@@ -575,7 +588,7 @@ export class BalanceLab {
   reset = (): void => {
     this.#_accept(
       createExperiment(catalog, learnsets.moves),
-      "Restored the catalog growth, rosters, move pools, home regions, traits and scalers.",
+      "Restored the catalog growth, rosters, move pools, home regions, traits, play styles and scalers.",
     )
   }
 
@@ -584,7 +597,7 @@ export class BalanceLab {
       const defaults = createExperiment(catalog, learnsets.moves).trainers[this.selectedId]
       if (!defaults) throw new Error("Unknown selected trainer.")
       next.trainers[this.selectedId] = defaults
-      return `Restored ${this.selected.trainer.name}’s catalog growth, roster, move pool, home region and traits. Other trainers and the scalers are unchanged.`
+      return `Restored ${this.selected.trainer.name}’s catalog growth, roster, move pool, home region, traits and play style. Other trainers and the scalers are unchanged.`
     })
 
   exportText = (): string =>

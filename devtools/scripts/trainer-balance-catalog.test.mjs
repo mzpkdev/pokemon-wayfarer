@@ -155,6 +155,64 @@ test("the aloof trait follows the section 16 assignments and names only league-e
   assert.equal(validate(["Tate & Liza"]), "ALOOF lists league-ineligible duos: Tate & Liza")
 })
 
+test("every trainer has exactly one section 18 play style and Lance alone is the boss", () => {
+  const styles = run("module.validate_play_styles(module.PLAY_STYLES, module.GROWTH)")
+  assert.equal(Object.keys(styles).length, 38)
+  const named = (style) =>
+    Object.keys(styles)
+      .filter((name) => styles[name] === style)
+      .sort()
+  assert.deepEqual(named("gambler"), ["Blaine", "Flannery", "Lt. Surge", "Winona"])
+  assert.deepEqual(named("bomber"), ["Wattson"])
+  assert.deepEqual(named("sweeper"), ["Bugsy", "Clair", "Drake", "Lorelei", "Norman", "Sidney"])
+  assert.deepEqual(named("field_marshal"), [
+    "Brock",
+    "Falkner",
+    "Misty",
+    "Steven",
+    "Tate & Liza",
+    "Will",
+  ])
+  assert.deepEqual(named("hexer"), [
+    "Agatha",
+    "Erika",
+    "Janine",
+    "Juan",
+    "Karen",
+    "Koga",
+    "Morty",
+    "Phoebe",
+    "Sabrina",
+  ])
+  assert.deepEqual(named("turtle"), ["Glacia", "Jasmine", "Pryce", "Roxanne", "Wallace", "Whitney"])
+  assert.deepEqual(named("brawler"), ["Brawly", "Bruno", "Chuck", "Giovanni"])
+  assert.deepEqual(named("tactician"), ["Blue", "Lance"])
+  assert.deepEqual(run("sorted(module.BOSS_OMNISCIENT)"), ["Lance"])
+  const validate = (styles) => run("module.validate_play_styles(args, module.GROWTH) and None", styles)
+  const all = run("{style: list(names) for style, names in module.PLAY_STYLES.items()}")
+  assert.equal(validate(all), null)
+  assert.equal(
+    validate({ ...all, staller: ["Blue"] }),
+    "unknown play styles: staller (use one of gambler, bomber, sweeper, field_marshal, hexer, turtle, brawler, tactician)",
+  )
+  assert.equal(
+    validate({ ...all, gambler: [...all.gambler, "Brock"] }),
+    "trainers with more than one play style: Brock",
+  )
+  assert.equal(
+    validate({ ...all, bomber: [] }),
+    "trainers without a play style: Wattson",
+  )
+  assert.equal(
+    validate({ ...all, bomber: ["Wattson", "Red"] }),
+    "PLAY_STYLES lists trainers not in the catalog: Red",
+  )
+  assert.equal(
+    run("module.validate_boss(set(args), module.GROWTH)", ["Red"]),
+    "BOSS_OMNISCIENT lists trainers not in the catalog: Red",
+  )
+})
+
 test("home regions and the traveller trait follow the section 14 assignments", () => {
   const home = run("module.HOME_REGION")
   const travellers = run("sorted(module.TRAVELLERS)")

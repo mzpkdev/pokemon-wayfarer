@@ -4443,6 +4443,8 @@
       "homeRegion": "Kanto",
       "traveller": true,
       "aloof": false,
+      "playStyle": "field_marshal",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -4566,6 +4568,8 @@
       "homeRegion": "Kanto",
       "traveller": true,
       "aloof": false,
+      "playStyle": "field_marshal",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -4687,6 +4691,8 @@
       "homeRegion": "Kanto",
       "traveller": false,
       "aloof": false,
+      "playStyle": "gambler",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -4817,6 +4823,8 @@
       "homeRegion": "Kanto",
       "traveller": false,
       "aloof": false,
+      "playStyle": "hexer",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -4943,6 +4951,8 @@
       "homeRegion": "Kanto",
       "traveller": false,
       "aloof": false,
+      "playStyle": "hexer",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5094,6 +5104,8 @@
       "homeRegion": "Kanto",
       "traveller": false,
       "aloof": true,
+      "playStyle": "hexer",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5226,6 +5238,8 @@
       "homeRegion": "Kanto",
       "traveller": false,
       "aloof": false,
+      "playStyle": "gambler",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5361,6 +5375,8 @@
       "homeRegion": "Kanto",
       "traveller": true,
       "aloof": false,
+      "playStyle": "brawler",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5500,6 +5516,8 @@
       "homeRegion": "Kanto",
       "traveller": true,
       "aloof": false,
+      "playStyle": "tactician",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5650,6 +5668,8 @@
       "homeRegion": "Kanto",
       "traveller": false,
       "aloof": false,
+      "playStyle": "sweeper",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5789,6 +5809,8 @@
       "homeRegion": "Kanto",
       "traveller": true,
       "aloof": false,
+      "playStyle": "brawler",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5928,6 +5950,8 @@
       "homeRegion": "Kanto",
       "traveller": false,
       "aloof": true,
+      "playStyle": "hexer",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6069,6 +6093,8 @@
       "homeRegion": "Johto",
       "traveller": true,
       "aloof": false,
+      "playStyle": "hexer",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6218,6 +6244,8 @@
       "homeRegion": "Kanto",
       "traveller": true,
       "aloof": true,
+      "playStyle": "tactician",
+      "bossOmniscient": true,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6358,6 +6386,8 @@
       "homeRegion": "Johto",
       "traveller": false,
       "aloof": false,
+      "playStyle": "field_marshal",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6480,6 +6510,8 @@
       "homeRegion": "Johto",
       "traveller": true,
       "aloof": false,
+      "playStyle": "sweeper",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6605,6 +6637,8 @@
       "homeRegion": "Johto",
       "traveller": false,
       "aloof": false,
+      "playStyle": "turtle",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6732,6 +6766,8 @@
       "homeRegion": "Johto",
       "traveller": false,
       "aloof": false,
+      "playStyle": "hexer",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6870,6 +6906,8 @@
       "homeRegion": "Johto",
       "traveller": false,
       "aloof": false,
+      "playStyle": "brawler",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7006,6 +7044,8 @@
       "homeRegion": "Johto",
       "traveller": false,
       "aloof": false,
+      "playStyle": "turtle",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7147,6 +7187,8 @@
       "homeRegion": "Johto",
       "traveller": false,
       "aloof": false,
+      "playStyle": "turtle",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7281,6 +7323,8 @@
       "homeRegion": "Johto",
       "traveller": false,
       "aloof": true,
+      "playStyle": "sweeper",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7428,6 +7472,8 @@
       "homeRegion": "Johto",
       "traveller": true,
       "aloof": false,
+      "playStyle": "field_marshal",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7567,6 +7613,8 @@
       "homeRegion": "Johto",
       "traveller": true,
       "aloof": true,
+      "playStyle": "hexer",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7706,6 +7754,8 @@
       "homeRegion": "Hoenn",
       "traveller": false,
       "aloof": false,
+      "playStyle": "turtle",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7840,6 +7890,8 @@
       "homeRegion": "Hoenn",
       "traveller": true,
       "aloof": false,
+      "playStyle": "brawler",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7968,6 +8020,8 @@
       "homeRegion": "Hoenn",
       "traveller": false,
       "aloof": false,
+      "playStyle": "bomber",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8103,6 +8157,8 @@
       "homeRegion": "Hoenn",
       "traveller": false,
       "aloof": false,
+      "playStyle": "gambler",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8239,6 +8295,8 @@
       "homeRegion": "Hoenn",
       "traveller": false,
       "aloof": false,
+      "playStyle": "sweeper",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8375,6 +8433,8 @@
       "homeRegion": "Hoenn",
       "traveller": false,
       "aloof": false,
+      "playStyle": "gambler",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8516,6 +8576,8 @@
       "homeRegion": "Hoenn",
       "traveller": false,
       "aloof": false,
+      "playStyle": "field_marshal",
+      "bossOmniscient": false,
       "doubleBattle": true,
       "leagueEligible": false,
       "source": {
@@ -8652,6 +8714,8 @@
       "homeRegion": "Hoenn",
       "traveller": false,
       "aloof": false,
+      "playStyle": "hexer",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8800,6 +8864,8 @@
       "homeRegion": "Hoenn",
       "traveller": false,
       "aloof": false,
+      "playStyle": "sweeper",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8943,6 +9009,8 @@
       "homeRegion": "Hoenn",
       "traveller": false,
       "aloof": false,
+      "playStyle": "hexer",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -9085,6 +9153,8 @@
       "homeRegion": "Hoenn",
       "traveller": true,
       "aloof": true,
+      "playStyle": "turtle",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -9227,6 +9297,8 @@
       "homeRegion": "Hoenn",
       "traveller": true,
       "aloof": false,
+      "playStyle": "sweeper",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -9366,6 +9438,8 @@
       "homeRegion": "Hoenn",
       "traveller": true,
       "aloof": true,
+      "playStyle": "turtle",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -9517,6 +9591,8 @@
       "homeRegion": "Hoenn",
       "traveller": true,
       "aloof": true,
+      "playStyle": "field_marshal",
+      "bossOmniscient": false,
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {

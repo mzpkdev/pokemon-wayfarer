@@ -170,7 +170,10 @@ progress, their start TR → peak TR, archetype,
 team level, team size, the gap between team level and the level cap, and how
 many roster slots are filled. The trainer panel edits start TR, archetype
 and peak TR, the trainer's home region (Kanto, Johto or Hoenn) and traits
-(the **Traveller** and **Aloof** checkboxes), shows the trainer's TR, team level and each roster slot's stage
+(the **Traveller** and **Aloof** checkboxes) and their **play style** (a
+select; each option's tooltip and the line under it give the style's flags
+and how it plays), shows the resolved **Trainer AI** at the current TR (the AI
+skill tier, the aces in the team, the boss mark, and the flag list), shows the trainer's TR, team level and each roster slot's stage
 and level at world progress 0 / 40 / 80 / 120 / 160 (aces marked), the trainer's
 **milestones**, a chart of their team level against the level cap across
 player TR 0–200 (the current player TR and the milestones marked; hover or
@@ -213,10 +216,10 @@ slot (Aerodactyl) ace joins · 159: peak TR 100". His late ace Aerodactyl
 (roster slot 6) joins at team size 6 (TR 71, team level 45), which his
 placeholder growth reaches at world progress 98.
 
-Exports and the saved browser state use version 16 (nine archetypes with the
+Exports and the saved browser state use version 17 (nine archetypes with the
 single-word identifiers above; rosters carry `isAce` and no moves; each
 trainer has a `movePool` of `{ "move", "fromLevel"? }` entries, a
-`homeRegion` and the `traveller` and `aloof` trait flags)
+`homeRegion`, the `traveller` and `aloof` trait flags and a `playStyle`)
 and store the point as `{ "playerTR": n }` and the league settings as
 `{ "at": "badges" | "player" }`; a `{ "badges": n }` point still
 imports and sets the matching player TR.
@@ -296,22 +299,47 @@ progress 135 (base lineup Lv 91), whichever league it is; in the standard sequen
 Hoenn's fatigue moves that to 138. No aloof lineup member sits more than 10
 levels above the base lineup level.
 
+**Trainer AI** ([spec](../../.product/specs/trainer-ai.md)) resolves each
+trainer's AI flags at their current TR, as the ROM writes them once per
+battle: the **Basic** bundle (Check Bad Move, Try To Faint, Check Viability),
+then the flags of the trainer's **play style** (`playStyle`, exactly one of
+eight, section 18 assignments; editable), then the **AI skill** tiers up to
+their TR (a step scaler, placeholder: TR 0–29 None; 30–69 Aware adds Smart
+Mon Choices and Assume STAB; 70–109 Smart adds Smart Switching, Assume Status
+Moves and Weigh Ability Prediction; 110+ Predictive adds Predict Switch,
+Predict Incoming Mon and Predict Move), then **ace protection** from the aces
+in the resolved team (Ace Pokemon for one, Double Ace Pokemon for two or
+more; roster slot 1 makes at least one), then Omniscient for a trainer with
+the authored **boss flag** (`bossOmniscient`, Lance only; not editable), then
+the engine's own additions (Double Battle for Tate & Liza, Smart Mon Choices
+with Smart Switching, Predict Switch with Predict Incoming Mon), listed in
+engine bit order. The styles: Gambler (Risky), Bomber (Risky, Will Suicide),
+Sweeper (Force Setup First Turn), Field marshal (Powerful Status), Hexer
+(Prefer Status Moves, HP Aware), Turtle (Conservative, HP Aware), Brawler (Try
+To 2HKO, Prefer Highest Damage Move) and Tactician (HP Aware). No resolution
+combines Risky with Conservative or uses Stall. At the badge points, Brock
+(Field marshal) is Basic + Powerful Status + Ace Pokemon at 0 badges (TR 25),
+adds the Aware tier at 8 (TR 63) and the Smart tier with Double Ace Pokemon
+once Aerodactyl joins (16 and 24 badges, TR 81 and 100); Lance is Predictive,
+Omniscient and Double Ace (three aces, the third unprotected) throughout.
+
 All thirteen scaler tables (team level, team size, wild level, regular trainer
 level, and the Steady, Prodigy, Sleeper, Veteran, Rival, Legend, Star,
 Comeback and Burst growth scalers) are editable under
 **Scalers & experiment settings**, each labeled interpolated or step. Anchors
 start at 0, rise and never decrease in value; growth scalers run 0–100% and
 start at 0%. Experiments persist in browser storage (key
-`wayfarer-trainer-balance-v16`). JSON export and import
-(format version 16) round-trip the experiment (growth, rosters with their ace
-flags, move pools, home regions, traveller and aloof flags and the thirteen
-scalers), the
+`wayfarer-trainer-balance-v17`). JSON export and import
+(format version 17) round-trip the experiment (growth, rosters with their ace
+flags, move pools, home regions, traveller and aloof flags, play styles and
+the thirteen scalers), the
 player TR, the league entry point, and the selected trainer. The
 importer also rejects a Legend whose peak TR differs from start TR, a
 Gym Leader Legend, a roster slot with moves, an unknown move name, a from level
 outside 1–100, a pool of more than 64 entries, an unknown home region, and
-a traveller or aloof flag that is not true or false. Files from versions
-1–15 are rejected with a message (version 15 saved a `travel` style, homebody
+a traveller or aloof flag that is not true or false, and a play style that
+is not one of the eight. Files from versions
+1–16 are rejected with a message (version 16 had no play styles; version 15 saved a `travel` style, homebody
 or traveller, instead of the traveller flag; version 14 had no aloof trait and the old
 Sleeper Champions; version 13 saved a league seed for the retired
 seeded lineup draw; version 12 had no home regions or traveller trait and
@@ -326,8 +354,8 @@ There is no migration. Reset restores the catalog defaults. **Restore this
 trainer’s defaults** updates only the selected trainer.
 
 The tool models species, team size, levels and each member's moves from the
-move pool. It does not simulate items, abilities, stats, AI, matchup
-difficulty or battle outcomes, and it skips the randomizer precedence (a
+move pool. It does not simulate items, abilities, stats, how the AI plays (it only lists
+the resolved AI flags), matchup difficulty or battle outcomes, and it skips the randomizer precedence (a
 species or learnset randomizer keeps the plain level-up moveset in the ROM). Seeded
 archetypes and other sources of world progress are out of scope for v0. The
 scaler the ROM uses today is unchanged.
@@ -370,7 +398,9 @@ is no base lineup, fatigue still applying, Lance skipping Indigo and the Sevii
 Masters and fighting at Hoenn, and no aloof lineup member more than 10 levels
 above the base lineup level). Home regions and the travellers live in the
 script's `HOME_REGION` table and `TRAVELLERS` set, and the aloof trainers in its `ALOOF` set (which may name only
-league-eligible catalog trainers). Rosters are the user-directed roster draft v1 (identity and anime
+league-eligible catalog trainers). Play styles live in its `PLAY_STYLES`
+table (the script rejects an unknown style and a trainer with none or more
+than one) and the boss flag in `BOSS_OMNISCIENT`. Rosters are the user-directed roster draft v1 (identity and anime
 picks) in the script's `DRAFT` table: six roster slots per trainer in join
 order, 1–3 aces at offset 0 (roster slot 1, the signature Pokémon, always
 one), fillers at offset -2. Off-type, anime or lore picks carry a tag (e.g.

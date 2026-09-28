@@ -119,6 +119,16 @@ changes yours.
   Pokémon included; aces are fought last.
 - **Filler slot:** any roster slot that isn't an ace; its Pokémon is fought
   before the aces.
+- **Play style:** a notable trainer's battle identity, exactly one each
+  (Gambler, Bomber, Sweeper, Field marshal, Hexer, Turtle, Brawler, or
+  Tactician); it adds its AI preferences on top of the basics
+  ([Trainer AI](trainer-ai.md)).
+- **AI skill:** how smart a notable trainer plays, a step scaler over their
+  own TR that adds smarter AI in tiers.
+- **Ace protection:** the AI holds a trainer's aces back until the end: the
+  last one when the team has one ace, the last two when it has two or more.
+- **Boss flag:** an authored mark that makes a notable trainer know the
+  player's whole party (Lance only in v0).
 - **Move pool:** a notable trainer's ordered list of the moves they like; the
   aces pick first.
 - **Dormant move:** a move-pool move none of the trainer's current Pokémon can
@@ -183,6 +193,7 @@ changes yours.
 - [Player Trainer Rating specification](../specs/player-trainer-rating.md)
 - [Notable trainers](notable-trainers.md)
 - [Leagues](leagues.md)
+- [Trainer AI](trainer-ai.md)
 - [Wild encounter and party progression](trainer-rating-wild-encounter-scaling.md)
 - [Regular trainer and Gym member scaling](trainer-party-scaling.md)
 - [Poké Marts](global-tr-pokemarts.md)

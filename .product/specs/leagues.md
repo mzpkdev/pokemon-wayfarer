@@ -237,7 +237,8 @@ league wins, or create league records.
 Each match fights with the trainer's own team at their own TR, as
 [Notable trainers](notable-trainers.md) composes it for any battle: there is
 no league-specific level offset, role adjustment, or six-member competitive
-profile. The old `[-4,-3,-2,-1,+1]` room offsets are removed.
+profile. Its AI flags come from [Trainer AI](trainer-ai.md) at the
+trainer's TR, as in any notable battle. The old `[-4,-3,-2,-1,+1]` room offsets are removed.
 
 Construct from the saved lineup. Resolve the selected trainer and roster owner
 before applying league policy; never identify enrollment from class, map, or
@@ -435,6 +436,7 @@ Report balance playtesting separately from structural checks.
 
 - [Leagues PRD](../prds/leagues.md)
 - [Notable trainers](notable-trainers.md)
+- [Trainer AI](trainer-ai.md)
 - [Player Trainer Rating](player-trainer-rating.md)
 - [Interregional League circuit](wayfarer-interregional-league-circuit.md)
 - [Existing League scaling contract](league-scaling.md)

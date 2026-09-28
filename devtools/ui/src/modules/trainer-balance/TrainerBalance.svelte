@@ -12,6 +12,8 @@
     MAX_MOVES,
     MAX_POOL_ENTRIES,
     NEAR_BAND,
+    PLAY_STYLES,
+    PLAY_STYLE_INFO,
     ROSTER_SIZE,
     AWAY_COST,
     LEAGUE_BADGES,
@@ -464,6 +466,41 @@
           >
         </div>
       {/key}
+      {#key lab.settings}
+        <div class="growth-form ai-form" data-testid="trainer-ai-editor">
+          <label
+            >Play style<select
+              aria-label="Play style"
+              value={lab.settings.playStyle}
+              title={PLAY_STYLE_INFO[lab.settings.playStyle].playsLike}
+              onchange={(event) => lab.setPlayStyle(event.currentTarget.value)}
+              >{#each PLAY_STYLES as style}<option
+                  value={style}
+                  title={`${PLAY_STYLE_INFO[style].flags.join(", ")}: ${PLAY_STYLE_INFO[style].playsLike}`}
+                  >{PLAY_STYLE_INFO[style].name}</option
+                >{/each}</select
+            ></label
+          ><span class="hint" data-testid="play-style-description"
+            >{PLAY_STYLE_INFO[lab.settings.playStyle].name}: {PLAY_STYLE_INFO[
+              lab.settings.playStyle
+            ].playsLike} Adds {PLAY_STYLE_INFO[lab.settings.playStyle].flags.join(", ")} on top of Basic.</span
+          >
+        </div>
+      {/key}
+      <div class="section-label">
+        <h3>Trainer AI at TR {lab.selected.tr}</h3>
+        <span data-testid="ai-skill"
+          >AI skill {lab.selected.ai.skill.name} (tier {lab.selected.ai.skill.tier}, TR {lab
+            .selected.ai.skill.fromTR}+) · {lab.selected.ai.aces}
+          {lab.selected.ai.aces === 1 ? "ace" : "aces"} in the team{lab.selected.trainer
+            .bossOmniscient
+            ? " · boss"
+            : ""}</span
+        >
+      </div>
+      <ul class="ai-flags" data-testid="ai-flags">
+        {#each lab.selected.ai.flags as flag (flag)}<li class="move-chip">{flag}</li>{/each}
+      </ul>
       <p class="hint">
         TR = start TR + (peak TR − start TR) × the archetype’s growth %, halves rounded up.
       </p>
@@ -1111,8 +1148,8 @@
       </form>
     {/key}
     <p class="hint">
-      Catalog growth, rosters, home regions and traits are placeholders. Seeded archetypes are out
-      of scope for v0. This is separate from the scaler the ROM uses today.
+      Catalog growth, rosters, home regions, traits and play styles are placeholders. Seeded
+      archetypes are out of scope for v0. This is separate from the scaler the ROM uses today.
     </p>
   </details>
 </section>
@@ -2012,6 +2049,15 @@
   }
   .growth-form button {
     padding: 5px 10px;
+  }
+  .ai-flags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 0 0 12px;
+    padding: 0;
+    list-style: none;
+    font-size: 11px;
   }
   .growth-form .trait-toggle input {
     width: auto;

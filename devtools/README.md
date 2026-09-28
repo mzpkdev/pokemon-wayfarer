@@ -40,7 +40,7 @@ the scalers, shows each trainer's TR at the chosen player TR (world
 progress; badges are presets, and any TR can be typed), with members below
 their stage's evolution level stepping down their line, each trainer's
 milestones and a team level vs level cap chart, the Gym ladder, league
-lineups (willingness and league score rankings, the base lineup level and each aloof trainer's check), and compares team levels with the level cap; see [the UI README](ui/README.md#trainer-balance-explorer) for assumptions
+lineups (willingness and league score rankings, the base lineup level and each aloof trainer's check), each trainer's play style and resolved Trainer AI flags at their TR, and compares team levels with the level cap; see [the UI README](ui/README.md#trainer-balance-explorer) for assumptions
 and catalog regeneration. The map modules consume
 the static catalog and terrain images created by the CLI tools. Docs bundles
 Markdown files below `.product/` through Vite and omits `__NAME__.md` templates

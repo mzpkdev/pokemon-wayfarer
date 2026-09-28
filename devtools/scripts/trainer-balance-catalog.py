@@ -30,6 +30,10 @@ section 14 lore table (HOME_REGION) and two opt-in traits (section 17),
 yes/no flags that default to no: traveller (TRAVELLERS), which the explorer's
 league score reads, and aloof (ALOOF), which only its league lineup rule
 reads.
+
+Each trainer also records the section 18 Trainer AI inputs: exactly one play
+style (PLAY_STYLES, one of eight) and the authored boss flag (BOSS_OMNISCIENT,
+Lance only in v0). The explorer resolves the AI flags from them.
 """
 from __future__ import annotations
 
@@ -185,6 +189,33 @@ TRAVELLERS = {"Brock", "Misty", "Blue", "Lance", "Steven", "Wallace", "Will", "K
 # cold and distant; Karen ("strong Pokémon, weak Pokémon") disdains weak
 # company.
 ALOOF = {"Lance", "Wallace", "Steven", "Agatha", "Glacia", "Clair", "Sabrina", "Karen"}
+# Section 18 play styles (engine-fitted, reviewable): every notable trainer has
+# exactly one, their battle identity; the explorer adds the style's AI flags on
+# top of the Basic bundle. The trainer's gimmick decides the style.
+PLAY_STYLE_NAMES = ("gambler", "bomber", "sweeper", "field_marshal", "hexer", "turtle", "brawler",
+                    "tactician")
+PLAY_STYLES = {
+    # Fire, electric and flying all-in offence: accept misses and recoil for damage.
+    "gambler": ("Blaine", "Lt. Surge", "Flannery", "Winona"),
+    # Wattson's Voltorb and Electrode line: self-destructing trades.
+    "bomber": ("Wattson",),
+    # Set up first, then sweep: Norman's Slaking, Lorelei, the dragon tamers, Bugsy's Scyther.
+    "sweeper": ("Norman", "Lorelei", "Clair", "Drake", "Sidney", "Bugsy"),
+    # Field control: Brock's rocks and Steven's hazards, Misty's rain, Will's screens,
+    # Tate & Liza's psychic field, Falkner's winds.
+    "field_marshal": ("Brock", "Steven", "Misty", "Will", "Tate & Liza", "Falkner"),
+    # Status and ghosts, poison, psychic and dark attrition.
+    "hexer": ("Erika", "Morty", "Sabrina", "Juan", "Janine", "Koga", "Agatha", "Karen", "Phoebe"),
+    # Walls that play for the long game: Miltank, ice, water, steel and rock bulk.
+    "turtle": ("Whitney", "Pryce", "Wallace", "Jasmine", "Glacia", "Roxanne"),
+    # Fighting and ground brawlers: hit hardest, knock out in two.
+    "brawler": ("Bruno", "Chuck", "Brawly", "Giovanni"),
+    # Adaptable Champions: no gimmick, read the battle.
+    "tactician": ("Lance", "Blue"),
+}
+# Section 18 boss flag (authored): the boss knows everything about the
+# player's party. Lance only in v0 (Red later).
+BOSS_OMNISCIENT = {"Lance"}
 # Section 9 shared evolution-level table: (predecessor, species, level, status).
 # The table covers only evolutions without a level in the game data (item,
 # trade, friendship, other); they step down below this level like level
@@ -558,6 +589,31 @@ def validate_aloof(aloof, catalog, duos):
     ineligible = sorted(set(aloof) & set(duos))
     if ineligible:
         raise ValueError(f"ALOOF lists league-ineligible duos: {', '.join(ineligible)}")
+
+
+def validate_play_styles(styles, catalog):
+    """Every catalog trainer has exactly one play style, and every style is one of the eight."""
+    unknown_styles = sorted(set(styles) - set(PLAY_STYLE_NAMES))
+    if unknown_styles:
+        raise ValueError(f"unknown play styles: {', '.join(unknown_styles)} (use one of {', '.join(PLAY_STYLE_NAMES)})")
+    assigned = [name for names in styles.values() for name in names]
+    repeated = sorted({name for name in assigned if assigned.count(name) > 1})
+    if repeated:
+        raise ValueError(f"trainers with more than one play style: {', '.join(repeated)}")
+    unknown = sorted(set(assigned) - set(catalog))
+    if unknown:
+        raise ValueError(f"PLAY_STYLES lists trainers not in the catalog: {', '.join(unknown)}")
+    missing = sorted(set(catalog) - set(assigned))
+    if missing:
+        raise ValueError(f"trainers without a play style: {', '.join(missing)}")
+    return {name: style for style, names in styles.items() for name in names}
+
+
+def validate_boss(boss, catalog):
+    """BOSS_OMNISCIENT names only catalog trainers."""
+    unknown = sorted(set(boss) - set(catalog))
+    if unknown:
+        raise ValueError(f"BOSS_OMNISCIENT lists trainers not in the catalog: {', '.join(unknown)}")
 
 
 def validate_gym_start(name, growth):
@@ -1153,6 +1209,8 @@ def generate():
     if set(HOME_REGION) != set(GROWTH) or not TRAVELLERS <= set(GROWTH):
         raise ValueError("HOME_REGION must list exactly the catalog trainers and TRAVELLERS only catalog trainers")
     validate_aloof(ALOOF, GROWTH, DUOS)
+    play_style = validate_play_styles(PLAY_STYLES, GROWTH)
+    validate_boss(BOSS_OMNISCIENT, GROWTH)
     for name, region, role, family, trainer in ROSTER:
         growth = GROWTH[name]
         validate_growth(name, growth)
@@ -1223,6 +1281,7 @@ def generate():
                          + (" Fought as a double battle: both leaders send Pokémon from this one roster in order." if name in DUOS else ""))
         result.append({"id": slug(name), "name": name, "region": region, "role": role,
                        "homeRegion": home, "traveller": name in TRAVELLERS, "aloof": name in ALOOF,
+                       "playStyle": play_style[name], "bossOmniscient": name in BOSS_OMNISCIENT,
                        "doubleBattle": double, "leagueEligible": not double,
                        "source": {"label": f"{family} local reference", "path": records[trainer]["source"], "trainerId": trainer, "note": note},
                        "referenceParty": [member(slot) for slot in reference_slots],
