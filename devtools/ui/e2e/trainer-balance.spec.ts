@@ -25,20 +25,34 @@ test("grows each trainer with world progress and round-trips an exported experim
   await expect(page.getByTestId("level-cap")).toHaveText("Lv. 15")
   await expect(page.getByTestId("world-progress")).toHaveText("0")
   const order = page.getByTestId("battle-order").locator("li")
-  // Brock (start TR 25, steady, peak TR 100) at world progress 0: TR 25, team level 18, size 2.
+  // Brock (start TR 25, a Steady, peak TR 100) at world progress 0: TR 25, team level 18, size 2.
   await expect(page.getByTestId("selected-tr")).toHaveText("25")
   await expect(page.getByTestId("growth-brock")).toHaveText("25 → 100")
-  await expect(page.getByTestId("archetype-brock")).toHaveText("steady")
-  await expect(page.getByLabel("Archetype", { exact: true }).locator("option")).toHaveText([
+  await expect(page.getByTestId("archetype-brock")).toHaveText("Steady")
+  const options = page.getByLabel("Archetype", { exact: true }).locator("option")
+  await expect(options).toHaveText([
+    "Steady",
+    "Prodigy",
+    "Sleeper",
+    "Veteran",
+    "Rival",
+    "Legend",
+    "Star",
+    "Comeback",
+    "Burst",
+  ])
+  expect(
+    await options.evaluateAll((items) => items.map((item) => item.getAttribute("value"))),
+  ).toEqual([
     "steady",
-    "early bloomer",
-    "late bloomer",
-    "plateau",
+    "prodigy",
+    "sleeper",
+    "veteran",
     "rival",
-    "fixed",
-    "rising star",
-    "second wind",
-    "bursts",
+    "legend",
+    "star",
+    "comeback",
+    "burst",
   ])
   await expect(page.getByTestId("selected-level")).toHaveText("Lv. 18")
   await expect(page.getByTestId("team-size")).toHaveText("2")
@@ -111,9 +125,9 @@ test("grows each trainer with world progress and round-trips an exported experim
   await expect(order.nth(3)).toContainText("Lv. 41")
 
   // TR is uncapped; the scalers stay flat past their last anchor (TR 160).
-  await setGrowth(page, { archetype: "plateau", peak: "200" })
+  await setGrowth(page, { archetype: "veteran", peak: "200" })
   await expect(page.getByTestId("selected-tr")).toHaveText("200")
-  await expect(page.getByTestId("archetype-brock")).toHaveText("plateau")
+  await expect(page.getByTestId("archetype-brock")).toHaveText("Veteran")
   await expect(page.getByTestId("level-brock")).toHaveText("Lv. 100")
   await expect(page.getByTestId("size-brock")).toHaveText("6")
   await expect(order).toHaveCount(6)
@@ -267,13 +281,13 @@ test("shows the selected trainer's milestones and a team level chart", async ({ 
   expect(errors).toEqual([])
 })
 
-test("grows Blue with the rival scaler and shows each trainer's TR at the checkpoints", async ({
+test("grows Blue with the Rival scaler and shows each trainer's TR at the checkpoints", async ({
   page,
 }) => {
   await page.goto("/#trainer-balance")
   await page.getByRole("button", { name: "Blue Kanto · Champion", exact: true }).click()
   await expect(page.getByTestId("growth-blue")).toHaveText("0 → 170")
-  await expect(page.getByTestId("archetype-blue")).toHaveText("rival")
+  await expect(page.getByTestId("archetype-blue")).toHaveText("Rival")
   // The Pallet fight: TR 0, one Eevee at Lv 5 (his signature Umbreon steps down).
   await expect(page.getByTestId("selected-tr")).toHaveText("0")
   await expect(page.getByTestId("team-size")).toHaveText("1")
@@ -288,14 +302,14 @@ test("grows Blue with the rival scaler and shows each trainer's TR at the checkp
   )
   await page.getByRole("button", { name: "Set 16 badges", exact: true }).click()
   await expect(page.getByTestId("selected-tr")).toHaveText("129")
-  // The rival growth scaler is editable like any other: 80% at world progress 120 is TR 136.
+  // The Rival growth scaler is editable like any other: 80% at world progress 120 is TR 136.
   await page.getByText("Scalers & experiment settings", { exact: true }).click()
   await page.getByLabel("Rival growth anchor 5 value", { exact: true }).fill("80")
   await page.getByRole("button", { name: "Apply scalers", exact: true }).click()
   await expect(page.getByTestId("selected-tr")).toHaveText("136")
   await setGrowth(page, { start: "10", archetype: "steady", peak: "180" })
   await expect(page.getByTestId("growth-blue")).toHaveText("10 → 180")
-  // Steady at world progress 120: 10 + 75% of 170 = 137.5, halves round up.
+  // A Steady at world progress 120: 10 + 75% of 170 = 137.5, halves round up.
   await expect(page.getByTestId("selected-tr")).toHaveText("138")
 })
 
@@ -305,7 +319,7 @@ test("ranks the Gym Leaders against the player TR in the Gym ladder", async ({ p
   await expect(ladder).toHaveCount(24)
   await expect(page.getByTestId("ladder-tate-liza")).toContainText("Tate & Liza · double battle")
   // At world progress 0 every Gym Leader starts in the 18–40 Gym band, so all are above the
-  // player: late bloomer Winona lowest (TR 18), plateau Pryce highest (TR 40).
+  // player: the Sleeper Winona lowest (TR 18), the Comeback Pryce highest (TR 40).
   await expect(page.getByTestId("ladder-counts")).toHaveText("0 below · 0 near · 24 above")
   await expect(ladder.first()).toContainText("Winona")
   await expect(ladder.first()).toContainText("above +18")
@@ -314,7 +328,7 @@ test("ranks the Gym Leaders against the player TR in the Gym ladder", async ({ p
   await expect(ladder.last()).toContainText("Pryce")
   await expect(ladder.last()).toContainText("above +40")
   await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
-  // Rising stars and second winds sit well below at 8 badges; Wattson, Janine and Erika are near.
+  // Stars and Comebacks sit well below at 8 badges; Wattson, Janine and Erika are near.
   await expect(page.getByTestId("ladder-counts")).toHaveText("16 below · 3 near · 5 above")
   await expect(ladder.last()).toContainText("Tate & Liza")
   await expect(page.getByTestId("ladder-brock")).toContainText("below -17")
@@ -336,8 +350,9 @@ test("puts the top five by TR at the current world progress in the lineup, stron
   await expect(page.getByTestId("league-names")).toContainText(
     "Indigo, Sevii Masters, Hoenn all use this lineup",
   )
-  // Beatable at 8 badges (level cap Lv 50): the lineup is TR 95, team level 59. Plateau Lt. Surge
-  // has reached his peak, bursts Giovanni has just jumped to 50%, and fixed Agatha never grows.
+  // Beatable at 8 badges (level cap Lv 50): the lineup is TR 95, team level 59. The Veteran Lt.
+  // Surge has reached his peak, the Burst Giovanni has just jumped to 50%, and the Legend Agatha
+  // never grows.
   await expect(page.getByTestId("league-range")).toHaveText("TR 95 … 95")
   await expect(page.getByTestId("league-match-1")).toContainText("TR 95 · Lv. 59 · 5 Pokémon")
   await expect(page.getByTestId("league-match-5")).toContainText("TR 95 · Lv. 59 · 5 Pokémon")
@@ -347,15 +362,15 @@ test("puts the top five by TR at the current world progress in the lineup, stron
   await expect(page.getByTestId("league-match-1")).toContainText("Norman")
   await expect(page.getByTestId("league-match-1")).toContainText("TR 130 · Lv. 81 · 6 Pokémon")
   await expect(page.getByTestId("league-match-5")).toContainText("TR 132 · Lv. 83 · 6 Pokémon")
-  // A plateau Brock with peak TR 150 moves into match 5 and drops Steven.
-  await setGrowth(page, { archetype: "plateau", peak: "150" })
+  // Brock as a Veteran with peak TR 150 moves into match 5 and drops Steven.
+  await setGrowth(page, { archetype: "veteran", peak: "150" })
   await expect(page.getByTestId("league-match-5")).toContainText("Brock")
   await expect(page.getByTestId("league-lineup")).not.toContainText("Steven")
   // Tate & Liza fight a double battle, so even far ahead they never enter the lineup.
   await page.getByRole("button", { name: /^Tate & Liza/ }).click()
   await expect(page.getByTestId("double-battle")).toHaveText("Double battle")
   await expect(page.getByTestId("double-battle-note")).toContainText("not in the league pool")
-  await setGrowth(page, { archetype: "plateau", peak: "300" })
+  await setGrowth(page, { archetype: "veteran", peak: "300" })
   await expect(page.getByTestId("tr-tate-liza")).toHaveText("300")
   await expect(page.getByTestId("league-lineup")).not.toContainText("Tate")
   await expect(page.getByTestId("league-match-5")).toContainText("Brock")
@@ -411,7 +426,7 @@ test("marks ace slots and fights them last, with slot 1 locked and at most three
   await expect(page.getByTestId("growth-slot-6")).not.toContainText("Ace")
 })
 
-test("flags incomplete rosters and rejects invalid edits and version 4 to 9 files", async ({
+test("flags incomplete rosters and rejects invalid edits and version 4 to 10 files", async ({
   page,
 }) => {
   await page.goto("/#trainer-balance")
@@ -429,15 +444,15 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 9 file
   await expect(page.getByRole("alert")).toContainText("Start TR must be a whole number")
   await setGrowth(page, { start: "50", peak: "40" })
   await expect(page.getByRole("alert")).toContainText("Peak TR must be at least start TR")
-  // A fixed trainer never grows, and no Gym Leader is fixed.
-  await setGrowth(page, { start: "25", archetype: "fixed", peak: "100" })
+  // A Legend never grows, and no Gym Leader is a Legend.
+  await setGrowth(page, { start: "25", archetype: "legend", peak: "100" })
   await expect(page.getByRole("alert")).toContainText(
-    "A fixed trainer never grows: set peak TR equal to start TR.",
+    "A Legend never grows: set peak TR equal to start TR.",
   )
-  await setGrowth(page, { start: "25", archetype: "fixed", peak: "25" })
-  await expect(page.getByRole("alert")).toContainText("brock: a Gym Leader cannot be fixed")
+  await setGrowth(page, { start: "25", archetype: "legend", peak: "25" })
+  await expect(page.getByRole("alert")).toContainText("brock: a Gym Leader cannot be a Legend")
   await expect(page.getByTestId("selected-tr")).toHaveText("25")
-  await expect(page.getByTestId("archetype-brock")).toHaveText("steady")
+  await expect(page.getByTestId("archetype-brock")).toHaveText("Steady")
 
   const importFile = (version: number, body: object) =>
     page.getByLabel("Import experiment file", { exact: true }).setInputFiles({
@@ -495,7 +510,7 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 9 file
     },
   })
   await expect(page.getByRole("alert")).toContainText(
-    "Version 7 experiments give the rival a fixed lead",
+    "Version 7 experiments give the Rival a fixed lead",
   )
   await importFile(8, {
     point: { playerTR: 80 },
@@ -526,6 +541,21 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 9 file
   })
   await expect(page.getByRole("alert")).toContainText(
     "Version 9 experiments have only five archetypes",
+  )
+  await importFile(10, {
+    point: { playerTR: 80 },
+    experiment: {
+      version: 10,
+      teamLevel: [[0, 15]],
+      teamSize: [[0, 2]],
+      wildLevel: [[0, 6]],
+      routeTrainerLevel: [[0, 9]],
+      archetypes: { "early bloomer": [[0, 0]] },
+      trainers: {},
+    },
+  })
+  await expect(page.getByRole("alert")).toContainText(
+    "Version 10 experiments use the old archetype names",
   )
   await expect(page.getByTestId("badge-count")).toHaveText("0")
   await expect(page.getByTestId("selected-tr")).toHaveText("25")
@@ -577,10 +607,10 @@ test("edits the trainer, world and archetype scalers globally", async ({ page })
   await expect(page.getByTestId("wild-level")).toHaveText("Lv. 28")
   await expect(page.getByTestId("regular-trainer-gap")).toHaveText("+2 vs cap")
 
-  // Archetype growth scalers read world progress: late bloomer Lance (48 → 200) at 8 badges.
+  // Archetype growth scalers read world progress: the Sleeper Lance (48 → 200) at 8 badges.
   await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
   await expect(page.getByTestId("tr-lance")).toHaveText("86")
-  await page.getByLabel("Late bloomer growth anchor 3 value", { exact: true }).fill("50")
+  await page.getByLabel("Sleeper growth anchor 3 value", { exact: true }).fill("50")
   await page.getByRole("button", { name: "Apply scalers", exact: true }).click()
   await expect(page.getByTestId("tr-lance")).toHaveText("124")
   await page.getByLabel("Steady growth anchor 1 value", { exact: true }).fill("5")
@@ -590,21 +620,21 @@ test("edits the trainer, world and archetype scalers globally", async ({ page })
   )
   await page.getByLabel("Steady growth anchor 1 value", { exact: true }).fill("0")
 
-  // Every scaler shows its kind; bursts is the only step scaler. Bursts Giovanni (24 → 166)
+  // Every scaler shows its kind; Burst is the only step scaler. The Burst Giovanni (24 → 166)
   // holds 25% (TR 60) from 4 badges until he jumps to 50% (TR 95) at 8 badges.
-  await expect(page.getByTestId("scaler-kind-bursts")).toHaveText("step")
-  for (const id of ["steady", "fixed", "rising-star", "second-wind", "teamSize"])
+  await expect(page.getByTestId("scaler-kind-burst")).toHaveText("step")
+  for (const id of ["steady", "legend", "star", "comeback", "teamSize"])
     await expect(page.getByTestId(`scaler-kind-${id}`)).toHaveText("interpolated")
   await expect(page.getByTestId("tr-giovanni")).toHaveText("95")
   await page.getByLabel("Player TR", { exact: true }).fill("79")
   await expect(page.getByTestId("tr-giovanni")).toHaveText("60")
   // Editing the step scaler moves the held value: 40% from world progress 40 is TR 81.
-  await page.getByLabel("Bursts growth anchor 2 value", { exact: true }).fill("40")
+  await page.getByLabel("Burst growth anchor 2 value", { exact: true }).fill("40")
   await page.getByRole("button", { name: "Apply scalers", exact: true }).click()
   await expect(page.getByTestId("tr-giovanni")).toHaveText("81")
-  await page.getByLabel("Bursts growth anchor 3 value", { exact: true }).fill("30")
+  await page.getByLabel("Burst growth anchor 3 value", { exact: true }).fill("30")
   await page.getByRole("button", { name: "Apply scalers", exact: true }).click()
-  await expect(page.getByRole("alert")).toContainText("bursts growth values must not decrease")
+  await expect(page.getByRole("alert")).toContainText("burst growth values must not decrease")
 
   await page.getByRole("button", { name: "Set 24 badges", exact: true }).click()
   await expect(page.getByTestId("player-tr")).toHaveText("160")

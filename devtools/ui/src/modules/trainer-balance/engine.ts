@@ -77,30 +77,33 @@ export const DEFAULT_REGULAR_TRAINER_LEVEL: readonly Anchor[] = [
 /** Archetypes, each a growth scaler over world progress, in display order. */
 export const ARCHETYPES: readonly Archetype[] = [
   "steady",
-  "early bloomer",
-  "late bloomer",
-  "plateau",
+  "prodigy",
+  "sleeper",
+  "veteran",
   "rival",
-  "fixed",
-  "rising star",
-  "second wind",
-  "bursts",
+  "legend",
+  "star",
+  "comeback",
+  "burst",
 ]
-/** Bursts is a step scaler; every other archetype is interpolated. The kind is not editable. */
+/** An archetype's display name: the proper noun used in prose (Steady, Prodigy, ...). */
+export const archetypeName = (archetype: Archetype): string =>
+  `${archetype[0]?.toUpperCase()}${archetype.slice(1)}`
+/** Burst is a step scaler; every other archetype is interpolated. The kind is not editable. */
 export const ARCHETYPE_KIND: Readonly<Record<Archetype, ScalerKind>> = {
   steady: "interpolated",
-  "early bloomer": "interpolated",
-  "late bloomer": "interpolated",
-  plateau: "interpolated",
+  prodigy: "interpolated",
+  sleeper: "interpolated",
+  veteran: "interpolated",
   rival: "interpolated",
-  fixed: "interpolated",
-  "rising star": "interpolated",
-  "second wind": "interpolated",
-  bursts: "step",
+  legend: "interpolated",
+  star: "interpolated",
+  comeback: "interpolated",
+  burst: "step",
 }
 /**
- * Growth % by world progress: 0 / 40 / 80 / 120 / 160 (the rival also at 20; fixed only at 0
- * and 160, 0% at both).
+ * Growth % by world progress: 0 / 40 / 80 / 120 / 160 (the Rival also at 20; the Legend only at
+ * 0 and 160, 0% at both).
  */
 export const DEFAULT_ARCHETYPE_GROWTH: Readonly<Record<Archetype, readonly Anchor[]>> = {
   steady: [
@@ -110,21 +113,21 @@ export const DEFAULT_ARCHETYPE_GROWTH: Readonly<Record<Archetype, readonly Ancho
     [120, 75],
     [160, 100],
   ],
-  "early bloomer": [
+  prodigy: [
     [0, 0],
     [40, 50],
     [80, 80],
     [120, 95],
     [160, 100],
   ],
-  "late bloomer": [
+  sleeper: [
     [0, 0],
     [40, 10],
     [80, 25],
     [120, 55],
     [160, 100],
   ],
-  plateau: [
+  veteran: [
     [0, 0],
     [40, 60],
     [80, 100],
@@ -139,25 +142,25 @@ export const DEFAULT_ARCHETYPE_GROWTH: Readonly<Record<Archetype, readonly Ancho
     [120, 76],
     [160, 100],
   ],
-  fixed: [
+  legend: [
     [0, 0],
     [160, 0],
   ],
-  "rising star": [
+  star: [
     [0, 0],
     [40, 10],
     [80, 50],
     [120, 90],
     [160, 100],
   ],
-  "second wind": [
+  comeback: [
     [0, 0],
     [40, 45],
     [80, 50],
     [120, 55],
     [160, 100],
   ],
-  bursts: [
+  burst: [
     [0, 0],
     [40, 25],
     [80, 50],
@@ -782,7 +785,7 @@ export const validateRoster = (value: unknown, path: string): RosterSlot[] => {
   return slots
 }
 
-/** Start and peak TR are whole numbers with peak >= start, and peak = start for a fixed trainer. */
+/** Start and peak TR are whole numbers with peak >= start, and peak = start for a Legend. */
 const growthSettings = (
   settings: Record<string, unknown>,
   id: string,
@@ -793,8 +796,8 @@ const growthSettings = (
   if (!ARCHETYPES.includes(archetype))
     fail(`${id}.archetype must be one of ${ARCHETYPES.join(", ")}`)
   if (peakTR < startTR) fail(`${id}: peak TR must be at least start TR`)
-  if (archetype === "fixed" && peakTR !== startTR)
-    fail(`${id}: a fixed trainer's peak TR must equal start TR`)
+  if (archetype === "legend" && peakTR !== startTR)
+    fail(`${id}: a Legend's peak TR must equal start TR`)
   return { startTR, archetype, peakTR }
 }
 
@@ -808,19 +811,21 @@ export const rosterGaps = (
     return length < ROSTER_SIZE ? [{ id: trainer.id, name: trainer.name, length }] : []
   })
 
-export const EXPERIMENT_VERSION = 10
+export const EXPERIMENT_VERSION = 11
 export const OLD_VERSION_REJECTION = (version: number): string =>
-  version === 9
-    ? "Version 9 experiments have only five archetypes (no fixed, rising star, second wind or bursts step scaler) and the old archetype assignments, so they cannot be imported. Start from the version 10 defaults."
-    : version === 8
-      ? "Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. Start from the version 10 defaults."
-      : version === 7
-        ? "Version 7 experiments give the rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. Start from the version 10 defaults."
-        : version === 6
-          ? "Version 6 experiments give each notable trainer one fixed TR and cannot be imported. Start from the version 10 defaults (start TR, archetype and peak TR)."
-          : version === 5
-            ? "Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. Start from the version 10 defaults."
-            : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. Start from the version 10 defaults.`
+  version === 10
+    ? "Version 10 experiments use the old archetype names (early bloomer, late bloomer, plateau, fixed, rising star, second wind, bursts), so they cannot be imported. Start from the version 11 defaults."
+    : version === 9
+      ? "Version 9 experiments have only five archetypes (no Legend, Star, Comeback or Burst step scaler) and the old archetype assignments, so they cannot be imported. Start from the version 11 defaults."
+      : version === 8
+        ? "Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. Start from the version 11 defaults."
+        : version === 7
+          ? "Version 7 experiments give the Rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. Start from the version 11 defaults."
+          : version === 6
+            ? "Version 6 experiments give each notable trainer one fixed TR and cannot be imported. Start from the version 11 defaults (start TR, archetype and peak TR)."
+            : version === 5
+              ? "Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. Start from the version 11 defaults."
+              : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. Start from the version 11 defaults.`
 
 export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Experiment => {
   const input = object(value, "root")
@@ -850,8 +855,8 @@ export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Ex
     const settings = object(inputTrainers[id], `trainers.${id}`)
     exactKeys(settings, ["startTR", "archetype", "peakTR", "roster"], `trainers.${id}`)
     const growth = growthSettings(settings, id)
-    if (growth.archetype === "fixed" && isGymLeader(trainer))
-      fail(`${id}: a Gym Leader cannot be fixed`)
+    if (growth.archetype === "legend" && isGymLeader(trainer))
+      fail(`${id}: a Gym Leader cannot be a Legend`)
     trainers[id] = { ...growth, roster: validateRoster(settings.roster, `${id}.roster`) }
   }
   const inputArchetypes = object(input.archetypes, "archetypes")

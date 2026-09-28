@@ -86,44 +86,44 @@ ROSTER = [
 
 # Placeholder growth (contract sections 7, 8 and 11), tuned in the explorer to
 # the balance targets: name -> (start TR, archetype, peak TR). Every archetype,
-# rival included, is a growth scaler. The lore-based assignments are approved
-# (section 11): veterans plateau, rising stars explode mid-journey, second winds
-# stall and surge late, bursts train in jumps, the strongest leaders bloom late,
-# Agatha is fixed, most others are steady; Champions and Lance get the highest
-# peaks. Gym Leaders (the duo included) start in the GYM_START_BAND by
-# archetype (GYM_ARCHETYPE_BANDS), not by Gym order, varied a little by lore;
-# no Gym Leader is fixed. League-eligible steadies and bursts keep start + peak
-# <= 190 so they stay at TR 95 or less at world progress 80.
-ARCHETYPES = ("steady", "early bloomer", "late bloomer", "plateau", "rival",
-              "fixed", "rising star", "second wind", "bursts")
+# Rival included, is a growth scaler. The lore-based assignments are approved
+# (section 11): Veterans peak early, Stars explode mid-journey, Comebacks
+# stall and return stronger, Bursts train in jumps, the strongest leaders are
+# Sleepers, Agatha is a Legend, most others are Steady; Champions and Lance get
+# the highest peaks. Gym Leaders (the duo included) start in the GYM_START_BAND
+# by archetype (GYM_ARCHETYPE_BANDS), not by Gym order, varied a little by lore;
+# no Gym Leader is a Legend. League-eligible Steadies and Bursts keep start +
+# peak <= 190 so they stay at TR 95 or less at world progress 80.
+ARCHETYPES = ("steady", "prodigy", "sleeper", "veteran", "rival",
+              "legend", "star", "comeback", "burst")
 GYM_START_BAND = (18, 40)
 GYM_ARCHETYPE_BANDS = {
-    "late bloomer": (18, 26), "rising star": (18, 26),
-    "early bloomer": (22, 30),
-    "steady": (24, 34), "bursts": (24, 34),
-    "plateau": (30, 40), "second wind": (30, 40),
+    "sleeper": (18, 26), "star": (18, 26),
+    "prodigy": (22, 30),
+    "steady": (24, 34), "burst": (24, 34),
+    "veteran": (30, 40), "comeback": (30, 40),
 }
 GROWTH = {
-    "Brock": (25, "steady", 100), "Misty": (26, "rising star", 110),
-    "Lt. Surge": (30, "plateau", 95), "Erika": (28, "steady", 150),
-    "Janine": (27, "early bloomer", 100), "Sabrina": (24, "late bloomer", 180),
-    "Blaine": (37, "second wind", 90), "Giovanni": (24, "bursts", 166),
+    "Brock": (25, "steady", 100), "Misty": (26, "star", 110),
+    "Lt. Surge": (30, "veteran", 95), "Erika": (28, "steady", 150),
+    "Janine": (27, "prodigy", 100), "Sabrina": (24, "sleeper", 180),
+    "Blaine": (37, "comeback", 90), "Giovanni": (24, "burst", 166),
     "Blue": (0, "rival", 170),
-    "Lorelei": (40, "plateau", 92), "Bruno": (45, "second wind", 94),
-    "Agatha": (95, "fixed", 95), "Koga": (30, "steady", 150),
-    "Lance": (48, "late bloomer", 200),
-    "Falkner": (22, "early bloomer", 80), "Bugsy": (24, "rising star", 100),
-    "Whitney": (26, "rising star", 95), "Morty": (26, "late bloomer", 171),
-    "Chuck": (34, "bursts", 85), "Jasmine": (24, "steady", 166),
-    "Pryce": (40, "second wind", 92), "Clair": (21, "late bloomer", 185),
-    "Will": (30, "early bloomer", 110), "Karen": (30, "steady", 155),
-    "Roxanne": (24, "steady", 90), "Brawly": (24, "bursts", 90),
-    "Wattson": (32, "plateau", 75), "Flannery": (23, "rising star", 100),
-    "Norman": (26, "steady", 164), "Winona": (18, "late bloomer", 172),
-    "Tate & Liza": (26, "rising star", 170), "Juan": (23, "late bloomer", 185),
-    "Sidney": (25, "early bloomer", 105), "Phoebe": (25, "steady", 150),
-    "Glacia": (40, "plateau", 90), "Drake": (45, "plateau", 93),
-    "Wallace": (48, "late bloomer", 190), "Steven": (50, "late bloomer", 195),
+    "Lorelei": (40, "veteran", 92), "Bruno": (45, "comeback", 94),
+    "Agatha": (95, "legend", 95), "Koga": (30, "steady", 150),
+    "Lance": (48, "sleeper", 200),
+    "Falkner": (22, "prodigy", 80), "Bugsy": (24, "star", 100),
+    "Whitney": (26, "star", 95), "Morty": (26, "sleeper", 171),
+    "Chuck": (34, "burst", 85), "Jasmine": (24, "steady", 166),
+    "Pryce": (40, "comeback", 92), "Clair": (21, "sleeper", 185),
+    "Will": (30, "prodigy", 110), "Karen": (30, "steady", 155),
+    "Roxanne": (24, "steady", 90), "Brawly": (24, "burst", 90),
+    "Wattson": (32, "veteran", 75), "Flannery": (23, "star", 100),
+    "Norman": (26, "steady", 164), "Winona": (18, "sleeper", 172),
+    "Tate & Liza": (26, "star", 170), "Juan": (23, "sleeper", 185),
+    "Sidney": (25, "prodigy", 105), "Phoebe": (25, "steady", 150),
+    "Glacia": (40, "veteran", 90), "Drake": (45, "veteran", 93),
+    "Wallace": (48, "sleeper", 190), "Steven": (50, "sleeper", 195),
 }
 # The Gym Leader duo: one entry fought as a double battle, league-ineligible.
 DUOS = {"Tate & Liza"}
@@ -274,20 +274,20 @@ DRAFT = {
 }
 DRAFT_NOTE = "user-directed roster draft v1 (identity/anime picks); battle content placeholder"
 GROWTH_NOTE = {
-    "steady": "steady (keeps a fixed fraction of the player's pace)",
-    "early bloomer": "early bloomer (a rising star: fast early, then slows)",
-    "late bloomer": "late bloomer (a strong leader: slow start, strong finish)",
-    "plateau": "plateau (a veteran who reaches their peak early and stops)",
-    "rival": "rival (starts at 0 and stays about 10 ahead of the player from 4 badges)",
-    "fixed": "fixed (never grows: TR stays at start TR, so peak TR equals start TR)",
-    "rising star": "rising star (an S-curve: slow start, explodes mid-journey, then levels off)",
-    "second wind": "second wind (fast early, stalls mid-journey, surges late)",
-    "bursts": "bursts (a step scaler: steady on average, but jumps at 4, 8, 16 and 24 badges)",
+    "steady": "a Steady (keeps a fixed fraction of the player's pace)",
+    "prodigy": "a Prodigy (brilliant early, then evens out: fast early, then slows)",
+    "sleeper": "a Sleeper (underestimated, strong at the end: slow start, strong finish)",
+    "veteran": "a Veteran (peaked already, you overtake them: reaches their peak early and stops)",
+    "rival": "the Rival (starts at 0 and stays about 10 ahead of the player from 4 badges)",
+    "legend": "a Legend (never changes, waits at the top: TR stays at start TR, so peak TR equals start TR)",
+    "star": "a Star (explodes mid-journey: slow start, explodes, then levels off)",
+    "comeback": "a Comeback (stalls, then returns stronger: fast early, stalls mid-journey, surges late)",
+    "burst": "a Burst (trains in jumps at milestones: a step scaler, Steady on average, jumping at 4, 8, 16 and 24 badges)",
 }
 
 
 def validate_growth(name, growth):
-    """Start and peak TR are non-negative integers with peak >= start (peak = start when fixed)."""
+    """Start and peak TR are non-negative integers with peak >= start (peak = start for a Legend)."""
     start, archetype, peak = growth
     if archetype not in ARCHETYPES:
         raise ValueError(f"{name}: unknown archetype {archetype!r}")
@@ -296,18 +296,18 @@ def validate_growth(name, growth):
             raise ValueError(f"{name}: {label} must be a non-negative integer")
     if peak < start:
         raise ValueError(f"{name}: peak TR must be at least start TR")
-    if archetype == "fixed" and peak != start:
-        raise ValueError(f"{name}: a fixed trainer's peak TR must equal start TR")
+    if archetype == "legend" and peak != start:
+        raise ValueError(f"{name}: a Legend's peak TR must equal start TR")
 
 
 def validate_gym_start(name, growth):
-    """A Gym Leader starts in the Gym band, inside their archetype's sub-band; none is fixed.
+    """A Gym Leader starts in the Gym band, inside their archetype's sub-band; none is a Legend.
 
-    An archetype without a sub-band (the rival) uses the whole Gym band.
+    An archetype without a sub-band (the Rival) uses the whole Gym band.
     """
     start, archetype, _ = growth
-    if archetype == "fixed":
-        raise ValueError(f"{name}: a Gym Leader cannot be fixed")
+    if archetype == "legend":
+        raise ValueError(f"{name}: a Gym Leader cannot be a Legend")
     low, high = GYM_ARCHETYPE_BANDS.get(archetype, GYM_START_BAND)
     if not GYM_START_BAND[0] <= start <= GYM_START_BAND[1] or not low <= start <= high:
         raise ValueError(f"{name}: Gym Leader start TR must be in {low}-{high} for {archetype}"

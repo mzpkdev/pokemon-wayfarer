@@ -41,24 +41,24 @@ even at the start, and the Elite Four and Champions start higher still.
 From there, notable trainers grow as your journey goes on, each in their own
 way:
 
-- **The steady Gym Leader** keeps a fixed share of your pace, from their
-  starting strength to their best.
-- **The early bloomer** grows fast early and then slows: a wall in the middle
-  of your journey.
-- **The late bloomer** starts slow and finishes strong: a challenge waiting
-  late in the game.
-- **The veteran** reaches their best early and stops there; eventually you
-  overtake them.
-- **Blue** starts level with you and pulls a step ahead over your first
-  badges, then stays there until he reaches his best.
-- **The fixed legend** never grows: already at their best, they wait at the
-  top for you to catch up, like Agatha.
-- **The rising star** starts modestly, explodes in the middle of your journey,
-  then settles at their best, like Misty and Whitney.
-- **The second wind** grows fast early, stalls for a long stretch, then
-  surges again late, like Blaine, Pryce, and Bruno.
-- **The trainer in bursts** keeps pace on average but trains in jumps,
-  getting stronger all at once at milestones in your journey, like Chuck,
+- **The Steady** keeps a fixed share of your pace, from their starting
+  strength to their best, like Brock.
+- **The Prodigy** is brilliant early, then evens out: they grow fast early and
+  then slow, a wall in the middle of your journey.
+- **The Sleeper** is underestimated and strong at the end: they start slow and
+  finish strong, a challenge waiting late in the game.
+- **The Veteran** peaked already, and you overtake them: they reach their best
+  early and stop there.
+- **The Rival**, Blue, starts level with you and pulls a step ahead over your
+  first badges, then stays there until he reaches his best.
+- **The Legend** never changes and waits at the top: already at their best,
+  they wait for you to catch up, like Agatha.
+- **The Star** explodes mid-journey: they start modestly, explode in the
+  middle of your journey, then settle at their best, like Misty and Whitney.
+- **The Comeback** stalls, then returns stronger: they grow fast early, stall
+  for a long stretch, then surge again late, like Blaine, Pryce, and Bruno.
+- **The Burst** trains in jumps at milestones: they keep pace on average but
+  get stronger all at once at milestones in your journey, like Chuck,
   Giovanni, and Brawly.
 
 Everyone grows by the same rule: only the shape, the starting strength, and
@@ -187,6 +187,10 @@ belong to playtesting.
 ## Later
 
 - More notable trainers, such as Red.
+- Hints in the world about who is too strong for you right now: Gym guides,
+  gossip, or a line on your Trainer Card.
+- Concrete feel checks for playtesters, such as winning the first Gym with a
+  lightly trained team.
 - A meaning for the "next Gym's highest or lowest level" cap options in an
   open world.
 - Growth shapes that differ from save to save, and other per-save variety.

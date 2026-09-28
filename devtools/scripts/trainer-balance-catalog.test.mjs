@@ -114,35 +114,35 @@ test("the growth table applies the section 11 archetype reassignment", () => {
   const growth = run("{name: list(value) for name, value in module.GROWTH.items()}")
   const named = (archetype) =>
     Object.keys(growth).filter((name) => growth[name][1] === archetype)
-  assert.deepEqual(named("rising star"), ["Misty", "Bugsy", "Whitney", "Flannery", "Tate & Liza"])
-  assert.deepEqual(named("second wind"), ["Blaine", "Bruno", "Pryce"])
-  assert.deepEqual(named("bursts"), ["Giovanni", "Chuck", "Brawly"])
-  assert.deepEqual(named("fixed"), ["Agatha"])
-  assert.equal(growth["Lt. Surge"][1], "plateau")
-  assert.equal(growth["Morty"][1], "late bloomer")
-  assert.deepEqual(growth["Agatha"], [95, "fixed", 95])
+  assert.deepEqual(named("star"), ["Misty", "Bugsy", "Whitney", "Flannery", "Tate & Liza"])
+  assert.deepEqual(named("comeback"), ["Blaine", "Bruno", "Pryce"])
+  assert.deepEqual(named("burst"), ["Giovanni", "Chuck", "Brawly"])
+  assert.deepEqual(named("legend"), ["Agatha"])
+  assert.equal(growth["Lt. Surge"][1], "veteran")
+  assert.equal(growth["Morty"][1], "sleeper")
+  assert.deepEqual(growth["Agatha"], [95, "legend", 95])
   assert.deepEqual(growth["Brock"], [25, "steady", 100])
   assert.deepEqual(growth["Blue"], [0, "rival", 170])
 })
 
-test("a fixed trainer's peak TR must equal its start TR", () => {
+test("a Legend's peak TR must equal its start TR", () => {
   const validate = (growth) => run("module.validate_growth('Fixture', tuple(args))", growth)
-  assert.equal(validate([95, "fixed", 95]), null)
-  assert.equal(validate([90, "fixed", 95]), "Fixture: a fixed trainer's peak TR must equal start TR")
-  assert.equal(validate([10, "bursts", 90]), null)
+  assert.equal(validate([95, "legend", 95]), null)
+  assert.equal(validate([90, "legend", 95]), "Fixture: a Legend's peak TR must equal start TR")
+  assert.equal(validate([10, "burst", 90]), null)
   assert.equal(validate([10, "sprint", 90]), "Fixture: unknown archetype 'sprint'")
 })
 
-test("Gym Leaders start in their archetype's sub-band and are never fixed", () => {
+test("Gym Leaders start in their archetype's sub-band and are never Legends", () => {
   const validate = (growth) => run("module.validate_gym_start('Fixture', tuple(args))", growth)
   for (const [archetype, low, high] of [
-    ["late bloomer", 18, 26],
-    ["rising star", 18, 26],
-    ["early bloomer", 22, 30],
+    ["sleeper", 18, 26],
+    ["star", 18, 26],
+    ["prodigy", 22, 30],
     ["steady", 24, 34],
-    ["bursts", 24, 34],
-    ["plateau", 30, 40],
-    ["second wind", 30, 40],
+    ["burst", 24, 34],
+    ["veteran", 30, 40],
+    ["comeback", 30, 40],
   ]) {
     assert.equal(validate([low, archetype, 100]), null)
     assert.equal(validate([high, archetype, 100]), null)
@@ -150,8 +150,8 @@ test("Gym Leaders start in their archetype's sub-band and are never fixed", () =
     assert.equal(validate([low - 1, archetype, 100]), message)
     assert.equal(validate([high + 1, archetype, 100]), message)
   }
-  assert.equal(validate([30, "fixed", 30]), "Fixture: a Gym Leader cannot be fixed")
-  // The rival has no sub-band, so only the whole Gym band applies.
+  assert.equal(validate([30, "legend", 30]), "Fixture: a Gym Leader cannot be a Legend")
+  // The Rival has no sub-band, so only the whole Gym band applies.
   assert.equal(validate([18, "rival", 100]), null)
   assert.equal(
     validate([41, "rival", 100]),

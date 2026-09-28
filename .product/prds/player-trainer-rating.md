@@ -88,8 +88,13 @@ changes yours.
 - **Player TR / trainer TR:** yours, or a notable trainer's, where it matters
   which.
 - **World progress:** your TR as notable trainers see it; they grow with it.
-- **Archetype:** a notable trainer's growth shape: steady, early bloomer, late
-  bloomer, plateau, rival, fixed, rising star, second wind, or bursts.
+- **Archetype:** a notable trainer's growth shape, named as a proper noun
+  ("Brock is a Steady"): Steady (keeps a fixed share of your pace), Prodigy
+  (brilliant early, then evens out), Sleeper (underestimated, strong at the
+  end), Veteran (peaked already, you overtake them), Rival (level with you,
+  then a step ahead), Legend (never changes, waits at the top), Star (explodes
+  mid-journey), Comeback (stalls, then returns stronger), or Burst (trains in
+  jumps at milestones).
 - **Start TR / peak TR:** a notable trainer's TR at the very start of your
   journey, and the most they can ever reach.
 - **Never decreases:** once earned, TR is never lowered.

@@ -72,7 +72,9 @@ change story battles, which follow the
 
 ## Selection and order
 
-One global pool of eligible trainers serves every league. When the player
+One global pool of eligible trainers serves every league. Gym Leaders, Elite
+Four, Champions, and Blue from every region are all eligible for any league;
+region, title, and home league never filter the pool. When the player
 enters:
 
 1. Compute each eligible trainer's TR at the current world progress

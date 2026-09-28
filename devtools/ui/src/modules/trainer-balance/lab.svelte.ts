@@ -69,14 +69,12 @@ const isGrowth = (id: ScalerId): id is Archetype => (ARCHETYPES as readonly stri
 const anchorsOf = (experiment: Experiment, id: ScalerId): Anchor[] =>
   isGrowth(id) ? experiment.archetypes[id] : experiment[id]
 /**
- * How a scaler reads between anchors. The kind is fixed: bursts is the only step scaler; team
+ * How a scaler reads between anchors. The kind is fixed: Burst is the only step scaler; team
  * size is interpolated, and its paired anchors make its steps.
  */
 export const scalerKind = (id: ScalerId): ScalerKind =>
   isGrowth(id) ? ARCHETYPE_KIND[id] : "interpolated"
-/** A form field name for a scaler (archetype names contain spaces). */
-export const scalerField = (id: ScalerId): string => id.replaceAll(" ", "-")
-const storageKey = "wayfarer-trainer-balance-v10"
+const storageKey = "wayfarer-trainer-balance-v11"
 /** The chart runs across player TR 0 to at least this. */
 export const CHART_MIN_END = Math.max(200, LEVEL_CAP_ANCHORS.at(-1)?.[0] ?? 0)
 /** The chart never runs past this player TR; a higher player TR is marked at the right edge. */
@@ -297,8 +295,8 @@ export class BalanceLab {
       const startTR = whole("startTR", "Start TR")
       const peakTR = whole("peakTR", "Peak TR")
       if (peakTR < startTR) throw new Error("Peak TR must be at least start TR.")
-      if (archetype === "fixed" && peakTR !== startTR)
-        throw new Error("A fixed trainer never grows: set peak TR equal to start TR.")
+      if (archetype === "legend" && peakTR !== startTR)
+        throw new Error("A Legend never grows: set peak TR equal to start TR.")
       Object.assign(settings, { startTR, archetype, peakTR })
       return `Updated ${this.#_name(this.selectedId)}’s growth.`
     })
@@ -387,8 +385,8 @@ export class BalanceLab {
       const read = (scaler: ScalerId) =>
         anchorsOf(next, scaler).map(
           (_, index): Anchor => [
-            index === 0 ? 0 : Number(data.get(`${scalerField(scaler)}-tr-${index}`)),
-            Number(data.get(`${scalerField(scaler)}-value-${index}`)),
+            index === 0 ? 0 : Number(data.get(`${scaler}-tr-${index}`)),
+            Number(data.get(`${scaler}-value-${index}`)),
           ],
         )
       for (const scaler of SCALER_IDS) {

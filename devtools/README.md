@@ -32,7 +32,8 @@ separate UI package only when it has a real independent consumer.
 `ui` contains Cartographer, Metatiles, Docs, and an experimental Trainer balance
 module (`#trainer-balance`). Trainer balance bundles its catalog and can run
 directly with `pnpm --filter @wayfarer/ui dev`, without building map catalogs.
-It edits each notable trainer's growth (start TR, one of nine archetypes, peak TR) and
+It edits each notable trainer's growth (start TR, one of nine archetypes from
+Steady, Prodigy, Sleeper, Veteran, Rival, Legend, Star, Comeback and Burst, peak TR) and
 six-slot roster with 1–3 ace slots fought last (38 entries, including the Tate & Liza double battle duo) and
 the scalers, shows each trainer's TR at the chosen player TR (world
 progress; badges are presets, and any TR can be typed), with members below

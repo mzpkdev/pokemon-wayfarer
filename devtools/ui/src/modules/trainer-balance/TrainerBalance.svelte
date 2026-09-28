@@ -7,6 +7,7 @@
     NEAR_BAND,
     ROSTER_SIZE,
     LEAGUES,
+    archetypeName,
     badgeMatchText,
     milestoneEventText,
   } from "./engine.js"
@@ -17,7 +18,6 @@
     catalog,
     lineText,
     movesText,
-    scalerField,
     scalerKind,
     stageWarning,
     type ScalerId,
@@ -75,7 +75,7 @@
     },
     ...ARCHETYPES.map((id) => ({
       id,
-      title: `${id[0]?.toUpperCase()}${id.slice(1)} growth`,
+      title: `${archetypeName(id)} growth`,
       by: "world progress",
       at: "World",
       unit: "%",
@@ -308,7 +308,9 @@
                 <td class="numeric muted" data-testid={`growth-${row.trainer.id}`}
                   >{row.startTR} → {row.peakTR}</td
                 >
-                <td class="muted" data-testid={`archetype-${row.trainer.id}`}>{row.archetype}</td>
+                <td class="muted" data-testid={`archetype-${row.trainer.id}`}
+                  >{archetypeName(row.archetype)}</td
+                >
                 <td
                   ><span class="level-pill" data-testid={`level-${row.trainer.id}`}
                     >Lv. {row.teamLevel}</span
@@ -387,7 +389,8 @@
             /></label
           ><label
             >Archetype<select aria-label="Archetype" name="archetype" value={lab.settings.archetype}
-              >{#each ARCHETYPES as archetype}<option value={archetype}>{archetype}</option
+              >{#each ARCHETYPES as archetype}<option value={archetype}
+                  >{archetypeName(archetype)}</option
                 >{/each}</select
             ></label
           ><label
@@ -766,10 +769,10 @@
       160); team size uses paired anchors to make a step table (0–10 → 1, 11–28 → 2, 29–43 → 3,
       44–70 → 4, 71–95 → 5, 96+ → 6). The wild level curve and regular trainer level curve are world
       scaling: they read the player’s TR and only feed the readout above. The nine archetype growth
-      scalers, the rival included, read world progress and give the growth % (0% at world progress
-      0, never decreasing, 0–100%) from start TR toward peak TR. Bursts is the only step scaler, so
-      it jumps at 4, 8, 16 and 24 badges; fixed stays at 0%, so a fixed trainer’s peak TR equals
-      start TR (no Gym Leader is fixed).
+      scalers, the Rival included, read world progress and give the growth % (0% at world progress
+      0, never decreasing, 0–100%) from start TR toward peak TR. Burst is the only step scaler, so
+      it jumps at 4, 8, 16 and 24 badges; a Legend stays at 0%, so a Legend’s peak TR equals start
+      TR (no Gym Leader is a Legend).
     </p>
     {#key lab.anchors}
       <form
@@ -783,7 +786,7 @@
             <div class="scaler" data-testid={`scaler-${scaler.id}`}>
               <h3>
                 {scaler.title} <span class="muted">by {scaler.by}</span>
-                <span class="scaler-kind" data-testid={`scaler-kind-${scalerField(scaler.id)}`}
+                <span class="scaler-kind" data-testid={`scaler-kind-${scaler.id}`}
                   >{scalerKind(scaler.id)}</span
                 >
               </h3>
@@ -795,7 +798,7 @@
                       <td
                         >{#if index === 0}<span class="muted">0</span>{:else}<input
                             aria-label={`${scaler.title} anchor ${index + 1} ${scaler.at === "TR" ? "TR" : "world progress"}`}
-                            name={`${scalerField(scaler.id)}-tr-${index}`}
+                            name={`${scaler.id}-tr-${index}`}
                             type="number"
                             min="1"
                             step="1"
@@ -806,7 +809,7 @@
                       <td
                         ><input
                           aria-label={`${scaler.title} anchor ${index + 1} value`}
-                          name={`${scalerField(scaler.id)}-value-${index}`}
+                          name={`${scaler.id}-value-${index}`}
                           type="number"
                           min={scaler.min}
                           max={scaler.max}

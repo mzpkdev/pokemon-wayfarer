@@ -28,7 +28,8 @@ rooms, and ceremonies. Each holds a five-match singles lineup.
 **Pool.** One global pool serves all three leagues: every notable singles
 trainer. Tate & Liza are notable but fight only as a double battle, so they
 are left out; Red (separate mastery encounter) is not notable. Region, title,
-and home league play no part.
+and home league play no part: Gym Leaders and trainers from every region can
+be invited to any league.
 
 **Lineup.** When the player enters a league, each pool trainer's current TR
 is worked out, and the lineup is the five with the highest. Ties fall in
@@ -75,8 +76,8 @@ cap; tougher endgame teams (better items, stats, movesets) are Later.
 3. They leave, win another badge, level up, and return to the same five with
    the same teams. This time they win, and the league result is committed.
 4. At the next league, entered with more badges, the lineup is worked out
-   again from everyone's current TR. Late bloomers may have climbed in and
-   veterans dropped out; some of the same people may return.
+   again from everyone's current TR. Sleepers may have climbed in and
+   Veterans dropped out; some of the same people may return.
 
 ## Records and recognition
 

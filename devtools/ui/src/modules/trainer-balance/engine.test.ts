@@ -163,7 +163,7 @@ describe("scalers", () => {
   })
 
   it("holds each anchor's value until the next anchor in a step scaler", () => {
-    const anchors = DEFAULT_ARCHETYPE_GROWTH.bursts
+    const anchors = DEFAULT_ARCHETYPE_GROWTH.burst
     expect(
       [0, 1, 39, 40, 41, 79, 80, 119, 120, 159, 160, 400].map((tr) => scale(anchors, tr, "step")),
     ).toEqual([0, 0, 0, 25, 25, 25, 50, 50, 75, 75, 100, 100])
@@ -638,22 +638,22 @@ describe("milestones", () => {
   })
 
   it("reports a growth scaler that stops short of 100% and scans only to the ceilings", () => {
-    const fixture = trainer("fixture", 10, six, { archetype: "plateau", peakTR: 60 })
+    const fixture = trainer("fixture", 10, six, { archetype: "veteran", peakTR: 60 })
     const experiment = experimentWith([fixture])
-    experiment.archetypes.plateau = [
+    experiment.archetypes.veteran = [
       [0, 0],
       [40, 50],
     ]
     const list = milestones(fixture, experiment, NO_EVOLUTION)
     // Growth stops at 50% (TR 35) at world progress 40; the level cap ceiling is TR 160.
-    expect(milestoneEnd(experiment, "plateau")).toBe(160)
+    expect(milestoneEnd(experiment, "veteran")).toBe(160)
     expect(list.at(-1)?.events.at(-1)).toEqual({ kind: "peak", tr: 35, reached: false })
     expect(list.at(-1)?.worldProgress).toBe(160)
-    experiment.archetypes.plateau = [
+    experiment.archetypes.veteran = [
       [0, 0],
       [1_000_000, 100],
     ]
-    expect(milestoneEnd(experiment, "plateau")).toBe(MILESTONE_SCAN_LIMIT)
+    expect(milestoneEnd(experiment, "veteran")).toBe(MILESTONE_SCAN_LIMIT)
   })
 })
 
@@ -738,9 +738,9 @@ describe("archetype growth", () => {
 
   it.each([
     ["steady", [0, 25, 50, 75, 100]],
-    ["early bloomer", [0, 50, 80, 95, 100]],
-    ["late bloomer", [0, 10, 25, 55, 100]],
-    ["plateau", [0, 60, 100, 100, 100]],
+    ["prodigy", [0, 50, 80, 95, 100]],
+    ["sleeper", [0, 10, 25, 55, 100]],
+    ["veteran", [0, 60, 100, 100, 100]],
   ] as const)(
     "reads %s growth at the anchors (start 0, peak 100 gives the growth %)",
     (name, pct) => {
@@ -750,61 +750,61 @@ describe("archetype growth", () => {
   )
 
   it.each([
-    ["rising star", [0, 10, 50, 90, 100]],
-    ["second wind", [0, 45, 50, 55, 100]],
-    ["bursts", [0, 25, 50, 75, 100]],
+    ["star", [0, 10, 50, 90, 100]],
+    ["comeback", [0, 45, 50, 55, 100]],
+    ["burst", [0, 25, 50, 75, 100]],
   ] as const)("reads %s growth at the §11 anchors", (name, pct) => {
     expect(WORLD_PROGRESS_CHECKPOINTS.map(trAt(name, 0, 100))).toEqual(pct)
     expect(growth[name].map(([world]) => world)).toEqual([...WORLD_PROGRESS_CHECKPOINTS])
   })
 
-  it("makes bursts the only step scaler and lists all nine archetypes", () => {
+  it("makes Burst the only step scaler and lists all nine archetypes", () => {
     expect(ARCHETYPES).toEqual([
       "steady",
-      "early bloomer",
-      "late bloomer",
-      "plateau",
+      "prodigy",
+      "sleeper",
+      "veteran",
       "rival",
-      "fixed",
-      "rising star",
-      "second wind",
-      "bursts",
+      "legend",
+      "star",
+      "comeback",
+      "burst",
     ])
-    expect(ARCHETYPES.filter((name) => ARCHETYPE_KIND[name] === "step")).toEqual(["bursts"])
+    expect(ARCHETYPES.filter((name) => ARCHETYPE_KIND[name] === "step")).toEqual(["burst"])
   })
 
-  it("interpolates rising star and second wind midpoints", () => {
-    // Rising star at 20 is 5%, at 60 is 30%, at 100 is 70%, at 140 is 95%.
-    expect([20, 60, 100, 140].map(trAt("rising star", 0, 100))).toEqual([5, 30, 70, 95])
-    // Second wind at 20 is 22.5% (rounds up), at 60 is 47.5%, at 100 is 52.5%, at 140 is 77.5%.
-    expect([20, 60, 100, 140].map(trAt("second wind", 0, 100))).toEqual([23, 48, 53, 78])
-    // Rising star 26 -> 110 at 100: 26 + 84 × 70% = 84.8.
-    expect(trAt("rising star", 26, 110)(100)).toBe(85)
+  it("interpolates Star and Comeback midpoints", () => {
+    // A Star at 20 is 5%, at 60 is 30%, at 100 is 70%, at 140 is 95%.
+    expect([20, 60, 100, 140].map(trAt("star", 0, 100))).toEqual([5, 30, 70, 95])
+    // A Comeback at 20 is 22.5% (rounds up), at 60 is 47.5%, at 100 is 52.5%, at 140 is 77.5%.
+    expect([20, 60, 100, 140].map(trAt("comeback", 0, 100))).toEqual([23, 48, 53, 78])
+    // A Star 26 -> 110 at 100: 26 + 84 × 70% = 84.8.
+    expect(trAt("star", 26, 110)(100)).toBe(85)
   })
 
-  it("holds bursts between anchors and jumps at 4, 8, 16 and 24 badges", () => {
-    const read = trAt("bursts", 24, 166)
+  it("holds a Burst between anchors and jumps at 4, 8, 16 and 24 badges", () => {
+    const read = trAt("burst", 24, 166)
     // 24 + 142 × 25% = 59.5 rounds up; 50% = 95; 75% = 130.5 rounds up.
     expect([0, 39, 40, 79, 80, 119, 120, 159, 160, 400].map(read)).toEqual([
       24, 24, 60, 60, 95, 95, 131, 131, 166, 166,
     ])
-    // At the anchors bursts equals steady; between them it holds below it.
+    // At the anchors a Burst equals a Steady; between them it holds below it.
     for (const world of WORLD_PROGRESS_CHECKPOINTS)
       expect(read(world)).toBe(trAt("steady", 24, 166)(world))
     expect(read(60)).toBeLessThan(trAt("steady", 24, 166)(60))
   })
 
-  it("keeps a fixed trainer at start TR at every world progress", () => {
-    expect(growth.fixed).toEqual([
+  it("keeps a Legend at start TR at every world progress", () => {
+    expect(growth.legend).toEqual([
       [0, 0],
       [160, 0],
     ])
-    const read = trAt("fixed", 95, 95)
+    const read = trAt("legend", 95, 95)
     for (let world = 0; world <= 200; world += 1) expect(read(world)).toBe(95)
     expect(read(1_000_000)).toBe(95)
   })
 
-  it("reads the rival as an ordinary growth scaler: 0/20/40/80/120/160 -> 0/15/29/53/76/100%", () => {
+  it("reads the Rival as an ordinary growth scaler: 0/20/40/80/120/160 -> 0/15/29/53/76/100%", () => {
     expect([0, 20, 40, 80, 120, 160].map(trAt("rival", 0, 100))).toEqual([0, 15, 29, 53, 76, 100])
     // The same start + (peak - start) x growth% rule as every archetype, so a start TR counts.
     expect(trAt("rival", 20, 120)(80)).toBe(73)
@@ -813,19 +813,19 @@ describe("archetype growth", () => {
   it("interpolates midpoints exactly and rounds halves up once", () => {
     // Steady 0 -> 100 at world progress 20 is 12.5%: 12.5 rounds up to 13.
     expect(trAt("steady", 0, 100)(20)).toBe(13)
-    // Start 10, peak 50, steady at 20: 10 + 40 * 12.5% = 15 (no rounding of the % first).
+    // Start 10, peak 50, a Steady at 20: 10 + 40 * 12.5% = 15 (no rounding of the % first).
     expect(trAt("steady", 10, 50)(20)).toBe(15)
-    // Late bloomer 20 -> 180 at 100: 20 + 40% of 160 = 84.
-    expect(trAt("late bloomer", 20, 180)(100)).toBe(84)
-    // Early bloomer 0 -> 90 at 60: 65% of 90 = 58.5 rounds up.
-    expect(trAt("early bloomer", 0, 90)(60)).toBe(59)
-    // Plateau 45 -> 94 at 20: 30% of 49 = 14.7.
-    expect(trAt("plateau", 45, 94)(20)).toBe(60)
+    // A Sleeper 20 -> 180 at 100: 20 + 40% of 160 = 84.
+    expect(trAt("sleeper", 20, 180)(100)).toBe(84)
+    // A Prodigy 0 -> 90 at 60: 65% of 90 = 58.5 rounds up.
+    expect(trAt("prodigy", 0, 90)(60)).toBe(59)
+    // A Veteran 45 -> 94 at 20: 30% of 49 = 14.7.
+    expect(trAt("veteran", 45, 94)(20)).toBe(60)
     expect(growthTR(growth.steady, 2, 95, 1)).toBe(3) // 2 + 93 * 0.625% = 2.58
   })
 
   it("stays flat past world progress 160 and keeps start at 0", () => {
-    for (const name of ARCHETYPES.filter((name) => name !== "fixed")) {
+    for (const name of ARCHETYPES.filter((name) => name !== "legend")) {
       const read = trAt(name, 12, 172)
       expect(read(0)).toBe(12)
       expect([read(160), read(200), read(1_000_000)]).toEqual([172, 172, 172])
@@ -900,7 +900,7 @@ describe("placeholder balance targets", () => {
           expect(opener.teamLevel).toBeLessThanOrEqual(cap(0))
         }
       } else if (world === 40) {
-        // The lowest late bloomer still sits near the player at world progress 40, so none is
+        // The lowest Sleeper still sits near the player at world progress 40, so none is
         // below yet; the low end is at least three Gym Leaders at or under the player TR.
         expect(count("near")).toBeGreaterThanOrEqual(3)
         expect(ladder.filter((row) => row.gap <= 0).length).toBeGreaterThanOrEqual(3)
@@ -912,26 +912,26 @@ describe("placeholder balance targets", () => {
     },
   )
 
-  it("makes the hardest leaders at 24 badges late bloomers or high-peak steadies", () => {
+  it("makes the hardest leaders at 24 badges Sleepers or high-peak Steadies", () => {
     const top = gymLadder(catalog, defaults, 160).slice(-5)
     for (const row of top) {
       const settings = defaults.trainers[row.trainer.id]!
       expect(
-        settings.archetype === "late bloomer" ||
+        settings.archetype === "sleeper" ||
           (settings.archetype === "steady" && settings.peakTR >= 170),
       ).toBe(true)
     }
   })
 
-  it("starts every Gym Leader in the 18–40 band by archetype, and none is fixed", () => {
+  it("starts every Gym Leader in the 18–40 band by archetype, and none is a Legend", () => {
     const bands: Record<string, [number, number]> = {
-      "late bloomer": [18, 26],
-      "rising star": [18, 26],
-      "early bloomer": [22, 30],
+      sleeper: [18, 26],
+      star: [18, 26],
+      prodigy: [22, 30],
       steady: [24, 34],
-      bursts: [24, 34],
-      plateau: [30, 40],
-      "second wind": [30, 40],
+      burst: [24, 34],
+      veteran: [30, 40],
+      comeback: [30, 40],
     }
     const gyms = catalog.filter(isGymLeader)
     expect(gyms).toHaveLength(24)
@@ -960,7 +960,7 @@ describe("placeholder balance targets", () => {
     ])
   })
 
-  it("starts Blue at one Eevee at Lv 5 and grows him with the rival scaler", () => {
+  it("starts Blue at one Eevee at Lv 5 and grows him with the Rival scaler", () => {
     const blue = (world: number) => at(world).find((row) => row.trainer.id === "blue")!
     const pallet = blue(0)
     expect([pallet.tr, pallet.size, pallet.teamLevel]).toEqual([0, 1, 5])
@@ -1056,9 +1056,9 @@ describe("catalog", () => {
     expect(growth("Blue")).toEqual([0, "rival", 170])
     expect(catalog.filter((record) => record.archetype === "rival")).toHaveLength(1)
     expect(growth("Brock")).toEqual([25, "steady", 100])
-    expect(growth("Lance")).toEqual([48, "late bloomer", 200])
+    expect(growth("Lance")).toEqual([48, "sleeper", 200])
     for (const record of catalog)
-      if (record.archetype === "fixed") expect(record.peakTR).toBe(record.startTR)
+      if (record.archetype === "legend") expect(record.peakTR).toBe(record.startTR)
     expect(Object.keys(experiment.trainers)).toHaveLength(38)
     expect(catalog.some((record) => record.id.startsWith("red"))).toBe(false)
   })
@@ -1066,18 +1066,12 @@ describe("catalog", () => {
   it("applies the §11 archetype reassignment and leaves everyone else unchanged", () => {
     const byArchetype = (archetype: Archetype) =>
       catalog.filter((record) => record.archetype === archetype).map((record) => record.name)
-    expect(byArchetype("rising star")).toEqual([
-      "Misty",
-      "Bugsy",
-      "Whitney",
-      "Flannery",
-      "Tate & Liza",
-    ])
-    expect(byArchetype("second wind")).toEqual(["Blaine", "Bruno", "Pryce"])
-    expect(byArchetype("bursts")).toEqual(["Giovanni", "Chuck", "Brawly"])
-    expect(byArchetype("fixed")).toEqual(["Agatha"])
-    expect(byArchetype("plateau")).toEqual(["Lt. Surge", "Lorelei", "Wattson", "Glacia", "Drake"])
-    expect(byArchetype("late bloomer")).toEqual([
+    expect(byArchetype("star")).toEqual(["Misty", "Bugsy", "Whitney", "Flannery", "Tate & Liza"])
+    expect(byArchetype("comeback")).toEqual(["Blaine", "Bruno", "Pryce"])
+    expect(byArchetype("burst")).toEqual(["Giovanni", "Chuck", "Brawly"])
+    expect(byArchetype("legend")).toEqual(["Agatha"])
+    expect(byArchetype("veteran")).toEqual(["Lt. Surge", "Lorelei", "Wattson", "Glacia", "Drake"])
+    expect(byArchetype("sleeper")).toEqual([
       "Sabrina",
       "Lance",
       "Morty",
@@ -1087,7 +1081,7 @@ describe("catalog", () => {
       "Wallace",
       "Steven",
     ])
-    expect(byArchetype("early bloomer")).toEqual(["Janine", "Falkner", "Will", "Sidney"])
+    expect(byArchetype("prodigy")).toEqual(["Janine", "Falkner", "Will", "Sidney"])
     expect(byArchetype("steady")).toEqual([
       "Brock",
       "Erika",
@@ -1218,10 +1212,18 @@ describe("experiment import", () => {
     expect(experiment.archetypes.steady[1]).toEqual([40, 25])
   })
 
+  it("rejects version 10, which used the old archetype names", () => {
+    const v10 = base()
+    v10.version = 10
+    expect(() => validateExperiment(v10, records)).toThrow(
+      "Version 10 experiments use the old archetype names",
+    )
+  })
+
   it("rejects version 9, which had only five archetypes", () => {
     const v9 = base()
     v9.version = 9
-    for (const name of ["fixed", "rising star", "second wind", "bursts"]) delete v9.archetypes[name]
+    for (const name of ["legend", "star", "comeback", "burst"]) delete v9.archetypes[name]
     expect(() => validateExperiment(v9, records)).toThrow(
       "Version 9 experiments have only five archetypes",
     )
@@ -1236,13 +1238,13 @@ describe("experiment import", () => {
     )
   })
 
-  it("rejects version 7, which gave the rival a fixed lead", () => {
+  it("rejects version 7, which gave the Rival a fixed lead", () => {
     const v7 = base()
     v7.version = 7
     delete v7.archetypes.rival
     v7.trainers.fixture.lead = null
     expect(() => validateExperiment(v7, records)).toThrow(
-      "Version 7 experiments give the rival a fixed lead",
+      "Version 7 experiments give the Rival a fixed lead",
     )
   })
 
@@ -1297,23 +1299,23 @@ describe("experiment import", () => {
     ["an unknown archetype", { archetype: "arc" }, "archetype must be one of"],
     ["the retired fixed TR", { tr: 3 }, "missing or unknown fields"],
     [
-      "a fixed trainer whose peak differs from the start",
-      { archetype: "fixed", startTR: 3, peakTR: 4 },
-      "a fixed trainer's peak TR must equal start TR",
+      "a Legend whose peak differs from the start",
+      { archetype: "legend", startTR: 3, peakTR: 4 },
+      "a Legend's peak TR must equal start TR",
     ],
-    ["a fixed Gym Leader", { archetype: "fixed", startTR: 3, peakTR: 3 }, "cannot be fixed"],
+    ["a Gym Leader Legend", { archetype: "legend", startTR: 3, peakTR: 3 }, "cannot be a Legend"],
   ])("rejects %s", (_name, change, message) => {
     const input = base()
     Object.assign(input.trainers.fixture, change)
     expect(() => validateExperiment(input, records)).toThrow(message)
   })
 
-  it("accepts a fixed trainer outside the Gyms with peak TR equal to start TR", () => {
+  it("accepts a Legend outside the Gyms with peak TR equal to start TR", () => {
     const elite = [{ ...trainer("fixture", 3), role: "Elite Four" as const }]
     const input = JSON.parse(serializeExperiment(experimentWith(elite)))
-    Object.assign(input.trainers.fixture, { archetype: "fixed", startTR: 95, peakTR: 95 })
+    Object.assign(input.trainers.fixture, { archetype: "legend", startTR: 95, peakTR: 95 })
     expect(validateExperiment(input, elite).trainers.fixture).toMatchObject({
-      archetype: "fixed",
+      archetype: "legend",
       startTR: 95,
       peakTR: 95,
     })
@@ -1340,7 +1342,7 @@ describe("experiment import", () => {
 
   it("validates the archetype growth scalers", () => {
     const input = base()
-    delete input.archetypes.plateau
+    delete input.archetypes.veteran
     expect(() => validateExperiment(input, records)).toThrow("missing or unknown fields")
     const noRival = base()
     delete noRival.archetypes.rival
