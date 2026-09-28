@@ -30,7 +30,8 @@ Each trainer has one filler pool, which may hold more than six options.
   modifier deltas.
 - **Modifiers**: authored rows `flag → (characterId, fillerId, delta)`, active
   while the persistent save flag is set. A set flag applies at the next
-  resolution and never alters a battle snapshot or a locked lineup.
+  resolution and never alters a battle snapshot or a frozen league event
+  lineup.
 - **Minimum TR** (optional per option): an option is ineligible while the
   trainer's TR is below it; the next-best eligible option fills meanwhile.
 - **Fill**: with K filler slots in the current team, the K highest-weight

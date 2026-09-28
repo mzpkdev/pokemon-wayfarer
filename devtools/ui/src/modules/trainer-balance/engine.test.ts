@@ -37,9 +37,11 @@ import {
   gymLadder,
   isGymLeader,
   leagueCandidates,
+  leagueCalendar,
   leagueScore,
-  leagueSequence,
-  leagueWorlds,
+  eventEntry,
+  eventLeague,
+  reigningChampions,
   learnsetIndex,
   learnsetOf,
   levelCap,
@@ -1623,8 +1625,8 @@ describe("league lineups", () => {
 
   it("ranks every league-eligible catalog trainer and fields five distinct ones, strongest last", () => {
     const eligible = catalog.filter((record) => record.leagueEligible).length
-    for (const at of [null, 0, 40, 97, 200])
-      for (const ranking of leagueSequence(catalog, defaults, leagueWorlds(at))) {
+    for (const world of [0, 40, 80, 97, 120, 160, 200])
+      for (const { ranking } of leagueCalendar(catalog, defaults, world, 24, 6)) {
         expect(ranking.entrants).toHaveLength(eligible)
         expect(ranking.entrants.map((entrant) => entrant.trainer.id)).not.toContain("tate-liza")
         // Those who join come first, highest score first and ranked 1..n; the aloof who skip follow.
@@ -1665,32 +1667,146 @@ describe("league lineups", () => {
     expect(ranked.score).toBe(Math.floor((norman.tr * 90) / 100))
   })
 
-  it("enters Indigo, then the Sevii Masters, then Hoenn, fatiguing the previous lineup", () => {
-    const worlds = leagueWorlds()
-    expect(worlds).toEqual({ Indigo: 80, "Sevii Masters": 120, Hoenn: 160 })
-    expect(leagueWorlds(97)).toEqual({ Indigo: 97, "Sevii Masters": 97, Hoenn: 97 })
-    for (const sequenceWorlds of [worlds, leagueWorlds(97)]) {
-      const [indigo, masters, hoenn] = leagueSequence(catalog, defaults, sequenceWorlds)
-      expect([indigo!.league, masters!.league, hoenn!.league]).toEqual([
+  describe("league calendar", () => {
+    const lineupIds = (ranking: { lineup: { trainer: TrainerRecord }[] }) =>
+      ranking.lineup.map((entrant) => entrant.trainer.id)
+
+    it("holds one event a day, staggered by day mod 3: Indigo, Hoenn, then the Sevii Masters", () => {
+      expect(Array.from({ length: 7 }, (_, day) => eventLeague(day))).toEqual([
         "Indigo",
-        "Sevii Masters",
         "Hoenn",
+        "Sevii Masters",
+        "Indigo",
+        "Hoenn",
+        "Sevii Masters",
+        "Indigo",
       ])
-      for (const entrant of indigo!.entrants) expect(entrant.willingness.fatigue).toBe(0)
-      for (const [ranking, before] of [
-        [masters!, indigo!],
-        [hoenn!, masters!],
-      ] as const)
-        for (const entrant of ranking.entrants)
-          expect(entrant.willingness.fatigue).toBe(
-            before.lineup.some((previous) => previous.trainer.id === entrant.trainer.id) ? 50 : 0,
-          )
-    }
-    // At one world progress, fatigue keeps the Sevii Masters from repeating Indigo's lineup.
-    const [indigo, masters] = leagueSequence(catalog, defaults, leagueWorlds(97))
-    expect(masters!.lineup.map((entrant) => entrant.trainer.id)).not.toEqual(
-      indigo!.lineup.map((entrant) => entrant.trainer.id),
-    )
+      const events = leagueCalendar(catalog, defaults, 120, 16, 12)
+      expect(events.map((event) => event.day)).toEqual([...Array(12).keys()])
+      for (const event of events) {
+        expect(event.league).toBe(eventLeague(event.day))
+        // Each league's next event is 3 days later.
+        const next = events.find((other) => other.day > event.day && other.league === event.league)
+        if (next) expect(next.day - event.day).toBe(3)
+      }
+      expect(() => eventLeague(-1)).toThrow("Invalid in-game day")
+    })
+
+    it("opens Indigo and Hoenn at 8 badges in any order, and the Sevii Masters at 16 after a regional win", () => {
+      const none = new Set<"Indigo" | "Hoenn" | "Sevii Masters">()
+      expect(eventEntry("Indigo", 7, none)).toEqual({ eligible: false, reason: "badges", needs: 8 })
+      expect(eventEntry("Hoenn", 7, none)).toEqual({ eligible: false, reason: "badges", needs: 8 })
+      expect(eventEntry("Indigo", 8, none)).toEqual({ eligible: true })
+      // Hoenn needs no Indigo win first.
+      expect(eventEntry("Hoenn", 8, none)).toEqual({ eligible: true })
+      expect(eventEntry("Sevii Masters", 15, new Set(["Indigo"]))).toEqual({
+        eligible: false,
+        reason: "badges",
+        needs: 16,
+      })
+      expect(eventEntry("Sevii Masters", 24, none)).toEqual({
+        eligible: false,
+        reason: "regional win",
+      })
+      expect(eventEntry("Sevii Masters", 16, new Set(["Indigo"]))).toEqual({ eligible: true })
+      expect(eventEntry("Sevii Masters", 16, new Set(["Hoenn"]))).toEqual({ eligible: true })
+      // A Masters win alone is not a regional win.
+      expect(eventEntry("Sevii Masters", 24, new Set(["Sevii Masters"]))).toEqual({
+        eligible: false,
+        reason: "regional win",
+      })
+    })
+
+    it("opens the Sevii Masters only once the player has won Indigo or Hoenn on an earlier day", () => {
+      const skip = leagueCalendar(catalog, defaults, 160, 24, 9)
+      for (const event of skip.filter((event) => event.league === "Sevii Masters"))
+        expect(event.entry).toEqual({ eligible: false, reason: "regional win" })
+      // Won Hoenn on day 4: the Masters on day 2 stays closed, day 5 and day 8 open.
+      const won = leagueCalendar(catalog, defaults, 160, 24, 9, new Set([4]))
+      expect(won.find((event) => event.day === 2)!.entry.eligible).toBe(false)
+      expect(won.find((event) => event.day === 5)!.entry.eligible).toBe(true)
+      expect(won.find((event) => event.day === 8)!.entry.eligible).toBe(true)
+      // With 12 badges, nothing but a regional league opens, and a win the player cannot enter counts
+      // for nothing.
+      const early = leagueCalendar(catalog, defaults, badgeTR(12), 12, 6, new Set([0, 2]))
+      expect(early.find((event) => event.day === 2)).toMatchObject({
+        entry: { eligible: false, reason: "badges", needs: 16 },
+        playerWon: false,
+      })
+      const closed = leagueCalendar(catalog, defaults, badgeTR(7), 7, 3, new Set([0]))
+      expect(closed[0]).toMatchObject({ playerWon: false, firstWin: false })
+    })
+
+    it("fatigues the lineup of the most recent completed event, at any league, entered or not", () => {
+      const events = leagueCalendar(catalog, defaults, 120, 16, 9, new Set([3]))
+      expect(events[0]!.fatigueFrom).toBeNull()
+      for (const entrant of events[0]!.ranking.entrants) expect(entrant.willingness.fatigue).toBe(0)
+      for (const event of events.slice(1)) {
+        const before = events[event.day - 1]!
+        expect(event.fatigueFrom).toEqual({ day: before.day, league: before.league })
+        const tired = new Set(lineupIds(before.ranking))
+        for (const entrant of event.ranking.entrants)
+          expect(entrant.willingness.fatigue).toBe(tired.has(entrant.trainer.id) ? 50 : 0)
+      }
+      // The player's win on day 3 changes nothing about the lineups or fatigue.
+      expect(events.map((event) => event.ranking)).toEqual(
+        leagueCalendar(catalog, defaults, 120, 16, 9).map((event) => event.ranking),
+      )
+      // Fatigue keeps back-to-back events from fielding the same five at the neutral Masters.
+      const masters = events.find((event) => event.league === "Sevii Masters")!
+      expect(lineupIds(masters.ranking)).not.toEqual(lineupIds(events[masters.day - 1]!.ranking))
+    })
+
+    it("makes the lineup's strongest the reigning champion unless the player wins", () => {
+      const events = leagueCalendar(catalog, defaults, 160, 24, 9, new Set([0, 3, 4]))
+      for (const event of events) {
+        if (event.playerWon) expect(event.champion).toEqual({ kind: "player" })
+        else
+          expect(event.champion).toEqual({
+            kind: "trainer",
+            entrant: event.ranking.lineup.at(-1),
+          })
+      }
+      // First and repeat wins at Indigo, a first win at Hoenn.
+      expect(
+        events.filter((event) => event.playerWon).map((event) => [event.day, event.firstWin]),
+      ).toEqual([
+        [0, true],
+        [3, false],
+        [4, true],
+      ])
+      // The title passes at each league's next event: Indigo's day 6 event (not won) ends the
+      // player's reign there; Hoenn's day 7 does the same.
+      const champions = reigningChampions(events)
+      expect(champions.Indigo).toEqual(events[6]!.champion)
+      expect(champions.Hoenn).toEqual(events[7]!.champion)
+      expect(champions["Sevii Masters"]).toEqual(events[8]!.champion)
+      expect(reigningChampions(events.slice(0, 1))).toEqual({
+        Indigo: { kind: "player" },
+        Hoenn: null,
+        "Sevii Masters": null,
+      })
+      // Lance, aloof, reigns over the elite endgame events when the player skips everything.
+      const skip = leagueCalendar(catalog, defaults, 160, 24, 3)
+      expect(
+        skip.map((event) =>
+          event.champion.kind === "trainer" ? event.champion.entrant.trainer.id : "player",
+        ),
+      ).toContain("lance")
+    })
+
+    it("is deterministic and never reads the day for strength", () => {
+      const a = leagueCalendar(catalog, defaults, 97, 17, 12, new Set([0, 5]))
+      expect(a).toEqual(leagueCalendar(catalog, defaults, 97, 17, 12, new Set([0, 5])))
+      // Every event scores everyone at the same TR: days only schedule events.
+      const trs = (event: (typeof a)[number]) =>
+        Object.fromEntries(
+          event.ranking.entrants.map((entrant) => [entrant.trainer.id, entrant.tr]),
+        )
+      for (const event of a) expect(trs(event)).toEqual(trs(a[0]!))
+      // A longer calendar extends a shorter one without changing it.
+      expect(leagueCalendar(catalog, defaults, 97, 17, 20, new Set([0, 5])).slice(0, 12)).toEqual(a)
+    })
   })
 
   describe("aloof trainers", () => {
@@ -1791,8 +1907,11 @@ describe("league lineups", () => {
       expect(ids(tiredAloof.lineup)).toEqual(["b", "c", "d", "e", "a"])
     })
 
-    it("keeps Lance out of the early leagues and fields him late in the standard sequence", () => {
-      const [indigo, masters, hoenn] = leagueSequence(catalog, defaults, leagueWorlds())
+    it("keeps Lance out of early events and fields him at an elite endgame event", () => {
+      const indigo = leagueCalendar(catalog, defaults, 80, 8, 1)[0]!.ranking
+      const masters = leagueCalendar(catalog, defaults, 120, 16, 3)[2]!.ranking
+      // Indigo's first event with all 24 badges (base lineup Lv 100), before anyone is fatigued.
+      const endgame = leagueCalendar(catalog, defaults, 160, 24, 1)[0]!.ranking
       const lance = (ranking: typeof indigo) =>
         ranking!.entrants.find((entrant) => entrant.trainer.id === "lance")!
       // A Legend at TR 200 (Lv 100) is far above the Indigo and Masters base lineups.
@@ -1803,13 +1922,13 @@ describe("league lineups", () => {
         inLineup: false,
       })
       expect(lance(masters)).toMatchObject({ joins: false, inLineup: false })
-      expect(lance(hoenn)).toMatchObject({ joins: true, inLineup: true })
-      expect(hoenn!.lineup.at(-1)!.trainer.id).toBe("lance")
+      expect(lance(endgame)).toMatchObject({ joins: true, inLineup: true })
+      expect(endgame.lineup.at(-1)!.trainer.id).toBe("lance")
     })
 
     it("never fields an aloof trainer more than the margin above the base lineup level", () => {
-      for (const at of [null, 0, 40, 80, 97, 120, 160, 200])
-        for (const ranking of leagueSequence(catalog, defaults, leagueWorlds(at))) {
+      for (const world of [0, 40, 80, 97, 120, 160, 200])
+        for (const { ranking } of leagueCalendar(catalog, defaults, world, 24, 6)) {
           expect(ranking.baseLineupLevel).not.toBeNull()
           for (const entrant of ranking.entrants.filter((row) => row.aloof))
             expect(entrant.joins).toBe(entrant.teamLevel <= ranking.baseLineupLevel! + ALOOF_MARGIN)
@@ -1820,9 +1939,8 @@ describe("league lineups", () => {
   })
 
   it("is deterministic: no seed, the same inputs give the same lineups in any input order", () => {
-    const worlds = leagueWorlds()
-    expect(leagueSequence(catalog, defaults, worlds)).toEqual(
-      leagueSequence(catalog, defaults, worlds),
+    expect(leagueCalendar(catalog, defaults, 120, 16, 9)).toEqual(
+      leagueCalendar(catalog, defaults, 120, 16, 9),
     )
     const candidates = leagueCandidates(catalog, defaults, 120)
     const previous = new Set(["blue", "lance", "steven"])
@@ -2378,6 +2496,14 @@ describe("experiment import", () => {
     restored.archetypes.steady[1]![1] = 40
     expect(experiment.trainers.fixture!.startTR).toBe(3)
     expect(experiment.archetypes.steady[1]).toEqual([40, 25])
+  })
+
+  it("rejects version 17, which saved a league entry point instead of the calendar", () => {
+    const v17 = base()
+    v17.version = 17
+    expect(() => validateExperiment(v17, records)).toThrow(
+      "Version 17 experiments save a league entry point for the retired standard entry sequence",
+    )
   })
 
   it("rejects version 16, which had no play styles", () => {

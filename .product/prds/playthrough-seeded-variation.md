@@ -79,10 +79,9 @@ owned by each feature.
 
 ## Later
 
-- Seeded league order.
+- Seeded league calendars or special events.
 - Seeded league lineups, varying which willing trainers come per save
-  ([Leagues](leagues.md) picks them deterministically in v0), with rotation
-  and recurring editions.
+  ([Leagues](leagues.md) picks them deterministically in v0), with rotation.
 - Per-save trainer growth arcs.
 - Per-save variation in which supporting Pokémon fill a trainer's filler
   slots ([Trainer roster influence](trainer-roster-influence.md)).

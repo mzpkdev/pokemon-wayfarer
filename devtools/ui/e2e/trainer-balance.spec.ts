@@ -189,7 +189,7 @@ test("sets the player TR directly, with badges as presets, and reads old badge p
   await expect(page.getByTestId("selected-tr")).toHaveText("70")
   await expect(page.getByTestId("tr-brock")).toHaveText("70")
   await expect(page.getByTestId("ladder-brock")).toContainText("below -27")
-  await expect(page.getByTestId("lineup-indigo").locator(":scope > li")).toHaveCount(5)
+  await expect(page.getByTestId("event-lineup").locator(":scope > li")).toHaveCount(5)
   // The slider runs 0–200; the field takes any larger TR, which is past 24 badges.
   await page.getByLabel("Player TR slider", { exact: true }).fill("170")
   await expect(input).toHaveValue("170")
@@ -344,31 +344,25 @@ test("ranks every eligible trainer by league score and fields the top five, stro
   page,
 }) => {
   await page.goto("/#trainer-balance")
-  const names = async (league: string) =>
-    page.getByTestId(`lineup-${league}`).locator(":scope > li h3").allInnerTexts()
+  const names = async () =>
+    page.getByTestId("event-lineup").locator(":scope > li h3").allInnerTexts()
+  const entrant = (id: string) => page.getByTestId(`event-entrant-${id}`).locator("td")
   // Every catalog trainer but the Tate & Liza duo is league-eligible.
   const eligible = 37
-  // The standard sequence enters each league at its own badge point: 8, 16 and 24 badges.
-  await expect(page.getByTestId("league-indigo").locator("h3").first()).toContainText(
-    "world progress 80 · Kanto + Johto · base lineup Lv 59",
+  await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
+  // Day 0 is Indigo's event at the player's world progress, with no earlier event to fatigue anyone.
+  await expect(page.getByTestId("event").locator("h3").first()).toContainText(
+    "Day 0: Indigo world progress 80 · Kanto + Johto · base lineup Lv 59 · fatigued from no earlier event",
   )
-  await expect(page.getByTestId("league-sevii-masters").locator("h3").first()).toContainText(
-    "world progress 120 · neutral location · base lineup Lv 81",
-  )
-  await expect(page.getByTestId("league-hoenn").locator("h3").first()).toContainText(
-    "world progress 160 · Hoenn · base lineup Lv 100",
-  )
-  for (const league of ["indigo", "sevii-masters", "hoenn"]) {
-    await expect(page.getByTestId(`lineup-${league}`).locator(":scope > li")).toHaveCount(5)
-    await expect(page.getByTestId(`entrants-${league}`).locator("tbody tr")).toHaveCount(eligible)
-    await expect(
-      page.getByTestId(`entrants-${league}`).locator("tbody tr", { hasText: "in lineup" }),
-    ).toHaveCount(5)
-  }
+  await expect(page.getByTestId("event-lineup").locator(":scope > li")).toHaveCount(5)
+  await expect(page.getByTestId("event-entrants").locator("tbody tr")).toHaveCount(eligible)
+  await expect(
+    page.getByTestId("event-entrants").locator("tbody tr", { hasText: "in lineup" }),
+  ).toHaveCount(5)
   await expect(page.getByLabel("League seed", { exact: true })).toHaveCount(0)
   // Indigo fights by ascending TR, strongest last (equal TRs in catalog order).
   await expect
-    .poll(() => names("indigo"))
+    .poll(names)
     .toEqual([
       "Match 1 Will",
       "Match 2 Lt. Surge",
@@ -376,11 +370,11 @@ test("ranks every eligible trainer by league score and fields the top five, stro
       "Match 4 Agatha",
       "Match 5 Jasmine",
     ])
-  await expect(page.getByTestId("match-indigo-5")).toContainText("TR 95 · score 95 · Lv. 59")
+  await expect(page.getByTestId("event-match-5")).toContainText("TR 95 · score 95 · Lv. 59")
   await expect(page.getByTestId("league-finalist")).toHaveText("Jasmine 95")
   // League score = floor(TR × willingness / 100). Norman (Hoenn, not a traveller) is away at
   // Indigo and pays 80; Drake (Hoenn, traveller) pays only 10.
-  await expect(page.getByTestId("entrant-indigo-norman").locator("td")).toHaveText([
+  await expect(entrant("norman")).toHaveText([
     "27",
     "Norman",
     "95",
@@ -395,7 +389,7 @@ test("ranks every eligible trainer by league score and fields the top five, stro
     "",
     "",
   ])
-  await expect(page.getByTestId("entrant-indigo-drake").locator("td")).toHaveText([
+  await expect(entrant("drake")).toHaveText([
     "12",
     "Drake",
     "93",
@@ -410,16 +404,16 @@ test("ranks every eligible trainer by league score and fields the top five, stro
     "",
     "",
   ])
-  // Aloof: the top five non-aloof are the base lineup (base lineup Lv 59 at Indigo). Agatha (Lv 59) joins;
+  // Aloof: the top five non-aloof are the base lineup (base lineup Lv 59). Agatha (Lv 59) joins;
   // Lance, a Legend at TR 200 (Lv 100), skips and is not ranked.
-  await expect(page.getByTestId("aloof-indigo-agatha")).toHaveText(
+  await expect(page.getByTestId("event-aloof-agatha")).toHaveText(
     "Agatha aloof: team Lv 59 vs base lineup Lv 59 + 10 → joins",
   )
-  await expect(page.getByTestId("aloof-indigo-lance")).toHaveText(
+  await expect(page.getByTestId("event-aloof-lance")).toHaveText(
     "Lance aloof: team Lv 100 vs base lineup Lv 59 + 10 → skips",
   )
-  await expect(page.getByTestId("aloof-indigo").locator("li")).toHaveCount(8)
-  await expect(page.getByTestId("entrant-indigo-lance").locator("td")).toHaveText([
+  await expect(page.getByTestId("event-aloof").locator("li")).toHaveCount(8)
+  await expect(entrant("lance")).toHaveText([
     "—",
     "Lance",
     "200",
@@ -434,94 +428,128 @@ test("ranks every eligible trainer by league score and fields the top five, stro
     "skips",
     "",
   ])
-  await expect(page.getByTestId("entrant-indigo-jasmine").locator("td").last()).toHaveText(
-    "in lineup",
+  await expect(entrant("jasmine").last()).toHaveText("in lineup")
+
+  // The calendar: 12 days by default, one event a day, staggered Indigo, Hoenn, Sevii Masters.
+  const calendar = page.getByTestId("calendar").locator("tbody tr")
+  await expect(calendar).toHaveCount(12)
+  await expect(page.getByTestId("event-0")).toContainText("Indigo")
+  await expect(page.getByTestId("event-1")).toContainText("Hoenn")
+  await expect(page.getByTestId("event-2")).toContainText("Sevii Masters")
+  await expect(page.getByTestId("event-3")).toContainText("Indigo")
+  // At 8 badges Indigo and Hoenn are open; the Masters needs 16.
+  await expect(page.getByTestId("event-0-entry")).toHaveText("may enter")
+  await expect(page.getByTestId("event-1-entry")).toHaveText("may enter")
+  await expect(page.getByTestId("event-2-entry")).toHaveText("needs 16 badges")
+  await expect(page.getByLabel("Won day 2", { exact: true })).toBeDisabled()
+  // Skipping: the lineup's strongest reigns until that league's next event.
+  await expect(page.getByTestId("event-0-champion")).toHaveText("Jasmine (TR 95)")
+  await expect(page.getByTestId("event-1-champion")).toHaveText("Norman (TR 95)")
+  await expect(page.getByTestId("champion-indigo")).toHaveText(
+    "Indigo reigning champion after day 11: Karen (TR 93)",
   )
-  // Fatigue: Giovanni fought at Indigo, so he carries 50 fatigue into the Sevii Masters, a
-  // neutral location where everyone is at home.
-  await expect(page.getByTestId("entrant-sevii-masters-giovanni").locator("td")).toHaveText([
-    "30",
-    "Giovanni",
-    "131",
-    "82",
-    "Kanto",
-    "traveller",
-    "at home",
-    "0",
-    "50",
-    "50",
-    "65",
-    "",
-    "",
-  ])
-  // The Champions wait for an elite base lineup: they skip the Sevii Masters (Lv 81) and meet at Hoenn.
-  await expect
-    .poll(() => names("sevii-masters"))
-    .toEqual(["Match 1 Erika", "Match 2 Koga", "Match 3 Karen", "Match 4 Blue", "Match 5 Norman"])
-  await expect(page.getByTestId("aloof-sevii-masters-steven")).toHaveText(
-    "Steven aloof: team Lv 99 vs base lineup Lv 81 + 10 → skips",
+  // Fatigue: day 1 (Hoenn) reads day 0's Indigo lineup. Giovanni, a Kanto traveller who fought
+  // at Indigo, pays 10 travel and 50 fatigue: willingness 40, score floor(95 × 40 / 100) = 38.
+  await page.getByRole("button", { name: "Show day 1", exact: true }).click()
+  await expect(page.getByTestId("event").locator("h3").first()).toContainText(
+    "Day 1: Hoenn world progress 80 · Hoenn · base lineup Lv 59 · fatigued from day 0 Indigo",
   )
-  await expect
-    .poll(() => names("hoenn"))
-    .toEqual([
-      "Match 1 Winona",
-      "Match 2 Juan",
-      "Match 3 Wallace",
-      "Match 4 Steven",
-      "Match 5 Lance",
-    ])
-  await expect(page.getByTestId("aloof-hoenn-lance")).toHaveText(
-    "Lance aloof: team Lv 100 vs base lineup Lv 100 + 10 → joins",
-  )
-  // The same inputs give the same lineups after a reload: there is no randomness.
-  await page.reload()
-  await expect(page.getByTestId("match-indigo-5")).toContainText("Jasmine")
-  await expect(page.getByTestId("match-hoenn-5")).toContainText("Lance")
-  // Entering every league at the player TR moves all three to it.
-  await page.getByRole("button", { name: "Set 12 badges", exact: true }).click()
-  await page.getByLabel("League entry point", { exact: true }).selectOption("player")
-  await expect(page.getByTestId("league-hoenn").locator("h3").first()).toContainText(
-    "world progress 100",
-  )
-  await page.getByLabel("League entry point", { exact: true }).selectOption("badges")
-  await expect(page.getByTestId("league-hoenn").locator("h3").first()).toContainText(
-    "world progress 160",
-  )
+  await expect(entrant("giovanni").nth(8)).toHaveText("50")
+  await expect(entrant("giovanni").nth(9)).toHaveText("40")
+  await expect(entrant("giovanni").nth(10)).toHaveText("38")
+  await expect(entrant("jasmine").nth(8)).toHaveText("50")
+  await expect(entrant("norman").nth(8)).toHaveText("0")
+  await page.getByRole("button", { name: "Show day 0", exact: true }).click()
+
   // Norman as a traveller pays only 10 away from Hoenn: floor(95 × 90 / 100) = 85.
   await page.getByRole("button", { name: /^Norman/ }).click()
   await expect(page.getByLabel("Home region", { exact: true })).toHaveValue("Hoenn")
   await expect(page.getByLabel("Traveller", { exact: true })).not.toBeChecked()
   await page.getByLabel("Traveller", { exact: true }).check()
-  await expect(page.getByTestId("entrant-indigo-norman").locator("td").nth(5)).toHaveText(
-    "traveller",
-  )
-  const norman = page.getByTestId("entrant-indigo-norman").locator("td")
-  await expect(norman.nth(9)).toHaveText("90")
-  await expect(norman.nth(10)).toHaveText("85")
+  await expect(entrant("norman").nth(5)).toHaveText("traveller")
+  await expect(entrant("norman").nth(9)).toHaveText("90")
+  await expect(entrant("norman").nth(10)).toHaveText("85")
   // At home in Johto he scores his full 95 and takes the fifth place from Will.
   await page.getByLabel("Home region", { exact: true }).selectOption("Johto")
-  await expect(norman.nth(6)).toHaveText("at home")
-  await expect(norman.nth(10)).toHaveText("95")
-  await expect(page.getByTestId("entrant-indigo-will").locator("td").last()).toHaveText("")
-  await expect(page.getByTestId("lineup-indigo")).toContainText("Norman")
+  await expect(entrant("norman").nth(6)).toHaveText("at home")
+  await expect(entrant("norman").nth(10)).toHaveText("95")
+  await expect(entrant("will").last()).toHaveText("")
+  await expect(page.getByTestId("event-lineup")).toContainText("Norman")
   // The trainer editor carries the aloof trait: Lance is aloof; unticked, he joins Indigo and
   // fights last there.
   await page.getByRole("button", { name: /^Lance/ }).click()
   await expect(page.getByLabel("Aloof", { exact: true })).toBeChecked()
   await page.getByLabel("Aloof", { exact: true }).uncheck()
-  await expect(page.getByTestId("aloof-indigo-lance")).toHaveCount(0)
-  await expect(page.getByTestId("match-indigo-5")).toContainText("Lance")
-  await expect(page.getByTestId("entrant-indigo-lance").locator("td").first()).toHaveText("1")
+  await expect(page.getByTestId("event-aloof-lance")).toHaveCount(0)
+  await expect(page.getByTestId("event-match-5")).toContainText("Lance")
+  await expect(entrant("lance").first()).toHaveText("1")
   await page.getByLabel("Aloof", { exact: true }).check()
-  await expect(page.getByTestId("aloof-indigo-lance")).toContainText("skips")
+  await expect(page.getByTestId("event-aloof-lance")).toContainText("skips")
   // Tate & Liza fight a double battle, so even far ahead they are never ranked.
   await page.getByRole("button", { name: /^Tate & Liza/ }).click()
   await expect(page.getByTestId("double-battle")).toHaveText("Double battle")
   await expect(page.getByTestId("double-battle-note")).toContainText("not in the league pool")
   await setGrowth(page, { archetype: "veteran", peak: "300" })
   await expect(page.getByTestId("tr-tate-liza")).toHaveText("300")
-  for (const league of ["indigo", "sevii-masters", "hoenn"])
-    await expect(page.getByTestId(`entrants-${league}`)).not.toContainText("Tate")
+  await expect(page.getByTestId("event-entrants")).not.toContainText("Tate")
+})
+
+test("simulates the league calendar: entry rules, wins, reigning champions and fatigue", async ({
+  page,
+}) => {
+  await page.goto("/#trainer-balance")
+  // With no badges, no league is open and every event is the lineup's to win.
+  await expect(page.getByTestId("event-0-entry")).toHaveText("needs 8 badges")
+  await expect(page.getByLabel("Won day 0", { exact: true })).toBeDisabled()
+  await page.getByRole("button", { name: "Set 16 badges", exact: true }).click()
+  // 16 badges open the Masters only after a win at Indigo or Hoenn.
+  await expect(page.getByTestId("event-2-entry")).toHaveText("needs an Indigo or Hoenn win")
+  await expect(page.getByLabel("Won day 2", { exact: true })).toBeDisabled()
+  await expect(page.getByTestId("event-0-champion")).toHaveText("Jasmine (TR 131)")
+  await page.getByLabel("Won day 0", { exact: true }).check()
+  await expect(page.getByTestId("event-0")).toContainText("first win")
+  await expect(page.getByTestId("event-0-champion")).toHaveText("the player")
+  await expect(page.getByTestId("event-2-entry")).toHaveText("may enter")
+  // A win changes no lineup: day 1 still fatigues day 0's five.
+  await expect(page.getByTestId("event-1")).toContainText("Winona, Juan, Phoebe, Koga, Norman")
+  // A repeat win at Indigo keeps the title with the player until Indigo's next event.
+  await page.getByLabel("Won day 3", { exact: true }).check()
+  await expect(page.getByTestId("event-3")).toContainText("repeat win")
+  await page.getByLabel("Calendar days", { exact: true }).fill("6")
+  await page.getByLabel("Calendar days", { exact: true }).press("Enter")
+  await expect(page.getByTestId("calendar").locator("tbody tr")).toHaveCount(6)
+  await expect(page.getByTestId("champion-indigo")).toHaveText(
+    "Indigo reigning champion after day 5: the player",
+  )
+  await expect(page.getByTestId("champion-hoenn")).toHaveText(
+    "Hoenn reigning champion after day 5: Giovanni (TR 131)",
+  )
+  await expect(page.getByTestId("champion-sevii-masters")).toHaveText(
+    "Sevii Masters reigning champion after day 5: Jasmine (TR 131)",
+  )
+  // The calendar length and the wins persist; the same inputs give the same calendar.
+  await page.reload()
+  await expect(page.getByTestId("calendar").locator("tbody tr")).toHaveCount(6)
+  await expect(page.getByLabel("Won day 0", { exact: true })).toBeChecked()
+  await expect(page.getByLabel("Won day 3", { exact: true })).toBeChecked()
+  await expect(page.getByTestId("event-4-champion")).toHaveText("Giovanni (TR 131)")
+  // They round-trip through export.
+  const downloadPromise = page.waitForEvent("download")
+  await page.getByRole("button", { name: "Export experiment", exact: true }).click()
+  const exported = await (await downloadPromise).path()
+  if (!exported) throw new Error("Export did not produce a file")
+  const saved = JSON.parse(await readFile(exported, "utf8"))
+  expect(saved.version).toBe(18)
+  expect(saved.league).toEqual({ days: 6, wins: [0, 3] })
+  // All 24 badges: the aloof Champions join the elite base lineup, and Lance reigns at Indigo.
+  await page.getByRole("button", { name: "Set 24 badges", exact: true }).click()
+  await page.getByLabel("Won day 0", { exact: true }).uncheck()
+  await page.getByLabel("Won day 3", { exact: true }).uncheck()
+  await expect(page.getByTestId("event-0-champion")).toHaveText("Lance (TR 200)")
+  await expect(page.getByTestId("event-aloof-lance")).toHaveText(
+    "Lance aloof: team Lv 100 vs base lineup Lv 100 + 10 → joins",
+  )
+  await expect(page.getByTestId("event-2-entry")).toHaveText("needs an Indigo or Hoenn win")
 })
 
 test("shows each trainer's play style and resolved AI flags, and edits the style", async ({
@@ -656,7 +684,7 @@ test("marks ace slots and fights them last, with slot 1 locked and at most three
   await expect(page.getByTestId("growth-slot-6")).not.toContainText("Ace")
 })
 
-test("flags incomplete rosters and rejects invalid edits and version 4 to 16 files", async ({
+test("flags incomplete rosters and rejects invalid edits and version 4 to 17 files", async ({
   page,
 }) => {
   await page.goto("/#trainer-balance")
@@ -881,6 +909,22 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 16 fil
   await expect(page.getByRole("alert")).toContainText(
     "Version 16 experiments have no play styles (Trainer AI)",
   )
+  await importFile(17, {
+    point: { playerTR: 80 },
+    league: { at: "badges" },
+    experiment: {
+      version: 17,
+      teamLevel: [[0, 15]],
+      teamSize: [[0, 2]],
+      wildLevel: [[0, 6]],
+      routeTrainerLevel: [[0, 9]],
+      archetypes: {},
+      trainers: {},
+    },
+  })
+  await expect(page.getByRole("alert")).toContainText(
+    "Version 17 experiments save a league entry point for the retired standard entry sequence",
+  )
   await expect(page.getByTestId("badge-count")).toHaveText("0")
   await expect(page.getByTestId("selected-tr")).toHaveText("25")
 
@@ -1088,7 +1132,8 @@ test("keeps controls and teams usable at a narrow viewport", async ({ page }) =>
   await expect(page.getByTestId("battle-order")).toBeVisible()
   await expect(page.getByTestId("growth-editor")).toBeVisible()
   await expect(page.getByTestId("gym-ladder")).toBeVisible()
-  await expect(page.getByTestId("lineup-indigo")).toBeVisible()
-  await expect(page.getByTestId("entrants-indigo")).toBeVisible()
+  await expect(page.getByTestId("calendar")).toBeVisible()
+  await expect(page.getByTestId("event-lineup")).toBeVisible()
+  await expect(page.getByTestId("event-entrants")).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })

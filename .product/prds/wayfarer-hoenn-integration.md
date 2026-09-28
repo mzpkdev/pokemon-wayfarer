@@ -12,7 +12,8 @@ model, notable trainers have their own TR, growing with world progress, that
 sets team level and size in every battle, with a six-slot roster. The
 [Leagues runtime](../specs/leagues.md) replaces Hoenn's fixed participants
 with the top five by league score (TR scaled by willingness), strongest
-last; after a loss the league keeps that locked lineup until won. These
+last, at recurring league events every three in-game days; after a loss the
+player waits for Hoenn's next event. These
 successors are not implemented by the
 content port; Today's behavior below remains identified separately from the
 proposed direction.
@@ -175,9 +176,10 @@ Hoenn destination.
 - Hoenn Champion completion is independent from the shared Indigo win and
   the Sevii Masters Challenge win.
 - Today, Hoenn is fixed Tier 3 after Indigo, Masters, and all twenty-four
-  badges. The proposed [Leagues](leagues.md) design keeps today's signup and
-  league order until designed; a loss keeps Hoenn's locked lineup until won.
-  First league wins retain their player rewards and local completion
+  badges. In the proposed [Leagues](leagues.md) design, Hoenn holds an event
+  every three in-game days and opens at 8 global badges, in any order with
+  Indigo; the player has one attempt per event, and a loss waits for the next
+  one. The first Hoenn win retains its player rewards and local completion
   ownership.
 - Hoenn Trainers, NPCs, items, gifts, and story rewards remain consumed through
   saving, reloading, and blacking out.
@@ -228,9 +230,10 @@ not keep a separate healing history for every region.
   static parties.
 - Today's Hoenn League preserves authored non-level metadata and scales from
   player TR locked for the run under [League scaling](league-scaling.md). The
-  proposed successor locks the five opponents, teams, and levels when the player
-  enters, each from that trainer's own TR at that moment and roster. Reload,
-  reconstruction, and retries after a loss preserve that locked lineup. Rosters
+  proposed successor freezes the five opponents, teams, and levels for the
+  event when the player enters, each from that trainer's own TR at that moment
+  and roster. Reload and reconstruction during the run preserve that event
+  lineup. Rosters
   are authored per trainer and need no immutable prefix of one Emerald roster.
 - Battle Frontier, Contests, Secret Bases, Match Call, television events,
   multiplayer features, event islands, and other optional Emerald systems are

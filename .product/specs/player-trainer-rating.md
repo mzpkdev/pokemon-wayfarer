@@ -45,7 +45,7 @@ awarded them:
 | 9–24 | +5 | 160 |
 
 League wins give **0 TR**: leagues test the player and grant no power.
-Losses, replays, repeated ceremonies, and Red add nothing. TR stays uncapped,
+Losses, replays and repeat wins, repeated ceremonies, and Red add nothing. TR stays uncapped,
 so future sources can add more above 160.
 
 ### Formula (Today)
@@ -172,7 +172,7 @@ reads a notable trainer's TR:
 | Wild and static encounter levels | [Wild encounter scaling](trainer-rating-wild-encounter-scaling.md) |
 | Regular trainers and Gym members (battle snapshot) | [Trainer party scaling](trainer-party-scaling.md) |
 | Poké Mart stock (counter-open snapshot) | [Global TR Poké Marts](global-tr-pokemarts.md) |
-| World progress: each notable trainer's TR (battle snapshot, or the locked lineup when entering a league) | [Notable trainers](notable-trainers.md#growth-with-world-progress) |
+| World progress: each notable trainer's TR (battle snapshot, or the event lineup when entering a league event) | [Notable trainers](notable-trainers.md#growth-with-world-progress) |
 
 Notable trainers use their own team-level scaler, equal to the level cap from
 TR 40 up, applied to their own TR; nothing they do changes the getter, the saved value, or any consumer
@@ -185,7 +185,7 @@ above. Standalone builds are unchanged.
   adjacent TR; step scalers hold between anchors; flat above the last anchor,
   including very large TRs.
 - v0 formula: every badge count 0–24 gives the tabled TR (10 per badge
-  through 8, then 5 per badge to 160); league wins, losses, replays, and Red
+  through 8, then 5 per badge to 160); league wins (first or repeat), losses, replays, and Red
   add nothing; the saved value never decreases.
 - v0 range: with the 80 clamps removed, every consumer reads its v0 scaler
   for TR 0–160 and its last-anchor value above 160.

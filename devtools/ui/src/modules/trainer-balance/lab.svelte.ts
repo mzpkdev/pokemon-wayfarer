@@ -21,8 +21,9 @@ import {
   evolutionStatus,
   gymLadder,
   isGymLeader,
-  leagueSequence,
-  leagueWorlds,
+  CALENDAR_DAYS,
+  leagueCalendar,
+  reigningChampions,
   learnsetIndex,
   levelCap,
   milestoneEnd,
@@ -88,9 +89,12 @@ const anchorsOf = (experiment: Experiment, id: ScalerId): Anchor[] =>
  */
 export const scalerKind = (id: ScalerId): ScalerKind =>
   isGrowth(id) ? ARCHETYPE_KIND[id] : "interpolated"
-const storageKey = "wayfarer-trainer-balance-v17"
-/** Where the leagues are entered: each at its own badge point (8 / 16 / 24), or all at the player TR. */
-export type LeagueEntryPoint = "badges" | "player"
+const storageKey = "wayfarer-trainer-balance-v18"
+/** Reads a calendar length: a whole number of days from 1 to CALENDAR_DAYS.max. */
+const calendarDays = (value: unknown): number | null =>
+  Number.isInteger(value) && (value as number) >= 1 && (value as number) <= CALENDAR_DAYS.max
+    ? (value as number)
+    : null
 /** The chart runs across player TR 0 to at least this. */
 export const CHART_MIN_END = Math.max(200, LEVEL_CAP_ANCHORS.at(-1)?.[0] ?? 0)
 /** The chart never runs past this player TR; a higher player TR is marked at the right edge. */
@@ -167,7 +171,12 @@ export class BalanceLab {
   region = $state("All regions")
   role = $state("All trainers")
   selectedId = $state(initialTrainerId)
-  leagueAt = $state<LeagueEntryPoint>("badges")
+  /** In-game days the league calendar simulates, from day 0. */
+  calendarDays = $state<number>(CALENDAR_DAYS.default)
+  /** Days on which the player enters and wins the event (counted only when they may enter). */
+  calendarWins = $state<number[]>([])
+  /** The calendar day whose event the lineup and score table show. */
+  eventDay = $state(0)
   editor = $state("")
   error = $state("")
   notice = $state("")
@@ -217,17 +226,39 @@ export class BalanceLab {
   })
   settings = $derived(this.#_settings(this.selected.trainer.id))
   gaps = $derived(rosterGaps(catalog, this.#_experiment))
-  /** World progress for each league in the standard entry sequence. */
-  leagueWorlds = $derived(leagueWorlds(this.leagueAt === "player" ? this.playerTR : null))
-  /** The standard sequence ranked by league score, each lineup resolved at its league's world progress. */
-  leagues = $derived(
-    leagueSequence(catalog, this.#_experiment, this.leagueWorlds).map((ranking) => ({
-      ...ranking,
-      matches: ranking.lineup.map((entrant) =>
-        resolveTrainer(entrant.trainer, this.#_experiment, ranking.world, evolution, learnsets),
-      ),
-    })),
+  /**
+   * The league calendar at the current world progress and badges (days never change strength):
+   * one event a day, its lineup, whether the player may enter, and the reigning champion.
+   */
+  calendar = $derived(
+    leagueCalendar(
+      catalog,
+      this.#_experiment,
+      this.worldProgress,
+      this.badgeFloor,
+      this.calendarDays,
+      new Set(this.calendarWins),
+    ),
   )
+  /** Each league's reigning champion after the last simulated day. */
+  champions = $derived(reigningChampions(this.calendar))
+  /** The selected event, with its lineup's teams resolved. */
+  event = $derived.by(() => {
+    const event = this.calendar[Math.min(this.eventDay, this.calendar.length - 1)]
+    if (!event) throw new Error("The league calendar is empty.")
+    return {
+      ...event,
+      matches: event.ranking.lineup.map((entrant) =>
+        resolveTrainer(
+          entrant.trainer,
+          this.#_experiment,
+          event.ranking.world,
+          evolution,
+          learnsets,
+        ),
+      ),
+    }
+  })
   ladder = $derived(gymLadder(catalog, this.#_experiment, this.worldProgress))
   /** The selected trainer's TR, team level and team (by roster slot) at each world progress checkpoint. */
   growth = $derived(
@@ -358,9 +389,28 @@ export class BalanceLab {
     this.#_persist()
   }
 
-  setLeagueAt = (at: LeagueEntryPoint): void => {
-    this.leagueAt = at
+  /** Sets how many in-game days the calendar simulates (1 to CALENDAR_DAYS.max). */
+  setCalendarDays = (value: number): void => {
+    const days = calendarDays(Math.round(value))
+    if (days === null) return
+    this.calendarDays = days
+    this.calendarWins = this.calendarWins.filter((day) => day < days)
+    this.eventDay = Math.min(this.eventDay, days - 1)
     this.#_persist()
+  }
+
+  /** Marks whether the player enters and wins the event on a day. */
+  setCalendarWin = (day: number, won: boolean): void => {
+    if (!Number.isInteger(day) || day < 0 || day >= this.calendarDays) return
+    const others = this.calendarWins.filter((other) => other !== day)
+    this.calendarWins = won ? [...others, day].toSorted((a, b) => a - b) : others
+    this.#_persist()
+  }
+
+  /** Shows one calendar day's event in the lineup and score table. */
+  selectEvent = (day: number): void => {
+    if (!Number.isInteger(day) || day < 0 || day >= this.calendarDays) return
+    this.eventDay = day
   }
 
   /** Sets the selected trainer's home region. */
@@ -606,7 +656,7 @@ export class BalanceLab {
         tool: "wayfarer-trainer-balance",
         version: EXPERIMENT_VERSION,
         point: { playerTR: this.playerTR },
-        league: { at: this.leagueAt },
+        league: { days: this.calendarDays, wins: this.calendarWins },
         selectedTrainer: this.selectedId,
         experiment: JSON.parse(serializeExperiment(this.#_experiment)),
       },
@@ -646,16 +696,30 @@ export class BalanceLab {
       if (!catalog.some((trainer) => trainer.id === data.selectedTrainer))
         throw new Error("Unknown selected trainer.")
       const league = data.league
+      const days =
+        league && typeof league === "object" && Object.keys(league).join() === "days,wins"
+          ? calendarDays(league.days)
+          : null
+      const wins: unknown[] = days !== null && Array.isArray(league.wins) ? league.wins : []
       if (
-        !league ||
-        typeof league !== "object" ||
-        Object.keys(league).join() !== "at" ||
-        (league.at !== "badges" && league.at !== "player")
+        days === null ||
+        !Array.isArray(league.wins) ||
+        wins.some(
+          (day, index) =>
+            !Number.isInteger(day) ||
+            (day as number) < 0 ||
+            (day as number) >= days ||
+            (index > 0 && (day as number) <= (wins[index - 1] as number)),
+        )
       )
-        throw new Error("The league settings must be an entry point (badges or player).")
+        throw new Error(
+          `The league settings must be a calendar length (1–${CALENDAR_DAYS.max} days) and the ascending days the player wins.`,
+        )
       this.#_experiment = experiment
       this.playerTR = playerTR
-      this.leagueAt = league.at
+      this.calendarDays = days
+      this.calendarWins = wins as number[]
+      this.eventDay = Math.min(this.eventDay, days - 1)
       this.selectedId = data.selectedTrainer
       this.error = ""
       this.notice = message

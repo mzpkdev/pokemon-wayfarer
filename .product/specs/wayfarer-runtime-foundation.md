@@ -124,18 +124,23 @@ Existing Johto and Kanto callers keep their current result.
 ### Save storage and lifecycle
 
 The proposed [Leagues runtime](leagues.md#saved-state) adds, under this
-storage policy, at most one locked lineup (its league, the pool's content
-versions, and five matches in battle order, each holding `characterId`, TR,
-and the composed team) plus active-run progress (league and defeated prefix).
-It also keeps the previous lineup for fatigue. There is no seed, edition,
-rotation history, other lineup history, or progress index.
+storage policy, small per-league calendar state (the last processed event
+day, the reigning champion, and the player's attempt at the current event),
+the most recent event lineup (five `characterId`s with content versions) for
+fatigue, and, only while the player is fighting, at most one active run (its
+league and event day, the event lineup of five matches in battle order, each
+holding `characterId`, TR, and the composed team, and the defeated prefix).
+Lifetime first-win facts stay as they are. Event days come from the existing
+in-game day counter; there is no seed, edition, rotation history, calendar
+copy, other lineup history, or progress index.
 Notable trainers' TRs are authored content, so New Game saves nothing for them.
-An explicit schema discriminator rejects obsolete layouts. The locked lineup
-stays unchanged through reconstruction, reload, departure, and losses; a win
-releases it. Size assertions and save-sector accounting must include the
-locked lineup, previous lineup, run progress, and transaction metadata within
-the allocation below. A corrupt locked lineup is an invalid save; a content version change
-instead drops the lock. This extension is not
+An explicit schema discriminator rejects obsolete layouts. The event lineup
+stays unchanged through reconstruction and reload; the run's end (a win, a
+loss, or leaving) releases it. Size assertions and save-sector accounting must
+include the league state, most recent event lineup, active run, and
+transaction metadata within the allocation below. A corrupt active run or
+league state is an invalid save; a content version change instead drops the
+run and clears the most recent event lineup. This extension is not
 implemented here.
 
 The additional Hoenn banks live in `SaveBlock3` or an equivalent separately
@@ -202,25 +207,28 @@ Today's circuit uses fixed Indigo, Sevii Masters, then Hoenn order. Its
 first-league-win result advances only after completion commits. Only Indigo
 projects its win into both Kanto and Johto Champion recognition.
 
-The proposed [Leagues runtime](leagues.md) keeps today's admission, league
-order, and first league wins with their regional recognition, cleanup, and
-unlocks. It changes only who is in the lineup and what happens after a loss:
-each league's lineup is the top five notable trainers by league score (their
-TR when the player enters, scaled by willingness), grown from world progress under
-[Notable trainers](notable-trainers.md), strongest last, without reading
-player party or XP. Notable trainers in Gyms use
-the same model at battle setup.
+The proposed [Leagues runtime](leagues.md) keeps today's first league wins
+with their regional recognition, cleanup, and unlocks, and replaces today's
+admission and fixed order with recurring league events: each league holds an
+event every three in-game days on a staggered calendar; Indigo and Hoenn open
+at 8 badges in any order and the Masters at 16 after a regional win. Each
+event's lineup is the top five notable trainers by league score (their TR
+when the player enters, scaled by willingness), grown from world progress
+under [Notable trainers](notable-trainers.md), strongest last, without reading
+player party, XP, or the day. Notable trainers in Gyms use the same model at
+battle setup.
 
-Winning commits the league result and any first league win, and releases the
-locked lineup. In v0 a win adds no player TR
+The player has one attempt per event. Winning makes the player the reigning
+champion, commits any first league win, and releases the run; a repeat win
+gives prize money and the title only. In v0 a win adds no player TR
 ([Player Trainer Rating](player-trainer-rating.md)); Today's +8 per first
-league win stays until adoption. Losing keeps the same locked lineup, with no
-league win or reward; the player may retry
-immediately or later. Save wins and ceremony phases atomically, with stale
-callbacks rejected.
+league win stays until adoption. Losing or leaving ends the attempt with no
+league win or reward; the player waits for that league's next event, and an
+event the player skips or loses crowns the lineup's strongest. Save wins,
+event processing, and ceremony phases atomically, with stale callbacks
+rejected.
 
-This draft does not implement that direction or approve signup thresholds or
-catalog content. Shared Indigo recognition and regional isolation remain
+This draft does not implement that direction or approve catalog content. Shared Indigo recognition and regional isolation remain
 mandatory. Unsupported schema states follow invalid-save handling under
 prerelease policy; do not synthesize compatibility or replacement fields.
 
@@ -290,11 +298,13 @@ Static and automated checks must prove all of the following:
 12. Representative map loads and transitions run without heap corruption or a
     second simultaneous map decompression buffer.
 
-The proposed locked-lineup extension additionally requires save round-trip and
-transaction tests for no-lineup, active, and locked-after-loss states. Prove at
-most one locked five-match lineup, an unchanged lineup after a loss and reload,
-idempotent and atomic entering of a league, and an atomic win. Reject obsolete
-schemas and damaged authoritative state without regenerating a lineup. Verify
+The proposed league-event extension additionally requires save round-trip and
+transaction tests for no-attempt, active-run, attempted-after-loss, and won
+states. Prove at most one active run with one five-match event lineup, an
+unchanged lineup after a reload mid-run, refused re-entry after a loss and
+reload, idempotent and atomic entering of an event, event processing, and an
+atomic win. Reject obsolete schemas and damaged authoritative state without
+regenerating a lineup. Verify
 the records satisfy the same sector and runtime bounds. These proposed checks do
 not claim the new lifecycle is implemented.
 

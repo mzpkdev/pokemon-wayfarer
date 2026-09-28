@@ -259,9 +259,8 @@ persisted admission value. The proposed [notable trainers](notable-trainers.md)
 model instead derives notable trainers' team level and size, in every battle
 with them including [leagues](leagues.md), from each trainer's own TR, which
 grows with world progress, never from player TR used directly. Battle snapshots
-are taken at battle setup; each league's locked lineup is captured when the
-player enters and stays locked until the league is won; a loss, leaving, or
-reload keeps it. Consumers and lifecycle code own those samples, eligibility,
+are taken at battle setup; each league event's lineup is captured when the
+player enters and frozen for that event; a reload during the run keeps it. Consumers and lifecycle code own those samples, eligibility,
 and persistence; the evaluator remains a pure function of explicit curve ID and
 TR. Host Gym/League audits consume the same curve points; keep independent
 golden expected results for equivalence tests.

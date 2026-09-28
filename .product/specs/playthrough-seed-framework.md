@@ -154,8 +154,8 @@ When un-parked, required evidence:
 
 ## Later
 
-- League consumer: seeded league order per edition (earlier draft: domain 1,
-  ORDER).
+- League consumer: seeded league calendars or special events (an earlier draft
+  seeded league order per edition: domain 1, ORDER; v0 leagues have no order).
 - League consumer: seeded lineups, varying the deterministic
   [league score](leagues.md#selection-and-order) lineup per save, with
   rotation (earlier draft: domain 1, ROSTER and POOL_KIND).

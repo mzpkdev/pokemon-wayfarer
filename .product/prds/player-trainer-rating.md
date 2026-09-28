@@ -26,7 +26,7 @@ trainers, and better shops.
 
 Every badge counts, whichever region it comes from. Your first eight badges
 each give a big step up; every badge after that still gives a smaller one, all
-the way to the last. TR never decreases: losses and replays add nothing, and a
+the way to the last. TR never decreases: losses and repeat wins add nothing, and a
 later check never lowers what you have earned. A new game starts at 0.
 
 League wins give you nothing. A league is a test of what you have built, not a
@@ -136,9 +136,19 @@ changes yours.
 - **Battle snapshot:** the team fixed when a battle starts and kept for the
   whole fight.
 - **League:** Indigo, Sevii Masters, or Hoenn.
-- **Lineup:** the five opponents of a league.
-- **Locked lineup:** the lineup kept from when you enter a league until you win
-  it.
+- **Calendar:** when each league holds its events: every 3 in-game days,
+  staggered so one league holds an event each day (Indigo on days where day
+  mod 3 = 0, Hoenn on 1, Sevii Masters on 2). Days never change anyone's
+  strength.
+- **League event:** one tournament at a league on a given in-game day. You get
+  one attempt per event; skipping it is free.
+- **Lineup:** the five opponents of a league event, worked out when you enter
+  and kept for that event.
+- **Reigning champion:** who holds a league's title until its next event: you
+  if you won the last one, otherwise the strongest trainer of that event's
+  lineup.
+- **Locked lineup:** an earlier v0 draft's lineup, kept from entering a league
+  until winning it; replaced by one attempt per league event.
 - **Home region:** a notable trainer's region (Kanto, Johto, or Hoenn).
 - **Trait:** an opt-in yes/no behaviour of a notable trainer; every trait
   defaults to no. v0 has two: traveller and aloof.
@@ -151,8 +161,8 @@ changes yours.
 - **At home / away:** at home when the location is in the trainer's home
   region or neutral; away otherwise.
 - **Travel cost:** 0 at home; away, 10 for a traveller or 80 otherwise.
-- **Fatigue:** 50 if the trainer was in the lineup of the last league the
-  player entered.
+- **Fatigue:** 50 if the trainer was in the lineup of the most recent
+  completed league event at any league, whether or not you entered it.
 - **Willingness:** max(5, 100 − travel cost − fatigue).
 - **Aloof:** a trait; an aloof trainer won't join a league whose base lineup
   is well below their level: they join only if their team level is at most
@@ -160,11 +170,11 @@ changes yours.
 - **Base lineup:** a league's five best non-aloof trainers by league score,
   ranked before any aloof trainer is considered.
 - **Base lineup level:** the highest team level in the base lineup.
-- **League score:** floor(TR × willingness / 100); a league's lineup is the
-  five highest among those who join, ties by ascending characterId, locked
-  until won.
+- **League score:** floor(TR × willingness / 100); a league event's lineup is
+  the five highest among those who join, ties by ascending characterId.
 - **Match 1-5:** a position in the lineup.
-- **First league win:** your first win at a given league.
+- **First league win:** your first win at a given league, which brings its
+  one-time effects; later wins are repeat wins (prize money and the title).
 - **Challenge options:** the opt-in challenge menu.
 - **Today / v0 / Later:** what the game does now, the accepted design, and
   ideas deferred for now.

@@ -90,7 +90,7 @@ export type AiFlag =
   | "Predict Move"
   | "Assume STAB"
   | "Assume Status Moves"
-/** The leagues, in the standard entry sequence. */
+/** The leagues: Indigo, Sevii Masters and Hoenn. */
 export type League = "Indigo" | "Sevii Masters" | "Hoenn"
 
 export type TrainerRecord = {
@@ -184,7 +184,7 @@ export type TrainerSettings = {
 /** A scaler anchor: [TR, value]. */
 export type Anchor = [number, number]
 export type Experiment = {
-  version: 17
+  version: 18
   /** Team level by TR: linear between anchors, halves up, flat past the last. */
   teamLevel: Anchor[]
   /** Team size by TR, same rules; paired anchors make it a step table. */
@@ -307,7 +307,8 @@ export type Milestone = {
 /**
  * A trainer's willingness score at one league: 100 - travel cost - fatigue, at least 5. Travel
  * cost is 0 at home (or at the neutral location, the Sevii Masters); away it is 10 for a traveller
- * and 80 otherwise. Fatigue is 50 for a trainer in the previous league's lineup.
+ * and 80 otherwise. Fatigue is 50 for a trainer in the lineup of the most recent completed league
+ * event, at any league.
  */
 export type Willingness = { home: boolean; travelCost: number; fatigue: number; score: number }
 /** A league-eligible trainer at the world progress a league is entered at. */
@@ -336,12 +337,12 @@ export type LeagueEntrant = LeagueCandidate & {
   inLineup: boolean
 }
 /**
- * One league entry: every eligible trainer ranked by league score, the base lineup level the aloof
- * are compared with, and the top five in battle order.
+ * One league event's lineup: every eligible trainer ranked by league score, the base lineup level
+ * the aloof are compared with, and the top five in battle order.
  */
 export type LeagueRanking = {
   league: League
-  /** World progress when the player enters. */
+  /** World progress when the lineup is computed (the player enters, or the event ends). */
   world: number
   /**
    * The base lineup level: the strongest team level in the base lineup (the top five non-aloof
@@ -352,4 +353,29 @@ export type LeagueRanking = {
   entrants: LeagueEntrant[]
   /** The top five by league score, ascending TR, strongest last. */
   lineup: LeagueEntrant[]
+}
+/** Why the player can or cannot enter a league event. */
+export type EventEntry =
+  | { eligible: true }
+  | { eligible: false; reason: "badges"; needs: number }
+  | { eligible: false; reason: "regional win" }
+/** The reigning champion after an event: the player (who won it) or the lineup's strongest trainer. */
+export type ReigningChampion = { kind: "player" } | { kind: "trainer"; entrant: LeagueEntrant }
+/** One league event on the calendar. */
+export type LeagueEvent = {
+  /** The in-game day it is held on. */
+  day: number
+  league: League
+  /** The event's lineup; fatigue reads the lineup of the event before it. */
+  ranking: LeagueRanking
+  /** The most recent completed event before this one, whose lineup is fatigued; null for the first. */
+  fatigueFrom: { day: number; league: League } | null
+  /** Whether the player may enter, from their badges and lifetime wins before this day. */
+  entry: EventEntry
+  /** The player entered and won (only when eligible). */
+  playerWon: boolean
+  /** The player's first-ever win at this league (the one-time effects). */
+  firstWin: boolean
+  /** Who holds the title until this league's next event. */
+  champion: ReigningChampion
 }

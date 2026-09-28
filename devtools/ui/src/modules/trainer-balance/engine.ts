@@ -4,6 +4,7 @@ import type {
   Anchor,
   Archetype,
   DormantReason,
+  EventEntry,
   Willingness,
   EvolutionData,
   Experiment,
@@ -11,6 +12,7 @@ import type {
   LadderRow,
   League,
   LeagueCandidate,
+  LeagueEvent,
   LeagueRanking,
   LearnsetData,
   Milestone,
@@ -21,6 +23,7 @@ import type {
   ResolvedAi,
   ResolvedMove,
   ResolvedTrainer,
+  ReigningChampion,
   RosterSlot,
   ScalerKind,
   TeamMember,
@@ -34,14 +37,25 @@ export const ROSTER_SIZE = 6
 export const MAX_ACES = 3
 export const LEVEL_OFFSET = { min: -6, max: 0, default: -2 } as const
 export const LINEUP_SIZE = 5
-/** The leagues in the standard entry sequence (fatigue follows entry order, not venue order). */
+/** The leagues, by league identity (Indigo = 1, Masters = 2, Hoenn = 3). */
 export const LEAGUES: readonly League[] = ["Indigo", "Sevii Masters", "Hoenn"]
-/** Each league's badge point in the standard sequence: 8, 16 and 24 badges. */
-export const LEAGUE_BADGES: Readonly<Record<League, number>> = {
+/** In-game days between two events at one league (placeholder). */
+export const EVENT_CADENCE = 3
+/**
+ * The calendar: the league holding an event on each day, by day mod EVENT_CADENCE (Indigo on 0,
+ * Hoenn on 1, the Sevii Masters on 2), so one league holds an event every day.
+ */
+export const CALENDAR: readonly League[] = ["Indigo", "Hoenn", "Sevii Masters"]
+/** The regional leagues: a lifetime win at one of them opens the Sevii Masters. */
+export const REGIONAL_LEAGUES: readonly League[] = ["Indigo", "Hoenn"]
+/** Badges each league opens at (placeholders): Indigo and Hoenn at 8 in any order, the Masters at 16. */
+export const ENTRY_BADGES: Readonly<Record<League, number>> = {
   Indigo: 8,
   "Sevii Masters": 16,
-  Hoenn: 24,
+  Hoenn: 8,
 }
+/** The calendar length the explorer simulates by default, and its limit. */
+export const CALENDAR_DAYS = { default: 12, max: 60 } as const
 /** Each league location's location regions; null is a neutral location (everyone is at home). */
 export const LOCATION_REGIONS: Readonly<Record<League, readonly HomeRegion[] | null>> = {
   Indigo: ["Kanto", "Johto"],
@@ -53,7 +67,7 @@ export const HOME_REGIONS: readonly HomeRegion[] = ["Kanto", "Johto", "Hoenn"]
 export const AWAY_COST = 80
 /** Willingness lost at an away league by a traveller. */
 export const TRAVELLER_AWAY_COST = 10
-/** Willingness lost by a trainer in the previous league's lineup. */
+/** Willingness lost by a trainer in the lineup of the most recent completed league event. */
 export const FATIGUE = 50
 export const WILLINGNESS_FLOOR = 5
 /** Levels (not TR) an aloof trainer's team level may sit above the base lineup level and still join. */
@@ -1159,8 +1173,8 @@ export const milestoneText = (milestone: Milestone): string =>
 /**
  * A trainer's willingness score at a league: 100 - travel cost - fatigue, at least
  * WILLINGNESS_FLOOR. Travel cost is 0 at home or at a neutral location (the Sevii Masters); away it
- * is TRAVELLER_AWAY_COST for a traveller and AWAY_COST otherwise. Fatigue is FATIGUE when the trainer was in the lineup of the
- * league the player entered just before.
+ * is TRAVELLER_AWAY_COST for a traveller and AWAY_COST otherwise. Fatigue is FATIGUE when the
+ * trainer was in the lineup of the most recent completed event at any league.
  */
 export const willingness = (
   league: League,
@@ -1218,8 +1232,8 @@ export const aloofJoins = (teamLevel: number, baseLineupLevel: number | null): b
   baseLineupLevel !== null && teamLevel <= baseLineupLevel + ALOOF_MARGIN
 
 /**
- * Entering a league: each eligible trainer's willingness (fatigued when in `previous`, the lineup of
- * the league entered just before) and league score. The top LINEUP_SIZE non-aloof trainers by
+ * A league event's lineup: each eligible trainer's willingness (fatigued when in `previous`, the
+ * lineup of the most recent completed event at any league) and league score. The top LINEUP_SIZE non-aloof trainers by
  * league score are the base lineup, whose strongest team level is the base lineup level; an aloof
  * trainer joins only when their team level is at most the base lineup level + ALOOF_MARGIN,
  * compared with the base lineup and never with other aloof trainers (with no base lineup, every
@@ -1268,36 +1282,90 @@ export const rankLeague = (
   }
 }
 
-/**
- * The world progress each league is entered at: its own badge point (LEAGUE_BADGES) by default,
- * or one player TR for all three.
- */
-export const leagueWorlds = (playerTR: number | null = null): Record<League, number> =>
-  Object.fromEntries(
-    LEAGUES.map((league) => [league, playerTR ?? badgeTR(LEAGUE_BADGES[league])]),
-  ) as Record<League, number>
+/** The league holding an event on an in-game day. */
+export const eventLeague = (day: number): League => {
+  const league = CALENDAR[day % EVENT_CADENCE]
+  if (!league || !Number.isInteger(day) || day < 0) throw new Error(`Invalid in-game day: ${day}`)
+  return league
+}
 
 /**
- * The standard entry sequence, Indigo -> Sevii Masters -> Hoenn, each entered once at its world
- * progress; fatigue reads the previous league's lineup.
+ * Whether the player may enter a league: Indigo and Hoenn from ENTRY_BADGES (8) badges, in any
+ * order; the Sevii Masters from 16 badges and at least one lifetime win at Indigo or Hoenn.
  */
-export const leagueSequence = (
+export const eventEntry = (
+  league: League,
+  badges: number,
+  lifetimeWins: ReadonlySet<League>,
+): EventEntry => {
+  if (badges < ENTRY_BADGES[league])
+    return { eligible: false, reason: "badges", needs: ENTRY_BADGES[league] }
+  if (
+    league === "Sevii Masters" &&
+    !REGIONAL_LEAGUES.some((regional) => lifetimeWins.has(regional))
+  )
+    return { eligible: false, reason: "regional win" }
+  return { eligible: true }
+}
+
+/**
+ * Simulates the calendar over days 0 to days - 1 at one world progress (days never change anyone's
+ * strength) and the player's badges. Each day one league holds an event; its lineup follows the
+ * league score rule, fatigued by the lineup of the event the day before (the most recent completed
+ * event at any league, whether or not the player entered it). `wins` are the days the player enters
+ * and wins; a win counts only when the player may enter. The reigning champion is the player after a
+ * win, otherwise the lineup's strongest member (last in battle order). No randomness.
+ */
+export const leagueCalendar = (
   catalog: readonly TrainerRecord[],
   experiment: Experiment,
-  worlds: Readonly<Record<League, number>>,
-): LeagueRanking[] => {
-  let previous: ReadonlySet<string> = new Set()
-  return LEAGUES.map((league) => {
+  world: number,
+  badges: number,
+  days: number,
+  wins: ReadonlySet<number> = new Set(),
+): LeagueEvent[] => {
+  const candidates = leagueCandidates(catalog, experiment, world)
+  const lifetimeWins = new Set<League>()
+  const events: LeagueEvent[] = []
+  for (let day = 0; day < days; day += 1) {
+    const league = eventLeague(day)
+    const before = events.at(-1)
     const ranking = rankLeague(
       league,
-      worlds[league],
-      leagueCandidates(catalog, experiment, worlds[league]),
-      previous,
+      world,
+      candidates,
+      new Set(before?.ranking.lineup.map((entrant) => entrant.trainer.id)),
     )
-    previous = new Set(ranking.lineup.map((entrant) => entrant.trainer.id))
-    return ranking
-  })
+    const entry = eventEntry(league, badges, lifetimeWins)
+    const playerWon = entry.eligible && wins.has(day)
+    const firstWin = playerWon && !lifetimeWins.has(league)
+    if (playerWon) lifetimeWins.add(league)
+    const strongest = ranking.lineup.at(-1)
+    if (!strongest) throw new Error(`${league} has no lineup on day ${day}.`)
+    events.push({
+      day,
+      league,
+      ranking,
+      fatigueFrom: before ? { day: before.day, league: before.league } : null,
+      entry,
+      playerWon,
+      firstWin,
+      champion: playerWon ? { kind: "player" } : { kind: "trainer", entrant: strongest },
+    })
+  }
+  return events
 }
+
+/** Each league's reigning champion after its latest event in the calendar (null before its first). */
+export const reigningChampions = (
+  events: readonly LeagueEvent[],
+): Record<League, ReigningChampion | null> =>
+  Object.fromEntries(
+    LEAGUES.map((league) => [
+      league,
+      events.findLast((event) => event.league === league)?.champion ?? null,
+    ]),
+  ) as Record<League, ReigningChampion | null>
 
 /** Gym Leaders, including a Gym Leader duo. */
 export const isGymLeader = (trainer: TrainerRecord): boolean =>
@@ -1503,34 +1571,36 @@ export const rosterGaps = (
     return length < ROSTER_SIZE ? [{ id: trainer.id, name: trainer.name, length }] : []
   })
 
-export const EXPERIMENT_VERSION = 17
+export const EXPERIMENT_VERSION = 18
 const START_OVER = `Start from the version ${EXPERIMENT_VERSION} defaults`
 export const OLD_VERSION_REJECTION = (version: number): string =>
-  version === 16
-    ? `Version 16 experiments have no play styles (Trainer AI), so they cannot be imported. ${START_OVER}.`
-    : version === 15
-      ? `Version 15 experiments save a travel style instead of the traveller trait, so they cannot be imported. ${START_OVER}.`
-      : version === 14
-        ? `Version 14 experiments have no aloof trait and the old Sleeper Champions, so they cannot be imported. ${START_OVER}.`
-        : version === 13
-          ? `Version 13 experiments save a league seed for the retired seeded lineup draw, so they cannot be imported. ${START_OVER}.`
-          : version === 12
-            ? `Version 12 experiments have no home regions or traveller trait and assume fixed league lineups, so they cannot be imported. ${START_OVER}.`
-            : version === 11
-              ? `Version 11 experiments author moves per roster slot and have no move pools, so they cannot be imported. ${START_OVER}.`
-              : version === 10
-                ? `Version 10 experiments use the old archetype names (early bloomer, late bloomer, plateau, fixed, rising star, second wind, bursts), so they cannot be imported. ${START_OVER}.`
-                : version === 9
-                  ? `Version 9 experiments have only five archetypes (no Legend, Star, Comeback or Burst step scaler) and the old archetype assignments, so they cannot be imported. ${START_OVER}.`
-                  : version === 8
-                    ? `Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. ${START_OVER}.`
-                    : version === 7
-                      ? `Version 7 experiments give the Rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. ${START_OVER}.`
-                      : version === 6
-                        ? `Version 6 experiments give each notable trainer one fixed TR and cannot be imported. ${START_OVER} (start TR, archetype and peak TR).`
-                        : version === 5
-                          ? `Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. ${START_OVER}.`
-                          : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. ${START_OVER}.`
+  version === 17
+    ? `Version 17 experiments save a league entry point for the retired standard entry sequence instead of the league calendar, so they cannot be imported. ${START_OVER}.`
+    : version === 16
+      ? `Version 16 experiments have no play styles (Trainer AI), so they cannot be imported. ${START_OVER}.`
+      : version === 15
+        ? `Version 15 experiments save a travel style instead of the traveller trait, so they cannot be imported. ${START_OVER}.`
+        : version === 14
+          ? `Version 14 experiments have no aloof trait and the old Sleeper Champions, so they cannot be imported. ${START_OVER}.`
+          : version === 13
+            ? `Version 13 experiments save a league seed for the retired seeded lineup draw, so they cannot be imported. ${START_OVER}.`
+            : version === 12
+              ? `Version 12 experiments have no home regions or traveller trait and assume fixed league lineups, so they cannot be imported. ${START_OVER}.`
+              : version === 11
+                ? `Version 11 experiments author moves per roster slot and have no move pools, so they cannot be imported. ${START_OVER}.`
+                : version === 10
+                  ? `Version 10 experiments use the old archetype names (early bloomer, late bloomer, plateau, fixed, rising star, second wind, bursts), so they cannot be imported. ${START_OVER}.`
+                  : version === 9
+                    ? `Version 9 experiments have only five archetypes (no Legend, Star, Comeback or Burst step scaler) and the old archetype assignments, so they cannot be imported. ${START_OVER}.`
+                    : version === 8
+                      ? `Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. ${START_OVER}.`
+                      : version === 7
+                        ? `Version 7 experiments give the Rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. ${START_OVER}.`
+                        : version === 6
+                          ? `Version 6 experiments give each notable trainer one fixed TR and cannot be imported. ${START_OVER} (start TR, archetype and peak TR).`
+                          : version === 5
+                            ? `Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. ${START_OVER}.`
+                            : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. ${START_OVER}.`
 
 /** Validates an experiment against the catalog; with `moves`, every move pool name must be one of them. */
 export const validateExperiment = (

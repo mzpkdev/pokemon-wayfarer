@@ -380,8 +380,10 @@ and Masters first league wins. Its authored source rosters use the player's TR
 saved when entering the league, under [League scaling](league-scaling.md).
 Hoenn-specific Champion/game-clear ownership and local cleanup remain in force.
 
-The proposed [Leagues runtime](leagues.md) keeps today's admission and league
-order and owns the locked five-trainer lineup and retries after a loss;
+The proposed [Leagues runtime](leagues.md) replaces today's admission and
+league order with recurring league events (Hoenn every three in-game days,
+open from 8 badges) and owns each event's frozen five-trainer lineup, one
+attempt per event, and the reigning champion;
 [Leagues selection](leagues.md#selection-and-order) picks the top five by
 league score (TR scaled by willingness), and [Notable trainers](notable-trainers.md) owns their TR and
 teams.
@@ -440,7 +442,7 @@ Static and automated validation must prove all of the following:
    distinct defeat bit. Non-League Hoenn source parties other than enrolled
    initial Gym Leader rosters match Emerald, while Hoenn League parties match
       today's fixed Tier 3 content. When implementing the proposed successor,
-   validate resolved rosters and the saved locked lineup instead; original
+   validate resolved rosters and the saved event lineup instead; original
    Emerald parties serve as provenance references. Eligible regular trainer
    battle parties then apply the separate Trainer-party projection; initial Gym
    Leader badge battles follow the Gym Leader scaling specification. Hoenn
