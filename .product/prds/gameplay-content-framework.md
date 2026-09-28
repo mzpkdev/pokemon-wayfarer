@@ -65,7 +65,8 @@ admission. Under the proposed [notable trainers](notable-trainers.md) model,
 notable trainers snapshot a team at battle setup from their own TR, which
 grows with world progress (never player TR used directly), and each league
 event's [lineup](../specs/leagues.md#event-lineup) is captured when the player
-enters and frozen for that event; a reload during the run keeps it. The shared curve evaluator accepts an explicit input and never
+accepts its invitation and frozen for that event; reloads while it waits keep
+it. The shared curve evaluator accepts an explicit input and never
 produces TR.
 
 ### Adding content

@@ -184,7 +184,7 @@ export type TrainerSettings = {
 /** A scaler anchor: [TR, value]. */
 export type Anchor = [number, number]
 export type Experiment = {
-  version: 18
+  version: 19
   /** Team level by TR: linear between anchors, halves up, flat past the last. */
   teamLevel: Anchor[]
   /** Team size by TR, same rules; paired anchors make it a step table. */
@@ -307,8 +307,8 @@ export type Milestone = {
 /**
  * A trainer's willingness score at one league: 100 - travel cost - fatigue, at least 5. Travel
  * cost is 0 at home (or at the neutral location, the Sevii Masters); away it is 10 for a traveller
- * and 80 otherwise. Fatigue is 50 for a trainer in the lineup of the most recent completed league
- * event, at any league.
+ * and 80 otherwise. Fatigue is 50 for a trainer in the lineup of the most recent resolved league
+ * event (accepted and finished, or declined).
  */
 export type Willingness = { home: boolean; travelCost: number; fatigue: number; score: number }
 /** A league-eligible trainer at the world progress a league is entered at. */
@@ -342,7 +342,7 @@ export type LeagueEntrant = LeagueCandidate & {
  */
 export type LeagueRanking = {
   league: League
-  /** World progress when the lineup is computed (the player enters, or the event ends). */
+  /** World progress when the lineup is computed (the player accepts or declines). */
   world: number
   /**
    * The base lineup level: the strongest team level in the base lineup (the top five non-aloof
@@ -354,28 +354,56 @@ export type LeagueRanking = {
   /** The top five by league score, ascending TR, strongest last. */
   lineup: LeagueEntrant[]
 }
-/** Why the player can or cannot enter a league event. */
-export type EventEntry =
-  | { eligible: true }
-  | { eligible: false; reason: "badges"; needs: number }
-  | { eligible: false; reason: "regional win" }
+/** The leagues that count badges: Indigo (Kanto + Johto) and Hoenn. */
+export type RegionalLeague = "Indigo" | "Hoenn"
+/** The player's badges by region. */
+export type BadgeSplit = Record<HomeRegion, number>
+/** Each regional league's badge count: Indigo = Kanto + Johto, Hoenn = Hoenn. */
+export type RegionalBadges = Record<RegionalLeague, number>
+/**
+ * Why a league calls: it has the most badges; the Masters, because the leader called last or on a
+ * tie; the other regional league, because the leader called last and the Masters could not; or a
+ * tie between the regional leagues (the very first tie goes to Indigo).
+ */
+export type CallReason =
+  | "most badges"
+  | "masters after repeat"
+  | "masters on tie"
+  | "no repeat"
+  | "tie"
+  | "first tie"
+/** How the player answers an invitation: accept and win, accept and lose, or decline. */
+export type InvitationChoice = "win" | "lose" | "decline"
 /** The reigning champion after an event: the player (who won it) or the lineup's strongest trainer. */
 export type ReigningChampion = { kind: "player" } | { kind: "trainer"; entrant: LeagueEntrant }
-/** One league event on the calendar. */
-export type LeagueEvent = {
-  /** The in-game day it is held on. */
+/** One league invitation and the event it resolves. */
+export type Invitation = {
+  /** 1 for the first invitation. */
+  number: number
+  /** The in-game day the call arrives. */
   day: number
+  /** The day the event resolves: the call's day when declined, the player's arrival when accepted. */
+  resolvedDay: number
   league: League
-  /** The event's lineup; fatigue reads the lineup of the event before it. */
+  reason: CallReason
+  /** The league that called before this one; null for the first call. */
+  lastCaller: League | null
+  /** Whether the Sevii Masters could call (after any lifetime league win). */
+  mastersEligible: boolean
+  choice: InvitationChoice
+  /** The lineup, computed at acceptance or decline and frozen. */
   ranking: LeagueRanking
-  /** The most recent completed event before this one, whose lineup is fatigued; null for the first. */
-  fatigueFrom: { day: number; league: League } | null
-  /** Whether the player may enter, from their badges and lifetime wins before this day. */
-  entry: EventEntry
-  /** The player entered and won (only when eligible). */
-  playerWon: boolean
+  /** The most recent resolved event, whose lineup is fatigued; null for the first. */
+  fatigueFrom: { number: number; league: League; day: number } | null
+  result: "win" | "loss" | "declined"
   /** The player's first-ever win at this league (the one-time effects). */
   firstWin: boolean
-  /** Who holds the title until this league's next event. */
+  /** Who holds the title after this event. */
   champion: ReigningChampion
+}
+/** A run of invitations: none unless the player qualifies. */
+export type InvitationSimulation = {
+  qualified: boolean
+  badges: RegionalBadges
+  invitations: Invitation[]
 }

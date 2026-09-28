@@ -2,28 +2,30 @@
 
 PRD: [Leagues](../prds/leagues.md)
 Implemented: No
-Design status: v0 approved: leagues as locations holding recurring
-**league events** on a staggered calendar of in-game days, Indigo and Hoenn
-open from 8 badges in any order and the Sevii Masters from 16 badges after a
-regional win, one attempt per event, a league score per eligible trainer
-(Trainer Rating (TR) scaled by willingness, from travel cost and fatigue),
-aloof trainers joining only a base lineup near their level, the top five by
-league score with no randomness, ascending battle order, a lineup computed
-when the player enters and frozen for that event, free skipping, a
-**reigning champion** per league between events, and first-win one-time
-effects. Balance is informational for now. Today's
+Design status: v0 approved: leagues as locations whose **league events**
+reach the player as **invitations** by phone. From player TR 80 a league
+calls every 7 in-game days (restarted when each invitation resolves, paused
+while an accepted event waits); the league where the player holds the most
+badges calls, never the same league twice in a row, with the Sevii Masters
+joining the turns after any league win. Accepting freezes a lineup that waits
+for the player, with one attempt; declining runs the event without them. A
+league score per eligible trainer (Trainer Rating (TR) scaled by
+willingness, from travel cost and fatigue), aloof trainers joining only a
+base lineup near their level, the top five by league score with no
+randomness, ascending battle order, a **reigning champion** per league, and
+first-win one-time effects. Balance is informational for now. Today's
 [interregional circuit](wayfarer-interregional-league-circuit.md) stays the
 record of Today's admission, fixed league order, and replays.
 
 ## Scope
 
 Own, for each `IS_WAYFARER` league: the league registry, eligibility,
-location regions, the calendar and league events, entry rules, fatigue, the
-league score, the base lineup and its level, the aloof rule, lineup selection
-and battle order, the event lineup, the reigning champion, battle
-construction, entering an event, active runs and dispatch, the win commit,
-first and repeat wins, saved state, load validation, presentation, and
-regional integration.
+location regions, invitations (the qualification gate, the countdown, which
+league calls, accepting and declining), fatigue, the league score, the base
+lineup and its level, the aloof rule, lineup selection and battle order, the
+event lineup, the reigning champion, battle construction, entering an
+accepted event, active runs and dispatch, the win commit, first and repeat
+wins, saved state, load validation, presentation, and regional integration.
 
 - [Notable trainers](notable-trainers.md) owns notable trainers, their
   TR and its growth with world progress, home regions, the traits (traveller
@@ -31,15 +33,16 @@ regional integration.
   scalers, rosters, and team composition. This spec reads a trainer's TR, team
   level, willingness, aloof trait, and composed team; it never restates how they are
   computed.
-- [Player Trainer Rating](player-trainer-rating.md) owns the player's TR. In
-  v0 a league win adds no player TR; Today's +8 per first league win stays
-  documented in the circuit spec until adoption.
+- [Player Trainer Rating](player-trainer-rating.md) owns the player's TR,
+  which this spec reads only for the qualification gate and as world
+  progress. In v0 a league win adds no player TR; Today's +8 per first league
+  win stays documented in the circuit spec until adoption.
 - Today's [interregional circuit spec](wayfarer-interregional-league-circuit.md)
   stays the record of Today's admission, fixed league order, and replays, and
   keeps owning the first-league-win facts, ceremonies,
   and unlocks this spec reuses. Upon adoption, this spec replaces its
-  admission, order, replay, and loss rules with the calendar, entry rules,
-  and one attempt per event.
+  admission, order, replay, and loss rules with invitations and one attempt
+  per accepted event.
 
 Upon adoption this replaces the fixed lineups and the level policy based on the
 player's TR when entering a league in [League scaling](league-scaling.md),
@@ -92,62 +95,99 @@ availability neither add nor remove a trainer. League eligibility does not
 change story battles, which follow the
 [every-battle rule](notable-trainers.md#trainer-rating).
 
-## Calendar
+## Invitations
 
-Each league holds a **league event**, one tournament on a given in-game day,
-every **3 in-game days** (a placeholder cadence). The **calendar** staggers
-the leagues so that one league holds an event every day:
+The player takes part in league events only by invitation. An **invitation**
+is a league's phone call inviting the player to its next event; the player
+**accepts** or **declines** it. At most one invitation or accepted event
+exists at a time.
 
-| League | Event days |
-| --- | --- |
-| Indigo | day mod 3 = 0 |
-| Hoenn | day mod 3 = 1 |
-| Masters | day mod 3 = 2 |
+Days come from the game's existing in-game day counter (`VAR_DAYS`, which
+the daily update in [clock.c](../../game/src/clock.c) keeps); leagues add no
+clock of their own. **Days never affect anyone's strength**: every TR stays a
+function of world progress, and days only schedule invitations.
 
-The day is the game's existing in-game day counter (`VAR_DAYS`, which the
-clock's daily update in [clock.c](../../game/src/clock.c) keeps); leagues add
-no clock of their own. **Days never affect anyone's strength**: every TR stays
-a function of world progress, and days only schedule events.
+### Qualification
 
-An event is **current** on its day and **ends** when the day counter moves
-past it. A league holds no event on a day at or before its last processed
-event day, so turning the clock back never reopens an event or reruns one.
+The player **qualifies** once their TR is at least **80** (a placeholder;
+today exactly 8 badges, and future TR sources may lower the badges needed).
+Player TR never decreases, so qualifying happens once. Below 80 no league
+calls, and every league's rooms stay closed to the player.
 
-## Entry
+### Countdown
 
-| League | Opens at (placeholders) |
-| --- | --- |
-| Indigo | 8 global badges |
-| Hoenn | 8 global badges |
-| Masters | 16 global badges and at least one lifetime win at Indigo or Hoenn |
+An invitation arrives **7 in-game days** (a placeholder) after the countdown
+starts. The countdown starts when the player first qualifies and restarts
+when each invitation resolves: when the player declines, or when their
+accepted event ends in a win, a loss, or leaving. No countdown runs while an
+invitation is waiting to be answered or an accepted event is pending, however
+long the player takes.
 
-Indigo and Hoenn open in any order. Global badges follow Today's
-[global badge count](wayfarer-interregional-league-circuit.md#global-badges).
-A lifetime win is a saved first-league-win fact, so the Masters stays open
-once it has opened.
+The saved countdown is the **day of the next call**. The call is due once the
+day counter reaches it. A counter behind it (a clock turned back) waits, and a
+counter far ahead brings one call, never a backlog: missed days leave no
+trace.
 
-The player may enter a league when its event is current, they meet its entry
-rule, they have not attempted this event, and no ceremony is pending. There is
-**one attempt per event**: a loss or leaving ends the event for the player, who
-waits for that league's next event, and re-entering the same event is refused.
-**Skipping is free**: missing an event costs nothing, and the next one comes
-three days later.
+### Which league calls
+
+The league that calls is chosen when the call arrives, from the player's
+badges then. **Indigo** and **Hoenn** may always call once the player
+qualifies. The **Sevii Masters** may call after any lifetime league win. A
+league's **badges** are the player's badges from its regions: Indigo counts
+Kanto and Johto badges, Hoenn counts Hoenn badges, and the Masters has no
+badge count. The saved **last caller** and **last regional caller** (the last
+of Indigo and Hoenn to call) decide the rest:
+
+1. The regional league with strictly more badges calls, unless it was the
+   last caller.
+2. Otherwise (the two tie, or the leader was the last caller), the Masters
+   calls, if it may and it was not the last caller.
+3. Otherwise a regional league that was not the last caller calls: the other
+   one after the leader's call; on a tie, the one that was not the last
+   caller, or, when neither was (the Masters called last), the one that is
+   not the last regional caller. The very first call breaks a tie toward
+   Indigo.
+
+So the same league never calls twice in a row. Before any win, Indigo and
+Hoenn take turns, the leader first. After a win, the Masters takes the turn
+the leader would repeat, so the leader and the Masters take turns and the
+other regional league calls only when the badges tie or change. Badges from
+any region count toward the gate; which region they come from only decides
+who calls.
+
+### Accept
+
+Accepting locks the event for the player. At that moment the lineup is
+selected ([Selection and order](#selection-and-order)) and frozen as the
+[event lineup](#event-lineup), and the event **waits forever** for the player
+to arrive at that league. The player has **one attempt**: a loss, or leaving
+midway, ends the event. The player cannot enter a league that has no
+accepted event of theirs, and the countdown stays stopped until the event
+ends.
+
+### Decline
+
+Declining runs the event without the player at once. Its lineup is selected
+at that moment with the same rule, its strongest member (the last in battle
+order) becomes that league's reigning champion, and the lineup becomes the
+most recent resolved lineup. The invitation resolves and the countdown
+restarts.
 
 ## Selection and order
 
 Every eligible trainer can be invited to any league; location regions only
 scale how willing they are to come, and an aloof trainer skips a league whose
-base lineup is well below their level. When the player enters an event, and
-when an event ends (see [Event end](#event-end)):
+base lineup is well below their level. When the player accepts or declines an
+invitation:
 
 1. **TR.** Compute each eligible trainer's TR at the current world progress
    ([Notable trainers](notable-trainers.md#growth-with-world-progress)).
 2. **Willingness.** Score each eligible trainer with the
    [travel rule](notable-trainers.md#home-region-and-travel):
    `max(5, 100 - travelCost - fatigue)`. **Fatigue** is league-specific: 50 if
-   the trainer is in the most recent event lineup, else 0. At home a trainer scores
-   100 (50 fatigued); away, a [traveller](notable-trainers.md#traveller) 90
-   (40) and anyone else 20 (5).
+   the trainer is in the most recent resolved lineup, else 0. At home a trainer
+   scores 100 (50 fatigued); away, a [traveller](notable-trainers.md#traveller)
+   90 (40) and anyone else 20 (5).
 3. **League score.** `floor(TR × willingness / 100)`, in integer arithmetic.
 4. **Base lineup.** Rank the eligible trainers who are not
    [aloof](notable-trainers.md#aloof) by league score, ties by ascending
@@ -168,51 +208,51 @@ when an event ends (see [Event end](#event-end)):
 7. **Battle order.** Order the five by ascending TR, so the strongest fights
    last. Equal TRs break by ascending `characterId`.
 
-The **most recent event lineup** is the lineup of the most recent completed
-event at any league, whether or not the player entered it. Each event's end
-saves its lineup as the new most recent event lineup, after its own selection
-has read the old one. Entering reads it but never changes it, because the
-event it reads is still the last one completed.
+The **most recent resolved lineup** is the lineup of the most recent resolved
+event at any league: an accepted event that ended (won, lost, or left), or a
+declined one. Each resolution saves its lineup as the new most recent
+resolved lineup, after its own selection has read the old one. Accepting reads
+it but never changes it, because the event it reads is still the last one
+resolved.
 
 Selection consumes no randomness and reads no seed: the same world progress,
-most recent event lineup, and content always give the same five. The day,
-title, reigning champion, party, and history play no part; player TR enters
-only as world progress, through each trainer's TR. Other leagues' events are
-never resolved early. When the player enters, the inputs become
-authoritative at that moment, and the result is committed before reveal, so
-nothing after it reselects.
+most recent resolved lineup, and content always give the same five. The day,
+title, reigning champion, party, badges, and history play no part; player TR
+enters only as world progress, through each trainer's TR. When the player
+answers, the inputs become authoritative at that moment, and the result is
+committed before reveal, so nothing after it reselects.
 
 ## Event lineup
 
-The five selected when the player enters are the event's lineup, frozen for
-that event. Entering captures, for each of the five in battle order:
-`characterId`, their TR, and their composed team, plus the registry and roster
-content versions. Per member, the team holds the roster slot index and every
-resolved battle value the battle snapshot uses: species/form, level, moves,
-item, ability, nature, IVs/EVs, and battle order. It is saved atomically with
-the active run before reveal, and the run reconstructs every battle from it,
-including after a reload; it never reselects or recomposes, even after the
-player's TR rises. The run releases it when it ends.
+The five selected when the player accepts are the event's lineup, frozen for
+that event however long it waits. Accepting captures, for each of the five in
+battle order: `characterId`, their TR, and their composed team, plus the
+registry and roster content versions. Per member, the team holds the roster
+slot index and every resolved battle value the battle snapshot uses:
+species/form, level, moves, item, ability, nature, IVs/EVs, and battle order.
+It is saved atomically with the accepted event before reveal, and every
+battle, including after a reload, is reconstructed from it; it never
+reselects or recomposes, even after the player's TR rises. The event's end
+releases it, keeping only the five `characterId`s as the most recent
+resolved lineup.
 
-The event's result is taken at its end ([Event end](#event-end)), from the
-lineup computed then with the same rule and inputs. Unless world progress rose
-after the player entered, that is the same five they faced; either way it
-never changes the lineup they fought.
+A declined event's lineup is only computed for its result: it saves the five
+`characterId`s and composes no teams.
 
 ## Reigning champion
 
 Each league has at most one **reigning champion**, who holds the title from
-the end of one of its events until the end of its next:
+the resolution of one of its events until the resolution of its next:
 
 - If the player wins the event, the player is the reigning champion, from the
   win.
-- Otherwise, at the event's end, the reigning champion is the strongest
-  member of the lineup the event fields at that moment (the last in battle
-  order), computed with the same rule, whether the player skipped, lost, or
-  left.
+- If the player loses or leaves an accepted event, the reigning champion is
+  its frozen lineup's strongest member (the last in battle order).
+- If the player declines, the reigning champion is the strongest member of the
+  lineup computed at decline.
 
 A new game has no reigning champion; each league gains one when its first
-event ends. The title is recognition only: it does not change selection,
+event resolves. The title is recognition only: it does not change selection,
 battles, or rewards.
 
 ## Saved state
@@ -220,92 +260,97 @@ battles, or rewards.
 Keep Today's saved first-league-win facts (`indigoCleared`, `mastersCleared`,
 `hoennCleared`, now the lifetime wins) and pending ceremony phase. Add:
 
-- per league: the **last processed event day** (or none), the **reigning
-  champion** (none, the player, or a `characterId`), and the player's
-  **attempt** at its current event, if any (the event day, and whether they
-  won);
-- the **most recent event lineup**: the five `characterId`s of the most
-  recent completed event, with its content versions, read for fatigue; empty
-  on a new game; and
-- the **active run**, only while the player is fighting: the league, the event
-  day, the event lineup (the five matches), and the defeated prefix.
+- the **invitation state**, exactly one of: not qualified; counting down, with
+  the **day of the next call**; **invited** by a league, waiting for the
+  player's answer; or an **accepted event**, holding its league and its
+  [event lineup](#event-lineup);
+- the **last caller** (none, or a league) and the **last regional caller**
+  (none, Indigo, or Hoenn);
+- the **most recent resolved lineup**: the five `characterId`s of the most
+  recent resolved event, with its content versions, read for fatigue; empty
+  on a new game;
+- per league, the **reigning champion** (none, the player, or a
+  `characterId`); and
+- the **active run**, only while the player is fighting their accepted event:
+  the defeated prefix.
 
-There is no seed, edition, rotation history, calendar copy, or lineup history
-beyond the most recent event lineup. At most one active run exists, because
-only one event is current on any day. New Game sets every league's last
-processed event day to the day before the counter's current day, so no event
-before the new game is processed, and saves no reigning champion, attempt, or
-most recent event lineup. Save an explicit schema discriminator for this
-layout; prerelease saves need no migration.
+There is no seed, edition, rotation history, calendar, or lineup history
+beyond the most recent resolved lineup. At most one accepted event and one
+active run exist. New Game saves the not-qualified state and no last caller,
+reigning champion, or most recent resolved lineup. Save an explicit schema
+discriminator for this layout; prerelease saves need no migration.
 
 ## Lifecycle
 
-### Event end
+### Qualifying and the call
 
-When the daily update sees a new day, and before any entry, process the
-events that have ended and are not yet processed, oldest first:
+After any player TR change, and on the daily update, a not-qualified player
+whose TR is at least 80 starts counting down: the day of the next call is the
+current day + 7.
 
-1. Each league's event the player attempted, once it has ended.
-2. Then each league's latest ended event after its last processed event day.
-   Older events missed while the counter jumped several days leave no trace.
+When the day counter reaches the day of the next call, choose the calling
+league ([Which league calls](#which-league-calls)) and, in one transaction,
+save the invited state with that league and set the last caller (and the last
+regional caller, for Indigo or Hoenn). The phone rings at the next moment the
+player can take a call (in the overworld, with no script, battle, or ceremony
+running); an invitation not yet answered rings again after a reload.
 
-Processing one event computes its lineup at the current world progress with
-the [selection rule](#selection-and-order), reading the most recent event
-lineup, and in one transaction: sets the reigning champion (the player if
-their attempt won, otherwise that lineup's strongest), saves that lineup as
-the new most recent event lineup, sets the league's last processed event day,
-and clears its attempt. An event with an active run ends only after the run
-ends; processing waits. Processing creates no battle, reward, or record, and
-repeated or interrupted processing never processes an event twice.
+### Answering
 
-### Entering an event
+The call asks the player to accept or decline; there is no "later".
 
-1. Process ended events ([Event end](#event-end)).
-2. Validate admission: the league's event is current, the player meets the
-   [entry rule](#entry), has not attempted this event, and has no pending
-   ceremony, active run, or transaction. A refusal states only the immediate
-   reason (no event today and the day of the next, badges, a regional win,
-   or already competed) and changes nothing.
-3. Select the five ([Selection and order](#selection-and-order)), then
-   atomically save the attempt (entered, not won), the active run, and the
-   [event lineup](#event-lineup).
-4. Reveal the lineup and start at match 1.
+- **Accept.** Select the five ([Selection and order](#selection-and-order))
+  and atomically save the accepted event with its event lineup, then reveal
+  the league and the five names.
+- **Decline.** Select the five and, in one transaction, set the league's
+  reigning champion to their strongest, save them as the most recent resolved
+  lineup, and restart the countdown (the day of the next call = today + 7).
 
-A failure leaves the prior state intact; a crash exposes either the old state
-or the complete attempt and run. Denied or cancelled requests change nothing
-and reveal nothing.
+A failure leaves the invited state intact, so the call rings again; a crash
+exposes either the invited state or the complete result. Answering creates no
+battle, reward, or record.
+
+### Entering the accepted event
+
+1. Validate admission: the player has an accepted event at this league, and
+   no pending ceremony, active run, or transaction. A refusal states only the
+   immediate reason (no invitation yet and when the next call is due, an
+   unanswered call, or an event accepted at another league) and changes
+   nothing.
+2. Save the active run and start at match 1, with the five and their teams
+   from the event lineup.
 
 ### Loss
 
 A loss blacks the player out as usual. A blackout or voluntary exit ends the
-run and the player's attempt: the run and its lineup are released, nothing is
-recorded or rewarded, and the attempt stays saved, so re-entering this event
-is refused. The player waits for that league's next event, three days later,
-and may earn badges meanwhile; that event's lineup is selected afresh when
-they enter it. At this event's end, the reigning champion follows
-[Reigning champion](#reigning-champion).
+event, in one transaction: the frozen lineup's strongest becomes the league's
+reigning champion, its five become the most recent resolved lineup, the run
+and the accepted event are released, the countdown restarts (the day of the
+next call = today + 7), and nothing is recorded or rewarded.
 
 ### Win
 
 After five victories, one transaction atomically:
 
-- marks the attempt won and makes the player the league's reigning champion;
+- makes the player the league's reigning champion;
 - if this is the player's first-ever win at this league, records the lifetime
   win and Today's first-league-win effects other than player TR, which a win
   never changes, and queues Today's ceremony; a repeat win instead gives its
-  [repeat-win reward](#first-and-repeat-wins); and
-- releases the run and its lineup.
+  [repeat-win reward](#first-and-repeat-wins);
+- saves the five as the most recent resolved lineup, releases the run and the
+  accepted event, and restarts the countdown (the day of the next call =
+  today + 7).
 
 Stale or duplicate callbacks are rejected. Individual victories, losses, and
 Red add no TR.
 
 ## Active run and dispatch
 
-Progress belongs to the active run's event lineup; global Trainer defeat flags
+Progress belongs to the accepted event's lineup; global Trainer defeat flags
 cannot skip a match.
 
-1. Validate the attempt, the active run and its lineup, and the destination
-   before locking an entrance or changing room state.
+1. Validate the accepted event, the active run, and the destination before
+   locking an entrance or changing room state.
 2. Each battle validates league, room, and expected match. The stored team and
    versioned references supply party, class, sprite, portrait, name,
    introduction, defeat text, music, and AI. Fixed room-owner IDs never pick
@@ -315,9 +360,9 @@ cannot skip a match.
    commits.
 
 Live badges, league wins, player TR, party, XP, and the day counter never
-mutate an event lineup. Debug and other battles cannot create runs or
-attempts, advance matches, grant league wins or titles, or create league
-records.
+mutate an event lineup. Debug and other battles cannot create invitations,
+accepted events, or runs, advance matches, grant league wins or titles, or
+create league records.
 
 ## Battle construction
 
@@ -344,43 +389,54 @@ size must not shift it.
 ## Load validation
 
 Validate the schema, lifetime wins, pending transactions, and league state
-before any dispatch or event processing. No attempt, no active run, and an
-empty most recent event lineup are normal; validation never generates a
-lineup, processes an event, or reads the day counter.
+before any dispatch, call, or answer. Not qualified, no accepted event, no
+active run, and an empty most recent resolved lineup are normal; validation
+never generates a lineup, places a call, or reads the day counter.
 
-- Each league's last processed event day is none or one of its event days; a
-  reigning champion is none, the player, or a known character; an attempt
-  names one of the league's event days after its last processed event day,
-  and a won attempt has the player as reigning champion.
-- The most recent event lineup is empty or holds five distinct known
-  characters.
-- An active run names a league whose attempt is on the run's event day and
-  not won, holds five distinct eligible characters in non-decreasing TR
-  order, and resolves every reference. Stored teams must be valid for their
-  roster (known roster slots, legal forms, levels, and moves); they are never
-  recomposed on load.
-- A day counter behind the saved event days is valid (a clock change): no
-  event is held until it passes them.
+- The invitation state is exactly one of its four kinds. Counting down holds
+  a day; invited and accepted name a league that may call (the Masters only
+  with a lifetime win) and that is the last caller.
+- The last caller is none only when the player has never been called; the last
+  regional caller is none or Indigo or Hoenn, and equals the last caller
+  whenever the last caller is Indigo or Hoenn.
+- An accepted event's lineup holds five distinct eligible characters in
+  non-decreasing TR order and resolves every reference. Stored teams must be
+  valid for their roster (known roster slots, legal forms, levels, and
+  moves); they are never recomposed on load.
+- The most recent resolved lineup is empty or holds five distinct known
+  characters; a reigning champion is none, the player, or a known character.
+- An active run exists only with an accepted event and names a match within
+  its lineup.
+- A day counter behind the day of the next call is valid (a clock change):
+  the call waits for it.
 
-If the saved content versions differ from the build's, drop the active run
-and clear its attempt, so the player may enter that event afresh; clear the
-most recent event lineup, so the next selection has no fatigue; and clear a
-reigning champion who is no longer an eligible character. This is the
-prerelease policy, not an invalid save.
+If the saved content versions differ from the build's, turn an accepted event
+back into an unanswered invitation from the same league (dropping its lineup
+and any run), so the call rings again; clear the most recent resolved lineup,
+so the next selection has no fatigue; and clear a reigning champion who is no
+longer an eligible character. This is the prerelease policy, not an invalid
+save.
 
 A valid active run with damaged run progress recovers to its own lobby with
 progress reset and the event lineup kept, so the attempt restarts at match 1.
-A missing, corrupt, or unsupported run, lineup, or league state follows
-standard invalid-save handling: never regenerate a lineup on load or
-synthesize results.
+A missing, corrupt, or unsupported invitation state, lineup, run, or league
+state follows standard invalid-save handling: never regenerate a lineup on
+load or synthesize results.
 
 ## Presentation
 
-Each lobby names the league's reigning champion (or none yet) and whether its
-event is today or in how many days. Before the player enters, lineups are
-unavailable and inspection generates nothing. After entering, show the five
-names and battle order; moves and items are hidden by default. After a loss,
-staff say the event is over for the player and when the next one is.
+Invitations and results arrive by **phone call**, on the Pokégear/PokéNav
+phone in the HNS/Emerald style; the exact phone UI is implementation. The
+invitation call names the league and asks the player to accept or decline.
+Accepting names the five and their battle order (moves and items hidden by
+default) and says the event waits for the player; declining says the event
+goes ahead without them and names its reigning champion. A win or a loss is
+followed by the league's call or lobby word on the result and the title.
+Before an answer, lineups are unavailable and inspection generates nothing.
+
+Each lobby names the league's reigning champion (or none yet). Without an
+accepted event there, staff turn the player away with the immediate reason
+([Entering the accepted event](#entering-the-accepted-event)).
 
 Graphics, portraits, dialogue, battle metadata, and names follow the selected
 character even in historical rooms; a displaced fixed resident must not remain
@@ -403,7 +459,7 @@ money of its battles and the reigning-champion title and nothing else: the
 one-time effects never repeat, and whether a repeat win shows a short
 ceremony follows Today's replay presentation until designed. Wins grant no
 TR. Ceremony handling stays idempotent across callbacks, reloads, and
-interrupted saves, and must finish before the player enters again.
+interrupted saves, and must finish before the next call rings.
 
 ### Story dependencies and travel
 
@@ -415,11 +471,12 @@ not Blue was in the lineup.
 Preserve current travel: the S.S. Aqua maiden voyage and Ticket,
 Olivine–Vermilion–Slateport service, and numbered Sevii service from Vermilion
 stay independent of badges, league wins, Rainbow Pass, Bill/Celio, National
-Pokédex, and Sevii quests. With Hoenn opening at 8 global badges, audit that
-every league is reachable at its entry threshold from any region's badges.
-Audit back warps, exits, healing and blackout targets, Dig, Escape Rope, and
-ceremony returns; a blackout after a league loss must keep the player's
-attempt, and Masters never routes to the HNS Indigo lobby.
+Pokédex, and Sevii quests. Any league may call a player who qualified in any
+region, so audit that every league is reachable from any region at player
+TR 80 and after the first league win. Audit back warps, exits, healing and
+blackout targets, Dig, Escape Rope, and ceremony returns; a blackout after a
+league loss must end the event exactly once, and Masters never routes to the
+HNS Indigo lobby.
 
 Audit checks that equate a room with a fixed opponent, read the old
 fixed-lineup run record, or assume the fixed Indigo → Masters → Hoenn order,
@@ -433,7 +490,8 @@ Existing code to review, not new APIs:
 
 - [Save ownership and initialization](../../game/src/wayfarer_persistence.c)
   and [run/save structures](../../game/include/global.h).
-- [The day counter's daily update](../../game/src/clock.c).
+- [The day counter's daily update](../../game/src/clock.c) and
+  [phone calls](../../game/src/match_call.c).
 - [Circuit admission and lifecycle](../../game/src/league_circuit.c),
   [script wrappers](../../game/src/league_circuit_scripts.c),
   [script entry points](../../game/data/scripts/league_circuit.inc), and
@@ -451,19 +509,21 @@ Existing code to review, not new APIs:
 ## Balance report
 
 League balance is informational in v0; tuning comes later. The
-[explorer](../../devtools/ui/README.md#trainer-balance-explorer) simulates the
-calendar over a chosen number of in-game days at a chosen world progress and
-badge count: for each day, the league holding an event, its lineup (fatigued
-by the event the day before), whether the player may enter, and the reigning
-champion, the player where marked as entering and winning, otherwise the
-lineup's strongest. For a selected event it reports every eligible trainer's
-TR, team level, willingness, league score, and rank, the base lineup level,
-each aloof trainer's check (team level against base lineup level + 10, joins
-or skips), and the resulting lineup. It asserts no fixed
-lineup, finalist, or strength target. The report is informational; it also
-confirms that no aloof trainer in a lineup is more than 10 levels above the
-base lineup level. The Gym ladder and team targets
-stay in [Notable trainers](notable-trainers.md#balance-targets).
+[explorer](../../devtools/ui/README.md#trainer-balance-explorer) simulates a
+chosen number of invitations at a chosen player TR (world progress) and badge
+split (Kanto, Johto, Hoenn), with the player's answer to each (accept and
+win, accept and lose, or decline); accepted events resolve the day they are
+accepted. For each invitation it reports the day it arrives, which league
+calls and why (most badges, no repeat, a tie, or the Masters), the frozen
+lineup with league scores, the event whose lineup it fatigues, the result, and
+the reigning champion. For a selected event it reports every eligible
+trainer's TR, team level, willingness, league score, and rank, the base lineup
+level, each aloof trainer's check (team level against base lineup level + 10,
+joins or skips), and the resulting lineup. It asserts no fixed lineup,
+finalist, or strength target. The report is informational; it also confirms
+that no aloof trainer in a lineup is more than 10 levels above the base lineup
+level. The Gym ladder and team targets stay in
+[Notable trainers](notable-trainers.md#balance-targets).
 
 ## Acceptance
 
@@ -485,55 +545,61 @@ evidence (not yet run):
    base lineup; fatigue applied to the base lineup and to an aloof trainer's
    score; the five highest scores over
    distinct scores and ties at the fifth-place boundary broken by ascending
-   `characterId`; fatigue read from the most recent completed event at any
-   league, whether or not the player entered it; the battle
+   `characterId`; fatigue read from the most recent resolved event at any
+   league, accepted or declined; the battle
    order non-decreasing in TR with the highest last; excluded and disabled
    trainers never appear; aliases never appear twice.
-3. **Calendar.** Each league holds events exactly on its days (Indigo day mod
-   3 = 0, Hoenn 1, Masters 2), one league a day; strength is identical on
-   every day at one world progress; a clock turned back reopens and reruns
-   nothing; a counter jump of many days processes each league's attempted
-   event and latest ended event, oldest first, and nothing older.
-4. **Entry.** Indigo and Hoenn refuse below 8 badges and open at 8 in either
-   order; the Masters refuses below 16 badges and, at 16 or more, until a
-   lifetime win at Indigo or Hoenn (a Masters win never counts); a second
-   entry to the same event, entry with no current event, and entry with a
-   pending ceremony are refused and change nothing.
-5. **Determinism.** Golden lineups for fixed world progress values, leagues,
-   and most recent event lineups, matched between host tooling and game C;
-   the same inputs always give the same five, and the Pokémon RNG state is
-   unchanged.
-6. **Fresh state.** A new game has no reigning champion, attempt, active run,
-   or most recent event lineup, and processes no event from before it; load,
-   display, and denied or cancelled attempts to enter generate nothing.
-7. **Entering.** Entering saves the selected five in ascending TR order with
-   the attempt and run atomically; reloading before the commit selects the
-   same five; inject failures before, during, and at commit.
-8. **Loss.** Lose at each match, and leave voluntarily: the run ends, nothing
-   is recorded, the player blacks out to the usual target, and re-entering the
-   event is refused, also after a reload. At the event's end the lineup's
-   strongest becomes reigning champion and that lineup becomes the most
-   recent event lineup. The next event of that league selects a new lineup.
-9. **Skipping and reigning champions.** Skip events at each league: each
-   event's end makes its lineup's strongest the reigning champion until that
-   league's next event and fatigues the next event's lineup; nothing else
-   changes.
+3. **Qualification.** No call at player TR 79; at 80 the countdown starts on
+   the day of qualifying and the first call comes 7 days later.
+4. **Countdown.** Each resolution (a decline, a win, a loss, leaving) restarts
+   the countdown at 7 days; no call arrives while an invitation is unanswered
+   or an accepted event waits, however many days pass; a clock turned back
+   delays the call; a counter jump of many days brings one call and no
+   backlog; strength is identical on every day at one world progress.
+5. **Which league calls.** The league with the most badges calls (Indigo
+   counting Kanto and Johto); never the same league twice in a row; ties go to
+   the league that did not call last, the very first tie to Indigo; the
+   Masters never calls before a lifetime league win and, after one, calls
+   whenever the leader would repeat or the badges tie, never twice in a row;
+   after the Masters, a tie goes to the regional league other than the last
+   regional caller.
+6. **Accept and decline.** Accepting saves the selected five in ascending TR
+   order with the accepted event atomically, and the event waits across many
+   days and reloads with the same five; reloading before the commit selects
+   the same five; inject failures before, during, and at commit. Declining
+   crowns the strongest of the lineup computed at decline, saves it as the
+   most recent resolved lineup, and restarts the countdown. Entering a league
+   without an accepted event there is refused and changes nothing.
+7. **Determinism.** Golden lineups and call sequences for fixed world
+   progress values, badge splits, answers, and most recent resolved lineups,
+   matched between host tooling and game C; the same inputs always give the
+   same five and the same caller, and the Pokémon RNG state is unchanged.
+8. **Fresh state.** A new game is not qualified and has no last caller,
+   reigning champion, accepted event, active run, or most recent resolved
+   lineup; load, display, and denied or cancelled requests generate nothing.
+9. **Loss.** Lose at each match, and leave voluntarily: the event ends once,
+   nothing is recorded, the player blacks out to the usual target, the frozen
+   lineup's strongest reigns, that lineup becomes the most recent resolved
+   lineup, and the countdown restarts, also across a reload.
 10. **Win.** A first win records exactly one lifetime win and its one-time
-    effects and ceremony; a repeat win gives only prize money and the title;
-    the player reigns until the league's next event ends; no win changes
-    player TR; the run is released. Interrupt and repeat win commits and
-    event processing.
+    effects and ceremony, and makes the Masters eligible to call; a repeat win
+    gives only prize money and the title; the player reigns until that
+    league's next resolved event; no win changes player TR; the run and the
+    accepted event are released. Interrupt and repeat win commits, calls, and
+    answers.
 11. **Construction and presentation.** Build every eligible trainer's team,
     preserve member identity and metadata, and reconstruct identically from
     the saved event lineup. Names, sprites, portraits, text, music, AI, money,
     XP, and parties match the lineup's matches, including a Gym Leader in
-    match 5. Lobbies name the reigning champion and the next event.
-12. **Load validation.** Corrupt league state, attempts, runs, event
-    lineups, most recent event lineups, schema, or callbacks are rejected
-    without regenerating, advancing, or rewarding. A content version change
-    drops the run and attempt and clears the most recent event lineup.
-13. **Standalone.** FRLG, HNS, and Emerald League behavior, travel, and
-    recovery are unchanged.
+    match 5. The phone rings only when the player can take a call, and rings
+    again after a reload until answered; lobbies name the reigning champion.
+12. **Load validation.** Corrupt invitation state, callers, accepted events,
+    runs, lineups, most recent resolved lineups, schema, or callbacks are
+    rejected without regenerating, calling, advancing, or rewarding. A
+    content version change turns an accepted event back into an unanswered
+    invitation and clears the most recent resolved lineup.
+13. **Standalone.** FRLG, HNS, and Emerald League behavior, travel, recovery,
+    and phone calls are unchanged.
 
 Run the trainer/scaling mechanics suites and extend
 [mechanics coverage](../../game/test/league_circuit.c),
@@ -547,20 +613,20 @@ Report balance playtesting separately from structural checks.
 
 ## Later
 
-- A per-save calendar rotation from the playthrough seed (e.g. Hoenn, Masters,
-  Indigo), shifting who tends to be rested where. v0 uses the fixed rotation.
-- Off-screen event results as signposting: NPC gossip, TV, and Match Call
-  news about who won and who reigns.
-- Event rewards tuning, cadence tuning, entry threshold tuning, and special
-  events.
+- Seeded or reputation-based league choice, as candidate consumers of the
+  [playthrough seed framework](playthrough-seed-framework.md) or a future
+  reputation system.
+- Invitation news: who won the events the player declined, as NPC gossip, TV,
+  or phone news.
+- Special invitational events.
+- Event rewards tuning, interval tuning, and qualification threshold tuning.
 - Balancing tools: tune travel costs, fatigue, the floor, and the aloof margin
   against the lineup reports, and set league balance targets.
-- Seeded lineups or calendars, as candidate consumers of the
-  [playthrough seed framework](playthrough-seed-framework.md).
+- Seeded lineups, varying which willing trainers come per save.
 - Rotation weights and rotation history.
 - Role windows and standing-based matches, with a nearest-standing fallback for
   empty windows.
-- A Trainer Card itinerary view for the three leagues.
+- A Trainer Card view of the three leagues and their reigning champions.
 - Winning-team records per edition and edition completion presentation.
 
 ## References

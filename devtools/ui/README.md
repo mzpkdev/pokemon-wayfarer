@@ -216,14 +216,15 @@ slot (Aerodactyl) ace joins · 159: peak TR 100". His late ace Aerodactyl
 (roster slot 6) joins at team size 6 (TR 71, team level 45), which his
 placeholder growth reaches at world progress 98.
 
-Exports and the saved browser state use version 18 (nine archetypes with the
+Exports and the saved browser state use version 19 (nine archetypes with the
 single-word identifiers above; rosters carry `isAce` and no moves; each
 trainer has a `movePool` of `{ "move", "fromLevel"? }` entries, a
 `homeRegion`, the `traveller` and `aloof` trait flags and a `playStyle`)
-and store the point as `{ "playerTR": n }` and the league calendar settings as
-`{ "days": n, "wins": [day, …] }` (1–60 days, the ascending days the player
-enters and wins); a `{ "badges": n }` point still imports and sets the
-matching player TR.
+and store the point as `{ "playerTR": n }` and the invitation simulator
+settings as `{ "choices": ["win" | "lose" | "decline", …], "split": null |
+{ "Kanto": n, "Johto": n, "Hoenn": n } }` (the answers to 1–24 invitations, and
+the badge split: null follows the badge total, or 0–8 badges per region); a
+`{ "badges": n }` point still imports and sets the matching player TR.
 
 **Tate & Liza** are one entry (role Gym Leader duo, Hoenn) with one start TR,
 archetype, peak TR and six-slot roster (Solrock and Lunatone as the signature
@@ -237,9 +238,9 @@ only).
 current world progress, sorted by TR, each marked below, near (within 10 of
 the player TR) or above.
 
-**League calendar** ([Leagues spec](../../.product/specs/leagues.md#calendar))
-simulates the leagues' recurring events and ranks every eligible trainer by
-league score for each one. Each league is
+**Invitation simulator** ([Leagues spec](../../.product/specs/leagues.md#invitations))
+simulates the league invitations and ranks every eligible trainer by league
+score for each invitation's event. Each league is
 a location: Indigo's location regions are Kanto and Johto, Hoenn's is Hoenn,
 and the Sevii Masters is a neutral location where everyone is at home. The
 catalog gives each notable trainer a home region (`homeRegion`) and traits:
@@ -249,13 +250,13 @@ opt-in yes/no flags that default to no (section 17). The **traveller** trait
 only: the catalog has no Red and Tate & Liza are ineligible) a
 **willingness** of max(5, 100 − travel cost − fatigue). Travel cost is 0 at
 home; away it is 10 for a traveller and 80 for everyone else; fatigue is 50 for a
-trainer in the lineup of the most recent completed event at any league (the
-day before, whether or not the player entered it). The **league score** is floor(TR × willingness / 100);
+trainer in the lineup of the most recent resolved event (the invitation
+before, whether the player accepted or declined it). The **league score** is floor(TR × willingness / 100);
 the top five by score make the lineup (ties in catalog order, standing in for
 `characterId`), which fights by ascending TR, strongest last (equal TRs in
 catalog order). There is no seed or randomness: the same world progress and
 previous event always give the same five (the ROM computes the lineup when
-the player enters and freezes it for that event).
+the player accepts or declines and freezes it for that event).
 
 Some trainers are **aloof** (`aloof`, a trait; the section 16 lore
 assignments, editable per trainer as the **Aloof** checkbox): Lance, Wallace,
@@ -270,58 +271,70 @@ aloof), every aloof trainer skips. Everyone who joins is then ranked by league
 score as above. An aloof trainer who skips is listed unranked at the end of
 the table.
 
-The panel simulates in-game days 0 to N − 1 (**Days**, default 12, up to 60) at the player's world progress and badges (the badge floor of the player
-TR): days never change anyone's strength, they only schedule events. Each
-league holds an event every 3 days, staggered by day mod 3: Indigo on 0,
-Hoenn on 1 and the Sevii Masters on 2, so one league holds an event every
-day. For each day the calendar table shows the league, its lineup in battle
-order, the event whose lineup it fatigues, whether the player may enter
-(Indigo and Hoenn from 8 badges in any order; the Sevii Masters from 16
-badges after a win at Indigo or Hoenn), a **Won** checkbox to have the player
-enter and win that event (first or repeat win; only when they may enter), and
-the reigning champion: the player after a win, otherwise the lineup's
-strongest member (last in battle order), who holds the title until that
-league's next event. A line above the table names each league's reigning
-champion after the last day. A win changes no lineup: the event's lineup
-still fatigues the next one. **Show day N** selects an event; below the
-table it shows the base lineup level, each aloof trainer's check ("team Lv X
-vs base lineup Lv Y + 10 → joins/skips"), the lineup with teams, levels and
-league scores, and every eligible trainer's rank, TR, team level, home
-region, whether they are a traveller, at home or away, travel cost, fatigue,
-willingness, league score, whether an aloof trainer joins or skips, and
-whether they are in the lineup. The summary strip names the Indigo finalist
-(the strongest of day 0's Indigo lineup). With the catalog defaults and the
-player skipping everything, 9 days give (lineup in battle order, league score
-in brackets where fatigue or travel lowers it; the reigning champion last):
+The simulator runs at the player's world progress (days never change anyone's
+strength). The player qualifies at player TR 80 (today exactly 8 badges; the
+explorer counts the qualifying moment as day 0); below it the panel says no
+league calls. An invitation arrives every 7 in-game days, counted from
+qualifying and restarted when an invitation resolves; no countdown runs while
+an accepted event is pending, and the simulator has the player arrive the day
+they accept, so the calls come on days 7, 14, 21 and so on. **Invitations**
+(default 8, up to 24) sets how many; the **Kanto**, **Johto** and **Hoenn**
+fields set the badge split (by default the badge floor of the player TR,
+filling Kanto, then Johto, then Hoenn, 8 each; **Follow badge total**
+restores it). Which league calls ([Leagues spec](../../.product/specs/leagues.md#which-league-calls)):
+Indigo (Kanto + Johto badges) and Hoenn (Hoenn badges) may always call, the
+Sevii Masters after any league win, and the league that called last never
+calls again: the league with strictly more badges calls; if it called last,
+or on a tie, the Masters calls when eligible; otherwise the other regional
+league, and on a tie the one that did not call last (after the Masters, the
+one other than the last regional league to call; the very first tie goes to
+Indigo). Each row shows the invitation, its day, the league and why ("most
+badges (Indigo 8, Hoenn 0)", "no repeat: Indigo called last", "Masters
+eligible: Hoenn (most badges) called last", "Masters eligible: tie", "tie" or
+"first tie … goes to Indigo"), the lineup in battle order with league scores,
+the invitation whose lineup it fatigues, an **Answer** (accept & win, accept &
+lose, or decline; decline by default), the result (first win, repeat win,
+loss, declined) and the reigning champion: the player after a win, otherwise
+the lineup's strongest member (last in battle order). A line above the table
+names each league's reigning champion after the last invitation. An answer
+changes who calls next (a win opens the Masters), never a lineup's rule.
+**Show invitation N** selects an event; below the table it shows the base
+lineup level, each aloof trainer's check ("team Lv X vs base lineup Lv Y + 10
+→ joins/skips"), the lineup with teams, levels and league scores, and every
+eligible trainer's rank, TR, team level, home region, whether they are a
+traveller, at home or away, travel cost, fatigue, willingness, league score,
+whether an aloof trainer joins or skips, and whether they are in the lineup.
+The summary strip names the Indigo finalist (the strongest of a fresh Indigo
+lineup at the current world progress). With the catalog defaults (lineup in
+battle order, league score in brackets where fatigue or travel lowers it; the
+reigning champion last):
 
-- 8 badges (world progress 80, base lineup Lv 58–59): Indigo on day 0 fields
-  Will, Lt. Surge, Giovanni, Agatha and Jasmine (all TR 94–95, at home;
-  champion Jasmine); the
-  best away trainer, Drake (a Hoenn traveller, TR 93), scores 83 and ranks
-  12th. Agatha (Lv 59), Karen (Lv 58), Glacia, Sabrina and Clair join; Lance
-  (Lv 100), Steven (Lv 77) and Wallace (Lv 74) skip. Hoenn on day 1 is
-  Phoebe, Sidney, Glacia, Drake and Norman (champion Norman). The Masters
-  (closed: 16 badges) repeats Indigo's day 0 five, fresh again after Hoenn.
-- 16 badges (world progress 120), the Masters closed without a regional win:
-  day 0 Indigo Erika, Karen, Blue, Giovanni, Jasmine (Jasmine); day 1 Hoenn
-  Winona, Juan, Phoebe, Koga (108), Norman (Norman); day 2 Masters Erika,
-  Karen, Blue, Giovanni, Jasmine (Jasmine); day 3 Indigo Morty, Will,
-  Sabrina, Clair, Koga (Koga); day 4 Hoenn Juan, Phoebe, Blue (116), Norman,
-  Giovanni (117) (Giovanni); day 5 Masters Clair, Erika, Koga, Karen, Jasmine
-  (Jasmine); day 6 Indigo Morty, Will, Sabrina, Blue, Giovanni (Giovanni);
-  day 7 Hoenn Juan, Phoebe, Koga (108), Karen (111), Norman (Norman); day 8
-  Masters Clair, Erika, Blue, Giovanni, Jasmine (Jasmine). The Champions
-  (Lv 99–100) skip every base lineup (Lv 75–82).
+- 8 badges (world progress 80, base lineup Lv 58–59), all Kanto, declining
+  everything: Indigo (most badges) and Hoenn (no repeat) take turns. Indigo
+  fields Will, Lt. Surge, Giovanni, Agatha and Jasmine (all TR 94–95, at
+  home; champion Jasmine); the best away trainer, Drake (a Hoenn traveller,
+  TR 93), scores 83 and ranks 12th. Agatha (Lv 59), Karen (Lv 58), Glacia,
+  Sabrina and Clair join; Lance (Lv 100), Steven (Lv 77) and Wallace (Lv 74)
+  skip. Hoenn fields Phoebe, Sidney, Glacia, Drake and Norman (champion
+  Norman).
+- 8 Hoenn badges, declining the first invitation, then accepting and winning
+  every one: day 7 Hoenn (most badges, declined; Norman reigns), day 14
+  Indigo (no repeat; first win), day 21 Hoenn (first win), day 28 the Sevii
+  Masters (eligible after a win; Hoenn called last) with Will, Lt. Surge,
+  Giovanni, Agatha and Jasmine (first win), then Hoenn and the Masters
+  alternate (repeat wins). Indigo, with no badges, does not call again.
+- 16 badges, all Kanto and Johto, accepting and winning everything: day 7
+  Indigo, Erika, Karen, Blue, Giovanni, Jasmine (first win); day 14 the
+  Masters, Clair, Juan, Phoebe, Koga, Norman (first win; the Indigo five are
+  tired); then Indigo and the Masters alternate. Hoenn does not call. Declining
+  everything instead alternates Indigo and Hoenn (Winona, Juan, Phoebe, Koga
+  (108), Norman; champion Norman); the Champions (Lv 99–100) skip every base
+  lineup (Lv 75–82).
 - 24 badges (world progress 160, base lineup Lv 100, every aloof trainer
-  joins): day 0 Indigo Morty, Sabrina, Clair, Steven (175), Lance (Lance);
-  day 1 Hoenn Norman, Blue (153), Winona, Juan, Wallace (Wallace); day 2
-  Masters Morty, Sabrina, Clair, Steven, Lance (Lance); day 3 Indigo Karen,
-  Giovanni, Jasmine, Blue, Wallace (171) (Wallace); day 4 Hoenn Norman,
-  Winona, Juan, Steven, Lance (180) (Lance); day 5 Masters Blue, Morty,
-  Sabrina, Clair, Wallace (Wallace); day 6 Indigo Karen, Giovanni, Jasmine,
-  Steven (175), Lance (Lance); days 7 and 8 repeat days 1 and 2. Lance, a
-  Kanto traveller, fights last whenever he is fresh, and sits out the day
-  after.
+  joins), declining everything: Indigo, Morty, Sabrina, Clair, Steven (175),
+  Lance (Lance); Hoenn, Norman (164), Blue (153), Winona (172), Juan, Wallace
+  (Wallace); and so on alternately. Lance, a Kanto traveller, fights last at
+  every Indigo event, each fatigued only by the Hoenn event before.
 
 Lance, a Legend at TR 200 (team Lv 100), first joins a league at world
 progress 135 (base lineup Lv 91) when no fatigue holds the base lineup back.
@@ -357,18 +370,19 @@ Comeback and Burst growth scalers) are editable under
 **Scalers & experiment settings**, each labeled interpolated or step. Anchors
 start at 0, rise and never decrease in value; growth scalers run 0–100% and
 start at 0%. Experiments persist in browser storage (key
-`wayfarer-trainer-balance-v18`). JSON export and import
-(format version 18) round-trip the experiment (growth, rosters with their ace
+`wayfarer-trainer-balance-v19`). JSON export and import
+(format version 19) round-trip the experiment (growth, rosters with their ace
 flags, move pools, home regions, traveller and aloof flags, play styles and
 the thirteen scalers), the
-player TR, the league calendar (days and wins), and the selected trainer. The
+player TR, the invitation simulator (answers and badge split), and the selected trainer. The
 importer also rejects a Legend whose peak TR differs from start TR, a
 Gym Leader Legend, a roster slot with moves, an unknown move name, a from level
 outside 1–100, a pool of more than 64 entries, an unknown home region, and
 a traveller or aloof flag that is not true or false, and a play style that
 is not one of the eight. Files from versions
-1–17 are rejected with a message (version 17 saved a league entry point for
-the retired standard entry sequence instead of the calendar; version 16 had no play styles; version 15 saved a `travel` style, homebody
+1–18 are rejected with a message (version 18 saved league calendar settings,
+days and wins, for the retired league calendar; version 17 saved a league
+entry point for the retired standard entry sequence; version 16 had no play styles; version 15 saved a `travel` style, homebody
 or traveller, instead of the traveller flag; version 14 had no aloof trait and the old
 Sleeper Champions; version 13 saved a league seed for the retired
 seeded lineup draw; version 12 had no home regions or traveller trait and
@@ -420,15 +434,19 @@ is past the near band), and the lowest three are two Pokémon at or under the
 level cap; at 40 none is below yet, but at least three are at or under the
 player TR. League lineups have no fixed targets: they are informational, and
 the tests check the league score and its flooring, the top-five selection and
-tie-break, the calendar (one event a day, staggered by day mod 3), entry
-rules (Indigo and Hoenn at 8 badges in any order, the Masters at 16 after a
-regional win), fatigue carried from the most recent event whether or not the
-player entered, reigning champions (the player after a win, otherwise the
-lineup's strongest), Sevii neutrality, determinism (days never change TR), and
+tie-break, the invitation gate (none at player TR 79, calls from 80), which
+league calls (most badges, never twice in a row, ties to the league that did
+not call last and the first tie to Indigo, the Masters eligible after any
+league win and taking the no-repeat and tie turns), the countdown (7 days
+from qualifying, restarted at each resolution and paused while an accepted
+event waits), fatigue from the most recent resolved event whether accepted or
+declined, reigning champions (the player after a win, otherwise the lineup's
+strongest, at decline too), Sevii neutrality, determinism (days never change
+TR), and
 the aloof rule (joining at exactly the base lineup level + 10 and skipping
 one level above, never compared with other aloof trainers, skipping when there
-is no base lineup, fatigue still applying, Lance skipping the 8- and 16-badge
-events and fighting last at a fresh 24-badge event, and no aloof lineup member more than 10 levels
+is no base lineup, fatigue still applying, Lance skipping fresh 8- and
+16-badge events and fighting last at a fresh 24-badge event, and no aloof lineup member more than 10 levels
 above the base lineup level). Home regions and the travellers live in the
 script's `HOME_REGION` table and `TRAVELLERS` set, and the aloof trainers in its `ALOOF` set (which may name only
 league-eligible catalog trainers). Play styles live in its `PLAY_STYLES`

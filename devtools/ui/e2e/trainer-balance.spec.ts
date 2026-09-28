@@ -350,9 +350,10 @@ test("ranks every eligible trainer by league score and fields the top five, stro
   // Every catalog trainer but the Tate & Liza duo is league-eligible.
   const eligible = 37
   await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
-  // Day 0 is Indigo's event at the player's world progress, with no earlier event to fatigue anyone.
+  // 8 badges (all Kanto by default) qualify the player: Indigo calls first, on day 7, with no
+  // earlier event to fatigue anyone.
   await expect(page.getByTestId("event").locator("h3").first()).toContainText(
-    "Day 0: Indigo world progress 80 · Kanto + Johto · base lineup Lv 59 · fatigued from no earlier event",
+    "Invitation 1 (day 7): Indigo world progress 80 · Kanto + Johto · base lineup Lv 59 · fatigued from no earlier event",
   )
   await expect(page.getByTestId("event-lineup").locator(":scope > li")).toHaveCount(5)
   await expect(page.getByTestId("event-entrants").locator("tbody tr")).toHaveCount(eligible)
@@ -430,36 +431,34 @@ test("ranks every eligible trainer by league score and fields the top five, stro
   ])
   await expect(entrant("jasmine").last()).toHaveText("in lineup")
 
-  // The calendar: 12 days by default, one event a day, staggered Indigo, Hoenn, Sevii Masters.
-  const calendar = page.getByTestId("calendar").locator("tbody tr")
-  await expect(calendar).toHaveCount(12)
-  await expect(page.getByTestId("event-0")).toContainText("Indigo")
-  await expect(page.getByTestId("event-1")).toContainText("Hoenn")
-  await expect(page.getByTestId("event-2")).toContainText("Sevii Masters")
-  await expect(page.getByTestId("event-3")).toContainText("Indigo")
-  // At 8 badges Indigo and Hoenn are open; the Masters needs 16.
-  await expect(page.getByTestId("event-0-entry")).toHaveText("may enter")
-  await expect(page.getByTestId("event-1-entry")).toHaveText("may enter")
-  await expect(page.getByTestId("event-2-entry")).toHaveText("needs 16 badges")
-  await expect(page.getByLabel("Won day 2", { exact: true })).toBeDisabled()
-  // Skipping: the lineup's strongest reigns until that league's next event.
-  await expect(page.getByTestId("event-0-champion")).toHaveText("Jasmine (TR 95)")
-  await expect(page.getByTestId("event-1-champion")).toHaveText("Norman (TR 95)")
-  await expect(page.getByTestId("champion-indigo")).toHaveText(
-    "Indigo reigning champion after day 11: Karen (TR 93)",
+  // Eight invitations by default, each declined: Indigo (most badges) and Hoenn take turns, and
+  // each event's strongest reigns.
+  await expect(page.getByTestId("invitations").locator("tbody tr")).toHaveCount(8)
+  await expect(page.getByTestId("invitation-1-reason")).toHaveText(
+    "most badges (Indigo 8, Hoenn 0)",
   )
-  // Fatigue: day 1 (Hoenn) reads day 0's Indigo lineup. Giovanni, a Kanto traveller who fought
-  // at Indigo, pays 10 travel and 50 fatigue: willingness 40, score floor(95 × 40 / 100) = 38.
-  await page.getByRole("button", { name: "Show day 1", exact: true }).click()
+  await expect(page.getByTestId("invitation-2-league")).toHaveText("Hoenn")
+  await expect(page.getByTestId("invitation-2-reason")).toHaveText("no repeat: Indigo called last")
+  await expect(page.getByTestId("invitation-1-champion")).toHaveText("Jasmine (TR 95)")
+  await expect(page.getByTestId("invitation-2-champion")).toHaveText("Norman (TR 95)")
+  await expect(page.getByTestId("champion-indigo")).toHaveText(
+    "Indigo reigning champion after invitation 8: Jasmine (TR 95)",
+  )
+  await expect(page.getByTestId("champion-sevii-masters")).toHaveText(
+    "Sevii Masters reigning champion after invitation 8: —",
+  )
+  // Fatigue: invitation 2 (Hoenn) reads invitation 1's Indigo lineup. Giovanni, a Kanto traveller
+  // who fought at Indigo, pays 10 travel and 50 fatigue: willingness 40, score floor(95 × 40 / 100) = 38.
+  await page.getByRole("button", { name: "Show invitation 2", exact: true }).click()
   await expect(page.getByTestId("event").locator("h3").first()).toContainText(
-    "Day 1: Hoenn world progress 80 · Hoenn · base lineup Lv 59 · fatigued from day 0 Indigo",
+    "Invitation 2 (day 14): Hoenn world progress 80 · Hoenn · base lineup Lv 59 · fatigued from invitation 1 (Indigo)",
   )
   await expect(entrant("giovanni").nth(8)).toHaveText("50")
   await expect(entrant("giovanni").nth(9)).toHaveText("40")
   await expect(entrant("giovanni").nth(10)).toHaveText("38")
   await expect(entrant("jasmine").nth(8)).toHaveText("50")
   await expect(entrant("norman").nth(8)).toHaveText("0")
-  await page.getByRole("button", { name: "Show day 0", exact: true }).click()
+  await page.getByRole("button", { name: "Show invitation 1", exact: true }).click()
 
   // Norman as a traveller pays only 10 away from Hoenn: floor(95 × 90 / 100) = 85.
   await page.getByRole("button", { name: /^Norman/ }).click()
@@ -494,62 +493,111 @@ test("ranks every eligible trainer by league score and fields the top five, stro
   await expect(page.getByTestId("event-entrants")).not.toContainText("Tate")
 })
 
-test("simulates the league calendar: entry rules, wins, reigning champions and fatigue", async ({
+test("simulates league invitations: the gate, who calls, answers, fatigue and champions", async ({
   page,
 }) => {
   await page.goto("/#trainer-balance")
-  // With no badges, no league is open and every event is the lineup's to win.
-  await expect(page.getByTestId("event-0-entry")).toHaveText("needs 8 badges")
-  await expect(page.getByLabel("Won day 0", { exact: true })).toBeDisabled()
-  await page.getByRole("button", { name: "Set 16 badges", exact: true }).click()
-  // 16 badges open the Masters only after a win at Indigo or Hoenn.
-  await expect(page.getByTestId("event-2-entry")).toHaveText("needs an Indigo or Hoenn win")
-  await expect(page.getByLabel("Won day 2", { exact: true })).toBeDisabled()
-  await expect(page.getByTestId("event-0-champion")).toHaveText("Jasmine (TR 131)")
-  await page.getByLabel("Won day 0", { exact: true }).check()
-  await expect(page.getByTestId("event-0")).toContainText("first win")
-  await expect(page.getByTestId("event-0-champion")).toHaveText("the player")
-  await expect(page.getByTestId("event-2-entry")).toHaveText("may enter")
-  // A win changes no lineup: day 1 still fatigues day 0's five.
-  await expect(page.getByTestId("event-1")).toContainText("Winona, Juan, Phoebe, Koga, Norman")
-  // A repeat win at Indigo keeps the title with the player until Indigo's next event.
-  await page.getByLabel("Won day 3", { exact: true }).check()
-  await expect(page.getByTestId("event-3")).toContainText("repeat win")
-  await page.getByLabel("Calendar days", { exact: true }).fill("6")
-  await page.getByLabel("Calendar days", { exact: true }).press("Enter")
-  await expect(page.getByTestId("calendar").locator("tbody tr")).toHaveCount(6)
+  const tr = page.getByLabel("Player TR", { exact: true })
+  const setBadges = async (region: string, value: string) => {
+    await page.getByLabel(`${region} badges`, { exact: true }).fill(value)
+    await page.getByLabel(`${region} badges`, { exact: true }).press("Enter")
+  }
+  const answer = (number: number, choice: string) =>
+    page.getByLabel(`Answer invitation ${number}`, { exact: true }).selectOption(choice)
+  // Below player TR 80 no league calls.
+  await expect(page.getByTestId("not-qualified")).toHaveText(
+    "No league calls: player TR 0 is below 80.",
+  )
+  await tr.fill("79")
+  await expect(page.getByTestId("not-qualified")).toHaveText(
+    "No league calls: player TR 79 is below 80.",
+  )
+  await expect(page.getByTestId("event")).toHaveCount(0)
+  await tr.fill("80")
+  await expect(page.getByTestId("not-qualified")).toHaveCount(0)
+  await expect(page.getByTestId("invitations").locator("tbody tr")).toHaveCount(8)
+  await expect(page.getByTestId("badge-split-note")).toHaveText(
+    "Badge split from the 8 badges of the player TR, filling Kanto, Johto, then Hoenn (8 each).",
+  )
+  // A Hoenn-first player: Hoenn calls first, every 7 days from qualifying.
+  await setBadges("Kanto", "0")
+  await setBadges("Hoenn", "8")
+  await expect(page.getByTestId("badge-split-note")).toHaveText(
+    "Badge split set by hand: Kanto 0, Johto 0, Hoenn 8.",
+  )
+  await expect(page.getByTestId("invitation-1")).toContainText("7Hoenn")
+  await expect(page.getByTestId("invitation-1-reason")).toHaveText(
+    "most badges (Indigo 0, Hoenn 8)",
+  )
+  await expect(page.getByTestId("invitation-1-result")).toHaveText("declined")
+  await expect(page.getByTestId("invitation-1-champion")).toHaveText("Norman (TR 95)")
+  // Accept and win the next three: Indigo (never the same league twice), Hoenn, then the Masters,
+  // eligible after a win, takes the turn Hoenn would repeat.
+  await answer(2, "win")
+  await answer(3, "win")
+  await answer(4, "win")
+  await expect(page.getByTestId("invitation-2-league")).toHaveText("Indigo")
+  await expect(page.getByTestId("invitation-2-reason")).toHaveText("no repeat: Hoenn called last")
+  await expect(page.getByTestId("invitation-2-result")).toHaveText("first win")
+  await expect(page.getByTestId("invitation-2-champion")).toHaveText("the player")
+  await expect(page.getByTestId("invitation-2-fatigue")).toHaveText("#1 Hoenn")
+  await expect(page.getByTestId("invitation-3-league")).toHaveText("Hoenn")
+  await expect(page.getByTestId("invitation-4")).toContainText("28Sevii Masters")
+  await expect(page.getByTestId("invitation-4-reason")).toHaveText(
+    "Masters eligible: Hoenn (most badges) called last",
+  )
+  await expect(page.getByTestId("invitation-4-result")).toHaveText("first win")
+  await page.getByRole("button", { name: "Show invitation 4", exact: true }).click()
+  await expect(page.getByTestId("event").locator("h3").first()).toContainText(
+    "Invitation 4 (day 28): Sevii Masters",
+  )
+  await expect(page.getByTestId("event").locator("h3").first()).toContainText(
+    "fatigued from invitation 3 (Hoenn)",
+  )
+  await page.getByLabel("Invitations", { exact: true }).fill("5")
+  await page.getByLabel("Invitations", { exact: true }).press("Enter")
+  await expect(page.getByTestId("invitations").locator("tbody tr")).toHaveCount(5)
   await expect(page.getByTestId("champion-indigo")).toHaveText(
-    "Indigo reigning champion after day 5: the player",
+    "Indigo reigning champion after invitation 5: the player",
   )
   await expect(page.getByTestId("champion-hoenn")).toHaveText(
-    "Hoenn reigning champion after day 5: Giovanni (TR 131)",
+    "Hoenn reigning champion after invitation 5: Norman (TR 95)",
   )
-  await expect(page.getByTestId("champion-sevii-masters")).toHaveText(
-    "Sevii Masters reigning champion after day 5: Jasmine (TR 131)",
-  )
-  // The calendar length and the wins persist; the same inputs give the same calendar.
+  // The answers and the split persist; the same inputs give the same invitations.
   await page.reload()
-  await expect(page.getByTestId("calendar").locator("tbody tr")).toHaveCount(6)
-  await expect(page.getByLabel("Won day 0", { exact: true })).toBeChecked()
-  await expect(page.getByLabel("Won day 3", { exact: true })).toBeChecked()
-  await expect(page.getByTestId("event-4-champion")).toHaveText("Giovanni (TR 131)")
+  await expect(page.getByTestId("invitations").locator("tbody tr")).toHaveCount(5)
+  await expect(page.getByLabel("Answer invitation 2", { exact: true })).toHaveValue("win")
+  await expect(page.getByTestId("invitation-4-league")).toHaveText("Sevii Masters")
   // They round-trip through export.
   const downloadPromise = page.waitForEvent("download")
   await page.getByRole("button", { name: "Export experiment", exact: true }).click()
   const exported = await (await downloadPromise).path()
   if (!exported) throw new Error("Export did not produce a file")
   const saved = JSON.parse(await readFile(exported, "utf8"))
-  expect(saved.version).toBe(18)
-  expect(saved.league).toEqual({ days: 6, wins: [0, 3] })
-  // All 24 badges: the aloof Champions join the elite base lineup, and Lance reigns at Indigo.
+  expect(saved.version).toBe(19)
+  expect(saved.league).toEqual({
+    choices: ["decline", "win", "win", "win", "decline"],
+    split: { Kanto: 0, Johto: 0, Hoenn: 8 },
+  })
+  // Following the badge total again: 16 badges are Kanto and Johto, so Indigo calls. A loss ends
+  // the event, its strongest reigns, and the Masters stays closed without a win.
+  await page.getByRole("button", { name: "Follow badge total", exact: true }).click()
+  await page.getByRole("button", { name: "Set 16 badges", exact: true }).click()
+  await answer(1, "lose")
+  await answer(2, "decline")
+  await expect(page.getByTestId("invitation-1-league")).toHaveText("Indigo")
+  await expect(page.getByTestId("invitation-1-result")).toHaveText("loss")
+  await expect(page.getByTestId("invitation-1-champion")).toHaveText("Jasmine (TR 131)")
+  await expect(page.getByTestId("invitation-2-reason")).toHaveText("no repeat: Indigo called last")
+  await expect(page.getByTestId("invitation-2-league")).toHaveText("Hoenn")
+  // All 24 badges: declining the elite Indigo event crowns aloof Lance.
   await page.getByRole("button", { name: "Set 24 badges", exact: true }).click()
-  await page.getByLabel("Won day 0", { exact: true }).uncheck()
-  await page.getByLabel("Won day 3", { exact: true }).uncheck()
-  await expect(page.getByTestId("event-0-champion")).toHaveText("Lance (TR 200)")
+  await answer(1, "decline")
+  await expect(page.getByTestId("invitation-1-champion")).toHaveText("Lance (TR 200)")
+  await page.getByRole("button", { name: "Show invitation 1", exact: true }).click()
   await expect(page.getByTestId("event-aloof-lance")).toHaveText(
     "Lance aloof: team Lv 100 vs base lineup Lv 100 + 10 → joins",
   )
-  await expect(page.getByTestId("event-2-entry")).toHaveText("needs an Indigo or Hoenn win")
 })
 
 test("shows each trainer's play style and resolved AI flags, and edits the style", async ({
@@ -684,7 +732,7 @@ test("marks ace slots and fights them last, with slot 1 locked and at most three
   await expect(page.getByTestId("growth-slot-6")).not.toContainText("Ace")
 })
 
-test("flags incomplete rosters and rejects invalid edits and version 4 to 17 files", async ({
+test("flags incomplete rosters and rejects invalid edits and version 4 to 18 files", async ({
   page,
 }) => {
   await page.goto("/#trainer-balance")
@@ -925,6 +973,22 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 17 fil
   await expect(page.getByRole("alert")).toContainText(
     "Version 17 experiments save a league entry point for the retired standard entry sequence",
   )
+  await importFile(18, {
+    point: { playerTR: 80 },
+    league: { days: 12, wins: [] },
+    experiment: {
+      version: 18,
+      teamLevel: [[0, 15]],
+      teamSize: [[0, 2]],
+      wildLevel: [[0, 6]],
+      routeTrainerLevel: [[0, 9]],
+      archetypes: {},
+      trainers: {},
+    },
+  })
+  await expect(page.getByRole("alert")).toContainText(
+    "Version 18 experiments save league calendar settings (days and wins) for the retired league calendar",
+  )
   await expect(page.getByTestId("badge-count")).toHaveText("0")
   await expect(page.getByTestId("selected-tr")).toHaveText("25")
 
@@ -1132,7 +1196,10 @@ test("keeps controls and teams usable at a narrow viewport", async ({ page }) =>
   await expect(page.getByTestId("battle-order")).toBeVisible()
   await expect(page.getByTestId("growth-editor")).toBeVisible()
   await expect(page.getByTestId("gym-ladder")).toBeVisible()
-  await expect(page.getByTestId("calendar")).toBeVisible()
+  await expect(page.getByTestId("not-qualified")).toBeVisible()
+  await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
+  await expect(page.getByLabel("Hoenn badges", { exact: true })).toBeVisible()
+  await expect(page.getByTestId("invitations")).toBeVisible()
   await expect(page.getByTestId("event-lineup")).toBeVisible()
   await expect(page.getByTestId("event-entrants")).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)

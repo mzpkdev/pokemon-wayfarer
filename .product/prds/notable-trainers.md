@@ -186,8 +186,9 @@ A battle's team is set from the trainer's strength when it starts and kept for
 the whole fight. Retrying brings the same team at the same levels, unless you
 have grown in the meantime. League opponents also fight with
 their own TR and team; [Leagues](leagues.md) decides who is in each lineup,
-which is set when you enter a league event and kept for that event. A trainer
-who played in the most recent event, at any league, is tired for the next.
+which is set when you accept a league's invitation and kept for that event. A
+trainer who played in the most recent event, at any league, whether you took
+part or declined it, is tired for the next.
 
 ## Gym battles
 

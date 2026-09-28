@@ -16,11 +16,11 @@
     PLAY_STYLE_INFO,
     ROSTER_SIZE,
     AWAY_COST,
-    CALENDAR,
-    CALENDAR_DAYS,
-    ENTRY_BADGES,
-    EVENT_CADENCE,
+    INVITATIONS,
+    INVITATION_INTERVAL,
     LEAGUES,
+    QUALIFYING_TR,
+    REGION_BADGES,
     TRAVELLER_AWAY_COST,
     WILLINGNESS_FLOOR,
     archetypeName,
@@ -31,6 +31,7 @@
   import TeamLevelChart from "./TeamLevelChart.svelte"
   import {
     BalanceLab,
+    INVITATION_CHOICES,
     PLAYER_TR_SLIDER_MAX,
     catalog,
     lineText,
@@ -49,14 +50,40 @@
   const slug = (text: string): string => text.toLowerCase().replaceAll(" ", "-")
   const locationRegions = (league: keyof typeof LOCATION_REGIONS): string =>
     LOCATION_REGIONS[league]?.join(" + ") ?? "neutral location"
-  type CalendarEvent = (typeof lab.calendar)[number]
-  const entryText = (entry: CalendarEvent["entry"]): string =>
-    entry.eligible
-      ? "may enter"
-      : entry.reason === "badges"
-        ? `needs ${entry.needs} badges`
-        : "needs an Indigo or Hoenn win"
-  const championText = (champion: CalendarEvent["champion"] | null): string =>
+  type SimulatedInvitation = (typeof lab.simulation.invitations)[number]
+  const CHOICE_TEXT = { win: "accept & win", lose: "accept & lose", decline: "decline" } as const
+  const otherRegional = (league: string): string => (league === "Indigo" ? "Hoenn" : "Indigo")
+  const reasonText = (
+    invitation: SimulatedInvitation,
+    badges: typeof lab.simulation.badges,
+  ): string => {
+    const count = `Indigo ${badges.Indigo}, Hoenn ${badges.Hoenn}`
+    switch (invitation.reason) {
+      case "most badges":
+        return `most badges (${count})`
+      case "masters after repeat":
+        return `Masters eligible: ${invitation.lastCaller} (most badges) called last`
+      case "masters on tie":
+        return `Masters eligible: tie (${count})`
+      case "no repeat":
+        return `no repeat: ${invitation.lastCaller} called last`
+      case "first tie":
+        return `first tie (${count}) goes to Indigo`
+      case "tie":
+        return invitation.lastCaller === "Sevii Masters"
+          ? `tie (${count}): ${otherRegional(invitation.league)} was the last regional league to call`
+          : `tie (${count}): ${invitation.lastCaller} called last`
+    }
+  }
+  const resultText = (invitation: SimulatedInvitation): string =>
+    invitation.result === "win"
+      ? invitation.firstWin
+        ? "first win"
+        : "repeat win"
+      : invitation.result === "loss"
+        ? "loss"
+        : "declined"
+  const championText = (champion: SimulatedInvitation["champion"] | null): string =>
     champion === null
       ? "—"
       : champion.kind === "player"
@@ -156,8 +183,8 @@
       <h1>Trainer balance</h1>
       <p>
         Author each notable trainer’s growth (start TR, archetype, peak TR), six-slot roster and
-        move pool, and see their TR, team, the Gym ladder and the league calendar with lineups
-        ranked by league score at any world progress.
+        move pool, and see their TR, team, the Gym ladder and simulated league invitations with
+        lineups ranked by league score at any world progress.
       </p>
     </div>
     <div class="actions">
@@ -291,11 +318,11 @@
     <div>
       <span class="eyebrow">Indigo finalist</span>
       <strong data-testid="league-finalist"
-        >{lab.calendar[0]?.ranking.lineup.at(-1)?.trainer.name ?? "—"}
-        {lab.calendar[0]?.ranking.lineup.at(-1)?.tr ?? ""}</strong
+        >{lab.indigo.lineup.at(-1)?.trainer.name ?? "—"}
+        {lab.indigo.lineup.at(-1)?.tr ?? ""}</strong
       >
       <span class="hint"
-        >Strongest of Indigo’s day 0 lineup, the top {LINEUP_SIZE} by league score at world progress
+        >Strongest of a fresh Indigo lineup, the top {LINEUP_SIZE} by league score at world progress
         {lab.worldProgress}</span
       >
     </div>
@@ -967,39 +994,66 @@
     </ol>
   </section>
 
-  <section class="league" aria-label="League calendar">
+  <section class="league" aria-label="Invitation simulator">
     <div class="panel-title">
       <h2>
-        League calendar <span
-          >world progress {lab.worldProgress} · {lab.badgeFloor} badges · days 0–{lab.calendarDays -
-            1}</span
+        Invitation simulator <span
+          >world progress {lab.worldProgress} · Indigo {lab.simulation.badges.Indigo} badges · Hoenn
+          {lab.simulation.badges.Hoenn} badges</span
         >
       </h2>
       <div class="league-controls">
         <label
-          >Days<input
-            aria-label="Calendar days"
+          >Invitations<input
+            aria-label="Invitations"
             type="number"
             min="1"
-            max={CALENDAR_DAYS.max}
+            max={INVITATIONS.max}
             step="1"
-            value={lab.calendarDays}
-            onchange={(event) => lab.setCalendarDays(event.currentTarget.valueAsNumber)}
+            value={lab.invitationChoices.length}
+            onchange={(event) => lab.setInvitationCount(event.currentTarget.valueAsNumber)}
           /></label
         >
+        {#each HOME_REGIONS as region (region)}
+          <label
+            >{region}<input
+              aria-label={`${region} badges`}
+              type="number"
+              min="0"
+              max={REGION_BADGES}
+              step="1"
+              value={lab.badgeSplit[region]}
+              onchange={(event) => lab.setRegionBadges(region, event.currentTarget.valueAsNumber)}
+            /></label
+          >
+        {/each}
+        {#if lab.badgeSplitOverride}
+          <button type="button" class="day-button" onclick={lab.resetBadgeSplit}
+            >Follow badge total</button
+          >
+        {/if}
       </div>
     </div>
+    <p class="hint league-note" data-testid="badge-split-note">
+      {lab.badgeSplitOverride
+        ? `Badge split set by hand: ${HOME_REGIONS.map((region) => `${region} ${lab.badgeSplit[region]}`).join(", ")}${
+            HOME_REGIONS.reduce((sum, region) => sum + lab.badgeSplit[region], 0) === lab.badgeFloor
+              ? ""
+              : ` (the player TR gives ${lab.badgeFloor} badges)`
+          }.`
+        : `Badge split from the ${lab.badgeFloor} badges of the player TR, filling Kanto, Johto, then Hoenn (${REGION_BADGES} each).`}
+    </p>
     <p class="hint league-note">
-      Each league holds an event every {EVENT_CADENCE} in-game days, staggered by day mod {EVENT_CADENCE}:
-      {CALENDAR.map((league, index) => `${league} on ${index}`).join(", ")}, so one league holds an
-      event every day. Days never change anyone’s strength: every event here is at the player’s
-      world progress, and the badges come from the player TR. Indigo and Hoenn open at {ENTRY_BADGES.Indigo}
-      badges in any order; the Sevii Masters opens at {ENTRY_BADGES["Sevii Masters"]} badges after a win
-      at Indigo or Hoenn. Tick <em>Won</em> on a day the player may enter to have them enter and win
-      it. Otherwise the lineup’s strongest member (last in battle order) is the reigning champion
-      until that league’s next event. Each lineup is the top {LINEUP_SIZE} by league score, fatigued by
-      the lineup of the event the day before (the most recent completed event at any league, entered or
-      not).
+      The player qualifies at player TR {QUALIFYING_TR} (day 0 here). A league phones every {INVITATION_INTERVAL}
+      in-game days, counted from qualifying and restarted when an invitation resolves; no countdown runs
+      while an accepted event is pending (here the player arrives the day they accept). Indigo and Hoenn
+      may always call, the Sevii Masters after any league win, and the league that called last never calls
+      again: the league with more badges (Indigo = Kanto + Johto, Hoenn = Hoenn) calls; if it called last,
+      or on a tie, the Masters calls when eligible; otherwise the other regional league, and on a tie
+      the one that did not call last (the very first tie goes to Indigo). Accepting freezes the lineup,
+      and the event waits for the player: one attempt, a loss ends it. Declining runs it without them.
+      The reigning champion is the player after a win, otherwise the lineup’s strongest (last in battle
+      order). Days never change anyone’s strength.
     </p>
     <p class="hint league-note">
       Each event gives every league-eligible trainer (singles only: no Red, no Tate & Liza) a
@@ -1007,136 +1061,158 @@
       home (a trainer whose home region is a location region, or anyone at the neutral Sevii
       Masters); away it is
       {TRAVELLER_AWAY_COST} for a trainer with the traveller trait and {AWAY_COST} for everyone else.
-      Fatigue is {FATIGUE}. The league score is floor(TR × willingness / 100). The top {LINEUP_SIZE} trainers
-      who are not aloof are the base lineup, and its strongest team level is the base lineup level; an
-      aloof trainer joins only when their team level is at most the base lineup level + {ALOOF_MARGIN},
-      aloof trainers are never compared with each other, and with no base lineup every aloof trainer
-      skips. The top {LINEUP_SIZE} of everyone who joins (ties in catalog order, standing in for characterId)
-      make the lineup, which fights by ascending TR, strongest last. There is no randomness; the ROM freezes
-      a lineup for its event when the player enters.
+      Fatigue is {FATIGUE} for a trainer in the lineup of the most recent resolved event. The league score
+      is floor(TR × willingness / 100). The top {LINEUP_SIZE} trainers who are not aloof are the base
+      lineup, and its strongest team level is the base lineup level; an aloof trainer joins only when
+      their team level is at most the base lineup level + {ALOOF_MARGIN}, aloof trainers are never
+      compared with each other, and with no base lineup every aloof trainer skips. The top {LINEUP_SIZE}
+      of everyone who joins (ties in catalog order, standing in for characterId) make the lineup, which
+      fights by ascending TR, strongest last. There is no randomness.
     </p>
-    <ul class="aloof-list" data-testid="champions">
-      {#each LEAGUES as league (league)}
-        <li data-testid={`champion-${slug(league)}`}>
-          {league} reigning champion after day {lab.calendarDays - 1}: {championText(
-            lab.champions[league],
-          )}
-        </li>
-      {/each}
-    </ul>
-    <div class="entrant-scroll">
-      <table class="entrant-table" data-testid="calendar">
-        <thead
-          ><tr
-            ><th>Day</th><th>League</th><th>Lineup (battle order)</th><th>Fatigued from</th><th
-              >Player</th
-            ><th>Won</th><th>Reigning champion</th></tr
-          ></thead
-        >
-        <tbody>
-          {#each lab.calendar as event (event.day)}
-            <tr class:in-lineup={event.day === lab.event.day} data-testid={`event-${event.day}`}
-              ><td
-                ><button
-                  class="day-button"
-                  type="button"
-                  aria-label={`Show day ${event.day}`}
-                  aria-pressed={event.day === lab.event.day}
-                  onclick={() => lab.selectEvent(event.day)}>Day {event.day}</button
-                ></td
-              ><td>{event.league}</td><td
-                >{event.ranking.lineup.map((entrant) => entrant.trainer.name).join(", ")}</td
-              ><td
-                >{event.fatigueFrom
-                  ? `day ${event.fatigueFrom.day} ${event.fatigueFrom.league}`
-                  : "—"}</td
-              ><td data-testid={`event-${event.day}-entry`}>{entryText(event.entry)}</td><td
-                ><input
-                  type="checkbox"
-                  aria-label={`Won day ${event.day}`}
-                  checked={event.playerWon}
-                  disabled={!event.entry.eligible}
-                  onchange={(change) => lab.setCalendarWin(event.day, change.currentTarget.checked)}
-                />{event.playerWon ? (event.firstWin ? " first win" : " repeat win") : ""}</td
-              ><td data-testid={`event-${event.day}-champion`}>{championText(event.champion)}</td
-              ></tr
-            >
-          {/each}
-        </tbody>
-      </table>
-    </div>
-    <div class="league-entry" data-testid="event">
-      <h3>
-        Day {lab.event.day}: {lab.event.league}
-        <span class="muted"
-          >world progress {lab.event.ranking.world} · {locationRegions(lab.event.league)} · base lineup
-          Lv {lab.event.ranking.baseLineupLevel ?? "—"} · fatigued from {lab.event.fatigueFrom
-            ? `day ${lab.event.fatigueFrom.day} ${lab.event.fatigueFrom.league}`
-            : "no earlier event"}</span
-        >
-      </h3>
-      <ul class="aloof-list" data-testid="event-aloof">
-        {#each lab.event.ranking.entrants.filter((entrant) => entrant.aloof) as entrant (entrant.trainer.id)}
-          <li class:skips={!entrant.joins} data-testid={`event-aloof-${entrant.trainer.id}`}>
-            {entrant.trainer.name} aloof: team Lv {entrant.teamLevel} vs base lineup Lv {lab.event
-              .ranking.baseLineupLevel ?? "—"} + {ALOOF_MARGIN} → {entrant.joins
-              ? "joins"
-              : "skips"}
+    {#if !lab.simulation.qualified}
+      <p class="hint league-note" data-testid="not-qualified">
+        No league calls: player TR {lab.playerTR} is below {QUALIFYING_TR}.
+      </p>
+    {:else}
+      <ul class="aloof-list" data-testid="champions">
+        {#each LEAGUES as league (league)}
+          <li data-testid={`champion-${slug(league)}`}>
+            {league} reigning champion after invitation {lab.invitationChoices.length}: {championText(
+              lab.champions[league],
+            )}
           </li>
         {/each}
       </ul>
-      <ol class="league-grid" data-testid="event-lineup">
-        {#each lab.event.matches as row, index (row.trainer.id)}
-          <li class="match-card" data-testid={`event-match-${index + 1}`}>
-            <div class="match-heading">
-              <h3><span class="muted">Match {index + 1}</span> {row.trainer.name}</h3>
-              <span class="hint"
-                >TR {row.tr} · score {lab.event.ranking.lineup[index]?.score} · Lv. {row.teamLevel} ·
-                {row.team.length} Pokémon</span
-              >
-            </div>
-            <ol class="league-team">
-              {#each row.battleOrder as member (member.slot)}<li>
-                  <span>{member.species}</span><span class="member-level">Lv. {member.level}</span>
-                </li>{/each}
-            </ol>
-          </li>
-        {/each}
-      </ol>
       <div class="entrant-scroll">
-        <table class="entrant-table" data-testid="event-entrants">
+        <table class="entrant-table" data-testid="invitations">
           <thead
             ><tr
-              ><th>Rank</th><th>Trainer</th><th>TR</th><th>Team level</th><th>Home region</th><th
-                >Traveller</th
-              ><th>Location</th><th>Travel cost</th><th>Fatigue</th><th>Willingness</th><th
-                >League score</th
-              ><th>Aloof</th><th>Lineup</th></tr
+              ><th>Invitation</th><th>Day</th><th>League</th><th>Why</th><th
+                >Lineup (battle order, league score)</th
+              ><th>Fatigued from</th><th>Answer</th><th>Result</th><th>Reigning champion</th></tr
             ></thead
           >
           <tbody>
-            {#each lab.event.ranking.entrants as entrant (entrant.trainer.id)}
+            {#each lab.simulation.invitations as invitation, index (invitation.number)}
               <tr
-                class:in-lineup={entrant.inLineup}
-                class:skips={!entrant.joins}
-                data-testid={`event-entrant-${entrant.trainer.id}`}
-                ><td class="numeric">{entrant.rank ?? "—"}</td><td>{entrant.trainer.name}</td><td
-                  class="numeric">{entrant.tr}</td
-                ><td class="numeric">{entrant.teamLevel}</td><td>{entrant.homeRegion}</td><td
-                  >{entrant.traveller ? "traveller" : ""}</td
-                ><td>{entrant.willingness.home ? "at home" : "away"}</td><td class="numeric"
-                  >{entrant.willingness.travelCost}</td
-                ><td class="numeric">{entrant.willingness.fatigue}</td><td class="numeric"
-                  >{entrant.willingness.score}</td
-                ><td class="numeric score">{entrant.score}</td><td
-                  >{entrant.aloof ? (entrant.joins ? "joins" : "skips") : ""}</td
-                ><td>{entrant.inLineup ? "in lineup" : ""}</td></tr
+                class:in-lineup={index === lab.invitationIndex}
+                data-testid={`invitation-${invitation.number}`}
+                ><td
+                  ><button
+                    class="day-button"
+                    type="button"
+                    aria-label={`Show invitation ${invitation.number}`}
+                    aria-pressed={index === lab.invitationIndex}
+                    onclick={() => lab.selectInvitation(index)}>#{invitation.number}</button
+                  ></td
+                ><td class="numeric">{invitation.day}</td><td
+                  data-testid={`invitation-${invitation.number}-league`}>{invitation.league}</td
+                ><td data-testid={`invitation-${invitation.number}-reason`}
+                  >{reasonText(invitation, lab.simulation.badges)}</td
+                ><td data-testid={`invitation-${invitation.number}-lineup`}
+                  >{invitation.ranking.lineup
+                    .map((entrant) => `${entrant.trainer.name} ${entrant.score}`)
+                    .join(", ")}</td
+                ><td data-testid={`invitation-${invitation.number}-fatigue`}
+                  >{invitation.fatigueFrom
+                    ? `#${invitation.fatigueFrom.number} ${invitation.fatigueFrom.league}`
+                    : "—"}</td
+                ><td
+                  ><select
+                    aria-label={`Answer invitation ${invitation.number}`}
+                    value={invitation.choice}
+                    onchange={(change) =>
+                      lab.setInvitationChoice(index, change.currentTarget.value)}
+                    >{#each INVITATION_CHOICES as choice (choice)}<option value={choice}
+                        >{CHOICE_TEXT[choice]}</option
+                      >{/each}</select
+                  ></td
+                ><td data-testid={`invitation-${invitation.number}-result`}
+                  >{resultText(invitation)}</td
+                ><td data-testid={`invitation-${invitation.number}-champion`}
+                  >{championText(invitation.champion)}</td
+                ></tr
               >
             {/each}
           </tbody>
         </table>
       </div>
-    </div>
+    {/if}
+    {#if lab.event}
+      <div class="league-entry" data-testid="event">
+        <h3>
+          Invitation {lab.event.number} (day {lab.event.day}): {lab.event.league}
+          <span class="muted"
+            >world progress {lab.event.ranking.world} · {locationRegions(lab.event.league)} · base lineup
+            Lv {lab.event.ranking.baseLineupLevel ?? "—"} · fatigued from {lab.event.fatigueFrom
+              ? `invitation ${lab.event.fatigueFrom.number} (${lab.event.fatigueFrom.league})`
+              : "no earlier event"}</span
+          >
+        </h3>
+        <ul class="aloof-list" data-testid="event-aloof">
+          {#each lab.event.ranking.entrants.filter((entrant) => entrant.aloof) as entrant (entrant.trainer.id)}
+            <li class:skips={!entrant.joins} data-testid={`event-aloof-${entrant.trainer.id}`}>
+              {entrant.trainer.name} aloof: team Lv {entrant.teamLevel} vs base lineup Lv {lab.event
+                .ranking.baseLineupLevel ?? "—"} + {ALOOF_MARGIN} → {entrant.joins
+                ? "joins"
+                : "skips"}
+            </li>
+          {/each}
+        </ul>
+        <ol class="league-grid" data-testid="event-lineup">
+          {#each lab.event.matches as row, index (row.trainer.id)}
+            <li class="match-card" data-testid={`event-match-${index + 1}`}>
+              <div class="match-heading">
+                <h3><span class="muted">Match {index + 1}</span> {row.trainer.name}</h3>
+                <span class="hint"
+                  >TR {row.tr} · score {lab.event.ranking.lineup[index]?.score} · Lv. {row.teamLevel}
+                  · {row.team.length} Pokémon</span
+                >
+              </div>
+              <ol class="league-team">
+                {#each row.battleOrder as member (member.slot)}<li>
+                    <span>{member.species}</span><span class="member-level">Lv. {member.level}</span
+                    >
+                  </li>{/each}
+              </ol>
+            </li>
+          {/each}
+        </ol>
+        <div class="entrant-scroll">
+          <table class="entrant-table" data-testid="event-entrants">
+            <thead
+              ><tr
+                ><th>Rank</th><th>Trainer</th><th>TR</th><th>Team level</th><th>Home region</th><th
+                  >Traveller</th
+                ><th>Location</th><th>Travel cost</th><th>Fatigue</th><th>Willingness</th><th
+                  >League score</th
+                ><th>Aloof</th><th>Lineup</th></tr
+              ></thead
+            >
+            <tbody>
+              {#each lab.event.ranking.entrants as entrant (entrant.trainer.id)}
+                <tr
+                  class:in-lineup={entrant.inLineup}
+                  class:skips={!entrant.joins}
+                  data-testid={`event-entrant-${entrant.trainer.id}`}
+                  ><td class="numeric">{entrant.rank ?? "—"}</td><td>{entrant.trainer.name}</td><td
+                    class="numeric">{entrant.tr}</td
+                  ><td class="numeric">{entrant.teamLevel}</td><td>{entrant.homeRegion}</td><td
+                    >{entrant.traveller ? "traveller" : ""}</td
+                  ><td>{entrant.willingness.home ? "at home" : "away"}</td><td class="numeric"
+                    >{entrant.willingness.travelCost}</td
+                  ><td class="numeric">{entrant.willingness.fatigue}</td><td class="numeric"
+                    >{entrant.willingness.score}</td
+                  ><td class="numeric score">{entrant.score}</td><td
+                    >{entrant.aloof ? (entrant.joins ? "joins" : "skips") : ""}</td
+                  ><td>{entrant.inLineup ? "in lineup" : ""}</td></tr
+                >
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {/if}
   </section>
 
   <details class="global-settings">

@@ -381,9 +381,10 @@ saved when entering the league, under [League scaling](league-scaling.md).
 Hoenn-specific Champion/game-clear ownership and local cleanup remain in force.
 
 The proposed [Leagues runtime](leagues.md) replaces today's admission and
-league order with recurring league events (Hoenn every three in-game days,
-open from 8 badges) and owns each event's frozen five-trainer lineup, one
-attempt per event, and the reigning champion;
+league order with league invitations (from player TR 80; Hoenn calls when
+the player holds more Hoenn badges than Kanto and Johto badges, or in turn)
+and owns each accepted event's frozen five-trainer lineup, one attempt per
+event, and the reigning champion;
 [Leagues selection](leagues.md#selection-and-order) picks the top five by
 league score (TR scaled by willingness), and [Notable trainers](notable-trainers.md) owns their TR and
 teams.

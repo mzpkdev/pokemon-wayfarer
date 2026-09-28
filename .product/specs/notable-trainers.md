@@ -99,7 +99,8 @@ willingness = max(5, 100 - travelCost - fatigue)
 
 **Fatigue** is a location-specific penalty, 0 unless the location defines one;
 in v0 only leagues do: 50 for a trainer in the lineup of the most recent
-completed league event at any league, whether or not the player entered it.
+resolved league event at any league, whether the player accepted it or
+declined it.
 [Leagues](leagues.md#selection-and-order) owns the league location regions,
 fatigue, and the league score that reads willingness.
 
@@ -454,7 +455,7 @@ reuses that snapshot, and the battle's AI flags are resolved alongside it
 ([Trainer AI](trainer-ai.md#runtime-and-the-override-point)); teardown clears it, and world progress gained during the
 battle never changes it. A retry at the same world progress produces an
 identical team (battle RNG may still differ); a retry after the player gained TR
-uses the higher world progress. Entering a league event computes every eligible trainer's TR
+uses the higher world progress. Accepting a league invitation computes every eligible trainer's TR
 at that moment and captures the selected trainers' battle snapshots in the
 event lineup, frozen for that event;
 [Leagues](leagues.md#event-lineup) owns that lifecycle. Invalid content or a
@@ -525,8 +526,8 @@ Content constraints checked by the catalog report and playtesting, not runtime
 rules (placeholders tuned in the explorer):
 
 - **Leagues (informational).** League lineups depend on willingness and the
-  calendar (fatigue from the most recent event), so the catalog report shows
-  league scores and lineups per league event ([Leagues](leagues.md#balance-report)) instead of asserting a strength
+  invitations (fatigue from the most recent resolved event), so the catalog
+  report shows league scores and lineups per league event ([Leagues](leagues.md#balance-report)) instead of asserting a strength
   target; league balance comes later. At 160 the team-level and level-cap
   scalers both reach their Lv 100 ceiling; challenge beyond that needs a
   quality scaler (Later).

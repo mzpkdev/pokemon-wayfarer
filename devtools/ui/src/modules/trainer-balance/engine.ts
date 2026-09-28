@@ -3,8 +3,9 @@ import type {
   AiSkillTier,
   Anchor,
   Archetype,
+  BadgeSplit,
+  CallReason,
   DormantReason,
-  EventEntry,
   Willingness,
   EvolutionData,
   Experiment,
@@ -12,7 +13,9 @@ import type {
   LadderRow,
   League,
   LeagueCandidate,
-  LeagueEvent,
+  Invitation,
+  InvitationChoice,
+  InvitationSimulation,
   LeagueRanking,
   LearnsetData,
   Milestone,
@@ -23,6 +26,8 @@ import type {
   ResolvedAi,
   ResolvedMove,
   ResolvedTrainer,
+  RegionalBadges,
+  RegionalLeague,
   ReigningChampion,
   RosterSlot,
   ScalerKind,
@@ -39,23 +44,17 @@ export const LEVEL_OFFSET = { min: -6, max: 0, default: -2 } as const
 export const LINEUP_SIZE = 5
 /** The leagues, by league identity (Indigo = 1, Masters = 2, Hoenn = 3). */
 export const LEAGUES: readonly League[] = ["Indigo", "Sevii Masters", "Hoenn"]
-/** In-game days between two events at one league (placeholder). */
-export const EVENT_CADENCE = 3
+/** The player TR that qualifies the player for league invitations (placeholder; 8 badges today). */
+export const QUALIFYING_TR = 80
 /**
- * The calendar: the league holding an event on each day, by day mod EVENT_CADENCE (Indigo on 0,
- * Hoenn on 1, the Sevii Masters on 2), so one league holds an event every day.
+ * In-game days from qualifying, or from an invitation's resolution, to the next invitation
+ * (placeholder). No countdown runs while an invitation or accepted event is pending.
  */
-export const CALENDAR: readonly League[] = ["Indigo", "Hoenn", "Sevii Masters"]
-/** The regional leagues: a lifetime win at one of them opens the Sevii Masters. */
-export const REGIONAL_LEAGUES: readonly League[] = ["Indigo", "Hoenn"]
-/** Badges each league opens at (placeholders): Indigo and Hoenn at 8 in any order, the Masters at 16. */
-export const ENTRY_BADGES: Readonly<Record<League, number>> = {
-  Indigo: 8,
-  "Sevii Masters": 16,
-  Hoenn: 8,
-}
-/** The calendar length the explorer simulates by default, and its limit. */
-export const CALENDAR_DAYS = { default: 12, max: 60 } as const
+export const INVITATION_INTERVAL = 7
+/** Badges one region holds. */
+export const REGION_BADGES = 8
+/** How many invitations the explorer simulates by default, and its limit. */
+export const INVITATIONS = { default: 8, max: 24 } as const
 /** Each league location's location regions; null is a neutral location (everyone is at home). */
 export const LOCATION_REGIONS: Readonly<Record<League, readonly HomeRegion[] | null>> = {
   Indigo: ["Kanto", "Johto"],
@@ -67,7 +66,7 @@ export const HOME_REGIONS: readonly HomeRegion[] = ["Kanto", "Johto", "Hoenn"]
 export const AWAY_COST = 80
 /** Willingness lost at an away league by a traveller. */
 export const TRAVELLER_AWAY_COST = 10
-/** Willingness lost by a trainer in the lineup of the most recent completed league event. */
+/** Willingness lost by a trainer in the lineup of the most recent resolved league event. */
 export const FATIGUE = 50
 export const WILLINGNESS_FLOOR = 5
 /** Levels (not TR) an aloof trainer's team level may sit above the base lineup level and still join. */
@@ -1174,7 +1173,8 @@ export const milestoneText = (milestone: Milestone): string =>
  * A trainer's willingness score at a league: 100 - travel cost - fatigue, at least
  * WILLINGNESS_FLOOR. Travel cost is 0 at home or at a neutral location (the Sevii Masters); away it
  * is TRAVELLER_AWAY_COST for a traveller and AWAY_COST otherwise. Fatigue is FATIGUE when the
- * trainer was in the lineup of the most recent completed event at any league.
+ * trainer was in the lineup of the most recent resolved league event (accepted and finished, or
+ * declined).
  */
 export const willingness = (
   league: League,
@@ -1233,7 +1233,7 @@ export const aloofJoins = (teamLevel: number, baseLineupLevel: number | null): b
 
 /**
  * A league event's lineup: each eligible trainer's willingness (fatigued when in `previous`, the
- * lineup of the most recent completed event at any league) and league score. The top LINEUP_SIZE non-aloof trainers by
+ * lineup of the most recent resolved league event) and league score. The top LINEUP_SIZE non-aloof trainers by
  * league score are the base lineup, whose strongest team level is the base lineup level; an aloof
  * trainer joins only when their team level is at most the base lineup level + ALOOF_MARGIN,
  * compared with the base lineup and never with other aloof trainers (with no base lineup, every
@@ -1282,83 +1282,132 @@ export const rankLeague = (
   }
 }
 
-/** The league holding an event on an in-game day. */
-export const eventLeague = (day: number): League => {
-  const league = CALENDAR[day % EVENT_CADENCE]
-  if (!league || !Number.isInteger(day) || day < 0) throw new Error(`Invalid in-game day: ${day}`)
-  return league
+/** Whether a player TR qualifies the player for league invitations: TR at least QUALIFYING_TR. */
+export const qualifies = (playerTR: number): boolean => playerTR >= QUALIFYING_TR
+
+/**
+ * A badge total split by region, filling Kanto, then Johto, then Hoenn (REGION_BADGES each): the
+ * explorer's default when no split is set.
+ */
+export const defaultBadgeSplit = (badges: number): BadgeSplit => {
+  const total = Math.min(REGION_BADGES * 3, Math.max(0, Math.floor(badges)))
+  const Kanto = Math.min(REGION_BADGES, total)
+  const Johto = Math.min(REGION_BADGES, total - Kanto)
+  return { Kanto, Johto, Hoenn: total - Kanto - Johto }
+}
+
+/** Each regional league's badge count: Indigo = Kanto + Johto badges, Hoenn = Hoenn badges. */
+export const leagueBadges = (split: BadgeSplit): RegionalBadges => ({
+  Indigo: split.Kanto + split.Johto,
+  Hoenn: split.Hoenn,
+})
+
+const otherRegional = (league: RegionalLeague): RegionalLeague =>
+  league === "Indigo" ? "Hoenn" : "Indigo"
+
+/**
+ * Which league calls next. Indigo and Hoenn are always eligible once the player qualifies; the
+ * Sevii Masters is eligible after any lifetime league win. The league that called last never calls
+ * again (another is always eligible):
+ * 1. The regional league with strictly more badges calls, unless it called last.
+ * 2. Otherwise (a tie, or the leader called last) the Masters calls, if eligible and it did not call
+ *    last.
+ * 3. Otherwise a regional league that did not call last: the other one after a repeat; on a tie the
+ *    one that did not call last, or, when neither did (the Masters called last, or no one has called),
+ *    the one other than the last regional league to call, and Indigo on the very first tie.
+ */
+export const callingLeague = (
+  badges: RegionalBadges,
+  mastersEligible: boolean,
+  last: League | null,
+  lastRegional: RegionalLeague | null,
+): { league: League; reason: CallReason } => {
+  const leader: RegionalLeague | null =
+    badges.Indigo > badges.Hoenn ? "Indigo" : badges.Hoenn > badges.Indigo ? "Hoenn" : null
+  if (leader !== null && leader !== last) return { league: leader, reason: "most badges" }
+  if (mastersEligible && last !== "Sevii Masters")
+    return {
+      league: "Sevii Masters",
+      reason: leader === null ? "masters on tie" : "masters after repeat",
+    }
+  if (leader !== null) return { league: otherRegional(leader), reason: "no repeat" }
+  if (last === "Indigo" || last === "Hoenn") return { league: otherRegional(last), reason: "tie" }
+  return lastRegional === null
+    ? { league: "Indigo", reason: "first tie" }
+    : { league: otherRegional(lastRegional), reason: "tie" }
 }
 
 /**
- * Whether the player may enter a league: Indigo and Hoenn from ENTRY_BADGES (8) badges, in any
- * order; the Sevii Masters from 16 badges and at least one lifetime win at Indigo or Hoenn.
+ * Simulates league invitations at one player TR (world progress; days never change anyone's
+ * strength) and badge split. The player qualifies on day 0 when their TR is at least QUALIFYING_TR;
+ * below it no league calls. The first invitation arrives INVITATION_INTERVAL days later, and each
+ * next one INVITATION_INTERVAL days after the previous one resolves: a decline resolves on the day
+ * of the call, an accepted event when the player arrives and fights (`waits[i]` days after the
+ * call, 0 by default); no countdown runs while an accepted event is pending. `choices[i]` answers
+ * invitation i. The lineup is computed at acceptance or decline, fatigued by the lineup of the most
+ * recent resolved event, and frozen. The reigning champion is the player after a win, otherwise the
+ * lineup's strongest member (last in battle order). No randomness.
  */
-export const eventEntry = (
-  league: League,
-  badges: number,
-  lifetimeWins: ReadonlySet<League>,
-): EventEntry => {
-  if (badges < ENTRY_BADGES[league])
-    return { eligible: false, reason: "badges", needs: ENTRY_BADGES[league] }
-  if (
-    league === "Sevii Masters" &&
-    !REGIONAL_LEAGUES.some((regional) => lifetimeWins.has(regional))
-  )
-    return { eligible: false, reason: "regional win" }
-  return { eligible: true }
-}
-
-/**
- * Simulates the calendar over days 0 to days - 1 at one world progress (days never change anyone's
- * strength) and the player's badges. Each day one league holds an event; its lineup follows the
- * league score rule, fatigued by the lineup of the event the day before (the most recent completed
- * event at any league, whether or not the player entered it). `wins` are the days the player enters
- * and wins; a win counts only when the player may enter. The reigning champion is the player after a
- * win, otherwise the lineup's strongest member (last in battle order). No randomness.
- */
-export const leagueCalendar = (
+export const simulateInvitations = (
   catalog: readonly TrainerRecord[],
   experiment: Experiment,
-  world: number,
-  badges: number,
-  days: number,
-  wins: ReadonlySet<number> = new Set(),
-): LeagueEvent[] => {
-  const candidates = leagueCandidates(catalog, experiment, world)
+  playerTR: number,
+  split: BadgeSplit,
+  choices: readonly InvitationChoice[],
+  waits: readonly number[] = [],
+): InvitationSimulation => {
+  const badges = leagueBadges(split)
+  if (!qualifies(playerTR)) return { qualified: false, badges, invitations: [] }
+  const candidates = leagueCandidates(catalog, experiment, playerTR)
   const lifetimeWins = new Set<League>()
-  const events: LeagueEvent[] = []
-  for (let day = 0; day < days; day += 1) {
-    const league = eventLeague(day)
-    const before = events.at(-1)
+  const invitations: Invitation[] = []
+  let day = INVITATION_INTERVAL
+  let lastRegional: RegionalLeague | null = null
+  choices.forEach((choice, index) => {
+    const before = invitations.at(-1)
+    const lastCaller = before?.league ?? null
+    const mastersEligible = lifetimeWins.size > 0
+    const { league, reason } = callingLeague(badges, mastersEligible, lastCaller, lastRegional)
     const ranking = rankLeague(
       league,
-      world,
+      playerTR,
       candidates,
       new Set(before?.ranking.lineup.map((entrant) => entrant.trainer.id)),
     )
-    const entry = eventEntry(league, badges, lifetimeWins)
-    const playerWon = entry.eligible && wins.has(day)
-    const firstWin = playerWon && !lifetimeWins.has(league)
-    if (playerWon) lifetimeWins.add(league)
     const strongest = ranking.lineup.at(-1)
-    if (!strongest) throw new Error(`${league} has no lineup on day ${day}.`)
-    events.push({
+    if (!strongest) throw new Error(`${league} has no lineup for invitation ${index + 1}.`)
+    const wait = choice === "decline" ? 0 : (waits[index] ?? 0)
+    if (!Number.isInteger(wait) || wait < 0)
+      throw new Error(`Invalid wait for invitation ${index + 1}: ${wait}`)
+    const won = choice === "win"
+    const firstWin = won && !lifetimeWins.has(league)
+    if (won) lifetimeWins.add(league)
+    invitations.push({
+      number: index + 1,
       day,
+      resolvedDay: day + wait,
       league,
+      reason,
+      lastCaller,
+      mastersEligible,
+      choice,
       ranking,
-      fatigueFrom: before ? { day: before.day, league: before.league } : null,
-      entry,
-      playerWon,
+      fatigueFrom: before
+        ? { number: before.number, league: before.league, day: before.resolvedDay }
+        : null,
+      result: choice === "decline" ? "declined" : won ? "win" : "loss",
       firstWin,
-      champion: playerWon ? { kind: "player" } : { kind: "trainer", entrant: strongest },
+      champion: won ? { kind: "player" } : { kind: "trainer", entrant: strongest },
     })
-  }
-  return events
+    if (league !== "Sevii Masters") lastRegional = league
+    day += wait + INVITATION_INTERVAL
+  })
+  return { qualified: true, badges, invitations }
 }
 
-/** Each league's reigning champion after its latest event in the calendar (null before its first). */
+/** Each league's reigning champion after its latest resolved event (null before its first). */
 export const reigningChampions = (
-  events: readonly LeagueEvent[],
+  events: readonly Pick<Invitation, "league" | "champion">[],
 ): Record<League, ReigningChampion | null> =>
   Object.fromEntries(
     LEAGUES.map((league) => [
@@ -1571,36 +1620,38 @@ export const rosterGaps = (
     return length < ROSTER_SIZE ? [{ id: trainer.id, name: trainer.name, length }] : []
   })
 
-export const EXPERIMENT_VERSION = 18
+export const EXPERIMENT_VERSION = 19
 const START_OVER = `Start from the version ${EXPERIMENT_VERSION} defaults`
 export const OLD_VERSION_REJECTION = (version: number): string =>
-  version === 17
-    ? `Version 17 experiments save a league entry point for the retired standard entry sequence instead of the league calendar, so they cannot be imported. ${START_OVER}.`
-    : version === 16
-      ? `Version 16 experiments have no play styles (Trainer AI), so they cannot be imported. ${START_OVER}.`
-      : version === 15
-        ? `Version 15 experiments save a travel style instead of the traveller trait, so they cannot be imported. ${START_OVER}.`
-        : version === 14
-          ? `Version 14 experiments have no aloof trait and the old Sleeper Champions, so they cannot be imported. ${START_OVER}.`
-          : version === 13
-            ? `Version 13 experiments save a league seed for the retired seeded lineup draw, so they cannot be imported. ${START_OVER}.`
-            : version === 12
-              ? `Version 12 experiments have no home regions or traveller trait and assume fixed league lineups, so they cannot be imported. ${START_OVER}.`
-              : version === 11
-                ? `Version 11 experiments author moves per roster slot and have no move pools, so they cannot be imported. ${START_OVER}.`
-                : version === 10
-                  ? `Version 10 experiments use the old archetype names (early bloomer, late bloomer, plateau, fixed, rising star, second wind, bursts), so they cannot be imported. ${START_OVER}.`
-                  : version === 9
-                    ? `Version 9 experiments have only five archetypes (no Legend, Star, Comeback or Burst step scaler) and the old archetype assignments, so they cannot be imported. ${START_OVER}.`
-                    : version === 8
-                      ? `Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. ${START_OVER}.`
-                      : version === 7
-                        ? `Version 7 experiments give the Rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. ${START_OVER}.`
-                        : version === 6
-                          ? `Version 6 experiments give each notable trainer one fixed TR and cannot be imported. ${START_OVER} (start TR, archetype and peak TR).`
-                          : version === 5
-                            ? `Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. ${START_OVER}.`
-                            : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. ${START_OVER}.`
+  version === 18
+    ? `Version 18 experiments save league calendar settings (days and wins) for the retired league calendar instead of the invitation simulator, so they cannot be imported. ${START_OVER}.`
+    : version === 17
+      ? `Version 17 experiments save a league entry point for the retired standard entry sequence, so they cannot be imported. ${START_OVER}.`
+      : version === 16
+        ? `Version 16 experiments have no play styles (Trainer AI), so they cannot be imported. ${START_OVER}.`
+        : version === 15
+          ? `Version 15 experiments save a travel style instead of the traveller trait, so they cannot be imported. ${START_OVER}.`
+          : version === 14
+            ? `Version 14 experiments have no aloof trait and the old Sleeper Champions, so they cannot be imported. ${START_OVER}.`
+            : version === 13
+              ? `Version 13 experiments save a league seed for the retired seeded lineup draw, so they cannot be imported. ${START_OVER}.`
+              : version === 12
+                ? `Version 12 experiments have no home regions or traveller trait and assume fixed league lineups, so they cannot be imported. ${START_OVER}.`
+                : version === 11
+                  ? `Version 11 experiments author moves per roster slot and have no move pools, so they cannot be imported. ${START_OVER}.`
+                  : version === 10
+                    ? `Version 10 experiments use the old archetype names (early bloomer, late bloomer, plateau, fixed, rising star, second wind, bursts), so they cannot be imported. ${START_OVER}.`
+                    : version === 9
+                      ? `Version 9 experiments have only five archetypes (no Legend, Star, Comeback or Burst step scaler) and the old archetype assignments, so they cannot be imported. ${START_OVER}.`
+                      : version === 8
+                        ? `Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. ${START_OVER}.`
+                        : version === 7
+                          ? `Version 7 experiments give the Rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. ${START_OVER}.`
+                          : version === 6
+                            ? `Version 6 experiments give each notable trainer one fixed TR and cannot be imported. ${START_OVER} (start TR, archetype and peak TR).`
+                            : version === 5
+                              ? `Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. ${START_OVER}.`
+                              : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. ${START_OVER}.`
 
 /** Validates an experiment against the catalog; with `moves`, every move pool name must be one of them. */
 export const validateExperiment = (

@@ -79,7 +79,7 @@ owned by each feature.
 
 ## Later
 
-- Seeded league calendars or special events.
+- Seeded league choice for invitations, or special invitational events.
 - Seeded league lineups, varying which willing trainers come per save
   ([Leagues](leagues.md) picks them deterministically in v0), with rotation.
 - Per-save trainer growth arcs.

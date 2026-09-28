@@ -21,9 +21,13 @@ import {
   evolutionStatus,
   gymLadder,
   isGymLeader,
-  CALENDAR_DAYS,
-  leagueCalendar,
+  INVITATIONS,
+  REGION_BADGES,
+  defaultBadgeSplit,
+  leagueCandidates,
+  rankLeague,
   reigningChampions,
+  simulateInvitations,
   learnsetIndex,
   levelCap,
   milestoneEnd,
@@ -38,9 +42,11 @@ import {
 import type {
   Anchor,
   Archetype,
+  BadgeSplit,
   Catalog,
   Experiment,
   HomeRegion,
+  InvitationChoice,
   PlayStyle,
   PoolEntry,
   RosterSlot,
@@ -89,12 +95,29 @@ const anchorsOf = (experiment: Experiment, id: ScalerId): Anchor[] =>
  */
 export const scalerKind = (id: ScalerId): ScalerKind =>
   isGrowth(id) ? ARCHETYPE_KIND[id] : "interpolated"
-const storageKey = "wayfarer-trainer-balance-v18"
-/** Reads a calendar length: a whole number of days from 1 to CALENDAR_DAYS.max. */
-const calendarDays = (value: unknown): number | null =>
-  Number.isInteger(value) && (value as number) >= 1 && (value as number) <= CALENDAR_DAYS.max
+const storageKey = "wayfarer-trainer-balance-v19"
+/** The answers the invitation simulator offers: accept and win, accept and lose, or decline. */
+export const INVITATION_CHOICES: readonly InvitationChoice[] = ["win", "lose", "decline"]
+/** The answer each new invitation starts with. */
+const DEFAULT_CHOICE: InvitationChoice = "decline"
+/** Reads an invitation count: a whole number from 1 to INVITATIONS.max. */
+const invitationCount = (value: unknown): number | null =>
+  Number.isInteger(value) && (value as number) >= 1 && (value as number) <= INVITATIONS.max
     ? (value as number)
     : null
+/** Reads a region's badges: a whole number from 0 to REGION_BADGES. */
+const regionBadges = (value: unknown): value is number =>
+  Number.isInteger(value) && (value as number) >= 0 && (value as number) <= REGION_BADGES
+/** Reads a saved badge split: null (the default from the badge total) or Kanto, Johto and Hoenn. */
+const badgeSplit = (value: unknown): BadgeSplit | null | undefined => {
+  if (value === null) return null
+  if (!value || typeof value !== "object") return undefined
+  const split = value as Record<string, unknown>
+  return Object.keys(split).join() === HOME_REGIONS.join() &&
+    HOME_REGIONS.every((region) => regionBadges(split[region]))
+    ? (split as BadgeSplit)
+    : undefined
+}
 /** The chart runs across player TR 0 to at least this. */
 export const CHART_MIN_END = Math.max(200, LEVEL_CAP_ANCHORS.at(-1)?.[0] ?? 0)
 /** The chart never runs past this player TR; a higher player TR is marked at the right edge. */
@@ -171,12 +194,14 @@ export class BalanceLab {
   region = $state("All regions")
   role = $state("All trainers")
   selectedId = $state(initialTrainerId)
-  /** In-game days the league calendar simulates, from day 0. */
-  calendarDays = $state<number>(CALENDAR_DAYS.default)
-  /** Days on which the player enters and wins the event (counted only when they may enter). */
-  calendarWins = $state<number[]>([])
-  /** The calendar day whose event the lineup and score table show. */
-  eventDay = $state(0)
+  /** The player's answer to each simulated invitation, in order (their count is how many). */
+  invitationChoices = $state<InvitationChoice[]>(
+    Array.from({ length: INVITATIONS.default }, () => DEFAULT_CHOICE),
+  )
+  /** The badges by region the leagues count; null follows the badge total (Kanto, Johto, Hoenn). */
+  badgeSplitOverride = $state<BadgeSplit | null>(null)
+  /** The invitation (0-based) whose event the lineup and score table show. */
+  invitationIndex = $state(0)
   editor = $state("")
   error = $state("")
   notice = $state("")
@@ -226,26 +251,37 @@ export class BalanceLab {
   })
   settings = $derived(this.#_settings(this.selected.trainer.id))
   gaps = $derived(rosterGaps(catalog, this.#_experiment))
+  /** The badges by region: the saved split, or the badge total filling Kanto, Johto, then Hoenn. */
+  badgeSplit = $derived(this.badgeSplitOverride ?? defaultBadgeSplit(this.badgeFloor))
   /**
-   * The league calendar at the current world progress and badges (days never change strength):
-   * one event a day, its lineup, whether the player may enter, and the reigning champion.
+   * The league invitations at the current world progress (days never change strength): who calls
+   * and why, each event's frozen lineup, the fatigue source, the result and the reigning champion.
    */
-  calendar = $derived(
-    leagueCalendar(
+  simulation = $derived(
+    simulateInvitations(
       catalog,
       this.#_experiment,
       this.worldProgress,
-      this.badgeFloor,
-      this.calendarDays,
-      new Set(this.calendarWins),
+      this.badgeSplit,
+      this.invitationChoices,
     ),
   )
-  /** Each league's reigning champion after the last simulated day. */
-  champions = $derived(reigningChampions(this.calendar))
-  /** The selected event, with its lineup's teams resolved. */
+  /** Each league's reigning champion after the last simulated invitation. */
+  champions = $derived(reigningChampions(this.simulation.invitations))
+  /** Indigo's lineup with no one fatigued, at the current world progress. */
+  indigo = $derived(
+    rankLeague(
+      "Indigo",
+      this.worldProgress,
+      leagueCandidates(catalog, this.#_experiment, this.worldProgress),
+      new Set(),
+    ),
+  )
+  /** The selected invitation's event, with its lineup's teams resolved; null when none calls. */
   event = $derived.by(() => {
-    const event = this.calendar[Math.min(this.eventDay, this.calendar.length - 1)]
-    if (!event) throw new Error("The league calendar is empty.")
+    const invitations = this.simulation.invitations
+    const event = invitations[Math.min(this.invitationIndex, invitations.length - 1)]
+    if (!event) return null
     return {
       ...event,
       matches: event.ranking.lineup.map((entrant) =>
@@ -389,28 +425,45 @@ export class BalanceLab {
     this.#_persist()
   }
 
-  /** Sets how many in-game days the calendar simulates (1 to CALENDAR_DAYS.max). */
-  setCalendarDays = (value: number): void => {
-    const days = calendarDays(Math.round(value))
-    if (days === null) return
-    this.calendarDays = days
-    this.calendarWins = this.calendarWins.filter((day) => day < days)
-    this.eventDay = Math.min(this.eventDay, days - 1)
+  /** Sets how many invitations the simulator answers (1 to INVITATIONS.max). */
+  setInvitationCount = (value: number): void => {
+    const count = invitationCount(Math.round(value))
+    if (count === null) return
+    this.invitationChoices = Array.from(
+      { length: count },
+      (_, index) => this.invitationChoices[index] ?? DEFAULT_CHOICE,
+    )
+    this.invitationIndex = Math.min(this.invitationIndex, count - 1)
     this.#_persist()
   }
 
-  /** Marks whether the player enters and wins the event on a day. */
-  setCalendarWin = (day: number, won: boolean): void => {
-    if (!Number.isInteger(day) || day < 0 || day >= this.calendarDays) return
-    const others = this.calendarWins.filter((other) => other !== day)
-    this.calendarWins = won ? [...others, day].toSorted((a, b) => a - b) : others
+  /** Sets the player's answer to one invitation (0-based). */
+  setInvitationChoice = (index: number, choice: string): void => {
+    const known = INVITATION_CHOICES.find((option) => option === choice)
+    if (!known || !Number.isInteger(index) || index < 0 || index >= this.invitationChoices.length)
+      return
+    this.invitationChoices = this.invitationChoices.map((old, at) => (at === index ? known : old))
     this.#_persist()
   }
 
-  /** Shows one calendar day's event in the lineup and score table. */
-  selectEvent = (day: number): void => {
-    if (!Number.isInteger(day) || day < 0 || day >= this.calendarDays) return
-    this.eventDay = day
+  /** Sets one region's badges (0 to REGION_BADGES), starting from the current split. */
+  setRegionBadges = (region: HomeRegion, value: number): void => {
+    const badges = Math.round(value)
+    if (!regionBadges(badges)) return
+    this.badgeSplitOverride = { ...this.badgeSplit, [region]: badges }
+    this.#_persist()
+  }
+
+  /** Makes the badge split follow the badge total again. */
+  resetBadgeSplit = (): void => {
+    this.badgeSplitOverride = null
+    this.#_persist()
+  }
+
+  /** Shows one invitation's event (0-based) in the lineup and score table. */
+  selectInvitation = (index: number): void => {
+    if (!Number.isInteger(index) || index < 0 || index >= this.invitationChoices.length) return
+    this.invitationIndex = index
   }
 
   /** Sets the selected trainer's home region. */
@@ -656,7 +709,7 @@ export class BalanceLab {
         tool: "wayfarer-trainer-balance",
         version: EXPERIMENT_VERSION,
         point: { playerTR: this.playerTR },
-        league: { days: this.calendarDays, wins: this.calendarWins },
+        league: { choices: this.invitationChoices, split: this.badgeSplitOverride },
         selectedTrainer: this.selectedId,
         experiment: JSON.parse(serializeExperiment(this.#_experiment)),
       },
@@ -696,30 +749,25 @@ export class BalanceLab {
       if (!catalog.some((trainer) => trainer.id === data.selectedTrainer))
         throw new Error("Unknown selected trainer.")
       const league = data.league
-      const days =
-        league && typeof league === "object" && Object.keys(league).join() === "days,wins"
-          ? calendarDays(league.days)
+      const choices: unknown =
+        league && typeof league === "object" && Object.keys(league).join() === "choices,split"
+          ? league.choices
           : null
-      const wins: unknown[] = days !== null && Array.isArray(league.wins) ? league.wins : []
+      const split = league && typeof league === "object" ? badgeSplit(league.split) : undefined
       if (
-        days === null ||
-        !Array.isArray(league.wins) ||
-        wins.some(
-          (day, index) =>
-            !Number.isInteger(day) ||
-            (day as number) < 0 ||
-            (day as number) >= days ||
-            (index > 0 && (day as number) <= (wins[index - 1] as number)),
-        )
+        !Array.isArray(choices) ||
+        invitationCount(choices.length) === null ||
+        choices.some((choice) => !INVITATION_CHOICES.includes(choice)) ||
+        split === undefined
       )
         throw new Error(
-          `The league settings must be a calendar length (1–${CALENDAR_DAYS.max} days) and the ascending days the player wins.`,
+          `The league settings must be the answers to 1–${INVITATIONS.max} invitations (win, lose or decline) and a badge split (null, or Kanto, Johto and Hoenn badges from 0 to ${REGION_BADGES}).`,
         )
       this.#_experiment = experiment
       this.playerTR = playerTR
-      this.calendarDays = days
-      this.calendarWins = wins as number[]
-      this.eventDay = Math.min(this.eventDay, days - 1)
+      this.invitationChoices = choices as InvitationChoice[]
+      this.badgeSplitOverride = split
+      this.invitationIndex = Math.min(this.invitationIndex, choices.length - 1)
       this.selectedId = data.selectedTrainer
       this.error = ""
       this.notice = message

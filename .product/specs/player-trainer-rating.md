@@ -172,7 +172,8 @@ reads a notable trainer's TR:
 | Wild and static encounter levels | [Wild encounter scaling](trainer-rating-wild-encounter-scaling.md) |
 | Regular trainers and Gym members (battle snapshot) | [Trainer party scaling](trainer-party-scaling.md) |
 | Poké Mart stock (counter-open snapshot) | [Global TR Poké Marts](global-tr-pokemarts.md) |
-| World progress: each notable trainer's TR (battle snapshot, or the event lineup when entering a league event) | [Notable trainers](notable-trainers.md#growth-with-world-progress) |
+| World progress: each notable trainer's TR (battle snapshot, or the event lineup when accepting or declining a league invitation) | [Notable trainers](notable-trainers.md#growth-with-world-progress) |
+| League invitations: the qualification gate (TR 80 or more, placeholder) | [Leagues](leagues.md#qualification) |
 
 Notable trainers use their own team-level scaler, equal to the level cap from
 TR 40 up, applied to their own TR; nothing they do changes the getter, the saved value, or any consumer

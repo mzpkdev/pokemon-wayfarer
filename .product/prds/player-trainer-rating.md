@@ -76,7 +76,8 @@ range, so extra TR still means something.
 - **World progress.** Notable trainers read your TR as world progress and
   grow with it, each in their own way and up to their own best
   ([Notable trainers](notable-trainers.md)). League lineups come from
-  their TR when you enter ([Leagues](leagues.md)).
+  their TR when you answer a league's invitation ([Leagues](leagues.md)), and
+  your TR of 80 is what gets you invited.
 
 Your TR is never worked out from a notable trainer's TR, and nothing they do
 changes yours.
@@ -136,17 +137,22 @@ changes yours.
 - **Battle snapshot:** the team fixed when a battle starts and kept for the
   whole fight.
 - **League:** Indigo, Sevii Masters, or Hoenn.
-- **Calendar:** when each league holds its events: every 3 in-game days,
-  staggered so one league holds an event each day (Indigo on days where day
-  mod 3 = 0, Hoenn on 1, Sevii Masters on 2). Days never change anyone's
-  strength.
-- **League event:** one tournament at a league on a given in-game day. You get
-  one attempt per event; skipping it is free.
-- **Lineup:** the five opponents of a league event, worked out when you enter
-  and kept for that event.
+- **Invitation:** a league's phone call inviting you to its next event. Once
+  your TR reaches 80 you qualify, and a league calls every 7 in-game days,
+  counted from qualifying and restarted when each invitation resolves; the
+  league with the most of your badges calls, never the same league twice in a
+  row. Days never change anyone's strength.
+- **Accept / decline:** your answer to an invitation. Accepting freezes the
+  lineup and the event waits for you, with one attempt; declining lets the
+  event run without you.
+- **League event:** one tournament at a league, held for one invitation.
+- **Lineup:** the five opponents of a league event, worked out when you accept
+  or decline and kept for that event.
 - **Reigning champion:** who holds a league's title until its next event: you
   if you won the last one, otherwise the strongest trainer of that event's
   lineup.
+- **Calendar:** an earlier v0 draft's staggered league events every 3 in-game
+  days; replaced by invitations.
 - **Locked lineup:** an earlier v0 draft's lineup, kept from entering a league
   until winning it; replaced by one attempt per league event.
 - **Home region:** a notable trainer's region (Kanto, Johto, or Hoenn).
@@ -162,7 +168,7 @@ changes yours.
   region or neutral; away otherwise.
 - **Travel cost:** 0 at home; away, 10 for a traveller or 80 otherwise.
 - **Fatigue:** 50 if the trainer was in the lineup of the most recent
-  completed league event at any league, whether or not you entered it.
+  resolved league event, whether you accepted it or declined it.
 - **Willingness:** max(5, 100 − travel cost − fatigue).
 - **Aloof:** a trait; an aloof trainer won't join a league whose base lineup
   is well below their level: they join only if their team level is at most

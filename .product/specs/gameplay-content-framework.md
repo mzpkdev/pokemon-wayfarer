@@ -260,7 +260,8 @@ model instead derives notable trainers' team level and size, in every battle
 with them including [leagues](leagues.md), from each trainer's own TR, which
 grows with world progress, never from player TR used directly. Battle snapshots
 are taken at battle setup; each league event's lineup is captured when the
-player enters and frozen for that event; a reload during the run keeps it. Consumers and lifecycle code own those samples, eligibility,
+player accepts its invitation and frozen for that event; reloads while it
+waits keep it. Consumers and lifecycle code own those samples, eligibility,
 and persistence; the evaluator remains a pure function of explicit curve ID and
 TR. Host Gym/League audits consume the same curve points; keep independent
 golden expected results for equivalence tests.
