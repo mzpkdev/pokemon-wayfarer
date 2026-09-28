@@ -89,7 +89,7 @@ changes yours.
   which.
 - **World progress:** your TR as notable trainers see it; they grow with it.
 - **Archetype:** a notable trainer's growth shape: steady, early bloomer, late
-  bloomer, plateau, or rival.
+  bloomer, plateau, rival, fixed, rising star, second wind, or bursts.
 - **Start TR / peak TR:** a notable trainer's TR at the very start of your
   journey, and the most they can ever reach.
 - **Never decreases:** once earned, TR is never lowered.

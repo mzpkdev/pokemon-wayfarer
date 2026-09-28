@@ -51,6 +51,15 @@ way:
   overtake them.
 - **Blue** starts level with you and pulls a step ahead over your first
   badges, then stays there until he reaches his best.
+- **The fixed legend** never grows: already at their best, they wait at the
+  top for you to catch up, like Agatha.
+- **The rising star** starts modestly, explodes in the middle of your journey,
+  then settles at their best, like Misty and Whitney.
+- **The second wind** grows fast early, stalls for a long stretch, then
+  surges again late, like Blaine, Pryce, and Bruno.
+- **The trainer in bursts** keeps pace on average but trains in jumps,
+  getting stronger all at once at milestones in your journey, like Chuck,
+  Giovanni, and Brawly.
 
 Everyone grows by the same rule: only the shape, the starting strength, and
 the best differ. They only move when you do. A big step, like one of your first badges, moves

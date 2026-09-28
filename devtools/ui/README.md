@@ -67,21 +67,30 @@ trainer's team. The player TR is never computed from a notable trainer's TR.
   progress (read exactly, flat past the last anchor). Defaults at world
   progress 0 / 40 / 80 / 120 / 160: steady 0 / 25 / 50 / 75 / 100, early
   bloomer 0 / 50 / 80 / 95 / 100, late bloomer 0 / 10 / 25 / 55 / 100, plateau
-  0 / 60 / 100 / 100 / 100. The **rival** is an ordinary archetype with an
-  extra anchor: 0 / 20 / 40 / 80 / 120 / 160 → 0 / 15 / 29 / 53 / 76 / 100%.
+  0 / 60 / 100 / 100 / 100, rising star 0 / 10 / 50 / 90 / 100, second wind
+  0 / 45 / 50 / 55 / 100, bursts 0 / 25 / 50 / 75 / 100. The **rival** is an
+  ordinary archetype with an extra anchor: 0 / 20 / 40 / 80 / 120 / 160 → 0 /
+  15 / 29 / 53 / 76 / 100%. **Fixed** has anchors at 0 and 160 only, both 0%,
+  so a fixed trainer stays at start TR and its peak TR must equal start TR (no
+  Gym Leader is fixed). Every archetype is interpolated except **bursts**, a
+  step scaler: it holds each anchor's growth % until the next anchor, so it
+  matches steady at 0 / 4 / 8 / 16 / 24 badges and jumps there, but sits below
+  it in between.
   Blue (rival, start TR 0, peak TR 170) is TR 0 at Pallet (one Eevee at
   Lv 5, his signature Umbreon stepped down), TR 26 at world progress 20 (two Pokémon, team level 18), TR 49 at
   40, then 9–10 ahead of the player until he reaches 170. Peak TR must be at
   least start TR.
 
 - **Scalers** turn TR into values. Each is an editable table of anchors
-  (TR, value), linear between anchors with halves rounded up, and flat past
-  the last anchor, whose TR is the scaler's ceiling TR. TR itself is never
-  clamped.
+  (TR, value), flat past the last anchor, whose TR is the scaler's ceiling TR.
+  An **interpolated** scaler is linear between anchors with halves rounded up;
+  a **step** scaler holds each anchor's value until the next one. The kind is
+  fixed per scaler and shown in the editor: only bursts is a step scaler. TR
+  itself is never clamped.
 - **Team level** has its own low end, then the level cap anchors from TR 40:
   (0, 5) (20, 14) (40, 28) (80, 50) (120, 75) (160, 100). TR 200 still gives
   Lv 100. The level cap itself is unchanged.
-- **Team size** is a step table built from paired anchors: TR 0–10 → 1,
+- **Team size** is interpolated, made a step table by paired anchors: TR 0–10 → 1,
   11–28 → 2, 29–43 → 3, 44–70 → 4, 71–95 → 5, 96+ → 6.
 - **Roster**: one ordered list of six roster slots per trainer. Each roster
   slot has a species (normally a final stage, such as Steelix), a level
@@ -150,7 +159,7 @@ joins · 159: peak TR 100". His late ace Aerodactyl (roster slot 6) joins only
 at team size 6 (TR 96, team level 60), which his placeholder peak TR 100
 reaches at world progress 151.
 
-Exports and the saved browser state use version 9 (rosters carry `isAce`)
+Exports and the saved browser state use version 10 (nine archetypes; rosters carry `isAce`)
 and store the point as `{ "playerTR": n }`; a `{ "badges": n }` point still
 imports and sets the matching player TR.
 
@@ -173,21 +182,24 @@ compute it. Ties keep catalog order. The
 five are shown as matches 1–5, ascending TR with the strongest last, each with
 their own team and levels. v0 uses one pool, so Indigo, Sevii Masters and Hoenn
 all use the same lineup. With the catalog defaults, at world progress 80
-(8 badges, level cap Lv 50) the lineup is Bruno (TR 94), Giovanni, Agatha,
-Jasmine and Norman (TR 95), team level 59. At 120 (level cap Lv 75) it is
+(8 badges, level cap Lv 50) the lineup is Lt. Surge, Giovanni, Agatha,
+Jasmine and Norman (all TR 95), team level 59. At 120 (level cap Lv 75) it is
 Norman and Steven (TR 130), Giovanni and Jasmine (TR 131) and Lance (TR 132),
 team level 81–83. At 160 it is Clair, Juan, Wallace, Steven and Lance (TR
 185–200), team level 100: the team level scaler stops at Lv 100, the same as
 the level cap there, so the lineup can match the cap but not exceed it.
 
-All nine scaler tables (team level, team size, wild level, regular trainer
-level, and the steady, early bloomer, late bloomer, plateau and rival growth
-scalers) are editable under **Scalers & experiment settings**. Anchors start at 0,
-rise and never decrease in value; growth scalers run 0–100% and start at 0%.
-Experiments persist in browser storage. JSON export and import (format
-version 9) round-trip the experiment (growth, rosters with their ace flags and
-the nine scalers), the player TR and the selected trainer. Files from versions 1–8
-are rejected with a message (version 8 had no ace slots and fought the team
+All thirteen scaler tables (team level, team size, wild level, regular trainer
+level, and the steady, early bloomer, late bloomer, plateau, rival, fixed,
+rising star, second wind and bursts growth scalers) are editable under
+**Scalers & experiment settings**, each labeled interpolated or step. Anchors
+start at 0, rise and never decrease in value; growth scalers run 0–100% and
+start at 0%. Experiments persist in browser storage. JSON export and import
+(format version 10) round-trip the experiment (growth, rosters with their ace
+flags and the thirteen scalers), the player TR and the selected trainer. The
+importer also rejects a fixed trainer whose peak TR differs from start TR and a
+fixed Gym Leader. Files from versions 1–9 are rejected with a message (version
+9 had only five archetypes and the old assignments; version 8 had no ace slots and fought the team
 simply reversed; version 7 gave the rival a fixed lead, copied the
 level cap into team level and had no Tate & Liza; version 6 gave each notable
 trainer one fixed TR; version 5 used the retired 0–80 player TR scale).
@@ -202,21 +214,28 @@ scaler the ROM uses today is unchanged.
 
 The catalog's growth and roster battle content are **placeholders**, for the
 authoring session to replace. The growth defaults live in the catalog script's `GROWTH`
-table, chosen by lore (veterans such as Bruno, Agatha, Lorelei, Pryce and
-Chuck plateau; rising stars such as Whitney and Falkner bloom early; Clair,
-Winona, Juan and Sabrina bloom late; most others are steady; Champions and
-Lance have the highest peaks). Every Gym Leader entry (Tate & Liza included)
-has a placeholder start TR in the 18–40 Gym band, set by archetype rather than
-Gym order and varied a little by lore: late bloomers 18–24, early bloomers
-22–30, steady 24–34, plateaus 30–40 (the script rejects a Gym Leader start TR
-outside 18–40). At world progress 0 that is team level Lv 13 (Winona, TR 18)
+table, with the approved lore assignments: Lt. Surge, Lorelei, Wattson,
+Glacia and Drake plateau; Misty, Bugsy, Whitney, Flannery and Tate & Liza are
+rising stars; Blaine, Pryce and Bruno get a second wind; Giovanni, Chuck and
+Brawly train in bursts; Janine, Falkner, Will and Sidney bloom early; Sabrina,
+Morty, Clair, Winona, Juan, Lance, Wallace and Steven bloom late; Agatha is
+fixed at TR 95; Blue is the rival; the rest are steady. Champions and Lance
+have the highest peaks. Every Gym Leader entry (Tate & Liza included) has a
+placeholder start TR in the 18–40 Gym band, set by archetype rather than Gym
+order and varied a little by lore: late bloomers and rising stars 18–26, early
+bloomers 22–30, steady and bursts 24–34, plateau and second wind 30–40. The
+script rejects a Gym Leader start TR outside its archetype's sub-band and a
+fixed Gym Leader. At world progress 0 that is team level Lv 13 (Winona, TR 18)
 to Lv 28 (Pryce, TR 40), two or three Pokémon; Brock at start TR 25 opens at
-Lv 18. League-eligible steady Gym Leaders keep start + peak TR at most 190 so
-they stay at TR 95 or less at world progress 80. The defaults are tuned to the
+Lv 18. League-eligible steady and bursts Gym Leaders keep start + peak TR at
+most 190, and plateau Lt. Surge peaks at TR 95, so they stay at TR 95 or less
+at world progress 80. The defaults are tuned to the
 v0 balance targets, which `engine.test.ts` checks: the lineup at TR 85–95 at
 world progress 80, 2–8 levels above the level cap at 120, Lv 100 at 160, every
 Gym Leader opening at team level 12 or more and within 16 levels of each other,
-and Blue about 10 ahead from world progress 40. The Gym ladder has at least
+Blue about 10 ahead from world progress 40, and the five hardest Gym Leaders
+at 24 badges late bloomers or steadies with peak TR 170 or more (Morty's peak
+TR 171 keeps rising star Tate & Liza, peak 170, out of them). The Gym ladder has at least
 three Gym Leaders near and above the player at every checkpoint and three below
 from world progress 80. At world progress 0 all 24 are above (every start TR
 is past the near band), and the lowest three are two Pokémon at or under the
@@ -242,7 +261,8 @@ later-generation evolutions): allowed, and the script prints them as a warning.
 The catalog uses local FRLG, Emerald and HNS source records, including their
 provenance and explicit variant notes. HNS is not substituted with HGSS;
 Steven's local Emerald postgame party is labeled as such. The catalog script
-validates growth (start and peak TR, archetype), roster length (at most six), offsets, moves, roster slot 1
+validates growth (start and peak TR, archetype, peak TR = start TR when
+fixed, the Gym sub-bands, no fixed Gym Leader), roster length (at most six), offsets, moves, roster slot 1
 as an ace at offset 0, 1–3 aces per roster, and that the catalog has exactly 38 entries with only the Tate &
 Liza duo fought as a double battle. It also validates the shared
 evolution-level table (one level per edge, each a real `species_info`

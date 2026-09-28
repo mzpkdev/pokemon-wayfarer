@@ -29,6 +29,17 @@ test("grows each trainer with world progress and round-trips an exported experim
   await expect(page.getByTestId("selected-tr")).toHaveText("25")
   await expect(page.getByTestId("growth-brock")).toHaveText("25 → 100")
   await expect(page.getByTestId("archetype-brock")).toHaveText("steady")
+  await expect(page.getByLabel("Archetype", { exact: true }).locator("option")).toHaveText([
+    "steady",
+    "early bloomer",
+    "late bloomer",
+    "plateau",
+    "rival",
+    "fixed",
+    "rising star",
+    "second wind",
+    "bursts",
+  ])
   await expect(page.getByTestId("selected-level")).toHaveText("Lv. 18")
   await expect(page.getByTestId("team-size")).toHaveText("2")
   await expect(order).toHaveCount(2)
@@ -303,11 +314,12 @@ test("ranks the Gym Leaders against the player TR in the Gym ladder", async ({ p
   await expect(ladder.last()).toContainText("Pryce")
   await expect(ladder.last()).toContainText("above +40")
   await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
-  await expect(page.getByTestId("ladder-counts")).toHaveText("9 below · 10 near · 5 above")
+  // Rising stars and second winds sit well below at 8 badges; Wattson, Janine and Erika are near.
+  await expect(page.getByTestId("ladder-counts")).toHaveText("16 below · 3 near · 5 above")
   await expect(ladder.last()).toContainText("Tate & Liza")
   await expect(page.getByTestId("ladder-brock")).toContainText("below -17")
   await page.getByRole("button", { name: "Set 24 badges", exact: true }).click()
-  await expect(page.getByTestId("ladder-counts")).toHaveText("14 below · 6 near · 4 above")
+  await expect(page.getByTestId("ladder-counts")).toHaveText("14 below · 5 near · 5 above")
   await expect(ladder.last()).toContainText("Juan")
   await expect(ladder.last()).toContainText("TR 185")
 })
@@ -319,14 +331,15 @@ test("puts the top five by TR at the current world progress in the lineup, stron
   const matches = page.getByTestId("league-lineup").locator(":scope > li")
   await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
   await expect(matches).toHaveCount(5)
-  for (const [index, name] of ["Bruno", "Giovanni", "Agatha", "Jasmine", "Norman"].entries())
+  for (const [index, name] of ["Lt. Surge", "Giovanni", "Agatha", "Jasmine", "Norman"].entries())
     await expect(matches.nth(index).locator("h3")).toContainText(name)
   await expect(page.getByTestId("league-names")).toContainText(
     "Indigo, Sevii Masters, Hoenn all use this lineup",
   )
-  // Beatable at 8 badges (level cap Lv 50): the lineup runs TR 94–95, team level 59.
-  await expect(page.getByTestId("league-range")).toHaveText("TR 94 … 95")
-  await expect(page.getByTestId("league-match-1")).toContainText("TR 94 · Lv. 59 · 5 Pokémon")
+  // Beatable at 8 badges (level cap Lv 50): the lineup is TR 95, team level 59. Plateau Lt. Surge
+  // has reached his peak, bursts Giovanni has just jumped to 50%, and fixed Agatha never grows.
+  await expect(page.getByTestId("league-range")).toHaveText("TR 95 … 95")
+  await expect(page.getByTestId("league-match-1")).toContainText("TR 95 · Lv. 59 · 5 Pokémon")
   await expect(page.getByTestId("league-match-5")).toContainText("TR 95 · Lv. 59 · 5 Pokémon")
   // At 16 badges (level cap Lv 75) the lineup is a little above the cap.
   await page.getByRole("button", { name: "Set 16 badges", exact: true }).click()
@@ -398,7 +411,7 @@ test("marks ace slots and fights them last, with slot 1 locked and at most three
   await expect(page.getByTestId("growth-slot-6")).not.toContainText("Ace")
 })
 
-test("flags incomplete rosters and rejects invalid edits and version 4 to 8 files", async ({
+test("flags incomplete rosters and rejects invalid edits and version 4 to 9 files", async ({
   page,
 }) => {
   await page.goto("/#trainer-balance")
@@ -416,6 +429,13 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 8 file
   await expect(page.getByRole("alert")).toContainText("Start TR must be a whole number")
   await setGrowth(page, { start: "50", peak: "40" })
   await expect(page.getByRole("alert")).toContainText("Peak TR must be at least start TR")
+  // A fixed trainer never grows, and no Gym Leader is fixed.
+  await setGrowth(page, { start: "25", archetype: "fixed", peak: "100" })
+  await expect(page.getByRole("alert")).toContainText(
+    "A fixed trainer never grows: set peak TR equal to start TR.",
+  )
+  await setGrowth(page, { start: "25", archetype: "fixed", peak: "25" })
+  await expect(page.getByRole("alert")).toContainText("brock: a Gym Leader cannot be fixed")
   await expect(page.getByTestId("selected-tr")).toHaveText("25")
   await expect(page.getByTestId("archetype-brock")).toHaveText("steady")
 
@@ -492,6 +512,21 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 8 file
   await expect(page.getByRole("alert")).toContainText(
     "Version 8 experiments have no ace slots (isAce)",
   )
+  await importFile(9, {
+    point: { playerTR: 80 },
+    experiment: {
+      version: 9,
+      teamLevel: [[0, 15]],
+      teamSize: [[0, 2]],
+      wildLevel: [[0, 6]],
+      routeTrainerLevel: [[0, 9]],
+      archetypes: {},
+      trainers: {},
+    },
+  })
+  await expect(page.getByRole("alert")).toContainText(
+    "Version 9 experiments have only five archetypes",
+  )
   await expect(page.getByTestId("badge-count")).toHaveText("0")
   await expect(page.getByTestId("selected-tr")).toHaveText("25")
 
@@ -554,6 +589,22 @@ test("edits the trainer, world and archetype scalers globally", async ({ page })
     "steady growth must be 0% at world progress 0",
   )
   await page.getByLabel("Steady growth anchor 1 value", { exact: true }).fill("0")
+
+  // Every scaler shows its kind; bursts is the only step scaler. Bursts Giovanni (24 → 166)
+  // holds 25% (TR 60) from 4 badges until he jumps to 50% (TR 95) at 8 badges.
+  await expect(page.getByTestId("scaler-kind-bursts")).toHaveText("step")
+  for (const id of ["steady", "fixed", "rising-star", "second-wind", "teamSize"])
+    await expect(page.getByTestId(`scaler-kind-${id}`)).toHaveText("interpolated")
+  await expect(page.getByTestId("tr-giovanni")).toHaveText("95")
+  await page.getByLabel("Player TR", { exact: true }).fill("79")
+  await expect(page.getByTestId("tr-giovanni")).toHaveText("60")
+  // Editing the step scaler moves the held value: 40% from world progress 40 is TR 81.
+  await page.getByLabel("Bursts growth anchor 2 value", { exact: true }).fill("40")
+  await page.getByRole("button", { name: "Apply scalers", exact: true }).click()
+  await expect(page.getByTestId("tr-giovanni")).toHaveText("81")
+  await page.getByLabel("Bursts growth anchor 3 value", { exact: true }).fill("30")
+  await page.getByRole("button", { name: "Apply scalers", exact: true }).click()
+  await expect(page.getByRole("alert")).toContainText("bursts growth values must not decrease")
 
   await page.getByRole("button", { name: "Set 24 badges", exact: true }).click()
   await expect(page.getByTestId("player-tr")).toHaveText("160")

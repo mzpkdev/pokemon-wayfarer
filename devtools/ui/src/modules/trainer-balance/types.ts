@@ -24,7 +24,21 @@ export type RosterSlot = {
 }
 
 /** A notable trainer's growth shape: a scaler over world progress giving growth %. */
-export type Archetype = "steady" | "early bloomer" | "late bloomer" | "plateau" | "rival"
+export type Archetype =
+  | "steady"
+  | "early bloomer"
+  | "late bloomer"
+  | "plateau"
+  | "rival"
+  | "fixed"
+  | "rising star"
+  | "second wind"
+  | "bursts"
+/**
+ * How a scaler reads between anchors: interpolated is linear with halves rounded up; step holds
+ * each anchor's value until the next anchor.
+ */
+export type ScalerKind = "interpolated" | "step"
 
 export type TrainerRecord = {
   id: string
@@ -41,7 +55,7 @@ export type TrainerRecord = {
   /** Trainer TR at world progress 0: a non-negative integer with no upper limit. */
   startTR: number
   archetype: Archetype
-  /** The highest TR this trainer can ever reach (not a scaler's ceiling TR). */
+  /** The highest TR this trainer can ever reach (not a scaler's ceiling TR); start TR when fixed. */
   peakTR: number
   trSource: string
   /** Exactly six ordered roster slots in v0; shorter catalog rosters are content gaps. */
@@ -71,7 +85,7 @@ export type TrainerSettings = {
 /** A scaler anchor: [TR, value]. */
 export type Anchor = [number, number]
 export type Experiment = {
-  version: 9
+  version: 10
   /** Team level by TR: linear between anchors, halves up, flat past the last. */
   teamLevel: Anchor[]
   /** Team size by TR, same rules; paired anchors make it a step table. */

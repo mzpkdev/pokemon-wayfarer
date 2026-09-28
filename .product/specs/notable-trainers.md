@@ -103,12 +103,14 @@ Each trainer authors:
 | Field | Contract |
 | --- | --- |
 | Start TR | Non-negative integer: the trainer's TR at world progress 0. |
-| Archetype | `steady`, `early bloomer`, `late bloomer`, `plateau`, or `rival`. |
-| Peak TR | Integer ≥ start TR: the most the trainer can ever reach. Distinct from a scaler's ceiling TR. |
+| Archetype | `steady`, `early bloomer`, `late bloomer`, `plateau`, `rival`, `fixed`, `rising star`, `second wind`, or `bursts`. |
+| Peak TR | Integer ≥ start TR (equal to start TR for `fixed`): the most the trainer can ever reach. Distinct from a scaler's ceiling TR. |
 
-The five archetypes are global scalers over world progress
-([scaler definition](player-trainer-rating.md#scalers)), interpolated, giving
-a growth fraction in percent (0–100):
+The nine archetypes are global scalers over world progress
+([scaler definition](player-trainer-rating.md#scalers)), giving a growth
+fraction in percent (0–100). All are interpolated except bursts, a
+[step](player-trainer-rating.md#scalers) scaler. Archetype scalers are
+monotonic non-decreasing, so no trainer's TR ever drops:
 
 | Archetype | World progress 0 / 40 / 80 / 120 / 160 → growth % | Feel |
 | --- | --- | --- |
@@ -117,6 +119,10 @@ a growth fraction in percent (0–100):
 | Late bloomer | 0 / 10 / 25 / 55 / 100 | Slow start, strong finish: a late challenge |
 | Plateau | 0 / 60 / 100 / 100 / 100 | Reaches the peak early and stops: a veteran the player overtakes |
 | Rival | 0 / 29 / 53 / 76 / 100, plus 15 at world progress 20 | Level with the player at the start, then about 10 TR ahead (with start 0, peak 170) |
+| Fixed | 0 / 0 / 0 / 0 / 0 (anchors at 0 and 160 only) | Never grows: TR is start TR throughout, so peak TR equals start TR |
+| Rising star | 0 / 10 / 50 / 90 / 100 | S-curve: slow start, explodes mid-journey, then levels off |
+| Second wind | 0 / 45 / 50 / 55 / 100 | Fast early, stalls mid-journey, surges late |
+| Bursts (step) | 0 / 25 / 50 / 75 / 100 | Steady on average, but trains in jumps: holds each value until the next anchor, so it jumps at 4, 8, 16, and 24 badges |
 
 The growth rule is the same for every notable trainer, whatever the
 archetype. With `wp` the world progress, `fraction` the archetype scaler's
@@ -126,9 +132,11 @@ value, and floor division (halves round up):
 trainerTR = start + floor(((peak - start) * fraction(wp) + 50) / 100)
 ```
 
-Past the last anchor the fraction stays at 100, so the trainer stays at peak
-TR. Archetypes are authored globally for v0, and any trainer may use any of
-them. Blue uses the rival archetype with start TR 0 and peak TR 170
+Past the last anchor the fraction stays at its last value (100, or 0 for
+fixed), so the trainer stays at peak TR. Archetypes are authored globally for v0, and any trainer may use any of
+them, except that no Gym Leader is fixed. Which archetype each trainer uses is catalog content: the lore-based
+assignments are approved, and the growth numbers are placeholders. Blue uses
+the rival archetype with start TR 0 and peak TR 170
 (placeholder): TR 0 in Pallet Town, about 25 at world progress 20 (Cerulean),
 about 50 at world progress 40, then about 10 ahead of the player until 170.
 
@@ -276,11 +284,14 @@ TR, another trainer, or a random team.
   authored stage; `LEVEL_UP` yields a usable move at every reachable level and
   stage, stepped-down stages included.
 - Archetypes: each archetype passes the scaler checks, with anchors at world
-  progress 0/40/80/120/160 (the rival adds 20), 0% at the first, and 100% at
-  the last.
+  progress 0/40/80/120/160 (the rival adds 20; fixed has only 0 and 160), 0%
+  at the first, and 100% at the last (fixed: 0% at both); values are
+  non-decreasing; bursts is a step scaler and every other archetype is
+  interpolated.
 - Catalog: the inventory holds exactly the 38 v0 entries (37 characters and
   the Tate & Liza duo); each has one roster and valid growth values
-  (non-negative integers, start TR ≤ peak TR); every enrolled encounter ID maps to exactly one `characterId`.
+  (non-negative integers, start TR ≤ peak TR, and peak TR = start TR for a
+  fixed trainer); no Gym Leader is fixed; every enrolled encounter ID maps to exactly one `characterId`.
 - Growth, for every trainer at world progress 0–200 and a very large value:
   TR is non-decreasing in world progress and never exceeds peak TR; a
   trainer equals start TR at world progress 0 and peak TR from world progress
@@ -318,7 +329,9 @@ rules (placeholders tuned in the explorer):
   Blue (who leaves Pallet with the player) starts at TR 0. Gym Leaders are
   established: placeholder starts sit in TR 18–40 (opening team about Lv
   13–28, never below Lv 12), spread by archetype rather than original Gym
-  order. The Elite Four and Champions start higher.
+  order: late bloomers and rising stars at TR 18–26, early bloomers at
+  22–30, steady and bursts at 24–34, plateau and second wind at 30–40. No Gym
+  Leader is fixed. The Elite Four and Champions start higher.
 - **Gym ladder.** At every world progress point, some Gym Leaders sit below
   the player's TR (accessible), some near it, and some clearly above
   (challenges). The hardest leaders at 24 badges are late bloomers or

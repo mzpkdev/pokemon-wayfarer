@@ -18,6 +18,7 @@
     lineText,
     movesText,
     scalerField,
+    scalerKind,
     stageWarning,
     type ScalerId,
   } from "./lab.svelte.js"
@@ -756,16 +757,19 @@
   <details class="global-settings">
     <summary>Scalers & experiment settings</summary>
     <p>
-      Each scaler maps TR to a value through anchors: linear between them, halves rounded up, and
+      Each scaler maps TR to a value through anchors: an interpolated scaler is linear between them,
+      halves rounded up; a step scaler holds each anchor’s value until the next anchor. Both are
       flat past the last anchor. That anchor’s TR is the ceiling TR: a higher TR is never clamped
       but stops adding level or size. Anchors start at TR 0, rise in TR and never decrease in value.
       Team level and team size read each notable trainer’s own TR. Team level has its own low end
       (Lv 5 at TR 0, Lv 14 at TR 20) and matches the level cap anchors from TR 40 (Lv 100 at TR
       160); team size uses paired anchors to make a step table (0–10 → 1, 11–28 → 2, 29–43 → 3,
       44–70 → 4, 71–95 → 5, 96+ → 6). The wild level curve and regular trainer level curve are world
-      scaling: they read the player’s TR and only feed the readout above. The five archetype growth
+      scaling: they read the player’s TR and only feed the readout above. The nine archetype growth
       scalers, the rival included, read world progress and give the growth % (0% at world progress
-      0) from start TR toward peak TR.
+      0, never decreasing, 0–100%) from start TR toward peak TR. Bursts is the only step scaler, so
+      it jumps at 4, 8, 16 and 24 badges; fixed stays at 0%, so a fixed trainer’s peak TR equals
+      start TR (no Gym Leader is fixed).
     </p>
     {#key lab.anchors}
       <form
@@ -777,7 +781,12 @@
         <div class="scaler-grid">
           {#each scalers as scaler (scaler.id)}
             <div class="scaler" data-testid={`scaler-${scaler.id}`}>
-              <h3>{scaler.title} <span class="muted">by {scaler.by}</span></h3>
+              <h3>
+                {scaler.title} <span class="muted">by {scaler.by}</span>
+                <span class="scaler-kind" data-testid={`scaler-kind-${scalerField(scaler.id)}`}
+                  >{scalerKind(scaler.id)}</span
+                >
+              </h3>
               <table class="arc-table">
                 <thead><tr><th>{scaler.at}</th><th>{scaler.unit}</th><th></th></tr></thead>
                 <tbody>
@@ -1756,6 +1765,14 @@
   }
   .scaler h3 {
     margin-top: 6px;
+  }
+  .scaler-kind {
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 1px 6px;
+    margin-left: 6px;
+    font-size: 0.75em;
+    font-weight: 400;
   }
   @media (max-width: 1150px) {
     .world-panel {

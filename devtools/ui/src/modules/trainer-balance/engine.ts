@@ -8,6 +8,7 @@ import type {
   MilestoneEvent,
   ResolvedTrainer,
   RosterSlot,
+  ScalerKind,
   TeamMember,
   TrainerRecord,
   TrainerSettings,
@@ -80,8 +81,27 @@ export const ARCHETYPES: readonly Archetype[] = [
   "late bloomer",
   "plateau",
   "rival",
+  "fixed",
+  "rising star",
+  "second wind",
+  "bursts",
 ]
-/** Growth % by world progress: 0 / 40 / 80 / 120 / 160 (the rival also at 20). */
+/** Bursts is a step scaler; every other archetype is interpolated. The kind is not editable. */
+export const ARCHETYPE_KIND: Readonly<Record<Archetype, ScalerKind>> = {
+  steady: "interpolated",
+  "early bloomer": "interpolated",
+  "late bloomer": "interpolated",
+  plateau: "interpolated",
+  rival: "interpolated",
+  fixed: "interpolated",
+  "rising star": "interpolated",
+  "second wind": "interpolated",
+  bursts: "step",
+}
+/**
+ * Growth % by world progress: 0 / 40 / 80 / 120 / 160 (the rival also at 20; fixed only at 0
+ * and 160, 0% at both).
+ */
 export const DEFAULT_ARCHETYPE_GROWTH: Readonly<Record<Archetype, readonly Anchor[]>> = {
   steady: [
     [0, 0],
@@ -119,6 +139,31 @@ export const DEFAULT_ARCHETYPE_GROWTH: Readonly<Record<Archetype, readonly Ancho
     [120, 76],
     [160, 100],
   ],
+  fixed: [
+    [0, 0],
+    [160, 0],
+  ],
+  "rising star": [
+    [0, 0],
+    [40, 10],
+    [80, 50],
+    [120, 90],
+    [160, 100],
+  ],
+  "second wind": [
+    [0, 0],
+    [40, 45],
+    [80, 50],
+    [120, 55],
+    [160, 100],
+  ],
+  bursts: [
+    [0, 0],
+    [40, 25],
+    [80, 50],
+    [120, 75],
+    [160, 100],
+  ],
 }
 /** World progress points the explorer reports each trainer TR at: 0, 4, 8, 16 and 24 badges. */
 export const WORLD_PROGRESS_CHECKPOINTS = [0, 40, 80, 120, 160] as const
@@ -132,16 +177,34 @@ const finite = (value: number, label: string) => {
 }
 
 /**
- * Reads a scaler: linear interpolation between anchors with halves rounded up,
- * flat before the first and past the last anchor. TR is never clamped.
+ * The anchors around a TR strictly between the first and last anchor: the last
+ * anchor at or below it and the first above it.
  */
-export const scale = (anchors: readonly Anchor[], tr: number): number => {
+const bracket = (anchors: readonly Anchor[], at: number): [Anchor, Anchor] => {
+  const index = anchors.findIndex(([x]) => x > at)
+  const lower = anchors[index - 1]
+  const upper = anchors[index]
+  if (!lower || !upper) throw new Error("Scaler anchors must not contain missing points")
+  return [lower, upper]
+}
+
+/**
+ * Reads a scaler: an interpolated scaler is linear between anchors with halves
+ * rounded up; a step scaler holds each anchor's value until the next anchor.
+ * Both are flat before the first and past the last anchor. TR is never clamped.
+ */
+export const scale = (
+  anchors: readonly Anchor[],
+  tr: number,
+  kind: ScalerKind = "interpolated",
+): number => {
   const rating = finite(tr, "TR")
   const first = anchors[0]
   const last = anchors.at(-1)
   if (!first || !last) throw new Error("A scaler needs at least one anchor")
   if (rating <= first[0]) return first[1]
   if (rating >= last[0]) return last[1]
+  if (kind === "step") return bracket(anchors, rating)[0][1]
   const index = anchors.findIndex(([at]) => at >= rating)
   const lower = anchors[index - 1]
   const upper = anchors[index]
@@ -188,13 +251,15 @@ const progress = (value: number): number => {
 /**
  * Growth along an archetype scaler: start + roundHalfUp((peak - start) *
  * growth% / 100), with growth% read exactly (no intermediate rounding) and flat
- * past the last anchor.
+ * past the last anchor. A step scaler holds each anchor's growth % until the
+ * next anchor.
  */
 export const growthTR = (
   growth: readonly Anchor[],
   startTR: number,
   peakTR: number,
   world: number,
+  kind: ScalerKind = "interpolated",
 ): number => {
   const at = progress(world)
   const first = growth[0]
@@ -204,6 +269,7 @@ export const growthTR = (
   let numerator = BigInt(last[1])
   let denominator = 1n
   if (at <= first[0]) numerator = BigInt(first[1])
+  else if (at < last[0] && kind === "step") numerator = BigInt(bracket(growth, at)[0][1])
   else if (at < last[0]) {
     const index = growth.findIndex(([x]) => x >= at)
     const lower = growth[index - 1]
@@ -219,14 +285,21 @@ export const growthTR = (
 
 /**
  * A notable trainer's TR at a world progress: their archetype's growth scaler
- * between start and peak TR. The same rule holds for every archetype.
+ * (of that archetype's kind) between start and peak TR. The same rule holds
+ * for every archetype.
  */
 export const trainerRating = (
   experiment: Pick<Experiment, "archetypes">,
   settings: Pick<TrainerSettings, "startTR" | "archetype" | "peakTR">,
   world: number,
 ): number =>
-  growthTR(experiment.archetypes[settings.archetype], settings.startTR, settings.peakTR, world)
+  growthTR(
+    experiment.archetypes[settings.archetype],
+    settings.startTR,
+    settings.peakTR,
+    world,
+    ARCHETYPE_KIND[settings.archetype],
+  )
 
 /** The player's level cap at a player TR. A readout for comparison: it never feeds notable trainer results. */
 export const levelCap = (playerTR: number): number => scale(LEVEL_CAP_ANCHORS, playerTR)
@@ -709,7 +782,7 @@ export const validateRoster = (value: unknown, path: string): RosterSlot[] => {
   return slots
 }
 
-/** Start and peak TR are whole numbers with peak >= start. */
+/** Start and peak TR are whole numbers with peak >= start, and peak = start for a fixed trainer. */
 const growthSettings = (
   settings: Record<string, unknown>,
   id: string,
@@ -720,6 +793,8 @@ const growthSettings = (
   if (!ARCHETYPES.includes(archetype))
     fail(`${id}.archetype must be one of ${ARCHETYPES.join(", ")}`)
   if (peakTR < startTR) fail(`${id}: peak TR must be at least start TR`)
+  if (archetype === "fixed" && peakTR !== startTR)
+    fail(`${id}: a fixed trainer's peak TR must equal start TR`)
   return { startTR, archetype, peakTR }
 }
 
@@ -733,17 +808,19 @@ export const rosterGaps = (
     return length < ROSTER_SIZE ? [{ id: trainer.id, name: trainer.name, length }] : []
   })
 
-export const EXPERIMENT_VERSION = 9
+export const EXPERIMENT_VERSION = 10
 export const OLD_VERSION_REJECTION = (version: number): string =>
-  version === 8
-    ? "Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. Start from the version 9 defaults."
-    : version === 7
-      ? "Version 7 experiments give the rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. Start from the version 9 defaults."
-      : version === 6
-        ? "Version 6 experiments give each notable trainer one fixed TR and cannot be imported. Start from the version 9 defaults (start TR, archetype and peak TR)."
-        : version === 5
-          ? "Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. Start from the version 9 defaults."
-          : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. Start from the version 9 defaults.`
+  version === 9
+    ? "Version 9 experiments have only five archetypes (no fixed, rising star, second wind or bursts step scaler) and the old archetype assignments, so they cannot be imported. Start from the version 10 defaults."
+    : version === 8
+      ? "Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. Start from the version 10 defaults."
+      : version === 7
+        ? "Version 7 experiments give the rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. Start from the version 10 defaults."
+        : version === 6
+          ? "Version 6 experiments give each notable trainer one fixed TR and cannot be imported. Start from the version 10 defaults (start TR, archetype and peak TR)."
+          : version === 5
+            ? "Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. Start from the version 10 defaults."
+            : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. Start from the version 10 defaults.`
 
 export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Experiment => {
   const input = object(value, "root")
@@ -768,17 +845,19 @@ export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Ex
   if (new Set(ids).size !== ids.length) fail("catalog contains duplicate trainer IDs")
   exactKeys(inputTrainers, ids, "trainers")
   const trainers: Experiment["trainers"] = Object.create(null)
-  for (const id of ids) {
+  for (const trainer of catalog) {
+    const id = trainer.id
     const settings = object(inputTrainers[id], `trainers.${id}`)
     exactKeys(settings, ["startTR", "archetype", "peakTR", "roster"], `trainers.${id}`)
-    trainers[id] = {
-      ...growthSettings(settings, id),
-      roster: validateRoster(settings.roster, `${id}.roster`),
-    }
+    const growth = growthSettings(settings, id)
+    if (growth.archetype === "fixed" && isGymLeader(trainer))
+      fail(`${id}: a Gym Leader cannot be fixed`)
+    trainers[id] = { ...growth, roster: validateRoster(settings.roster, `${id}.roster`) }
   }
   const inputArchetypes = object(input.archetypes, "archetypes")
   exactKeys(inputArchetypes, ARCHETYPES, "archetypes")
   const archetypes = Object.fromEntries(
+    // Monotonic non-decreasing 0–100%, whatever the kind.
     ARCHETYPES.map((name) => {
       const points = anchors(inputArchetypes[name], 0, 100, `${name} growth`)
       if (points[0]?.[1] !== 0) fail(`${name} growth must be 0% at world progress 0`)
