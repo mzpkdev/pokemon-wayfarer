@@ -3,7 +3,7 @@
 Implemented: No. Today, the ROM keeps its existing Gym and league scaling
 until this design is adopted; the balance explorer is placeholder tooling.
 Design status: v0 accepted. Every trainer's team is approved (draft v1:
-who they bring, in what order, and which are aces); their hand-picked moves
+who they bring, in what order, and which are aces); their favourite moves
 and items, their growth numbers, and the exact team-size steps are still
 placeholder content under review. Terms follow the
 [glossary](player-trainer-rating.md#glossary).
@@ -121,9 +121,13 @@ Stronger forms appear only once they've reached the right level: until then a
 Pokémon comes as an earlier form, so Brock opens with Onix and Geodude and
 brings Steelix once his team reaches level 35. Pokémon never evolve past what
 the list names, and a trainer can name an earlier form on purpose, like Blue's
-Eevee. Hand-picked moves belong to the named form; an earlier form uses its
-usual moves for its level
-([evolution stages](../specs/player-trainer-rating.md#evolution-stages)).
+Eevee ([evolution stages](../specs/player-trainer-rating.md#evolution-stages)).
+
+Each trainer has a signature set of moves they like. Their Pokémon start
+from their usual moves for their level and swap in the signature moves they
+can use, and the aces get first pick. Some moves wait unused until the right
+Pokémon joins the team or evolves
+([move pools](../specs/notable-trainers.md#move-pools)).
 
 FRLG, Emerald, and HNS parties are references for recognizable content, not
 required teams. Challenge options such as trainer items, trainer IVs and EVs,
@@ -159,8 +163,9 @@ Juan.
 Tate and Liza stay a double battle, with both of them sending out Pokémon from
 their shared list in order. Blue has no badge encounter in Wayfarer.
 
-Each leader's hand-written team supplies species, moves, items, and
-abilities, which stay attached to the right Pokémon when a team is reordered.
+Each leader's hand-written team supplies species, items, and abilities, and
+their signature moves supply the moves; all of it stays attached to the right
+Pokémon when a team is reordered.
 Rewards, prize money, badge scripts, and AI are preserved unless a team
 deliberately changes them. Trainer-species randomization keeps its existing
 path; other randomizer and challenge options keep their precedence.

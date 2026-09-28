@@ -4,8 +4,9 @@ PRD: [Notable trainers](../prds/notable-trainers.md)
 Implemented: No. Today, the ROM keeps its existing Gym and league scaling
 until adoption; the browser explorer is placeholder tooling.
 Design status: v0 contract. The model is accepted. Rosters are approved
-content (draft v1: species, order, and aces); their battle content (moves,
-items) is still placeholder where a slot doesn't match its source party. Growth
+content (draft v1: species, order, and aces); their battle content (move
+pools, and items where a slot doesn't match its source party) is still
+placeholder. Growth
 values (start TR, archetype, peak TR) and every anchor marked placeholder are
 catalog content under review.
 
@@ -20,13 +21,13 @@ in game code, and the validation rules here apply to that code.
 This specification is the single owner of the v0 notable trainer model: the
 notable trainer inventory, the rule that routes every battle with a notable
 character to their Trainer Rating (TR) and roster, trainer TR and its growth
-with world progress, the archetypes, the v0 trainer scalers, rosters, team
-resolution, the battle snapshot, and their validation. Consumers link here
+with world progress, the archetypes, the v0 trainer scalers, rosters, move pools,
+team resolution, the battle snapshot, and their validation. Consumers link here
 rather than restating it.
 
 - [Gym Leader scaling](gym-leader-scaling.md) owns badge-encounter coverage and
   is the single authority for battle construction (source-member identity,
-  `AUTHORED`/`LEVEL_UP` moves, rewards and AI, randomizer precedence). Those
+  writing the resolved moves, rewards and AI, randomizer precedence). Those
   rules apply to every notable trainer battle, not only Gym battles.
 - [Leagues](leagues.md) owns league lineups and their lifecycle.
 - [Player Trainer Rating](player-trainer-rating.md) owns the player's TR,
@@ -204,8 +205,10 @@ scaling, level cap, experience, and so on) layer on top as they do today.
 | Species/form | Authored per roster slot, recommended at its final stage (validation warns otherwise; any stage is allowed, such as Blue's Eevee). Runtime never substitutes another line; below the stage's evolution level the member steps down ([evolution stages](player-trainer-rating.md#evolution-stages)). |
 | `levelOffset` | Integer −6..0, default −2. |
 | `isAce` | One bit. Slot 1 is always an ace; one to three aces per roster. Every other slot is a **filler slot**; there is no separate filler flag. |
-| Moves policy | `AUTHORED` (exact moves for the authored stage) or `LEVEL_UP` (latest four level-up moves of the species at its level, per the existing constructor). A stepped-down member always uses `LEVEL_UP` for its stage. |
 | Battle content | Held item, ability, nature, and IVs/EVs per the existing construction rules; unset fields use constructor defaults. |
+
+Roster slots carry no moves: each member's moves come from the trainer's
+[move pool](#move-pools).
 
 Resolution for a trainer with TR `tr`:
 
@@ -214,7 +217,7 @@ N           = teamSize(tr)
 team        = entries[1..N]                          // the first N roster slots
 memberLevel = clamp(teamLevel(tr) + entry.levelOffset, 1, 100)
 species     = stepDown(entry.species, memberLevel)   // the downward rule
-movesPolicy = species == entry.species ? entry.movesPolicy : LEVEL_UP
+moves       = resolveMovePool(team, pool)            // after every member's species and level
 battleOrder = fillers(team) in reverse slot order,
               then aces(team) in reverse slot order    // slot 1 last
 ```
@@ -241,9 +244,8 @@ Aerodactyl (ace).
 
 Members step down by level through the
 [downward rule](player-trainer-rating.md#evolution-stages) and never evolve
-forward. Authored moves belong to the authored stage: at or above it the member
-uses them, and a stepped-down member uses its stage's `LEVEL_UP` set at its
-level, as regular trainers do. Brock's slot 1 Steelix (offset 0) appears as
+forward. Moves are resolved from the [move pool](#move-pools) against the
+member's current species, so a stepped-down member needs no special case. Brock's slot 1 Steelix (offset 0) appears as
 Onix until his team level reaches 35; his slot 2 Golem (offset −2) is Geodude
 below Lv 25, Graveler from 25, and Golem from 38; his slot 6 Aerodactyl ace has
 no earlier stage and joins as Aerodactyl.
@@ -260,6 +262,52 @@ Source FRLG, Emerald,
 and HNS parties are provenance and balance references; their levels never
 override this resolver. As world progress rises, a trainer's team gains
 levels and later roster slots; it never loses them.
+
+## Move pools
+
+Each notable trainer authors **one ordered move pool**: a per-trainer list,
+separate from the roster, of the moves they like. An entry is a move plus an
+optional **from level** (none means from Lv 1). There is no shared flag: an
+entry goes to at most one member, so a move listed twice can go to two
+members.
+
+Resolution runs at battle start, after every member's species and level are
+resolved (stepping down included):
+
+1. Give each member its default level-up moveset: the existing constructor's
+   last four level-up moves learned by its level.
+2. Visit members **aces first, then fillers, each in list order**. For each
+   member, walk the pool top to bottom and take every entry that is:
+   unassigned; from level ≤ the member's level; learnable by the member's
+   **current species** (in its level-up learnset at any level, or in its
+   TM/tutor list); and not already in its moveset. Stop at four pool moves.
+3. Pool moves fill empty move slots, then **replace the oldest level-up moves
+   first**, so the newest natural moves stay.
+
+Pool order is identity: top entries reach the aces first. TM and tutor moves
+have no learn level, so the from level alone decides their timing.
+
+- **Dormant entries.** An entry no current member takes is dormant. It wakes
+  when a member that can use it joins or evolves (Later, also when a traded
+  Pokémon joins). Nothing is saved; resolution is a pure function of the team
+  and the pool.
+- **Stepping down.** No special case: learnability is always checked against
+  the current species.
+- **Randomizers.** When a species or learnset randomizer option applies, the
+  pool is skipped and members keep the plain level-up moveset, as today;
+  [Gym Leader scaling](gym-leader-scaling.md#overrides-and-enablement) owns
+  that precedence.
+- **Per-slot content.** Held items, abilities, natures, and IVs/EVs stay per
+  roster slot. Traded Pokémon (Later) keep their own record moves and don't
+  draw from the pool ([roster influence](trainer-roster-influence.md#trades)).
+
+Example (illustrative only; learnsets not checked): Brock's pool is Stone
+Edge (from Lv 40), Earthquake, Stealth Rock, Iron Defense, Rock Slide,
+Earthquake, Rock Slide. His slot 1 ace picks first and takes the entries it can
+learn, up to four; Golem then takes from what is left. Two Earthquake entries
+let two members carry it. If neither opening member can learn Earthquake,
+both entries stay dormant until a member that can joins or evolves, and Stone
+Edge waits until some member reaches Lv 40.
 
 ## Battle snapshot
 
@@ -289,9 +337,11 @@ TR, another trainer, or a random team.
 - Rosters: exactly six roster slots per trainer; offsets in −6..0; slot 1 at
   offset 0 (`teamSize(0)` is 1); slot 1 is an ace and each roster has one to
   three aces; valid species/forms; a warning for each slot
-  not at a final stage; `AUTHORED` slots have one to four legal moves for the
-  authored stage; `LEVEL_UP` yields a usable move at every reachable level and
-  stage, stepped-down stages included.
+  not at a final stage; every member has at least one usable move at every
+  reachable level and stage, stepped-down stages included.
+- Move pools: one ordered pool per trainer; every entry is a valid move; from
+  levels are in 1–100; learnability is checked against the member's current
+  species (level-up learnset at any level, or TM/tutor list).
 - Archetypes: each archetype passes the scaler checks, with anchors at world
   progress 0/40/80/120/160 (the Rival adds 20; the Legend has only 0 and 160), 0%
   at the first, and 100% at the last (Legend: 0% at both); values are
@@ -310,8 +360,8 @@ TR, another trainer, or a random team.
 - Tate & Liza: their double battle draws both trainers' Pokémon from the shared
   roster in order, at the table's team size; they never enter a league lineup.
 - Resolution report per trainer at world progress 0, 40, 80, 120, and 160: TR,
-  size, member slots, species after stepping down, levels, moves, and battle
-  order, each level in 1–100 and the battle order derived as above (filler
+  size, member slots, species after stepping down, levels, moves, dormant
+  move-pool entries, and battle order, each level in 1–100 and the battle order derived as above (filler
   slots, then aces, each in reverse list order; slot 1 last), matching the
   Brock example at every team size.
 - Determinism: trainer TR and resolution are pure functions of world progress
@@ -360,8 +410,8 @@ implementations stay active until then.
 
 - Each trainer's growth values on the new scale, the archetype anchors, and
   the placeholder team-level low end and team-size steps (content review).
-- Battle content (moves, items, abilities) for roster slots that don't match
-  their source party, especially aces.
+- Battle content: author each trainer's move pool; items and abilities per
+  roster slot.
 
 ## Later
 

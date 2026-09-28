@@ -17,7 +17,8 @@ species, offset, and battle content, never replaced. Filler slots keep their
 position, so join order and
 [battle order](notable-trainers.md#rosters) are unchanged, but their Pokémon
 come from the trainer's filler pool. Team size, team level, and trainer TR are
-untouched.
+untouched. A dynamic filler draws from the trainer's
+[move pool](notable-trainers.md#move-pools) like any member.
 
 ## Weighted pools
 
@@ -65,16 +66,21 @@ Each trainer has one filler pool, which may hold more than six options.
   above the trade level up to the member's level, add the current stage's
   level-up moves in learnset order, skipping known moves and otherwise filling
   an empty slot or replacing the oldest. The trainer never teaches TMs; the
-  result is a pure function of the record and the level.
+  result is a pure function of the record and the level. A traded Pokémon
+  never draws from the trainer's
+  [move pool](notable-trainers.md#move-pools); the filler it replaces frees
+  its pool moves for other members.
 
 ## Data shape
 
 Sketch for reference; team building stays a pure function at battle start.
 
 ```text
-ROM   NotableTrainer { characterId, startTR, peakTR, archetype, flags, slots[6] }
-ROM   RosterSlot     { species, levelOffset, isAce, movePolicy, moves, item,
-                       ability, nature, ... }                        // v0
+ROM   NotableTrainer { characterId, startTR, peakTR, archetype, flags, slots[6],
+                       movePool[] }
+ROM   RosterSlot     { species, levelOffset, isAce, item, ability, nature,
+                       ... }                                         // v0
+ROM   MovePoolEntry  { move, fromLevel }                             // v0
 Later FillerOption   { fillerId, species, levelOffset, baseWeight, minTR, ... }
 Later FillerModifier { flag, characterId, fillerId, delta }
 Save  TradeRecord    { offerId, species, personality, otId, otName, nickname,

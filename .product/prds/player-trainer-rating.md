@@ -119,6 +119,10 @@ changes yours.
   Pokémon included; aces are fought last.
 - **Filler slot:** any roster slot that isn't an ace; its Pokémon is fought
   before the aces.
+- **Move pool:** a notable trainer's ordered list of the moves they like; the
+  aces pick first.
+- **Dormant move:** a move-pool move none of the trainer's current Pokémon can
+  use yet.
 - **Battle snapshot:** the team fixed when a battle starts and kept for the
   whole fight.
 - **League:** Indigo, Sevii Masters, or Hoenn.

@@ -69,11 +69,13 @@ TR, and never read party levels, badges, historical Gym order, or the old
 ## Member metadata
 
 Keep a stable member identity (the roster slot) separate from output position.
-The battle snapshot supplies battle order, levels, species/forms, and moves:
-`AUTHORED` moves exactly as written when the member appears as its authored
-stage, and `LEVEL_UP` moves from the existing constructor otherwise, including
-a member stepped down by the
-[evolution stages](player-trainer-rating.md#evolution-stages) rule. Validate
+The battle snapshot supplies battle order, levels, species/forms, and moves,
+resolved from the trainer's
+[move pool](notable-trainers.md#move-pools) against each member's current
+species (a member stepped down by the
+[evolution stages](player-trainer-rating.md#evolution-stages) rule included).
+Write the resolved moves through the existing constructor; randomizer options
+keep their precedence ([overrides](#overrides-and-enablement)). Validate
 content rather than silently dropping a member.
 
 Copy roster-authored items, abilities, natures, IVs/EVs, trainer inventory,
@@ -124,7 +126,7 @@ prize-money basis. Check:
 1. The model obligations in
    [Notable trainers](notable-trainers.md#validation) for
    every Gym Leader.
-2. Member metadata, move policies at every supported level, non-identity
+2. Member metadata, resolved move-pool moves at every supported level, non-identity
    ordering, gimmick remapping, actual counts, and unused-slot clearing.
 3. Repeated construction in one battle, identical retries, and badge awards
    only after the fight.

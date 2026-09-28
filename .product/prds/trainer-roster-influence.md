@@ -14,7 +14,8 @@ ideas let the supporting places change; the aces never do.
   supporting Pokémon to pick from. Their favourites fill the supporting places
   in their list, and the favourites can differ a little from save to save. As
   a trainer grows, new supporting Pokémon join and the ones already there
-  stay. Some strong choices wait until the trainer is strong enough.
+  stay. Some strong choices wait until the trainer is strong enough. They use
+  the trainer's signature moves like any other Pokémon on the team.
 - **Nudges.** What you do can make a trainer keener on a supporting Pokémon.
   Telling Misty where Lapras lives could put Lapras on her team the next time
   you meet. Nudges are permanent for the save.
@@ -23,7 +24,8 @@ ideas let the supporting places change; the aces never do.
   nickname, shininess, gender, nature, ability, ball, and original trainer. It
   becomes a favourite on their team, never appears weaker than when you gave it
   away, and evolves as the trainer grows. It keeps its moves and learns new ones
-  only by levelling up; its new trainer never teaches it anything.
+  only by levelling up; its new trainer never teaches it anything, not even
+  their signature moves.
 - **Evolution gifts.** A trainer accepts an item such as a Water Stone, and a
   supporting Pokémon appears evolved from then on.
 
