@@ -52,27 +52,25 @@
     LOCATION_REGIONS[league]?.join(" + ") ?? "neutral location"
   type SimulatedInvitation = (typeof lab.simulation.invitations)[number]
   const CHOICE_TEXT = { win: "accept & win", lose: "accept & lose", decline: "decline" } as const
-  const otherRegional = (league: string): string => (league === "Indigo" ? "Hoenn" : "Indigo")
   const reasonText = (
     invitation: SimulatedInvitation,
     badges: typeof lab.simulation.badges,
   ): string => {
     const count = `Indigo ${badges.Indigo}, Hoenn ${badges.Hoenn}`
     switch (invitation.reason) {
-      case "most badges":
-        return `most badges (${count})`
-      case "masters after repeat":
-        return `Masters eligible: ${invitation.lastCaller} (most badges) called last`
-      case "masters on tie":
-        return `Masters eligible: tie (${count})`
-      case "no repeat":
-        return `no repeat: ${invitation.lastCaller} called last`
-      case "first tie":
-        return `first tie (${count}) goes to Indigo`
-      case "tie":
-        return invitation.lastCaller === "Sevii Masters"
-          ? `tie (${count}): ${otherRegional(invitation.league)} was the last regional league to call`
-          : `tie (${count}): ${invitation.lastCaller} called last`
+      case "only eligible":
+        return `only eligible (${count}${invitation.eligible.includes("Sevii Masters") ? "" : "; no league win"})`
+      case "least recently called":
+        return `least recently called (${invitation.eligible
+          .map((league) => {
+            const day = invitation.lastCalled[league]
+            return `${league} ${day === null ? "never" : `day ${day}`}`
+          })
+          .join(", ")})`
+      case "tie: most badges":
+        return `tie (never called) → most badges (${count})`
+      case "tie: Indigo":
+        return `tie (never called, ${count}) → Indigo`
     }
   }
   const resultText = (invitation: SimulatedInvitation): string =>
@@ -1046,14 +1044,14 @@
     <p class="hint league-note">
       The player qualifies at player TR {QUALIFYING_TR} (day 0 here). A league phones every {INVITATION_INTERVAL}
       in-game days, counted from qualifying and restarted when an invitation resolves; no countdown runs
-      while an accepted event is pending (here the player arrives the day they accept). Indigo and Hoenn
-      may always call, the Sevii Masters after any league win, and the league that called last never calls
-      again: the league with more badges (Indigo = Kanto + Johto, Hoenn = Hoenn) calls; if it called last,
-      or on a tie, the Masters calls when eligible; otherwise the other regional league, and on a tie
-      the one that did not call last (the very first tie goes to Indigo). Accepting freezes the lineup,
-      and the event waits for the player: one attempt, a loss ends it. Declining runs it without them.
-      The reigning champion is the player after a win, otherwise the lineup’s strongest (last in battle
-      order). Days never change anyone’s strength.
+      while an accepted event is pending (here the player arrives the day they accept). A league calls
+      only where the player is known: Indigo with a Kanto or Johto badge, Hoenn with a Hoenn badge, the
+      Sevii Masters after any league win. Among those, the league that called least recently calls (never
+      counts as least recent); ties go to the most badges (Indigo = Kanto + Johto, Hoenn = Hoenn; the
+      Masters has none), then to Indigo. A single eligible league calls every time. Accepting freezes
+      the lineup, and the event waits for the player: one attempt, a loss ends it. Declining runs it without
+      them. The reigning champion is the player after a win, otherwise the lineup’s strongest (last in
+      battle order). Days never change anyone’s strength.
     </p>
     <p class="hint league-note">
       Each event gives every league-eligible trainer (singles only: no Red, no Tate & Liza) a
@@ -1072,6 +1070,10 @@
     {#if !lab.simulation.qualified}
       <p class="hint league-note" data-testid="not-qualified">
         No league calls: player TR {lab.playerTR} is below {QUALIFYING_TR}.
+      </p>
+    {:else if !lab.simulation.invitations.length}
+      <p class="hint league-note" data-testid="not-qualified">
+        No league calls: the player holds no badges, so no league knows them.
       </p>
     {:else}
       <ul class="aloof-list" data-testid="champions">

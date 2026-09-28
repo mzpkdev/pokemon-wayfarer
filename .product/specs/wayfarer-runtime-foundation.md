@@ -127,8 +127,8 @@ The proposed [Leagues runtime](leagues.md#saved-state) adds, under this
 storage policy, a small invitation state (not qualified; counting down, with
 the day of the next call; invited by a league; or one accepted event, holding
 its league and its event lineup of five matches in battle order, each holding
-`characterId`, TR, and the composed team), the last calling league and the
-last regional league to call, the most recent resolved lineup (five
+`characterId`, TR, and the composed team), the day each league last called,
+the most recent resolved lineup (five
 `characterId`s with content versions) for fatigue, each league's reigning
 champion, and, only while the player is fighting, the active run's defeated
 prefix. Lifetime first-win facts stay as they are. Call days come from the
@@ -214,9 +214,10 @@ The proposed [Leagues runtime](leagues.md) keeps today's first league wins
 with their regional recognition, cleanup, and unlocks, and replaces today's
 admission and fixed order with league invitations: from player TR 80 a
 league phones every 7 in-game days (restarted when each invitation resolves,
-paused while an accepted event waits); the league with the most of the
-player's badges calls, never the same one twice in a row, and the Masters
-joins the turns after any league win. Each event's lineup is the top five
+paused while an accepted event waits); only a league that knows the player
+calls (Indigo with a Kanto or Johto badge, Hoenn with a Hoenn badge, the
+Masters after any league win), round-robin by least recent call, ties to the
+most badges and then Indigo. Each event's lineup is the top five
 notable trainers by league score (their TR when the player accepts or
 declines, scaled by willingness), grown from world progress under
 [Notable trainers](notable-trainers.md), strongest last, without reading

@@ -361,17 +361,15 @@ export type BadgeSplit = Record<HomeRegion, number>
 /** Each regional league's badge count: Indigo = Kanto + Johto, Hoenn = Hoenn. */
 export type RegionalBadges = Record<RegionalLeague, number>
 /**
- * Why a league calls: it has the most badges; the Masters, because the leader called last or on a
- * tie; the other regional league, because the leader called last and the Masters could not; or a
- * tie between the regional leagues (the very first tie goes to Indigo).
+ * Why a league calls: it is the only eligible league; it called least recently of the eligible
+ * leagues (never counts as least recent); or, on a least-recent tie, it holds the most badges, or
+ * the remaining tie goes to Indigo.
  */
 export type CallReason =
-  | "most badges"
-  | "masters after repeat"
-  | "masters on tie"
-  | "no repeat"
-  | "tie"
-  | "first tie"
+  | "only eligible"
+  | "least recently called"
+  | "tie: most badges"
+  | "tie: Indigo"
 /** How the player answers an invitation: accept and win, accept and lose, or decline. */
 export type InvitationChoice = "win" | "lose" | "decline"
 /** The reigning champion after an event: the player (who won it) or the lineup's strongest trainer. */
@@ -386,10 +384,10 @@ export type Invitation = {
   resolvedDay: number
   league: League
   reason: CallReason
-  /** The league that called before this one; null for the first call. */
-  lastCaller: League | null
-  /** Whether the Sevii Masters could call (after any lifetime league win). */
-  mastersEligible: boolean
+  /** The leagues that could call, in LEAGUES order (known-there eligibility, Masters after a win). */
+  eligible: League[]
+  /** The day each league last called before this invitation (null: never). */
+  lastCalled: Record<League, number | null>
   choice: InvitationChoice
   /** The lineup, computed at acceptance or decline and frozen. */
   ranking: LeagueRanking

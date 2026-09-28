@@ -282,16 +282,18 @@ they accept, so the calls come on days 7, 14, 21 and so on. **Invitations**
 fields set the badge split (by default the badge floor of the player TR,
 filling Kanto, then Johto, then Hoenn, 8 each; **Follow badge total**
 restores it). Which league calls ([Leagues spec](../../.product/specs/leagues.md#which-league-calls)):
-Indigo (Kanto + Johto badges) and Hoenn (Hoenn badges) may always call, the
-Sevii Masters after any league win, and the league that called last never
-calls again: the league with strictly more badges calls; if it called last,
-or on a tie, the Masters calls when eligible; otherwise the other regional
-league, and on a tie the one that did not call last (after the Masters, the
-one other than the last regional league to call; the very first tie goes to
-Indigo). Each row shows the invitation, its day, the league and why ("most
-badges (Indigo 8, Hoenn 0)", "no repeat: Indigo called last", "Masters
-eligible: Hoenn (most badges) called last", "Masters eligible: tie", "tie" or
-"first tie … goes to Indigo"), the lineup in battle order with league scores,
+a league calls only where the player is known: Indigo with at least one Kanto
+or Johto badge, Hoenn with at least one Hoenn badge, and the Sevii Masters
+after any league win. With no badges at all the panel says no league calls.
+Among the eligible leagues the one that called least recently calls (a league
+that never called counts as least recent); ties go to the most badges (Indigo
+= Kanto + Johto, Hoenn = Hoenn; the Masters has none and loses to a regional
+league), then to Indigo. So the first call comes from the eligible league with
+the most badges, and a single eligible league calls every time. Each row shows
+the invitation, its day, the league and why ("only eligible (Indigo 8, Hoenn
+0; no league win)", "least recently called (Indigo day 7, Sevii Masters
+never)", "tie (never called) → most badges (Indigo 16, Hoenn 8)" or "tie
+(never called, Indigo 4, Hoenn 4) → Indigo"), the lineup in battle order with league scores,
 the invitation whose lineup it fatigues, an **Answer** (accept & win, accept &
 lose, or decline; decline by default), the result (first win, repeat win,
 loss, declined) and the reigning champion: the player after a win, otherwise
@@ -310,31 +312,32 @@ battle order, league score in brackets where fatigue or travel lowers it; the
 reigning champion last):
 
 - 8 badges (world progress 80, base lineup Lv 58–59), all Kanto, declining
-  everything: Indigo (most badges) and Hoenn (no repeat) take turns. Indigo
-  fields Will, Lt. Surge, Giovanni, Agatha and Jasmine (all TR 94–95, at
-  home; champion Jasmine); the best away trainer, Drake (a Hoenn traveller,
-  TR 93), scores 83 and ranks 12th. Agatha (Lv 59), Karen (Lv 58), Glacia,
-  Sabrina and Clair join; Lance (Lv 100), Steven (Lv 77) and Wallace (Lv 74)
-  skip. Hoenn fields Phoebe, Sidney, Glacia, Drake and Norman (champion
-  Norman).
+  everything: only Indigo knows the player, so it calls every time. Its
+  fresh lineup is Will, Lt. Surge, Giovanni, Agatha and Jasmine (all TR
+  94–95, at home; champion Jasmine); the best away trainer, Drake (a Hoenn
+  traveller, TR 93), scores 83 and ranks 12th. Agatha (Lv 59), Karen (Lv 58),
+  Glacia, Sabrina and Clair join; Lance (Lv 100), Steven (Lv 77) and Wallace
+  (Lv 74) skip. The next event, with those five tired, fields Erika, Blue,
+  Koga, Lorelei and Karen (champion Karen), and the two lineups alternate.
 - 8 Hoenn badges, declining the first invitation, then accepting and winning
-  every one: day 7 Hoenn (most badges, declined; Norman reigns), day 14
-  Indigo (no repeat; first win), day 21 Hoenn (first win), day 28 the Sevii
-  Masters (eligible after a win; Hoenn called last) with Will, Lt. Surge,
-  Giovanni, Agatha and Jasmine (first win), then Hoenn and the Masters
-  alternate (repeat wins). Indigo, with no badges, does not call again.
+  every one: day 7 Hoenn (only eligible, declined; Norman reigns), day 14
+  Hoenn again (only eligible; Blue, Koga, Karen, Will, Giovanni; first win),
+  day 21 the Sevii Masters (never called; Drake, Lt. Surge, Agatha, Jasmine,
+  Norman; first win), then Hoenn and the Masters alternate (repeat wins).
+  Indigo, with no Kanto or Johto badge, never calls.
 - 16 badges, all Kanto and Johto, accepting and winning everything: day 7
   Indigo, Erika, Karen, Blue, Giovanni, Jasmine (first win); day 14 the
   Masters, Clair, Juan, Phoebe, Koga, Norman (first win; the Indigo five are
-  tired); then Indigo and the Masters alternate. Hoenn does not call. Declining
-  everything instead alternates Indigo and Hoenn (Winona, Juan, Phoebe, Koga
-  (108), Norman; champion Norman); the Champions (Lv 99–100) skip every base
-  lineup (Lv 75–82).
+  tired); then Indigo and the Masters alternate. Hoenn never calls. Declining
+  everything instead has Indigo call every time, alternating that lineup
+  (champion Jasmine) with Morty, Will, Sabrina, Clair and Koga (champion
+  Koga); the Champions (Lv 99–100) skip every base lineup (Lv 75–82).
 - 24 badges (world progress 160, base lineup Lv 100, every aloof trainer
-  joins), declining everything: Indigo, Morty, Sabrina, Clair, Steven (175),
-  Lance (Lance); Hoenn, Norman (164), Blue (153), Winona (172), Juan, Wallace
-  (Wallace); and so on alternately. Lance, a Kanto traveller, fights last at
-  every Indigo event, each fatigued only by the Hoenn event before.
+  joins), declining everything: Indigo (tie → most badges), Morty, Sabrina,
+  Clair, Steven (175), Lance (Lance); Hoenn (never called), Norman (164), Blue
+  (153), Winona (172), Juan, Wallace (Wallace); and so on alternately. Lance,
+  a Kanto traveller, fights last at every Indigo event, each fatigued only by
+  the Hoenn event before.
 
 Lance, a Legend at TR 200 (team Lv 100), first joins a league at world
 progress 135 (base lineup Lv 91) when no fatigue holds the base lineup back.
@@ -435,9 +438,10 @@ level cap; at 40 none is below yet, but at least three are at or under the
 player TR. League lineups have no fixed targets: they are informational, and
 the tests check the league score and its flooring, the top-five selection and
 tie-break, the invitation gate (none at player TR 79, calls from 80), which
-league calls (most badges, never twice in a row, ties to the league that did
-not call last and the first tie to Indigo, the Masters eligible after any
-league win and taking the no-repeat and tie turns), the countdown (7 days
+league calls (known-there eligibility: no badges in a region means that
+league never calls, the Masters only after a win; the least recently called
+eligible league, round-robin over three; ties to the most badges, then
+Indigo; a single eligible league calling again and again), the countdown (7 days
 from qualifying, restarted at each resolution and paused while an accepted
 event waits), fatigue from the most recent resolved event whether accepted or
 declined, reigning champions (the player after a win, otherwise the lineup's

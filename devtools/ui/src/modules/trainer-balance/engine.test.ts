@@ -40,6 +40,7 @@ import {
   LEAGUES,
   QUALIFYING_TR,
   callingLeague,
+  eligibleLeagues,
   defaultBadgeSplit,
   leagueBadges,
   leagueCandidates,
@@ -1731,111 +1732,112 @@ describe("league lineups", () => {
       expect(leagueBadges({ Kanto: 3, Johto: 5, Hoenn: 7 })).toEqual({ Indigo: 8, Hoenn: 7 })
     })
 
-    it("calls the league with the most badges, but never the same league twice in a row", () => {
-      expect(callingLeague({ Indigo: 0, Hoenn: 8 }, false, null, null)).toEqual({
-        league: "Hoenn",
-        reason: "most badges",
-      })
-      expect(callingLeague({ Indigo: 0, Hoenn: 8 }, false, "Hoenn", "Hoenn")).toEqual({
-        league: "Indigo",
-        reason: "no repeat",
-      })
-      expect(callingLeague({ Indigo: 16, Hoenn: 0 }, false, "Hoenn", "Hoenn")).toEqual({
-        league: "Indigo",
-        reason: "most badges",
-      })
-      // Without a win, the leagues alternate, the leader first.
-      expect(leagues(80, hoennFirst, decline(4))).toEqual(["Hoenn", "Indigo", "Hoenn", "Indigo"])
-      expect(leagues(120, kantoJohto, ["lose", "decline", "lose"])).toEqual([
-        "Indigo",
-        "Hoenn",
-        "Indigo",
+    const never = { Indigo: null, "Sevii Masters": null, Hoenn: null } as const
+    const calls = (tr: number, split: typeof hoennFirst, choices: Parameters<typeof simulate>[2]) =>
+      simulate(tr, split, choices).invitations.map((invitation) => [
+        invitation.league,
+        invitation.reason,
       ])
-      for (const split of [hoennFirst, kantoJohto, { Kanto: 4, Johto: 0, Hoenn: 4 }]) {
-        const called = leagues(160, split, ["win", "decline", "win", "lose", "decline", "win"])
-        for (const [index, league] of called.entries())
-          if (index > 0) expect(league).not.toBe(called[index - 1])
-      }
-    })
 
-    it("breaks ties toward the league that did not call last, the very first tie toward Indigo", () => {
-      const tie = { Indigo: 4, Hoenn: 4 }
-      expect(callingLeague(tie, false, null, null)).toEqual({
-        league: "Indigo",
-        reason: "first tie",
+    it("lets a league call only where the player is known, and the Masters only after a win", () => {
+      expect(eligibleLeagues({ Indigo: 0, Hoenn: 8 }, false)).toEqual(["Hoenn"])
+      expect(eligibleLeagues({ Indigo: 1, Hoenn: 0 }, false)).toEqual(["Indigo"])
+      expect(eligibleLeagues({ Indigo: 16, Hoenn: 1 }, true)).toEqual([
+        "Indigo",
+        "Sevii Masters",
+        "Hoenn",
+      ])
+      expect(callingLeague({ Indigo: 0, Hoenn: 0 }, false, never)).toBeNull()
+      // No badges in a region: that league never calls, however long the run.
+      expect(new Set(leagues(80, hoennFirst, decline(8)))).toEqual(new Set(["Hoenn"]))
+      expect(new Set(leagues(120, kantoJohto, ["lose", "decline", "lose"]))).toEqual(
+        new Set(["Indigo"]),
+      )
+      // Qualified by TR but holding no badges: no league knows the player, so none calls.
+      expect(simulate(80, { Kanto: 0, Johto: 0, Hoenn: 0 }, decline(3))).toEqual({
+        qualified: true,
+        badges: { Indigo: 0, Hoenn: 0 },
+        invitations: [],
       })
-      expect(callingLeague(tie, false, "Indigo", "Indigo")).toEqual({
-        league: "Hoenn",
-        reason: "tie",
-      })
-      expect(callingLeague(tie, false, "Hoenn", "Hoenn")).toEqual({
-        league: "Indigo",
-        reason: "tie",
-      })
-      // After the Masters, the regional league other than the last regional caller.
-      expect(callingLeague(tie, true, "Sevii Masters", "Indigo")).toEqual({
-        league: "Hoenn",
-        reason: "tie",
-      })
-      expect(callingLeague(tie, true, "Sevii Masters", "Hoenn")).toEqual({
-        league: "Indigo",
-        reason: "tie",
-      })
-      expect(
-        simulate(80, { Kanto: 4, Johto: 0, Hoenn: 4 }, decline(3)).invitations.map((invitation) => [
-          invitation.league,
-          invitation.reason,
-        ]),
-      ).toEqual([
-        ["Indigo", "first tie"],
-        ["Hoenn", "tie"],
-        ["Indigo", "tie"],
+      // Losses and declines never open the Masters; the first win does.
+      const run = simulate(80, hoennFirst, ["lose", "decline", "win", "decline"]).invitations
+      expect(run.map((invitation) => invitation.eligible)).toEqual([
+        ["Hoenn"],
+        ["Hoenn"],
+        ["Hoenn"],
+        ["Sevii Masters", "Hoenn"],
+      ])
+      expect(run.map((invitation) => invitation.league)).toEqual([
+        "Hoenn",
+        "Hoenn",
+        "Hoenn",
+        "Sevii Masters",
       ])
     })
 
-    it("makes the Sevii Masters eligible after any league win, taking the no-repeat and tie turns", () => {
-      expect(callingLeague({ Indigo: 16, Hoenn: 0 }, true, "Indigo", "Indigo")).toEqual({
-        league: "Sevii Masters",
-        reason: "masters after repeat",
-      })
-      expect(callingLeague({ Indigo: 16, Hoenn: 0 }, true, "Sevii Masters", "Indigo")).toEqual({
+    it("lets a single eligible league call again and again", () => {
+      expect(calls(80, hoennFirst, decline(4))).toEqual(
+        Array.from({ length: 4 }, () => ["Hoenn", "only eligible"]),
+      )
+      expect(callingLeague({ Indigo: 16, Hoenn: 0 }, false, { ...never, Indigo: 7 })).toEqual({
         league: "Indigo",
-        reason: "most badges",
+        reason: "only eligible",
+        eligible: ["Indigo"],
       })
-      expect(callingLeague({ Indigo: 4, Hoenn: 4 }, true, "Indigo", "Indigo")).toEqual({
+    })
+
+    it("calls the least recently called eligible league, round-robin over three", () => {
+      const all = { Indigo: 16, Hoenn: 8 }
+      expect(callingLeague(all, true, { Indigo: 7, "Sevii Masters": 21, Hoenn: 14 })).toMatchObject(
+        { league: "Indigo", reason: "least recently called" },
+      )
+      // Never called counts as least recent, whatever the badges.
+      expect(callingLeague(all, true, { ...never, Indigo: 7, Hoenn: 14 })).toMatchObject({
         league: "Sevii Masters",
-        reason: "masters on tie",
+        reason: "least recently called",
       })
-      // A Kanto/Johto player who wins Indigo: the Masters then takes every no-repeat turn.
-      const won = simulate(120, kantoJohto, ["win", "win", "win", "win"]).invitations
-      expect(won.map((invitation) => invitation.league)).toEqual([
-        "Indigo",
-        "Sevii Masters",
-        "Indigo",
-        "Sevii Masters",
+      // 16 Kanto/Johto + 8 Hoenn badges, winning the first call: Indigo, Hoenn, the Masters, then
+      // the same order again.
+      expect(calls(160, defaultBadgeSplit(24), ["win", ...decline(7)])).toEqual([
+        ["Indigo", "tie: most badges"],
+        ["Hoenn", "tie: most badges"],
+        ["Sevii Masters", "least recently called"],
+        ["Indigo", "least recently called"],
+        ["Hoenn", "least recently called"],
+        ["Sevii Masters", "least recently called"],
+        ["Indigo", "least recently called"],
+        ["Hoenn", "least recently called"],
       ])
-      expect(won.map((invitation) => invitation.mastersEligible)).toEqual([false, true, true, true])
-      // A win at Hoenn counts too; a loss or a decline never opens the Masters.
-      expect(leagues(80, hoennFirst, ["decline", "win", "win", "win", "win"])).toEqual([
-        "Hoenn",
-        "Indigo",
-        "Hoenn",
-        "Sevii Masters",
-        "Hoenn",
+      const run = simulate(160, defaultBadgeSplit(24), ["win", ...decline(3)]).invitations
+      expect(run.map((invitation) => invitation.lastCalled)).toEqual([
+        never,
+        { ...never, Indigo: 7 },
+        { ...never, Indigo: 7, Hoenn: 14 },
+        { Indigo: 7, "Sevii Masters": 21, Hoenn: 14 },
       ])
-      expect(leagues(80, hoennFirst, ["lose", "decline", "lose", "decline"])).toEqual([
-        "Hoenn",
-        "Indigo",
-        "Hoenn",
-        "Indigo",
-      ])
-      // On a tie, the Masters, then the regional league that called less recently.
-      expect(leagues(80, { Kanto: 4, Johto: 0, Hoenn: 4 }, ["win", ...decline(4)])).toEqual([
-        "Indigo",
-        "Sevii Masters",
-        "Hoenn",
-        "Sevii Masters",
-        "Indigo",
+    })
+
+    it("breaks ties by most badges (the Masters has none), then toward Indigo", () => {
+      // The first call: the eligible league with the most badges.
+      expect(callingLeague({ Indigo: 1, Hoenn: 8 }, false, never)).toEqual({
+        league: "Hoenn",
+        reason: "tie: most badges",
+        eligible: ["Indigo", "Hoenn"],
+      })
+      expect(callingLeague({ Indigo: 4, Hoenn: 4 }, false, never)).toEqual({
+        league: "Indigo",
+        reason: "tie: Indigo",
+        eligible: ["Indigo", "Hoenn"],
+      })
+      // The Masters loses a badge tie to a regional league that never called either.
+      expect(callingLeague({ Indigo: 8, Hoenn: 1 }, true, { ...never, Indigo: 7 })).toMatchObject({
+        league: "Hoenn",
+        reason: "tie: most badges",
+      })
+      expect(calls(80, { Kanto: 4, Johto: 0, Hoenn: 4 }, decline(3))).toEqual([
+        ["Indigo", "tie: Indigo"],
+        ["Hoenn", "least recently called"],
+        ["Indigo", "least recently called"],
       ])
     })
 
@@ -1901,7 +1903,9 @@ describe("league lineups", () => {
       }
       // The player's answers change who calls, never a lineup for the same league and fatigue.
       const again = simulate(120, kantoJohto, ["lose", "lose", "lose", "lose", "lose"]).invitations
-      expect(again[1]!.league).toBe("Hoenn")
+      expect(again[1]!.league).toBe("Indigo")
+      expect(again[3]!.league).toBe("Indigo")
+      expect(invitations[3]!.league).toBe("Sevii Masters")
       expect(invitations[1]!.ranking).toEqual(again[1]!.ranking)
     })
 
@@ -1931,8 +1935,8 @@ describe("league lineups", () => {
         ["Hoenn", "loss", false],
         ["Indigo", "win", true],
         ["Sevii Masters", "win", true],
-        ["Indigo", "win", false],
-        ["Sevii Masters", "declined", false],
+        ["Hoenn", "win", true],
+        ["Indigo", "declined", false],
       ])
       // Declining an elite endgame event crowns aloof Lance, the strongest who joins.
       expect(invitations[0]!.champion).toMatchObject({
@@ -1940,9 +1944,9 @@ describe("league lineups", () => {
         entrant: { trainer: { id: "lance" } },
       })
       expect(reigningChampions(invitations)).toEqual({
-        Indigo: { kind: "player" },
-        Hoenn: invitations[1]!.champion,
-        "Sevii Masters": invitations[5]!.champion,
+        Indigo: invitations[5]!.champion,
+        Hoenn: { kind: "player" },
+        "Sevii Masters": { kind: "player" },
       })
       expect(reigningChampions(invitations.slice(0, 1))).toEqual({
         Indigo: invitations[0]!.champion,

@@ -1302,39 +1302,41 @@ export const leagueBadges = (split: BadgeSplit): RegionalBadges => ({
   Hoenn: split.Hoenn,
 })
 
-const otherRegional = (league: RegionalLeague): RegionalLeague =>
-  league === "Indigo" ? "Hoenn" : "Indigo"
+/**
+ * The leagues that may call, in LEAGUES order: Indigo with at least one Kanto or Johto badge, Hoenn
+ * with at least one Hoenn badge, and the Sevii Masters after any lifetime league win.
+ */
+export const eligibleLeagues = (badges: RegionalBadges, lifetimeWin: boolean): League[] =>
+  LEAGUES.filter((league) =>
+    league === "Sevii Masters" ? lifetimeWin : badges[league as RegionalLeague] > 0,
+  )
 
 /**
- * Which league calls next. Indigo and Hoenn are always eligible once the player qualifies; the
- * Sevii Masters is eligible after any lifetime league win. The league that called last never calls
- * again (another is always eligible):
- * 1. The regional league with strictly more badges calls, unless it called last.
- * 2. Otherwise (a tie, or the leader called last) the Masters calls, if eligible and it did not call
- *    last.
- * 3. Otherwise a regional league that did not call last: the other one after a repeat; on a tie the
- *    one that did not call last, or, when neither did (the Masters called last, or no one has called),
- *    the one other than the last regional league to call, and Indigo on the very first tie.
+ * Which eligible league calls next (null when none is eligible). `lastCalled` is the day each league
+ * last called (null: never). Round-robin: the eligible league that called least recently (never
+ * counts as least recent); ties go to the league with the most badges (the Masters has no badge
+ * count and loses to a regional league), and remaining ties to Indigo. The first call is therefore
+ * from the eligible league with the most badges; a single eligible league calls every time.
  */
 export const callingLeague = (
   badges: RegionalBadges,
-  mastersEligible: boolean,
-  last: League | null,
-  lastRegional: RegionalLeague | null,
-): { league: League; reason: CallReason } => {
-  const leader: RegionalLeague | null =
-    badges.Indigo > badges.Hoenn ? "Indigo" : badges.Hoenn > badges.Indigo ? "Hoenn" : null
-  if (leader !== null && leader !== last) return { league: leader, reason: "most badges" }
-  if (mastersEligible && last !== "Sevii Masters")
-    return {
-      league: "Sevii Masters",
-      reason: leader === null ? "masters on tie" : "masters after repeat",
-    }
-  if (leader !== null) return { league: otherRegional(leader), reason: "no repeat" }
-  if (last === "Indigo" || last === "Hoenn") return { league: otherRegional(last), reason: "tie" }
-  return lastRegional === null
-    ? { league: "Indigo", reason: "first tie" }
-    : { league: otherRegional(lastRegional), reason: "tie" }
+  lifetimeWin: boolean,
+  lastCalled: Record<League, number | null>,
+): { league: League; reason: CallReason; eligible: League[] } | null => {
+  const eligible = eligibleLeagues(badges, lifetimeWin)
+  const [only] = eligible
+  if (only === undefined) return null
+  if (eligible.length === 1) return { league: only, reason: "only eligible", eligible }
+  const recency = (league: League): number => lastCalled[league] ?? -Infinity
+  const oldest = Math.min(...eligible.map(recency))
+  const least = eligible.filter((league) => recency(league) === oldest)
+  if (least.length === 1) return { league: least[0]!, reason: "least recently called", eligible }
+  const count = (league: League): number =>
+    league === "Sevii Masters" ? -1 : badges[league as RegionalLeague]
+  const most = Math.max(...least.map(count))
+  const leaders = least.filter((league) => count(league) === most)
+  if (leaders.length === 1) return { league: leaders[0]!, reason: "tie: most badges", eligible }
+  return { league: "Indigo", reason: "tie: Indigo", eligible }
 }
 
 /**
@@ -1346,7 +1348,8 @@ export const callingLeague = (
  * call, 0 by default); no countdown runs while an accepted event is pending. `choices[i]` answers
  * invitation i. The lineup is computed at acceptance or decline, fatigued by the lineup of the most
  * recent resolved event, and frozen. The reigning champion is the player after a win, otherwise the
- * lineup's strongest member (last in battle order). No randomness.
+ * lineup's strongest member (last in battle order). Invitations stop when no league is eligible
+ * (callingLeague). No randomness.
  */
 export const simulateInvitations = (
   catalog: readonly TrainerRecord[],
@@ -1360,14 +1363,18 @@ export const simulateInvitations = (
   if (!qualifies(playerTR)) return { qualified: false, badges, invitations: [] }
   const candidates = leagueCandidates(catalog, experiment, playerTR)
   const lifetimeWins = new Set<League>()
+  const lastCalled: Record<League, number | null> = {
+    Indigo: null,
+    "Sevii Masters": null,
+    Hoenn: null,
+  }
   const invitations: Invitation[] = []
   let day = INVITATION_INTERVAL
-  let lastRegional: RegionalLeague | null = null
-  choices.forEach((choice, index) => {
+  for (const [index, choice] of choices.entries()) {
     const before = invitations.at(-1)
-    const lastCaller = before?.league ?? null
-    const mastersEligible = lifetimeWins.size > 0
-    const { league, reason } = callingLeague(badges, mastersEligible, lastCaller, lastRegional)
+    const call = callingLeague(badges, lifetimeWins.size > 0, lastCalled)
+    if (call === null) break
+    const { league, reason, eligible } = call
     const ranking = rankLeague(
       league,
       playerTR,
@@ -1388,8 +1395,8 @@ export const simulateInvitations = (
       resolvedDay: day + wait,
       league,
       reason,
-      lastCaller,
-      mastersEligible,
+      eligible,
+      lastCalled: { ...lastCalled },
       choice,
       ranking,
       fatigueFrom: before
@@ -1399,9 +1406,9 @@ export const simulateInvitations = (
       firstWin,
       champion: won ? { kind: "player" } : { kind: "trainer", entrant: strongest },
     })
-    if (league !== "Sevii Masters") lastRegional = league
+    lastCalled[league] = day
     day += wait + INVITATION_INTERVAL
-  })
+  }
   return { qualified: true, badges, invitations }
 }
 

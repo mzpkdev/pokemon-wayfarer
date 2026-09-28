@@ -5,10 +5,12 @@ Implemented: No
 Design status: v0 approved: leagues as locations whose **league events**
 reach the player as **invitations** by phone. From player TR 80 a league
 calls every 7 in-game days (restarted when each invitation resolves, paused
-while an accepted event waits); the league where the player holds the most
-badges calls, never the same league twice in a row, with the Sevii Masters
-joining the turns after any league win. Accepting freezes a lineup that waits
-for the player, with one attempt; declining runs the event without them. A
+while an accepted event waits); only a league that knows the player calls
+(Indigo with a Kanto or Johto badge, Hoenn with a Hoenn badge, the Sevii
+Masters after any league win), round-robin: the eligible league that called
+least recently, ties to the most badges, then Indigo. Accepting freezes a
+lineup that waits for the player, with one attempt; declining runs the event
+without them. A
 league score per eligible trainer (Trainer Rating (TR) scaled by
 willingness, from travel cost and fatigue), aloof trainers joining only a
 base lineup near their level, the top five by league score with no
@@ -102,6 +104,13 @@ is a league's phone call inviting the player to its next event; the player
 **accepts** or **declines** it. At most one invitation or accepted event
 exists at a time.
 
+These rules stand with the round-robin choice of caller: the player must
+answer a call, with no "later" ([Answering](#answering)); leaving an accepted
+event midway counts as a loss ([Loss](#loss)); after a loss the reigning
+champion is the strongest of the frozen lineup; and a content version change
+turns an accepted event back into an unanswered invitation from the same
+league ([Load validation](#load-validation)).
+
 Days come from the game's existing in-game day counter (`VAR_DAYS`, which
 the daily update in [clock.c](../../game/src/clock.c) keeps); leagues add no
 clock of their own. **Days never affect anyone's strength**: every TR stays a
@@ -131,29 +140,33 @@ trace.
 ### Which league calls
 
 The league that calls is chosen when the call arrives, from the player's
-badges then. **Indigo** and **Hoenn** may always call once the player
-qualifies. The **Sevii Masters** may call after any lifetime league win. A
-league's **badges** are the player's badges from its regions: Indigo counts
-Kanto and Johto badges, Hoenn counts Hoenn badges, and the Masters has no
-badge count. The saved **last caller** and **last regional caller** (the last
-of Indigo and Hoenn to call) decide the rest:
+badges and lifetime wins then. A league calls only where the player is known
+(**known-there eligibility**):
 
-1. The regional league with strictly more badges calls, unless it was the
-   last caller.
-2. Otherwise (the two tie, or the leader was the last caller), the Masters
-   calls, if it may and it was not the last caller.
-3. Otherwise a regional league that was not the last caller calls: the other
-   one after the leader's call; on a tie, the one that was not the last
-   caller, or, when neither was (the Masters called last), the one that is
-   not the last regional caller. The very first call breaks a tie toward
-   Indigo.
+- **Indigo** is eligible once the player holds at least one Kanto or Johto
+  badge;
+- **Hoenn** is eligible once the player holds at least one Hoenn badge; and
+- the **Sevii Masters** is eligible after any lifetime league win.
 
-So the same league never calls twice in a row. Before any win, Indigo and
-Hoenn take turns, the leader first. After a win, the Masters takes the turn
-the leader would repeat, so the leader and the Masters take turns and the
-other regional league calls only when the badges tie or change. Badges from
-any region count toward the gate; which region they come from only decides
-who calls.
+The TR 80 gate still applies to every call. A league's **badges** are the
+player's badges from its regions: Indigo counts Kanto and Johto badges, Hoenn
+counts Hoenn badges, and the Masters has no badge count. Among the eligible
+leagues, the saved **day each league last called** decides, **round-robin**:
+
+1. The eligible league that **called least recently** calls. A league that has
+   never called counts as least recent.
+2. A tie (only possible between leagues that have never called) goes to the
+   league with the **most badges**; the Masters, with no badge count, loses
+   a badge tie to a regional league.
+3. A remaining tie (Indigo and Hoenn with equal badges) goes to **Indigo**.
+
+So the very first call comes from the eligible league with the most badges,
+and each eligible league then calls in turn. When only one league is
+eligible, it calls every time, repeating as often as needed; a league that
+becomes eligible later (a first badge in its regions, or the Masters after a
+first win) has never called, so it calls next. Badges from any region count
+toward the gate; which regions they come from decides who may call and breaks
+ties.
 
 ### Accept
 
@@ -264,8 +277,8 @@ Keep Today's saved first-league-win facts (`indigoCleared`, `mastersCleared`,
   the **day of the next call**; **invited** by a league, waiting for the
   player's answer; or an **accepted event**, holding its league and its
   [event lineup](#event-lineup);
-- the **last caller** (none, or a league) and the **last regional caller**
-  (none, Indigo, or Hoenn);
+- per league, the **day it last called** (none, or an in-game day), read for
+  [which league calls](#which-league-calls);
 - the **most recent resolved lineup**: the five `characterId`s of the most
   recent resolved event, with its content versions, read for fatigue; empty
   on a new game;
@@ -276,7 +289,7 @@ Keep Today's saved first-league-win facts (`indigoCleared`, `mastersCleared`,
 
 There is no seed, edition, rotation history, calendar, or lineup history
 beyond the most recent resolved lineup. At most one accepted event and one
-active run exist. New Game saves the not-qualified state and no last caller,
+active run exist. New Game saves the not-qualified state and no last-call day,
 reigning champion, or most recent resolved lineup. Save an explicit schema
 discriminator for this layout; prerelease saves need no migration.
 
@@ -290,8 +303,8 @@ current day + 7.
 
 When the day counter reaches the day of the next call, choose the calling
 league ([Which league calls](#which-league-calls)) and, in one transaction,
-save the invited state with that league and set the last caller (and the last
-regional caller, for Indigo or Hoenn). The phone rings at the next moment the
+save the invited state with that league and set that league's last-call day
+to the current day. The phone rings at the next moment the
 player can take a call (in the overworld, with no script, battle, or ceremony
 running); an invitation not yet answered rings again after a reload.
 
@@ -394,11 +407,14 @@ active run, and an empty most recent resolved lineup are normal; validation
 never generates a lineup, places a call, or reads the day counter.
 
 - The invitation state is exactly one of its four kinds. Counting down holds
-  a day; invited and accepted name a league that may call (the Masters only
-  with a lifetime win) and that is the last caller.
-- The last caller is none only when the player has never been called; the last
-  regional caller is none or Indigo or Hoenn, and equals the last caller
-  whenever the last caller is Indigo or Hoenn.
+  a day; invited and accepted name a league that has a last-call day and is
+  the league that called most recently (the Masters only with a lifetime
+  win); badges are not rechecked, since badges never decrease.
+- Each league's last-call day is none or a day; no two leagues share a day,
+  and all are none only when the player has never been called (not
+  qualified, or counting down to the first call). The Masters has a day only
+  with a lifetime win. A last-call day ahead of the day counter is valid (a
+  clock change).
 - An accepted event's lineup holds five distinct eligible characters in
   non-decreasing TR order and resolves every reference. Stored teams must be
   valid for their roster (known roster slots, legal forms, levels, and
@@ -514,7 +530,8 @@ chosen number of invitations at a chosen player TR (world progress) and badge
 split (Kanto, Johto, Hoenn), with the player's answer to each (accept and
 win, accept and lose, or decline); accepted events resolve the day they are
 accepted. For each invitation it reports the day it arrives, which league
-calls and why (most badges, no repeat, a tie, or the Masters), the frozen
+calls and why (the only eligible league, the least recently called, or a
+tie going to the most badges or to Indigo), the frozen
 lineup with league scores, the event whose lineup it fatigues, the result, and
 the reigning champion. For a selected event it reports every eligible
 trainer's TR, team level, willingness, league score, and rank, the base lineup
@@ -556,13 +573,16 @@ evidence (not yet run):
    or an accepted event waits, however many days pass; a clock turned back
    delays the call; a counter jump of many days brings one call and no
    backlog; strength is identical on every day at one world progress.
-5. **Which league calls.** The league with the most badges calls (Indigo
-   counting Kanto and Johto); never the same league twice in a row; ties go to
-   the league that did not call last, the very first tie to Indigo; the
-   Masters never calls before a lifetime league win and, after one, calls
-   whenever the leader would repeat or the badges tie, never twice in a row;
-   after the Masters, a tie goes to the regional league other than the last
-   regional caller.
+5. **Which league calls.** Known-there eligibility: with no badge in a
+   league's regions that league never calls (Indigo counting Kanto and
+   Johto), and the Masters never calls before a lifetime league win. Among the
+   eligible leagues the least recently called calls, a never-called league
+   first: with three eligible leagues they call in a fixed rotation. Ties go
+   to the most badges, the Masters losing to a regional league, then to
+   Indigo; the very first call comes from the most-badges eligible league. A
+   single eligible league calls repeatedly; a league that becomes eligible
+   later calls next. The same badges, wins, and last-call days always give the
+   same caller.
 6. **Accept and decline.** Accepting saves the selected five in ascending TR
    order with the accepted event atomically, and the event waits across many
    days and reloads with the same five; reloading before the commit selects
@@ -574,7 +594,7 @@ evidence (not yet run):
    progress values, badge splits, answers, and most recent resolved lineups,
    matched between host tooling and game C; the same inputs always give the
    same five and the same caller, and the Pokémon RNG state is unchanged.
-8. **Fresh state.** A new game is not qualified and has no last caller,
+8. **Fresh state.** A new game is not qualified and has no last-call day,
    reigning champion, accepted event, active run, or most recent resolved
    lineup; load, display, and denied or cancelled requests generate nothing.
 9. **Loss.** Lose at each match, and leave voluntarily: the event ends once,
@@ -593,7 +613,7 @@ evidence (not yet run):
     XP, and parties match the lineup's matches, including a Gym Leader in
     match 5. The phone rings only when the player can take a call, and rings
     again after a reload until answered; lobbies name the reigning champion.
-12. **Load validation.** Corrupt invitation state, callers, accepted events,
+12. **Load validation.** Corrupt invitation state, last-call days, accepted events,
     runs, lineups, most recent resolved lineups, schema, or callbacks are
     rejected without regenerating, calling, advancing, or rewarding. A
     content version change turns an accepted event back into an unanswered

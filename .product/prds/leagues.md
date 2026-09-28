@@ -2,9 +2,9 @@
 
 Implemented: No
 Design status: v0 approved: once the player is known (TR 80), a league
-phones with an invitation every seven in-game days; the league where they
-hold the most badges calls, never the same one twice in a row, and Sevii
-Masters joins in after any league win. Accept and the event waits for them,
+phones with an invitation every seven in-game days; only leagues that know
+them call (where they hold a badge, and Sevii Masters after any league win),
+taking turns: whichever called longest ago calls next. Accept and the event waits for them,
 with one attempt; decline and the season goes on without them. Someone always
 holds each league's title. Each lineup is the five strongest trainers who are
 willing to come (favouring those at home and fresh, with aloof trainers
@@ -47,13 +47,22 @@ player, no other league calls. Days come from the game's existing day
 counter and only schedule calls: nobody grows stronger or weaker with time,
 only with the world's progress.
 
-**Who calls.** The league where the player has earned the most badges calls:
-Indigo counts Kanto and Johto badges, Hoenn counts Hoenn badges. The same
-league never calls twice in a row, so the other one takes the next turn. When
-the counts are level, the league that did not call last calls, and the very
-first time, Indigo. Sevii Masters is the invitational: after the player's
-first league win anywhere, it takes the turn whenever the leading league has
-just called or the counts are level.
+**Who calls.** Only a league that knows the player calls: Indigo once they
+hold a Kanto or Johto badge, Hoenn once they hold a Hoenn badge, and Sevii
+Masters, the invitational, after their first league win anywhere. The leagues
+that know them take turns: the one that called longest ago calls next, and one
+that has never called goes first. When that is a tie, the league where they
+have earned the most badges calls (Indigo counts Kanto and Johto badges,
+Hoenn counts Hoenn badges; the Masters counts none), and on level counts,
+Indigo. So the first call comes from where they have the most badges, and a
+player known in only one region hears from that league every time until
+another league knows them.
+
+These stay as they were: the player must answer each call, with no "later";
+leaving an accepted event midway counts as a loss; after a loss the
+strongest trainer of the kept lineup takes the title; and if the game's
+content changes under a save, an accepted event goes back to an unanswered
+invitation from the same league.
 
 **Accept.** Accepting books the player in. The lineup is worked out then and
 kept, and the event waits for them as long as they like: they can train, earn
@@ -136,27 +145,28 @@ teams (better items, stats, movesets) are Later.
 
 1. A player starts in Hoenn and earns all eight Hoenn badges: TR 80, and the
    leagues know their name. A week of in-game days later the phone rings:
-   Hoenn, where they have the most badges, invites them. They feel unready and
-   decline. The event runs without them, and Norman, its strongest trainer,
-   is Hoenn's reigning champion.
-2. Seven days later Indigo calls, since Hoenn called last. They accept. The
-   five are fixed on the spot, mostly Kanto and Johto trainers at home, with
-   anyone who played Hoenn's event tired. The event waits while they sail
-   north and train.
+   Hoenn, the only league that knows them, invites them. They feel unready
+   and decline. The event runs without them, and Norman, its strongest
+   trainer, is Hoenn's reigning champion.
+2. Meanwhile they sail north and earn a Kanto badge. Seven days later Indigo
+   calls: it knows them now and has never called. They accept. The five are
+   fixed on the spot, mostly Kanto and Johto trainers at home, with anyone
+   who played Hoenn's event tired. The event waits while they train.
 3. They arrive and fight, weakest first, each opponent with the team they
    would bring anywhere else. They win: the Hall of Fame, the Kanto/Johto
    Champion recognition, and Blue's Dojo battle follow, and they reign at
    Indigo.
-4. A week after that win, Hoenn calls again. They accept, and later lose at
-   match 5. They black out, the event is over, and that finalist reigns in
-   Hoenn.
-5. The next call is from Sevii Masters: after a league win it takes the turn
-   Hoenn would repeat. Anyone from anywhere is at home there. An aloof
+4. A week after that win, Sevii Masters calls: a league win opened it, and it
+   has never called. Anyone from anywhere is at home there. An aloof
    Champion may still find the base lineup too far below them, and turn up
-   only once the world's best are strong enough.
-6. Hoenn and the Masters now take turns. When the player accepts Hoenn again
-   and wins, it is their first Hoenn win, with the full completion credits;
-   later wins bring prize money and the title, with no second Hall of Fame.
+   only once the world's best are strong enough. They accept, and later lose
+   at match 5. They black out, the event is over, and that finalist reigns at
+   the Masters.
+5. Hoenn calls next, having called longest ago, and from then on the three
+   take turns: Indigo, the Masters, Hoenn, and round again. When the player
+   accepts Hoenn and wins, it is their first Hoenn win, with the full
+   completion credits; later wins bring prize money and the title, with no
+   second Hall of Fame.
 
 ## Records and recognition
 

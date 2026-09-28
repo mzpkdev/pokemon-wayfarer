@@ -139,9 +139,11 @@ changes yours.
 - **League:** Indigo, Sevii Masters, or Hoenn.
 - **Invitation:** a league's phone call inviting you to its next event. Once
   your TR reaches 80 you qualify, and a league calls every 7 in-game days,
-  counted from qualifying and restarted when each invitation resolves; the
-  league with the most of your badges calls, never the same league twice in a
-  row. Days never change anyone's strength.
+  counted from qualifying and restarted when each invitation resolves. Only a
+  league that knows you calls (where you hold a badge, and Sevii Masters after
+  any league win), taking turns: the one that called longest ago calls next,
+  ties going to where you have the most badges, then Indigo. Days never change
+  anyone's strength.
 - **Accept / decline:** your answer to an invitation. Accepting freezes the
   lineup and the event waits for you, with one attempt; declining lets the
   event run without you.
