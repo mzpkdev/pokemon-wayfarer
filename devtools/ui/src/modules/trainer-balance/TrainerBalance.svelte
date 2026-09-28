@@ -21,6 +21,7 @@
     catalog,
     lineText,
     moveNames,
+    poolLearningHint,
     scalerKind,
     stageWarning,
     type ScalerId,
@@ -554,7 +555,7 @@
               data-testid={`dormant-${entry.index + 1}`}
             >
               <span class="slot">{entry.index + 1}</span><strong>{entry.move}</strong
-              >{#if entry.fromLevel > 1}<small>from Lv {entry.fromLevel}</small>{/if}<span
+              >{#if entry.fromLevel !== null}<small>from Lv {entry.fromLevel}</small>{/if}<span
                 class="dormant-reason">{dormantReasonText(entry)}</span
               >
             </li>{/each}
@@ -700,7 +701,10 @@
         >
           <ol class="pool-list">
             {#each lab.settings.movePool as entry, index (index)}{@const status =
-                lab.selected.pool[index]}
+                lab.selected.pool[index]}{@const learning = poolLearningHint(
+                entry,
+                lab.settings.roster,
+              )}
               <li class:dormant={status?.slot === null} data-testid={`pool-entry-${index + 1}`}>
                 <span class="slot">{index + 1}</span><input
                   class="pool-move"
@@ -719,7 +723,7 @@
                     min="1"
                     max="100"
                     step="1"
-                    placeholder="1"
+                    placeholder="—"
                     value={entry.fromLevel ?? ""}
                   /></label
                 ><span class="pool-status" data-testid={`pool-status-${index + 1}`}
@@ -743,6 +747,11 @@
                     onclick={() => lab.removePoolEntry(index)}>Remove</button
                   >
                 </div>
+                <small
+                  class="pool-learning"
+                  class:needs-from={learning.needsFrom}
+                  data-testid={`pool-learning-${index + 1}`}>{learning.text}</small
+                >
               </li>
             {:else}<li class="muted pool-empty">
                 The pool is empty: every member keeps its level-up moves.
@@ -776,17 +785,19 @@
               min="1"
               max="100"
               step="1"
-              placeholder="1"
+              placeholder="—"
             /></label
           ><button type="submit">Add to pool</button>
         </form>{/if}
       <p class="hint" data-testid="pool-rule">
         Each member starts from its level-up moves (the last {MAX_MOVES} learned by its level). Then the
         aces, then the fillers, each in list order, walk the pool top to bottom and take every unassigned
-        entry whose from level they have reached and that their current species can learn (level-up at
-        any level, or TM/tutor) and does not already know, up to {MAX_MOVES}. Pool moves fill empty
-        slots, then replace the oldest level-up moves. An entry goes to one member; list a move
-        twice for two. A blank from level means Lv 1.
+        entry they are eligible for and don't already know, up to {MAX_MOVES}. An entry without a
+        from level goes only to a member whose current species learns it by level-up, once it
+        reaches the lowest learn level (evolution moves at once); a TM/tutor-only move needs a from
+        level. An entry with a from level goes to any level-up or TM/tutor learner from that level.
+        Pool moves fill empty slots, then replace the oldest level-up moves. An entry goes to one
+        member; list a move twice for two.
       </p>
 
       <details class="reference-panel">
@@ -1750,6 +1761,14 @@
     overflow-wrap: anywhere;
   }
   .pool-list li.dormant .pool-status {
+    color: var(--accent);
+  }
+  .pool-learning {
+    grid-column: 2 / -1;
+    color: var(--color-cartographer-muted);
+    font-size: 10px;
+  }
+  .pool-learning.needs-from {
     color: var(--accent);
   }
   .pool-list li.pool-empty {

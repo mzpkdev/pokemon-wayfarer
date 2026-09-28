@@ -125,9 +125,10 @@ Eevee ([evolution stages](../specs/player-trainer-rating.md#evolution-stages)).
 
 Each trainer has a signature set of moves they like. Their Pokémon start
 from their usual moves for their level and swap in the signature moves they
-can use, and the aces get first pick. Some moves wait unused until the right
-Pokémon joins the team or evolves
-([move pools](../specs/notable-trainers.md#move-pools)).
+can use, and the aces get first pick. Moves they learn naturally arrive on
+their natural schedule; special moves wait until the level set for them. Some
+moves wait unused until the right Pokémon joins the team, evolves, or grows
+into them ([move pools](../specs/notable-trainers.md#move-pools)).
 
 FRLG, Emerald, and HNS parties are references for recognizable content, not
 required teams. Challenge options such as trainer items, trainer IVs and EVs,

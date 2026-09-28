@@ -40,8 +40,10 @@ export type Archetype =
 export type ScalerKind = "interpolated" | "step"
 
 /**
- * One move pool entry: a move the trainer likes, from a level (none means from Lv 1). An entry
- * goes to at most one member; list a move twice to let two members carry it.
+ * One move pool entry: a move the trainer likes, and an optional from level. Without one, a
+ * member takes it only if its current species learns the move by level-up, once it reaches the
+ * lowest learn level; with one, a level-up or TM/tutor learner takes it from that level. An
+ * entry goes to at most one member; list a move twice to let two members carry it.
  */
 export type PoolEntry = { move: string; fromLevel?: number }
 
@@ -133,20 +135,24 @@ export type WorldPoint = { badges: number }
 /** One resolved move: from the move pool or the default level-up moveset. */
 export type ResolvedMove = { move: string; source: "pool" | "level-up" }
 /**
- * Why a pool entry is dormant: no current member can learn it, every learner is below its from
- * level, or every eligible learner already knows it or has four pool moves.
+ * Why a pool entry is dormant: no current member can learn it; it has no from level and current
+ * members learn it only by TM/tutor; every eligible member is below its from level (or, without
+ * one, its learn level); or every eligible member already knows it or has four pool moves.
  */
-export type DormantReason = "unlearnable" | "level" | "taken"
+export type DormantReason = "unlearnable" | "tm-only" | "level" | "taken"
 /** A pool entry at one team: the member that took it, or why it is dormant. */
 export type PoolStatus = {
   /** 0-based position in the pool. */
   index: number
   move: string
-  fromLevel: number
+  /** The entry's from level, or null when it waits for each member's learn level. */
+  fromLevel: number | null
   /** The roster slot of the member that took it, or null when dormant. */
   slot: number | null
   species: string | null
   reason: DormantReason | null
+  /** For a "level" entry, the lowest level an eligible member would need; else null. */
+  waitLevel: number | null
 }
 export type TeamMember = RosterSlot & {
   /** 1-based roster position. */

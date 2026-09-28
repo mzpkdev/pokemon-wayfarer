@@ -453,6 +453,11 @@ export const battleOrderOf = <T extends Pick<RosterSlot, "isAce">>(team: readonl
 /** One species' learnsets: level-up moves in the game's order, and every move it can learn. */
 export type Learnset = {
   levelUp: readonly (readonly [level: number, move: string])[]
+  /**
+   * Each level-up move's lowest learn level (0 is an evolution move, available whenever the
+   * species is present): an entry without a from level waits for it.
+   */
+  levelUpAt: ReadonlyMap<string, number>
   /** Its level-up learnset at any level, plus its TM/tutor list. */
   learnable: ReadonlySet<string>
 }
@@ -460,6 +465,17 @@ export type Learnset = {
 export type Learnsets = { moves: ReadonlySet<string>; species: ReadonlyMap<string, Learnset> }
 /** No learnset data: no member learns anything, and move names are not checked. */
 export const NO_LEARNSETS: Learnsets = { moves: new Set(), species: new Map() }
+
+/** One species' learnset from its level-up [level, move] pairs in the game's order and TM/tutor moves. */
+export const learnsetOf = (
+  levelUp: readonly (readonly [number, string])[],
+  teachable: readonly string[],
+): Learnset => {
+  const levelUpAt = new Map<string, number>()
+  for (const [level, move] of levelUp)
+    levelUpAt.set(move, Math.min(level, levelUpAt.get(move) ?? level))
+  return { levelUp, levelUpAt, learnable: new Set([...levelUpAt.keys(), ...teachable]) }
+}
 
 /** Indexes the catalog's compact learnsets (move indices into `moves`). */
 export const learnsetIndex = (data: LearnsetData): Learnsets => {
@@ -475,13 +491,13 @@ export const learnsetIndex = (data: LearnsetData): Learnsets => {
     const pairs: [number, string][] = []
     for (let index = 0; index < levelUp.length; index += 2)
       pairs.push([levelUp[index] ?? 0, name(levelUp[index + 1] ?? -1, id)])
-    species.set(id, {
-      levelUp: pairs,
-      learnable: new Set([
-        ...pairs.map(([, move]) => move),
-        ...teachable.map((move) => name(move, id)),
-      ]),
-    })
+    species.set(
+      id,
+      learnsetOf(
+        pairs,
+        teachable.map((move) => name(move, id)),
+      ),
+    )
   }
   return { moves: new Set(data.moves), species }
 }
@@ -506,13 +522,26 @@ export const defaultMoveset = (learnset: Learnset | undefined, level: number): s
 type PoolMember = Pick<TeamMember, "slot" | "species" | "level" | "isAce">
 
 /**
+ * The level from which a member may take a pool entry, or null when it can't. An entry with a
+ * from level needs the move in the member's level-up learnset at any level or its TM/tutor list,
+ * and waits for the from level. An entry without one needs the move in the level-up learnset and
+ * waits for its lowest learn level there (an evolution move, level 0, is available at once).
+ */
+const entryLevel = (entry: PoolEntry, learnset: Learnset | undefined): number | null =>
+  entry.fromLevel !== undefined
+    ? learnset?.learnable.has(entry.move)
+      ? entry.fromLevel
+      : null
+    : (learnset?.levelUpAt.get(entry.move) ?? null)
+
+/**
  * Resolves the move pool for a team whose species and levels are final (stepping down
  * included). Each member starts from its default level-up moveset. Members are visited aces
  * first, then fillers, each in list order; each walks the pool top to bottom and takes every
- * entry that is unassigned, has from level ≤ its level, is learnable by its current species
- * (level-up learnset at any level, or TM/tutor list) and not already in its moveset, up to four.
- * Pool moves fill empty move slots, then replace the oldest level-up moves. An entry nobody
- * takes is dormant. No randomness: a pure function of the team and the pool.
+ * entry that is unassigned, is eligible for its current species at its level (see entryLevel)
+ * and not already in its moveset, up to four. Pool moves fill empty move slots, then replace
+ * the oldest level-up moves. An entry nobody takes is dormant. No randomness: a pure function
+ * of the team and the pool.
  */
 export const resolveMovePool = (
   team: readonly PoolMember[],
@@ -531,9 +560,9 @@ export const resolveMovePool = (
     const known = new Set(base)
     const picks: string[] = []
     pool.forEach((entry, index) => {
-      if (picks.length === MAX_MOVES || taken[index]) return
-      if ((entry.fromLevel ?? 1) > member.level) return
-      if (!learnset?.learnable.has(entry.move) || known.has(entry.move)) return
+      if (picks.length === MAX_MOVES || taken[index] || known.has(entry.move)) return
+      const from = entryLevel(entry, learnset)
+      if (from === null || from > member.level) return
       picks.push(entry.move)
       known.add(entry.move)
       taken[index] = member
@@ -547,37 +576,74 @@ export const resolveMovePool = (
     moves.set(member.slot, resolved)
   }
   const status = pool.map((entry, index): PoolStatus => {
-    const fromLevel = entry.fromLevel ?? 1
+    const fromLevel = entry.fromLevel ?? null
     const member = taken[index]
+    const base = { index, move: entry.move, fromLevel }
     if (member)
       return {
-        index,
-        move: entry.move,
-        fromLevel,
+        ...base,
         slot: member.slot,
         species: member.species,
         reason: null,
+        waitLevel: null,
       }
+    const levels = team.flatMap((other) => {
+      const level = entryLevel(entry, learnsets.species.get(other.species))
+      return level === null ? [] : [{ other, level }]
+    })
     const learners = team.filter((other) =>
       learnsets.species.get(other.species)?.learnable.has(entry.move),
     )
+    const waiting = levels.every(({ other, level }) => other.level < level)
     const reason: DormantReason = !learners.length
       ? "unlearnable"
-      : learners.every((other) => other.level < fromLevel)
-        ? "level"
-        : "taken"
-    return { index, move: entry.move, fromLevel, slot: null, species: null, reason }
+      : !levels.length
+        ? "tm-only"
+        : waiting
+          ? "level"
+          : "taken"
+    const waitLevel = reason === "level" ? Math.min(...levels.map(({ level }) => level)) : null
+    return { ...base, slot: null, species: null, reason, waitLevel }
   })
   return { moves, pool: status }
 }
 
 /** A dormant entry's reason as text, e.g. "below from level Lv 40". */
-export const dormantReasonText = (status: Pick<PoolStatus, "reason" | "fromLevel">): string =>
+export const dormantReasonText = (
+  status: Pick<PoolStatus, "reason" | "fromLevel" | "waitLevel">,
+): string =>
   status.reason === "unlearnable"
     ? "no one can learn it"
-    : status.reason === "level"
-      ? `below from level Lv ${status.fromLevel}`
-      : "taken: every learner already knows it or has four pool moves"
+    : status.reason === "tm-only"
+      ? "TM/tutor only — needs a from level"
+      : status.reason === "level"
+        ? status.fromLevel === null
+          ? `below its learn level Lv ${status.waitLevel}`
+          : `below from level Lv ${status.fromLevel}`
+        : "taken: every learner already knows it or has four pool moves"
+
+/** How a roster's lines can learn a move: by level-up on some stage, only by TM/tutor, or not at all. */
+export type PoolLearning = "level-up" | "tm-only" | "unlearnable"
+
+/**
+ * How any stage on the roster's lines learns `move`. An entry without a from level needs a
+ * level-up learner; a TM/tutor-only move needs a from level.
+ */
+export const poolLearning = (
+  move: string,
+  roster: readonly Pick<RosterSlot, "species">[],
+  evolution: Evolution,
+  learnsets: Learnsets,
+): PoolLearning => {
+  const stages = roster.flatMap(({ species }) =>
+    (evolution.lines.get(species) ?? [{ species }]).map((stage) =>
+      learnsets.species.get(stage.species),
+    ),
+  )
+  if (stages.some((learnset) => learnset?.levelUpAt.has(move))) return "level-up"
+  if (stages.some((learnset) => learnset?.learnable.has(move))) return "tm-only"
+  return "unlearnable"
+}
 
 /**
  * Team = the first N roster slots (N = team size at TR), so join order is list

@@ -119,24 +119,33 @@ trainer's team. The player TR is never computed from a notable trainer's TR.
   are not stepped down to. Brock at start TR 25 (team level 18) fields Onix
   Lv 18 and Geodude Lv 16; his Graveler appears from Lv 25, Steelix from Lv 35 and Golem from Lv 38.
 - **Move pool**: each trainer authors one ordered list of moves they like,
-  each with an optional from level (blank is Lv 1). After every member's
+  each with an optional from level. After every member's
   species and level are resolved (stepping down included), each member starts
   from its default level-up moveset: the constructor's last four level-up
   moves learned by its level, for its current species, oldest first. Then the
   aces, then the fillers, each in list order, walk the pool top to bottom and
-  take every entry that is unassigned, has a from level at or below the
-  member's level, is learnable by the member's current species (in its
-  level-up learnset at any level, or in its TM/tutor list) and is not already
-  in its moveset, up to four. Pool moves fill empty move slots, then replace
+  take every entry that is unassigned, eligible and not already in the
+  member's moveset, up to four. An entry **without a from level** is eligible
+  only if the member's current species learns the move by level-up, once the
+  member reaches its learn level (the lowest, when the learnset lists it
+  more than once; an evolution move, level 0, counts at once): moves a Pokémon
+  learns naturally arrive on their natural schedule, and a member that could
+  get the move only by TM/tutor can't take it. An entry **with a from level**
+  is eligible for a member whose current species learns it by level-up at any
+  level or by TM/tutor, from that level. Pool moves fill empty move slots, then replace
   the oldest level-up moves. An entry goes to at most one member, so a move
   listed twice can go to two members. An entry nobody takes is **dormant**:
-  nobody on the team can learn it, every learner is below its from level, or
-  every eligible learner already knows it or has four pool moves ("taken"). It
+  nobody on the team can learn it; it has no from level and the members learn
+  it only by TM/tutor ("TM/tutor only — needs a from level"); every eligible
+  member is below its from level (or, without one, its learn level); or every
+  eligible member already knows it or has four pool moves ("taken"). It
   wakes when a member that can use it joins, evolves or reaches the level.
   Resolution is a pure function of the team and the pool, with no randomness.
-  Brock's placeholder pool at 0 badges gives his Onix Earthquake, Curse, Stone
-  Edge and Body Slam and his Geodude Earthquake and Toxic next to Strength and
-  Rock Throw; Sky Attack stays dormant (no one can learn it).
+  Brock's placeholder pool has no from levels, so at 0 badges his Onix takes
+  only Curse (next to Rock Tomb, Rage and Stealth Rock) and his Geodude keeps
+  Rollout, Magnitude, Strength and Rock Throw; Earthquake waits for its learn
+  level (Lv 34), Body Slam and Toxic are TM/tutor only and need a from level,
+  and Sky Attack stays dormant (no one can learn it).
 
 The world panel sets the player TR: a number field and a 0–200 slider (type
 any larger whole TR; TR has no upper limit). Badges (0–24) are presets that
@@ -159,14 +168,15 @@ focus it and use the arrow keys to read values), the team at the current
 TR in battle order (aces marked; a stepped-down member shows its authored
 stage, e.g. "Onix → Steelix at Lv 35"; each member lists its resolved moves,
 each tagged `pool` or `level-up`), the **dormant** pool entries at the current
-player TR with the reason for each (no one can learn it, below from level, or
-taken), a roster editor: reorder roster
+player TR with the reason for each (no one can learn it, TM/tutor only — needs
+a from level, below from level or learn level, or taken), a roster editor: reorder roster
 slots, edit species, offset and item, toggle each slot's ace flag
 (roster slot 1 is locked as an ace; a fourth ace is refused with a message),
 and add or remove roster slots, and a **move pool editor**: reorder, add and
 remove entries, edit each move name (checked against the game's move list,
 any case) and optional from level; each entry shows the member that took it at
-the current TR or "dormant". Each roster
+the current TR or "dormant", and whether some stage on the roster's lines
+learns the move by level-up or it is TM/tutor only and needs a from level. Each roster
 slot shows its line with evolution levels and warns when the species is not a
 final stage or has no evolution data in the catalog. **Edit settings as JSON** covers ability,
 nature and the move pool too.
@@ -181,12 +191,11 @@ a dormant move pool entry assigned for the first time ("Earthquake wakes
 (Golem)"), and peak TR reached. The player's current TR is marked in the list. Brock
 reads "0: Onix, Geodude (team level above the level cap) · 8: 3rd slot
 (Zubat) joins · 19: Zubat → Golbat · 27: Geodude → Graveler · 40: 4th slot
-(Kabuto) joins, Ancient Power wakes (Kabuto), Surf wakes (Kabuto), Ice Beam
-wakes (Kabuto) · 49: team level Lv 32 drops below the level cap Lv 33 · 57:
+(Kabuto) joins · 49: team level Lv 32 drops below the level cap Lv 33 · 57:
 Onix → Steelix, Fire Fang wakes (Steelix) · 76: Graveler → Golem, Golbat →
-Crobat · 85: Kabuto → Kabutops, Night Slash wakes (Kabutops), Swords Dance
-wakes (Kabutops) · 98: 5th slot (Omastar) joins, Surf wakes (Omastar) · 151:
-6th slot (Aerodactyl) ace joins · 159: peak TR 100". His late ace Aerodactyl (roster slot 6) joins only
+Crobat · 85: Kabuto → Kabutops, Night Slash wakes (Kabutops) · 98: 5th slot
+(Omastar) joins · 151: 6th slot (Aerodactyl) ace joins, Ancient Power wakes
+(Aerodactyl) · 157: Earthquake wakes (Golem) · 159: peak TR 100". His late ace Aerodactyl (roster slot 6) joins only
 at team size 6 (TR 96, team level 60), which his placeholder peak TR 100
 reaches at world progress 151.
 
@@ -298,7 +307,9 @@ moves, ace slots first, then filler slots, each in slot order, a move listed
 once per slot that had it (so it appears twice only when two slots had it),
 with no from levels. Old move names in the source parties (Faint Attack) are
 stored as the move itself (Feint Attack). The script warns about pool entries
-no stage on the trainer's roster lines can learn (they stay dormant). Every roster lists six Pokémon; the explorer still flags a roster edited
+no stage on the trainer's roster lines can learn, and about entries without a
+from level that every stage on those lines learns only by TM/tutor (both stay
+dormant; the second needs a from level). Every roster lists six Pokémon; the explorer still flags a roster edited
 below six as incomplete, and the script would warn about one. Four draft
 picks are not final stages in this game (Primeape, Ursaring and Girafarig have
 later-generation evolutions): allowed, and the script prints them as a warning.

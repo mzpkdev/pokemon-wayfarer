@@ -23,6 +23,7 @@ import {
   levelCap,
   milestoneEnd,
   milestones,
+  poolLearning,
   resolveTrainer,
   rosterGaps,
   serializeExperiment,
@@ -92,7 +93,10 @@ const firstTrainer = catalog[0]
 if (!firstTrainer) throw new Error("The trainer catalog is empty.")
 const initialTrainerId = firstTrainer.id
 
-/** Reads a move pool entry's fields: a known move name and an optional from level (blank is Lv 1). */
+/**
+ * Reads a move pool entry's fields: a known move name and an optional from level (blank waits
+ * for each member's level-up learn level).
+ */
 export const poolEntry = (moveText: string, fromText: string, where: string): PoolEntry => {
   const move = moveText.trim()
   if (!move) throw new Error(`${where}: enter a move name.`)
@@ -107,6 +111,30 @@ export const poolEntry = (moveText: string, fromText: string, where: string): Po
   if (!Number.isInteger(fromLevel) || fromLevel < 1 || fromLevel > 100)
     throw new Error(`${where}: the from level must be a whole number from 1 to 100, or blank.`)
   return { move: name, fromLevel }
+}
+
+/**
+ * The pool editor's hint for one entry: whether some stage on the roster's lines learns the move
+ * by level-up, or only by TM/tutor and so needs a from level.
+ */
+export const poolLearningHint = (
+  entry: PoolEntry,
+  roster: readonly Pick<RosterSlot, "species">[],
+): { text: string; needsFrom: boolean } => {
+  const learning = poolLearning(entry.move, roster, evolution, learnsets)
+  const from = entry.fromLevel
+  if (learning === "unlearnable") return { text: "No roster line learns it", needsFrom: false }
+  if (learning === "tm-only")
+    return from === undefined
+      ? { text: "TM/tutor only — needs a from level", needsFrom: true }
+      : { text: `TM/tutor only: from Lv ${from}`, needsFrom: false }
+  return {
+    text:
+      from === undefined
+        ? "Level-up on the roster: arrives at the learn level"
+        : `Level-up or TM/tutor learners from Lv ${from}`,
+    needsFrom: false,
+  }
 }
 
 export class BalanceLab {

@@ -267,9 +267,11 @@ levels and later roster slots; it never loses them.
 
 Each notable trainer authors **one ordered move pool**: a per-trainer list,
 separate from the roster, of the moves they like. An entry is a move plus an
-optional **from level** (none means from Lv 1). There is no shared flag: an
-entry goes to at most one member, so a move listed twice can go to two
-members.
+optional **from level**. Without one, the entry follows the natural schedule:
+it waits for the member's own level-up learn level. With one, it is a special
+move that any learner, TM/tutor included, gets from that level. There is no
+shared flag: an entry goes to at most one member, so a move listed twice can
+go to two members.
 
 Resolution runs at battle start, after every member's species and level are
 resolved (stepping down included):
@@ -277,18 +279,30 @@ resolved (stepping down included):
 1. Give each member its default level-up moveset: the existing constructor's
    last four level-up moves learned by its level.
 2. Visit members **aces first, then fillers, each in list order**. For each
-   member, walk the pool top to bottom and take every entry that is:
-   unassigned; from level ≤ the member's level; learnable by the member's
-   **current species** (in its level-up learnset at any level, or in its
-   TM/tutor list); and not already in its moveset. Stop at four pool moves.
+   member, walk the pool top to bottom and take every entry that is
+   unassigned, not already in its moveset, and eligible for the member's
+   **current species** at its level. Stop at four pool moves.
+   - **No from level:** the species learns the move **by level-up** and the
+     member's level ≥ that learn level. If the learnset lists the move at
+     several levels, the lowest counts; an evolution move (level 0) is
+     available whenever the species is present. A member that could get the
+     move only by TM/tutor can't take the entry.
+   - **With a from level:** the species learns the move by level-up at any
+     level or through its TM/tutor list, and the member's level ≥ the from
+     level.
 3. Pool moves fill empty move slots, then **replace the oldest level-up moves
    first**, so the newest natural moves stay.
 
 Pool order is identity: top entries reach the aces first. TM and tutor moves
-have no learn level, so the from level alone decides their timing.
+have no learn level, so they need a from level, and it alone decides their
+timing.
 
-- **Dormant entries.** An entry no current member takes is dormant. It wakes
-  when a member that can use it joins or evolves (Later, also when a traded
+- **Dormant entries.** An entry no current member takes is dormant: no member
+  can learn it; it has no from level and the members learn it only by
+  TM/tutor (TM/tutor only — needs a from level); every eligible member is
+  below its from level or, without one, its learn level; or every eligible
+  member already knows it or has four pool moves. It wakes when a member that
+  can use it joins, evolves, or reaches the level (Later, also when a traded
   Pokémon joins). Nothing is saved; resolution is a pure function of the team
   and the pool.
 - **Stepping down.** No special case: learnability is always checked against
@@ -303,11 +317,13 @@ have no learn level, so the from level alone decides their timing.
 
 Example (illustrative only; learnsets not checked): Brock's pool is Stone
 Edge (from Lv 40), Earthquake, Stealth Rock, Iron Defense, Rock Slide,
-Earthquake, Rock Slide. His slot 1 ace picks first and takes the entries it can
-learn, up to four; Golem then takes from what is left. Two Earthquake entries
-let two members carry it. If neither opening member can learn Earthquake,
-both entries stay dormant until a member that can joins or evolves, and Stone
-Edge waits until some member reaches Lv 40.
+Earthquake, Rock Slide. His slot 1 ace picks first and takes the entries it is
+eligible for, up to four; Golem then takes from what is left. Two Earthquake
+entries let two members carry it. The Earthquake entries have no from level,
+so each waits until a member whose species learns Earthquake by level-up
+reaches that learn level; a member that could learn it only by TM never takes
+them. Stone Edge has a from level, so it waits until some member that can
+learn it at all, TM included, reaches Lv 40.
 
 ## Battle snapshot
 
@@ -340,8 +356,12 @@ TR, another trainer, or a random team.
   not at a final stage; every member has at least one usable move at every
   reachable level and stage, stepped-down stages included.
 - Move pools: one ordered pool per trainer; every entry is a valid move; from
-  levels are in 1–100; learnability is checked against the member's current
-  species (level-up learnset at any level, or TM/tutor list).
+  levels are in 1–100; eligibility is checked against the member's current
+  species (without a from level, its level-up learnset at the lowest learn
+  level, evolution moves at level 0; with one, its level-up learnset at any
+  level or its TM/tutor list). A warning, not a failure, for each entry no
+  stage on the trainer's roster lines can learn, and for each entry without a
+  from level that every learner on those lines gets only by TM/tutor.
 - Archetypes: each archetype passes the scaler checks, with anchors at world
   progress 0/40/80/120/160 (the Rival adds 20; the Legend has only 0 and 160), 0%
   at the first, and 100% at the last (Legend: 0% at both); values are

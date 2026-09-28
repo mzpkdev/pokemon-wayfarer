@@ -242,3 +242,20 @@ test("move pool validation requires known moves and from levels 1-100", () => {
     "Fixture move pool [1]: an entry is a move and an optional fromLevel",
   )
 })
+
+test("the pool warnings flag unlearnable entries and TM/tutor-only entries without a from level", () => {
+  const pool = [
+    { move: "Earthquake" },
+    { move: "Toxic" },
+    { move: "Toxic", fromLevel: 30 },
+    { move: "Sky Attack" },
+  ]
+  assert.deepEqual(
+    run("module.pool_warnings(args[0], set(args[1]), set(args[2]))", [
+      pool,
+      ["Earthquake"],
+      ["Earthquake", "Toxic"],
+    ]),
+    [["Sky Attack"], ["Toxic"]],
+  )
+})

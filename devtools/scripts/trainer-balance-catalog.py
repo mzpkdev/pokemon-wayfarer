@@ -17,7 +17,9 @@ levels: species_info EVO_LEVEL thresholds, or the shared evolution-level table
 that chain until its level supports the stage. For every stage on those lines
 it records the level-up learnset and the TM/tutor (teachable) list as the
 Wayfarer ROM builds them (see load_learnsets), which the explorer's move pool
-resolver reads. Learnset extraction needs a C preprocessor
+resolver reads. A pool entry without a from level goes only to a member that
+learns the move by level-up, so an entry every roster line learns only by
+TM/tutor is a warning (it needs a from level), as is one no line can learn. Learnset extraction needs a C preprocessor
 (arm-none-eabi-cpp, else cpp).
 """
 from __future__ import annotations
@@ -773,12 +775,27 @@ def validate_roster(name, roster):
         raise ValueError(f"{name}: a roster has 1-{MAX_ACES} aces")
 
 
+def pool_warnings(pool, level_up, learnable):
+    """A pool's always-dormant entries, given the moves its roster lines learn.
+
+    `level_up` holds the moves some stage learns by level-up and `learnable`
+    every move some stage can learn. Returns (entries no stage can learn,
+    entries without a from level that every learner gets only by TM/tutor),
+    each as move names in pool order.
+    """
+    unlearnable = [entry["move"] for entry in pool if entry["move"] not in learnable]
+    tm_only = [entry["move"] for entry in pool
+               if "fromLevel" not in entry and entry["move"] in learnable and entry["move"] not in level_up]
+    return unlearnable, tm_only
+
+
 def learnset_data(lines, trainers):
     """Compact learnsets for every stage on every roster line, and the move pools checked against them.
 
     Returns ({"moves": [name], "species": {species: {"levelUp": [level, move
     index, ...], "teachable": [move index]}}}, pool entries that no stage on
-    the trainer's roster lines can learn). Level-up pairs keep the game's
+    the trainer's roster lines can learn, and pool entries without a from level
+    that those lines learn only by TM/tutor). Level-up pairs keep the game's
     order; level 0 is an evolution move.
     """
     tokens = sorted({token for chain in lines.values() for token, _ in chain})
@@ -802,13 +819,16 @@ def learnset_data(lines, trainers):
             "levelUp": [part for level, move in data["levelUp"] for part in (level, position[names[move]])],
             "teachable": sorted({position[names[move]] for move in data["teachable"]})}
     unlearnable = []
+    tm_only = []
     for trainer in trainers:
         validate_pool(trainer["name"], trainer["movePool"], position)
         stages = [token for entry in trainer["roster"] for token, _ in lines[entry["species"]]]
-        learnable = {names[move] for token in stages
-                     for move in [move for _, move in learnsets[token]["levelUp"]] + learnsets[token]["teachable"]}
-        unlearnable += [f"{trainer['name']} {entry['move']}" for entry in trainer["movePool"] if entry["move"] not in learnable]
-    return {"moves": moves, "species": species}, unlearnable
+        level_up = {names[move] for token in stages for _, move in learnsets[token]["levelUp"]}
+        learnable = level_up | {names[move] for token in stages for move in learnsets[token]["teachable"]}
+        never, needs_from = pool_warnings(trainer["movePool"], level_up, learnable)
+        unlearnable += [f"{trainer['name']} {move}" for move in never]
+        tm_only += [f"{trainer['name']} {move}" for move in needs_from]
+    return {"moves": moves, "species": species}, unlearnable, tm_only
 
 
 def generate():
@@ -916,10 +936,10 @@ def generate():
     evolution = {"chains": dict(sorted(chains.items())),
                  "notFinal": sorted(stage for stage in chains
                                     if any(source == species_token(stage) for source, _ in edges))}
-    learnsets, unlearnable = learnset_data(lines, result)
+    learnsets, unlearnable, tm_only = learnset_data(lines, result)
     return json.dumps({"evolution": evolution, "learnsets": learnsets, "trainers": result},
                       indent=2, ensure_ascii=False) + "\n", gaps, {
-        "kept": kept, "non_final": non_final, "unlearnable": unlearnable,
+        "kept": kept, "non_final": non_final, "unlearnable": unlearnable, "tm_only": tm_only,
         "placeholders": [f"{source}->{target} {level}" for source, target, level, status in EVOLUTION_LEVELS if status == "placeholder"]}
 
 
@@ -946,6 +966,11 @@ def main():
             # Learnability is the resolver's rule: such an entry stays dormant, it is not invalid.
             print(f"warning: {len(report['unlearnable'])} move pool entries no roster line can learn (always dormant):"
                   f" {', '.join(report['unlearnable'])}", file=sys.stderr)
+        if report["tm_only"]:
+            # Without a from level only a level-up learner takes an entry: dormant until one is set.
+            print(f"warning: {len(report['tm_only'])} move pool entries every roster line learns only by TM/tutor"
+                  f" and have no from level (always dormant; set a from level): {', '.join(report['tm_only'])}",
+                  file=sys.stderr)
         if report["non_final"]:
             # Section 9 recommends final stages; any authored stage is allowed.
             print(f"warning: {len(report['non_final'])} roster slots are not final stages: {', '.join(report['non_final'])}", file=sys.stderr)

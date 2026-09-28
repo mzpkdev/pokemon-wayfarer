@@ -31,10 +31,12 @@ import {
   isGymLeader,
   leagueLineup,
   learnsetIndex,
+  learnsetOf,
   levelCap,
   milestoneEnd,
   milestoneText,
   milestones,
+  poolLearning,
   playerRating,
   resolveMovePool,
   resolveTrainer,
@@ -460,7 +462,7 @@ const learnsetsOf = (
   species: new Map(
     Object.entries(species).map(([name, { levelUp, teachable = [] }]) => [
       name,
-      { levelUp, learnable: new Set([...levelUp.map(([, move]) => move), ...teachable]) },
+      learnsetOf(levelUp, teachable),
     ]),
   ),
 })
@@ -512,19 +514,16 @@ describe("move pools", () => {
   })
 
   it("visits aces first, then fillers, each in list order, and gives each entry to one member", () => {
-    const data = learnsetsOf({ A: basic("A"), B: basic("B"), C: basic("C") })
-    for (const species of data.species.values()) (species.learnable as Set<string>).add("Quake")
+    const tm = { teachable: ["Quake"] }
+    const data = learnsetsOf({ A: basic("A", tm), B: basic("B", tm), C: basic("C", tm) })
+    const quake = { move: "Quake", fromLevel: 1 }
     // Roster order: ace, filler, ace. The second ace (slot 3) picks before the filler (slot 2).
     const team = [member(1, "A", 20), member(2, "B", 20, false), member(3, "C", 20, true)]
-    const result = resolveMovePool(team, [{ move: "Quake" }, { move: "Quake" }], data)
+    const result = resolveMovePool(team, [quake, quake], data)
     expect(result.pool.map((entry) => entry.slot)).toEqual([1, 3])
     expect(movesOf(result, 2)).toEqual(["B1 level-up", "B2 level-up", "B3 level-up", "B4 level-up"])
     // A third copy reaches the filler.
-    const three = resolveMovePool(
-      team,
-      [{ move: "Quake" }, { move: "Quake" }, { move: "Quake" }],
-      data,
-    )
+    const three = resolveMovePool(team, [quake, quake, quake], data)
     expect(three.pool.map((entry) => entry.slot)).toEqual([1, 3, 2])
   })
 
@@ -533,20 +532,33 @@ describe("move pools", () => {
     const pool = [{ move: "Edge", fromLevel: 40 }]
     const low = resolveMovePool([member(1, "A", 39)], pool, data)
     expect(low.pool).toEqual([
-      { index: 0, move: "Edge", fromLevel: 40, slot: null, species: null, reason: "level" },
+      {
+        index: 0,
+        move: "Edge",
+        fromLevel: 40,
+        slot: null,
+        species: null,
+        reason: "level",
+        waitLevel: 40,
+      },
     ])
     expect(dormantReasonText(low.pool[0]!)).toBe("below from level Lv 40")
     expect(resolveMovePool([member(1, "A", 40)], pool, data).pool[0]?.slot).toBe(1)
   })
 
-  it("checks learnability: the level-up learnset at any level, or the TM/tutor list", () => {
+  it("with a from level, checks learnability: the level-up learnset at any level, or the TM/tutor list", () => {
     const data = learnsetsOf({
       A: basic("A", { levelUp: [[60, "Late"]], teachable: ["Tm"] }),
       B: basic("B"),
     })
     const result = resolveMovePool(
       [member(1, "A", 10), member(2, "B", 10, false)],
-      [{ move: "Late" }, { move: "Tm" }, { move: "Tm" }, { move: "Nope" }],
+      [
+        { move: "Late", fromLevel: 1 },
+        { move: "Tm", fromLevel: 1 },
+        { move: "Tm", fromLevel: 1 },
+        { move: "Nope" },
+      ],
       data,
     )
     // A learns Late at Lv 60 by level-up, yet takes it at Lv 10 (filling its empty fourth slot);
@@ -562,11 +574,100 @@ describe("move pools", () => {
     expect(dormantReasonText(result.pool[3]!)).toBe("no one can learn it")
   })
 
+  // Late is learned at Lv 30, then pushed out of the default moveset by L1–L4 at Lv 31–34.
+  const late = basic("A", {
+    levelUp: [
+      [30, "Late"],
+      [31, "L1"],
+      [32, "L2"],
+      [33, "L3"],
+      [34, "L4"],
+    ],
+  })
+
+  it("without a from level, waits for the member's level-up learn level", () => {
+    const data = learnsetsOf({ A: late })
+    const pool = [{ move: "Late" }]
+    const early = resolveMovePool([member(1, "A", 29)], pool, data)
+    expect(early.pool[0]).toMatchObject({
+      fromLevel: null,
+      slot: null,
+      reason: "level",
+      waitLevel: 30,
+    })
+    expect(dormantReasonText(early.pool[0]!)).toBe("below its learn level Lv 30")
+    // From Lv 30 it is in reach; at Lv 34 it has left the default moveset, so the pool brings it back.
+    expect(resolveMovePool([member(1, "A", 30)], pool, data).pool[0]).toMatchObject({
+      slot: null,
+      reason: "taken",
+    })
+    expect(movesOf(resolveMovePool([member(1, "A", 34)], pool, data), 1)).toEqual([
+      "Late pool",
+      "L2 level-up",
+      "L3 level-up",
+      "L4 level-up",
+    ])
+  })
+
+  it("without a from level, skips a member that learns the move only by TM/tutor", () => {
+    const data = learnsetsOf({ Tm: basic("T", { teachable: ["Late", "Only"] }), A: late })
+    // The ace can learn Late only by TM, so the filler that learns it by level-up takes it.
+    const team = [member(1, "Tm", 50), member(2, "A", 40, false)]
+    const result = resolveMovePool(team, [{ move: "Late" }, { move: "Only" }], data)
+    expect(result.pool.map((entry) => [entry.move, entry.slot, entry.reason])).toEqual([
+      ["Late", 2, null],
+      ["Only", null, "tm-only"],
+    ])
+    expect(dormantReasonText(result.pool[1]!)).toBe("TM/tutor only — needs a from level")
+    // With a from level, the TM learner takes it.
+    const from = resolveMovePool(
+      team,
+      [
+        { move: "Late", fromLevel: 1 },
+        { move: "Only", fromLevel: 45 },
+      ],
+      data,
+    )
+    expect(from.pool.map((entry) => entry.slot)).toEqual([1, 1])
+  })
+
+  it("without a from level, uses the lowest learn level and gives evolution moves at once", () => {
+    const data = learnsetsOf({
+      Twice: {
+        levelUp: [
+          [1, "T1"],
+          [20, "Dup"],
+          [21, "C1"],
+          [22, "C2"],
+          [23, "C3"],
+          [24, "C4"],
+          [45, "Dup"],
+        ],
+      },
+      Evolved: {
+        levelUp: [
+          [0, "Evo"],
+          [1, "E1"],
+          [50, "Evo"],
+        ],
+      },
+    })
+    // Dup is listed at Lv 20 and 45: the lowest counts.
+    const twice = resolveMovePool([member(1, "Twice", 30)], [{ move: "Dup" }], data)
+    expect(twice.pool[0]?.slot).toBe(1)
+    expect(
+      resolveMovePool([member(1, "Twice", 19)], [{ move: "Dup" }], data).pool[0],
+    ).toMatchObject({ reason: "level", waitLevel: 20 })
+    // An evolution move (level 0) is not in the default moveset but is available at any level.
+    const evolved = resolveMovePool([member(1, "Evolved", 5)], [{ move: "Evo" }], data)
+    expect(movesOf(evolved, 1)).toEqual(["E1 level-up", "Evo pool"])
+  })
+
   it("skips a move the member already knows, leaving the entry for another member", () => {
     const data = learnsetsOf({ A: basic("A", { teachable: ["B1"] }), B: basic("B") })
     const result = resolveMovePool(
       [member(1, "A", 20), member(2, "B", 20, false)],
-      [{ move: "B1" }, { move: "A1" }],
+      [{ move: "B1", fromLevel: 1 }, { move: "A1" }],
       data,
     )
     // A doesn't know B1 and takes it; A1 is already in A's level-up moveset and B can't learn it.
@@ -578,13 +679,14 @@ describe("move pools", () => {
       "taken: every learner already knows it or has four pool moves",
     )
     // Two copies of one move never both go to one member.
-    const twice = resolveMovePool([member(1, "A", 20)], [{ move: "B1" }, { move: "B1" }], data)
+    const b1 = { move: "B1", fromLevel: 1 }
+    const twice = resolveMovePool([member(1, "A", 20)], [b1, b1], data)
     expect(twice.pool.map((entry) => entry.slot)).toEqual([1, null])
   })
 
   it("fills empty move slots first, then replaces the oldest level-up moves", () => {
     const data = learnsetsOf({ A: basic("A", { teachable: ["P1", "P2", "P3", "P4", "P5"] }) })
-    const pool = ["P1", "P2", "P3", "P4", "P5"].map((move) => ({ move }))
+    const pool = ["P1", "P2", "P3", "P4", "P5"].map((move) => ({ move, fromLevel: 1 }))
     // Lv 5 knows A1 and A2: P1 and P2 fill the empty slots, P3 replaces A1 (the oldest), P4 A2.
     expect(movesOf(resolveMovePool([member(1, "A", 5)], pool.slice(0, 3), data), 1)).toEqual([
       "P3 pool",
@@ -612,7 +714,7 @@ describe("move pools", () => {
       Big: basic("G", { teachable: ["Quake"] }),
       Other: basic("O", { teachable: ["Quake"] }),
     })
-    const pool = [{ move: "Quake" }]
+    const pool = [{ move: "Quake", fromLevel: 1 }]
     const roster = [slot("Big", 0), slot("Other", -2)]
     // Below Lv 25 the member is Small: its own level-up moves, and it cannot learn Quake.
     const small = buildTeam(roster, 24, 1, line, pool, data)
@@ -649,20 +751,32 @@ describe("move pools", () => {
         entry.species,
         entry.moves.map(({ move, source }) => `${move}${source === "pool" ? "*" : ""}`),
       ])
-    // Onix (the ace) picks first; Geodude gets what it can learn from the rest.
+    // The placeholder pool has no from levels, so a member takes only moves its current species
+    // learns by level-up, once it reaches the learn level. At world progress 0 Onix (the ace) takes
+    // Curse; Geodude is below its Earthquake learn level.
     expect(moves(0)).toEqual([
-      ["Onix", ["Earthquake*", "Curse*", "Stone Edge*", "Body Slam*"]],
-      ["Geodude", ["Earthquake*", "Toxic*", "Strength", "Rock Throw"]],
+      ["Onix", ["Curse*", "Rock Tomb", "Rage", "Stealth Rock"]],
+      ["Geodude", ["Rollout", "Magnitude", "Strength", "Rock Throw"]],
     ])
     const early = resolveTrainer(brock, defaults, 0, evolution, learnsets)
-    expect(early.dormant.map((entry) => entry.move)).toContain("Sky Attack")
-    expect(early.dormant.every((entry) => entry.reason === "unlearnable")).toBe(true)
-    // Kabuto joins at world progress 40 and wakes the water moves nobody could use before.
+    const reasons = new Map(early.dormant.map((entry) => [entry.move, dormantReasonText(entry)]))
+    expect(reasons.get("Sky Attack")).toBe("no one can learn it")
+    expect(reasons.get("Earthquake")).toBe("below its learn level Lv 34")
+    // Body Slam and Toxic are TM/tutor-only for the current members.
+    expect(reasons.get("Body Slam")).toBe("TM/tutor only — needs a from level")
+    expect(reasons.get("Toxic")).toBe("TM/tutor only — needs a from level")
     const timeline = milestones(brock, defaults, evolution, learnsets).map(milestoneText)
-    expect(timeline).toContain(
-      "40: 4th slot (Kabuto) joins, Ancient Power wakes (Kabuto), Surf wakes (Kabuto), Ice Beam wakes (Kabuto)",
-    )
     expect(timeline).toContain("57: Onix → Steelix, Fire Fang wakes (Steelix)")
+    expect(timeline).toContain("85: Kabuto → Kabutops, Night Slash wakes (Kabutops)")
+    // Golem learns Earthquake by level-up; once it leaves its default moveset, the pool brings it back.
+    expect(timeline).toContain("157: Earthquake wakes (Golem)")
+    // The pool editor's hint reads every stage on the roster lines.
+    const learning = (move: string) => poolLearning(move, brock.roster, evolution, learnsets)
+    expect([learning("Earthquake"), learning("Toxic"), learning("Sky Attack")]).toEqual([
+      "level-up",
+      "tm-only",
+      "unlearnable",
+    ])
     // Without learnsets nothing is assigned, so nothing wakes.
     expect(milestones(brock, defaults, evolution).map(milestoneText).join()).not.toContain("wakes")
   })
