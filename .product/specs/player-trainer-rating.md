@@ -1,8 +1,9 @@
 # Player Trainer Rating
 
 PRD: [Player Trainer Rating](../prds/player-trainer-rating.md)
-Implemented: Partial. Today's formula, its saved high-water value, and the
-consumers below exist; the rescaled formula, uncapped TR, and the player-TR
+Implemented: Partial. Today's formula, its saved high-water value, and every
+consumer below except notable-trainer world progress and league invitations
+(v0) exist; the rescaled formula, uncapped TR, and the player-TR
 scalers are v0.
 Design status: v0 accepted. The v0 formula is approved; every scaler anchor
 is a placeholder tuned by playtesting.

@@ -11,13 +11,13 @@ The [Kanto origin opening](wayfarer-kanto-origin-opening.md) separately owns
 the native Pallet sequence through Parcel delivery, Pokédex receipt, and five
 Poké Balls.
 
-League-dependent successor: the proposed
+League-dependent successor: the v0
 [Leagues](leagues.md) design replaces the guaranteed Indigo/Masters
 lineups and fixed visiting-origin Blue League profile below with the
-strongest willing trainers by Trainer Rating (TR). Its
+strongest willing trainers by league score. Its
 [runtime contract](../specs/leagues.md) keeps
 Blue's Dojo unlock on the first committed Indigo win. These changes take
-precedence for league appearances only if the draft is adopted. Local Kanto
+precedence for league appearances only once the v0 design is adopted. Local Kanto
 adventures, Blue's origin-specific rivalry and forward story progression, and
 Giovanni's badge role remain owned here; the current port and approved fixed
 circuit retain their existing behavior meanwhile.

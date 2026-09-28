@@ -61,7 +61,7 @@ when opened. Regular trainers and Gym members snapshot player TR at battle
 setup. The existing six-slot Gym scaler is disabled by default; when enabled it
 uses player TR, while Giovanni has a separate five-slot player-TR projection.
 Today's fixed Leagues use their saved admission TR and sample again on new
-admission. Under the proposed [notable trainers](notable-trainers.md) model,
+admission. Under the v0 [notable trainers](notable-trainers.md) design,
 notable trainers snapshot a team at battle setup from their own TR, which
 grows with world progress (never player TR used directly), and each league
 event's [lineup](../specs/leagues.md#event-lineup) is captured when the player

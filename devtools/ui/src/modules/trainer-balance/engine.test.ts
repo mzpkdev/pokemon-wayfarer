@@ -1932,7 +1932,8 @@ describe("league lineups", () => {
         reason: "tie: Indigo",
         eligible: ["Indigo", "Hoenn"],
       })
-      // The Masters loses a badge tie to a regional league that never called either.
+      // The Masters loses a badge tie to a regional league that never called either (unreachable
+      // in play, where Indigo and Hoenn have both called before the Masters is eligible).
       expect(callingLeague({ Indigo: 8, Hoenn: 1 }, true, { ...never, Indigo: 1 })).toMatchObject({
         league: "Hoenn",
         reason: "tie: most badges",
@@ -3044,6 +3045,14 @@ describe("experiment import", () => {
     restored.archetypes.steady[1]![1] = 40
     expect(experiment.trainers.fixture!.startTR).toBe(3)
     expect(experiment.archetypes.steady[1]).toEqual([40, 25])
+  })
+
+  it("rejects version 19, whose saved catalog defaults may be stale", () => {
+    const v19 = base()
+    v19.version = 19
+    expect(() => validateExperiment(v19, records)).toThrow(
+      "Version 19 experiments may carry catalog defaults that have since changed",
+    )
   })
 
   it("rejects version 18, which saved league calendar settings instead of invitations", () => {

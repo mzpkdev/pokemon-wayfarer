@@ -182,7 +182,7 @@ Collecting all badges first remains valid:
 TR never decreases. It drives wild, mart, regular trainer, Gym member, level
 cap, and obedience consumers, plus Giovanni's current five-slot projection.
 The shared six-slot Gym feature reads player TR when enabled and is disabled
-by default. Proposed notable trainers instead use their own TR, grown from
+by default. In the v0 design, notable trainers instead use their own TR, grown from
 world progress, under
 [Notable trainers](notable-trainers.md); the other consumers continue to read
 player TR. Today's fixed circuit opponents use the TR snapshot saved when the

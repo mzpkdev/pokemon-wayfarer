@@ -255,8 +255,8 @@ is explicit: marts, regular trainers, and Gym members read player TR at their
 existing sample boundaries. Existing six-slot Gym scaling uses player TR when
 `B_GYM_LEADER_SCALING` is enabled; it is disabled by default. Giovanni retains
 his separate five-slot player-TR projection. Today's fixed Leagues use their
-persisted admission value. The proposed [notable trainers](notable-trainers.md)
-model instead derives notable trainers' team level and size, in every battle
+persisted admission value. The v0 [notable trainers](notable-trainers.md)
+design instead derives notable trainers' team level and size, in every battle
 with them including [leagues](leagues.md), from each trainer's own TR, which
 grows with world progress, never from player TR used directly. Battle snapshots
 are taken at battle setup; each league event's lineup is captured when the

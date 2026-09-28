@@ -43,16 +43,12 @@ rather than restating it.
   part of v0; it records the extension path from filler slots to filler pools
   and trades.
 
-v0 supersedes every earlier NPC growth model in full; the only growth is
-[growth with world progress](#growth-with-world-progress). There is no world
-cap, `levelBase` or headroom, progress index, standing or bias, growth arcs or
-arc seeds, dynamic filler picks, filler weights or scores, trades or
-gifts, and none of the older `baselineTR`, badge checkpoints,
-`effectiveTR`, or TR role bands. Player TR, the level cap, experience,
-obedience, wild and static encounters, marts, regular trainers, and Gym
-members read player TR under their own policies and v0 curves
-([Player Trainer Rating](player-trainer-rating.md#player-tr-scalers-v0)).
-Standalone builds are unchanged.
+The only growth is [growth with world progress](#growth-with-world-progress).
+Player TR, the level cap, experience, obedience, wild and static encounters,
+marts, regular trainers, and Gym members read player TR under their own policies
+and v0 curves ([Player Trainer
+Rating](player-trainer-rating.md#player-tr-scalers-v0)). Standalone builds are
+unchanged.
 
 ## Notable trainer inventory
 
@@ -576,9 +572,10 @@ rules (placeholders tuned in the explorer):
   Champions start above the Gym band, at TR 41 or more (opening team level 29
   or more), except Blue, the Rival, who starts at 0: Will and Sidney 41,
   Lorelei 42, Phoebe 43, Koga and Glacia 44, Bruno and Drake 45, Karen 47,
-  Wallace 48, Steven 50, Agatha 95, and Lance 200. Each league's first member
-  starts lowest (Lorelei, Will, Sidney), and the catalog script rejects an
-  Elite Four or Champion start below 41, except the Rival's.
+  Wallace 48, Steven 50, Agatha 95, and Lance 200. Each region's lowest Elite
+  Four start is Lorelei's (Kanto), Will's (Johto), and Sidney's (Hoenn), and
+  the catalog script rejects an Elite Four or Champion start below 41, except
+  the Rival's.
 - **Gym ladder.** From the first badges on, some Gym Leaders sit near the
   player's TR and some clearly above (challenges), and from 8 badges some
   also sit below it (accessible). At the start every leader is above the

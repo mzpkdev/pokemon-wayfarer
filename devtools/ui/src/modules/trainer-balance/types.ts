@@ -184,7 +184,7 @@ export type TrainerSettings = {
 /** A scaler anchor: [TR, value]. */
 export type Anchor = [number, number]
 export type Experiment = {
-  version: 19
+  version: 20
   /** Team level by TR: linear between anchors, halves up, flat past the last. */
   teamLevel: Anchor[]
   /** Team size by TR: a step scaler, each anchor's size held until the next anchor. */

@@ -115,25 +115,20 @@ is a league's phone call inviting the player to its next event; the player
 **accepts** or **declines** it. At most one invitation or accepted event
 exists at a time.
 
-These rules stand with the round-robin choice of caller: the player must
-answer a call, with no "later" ([Answering](#answering)); leaving an accepted
-event midway counts as a loss ([Loss](#loss)); after a loss the reigning
-champion is the strongest of the frozen lineup; and a content version change
-turns an accepted event back into an unanswered invitation from the same
-league ([Load validation](#load-validation)).
-
-Days come from the game's existing in-game day counter (`VAR_DAYS`, which
-the daily update in [clock.c](../../game/src/clock.c) keeps); leagues add no
-clock of their own. **Days never affect anyone's strength**: every TR stays a
-function of world progress, and days only schedule invitations. The order of
-calls never reads days: it comes from a monotonic
-[call counter](#which-league-calls), so a day counter that goes backwards
-cannot reorder the leagues.
+Days come from the game's in-game day clock; leagues add no clock of their own.
+**Dependency:** Today the day counter (`VAR_DAYS`, kept by the daily update in
+[clock.c](../../game/src/clock.c)) follows the real-time clock (RTC). The game
+is moving to an in-game clock with no RTC, and this design depends on it:
+adopting Leagues requires that clock, and every day below is an in-game day from
+it. **Days never affect anyone's strength**: every TR stays a function of world
+progress, and days only schedule invitations. The order of calls never reads
+days: it comes from a monotonic [call counter](#which-league-calls), so a day
+counter that goes backwards cannot reorder the leagues.
 
 ### Qualification
 
 The player **qualifies** once their TR is at least **80** (a placeholder;
-today exactly 8 badges, and future TR sources may lower the badges needed).
+in v0 exactly 8 badges, and future TR sources may lower the badges needed).
 Player TR never decreases, so qualifying happens once. Below 80 no league
 calls, and every league's rooms stay closed to the player.
 
@@ -189,8 +184,9 @@ number**. Among the eligible leagues, the last call numbers decide,
 1. The eligible league whose last call has the **lowest number** calls. A
    league that has never called has no number and counts as lowest.
 2. A tie (only possible between leagues that have never called) goes to the
-   league with the **most badges**; the Masters, with no badge count, loses
-   a badge tie to a regional league.
+   league with the **most badges**. The Masters is never in a tie: it
+   becomes eligible only after lifetime wins at Indigo and Hoenn, so both
+   have called by then.
 3. A remaining tie (Indigo and Hoenn with equal badges) goes to **Indigo**.
 
 So the very first call comes from the eligible league with the most badges,
@@ -287,15 +283,16 @@ committed before reveal, so nothing after it reselects.
 
 The five selected when the player accepts are the event's lineup, frozen for
 that event however long it waits. Accepting captures, for each of the five in
-battle order: `characterId`, their TR, and their composed team, plus the
-registry and roster content versions. Per member, the team holds the roster
-slot index and every resolved battle value the battle snapshot uses:
-species/form, level, moves, item, ability, nature, IVs/EVs, and battle order.
-It is saved atomically with the accepted event before reveal, and every
-battle, including after a reload, is reconstructed from it; it never
-reselects or recomposes, even after the player's TR rises. The event's end
-releases it, keeping only the five `characterId`s as the most recent
-resolved lineup.
+battle order: `characterId`, their TR, and their composed team, plus the event
+lineup's **content versions**: the league registry, the rosters, world progress
+and the scalers, the growth archetypes, the evolution-level table, the move
+pools and learnsets, and the play styles and AI tiers. Per member, the team
+holds the roster slot index and every resolved battle value the battle snapshot
+uses: species/form, level, moves, item, ability, nature, IVs/EVs, and battle
+order. It is saved atomically with the accepted event before reveal, and every
+battle, including after a reload, is reconstructed from it; it never reselects
+or recomposes, even after the player's TR rises. The event's end releases it,
+keeping only the five `characterId`s as the most recent resolved lineup.
 
 A declined event's lineup is only computed for its result: it saves the five
 `characterId`s and composes no teams.
@@ -330,16 +327,16 @@ The player is a Master once they have lifetime wins at both Indigo and Hoenn;
 the saved first-league-win facts already record that, so the player has no
 reign flags. Being a Master changes only the Masters: its calls for the
 player, and its guaranteed seats for notable trainers. Winning the Masters
-adds a Gallery entry and gives no new status.
+adds a Gallery win and gives no new status.
 
 ### Masters Gallery
 
-The Masters Gallery, the final ceremony room on the basement wall, records
-the winner of every resolved Masters event: the player after a win, otherwise
-the reigning champion that event crowned, so trainers who won events the
-player declined appear too. It keeps a saved win count per winner (one per
-notable trainer and one for the player), shown on the wall; a count stops at
-its maximum rather than wrapping.
+The Masters Gallery, the final ceremony room on the basement wall, tallies each
+Masters winner's wins, adding one for the winner of every resolved Masters
+event: the player after a win, otherwise the reigning champion that event
+crowned, so trainers who won events the player declined appear too. It keeps a
+saved win count per winner (one per notable trainer and one for the player),
+shown on the wall; a count stops at its maximum rather than wrapping.
 
 ## Saved state
 
@@ -354,8 +351,8 @@ Add:
 - the **call counter**, and per league its **last call number** (none, or a
   call number), read for [which league calls](#which-league-calls);
 - the **most recent resolved lineup**: the five `characterId`s of the most
-  recent resolved event, with its content versions, read for fatigue; empty
-  on a new game;
+  recent resolved event, with the same set of content versions as an
+  [event lineup](#event-lineup), read for fatigue; empty on a new game;
 - per league, the **reigning champion** (none, the player, or a
   `characterId`);
 - per notable trainer, the two [reign flags](#reign-records) (has reigned at
@@ -512,13 +509,17 @@ never generates a lineup or places a call.
   characters; a reigning champion is none, the player, or a known character.
 - Reign flags and Gallery counts exist only for known notable trainers (and
   the player's Gallery count). A trainer reigning at Indigo or Hoenn has that
-  league's reign flag; flags are otherwise never rechecked against history,
-  which the save does not keep.
+  league's reign flag; a trainer reigning at the Masters has a Gallery count
+  of at least 1; the player reigning at a league has that league's lifetime
+  win (at the Masters, also a Gallery count of at least 1). Flags and counts
+  are otherwise never rechecked against history, which the save does not
+  keep.
 - An active run exists only with an accepted event and names a match within
   its lineup.
 
-If the saved content versions differ from the build's, turn an accepted event
-back into an unanswered invitation from the same league (dropping its lineup
+If any content version saved with the event lineup or the most recent
+resolved lineup differs from the build's, turn an accepted event back into an
+unanswered invitation from the same league (dropping its lineup
 and any run), so the call rings again; clear the most recent resolved lineup,
 so the next selection has no fatigue; clear a reigning champion who is no
 longer an eligible character; and drop the reign flags and Gallery counts of
@@ -543,7 +544,7 @@ followed by the league's call or lobby word on the result and the title.
 Before an answer, lineups are unavailable and inspection generates nothing.
 
 The Masters' call comes from the caretaker, not from an official league.
-His first call says that Lorelei, retired to Four Island, spoke of the player;
+Her first call says that Lorelei, retired to Four Island, spoke of the player;
 that is story only, and Lorelei stays an ordinary notable trainer with no
 guaranteed seat. Accepting names the five as usual and which of them hold a
 Master's seat. The Masters Gallery shows every recorded winner
@@ -563,18 +564,18 @@ never calls its winner a regional Champion.
 
 ### First and repeat wins
 
-The player's first-ever win at each league keeps the one-time effects as
-Today's [interregional circuit](wayfarer-interregional-league-circuit.md)
-implements them: Indigo's shared Kanto/Johto Champion recognition with one
-Hall of Fame registration, the Masters Gallery entry without regional awards
-or new status, Hoenn's own recognition, Hall of Fame, regional cleanup, and full completion
-credits, Red's unlock once all three leagues have a lifetime win, and Blue's
-Saffron Dojo battle after the first Indigo win. A repeat win gives the prize
-money of its battles and the reigning-champion title and nothing else: the
-one-time effects never repeat, and whether a repeat win shows a short
-ceremony follows Today's replay presentation until designed. Wins grant no
-TR. Ceremony handling stays idempotent across callbacks, reloads, and
-interrupted saves, and must finish before the next call rings.
+The player's first-ever win at each league keeps the one-time effects as Today's
+[interregional circuit](wayfarer-interregional-league-circuit.md) implements
+them: Indigo's shared Kanto/Johto Champion recognition with one Hall of Fame
+registration, Hoenn's own recognition, Hall of Fame, regional cleanup, and full
+completion credits, Red's unlock once all three leagues have a lifetime win, and
+Blue's Saffron Dojo battle after the first Indigo win. The first Masters win
+brings no regional awards or new status. A repeat win gives the prize money of
+its battles and the reigning-champion title (plus the Gallery win at the
+Masters) and nothing else: the one-time effects never repeat, and whether a
+repeat win shows a short ceremony follows Today's replay presentation until
+designed. Wins grant no TR. Ceremony handling stays idempotent across callbacks,
+reloads, and interrupted saves, and must finish before the next call rings.
 
 ### Story dependencies and travel
 
@@ -653,7 +654,7 @@ evidence (not yet run):
 1. **Registry.** Reject duplicate characters or aliases, unresolved source
    IDs, missing assets, double-battle flags, and trainers without valid
    growth values or a valid roster. The build must hold at least five eligible
-   trainers.
+   trainers who are not aloof.
 2. **Selection.** Fixtures at several world progress values, including one
    where growth reorders the lineup: willingness for at-home, away
    non-traveller, away traveller, fatigued, and floored cases at each league,
@@ -663,7 +664,7 @@ evidence (not yet run):
    never judged against another aloof trainer, and skipping when there is no
    base lineup; fatigue applied to the base lineup and to an aloof trainer's
    score; at the Masters no base lineup and every aloof trainer eligible
-   however far above the field; a Master seated over a higher-scoring
+   however far above the other trainers; a Master seated over a higher-scoring
    trainer who is not one, more than five Masters seated by league score with
    ties by `characterId`, a fatigued Master keeping the seat, a trainer who
    reigned at only one of Indigo and Hoenn not a Master, and Master status
@@ -683,19 +684,18 @@ evidence (not yet run):
    counter loads, clamped, and is never rejected; a counter jump of many days
    brings one call and no backlog; strength is identical on every day at one
    world progress.
-5. **Which league calls.** Known-there eligibility: with no badge in a
-   league's regions that league never calls (Indigo counting Kanto and
-   Johto), and the Masters never calls before lifetime wins at both Indigo
-   and Hoenn: not after wins at only one, in either order. Among the
-   eligible leagues the least recently called calls, a never-called league
-   first: with three eligible leagues they call in a fixed rotation. Ties go
-   to the most badges, the Masters losing to a regional league, then to
+5. **Which league calls.** Known-there eligibility: with no badge in a league's
+   regions that league never calls (Indigo counting Kanto and Johto), and the
+   Masters never calls before lifetime wins at both Indigo and Hoenn: not after
+   wins at only one, in either order. Among the eligible leagues the least
+   recently called calls, a never-called league first: with three eligible
+   leagues they call in a fixed rotation. Ties go to the most badges, then to
    Indigo; the very first call comes from the most-badges eligible league. A
-   single eligible league calls repeatedly; a league that becomes eligible
-   later calls next. With no eligible league, a due call waits and is
-   checked again each day until a league knows the player. The call counter
-   only increases, and a day counter turned back never changes the order.
-   The same badges, wins, and last call numbers always give the same caller.
+   single eligible league calls repeatedly; a league that becomes eligible later
+   calls next. With no eligible league, a due call waits and is checked again
+   each day until a league knows the player. The call counter only increases,
+   and a day counter turned back never changes the order. The same badges, wins,
+   and last call numbers always give the same caller.
 6. **Accept and decline.** Accepting saves the selected five in ascending TR
    order with the accepted event atomically, and the event waits across many
    days and reloads with the same five; reloading before the commit selects
@@ -721,8 +721,9 @@ evidence (not yet run):
 10. **Win.** A first win records exactly one lifetime win and its one-time
     effects and ceremony; the second of the Indigo and Hoenn first wins makes
     the player a Master and the Masters eligible to call; a Masters win adds
-    the player's Gallery win and no status; a repeat win gives only prize
-    money and the title; the player reigns until that
+    the player's Gallery win and no status, on every Masters win; a repeat
+    win gives only prize money and the title (plus the Gallery win at the
+    Masters); the player reigns until that
     league's next resolved event; no win changes player TR; the run and the
     accepted event are released. Interrupt and repeat win commits, calls, and
     answers.
@@ -734,13 +735,15 @@ evidence (not yet run):
     again after a reload until answered; lobbies name the reigning champion.
     The Masters' calls come from the caretaker, the first naming Lorelei;
     the Gallery shows the winners of declined Masters events too.
-12. **Load validation.** Corrupt invitation state, call numbers, accepted events,
-    runs, lineups, most recent resolved lineups, reign flags, Gallery counts,
-    schema, or callbacks are rejected without regenerating, calling,
-    advancing, or rewarding; a Masters invitation without both lifetime wins
-    is rejected. A content version change turns an accepted event back into
-    an unanswered invitation, clears the most recent resolved lineup, and
-    drops the reign flags and Gallery counts of removed characters.
+12. **Load validation.** Corrupt invitation state, call numbers, accepted
+    events, runs, lineups, most recent resolved lineups, reign flags, Gallery
+    counts, schema, or callbacks are rejected without regenerating, calling,
+    advancing, or rewarding; a Masters invitation without both lifetime wins is
+    rejected, and so are a trainer reigning at the Masters with a Gallery count
+    of 0 and the player reigning at a league without its lifetime win. A content
+    version change turns an accepted event back into an unanswered invitation,
+    clears the most recent resolved lineup, and drops the reign flags and
+    Gallery counts of removed characters.
 13. **Standalone.** FRLG, HNS, and Emerald League behavior, travel, recovery,
     and phone calls are unchanged.
 
@@ -765,8 +768,6 @@ Report balance playtesting separately from structural checks.
 - Event rewards tuning, interval tuning, and qualification threshold tuning.
 - Balancing tools: tune travel costs, fatigue, the floor, and the aloof margin
   against the lineup reports, and set league balance targets.
-- Tuning the Masters lineup: with the aloof rule off, the Champions attend
-  from the first call at any world progress.
 - The caretaker's later calls and lines, and what the Masters Gallery shows
   beyond each winner's count.
 - Seeded lineups, varying which willing trainers come per save.

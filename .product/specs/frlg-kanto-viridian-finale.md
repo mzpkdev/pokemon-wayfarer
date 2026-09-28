@@ -57,7 +57,7 @@ Blue is removed from Viridian's exterior introduction and Gym scripts, objects, 
 
 ## Blue at the Saffron Dojo
 
-The proposed [Leagues](../prds/leagues.md) design picks the strongest
+The v0 [Leagues](../prds/leagues.md) design picks the strongest
 willing trainers by league score, so Blue is not guaranteed at Indigo. It keeps this unlock
 on the first committed Indigo win, whether or not Blue was in the lineup.
 

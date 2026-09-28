@@ -159,7 +159,8 @@ trainer's team. The player TR is never computed from a notable trainer's TR.
   move) and Curse from his pool and claims Stealth Rock (already in its
   level-up moves), next to Rage, and his Geodude keeps Rollout, Magnitude,
   Strength and Rock Throw; Sandstorm waits for its from level (Lv 20), Earthquake for its learn level
-  (Lv 34), Heavy Slam is only an Onix egg move until Golem joins, and Cross
+  (Lv 34), Heavy Slam is only an Onix egg move until Graveler evolves into
+  Golem, and Cross
   Poison stays dormant until Crobat joins (no one can learn it yet). From Lv
   34 his Graveler takes Earthquake through its earlier form Geodude.
 
@@ -229,7 +230,7 @@ joins at team size 6 (TR 71, team level 45), which his placeholder growth
 reaches at world progress 97; at 159 the growth is 99%, so peak TR 100 comes
 at 160.
 
-Exports and the saved browser state use version 19 (nine archetypes with the
+Exports and the saved browser state use version 20 (nine archetypes with the
 single-word identifiers above; rosters carry `isAce` and no moves; each
 trainer has a `movePool` of `{ "move", "fromLevel"? }` entries, a
 `homeRegion`, the `traveller` and `aloof` trait flags and a `playStyle`)
@@ -240,7 +241,7 @@ the badge split: null follows the badge total, or 0–8 badges per region); a
 `{ "badges": n }` point still imports and sets the matching player TR. The
 call counter lives only in the simulation (the saved settings are the answers
 and the split), and team size keeps its `[TR, size]` anchors, so neither
-changes the format: a version 19 file with the older paired team size
+changes the format: a version 20 file with the older paired team size
 anchors (0–10, 11–28, …) reads the same size at every whole TR.
 
 **Tate & Liza** are one entry (role Gym Leader duo, Hoenn) with one start TR,
@@ -306,7 +307,7 @@ Masters, the highest league scores first when more than five are Masters,
 fatigue included; the remaining seats go to the highest league scores.
 
 The simulator runs at the player's world progress (days never change anyone's
-strength). The player qualifies at player TR 80 (today exactly 8 badges; the
+strength). The player qualifies at player TR 80 (in v0 exactly 8 badges; the
 explorer counts the qualifying moment as day 0); below it the panel says no
 league calls. An invitation arrives after a countdown of 7 in-game days,
 started at qualifying and restarted when an invitation resolves; no countdown
@@ -320,7 +321,9 @@ keeps waiting, re-checked at every later day. **Invitations**
 (default 8, up to 24) sets how many; the **Kanto**, **Johto** and **Hoenn**
 fields set the badge split (by default the badge floor of the player TR,
 filling Kanto, then Johto, then Hoenn, 8 each; **Follow badge total**
-restores it). Which league calls ([Leagues spec](../../.product/specs/leagues.md#which-league-calls)):
+restores it, and so does any change to the badge total). Each number field
+shows the value the simulation uses: an entry out of range is refused (or,
+for the player TR, clamped to 0 or more) and the field reverts to it. Which league calls ([Leagues spec](../../.product/specs/leagues.md#which-league-calls)):
 a league calls only where the player is known: Indigo with at least one Kanto
 or Johto badge, Hoenn with at least one Hoenn badge, and the Sevii Masters,
 whose caretaker calls, once the player is a Master (they have won both
@@ -330,8 +333,8 @@ takes the next sequence number (1, 2, 3, …) and each league remembers the
 number of its last call, so a clock turned back cannot reorder them. Among the
 eligible leagues the one that called least recently, the lowest sequence
 number, calls (a league that never called counts as least recent); ties go to the most badges (Indigo
-= Kanto + Johto, Hoenn = Hoenn; the Masters has none and loses to a regional
-league), then to Indigo. So the first call comes from the eligible league with
+= Kanto + Johto, Hoenn = Hoenn; the Masters has none but is never in a tie,
+since Indigo and Hoenn have both called before it can), then to Indigo. So the first call comes from the eligible league with
 the most badges, and a single eligible league calls every time. Each row shows
 the invitation, its day, the league and why ("only eligible (Indigo 8, Hoenn
 0); the Masters needs Indigo and Hoenn wins", "least recently called (Indigo
@@ -346,8 +349,8 @@ loss, declined) and the reigning champion: the player after a win, otherwise
 the lineup's strongest member (last in battle order). A line above the table
 names each league's reigning champion after the last invitation, and another
 who has reigned at Indigo and at Hoenn, the notable Masters, and the Masters
-Gallery (every Masters event's winner, "#3 Lance (TR 200)" or "#12 the
-player"). An answer changes who calls next (wins at both Indigo and Hoenn open
+Gallery (each Masters event's winner by invitation, "#3 Lance (TR 200)" or
+"#12 the player"; the game keeps only each winner's win count). An answer changes who calls next (wins at both Indigo and Hoenn open
 the Masters) and who reigns, which decides the Masters' guaranteed seats; it
 never changes a rule.
 **Show invitation N** selects an event; below the table it shows the base
@@ -398,7 +401,7 @@ reigning champion last):
 - 24 badges (world progress 160, base lineup Lv 100, every aloof trainer
   joins), declining everything: Indigo (tie → most badges), Morty, Sabrina,
   Clair, Steven (175), Lance (Lance); Hoenn (least recently called: never),
-  Norman (164), Blue (153), Winona (172), Juan, Wallace (Wallace); and so on
+  Norman, Blue (153), Winona, Juan, Wallace (Wallace); and so on
   alternately. Lance, a Kanto traveller, fights last at every Indigo event,
   each fatigued only by the Hoenn event before. With no win the Masters never
   calls, and no one is a Master: Lance reigns only at Indigo, Wallace only at
@@ -438,8 +441,8 @@ Comeback and Burst growth scalers) are editable under
 **Scalers & experiment settings**, each labeled interpolated or step. Anchors
 start at 0, rise and never decrease in value; growth scalers run 0–100% and
 start at 0%. Experiments persist in browser storage (key
-`wayfarer-trainer-balance-v19`). JSON export and import
-(format version 19) round-trip the experiment (growth, rosters with their ace
+`wayfarer-trainer-balance-v20`). JSON export and import
+(format version 20) round-trip the experiment (growth, rosters with their ace
 flags, move pools, home regions, traveller and aloof flags, play styles and
 the thirteen scalers), the
 player TR, the invitation simulator (answers and badge split), and the selected trainer. The
@@ -447,8 +450,11 @@ importer also rejects a Legend whose peak TR differs from start TR, a
 Gym Leader Legend, a roster slot with moves, an unknown move name, a from level
 outside 1–100, a pool of more than 64 entries, an unknown home region, and
 a traveller or aloof flag that is not true or false, and a play style that
-is not one of the eight. Files from versions
-1–18 are rejected with a message (version 18 saved league calendar settings,
+is not one of the eight. Import accepts the league settings' keys in any
+order. Files from versions
+1–19 are rejected with a message (version 19 may carry catalog defaults that
+have since changed, such as the Elite Four and Champion starts and Karen and
+Koga no longer travellers; version 18 saved league calendar settings,
 days and wins, for the retired league calendar; version 17 saved a league
 entry point for the retired standard entry sequence; version 16 had no play styles; version 15 saved a `travel` style, homebody
 or traveller, instead of the traveller flag; version 14 had no aloof trait and the old
@@ -461,7 +467,9 @@ move pools; version
 simply reversed; version 7 gave the Rival a fixed lead, copied the
 level cap into team level and had no Tate & Liza; version 6 gave each notable
 trainer one fixed TR; version 5 used the retired 0–80 player TR scale).
-There is no migration. Reset restores the catalog defaults. **Restore this
+There is no migration. Reset restores the catalog defaults. If the saved
+browser state fails to restore, the explorer shows why and saves nothing over
+it until Reset or a successful import. **Restore this
 trainer’s defaults** updates only the selected trainer.
 
 The tool models species, team size, levels and each member's moves from the

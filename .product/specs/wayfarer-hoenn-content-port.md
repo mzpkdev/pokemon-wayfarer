@@ -123,14 +123,14 @@ Trainer records follow these rules:
   apply [Trainer-party scaling](trainer-party-scaling.md) at battle creation;
   rivals and bosses remain excluded. Initial Gym Leader badge battles use the
   separate [Gym Leader scaling](gym-leader-scaling.md), which owns their current
-  six-slot rosters and player-TR selection. Proposed singles Gym Leaders instead
-  use their own TR, grown from world progress, and six-slot roster; source
-  Emerald parties are provenance, not mandatory opening teams. Proposed Tate
-  and Liza are one notable duo that keeps its double battle and badge and stays
-  out of league lineups.
-  Today's Hoenn League retains its Tier 3 source rosters and applies the
-  separate [League scaling specification](league-scaling.md) to their battle
-  levels. Species, party sizes, moves, items, abilities, and AI remain authored.
+  six-slot rosters and player-TR selection. In the v0 design, singles Gym
+  Leaders instead use their own TR, grown from world progress, and six-slot
+  roster; source Emerald parties are provenance, not mandatory opening teams. In
+  v0, Tate and Liza are one notable duo that keeps its double battle and badge
+  and stays out of league lineups. Today's Hoenn League retains its Tier 3
+  source rosters and applies the separate [League scaling
+  specification](league-scaling.md) to their battle levels. Species, party
+  sizes, moves, items, abilities, and AI remain authored.
 - Other than an initial Gym Leader badge battle enrolled in the Gym Leader
   scaling specification, the same authored party is selected regardless of the
     player's TR or HNS difficulty option.
@@ -308,7 +308,7 @@ now calls the [Wattson relocation helper](../../game/data/maps/MauvilleCity_Gym/
 which requires both Norman's defeat and the Dynamo Badge. An undefeated Wattson
 therefore remains in his Gym, and relocation is independent of award order.
 These source checks establish the implemented branch, not campaign playtest
-acceptance. The proposed per-leader TR changes singles Gym strength
+acceptance. The v0 per-leader TR changes singles Gym strength
 without adding a league-win prerequisite or changing badge ownership.
 
 Hoenn badges alter Wayfarer TR through the global badge total.
@@ -380,14 +380,10 @@ and Masters first league wins. Its authored source rosters use the player's TR
 saved when entering the league, under [League scaling](league-scaling.md).
 Hoenn-specific Champion/game-clear ownership and local cleanup remain in force.
 
-The proposed [Leagues runtime](leagues.md) replaces today's admission and
-league order with league invitations (from player TR 80, Hoenn calling once
-the player holds a Hoenn badge, in turn with the other leagues that know them:
-[which league calls](leagues.md#which-league-calls)) and owns each accepted event's frozen five-trainer lineup, one attempt per
-event, and the reigning champion;
-[Leagues selection](leagues.md#selection-and-order) picks the top five by
-league score (TR scaled by willingness), and [Notable trainers](notable-trainers.md) owns their TR and
-teams.
+The v0 [Leagues design](leagues.md) replaces today's admission, league order,
+and fixed participants with [invitations](leagues.md#invitations) and
+league-score lineups; [Notable trainers](notable-trainers.md) owns their TR
+and teams.
 Completion still owns this league's result and regional effects, independently
 of who was selected.
 

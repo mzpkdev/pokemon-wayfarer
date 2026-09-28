@@ -7,8 +7,8 @@ Today's [circuit producer](../../game/src/league_circuit.c) uses fixed Tier 3
 Hoenn admission, and the implemented
 [League level resolver](../../game/src/trainer_party_scaling.c) uses the
 player's Trainer Rating (TR) saved when entering a league, so League levels
-scale from that saved TR. Under the proposed [notable trainers](notable-trainers.md)
-model, notable trainers have their own TR, growing with world progress, that
+scale from that saved TR. Under the v0 [notable trainers](notable-trainers.md)
+design, notable trainers have their own TR, growing with world progress, that
 sets team level and size in every battle, with a six-slot roster. The
 [Leagues runtime](../specs/leagues.md) replaces Hoenn's fixed participants
 with the top five by league score (TR scaled by willingness), strongest
@@ -149,18 +149,18 @@ authored, static parties Today; on adoption they follow the notable model
 through the [every-battle rule](../specs/notable-trainers.md#trainer-rating).
 Current Hoenn Elite Four and Champion battles
 use fixed Tier 3 source rosters and the player's TR saved when entering the
-league, under [League scaling](league-scaling.md). The proposed
+league, under [League scaling](league-scaling.md). The v0
 [Leagues selection](../specs/leagues.md#selection-and-order) instead picks the
 top five by league score (TR scaled by willingness), favouring trainers at
 home. Emerald source parties remain provenance
-references rather than required opening or circuit teams. In the proposed design,
+references rather than required opening or circuit teams. In the v0 design,
 Tate and Liza are one notable duo that keeps its double battle and badge;
 leagues are singles only, so the duo stays out of league lineups.
 
 Ordinary Hoenn wild encounters retain Emerald's species, methods, weights, and
 locations while using the HNS TR level projection. Hoenn badges
 count toward Wayfarer's global badge total. Today the Hoenn League
-contributes its circuit milestone; in the proposed [Leagues](leagues.md)
+contributes its circuit milestone; in the v0 [Leagues](leagues.md)
 design it adds no TR and calls the player once they hold a Hoenn badge and
 TR 80. Fixed, gift, legendary, hidden, and scripted Pokémon
 retain their authored levels unless another approved feature already governs
@@ -180,12 +180,9 @@ Hoenn destination.
 - Hoenn Champion completion is independent from the shared Indigo win and
   the Sevii Masters Challenge win.
 - Today, Hoenn is fixed Tier 3 after Indigo, Masters, and all twenty-four
-  badges. In the proposed [Leagues](leagues.md) design, Hoenn phones with
-  an invitation once the player holds a Hoenn badge and has reached TR 80,
-  taking turns with the other leagues that know them
-  ([which league calls](../specs/leagues.md#which-league-calls)); an accepted
-  event gives one attempt, and a loss waits for the next invitation. The first Hoenn win retains its player rewards and local completion
-  ownership.
+  badges. In the v0 [Leagues](leagues.md) design, Hoenn instead calls by
+  [invitation](../specs/leagues.md#invitations). The first Hoenn win retains
+  its player rewards and local completion ownership.
 - Hoenn Trainers, NPCs, items, gifts, and story rewards remain consumed through
   saving, reloading, and blacking out.
 

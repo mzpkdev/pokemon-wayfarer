@@ -123,29 +123,11 @@ Existing Johto and Kanto callers keep their current result.
 
 ### Save storage and lifecycle
 
-The proposed [Leagues runtime](leagues.md#saved-state) adds, under this
-storage policy, a small invitation state (not qualified; counting down, with
-the days remaining and the last counted day; invited by a league; or one
-accepted event, holding its league and its event lineup of five matches in
-battle order, each holding `characterId`, TR, and the composed team), the
-call counter and each league's last call number, the most recent resolved
-lineup (five `characterId`s with content versions) for fatigue, each league's
-reigning champion, and, only while the player is fighting, the active run's
-defeated prefix. Lifetime first-win facts stay as they are. The countdown
-reads the existing in-game day counter; there is no seed, rotation history,
-other lineup history, or progress index.
-Notable trainers' TRs are authored content, so New Game saves nothing for them.
-An explicit schema discriminator rejects obsolete layouts. The event lineup
-stays unchanged through reconstruction and reload however long the accepted
-event waits; the event's end (a win, a loss, or leaving) releases it. Size
-assertions and save-sector accounting must include the invitation state and
-accepted event lineup, the call counter and call numbers, the most recent
-resolved lineup, the reigning champions, the active run, and transaction
-metadata within the allocation below. A corrupt invitation state, accepted
-event, run, or league state is an invalid save, but a stored day ahead of the
-day counter is clamped, never rejected; a content version change instead turns an accepted
-event back into an unanswered invitation and clears the most recent resolved
-lineup. This extension is not implemented here.
+The v0 [Leagues design](leagues.md#saved-state) owns its saved league state
+and load validation; its size assertions and save-sector accounting must
+cover all of that state within the allocation below. Notable trainers' TRs are
+authored content, so New Game saves nothing for them. This extension is not
+implemented here.
 
 The additional Hoenn banks live in `SaveBlock3` or an equivalent separately
 bounded saved structure. The implementation must not enlarge `SaveBlock1`
@@ -211,7 +193,7 @@ Today's circuit uses fixed Indigo, Sevii Masters, then Hoenn order. Its
 first-league-win result advances only after completion commits. Only Indigo
 projects its win into both Kanto and Johto Champion recognition.
 
-The proposed [Leagues runtime](leagues.md) keeps today's first league wins
+The v0 [Leagues design](leagues.md) keeps today's first league wins
 with their regional recognition, cleanup, and unlocks, and replaces today's
 admission and fixed order with league invitations and league-score lineups
 ([invitations](leagues.md#invitations),
@@ -222,16 +204,18 @@ battle setup.
 
 An accepted event waits for the player, who has one attempt. Winning makes the
 player the reigning champion, commits any first league win, and releases the
-event; a repeat win gives prize money and the title only. In v0 a win adds no
+event; a repeat win gives prize money and the title only (plus the Gallery
+win at the Masters). In v0 a win adds no
 player TR ([Player Trainer Rating](player-trainer-rating.md)); Today's +8 per
 first league win stays until adoption. Losing or leaving ends the event with
 no league win or reward and crowns the lineup's strongest, as does declining.
 Save calls, answers, wins, and ceremony phases atomically, with stale
 callbacks rejected.
 
-This draft does not implement that direction or approve catalog content. Shared Indigo recognition and regional isolation remain
-mandatory. Unsupported schema states follow invalid-save handling under
-prerelease policy; do not synthesize compatibility or replacement fields.
+This spec does not implement that direction or approve catalog content. Shared
+Indigo recognition and regional isolation remain mandatory. Unsupported schema
+states follow invalid-save handling under prerelease policy; do not synthesize
+compatibility or replacement fields.
 
 ### ROM budget
 
@@ -299,14 +283,14 @@ Static and automated checks must prove all of the following:
 12. Representative map loads and transitions run without heap corruption or a
     second simultaneous map decompression buffer.
 
-The proposed league-invitation extension additionally requires save round-trip
+The v0 league-invitation extension additionally requires save round-trip
 and transaction tests for not-qualified, counting-down, invited, accepted,
 active-run, and after-loss and after-win states. Prove at most one invitation
 or accepted event with one five-match event lineup, an unchanged lineup after
 reloads while it waits and mid-run, idempotent and atomic calls, answers, and
 entering, and an atomic win. Reject obsolete schemas and damaged authoritative state without
 regenerating a lineup. Verify
-the records satisfy the same sector and runtime bounds. These proposed checks do
+the records satisfy the same sector and runtime bounds. These checks do
 not claim the new lifecycle is implemented.
 
 ## References

@@ -96,7 +96,7 @@ const anchorsOf = (experiment: Experiment, id: ScalerId): Anchor[] =>
  */
 export const scalerKind = (id: ScalerId): ScalerKind =>
   isGrowth(id) ? ARCHETYPE_KIND[id] : id === "teamSize" ? TEAM_SIZE_KIND : "interpolated"
-const storageKey = "wayfarer-trainer-balance-v19"
+const storageKey = "wayfarer-trainer-balance-v20"
 /** The answers the invitation simulator offers: accept and win, accept and lose, or decline. */
 export const INVITATION_CHOICES: readonly InvitationChoice[] = ["win", "lose", "decline"]
 /** The answer each new invitation starts with. */
@@ -109,12 +109,15 @@ const invitationCount = (value: unknown): number | null =>
 /** Reads a region's badges: a whole number from 0 to REGION_BADGES. */
 const regionBadges = (value: unknown): value is number =>
   Number.isInteger(value) && (value as number) >= 0 && (value as number) <= REGION_BADGES
+/** Whether an object has exactly these keys, in any order. */
+const sameKeys = (value: object, keys: readonly string[]): boolean =>
+  Object.keys(value).sort().join() === [...keys].sort().join()
 /** Reads a saved badge split: null (the default from the badge total) or Kanto, Johto and Hoenn. */
 const badgeSplit = (value: unknown): BadgeSplit | null | undefined => {
   if (value === null) return null
   if (!value || typeof value !== "object") return undefined
   const split = value as Record<string, unknown>
-  return Object.keys(split).join() === HOME_REGIONS.join() &&
+  return sameKeys(split, HOME_REGIONS) &&
     HOME_REGIONS.every((region) => regionBadges(split[region]))
     ? (split as BadgeSplit)
     : undefined
@@ -357,7 +360,19 @@ export class BalanceLab {
     this.editor = JSON.stringify(this.#_experiment.trainers[this.selectedId], null, 2)
   }
 
+  /**
+   * Set when the saved experiment fails to restore: nothing is saved over it until the user
+   * deliberately replaces it (Reset or a successful import), so a routine click cannot lose it.
+   */
+  #_keepSaved = false
+
   #_persist = (): void => {
+    if (this.#_keepSaved) {
+      const kept =
+        "Not saved: your stored experiment could not be restored and is kept until you press Reset or import an experiment."
+      if (!this.notice.includes(kept)) this.notice = this.notice ? `${this.notice} ${kept}` : kept
+      return
+    }
     try {
       localStorage.setItem(storageKey, this.exportText())
     } catch {
@@ -400,7 +415,12 @@ export class BalanceLab {
   load = (): void => {
     try {
       const saved = localStorage.getItem(storageKey)
-      if (saved) this.importText(saved, "Restored your local experiment.")
+      if (!saved) return
+      this.importText(saved, "Restored your local experiment.")
+      if (this.error) {
+        this.#_keepSaved = true
+        this.error = `Could not restore your stored experiment (kept in browser storage until you press Reset or import an experiment): ${this.error}`
+      }
     } catch {
       this.notice = "Browser storage is unavailable. You can still import and export experiments."
     }
@@ -414,19 +434,27 @@ export class BalanceLab {
     this.#_persist()
   }
 
-  /** A badge preset: sets the player TR from the badge formula. */
-  setBadges = (badges: number): void => {
-    this.playerTR = badgeTR(
-      Number.isFinite(badges) ? Math.min(MAX_BADGES, Math.max(0, Math.round(badges))) : 0,
-    )
+  /**
+   * Moves the player TR; a badge split set by hand follows the badge total again once the badge
+   * total changes, so a split set for one badge total never carries over to another.
+   */
+  #_movePlayerTR = (playerTR: number): void => {
+    const floor = this.badgeFloor
+    this.playerTR = playerTR
+    if (this.badgeFloor !== floor) this.badgeSplitOverride = null
     this.#_persist()
   }
+
+  /** A badge preset: sets the player TR from the badge formula. */
+  setBadges = (badges: number): void =>
+    this.#_movePlayerTR(
+      badgeTR(Number.isFinite(badges) ? Math.min(MAX_BADGES, Math.max(0, Math.round(badges))) : 0),
+    )
 
   /** Sets the player TR directly: any whole number of 0 or more (TR has no upper limit). */
   setPlayerTR = (value: number): void => {
     if (!Number.isFinite(value)) return
-    this.playerTR = Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, Math.round(value)))
-    this.#_persist()
+    this.#_movePlayerTR(Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, Math.round(value))))
   }
 
   /** Sets how many invitations the simulator answers (1 to INVITATIONS.max). */
@@ -693,6 +721,7 @@ export class BalanceLab {
     })
 
   reset = (): void => {
+    this.#_keepSaved = false
     this.#_accept(
       createExperiment(catalog, learnsets.moves),
       "Restored the catalog growth, rosters, move pools, home regions, traits, play styles and scalers.",
@@ -754,7 +783,7 @@ export class BalanceLab {
         throw new Error("Unknown selected trainer.")
       const league = data.league
       const choices: unknown =
-        league && typeof league === "object" && Object.keys(league).join() === "choices,split"
+        league && typeof league === "object" && sameKeys(league, ["choices", "split"])
           ? league.choices
           : null
       const split = league && typeof league === "object" ? badgeSplit(league.split) : undefined
@@ -767,6 +796,7 @@ export class BalanceLab {
         throw new Error(
           `The league settings must be the answers to 1–${INVITATIONS.max} invitations (win, lose or decline) and a badge split (null, or Kanto, Johto and Hoenn badges from 0 to ${REGION_BADGES}).`,
         )
+      this.#_keepSaved = false
       this.#_experiment = experiment
       this.playerTR = playerTR
       this.invitationChoices = choices as InvitationChoice[]

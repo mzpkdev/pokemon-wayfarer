@@ -47,7 +47,7 @@ point, whether or not they reign there now. A Masters title never counts
 toward it.
 
 **Qualifying.** The player qualifies for invitations once their TR reaches
-80, which today means 8 badges from any regions; later sources of TR may
+80, which in v0 means 8 badges from any regions; later sources of TR may
 qualify them sooner. Until then, no league calls and the league doors stay
 shut.
 
@@ -55,11 +55,15 @@ shut.
 phones with an invitation, and the next one comes seven days after the player
 answers, or, if they accepted, seven days after that event is over. While an
 invitation is waiting for an answer, or an accepted event is waiting for the
-player, no other league calls. Days come from the game's existing day
-counter and only schedule calls: nobody grows stronger or weaker with time,
-only with the world's progress. Only days going forward count: if the game's
-day counter ever goes backwards, the countdown neither moves on nor starts
-over.
+player, no other league calls. Days come from the game's in-game day clock
+and only schedule calls: nobody grows stronger or weaker with time, only with
+the world's progress. Only days going forward count: if the day counter ever
+goes backwards, the countdown neither moves on nor starts over.
+
+**Depends on the in-game clock.** Today the game's day counter follows the
+cartridge's real-time clock (RTC). The game is moving to an in-game clock with
+no RTC, and Leagues depends on it: league days are in-game days, and Leagues
+can't be adopted before that clock is.
 
 **Who calls.** Only a league that knows the player calls: Indigo once they
 hold a Kanto or Johto badge, Hoenn once they hold a Hoenn badge, and the Sevii
@@ -68,23 +72,22 @@ once, in either order. Until then the Masters never calls. The leagues
 that know them take turns: the one that called longest ago calls next, and one
 that has never called goes first. When that is a tie, the league where they
 have earned the most badges calls (Indigo counts Kanto and Johto badges,
-Hoenn counts Hoenn badges; the Masters counts none), and on equal counts,
-Indigo. So the first call comes from where they have the most badges, and a
+Hoenn counts Hoenn badges), and on equal counts, Indigo. The Masters is never
+in such a tie: it knows the player only after Indigo and Hoenn have both
+called. So the first call comes from where they have the most badges, and a
 player known in only one region hears from that league every time until
 another league knows them. If the player qualifies while no league knows
 them (possible only with a future source of TR), no call comes: the call
 stays due and is checked again each day until a league knows them.
 
-These stay as they were: the player must answer each call, with no "later";
-leaving an accepted event midway counts as a loss; after a loss the
-strongest trainer of the kept lineup takes the title; and if the game's
-content changes under a save, an accepted event goes back to an unanswered
-invitation from the same league.
-
-**Accept.** Accepting books the player in. The lineup is worked out then and
+**Accept.** The player must accept or decline each call; there is no
+"later". Accepting books the player in. The lineup is worked out then and
 kept, and the event waits for them as long as they like: they can train, earn
 badges, and come back. When they arrive, they get one attempt: a loss, or
-leaving midway, ends the event.
+leaving midway, which counts as a loss, ends the event, and the strongest
+trainer of the kept lineup takes the title. If the game's content changes
+under a save, an accepted event goes back to an unanswered invitation from the
+same league.
 
 **Decline.** Declining costs nothing. The event goes ahead without the player
 straight away, and its strongest trainer takes the title.
@@ -151,8 +154,9 @@ Hoenn; once both are true, they are a Master for good.
 **Winning.** The player's first win at each league keeps today's records,
 ceremonies, and unlocks, all once only. Their first wins at both Indigo and
 Hoenn make them a Master, which opens the Sevii Masters' turns. Winning the
-Masters brings a place in the Masters Gallery, prize money, and the title, and
-no new status. Winning again brings prize money and the title back. No win gives the player
+Masters brings a Gallery win, prize money, and the title, and no new status.
+Winning again brings prize money and the title back, plus another Gallery win
+at the Masters. No win gives the player
 TR: a league is a test, not a source of power
 ([Player Trainer Rating](player-trainer-rating.md)). Today, the ROM still adds
 TR for a first league win until that design is adopted.
@@ -160,10 +164,10 @@ TR for a first league win until that design is adopted.
 **Presentation.** Invitations and results come by phone call, on a
 Pokégear/PokéNav-style phone as in HeartGold/SoulSilver and Emerald; the exact
 phone screens are an implementation detail. The Masters' call comes from the
-caretaker, not from an official league, and his first call says that Lorelei,
+caretaker, not from an official league, and her first call says that Lorelei,
 retired to Four Island, spoke of the player. That is story only: Lorelei stays
 an ordinary notable trainer with no guaranteed seat. The **Masters Gallery**
-on the basement wall records every Masters event's winner, including trainers
+on the basement wall tallies each Masters winner's wins, including trainers
 who won the events the player declined.
 
 **Balance.** Informational for now: the balance explorer simulates a run of
@@ -181,8 +185,8 @@ level 100) attends from the Masters' first call.
 ## Sample playthrough
 
 The player holds all eight Kanto badges and all eight Hoenn badges, TR 120.
-To keep the example simple, their TR stays at 120 throughout, as in the
-balance explorer.
+To keep the example simple, their TR stays at 120 throughout, and they fight
+each accepted event on the day of its call, as in the balance explorer.
 
 1. Day 7: Indigo calls first (it ties with Hoenn on badges, so Indigo). The
    base lineup tops out at level 82, so the aloof Champions (levels 99-100)
@@ -191,23 +195,23 @@ balance explorer.
 2. Day 14: Hoenn calls. The player accepts and beats Sidney, Winona, Juan,
    Phoebe, and Norman. With Indigo and Hoenn both won, the player is a Master.
 3. Day 21: the phone rings, and it is the caretaker of Seven Island's battle
-   house: Lorelei spoke of the player, and there is a room downstairs. The
-   aloof rule is off at the Masters, so the Champions come: Giovanni, Jasmine,
-   Steven, Wallace, and Lance. The player declines. Lance takes the Masters
-   title, and the Masters Gallery records him. A Masters title doesn't make
-   him a Master.
+   house: Lorelei spoke of the player, and there is a room downstairs. The aloof
+   rule is off at the Masters, so the Champions come; the lineup is Giovanni,
+   Jasmine, Steven, Wallace, and Lance. The player declines. Lance takes the
+   Masters title, and the Masters Gallery records his win. A Masters title
+   doesn't make him a Master.
 4. Days 28 to 49: the player declines everything. Blue takes Indigo's title,
    then Giovanni, a traveller, takes Hoenn's away from home; the Masters
    crowns Lance again; then Giovanni takes Indigo's title too. He has now
    reigned at both, so he is a Master for good.
 5. Day 56: Norman takes Hoenn's title. Day 63: at the Masters, Giovanni's
-   seat is guaranteed; he would have sat anyway, fourth by league score.
-   Lance wins the declined event and goes on the Gallery wall again.
+   seat is guaranteed, though his league score would have put him in the top
+   five anyway. Lance wins the declined event and adds a Gallery win.
 6. Days 70 and 77: Blue reigns at Indigo again, Giovanni at Hoenn again.
    Day 84: the Masters calls. Giovanni fought at Hoenn a week earlier, so he
    is tired: league score 65, far below Blue's 129. His guaranteed seat still
    holds, and Blue sits out. The lineup is Giovanni, Jasmine, Steven, Wallace,
-   and Lance. The player accepts and wins: the Gallery records the player, with
+   and Lance. The player accepts and wins: a Gallery win for the player, with
    prize money and the Masters title, and no Hall of Fame, Ribbon, or regional
    title.
 
@@ -215,12 +219,13 @@ balance explorer.
 
 The player's first win at each league keeps Today's records, as the
 [interregional League circuit](wayfarer-interregional-league-circuit.md)
-implements them; repeat wins give prize money and the title only.
+implements them; repeat wins give prize money and the title only (plus the
+Gallery win at the Masters).
 
 - Indigo's first win grants the shared Kanto/Johto Champion recognition with
   one Hall of Fame registration and Champion Ribbon flow.
-- The Masters Gallery records every Masters event's winner, the player or a
-  notable trainer. Winning the Masters gives a Gallery entry, prize money, and
+- The Masters Gallery tallies each Masters winner's wins, the player's or a
+  notable trainer's. Every Masters win gives a Gallery win, prize money, and
   the title, and never a regional Champion title, Hall of Fame registration,
   Ribbon, or new status.
 - First wins at both Indigo and Hoenn make the player a Master, which opens
@@ -245,7 +250,7 @@ seats at the Masters, battle order, and the Masters' caretaker and Gallery.
 Out of scope for v0: seeded or reputation-based league choice, news of who won
 the events the player declined (beyond the Masters Gallery), special
 invitational events, doubles at the Masters, any status or reward for winning
-the Masters beyond its Gallery entry, prize money, and title, and balance
+the Masters beyond its Gallery win, prize money, and title, and balance
 targets for leagues. Red's unlock after all three leagues and Blue's Dojo stay
 as they are. Today's circuit, with its fixed order and replays, stays
 documented as Today until this design is adopted; its record, ceremony, and
@@ -280,10 +285,8 @@ own TR.
   the player.
 - Balancing tools: tuning travel cost, fatigue, and the aloof margin against
   the lineup reports, and league balance targets.
-- Tuning the Masters lineup: with the aloof rule off, the Champions attend
-  from the first call at any world progress.
 - More of the Masters' story: the caretaker's later calls and lines, and what
-  the Gallery shows beyond each event's winner.
+  the Gallery shows beyond each winner's win count.
 - Seeded lineups and rotation.
 - Role windows (such as elite and headliner) and standing-based selection.
 - Matchmaking lineups around the player's TR.

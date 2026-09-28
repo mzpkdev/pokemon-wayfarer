@@ -48,6 +48,14 @@
   const signed = (value: number): string => (value > 0 ? `+${value}` : `${value}`)
   const tone = (gap: number): string => (gap > 0 ? "above" : gap < 0 ? "below" : "even")
   const slug = (text: string): string => text.toLowerCase().replaceAll(" ", "-")
+  /**
+   * Shows the model's value in a number field after its setter ran, so a clamped or rejected entry
+   * never lingers. While typing, a blank or partial entry (no number yet) is left alone; `always`
+   * (on change) writes the model value back regardless.
+   */
+  const reflect = (input: HTMLInputElement, value: number, always = false): void => {
+    if (always || (input.value !== "" && input.valueAsNumber !== value)) input.value = String(value)
+  }
   const locationRegions = (league: keyof typeof LOCATION_REGIONS): string =>
     LOCATION_REGIONS[league]?.join(" + ") ?? "neutral location"
   type SimulatedInvitation = (typeof lab.simulation.invitations)[number]
@@ -244,7 +252,11 @@
           min="0"
           step="1"
           value={lab.playerTR}
-          oninput={(event) => lab.setPlayerTR(event.currentTarget.valueAsNumber)}
+          oninput={(event) => {
+            lab.setPlayerTR(event.currentTarget.valueAsNumber)
+            reflect(event.currentTarget, lab.playerTR)
+          }}
+          onchange={(event) => reflect(event.currentTarget, lab.playerTR, true)}
         /><input
           type="range"
           aria-label="Player TR slider"
@@ -1064,7 +1076,10 @@
             max={INVITATIONS.max}
             step="1"
             value={lab.invitationChoices.length}
-            onchange={(event) => lab.setInvitationCount(event.currentTarget.valueAsNumber)}
+            onchange={(event) => {
+              lab.setInvitationCount(event.currentTarget.valueAsNumber)
+              reflect(event.currentTarget, lab.invitationChoices.length, true)
+            }}
           /></label
         >
         {#each HOME_REGIONS as region (region)}
@@ -1076,7 +1091,10 @@
               max={REGION_BADGES}
               step="1"
               value={lab.badgeSplit[region]}
-              onchange={(event) => lab.setRegionBadges(region, event.currentTarget.valueAsNumber)}
+              onchange={(event) => {
+                lab.setRegionBadges(region, event.currentTarget.valueAsNumber)
+                reflect(event.currentTarget, lab.badgeSplit[region], true)
+              }}
             /></label
           >
         {/each}
@@ -1110,8 +1128,8 @@
       Accepting freezes the lineup, and the event waits for the player: one attempt, a loss ends it. Declining
       runs it without them. The reigning champion is the player after a win, otherwise the lineup’s strongest
       (last in battle order). A Master is anyone, the player or a notable trainer, who has been champion
-      at both Indigo and Hoenn (a Masters title never counts). The Masters Gallery records every Masters
-      event’s winner. Days never change anyone’s strength.
+      at both Indigo and Hoenn (a Masters title never counts). The Masters Gallery tallies each Masters
+      winner’s wins (listed here by event). Days never change anyone’s strength.
     </p>
     <p class="hint league-note">
       Each event gives every league-eligible trainer (singles only: no Red, no Tate & Liza) a

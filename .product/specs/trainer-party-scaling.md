@@ -37,7 +37,7 @@ feature is disabled by `B_GYM_LEADER_SCALING` in the default configuration; its
 compiled plans would use player TR when enabled. Disabled paths retain existing
 authored behavior. Giovanni's initial Viridian battle separately uses a bespoke
 five-slot player-TR projection in
-[party construction](../../game/src/battle_main.c). Proposed notable trainer TR
+[party construction](../../game/src/battle_main.c). The v0 notable trainer TR
 and rosters belong to the [Notable trainers](notable-trainers.md) and Gym
 specifications. `LEAGUE` currently routes the fifteen enrolled circuit runtime
 IDs to the separate [League scaling specification](league-scaling.md), including

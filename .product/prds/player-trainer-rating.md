@@ -1,7 +1,8 @@
 # Player Trainer Rating
 
 Implemented: Partial. Today's badge and first-league-win formula, its saved
-value that never decreases, and every consumer listed below exist. The new
+value that never decreases, and every consumer listed below except
+notable-trainer world progress and league invitations (v0) exist. The new
 badge scale, uncapped TR, and the world scaling that follows it are v0.
 Design status: v0 accepted. How TR is earned and how the world answers it are
 approved; the exact numbers are placeholders tuned by playtesting.
@@ -150,8 +151,9 @@ changes yours.
   player's whole party (Lance only in v0).
 - **Move pool:** a notable trainer's ordered list of the moves they like; the
   aces pick first.
-- **Dormant entry:** a move-pool entry that none of the trainer's current
-  Pokémon can use yet; it wakes once one can.
+- **Dormant entry:** a move-pool entry that no current team member takes:
+  none can use it yet, or every one that can already knows it or holds four
+  pool moves. It wakes once a member can take it.
 - **Battle snapshot:** the team fixed when a battle starts and kept for the
   whole fight.
 - **League:** Indigo, Sevii Masters, or Hoenn.
@@ -165,6 +167,10 @@ changes yours.
   leagues taking turns
   ([which league calls](../specs/leagues.md#which-league-calls)). Days only
   schedule calls; they never change anyone's strength.
+- **In-game day:** a day on the game's in-game day clock, which is what
+  league invitations count. Today the game's day counter follows the
+  real-time clock (RTC); Leagues depends on the planned in-game clock, which
+  has no RTC.
 - **Accept / decline:** your answer to an invitation. Accepting fixes the
   event lineup and the event waits for you, with one attempt; declining lets
   the event run without you.
@@ -180,8 +186,8 @@ changes yours.
   title never counts. The Sevii Masters calls you once you are a Master, and
   gives notable trainers who are Masters guaranteed seats
   ([reign records](../specs/leagues.md#reign-records)).
-- **Masters Gallery:** the Sevii Masters' record of every Masters event's
-  winner, including events you declined.
+- **Masters Gallery:** the Sevii Masters' tally of each Masters winner's
+  wins, including the winners of events you declined.
 - **Home region:** a notable trainer's region (Kanto, Johto, or Hoenn).
 - **Trait:** an opt-in yes/no behaviour of a notable trainer; every trait
   defaults to no. v0 has two: traveller and aloof.
@@ -218,7 +224,8 @@ changes yours.
   ([selection](../specs/leagues.md#selection-and-order)).
 - **Match 1-5:** a position in the lineup.
 - **First league win:** your first win at a given league, which brings its
-  one-time effects; later wins are repeat wins (prize money and the title).
+  one-time effects; later wins are repeat wins (prize money and the title,
+  plus a Gallery win at the Masters).
 - **Challenge options:** the opt-in challenge menu.
 - **Today / v0 / Later:** what the game does now, the accepted design, and
   ideas deferred for now.

@@ -115,7 +115,9 @@ roster):
 - exactly one ace (always roster slot 1, the signature Pokémon): Ace Pokemon;
 - two or more: Double Ace Pokemon.
 
-A resolved team always has at least one ace, so one of the two is always set.
+A resolved team always has at least one ace, so one of the two is always set
+(except under trainer-species randomization, which turns ace protection off;
+see [Options and double battles](#options-and-double-battles)).
 The engine has no three-ace flag: with three aces the earliest-fought ace is
 unprotected (a known limit; Later). A trainer whose team grows past a second
 ace switches from Ace to Double Ace at that team size (Brock when Aerodactyl
@@ -132,13 +134,14 @@ is a notable trainer.
 
 For one battle, with `tr` the trainer's TR and `aces` the aces in the
 resolved team, both from the
-[battle snapshot](notable-trainers.md#battle-snapshot):
+[battle snapshot](notable-trainers.md#battle-snapshot), and
+`speciesRandomized` whether trainer-species randomization is on:
 
 ```text
 flags = Basic
       | styleFlags(playStyle)
       | skillFlags(tier 0..aiSkill(tr))
-      | (aces == 1 ? Ace Pokemon : Double Ace Pokemon)
+      | (speciesRandomized ? 0 : aces == 1 ? Ace Pokemon : Double Ace Pokemon)
       | (bossOmniscient ? Omniscient : 0)
       | (double battle ? Double Battle : 0)
       | (Smart Switching ? Smart Mon Choices : 0)
@@ -200,8 +203,9 @@ encounter's authored AI line along with its party
   ([overrides](gym-leader-scaling.md#overrides-and-enablement)). They change
   species, moves, items, IVs/EVs, or levels, not AI flags; the resolved flags
   still come from the snapshot's TR and aces, except that trainer-species
-  randomization turns ace protection off (the legacy party's last slots need
-  not be aces).
+  randomization turns ace protection off (Ace Pokémon and Double Ace
+  Pokémon): the roster is bypassed and the legacy party keeps its own order,
+  so its last slots need not be aces.
 - **Double battles** keep the engine's automatic Double Battle flag. Tate &
   Liza share one play style (Field marshal), one TR, and one resolved flag
   set, written for both opponent battlers. Leagues are singles only.
@@ -228,9 +232,7 @@ encounter's authored AI line along with its party
 
 ## Open questions
 
-None in v0. Under trainer-species randomization the roster is bypassed and the
-legacy party keeps its own order, so its last slots need not be aces: ace
-protection (Ace Pokémon and Double Ace Pokémon) is left off for those battles.
+None in v0.
 
 ## Later
 

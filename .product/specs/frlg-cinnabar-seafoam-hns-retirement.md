@@ -55,7 +55,7 @@ Seafoam Gym or Secret Cave path grants another Blaine or Groudon encounter.
 This Blue introduction records the historical coastal port. The implemented
 [Viridian finale](frlg-kanto-viridian-finale.md) now removes Blue from the exterior
 and Gym; its acceptance checks supersede this document's Blue check. The
-proposed [notable trainers](notable-trainers.md) model gives Blue
+v0 [notable trainers](notable-trainers.md) design gives Blue
 his own TR but no badge; it does not restore Viridian actors. The
 retirement boundary remains unchanged.
 

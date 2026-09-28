@@ -178,6 +178,10 @@ test("sets the player TR directly, with badges as presets, and reads old badge p
   const input = page.getByLabel("Player TR", { exact: true })
   await expect(input).toHaveValue("0")
   await expect(page.getByTestId("badge-match")).toHaveText("matches 0 badges")
+  // A negative TR clamps to 0, and the field shows the value the model uses.
+  await input.fill("-5")
+  await expect(input).toHaveValue("0")
+  await expect(page.getByTestId("player-tr")).toHaveText("0")
   // A badge preset sets the player TR from the badge formula.
   await page.getByRole("button", { name: "Set 12 badges", exact: true }).click()
   await expect(input).toHaveValue("100")
@@ -582,6 +586,20 @@ test("simulates league invitations: the gate, who calls, answers, fatigue and ch
   await page.getByLabel("Invitations", { exact: true }).press("Enter")
   await expect(page.getByTestId("invitations").locator("tbody tr")).toHaveCount(5)
   await expect(page.getByTestId("invitation-5-league")).toHaveText("Hoenn")
+  // Out-of-range entries are refused, and each field shows the value the simulation uses.
+  const invitations = page.getByLabel("Invitations", { exact: true })
+  await invitations.fill("30")
+  await invitations.press("Enter")
+  await expect(invitations).toHaveValue("5")
+  await invitations.fill("0")
+  await invitations.press("Enter")
+  await expect(invitations).toHaveValue("5")
+  await setBadges("Hoenn", "9")
+  await expect(page.getByLabel("Hoenn badges", { exact: true })).toHaveValue("8")
+  await expect(page.getByTestId("badge-split-note")).toHaveText(
+    "Badge split set by hand: Kanto 0, Johto 0, Hoenn 8.",
+  )
+  await expect(page.getByTestId("invitations").locator("tbody tr")).toHaveCount(5)
   await expect(page.getByTestId("champion-indigo")).toHaveText(
     "Indigo reigning champion after invitation 5: —",
   )
@@ -606,15 +624,34 @@ test("simulates league invitations: the gate, who calls, answers, fatigue and ch
   const exported = await (await downloadPromise).path()
   if (!exported) throw new Error("Export did not produce a file")
   const saved = JSON.parse(await readFile(exported, "utf8"))
-  expect(saved.version).toBe(19)
+  expect(saved.version).toBe(20)
   expect(saved.league).toEqual({
     choices: ["decline", "win", "win", "win", "decline"],
     split: { Kanto: 0, Johto: 0, Hoenn: 8 },
   })
+  // Import reads the league settings whatever their key order.
+  await page.getByLabel("Import experiment file", { exact: true }).setInputFiles({
+    name: "reordered.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(
+      JSON.stringify({
+        ...saved,
+        league: { split: { Hoenn: 8, Kanto: 0, Johto: 0 }, choices: saved.league.choices },
+      }),
+    ),
+  })
+  await expect(page.getByRole("status")).toHaveText("Imported experiment.")
+  await expect(page.getByTestId("badge-split-note")).toHaveText(
+    "Badge split set by hand: Kanto 0, Johto 0, Hoenn 8.",
+  )
   // 16 badges, Kanto 8 and Hoenn 8: win Indigo and Hoenn and the caretaker calls from the Sevii
   // Masters; declining the rest lets trainers reign, and one who reigns at both becomes a Master.
+  // A new badge total drops the split set by hand, which follows the badge total again.
   await tr.fill("120")
-  await setBadges("Kanto", "8")
+  await expect(page.getByTestId("badge-split-note")).toHaveText(
+    "Badge split from the 16 badges of the player TR, filling Kanto, Johto, then Hoenn (8 each).",
+  )
+  await setBadges("Johto", "0")
   await setBadges("Hoenn", "8")
   await page.getByLabel("Invitations", { exact: true }).fill("12")
   await page.getByLabel("Invitations", { exact: true }).press("Enter")
@@ -844,7 +881,7 @@ test("marks ace slots and fights them last, with slot 1 locked and at most three
   await expect(page.getByTestId("growth-slot-6")).not.toContainText("Ace")
 })
 
-test("flags incomplete rosters and rejects invalid edits and version 4 to 18 files", async ({
+test("flags incomplete rosters and rejects invalid edits and version 4 to 19 files", async ({
   page,
 }) => {
   await page.goto("/#trainer-balance")
@@ -1101,6 +1138,22 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 18 fil
   await expect(page.getByRole("alert")).toContainText(
     "Version 18 experiments save league calendar settings (days and wins) for the retired league calendar",
   )
+  await importFile(19, {
+    point: { playerTR: 80 },
+    league: { choices: ["decline"], split: null },
+    experiment: {
+      version: 19,
+      teamLevel: [[0, 15]],
+      teamSize: [[0, 2]],
+      wildLevel: [[0, 6]],
+      routeTrainerLevel: [[0, 9]],
+      archetypes: {},
+      trainers: {},
+    },
+  })
+  await expect(page.getByRole("alert")).toContainText(
+    "Version 19 experiments may carry catalog defaults that have since changed",
+  )
   await expect(page.getByTestId("badge-count")).toHaveText("0")
   await expect(page.getByTestId("selected-tr")).toHaveText("25")
 
@@ -1298,6 +1351,25 @@ test("edits the trainer, world and archetype scalers globally", async ({ page })
   await expect(page.getByTestId("wild-gap")).toHaveText("-22 vs cap")
   await expect(page.getByTestId("regular-trainer-level")).toHaveText("Lv. 82")
   await expect(page.getByTestId("regular-trainer-gap")).toHaveText("-18 vs cap")
+})
+
+test("keeps a stored experiment that fails to restore until Reset", async ({ page }) => {
+  const key = "wayfarer-trainer-balance-v20"
+  const stored = JSON.stringify({ tool: "wayfarer-trainer-balance", version: 20, point: {} })
+  await page.goto("/#trainer-balance")
+  await page.evaluate(([key, stored]) => localStorage.setItem(key!, stored!), [key, stored])
+  await page.reload()
+  await expect(page.getByRole("alert")).toContainText("Could not restore your stored experiment")
+  const saved = () => page.evaluate((key) => localStorage.getItem(key), key)
+  // Routine clicks save nothing over it.
+  await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
+  await page.getByRole("button", { name: "Lorelei Kanto · Elite Four", exact: true }).click()
+  expect(await saved()).toBe(stored)
+  await expect(page.getByRole("status")).toContainText("Not saved")
+  // Reset deliberately replaces it.
+  await page.getByText("Scalers & experiment settings", { exact: true }).click()
+  await page.getByRole("button", { name: "Reset all to catalog defaults", exact: true }).click()
+  expect(JSON.parse((await saved()) ?? "{}").version).toBe(20)
 })
 
 test("keeps controls and teams usable at a narrow viewport", async ({ page }) => {

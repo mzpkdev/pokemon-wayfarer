@@ -1379,8 +1379,9 @@ export const eligibleLeagues = (badges: RegionalBadges, knownByMasters: boolean)
  * Which eligible league calls next (null when none is eligible). `lastCall` is each league's last
  * call sequence number (null: never), from the monotonic call counter. Round-robin: the eligible
  * league that called least recently (the lowest sequence number; never counts as least recent);
- * ties go to the league with the most badges (the Masters has no badge count and loses to a
- * regional league), and remaining ties to Indigo. The first call is therefore from the eligible
+ * ties go to the league with the most badges, and remaining ties to Indigo. (The Masters has no
+ * badge count and would lose a badge tie, but it is never in one: it becomes eligible only after
+ * Indigo and Hoenn have both called.) The first call is therefore from the eligible
  * league with the most badges; a single eligible league calls every time.
  */
 export const callingLeague = (
@@ -1777,38 +1778,40 @@ export const rosterGaps = (
     return length < ROSTER_SIZE ? [{ id: trainer.id, name: trainer.name, length }] : []
   })
 
-export const EXPERIMENT_VERSION = 19
+export const EXPERIMENT_VERSION = 20
 const START_OVER = `Start from the version ${EXPERIMENT_VERSION} defaults`
 export const OLD_VERSION_REJECTION = (version: number): string =>
-  version === 18
-    ? `Version 18 experiments save league calendar settings (days and wins) for the retired league calendar instead of the invitation simulator, so they cannot be imported. ${START_OVER}.`
-    : version === 17
-      ? `Version 17 experiments save a league entry point for the retired standard entry sequence, so they cannot be imported. ${START_OVER}.`
-      : version === 16
-        ? `Version 16 experiments have no play styles (Trainer AI), so they cannot be imported. ${START_OVER}.`
-        : version === 15
-          ? `Version 15 experiments save a travel style instead of the traveller trait, so they cannot be imported. ${START_OVER}.`
-          : version === 14
-            ? `Version 14 experiments have no aloof trait and the old Sleeper Champions, so they cannot be imported. ${START_OVER}.`
-            : version === 13
-              ? `Version 13 experiments save a league seed for the retired seeded lineup draw, so they cannot be imported. ${START_OVER}.`
-              : version === 12
-                ? `Version 12 experiments have no home regions or traveller trait and assume fixed league lineups, so they cannot be imported. ${START_OVER}.`
-                : version === 11
-                  ? `Version 11 experiments author moves per roster slot and have no move pools, so they cannot be imported. ${START_OVER}.`
-                  : version === 10
-                    ? `Version 10 experiments use the old archetype names (early bloomer, late bloomer, plateau, fixed, rising star, second wind, bursts), so they cannot be imported. ${START_OVER}.`
-                    : version === 9
-                      ? `Version 9 experiments have only five archetypes (no Legend, Star, Comeback or Burst step scaler) and the old archetype assignments, so they cannot be imported. ${START_OVER}.`
-                      : version === 8
-                        ? `Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. ${START_OVER}.`
-                        : version === 7
-                          ? `Version 7 experiments give the Rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. ${START_OVER}.`
-                          : version === 6
-                            ? `Version 6 experiments give each notable trainer one fixed TR and cannot be imported. ${START_OVER} (start TR, archetype and peak TR).`
-                            : version === 5
-                              ? `Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. ${START_OVER}.`
-                              : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. ${START_OVER}.`
+  version === 19
+    ? `Version 19 experiments may carry catalog defaults that have since changed (Elite Four and Champion starts above the Gym band, Karen and Koga no longer travellers), so they cannot be imported. ${START_OVER}.`
+    : version === 18
+      ? `Version 18 experiments save league calendar settings (days and wins) for the retired league calendar instead of the invitation simulator, so they cannot be imported. ${START_OVER}.`
+      : version === 17
+        ? `Version 17 experiments save a league entry point for the retired standard entry sequence, so they cannot be imported. ${START_OVER}.`
+        : version === 16
+          ? `Version 16 experiments have no play styles (Trainer AI), so they cannot be imported. ${START_OVER}.`
+          : version === 15
+            ? `Version 15 experiments save a travel style instead of the traveller trait, so they cannot be imported. ${START_OVER}.`
+            : version === 14
+              ? `Version 14 experiments have no aloof trait and the old Sleeper Champions, so they cannot be imported. ${START_OVER}.`
+              : version === 13
+                ? `Version 13 experiments save a league seed for the retired seeded lineup draw, so they cannot be imported. ${START_OVER}.`
+                : version === 12
+                  ? `Version 12 experiments have no home regions or traveller trait and assume fixed league lineups, so they cannot be imported. ${START_OVER}.`
+                  : version === 11
+                    ? `Version 11 experiments author moves per roster slot and have no move pools, so they cannot be imported. ${START_OVER}.`
+                    : version === 10
+                      ? `Version 10 experiments use the old archetype names (early bloomer, late bloomer, plateau, fixed, rising star, second wind, bursts), so they cannot be imported. ${START_OVER}.`
+                      : version === 9
+                        ? `Version 9 experiments have only five archetypes (no Legend, Star, Comeback or Burst step scaler) and the old archetype assignments, so they cannot be imported. ${START_OVER}.`
+                        : version === 8
+                          ? `Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. ${START_OVER}.`
+                          : version === 7
+                            ? `Version 7 experiments give the Rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. ${START_OVER}.`
+                            : version === 6
+                              ? `Version 6 experiments give each notable trainer one fixed TR and cannot be imported. ${START_OVER} (start TR, archetype and peak TR).`
+                              : version === 5
+                                ? `Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. ${START_OVER}.`
+                                : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. ${START_OVER}.`
 
 /** Validates an experiment against the catalog; with `moves`, every move pool name must be one of them. */
 export const validateExperiment = (
