@@ -744,35 +744,41 @@ describe("move pools", () => {
     ).toBe(true)
   })
 
-  it("resolves Brock's placeholder pool from the catalog learnsets", () => {
+  it("resolves Brock's pool draft from the catalog learnsets", () => {
     const brock = catalog.find((record) => record.id === "brock")!
     const moves = (world: number) =>
       resolveTrainer(brock, defaults, world, evolution, learnsets).team.map((entry) => [
         entry.species,
         entry.moves.map(({ move, source }) => `${move}${source === "pool" ? "*" : ""}`),
       ])
-    // The placeholder pool has no from levels, so a member takes only moves its current species
-    // learns by level-up, once it reaches the learn level. At world progress 0 Onix (the ace) takes
-    // Curse; Geodude is below its Earthquake learn level.
+    // An entry without a from level goes only to a member whose current species learns it by
+    // level-up, once it reaches the learn level. At world progress 0 Onix (the ace) takes Curse;
+    // it already knows Stealth Rock, and Geodude is below its Earthquake learn level.
     expect(moves(0)).toEqual([
       ["Onix", ["Curse*", "Rock Tomb", "Rage", "Stealth Rock"]],
       ["Geodude", ["Rollout", "Magnitude", "Strength", "Rock Throw"]],
     ])
     const early = resolveTrainer(brock, defaults, 0, evolution, learnsets)
     const reasons = new Map(early.dormant.map((entry) => [entry.move, dormantReasonText(entry)]))
-    expect(reasons.get("Sky Attack")).toBe("no one can learn it")
+    expect(reasons.get("Stealth Rock")).toBe(
+      "taken: every learner already knows it or has four pool moves",
+    )
+    // Sandstorm has a from level: Onix learns it by level-up only at Lv 52, Golem only by TM.
+    expect(reasons.get("Sandstorm")).toBe("below from level Lv 20")
     expect(reasons.get("Earthquake")).toBe("below its learn level Lv 34")
-    // Body Slam and Toxic are TM/tutor-only for the current members.
-    expect(reasons.get("Body Slam")).toBe("TM/tutor only — needs a from level")
-    expect(reasons.get("Toxic")).toBe("TM/tutor only — needs a from level")
+    // Only Golem and Crobat learn these, and neither has joined yet.
+    expect(reasons.get("Heavy Slam")).toBe("no one can learn it")
+    expect(reasons.get("Cross Poison")).toBe("no one can learn it")
     const timeline = milestones(brock, defaults, evolution, learnsets).map(milestoneText)
-    expect(timeline).toContain("57: Onix → Steelix, Fire Fang wakes (Steelix)")
-    expect(timeline).toContain("85: Kabuto → Kabutops, Night Slash wakes (Kabutops)")
+    expect(timeline).toContain("6: Sandstorm wakes (Onix)")
+    expect(timeline).toContain(
+      "76: Graveler → Golem, Golbat → Crobat, Heavy Slam wakes (Golem), Cross Poison wakes (Crobat)",
+    )
     // Golem learns Earthquake by level-up; once it leaves its default moveset, the pool brings it back.
     expect(timeline).toContain("157: Earthquake wakes (Golem)")
     // The pool editor's hint reads every stage on the roster lines.
     const learning = (move: string) => poolLearning(move, brock.roster, evolution, learnsets)
-    expect([learning("Earthquake"), learning("Toxic"), learning("Sky Attack")]).toEqual([
+    expect([learning("Earthquake"), learning("Toxic"), learning("Iron Defense")]).toEqual([
       "level-up",
       "tm-only",
       "unlearnable",
@@ -1581,39 +1587,41 @@ describe("catalog", () => {
       expect(learnsets.species.get(species)!.learnable.has("Earthquake")).toBe(true)
     expect(learnsets.species.get("Zubat")!.learnable.has("Earthquake")).toBe(false)
     expect(learnsets.moves.has("Stone Edge")).toBe(true)
-    // An old alias is not a move of its own: Karen's source Faint Attack is the pool's Feint Attack.
+    // An old alias is not a move of its own: Faint Attack is Feint Attack.
     expect(learnsets.moves.has("Faint Attack")).toBe(false)
-    expect(catalog.find((record) => record.id === "karen")!.movePool).toContainEqual({
-      move: "Feint Attack",
-    })
+    expect(learnsets.moves.has("Feint Attack")).toBe(true)
   })
 
-  it("builds each placeholder pool from the previous per-slot moves, aces first", () => {
+  it("uses the user-directed pool draft: 8–12 ordered entries, from levels only where needed", () => {
     const brock = catalog.find((record) => record.id === "brock")!
-    expect(brock.movePoolSource).toMatch(/^Placeholder pool from previous per-slot moves/)
-    // Aerodactyl (ace, slot 6), then Golem, Kabutops and Omastar: Steelix and Crobat had no
-    // source moves. A move stays twice only when two slots had it.
-    expect(brock.movePool.map((entry) => entry.move)).toEqual([
-      "Ancient Power",
-      "Sky Attack",
-      "Earthquake",
-      "Fire Fang",
-      "Curse",
-      "Stone Edge",
-      "Body Slam",
-      "Earthquake",
-      "Surf",
-      "Ancient Power",
-      "Night Slash",
-      "Swords Dance",
-      "Ancient Power",
-      "Ice Beam",
-      "Surf",
-      "Toxic",
+    expect(brock.movePoolSource).toBe(
+      "user-directed pool draft v1: hazards and sand walls (Sturdy walls, Stealth Rock, chip)",
+    )
+    // Curse stands in for Iron Defense, which no roster line learns.
+    expect(brock.movePool).toEqual([
+      { move: "Stealth Rock" },
+      { move: "Sandstorm", fromLevel: 20 },
+      { move: "Curse" },
+      { move: "Stone Edge" },
+      { move: "Earthquake" },
+      { move: "Rock Slide" },
+      { move: "Heavy Slam" },
+      { move: "Rock Blast" },
+      { move: "Cross Poison" },
+      { move: "Explosion" },
     ])
-    expect(
-      catalog.every((record) => record.movePool.every((entry) => !("fromLevel" in entry))),
-    ).toBe(true)
+    for (const record of catalog) {
+      expect(record.movePoolSource).toMatch(/^user-directed pool draft v1: /)
+      expect(record.movePool.length).toBeGreaterThanOrEqual(8)
+      expect(record.movePool.length).toBeLessThanOrEqual(12)
+      // Every entry is learnable on the roster lines; one only TM/tutor learners get has a from level.
+      for (const entry of record.movePool) {
+        const learning = poolLearning(entry.move, record.roster, evolution, learnsets)
+        const where = `${record.id} ${entry.move}`
+        expect(learning, where).not.toBe("unlearnable")
+        if (learning === "tm-only") expect(entry.fromLevel, where).toBeDefined()
+      }
+    }
   })
 
   it("has no roster content gaps: every catalog roster lists six Pokémon", () => {

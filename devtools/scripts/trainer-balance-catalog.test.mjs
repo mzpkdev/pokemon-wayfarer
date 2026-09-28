@@ -210,14 +210,19 @@ test("the default moveset keeps the last four level-up moves, skipping evolution
   assert.deepEqual(run("module.default_moveset(args, 19)", learnset), ["B", "C", "D", "E"])
 })
 
-test("placeholder pools list the previous per-slot moves, aces first, once per slot", () => {
-  const roster = [true, false, false, true].map((isAce) => ({ isAce }))
-  const moves = [["Rock Slide"], ["Earthquake", "Rock Slide"], [], ["Earthquake", "Earthquake"]]
-  assert.deepEqual(run("module.placeholder_pool(args[0], args[1])", [roster, moves]), [
-    { move: "Rock Slide" },
-    { move: "Earthquake" },
-    { move: "Earthquake" },
-    { move: "Rock Slide" },
+test("the pool draft gives every trainer 8-12 ordered entries with tiered from levels", () => {
+  const pools = run("{name: module.draft_pool(name) for name in module.POOL_DRAFT}")
+  assert.equal(Object.keys(pools).length, 38)
+  for (const [name, pool] of Object.entries(pools)) {
+    assert.ok(pool.length >= 8 && pool.length <= 12, `${name}: ${pool.length} entries`)
+    for (const entry of pool)
+      if ("fromLevel" in entry)
+        assert.ok([20, 30, 38, 40, 45, 55].includes(entry.fromLevel), `${name} ${entry.move}`)
+  }
+  assert.deepEqual(pools.Brock.slice(0, 3), [
+    { move: "Stealth Rock" },
+    { move: "Sandstorm", fromLevel: 20 },
+    { move: "Curse" },
   ])
 })
 

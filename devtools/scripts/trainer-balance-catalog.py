@@ -7,9 +7,8 @@ moves/items describe authored sources only. Each trainer gets placeholder growth
 ordered roster slots, identity/anime picks, 1-3 aces). A slot keeps authored
 source item/ability/nature only when its species is in the trainer's source
 party; otherwise it has no item. Roster slots carry no moves: each trainer has
-one ordered move pool, a placeholder built from those source slots' moves. A
-roster short of six or a slot that is not a final stage is a warning, not a
-failure.
+one ordered move pool, the user-directed pool draft v1 (POOL_DRAFT). A roster
+short of six or a slot that is not a final stage is a warning, not a failure.
 
 The catalog also records each roster species' predecessor chain with evolution
 levels: species_info EVO_LEVEL thresholds, or the shared evolution-level table
@@ -51,7 +50,7 @@ LEARNSET_CPPFLAGS = ["-P", "-iquote", "include", "-iquote", "src", "-Wno-trigrap
                      f"-D{LEARNSET_BUILD}", "-std=gnu17", "-DENABLE_COLOSSEUM_MULTIBOOT=0",
                      "-DENABLE_BERRY_GLITCH_FIX_MULTIBOOT=0", "-DENABLE_EREADER_TRANSFER=0", "-DPOKEMON_HNS"]
 MAX_POOL_MOVES = 64
-POOL_NOTE = "placeholder pool from previous per-slot moves"
+POOL_NOTE = "user-directed pool draft v1"
 ROSTER_SIZE = 6
 MAX_ACES = 3
 CATALOG_SIZE = 38
@@ -214,8 +213,7 @@ EVOLUTION_LEVELS = [
 # Pokémon (an ace at offset 0); other aces are at offset 0 and fillers at -2.
 # Tags record off-type, anime or lore picks. Battle content is a placeholder: a
 # slot keeps the authored item/ability/nature of the same species in the
-# trainer's source party, otherwise it has no item; the source slots' moves
-# seed the placeholder move pool.
+# trainer's source party, otherwise it has no item.
 DRAFT = {
     "Brock": [("Steelix", True), ("Golem", False), ("Crobat", False, "anime Zubat"),
               ("Kabutops", False), ("Omastar", False), ("Aerodactyl", True)],
@@ -295,6 +293,154 @@ DRAFT = {
              ("Nidoking", False), ("Scizor", False), ("Arcanine", True)],
 }
 DRAFT_NOTE = "user-directed roster draft v1 (identity/anime picks); battle content placeholder"
+# The user-directed move pool draft v1: name -> (gimmick, ordered entries). An
+# entry is a move, or (move, from level) when a roster line the entry is meant
+# for learns it only by TM/tutor, or to hold back a strong move a line learns
+# by level-up too early. From levels by tier: status and utility 20; attacks
+# under 90 power and setup 30 (Shell Smash, Belly Drum, Quiver Dance 40);
+# 90-100 power 38; 110+ power or a heavy drawback 45; OHKO 55. Order is
+# identity: top entries reach the aces first. A draft move no roster line can
+# learn is replaced by the closest legal move that keeps the gimmick.
+POOL_DRAFT = {
+    # Curse for Iron Defense (no roster line learns it).
+    "Brock": ("hazards and sand walls (Sturdy walls, Stealth Rock, chip)", [
+        "Stealth Rock", ("Sandstorm", 20), "Curse", "Stone Edge", "Earthquake", "Rock Slide", "Heavy Slam",
+        "Rock Blast", "Cross Poison", "Explosion"]),
+    "Misty": ("rain-boosted glass cannons", [
+        ("Rain Dance", 20), "Surf", "Hydro Pump", ("Thunder", 45), "Psychic", "Recover", "Rapid Spin",
+        "Ice Beam", "Dragon Dance", "Disable"]),
+    "Lt. Surge": ("paralysis and pivoting", [
+        "Thunder Wave", "Thunderbolt", ("Volt Switch", 30), "Discharge", "Light Screen", "Thunder Punch",
+        ("Ice Punch", 30), "Flash Cannon", "Explosion", "Charge Beam"]),
+    "Erika": ("status and sleep under sun", [
+        "Sleep Powder", "Stun Spore", "Leech Seed", "Giga Drain", "Sunny Day", "Solar Beam",
+        ("Sludge Bomb", 38), "Synthesis", "Petal Dance", "Toxic"]),
+    # Poison Powder for Toxic Spikes (no roster line learns it).
+    "Janine": ("ninja poison and evasion", [
+        ("Toxic", 20), "Poison Powder", ("Double Team", 20), ("Substitute", 20), "Sludge Bomb", ("U Turn", 30),
+        "Poison Jab", "Cross Poison", "Smokescreen", ("Protect", 20)]),
+    "Sabrina": ("mind control", [
+        "Calm Mind", "Psychic", "Hypnosis", "Reflect", ("Light Screen", 20), "Future Sight", "Shadow Ball",
+        "Barrier", "Psyshock", "Dazzling Gleam"]),
+    # Recover for Morning Sun (no roster line learns it).
+    "Blaine": ("sun and raw fire", [
+        "Sunny Day", "Flamethrower", "Fire Blast", ("Will O Wisp", 20), "Flare Blitz", "Extreme Speed",
+        ("Solar Beam", 45), "Lava Plume", ("Overheat", 45), "Recover"]),
+    # Power Gem for Pay Day (only Meowth learns it, at Lv 30, after evolving at 28).
+    "Giovanni": ("ground brutes and the boss's cat", [
+        "Earthquake", "Stone Edge", "Megahorn", ("Swords Dance", 30), "Fake Out", "Power Gem", "Nasty Plot",
+        "Sucker Punch", "Earth Power", ("Sludge Wave", 38)]),
+    # Fly for Brave Bird (no roster line learns it); Whirlwind for Defog (no roster line learns it).
+    "Falkner": ("speed and Tailwind", [
+        "Tailwind", ("Fly", 38), "Roost", "Air Slash", "Hurricane", "Feather Dance", ("U Turn", 30),
+        "Drill Peck", "Mirror Move", "Whirlwind"]),
+    "Bugsy": ("setup and pivot bugs", [
+        "Fury Cutter", "Swords Dance", "Bullet Punch", "U Turn", "Megahorn", "Close Combat", "Quiver Dance",
+        "Sleep Powder", "Bug Buzz", "Sticky Web"]),
+    "Whitney": ("Rollout and Milk Drink (the classic wall)", [
+        "Rollout", "Milk Drink", ("Attract", 20), "Body Slam", "Stomp", "Metronome", ("Soft Boiled", 20),
+        "Moonblast", "Hyper Voice", "Heal Bell"]),
+    # Mean Look for Perish Song (only Misdreavus learns it, at Lv 46, after evolving at 36).
+    "Morty": ("sleep, dream and curse", [
+        "Hypnosis", "Dream Eater", "Shadow Ball", "Curse", "Destiny Bond", "Will O Wisp", "Hex", "Confuse Ray",
+        "Mean Look", "Night Shade"]),
+    # Quick Attack for Mach Punch (no roster line learns it).
+    "Chuck": ("waterfall-trained power", [
+        "Dynamic Punch", "Bulk Up", ("Close Combat", 45), "Quick Attack", ("Focus Punch", 45),
+        ("Waterfall", 30), ("Ice Punch", 30), "Triple Kick", "Cross Chop", "Aura Sphere"]),
+    "Jasmine": ("iron defense and hazards", [
+        "Iron Tail", "Iron Defense", "Spikes", "Stealth Rock", "Rapid Spin", "Gyro Ball", ("Thunderbolt", 38),
+        "Thunder Wave", "Flash Cannon", "Heavy Slam"]),
+    # Aurora Beam for Freeze Dry (no roster line learns it).
+    "Pryce": ("hail and old-master patience", [
+        "Hail", "Blizzard", "Ice Shard", "Icicle Crash", "Earthquake", ("Aurora Veil", 20), "Rest",
+        ("Sleep Talk", 20), "Ice Beam", "Aurora Beam"]),
+    # Dragon Claw for Draco Meteor (no roster line learns it).
+    "Clair": ("rain dragons and Dragon Dance", [
+        "Dragon Dance", "Outrage", ("Rain Dance", 20), "Hydro Pump", "Dragon Pulse", "Thunder Wave",
+        "Earthquake", "Dragon Rush", "Aqua Tail", "Dragon Claw"]),
+    "Roxanne": ("the fossil lesson: Sturdy counters and hazards", [
+        ("Rock Tomb", 30), ("Stealth Rock", 20), "Sandstorm", "Power Gem", "Metal Burst", ("Head Smash", 45),
+        "Rock Polish", "Earth Power", "Thunder Wave", ("Wood Hammer", 45)]),
+    # Stun Spore for Spore (only Shroomish learns it, at Lv 40, after evolving at 23).
+    "Brawly": ("the surfer brawler: Fake Out and Bulk Up", [
+        "Fake Out", "Bulk Up", "Close Combat", ("Drain Punch", 30), "Mach Punch", "Stun Spore",
+        ("Bullet Seed", 30), "Ice Punch", "Knock Off", ("Surf", 38)]),
+    "Wattson": ("Wahaha! Paralysis and Explosion", [
+        "Thunder Wave", ("Volt Switch", 30), "Discharge", ("Thunderbolt", 38), ("Explosion", 45),
+        "Magnet Rise", "Light Screen", "Flash Cannon", "Charge", ("Thunder", 45)]),
+    "Flannery": ("sun and Eruption", [
+        ("Sunny Day", 20), "Eruption", ("Overheat", 45), "Lava Plume", ("Will O Wisp", 20), "Yawn",
+        ("Solar Beam", 45), "Earth Power", "Heat Wave", "Rapid Spin"]),
+    # Quick Attack for Extreme Speed (no roster line learns it).
+    "Norman": ("Facade and Belly Drum normals", [
+        ("Facade", 30), "Slack Off", "Belly Drum", "Quick Attack", "Fake Out", "Body Slam", "Double Edge",
+        "Hammer Arm", "Encore", "Rest"]),
+    "Winona": ("graceful flyers: Roost and Dragon Dance", [
+        ("Aerial Ace", 30), ("Roost", 20), "Dragon Dance", ("Brave Bird", 45), ("Hurricane", 45), "Tailwind",
+        "Spikes", "Whirlwind", "Cotton Guard", "Sky Attack"]),
+    # Heal Pulse for Helping Hand (no roster line learns it).
+    "Tate & Liza": ("double-battle sync: Levitate + Earthquake, Trick Room", [
+        ("Calm Mind", 30), ("Earthquake", 38), "Rock Slide", ("Trick Room", 20), "Heal Pulse", "Psychic",
+        ("Reflect", 20), ("Light Screen", 20), "Explosion", "Cosmic Power"]),
+    # Razor Shell for Aqua Jet (no roster line learns it).
+    "Juan": ("flamboyant rain and charm", [
+        ("Water Pulse", 30), ("Rain Dance", 20), ("Scald", 30), "Hydro Pump", "Dragon Dance", "Attract",
+        "Charm", "Razor Shell", "Crabhammer", "Sheer Cold"]),
+    # Aurora Beam for Freeze Dry (no roster line learns it).
+    "Lorelei": ("ice and Shell Smash", [
+        "Shell Smash", "Icicle Spear", "Aurora Beam", "Perish Song", "Blizzard", "Ice Beam", "Lovely Kiss",
+        "Slack Off", ("Aurora Veil", 20), "Rest"]),
+    # Feint for Fake Out (no roster line learns it).
+    "Bruno": ("No Guard punches and Bulk Up", [
+        "Dynamic Punch", "Bulk Up", "Close Combat", "High Jump Kick", "Mach Punch", ("Fire Punch", 30),
+        "Ice Punch", "Thunder Punch", "Feint", ("Earthquake", 38)]),
+    "Agatha": ("trap and drain", [
+        "Mean Look", "Curse", "Destiny Bond", "Hypnosis", "Dream Eater", "Shadow Ball", "Glare", "Haze",
+        "Bonemerang", ("Will O Wisp", 20)]),
+    "Koga": ("poison stall and evasion", [
+        ("Toxic", 20), "Toxic Spikes", "Spikes", "Minimize", ("Double Team", 20), ("Substitute", 20),
+        "Sludge Bomb", ("Will O Wisp", 20), "Sticky Web", "Explosion"]),
+    "Will": ("psychic masquerade: Trick Room and screens", [
+        ("Trick Room", 20), "Calm Mind", "Psychic", "Reflect", ("Light Screen", 20), "Future Sight",
+        "Confuse Ray", "Lovely Kiss", "Yawn", "Moonblast"]),
+    # Confuse Ray for Wish (no roster line learns it); Fly for Brave Bird (no roster line learns it).
+    "Karen": ("disruption. \"Strong Pokémon, weak Pokémon.\"", [
+        "Foul Play", "Moonlight", "Confuse Ray", "Taunt", "Nasty Plot", "Dark Pulse", "Sucker Punch",
+        "Sleep Powder", "Shadow Ball", ("Fly", 38)]),
+    # Brick Break for Superpower (no roster line learns it).
+    "Sidney": ("dark aggression and priority", [
+        "Sucker Punch", "Swords Dance", "Knock Off", "Night Slash", "Crunch", "Taunt", ("Protect", 20),
+        "Aqua Jet", ("Brick Break", 30), "Leaf Blade"]),
+    # Grudge for Pain Split (no roster line learns it); Detect for Recover (no roster line learns it);
+    # Hail for Spikes (no roster line learns it).
+    "Phoebe": ("burns and grudges", [
+        "Will O Wisp", "Shadow Sneak", "Destiny Bond", "Grudge", "Shadow Claw", "Detect", ("Trick Room", 20),
+        "Hail", ("Ice Beam", 38), "Curse"]),
+    # Icy Wind for Spikes (no roster line learns it).
+    "Glacia": ("hail and Sheer Cold", [
+        "Hail", "Blizzard", ("Aurora Veil", 20), ("Sheer Cold", 55), "Freeze Dry", "Ice Shard", "Protect",
+        ("Surf", 38), "Icy Wind", ("Explosion", 45)]),
+    "Drake": ("sea-captain dragons", [
+        "Dragon Claw", "Dragon Dance", "Outrage", "Earthquake", ("Waterfall", 30), "Flamethrower", "Crunch",
+        "Dragon Pulse", ("Roost", 20), "Hydro Pump"]),
+    # Agility for Extreme Speed (no roster line learns it).
+    "Lance": ("Hyper Beam Dragonite and speed", [
+        "Hyper Beam", "Agility", "Dragon Dance", "Outrage", "Thunder Wave", ("Fire Blast", 45),
+        ("Earthquake", 38), "Waterfall", "Roost", "Dragon Rush"]),
+    # Aqua Ring for Mirror Coat (no roster line learns it).
+    "Wallace": ("rain, bulk and beauty", [
+        "Rain Dance", ("Scald", 30), "Recover", "Aqua Ring", "Water Spout", ("Giga Drain", 30), "Toxic Spikes",
+        "Earthquake", "Dragon Dance", ("Ice Beam", 38)]),
+    # Double Edge for Head Smash (no roster line learns it); Ingrain for Recover (no roster line learns it).
+    "Steven": ("Stealth Rock and Meteor Mash", [
+        "Meteor Mash", "Bullet Punch", ("Stealth Rock", 20), ("Earthquake", 38), "Double Edge", "Spikes",
+        ("Roost", 20), "Rapid Spin", "Ingrain", ("Swords Dance", 30)]),
+    # Dark Pulse for Foul Play (no roster line learns it).
+    "Blue": ("Gary's all-rounder: priority and coverage", [
+        ("Dark Pulse", 30), "Moonlight", "Psychic", "Calm Mind", "Extreme Speed", "Flare Blitz",
+        "Bullet Punch", "Swords Dance", "Earth Power", "Megahorn", "Hurricane", "Roost"]),
+}
 GROWTH_NOTE = {
     "steady": "a Steady (keeps a fixed fraction of the player's pace)",
     "prodigy": "a Prodigy (brilliant early, then evens out: fast early, then slows)",
@@ -670,17 +816,16 @@ def known_species():
 
 
 def draft_roster(name, source_slots, known):
-    """The DRAFT roster as catalog roster slots, each slot's previous moves, and "species (source slot)" for kept content.
+    """The DRAFT roster as catalog roster slots and "species (source slot)" for kept content.
 
     `source_slots` is [(slot, provenance)]. A species must resolve in the game
     data. A slot whose species is in the source party keeps that source slot's
-    item/ability/nature (first match) and reports its authored moves, which
-    seed the placeholder move pool; every other slot has no item, ability,
-    nature or moves.
+    item/ability/nature (first match); every other slot has no item, ability
+    or nature.
     """
     if name not in DRAFT:
         raise ValueError(f"{name}: add a DRAFT roster")
-    roster, moves, kept = [], [], []
+    roster, kept = [], []
     for index, (species, is_ace, *tag) in enumerate(DRAFT[name]):
         token = species_token(species)
         if token not in known:
@@ -688,29 +833,21 @@ def draft_roster(name, source_slots, known):
         source, where = next(((slot, where) for slot, where in source_slots if slot["species"] == token), (None, None))
         entry = {"species": display(token, "SPECIES_"), "levelOffset": 0 if is_ace else DEFAULT_OFFSET,
                  "isAce": is_ace, "item": None, "ability": None, "nature": None}
-        slot_moves = []
         if source is not None:
             authored = member(source)
             kept.append(f"{entry['species']} ({where})")
-            slot_moves = authored["moves"]
             entry.update(item=authored["item"],
                          ability=optional(source.get("ability"), "ABILITY_", "ABILITY_NONE"),
                          # trainerproc emits NATURE_HARDY when a party omits the nature.
                          nature=optional(source.get("nature"), "NATURE_", "NATURE_HARDY"))
         roster.append(entry)
-        moves.append(slot_moves)
-    return roster, moves, kept
+    return roster, kept
 
 
-def placeholder_pool(roster, slot_moves):
-    """The placeholder move pool from the previous per-slot moves.
-
-    Slots in order, ace slots first, then filler slots; each slot's moves in
-    its order, once per slot, so a move stays twice only when two slots had it.
-    """
-    order = [index for index, entry in enumerate(roster) if entry["isAce"]] + \
-            [index for index, entry in enumerate(roster) if not entry["isAce"]]
-    return [{"move": move} for index in order for move in dict.fromkeys(slot_moves[index])]
+def draft_pool(name):
+    """The POOL_DRAFT move pool as catalog entries ({"move"[, "fromLevel"]}), in order."""
+    return [{"move": entry} if isinstance(entry, str) else {"move": entry[0], "fromLevel": entry[1]}
+            for entry in POOL_DRAFT[name][1]]
 
 
 def validate_pool(name, pool, moves):
@@ -845,8 +982,8 @@ def generate():
         raise ValueError("unsupported gym catalog")
     result = []
     gaps = []
-    if set(GROWTH) != {row[0] for row in ROSTER} or set(DRAFT) != set(GROWTH):
-        raise ValueError("GROWTH and DRAFT must list exactly the catalog trainers")
+    if set(GROWTH) != {row[0] for row in ROSTER} or set(DRAFT) != set(GROWTH) or set(POOL_DRAFT) != set(GROWTH):
+        raise ValueError("GROWTH, DRAFT and POOL_DRAFT must list exactly the catalog trainers")
     for name, region, role, family, trainer in ROSTER:
         growth = GROWTH[name]
         validate_growth(name, growth)
@@ -886,8 +1023,8 @@ def generate():
         else:
             source_slots = [(slot, f"{records[trainer]['source']}:{trainer}[{index}]") for index, slot in enumerate(reference_slots)]
             origin = "the reference party"
-        roster, slot_moves, kept_slots = draft_roster(name, source_slots, known)
-        pool = placeholder_pool(roster, slot_moves)
+        roster, kept_slots = draft_roster(name, source_slots, known)
+        pool = draft_pool(name)
         kept.append((name, [text.split(" (")[0] for text in kept_slots]))
         # A duo is fought as its source double battle; leagues are singles only.
         double = records[trainer].get("battleType") == "TRAINER_BATTLE_TYPE_DOUBLES"
@@ -922,10 +1059,7 @@ def generate():
                                    + (f" (placeholder start TR in the {GYM_START_BAND[0]}–{GYM_START_BAND[1]} Gym band by archetype)" if gym else "")
                                    + f", {GROWTH_NOTE[archetype]}, peak TR {peak}.",
                        "roster": roster, "rosterSource": roster_source, "movePool": pool,
-                       "movePoolSource": f"{POOL_NOTE[0].upper()}{POOL_NOTE[1:]}: the source slots' moves"
-                                         " (species in the source party), ace slots first, then filler slots, each in slot order;"
-                                         " a move is listed once per slot that had it. No from levels."
-                                         + ("" if pool else " No roster species is in the source party, so the pool is empty.")})
+                       "movePoolSource": f"{POOL_NOTE}: {POOL_DRAFT[name][0]}"})
     # 37 characters plus the Tate & Liza duo.
     if len(result) != CATALOG_SIZE or len({row["id"] for row in result}) != CATALOG_SIZE:
         raise ValueError(f"catalog must contain exactly {CATALOG_SIZE} unique entries")

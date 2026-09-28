@@ -4380,16 +4380,11 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Crobat [anime Zubat]. Aces (Steelix, Aerodactyl) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Golem (game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[0]), Kabutops (game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[2]), Omastar (game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[3]), Aerodactyl (game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[1]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Ancient Power"
+          "move": "Stealth Rock"
         },
         {
-          "move": "Sky Attack"
-        },
-        {
-          "move": "Earthquake"
-        },
-        {
-          "move": "Fire Fang"
+          "move": "Sandstorm",
+          "fromLevel": 20
         },
         {
           "move": "Curse"
@@ -4398,37 +4393,25 @@
           "move": "Stone Edge"
         },
         {
-          "move": "Body Slam"
-        },
-        {
           "move": "Earthquake"
         },
         {
-          "move": "Surf"
+          "move": "Rock Slide"
         },
         {
-          "move": "Ancient Power"
+          "move": "Heavy Slam"
         },
         {
-          "move": "Night Slash"
+          "move": "Rock Blast"
         },
         {
-          "move": "Swords Dance"
+          "move": "Cross Poison"
         },
         {
-          "move": "Ancient Power"
-        },
-        {
-          "move": "Ice Beam"
-        },
-        {
-          "move": "Surf"
-        },
-        {
-          "move": "Toxic"
+          "move": "Explosion"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: hazards and sand walls (Sturdy walls, Stealth Rock, chip)"
     },
     {
       "id": "misty",
@@ -4514,7 +4497,18 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Golduck [anime Psyduck], Politoed [anime Poliwag], Lapras [HGSS], Kingdra [anime Horsea]. Aces (Starmie, Gyarados, Kingdra) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Starmie (game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[5]), Golduck (game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[0]), Lapras (game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[4]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
+          "move": "Rain Dance",
+          "fromLevel": 20
+        },
+        {
           "move": "Surf"
+        },
+        {
+          "move": "Hydro Pump"
+        },
+        {
+          "move": "Thunder",
+          "fromLevel": 45
         },
         {
           "move": "Psychic"
@@ -4523,34 +4517,19 @@
           "move": "Recover"
         },
         {
-          "move": "Thunderbolt"
-        },
-        {
-          "move": "Aqua Tail"
-        },
-        {
-          "move": "Psychic"
-        },
-        {
-          "move": "Wonder Room"
-        },
-        {
-          "move": "Cross Chop"
-        },
-        {
-          "move": "Hydro Pump"
+          "move": "Rapid Spin"
         },
         {
           "move": "Ice Beam"
         },
         {
-          "move": "Rain Dance"
+          "move": "Dragon Dance"
         },
         {
-          "move": "Reflect"
+          "move": "Disable"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: rain-boosted glass cannons"
     },
     {
       "id": "lt-surge",
@@ -4642,55 +4621,39 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Raichu [anime]. Aces (Raichu, Electivire) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Raichu (game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[5]), Electrode (game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[0]), Electivire (game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[4]), Magnezone (game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[1]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Thunder"
-        },
-        {
-          "move": "Rain Dance"
-        },
-        {
-          "move": "Body Slam"
-        },
-        {
-          "move": "Surf"
+          "move": "Thunder Wave"
         },
         {
           "move": "Thunderbolt"
         },
         {
-          "move": "Fire Punch"
+          "move": "Volt Switch",
+          "fromLevel": 30
         },
         {
-          "move": "Ice Punch"
+          "move": "Discharge"
         },
         {
-          "move": "Submission"
+          "move": "Light Screen"
         },
         {
-          "move": "Shock Wave"
+          "move": "Thunder Punch"
         },
         {
-          "move": "Rain Dance"
+          "move": "Ice Punch",
+          "fromLevel": 30
         },
         {
-          "move": "Thunder Wave"
+          "move": "Flash Cannon"
         },
         {
           "move": "Explosion"
         },
         {
-          "move": "Thunder"
-        },
-        {
-          "move": "Reflect"
-        },
-        {
-          "move": "Rain Dance"
-        },
-        {
-          "move": "Double Edge"
+          "move": "Charge Beam"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: paralysis and pivoting"
     },
     {
       "id": "erika",
@@ -4782,55 +4745,38 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Vileplume [FRLG ace / anime Gloom], Tangrowth [anime Tangela], Jumpluff [HGSS]. Aces (Vileplume, Victreebel) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Tangrowth (game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[2]), Victreebel (game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[4]), Jumpluff (game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[0]), Bellossom (game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[5]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Sludge Bomb"
-        },
-        {
-          "move": "Leaf Blade"
-        },
-        {
-          "move": "Swords Dance"
-        },
-        {
           "move": "Sleep Powder"
-        },
-        {
-          "move": "Power Whip"
-        },
-        {
-          "move": "Wring Out"
-        },
-        {
-          "move": "Grassy Terrain"
-        },
-        {
-          "move": "Tickle"
-        },
-        {
-          "move": "Acrobatics"
-        },
-        {
-          "move": "U Turn"
-        },
-        {
-          "move": "Sleep Powder"
-        },
-        {
-          "move": "Leech Seed"
-        },
-        {
-          "move": "Petal Blizzard"
-        },
-        {
-          "move": "Quiver Dance"
         },
         {
           "move": "Stun Spore"
         },
         {
-          "move": "Attract"
+          "move": "Leech Seed"
+        },
+        {
+          "move": "Giga Drain"
+        },
+        {
+          "move": "Sunny Day"
+        },
+        {
+          "move": "Solar Beam"
+        },
+        {
+          "move": "Sludge Bomb",
+          "fromLevel": 38
+        },
+        {
+          "move": "Synthesis"
+        },
+        {
+          "move": "Petal Dance"
+        },
+        {
+          "move": "Toxic"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: status and sleep under sun"
     },
     {
       "id": "janine",
@@ -4940,55 +4886,42 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Toxicroak [ninja theme]. Aces (Venomoth, Crobat) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Venomoth (game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[5]), Crobat (game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[4]), Weezing (game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[0]), Muk (game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[1]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Signal Beam"
+          "move": "Toxic",
+          "fromLevel": 20
         },
         {
-          "move": "Poison Fang"
+          "move": "Poison Powder"
         },
         {
-          "move": "Toxic"
+          "move": "Double Team",
+          "fromLevel": 20
         },
         {
-          "move": "Double Team"
-        },
-        {
-          "move": "Air Slash"
-        },
-        {
-          "move": "Venoshock"
-        },
-        {
-          "move": "Toxic"
-        },
-        {
-          "move": "Confuse Ray"
+          "move": "Substitute",
+          "fromLevel": 20
         },
         {
           "move": "Sludge Bomb"
         },
         {
-          "move": "Flamethrower"
+          "move": "U Turn",
+          "fromLevel": 30
         },
         {
-          "move": "Belch"
+          "move": "Poison Jab"
         },
         {
-          "move": "Amnesia"
+          "move": "Cross Poison"
         },
         {
-          "move": "Minimize"
+          "move": "Smokescreen"
         },
         {
-          "move": "Gunk Shot"
-        },
-        {
-          "move": "Toxic"
-        },
-        {
-          "move": "Acid Armor"
+          "move": "Protect",
+          "fromLevel": 20
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: ninja poison and evasion"
     },
     {
       "id": "sabrina",
@@ -5086,43 +5019,38 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Alakazam [anime Kadabra], Espeon [HGSS], Gengar [anime Haunter], Venomoth [FRLG]. Aces (Alakazam, Espeon) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Alakazam (game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[5]), Mr. Mime (game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[0]), Espeon (game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[4]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Shadow Ball"
-        },
-        {
-          "move": "Psychic"
-        },
-        {
-          "move": "Recover"
-        },
-        {
           "move": "Calm Mind"
         },
         {
           "move": "Psychic"
         },
         {
-          "move": "Morning Sun"
+          "move": "Hypnosis"
+        },
+        {
+          "move": "Reflect"
+        },
+        {
+          "move": "Light Screen",
+          "fromLevel": 20
         },
         {
           "move": "Future Sight"
         },
         {
-          "move": "Power Gem"
+          "move": "Shadow Ball"
         },
         {
-          "move": "Magical Leaf"
+          "move": "Barrier"
         },
         {
-          "move": "Psychic"
+          "move": "Psyshock"
         },
         {
-          "move": "Substitute"
-        },
-        {
-          "move": "Reflect"
+          "move": "Dazzling Gleam"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: mind control"
     },
     {
       "id": "blaine",
@@ -5220,43 +5148,40 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Magmortar [anime Magmar], Ninetales [anime], Magcargo [HGSS]. Aces (Magmortar, Arcanine) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Magmortar (game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[1]), Rapidash (game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[0]), Magcargo (game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[3]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Thunder Punch"
-        },
-        {
-          "move": "Fire Blast"
-        },
-        {
-          "move": "Psychic"
-        },
-        {
-          "move": "Confuse Ray"
-        },
-        {
-          "move": "Bounce"
-        },
-        {
           "move": "Sunny Day"
-        },
-        {
-          "move": "Flare Blitz"
-        },
-        {
-          "move": "Solar Beam"
         },
         {
           "move": "Flamethrower"
         },
         {
+          "move": "Fire Blast"
+        },
+        {
+          "move": "Will O Wisp",
+          "fromLevel": 20
+        },
+        {
+          "move": "Flare Blitz"
+        },
+        {
+          "move": "Extreme Speed"
+        },
+        {
+          "move": "Solar Beam",
+          "fromLevel": 45
+        },
+        {
+          "move": "Lava Plume"
+        },
+        {
+          "move": "Overheat",
+          "fromLevel": 45
+        },
+        {
           "move": "Recover"
-        },
-        {
-          "move": "Amnesia"
-        },
-        {
-          "move": "Hypnosis"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: sun and raw fire"
     },
     {
       "id": "giovanni",
@@ -5360,43 +5285,39 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Persian [anime]. Aces (Rhyperior, Persian, Nidoking) at offset 0, fillers at -2. Species in the reference party keep that source slot's item/ability/nature: Dugtrio (game/src/data/trainers_frlg.party:TRAINER_LEADER_GIOVANNI[1]), Nidoqueen (game/src/data/trainers_frlg.party:TRAINER_LEADER_GIOVANNI[2]), Nidoking (game/src/data/trainers_frlg.party:TRAINER_LEADER_GIOVANNI[3]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Thrash"
-        },
-        {
-          "move": "Double Kick"
-        },
-        {
-          "move": "Poison Sting"
-        },
-        {
           "move": "Earthquake"
         },
         {
-          "move": "Slash"
+          "move": "Stone Edge"
         },
         {
-          "move": "Sand Tomb"
+          "move": "Megahorn"
         },
         {
-          "move": "Mud Slap"
+          "move": "Swords Dance",
+          "fromLevel": 30
         },
         {
-          "move": "Earthquake"
+          "move": "Fake Out"
         },
         {
-          "move": "Body Slam"
+          "move": "Power Gem"
         },
         {
-          "move": "Double Kick"
+          "move": "Nasty Plot"
         },
         {
-          "move": "Poison Sting"
+          "move": "Sucker Punch"
         },
         {
-          "move": "Earthquake"
+          "move": "Earth Power"
+        },
+        {
+          "move": "Sludge Wave",
+          "fromLevel": 38
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: ground brutes and the boss's cat"
     },
     {
       "id": "blue",
@@ -5506,43 +5427,44 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Umbreon [Eevee early], Pidgeot [games]. Aces (Umbreon, Alakazam, Arcanine) at offset 0, fillers at -2. Species in the reference party keep that source slot's item/ability/nature: Pidgeot (game/src/data/trainers_frlg.party:TRAINER_CHAMPION_FIRST_SQUIRTLE[0]), Alakazam (game/src/data/trainers_frlg.party:TRAINER_CHAMPION_FIRST_SQUIRTLE[1]), Arcanine (game/src/data/trainers_frlg.party:TRAINER_CHAMPION_FIRST_SQUIRTLE[3]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
+          "move": "Dark Pulse",
+          "fromLevel": 30
+        },
+        {
+          "move": "Moonlight"
+        },
+        {
           "move": "Psychic"
         },
         {
-          "move": "Future Sight"
-        },
-        {
-          "move": "Recover"
-        },
-        {
-          "move": "Reflect"
+          "move": "Calm Mind"
         },
         {
           "move": "Extreme Speed"
         },
         {
-          "move": "Flamethrower"
+          "move": "Flare Blitz"
         },
         {
-          "move": "Roar"
+          "move": "Bullet Punch"
         },
         {
-          "move": "Bite"
+          "move": "Swords Dance"
         },
         {
-          "move": "Aerial Ace"
+          "move": "Earth Power"
         },
         {
-          "move": "Feather Dance"
+          "move": "Megahorn"
         },
         {
-          "move": "Sand Attack"
+          "move": "Hurricane"
         },
         {
-          "move": "Whirlwind"
+          "move": "Roost"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: Gary's all-rounder: priority and coverage"
     },
     {
       "id": "lorelei",
@@ -5646,67 +5568,38 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Lapras, Cloyster) at offset 0, fillers at -2. Species in the reference party keep that source slot's item/ability/nature: Lapras (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LORELEI[4]), Dewgong (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LORELEI[0]), Cloyster (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LORELEI[1]), Slowbro (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LORELEI[2]), Jynx (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LORELEI[3]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Confuse Ray"
+          "move": "Shell Smash"
+        },
+        {
+          "move": "Icicle Spear"
+        },
+        {
+          "move": "Aurora Beam"
+        },
+        {
+          "move": "Perish Song"
+        },
+        {
+          "move": "Blizzard"
         },
         {
           "move": "Ice Beam"
-        },
-        {
-          "move": "Surf"
-        },
-        {
-          "move": "Body Slam"
-        },
-        {
-          "move": "Spikes"
-        },
-        {
-          "move": "Protect"
-        },
-        {
-          "move": "Hail"
-        },
-        {
-          "move": "Dive"
-        },
-        {
-          "move": "Ice Beam"
-        },
-        {
-          "move": "Surf"
-        },
-        {
-          "move": "Hail"
-        },
-        {
-          "move": "Safeguard"
-        },
-        {
-          "move": "Ice Beam"
-        },
-        {
-          "move": "Surf"
-        },
-        {
-          "move": "Amnesia"
-        },
-        {
-          "move": "Yawn"
-        },
-        {
-          "move": "Ice Punch"
-        },
-        {
-          "move": "Double Slap"
         },
         {
           "move": "Lovely Kiss"
         },
         {
-          "move": "Attract"
+          "move": "Slack Off"
+        },
+        {
+          "move": "Aurora Veil",
+          "fromLevel": 20
+        },
+        {
+          "move": "Rest"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: ice and Shell Smash"
     },
     {
       "id": "bruno",
@@ -5810,43 +5703,39 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Steelix [FRLG Onix]. Aces (Machamp, Hitmonlee) at offset 0, fillers at -2. Species in the reference party keep that source slot's item/ability/nature: Machamp (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_BRUNO[4]), Hitmonlee (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_BRUNO[2]), Hitmonchan (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_BRUNO[1]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Cross Chop"
+          "move": "Dynamic Punch"
         },
         {
           "move": "Bulk Up"
         },
         {
-          "move": "Scary Face"
+          "move": "Close Combat"
         },
         {
-          "move": "Rock Tomb"
-        },
-        {
-          "move": "Mega Kick"
-        },
-        {
-          "move": "Foresight"
-        },
-        {
-          "move": "Brick Break"
-        },
-        {
-          "move": "Facade"
-        },
-        {
-          "move": "Sky Uppercut"
+          "move": "High Jump Kick"
         },
         {
           "move": "Mach Punch"
         },
         {
-          "move": "Rock Tomb"
+          "move": "Fire Punch",
+          "fromLevel": 30
         },
         {
-          "move": "Counter"
+          "move": "Ice Punch"
+        },
+        {
+          "move": "Thunder Punch"
+        },
+        {
+          "move": "Feint"
+        },
+        {
+          "move": "Earthquake",
+          "fromLevel": 38
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: No Guard punches and Bulk Up"
     },
     {
       "id": "agatha",
@@ -5950,31 +5839,38 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Marowak [lore: Pokemon Tower]. Aces (Gengar, Dusknoir) at offset 0, fillers at -2. Species in the reference party keep that source slot's item/ability/nature: Gengar (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_AGATHA[0]), Arbok (game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_AGATHA[3]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Shadow Punch"
+          "move": "Mean Look"
         },
         {
-          "move": "Confuse Ray"
+          "move": "Curse"
         },
         {
-          "move": "Toxic"
+          "move": "Destiny Bond"
         },
         {
-          "move": "Double Team"
+          "move": "Hypnosis"
         },
         {
-          "move": "Sludge Bomb"
+          "move": "Dream Eater"
         },
         {
-          "move": "Screech"
+          "move": "Shadow Ball"
         },
         {
-          "move": "Iron Tail"
+          "move": "Glare"
         },
         {
-          "move": "Bite"
+          "move": "Haze"
+        },
+        {
+          "move": "Bonemerang"
+        },
+        {
+          "move": "Will O Wisp",
+          "fromLevel": 20
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: trap and drain"
     },
     {
       "id": "koga",
@@ -6078,55 +5974,41 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Forretress [HGSS]. Aces (Crobat, Weezing) at offset 0, fillers at -2. Species in the reference party keep that source slot's item/ability/nature: Crobat (game/src/data/trainers_hns.party:TRAINER_KOGA_1_HNS[4]), Ariados (game/src/data/trainers_hns.party:TRAINER_KOGA_1_HNS[0]), Muk (game/src/data/trainers_hns.party:TRAINER_KOGA_1_HNS[2]), Venomoth (game/src/data/trainers_hns.party:TRAINER_KOGA_1_HNS[3]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Double Team"
+          "move": "Toxic",
+          "fromLevel": 20
         },
         {
-          "move": "Toxic"
+          "move": "Toxic Spikes"
         },
         {
-          "move": "Bite"
-        },
-        {
-          "move": "Confuse Ray"
-        },
-        {
-          "move": "Megahorn"
-        },
-        {
-          "move": "Giga Drain"
-        },
-        {
-          "move": "Double Team"
-        },
-        {
-          "move": "Toxic"
+          "move": "Spikes"
         },
         {
           "move": "Minimize"
         },
         {
-          "move": "Fire Blast"
+          "move": "Double Team",
+          "fromLevel": 20
         },
         {
-          "move": "Gunk Shot"
+          "move": "Substitute",
+          "fromLevel": 20
         },
         {
-          "move": "Toxic"
+          "move": "Sludge Bomb"
         },
         {
-          "move": "Leech Life"
+          "move": "Will O Wisp",
+          "fromLevel": 20
         },
         {
-          "move": "Psychic"
+          "move": "Sticky Web"
         },
         {
-          "move": "Poison Fang"
-        },
-        {
-          "move": "Sleep Powder"
+          "move": "Explosion"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: poison stall and evasion"
     },
     {
       "id": "lance",
@@ -6233,52 +6115,36 @@
           "move": "Hyper Beam"
         },
         {
-          "move": "Safeguard"
+          "move": "Agility"
+        },
+        {
+          "move": "Dragon Dance"
         },
         {
           "move": "Outrage"
         },
         {
-          "move": "Wing Attack"
+          "move": "Thunder Wave"
         },
         {
-          "move": "Hyper Beam"
+          "move": "Fire Blast",
+          "fromLevel": 45
         },
         {
-          "move": "Safeguard"
+          "move": "Earthquake",
+          "fromLevel": 38
         },
         {
-          "move": "Outrage"
+          "move": "Waterfall"
         },
         {
-          "move": "Wing Attack"
+          "move": "Roost"
         },
         {
-          "move": "Hyper Beam"
-        },
-        {
-          "move": "Dragon Rage"
-        },
-        {
-          "move": "Twister"
-        },
-        {
-          "move": "Bite"
-        },
-        {
-          "move": "Hyper Beam"
-        },
-        {
-          "move": "Ancient Power"
-        },
-        {
-          "move": "Wing Attack"
-        },
-        {
-          "move": "Scary Face"
+          "move": "Dragon Rush"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: Hyper Beam Dragonite and speed"
     },
     {
       "id": "falkner",
@@ -6367,37 +6233,36 @@
           "move": "Tailwind"
         },
         {
-          "move": "Aerial Ace"
+          "move": "Fly",
+          "fromLevel": 38
         },
         {
-          "move": "Extreme Speed"
+          "move": "Roost"
         },
         {
-          "move": "Sand Attack"
+          "move": "Air Slash"
         },
         {
-          "move": "Stealth Rock"
+          "move": "Hurricane"
+        },
+        {
+          "move": "Feather Dance"
+        },
+        {
+          "move": "U Turn",
+          "fromLevel": 30
         },
         {
           "move": "Drill Peck"
         },
         {
-          "move": "Metal Sound"
+          "move": "Mirror Move"
         },
         {
-          "move": "Steel Wing"
-        },
-        {
-          "move": "Tackle"
-        },
-        {
-          "move": "Mud Slap"
-        },
-        {
-          "move": "Peck"
+          "move": "Whirlwind"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: speed and Tailwind"
     },
     {
       "id": "bugsy",
@@ -6489,31 +6354,37 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Scizor [anime Scyther]. Aces (Scizor, Heracross) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Scizor (game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[3]), Yanmega (game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[2]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Bullet Punch"
-        },
-        {
-          "move": "X Scissor"
-        },
-        {
-          "move": "Iron Head"
+          "move": "Fury Cutter"
         },
         {
           "move": "Swords Dance"
         },
         {
-          "move": "Air Slash"
-        },
-        {
-          "move": "Screech"
+          "move": "Bullet Punch"
         },
         {
           "move": "U Turn"
         },
         {
-          "move": "Night Slash"
+          "move": "Megahorn"
+        },
+        {
+          "move": "Close Combat"
+        },
+        {
+          "move": "Quiver Dance"
+        },
+        {
+          "move": "Sleep Powder"
+        },
+        {
+          "move": "Bug Buzz"
+        },
+        {
+          "move": "Sticky Web"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: setup and pivot bugs"
     },
     {
       "id": "whitney",
@@ -6608,28 +6479,36 @@
           "move": "Rollout"
         },
         {
-          "move": "Attract"
+          "move": "Milk Drink"
+        },
+        {
+          "move": "Attract",
+          "fromLevel": 20
+        },
+        {
+          "move": "Body Slam"
         },
         {
           "move": "Stomp"
         },
         {
-          "move": "Milk Drink"
+          "move": "Metronome"
         },
         {
-          "move": "Sing"
+          "move": "Soft Boiled",
+          "fromLevel": 20
         },
         {
-          "move": "Light Screen"
+          "move": "Moonblast"
         },
         {
-          "move": "Attract"
+          "move": "Hyper Voice"
         },
         {
-          "move": "Soft Boiled"
+          "move": "Heal Bell"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: Rollout and Milk Drink (the classic wall)"
     },
     {
       "id": "morty",
@@ -6730,40 +6609,34 @@
           "move": "Hypnosis"
         },
         {
-          "move": "Shadow Ball"
-        },
-        {
-          "move": "Mean Look"
-        },
-        {
           "move": "Dream Eater"
         },
         {
           "move": "Shadow Ball"
         },
         {
-          "move": "Magical Leaf"
+          "move": "Curse"
         },
         {
-          "move": "Pain Split"
+          "move": "Destiny Bond"
         },
         {
-          "move": "Perish Song"
+          "move": "Will O Wisp"
         },
         {
-          "move": "Quash"
+          "move": "Hex"
         },
         {
-          "move": "Foul Play"
+          "move": "Confuse Ray"
         },
         {
-          "move": "Shadow Claw"
+          "move": "Mean Look"
         },
         {
-          "move": "Power Gem"
+          "move": "Night Shade"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: sleep, dream and curse"
     },
     {
       "id": "chuck",
@@ -6861,43 +6734,41 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Poliwrath, Machamp, Lucario) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Poliwrath (game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[3]), Primeape (game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[1]), Hitmontop (game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[0]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Hypnosis"
-        },
-        {
-          "move": "Mind Reader"
-        },
-        {
-          "move": "Surf"
-        },
-        {
           "move": "Dynamic Punch"
         },
         {
-          "move": "Low Kick"
+          "move": "Bulk Up"
         },
         {
-          "move": "Karate Chop"
+          "move": "Close Combat",
+          "fromLevel": 45
         },
         {
-          "move": "Ice Punch"
+          "move": "Quick Attack"
         },
         {
-          "move": "Rage"
+          "move": "Focus Punch",
+          "fromLevel": 45
+        },
+        {
+          "move": "Waterfall",
+          "fromLevel": 30
+        },
+        {
+          "move": "Ice Punch",
+          "fromLevel": 30
         },
         {
           "move": "Triple Kick"
         },
         {
-          "move": "Rolling Kick"
+          "move": "Cross Chop"
         },
         {
-          "move": "Dig"
-        },
-        {
-          "move": "Pursuit"
+          "move": "Aura Sphere"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: waterfall-trained power"
     },
     {
       "id": "jasmine",
@@ -7001,31 +6872,38 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Ampharos [lore: Amphy]. Aces (Steelix, Ampharos) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Steelix (game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[4]), Skarmory (game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[0]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Crunch"
-        },
-        {
-          "move": "Earthquake"
-        },
-        {
-          "move": "Rock Slide"
-        },
-        {
           "move": "Iron Tail"
+        },
+        {
+          "move": "Iron Defense"
         },
         {
           "move": "Spikes"
         },
         {
-          "move": "Drill Peck"
+          "move": "Stealth Rock"
         },
         {
-          "move": "Swagger"
+          "move": "Rapid Spin"
         },
         {
-          "move": "Steel Wing"
+          "move": "Gyro Ball"
+        },
+        {
+          "move": "Thunderbolt",
+          "fromLevel": 38
+        },
+        {
+          "move": "Thunder Wave"
+        },
+        {
+          "move": "Flash Cannon"
+        },
+        {
+          "move": "Heavy Slam"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: iron defense and hazards"
     },
     {
       "id": "pryce",
@@ -7123,43 +7001,39 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Mamoswine [anime Piloswine]. Aces (Mamoswine, Weavile) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Dewgong (game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[0]), Cloyster (game/src/data/trainers_hns.party:TRAINER_PRYCE_1_2_HNS[0]), Jynx (game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[2]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Aqua Ring"
+          "move": "Hail"
+        },
+        {
+          "move": "Blizzard"
+        },
+        {
+          "move": "Ice Shard"
+        },
+        {
+          "move": "Icicle Crash"
+        },
+        {
+          "move": "Earthquake"
+        },
+        {
+          "move": "Aurora Veil",
+          "fromLevel": 20
+        },
+        {
+          "move": "Rest"
+        },
+        {
+          "move": "Sleep Talk",
+          "fromLevel": 20
+        },
+        {
+          "move": "Ice Beam"
         },
         {
           "move": "Aurora Beam"
-        },
-        {
-          "move": "Rain Dance"
-        },
-        {
-          "move": "Aqua Jet"
-        },
-        {
-          "move": "Surf"
-        },
-        {
-          "move": "Spikes"
-        },
-        {
-          "move": "Aurora Beam"
-        },
-        {
-          "move": "Rain Dance"
-        },
-        {
-          "move": "Ice Punch"
-        },
-        {
-          "move": "Psychic"
-        },
-        {
-          "move": "Rain Dance"
-        },
-        {
-          "move": "Lovely Kiss"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: hail and old-master patience"
     },
     {
       "id": "clair",
@@ -7263,31 +7137,38 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Dragonite [anime Dragonair]. Aces (Kingdra, Salamence, Garchomp) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Kingdra (game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[4]), Gyarados (game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[1]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Agility"
+          "move": "Dragon Dance"
         },
         {
-          "move": "Surf"
+          "move": "Outrage"
         },
         {
-          "move": "Hyper Beam"
+          "move": "Rain Dance",
+          "fromLevel": 20
+        },
+        {
+          "move": "Hydro Pump"
         },
         {
           "move": "Dragon Pulse"
         },
         {
-          "move": "Bite"
+          "move": "Thunder Wave"
         },
         {
-          "move": "Waterfall"
+          "move": "Earthquake"
         },
         {
-          "move": "Fly"
+          "move": "Dragon Rush"
         },
         {
-          "move": "Ice Fang"
+          "move": "Aqua Tail"
+        },
+        {
+          "move": "Dragon Claw"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: rain dragons and Dragon Dance"
     },
     {
       "id": "will",
@@ -7391,31 +7272,39 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Xatu, Slowbro, Gardevoir) at offset 0, fillers at -2. Species in the reference party keep that source slot's item/ability/nature: Xatu (game/src/data/trainers_hns.party:TRAINER_WILL_1_HNS[4]), Slowbro (game/src/data/trainers_hns.party:TRAINER_WILL_1_HNS[3]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Air Slash"
+          "move": "Trick Room",
+          "fromLevel": 20
         },
         {
-          "move": "Recover"
-        },
-        {
-          "move": "Confuse Ray"
+          "move": "Calm Mind"
         },
         {
           "move": "Psychic"
         },
         {
-          "move": "Curse"
+          "move": "Reflect"
         },
         {
-          "move": "Rock Smash"
+          "move": "Light Screen",
+          "fromLevel": 20
         },
         {
-          "move": "Body Slam"
+          "move": "Future Sight"
         },
         {
-          "move": "Zen Headbutt"
+          "move": "Confuse Ray"
+        },
+        {
+          "move": "Lovely Kiss"
+        },
+        {
+          "move": "Yawn"
+        },
+        {
+          "move": "Moonblast"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: psychic masquerade: Trick Room and screens"
     },
     {
       "id": "karen",
@@ -7519,67 +7408,38 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Vileplume [HGSS], Gengar [HGSS]. Aces (Umbreon, Houndoom) at offset 0, fillers at -2. Species in the reference party keep that source slot's item/ability/nature: Umbreon (game/src/data/trainers_hns.party:TRAINER_KAREN_1_HNS[0]), Vileplume (game/src/data/trainers_hns.party:TRAINER_KAREN_1_HNS[2]), Honchkrow (game/src/data/trainers_hns.party:TRAINER_KAREN_1_HNS[3]), Gengar (game/src/data/trainers_hns.party:TRAINER_KAREN_1_HNS[1]), Houndoom (game/src/data/trainers_hns.party:TRAINER_KAREN_1_HNS[4]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Feint Attack"
-        },
-        {
-          "move": "Double Team"
-        },
-        {
-          "move": "Baton Pass"
+          "move": "Foul Play"
         },
         {
           "move": "Moonlight"
         },
         {
-          "move": "Flamethrower"
+          "move": "Confuse Ray"
         },
         {
-          "move": "Crunch"
+          "move": "Taunt"
         },
         {
-          "move": "Iron Tail"
+          "move": "Nasty Plot"
         },
         {
-          "move": "Reversal"
+          "move": "Dark Pulse"
+        },
+        {
+          "move": "Sucker Punch"
         },
         {
           "move": "Sleep Powder"
         },
         {
-          "move": "Giga Drain"
-        },
-        {
-          "move": "Leech Seed"
-        },
-        {
-          "move": "Substitute"
-        },
-        {
-          "move": "Air Slash"
-        },
-        {
-          "move": "Feint Attack"
-        },
-        {
-          "move": "Steel Wing"
-        },
-        {
-          "move": "Haze"
-        },
-        {
           "move": "Shadow Ball"
         },
         {
-          "move": "Hypnosis"
-        },
-        {
-          "move": "Dream Eater"
-        },
-        {
-          "move": "Confuse Ray"
+          "move": "Fly",
+          "fromLevel": 38
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: disruption. \"Strong Pokémon, weak Pokémon.\""
     },
     {
       "id": "roxanne",
@@ -7669,8 +7529,43 @@
         }
       ],
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Rampardos [fossil lessons]. Aces (Probopass, Rampardos) at offset 0, fillers at -2. No roster species is in the curated composition in game/src/data/trainer_scaling/gym_leaders.json; other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
-      "movePool": [],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels. No roster species is in the source party, so the pool is empty."
+      "movePool": [
+        {
+          "move": "Rock Tomb",
+          "fromLevel": 30
+        },
+        {
+          "move": "Stealth Rock",
+          "fromLevel": 20
+        },
+        {
+          "move": "Sandstorm"
+        },
+        {
+          "move": "Power Gem"
+        },
+        {
+          "move": "Metal Burst"
+        },
+        {
+          "move": "Head Smash",
+          "fromLevel": 45
+        },
+        {
+          "move": "Rock Polish"
+        },
+        {
+          "move": "Earth Power"
+        },
+        {
+          "move": "Thunder Wave"
+        },
+        {
+          "move": "Wood Hammer",
+          "fromLevel": 45
+        }
+      ],
+      "movePoolSource": "user-directed pool draft v1: the fossil lesson: Sturdy counters and hazards"
     },
     {
       "id": "brawly",
@@ -7765,40 +7660,37 @@
           "move": "Fake Out"
         },
         {
-          "move": "Focus Punch"
-        },
-        {
-          "move": "Belly Drum"
-        },
-        {
-          "move": "Earthquake"
-        },
-        {
-          "move": "Karate Chop"
-        },
-        {
-          "move": "Rock Slide"
-        },
-        {
-          "move": "Focus Punch"
-        },
-        {
           "move": "Bulk Up"
         },
         {
-          "move": "Pursuit"
+          "move": "Close Combat"
         },
         {
-          "move": "Counter"
+          "move": "Drain Punch",
+          "fromLevel": 30
         },
         {
-          "move": "Protect"
+          "move": "Mach Punch"
         },
         {
-          "move": "Triple Kick"
+          "move": "Stun Spore"
+        },
+        {
+          "move": "Bullet Seed",
+          "fromLevel": 30
+        },
+        {
+          "move": "Ice Punch"
+        },
+        {
+          "move": "Knock Off"
+        },
+        {
+          "move": "Surf",
+          "fromLevel": 38
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: the surfer brawler: Fake Out and Bulk Up"
     },
     {
       "id": "wattson",
@@ -7896,43 +7788,41 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Manectric, Magnezone) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Manectric (game/src/data/trainers.party:TRAINER_WATTSON_1[3]), Electrode (game/src/data/trainers.party:TRAINER_WATTSON_2[1]), Ampharos (game/src/data/trainers.party:TRAINER_WATTSON_4[1]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Quick Attack"
-        },
-        {
           "move": "Thunder Wave"
         },
         {
-          "move": "Shock Wave"
+          "move": "Volt Switch",
+          "fromLevel": 30
         },
         {
-          "move": "Howl"
+          "move": "Discharge"
         },
         {
-          "move": "Rollout"
+          "move": "Thunderbolt",
+          "fromLevel": 38
         },
         {
-          "move": "Thunder"
+          "move": "Explosion",
+          "fromLevel": 45
         },
         {
-          "move": "Explosion"
-        },
-        {
-          "move": "Rain Dance"
-        },
-        {
-          "move": "Thunder"
-        },
-        {
-          "move": "Protect"
-        },
-        {
-          "move": "Thunder Wave"
+          "move": "Magnet Rise"
         },
         {
           "move": "Light Screen"
+        },
+        {
+          "move": "Flash Cannon"
+        },
+        {
+          "move": "Charge"
+        },
+        {
+          "move": "Thunder",
+          "fromLevel": 45
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: Wahaha! Paralysis and Explosion"
     },
     {
       "id": "flannery",
@@ -8030,43 +7920,41 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Torkoal [anime]. Aces (Torkoal, Camerupt) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Torkoal (game/src/data/trainers.party:TRAINER_FLANNERY_1[3]), Magcargo (game/src/data/trainers.party:TRAINER_FLANNERY_2[0]), Camerupt (game/src/data/trainers.party:TRAINER_FLANNERY_1[2]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Overheat"
+          "move": "Sunny Day",
+          "fromLevel": 20
         },
         {
-          "move": "Sunny Day"
+          "move": "Eruption"
         },
         {
-          "move": "Body Slam"
+          "move": "Overheat",
+          "fromLevel": 45
         },
         {
-          "move": "Attract"
+          "move": "Lava Plume"
         },
         {
-          "move": "Overheat"
+          "move": "Will O Wisp",
+          "fromLevel": 20
         },
         {
-          "move": "Tackle"
+          "move": "Yawn"
         },
         {
-          "move": "Sunny Day"
+          "move": "Solar Beam",
+          "fromLevel": 45
         },
         {
-          "move": "Attract"
+          "move": "Earth Power"
         },
         {
-          "move": "Overheat"
+          "move": "Heat Wave"
         },
         {
-          "move": "Attract"
-        },
-        {
-          "move": "Light Screen"
-        },
-        {
-          "move": "Rock Slide"
+          "move": "Rapid Spin"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: sun and Eruption"
     },
     {
       "id": "norman",
@@ -8164,55 +8052,38 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Slaking, Kangaskhan, Snorlax) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Slaking (game/src/data/trainers.party:TRAINER_NORMAN_1[3]), Linoone (game/src/data/trainers.party:TRAINER_NORMAN_1[2]), Spinda (game/src/data/trainers.party:TRAINER_NORMAN_1[0]), Kangaskhan (game/src/data/trainers.party:TRAINER_NORMAN_3[2]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Counter"
+          "move": "Facade",
+          "fromLevel": 30
         },
         {
-          "move": "Yawn"
-        },
-        {
-          "move": "Facade"
-        },
-        {
-          "move": "Feint Attack"
-        },
-        {
-          "move": "Fake Out"
-        },
-        {
-          "move": "Dizzy Punch"
-        },
-        {
-          "move": "Endure"
-        },
-        {
-          "move": "Reversal"
-        },
-        {
-          "move": "Slash"
+          "move": "Slack Off"
         },
         {
           "move": "Belly Drum"
         },
         {
-          "move": "Facade"
+          "move": "Quick Attack"
         },
         {
-          "move": "Headbutt"
+          "move": "Fake Out"
         },
         {
-          "move": "Teeter Dance"
+          "move": "Body Slam"
         },
         {
-          "move": "Psybeam"
+          "move": "Double Edge"
         },
         {
-          "move": "Facade"
+          "move": "Hammer Arm"
         },
         {
           "move": "Encore"
+        },
+        {
+          "move": "Rest"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: Facade and Belly Drum normals"
     },
     {
       "id": "winona",
@@ -8316,55 +8187,41 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Altaria, Skarmory) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Altaria (game/src/data/trainers.party:TRAINER_WINONA_1[4]), Tropius (game/src/data/trainers.party:TRAINER_WINONA_1[1]), Pelipper (game/src/data/trainers.party:TRAINER_WINONA_1[2]), Skarmory (game/src/data/trainers.party:TRAINER_WINONA_1[3]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Earthquake"
+          "move": "Aerial Ace",
+          "fromLevel": 30
         },
         {
-          "move": "Dragon Breath"
+          "move": "Roost",
+          "fromLevel": 20
         },
         {
           "move": "Dragon Dance"
         },
         {
-          "move": "Aerial Ace"
+          "move": "Brave Bird",
+          "fromLevel": 45
         },
         {
-          "move": "Sand Attack"
+          "move": "Hurricane",
+          "fromLevel": 45
         },
         {
-          "move": "Fury Attack"
+          "move": "Tailwind"
         },
         {
-          "move": "Steel Wing"
+          "move": "Spikes"
         },
         {
-          "move": "Aerial Ace"
+          "move": "Whirlwind"
         },
         {
-          "move": "Sunny Day"
+          "move": "Cotton Guard"
         },
         {
-          "move": "Aerial Ace"
-        },
-        {
-          "move": "Solar Beam"
-        },
-        {
-          "move": "Synthesis"
-        },
-        {
-          "move": "Water Gun"
-        },
-        {
-          "move": "Supersonic"
-        },
-        {
-          "move": "Protect"
-        },
-        {
-          "move": "Aerial Ace"
+          "move": "Sky Attack"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: graceful flyers: Roost and Dragon Dance"
     },
     {
       "id": "tate-liza",
@@ -8462,55 +8319,42 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Solrock, Lunatone, Gardevoir) at offset 0, fillers at -2. Species in the reference party keep that source slot's item/ability/nature: Solrock (game/src/data/trainers.party:TRAINER_TATE_AND_LIZA_1[3]), Lunatone (game/src/data/trainers.party:TRAINER_TATE_AND_LIZA_1[2]), Claydol (game/src/data/trainers.party:TRAINER_TATE_AND_LIZA_1[0]), Xatu (game/src/data/trainers.party:TRAINER_TATE_AND_LIZA_1[1]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool. Fought as a double battle: both leaders send Pokémon from this one roster in order.",
       "movePool": [
         {
-          "move": "Sunny Day"
+          "move": "Calm Mind",
+          "fromLevel": 30
         },
         {
-          "move": "Solar Beam"
+          "move": "Earthquake",
+          "fromLevel": 38
         },
         {
-          "move": "Psychic"
+          "move": "Rock Slide"
         },
         {
-          "move": "Flamethrower"
+          "move": "Trick Room",
+          "fromLevel": 20
         },
         {
-          "move": "Light Screen"
-        },
-        {
-          "move": "Psychic"
-        },
-        {
-          "move": "Hypnosis"
-        },
-        {
-          "move": "Calm Mind"
-        },
-        {
-          "move": "Earthquake"
-        },
-        {
-          "move": "Ancient Power"
+          "move": "Heal Pulse"
         },
         {
           "move": "Psychic"
         },
         {
-          "move": "Light Screen"
+          "move": "Reflect",
+          "fromLevel": 20
         },
         {
-          "move": "Psychic"
+          "move": "Light Screen",
+          "fromLevel": 20
         },
         {
-          "move": "Sunny Day"
+          "move": "Explosion"
         },
         {
-          "move": "Confuse Ray"
-        },
-        {
-          "move": "Calm Mind"
+          "move": "Cosmic Power"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: double-battle sync: Levitate + Earthquake, Trick Room"
     },
     {
       "id": "juan",
@@ -8614,67 +8458,40 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Luvdisc [flamboyance]. Aces (Kingdra, Walrein) at offset 0, fillers at -2. Species in the curated composition in game/src/data/trainer_scaling/gym_leaders.json keep that source slot's item/ability/nature: Kingdra (game/src/data/trainers.party:TRAINER_JUAN_1[4]), Luvdisc (game/src/data/trainers.party:TRAINER_JUAN_1[0]), Whiscash (game/src/data/trainers.party:TRAINER_JUAN_1[1]), Walrein (game/src/data/trainers.party:TRAINER_JUAN_2[2]), Crawdaunt (game/src/data/trainers.party:TRAINER_JUAN_1[3]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Water Pulse"
+          "move": "Water Pulse",
+          "fromLevel": 30
         },
         {
-          "move": "Double Team"
+          "move": "Rain Dance",
+          "fromLevel": 20
         },
         {
-          "move": "Ice Beam"
+          "move": "Scald",
+          "fromLevel": 30
         },
         {
-          "move": "Rest"
+          "move": "Hydro Pump"
         },
         {
-          "move": "Water Pulse"
-        },
-        {
-          "move": "Body Slam"
-        },
-        {
-          "move": "Protect"
-        },
-        {
-          "move": "Ice Beam"
-        },
-        {
-          "move": "Water Pulse"
+          "move": "Dragon Dance"
         },
         {
           "move": "Attract"
         },
         {
-          "move": "Sweet Kiss"
+          "move": "Charm"
         },
         {
-          "move": "Flail"
-        },
-        {
-          "move": "Rain Dance"
-        },
-        {
-          "move": "Water Pulse"
-        },
-        {
-          "move": "Amnesia"
-        },
-        {
-          "move": "Earthquake"
-        },
-        {
-          "move": "Water Pulse"
+          "move": "Razor Shell"
         },
         {
           "move": "Crabhammer"
         },
         {
-          "move": "Taunt"
-        },
-        {
-          "move": "Leer"
+          "move": "Sheer Cold"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: flamboyant rain and charm"
     },
     {
       "id": "sidney",
@@ -8778,67 +8595,39 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Absol, Sharpedo) at offset 0, fillers at -2. Species in the reference party keep that source slot's item/ability/nature: Absol (game/src/data/trainers.party:TRAINER_SIDNEY[4]), Mightyena (game/src/data/trainers.party:TRAINER_SIDNEY[0]), Shiftry (game/src/data/trainers.party:TRAINER_SIDNEY[1]), Cacturne (game/src/data/trainers.party:TRAINER_SIDNEY[2]), Crawdaunt (game/src/data/trainers.party:TRAINER_SIDNEY[3]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Aerial Ace"
-        },
-        {
-          "move": "Rock Slide"
+          "move": "Sucker Punch"
         },
         {
           "move": "Swords Dance"
         },
         {
-          "move": "Slash"
+          "move": "Knock Off"
         },
         {
-          "move": "Roar"
-        },
-        {
-          "move": "Double Edge"
-        },
-        {
-          "move": "Sand Attack"
+          "move": "Night Slash"
         },
         {
           "move": "Crunch"
         },
         {
-          "move": "Torment"
+          "move": "Taunt"
         },
         {
-          "move": "Double Team"
+          "move": "Protect",
+          "fromLevel": 20
         },
         {
-          "move": "Swagger"
+          "move": "Aqua Jet"
         },
         {
-          "move": "Extrasensory"
+          "move": "Brick Break",
+          "fromLevel": 30
         },
         {
-          "move": "Leech Seed"
-        },
-        {
-          "move": "Feint Attack"
-        },
-        {
-          "move": "Needle Arm"
-        },
-        {
-          "move": "Cotton Spore"
-        },
-        {
-          "move": "Surf"
-        },
-        {
-          "move": "Swords Dance"
-        },
-        {
-          "move": "Strength"
-        },
-        {
-          "move": "Facade"
+          "move": "Leaf Blade"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: dark aggression and priority"
     },
     {
       "id": "phoebe",
@@ -8942,31 +8731,39 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Shedinja [gimmick]. Aces (Dusknoir, Banette) at offset 0, fillers at -2. Species in the reference party keep that source slot's item/ability/nature: Sableye (game/src/data/trainers.party:TRAINER_PHOEBE[2]), Banette (game/src/data/trainers.party:TRAINER_PHOEBE[1]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Shadow Ball"
+          "move": "Will O Wisp"
+        },
+        {
+          "move": "Shadow Sneak"
+        },
+        {
+          "move": "Destiny Bond"
         },
         {
           "move": "Grudge"
         },
         {
-          "move": "Will O Wisp"
+          "move": "Shadow Claw"
         },
         {
-          "move": "Feint Attack"
+          "move": "Detect"
         },
         {
-          "move": "Shadow Ball"
+          "move": "Trick Room",
+          "fromLevel": 20
         },
         {
-          "move": "Double Team"
+          "move": "Hail"
         },
         {
-          "move": "Night Shade"
+          "move": "Ice Beam",
+          "fromLevel": 38
         },
         {
-          "move": "Feint Attack"
+          "move": "Curse"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: burns and grudges"
     },
     {
       "id": "glacia",
@@ -9070,43 +8867,41 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Walrein [iconic duplicate]. Aces (Walrein, Walrein) at offset 0, fillers at -2. Species in the reference party keep that source slot's item/ability/nature: Walrein (game/src/data/trainers.party:TRAINER_GLACIA[4]), Glalie (game/src/data/trainers.party:TRAINER_GLACIA[1]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Surf"
+          "move": "Hail"
         },
         {
-          "move": "Body Slam"
+          "move": "Blizzard"
         },
         {
-          "move": "Ice Beam"
+          "move": "Aurora Veil",
+          "fromLevel": 20
         },
         {
-          "move": "Sheer Cold"
+          "move": "Sheer Cold",
+          "fromLevel": 55
         },
         {
-          "move": "Surf"
+          "move": "Freeze Dry"
         },
         {
-          "move": "Body Slam"
+          "move": "Ice Shard"
         },
         {
-          "move": "Ice Beam"
+          "move": "Protect"
         },
         {
-          "move": "Sheer Cold"
-        },
-        {
-          "move": "Light Screen"
-        },
-        {
-          "move": "Crunch"
+          "move": "Surf",
+          "fromLevel": 38
         },
         {
           "move": "Icy Wind"
         },
         {
-          "move": "Ice Beam"
+          "move": "Explosion",
+          "fromLevel": 45
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: hail and Sheer Cold"
     },
     {
       "id": "drake",
@@ -9210,55 +9005,39 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Aces (Salamence, Flygon, Dragonite) at offset 0, fillers at -2. Species in the reference party keep that source slot's item/ability/nature: Salamence (game/src/data/trainers.party:TRAINER_DRAKE[4]), Altaria (game/src/data/trainers.party:TRAINER_DRAKE[1]), Kingdra (game/src/data/trainers.party:TRAINER_DRAKE[2]), Flygon (game/src/data/trainers.party:TRAINER_DRAKE[3]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Flamethrower"
-        },
-        {
           "move": "Dragon Claw"
         },
         {
-          "move": "Rock Slide"
+          "move": "Dragon Dance"
         },
         {
-          "move": "Crunch"
-        },
-        {
-          "move": "Flamethrower"
-        },
-        {
-          "move": "Crunch"
-        },
-        {
-          "move": "Dragon Breath"
+          "move": "Outrage"
         },
         {
           "move": "Earthquake"
         },
         {
-          "move": "Double Edge"
+          "move": "Waterfall",
+          "fromLevel": 30
         },
         {
-          "move": "Dragon Breath"
+          "move": "Flamethrower"
         },
         {
-          "move": "Dragon Dance"
+          "move": "Crunch"
         },
         {
-          "move": "Aerial Ace"
+          "move": "Dragon Pulse"
         },
         {
-          "move": "Smokescreen"
+          "move": "Roost",
+          "fromLevel": 20
         },
         {
-          "move": "Dragon Dance"
-        },
-        {
-          "move": "Surf"
-        },
-        {
-          "move": "Body Slam"
+          "move": "Hydro Pump"
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: sea-captain dragons"
     },
     {
       "id": "wallace",
@@ -9368,79 +9147,40 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Gyarados [RS team]. Aces (Milotic, Gyarados) at offset 0, fillers at -2. Species in the reference party keep that source slot's item/ability/nature: Milotic (game/src/data/trainers.party:TRAINER_WALLACE[5]), Wailord (game/src/data/trainers.party:TRAINER_WALLACE[0]), Tentacruel (game/src/data/trainers.party:TRAINER_WALLACE[1]), Ludicolo (game/src/data/trainers.party:TRAINER_WALLACE[2]), Whiscash (game/src/data/trainers.party:TRAINER_WALLACE[3]), Gyarados (game/src/data/trainers.party:TRAINER_WALLACE[4]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
+          "move": "Rain Dance"
+        },
+        {
+          "move": "Scald",
+          "fromLevel": 30
+        },
+        {
           "move": "Recover"
         },
         {
-          "move": "Surf"
-        },
-        {
-          "move": "Ice Beam"
-        },
-        {
-          "move": "Toxic"
-        },
-        {
-          "move": "Dragon Dance"
-        },
-        {
-          "move": "Earthquake"
-        },
-        {
-          "move": "Hyper Beam"
-        },
-        {
-          "move": "Surf"
-        },
-        {
-          "move": "Rain Dance"
+          "move": "Aqua Ring"
         },
         {
           "move": "Water Spout"
         },
         {
-          "move": "Double Edge"
+          "move": "Giga Drain",
+          "fromLevel": 30
         },
         {
-          "move": "Blizzard"
-        },
-        {
-          "move": "Toxic"
-        },
-        {
-          "move": "Hydro Pump"
-        },
-        {
-          "move": "Sludge Bomb"
-        },
-        {
-          "move": "Ice Beam"
-        },
-        {
-          "move": "Giga Drain"
-        },
-        {
-          "move": "Surf"
-        },
-        {
-          "move": "Leech Seed"
-        },
-        {
-          "move": "Double Team"
+          "move": "Toxic Spikes"
         },
         {
           "move": "Earthquake"
         },
         {
-          "move": "Surf"
+          "move": "Dragon Dance"
         },
         {
-          "move": "Amnesia"
-        },
-        {
-          "move": "Hyper Beam"
+          "move": "Ice Beam",
+          "fromLevel": 38
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: rain, bulk and beauty"
     },
     {
       "id": "steven",
@@ -9550,79 +9290,41 @@
       "rosterSource": "user-directed roster draft v1 (identity/anime picks); battle content placeholder. Tags: Armaldo [RS team]. Aces (Metagross, Aggron) at offset 0, fillers at -2. Species in the reference party keep that source slot's item/ability/nature: Metagross (game/src/data/trainers.party:TRAINER_STEVEN[5]), Skarmory (game/src/data/trainers.party:TRAINER_STEVEN[0]), Claydol (game/src/data/trainers.party:TRAINER_STEVEN[1]), Aggron (game/src/data/trainers.party:TRAINER_STEVEN[2]), Cradily (game/src/data/trainers.party:TRAINER_STEVEN[3]), Armaldo (game/src/data/trainers.party:TRAINER_STEVEN[4]); other roster slots have no item. Roster slots carry no moves: members draw them from the move pool.",
       "movePool": [
         {
-          "move": "Earthquake"
-        },
-        {
-          "move": "Psychic"
-        },
-        {
           "move": "Meteor Mash"
         },
         {
-          "move": "Shadow Ball"
+          "move": "Bullet Punch"
         },
         {
-          "move": "Thunder"
+          "move": "Stealth Rock",
+          "fromLevel": 20
         },
         {
-          "move": "Earthquake"
+          "move": "Earthquake",
+          "fromLevel": 38
         },
         {
-          "move": "Solar Beam"
-        },
-        {
-          "move": "Dragon Claw"
-        },
-        {
-          "move": "Toxic"
-        },
-        {
-          "move": "Aerial Ace"
+          "move": "Double Edge"
         },
         {
           "move": "Spikes"
         },
         {
-          "move": "Steel Wing"
+          "move": "Roost",
+          "fromLevel": 20
         },
         {
-          "move": "Reflect"
-        },
-        {
-          "move": "Light Screen"
-        },
-        {
-          "move": "Ancient Power"
-        },
-        {
-          "move": "Earthquake"
-        },
-        {
-          "move": "Giga Drain"
-        },
-        {
-          "move": "Ancient Power"
+          "move": "Rapid Spin"
         },
         {
           "move": "Ingrain"
         },
         {
-          "move": "Confuse Ray"
-        },
-        {
-          "move": "Water Pulse"
-        },
-        {
-          "move": "Ancient Power"
-        },
-        {
-          "move": "Aerial Ace"
-        },
-        {
-          "move": "Slash"
+          "move": "Swords Dance",
+          "fromLevel": 30
         }
       ],
-      "movePoolSource": "Placeholder pool from previous per-slot moves: the source slots' moves (species in the source party), ace slots first, then filler slots, each in slot order; a move is listed once per slot that had it. No from levels."
+      "movePoolSource": "user-directed pool draft v1: Stealth Rock and Meteor Mash"
     }
   ]
 }

@@ -141,11 +141,11 @@ trainer's team. The player TR is never computed from a notable trainer's TR.
   eligible member already knows it or has four pool moves ("taken"). It
   wakes when a member that can use it joins, evolves or reaches the level.
   Resolution is a pure function of the team and the pool, with no randomness.
-  Brock's placeholder pool has no from levels, so at 0 badges his Onix takes
-  only Curse (next to Rock Tomb, Rage and Stealth Rock) and his Geodude keeps
-  Rollout, Magnitude, Strength and Rock Throw; Earthquake waits for its learn
-  level (Lv 34), Body Slam and Toxic are TM/tutor only and need a from level,
-  and Sky Attack stays dormant (no one can learn it).
+  At 0 badges Brock's Onix takes Curse from his pool (next to Rock Tomb, Rage
+  and Stealth Rock, which it already knows) and his Geodude keeps Rollout,
+  Magnitude, Strength and Rock Throw; Sandstorm waits for its from level
+  (Lv 20), Earthquake for its learn level (Lv 34), and Heavy Slam and Cross
+  Poison stay dormant until Golem and Crobat join (no one can learn them yet).
 
 The world panel sets the player TR: a number field and a 0–200 slider (type
 any larger whole TR; TR has no upper limit). Badges (0–24) are presets that
@@ -189,13 +189,14 @@ along its evolution line, the team level moving strictly above the level cap
 or strictly below it again (equal keeps the side, so rounding cannot flicker),
 a dormant move pool entry assigned for the first time ("Earthquake wakes
 (Golem)"), and peak TR reached. The player's current TR is marked in the list. Brock
-reads "0: Onix, Geodude (team level above the level cap) · 8: 3rd slot
-(Zubat) joins · 19: Zubat → Golbat · 27: Geodude → Graveler · 40: 4th slot
-(Kabuto) joins · 49: team level Lv 32 drops below the level cap Lv 33 · 57:
-Onix → Steelix, Fire Fang wakes (Steelix) · 76: Graveler → Golem, Golbat →
-Crobat · 85: Kabuto → Kabutops, Night Slash wakes (Kabutops) · 98: 5th slot
-(Omastar) joins · 151: 6th slot (Aerodactyl) ace joins, Ancient Power wakes
-(Aerodactyl) · 157: Earthquake wakes (Golem) · 159: peak TR 100". His late ace Aerodactyl (roster slot 6) joins only
+reads "0: Onix, Geodude (team level above the level cap) · 6: Sandstorm wakes
+(Onix) · 8: 3rd slot (Zubat) joins · 19: Zubat → Golbat · 21: Stealth Rock
+wakes (Onix) · 27: Geodude → Graveler · 40: 4th slot (Kabuto) joins · 49: team
+level Lv 32 drops below the level cap Lv 33 · 57: Onix → Steelix · 76:
+Graveler → Golem, Golbat → Crobat, Heavy Slam wakes (Golem), Cross Poison
+wakes (Crobat) · 85: Kabuto → Kabutops · 98: 5th slot (Omastar) joins · 100:
+Rock Slide wakes (Steelix) · 136: Rock Blast wakes (Golem) · 151: 6th slot
+(Aerodactyl) ace joins · 157: Earthquake wakes (Golem) · 159: peak TR 100". His late ace Aerodactyl (roster slot 6) joins only
 at team size 6 (TR 96, team level 60), which his placeholder peak TR 100
 reaches at world progress 151.
 
@@ -301,12 +302,20 @@ Aerodactyl (ace); Blue's is Umbreon (ace, Eevee early), Pidgeot, Alakazam
 roster slot whose species is in the trainer's source party (the curated
 composition in `game/src/data/trainer_scaling/gym_leaders.json`, otherwise its
 reference party) keeps that source slot's item, ability and nature; every
-other slot has no item. Each trainer's move pool is a placeholder pool from
-the previous per-slot moves (`movePoolSource` says so): those source slots'
-moves, ace slots first, then filler slots, each in slot order, a move listed
-once per slot that had it (so it appears twice only when two slots had it),
-with no from levels. Old move names in the source parties (Faint Attack) are
-stored as the move itself (Feint Attack). The script warns about pool entries
+other slot has no item. Each trainer's move pool is the user-directed pool
+draft v1 in the script's `POOL_DRAFT` table (`movePoolSource` reads
+"user-directed pool draft v1: " and the trainer's gimmick): 8–12 ordered
+entries, identity moves first so the aces take them. An entry has a from level
+only when a roster line it is meant for learns it only by TM/tutor, or to hold
+back a strong move a line learns by level-up too early, by tier: status and
+utility 20; attacks under 90 power and setup 30 (Shell Smash, Belly Drum and
+Quiver Dance 40); 90–100 power 38; 110+ power or a heavy drawback 45; OHKO 55.
+A draft move no roster line can learn is replaced by the closest legal move
+that keeps the gimmick (a comment in the table names it); Brock's pool is
+Stealth Rock, Sandstorm (from Lv 20), Curse (for Iron Defense), Stone Edge,
+Earthquake, Rock Slide, Heavy Slam, Rock Blast, Cross Poison and Explosion.
+An old move name (Faint Attack) is stored as the move itself (Feint Attack).
+The script warns about pool entries
 no stage on the trainer's roster lines can learn, and about entries without a
 from level that every stage on those lines learns only by TM/tutor (both stay
 dormant; the second needs a from level). Every roster lists six Pokémon; the explorer still flags a roster edited
