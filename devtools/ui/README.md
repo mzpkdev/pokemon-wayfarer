@@ -169,7 +169,8 @@ the player TR). The trainer list shows each trainer's TR at the current world
 progress, their start TR → peak TR, archetype,
 team level, team size, the gap between team level and the level cap, and how
 many roster slots are filled. The trainer panel edits start TR, archetype
-and peak TR, shows the trainer's TR, team level and each roster slot's stage
+and peak TR, the trainer's home region (Kanto, Johto or Hoenn) and travel
+style (homebody or traveller), shows the trainer's TR, team level and each roster slot's stage
 and level at world progress 0 / 40 / 80 / 120 / 160 (aces marked), the trainer's
 **milestones**, a chart of their team level against the level cap across
 player TR 0–200 (the current player TR and the milestones marked; hover or
@@ -212,10 +213,12 @@ slot (Aerodactyl) ace joins · 159: peak TR 100". His late ace Aerodactyl
 (roster slot 6) joins at team size 6 (TR 71, team level 45), which his
 placeholder growth reaches at world progress 98.
 
-Exports and the saved browser state use version 12 (nine archetypes with the
+Exports and the saved browser state use version 13 (nine archetypes with the
 single-word identifiers above; rosters carry `isAce` and no moves; each
-trainer has a `movePool` of `{ "move", "fromLevel"? }` entries)
-and store the point as `{ "playerTR": n }`; a `{ "badges": n }` point still
+trainer has a `movePool` of `{ "move", "fromLevel"? }` entries, a
+`homeRegion` and a `travel` style)
+and store the point as `{ "playerTR": n }` and the league settings as
+`{ "seed": n, "at": "badges" | "player" }`; a `{ "badges": n }` point still
 imports and sets the matching player TR.
 
 **Tate & Liza** are one entry (role Gym Leader duo, Hoenn) with one start TR,
@@ -230,19 +233,40 @@ only).
 current world progress, sorted by TR, each marked below, near (within 10 of
 the player TR) or above.
 
-**League lineup** previews the top five trainers by TR at the current world
-progress from one global pool of the 37 league-eligible entries (the catalog
-has no Red, and Tate & Liza are ineligible), as entering a league would
-compute it. Ties keep catalog order. The
-five are shown as matches 1–5, ascending TR with the strongest last, each with
-their own team and levels. v0 uses one pool, so Indigo, Sevii Masters and Hoenn
-all use the same lineup. With the catalog defaults, at world progress 80
-(8 badges, level cap Lv 50) the lineup is Lt. Surge, Giovanni, Agatha,
-Jasmine and Norman (all TR 95), team level 59. At 120 (level cap Lv 75) it is
-Norman and Steven (TR 130), Giovanni and Jasmine (TR 131) and Lance (TR 132),
-team level 81–83. At 160 it is Clair, Juan, Wallace, Steven and Lance (TR
-185–200), team level 100: the team level scaler stops at Lv 100, the same as
-the level cap there, so the lineup can match the cap but not exceed it.
+**Seeded leagues** model the league lineup draw. Each league is a location:
+Indigo's location regions are Kanto and Johto, Hoenn's is Hoenn, and the
+Sevii Masters is a neutral location where everyone is at home. The catalog
+gives each notable trainer a home region and a travel style (`homeRegion`,
+`travel`; the section 14 lore assignments, editable per trainer). Entering a
+league takes its **contenders**, the 10 strongest league-eligible trainers by
+TR at that world progress (singles only: the catalog has no Red and Tate &
+Liza are ineligible), and gives each a **willingness** of max(5, 100 − travel
+cost − fatigue). Travel cost is 0 at home, 80 for a homebody away and 10 for
+a traveller away; fatigue is 50 for a trainer in the lineup of the league
+entered just before (by entry sequence, not location order). The **lineup
+draw** takes five contenders without replacement, weighted by willingness,
+from a small deterministic PRNG keyed by seed + league + entry occurrence
+(the ROM keys the same decision from the playthrough seed, draws it on first
+entry and locks it until won, so explorer lineups need not match ROM draws).
+The five fight by ascending TR, strongest last (ties in catalog order).
+
+The panel runs the standard entry sequence Indigo → Sevii Masters → Hoenn
+(first entry each), entered at each league's badge point (8, 16 and 24
+badges: world progress 80, 120 and 160) or, with **Enter at**, all at the
+player TR. For an editable **League seed** (or **New seed**) it shows each
+league's sample lineup with teams and levels, and its contenders with TR,
+home region, travel style, at home or away, travel cost, fatigue,
+willingness and whether they were drawn. **Appearance odds** give each
+contender's share of 2,000 seeded runs (seeds 0–1999) in which they are in
+each league's lineup; every league's shares total 500% (five per run). With
+the catalog defaults at the standard badge points, Indigo's contenders are
+near even (about 54–56% each) except the away trainers: Drake, a Hoenn
+traveller, about 50%, and Norman, a Hoenn homebody, about 14%. The Sevii
+Masters has no travel cost, so only fatigue from the Indigo lineup spreads
+it (about 42–55%). At Hoenn the home trainers Winona and Juan lead (about
+74%), the travellers Wallace, Steven, Blue, Giovanni and Lance follow (about
+53–61%), and the Johto and Kanto homebodies Morty, Sabrina and Clair trail
+(about 21–25%).
 
 All thirteen scaler tables (team level, team size, wild level, regular trainer
 level, and the Steady, Prodigy, Sleeper, Veteran, Rival, Legend, Star,
@@ -250,13 +274,16 @@ Comeback and Burst growth scalers) are editable under
 **Scalers & experiment settings**, each labeled interpolated or step. Anchors
 start at 0, rise and never decrease in value; growth scalers run 0–100% and
 start at 0%. Experiments persist in browser storage (key
-`wayfarer-trainer-balance-v12`). JSON export and import
-(format version 12) round-trip the experiment (growth, rosters with their ace
-flags, move pools and the thirteen scalers), the player TR and the selected trainer. The
+`wayfarer-trainer-balance-v13`). JSON export and import
+(format version 13) round-trip the experiment (growth, rosters with their ace
+flags, move pools, home regions, travel styles and the thirteen scalers), the
+player TR, the league seed and entry point, and the selected trainer. The
 importer also rejects a Legend whose peak TR differs from start TR, a
 Gym Leader Legend, a roster slot with moves, an unknown move name, a from level
-outside 1–100 and a pool of more than 64 entries. Files from versions 1–11 are
-rejected with a message (version 11 authored moves per roster slot and had no
+outside 1–100, a pool of more than 64 entries, and an unknown home region or
+travel style. Files from versions 1–12 are
+rejected with a message (version 12 had no home regions or travel styles and
+assumed fixed league lineups; version 11 authored moves per roster slot and had no
 move pools; version
 10 used the old archetype names; version
 9 had only five archetypes and the old assignments; version 8 had no ace slots and fought the team
@@ -270,8 +297,7 @@ The tool models species, team size, levels and each member's moves from the
 move pool. It does not simulate items, abilities, stats, AI, matchup
 difficulty or battle outcomes, and it skips the randomizer precedence (a
 species or learnset randomizer keeps the plain level-up moveset in the ROM). Seeded
-archetypes, other sources of world progress and lineup rules beyond the top
-five are out of scope for v0. The
+archetypes and other sources of world progress are out of scope for v0. The
 scaler the ROM uses today is unchanged.
 
 The catalog's growth and roster battle content are **placeholders**, for the
@@ -292,8 +318,7 @@ to Lv 28 (Pryce, TR 40), two or three Pokémon; Brock at start TR 25 opens at
 Lv 18. League-eligible Steady and Burst Gym Leaders keep start + peak TR at
 most 190, and the Veteran Lt. Surge peaks at TR 95, so they stay at TR 95 or less
 at world progress 80. The defaults are tuned to the
-v0 balance targets, which `engine.test.ts` checks: the lineup at TR 85–95 at
-world progress 80, 2–8 levels above the level cap at 120, Lv 100 at 160, every
+v0 balance targets, which `engine.test.ts` checks: every
 notable trainer at team size 6 at their peak TR, every
 Gym Leader opening at team level 12 or more and within 16 levels of each other,
 Blue about 10 ahead from world progress 40, and the five hardest Gym Leaders
@@ -303,7 +328,11 @@ three Gym Leaders near and above the player at every checkpoint and three below
 from world progress 80. At world progress 0 all 24 are above (every start TR
 is past the near band), and the lowest three are two Pokémon at or under the
 level cap; at 40 none is below yet, but at least three are at or under the
-player TR. Rosters are the user-directed roster draft v1 (identity and anime
+player TR. League lineups have no fixed targets any more: the appearance odds
+are informational, and the tests only check that every lineup has five
+distinct eligible contenders and that each league's odds sum to five. Home
+regions and travel styles live in the script's `HOME_REGION` and `TRAVELLERS`
+tables. Rosters are the user-directed roster draft v1 (identity and anime
 picks) in the script's `DRAFT` table: six roster slots per trainer in join
 order, 1–3 aces at offset 0 (roster slot 1, the signature Pokémon, always
 one), fillers at offset -2. Off-type, anime or lore picks carry a tag (e.g.

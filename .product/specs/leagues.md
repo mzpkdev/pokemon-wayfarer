@@ -2,24 +2,30 @@
 
 PRD: [Leagues](../prds/leagues.md)
 Implemented: No
-Design status: v0 approved: one global pool, top five by Trainer Rating (TR)
-at the moment the player enters, ascending battle order, a lineup captured
-when the player enters and locked until the league is won, and a win that
-commits the league result. Signup and league order stay as Today's
+Design status: v0 approved: leagues as locations, ten contenders (the
+strongest eligible trainers by Trainer Rating (TR) when the player enters), a
+seeded lineup draw of five weighted by willingness (travel cost and fatigue),
+ascending battle order, a lineup drawn on first entry and locked until the
+league is won, and a win that commits the league result. Balance is
+informational for now. Signup and league order stay as Today's
 [interregional circuit](wayfarer-interregional-league-circuit.md) until
 designed.
 
 ## Scope
 
-Own, for each `IS_WAYFARER` league: the league registry, eligibility, lineup
-selection and battle order, the locked lineup, battle construction, entering a
-league, active runs and dispatch, the win commit, saved state, load
-validation, presentation, and regional integration.
+Own, for each `IS_WAYFARER` league: the league registry, eligibility,
+location regions, contenders, fatigue, the lineup draw and battle order, the
+locked lineup, battle construction, entering a league, active runs and dispatch, the win commit,
+saved state, load validation, presentation, and regional integration.
 
 - [Notable trainers](notable-trainers.md) owns notable trainers, their
-  TR and its growth with world progress, the team-level and team-size scalers,
-  rosters, and team composition. This spec reads a trainer's TR and composed
+  TR and its growth with world progress, home regions, travel styles, travel
+  cost and willingness, the team-level and team-size scalers, rosters, and
+  team composition. This spec reads a trainer's TR, willingness, and composed
   team; it never restates how they are computed.
+- The [playthrough seed framework](playthrough-seed-framework.md) owns the
+  root seed, keyed derivation, and the weighted-choice helper. The lineup draw
+  is its only v0 consumer.
 - [Player Trainer Rating](player-trainer-rating.md) owns the player's TR. In
   v0 a league win adds no player TR; Today's +8 per first league win stays
   documented in the circuit spec until adoption.
@@ -43,6 +49,15 @@ rooms need a Wayfarer-only map-context override; standalone HNS keeps its
 identity. The final HNS ceremony room is the Masters Gallery. Geography, room
 names, and titles never substitute for saved league or selected-character
 identity.
+
+Each league is a [location](notable-trainers.md#home-region-and-travel) with
+a location region, which decides who is at home there:
+
+| League | Location region |
+| --- | --- |
+| Indigo | Kanto, Johto |
+| Masters | Neutral location: home to everyone |
+| Hoenn | Hoenn |
 
 ## Registry and eligibility
 
@@ -72,33 +87,55 @@ change story battles, which follow the
 
 ## Selection and order
 
-One global pool of eligible trainers serves every league. Gym Leaders, Elite
-Four, Champions, and Blue from every region are all eligible for any league;
-region, title, and home league never filter the pool. When the player
-enters:
+Every eligible trainer can be invited to any league; location regions only
+weight the draw. The first time the player enters a league, and on each replay
+(see [Entering a league](#entering-a-league)):
 
-1. Compute each eligible trainer's TR at the current world progress
-   ([Notable trainers](notable-trainers.md#growth-with-world-progress)) and
-   sort the pool by it, highest first.
-2. Take the first five. Equal TRs keep whatever order the registry iteration
-   and sort produce; there is no tie-break rule.
-3. Order the five by ascending TR for battle, so the highest TR fights last.
-   Equal TRs again take whatever order the sort produces.
+1. **Contenders.** Compute each eligible trainer's TR at the current world
+   progress ([Notable trainers](notable-trainers.md#growth-with-world-progress))
+   and take the ten highest (all of them if fewer than ten are eligible). Equal
+   TRs at the boundary break by ascending `characterId`.
+2. **Willingness.** Score each contender with the
+   [travel rule](notable-trainers.md#home-region-and-travel):
+   `max(5, 100 - travelCost - fatigue)`. **Fatigue** is league-specific: 50 if
+   the trainer is in the previous lineup, else 0. At home a contender scores
+   100 (50 fatigued); away, a traveller 90 (40) and a homebody 20 (5).
+3. **Lineup draw.** Draw five without replacement: five weighted choices by
+   willingness over the contenders in ascending `characterId` order, each
+   removing its pick ([seeded key](#seeded-key)).
+4. **Battle order.** Order the five by ascending TR, so the strongest fights
+   last. Equal TRs take whatever order the sort produces.
 
-League, region, home membership, title, party, and history play no part;
-player TR enters only as world progress, through each trainer's TR. Trainers
-grow at different rates, so the lineup changes naturally between leagues as
-world progress rises; leagues may still share some or all of the five, and v0
-accepts that. The procedure consumes no randomness and reads no seed. Other
-leagues are never resolved early.
+The **previous lineup** is the lineup of the last league the player entered
+before this one, by entry sequence (re-entries of a locked lineup and replays
+count), not league order. Every entry saves its lineup as the new previous
+lineup, after this entry's draw has read the old one.
 
-Because ties have no rule, a changed registry order or sort can reorder tied
-trainers in a lineup the player has not entered yet. The locked lineup keeps
-any entered lineup stable.
+Title, party, and history play no part; player TR enters only as world
+progress, through each trainer's TR. Other leagues are never resolved early.
+
+### Seeded key
+
+The lineup draw is one keyed decision of the
+[playthrough seed framework](playthrough-seed-framework.md#decision-identities):
+
+| Key field | Value |
+| --- | --- |
+| `domainId` / `decisionId` | Leagues (1) / lineup draw (1) |
+| `decisionVersion` | 1; bump when contender, willingness, or draw rules change |
+| `entityLo` | League identity (1-3); `entityHi` 0 |
+| `occurrenceId` | That league's saved draw counter: 0 for its first draw |
+| `drawId` | Pick 1-5 |
+
+Inputs become authoritative at the moment of entry: world progress, the
+previous lineup, and content. The result is committed before reveal, together
+with the counter advance, so reloading before the commit re-derives the same
+five and nothing after it re-rolls. The draw never touches the Pokémon RNG.
 
 ## Locked lineup
 
-Entering a league captures, for each of the five in battle order:
+The drawn five are the locked lineup. The draw captures, for each of the five
+in battle order:
 `characterId`, their TR, and their composed team, plus the registry and roster
 content versions. Per member, the team holds the roster slot index and every
 resolved battle value the battle snapshot uses: species/form, level, moves,
@@ -110,17 +147,23 @@ Every retry at that league, including after reload, reconstructs battles from
 the saved lineup and never reselects or recomposes, even after the player's TR
 rises. If the content version changes while a lineup is locked,
 the lock is dropped and the next time the player enters, a new lineup is
-captured (prerelease policy; the save stays valid).
+drawn with the league's next occurrence (prerelease policy; the save stays
+valid).
 
 ## Saved state
 
 Keep Today's saved circuit facts (league wins, pending ceremony phase). Add:
 
 - at most one **locked lineup**: the league (`venueId`), the content versions,
-  and the five matches of the lineup; and
+  the occurrence it was drawn with, and the five drawn matches;
+- a **draw counter** per league (`u16`, saturating): the occurrence its next
+  draw uses;
+- the **previous lineup**: the five `characterId`s of the last league entered,
+  with its content versions, read for fatigue; empty on a new game; and
 - active-run progress: the league and the defeated prefix of the five matches.
 
-There is no seed, edition, rotation history, or lineup history. Only one lineup
+The root seed lives in the framework's shared record. There is no edition,
+rotation history, or lineup history beyond the previous lineup. Only one lineup
 can be locked at a time because admission already requires the previous league
 to be won. Save an explicit schema discriminator for this layout; prerelease
 saves need no migration.
@@ -131,20 +174,23 @@ saves need no migration.
 
 Admission follows Today's circuit rules. At a league that is not yet won:
 
-1. If a locked lineup exists for this league, load it. Otherwise validate the
-   absence of any other locked lineup or pending transaction, select the five,
-   and atomically save the locked lineup.
+1. If a locked lineup exists for this league, load it and save it as the
+   previous lineup. Otherwise validate the absence of any other locked lineup
+   or pending transaction, draw the five
+   ([Selection and order](#selection-and-order)), and atomically save the
+   locked lineup, the advanced draw counter, and the new previous lineup.
 2. Start a fresh run and reveal the lineup.
 
 A failure leaves the prior state intact; a crash exposes either the old state
 or the complete locked lineup. Denied or cancelled requests change nothing and
 reveal nothing.
 
-Replays of a won league reselect the lineup deterministically from the current
-world progress, so it matches the won lineup only if world progress has not
-changed. A replay stores nothing beyond the existing
-replay run record and never locks the league. Whether a replay is available
-while another league is locked follows Today's circuit rules.
+A replay of a won league draws a fresh lineup with the league's next
+occurrence. The drawn five, the counter advance, and the new previous lineup
+commit atomically with the existing replay run record before reveal; a replay
+never locks the league, and the next replay draws the following occurrence.
+Whether a replay is available while another league is locked follows Today's
+circuit rules.
 
 ### Loss
 
@@ -171,7 +217,7 @@ Red add no TR.
 ## Active run and dispatch
 
 Progress belongs to the locked lineup's matches (or, in a replay, the
-reselected lineup's); global Trainer defeat flags cannot skip a match.
+replay run's drawn lineup's); global Trainer defeat flags cannot skip a match.
 
 1. Validate the locked lineup, admission, run, and destination before locking
    an entrance or changing room state.
@@ -219,7 +265,15 @@ order, and resolve every reference. Stored teams must be valid for their
 roster (known roster slots, legal forms, levels, and moves); they are never
 recomposed on load. If the saved content versions differ from the build's,
 drop the lock and run progress; the next time the player enters, a new lineup
-is captured. This is the prerelease policy, not an invalid save.
+is drawn with the next occurrence. A previous lineup from other content
+versions is cleared, so the next draw has no fatigue. This is the prerelease
+policy, not an invalid save.
+
+The previous lineup is empty or holds five distinct known characters, and a
+locked lineup's occurrence is below its league's draw counter. The
+playthrough root must be valid
+([seed framework](playthrough-seed-framework.md#root-seed-lifecycle)); a
+missing root is an invalid save, never a reroll.
 
 A valid locked lineup with damaged run progress recovers to its own lobby with
 progress reset and the lineup kept. A missing, corrupt, or unsupported locked
@@ -290,20 +344,14 @@ Existing code to review, not new APIs:
   [Sevii content manifest](../../game/src/data/wayfarer_sevii_maps.json), and
   [Blue Dojo scripts](../../game/data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc).
 
-## Balance target
+## Balance report
 
-The first league must be beatable after 8 badges. An 8-badge player sits at
-TR 80 with a level cap of Lv 50
-([Player Trainer Rating](player-trainer-rating.md#player-tr-scalers-v0)), so at
-world progress 80 the placeholder catalog puts the top five around TR 85–95, a
-team level of about 53–59
-([Notable trainers](notable-trainers.md#trainer-scalers)). Later leagues stay
-a real fight: at world progress 120 the top five sit a little above the
-player's level cap, not a wall; at 160 both team level and level cap reach
-Lv 100, so the lineup meets the cap. These are content constraints on the
-trainers' growth values, owned with the other
-[balance targets](notable-trainers.md#balance-targets) and checked by the
-catalog report and playtesting, not runtime rules.
+League balance is informational in v0; tuning comes later. The
+[explorer](../../devtools/ui/README.md#trainer-balance-explorer) reports, for
+each league at sample world progress values and entry sequences, every
+contender's appearance odds and the likely lineups. It asserts no fixed
+lineup, finalist, or strength target. The Gym ladder and team targets
+stay in [Notable trainers](notable-trainers.md#balance-targets).
 
 ## Acceptance
 
@@ -316,35 +364,45 @@ evidence (not yet run):
    growth values or a valid roster. The build must hold at least five eligible
    trainers.
 2. **Selection.** Fixtures at several world progress values, including one
-   where growth reorders the top five: the top five over distinct TRs, ties at
-   the fifth-place boundary, and ties inside the lineup; the battle order is
-   non-decreasing in TR with the highest last; excluded and disabled trainers
-   never appear; aliases never appear twice.
-3. **Fresh state.** A new game has no locked lineup; load, display, and
-   denied or cancelled attempts to enter generate nothing.
-4. **Entering.** Entering a league the first time saves five matches
-   atomically in ascending TR order; inject failures before, during, and at
-   commit.
-5. **Loss.** Lose at each match: the locked lineup is unchanged, progress
+   where growth reorders the contenders: the ten highest over distinct TRs and
+   ties at the tenth-place boundary; willingness for at-home, away homebody,
+   away traveller, fatigued, and floored cases at each league, Masters as a
+   neutral location; fatigue read from the last league entered by entry
+   sequence, re-entries and replays included, not league order; five distinct
+   picks from the contenders; the battle order non-decreasing in TR with the
+   highest last; excluded and disabled trainers never appear; aliases never
+   appear twice.
+3. **Draw.** Golden lineups for fixed roots, leagues, and occurrences, matched
+   between host tooling and game C; the same key and inputs give the same five,
+   a different root or occurrence can differ, and the Pokémon RNG state is
+   unchanged. Over many roots, observed pick rates follow willingness.
+4. **Fresh state.** A new game has a root seed, zero draw counters, no
+   previous lineup, and no locked lineup; load, display, and denied or
+   cancelled attempts to enter generate nothing.
+5. **Entering.** Entering a league the first time saves the drawn five in
+   ascending TR order, the counter advance, and the previous lineup
+   atomically; reloading before the commit re-derives the same five; inject
+   failures before, during, and at commit.
+6. **Loss.** Lose at each match: the locked lineup is unchanged, progress
    resets, nothing is recorded, and the player blacks out to the usual target.
    Earn a badge and level up, then retry: identical five trainers, teams, and
    levels, although every trainer's current TR has risen. Repeat with reloads
    and voluntary exits.
-6. **Win.** Exactly one league win and ceremony; only the first league win
+7. **Win.** Exactly one league win and ceremony; only the first league win
    grants first-league-win effects; no win changes player TR; the locked
    lineup is released. Interrupt and repeat ceremony commits.
-7. **Replay.** Replays of a won league reselect from the current world
-   progress (an identical lineup when it is unchanged), store nothing beyond
-   the existing replay run record, and never lock it.
-8. **Construction and presentation.** Build every eligible trainer's team,
+8. **Replay.** Each replay of a won league draws with the next occurrence,
+   commits it with the replay run record, updates the previous lineup, and
+   never locks the league.
+9. **Construction and presentation.** Build every eligible trainer's team,
    preserve member identity and metadata, and reconstruct identically from the
    saved lineup. Names, sprites, portraits, text, music, AI, money, XP, and
    parties match the lineup's matches, including a Gym Leader in match 5.
-9. **Load validation.** Corrupt locked lineups, schema, or callbacks are
-   rejected without regenerating, advancing, or rewarding. A content version
-   change drops the lock, and the next time the player enters, a new lineup is
-   captured.
-10. **Standalone.** FRLG, HNS, and Emerald League behavior, travel, and
+10. **Load validation.** Corrupt locked lineups, previous lineups, counters,
+    roots, schema, or callbacks are rejected without regenerating, advancing,
+    or rewarding. A content version change drops the lock, and the next time
+    the player enters, a new lineup is drawn with the next occurrence.
+11. **Standalone.** FRLG, HNS, and Emerald League behavior, travel, and
     recovery are unchanged.
 
 Run the trainer/scaling mechanics suites and extend
@@ -360,11 +418,12 @@ Report balance playtesting separately from structural checks.
 ## Later
 
 - Signup thresholds and qualification designed for these leagues.
-- Seeded keys and draws for selection, and seeded league order.
+- Balancing tools: tune the contender count, travel costs, fatigue, and the
+  floor against appearance-odds reports, and set league balance targets.
+- Seeded league order.
 - Recurring editions with rollover, rotation weights, and rotation history.
 - Role windows and standing-based matches, with a nearest-standing fallback for
   empty windows.
-- Home leagues and the 85/15 home/visitor draw.
 - A Trainer Card itinerary view for the three leagues.
 - Winning-team records per edition and edition completion presentation.
 
@@ -373,6 +432,7 @@ Report balance playtesting separately from structural checks.
 - [Leagues PRD](../prds/leagues.md)
 - [Notable trainers](notable-trainers.md)
 - [Player Trainer Rating](player-trainer-rating.md)
+- [Playthrough seed framework](playthrough-seed-framework.md)
 - [Interregional League circuit](wayfarer-interregional-league-circuit.md)
 - [Existing League scaling contract](league-scaling.md)
 - [Party construction](../../game/src/battle_main.c)

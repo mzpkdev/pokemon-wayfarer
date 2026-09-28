@@ -189,7 +189,7 @@ test("sets the player TR directly, with badges as presets, and reads old badge p
   await expect(page.getByTestId("selected-tr")).toHaveText("70")
   await expect(page.getByTestId("tr-brock")).toHaveText("70")
   await expect(page.getByTestId("ladder-brock")).toContainText("below -27")
-  await expect(page.getByTestId("league-lineup").locator(":scope > li")).toHaveCount(5)
+  await expect(page.getByTestId("lineup-indigo").locator(":scope > li")).toHaveCount(5)
   // The slider runs 0–200; the field takes any larger TR, which is past 24 badges.
   await page.getByLabel("Player TR slider", { exact: true }).fill("170")
   await expect(input).toHaveValue("170")
@@ -340,42 +340,112 @@ test("ranks the Gym Leaders against the player TR in the Gym ladder", async ({ p
   await expect(ladder.last()).toContainText("TR 185")
 })
 
-test("puts the top five by TR at the current world progress in the lineup, strongest last", async ({
+test("draws seeded league lineups from the top 10 contenders by willingness, with appearance odds", async ({
   page,
 }) => {
   await page.goto("/#trainer-balance")
-  const matches = page.getByTestId("league-lineup").locator(":scope > li")
-  await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
-  await expect(matches).toHaveCount(5)
-  for (const [index, name] of ["Lt. Surge", "Giovanni", "Agatha", "Jasmine", "Norman"].entries())
-    await expect(matches.nth(index).locator("h3")).toContainText(name)
-  await expect(page.getByTestId("league-names")).toContainText(
-    "Indigo, Sevii Masters, Hoenn all use this lineup",
+  const names = async (league: string) =>
+    page.getByTestId(`lineup-${league}`).locator(":scope > li h3").allInnerTexts()
+  // The standard sequence enters each league at its own badge point: 8, 16 and 24 badges.
+  await expect(page.getByTestId("league-indigo").locator("h3").first()).toContainText(
+    "world progress 80 · Kanto + Johto · entry 1",
   )
-  // Beatable at 8 badges (level cap Lv 50): the lineup is TR 95, team level 59. The Veteran Lt.
-  // Surge has reached his peak, the Burst Giovanni has just jumped to 50%, and the Legend Agatha
-  // never grows.
-  await expect(page.getByTestId("league-range")).toHaveText("TR 95 … 95")
-  await expect(page.getByTestId("league-match-1")).toContainText("TR 95 · Lv. 59 · 6 Pokémon")
-  await expect(page.getByTestId("league-match-5")).toContainText("TR 95 · Lv. 59 · 6 Pokémon")
-  // At 16 badges (level cap Lv 75) the lineup is a little above the cap.
-  await page.getByRole("button", { name: "Set 16 badges", exact: true }).click()
-  await expect(page.getByTestId("league-range")).toHaveText("TR 130 … 132")
-  await expect(page.getByTestId("league-match-1")).toContainText("Norman")
-  await expect(page.getByTestId("league-match-1")).toContainText("TR 130 · Lv. 81 · 6 Pokémon")
-  await expect(page.getByTestId("league-match-5")).toContainText("TR 132 · Lv. 83 · 6 Pokémon")
-  // Brock as a Veteran with peak TR 150 moves into match 5 and drops Steven.
-  await setGrowth(page, { archetype: "veteran", peak: "150" })
-  await expect(page.getByTestId("league-match-5")).toContainText("Brock")
-  await expect(page.getByTestId("league-lineup")).not.toContainText("Steven")
-  // Tate & Liza fight a double battle, so even far ahead they never enter the lineup.
+  await expect(page.getByTestId("league-sevii-masters").locator("h3").first()).toContainText(
+    "world progress 120 · neutral location",
+  )
+  await expect(page.getByTestId("league-hoenn").locator("h3").first()).toContainText(
+    "world progress 160 · Hoenn",
+  )
+  for (const league of ["indigo", "sevii-masters", "hoenn"]) {
+    await expect(page.getByTestId(`lineup-${league}`).locator(":scope > li")).toHaveCount(5)
+    await expect(page.getByTestId(`contenders-${league}`).locator("tbody tr")).toHaveCount(10)
+    await expect(page.getByTestId(`odds-${league}`).locator("tbody tr")).toHaveCount(10)
+    await expect(page.getByTestId(`odds-total-${league}`)).toHaveText("500%")
+  }
+  // Seed 1: the Indigo lineup fights by ascending TR, strongest last (ties in catalog order).
+  await expect(page.getByLabel("League seed", { exact: true })).toHaveValue("1")
+  await expect
+    .poll(() => names("indigo"))
+    .toEqual([
+      "Match 1 Blue",
+      "Match 2 Lorelei",
+      "Match 3 Drake",
+      "Match 4 Lt. Surge",
+      "Match 5 Giovanni",
+    ])
+  await expect(page.getByTestId("match-indigo-5")).toContainText("TR 95 · Lv. 59 · 6 Pokémon")
+  // Willingness: Norman (Hoenn, homebody) is away at Indigo; Drake (Hoenn, traveller) pays 10.
+  await expect(page.getByTestId("contender-indigo-norman").locator("td")).toHaveText([
+    "Norman",
+    "95",
+    "Hoenn",
+    "homebody",
+    "away",
+    "80",
+    "0",
+    "20",
+    "",
+  ])
+  await expect(page.getByTestId("contender-indigo-drake").locator("td")).toHaveText([
+    "Drake",
+    "93",
+    "Hoenn",
+    "traveller",
+    "away",
+    "10",
+    "0",
+    "90",
+    "drawn",
+  ])
+  // Fatigue: Blue and Giovanni fought at Indigo, so they carry 50 fatigue into the Sevii Masters,
+  // a neutral location where everyone is at home.
+  await expect(page.getByTestId("contender-sevii-masters-blue").locator("td")).toHaveText([
+    "Blue",
+    "129",
+    "Kanto",
+    "traveller",
+    "at home",
+    "0",
+    "50",
+    "50",
+    "",
+  ])
+  // Another seed draws another lineup; the seed survives a reload.
+  await page.getByLabel("League seed", { exact: true }).fill("2")
+  await page.getByLabel("League seed", { exact: true }).press("Enter")
+  await expect
+    .poll(() => names("indigo"))
+    .toEqual(["Match 1 Blue", "Match 2 Lorelei", "Match 3 Karen", "Match 4 Will", "Match 5 Agatha"])
+  await page.reload()
+  await expect(page.getByLabel("League seed", { exact: true })).toHaveValue("2")
+  await expect(page.getByTestId("match-indigo-5")).toContainText("Agatha")
+  // Entering every league at the player TR moves all three to it.
+  await page.getByRole("button", { name: "Set 12 badges", exact: true }).click()
+  await page.getByLabel("League entry point", { exact: true }).selectOption("player")
+  await expect(page.getByTestId("league-hoenn").locator("h3").first()).toContainText(
+    "world progress 100",
+  )
+  await page.getByLabel("League entry point", { exact: true }).selectOption("badges")
+  await expect(page.getByTestId("league-hoenn").locator("h3").first()).toContainText(
+    "world progress 160",
+  )
+  // Norman as a traveller pays only 10 away from Hoenn.
+  await page.getByRole("button", { name: /^Norman/ }).click()
+  await expect(page.getByLabel("Home region", { exact: true })).toHaveValue("Hoenn")
+  await page.getByLabel("Travel style", { exact: true }).selectOption("traveller")
+  await expect(page.getByTestId("contender-indigo-norman").locator("td").nth(7)).toHaveText("90")
+  await page.getByLabel("Home region", { exact: true }).selectOption("Johto")
+  await expect(page.getByTestId("contender-indigo-norman").locator("td").nth(4)).toHaveText(
+    "at home",
+  )
+  // Tate & Liza fight a double battle, so even far ahead they are never a contender.
   await page.getByRole("button", { name: /^Tate & Liza/ }).click()
   await expect(page.getByTestId("double-battle")).toHaveText("Double battle")
   await expect(page.getByTestId("double-battle-note")).toContainText("not in the league pool")
   await setGrowth(page, { archetype: "veteran", peak: "300" })
   await expect(page.getByTestId("tr-tate-liza")).toHaveText("300")
-  await expect(page.getByTestId("league-lineup")).not.toContainText("Tate")
-  await expect(page.getByTestId("league-match-5")).toContainText("Brock")
+  for (const league of ["indigo", "sevii-masters", "hoenn"])
+    await expect(page.getByTestId(`contenders-${league}`)).not.toContainText("Tate")
 })
 
 test("marks ace slots and fights them last, with slot 1 locked and at most three aces", async ({
@@ -428,7 +498,7 @@ test("marks ace slots and fights them last, with slot 1 locked and at most three
   await expect(page.getByTestId("growth-slot-6")).not.toContainText("Ace")
 })
 
-test("flags incomplete rosters and rejects invalid edits and version 4 to 11 files", async ({
+test("flags incomplete rosters and rejects invalid edits and version 4 to 12 files", async ({
   page,
 }) => {
   await page.goto("/#trainer-balance")
@@ -573,6 +643,21 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 11 fil
   })
   await expect(page.getByRole("alert")).toContainText(
     "Version 11 experiments author moves per roster slot and have no move pools",
+  )
+  await importFile(12, {
+    point: { playerTR: 80 },
+    experiment: {
+      version: 12,
+      teamLevel: [[0, 15]],
+      teamSize: [[0, 2]],
+      wildLevel: [[0, 6]],
+      routeTrainerLevel: [[0, 9]],
+      archetypes: {},
+      trainers: {},
+    },
+  })
+  await expect(page.getByRole("alert")).toContainText(
+    "Version 12 experiments have no home regions or travel styles",
   )
   await expect(page.getByTestId("badge-count")).toHaveText("0")
   await expect(page.getByTestId("selected-tr")).toHaveText("25")
@@ -779,6 +864,7 @@ test("keeps controls and teams usable at a narrow viewport", async ({ page }) =>
   await expect(page.getByTestId("battle-order")).toBeVisible()
   await expect(page.getByTestId("growth-editor")).toBeVisible()
   await expect(page.getByTestId("gym-ladder")).toBeVisible()
-  await expect(page.getByTestId("league-lineup")).toBeVisible()
+  await expect(page.getByTestId("lineup-indigo")).toBeVisible()
+  await expect(page.getByTestId("league-odds")).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })

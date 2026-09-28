@@ -129,6 +129,23 @@ changes yours.
 - **Lineup:** the five opponents of a league.
 - **Locked lineup:** the lineup kept from when you enter a league until you win
   it.
+- **Home region:** a notable trainer's region (Kanto, Johto, or Hoenn).
+- **Travel style:** homebody or traveller.
+- **Location:** anywhere a notable trainer can appear; a league is a location
+  (overworld spots later).
+- **Location region:** the region or regions a location belongs to (Indigo:
+  Kanto and Johto; Hoenn: Hoenn).
+- **Neutral location:** a location that is home to everyone (Sevii Masters).
+- **At home / away:** at home when the location is in the trainer's home
+  region or neutral; away otherwise.
+- **Travel cost:** 0 at home; away, 80 for a homebody or 10 for a traveller.
+- **Fatigue:** 50 if the trainer was in the lineup of the last league the
+  player entered.
+- **Willingness:** max(5, 100 − travel cost − fatigue).
+- **Contenders:** the 10 strongest notable trainers by TR considered for a
+  league.
+- **Lineup draw:** choosing 5 of the contenders weighted by willingness, from
+  the playthrough seed, locked until won.
 - **Match 1-5:** a position in the lineup.
 - **First league win:** your first win at a given league.
 - **Challenge options:** the opt-in challenge menu.

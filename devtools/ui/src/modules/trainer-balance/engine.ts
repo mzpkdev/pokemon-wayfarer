@@ -2,9 +2,15 @@ import type {
   Anchor,
   Archetype,
   DormantReason,
+  Willingness,
   EvolutionData,
   Experiment,
+  HomeRegion,
   LadderRow,
+  League,
+  LeagueCandidate,
+  LeagueDraw,
+  LeagueOdds,
   LearnsetData,
   Milestone,
   MilestoneEvent,
@@ -17,6 +23,7 @@ import type {
   TeamMember,
   TrainerRecord,
   TrainerSettings,
+  TravelStyle,
   WorldPoint,
 } from "./types.js"
 
@@ -25,7 +32,33 @@ export const ROSTER_SIZE = 6
 export const MAX_ACES = 3
 export const LEVEL_OFFSET = { min: -6, max: 0, default: -2 } as const
 export const LINEUP_SIZE = 5
-export const LEAGUES = ["Indigo", "Sevii Masters", "Hoenn"] as const
+/** The leagues in the standard entry sequence (fatigue follows entry order, not venue order). */
+export const LEAGUES: readonly League[] = ["Indigo", "Sevii Masters", "Hoenn"]
+/** Each league's badge point in the standard sequence: 8, 16 and 24 badges. */
+export const LEAGUE_BADGES: Readonly<Record<League, number>> = {
+  Indigo: 8,
+  "Sevii Masters": 16,
+  Hoenn: 24,
+}
+/** Each league location's location regions; null is a neutral location (everyone is at home). */
+export const LOCATION_REGIONS: Readonly<Record<League, readonly HomeRegion[] | null>> = {
+  Indigo: ["Kanto", "Johto"],
+  "Sevii Masters": null,
+  Hoenn: ["Hoenn"],
+}
+export const HOME_REGIONS: readonly HomeRegion[] = ["Kanto", "Johto", "Hoenn"]
+export const TRAVEL_STYLES: readonly TravelStyle[] = ["homebody", "traveller"]
+/** A league considers the strongest eligible trainers by TR (its contenders), then draws LINEUP_SIZE of them. */
+export const CONTENDERS = 10
+/** Willingness lost at an away league, by travel style. */
+export const AWAY_COST: Readonly<Record<TravelStyle, number>> = { homebody: 80, traveller: 10 }
+/** Willingness lost by a trainer in the previous league's lineup. */
+export const FATIGUE = 50
+export const WILLINGNESS_FLOOR = 5
+/** League seeds are unsigned 32-bit whole numbers. */
+export const MAX_SEED = 0xffffffff
+/** Seeded runs behind the appearance odds. */
+export const ODDS_RUNS = 2000
 export const MAX_ANCHORS = 20
 /** Moves a Pokémon knows, and pool moves a member takes. */
 export const MAX_MOVES = 4
@@ -951,23 +984,223 @@ export const milestoneText = (milestone: Milestone): string =>
   `${milestone.worldProgress}: ${milestone.events.map((event) => milestoneEventText(event, milestone)).join(", ")}`
 
 /**
- * The league lineup from one global pool of league-eligible trainers at a
- * world progress: the top five by TR (ties keep catalog order), returned in
- * battle order, ascending TR with the strongest last.
+ * A trainer's willingness score at a league: 100 - travel cost - fatigue, at least
+ * WILLINGNESS_FLOOR. Travel cost is 0 at home or at a neutral location (the Sevii Masters); away it
+ * is AWAY_COST for the travel style. Fatigue is FATIGUE when the trainer was in the lineup of the
+ * league the player entered just before.
  */
-export const leagueLineup = (
-  catalog: TrainerRecord[],
+export const willingness = (
+  league: League,
+  trait: { homeRegion: HomeRegion; travel: TravelStyle },
+  fatigued: boolean,
+): Willingness => {
+  const homes = LOCATION_REGIONS[league]
+  const home = homes === null || homes.includes(trait.homeRegion)
+  const travelCost = home ? 0 : AWAY_COST[trait.travel]
+  const fatigue = fatigued ? FATIGUE : 0
+  return {
+    home,
+    travelCost,
+    fatigue,
+    score: Math.max(WILLINGNESS_FLOOR, 100 - travelCost - fatigue),
+  }
+}
+
+/**
+ * A league's contenders: the CONTENDERS strongest league-eligible trainers by TR at a world
+ * progress (singles only, so the Tate & Liza duo is out; the catalog has no Red), strongest first.
+ * Ties keep catalog order.
+ */
+export const leagueContenders = (
+  catalog: readonly TrainerRecord[],
   experiment: Experiment,
   world: number,
-  evolution: Evolution,
-  learnsets: Learnsets = NO_LEARNSETS,
-): ResolvedTrainer[] =>
+): LeagueCandidate[] =>
   catalog
-    .filter((trainer) => trainer.leagueEligible)
-    .map((trainer) => resolveTrainer(trainer, experiment, world, evolution, learnsets))
-    .toSorted((a, b) => b.tr - a.tr)
-    .slice(0, LINEUP_SIZE)
-    .toSorted((a, b) => a.tr - b.tr)
+    .flatMap((trainer, order): LeagueCandidate[] => {
+      if (!trainer.leagueEligible) return []
+      const settings = experiment.trainers[trainer.id]
+      if (!settings) throw new Error(`Missing trainer settings: ${trainer.id}`)
+      const tr = trainerRating(experiment, settings, world)
+      return [{ trainer, tr, homeRegion: settings.homeRegion, travel: settings.travel, order }]
+    })
+    .toSorted((a, b) => b.tr - a.tr || a.order - b.order)
+    .slice(0, CONTENDERS)
+
+/** FNV-1a over a string: the draw key's 32-bit hash. */
+const hashKey = (text: string): number => {
+  let hash = 0x811c9dc5
+  for (let index = 0; index < text.length; index += 1) {
+    hash ^= text.charCodeAt(index)
+    hash = Math.imul(hash, 0x01000193) >>> 0
+  }
+  return hash
+}
+
+/**
+ * A small deterministic PRNG (mulberry32) keyed by seed + league + entry occurrence, returning
+ * numbers in [0, 1). The explorer's stand-in: the ROM draws the same keyed decision from the
+ * playthrough seed framework, so exact explorer lineups need not match ROM draws.
+ */
+export const leagueRandom = (seed: number, league: League, occurrence: number): (() => number) => {
+  let state = hashKey(`${seed}|${league}|${occurrence}`)
+  return () => {
+    state = (state + 0x6d2b79f5) >>> 0
+    let value = state
+    value = Math.imul(value ^ (value >>> 15), value | 1)
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61)
+    return ((value ^ (value >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+/** Draws `count` items without replacement, each pick weighted by a positive whole weight. */
+export const drawWeighted = <T>(
+  items: readonly T[],
+  weight: (item: T) => number,
+  count: number,
+  random: () => number,
+): T[] => {
+  const left = [...items]
+  const picked: T[] = []
+  while (picked.length < count && left.length) {
+    const total = left.reduce((sum, item) => sum + weight(item), 0)
+    let roll = Math.floor(random() * total)
+    const index = left.findIndex((item) => (roll -= weight(item)) < 0)
+    picked.push(...left.splice(index < 0 ? left.length - 1 : index, 1))
+  }
+  return picked
+}
+
+/**
+ * Entering a league: each contender's willingness (fatigued when in `previous`, the
+ * lineup of the league entered just before), then LINEUP_SIZE drawn without replacement,
+ * weighted by willingness, keyed by seed + league + occurrence. The lineup fights in ascending
+ * TR, strongest last (ties keep catalog order).
+ */
+export const drawLeague = (
+  league: League,
+  world: number,
+  contenders: readonly LeagueCandidate[],
+  previous: ReadonlySet<string>,
+  seed: number,
+  occurrence = 1,
+): LeagueDraw => {
+  const scored = contenders.map((candidate) => ({
+    ...candidate,
+    willingness: willingness(league, candidate, previous.has(candidate.trainer.id)),
+    drawn: false,
+  }))
+  const drawn = new Set(
+    drawWeighted(
+      scored,
+      (entry) => entry.willingness.score,
+      LINEUP_SIZE,
+      leagueRandom(seed, league, occurrence),
+    ).map((entry) => entry.trainer.id),
+  )
+  for (const entry of scored) entry.drawn = drawn.has(entry.trainer.id)
+  return {
+    league,
+    world,
+    occurrence,
+    contenders: scored,
+    lineup: scored
+      .filter((entry) => entry.drawn)
+      .toSorted((a, b) => a.tr - b.tr || a.order - b.order),
+  }
+}
+
+/**
+ * The world progress each league is entered at: its own badge point (LEAGUE_BADGES) by default,
+ * or one player TR for all three.
+ */
+export const leagueWorlds = (playerTR: number | null = null): Record<League, number> =>
+  Object.fromEntries(
+    LEAGUES.map((league) => [league, playerTR ?? badgeTR(LEAGUE_BADGES[league])]),
+  ) as Record<League, number>
+
+/** Each league's contenders at the world progress it is entered at. */
+const contenderListsFor = (
+  catalog: readonly TrainerRecord[],
+  experiment: Experiment,
+  worlds: Readonly<Record<League, number>>,
+): Record<League, LeagueCandidate[]> =>
+  Object.fromEntries(
+    LEAGUES.map((league) => [league, leagueContenders(catalog, experiment, worlds[league])]),
+  ) as Record<League, LeagueCandidate[]>
+
+/**
+ * The standard entry sequence, Indigo -> Sevii Masters -> Hoenn, each entered once
+ * (occurrence 1) at its world progress; fatigue reads the previous league's drawn lineup.
+ */
+export const leagueSequence = (
+  catalog: readonly TrainerRecord[],
+  experiment: Experiment,
+  worlds: Readonly<Record<League, number>>,
+  seed: number,
+  contenderLists: Readonly<Record<League, readonly LeagueCandidate[]>> = contenderListsFor(
+    catalog,
+    experiment,
+    worlds,
+  ),
+): LeagueDraw[] => {
+  let previous: ReadonlySet<string> = new Set()
+  return LEAGUES.map((league) => {
+    const draw = drawLeague(league, worlds[league], contenderLists[league], previous, seed)
+    previous = new Set(draw.lineup.map((entry) => entry.trainer.id))
+    return draw
+  })
+}
+
+/**
+ * Appearance odds: the share of `runs` seeded runs of the standard sequence (seeds firstSeed,
+ * firstSeed + 1, ...) in which each contender is in each league's lineup. Each run
+ * draws five per league, so a league's shares sum to 5. Rows run most likely first (ties by TR,
+ * strongest first, then catalog order).
+ */
+export const appearanceOdds = (
+  catalog: readonly TrainerRecord[],
+  experiment: Experiment,
+  worlds: Readonly<Record<League, number>>,
+  runs = ODDS_RUNS,
+  firstSeed = 0,
+): LeagueOdds[] => {
+  const contenderLists = contenderListsFor(catalog, experiment, worlds)
+  const counts = new Map<string, number>()
+  for (let run = 0; run < runs; run += 1)
+    for (const draw of leagueSequence(
+      catalog,
+      experiment,
+      worlds,
+      (firstSeed + run) >>> 0,
+      contenderLists,
+    ))
+      for (const entry of draw.lineup) {
+        const key = `${draw.league}|${entry.trainer.id}`
+        counts.set(key, (counts.get(key) ?? 0) + 1)
+      }
+  return LEAGUES.map((league) => ({
+    league,
+    world: worlds[league],
+    rows: contenderLists[league]
+      .map((candidate) => ({
+        candidate,
+        appearances: counts.get(`${league}|${candidate.trainer.id}`) ?? 0,
+      }))
+      .toSorted(
+        (a, b) =>
+          b.appearances - a.appearances ||
+          b.candidate.tr - a.candidate.tr ||
+          a.candidate.order - b.candidate.order,
+      )
+      .map(({ candidate, appearances }) => ({
+        trainer: candidate.trainer,
+        tr: candidate.tr,
+        appearances,
+        share: runs ? appearances / runs : 0,
+      })),
+  }))
+}
 
 /** Gym Leaders, including a Gym Leader duo. */
 export const isGymLeader = (trainer: TrainerRecord): boolean =>
@@ -1004,6 +1237,8 @@ export const defaultTrainerSettings = (trainer: TrainerRecord): TrainerSettings 
   peakTR: trainer.peakTR,
   roster: structuredClone(trainer.roster),
   movePool: structuredClone(trainer.movePool),
+  homeRegion: trainer.homeRegion,
+  travel: trainer.travel,
 })
 
 export const createExperiment = (
@@ -1144,7 +1379,7 @@ export const validateMovePool = (
 const growthSettings = (
   settings: Record<string, unknown>,
   id: string,
-): Omit<TrainerSettings, "roster" | "movePool"> => {
+): Omit<TrainerSettings, "roster" | "movePool" | "homeRegion" | "travel"> => {
   const startTR = tr(settings.startTR, `${id}.startTR`)
   const peakTR = tr(settings.peakTR, `${id}.peakTR`)
   const archetype = settings.archetype as Archetype
@@ -1166,24 +1401,26 @@ export const rosterGaps = (
     return length < ROSTER_SIZE ? [{ id: trainer.id, name: trainer.name, length }] : []
   })
 
-export const EXPERIMENT_VERSION = 12
+export const EXPERIMENT_VERSION = 13
 const START_OVER = `Start from the version ${EXPERIMENT_VERSION} defaults`
 export const OLD_VERSION_REJECTION = (version: number): string =>
-  version === 11
-    ? `Version 11 experiments author moves per roster slot and have no move pools, so they cannot be imported. ${START_OVER}.`
-    : version === 10
-      ? `Version 10 experiments use the old archetype names (early bloomer, late bloomer, plateau, fixed, rising star, second wind, bursts), so they cannot be imported. ${START_OVER}.`
-      : version === 9
-        ? `Version 9 experiments have only five archetypes (no Legend, Star, Comeback or Burst step scaler) and the old archetype assignments, so they cannot be imported. ${START_OVER}.`
-        : version === 8
-          ? `Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. ${START_OVER}.`
-          : version === 7
-            ? `Version 7 experiments give the Rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. ${START_OVER}.`
-            : version === 6
-              ? `Version 6 experiments give each notable trainer one fixed TR and cannot be imported. ${START_OVER} (start TR, archetype and peak TR).`
-              : version === 5
-                ? `Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. ${START_OVER}.`
-                : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. ${START_OVER}.`
+  version === 12
+    ? `Version 12 experiments have no home regions or travel styles and assume fixed league lineups, so they cannot be imported. ${START_OVER}.`
+    : version === 11
+      ? `Version 11 experiments author moves per roster slot and have no move pools, so they cannot be imported. ${START_OVER}.`
+      : version === 10
+        ? `Version 10 experiments use the old archetype names (early bloomer, late bloomer, plateau, fixed, rising star, second wind, bursts), so they cannot be imported. ${START_OVER}.`
+        : version === 9
+          ? `Version 9 experiments have only five archetypes (no Legend, Star, Comeback or Burst step scaler) and the old archetype assignments, so they cannot be imported. ${START_OVER}.`
+          : version === 8
+            ? `Version 8 experiments have no ace slots (isAce) and fight the team simply reversed, so they cannot be imported. ${START_OVER}.`
+            : version === 7
+              ? `Version 7 experiments give the Rival a fixed lead, copy the level cap into team level and lack Tate & Liza, so they cannot be imported. ${START_OVER}.`
+              : version === 6
+                ? `Version 6 experiments give each notable trainer one fixed TR and cannot be imported. ${START_OVER} (start TR, archetype and peak TR).`
+                : version === 5
+                  ? `Version 5 experiments use the retired 0–80 player TR scale and cannot be imported. ${START_OVER}.`
+                  : `Version ${version} experiments use a retired trainer model (standing, arcs or aces and fillers) and cannot be imported. ${START_OVER}.`
 
 /** Validates an experiment against the catalog; with `moves`, every move pool name must be one of them. */
 export const validateExperiment = (
@@ -1216,7 +1453,11 @@ export const validateExperiment = (
   for (const trainer of catalog) {
     const id = trainer.id
     const settings = object(inputTrainers[id], `trainers.${id}`)
-    exactKeys(settings, ["startTR", "archetype", "peakTR", "roster", "movePool"], `trainers.${id}`)
+    exactKeys(
+      settings,
+      ["startTR", "archetype", "peakTR", "roster", "movePool", "homeRegion", "travel"],
+      `trainers.${id}`,
+    )
     const growth = growthSettings(settings, id)
     if (growth.archetype === "legend" && isGymLeader(trainer))
       fail(`${id}: a Gym Leader cannot be a Legend`)
@@ -1224,7 +1465,13 @@ export const validateExperiment = (
       ...growth,
       roster: validateRoster(settings.roster, `${id}.roster`),
       movePool: validateMovePool(settings.movePool, `${id}.movePool`, moves),
+      homeRegion: settings.homeRegion as HomeRegion,
+      travel: settings.travel as TravelStyle,
     }
+    if (!HOME_REGIONS.includes(settings.homeRegion as HomeRegion))
+      fail(`${id}.homeRegion must be one of ${HOME_REGIONS.join(", ")}`)
+    if (!TRAVEL_STYLES.includes(settings.travel as TravelStyle))
+      fail(`${id}.travel must be one of ${TRAVEL_STYLES.join(", ")}`)
   }
   const inputArchetypes = object(input.archetypes, "archetypes")
   exactKeys(inputArchetypes, ARCHETYPES, "archetypes")

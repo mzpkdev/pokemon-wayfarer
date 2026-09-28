@@ -382,8 +382,9 @@ Hoenn-specific Champion/game-clear ownership and local cleanup remain in force.
 
 The proposed [Leagues runtime](leagues.md) keeps today's admission and league
 order and owns the locked five-trainer lineup and retries after a loss;
-[Leagues selection](leagues.md#selection-and-order) picks the global top five by
-TR, and [Notable trainers](notable-trainers.md) owns their TR and teams.
+[Leagues selection](leagues.md#selection-and-order) draws five of the ten
+strongest by TR, and [Notable trainers](notable-trainers.md) owns their TR and
+teams.
 Completion still owns this league's result and regional effects, independently
 of who was selected.
 

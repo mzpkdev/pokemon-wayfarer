@@ -5,7 +5,8 @@ until this design is adopted; the balance explorer is placeholder tooling.
 Design status: v0 accepted. Every trainer's team is approved (draft v1:
 who they bring, in what order, and which are aces); their favourite moves
 and items, their growth numbers, and the exact team-size steps are still
-placeholder content under review. Terms follow the
+placeholder content under review. Home regions and travel styles follow lore
+and are open to review. Terms follow the
 [glossary](player-trainer-rating.md#glossary).
 
 ## Intent
@@ -76,6 +77,22 @@ strength and one list of six Pokémon, grow like everyone else, and still fight
 you together in their double battle. Leagues are singles only, so they never
 appear in one. Everyone else, including Red, keeps their current rules.
 
+### Home and travel
+
+Every notable trainer comes from a home region, Kanto, Johto, or Hoenn, and
+has a travel style: a homebody, who prefers to stay close to home, or a
+traveller, who goes wherever the action is. Wherever a trainer might appear,
+they are at home when the place belongs to their region, or is neutral ground
+like Sevii Masters, and away otherwise. Being away costs a homebody a lot of
+willingness to turn up and a traveller very little. In this first version only
+leagues use this ([Leagues](leagues.md)).
+
+The travellers are Brock, Misty, Giovanni, Blue, Bruno, and Lance from Kanto;
+Bugsy, Will, Koga, and Karen from Johto; and Brawly, Glacia, Drake, Wallace,
+and Steven from Hoenn. Everyone else is a homebody. These picks follow the
+trainers' stories and are open to review
+([assignments](../specs/notable-trainers.md#home-region-and-travel)).
+
 ### No ceiling
 
 Like yours, a trainer's TR has no ceiling
@@ -97,11 +114,10 @@ on one at your level (level 5), and he pulls ahead over your first badges.
 For trainers rated like a player with four badges or more, levels follow the
 same curve as your level cap. Every notable trainer eventually fields a full
 team of six, and a trainer rated like a player with all 24 badges brings six
-at level 100. When you have eight badges, the
-strongest trainers are meant to sit a little above you, so you can win your
-first league; later leagues stay a real fight a little above your level cap,
-and at the very end both sides meet at level 100 ([Leagues](leagues.md)). Each Pokémon has a small, hand-set
-level difference, so a team feels shaped rather than uniform.
+at level 100. League lineups are drawn from the strongest trainers of the
+moment; how hard each league feels is reported for now and tuned later
+([Leagues](leagues.md)). Each Pokémon has a small, hand-set level
+difference, so a team feels shaped rather than uniform.
 
 ### Their stars come last
 
@@ -198,6 +214,8 @@ belong to playtesting.
 ## Later
 
 - More notable trainers, such as Red.
+- Notable trainers met around the world according to their travel style:
+  homebodies stay in their home region and travellers roam.
 - Hints in the world about who is too strong for you right now: Gym guides,
   gossip, or a line on your Trainer Card.
 - Concrete feel checks for playtesters, such as winning the first Gym with a

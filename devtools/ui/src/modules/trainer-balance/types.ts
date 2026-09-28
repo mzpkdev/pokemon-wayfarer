@@ -48,10 +48,22 @@ export type ScalerKind = "interpolated" | "step"
  */
 export type PoolEntry = { move: string; fromLevel?: number }
 
+/** A notable trainer's home region: a league location whose location regions include it counts the trainer at home. */
+export type HomeRegion = "Kanto" | "Johto" | "Hoenn"
+/**
+ * A notable trainer's travel style: an away location costs a homebody much more travel than a
+ * traveller (also reserved for a future overworld spawning rule).
+ */
+export type TravelStyle = "homebody" | "traveller"
+/** The leagues, in the standard entry sequence. */
+export type League = "Indigo" | "Sevii Masters" | "Hoenn"
+
 export type TrainerRecord = {
   id: string
   name: string
   region: "Kanto" | "Johto" | "Hoenn"
+  homeRegion: HomeRegion
+  travel: TravelStyle
   /** A duo is two leaders sharing one entry, fought as a double battle. */
   role: "Gym Leader" | "Gym Leader duo" | "Elite Four" | "Champion"
   /** Fought as a double battle (the duo's Pokémon come from the shared roster in order). */
@@ -119,11 +131,13 @@ export type TrainerSettings = {
   peakTR: number
   roster: RosterSlot[]
   movePool: PoolEntry[]
+  homeRegion: HomeRegion
+  travel: TravelStyle
 }
 /** A scaler anchor: [TR, value]. */
 export type Anchor = [number, number]
 export type Experiment = {
-  version: 12
+  version: 13
   /** Team level by TR: linear between anchors, halves up, flat past the last. */
   teamLevel: Anchor[]
   /** Team size by TR, same rules; paired anchors make it a step table. */
@@ -226,4 +240,37 @@ export type Milestone = {
   teamLevel: number
   cap: number
   events: MilestoneEvent[]
+}
+/**
+ * A trainer's willingness score at one league: 100 - travel cost - fatigue, at least 5. TravelStyle
+ * cost is 0 at home (or at the neutral location, the Sevii Masters); away it is 80 for a homebody and 10 for a
+ * traveller. Fatigue is 50 for a trainer in the previous league's lineup.
+ */
+export type Willingness = { home: boolean; travelCost: number; fatigue: number; score: number }
+/** A league-eligible trainer among a league's contenders, at the world progress the league is entered at. */
+export type LeagueCandidate = {
+  trainer: TrainerRecord
+  tr: number
+  homeRegion: HomeRegion
+  travel: TravelStyle
+  /** Catalog position: breaks TR ties. */
+  order: number
+}
+export type Contender = LeagueCandidate & { willingness: Willingness; drawn: boolean }
+/** One league entry: its top-10 contenders with willingness, and the five drawn in battle order. */
+export type LeagueDraw = {
+  league: League
+  /** World progress when the player enters. */
+  world: number
+  /** The league's entry occurrence (1 on first entry; a replay after winning draws with the next). */
+  occurrence: number
+  contenders: Contender[]
+  /** The five drawn, ascending TR, strongest last. */
+  lineup: Contender[]
+}
+/** How often each contender appears in one league's lineup over many seeded runs. */
+export type LeagueOdds = {
+  league: League
+  world: number
+  rows: { trainer: TrainerRecord; tr: number; appearances: number; share: number }[]
 }

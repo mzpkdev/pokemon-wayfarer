@@ -128,6 +128,66 @@ test("the growth table applies the section 11 archetype reassignment", () => {
   assert.deepEqual(growth["Blue"], [0, "rival", 170])
 })
 
+test("home regions and travel styles follow the section 14 assignments", () => {
+  const home = run("module.HOME_REGION")
+  const travellers = run("sorted(module.TRAVELLERS)")
+  const named = (region) => Object.keys(home).filter((name) => home[name] === region)
+  assert.deepEqual(named("Kanto"), [
+    "Brock",
+    "Misty",
+    "Lt. Surge",
+    "Erika",
+    "Janine",
+    "Sabrina",
+    "Blaine",
+    "Giovanni",
+    "Blue",
+    "Lorelei",
+    "Bruno",
+    "Agatha",
+    "Lance",
+  ])
+  assert.deepEqual(named("Johto"), [
+    "Falkner",
+    "Bugsy",
+    "Whitney",
+    "Morty",
+    "Chuck",
+    "Jasmine",
+    "Pryce",
+    "Clair",
+    "Will",
+    "Koga",
+    "Karen",
+  ])
+  assert.equal(named("Hoenn").length, 14)
+  assert.ok(named("Hoenn").includes("Tate & Liza") && named("Hoenn").includes("Steven"))
+  assert.deepEqual(
+    travellers,
+    [
+      "Blue",
+      "Brawly",
+      "Brock",
+      "Bruno",
+      "Bugsy",
+      "Drake",
+      "Giovanni",
+      "Glacia",
+      "Karen",
+      "Koga",
+      "Lance",
+      "Misty",
+      "Steven",
+      "Wallace",
+      "Will",
+    ],
+  )
+  const validate = (value) => run("module.validate_home_travel('Fixture', *args)", value)
+  assert.equal(validate(["Johto", "traveller"]), null)
+  assert.equal(validate(["Sinnoh", "homebody"]), "Fixture: home region must be one of Kanto, Johto, Hoenn")
+  assert.equal(validate(["Kanto", "roamer"]), "Fixture: travel style must be one of homebody, traveller")
+})
+
 test("a Legend's peak TR must equal its start TR", () => {
   const validate = (growth) => run("module.validate_growth('Fixture', tuple(args))", growth)
   assert.equal(validate([95, "legend", 95]), null)

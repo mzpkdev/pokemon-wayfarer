@@ -3,7 +3,10 @@ import {
   ARCHETYPES,
   ARCHETYPE_KIND,
   EXPERIMENT_VERSION,
+  HOME_REGIONS,
   LEVEL_OFFSET,
+  MAX_SEED,
+  TRAVEL_STYLES,
   MAX_ACES,
   MAX_ANCHORS,
   MAX_POOL_ENTRIES,
@@ -11,6 +14,7 @@ import {
   LEVEL_CAP_ANCHORS,
   MAX_BADGES,
   WORLD_PROGRESS_CHECKPOINTS,
+  appearanceOdds,
   badgeMatch,
   badgeTR,
   createExperiment,
@@ -18,7 +22,8 @@ import {
   evolutionStatus,
   gymLadder,
   isGymLeader,
-  leagueLineup,
+  leagueSequence,
+  leagueWorlds,
   learnsetIndex,
   levelCap,
   milestoneEnd,
@@ -35,11 +40,13 @@ import type {
   Archetype,
   Catalog,
   Experiment,
+  HomeRegion,
   PoolEntry,
   RosterSlot,
   ScalerKind,
   TrainerRecord,
   TrainerSettings,
+  TravelStyle,
 } from "./types.js"
 
 const data = catalogData as Catalog
@@ -82,7 +89,11 @@ const anchorsOf = (experiment: Experiment, id: ScalerId): Anchor[] =>
  */
 export const scalerKind = (id: ScalerId): ScalerKind =>
   isGrowth(id) ? ARCHETYPE_KIND[id] : "interpolated"
-const storageKey = "wayfarer-trainer-balance-v12"
+const storageKey = "wayfarer-trainer-balance-v13"
+/** Where the leagues are entered: each at its own badge point (8 / 16 / 24), or all at the player TR. */
+export type LeagueEntryPoint = "badges" | "player"
+const isSeed = (value: unknown): value is number =>
+  typeof value === "number" && Number.isInteger(value) && value >= 0 && value <= MAX_SEED
 /** The chart runs across player TR 0 to at least this. */
 export const CHART_MIN_END = Math.max(200, LEVEL_CAP_ANCHORS.at(-1)?.[0] ?? 0)
 /** The chart never runs past this player TR; a higher player TR is marked at the right edge. */
@@ -159,6 +170,9 @@ export class BalanceLab {
   region = $state("All regions")
   role = $state("All trainers")
   selectedId = $state(initialTrainerId)
+  /** The playthrough seed the sample league lineups draw from. */
+  leagueSeed = $state(1)
+  leagueAt = $state<LeagueEntryPoint>("badges")
   editor = $state("")
   error = $state("")
   notice = $state("")
@@ -208,9 +222,19 @@ export class BalanceLab {
   })
   settings = $derived(this.#_settings(this.selected.trainer.id))
   gaps = $derived(rosterGaps(catalog, this.#_experiment))
-  league = $derived(
-    leagueLineup(catalog, this.#_experiment, this.worldProgress, evolution, learnsets),
+  /** World progress for each league in the standard entry sequence. */
+  leagueWorlds = $derived(leagueWorlds(this.leagueAt === "player" ? this.playerTR : null))
+  /** The sample sequence for the league seed, each lineup resolved at its league's world progress. */
+  leagues = $derived(
+    leagueSequence(catalog, this.#_experiment, this.leagueWorlds, this.leagueSeed).map((draw) => ({
+      ...draw,
+      matches: draw.lineup.map((entry) =>
+        resolveTrainer(entry.trainer, this.#_experiment, draw.world, evolution, learnsets),
+      ),
+    })),
   )
+  /** Appearance odds per trainer per league over many seeded runs of the standard sequence. */
+  odds = $derived(appearanceOdds(catalog, this.#_experiment, this.leagueWorlds))
   ladder = $derived(gymLadder(catalog, this.#_experiment, this.worldProgress))
   /** The selected trainer's TR, team level and team (by roster slot) at each world progress checkpoint. */
   growth = $derived(
@@ -340,6 +364,40 @@ export class BalanceLab {
     this.playerTR = Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, Math.round(value)))
     this.#_persist()
   }
+
+  /** Sets the league seed: a whole number from 0 to MAX_SEED. */
+  setLeagueSeed = (value: number): void => {
+    if (!isSeed(value)) {
+      this.error = `The league seed must be a whole number from 0 to ${MAX_SEED}.`
+      return
+    }
+    this.error = ""
+    this.leagueSeed = value
+    this.#_persist()
+  }
+
+  /** Draws a fresh random league seed. */
+  rollLeagueSeed = (): void => this.setLeagueSeed(Math.floor(Math.random() * (MAX_SEED + 1)))
+
+  setLeagueAt = (at: LeagueEntryPoint): void => {
+    this.leagueAt = at
+    this.#_persist()
+  }
+
+  /** Sets the selected trainer's home region or travel style. */
+  setHomeTravel = (field: "homeRegion" | "travel", value: string): void =>
+    this.#_edit("Could not change the home region or travel style.", (next) => {
+      const settings = next.trainers[this.selectedId]
+      if (!settings) throw new Error("Unknown selected trainer.")
+      if (field === "homeRegion") {
+        if (!HOME_REGIONS.includes(value as HomeRegion)) throw new Error("Unknown home region.")
+        settings.homeRegion = value as HomeRegion
+        return `${this.#_name(this.selectedId)}’s home region is now ${value}.`
+      }
+      if (!TRAVEL_STYLES.includes(value as TravelStyle)) throw new Error("Unknown travel style.")
+      settings.travel = value as TravelStyle
+      return `${this.#_name(this.selectedId)} is now a ${value}.`
+    })
 
   /** Reads start TR, archetype and peak TR from the growth form. */
   applyGrowth = (form: HTMLFormElement): void =>
@@ -528,7 +586,7 @@ export class BalanceLab {
   reset = (): void => {
     this.#_accept(
       createExperiment(catalog, learnsets.moves),
-      "Restored the catalog growth, rosters, move pools and scalers.",
+      "Restored the catalog growth, rosters, move pools, home regions, travel styles and scalers.",
     )
   }
 
@@ -537,7 +595,7 @@ export class BalanceLab {
       const defaults = createExperiment(catalog, learnsets.moves).trainers[this.selectedId]
       if (!defaults) throw new Error("Unknown selected trainer.")
       next.trainers[this.selectedId] = defaults
-      return `Restored ${this.selected.trainer.name}’s catalog growth, roster and move pool. Other trainers and the scalers are unchanged.`
+      return `Restored ${this.selected.trainer.name}’s catalog growth, roster, move pool, home region and travel style. Other trainers and the scalers are unchanged.`
     })
 
   exportText = (): string =>
@@ -546,6 +604,7 @@ export class BalanceLab {
         tool: "wayfarer-trainer-balance",
         version: EXPERIMENT_VERSION,
         point: { playerTR: this.playerTR },
+        league: { seed: this.leagueSeed, at: this.leagueAt },
         selectedTrainer: this.selectedId,
         experiment: JSON.parse(serializeExperiment(this.#_experiment)),
       },
@@ -584,8 +643,21 @@ export class BalanceLab {
         throw new Error("The player point must be a player TR of 0 or more (or 0–24 badges).")
       if (!catalog.some((trainer) => trainer.id === data.selectedTrainer))
         throw new Error("Unknown selected trainer.")
+      const league = data.league
+      if (
+        !league ||
+        typeof league !== "object" ||
+        Object.keys(league).sort().join() !== "at,seed" ||
+        !isSeed(league.seed) ||
+        (league.at !== "badges" && league.at !== "player")
+      )
+        throw new Error(
+          `The league settings must be a seed from 0 to ${MAX_SEED} and an entry point (badges or player).`,
+        )
       this.#_experiment = experiment
       this.playerTR = playerTR
+      this.leagueSeed = league.seed
+      this.leagueAt = league.at
       this.selectedId = data.selectedTrainer
       this.error = ""
       this.notice = message

@@ -24,6 +24,10 @@ member that learns the move by level-up (its own species or an earlier form),
 so an entry every roster line learns only by TM/tutor or as an egg move is a
 warning (it needs a from level), as is one no line can learn. Learnset
 extraction needs a C preprocessor (arm-none-eabi-cpp, else cpp).
+
+Each trainer also records a home region (Kanto, Johto or Hoenn) and a travel
+style (homebody or traveller) from the section 14 lore tables (HOME_REGION,
+TRAVELLERS), which the explorer's seeded league draw reads.
 """
 from __future__ import annotations
 
@@ -151,6 +155,25 @@ GROWTH = {
 }
 # The Gym Leader duo: one entry fought as a double battle, league-ineligible.
 DUOS = {"Tate & Liza"}
+# Section 14 home regions and travel styles (lore, reviewable). A league is a
+# location: a trainer is at home when their home region is one of its location
+# regions (Indigo: Kanto and Johto; Hoenn: Hoenn); the Sevii Masters is a
+# neutral location, so everyone is at home. Away, a traveller pays a small
+# travel cost and a homebody a large one; the styles are also reserved for a
+# future overworld spawning rule.
+HOME_REGIONS = ("Kanto", "Johto", "Hoenn")
+TRAVEL_STYLES = ("homebody", "traveller")
+HOME_REGION = {
+    **{name: "Kanto" for name in ("Brock", "Misty", "Lt. Surge", "Erika", "Janine", "Sabrina", "Blaine",
+                                  "Giovanni", "Blue", "Lorelei", "Bruno", "Agatha", "Lance")},
+    **{name: "Johto" for name in ("Falkner", "Bugsy", "Whitney", "Morty", "Chuck", "Jasmine", "Pryce",
+                                  "Clair", "Will", "Koga", "Karen")},
+    **{name: "Hoenn" for name in ("Roxanne", "Brawly", "Wattson", "Flannery", "Norman", "Winona",
+                                  "Tate & Liza", "Juan", "Sidney", "Phoebe", "Glacia", "Drake", "Wallace",
+                                  "Steven")},
+}
+TRAVELLERS = {"Brock", "Misty", "Blue", "Lance", "Steven", "Wallace", "Will", "Karen", "Bruno", "Glacia",
+              "Giovanni", "Koga", "Bugsy", "Brawly", "Drake"}
 # Section 9 shared evolution-level table: (predecessor, species, level, status).
 # The table covers only evolutions without a level in the game data (item,
 # trade, friendship, other); they step down below this level like level
@@ -508,6 +531,14 @@ def validate_growth(name, growth):
         raise ValueError(f"{name}: peak TR must be at least start TR")
     if archetype == "legend" and peak != start:
         raise ValueError(f"{name}: a Legend's peak TR must equal start TR")
+
+
+def validate_home_travel(name, home, travel):
+    """A home region is Kanto, Johto or Hoenn and a travel style is homebody or traveller."""
+    if home not in HOME_REGIONS:
+        raise ValueError(f"{name}: home region must be one of {', '.join(HOME_REGIONS)}")
+    if travel not in TRAVEL_STYLES:
+        raise ValueError(f"{name}: travel style must be one of {', '.join(TRAVEL_STYLES)}")
 
 
 def validate_gym_start(name, growth):
@@ -1100,10 +1131,14 @@ def generate():
     gaps = []
     if set(GROWTH) != {row[0] for row in ROSTER} or set(DRAFT) != set(GROWTH) or set(POOL_DRAFT) != set(GROWTH):
         raise ValueError("GROWTH, DRAFT and POOL_DRAFT must list exactly the catalog trainers")
+    if set(HOME_REGION) != set(GROWTH) or not TRAVELLERS <= set(GROWTH):
+        raise ValueError("HOME_REGION must list exactly the catalog trainers and TRAVELLERS only catalog trainers")
     for name, region, role, family, trainer in ROSTER:
         growth = GROWTH[name]
         validate_growth(name, growth)
         start, archetype, peak = growth
+        home, travel = HOME_REGION[name], "traveller" if name in TRAVELLERS else "homebody"
+        validate_home_travel(name, home, travel)
         gym = role.startswith("Gym Leader")
         if gym:
             validate_gym_start(name, growth)
@@ -1167,6 +1202,7 @@ def generate():
                          + " other roster slots have no item. Roster slots carry no moves: members draw them from the move pool."
                          + (" Fought as a double battle: both leaders send Pokémon from this one roster in order." if name in DUOS else ""))
         result.append({"id": slug(name), "name": name, "region": region, "role": role,
+                       "homeRegion": home, "travel": travel,
                        "doubleBattle": double, "leagueEligible": not double,
                        "source": {"label": f"{family} local reference", "path": records[trainer]["source"], "trainerId": trainer, "note": note},
                        "referenceParty": [member(slot) for slot in reference_slots],

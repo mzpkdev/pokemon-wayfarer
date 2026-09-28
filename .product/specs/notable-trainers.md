@@ -7,8 +7,8 @@ Design status: v0 contract. The model is accepted. Rosters are approved
 content (draft v1: species, order, and aces); their battle content (move
 pools, and items where a slot doesn't match its source party) is still
 placeholder. Growth
-values (start TR, archetype, peak TR) and every anchor marked placeholder are
-catalog content under review.
+values (start TR, archetype, peak TR), home regions and travel styles, and
+every anchor marked placeholder are catalog content under review.
 
 **Catalog as design reference.** "Catalog" in this spec means the
 [balance explorer](../../devtools/ui/README.md#trainer-balance-explorer)'s
@@ -19,10 +19,11 @@ in game code, and the validation rules here apply to that code.
 ## Ownership and scope
 
 This specification is the single owner of the v0 notable trainer model: the
-notable trainer inventory, the rule that routes every battle with a notable
-character to their Trainer Rating (TR) and roster, trainer TR and its growth
-with world progress, the archetypes, the v0 trainer scalers, rosters, move pools,
-team resolution, the battle snapshot, and their validation. Consumers link here
+notable trainer inventory, home regions, travel styles, and willingness, the
+rule that routes every battle with a notable character to their Trainer Rating
+(TR) and roster, trainer TR and its growth with world progress, the
+archetypes, the v0 trainer scalers, rosters, move pools, team resolution, the
+battle snapshot, and their validation. Consumers link here
 rather than restating it.
 
 - [Gym Leader scaling](gym-leader-scaling.md) owns badge-encounter coverage and
@@ -70,6 +71,33 @@ Mapping each encounter ID of these characters (Gym, overworld, rematch,
 league, and story battles) to its `characterId` is an implementation inventory
 task owned here. Exactly one battle policy owns an encounter; a mapped
 encounter always uses this model.
+
+## Home region and travel
+
+Each entry authors a **home region** (`kanto`, `johto`, or `hoenn`) and a
+**travel style**: `homebody` or `traveller`. Assignments follow lore and are
+reviewable content:
+
+| Home region | Travellers | Homebodies |
+| --- | --- | --- |
+| Kanto | Brock, Misty, Giovanni, Blue, Bruno, Lance | Lt. Surge, Erika, Janine, Sabrina, Blaine, Lorelei, Agatha |
+| Johto | Bugsy, Will, Koga, Karen | Falkner, Whitney, Morty, Chuck, Jasmine, Pryce, Clair |
+| Hoenn | Brawly, Glacia, Drake, Wallace, Steven | Roxanne, Wattson, Flannery, Norman, Winona, Tate & Liza, Juan, Sidney, Phoebe |
+
+A **location** is anywhere a notable trainer can appear; in v0 the only
+locations are the leagues. Each location has a **location region** (one or
+more regions), or is a **neutral location**, home to everyone. A trainer is
+**at home** when the location region includes their home region or the
+location is neutral, and **away** otherwise. For any trainer and location:
+
+```text
+travelCost  = 0 at home; away: homebody 80, traveller 10
+willingness = max(5, 100 - travelCost - fatigue)
+```
+
+**Fatigue** is a location-specific penalty, 0 unless the location defines one;
+in v0 only leagues do. [Leagues](leagues.md#selection-and-order) owns the
+league location regions, fatigue, and the lineup draw that reads willingness.
 
 ## Trainer rating
 
@@ -367,7 +395,7 @@ reuses that snapshot; teardown clears it, and world progress gained during the
 battle never changes it. A retry at the same world progress produces an
 identical team (battle RNG may still differ); a retry after the player gained TR
 uses the higher world progress. Entering a league computes every candidate's TR
-at that moment and captures the selected trainers' battle snapshots in the
+at that moment and captures the drawn trainers' battle snapshots in the
 lineup, which stays locked until the league is won;
 [Leagues](leagues.md#locked-lineup) owns that lifecycle. Invalid content or a
 failed resolution fails preparation; never substitute player TR for a trainer's
@@ -399,9 +427,13 @@ TR, another trainer, or a random team.
   non-decreasing; Burst is a step scaler and every other archetype is
   interpolated.
 - Catalog: the inventory holds exactly the 38 v0 entries (37 characters and
-  the Tate & Liza duo); each has one roster and valid growth values
+  the Tate & Liza duo); each has one roster, one home region, one travel
+  style, and valid growth values
   (non-negative integers, start TR ≤ peak TR, and peak TR = start TR for a
   Legend); no Gym Leader is a Legend; every enrolled encounter ID maps to exactly one `characterId`.
+- Travel: home regions and travel styles match the assignments table; for
+  every trainer, willingness is 100 at home, 90 (traveller) or 20 (homebody)
+  away, and never below 5 with fatigue added.
 - Growth, for every trainer at world progress 0–200 and a very large value:
   TR is non-decreasing in world progress and never exceeds peak TR; a
   trainer equals start TR at world progress 0 and peak TR from world progress
@@ -427,14 +459,12 @@ TR, another trainer, or a random team.
 Content constraints checked by the catalog report and playtesting, not runtime
 rules (placeholders tuned in the explorer):
 
-- **First league.** At world progress 80 (8 badges, level cap Lv 50), the
-  league top five sit around TR 85–95 (team level about 53–59), so the first
-  league is beatable at 8 badges.
-- **Later leagues.** At world progress 120 the top five sit a little above
-  the player's level cap (about cap +2 to +8): a real fight, not a wall. At
-  160 the team-level and level-cap scalers both reach their Lv 100 ceiling, so
-  the lineup meets the cap. Challenge beyond that needs a quality scaler
-  (Later).
+- **Leagues (informational).** League lineups are seeded draws, so the
+  catalog report shows appearance odds and likely lineups per league
+  ([Leagues](leagues.md#balance-report)) instead of asserting a strength
+  target; league balance comes later. At 160 the team-level and level-cap
+  scalers both reach their Lv 100 ceiling; challenge beyond that needs a
+  quality scaler (Later).
 - **Start TR means how established a trainer is** when the journey begins.
   Blue (who leaves Pallet with the player) starts at TR 0. Gym Leaders are
   established: placeholder starts sit in TR 18–40 (opening team about Lv
@@ -469,6 +499,8 @@ implementations stay active until then.
 ## Later
 
 - Notable trainer status for more characters, such as Red.
+- Overworld locations for notable trainers, read through willingness:
+  homebodies stay in their home region and travellers roam.
 - Difficulty signposting: in-world hints about who is too strong (Gym guides,
   NPC gossip, a Trainer Card line), since TR is hidden.
 - Testable feel targets for playtesting (first Gym winnable with a lightly

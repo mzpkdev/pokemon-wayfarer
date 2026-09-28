@@ -4,6 +4,7 @@ import catalogData from "./catalog.json"
 import {
   ARCHETYPES,
   ARCHETYPE_KIND,
+  CONTENDERS,
   DEFAULT_ARCHETYPE_GROWTH,
   DEFAULT_REGULAR_TRAINER_LEVEL,
   DEFAULT_TEAM_LEVEL,
@@ -29,7 +30,13 @@ import {
   growthTR,
   gymLadder,
   isGymLeader,
-  leagueLineup,
+  appearanceOdds,
+  drawLeague,
+  drawWeighted,
+  leagueContenders,
+  leagueRandom,
+  leagueSequence,
+  leagueWorlds,
   learnsetIndex,
   learnsetOf,
   levelCap,
@@ -51,6 +58,7 @@ import {
   validateExperiment,
   validateMovePool,
   validateRoster,
+  willingness,
   worldLevels,
   worldProgress,
   type Learnsets,
@@ -61,6 +69,8 @@ import type {
   Experiment,
   RosterSlot,
   TrainerRecord,
+  HomeRegion,
+  TravelStyle,
   WorldPoint,
 } from "./types.js"
 
@@ -82,11 +92,18 @@ const trainer = (
   id: string,
   tr: number,
   species = six,
-  growth: { archetype?: Archetype; peakTR?: number } = {},
+  growth: {
+    archetype?: Archetype
+    peakTR?: number
+    homeRegion?: HomeRegion
+    travel?: TravelStyle
+  } = {},
 ): TrainerRecord => ({
   id,
   name: id,
   region: "Kanto",
+  homeRegion: growth.homeRegion ?? "Kanto",
+  travel: growth.travel ?? "homebody",
   role: "Gym Leader",
   doubleBattle: false,
   leagueEligible: true,
@@ -105,12 +122,6 @@ const experimentWith = (records: TrainerRecord[]): Experiment => createExperimen
 const defaults = createExperiment(catalog)
 const at = (world: number) =>
   catalog.map((record) => resolveTrainer(record, defaults, world, evolution))
-const lineupAt = (world: number) =>
-  leagueLineup(catalog, defaults, world, evolution).map((row) => [
-    row.trainer.name,
-    row.tr,
-    row.teamLevel,
-  ])
 
 describe("scalers", () => {
   it("interpolates linearly between anchors with halves rounded up", () => {
@@ -987,11 +998,8 @@ describe("player TR and badge presets", () => {
       gap: -25,
       mark: "below",
     })
-    expect(leagueLineup(catalog, experiment, 300, evolution)).toEqual(
-      leagueLineup(catalog, experiment, 160, evolution).map((row) => ({
-        ...row,
-        worldProgress: 300,
-      })),
+    expect(leagueContenders(catalog, experiment, 300)).toEqual(
+      leagueContenders(catalog, experiment, 160),
     )
   })
 })
@@ -1318,34 +1326,6 @@ describe("archetype growth", () => {
 describe("placeholder balance targets", () => {
   const cap = (world: number) => scale(LEVEL_CAP_ANCHORS, world)
 
-  it("puts the first league at TR 85–95 at world progress 80 (8 badges, level cap 50)", () => {
-    expect(worldProgress({ badges: 8 })).toBe(80)
-    for (const row of leagueLineup(catalog, defaults, 80, evolution)) {
-      expect(row.tr).toBeGreaterThanOrEqual(85)
-      expect(row.tr).toBeLessThanOrEqual(95)
-      expect(row.teamLevel).toBeGreaterThanOrEqual(53)
-      expect(row.teamLevel).toBeLessThanOrEqual(59)
-    }
-  })
-
-  it("puts the lineup a little above the level cap at world progress 120", () => {
-    expect(cap(120)).toBe(75)
-    for (const row of leagueLineup(catalog, defaults, 120, evolution)) {
-      expect(row.teamLevel - cap(120)).toBeGreaterThanOrEqual(2)
-      expect(row.teamLevel - cap(120)).toBeLessThanOrEqual(8)
-    }
-  })
-
-  it("puts the lineup at Lv 100 at world progress 160, where the team level scaler tops out", () => {
-    // The level cap is Lv 100 at world progress 160 and team level stops at Lv 100 too, so the
-    // lineup can only match the cap there. Every member sits past the team level ceiling TR.
-    expect(cap(160)).toBe(100)
-    for (const row of leagueLineup(catalog, defaults, 160, evolution)) {
-      expect(row.tr).toBeGreaterThan(160)
-      expect(row.teamLevel).toBe(cap(160))
-    }
-  })
-
   it.each([...WORLD_PROGRESS_CHECKPOINTS])(
     "spreads the 24 Gym Leader entries below, near and above the player at world progress %i",
     (world) => {
@@ -1468,52 +1448,197 @@ describe("placeholder balance targets", () => {
   })
 })
 
-describe("league lineup", () => {
-  it("picks the top five by TR in ascending battle order, strongest last", () => {
-    expect(lineupAt(80)).toEqual([
-      ["Lt. Surge", 95, 59],
-      ["Giovanni", 95, 59],
-      ["Agatha", 95, 59],
-      ["Jasmine", 95, 59],
-      ["Norman", 95, 59],
-    ])
-    expect(leagueLineup(catalog, defaults, 80, evolution).at(-1)?.trainer.name).toBe("Norman")
-  })
-
-  it("computes the lineup at the world progress it is entered at", () => {
-    expect(lineupAt(120)).toEqual([
-      ["Norman", 130, 81],
-      ["Steven", 130, 81],
-      ["Giovanni", 131, 82],
-      ["Jasmine", 131, 82],
-      ["Lance", 132, 83],
-    ])
-    expect(lineupAt(160)).toEqual([
-      ["Clair", 185, 100],
-      ["Juan", 185, 100],
-      ["Wallace", 190, 100],
-      ["Steven", 195, 100],
-      ["Lance", 200, 100],
-    ])
-  })
-
-  it("leaves league-ineligible entries out of the pool, however strong", () => {
-    const duo = { ...trainer("duo", 150), leagueEligible: false, doubleBattle: true }
-    const records = [duo, ...["a", "b", "c", "d", "e"].map((id) => trainer(id, 40))]
-    const lineup = leagueLineup(records, experimentWith(records), 0, NO_EVOLUTION)
-    expect(lineup.map((row) => row.trainer.id)).toEqual(["a", "b", "c", "d", "e"])
-    for (const world of WORLD_PROGRESS_CHECKPOINTS)
-      expect(
-        leagueLineup(catalog, defaults, world, evolution).map((row) => row.trainer.id),
-      ).not.toContain("tate-liza")
-  })
-
-  it("breaks ties by array order, with no tie-break logic", () => {
-    const records = ["a", "b", "c", "d", "e", "f", "g"].map((id, index) =>
-      trainer(id, index === 6 ? 90 : 40),
+describe("seeded leagues", () => {
+  const home = { homeRegion: "Kanto", travel: "homebody" } as const
+  it("scores willingness as 100 - travel cost - fatigue, at least 5", () => {
+    // At home: no travel cost.
+    expect(willingness("Indigo", home, false)).toEqual({
+      home: true,
+      travelCost: 0,
+      fatigue: 0,
+      score: 100,
+    })
+    expect(willingness("Indigo", { homeRegion: "Johto", travel: "homebody" }, false).score).toBe(
+      100,
     )
-    const lineup = leagueLineup(records, experimentWith(records), 0, NO_EVOLUTION)
-    expect(lineup.map((row) => row.trainer.id)).toEqual(["a", "b", "c", "d", "g"])
+    expect(willingness("Hoenn", { homeRegion: "Hoenn", travel: "homebody" }, false).score).toBe(100)
+    // Away: a homebody pays 80, a traveller 10.
+    expect(willingness("Hoenn", home, false)).toEqual({
+      home: false,
+      travelCost: 80,
+      fatigue: 0,
+      score: 20,
+    })
+    expect(willingness("Indigo", { homeRegion: "Hoenn", travel: "traveller" }, false)).toEqual({
+      home: false,
+      travelCost: 10,
+      fatigue: 0,
+      score: 90,
+    })
+    // Fatigue: 50 for a trainer in the previous league's lineup.
+    expect(willingness("Indigo", home, true)).toEqual({
+      home: true,
+      travelCost: 0,
+      fatigue: 50,
+      score: 50,
+    })
+    expect(willingness("Hoenn", { homeRegion: "Johto", travel: "traveller" }, true).score).toBe(40)
+    // The floor: an away, fatigued homebody would be -30 but keeps 5.
+    expect(willingness("Hoenn", home, true)).toEqual({
+      home: false,
+      travelCost: 80,
+      fatigue: 50,
+      score: 5,
+    })
+  })
+
+  it("treats the Sevii Masters as a neutral location: everyone is at home", () => {
+    for (const homeRegion of ["Kanto", "Johto", "Hoenn"] as const)
+      for (const travel of ["homebody", "traveller"] as const) {
+        expect(willingness("Sevii Masters", { homeRegion, travel }, false)).toEqual({
+          home: true,
+          travelCost: 0,
+          fatigue: 0,
+          score: 100,
+        })
+        expect(willingness("Sevii Masters", { homeRegion, travel }, true).score).toBe(50)
+      }
+  })
+
+  it("takes the top 10 league-eligible trainers by TR as contenders, ties in catalog order", () => {
+    const duo = { ...trainer("duo", 150), leagueEligible: false, doubleBattle: true }
+    const records = [
+      duo,
+      ...Array.from({ length: 12 }, (_, index) => trainer(`t${index}`, index === 11 ? 90 : 40)),
+    ]
+    const contenders = leagueContenders(records, experimentWith(records), 0)
+    expect(contenders).toHaveLength(CONTENDERS)
+    expect(contenders.map((entry) => entry.trainer.id)).toEqual([
+      "t11",
+      ...Array.from({ length: 9 }, (_, index) => `t${index}`),
+    ])
+    for (const world of WORLD_PROGRESS_CHECKPOINTS) {
+      const top = leagueContenders(catalog, defaults, world)
+      expect(top).toHaveLength(CONTENDERS)
+      expect(top.map((entry) => entry.trainer.id)).not.toContain("tate-liza")
+      const weakest = Math.min(...top.map((entry) => entry.tr))
+      const outside = catalog.filter(
+        (record) => record.leagueEligible && !top.some((entry) => entry.trainer.id === record.id),
+      )
+      for (const record of outside)
+        expect(trainerRating(defaults, defaults.trainers[record.id]!, world)).toBeLessThanOrEqual(
+          weakest,
+        )
+    }
+  })
+
+  it("reads contenders' home region and travel style from the experiment", () => {
+    const edited = createExperiment(catalog)
+    edited.trainers.norman!.travel = "traveller"
+    const norman = leagueContenders(catalog, edited, 80).find(
+      (entry) => entry.trainer.id === "norman",
+    )!
+    expect(norman.travel).toBe("traveller")
+    expect(drawLeague("Indigo", 80, [norman], new Set(), 1).contenders[0]!.willingness.score).toBe(
+      90,
+    )
+  })
+
+  it("draws the same lineup for the same seed, league and occurrence", () => {
+    const worlds = leagueWorlds()
+    const ids = (seed: number) =>
+      leagueSequence(catalog, defaults, worlds, seed).map((draw) =>
+        draw.lineup.map((entry) => entry.trainer.id),
+      )
+    expect(ids(42)).toEqual(ids(42))
+    expect(ids(7)).toEqual(ids(7))
+    // Different seeds give different lineups somewhere in the first few seeds.
+    expect(new Set([1, 2, 3, 4, 5].map((seed) => JSON.stringify(ids(seed)))).size).toBeGreaterThan(
+      1,
+    )
+    const random = leagueRandom(42, "Hoenn", 1)
+    const again = leagueRandom(42, "Hoenn", 1)
+    const values = [random(), random(), random()]
+    expect([again(), again(), again()]).toEqual(values)
+    for (const value of values) expect(value >= 0 && value < 1).toBe(true)
+    expect(leagueRandom(42, "Hoenn", 2)()).not.toBe(values[0])
+    expect(leagueRandom(42, "Indigo", 1)()).not.toBe(values[0])
+  })
+
+  it("draws five distinct contenders in ascending TR, strongest last", () => {
+    const worlds = leagueWorlds()
+    for (let seed = 0; seed < 200; seed += 1)
+      for (const draw of leagueSequence(catalog, defaults, worlds, seed)) {
+        const ids = draw.lineup.map((entry) => entry.trainer.id)
+        expect(ids).toHaveLength(5)
+        expect(new Set(ids).size).toBe(5)
+        for (const entry of draw.lineup) {
+          expect(entry.trainer.leagueEligible).toBe(true)
+          expect(
+            draw.contenders.some((contender) => contender.trainer.id === entry.trainer.id),
+          ).toBe(true)
+        }
+        const trs = draw.lineup.map((entry) => entry.tr)
+        expect(trs).toEqual(trs.toSorted((a, b) => a - b))
+        expect(draw.contenders.filter((entry) => entry.drawn)).toHaveLength(5)
+      }
+  })
+
+  it("never repeats a pick and weights by willingness", () => {
+    const items = ["a", "b", "c"]
+    expect(drawWeighted(items, () => 1, 5, Math.random).toSorted()).toEqual(items)
+    // A zero-width roll always lands on the first item still left.
+    expect(
+      drawWeighted(
+        items,
+        () => 1,
+        3,
+        () => 0,
+      ),
+    ).toEqual(items)
+    expect(
+      drawWeighted(
+        items,
+        (item) => (item === "c" ? 98 : 1),
+        1,
+        () => 0.5,
+      ),
+    ).toEqual(["c"])
+  })
+
+  it("enters Indigo, then the Sevii Masters, then Hoenn, fatiguing the previous lineup", () => {
+    const worlds = leagueWorlds()
+    expect(worlds).toEqual({ Indigo: 80, "Sevii Masters": 120, Hoenn: 160 })
+    expect(leagueWorlds(97)).toEqual({ Indigo: 97, "Sevii Masters": 97, Hoenn: 97 })
+    const [indigo, masters, hoenn] = leagueSequence(catalog, defaults, worlds, 3)
+    expect([indigo!.league, masters!.league, hoenn!.league]).toEqual([
+      "Indigo",
+      "Sevii Masters",
+      "Hoenn",
+    ])
+    for (const entry of indigo!.contenders) expect(entry.willingness.fatigue).toBe(0)
+    for (const [draw, before] of [
+      [masters!, indigo!],
+      [hoenn!, masters!],
+    ] as const)
+      for (const entry of draw.contenders)
+        expect(entry.willingness.fatigue).toBe(
+          before.lineup.some((previous) => previous.trainer.id === entry.trainer.id) ? 50 : 0,
+        )
+  })
+
+  it("reports appearance odds that sum to 5 per league", () => {
+    const odds = appearanceOdds(catalog, defaults, leagueWorlds(), 500)
+    expect(odds.map((league) => league.league)).toEqual(["Indigo", "Sevii Masters", "Hoenn"])
+    for (const league of odds) {
+      expect(league.rows).toHaveLength(CONTENDERS)
+      expect(league.rows.reduce((sum, row) => sum + row.appearances, 0)).toBe(5 * 500)
+      expect(league.rows.reduce((sum, row) => sum + row.share, 0)).toBeCloseTo(5, 10)
+      const shares = league.rows.map((row) => row.share)
+      expect(shares).toEqual(shares.toSorted((a, b) => b - a))
+    }
+    // Deterministic: the same runs give the same odds.
+    expect(appearanceOdds(catalog, defaults, leagueWorlds(), 500)).toEqual(odds)
   })
 })
 
@@ -1607,6 +1732,47 @@ describe("catalog", () => {
     expect(catalog.filter((record) => record.doubleBattle).map((record) => record.id)).toEqual([
       "tate-liza",
     ])
+  })
+
+  it("assigns the §14 home regions and travel styles", () => {
+    const named = (test: (record: TrainerRecord) => boolean) =>
+      catalog.filter(test).map((record) => record.name)
+    expect(named((record) => record.travel === "traveller")).toEqual([
+      "Brock",
+      "Misty",
+      "Giovanni",
+      "Blue",
+      "Bruno",
+      "Koga",
+      "Lance",
+      "Bugsy",
+      "Will",
+      "Karen",
+      "Brawly",
+      "Glacia",
+      "Drake",
+      "Wallace",
+      "Steven",
+    ])
+    expect(named((record) => record.homeRegion === "Johto")).toEqual([
+      "Koga",
+      "Falkner",
+      "Bugsy",
+      "Whitney",
+      "Morty",
+      "Chuck",
+      "Jasmine",
+      "Pryce",
+      "Clair",
+      "Will",
+      "Karen",
+    ])
+    expect(named((record) => record.homeRegion === "Kanto")).toHaveLength(13)
+    expect(named((record) => record.homeRegion === "Hoenn")).toHaveLength(14)
+    for (const record of catalog) {
+      expect(defaults.trainers[record.id]!.homeRegion).toBe(record.homeRegion)
+      expect(defaults.trainers[record.id]!.travel).toBe(record.travel)
+    }
   })
 
   it("records the section 9 table levels and the game's own levels for level evolutions", () => {
@@ -1800,6 +1966,32 @@ describe("experiment import", () => {
     restored.archetypes.steady[1]![1] = 40
     expect(experiment.trainers.fixture!.startTR).toBe(3)
     expect(experiment.archetypes.steady[1]).toEqual([40, 25])
+  })
+
+  it("rejects version 12, which had no home regions or travel styles", () => {
+    const v12 = base()
+    v12.version = 12
+    delete v12.trainers.fixture.homeRegion
+    delete v12.trainers.fixture.travel
+    expect(() => validateExperiment(v12, records)).toThrow(
+      "Version 12 experiments have no home regions or travel styles",
+    )
+  })
+
+  it("requires a valid home region and travel style per trainer", () => {
+    const missing = base()
+    delete missing.trainers.fixture.travel
+    expect(() => validateExperiment(missing, records)).toThrow("missing or unknown fields")
+    const region = base()
+    region.trainers.fixture.homeRegion = "Sinnoh"
+    expect(() => validateExperiment(region, records)).toThrow(
+      "fixture.homeRegion must be one of Kanto, Johto, Hoenn",
+    )
+    const travel = base()
+    travel.trainers.fixture.travel = "roamer"
+    expect(() => validateExperiment(travel, records)).toThrow(
+      "fixture.travel must be one of homebody, traveller",
+    )
   })
 
   it("rejects version 11, which authored moves per roster slot", () => {

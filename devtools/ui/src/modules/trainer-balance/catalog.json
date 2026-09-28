@@ -4440,6 +4440,8 @@
       "name": "Brock",
       "region": "Kanto",
       "role": "Gym Leader",
+      "homeRegion": "Kanto",
+      "travel": "traveller",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -4560,6 +4562,8 @@
       "name": "Misty",
       "region": "Kanto",
       "role": "Gym Leader",
+      "homeRegion": "Kanto",
+      "travel": "traveller",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -4678,6 +4682,8 @@
       "name": "Lt. Surge",
       "region": "Kanto",
       "role": "Gym Leader",
+      "homeRegion": "Kanto",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -4805,6 +4811,8 @@
       "name": "Erika",
       "region": "Kanto",
       "role": "Gym Leader",
+      "homeRegion": "Kanto",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -4928,6 +4936,8 @@
       "name": "Janine",
       "region": "Kanto",
       "role": "Gym Leader",
+      "homeRegion": "Kanto",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5076,6 +5086,8 @@
       "name": "Sabrina",
       "region": "Kanto",
       "role": "Gym Leader",
+      "homeRegion": "Kanto",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5205,6 +5217,8 @@
       "name": "Blaine",
       "region": "Kanto",
       "role": "Gym Leader",
+      "homeRegion": "Kanto",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5337,6 +5351,8 @@
       "name": "Giovanni",
       "region": "Kanto",
       "role": "Gym Leader",
+      "homeRegion": "Kanto",
+      "travel": "traveller",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5473,6 +5489,8 @@
       "name": "Blue",
       "region": "Kanto",
       "role": "Champion",
+      "homeRegion": "Kanto",
+      "travel": "traveller",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5620,6 +5638,8 @@
       "name": "Lorelei",
       "region": "Kanto",
       "role": "Elite Four",
+      "homeRegion": "Kanto",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5756,6 +5776,8 @@
       "name": "Bruno",
       "region": "Kanto",
       "role": "Elite Four",
+      "homeRegion": "Kanto",
+      "travel": "traveller",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -5892,6 +5914,8 @@
       "name": "Agatha",
       "region": "Kanto",
       "role": "Elite Four",
+      "homeRegion": "Kanto",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6030,6 +6054,8 @@
       "name": "Koga",
       "region": "Johto",
       "role": "Elite Four",
+      "homeRegion": "Johto",
+      "travel": "traveller",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6176,6 +6202,8 @@
       "name": "Lance",
       "region": "Kanto",
       "role": "Champion",
+      "homeRegion": "Kanto",
+      "travel": "traveller",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6313,6 +6341,8 @@
       "name": "Falkner",
       "region": "Johto",
       "role": "Gym Leader",
+      "homeRegion": "Johto",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6432,6 +6462,8 @@
       "name": "Bugsy",
       "region": "Johto",
       "role": "Gym Leader",
+      "homeRegion": "Johto",
+      "travel": "traveller",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6554,6 +6586,8 @@
       "name": "Whitney",
       "region": "Johto",
       "role": "Gym Leader",
+      "homeRegion": "Johto",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6678,6 +6712,8 @@
       "name": "Morty",
       "region": "Johto",
       "role": "Gym Leader",
+      "homeRegion": "Johto",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6813,6 +6849,8 @@
       "name": "Chuck",
       "region": "Johto",
       "role": "Gym Leader",
+      "homeRegion": "Johto",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -6946,6 +6984,8 @@
       "name": "Jasmine",
       "region": "Johto",
       "role": "Gym Leader",
+      "homeRegion": "Johto",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7084,6 +7124,8 @@
       "name": "Pryce",
       "region": "Johto",
       "role": "Gym Leader",
+      "homeRegion": "Johto",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7215,6 +7257,8 @@
       "name": "Clair",
       "region": "Johto",
       "role": "Gym Leader",
+      "homeRegion": "Johto",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7359,6 +7403,8 @@
       "name": "Will",
       "region": "Johto",
       "role": "Elite Four",
+      "homeRegion": "Johto",
+      "travel": "traveller",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7495,6 +7541,8 @@
       "name": "Karen",
       "region": "Johto",
       "role": "Elite Four",
+      "homeRegion": "Johto",
+      "travel": "traveller",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7631,6 +7679,8 @@
       "name": "Roxanne",
       "region": "Hoenn",
       "role": "Gym Leader",
+      "homeRegion": "Hoenn",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7762,6 +7812,8 @@
       "name": "Brawly",
       "region": "Hoenn",
       "role": "Gym Leader",
+      "homeRegion": "Hoenn",
+      "travel": "traveller",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -7887,6 +7939,8 @@
       "name": "Wattson",
       "region": "Hoenn",
       "role": "Gym Leader",
+      "homeRegion": "Hoenn",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8019,6 +8073,8 @@
       "name": "Flannery",
       "region": "Hoenn",
       "role": "Gym Leader",
+      "homeRegion": "Hoenn",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8152,6 +8208,8 @@
       "name": "Norman",
       "region": "Hoenn",
       "role": "Gym Leader",
+      "homeRegion": "Hoenn",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8285,6 +8343,8 @@
       "name": "Winona",
       "region": "Hoenn",
       "role": "Gym Leader",
+      "homeRegion": "Hoenn",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8423,6 +8483,8 @@
       "name": "Tate & Liza",
       "region": "Hoenn",
       "role": "Gym Leader duo",
+      "homeRegion": "Hoenn",
+      "travel": "homebody",
       "doubleBattle": true,
       "leagueEligible": false,
       "source": {
@@ -8556,6 +8618,8 @@
       "name": "Juan",
       "region": "Hoenn",
       "role": "Gym Leader",
+      "homeRegion": "Hoenn",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8701,6 +8765,8 @@
       "name": "Sidney",
       "region": "Hoenn",
       "role": "Elite Four",
+      "homeRegion": "Hoenn",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8841,6 +8907,8 @@
       "name": "Phoebe",
       "region": "Hoenn",
       "role": "Elite Four",
+      "homeRegion": "Hoenn",
+      "travel": "homebody",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -8980,6 +9048,8 @@
       "name": "Glacia",
       "region": "Hoenn",
       "role": "Elite Four",
+      "homeRegion": "Hoenn",
+      "travel": "traveller",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -9119,6 +9189,8 @@
       "name": "Drake",
       "region": "Hoenn",
       "role": "Elite Four",
+      "homeRegion": "Hoenn",
+      "travel": "traveller",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -9255,6 +9327,8 @@
       "name": "Wallace",
       "region": "Hoenn",
       "role": "Champion",
+      "homeRegion": "Hoenn",
+      "travel": "traveller",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {
@@ -9403,6 +9477,8 @@
       "name": "Steven",
       "region": "Hoenn",
       "role": "Champion",
+      "homeRegion": "Hoenn",
+      "travel": "traveller",
       "doubleBattle": false,
       "leagueEligible": true,
       "source": {

@@ -2,13 +2,23 @@
   import { onMount } from "svelte"
   import {
     ARCHETYPES,
+    CONTENDERS,
+    FATIGUE,
+    HOME_REGIONS,
     LEVEL_OFFSET,
+    LINEUP_SIZE,
+    LOCATION_REGIONS,
+    MAX_SEED,
     MAX_ACES,
     MAX_MOVES,
     MAX_POOL_ENTRIES,
     NEAR_BAND,
     ROSTER_SIZE,
-    LEAGUES,
+    AWAY_COST,
+    LEAGUE_BADGES,
+    ODDS_RUNS,
+    TRAVEL_STYLES,
+    WILLINGNESS_FLOOR,
     archetypeName,
     badgeMatchText,
     dormantReasonText,
@@ -32,6 +42,10 @@
   let importInput: HTMLInputElement
   const signed = (value: number): string => (value > 0 ? `+${value}` : `${value}`)
   const tone = (gap: number): string => (gap > 0 ? "above" : gap < 0 ? "below" : "even")
+  const slug = (text: string): string => text.toLowerCase().replaceAll(" ", "-")
+  const locationRegions = (league: keyof typeof LOCATION_REGIONS): string =>
+    LOCATION_REGIONS[league]?.join(" + ") ?? "neutral location"
+  const percent = (share: number): string => `${(share * 100).toFixed(1)}%`
   const scalers: {
     id: ScalerId
     title: string
@@ -126,8 +140,8 @@
       <h1>Trainer balance</h1>
       <p>
         Author each notable trainer’s growth (start TR, archetype, peak TR), six-slot roster and
-        move pool, and see their TR, team, the Gym ladder and the league lineup at any world
-        progress.
+        move pool, and see their TR, team, the Gym ladder, seeded league lineups and appearance odds
+        at any world progress.
       </p>
     </div>
     <div class="actions">
@@ -259,11 +273,14 @@
       <span class="hint">Trainers whose team level exceeds Lv. {lab.cap}</span>
     </div>
     <div>
-      <span class="eyebrow">League lineup</span>
-      <strong data-testid="league-range"
-        >TR {lab.league[0]?.tr ?? "—"} … {lab.league.at(-1)?.tr ?? "—"}</strong
+      <span class="eyebrow">Likeliest Indigo contender</span>
+      <strong data-testid="league-favourite"
+        >{lab.odds[0]?.rows[0]?.trainer.name ?? "—"}
+        {percent(lab.odds[0]?.rows[0]?.share ?? 0)}</strong
       >
-      <span class="hint">Top five by TR at world progress {lab.worldProgress}, one global pool</span
+      <span class="hint"
+        >Top appearance odds over {ODDS_RUNS} seeded runs at world progress {lab.odds[0]
+          ?.world}</span
       >
     </div>
   </section>
@@ -419,6 +436,25 @@
           >
           <button type="submit">Apply growth</button>
         </form>
+      {/key}
+      {#key lab.settings}
+        <div class="growth-form" data-testid="home-travel-editor">
+          <label
+            >Home region<select
+              aria-label="Home region"
+              value={lab.settings.homeRegion}
+              onchange={(event) => lab.setHomeTravel("homeRegion", event.currentTarget.value)}
+              >{#each HOME_REGIONS as region}<option>{region}</option>{/each}</select
+            ></label
+          ><label
+            >Travel style<select
+              aria-label="Travel style"
+              value={lab.settings.travel}
+              onchange={(event) => lab.setHomeTravel("travel", event.currentTarget.value)}
+              >{#each TRAVEL_STYLES as style}<option>{style}</option>{/each}</select
+            ></label
+          >
+        </div>
       {/key}
       <p class="hint">
         TR = start TR + (peak TR − start TR) × the archetype’s growth %, halves rounded up.
@@ -869,38 +905,142 @@
     </ol>
   </section>
 
-  <section class="league" aria-label="League preview">
+  <section class="league" aria-label="Seeded leagues">
     <div class="panel-title">
       <h2>
-        League lineup <span
-          >top {lab.league.length} by TR at world progress {lab.worldProgress}</span
+        Seeded leagues <span
+          >{lab.leagues.map((entry) => entry.league).join(" → ")}, {LINEUP_SIZE} drawn from the top
+          {CONTENDERS} contenders</span
         >
       </h2>
-      <span class="hint" data-testid="league-names"
-        >One global pool, so {LEAGUES.join(", ")} all use this lineup in v0.</span
-      >
+      <div class="league-controls">
+        <label
+          >Seed<input
+            aria-label="League seed"
+            type="number"
+            min="0"
+            max={MAX_SEED}
+            step="1"
+            value={lab.leagueSeed}
+            onchange={(event) => lab.setLeagueSeed(Number(event.currentTarget.value))}
+          /></label
+        ><button type="button" class="small" onclick={lab.rollLeagueSeed}>New seed</button><label
+          >Enter at<select
+            aria-label="League entry point"
+            value={lab.leagueAt}
+            onchange={(event) =>
+              lab.setLeagueAt(event.currentTarget.value === "player" ? "player" : "badges")}
+            ><option value="badges">badge points {Object.values(LEAGUE_BADGES).join(" / ")}</option
+            ><option value="player">the player TR ({lab.playerTR})</option></select
+          ></label
+        >
+      </div>
     </div>
     <p class="hint league-note">
-      Entering a league computes each league-eligible notable trainer’s TR at the current world
-      progress and takes the top five (Tate & Liza fight doubles, so they are not in the pool).
-      Battle order runs by ascending TR, strongest last. Ties keep catalog order. Each opponent uses
-      their own TR, team and levels.
+      Each league is a location. Entering one takes its contenders, the {CONTENDERS} strongest league-eligible
+      trainers by TR at that world progress (singles only: no Red, no Tate & Liza), and gives each a willingness
+      of 100 − travel cost − fatigue, at least {WILLINGNESS_FLOOR}. Travel cost is 0 at home (a
+      trainer whose home region is a location region, or anyone at the neutral Sevii Masters); away
+      it is {AWAY_COST.homebody} for a homebody and {AWAY_COST.traveller}
+      for a traveller. Fatigue is {FATIGUE} for a trainer in the lineup of the league entered just before.
+      The lineup draw takes {LINEUP_SIZE} contenders weighted by willingness from the seed (keyed by league
+      and entry occurrence; the ROM uses the playthrough seed and locks the draw until won) and fights
+      them by ascending TR, strongest last.
     </p>
-    <ol class="league-grid" data-testid="league-lineup">
-      {#each lab.league as row, index (row.trainer.id)}
-        <li class="match-card" data-testid={`league-match-${index + 1}`}>
-          <div class="match-heading">
-            <h3><span class="muted">Match {index + 1}</span> {row.trainer.name}</h3>
-            <span class="hint">TR {row.tr} · Lv. {row.teamLevel} · {row.team.length} Pokémon</span>
-          </div>
-          <ol class="league-team">
-            {#each row.battleOrder as member (member.slot)}<li>
-                <span>{member.species}</span><span class="member-level">Lv. {member.level}</span>
-              </li>{/each}
-          </ol>
-        </li>
-      {/each}
-    </ol>
+    {#each lab.leagues as entry (entry.league)}
+      <div class="league-entry" data-testid={`league-${slug(entry.league)}`}>
+        <h3>
+          {entry.league}
+          <span class="muted"
+            >world progress {entry.world} · {locationRegions(entry.league)} · entry {entry.occurrence}</span
+          >
+        </h3>
+        <ol class="league-grid" data-testid={`lineup-${slug(entry.league)}`}>
+          {#each entry.matches as row, index (row.trainer.id)}
+            <li class="match-card" data-testid={`match-${slug(entry.league)}-${index + 1}`}>
+              <div class="match-heading">
+                <h3><span class="muted">Match {index + 1}</span> {row.trainer.name}</h3>
+                <span class="hint"
+                  >TR {row.tr} · Lv. {row.teamLevel} · {row.team.length} Pokémon</span
+                >
+              </div>
+              <ol class="league-team">
+                {#each row.battleOrder as member (member.slot)}<li>
+                    <span>{member.species}</span><span class="member-level">Lv. {member.level}</span
+                    >
+                  </li>{/each}
+              </ol>
+            </li>
+          {/each}
+        </ol>
+        <div class="contender-scroll">
+          <table class="contender-table" data-testid={`contenders-${slug(entry.league)}`}>
+            <thead
+              ><tr
+                ><th>Contender</th><th>TR</th><th>Home region</th><th>Travel style</th><th
+                  >Location</th
+                ><th>Travel cost</th><th>Fatigue</th><th>Willingness</th><th>Drawn</th></tr
+              ></thead
+            >
+            <tbody>
+              {#each entry.contenders as contender (contender.trainer.id)}
+                <tr
+                  class:drawn={contender.drawn}
+                  data-testid={`contender-${slug(entry.league)}-${contender.trainer.id}`}
+                  ><td>{contender.trainer.name}</td><td class="numeric">{contender.tr}</td><td
+                    >{contender.homeRegion}</td
+                  ><td>{contender.travel}</td><td
+                    >{contender.willingness.home ? "at home" : "away"}</td
+                  ><td class="numeric">{contender.willingness.travelCost}</td><td class="numeric"
+                    >{contender.willingness.fatigue}</td
+                  ><td class="numeric willingness">{contender.willingness.score}</td><td
+                    >{contender.drawn ? "drawn" : ""}</td
+                  ></tr
+                >
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {/each}
+    <div class="league-entry">
+      <h3>
+        Appearance odds <span class="muted"
+          >share of {ODDS_RUNS} seeded runs (seeds 0–{ODDS_RUNS - 1}) with each contender in the
+          lineup</span
+        >
+      </h3>
+      <div class="odds-grid" data-testid="league-odds">
+        {#each lab.odds as league (league.league)}
+          <table class="contender-table" data-testid={`odds-${slug(league.league)}`}>
+            <thead
+              ><tr
+                ><th>{league.league} · world progress {league.world}</th><th>TR</th><th>Odds</th
+                ></tr
+              ></thead
+            >
+            <tbody>
+              {#each league.rows as row (row.trainer.id)}
+                <tr data-testid={`odds-${slug(league.league)}-${row.trainer.id}`}
+                  ><td>{row.trainer.name}</td><td class="numeric">{row.tr}</td><td class="numeric"
+                    >{percent(row.share)}</td
+                  ></tr
+                >
+              {/each}
+            </tbody>
+            <tfoot
+              ><tr
+                ><td>Total</td><td></td><td
+                  class="numeric"
+                  data-testid={`odds-total-${slug(league.league)}`}
+                  >{(league.rows.reduce((sum, row) => sum + row.share, 0) * 100).toFixed(0)}%</td
+                ></tr
+              ></tfoot
+            >
+          </table>
+        {/each}
+      </div>
+    </div>
   </section>
 
   <details class="global-settings">
@@ -990,8 +1130,8 @@
       </form>
     {/key}
     <p class="hint">
-      Catalog growth and rosters are placeholders. Seeded archetypes and lineup rules beyond the top
-      five are out of scope for v0. This is separate from the scaler the ROM uses today.
+      Catalog growth, rosters, home regions and travel styles are placeholders. Seeded archetypes
+      are out of scope for v0. This is separate from the scaler the ROM uses today.
     </p>
   </details>
 </section>
@@ -2026,6 +2166,70 @@
     grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
     gap: 14px;
     padding: 0 18px;
+  }
+  .league-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    font-size: 11px;
+  }
+  .league-controls label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-cartographer-muted);
+  }
+  .league-controls input {
+    width: 110px;
+    padding: 5px 6px;
+  }
+  .league-controls select {
+    padding: 5px 24px 5px 8px;
+  }
+  .league-entry {
+    margin-top: 16px;
+  }
+  .league-entry > h3 {
+    margin: 0 18px 10px;
+  }
+  .league-entry > h3 .muted {
+    font-size: 12px;
+    font-weight: 400;
+    margin-left: 6px;
+  }
+  .contender-scroll {
+    overflow-x: auto;
+    margin: 12px 18px 0;
+  }
+  .contender-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .contender-table th {
+    position: static;
+    padding: 7px 8px;
+  }
+  .contender-table td,
+  .contender-table td:first-child {
+    padding: 6px 8px;
+  }
+  .contender-table tr.drawn td:first-child {
+    box-shadow: inset 3px 0 var(--accent);
+  }
+  .contender-table tr.drawn .willingness,
+  .contender-table tfoot td {
+    color: var(--accent);
+  }
+  .odds-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 14px;
+    padding: 0 18px;
+    overflow-x: auto;
   }
   .league-team {
     list-style: none;

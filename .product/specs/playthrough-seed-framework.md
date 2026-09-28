@@ -2,14 +2,16 @@
 
 PRD: [Playthrough-seeded variation](../prds/playthrough-seeded-variation.md)
 Implemented: No
-Design status: Parked: no v0 consumer. Kept as the implementation contract for
-the first approved seeded feature; nothing is built until then.
+Design status: v0: one consumer (league lineups). Other seeded features stay
+Later.
 
 ## Scope
 
 Own root-seed initialization and persistence, stable decision identities,
 portable derivation, deterministic selection helpers, isolation from existing
-RNG, and the adoption contract for Wayfarer features. The API names below
+RNG, and the adoption contract for Wayfarer features. The only v0 consumer is
+the [league lineup draw](leagues.md#seeded-key), which documents its own key,
+inputs, and commit. The API names below
 describe required behavior, not functions present in the game. This does not
 enroll existing random mechanics.
 
@@ -51,7 +53,12 @@ A random word is a pure function of the root and this key:
 | `rejectionIndex` | Internal index used only to retry the same bounded draw. |
 
 Keep a checked-in registry of explicit numeric IDs. Adding an entry never
-renumbers others, and a retired ID is never reused. No IDs are reserved in v0.
+renumbers others, and a retired ID is never reused. v0 registers one entry:
+
+| `domainId` | `decisionId` | Decision | Owner |
+| ---: | ---: | --- | --- |
+| 1 (Leagues) | 1 | Lineup draw | [Leagues](leagues.md#seeded-key) |
+
 Entity identity comes from stable authored IDs, never pointers, table
 positions, text, or visit order.
 
@@ -138,7 +145,7 @@ Review [new-game initialization](../../game/src/new_game.c),
 [RNG interfaces](../../game/include/random.h) and
 [implementations](../../game/src/random.c). Keep the module Wayfarer-only.
 
-When un-parked, required evidence:
+Required evidence:
 
 - Golden vectors for zero and all-one roots, high-word-only changes, every key
   field, endian-sensitive patterns, interval boundaries, rejection retries, and
@@ -147,19 +154,16 @@ When un-parked, required evidence:
 - Repeated, reordered, and newly added unrelated queries leave existing values
   unchanged; source reordering does not change canonical order.
 - Both global RNG states are unchanged around root creation and queries.
-- A test-only one-time and recurring consumer prove reload before and after
-  commit, duplicate callbacks, invalid input, and occurrence transitions.
+- The league lineup draw, plus a test-only one-time consumer, prove reload
+  before and after commit, duplicate callbacks, invalid input, and occurrence
+  transitions.
 - Missing roots and unsupported versions are rejected without a reroll.
 - Save size, RAM, stack, ROM, and runtime cost are measured on target.
 
 ## Later
 
-- League consumer: seeded league order per edition (earlier draft: domain 1,
-  ORDER).
-- League consumer: seeded lineups with home/visitor draws and rotation
-  (earlier draft: domain 1, ROSTER and POOL_KIND).
-- Trainer growth consumer: one growth arc per trainer per save (earlier draft:
-  domain 2, GROWTH_ARC).
+- League consumer: seeded league order per edition, and rotation across
+  recurring editions.
+- Trainer growth consumer: one growth arc per trainer per save.
 - Roster consumer: per-save filler weight variation
-  ([roster influence](trainer-roster-influence.md#weighted-pools); earlier
-  draft: domain 3, FILLER_JITTER).
+  ([roster influence](trainer-roster-influence.md#weighted-pools)).
