@@ -350,13 +350,13 @@ test("ranks every eligible trainer by league score and fields the top five, stro
   const eligible = 37
   // The standard sequence enters each league at its own badge point: 8, 16 and 24 badges.
   await expect(page.getByTestId("league-indigo").locator("h3").first()).toContainText(
-    "world progress 80 · Kanto + Johto · field Lv 59",
+    "world progress 80 · Kanto + Johto · base lineup Lv 59",
   )
   await expect(page.getByTestId("league-sevii-masters").locator("h3").first()).toContainText(
-    "world progress 120 · neutral location · field Lv 81",
+    "world progress 120 · neutral location · base lineup Lv 81",
   )
   await expect(page.getByTestId("league-hoenn").locator("h3").first()).toContainText(
-    "world progress 160 · Hoenn · field Lv 100",
+    "world progress 160 · Hoenn · base lineup Lv 100",
   )
   for (const league of ["indigo", "sevii-masters", "hoenn"]) {
     await expect(page.getByTestId(`lineup-${league}`).locator(":scope > li")).toHaveCount(5)
@@ -378,15 +378,15 @@ test("ranks every eligible trainer by league score and fields the top five, stro
     ])
   await expect(page.getByTestId("match-indigo-5")).toContainText("TR 95 · score 95 · Lv. 59")
   await expect(page.getByTestId("league-finalist")).toHaveText("Jasmine 95")
-  // League score = floor(TR × willingness / 100). Norman (Hoenn, homebody) is away at Indigo;
-  // Drake (Hoenn, traveller) pays only 10.
+  // League score = floor(TR × willingness / 100). Norman (Hoenn, not a traveller) is away at
+  // Indigo and pays 80; Drake (Hoenn, traveller) pays only 10.
   await expect(page.getByTestId("entrant-indigo-norman").locator("td")).toHaveText([
     "27",
     "Norman",
     "95",
     "59",
     "Hoenn",
-    "homebody",
+    "",
     "away",
     "80",
     "0",
@@ -410,13 +410,13 @@ test("ranks every eligible trainer by league score and fields the top five, stro
     "",
     "",
   ])
-  // Aloof: the top five non-aloof set the field level (Lv 59 at Indigo). Agatha (Lv 59) joins;
+  // Aloof: the top five non-aloof are the base lineup (base lineup Lv 59 at Indigo). Agatha (Lv 59) joins;
   // Lance, a Legend at TR 200 (Lv 100), skips and is not ranked.
   await expect(page.getByTestId("aloof-indigo-agatha")).toHaveText(
-    "Agatha aloof: team Lv 59 vs field Lv 59 + 10 → joins",
+    "Agatha aloof: team Lv 59 vs base lineup Lv 59 + 10 → joins",
   )
   await expect(page.getByTestId("aloof-indigo-lance")).toHaveText(
-    "Lance aloof: team Lv 100 vs field Lv 59 + 10 → skips",
+    "Lance aloof: team Lv 100 vs base lineup Lv 59 + 10 → skips",
   )
   await expect(page.getByTestId("aloof-indigo").locator("li")).toHaveCount(8)
   await expect(page.getByTestId("entrant-indigo-lance").locator("td")).toHaveText([
@@ -454,12 +454,12 @@ test("ranks every eligible trainer by league score and fields the top five, stro
     "",
     "",
   ])
-  // The Champions wait for an elite field: they skip the Sevii Masters (field Lv 81) and meet at Hoenn.
+  // The Champions wait for an elite base lineup: they skip the Sevii Masters (Lv 81) and meet at Hoenn.
   await expect
     .poll(() => names("sevii-masters"))
     .toEqual(["Match 1 Erika", "Match 2 Koga", "Match 3 Karen", "Match 4 Blue", "Match 5 Norman"])
   await expect(page.getByTestId("aloof-sevii-masters-steven")).toHaveText(
-    "Steven aloof: team Lv 99 vs field Lv 81 + 10 → skips",
+    "Steven aloof: team Lv 99 vs base lineup Lv 81 + 10 → skips",
   )
   await expect
     .poll(() => names("hoenn"))
@@ -471,7 +471,7 @@ test("ranks every eligible trainer by league score and fields the top five, stro
       "Match 5 Lance",
     ])
   await expect(page.getByTestId("aloof-hoenn-lance")).toHaveText(
-    "Lance aloof: team Lv 100 vs field Lv 100 + 10 → joins",
+    "Lance aloof: team Lv 100 vs base lineup Lv 100 + 10 → joins",
   )
   // The same inputs give the same lineups after a reload: there is no randomness.
   await page.reload()
@@ -490,7 +490,11 @@ test("ranks every eligible trainer by league score and fields the top five, stro
   // Norman as a traveller pays only 10 away from Hoenn: floor(95 × 90 / 100) = 85.
   await page.getByRole("button", { name: /^Norman/ }).click()
   await expect(page.getByLabel("Home region", { exact: true })).toHaveValue("Hoenn")
-  await page.getByLabel("Travel style", { exact: true }).selectOption("traveller")
+  await expect(page.getByLabel("Traveller", { exact: true })).not.toBeChecked()
+  await page.getByLabel("Traveller", { exact: true }).check()
+  await expect(page.getByTestId("entrant-indigo-norman").locator("td").nth(5)).toHaveText(
+    "traveller",
+  )
   const norman = page.getByTestId("entrant-indigo-norman").locator("td")
   await expect(norman.nth(9)).toHaveText("90")
   await expect(norman.nth(10)).toHaveText("85")
@@ -500,7 +504,7 @@ test("ranks every eligible trainer by league score and fields the top five, stro
   await expect(norman.nth(10)).toHaveText("95")
   await expect(page.getByTestId("entrant-indigo-will").locator("td").last()).toHaveText("")
   await expect(page.getByTestId("lineup-indigo")).toContainText("Norman")
-  // The trainer editor carries the aloof flag: Lance is aloof; unticked, he joins Indigo and
+  // The trainer editor carries the aloof trait: Lance is aloof; unticked, he joins Indigo and
   // fights last there.
   await page.getByRole("button", { name: /^Lance/ }).click()
   await expect(page.getByLabel("Aloof", { exact: true })).toBeChecked()
@@ -570,7 +574,7 @@ test("marks ace slots and fights them last, with slot 1 locked and at most three
   await expect(page.getByTestId("growth-slot-6")).not.toContainText("Ace")
 })
 
-test("flags incomplete rosters and rejects invalid edits and version 4 to 14 files", async ({
+test("flags incomplete rosters and rejects invalid edits and version 4 to 15 files", async ({
   page,
 }) => {
   await page.goto("/#trainer-balance")
@@ -729,7 +733,7 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 14 fil
     },
   })
   await expect(page.getByRole("alert")).toContainText(
-    "Version 12 experiments have no home regions or travel styles",
+    "Version 12 experiments have no home regions or traveller trait",
   )
   await importFile(13, {
     point: { playerTR: 80 },
@@ -762,6 +766,22 @@ test("flags incomplete rosters and rejects invalid edits and version 4 to 14 fil
   })
   await expect(page.getByRole("alert")).toContainText(
     "Version 14 experiments have no aloof trait and the old Sleeper Champions",
+  )
+  await importFile(15, {
+    point: { playerTR: 80 },
+    league: { at: "badges" },
+    experiment: {
+      version: 15,
+      teamLevel: [[0, 15]],
+      teamSize: [[0, 2]],
+      wildLevel: [[0, 6]],
+      routeTrainerLevel: [[0, 9]],
+      archetypes: {},
+      trainers: {},
+    },
+  })
+  await expect(page.getByRole("alert")).toContainText(
+    "Version 15 experiments save a travel style instead of the traveller trait",
   )
   await expect(page.getByTestId("badge-count")).toHaveText("0")
   await expect(page.getByTestId("selected-tr")).toHaveText("25")

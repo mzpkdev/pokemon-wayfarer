@@ -5,8 +5,8 @@ until this design is adopted; the balance explorer is placeholder tooling.
 Design status: v0 accepted. Every trainer's team is approved (draft v1:
 who they bring, in what order, and which are aces); their favourite moves
 and items, their growth numbers, and the exact team-size steps are still
-placeholder content under review. Home regions and travel styles follow lore
-and are open to review. Terms follow the
+placeholder content under review. Home regions and traits follow lore and
+are open to review. Terms follow the
 [glossary](player-trainer-rating.md#glossary).
 
 ## Intent
@@ -80,34 +80,36 @@ appear in one. Everyone else, including Red, keeps their current rules.
 
 ### Home and travel
 
-Every notable trainer comes from a home region, Kanto, Johto, or Hoenn, and
-has a travel style: a homebody, who prefers to stay close to home, or a
-traveller, who goes wherever the action is. Wherever a trainer might appear,
-they are at home when the place belongs to their region, or is neutral ground
-like Sevii Masters, and away otherwise. Being away costs a homebody a lot of
-willingness to turn up and a traveller very little. In this first version only
-leagues use this ([Leagues](leagues.md)).
-
-The travellers are Brock, Misty, Giovanni, Blue, Bruno, and Lance from Kanto;
-Bugsy, Will, Koga, and Karen from Johto; and Brawly, Glacia, Drake, Wallace,
-and Steven from Hoenn. Everyone else is a homebody. These picks follow the
-trainers' stories and are open to review
-([assignments](../specs/notable-trainers.md#home-region-and-travel)).
-
-### Aloof
-
-Some proud trainers are **aloof**: they won't bother with a league whose field
-is far below them, but they join once the field is elite. Being aloof has
-nothing to do with how a trainer grows or how far they travel, and in this
-first version only leagues pay attention to it
+Every notable trainer comes from a home region, Kanto, Johto, or Hoenn.
+Wherever a trainer might appear, they are at home when the place belongs to
+their region, or is neutral ground like Sevii Masters, and away otherwise.
+Most trainers are homebodies at heart: being away costs them a lot of
+willingness to turn up. In this first version only leagues use this
 ([Leagues](leagues.md)).
 
-The aloof trainers are the Champions Lance, Wallace, and Steven, who only
-grace elite fields; Agatha, Oak's proud old rival; Glacia, who came to Hoenn
-looking for worthy opponents; Clair, the proud dragon tamer; cold, distant
-Sabrina; and Karen, whose "strong Pokémon, weak Pokémon" disdains weak
-fields. Everyone else is not aloof. These picks are open to review
-([assignments](../specs/notable-trainers.md#aloof)).
+### Traits
+
+A **trait** is an opt-in yes-or-no quirk of a notable trainer; a trainer
+without it behaves the default way. This first version has two traits, and
+only leagues pay attention to them ([Leagues](leagues.md)). Neither has
+anything to do with how a trainer grows.
+
+A **traveller** goes wherever the action is: being away costs them very
+little willingness. The travellers are Brock, Misty, Giovanni, Blue, Bruno,
+and Lance from Kanto; Bugsy, Will, Koga, and Karen from Johto; and Brawly,
+Glacia, Drake, Wallace, and Steven from Hoenn. Everyone else stays close to
+home.
+
+Some proud trainers are **aloof**: they won't bother with a league whose best
+regular contenders are far below them, but they join once those contenders
+are elite. The aloof trainers are the Champions Lance, Wallace, and Steven, who
+only grace elite leagues; Agatha, Oak's proud old rival; Glacia, who came to
+Hoenn looking for worthy opponents; Clair, the proud dragon tamer; cold,
+distant Sabrina; and Karen, whose "strong Pokémon, weak Pokémon" disdains
+weak company. Everyone else is not aloof.
+
+These picks follow the trainers' stories and are open to review
+([assignments](../specs/notable-trainers.md#traits)).
 
 ### No ceiling
 
@@ -230,8 +232,8 @@ belong to playtesting.
 ## Later
 
 - More notable trainers, such as Red.
-- Notable trainers met around the world according to their travel style:
-  homebodies stay in their home region and travellers roam.
+- Notable trainers met around the world according to the traveller trait:
+  travellers roam and everyone else stays in their home region.
 - Aloof trainers keeping their distance around the world too, not only from
   leagues.
 - Hints in the world about who is too strong for you right now: Gym guides,

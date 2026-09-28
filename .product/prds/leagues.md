@@ -32,8 +32,8 @@ rooms, and ceremonies. Each holds a five-match singles lineup.
 Liza are notable but fight only as a double battle, so they are left out; Red
 (separate mastery encounter) is not notable.
 
-**Home and away.** Every notable trainer has a home region and a travel
-style, homebody or traveller ([Notable trainers](notable-trainers.md)). A
+**Home and away.** Every notable trainer has a home region, and some have
+the traveller trait ([Notable trainers](notable-trainers.md)). A
 league is a location: Indigo belongs to Kanto and Johto, and Hoenn to Hoenn,
 so trainers from there are at home. Sevii Masters is neutral ground, where
 everyone is at home.
@@ -41,19 +41,20 @@ everyone is at home.
 **Lineup.** The strongest trainers who are willing to come make the lineup.
 When the player enters a league, every trainer gets a league score: their
 current TR, scaled down by how unwilling they are to come. Trainers prefer to
-play at home: a homebody rarely makes the trip to a league away from home,
-while a traveller roams almost as readily as they play at home. Someone who
+play at home: most rarely make the trip to a league away from home, while a
+traveller roams almost as readily as they play at home. Someone who
 was in the lineup of the last league the player entered is tired and less
 keen on this one.
 
-Some proud trainers are aloof: they won't bother with a league whose field is
-far below them, but they join once the field is elite. The field is the five
-best trainers by league score who are not aloof, and the field level is the
-highest team level among them. An aloof trainer joins only if their own team
-level is no more than 10 above the field level; aloof trainers only measure
-themselves against that field, never against each other. The Champions
-are aloof, so early leagues go ahead without them, and they turn up once the
-field is strong enough to deserve them.
+Some proud trainers are aloof: they won't bother with a league whose base
+lineup is far below them, but they join once it is elite. The base lineup is
+the five best trainers by league score who are not aloof, and the base lineup
+level is the highest team level among them. An aloof trainer joins only if
+their own team level is no more than 10 above the base lineup level; aloof
+trainers only measure themselves against the base lineup, never against each
+other, and with no base lineup at all they skip. The Champions are aloof, so
+early leagues go ahead without them, and they turn up once the base lineup is
+strong enough to deserve them.
 
 Everyone still eligible is then ranked by league score, and the five highest
 make the lineup. Apart from the aloof, nobody is ruled out: a strong enough
@@ -85,7 +86,7 @@ is a test, not a source of power
 TR for a first league win until that design is adopted.
 
 **Balance.** Informational for now: the balance explorer reports each
-trainer's league score, the field level, which aloof trainers join or skip,
+trainer's league score, the base lineup level, which aloof trainers join or skip,
 and the resulting lineup at each league, and tuning comes later. The lineup comes from the strongest trainers of the moment, so it tends to sit a little above the player; with all 24 badges both
 sides reach level 100, and tougher endgame teams (better items, stats,
 movesets) are Later.
@@ -105,8 +106,8 @@ movesets) are Later.
    again from everyone's current TR. Sleepers may have climbed in and Veterans
    dropped out. Anyone from anywhere is at home here, but the five who just
    played Indigo are tired and mostly sit this one out. An aloof Champion who
-   skipped Indigo may still find this field too far below them and wait for
-   a stronger one, such as Hoenn's at the end of the journey.
+   skipped Indigo may still find this base lineup too far below them and wait
+   for a stronger one, such as Hoenn's at the end of the journey.
 
 ## Records and recognition
 
@@ -127,7 +128,8 @@ Today's circuit behaviour stays until designed; see the
 ## Boundaries
 
 In: the three leagues, notable Kanto, Johto, and Hoenn singles trainers,
-home and away, the league score, aloof trainers and the field level, the
+home and away, the league score, the traveller and aloof traits and the base
+lineup level, the
 lineup, battle order, and the locked
 lineup.
 
@@ -146,7 +148,7 @@ own TR.
   fatigue, the league score, lineup selection, ordering, the locked lineup, battle
   construction, the win commit, saved state, and load validation.
 - [Notable trainers specification](../specs/notable-trainers.md): TR, home
-  regions, travel styles and willingness, the aloof trait, scalers, and
+  regions, the traveller and aloof traits, willingness, scalers, and
   rosters.
 - [Player Trainer Rating specification](../specs/player-trainer-rating.md):
   the player's TR, which league wins do not raise in v0.

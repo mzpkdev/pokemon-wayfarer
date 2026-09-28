@@ -4,8 +4,8 @@ PRD: [Leagues](../prds/leagues.md)
 Implemented: No
 Design status: v0 approved: leagues as locations, a league score per
 eligible trainer (Trainer Rating (TR) scaled by willingness, from travel cost
-and fatigue, when the player enters), aloof trainers joining only a field
-near their level, the top five by league score with no
+and fatigue, when the player enters), aloof trainers joining only a base
+lineup near their level, the top five by league score with no
 randomness, ascending battle order, a lineup computed on first entry and
 locked until the league is won, and a win that commits the league result. Balance is
 informational for now. Signup and league order stay as Today's
@@ -15,17 +15,17 @@ designed.
 ## Scope
 
 Own, for each `IS_WAYFARER` league: the league registry, eligibility,
-location regions, fatigue, the league score, the field level and the aloof
-rule, lineup selection and battle
+location regions, fatigue, the league score, the base lineup and its level,
+the aloof rule, lineup selection and battle
 order, the locked lineup, battle construction, entering a league, active runs
 and dispatch, the win commit, saved state, load validation, presentation, and
 regional integration.
 
 - [Notable trainers](notable-trainers.md) owns notable trainers, their
-  TR and its growth with world progress, home regions, travel styles, travel
-  cost and willingness, the aloof trait, the team-level and team-size scalers,
-  rosters, and team composition. This spec reads a trainer's TR, team level,
-  willingness, aloof trait, and composed team; it never restates how they are
+  TR and its growth with world progress, home regions, the traits (traveller
+  and aloof), travel cost and willingness, the team-level and team-size
+  scalers, rosters, and team composition. This spec reads a trainer's TR, team
+  level, willingness, aloof trait, and composed team; it never restates how they are
   computed.
 - [Player Trainer Rating](player-trainer-rating.md) owns the player's TR. In
   v0 a league win adds no player TR; Today's +8 per first league win stays
@@ -90,7 +90,7 @@ change story battles, which follow the
 
 Every eligible trainer can be invited to any league; location regions only
 scale how willing they are to come, and an aloof trainer skips a league whose
-field is well below their level. The first time the player enters a league,
+base lineup is well below their level. The first time the player enters a league,
 and on each replay (see [Entering a league](#entering-a-league)):
 
 1. **TR.** Compute each eligible trainer's TR at the current world progress
@@ -99,20 +99,22 @@ and on each replay (see [Entering a league](#entering-a-league)):
    [travel rule](notable-trainers.md#home-region-and-travel):
    `max(5, 100 - travelCost - fatigue)`. **Fatigue** is league-specific: 50 if
    the trainer is in the previous lineup, else 0. At home a trainer scores
-   100 (50 fatigued); away, a traveller 90 (40) and a homebody 20 (5).
+   100 (50 fatigued); away, a [traveller](notable-trainers.md#traveller) 90
+   (40) and anyone else 20 (5).
 3. **League score.** `floor(TR × willingness / 100)`, in integer arithmetic.
-4. **Field level.** Rank the eligible trainers who are not
+4. **Base lineup.** Rank the eligible trainers who are not
    [aloof](notable-trainers.md#aloof) by league score, ties by ascending
-   `characterId`, and take the top five (all of them if fewer than five). The
-   **field level** is the strongest
-   [team level](notable-trainers.md#trainer-scalers) among them.
+   `characterId`, and take the top five (all of them if fewer than five):
+   the **base lineup**. The **base lineup level** is the strongest
+   [team level](notable-trainers.md#trainer-scalers) in it.
 5. **Aloof.** An aloof trainer is eligible for this league only if their team
-   level is at most field level + 10 (a placeholder margin, in levels, not
-   TR); otherwise they skip it. Aloof trainers are judged against the
-   non-aloof field only, never against each other, so one aloof trainer
-   joining never lets another in. Fatigue still applies: it shapes the field
-   through the league scores, and an aloof trainer who joins keeps their
-   fatigued league score.
+   level is at most base lineup level + 10 (a placeholder margin, in levels,
+   not TR); otherwise they skip it. Aloof trainers are judged against the
+   base lineup only, never against each other, so one aloof trainer joining
+   never lets another in. With no base lineup (no eligible trainer who is not
+   aloof), there is no base lineup level and every aloof trainer skips.
+   Fatigue still applies: it shapes the base lineup through the league
+   scores, and an aloof trainer who joins keeps their fatigued league score.
 6. **Lineup.** Rank every trainer still eligible (the non-aloof and the aloof
    who join) by league score and take the five highest (all of them if fewer
    than five). Equal league scores break by ascending `characterId`.
@@ -343,11 +345,11 @@ League balance is informational in v0; tuning comes later. The
 [explorer](../../devtools/ui/README.md#trainer-balance-explorer) reports, for
 each league at sample world progress values and entry sequences, every
 eligible trainer's TR, team level, willingness, league score, and rank, the
-field level, each aloof trainer's check (team level against field level + 10,
-joins or skips), and the resulting lineup. It asserts no fixed
+base lineup level, each aloof trainer's check (team level against base lineup
+level + 10, joins or skips), and the resulting lineup. It asserts no fixed
 lineup, finalist, or strength target. The report is informational; it also
 confirms that no aloof trainer in a lineup is more than 10 levels above the
-field. The Gym ladder and team targets
+base lineup level. The Gym ladder and team targets
 stay in [Notable trainers](notable-trainers.md#balance-targets).
 
 ## Acceptance
@@ -361,12 +363,13 @@ evidence (not yet run):
    growth values or a valid roster. The build must hold at least five eligible
    trainers.
 2. **Selection.** Fixtures at several world progress values, including one
-   where growth reorders the lineup: willingness for at-home, away homebody,
-   away traveller, fatigued, and floored cases at each league, Masters as a
-   neutral location; the league score floored; the field level taken from the
-   top five non-aloof trainers only; an aloof trainer joining at exactly field
-   level + 10 and skipping at one level more, never judged against another
-   aloof trainer, with fatigue applied to the field and to an aloof trainer's
+   where growth reorders the lineup: willingness for at-home, away
+   non-traveller, away traveller, fatigued, and floored cases at each league,
+   Masters as a neutral location; the league score floored; the base lineup
+   level taken from the top five non-aloof trainers only; an aloof trainer
+   joining at exactly base lineup level + 10 and skipping at one level more,
+   never judged against another aloof trainer, and skipping when there is no
+   base lineup; fatigue applied to the base lineup and to an aloof trainer's
    score; the five highest scores over
    distinct scores and ties at the fifth-place boundary broken by ascending
    `characterId`; fatigue read from the last league entered by entry

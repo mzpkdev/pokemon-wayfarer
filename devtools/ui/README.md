@@ -169,8 +169,8 @@ the player TR). The trainer list shows each trainer's TR at the current world
 progress, their start TR → peak TR, archetype,
 team level, team size, the gap between team level and the level cap, and how
 many roster slots are filled. The trainer panel edits start TR, archetype
-and peak TR, the trainer's home region (Kanto, Johto or Hoenn) and travel
-style (homebody or traveller), shows the trainer's TR, team level and each roster slot's stage
+and peak TR, the trainer's home region (Kanto, Johto or Hoenn) and traits
+(the **Traveller** and **Aloof** checkboxes), shows the trainer's TR, team level and each roster slot's stage
 and level at world progress 0 / 40 / 80 / 120 / 160 (aces marked), the trainer's
 **milestones**, a chart of their team level against the level cap across
 player TR 0–200 (the current player TR and the milestones marked; hover or
@@ -213,10 +213,10 @@ slot (Aerodactyl) ace joins · 159: peak TR 100". His late ace Aerodactyl
 (roster slot 6) joins at team size 6 (TR 71, team level 45), which his
 placeholder growth reaches at world progress 98.
 
-Exports and the saved browser state use version 15 (nine archetypes with the
+Exports and the saved browser state use version 16 (nine archetypes with the
 single-word identifiers above; rosters carry `isAce` and no moves; each
 trainer has a `movePool` of `{ "move", "fromLevel"? }` entries, a
-`homeRegion`, a `travel` style and an `aloof` flag)
+`homeRegion` and the `traveller` and `aloof` trait flags)
 and store the point as `{ "playerTR": n }` and the league settings as
 `{ "at": "badges" | "player" }`; a `{ "badges": n }` point still
 imports and sets the matching player TR.
@@ -236,12 +236,13 @@ the player TR) or above.
 **League lineups** rank every eligible trainer by league score. Each league is
 a location: Indigo's location regions are Kanto and Johto, Hoenn's is Hoenn,
 and the Sevii Masters is a neutral location where everyone is at home. The
-catalog gives each notable trainer a home region and a travel style
-(`homeRegion`, `travel`; the section 14 lore assignments, editable per
-trainer). Entering a league gives every league-eligible trainer (singles
+catalog gives each notable trainer a home region (`homeRegion`) and traits:
+opt-in yes/no flags that default to no (section 17). The **traveller** trait
+(`traveller`; the section 14 lore assignments, editable per trainer as the
+**Traveller** checkbox) makes away travel cheap. Entering a league gives every league-eligible trainer (singles
 only: the catalog has no Red and Tate & Liza are ineligible) a
 **willingness** of max(5, 100 − travel cost − fatigue). Travel cost is 0 at
-home, 80 for a homebody away and 10 for a traveller away; fatigue is 50 for a
+home; away it is 10 for a traveller and 80 for everyone else; fatigue is 50 for a
 trainer in the lineup of the league entered just before (by entry sequence,
 not location order). The **league score** is floor(TR × willingness / 100);
 the top five by score make the lineup (ties in catalog order, standing in for
@@ -250,48 +251,50 @@ catalog order). There is no seed or randomness: the same world progress and
 previous lineup always give the same five (the ROM computes the lineup on
 first entry and locks it until won).
 
-Some trainers are **aloof** (`aloof`; the section 16 lore assignments,
-editable per trainer as the **Aloof** checkbox): Lance, Wallace, Steven,
-Agatha, Glacia, Clair, Sabrina and Karen. They won't join a league whose field
-is well below their level. The top five trainers who are not aloof, by league
-score (fatigue included), set the **field level**: their strongest team level.
-An aloof trainer joins only when their team level is at most the field level
-
-- 10 (levels, not TR; a placeholder margin), judged against that field and
-  never against other aloof trainers; everyone who joins is then ranked by league
-  score as above. An aloof trainer who skips is listed unranked at the end of the
-  table.
+Some trainers are **aloof** (`aloof`, a trait; the section 16 lore
+assignments, editable per trainer as the **Aloof** checkbox): Lance, Wallace,
+Steven, Agatha, Glacia, Clair, Sabrina and Karen. They won't join a league
+whose base lineup is well below their level. The top five trainers who are not
+aloof, by league score (fatigue included), are the **base lineup**; its
+strongest team level is the **base lineup level**. An aloof trainer joins only
+when their team level is at most the base lineup level plus 10 (levels, not
+TR; a placeholder margin), judged against the base lineup and never against
+other aloof trainers; with no base lineup (no eligible trainer who is not
+aloof), every aloof trainer skips. Everyone who joins is then ranked by league
+score as above. An aloof trainer who skips is listed unranked at the end of
+the table.
 
 The panel runs the standard entry sequence Indigo → Sevii Masters → Hoenn,
 entered at each league's badge point (8, 16 and 24 badges: world progress
 80, 120 and 160) or, with **Enter at**, all at the player TR. For each league
-it shows the field level, each aloof trainer's check ("team Lv X vs field Lv
-Y + 10 → joins/skips"), the lineup with teams, levels and league scores, and
-every eligible trainer's rank, TR, team level, home region, travel style, at
-home or away, travel cost, fatigue, willingness, league score, whether an
+it shows the base lineup level, each aloof trainer's check ("team Lv X vs base
+lineup Lv Y + 10 → joins/skips"), the lineup with teams, levels and league scores, and
+every eligible trainer's rank, TR, team level, home region, whether they are a
+traveller, at home or away, travel cost, fatigue, willingness, league score, whether an
 aloof trainer joins or skips, and whether they are in the lineup. The summary
 strip names the Indigo finalist. With the catalog defaults at the standard
 badge points (battle order, league score in brackets):
 
-- Indigo (80, field Lv 59): Will (94), Lt. Surge (95), Giovanni (95), Agatha
+- Indigo (80, base lineup Lv 59): Will (94), Lt. Surge (95), Giovanni (95), Agatha
   (95), Jasmine (95). Everyone at home; the best away trainer, Drake (a Hoenn
   traveller, TR 93), scores 83 and ranks 12th. Agatha (Lv 59), Karen (Lv 58),
   Glacia, Sabrina and Clair join; Lance (Lv 100), Steven (Lv 77) and Wallace
   (Lv 74) skip.
-- Sevii Masters (120, field Lv 81): Erika (120), Koga (120), Karen (124),
+- Sevii Masters (120, base lineup Lv 81): Erika (120), Koga (120), Karen (124),
   Blue (129), Norman (130). No travel cost, so the score is the TR except for
   Indigo's five, now fatigued (Giovanni, TR 131, scores 65). Karen, Clair,
   Sabrina, Glacia and Agatha join; Lance (Lv 100), Wallace (Lv 100) and
   Steven (Lv 99) skip.
-- Hoenn (160, field Lv 100): Winona (172), Juan (185), Wallace (190), Steven
-  (195), Lance (180). With the field at Lv 100 every aloof trainer joins;
+- Hoenn (160, base lineup Lv 100): Winona (172), Juan (185), Wallace (190),
+  Steven (195), Lance (180). With the base lineup at Lv 100 every aloof
+  trainer joins;
   Lance, a Kanto traveller, scores 90% of TR 200 and fights last. The Masters
   five are fatigued and drop out.
 
 Lance, a Legend at TR 200 (team Lv 100), first joins a league at world
-progress 135 (field Lv 91), whichever league it is; in the standard sequence
+progress 135 (base lineup Lv 91), whichever league it is; in the standard sequence
 Hoenn's fatigue moves that to 138. No aloof lineup member sits more than 10
-levels above the field.
+levels above the base lineup level.
 
 All thirteen scaler tables (team level, team size, wild level, regular trainer
 level, and the Steady, Prodigy, Sleeper, Veteran, Rival, Legend, Star,
@@ -299,18 +302,19 @@ Comeback and Burst growth scalers) are editable under
 **Scalers & experiment settings**, each labeled interpolated or step. Anchors
 start at 0, rise and never decrease in value; growth scalers run 0–100% and
 start at 0%. Experiments persist in browser storage (key
-`wayfarer-trainer-balance-v15`). JSON export and import
-(format version 15) round-trip the experiment (growth, rosters with their ace
-flags, move pools, home regions, travel styles, aloof flags and the thirteen
+`wayfarer-trainer-balance-v16`). JSON export and import
+(format version 16) round-trip the experiment (growth, rosters with their ace
+flags, move pools, home regions, traveller and aloof flags and the thirteen
 scalers), the
 player TR, the league entry point, and the selected trainer. The
 importer also rejects a Legend whose peak TR differs from start TR, a
 Gym Leader Legend, a roster slot with moves, an unknown move name, a from level
-outside 1–100, a pool of more than 64 entries, an unknown home region or
-travel style, and an aloof flag that is not true or false. Files from versions
-1–14 are rejected with a message (version 14 had no aloof trait and the old
+outside 1–100, a pool of more than 64 entries, an unknown home region, and
+a traveller or aloof flag that is not true or false. Files from versions
+1–15 are rejected with a message (version 15 saved a `travel` style, homebody
+or traveller, instead of the traveller flag; version 14 had no aloof trait and the old
 Sleeper Champions; version 13 saved a league seed for the retired
-seeded lineup draw; version 12 had no home regions or travel styles and
+seeded lineup draw; version 12 had no home regions or traveller trait and
 assumed fixed league lineups; version 11 authored moves per roster slot and had no
 move pools; version
 10 used the old archetype names; version
@@ -360,12 +364,12 @@ level cap; at 40 none is below yet, but at least three are at or under the
 player TR. League lineups have no fixed targets: they are informational, and
 the tests check the league score and its flooring, the top-five selection and
 tie-break, fatigue through the sequence, Sevii neutrality, determinism, and
-the aloof rule (joining at exactly the field level + 10 and skipping one level
-above, never compared with other aloof trainers, fatigue still applying, Lance
-skipping Indigo and the Sevii Masters and fighting at Hoenn, and no aloof
-lineup member more than 10 levels above the field). Home
-regions and travel styles live in the script's `HOME_REGION` and `TRAVELLERS`
-tables, and the aloof trainers in its `ALOOF` set (which may name only
+the aloof rule (joining at exactly the base lineup level + 10 and skipping
+one level above, never compared with other aloof trainers, skipping when there
+is no base lineup, fatigue still applying, Lance skipping Indigo and the Sevii
+Masters and fighting at Hoenn, and no aloof lineup member more than 10 levels
+above the base lineup level). Home regions and the travellers live in the
+script's `HOME_REGION` table and `TRAVELLERS` set, and the aloof trainers in its `ALOOF` set (which may name only
 league-eligible catalog trainers). Rosters are the user-directed roster draft v1 (identity and anime
 picks) in the script's `DRAFT` table: six roster slots per trainer in join
 order, 1–3 aces at offset 0 (roster slot 1, the signature Pokémon, always

@@ -25,10 +25,11 @@ so an entry every roster line learns only by TM/tutor or as an egg move is a
 warning (it needs a from level), as is one no line can learn. Learnset
 extraction needs a C preprocessor (arm-none-eabi-cpp, else cpp).
 
-Each trainer also records a home region (Kanto, Johto or Hoenn) and a travel
-style (homebody or traveller) from the section 14 lore tables (HOME_REGION,
-TRAVELLERS), which the explorer's league score reads, and the section 16
-aloof trait (ALOOF), which only the explorer's league lineup rule reads.
+Each trainer also records a home region (Kanto, Johto or Hoenn) from the
+section 14 lore table (HOME_REGION) and two opt-in traits (section 17),
+yes/no flags that default to no: traveller (TRAVELLERS), which the explorer's
+league score reads, and aloof (ALOOF), which only its league lineup rule
+reads.
 """
 from __future__ import annotations
 
@@ -157,14 +158,11 @@ GROWTH = {
 }
 # The Gym Leader duo: one entry fought as a double battle, league-ineligible.
 DUOS = {"Tate & Liza"}
-# Section 14 home regions and travel styles (lore, reviewable). A league is a
-# location: a trainer is at home when their home region is one of its location
-# regions (Indigo: Kanto and Johto; Hoenn: Hoenn); the Sevii Masters is a
-# neutral location, so everyone is at home. Away, a traveller pays a small
-# travel cost and a homebody a large one; the styles are also reserved for a
-# future overworld spawning rule.
+# Section 14 home regions (lore, reviewable). A league is a location: a
+# trainer is at home when their home region is one of its location regions
+# (Indigo: Kanto and Johto; Hoenn: Hoenn); the Sevii Masters is a neutral
+# location, so everyone is at home.
 HOME_REGIONS = ("Kanto", "Johto", "Hoenn")
-TRAVEL_STYLES = ("homebody", "traveller")
 HOME_REGION = {
     **{name: "Kanto" for name in ("Brock", "Misty", "Lt. Surge", "Erika", "Janine", "Sabrina", "Blaine",
                                   "Giovanni", "Blue", "Lorelei", "Bruno", "Agatha", "Lance")},
@@ -174,14 +172,18 @@ HOME_REGION = {
                                   "Tate & Liza", "Juan", "Sidney", "Phoebe", "Glacia", "Drake", "Wallace",
                                   "Steven")},
 }
+# Section 17 traveller trait (lore, reviewable; section 14 assignments): away,
+# a traveller pays a travel cost of 10 instead of the default 80. Also reserved
+# for a future overworld spawning rule. Everyone else is not a traveller.
 TRAVELLERS = {"Brock", "Misty", "Blue", "Lance", "Steven", "Wallace", "Will", "Karen", "Bruno", "Glacia",
               "Giovanni", "Koga", "Bugsy", "Brawly", "Drake"}
-# Section 16 aloof trait (lore, reviewable), independent of archetype and
-# travel style: an aloof trainer won't join a league whose field is well below
-# their level. Only the league lineup rule reads it. The Champions only grace
-# elite fields; Agatha is Oak's proud old rival; Glacia came to Hoenn seeking
-# worthy opponents; Clair is a proud dragon tamer; Sabrina is cold and
-# distant; Karen ("strong Pokémon, weak Pokémon") disdains weak fields.
+# Section 16 aloof trait (lore, reviewable), independent of archetype and the
+# traveller trait: an aloof trainer won't join a league whose base lineup is
+# well below their level. Only the league lineup rule reads it. The Champions
+# only grace elite leagues; Agatha is Oak's proud old rival; Glacia came to
+# Hoenn seeking worthy opponents; Clair is a proud dragon tamer; Sabrina is
+# cold and distant; Karen ("strong Pokémon, weak Pokémon") disdains weak
+# company.
 ALOOF = {"Lance", "Wallace", "Steven", "Agatha", "Glacia", "Clair", "Sabrina", "Karen"}
 # Section 9 shared evolution-level table: (predecessor, species, level, status).
 # The table covers only evolutions without a level in the game data (item,
@@ -542,12 +544,10 @@ def validate_growth(name, growth):
         raise ValueError(f"{name}: a Legend's peak TR must equal start TR")
 
 
-def validate_home_travel(name, home, travel):
-    """A home region is Kanto, Johto or Hoenn and a travel style is homebody or traveller."""
+def validate_home(name, home):
+    """A home region is Kanto, Johto or Hoenn."""
     if home not in HOME_REGIONS:
         raise ValueError(f"{name}: home region must be one of {', '.join(HOME_REGIONS)}")
-    if travel not in TRAVEL_STYLES:
-        raise ValueError(f"{name}: travel style must be one of {', '.join(TRAVEL_STYLES)}")
 
 
 def validate_aloof(aloof, catalog, duos):
@@ -1157,8 +1157,8 @@ def generate():
         growth = GROWTH[name]
         validate_growth(name, growth)
         start, archetype, peak = growth
-        home, travel = HOME_REGION[name], "traveller" if name in TRAVELLERS else "homebody"
-        validate_home_travel(name, home, travel)
+        home = HOME_REGION[name]
+        validate_home(name, home)
         gym = role.startswith("Gym Leader")
         if gym:
             validate_gym_start(name, growth)
@@ -1222,7 +1222,7 @@ def generate():
                          + " other roster slots have no item. Roster slots carry no moves: members draw them from the move pool."
                          + (" Fought as a double battle: both leaders send Pokémon from this one roster in order." if name in DUOS else ""))
         result.append({"id": slug(name), "name": name, "region": region, "role": role,
-                       "homeRegion": home, "travel": travel, "aloof": name in ALOOF,
+                       "homeRegion": home, "traveller": name in TRAVELLERS, "aloof": name in ALOOF,
                        "doubleBattle": double, "leagueEligible": not double,
                        "source": {"label": f"{family} local reference", "path": records[trainer]["source"], "trainerId": trainer, "note": note},
                        "referenceParty": [member(slot) for slot in reference_slots],

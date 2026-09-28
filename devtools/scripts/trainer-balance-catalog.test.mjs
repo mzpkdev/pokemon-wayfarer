@@ -155,7 +155,7 @@ test("the aloof trait follows the section 16 assignments and names only league-e
   assert.equal(validate(["Tate & Liza"]), "ALOOF lists league-ineligible duos: Tate & Liza")
 })
 
-test("home regions and travel styles follow the section 14 assignments", () => {
+test("home regions and the traveller trait follow the section 14 assignments", () => {
   const home = run("module.HOME_REGION")
   const travellers = run("sorted(module.TRAVELLERS)")
   const named = (region) => Object.keys(home).filter((name) => home[name] === region)
@@ -209,10 +209,9 @@ test("home regions and travel styles follow the section 14 assignments", () => {
       "Will",
     ],
   )
-  const validate = (value) => run("module.validate_home_travel('Fixture', *args)", value)
-  assert.equal(validate(["Johto", "traveller"]), null)
-  assert.equal(validate(["Sinnoh", "homebody"]), "Fixture: home region must be one of Kanto, Johto, Hoenn")
-  assert.equal(validate(["Kanto", "roamer"]), "Fixture: travel style must be one of homebody, traveller")
+  const validate = (value) => run("module.validate_home('Fixture', *args)", value)
+  assert.equal(validate(["Johto"]), null)
+  assert.equal(validate(["Sinnoh"]), "Fixture: home region must be one of Kanto, Johto, Hoenn")
 })
 
 test("a Legend's peak TR must equal its start TR", () => {

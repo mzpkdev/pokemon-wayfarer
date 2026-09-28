@@ -68,7 +68,6 @@ import type {
   RosterSlot,
   TrainerRecord,
   HomeRegion,
-  TravelStyle,
   WorldPoint,
 } from "./types.js"
 
@@ -94,7 +93,7 @@ const trainer = (
     archetype?: Archetype
     peakTR?: number
     homeRegion?: HomeRegion
-    travel?: TravelStyle
+    traveller?: boolean
     aloof?: boolean
   } = {},
 ): TrainerRecord => ({
@@ -102,7 +101,7 @@ const trainer = (
   name: id,
   region: "Kanto",
   homeRegion: growth.homeRegion ?? "Kanto",
-  travel: growth.travel ?? "homebody",
+  traveller: growth.traveller ?? false,
   aloof: growth.aloof ?? false,
   role: "Gym Leader",
   doubleBattle: false,
@@ -1449,7 +1448,7 @@ describe("placeholder balance targets", () => {
 })
 
 describe("league lineups", () => {
-  const home = { homeRegion: "Kanto", travel: "homebody" } as const
+  const home = { homeRegion: "Kanto", traveller: false } as const
   it("scores willingness as 100 - travel cost - fatigue, at least 5", () => {
     // At home: no travel cost.
     expect(willingness("Indigo", home, false)).toEqual({
@@ -1458,18 +1457,16 @@ describe("league lineups", () => {
       fatigue: 0,
       score: 100,
     })
-    expect(willingness("Indigo", { homeRegion: "Johto", travel: "homebody" }, false).score).toBe(
-      100,
-    )
-    expect(willingness("Hoenn", { homeRegion: "Hoenn", travel: "homebody" }, false).score).toBe(100)
-    // Away: a homebody pays 80, a traveller 10.
+    expect(willingness("Indigo", { homeRegion: "Johto", traveller: false }, false).score).toBe(100)
+    expect(willingness("Hoenn", { homeRegion: "Hoenn", traveller: false }, false).score).toBe(100)
+    // Away: a traveller pays 10, anyone else 80.
     expect(willingness("Hoenn", home, false)).toEqual({
       home: false,
       travelCost: 80,
       fatigue: 0,
       score: 20,
     })
-    expect(willingness("Indigo", { homeRegion: "Hoenn", travel: "traveller" }, false)).toEqual({
+    expect(willingness("Indigo", { homeRegion: "Hoenn", traveller: true }, false)).toEqual({
       home: false,
       travelCost: 10,
       fatigue: 0,
@@ -1482,8 +1479,8 @@ describe("league lineups", () => {
       fatigue: 50,
       score: 50,
     })
-    expect(willingness("Hoenn", { homeRegion: "Johto", travel: "traveller" }, true).score).toBe(40)
-    // The floor: an away, fatigued homebody would be -30 but keeps 5.
+    expect(willingness("Hoenn", { homeRegion: "Johto", traveller: true }, true).score).toBe(40)
+    // The floor: an away, fatigued non-traveller would be -30 but keeps 5.
     expect(willingness("Hoenn", home, true)).toEqual({
       home: false,
       travelCost: 80,
@@ -1494,14 +1491,14 @@ describe("league lineups", () => {
 
   it("treats the Sevii Masters as a neutral location: everyone is at home", () => {
     for (const homeRegion of ["Kanto", "Johto", "Hoenn"] as const)
-      for (const travel of ["homebody", "traveller"] as const) {
-        expect(willingness("Sevii Masters", { homeRegion, travel }, false)).toEqual({
+      for (const traveller of [false, true]) {
+        expect(willingness("Sevii Masters", { homeRegion, traveller }, false)).toEqual({
           home: true,
           travelCost: 0,
           fatigue: 0,
           score: 100,
         })
-        expect(willingness("Sevii Masters", { homeRegion, travel }, true).score).toBe(50)
+        expect(willingness("Sevii Masters", { homeRegion, traveller }, true).score).toBe(50)
       }
   })
 
@@ -1518,7 +1515,7 @@ describe("league lineups", () => {
     const records = [
       { ...trainer("duo", 150), leagueEligible: false, doubleBattle: true },
       trainer("a", 80),
-      trainer("b", 90, six, { homeRegion: "Hoenn", travel: "traveller" }),
+      trainer("b", 90, six, { homeRegion: "Hoenn", traveller: true }),
       trainer("c", 200, six, { homeRegion: "Hoenn" }),
       trainer("d", 60),
       trainer("e", 60, six, { homeRegion: "Johto" }),
@@ -1539,7 +1536,7 @@ describe("league lineups", () => {
       ["d", 60],
       ["e", 60],
       ["f", 60],
-      // The strongest trainer, a homebody far from home, scores floor(200 × 20 / 100).
+      // The strongest trainer, not a traveller and far from home, scores floor(200 × 20 / 100).
       ["c", 40],
     ])
     expect(ranking.entrants.map((entrant) => entrant.rank)).toEqual([1, 2, 3, 4, 5, 6, 7])
@@ -1641,12 +1638,13 @@ describe("league lineups", () => {
       }
   })
 
-  it("reads home region and travel style from the experiment", () => {
+  it("reads home region and the traveller trait from the experiment", () => {
     const edited = createExperiment(catalog)
-    edited.trainers.norman!.travel = "traveller"
+    expect(edited.trainers.norman!.traveller).toBe(false)
+    edited.trainers.norman!.traveller = true
     const candidates = leagueCandidates(catalog, edited, 80)
     const norman = candidates.find((entry) => entry.trainer.id === "norman")!
-    expect(norman.travel).toBe("traveller")
+    expect(norman.traveller).toBe(true)
     const ranked = rankLeague("Indigo", 80, candidates, new Set()).entrants.find(
       (entry) => entry.trainer.id === "norman",
     )!
@@ -1693,19 +1691,19 @@ describe("league lineups", () => {
     })
     const rank = (records: TrainerRecord[], previous: string[] = [], league = "Indigo" as const) =>
       rankLeague(league, 0, leagueCandidates(records, levelled(records), 0), new Set(previous))
-    const field = ["a", "b", "c", "d", "e"].map((id) => trainer(id, 50))
+    const baseLineup = ["a", "b", "c", "d", "e"].map((id) => trainer(id, 50))
     const ids = (entrants: { trainer: TrainerRecord }[]) =>
       entrants.map((entrant) => entrant.trainer.id)
 
-    it("joins at exactly the field level + the margin and skips one level above it", () => {
+    it("joins at exactly the base lineup level + the margin and skips one level above it", () => {
       expect(ALOOF_MARGIN).toBe(10)
       const ranking = rank([
-        ...field,
+        ...baseLineup,
         trainer("at", 60, six, { aloof: true }),
         trainer("over", 61, six, { aloof: true }),
       ])
-      // The field: the top five non-aloof by league score, strongest team level Lv 51.
-      expect(ranking.fieldLevel).toBe(51)
+      // The base lineup: the top five non-aloof by league score, strongest team level Lv 51.
+      expect(ranking.baseLineupLevel).toBe(51)
       const at = ranking.entrants.find((entrant) => entrant.trainer.id === "at")!
       const over = ranking.entrants.find((entrant) => entrant.trainer.id === "over")!
       expect(at).toMatchObject({ teamLevel: 61, joins: true, rank: 1, inLineup: true })
@@ -1715,38 +1713,60 @@ describe("league lineups", () => {
       expect(ids(ranking.lineup)).toEqual(["a", "b", "c", "d", "at"])
     })
 
-    it("compares the aloof with the non-aloof field only, never with each other", () => {
+    it("compares the aloof with the base lineup only, never with each other", () => {
       const ranking = rank([
-        ...field,
+        ...baseLineup,
         trainer("x", 60, six, { aloof: true }),
         trainer("w", 70, six, { aloof: true }),
       ])
-      // x (Lv 61) outscores the field but is aloof, so it does not raise the field level; w (Lv 71)
-      // would pass against x (61 + 10) but is judged against the field (51 + 10) and skips.
-      expect(ranking.fieldLevel).toBe(51)
+      // x (Lv 61) outscores the base lineup but is aloof, so it does not raise the base lineup level;
+      // w (Lv 71) would pass against x (61 + 10) but is judged against the base lineup (51 + 10) and
+      // skips.
+      expect(ranking.baseLineupLevel).toBe(51)
       expect(ranking.entrants.find((entrant) => entrant.trainer.id === "x")!.joins).toBe(true)
       expect(ranking.entrants.find((entrant) => entrant.trainer.id === "w")!.joins).toBe(false)
-      // A non-aloof trainer is never judged, however far above the field.
-      const strong = rank([...field, trainer("strong", 99)])
+      // A non-aloof trainer is never judged, however far above the base lineup.
+      const strong = rank([...baseLineup, trainer("strong", 99)])
       expect(strong.entrants.find((entrant) => entrant.trainer.id === "strong")).toMatchObject({
         joins: true,
         rank: 1,
       })
     })
 
-    it("still applies fatigue: to the field that sets the level and to the aloof trainer's score", () => {
+    it("skips every aloof trainer when there is no base lineup", () => {
+      // Only aloof trainers are eligible: no base lineup, so no base lineup level to join against.
+      const ranking = rank([
+        trainer("x", 50, six, { aloof: true }),
+        trainer("y", 10, six, { aloof: true }),
+      ])
+      expect(ranking.baseLineupLevel).toBeNull()
+      expect(ranking.entrants).toHaveLength(2)
+      for (const entrant of ranking.entrants)
+        expect(entrant).toMatchObject({ joins: false, rank: null, inLineup: false })
+      expect(ranking.lineup).toEqual([])
+      // One non-aloof trainer makes a base lineup of one, and the aloof are judged against it.
+      const one = rank([
+        trainer("a", 45),
+        trainer("x", 50, six, { aloof: true }),
+        trainer("y", 60, six, { aloof: true }),
+      ])
+      expect(one.baseLineupLevel).toBe(46)
+      expect(ids(one.lineup)).toEqual(["a", "x"])
+    })
+
+    it("still applies fatigue: to the base lineup that sets the level and to the aloof trainer's score", () => {
       const records = [
         trainer("a", 80),
         ...["b", "c", "d", "e", "f"].map((id) => trainer(id, 50)),
         trainer("x", 88, six, { aloof: true }),
       ]
-      // Fresh, a (Lv 81) is in the field, so x (Lv 89) joins.
+      // Fresh, a (Lv 81) is in the base lineup, so x (Lv 89) joins.
       const fresh = rank(records)
-      expect(fresh.fieldLevel).toBe(81)
+      expect(fresh.baseLineupLevel).toBe(81)
       expect(fresh.entrants.find((entrant) => entrant.trainer.id === "x")!.joins).toBe(true)
-      // a fatigued scores 40 and leaves the field's top five: the field level drops and x skips.
+      // a fatigued scores 40 and leaves the base lineup: the base lineup level drops and x skips.
       const tired = rank(records, ["a"])
-      expect(tired.fieldLevel).toBe(51)
+      expect(tired.baseLineupLevel).toBe(51)
       expect(tired.entrants.find((entrant) => entrant.trainer.id === "x")!.joins).toBe(false)
       // x fatigued still joins (team level, not league score, decides) but scores 44 and drops out.
       const tiredAloof = rank(records, ["x"])
@@ -1762,7 +1782,7 @@ describe("league lineups", () => {
       const [indigo, masters, hoenn] = leagueSequence(catalog, defaults, leagueWorlds())
       const lance = (ranking: typeof indigo) =>
         ranking!.entrants.find((entrant) => entrant.trainer.id === "lance")!
-      // A Legend at TR 200 (Lv 100) is far above the Indigo and Masters fields.
+      // A Legend at TR 200 (Lv 100) is far above the Indigo and Masters base lineups.
       expect(lance(indigo)).toMatchObject({
         tr: 200,
         teamLevel: 100,
@@ -1774,14 +1794,14 @@ describe("league lineups", () => {
       expect(hoenn!.lineup.at(-1)!.trainer.id).toBe("lance")
     })
 
-    it("never fields an aloof trainer more than the margin above the field", () => {
+    it("never fields an aloof trainer more than the margin above the base lineup level", () => {
       for (const at of [null, 0, 40, 80, 97, 120, 160, 200])
         for (const ranking of leagueSequence(catalog, defaults, leagueWorlds(at))) {
-          expect(ranking.fieldLevel).not.toBeNull()
+          expect(ranking.baseLineupLevel).not.toBeNull()
           for (const entrant of ranking.entrants.filter((row) => row.aloof))
-            expect(entrant.joins).toBe(entrant.teamLevel <= ranking.fieldLevel! + ALOOF_MARGIN)
+            expect(entrant.joins).toBe(entrant.teamLevel <= ranking.baseLineupLevel! + ALOOF_MARGIN)
           for (const entrant of ranking.lineup.filter((row) => row.aloof))
-            expect(entrant.teamLevel - ranking.fieldLevel!).toBeLessThanOrEqual(ALOOF_MARGIN)
+            expect(entrant.teamLevel - ranking.baseLineupLevel!).toBeLessThanOrEqual(ALOOF_MARGIN)
         }
     })
   })
@@ -1874,7 +1894,7 @@ describe("catalog", () => {
       expect(trainerRating(defaults, defaults.trainers.lance!, world)).toBe(200)
   })
 
-  it("assigns the §16 aloof trait, independent of archetype and travel style", () => {
+  it("assigns the §16 aloof trait, independent of archetype and the traveller trait", () => {
     expect(catalog.filter((record) => record.aloof).map((record) => record.name)).toEqual([
       "Sabrina",
       "Agatha",
@@ -1920,10 +1940,10 @@ describe("catalog", () => {
     ])
   })
 
-  it("assigns the §14 home regions and travel styles", () => {
+  it("assigns the §14 home regions and the §17 traveller trait", () => {
     const named = (test: (record: TrainerRecord) => boolean) =>
       catalog.filter(test).map((record) => record.name)
-    expect(named((record) => record.travel === "traveller")).toEqual([
+    expect(named((record) => record.traveller)).toEqual([
       "Brock",
       "Misty",
       "Giovanni",
@@ -1957,7 +1977,8 @@ describe("catalog", () => {
     expect(named((record) => record.homeRegion === "Hoenn")).toHaveLength(14)
     for (const record of catalog) {
       expect(defaults.trainers[record.id]!.homeRegion).toBe(record.homeRegion)
-      expect(defaults.trainers[record.id]!.travel).toBe(record.travel)
+      expect(typeof record.traveller).toBe("boolean")
+      expect(defaults.trainers[record.id]!.traveller).toBe(record.traveller)
     }
   })
 
@@ -2154,6 +2175,16 @@ describe("experiment import", () => {
     expect(experiment.archetypes.steady[1]).toEqual([40, 25])
   })
 
+  it("rejects version 15, which saved a travel style instead of the traveller trait", () => {
+    const v15 = base()
+    v15.version = 15
+    v15.trainers.fixture.travel = v15.trainers.fixture.traveller ? "traveller" : "homebody"
+    delete v15.trainers.fixture.traveller
+    expect(() => validateExperiment(v15, records)).toThrow(
+      "Version 15 experiments save a travel style instead of the traveller trait",
+    )
+  })
+
   it("rejects version 14, which had no aloof trait", () => {
     const v14 = base()
     v14.version = 14
@@ -2183,30 +2214,37 @@ describe("experiment import", () => {
     )
   })
 
-  it("rejects version 12, which had no home regions or travel styles", () => {
+  it("rejects version 12, which had no home regions or traveller trait", () => {
     const v12 = base()
     v12.version = 12
     delete v12.trainers.fixture.homeRegion
-    delete v12.trainers.fixture.travel
+    delete v12.trainers.fixture.traveller
     expect(() => validateExperiment(v12, records)).toThrow(
-      "Version 12 experiments have no home regions or travel styles",
+      "Version 12 experiments have no home regions or traveller trait",
     )
   })
 
-  it("requires a valid home region and travel style per trainer", () => {
+  it("requires a valid home region and a traveller trait of true or false per trainer", () => {
     const missing = base()
-    delete missing.trainers.fixture.travel
+    delete missing.trainers.fixture.traveller
     expect(() => validateExperiment(missing, records)).toThrow("missing or unknown fields")
+    const legacy = base()
+    delete legacy.trainers.fixture.traveller
+    legacy.trainers.fixture.travel = "traveller"
+    expect(() => validateExperiment(legacy, records)).toThrow("missing or unknown fields")
     const region = base()
     region.trainers.fixture.homeRegion = "Sinnoh"
     expect(() => validateExperiment(region, records)).toThrow(
       "fixture.homeRegion must be one of Kanto, Johto, Hoenn",
     )
-    const travel = base()
-    travel.trainers.fixture.travel = "roamer"
-    expect(() => validateExperiment(travel, records)).toThrow(
-      "fixture.travel must be one of homebody, traveller",
+    const wrong = base()
+    wrong.trainers.fixture.traveller = "yes"
+    expect(() => validateExperiment(wrong, records)).toThrow(
+      "fixture.traveller must be true or false",
     )
+    const traveller = base()
+    traveller.trainers.fixture.traveller = true
+    expect(validateExperiment(traveller, records).trainers.fixture!.traveller).toBe(true)
   })
 
   it("rejects version 11, which authored moves per roster slot", () => {

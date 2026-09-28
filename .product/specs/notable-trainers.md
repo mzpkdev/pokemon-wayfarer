@@ -7,8 +7,8 @@ Design status: v0 contract. The model is accepted. Rosters are approved
 content (draft v1: species, order, and aces); their battle content (move
 pools, and items where a slot doesn't match its source party) is still
 placeholder. Growth
-values (start TR, archetype, peak TR), home regions, travel styles, the aloof
-trait, and every anchor marked placeholder are catalog content under review.
+values (start TR, archetype, peak TR), home regions, trait assignments, and
+every anchor marked placeholder are catalog content under review.
 
 **Catalog as design reference.** "Catalog" in this spec means the
 [balance explorer](../../devtools/ui/README.md#trainer-balance-explorer)'s
@@ -19,8 +19,8 @@ in game code, and the validation rules here apply to that code.
 ## Ownership and scope
 
 This specification is the single owner of the v0 notable trainer model: the
-notable trainer inventory, home regions, travel styles, willingness, and the
-aloof trait, the
+notable trainer inventory, home regions, willingness, the traits (traveller
+and aloof), the
 rule that routes every battle with a notable character to their Trainer Rating
 (TR) and roster, trainer TR and its growth with world progress, the
 archetypes, the v0 trainer scalers, rosters, move pools, team resolution, the
@@ -75,15 +75,14 @@ encounter always uses this model.
 
 ## Home region and travel
 
-Each entry authors a **home region** (`kanto`, `johto`, or `hoenn`) and a
-**travel style**: `homebody` or `traveller`. Assignments follow lore and are
-reviewable content:
+Each entry authors a **home region** (`kanto`, `johto`, or `hoenn`).
+Assignments follow lore and are reviewable content:
 
-| Home region | Travellers | Homebodies |
-| --- | --- | --- |
-| Kanto | Brock, Misty, Giovanni, Blue, Bruno, Lance | Lt. Surge, Erika, Janine, Sabrina, Blaine, Lorelei, Agatha |
-| Johto | Bugsy, Will, Koga, Karen | Falkner, Whitney, Morty, Chuck, Jasmine, Pryce, Clair |
-| Hoenn | Brawly, Glacia, Drake, Wallace, Steven | Roxanne, Wattson, Flannery, Norman, Winona, Tate & Liza, Juan, Sidney, Phoebe |
+| Home region | Trainers |
+| --- | --- |
+| Kanto | Brock, Misty, Lt. Surge, Erika, Janine, Sabrina, Blaine, Giovanni, Lorelei, Bruno, Agatha, Lance, Blue |
+| Johto | Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce, Clair, Will, Koga, Karen |
+| Hoenn | Roxanne, Brawly, Wattson, Flannery, Norman, Winona, Tate & Liza, Juan, Sidney, Phoebe, Glacia, Drake, Wallace, Steven |
 
 A **location** is anywhere a notable trainer can appear; in v0 the only
 locations are the leagues. Each location has a **location region** (one or
@@ -92,7 +91,7 @@ more regions), or is a **neutral location**, home to everyone. A trainer is
 location is neutral, and **away** otherwise. For any trainer and location:
 
 ```text
-travelCost  = 0 at home; away: homebody 80, traveller 10
+travelCost  = 0 at home; away: 10 for a traveller, otherwise 80
 willingness = max(5, 100 - travelCost - fatigue)
 ```
 
@@ -100,24 +99,43 @@ willingness = max(5, 100 - travelCost - fatigue)
 in v0 only leagues do. [Leagues](leagues.md#selection-and-order) owns the
 league location regions, fatigue, and the league score that reads willingness.
 
-## Aloof
+## Traits
 
-Each entry authors an **aloof** trait (`true` or `false`), independent of
-archetype and travel style: an aloof trainer won't join a league whose field
-is well below their level. The trait only marks the trainer; in v0 only the
-[league lineup rule](leagues.md#selection-and-order) reads it, comparing the
-trainer's team level with the league's field level. Assignments follow lore
-(each a strong trainer with a proud or distant persona) and are reviewable
-content:
+A **trait** is an opt-in yes/no behaviour of a notable trainer, authored per
+entry as a boolean that defaults to `false`. Traits are independent of each
+other and of the archetype. v0 has two traits, **traveller** and **aloof**;
+in v0 only the [league lineup rule](leagues.md#selection-and-order) reads
+them. Assignments follow lore and are reviewable content.
+
+### Traveller
+
+`traveller: true` lowers the away travel cost from 80 to 10
+([travel cost](#home-region-and-travel)). A trainer without the trait stays
+close to home. The travellers:
+
+| Home region | Travellers |
+| --- | --- |
+| Kanto | Brock, Misty, Giovanni, Blue, Bruno, Lance |
+| Johto | Bugsy, Will, Koga, Karen |
+| Hoenn | Brawly, Glacia, Drake, Wallace, Steven |
+
+Everyone else is not a traveller.
+
+### Aloof
+
+`aloof: true` marks a trainer who won't join a league whose base lineup is
+well below their level: the league lineup rule compares the trainer's team
+level with the league's **base lineup level**. The aloof trainers (each a
+strong trainer with a proud or distant persona):
 
 | Aloof trainer | Reason |
 | --- | --- |
-| Lance, Wallace, Steven | Champions only grace elite fields. |
+| Lance, Wallace, Steven | Champions only grace elite leagues. |
 | Agatha | Oak's proud old rival. |
 | Glacia | Came to Hoenn seeking worthy opponents. |
 | Clair | A proud dragon tamer. |
 | Sabrina | Cold and distant. |
-| Karen | "Strong Pokémon, weak Pokémon": disdains weak fields. |
+| Karen | "Strong Pokémon, weak Pokémon": disdains weak company. |
 
 Everyone else is not aloof. The Tate & Liza duo is never aloof, since leagues
 are singles only.
@@ -456,15 +474,17 @@ TR, another trainer, or a random team.
   non-decreasing; Burst is a step scaler and every other archetype is
   interpolated.
 - Catalog: the inventory holds exactly the 38 v0 entries (37 characters and
-  the Tate & Liza duo); each has one roster, one home region, one travel
-  style, one aloof trait, and valid growth values
+  the Tate & Liza duo); each has one roster, one home region, a boolean
+  `traveller` and `aloof` trait, and valid growth values
   (non-negative integers, start TR ≤ peak TR, and peak TR = start TR for a
   Legend); no Gym Leader is a Legend; every enrolled encounter ID maps to exactly one `characterId`.
 - Aloof: the aloof trait is `true` exactly for the trainers in the
   [aloof table](#aloof), each league-eligible.
-- Travel: home regions and travel styles match the assignments table; for
-  every trainer, willingness is 100 at home, 90 (traveller) or 20 (homebody)
-  away, and never below 5 with fatigue added.
+- Traveller: home regions match the [home region table](#home-region-and-travel)
+  and the traveller trait is `true` exactly for the trainers in the
+  [traveller table](#traveller); for every trainer, willingness is 100 at
+  home, 90 (traveller) or 20 (not a traveller) away, and never below 5 with
+  fatigue added.
 - Growth, for every trainer at world progress 0–200 and a very large value:
   TR is non-decreasing in world progress and never exceeds peak TR; a
   trainer equals start TR at world progress 0 and peak TR from world progress
@@ -531,7 +551,7 @@ implementations stay active until then.
 
 - Notable trainer status for more characters, such as Red.
 - Overworld locations for notable trainers, read through willingness:
-  homebodies stay in their home region and travellers roam.
+  travellers roam and everyone else stays in their home region.
 - An overworld use of the aloof trait, such as aloof trainers keeping away
   from weak areas.
 - Difficulty signposting: in-world hints about who is too strong (Gym guides,

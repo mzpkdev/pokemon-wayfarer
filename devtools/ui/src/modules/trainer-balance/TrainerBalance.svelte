@@ -15,7 +15,7 @@
     ROSTER_SIZE,
     AWAY_COST,
     LEAGUE_BADGES,
-    TRAVEL_STYLES,
+    TRAVELLER_AWAY_COST,
     WILLINGNESS_FLOOR,
     archetypeName,
     badgeMatchText,
@@ -435,29 +435,31 @@
         </form>
       {/key}
       {#key lab.settings}
-        <div class="growth-form" data-testid="home-travel-editor">
+        <div class="growth-form" data-testid="home-trait-editor">
           <label
             >Home region<select
               aria-label="Home region"
               value={lab.settings.homeRegion}
-              onchange={(event) => lab.setHomeTravel("homeRegion", event.currentTarget.value)}
+              onchange={(event) => lab.setHomeRegion(event.currentTarget.value)}
               >{#each HOME_REGIONS as region}<option>{region}</option>{/each}</select
             ></label
-          ><label
-            >Travel style<select
-              aria-label="Travel style"
-              value={lab.settings.travel}
-              onchange={(event) => lab.setHomeTravel("travel", event.currentTarget.value)}
-              >{#each TRAVEL_STYLES as style}<option>{style}</option>{/each}</select
+          ><label class="trait-toggle"
+            ><input
+              type="checkbox"
+              aria-label="Traveller"
+              checked={lab.settings.traveller}
+              onchange={(event) => lab.setTraveller(event.currentTarget.checked)}
+            />Traveller<span class="hint"
+              >away travel cost {TRAVELLER_AWAY_COST} instead of {AWAY_COST}</span
             ></label
-          ><label class="aloof-toggle"
+          ><label class="trait-toggle"
             ><input
               type="checkbox"
               aria-label="Aloof"
               checked={lab.settings.aloof}
               onchange={(event) => lab.setAloof(event.currentTarget.checked)}
             />Aloof<span class="hint"
-              >joins a league only when their team level is at most the field level + {ALOOF_MARGIN}</span
+              >joins a league only when their team level is at most the base lineup level + {ALOOF_MARGIN}</span
             ></label
           >
         </div>
@@ -935,12 +937,14 @@
       Each league is a location. Entering one gives every league-eligible trainer (singles only: no
       Red, no Tate & Liza) a willingness of 100 − travel cost − fatigue, at least {WILLINGNESS_FLOOR}.
       Travel cost is 0 at home (a trainer whose home region is a location region, or anyone at the
-      neutral Sevii Masters); away it is {AWAY_COST.homebody} for a homebody and {AWAY_COST.traveller}
-      for a traveller. Fatigue is {FATIGUE} for a trainer in the lineup of the league entered just before.
-      The league score is floor(TR × willingness / 100). The top {LINEUP_SIZE} trainers who are not aloof
-      set the field level (their strongest team level); an aloof trainer joins only when their team level
-      is at most the field level + {ALOOF_MARGIN}, and aloof trainers are never compared with each
-      other. The top {LINEUP_SIZE} of everyone who joins (ties in catalog order, standing in for characterId)
+      neutral Sevii Masters); away it is {TRAVELLER_AWAY_COST} for a trainer with the traveller trait
+      and
+      {AWAY_COST} for everyone else. Fatigue is {FATIGUE} for a trainer in the lineup of the league entered
+      just before. The league score is floor(TR × willingness / 100). The top {LINEUP_SIZE} trainers who
+      are not aloof are the base lineup, and its strongest team level is the base lineup level; an aloof
+      trainer joins only when their team level is at most the base lineup level + {ALOOF_MARGIN},
+      aloof trainers are never compared with each other, and with no base lineup every aloof trainer
+      skips. The top {LINEUP_SIZE} of everyone who joins (ties in catalog order, standing in for characterId)
       make the lineup, which fights by ascending TR, strongest last. There is no randomness; the ROM locks
       the lineup until won.
     </p>
@@ -949,7 +953,7 @@
         <h3>
           {entry.league}
           <span class="muted"
-            >world progress {entry.world} · {locationRegions(entry.league)} · field Lv {entry.fieldLevel ??
+            >world progress {entry.world} · {locationRegions(entry.league)} · base lineup Lv {entry.baseLineupLevel ??
               "—"}</span
           >
         </h3>
@@ -959,7 +963,7 @@
               class:skips={!entrant.joins}
               data-testid={`aloof-${slug(entry.league)}-${entrant.trainer.id}`}
             >
-              {entrant.trainer.name} aloof: team Lv {entrant.teamLevel} vs field Lv {entry.fieldLevel ??
+              {entrant.trainer.name} aloof: team Lv {entrant.teamLevel} vs base lineup Lv {entry.baseLineupLevel ??
                 "—"} + {ALOOF_MARGIN} → {entrant.joins ? "joins" : "skips"}
             </li>
           {/each}
@@ -988,7 +992,7 @@
             <thead
               ><tr
                 ><th>Rank</th><th>Trainer</th><th>TR</th><th>Team level</th><th>Home region</th><th
-                  >Travel style</th
+                  >Traveller</th
                 ><th>Location</th><th>Travel cost</th><th>Fatigue</th><th>Willingness</th><th
                   >League score</th
                 ><th>Aloof</th><th>Lineup</th></tr
@@ -1003,7 +1007,7 @@
                   ><td class="numeric">{entrant.rank ?? "—"}</td><td>{entrant.trainer.name}</td><td
                     class="numeric">{entrant.tr}</td
                   ><td class="numeric">{entrant.teamLevel}</td><td>{entrant.homeRegion}</td><td
-                    >{entrant.travel}</td
+                    >{entrant.traveller ? "traveller" : ""}</td
                   ><td>{entrant.willingness.home ? "at home" : "away"}</td><td class="numeric"
                     >{entrant.willingness.travelCost}</td
                   ><td class="numeric">{entrant.willingness.fatigue}</td><td class="numeric"
@@ -1107,8 +1111,8 @@
       </form>
     {/key}
     <p class="hint">
-      Catalog growth, rosters, home regions, travel styles and aloof traits are placeholders. Seeded
-      archetypes are out of scope for v0. This is separate from the scaler the ROM uses today.
+      Catalog growth, rosters, home regions and traits are placeholders. Seeded archetypes are out
+      of scope for v0. This is separate from the scaler the ROM uses today.
     </p>
   </details>
 </section>
@@ -2009,7 +2013,7 @@
   .growth-form button {
     padding: 5px 10px;
   }
-  .growth-form .aloof-toggle input {
+  .growth-form .trait-toggle input {
     width: auto;
     padding: 0;
     margin: 0;

@@ -5,7 +5,6 @@ import {
   EXPERIMENT_VERSION,
   HOME_REGIONS,
   LEVEL_OFFSET,
-  TRAVEL_STYLES,
   MAX_ACES,
   MAX_ANCHORS,
   MAX_POOL_ENTRIES,
@@ -44,7 +43,6 @@ import type {
   ScalerKind,
   TrainerRecord,
   TrainerSettings,
-  TravelStyle,
 } from "./types.js"
 
 const data = catalogData as Catalog
@@ -87,7 +85,7 @@ const anchorsOf = (experiment: Experiment, id: ScalerId): Anchor[] =>
  */
 export const scalerKind = (id: ScalerId): ScalerKind =>
   isGrowth(id) ? ARCHETYPE_KIND[id] : "interpolated"
-const storageKey = "wayfarer-trainer-balance-v15"
+const storageKey = "wayfarer-trainer-balance-v16"
 /** Where the leagues are entered: each at its own badge point (8 / 16 / 24), or all at the player TR. */
 export type LeagueEntryPoint = "badges" | "player"
 /** The chart runs across player TR 0 to at least this. */
@@ -362,19 +360,23 @@ export class BalanceLab {
     this.#_persist()
   }
 
-  /** Sets the selected trainer's home region or travel style. */
-  setHomeTravel = (field: "homeRegion" | "travel", value: string): void =>
-    this.#_edit("Could not change the home region or travel style.", (next) => {
+  /** Sets the selected trainer's home region. */
+  setHomeRegion = (value: string): void =>
+    this.#_edit("Could not change the home region.", (next) => {
       const settings = next.trainers[this.selectedId]
       if (!settings) throw new Error("Unknown selected trainer.")
-      if (field === "homeRegion") {
-        if (!HOME_REGIONS.includes(value as HomeRegion)) throw new Error("Unknown home region.")
-        settings.homeRegion = value as HomeRegion
-        return `${this.#_name(this.selectedId)}’s home region is now ${value}.`
-      }
-      if (!TRAVEL_STYLES.includes(value as TravelStyle)) throw new Error("Unknown travel style.")
-      settings.travel = value as TravelStyle
-      return `${this.#_name(this.selectedId)} is now a ${value}.`
+      if (!HOME_REGIONS.includes(value as HomeRegion)) throw new Error("Unknown home region.")
+      settings.homeRegion = value as HomeRegion
+      return `${this.#_name(this.selectedId)}’s home region is now ${value}.`
+    })
+
+  /** Sets whether the selected trainer is a traveller. */
+  setTraveller = (traveller: boolean): void =>
+    this.#_edit("Could not change the traveller trait.", (next) => {
+      const settings = next.trainers[this.selectedId]
+      if (!settings) throw new Error("Unknown selected trainer.")
+      settings.traveller = traveller
+      return `${this.#_name(this.selectedId)} is now ${traveller ? "a traveller" : "not a traveller"}.`
     })
 
   /** Sets whether the selected trainer is aloof. */
@@ -573,7 +575,7 @@ export class BalanceLab {
   reset = (): void => {
     this.#_accept(
       createExperiment(catalog, learnsets.moves),
-      "Restored the catalog growth, rosters, move pools, home regions, travel styles, aloof traits and scalers.",
+      "Restored the catalog growth, rosters, move pools, home regions, traits and scalers.",
     )
   }
 
@@ -582,7 +584,7 @@ export class BalanceLab {
       const defaults = createExperiment(catalog, learnsets.moves).trainers[this.selectedId]
       if (!defaults) throw new Error("Unknown selected trainer.")
       next.trainers[this.selectedId] = defaults
-      return `Restored ${this.selected.trainer.name}’s catalog growth, roster, move pool, home region, travel style and aloof trait. Other trainers and the scalers are unchanged.`
+      return `Restored ${this.selected.trainer.name}’s catalog growth, roster, move pool, home region and traits. Other trainers and the scalers are unchanged.`
     })
 
   exportText = (): string =>

@@ -130,7 +130,9 @@ changes yours.
 - **Locked lineup:** the lineup kept from when you enter a league until you win
   it.
 - **Home region:** a notable trainer's region (Kanto, Johto, or Hoenn).
-- **Travel style:** homebody or traveller.
+- **Trait:** an opt-in yes/no behaviour of a notable trainer; every trait
+  defaults to no. v0 has two: traveller and aloof.
+- **Traveller:** a trait; a traveller pays a small travel cost away from home.
 - **Location:** anywhere a notable trainer can appear; a league is a location
   (overworld spots later).
 - **Location region:** the region or regions a location belongs to (Indigo:
@@ -138,15 +140,16 @@ changes yours.
 - **Neutral location:** a location that is home to everyone (Sevii Masters).
 - **At home / away:** at home when the location is in the trainer's home
   region or neutral; away otherwise.
-- **Travel cost:** 0 at home; away, 80 for a homebody or 10 for a traveller.
+- **Travel cost:** 0 at home; away, 10 for a traveller or 80 otherwise.
 - **Fatigue:** 50 if the trainer was in the lineup of the last league the
   player entered.
 - **Willingness:** max(5, 100 − travel cost − fatigue).
-- **Aloof:** a notable trainer who won't join a league whose field is well
-  below their level.
-- **Field level:** the highest team level among a league's five best
-  non-aloof trainers by league score; an aloof trainer joins only if their
-  team level is at most the field level + 10.
+- **Aloof:** a trait; an aloof trainer won't join a league whose base lineup
+  is well below their level: they join only if their team level is at most
+  the base lineup level + 10, and skip when there is no base lineup.
+- **Base lineup:** a league's five best non-aloof trainers by league score,
+  ranked before any aloof trainer is considered.
+- **Base lineup level:** the highest team level in the base lineup.
 - **League score:** floor(TR × willingness / 100); a league's lineup is the
   five highest among those who join, ties by ascending characterId, locked
   until won.
