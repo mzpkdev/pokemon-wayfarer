@@ -20,6 +20,7 @@ import {
   NO_LEARNSETS,
   PLAY_STYLES,
   PLAY_STYLE_INFO,
+  TEAM_SIZE_KIND,
   WORLD_PROGRESS_CHECKPOINTS,
   aceProtection,
   aiSkillTier,
@@ -30,6 +31,7 @@ import {
   buildTeam,
   createExperiment,
   defaultMoveset,
+  doublesPartners,
   dormantReasonText,
   evolutionIndex,
   evolutionStatus,
@@ -48,6 +50,10 @@ import {
   qualifies,
   reigningChampions,
   simulateInvitations,
+  startInvitationClock,
+  observeDay,
+  placeCall,
+  resolveInvitation,
   learnsetIndex,
   learnsetOf,
   levelCap,
@@ -84,6 +90,7 @@ import type {
   RosterSlot,
   TrainerRecord,
   HomeRegion,
+  League,
   PlayStyle,
   WorldPoint,
 } from "./types.js"
@@ -234,13 +241,40 @@ describe("scalers", () => {
   })
 
   it("steps team size: 0–10 -> 1, 11–28 -> 2, 29–43 -> 3, 44–56 -> 4, 57–70 -> 5, 71+ -> 6", () => {
-    const sizes = (trs: number[]) => trs.map((tr) => scale(DEFAULT_TEAM_SIZE, tr))
+    // A step scaler with an anchor at each step's start.
+    expect(TEAM_SIZE_KIND).toBe("step")
+    expect(DEFAULT_TEAM_SIZE).toEqual([
+      [0, 1],
+      [11, 2],
+      [29, 3],
+      [44, 4],
+      [57, 5],
+      [71, 6],
+    ])
+    const experiment = experimentWith([trainer("fixture", 0)])
+    const sizes = (trs: number[]) => trs.map((tr) => teamSizeFor(experiment, tr))
     expect(sizes([0, 5, 10])).toEqual([1, 1, 1])
     expect(sizes([11, 20, 28])).toEqual([2, 2, 2])
     expect(sizes([29, 35, 43])).toEqual([3, 3, 3])
     expect(sizes([44, 50, 56])).toEqual([4, 4, 4])
     expect(sizes([57, 63, 70])).toEqual([5, 5, 5])
     expect(sizes([71, 96, 160, 500])).toEqual([6, 6, 6, 6])
+    // Identical, at every whole TR, to the retired interpolated table with paired anchors.
+    const paired: [number, number][] = [
+      [0, 1],
+      [10, 1],
+      [11, 2],
+      [28, 2],
+      [29, 3],
+      [43, 3],
+      [44, 4],
+      [56, 4],
+      [57, 5],
+      [70, 5],
+      [71, 6],
+    ]
+    for (let tr = 0; tr <= 200; tr += 1)
+      expect(teamSizeFor(experiment, tr)).toBe(scale(paired, tr, "interpolated"))
   })
 })
 
@@ -292,12 +326,13 @@ describe("teams", () => {
     for (let size = 1; size <= 5; size += 1) expect(team(size)).not.toContain("Aerodactyl")
     expect(team(6)).toContain("Aerodactyl")
     expect(team(3)).toEqual(["Steelix", "Golem", "Crobat"])
-    // Steady Brock (25 → 100) reaches TR 71, the first TR at team size 6, at world progress 98:
-    // 25 + 75 × 98/160 = 70.94. At 97 he is TR 70 (25 + 45.47), still team size 5.
+    // Steady Brock (25 → 100) reaches TR 71, the first TR at team size 6, at world progress 97:
+    // 60.625% rounds to 61%, and 25 + floor((75 × 61 + 50) / 100) = 71. At 96 (60%) he is TR 70,
+    // still team size 5.
     const record = catalog.find((entry) => entry.id === "brock")!
     const at = (world: number) => resolveTrainer(record, defaults, world, evolution)
-    const before = at(97)
-    const joined = at(98)
+    const before = at(96)
+    const joined = at(97)
     expect([before.tr, before.size, before.team.map((member) => member.species)]).toEqual([
       70,
       5,
@@ -908,7 +943,7 @@ describe("move pools", () => {
     const timeline = milestones(brock, defaults, evolution, learnsets).map(milestoneText)
     expect(timeline).toContain("6: Sandstorm wakes (Onix)")
     // Graveler learns Earthquake from its earlier form Geodude (Lv 34).
-    expect(timeline).toContain("61: Earthquake wakes (Graveler)")
+    expect(timeline).toContain("60: Earthquake wakes (Graveler)")
     expect(timeline).toContain(
       "76: Graveler → Golem, Golbat → Crobat, Heavy Slam wakes (Golem), Cross Poison wakes (Crobat)",
     )
@@ -1025,15 +1060,15 @@ describe("player TR and badge presets", () => {
     const blue = catalog.find((record) => record.id === "blue")!
     const tr = (record: TrainerRecord, world: number) =>
       resolveTrainer(record, experiment, world, evolution).tr
-    // Steady Brock (25 → 100): 25 + 75 × 95/160 = 69.53. Flat past 160.
-    expect([tr(brock, 95), tr(brock, 170), tr(brock, 300)]).toEqual([70, 100, 100])
-    // Rival Blue (0 → 170): 53% + 23 × 15/40 % at 95 = 61.625% of 170 = 104.8.
+    // Steady Brock (25 → 100): 59.375% rounds to 59%, and 75 × 59% = 44.25. Flat past 160.
+    expect([tr(brock, 95), tr(brock, 170), tr(brock, 300)]).toEqual([69, 100, 100])
+    // Rival Blue (0 → 170): 53% + 23 × 15/40 % at 95 = 61.625%, rounded to 62%: 170 × 62% = 105.4.
     expect([tr(blue, 95), tr(blue, 170), tr(blue, 300)]).toEqual([105, 170, 170])
     expect(
       gymLadder(catalog, experiment, 95).find((row) => row.trainer.id === "brock"),
     ).toMatchObject({
-      tr: 70,
-      gap: -25,
+      tr: 69,
+      gap: -26,
       mark: "below",
     })
     expect(leagueCandidates(catalog, experiment, 300)).toEqual(
@@ -1067,18 +1102,19 @@ describe("milestones", () => {
     )!
     expect([steelix.worldProgress, steelix.tr, steelix.teamLevel]).toEqual([57, 52, 35])
     expect(resolveTrainer(record("brock"), defaults, 56, evolution).team[0]?.species).toBe("Onix")
-    // TR 71 (team size 6) at world progress 98 brings in the slot-6 Aerodactyl ace at team level 45.
+    // TR 71 (team size 6) at world progress 97 brings in the slot-6 Aerodactyl ace at team level 45.
     expect(
       brock.find((m) => m.events.some((e) => e.kind === "join" && e.species === "Aerodactyl")),
     ).toMatchObject({
-      worldProgress: 98,
+      worldProgress: 97,
       tr: 71,
       teamLevel: 45,
       events: [{ kind: "join", slot: 6, species: "Aerodactyl", isAce: true }],
     })
-    // 25 + 75 × 159/160 = 99.53 rounds up to peak TR 100.
+    // At 159 the growth is 99.375%, rounded to 99%: TR 99. Peak TR 100 arrives at 160.
+    expect(resolveTrainer(record("brock"), defaults, 159, evolution).tr).toBe(99)
     expect(brock.at(-1)).toMatchObject({
-      worldProgress: 159,
+      worldProgress: 160,
       tr: 100,
       events: [{ kind: "peak", tr: 100, reached: true }],
     })
@@ -1090,11 +1126,11 @@ describe("milestones", () => {
       "40: 4th slot (Kabuto) joins",
       "49: team level Lv 32 drops below the level cap Lv 33",
       "57: Onix → Steelix",
-      "68: 5th slot (Omanyte) joins",
+      "67: 5th slot (Omanyte) joins",
       "76: Graveler → Golem, Golbat → Crobat",
-      "85: Kabuto → Kabutops, Omanyte → Omastar",
-      "98: 6th slot (Aerodactyl) ace joins",
-      "159: peak TR 100",
+      "84: Kabuto → Kabutops, Omanyte → Omastar",
+      "97: 6th slot (Aerodactyl) ace joins",
+      "160: peak TR 100",
     ])
   })
 
@@ -1102,13 +1138,11 @@ describe("milestones", () => {
     expect(timeline("blue").map(milestoneText)).toEqual([
       "0: Eevee",
       "9: 2nd slot (Pidgey) joins",
-      "22: Pidgey → Pidgeotto",
-      "23: 3rd slot (Kadabra) ace joins",
+      "23: Pidgey → Pidgeotto, 3rd slot (Kadabra) ace joins",
       "28: team level Lv 25 passes the level cap Lv 24",
-      "35: Eevee → Umbreon",
-      "36: 4th slot (Nidorino) joins",
-      "48: 5th slot (Scyther) joins",
-      "49: Pidgeotto → Pidgeot, Nidorino → Nidoking",
+      "34: Eevee → Umbreon",
+      "35: 4th slot (Nidorino) joins",
+      "48: Pidgeotto → Pidgeot, Nidorino → Nidoking, 5th slot (Scyther) joins",
       "55: Kadabra → Alakazam, Scyther → Scizor",
       "61: 6th slot (Arcanine) ace joins",
       "160: peak TR 170",
@@ -1133,10 +1167,10 @@ describe("milestones", () => {
 
   it("ignores ties with the level cap, so rounding cannot flicker a crossing", () => {
     // Erika's team level runs within one level of the cap from world progress 108 to 128 and
-    // ties it from 113 to 122, but it crosses once: she starts above the cap and drops below.
+    // ties it from 116 to 122, but it crosses once: she starts above the cap and drops below.
     const crossings = timeline("erika").filter((m) => m.events.some((e) => e.kind === "cap"))
     expect(crossings.map(milestoneText)).toEqual([
-      "121: team level Lv 75 drops below the level cap Lv 76",
+      "123: team level Lv 76 drops below the level cap Lv 77",
     ])
   })
 
@@ -1264,7 +1298,7 @@ describe("archetype growth", () => {
     ["star", [0, 10, 50, 90, 100]],
     ["comeback", [0, 45, 50, 55, 100]],
     ["burst", [0, 25, 50, 75, 100]],
-  ] as const)("reads %s growth at the §11 anchors", (name, pct) => {
+  ] as const)("reads %s growth at its growth-table anchors", (name, pct) => {
     expect(WORLD_PROGRESS_CHECKPOINTS.map(trAt(name, 0, 100))).toEqual(pct)
     expect(growth[name].map(([world]) => world)).toEqual([...WORLD_PROGRESS_CHECKPOINTS])
   })
@@ -1321,10 +1355,13 @@ describe("archetype growth", () => {
     expect(trAt("rival", 20, 120)(80)).toBe(73)
   })
 
-  it("interpolates midpoints exactly and rounds halves up once", () => {
-    // Steady 0 -> 100 at world progress 20 is 12.5%: 12.5 rounds up to 13.
+  it("rounds the growth % to a whole percent first, then rounds the TR gain half up", () => {
+    // Steady 0 -> 100 at world progress 20 is 12.5%, which rounds up to 13%.
     expect(trAt("steady", 0, 100)(20)).toBe(13)
-    // Start 10, peak 50, a Steady at 20: 10 + 40 * 12.5% = 15 (no rounding of the % first).
+    expect(scale(growth.steady, 20)).toBe(13)
+    // Start 0, peak 200, a Steady at 20: 200 × 13% = 26 (the unrounded 12.5% would give 25).
+    expect(trAt("steady", 0, 200)(20)).toBe(26)
+    // Start 10, peak 50, a Steady at 20: 10 + floor((40 × 13 + 50) / 100) = 15.
     expect(trAt("steady", 10, 50)(20)).toBe(15)
     // A Sleeper 20 -> 180 at 100: 20 + 40% of 160 = 84.
     expect(trAt("sleeper", 20, 180)(100)).toBe(84)
@@ -1332,7 +1369,22 @@ describe("archetype growth", () => {
     expect(trAt("prodigy", 0, 90)(60)).toBe(59)
     // A Veteran 45 -> 94 at 20: 30% of 49 = 14.7.
     expect(trAt("veteran", 45, 94)(20)).toBe(60)
-    expect(growthTR(growth.steady, 2, 95, 1)).toBe(3) // 2 + 93 * 0.625% = 2.58
+    // Steady 2 -> 95 at 1: 0.625% rounds to 1%, and 93 × 1% = 0.93 rounds to 1.
+    expect(growthTR(growth.steady, 2, 95, 1)).toBe(3)
+    // Every archetype, every catalog-sized range: the gain is floor(((peak - start) × % + 50) / 100).
+    for (const name of ARCHETYPES)
+      for (const [start, peak] of [
+        [0, 170],
+        [25, 100],
+        [18, 172],
+      ] as const)
+        for (let world = 0; world <= 200; world += 1)
+          expect(growthTR(growth[name], start, peak, world, ARCHETYPE_KIND[name])).toBe(
+            start +
+              Math.floor(
+                ((peak - start) * scale(growth[name], world, ARCHETYPE_KIND[name]) + 50) / 100,
+              ),
+          )
   })
 
   it("stays flat past world progress 160 and keeps start at 0", () => {
@@ -1429,10 +1481,16 @@ describe("placeholder balance targets", () => {
   })
 
   it("opens every Gym Leader at team level 12 or more, within 16 levels of each other", () => {
-    const levels = catalog
+    // The floor is on the team level, not on each member: a filler at offset -2 may sit below it.
+    const opening = catalog
       .filter(isGymLeader)
-      .map((record) => resolveTrainer(record, defaults, 0, evolution).teamLevel)
+      .map((record) => resolveTrainer(record, defaults, 0, evolution))
+    const levels = opening.map((row) => row.teamLevel)
     for (const level of levels) expect(level).toBeGreaterThanOrEqual(12)
+    const winona = opening.find((row) => row.trainer.id === "winona")!
+    expect([winona.teamLevel, Math.min(...winona.team.map((member) => member.level))]).toEqual([
+      13, 11,
+    ])
     expect(Math.max(...levels) - Math.min(...levels)).toBeLessThanOrEqual(16)
     // Brock (steady, start TR 25) opens at Lv 18 with Onix and Geodude.
     const brock = at(0).find((row) => row.trainer.id === "brock")!
@@ -1477,10 +1535,11 @@ describe("placeholder balance targets", () => {
 
   it("keeps Blue about 10 ahead of the player from world progress 40 until his peak", () => {
     const record = catalog.find((entry) => entry.id === "blue")!
+    // A whole growth percent of his 170 range is 1.7 TR, so the lead wobbles between 9 and 11.
     for (let world = 40; world <= 160; world += 1) {
       const gap = resolveTrainer(record, defaults, world, evolution).tr - world
       expect(gap).toBeGreaterThanOrEqual(9)
-      expect(gap).toBeLessThanOrEqual(10)
+      expect(gap).toBeLessThanOrEqual(11)
     }
     expect(resolveTrainer(record, defaults, 400, evolution).tr).toBe(170)
   })
@@ -1779,7 +1838,7 @@ describe("league lineups", () => {
       expect(calls(80, hoennFirst, decline(4))).toEqual(
         Array.from({ length: 4 }, () => ["Hoenn", "only eligible"]),
       )
-      expect(callingLeague({ Indigo: 16, Hoenn: 0 }, false, { ...never, Indigo: 7 })).toEqual({
+      expect(callingLeague({ Indigo: 16, Hoenn: 0 }, false, { ...never, Indigo: 1 })).toEqual({
         league: "Indigo",
         reason: "only eligible",
         eligible: ["Indigo"],
@@ -1788,11 +1847,13 @@ describe("league lineups", () => {
 
     it("calls the least recently called eligible league, round-robin over three", () => {
       const all = { Indigo: 16, Hoenn: 8 }
-      expect(callingLeague(all, true, { Indigo: 7, "Sevii Masters": 21, Hoenn: 14 })).toMatchObject(
-        { league: "Indigo", reason: "least recently called" },
-      )
+      // Recency is the call sequence number: the lowest called least recently.
+      expect(callingLeague(all, true, { Indigo: 1, "Sevii Masters": 3, Hoenn: 2 })).toMatchObject({
+        league: "Indigo",
+        reason: "least recently called",
+      })
       // Never called counts as least recent, whatever the badges.
-      expect(callingLeague(all, true, { ...never, Indigo: 7, Hoenn: 14 })).toMatchObject({
+      expect(callingLeague(all, true, { ...never, Indigo: 1, Hoenn: 2 })).toMatchObject({
         league: "Sevii Masters",
         reason: "least recently called",
       })
@@ -1809,11 +1870,12 @@ describe("league lineups", () => {
         ["Hoenn", "least recently called"],
       ])
       const run = simulate(160, defaultBadgeSplit(24), ["win", ...decline(3)]).invitations
-      expect(run.map((invitation) => invitation.lastCalled)).toEqual([
-        never,
-        { ...never, Indigo: 7 },
-        { ...never, Indigo: 7, Hoenn: 14 },
-        { Indigo: 7, "Sevii Masters": 21, Hoenn: 14 },
+      // Each call takes the next sequence number; lastCall is the state before the call.
+      expect(run.map((invitation) => [invitation.sequence, invitation.lastCall])).toEqual([
+        [1, never],
+        [2, { ...never, Indigo: 1 }],
+        [3, { ...never, Indigo: 1, Hoenn: 2 }],
+        [4, { Indigo: 1, "Sevii Masters": 3, Hoenn: 2 }],
       ])
     })
 
@@ -1830,7 +1892,7 @@ describe("league lineups", () => {
         eligible: ["Indigo", "Hoenn"],
       })
       // The Masters loses a badge tie to a regional league that never called either.
-      expect(callingLeague({ Indigo: 8, Hoenn: 1 }, true, { ...never, Indigo: 7 })).toMatchObject({
+      expect(callingLeague({ Indigo: 8, Hoenn: 1 }, true, { ...never, Indigo: 1 })).toMatchObject({
         league: "Hoenn",
         reason: "tie: most badges",
       })
@@ -1876,6 +1938,75 @@ describe("league lineups", () => {
         if (index > 0)
           expect(invitation.day - invitations[index - 1]!.resolvedDay).toBe(INVITATION_INTERVAL)
       expect(() => simulate(80, hoennFirst, ["win"], [-1])).toThrow("Invalid wait")
+    })
+
+    it("counts only forward day advances: a clock turned back neither advances nor resets", () => {
+      const badges = { Indigo: 16, Hoenn: 8 }
+      let clock = observeDay(startInvitationClock(10), 14)
+      expect(clock).toMatchObject({ day: 14, countdown: 3, calls: 0 })
+      // Back to day 2: the countdown holds at 3 and the day is recorded.
+      clock = observeDay(clock, 2)
+      expect(clock).toMatchObject({ day: 2, countdown: 3 })
+      expect(placeCall(clock, badges, true).call).toBeNull()
+      // Forward again from day 2: three more days make the call due.
+      clock = observeDay(clock, 4)
+      expect(clock.countdown).toBe(1)
+      clock = observeDay(clock, 5)
+      expect(clock.countdown).toBe(0)
+      // A counter far ahead brings one call, never a backlog.
+      expect(observeDay(observeDay(startInvitationClock(0), 500), 900).countdown).toBe(0)
+      expect(() => observeDay(clock, -1)).toThrow("day counter")
+    })
+
+    it("orders calls by the call counter, so a clock turned back cannot reorder them", () => {
+      const badges = { Indigo: 16, Hoenn: 8 }
+      // Calls on days 7, 14 and 21 answered at once, then the clock is set back before each.
+      const run = (days: number[]) => {
+        let clock = startInvitationClock(0)
+        const leagues: [League, number][] = []
+        for (const today of days) {
+          clock = observeDay(clock, today)
+          const placed = placeCall(clock, badges, true)
+          if (!placed.call) continue
+          leagues.push([placed.call.league, placed.call.sequence])
+          clock = resolveInvitation(placed.clock)
+        }
+        return { leagues, clock }
+      }
+      const forward = run([7, 14, 21, 28])
+      expect(forward.leagues).toEqual([
+        ["Indigo", 1],
+        ["Hoenn", 2],
+        ["Sevii Masters", 3],
+        ["Indigo", 4],
+      ])
+      // The same calls with the clock going back (from day 30 to day 3) in between: calls come on
+      // days 7, 30, 10 (7 forward days after 3) and 19 (day 12 counts only 2), and the order
+      // stays by call sequence.
+      const back = run([7, 30, 3, 10, 12, 19])
+      expect(back.leagues).toEqual(forward.leagues)
+      expect(back.clock).toMatchObject({
+        calls: 4,
+        lastCall: { Indigo: 4, Hoenn: 2, "Sevii Masters": 3 },
+        countdown: INVITATION_INTERVAL,
+      })
+      // No countdown runs while an invitation is pending, whatever the days.
+      const pending = placeCall(observeDay(startInvitationClock(0), 7), badges, false).clock
+      expect(observeDay(observeDay(pending, 100), 1)).toMatchObject({ countdown: null, calls: 1 })
+    })
+
+    it("makes no call with no eligible league and keeps the countdown waiting, re-checked when due", () => {
+      const none = { Indigo: 0, Hoenn: 0 }
+      let clock = observeDay(startInvitationClock(0), 9)
+      expect(clock.countdown).toBe(0)
+      const missed = placeCall(clock, none, false)
+      expect(missed).toEqual({ clock, call: null })
+      // Still due on later days: the first badge brings the call at the next check.
+      clock = observeDay(missed.clock, 12)
+      expect(clock).toMatchObject({ countdown: 0, calls: 0 })
+      const placed = placeCall(clock, { Indigo: 1, Hoenn: 0 }, false)
+      expect(placed.call).toMatchObject({ league: "Indigo", reason: "only eligible", sequence: 1 })
+      expect(placed.clock).toMatchObject({ countdown: null, calls: 1 })
     })
 
     it("fatigues the lineup of the most recent resolved event, accepted or declined", () => {
@@ -2273,7 +2404,7 @@ describe("catalog", () => {
     expect(catalog.some((record) => record.id.startsWith("red"))).toBe(false)
   })
 
-  it("applies the §11 archetype reassignment and leaves everyone else unchanged", () => {
+  it("applies the lore archetype assignments (Growth with world progress) and leaves everyone else Steady", () => {
     const byArchetype = (archetype: Archetype) =>
       catalog.filter((record) => record.archetype === archetype).map((record) => record.name)
     expect(byArchetype("star")).toEqual([
@@ -2288,7 +2419,7 @@ describe("catalog", () => {
     expect(byArchetype("burst")).toEqual(["Giovanni", "Chuck", "Brawly", "Steven"])
     expect(byArchetype("legend")).toEqual(["Agatha", "Lance"])
     expect(byArchetype("veteran")).toEqual(["Lt. Surge", "Lorelei", "Wattson", "Glacia", "Drake"])
-    // §16: the Champions follow lore, so no Champion is a Sleeper.
+    // The Champions follow lore (Growth with world progress), so no Champion is a Sleeper.
     expect(byArchetype("sleeper")).toEqual(["Sabrina", "Morty", "Clair", "Winona", "Juan"])
     expect(byArchetype("prodigy")).toEqual(["Janine", "Falkner", "Will", "Sidney"])
     expect(byArchetype("steady")).toEqual([
@@ -2306,7 +2437,7 @@ describe("catalog", () => {
     expect([agatha.startTR, agatha.peakTR]).toEqual([95, 95])
   })
 
-  it("gives the Champions their §16 lore archetypes: Lance a Legend at 200, Steven a Burst, Wallace a Star", () => {
+  it("gives the Champions their lore archetypes: Lance a Legend at 200, Steven a Burst, Wallace a Star", () => {
     const growth = (id: string) => {
       const record = catalog.find((entry) => entry.id === id)!
       return [record.startTR, record.archetype, record.peakTR]
@@ -2318,7 +2449,7 @@ describe("catalog", () => {
       expect(trainerRating(defaults, defaults.trainers.lance!, world)).toBe(200)
   })
 
-  it("assigns the §18 play styles and the boss flag", () => {
+  it("assigns the Trainer AI play styles and the boss flag", () => {
     const named = (style: PlayStyle) =>
       catalog.filter((record) => record.playStyle === style).map((record) => record.name)
     expect(Object.fromEntries(PLAY_STYLES.map((style) => [style, named(style)]))).toEqual({
@@ -2384,7 +2515,7 @@ describe("catalog", () => {
     expect(duo.ai.flags).toContain("Double Battle")
   })
 
-  it("assigns the §16 aloof trait, independent of archetype and the traveller trait", () => {
+  it("assigns the Aloof trait lore assignments, independent of archetype and the traveller trait", () => {
     expect(catalog.filter((record) => record.aloof).map((record) => record.name)).toEqual([
       "Sabrina",
       "Agatha",
@@ -2430,7 +2561,49 @@ describe("catalog", () => {
     ])
   })
 
-  it("assigns the §14 home regions and the §17 traveller trait", () => {
+  it("splits Tate & Liza along the battle order so each leader's last Pokémon is an ace", () => {
+    const duo = catalog.find((record) => record.id === "tate-liza")!
+    const split = (world: number) => {
+      const resolved = resolveTrainer(duo, defaults, world, evolution)
+      return [
+        resolved.battleOrder.map((member) => member.species),
+        resolved.partners?.map(({ name, members }) => [name, members.map((m) => m.species)]),
+      ]
+    }
+    // Full team: fillers first, aces last, alternating from the end (Solrock to Tate).
+    expect(split(160)).toEqual([
+      ["Grumpig", "Xatu", "Claydol", "Gardevoir", "Lunatone", "Solrock"],
+      [
+        ["Tate", ["Xatu", "Gardevoir", "Solrock"]],
+        ["Liza", ["Grumpig", "Claydol", "Lunatone"]],
+      ],
+    ])
+    // At world progress 0 (TR 26, two Pokémon) each leader sends their signature ace.
+    expect(split(0)).toEqual([
+      ["Lunatone", "Solrock"],
+      [
+        ["Tate", ["Solrock"]],
+        ["Liza", ["Lunatone"]],
+      ],
+    ])
+    // Every member goes to exactly one leader, and with two or more aces both end on an ace.
+    for (let world = 0; world <= 160; world += 1) {
+      const resolved = resolveTrainer(duo, defaults, world, evolution)
+      const partners = resolved.partners!
+      expect(partners.flatMap(({ members }) => members).length).toBe(resolved.team.length)
+      if (resolved.team.filter((member) => member.isAce).length >= 2)
+        for (const { members } of partners) expect(members.at(-1)?.isAce).toBe(true)
+    }
+    // Single battles have no split; a double battle names two leaders.
+    expect(resolveTrainer(catalog[0]!, defaults, 0, evolution).partners).toBeNull()
+    expect(doublesPartners("A & B", [1, 2, 3])).toEqual([
+      { name: "A", members: [1, 3] },
+      { name: "B", members: [2] },
+    ])
+    expect(() => doublesPartners("Solo", [1])).toThrow("names two leaders")
+  })
+
+  it("assigns the Home region and travel lore assignments and the Traveller trait", () => {
     const named = (test: (record: TrainerRecord) => boolean) =>
       catalog.filter(test).map((record) => record.name)
     expect(named((record) => record.traveller)).toEqual([
@@ -2472,7 +2645,7 @@ describe("catalog", () => {
     }
   })
 
-  it("records the section 9 table levels and the game's own levels for level evolutions", () => {
+  it("records the shared evolution-level table levels and the game's own levels for level evolutions", () => {
     const edges = (species: string[]) =>
       species.map((name) => data.evolution.chains[name]?.slice(-3))
     // Shared table rows: evolutions without a level in the game data.

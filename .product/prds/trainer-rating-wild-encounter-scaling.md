@@ -7,7 +7,7 @@ Today's [circuit producer](../../game/src/league_circuit.c) implements
 contributions and level cap anchors are unchanged. The Partial marker does not
 certify all wild-scaling and party-progression acceptance below.
 
-The v0 TR design (a new badge scale, uncapped TR, scalers, and notable
+The v0 TR design (the v0 badge scale, uncapped TR, scalers, and notable
 trainers' separate TR) is in [Player Trainer Rating](player-trainer-rating.md);
 its effect on wild Pokémon and the level cap is under [v0](#v0). The rest of
 this document describes Today.
@@ -114,12 +114,12 @@ above the cap.
 
 ### v0
 
-On the new TR scale, wild Pokémon follow their own wild level curve instead of
+On the v0 TR scale, wild Pokémon follow their own wild level curve instead of
 sitting a fixed 10 levels under the level cap. With a few badges they press
 close to the cap, about 4 levels under it at four badges, so the early world is
 dangerous. Later they fall behind: with all 24 badges they sit about 22 levels
 under the cap, and routes are no threat. The level cap itself rises with every
-badge to level 100 at 24 badges, and League wins no longer raise it. The exact
+badge to level 100 at 24 badges, and League wins do not raise it. The exact
 curves are in the
 [wild scaling](../specs/trainer-rating-wild-encounter-scaling.md#v0-wild-level-curve)
 and
@@ -128,14 +128,14 @@ specifications.
 
 How a wild encounter's level is worked out does not change: it still never
 drops as TR rises, evolved species still step back to a predecessor when the
-level is too low, and species minimum levels still apply. Stepping back now
-also covers trade, stone, and friendship evolutions, each through one shared
+level is too low, and species minimum levels still apply. In v0, stepping
+back also covers trade, stone, and friendship evolutions, each through one shared
 authored level
 ([evolution stages](../specs/player-trainer-rating.md#evolution-stages)); today
 only level evolutions step back. Obedience, reduced
 experience past the cap, and Candy rules also work as today. The Mantine and
 Chinchou utility-catch guarantees in this document are stated on today's scale.
-On the new scale their ranges become TR 25 through 160 for Mantine (about 2.5
+On the v0 scale their ranges become TR 25 through 160 for Mantine (about 2.5
 to 24 badges) and TR 0 through 160 for Chinchou, and both must be re-checked
 on the new curve, including Mantine's level-14 floor, before adoption.
 

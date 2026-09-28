@@ -62,9 +62,12 @@ trainer's team. The player TR is never computed from a notable trainer's TR.
 
 - **Growth**: each trainer has a **start TR** (their TR at world progress 0),
   an **archetype** and a **peak TR** (the most they can ever reach). For
-  every archetype, trainer TR = start TR + roundHalfUp((peak TR − start TR) ×
-  growth % / 100), where the growth % is that archetype's scaler over world
-  progress (read exactly, flat past the last anchor). The nine archetypes are
+  every archetype, trainer TR = start TR + floor(((peak TR − start TR) ×
+  growth % + 50) / 100), where the growth % is that archetype's scaler over
+  world progress as a whole percent: the standard scaler rule (interpolated
+  with halves rounded up, or held for Burst; flat past the last anchor) rounds
+  it first, then the TR gain rounds half up. Brock (Steady, 25 → 100) at world
+  progress 97 reads 60.625%, so 61%, and TR 25 + floor((75 × 61 + 50) / 100) = 71. The nine archetypes are
   named as proper nouns in prose and stored as lowercase identifiers
   (`steady`, `prodigy`, `sleeper`, `veteran`, `rival`, `legend`, `star`,
   `comeback`, `burst`). Defaults at world progress 0 / 40 / 80 / 120 / 160:
@@ -83,21 +86,23 @@ trainer's team. The player TR is never computed from a notable trainer's TR.
   16 / 24 badges and jumps there, but sits below it in between.
   Blue (the Rival, start TR 0, peak TR 170) is TR 0 at Pallet (one Eevee at
   Lv 5, his signature Umbreon stepped down), TR 26 at world progress 20 (two Pokémon, team level 18), TR 49 at
-  40, then 9–10 ahead of the player until he reaches 170. Peak TR must be at
-  least start TR.
+  40, then 9–11 ahead of the player (a whole percent of his range is 1.7 TR)
+  until he reaches 170. Peak TR must be at least start TR.
 
 - **Scalers** turn TR into values. Each is an editable table of anchors
   (TR, value), flat past the last anchor, whose TR is the scaler's ceiling TR.
   An **interpolated** scaler is linear between anchors with halves rounded up;
   a **step** scaler holds each anchor's value until the next one. The kind is
-  fixed per scaler and shown in the editor: only Burst is a step scaler. TR
-  itself is never clamped.
+  fixed per scaler and shown in the editor: team size and Burst are step
+  scalers; the rest are interpolated. TR itself is never clamped.
 - **Team level** has its own low end, then the level cap anchors from TR 40:
   (0, 5) (20, 14) (40, 28) (80, 50) (120, 75) (160, 100). TR 200 still gives
   Lv 100. The level cap itself is unchanged.
-- **Team size** is interpolated, made a step table by paired anchors: TR 0–10 → 1,
-  11–28 → 2, 29–43 → 3, 44–56 → 4, 57–70 → 5, 71+ → 6. Every notable trainer's
-  peak TR is 71 or more, so every one fields a full team of six at their peak.
+- **Team size** is a step scaler with an anchor at each step's start, (0, 1)
+  (11, 2) (29, 3) (44, 4) (57, 5) (71, 6): TR 0–10 → 1, 11–28 → 2, 29–43 → 3,
+  44–56 → 4, 57–70 → 5, 71+ → 6 (the same sizes as the retired paired-anchor
+  table at every whole TR). Every notable trainer's peak TR is 71 or more, so
+  every one fields a full team of six at their peak.
 - **Roster**: one ordered list of six roster slots per trainer. Each roster
   slot has a species (normally a final stage, such as Steelix), a level
   offset (-6 to 0), a held item, an optional ability and nature, and an ace
@@ -117,7 +122,9 @@ trainer's team. The player TR is never computed from a notable trainer's TR.
   `species_info` threshold; non-level evolutions (item, trade, friendship,
   other) use the shared evolution-level table in the catalog script, which
   covers only evolutions without a level in the game data. Baby pre-evolutions
-  are not stepped down to. Brock at start TR 25 (team level 18) fields Onix
+  are not stepped down to: a line stops above its baby (Raichu steps down to
+  Pikachu, never Pichu), so baby edges need no table row and the script never
+  asks for one. Brock at start TR 25 (team level 18) fields Onix
   Lv 18 and Geodude Lv 16; his Graveler appears from Lv 25, Steelix from Lv 35 and Golem from Lv 38.
 - **Move pool**: each trainer authors one ordered list of moves they like,
   each with an optional from level. After every member's
@@ -173,8 +180,12 @@ and peak TR, the trainer's home region (Kanto, Johto or Hoenn) and traits
 (the **Traveller** and **Aloof** checkboxes) and their **play style** (a
 select; each option's tooltip and the line under it give the style's flags
 and how it plays), shows the resolved **Trainer AI** at the current TR (the AI
-skill tier, the aces in the team, the boss mark, and the flag list), shows the trainer's TR, team level and each roster slot's stage
-and level at world progress 0 / 40 / 80 / 120 / 160 (aces marked), the trainer's
+skill tier, the aces in the team, the boss mark, and the flag list), shows a checkpoint report at world progress 0 / 40 / 80 / 120 / 160: the
+trainer's TR, team level, each roster slot's stage, level and moves (pool
+moves highlighted, level-up moves muted; aces marked), the battle order, the
+number of dormant pool entries and the resolved AI skill tier (Brock: TR 25 /
+44 / 63 / 81 / 100, 8 / 7 / 2 / 2 / 2 dormant entries, None / Aware / Aware /
+Smart / Smart), the trainer's
 **milestones**, a chart of their team level against the level cap across
 player TR 0–200 (the current player TR and the milestones marked; hover or
 focus it and use the arrow keys to read values), the team at the current
@@ -207,14 +218,16 @@ a dormant move pool entry assigned for the first time ("Earthquake wakes
 reads "0: Onix, Geodude (team level above the level cap) · 6: Sandstorm wakes
 (Onix) · 8: 3rd slot (Zubat) joins · 19: Zubat → Golbat · 27: Geodude →
 Graveler · 40: 4th slot (Kabuto) joins · 46: Rock Blast wakes (Graveler) · 49:
-team level Lv 32 drops below the level cap Lv 33 · 53: Rock Slide wakes (Onix)
-· 57: Onix → Steelix · 61: Earthquake wakes (Graveler) · 68: 5th slot
-(Omanyte) joins · 70: Explosion wakes (Graveler) · 76: Graveler → Golem,
-Golbat → Crobat, Heavy Slam wakes (Golem), Cross Poison wakes (Crobat) · 85:
-Kabuto → Kabutops, Omanyte → Omastar · 93: Stone Edge wakes (Golem) · 98: 6th
-slot (Aerodactyl) ace joins · 159: peak TR 100". His late ace Aerodactyl
-(roster slot 6) joins at team size 6 (TR 71, team level 45), which his
-placeholder growth reaches at world progress 98.
+team level Lv 32 drops below the level cap Lv 33 · 57: Onix → Steelix · 60:
+Earthquake wakes (Graveler) · 67: 5th slot (Omanyte) joins · 70: Explosion
+wakes (Graveler) · 76: Graveler → Golem, Golbat → Crobat, Heavy Slam wakes
+(Golem), Cross Poison wakes (Crobat) · 84: Kabuto → Kabutops, Omanyte →
+Omastar · 92: Stone Edge wakes (Golem) · 97: 6th slot (Aerodactyl) ace joins
+· 160: peak TR 100" (Rock Slide never wakes: its only level-up learner, Onix
+and then Steelix, already holds four pool moves by its learn level). His late ace Aerodactyl (roster slot 6)
+joins at team size 6 (TR 71, team level 45), which his placeholder growth
+reaches at world progress 97; at 159 the growth is 99%, so peak TR 100 comes
+at 160.
 
 Exports and the saved browser state use version 19 (nine archetypes with the
 single-word identifiers above; rosters carry `isAce` and no moves; each
@@ -224,13 +237,23 @@ and store the point as `{ "playerTR": n }` and the invitation simulator
 settings as `{ "choices": ["win" | "lose" | "decline", …], "split": null |
 { "Kanto": n, "Johto": n, "Hoenn": n } }` (the answers to 1–24 invitations, and
 the badge split: null follows the badge total, or 0–8 badges per region); a
-`{ "badges": n }` point still imports and sets the matching player TR.
+`{ "badges": n }` point still imports and sets the matching player TR. The
+call counter lives only in the simulation (the saved settings are the answers
+and the split), and team size keeps its `[TR, size]` anchors, so neither
+changes the format: a version 19 file with the older paired team size
+anchors (0–10, 11–28, …) reads the same size at every whole TR.
 
 **Tate & Liza** are one entry (role Gym Leader duo, Hoenn) with one start TR,
 archetype, peak TR and six-slot roster (Solrock and Lunatone as the signature
-pair, both aces at offset 0, with Gardevoir as the third ace). They are fought as a double battle: both leaders send
-Pokémon from the shared roster in order, with team size from the same table.
-The explorer marks them as a double battle. They follow every notable trainer
+pair, both aces at offset 0, with Gardevoir as the third ace). They are fought as a double battle: the resolved team
+(team size from the same table) is sent in battle order, fillers first and
+aces last, and its members alternate between Tate and Liza along that order,
+anchored at its end: the last member goes to Tate, the one before it to Liza,
+and so on, so each leader's last Pokémon is an ace whenever the team has two.
+The full team splits Tate: Xatu, Gardevoir, Solrock and Liza: Grumpig,
+Claydol, Lunatone; at world progress 0 (TR 26, two Pokémon) Tate sends
+Solrock and Liza Lunatone. The explorer marks them as a double battle and
+shows the split under the team and on each member. They follow every notable trainer
 rule but are league-ineligible (`leagueEligible: false`; leagues are singles
 only).
 
@@ -244,8 +267,8 @@ score for each invitation's event. Each league is
 a location: Indigo's location regions are Kanto and Johto, Hoenn's is Hoenn,
 and the Sevii Masters is a neutral location where everyone is at home. The
 catalog gives each notable trainer a home region (`homeRegion`) and traits:
-opt-in yes/no flags that default to no (section 17). The **traveller** trait
-(`traveller`; the section 14 lore assignments, editable per trainer as the
+opt-in yes/no flags that default to no ([Traits](../../.product/specs/notable-trainers.md#traits)). The **traveller** trait
+(`traveller`; the [Home region and travel](../../.product/specs/notable-trainers.md#home-region-and-travel) lore assignments, editable per trainer as the
 **Traveller** checkbox) makes away travel cheap. Each league event gives every league-eligible trainer (singles
 only: the catalog has no Red and Tate & Liza are ineligible) a
 **willingness** of max(5, 100 − travel cost − fatigue). Travel cost is 0 at
@@ -258,7 +281,7 @@ catalog order). There is no seed or randomness: the same world progress and
 previous event always give the same five (the ROM computes the lineup when
 the player accepts or declines and freezes it for that event).
 
-Some trainers are **aloof** (`aloof`, a trait; the section 16 lore
+Some trainers are **aloof** (`aloof`, a trait; the [Aloof](../../.product/specs/notable-trainers.md#aloof) lore
 assignments, editable per trainer as the **Aloof** checkbox): Lance, Wallace,
 Steven, Agatha, Glacia, Clair, Sabrina and Karen. They won't join a league
 whose base lineup is well below their level. The top five trainers who are not
@@ -274,10 +297,15 @@ the table.
 The simulator runs at the player's world progress (days never change anyone's
 strength). The player qualifies at player TR 80 (today exactly 8 badges; the
 explorer counts the qualifying moment as day 0); below it the panel says no
-league calls. An invitation arrives every 7 in-game days, counted from
-qualifying and restarted when an invitation resolves; no countdown runs while
-an accepted event is pending, and the simulator has the player arrive the day
-they accept, so the calls come on days 7, 14, 21 and so on. **Invitations**
+league calls. An invitation arrives after a countdown of 7 in-game days,
+started at qualifying and restarted when an invitation resolves; no countdown
+runs while an invitation or accepted event is pending, and the simulator has
+the player arrive the day they accept, so the calls come on days 7, 14, 21 and
+so on. The countdown counts only forward day advances: when the day counter
+goes backwards (a clock turned back) the countdown neither advances nor
+resets, and a counter far ahead makes one call due, never a backlog. When the
+call is due but no league is eligible, no call is made and the countdown
+keeps waiting, re-checked at every later day. **Invitations**
 (default 8, up to 24) sets how many; the **Kanto**, **Johto** and **Hoenn**
 fields set the badge split (by default the badge floor of the player TR,
 filling Kanto, then Johto, then Hoenn, 8 each; **Follow badge total**
@@ -285,13 +313,16 @@ restores it). Which league calls ([Leagues spec](../../.product/specs/leagues.md
 a league calls only where the player is known: Indigo with at least one Kanto
 or Johto badge, Hoenn with at least one Hoenn badge, and the Sevii Masters
 after any league win. With no badges at all the panel says no league calls.
-Among the eligible leagues the one that called least recently calls (a league
-that never called counts as least recent); ties go to the most badges (Indigo
+Calls are ordered by a monotonic **call counter**, never by days: each call
+takes the next sequence number (1, 2, 3, …) and each league remembers the
+number of its last call, so a clock turned back cannot reorder them. Among the
+eligible leagues the one that called least recently, the lowest sequence
+number, calls (a league that never called counts as least recent); ties go to the most badges (Indigo
 = Kanto + Johto, Hoenn = Hoenn; the Masters has none and loses to a regional
 league), then to Indigo. So the first call comes from the eligible league with
 the most badges, and a single eligible league calls every time. Each row shows
 the invitation, its day, the league and why ("only eligible (Indigo 8, Hoenn
-0; no league win)", "least recently called (Indigo day 7, Sevii Masters
+0; no league win)", "least recently called (Indigo call 1, Sevii Masters
 never)", "tie (never called) → most badges (Indigo 16, Hoenn 8)" or "tie
 (never called, Indigo 4, Hoenn 4) → Indigo"), the lineup in battle order with league scores,
 the invitation whose lineup it fatigues, an **Answer** (accept & win, accept &
@@ -311,33 +342,34 @@ lineup at the current world progress). With the catalog defaults (lineup in
 battle order, league score in brackets where fatigue or travel lowers it; the
 reigning champion last):
 
-- 8 badges (world progress 80, base lineup Lv 58–59), all Kanto, declining
+- 8 badges (world progress 80, base lineup Lv 59–61), all Kanto, declining
   everything: only Indigo knows the player, so it calls every time. Its
-  fresh lineup is Will, Lt. Surge, Giovanni, Agatha and Jasmine (all TR
-  94–95, at home; champion Jasmine); the best away trainer, Drake (a Hoenn
-  traveller, TR 93), scores 83 and ranks 12th. Agatha (Lv 59), Karen (Lv 58),
-  Glacia, Sabrina and Clair join; Lance (Lv 100), Steven (Lv 77) and Wallace
-  (Lv 74) skip. The next event, with those five tired, fields Erika, Blue,
-  Koga, Lorelei and Karen (champion Karen), and the two lineups alternate.
+  fresh lineup is Lt. Surge, Giovanni, Will, Koga and Karen (TR 95–101, all
+  at home; champion Karen); the best away trainer, Drake (a Hoenn traveller,
+  TR 93), scores 83 and ranks 12th. Karen (Lv 63), Agatha (Lv 59), Glacia,
+  Sabrina and Clair join; Lance (Lv 100), Steven (Lv 77) and Wallace (Lv 74)
+  skip. The next event, with those five tired, fields Erika, Blue, Lorelei,
+  Agatha and Jasmine (champion Jasmine), and the two lineups alternate.
 - 8 Hoenn badges, declining the first invitation, then accepting and winning
-  every one: day 7 Hoenn (only eligible, declined; Norman reigns), day 14
-  Hoenn again (only eligible; Blue, Koga, Karen, Will, Giovanni; first win),
-  day 21 the Sevii Masters (never called; Drake, Lt. Surge, Agatha, Jasmine,
-  Norman; first win), then Hoenn and the Masters alternate (repeat wins).
-  Indigo, with no Kanto or Johto badge, never calls.
+  every one: day 7 Hoenn (only eligible, declined; Sidney, Drake, Norman,
+  Phoebe, Karen (90); Karen reigns), day 14 Hoenn again (only eligible; Blue
+  (81), Glacia, Giovanni (85), Will (86), Koga (87); first win), day 21 the
+  Sevii Masters (never called; Lt. Surge, Agatha, Jasmine, Phoebe, Karen;
+  first win), then Hoenn and the Masters alternate (repeat wins). Indigo, with
+  no Kanto or Johto badge, never calls.
 - 16 badges, all Kanto and Johto, accepting and winning everything: day 7
-  Indigo, Erika, Karen, Blue, Giovanni, Jasmine (first win); day 14 the
-  Masters, Clair, Juan, Phoebe, Koga, Norman (first win; the Indigo five are
+  Indigo, Koga, Karen, Blue, Giovanni, Jasmine (first win); day 14 the
+  Masters, Clair, Juan, Erika, Phoebe, Norman (first win; the Indigo five are
   tired); then Indigo and the Masters alternate. Hoenn never calls. Declining
   everything instead has Indigo call every time, alternating that lineup
-  (champion Jasmine) with Morty, Will, Sabrina, Clair and Koga (champion
-  Koga); the Champions (Lv 99–100) skip every base lineup (Lv 75–82).
+  (champion Jasmine) with Morty, Will, Sabrina, Clair and Erika (champion
+  Erika); the Champions (Lv 99–100) skip every base lineup (Lv 75–82).
 - 24 badges (world progress 160, base lineup Lv 100, every aloof trainer
   joins), declining everything: Indigo (tie → most badges), Morty, Sabrina,
-  Clair, Steven (175), Lance (Lance); Hoenn (never called), Norman (164), Blue
-  (153), Winona (172), Juan, Wallace (Wallace); and so on alternately. Lance,
-  a Kanto traveller, fights last at every Indigo event, each fatigued only by
-  the Hoenn event before.
+  Clair, Steven (175), Lance (Lance); Hoenn (least recently called: never),
+  Norman (164), Blue (153), Winona (172), Juan, Wallace (Wallace); and so on
+  alternately. Lance, a Kanto traveller, fights last at every Indigo event,
+  each fatigued only by the Hoenn event before.
 
 Lance, a Legend at TR 200 (team Lv 100), first joins a league at world
 progress 135 (base lineup Lv 91) when no fatigue holds the base lineup back.
@@ -347,7 +379,7 @@ No aloof lineup member sits more than 10 levels above the base lineup level.
 trainer's AI flags at their current TR, as the ROM writes them once per
 battle: the **Basic** bundle (Check Bad Move, Try To Faint, Check Viability),
 then the flags of the trainer's **play style** (`playStyle`, exactly one of
-eight, section 18 assignments; editable), then the **AI skill** tiers up to
+eight, the [Trainer AI spec](../../.product/specs/trainer-ai.md#play-styles) assignments; editable), then the **AI skill** tiers up to
 their TR (a step scaler, placeholder: TR 0–29 None; 30–69 Aware adds Smart
 Mon Choices and Assume STAB; 70–109 Smart adds Smart Switching, Assume Status
 Moves and Weigh Ability Prediction; 110+ Predictive adds Predict Switch,
@@ -413,7 +445,7 @@ Glacia and Drake are Veterans; Misty, Bugsy, Whitney, Flannery and Tate & Liza a
 Stars; Blaine, Pryce and Bruno are Comebacks; Giovanni, Chuck and
 Brawly are Bursts; Janine, Falkner, Will and Sidney are Prodigies; Sabrina,
 Morty, Clair, Winona and Juan are Sleepers; Agatha is a Legend at TR 95; Blue
-is the Rival; the rest are Steady. The Champions follow lore (section 16):
+is the Rival; the rest are Steady. The Champions follow lore ([Growth with world progress](../../.product/specs/notable-trainers.md#growth-with-world-progress)):
 Lance is a Legend fixed at TR 200 (start = peak), Steven a Burst (50 → 195)
 and Wallace a Star (48 → 190); they have the highest peaks. Every Gym Leader entry (Tate & Liza included) has a
 placeholder start TR in the 18–40 Gym band, set by archetype rather than Gym
@@ -424,26 +456,39 @@ Gym Leader Legend. At world progress 0 that is team level Lv 13 (Winona, TR 18)
 to Lv 28 (Pryce, TR 40), two or three Pokémon; Brock at start TR 25 opens at
 Lv 18. League-eligible Steady and Burst Gym Leaders keep start + peak TR at
 most 190, and the Veteran Lt. Surge peaks at TR 95, so they stay at TR 95 or less
-at world progress 80. The defaults are tuned to the
+at world progress 80. The Elite Four and Champions start above the Gym band,
+at TR 41 or more (the script's `ELITE_START_MIN`; it rejects a lower start),
+except Blue, the Rival, who leaves Pallet with the player at TR 0. The members
+who once started inside the band start at TR 41–50 by lore, each league's
+first member lowest, with their peaks unchanged: Will and Sidney 41 (from 30
+and 25), Lorelei 42 (from 40), Phoebe 43 (from 25), Koga and Glacia 44 (from
+30 and 40) and Karen 47 (from 30), the last before the Champion; Bruno (45),
+Drake (45), Wallace (48), Steven (50), Agatha (95) and Lance (200) already
+started above it. The defaults are tuned to the
 v0 balance targets, which `engine.test.ts` checks: every
 notable trainer at team size 6 at their peak TR, every
-Gym Leader opening at team level 12 or more and within 16 levels of each other,
-Blue about 10 ahead from world progress 40, and the five hardest Gym Leaders
+Gym Leader opening at a team level of 12 or more (a team-level floor: a filler
+at offset -2 may open lower, e.g. Winona's Lv 11 fillers at team level 13) and
+within 16 levels of each other, Blue about 10 ahead (9–11) from world progress
+40, and the five hardest Gym Leaders
 at 24 badges Sleepers or Steadies with peak TR 170 or more (Morty's peak
-TR 171 keeps the Star Tate & Liza, peak 170, out of them). The Gym ladder has at least
-three Gym Leaders near and above the player at every checkpoint and three below
-from world progress 80. At world progress 0 all 24 are above (every start TR
-is past the near band), and the lowest three are two Pokémon at or under the
-level cap; at 40 none is below yet, but at least three are at or under the
-player TR. League lineups have no fixed targets: they are informational, and
+TR 171 keeps the Star Tate & Liza, peak 170, out of them). The Gym ladder
+follows the spec's target: from the first badges on, some Gym Leaders sit near
+the player and some above, and from world progress 80 some also sit below
+(at least three below, three near, and three above). At world progress 0 all
+24 are above (every start TR is past the near band), and the lowest three are
+two Pokémon at or under the level cap; at 40 none is below yet, but at least
+three are at or under the player TR. League lineups have no fixed targets: they are informational, and
 the tests check the league score and its flooring, the top-five selection and
 tie-break, the invitation gate (none at player TR 79, calls from 80), which
 league calls (known-there eligibility: no badges in a region means that
 league never calls, the Masters only after a win; the least recently called
 eligible league, round-robin over three; ties to the most badges, then
-Indigo; a single eligible league calling again and again), the countdown (7 days
-from qualifying, restarted at each resolution and paused while an accepted
-event waits), fatigue from the most recent resolved event whether accepted or
+Indigo; a single eligible league calling again and again), the call counter
+(each call takes the next sequence number; a clock turned back reorders
+nothing), the countdown (7 days from qualifying, restarted at each resolution,
+stopped while an invitation or accepted event waits, counting only forward day
+advances, and waiting, due, while no league is eligible), fatigue from the most recent resolved event whether accepted or
 declined, reigning champions (the player after a win, otherwise the lineup's
 strongest, at decline too), Sevii neutrality, determinism (days never change
 TR), and
@@ -486,7 +531,13 @@ Bind, Stealth Rock, Sandstorm (from Lv 20), Curse (for Iron Defense), Stone Edge
 Earthquake, Rock Slide, Heavy Slam, Rock Blast, Cross Poison and Explosion.
 The script fails when a pool draws on more than one frustration category (its
 `FRUSTRATION` map: sleep, evasion, OHKO, trapping, Perish Song, Destiny Bond,
-infatuation/confusion) or pairs evasion with Toxic or Toxic Spikes.
+infatuation/confusion) or pairs evasion with Toxic or Toxic Spikes. The map
+covers moves whose **main effect** is the frustration, including a damaging
+move whose effect always happens (Mud Slap's accuracy drop, Dynamic Punch's
+confusion); trapping includes Fairy Lock and Thousand Waves. Secondary-chance
+effects are excluded: Hurricane's or Water Pulse's chance to confuse, and
+damaging moves with a chance to lower accuracy (Muddy Water, Octazooka,
+Mirror Shot). Every drafted pool passes the rule.
 An old move name (Faint Attack) is stored as the move itself (Feint Attack).
 The script warns about pool entries
 no stage on the trainer's roster lines can learn, and about entries without a
@@ -528,13 +579,16 @@ The catalog uses local FRLG, Emerald and HNS source records, including their
 provenance and explicit variant notes. HNS is not substituted with HGSS;
 Steven's local Emerald postgame party is labeled as such. The catalog script
 validates growth (start and peak TR, archetype, peak TR = start TR for a
-Legend, the Gym sub-bands, no Gym Leader Legend), roster length (at most six), offsets, no per-slot moves,
+Legend, the Gym sub-bands, no Gym Leader Legend, Elite Four and Champion
+starts of TR 41 or more except the Rival), roster length (at most six), offsets, no per-slot moves,
 move pools (known move names, from levels 1–100, at most 64 entries), roster slot 1
 as an ace at offset 0, 1–3 aces per roster, and that the catalog has exactly 38 entries with only the Tate &
 Liza duo fought as a double battle. It also validates the shared
 evolution-level table (one level per edge, each a real `species_info`
 evolution without an `EVO_LEVEL`; a row for a level evolution fails, since the
-game's level wins), requires a table entry for every non-level edge on a roster line,
+game's level wins), requires a table entry for every non-level edge on a roster line
+(never for a baby edge: lines stop above their babies, so Pichu → Pikachu,
+Munchlax → Snorlax or Mime Jr. → Mr. Mime need no row),
 and checks that levels increase along each line with no ambiguous ancestry or
 cycles. Table rows are `authored` (the contract examples: Onix → Steelix 35,
 Staryu → Starmie 30, Growlithe → Arcanine 35) or `placeholder`;

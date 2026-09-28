@@ -63,8 +63,8 @@
       case "least recently called":
         return `least recently called (${invitation.eligible
           .map((league) => {
-            const day = invitation.lastCalled[league]
-            return `${league} ${day === null ? "never" : `day ${day}`}`
+            const call = invitation.lastCall[league]
+            return `${league} ${call === null ? "never" : `call ${call}`}`
           })
           .join(", ")})`
       case "tie: most badges":
@@ -282,14 +282,14 @@
     <span class="note-dot"></span><span
       >TR v0: each notable trainer grows with world progress from start TR to peak TR along their
       archetype’s growth scaler, the same rule for every archetype. Team level and team size are
-      scalers of that trainer TR (anchor tables, linear between anchors, halves rounded up, flat
-      past the last anchor, the ceiling TR; TR itself is uncapped). The team is the first N roster
-      slots at team level + offset (join order is list order). Battle order puts the filler slots
-      first and the aces last, each in reverse list order, so roster slot 1 comes last. Rosters
-      author final stages; a member below its stage’s evolution level steps down its line (the
-      shared evolution-level table covers non-level evolutions). Moves come from each trainer’s move
-      pool: members start from their level-up moves, then the aces pick first. Items, AI and win
-      rates are not simulated.</span
+      scalers of that trainer TR (anchor tables: team level linear between anchors, halves rounded
+      up; team size a step table; both flat past the last anchor, the ceiling TR; TR itself is
+      uncapped). The team is the first N roster slots at team level + offset (join order is list
+      order). Battle order puts the filler slots first and the aces last, each in reverse list
+      order, so roster slot 1 comes last. Rosters author final stages; a member below its stage’s
+      evolution level steps down its line (the shared evolution-level table covers non-level
+      evolutions). Moves come from each trainer’s move pool: members start from their level-up
+      moves, then the aces pick first. Items, AI and win rates are not simulated.</span
     >
   </div>
 
@@ -544,7 +544,8 @@
         {#each lab.selected.ai.flags as flag (flag)}<li class="move-chip">{flag}</li>{/each}
       </ul>
       <p class="hint">
-        TR = start TR + (peak TR − start TR) × the archetype’s growth %, halves rounded up.
+        TR = start TR + (peak TR − start TR) × the archetype’s growth % (a whole percent), halves
+        rounded up.
       </p>
       <table class="growth-table" data-testid="growth-table">
         <thead
@@ -574,9 +575,37 @@
                   class:current={point.world === lab.worldProgress}
                   >{#if member}<span class="growth-species">{member.species}</span><small
                       >Lv {member.level}</small
-                    >{:else}<span class="muted">—</span>{/if}</td
+                    >
+                    <ul class="growth-moves">
+                      {#each member.moves as move, moveIndex (moveIndex)}<li
+                          class:pool={move.source === "pool"}
+                          title={move.source}
+                        >
+                          {move.move}
+                        </li>{/each}
+                    </ul>{:else}<span class="muted">—</span>{/if}</td
                 >{/each}</tr
             >{/each}
+          <tr data-testid="growth-battle-order"
+            ><th>Battle order</th>{#each lab.growth as point}<td
+                class:current={point.world === lab.worldProgress}
+                ><ol class="growth-order">
+                  {#each point.battleOrder as member (member.slot)}<li>
+                      {member.species}{#if member.isAce}<span class="ace-chip">Ace</span>{/if}
+                    </li>{/each}
+                </ol></td
+              >{/each}</tr
+          >
+          <tr data-testid="growth-dormant"
+            ><th>Dormant entries</th>{#each lab.growth as point}<td
+                class:current={point.world === lab.worldProgress}>{point.dormant}</td
+              >{/each}</tr
+          >
+          <tr data-testid="growth-ai-tier"
+            ><th>AI tier</th>{#each lab.growth as point}<td
+                class:current={point.world === lab.worldProgress}>{point.aiTier.name}</td
+              >{/each}</tr
+          >
         </tbody>
       </table>
       <div class="section-label">
@@ -637,12 +666,24 @@
         <h3>Team at TR {lab.selected.tr} (world progress {lab.worldProgress})</h3>
         <span>Battle order: filler slots, then aces; roster slot 1 last</span>
       </div>
+      {#if lab.selected.partners}<p class="hint doubles-split" data-testid="doubles-split">
+          Members alternate between the leaders along the battle order, so each leader’s last
+          Pokémon is an ace where the team has two:
+          {#each lab.selected.partners as partner, index (partner.name)}{index ? " · " : ""}<strong
+              >{partner.name}</strong
+            >: {partner.members.map((member) => member.species).join(", ") || "none"}{/each}
+        </p>{/if}
       <ol class="party" data-testid="battle-order">
         {#each lab.selected.battleOrder as member (member.slot)}<li
             class:signature={member.slot === 1}
           >
             <span class="slot">#{member.slot}</span>
             <div class="member-name">
+              {#if lab.selected.partners}{@const partner = lab.selected.partners.find((entry) =>
+                  entry.members.includes(member),
+                )}<span class="partner-chip" data-testid={`partner-${member.slot}`}
+                  >{partner?.name}</span
+                >{/if}
               <strong
                 >{member.species}{#if member.authoredAt !== null}<span
                     class="evolves-into"
@@ -1044,14 +1085,17 @@
     <p class="hint league-note">
       The player qualifies at player TR {QUALIFYING_TR} (day 0 here). A league phones every {INVITATION_INTERVAL}
       in-game days, counted from qualifying and restarted when an invitation resolves; no countdown runs
-      while an accepted event is pending (here the player arrives the day they accept). A league calls
-      only where the player is known: Indigo with a Kanto or Johto badge, Hoenn with a Hoenn badge, the
-      Sevii Masters after any league win. Among those, the league that called least recently calls (never
-      counts as least recent); ties go to the most badges (Indigo = Kanto + Johto, Hoenn = Hoenn; the
-      Masters has none), then to Indigo. A single eligible league calls every time. Accepting freezes
-      the lineup, and the event waits for the player: one attempt, a loss ends it. Declining runs it without
-      them. The reigning champion is the player after a win, otherwise the lineup’s strongest (last in
-      battle order). Days never change anyone’s strength.
+      while an invitation or accepted event is pending (here the player arrives the day they accept).
+      The countdown counts only forward day advances: a clock turned back neither advances nor resets
+      it. A league calls only where the player is known: Indigo with a Kanto or Johto badge, Hoenn with
+      a Hoenn badge, the Sevii Masters after any league win; with none, no call is made and the countdown
+      keeps waiting. Each call takes the next number on a call counter, and among the eligible leagues
+      the one whose last call has the lowest number calls (never counts as least recent); ties go to the
+      most badges (Indigo = Kanto + Johto, Hoenn = Hoenn; the Masters has none), then to Indigo. A single
+      eligible league calls every time. Accepting freezes the lineup, and the event waits for the player:
+      one attempt, a loss ends it. Declining runs it without them. The reigning champion is the player
+      after a win, otherwise the lineup’s strongest (last in battle order). Days never change anyone’s
+      strength.
     </p>
     <p class="hint league-note">
       Each event gives every league-eligible trainer (singles only: no Red, no Tate & Liza) a
@@ -1226,13 +1270,13 @@
       but stops adding level or size. Anchors start at TR 0, rise in TR and never decrease in value.
       Team level and team size read each notable trainer’s own TR. Team level has its own low end
       (Lv 5 at TR 0, Lv 14 at TR 20) and matches the level cap anchors from TR 40 (Lv 100 at TR
-      160); team size uses paired anchors to make a step table (0–10 → 1, 11–28 → 2, 29–43 → 3,
-      44–70 → 4, 71–95 → 5, 96+ → 6). The wild level curve and regular trainer level curve are world
-      scaling: they read the player’s TR and only feed the readout above. The nine archetype growth
-      scalers, the Rival included, read world progress and give the growth % (0% at world progress
-      0, never decreasing, 0–100%) from start TR toward peak TR. Burst is the only step scaler, so
-      it jumps at 4, 8, 16 and 24 badges; a Legend stays at 0%, so a Legend’s peak TR equals start
-      TR (no Gym Leader is a Legend).
+      160); team size is a step scaler with an anchor at each step’s start (0–10 → 1, 11–28 → 2,
+      29–43 → 3, 44–56 → 4, 57–70 → 5, 71+ → 6). The wild level curve and regular trainer level
+      curve are world scaling: they read the player’s TR and only feed the readout above. The nine
+      archetype growth scalers, the Rival included, read world progress and give the growth % (0% at
+      world progress 0, never decreasing, 0–100%, read as a whole percent) from start TR toward peak
+      TR. Burst is the only step growth scaler, so it jumps at 4, 8, 16 and 24 badges; a Legend
+      stays at 0%, so a Legend’s peak TR equals start TR (no Gym Leader is a Legend).
     </p>
     {#key lab.anchors}
       <form
@@ -2253,6 +2297,40 @@
   }
   .growth-species {
     overflow-wrap: anywhere;
+  }
+  .growth-moves,
+  .growth-order {
+    list-style: none;
+    padding: 0;
+    margin: 3px 0 0;
+    font-size: 10px;
+    line-height: 1.3;
+  }
+  .growth-moves li {
+    color: var(--color-cartographer-muted);
+    overflow-wrap: anywhere;
+  }
+  .growth-moves li.pool {
+    color: var(--accent);
+  }
+  .growth-order li {
+    overflow-wrap: anywhere;
+  }
+  .growth-order .ace-chip {
+    margin-left: 3px;
+    padding: 0 3px;
+    font-size: 9px;
+  }
+  .partner-chip {
+    display: inline-block;
+    width: fit-content;
+    align-self: flex-start;
+    color: var(--color-cartographer-muted);
+    border: 1px solid #2d333a;
+    border-radius: 4px;
+    padding: 0 5px;
+    margin-bottom: 2px;
+    font-size: 10px;
   }
   .evolves-into {
     margin-left: 6px;

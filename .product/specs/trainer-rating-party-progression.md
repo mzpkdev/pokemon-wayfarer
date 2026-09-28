@@ -85,8 +85,8 @@ encounters.
 
 On the [v0 TR scale](player-trainer-rating.md#formula-v0) the level
 cap uses these placeholder anchors, interpolated as a
-[scaler](player-trainer-rating.md#scalers) and flat at Lv 100 from TR 160. It
-is no longer tied to the wild level curve plus 10:
+[scaler](player-trainer-rating.md#scalers) and flat at Lv 100 from TR 160.
+Unlike Today's cap, it is not tied to the wild level curve plus 10:
 
 | Badges | v0 TR | Level cap |
 | ---: | ---: | ---: |
@@ -96,7 +96,7 @@ is no longer tied to the wild level curve plus 10:
 | 16 | 120 | 75 |
 | 24 | 160 | 100 |
 
-League wins no longer move the cap. Experience reduction, obedience, Exp.
+In v0, league wins do not move the cap. Experience reduction, obedience, Exp.
 Candy, Rare Candy, and the missing-badge catch penalty are unchanged; they
 read whatever cap this curve yields.
 

@@ -40,10 +40,13 @@ explicit mapping.
 
 The twenty-fourth badge is Tate & Liza's double battle, covered as the
 [notable duo entry](notable-trainers.md#notable-trainer-inventory): the duo's
-TR sets the team size and levels, and both trainers' Pokémon come from the
-shared roster in roster order. Construction keeps its double-battle specifics:
-do not convert it to singles, keep its rewards and badge, and fill both
-trainers' parties from the one battle snapshot.
+TR sets the team size and levels, and members come out in battle order
+(fillers first, aces last), like every notable trainer's, alternating between
+the two partners along that order, counting back from the last member (who
+goes to Tate), so each partner's last Pokémon is an ace where possible
+([example](notable-trainers.md#notable-trainer-inventory)). Construction keeps its double-battle specifics: do not
+convert it to singles, keep its rewards and badge, and fill both trainers'
+parties from the one battle snapshot.
 
 Blue's `gymEligible` content metadata creates no badge encounter; his HNS Gym ID
 is excluded in Wayfarer. A leader's battles outside their badge encounter are
@@ -113,8 +116,10 @@ Trainer-species randomization bypasses the new roster and keeps its legacy
 source species, indices, count, levels, and constructor. Other challenge and
 move randomizer options keep their explicit precedence. A disabled switch
 restores existing encounter behavior rather than exposing an unscaled new
-roster. Standalone builds are untouched. Leader rematches resolve from the
-leader's TR under the every-battle rule, built with these same rules.
+roster. Standalone builds are untouched. On adoption, leader rematches
+resolve from the leader's TR under the
+[every-battle rule](notable-trainers.md#trainer-rating), built with these same
+rules; Today they keep their authored, static parties.
 
 Keep the policy disabled until inventory, content, validation, and playtesting
 pass. Invalid shipped metadata fails the build; runtime invalidity fails
@@ -137,8 +142,11 @@ prize-money basis, and the resolved AI flags. Check:
    only after the fight.
 4. Giovanni's Viridian finale encounter; Blue's excluded Gym ID; no enrollment
    from `gymEligible` alone.
-5. Tate & Liza's double battle drawn from the duo roster in order at every
-   team size, its badge, randomizer bypass, disabled-switch
+5. Tate & Liza's double battle at every team size from the duo's TR, with
+   members in battle order (fillers first, aces last) alternating between the
+   partners counting back from Tate's last member, so each partner's last
+   Pokémon is an ace where possible, its
+   badge, randomizer bypass, disabled-switch
    behavior, unchanged standalone parties, and rematches resolved from the
    leader's TR.
 6. Emulator playtests of low- and high-rated leaders, Gym-member comparisons,

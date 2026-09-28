@@ -5710,10 +5710,10 @@
           "item": "Sitrus Berry"
         }
       ],
-      "startTR": 40,
+      "startTR": 42,
       "archetype": "veteran",
       "peakTR": 92,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 40, a Veteran (peaked already, you overtake them: reaches their peak early and stops), peak TR 92.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 42 (placeholder start TR above the Gym band, 41 or more), a Veteran (peaked already, you overtake them: reaches their peak early and stops), peak TR 92.",
       "roster": [
         {
           "species": "Lapras",
@@ -5854,7 +5854,7 @@
       "startTR": 45,
       "archetype": "comeback",
       "peakTR": 94,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 45, a Comeback (stalls, then returns stronger: fast early, stalls mid-journey, surges late), peak TR 94.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 45 (placeholder start TR above the Gym band, 41 or more), a Comeback (stalls, then returns stronger: fast early, stalls mid-journey, surges late), peak TR 94.",
       "roster": [
         {
           "species": "Machamp",
@@ -5995,7 +5995,7 @@
       "startTR": 95,
       "archetype": "legend",
       "peakTR": 95,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 95, a Legend (never changes, waits at the top: TR stays at start TR, so peak TR equals start TR), peak TR 95.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 95 (placeholder start TR above the Gym band, 41 or more), a Legend (never changes, waits at the top: TR stays at start TR, so peak TR equals start TR), peak TR 95.",
       "roster": [
         {
           "species": "Gengar",
@@ -6135,10 +6135,10 @@
           "item": "Bright Powder"
         }
       ],
-      "startTR": 30,
+      "startTR": 44,
       "archetype": "steady",
       "peakTR": 150,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 30, a Steady (keeps a fixed fraction of the player's pace), peak TR 150.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 44 (placeholder start TR above the Gym band, 41 or more), a Steady (keeps a fixed fraction of the player's pace), peak TR 150.",
       "roster": [
         {
           "species": "Crobat",
@@ -6289,7 +6289,7 @@
       "startTR": 200,
       "archetype": "legend",
       "peakTR": 200,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 200, a Legend (never changes, waits at the top: TR stays at start TR, so peak TR equals start TR), peak TR 200.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 200 (placeholder start TR above the Gym band, 41 or more), a Legend (never changes, waits at the top: TR stays at start TR, so peak TR equals start TR), peak TR 200.",
       "roster": [
         {
           "species": "Dragonite",
@@ -7514,10 +7514,10 @@
           "item": "Twisted Spoon"
         }
       ],
-      "startTR": 30,
+      "startTR": 41,
       "archetype": "prodigy",
       "peakTR": 110,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 30, a Prodigy (brilliant early, then evens out: fast early, then slows), peak TR 110.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 41 (placeholder start TR above the Gym band, 41 or more), a Prodigy (brilliant early, then evens out: fast early, then slows), peak TR 110.",
       "roster": [
         {
           "species": "Xatu",
@@ -7655,10 +7655,10 @@
           "item": "Black Glasses"
         }
       ],
-      "startTR": 30,
+      "startTR": 47,
       "archetype": "steady",
       "peakTR": 155,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 30, a Steady (keeps a fixed fraction of the player's pace), peak TR 155.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 47 (placeholder start TR above the Gym band, 41 or more), a Steady (keeps a fixed fraction of the player's pace), peak TR 155.",
       "roster": [
         {
           "species": "Umbreon",
@@ -8906,10 +8906,10 @@
           "item": "Sitrus Berry"
         }
       ],
-      "startTR": 25,
+      "startTR": 41,
       "archetype": "prodigy",
       "peakTR": 105,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 25, a Prodigy (brilliant early, then evens out: fast early, then slows), peak TR 105.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 41 (placeholder start TR above the Gym band, 41 or more), a Prodigy (brilliant early, then evens out: fast early, then slows), peak TR 105.",
       "roster": [
         {
           "species": "Absol",
@@ -9051,10 +9051,10 @@
           "item": "Sitrus Berry"
         }
       ],
-      "startTR": 25,
+      "startTR": 43,
       "archetype": "steady",
       "peakTR": 150,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 25, a Steady (keeps a fixed fraction of the player's pace), peak TR 150.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 43 (placeholder start TR above the Gym band, 41 or more), a Steady (keeps a fixed fraction of the player's pace), peak TR 150.",
       "roster": [
         {
           "species": "Dusknoir",
@@ -9195,10 +9195,10 @@
           "item": "Sitrus Berry"
         }
       ],
-      "startTR": 40,
+      "startTR": 44,
       "archetype": "veteran",
       "peakTR": 90,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 40, a Veteran (peaked already, you overtake them: reaches their peak early and stops), peak TR 90.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 44 (placeholder start TR above the Gym band, 41 or more), a Veteran (peaked already, you overtake them: reaches their peak early and stops), peak TR 90.",
       "roster": [
         {
           "species": "Walrein",
@@ -9342,7 +9342,7 @@
       "startTR": 45,
       "archetype": "veteran",
       "peakTR": 93,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 45, a Veteran (peaked already, you overtake them: reaches their peak early and stops), peak TR 93.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 45 (placeholder start TR above the Gym band, 41 or more), a Veteran (peaked already, you overtake them: reaches their peak early and stops), peak TR 93.",
       "roster": [
         {
           "species": "Salamence",
@@ -9489,7 +9489,7 @@
       "startTR": 48,
       "archetype": "star",
       "peakTR": 190,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 48, a Star (explodes mid-journey: slow start, explodes, then levels off), peak TR 190.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 48 (placeholder start TR above the Gym band, 41 or more), a Star (explodes mid-journey: slow start, explodes, then levels off), peak TR 190.",
       "roster": [
         {
           "species": "Milotic",
@@ -9642,7 +9642,7 @@
       "startTR": 50,
       "archetype": "burst",
       "peakTR": 195,
-      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 50, a Burst (trains in jumps at milestones: a step scaler, Steady on average, jumping at 4, 8, 16 and 24 badges), peak TR 195.",
+      "trSource": "PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR 50 (placeholder start TR above the Gym band, 41 or more), a Burst (trains in jumps at milestones: a step scaler, Steady on average, jumping at 4, 8, 16 and 24 badges), peak TR 195.",
       "roster": [
         {
           "species": "Metagross",

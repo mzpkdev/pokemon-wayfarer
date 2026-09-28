@@ -154,13 +154,12 @@ When un-parked, required evidence:
 
 ## Later
 
-- League consumer: seeded league choice for invitations or special events (an earlier draft
-  seeded league order per edition: domain 1, ORDER; v0 leagues have no order).
+- League consumer: seeded league choice for invitations or special events.
+  In v0 no seed picks the caller: leagues call in an order set by the
+  deterministic [which league calls](leagues.md#which-league-calls) rule.
 - League consumer: seeded lineups, varying the deterministic
   [league score](leagues.md#selection-and-order) lineup per save, with
-  rotation (earlier draft: domain 1, ROSTER and POOL_KIND).
-- Trainer growth consumer: one growth arc per trainer per save (earlier draft:
-  domain 2, GROWTH_ARC).
+  rotation.
+- Trainer growth consumer: one growth arc per trainer per save.
 - Roster consumer: per-save filler weight variation
-  ([roster influence](trainer-roster-influence.md#weighted-pools); earlier
-  draft: domain 3, FILLER_JITTER).
+  ([roster influence](trainer-roster-influence.md#weighted-pools)).

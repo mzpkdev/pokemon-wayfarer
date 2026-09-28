@@ -6,8 +6,8 @@ content/balance acceptance remains separate.
 Today's [circuit producer](../../game/src/league_circuit.c) uses fixed Tier 3
 Hoenn admission, and the implemented
 [League level resolver](../../game/src/trainer_party_scaling.c) uses the
-player's Trainer Rating (TR) saved when entering a league. League levels are no
-longer static. Under the proposed [notable trainers](notable-trainers.md)
+player's Trainer Rating (TR) saved when entering a league, so League levels
+scale from that saved TR. Under the proposed [notable trainers](notable-trainers.md)
 model, notable trainers have their own TR, growing with world progress, that
 sets team level and size in every battle, with a six-slot roster. The
 [Leagues runtime](../specs/leagues.md) replaces Hoenn's fixed participants
@@ -144,8 +144,10 @@ rosters, items, AI, and battle formats. Regular trainers and Gym members apply
 the separate [Trainer-party scaling design](trainer-party-scaling.md) to those
 rosters; rivals and bosses retain authored battle parties. Initial Gym Leader
 badge battles follow the separate
-[Gym battle design](notable-trainers.md#gym-battles), while leader rematches
-retain authored, static parties. Current Hoenn Elite Four and Champion battles
+[Gym battle design](notable-trainers.md#gym-battles). Leader rematches keep
+authored, static parties Today; on adoption they follow the notable model
+through the [every-battle rule](../specs/notable-trainers.md#trainer-rating).
+Current Hoenn Elite Four and Champion battles
 use fixed Tier 3 source rosters and the player's TR saved when entering the
 league, under [League scaling](league-scaling.md). The proposed
 [Leagues selection](../specs/leagues.md#selection-and-order) instead picks the
@@ -157,8 +159,10 @@ leagues are singles only, so the duo stays out of league lineups.
 
 Ordinary Hoenn wild encounters retain Emerald's species, methods, weights, and
 locations while using the HNS TR level projection. Hoenn badges
-count toward Wayfarer's global badge total, and the Hoenn League contributes
-its circuit milestone. Fixed, gift, legendary, hidden, and scripted Pokémon
+count toward Wayfarer's global badge total. Today the Hoenn League
+contributes its circuit milestone; in the proposed [Leagues](leagues.md)
+design it adds no TR and calls the player once they hold a Hoenn badge and
+TR 80. Fixed, gift, legendary, hidden, and scripted Pokémon
 retain their authored levels unless another approved feature already governs
 them.
 
@@ -176,11 +180,11 @@ Hoenn destination.
 - Hoenn Champion completion is independent from the shared Indigo win and
   the Sevii Masters Challenge win.
 - Today, Hoenn is fixed Tier 3 after Indigo, Masters, and all twenty-four
-  badges. In the proposed [Leagues](leagues.md) design, leagues invite the
-  player by phone from player TR 80, the league with the most of their badges
-  first (Hoenn counts Hoenn badges), so a Hoenn-first player may hear from
-  Hoenn before Indigo; an accepted event gives one attempt, and a loss waits
-  for the next invitation. The first Hoenn win retains its player rewards and local completion
+  badges. In the proposed [Leagues](leagues.md) design, Hoenn phones with
+  an invitation once the player holds a Hoenn badge and has reached TR 80,
+  taking turns with the other leagues that know them
+  ([which league calls](../specs/leagues.md#which-league-calls)); an accepted
+  event gives one attempt, and a loss waits for the next invitation. The first Hoenn win retains its player rewards and local completion
   ownership.
 - Hoenn Trainers, NPCs, items, gifts, and story rewards remain consumed through
   saving, reloading, and blacking out.
@@ -227,8 +231,9 @@ not keep a separate healing history for every region.
 - Regular trainer and Gym member scaling is owned by the
   [Trainer-party scaling design](trainer-party-scaling.md). Enrolled initial
   Gym Leader badge battles are separately owned by the
-  [Gym battle design](notable-trainers.md#gym-battles); leader rematches retain
-  static parties.
+  [Gym battle design](notable-trainers.md#gym-battles). Leader rematches keep
+  static parties Today; on adoption they follow the notable model through the
+  [every-battle rule](../specs/notable-trainers.md#trainer-rating).
 - Today's Hoenn League preserves authored non-level metadata and scales from
   player TR locked for the run under [League scaling](league-scaling.md). The
   proposed successor freezes the five opponents, teams, and levels for the

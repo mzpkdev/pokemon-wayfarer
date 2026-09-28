@@ -34,13 +34,16 @@ module (`#trainer-balance`). Trainer balance bundles its catalog and can run
 directly with `pnpm --filter @wayfarer/ui dev`, without building map catalogs.
 It edits each notable trainer's growth (start TR, one of nine archetypes from
 Steady, Prodigy, Sleeper, Veteran, Rival, Legend, Star, Comeback and Burst, peak TR) and
-six-slot roster with 1–3 ace slots fought last (38 entries, including the Tate & Liza double battle duo), their
+six-slot roster with 1–3 ace slots fought last (38 entries, including the Tate & Liza double battle duo, whose team alternates between the two leaders along the battle order), their
 move pool (resolved against the Wayfarer learnsets and egg moves the catalog extracts, with dormant entries listed) and
 the scalers, shows each trainer's TR at the chosen player TR (world
 progress; badges are presets, and any TR can be typed), with members below
 their stage's evolution level stepping down their line, each trainer's
-milestones and a team level vs level cap chart, the Gym ladder, league
-lineups (willingness and league score rankings, the base lineup level and each aloof trainer's check), each trainer's play style and resolved Trainer AI flags at their TR, and compares team levels with the level cap; see [the UI README](ui/README.md#trainer-balance-explorer) for assumptions
+checkpoint report (TR, team level, stages, moves, battle order, dormant entries
+and AI tier at world progress 0, 40, 80, 120 and 160), milestones and a team
+level vs level cap chart, the Gym ladder, league lineups (willingness and
+league score rankings, the base lineup level and each aloof trainer's check)
+and simulated league invitations (ordered by a call counter), each trainer's play style and resolved Trainer AI flags at their TR, and compares team levels with the level cap; see [the UI README](ui/README.md#trainer-balance-explorer) for assumptions
 and catalog regeneration. The map modules consume
 the static catalog and terrain images created by the CLI tools. Docs bundles
 Markdown files below `.product/` through Vite and omits `__NAME__.md` templates

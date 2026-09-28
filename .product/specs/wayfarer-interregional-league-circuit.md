@@ -7,7 +7,7 @@ Implemented: Yes
 This contract remains the record of Today's implementation; the v0 design is
 [Leagues](leagues.md).
 
-The runtime now uses one persisted circuit stage identity for FRLG Indigo,
+The runtime uses one persisted circuit stage identity for FRLG Indigo,
 Sevii Masters, and Hoenn. Regional Champion flags are projections of committed
 league wins rather than the source of circuit progression.
 
@@ -375,9 +375,9 @@ stage was previously won.
 
 ## Trainer Rating
 
-This is today's formula. v0 moves TR to the new badge scale in
-[Player Trainer Rating](player-trainer-rating.md#formula-v0) and
-removes league TR.
+This is today's formula. In v0, TR follows the badge scale in
+[Player Trainer Rating](player-trainer-rating.md#formula-v0), with no
+league TR.
 
 Let `b` be global badge count. Preserve the badge contribution:
 

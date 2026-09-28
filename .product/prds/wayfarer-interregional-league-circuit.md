@@ -141,8 +141,8 @@ first-league-win unlock. Ordinary battle rewards remain unchanged.
 
 ## Trainer Rating
 
-This is today's formula. v0 moves TR to the new badge scale in
-[Player Trainer Rating](player-trainer-rating.md) and removes league TR.
+This is today's formula. In v0, TR follows the badge scale in
+[Player Trainer Rating](player-trainer-rating.md), with no league TR.
 
 The existing badge contribution remains unchanged. First league wins
 contribute:

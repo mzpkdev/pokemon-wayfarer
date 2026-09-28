@@ -33,9 +33,9 @@ League wins give you nothing. A league is a test of what you have built, not a
 source of power: winning one proves you are ready, and your next step still
 comes from badges.
 
-Today, the ROM still uses the earlier formula, where each first league win
-also raised TR and the total stopped at a fixed ceiling. It stays in place
-until the new scale is adopted.
+Today, the ROM uses a different formula, where each first league win also
+raises TR and the total stops at a fixed ceiling. It stays in place until the
+v0 scale is adopted.
 
 ### No ceiling
 
@@ -55,8 +55,8 @@ range, so extra TR still means something.
 - **Late on, routes are no threat.** With many badges, your level cap climbs
   far ahead of the wild and of regular trainers. You travel freely.
 - **The challenge comes from people you know.** Gym Leaders, league lineups,
-  and notable trainers met on the road bring the late-game fights, at their
-  own strength ([Notable trainers](notable-trainers.md)).
+  and the other notable trainers bring the late-game fights, at their own
+  strength ([Notable trainers](notable-trainers.md)).
 - **Stronger forms appear only once they've reached the right level, for
   everyone.** A wild Pokémon, a regular trainer's, or a notable trainer's
   below that level appears as an earlier form
@@ -77,7 +77,7 @@ range, so extra TR still means something.
   grow with it, each in their own way and up to their own best
   ([Notable trainers](notable-trainers.md)). League lineups come from
   their TR when you answer a league's invitation ([Leagues](leagues.md)), and
-  your TR of 80 is what gets you invited.
+  reaching TR 80 qualifies you for invitations.
 
 Your TR is never worked out from a notable trainer's TR, and nothing they do
 changes yours.
@@ -103,11 +103,22 @@ changes yours.
   with their own TR: 38 entries in v0 (37 people plus the Tate & Liza duo).
 - **Regular trainer:** every other trainer you battle.
 - **Gym member:** a regular trainer who works in a Gym.
+- **Scaler:** a TR-driven property, authored as a few anchor points (a TR
+  and a value). Between anchors the value follows a straight line, or, for a
+  **step** scaler, holds each anchor's value until the next anchor; past the
+  last anchor it stays flat
+  ([scalers](../specs/player-trainer-rating.md#scalers)).
 - **Level cap:** the level your Pokémon can reach before they earn less
   experience and may disobey.
 - **World scaling:** wild Pokémon and regular trainers following your TR.
 - **Wild level curve / regular trainer level curve:** how wild Pokémon and
   regular trainers' levels follow your TR.
+- **Team level:** the level a notable trainer's team is built around, a
+  scaler over their own TR; from TR 40 up it matches the level cap at the
+  same TR ([trainer scalers](../specs/notable-trainers.md#trainer-scalers)).
+- **Team size:** how many Pokémon a notable trainer brings, one to six: a
+  step scaler over their own TR, so it holds each size until the next step
+  ([trainer scalers](../specs/notable-trainers.md#trainer-scalers)).
 - **Authored level bonus:** a small, hand-set level bump for one regular
   trainer.
 - **Ceiling:** the point where something TR drives stops growing, and the TR
@@ -120,6 +131,13 @@ changes yours.
   Pokémon included; aces are fought last.
 - **Filler slot:** any roster slot that isn't an ace; its Pokémon is fought
   before the aces.
+- **Evolution level:** the level a Pokémon needs for its stage: the game's
+  own level for a level evolution, or one shared authored level for a trade,
+  stone, friendship, or other evolution.
+- **Downward rule:** a Pokémon below its stage's evolution level appears as
+  an earlier form, one stage at a time, until its level fits. It never steps
+  into a baby form and never evolves forward
+  ([evolution stages](../specs/player-trainer-rating.md#evolution-stages)).
 - **Play style:** a notable trainer's battle identity, exactly one each
   (Gambler, Bomber, Sweeper, Field marshal, Hexer, Turtle, Brawler, or
   Tactician); it adds its AI preferences on top of the basics
@@ -132,54 +150,63 @@ changes yours.
   player's whole party (Lance only in v0).
 - **Move pool:** a notable trainer's ordered list of the moves they like; the
   aces pick first.
-- **Dormant move:** a move-pool move none of the trainer's current Pokémon can
-  use yet.
+- **Dormant entry:** a move-pool entry that none of the trainer's current
+  Pokémon can use yet; it wakes once one can.
 - **Battle snapshot:** the team fixed when a battle starts and kept for the
   whole fight.
 - **League:** Indigo, Sevii Masters, or Hoenn.
+- **Qualify:** your TR reaching 80 (a placeholder), which makes you eligible
+  for league invitations. TR never decreases, so it happens once.
+- **Known (by a league):** a league knows you once you hold a badge from its
+  region: Indigo with a Kanto or Johto badge, Hoenn with a Hoenn badge. Sevii
+  Masters knows you after any league win. Only a league that knows you calls.
 - **Invitation:** a league's phone call inviting you to its next event. Once
-  your TR reaches 80 you qualify, and a league calls every 7 in-game days,
-  counted from qualifying and restarted when each invitation resolves. Only a
-  league that knows you calls (where you hold a badge, and Sevii Masters after
-  any league win), taking turns: the one that called longest ago calls next,
-  ties going to where you have the most badges, then Indigo. Days never change
-  anyone's strength.
-- **Accept / decline:** your answer to an invitation. Accepting freezes the
-  lineup and the event waits for you, with one attempt; declining lets the
-  event run without you.
+  you qualify, a league that knows you calls every seven in-game days, the
+  leagues taking turns
+  ([which league calls](../specs/leagues.md#which-league-calls)). Days only
+  schedule calls; they never change anyone's strength.
+- **Accept / decline:** your answer to an invitation. Accepting fixes the
+  event lineup and the event waits for you, with one attempt; declining lets
+  the event run without you.
 - **League event:** one tournament at a league, held for one invitation.
-- **Lineup:** the five opponents of a league event, worked out when you accept
-  or decline and kept for that event.
+- **Event lineup:** the five opponents of a league event, picked when you
+  accept or decline; an accepted event keeps them, with their teams, until it
+  ends.
 - **Reigning champion:** who holds a league's title until its next event: you
   if you won the last one, otherwise the strongest trainer of that event's
   lineup.
-- **Calendar:** an earlier v0 draft's staggered league events every 3 in-game
-  days; replaced by invitations.
-- **Locked lineup:** an earlier v0 draft's lineup, kept from entering a league
-  until winning it; replaced by one attempt per league event.
 - **Home region:** a notable trainer's region (Kanto, Johto, or Hoenn).
 - **Trait:** an opt-in yes/no behaviour of a notable trainer; every trait
   defaults to no. v0 has two: traveller and aloof.
-- **Traveller:** a trait; a traveller pays a small travel cost away from home.
-- **Location:** anywhere a notable trainer can appear; a league is a location
-  (overworld spots later).
+- **Traveller:** a trait; being away from home costs a traveller little
+  willingness.
+- **Location:** a place that picks which notable trainers turn up there, by
+  their willingness; in v0 the leagues are the only locations. Gym and story
+  battles are not locations: each always brings its own trainer.
 - **Location region:** the region or regions a location belongs to (Indigo:
   Kanto and Johto; Hoenn: Hoenn).
 - **Neutral location:** a location that is home to everyone (Sevii Masters).
 - **At home / away:** at home when the location is in the trainer's home
   region or neutral; away otherwise.
-- **Travel cost:** 0 at home; away, 10 for a traveller or 80 otherwise.
-- **Fatigue:** 50 if the trainer was in the lineup of the most recent
-  resolved league event, whether you accepted it or declined it.
-- **Willingness:** max(5, 100 − travel cost − fatigue).
-- **Aloof:** a trait; an aloof trainer won't join a league whose base lineup
-  is well below their level: they join only if their team level is at most
-  the base lineup level + 10, and skip when there is no base lineup.
-- **Base lineup:** a league's five best non-aloof trainers by league score,
-  ranked before any aloof trainer is considered.
+- **Travel cost:** how much being away from home puts a trainer off: nothing
+  at home, a little for a traveller, a lot for anyone else
+  ([travel](../specs/notable-trainers.md#home-region-and-travel)).
+- **Fatigue:** the tiredness of a trainer who played in the most recent
+  resolved league event, whether you accepted it or declined it; it makes
+  them less willing to join the next
+  ([selection](../specs/leagues.md#selection-and-order)).
+- **Willingness:** how keen a trainer is to turn up at a location: full at
+  home, lowered by travel cost and fatigue, and never quite zero
+  ([travel](../specs/notable-trainers.md#home-region-and-travel)).
+- **Aloof:** a trait; an aloof trainer joins a league only when its base
+  lineup is close enough to their own team level, and skips it when there is
+  no base lineup ([selection](../specs/leagues.md#selection-and-order)).
+- **Base lineup:** a league event's five best trainers by league score who
+  are not aloof, picked before any aloof trainer is considered.
 - **Base lineup level:** the highest team level in the base lineup.
-- **League score:** floor(TR × willingness / 100); a league event's lineup is
-  the five highest among those who join, ties by ascending characterId.
+- **League score:** a trainer's TR scaled down by their willingness; the
+  event lineup is the five highest among those who join
+  ([selection](../specs/leagues.md#selection-and-order)).
 - **Match 1-5:** a position in the lineup.
 - **First league win:** your first win at a given league, which brings its
   one-time effects; later wins are repeat wins (prize money and the title).
@@ -204,7 +231,7 @@ changes yours.
 - Scalers whose ceilings lie beyond today's range, arriving with the content
   that pushes TR higher.
 - Further tuning of the treadmill (the world scaling alongside the player's
-  growth) and the widening world gap, now that late routes fall behind.
+  growth) and the widening world gap, as late routes fall behind.
 
 ## References
 

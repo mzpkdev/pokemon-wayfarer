@@ -4,14 +4,13 @@ PRD: [Leagues](../prds/leagues.md)
 Implemented: No
 Design status: v0 approved: leagues as locations whose **league events**
 reach the player as **invitations** by phone. From player TR 80 a league
-calls every 7 in-game days (restarted when each invitation resolves, paused
+calls every 7 in-game days (restarted when each invitation resolves, stopped
 while an accepted event waits); only a league that knows the player calls
 (Indigo with a Kanto or Johto badge, Hoenn with a Hoenn badge, the Sevii
-Masters after any league win), round-robin: the eligible league that called
-least recently, ties to the most badges, then Indigo. Accepting freezes a
-lineup that waits for the player, with one attempt; declining runs the event
-without them. A
-league score per eligible trainer (Trainer Rating (TR) scaled by
+Masters after any league win), round-robin by a call counter: the eligible
+league that called least recently, ties to the most badges, then Indigo.
+Accepting freezes a lineup that waits for the player, with one attempt;
+declining runs the event without them. A league score per eligible trainer (Trainer Rating (TR) scaled by
 willingness, from travel cost and fatigue), aloof trainers joining only a
 base lineup near their level, the top five by league score with no
 randomness, ascending battle order, a **reigning champion** per league, and
@@ -31,10 +30,10 @@ wins, saved state, load validation, presentation, and regional integration.
 
 - [Notable trainers](notable-trainers.md) owns notable trainers, their
   TR and its growth with world progress, home regions, the traits (traveller
-  and aloof), travel cost and willingness, the team-level and team-size
-  scalers, rosters, and team composition. This spec reads a trainer's TR, team
-  level, willingness, aloof trait, and composed team; it never restates how they are
-  computed.
+  and aloof), travel cost and willingness, the team-level scaler and the
+  team-size step scaler, rosters, and team composition. This spec reads a
+  trainer's TR, team level, willingness, aloof trait, and composed team; it
+  never restates how they are computed.
 - [Player Trainer Rating](player-trainer-rating.md) owns the player's TR,
   which this spec reads only for the qualification gate and as world
   progress. In v0 a league win adds no player TR; Today's +8 per first league
@@ -114,7 +113,10 @@ league ([Load validation](#load-validation)).
 Days come from the game's existing in-game day counter (`VAR_DAYS`, which
 the daily update in [clock.c](../../game/src/clock.c) keeps); leagues add no
 clock of their own. **Days never affect anyone's strength**: every TR stays a
-function of world progress, and days only schedule invitations.
+function of world progress, and days only schedule invitations. The order of
+calls never reads days: it comes from a monotonic
+[call counter](#which-league-calls), so a day counter that goes backwards
+cannot reorder the leagues.
 
 ### Qualification
 
@@ -132,8 +134,20 @@ accepted event ends in a win, a loss, or leaving. No countdown runs while an
 invitation is waiting to be answered or an accepted event is pending, however
 long the player takes.
 
-The saved countdown is the **day of the next call**. The call is due once the
-day counter reaches it. A counter behind it (a clock turned back) waits, and a
+The countdown counts only **forward day advances**. It saves the **days
+remaining** (7 when it starts or restarts) and the **last counted day** (the
+day counter's value when the countdown last looked). On each check (the daily
+update, and after a load):
+
+```text
+today = day counter
+if today > lastCountedDay: daysRemaining = max(0, daysRemaining - (today - lastCountedDay))
+lastCountedDay = today
+```
+
+The call is due once the days remaining reach 0. A day counter that goes
+backwards (a clock turned back) neither advances nor resets the countdown: it
+only moves the last counted day down, and counting resumes from there. A
 counter far ahead brings one call, never a backlog: missed days leave no
 trace.
 
@@ -150,11 +164,15 @@ badges and lifetime wins then. A league calls only where the player is known
 
 The TR 80 gate still applies to every call. A league's **badges** are the
 player's badges from its regions: Indigo counts Kanto and Johto badges, Hoenn
-counts Hoenn badges, and the Masters has no badge count. Among the eligible
-leagues, the saved **day each league last called** decides, **round-robin**:
+counts Hoenn badges, and the Masters has no badge count.
 
-1. The eligible league that **called least recently** calls. A league that has
-   never called counts as least recent.
+The saved **call counter** is monotonic: it starts at 0, and each call takes
+the next number (counter + 1), which becomes the calling league's **last call
+number**. Among the eligible leagues, the last call numbers decide,
+**round-robin**:
+
+1. The eligible league whose last call has the **lowest number** calls. A
+   league that has never called has no number and counts as lowest.
 2. A tie (only possible between leagues that have never called) goes to the
    league with the **most badges**; the Masters, with no badge count, loses
    a badge tie to a regional league.
@@ -167,6 +185,11 @@ becomes eligible later (a first badge in its regions, or the Masters after a
 first win) has never called, so it calls next. Badges from any region count
 toward the gate; which regions they come from decides who may call and breaks
 ties.
+
+**No eligible league.** If the player qualifies while no league knows them
+(possible only with a future TR source that needs no badge), no call is made:
+the countdown stays due, and each daily update checks again, until a league
+knows them and calls.
 
 ### Accept
 
@@ -195,12 +218,11 @@ invitation:
 
 1. **TR.** Compute each eligible trainer's TR at the current world progress
    ([Notable trainers](notable-trainers.md#growth-with-world-progress)).
-2. **Willingness.** Score each eligible trainer with the
-   [travel rule](notable-trainers.md#home-region-and-travel):
-   `max(5, 100 - travelCost - fatigue)`. **Fatigue** is league-specific: 50 if
-   the trainer is in the most recent resolved lineup, else 0. At home a trainer
-   scores 100 (50 fatigued); away, a [traveller](notable-trainers.md#traveller)
-   90 (40) and anyone else 20 (5).
+2. **Willingness.** Score each eligible trainer's willingness for this league
+   with the [travel rule](notable-trainers.md#home-region-and-travel), which
+   reads the league's location region and this fatigue. **Fatigue** is
+   league-specific: 50 if the trainer is in the most recent resolved lineup,
+   else 0.
 3. **League score.** `floor(TR × willingness / 100)`, in integer arithmetic.
 4. **Base lineup.** Rank the eligible trainers who are not
    [aloof](notable-trainers.md#aloof) by league score, ties by ascending
@@ -271,14 +293,15 @@ battles, or rewards.
 ## Saved state
 
 Keep Today's saved first-league-win facts (`indigoCleared`, `mastersCleared`,
-`hoennCleared`, now the lifetime wins) and pending ceremony phase. Add:
+`hoennCleared`, which serve as the lifetime wins) and pending ceremony phase.
+Add:
 
 - the **invitation state**, exactly one of: not qualified; counting down, with
-  the **day of the next call**; **invited** by a league, waiting for the
-  player's answer; or an **accepted event**, holding its league and its
-  [event lineup](#event-lineup);
-- per league, the **day it last called** (none, or an in-game day), read for
-  [which league calls](#which-league-calls);
+  the **days remaining** and the **last counted day**; **invited** by a
+  league, waiting for the player's answer; or an **accepted event**, holding
+  its league and its [event lineup](#event-lineup);
+- the **call counter**, and per league its **last call number** (none, or a
+  call number), read for [which league calls](#which-league-calls);
 - the **most recent resolved lineup**: the five `characterId`s of the most
   recent resolved event, with its content versions, read for fatigue; empty
   on a new game;
@@ -287,10 +310,11 @@ Keep Today's saved first-league-win facts (`indigoCleared`, `mastersCleared`,
 - the **active run**, only while the player is fighting their accepted event:
   the defeated prefix.
 
-There is no seed, edition, rotation history, calendar, or lineup history
-beyond the most recent resolved lineup. At most one accepted event and one
-active run exist. New Game saves the not-qualified state and no last-call day,
-reigning champion, or most recent resolved lineup. Save an explicit schema
+There is no seed, rotation history, or lineup history beyond the most recent
+resolved lineup, and no stored day other than the countdown's last counted
+day. At most one accepted event and one active run exist. New Game saves the
+not-qualified state, a call counter of 0, and no last call number, reigning
+champion, or most recent resolved lineup. Save an explicit schema
 discriminator for this layout; prerelease saves need no migration.
 
 ## Lifecycle
@@ -298,13 +322,14 @@ discriminator for this layout; prerelease saves need no migration.
 ### Qualifying and the call
 
 After any player TR change, and on the daily update, a not-qualified player
-whose TR is at least 80 starts counting down: the day of the next call is the
-current day + 7.
+whose TR is at least 80 starts counting down: 7 days remaining, with the
+current day as the last counted day.
 
-When the day counter reaches the day of the next call, choose the calling
-league ([Which league calls](#which-league-calls)) and, in one transaction,
-save the invited state with that league and set that league's last-call day
-to the current day. The phone rings at the next moment the
+When the countdown is due, choose the calling league
+([Which league calls](#which-league-calls)); with no eligible league, nothing
+happens until a later check. Otherwise, in one transaction, save the invited
+state with that league, advance the call counter, and give that league the
+new number as its last call number. The phone rings at the next moment the
 player can take a call (in the overworld, with no script, battle, or ceremony
 running); an invitation not yet answered rings again after a reload.
 
@@ -317,7 +342,7 @@ The call asks the player to accept or decline; there is no "later".
   the league and the five names.
 - **Decline.** Select the five and, in one transaction, set the league's
   reigning champion to their strongest, save them as the most recent resolved
-  lineup, and restart the countdown (the day of the next call = today + 7).
+  lineup, and restart the countdown (7 days remaining from today).
 
 A failure leaves the invited state intact, so the call rings again; a crash
 exposes either the invited state or the complete result. Answering creates no
@@ -338,8 +363,8 @@ battle, reward, or record.
 A loss blacks the player out as usual. A blackout or voluntary exit ends the
 event, in one transaction: the frozen lineup's strongest becomes the league's
 reigning champion, its five become the most recent resolved lineup, the run
-and the accepted event are released, the countdown restarts (the day of the
-next call = today + 7), and nothing is recorded or rewarded.
+and the accepted event are released, the countdown restarts (7 days
+remaining from today), and nothing is recorded or rewarded.
 
 ### Win
 
@@ -351,8 +376,7 @@ After five victories, one transaction atomically:
   never changes, and queues Today's ceremony; a repeat win instead gives its
   [repeat-win reward](#first-and-repeat-wins);
 - saves the five as the most recent resolved lineup, releases the run and the
-  accepted event, and restarts the countdown (the day of the next call =
-  today + 7).
+  accepted event, and restarts the countdown (7 days remaining from today).
 
 Stale or duplicate callbacks are rejected. Individual victories, losses, and
 Red add no TR.
@@ -404,17 +428,21 @@ size must not shift it.
 Validate the schema, lifetime wins, pending transactions, and league state
 before any dispatch, call, or answer. Not qualified, no accepted event, no
 active run, and an empty most recent resolved lineup are normal; validation
-never generates a lineup, places a call, or reads the day counter.
+never generates a lineup or places a call.
 
 - The invitation state is exactly one of its four kinds. Counting down holds
-  a day; invited and accepted name a league that has a last-call day and is
-  the league that called most recently (the Masters only with a lifetime
-  win); badges are not rechecked, since badges never decrease.
-- Each league's last-call day is none or a day; no two leagues share a day,
-  and all are none only when the player has never been called (not
-  qualified, or counting down to the first call). The Masters has a day only
-  with a lifetime win. A last-call day ahead of the day counter is valid (a
-  clock change).
+  days remaining (0 to 7) and a last counted day; invited and accepted name a
+  league whose last call number equals the call counter (the league that
+  called most recently; the Masters only with a lifetime win); badges are not
+  rechecked, since badges never decrease.
+- A stored day is never a reason to reject a save. A last counted day ahead
+  of the day counter (a clock turned back) is clamped to the day counter,
+  which neither advances nor resets the countdown.
+- Each league's last call number is none or a number from 1 to the call
+  counter; no two leagues share a number, and when the counter is above 0 one
+  league holds it. All are none only when the counter is 0, which means the
+  player has never been called (not qualified, or counting down to the first
+  call). The Masters has a number only with a lifetime win.
 - An accepted event's lineup holds five distinct eligible characters in
   non-decreasing TR order and resolves every reference. Stored teams must be
   valid for their roster (known roster slots, legal forms, levels, and
@@ -423,8 +451,6 @@ never generates a lineup, places a call, or reads the day counter.
   characters; a reigning champion is none, the player, or a known character.
 - An active run exists only with an accepted event and names a match within
   its lineup.
-- A day counter behind the day of the next call is valid (a clock change):
-  the call waits for it.
 
 If the saved content versions differ from the build's, turn an accepted event
 back into an unanswered invitation from the same league (dropping its lineup
@@ -570,9 +596,12 @@ evidence (not yet run):
    the day of qualifying and the first call comes 7 days later.
 4. **Countdown.** Each resolution (a decline, a win, a loss, leaving) restarts
    the countdown at 7 days; no call arrives while an invitation is unanswered
-   or an accepted event waits, however many days pass; a clock turned back
-   delays the call; a counter jump of many days brings one call and no
-   backlog; strength is identical on every day at one world progress.
+   or an accepted event waits, however many days pass; a day counter turned
+   back neither advances nor resets the countdown, which then counts forward
+   from the lower day; a save whose last counted day is ahead of the day
+   counter loads, clamped, and is never rejected; a counter jump of many days
+   brings one call and no backlog; strength is identical on every day at one
+   world progress.
 5. **Which league calls.** Known-there eligibility: with no badge in a
    league's regions that league never calls (Indigo counting Kanto and
    Johto), and the Masters never calls before a lifetime league win. Among the
@@ -581,8 +610,10 @@ evidence (not yet run):
    to the most badges, the Masters losing to a regional league, then to
    Indigo; the very first call comes from the most-badges eligible league. A
    single eligible league calls repeatedly; a league that becomes eligible
-   later calls next. The same badges, wins, and last-call days always give the
-   same caller.
+   later calls next. With no eligible league, a due call waits and is
+   checked again each day until a league knows the player. The call counter
+   only increases, and a day counter turned back never changes the order.
+   The same badges, wins, and last call numbers always give the same caller.
 6. **Accept and decline.** Accepting saves the selected five in ascending TR
    order with the accepted event atomically, and the event waits across many
    days and reloads with the same five; reloading before the commit selects
@@ -594,9 +625,9 @@ evidence (not yet run):
    progress values, badge splits, answers, and most recent resolved lineups,
    matched between host tooling and game C; the same inputs always give the
    same five and the same caller, and the Pokémon RNG state is unchanged.
-8. **Fresh state.** A new game is not qualified and has no last-call day,
-   reigning champion, accepted event, active run, or most recent resolved
-   lineup; load, display, and denied or cancelled requests generate nothing.
+8. **Fresh state.** A new game is not qualified, has a call counter of 0, and
+   has no last call number, reigning champion, accepted event, active run, or
+   most recent resolved lineup; load, display, and denied or cancelled requests generate nothing.
 9. **Loss.** Lose at each match, and leave voluntarily: the event ends once,
    nothing is recorded, the player blacks out to the usual target, the frozen
    lineup's strongest reigns, that lineup becomes the most recent resolved
@@ -613,7 +644,7 @@ evidence (not yet run):
     XP, and parties match the lineup's matches, including a Gym Leader in
     match 5. The phone rings only when the player can take a call, and rings
     again after a reload until answered; lobbies name the reigning champion.
-12. **Load validation.** Corrupt invitation state, last-call days, accepted events,
+12. **Load validation.** Corrupt invitation state, call numbers, accepted events,
     runs, lineups, most recent resolved lineups, schema, or callbacks are
     rejected without regenerating, calling, advancing, or rewarding. A
     content version change turns an accepted event back into an unanswered
@@ -647,7 +678,8 @@ Report balance playtesting separately from structural checks.
 - Role windows and standing-based matches, with a nearest-standing fallback for
   empty windows.
 - A Trainer Card view of the three leagues and their reigning champions.
-- Winning-team records per edition and edition completion presentation.
+- Winning-team records per league event, and presentation of a player's
+  record across a run of events.
 
 ## References
 

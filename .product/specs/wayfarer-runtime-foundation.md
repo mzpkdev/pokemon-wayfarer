@@ -125,24 +125,25 @@ Existing Johto and Kanto callers keep their current result.
 
 The proposed [Leagues runtime](leagues.md#saved-state) adds, under this
 storage policy, a small invitation state (not qualified; counting down, with
-the day of the next call; invited by a league; or one accepted event, holding
-its league and its event lineup of five matches in battle order, each holding
-`characterId`, TR, and the composed team), the day each league last called,
-the most recent resolved lineup (five
-`characterId`s with content versions) for fatigue, each league's reigning
-champion, and, only while the player is fighting, the active run's defeated
-prefix. Lifetime first-win facts stay as they are. Call days come from the
-existing in-game day counter; there is no seed, edition, rotation history,
-calendar, other lineup history, or progress index.
+the days remaining and the last counted day; invited by a league; or one
+accepted event, holding its league and its event lineup of five matches in
+battle order, each holding `characterId`, TR, and the composed team), the
+call counter and each league's last call number, the most recent resolved
+lineup (five `characterId`s with content versions) for fatigue, each league's
+reigning champion, and, only while the player is fighting, the active run's
+defeated prefix. Lifetime first-win facts stay as they are. The countdown
+reads the existing in-game day counter; there is no seed, rotation history,
+other lineup history, or progress index.
 Notable trainers' TRs are authored content, so New Game saves nothing for them.
 An explicit schema discriminator rejects obsolete layouts. The event lineup
 stays unchanged through reconstruction and reload however long the accepted
 event waits; the event's end (a win, a loss, or leaving) releases it. Size
 assertions and save-sector accounting must include the invitation state and
-accepted event lineup, the callers, the most recent resolved lineup, the
-reigning champions, the active run, and transaction metadata within the
-allocation below. A corrupt invitation state, accepted event, run, or league
-state is an invalid save; a content version change instead turns an accepted
+accepted event lineup, the call counter and call numbers, the most recent
+resolved lineup, the reigning champions, the active run, and transaction
+metadata within the allocation below. A corrupt invitation state, accepted
+event, run, or league state is an invalid save, but a stored day ahead of the
+day counter is clamped, never rejected; a content version change instead turns an accepted
 event back into an unanswered invitation and clears the most recent resolved
 lineup. This extension is not implemented here.
 
@@ -212,16 +213,11 @@ projects its win into both Kanto and Johto Champion recognition.
 
 The proposed [Leagues runtime](leagues.md) keeps today's first league wins
 with their regional recognition, cleanup, and unlocks, and replaces today's
-admission and fixed order with league invitations: from player TR 80 a
-league phones every 7 in-game days (restarted when each invitation resolves,
-paused while an accepted event waits); only a league that knows the player
-calls (Indigo with a Kanto or Johto badge, Hoenn with a Hoenn badge, the
-Masters after any league win), round-robin by least recent call, ties to the
-most badges and then Indigo. Each event's lineup is the top five
-notable trainers by league score (their TR when the player accepts or
-declines, scaled by willingness), grown from world progress under
-[Notable trainers](notable-trainers.md), strongest last, without reading
-player party, XP, or the day. Notable trainers in Gyms use the same model at
+admission and fixed order with league invitations and league-score lineups
+([invitations](leagues.md#invitations),
+[selection](leagues.md#selection-and-order)), grown from world progress under
+[Notable trainers](notable-trainers.md), without reading player party, XP, or
+the day. Notable trainers in Gyms use the same model at
 battle setup.
 
 An accepted event waits for the player, who has one attempt. Winning makes the

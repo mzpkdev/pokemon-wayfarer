@@ -381,9 +381,9 @@ saved when entering the league, under [League scaling](league-scaling.md).
 Hoenn-specific Champion/game-clear ownership and local cleanup remain in force.
 
 The proposed [Leagues runtime](leagues.md) replaces today's admission and
-league order with league invitations (from player TR 80; Hoenn calls when
-the player holds more Hoenn badges than Kanto and Johto badges, or in turn)
-and owns each accepted event's frozen five-trainer lineup, one attempt per
+league order with league invitations (from player TR 80, Hoenn calling once
+the player holds a Hoenn badge, in turn with the other leagues that know them:
+[which league calls](leagues.md#which-league-calls)) and owns each accepted event's frozen five-trainer lineup, one attempt per
 event, and the reigning champion;
 [Leagues selection](leagues.md#selection-and-order) picks the top five by
 league score (TR scaled by willingness), and [Notable trainers](notable-trainers.md) owns their TR and
@@ -454,8 +454,9 @@ Static and automated validation must prove all of the following:
 9. Global difficulty does not change ordinary Hoenn source roster selection.
       TR transforms eligible regular trainer and Gym member battle parties
    under the Trainer-party scaling specification. Enrolled initial Gym Leader
-   badge battles follow the separate Gym Leader scaling specification; leader
-   rematches remain static.
+   badge battles follow the separate Gym Leader scaling specification. Leader
+   rematches remain static Today; on adoption they follow the notable model
+   through the [every-battle rule](notable-trainers.md#trainer-rating).
 10. Every authored ordinary wild profile exists in Wayfarer, preserves its
    source population, and uses HNS level projection.
 11. HNS and Hoenn native utility schedules are both present, and Hoenn-sourced

@@ -26,12 +26,13 @@ warning (it needs a from level), as is one no line can learn. Learnset
 extraction needs a C preprocessor (arm-none-eabi-cpp, else cpp).
 
 Each trainer also records a home region (Kanto, Johto or Hoenn) from the
-section 14 lore table (HOME_REGION) and two opt-in traits (section 17),
+lore table in the Notable trainers spec (Home region and travel, HOME_REGION)
+and two opt-in traits (Traits),
 yes/no flags that default to no: traveller (TRAVELLERS), which the explorer's
 league score reads, and aloof (ALOOF), which only its league lineup rule
 reads.
 
-Each trainer also records the section 18 Trainer AI inputs: exactly one play
+Each trainer also records the Trainer AI inputs (Trainer AI spec): exactly one play
 style (PLAY_STYLES, one of eight) and the authored boss flag (BOSS_OMNISCIENT,
 Lance only in v0). The explorer resolves the AI flags from them.
 """
@@ -70,7 +71,9 @@ MAX_ACES = 3
 CATALOG_SIZE = 38
 OFFSET_MIN, OFFSET_MAX = -6, 0
 DEFAULT_OFFSET = -2
-# Baby pre-evolutions do not count when checking whether a line covers a species.
+# Baby pre-evolutions: a line stops above them (members never step down to a
+# baby), so baby edges need no evolution-level table row. Egg species still
+# include them (egg_species).
 BABIES = {"SPECIES_PICHU", "SPECIES_CLEFFA", "SPECIES_IGGLYBUFF", "SPECIES_TYROGUE", "SPECIES_SMOOCHUM",
           "SPECIES_ELEKID", "SPECIES_MAGBY", "SPECIES_AZURILL", "SPECIES_WYNAUT", "SPECIES_BUDEW",
           "SPECIES_CHINGLING", "SPECIES_BONSLY", "SPECIES_MIME_JR", "SPECIES_HAPPINY", "SPECIES_MUNCHLAX",
@@ -118,20 +121,28 @@ ROSTER = [
 ]
 
 
-# Placeholder growth (contract sections 7, 8 and 11), tuned in the explorer to
-# the balance targets: name -> (start TR, archetype, peak TR). Every archetype,
-# Rival included, is a growth scaler. The lore-based assignments are approved
-# (section 11): Veterans peak early, Stars explode mid-journey, Comebacks
-# stall and return stronger, Bursts train in jumps, the strongest leaders are
-# Sleepers, Agatha is a Legend, most others are Steady. The Champions follow
-# lore (section 16): Lance is a Legend fixed at TR 200, Steven a Burst and
-# Wallace a Star; they and Lance have the highest peaks. Gym Leaders (the duo included) start in the GYM_START_BAND
-# by archetype (GYM_ARCHETYPE_BANDS), not by Gym order, varied a little by lore;
-# no Gym Leader is a Legend. League-eligible Steadies and Bursts keep start +
-# peak <= 190 so they stay at TR 95 or less at world progress 80.
+# Placeholder growth (Notable trainers spec: Growth with world progress and
+# Balance targets), tuned in the explorer to the balance targets: name ->
+# (start TR, archetype, peak TR). Every archetype, Rival included, is a growth
+# scaler. The lore-based assignments are approved: Veterans peak early, Stars
+# explode mid-journey, Comebacks stall and return stronger, Bursts train in
+# jumps, the strongest leaders are Sleepers, Agatha is a Legend, most others
+# are Steady. The Champions follow lore too: Lance is a Legend fixed at TR 200,
+# Steven a Burst and Wallace a Star; they and Lance have the highest peaks. Gym
+# Leaders (the duo included) start in the GYM_START_BAND by archetype
+# (GYM_ARCHETYPE_BANDS), not by Gym order, varied a little by lore; no Gym
+# Leader is a Legend. League-eligible Steady and Burst Gym Leaders keep start +
+# peak <= 190 so they stay at TR 95 or less at world progress 80. The Elite
+# Four and Champions start above the Gym band (ELITE_START_MIN), except Blue,
+# the Rival, who leaves Pallet with the player at TR 0; the members who once
+# sat inside the band start at TR 41-50 by lore, each league's first member
+# lowest (Will and Sidney 41, Lorelei 42, Phoebe 43, Koga and Glacia 44, Karen
+# 47, the last before the Champion).
 ARCHETYPES = ("steady", "prodigy", "sleeper", "veteran", "rival",
               "legend", "star", "comeback", "burst")
 GYM_START_BAND = (18, 40)
+# The lowest start TR of an Elite Four member or Champion other than the Rival.
+ELITE_START_MIN = GYM_START_BAND[1] + 1
 GYM_ARCHETYPE_BANDS = {
     "sleeper": (18, 26), "star": (18, 26),
     "prodigy": (22, 30),
@@ -144,25 +155,25 @@ GROWTH = {
     "Janine": (27, "prodigy", 100), "Sabrina": (24, "sleeper", 180),
     "Blaine": (37, "comeback", 90), "Giovanni": (24, "burst", 166),
     "Blue": (0, "rival", 170),
-    "Lorelei": (40, "veteran", 92), "Bruno": (45, "comeback", 94),
-    "Agatha": (95, "legend", 95), "Koga": (30, "steady", 150),
+    "Lorelei": (42, "veteran", 92), "Bruno": (45, "comeback", 94),
+    "Agatha": (95, "legend", 95), "Koga": (44, "steady", 150),
     "Lance": (200, "legend", 200),
     "Falkner": (22, "prodigy", 80), "Bugsy": (24, "star", 100),
     "Whitney": (26, "star", 95), "Morty": (26, "sleeper", 171),
     "Chuck": (34, "burst", 85), "Jasmine": (24, "steady", 166),
     "Pryce": (40, "comeback", 92), "Clair": (21, "sleeper", 185),
-    "Will": (30, "prodigy", 110), "Karen": (30, "steady", 155),
+    "Will": (41, "prodigy", 110), "Karen": (47, "steady", 155),
     "Roxanne": (24, "steady", 90), "Brawly": (24, "burst", 90),
     "Wattson": (32, "veteran", 75), "Flannery": (23, "star", 100),
     "Norman": (26, "steady", 164), "Winona": (18, "sleeper", 172),
     "Tate & Liza": (26, "star", 170), "Juan": (23, "sleeper", 185),
-    "Sidney": (25, "prodigy", 105), "Phoebe": (25, "steady", 150),
-    "Glacia": (40, "veteran", 90), "Drake": (45, "veteran", 93),
+    "Sidney": (41, "prodigy", 105), "Phoebe": (43, "steady", 150),
+    "Glacia": (44, "veteran", 90), "Drake": (45, "veteran", 93),
     "Wallace": (48, "star", 190), "Steven": (50, "burst", 195),
 }
 # The Gym Leader duo: one entry fought as a double battle, league-ineligible.
 DUOS = {"Tate & Liza"}
-# Section 14 home regions (lore, reviewable). A league is a location: a
+# Home regions (Notable trainers spec: Home region and travel; lore, reviewable). A league is a location: a
 # trainer is at home when their home region is one of its location regions
 # (Indigo: Kanto and Johto; Hoenn: Hoenn); the Sevii Masters is a neutral
 # location, so everyone is at home.
@@ -176,12 +187,12 @@ HOME_REGION = {
                                   "Tate & Liza", "Juan", "Sidney", "Phoebe", "Glacia", "Drake", "Wallace",
                                   "Steven")},
 }
-# Section 17 traveller trait (lore, reviewable; section 14 assignments): away,
+# Traveller trait (Notable trainers spec: Traveller; lore, reviewable): away,
 # a traveller pays a travel cost of 10 instead of the default 80. Also reserved
 # for a future overworld spawning rule. Everyone else is not a traveller.
 TRAVELLERS = {"Brock", "Misty", "Blue", "Lance", "Steven", "Wallace", "Will", "Karen", "Bruno", "Glacia",
               "Giovanni", "Koga", "Bugsy", "Brawly", "Drake"}
-# Section 16 aloof trait (lore, reviewable), independent of archetype and the
+# Aloof trait (Notable trainers spec: Aloof; lore, reviewable), independent of archetype and the
 # traveller trait: an aloof trainer won't join a league whose base lineup is
 # well below their level. Only the league lineup rule reads it. The Champions
 # only grace elite leagues; Agatha is Oak's proud old rival; Glacia came to
@@ -189,7 +200,7 @@ TRAVELLERS = {"Brock", "Misty", "Blue", "Lance", "Steven", "Wallace", "Will", "K
 # cold and distant; Karen ("strong Pokémon, weak Pokémon") disdains weak
 # company.
 ALOOF = {"Lance", "Wallace", "Steven", "Agatha", "Glacia", "Clair", "Sabrina", "Karen"}
-# Section 18 play styles (engine-fitted, reviewable): every notable trainer has
+# Play styles (Trainer AI spec: Play styles; engine-fitted, reviewable): every notable trainer has
 # exactly one, their battle identity; the explorer adds the style's AI flags on
 # top of the Basic bundle. The trainer's gimmick decides the style.
 PLAY_STYLE_NAMES = ("gambler", "bomber", "sweeper", "field_marshal", "hexer", "turtle", "brawler",
@@ -213,10 +224,10 @@ PLAY_STYLES = {
     # Adaptable Champions: no gimmick, read the battle.
     "tactician": ("Lance", "Blue"),
 }
-# Section 18 boss flag (authored): the boss knows everything about the
+# Boss flag (Trainer AI spec: Boss flag; authored): the boss knows everything about the
 # player's party. Lance only in v0 (Red later).
 BOSS_OMNISCIENT = {"Lance"}
-# Section 9 shared evolution-level table: (predecessor, species, level, status).
+# Shared evolution-level table (Player Trainer Rating spec: Evolution stages): (predecessor, species, level, status).
 # The table covers only evolutions without a level in the game data (item,
 # trade, friendship, other); they step down below this level like level
 # evolutions. Level evolutions use the game's own species_info EVO_LEVEL, so a
@@ -532,16 +543,22 @@ POOL_DRAFT = {
         ("Dark Pulse", 30), "Moonlight", "Psychic", "Calm Mind", "Extreme Speed", "Flare Blitz", "Bullet Punch",
         "Swords Dance", "Earth Power", "Megahorn", "Hurricane", "Roost"]),
 }
-# Frustration categories (spec: move pools): a pool draws on at most one, and
-# never pairs evasion with Toxic or Toxic Spikes. Paralysis, burns, hazards and
-# Toxic are not categories. A move maps to its category's name.
+# Frustration categories (Notable trainers spec: Move pools, frustration rule):
+# a pool draws on at most one, and never pairs evasion with Toxic or Toxic
+# Spikes. Paralysis, burns, hazards and Toxic are not categories. The map lists
+# only moves whose main effect is the frustration, including a damaging move
+# whose effect always happens (Mud Slap's accuracy drop, Dynamic Punch's
+# confusion, Thousand Waves' trap). Secondary-chance effects are excluded:
+# Hurricane's or Water Pulse's chance to confuse, and damaging moves with a
+# chance to lower accuracy (Muddy Water, Octazooka, Mirror Shot). A move maps
+# to its category's name.
 FRUSTRATION = {move: category for category, moves in {
     "sleep": ["Hypnosis", "Sleep Powder", "Spore", "Lovely Kiss", "Yawn", "Sing", "Grass Whistle", "Dark Void"],
     "evasion": ["Double Team", "Minimize", "Smokescreen", "Sand Attack", "Flash", "Kinesis", "Mud Slap"],
     "OHKO": ["Sheer Cold", "Fissure", "Horn Drill", "Guillotine"],
     "trapping": ["Bind", "Wrap", "Fire Spin", "Whirlpool", "Sand Tomb", "Clamp", "Infestation", "Magma Storm",
                  "Snap Trap", "Thunder Cage", "Mean Look", "Block", "Spider Web", "Jaw Lock", "Anchor Shot",
-                 "Spirit Shackle", "Octolock"],
+                 "Spirit Shackle", "Octolock", "Fairy Lock", "Thousand Waves"],
     "Perish Song": ["Perish Song"],
     "Destiny Bond": ["Destiny Bond"],
     "infatuation/confusion": ["Attract", "Swagger", "Flatter", "Confuse Ray", "Supersonic", "Sweet Kiss",
@@ -628,6 +645,14 @@ def validate_gym_start(name, growth):
     if not GYM_START_BAND[0] <= start <= GYM_START_BAND[1] or not low <= start <= high:
         raise ValueError(f"{name}: Gym Leader start TR must be in {low}-{high} for {archetype}"
                          f" (Gym band {GYM_START_BAND[0]}-{GYM_START_BAND[1]})")
+
+
+def validate_elite_start(name, role, growth):
+    """An Elite Four member or Champion starts above the Gym band, except the Rival (Blue starts at 0)."""
+    start, archetype, _ = growth
+    if role in ("Elite Four", "Champion") and archetype != "rival" and start < ELITE_START_MIN:
+        raise ValueError(f"{name}: an Elite Four member or Champion starts at TR {ELITE_START_MIN} or more"
+                         f" (above the Gym band {GYM_START_BAND[0]}-{GYM_START_BAND[1]}); only the Rival starts lower")
 
 
 def command(args, **kwargs):
@@ -1220,6 +1245,7 @@ def generate():
         gym = role.startswith("Gym Leader")
         if gym:
             validate_gym_start(name, growth)
+        validate_elite_start(name, role, growth)
         records = sources[family]
         reference_slots = party(records, trainer)
         note = "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams."
@@ -1288,6 +1314,8 @@ def generate():
                        "startTR": start, "archetype": archetype, "peakTR": peak,
                        "trSource": f"PLACEHOLDER growth tuned in the explorer to the v0 balance targets: start TR {start}"
                                    + (f" (placeholder start TR in the {GYM_START_BAND[0]}–{GYM_START_BAND[1]} Gym band by archetype)" if gym else "")
+                                   + (f" (placeholder start TR above the Gym band, {ELITE_START_MIN} or more)"
+                                      if role in ("Elite Four", "Champion") and archetype != "rival" else "")
                                    + f", {GROWTH_NOTE[archetype]}, peak TR {peak}.",
                        "roster": roster, "rosterSource": roster_source, "movePool": pool,
                        "movePoolSource": f"{POOL_NOTE}: {POOL_DRAFT[name][0]}"})
@@ -1338,7 +1366,7 @@ def main():
                   f" and have no from level (always dormant; set a from level): {', '.join(report['tm_only'])}",
                   file=sys.stderr)
         if report["non_final"]:
-            # Section 9 recommends final stages; any authored stage is allowed.
+            # Evolution stages (Player Trainer Rating spec) recommends final stages; any authored stage is allowed.
             print(f"warning: {len(report['non_final'])} roster slots are not final stages: {', '.join(report['non_final'])}", file=sys.stderr)
         if gaps:
             # v0 requires six roster slots: warn, don't fail.

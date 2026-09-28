@@ -13,6 +13,7 @@ import {
   playStyleName,
   LEVEL_CAP_ANCHORS,
   MAX_BADGES,
+  TEAM_SIZE_KIND,
   WORLD_PROGRESS_CHECKPOINTS,
   badgeMatch,
   badgeTR,
@@ -90,11 +91,11 @@ const isGrowth = (id: ScalerId): id is Archetype => (ARCHETYPES as readonly stri
 const anchorsOf = (experiment: Experiment, id: ScalerId): Anchor[] =>
   isGrowth(id) ? experiment.archetypes[id] : experiment[id]
 /**
- * How a scaler reads between anchors. The kind is fixed: Burst is the only step scaler; team
- * size is interpolated, and its paired anchors make its steps.
+ * How a scaler reads between anchors. The kind is fixed: team size and Burst are step scalers;
+ * every other scaler is interpolated.
  */
 export const scalerKind = (id: ScalerId): ScalerKind =>
-  isGrowth(id) ? ARCHETYPE_KIND[id] : "interpolated"
+  isGrowth(id) ? ARCHETYPE_KIND[id] : id === "teamSize" ? TEAM_SIZE_KIND : "interpolated"
 const storageKey = "wayfarer-trainer-balance-v19"
 /** The answers the invitation simulator offers: accept and win, accept and lose, or decline. */
 export const INVITATION_CHOICES: readonly InvitationChoice[] = ["win", "lose", "decline"]
@@ -296,17 +297,20 @@ export class BalanceLab {
     }
   })
   ladder = $derived(gymLadder(catalog, this.#_experiment, this.worldProgress))
-  /** The selected trainer's TR, team level and team (by roster slot) at each world progress checkpoint. */
+  /**
+   * The selected trainer at each world progress checkpoint: TR, team level, the team by roster slot
+   * with each member's moves, the battle order, the dormant pool entry count and the AI skill tier.
+   */
   growth = $derived(
     WORLD_PROGRESS_CHECKPOINTS.map((world) => {
-      const { tr, teamLevel, team } = resolveTrainer(
+      const { tr, teamLevel, team, battleOrder, dormant, ai } = resolveTrainer(
         this.selected.trainer,
         this.#_experiment,
         world,
         evolution,
         learnsets,
       )
-      return { world, tr, teamLevel, team }
+      return { world, tr, teamLevel, team, battleOrder, dormant: dormant.length, aiTier: ai.skill }
     }),
   )
   /** Every world progress where the selected trainer's team changes. */

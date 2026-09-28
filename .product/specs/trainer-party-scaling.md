@@ -4,7 +4,7 @@ PRD: [Regular trainer and Gym member scaling](../prds/trainer-party-scaling.md)
 Implemented: Partial; runtime policies exist, campaign balance acceptance remains pending.
 
 Today's routing includes [League scaling](league-scaling.md) with the player's
-TR saved when entering a league; League levels are no longer static. See
+TR saved when entering a league, so League levels scale from that saved TR. See
 [the level resolver](../../game/src/trainer_party_scaling.c) and
 [the circuit producer](../../game/src/league_circuit.c). The v0 TR design
 (rescaled formula, uncapped TR, scalers, and notable trainers' separate TR) is
@@ -71,7 +71,9 @@ explicitly enrolled as initial badge battles may use the `GYM_LEADER` routing
 policy in the [Gym Leader scaling specification](gym-leader-scaling.md).
 Enumerate their aliases and scripted variants explicitly: enrolled initial-badge
 variants use that policy, while rematch and other story variants remain
-excluded. Exclude all rival variants, villain bosses and admins, Elite Four,
+excluded Today; on adoption a leader's rematch and story battles follow the
+notable model through the
+[every-battle rule](notable-trainers.md#trainer-rating). Exclude all rival variants, villain bosses and admins, Elite Four,
 Champions, other story bosses, and tutorial opponents from regular trainer
 transformation. Explicitly enrolled circuit IDs use `LEAGUE` routing; other
 Elite Four and Champion variants remain `EXCLUDED`. Shared classes must not

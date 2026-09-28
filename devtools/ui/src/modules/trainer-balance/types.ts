@@ -187,7 +187,7 @@ export type Experiment = {
   version: 19
   /** Team level by TR: linear between anchors, halves up, flat past the last. */
   teamLevel: Anchor[]
-  /** Team size by TR, same rules; paired anchors make it a step table. */
+  /** Team size by TR: a step scaler, each anchor's size held until the next anchor. */
   teamSize: Anchor[]
   /** The wild level curve by player TR. */
   wildLevel: Anchor[]
@@ -255,6 +255,12 @@ export type ResolvedTrainer = {
   team: TeamMember[]
   /** Filler slots in reverse roster order, then aces in reverse roster order: roster slot 1 comes last. */
   battleOrder: TeamMember[]
+  /**
+   * A double battle's split between the two leaders (null in a single battle): members alternate
+   * along the battle order, anchored at its end, so each leader's last Pokémon is an ace where the
+   * team has two.
+   */
+  partners: DoublesPartner[] | null
   /** Every move pool entry at this team, in pool order. */
   pool: PoolStatus[]
   /** The pool entries no member took. */
@@ -265,6 +271,8 @@ export type ResolvedTrainer = {
   ai: ResolvedAi
   warnings: string[]
 }
+/** One leader of a double battle and the members they send, in battle order. */
+export type DoublesPartner = { name: string; members: TeamMember[] }
 /** One AI skill tier: a step of the AI skill scaler over trainer TR. */
 export type AiSkillTier = { tier: number; name: string; fromTR: number; flags: readonly AiFlag[] }
 /**
@@ -386,8 +394,13 @@ export type Invitation = {
   reason: CallReason
   /** The leagues that could call, in LEAGUES order (known-there eligibility, Masters after a win). */
   eligible: League[]
-  /** The day each league last called before this invitation (null: never). */
-  lastCalled: Record<League, number | null>
+  /** This call's sequence number: each call takes the next one (1 for the first). */
+  sequence: number
+  /**
+   * Each league's last call before this invitation, as its call sequence number (null: never). The
+   * lowest number is the least recently called.
+   */
+  lastCall: Record<League, number | null>
   choice: InvitationChoice
   /** The lineup, computed at acceptance or decline and frozen. */
   ranking: LeagueRanking
@@ -398,6 +411,23 @@ export type Invitation = {
   firstWin: boolean
   /** Who holds the title after this event. */
   champion: ReigningChampion
+}
+/**
+ * The invitation state the ROM keeps, as the explorer models it. Calls are ordered by a monotonic
+ * call counter, never by days, so a day counter that goes backwards cannot reorder them.
+ */
+export type InvitationClock = {
+  /** The day counter last observed. */
+  day: number
+  /**
+   * Forward days still to count before the next call is due (0: due, re-checked at every
+   * observation until a league can call); null while an invitation or accepted event is pending.
+   */
+  countdown: number | null
+  /** Calls made so far; the next call takes calls + 1 as its sequence number. */
+  calls: number
+  /** Each league's last call sequence number (null: never called). */
+  lastCall: Record<League, number | null>
 }
 /** A run of invitations: none unless the player qualifies. */
 export type InvitationSimulation = {

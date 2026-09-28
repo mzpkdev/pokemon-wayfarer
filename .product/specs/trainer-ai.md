@@ -151,12 +151,12 @@ reproduces them because it writes after that setup. Resolution is a pure
 function of play style, trainer TR, aces, the boss flag, and the battle type:
 no save seed, RNG, player party, or call history.
 
-Examples (placeholder growth; badges → world progress 0 / 80 / 120 / 160):
+Examples (placeholder growth; badges → world progress 0 / 40 / 80 / 120 / 160):
 
-| Trainer | 0 badges | 8 badges | 16 badges | 24 badges |
-| --- | --- | --- | --- | --- |
-| Brock (Field marshal) | TR 25, None, 1 ace | TR 63, Aware, 1 ace | TR 81, Smart, 2 aces | TR 100, Smart, 2 aces |
-| Lance (Tactician, boss) | TR 200, Predictive, 3 aces, Omniscient | same | same | same |
+| Trainer | 0 badges | 4 badges | 8 badges | 16 badges | 24 badges |
+| --- | --- | --- | --- | --- | --- |
+| Brock (Field marshal) | TR 25, None, 1 ace | TR 44, Aware, 1 ace | TR 63, Aware, 1 ace | TR 81, Smart, 2 aces | TR 100, Smart, 2 aces |
+| Lance (Tactician, boss) | TR 200, Predictive, 3 aces, Omniscient | same | same | same | same |
 
 ## Flag hazards
 

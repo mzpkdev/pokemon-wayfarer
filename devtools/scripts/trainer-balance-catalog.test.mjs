@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import { spawnSync } from "node:child_process"
+import { readFileSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import test from "node:test"
 
@@ -113,7 +114,7 @@ except ValueError as error:
   }
 }
 
-test("the growth table applies the section 11 archetype reassignment and the section 16 Champions", () => {
+test("the growth table applies the lore archetype assignments and the lore Champions", () => {
   const growth = run("{name: list(value) for name, value in module.GROWTH.items()}")
   const named = (archetype) =>
     Object.keys(growth).filter((name) => growth[name][1] === archetype)
@@ -128,7 +129,7 @@ test("the growth table applies the section 11 archetype reassignment and the sec
   assert.deepEqual(growth["Blue"], [0, "rival", 170])
 })
 
-test("the Champions follow lore (section 16): Lance a Legend at 200, Steven a Burst, Wallace a Star", () => {
+test("the Champions follow lore: Lance a Legend at 200, Steven a Burst, Wallace a Star", () => {
   const growth = run("{name: list(value) for name, value in module.GROWTH.items()}")
   assert.deepEqual(growth["Lance"], [200, "legend", 200])
   assert.deepEqual(growth["Steven"], [50, "burst", 195])
@@ -137,7 +138,7 @@ test("the Champions follow lore (section 16): Lance a Legend at 200, Steven a Bu
   assert.deepEqual(sleepers, ["Sabrina", "Morty", "Clair", "Winona", "Juan"])
 })
 
-test("the aloof trait follows the section 16 assignments and names only league-eligible trainers", () => {
+test("the aloof trait follows the Aloof lore assignments and names only league-eligible trainers", () => {
   assert.deepEqual(run("sorted(module.ALOOF)"), [
     "Agatha",
     "Clair",
@@ -155,7 +156,7 @@ test("the aloof trait follows the section 16 assignments and names only league-e
   assert.equal(validate(["Tate & Liza"]), "ALOOF lists league-ineligible duos: Tate & Liza")
 })
 
-test("every trainer has exactly one section 18 play style and Lance alone is the boss", () => {
+test("every trainer has exactly one Trainer AI play style and Lance alone is the boss", () => {
   const styles = run("module.validate_play_styles(module.PLAY_STYLES, module.GROWTH)")
   assert.equal(Object.keys(styles).length, 38)
   const named = (style) =>
@@ -213,7 +214,7 @@ test("every trainer has exactly one section 18 play style and Lance alone is the
   )
 })
 
-test("home regions and the traveller trait follow the section 14 assignments", () => {
+test("home regions and the traveller trait follow the Home region and travel lore assignments", () => {
   const home = run("module.HOME_REGION")
   const travellers = run("sorted(module.TRAVELLERS)")
   const named = (region) => Object.keys(home).filter((name) => home[name] === region)
@@ -306,6 +307,44 @@ test("Gym Leaders start in their archetype's sub-band and are never Legends", ()
   )
 })
 
+test("the Elite Four and Champions start above the Gym band, except the Rival", () => {
+  const growth = run("{name: list(value) for name, value in module.GROWTH.items()}")
+  const roles = run("{name: role for name, _, role, _, _ in module.ROSTER}")
+  const elite = Object.keys(growth).filter(
+    (name) => ["Elite Four", "Champion"].includes(roles[name]) && growth[name][1] !== "rival",
+  )
+  assert.equal(elite.length, 13)
+  for (const name of elite) assert.ok(growth[name][0] >= 41, `${name} starts at ${growth[name][0]}`)
+  // The members who once sat inside the Gym band start at 41-50 by lore; peaks are unchanged.
+  assert.deepEqual(
+    Object.fromEntries(
+      ["Lorelei", "Koga", "Will", "Karen", "Sidney", "Phoebe", "Glacia"].map((name) => [
+        name,
+        growth[name],
+      ]),
+    ),
+    {
+      Lorelei: [42, "veteran", 92],
+      Koga: [44, "steady", 150],
+      Will: [41, "prodigy", 110],
+      Karen: [47, "steady", 155],
+      Sidney: [41, "prodigy", 105],
+      Phoebe: [43, "steady", 150],
+      Glacia: [44, "veteran", 90],
+    },
+  )
+  assert.deepEqual(growth["Blue"], [0, "rival", 170])
+  const validate = (role, value) =>
+    run("module.validate_elite_start('Fixture', args[0], tuple(args[1]))", [role, value])
+  assert.equal(validate("Elite Four", [41, "steady", 150]), null)
+  assert.equal(
+    validate("Champion", [40, "steady", 150]),
+    "Fixture: an Elite Four member or Champion starts at TR 41 or more (above the Gym band 18-40); only the Rival starts lower",
+  )
+  assert.equal(validate("Champion", [0, "rival", 170]), null)
+  assert.equal(validate("Gym Leader", [25, "steady", 100]), null)
+})
+
 test("learnsets are read from the preprocessed game data for the Wayfarer build", () => {
   const data = run(
     `(lambda result: {"valid": len(result[0]), "aliases": result[1].get("MOVE_FAINT_ATTACK"),
@@ -349,6 +388,22 @@ test("egg moves are read from egg_moves.h through each species' species_info ent
   assert.deepEqual(egg.SPECIES_DRAGONITE, [])
   assert.deepEqual(egg.SPECIES_PIKACHU, [])
   assert.ok(egg.SPECIES_PICHU.includes("MOVE_WISH"))
+})
+
+test("steps down never reach a baby, so baby edges need no evolution-level table row", () => {
+  // Pichu -> Pikachu, Munchlax -> Snorlax and Mime Jr. -> Mr. Mime are non-level (friendship or
+  // move) baby edges; the table has no rows for them, and the chains stop above the baby.
+  const chains = run(
+    "(lambda evolutions: [[module.display(token, 'SPECIES_') for token, _ in module.evolution_chain(token, evolutions[0], evolutions[1], module.evolution_table(evolutions[0]))] for token in args])(module.load_evolutions())",
+    ["SPECIES_RAICHU", "SPECIES_SNORLAX", "SPECIES_MR_MIME", "SPECIES_BLISSEY"],
+  )
+  assert.deepEqual(chains, [["Pikachu", "Raichu"], ["Snorlax"], ["Mr. Mime"], ["Chansey", "Blissey"]])
+  const rows = run("[[source, target] for source, target, _, _ in module.EVOLUTION_LEVELS]")
+  const babies = ["Pichu", "Munchlax", "Mime Jr", "Happiny"]
+  assert.deepEqual(
+    rows.filter(([source]) => babies.includes(source)),
+    [],
+  )
 })
 
 test("a line's Egg hatches as the root of its evolution tree, babies included", () => {
@@ -436,6 +491,25 @@ test("a move pool draws on at most one frustration category and never pairs evas
     validate(["Toxic Spikes", "Double Team", "Toxic"]),
     "Fixture move pool: evasion (Double Team) never pairs with Toxic, Toxic Spikes",
   )
+})
+
+test("the frustration map covers moves whose main effect is the frustration, not secondary chances", () => {
+  const category = (moves) => run("[module.FRUSTRATION.get(move) for move in args]", moves)
+  assert.deepEqual(category(["Fairy Lock", "Thousand Waves", "Mean Look", "Mud Slap", "Dynamic Punch"]), [
+    "trapping",
+    "trapping",
+    "trapping",
+    "evasion",
+    "infatuation/confusion",
+  ])
+  // Secondary-chance effects are excluded: confusion chances and damaging moves that may lower accuracy.
+  assert.deepEqual(
+    category(["Hurricane", "Water Pulse", "Signal Beam", "Muddy Water", "Octazooka", "Mirror Shot"]),
+    [null, null, null, null, null, null],
+  )
+  // Every mapped move is a valid move name of the game.
+  const catalog = JSON.parse(readFileSync(new URL("../ui/src/modules/trainer-balance/catalog.json", import.meta.url), "utf8"))
+  assert.deepEqual(run("sorted(set(module.FRUSTRATION) - set(args))", catalog.learnsets.moves), [])
 })
 
 test("every drafted move pool passes the frustration rule", () => {

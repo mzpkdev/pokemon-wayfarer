@@ -3,10 +3,10 @@
 Implemented: Partial; runtime policies exist, campaign balance acceptance remains pending.
 
 Today's routing includes [League scaling](league-scaling.md) with the player's
-TR saved when entering a league; League levels are no longer static. See
+TR saved when entering a league, so League levels scale from that saved TR. See
 [the level resolver](../../game/src/trainer_party_scaling.c) and
 [the circuit producer](../../game/src/league_circuit.c). The v0 TR design (a
-new badge scale, uncapped TR, scalers, and notable trainers' separate TR) is in
+v0 badge scale, uncapped TR, scalers, and notable trainers' separate TR) is in
 [Player Trainer Rating](player-trainer-rating.md); its effect on regular
 trainers is under [v0](#v0).
 
@@ -88,7 +88,7 @@ species, moves, and held items must be considered when testing those fights.
 
 ### v0
 
-On the new TR scale, regular trainers follow a new level curve. With a few
+On the v0 TR scale, regular trainers follow their own v0 level curve. With a few
 badges they sit right under your level cap, about one level below it at four
 badges, so early routes are real fights. Later they fall behind: with all 24
 badges they sit about 18 levels under the cap, and routes are no threat. The
@@ -113,8 +113,9 @@ availability or repeatable farming system.
 Gym Leaders remain outside this automatic system. Their enrolled initial badge
 battles follow the separate
 [Gym battle design](notable-trainers.md#gym-battles); the regular trainer scaler
-continues to exclude them, and leader rematches retain their authored, static
-parties. Rivals, villain bosses and admins, Elite Four members, Champions, other
+continues to exclude them. Leader rematches keep their authored, static
+parties Today; on adoption they follow the notable model through the
+[every-battle rule](../specs/notable-trainers.md#trainer-rating). Rivals, villain bosses and admins, Elite Four members, Champions, other
 authored story bosses, tutorials, and battle facilities also remain outside the
 automatic system. Player-controlled rental parties, battle partners, link
 battles, recorded battles, and imported or externally supplied parties also
@@ -145,8 +146,8 @@ active. Moves must be valid for the resulting randomized species and level.
 
 This design supersedes the interregional League circuit's static-party rule only
 for regular trainers and Gym members. Initial Gym Leader badge battles are owned
-by the separate [Gym battle design](notable-trainers.md#gym-battles), while
-leader rematches remain static. League rosters stay authored and their levels
+by the separate [Gym battle design](notable-trainers.md#gym-battles), and
+leader rematches stay static until they follow that design on adoption. League rosters stay authored and their levels
 follow the separate [League scaling design](league-scaling.md). Player TR
 advancement belongs to the implemented circuit producer. Host checks may still
 seed TR independently; this feature introduces no substitute local-badge or

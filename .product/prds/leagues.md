@@ -1,21 +1,21 @@
 # Leagues
 
 Implemented: No
-Design status: v0 approved: once the player is known (TR 80), a league
+Design status: v0 approved: once the player qualifies (TR 80), a league
 phones with an invitation every seven in-game days; only leagues that know
 them call (where they hold a badge, and Sevii Masters after any league win),
-taking turns: whichever called longest ago calls next. Accept and the event waits for them,
-with one attempt; decline and the season goes on without them. Someone always
-holds each league's title. Each lineup is the five strongest trainers who are
-willing to come (favouring those at home and fresh, with aloof trainers
-joining only an elite enough field), with no randomness, fought in ascending
-order. Balance is informational for now. Terms follow the
+taking turns: whichever called longest ago calls next. Accept and the event
+waits for them, with one attempt; decline and the season goes on without
+them. Someone always holds each league's title. Each lineup is the five
+strongest trainers who are willing to come (favouring those at home and
+fresh, with aloof trainers joining only a strong enough base lineup), with no
+randomness, fought in ascending order. Balance is informational for now. Terms follow the
 [glossary](player-trainer-rating.md#glossary).
 
 ## Intent
 
 Leagues should feel like seasons in a living world rather than a fixed
-ladder to climb once. Once the player is known, the leagues come to them: a
+ladder to climb once. Once the player qualifies, the leagues come to them: a
 league phones to invite them to its next event. Accept, and the event waits
 until they are ready; decline, and it goes ahead without them, and someone
 else takes the title. Lineups are made of the strongest notable trainers in
@@ -35,17 +35,20 @@ which remain the record of Today.
 **Leagues.** Indigo, Sevii Masters, and Hoenn keep their public entrances,
 rooms, and ceremonies. Each league event is a five-match singles lineup.
 
-**Getting known.** Leagues notice the player once their TR reaches 80, which
-today means 8 badges from any regions; later sources of TR may get them known
-sooner. Until then, no league calls and the league doors stay shut.
+**Qualifying.** The player qualifies for invitations once their TR reaches
+80, which today means 8 badges from any regions; later sources of TR may
+qualify them sooner. Until then, no league calls and the league doors stay
+shut.
 
-**The phone rings.** Seven in-game days after the player gets known, a league
+**The phone rings.** Seven in-game days after the player qualifies, a league
 phones with an invitation, and the next one comes seven days after the player
 answers, or, if they accepted, seven days after that event is over. While an
 invitation is waiting for an answer, or an accepted event is waiting for the
 player, no other league calls. Days come from the game's existing day
 counter and only schedule calls: nobody grows stronger or weaker with time,
-only with the world's progress.
+only with the world's progress. Only days going forward count: if the game's
+day counter ever goes backwards, the countdown neither moves on nor starts
+over.
 
 **Who calls.** Only a league that knows the player calls: Indigo once they
 hold a Kanto or Johto badge, Hoenn once they hold a Hoenn badge, and Sevii
@@ -53,10 +56,12 @@ Masters, the invitational, after their first league win anywhere. The leagues
 that know them take turns: the one that called longest ago calls next, and one
 that has never called goes first. When that is a tie, the league where they
 have earned the most badges calls (Indigo counts Kanto and Johto badges,
-Hoenn counts Hoenn badges; the Masters counts none), and on level counts,
+Hoenn counts Hoenn badges; the Masters counts none), and on equal counts,
 Indigo. So the first call comes from where they have the most badges, and a
 player known in only one region hears from that league every time until
-another league knows them.
+another league knows them. If the player qualifies while no league knows
+them (possible only with a future source of TR), no call comes: the call
+stays due and is checked again each day until a league knows them.
 
 These stay as they were: the player must answer each call, with no "later";
 leaving an accepted event midway counts as a loss; after a loss the
@@ -86,7 +91,7 @@ everyone is at home.
 When the player accepts or declines, every trainer gets a league score: their
 current TR, scaled down by how unwilling they are to come. Trainers prefer to
 play at home: most rarely make the trip to a league away from home, while a
-traveller roams almost as readily as they play at home. Someone who played
+traveller makes the trip almost as readily as they play at home. Someone who played
 in the most recent event, whether the player took part or declined it, is
 tired and less keen on this one.
 
@@ -112,9 +117,9 @@ strongest last.
 **Strength.** Each opponent uses their own TR, team, and levels, exactly as in
 any other battle with them. There is no league-specific adjustment.
 [Notable trainers](notable-trainers.md) owns trainer TR and how it grows,
-the scalers that turn TR into team level and size, and rosters. The player's
-TR enters only through how far each trainer has grown, and through getting
-known.
+the scalers that turn TR into team level and team size (which grows in
+steps), and rosters. The player's TR enters only through how far each
+trainer has grown, and through qualifying.
 
 **Reigning champion.** Every event crowns someone. If the player wins, they
 are the league's reigning champion. If they lose or decline, the strongest
@@ -143,30 +148,31 @@ teams (better items, stats, movesets) are Later.
 
 ## Sample playthrough
 
-1. A player starts in Hoenn and earns all eight Hoenn badges: TR 80, and the
-   leagues know their name. A week of in-game days later the phone rings:
-   Hoenn, the only league that knows them, invites them. They feel unready
-   and decline. The event runs without them, and Norman, its strongest
-   trainer, is Hoenn's reigning champion.
-2. Meanwhile they sail north and earn a Kanto badge. Seven days later Indigo
-   calls: it knows them now and has never called. They accept. The five are
-   fixed on the spot, mostly Kanto and Johto trainers at home, with anyone
-   who played Hoenn's event tired. The event waits while they train.
+1. A player starts in Hoenn and earns all eight Hoenn badges: TR 80, so they
+   qualify. A week of in-game days later the phone rings: Hoenn, the only
+   league that knows them, invites them. They feel unready and decline. The
+   event runs without them: Sidney, Drake, Norman, Phoebe, and Karen, a Johto
+   traveller who is the strongest of the five, so Karen is Hoenn's reigning
+   champion.
+2. Seven days later Hoenn calls again, still the only league that knows them.
+   They accept. The five are fixed on the spot, and everyone from the
+   declined event is tired: Blue, Glacia, Giovanni, Will, and Koga, mostly
+   travellers from Kanto and Johto. The event waits while they train.
 3. They arrive and fight, weakest first, each opponent with the team they
-   would bring anywhere else. They win: the Hall of Fame, the Kanto/Johto
-   Champion recognition, and Blue's Dojo battle follow, and they reign at
-   Indigo.
+   would bring anywhere else. They win: it is their first Hoenn win, with the
+   full completion credits, and they reign at Hoenn.
 4. A week after that win, Sevii Masters calls: a league win opened it, and it
-   has never called. Anyone from anywhere is at home there. An aloof
-   Champion may still find the base lineup too far below them, and turn up
-   only once the world's best are strong enough. They accept, and later lose
-   at match 5. They black out, the event is over, and that finalist reigns at
-   the Masters.
-5. Hoenn calls next, having called longest ago, and from then on the three
-   take turns: Indigo, the Masters, Hoenn, and round again. When the player
-   accepts Hoenn and wins, it is their first Hoenn win, with the full
-   completion credits; later wins bring prize money and the title, with no
-   second Hall of Fame.
+   has never called. Anyone from anywhere is at home there. The aloof
+   Champions find the base lineup too far below them and stay away, while
+   Agatha, aloof too, is close enough to join: Lt. Surge, Agatha, Jasmine,
+   Phoebe, and Karen. They accept and win, and reign at the Masters, which
+   records the win in its gallery without a regional title.
+5. Hoenn calls next, having called longest ago, and from then on Hoenn and
+   the Masters take turns. When the player accepts Hoenn again and wins, it
+   is a repeat win: prize money and the title, with no second Hall of Fame.
+   Indigo never calls, because the player holds no Kanto or Johto badge; a
+   first Kanto or Johto badge would make Indigo, never called, the next to
+   call.
 
 ## Records and recognition
 
@@ -188,8 +194,8 @@ implements them; repeat wins give prize money and the title only.
 
 ## Boundaries
 
-In: the three leagues, getting known, invitations by phone and which league
-calls, accepting and declining, one attempt per accepted event, reigning
+In: the three leagues, qualifying, which leagues know the player,
+invitations by phone and which league calls, accepting and declining, one attempt per accepted event, reigning
 champions, first and repeat wins, notable Kanto, Johto, and Hoenn singles
 trainers, home and away, the league score, the traveller and aloof traits and
 the base lineup level, the lineup, and battle order.
@@ -224,8 +230,8 @@ own TR.
 - Invitation news: who won the events the player declined, as NPC gossip, TV,
   or phone news.
 - Special invitational events.
-- Tuning event rewards, the seven-day interval, and the TR that gets the
-  player known.
+- Tuning event rewards, the seven-day interval, and the TR that qualifies
+  the player.
 - Balancing tools: tuning travel cost, fatigue, and the aloof margin against
   the lineup reports, and league balance targets.
 - Seeded lineups and rotation.

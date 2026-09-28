@@ -44,8 +44,8 @@ win.
 | 4 | 40 | `ITEM_FULL_HEAL`, `ITEM_MAX_REPEL` |
 | 5 | 55 | `ITEM_MAX_POTION`, `ITEM_FULL_RESTORE` |
 
-The cumulative ordinary counts are 9, 11, 12, 15, 17 and 19. TR 55 through 80
-uses tier 5. Lower-tier entries never disappear. A resupply location means
+The cumulative ordinary counts are 9, 11, 12, 15, 17 and 19. Tier 5 covers
+every TR from 55 up (from 120 up in [v0](#v0-thresholds)). Lower-tier entries never disappear. A resupply location means
 one full-service counter, except Lilycove 2F, where it means the union of the
 two co-located counters. At equal TR, each location offers the complete same
 common catalog; the two Lilycove profiles individually offer their defined
@@ -315,7 +315,7 @@ At Cherrygrove, remove the `VAR_NEWBARK_TOWN_STATE >= 5` inventory restriction.
 At Oldale, remove the `FLAG_ADVENTURE_STARTED` stock restriction. At Petalburg,
 remove `FLAG_PETALBURG_MART_EXPANDED_ITEMS` from stock selection. At Rustboro,
 remove `FLAG_MET_DEVON_EMPLOYEE` from stock selection. Rustboro's Timer/Repeat
-Balls are now available on arrival. At Hoenn Trainer Hill, remove the
+Balls are available on arrival. At Hoenn Trainer Hill, remove the
 `FLAG_SYS_GAME_CLEAR` inventory branch. Preserve every unrelated writer or
 reader of these flags and vars. Do not change story state to make a shop work.
 Each removal exists only inside its

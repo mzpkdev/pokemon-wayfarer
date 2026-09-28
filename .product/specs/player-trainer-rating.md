@@ -20,8 +20,9 @@ link here for the shared model.
 - [Wild encounter scaling](trainer-rating-wild-encounter-scaling.md#trainer-rating-lifecycle)
   implements the getter, its persistence, and the standalone builds' own
   progression.
-- [Notable trainers](notable-trainers.md) own trainer TR and the
-  team-level and team-size scalers; [Leagues](leagues.md) own league lineups.
+- [Notable trainers](notable-trainers.md) own trainer TR, the team-level
+  scaler, and the team-size step scaler; [Leagues](leagues.md) own league
+  lineups.
 
 ## Player TR
 
@@ -107,7 +108,7 @@ Intent:
 - **Late comfort.** At 24 badges routes are no threat: wild Pokémon sit about
   22 levels below the level cap and regular trainers about 18 below.
 - **Challenge from notable trainers.** The late challenge comes from Gyms,
-  leagues, and overworld meetings with
+  leagues, and every other battle with
   [notable trainers](notable-trainers.md#trainer-scalers), whose team level
   matches the level cap from TR 40 up.
 
@@ -125,6 +126,13 @@ the downward rule and the shared evolution-level table; consumers link here.
 steps down its predecessor chain, one stage at a time, until the level supports
 the stage. There is never forward evolution: a low stage at a high level stays
 as it is.
+
+**No baby forms.** Stepping down never enters a baby form, whatever the
+evolution method: the chain ends at the first stage above the baby, which
+stays as it is at any level, like a base species. Pikachu
+never becomes Pichu, Snorlax never becomes Munchlax, and Jynx never becomes
+Smoochum. This holds for every consumer below. The baby forms are listed with
+the shared evolution-level table as catalog content.
 
 **Evolution level.** The table covers only evolutions without a level in the
 game data; level evolutions use the game's own levels. A non-level evolution
@@ -147,10 +155,12 @@ level. The table is versioned catalog content like the scalers; runtime never
 repairs or infers it.
 
 **Validation.** Every non-level edge in the evolution data has exactly one
-level; a table row for an edge that already has a level in the game data fails; levels increase along a line (each edge above the edge into its
-predecessor); the predecessor graph has no cycles; a species with more than one
-possible predecessor has its ancestry resolved explicitly, and an unresolved
-one fails validation.
+level, except an edge out of a baby form, which has none; a table row for an
+edge that already has a level in the game data fails; levels increase along a
+line (each edge above the edge into its predecessor); the predecessor graph has
+no cycles; a species with more than one possible predecessor has its ancestry
+resolved explicitly, and an unresolved one fails validation; and no step-down
+result is a baby form.
 
 | Consumer | Uses it for |
 | --- | --- |

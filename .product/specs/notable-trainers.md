@@ -64,14 +64,21 @@ other character are not notable trainers in v0 and keep their current policies.
 
 **Tate & Liza** are one notable entry with one `characterId`, one set of growth
 values (start TR, archetype, peak TR), and one ordered six-slot roster. They
-are fought as their existing double battle: team size comes from the same
-table, and both trainers' Pokémon are drawn from the shared roster in roster
-order. Every notable rule applies to them (world progress, battle snapshot,
+are fought as their existing double battle. The team size comes from the
+duo's TR like any notable trainer's. Members come out in
+[battle order](#rosters) (fillers first, aces last), as for every notable
+trainer, and alternate between the two partners along that order, counting back from
+the last member, who goes to Tate. So each partner's last Pokémon is an ace
+where possible (always when the team has two aces or more). With the full team
+the battle order is Grumpig, Xatu, Claydol, Gardevoir, Lunatone, Solrock: Tate
+brings Xatu, Gardevoir, and Solrock, and Liza brings Grumpig, Claydol, and
+Lunatone. At world progress 0 (TR 26, two Pokémon) Tate brings Solrock and
+Liza Lunatone. Every notable rule applies to them (world progress, battle snapshot,
 construction); they are league-ineligible because leagues are singles only
 ([Leagues](leagues.md#registry-and-eligibility)).
 
-Mapping each encounter ID of these characters (Gym, overworld, rematch,
-league, and story battles) to its `characterId` is an implementation inventory
+Mapping each encounter ID of these characters (Gym, rematch, league, and
+story battles) to its `characterId` is an implementation inventory
 task owned here. Exactly one battle policy owns an encounter; a mapped
 encounter always uses this model.
 
@@ -86,8 +93,10 @@ Assignments follow lore and are reviewable content:
 | Johto | Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce, Clair, Will, Koga, Karen |
 | Hoenn | Roxanne, Brawly, Wattson, Flannery, Norman, Winona, Tate & Liza, Juan, Sidney, Phoebe, Glacia, Drake, Wallace, Steven |
 
-A **location** is anywhere a notable trainer can appear; in v0 the only
-locations are the leagues. Each location has a **location region** (one or
+A **location** is a place that picks which notable trainers turn up there, by
+their willingness; in v0 the only locations are the leagues. Gym and story
+battles are not locations: each always brings its own trainer. Each location
+has a **location region** (one or
 more regions), or is a **neutral location**, home to everyone. A trainer is
 **at home** when the location region includes their home region or the
 location is neutral, and **away** otherwise. For any trainer and location:
@@ -98,11 +107,9 @@ willingness = max(5, 100 - travelCost - fatigue)
 ```
 
 **Fatigue** is a location-specific penalty, 0 unless the location defines one;
-in v0 only leagues do: 50 for a trainer in the lineup of the most recent
-resolved league event at any league, whether the player accepted it or
-declined it.
-[Leagues](leagues.md#selection-and-order) owns the league location regions,
-fatigue, and the league score that reads willingness.
+in v0 only leagues do. [Leagues](leagues.md#selection-and-order) owns the
+league location regions, league fatigue, and the league score that reads
+willingness.
 
 ## Traits
 
@@ -161,8 +168,8 @@ team's aces.
   through that trainer's own growth values; resolving a trainer reads
   `GetTrainerRating()` for that and never reads party levels, badges, league
   wins, or another trainer.
-- **Source of truth for every battle.** Gym, overworld, rematch, league, and
-  story battles with a trainer all build from that trainer's TR and roster.
+- **Source of truth for every battle.** Gym, rematch, league, and story
+  battles with a trainer all build from that trainer's TR and roster.
   Story battles include Blue's rival fights, Giovanni's Rocket battles, and the
   Saffron Dojo. There is no battle-specific adjustment, role bonus, or
   exception. Every encounter ID of a character resolves to one canonical
@@ -174,7 +181,7 @@ team's aces.
   badges put the player at TR 160, and nothing caps it
   ([range](player-trainer-rating.md#range)).
 - **Placeholders.** Every trainer's growth values are placeholders authored
-  on the new scale, tuned in the explorer, and re-authored with playtesting
+  on the v0 scale, tuned in the explorer, and re-authored with playtesting
   against the [balance targets](#balance-targets). Rosters are approved
   draft v1 content; only their battle content remains placeholder.
 
@@ -197,7 +204,7 @@ Each trainer authors:
 
 The nine archetypes are global scalers over world progress
 ([scaler definition](player-trainer-rating.md#scalers)), giving a growth
-fraction in percent (0–100). Prose names them as proper nouns (Brock is a
+fraction in whole percent (0–100; the scaler rule rounds halves up). Prose names them as proper nouns (Brock is a
 Steady, a Sleeper finishes strong); content stores the lowercase identifier.
 All are interpolated except Burst, a
 [step](player-trainer-rating.md#scalers) scaler. Archetype scalers are
@@ -209,7 +216,7 @@ monotonic non-decreasing, so no trainer's TR ever drops:
 | Prodigy | 0 / 50 / 80 / 95 / 100 | Brilliant early, then evens out: fast early, then slows, a mid-game wall |
 | Sleeper | 0 / 10 / 25 / 55 / 100 | Underestimated, strong at the end: slow start, strong finish, a late challenge |
 | Veteran | 0 / 60 / 100 / 100 / 100 | Peaked already, you overtake them: reaches the peak early and stops |
-| Rival | 0 / 29 / 53 / 76 / 100, plus 15 at world progress 20 | Level with the player at the start, then about 10 TR ahead (with start 0, peak 170) |
+| Rival | 0 / 29 / 53 / 76 / 100, plus 15 at world progress 20 | Level with the player at the start, then about 10 TR ahead, 9–11 (with start 0, peak 170) |
 | Legend | 0 / 0 / 0 / 0 / 0 (anchors at 0 and 160 only) | Never changes, waits at the top: TR is start TR throughout, so peak TR equals start TR |
 | Star | 0 / 10 / 50 / 90 / 100 | Explodes mid-journey: an S-curve with a slow start, then levels off |
 | Comeback | 0 / 45 / 50 / 55 / 100 | Stalls, then returns stronger: fast early, stalls mid-journey, surges late |
@@ -229,8 +236,9 @@ v0, and any trainer may use any of them, except that no Gym Leader is a
 Legend. Which archetype each trainer uses is catalog content: the lore-based
 assignments are approved, and the growth numbers are placeholders. Blue is
 the Rival, with start TR 0 and peak TR 170
-(placeholder): TR 0 in Pallet Town, about 25 at world progress 20 (Cerulean),
-about 50 at world progress 40, then about 10 ahead of the player until 170.
+(placeholder): TR 0 in Pallet Town, 26 at world progress 20 (Cerulean), 49 at
+world progress 40, then 9–11 ahead of the player until 170 at world progress
+160 (a whole percent of his 170-point range is 1.7 TR).
 
 The Champions follow lore too: **Lance** is a Legend who never changes, at
 TR 200 throughout (start TR = peak TR = 200); **Steven** is a Burst (start
@@ -240,14 +248,17 @@ the [aloof](#aloof) trait, not by their archetype.
 
 Examples (placeholder values):
 
-| Trainer | wp 0 | wp 20 | wp 40 | wp 80 | wp 81 | wp 90 | wp 160 | wp 300 |
+| Trainer | wp 0 | wp 20 | wp 40 | wp 80 | wp 85 | wp 90 | wp 160 | wp 300 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Steady, start 20, peak 100 | 20 | 30 | 40 | 60 | 61 | 65 | 100 | 100 |
+| Steady, start 20, peak 100 | 20 | 30 | 40 | 60 | 62 | 65 | 100 | 100 |
 | Veteran, start 50, peak 90 | 50 | 62 | 74 | 90 | 90 | 90 | 90 | 90 |
-| Rival (Blue), start 0, peak 170 | 0 | 26 | 49 | 90 | 92 | 100 | 170 | 170 |
+| Rival (Blue), start 0, peak 170 | 0 | 26 | 49 | 90 | 95 | 100 | 170 | 170 |
 
-From world progress 80, a +10 gain moves the Steady 5 TR and a +1
-gain moves them 1 TR; the Veteran, already at peak, does not move.
+The growth percent is whole, so the Steady at world progress 85 uses 53%
+(53.125 rounded) and reaches 62, not the 63 an exact fraction would give.
+From world progress 80, a +10 gain moves the Steady 5 TR (60 to 65) and a +1
+gain moves them 0 or 1 TR (80 to 81 gives 61); the Veteran, already at peak,
+does not move.
 
 ## Trainer scalers
 
@@ -259,8 +270,8 @@ Team level and team size are scalers as defined in
 | Team level (notable trainers) | interpolated | Lv 5 → 100 | Lv 100 | TR 160 (placeholder) |
 | Team size (notable trainers) | step | 1 → 6 | 6 | TR 71 (placeholder) |
 
-**Team level** has its own anchors (placeholder). Below TR 40 it is no longer a
-copy of the level cap curve: it starts lower, so early notable fights are fair.
+**Team level** has its own anchors (placeholder). Below TR 40 it sits below
+the level cap curve, so early notable fights are fair.
 From TR 40 up it equals the
 [v0 level cap curve](trainer-rating-party-progression.md#v0-level-cap-curve),
 so a trainer at TR 80 and a player capped at TR 80 (8 badges) mean the same
@@ -270,8 +281,10 @@ level. The level cap itself is unchanged.
 (0,5) (20,14) (40,28) (80,50) (120,75) (160,100)
 ```
 
-**Team size** (step, placeholder): TR 0–10 → 1, 11–28 → 2, 29–43 → 3,
-44–56 → 4, 57–70 → 5, 71+ → 6.
+**Team size** is a [step](player-trainer-rating.md#scalers) scaler
+(placeholder): it holds each anchor's value until the next anchor. Anchors
+`(0,1) (11,2) (29,3) (44,4) (57,5) (71,6)`: TR 0–10 → 1, 11–28 → 2,
+29–43 → 3, 44–56 → 4, 57–70 → 5, 71+ → 6.
 
 | TR | 0 | 10 | 11 | 28 | 29 | 43 | 44 | 56 | 57 | 70 | 71 | 120 | 160 | 300 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -290,7 +303,7 @@ scaling, level cap, experience, and so on) layer on top as they do today.
 
 | Field | Contract |
 | --- | --- |
-| Species/form | Authored per roster slot, recommended at its final stage (validation warns otherwise; any stage is allowed, such as Blue's Eevee). Runtime never substitutes another line; below the stage's evolution level the member steps down ([evolution stages](player-trainer-rating.md#evolution-stages)). |
+| Species/form | Authored per roster slot, recommended at its final stage (validation warns otherwise; any stage is allowed, such as Whitney's Ursaring, which appears as Teddiursa below its evolution level). Runtime never substitutes another line; below the stage's evolution level the member steps down ([evolution stages](player-trainer-rating.md#evolution-stages)). |
 | `levelOffset` | Integer −6..0, default −2. |
 | `isAce` | One bit. Slot 1 is always an ace; one to three aces per roster. Every other slot is a **filler slot**; there is no separate filler flag. |
 | Battle content | Held item, ability, nature, and IVs/EVs per the existing construction rules; unset fields use constructor defaults. |
@@ -333,17 +346,23 @@ Aerodactyl (ace).
 Members step down by level through the
 [downward rule](player-trainer-rating.md#evolution-stages) and never evolve
 forward. Moves are resolved from the [move pool](#move-pools) against the
-member's current species, so a stepped-down member needs no special case. Brock's slot 1 Steelix (offset 0) appears as
-Onix until his team level reaches 35; his slot 2 Golem (offset −2) is Geodude
-below Lv 25, Graveler from 25, and Golem from 38; his slot 6 Aerodactyl ace has
-no earlier stage and joins as Aerodactyl.
+member's current species, so a stepped-down member needs no special case.
+Brock (a Steady, start TR 25, peak TR 100) shows it: his slot 1 Steelix
+(offset 0) appears as Onix until his team level reaches 35 (world progress
+57, TR 52); his slot 2 Golem (offset −2) is Geodude below Lv 25, Graveler
+from 25, and Golem from 38; his slot 6 Aerodactyl ace has no earlier stage
+and joins as Aerodactyl at TR 71 (world progress 97). At world progress 0, 40,
+80, 120, and 160 he is at TR 25, 44, 63, 81, and 100 with team level 18, 30,
+41, 51, and 63, fielding Geodude, Onix; then Kabuto, Golbat, Graveler, Onix;
+then Omanyte, Kabuto, Crobat, Golem, Steelix; then Omastar, Kabutops, Crobat,
+Golem, Aerodactyl, Steelix at 120 and 160.
 
 Early examples (placeholder content):
 
 | Battle | Trainer TR | Team |
 | --- | ---: | --- |
 | Blue in Pallet Town (world progress 0) | 0 | Eevee Lv 5 |
-| Blue at Cerulean (world progress about 20) | about 25 | two Pokémon at about Lv 18 |
+| Blue at Cerulean (world progress 20) | 26 | Pidgey Lv 16 (slot 2 Pidgeot, offset −2), Eevee Lv 18 (slot 1 Umbreon, offset 0) |
 | Brock at world progress 0 (start TR 25) | 25 | Onix Lv 18 (slot 1 Steelix, offset 0), Geodude Lv 16 (slot 2 Golem, offset −2) |
 
 Source FRLG, Emerald,
@@ -413,13 +432,19 @@ learn level, so they need a from level, and it alone decides their timing.
   draw from the pool ([roster influence](trainer-roster-influence.md#trades)).
 
 **Frustration rule.** When authoring a pool, draw on at most one
-frustration category per trainer, and keep the trainer's most iconic one:
+frustration category per trainer, and keep the trainer's most iconic one. A
+move belongs to a category only when the frustration is its **main effect**,
+including a damaging move whose effect always happens (Mud-Slap's accuracy
+drop, Dynamic Punch's confusion, Thousand Waves' trap). A secondary chance
+doesn't count: Hurricane's or Water Pulse's chance to confuse, or a damaging
+move with a chance to lower accuracy (Muddy Water, Octazooka, Mirror Shot).
 
 - sleep (Hypnosis, Sleep Powder, Spore, Lovely Kiss, Yawn, and the like);
-- evasion (Double Team, Minimize, and accuracy drops such as Smokescreen or
-  Sand Attack);
+- evasion (Double Team, Minimize, and accuracy drops such as Smokescreen,
+  Sand Attack, or Mud-Slap);
 - OHKO (Sheer Cold, Fissure, Horn Drill, Guillotine);
-- trapping (Bind- and Wrap-style moves, Mean Look, Block, and the like);
+- trapping (Bind- and Wrap-style moves, Mean Look, Block, Fairy Lock,
+  Thousand Waves, and the like);
 - Perish Song;
 - Destiny Bond;
 - infatuation and confusion (Attract, Swagger, Confuse Ray, Sweet Kiss,
@@ -430,17 +455,20 @@ evasion never also lists Toxic or Toxic Spikes. The catalog script holds the
 move-to-category map and rejects a pool that breaks the rule. The rule covers
 pool entries; a member's natural level-up moves are not checked.
 
-Example (illustrative only; learnsets not checked): Brock's pool is Stone
-Edge (from Lv 40), Earthquake, Stealth Rock, Iron Defense, Rock Slide,
-Earthquake, Rock Slide. His slot 1 ace picks first and takes the entries it is
-eligible for, up to four; Golem then takes from what is left. Two Earthquake
-entries let two members carry it. The Earthquake entries have no from level,
-so each waits until a member whose species learns Earthquake by level-up
-reaches that learn level (an earlier form's level-up counts); a member that
-could learn it only by TM never takes them. If Golem already knows Rock Slide
-from its level-up moveset, it claims a Rock Slide entry and keeps the move.
-Stone Edge has a from level, so it waits until some member that can learn it
-at all, TM or egg move included, reaches Lv 40.
+Example (Brock's draft pool, resolved against the game's learnsets): Bind,
+Stealth Rock, Sandstorm (from Lv 20), Curse, Stone Edge, Earthquake, Rock
+Slide, Heavy Slam, Rock Blast, Cross Poison, Explosion. Bind is his one
+frustration category (trapping). At world progress 0 his slot 1 ace, Onix at
+Lv 18, picks first: it takes Bind and Curse, claims Stealth Rock, which it
+already knows from its level-up moveset, and keeps Rage; Geodude keeps its
+level-up moves; the other eight entries are dormant. Sandstorm has a from
+level and wakes for Onix at Lv 20 (world progress 6). Entries without a from
+level wait for a member's natural learn level (an earlier form's level-up
+counts): Rock Blast wakes for Graveler at world progress 46, Earthquake at 60,
+and Explosion at 70; Heavy Slam wakes for Golem and Cross Poison for Crobat
+at 76; Stone Edge wakes for Golem at 92. Rock Slide never wakes: its only
+level-up learner on the roster, Onix and Steelix, already holds four pool
+moves by the time it could learn it.
 
 ## Battle snapshot
 
@@ -455,9 +483,11 @@ reuses that snapshot, and the battle's AI flags are resolved alongside it
 ([Trainer AI](trainer-ai.md#runtime-and-the-override-point)); teardown clears it, and world progress gained during the
 battle never changes it. A retry at the same world progress produces an
 identical team (battle RNG may still differ); a retry after the player gained TR
-uses the higher world progress. Accepting a league invitation computes every eligible trainer's TR
-at that moment and captures the selected trainers' battle snapshots in the
-event lineup, frozen for that event;
+uses the higher world progress. Accepting a league invitation computes every
+eligible trainer's TR and league score at that moment and captures the
+selected trainers' battle snapshots in the event lineup, frozen for that
+event. Declining also computes the event lineup (and the league scores) at
+that moment, but captures no teams.
 [Leagues](leagues.md#event-lineup) owns that lifecycle. Invalid content or a
 failed resolution fails preparation; never substitute player TR for a trainer's
 TR, another trainer, or a random team.
@@ -506,11 +536,14 @@ TR, another trainer, or a random team.
   160; every archetype, the Rival included, uses the one growth rule; results
   match the examples above, including the +10 and +1 steps and the early Blue
   and Brock fights (Brock's stepped-down Onix and Geodude).
-- Tate & Liza: their double battle draws both trainers' Pokémon from the shared
-  roster in order, at the table's team size; they never enter a league lineup.
+- Tate & Liza: their double battle takes the team size from the duo's TR,
+  sends members out in battle order (fillers first, aces last), alternating
+  between the two partners counting back from the last member (Tate's), so
+  each partner's last Pokémon is an ace where possible, matching the example
+  above; they never enter a league lineup.
 - Resolution report per trainer at world progress 0, 40, 80, 120, and 160: TR,
   size, member slots, species after stepping down, levels, moves, dormant
-  move-pool entries, and battle order, each level in 1–100 and the battle order derived as above (filler
+  entries, and battle order, each level in 1–100 and the battle order derived as above (filler
   slots, then aces, each in reverse list order; slot 1 last), matching the
   Brock example at every team size.
 - Determinism: trainer TR and resolution are pure functions of world progress
@@ -533,16 +566,25 @@ rules (placeholders tuned in the explorer):
   quality scaler (Later).
 - **Start TR means how established a trainer is** when the journey begins.
   Blue (who leaves Pallet with the player) starts at TR 0. Gym Leaders are
-  established: placeholder starts sit in TR 18–40 (opening team about Lv
-  13–28, never below Lv 12), spread by archetype rather than original Gym
-  order: Sleepers and Stars at TR 18–26, Prodigies at 22–30, Steadies and
-  Bursts at 24–34, Veterans and Comebacks at 30–40. No Gym Leader is a
-  Legend. The Elite Four and Champions start higher.
-- **Gym ladder.** At every world progress point, some Gym Leaders sit below
-  the player's TR (accessible), some near it, and some clearly above
-  (challenges). The hardest leaders at 24 badges are Sleepers or
+  established: placeholder starts sit in TR 18–40 (opening team level about
+  Lv 13–28, never below team level 12), spread by archetype rather than
+  original Gym order: Sleepers and Stars at TR 18–26, Prodigies at 22–30,
+  Steadies and Bursts at 24–34, Veterans and Comebacks at 30–40. No Gym
+  Leader is a Legend. The floor is on team level: a filler may open lower
+  (Winona's fillers open at Lv 11 on team level 13). The Elite Four and
+  Champions start above the Gym band, at TR 41 or more (opening team level 29
+  or more), except Blue, the Rival, who starts at 0: Will and Sidney 41,
+  Lorelei 42, Phoebe 43, Koga and Glacia 44, Bruno and Drake 45, Karen 47,
+  Wallace 48, Steven 50, Agatha 95, and Lance 200. Each league's first member
+  starts lowest (Lorelei, Will, Sidney), and the catalog script rejects an
+  Elite Four or Champion start below 41, except the Rival's.
+- **Gym ladder.** From the first badges on, some Gym Leaders sit near the
+  player's TR and some clearly above (challenges), and from 8 badges some
+  also sit below it (accessible). At the start every leader is above the
+  player; at 4 badges none is below yet, but several are at or under the
+  player's TR. The hardest leaders at 24 badges are Sleepers or
   high-peak Steadies.
-- **Rival.** Blue starts level with the player, pulls about 10 TR ahead by 4
+- **Rival.** Blue starts level with the player, pulls about 10 TR ahead (9–11) by 4
   badges, and stays there until his peak TR of 170.
 - **Early fights.** At world progress 0 notable fights are small and near the
   player's level (Blue brings one Pokémon at Lv 5).
@@ -558,7 +600,7 @@ implementations stay active until then.
 
 ## Open questions
 
-- Each trainer's growth values on the new scale, the archetype anchors, and
+- Each trainer's growth values on the v0 scale, the archetype anchors, and
   the placeholder team-level low end and team-size steps (content review).
 - Battle content: author each trainer's move pool; items and abilities per
   roster slot.

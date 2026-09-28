@@ -15,6 +15,7 @@ import type {
   LeagueCandidate,
   Invitation,
   InvitationChoice,
+  InvitationClock,
   InvitationSimulation,
   LeagueRanking,
   LearnsetData,
@@ -97,20 +98,20 @@ export const DEFAULT_TEAM_LEVEL: readonly Anchor[] = [
   [120, 75],
   [160, 100],
 ]
-/** Step table as paired anchors: 0–10 -> 1, 11–28 -> 2, 29–43 -> 3, 44–56 -> 4, 57–70 -> 5, 71+ -> 6. */
+/**
+ * Team size, a step scaler: each anchor's size holds until the next anchor, so 0–10 -> 1,
+ * 11–28 -> 2, 29–43 -> 3, 44–56 -> 4, 57–70 -> 5, 71+ -> 6.
+ */
 export const DEFAULT_TEAM_SIZE: readonly Anchor[] = [
   [0, 1],
-  [10, 1],
   [11, 2],
-  [28, 2],
   [29, 3],
-  [43, 3],
   [44, 4],
-  [56, 4],
   [57, 5],
-  [70, 5],
   [71, 6],
 ]
+/** Team size is a step scaler; team level, wild and regular trainer levels are interpolated. */
+export const TEAM_SIZE_KIND: ScalerKind = "step"
 /** The wild level curve by player TR (replaces "cap - 10"). */
 export const DEFAULT_WILD_LEVEL: readonly Anchor[] = [
   [0, 6],
@@ -444,7 +445,7 @@ export const scale = (
 export const teamLevelFor = (experiment: Pick<Experiment, "teamLevel">, tr: number): number =>
   scale(experiment.teamLevel, tr)
 export const teamSizeFor = (experiment: Pick<Experiment, "teamSize">, tr: number): number =>
-  scale(experiment.teamSize, tr)
+  scale(experiment.teamSize, tr, TEAM_SIZE_KIND)
 
 /** Clamps badges to 0–24. */
 export const normalizePoint = (point: WorldPoint): WorldPoint => ({
@@ -473,10 +474,9 @@ const progress = (value: number): number => {
 }
 
 /**
- * Growth along an archetype scaler: start + roundHalfUp((peak - start) *
- * growth% / 100), with growth% read exactly (no intermediate rounding) and flat
- * past the last anchor. A step scaler holds each anchor's growth % until the
- * next anchor.
+ * Growth along an archetype scaler: the growth % is the scaler's whole-percent value at the world
+ * progress (the standard scaler rule of that kind, halves rounded up; flat past the last anchor),
+ * then trainer TR = start + floor(((peak - start) × growth% + 50) / 100), halves rounded up again.
  */
 export const growthTR = (
   growth: readonly Anchor[],
@@ -485,26 +485,9 @@ export const growthTR = (
   world: number,
   kind: ScalerKind = "interpolated",
 ): number => {
-  const at = progress(world)
-  const first = growth[0]
-  const last = growth.at(-1)
-  if (!first || !last) throw new Error("A scaler needs at least one anchor")
-  // growth% = numerator / denominator.
-  let numerator = BigInt(last[1])
-  let denominator = 1n
-  if (at <= first[0]) numerator = BigInt(first[1])
-  else if (at < last[0] && kind === "step") numerator = BigInt(bracket(growth, at)[0][1])
-  else if (at < last[0]) {
-    const index = growth.findIndex(([x]) => x >= at)
-    const lower = growth[index - 1]
-    const upper = growth[index]
-    if (!lower || !upper) throw new Error("Scaler anchors must not contain missing points")
-    denominator = BigInt(upper[0] - lower[0])
-    numerator = BigInt(lower[1]) * denominator + BigInt(at - lower[0]) * BigInt(upper[1] - lower[1])
-  }
-  const divisor = 100n * denominator
-  const gain = (2n * BigInt(peakTR - startTR) * numerator + divisor) / (2n * divisor)
-  return startTR + Number(gain)
+  const fraction = scale(growth, progress(world), kind)
+  // BigInt keeps the product exact for any safe start and peak TR.
+  return startTR + Number((BigInt(peakTR - startTR) * BigInt(fraction) + 50n) / 100n)
 }
 
 /**
@@ -661,6 +644,25 @@ export const battleOrderOf = <T extends Pick<RosterSlot, "isAce">>(team: readonl
   ...team.filter((member) => !member.isAce).toReversed(),
   ...team.filter((member) => member.isAce).toReversed(),
 ]
+
+/**
+ * A double battle's split: the members alternate between the two leaders (named in the entry's
+ * name, "Tate & Liza") along the battle order, anchored at its end: the last member goes to the
+ * first leader, the one before it to the second, and so on. Aces are fought last, so with two or
+ * more aces each leader's last Pokémon is an ace. Each leader's members stay in battle order.
+ */
+export const doublesPartners = <T>(
+  name: string,
+  battleOrder: readonly T[],
+): { name: string; members: T[] }[] => {
+  const names = name.split(" & ")
+  if (names.length !== 2 || names.some((part) => !part.trim()))
+    throw new Error(`A double battle entry names two leaders ("A & B"): ${name}`)
+  return names.map((leader, partner) => ({
+    name: leader,
+    members: battleOrder.filter((_, index) => (battleOrder.length - 1 - index) % 2 === partner),
+  }))
+}
 
 /**
  * One species' learnsets: level-up moves in the game's order, its TM/tutor list, and (on a line's
@@ -1036,6 +1038,7 @@ export const resolveTrainer = (
     size,
     team,
     battleOrder,
+    partners: trainer.doubleBattle ? doublesPartners(trainer.name, battleOrder) : null,
     pool,
     dormant: pool.filter((entry) => entry.slot === null),
     rosterLength: settings.roster.length,
@@ -1312,22 +1315,23 @@ export const eligibleLeagues = (badges: RegionalBadges, lifetimeWin: boolean): L
   )
 
 /**
- * Which eligible league calls next (null when none is eligible). `lastCalled` is the day each league
- * last called (null: never). Round-robin: the eligible league that called least recently (never
- * counts as least recent); ties go to the league with the most badges (the Masters has no badge
- * count and loses to a regional league), and remaining ties to Indigo. The first call is therefore
- * from the eligible league with the most badges; a single eligible league calls every time.
+ * Which eligible league calls next (null when none is eligible). `lastCall` is each league's last
+ * call sequence number (null: never), from the monotonic call counter. Round-robin: the eligible
+ * league that called least recently (the lowest sequence number; never counts as least recent);
+ * ties go to the league with the most badges (the Masters has no badge count and loses to a
+ * regional league), and remaining ties to Indigo. The first call is therefore from the eligible
+ * league with the most badges; a single eligible league calls every time.
  */
 export const callingLeague = (
   badges: RegionalBadges,
   lifetimeWin: boolean,
-  lastCalled: Record<League, number | null>,
+  lastCall: Record<League, number | null>,
 ): { league: League; reason: CallReason; eligible: League[] } | null => {
   const eligible = eligibleLeagues(badges, lifetimeWin)
   const [only] = eligible
   if (only === undefined) return null
   if (eligible.length === 1) return { league: only, reason: "only eligible", eligible }
-  const recency = (league: League): number => lastCalled[league] ?? -Infinity
+  const recency = (league: League): number => lastCall[league] ?? -Infinity
   const oldest = Math.min(...eligible.map(recency))
   const least = eligible.filter((league) => recency(league) === oldest)
   if (least.length === 1) return { league: least[0]!, reason: "least recently called", eligible }
@@ -1339,17 +1343,80 @@ export const callingLeague = (
   return { league: "Indigo", reason: "tie: Indigo", eligible }
 }
 
+const day = (value: number): number => {
+  if (!Number.isSafeInteger(value) || value < 0)
+    throw new Error("The day counter must be a non-negative whole number")
+  return value
+}
+
+/** The invitation state when the player qualifies on `today`: the countdown starts, no calls yet. */
+export const startInvitationClock = (today: number): InvitationClock => ({
+  day: day(today),
+  countdown: INVITATION_INTERVAL,
+  calls: 0,
+  lastCall: { Indigo: null, "Sevii Masters": null, Hoenn: null },
+})
+
+/**
+ * Observes the day counter. The countdown counts only forward day advances: a counter ahead of
+ * the last observed day counts the difference (a jump far ahead makes the call due once, never a
+ * backlog); a counter that goes backwards neither advances nor resets it. Nothing counts while an
+ * invitation or accepted event is pending. The observed day is always recorded.
+ */
+export const observeDay = (clock: InvitationClock, today: number): InvitationClock => ({
+  ...clock,
+  day: day(today),
+  countdown:
+    clock.countdown === null ? null : Math.max(0, clock.countdown - Math.max(0, today - clock.day)),
+})
+
+/**
+ * Places the call once the countdown is due: the calling league (callingLeague) takes the next
+ * sequence number and the countdown stops until the invitation resolves. With no eligible league
+ * no call is made and the countdown stays due, re-checked at the next observation.
+ */
+export const placeCall = (
+  clock: InvitationClock,
+  badges: RegionalBadges,
+  lifetimeWin: boolean,
+): {
+  clock: InvitationClock
+  call: (ReturnType<typeof callingLeague> & { sequence: number }) | null
+} => {
+  if (clock.countdown !== 0) return { clock, call: null }
+  const call = callingLeague(badges, lifetimeWin, clock.lastCall)
+  if (call === null) return { clock, call: null }
+  const sequence = clock.calls + 1
+  return {
+    clock: {
+      ...clock,
+      countdown: null,
+      calls: sequence,
+      lastCall: { ...clock.lastCall, [call.league]: sequence },
+    },
+    call: { ...call, sequence },
+  }
+}
+
+/** An invitation resolves (a decline, or an accepted event's end): the countdown restarts. */
+export const resolveInvitation = (clock: InvitationClock): InvitationClock => ({
+  ...clock,
+  countdown: INVITATION_INTERVAL,
+})
+
 /**
  * Simulates league invitations at one player TR (world progress; days never change anyone's
  * strength) and badge split. The player qualifies on day 0 when their TR is at least QUALIFYING_TR;
- * below it no league calls. The first invitation arrives INVITATION_INTERVAL days later, and each
- * next one INVITATION_INTERVAL days after the previous one resolves: a decline resolves on the day
- * of the call, an accepted event when the player arrives and fights (`waits[i]` days after the
- * call, 0 by default); no countdown runs while an accepted event is pending. `choices[i]` answers
- * invitation i. The lineup is computed at acceptance or decline, fatigued by the lineup of the most
- * recent resolved event, and frozen. The reigning champion is the player after a win, otherwise the
- * lineup's strongest member (last in battle order). Invitations stop when no league is eligible
- * (callingLeague). No randomness.
+ * below it no league calls. The invitation clock (startInvitationClock) makes the first call due
+ * INVITATION_INTERVAL days later, and each next one INVITATION_INTERVAL days after the previous one
+ * resolves: a decline resolves on the day of the call, an accepted event when the player arrives
+ * and fights (`waits[i]` days after the call, 0 by default); no countdown runs while an accepted
+ * event is pending. Each call takes the next call sequence number, which orders the round-robin.
+ * `choices[i]` answers invitation i. The lineup is computed at acceptance or decline, fatigued by
+ * the lineup of the most recent resolved event, and frozen. The reigning champion is the player
+ * after a win, otherwise the lineup's strongest member (last in battle order). With no eligible
+ * league no call is made; badges and wins are fixed within a simulation, so none ever follows.
+ * No randomness.
  */
 export const simulateInvitations = (
   catalog: readonly TrainerRecord[],
@@ -1363,18 +1430,16 @@ export const simulateInvitations = (
   if (!qualifies(playerTR)) return { qualified: false, badges, invitations: [] }
   const candidates = leagueCandidates(catalog, experiment, playerTR)
   const lifetimeWins = new Set<League>()
-  const lastCalled: Record<League, number | null> = {
-    Indigo: null,
-    "Sevii Masters": null,
-    Hoenn: null,
-  }
   const invitations: Invitation[] = []
-  let day = INVITATION_INTERVAL
+  let clock = startInvitationClock(0)
   for (const [index, choice] of choices.entries()) {
     const before = invitations.at(-1)
-    const call = callingLeague(badges, lifetimeWins.size > 0, lastCalled)
-    if (call === null) break
-    const { league, reason, eligible } = call
+    const due = clock.day + (clock.countdown ?? 0)
+    const placed = placeCall(observeDay(clock, due), badges, lifetimeWins.size > 0)
+    if (placed.call === null) break
+    const { league, reason, eligible, sequence } = placed.call
+    const lastCall = { ...clock.lastCall }
+    clock = placed.clock
     const ranking = rankLeague(
       league,
       playerTR,
@@ -1391,12 +1456,13 @@ export const simulateInvitations = (
     if (won) lifetimeWins.add(league)
     invitations.push({
       number: index + 1,
-      day,
-      resolvedDay: day + wait,
+      day: due,
+      resolvedDay: due + wait,
       league,
       reason,
       eligible,
-      lastCalled: { ...lastCalled },
+      sequence,
+      lastCall,
       choice,
       ranking,
       fatigueFrom: before
@@ -1406,8 +1472,7 @@ export const simulateInvitations = (
       firstWin,
       champion: won ? { kind: "player" } : { kind: "trainer", entrant: strongest },
     })
-    lastCalled[league] = day
-    day += wait + INVITATION_INTERVAL
+    clock = resolveInvitation(observeDay(clock, due + wait))
   }
   return { qualified: true, badges, invitations }
 }

@@ -66,18 +66,28 @@ test("grows each trainer with world progress and round-trips an exported experim
   await expect(page.getByTestId("ace-2")).toHaveCount(0)
   await expect(order.nth(1)).toContainText("Onix→ Steelix at Lv 35Ace")
   await expect(order.nth(1)).toContainText("Lv. 18")
-  // The growth table shows each roster slot's stage at the world progress checkpoints: TR 25, 44,
-  // 63, 81 and 100 (team level 18, 30, 41, 51 and 63; team size 2, 4, 5, 6 and 6).
+  // The growth table shows each roster slot's stage and moves at the world progress checkpoints:
+  // TR 25, 44, 63, 81 and 100 (team level 18, 30, 41, 51 and 63; team size 2, 4, 5, 6 and 6).
   await expect(page.getByTestId("growth-slot-1")).toHaveText(
-    /Slot 1\s*Ace\s*Onix\s*Lv 18\s*Onix\s*Lv 30\s*Steelix\s*Lv 41\s*Steelix\s*Lv 51\s*Steelix\s*Lv 63/,
+    /^Slot 1\s*Ace\s*Onix\s*Lv 18\s*Bind\s*Curse\s*Rage\s*Stealth Rock\s*Onix\s*Lv 30.*Steelix\s*Lv 41.*Steelix\s*Lv 51.*Steelix\s*Lv 63/s,
   )
   await expect(page.getByTestId("growth-slot-2")).toHaveText(
-    /Slot 2\s*Geodude\s*Lv 16\s*Graveler\s*Lv 28\s*Golem\s*Lv 39\s*Golem\s*Lv 49\s*Golem\s*Lv 61/,
+    /^Slot 2\s*Geodude\s*Lv 16\s*Rollout\s*Magnitude\s*Strength\s*Rock Throw\s*Graveler\s*Lv 28.*Golem\s*Lv 39.*Golem\s*Lv 49.*Golem\s*Lv 61/s,
   )
   // The slot-6 Aerodactyl ace (offset 0) joins only at team size 6 (TR 71), so from world
   // progress 120.
   await expect(page.getByTestId("growth-slot-6")).toHaveText(
-    /Slot 6\s*Ace\s*—\s*—\s*—\s*Aerodactyl\s*Lv 51\s*Aerodactyl\s*Lv 63/,
+    /^Slot 6\s*Ace\s*—\s*—\s*—\s*Aerodactyl\s*Lv 51.*Aerodactyl\s*Lv 63/s,
+  )
+  // Each checkpoint also shows the battle order, the dormant pool entry count and the AI tier.
+  await expect(page.getByTestId("growth-battle-order")).toHaveText(
+    /^Battle order\s*Geodude\s*Onix\s*Ace\s*Kabuto\s*Golbat\s*Graveler\s*Onix\s*Ace\s*Omanyte/,
+  )
+  await expect(page.getByTestId("growth-dormant")).toHaveText(
+    /^Dormant entries\s*8\s*7\s*2\s*2\s*2$/,
+  )
+  await expect(page.getByTestId("growth-ai-tier")).toHaveText(
+    /^AI tier\s*None\s*Aware\s*Aware\s*Smart\s*Smart$/,
   )
   await expect(page.getByTestId("slot-line-2")).toHaveText("Geodude → Graveler Lv 25 → Golem Lv 38")
   await expect(page.getByTestId("stage-warning-1")).toHaveCount(0)
@@ -185,10 +195,10 @@ test("sets the player TR directly, with badges as presets, and reads old badge p
   await expect(page.getByTestId("level-cap")).toHaveText("Lv. 61")
   await expect(page.getByTestId("wild-level")).toHaveText("Lv. 48")
   await expect(page.getByTestId("regular-trainer-level")).toHaveText("Lv. 52")
-  // Steady Brock (25 → 100) at world progress 97: 25 + 75 × 97/160 = 70.47.
-  await expect(page.getByTestId("selected-tr")).toHaveText("70")
-  await expect(page.getByTestId("tr-brock")).toHaveText("70")
-  await expect(page.getByTestId("ladder-brock")).toContainText("below -27")
+  // Steady Brock (25 → 100) at world progress 97: 60.625% rounds to 61%, and 75 × 61% = 45.75.
+  await expect(page.getByTestId("selected-tr")).toHaveText("71")
+  await expect(page.getByTestId("tr-brock")).toHaveText("71")
+  await expect(page.getByTestId("ladder-brock")).toContainText("below -26")
   await expect(page.getByTestId("event-lineup").locator(":scope > li")).toHaveCount(5)
   // The slider runs 0–200; the field takes any larger TR, which is past 24 badges.
   await page.getByLabel("Player TR slider", { exact: true }).fill("170")
@@ -229,15 +239,15 @@ test("shows the selected trainer's milestones and a team level chart", async ({ 
   await expect(page.getByTestId("milestone-8")).toHaveText(/8\s*3rd slot \(Zubat\) joins/)
   await expect(page.getByTestId("milestone-40")).toHaveText(/40\s*4th slot \(Kabuto\) joins/)
   await expect(page.getByTestId("milestone-57")).toHaveText(/57\s*Onix → Steelix/)
-  await expect(page.getByTestId("milestone-68")).toHaveText(/68\s*5th slot \(Omanyte\) joins/)
-  await expect(page.getByTestId("milestone-98")).toHaveText(
-    /98\s*6th slot \(Aerodactyl\) ace joins/,
+  await expect(page.getByTestId("milestone-67")).toHaveText(/67\s*5th slot \(Omanyte\) joins/)
+  await expect(page.getByTestId("milestone-97")).toHaveText(
+    /97\s*6th slot \(Aerodactyl\) ace joins/,
   )
-  await expect(timeline.last()).toHaveText(/159\s*peak TR 100/)
+  await expect(timeline.last()).toHaveText(/160\s*peak TR 100/)
   await expect(timeline.first()).toHaveAttribute("aria-current", "step")
   await expect(page.getByTestId("milestone-now")).toHaveCount(0)
   // At 8 badges (player TR 80) the marker sits between Graveler → Golem, Golbat → Crobat (76)
-  // and Kabuto → Kabutops (85).
+  // and Kabuto → Kabutops (84).
   await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
   await expect(page.getByTestId("milestone-now")).toHaveText(/80\s*Player TR now/)
   await expect(page.getByTestId("milestone-76")).toHaveText(
@@ -353,7 +363,7 @@ test("ranks every eligible trainer by league score and fields the top five, stro
   // 8 badges (all Kanto by default) qualify the player: Indigo calls first, on day 7, with no
   // earlier event to fatigue anyone.
   await expect(page.getByTestId("event").locator("h3").first()).toContainText(
-    "Invitation 1 (day 7): Indigo world progress 80 · Kanto + Johto · base lineup Lv 59 · fatigued from no earlier event",
+    "Invitation 1 (day 7): Indigo world progress 80 · Kanto + Johto · base lineup Lv 61 · fatigued from no earlier event",
   )
   await expect(page.getByTestId("event-lineup").locator(":scope > li")).toHaveCount(5)
   await expect(page.getByTestId("event-entrants").locator("tbody tr")).toHaveCount(eligible)
@@ -365,14 +375,14 @@ test("ranks every eligible trainer by league score and fields the top five, stro
   await expect
     .poll(names)
     .toEqual([
-      "Match 1 Will",
-      "Match 2 Lt. Surge",
-      "Match 3 Giovanni",
-      "Match 4 Agatha",
-      "Match 5 Jasmine",
+      "Match 1 Lt. Surge",
+      "Match 2 Giovanni",
+      "Match 3 Will",
+      "Match 4 Koga",
+      "Match 5 Karen",
     ])
-  await expect(page.getByTestId("event-match-5")).toContainText("TR 95 · score 95 · Lv. 59")
-  await expect(page.getByTestId("league-finalist")).toHaveText("Jasmine 95")
+  await expect(page.getByTestId("event-match-5")).toContainText("TR 101 · score 101 · Lv. 63")
+  await expect(page.getByTestId("league-finalist")).toHaveText("Karen 101")
   // League score = floor(TR × willingness / 100). Norman (Hoenn, not a traveller) is away at
   // Indigo and pays 80; Drake (Hoenn, traveller) pays only 10.
   await expect(entrant("norman")).toHaveText([
@@ -405,13 +415,16 @@ test("ranks every eligible trainer by league score and fields the top five, stro
     "",
     "",
   ])
-  // Aloof: the top five non-aloof are the base lineup (base lineup Lv 59). Agatha (Lv 59) joins;
-  // Lance, a Legend at TR 200 (Lv 100), skips and is not ranked.
+  // Aloof: the top five non-aloof are the base lineup (base lineup Lv 61, Koga). Karen (Lv 63)
+  // and Agatha (Lv 59) join; Lance, a Legend at TR 200 (Lv 100), skips and is not ranked.
+  await expect(page.getByTestId("event-aloof-karen")).toHaveText(
+    "Karen aloof: team Lv 63 vs base lineup Lv 61 + 10 → joins",
+  )
   await expect(page.getByTestId("event-aloof-agatha")).toHaveText(
-    "Agatha aloof: team Lv 59 vs base lineup Lv 59 + 10 → joins",
+    "Agatha aloof: team Lv 59 vs base lineup Lv 61 + 10 → joins",
   )
   await expect(page.getByTestId("event-aloof-lance")).toHaveText(
-    "Lance aloof: team Lv 100 vs base lineup Lv 59 + 10 → skips",
+    "Lance aloof: team Lv 100 vs base lineup Lv 61 + 10 → skips",
   )
   await expect(page.getByTestId("event-aloof").locator("li")).toHaveCount(8)
   await expect(entrant("lance")).toHaveText([
@@ -429,7 +442,8 @@ test("ranks every eligible trainer by league score and fields the top five, stro
     "skips",
     "",
   ])
-  await expect(entrant("jasmine").last()).toHaveText("in lineup")
+  await expect(entrant("karen").last()).toHaveText("in lineup")
+  await expect(entrant("jasmine").last()).toHaveText("")
 
   // Eight invitations by default, each declined: with only Kanto badges, Indigo is the only league
   // that knows the player, so it calls every time, and each event's strongest reigns.
@@ -441,10 +455,10 @@ test("ranks every eligible trainer by league score and fields the top five, stro
   await expect(page.getByTestId("invitation-2-reason")).toHaveText(
     "only eligible (Indigo 8, Hoenn 0; no league win)",
   )
-  await expect(page.getByTestId("invitation-1-champion")).toHaveText("Jasmine (TR 95)")
-  await expect(page.getByTestId("invitation-2-champion")).toHaveText("Karen (TR 93)")
+  await expect(page.getByTestId("invitation-1-champion")).toHaveText("Karen (TR 101)")
+  await expect(page.getByTestId("invitation-2-champion")).toHaveText("Jasmine (TR 95)")
   await expect(page.getByTestId("champion-indigo")).toHaveText(
-    "Indigo reigning champion after invitation 8: Karen (TR 93)",
+    "Indigo reigning champion after invitation 8: Jasmine (TR 95)",
   )
   await expect(page.getByTestId("champion-sevii-masters")).toHaveText(
     "Sevii Masters reigning champion after invitation 8: —",
@@ -453,12 +467,13 @@ test("ranks every eligible trainer by league score and fields the top five, stro
   // is at home in Kanto and pays only the 50 fatigue: willingness 50, score floor(95 × 50 / 100) = 47.
   await page.getByRole("button", { name: "Show invitation 2", exact: true }).click()
   await expect(page.getByTestId("event").locator("h3").first()).toContainText(
-    "Invitation 2 (day 14): Indigo world progress 80 · Kanto + Johto · base lineup Lv 58 · fatigued from invitation 1 (Indigo)",
+    "Invitation 2 (day 14): Indigo world progress 80 · Kanto + Johto · base lineup Lv 59 · fatigued from invitation 1 (Indigo)",
   )
   await expect(entrant("giovanni").nth(8)).toHaveText("50")
   await expect(entrant("giovanni").nth(9)).toHaveText("50")
   await expect(entrant("giovanni").nth(10)).toHaveText("47")
-  await expect(entrant("jasmine").nth(8)).toHaveText("50")
+  await expect(entrant("will").nth(8)).toHaveText("50")
+  await expect(entrant("jasmine").nth(8)).toHaveText("0")
   await expect(entrant("norman").nth(8)).toHaveText("0")
   await page.getByRole("button", { name: "Show invitation 1", exact: true }).click()
 
@@ -470,15 +485,17 @@ test("ranks every eligible trainer by league score and fields the top five, stro
   await expect(entrant("norman").nth(5)).toHaveText("traveller")
   await expect(entrant("norman").nth(9)).toHaveText("90")
   await expect(entrant("norman").nth(10)).toHaveText("85")
-  // At home in Johto he scores his full 95 and takes the fifth place from Will.
+  // At home in Johto he scores his full 95, but ties go to catalog order: Lt. Surge, Giovanni,
+  // Agatha and Jasmine (also 95) rank ahead, so he is eighth and stays out of the lineup.
   await page.getByLabel("Home region", { exact: true }).selectOption("Johto")
   await expect(entrant("norman").nth(6)).toHaveText("at home")
   await expect(entrant("norman").nth(10)).toHaveText("95")
-  await expect(entrant("will").last()).toHaveText("")
-  await expect(page.getByTestId("event-lineup")).toContainText("Norman")
+  await expect(entrant("norman").first()).toHaveText("8")
+  await expect(page.getByTestId("event-lineup")).not.toContainText("Norman")
   // The trainer editor carries the aloof trait: Lance is aloof; unticked, he joins Indigo and
   // fights last there.
   await page.getByRole("button", { name: /^Lance/ }).click()
+  await expect(page.getByTestId("doubles-split")).toHaveCount(0)
   await expect(page.getByLabel("Aloof", { exact: true })).toBeChecked()
   await page.getByLabel("Aloof", { exact: true }).uncheck()
   await expect(page.getByTestId("event-aloof-lance")).toHaveCount(0)
@@ -490,6 +507,12 @@ test("ranks every eligible trainer by league score and fields the top five, stro
   await page.getByRole("button", { name: /^Tate & Liza/ }).click()
   await expect(page.getByTestId("double-battle")).toHaveText("Double battle")
   await expect(page.getByTestId("double-battle-note")).toContainText("not in the league pool")
+  // The team splits between the leaders along the battle order, so each ends on an ace.
+  await expect(page.getByTestId("doubles-split")).toContainText(
+    "Tate: Xatu, Gardevoir, Solrock · Liza: Grumpig, Claydol, Lunatone",
+  )
+  await expect(page.getByTestId("partner-1")).toHaveText("Tate")
+  await expect(page.getByTestId("partner-2")).toHaveText("Liza")
   await setGrowth(page, { archetype: "veteran", peak: "300" })
   await expect(page.getByTestId("tr-tate-liza")).toHaveText("300")
   await expect(page.getByTestId("event-entrants")).not.toContainText("Tate")
@@ -532,7 +555,7 @@ test("simulates league invitations: the gate, who calls, answers, fatigue and ch
     "only eligible (Indigo 0, Hoenn 8; no league win)",
   )
   await expect(page.getByTestId("invitation-1-result")).toHaveText("declined")
-  await expect(page.getByTestId("invitation-1-champion")).toHaveText("Norman (TR 95)")
+  await expect(page.getByTestId("invitation-1-champion")).toHaveText("Karen (TR 101)")
   // Accept and win the next three: Hoenn again (the only league that knows the player), then the
   // Masters, eligible after that win and never called, then Hoenn, called less recently.
   await answer(2, "win")
@@ -547,12 +570,12 @@ test("simulates league invitations: the gate, who calls, answers, fatigue and ch
   await expect(page.getByTestId("invitation-2-fatigue")).toHaveText("#1 Hoenn")
   await expect(page.getByTestId("invitation-3")).toContainText("21Sevii Masters")
   await expect(page.getByTestId("invitation-3-reason")).toHaveText(
-    "least recently called (Sevii Masters never, Hoenn day 14)",
+    "least recently called (Sevii Masters never, Hoenn call 2)",
   )
   await expect(page.getByTestId("invitation-3-result")).toHaveText("first win")
   await expect(page.getByTestId("invitation-4-league")).toHaveText("Hoenn")
   await expect(page.getByTestId("invitation-4-reason")).toHaveText(
-    "least recently called (Sevii Masters day 21, Hoenn day 14)",
+    "least recently called (Sevii Masters call 3, Hoenn call 2)",
   )
   await expect(page.getByTestId("invitation-4-result")).toHaveText("repeat win")
   await page.getByRole("button", { name: "Show invitation 3", exact: true }).click()
@@ -603,7 +626,7 @@ test("simulates league invitations: the gate, who calls, answers, fatigue and ch
   )
   await expect(page.getByTestId("invitation-2-league")).toHaveText("Indigo")
   await expect(page.getByTestId("invitation-2-reason")).toHaveText(
-    "least recently called (Indigo never, Hoenn day 7)",
+    "least recently called (Indigo never, Hoenn call 1)",
   )
   // Following the badge total again: 16 badges are Kanto and Johto, so only Indigo calls. A loss
   // ends the event, its strongest reigns, and the Masters stays closed without a win.
@@ -1086,7 +1109,7 @@ test("resolves each member's moves from the move pool, lists dormant entries and
   )
   await expect(page.getByTestId("milestone-6")).toContainText("Sandstorm wakes (Onix)")
   // Graveler learns Earthquake through its earlier form Geodude (Lv 34).
-  await expect(page.getByTestId("milestone-61")).toContainText("Earthquake wakes (Graveler)")
+  await expect(page.getByTestId("milestone-60")).toContainText("Earthquake wakes (Graveler)")
 
   // A from level lets a TM learner take an entry, and holds an entry back until it.
   await page.getByLabel("Pool entry 6 from level", { exact: true }).fill("16")
@@ -1147,8 +1170,9 @@ test("edits the trainer, world and archetype scalers globally", async ({ page })
   await page.getByText("Scalers & experiment settings", { exact: true }).click()
   // Wallace is TR 48 at world progress 0.
   await expect(page.getByTestId("size-wallace")).toHaveText("4")
-  // Without the (44, 4) anchor, size ramps from (43, 3) to (56, 4): TR 48 rounds to 3.
-  await page.getByRole("button", { name: "Remove Team size anchor 7", exact: true }).click()
+  // Team size is a step scaler: without the (44, 4) anchor, size 3 holds from TR 29 until the
+  // (57, 5) anchor, so TR 48 is size 3.
+  await page.getByRole("button", { name: "Remove Team size anchor 4", exact: true }).click()
   await expect(page.getByTestId("size-wallace")).toHaveText("3")
   await page.getByLabel("Team level anchor 1 value", { exact: true }).fill("30")
   await page.getByRole("button", { name: "Apply scalers", exact: true }).click()
@@ -1186,10 +1210,11 @@ test("edits the trainer, world and archetype scalers globally", async ({ page })
   )
   await page.getByLabel("Steady growth anchor 1 value", { exact: true }).fill("0")
 
-  // Every scaler shows its kind; Burst is the only step scaler. The Burst Giovanni (24 → 166)
-  // holds 25% (TR 60) from 4 badges until he jumps to 50% (TR 95) at 8 badges.
+  // Every scaler shows its kind; team size and Burst are the step scalers. The Burst Giovanni
+  // (24 → 166) holds 25% (TR 60) from 4 badges until he jumps to 50% (TR 95) at 8 badges.
   await expect(page.getByTestId("scaler-kind-burst")).toHaveText("step")
-  for (const id of ["steady", "legend", "star", "comeback", "teamSize"])
+  await expect(page.getByTestId("scaler-kind-teamSize")).toHaveText("step")
+  for (const id of ["steady", "legend", "star", "comeback", "teamLevel"])
     await expect(page.getByTestId(`scaler-kind-${id}`)).toHaveText("interpolated")
   await expect(page.getByTestId("tr-giovanni")).toHaveText("95")
   await page.getByLabel("Player TR", { exact: true }).fill("79")

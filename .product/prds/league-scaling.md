@@ -105,7 +105,9 @@ announcement is required.
 
 Initial Gym battles remain governed by the Gym Leader design. Regular
 trainers, Gym members, story bosses, facilities, and rematches retain their
-existing scaling policies. This design supersedes static levels for the fifteen
+existing scaling policies; on adoption, notable trainers' rematches and story
+battles follow the notable model through the
+[every-battle rule](../specs/notable-trainers.md#trainer-rating). This design supersedes static levels for the fifteen
 circuit opponents only; it preserves their authored non-level content.
 First-league-win and replay runs use the same scaling policy and roster. Replays
 take a fresh admission snapshot and do not repeat circuit progression.

@@ -83,8 +83,7 @@ owned by each feature.
 - Seeded league lineups, varying which willing trainers come per save
   ([Leagues](leagues.md) picks them deterministically in v0), with rotation.
 - Per-save trainer growth arcs.
-- Per-save variation in which supporting Pokémon fill a trainer's filler
-  slots ([Trainer roster influence](trainer-roster-influence.md)).
+- Per-save variation in which Pokémon fill a trainer's filler slots ([Trainer roster influence](trainer-roster-influence.md)).
 - Other per-save world variants, each approved as its own feature.
 
 ## References
