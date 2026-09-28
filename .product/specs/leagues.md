@@ -485,10 +485,10 @@ Challenge options keep their overrides. Party randomizers keep their
 precedence but cannot reroll participants: the trainer species randomizer may
 bypass authored parties as it does today but still uses the saved people and
 order. Its legacy party for a selected trainer is that trainer's own authored
-source party, the party of their inventoried source roster owner (Brock's Gym
-party for Brock in match 1 at Indigo, Lorelei's League party for Lorelei), as
-today's constructor randomizes the party of the trainer it builds; another
-room occupant's old fixed party never stands in. XP uses actual species and levels. Prize money uses the trainer's
+source party: their league source party where they have one, otherwise their
+Gym party (Lorelei's League party for Lorelei, Brock's Gym party for Brock in
+match 1 at Indigo), as today's constructor randomizes the party of the trainer
+it builds; another room occupant's old fixed party never stands in. XP uses actual species and levels. Prize money uses the trainer's
 inventoried source reward basis and class, not the old room occupant, and team
 size must not shift it.
 

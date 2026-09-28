@@ -2229,7 +2229,7 @@ describe("league lineups", () => {
       expect(ids(one.lineup)).toEqual(["a", "x"])
     })
 
-    it("lets an aloof trainer attend the Masters however far above the field", () => {
+    it("lets an aloof trainer attend the Masters however far above the other trainers", () => {
       const records = [...baseLineup, trainer("x", 99, six, { aloof: true })]
       // At Indigo x (Lv 100) is far above the base lineup (Lv 51 + 10) and skips.
       expect(rank(records).entrants.find((entrant) => entrant.trainer.id === "x")!.joins).toBe(
