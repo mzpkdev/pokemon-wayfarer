@@ -64,7 +64,7 @@ the notable-trainer catalog, and the
   slot.
 - **Length:** each line fits one GBA text box, 2 lines of about 36
   characters, so 70 characters at most, counting `{PLAYER}` as 7 characters,
-  `{ITEM}` as 12, and `{ACE}` and `{BUDDY}` as 10. Line breaks are left to
+  `{ITEM}` as 16 (the longest reward-pool item name), and `{ACE}` and `{BUDDY}` as 10. Line breaks are left to
   the text formatter. Game text style: POKéMON, GYM, names in caps.
 - **Revisits.** A haunt can always be revisited while the trainer is placed
   there, so "come back later" lines are fine.

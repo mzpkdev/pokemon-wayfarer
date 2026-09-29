@@ -254,6 +254,11 @@ changes yours.
 - **Buddy:** a notable trainer's companion Pokémon, one slot of their
   roster, named at its current stage, so Brock's buddy is Onix early and
   Steelix later ([trainer values](../specs/notable-haunts.md#trainer-values)).
+- **Reward pool:** a notable trainer's short, ordered list of gifts for
+  quests at haunts: items, and lessons that teach one of the moves they
+  like. Each opens once the trainer's TR is high enough, and each quest
+  pays the next one
+  ([rewards and claims](../specs/notable-haunts.md#rewards-and-claims)).
 - **Momentum:** whether a notable trainer is rising (getting stronger fast
   right now) or settled; rising trainers go training at haunts, settled ones
   relax or sightsee ([momentum](../specs/notable-haunts.md#momentum)).

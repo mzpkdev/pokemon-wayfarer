@@ -35,8 +35,8 @@ rather than restating it.
   battle: the play style, AI skill, ace protection, and the boss flag.
 - [Leagues](leagues.md) owns league lineups and their lifecycle.
 - [Notable haunts](notable-haunts.md) places notable trainers in the
-  overworld and owns the meaning of the manner and buddy values
-  ([below](#manner-and-buddy)).
+  overworld and owns the meaning of the manner, buddy, and reward pool
+  values ([below](#haunt-values-manner-buddy-reward-pool)).
 - [Player Trainer Rating](player-trainer-rating.md) owns the player's TR,
   the scaler definition, and the downward rule and shared evolution-level table
   ([evolution stages](player-trainer-rating.md#evolution-stages));
@@ -162,12 +162,16 @@ a boolean **boss flag** (`bossOmniscient`, Lance only in v0).
 flags each battle resolves from them, the trainer's TR, and the resolved
 team's aces.
 
-## Manner and buddy
+## Haunt values: manner, buddy, reward pool
 
 Each entry also authors a **manner** (`warm`, `proud`, or `cold`) and a
 **buddy** (one roster slot, 1-6). Notable trainers also appear at haunts in
 the overworld, and [Notable haunts](notable-haunts.md#trainer-values) owns
 what these two values mean.
+Each entry also authors a **reward pool**, an ordered list of items and
+lessons with a from-TR gate each, which pays for finished haunt quests;
+[Notable haunts](notable-haunts.md#rewards-and-claims) owns what it means
+and its rules.
 
 ## Trainer rating
 
