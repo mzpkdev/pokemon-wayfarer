@@ -109,7 +109,7 @@ Hoenn looking for worthy opponents; Clair, the proud dragon tamer; cold,
 distant Sabrina; and Karen, whose "strong Pokémon, weak Pokémon" disdains
 weak company. Everyone else is not aloof. The Sevii Masters is the exception:
 it is the elite company they seek, so the aloof rule doesn't apply there
-([Leagues](leagues.md)).
+([Sevii Masters](sevii-masters.md#design)).
 
 These picks follow the trainers' stories and are open to review
 ([assignments](../specs/notable-trainers.md#traits)).
@@ -184,12 +184,9 @@ knows everything about your party ([Trainer AI](trainer-ai.md)).
 
 ### Phone numbers
 
-The first time you beat a notable trainer, in any battle with them, they
-give you their phone number, and they join your phone's contacts for good.
-Tate and Liza, a duo, give none. In this first version a contact is for one
-thing: asking them to be your partner at the Sevii Masters, which always
-works ([Leagues](leagues.md#design)). Friendship, gifts, and trades come
-later.
+The first time you beat a notable trainer, they give you their phone
+number, which the [Sevii Masters](sevii-masters.md#design) uses to find you
+a partner.
 
 FRLG, Emerald, and HNS parties are references for recognizable content, not
 required teams. Challenge options such as trainer items, trainer IVs and EVs,
@@ -284,14 +281,13 @@ well they play, and combat difficulty belong to playtesting.
 - Tighter level spreads at the top.
 - Gym arenas with their own field conditions for both sides, like the
   leagues' [halls](leagues.md#design).
-- More for contacts: a friendship score, contacts who can turn you down, and
-  gifts and trades ([Leagues](leagues.md#later)).
 
 ## Specifications
 
 - [Notable trainers specification](../specs/notable-trainers.md):
-  inventory, TR and its growth, scalers, rosters, the battle snapshot, and
-  phone contacts.
+  inventory, TR and its growth, scalers, rosters, and the battle snapshot.
+- [Sevii Masters specification](../specs/sevii-masters.md): phone contacts,
+  given for a first win over a notable trainer.
 - [Gym Leader scaling](../specs/gym-leader-scaling.md): badge-encounter
   coverage and battle construction.
 - [Trainer AI specification](../specs/trainer-ai.md): play styles, AI skill,
@@ -301,6 +297,7 @@ well they play, and combat difficulty belong to playtesting.
 
 - [Player Trainer Rating](player-trainer-rating.md)
 - [Leagues](leagues.md)
+- [Sevii Masters](sevii-masters.md)
 - [Trainer AI](trainer-ai.md)
 - [Regular trainer and Gym member scaling](trainer-party-scaling.md)
 - [Player progression](../specs/trainer-rating-party-progression.md)

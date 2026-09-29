@@ -7,47 +7,45 @@ the player as **invitations** by phone. From player TR 80 a league calls every 7
 in-game days (restarted when each invitation resolves, stopped while an accepted
 event waits); only a league that knows the player calls (Indigo with a Kanto or
 Johto badge, Hoenn with a Hoenn badge, the Sevii Masters once the player is a
-**Master**, with lifetime wins at both Indigo and Hoenn), round-robin by a call
-counter: the eligible league that called least recently, ties to the most
-badges, then Indigo. Accepting freezes a lineup that waits for the player, with
-one attempt; declining runs the event without them. A league score per eligible
-trainer (Trainer Rating (TR) scaled by willingness, from travel cost and
-fatigue), aloof trainers joining only a base lineup near their level (never at
-the Masters), guaranteed Masters seats for notable trainers who have reigned at
-both Indigo and Hoenn, the top five by league score with no randomness,
-ascending battle order, match N in **hall** N (each themed Elite Four room a
-named hall with one fixed **hall condition** for both sides; Champion rooms
-neutral). The Masters is a tag-battle league: eight opponents (never the
-**partner**, the contact the player last asked by phone, Lorelei by default)
-paired in ascending order, four **tag matches** (the player and partner against
-a pair, three Pokémon each, the player picking three at each door with damage
-carrying over), then a full-team singles final against the partner after a full
-heal. A **reigning champion** per league, reign records, and first-win one-time
-effects. Balance is informational for now. Today's [interregional
-circuit](wayfarer-interregional-league-circuit.md) stays the record of Today's
-admission, fixed league order, and replays.
+[Master](sevii-masters.md#master)), round-robin by a call counter: the eligible
+league that called least recently, ties to the most badges, then Indigo.
+Accepting freezes a lineup that waits for the player, with one attempt;
+declining runs the event without them. A league score per eligible trainer
+(Trainer Rating (TR) scaled by willingness, from travel cost and fatigue),
+aloof trainers joining only a base lineup near their level, the top five by
+league score with no randomness, ascending battle order, match N in **hall** N
+(each themed Elite Four room a named hall with one fixed **hall condition**
+for both sides; Champion rooms neutral). A **reigning champion** per league,
+Indigo and Hoenn reign records, and first-win one-time effects. The Sevii
+Masters' own lineup rules, tag format, partner, and Gallery are in [Sevii
+Masters](sevii-masters.md). Balance is informational for now. Today's
+[interregional circuit](wayfarer-interregional-league-circuit.md) stays the
+record of Today's admission, fixed league order, and replays.
 
 ## Scope
 
 Own, for each `IS_WAYFARER` league: the league registry, eligibility,
 location regions, invitations (the qualification gate, the countdown, which
 league calls, accepting and declining), fatigue, the league score, the base
-lineup and its level, the aloof rule, reign records and Masters, lineup
-selection (with the Masters' guaranteed seats) and battle order, the
-Masters' partner and pairs, the halls and their conditions, the event
-lineup, the reigning champion, the Masters Gallery, battle construction
-(with the hall condition hook, the Masters' tag matches, and its final),
-entering an accepted event, active runs and dispatch (with the Masters'
-party selection, restore, and heal), the win commit, first and repeat wins,
-saved state, load validation, presentation, and regional integration.
+lineup and its level, the aloof rule, the Indigo and Hoenn reign records,
+lineup selection and battle order, the halls and their conditions, the event
+lineup, the reigning champion, battle construction (with the hall condition
+hook), entering an accepted event, active runs and dispatch, the win commit,
+first and repeat wins, saved state, load validation, presentation, and
+regional integration.
 
+- [Sevii Masters](sevii-masters.md) owns what is only the Masters': its
+  identity, the Master rule, phone contacts, the partner, its lineup
+  changes (eight seats, Master seats, no aloof rule, and pairs), its title
+  rules and Gallery, the tag matches and the final, and its own saved state
+  and load validation. Where a rule here has a Masters exception, this spec
+  names it in one clause and links there.
 - [Notable trainers](notable-trainers.md) owns notable trainers, their
   TR and its growth with world progress, home regions, the traits (traveller
   and aloof), travel cost and willingness, the team-level scaler and the
   team-size step scaler, rosters, and team composition. This spec reads a
-  trainer's TR, team level, willingness, aloof trait, composed team, and
-  [phone contact](notable-trainers.md#phone-contacts) bit; it never
-  restates how they are computed.
+  trainer's TR, team level, willingness, aloof trait, and composed team; it
+  never restates how they are computed.
 - [Player Trainer Rating](player-trainer-rating.md) owns the player's TR,
   which this spec reads only for the qualification gate and as world
   progress. In v0 a league win adds no player TR; Today's +8 per first league
@@ -71,17 +69,10 @@ Seven Island Masters House leading into HNS rooms, and Emerald Hoenn.
 
 Masters resolves to Sevii/Kanto for other regional systems. Its reused HNS
 rooms need a Wayfarer-only map-context override; standalone HNS keeps its
-identity. The final HNS ceremony room is the Masters Gallery.
-
-The Masters is presented as an off-the-record club, not an official league:
-a hidden basement under Seven Island's battle house (the Masters House
-entrance), where champions find out who is actually best. An old caretaker,
-the retired trainer who runs the house, keeps the door and makes its calls.
-A **Master** is anyone, the player or a notable trainer, who has been
-champion at both Indigo and Hoenn at some point; a Masters title never counts
-([Reign records](#reign-records)). Geography, room
-names, and titles never substitute for saved league or selected-character
-identity.
+identity. The Masters' presentation as an off-the-record club, and its
+final ceremony room, the Masters Gallery, are in [Sevii
+Masters](sevii-masters.md#identity). Geography, room names, and titles never
+substitute for saved league or selected-character identity.
 
 Each league is a [location](notable-trainers.md#home-region-and-travel) with
 a location region, which decides who is at home there:
@@ -149,11 +140,10 @@ The conditions:
 | Sticky Web (both sides) | Sticky Web on each side | Until cleared, like any hazard |
 | Stealth Rock (both sides) | Stealth Rock on each side | Until cleared, like any hazard |
 
-A side condition covers every battler on its side: in a [tag
-match](#tag-matches) the player and partner share one side, and the pair the
-other. Starting hazards also hit every lead, two in singles and four in a tag
-match: the first-turn switch-in events run the hazard block for every battler,
-and the engine then handles any lead that fainted from them
+A side condition covers every battler on its side, and starting hazards hit
+every lead (two in singles; a Masters [tag match](sevii-masters.md#tag-matches)
+has four): the first-turn switch-in events run the hazard block for every
+battler, and the engine then handles any lead that fainted from them
 (`FIRST_TURN_FAINTED_BATTLERS` in
 [battle_main.c](../../game/src/battle_main.c)). Sticky Web lowers the Speed of
 each grounded lead and of every grounded Pokémon that switches in, as usual.
@@ -203,14 +193,13 @@ cannot appear in a lineup twice. People with similar names remain distinct.
 
 A trainer is **eligible** when they are a notable trainer with valid growth
 values and a valid roster, battle alone (not as a duo), are enabled, and have
-validated presentation, including a back pic for battling as a
-[partner](#partner). Tate & Liza are a notable duo who fight only together, so
-they are league-ineligible: never an opponent and never a partner, in singles or
-in a tag match. Red is not a notable trainer in v0, so he is league-ineligible
-and keeps his separate mastery encounter. Region, title, and story availability
-neither add nor remove a trainer. League eligibility does not change story
-battles, which follow the [every-battle
-rule](notable-trainers.md#trainer-rating).
+validated presentation, including a back pic for battling as a Masters
+[partner](sevii-masters.md#partner). Tate & Liza are a notable duo who fight
+only together, so they are league-ineligible, as opponents and as partners. Red
+is not a notable trainer in v0, so he is league-ineligible and keeps his
+separate mastery encounter. Region, title, and story availability neither add
+nor remove a trainer. League eligibility does not change story battles, which
+follow the [every-battle rule](notable-trainers.md#trainer-rating).
 
 ## Invitations
 
@@ -274,10 +263,8 @@ badges and lifetime wins then. A league calls only where the player is known
 - **Indigo** is eligible once the player holds at least one Kanto or Johto
   badge;
 - **Hoenn** is eligible once the player holds at least one Hoenn badge; and
-- the **Sevii Masters** is eligible once the player is a Master: lifetime wins
-  at both Indigo and Hoenn (`indigoCleared` and `hoennCleared`), in either
-  order. A lifetime win at only one of them, or a Masters win, never makes it
-  eligible.
+- the **Sevii Masters** is eligible once the player is a
+  [Master](sevii-masters.md#master).
 
 The TR 80 gate still applies to every call. A league's **badges** are the
 player's badges from its regions: Indigo counts Kanto and Johto badges, Hoenn
@@ -332,123 +319,77 @@ restarts.
 
 Every eligible trainer can be invited to any league; location regions only
 scale how willing they are to come, and an aloof trainer skips a league whose
-base lineup is well below their level. The **lineup size** is five at
-Indigo and Hoenn and eight at the Masters. The Masters also differs in three
-more ways: the aloof rule is off there, notable trainers who are Masters
-have guaranteed seats, and the player's partner is never in its lineup.
-When the player accepts or declines an invitation:
+base lineup is well below their level. The **lineup size** is five. The Sevii
+Masters changes the lineup size, drops the aloof rule, adds guaranteed seats,
+excludes the partner, and pairs the lineup ([Sevii
+Masters](sevii-masters.md#lineup)). When the player accepts or declines an
+invitation:
 
-1. **Partner** (the Masters only). Resolve the [partner](#partner) and
-   remove them from the eligible trainers for this event.
-2. **TR.** Compute each eligible trainer's TR at the current world progress
+1. **TR.** Compute each eligible trainer's TR at the current world progress
    ([Notable trainers](notable-trainers.md#growth-with-world-progress)).
-3. **Willingness.** Score each eligible trainer's willingness for this league
+2. **Willingness.** Score each eligible trainer's willingness for this league
    with the [travel rule](notable-trainers.md#home-region-and-travel), which
    reads the league's location region and this fatigue. **Fatigue** is
    league-specific: 50 if the trainer is in the most recent resolved lineup,
    else 0.
-4. **League score.** `floor(TR × willingness / 100)`, in integer arithmetic.
-5. **Base lineup** (Indigo and Hoenn only). Rank the eligible trainers who
-   are not [aloof](notable-trainers.md#aloof) by league score, ties by
-   ascending `characterId`, and take the top five (all of them if fewer than
-   five): the **base lineup**. The **base lineup level** is the strongest
+3. **League score.** `floor(TR × willingness / 100)`, in integer arithmetic.
+4. **Base lineup.** Rank the eligible trainers who are not
+   [aloof](notable-trainers.md#aloof) by league score, ties by ascending
+   `characterId`, and take the top five (all of them if fewer than five): the
+   **base lineup**. The **base lineup level** is the strongest
    [team level](notable-trainers.md#trainer-scalers) in it.
-6. **Aloof** (Indigo and Hoenn only). An aloof trainer is eligible for this
-   league only if their team level is at most base lineup level + 10 (a
-   placeholder margin, in levels, not TR); otherwise they skip it. Aloof
-   trainers are judged against the base lineup only, never against each
-   other, so one aloof trainer joining never lets another in. With no base
-   lineup (no eligible trainer who is not aloof), there is no base lineup
-   level and every aloof trainer skips. Fatigue still applies: it shapes the
-   base lineup through the league scores, and an aloof trainer who joins
-   keeps their fatigued league score. At the Masters there is no base lineup
-   and no aloof check: every eligible trainer stays eligible.
-7. **Master seats** (the Masters only). Rank the eligible notable trainers
-   who are [Masters](#reign-records) by league score, ties by ascending
-   `characterId`, and seat the top eight (all of them if fewer than eight).
-   Fatigue lowers a Master's league score but never removes the guarantee;
-   a Master who is the partner was removed in step 1 and has no seat.
-8. **Lineup.** Rank every trainer still eligible and not already seated (at
-   Indigo and Hoenn: the non-aloof and the aloof who join) by league score,
-   and fill the remaining seats, the lineup size minus the Master seats,
-   with the highest. Equal league scores break by ascending `characterId`.
-9. **Battle order.** Order the lineup by ascending TR, so the strongest
+5. **Aloof.** An aloof trainer is eligible for this league only if their team
+   level is at most base lineup level + 10 (a placeholder margin, in levels,
+   not TR); otherwise they skip it. Aloof trainers are judged against the base
+   lineup only, never against each other, so one aloof trainer joining never
+   lets another in. With no base lineup (no eligible trainer who is not
+   aloof), there is no base lineup level and every aloof trainer skips.
+   Fatigue still applies: it shapes the base lineup through the league
+   scores, and an aloof trainer who joins keeps their fatigued league score.
+6. **Lineup.** Rank every trainer still eligible (the non-aloof and the aloof
+   who join) by league score, and fill the lineup's seats with the highest.
+   Equal league scores break by ascending `characterId`.
+7. **Battle order.** Order the lineup by ascending TR, so the strongest
    fights last. Equal TRs break by ascending `characterId`.
-10. **Pairs** (the Masters only). Pair the eight in battle order: the first
-    and second are pair 1, the third and fourth pair 2, and so on, so the
-    strongest two are pair 4. In each pair the first is **opponent A** and
-    the second **opponent B**.
-11. **Halls.** Match N is fought in the league's [hall](#halls) N, so the
-    battle order decides who lands in which hall. At the Masters, match N is
-    pair N's [tag match](#tag-matches) for N from 1 to 4, and match 5 is the
-    [final](#the-final) against the partner in the Champion's Room. Hall
-    conditions play no part in selection, order, or pairing.
+8. **Halls.** Match N is fought in the league's [hall](#halls) N, so the
+   battle order decides who lands in which hall. Hall conditions play no part
+   in selection or order.
 
 The **most recent resolved lineup** is the lineup of the most recent resolved
 event at any league: an accepted event that ended (won, lost, or left), or a
-declined one. For an accepted Masters event it also holds the partner, who
-played in it; a declined Masters event holds only its eight. Each resolution
-saves its lineup as the new most recent resolved lineup, after its own
-selection has read the old one. Accepting reads it but never changes it,
-because the event it reads is still the last one resolved.
+declined one (at the Masters, with the partner [as it
+says](sevii-masters.md#lineup)). Each resolution saves its lineup as the new
+most recent resolved lineup, after its own selection has read the old one.
+Accepting reads it but never changes it, because the event it reads is still
+the last one resolved.
 
 Selection consumes no randomness and reads no seed: the same world progress,
-most recent resolved lineup, reign records, partner, and content always give the
-same lineup. The day, title, reigning champion, party, badges, and contacts play
-no part; history enters only through the most recent resolved lineup and, at the
-Masters, the reign records and the partner. Player TR enters only as world
-progress, through each trainer's TR. When the player answers, the inputs become
-authoritative at that moment, and the result is committed before reveal, so
-nothing after it reselects.
-
-## Partner
-
-At the Masters the player fights beside a **partner**: the notable trainer
-they last asked. The saved **partner choice** is none or one `characterId`.
-
-- **Asking.** From the phone's contact list, the player can ask any
-  [contact](notable-trainers.md#phone-contacts) to be their partner once
-  they are a Master (the Masters knows them), whenever they can make a call
-  (in the overworld, with no script, battle, or ceremony running). The ask
-  always succeeds: it saves that contact as the partner choice, replacing
-  any earlier one, and does nothing else. Only a league-eligible contact
-  can be asked (Tate & Liza give no number), and no trait, TR, reign, or
-  friendship check applies.
-- **Default.** With no partner choice (the player has never asked anyone),
-  the partner is **Lorelei**, who spoke of the player to the caretaker. She
-  needs no contact bit.
-- **Resolution.** Selection step 1 resolves the partner when the player
-  accepts or declines a Masters invitation: the partner choice, or Lorelei
-  without one. An accepted event records that partner in its
-  [event lineup](#event-lineup), so asking someone else while it waits
-  changes only later Masters events. A declined event reads the partner only
-  to keep them out of its lineup; they do not play in it.
-
-The partner is never in the lineup, is a notable trainer like any other
-(their own TR, team, and AI), and plays no part in Indigo or Hoenn events.
+most recent resolved lineup, and content always give the same lineup (the
+Masters adds [its own inputs](sevii-masters.md#lineup)). The day, title,
+reigning champion, party, and badges play no part; history enters only
+through the most recent resolved lineup. Player TR enters only as world
+progress, through each trainer's TR. When the player answers, the inputs
+become authoritative at that moment, and the result is committed before
+reveal, so nothing after it reselects.
 
 ## Event lineup
 
 The lineup selected when the player accepts is the event's lineup, frozen for
 that event however long it waits. Accepting captures, for each member in battle
-order: `characterId`, their TR, and their composed team. At the Masters it holds
-the eight in battle order, whose positions give the
-[pairs](#selection-and-order), and also captures the partner the same way:
-`characterId`, TR, and composed team. The lineup stores no content versions of
-its own: the league state's [content versions](#saved-state) cover it, and they
-match the build whenever an event is accepted. Per member, the team holds the
-roster slot index and every resolved battle value the battle snapshot uses:
-species/form, level, moves, item, ability, nature, IVs/EVs, and battle order. It
-is saved atomically with the accepted event before reveal, and every battle,
-including after a reload, is reconstructed from it; it never reselects or
-recomposes, even after the player's TR rises. The composed team is each
-trainer's whole resolved team; a tag match takes its three from it at
-construction ([Tag matches](#tag-matches)), so nothing else is stored. The
-event's end releases it, keeping only the `characterId`s (the five, or at the
-Masters the eight and the partner) as the most recent resolved lineup.
+order: `characterId`, their TR, and their composed team; a Masters event also
+captures its [partner](sevii-masters.md#event-lineup). The lineup stores no
+content versions of its own: the league state's [content
+versions](#saved-state) cover it, and they match the build whenever an event
+is accepted. Per member, the team holds the roster slot index and every
+resolved battle value the battle snapshot uses: species/form, level, moves,
+item, ability, nature, IVs/EVs, and battle order. It is saved atomically with
+the accepted event before reveal, and every battle, including after a reload,
+is reconstructed from it; it never reselects or recomposes, even after the
+player's TR rises. The event's end releases it, keeping only the
+`characterId`s as the most recent resolved lineup.
 
 A declined event's lineup is only computed for its result: it saves the
-five or eight `characterId`s and composes no teams.
+`characterId`s and composes no teams.
 
 ## Reigning champion
 
@@ -458,42 +399,25 @@ the resolution of one of its events until the resolution of its next:
 - If the player wins the event, the player is the reigning champion, from the
   win.
 - If the player loses or leaves an accepted event, the reigning champion is
-  its frozen lineup's strongest member (the last in battle order). At the
-  Masters this covers a loss in any hall (matches 1-4) and leaving before
-  the final.
-- If the player loses the Masters final, the reigning champion is the
-  partner, who beat them.
+  its frozen lineup's strongest member (the last in battle order), except
+  that a loss in the Masters final crowns the partner ([Sevii
+  Masters](sevii-masters.md#title)).
 - If the player declines, the reigning champion is the strongest member of the
   lineup computed at decline.
 
 A new game has no reigning champion; each league gains one when its first
 event resolves. Holding a title changes nothing by itself: it does not change
 selection, battles, or rewards. What it leaves behind, the reign records,
-decides who is a Master.
+decides who is a [Master](sevii-masters.md#master).
 
 ### Reign records
 
 Each notable trainer has two lifetime **reign flags**: **has reigned at
 Indigo** and **has reigned at Hoenn**. A flag is set, in the same transaction,
-whenever that trainer becomes the league's reigning champion (after a loss,
+whenever that trainer becomes that league's reigning champion (after a loss,
 leaving, or a decline), and it is never cleared by play. A Masters title sets
-neither flag. A notable trainer with both flags is a **Master**, for good,
-whether or not they reign anywhere now.
-
-The player is a Master once they have lifetime wins at both Indigo and Hoenn;
-the saved first-league-win facts already record that, so the player has no
-reign flags. Being a Master changes only the Masters: its calls for the
-player, and its guaranteed seats for notable trainers. Winning the Masters
-adds a Gallery win and gives no new status.
-
-### Masters Gallery
-
-The Masters Gallery, the final ceremony room on the basement wall, tallies each
-Masters winner's wins, adding one for the winner of every resolved Masters
-event: the player after a win, otherwise the reigning champion that event
-crowned, so trainers who won events the player declined appear too. It keeps a
-saved win count per winner (one per notable trainer and one for the player),
-shown on the wall; a count stops at its maximum rather than wrapping.
+neither flag; the Masters records its [Gallery
+win](sevii-masters.md#masters-gallery) instead.
 
 ## Saved state
 
@@ -513,32 +437,24 @@ Add:
   and the play styles and AI tiers, written at New Game and rewritten after
   each [content-change cleanup](#load-validation);
 - the **most recent resolved lineup**: the `characterId`s of the most
-  recent resolved event (five, eight for a declined Masters event, or eight
-  and the partner for an accepted one), read for fatigue; empty on a new
-  game;
-- the [partner choice](#partner): none or one `characterId`;
+  recent resolved event, read for fatigue; empty on a new game;
 - per league, the **reigning champion** (none, the player, or a
   `characterId`);
 - per notable trainer, the two [reign flags](#reign-records) (has reigned at
-  Indigo, has reigned at Hoenn);
-- the [Masters Gallery](#masters-gallery) win counts, one per notable trainer
-  and one for the player; and
+  Indigo, has reigned at Hoenn); and
 - the **active run**, only while the player is fighting their accepted event:
-  the defeated prefix, and at the Masters the **tag selection**, the party
-  slots the player chose at the current door, present only between that
-  choice and the end of its [party restore](#masters-party-and-heal).
+  the defeated prefix.
 
-The reign flags are unchanged by the tag format. Contact bits are
-[Notable trainers](notable-trainers.md#phone-contacts)' saved state; this
-spec only reads them.
+The Sevii Masters adds its own fields to this state ([Sevii
+Masters](sevii-masters.md#saved-state)), covered by the same content versions
+and schema.
 
 There is no seed, rotation history, or lineup history beyond the most recent
-resolved lineup, the reign flags, and the Gallery counts, and no stored day
-other than the countdown's last counted day. At most one accepted event and
-one active run exist. New Game saves the not-qualified state, a call counter
-of 0, no last call number, reigning champion, or most recent resolved lineup,
-every reign flag clear, every Gallery count 0, and the build's content
-versions, with no partner choice. Save an explicit schema
+resolved lineup, the reign flags, and the Masters' Gallery counts, and no stored
+day other than the countdown's last counted day. At most one accepted event and
+one active run exist. New Game saves the not-qualified state, a call counter of
+0, no last call number, reigning champion, or most recent resolved lineup, every
+reign flag clear, and the build's content versions. Save an explicit schema
 discriminator for this layout; prerelease saves need no migration.
 
 ## Lifecycle
@@ -564,10 +480,12 @@ The call asks the player to accept or decline; there is no "later".
 - **Accept.** Select the lineup
   ([Selection and order](#selection-and-order)) and atomically save the
   accepted event with its event lineup, then reveal the league and the
-  names (at the Masters, the four pairs and the partner).
+  names ([at the Masters](sevii-masters.md#presentation), the pairs and the
+  partner).
 - **Decline.** Select the lineup and, in one transaction, set the league's
   reigning champion to their strongest, set that trainer's reign flag for the
-  league (Indigo or Hoenn) or, at the Masters, add their Gallery win, save
+  league (Indigo or Hoenn; the Masters adds their
+  [Gallery win](sevii-masters.md#masters-gallery) instead), save
   the lineup as the most recent resolved lineup, and restart the countdown
   (7 days remaining from today).
 
@@ -582,34 +500,32 @@ battle, reward, or record.
    immediate reason (no invitation yet and when the next call is due, an
    unanswered call, or an event accepted at another league) and changes
    nothing.
-2. Save the active run and start at match 1, with the lineup (and at the
-   Masters the partner) and their teams from the event lineup.
+2. Save the active run and start at match 1, with the lineup and their teams
+   from the event lineup.
 
 ### Loss
 
 A loss blacks the player out as usual. A blackout or voluntary exit ends the
 event, in one transaction: the frozen lineup's strongest becomes the league's
-reigning champion (with their reign flag at Indigo or Hoenn, or their Gallery
-win at the Masters), except that a loss in the Masters final crowns the
-partner (with their Gallery win); the event's lineup (at the Masters, with
-the partner) becomes the most recent resolved lineup, the run and the
-accepted event are released, the countdown restarts (7 days remaining from
-today), and nothing is recorded or rewarded. A tag match loss first
-[restores the party](#masters-party-and-heal), then blacks out.
+reigning champion (with their reign flag at Indigo or Hoenn; the Masters follows
+[its title rules](sevii-masters.md#title)); the event's lineup becomes the most
+recent resolved lineup, the run and the accepted event are released, the
+countdown restarts (7 days remaining from today), and nothing is recorded or
+rewarded.
 
 ### Win
 
 After five victories, one transaction atomically:
 
 - makes the player the league's reigning champion (at the Masters, also
-  adding the player's Gallery win);
+  adding the player's [Gallery win](sevii-masters.md#masters-gallery));
 - if this is the player's first-ever win at this league, records the lifetime
   win and Today's first-league-win effects other than player TR, which a win
   never changes, and queues Today's ceremony; a repeat win instead gives its
   [repeat-win reward](#first-and-repeat-wins);
-- saves the event's lineup (at the Masters, with the partner) as the most
-  recent resolved lineup, releases the run and the accepted event, and
-  restarts the countdown (7 days remaining from today).
+- saves the event's lineup as the most recent resolved lineup, releases the run
+  and the accepted event, and restarts the countdown (7 days remaining from
+  today).
 
 Stale or duplicate callbacks are rejected. Individual victories, losses, and
 Red add no TR.
@@ -629,58 +545,13 @@ cannot skip a match.
 4. Room and ceremony transitions keep the league identity until the win
    commits.
 
-Live badges, league wins, player TR, party, XP, the day counter, and a
-later partner choice never mutate an event lineup. Debug and other battles
+Live badges, league wins, player TR, party, XP, and the day counter never
+mutate an event lineup. Debug and other battles
 cannot create invitations, accepted events, or runs, advance matches, grant
 league wins or titles, or create league records.
 
-### Masters party and heal
-
-In a tag match each trainer brings three Pokémon, the engine's fixed
-per-trainer share of a multi battle. The player's three come from their
-current party, and their state carries from hall to hall:
-
-1. **Choose three.** At each hall's door (matches 1-4), after the pair is
-   introduced, the player picks three party members on the engine's
-   existing choose-3 screen (`ChooseHalfPartyForBattle` in
-   [script_pokemon_util.c](../../game/src/script_pokemon_util.c)). The
-   screen's own rules apply: it refuses fainted Pokémon, and it accepts one
-   or two when the player chooses fewer, so a party with fewer than three
-   able Pokémon can still fight. Cancelling returns to the door with nothing
-   started, as Mossdeep's Steven battle does.
-2. **Save and reduce.** Save the whole party as the backup
-   (`SavePlayerParty`), record the chosen slots as the run's tag selection,
-   then reduce the battle party to the three in the chosen order
-   (`ReducePlayerPartyToSelectedMons`, which the `multi_2_vs_2` macro's
-   `multi_do` runs); the partner's three fill `gPlayerParty[3..5]`.
-3. **Restore.** When the battle ends, won or lost, write each of the three
-   back to its original slot in the backup, then reload the whole party, as
-   `CB2_EndDebugBattle` in
-   [battle_setup.c](../../game/src/battle_setup.c) does with
-   `frontier.selectedPartyMons` and `LoadPlayerParty`, and clear the tag
-   selection. The three keep their HP, PP, status, fainting, experience,
-   levels, and consumed items; the rest of the party is untouched; the
-   partner's Pokémon leave with the battle. The multi macro's own
-   end-of-battle copy stays skipped (`MULTI_BATTLE_CHOOSE_MONS`), so this is
-   the only restore.
-4. **No heal between halls.** Damage carries over: nothing heals the party
-   between matches 1-4 beyond what the player does themselves, as between
-   any two league matches. The pair and the partner are built fresh from the
-   event lineup for each match.
-5. **Full heal before the final.** When match 4 is won and the party is
-   restored, fully heal the player's whole party (HP, PP, and status), and
-   the partner's team is built fresh for the final: both sides start it
-   whole.
-
-No save point exists between the choice and the end of the restore: the
-choose-3 screen, the battle, and the restore run in one script, so a reset
-at any moment of a tag match reloads the last save, where the party is whole
-and no tag selection is recorded. That is neither a win nor a loss: the run
-resumes wherever that save was made, and the match is fought again, as after
-a reset in any league match. A save routine that ever runs in that window
-(such as a future autosave) must write the backup as the party, never the
-reduced battle party; [load validation](#load-validation) recovers such a
-save.
+The Masters' tag matches add party choice, restore, and heal to the run
+([Sevii Masters](sevii-masters.md#run)).
 
 ## Battle construction
 
@@ -762,95 +633,8 @@ it builds; another room occupant's old fixed party never stands in. XP uses actu
 inventoried source reward basis and class, not the old room occupant, and team
 size must not shift it.
 
-### Tag matches
-
-Masters matches 1-4 are tag matches: the player and the partner against
-pair N, in the engine's existing two-versus-two partner battle. Mossdeep's
-Steven battle
-([scripts](../../game/data/maps/MossdeepCity_SpaceCenter_2F/scripts.inc))
-is the reference flow: `SavePlayerParty`, then `ChooseHalfPartyForBattle`,
-then the `multi_2_vs_2` macro
-([battle_tower.inc](../../game/asm/macros/battle_frontier/battle_tower.inc)),
-which calls `SetMultiTrainerBattle`
-([battle_setup.c](../../game/src/battle_setup.c)) and starts
-`SPECIAL_BATTLE_MULTI` in
-[battle_special.c](../../game/src/battle_special.c); that sets
-`BATTLE_TYPE_TRAINER | DOUBLE | TWO_OPPONENTS | MULTI | INGAME_PARTNER` and
-calls `FillPartnerParty`, and the script then reads `VAR_RESULT` and calls
-`SetCB2WhiteOut` on a loss.
-
-- **Three each.** The engine fixes three Pokémon per trainer: the player's
-  in `gPlayerParty[0..2]`, the partner's in `gPlayerParty[3..5]`
-  ([battle_partner.c](../../game/src/battle_partner.c) caps them at 3), and
-  each opponent's half of `gEnemyParty`, capped at `PARTY_SIZE / 2` in a
-  two-opponent battle (`CreateNPCTrainerPartyInternal` in
-  [battle_main.c](../../game/src/battle_main.c)). Opponent A fills the first
-  half and opponent B the second.
-- **Best three, aces first.** Each notable trainer in a tag match brings
-  the last three members of their stored team's
-  [battle order](notable-trainers.md#rosters) (all of it with fewer than
-  three), in that order. Battle order sends fillers first and aces last,
-  and a roster has one to three aces, so this takes every ace, then the
-  filler slots closest to them in battle order (the lowest-numbered filler
-  slots in the team); the signature Pokémon still comes out last. Every
-  member keeps the species, level, moves, item, ability, nature, and IVs/EVs
-  the stored team resolved for it (its moves resolved against the whole
-  team), so a Pokémon is the same in a tag match as anywhere else. Brock's
-  full team (Omastar, Kabutops, Crobat, Golem, Aerodactyl, Steelix) brings
-  Golem, Aerodactyl, Steelix.
-- **Notable team path.** Today's scaling skips these battles: the scaling
-  context excludes `BATTLE_TYPE_INGAME_PARTNER`
-  (`IsTrainerScalingBattleContext` in
-  [trainer_party_scaling.c](../../game/src/trainer_party_scaling.c)), and
-  league rosters are skipped under `BATTLE_TYPE_TWO_OPPONENTS` in
-  battle_main.c. A Masters tag match must build both opponents and the
-  partner from the event lineup's stored teams through a notable team path
-  that those exclusions do not stop; every other partner or two-opponent
-  battle keeps today's construction.
-- **Runtime partner slot.** Partners are the static `gBattlePartners`
-  ([battle_partners.party](../../game/src/data/battle_partners.party)).
-  Reserve one runtime partner slot whose trainer struct (name, class,
-  front pic, back pic, AI flags) and three-member party are filled for each
-  battle from the partner's stored snapshot and presentation, and point
-  `gPartnerTrainerId` at it; `FillPartnerParty` builds `gPlayerParty[3..5]`
-  from that party. No other partner entry changes.
-- **AI.** `BattleAI_SetupFlags()` in
-  [battle_ai_main.c](../../game/src/battle_ai_main.c) sets flags per
-  battler: opponent A, opponent B, and the partner. The per-battle override
-  writes all three from each trainer's own snapshot
-  ([Trainer AI](trainer-ai.md#options-and-double-battles)).
-- **Money.** `Cmd_getmoneyreward` in
-  [battle_script_commands.c](../../game/src/battle_script_commands.c) adds
-  both opponents' rewards, each from their authored party's last level. A
-  tag match uses the snapshot level basis instead: each opponent's reward
-  reads the level of the last member they bring (their signature Pokémon)
-  with their class's rate, and the two are summed as the engine sums them.
-- **Experience and whiteout.** The player's Pokémon gain experience as
-  usual; the partner's gain none (the engine skips partner slots under
-  `BATTLE_TYPE_INGAME_PARTNER`). With `B_MULTI_BATTLE_WHITEOUT` at
-  `GEN_LATEST` ([config](../../game/include/config/battle.h)), the match is
-  lost only when the player's and the partner's Pokémon have all fainted.
-- **Halls.** The [hall condition](#hall-condition) is written the same way;
-  each side's starting status covers both battlers on that side, and
-  starting hazards hit all four leads, two per side, as Bruno's Hall's
-  Stealth Rock does; a Sticky Web start would lower the Speed of each
-  grounded lead the same way.
-- **Rooms.** The Masters
-  [room scripts](../../game/data/scripts/wayfarer_masters_league.inc)
-  (`wayfarer_masters_league.inc`) start one singles battle per room, and
-  each HNS hall room map holds one opponent object. Each of the four tag
-  halls needs a second opponent object for opponent B, and its script
-  starts the tag match through the flow above.
-
-### The final
-
-Match 5 at the Masters is a singles battle in the neutral Champion's Room
-against the partner, after the [full heal](#masters-party-and-heal): the
-player's whole party against the partner's whole stored team, in its battle
-order. It is built like any league match: the partner's snapshot, AI flags
-from [Trainer AI](trainer-ai.md) at their TR, and prize money as in any
-league singles match. Winning it wins the event; losing it crowns the partner
-([Reigning champion](#reigning-champion)).
+The Masters' tag matches and its final against the partner are built as
+[Sevii Masters](sevii-masters.md#battle-construction) describes.
 
 ## Load validation
 
@@ -862,8 +646,9 @@ never generates a lineup or places a call.
 - The invitation state is exactly one of its four kinds. Counting down holds
   days remaining (0 to 7) and a last counted day; invited and accepted name a
   league whose last call number equals the call counter (the league that
-  called most recently; the Masters only with lifetime wins at both Indigo
-  and Hoenn); badges are not rechecked, since badges never decrease.
+  called most recently; the Masters only once the player is a
+  [Master](sevii-masters.md#master)); badges are not rechecked, since badges
+  never decrease.
 - A stored day is never a reason to reject a save. A last counted day ahead
   of the day counter (a clock turned back) is clamped to the day counter,
   which neither advances nor resets the countdown.
@@ -871,49 +656,35 @@ never generates a lineup or places a call.
   counter; no two leagues share a number, and when the counter is above 0 one
   league holds it. All are none only when the counter is 0, which means the
   player has never been called (not qualified, or counting down to the first
-  call). The Masters has a number only with lifetime wins at both Indigo and
-  Hoenn.
-- An accepted event's lineup holds five distinct eligible characters (eight
-  at the Masters) in non-decreasing TR order and resolves every reference; a
-  Masters event also holds an eligible partner who is none of the eight.
-  Stored teams must be valid for their roster (known roster slots, legal
-  forms, levels, and moves); they are never recomposed on load.
-- The most recent resolved lineup is empty or holds five, eight, or nine
-  distinct known characters; a reigning champion is none, the player, or a
-  known character.
-- The partner choice is none or a known eligible character whose contact bit
-  is set.
-- Reign flags and Gallery counts exist only for known notable trainers (and
-  the player's Gallery count). A trainer reigning at Indigo or Hoenn has that
-  league's reign flag; a trainer reigning at the Masters has a Gallery count
-  of at least 1; the player reigning at a league has that league's lifetime
-  win (at the Masters, also a Gallery count of at least 1). Flags and counts
-  are otherwise never rechecked against history, which the save does not
-  keep.
+  call). The Masters has a number only once the player is a Master.
+- An accepted event's lineup holds five distinct eligible characters (the
+  Masters' sizes are in [its load validation](sevii-masters.md#load-validation))
+  in non-decreasing TR order and resolves every reference. Stored teams must be
+  valid for their roster (known roster slots, legal forms, levels, and moves);
+  they are never recomposed on load.
+- The most recent resolved lineup is empty or holds five distinct known
+  characters (or a Masters size); a reigning champion is none, the player, or
+  a known character.
+- Reign flags exist only for known notable trainers. A trainer reigning at
+  Indigo or Hoenn has that league's reign flag; the player reigning at a
+  league has that league's lifetime win. Flags are otherwise never rechecked
+  against history, which the save does not keep.
 - An active run exists only with an accepted event and names a match within
-  its lineup. A tag selection exists only in a Masters run at matches 1-4
-  and names one to three distinct party slots.
+  its lineup.
 
-On every load, first recover a mid-tag save: a Masters run holding a tag
-selection was saved between a door's choice and its restore, which
-[normal play never does](#masters-party-and-heal). Its saved party is the
-whole backup from the door, so keep that party as it is (each chosen member
-as it was at the door), clear the tag selection, and resume the run at that
-match's door with the match unfought; the reset is neither a win nor a
-loss. A tag selection that names slots outside the saved party is corrupt.
-
-Then, before the checks above, drop the reign flags and Gallery counts of
-characters no longer in the registry, keeping the rest, clear a reigning
-champion who is no longer in the registry, and clear a partner choice naming one
-(so Lorelei steps in again); this runs whatever the versions say, so a save that
-crossed several content builds still loads. If any saved league content version
-differs from the build's, also, still before those checks, turn an accepted
-event back into an unanswered invitation from the same league (dropping its
-lineup and any run), so the call rings again; clear the most recent resolved
-lineup, so the next selection has no fatigue; clear a reigning champion or
-partner choice who is no longer an eligible character; then rewrite the saved
-content versions as the build's. This is the prerelease policy, not an invalid
-save.
+On every load, first run the Masters' [mid-tag
+recovery](sevii-masters.md#load-validation). Then, before the checks above,
+drop the reign flags of characters no longer in the registry, keeping the
+rest, and clear a reigning champion who is no longer in the registry; this
+runs whatever the versions say, so a save that crossed several content builds
+still loads. If any saved league content version differs from the build's,
+also, still before those checks, turn an accepted event back into an
+unanswered invitation from the same league (dropping its lineup and any run),
+so the call rings again; clear the most recent resolved lineup, so the next
+selection has no fatigue; clear a reigning champion who is no longer an
+eligible character; then rewrite the saved content versions as the build's.
+The Masters' own pruning and checks run at the same points. This is the
+prerelease policy, not an invalid save.
 
 A valid active run with damaged run progress recovers to its own lobby with
 progress reset and the event lineup kept, so the attempt restarts at match 1.
@@ -932,22 +703,9 @@ goes ahead without them and names its reigning champion. A win or a loss is
 followed by the league's call or lobby word on the result and the title.
 Before an answer, lineups are unavailable and inspection generates nothing.
 
-The Masters' call comes from the caretaker, not from an official league.
-Her first call says that Lorelei, retired to Four Island, spoke of the player;
-beyond being the default [partner](#partner), Lorelei stays an ordinary
-notable trainer with no guaranteed seat. Accepting names the four pairs in
-order, which of the eight hold a Master's seat, and the partner who will
-join the player. When the run starts, the caretaker introduces the pairs in
-the lobby, and each hall's door names its pair along with the hall and its
-condition. The Masters Gallery shows every recorded winner
-([Masters Gallery](#masters-gallery)).
-
-The player asks a partner with an outgoing phone call to a contact
-([phone calls](../../game/src/match_call.c)); the contact agrees, and the
-call says they will join the player at the next Masters event. The phone's
-contact list shows who can be asked and who is the current partner. In the
-tag matches the partner appears beside the player with their back pic, and
-in the final they are the opponent, with their own lines.
+The Masters' calls, its caretaker, asking a partner by phone, and its
+Gallery are presented as [Sevii Masters](sevii-masters.md#presentation)
+describes.
 
 Each lobby names the league's reigning champion (or none yet). Without an
 accepted event there, staff turn the player away with the immediate reason
@@ -955,10 +713,8 @@ accepted event there, staff turn the player away with the immediate reason
 
 Graphics, portraits, dialogue, battle metadata, and names follow the selected
 character even in historical rooms; a displaced fixed resident must not remain
-in dialogue. The last opponent is this lineup's finalist, whatever their title;
-at the Masters it is the partner.
-Dialogue cannot assume Blue occupies Indigo or Lance ends Masters. Masters
-never calls its winner a regional Champion.
+in dialogue. The last opponent is this lineup's finalist, whatever their title
+(at the Masters, the partner). Dialogue cannot assume Blue occupies Indigo.
 
 The lobby, or a sign at each hall's door, names the hall and its condition
 ("Lorelei's Hall: snow") before the match; a neutral room shows no condition.
@@ -977,10 +733,10 @@ The player's first-ever win at each league keeps the one-time effects as Today's
 them: Indigo's shared Kanto/Johto Champion recognition with one Hall of Fame
 registration, Hoenn's own recognition, Hall of Fame, regional cleanup, and full
 completion credits, Red's unlock once all three leagues have a lifetime win, and
-Blue's Saffron Dojo battle after the first Indigo win. The first Masters win
-brings no regional awards or new status. A repeat win gives the prize money of
-its battles and the reigning-champion title (plus the Gallery win at the
-Masters) and nothing else: the one-time effects never repeat, and whether a
+Blue's Saffron Dojo battle after the first Indigo win; the Masters' wins
+bring only what [Sevii Masters](sevii-masters.md#masters-gallery) lists. A
+repeat win gives the prize money of its battles and the reigning-champion
+title and nothing else: the one-time effects never repeat, and whether a
 repeat win shows a short ceremony follows Today's replay presentation until
 designed. Wins grant no TR. Ceremony handling stays idempotent across callbacks,
 reloads, and interrupted saves, and must finish before the next call rings.
@@ -1030,13 +786,8 @@ Existing code to review, not new APIs:
   [circuit status](../../game/src/league_circuit_status.c),
   [Sevii content manifest](../../game/src/data/wayfarer_sevii_maps.json), and
   [Blue Dojo scripts](../../game/data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc).
-- The tag match path listed in [Tag matches](#tag-matches):
-  [partner battle setup](../../game/src/battle_special.c),
-  [partner parties](../../game/src/battle_partner.c),
-  [AI flag setup](../../game/src/battle_ai_main.c),
-  [party choice](../../game/src/script_pokemon_util.c),
-  [money and experience](../../game/src/battle_script_commands.c), and
-  [Masters room scripts](../../game/data/scripts/wayfarer_masters_league.inc).
+- The Masters' tag match path, listed in [Sevii
+  Masters](sevii-masters.md#integration).
 
 ## Balance report
 
@@ -1048,18 +799,15 @@ win, accept and lose, or decline); accepted events resolve the day they are
 accepted. For each invitation it reports the day it arrives, which league
 calls and why (the only eligible league, the least recently called, or a
 tie going to the most badges or to Indigo; whether the Masters knows the
-player yet), the frozen lineup with league scores and Master seats, the event
-whose lineup it fatigues, the result, and the reigning champion, and after
-the run who has reigned at Indigo and at Hoenn, the notable Masters, and the
-Masters Gallery. For a selected event it reports every eligible trainer's TR,
-team level, willingness, league score, rank, and reign flags, the base lineup
-level, each aloof trainer's check (team level against base lineup level + 10,
-joins or skips; at the Masters, the aloof rule off), the Master seats, and
-the resulting lineup. It doesn't show each match's hall and condition yet,
-or the Masters' tag format: its Masters lineups still take five seats, with
-no partner, pairs, or three-member tag teams ([Later](#later)). It asserts
-no fixed lineup,
-finalist, or strength target. The report is informational; it also confirms
+player yet), the frozen lineup with league scores, the event whose lineup it
+fatigues, the result, and the reigning champion, and after the run who has
+reigned at Indigo and at Hoenn. For a selected event it reports every eligible
+trainer's TR, team level, willingness, league score, rank, and reign flags, the
+base lineup level, each aloof trainer's check (team level against base lineup
+level + 10, joins or skips), and the resulting lineup. The Masters adds [its
+own rows](sevii-masters.md#balance-report). It doesn't show each match's hall
+and condition yet ([Later](#later)). It asserts no fixed lineup, finalist, or
+strength target. The report is informational; it also confirms
 that no aloof trainer in an Indigo or Hoenn lineup is more than 10 levels
 above the base lineup level. The Gym ladder and team targets stay in
 [Notable trainers](notable-trainers.md#balance-targets).
@@ -1073,9 +821,8 @@ evidence (not yet run):
 1. **Registry.** Reject duplicate characters or aliases, unresolved source
    IDs, missing assets, double-battle flags, and trainers without valid
    growth values or a valid roster. The build must hold at least five eligible
-   trainers who are not aloof and at least nine eligible trainers (the
-   Masters' eight and a partner); Lorelei is eligible; every eligible
-   trainer has a back pic for partnering. Each league has exactly five
+   trainers who are not aloof, and meet the [Masters'
+   minimums](sevii-masters.md#acceptance). Each league has exactly five
    halls whose rooms match its room chain in order; Indigo and Hoenn halls
    1-4 each honour a
    distinct member of that league's own Elite Four; the Masters' halls 1-4
@@ -1094,23 +841,12 @@ evidence (not yet run):
    joining at exactly base lineup level + 10 and skipping at one level more,
    never judged against another aloof trainer, and skipping when there is no
    base lineup; fatigue applied to the base lineup and to an aloof trainer's
-   score; at the Masters no base lineup and every aloof trainer eligible
-   however far above the other trainers; a Master seated over a higher-scoring
-   trainer who is not one, more than eight Masters seated by league score
-   with ties by `characterId`, a fatigued Master keeping the seat, a trainer who
-   reigned at only one of Indigo and Hoenn not a Master, and Master status
-   ignored at Indigo and Hoenn; the five highest scores (eight at the
-   Masters) over distinct scores and ties at the last-seat boundary broken
-   by ascending `characterId`; fatigue read from the most recent resolved
-   event at any
-   league, accepted or declined, including the partner after an accepted
-   Masters event; the battle
+   score; the five highest scores over distinct scores and ties at the
+   last-seat boundary broken by ascending `characterId`; fatigue read from the
+   most recent resolved event at any league, accepted or declined; the battle
    order non-decreasing in TR with the highest last; excluded and disabled
-   trainers never appear; aliases never appear twice. At the Masters: eight
-   seats, up to eight Master seats, the partner never seated (a Master who
-   is the partner gives up the seat and the next score moves in), the same
-   eight whether the player accepts or declines with the same partner, and
-   pairs taken two by two in battle order.
+   trainers never appear; aliases never appear twice. The Masters' lineup
+   cases are in [Sevii Masters](sevii-masters.md#acceptance).
 3. **Qualification.** No call at player TR 79; at 80 the countdown starts on
    the day of qualifying and the first call comes 7 days later.
 4. **Countdown.** Each resolution (a decline, a win, a loss, leaving) restarts
@@ -1133,39 +869,33 @@ evidence (not yet run):
    each day until a league knows the player. The call counter only increases,
    and a day counter turned back never changes the order. The same badges, wins,
    and last call numbers always give the same caller.
-6. **Accept and decline.** Accepting saves the selected lineup (at the
-   Masters, with the partner) in ascending TR order with the accepted event
+6. **Accept and decline.** Accepting saves the selected lineup in ascending
+   TR order with the accepted event
    atomically, and the event waits across many days and reloads with the
    same lineup; reloading before the commit selects the same lineup;
    inject failures before, during, and at commit. Declining
    crowns the strongest of the lineup computed at decline, saves it as the
    most recent resolved lineup, and restarts the countdown. Entering a league
    without an accepted event there is refused and changes nothing. A decline
-   sets the new champion's reign flag at Indigo or Hoenn, or adds their
-   Gallery win at the Masters, and a Masters title never sets a reign flag.
+   sets the new champion's reign flag at Indigo or Hoenn, and a Masters title
+   never sets a reign flag.
 7. **Determinism.** Golden lineups and call sequences for fixed world
    progress values, badge splits, answers, most recent resolved lineups,
-   reign records, and partners, matched between host tooling and game C;
+   and reign records, matched between host tooling and game C;
    the same inputs always give the same lineup and the same caller, and the
    Pokémon RNG state is unchanged.
 8. **Fresh state.** A new game is not qualified, has a call counter of 0, and
    has no last call number, reigning champion, accepted event, active run,
-   most recent resolved lineup, reign flag, or Gallery win; load, display,
+   most recent resolved lineup, or reign flag; load, display,
    and denied or cancelled requests generate nothing.
 9. **Loss.** Lose at each match, and leave voluntarily: the event ends once,
    nothing is recorded, the player blacks out to the usual target, the frozen
-   lineup's strongest reigns and gains the reign flag (or Gallery win), that
-   lineup becomes the most recent resolved lineup, and the countdown
-   restarts, also across a reload. At the Masters, a loss in any hall or
-   leaving before the final crowns the lineup's strongest, a loss in the
-   final crowns the partner with a Gallery win, and a tag match loss
-   restores the party before the blackout.
+   lineup's strongest reigns and gains the reign flag at Indigo or Hoenn,
+   that lineup becomes the most recent resolved lineup, and the countdown
+   restarts, also across a reload.
 10. **Win.** A first win records exactly one lifetime win and its one-time
-    effects and ceremony; the second of the Indigo and Hoenn first wins makes
-    the player a Master and the Masters eligible to call; a Masters win adds
-    the player's Gallery win and no status, on every Masters win; a repeat
-    win gives only prize money and the title (plus the Gallery win at the
-    Masters); the player reigns until that
+    effects and ceremony; a repeat win gives only prize money and the title;
+    the player reigns until that
     league's next resolved event; no win changes player TR; the run and the
     accepted event are released. Interrupt and repeat win commits, calls, and
     answers.
@@ -1175,14 +905,12 @@ evidence (not yet run):
     XP, and parties match the lineup's matches, including a Gym Leader in
     match 5. The phone rings only when the player can take a call, and rings
     again after a reload until answered; lobbies name the reigning champion.
-    The Masters' calls come from the caretaker, the first naming Lorelei;
-    the Gallery shows the winners of declined Masters events too.
 12. **Halls.** Every match is fought in its hall and starts with that hall's
     condition on both sides: snow and sandstorm last until a move or ability
     replaces them; rooms and terrains end after 5 turns; Tailwind and Sea
     of Fire are up on both sides and end on each after the engine's
     temporary duration; Sticky Web and Stealth Rock are down on both sides,
-    hit every lead (all four in a tag match), and stay until cleared. The
+    hit every lead, and stay until cleared. The
     same trainer gets each hall's
     condition in whichever match they fight, a trainer with an authored
     `startingStatus` gets only the hall's, and neutral rooms start clear. A
@@ -1195,52 +923,22 @@ evidence (not yet run):
     show their weather and their battles start
     in it; that change is accepted.
 13. **Load validation.** Corrupt invitation state, call numbers, accepted
-    events, runs, lineups, most recent resolved lineups, partner choices,
-    tag selections, reign flags, Gallery counts, schema, or callbacks are
-    rejected without regenerating, calling,
-    advancing, or rewarding; a Masters invitation without both lifetime wins is
-    rejected, and so are a trainer reigning at the Masters with a Gallery count
-    of 0 and the player reigning at a league without its lifetime win. A content
-    version change turns an accepted event back into an unanswered invitation,
-    clears the most recent resolved lineup, drops the reign flags and Gallery
-    counts of removed characters, and rewrites the saved content versions. A
-    double update loads too: a save that went through one content change and
-    was saved again before the next event resolved, then loaded under a build
-    that removes a character who reigns at Hoenn or has a Gallery count, is
-    pruned, not rejected.
+    events, runs, lineups, most recent resolved lineups, reign flags, schema,
+    or callbacks are rejected without regenerating, calling, advancing, or
+    rewarding; a Masters invitation before the player is a Master is
+    rejected, and so is the player reigning at a league without its lifetime
+    win. A content version change turns an accepted event back into an
+    unanswered invitation, clears the most recent resolved lineup, drops the
+    reign flags of removed characters, and rewrites the saved content
+    versions. A double update loads too: a save that went through one content
+    change and was saved again before the next event resolved, then loaded
+    under a build that removes a character who reigns at Hoenn, is pruned,
+    not rejected.
 14. **Standalone.** FRLG, HNS, and Emerald League behavior, travel, recovery,
     and phone calls are unchanged, apart from the accepted hall-room weather
-    (item 12); Mossdeep's Steven battle and every other partner or
-    two-opponent battle are built as today.
-15. **Partner.** With no ask, the partner is Lorelei, with or without her
-    number; asking any contact always succeeds and sets the partner, the
-    latest ask winning; a non-contact and Tate & Liza cannot be asked, and
-    no one can be asked before the player is a Master; an ask while an
-    accepted Masters event waits leaves that event's partner and lineup
-    unchanged and applies to the next.
-16. **Tag matches.** Each tag match is a two-versus-two partner battle
-    against its pair, opponent A the weaker, under its hall's condition,
-    with starting hazards on all four leads. Each notable brings the last
-    three of their stored battle order, with fixtures for teams of one,
-    two, three, and six members and one, two, and three aces, each member
-    matching its stored species, level, moves, and item. Both opponents
-    and the partner come from the event lineup despite today's scaling
-    exclusions; the runtime partner slot shows the partner's name, class,
-    pics, and AI, and no static partner changes. The override writes the AI
-    of battlers 1, 2, and 3. Prize money sums both opponents at their
-    snapshot levels; the partner's Pokémon gain no experience; the match
-    goes on while the partner can still fight. Reconstruction after a
-    reload builds the same match.
-17. **Party and heal.** At each door the player picks one to three able
-    Pokémon, and cancelling starts nothing; after a win or a loss the
-    fought Pokémon return to their own slots with their damage, experience,
-    and evolutions, and the rest of the party is unchanged; damage carries
-    from hall to hall; after hall 4 the whole party is fully healed, and the
-    final uses the player's whole party against the partner's whole team.
-    A reset at any moment of a tag match reloads a save with the whole
-    party and no tag selection, and the match is fought again; a save
-    carrying a tag selection loads with the party whole, resuming at that
-    match's door.
+    (item 12).
+15. **Sevii Masters.** Every item of [Sevii
+    Masters acceptance](sevii-masters.md#acceptance) passes.
 
 Run the trainer/scaling mechanics suites and extend
 [mechanics coverage](../../game/test/league_circuit.c),
@@ -1263,8 +961,6 @@ Report balance playtesting separately from structural checks.
 - Event rewards tuning, interval tuning, and qualification threshold tuning.
 - Balancing tools: tune travel costs, fatigue, the floor, and the aloof margin
   against the lineup reports, and set league balance targets.
-- The caretaker's later calls and lines, and what the Masters Gallery shows
-  beyond each winner's count.
 - Seeded lineups, varying which willing trainers come per save.
 - Rotation weights and rotation history.
 - Role windows and standing-based matches, with a nearest-standing fallback for
@@ -1275,16 +971,12 @@ Report balance playtesting separately from structural checks.
 - Gym arenas with their own field conditions, like the halls
   ([Notable trainers](notable-trainers.md#later)).
 - Each match's hall and condition in the balance explorer.
-- Explorer support for the Masters' tag format: the partner, eight seats,
-  the pairs, and each notable's three for a tag match.
-- A friendship score per contact, raised by partnering and other shared
-  play; picky partners who can refuse (by friendship or by trait, such as
-  aloof); asking a partner in person in the overworld; and gifts and trades
-  with contacts ([Notable trainers](notable-trainers.md#later)).
+- The Masters' own Later items are in [Sevii Masters](sevii-masters.md#later).
 
 ## References
 
 - [Leagues PRD](../prds/leagues.md)
+- [Sevii Masters](sevii-masters.md)
 - [Notable trainers](notable-trainers.md)
 - [Trainer AI](trainer-ai.md)
 - [Player Trainer Rating](player-trainer-rating.md)

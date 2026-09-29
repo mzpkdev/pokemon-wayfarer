@@ -162,7 +162,9 @@ changes yours.
   for league invitations. TR never decreases, so it happens once.
 - **Known (by a league):** a league knows you once you hold a badge from its
   region: Indigo with a Kanto or Johto badge, Hoenn with a Hoenn badge. Sevii
-  Masters knows you once you are a Master. Only a league that knows you calls.
+  Masters knows you once you are a
+  [Master](../specs/sevii-masters.md#master). Only a league that knows you
+  calls.
 - **Invitation:** a league's phone call inviting you to its next event. Once
   you qualify, a league that knows you calls every seven in-game days, the
   leagues taking turns
@@ -177,8 +179,9 @@ changes yours.
   the event run without you.
 - **League event:** one tournament at a league, held for one invitation.
 - **Event lineup:** the five opponents of a league event (eight at the
-  Sevii Masters, whose accepted event also keeps your partner), picked when
-  you accept or decline; an accepted event keeps them, with their teams,
+  Sevii Masters, whose accepted event also keeps your partner;
+  [lineup](../specs/sevii-masters.md#lineup)), picked when you accept or
+  decline; an accepted event keeps them, with their teams,
   until it ends.
 - **Reigning champion:** who holds a league's title until its next event: you
   if you won the last one, otherwise the strongest trainer of that event's
@@ -187,9 +190,10 @@ changes yours.
   Indigo and Hoenn at some point, whether or not they reign now; a Masters
   title never counts. The Sevii Masters calls you once you are a Master, and
   gives notable trainers who are Masters guaranteed seats
-  ([reign records](../specs/leagues.md#reign-records)).
+  ([Master](../specs/sevii-masters.md#master)).
 - **Masters Gallery:** the Sevii Masters' tally of each Masters winner's
-  wins, including the winners of events you declined.
+  wins, including the winners of events you declined
+  ([Gallery](../specs/sevii-masters.md#masters-gallery)).
 - **Home region:** a notable trainer's region (Kanto, Johto, or Hoenn).
 - **Trait:** an opt-in yes/no behaviour of a notable trainer; every trait
   defaults to no. v0 has two: traveller and aloof.
@@ -221,22 +225,23 @@ changes yours.
   score who are not aloof, picked before any aloof trainer is considered.
 - **Base lineup level:** the highest team level in the base lineup.
 - **League score:** a trainer's TR scaled down by their willingness; the
-  event lineup is the five highest among those who join (eight at the Sevii
-  Masters, after its Masters' guaranteed seats and never your partner)
-  ([selection](../specs/leagues.md#selection-and-order)).
+  event lineup is the five highest among those who join
+  ([selection](../specs/leagues.md#selection-and-order)); eight at the Sevii
+  Masters, after its Masters' guaranteed seats and never your partner
+  ([lineup](../specs/sevii-masters.md#lineup)).
 - **Match 1-5:** a position in the battle order. At the Sevii Masters,
   matches 1-4 are tag battles against the pairs, weakest first, and match 5
   is the final against your partner.
 - **Tag battle:** two against two, each trainer bringing three Pokémon: you
   and your partner against a pair from the lineup in each Sevii Masters
-  hall.
+  hall ([tag matches](../specs/sevii-masters.md#tag-matches)).
 - **Contact:** a notable trainer whose phone number you hold. Each gives you
   their number the first time you beat them
-  ([phone contacts](../specs/notable-trainers.md#phone-contacts)).
+  ([phone contacts](../specs/sevii-masters.md#phone-contacts)).
 - **Partner:** the contact you last asked to join you at the Sevii Masters,
   or Lorelei if you have never asked anyone. They fight beside you in the
   tag battles, never in the lineup, and face you in the final
-  ([partner](../specs/leagues.md#partner)).
+  ([partner](../specs/sevii-masters.md#partner)).
 - **Hall:** a league room where one match is fought, named after an Elite
   Four member whose theme the room carries (such as Lorelei's Hall) without
   meaning they fight there. Match 1 is in the first hall, match 2 in the
