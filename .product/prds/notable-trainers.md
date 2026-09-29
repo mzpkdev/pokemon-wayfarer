@@ -75,8 +75,9 @@ In this first version there are 38 notable trainers: 37 people (the 23
 singles Gym Leaders, the Kanto, Johto, and Hoenn Elite Four, Lance, Wallace,
 Steven, and Blue) plus Tate and Liza as one duo. Tate and Liza share one
 strength and one list of six Pokémon, grow like everyone else, and still fight
-you together in their double battle. Leagues are singles only, so they never
-appear in one. Everyone else, including Red, keeps their current rules.
+you together in their double battle. Leagues field trainers who battle
+alone, so the duo never appears in one, as opponents or as a partner.
+Everyone else, including Red, keeps their current rules.
 
 ### Home and travel
 
@@ -181,6 +182,15 @@ Brock's wall of rocks or Whitney's stubborn Miltank. Stronger trainers play
 smarter, their aces are held back until the end, and a rare boss like Lance
 knows everything about your party ([Trainer AI](trainer-ai.md)).
 
+### Phone numbers
+
+The first time you beat a notable trainer, in any battle with them, they
+give you their phone number, and they join your phone's contacts for good.
+Tate and Liza, a duo, give none. In this first version a contact is for one
+thing: asking them to be your partner at the Sevii Masters, which always
+works ([Leagues](leagues.md#design)). Friendship, gifts, and trades come
+later.
+
 FRLG, Emerald, and HNS parties are references for recognizable content, not
 required teams. Challenge options such as trainer items, trainer IVs and EVs,
 and the level cap apply on top, as they do today.
@@ -274,11 +284,14 @@ well they play, and combat difficulty belong to playtesting.
 - Tighter level spreads at the top.
 - Gym arenas with their own field conditions for both sides, like the
   leagues' [halls](leagues.md#design).
+- More for contacts: a friendship score, contacts who can turn you down, and
+  gifts and trades ([Leagues](leagues.md#later)).
 
 ## Specifications
 
 - [Notable trainers specification](../specs/notable-trainers.md):
-  inventory, TR and its growth, scalers, rosters, and the battle snapshot.
+  inventory, TR and its growth, scalers, rosters, the battle snapshot, and
+  phone contacts.
 - [Gym Leader scaling](../specs/gym-leader-scaling.md): badge-encounter
   coverage and battle construction.
 - [Trainer AI specification](../specs/trainer-ai.md): play styles, AI skill,

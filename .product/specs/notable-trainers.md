@@ -24,7 +24,7 @@ and aloof), the
 rule that routes every battle with a notable character to their Trainer Rating
 (TR) and roster, trainer TR and its growth with world progress, the
 archetypes, the v0 trainer scalers, rosters, move pools, team resolution, the
-battle snapshot, and their validation. Consumers link here
+battle snapshot, phone contacts, and their validation. Consumers link here
 rather than restating it.
 
 - [Gym Leader scaling](gym-leader-scaling.md) owns badge-encounter coverage and
@@ -70,7 +70,8 @@ the battle order is Grumpig, Xatu, Claydol, Gardevoir, Lunatone, Solrock: Tate
 brings Xatu, Gardevoir, and Solrock, and Liza brings Grumpig, Claydol, and
 Lunatone. At world progress 0 (TR 26, two Pokémon) Tate brings Solrock and
 Liza Lunatone. Every notable rule applies to them (world progress, battle snapshot,
-construction); they are league-ineligible because leagues are singles only
+construction); they are league-ineligible, as opponents and as partners,
+because leagues field trainers who battle alone
 ([Leagues](leagues.md#registry-and-eligibility)).
 
 Mapping each encounter ID of these characters (Gym, rematch, league, and
@@ -145,8 +146,8 @@ strong trainer with a proud or distant persona):
 | Sabrina | Cold and distant. |
 | Karen | "Strong Pokémon, weak Pokémon": disdains weak company. |
 
-Everyone else is not aloof. The Tate & Liza duo is never aloof, since leagues
-are singles only. The aloof rule does not apply at the Sevii Masters
+Everyone else is not aloof. The Tate & Liza duo is never aloof, since it is
+league-ineligible. The aloof rule does not apply at the Sevii Masters
 ([Leagues selection](leagues.md#selection-and-order)).
 
 ## Trainer AI
@@ -482,13 +483,34 @@ battle never changes it. A retry at the same world progress produces an
 identical team (battle RNG may still differ); a retry after the player gained TR
 uses the higher world progress. Accepting a league invitation computes every
 eligible trainer's TR and league score at that moment and captures the
-selected trainers' battle snapshots in the event lineup, frozen for that
-event; there the league state's
+selected trainers' battle snapshots (and at the Sevii Masters the
+partner's) in the event lineup, frozen for that event; there the league state's
 [content versions](leagues.md#saved-state) stand in for each snapshot's own. Declining also computes the event lineup (and the league scores) at
 that moment, but captures no teams.
 [Leagues](leagues.md#event-lineup) owns that lifecycle. Invalid content or a
 failed resolution fails preparation; never substitute player TR for a trainer's
 TR, another trainer, or a random team.
+
+## Phone contacts
+
+Each notable trainer except the Tate & Liza duo has a **contact bit**: set,
+the player holds their phone number and the trainer is a **contact** on the
+phone ([phone calls](../../game/src/match_call.c)). The bit is set, once, at
+the first committed win of any battle against that trainer: a Gym, rematch,
+story, or league battle, singles or a league tag match (where both
+opponents' bits are set). A loss, a draw, fleeing, a declined league event,
+a battle beside the trainer as a partner, and debug battles set nothing. The
+bit is never cleared by play. Tate & Liza give no number, since in v0 a
+contact's only use is being asked as a partner, which the duo cannot be.
+
+In v0 the only use is asking a contact to be the player's partner at the
+Sevii Masters ([Leagues](leagues.md#partner)); calling a contact otherwise
+does nothing new.
+
+Saved state: one contact bit per notable trainer, all clear at New Game.
+On load, drop the bits of characters no longer in the inventory and keep
+the rest, as [Leagues](leagues.md#load-validation) prunes reign flags;
+a bit for an unknown character is otherwise an invalid save.
 
 ## Validation
 
@@ -550,6 +572,10 @@ TR, another trainer, or a random team.
 - Snapshot: repeated construction within one battle and retries at the same
   world progress reproduce the same battle snapshot; TR gained mid-battle
   changes nothing; invalid content fails preparation without a fallback.
+- Contacts: a first win over a trainer sets their bit exactly once, in each
+  kind of battle, both opponents' bits after a won tag match; a loss, a
+  decline, partnering, and debug battles set none; Tate & Liza never get a
+  bit; bits survive reloads and prune with removed characters.
 
 ## Balance targets
 
@@ -632,6 +658,8 @@ implementations stay active until then.
 - Gym arenas: a fixed field condition for both sides in a Gym battle, from
   the Gym as a place rather than the leader, like the leagues'
   [halls](leagues.md#halls).
+- More for contacts: a friendship score, picky contacts, asking in person in
+  the overworld, and gifts and trades ([Leagues](leagues.md#later)).
 
 ## References
 

@@ -176,9 +176,10 @@ changes yours.
   event lineup and the event waits for you, with one attempt; declining lets
   the event run without you.
 - **League event:** one tournament at a league, held for one invitation.
-- **Event lineup:** the five opponents of a league event, picked when you
-  accept or decline; an accepted event keeps them, with their teams, until it
-  ends.
+- **Event lineup:** the five opponents of a league event (eight at the
+  Sevii Masters, whose accepted event also keeps your partner), picked when
+  you accept or decline; an accepted event keeps them, with their teams,
+  until it ends.
 - **Reigning champion:** who holds a league's title until its next event: you
   if you won the last one, otherwise the strongest trainer of that event's
   lineup.
@@ -220,10 +221,22 @@ changes yours.
   score who are not aloof, picked before any aloof trainer is considered.
 - **Base lineup level:** the highest team level in the base lineup.
 - **League score:** a trainer's TR scaled down by their willingness; the
-  event lineup is the five highest among those who join, after any Masters'
-  guaranteed seats at the Sevii Masters
+  event lineup is the five highest among those who join (eight at the Sevii
+  Masters, after its Masters' guaranteed seats and never your partner)
   ([selection](../specs/leagues.md#selection-and-order)).
-- **Match 1-5:** a position in the lineup.
+- **Match 1-5:** a position in the battle order. At the Sevii Masters,
+  matches 1-4 are tag battles against the pairs, weakest first, and match 5
+  is the final against your partner.
+- **Tag battle:** two against two, each trainer bringing three Pokémon: you
+  and your partner against a pair from the lineup in each Sevii Masters
+  hall.
+- **Contact:** a notable trainer whose phone number you hold. Each gives you
+  their number the first time you beat them
+  ([phone contacts](../specs/notable-trainers.md#phone-contacts)).
+- **Partner:** the contact you last asked to join you at the Sevii Masters,
+  or Lorelei if you have never asked anyone. They fight beside you in the
+  tag battles, never in the lineup, and face you in the final
+  ([partner](../specs/leagues.md#partner)).
 - **Hall:** a league room where one match is fought, named after an Elite
   Four member whose theme the room carries (such as Lorelei's Hall) without
   meaning they fight there. Match 1 is in the first hall, match 2 in the
