@@ -3,8 +3,18 @@
 #include "test/test.h"
 #include "wild_encounter.h"
 #include "constants/maps.h"
+#include "config/notable_trainers.h"
 
 #if IS_WAYFARER
+
+#if WAYFARER_V0_TRAINERS
+#define NATIVE_HM_MAX_RATING 160
+#else
+#define NATIVE_HM_MAX_RATING 80
+#endif
+#define NATIVE_HM_RATING_COUNT (NATIVE_HM_MAX_RATING + 1)
+#define NATIVE_HM_REGIONAL_BLOCK_SIZE 4
+#define NATIVE_HM_DIRECTIONAL_BLOCK_SIZE 3
 
 struct CoverageProfile
 {
@@ -18,7 +28,7 @@ struct RegionalCoverage
 {
     const char *name;
     u16 move;
-    u16 profiles[81];
+    u16 profiles[NATIVE_HM_RATING_COUNT];
 };
 
 struct AcquisitionSource
@@ -37,6 +47,14 @@ struct AcquisitionScenario
 };
 
 #include "data/native_hm_coverage.h"
+#if WAYFARER_V0_TRAINERS
+#include "data/native_hm_v0_coverage.h"
+#define sActiveRegionalCoverage sV0RegionalCoverage
+#define sActiveRegionalProfiles sV0RegionalProfiles
+#else
+#define sActiveRegionalCoverage sRegionalCoverage
+#define sActiveRegionalProfiles sRegionalProfiles
+#endif
 
 struct CoverageChance
 {
@@ -185,22 +203,27 @@ static struct CoverageChance ProfileMoveChance(const struct WildEncounterProfile
     return chance;
 }
 
-TEST("Wayfarer native HM windows cover all 1944 approved regional cells")
+static void CheckRegionalCoverage(u8 row)
 {
-    u16 row = 0;
-    u16 parameterRow;
+    u16 ratingStart = 0;
+    u16 parameterBlock;
     u16 rating;
     const struct RegionalCoverage *cell;
 
-    for (parameterRow = 0; parameterRow < ARRAY_COUNT(sRegionalCoverage); parameterRow++)
-        PARAMETRIZE_LABEL("%s", sRegionalCoverage[parameterRow].name) { row = parameterRow; }
+    for (parameterBlock = 0; parameterBlock * NATIVE_HM_REGIONAL_BLOCK_SIZE <= NATIVE_HM_MAX_RATING; parameterBlock++)
+        PARAMETRIZE_LABEL("%s TR %d-%d", sActiveRegionalCoverage[row].name,
+                          parameterBlock * NATIVE_HM_REGIONAL_BLOCK_SIZE,
+                          min((parameterBlock + 1) * NATIVE_HM_REGIONAL_BLOCK_SIZE - 1, NATIVE_HM_MAX_RATING))
+        {
+            ratingStart = parameterBlock * NATIVE_HM_REGIONAL_BLOCK_SIZE;
+        }
 
-    EXPECT_EQ(ARRAY_COUNT(sRegionalCoverage) * 81, 1944);
-    cell = &sRegionalCoverage[row];
+    EXPECT_EQ(ARRAY_COUNT(sActiveRegionalCoverage), 24);
+    cell = &sActiveRegionalCoverage[row];
     SetCoverageMode();
-    for (rating = 0; rating <= 80; rating++)
+    for (rating = ratingStart; rating < ratingStart + NATIVE_HM_REGIONAL_BLOCK_SIZE && rating <= NATIVE_HM_MAX_RATING; rating++)
     {
-        const struct CoverageProfile *profile = &sRegionalProfiles[cell->profiles[rating]];
+        const struct CoverageProfile *profile = &sActiveRegionalProfiles[cell->profiles[rating]];
         struct WildEncounterProfileView view;
         struct CoverageChance chance;
 
@@ -220,32 +243,63 @@ TEST("Wayfarer native HM windows cover all 1944 approved regional cells")
     }
 }
 
-TEST("Wayfarer native HM acquisition has a source in all 10692 directional cases")
+#define REGIONAL_COVERAGE_TEST(row, label) \
+    TEST("Wayfarer native HM regional " label " retains a carrier at every rating") \
+    { \
+        CheckRegionalCoverage(row); \
+    }
+
+REGIONAL_COVERAGE_TEST(0, "Johto Cut")
+REGIONAL_COVERAGE_TEST(1, "Johto Flash")
+REGIONAL_COVERAGE_TEST(2, "Johto Surf")
+REGIONAL_COVERAGE_TEST(3, "Johto Strength")
+REGIONAL_COVERAGE_TEST(4, "Johto Rock Smash")
+REGIONAL_COVERAGE_TEST(5, "Johto Waterfall")
+REGIONAL_COVERAGE_TEST(6, "Johto Whirlpool")
+REGIONAL_COVERAGE_TEST(7, "Johto Dive")
+REGIONAL_COVERAGE_TEST(8, "Kanto Cut")
+REGIONAL_COVERAGE_TEST(9, "Kanto Flash")
+REGIONAL_COVERAGE_TEST(10, "Kanto Surf")
+REGIONAL_COVERAGE_TEST(11, "Kanto Strength")
+REGIONAL_COVERAGE_TEST(12, "Kanto Rock Smash")
+REGIONAL_COVERAGE_TEST(13, "Kanto Waterfall")
+REGIONAL_COVERAGE_TEST(14, "Kanto Whirlpool")
+REGIONAL_COVERAGE_TEST(15, "Kanto Dive")
+REGIONAL_COVERAGE_TEST(16, "Hoenn Cut")
+REGIONAL_COVERAGE_TEST(17, "Hoenn Flash")
+REGIONAL_COVERAGE_TEST(18, "Hoenn Surf")
+REGIONAL_COVERAGE_TEST(19, "Hoenn Strength")
+REGIONAL_COVERAGE_TEST(20, "Hoenn Rock Smash")
+REGIONAL_COVERAGE_TEST(21, "Hoenn Waterfall")
+REGIONAL_COVERAGE_TEST(22, "Hoenn Whirlpool")
+REGIONAL_COVERAGE_TEST(23, "Hoenn Dive")
+
+static void CheckDirectionalAcquisition(u8 scenarioId)
 {
-    u8 scenarioId = 0, clock = TIME_DAY, rod = WILD_ENCOUNTER_FISHING_ROD_OLD;
-    u8 parameterScenario, parameterClock, parameterRod, parameterBlock;
-    u8 ratingStart = 0;
+    u8 clock = TIME_DAY, rod = WILD_ENCOUNTER_FISHING_ROD_OLD;
+    u8 parameterClock, parameterRod;
+    u16 parameterBlock, ratingStart = 0;
     u16 rating;
     const struct AcquisitionScenario *scenario;
 
-    for (parameterScenario = 0; parameterScenario < ARRAY_COUNT(sAcquisitionScenarios); parameterScenario++)
     for (parameterClock = 0; parameterClock < 2; parameterClock++)
     for (parameterRod = WILD_ENCOUNTER_FISHING_ROD_OLD; parameterRod <= WILD_ENCOUNTER_FISHING_ROD_SUPER; parameterRod++)
-    for (parameterBlock = 0; parameterBlock < 9; parameterBlock++)
-        PARAMETRIZE_LABEL("%s clock %d rod %d TR %d-%d", sAcquisitionScenarios[parameterScenario].name, parameterClock, parameterRod, parameterBlock * 9, parameterBlock * 9 + 8)
+    for (parameterBlock = 0; parameterBlock * NATIVE_HM_DIRECTIONAL_BLOCK_SIZE <= NATIVE_HM_MAX_RATING; parameterBlock++)
+        PARAMETRIZE_LABEL("%s clock %d rod %d TR %d-%d", sAcquisitionScenarios[scenarioId].name, parameterClock, parameterRod,
+                          parameterBlock * NATIVE_HM_DIRECTIONAL_BLOCK_SIZE,
+                          min((parameterBlock + 1) * NATIVE_HM_DIRECTIONAL_BLOCK_SIZE - 1, NATIVE_HM_MAX_RATING))
         {
-            scenarioId = parameterScenario;
             clock = parameterClock == 0 ? TIME_DAY : TIME_NIGHT;
             rod = parameterRod;
-            ratingStart = parameterBlock * 9;
+            ratingStart = parameterBlock * NATIVE_HM_DIRECTIONAL_BLOCK_SIZE;
         }
 
-    EXPECT_EQ(ARRAY_COUNT(sAcquisitionScenarios) * 2 * 3 * 81, 5346);
+    EXPECT_EQ(ARRAY_COUNT(sAcquisitionScenarios), 11);
     scenario = &sAcquisitionScenarios[scenarioId];
     SetCoverageMode();
     // Bound each parameter case below the mechanics runner's GBA timeout.
-    // Nine disjoint blocks still enumerate every supported rating exactly once.
-    for (rating = ratingStart; rating < ratingStart + 9; rating++)
+    // Disjoint blocks enumerate every supported rating exactly once.
+    for (rating = ratingStart; rating < ratingStart + NATIVE_HM_DIRECTIONAL_BLOCK_SIZE && rating <= NATIVE_HM_MAX_RATING; rating++)
     {
         bool8 found = FALSE;
         u8 sourceId;
@@ -276,4 +330,22 @@ TEST("Wayfarer native HM acquisition has a source in all 10692 directional cases
                 gTestRunnerState.test->filename, __LINE__, scenario->name, clock, rod, rating);
     }
 }
+
+#define DIRECTIONAL_ACQUISITION_TEST(scenario, label) \
+    TEST("Wayfarer native HM acquisition " label " has a source at every rating") \
+    { \
+        CheckDirectionalAcquisition(scenario); \
+    }
+
+DIRECTIONAL_ACQUISITION_TEST(0, "Cianwood Surf")
+DIRECTIONAL_ACQUISITION_TEST(1, "Olivine Surf")
+DIRECTIONAL_ACQUISITION_TEST(2, "Vermilion Surf")
+DIRECTIONAL_ACQUISITION_TEST(3, "Cinnabar Surf")
+DIRECTIONAL_ACQUISITION_TEST(4, "Lilycove Surf")
+DIRECTIONAL_ACQUISITION_TEST(5, "Mossdeep Surf")
+DIRECTIONAL_ACQUISITION_TEST(6, "Pacifidlog Surf")
+DIRECTIONAL_ACQUISITION_TEST(7, "Route 118 West Surf")
+DIRECTIONAL_ACQUISITION_TEST(8, "Route 118 East Surf")
+DIRECTIONAL_ACQUISITION_TEST(9, "Blackthorn Surf")
+DIRECTIONAL_ACQUISITION_TEST(10, "Dragon's Den Whirlpool")
 #endif

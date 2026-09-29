@@ -5,9 +5,11 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 RECORDS = {
-    "trainers_hns.h": ("TRAINER_ABE_HNS", "TRAINER_QUINN_HNS"),
-    "trainers.h": ("TRAINER_SAWYER_1",),
+    "trainers_hns.h": ("TRAINER_ABE_HNS", "TRAINER_QUINN_HNS", "TRAINER_BROCK_HNS"),
+    "trainers.h": ("TRAINER_SAWYER_1", "TRAINER_TATE_AND_LIZA_1"),
     "trainers_wayfarer_local.h": ("TRAINER_VIRIDIAN_GYM_GIOVANNI_HNS",),
+    "trainers_wayfarer_kanto.h": ("TRAINER_WAYFARER_KANTO_BLUE_BULBASAUR",),
+    "trainers_wayfarer_celadon_hideout.h": ("TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS",),
 }
 
 
@@ -16,7 +18,7 @@ def render():
     for filename, ids in RECORDS.items():
         source = (ROOT / "src/data" / filename).read_text()
         for trainer_id in ids:
-            match = re.search(r"^    \[" + trainer_id + r"\] =\n", source, re.M)
+            match = re.search(r"^[ \t]*\[" + trainer_id + r"\] =\n", source, re.M)
             if match is None:
                 raise ValueError(f"Missing {trainer_id} in {filename}")
             start = match.start()
@@ -36,7 +38,7 @@ if __name__ == "__main__":
     expected = render()
     if args.check:
         if target.read_text() != expected:
-            raise SystemExit("Trainer scaling production fixtures are stale; regenerate them")
-        print("Trainer scaling production fixtures match trainerproc output (4 records)")
+            raise SystemExit(f"{target.name} is stale; regenerate trainer fixtures")
+        print("Trainer fixtures match trainerproc output")
     else:
         target.write_text(expected)

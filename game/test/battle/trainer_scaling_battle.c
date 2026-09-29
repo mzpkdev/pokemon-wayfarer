@@ -9,6 +9,7 @@
 #include "test/battle.h"
 #include "trainer_party_scaling.h"
 #include "trainer_rating.h"
+#include "config/notable_trainers.h"
 #include "constants/opponents.h"
 
 #if IS_WAYFARER
@@ -52,7 +53,11 @@ SINGLE_BATTLE_TEST("Trainer scaling generated moves execute at early middle and 
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, moveSlot: 0); }
     } THEN {
+#if WAYFARER_V0_TRAINERS
+        EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), rating == 0 ? 9 : rating == 40 ? 27 : 44);
+#else
         EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), rating == 0 ? 7 : rating == 40 ? 34 : 92);
+#endif
         EXPECT_NE(GetMonData(&gEnemyParty[0], MON_DATA_MOVE1), MOVE_NONE);
     }
 }
@@ -60,9 +65,15 @@ SINGLE_BATTLE_TEST("Trainer scaling generated moves execute at early middle and 
 AI_SINGLE_BATTLE_TEST("Trainer scaling battle XP uses effective levels and money keeps authored levels", u32 initialExp)
 {
     u32 rating = 0, level = 7, playerLevel = 10;
+#if WAYFARER_V0_TRAINERS
+    PARAMETRIZE { rating = 0; level = 9; playerLevel = 10; }
+    PARAMETRIZE { rating = 40; level = 27; playerLevel = 25; }
+    PARAMETRIZE { rating = 80; level = 44; playerLevel = 45; }
+#else
     PARAMETRIZE { rating = 0; level = 7; playerLevel = 10; }
     PARAMETRIZE { rating = 40; level = 34; playerLevel = 40; }
     PARAMETRIZE { rating = 80; level = 92; playerLevel = 90; }
+#endif
     GIVEN {
         ASSUME(B_TRAINER_PARTY_SCALING);
         ASSUME(B_SCALED_EXP == GEN_3);
@@ -94,6 +105,7 @@ AI_SINGLE_BATTLE_TEST("Trainer scaling battle XP uses effective levels and money
     }
 }
 
+#if !WAYFARER_V0_TRAINERS
 ONE_VS_TWO_BATTLE_TEST("Trainer scaling mixed Gym and boss doubles execute their constructed parties")
 {
     GIVEN {
@@ -123,5 +135,6 @@ ONE_VS_TWO_BATTLE_TEST("Trainer scaling mixed Gym and boss doubles execute their
         EXPECT_EQ(GetMonData(&gEnemyParty[3], MON_DATA_SPECIES), SPECIES_CHARIZARD);
     }
 }
+#endif
 
 #endif

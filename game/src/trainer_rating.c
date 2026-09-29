@@ -1,10 +1,18 @@
 #include "global.h"
 #include "event_data.h"
 #include "config/league_circuit.h"
+#include "config/notable_trainers.h"
 #include "league_circuit.h"
 #include "pokemon.h"
 #include "trainer_rating.h"
+#include "trainer_scaler.h"
 
+#if WAYFARER_V0_TRAINERS
+static const struct TrainerScalerAnchor sTrainerRatingSoftLevelCapsV0[] =
+{
+    { 0, 15 }, { 40, 28 }, { 80, 50 }, { 120, 75 }, { 160, 100 },
+};
+#else
 static const struct
 {
     u8 rating;
@@ -21,6 +29,7 @@ static const struct
     { 65,  80 },
     { 80, 100 },
 };
+#endif
 
 u8 ClampTrainerRating(u16 rating)
 {
@@ -104,8 +113,15 @@ static u8 CalculateLegacyTrainerRating(void)
 }
 #endif
 
-u8 GetTrainerRating(void)
+u32 GetTrainerRating(void)
 {
+#if WAYFARER_V0_TRAINERS
+    u32 rating = gSaveBlock3Ptr->wayfarerHoenn.trainerRatingHighWater;
+
+    rating = max(rating, CalculateLeagueCircuitTrainerRating());
+    gSaveBlock3Ptr->wayfarerHoenn.trainerRatingHighWater = rating;
+    return rating;
+#else
     u8 rating = ClampTrainerRating(VarGet(VAR_TRAINER_RATING));
 
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
@@ -117,11 +133,16 @@ u8 GetTrainerRating(void)
         VarSet(VAR_TRAINER_RATING, rating);
 
     return rating;
+#endif
 }
 
-void SetTrainerRating(u16 rating)
+void SetTrainerRating(u32 rating)
 {
+#if WAYFARER_V0_TRAINERS
+    gSaveBlock3Ptr->wayfarerHoenn.trainerRatingHighWater = rating;
+#else
     VarSet(VAR_TRAINER_RATING, ClampTrainerRating(rating));
+#endif
 }
 
 void InitializeTrainerRatingForNewGame(void)
@@ -140,6 +161,9 @@ void InitializeTrainerRatingForSaveMigration(void)
 
 u8 GetTrainerRatingSoftLevelCap(void)
 {
+#if WAYFARER_V0_TRAINERS
+    return EvaluateTrainerScaler(sTrainerRatingSoftLevelCapsV0, ARRAY_COUNT(sTrainerRatingSoftLevelCapsV0), GetTrainerRating(), FALSE);
+#else
     u8 rating = GetTrainerRating();
     u8 i;
 
@@ -159,6 +183,7 @@ u8 GetTrainerRatingSoftLevelCap(void)
     }
 
     return sTrainerRatingSoftLevelCaps[ARRAY_COUNT(sTrainerRatingSoftLevelCaps) - 1].cap;
+#endif
 }
 
 u32 ApplyTrainerRatingExperienceReduction(u16 species, u32 currentExp, u32 awardedExp)

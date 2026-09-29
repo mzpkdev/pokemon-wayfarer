@@ -11,7 +11,7 @@ endif
 all: mgba-rom-test-hydra$(EXE)
 	@:
 
-mgba-rom-test-hydra$(EXE): $(SRCS)
+mgba-rom-test-hydra$(EXE): $(SRCS) worker_count.h
 	$(CC) $(SRCS) -Werror=implicit-function-declaration -o $@ -lm $(LDFLAGS)
 
 clean:

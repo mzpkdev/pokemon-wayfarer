@@ -13,10 +13,10 @@ export type TrainerOnlySnapshot = {
   outcome: number
 }
 
-const abiVersion = 23
-const expectedRequestSize = 372
+const abiVersion = 24
+const expectedRequestSize = 380
 const expectedResultSize = 16
-const expectedStateSize = 1684
+const expectedStateSize = 1692
 const expectedRequestStatusOffset = 87
 const expectedResultStatusOffset = 14
 
@@ -53,6 +53,7 @@ export const commands = {
   giftStorageCapacity: 10,
   observeVar: 11,
   setVar: 12,
+  setTrainerRating: 13,
 } as const
 export const fullPocketMasks = {
   items: 1 << 0,
@@ -214,6 +215,7 @@ export type CommandRequest = {
   applyLeagueCircuit?: boolean
   appearanceId?: number
   decoratedSecretBase?: boolean
+  trainerRating?: number
 }
 
 export type ArrangeRequest = Omit<CommandRequest, "command" | "useRngSeed" | "wildMon"> & {
@@ -447,6 +449,16 @@ export const encodeCommandRequest = (abi: SessionAbi, request: CommandRequest): 
   view.setUint8(368, request.applyLeagueCircuit ? 1 : 0)
   view.setUint8(369, request.appearanceId ?? 0)
   view.setUint8(370, request.decoratedSecretBase ? 1 : 0)
+  if (request.trainerRating !== undefined) {
+    if (
+      !Number.isInteger(request.trainerRating) ||
+      request.trainerRating < 0 ||
+      request.trainerRating > 0xffffffff
+    )
+      throw new Error("Trainer Rating must be an unsigned 32-bit integer")
+    view.setUint32(372, request.trainerRating, true)
+    view.setUint8(376, 1)
+  }
   return bytes
 }
 
@@ -714,6 +726,37 @@ export const encodeSetVarRequest = (
     leagueClears: [false, false, false],
   })
 
+export const encodeSetTrainerRatingRequest = (
+  abi: SessionAbi,
+  requestId: number,
+  rating: number,
+): Uint8Array =>
+  encodeCommandRequest(abi, {
+    requestId,
+    command: commands.setTrainerRating,
+    mapGroup: keepMap,
+    mapNum: keepMap,
+    x: keepCoordinate,
+    y: keepCoordinate,
+    rngSeed: 0,
+    useRngSeed: false,
+    vars: [],
+    flags: [],
+    checkpoint: 0,
+    facing: 0,
+    textSpeed: 0,
+    party: [],
+    bagItems: [],
+    pcSlots: [],
+    wildMon: emptyMon(),
+    currentBox: 0,
+    hmsOverwrite: false,
+    fullPocketMask: 0,
+    regionalBadgeCounts: [0, 0, 0],
+    leagueClears: [false, false, false],
+    trainerRating: rating,
+  })
+
 export const encodeGiftStorageCapacityRequest = (
   abi: SessionAbi,
   requestId: number,
@@ -903,11 +946,11 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     leagueClears: Array.from(bytes.slice(343, 346), (value) => value === 1),
     leagueStatuses: Array.from(bytes.slice(346, 349)),
     globalBadgeCount: bytes[349]!,
-    trainerRating: bytes[350]!,
+    trainerRating: uint32(bytes, 1684),
     trainerCardState: bytes[351]!,
     leagueRunActive: bytes[352] === 1,
     leagueRunStage: bytes[353]!,
-    leagueRunRating: bytes[354]!,
+    leagueRunRating: uint32(bytes, 1688),
     leagueRunReplay: bytes[441] !== 0,
     regionalChampionMask: bytes[442]!,
     starterChooseStage: bytes[373]!,

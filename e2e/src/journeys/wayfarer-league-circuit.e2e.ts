@@ -142,34 +142,13 @@ const finishGiovanniFinale = async (game: GameSession): Promise<void> => {
   await game.wait.forMap("viridian-gym")
   await startTrainerBattle(game, "Viridian Giovanni finale")
   await expect(game.state.read()).resolves.toMatchObject({
-    battle: { enemy: { species: "rhyhorn" } },
+    battle: { enemy: { species: "marowak" } },
   })
   await game.battle.win()
   await finishVictoryScript(game, "Viridian Giovanni finale")
   await expect(game.story.flag("badge16")).resolves.toBe(true)
   await expect(game.story.flag("viridianGiovanniDeparted")).resolves.toBe(true)
   await expect(game.inventory.count("tmEarthquake")).resolves.toBe(1)
-}
-
-const leagueBaseline = (rating: number): number => {
-  const anchors = [
-    [0, 15],
-    [4, 16],
-    [8, 18],
-    [16, 23],
-    [30, 30],
-    [40, 42],
-    [55, 60],
-    [65, 80],
-    [80, 100],
-  ] as const
-  for (let index = 1; index < anchors.length; index++) {
-    const [r1, l1] = anchors[index]!
-    const [r0, l0] = anchors[index - 1]!
-    if (rating <= r1)
-      return l0 + Math.floor(((rating - r0) * (l1 - l0) * 2 + r1 - r0) / (2 * (r1 - r0)))
-  }
-  return 100
 }
 
 const walkTo = async (game: GameSession, x: number, y: number): Promise<void> => {
@@ -222,9 +201,9 @@ const rooms = {
   hoenn: ["league-sidney", "league-phoebe", "league-glacia", "league-drake", "league-wallace"],
 } as const
 const leads: Record<CircuitStage, readonly Species[]> = {
-  indigo: ["dewgong", "onix", "gengar", "gyarados", "pidgeot"],
-  masters: ["gardevoir", "tentacruel", "steelix", "umbreon", "salamence"],
-  hoenn: ["mightyena", "dusclops", "sealeo", "shelgon", "wailord"],
+  indigo: ["jynx", "hitmonchan", "mismagius", "kingdra", "scizor"],
+  masters: ["bronzong", "venomoth", "primeape", "weavile", "kingdra"],
+  hoenn: ["crawdaunt", "shedinja", "weavile", "gyarados", "whiscash"],
 }
 
 const admitIndigo = async (game: GameSession, replay = false): Promise<number> => {
@@ -289,7 +268,12 @@ const finishRoomChain = async (
       await startTrainerBattle(game, `${stage} ${map}`)
     }
     await expect(game.state.read()).resolves.toMatchObject({
-      battle: { enemy: { species: leads[stage][index] } },
+      battle: {
+        enemy: {
+          species:
+            stage === "indigo" && index === 1 && rating >= 160 ? "primeape" : leads[stage][index],
+        },
+      },
       circuit: { run: { active: true, stage, replay, ratingAtEntry: rating } },
     })
     // Starting the Champion battle is not a committed Indigo victory.
@@ -417,7 +401,7 @@ describe.sequential("Wayfarer League Circuit", () => {
     await expect(game.story.flag("hideDojoBlue")).resolves.toBe(false)
     await startTrainerBattle(game, "Blue Dojo after Giovanni then Indigo")
     await expect(game.state.read()).resolves.toMatchObject({
-      battle: { enemy: { species: "rhyperior" } },
+      battle: { enemy: { species: "scizor" } },
     })
     await finishDojoWin(game)
   }, 600_000)
@@ -433,7 +417,7 @@ describe.sequential("Wayfarer League Circuit", () => {
       circuit: {
         badges: { kanto: 0, johto: 4, hoenn: 4, total: 8 },
         leagues: { indigo: "available", masters: "locked", hoenn: "locked" },
-        trainerRating: 40,
+        trainerRating: 80,
       },
     })
     await expect(circuitState(game, { johto: 8, hoenn: 8 })).resolves.toMatchObject({
@@ -447,7 +431,7 @@ describe.sequential("Wayfarer League Circuit", () => {
         badges: { total: 24 },
         clears: { indigo: false, masters: false, hoenn: false },
         leagues: { indigo: "available", masters: "locked", hoenn: "locked" },
-        trainerRating: 56,
+        trainerRating: 160,
       },
     })
 
@@ -456,7 +440,7 @@ describe.sequential("Wayfarer League Circuit", () => {
       circuit: {
         badges: { total: 24 },
         clears: { indigo: false, masters: false, hoenn: false },
-        trainerRating: 56,
+        trainerRating: 160,
       },
     })
 
@@ -508,7 +492,7 @@ describe.sequential("Wayfarer League Circuit", () => {
     ).resolves.toMatchObject({
       circuit: {
         leagues: { indigo: "cleared", masters: "available", hoenn: "locked" },
-        trainerRating: 64,
+        trainerRating: 160,
       },
     })
     await expect(
@@ -516,7 +500,7 @@ describe.sequential("Wayfarer League Circuit", () => {
     ).resolves.toMatchObject({
       circuit: {
         leagues: { indigo: "cleared", masters: "cleared", hoenn: "available" },
-        trainerRating: 72,
+        trainerRating: 160,
       },
     })
     await expect(
@@ -528,8 +512,29 @@ describe.sequential("Wayfarer League Circuit", () => {
     ).resolves.toMatchObject({
       circuit: {
         leagues: { indigo: "cleared", masters: "cleared", hoenn: "cleared" },
-        trainerRating: 80,
+        trainerRating: 160,
       },
+    })
+  })
+
+  it("persists a 32-bit player rating and freezes it at League admission", async () => {
+    const rating = 0x10001
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { facing: "up", position: { map: "indigo-league-lobby", x: 32, y: 4 } },
+      party: [{ species: "lapras", level: 100 }],
+      story: { vars: { trainerRating: rating } },
+      circuit: { badges: { kanto: 8 } },
+    })
+    expect(await game.story.var("trainerRating")).toBe(rating)
+    await expect(game.state.read()).resolves.toMatchObject({ circuit: { trainerRating: rating } })
+    await admitIndigo(game)
+    await expect(game.state.read()).resolves.toMatchObject({
+      circuit: { run: { active: true, ratingAtEntry: rating } },
+    })
+    await game.saveAndReload()
+    await expect(game.state.read()).resolves.toMatchObject({
+      circuit: { trainerRating: rating, run: { active: true, ratingAtEntry: rating } },
     })
   })
 
@@ -573,7 +578,7 @@ describe.sequential("Wayfarer League Circuit", () => {
       phase: "boot",
       circuit: {
         clears: { indigo: true, masters: true, hoenn: true },
-        trainerRating: 80,
+        trainerRating: 160,
         run: { active: false },
       },
     })
@@ -695,7 +700,7 @@ describe.sequential("Wayfarer League Circuit", () => {
         circuit: {
           clears: { indigo: true, masters: false, hoenn: false },
           regionalChampions: { kanto: true, johto: true, hoenn: false },
-          trainerRating: rating + 8,
+          trainerRating: rating,
           run: { active: false },
         },
       })
@@ -718,7 +723,7 @@ describe.sequential("Wayfarer League Circuit", () => {
         await expect(game.story.flag("hideDojoBlue")).resolves.toBe(false)
         await startTrainerBattle(game, "Blue Dojo battle after Indigo")
         await expect(game.state.read()).resolves.toMatchObject({
-          battle: { enemy: { species: "rhyperior" } },
+          battle: { enemy: { species: "scizor" } },
         })
         await finishDojoWin(game)
         await game.saveAndReload()
@@ -726,7 +731,7 @@ describe.sequential("Wayfarer League Circuit", () => {
         await expect(game.inventory.battlePoints()).resolves.toBe(10)
         await startTrainerBattle(game, "Blue Dojo repeat battle")
         await expect(game.state.read()).resolves.toMatchObject({
-          battle: { enemy: { species: "rhyperior" } },
+          battle: { enemy: { species: "scizor" } },
         })
         await finishDojoWin(game)
         await expect(game.inventory.battlePoints()).resolves.toBe(20)
@@ -771,13 +776,13 @@ describe.sequential("Wayfarer League Circuit", () => {
       circuit: {
         clears: { indigo: true, masters: true, hoenn: false },
         regionalChampions: { kanto: true, johto: true, hoenn: false },
-        trainerRating: rating + 8,
+        trainerRating: rating,
       },
     })
 
     await walkTo(game, 4, 5)
     const replayRating = await admitMasters(game, true)
-    expect(replayRating).toBe(rating + 8)
+    expect(replayRating).toBe(rating)
     await finishRoomChain(game, "masters", replayRating, true)
     await expect(game.state.read()).resolves.toMatchObject({
       circuit: { trainerRating: replayRating, clears: { masters: true }, run: { active: false } },
@@ -813,14 +818,14 @@ describe.sequential("Wayfarer League Circuit", () => {
       "league-drake",
       "league-wallace",
     ] as const
-    const leads = ["mightyena", "dusclops", "sealeo", "shelgon", "wailord"] as const
+    const leads = ["crawdaunt", "shedinja", "weavile", "gyarados", "whiscash"] as const
     const halls = [
       "hoenn-league-hall1",
       "hoenn-league-hall2",
       "hoenn-league-hall3",
       "hoenn-league-hall4",
     ] as const
-    const offsets = [-5, -4, -3, -2, 0]
+    const leadLevels = [64, 92, 54, 56, 98] as const
     for (const [index, room] of rooms.entries()) {
       if (index < 4) {
         await walkTo(game, 6, 6)
@@ -833,7 +838,7 @@ describe.sequential("Wayfarer League Circuit", () => {
         battle: {
           enemy: {
             species: leads[index],
-            level: Math.min(100, leagueBaseline(rating) + offsets[index]!),
+            level: leadLevels[index],
           },
         },
         circuit: {
@@ -953,7 +958,7 @@ describe.sequential("Wayfarer League Circuit", () => {
     await expect(game.state.read()).resolves.toMatchObject({
       map: { name: "indigo-league-lobby" },
       circuit: {
-        trainerRating: 56,
+        trainerRating: 160,
         clears: { indigo: false, masters: false, hoenn: false },
         run: { active: false },
       },

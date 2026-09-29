@@ -1439,7 +1439,14 @@ class WildEncounterScalingTests(unittest.TestCase):
         self.assertTrue(kanto["forbiddenSpecies"]["passed"])
         self.assertTrue(kanto["hoennSoundComparison"]["passed"])
         native_hm = audit["wayfarerNativeHmOverlays"]
-        self.assertEqual(len(native_hm), 23)
+        self.assertEqual(len(native_hm), 25)
+        self.assertEqual(
+            {(row["map"], row["slot"], row["old"]["species"], row["new"]["species"])
+             for row in native_hm if row["map"] in ("MAP_MOSSDEEP_CITY", "MAP_PACIFIDLOG_TOWN")
+             and row["slot"] == 2},
+            {("MAP_MOSSDEEP_CITY", 2, "SPECIES_MAGIKARP", "SPECIES_HORSEA"),
+             ("MAP_PACIFIDLOG_TOWN", 2, "SPECIES_MAGIKARP", "SPECIES_HORSEA")},
+        )
         self.assertFalse(any(row["map"] in GENERATOR.RETIRED_WAYFARER_COAST_POC_WILD_MAPS
                              for row in native_hm))
         cinnabar_native_hm = [

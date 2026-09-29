@@ -1,4 +1,5 @@
 #include "global.h"
+#include "config/notable_trainers.h"
 #include "event_data.h"
 #include "league_circuit.h"
 #include "league_run_helpers.h"
@@ -114,6 +115,15 @@ TEST("All 24 badges may precede every circuit clear and Rating rises eight per f
 {
     ResetCircuitFacts();
     SetTotalBadges(24);
+#if WAYFARER_V0_TRAINERS
+    EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 160);
+    EXPECT_EQ(Test_CompleteAndCommitCircuit(CIRCUIT_STAGE_INDIGO), CIRCUIT_COMMIT_FIRST_CLEAR);
+    EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 160);
+    EXPECT_EQ(Test_CompleteAndCommitCircuit(CIRCUIT_STAGE_MASTERS), CIRCUIT_COMMIT_FIRST_CLEAR);
+    EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 160);
+    EXPECT_EQ(Test_CompleteAndCommitCircuit(CIRCUIT_STAGE_HOENN), CIRCUIT_COMMIT_FIRST_CLEAR);
+    EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 160);
+#else
     EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 56);
     EXPECT_EQ(Test_CompleteAndCommitCircuit(CIRCUIT_STAGE_INDIGO), CIRCUIT_COMMIT_FIRST_CLEAR);
     EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 64);
@@ -121,27 +131,43 @@ TEST("All 24 badges may precede every circuit clear and Rating rises eight per f
     EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 72);
     EXPECT_EQ(Test_CompleteAndCommitCircuit(CIRCUIT_STAGE_HOENN), CIRCUIT_COMMIT_FIRST_CLEAR);
     EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 80);
+#endif
     EXPECT_EQ(ConsumeRecordedCircuitClearStage(), CIRCUIT_STAGE_HOENN);
     EXPECT_EQ(ConsumeRecordedCircuitClearStage(), CIRCUIT_STAGE_NONE);
 }
 
 TEST("Cleared venue replay captures fresh Rating and commits without another reward")
 {
-    u8 rating;
+    u32 rating;
     ResetCircuitFacts();
     SetTotalBadges(8);
     EXPECT_EQ(Test_CompleteAndCommitCircuit(CIRCUIT_STAGE_INDIGO), CIRCUIT_COMMIT_FIRST_CLEAR);
-    EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 48);
+    EXPECT_EQ(CalculateLeagueCircuitTrainerRating(),
+#if WAYFARER_V0_TRAINERS
+              80);
+#else
+              48);
+#endif
     SetTotalBadges(16);
     EXPECT(IsEligibleForCircuitStage(CIRCUIT_STAGE_INDIGO));
     EXPECT_EQ(GetRequiredCircuitStage(), CIRCUIT_STAGE_MASTERS);
     EXPECT(Test_AdmitCircuitRun(CIRCUIT_STAGE_INDIGO));
     EXPECT(IsActiveLeagueRunReplay());
     EXPECT(GetCircuitRunBattleRating(CIRCUIT_STAGE_INDIGO, 0, &rating));
-    EXPECT_EQ(rating, 56);
+    EXPECT_EQ(rating,
+#if WAYFARER_V0_TRAINERS
+              120);
+#else
+              56);
+#endif
     Test_CompleteCircuitRooms(CIRCUIT_STAGE_INDIGO);
     EXPECT_EQ(CommitCircuitRun(CIRCUIT_STAGE_INDIGO), CIRCUIT_COMMIT_REPLAY);
-    EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 56);
+    EXPECT_EQ(CalculateLeagueCircuitTrainerRating(),
+#if WAYFARER_V0_TRAINERS
+              120);
+#else
+              56);
+#endif
     EXPECT_EQ(GetRequiredCircuitStage(), CIRCUIT_STAGE_MASTERS);
     EXPECT_EQ(ConsumeRecordedCircuitClearStage(), CIRCUIT_STAGE_INDIGO);
     EXPECT_EQ(ConsumeRecordedCircuitClearStage(), CIRCUIT_STAGE_NONE);
@@ -152,7 +178,8 @@ TEST("Room victory validation uses stage, room and saved Rating snapshot")
     static const enum CircuitStage stages[] = {
         CIRCUIT_STAGE_INDIGO, CIRCUIT_STAGE_MASTERS, CIRCUIT_STAGE_HOENN,
     };
-    u8 i, rating, firstRating;
+    u8 i;
+    u32 rating, firstRating;
     ResetCircuitFacts();
     SetTotalBadges(24);
     for (i = 0; i < ARRAY_COUNT(stages); i++)
@@ -181,7 +208,8 @@ TEST("Room victory validation uses stage, room and saved Rating snapshot")
 
 TEST("Production save and load preserve stage, mode, Rating and room progress")
 {
-    u8 loadStatus, rating;
+    u8 loadStatus;
+    u32 rating;
     struct LeagueRunState saved;
     ResetCircuitFacts();
     CheckForFlashMemory();

@@ -9,6 +9,7 @@
 #include "constants/vars.h"
 #include "league_circuit.h"
 #include "trainer_rating.h"
+#include "config/notable_trainers.h"
 #include "wayfarer_persistence.h"
 
 #if IS_WAYFARER
@@ -113,7 +114,7 @@ bool8 SetWayfarerCircuitLobbyWarpForMap(s16 mapGroup, s16 mapNum, struct WarpDat
     return SetWayfarerMastersHouseWarpForMap(mapGroup, mapNum, warp);
 }
 
-static enum CircuitStage GetVenue(const struct WarpData *warp)
+static enum CircuitStage GetCircuitStageForLocation(const struct WarpData *warp)
 {
     if (FindRoom(warp, sIndigoRooms, ARRAY_COUNT(sIndigoRooms)) >= 0)
         return CIRCUIT_STAGE_INDIGO;
@@ -171,7 +172,10 @@ bool8 HasCommittedFirstIndigoVictory(void)
 enum CircuitStage GetActiveLeagueRunStage(void)
 {
     const struct LeagueRunState *run = &gSaveBlock3Ptr->wayfarerHoenn.leagueRun;
-    if (run->active != TRUE || run->ratingAtEntry > 80
+    if (run->active != TRUE
+#if !WAYFARER_V0_TRAINERS
+     || run->ratingAtEntry > TRAINER_RATING_MAX
+#endif
      || run->stage < CIRCUIT_STAGE_INDIGO || run->stage > CIRCUIT_STAGE_HOENN
      || run->replay > TRUE || run->replay != HasClearedCircuitStage(run->stage))
         return CIRCUIT_STAGE_NONE;
@@ -235,7 +239,7 @@ static bool8 ValidateLeagueLocation(const struct WarpData *location)
     enum CircuitStage stage = GetActiveLeagueRunStage();
     s8 room, defeated, hall;
     u16 state;
-    if (stage == CIRCUIT_STAGE_NONE || GetVenue(location) != stage)
+    if (stage == CIRCUIT_STAGE_NONE || GetCircuitStageForLocation(location) != stage)
         return FALSE;
     room = FindRoom(location, GetStageRooms(stage), 6);
     defeated = GetDefeatedCount(stage);
@@ -278,15 +282,15 @@ bool8 ValidateCircuitRoomBattle(enum CircuitStage stage, u8 encounterIndex)
         && WarpIsMap(&gSaveBlock1Ptr->location, GetStageRooms(stage)[encounterIndex]);
 }
 
-bool32 GetCircuitRunBattleRating(enum CircuitStage stage, u32 encounterIndex, u8 *rating)
+bool32 GetCircuitRunBattleRating(enum CircuitStage stage, u32 encounterIndex, u32 *rating)
 {
-    if (!ValidateCircuitRoomBattle(stage, encounterIndex))
+    if (rating == NULL || !ValidateCircuitRoomBattle(stage, encounterIndex))
         return FALSE;
     *rating = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.ratingAtEntry;
     return TRUE;
 }
 
-bool32 GetLeagueRunBattleRating(u32 region, u32 encounterIndex, u8 *rating)
+bool32 GetLeagueRunBattleRating(u32 region, u32 encounterIndex, u32 *rating)
 {
     enum CircuitStage stage = region == REGION_HOENN ? CIRCUIT_STAGE_HOENN
         : region == REGION_KANTO ? CIRCUIT_STAGE_INDIGO
@@ -339,14 +343,14 @@ bool8 CanCompleteCircuitRun(enum CircuitStage stage)
         && WarpIsMap(&gSaveBlock1Ptr->location, GetStageRooms(stage)[5]);
 }
 
-static void ReturnToLobby(struct WarpData *location, enum CircuitStage venue)
+static void ReturnToLobby(struct WarpData *location, enum CircuitStage stage)
 {
     const struct MapHeader *header;
-    u16 map = venue == CIRCUIT_STAGE_HOENN ? MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F
-        : venue == CIRCUIT_STAGE_MASTERS ? MAP_SEVEN_ISLAND_HOUSE_ROOM1
+    u16 map = stage == CIRCUIT_STAGE_HOENN ? MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F
+        : stage == CIRCUIT_STAGE_MASTERS ? MAP_SEVEN_ISLAND_HOUSE_ROOM1
         : MAP_INDIGO_PLATEAU_POKEMON_CENTER_HNS;
     EndLeagueRun();
-    ResetLeagueProgress(venue);
+    ResetLeagueProgress(stage);
     location->mapGroup = MAP_GROUP(map);
     location->mapNum = MAP_NUM(map);
     location->warpId = 0;
@@ -358,14 +362,14 @@ static void ReturnToLobby(struct WarpData *location, enum CircuitStage venue)
 void LeagueRunHandleWarp(const struct WarpData *source, struct WarpData *destination)
 {
 #if WAYFARER_LEAGUE_CIRCUIT_ENABLED
-    enum CircuitStage venue = GetVenue(destination);
+    enum CircuitStage stage = GetCircuitStageForLocation(destination);
     bool8 admission = (WarpIsMap(source, MAP_INDIGO_PLATEAU_POKEMON_CENTER_HNS)
                        && WarpIsMap(destination, sIndigoRooms[0]))
                    || (WarpIsMap(source, MAP_SEVEN_ISLAND_HOUSE_ROOM2)
                        && WarpIsMap(destination, sMastersRooms[0]))
                    || (WarpIsMap(source, MAP_EVER_GRANDE_CITY_HALL5)
                        && WarpIsMap(destination, sHoennRooms[0]));
-    if (venue == CIRCUIT_STAGE_NONE)
+    if (stage == CIRCUIT_STAGE_NONE)
     {
         // Masters admission is accepted in Room 1; Room 2 is its antechamber.
         if (WarpIsMap(destination, MAP_SEVEN_ISLAND_HOUSE_ROOM2)
@@ -382,27 +386,27 @@ void LeagueRunHandleWarp(const struct WarpData *source, struct WarpData *destina
     }
     if (admission)
     {
-        if (venue == CIRCUIT_STAGE_MASTERS)
+        if (stage == CIRCUIT_STAGE_MASTERS)
         {
-            if (GetActiveLeagueRunStage() == venue)
+            if (GetActiveLeagueRunStage() == stage)
                 return;
-            ReturnToLobby(destination, venue);
+            ReturnToLobby(destination, stage);
             return;
         }
         EndLeagueRun();
-        if (IsEligibleForCircuitStage(venue))
+        if (IsEligibleForCircuitStage(stage))
         {
             struct LeagueRunState *run = &gSaveBlock3Ptr->wayfarerHoenn.leagueRun;
-            ResetLeagueProgress(venue);
-            run->stage = venue;
-            run->replay = HasClearedCircuitStage(venue);
+            ResetLeagueProgress(stage);
+            run->stage = stage;
+            run->replay = HasClearedCircuitStage(stage);
             run->ratingAtEntry = GetTrainerRating();
             run->active = TRUE;
             return;
         }
     }
     if (!ValidateLeagueLocation(destination))
-        ReturnToLobby(destination, venue);
+        ReturnToLobby(destination, stage);
 #endif
 }
 
@@ -413,11 +417,11 @@ bool8 ConsumeLeagueRunLoadRecovery(void)
     return pending;
 }
 
-static bool8 IsCompletedLeagueReturn(enum CircuitStage venue)
+static bool8 IsCompletedLeagueReturn(enum CircuitStage stage)
 {
     const struct HealLocation *heal;
     const struct WarpData *warp = &gSaveBlock1Ptr->continueGameWarp;
-    if (venue != CIRCUIT_STAGE_HOENN)
+    if (stage != CIRCUIT_STAGE_HOENN)
         return FALSE;
     heal = GetHealLocation(HEAL_LOCATION_EVER_GRANDE_CITY_POKEMON_LEAGUE);
     return gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active == FALSE
@@ -430,19 +434,19 @@ static bool8 IsCompletedLeagueReturn(enum CircuitStage venue)
 void LeagueRunValidateSavedLocation(void)
 {
 #if WAYFARER_LEAGUE_CIRCUIT_ENABLED
-    enum CircuitStage venue = GetVenue(&gSaveBlock1Ptr->location);
+    enum CircuitStage stage = GetCircuitStageForLocation(&gSaveBlock1Ptr->location);
     sLeagueRunLoadRecoveryPending = FALSE;
     if (WarpIsMap(&gSaveBlock1Ptr->location, MAP_SEVEN_ISLAND_HOUSE_ROOM2)
      && GetActiveLeagueRunStage() == CIRCUIT_STAGE_MASTERS)
         return;
-    if (venue == CIRCUIT_STAGE_NONE)
+    if (stage == CIRCUIT_STAGE_NONE)
     {
         if (gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active)
             EndLeagueRun();
     }
-    else if (!ValidateActiveLeagueRun() && !IsCompletedLeagueReturn(venue))
+    else if (!ValidateActiveLeagueRun() && !IsCompletedLeagueReturn(stage))
     {
-        ReturnToLobby(&gSaveBlock1Ptr->location, venue);
+        ReturnToLobby(&gSaveBlock1Ptr->location, stage);
         sLeagueRunLoadRecoveryPending = TRUE;
         gSaveBlock1Ptr->pos.x = gSaveBlock1Ptr->location.x;
         gSaveBlock1Ptr->pos.y = gSaveBlock1Ptr->location.y;
@@ -548,7 +552,7 @@ enum CircuitCommitResult CommitCircuitRun(enum CircuitStage stage)
     return firstClear ? CIRCUIT_COMMIT_FIRST_CLEAR : CIRCUIT_COMMIT_REPLAY;
 }
 
-void RollbackIndigoHallOfFameCommit(u8 ratingAtEntry, u8 storedRatingBefore)
+void RollbackIndigoHallOfFameCommit(u32 ratingAtEntry, u32 storedRatingBefore)
 {
     struct LeagueRunState *run = &gSaveBlock3Ptr->wayfarerHoenn.leagueRun;
 
@@ -615,9 +619,12 @@ enum Region ConsumeRecordedLeagueClearRegion(void)
         : stage == CIRCUIT_STAGE_HOENN ? REGION_HOENN : REGION_NONE;
 }
 
-u8 CalculateLeagueCircuitTrainerRating(void)
+u32 CalculateLeagueCircuitTrainerRating(void)
 {
     u8 badges = GetGlobalBadgeCount();
+#if WAYFARER_V0_TRAINERS
+    return badges <= 8 ? 10 * badges : 80 + 5 * (badges - 8);
+#else
     u8 rating;
     if (badges <= 4)
         rating = 4 * badges;
@@ -632,6 +639,7 @@ u8 CalculateLeagueCircuitTrainerRating(void)
     if (HasClearedCircuitStage(CIRCUIT_STAGE_HOENN))
         rating += 8;
     return ClampTrainerRating(rating);
+#endif
 }
 
 #if TESTING || defined(E2E_TESTING)

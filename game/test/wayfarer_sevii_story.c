@@ -143,7 +143,7 @@ TEST("Wayfarer Sevii Egg receipt remains a party-only capacity transaction")
     EXPECT(GetMonData(&gPlayerParty[0], MON_DATA_IS_EGG));
 }
 
-TEST("Wayfarer Sevii Moltres uses TR 55 and only resolves after a win or catch")
+TEST("Wayfarer Sevii Moltres uses its scaled TR threshold and only resolves after a win or catch")
 {
     WayfarerSeviiInitPersistentState();
     SetTrainerRating(WAYFARER_BIRD_CAPTURE_TR - 1);

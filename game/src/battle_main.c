@@ -29,6 +29,7 @@
 #include "evolution_scene.h"
 #include "frontier_util.h"
 #include "field_weather.h"
+#include "field_screen_effect.h"
 #include "follower_npc.h"
 #include "graphics.h"
 #include "gpu_regs.h"
@@ -49,6 +50,7 @@
 #include "random.h"
 #include "randomizer.h"
 #include "nuzlocke.h"
+#include "overworld.h"
 #include "recorded_battle.h"
 #include "roamer.h"
 #include "safari_zone.h"
@@ -64,6 +66,9 @@
 #include "text.h"
 #include "trainer_pools.h"
 #include "trainer_party_scaling.h"
+#include "notable_trainers.h"
+#include "notable_ai.h"
+#include "config/notable_trainers.h"
 #include "league_circuit.h"
 #include "trig.h"
 #include "tv.h"
@@ -91,6 +96,19 @@ extern const struct BgTemplate gBattleBgTemplates[];
 extern const struct WindowTemplate *const gBattleWindowTemplates[];
 
 static void CB2_InitBattleInternal(void);
+static void FreeRestoreBattleData(void);
+struct NotableChallengeSnapshot
+{
+    bool8 applyIVs;
+    bool8 applyEVs;
+    u8 iv;
+    u8 ev;
+};
+#if IS_WAYFARER && WAYFARER_V0_TRAINERS
+static bool32 IsNotableBattleContext(u32 flags);
+static void AbortUnpreparedNotableBattle(void);
+static EWRAM_DATA struct NotableChallengeSnapshot sNotableChallengeSnapshot;
+#endif
 static void CB2_PreInitMultiBattle(void);
 static void CB2_PreInitIngamePlayerPartnerBattle(void);
 static void CB2_HandleStartMultiPartnerBattle(void);
@@ -662,7 +680,17 @@ static void CB2_InitBattleInternal(void)
     {
         if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED)))
         {
+#if IS_WAYFARER && WAYFARER_V0_TRAINERS
+            u8 opponentCount = CreateNPCTrainerParty(&gEnemyParty[0], TRAINER_BATTLE_PARAM.opponentA, TRUE);
+            if (opponentCount == 0 && !gIsDebugBattle && IsNotableBattleContext(gBattleTypeFlags)
+             && GetNotableTrainerForEncounter(TRAINER_BATTLE_PARAM.opponentA) != NULL)
+            {
+                AbortUnpreparedNotableBattle();
+                return;
+            }
+#else
             CreateNPCTrainerParty(&gEnemyParty[0], TRAINER_BATTLE_PARAM.opponentA, TRUE);
+#endif
             if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && !BATTLE_TWO_VS_ONE_OPPONENT)
                 CreateNPCTrainerParty(&gEnemyParty[PARTY_SIZE / 2], TRAINER_BATTLE_PARAM.opponentB, FALSE);
             SetWildMonHeldItem();
@@ -1897,6 +1925,28 @@ static void FreeRestoreBattleData(void)
     ResetDynamicAiFunctions();
 }
 
+#if IS_WAYFARER && WAYFARER_V0_TRAINERS
+static void AbortUnpreparedNotableBattle(void)
+{
+    MainCallback callback1 = gMain.callback1;
+
+    // No battle was fought. Discard the suspended trainer script: Gym scripts
+    // may award a badge immediately after the battle command returns.
+    SetHBlankCallback(NULL);
+    SetVBlankCallback(NULL);
+    gBattleOutcome = 0;
+    gSpecialVar_Result = FALSE;
+    FreeRestoreBattleData();
+    // Normal startup captures this callback later; preserve the live field
+    // callback when cleanup runs this early.
+    gMain.callback1 = callback1;
+    FreeAllWindowBuffers();
+    ScriptContext_Init();
+    gFieldCallback = FieldCB_ReturnToFieldNoScriptCheckMusic;
+    SetMainCallback2(CB2_ReturnToField);
+}
+#endif
+
 void CB2_QuitRecordedBattle(void)
 {
     UpdatePaletteFade();
@@ -2006,7 +2056,7 @@ void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon 
     }
 }
 
-static u8 CreateNPCTrainerPartyInternal(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags, u32 scalingPolicy, u32 rating, u32 rosterOwner, bool32 reconstructGimmickSlots, const struct GymLeaderScalingRoster *leaderRoster, const struct GymLeaderScalingPlan *leaderPlan, const struct LeagueScalingRoster *leagueRoster)
+static u8 CreateNPCTrainerPartyInternal(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags, u32 scalingPolicy, u32 rating, u32 rosterOwner, bool32 reconstructGimmickSlots, const struct GymLeaderScalingRoster *leaderRoster, const struct GymLeaderScalingPlan *leaderPlan, const struct LeagueScalingRoster *leagueRoster, const struct NotableTrainerSnapshot *notable, const struct NotableChallengeSnapshot *notableChallenges)
 {
     u32 personalityValue;
     s32 i;
@@ -2031,7 +2081,13 @@ static u8 CreateNPCTrainerPartyInternal(struct Pokemon *party, const struct Trai
             monsCount = trainer->partySize;
         }
 
-        if (leagueRoster != NULL)
+        if (notable != NULL)
+        {
+            monsCount = notable->teamSize;
+            for (i = 0; i < monsCount; i++)
+                monIndices[i] = notable->battleOrder[i];
+        }
+        else if (leagueRoster != NULL)
         {
             for (i = 0; i < monsCount; i++)
                 monIndices[i] = i;
@@ -2053,20 +2109,22 @@ static u8 CreateNPCTrainerPartyInternal(struct Pokemon *party, const struct Trai
             s32 ball = -1;
             // Pool positions are normal constructor inputs.  A Gym Leader's
             // source index stays its stable identity after battle reordering.
-            u32 personalityHash = GeneratePartyHash(trainer, leaderPlan != NULL ? monIndex : i);
+            u32 personalityHash = notable != NULL
+                                ? Crc32B((const u8 *)&notable->trainer->roster[monIndex], sizeof(struct TrainerMon))
+                                : GeneratePartyHash(trainer, leaderPlan != NULL ? monIndex : i);
             const struct TrainerMon *partyData = trainer->party;
             struct OriginalTrainerId otId = OTID_STRUCT_RANDOM_NO_SHINY;
             u32 abilityNum = 0;
             u16 species = partyData[monIndex].species;
             u8 level = leaderPlan != NULL ? leaderPlan->levels[i] : partyData[monIndex].lvl;
-            bool32 scale = scalingPolicy != TRAINER_SCALING_EXCLUDED && leagueRoster == NULL;
+            bool32 scale = notable != NULL || (scalingPolicy != TRAINER_SCALING_EXCLUDED && leagueRoster == NULL);
             bool32 isGymLeader = leaderPlan != NULL;
             bool32 randomizedSpecies = FALSE;
             u32 gimmickSlot = i + ((!firstTrainer && (battleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)) ? PARTY_SIZE / 2 : 0);
 
             if (leagueRoster != NULL)
                 level = GetLeagueScalingLevel(rating, leagueRoster->encounterOffset, leagueRoster->offsets[monIndex]);
-            if (scale)
+            if (scale && notable == NULL)
             {
                 if (!isGymLeader)
                     level = GetTrainerScalingLevel(rating, level, scalingPolicy);
@@ -2118,7 +2176,9 @@ static u8 CreateNPCTrainerPartyInternal(struct Pokemon *party, const struct Trai
             CreateMon(&party[i], species, level, personalityValue, otId);
             SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[monIndex].heldItem);
 
-            if (isGymLeader)
+            if (notable != NULL)
+                CustomTrainerPartyAssignMoves(&party[i], &partyData[monIndex]);
+            else if (isGymLeader)
             {
                 if (leaderRoster->slots[monIndex].movePolicy == GYM_LEADER_MOVE_LEVEL_UP)
                     GiveMonInitialMoveset(&party[i]);
@@ -2184,13 +2244,13 @@ static u8 CreateNPCTrainerPartyInternal(struct Pokemon *party, const struct Trai
             {
                 u32 data = partyData[monIndex].dynamaxLevel;
                 if (partyData[monIndex].shouldUseDynamax
-                 && (!scale || isGymLeader || (GET_BASE_SPECIES_ID(species) != SPECIES_ZACIAN
+                 && (!scale || isGymLeader || notable != NULL || (GET_BASE_SPECIES_ID(species) != SPECIES_ZACIAN
                              && GET_BASE_SPECIES_ID(species) != SPECIES_ZAMAZENTA
                              && GET_BASE_SPECIES_ID(species) != SPECIES_ETERNATUS)))
                     gBattleStruct->opponentMonCanDynamax |= 1 << gimmickSlot;
                 SetMonData(&party[i], MON_DATA_DYNAMAX_LEVEL, &data);
             }
-            if (partyData[monIndex].gigantamaxFactor && (!scale || isGymLeader || DoesSpeciesHaveFormChangeMethod(species, FORM_CHANGE_BATTLE_GIGANTAMAX)))
+            if (partyData[monIndex].gigantamaxFactor && (!scale || isGymLeader || notable != NULL || DoesSpeciesHaveFormChangeMethod(species, FORM_CHANGE_BATTLE_GIGANTAMAX)))
             {
                 u32 data = partyData[monIndex].gigantamaxFactor;
                 SetMonData(&party[i], MON_DATA_GIGANTAMAX_FACTOR, &data);
@@ -2210,9 +2270,16 @@ static u8 CreateNPCTrainerPartyInternal(struct Pokemon *party, const struct Trai
             }
         }
 
-        if (gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingIVs)
+        bool32 applyIVs = gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingIVs != 0;
+        bool32 applyEVs = gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingEVs != 0;
+        if (notableChallenges != NULL)
         {
-            u8 iv = GetCurrentTrainerIVs();
+            applyIVs = notableChallenges->applyIVs;
+            applyEVs = notableChallenges->applyEVs;
+        }
+        if (applyIVs)
+        {
+            u8 iv = notableChallenges != NULL ? notableChallenges->iv : GetCurrentTrainerIVs();
             for (i = 0; i < monsCount; i++)
             {
                 for (u32 j = 0; j < NUM_STATS; j++)
@@ -2221,9 +2288,9 @@ static u8 CreateNPCTrainerPartyInternal(struct Pokemon *party, const struct Trai
             }
         }
 
-        if (gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingEVs)
+        if (applyEVs)
         {
-            u8 ev = GetCurrentTrainerEVs();
+            u8 ev = notableChallenges != NULL ? notableChallenges->ev : GetCurrentTrainerEVs();
             for (i = 0; i < monsCount; i++)
             {
                 SetMonData(&party[i], MON_DATA_HP_EV, &ev);
@@ -2241,12 +2308,93 @@ static u8 CreateNPCTrainerPartyInternal(struct Pokemon *party, const struct Trai
         }
     }
 
-    return leaderPlan != NULL ? monsCount : trainer->partySize;
+    return leaderPlan != NULL || notable != NULL ? monsCount : trainer->partySize;
 }
 
 u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags)
 {
-    return CreateNPCTrainerPartyInternal(party, trainer, firstTrainer, battleTypeFlags, TRAINER_SCALING_EXCLUDED, 0, TRAINERS_COUNT, FALSE, NULL, NULL, NULL);
+    return CreateNPCTrainerPartyInternal(party, trainer, firstTrainer, battleTypeFlags, TRAINER_SCALING_EXCLUDED, 0, TRAINERS_COUNT, FALSE, NULL, NULL, NULL, NULL, NULL);
+}
+
+#if IS_WAYFARER && WAYFARER_V0_TRAINERS
+static EWRAM_DATA struct NotableTrainerSnapshot sNotableBattleSnapshot;
+static EWRAM_DATA u16 sNotableBattleEncounter;
+static EWRAM_DATA bool8 sHasNotableBattleSnapshot;
+static EWRAM_DATA bool8 sNotableBattleRandomizedSpecies;
+
+static bool32 IsNotableBattleContext(u32 flags)
+{
+    // FIRST_BATTLE also marks Blue's Pallet tutorial.  The ordinary scaling
+    // context excludes it, but this known trainer encounter is enrolled.
+    return (flags & BATTLE_TYPE_TRAINER)
+        && !(flags & (BATTLE_TYPE_LINK | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_EREADER_TRAINER
+                    | BATTLE_TYPE_TRAINER_HILL | BATTLE_TYPE_SECRET_BASE | BATTLE_TYPE_RECORDED
+                    | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_POKEDUDE
+                    | BATTLE_TYPE_SAFARI | BATTLE_TYPE_RAID | BATTLE_TYPE_INGAME_PARTNER
+                    | BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS));
+}
+
+static bool32 PrepareNotableBattleSnapshot(u16 trainerNum, u16 ownerId, u32 battleTypeFlags, bool32 *randomizedSpecies)
+{
+    const struct NotableTrainer *definition = GetNotableTrainerForEncounter(trainerNum);
+    u32 worldProgress;
+
+    if (definition == NULL || (definition->isDoubleBattle && !(battleTypeFlags & BATTLE_TYPE_DOUBLE)))
+        return FALSE;
+    if (sHasNotableBattleSnapshot)
+    {
+        *randomizedSpecies = sNotableBattleRandomizedSpecies;
+        return sNotableBattleEncounter == trainerNum;
+    }
+
+    if (GetTrainerScalingPolicy(trainerNum) == TRAINER_SCALING_LEAGUE)
+    {
+        const struct LeagueScalingRoster *league = GetLeagueScalingRoster(trainerNum, ownerId);
+        if (league == NULL || !GetCircuitRunBattleRating(league->stage, league->encounterIndex, &worldProgress))
+            return FALSE;
+    }
+    else
+    {
+        worldProgress = GetTrainerScalingSnapshot();
+    }
+
+    if (!ResolveNotableTrainerSnapshot(definition, worldProgress, *randomizedSpecies, &sNotableBattleSnapshot))
+        return FALSE;
+    sNotableBattleSnapshot.aiFlags = ResolveNotableTrainerAi(&sNotableBattleSnapshot, *randomizedSpecies,
+                                                             (battleTypeFlags & BATTLE_TYPE_DOUBLE) != 0);
+    if (sNotableBattleSnapshot.aiFlags == 0)
+        return FALSE;
+    sNotableChallengeSnapshot.applyIVs = gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingIVs != 0;
+    sNotableChallengeSnapshot.applyEVs = gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingEVs != 0;
+    sNotableChallengeSnapshot.iv = GetCurrentTrainerIVs();
+    sNotableChallengeSnapshot.ev = GetCurrentTrainerEVs();
+    sNotableBattleEncounter = trainerNum;
+    sNotableBattleRandomizedSpecies = *randomizedSpecies;
+    sHasNotableBattleSnapshot = TRUE;
+    return TRUE;
+}
+#endif
+
+void ResetNotableBattleSnapshot(void)
+{
+#if IS_WAYFARER && WAYFARER_V0_TRAINERS
+    sHasNotableBattleSnapshot = FALSE;
+    sNotableBattleEncounter = TRAINERS_COUNT;
+    sNotableBattleRandomizedSpecies = FALSE;
+#endif
+}
+
+bool32 GetNotableBattleAiFlags(u16 trainerId, u64 *flags)
+{
+#if IS_WAYFARER && WAYFARER_V0_TRAINERS
+    if (flags != NULL && sHasNotableBattleSnapshot && sNotableBattleEncounter == trainerId
+     && !gIsDebugBattle && IsNotableBattleContext(gBattleTypeFlags))
+    {
+        *flags = sNotableBattleSnapshot.aiFlags;
+        return TRUE;
+    }
+#endif
+    return FALSE;
 }
 
 u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool32 firstTrainer, u32 battleTypeFlags)
@@ -2283,6 +2431,37 @@ u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool3
     resolved.poolSize = owner->poolSize;
     if (resolved.party == NULL || resolved.partySize == 0)
         return 0;
+#if IS_WAYFARER && WAYFARER_V0_TRAINERS
+    if (gIsDebugBattle || !IsNotableBattleContext(battleTypeFlags))
+        ResetNotableBattleSnapshot();
+    if (!gIsDebugBattle && IsNotableBattleContext(battleTypeFlags)
+     && GetNotableTrainerForEncounter(trainerNum) != NULL)
+    {
+        bool32 randomizedSpecies = FALSE;
+        u16 gimmickMask = (1 << PARTY_SIZE) - 1;
+#if RANDOMIZER_AVAILABLE
+        randomizedSpecies = RandomizerFeatureEnabled(RANDOMIZE_TRAINER_MON);
+#endif
+        // Resolve the whole team before clearing any previously built party.
+        if (!PrepareNotableBattleSnapshot(trainerNum, ownerId, battleTypeFlags, &randomizedSpecies))
+            return 0;
+        gBattleStruct->opponentMonCanDynamax &= ~gimmickMask;
+        gBattleStruct->opponentMonCanTera &= ~gimmickMask;
+        if (!randomizedSpecies)
+        {
+            resolved.party = sNotableBattleSnapshot.members;
+            resolved.partySize = PARTY_SIZE;
+            resolved.poolSize = 0;
+            return CreateNPCTrainerPartyInternal(party, &resolved, firstTrainer, battleTypeFlags,
+                                                 TRAINER_SCALING_EXCLUDED, 0, ownerId, TRUE,
+                                                 NULL, NULL, NULL, &sNotableBattleSnapshot, &sNotableChallengeSnapshot);
+        }
+        // Trainer-species randomization keeps the source party and its order.
+        return CreateNPCTrainerPartyInternal(party, &resolved, firstTrainer, battleTypeFlags,
+                                             TRAINER_SCALING_EXCLUDED, 0, ownerId, TRUE,
+                                             NULL, NULL, NULL, NULL, &sNotableChallengeSnapshot);
+    }
+#endif
 #if IS_WAYFARER
     if (!gIsDebugBattle && IsTrainerScalingBattleContext(battleTypeFlags))
     {
@@ -2324,7 +2503,7 @@ u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool3
             policy = TRAINER_SCALING_EXCLUDED;
 #if B_LEAGUE_SCALING
             bool32 randomizedTrainerSpecies = FALSE;
-            u8 entryRating;
+            u32 entryRating;
 #if RANDOMIZER_AVAILABLE
             randomizedTrainerSpecies = RandomizerFeatureEnabled(RANDOMIZE_TRAINER_MON);
 #endif
@@ -2409,7 +2588,7 @@ u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool3
         gBattleStruct->opponentMonCanDynamax &= ~mask;
         gBattleStruct->opponentMonCanTera &= ~mask;
     }
-    return CreateNPCTrainerPartyInternal(party, &resolved, firstTrainer, battleTypeFlags, policy, rating, ownerId, reconstructGimmickSlots, leaderRoster, leaderRoster != NULL ? &leaderPlan : NULL, leagueRoster);
+    return CreateNPCTrainerPartyInternal(party, &resolved, firstTrainer, battleTypeFlags, policy, rating, ownerId, reconstructGimmickSlots, leaderRoster, leaderRoster != NULL ? &leaderPlan : NULL, leagueRoster, NULL, NULL);
 }
 
 static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 firstTrainer)

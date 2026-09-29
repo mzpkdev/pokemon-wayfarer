@@ -30,7 +30,7 @@
 
 #if IS_WAYFARER
 
-TEST("Wayfarer Power Plant Zapdos requires TR 55 and unresolved dedicated state")
+TEST("Wayfarer Power Plant Zapdos requires its scaled TR threshold and unresolved dedicated state")
 {
     FlagClear(FLAG_WAYFARER_POWER_PLANT_ZAPDOS_RESOLVED);
     EXPECT_NE(FLAG_WAYFARER_POWER_PLANT_ZAPDOS_RESOLVED, FLAG_HIDE_ZAPDOS);

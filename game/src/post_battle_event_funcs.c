@@ -7,6 +7,7 @@
 #include "load_save.h"
 #include "malloc.h"
 #include "league_circuit.h"
+#include "trainer_rating.h"
 #include "overworld.h"
 #include "regions.h"
 #include "script_pokemon_util.h"
@@ -24,8 +25,8 @@ static bool8 sUseNonCircuitGameClear;
 static bool8 sIndigoHallOfFameCommitPending;
 static bool8 sIndigoHallOfFameSaveTransaction;
 static bool8 sIndigoHallOfFameSaveCountIncremented;
-static u8 sIndigoHallOfFameRatingAtEntry;
-static u8 sIndigoHallOfFameStoredRatingBefore;
+static u32 sIndigoHallOfFameRatingAtEntry;
+static u32 sIndigoHallOfFameStoredRatingBefore;
 // The rollback snapshot is too large for IWRAM, where it would shrink the
 // shared stack, so it lives on the heap only while a transaction is open.
 static struct IndigoHallOfFameSnapshot
@@ -84,7 +85,7 @@ u16 LeagueCircuit_CommitAndRegisterIndigo(void)
     sIndigoHallOfFameSaveTransaction = TRUE;
     sIndigoHallOfFameSaveCountIncremented = FALSE;
     sIndigoHallOfFameRatingAtEntry = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.ratingAtEntry;
-    sIndigoHallOfFameStoredRatingBefore = VarGet(VAR_TRAINER_RATING);
+    sIndigoHallOfFameStoredRatingBefore = GetTrainerRating();
     SetMainCallback2(CB2_DoHallOfFameScreenFrlg);
     return TRUE;
 #else

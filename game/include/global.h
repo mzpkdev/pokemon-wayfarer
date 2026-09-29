@@ -346,11 +346,12 @@ struct LeagueRunState
     u8 active;
     u8 stage;
     u8 replay;
-    u8 ratingAtEntry;
+    u32 ratingAtEntry;
 };
 
 struct WayfarerHoennPersistentState
 {
+    u32 trainerRatingHighWater;
     u16 startingOriginId;
     u8 playerAppearanceId;
     u8 fallbackHealLocation;

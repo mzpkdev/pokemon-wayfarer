@@ -443,7 +443,7 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
   it("walks continuously from the worker entrance through the hall to Zapdos", async () => {
     await arrangeAt(game, { map: lobby, x: 3, y: 13 }, "up", {
       flags: { powerPlantZapdosHidden: false, powerPlantZapdosResolved: false },
-      vars: { trainerRating: 54 },
+      vars: { trainerRating: 119 },
     })
     await chooseWorkerOffer(game, true)
     await game.wait.forMap(hall)
@@ -710,24 +710,24 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
     expect((await game.state.read()).battle.active).toBe(false)
   })
 
-  it("refuses TR 54 and starts a fixed level-50 Zapdos battle at TR 55", async () => {
+  it("refuses TR 119 and starts a fixed level-50 Zapdos battle at TR 120", async () => {
     await arrangeAt(game, { map: hall, x: 5, y: 10 }, "down", {
       flags: { powerPlantZapdosHidden: false, powerPlantZapdosResolved: false },
-      vars: { trainerRating: 54 },
+      vars: { trainerRating: 119 },
     })
     expect(await game.story.flag("powerPlantZapdosHidden")).toBe(false)
-    await interactWithZapdos(game, "Zapdos TR 54")
+    await interactWithZapdos(game, "Zapdos TR 119")
     await advanceUntil(
       game,
       (state) => state.dialogue.text.toLowerCase().includes("watches you warily"),
-      "Zapdos TR 54 refusal",
+      "Zapdos TR 119 refusal",
     )
     expect((await game.state.read()).battle.active).toBe(false)
     expect(await game.story.flag("powerPlantZapdosResolved")).toBe(false)
-    await settleField(game, "Zapdos TR 54 refusal")
+    await settleField(game, "Zapdos TR 119 refusal")
 
-    await game.story.setVar("trainerRating", 55)
-    await startZapdos(game, "Zapdos TR 55")
+    await game.story.setVar("trainerRating", 120)
+    await startZapdos(game, "Zapdos TR 120")
     await game.battle.lose()
     await advanceUntil(
       game,
@@ -744,7 +744,7 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
   it("permanently resolves a Zapdos knockout across save, reentry, and champion state", async () => {
     await arrangeAt(game, { map: hall, x: 5, y: 10 }, "down", {
       flags: { powerPlantZapdosHidden: false, powerPlantZapdosResolved: false },
-      vars: { trainerRating: 55 },
+      vars: { trainerRating: 120 },
     })
     await startZapdos(game, "Zapdos knockout")
     await game.battle.win()
@@ -762,7 +762,7 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
   it("permanently resolves a Zapdos capture across save and reentry", async () => {
     await arrangeAt(game, { map: hall, x: 5, y: 10 }, "down", {
       flags: { powerPlantZapdosHidden: false, powerPlantZapdosResolved: false },
-      vars: { trainerRating: 55 },
+      vars: { trainerRating: 120 },
       items: { masterBall: 1 },
       party: Array.from({ length: 6 }, () => ({ species: "pidgey" as const, level: 50 })),
     })
@@ -780,7 +780,7 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
   it("returns Zapdos after Run and player Teleport map reentry", async () => {
     await arrangeAt(game, { map: hall, x: 5, y: 10 }, "down", {
       flags: { powerPlantZapdosHidden: false, powerPlantZapdosResolved: false },
-      vars: { trainerRating: 55 },
+      vars: { trainerRating: 120 },
       party: [{ species: "pidgey", level: 100, moves: ["teleport", "tackle"] }],
     })
     await startZapdos(game, "Zapdos Run")
@@ -805,7 +805,7 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
   it("keeps Zapdos retryable after a real blackout and has no exterior duplicate", async () => {
     await arrangeAt(game, { map: hall, x: 5, y: 10 }, "down", {
       flags: { powerPlantZapdosHidden: false, powerPlantZapdosResolved: false },
-      vars: { trainerRating: 55 },
+      vars: { trainerRating: 120 },
       party: [{ species: "pidgey", level: 1, moves: ["tackle"] }],
     })
     await startZapdos(game, "Zapdos blackout")
@@ -821,7 +821,7 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
     await settleField(game, "Zapdos blackout retry victory")
 
     await arrangeAt(game, { map: "route-10", x: 5, y: 49 }, "up", {
-      vars: { trainerRating: 55 },
+      vars: { trainerRating: 120 },
     })
     await game.player.interact()
     await game.wait.frames(90)

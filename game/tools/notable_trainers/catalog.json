@@ -1,0 +1,4078 @@
+{
+  "version": 1,
+  "trainers": [
+    {
+      "slug": "brock",
+      "name": "Brock",
+      "role": "Gym Leader",
+      "homeRegion": "Kanto",
+      "traveller": true,
+      "aloof": false,
+      "playStyle": "field_marshal",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 25,
+      "archetype": "steady",
+      "peakTR": 100,
+      "roster": [
+        {
+          "species": "Steelix",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Golem",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Quick Claw",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Crobat",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Kabutops",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Scope Lens",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Omastar",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Focus Band",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Aerodactyl",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Hard Stone",
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Bind"
+        },
+        {
+          "move": "Stealth Rock"
+        },
+        {
+          "move": "Sandstorm",
+          "fromLevel": 20
+        },
+        {
+          "move": "Curse"
+        },
+        {
+          "move": "Stone Edge"
+        },
+        {
+          "move": "Earthquake"
+        },
+        {
+          "move": "Rock Slide"
+        },
+        {
+          "move": "Heavy Slam"
+        },
+        {
+          "move": "Rock Blast"
+        },
+        {
+          "move": "Cross Poison"
+        },
+        {
+          "move": "Explosion"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_BROCK_DOJO_HNS",
+        "TRAINER_BROCK_HNS",
+        "TRAINER_BROCK_POSTOBC_HNS"
+      ],
+      "characterId": 1
+    },
+    {
+      "slug": "misty",
+      "name": "Misty",
+      "role": "Gym Leader",
+      "homeRegion": "Kanto",
+      "traveller": true,
+      "aloof": false,
+      "playStyle": "field_marshal",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 26,
+      "archetype": "star",
+      "peakTR": 110,
+      "roster": [
+        {
+          "species": "Starmie",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Mystic Water",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Golduck",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Gyarados",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Politoed",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Lapras",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Never Melt Ice",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Kingdra",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Rain Dance",
+          "fromLevel": 20
+        },
+        {
+          "move": "Surf"
+        },
+        {
+          "move": "Hydro Pump"
+        },
+        {
+          "move": "Thunder",
+          "fromLevel": 45
+        },
+        {
+          "move": "Psychic"
+        },
+        {
+          "move": "Recover"
+        },
+        {
+          "move": "Rapid Spin"
+        },
+        {
+          "move": "Ice Beam"
+        },
+        {
+          "move": "Dragon Dance"
+        },
+        {
+          "move": "Disable"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_MISTY_DOJO_HNS",
+        "TRAINER_MISTY_HNS",
+        "TRAINER_MISTY_POSTOBC_HNS"
+      ],
+      "characterId": 2
+    },
+    {
+      "slug": "lt-surge",
+      "name": "Lt. Surge",
+      "role": "Gym Leader",
+      "homeRegion": "Kanto",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "gambler",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 30,
+      "archetype": "veteran",
+      "peakTR": 95,
+      "roster": [
+        {
+          "species": "Raichu",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Magnet",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Electrode",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Focus Band",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Electivire",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Scope Lens",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Magnezone",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Jolteon",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Luxray",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Thunder Wave"
+        },
+        {
+          "move": "Thunderbolt"
+        },
+        {
+          "move": "Volt Switch",
+          "fromLevel": 30
+        },
+        {
+          "move": "Discharge"
+        },
+        {
+          "move": "Light Screen"
+        },
+        {
+          "move": "Thunder Punch"
+        },
+        {
+          "move": "Ice Punch",
+          "fromLevel": 30
+        },
+        {
+          "move": "Flash Cannon"
+        },
+        {
+          "move": "Explosion"
+        },
+        {
+          "move": "Charge Beam"
+        },
+        {
+          "move": "Flash Cannon"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_LTSURGE_DOJO_HNS",
+        "TRAINER_LTSURGE_HNS",
+        "TRAINER_LTSURGE_POSTOBC_HNS"
+      ],
+      "characterId": 3
+    },
+    {
+      "slug": "erika",
+      "name": "Erika",
+      "role": "Gym Leader",
+      "homeRegion": "Kanto",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "hexer",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 28,
+      "archetype": "steady",
+      "peakTR": 150,
+      "roster": [
+        {
+          "species": "Vileplume",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Tangrowth",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Victreebel",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Poison Barb",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Jumpluff",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Focus Band",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Parasect",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Bellossom",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Miracle Seed",
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Sleep Powder"
+        },
+        {
+          "move": "Stun Spore"
+        },
+        {
+          "move": "Leech Seed"
+        },
+        {
+          "move": "Giga Drain"
+        },
+        {
+          "move": "Sunny Day"
+        },
+        {
+          "move": "Solar Beam"
+        },
+        {
+          "move": "Sludge Bomb",
+          "fromLevel": 38
+        },
+        {
+          "move": "Synthesis"
+        },
+        {
+          "move": "Petal Dance"
+        },
+        {
+          "move": "Toxic"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_ERIKA_DOJO_HNS",
+        "TRAINER_ERIKA_HNS",
+        "TRAINER_ERIKA_POSTOBC_HNS"
+      ],
+      "characterId": 4
+    },
+    {
+      "slug": "janine",
+      "name": "Janine",
+      "role": "Gym Leader",
+      "homeRegion": "Kanto",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "hexer",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 27,
+      "archetype": "prodigy",
+      "peakTR": 100,
+      "roster": [
+        {
+          "species": "Venomoth",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Bright Powder",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Ariados",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Crobat",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Weezing",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Leftovers",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Toxicroak",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Muk",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Double Team",
+          "fromLevel": 20
+        },
+        {
+          "move": "Substitute",
+          "fromLevel": 20
+        },
+        {
+          "move": "Sludge Bomb",
+          "fromLevel": 38
+        },
+        {
+          "move": "Quiver Dance"
+        },
+        {
+          "move": "U Turn",
+          "fromLevel": 30
+        },
+        {
+          "move": "Cross Poison"
+        },
+        {
+          "move": "Double Team",
+          "fromLevel": 20
+        },
+        {
+          "move": "Poison Jab"
+        },
+        {
+          "move": "Sucker Punch"
+        },
+        {
+          "move": "Smokescreen"
+        },
+        {
+          "move": "Minimize"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_JANINE_DOJO_HNS",
+        "TRAINER_JANINE_HNS",
+        "TRAINER_JANINE_POSTOBC_HNS"
+      ],
+      "characterId": 5
+    },
+    {
+      "slug": "sabrina",
+      "name": "Sabrina",
+      "role": "Gym Leader",
+      "homeRegion": "Kanto",
+      "traveller": false,
+      "aloof": true,
+      "playStyle": "hexer",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 24,
+      "archetype": "sleeper",
+      "peakTR": 180,
+      "roster": [
+        {
+          "species": "Alakazam",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Twisted Spoon",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Mr. Mime",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Quick Claw",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Espeon",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Gengar",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Hypno",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Venomoth",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Calm Mind"
+        },
+        {
+          "move": "Psychic"
+        },
+        {
+          "move": "Hypnosis"
+        },
+        {
+          "move": "Reflect"
+        },
+        {
+          "move": "Light Screen",
+          "fromLevel": 20
+        },
+        {
+          "move": "Future Sight"
+        },
+        {
+          "move": "Shadow Ball"
+        },
+        {
+          "move": "Barrier"
+        },
+        {
+          "move": "Psyshock"
+        },
+        {
+          "move": "Dazzling Gleam"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_SABRINA_DOJO_HNS",
+        "TRAINER_SABRINA_HNS",
+        "TRAINER_SABRINA_POSTOBC_HNS"
+      ],
+      "characterId": 6
+    },
+    {
+      "slug": "blaine",
+      "name": "Blaine",
+      "role": "Gym Leader",
+      "homeRegion": "Kanto",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "gambler",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 37,
+      "archetype": "comeback",
+      "peakTR": 90,
+      "roster": [
+        {
+          "species": "Magmortar",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Rapidash",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Quick Claw",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Arcanine",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Ninetales",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Magcargo",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Leftovers",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Flareon",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Sunny Day"
+        },
+        {
+          "move": "Flamethrower"
+        },
+        {
+          "move": "Fire Blast"
+        },
+        {
+          "move": "Will O Wisp",
+          "fromLevel": 20
+        },
+        {
+          "move": "Flare Blitz"
+        },
+        {
+          "move": "Extreme Speed"
+        },
+        {
+          "move": "Solar Beam",
+          "fromLevel": 45
+        },
+        {
+          "move": "Lava Plume"
+        },
+        {
+          "move": "Overheat",
+          "fromLevel": 45
+        },
+        {
+          "move": "Morning Sun",
+          "fromLevel": 20
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_BLAINE_DOJO_HNS",
+        "TRAINER_BLAINE_HNS",
+        "TRAINER_BLAINE_POSTOBC_HNS",
+        "TRAINER_WAYFARER_COAST_LEADER_BLAINE"
+      ],
+      "characterId": 7
+    },
+    {
+      "slug": "giovanni",
+      "name": "Giovanni",
+      "role": "Gym Leader",
+      "homeRegion": "Kanto",
+      "traveller": true,
+      "aloof": false,
+      "playStyle": "brawler",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 24,
+      "archetype": "burst",
+      "peakTR": 166,
+      "roster": [
+        {
+          "species": "Rhyperior",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Dugtrio",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Nidoqueen",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Persian",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Marowak",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Nidoking",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Earthquake"
+        },
+        {
+          "move": "Stone Edge"
+        },
+        {
+          "move": "Megahorn"
+        },
+        {
+          "move": "Swords Dance",
+          "fromLevel": 30
+        },
+        {
+          "move": "Fake Out"
+        },
+        {
+          "move": "Pay Day"
+        },
+        {
+          "move": "Nasty Plot"
+        },
+        {
+          "move": "Sucker Punch"
+        },
+        {
+          "move": "Earth Power"
+        },
+        {
+          "move": "Sludge Wave",
+          "fromLevel": 38
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS",
+        "TRAINER_GIOVANNI_HNS",
+        "TRAINER_SILPH_GIOVANNI_HNS",
+        "TRAINER_VIRIDIAN_GYM_GIOVANNI_HNS"
+      ],
+      "characterId": 8
+    },
+    {
+      "slug": "blue",
+      "name": "Blue",
+      "role": "Champion",
+      "homeRegion": "Kanto",
+      "traveller": true,
+      "aloof": false,
+      "playStyle": "tactician",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 0,
+      "archetype": "rival",
+      "peakTR": 170,
+      "roster": [
+        {
+          "species": "Umbreon",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Pidgeot",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Alakazam",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Nidoking",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Scizor",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Arcanine",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Dark Pulse",
+          "fromLevel": 30
+        },
+        {
+          "move": "Moonlight"
+        },
+        {
+          "move": "Psychic"
+        },
+        {
+          "move": "Calm Mind"
+        },
+        {
+          "move": "Extreme Speed"
+        },
+        {
+          "move": "Flare Blitz"
+        },
+        {
+          "move": "Bullet Punch"
+        },
+        {
+          "move": "Swords Dance"
+        },
+        {
+          "move": "Earth Power"
+        },
+        {
+          "move": "Megahorn"
+        },
+        {
+          "move": "Hurricane"
+        },
+        {
+          "move": "Roost"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_BLUE_DOJO_HNS",
+        "TRAINER_WAYFARER_INDIGO_BLUE",
+        "TRAINER_WAYFARER_KANTO_BLUE_BULBASAUR",
+        "TRAINER_WAYFARER_KANTO_BLUE_CHARMANDER",
+        "TRAINER_WAYFARER_KANTO_BLUE_SQUIRTLE"
+      ],
+      "characterId": 9
+    },
+    {
+      "slug": "lorelei",
+      "name": "Lorelei",
+      "role": "Elite Four",
+      "homeRegion": "Kanto",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "sweeper",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 42,
+      "archetype": "veteran",
+      "peakTR": 92,
+      "roster": [
+        {
+          "species": "Lapras",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Dewgong",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Cloyster",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Slowbro",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Glaceon",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Jynx",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Shell Smash"
+        },
+        {
+          "move": "Icicle Spear"
+        },
+        {
+          "move": "Freeze Dry",
+          "fromLevel": 30
+        },
+        {
+          "move": "Body Slam"
+        },
+        {
+          "move": "Blizzard"
+        },
+        {
+          "move": "Ice Beam"
+        },
+        {
+          "move": "Lovely Kiss"
+        },
+        {
+          "move": "Slack Off"
+        },
+        {
+          "move": "Aurora Veil",
+          "fromLevel": 20
+        },
+        {
+          "move": "Rest"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_WAYFARER_INDIGO_LORELEI"
+      ],
+      "characterId": 10
+    },
+    {
+      "slug": "bruno",
+      "name": "Bruno",
+      "role": "Elite Four",
+      "homeRegion": "Kanto",
+      "traveller": true,
+      "aloof": false,
+      "playStyle": "brawler",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 45,
+      "archetype": "comeback",
+      "peakTR": 94,
+      "roster": [
+        {
+          "species": "Machamp",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Hitmontop",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Hitmonlee",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Steelix",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Hitmonchan",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Primeape",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Dynamic Punch"
+        },
+        {
+          "move": "Bulk Up"
+        },
+        {
+          "move": "Close Combat"
+        },
+        {
+          "move": "High Jump Kick"
+        },
+        {
+          "move": "Mach Punch"
+        },
+        {
+          "move": "Fire Punch",
+          "fromLevel": 30
+        },
+        {
+          "move": "Ice Punch"
+        },
+        {
+          "move": "Thunder Punch"
+        },
+        {
+          "move": "Feint"
+        },
+        {
+          "move": "Earthquake",
+          "fromLevel": 38
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_BRUNO_1_HNS",
+        "TRAINER_BRUNO_2_HNS",
+        "TRAINER_BRUNO_POSTOBC_HNS",
+        "TRAINER_WAYFARER_INDIGO_BRUNO"
+      ],
+      "characterId": 11
+    },
+    {
+      "slug": "agatha",
+      "name": "Agatha",
+      "role": "Elite Four",
+      "homeRegion": "Kanto",
+      "traveller": false,
+      "aloof": true,
+      "playStyle": "hexer",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 95,
+      "archetype": "legend",
+      "peakTR": 95,
+      "roster": [
+        {
+          "species": "Gengar",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Arbok",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Crobat",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Marowak",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Mismagius",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Dusknoir",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Mean Look"
+        },
+        {
+          "move": "Curse"
+        },
+        {
+          "move": "Shadow Ball"
+        },
+        {
+          "move": "Hex"
+        },
+        {
+          "move": "Will O Wisp"
+        },
+        {
+          "move": "Pain Split",
+          "fromLevel": 20
+        },
+        {
+          "move": "Shadow Sneak"
+        },
+        {
+          "move": "Glare"
+        },
+        {
+          "move": "Haze"
+        },
+        {
+          "move": "Leech Life"
+        },
+        {
+          "move": "Bonemerang"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_WAYFARER_INDIGO_AGATHA"
+      ],
+      "characterId": 12
+    },
+    {
+      "slug": "koga",
+      "name": "Koga",
+      "role": "Elite Four",
+      "homeRegion": "Johto",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "hexer",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 44,
+      "archetype": "steady",
+      "peakTR": 150,
+      "roster": [
+        {
+          "species": "Crobat",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Bright Powder",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Ariados",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Kings Rock",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Forretress",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Muk",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Leftovers",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Venomoth",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Weezing",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Toxic",
+          "fromLevel": 20
+        },
+        {
+          "move": "Substitute",
+          "fromLevel": 20
+        },
+        {
+          "move": "Protect",
+          "fromLevel": 20
+        },
+        {
+          "move": "Haze"
+        },
+        {
+          "move": "Will O Wisp",
+          "fromLevel": 20
+        },
+        {
+          "move": "Toxic Spikes"
+        },
+        {
+          "move": "Spikes"
+        },
+        {
+          "move": "Sludge Bomb"
+        },
+        {
+          "move": "Pain Split",
+          "fromLevel": 20
+        },
+        {
+          "move": "Toxic",
+          "fromLevel": 20
+        },
+        {
+          "move": "Explosion"
+        },
+        {
+          "move": "Sticky Web"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_KOGA_1_HNS",
+        "TRAINER_KOGA_2_HNS",
+        "TRAINER_KOGA_POSTOBC_HNS"
+      ],
+      "characterId": 13
+    },
+    {
+      "slug": "lance",
+      "name": "Lance",
+      "role": "Champion",
+      "homeRegion": "Kanto",
+      "traveller": true,
+      "aloof": true,
+      "playStyle": "tactician",
+      "bossOmniscient": true,
+      "doubleBattle": false,
+      "startTR": 200,
+      "archetype": "legend",
+      "peakTR": 200,
+      "roster": [
+        {
+          "species": "Dragonite",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Gyarados",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Aerodactyl",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Charizard",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Kingdra",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Dragonite",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Hyper Beam"
+        },
+        {
+          "move": "Extreme Speed",
+          "fromLevel": 30
+        },
+        {
+          "move": "Dragon Dance"
+        },
+        {
+          "move": "Outrage"
+        },
+        {
+          "move": "Thunder Wave"
+        },
+        {
+          "move": "Dragon Rush"
+        },
+        {
+          "move": "Fire Blast",
+          "fromLevel": 45
+        },
+        {
+          "move": "Earthquake",
+          "fromLevel": 38
+        },
+        {
+          "move": "Waterfall"
+        },
+        {
+          "move": "Roost"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_LANCE_1_HNS",
+        "TRAINER_LANCE_2_HNS",
+        "TRAINER_LANCE_3_HNS",
+        "TRAINER_LANCE_POSTOBC_HNS",
+        "TRAINER_WAYFARER_INDIGO_LANCE"
+      ],
+      "characterId": 14
+    },
+    {
+      "slug": "falkner",
+      "name": "Falkner",
+      "role": "Gym Leader",
+      "homeRegion": "Johto",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "field_marshal",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 22,
+      "archetype": "prodigy",
+      "peakTR": 80,
+      "roster": [
+        {
+          "species": "Pidgeot",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Noctowl",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Dodrio",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Skarmory",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Xatu",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Honchkrow",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Tailwind"
+        },
+        {
+          "move": "Brave Bird",
+          "fromLevel": 45
+        },
+        {
+          "move": "Roost"
+        },
+        {
+          "move": "Air Slash"
+        },
+        {
+          "move": "Hurricane"
+        },
+        {
+          "move": "Feather Dance"
+        },
+        {
+          "move": "U Turn",
+          "fromLevel": 30
+        },
+        {
+          "move": "Drill Peck"
+        },
+        {
+          "move": "Mirror Move"
+        },
+        {
+          "move": "Defog",
+          "fromLevel": 20
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_FALKNER_1_HNS",
+        "TRAINER_FALKNER_2_HNS",
+        "TRAINER_FALKNER_POSTOBC_HNS"
+      ],
+      "characterId": 15
+    },
+    {
+      "slug": "bugsy",
+      "name": "Bugsy",
+      "role": "Gym Leader",
+      "homeRegion": "Johto",
+      "traveller": true,
+      "aloof": false,
+      "playStyle": "sweeper",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 24,
+      "archetype": "star",
+      "peakTR": 100,
+      "roster": [
+        {
+          "species": "Scizor",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Beedrill",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Butterfree",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Heracross",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Yanmega",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Berry Juice",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Ariados",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Fury Cutter"
+        },
+        {
+          "move": "Swords Dance"
+        },
+        {
+          "move": "Bullet Punch"
+        },
+        {
+          "move": "U Turn"
+        },
+        {
+          "move": "Megahorn"
+        },
+        {
+          "move": "Close Combat"
+        },
+        {
+          "move": "Quiver Dance"
+        },
+        {
+          "move": "Sleep Powder"
+        },
+        {
+          "move": "Bug Buzz"
+        },
+        {
+          "move": "Sticky Web"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_BUGSY_1_HNS",
+        "TRAINER_BUGSY_2_HNS",
+        "TRAINER_BUGSY_POSTOBC_HNS"
+      ],
+      "characterId": 16
+    },
+    {
+      "slug": "whitney",
+      "name": "Whitney",
+      "role": "Gym Leader",
+      "homeRegion": "Johto",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "turtle",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 26,
+      "archetype": "star",
+      "peakTR": 95,
+      "roster": [
+        {
+          "species": "Miltank",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Clefable",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Wigglytuff",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Ursaring",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Girafarig",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Blissey",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Rollout"
+        },
+        {
+          "move": "Milk Drink"
+        },
+        {
+          "move": "Attract",
+          "fromLevel": 20
+        },
+        {
+          "move": "Body Slam"
+        },
+        {
+          "move": "Stomp"
+        },
+        {
+          "move": "Metronome"
+        },
+        {
+          "move": "Soft Boiled",
+          "fromLevel": 20
+        },
+        {
+          "move": "Moonblast"
+        },
+        {
+          "move": "Hyper Voice"
+        },
+        {
+          "move": "Heal Bell"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_WHITNEY_1_HNS",
+        "TRAINER_WHITNEY_2_HNS",
+        "TRAINER_WHITNEY_POSTOBC_HNS"
+      ],
+      "characterId": 17
+    },
+    {
+      "slug": "morty",
+      "name": "Morty",
+      "role": "Gym Leader",
+      "homeRegion": "Johto",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "hexer",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 26,
+      "archetype": "sleeper",
+      "peakTR": 171,
+      "roster": [
+        {
+          "species": "Gengar",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": "Levitate",
+          "nature": null
+        },
+        {
+          "species": "Drifblim",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Mismagius",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Spiritomb",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Sableye",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Dusknoir",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Hypnosis"
+        },
+        {
+          "move": "Dream Eater"
+        },
+        {
+          "move": "Shadow Ball"
+        },
+        {
+          "move": "Hex"
+        },
+        {
+          "move": "Will O Wisp"
+        },
+        {
+          "move": "Pain Split"
+        },
+        {
+          "move": "Mystical Fire"
+        },
+        {
+          "move": "Curse"
+        },
+        {
+          "move": "Shadow Sneak"
+        },
+        {
+          "move": "Calm Mind",
+          "fromLevel": 30
+        },
+        {
+          "move": "Nasty Plot"
+        },
+        {
+          "move": "Night Shade"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_MORTY_1_HNS",
+        "TRAINER_MORTY_2_HNS",
+        "TRAINER_MORTY_POSTOBC_HNS"
+      ],
+      "characterId": 18
+    },
+    {
+      "slug": "chuck",
+      "name": "Chuck",
+      "role": "Gym Leader",
+      "homeRegion": "Johto",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "brawler",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 34,
+      "archetype": "burst",
+      "peakTR": 85,
+      "roster": [
+        {
+          "species": "Poliwrath",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Black Belt",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Primeape",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Hitmontop",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Machamp",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Heracross",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Lucario",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Dynamic Punch"
+        },
+        {
+          "move": "Bulk Up"
+        },
+        {
+          "move": "Close Combat",
+          "fromLevel": 45
+        },
+        {
+          "move": "Mach Punch",
+          "fromLevel": 30
+        },
+        {
+          "move": "Focus Punch",
+          "fromLevel": 45
+        },
+        {
+          "move": "Waterfall",
+          "fromLevel": 30
+        },
+        {
+          "move": "Ice Punch",
+          "fromLevel": 30
+        },
+        {
+          "move": "Triple Kick"
+        },
+        {
+          "move": "Cross Chop"
+        },
+        {
+          "move": "Aura Sphere"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_CHUCK_1_2_HNS",
+        "TRAINER_CHUCK_1_3_HNS",
+        "TRAINER_CHUCK_1_HNS",
+        "TRAINER_CHUCK_2_HNS",
+        "TRAINER_CHUCK_POSTOBC_HNS"
+      ],
+      "characterId": 19
+    },
+    {
+      "slug": "jasmine",
+      "name": "Jasmine",
+      "role": "Gym Leader",
+      "homeRegion": "Johto",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "turtle",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 24,
+      "archetype": "steady",
+      "peakTR": 166,
+      "roster": [
+        {
+          "species": "Steelix",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Quick Claw",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Magnezone",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Ampharos",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Skarmory",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Forretress",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Bronzong",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Iron Tail"
+        },
+        {
+          "move": "Iron Defense"
+        },
+        {
+          "move": "Spikes"
+        },
+        {
+          "move": "Spikes"
+        },
+        {
+          "move": "Stealth Rock"
+        },
+        {
+          "move": "Rapid Spin"
+        },
+        {
+          "move": "Gyro Ball"
+        },
+        {
+          "move": "Thunderbolt",
+          "fromLevel": 38
+        },
+        {
+          "move": "Thunder Wave"
+        },
+        {
+          "move": "Flash Cannon"
+        },
+        {
+          "move": "Heavy Slam"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_JASMINE",
+        "TRAINER_JASMINE_1_2_HNS",
+        "TRAINER_JASMINE_1_3_HNS",
+        "TRAINER_JASMINE_1_HNS",
+        "TRAINER_JASMINE_2_HNS",
+        "TRAINER_JASMINE_POSTOBC_HNS"
+      ],
+      "characterId": 20
+    },
+    {
+      "slug": "pryce",
+      "name": "Pryce",
+      "role": "Gym Leader",
+      "homeRegion": "Johto",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "turtle",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 40,
+      "archetype": "comeback",
+      "peakTR": 92,
+      "roster": [
+        {
+          "species": "Mamoswine",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Dewgong",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Cloyster",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Weavile",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Jynx",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Abomasnow",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Hail"
+        },
+        {
+          "move": "Blizzard"
+        },
+        {
+          "move": "Ice Shard"
+        },
+        {
+          "move": "Icicle Crash"
+        },
+        {
+          "move": "Earthquake"
+        },
+        {
+          "move": "Aurora Veil",
+          "fromLevel": 20
+        },
+        {
+          "move": "Rest"
+        },
+        {
+          "move": "Sleep Talk",
+          "fromLevel": 20
+        },
+        {
+          "move": "Ice Beam"
+        },
+        {
+          "move": "Freeze Dry",
+          "fromLevel": 30
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_PRYCE_1_2_HNS",
+        "TRAINER_PRYCE_1_3_HNS",
+        "TRAINER_PRYCE_1_HNS",
+        "TRAINER_PRYCE_2_HNS",
+        "TRAINER_PRYCE_POSTOBC_HNS"
+      ],
+      "characterId": 21
+    },
+    {
+      "slug": "clair",
+      "name": "Clair",
+      "role": "Gym Leader",
+      "homeRegion": "Johto",
+      "traveller": false,
+      "aloof": true,
+      "playStyle": "sweeper",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 21,
+      "archetype": "sleeper",
+      "peakTR": 185,
+      "roster": [
+        {
+          "species": "Kingdra",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Leftovers",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Dragonite",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Gyarados",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Focus Band",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Salamence",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Flygon",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Garchomp",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Dragon Dance"
+        },
+        {
+          "move": "Dragon Pulse"
+        },
+        {
+          "move": "Dragon Dance",
+          "fromLevel": 30
+        },
+        {
+          "move": "Outrage"
+        },
+        {
+          "move": "Dragon Claw"
+        },
+        {
+          "move": "Dragon Rush"
+        },
+        {
+          "move": "Earthquake",
+          "fromLevel": 38
+        },
+        {
+          "move": "Earthquake",
+          "fromLevel": 38
+        },
+        {
+          "move": "Thunder Wave"
+        },
+        {
+          "move": "Aqua Tail"
+        },
+        {
+          "move": "Waterfall"
+        },
+        {
+          "move": "Swords Dance",
+          "fromLevel": 30
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_CLAIR_1_HNS",
+        "TRAINER_CLAIR_2_HNS",
+        "TRAINER_CLAIR_3_HNS",
+        "TRAINER_CLAIR_OBC_HNS"
+      ],
+      "characterId": 22
+    },
+    {
+      "slug": "will",
+      "name": "Will",
+      "role": "Elite Four",
+      "homeRegion": "Johto",
+      "traveller": true,
+      "aloof": false,
+      "playStyle": "field_marshal",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 41,
+      "archetype": "prodigy",
+      "peakTR": 110,
+      "roster": [
+        {
+          "species": "Xatu",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Twisted Spoon",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Jynx",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Slowbro",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Quick Claw",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Exeggutor",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Bronzong",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Gardevoir",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Trick Room",
+          "fromLevel": 20
+        },
+        {
+          "move": "Calm Mind"
+        },
+        {
+          "move": "Psychic"
+        },
+        {
+          "move": "Reflect"
+        },
+        {
+          "move": "Light Screen",
+          "fromLevel": 20
+        },
+        {
+          "move": "Wish"
+        },
+        {
+          "move": "Future Sight"
+        },
+        {
+          "move": "Avalanche"
+        },
+        {
+          "move": "Yawn"
+        },
+        {
+          "move": "Moonblast"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_WILL_1_HNS",
+        "TRAINER_WILL_2_HNS",
+        "TRAINER_WILL_POSTOBC_HNS"
+      ],
+      "characterId": 23
+    },
+    {
+      "slug": "karen",
+      "name": "Karen",
+      "role": "Elite Four",
+      "homeRegion": "Johto",
+      "traveller": false,
+      "aloof": true,
+      "playStyle": "hexer",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 47,
+      "archetype": "steady",
+      "peakTR": 155,
+      "roster": [
+        {
+          "species": "Umbreon",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Vileplume",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Leftovers",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Honchkrow",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Sharp Beak",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Gengar",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Weavile",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Houndoom",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Black Glasses",
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Foul Play"
+        },
+        {
+          "move": "Moonlight"
+        },
+        {
+          "move": "Wish",
+          "fromLevel": 20
+        },
+        {
+          "move": "Taunt"
+        },
+        {
+          "move": "Nasty Plot"
+        },
+        {
+          "move": "Dark Pulse"
+        },
+        {
+          "move": "Sucker Punch"
+        },
+        {
+          "move": "Sleep Powder"
+        },
+        {
+          "move": "Shadow Ball"
+        },
+        {
+          "move": "Brave Bird",
+          "fromLevel": 45
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_KAREN_1",
+        "TRAINER_KAREN_1_HNS",
+        "TRAINER_KAREN_2",
+        "TRAINER_KAREN_2_HNS",
+        "TRAINER_KAREN_3",
+        "TRAINER_KAREN_4",
+        "TRAINER_KAREN_5",
+        "TRAINER_KAREN_POSTOBC_HNS"
+      ],
+      "characterId": 24
+    },
+    {
+      "slug": "roxanne",
+      "name": "Roxanne",
+      "role": "Gym Leader",
+      "homeRegion": "Hoenn",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "turtle",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 24,
+      "archetype": "steady",
+      "peakTR": 90,
+      "roster": [
+        {
+          "species": "Probopass",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Sudowoodo",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Relicanth",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Golem",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Bastiodon",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Rampardos",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Rock Tomb",
+          "fromLevel": 30
+        },
+        {
+          "move": "Power Gem"
+        },
+        {
+          "move": "Earth Power"
+        },
+        {
+          "move": "Thunder Wave"
+        },
+        {
+          "move": "Head Smash",
+          "fromLevel": 45
+        },
+        {
+          "move": "Rock Polish",
+          "fromLevel": 30
+        },
+        {
+          "move": "Ancient Power"
+        },
+        {
+          "move": "Zen Headbutt"
+        },
+        {
+          "move": "Counter"
+        },
+        {
+          "move": "Metal Burst"
+        },
+        {
+          "move": "Iron Defense"
+        },
+        {
+          "move": "Ancient Power"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_ROXANNE_1",
+        "TRAINER_ROXANNE_2",
+        "TRAINER_ROXANNE_3",
+        "TRAINER_ROXANNE_4",
+        "TRAINER_ROXANNE_5",
+        "TRAINER_ROXANNE_HNS"
+      ],
+      "characterId": 25
+    },
+    {
+      "slug": "brawly",
+      "name": "Brawly",
+      "role": "Gym Leader",
+      "homeRegion": "Hoenn",
+      "traveller": true,
+      "aloof": false,
+      "playStyle": "brawler",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 24,
+      "archetype": "burst",
+      "peakTR": 90,
+      "roster": [
+        {
+          "species": "Hariyama",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Breloom",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Medicham",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Machamp",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Gallade",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Hitmontop",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Fake Out"
+        },
+        {
+          "move": "Bulk Up"
+        },
+        {
+          "move": "Close Combat"
+        },
+        {
+          "move": "Drain Punch",
+          "fromLevel": 30
+        },
+        {
+          "move": "Mach Punch"
+        },
+        {
+          "move": "Spore"
+        },
+        {
+          "move": "Bullet Seed",
+          "fromLevel": 30
+        },
+        {
+          "move": "Ice Punch"
+        },
+        {
+          "move": "Knock Off"
+        },
+        {
+          "move": "Surf",
+          "fromLevel": 38
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_BRAWLY_1",
+        "TRAINER_BRAWLY_2",
+        "TRAINER_BRAWLY_3",
+        "TRAINER_BRAWLY_4",
+        "TRAINER_BRAWLY_5"
+      ],
+      "characterId": 26
+    },
+    {
+      "slug": "wattson",
+      "name": "Wattson",
+      "role": "Gym Leader",
+      "homeRegion": "Hoenn",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "bomber",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 32,
+      "archetype": "veteran",
+      "peakTR": 75,
+      "roster": [
+        {
+          "species": "Manectric",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Electrode",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Magnezone",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Lanturn",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Rotom",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Ampharos",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Thunder Wave"
+        },
+        {
+          "move": "Volt Switch",
+          "fromLevel": 30
+        },
+        {
+          "move": "Discharge"
+        },
+        {
+          "move": "Thunderbolt",
+          "fromLevel": 38
+        },
+        {
+          "move": "Magnet Rise"
+        },
+        {
+          "move": "Light Screen"
+        },
+        {
+          "move": "Flash Cannon"
+        },
+        {
+          "move": "Thunder",
+          "fromLevel": 45
+        },
+        {
+          "move": "Explosion",
+          "fromLevel": 45
+        },
+        {
+          "move": "Charge"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_WATTSON_1",
+        "TRAINER_WATTSON_2",
+        "TRAINER_WATTSON_3",
+        "TRAINER_WATTSON_4",
+        "TRAINER_WATTSON_5"
+      ],
+      "characterId": 27
+    },
+    {
+      "slug": "flannery",
+      "name": "Flannery",
+      "role": "Gym Leader",
+      "homeRegion": "Hoenn",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "gambler",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 23,
+      "archetype": "star",
+      "peakTR": 100,
+      "roster": [
+        {
+          "species": "Torkoal",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "White Herb",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Magcargo",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": "White Herb",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Camerupt",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Houndoom",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Ninetales",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Rapidash",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Sunny Day",
+          "fromLevel": 20
+        },
+        {
+          "move": "Eruption"
+        },
+        {
+          "move": "Yawn",
+          "fromLevel": 20
+        },
+        {
+          "move": "Overheat",
+          "fromLevel": 45
+        },
+        {
+          "move": "Lava Plume"
+        },
+        {
+          "move": "Will O Wisp",
+          "fromLevel": 20
+        },
+        {
+          "move": "Solar Beam",
+          "fromLevel": 45
+        },
+        {
+          "move": "Earth Power"
+        },
+        {
+          "move": "Heat Wave"
+        },
+        {
+          "move": "Rapid Spin"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_FLANNERY_1",
+        "TRAINER_FLANNERY_2",
+        "TRAINER_FLANNERY_3",
+        "TRAINER_FLANNERY_4",
+        "TRAINER_FLANNERY_5"
+      ],
+      "characterId": 28
+    },
+    {
+      "slug": "norman",
+      "name": "Norman",
+      "role": "Gym Leader",
+      "homeRegion": "Hoenn",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "sweeper",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 26,
+      "archetype": "steady",
+      "peakTR": 164,
+      "roster": [
+        {
+          "species": "Slaking",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Linoone",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Spinda",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Kangaskhan",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Swellow",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Snorlax",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Facade",
+          "fromLevel": 30
+        },
+        {
+          "move": "Slack Off"
+        },
+        {
+          "move": "Belly Drum"
+        },
+        {
+          "move": "Extreme Speed",
+          "fromLevel": 30
+        },
+        {
+          "move": "Fake Out"
+        },
+        {
+          "move": "Body Slam"
+        },
+        {
+          "move": "Belly Drum"
+        },
+        {
+          "move": "Double Edge"
+        },
+        {
+          "move": "Hammer Arm"
+        },
+        {
+          "move": "Encore"
+        },
+        {
+          "move": "Rest"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_NORMAN_1",
+        "TRAINER_NORMAN_2",
+        "TRAINER_NORMAN_3",
+        "TRAINER_NORMAN_4",
+        "TRAINER_NORMAN_5",
+        "TRAINER_NORMAN_HNS"
+      ],
+      "characterId": 29
+    },
+    {
+      "slug": "winona",
+      "name": "Winona",
+      "role": "Gym Leader",
+      "homeRegion": "Hoenn",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "gambler",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 18,
+      "archetype": "sleeper",
+      "peakTR": 172,
+      "roster": [
+        {
+          "species": "Altaria",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Oran Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Tropius",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Pelipper",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Swellow",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Skarmory",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Staraptor",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Aerial Ace",
+          "fromLevel": 30
+        },
+        {
+          "move": "Roost",
+          "fromLevel": 20
+        },
+        {
+          "move": "Dragon Dance"
+        },
+        {
+          "move": "Brave Bird",
+          "fromLevel": 45
+        },
+        {
+          "move": "Hurricane",
+          "fromLevel": 45
+        },
+        {
+          "move": "Tailwind"
+        },
+        {
+          "move": "Spikes"
+        },
+        {
+          "move": "Whirlwind"
+        },
+        {
+          "move": "Cotton Guard"
+        },
+        {
+          "move": "Sky Attack"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_WINONA_1",
+        "TRAINER_WINONA_2",
+        "TRAINER_WINONA_3",
+        "TRAINER_WINONA_4",
+        "TRAINER_WINONA_5"
+      ],
+      "characterId": 30
+    },
+    {
+      "slug": "tate-liza",
+      "name": "Tate & Liza",
+      "role": "Gym Leader duo",
+      "homeRegion": "Hoenn",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "field_marshal",
+      "bossOmniscient": false,
+      "doubleBattle": true,
+      "startTR": 26,
+      "archetype": "star",
+      "peakTR": 170,
+      "roster": [
+        {
+          "species": "Solrock",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Lunatone",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Claydol",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Xatu",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Grumpig",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Gardevoir",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Calm Mind",
+          "fromLevel": 30
+        },
+        {
+          "move": "Earthquake",
+          "fromLevel": 38
+        },
+        {
+          "move": "Rock Slide"
+        },
+        {
+          "move": "Explosion"
+        },
+        {
+          "move": "Trick Room",
+          "fromLevel": 20
+        },
+        {
+          "move": "Heal Pulse"
+        },
+        {
+          "move": "Psychic"
+        },
+        {
+          "move": "Reflect",
+          "fromLevel": 20
+        },
+        {
+          "move": "Light Screen",
+          "fromLevel": 20
+        },
+        {
+          "move": "Cosmic Power"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_TATE_AND_LIZA_1",
+        "TRAINER_TATE_AND_LIZA_2",
+        "TRAINER_TATE_AND_LIZA_3",
+        "TRAINER_TATE_AND_LIZA_4",
+        "TRAINER_TATE_AND_LIZA_5"
+      ],
+      "characterId": 31
+    },
+    {
+      "slug": "juan",
+      "name": "Juan",
+      "role": "Gym Leader",
+      "homeRegion": "Hoenn",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "hexer",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 23,
+      "archetype": "sleeper",
+      "peakTR": 185,
+      "roster": [
+        {
+          "species": "Kingdra",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Chesto Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Luvdisc",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Whiscash",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Walrein",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Crawdaunt",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Politoed",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Water Pulse",
+          "fromLevel": 30
+        },
+        {
+          "move": "Swagger"
+        },
+        {
+          "move": "Attract"
+        },
+        {
+          "move": "Charm"
+        },
+        {
+          "move": "Scald",
+          "fromLevel": 30
+        },
+        {
+          "move": "Dragon Pulse"
+        },
+        {
+          "move": "Ice Beam",
+          "fromLevel": 38
+        },
+        {
+          "move": "Surf"
+        },
+        {
+          "move": "Crabhammer"
+        },
+        {
+          "move": "Razor Shell"
+        },
+        {
+          "move": "Aqua Jet",
+          "fromLevel": 30
+        },
+        {
+          "move": "Aqua Jet",
+          "fromLevel": 30
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_JUAN_1",
+        "TRAINER_JUAN_2",
+        "TRAINER_JUAN_3",
+        "TRAINER_JUAN_4",
+        "TRAINER_JUAN_5"
+      ],
+      "characterId": 32
+    },
+    {
+      "slug": "sidney",
+      "name": "Sidney",
+      "role": "Elite Four",
+      "homeRegion": "Hoenn",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "sweeper",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 41,
+      "archetype": "prodigy",
+      "peakTR": 105,
+      "roster": [
+        {
+          "species": "Absol",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Mightyena",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Shiftry",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Cacturne",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Crawdaunt",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Sharpedo",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Sucker Punch"
+        },
+        {
+          "move": "Swords Dance"
+        },
+        {
+          "move": "Knock Off"
+        },
+        {
+          "move": "Night Slash"
+        },
+        {
+          "move": "Crunch"
+        },
+        {
+          "move": "Taunt"
+        },
+        {
+          "move": "Protect",
+          "fromLevel": 20
+        },
+        {
+          "move": "Aqua Jet"
+        },
+        {
+          "move": "Aqua Jet",
+          "fromLevel": 30
+        },
+        {
+          "move": "Superpower",
+          "fromLevel": 45
+        },
+        {
+          "move": "Leaf Blade"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_SIDNEY",
+        "TRAINER_SIDNEY_HNS"
+      ],
+      "characterId": 33
+    },
+    {
+      "slug": "phoebe",
+      "name": "Phoebe",
+      "role": "Elite Four",
+      "homeRegion": "Hoenn",
+      "traveller": false,
+      "aloof": false,
+      "playStyle": "hexer",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 43,
+      "archetype": "steady",
+      "peakTR": 150,
+      "roster": [
+        {
+          "species": "Dusknoir",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Sableye",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Banette",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Froslass",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Drifblim",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Shedinja",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Will O Wisp"
+        },
+        {
+          "move": "Pain Split",
+          "fromLevel": 20
+        },
+        {
+          "move": "Trick Room",
+          "fromLevel": 20
+        },
+        {
+          "move": "Ice Beam",
+          "fromLevel": 38
+        },
+        {
+          "move": "Shadow Sneak"
+        },
+        {
+          "move": "Destiny Bond"
+        },
+        {
+          "move": "Shadow Claw"
+        },
+        {
+          "move": "Recover",
+          "fromLevel": 20
+        },
+        {
+          "move": "Spikes",
+          "fromLevel": 20
+        },
+        {
+          "move": "Curse"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_PHOEBE"
+      ],
+      "characterId": 34
+    },
+    {
+      "slug": "glacia",
+      "name": "Glacia",
+      "role": "Elite Four",
+      "homeRegion": "Hoenn",
+      "traveller": true,
+      "aloof": true,
+      "playStyle": "turtle",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 44,
+      "archetype": "veteran",
+      "peakTR": 90,
+      "roster": [
+        {
+          "species": "Walrein",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Glalie",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Froslass",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Abomasnow",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Weavile",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Walrein",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Hail"
+        },
+        {
+          "move": "Blizzard"
+        },
+        {
+          "move": "Aurora Veil",
+          "fromLevel": 20
+        },
+        {
+          "move": "Sheer Cold",
+          "fromLevel": 55
+        },
+        {
+          "move": "Freeze Dry"
+        },
+        {
+          "move": "Ice Shard"
+        },
+        {
+          "move": "Protect"
+        },
+        {
+          "move": "Surf",
+          "fromLevel": 38
+        },
+        {
+          "move": "Spikes",
+          "fromLevel": 20
+        },
+        {
+          "move": "Explosion",
+          "fromLevel": 45
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_GLACIA"
+      ],
+      "characterId": 35
+    },
+    {
+      "slug": "drake",
+      "name": "Drake",
+      "role": "Elite Four",
+      "homeRegion": "Hoenn",
+      "traveller": true,
+      "aloof": false,
+      "playStyle": "sweeper",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 45,
+      "archetype": "veteran",
+      "peakTR": 93,
+      "roster": [
+        {
+          "species": "Salamence",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Altaria",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Kingdra",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Flygon",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Gyarados",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Dragonite",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Dragon Claw"
+        },
+        {
+          "move": "Dragon Dance"
+        },
+        {
+          "move": "Outrage"
+        },
+        {
+          "move": "Earthquake"
+        },
+        {
+          "move": "Waterfall",
+          "fromLevel": 30
+        },
+        {
+          "move": "Flamethrower"
+        },
+        {
+          "move": "Crunch"
+        },
+        {
+          "move": "Dragon Pulse"
+        },
+        {
+          "move": "Roost",
+          "fromLevel": 20
+        },
+        {
+          "move": "Hydro Pump"
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_DRAKE"
+      ],
+      "characterId": 36
+    },
+    {
+      "slug": "wallace",
+      "name": "Wallace",
+      "role": "Champion",
+      "homeRegion": "Hoenn",
+      "traveller": true,
+      "aloof": true,
+      "playStyle": "turtle",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 48,
+      "archetype": "star",
+      "peakTR": 190,
+      "roster": [
+        {
+          "species": "Milotic",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Wailord",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Tentacruel",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Ludicolo",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Whiscash",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Gyarados",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Rain Dance"
+        },
+        {
+          "move": "Scald",
+          "fromLevel": 30
+        },
+        {
+          "move": "Recover"
+        },
+        {
+          "move": "Mirror Coat",
+          "fromLevel": 30
+        },
+        {
+          "move": "Water Spout"
+        },
+        {
+          "move": "Giga Drain",
+          "fromLevel": 30
+        },
+        {
+          "move": "Giga Drain",
+          "fromLevel": 30
+        },
+        {
+          "move": "Toxic Spikes"
+        },
+        {
+          "move": "Earthquake"
+        },
+        {
+          "move": "Dragon Dance"
+        },
+        {
+          "move": "Ice Beam",
+          "fromLevel": 38
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_WALLACE"
+      ],
+      "characterId": 37
+    },
+    {
+      "slug": "steven",
+      "name": "Steven",
+      "role": "Champion",
+      "homeRegion": "Hoenn",
+      "traveller": true,
+      "aloof": true,
+      "playStyle": "field_marshal",
+      "bossOmniscient": false,
+      "doubleBattle": false,
+      "startTR": 50,
+      "archetype": "burst",
+      "peakTR": 195,
+      "roster": [
+        {
+          "species": "Metagross",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": "Sitrus Berry",
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Skarmory",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Claydol",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Aggron",
+          "levelOffset": 0,
+          "isAce": true,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Cradily",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        },
+        {
+          "species": "Armaldo",
+          "levelOffset": -2,
+          "isAce": false,
+          "item": null,
+          "ability": null,
+          "nature": null
+        }
+      ],
+      "movePool": [
+        {
+          "move": "Meteor Mash"
+        },
+        {
+          "move": "Bullet Punch"
+        },
+        {
+          "move": "Stealth Rock",
+          "fromLevel": 20
+        },
+        {
+          "move": "Earthquake",
+          "fromLevel": 38
+        },
+        {
+          "move": "Head Smash",
+          "fromLevel": 45
+        },
+        {
+          "move": "Spikes"
+        },
+        {
+          "move": "Roost",
+          "fromLevel": 20
+        },
+        {
+          "move": "Rapid Spin"
+        },
+        {
+          "move": "Recover",
+          "fromLevel": 20
+        },
+        {
+          "move": "Swords Dance",
+          "fromLevel": 30
+        }
+      ],
+      "encounterIds": [
+        "TRAINER_STEVEN",
+        "TRAINER_STEVEN_HNS"
+      ],
+      "characterId": 38
+    }
+  ]
+}

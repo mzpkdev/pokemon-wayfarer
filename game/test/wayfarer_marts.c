@@ -1,5 +1,6 @@
 #include "global.h"
 #include "config/wayfarer_marts.h"
+#include "config/notable_trainers.h"
 #include "event_data.h"
 #include "test/test.h"
 #include "trainer_rating.h"
@@ -173,7 +174,22 @@ static void AppendExpectedItem(u16 *items, u8 *count, u16 item)
     (*count)++;
 }
 
-static u8 BuildExpectedCatalog(const struct ExpectedProfile *profile, u8 rating, bool8 challenge, u16 *items)
+static u32 ExpectedThreshold(u8 legacyThreshold)
+{
+#if WAYFARER_V0_TRAINERS
+    switch (legacyThreshold)
+    {
+    case 4: return 10;
+    case 16: return 40;
+    case 30: return 70;
+    case 40: return 80;
+    case 55: return 120;
+    }
+#endif
+    return legacyThreshold;
+}
+
+static u8 BuildExpectedCatalog(const struct ExpectedProfile *profile, u32 rating, bool8 challenge, u16 *items)
 {
     u8 i;
     u8 count = 0;
@@ -182,14 +198,14 @@ static u8 BuildExpectedCatalog(const struct ExpectedProfile *profile, u8 rating,
     {
         const struct ExpectedMartItem *entry = &sExpectedCommonItems[i];
 
-        if (rating >= entry->minimumTrainerRating && (profile->commonCategoryMask & entry->category) != 0)
+        if (rating >= ExpectedThreshold(entry->minimumTrainerRating) && (profile->commonCategoryMask & entry->category) != 0)
             AppendExpectedItem(items, &count, entry->item);
     }
     if (challenge && profile->supportsPpRecovery)
     {
         for (i = 0; i < ARRAY_COUNT(sExpectedPpItems); i++)
         {
-            if (rating >= sExpectedPpItems[i].minimumTrainerRating)
+            if (rating >= ExpectedThreshold(sExpectedPpItems[i].minimumTrainerRating))
                 AppendExpectedItem(items, &count, sExpectedPpItems[i].item);
         }
     }
@@ -235,7 +251,7 @@ TEST("Wayfarer mart profiles resolve every rating, tier boundary, and challenge 
     {
         const struct ExpectedProfile *expectedProfile = &sExpectedProfiles[profileIndex];
         const struct WayfarerMartProfile *actualProfile = WayfarerGetMartProfile(expectedProfile->id);
-        u8 rating;
+        u32 rating;
 
         EXPECT(actualProfile != NULL);
         if (actualProfile == NULL)
@@ -250,7 +266,13 @@ TEST("Wayfarer mart profiles resolve every rating, tier boundary, and challenge 
         for (rating = 0; rating < expectedProfile->retainedCount; rating++)
             EXPECT_EQ(actualProfile->retainedItems[rating], expectedProfile->retained[rating]);
 
-        for (rating = 0; rating <= TRAINER_RATING_MAX; rating++)
+        for (rating = 0; rating <=
+#if WAYFARER_V0_TRAINERS
+             160;
+#else
+             TRAINER_RATING_MAX;
+#endif
+             rating++)
         {
             u8 challenge;
             for (challenge = FALSE; challenge <= TRUE; challenge++)
@@ -308,8 +330,8 @@ TEST("Wayfarer mart resolver keeps PP supplements and Lilycove's common split ex
     u16 right[WAYFARER_MART_CATALOG_CAPACITY];
     u8 i;
 
-    EXPECT(WayfarerResolveMartProfile(MART_PROFILE_LILYCOVE_2F_LEFT, 55, TRUE, left, ARRAY_COUNT(left)));
-    EXPECT(WayfarerResolveMartProfile(MART_PROFILE_LILYCOVE_2F_RIGHT, 55, TRUE, right, ARRAY_COUNT(right)));
+    EXPECT(WayfarerResolveMartProfile(MART_PROFILE_LILYCOVE_2F_LEFT, ExpectedThreshold(55), TRUE, left, ARRAY_COUNT(left)));
+    EXPECT(WayfarerResolveMartProfile(MART_PROFILE_LILYCOVE_2F_RIGHT, ExpectedThreshold(55), TRUE, right, ARRAY_COUNT(right)));
     for (i = 0; i < ARRAY_COUNT(sExpectedCommonItems); i++)
     {
         const struct ExpectedMartItem *entry = &sExpectedCommonItems[i];
@@ -335,12 +357,12 @@ TEST("Wayfarer mart resolver rejects invalid profiles and capacity without chang
 
     for (i = 0; i < ARRAY_COUNT(small); i++)
         small[i] = 0xBEEF;
-    EXPECT(!WayfarerResolveMartProfile(MART_PROFILE_MAUVILLE, 55, TRUE, small, ARRAY_COUNT(small)));
+    EXPECT(!WayfarerResolveMartProfile(MART_PROFILE_MAUVILLE, ExpectedThreshold(55), TRUE, small, ARRAY_COUNT(small)));
     for (i = 0; i < ARRAY_COUNT(small); i++)
         EXPECT_EQ(small[i], 0xBEEF);
     EXPECT(!WayfarerResolveMartProfile(MART_PROFILE_NONE, 55, FALSE, full, ARRAY_COUNT(full)));
     EXPECT(!WayfarerResolveMartProfile(MART_PROFILE_COUNT, 55, FALSE, full, ARRAY_COUNT(full)));
-    EXPECT(WayfarerResolveMartProfile(MART_PROFILE_CHERRYGROVE, TRAINER_RATING_MAX, FALSE, full, ARRAY_COUNT(full)));
+    EXPECT(WayfarerResolveMartProfile(MART_PROFILE_CHERRYGROVE, ExpectedThreshold(55), FALSE, full, ARRAY_COUNT(full)));
     EXPECT(WayfarerResolveMartProfile(MART_PROFILE_CHERRYGROVE, 255, FALSE, clamped, ARRAY_COUNT(clamped)));
     ExpectSameItems(clamped, full);
 }

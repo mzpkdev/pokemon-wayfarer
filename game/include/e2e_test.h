@@ -53,6 +53,7 @@ enum E2ETestCommand
     E2E_TEST_COMMAND_GIFT_STORAGE_CAPACITY,
     E2E_TEST_COMMAND_OBSERVE_VAR,
     E2E_TEST_COMMAND_SET_VAR,
+    E2E_TEST_COMMAND_SET_TRAINER_RATING,
 };
 
 enum E2ETestCheckpoint
@@ -295,6 +296,9 @@ struct E2ETestRequest
     u8 appearanceId;
     u8 decoratedSecretBase;
     u8 reserved;
+    u32 trainerRating;
+    bool8 applyTrainerRating;
+    u8 reserved2[3];
 };
 
 struct E2ETestObservedPcSlot
@@ -399,11 +403,11 @@ struct E2ETestState
     u8 leagueClears[E2E_TEST_LEAGUE_COUNT];
     u8 leagueStatuses[E2E_TEST_LEAGUE_COUNT];
     u8 globalBadgeCount;
-    u8 trainerRating;
+    u8 reservedTrainerRating;
     u8 trainerCardState;
     bool8 leagueRunActive;
     u8 leagueRunStage;
-    u8 leagueRunRating;
+    u8 reservedLeagueRunRating;
     u8 originIntroStage;
     u16 startingOriginId;
     u16 johtoStarterChoice;
@@ -454,6 +458,8 @@ struct E2ETestState
     // continues; dialogueOpen alone cannot distinguish that from "done".
     u8 awaitingButton;
     u8 reserved2[3];
+    u32 trainerRating;
+    u32 leagueRunRating;
 };
 
 struct E2ETestAbi

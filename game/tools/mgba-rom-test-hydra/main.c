@@ -19,7 +19,6 @@
 #include <fcntl.h>
 #include <math.h>
 #include <poll.h>
-#include <regex.h>
 #include <signal.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -36,10 +35,11 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include "elf.h"
+#include "worker_count.h"
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
-#define MAX_PROCESSES                     32 // See also test/test.h
+#define MAX_PROCESSES                     HYDRA_MAX_WORKERS // See also test/test.h
 #define MAX_HUMAN_SUMMARY_TESTS_TO_LIST   50
 #define MAX_TEST_LIST_BUFFER_LENGTH       256
 
@@ -770,31 +770,9 @@ int main(int argc, char *argv[])
 
     build_symbol_table(elf);
 
-    nrunners = 1;
-    const char *makeflags = getenv("MAKEFLAGS");
-    if (makeflags)
-    {
-        int e;
-        regex_t preg;
-        regmatch_t pmatch[4];
-        if ((e = regcomp(&preg, "(^| )-j([0-9]*)($| )", REG_EXTENDED)) != 0)
-        {
-            char errbuf[256];
-            regerror(e, &preg, errbuf, sizeof(errbuf));
-            fprintf(stderr, "regcomp failed: '%s'\n", errbuf);
-            exit(2);
-        }
-        if (regexec(&preg, makeflags, ARRAY_COUNT(pmatch), pmatch, 0) != REG_NOMATCH)
-        {
-            if (pmatch[2].rm_so == pmatch[2].rm_eo)
-                nrunners = sysconf(_SC_NPROCESSORS_ONLN);
-            else
-                sscanf(makeflags + pmatch[2].rm_so, "%d", &nrunners);
-        }
-        regfree(&preg);
-    }
-    if (nrunners > MAX_PROCESSES)
-        nrunners = MAX_PROCESSES;
+    nrunners = select_worker_count(getenv("MAKEFLAGS"), sysconf(_SC_NPROCESSORS_ONLN));
+    fprintf(stdout, "mgba-rom-test-hydra: using %u worker%s\n", nrunners, nrunners == 1 ? "" : "s");
+    fflush(stdout);
     runners_digits = ceil(log10(nrunners));
     runners = calloc(nrunners, sizeof(*runners));
     if (!runners)

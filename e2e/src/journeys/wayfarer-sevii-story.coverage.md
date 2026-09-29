@@ -7,7 +7,7 @@ SkyEmu test ROM. It covers:
 - Lostelle's local start without Bill, refusal of an out-of-order biker,
   objective-battle loss/blackout/re-entry, all four ordered wins, persisted
   biker completion, and Hypno loss/reload/retry through rescue; and
-- Moltres at TR 54 and 55, loss/re-entry, knockout, and persisted resolution.
+- Moltres at TR 119 and 55, loss/re-entry, knockout, and persisted resolution.
 
 The existing `wayfarer-sevii-exploration.e2e.ts` remains the emulator coverage
 for the ungated ferry, the frozen 135-map catalog, and unchanged Birth Island

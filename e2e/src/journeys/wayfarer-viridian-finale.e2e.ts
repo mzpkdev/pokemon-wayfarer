@@ -313,7 +313,7 @@ describe.sequential("Wayfarer Viridian Giovanni finale", () => {
     await game.dialogue.waitForOpen()
     expect((await game.state.read()).dialogue.text).toContain("GIOVANNI")
     await waitBattle(game, "Giovanni after full Gym traversal")
-    expect((await game.state.read()).battle.enemy).toMatchObject({ species: "rhyhorn", level: 14 })
+    expect((await game.state.read()).battle.enemy).toMatchObject({ species: "diglett", level: 15 })
   })
 
   for (const probe of [
@@ -370,8 +370,8 @@ describe.sequential("Wayfarer Viridian Giovanni finale", () => {
       }
       await startGiovanni(game)
       expect((await game.state.read()).battle.enemy).toMatchObject({
-        species: "rhyhorn",
-        level: 14,
+        species: "diglett",
+        level: 15,
       })
       await game.battle.lose()
       await settleField(game, `Giovanni after ${first} prerequisites`)
@@ -428,7 +428,7 @@ describe.sequential("Wayfarer Viridian Giovanni finale", () => {
     expect(await game.story.flag("viridianGiovanniDeparted")).toBe(false)
     expect(await game.inventory.count("tmEarthquake")).toBe(0)
     await startGiovanni(game)
-    expect((await game.state.read()).battle.enemy?.species).toBe("rhyhorn")
+    expect((await game.state.read()).battle.enemy?.species).toBe("diglett")
   })
 
   it("awards Earth Badge, Trainer Rating and Earthquake once, then Giovanni leaves without Rocket cleanup", async () => {
@@ -437,7 +437,7 @@ describe.sequential("Wayfarer Viridian Giovanni finale", () => {
     })
     const before = await game.state.read()
     await startGiovanni(game)
-    expect((await game.state.read()).battle.enemy).toMatchObject({ species: "rhyhorn", level: 14 })
+    expect((await game.state.read()).battle.enemy).toMatchObject({ species: "diglett", level: 15 })
     await game.battle.win()
     await settleField(game, "Giovanni victory and TM")
     expect(await game.story.flag("viridianGiovanniDefeated")).toBe(true)
@@ -450,7 +450,7 @@ describe.sequential("Wayfarer Viridian Giovanni finale", () => {
       kanto: before.circuit.badges.kanto + 1,
       total: before.circuit.badges.total + 1,
     })
-    expect(after.circuit.trainerRating).toBe(before.circuit.trainerRating + 4)
+    expect(after.circuit.trainerRating).toBe(before.circuit.trainerRating + 10)
     for (const flag of [
       "silphMasterBallPending",
       "celadonHideoutScopeReceived",

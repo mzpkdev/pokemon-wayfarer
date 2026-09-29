@@ -1,4 +1,5 @@
 #include "global.h"
+#include "config/notable_trainers.h"
 #include "event_data.h"
 #include "hall_of_fame.h"
 #include "league_circuit.h"
@@ -92,7 +93,7 @@ TEST("Circuit script replay result differs from invalid completion")
 TEST("Failed Indigo Hall of Fame save rolls back the clear and reward")
 {
     MainCallback testCallback = gMain.callback2;
-    u8 rating;
+    u32 rating;
 
     WayfarerInitPersistentState();
     FlagClear(FLAG_SYS_GAME_CLEAR);
@@ -126,7 +127,7 @@ TEST("Recoverable Indigo Hall of Fame save failure retains the commit for retry"
 {
     MainCallback testCallback = gMain.callback2;
     u32 hallOfFameCount;
-    u8 rating;
+    u32 rating;
 
     WayfarerInitPersistentState();
     SetGameClearStateForRegion(REGION_KANTO, FALSE);
@@ -149,7 +150,12 @@ TEST("Recoverable Indigo Hall of Fame save failure retains the commit for retry"
     EXPECT(IsIndigoHallOfFameSaveTransactionActive());
     EXPECT(HasClearedCircuitStage(CIRCUIT_STAGE_INDIGO));
     EXPECT(FlagGet(FLAG_SYS_GAME_CLEAR));
-    EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), rating + 8);
+    EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), rating +
+#if WAYFARER_V0_TRAINERS
+              0);
+#else
+              8);
+#endif
     EXPECT_EQ(GetGameStat(GAME_STAT_ENTERED_HOF), hallOfFameCount + 1);
 
     ResolveIndigoHallOfFameSaveAttempt(TRUE, FALSE);
@@ -157,14 +163,19 @@ TEST("Recoverable Indigo Hall of Fame save failure retains the commit for retry"
     EXPECT(!IsIndigoHallOfFameSaveTransactionActive());
     EXPECT(HasClearedCircuitStage(CIRCUIT_STAGE_INDIGO));
     EXPECT(FlagGet(FLAG_SYS_GAME_CLEAR));
-    EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), rating + 8);
+    EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), rating +
+#if WAYFARER_V0_TRAINERS
+              0);
+#else
+              8);
+#endif
     SetMainCallback2(testCallback);
 }
 
 TEST("Red completion starts authored credits without changing circuit rewards")
 {
     MainCallback testCallback = gMain.callback2;
-    u8 rating;
+    u32 rating;
 
     WayfarerInitPersistentState();
     SetTotalBadges(24);

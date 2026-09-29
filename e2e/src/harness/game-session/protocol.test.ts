@@ -7,6 +7,7 @@ import {
   encodeObserveRegionMapSectionRequest,
   encodeObserveVarRequest,
   encodeSetVarRequest,
+  encodeSetTrainerRatingRequest,
   encodeSaveRequest,
   encodeWinBattleRequest,
   keepCoordinate,
@@ -20,16 +21,16 @@ import {
 import { decodeFieldMessageText } from "./features/state"
 
 const abi: SessionAbi = {
-  requestSize: 372,
+  requestSize: 380,
   resultSize: 16,
-  stateSize: 1684,
+  stateSize: 1692,
   requestStatusOffset: 87,
   resultStatusOffset: 14,
   flagsOffset: 0x1270,
   varsOffset: 0x1340,
 }
 
-const abiBytes = (version = 23): Uint8Array => {
+const abiBytes = (version = 24): Uint8Array => {
   const bytes = new Uint8Array(16)
   const view = new DataView(bytes.buffer)
   for (const [index, value] of [
@@ -73,10 +74,29 @@ const request = (): CommandRequest => ({
 
 const expectNoFixtureMutations = (bytes: Uint8Array) => {
   expect(Array.from(bytes.slice(88, 356))).toEqual(Array(268).fill(0))
-  expect(Array.from(bytes.slice(356))).toEqual(Array(16).fill(0))
+  expect(Array.from(bytes.slice(356))).toEqual(Array(24).fill(0))
 }
 
-describe("game-session v23 protocol", () => {
+describe("game-session v24 protocol", () => {
+  it("round-trips 32-bit player and frozen league ratings without truncation", () => {
+    const requestBytes = encodeCommandRequest(abi, { ...request(), trainerRating: 0x12345678 })
+    const requestView = new DataView(requestBytes.buffer)
+    expect(requestView.getUint32(372, true)).toBe(0x12345678)
+    expect(requestBytes[376]).toBe(1)
+
+    const commandBytes = encodeSetTrainerRatingRequest(abi, 27, 0x87654321)
+    expect(commandBytes[86]).toBe(commands.setTrainerRating)
+    expect(new DataView(commandBytes.buffer).getUint32(372, true)).toBe(0x87654321)
+
+    const stateBytes = new Uint8Array(abi.stateSize)
+    const stateView = new DataView(stateBytes.buffer)
+    stateView.setUint32(1684, 0x12345678, true)
+    stateView.setUint32(1688, 0x87654321, true)
+    expect(parseStateSnapshot(stateBytes)).toMatchObject({
+      trainerRating: 0x12345678,
+      leagueRunRating: 0x87654321,
+    })
+  })
   it("decodes canonical FRLG dialogue glyphs and page breaks for exact assertions", () => {
     expect(
       decodeFieldMessageText([0xca, 0xc9, 0xc5, 0x1b, 0xc7, 0xc9, 0xc8, 0xfe, 0xb4, 0xfb, 0xff]),
@@ -313,15 +333,16 @@ describe("game-session v23 protocol", () => {
 
   it("decodes semantic League Circuit state", () => {
     const bytes = new Uint8Array(abi.stateSize)
+    const view = new DataView(bytes.buffer)
     bytes.set([4, 3, 1], 340)
     bytes.set([1, 0, 0], 343)
     bytes.set([2, 1, 0], 346)
     bytes[349] = 8
-    bytes[350] = 55
     bytes[351] = 4
     bytes[352] = 1
     bytes[353] = 2
-    bytes[354] = 40
+    view.setUint32(1684, 55, true)
+    view.setUint32(1688, 40, true)
     bytes[441] = 1
     bytes[442] = 3
 

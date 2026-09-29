@@ -1,10 +1,12 @@
 #include "global.h"
 #include "config/wayfarer_marts.h"
+#include "config/notable_trainers.h"
 #include "event_data.h"
 #include "gba/isagbprint.h"
 #include "item.h"
 #include "shop.h"
 #include "trainer_rating.h"
+#include "trainer_scaler.h"
 #include "wayfarer_marts.h"
 #include "constants/items.h"
 #include "constants/maps.h"
@@ -36,6 +38,25 @@ struct WayfarerMartSharedClerkBinding
 
 #if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
 static EWRAM_DATA u16 sWayfarerMartCatalog[WAYFARER_MART_CATALOG_CAPACITY];
+
+#if WAYFARER_V0_TRAINERS
+static const struct TrainerScalerAnchor sMartEssentialsTiers[] =
+{
+    { 0, 0 }, { 10, 1 }, { 40, 2 }, { 70, 3 }, { 80, 4 }, { 120, 5 },
+};
+
+// Existing catalog rows retain their tier ordering. This translates their
+// legacy threshold labels, while the v0 scaler owns when each tier opens.
+static u8 GetMartItemTier(u8 threshold)
+{
+    if (threshold >= 55) return 5;
+    if (threshold >= 40) return 4;
+    if (threshold >= 30) return 3;
+    if (threshold >= 16) return 2;
+    if (threshold >= 4) return 1;
+    return 0;
+}
+#endif
 
 static bool8 IsValidMartItem(u16 item)
 {
@@ -97,25 +118,33 @@ static bool8 IsProfileStructValid(const struct WayfarerMartProfile *profile)
     return TRUE;
 }
 
-static bool8 ResolveMartCatalog(const struct WayfarerMartProfile *profile, u8 trainerRating, bool8 challengeEnabled, u16 *items, u8 capacity)
+static bool8 ResolveMartCatalog(const struct WayfarerMartProfile *profile, u32 trainerRating, bool8 challengeEnabled, u16 *items, u8 capacity)
 {
     u16 draft[WAYFARER_MART_CATALOG_CAPACITY];
     u8 count = 0;
     u8 i;
+#if WAYFARER_V0_TRAINERS
+    u8 tier = EvaluateTrainerScaler(sMartEssentialsTiers, ARRAY_COUNT(sMartEssentialsTiers), trainerRating, TRUE);
+#endif
 
     if (items == NULL || capacity < 2 || capacity > ARRAY_COUNT(draft) || !IsProfileStructValid(profile))
         return FALSE;
 
-    // The public getter is already clamped, but this keeps the resolver's
-    // behavior defined for host callers and corrupted script inputs as well.
+#if !WAYFARER_V0_TRAINERS
     if (trainerRating > TRAINER_RATING_MAX)
         trainerRating = TRAINER_RATING_MAX;
+#endif
 
     for (i = 0; i < ARRAY_COUNT(sWayfarerMartCommonItems); i++)
     {
         const struct WayfarerMartCommonItem *entry = &sWayfarerMartCommonItems[i];
 
-        if (trainerRating >= entry->minimumTrainerRating
+        if (
+#if WAYFARER_V0_TRAINERS
+            tier >= GetMartItemTier(entry->minimumTrainerRating)
+#else
+            trainerRating >= entry->minimumTrainerRating
+#endif
          && (profile->commonCategoryMask & entry->category) != 0
          && !AppendUniqueMartItem(draft, capacity, &count, entry->item))
             return FALSE;
@@ -127,7 +156,12 @@ static bool8 ResolveMartCatalog(const struct WayfarerMartProfile *profile, u8 tr
         {
             const struct WayfarerMartPpItem *entry = &sWayfarerMartPpItems[i];
 
-            if (trainerRating >= entry->minimumTrainerRating
+            if (
+#if WAYFARER_V0_TRAINERS
+                tier >= GetMartItemTier(entry->minimumTrainerRating)
+#else
+                trainerRating >= entry->minimumTrainerRating
+#endif
              && !AppendUniqueMartItem(draft, capacity, &count, entry->item))
                 return FALSE;
         }
@@ -143,7 +177,7 @@ static bool8 ResolveMartCatalog(const struct WayfarerMartProfile *profile, u8 tr
     return TRUE;
 }
 
-static bool8 ResolveFallbackMartCatalog(u8 trainerRating, bool8 challengeEnabled, u16 *items, u8 capacity)
+static bool8 ResolveFallbackMartCatalog(u32 trainerRating, bool8 challengeEnabled, u16 *items, u8 capacity)
 {
     static const struct WayfarerMartProfile sFallbackProfile =
     {
@@ -176,7 +210,7 @@ const struct WayfarerMartProfile *WayfarerGetMartProfile(u16 profileId)
 #endif
 }
 
-bool8 WayfarerResolveMartProfile(u16 profileId, u8 trainerRating, bool8 challengeEnabled, u16 *items, u8 capacity)
+bool8 WayfarerResolveMartProfile(u16 profileId, u32 trainerRating, bool8 challengeEnabled, u16 *items, u8 capacity)
 {
 #if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
     return ResolveMartCatalog(WayfarerGetMartProfile(profileId), trainerRating, challengeEnabled, items, capacity);
@@ -194,7 +228,7 @@ void WayfarerOpenMartProfile(void)
 {
 #if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
     const u16 profileId = gSpecialVar_0x8004;
-    const u8 trainerRating = GetTrainerRating();
+    const u32 trainerRating = GetTrainerRating();
     const bool8 challengeEnabled = gSaveBlock3Ptr->challengeSettings.tx_Challenges_PkmnCenter != 0;
 
     if (!WayfarerResolveMartProfile(profileId, trainerRating, challengeEnabled, sWayfarerMartCatalog, ARRAY_COUNT(sWayfarerMartCatalog)))

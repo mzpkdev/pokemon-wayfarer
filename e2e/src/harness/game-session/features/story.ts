@@ -1,6 +1,11 @@
 import { storyFlags, storyVars, type StoryFlag, type StoryVar } from "../catalog"
 import { varsStart } from "../protocol"
-import { encodeObserveFlagRequest, encodeObserveVarRequest, encodeSetVarRequest } from "../protocol"
+import {
+  encodeObserveFlagRequest,
+  encodeObserveVarRequest,
+  encodeSetVarRequest,
+  encodeSetTrainerRatingRequest,
+} from "../protocol"
 import { type MailboxApi } from "../mailbox"
 import { type SessionRuntime } from "../runtime"
 
@@ -35,9 +40,16 @@ export const createStoryApi = (runtime: SessionRuntime, mailbox: MailboxApi): St
     const address = saveBlock + runtime.abi.flagsOffset + Math.floor(id / 8)
     const bytes = await runtime.readBytes(address, 1)
     const mask = 1 << (id % 8)
-    await runtime.writeBytes(address, new Uint8Array([value ? bytes[0]! | mask : bytes[0]! & ~mask]))
+    await runtime.writeBytes(
+      address,
+      new Uint8Array([value ? bytes[0]! | mask : bytes[0]! & ~mask]),
+    )
   },
   var: async (name) => {
+    if (name === "trainerRating") {
+      const bytes = await runtime.readBytes(runtime.address("gE2ETestState") + 1684, 4)
+      return new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength).getUint32(0, true)
+    }
     const id = storyVars[name]
     if ((id & 0xf000) === 0x7000) {
       const result = await mailbox.execute(
@@ -52,6 +64,15 @@ export const createStoryApi = (runtime: SessionRuntime, mailbox: MailboxApi): St
     return runtime.readUint16(saveBlock + runtime.abi.varsOffset + (id - varsStart) * 2)
   },
   setVar: async (name, value) => {
+    if (name === "trainerRating") {
+      await mailbox.execute(
+        (requestId) => encodeSetTrainerRatingRequest(runtime.abi, requestId, value),
+        "set trainer rating",
+      )
+      // The ROM refreshes its observation before processing each mailbox request.
+      await runtime.advance(1)
+      return
+    }
     if (!Number.isInteger(value) || value < 0 || value > 0xffff)
       throw new Error("Story variable values must be unsigned 16-bit integers")
     const id = storyVars[name]
