@@ -228,13 +228,15 @@ changes yours.
   Four member whose theme the room carries (such as Lorelei's Hall) without
   meaning they fight there. Match 1 is in the first hall, match 2 in the
   second, and so on. The Sevii Masters' halls honour Johto's old Elite Four,
-  whose rooms it reuses; the Champion's Rooms honour no one ([halls](../specs/leagues.md#halls)).
+  whose rooms it reuses; the Champion's Rooms honour no one
+  ([halls](../specs/leagues.md#halls)).
 - **Hall condition:** the one field condition a hall always has, such as
   snow, Trick Room, or Stealth Rock, in effect for both sides from the start
   of the battle. Snow and sandstorm also show in the room and last until
   something replaces them; rooms, terrains, Tailwind, and Sea of Fire wear
   off after a few turns; hazards stay until cleared. Each hall's condition
-  matches the room's look, and no two halls share one. The Champion's Rooms
+  matches the room's look (Karen's Hall is the one exception), and no two
+  halls share one. The Champion's Rooms
   are neutral, with none.
 - **First league win:** your first win at a given league, which brings its
   one-time effects; later wins are repeat wins (prize money and the title,

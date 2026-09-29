@@ -100,7 +100,32 @@ the league registry (a location property, never a trainer's). A hall has:
 
 A **hall condition** starts the battle already in effect for both sides. It
 is chosen from the room's look (its floor, pillars, and decor), never from
-who fought there before, and no two halls share a condition:
+who fought there before, and no two halls share a condition. Karen's Hall
+is the one exception to the look rule: its room shows no theme, and its
+Wonder Room comes from Karen's own "strong or weak is only perception".
+
+What each room shows, and the condition it gives:
+
+| Hall | Look | Condition |
+| --- | --- | --- |
+| Lorelei's | blue floor, ice-block pillars | snow |
+| Bruno's (Indigo) | sand floor, stacked stone pillars | sandstorm |
+| Agatha's | violet floor, glowing light pillars | Trick Room |
+| Lance's | teal floor, dragon horn and dragon statues | Tailwind |
+| Sidney's | wooden floor, cabinets stocked with items | Magic Room (the items stay shelved) |
+| Phoebe's | crumbling, overgrown ruins | Sticky Web (cobwebbed ruins) |
+| Glacia's | pale frosty floor, ice-crystal cases | Misty Terrain (freezing mist) |
+| Drake's | glowing orange floor, jagged rock rows | Sea of Fire |
+| Will's | violet floor, glowing light pillars | Psychic Terrain |
+| Koga's | grass floor, potted plants | Grassy Terrain |
+| Bruno's (Masters) | sand floor, stacked stone pillars | Stealth Rock |
+| Karen's | teal floor, plain stone pillars | Wonder Room (the exception) |
+
+Some Masters rooms share art with Indigo's (Will's with Agatha's, the
+Masters' Bruno's with Indigo's); each takes its condition from a different
+part of the same look.
+
+The conditions:
 
 | Condition | Battle start | Lasts |
 | --- | --- | --- |
@@ -114,22 +139,22 @@ who fought there before, and no two halls share a condition:
 | Misty Terrain | Misty Terrain | 5 turns |
 | Tailwind (both sides) | Tailwind on the player's side and on the opponent's side | The engine's temporary Tailwind (4 turns) on each side |
 | Sea of Fire (both sides) | Sea of Fire on the player's side and on the opponent's side | The engine's temporary Sea of Fire (4 turns) on each side |
-| Toxic Spikes (both sides) | One layer of Toxic Spikes on each side | Until cleared, like any hazard |
+| Sticky Web (both sides) | Sticky Web on each side | Until cleared, like any hazard |
 | Stealth Rock (both sides) | Stealth Rock on each side | Until cleared, like any hazard |
 
 Starting hazards also hit both leads: the first-turn switch-in events run
 the hazard block for every battler, and the engine then handles any lead that
 fainted from them (`FIRST_TURN_FAINTED_BATTLERS` in
-[battle_main.c](../../game/src/battle_main.c)). Toxic Spikes poison each
-grounded lead that isn't immune, and a grounded Poison-type switching in
-absorbs its side's layer, as usual.
+[battle_main.c](../../game/src/battle_main.c)). Sticky Web lowers the Speed
+of each grounded lead and of every grounded Pokémon that switches in, as
+usual.
 
 The v0 halls, by match:
 
 | Match | Indigo | Hoenn | Masters |
 | --- | --- | --- | --- |
 | 1 | Lorelei's Hall (`PokemonLeague_LoreleisRoom_Frlg`): snow | Sidney's Hall (`EverGrandeCity_SidneysRoom`): Magic Room | Will's Hall (`PokemonLeague_WillsRoom_hns`): Psychic Terrain |
-| 2 | Bruno's Hall (`PokemonLeague_BrunosRoom_Frlg`): sandstorm | Phoebe's Hall (`EverGrandeCity_PhoebesRoom`): Grassy Terrain | Koga's Hall (`PokemonLeague_KogasRoom_hns`): Toxic Spikes (both sides) |
+| 2 | Bruno's Hall (`PokemonLeague_BrunosRoom_Frlg`): sandstorm | Phoebe's Hall (`EverGrandeCity_PhoebesRoom`): Sticky Web (both sides) | Koga's Hall (`PokemonLeague_KogasRoom_hns`): Grassy Terrain |
 | 3 | Agatha's Hall (`PokemonLeague_AgathasRoom_Frlg`): Trick Room | Glacia's Hall (`EverGrandeCity_GlaciasRoom`): Misty Terrain | Bruno's Hall (`PokemonLeague_BrunosRoom_hns`): Stealth Rock (both sides) |
 | 4 | Lance's Hall (`PokemonLeague_LancesRoom_Frlg`): Tailwind (both sides) | Drake's Hall (`EverGrandeCity_DrakesRoom`): Sea of Fire (both sides) | Karen's Hall (`PokemonLeague_KarensRoom_hns`): Wonder Room |
 | 5 | Champion's Room (`PokemonLeague_ChampionsRoom_Frlg`): neutral | Champion's Room (`EverGrandeCity_ChampionsRoom`): neutral | `PokemonLeague_ChampionsRoom_hns`: neutral |
@@ -141,12 +166,12 @@ match N. Indigo's and Hoenn's four Elite Four rooms map one to one onto
 matches 1-4, and their Champion's Room hosts match 5, honouring no one. The
 Masters reuses the HNS rooms of Johto's old Elite Four, and a room becomes a
 named hall only where its art is themed to that member's type: Will's room
-(violet floor, glowing crystal pillars) reads as Psychic, Koga's (green
-floor, potted plants) as Poison, and Bruno's (sand-coloured floor, stacked
-boulder pillars) as Rock and Fighting. Karen's room (teal floor, plain stone
-pillars) shows no Dark theme but is still Karen's Hall, with Wonder Room for
-her "strong or weak is only perception", and the HNS Champion's Room is
-neutral. The Emerald corridors `EverGrandeCity_Hall1` to
+(violet floor, glowing pillars) reads as Psychic, Koga's (grass floor,
+potted plants) as Grass, and Bruno's (sand-coloured floor, stacked boulder
+pillars) as Rock and Fighting. Karen's room (teal floor, plain stone
+pillars) shows no Dark theme but is still Karen's Hall, the look rule's one
+exception, and the HNS Champion's Room is neutral. The Emerald corridors
+`EverGrandeCity_Hall1` to
 `EverGrandeCity_Hall5` are passages between rooms, not halls: no match is
 fought there. A room keeps its look (map, tiles, music), plus the hall's
 weather where it has one, and a hall's name never implies who fights there.
@@ -575,8 +600,8 @@ through a per-battle override, as
   `tailwindPlayerTemporary` and `tailwindOpponentTemporary` (the engine's
   `B_TAILWIND_TURNS` duration on each side); both
   `seaOfFirePlayerTemporary` and `seaOfFireOpponentTemporary` (4 turns on
-  each side); both `toxicSpikesPlayerL1` and
-  `toxicSpikesOpponentL1`; or both `stealthRockPlayer` and
+  each side); both `stickyWebPlayer` and `stickyWebOpponent`; or both
+  `stealthRockPlayer` and
   `stealthRockOpponent`. The first-turn starting-status step
   (`FIRST_TURN_EVENTS_STARTING_STATUS`, through
   `TryFieldEffects(FIELD_EFFECT_TRAINER_STATUSES)` in
@@ -813,7 +838,7 @@ evidence (not yet run):
    and honours no one; every condition is one of neutral, snow, sandstorm,
    Trick Room, Magic Room, Wonder Room, Psychic Terrain, Grassy Terrain,
    Misty Terrain, Sea of Fire (both sides), Tailwind (both
-   sides), Toxic Spikes (both sides), or Stealth Rock (both sides); no two
+   sides), Sticky Web (both sides), or Stealth Rock (both sides); no two
    halls share a condition other than neutral; a hall has weather exactly
    when its condition is snow or sandstorm.
 2. **Selection.** Fixtures at several world progress values, including one
@@ -900,7 +925,7 @@ evidence (not yet run):
     condition on both sides: snow and sandstorm last until a move or ability
     replaces them; rooms and terrains end after 5 turns; Tailwind and Sea
     of Fire are up on both sides and end on each after the engine's
-    temporary duration; Toxic Spikes and Stealth Rock are down on both sides,
+    temporary duration; Sticky Web and Stealth Rock are down on both sides,
     hit both leads, and stay until cleared. The same trainer gets each hall's
     condition in whichever match they fight, a trainer with an authored
     `startingStatus` gets only the hall's, and neutral rooms start clear. A

@@ -151,20 +151,22 @@ lineup puts in that match is the occupant. Each hall has one fixed **hall
 condition** that applies to both sides from the start of the battle. It's
 the hall's identity, not a balancing lever: it matches what the room looks
 like, never who used to fight there, and every hall's condition is
-different. Match 1 is fought in the first
+different. Karen's Hall is the one exception: its room shows no theme, so its
+Wonder Room comes from Karen's own "strong or weak is only perception".
+Match 1 is fought in the first
 hall, match 2 in the second, and so on, so the ascending battle order decides
 who lands in which hall.
 
 | League | Hall 1 | Hall 2 | Hall 3 | Hall 4 | Hall 5 |
 | --- | --- | --- | --- | --- | --- |
 | Indigo | Lorelei's Hall: snow | Bruno's Hall: sandstorm | Agatha's Hall: Trick Room (5 turns) | Lance's Hall: Tailwind for both sides (temporary) | Champion's Room: neutral |
-| Hoenn | Sidney's Hall: Magic Room (5 turns) | Phoebe's Hall: Grassy Terrain (5 turns) | Glacia's Hall: Misty Terrain (5 turns) | Drake's Hall: Sea of Fire on both sides (4 turns) | Champion's Room: neutral |
-| Sevii Masters | Will's Hall: Psychic Terrain (5 turns) | Koga's Hall: Toxic Spikes on both sides | Bruno's Hall: Stealth Rock on both sides | Karen's Hall: Wonder Room (5 turns) | Champion's Room: neutral |
+| Hoenn | Sidney's Hall: Magic Room (5 turns) | Phoebe's Hall: Sticky Web on both sides | Glacia's Hall: Misty Terrain (5 turns) | Drake's Hall: Sea of Fire on both sides (4 turns) | Champion's Room: neutral |
+| Sevii Masters | Will's Hall: Psychic Terrain (5 turns) | Koga's Hall: Grassy Terrain (5 turns) | Bruno's Hall: Stealth Rock on both sides | Karen's Hall: Wonder Room (5 turns) | Champion's Room: neutral |
 
 Weather lasts until something replaces it, as overworld weather does when a
 battle starts outdoors. Rooms, terrains, Tailwind, and Sea of Fire wear off
-after a few turns. Toxic Spikes and Stealth Rock stay down until a
-Pokémon clears them, and they greet both leads as the battle opens. The
+after a few turns. Sticky Web and Stealth Rock stay down until a Pokémon
+clears them, and they greet both leads as the battle opens. The
 Champion's Rooms are neutral everywhere: the last match is
 just the best. Because each condition is known in advance and fixed, the
 player can plan a team for each hall, and matchups emerge on their own: a
