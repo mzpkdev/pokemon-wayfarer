@@ -106,6 +106,7 @@ A **hall condition** starts the battle already in effect for both sides:
 | Sandstorm | Sandstorm weather, also blowing in the room | Until replaced, like overworld weather |
 | Trick Room | Trick Room | 5 turns |
 | Magic Room | Magic Room | 5 turns |
+| Wonder Room | Wonder Room | 5 turns |
 | Psychic Terrain | Psychic Terrain | 5 turns |
 | Tailwind (both sides) | Tailwind on the player's side and on the opponent's side | The engine's temporary Tailwind (4 turns) on each side |
 | Toxic Spikes (both sides) | One layer of Toxic Spikes on each side | Until cleared, like any hazard |
@@ -125,7 +126,7 @@ The v0 halls, by match:
 | 1 | Lorelei's Hall (`PokemonLeague_LoreleisRoom_Frlg`): snow | Sidney's Hall (`EverGrandeCity_SidneysRoom`): Magic Room | Will's Hall (`PokemonLeague_WillsRoom_hns`): Psychic Terrain |
 | 2 | Bruno's Hall (`PokemonLeague_BrunosRoom_Frlg`): sandstorm | Phoebe's Hall (`EverGrandeCity_PhoebesRoom`): Trick Room | Koga's Hall (`PokemonLeague_KogasRoom_hns`): Toxic Spikes (both sides) |
 | 3 | Agatha's Hall (`PokemonLeague_AgathasRoom_Frlg`): Trick Room | Glacia's Hall (`EverGrandeCity_GlaciasRoom`): snow | Bruno's Hall (`PokemonLeague_BrunosRoom_hns`): Stealth Rock (both sides) |
-| 4 | Lance's Hall (`PokemonLeague_LancesRoom_Frlg`): Tailwind (both sides) | Drake's Hall (`EverGrandeCity_DrakesRoom`): Tailwind (both sides) | Unnamed (`PokemonLeague_KarensRoom_hns`): neutral |
+| 4 | Lance's Hall (`PokemonLeague_LancesRoom_Frlg`): Tailwind (both sides) | Drake's Hall (`EverGrandeCity_DrakesRoom`): Tailwind (both sides) | Karen's Hall (`PokemonLeague_KarensRoom_hns`): Wonder Room |
 | 5 | Champion's Room (`PokemonLeague_ChampionsRoom_Frlg`): neutral | Champion's Room (`EverGrandeCity_ChampionsRoom`): neutral | `PokemonLeague_ChampionsRoom_hns`: neutral |
 
 Each chain is Today's room chain in
@@ -138,8 +139,9 @@ named hall only where its art is themed to that member's type: Will's room
 (violet floor, glowing crystal pillars) reads as Psychic, Koga's (green
 floor, potted plants) as Poison, and Bruno's (sand-coloured floor, stacked
 boulder pillars) as Rock and Fighting. Karen's room (teal floor, plain stone
-pillars) shows no Dark theme, so it stays unnamed and neutral, and the HNS
-Champion's Room is neutral. The Emerald corridors `EverGrandeCity_Hall1` to
+pillars) shows no Dark theme but is still Karen's Hall, with Wonder Room for
+her "strong or weak is only perception", and the HNS Champion's Room is
+neutral. The Emerald corridors `EverGrandeCity_Hall1` to
 `EverGrandeCity_Hall5` are passages between rooms, not halls: no match is
 fought there. A room keeps its look (map, tiles, music), plus the hall's
 weather where it has one, and a hall's name never implies who fights there.
@@ -563,7 +565,8 @@ through a per-battle override, as
   ([battle_main.c](../../game/src/battle_main.c),
   `UNPACK_STARTING_STATUS_TO_BATTLE`); directly after that, a league match
   replaces `gStartingStatuses` with the hall's: `trickRoomTemporary`,
-  `magicRoomTemporary`, or `psychicTerrainTemporary` (5 turns each); both
+  `magicRoomTemporary`, `wonderRoomTemporary`, or `psychicTerrainTemporary`
+  (5 turns each); both
   `tailwindPlayerTemporary` and `tailwindOpponentTemporary` (the engine's
   `B_TAILWIND_TURNS` duration on each side); both `toxicSpikesPlayerL1` and
   `toxicSpikesOpponentL1`; or both `stealthRockPlayer` and
@@ -799,10 +802,10 @@ evidence (not yet run):
    growth values or a valid roster. The build must hold at least five eligible
    trainers who are not aloof. Each league has exactly five halls whose rooms
    match its room chain in order; Indigo and Hoenn halls 1-4 each honour a
-   distinct member of that league's own Elite Four; the Masters' halls 1-3
-   honour Will, Koga, and Bruno, and its fourth room and each Champion's Room
-   are neutral and honour no one; every condition is one of neutral, snow,
-   sandstorm, Trick Room, Magic Room, Psychic Terrain, Tailwind (both
+   distinct member of that league's own Elite Four; the Masters' halls 1-4
+   honour Will, Koga, Bruno, and Karen, and each Champion's Room is neutral
+   and honours no one; every condition is one of neutral, snow, sandstorm,
+   Trick Room, Magic Room, Wonder Room, Psychic Terrain, Tailwind (both
    sides), Toxic Spikes (both sides), or Stealth Rock (both sides); a hall
    has weather exactly when its condition is snow or sandstorm.
 2. **Selection.** Fixtures at several world progress values, including one
@@ -951,8 +954,6 @@ Report balance playtesting separately from structural checks.
 - Gym arenas with their own field conditions, like the halls
   ([Notable trainers](notable-trainers.md#later)).
 - Each match's hall and condition in the balance explorer.
-- A theme for the Masters' fourth room (Karen's old room), making it a
-  named hall with a condition to match.
 
 ## References
 

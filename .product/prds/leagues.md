@@ -157,14 +157,13 @@ who lands in which hall.
 | --- | --- | --- | --- | --- | --- |
 | Indigo | Lorelei's Hall: snow | Bruno's Hall: sandstorm | Agatha's Hall: Trick Room (5 turns) | Lance's Hall: Tailwind for both sides (temporary) | Champion's Room: neutral |
 | Hoenn | Sidney's Hall: Magic Room (5 turns) | Phoebe's Hall: Trick Room (5 turns) | Glacia's Hall: snow | Drake's Hall: Tailwind for both sides (temporary) | Champion's Room: neutral |
-| Sevii Masters | Will's Hall: Psychic Terrain (5 turns) | Koga's Hall: Toxic Spikes on both sides | Bruno's Hall: Stealth Rock on both sides | Unnamed room: neutral | Champion's Room: neutral |
+| Sevii Masters | Will's Hall: Psychic Terrain (5 turns) | Koga's Hall: Toxic Spikes on both sides | Bruno's Hall: Stealth Rock on both sides | Karen's Hall: Wonder Room (5 turns) | Champion's Room: neutral |
 
 Weather lasts until something replaces it, as overworld weather does when a
-battle starts outdoors. Trick Room, Magic Room, Psychic Terrain, and Tailwind
+battle starts outdoors. Trick Room, Magic Room, Wonder Room, Psychic Terrain, and Tailwind
 wear off after a few turns. Toxic Spikes and Stealth Rock stay down until a
 Pokémon clears them, and they greet both leads as the battle opens. The
-Masters' fourth room has no theme of its own, so it stays unnamed and
-neutral, and the Champion's Rooms are neutral everywhere: the last match is
+Champion's Rooms are neutral everywhere: the last match is
 just the best. Because each condition is known in advance and fixed, the
 player can plan a team for each hall, and matchups emerge on their own: a
 trainer who happens to land in the hall that suits their team is more
@@ -335,8 +334,6 @@ battles with notable trainers follow their own TR.
 - Gym arenas with their own field conditions, like the halls
   ([Notable trainers](notable-trainers.md#later)).
 - Each match's hall and its condition in the balance explorer.
-- A theme for the Masters' fourth room (Karen's old room), making it a
-  named hall with a condition to match.
 
 ## References
 

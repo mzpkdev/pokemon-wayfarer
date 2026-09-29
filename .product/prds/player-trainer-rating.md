@@ -228,8 +228,7 @@ changes yours.
   Four member whose theme the room carries (such as Lorelei's Hall) without
   meaning they fight there. Match 1 is in the first hall, match 2 in the
   second, and so on. The Sevii Masters' halls honour Johto's old Elite Four,
-  whose rooms it reuses; the Champion's Rooms and a room with no theme
-  honour no one ([halls](../specs/leagues.md#halls)).
+  whose rooms it reuses; the Champion's Rooms honour no one ([halls](../specs/leagues.md#halls)).
 - **Hall condition:** the one field condition a hall always has, such as
   snow, Trick Room, or Stealth Rock, in effect for both sides from the start
   of the battle. Snow and sandstorm also show in the room and last until
