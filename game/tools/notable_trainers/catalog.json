@@ -105,7 +105,13 @@
         "TRAINER_BROCK_HNS",
         "TRAINER_BROCK_POSTOBC_HNS"
       ],
-      "characterId": 1
+      "characterId": 1,
+      "league": {
+        "sourceTrainerId": "TRAINER_BROCK_HNS",
+        "presentationId": 1,
+        "objectGraphicsId": "OBJ_EVENT_GFX_BROCK_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "misty",
@@ -209,7 +215,13 @@
         "TRAINER_MISTY_HNS",
         "TRAINER_MISTY_POSTOBC_HNS"
       ],
-      "characterId": 2
+      "characterId": 2,
+      "league": {
+        "sourceTrainerId": "TRAINER_MISTY_HNS",
+        "presentationId": 2,
+        "objectGraphicsId": "OBJ_EVENT_GFX_MISTY_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "lt-surge",
@@ -316,7 +328,13 @@
         "TRAINER_LTSURGE_HNS",
         "TRAINER_LTSURGE_POSTOBC_HNS"
       ],
-      "characterId": 3
+      "characterId": 3,
+      "league": {
+        "sourceTrainerId": "TRAINER_LTSURGE_HNS",
+        "presentationId": 3,
+        "objectGraphicsId": "OBJ_EVENT_GFX_SURGE_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "erika",
@@ -419,7 +437,13 @@
         "TRAINER_ERIKA_HNS",
         "TRAINER_ERIKA_POSTOBC_HNS"
       ],
-      "characterId": 4
+      "characterId": 4,
+      "league": {
+        "sourceTrainerId": "TRAINER_ERIKA_HNS",
+        "presentationId": 4,
+        "objectGraphicsId": "OBJ_EVENT_GFX_ERIKA_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "janine",
@@ -529,7 +553,13 @@
         "TRAINER_JANINE_HNS",
         "TRAINER_JANINE_POSTOBC_HNS"
       ],
-      "characterId": 5
+      "characterId": 5,
+      "league": {
+        "sourceTrainerId": "TRAINER_JANINE_HNS",
+        "presentationId": 5,
+        "objectGraphicsId": "OBJ_EVENT_GFX_JANINE_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "sabrina",
@@ -632,7 +662,13 @@
         "TRAINER_SABRINA_HNS",
         "TRAINER_SABRINA_POSTOBC_HNS"
       ],
-      "characterId": 6
+      "characterId": 6,
+      "league": {
+        "sourceTrainerId": "TRAINER_SABRINA_HNS",
+        "presentationId": 6,
+        "objectGraphicsId": "OBJ_EVENT_GFX_SABRINA_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "blaine",
@@ -739,7 +775,13 @@
         "TRAINER_BLAINE_POSTOBC_HNS",
         "TRAINER_WAYFARER_COAST_LEADER_BLAINE"
       ],
-      "characterId": 7
+      "characterId": 7,
+      "league": {
+        "sourceTrainerId": "TRAINER_BLAINE_HNS",
+        "presentationId": 7,
+        "objectGraphicsId": "OBJ_EVENT_GFX_BLAINE_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "giovanni",
@@ -844,7 +886,13 @@
         "TRAINER_SILPH_GIOVANNI_HNS",
         "TRAINER_VIRIDIAN_GYM_GIOVANNI_HNS"
       ],
-      "characterId": 8
+      "characterId": 8,
+      "league": {
+        "sourceTrainerId": "TRAINER_VIRIDIAN_GYM_GIOVANNI_HNS",
+        "presentationId": 8,
+        "objectGraphicsId": "OBJ_EVENT_GFX_GIOVANNI_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "blue",
@@ -955,7 +1003,13 @@
         "TRAINER_WAYFARER_KANTO_BLUE_CHARMANDER",
         "TRAINER_WAYFARER_KANTO_BLUE_SQUIRTLE"
       ],
-      "characterId": 9
+      "characterId": 9,
+      "league": {
+        "sourceTrainerId": "TRAINER_WAYFARER_INDIGO_BLUE",
+        "presentationId": 9,
+        "objectGraphicsId": "OBJ_EVENT_GFX_BLUE",
+        "enabled": true
+      }
     },
     {
       "slug": "lorelei",
@@ -1057,7 +1111,13 @@
       "encounterIds": [
         "TRAINER_WAYFARER_INDIGO_LORELEI"
       ],
-      "characterId": 10
+      "characterId": 10,
+      "league": {
+        "sourceTrainerId": "TRAINER_WAYFARER_INDIGO_LORELEI",
+        "presentationId": 10,
+        "objectGraphicsId": "OBJ_EVENT_GFX_LORELEI",
+        "enabled": true
+      }
     },
     {
       "slug": "bruno",
@@ -1162,7 +1222,13 @@
         "TRAINER_BRUNO_POSTOBC_HNS",
         "TRAINER_WAYFARER_INDIGO_BRUNO"
       ],
-      "characterId": 11
+      "characterId": 11,
+      "league": {
+        "sourceTrainerId": "TRAINER_WAYFARER_INDIGO_BRUNO",
+        "presentationId": 11,
+        "objectGraphicsId": "OBJ_EVENT_GFX_BRUNO",
+        "enabled": true
+      }
     },
     {
       "slug": "agatha",
@@ -1266,7 +1332,13 @@
       "encounterIds": [
         "TRAINER_WAYFARER_INDIGO_AGATHA"
       ],
-      "characterId": 12
+      "characterId": 12,
+      "league": {
+        "sourceTrainerId": "TRAINER_WAYFARER_INDIGO_AGATHA",
+        "presentationId": 12,
+        "objectGraphicsId": "OBJ_EVENT_GFX_AGATHA",
+        "enabled": true
+      }
     },
     {
       "slug": "koga",
@@ -1380,7 +1452,13 @@
         "TRAINER_KOGA_2_HNS",
         "TRAINER_KOGA_POSTOBC_HNS"
       ],
-      "characterId": 13
+      "characterId": 13,
+      "league": {
+        "sourceTrainerId": "TRAINER_KOGA_1_HNS",
+        "presentationId": 13,
+        "objectGraphicsId": "OBJ_EVENT_GFX_KOGA_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "lance",
@@ -1487,7 +1565,13 @@
         "TRAINER_LANCE_POSTOBC_HNS",
         "TRAINER_WAYFARER_INDIGO_LANCE"
       ],
-      "characterId": 14
+      "characterId": 14,
+      "league": {
+        "sourceTrainerId": "TRAINER_WAYFARER_INDIGO_LANCE",
+        "presentationId": 14,
+        "objectGraphicsId": "OBJ_EVENT_GFX_LANCE",
+        "enabled": true
+      }
     },
     {
       "slug": "falkner",
@@ -1592,7 +1676,13 @@
         "TRAINER_FALKNER_2_HNS",
         "TRAINER_FALKNER_POSTOBC_HNS"
       ],
-      "characterId": 15
+      "characterId": 15,
+      "league": {
+        "sourceTrainerId": "TRAINER_FALKNER_1_HNS",
+        "presentationId": 15,
+        "objectGraphicsId": "OBJ_EVENT_GFX_FALKNER_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "bugsy",
@@ -1694,7 +1784,13 @@
         "TRAINER_BUGSY_2_HNS",
         "TRAINER_BUGSY_POSTOBC_HNS"
       ],
-      "characterId": 16
+      "characterId": 16,
+      "league": {
+        "sourceTrainerId": "TRAINER_BUGSY_1_HNS",
+        "presentationId": 16,
+        "objectGraphicsId": "OBJ_EVENT_GFX_BUGSY_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "whitney",
@@ -1798,7 +1894,13 @@
         "TRAINER_WHITNEY_2_HNS",
         "TRAINER_WHITNEY_POSTOBC_HNS"
       ],
-      "characterId": 17
+      "characterId": 17,
+      "league": {
+        "sourceTrainerId": "TRAINER_WHITNEY_1_HNS",
+        "presentationId": 17,
+        "objectGraphicsId": "OBJ_EVENT_GFX_WHITNEY_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "morty",
@@ -1907,7 +2009,13 @@
         "TRAINER_MORTY_2_HNS",
         "TRAINER_MORTY_POSTOBC_HNS"
       ],
-      "characterId": 18
+      "characterId": 18,
+      "league": {
+        "sourceTrainerId": "TRAINER_MORTY_1_HNS",
+        "presentationId": 18,
+        "objectGraphicsId": "OBJ_EVENT_GFX_MORTY_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "chuck",
@@ -2016,7 +2124,13 @@
         "TRAINER_CHUCK_2_HNS",
         "TRAINER_CHUCK_POSTOBC_HNS"
       ],
-      "characterId": 19
+      "characterId": 19,
+      "league": {
+        "sourceTrainerId": "TRAINER_CHUCK_1_HNS",
+        "presentationId": 19,
+        "objectGraphicsId": "OBJ_EVENT_GFX_CHUCK_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "jasmine",
@@ -2125,7 +2239,13 @@
         "TRAINER_JASMINE_2_HNS",
         "TRAINER_JASMINE_POSTOBC_HNS"
       ],
-      "characterId": 20
+      "characterId": 20,
+      "league": {
+        "sourceTrainerId": "TRAINER_JASMINE_1_HNS",
+        "presentationId": 20,
+        "objectGraphicsId": "OBJ_EVENT_GFX_JASMINE_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "pryce",
@@ -2232,7 +2352,13 @@
         "TRAINER_PRYCE_2_HNS",
         "TRAINER_PRYCE_POSTOBC_HNS"
       ],
-      "characterId": 21
+      "characterId": 21,
+      "league": {
+        "sourceTrainerId": "TRAINER_PRYCE_1_HNS",
+        "presentationId": 21,
+        "objectGraphicsId": "OBJ_EVENT_GFX_PRYCE_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "clair",
@@ -2345,7 +2471,13 @@
         "TRAINER_CLAIR_3_HNS",
         "TRAINER_CLAIR_OBC_HNS"
       ],
-      "characterId": 22
+      "characterId": 22,
+      "league": {
+        "sourceTrainerId": "TRAINER_CLAIR_1_HNS",
+        "presentationId": 22,
+        "objectGraphicsId": "OBJ_EVENT_GFX_CLAIR_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "will",
@@ -2449,7 +2581,13 @@
         "TRAINER_WILL_2_HNS",
         "TRAINER_WILL_POSTOBC_HNS"
       ],
-      "characterId": 23
+      "characterId": 23,
+      "league": {
+        "sourceTrainerId": "TRAINER_WILL_1_HNS",
+        "presentationId": 23,
+        "objectGraphicsId": "OBJ_EVENT_GFX_WILL_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "karen",
@@ -2558,7 +2696,13 @@
         "TRAINER_KAREN_5",
         "TRAINER_KAREN_POSTOBC_HNS"
       ],
-      "characterId": 24
+      "characterId": 24,
+      "league": {
+        "sourceTrainerId": "TRAINER_KAREN_1_HNS",
+        "presentationId": 24,
+        "objectGraphicsId": "OBJ_EVENT_GFX_KAREN_HNS",
+        "enabled": true
+      }
     },
     {
       "slug": "roxanne",
@@ -2672,7 +2816,13 @@
         "TRAINER_ROXANNE_5",
         "TRAINER_ROXANNE_HNS"
       ],
-      "characterId": 25
+      "characterId": 25,
+      "league": {
+        "sourceTrainerId": "TRAINER_ROXANNE_1",
+        "presentationId": 25,
+        "objectGraphicsId": "OBJ_EVENT_GFX_ROXANNE",
+        "enabled": true
+      }
     },
     {
       "slug": "brawly",
@@ -2779,7 +2929,13 @@
         "TRAINER_BRAWLY_4",
         "TRAINER_BRAWLY_5"
       ],
-      "characterId": 26
+      "characterId": 26,
+      "league": {
+        "sourceTrainerId": "TRAINER_BRAWLY_1",
+        "presentationId": 26,
+        "objectGraphicsId": "OBJ_EVENT_GFX_BRAWLY",
+        "enabled": true
+      }
     },
     {
       "slug": "wattson",
@@ -2887,7 +3043,13 @@
         "TRAINER_WATTSON_4",
         "TRAINER_WATTSON_5"
       ],
-      "characterId": 27
+      "characterId": 27,
+      "league": {
+        "sourceTrainerId": "TRAINER_WATTSON_1",
+        "presentationId": 27,
+        "objectGraphicsId": "OBJ_EVENT_GFX_WATTSON",
+        "enabled": true
+      }
     },
     {
       "slug": "flannery",
@@ -2996,7 +3158,13 @@
         "TRAINER_FLANNERY_4",
         "TRAINER_FLANNERY_5"
       ],
-      "characterId": 28
+      "characterId": 28,
+      "league": {
+        "sourceTrainerId": "TRAINER_FLANNERY_1",
+        "presentationId": 28,
+        "objectGraphicsId": "OBJ_EVENT_GFX_FLANNERY",
+        "enabled": true
+      }
     },
     {
       "slug": "norman",
@@ -3106,7 +3274,13 @@
         "TRAINER_NORMAN_5",
         "TRAINER_NORMAN_HNS"
       ],
-      "characterId": 29
+      "characterId": 29,
+      "league": {
+        "sourceTrainerId": "TRAINER_NORMAN_1",
+        "presentationId": 29,
+        "objectGraphicsId": "OBJ_EVENT_GFX_NORMAN",
+        "enabled": true
+      }
     },
     {
       "slug": "winona",
@@ -3214,7 +3388,13 @@
         "TRAINER_WINONA_4",
         "TRAINER_WINONA_5"
       ],
-      "characterId": 30
+      "characterId": 30,
+      "league": {
+        "sourceTrainerId": "TRAINER_WINONA_1",
+        "presentationId": 30,
+        "objectGraphicsId": "OBJ_EVENT_GFX_WINONA",
+        "enabled": true
+      }
     },
     {
       "slug": "tate-liza",
@@ -3323,7 +3503,14 @@
         "TRAINER_TATE_AND_LIZA_4",
         "TRAINER_TATE_AND_LIZA_5"
       ],
-      "characterId": 31
+      "characterId": 31,
+      "league": {
+        "sourceTrainerId": "TRAINER_TATE_AND_LIZA_1",
+        "presentationId": 31,
+        "objectGraphicsId": "OBJ_EVENT_GFX_TATE",
+        "enabled": false,
+        "disabledReason": "Doubles-only; leagues are singles."
+      }
     },
     {
       "slug": "juan",
@@ -3438,7 +3625,13 @@
         "TRAINER_JUAN_4",
         "TRAINER_JUAN_5"
       ],
-      "characterId": 32
+      "characterId": 32,
+      "league": {
+        "sourceTrainerId": "TRAINER_JUAN_1",
+        "presentationId": 32,
+        "objectGraphicsId": "OBJ_EVENT_GFX_JUAN",
+        "enabled": true
+      }
     },
     {
       "slug": "sidney",
@@ -3545,7 +3738,13 @@
         "TRAINER_SIDNEY",
         "TRAINER_SIDNEY_HNS"
       ],
-      "characterId": 33
+      "characterId": 33,
+      "league": {
+        "sourceTrainerId": "TRAINER_SIDNEY",
+        "presentationId": 33,
+        "objectGraphicsId": "OBJ_EVENT_GFX_SIDNEY",
+        "enabled": true
+      }
     },
     {
       "slug": "phoebe",
@@ -3650,7 +3849,13 @@
       "encounterIds": [
         "TRAINER_PHOEBE"
       ],
-      "characterId": 34
+      "characterId": 34,
+      "league": {
+        "sourceTrainerId": "TRAINER_PHOEBE",
+        "presentationId": 34,
+        "objectGraphicsId": "OBJ_EVENT_GFX_PHOEBE",
+        "enabled": true
+      }
     },
     {
       "slug": "glacia",
@@ -3755,7 +3960,13 @@
       "encounterIds": [
         "TRAINER_GLACIA"
       ],
-      "characterId": 35
+      "characterId": 35,
+      "league": {
+        "sourceTrainerId": "TRAINER_GLACIA",
+        "presentationId": 35,
+        "objectGraphicsId": "OBJ_EVENT_GFX_GLACIA",
+        "enabled": true
+      }
     },
     {
       "slug": "drake",
@@ -3857,7 +4068,13 @@
       "encounterIds": [
         "TRAINER_DRAKE"
       ],
-      "characterId": 36
+      "characterId": 36,
+      "league": {
+        "sourceTrainerId": "TRAINER_DRAKE",
+        "presentationId": 36,
+        "objectGraphicsId": "OBJ_EVENT_GFX_DRAKE",
+        "enabled": true
+      }
     },
     {
       "slug": "wallace",
@@ -3965,7 +4182,13 @@
       "encounterIds": [
         "TRAINER_WALLACE"
       ],
-      "characterId": 37
+      "characterId": 37,
+      "league": {
+        "sourceTrainerId": "TRAINER_WALLACE",
+        "presentationId": 37,
+        "objectGraphicsId": "OBJ_EVENT_GFX_WALLACE",
+        "enabled": true
+      }
     },
     {
       "slug": "steven",
@@ -4072,7 +4295,13 @@
         "TRAINER_STEVEN",
         "TRAINER_STEVEN_HNS"
       ],
-      "characterId": 38
+      "characterId": 38,
+      "league": {
+        "sourceTrainerId": "TRAINER_STEVEN",
+        "presentationId": 38,
+        "objectGraphicsId": "OBJ_EVENT_GFX_STEVEN",
+        "enabled": true
+      }
     }
   ]
 }

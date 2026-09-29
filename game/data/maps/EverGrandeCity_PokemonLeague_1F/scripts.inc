@@ -9,6 +9,16 @@ EverGrandeCity_PokemonLeague_1F_OnTransition:
 	call_if_unset FLAG_ENTERED_ELITE_FOUR, EverGrandeCity_PokemonLeague_1F_EventScript_GuardsBlockDoor
 	end
 
+#if IS_WAYFARER
+EverGrandeCity_PokemonLeague_1F_EventScript_LeagueEventEntrance::
+#if WAYFARER_LEAGUE_EVENTS
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
+	goto LeagueEvent_EventScript_Entrance
+#else
+	end
+#endif
+#endif
+
 EverGrandeCity_PokemonLeague_1F_EventScript_GuardsBlockDoor::
 	setobjectxyperm LOCALID_LEAGUE_GUARD_1, 9, 2
 	setobjectxyperm LOCALID_LEAGUE_GUARD_2, 10, 2
@@ -62,7 +72,11 @@ EverGrandeCity_PokemonLeague_1F_EventScript_DoorGuard::
 	getplayerxy VAR_TEMP_0, VAR_TEMP_1
 	call_if_ge VAR_TEMP_0, 11, EverGrandeCity_PokemonLeague_1F_EventScript_PlayerMoveToFrontFromRight
 	call_if_le VAR_TEMP_0, 8, EverGrandeCity_PokemonLeague_1F_EventScript_PlayerMoveToFrontFromLeft
+#if IS_WAYFARER && WAYFARER_LEAGUE_EVENTS
+	message EverGrandeCity_PokemonLeague_1F_Text_QualifiedForLeague
+#else
 	message EverGrandeCity_PokemonLeague_1F_Text_MustHaveAllGymBadges
+#endif
 	waitmessage
 	delay 120
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
@@ -143,6 +157,14 @@ EverGrandeCity_PokemonLeague_1F_Text_MustHaveAllGymBadges:
 	.string "are permitted to enter.\p"
 	.string "TRAINER, let us confirm that you have\n"
 	.string "all the GYM BADGES.$"
+
+#if IS_WAYFARER && WAYFARER_LEAGUE_EVENTS
+EverGrandeCity_PokemonLeague_1F_Text_QualifiedForLeague:
+	.string "Beyond this point, qualified TRAINERS\n"
+	.string "may enter the POKéMON LEAGUE.\p"
+	.string "Let us confirm your TRAINER RATING\n"
+	.string "and HOENN BADGE.$"
+#endif
 
 EverGrandeCity_PokemonLeague_1F_Text_HaventObtainedAllBadges:
 	.string "You haven't obtained all the BADGES.\p"

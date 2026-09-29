@@ -145,10 +145,8 @@ export const resolvePalletBlueBattle = async (
     (state) => state.battle.active,
     "first Blue lab battle",
   )
-  if (battle.battle.enemy?.species !== "charmander")
-    throw new Error(
-      `Blue did not choose Bulbasaur's counter: ${JSON.stringify(battle.battle.enemy)}`,
-    )
+  if (battle.battle.enemy?.species !== "eevee")
+    throw new Error(`Blue did not bring his v0 starter: ${JSON.stringify(battle.battle.enemy)}`)
   await game.battle[outcome]()
   await finishKantoBattle(game, "first Blue battle did not finish")
   await advanceKantoScene(
@@ -279,7 +277,8 @@ export const receivePalletParcel = async (game: GameSession): Promise<void> => {
   await checkViridianOpeningBoundary(game)
   await game.player.warp("viridian-city", 40, 28, "up")
   await game.player.move("up")
-  await game.wait.forMap("viridian-mart")
+  // The Parcel scene locks controls on entry, before the map becomes ready.
+  await game.wait.until((state) => state.map.name === "viridian-mart", "Viridian Mart entry")
   await advanceKantoScene(
     game,
     (state) => state.origin.pallet.phase >= palletPhases.parcelReceived,

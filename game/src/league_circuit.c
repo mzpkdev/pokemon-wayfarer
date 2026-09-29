@@ -8,13 +8,17 @@
 #include "constants/maps.h"
 #include "constants/vars.h"
 #include "league_circuit.h"
+#include "league_events.h"
+#include "league_event_battle.h"
 #include "trainer_rating.h"
+#include "save.h"
 #include "config/notable_trainers.h"
 #include "wayfarer_persistence.h"
 
 #if IS_WAYFARER
 EWRAM_DATA static enum CircuitStage sRecordedCircuitClearStage = CIRCUIT_STAGE_NONE;
 EWRAM_DATA static bool8 sLeagueRunLoadRecoveryPending = FALSE;
+EWRAM_DATA static bool8 sLeagueSavePending = FALSE;
 
 #define LEAGUE_HOENN_STATE HOENN_VAR_ID(0x409C)
 #define LEAGUE_HOENN_FIRST_DEFEAT HOENN_FLAG_ID(0x4FB)
@@ -144,12 +148,55 @@ static void ResetLeagueProgress(enum CircuitStage stage)
     }
 }
 
-void EndLeagueRun(void)
+static void ResetLeagueRun(void)
 {
     struct LeagueRunState *run = &gSaveBlock3Ptr->wayfarerHoenn.leagueRun;
     if (run->stage >= CIRCUIT_STAGE_INDIGO && run->stage <= CIRCUIT_STAGE_HOENN)
         ResetLeagueProgress(run->stage);
     memset(run, 0, sizeof(*run));
+}
+
+void EndLeagueRun(void)
+{
+#if WAYFARER_LEAGUE_EVENTS
+    // Pending events survive ordinary exploration and unrelated blackouts.
+    if (gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active
+     && ValidateLeagueEventState() && GetAcceptedLeagueEventId() != 0)
+        sLeagueSavePending = ResolveLeagueEvent(LEAGUE_EVENT_LOST, GetAcceptedLeagueEventId());
+#endif
+    ResetLeagueRun();
+}
+
+void ResetLeagueCircuitTransientState(void)
+{
+#if WAYFARER_LEAGUE_EVENTS
+    ResetLeagueEventBattleProof();
+#endif
+    sLeagueSavePending = FALSE;
+    sLeagueRunLoadRecoveryPending = FALSE;
+    sRecordedCircuitClearStage = CIRCUIT_STAGE_NONE;
+}
+
+void AcknowledgeLeagueProgressSave(void)
+{
+    sLeagueSavePending = FALSE;
+}
+
+bool8 SavePendingLeagueProgress(void)
+{
+#if WAYFARER_LEAGUE_EVENTS
+    if (sLeagueSavePending)
+    {
+        // Called only after returning to a settled overworld. Saving in the
+        // battle/warp callback would capture the old map or pre-blackout party.
+        // On a flash failure the normal failure screen owns the retry, using
+        // this same already-resolved state rather than applying the result again.
+        sLeagueSavePending = FALSE;
+        TrySavingData(SAVE_NORMAL);
+        return TRUE;
+    }
+#endif
+    return FALSE;
 }
 
 bool8 HasClearedCircuitStage(enum CircuitStage stage)
@@ -179,6 +226,11 @@ enum CircuitStage GetActiveLeagueRunStage(void)
      || run->stage < CIRCUIT_STAGE_INDIGO || run->stage > CIRCUIT_STAGE_HOENN
      || run->replay > TRUE || run->replay != HasClearedCircuitStage(run->stage))
         return CIRCUIT_STAGE_NONE;
+#if WAYFARER_LEAGUE_EVENTS
+    if (GetAcceptedLeagueEventId() == 0
+     || GetAcceptedLeagueEventLeagueId() != run->stage)
+        return CIRCUIT_STAGE_NONE;
+#endif
     return run->stage;
 }
 
@@ -282,6 +334,20 @@ bool8 ValidateCircuitRoomBattle(enum CircuitStage stage, u8 encounterIndex)
         && WarpIsMap(&gSaveBlock1Ptr->location, GetStageRooms(stage)[encounterIndex]);
 }
 
+s8 GetCurrentLeagueEventMatch(void)
+{
+#if WAYFARER_LEAGUE_EVENTS
+    enum CircuitStage stage = GetActiveLeagueRunStage();
+    s8 match;
+    if (stage == CIRCUIT_STAGE_NONE || !ValidateLeagueEventState())
+        return -1;
+    match = FindRoom(&gSaveBlock1Ptr->location, GetStageRooms(stage), 5);
+    if (match >= 0 && ValidateActiveLeagueRun())
+        return match;
+#endif
+    return -1;
+}
+
 bool32 GetCircuitRunBattleRating(enum CircuitStage stage, u32 encounterIndex, u32 *rating)
 {
     if (rating == NULL || !ValidateCircuitRoomBattle(stage, encounterIndex))
@@ -302,6 +368,11 @@ bool8 RecordCircuitRoomVictory(enum CircuitStage stage, u8 encounterIndex)
 {
     if (!ValidateCircuitRoomBattle(stage, encounterIndex))
         return FALSE;
+#if WAYFARER_LEAGUE_EVENTS
+    if (!ValidateLeagueEventState()
+     || !ConsumeLeagueEventBattleVictory(GetAcceptedLeagueEventId(), encounterIndex))
+        return FALSE;
+#endif
     if (stage == CIRCUIT_STAGE_INDIGO)
     {
         gSaveBlock3Ptr->wayfarerHoenn.indigoRoomDefeats |= 1 << encounterIndex;
@@ -318,6 +389,9 @@ bool8 RecordCircuitRoomVictory(enum CircuitStage stage, u8 encounterIndex)
     }
     else
         VarSet(LEAGUE_HOENN_STATE, 5);
+#if WAYFARER_LEAGUE_EVENTS
+    sLeagueSavePending = TRUE;
+#endif
     return TRUE;
 }
 
@@ -343,20 +417,24 @@ bool8 CanCompleteCircuitRun(enum CircuitStage stage)
         && WarpIsMap(&gSaveBlock1Ptr->location, GetStageRooms(stage)[5]);
 }
 
-static void ReturnToLobby(struct WarpData *location, enum CircuitStage stage)
+static void SetLobbyLocation(struct WarpData *location, enum CircuitStage stage)
 {
     const struct MapHeader *header;
     u16 map = stage == CIRCUIT_STAGE_HOENN ? MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F
         : stage == CIRCUIT_STAGE_MASTERS ? MAP_SEVEN_ISLAND_HOUSE_ROOM1
         : MAP_INDIGO_PLATEAU_POKEMON_CENTER_HNS;
-    EndLeagueRun();
-    ResetLeagueProgress(stage);
     location->mapGroup = MAP_GROUP(map);
     location->mapNum = MAP_NUM(map);
     location->warpId = 0;
     header = Overworld_GetMapHeaderByGroupAndId(location->mapGroup, location->mapNum);
     location->x = header->events->warps[0].x;
     location->y = header->events->warps[0].y;
+}
+
+static void ReturnToLobby(struct WarpData *location, enum CircuitStage stage)
+{
+    EndLeagueRun();
+    SetLobbyLocation(location, stage);
 }
 
 void LeagueRunHandleWarp(const struct WarpData *source, struct WarpData *destination)
@@ -386,6 +464,13 @@ void LeagueRunHandleWarp(const struct WarpData *source, struct WarpData *destina
     }
     if (admission)
     {
+#if WAYFARER_LEAGUE_EVENTS
+        // Selection and saving happen only at explicit lobby acceptance.
+        if (GetAcceptedLeagueEventLeagueId() == (enum LeagueId)stage && BeginCircuitRun(stage))
+            return;
+        ReturnToLobby(destination, stage);
+        return;
+#else
         if (stage == CIRCUIT_STAGE_MASTERS)
         {
             if (GetActiveLeagueRunStage() == stage)
@@ -404,6 +489,7 @@ void LeagueRunHandleWarp(const struct WarpData *source, struct WarpData *destina
             run->active = TRUE;
             return;
         }
+#endif
     }
     if (!ValidateLeagueLocation(destination))
         ReturnToLobby(destination, stage);
@@ -442,11 +528,14 @@ void LeagueRunValidateSavedLocation(void)
     if (stage == CIRCUIT_STAGE_NONE)
     {
         if (gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active)
-            EndLeagueRun();
+            ResetLeagueRun();
     }
     else if (!ValidateActiveLeagueRun() && !IsCompletedLeagueReturn(stage))
     {
-        ReturnToLobby(&gSaveBlock1Ptr->location, stage);
+        // A valid saved event survives damaged room progress; never crown an
+        // opponent during load recovery or compose a replacement lineup.
+        ResetLeagueRun();
+        SetLobbyLocation(&gSaveBlock1Ptr->location, stage);
         sLeagueRunLoadRecoveryPending = TRUE;
         gSaveBlock1Ptr->pos.x = gSaveBlock1Ptr->location.x;
         gSaveBlock1Ptr->pos.y = gSaveBlock1Ptr->location.y;
@@ -467,15 +556,40 @@ enum CircuitStage GetRequiredCircuitStage(void)
 {
     if (!HasClearedCircuitStage(CIRCUIT_STAGE_INDIGO))
         return CIRCUIT_STAGE_INDIGO;
+#if WAYFARER_LEAGUE_EVENTS
+    if (!HasClearedCircuitStage(CIRCUIT_STAGE_HOENN))
+        return CIRCUIT_STAGE_HOENN;
+    if (!HasClearedCircuitStage(CIRCUIT_STAGE_MASTERS))
+        return CIRCUIT_STAGE_MASTERS;
+#else
     if (!HasClearedCircuitStage(CIRCUIT_STAGE_MASTERS))
         return CIRCUIT_STAGE_MASTERS;
     if (!HasClearedCircuitStage(CIRCUIT_STAGE_HOENN))
         return CIRCUIT_STAGE_HOENN;
+#endif
     return CIRCUIT_STAGE_NONE;
 }
 
 enum LeagueAdmissionRequirement GetCircuitAdmissionRequirement(enum CircuitStage stage)
 {
+#if WAYFARER_LEAGUE_EVENTS
+    enum LeagueId accepted = GetAcceptedLeagueEventLeagueId();
+    if (stage < CIRCUIT_STAGE_INDIGO || stage > CIRCUIT_STAGE_HOENN)
+        return LEAGUE_ADMISSION_UNAVAILABLE;
+    if (accepted != LEAGUE_ID_NONE)
+        return accepted == (enum LeagueId)stage ? LEAGUE_ADMISSION_AVAILABLE : LEAGUE_ADMISSION_EVENT_ELSEWHERE;
+    if (GetTrainerRating() < 80)
+        return LEAGUE_ADMISSION_NEEDS_QUALIFICATION;
+    if (stage == CIRCUIT_STAGE_MASTERS)
+        return HasClearedCircuitStage(CIRCUIT_STAGE_INDIGO)
+            && HasClearedCircuitStage(CIRCUIT_STAGE_HOENN)
+            ? LEAGUE_ADMISSION_AVAILABLE : LEAGUE_ADMISSION_NEEDS_MASTER;
+    if (stage == CIRCUIT_STAGE_INDIGO)
+        return GetBadgeCountForRegion(REGION_KANTO) + GetBadgeCountForRegion(REGION_JOHTO) != 0
+            ? LEAGUE_ADMISSION_AVAILABLE : LEAGUE_ADMISSION_NEEDS_REGIONAL_BADGE;
+    return GetBadgeCountForRegion(REGION_HOENN) != 0
+        ? LEAGUE_ADMISSION_AVAILABLE : LEAGUE_ADMISSION_NEEDS_REGIONAL_BADGE;
+#else
     if (HasClearedCircuitStage(stage))
         return LEAGUE_ADMISSION_AVAILABLE;
     switch (stage)
@@ -498,6 +612,7 @@ enum LeagueAdmissionRequirement GetCircuitAdmissionRequirement(enum CircuitStage
     default:
         return LEAGUE_ADMISSION_UNAVAILABLE;
     }
+#endif
 }
 
 bool8 IsEligibleForCircuitStage(enum CircuitStage stage)
@@ -508,18 +623,47 @@ bool8 IsEligibleForCircuitStage(enum CircuitStage stage)
 bool8 BeginCircuitRun(enum CircuitStage stage)
 {
     struct LeagueRunState *run = &gSaveBlock3Ptr->wayfarerHoenn.leagueRun;
+    if (stage < CIRCUIT_STAGE_INDIGO || stage > CIRCUIT_STAGE_HOENN)
+        return FALSE;
     if (GetActiveLeagueRunStage() == stage)
+#if WAYFARER_LEAGUE_EVENTS
+        return ValidateLeagueEventState();
+#else
         return TRUE;
+#endif
     if (run->active || !IsEligibleForCircuitStage(stage))
         return FALSE;
+#if WAYFARER_LEAGUE_EVENTS
+    if (!ValidateLeagueEventState() || GetAcceptedLeagueEventLeagueId() != (enum LeagueId)stage
+     || IsIndigoHallOfFameSaveTransactionActive())
+        return FALSE;
+    if (stage == CIRCUIT_STAGE_INDIGO
+     && !WarpIsMap(&gSaveBlock1Ptr->location, MAP_INDIGO_PLATEAU_POKEMON_CENTER_HNS))
+        return FALSE;
+    if (stage == CIRCUIT_STAGE_MASTERS
+     && !WarpIsMap(&gSaveBlock1Ptr->location, MAP_SEVEN_ISLAND_HOUSE_ROOM1)
+     && !WarpIsMap(&gSaveBlock1Ptr->location, MAP_SEVEN_ISLAND_HOUSE_ROOM2))
+        return FALSE;
+    if (stage == CIRCUIT_STAGE_HOENN
+     && !WarpIsMap(&gSaveBlock1Ptr->location, MAP_EVER_GRANDE_CITY_HALL5))
+        return FALSE;
+#else
     if (stage == CIRCUIT_STAGE_MASTERS
      && !WarpIsMap(&gSaveBlock1Ptr->location, MAP_SEVEN_ISLAND_HOUSE_ROOM1))
         return FALSE;
+#endif
     ResetLeagueProgress(stage);
     run->stage = stage;
     run->replay = HasClearedCircuitStage(stage);
+#if WAYFARER_LEAGUE_EVENTS
+    run->ratingAtEntry = GetAcceptedLeagueEventWorldProgress();
+#else
     run->ratingAtEntry = GetTrainerRating();
+#endif
     run->active = TRUE;
+#if WAYFARER_LEAGUE_EVENTS
+    sLeagueSavePending = TRUE;
+#endif
     return TRUE;
 }
 
@@ -530,6 +674,10 @@ enum CircuitCommitResult CommitCircuitRun(enum CircuitStage stage)
     if (!CanCompleteCircuitRun(stage))
         return CIRCUIT_COMMIT_INVALID;
     firstClear = !run->replay;
+#if WAYFARER_LEAGUE_EVENTS
+    if (!ResolveLeagueEvent(LEAGUE_EVENT_WON, GetAcceptedLeagueEventId()))
+        return CIRCUIT_COMMIT_INVALID;
+#endif
     if (firstClear)
     {
         if (stage == CIRCUIT_STAGE_INDIGO)
@@ -548,7 +696,10 @@ enum CircuitCommitResult CommitCircuitRun(enum CircuitStage stage)
         GetTrainerRating();
         sRecordedCircuitClearStage = stage;
     }
-    EndLeagueRun();
+    ResetLeagueRun();
+#if WAYFARER_LEAGUE_EVENTS
+    sLeagueSavePending = TRUE;
+#endif
     return firstClear ? CIRCUIT_COMMIT_FIRST_CLEAR : CIRCUIT_COMMIT_REPLAY;
 }
 
@@ -556,6 +707,7 @@ void RollbackIndigoHallOfFameCommit(u32 ratingAtEntry, u32 storedRatingBefore)
 {
     struct LeagueRunState *run = &gSaveBlock3Ptr->wayfarerHoenn.leagueRun;
 
+    sLeagueSavePending = FALSE;
     gSaveBlock3Ptr->wayfarerHoenn.leagueFlags &= ~CIRCUIT_CLEAR_INDIGO;
     SetGameClearStateForRegion(REGION_KANTO, FALSE);
     SetGameClearStateForRegion(REGION_JOHTO, FALSE);

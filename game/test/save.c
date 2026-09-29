@@ -7,7 +7,11 @@
 #define T_SAVEBLOCK1_SIZE 15568
 #define T_SAVEBLOCK2_SIZE 3892
 #define T_SAVEBLOCK3_SIZE 4
+#if IS_WAYFARER
+#define T_POKEMONSTORAGE_SIZE 35600
+#else
 #define T_POKEMONSTORAGE_SIZE 34144
+#endif
 
 TEST("SaveBlock1 is backwards compatible")
 {
@@ -32,6 +36,10 @@ TEST("SaveBlock3 is backwards compatible")
 
 TEST("PokemonStorage is backwards compatible")
 {
+#if IS_WAYFARER
+    // Prerelease Wayfarer saves use the schema discriminator, and the new
+    // frozen event payload occupies only the formerly unused final sector.
+#endif
     EXPECT_EQ(sizeof(struct PokemonStorage), T_POKEMONSTORAGE_SIZE);
 }
 

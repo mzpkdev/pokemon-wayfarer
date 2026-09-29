@@ -1,4 +1,7 @@
 PokemonLeague_KogasRoom_hns_MapScripts::
+#if WAYFARER_LEAGUE_EVENTS
+	map_script MAP_SCRIPT_ON_TRANSITION, LeagueEvent_EventScript_SetRoomGraphics
+#endif
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, EliteFourRoom_OnFrame
 	map_script MAP_SCRIPT_ON_RESUME, PokemonLeague_KogasRoom_OnResume
 	map_script MAP_SCRIPT_ON_LOAD, EliteFourRoom_OnLoad

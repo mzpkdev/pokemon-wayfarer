@@ -22,6 +22,11 @@ enum LeagueAdmissionRequirement
     LEAGUE_ADMISSION_NEEDS_MASTERS_CLEAR,
     LEAGUE_ADMISSION_NEEDS_24_BADGES,
     LEAGUE_ADMISSION_UNAVAILABLE,
+    LEAGUE_ADMISSION_NEEDS_QUALIFICATION,
+    LEAGUE_ADMISSION_NEEDS_REGIONAL_BADGE,
+    LEAGUE_ADMISSION_NEEDS_MASTER,
+    LEAGUE_ADMISSION_EVENT_ELSEWHERE,
+    LEAGUE_ADMISSION_NO_ACCEPTED_EVENT,
 };
 
 enum CircuitCommitResult
@@ -35,6 +40,7 @@ enum CircuitStage GetActiveLeagueRunStage(void);
 bool8 IsActiveLeagueRunReplay(void);
 bool32 GetCircuitRunBattleRating(enum CircuitStage stage, u32 encounterIndex, u32 *rating);
 bool8 ValidateCircuitRoomBattle(enum CircuitStage stage, u8 encounterIndex);
+s8 GetCurrentLeagueEventMatch(void);
 bool8 RecordCircuitRoomVictory(enum CircuitStage stage, u8 encounterIndex);
 bool8 CanCompleteCircuitRun(enum CircuitStage stage);
 bool8 BeginCircuitRun(enum CircuitStage stage);
@@ -57,6 +63,9 @@ enum Region GetActiveLeagueRunRegion(void);
 bool8 ValidateActiveLeagueRun(void);
 bool32 GetLeagueRunBattleRating(u32 region, u32 encounterIndex, u32 *rating);
 void EndLeagueRun(void);
+void ResetLeagueCircuitTransientState(void);
+bool8 SavePendingLeagueProgress(void);
+void AcknowledgeLeagueProgressSave(void);
 void LeagueRunHandleWarp(const struct WarpData *source, struct WarpData *destination);
 void LeagueRunValidateSavedLocation(void);
 bool8 ConsumeLeagueRunLoadRecovery(void);

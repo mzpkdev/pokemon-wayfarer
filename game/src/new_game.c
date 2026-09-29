@@ -58,6 +58,9 @@
 #include "wayfarer_persistence.h"
 #include "wayfarer_origin.h"
 #include "wayfarer_appearance.h"
+#include "league_events.h"
+#include "league_circuit.h"
+#include "config/league_circuit.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
 #if IS_FRLG
@@ -283,6 +286,10 @@ void NewGameInitData(void)
     gPlayerPartyCount = 0;
     ZeroPlayerPartyMons();
     ResetPokemonStorageSystem();
+#if WAYFARER_LEAGUE_EVENTS
+    InitLeagueEventState();
+    ResetLeagueCircuitTransientState();
+#endif
     DeactivateAllRoamers();
     gSaveBlock1Ptr->registeredItem = ITEM_NONE;
     gSaveBlock3Ptr->registeredItemHold = ITEM_NONE;

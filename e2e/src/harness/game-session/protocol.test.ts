@@ -23,14 +23,14 @@ import { decodeFieldMessageText } from "./features/state"
 const abi: SessionAbi = {
   requestSize: 380,
   resultSize: 16,
-  stateSize: 1692,
+  stateSize: 1732,
   requestStatusOffset: 87,
   resultStatusOffset: 14,
   flagsOffset: 0x1270,
   varsOffset: 0x1340,
 }
 
-const abiBytes = (version = 24): Uint8Array => {
+const abiBytes = (version = 25): Uint8Array => {
   const bytes = new Uint8Array(16)
   const view = new DataView(bytes.buffer)
   for (const [index, value] of [
@@ -77,7 +77,7 @@ const expectNoFixtureMutations = (bytes: Uint8Array) => {
   expect(Array.from(bytes.slice(356))).toEqual(Array(24).fill(0))
 }
 
-describe("game-session v24 protocol", () => {
+describe("game-session v25 protocol", () => {
   it("round-trips 32-bit player and frozen league ratings without truncation", () => {
     const requestBytes = encodeCommandRequest(abi, { ...request(), trainerRating: 0x12345678 })
     const requestView = new DataView(requestBytes.buffer)
@@ -92,9 +92,21 @@ describe("game-session v24 protocol", () => {
     const stateView = new DataView(stateBytes.buffer)
     stateView.setUint32(1684, 0x12345678, true)
     stateView.setUint32(1688, 0x87654321, true)
+    stateView.setUint32(1692, 0x1234, true)
+    stateView.setUint32(1696, 0x87654321, true)
+    stateView.setUint16(1702, 37, true)
+    stateView.setUint16(1712, 131, true)
+    stateView.setUint8(1722, 6)
+    stateView.setUint8(1727, 50)
     expect(parseStateSnapshot(stateBytes)).toMatchObject({
       trainerRating: 0x12345678,
       leagueRunRating: 0x87654321,
+      leagueEventId: 0x1234,
+      leagueEventWorldProgress: 0x87654321,
+      leagueEventCharacterIds: [37, 0, 0, 0, 0],
+      leagueEventLeadSpecies: [131, 0, 0, 0, 0],
+      leagueEventTeamSizes: [6, 0, 0, 0, 0],
+      leagueEventLeadLevels: [50, 0, 0, 0, 0],
     })
   })
   it("decodes canonical FRLG dialogue glyphs and page breaks for exact assertions", () => {

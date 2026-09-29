@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CATALOG = Path(__file__).with_name("catalog.json")
 DATA_OUTPUT = ROOT / "src/data/notable_trainers/catalog.h"
+REGISTRY_OUTPUT = ROOT / "src/data/notable_trainers/league_registry.h"
 IDS_OUTPUT = ROOT / "include/constants/notable_trainers.h"
 BADGE_ENCOUNTERS = {
     "TRAINER_BROCK_HNS", "TRAINER_MISTY_HNS", "TRAINER_LTSURGE_HNS",
@@ -40,6 +41,7 @@ def validate(data: dict) -> None:
         "MOVE_": known_symbols("include/constants/moves.h", "MOVE_"),
         "ITEM_": known_symbols("include/constants/items.h", "ITEM_"),
         "ABILITY_": known_symbols("include/constants/abilities.h", "ABILITY_"),
+        "OBJ_EVENT_GFX_": known_symbols("include/constants/event_objects.h", "OBJ_EVENT_GFX_"),
     }
     opponent_headers = list((ROOT / "include/constants").glob("opponents*.h"))
     opponent_headers += list((ROOT / "include/constants").glob("wayfarer_*trainers.h"))
@@ -84,6 +86,19 @@ def validate(data: dict) -> None:
             if alias not in opponents or alias in aliases:
                 raise ValueError(f"{name}: unknown or duplicate encounter alias {alias}")
             aliases.add(alias)
+        league = trainer["league"]
+        if league["sourceTrainerId"] not in trainer["encounterIds"]:
+            raise ValueError(f"{name}: league source must be the character's own encounter")
+        if league["presentationId"] != character_id:
+            raise ValueError(f"{name}: league presentation must identify this character")
+        if league["objectGraphicsId"] not in known["OBJ_EVENT_GFX_"]:
+            raise ValueError(f"{name}: unknown league overworld graphic")
+        if type(league["enabled"]) is not bool or league["enabled"] == trainer["doubleBattle"]:
+            raise ValueError(f"{name}: singles-only league eligibility mismatch")
+        if league["enabled"] and league.get("disabledReason"):
+            raise ValueError(f"{name}: enabled trainer has a disabled reason")
+        if not league["enabled"] and not league.get("disabledReason"):
+            raise ValueError(f"{name}: disabled trainer needs an authored reason")
     if ids != set(range(1, 39)):
         raise ValueError("character IDs must cover 1..38")
     if "TRAINER_BLUE_HNS" in aliases or "TRAINER_LEADER_GIOVANNI" in aliases:
@@ -92,7 +107,7 @@ def validate(data: dict) -> None:
         raise ValueError(f"Wayfarer badge coverage incomplete: {sorted(BADGE_ENCOUNTERS - aliases)}")
 
 
-def generate(data: dict) -> tuple[str, str]:
+def generate(data: dict) -> tuple[str, str, str]:
     trainers = sorted(data["trainers"], key=lambda t: t["characterId"])
     ids = ["#ifndef GUARD_CONSTANTS_NOTABLE_TRAINERS_H", "#define GUARD_CONSTANTS_NOTABLE_TRAINERS_H", "", "// Stable v0 character identities; encounter IDs are mapped separately.", "enum NotableTrainerId", "{", "    NOTABLE_TRAINER_NONE = 0,"]
     ids += [f"    {symbol('NOTABLE_TRAINER_', t['slug'])} = {t['characterId']}," for t in trainers]
@@ -127,7 +142,19 @@ def generate(data: dict) -> tuple[str, str]:
             lines.append(f"    case {alias}:")
         lines.append(f"        return {symbol('NOTABLE_TRAINER_', t['slug'])};")
     lines += ["    default:", "        return NOTABLE_TRAINER_NONE;", "    }", "}", ""]
-    return "\n".join(ids), "\n".join(lines)
+    registry = ["// Generated from game/tools/notable_trainers/catalog.json. Do not edit by hand.", "",
+                "const struct LeagueTrainer gLeagueTrainers[NOTABLE_TRAINER_COUNT] =", "{"]
+    for t in trainers:
+        league = t["league"]
+        registry += ["    {",
+                     f"        .characterId = {symbol('NOTABLE_TRAINER_', t['slug'])},",
+                     f"        .sourceTrainerId = {league['sourceTrainerId']},",
+                     f"        .presentationId = {league['presentationId']},",
+                     f"        .objectGraphicsId = {league['objectGraphicsId']},",
+                     f"        .enabled = {'TRUE' if league['enabled'] else 'FALSE'},",
+                     "    },"]
+    registry += ["};", ""]
+    return "\n".join(ids), "\n".join(lines), "\n".join(registry)
 
 
 def main() -> None:
@@ -136,13 +163,14 @@ def main() -> None:
     args = parser.parse_args()
     data = json.loads(CATALOG.read_text())
     validate(data)
-    ids, table = generate(data)
+    ids, table, registry = generate(data)
     if args.check:
-        if IDS_OUTPUT.read_text() != ids or DATA_OUTPUT.read_text() != table:
+        if IDS_OUTPUT.read_text() != ids or DATA_OUTPUT.read_text() != table or REGISTRY_OUTPUT.read_text() != registry:
             raise SystemExit("notable trainer generated data is stale; run tools/notable_trainers/generate.py")
     else:
         IDS_OUTPUT.write_text(ids)
         DATA_OUTPUT.write_text(table)
+        REGISTRY_OUTPUT.write_text(registry)
     print(f"{len(data['trainers'])} trainers, {sum(len(t['encounterIds']) for t in data['trainers'])} encounter aliases")
 
 

@@ -341,6 +341,7 @@ struct ChallengeSettings
 };
 
 #if IS_WAYFARER
+#include "league_event_types.h"
 struct LeagueRunState
 {
     u8 active;
@@ -431,6 +432,7 @@ struct SaveBlock3
     struct WayfarerCoastPersistentState wayfarerCoast;
     struct WayfarerPalletOpeningState wayfarerPalletOpening;
     u16 wayfarerTowerTrainerDefeats;
+    struct LeagueEventState leagueEvent;
 #endif
 }; /* max size 1624 bytes */
 

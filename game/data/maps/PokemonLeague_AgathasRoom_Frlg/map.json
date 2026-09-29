@@ -31,7 +31,8 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PokemonLeague_AgathasRoom_EventScript_Agatha",
       "wayfarer_script": "WayfarerIndigo_EventScript_Agatha",
-      "flag": "0"
+      "flag": "0",
+      "wayfarer_graphics_id": "WAYFARER_LEAGUE_ROOM_GFX(OBJ_EVENT_GFX_AGATHA)"
     }
   ],
   "warp_events": [

@@ -1,5 +1,7 @@
 #include "global.h"
 #include "league_circuit.h"
+#include "league_events.h"
+#include "config/league_circuit.h"
 #include "event_data.h"
 #include "heal_location.h"
 #include "map_layout.h"
@@ -142,6 +144,10 @@ void WayfarerInitPersistentState(void)
 {
 #if IS_WAYFARER
     ConsumeLeagueRunLoadRecovery();
+#if WAYFARER_LEAGUE_EVENTS
+    ResetLeagueCircuitTransientState();
+    InitLeagueEventState();
+#endif
     memset(&gSaveBlock3Ptr->wayfarerHoenn, 0, sizeof(gSaveBlock3Ptr->wayfarerHoenn));
     gSaveBlock3Ptr->wayfarerHoenn.magic = WAYFARER_HOENN_STATE_MAGIC;
     gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId = APPEARANCE_GOLD;

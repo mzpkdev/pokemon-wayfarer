@@ -12,6 +12,7 @@
 #define E2E_TEST_MAX_PC_SLOTS 8
 #define E2E_TEST_MAX_PARTY_MENU_ACTIONS 8
 #define E2E_TEST_LEAGUE_COUNT 3
+#define E2E_TEST_LEAGUE_LINEUP_SIZE 5
 #define E2E_TEST_FIELD_MESSAGE_TEXT_LENGTH 32
 // Expanded field messages can span several text boxes. Keep the original short
 // observation for ABI consumers that only need a prefix and expose this larger,
@@ -460,6 +461,14 @@ struct E2ETestState
     u8 reserved2[3];
     u32 trainerRating;
     u32 leagueRunRating;
+    u32 leagueEventId;
+    u32 leagueEventWorldProgress;
+    u8 leagueEventAcceptedLeague;
+    u8 leagueEventInvitationState;
+    u16 leagueEventCharacterIds[E2E_TEST_LEAGUE_LINEUP_SIZE];
+    u16 leagueEventLeadSpecies[E2E_TEST_LEAGUE_LINEUP_SIZE];
+    u8 leagueEventTeamSizes[E2E_TEST_LEAGUE_LINEUP_SIZE];
+    u8 leagueEventLeadLevels[E2E_TEST_LEAGUE_LINEUP_SIZE];
 };
 
 struct E2ETestAbi

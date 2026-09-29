@@ -9,6 +9,7 @@
 #include "battle_controllers.h"
 #include "battle_interface.h"
 #include "battle_setup.h"
+#include "league_event_battle.h"
 #include "battle_z_move.h"
 #include "battle_gimmick.h"
 #include "battle_hold_effects.h"
@@ -9592,6 +9593,7 @@ void CopyMonLevelAndBaseStatsToBattleMon(enum BattlerId battler, struct Pokemon 
 
 void CopyMonAbilityAndTypesToBattleMon(enum BattlerId battler, struct Pokemon *mon)
 {
+    u8 frozenTypes[2];
     gBattleMons[battler].ability = GetMonAbility(mon);
     #if TESTING
     if (gTestRunnerEnabled)
@@ -9604,6 +9606,12 @@ void CopyMonAbilityAndTypesToBattleMon(enum BattlerId battler, struct Pokemon *m
     #endif
     gBattleMons[battler].types[0] = GetSpeciesType(gBattleMons[battler].species, 0);
     gBattleMons[battler].types[1] = GetSpeciesType(gBattleMons[battler].species, 1);
+    if (GetLeagueEventFrozenTypesForMon(mon, frozenTypes)
+     && gBattleMons[battler].species == GetMonData(mon, MON_DATA_SPECIES))
+    {
+        gBattleMons[battler].types[0] = frozenTypes[0];
+        gBattleMons[battler].types[1] = frozenTypes[1];
+    }
     gBattleMons[battler].types[2] = TYPE_MYSTERY;
 }
 

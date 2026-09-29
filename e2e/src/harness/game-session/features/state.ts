@@ -119,6 +119,18 @@ export type GameState = {
     leagues: Record<(typeof circuitStages)[number], (typeof leagueStatuses)[number]>
     regionalChampions: Record<(typeof leagueRegions)[number], boolean>
     trainerRating: number
+    event: {
+      id: number
+      acceptedLeague: (typeof circuitStages)[number] | null
+      worldProgress: number
+      invitationState: number
+      lineup: {
+        characterId: number
+        leadSpecies: Species | "unknown"
+        leadLevel: number
+        teamSize: number
+      }[]
+    }
     run: {
       active: boolean
       stage: (typeof circuitStages)[number] | null
@@ -495,6 +507,18 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
           ]),
         ) as GameState["circuit"]["regionalChampions"],
         trainerRating: snapshot.trainerRating,
+        event: {
+          id: snapshot.leagueEventId,
+          acceptedLeague: circuitStages[snapshot.leagueEventAcceptedLeague - 1] ?? null,
+          worldProgress: snapshot.leagueEventWorldProgress,
+          invitationState: snapshot.leagueEventInvitationState,
+          lineup: snapshot.leagueEventCharacterIds.map((characterId, index) => ({
+            characterId,
+            leadSpecies: nameByValue(species, snapshot.leagueEventLeadSpecies[index] ?? 0),
+            leadLevel: snapshot.leagueEventLeadLevels[index] ?? 0,
+            teamSize: snapshot.leagueEventTeamSizes[index] ?? 0,
+          })),
+        },
         run: {
           active: snapshot.leagueRunActive,
           stage: circuitStages[snapshot.leagueRunStage - 1] ?? null,

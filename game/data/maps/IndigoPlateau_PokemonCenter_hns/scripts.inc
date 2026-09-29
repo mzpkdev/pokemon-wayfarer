@@ -24,6 +24,16 @@ IndigoPlateau_Pokecenter_OnTransition::
 	setrespawn HEAL_LOCATION_INDIGO_PLATEAU_HNS
 	end
 
+#if IS_WAYFARER
+IndigoPlateau_EventScript_LeagueEventEntrance::
+#if WAYFARER_LEAGUE_EVENTS
+	setvar VAR_0x8004, CIRCUIT_STAGE_INDIGO
+	goto LeagueEvent_EventScript_Entrance
+#else
+	end
+#endif
+#endif
+
 
 IndigoPlateau_EventScript_Cooltrainer::
 	msgbox IndigoPlateau_Text_CooltrainerM, MSGBOX_NPC

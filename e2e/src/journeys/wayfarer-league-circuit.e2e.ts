@@ -1,12 +1,8 @@
+import * as fs from "node:fs"
+import * as path from "node:path"
 import { afterEach, beforeEach, describe, expect, it } from "webanvil/test"
 
-import {
-  GameSession,
-  type ArrangeGame,
-  type CircuitStage,
-  type GameMap,
-  type Species,
-} from "../harness/game-session"
+import { GameSession, type ArrangeGame, type GameMap } from "../harness/game-session"
 
 const circuitState = async (
   game: GameSession,
@@ -200,12 +196,6 @@ const rooms = {
   masters: ["league-will", "league-koga", "league-bruno", "league-karen", "league-lance"],
   hoenn: ["league-sidney", "league-phoebe", "league-glacia", "league-drake", "league-wallace"],
 } as const
-const leads: Record<CircuitStage, readonly Species[]> = {
-  indigo: ["jynx", "hitmonchan", "mismagius", "kingdra", "scizor"],
-  masters: ["bronzong", "venomoth", "primeape", "weavile", "kingdra"],
-  hoenn: ["crawdaunt", "shedinja", "weavile", "gyarados", "whiscash"],
-}
-
 const admitIndigo = async (game: GameSession, replay = false): Promise<number> => {
   const start = await game.state.read()
   if (start.map.name === "indigo-league-lobby" && (start.player.x !== 32 || start.player.y !== 4)) {
@@ -215,10 +205,23 @@ const admitIndigo = async (game: GameSession, replay = false): Promise<number> =
     await walkTo(game, 32, 4)
   }
   const rating = (await game.state.read()).circuit.trainerRating
+  await walkTo(game, 32, 3)
+  await finishFieldScript(game, "Indigo event acceptance")
+  await expect(game.state.read()).resolves.toMatchObject({
+    circuit: { event: { acceptedLeague: "indigo", worldProgress: rating } },
+  })
   await walkNorthToMap(game, "indigo-lorelei")
   await expect(game.state.read()).resolves.toMatchObject({
     circuit: { run: { active: true, stage: "indigo", replay, ratingAtEntry: rating } },
   })
+  if (process.env.SKYEMU_CAPTURE_DIR && !replay) {
+    await fs.promises.mkdir(process.env.SKYEMU_CAPTURE_DIR, { recursive: true })
+    const eventId = (await game.state.read()).circuit.event.id
+    await fs.promises.writeFile(
+      path.join(process.env.SKYEMU_CAPTURE_DIR, `indigo-selected-${rating}-${eventId}.png`),
+      await game.screenshot(),
+    )
+  }
   return rating
 }
 
@@ -252,10 +255,17 @@ const finishRoomChain = async (
   replay = false,
   champion: "win" | "lose" = "win",
 ): Promise<void> => {
+  const accepted = (await game.state.read()).circuit.event
+  expect(accepted.acceptedLeague).toBe(stage)
+  expect(accepted.lineup.map((member) => member.characterId).every((id) => id > 0)).toBe(true)
+  expect(new Set(accepted.lineup.map((member) => member.characterId)).size).toBe(5)
   for (const [index, map] of rooms[stage].entries()) {
     await expect(game.state.read()).resolves.toMatchObject({
       map: { name: map },
       circuit: { run: { active: true, stage, replay, ratingAtEntry: rating } },
+    })
+    await expect(game.state.read()).resolves.toMatchObject({
+      circuit: { event: { id: accepted.id, worldProgress: rating, lineup: accepted.lineup } },
     })
     const automaticBattle = (await game.state.read()).battle.active
     if (!automaticBattle) {
@@ -270,8 +280,7 @@ const finishRoomChain = async (
     await expect(game.state.read()).resolves.toMatchObject({
       battle: {
         enemy: {
-          species:
-            stage === "indigo" && index === 1 && rating >= 160 ? "primeape" : leads[stage][index],
+          species: accepted.lineup[index]!.leadSpecies,
         },
       },
       circuit: { run: { active: true, stage, replay, ratingAtEntry: rating } },
@@ -406,41 +415,40 @@ describe.sequential("Wayfarer League Circuit", () => {
     await finishDojoWin(game)
   }, 600_000)
 
-  it("keeps badge collection independent and enforces the ordered 8/16/24 itinerary", async () => {
+  it("qualifies Indigo and Hoenn independently at TR 80, then unlocks Masters after both clears", async () => {
     await expect(circuitState(game, { johto: 3, hoenn: 4 })).resolves.toMatchObject({
       circuit: {
         badges: { total: 7 },
+        trainerRating: 70,
         leagues: { indigo: "locked", masters: "locked", hoenn: "locked" },
       },
     })
     await expect(circuitState(game, { johto: 4, hoenn: 4 })).resolves.toMatchObject({
       circuit: {
-        badges: { kanto: 0, johto: 4, hoenn: 4, total: 8 },
-        leagues: { indigo: "available", masters: "locked", hoenn: "locked" },
+        badges: { total: 8 },
         trainerRating: 80,
+        leagues: { indigo: "available", masters: "locked", hoenn: "available" },
       },
     })
-    await expect(circuitState(game, { johto: 8, hoenn: 8 })).resolves.toMatchObject({
-      circuit: {
-        badges: { total: 16 },
-        leagues: { indigo: "available", masters: "locked", hoenn: "locked" },
-      },
+    await expect(circuitState(game, { hoenn: 8 })).resolves.toMatchObject({
+      circuit: { leagues: { indigo: "locked", masters: "locked", hoenn: "available" } },
+    })
+    await expect(circuitState(game, { johto: 8 })).resolves.toMatchObject({
+      circuit: { leagues: { indigo: "available", masters: "locked", hoenn: "locked" } },
     })
     await expect(circuitState(game, { kanto: 8, johto: 8, hoenn: 8 })).resolves.toMatchObject({
       circuit: {
         badges: { total: 24 },
-        clears: { indigo: false, masters: false, hoenn: false },
-        leagues: { indigo: "available", masters: "locked", hoenn: "locked" },
         trainerRating: 160,
+        leagues: { indigo: "available", masters: "locked", hoenn: "available" },
       },
     })
-
     await game.saveAndReload()
     await expect(game.state.read()).resolves.toMatchObject({
       circuit: {
         badges: { total: 24 },
-        clears: { indigo: false, masters: false, hoenn: false },
         trainerRating: 160,
+        leagues: { indigo: "available", masters: "locked", hoenn: "available" },
       },
     })
 
@@ -461,19 +469,13 @@ describe.sequential("Wayfarer League Circuit", () => {
     )
     await expect(game.state.read()).resolves.toMatchObject({
       ui: { mode: "trainer-card", trainerCard: "circuit" },
-      circuit: {
-        badges: { total: 24 },
-        leagues: { indigo: "available", masters: "locked", hoenn: "locked" },
-      },
+      circuit: { leagues: { indigo: "available", masters: "locked", hoenn: "available" } },
     })
     await game.controls.press("b")
     await game.wait.until(
       (state) => state.ui.mode === "trainer-card" && state.ui.trainerCard === "front",
       "return to Trainer Card",
     )
-    // A short input pulse can be missed after observing the restored front
-    // page. Retry only while that page still owns input; never send B
-    // during closing or after the pause menu has opened.
     for (let attempt = 0; attempt < 8; attempt++) {
       const state = await game.state.read()
       if (state.ui.mode !== "trainer-card" || state.ui.trainerCard !== "front") break
@@ -488,32 +490,24 @@ describe.sequential("Wayfarer League Circuit", () => {
     )
 
     await expect(
-      circuitState(game, { kanto: 8, johto: 8, hoenn: 8 }, { indigo: true }),
+      circuitState(game, { johto: 4, hoenn: 4 }, { indigo: true }),
     ).resolves.toMatchObject({
-      circuit: {
-        leagues: { indigo: "cleared", masters: "available", hoenn: "locked" },
-        trainerRating: 160,
-      },
+      circuit: { leagues: { indigo: "cleared", masters: "locked", hoenn: "available" } },
     })
     await expect(
-      circuitState(game, { kanto: 8, johto: 8, hoenn: 8 }, { indigo: true, masters: true }),
+      circuitState(game, { johto: 4, hoenn: 4 }, { hoenn: true }),
     ).resolves.toMatchObject({
-      circuit: {
-        leagues: { indigo: "cleared", masters: "cleared", hoenn: "available" },
-        trainerRating: 160,
-      },
+      circuit: { leagues: { indigo: "available", masters: "locked", hoenn: "cleared" } },
     })
     await expect(
-      circuitState(
-        game,
-        { kanto: 8, johto: 8, hoenn: 8 },
-        { indigo: true, masters: true, hoenn: true },
-      ),
+      circuitState(game, { johto: 4, hoenn: 4 }, { indigo: true, hoenn: true }),
     ).resolves.toMatchObject({
-      circuit: {
-        leagues: { indigo: "cleared", masters: "cleared", hoenn: "cleared" },
-        trainerRating: 160,
-      },
+      circuit: { leagues: { indigo: "cleared", masters: "available", hoenn: "cleared" } },
+    })
+    await expect(
+      circuitState(game, { johto: 4, hoenn: 4 }, { indigo: true, masters: true, hoenn: true }),
+    ).resolves.toMatchObject({
+      circuit: { leagues: { indigo: "cleared", masters: "cleared", hoenn: "cleared" } },
     })
   })
 
@@ -529,12 +523,21 @@ describe.sequential("Wayfarer League Circuit", () => {
     expect(await game.story.var("trainerRating")).toBe(rating)
     await expect(game.state.read()).resolves.toMatchObject({ circuit: { trainerRating: rating } })
     await admitIndigo(game)
+    const accepted = (await game.state.read()).circuit.event
     await expect(game.state.read()).resolves.toMatchObject({
-      circuit: { run: { active: true, ratingAtEntry: rating } },
+      circuit: {
+        event: { worldProgress: rating, acceptedLeague: "indigo" },
+        run: { active: true, ratingAtEntry: rating },
+      },
     })
+    await game.story.setVar("trainerRating", rating + 123)
     await game.saveAndReload()
     await expect(game.state.read()).resolves.toMatchObject({
-      circuit: { trainerRating: rating, run: { active: true, ratingAtEntry: rating } },
+      circuit: {
+        trainerRating: rating + 123,
+        event: { id: accepted.id, worldProgress: rating, lineup: accepted.lineup },
+        run: { active: true, ratingAtEntry: rating },
+      },
     })
   })
 
@@ -745,7 +748,7 @@ describe.sequential("Wayfarer League Circuit", () => {
     }, 600_000)
   }
 
-  it("admits Seven Island Masters at sixteen badges and replays without another reward", async () => {
+  it("admits Masters after both regional clears and replays without another reward", async () => {
     await game.arrange({
       checkpoint: "new-bark-after-intro",
       player: { facing: "up", position: { map: "sevii-seven-island-house-room1", x: 4, y: 5 } },
@@ -754,7 +757,7 @@ describe.sequential("Wayfarer League Circuit", () => {
     })
     const lockedRating = (await game.state.read()).circuit.trainerRating
     await game.player.interact()
-    await finishFieldScript(game, "Masters fifteen-badge refusal")
+    await finishFieldScript(game, "Masters refusal before both regional clears")
     await expect(game.state.read()).resolves.toMatchObject({
       map: { name: "sevii-seven-island-house-room1" },
       circuit: { trainerRating: lockedRating, clears: { masters: false }, run: { active: false } },
@@ -764,7 +767,7 @@ describe.sequential("Wayfarer League Circuit", () => {
       checkpoint: "new-bark-after-intro",
       player: { facing: "up", position: { map: "sevii-seven-island-house-room1", x: 4, y: 5 } },
       party: [{ species: "lapras", level: 100, moves: ["surf"] }],
-      circuit: { badges: { kanto: 8, johto: 8 }, clears: { indigo: true } },
+      circuit: { badges: { kanto: 8, johto: 8, hoenn: 1 }, clears: { indigo: true, hoenn: true } },
     })
     const rating = await admitMasters(game)
     await game.saveAndReload()
@@ -774,8 +777,8 @@ describe.sequential("Wayfarer League Circuit", () => {
     await finishRoomChain(game, "masters", rating)
     await expect(game.state.read()).resolves.toMatchObject({
       circuit: {
-        clears: { indigo: true, masters: true, hoenn: false },
-        regionalChampions: { kanto: true, johto: true, hoenn: false },
+        clears: { indigo: true, masters: true, hoenn: true },
+        regionalChampions: { kanto: true, johto: true, hoenn: true },
         trainerRating: rating,
       },
     })
@@ -794,14 +797,17 @@ describe.sequential("Wayfarer League Circuit", () => {
       checkpoint: "new-bark-after-intro",
       player: { position: { map: "hoenn-league-lobby", x: 9, y: 3 } },
       party: [{ species: "lapras", level: 100, moves: ["surf"] }],
-      circuit: {
-        badges: { kanto: 8, johto: 8, hoenn: 8 },
-        clears: { indigo: true, masters: true },
-      },
+      circuit: { badges: { hoenn: 8 } },
     })
     const rating = (await game.state.read()).circuit.trainerRating
     await game.player.interact()
     await finishFieldScript(game, "Hoenn guards grant admission")
+    await walkTo(game, 9, 2)
+    await finishFieldScript(game, "Hoenn event acceptance")
+    const accepted = (await game.state.read()).circuit.event
+    expect(accepted.acceptedLeague).toBe("hoenn")
+    expect(accepted.worldProgress).toBe(rating)
+    expect(new Set(accepted.lineup.map((member) => member.characterId)).size).toBe(5)
     await walkNorthToMap(game, "hoenn-league-hall5")
     await walkNorthToMap(game, "league-sidney")
     // The room's frame script closes the entrance after the map first becomes ready.
@@ -818,14 +824,12 @@ describe.sequential("Wayfarer League Circuit", () => {
       "league-drake",
       "league-wallace",
     ] as const
-    const leads = ["crawdaunt", "shedinja", "weavile", "gyarados", "whiscash"] as const
     const halls = [
       "hoenn-league-hall1",
       "hoenn-league-hall2",
       "hoenn-league-hall3",
       "hoenn-league-hall4",
     ] as const
-    const leadLevels = [64, 92, 54, 56, 98] as const
     for (const [index, room] of rooms.entries()) {
       if (index < 4) {
         await walkTo(game, 6, 6)
@@ -837,13 +841,14 @@ describe.sequential("Wayfarer League Circuit", () => {
         map: { name: room },
         battle: {
           enemy: {
-            species: leads[index],
-            level: leadLevels[index],
+            species: accepted.lineup[index]!.leadSpecies,
+            level: accepted.lineup[index]!.leadLevel,
           },
         },
         circuit: {
           trainerRating: rating,
           clears: { hoenn: false },
+          event: { id: accepted.id, worldProgress: rating, lineup: accepted.lineup },
           run: { active: true, stage: "hoenn", replay: false, ratingAtEntry: rating },
         },
       })
@@ -872,7 +877,11 @@ describe.sequential("Wayfarer League Circuit", () => {
     }
     await expect(game.state.read()).resolves.toMatchObject({
       map: { name: "ever-grande-city" },
-      circuit: { clears: { indigo: true, masters: true, hoenn: true }, run: { active: false } },
+      circuit: {
+        clears: { indigo: false, masters: false, hoenn: true },
+        run: { active: false },
+        event: { id: 0, acceptedLeague: null },
+      },
     })
     const completedRating = (await game.state.read()).circuit.trainerRating
     await game.saveAndReload()
@@ -889,6 +898,7 @@ describe.sequential("Wayfarer League Circuit", () => {
       circuit: { badges: { johto: 8 } },
     })
     const rating = await admitIndigo(game)
+    const firstEventId = (await game.state.read()).circuit.event.id
     await walkTo(game, 6, 6)
     await startTrainerBattle(game, "losing Indigo attempt")
     for (let attempt = 0; attempt < 900; attempt++) {
@@ -899,11 +909,17 @@ describe.sequential("Wayfarer League Circuit", () => {
     }
     await expect(game.state.read()).resolves.toMatchObject({
       map: { name: "indigo-league-lobby" },
-      circuit: { trainerRating: rating, clears: { indigo: false }, run: { active: false } },
+      circuit: {
+        trainerRating: rating,
+        clears: { indigo: false },
+        run: { active: false },
+        event: { id: 0, acceptedLeague: null },
+      },
     })
     await game.saveAndReload()
     await expect(game.story.var("leagueState")).resolves.toBe(1)
     expect(await admitIndigo(game)).toBe(rating)
+    expect((await game.state.read()).circuit.event.id).toBeGreaterThan(firstEventId)
     await expect(game.story.var("leagueState")).resolves.toBe(1)
   }, 240_000)
 
@@ -918,7 +934,12 @@ describe.sequential("Wayfarer League Circuit", () => {
     await finishRoomChain(game, "indigo", rating, false, "lose")
     await expect(game.state.read()).resolves.toMatchObject({
       map: { name: "indigo-league-lobby" },
-      circuit: { trainerRating: rating, clears: { indigo: false }, run: { active: false } },
+      circuit: {
+        trainerRating: rating,
+        clears: { indigo: false },
+        run: { active: false },
+        event: { id: 0, acceptedLeague: null },
+      },
     })
     await game.saveAndReload()
     await enterDojo(game)
@@ -933,11 +954,17 @@ describe.sequential("Wayfarer League Circuit", () => {
       circuit: { badges: { johto: 8 } },
     })
     const rating = await admitIndigo(game)
+    const accepted = (await game.state.read()).circuit.event
     await game.story.setVar("leagueState", 6)
     await game.saveAndReload()
     await expect(game.state.read()).resolves.toMatchObject({
       map: { name: "indigo-league-lobby" },
-      circuit: { trainerRating: rating, clears: { indigo: false }, run: { active: false } },
+      circuit: {
+        trainerRating: rating,
+        clears: { indigo: false },
+        run: { active: false },
+        event: accepted,
+      },
     })
     await expect(game.story.var("leagueState")).resolves.toBe(1)
   })
@@ -965,7 +992,7 @@ describe.sequential("Wayfarer League Circuit", () => {
     })
   })
 
-  it("denies entry without eight badges and creates no run", async () => {
+  it("denies entry below TR 80 and creates no event or run", async () => {
     await game.arrange({
       checkpoint: "new-bark-after-intro",
       player: { position: { map: "indigo-league-lobby", x: 32, y: 4 } },
@@ -980,7 +1007,50 @@ describe.sequential("Wayfarer League Circuit", () => {
     await finishFieldScript(game, "denied Indigo admission")
     await expect(game.state.read()).resolves.toMatchObject({
       map: { name: "indigo-league-lobby" },
-      circuit: { trainerRating: rating, clears: { indigo: false }, run: { active: false } },
+      circuit: {
+        trainerRating: rating,
+        clears: { indigo: false },
+        run: { active: false },
+        event: { id: 0, acceptedLeague: null },
+      },
+    })
+  })
+
+  it("keeps one accepted event while declining admission to another League", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { position: { map: "indigo-league-lobby", x: 32, y: 4 }, facing: "up" },
+      party: [{ species: "lapras", level: 100 }],
+      circuit: { badges: { johto: 4, hoenn: 4 }, clears: { indigo: true, hoenn: true } },
+    })
+    await walkTo(game, 32, 3)
+    await finishFieldScript(game, "Indigo event acceptance")
+    const accepted = (await game.state.read()).circuit.event
+    expect(accepted.id).toBeGreaterThan(0)
+    expect(accepted.acceptedLeague).toBe("indigo")
+    await game.saveAndReload()
+    await expect(game.state.read()).resolves.toMatchObject({ circuit: { event: accepted } })
+
+    await game.player.warp("sevii-seven-island-house-room1", 4, 5, "up")
+    await game.wait.forMap("sevii-seven-island-house-room1")
+    await game.player.interact()
+    await finishFieldScript(game, "Masters event elsewhere denial")
+    await expect(game.state.read()).resolves.toMatchObject({
+      map: { name: "sevii-seven-island-house-room1" },
+      circuit: {
+        leagues: { masters: "locked", hoenn: "cleared" },
+        run: { active: false },
+        event: accepted,
+      },
+    })
+
+    await game.player.warp("indigo-league-lobby", 32, 4, "up")
+    await game.wait.forMap("indigo-league-lobby")
+    await walkTo(game, 32, 3)
+    await finishFieldScript(game, "return to accepted Indigo event")
+    await walkNorthToMap(game, "indigo-lorelei")
+    await expect(game.state.read()).resolves.toMatchObject({
+      circuit: { event: accepted, run: { active: true, stage: "indigo" } },
     })
   })
 })

@@ -2,7 +2,13 @@
 #define GUARD_TEST_LEAGUE_RUN_HELPERS_H
 
 #include "event_data.h"
+#include "config/league_circuit.h"
 #include "league_circuit.h"
+#include "league_events.h"
+#include "league_event_battle.h"
+#include "load_save.h"
+#include "save.h"
+#include "gba/flash_internal.h"
 #include "constants/maps.h"
 #include "constants/vars.h"
 
@@ -24,6 +30,22 @@ static inline enum CircuitStage Test_StageForRegion(enum Region region)
 static inline bool8 Test_AdmitCircuitRun(enum CircuitStage stage)
 {
     struct WarpData source, destination;
+#if WAYFARER_LEAGUE_EVENTS
+    // Accept has the same full-save boundary as the production lobby action.
+    CheckForFlashMemory();
+    if (gFlashMemoryPresent != TRUE)
+    {
+        gFlashMemoryPresent = TRUE;
+        InitFlashTimer();
+    }
+    gSaveBlock1Ptr->saveVersionMagic = SAVE_VERSION_MAGIC;
+    gSaveBlock1Ptr->saveVersion = SAVE_VERSION;
+    if (GetAcceptedLeagueEventId() == 0
+     && AcceptLeagueEvent((enum LeagueId)stage) != LEAGUE_ACCEPT_OK)
+        return FALSE;
+    if (GetAcceptedLeagueEventLeagueId() != (enum LeagueId)stage)
+        return FALSE;
+#endif
     if (stage == CIRCUIT_STAGE_MASTERS)
     {
         Test_SetLeagueMap(&gSaveBlock1Ptr->location, MAP_SEVEN_ISLAND_HOUSE_ROOM1);
@@ -36,6 +58,7 @@ static inline bool8 Test_AdmitCircuitRun(enum CircuitStage stage)
     Test_SetLeagueMap(&destination, stage == CIRCUIT_STAGE_HOENN
         ? MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM : stage == CIRCUIT_STAGE_MASTERS
         ? MAP_POKEMON_LEAGUE_WILLS_ROOM_HNS : MAP_POKEMON_LEAGUE_LORELEIS_ROOM);
+    gSaveBlock1Ptr->location = source;
     LeagueRunHandleWarp(&source, &destination);
     gSaveBlock1Ptr->location = destination;
     return GetActiveLeagueRunStage() == stage;
@@ -49,6 +72,39 @@ static inline bool8 Test_AdmitLeagueRun(enum Region region)
 static inline void Test_CompleteCircuitRooms(enum CircuitStage stage)
 {
     u8 i;
+#if WAYFARER_LEAGUE_EVENTS
+    static const u16 indigoRooms[] = {
+        MAP_POKEMON_LEAGUE_LORELEIS_ROOM, MAP_POKEMON_LEAGUE_BRUNOS_ROOM,
+        MAP_POKEMON_LEAGUE_AGATHAS_ROOM, MAP_POKEMON_LEAGUE_LANCES_ROOM,
+        MAP_POKEMON_LEAGUE_CHAMPIONS_ROOM,
+    };
+    static const u16 mastersRooms[] = {
+        MAP_POKEMON_LEAGUE_WILLS_ROOM_HNS, MAP_POKEMON_LEAGUE_KOGAS_ROOM_HNS,
+        MAP_POKEMON_LEAGUE_BRUNOS_ROOM_HNS, MAP_POKEMON_LEAGUE_KARENS_ROOM_HNS,
+        MAP_POKEMON_LEAGUE_CHAMPIONS_ROOM_HNS,
+    };
+    static const u16 hoennRooms[] = {
+        MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM, MAP_EVER_GRANDE_CITY_PHOEBES_ROOM,
+        MAP_EVER_GRANDE_CITY_GLACIAS_ROOM, MAP_EVER_GRANDE_CITY_DRAKES_ROOM,
+        MAP_EVER_GRANDE_CITY_CHAMPIONS_ROOM,
+    };
+    const u16 *rooms = stage == CIRCUIT_STAGE_INDIGO ? indigoRooms
+                     : stage == CIRCUIT_STAGE_MASTERS ? mastersRooms : hoennRooms;
+    s8 first = GetCurrentLeagueEventMatch();
+
+    for (i = first < 0 ? 5 : first; i < 5; i++)
+    {
+        Test_SetLeagueMap(&gSaveBlock1Ptr->location, rooms[i]);
+#if TESTING
+        SetLeagueEventBattleVictoryForTesting(GetAcceptedLeagueEventId(), i);
+#endif
+        if (!RecordCircuitRoomVictory(stage, i))
+            return;
+    }
+    Test_SetLeagueMap(&gSaveBlock1Ptr->location, stage == CIRCUIT_STAGE_INDIGO
+        ? MAP_POKEMON_LEAGUE_HALL_OF_FAME : stage == CIRCUIT_STAGE_MASTERS
+        ? MAP_POKEMON_LEAGUE_HALL_OF_FAME_HNS : MAP_EVER_GRANDE_CITY_HALL_OF_FAME);
+#else
     if (stage == CIRCUIT_STAGE_HOENN)
     {
         for (i = 0; i < 4; i++)
@@ -67,6 +123,7 @@ static inline void Test_CompleteCircuitRooms(enum CircuitStage stage)
         VarSet(VAR_LEAGUE_STATE, 5);
         Test_SetLeagueMap(&gSaveBlock1Ptr->location, MAP_POKEMON_LEAGUE_HALL_OF_FAME);
     }
+#endif
 }
 
 static inline void Test_CompleteLeagueRooms(enum Region region)

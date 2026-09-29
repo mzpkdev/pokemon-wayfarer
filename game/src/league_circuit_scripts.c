@@ -3,6 +3,15 @@
 #include "league_circuit.h"
 #include "script.h"
 #include "string_util.h"
+#include "config/league_circuit.h"
+
+#if WAYFARER_LEAGUE_EVENTS
+#include "data.h"
+#include "league_events.h"
+#include "constants/characters.h"
+#include "constants/event_objects.h"
+#include "constants/vars.h"
+#endif
 
 #if IS_WAYFARER
 extern const u8 LeagueCircuit_Text_NeedEightBadges[];
@@ -11,6 +20,96 @@ extern const u8 LeagueCircuit_Text_NeedSixteenBadges[];
 extern const u8 LeagueCircuit_Text_NeedMastersClear[];
 extern const u8 LeagueCircuit_Text_NeedTwentyFourBadges[];
 extern const u8 LeagueCircuit_Text_Unavailable[];
+extern const u8 LeagueCircuit_Text_NeedQualification[];
+extern const u8 LeagueCircuit_Text_NeedRegionalBadge[];
+extern const u8 LeagueCircuit_Text_NeedMaster[];
+extern const u8 LeagueCircuit_Text_EventElsewhere[];
+extern const u8 LeagueCircuit_Text_NoAcceptedEvent[];
+#endif
+
+#if WAYFARER_LEAGUE_EVENTS
+static const u8 sLeagueEventUnknownTrainer[] = _("TRAINER");
+static const u8 sLeagueEventLineupLabel[] = _("Your opponents:");
+
+static const struct LeagueSavedTeam *GetCurrentLeagueRoomTeam(void)
+{
+    const struct LeagueSavedTeam *team;
+    s8 match = GetCurrentLeagueEventMatch();
+
+    if (match < 0 || !GetAcceptedLeagueEventMember(match, &team))
+        return NULL;
+    return team;
+}
+
+static const u8 *GetLeagueEventMemberName(const struct LeagueSavedTeam *team)
+{
+    if (team == NULL || team->sourceTrainerId >= TRAINERS_COUNT)
+        return sLeagueEventUnknownTrainer;
+    return gTrainers[team->sourceTrainerId].trainerName;
+}
+
+u16 LeagueEvent_Accept(void)
+{
+    return AcceptLeagueEvent((enum LeagueId)gSpecialVar_0x8004);
+}
+
+u16 LeagueEvent_GetAcceptedLeague(void)
+{
+    return GetAcceptedLeagueEventLeagueId();
+}
+
+u16 LeagueEvent_BufferRoomName(void)
+{
+    const struct LeagueSavedTeam *team = GetCurrentLeagueRoomTeam();
+
+    StringCopy(gStringVar1, GetLeagueEventMemberName(team));
+    return team != NULL;
+}
+
+u16 LeagueEvent_SetRoomGraphics(void)
+{
+    const struct LeagueSavedTeam *team = GetCurrentLeagueRoomTeam();
+    const struct LeagueTrainer *trainer = team != NULL ? GetLeagueTrainer(team->characterId) : NULL;
+
+    VarSet(VAR_OBJ_GFX_ID_1, trainer != NULL && trainer->enabled
+           ? trainer->objectGraphicsId : OBJ_EVENT_GFX_YOUNGSTER);
+    return trainer != NULL;
+}
+
+u16 LeagueEvent_BufferChampion(void)
+{
+    const struct LeagueSavedTeam *team;
+
+    if (!GetAcceptedLeagueEventMember(LEAGUE_LINEUP_SIZE - 1, &team))
+        team = NULL;
+    StringCopy(gStringVar1, GetLeagueEventMemberName(team));
+    return team != NULL;
+}
+
+u16 LeagueEvent_BufferLineup(void)
+{
+    const struct LeagueSavedTeam *team;
+    u8 *ptr = StringCopy(gStringVar4, sLeagueEventLineupLabel);
+    u8 match;
+
+    for (match = 0; match < LEAGUE_LINEUP_SIZE; match++)
+    {
+        if (!GetAcceptedLeagueEventMember(match, &team))
+            return FALSE;
+        if (match == 0)
+            *ptr++ = CHAR_NEWLINE;
+        else if (match % 2 != 0)
+        {
+            *ptr++ = CHAR_COMMA;
+            *ptr++ = CHAR_SPACE;
+        }
+        ptr = StringCopy(ptr, GetLeagueEventMemberName(team));
+        if (match == 1 || match == 3)
+            *ptr++ = CHAR_PROMPT_CLEAR;
+    }
+    *ptr = EOS;
+    return TRUE;
+}
 #endif
 
 u16 LeagueCircuit_GetRequiredRegion(void)
@@ -71,6 +170,21 @@ u16 LeagueCircuit_BufferAdmissionDenial(void)
         break;
     case LEAGUE_ADMISSION_NEEDS_24_BADGES:
         text = LeagueCircuit_Text_NeedTwentyFourBadges;
+        break;
+    case LEAGUE_ADMISSION_NEEDS_QUALIFICATION:
+        text = LeagueCircuit_Text_NeedQualification;
+        break;
+    case LEAGUE_ADMISSION_NEEDS_REGIONAL_BADGE:
+        text = LeagueCircuit_Text_NeedRegionalBadge;
+        break;
+    case LEAGUE_ADMISSION_NEEDS_MASTER:
+        text = LeagueCircuit_Text_NeedMaster;
+        break;
+    case LEAGUE_ADMISSION_EVENT_ELSEWHERE:
+        text = LeagueCircuit_Text_EventElsewhere;
+        break;
+    case LEAGUE_ADMISSION_NO_ACCEPTED_EVENT:
+        text = LeagueCircuit_Text_NoAcceptedEvent;
         break;
     default:
         text = LeagueCircuit_Text_Unavailable;

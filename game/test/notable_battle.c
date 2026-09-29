@@ -7,14 +7,21 @@
 #include "data.h"
 #include "debug.h"
 #include "event_data.h"
+#include "event_scripts.h"
+#include "league_event_battle.h"
+#include "league_events.h"
 #include "league_circuit.h"
+#include "league_run_helpers.h"
 #include "notable_trainers.h"
 #include "pokemon.h"
 #include "randomizer.h"
 #include "test/test.h"
 #include "trainer_party_scaling.h"
 #include "trainer_rating.h"
+#include "wayfarer_persistence.h"
 #include "config/notable_trainers.h"
+#include "config/league_circuit.h"
+#include "constants/battle_setup.h"
 #include "constants/battle_ai.h"
 #include "constants/items.h"
 #include "constants/maps.h"
@@ -192,6 +199,68 @@ TEST("Notable battle species randomizer uses the source party and disables ace p
 
 TEST("Notable league opponent uses the frozen run entry rating")
 {
+#if WAYFARER_LEAGUE_EVENTS
+    struct BattlePokemon battleMon;
+    const struct LeagueSavedTeam *team;
+    const struct LeagueSavedTeam *prepared;
+    u8 options, count, i;
+    u16 carrier = TRAINER_WAYFARER_INDIGO_LORELEI;
+    u32 changedSpecies;
+
+    WayfarerInitPersistentState();
+    for (i = 0; i < 8; i++)
+        SetBadgeStateForRegion(REGION_KANTO, i, TRUE);
+    SetTrainerRating(80);
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Abilities = TRUE;
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Type = TRUE;
+    EXPECT(Test_AdmitCircuitRun(CIRCUIT_STAGE_INDIGO));
+    EXPECT(GetAcceptedLeagueEventMember(0, &team));
+    EXPECT_EQ(GetAcceptedLeagueEventWorldProgress(), 80);
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Abilities = FALSE;
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Type = FALSE;
+    BeginNotableConstruction(160, BATTLE_TYPE_TRAINER);
+    TRAINER_BATTLE_PARAM.mode = TRAINER_BATTLE_SINGLE_NO_INTRO_TEXT;
+    TRAINER_BATTLE_PARAM.opponentA = carrier;
+    BattleSetup_ConfigureTrainerBattle(NULL);
+    EXPECT_EQ(TRAINER_BATTLE_PARAM.opponentA, team->sourceTrainerId);
+    EXPECT(GetPreparedLeagueEventBattle(team->sourceTrainerId, &prepared, &options));
+    EXPECT_EQ(prepared, team);
+    count = CreateNPCTrainerPartyForOpponent(gEnemyParty, team->sourceTrainerId, TRUE, gBattleTypeFlags);
+    EXPECT_EQ(count, team->teamSize);
+    for (i = 0; i < count; i++)
+    {
+        const struct LeagueSavedMon *saved = &team->members[team->battleOrder[i]];
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_SPECIES), saved->species);
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_LEVEL), saved->level);
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM), saved->heldItem);
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_MOVE1), saved->moves[0]);
+        EXPECT_EQ(GetMonAbility(&gEnemyParty[i]), saved->ability);
+        PokemonToBattleMon(&gEnemyParty[i], &battleMon);
+        EXPECT_EQ(battleMon.ability, saved->ability);
+        EXPECT_EQ(battleMon.types[0], saved->types[0]);
+        EXPECT_EQ(battleMon.types[1], saved->types[1]);
+    }
+    // TryFormChange uses these same setters. A new species uses its own
+    // ability and types instead of inheriting the original saved identity.
+    changedSpecies = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES) == SPECIES_ROTOM
+        ? SPECIES_ROTOM_HEAT : SPECIES_ROTOM;
+    SetMonData(&gEnemyParty[0], MON_DATA_SPECIES, &changedSpecies);
+    CalculateMonStats(&gEnemyParty[0]);
+    PokemonToBattleMon(&gEnemyParty[0], &battleMon);
+    EXPECT_EQ(battleMon.ability, GetAbilityBySpecies(changedSpecies, battleMon.abilityNum));
+    EXPECT_EQ(battleMon.types[0], GetSpeciesType(changedSpecies, 0));
+    EXPECT_EQ(battleMon.types[1], GetSpeciesType(changedSpecies, 1));
+    SetTrainerRating(0);
+    EXPECT_EQ(CreateNPCTrainerPartyForOpponent(gEnemyParty, team->sourceTrainerId, TRUE, gBattleTypeFlags), count);
+    for (i = 0; i < count; i++)
+    {
+        const struct LeagueSavedMon *saved = &team->members[team->battleOrder[i]];
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_SPECIES), saved->species);
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_LEVEL), saved->level);
+    }
+    ResetLeagueEventBattleProof();
+    FreeBattleResources();
+#else
     struct NotableTrainerSnapshot entry;
     u16 leagueId = TRAINER_WAYFARER_INDIGO_LORELEI;
     u16 map = MAP_POKEMON_LEAGUE_LORELEIS_ROOM;
@@ -213,7 +282,43 @@ TEST("Notable league opponent uses the frozen run entry rating")
     EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), entry.members[entry.battleOrder[0]].lvl);
     gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active = FALSE;
     FreeBattleResources();
+#endif
 }
+
+#if WAYFARER_LEAGUE_EVENTS
+TEST("Corrupt accepted lineup cannot fall through to the old league room carrier")
+{
+    const struct LeagueSavedTeam *team;
+    const u8 *script;
+    u8 firstSlot;
+    u8 originalType;
+    u16 carrier = TRAINER_WAYFARER_INDIGO_LORELEI;
+    u8 i;
+
+    WayfarerInitPersistentState();
+    for (i = 0; i < 8; i++)
+        SetBadgeStateForRegion(REGION_KANTO, i, TRUE);
+    SetTrainerRating(80);
+    EXPECT(Test_AdmitCircuitRun(CIRCUIT_STAGE_INDIGO));
+    EXPECT(GetAcceptedLeagueEventMember(0, &team));
+    firstSlot = team->battleOrder[0];
+    originalType = team->members[firstSlot].types[0];
+    gPokemonStoragePtr->leagueEventTeams.lineup[0].members[firstSlot].types[0] = NUMBER_OF_MON_TYPES;
+    EXPECT(!ValidateLeagueEventState());
+
+    gIsDebugBattle = FALSE;
+    TRAINER_BATTLE_PARAM.mode = TRAINER_BATTLE_SINGLE_NO_INTRO_TEXT;
+    TRAINER_BATTLE_PARAM.opponentA = carrier;
+    script = BattleSetup_ConfigureTrainerBattle(NULL);
+    EXPECT_EQ(script, EventScript_NoNormalTrainerBattle);
+    EXPECT_EQ(TRAINER_BATTLE_PARAM.opponentA, carrier);
+    EXPECT(!IsLeagueEventBattleInProgress());
+
+    gPokemonStoragePtr->leagueEventTeams.lineup[0].members[firstSlot].types[0] = originalType;
+    EXPECT(ValidateLeagueEventState());
+    ResetLeagueEventBattleProof();
+}
+#endif
 
 TEST("Notable league preparation fails before changing an existing party")
 {

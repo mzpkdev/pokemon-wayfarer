@@ -23,6 +23,9 @@ EverGrandeCity_HallOfFame_EventScript_EnterHallOfFame::
 	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
 	specialvar VAR_RESULT, LeagueCircuit_HasClearedStage
 	goto_if_eq VAR_RESULT, TRUE, EverGrandeCity_HallOfFame_EventScript_WayfarerReplay
+#if WAYFARER_LEAGUE_EVENTS
+	goto EverGrandeCity_HallOfFame_EventScript_LeagueEventFirstClear
+#endif
 #endif
 	lockall
 	applymovement LOCALID_HALL_OF_FAME_WALLACE, EverGrandeCity_HallOfFame_Movement_WalkIntoHallOfFame1
@@ -70,6 +73,29 @@ EverGrandeCity_HallOfFame_EventScript_EnterHallOfFame::
 	end
 
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+#if WAYFARER_LEAGUE_EVENTS
+EverGrandeCity_HallOfFame_EventScript_LeagueEventFirstClear::
+	lockall
+	msgbox EverGrandeCity_HallOfFame_Text_LeagueEventFirstClear
+	dofieldeffect FLDEFF_HALL_OF_FAME_RECORD
+	waitfieldeffect FLDEFF_HALL_OF_FAME_RECORD
+	setvar VAR_TEMP_1, 1
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
+	specialvar VAR_RESULT, LeagueCircuit_CommitRunClear
+	goto_if_ne VAR_RESULT, CIRCUIT_COMMIT_FIRST_CLEAR, LeagueCircuit_EventScript_HoennEntryDenied
+	call EverGrandeCity_HallOfFame_EventScript_SetGameClearFlags
+	setrespawn HEAL_LOCATION_EVER_GRANDE_CITY_POKEMON_LEAGUE
+	fadescreenspeed FADE_TO_BLACK, 24
+	special GameClear
+	waitstate
+	releaseall
+	end
+
+EverGrandeCity_HallOfFame_Text_LeagueEventFirstClear::
+	.string "Your HOENN LEAGUE victory will be\n"
+	.string "recorded in the HALL OF FAME.$"
+#endif
+
 EverGrandeCity_HallOfFame_EventScript_WayfarerReplay::
 	lockall
 	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN

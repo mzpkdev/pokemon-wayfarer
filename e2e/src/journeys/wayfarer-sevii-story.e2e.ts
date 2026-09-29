@@ -218,7 +218,7 @@ describe.sequential("Wayfarer Sevii independent story journeys", () => {
       party: [...strongParty()].map((mon) => ({ ...mon, moves: [...mon.moves] })),
       determinism: { textSpeed: "instant" },
     })
-    expect((await game.state.read()).circuit.trainerRating).toBe(54)
+    expect((await game.state.read()).circuit.trainerRating).toBe(119)
     await game.player.interact()
     await advanceUntil(
       game,

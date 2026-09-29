@@ -13,10 +13,10 @@ export type TrainerOnlySnapshot = {
   outcome: number
 }
 
-const abiVersion = 24
+const abiVersion = 25
 const expectedRequestSize = 380
 const expectedResultSize = 16
-const expectedStateSize = 1692
+const expectedStateSize = 1732
 const expectedRequestStatusOffset = 87
 const expectedResultStatusOffset = 14
 
@@ -312,6 +312,14 @@ export type StateSnapshot = {
   leagueRunStage: number
   leagueRunRating: number
   leagueRunReplay: boolean
+  leagueEventId: number
+  leagueEventWorldProgress: number
+  leagueEventAcceptedLeague: number
+  leagueEventInvitationState: number
+  leagueEventCharacterIds: number[]
+  leagueEventLeadSpecies: number[]
+  leagueEventTeamSizes: number[]
+  leagueEventLeadLevels: number[]
   regionalChampionMask: number
   starterChooseStage: number
   playerAppearanceId: number
@@ -952,6 +960,18 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     leagueRunStage: bytes[353]!,
     leagueRunRating: uint32(bytes, 1688),
     leagueRunReplay: bytes[441] !== 0,
+    leagueEventId: uint32(bytes, 1692),
+    leagueEventWorldProgress: uint32(bytes, 1696),
+    leagueEventAcceptedLeague: bytes[1700]!,
+    leagueEventInvitationState: bytes[1701]!,
+    leagueEventCharacterIds: Array.from({ length: 5 }, (_, index) =>
+      uint16(bytes, 1702 + index * 2),
+    ),
+    leagueEventLeadSpecies: Array.from({ length: 5 }, (_, index) =>
+      uint16(bytes, 1712 + index * 2),
+    ),
+    leagueEventTeamSizes: Array.from(bytes.slice(1722, 1727)),
+    leagueEventLeadLevels: Array.from(bytes.slice(1727, 1732)),
     regionalChampionMask: bytes[442]!,
     starterChooseStage: bytes[373]!,
     playerAppearanceId: bytes[382]!,

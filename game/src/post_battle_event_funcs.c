@@ -7,6 +7,7 @@
 #include "load_save.h"
 #include "malloc.h"
 #include "league_circuit.h"
+#include "league_events.h"
 #include "trainer_rating.h"
 #include "overworld.h"
 #include "regions.h"
@@ -33,6 +34,10 @@ static struct IndigoHallOfFameSnapshot
 {
     struct Pokemon party[PARTY_SIZE];
     TVShow tvShows[TV_SHOWS_COUNT];
+#if WAYFARER_LEAGUE_EVENTS
+    struct LeagueEventState leagueEvent;
+    struct LeagueSavedTeams leagueEventTeams;
+#endif
 } *sIndigoHallOfFameSnapshot;
 static struct WarpData sIndigoHallOfFameContinueWarpBefore;
 static u32 sIndigoHallOfFameCountBefore;
@@ -57,6 +62,10 @@ u16 LeagueCircuit_CommitAndRegisterIndigo(void)
     if (sIndigoHallOfFameSnapshot == NULL)
         return FALSE;
 
+#if WAYFARER_LEAGUE_EVENTS
+    sIndigoHallOfFameSnapshot->leagueEvent = gSaveBlock3Ptr->leagueEvent;
+    sIndigoHallOfFameSnapshot->leagueEventTeams = gPokemonStoragePtr->leagueEventTeams;
+#endif
     memcpy(sIndigoHallOfFameSnapshot->party, gPlayerParty, sizeof(gPlayerParty));
     memcpy(sIndigoHallOfFameSnapshot->tvShows, gSaveBlock1Ptr->tvShows, sizeof(gSaveBlock1Ptr->tvShows));
     sIndigoHallOfFameContinueWarpBefore = gSaveBlock1Ptr->continueGameWarp;
@@ -108,8 +117,14 @@ void FinishIndigoHallOfFameSaveTransaction(bool8 success)
     if (!sIndigoHallOfFameSaveTransaction)
         return;
     sIndigoHallOfFameSaveTransaction = FALSE;
+    if (success)
+        AcknowledgeLeagueProgressSave();
     if (!success)
     {
+#if WAYFARER_LEAGUE_EVENTS
+        gSaveBlock3Ptr->leagueEvent = sIndigoHallOfFameSnapshot->leagueEvent;
+        gPokemonStoragePtr->leagueEventTeams = sIndigoHallOfFameSnapshot->leagueEventTeams;
+#endif
         RollbackIndigoHallOfFameCommit(sIndigoHallOfFameRatingAtEntry,
                                       sIndigoHallOfFameStoredRatingBefore);
         SetGameClearStateForRegion(REGION_KANTO, sIndigoHallOfFameKantoClearBefore);

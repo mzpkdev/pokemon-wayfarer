@@ -77,6 +77,7 @@ struct NotableTrainerSnapshot
 const struct NotableTrainer *GetNotableTrainerById(u32 characterId);
 const struct NotableTrainer *GetNotableTrainerForEncounter(u16 trainerId);
 u32 GetNotableTrainerRating(const struct NotableTrainer *trainer, u32 worldProgress);
+u8 GetNotableTrainerTeamLevel(u32 trainerTR);
 bool32 ResolveNotableTrainerSnapshot(const struct NotableTrainer *trainer, u32 worldProgress, bool32 skipMovePool, struct NotableTrainerSnapshot *snapshot);
 bool32 IsNotableTrainerCatalogValid(void);
 

@@ -5,10 +5,13 @@ controlled by `WAYFARER_V0_TRAINERS` in `include/config/notable_trainers.h`.
 The default enables it for Wayfarer. Standalone products retain their existing
 progression and battles.
 
-The fixed League circuit still owns admission, room order, wins, and ceremonies.
-Its opponents now use their canonical notable teams at the world progress saved
-on entry. Invitations, dynamic lineups, and persisted event teams are separate
-follow-up work. League wins no longer award player TR.
+League events select five canonical trainers, persist their resolved teams, and
+use the existing league rooms and first-win ceremonies. This slice offers an
+explicit acceptance prompt at each lobby: player TR 80 and a badge from that
+league's regions qualify for Indigo or Hoenn, and lifetime wins at both qualify
+for the Masters. Only one accepted event may wait at a time. Phone invitations
+and the in-game day clock remain follow-up work; lobby acceptance does not wait
+for a countdown. League wins award no player TR.
 
 Wild encounters use the v0 curve and shared evolution policy. Their encounter
 content must preserve the existing regional HM acquisition requirements.
@@ -22,6 +25,9 @@ content must preserve the existing regional HM acquisition requirements.
 | `notable_trainers.c` | Encounter-to-character mapping, growth, roster selection, and team resolution. |
 | `notable_moves.c` | Shared evolution step-down and per-trainer move pools, using game learnsets. |
 | `notable_ai.c` | Play styles, skill tiers, ace protection, and boss flags. |
+| `league_selection.c` | League registry, willingness, fatigue, aloof eligibility, Masters seats, and deterministic lineup order. |
+| `league_events.c` | Accepted events, saved teams, content validation, reigning champions, reign records, and Gallery counts. |
+| `league_circuit.c` | Room admission, battle progress, event resolution, recovery, and first-win integration. |
 | `battle_main.c` | Eligible opponent preparation, battle snapshot lifetime, and construction through the existing Pokémon constructor. |
 | `battle_ai_main.c` | Applying frozen notable flags after the engine's normal AI setup, including prediction slots. |
 
@@ -60,7 +66,28 @@ v0 HM windows and their generated regional witnesses. Regional witnesses prove
 encounter-table presence; the directional scenarios check acquisition from
 their approved sources. Native ROM tests verify both against actual movesets.
 
-Future league events should compose teams through `ResolveNotableTrainerSnapshot`
-and persist their resolved values before revealing the lineup. Its runtime
-pointers are transient and must not be written directly into a save. The event
-layer owns selection and lifetime; the battle layer owns construction.
+## Saved league events
+
+Acceptance composes all five teams through `ResolveNotableTrainerSnapshot` and
+the production Pokémon constructor, then commits a full save before revealing
+the lineup. Saved team records contain values rather than runtime pointers.
+Challenge and randomizer choices that determine those values are captured at
+acceptance; changing options later does not recompose the accepted team.
+
+Event metadata occupies `SaveBlock3.leagueEvent`; the compact team payload uses
+the unused tail of `PokemonStorage`, without reducing box capacity. State and
+payload checksums bind them to one event generation. Wayfarer event saves use
+complete slots, including save paths that formerly wrote only a few sectors.
+Load rejects mixed-generation slots and can recover the older complete slot.
+
+Entry and room victories queue a save at a settled overworld point. A loss or
+exit crowns the strongest saved participant; a win crowns the player. Both
+release the accepted event and update the most recent resolved lineup exactly
+once. Battle completion carries the event identity and match index, so an old
+callback cannot advance a new event. First Indigo Hall of Fame rollback restores
+the event metadata and saved teams together with its existing ceremony state.
+
+The future clock integration must initialize countdown timestamps from its own
+in-game day count; this slice does not read RTC days or schedule calls. The
+Masters Gallery counts are persisted; the full Gallery presentation and phone
+results remain separate work.

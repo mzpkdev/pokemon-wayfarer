@@ -1,7 +1,9 @@
 #include "global.h"
 #include "config/notable_trainers.h"
+#include "config/league_circuit.h"
 #include "event_data.h"
 #include "league_circuit.h"
+#include "league_event_battle.h"
 #include "league_run_helpers.h"
 #include "load_save.h"
 #include "main.h"
@@ -72,9 +74,27 @@ TEST("Circuit badges aggregate every regional distribution and duplicate awards 
             }
 }
 
-TEST("Circuit first-clear admission obeys 8 16 24 boundaries and canonical prerequisites")
+TEST("Circuit admission follows qualification, regional badges and lifetime wins")
 {
     ResetCircuitFacts();
+#if WAYFARER_LEAGUE_EVENTS
+    SetDistribution(1, 0, 0);
+    SetTrainerRating(79);
+    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_INDIGO), LEAGUE_ADMISSION_NEEDS_QUALIFICATION);
+    SetTrainerRating(80);
+    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_INDIGO), LEAGUE_ADMISSION_AVAILABLE);
+    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_HOENN), LEAGUE_ADMISSION_NEEDS_REGIONAL_BADGE);
+    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_MASTERS), LEAGUE_ADMISSION_NEEDS_MASTER);
+
+    SetDistribution(0, 0, 1);
+    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_INDIGO), LEAGUE_ADMISSION_NEEDS_REGIONAL_BADGE);
+    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_HOENN), LEAGUE_ADMISSION_AVAILABLE);
+    // Indigo and Hoenn wins are independent; neither orders the other.
+    SetCircuitClearForTesting(CIRCUIT_STAGE_HOENN, TRUE);
+    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_MASTERS), LEAGUE_ADMISSION_NEEDS_MASTER);
+    SetCircuitClearForTesting(CIRCUIT_STAGE_INDIGO, TRUE);
+    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_MASTERS), LEAGUE_ADMISSION_AVAILABLE);
+#else
     SetTotalBadges(7);
     EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_INDIGO), LEAGUE_ADMISSION_NEEDS_8_BADGES);
     SetTotalBadges(8);
@@ -109,9 +129,10 @@ TEST("Circuit first-clear admission obeys 8 16 24 boundaries and canonical prere
     EXPECT_EQ(Test_CompleteAndCommitCircuit(CIRCUIT_STAGE_HOENN), CIRCUIT_COMMIT_FIRST_CLEAR);
     EXPECT_EQ(GetRequiredCircuitStage(), CIRCUIT_STAGE_NONE);
     EXPECT(GetChampionStateForRegion(REGION_HOENN));
+#endif
 }
 
-TEST("All 24 badges may precede every circuit clear and Rating rises eight per first clear")
+TEST("All 24 badges may precede every circuit clear without league-win Rating gains")
 {
     ResetCircuitFacts();
     SetTotalBadges(24);
@@ -119,9 +140,15 @@ TEST("All 24 badges may precede every circuit clear and Rating rises eight per f
     EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 160);
     EXPECT_EQ(Test_CompleteAndCommitCircuit(CIRCUIT_STAGE_INDIGO), CIRCUIT_COMMIT_FIRST_CLEAR);
     EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 160);
+#if WAYFARER_LEAGUE_EVENTS
+    EXPECT_EQ(Test_CompleteAndCommitCircuit(CIRCUIT_STAGE_HOENN), CIRCUIT_COMMIT_FIRST_CLEAR);
+    EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 160);
+    EXPECT_EQ(Test_CompleteAndCommitCircuit(CIRCUIT_STAGE_MASTERS), CIRCUIT_COMMIT_FIRST_CLEAR);
+#else
     EXPECT_EQ(Test_CompleteAndCommitCircuit(CIRCUIT_STAGE_MASTERS), CIRCUIT_COMMIT_FIRST_CLEAR);
     EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 160);
     EXPECT_EQ(Test_CompleteAndCommitCircuit(CIRCUIT_STAGE_HOENN), CIRCUIT_COMMIT_FIRST_CLEAR);
+#endif
     EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 160);
 #else
     EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 56);
@@ -132,7 +159,12 @@ TEST("All 24 badges may precede every circuit clear and Rating rises eight per f
     EXPECT_EQ(Test_CompleteAndCommitCircuit(CIRCUIT_STAGE_HOENN), CIRCUIT_COMMIT_FIRST_CLEAR);
     EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 80);
 #endif
-    EXPECT_EQ(ConsumeRecordedCircuitClearStage(), CIRCUIT_STAGE_HOENN);
+    EXPECT_EQ(ConsumeRecordedCircuitClearStage(),
+#if WAYFARER_LEAGUE_EVENTS
+              CIRCUIT_STAGE_MASTERS);
+#else
+              CIRCUIT_STAGE_HOENN);
+#endif
     EXPECT_EQ(ConsumeRecordedCircuitClearStage(), CIRCUIT_STAGE_NONE);
 }
 
@@ -150,7 +182,12 @@ TEST("Cleared venue replay captures fresh Rating and commits without another rew
 #endif
     SetTotalBadges(16);
     EXPECT(IsEligibleForCircuitStage(CIRCUIT_STAGE_INDIGO));
-    EXPECT_EQ(GetRequiredCircuitStage(), CIRCUIT_STAGE_MASTERS);
+    EXPECT_EQ(GetRequiredCircuitStage(),
+#if WAYFARER_LEAGUE_EVENTS
+              CIRCUIT_STAGE_HOENN);
+#else
+              CIRCUIT_STAGE_MASTERS);
+#endif
     EXPECT(Test_AdmitCircuitRun(CIRCUIT_STAGE_INDIGO));
     EXPECT(IsActiveLeagueRunReplay());
     EXPECT(GetCircuitRunBattleRating(CIRCUIT_STAGE_INDIGO, 0, &rating));
@@ -168,7 +205,12 @@ TEST("Cleared venue replay captures fresh Rating and commits without another rew
 #else
               56);
 #endif
-    EXPECT_EQ(GetRequiredCircuitStage(), CIRCUIT_STAGE_MASTERS);
+    EXPECT_EQ(GetRequiredCircuitStage(),
+#if WAYFARER_LEAGUE_EVENTS
+              CIRCUIT_STAGE_HOENN);
+#else
+              CIRCUIT_STAGE_MASTERS);
+#endif
     EXPECT_EQ(ConsumeRecordedCircuitClearStage(), CIRCUIT_STAGE_INDIGO);
     EXPECT_EQ(ConsumeRecordedCircuitClearStage(), CIRCUIT_STAGE_NONE);
 }
@@ -176,7 +218,11 @@ TEST("Cleared venue replay captures fresh Rating and commits without another rew
 TEST("Room victory validation uses stage, room and saved Rating snapshot")
 {
     static const enum CircuitStage stages[] = {
+#if WAYFARER_LEAGUE_EVENTS
+        CIRCUIT_STAGE_INDIGO, CIRCUIT_STAGE_HOENN, CIRCUIT_STAGE_MASTERS,
+#else
         CIRCUIT_STAGE_INDIGO, CIRCUIT_STAGE_MASTERS, CIRCUIT_STAGE_HOENN,
+#endif
     };
     u8 i;
     u32 rating, firstRating;
@@ -191,6 +237,10 @@ TEST("Room victory validation uses stage, room and saved Rating snapshot")
         EXPECT(!ValidateCircuitRoomBattle(stage == CIRCUIT_STAGE_INDIGO
             ? CIRCUIT_STAGE_MASTERS : CIRCUIT_STAGE_INDIGO, 0));
         EXPECT(ValidateCircuitRoomBattle(stage, 0));
+#if WAYFARER_LEAGUE_EVENTS
+        EXPECT(!RecordCircuitRoomVictory(stage, 0));
+        SetLeagueEventBattleVictoryForTesting(GetAcceptedLeagueEventId(), 0);
+#endif
         EXPECT(RecordCircuitRoomVictory(stage, 0));
         if (stage == CIRCUIT_STAGE_INDIGO)
             EXPECT_EQ(VarGet(VAR_LEAGUE_STATE), 1);
@@ -211,6 +261,12 @@ TEST("Production save and load preserve stage, mode, Rating and room progress")
     u8 loadStatus;
     u32 rating;
     struct LeagueRunState saved;
+#if WAYFARER_LEAGUE_EVENTS
+    const struct LeagueSavedTeam *team;
+    u32 eventId;
+    u16 characterId, species;
+    u8 level;
+#endif
     ResetCircuitFacts();
     CheckForFlashMemory();
     if (gFlashMemoryPresent != TRUE)
@@ -226,9 +282,23 @@ TEST("Production save and load preserve stage, mode, Rating and room progress")
     SetTotalBadges(8);
     EXPECT(Test_AdmitCircuitRun(CIRCUIT_STAGE_INDIGO));
     saved = gSaveBlock3Ptr->wayfarerHoenn.leagueRun;
+#if WAYFARER_LEAGUE_EVENTS
+    eventId = GetAcceptedLeagueEventId();
+    EXPECT_NE(eventId, 0);
+    EXPECT(GetAcceptedLeagueEventMember(1, &team));
+    characterId = team->characterId;
+    species = team->members[team->battleOrder[0]].species;
+    level = team->members[team->battleOrder[0]].level;
+    SetLeagueEventBattleVictoryForTesting(eventId, 0);
+#endif
     EXPECT(RecordCircuitRoomVictory(CIRCUIT_STAGE_INDIGO, 0));
     Test_SetLeagueMap(&gSaveBlock1Ptr->location, MAP_POKEMON_LEAGUE_BRUNOS_ROOM);
+#if WAYFARER_LEAGUE_EVENTS
+    // The settled overworld flush must save the accepted payload and the first win.
+    EXPECT(SavePendingLeagueProgress());
+#else
     HandleSavingData(SAVE_NORMAL);
+#endif
     ClearSav1();
     ClearSav2();
     ClearSav3();
@@ -236,6 +306,15 @@ TEST("Production save and load preserve stage, mode, Rating and room progress")
     EXPECT_EQ(loadStatus, SAVE_STATUS_OK);
     EXPECT_EQ(GetActiveLeagueRunStage(), CIRCUIT_STAGE_INDIGO);
     EXPECT_EQ(gSaveBlock3Ptr->wayfarerHoenn.leagueRun.replay, saved.replay);
+#if WAYFARER_LEAGUE_EVENTS
+    EXPECT_EQ(GetAcceptedLeagueEventId(), eventId);
+    EXPECT(GetAcceptedLeagueEventMember(1, &team));
+    EXPECT_EQ(team->characterId, characterId);
+    EXPECT_EQ(team->members[team->battleOrder[0]].species, species);
+    EXPECT_EQ(team->members[team->battleOrder[0]].level, level);
+    EXPECT_EQ(GetCurrentLeagueEventMatch(), 1);
+    EXPECT(!SavePendingLeagueProgress());
+#endif
     EXPECT(GetCircuitRunBattleRating(CIRCUIT_STAGE_INDIGO, 1, &rating));
     EXPECT_EQ(rating, saved.ratingAtEntry);
     EXPECT(!ConsumeLeagueRunLoadRecovery());
@@ -314,6 +393,9 @@ TEST("Masters antechamber preserves admission but Will backtracking abandons to 
     ResetCircuitFacts();
     SetTotalBadges(16);
     SetCircuitClearForTesting(CIRCUIT_STAGE_INDIGO, TRUE);
+#if WAYFARER_LEAGUE_EVENTS
+    SetCircuitClearForTesting(CIRCUIT_STAGE_HOENN, TRUE);
+#endif
     EXPECT(Test_AdmitCircuitRun(CIRCUIT_STAGE_MASTERS));
 
     Test_SetLeagueMap(&source, MAP_SEVEN_ISLAND_HOUSE_ROOM1);

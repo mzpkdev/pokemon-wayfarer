@@ -15,6 +15,10 @@
 #include "field_screen_effect.h"
 #include "item.h"
 #include "league_circuit.h"
+#include "config/league_circuit.h"
+#if WAYFARER_LEAGUE_EVENTS
+#include "league_events.h"
+#endif
 #include "load_save.h"
 #include "main.h"
 #include "menu.h"
@@ -53,7 +57,7 @@ EWRAM_DATA volatile struct E2ETestState gE2ETestState;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
-    .version = 24,
+    .version = 25,
     .requestSize = sizeof(struct E2ETestRequest),
     .resultSize = sizeof(struct E2ETestResult),
     .stateSize = sizeof(struct E2ETestState),
@@ -71,9 +75,11 @@ STATIC_ASSERT(offsetof(struct E2ETestRequest, status) == 87, E2ETestRequestStatu
 STATIC_ASSERT(sizeof(struct E2ETestResult) == 16, E2ETestResultSize);
 STATIC_ASSERT(offsetof(struct E2ETestResult, status) == 14, E2ETestResultStatusOffset);
 STATIC_ASSERT(sizeof(struct E2ETestObservedObjectEvent) == 12, E2ETestObservedObjectEventSize);
-STATIC_ASSERT(sizeof(struct E2ETestState) == 1692, E2ETestStateSize);
+STATIC_ASSERT(sizeof(struct E2ETestState) == 1732, E2ETestStateSize);
 STATIC_ASSERT(offsetof(struct E2ETestState, trainerRating) == 1684, E2ETestStateTrainerRatingOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, leagueRunRating) == 1688, E2ETestStateLeagueRunRatingOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, leagueEventId) == 1692, E2ETestLeagueEventIdOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, leagueEventCharacterIds) == 1702, E2ETestLeagueEventLineupOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, playerAppearanceId) == 382, E2ETestAppearanceIdOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, appearanceCandidate) == 383, E2ETestAppearanceCandidateOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, appearanceConfirmed) == 384, E2ETestAppearanceConfirmedOffset);
@@ -1488,6 +1494,17 @@ static void UpdateState(void)
     gE2ETestState.reservedLeagueRunRating = 0;
     gE2ETestState.leagueRunRating = 0;
     gE2ETestState.leagueRunReplay = FALSE;
+    gE2ETestState.leagueEventId = 0;
+    gE2ETestState.leagueEventWorldProgress = 0;
+    gE2ETestState.leagueEventAcceptedLeague = 0;
+    gE2ETestState.leagueEventInvitationState = 0;
+    for (i = 0; i < E2E_TEST_LEAGUE_LINEUP_SIZE; i++)
+    {
+        gE2ETestState.leagueEventCharacterIds[i] = 0;
+        gE2ETestState.leagueEventLeadSpecies[i] = SPECIES_NONE;
+        gE2ETestState.leagueEventTeamSizes[i] = 0;
+        gE2ETestState.leagueEventLeadLevels[i] = 0;
+    }
     gE2ETestState.regionalChampionMask = 0;
     gE2ETestState.trainerCardState = E2E_TEST_TRAINER_CARD_NONE;
     for (i = 0; i < E2E_TEST_LEAGUE_COUNT; i++)
@@ -1585,6 +1602,30 @@ static void UpdateState(void)
         gE2ETestState.leagueRunStage = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.stage;
         gE2ETestState.leagueRunRating = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.ratingAtEntry;
         gE2ETestState.leagueRunReplay = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.replay;
+#if WAYFARER_LEAGUE_EVENTS
+        gE2ETestState.leagueEventId = GetAcceptedLeagueEventId();
+        gE2ETestState.leagueEventWorldProgress = GetAcceptedLeagueEventWorldProgress();
+        gE2ETestState.leagueEventAcceptedLeague = GetAcceptedLeagueEventLeagueId();
+        gE2ETestState.leagueEventInvitationState = gSaveBlock3Ptr->leagueEvent.invitationState;
+        if (gE2ETestState.leagueEventId != 0)
+        {
+            for (i = 0; i < E2E_TEST_LEAGUE_LINEUP_SIZE; i++)
+            {
+                const struct LeagueSavedTeam *team;
+
+                if (GetAcceptedLeagueEventMember(i, &team))
+                {
+                    gE2ETestState.leagueEventCharacterIds[i] = team->characterId;
+                    if (team->teamSize != 0 && team->battleOrder[0] < 6)
+                    {
+                        gE2ETestState.leagueEventLeadSpecies[i] = team->members[team->battleOrder[0]].species;
+                        gE2ETestState.leagueEventLeadLevels[i] = team->members[team->battleOrder[0]].level;
+                    }
+                    gE2ETestState.leagueEventTeamSizes[i] = team->teamSize;
+                }
+            }
+        }
+#endif
         gE2ETestState.palletOpeningPhase = gSaveBlock3Ptr->wayfarerPalletOpening.phase;
         gE2ETestState.palletStarterSlot = gSaveBlock3Ptr->wayfarerPalletOpening.starterSlot;
         gE2ETestState.palletOpeningReceipts = gSaveBlock3Ptr->wayfarerPalletOpening.receipts;

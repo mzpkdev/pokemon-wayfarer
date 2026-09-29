@@ -111,6 +111,11 @@ u32 GetNotableTrainerRating(const struct NotableTrainer *trainer, u32 worldProgr
     return trainer->startTR + ((trainer->peakTR - trainer->startTR) * fraction + 50) / 100;
 }
 
+u8 GetNotableTrainerTeamLevel(u32 trainerTR)
+{
+    return EvaluateTrainerScaler(sTeamLevel, ARRAY_COUNT(sTeamLevel), trainerTR, FALSE);
+}
+
 bool32 ResolveNotableTrainerSnapshot(const struct NotableTrainer *trainer, u32 worldProgress, bool32 skipMovePool, struct NotableTrainerSnapshot *snapshot)
 {
     u32 slot;
@@ -127,7 +132,7 @@ bool32 ResolveNotableTrainerSnapshot(const struct NotableTrainer *trainer, u32 w
     snapshot->worldProgress = worldProgress;
     snapshot->trainerTR = GetNotableTrainerRating(trainer, worldProgress);
     count = EvaluateTrainerScaler(sTeamSize, ARRAY_COUNT(sTeamSize), snapshot->trainerTR, TRUE);
-    level = EvaluateTrainerScaler(sTeamLevel, ARRAY_COUNT(sTeamLevel), snapshot->trainerTR, FALSE);
+    level = GetNotableTrainerTeamLevel(snapshot->trainerTR);
     if (count == 0 || count > PARTY_SIZE || level == 0 || level > 100)
         return FALSE;
     snapshot->teamSize = count;
@@ -177,6 +182,11 @@ const struct NotableTrainer *GetNotableTrainerForEncounter(u16 trainerId)
 }
 
 u32 GetNotableTrainerRating(const struct NotableTrainer *trainer, u32 worldProgress)
+{
+    return 0;
+}
+
+u8 GetNotableTrainerTeamLevel(u32 trainerTR)
 {
     return 0;
 }
