@@ -261,8 +261,9 @@ or a failed attempt, uses `NOT_READY`. Completing it runs `PRAISE`, then the
 
 ### Walk with me
 
-The haunt authors a **start** (its meeting spot) and an **exit** (one warp
-or map edge of its quest maps).
+The haunt authors a **start** (its meeting spot), an **exit** (one warp
+or map edge of its quest maps), and its **wrong-exit triggers** (every
+other warp or map edge that leaves the quest maps).
 
 - **Start.** `YES` makes the trainer a follower NPC who is also the
   player's battle partner ([follower NPCs](#follower-npcs)), with the
@@ -280,9 +281,19 @@ or map edge of its quest maps).
 - **Complete.** Stepping through the exit with the trainer following ends
   the walk: the haunt's done line, `PRAISE`, and the reward. The follower
   leaves, and the trainer is back at their haunt.
-- **Unfinished.** A whiteout, leaving the quest maps any other way, or a
-  reload ends the walk with no reward and the claim bit still clear; the
-  trainer is back at their haunt and the walk can be started again.
+- **Wrong exit.** While the walk is in progress, a trigger at each
+  wrong-exit warp or map edge stops the player and shows the haunt line
+  "Giving up on the walk?" with [YES / NO].
+  - **YES:** the trainer's `NO` line. The walk ends with no reward and the
+    claim bit still clear, the trainer returns to their haunt spot, and the
+    player leaves.
+  - **NO:** the player is stepped back one tile and the walk continues.
+- **Unfinished.** A whiteout or a reload ends the walk silently, and giving
+  up at a wrong exit ends it as above: no reward and the claim bit still
+  clear; the trainer is back at their haunt and the walk can be started
+  again. Fly, Teleport, and an Escape Rope stay blocked by the follower
+  flags. Each Walk with me haunt authors its wrong-exit triggers (Diglett's
+  Cave: the north entrance's warp to Route 2).
 
 ### Lost something
 
@@ -364,7 +375,10 @@ A haunt's dialogue is assembled from two sources:
   whether it is a favour or an invitation; voice bits carry only
   personality.
 - **Voice bits**, twelve per trainer: `HELLO`, `MEET`, `NOT_YET`, `NEWS`,
-  `ASK` (an attention-getter only, never a request), `YES`, `NO`, `NOT_READY`, `PRAISE`, `GIFT`, `BYE`, and `QUIRK`
+  `ASK` (an attention-getter only, never a request), `YES` (pure approval
+  of the answer: no movement, timing, or assumed activity), `NO`,
+  `NOT_READY`, `PRAISE` (these three assume no specific activity, movement,
+  or place), `GIFT`, `BYE`, and `QUIRK`
   ([voice bits](../research/notable-trainer-voices.md)). They carry the
   personality and never mention a place.
 
@@ -432,7 +446,7 @@ BROCK: I hear MISTY hangs around PALLET TOWN.                 gossip
 BROCK: Hey, I've got an idea.                                 ASK
 BROCK: Walk it with me, out to the VERMILION side?            quest line
 > Yes
-BROCK: Great! I'll have a hot meal ready when you're done.    YES
+BROCK: Great! I knew I could count on you.                     YES
   (wild DIGLETT pairs are tag battles beside BROCK)
 BROCK: That's the VERMILION side. We made it through.         done line
 BROCK: Nicely done! That's rock-hard willpower if I ever saw  PRAISE
@@ -440,6 +454,20 @@ BROCK: Nicely done! That's rock-hard willpower if I ever saw  PRAISE
 BROCK: Take this METAL COAT. A good breeder always shares     GIFT
        supplies.
 ```
+
+**Leaving early** (the player tries the north entrance's warp to Route 2
+mid-walk):
+
+```text
+HAUNT: Giving up on the walk?
+> Yes
+BROCK: No worries. Just don't skip any meals, okay?           NO
+```
+
+With Giovanni the same YES gives "Hmph. You'll regret wasting my time."
+(`NO`). Either way the walk ends with no reward and the claim bit clear,
+and the trainer is back at their haunt spot. Answering No steps the player
+back one tile and the walk goes on.
 
 Back at the cave, **Chat** gives "ONIX gets fussy if I burn the rice. So do
 my little siblings." (`QUIRK`), and **Bye** gives "Take care! And keep your
@@ -707,7 +735,9 @@ Required implementation evidence (not yet run):
    a friend's; a famous trainer never offers a battle; a friend gets the
    menu, and Team up appears only for a Master and sets the partner choice.
 6. **Quests.** Each quest completes, fails, and retries as specified; a
-   walk ends unfinished on whiteout, on leaving another way, and on reload;
+   walk ends unfinished on whiteout and on reload, and a wrong exit asks
+   "Giving up on the walk?" (YES ends it with the trainer's `NO` line, NO
+   steps the player back one tile and the walk continues);
    Fly, Teleport, and an Escape Rope are refused during a walk; its wild
    battles are double battles beside the trainer with their best three from
    the runtime partner slot; Catch me one refuses the last able party
