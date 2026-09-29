@@ -76,6 +76,13 @@ the notable-trainer catalog, and the
   must read naturally before any haunt proposal, e.g. "...These tunnels run
   through to Vermilion. Walk it with me?", "...I dropped my {ITEM} somewhere
   here. Help me look?", "...Your best one against my {ACE}?"
+- **YES is pure approval of the player's answer.** No movement (go, move
+  out, let's go, come, walk, follow), no timing (later, when you're done,
+  after) and no assumed activity (meal, battle, search, walk, quiz). It must
+  read naturally after any haunt proposal, including one where the trainer
+  walks with the player. `NO`, `NOT_READY` and `PRAISE` likewise assume no
+  specific activity, movement or place. Their mood and the trainer's own
+  hooks (cooking, Water types, war stories) are fine.
 - **Tate & Liza** alternate halves of every line ("TATE: … LIZA: …").
 
 ## Source priority
@@ -108,7 +115,7 @@ Buddy: slot 1, Steelix (ONIX early). Anime Onix.
 | NOT_YET | Test your rock-hard will at my GYM first. Then we'll talk. |
 | NEWS | Word travels fast between breeders. Listen to this... |
 | ASK | Hey, I've got an idea. |
-| YES | Great! I'll have a hot meal ready when you're done. |
+| YES | Great! I knew I could count on you. |
 | NO | No worries. Just don't skip any meals, okay? |
 | NOT_READY | Not yet. Even Rock types need time to harden. |
 | PRAISE | Nicely done! That's rock-hard willpower if I ever saw it. |
@@ -133,9 +140,9 @@ Buddy: slot 2, Golduck (PSYDUCK early). Anime Psyduck.
 | NOT_YET | Beat me at my GYM first. My Water types won't go easy! |
 | NEWS | Okay, listen up! You'll want to hear this. |
 | ASK | Okay, listen up! |
-| YES | Now that's what I like to hear! Let's go! |
+| YES | Now that's what I like to hear! |
 | NO | Hmph! Fine. Don't come crying to me later! |
-| NOT_READY | Not yet! Come back when you can keep up with me. |
+| NOT_READY | Not yet! Come back when you've got some backbone! |
 | PRAISE | Wow, not bad! You'd almost make a decent Water trainer! |
 | GIFT | Take this {ITEM}! Don't say I never gave you anything! |
 | BYE | See ya! ...{BUDDY}, get back in your ball! Not again! |
@@ -159,7 +166,7 @@ Buddy: slot 1, Raichu (PIKACHU early). His anime Raichu, and the Pikachu gag.
 | NOT_YET | Hey, kid! Win at my GYM first. Then we'll talk like soldiers! |
 | NEWS | Listen up, kid! Here's the latest intel. |
 | ASK | Listen up, soldier! |
-| YES | Now that's a soldier! Move out! |
+| YES | Now that's a soldier! |
 | NO | Hah! Chickened out, huh? Suit yourself, kid. |
 | NOT_READY | Negative, kid! You won't live long in combat like that! |
 | PRAISE | Ahaha! You're the real deal, kid! Outstanding! |
@@ -210,7 +217,7 @@ Buddy: slot 1, Venomoth (VENONAT early). Iconic ace.
 | ASK | Hee hee! Psst, psst! |
 | YES | Thank you! Father would call that honorable. |
 | NO | Oh... all right. I'll handle it myself! |
-| NOT_READY | Not yet! Even a ninja trains before a mission. |
+| NOT_READY | Not yet! Even a ninja has to train first. |
 | PRAISE | Amazing! Father would be impressed. I am, too! |
 | GIFT | Take this {ITEM}. A ninja's gift, straight from the shadows! |
 | BYE | Farewell! *Poof!* ...I'm still working on that part. |
@@ -259,10 +266,10 @@ Buddy: slot 1, Magmortar (MAGMAR early). His RBY and FRLG ace.
 | NOT_YET | Hah! Pass my GYM quiz and beat me there first! |
 | NEWS | Quiz time! No, wait... just some news. Listen! |
 | ASK | Hey, kid, hear me out. |
-| YES | Correct answer! Hah! |
-| NO | Wrong answer! Hah! Well, suit yourself. |
-| NOT_READY | Buzz! Not yet! Come back with the right answer. |
-| PRAISE | Hah! You've got fire! That's the correct answer! |
+| YES | Hah! Now you're talking! Hah! |
+| NO | Hah! Cold feet? Well, suit yourself. |
+| NOT_READY | Buzz! Not yet! Come back when you've got more fire. |
+| PRAISE | Hah! You've got fire! Now that's hot stuff! |
 | GIFT | Your prize for a correct answer: {ITEM}! Hah! |
 | BYE | Hah! Better have BURN HEAL next time! |
 | QUIRK | What burns hot but never melts? My fighting spirit! Hah! |
@@ -437,7 +444,7 @@ Buddy: slot 1, Crobat (ZUBAT, then GOLBAT). His HGSS ace.
 | NOT_YET | Best me in battle first. Until then, you walk in my shadow. |
 | NEWS | A ninja gathers secrets. Here is one. |
 | ASK | Hm? Just a moment. |
-| YES | Fwahahaha! Good. Move swiftly. |
+| YES | Fwahahaha! Good. A wise choice. |
 | NO | So be it. A ninja works alone in any case. |
 | NOT_READY | Too soon. Patience is the first of the ninja arts. |
 | PRAISE | Fwahahaha! You have the makings of a ninja! |
@@ -668,7 +675,7 @@ Buddy: slot 1, Xatu (NATU early). His GSC and HGSS ace.
 | NEWS | My psychic POKéMON sensed something. Listen. |
 | ASK | Hmm. I have something to say. |
 | YES | Very good. |
-| NO | Then go. I have no use for hesitation. |
+| NO | Then so be it. I have no use for hesitation. |
 | NOT_READY | You are not ready. My {BUDDY} sees it clearly. |
 | PRAISE | ...Impressive. The mask hides a great deal, but not that. |
 | GIFT | Take this {ITEM}. Consider it a courtesy. |
@@ -748,7 +755,7 @@ Buddy: slot 1, Hariyama (MAKUHITA early). Anime and RSE Makuhita.
 | NOT_YET | Beat me at my GYM first! Show me what you're made of! |
 | NEWS | Dude, you gotta hear this! |
 | ASK | Hey! Quick question! |
-| YES | Awesome! Let's ride this one out! |
+| YES | Awesome! Totally righteous, dude! |
 | NO | No big deal! There's always another wave. |
 | NOT_READY | Not yet, dude. Keep paddling! |
 | PRAISE | Whoa! You made a much bigger splash than I expected! |
@@ -1032,7 +1039,7 @@ Buddy: slot 1, Milotic (FEEBAS early). Anime and RSE Milotic.
 | YES | Splendid! Your answer shines brilliantly. |
 | NO | A pity. But I won't insist. |
 | NOT_READY | Not yet. Polish your style a little more. |
-| PRAISE | Magnificent! Your battle style is truly elegant. |
+| PRAISE | Magnificent! Your style is truly elegant. |
 | GIFT | Please accept this {ITEM}. It suits you beautifully. |
 | BYE | Farewell! May your style shine ever brighter. |
 | QUIRK | {BUDDY} taught me that true beauty takes patience. Lovely, no? |
