@@ -1,4 +1,4 @@
-# Sevii ordinary Trainer restoration
+# Sevii regular trainer restoration
 
 PRDs: [Sevii exploration port](../prds/sevii-exploration-port.md) and
 [Sevii independent story beats](../prds/sevii-independent-story-beats.md)
@@ -9,7 +9,7 @@ Implemented: Yes — delivered in [PR #105](https://github.com/mzpkdev/pokemon-w
 
 Restore every ordinary FRLG Trainer on the 135-map Wayfarer Sevii exploration
 catalog, including their source placement, approach behavior, dialogue, party,
-defeat persistence, and rematches. This specification owns ordinary Trainer
+defeat persistence, and rematches. This specification owns regular trainer
 selection and behavior. The [Sevii content overlay](sevii-content-overlay.md)
 owns projection, generated IDs, state isolation, source provenance, and audits.
 
@@ -20,7 +20,7 @@ temporary trainer-only wild mechanic.
 
 ## Frozen inventory
 
-The source inventory contains 87 ordinary Trainer objects and 81 unique base
+The source inventory contains 87 regular trainer objects and 81 unique base
 Trainer IDs:
 
 - 75 single-battle objects and 12 objects forming six paired Double Battles;
@@ -102,13 +102,13 @@ state.
 Classify every selected ordinary base and rematch party `ORDINARY` in the
 existing Trainer scaling inventory. Extend its generator to read only the
 selected FRLG party records with the same product defines used for Wayfarer.
-Apply the current ordinary-Trainer policy at battle construction; do not
+Apply the current regular trainer policy at battle construction; do not
 pre-scale or rewrite the checked-in source parties.
 
 The generated audit tests representative low, equal, and high Trainer Rating
-values against every selected party and proves legal levels, moves, evolutions,
-and party size under the existing scaling contract. It also proves that
-excluded story and facility IDs do not enter ordinary scaling.
+(TR) values against every selected party and proves legal levels, moves,
+evolutions, and party size under the existing scaling contract. It also proves
+that excluded story and facility IDs do not enter regular trainer scaling.
 
 ## Defeat, loss, and rematches
 
@@ -130,7 +130,7 @@ rematch victory does not create a second map defeat flag.
 
 ## Structural audit
 
-The ordinary-Trainer portion of `wayfarer-sevii-content-audit` checks selected
+The regular trainer portion of `wayfarer-sevii-content-audit` checks selected
 source identity, the frozen counts and pairs, generated IDs and defeat mappings,
 ordinary-scaling classification, and the owned script/asset closure. It rejects
 source drift, incomplete pairs, missing rematch rows, ID or defeat aliases, and
@@ -142,7 +142,7 @@ mechanics and emulator coverage, not a duplicate inventory report.
 Mechanics tests cover
 first victory, loss, draw, blackout, post-battle talk, save/reload, Vs. Seeker
 eligibility, every rematch stage, and paired eligibility. Exercise every party
-through the ordinary scaler at low, equal, and high Trainer Rating.
+through the ordinary scaler at low, equal, and high TR.
 
 The following remains the manual playtesting checklist; the automated journeys
 exercise representative routes rather than every entry below:
@@ -150,7 +150,7 @@ exercise representative routes rather than every entry below:
 - Kindle Road sight and Fisherman Tommy talk encounters;
 - the Crush Kin pair and a pair with only one usable Pokémon;
 - one no-rematch Trainer from Mt. Ember, Lost Cave, and Pattern Bush;
-- ordinary Trainers on Three, Five, Six, and Seven Island;
+- regular trainers on Three, Five, Six, and Seven Island;
 - Dario and Rodette outside Trainer Tower without facility routing;
 - a base fight and full rematch chain; and
 - loss, ferry departure, map reload, save/reload, and return after defeat.

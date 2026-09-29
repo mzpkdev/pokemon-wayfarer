@@ -52,9 +52,12 @@ dialogue does not claim a Cinnabar meeting or eruption. Retiring Cinnabar's
 Blaine script also removes its Fighting Dojo relocation trigger. No retired
 Seafoam Gym or Secret Cave path grants another Blaine or Groudon encounter.
 
-This Blue introduction is part of the delivered coastal port. The
-[future Viridian finale](frlg-kanto-viridian-finale.md) removes Blue from the
-exterior and Gym; its acceptance checks supersede this document's Blue check.
+This Blue introduction records the historical coastal port. The implemented
+[Viridian finale](frlg-kanto-viridian-finale.md) now removes Blue from the exterior
+and Gym; its acceptance checks supersede this document's Blue check. The
+v0 [notable trainers](notable-trainers.md) design gives Blue
+his own TR but no badge; it does not restore Viridian actors. The
+retirement boundary remains unchanged.
 
 The Wayfarer release link map contains no layout, event, script, or wild
 encounter payload for the seven retired HNS maps. The generated standalone HNS
@@ -82,8 +85,9 @@ content.
 The final port must preserve native-Surf access between Pallet and Cinnabar
 through the selected FRLG Route 21 North and South maps. Its ordinary coastal
 wild ecology follows the existing Kanto FireRed and LeafGreen merge, authored
-day-and-night, and Trainer Rating policies. The full port's implementation and
-acceptance requirements remain owned by the coastal and route specifications.
+day-and-night, and Trainer Rating (TR) policies. The full port's implementation
+and acceptance requirements remain owned by the coastal and route
+specifications.
 
 ## References
 

@@ -3,30 +3,39 @@
 PRD: [League scaling](../prds/league-scaling.md)
 Implemented: Partial
 
-The scaling engine is implemented for the current circuit. See
-[implementation evidence](../research/league-scaling-implementation.md) for
-automated results. Revised Indigo and Masters roster/venue wiring, campaign
-balance acceptance, and TR progression remain pending.
+Everything below describes Today; the v0 successor is
+[Leagues](leagues.md).
 
-## Scope and current code
+The scaling engine, fixed Indigo/Masters/Hoenn roster and league wiring,
+persisted stage/replay identity and Trainer Rating (TR) snapshot taken when
+entering a league, and +8-per-league progression are implemented. Campaign
+balance acceptance remains pending. See the
+[current circuit contract](wayfarer-interregional-league-circuit.md) and
+[runtime producer](../../game/src/league_circuit.c). The
+[original scaling evidence](../research/league-scaling-implementation.md)
+records earlier automated results; its prior progression/wiring description does
+not describe the current circuit.
+
+## Today's scope and code
 
 Implement TR-based levels for the fifteen fixed Indigo, Masters, and Hoenn circuit opponents in
 `IS_WAYFARER`. Preserve all existing non-level team content and admission rules.
 This specification supersedes the static League level policy only.
 
-Consume `GetTrainerRating()` at admission. Trainer Rating production, badge and
-circuit-clear contributions, high-water storage, and player progression remain owned
-by the existing [circuit specification](wayfarer-interregional-league-circuit.md)
-and [party progression specification](trainer-rating-party-progression.md).
-Do not change their formulas or reward amounts as part of implementing scaling.
-Their pending revisions can be implemented independently; scaling works with
-whatever valid TR the current producer returns.
+Consume `GetTrainerRating()` at admission. TR production, badge and
+first-league-win contributions, storage that never decreases, and player
+progression remain owned by the existing
+[circuit specification](wayfarer-interregional-league-circuit.md) and
+[party progression specification](trainer-rating-party-progression.md). Do not
+change their formulas or reward amounts as part of implementing scaling. Today's
+producer already awards +8 per canonical first league win; scaling consumes its
+saved admission snapshot without altering those rewards.
 
 Current integration points:
 
-- `game/src/league_circuit.c`: stage admission, first-clear recording, replay
-  mode, and the transient recorded-clear handoff. Its TR formula is outside
-  this feature.
+- `game/src/league_circuit.c`: stage admission, first-league-win recording,
+  replay mode, and the transient recorded-league-win handoff. Its TR formula is
+  outside this feature.
 - `game/src/league_circuit_scripts.c` and
   `game/data/scripts/league_circuit.inc`: script-facing admission and completion.
 - `game/data/maps/PokemonLeague_*_Frlg/scripts.inc`: approved Indigo rooms and
@@ -39,11 +48,11 @@ Current integration points:
 - `game/src/data/trainers_frlg.party`, `game/src/data/trainers_hns.party`, and
   `game/src/data/trainers.party`: authoritative source parties. The FRLG
   records are imported into collision-audited Wayfarer IDs rather than linked
-  by their raw IDs. `game/test/league_tiers.c` currently asserts static levels
-  and non-level identity across difficulty settings.
+  by their raw IDs. `game/test/league_tiers.c` checks source-party and non-level
+  identity across difficulty settings.
 
-The transient recorded-clear region is not a persisted run snapshot. Keep its
-existing Hall of Fame handoff role; do not reuse it as the run state.
+The transient recorded-league-win stage is not a persisted run snapshot. Keep
+its existing Hall of Fame handoff role; do not reuse it as the run state.
 
 ## Opponent metadata
 
@@ -94,6 +103,9 @@ Expose a pure `GetLeagueScalingBaseline(rating)` function with its own anchors:
 (40,42), (55,60), (65,80), (80,100)
 ```
 
+These anchors are on today's TR scale and have no v0 conversion; in
+v0, League opponents use their own TR from [Leagues](leagues.md).
+
 Clamp input TR to 0 through 80. Between adjacent anchors `(r0,l0)` and
 `(r1,l1)`, use integer arithmetic wide enough for the intermediate product:
 
@@ -123,47 +135,50 @@ difficulty do not introduce new offsets.
 
 ## Persistent run state and lifecycle
 
-Add a save-backed Wayfarer run record containing `active`, `stage`, `mode`, and
-`ratingAtEntry`. `mode` distinguishes first-clear from replay. Use the existing Wayfarer save ownership and initialization
-mechanisms; it must not be a region-swapped event variable. Store only these
-facts, not derived levels or a copied roster. Existing room progression remains
-the authority for which opponents have been defeated.
+Use the implemented save-backed Wayfarer run record containing `active`,
+`stage`, `replay`, and `ratingAtEntry`. `replay` distinguishes replay from
+first-league-win mode. Use the existing Wayfarer save ownership and
+initialization mechanisms; it must not be a region-swapped event variable. Store
+only these facts, not derived levels or a copied roster. Existing room
+progression remains the authority for which opponents have been defeated.
 
 1. At successful admission into the first room, before locking the entrance,
    validate the existing circuit requirements and capture `GetTrainerRating()`
    plus the admitted circuit stage and mode. Failed admission creates no run. Reset
    room defeat state using the existing new-run flow.
 2. First-room resume and map load must recognize an active matching run and
-   never overwrite its rating or reset defeated rooms. Ordinary room transitions
+   never overwrite its TR or reset defeated rooms. Ordinary room transitions
    use the same record. Resolve Indigo, Masters, and Hoenn from saved circuit
-   stage, not the geographic region of a reused venue.
+   stage, not the geographic region of reused league rooms.
 3. Each enrolled battle requires an active matching record, the expected source
    identity, and valid room progression. Use `ratingAtEntry` for construction
    and reconstruction. A per-battle snapshot may copy this value but must never
    replace it with live TR. Battle teardown does not end the circuit run.
 4. A loss/whiteout or departure from the run clears the record and resets the
-   existing room progression for the next attempt. Enumerate all three venues'
+   existing room progression for the next attempt. Enumerate all three leagues'
    exit, warp, whiteout, and return paths. Ordinary room and ceremony
    transitions stay within the run until completion handling finishes.
-5. Final-opponent victory validates the captured stage, mode, and completed
-   room progression. Indigo and Hoenn first clears use their Hall of Fame
-   paths; Masters uses the Gallery path without Hall of Fame or Champion side
-   effects. First-clear mode records the stage through the circuit producer.
-   Replay mode records no clear. Clear the active run and reset only that venue
+5. Final-opponent victory validates the captured stage, mode, and completed room
+   progression. Indigo and Hoenn first league wins use their Hall of Fame paths;
+   Masters uses the Gallery path without Hall of Fame or Champion side effects.
+   First-league-win mode records the stage through the circuit producer. Replay
+   mode records no league win. Clear the active run and reset only that league
    before the completion save and overworld return.
 6. Save/load within an unfinished run preserves its record and room progression.
    Repeated completion processing must not award another contribution, switch
    the recorded result to the next stage, or skip its opponents.
 
-Initialize an inactive record on new game. Validate region, rating range, and
-venue/room consistency on load. Invalid or absent run state inside a circuit venue
-must safely reset the attempt and return to that venue's lobby without a clear
-or reward; do not silently capture a new rating halfway through a run. Validate
-before dispatching room scripts. Do not add migrations for prerelease saves.
+Initialize an inactive record on new game. Validate stage, TR range, and
+league/room consistency on load. Invalid or absent run state inside a circuit
+league must safely reset the attempt and return to that league's lobby without a
+league win or reward; do not silently capture a new TR halfway through a run.
+Validate before dispatching room scripts. Do not add migrations for prerelease
+saves.
 
-Existing first-clear and replay admission restrictions still apply. An out-of-context debug Trainer battle
-must use the existing authored fallback, never create a real circuit run or
-award a clear. Real room scripts deny/recover invalid state before battle.
+Existing first-league-win and replay admission restrictions still apply. An
+out-of-context debug Trainer battle must use the existing authored fallback,
+never create a real circuit run or award a league win. Real room scripts
+deny/recover invalid state before battle.
 
 ## Party construction and other modes
 
@@ -178,7 +193,7 @@ the new source rather than quietly replacing its moves.
 
 Keep existing Trainer species-randomizer behavior as a complete party-path
 bypass, consistent with the Gym Leader boundary. Other move randomizers and
-challenge modes retain existing precedence. Run lifecycle and first-clear
+challenge modes retain existing precedence. Run lifecycle and first-league-win
 rewards still apply in those modes. Do not claim roster identity preservation
 when the player explicitly enables a content randomizer.
 
@@ -188,7 +203,7 @@ catch rules, or player stats is implied by scaling opponent levels.
 
 ## Validation and release
 
-Update static-level assertions in `game/test/league_tiers.c` while retaining
+Maintain effective-level assertions in `game/test/league_tiers.c` alongside
 its authored identity checks. Extend `game/test/league_circuit.c`, script tests,
 and the League E2E journey. Required evidence:
 
@@ -199,16 +214,17 @@ and the League E2E journey. Required evidence:
 - Actual party construction and reconstruction for every resolved difficulty,
   including duplicate species, source slot identity, randomizer bypass, and
   unchanged ordinary/Gym/story/rematch behavior.
-- Preserve valid admission order and completion behavior for first clear,
-  failed clear, replay clear, and duplicate completion handling. Tests
+- Preserve valid admission order and completion behavior for first league win,
+  failed attempt, replay win, and duplicate completion handling. Tests
   use the current producer contract; scaling introduces no reward calculation.
 - Persistent run admission, denied admission, room transitions, save/load,
-  loss/retry, exit/re-entry, invalid record recovery, and changing live TR during
-  a run without changing its opponents. No reward before successful completion.
-- Earliest-entry and all-badges-first routes, intermediate stage timing,
-  Indigo-to-Seven-Island-to-Hoenn progression, completion saves and reloads,
-  and return to regional travel without stale room or clear state.
-- Seeded input ratings from the PRD examples and all curve boundaries. Assert
+  loss/retry, exit and re-entering the league, invalid record recovery, and
+  changing live TR during a run without changing its opponents. No reward before
+  successful completion.
+- Enter-as-soon-as-eligible and all-badges-first routes, intermediate stage
+  timing, Indigo-to-Seven-Island-to-Hoenn progression, completion saves and
+  reloads, and return to regional travel without stale room or league-win state.
+- Seeded input TR values from the PRD examples and all curve boundaries. Assert
   that scaling does not mutate live TR or change its producer. Campaign tests
   derive expected levels from the actual admission TR, without assuming a
   particular League reward schedule.

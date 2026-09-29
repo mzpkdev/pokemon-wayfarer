@@ -20,7 +20,7 @@ and early arrival behavior needed to reach all fourteen opening-network
 settlements in the parent PRD.
 
 It does not open Sootopolis or Ever Grande, reorder Gyms or the main campaign,
-remove field moves from optional content, change ordinary trainer placement or
+remove field moves from optional content, change regular trainer placement or
 sight range, or change battle and wild encounter scaling.
 
 ## Behavior

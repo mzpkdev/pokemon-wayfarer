@@ -18,7 +18,7 @@ independent Generation III families belongs to Hoenn and is removed from Kanto.
 Kanto is a valid starting region, not postgame-only content. On a new save, its
 authored levels must support an ordinary FireRed and LeafGreen-style opening.
 Species placement communicates habitat and regional identity, while Trainer
-Rating keeps encounters relevant later in the open-world campaign.
+Rating (TR) keeps encounters relevant later in the open-world campaign.
 
 ## Design
 
@@ -107,7 +107,7 @@ documented FireRed or LeafGreen Kanto analog with the same method and closest
 habitat. Every slot in that target profile must map to an analog source rarity
 role and inherit that role's exact minimum and maximum under the same
 lower-level version rule. Sevii profiles use their FireRed and LeafGreen Sevii
-sources. These authored ranges are inputs to Trainer Rating scaling, so
+sources. These authored ranges are inputs to TR scaling, so
 effective levels still rise with campaign progress.
 
 Kanto uses these priorities in order:
@@ -360,7 +360,7 @@ sources rather than a low-probability slot on many unrelated maps.
 
 Vermilion and the selected FRLG Cinnabar fishing tables must retain Chinchou as
 the native Surf source for the open-world mainland-to-Cinnabar crossing. At
-both named sources and at every supported Trainer Rating, Chinchou must remain
+both named sources and at every supported TR, Chinchou must remain
 exactly as accessible as the current Standard Rod contract: 11 percent of
 successful Old Rod encounters and 2.75 percent of unmodified casts. Its
 authored level range follows its mapped FireRed or LeafGreen rarity role. If
@@ -371,12 +371,11 @@ specification in the same change. Every qualifying catch must know Surf.
 
 ## Interactions
 
-Trainer Rating owns ordinary wild level progression after the encounter author
+TR owns ordinary wild level progression after the encounter author
 supplies the FireRed or LeafGreen level range required above. Kanto must not
 retain HNS's postgame-authored levels or use permanently high authored levels
 to enforce a postgame order. Reverse evolution, species floors, entry
-eligibility, and level projection retain the behavior defined by the Trainer
-Rating product.
+eligibility, and level projection retain the behavior defined by the TR product.
 
 Standard Rod owns fishing entry eligibility, quality weights, bite rates, Lure
 behavior, and rod progression. This PRD owns which species occupy Kanto's ten
@@ -451,14 +450,14 @@ Playtesting should answer these questions:
 ## Acceptance
 
 - Produce a deterministic distribution report for every mainland map, method,
-  day or night variant, and integer Wayfarer Trainer Rating from 0 through 80.
+  day or night variant, and integer Wayfarer TR from 0 through 80.
   Report entry weights, eligible entries, aggregate species probabilities,
   generation shares, and the regional and per-method summaries.
 - Confirm the report matches the profile-ownership manifest, includes all three
   Kanto Victory Road maps, reserves Route 23 for Kanto, and excludes the named
   Johto and Sevii profiles. Reconcile the denominator when Route 23 is authored.
 - Confirm the regional day and night summaries remain within their generation
-  bands at every supported Trainer Rating, for each Standard Rod quality, with
+  bands at every supported TR, for each Standard Rod quality, with
   baseline modifiers off. Confirm night has at least 5 percentage points more
   Generation II probability than day. List any local habitat exceptions without
   excluding them from the regional calculation.
@@ -480,14 +479,16 @@ Playtesting should answer these questions:
   exact minimum and maximum. For a shared species and role with different source
   ranges, confirm the deterministic lower-level source rule selected one
   complete range. List no HNS postgame level as a source.
-- Report the effective minimum and maximum levels at Wayfarer Rating 0 for every
+- Report the effective minimum and maximum levels at Wayfarer TR 0 for every
   Kanto profile, then playtest a new Kanto save through the first badge. Confirm
   level projection uses the FireRed and LeafGreen authored inputs and that the
   opening does not behave like the former postgame Kanto curve.
-- At Wayfarer Rating 0, confirm the land populations for Routes 1, 2, 3, and 22,
+- At Wayfarer TR 0, confirm the land populations for Routes 1, 2, 3, and 22,
   Viridian Forest, and every Mt. Moon floor produce no encounter above level
   12. This ceiling is the current projection of the highest level 12 source
-  role in that opening set.
+  role in that opening set. Today's TR 0 stays TR 0 on the
+  [v0 scale](player-trainer-rating.md#how-you-earn-it), but the new wild
+  curve changes the projection, so the ceiling must be re-checked there.
 - Confirm the mainland day and night union contains 105 to 120 distinct ordinary
   species and Generation IV onward never exceeds 5 percent of regional
   probability.
@@ -496,7 +497,7 @@ Playtesting should answer these questions:
   non-randomized effective population, allow only Wynaut or Azurill produced by
   predecessor resolution from an authored Generation II family entry; report
   zero probability for every other Generation III species. Apply this at every
-  Trainer Rating, day and night, encounter method, and Standard Rod quality,
+  TR, day and night, encounter method, and Standard Rod quality,
   with Hoenn Sound off and on.
 - Classify Generation III from base National Dex numbers 252 through 386. Count
   a resolved Wynaut or Azurill with its Generation II family and report its
@@ -515,11 +516,11 @@ Playtesting should answer these questions:
 - Run the Standard Rod distribution report at all three qualities, with Lure off
   and on, for every Kanto fishing profile. Confirm all ten active entries remain
   selectable when eligible.
-- At Vermilion and Cinnabar, confirm Chinchou remains available at every Trainer
-  Rating with exactly 11 percent probability per successful Old Rod encounter
-  and 2.75 percent per unmodified cast. Confirm every qualifying Chinchou knows
-  Surf. If its effective range falls below level 20, confirm the native-HM
-  source record, specification, and generated learnset were updated together.
+- At Vermilion and Cinnabar, confirm Chinchou remains available at every TR with
+  exactly 11 percent probability per successful Old Rod encounter and 2.75
+  percent per unmodified cast. Confirm every qualifying Chinchou knows Surf. If
+  its effective range falls below level 20, confirm the native-HM source record,
+  specification, and generated learnset were updated together.
 - Inspect representative early route, forest, cave, Route 10 Power Plant
   approach, Safari Zone, coast, pond, and transition profiles in game at day
   and night, plus Sevii profiles when they are included. Compare observed

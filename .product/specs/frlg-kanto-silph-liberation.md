@@ -22,7 +22,7 @@ source Lapras gift, doors, staff dialogue, and the post-liberation HNS
 reception and Up-Grade service.
 
 The player may begin Silph without Bill, the S.S. Anne, Tower, Fuji, Scope,
-Flute, Celadon completion, badge, League clear, Kanto origin, or any regional
+Flute, Celadon completion, badge, league win, Kanto origin, or any regional
 campaign result. Liberating Silph completes only this local investigation. It
 does not award a badge, complete Celadon, Tower, Snorlax, Viridian Gym, the
 Giovanni finale, Celebi, or any other story.
@@ -63,8 +63,8 @@ variable reachable for a local alias. Retain the 7F map OnLoad callback and
 all unrelated 7F local scripts. The Wayfarer 11F callback continues to use
 only VAR_SILPH_GIOVANNI_SCENE_HNS.
 
-Do not change Goldenrod's Card Key, radio-door state, shared item policy,
-global Trainer Rating formula, League accounting, exterior Saffron state, the
+Do not change Goldenrod's Card Key, radio-door state, shared item policy, global
+Trainer Rating (TR) formula, League accounting, exterior Saffron state, the
 Kanto opening, or a future Blue chapter.
 
 ## Maps, access, and graphics
@@ -244,7 +244,7 @@ following explicit sequence.
 
 Set TRAINERS_COUNT_SILPH_LIBERATION_WAYFARER to 31 and extend TRAINERS_COUNT_WAYFARER through runtime ID 1767. Add range assertions proving that Silph follows the reserved Celadon block and Giovanni is the last Silph record.
 The ordinary records use existing appended-HNS defeat storage and ordinary
-Trainer Rating scaling. Giovanni uses the existing objective-boss exclusion.
+TR scaling. Giovanni uses the existing objective-boss exclusion.
 No new Trainer enters the Hoenn fixed runtime bank, and shared scaling changes
 are out of scope.
 
@@ -287,7 +287,7 @@ The 7F Lapras employee remains reachable through the authored Card Key and
 warp-panel route without Blue. In Wayfarer, use the HNS male worker graphic
 and place him at (2,7), away from the source map's left edge. Give the
 authored Level 25 Lapras without a
-Trainer Rating, badge, or Giovanni-defeat requirement. The normal gift delivery
+TR, badge, or Giovanni-defeat requirement. The normal gift delivery
 may place it in party or PC. If both are full, leave the employee and local
 receipt clear for retry. Set FLAG_GOT_SILPH_LAPRAS_HNS only after a successful
 delivery and preserve the nickname flow. This is an ordinary one-time local
@@ -313,7 +313,7 @@ FLAG_SILPH_LIBERATED_HNS is clear. After a win, his explicit Wayfarer handler
 offers the immediate reward defined in [Silph President Master Ball](silph-president-master-ball.md).
 That separate specification owns the recoverable delivery transaction,
 success-only receipt, pending-marker consumption, and repeat dialogue. No
-Trainer Rating condition applies.
+TR condition applies.
 
 ## Validation and release budget
 
@@ -333,8 +333,8 @@ Verify the tutor's success-only receipt and that no unnecessary FRLG tutor
 linkage is introduced.
 
 Native coverage must prove Trainer IDs 1737 through 1767 and their final total,
-source-party parity, metadata, appended defeat storage, ordinary scaling, and
-Giovanni's exclusion. Exercise each no-party shape, a usable party, ordinary
+source-party parity, metadata, appended defeat storage, regular trainer scaling,
+and Giovanni's exclusion. Exercise each no-party shape, a usable party, ordinary
 and Giovanni wins, every non-win retry, save/reload, and liberation only after
 Giovanni wins. Prove liberation removes occupation objects without setting
 unfought Trainer defeats and leaves HNS Saffron, Celadon, Goldenrod, Blue,
@@ -371,7 +371,7 @@ silently cut this specified content or begin unrelated optimization.
 ## References
 
 - [FRLG Kanto story conflicts](../research/frlg-hns-kanto-story-conflicts.md)
-- [FRLG Kanto implementation sequence](../research/frlg-kanto-implementation-sequence.md)
+- [Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md)
 - [Celadon Rocket Hideout on Wayfarer](frlg-kanto-celadon-hideout.md)
 - [Nugget Bridge on Wayfarer](frlg-kanto-nugget-bridge.md)
 - [HNS Silph lobby](../../game/data/maps/SaffronCity_SilphCo_hns/map.json)

@@ -5,7 +5,13 @@ PRDs: [Sevii exploration port](../prds/sevii-exploration-port.md),
 [Sevii Trainer Tower](../prds/sevii-trainer-tower.md), and
 [Interregional League circuit](../prds/wayfarer-interregional-league-circuit.md)
 
-Implemented: Partial — foundation in [PR #101](https://github.com/mzpkdev/pokemon-wayfarer/pull/101), with the ordinary Trainers, story, and Trainer Tower delivered in [PR #105](https://github.com/mzpkdev/pokemon-wayfarer/pull/105), [PR #104](https://github.com/mzpkdev/pokemon-wayfarer/pull/104), and [PR #102](https://github.com/mzpkdev/pokemon-wayfarer/pull/102). The Masters domain is approved but pending.
+Implemented: Partial — foundation in
+[PR #101](https://github.com/mzpkdev/pokemon-wayfarer/pull/101), with the
+regular trainers, story, and Trainer Tower delivered in
+[PR #105](https://github.com/mzpkdev/pokemon-wayfarer/pull/105),
+[PR #104](https://github.com/mzpkdev/pokemon-wayfarer/pull/104), and
+[PR #102](https://github.com/mzpkdev/pokemon-wayfarer/pull/102). The Masters
+domain is approved but pending.
 
 ## Scope and authority
 
@@ -21,7 +27,7 @@ circuit may add the explicitly scoped Masters Challenge event layer described
 below without changing these access rules:
 
 - One through Seven Island remain available from Vermilion without Bill,
-  Celio, a Rainbow Pass, a League clear, or another story credential.
+  Celio, a Rainbow Pass, a league win, or another story credential.
 - Every numbered-island harbor retains all seven islands and Vermilion.
 - The existing maps, layouts, connections, wild encounters, healing, PCs,
   Marts, Day Care, and environmental puzzles remain unchanged unless another
@@ -135,9 +141,9 @@ campaign dispatch. Do not widen `.if IS_FRLG` around source map or campaign
 scripts.
 
 Reserve the root `common.inc` for universal exploration primitives; story,
-ordinary-Trainer, Tower, and Masters modules must not be linked through it. If owner
-subdirectories are used, derive Make dependencies from the manifest or emit a
-depfile rather than relying on the existing nonrecursive glob.
+regular trainer, Tower, and Masters modules must not be linked through it. If
+owner subdirectories are used, derive Make dependencies from the manifest or
+emit a depfile rather than relying on the existing nonrecursive glob.
 
 Copied text and movement data may retain source wording and ordering. Script
 control flow is adapted to the Wayfarer contracts. Generation fails on an
@@ -153,7 +159,7 @@ script used it. The manifest publishes each domain's state table and rejects a
 write outside that table.
 
 Use a compact dedicated Wayfarer Sevii state bank, including a dedicated
-ordinary-Trainer defeat bitset. The delivered state is initialized as a whole;
+regular trainer defeat bitset. The delivered state is initialized as a whole;
 prerelease save migration is not required. Publish each cell's owner and use
 normal flag/variable APIs rather than raw FRLG state. Keep `SaveBlock3` within
 its 1,624-byte bound with compile-time assertions.
@@ -217,7 +223,7 @@ store normalized source hashes, keep IDs below the partner boundary at 2048,
 and dispatch their defeat state through the dedicated Sevii bitset before the
 existing appended-HNS remap.
 
-Ordinary Trainers enroll in the existing Wayfarer ordinary scaling policy.
+Regular trainers enroll in the existing Wayfarer regular trainer scaling policy.
 Story bosses, rivals, and facility opponents remain excluded from that policy
 unless their owning specification defines another existing scaler. No content
 record may silently change a Trainer party, AI, prize money, rematch family, or
@@ -268,7 +274,7 @@ The stable validation set includes:
 - manifest schema, source-drift, collision, script-closure, and state-ownership
   tests;
 - the existing Sevii map and wild-encounter audits unchanged;
-- ordinary-Trainer, story-objective, static-encounter, Trainer Tower, and
+- regular trainer, story-objective, static-encounter, Trainer Tower, and
   Masters Challenge tests named by their owning specifications;
 - serial Wayfarer and supported standalone builds;
 - a production-equivalent Wayfarer release with the active ROM reserve; and

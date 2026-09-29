@@ -35,7 +35,7 @@ pending handoff:
    explanation and never gives another Silph copy. A pre-owned Master Ball does
    not suppress the local Silph copy; its stack grows by one.
 
-There is no Trainer Rating, badge, League, legendary-readiness, origin, or
+There is no Trainer Rating (TR), badge, League, legendary-readiness, origin, or
 other story threshold. The transaction must not read or write Elm's receipt,
 `FLAG_GOT_MASTER_BALL_FROM_SILPH`, or any non-Wayfarer state.
 

@@ -74,7 +74,7 @@ committed choice.
 
 The first Blue battle uses the opening's early-rival behavior. Winning or
 losing completes that encounter and leaves the player able to continue north.
-No victory-only story gate or ordinary trainer retry rule is added.
+No victory-only story gate or regular trainer retry rule is added.
 
 ### A quiet first trip to Viridian
 
@@ -113,7 +113,7 @@ follow Wayfarer's shared recovery rules.
 - Existing separate Red NPCs or encounters outside the selected opening maps
   remain untouched. Reconciling the narrative player role with those duplicate
   world appearances is later work.
-- No later Kanto milestone, badge, League clear, campaign completion, or
+- No later Kanto milestone, badge, league win, campaign completion, or
   visitor reward may be fabricated to make this opening work. The Pokédex and
   five Poké Balls are authored rewards of Parcel delivery, not later progress.
 - The opening adapts FRLG's story beats to HNS map geometry. It does not

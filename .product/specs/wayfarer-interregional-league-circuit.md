@@ -4,25 +4,28 @@ PRD: [Wayfarer interregional League circuit](../prds/wayfarer-interregional-leag
 
 Implemented: Yes
 
-The runtime now uses one persisted circuit stage identity for FRLG Indigo,
-Sevii Masters, and Hoenn. Regional Champion flags are projections of committed
-circuit clears rather than the source of circuit progression.
+This contract remains the record of Today's implementation; the v0 design is
+[Leagues](leagues.md).
 
-## Scope
+The runtime uses one persisted circuit stage identity for FRLG Indigo,
+Sevii Masters, and Hoenn. Regional Champion flags are projections of committed
+league wins rather than the source of circuit progression.
+
+## Today's scope
 
 This specification owns:
 
 - global badge aggregation;
 - the fixed Indigo, Sevii Masters, Hoenn circuit order;
-- admission, run identity, loss/retry, replay, and first-clear recording;
-- circuit Trainer Rating contributions;
+- admission, run identity, loss/retry, replay, and first-league-win recording;
+- circuit Trainer Rating (TR) contributions;
 - shared Kanto/Johto Champion recognition from Indigo;
 - the Seven Island battle-house entrance and HNS room-chain reuse;
 - Trainer Card circuit presentation; and
 - Red's circuit-completion admission at Mt. Silver.
 
 Regional badge awards, local stories, ordinary travel, wild populations,
-ordinary-Trainer scaling, Gym scaling, and each source roster's authored party
+regular trainer scaling, Gym scaling, and each source roster's authored party
 data remain with their owning specifications. League opponent levels remain
 owned by [League scaling](league-scaling.md).
 
@@ -37,20 +40,20 @@ CIRCUIT_STAGE_HOENN
 ```
 
 Region identifies map and story provenance. Circuit stage identifies
-qualification, roster, run state, first-clear state, reward, and presentation.
-The Masters maps resolve to Sevii/Kanto for ordinary regional systems and to
-`CIRCUIT_STAGE_MASTERS` only while dispatching the challenge.
+qualification, roster, run state, first-league-win state, reward, and
+presentation. The Masters maps resolve to Sevii/Kanto for ordinary regional
+systems and to `CIRCUIT_STAGE_MASTERS` only while dispatching the challenge.
 
 The three stages are:
 
-| Stage | Qualification | Venue | Authored roster |
+| Stage | Qualification | Location | Authored roster |
 | --- | --- | --- | --- |
 | Indigo | At least 8 global badges | FRLG Indigo rooms | Lorelei, Bruno, Agatha, Lance, Blue |
-| Masters | Indigo first clear and at least 16 global badges | Seven Island battle house into HNS rooms | Will, Koga, Bruno, Karen, Lance |
-| Hoenn | Indigo and Masters first clears and all 24 badges | Emerald League rooms | Existing Emerald Elite Four and Champion |
+| Masters | Indigo first league win and at least 16 global badges | Seven Island battle house into HNS rooms | Will, Koga, Bruno, Karen, Lance |
+| Hoenn | Indigo and Masters first league wins and all 24 badges | Emerald League rooms | Existing Emerald Elite Four and Champion |
 
-Red at Mt. Silver requires all three first clears. Red is not a circuit stage,
-does not create a run record, and contributes no circuit Trainer Rating.
+Red at Mt. Silver requires all three first league wins. Red is not a circuit
+stage, does not create a run record, and contributes no circuit TR.
 
 ## Global badges
 
@@ -64,9 +67,9 @@ Each regional count is between zero and eight. Re-reading an earned badge or
 re-running its award script cannot increase the result. Regional displays and
 story checks retain badge identity and origin.
 
-All twenty-four badges remain obtainable with zero circuit clears. Initial Gym
+All twenty-four badges remain obtainable with zero league wins. Initial Gym
 entry, reward-bearing Leader battles, and deferred badge awards must not read a
-circuit-clear cap. Eight, sixteen, or twenty-four badges with no clears are
+league-win cap. Eight, sixteen, or twenty-four badges with no league wins are
 valid states.
 
 Coherent local prerequisites remain. These include Jasmine's medicine errand,
@@ -84,8 +87,8 @@ Giovanni or the currently selected Viridian owner, Clair, and Blaine.
 
 ## Opening and travel
 
-The existing Johto opening initializes zero badges, no circuit clears, no
-regional Champion/game-clear result, and Trainer Rating 0. Kanto and Hoenn
+The existing Johto opening initializes zero badges, no league wins, no
+regional Champion/game-clear result, and TR 0. Kanto and Hoenn
 starts remain separate future work.
 
 The S.S. Aqua maiden voyage remains available without a Ticket, awards the
@@ -93,20 +96,20 @@ Ticket during its reunion flow, and reaches state 8 on arrival at Vermilion.
 State 8 plus the Ticket permits the Olivine, Vermilion, and Slateport circuit.
 
 Numbered Sevii-island service remains available from Vermilion independently
-of badges, circuit clears, the Rainbow Pass, Bill, Celio, the National Pokédex,
+of badges, league wins, the Rainbow Pass, Bill, Celio, the National Pokédex,
 Trainer Tower, or a Sevii quest. Qualification controls only the hidden Masters
 entrance inside its existing Seven Island house.
 
-Every threshold-badge location must have a usable route to the eligible venue.
-Reaching a venue cannot require another badge, the clear being pursued, or an
-unrelated local story. Completion, loss, or voluntary exit must return the
+Every threshold-badge location must have a usable route to the eligible league.
+Reaching a league cannot require another badge, the league win being pursued, or
+an unrelated local story. Completion, loss, or voluntary exit must return the
 player to a location connected to the wider travel network.
 
 ## Admission and order
 
-First-clear admission uses these predicates:
+First-league-win admission uses these predicates:
 
-| Stage | First-clear admission |
+| Stage | First-league-win admission |
 | --- | --- |
 | Indigo | `globalBadges >= 8 && !indigoCleared` |
 | Masters | `indigoCleared && globalBadges >= 16 && !mastersCleared` |
@@ -115,10 +118,10 @@ First-clear admission uses these predicates:
 Badge origin, current map region, local story completion, another regional
 Champion flag, and a generic game-clear flag cannot substitute for these facts.
 
-After a stage's first clear, its venue offers replay admission without changing
-the next required stage. Replay admission does not require completing later
-stages. The venue must distinguish first-clear and replay runs before creating
-the persistent run record.
+After a stage's first league win, its league offers replay admission without
+changing the next required stage. Replay admission does not require completing
+later stages. The league must distinguish first-league-win and replay runs
+before creating the persistent run record.
 
 Admission refusal states only the immediate unmet requirement. The Trainer
 Card owns the complete overview.
@@ -167,28 +170,28 @@ Clone the five Indigo battle positions into collision-audited Wayfarer Trainer
 IDs. Lorelei through Lance each reference one FRLG source party. Blue uses one
 Wayfarer runtime ID with a roster resolver: Blastoise for the current visitor
 branch and, when the Kanto opening exists, one of the three reviewed FRLG
-first-clear variants. Generate only the reachable party, class, portrait,
+first-league-win variants. Generate only the reachable party, class, portrait,
 palette, text, item, music, and AI dependency closure. Never index the active
 Wayfarer Trainer table with a raw FRLG opponent ID.
 
-The first clear atomically:
+The first league win atomically:
 
-1. records the canonical Indigo circuit clear;
+1. records the canonical Indigo league win;
 2. establishes Champion and game-clear recognition for both Kanto and Johto;
 3. performs one FRLG Hall of Fame registration and Champion Ribbon flow;
-4. applies one +8 Trainer Rating contribution;
+4. applies one +8 TR contribution;
 5. resets Indigo room/run state; and
 6. returns the player to the travel network without full completion credits.
 
 Kanto and Johto recognition may be projected into both existing regional
-helpers, but neither flag is an independent circuit clear or reward input.
+helpers, but neither flag is an independent league win or reward input.
 Clearing or resetting unrelated Hoenn content cannot change Indigo. Indigo
 cleanup must not run a second regional Hall of Fame path.
 
 An Indigo replay uses the same rooms and roster. It may run the ordinary
 victory presentation needed to leave the chain, but it does not register
 another circuit Hall of Fame record, award another Champion Ribbon, replay full
-credits, or change a first-clear fact.
+credits, or change a first-league-win fact.
 
 ## Sevii Masters Challenge
 
@@ -208,15 +211,15 @@ with a `masters` content-domain handler for the existing elderly former Trainer
 and the existing box background event. Preserve the exterior warp, map layout,
 old-woman graphics, coordinates, and local ID.
 
-Before first-clear qualification, the caretaker states the immediate missing
-badge or Indigo requirement and the box remains closed. When eligible, she
-moves the box and selects the existing door-open layout. Room 2 becomes the
+Before first-league-win qualification, the caretaker states the immediate
+missing badge or Indigo requirement and the box remains closed. When eligible,
+she moves the box and selects the existing door-open layout. Room 2 becomes the
 Masters antechamber and forwards an admitted run into the HNS room chain. It no
 longer dispatches e-Reader or visiting-Trainer behavior in Wayfarer. Standalone
 FRLG behavior remains unchanged.
 
-After first clear, the caretaker offers replay admission. Declining, leaving,
-losing, or abandoning a run changes no first-clear state.
+After first league win, the caretaker offers replay admission. Declining,
+leaving, losing, or abandoning a run changes no first-league-win state.
 
 ### Challenge chain
 
@@ -252,10 +255,10 @@ Rename the final room in Wayfarer presentation to `Masters Gallery`. Preserve
 its map asset and transition role, but bypass regional Hall of Fame recording,
 Champion Ribbon award, regional cleanup, game-clear state, and credits.
 
-The first clear atomically:
+The first league win atomically:
 
-1. records the dedicated Masters circuit clear;
-2. applies one +8 Trainer Rating contribution;
+1. records the dedicated Masters league win;
+2. applies one +8 TR contribution;
 3. resets HNS room/run state;
 4. returns the player to the Masters House; and
 5. leaves Seven Island harbor and all independent Sevii content available.
@@ -282,8 +285,8 @@ a layout edit.
 ## Hoenn League and Red
 
 Hoenn retains its Emerald room chain, authored Tier 3 roster, regional Hall of
-Fame, Champion and game-clear state, cleanup, and first-clear +8 Rating
-contribution. Its first clear records circuit completion and runs the full
+Fame, Champion and game-clear state, cleanup, and first-league-win +8 TR
+contribution. Its first league win records circuit completion and runs the full
 completion credits. A replay grants no additional circuit reward or credits.
 
 Red's Mt. Silver encounter requires `indigoCleared && mastersCleared &&
@@ -294,7 +297,7 @@ specification says otherwise. This circuit adds no Red reward.
 
 ## Persistent circuit state
 
-Store canonical first-clear state separately from region identity:
+Store canonical first-league-win state separately from region identity:
 
 ```text
 indigoCleared
@@ -308,47 +311,47 @@ canonical saved fact even if completion projects true into both Kanto and
 Johto Champion helpers. Masters requires a dedicated saved fact in the
 Wayfarer circuit or Sevii state bank.
 
-Do not calculate canonical clears from a sum of regional Champion flags. Do not
-store copied badge totals, reward counts, roster choices, or derived Rating.
-New game initializes every clear false. Prerelease migration is not required.
+Do not calculate canonical league wins from a sum of regional Champion flags. Do
+not store copied badge totals, reward counts, roster choices, or derived TR. New
+game initializes every league win false. Prerelease migration is not required.
 
-First-clear recording is transactional. A failed ceremony, save interruption,
-duplicate callback, or return-map load cannot award +8 without retaining the
-corresponding clear, retain a clear without its reward fact, or consume the
-wrong stage. The high-water Rating getter must recover the derived value from
-the committed facts.
+First-league-win recording is transactional. A failed ceremony, save
+interruption, duplicate callback, or return-map load cannot award +8 without
+retaining the corresponding league win, retain a league win without its reward
+fact, or consume the wrong stage. The TR getter (saved high-water value) must
+recover the derived value from the committed facts.
 
 ## Run lifecycle
 
 The persistent active-run record stores:
 
 - circuit stage;
-- first-clear or replay mode;
-- Trainer Rating captured at admission;
+- first-league-win or replay mode;
+- TR captured at admission;
 - active status; and
-- enough venue identity to validate the saved room.
+- enough league identity to validate the saved room.
 
 It does not store copied parties or derived opponent levels. Existing room
 progression remains authoritative for defeated members.
 
 1. Validate admission before locking the entrance or changing a room.
 2. Capture stage, mode, and `GetTrainerRating()` once on successful admission.
-3. Reset that venue's room progression only when starting a new run.
+3. Reset that league's room progression only when starting a new run.
 4. Every enrolled battle validates the matching run, room, and opponent.
 5. Save/load preserves the snapshot and defeated-room progression.
-6. A loss or voluntary exit clears the run and resets only that venue.
+6. A loss or voluntary exit clears the run and resets only that league.
 7. A final victory validates complete room progression before its ceremony.
-8. The ceremony records a first clear only in first-clear mode, then ends and
-   resets the run exactly once.
+8. The ceremony records a first league win only in first-league-win mode, then
+   ends and resets the run exactly once.
 
 Loading an invalid or absent record inside a circuit room returns the player to
-that venue's lobby without a clear or reward. Do not silently start a run or
-capture live Rating midway through the chain. Indigo returns to its League
-lobby, Masters to Room 1 of the Seven Island battle house, and Hoenn to its
-native lobby.
+that league's lobby without a league win or reward. Do not silently start a run
+or capture live TR midway through the chain. Indigo returns to its League lobby,
+Masters to Room 1 of the Seven Island battle house, and Hoenn to its native
+lobby.
 
 An out-of-context debug battle may use its authored fallback but cannot create
-a circuit run, defeat a room member, or award a clear.
+a circuit run, defeat a room member, or award a league win.
 
 ## Opponent scaling
 
@@ -366,11 +369,15 @@ and forms, party size, moves, items, abilities, IVs, EVs, natures, genders,
 balls, AI, healing inventory, and battle type. Existing randomizer precedence
 continues to apply.
 
-A replay captures a fresh Rating snapshot and reconstructs the same authored
+A replay captures a fresh TR snapshot and reconstructs the same authored
 tier roster. It never selects a later tier or rematch party merely because the
-stage was previously cleared.
+stage was previously won.
 
 ## Trainer Rating
+
+This is today's formula. In v0, TR follows the badge scale in
+[Player Trainer Rating](player-trainer-rating.md#formula-v0), with no
+league TR.
 
 Let `b` be global badge count. Preserve the badge contribution:
 
@@ -380,7 +387,7 @@ Let `b` be global badge count. Preserve the badge contribution:
 9 <= b <= 24:  40 + (b - 8)
 ```
 
-Add eight for each canonical first-clear fact:
+Add eight for each canonical first-league-win fact:
 
 ```text
 rating = badgeContribution
@@ -389,29 +396,29 @@ rating = badgeContribution
        + (hoennCleared   ? 8 : 0)
 ```
 
-Clamp the result to 80 and preserve high-water semantics. Regional Champion
-projection, individual victories, losses, replay clears, repeated ceremonies,
+Clamp the result to 80; TR never decreases. Regional Champion
+projection, individual victories, losses, replay wins, repeated ceremonies,
 Hall of Fame revisits, and Red add nothing.
 
 Required milestones are:
 
-| Facts | Rating | Soft cap where applicable |
+| Facts | TR | Level cap where applicable |
 | --- | ---: | ---: |
-| No badges or clears | 0 | |
+| No badges or league wins | 0 | |
 | 4 badges | 16 | |
 | 8 badges | 40 | |
-| 8 badges and Indigo clear | 48 | |
-| 16 badges and Indigo clear | 56 | |
-| 16 badges and Indigo plus Masters clears | 64 | |
-| 24 badges and first two clears | 72 | |
+| 8 badges and Indigo win | 48 | |
+| 16 badges and Indigo win | 56 | |
+| 16 badges and Indigo plus Masters wins | 64 | |
+| 24 badges and first two league wins | 72 | |
 | 24 badges and circuit complete | 80 | 100 |
-| 24 badges and no clears | 56 | 62 |
-| 24 badges and Indigo clear | 64 | 78 |
-| 24 badges and Indigo plus Masters clears | 72 | 89 |
+| 24 badges and no league wins | 56 | 62 |
+| 24 badges and Indigo win | 64 | 78 |
+| 24 badges and Indigo plus Masters wins | 72 | 89 |
 
 The HNS Chinchou learnset retains the existing Wayfarer additions of `Flash`,
 `Surf`, and `Whirlpool` at level 5 and the established forty-entry adjustment.
-This keeps the Johto start's native utility route available at Rating 0.
+This keeps the Johto start's native utility route available at TR 0.
 
 ## Trainer Card and dialogue
 
@@ -427,11 +434,11 @@ Hoenn League: <state>
   24 badges + Masters clear
 ```
 
-Use `Locked`, `Available`, or `Cleared` for first-clear state. After Hoenn,
+Use `Locked`, `Available`, or `Cleared` for first-league-win state. After Hoenn,
 append `Circuit complete`. Red does not occupy a fourth status row.
 
 Opening, badge awards, qualification, Hall of Fame returns, and unrelated Sevii
-interactions produce no automatic circuit announcements. Venue dialogue may
+interactions produce no automatic circuit announcements. League dialogue may
 state its immediate unmet requirement. Masters dialogue must not call the event
 a League, call its winner Champion, or claim Lance is current Indigo Champion.
 
@@ -451,7 +458,7 @@ The [Viridian finale specification](frlg-kanto-viridian-finale.md) selects the
 full FRLG Gym, Giovanni's permanent departure, and no Blue successor or Gym
 rematches. Blue's existing Dojo battle unlocks on the committed first Indigo
 Champion victory, including when Indigo precedes Giovanni. A battle start or
-loss does not unlock it. This reads Indigo's canonical first-clear fact and
+loss does not unlock it. This reads Indigo's canonical first-league-win fact and
 does not change the shared eight-global-badge admission or add a circuit reward.
 
 The [Viridian implementation](../research/viridian-finale-implementation.md)
@@ -465,23 +472,24 @@ so a rolled-back first victory leaves Blue hidden.
 
 1. Prove global badge totals 0 through 24 from every regional distribution and
    reject duplicate badge awards.
-2. Cover every first-clear and replay admission boundary, including 7/8,
-   15/16, and 23/24 badges; missing prior clears; all-badges-first progression;
-   and cleared-stage replay while a later stage remains locked or available.
+2. Cover every first-league-win and replay admission boundary, including 7/8,
+   15/16, and 23/24 badges; missing prior league wins; all-badges-first
+   progression; and won-stage replay while a later stage remains locked or
+   available.
 3. Prove stage identity is independent of region: Masters maps remain
    Sevii/Kanto for ordinary systems while their battles resolve Tier 2.
 4. Verify the exact five-member roster order and authored party identity for
    all three stages across every supported difficulty and randomizer boundary.
-5. Cover every integer Rating 0 through 80, level offsets, interpolation,
+5. Cover every integer TR 0 through 80, level offsets, interpolation,
    clamping, run snapshots, and fresh replay snapshots.
 6. Prove Indigo projects both Kanto and Johto Champion recognition while adding
-   one canonical clear and one +8 contribution. Masters changes neither
+   one canonical league win and one +8 contribution. Masters changes neither
    regional Champion state. Hoenn changes only Hoenn's regional result.
-7. Exercise transactional first-clear recording, duplicate ceremony callbacks,
-   interrupted returns, and derived Rating recovery.
-8. Verify the Trainer Card text and states for every threshold, first clear,
-   replay availability, circuit completion, and mixed regional badge order.
-9. Update static consumers that still name Kanto and Johto League clears,
+7. Exercise transactional first-league-win recording, duplicate ceremony
+   callbacks, interrupted returns, and derived TR recovery.
+8. Verify the Trainer Card text and states for every threshold, first league
+   win, replay availability, circuit completion, and mixed regional badge order.
+9. Update static consumers that still name Kanto and Johto league wins,
    regional Tier 2 dispatch, consecutive Indigo tiers, or three Hall of Fame
    callbacks. No live circuit path may retain those assumptions.
 
@@ -491,11 +499,12 @@ so a rolled-back first victory leaves Blue hidden.
    warp before and after qualification. Confirm its ordinary return warp and
    island services remain reachable.
 2. Verify the old woman and box use exact retained source identities and that
-   the `masters` domain conflicts with no story, ordinary-Trainer, or Tower
+   the `masters` domain conflicts with no story, regular trainer, or Tower
    record.
 3. Exercise the closed box, each refusal, accepted admission, Room 2 transition,
    every HNS room, Masters Gallery, loss at every opponent, voluntary exit,
-   blackout, save/load, invalid-run recovery, first-clear return, and replay.
+   blackout, save/load, invalid-run recovery, first-league-win return, and
+   replay.
 4. Confirm no e-Reader or visiting-Trainer route is reachable in Wayfarer and
    standalone FRLG retains its source behavior.
 5. Exercise FRLG Indigo and Emerald Hoenn with equivalent run-lifecycle cases,
@@ -508,14 +517,15 @@ so a rolled-back first victory leaves Blue hidden.
 
 ### Regional journey coverage
 
-Play a Johto-start journey to all twenty-four badges with zero clears. Include
-mixed regional order, deferred Whitney and Clair rewards, the selected Viridian
-badge owner, Wattson/Norman in both orders, and the audited Rocket takeover
-predicate. Then clear Indigo, Masters, and Hoenn consecutively and reach Red.
+Play a Johto-start journey to all twenty-four badges with zero league wins.
+Include mixed regional order, deferred Whitney and Clair rewards, the selected
+Viridian badge owner, Wattson/Norman in both orders, and the audited Rocket
+takeover predicate. Then clear Indigo, Masters, and Hoenn consecutively and
+reach Red.
 
 Repeat representative routes by taking each stage at its minimum badge count.
 Confirm transport from every threshold-badge region, return to ordinary travel,
-and the exact Rating milestones. Record live emulator evidence separately from
+and the exact TR milestones. Record live emulator evidence separately from
 mechanics and source audits.
 
 Build Wayfarer and the affected mechanics/E2E configuration. If shared engine
@@ -526,11 +536,11 @@ Run map-version builds serially because generated map files are shared.
 ## Implementation evidence
 
 Validated on 2026-09-25 with the production Wayfarer ROM and E2E-enabled ROM.
-The live emulator circuit journey covers first clears and replays across FRLG
-Indigo, Sevii Masters, and Hoenn; save/reload recovery; loss recovery; Rating
+The live emulator circuit journey covers first league wins and replays across
+FRLG Indigo, Sevii Masters, and Hoenn; save/reload recovery; loss recovery; TR
 snapshots; the single Indigo Hall of Fame commit; and Red after circuit
 completion. A separate Hoenn-origin journey covers admission to all three
-venues without the maiden voyage. Native mechanics include a fault-injected
+leagues without the maiden voyage. Native mechanics include a fault-injected
 Indigo Hall of Fame save rollback, Red's authored completion handoff, circuit
 admission/persistence/status tests, exact League roster and tier tests, and the
 map, traversal, Sevii-content, Trainer-scaling, and generator audits.

@@ -16,7 +16,7 @@ encounter the sibling they did not release into Hoenn.
 
 ### Postgame choice
 
-After the player first clears the Hoenn League, retain the existing return-home
+After the player first wins the Hoenn League, retain the existing return-home
 scene. Norman gives the S.S. Ticket, the television reports an unidentified
 flying Pokémon, and Mom asks which color the report named.
 
@@ -95,7 +95,7 @@ new way to obtain the ticket.
 - Preserve the source species, levels, route network, movement rules, encounter
   odds, battle behavior, Soul Dew reward, dialogue, and audiovisual presentation.
 - Do not redesign Eon Ticket acquisition, S.S. Tidal's unrelated destinations,
-  ordinary wild encounters, Pokédex rules, Trainer Rating, or legendary
+  ordinary wild encounters, Pokédex rules, Trainer Rating (TR), or legendary
   readiness policy.
 - Do not merge Kanto and Hoenn Lati choice, capture, defeat, or island state.
 - Do not require a prerelease save migration. The project has no public save

@@ -123,6 +123,12 @@ Existing Johto and Kanto callers keep their current result.
 
 ### Save storage and lifecycle
 
+The v0 [Leagues design](leagues.md#saved-state) owns its saved league state
+and load validation; its size assertions and save-sector accounting must
+cover all of that state within the allocation below. Notable trainers' TRs are
+authored content, so New Game saves nothing for them. This extension is not
+implemented here.
+
 The additional Hoenn banks live in `SaveBlock3` or an equivalent separately
 bounded saved structure. The implementation must not enlarge `SaveBlock1`
 past its safe allocation or shift existing HNS fields merely to create Hoenn
@@ -167,26 +173,49 @@ dispatch consume this same resolved context.
 
 Johto, Kanto, and Hoenn have separate badge, story, Trainer, item, NPC, and
 campaign state. The shared Indigo League is the deliberate Champion exception:
-its one canonical clear establishes the Champion title recognized by both
-Kanto and Johto. That projection is one circuit result and one reward, not two
-independent regional League clears. The Sevii Masters Challenge has dedicated
+its one canonical league win establishes the Champion title recognized by
+both Kanto and Johto. That projection is one circuit result and one reward, not
+two independent regional league wins. The Sevii Masters Challenge has dedicated
 circuit state and no regional Champion or game-clear meaning.
 
 The interregional circuit aggregates regional badges and its canonical Indigo,
-Masters, and Hoenn first-clear facts for qualification and Trainer Rating.
-Circuit results never limit badge collection. Hoenn scripts that reveal local
-postgame content must still check Hoenn Champion or Hoenn game-clear state, not
-Indigo, Masters, or a generic global flag.
+Masters, and Hoenn first-league-win facts for qualification and Trainer Rating
+(TR). Circuit results never limit badge collection. Hoenn scripts that reveal
+local postgame content must still check Hoenn Champion or Hoenn game-clear
+state, not Indigo, Masters, or a generic global flag.
 
 Whiteout, Hall of Fame, daily reset, and new-game code must dispatch cleanup to
-the applicable venue and region. A whiteout in Johto cannot relocate a Hoenn
+the applicable league and region. A whiteout in Johto cannot relocate a Hoenn
 NPC. The Masters Gallery cannot run a regional Hall of Fame path, and entering
 the Hoenn Hall of Fame cannot reset Indigo or Masters rooms.
 
-Wayfarer's fixed circuit order is Indigo, Sevii Masters, then Hoenn. A
-first-clear result advances the circuit only after its own completion commits.
-Only Indigo may project one clear into both Kanto and Johto Champion
-recognition; no other circuit result may synthesize another region's state.
+Today's circuit uses fixed Indigo, Sevii Masters, then Hoenn order. Its
+first-league-win result advances only after completion commits. Only Indigo
+projects its win into both Kanto and Johto Champion recognition.
+
+The v0 [Leagues design](leagues.md) keeps today's first league wins
+with their regional recognition, cleanup, and unlocks, and replaces today's
+admission and fixed order with league invitations and league-score lineups
+([invitations](leagues.md#invitations),
+[selection](leagues.md#selection-and-order)), grown from world progress under
+[Notable trainers](notable-trainers.md), without reading player party, XP, or
+the day. Notable trainers in Gyms use the same model at
+battle setup.
+
+An accepted event waits for the player, who has one attempt. Winning makes the
+player the reigning champion, commits any first league win, and releases the
+event; a repeat win gives prize money and the title only (plus the Gallery
+win at the Masters). In v0 a win adds no
+player TR ([Player Trainer Rating](player-trainer-rating.md)); Today's +8 per
+first league win stays until adoption. Losing or leaving ends the event with
+no league win or reward and crowns the lineup's strongest, as does declining.
+Save calls, answers, wins, and ceremony phases atomically, with stale
+callbacks rejected.
+
+This spec does not implement that direction or approve catalog content. Shared
+Indigo recognition and regional isolation remain mandatory. Unsupported schema
+states follow invalid-save handling under prerelease policy; do not synthesize
+compatibility or replacement fields.
 
 ### ROM budget
 
@@ -253,6 +282,16 @@ Static and automated checks must prove all of the following:
    size category.
 12. Representative map loads and transitions run without heap corruption or a
     second simultaneous map decompression buffer.
+
+The v0 league-invitation extension additionally requires save round-trip
+and transaction tests for not-qualified, counting-down, invited, accepted,
+active-run, and after-loss and after-win states. Prove at most one invitation
+or accepted event with one five-match event lineup, an unchanged lineup after
+reloads while it waits and mid-run, idempotent and atomic calls, answers, and
+entering, and an atomic win. Reject obsolete schemas and damaged authoritative state without
+regenerating a lineup. Verify
+the records satisfy the same sector and runtime bounds. These checks do
+not claim the new lifecycle is implemented.
 
 ## References
 

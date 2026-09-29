@@ -41,7 +41,10 @@ The HNS Machine Part repair remains the director's condition for the Kanto radio
 - Enter and leave the Tower before Scope acquisition and before Machine Part repair. Verify every stair, save/reload, blackout, and normal return route, and confirm the radio director still follows only his existing repair state.
 - Resolve the Scope, Marowak, Rocket, Fuji, and Flute sequence after discovering Lavender first or Celadon first. Test losses, departures, reloads, and a full Bag at the gift; no step advances from merely entering or talking to the guard.
 - Verify one Fuji in the world state at a time, with truthful Soul House, House1, radio guard, and directory text. Inspect the living House1 Marowak scene against the ghost story.
-- Test visiting origins with no Blue battle, and return after later Blue progress. The adventure and its rewards remain playable. Check ordinary Trainers, items, wild encounters, scaling, and persistent floor access after rescue.
+- Test visiting origins with no Blue battle, and return after later Blue
+  progress. The adventure and its rewards remain playable. Check regular
+  trainers, items, wild encounters, scaling, and persistent floor access after
+  rescue.
 - Inspect the rendered lobby and 2F arrival/return tiles for collision and visual coherence. Confirm the guard and radio services remain reachable.
 
 ## Source anchors

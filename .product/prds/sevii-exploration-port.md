@@ -9,7 +9,7 @@ exploration region. Players can visit the island hubs, follow their outdoor
 routes, enter their caves and buildings, and find the local wild Pokemon.
 
 The initial port shipped geography and encounters. The current Wayfarer build
-also layers the delivered ordinary Trainers, independent story, and Trainer
+also layers the delivered regular trainers, independent story, and Trainer
 Tower on that exploration baseline; their gameplay contracts are owned by their
 respective product and technical documents.
 
@@ -32,16 +32,16 @@ Birth Island and Navel Rock already exist in Wayfarer through HNS and Emerald
 content. Connect their existing harbors to the same transport system using the
 FRLG special-island routes. Birth Island remains available only when the
 current origin can use the regular S.S. Aqua service and the player has the
-Aurora Ticket. Navel Rock remains available only after the League clear and
+Aurora Ticket. Navel Rock remains available only after the league win and
 with the Mystic Ticket. These are read-only travel checks: the connection does
 not grant tickets or write ticket, shown-ticket, unlock, or story flags. The
 Sevii port does not own or change either island's maps, encounters, actors,
 battles, static Pokemon, puzzles, items, rewards, or non-ferry scripts.
 
 Wayfarer does not require Bill's Cinnabar trip, Celio's repair, the National
-Pokedex, a League clear, a Rainbow Pass, or another Sevii quest to use the
+Pokedex, a league win, a Rainbow Pass, or another Sevii quest to use the
 ordinary One through Seven Island service. This rule does not remove the
-separate League-clear requirement for Navel Rock. Entering the region does not
+separate league-win requirement for Navel Rock. Entering the region does not
 start or complete any FRLG story state.
 
 ### Geography
@@ -85,7 +85,7 @@ The exploration baseline retains the scripts needed for:
 The baseline does not itself own story actors, Trainers, Trainer Tower battles,
 scripted encounters, gifts, trades, rewards, or quest handoffs. Those selected
 interactions are layered through the delivered [story](sevii-independent-story-beats.md),
-[ordinary-Trainer](../specs/sevii-trainer-restoration.md), and
+[regular trainer](../specs/sevii-trainer-restoration.md), and
 [Trainer Tower](sevii-trainer-tower.md) contracts; all other source content
 remains excluded.
 
@@ -107,7 +107,7 @@ Each nighttime profile is an explicit alias of its resolved daytime profile.
 Day and night therefore use the same species, slots, levels, encounter rate,
 and method data. Morning and evening keep the configured daytime fallback.
 
-Ordinary encounters still use Wayfarer's Trainer Rating level projection,
+Ordinary encounters still use Wayfarer's Trainer Rating (TR) level projection,
 standard fishing behavior, Lures, abilities, and other shared encounter
 mechanics. Those systems may affect effective levels or selection odds, but
 they do not replace the authored Sevii roster.
@@ -150,7 +150,7 @@ does not add Sevii Fly destinations or change existing Birth Island and Navel
 Rock travel behavior beyond their FRLG-style ferry connection.
 
 Wild encounters remain ordinary regional encounters for Pokedex area data,
-DexNav, Lures, ability attraction, and Trainer Rating. Static and scripted
+DexNav, Lures, ability attraction, and TR. Static and scripted
 Pokémon are outside this baseline and owned by the story layer where selected.
 Existing Birth Island and Navel Rock Pokémon remain unchanged.
 
@@ -178,7 +178,7 @@ islands, interiors, or encounter profiles.
   to the same authored table before ordinary runtime modifiers.
 - Verify Pokemon Centers, Marts, the Day Care, PCs, and island ferries without
   enabling any Sevii story state.
-- Repeat the route at low and high Trainer Rating to confirm that scaling does
+- Repeat the route at low and high TR to confirm that scaling does
   not change the resolved species roster.
 
 ## References

@@ -150,7 +150,7 @@ The existing lifecycle applies independently to each active record:
 - catching or defeating the Pokémon deactivates only the encountered record.
 
 Roamers retain their authored fixed levels and do not pass through ordinary
-Trainer Rating wild-level projection. The engine must continue to track the
+Trainer Rating (TR) wild-level projection. The engine must continue to track the
 encountered record index so two Lati of the same species cannot update or resolve
 one another.
 

@@ -33,7 +33,7 @@ class, graphics, map names, or an absence of known exceptions.
 
 | Area | Authoring outcome | Player outcome |
 | --- | --- | --- |
-| Progression | One definition for each named Rating curve, consumed by gameplay and audits | Existing levels, rounding, offsets, and timing remain exact |
+| Progression | One definition for each named Trainer Rating (TR) curve, consumed by gameplay and audits | Existing levels, rounding, offsets, and timing remain exact |
 | NPC services | One declaration per rod contributor or converted mart interaction; membership and bindings derive from it | All currently supported regional contributors work, rewards remain repeat-safe, and towns retain their stock |
 | Encounters (future) | Separately approved shared encounter and story profiles supply only their declared behavior | Each adopted encounter retains its explicitly validated consequences |
 
@@ -57,8 +57,17 @@ Geography cannot determine which persistence bank a script uses. Total badges
 cannot substitute for a story completion flag or League admission rule.
 
 Each consumer declares when it samples changing state. A mart resolves its stock
-when opened. A trainer party uses its encounter snapshot. A League uses its saved
-admission Rating throughout the run and samples again on a new admission.
+when opened. Regular trainers and Gym members snapshot player TR at battle
+setup. The existing six-slot Gym scaler is disabled by default; when enabled it
+uses player TR, while Giovanni has a separate five-slot player-TR projection.
+Today's fixed Leagues use their saved admission TR and sample again on new
+admission. Under the v0 [notable trainers](notable-trainers.md) design,
+notable trainers snapshot a team at battle setup from their own TR, which
+grows with world progress (never player TR used directly), and each league
+event's [lineup](../specs/leagues.md#event-lineup) is captured when the player
+accepts its invitation and frozen for that event; reloads while it waits keep
+it. The shared curve evaluator accepts an explicit input and never
+produces TR.
 
 ### Adding content
 
@@ -77,7 +86,7 @@ authorize a new outcome for it.
 
 ## Boundaries
 
-This work does not change Rating production, League rewards, badge access,
+This work does not change TR production, League rewards, badge access,
 feature enablement, encounter odds, rosters, learnsets, catalog membership, or
 dialogue. Existing feature specifications continue to own those decisions.
 Where a specification describes pending behavior, migration preserves the

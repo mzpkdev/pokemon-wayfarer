@@ -1,20 +1,24 @@
 # Global TR Poké Marts
 
 PRD: [Poké Marts across the three regions](../prds/global-tr-pokemarts.md)
-Implemented: Outdated
+Implemented: Partial; converted-counter runtime is enabled, release acceptance remains pending.
 
-The League progression example now assumes +8 per first-time clear. That
-reward change is pending implementation; the current circuit uses the old rewards.
+Today's [circuit producer](../../game/src/league_circuit.c) already
+contributes +8 once for each canonical league's first league win. Replays add
+no player TR. The v0 TR design (rescaled formula, uncapped TR, scalers, and
+notable trainers' separate TR) is in
+[Player Trainer Rating](player-trainer-rating.md); this document owns the v0
+thresholds in [v0 thresholds](#v0-thresholds). The thresholds elsewhere in this
+document are Today.
 
 ## Scope
 
-Implement shared Trainer Rating essentials and permanent local stock for the
-Wayfarer counters enumerated below. Kanto uses active HNS maps plus the
+Implement shared Trainer Rating (TR) essentials and permanent local stock for
+the Wayfarer counters enumerated below. Kanto uses active HNS maps plus the
 implemented FRLG Cinnabar counter defined below. Johto uses HNS maps and Hoenn
-uses imported Emerald maps. This
-specification defines the catalog, bindings, script changes, runtime contract
-and acceptance.
-It does not authorize changes to Pokémon species, teams, movesets or learnsets.
+uses imported Emerald maps. This specification defines the catalog, bindings,
+script changes, runtime contract and acceptance. It does not authorize changes
+to Pokémon species, teams, movesets or learnsets.
 
 Source baseline: `f7a2b95b7bde184141cf5b91215dc4e7ab9068a6`. The core production
 implementation is merged and enabled by default. Emulator validation and release
@@ -26,9 +30,10 @@ with the retention rules below before extending the implementation.
 ### Essentials and global progression
 
 Read `GetTrainerRating()` once when a converted counter opens. Use the greatest
-threshold less than or equal to that value. The getter's existing saved high-water
-behavior and League calculation remain authoritative. Never count badge flags,
-infer TR from the current region, or require a particular League clear.
+threshold less than or equal to that value. The getter's existing behavior (TR
+never decreases) and League calculation remain authoritative. Never count
+badge flags, infer TR from the current region, or require a particular league
+win.
 
 | Tier | Minimum TR | Newly included item constants |
 | --- | --- | --- |
@@ -39,8 +44,8 @@ infer TR from the current region, or require a particular League clear.
 | 4 | 40 | `ITEM_FULL_HEAL`, `ITEM_MAX_REPEL` |
 | 5 | 55 | `ITEM_MAX_POTION`, `ITEM_FULL_RESTORE` |
 
-The cumulative ordinary counts are 9, 11, 12, 15, 17 and 19. TR 55 through 80
-uses tier 5. Lower-tier entries never disappear. A resupply location means
+The cumulative ordinary counts are 9, 11, 12, 15, 17 and 19. Tier 5 covers
+every TR from 55 up (from 120 up in [v0](#v0-thresholds)). Lower-tier entries never disappear. A resupply location means
 one full-service counter, except Lilycove 2F, where it means the union of the
 two co-located counters. At equal TR, each location offers the complete same
 common catalog; the two Lilycove profiles individually offer their defined
@@ -72,6 +77,26 @@ consume this supplement. Match the existing nonzero-setting interpretation.
 These explicit TR thresholds replace the old badge thresholds for converted
 counters. Normal play does not receive the supplement. Existing challenge
 item-use restrictions, Expensive pricing and all specialist stock stay intact.
+
+### v0 thresholds
+
+On the [v0 TR scale](player-trainer-rating.md#formula-v0) each
+threshold moves to the v0 TR at the same badge point as today (tier 5, today
+reached at 16 badges plus the first Indigo win, moves to 16 badges). Tier
+contents, order, and every other rule are unchanged:
+
+| Tier | Today minimum TR | v0 minimum TR | v0 reached at |
+| --- | ---: | ---: | --- |
+| 0 | 0 | 0 | New game |
+| 1 | 4 | 10 | 1 badge |
+| 2 | 16 | 40 | 4 badges |
+| 3 | 30 | 70 | 7 badges |
+| 4 | 40 | 80 | 8 badges |
+| 5 | 55 | 120 | 16 badges |
+
+The Pokémon Center challenge supplement follows the same mapping: TR 0, 40,
+70, and 120 for Ether, Elixir, Max Ether, and Max Elixir. The v0 tier is a
+step [scaler](player-trainer-rating.md#scalers), flat at tier 5 above TR 120.
 
 ### Local stock authority and retention
 
@@ -204,7 +229,7 @@ new signature goods.
 | `TrainerHill_Entrance` / clerk at (14,9) | `TrainerHill_Entrance_EventScript_Clerk`; full essentials plus union of authored X/battle items |
 
 HNS Trainer Hill's first clerk at (14,9) remains a battle-item specialist.
-BP exchanges, décor and challenge-admission NPCs are excluded. Venue access
+BP exchanges, décor and challenge-admission NPCs are excluded. Facility access
 and facility rules stay authored; once a listed clerk is accessible, its stock
 has no additional game-clear gate. Any listed facility map excluded by the
 Wayfarer build receives an explicit inactive classification in the manifest,
@@ -290,7 +315,7 @@ At Cherrygrove, remove the `VAR_NEWBARK_TOWN_STATE >= 5` inventory restriction.
 At Oldale, remove the `FLAG_ADVENTURE_STARTED` stock restriction. At Petalburg,
 remove `FLAG_PETALBURG_MART_EXPANDED_ITEMS` from stock selection. At Rustboro,
 remove `FLAG_MET_DEVON_EMPLOYEE` from stock selection. Rustboro's Timer/Repeat
-Balls are now available on arrival. At Hoenn Trainer Hill, remove the
+Balls are available on arrival. At Hoenn Trainer Hill, remove the
 `FLAG_SYS_GAME_CLEAR` inventory branch. Preserve every unrelated writer or
 reader of these flags and vars. Do not change story state to make a shop work.
 Each removal exists only inside its
@@ -419,10 +444,10 @@ largest list is Mauville in challenge mode at TR 55 or above: 31 unique IDs,
 including eight distinct signature/retained goods. Treat future capacity
 growth as a checked data change. Cover threshold minus one, threshold and threshold plus one;
 normal/challenge switching; equal TR with Johto-only, Kanto-only, Hoenn-only
-and mixed progress; 24 badges without League clears (TR 56) and eight badges
-plus the first League clear (TR 48). The TR 56 case has all essentials; the
+and mixed progress; 24 badges without league wins (TR 56) and eight badges
+plus the first league win (TR 48). The TR 56 case has all essentials; the
 TR 48 case has the TR 45 tier and excludes Max Potion and Full Restore, which
-unlock at TR 55. Mart thresholds are unchanged.
+unlock at TR 55. These are today's thresholds.
 Use the real global TR path in integration tests, not only a stubbed tier input.
 
 Verify the 19 common items cannot appear early through signatures or retained

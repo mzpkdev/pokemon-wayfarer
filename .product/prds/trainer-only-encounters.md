@@ -73,7 +73,7 @@ The player uses balls and berries actually owned in the Bag.
 | Go Near | Use existing Safari approach behavior: increase catch and flee factors, including repeated attempts at the closest distance. Apply the catch benefit to every ball. |
 | Bag: ball | Consume one owned, usable ball and attempt a normal capture with the proximity benefit. Preserve the ball's ordinary effects where applicable. |
 | Bag: berry | Selecting any standard berry feeds it directly, consuming one to temporarily reduce flee risk and partially lower anger. Feeding does not heal rock damage or instantly reset anger. |
-| Run | Attempt escape. Success depends on wild level relative to the Trainer Rating softcap and improves with repeated attempts. A failed attempt consumes a turn. |
+| Run | Attempt escape. Success depends on wild level relative to the level cap and improves with repeated attempts. A failed attempt consumes a turn. |
 
 Performing a valid action consumes a turn. Opening or cancelling the Bag,
 selecting an unusable item, or attempting an unavailable action consumes neither
@@ -169,7 +169,7 @@ saturation. Trainer-only passive anger continues on those turns. Do not apply
 the approach benefit twice to Safari Balls.
 
 The following are selected initial playtest defaults. They are tuning values, not
-claims that balance has been validated. Let `C` be the Trainer Rating soft level
+claims that balance has been validated. Let `C` be the level
 cap and `L` the wild Pokémon's level, both fixed for the encounter at entry.
 
 | Mechanic | Initial default |
@@ -189,7 +189,7 @@ cap and `L` the wild Pokémon's level, both fixed for the encounter at entry.
 The flee defaults above belong to trainer-only encounters. Safari shares the
 all-ball proximity catch benefit while retaining its visit rules. Run succeeds
 with probability `clamp(floor(50 * C / L) + 15 * priorFailedAttempts, 5, 95)` percent,
-using the entry softcap C and wild level L, each at least 1. Failed attempts consume
+using the level cap C at encounter start and wild level L, each at least 1. Failed attempts consume
 a turn; even repeated failures never guarantee escape. Preserve global no-running
 and existing less-escapes challenge restrictions. Invalid actions and menu
 cancellation advance none of these values.
@@ -264,7 +264,7 @@ Acceptance examples:
 Playtesting must establish whether messages communicate escalating danger without
 meters, whether the dynamic warning arrives in time to inform a choice, and
 whether catching without rocks remains practical. Compare equal-level encounters
-with Pokémon above and below the Trainer Rating softcap, including repeated failed
+with Pokémon above and below the level cap, including repeated failed
 escapes, berry use near the anger threshold, and peaceful turns reaching it.
 
 ## No contextual exceptions

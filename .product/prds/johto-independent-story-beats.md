@@ -20,7 +20,7 @@ medicine errand and the Lake of Rage investigation are each one adventure.
 
 An independent adventure introduces its problem where the player discovers it,
 provides enough context to act, and ends with a clear local result. Its starting
-conditions do not require unrelated Gym badges, League clears, or distant story
+conditions do not require unrelated Gym badges, league wins, or distant story
 flags. Geography and existing field-move preparation still apply unless another
 approved traversal requirement removes them.
 
@@ -171,7 +171,7 @@ to her Gym and completing Clair's local trial before receiving her badge. This
 feature does not make every Gym independent of its own local adventure.
 
 Remove the named unrelated badge prerequisites above. Do not replace them with a
-global badge total, Trainer Rating threshold, League clear, or another unrelated
+global badge total, TR threshold, league win, or another unrelated
 story check. Existing access to Blackthorn and other locations is governed by the
 traversal design; removing Clair's Gym check alone does not promise unrestricted
 geographic access.
@@ -234,7 +234,7 @@ their staging.
 This proposed design revises the retained Johto story prerequisites described by
 the [League circuit PRD](wayfarer-interregional-league-circuit.md), specifically
 Radio Tower activation and Clair's three-badge requirement. It does not alter
-League admission, the Trainer Rating calculation, or badge accounting. The
+League admission, the TR calculation, or badge accounting. The
 legendary readiness gate consumes existing TR. The older specifications
 still describe the current implementation until this design is implemented.
 

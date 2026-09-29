@@ -109,7 +109,7 @@ reward collection must remain recoverable; claiming a TR-gated Master Ball is
 not a finale prerequisite. Neither Snorlax encounter is required.
 
 Remove the existing specific-Kanto-badge access condition for this finale. Do not
-replace it with TR, a total badge count, or a League clear. This is a direct story
+replace it with TR, a total badge count, or a league win. This is a direct story
 dependency preserving Giovanni's reveal and withdrawal, not a late-reward gate
 on an ordinary badge.
 
@@ -126,8 +126,8 @@ prerequisites merely to preserve an unconditional line about Rocket's defeat.
 ### Late-game rewards
 
 Use the [late-game reward exception](johto-independent-story-beats.md): delay
-specifically named powerful rewards through Trainer Rating while leaving their
-ordinary adventures playable. TR determines eligibility; it is not spent.
+specifically named powerful rewards through Trainer Rating (TR) while leaving
+their ordinary adventures playable. TR determines eligibility; it is not spent.
 
 | Reward | Required treatment |
 | --- | --- |
@@ -149,10 +149,11 @@ permanently hide an encounter.
 
 For Mewtwo, the port specification must identify the appropriate local access
 boundary in Cerulean Cave. It must enforce the readiness requirement without
-requiring completion of Sevii's unrelated delivery chain. No new League-clear
+requiring completion of Sevii's unrelated delivery chain. No new league-win
 condition is introduced by this PRD.
 
-The Wayfarer Power Plant port sets Zapdos's battle threshold at TR 55. Exact
+The Wayfarer Power Plant port sets Zapdos's battle threshold at TR 55 on the
+today's scale (v0: TR 120, ≈ 16 badges). Exact
 thresholds for the Master Ball, Articuno, and Mewtwo remain balance decisions
 against the wider journey. Mewtwo's threshold is higher than the birds'; do not
 assume the Master Ball shares either threshold. All alternate activation paths
@@ -161,9 +162,12 @@ must obey the final reward rules.
 ### Rival continuity
 
 Keep FRLG's rival scenes at their existing locations except for Blue's
-one-time Cinnabar introduction. The delivered coastal port currently moves it
-to the Viridian Gym entrance; the [future Viridian finale](../specs/frlg-kanto-viridian-finale.md)
-removes that introduction and Blue's Gym role. Preserve genuinely necessary
+one-time Cinnabar introduction. The historical coastal port moved it to the
+Viridian Gym entrance; the implemented [Viridian finale](../specs/frlg-kanto-viridian-finale.md)
+now removes that introduction and Blue's Gym role. The v0
+[notable trainers](notable-trainers.md) design gives Blue and Giovanni their
+own TR, growing with world progress, for every battle with them; it assigns
+Blue no badge. Preserve genuinely necessary
 character-development order by withholding later scenes until their predecessors
 are complete. Do not relocate chapters or select a different chapter dynamically
 based on where the player arrives.

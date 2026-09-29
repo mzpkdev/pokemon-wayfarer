@@ -67,7 +67,7 @@ capture belongs to Hoenn's Terra Cave and its separate story rules.
 
 Replace Wayfarer's HNS route selection and empty coast-preview events with
 the complete FRLG route content. Preserve the FRLG route layouts and their
-ordinary Trainers, non-Trainer NPCs, signs, hidden items, Surf and fishing
+regular trainers, non-Trainer NPCs, signs, hidden items, Surf and fishing
 encounters, and Route 21 land encounters. The two FRLG Route 21 maps form one
 continuous Pallet-to-Cinnabar crossing. Trainer battles use Wayfarer's scaling
 and defeat-state rules, and route encounter sources follow its combined
@@ -85,17 +85,21 @@ Cave remains the later Kyogre capture destination under its own story rules.
 
 Move Blue's one-time Cinnabar introduction to the Viridian City exterior at
 the Gym entrance. He invites the player inside. In this standalone port, Blue
-remains Wayfarer's Viridian Gym Leader and sole Earth Badge giver; a separate
-future Kanto story may assign that role to Giovanni. Meeting Blue requires no
+was Wayfarer's Viridian Gym Leader and sole Earth Badge giver in that delivered
+port. The implemented finale now assigns both roles to Giovanni. Meeting Blue requires no
 Cinnabar visit, Blaine victory, League
 clear, or other region's story. Replace references to the eruption or to a
 Cinnabar meeting that did not occur. His later Dojo and League appearances
 must follow their own rules rather than depend on visiting Cinnabar.
 
-This Blue introduction and Gym path describe the delivered coastal port. The
-[future Viridian finale](../specs/frlg-kanto-viridian-finale.md) supersedes them:
-Giovanni takes the full FRLG Gym and Earth Badge, Blue leaves Viridian, and his
-Dojo battle follows Indigo's first committed Champion victory.
+This Blue introduction and Gym path describe the historical coastal port. The
+implemented [Viridian finale](../specs/frlg-kanto-viridian-finale.md) now
+supersedes them: Giovanni owns the FRLG Gym and Earth Badge, Blue is absent from
+Viridian, and his current Dojo unlock follows committed Indigo victory. The
+v0 [notable trainers](notable-trainers.md) design gives Blue
+and Blaine their own growing TR and roster for every battle with them;
+it does not restore Blue as Viridian's badge owner. The port's source parties
+remain provenance references, not mandatory opening teams.
 
 Blaine's victory does not summon Bill or start a voyage. Bill's Meteorite
 delivery and all Sevii travel and stories retain their independently owned
@@ -115,7 +119,8 @@ requirements.
   Groudon or Kyogre encounter, a Bill-triggered Sevii unlock, or a new
   campaign order.
 - Existing Hoenn Groudon story and capture rules, global badge accounting,
-  Trainer Rating, and regional League admission remain owned by their designs.
+  Trainer Rating (TR), and regional League admission remain owned by their
+  designs.
 
 ## Interactions
 

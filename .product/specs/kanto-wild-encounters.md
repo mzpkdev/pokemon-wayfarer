@@ -19,9 +19,10 @@ behavior, and the deterministic checks that keep it suitable as a starting
 region. It covers land, Surf, the shared Rock Smash and Headbutt interaction
 data, and all ten Standard Rod entries.
 
-It does not redesign encounter runtime selection, Trainer Rating, rod quality,
-special acquisitions, terrain, or region access. Sevii remains out of scope for
-this implementation. Its existing encounter records must remain unchanged.
+It does not redesign encounter runtime selection, Trainer Rating (TR), rod
+quality, special acquisitions, terrain, or region access. Sevii remains out of
+scope for this implementation. Its existing encounter records must remain
+unchanged.
 
 ## Behavior
 
@@ -310,14 +311,19 @@ addition's paired FireRed and LeafGreen roles have different ranges, apply the
 same midpoint, maximum, and FireRed tie breaks above even though the added
 species does not occur in either source.
 
-Trainer Rating rolls within the authored range, projects the level, resolves a
+TR rolls within the authored range, projects the level, resolves a
 supported predecessor, and applies species-floor eligibility as defined by the
-Trainer Rating specification. The redesign adds no Kanto profile offset.
+TR specification. The redesign adds no Kanto profile offset.
 
-At Rating 10, effective land encounters on Routes 1, 2, 3, and 22, Viridian
+At TR 10, effective land encounters on Routes 1, 2, 3, and 22, Viridian
 Forest, and every manifest-owned Mt. Moon profile must be level 12 or lower.
 The check enumerates every authored level in every slot, including ability and
-Lure level selection inputs before projection.
+Lure level selection inputs before projection. TR 10 is today's scale;
+v0: TR 25 (≈ 2.5 badges) on the
+[v0 TR scale](player-trainer-rating.md#formula-v0). The level-12
+ceiling needs data re-verification against the
+[v0 wild level curve](trainer-rating-wild-encounter-scaling.md#v0-wild-level-curve)
+and is not yet claimed there.
 
 ### Night authoring
 
@@ -355,17 +361,16 @@ as a Generation II family extension. Neither baby is required to resolve, and
 neither may be authored directly. Every other effective species numbered 252
 through 386 is forbidden.
 
-For each profile, remove `SPECIES_NONE` and slots locked by the current Trainer
-Rating, renormalize the remaining production weights, aggregate by effective
-species, and then by generation. Every map and method profile has equal weight
-in the 129-profile regional mean. Encounter rates do not weight profiles. For a
-given calculation, the selected rod quality supplies the weights for all 32
-fishing profiles. Report land, Surf, interaction, and fishing breakouts as
-diagnostics, but do not apply generation quotas to those breakouts. Ability
-attraction, Lures, randomizer behavior, and Hoenn Sound are off for the
-baseline portfolio.
+For each profile, remove `SPECIES_NONE` and slots locked by the current TR,
+renormalize the remaining production weights, aggregate by effective species,
+and then by generation. Every map and method profile has equal weight in the
+129-profile regional mean. Encounter rates do not weight profiles. For a given
+calculation, the selected rod quality supplies the weights for all 32 fishing
+profiles. Report land, Surf, interaction, and fishing breakouts as diagnostics,
+but do not apply generation quotas to those breakouts. Ability attraction,
+Lures, randomizer behavior, and Hoenn Sound are off for the baseline portfolio.
 
-For Wayfarer, run the effective regional portfolio for every integer Rating
+For Wayfarer, run the effective regional portfolio for every integer TR
 from 0 through 80. Every rating and every rod quality must satisfy:
 
 | Time | Generation I | Generation II families | Independent Generation III | Generation IV onward |
@@ -373,12 +378,12 @@ from 0 through 80. Every rating and every rod quality must satisfy:
 | Day | 75% to 85% | 10% to 20% | 0% | At most 5% |
 | Night | 60% to 75% | 20% to 35% | 0% | At most 5% |
 
-At each rating, night Generation II probability is at least 5 percentage
+At each TR, night Generation II probability is at least 5 percentage
 points above day. Exact rational values decide pass or failure. Decimal display
 rounding uses half-up rounding to two places.
 
 The authored day and night union contains 105 through 120 distinct nonempty
-species. This union uses active authored slots before Trainer Rating resolution
+species. This union uses active authored slots before TR resolution
 and counts each species once. Wynaut and Azurill do not enter the union unless
 they are authored, which this specification forbids.
 
@@ -392,11 +397,12 @@ The six Wayfarer records for Vermilion City, Vermilion port outside, and the
 selected FRLG Cinnabar Island, by day and night, remain in
 `game/src/data/standard_rod_fishing.json`. For each record, Chinchou is
 exactly 11 percent of successful Old Rod encounters with Lure off at every
-Wayfarer Rating from 0 through 80. The 25 percent bite rate makes it exactly
-2.75 percent per unmodified cast. Kanto changes must not alter the Johto-owned
+Wayfarer TR from 0 through 80 (today's scale; v0: TR 0 through 160,
+0 to 24 badges, to be re-verified on the v0 wild level curve). The 25 percent
+bite rate makes it exactly 2.75 percent per unmodified cast. Kanto changes must not alter the Johto-owned
 Olivine and Cianwood accessibility records in the same file.
 
-Every qualifying Kanto Chinchou catch knows Surf. Wayfarer Rating 0 produces a
+Every qualifying Kanto Chinchou catch knows Surf. Wayfarer TR 0 produces a
 level-5 catch from the authored level-5 sources, so the Wayfarer Chinchou
 schedule begins at level 5 in the current learnset as required by the
 interregional circuit. Preserve the utility moves through level 100 and update
@@ -425,14 +431,14 @@ Hidden DexNav entries and the randomizer retain their existing exclusions.
 
 Extend `game/tools/wild_encounters/wild_encounters_to_header.py` to consume the
 regional manifest. Bump the balance audit to schema version 3. In addition to
-the existing per-slot Trainer Rating data, it contains:
+the existing per-slot TR data, it contains:
 
 - The complete resolved Kanto ownership manifest and its generated profile
   denominator for each time. The report distinguishes the historical HNS-only
   baseline from the selected FRLG Cinnabar and Seafoam port manifest.
 - Authored and effective species probabilities as exact fractions, with the
   authored slot and resolved species both present for every outcome.
-- Day and night generation portfolios for every Rating and rod quality.
+- Day and night generation portfolios for every TR and rod quality.
 - Per-profile shared-species retention and total-variation distance.
 - FRLG ecology-group budgets, counterpart ratios, selected source level ranges,
   and every exhaustive discrete-slot proof in the schema-version-3 audit. Each
@@ -440,7 +446,7 @@ the existing per-slot Trainer Rating data, it contains:
   certificate defined above, including exact candidate and rejection counts,
   the enumeration digest, and the selected assignment's exact objective values.
 - The authored species union, forbidden-species results, Hoenn Sound comparison,
-  Chinchou accessibility and Wayfarer Rating 0 opening-level checks.
+  Chinchou accessibility and Wayfarer TR 0 opening-level checks.
 - The manifest `changes` ledger and a list of every `DAY_ALIAS`.
 
 Generation fails when any required report invariant fails. The report may
@@ -460,7 +466,7 @@ Update the profile-count fixtures for Route 23, selected FRLG Routes 19, 20,
 21 North and South, Cinnabar, all five Seafoam floors, and their explicit
 night bindings. Check that both Route 21 target profiles exactly retain the
 shared HNS Route 21 donor slots. Run `make wild-encounter-scaling-test` and
-`make wild-encounter-balance-audit`. The generated audit must pass every Rating
+`make wild-encounter-balance-audit`. The generated audit must pass every TR
 from 0 through 80 in Wayfarer and all three rod qualities.
 
 Keep the production runtime tests for eligibility, predecessor resolution,

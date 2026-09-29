@@ -10,9 +10,13 @@ Johto and Hoenn. A player returning to an early town should find supplies
 appropriate to their current Trainer Rating (TR). Local stock should also
 make towns recognizable and give players reasons to visit different shops.
 
-Today, shared Johto/Kanto clerk scripts select inventory using their legacy
-badge flags, while Hoenn marts largely use fixed lists and local story gates.
-Neither provides consistent resupply across the combined adventure.
+The converted-counter runtime uses the shared player-TR essentials and
+permanent local stock specified below; release acceptance remains pending in
+the implementation specification. Legacy counters outside that enrollment keep
+their existing behavior. The v0 TR design (the v0 badge scale, uncapped TR,
+scalers, and notable trainers' separate TR) is in
+[Player Trainer Rating](player-trainer-rating.md); its effect on marts is
+under [v0](#v0).
 
 ## Design
 
@@ -22,7 +26,7 @@ counters supply that catalog together: balls and status cures on the left,
 HP medicine and repels on the right. All other converted locations have a
 full-service counter. Stock expands when the player reaches a
 threshold, keeps all earlier items, and remains available at every higher TR.
-The source of the player's badges or League clears does not affect stock at
+The source of the player's badges or league wins does not affect stock at
 the same TR.
 
 | Minimum TR | Additions to essentials |
@@ -34,14 +38,23 @@ the same TR.
 | 40 | Full Heal, Max Repel |
 | 55 | Max Potion, Full Restore |
 
-These are the selected v1 thresholds. TR 55 through 80 shares the complete
-catalog. An ordinary mart never sells a later-tier essential through its
+These are the selected v1 thresholds. Tier 5, from TR 55 up, shares the
+complete catalog; in v0 it starts at TR 120 and has no upper end. An ordinary mart never sells a later-tier essential through its
 local selection. Department-store essentials use these same thresholds,
 including both halves of Lilycove's split catalog.
 
 For example, a TR 4 visitor to Cherrygrove and Mossdeep can buy Great Balls
 and Super Potions in both towns. Their specialty stock differs. On returning
 to Cherrygrove at TR 55, the player can buy Full Restores there too.
+
+### v0
+
+On the v0 TR scale the thresholds become TR 0, 10, 40, 70, 80, and 120, so
+each tier still opens at the same badge point: Great Balls after the first
+badge, Super Repels after four, Ultra Balls after seven, Full Heals after
+eight, and Max Potions and Full Restores after sixteen. The tier contents and
+the rest of this design are unchanged. The thresholds in the table above stay
+Today's until adoption.
 
 ### Local character
 
@@ -71,9 +84,9 @@ their existing specialist floors. General-counter evolution stones and other
 nonessential goods remain available. A department store earns its appeal
 through breadth and convenience.
 
-Cash marts at League venues, Trainer Hill and the Battle Frontier also receive
-TR essentials where the specification identifies an existing resupply clerk.
-Specialist counters in the same building keep their separate services.
+Cash marts in League buildings, Trainer Hill and the Battle Frontier also
+receive TR essentials where the specification identifies an existing resupply
+clerk. Specialist counters in the same building keep their separate services.
 
 ### Story and access
 
@@ -124,8 +137,9 @@ capacity, travel routes or facility battle rules. Do not edit map tiles.
 
 The essentials thresholds follow the existing TR progression: stronger
 healing and balls become broadly available as the party's level range rises.
-All essential supplies unlock by TR 55, so late-game travel remains convenient.
-Reaching a late town early no longer bypasses those tiers at an ordinary mart;
+All essential supplies unlock by tier 5 (TR 55 Today, TR 120 in v0), so
+late-game travel remains convenient. Reaching a late town early does not
+bypass those tiers at an ordinary mart;
 existing specialist remedies and pickups remain intentional alternatives.
 
 Keep earlier items because lower cost and different efficiency can still make
@@ -142,7 +156,7 @@ claims that ordinary Poké Balls are sold out until a story event.
 
 ## Playtesting
 
-- Revisit an early town at TR 55 and buy the same essentials available in a late town.
+- Revisit an early town at tier 5 and buy the same essentials available in a late town.
 - Enter each region at low TR and check that ordinary counters follow the same tiers.
 - Check whether each town's signature goods are useful and recognizable without
   requiring frequent travel solely for everyday supplies.

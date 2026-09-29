@@ -87,7 +87,7 @@ order:
 
 1. Resolve the active map, time-of-day fishing table, and the current rod's
    ten-entry profile.
-2. Calculate Trainer Rating eligibility for every entry. An entry with
+2. Calculate Trainer Rating (TR) eligibility for every entry. An entry with
    `SPECIES_NONE` is ineligible in both normal and randomized modes.
 3. Sum the current quality's weights for eligible entries only. If the total is
    zero, report that the current spot has no fishing encounter and do not enter
@@ -98,7 +98,7 @@ order:
    the selected position across the ordered sequence of eligible entries, not
    across fixed raw indices. An ineligible entry can never be restored by the
    mirror.
-6. Roll the selected entry's authored level, apply Trainer Rating level
+6. Roll the selected entry's authored level, apply TR level
    projection and predecessor resolution, and create the encounter through the
    existing ordinary fishing path.
 
@@ -270,7 +270,9 @@ contract defines no permanent named-carrier records for other builds.
 
 The wild encounter generator's deterministic balance report
 covers every Wayfarer map profile and time-of-day variant at every
-integer Trainer Rating from 0 through 80. For every quality it reports:
+integer TR from 0 through 80 (today's scale; v0: 0 through
+160, 0 to 24 badges, on the [v0 TR scale](player-trainer-rating.md#formula-v0)).
+For every quality it reports:
 
 - Raw entry weights and eligible entries.
 - Renormalized entry and aggregate species probabilities.
@@ -280,6 +282,10 @@ integer Trainer Rating from 0 through 80. For every quality it reports:
   50, and 75 percent base bite rates.
 - Expected unmodified casts for qualifying fishing catches in the selected
   catch-window scenarios.
+
+The traversal results need data re-verification against the
+[v0 wild level curve](trainer-rating-wild-encounter-scaling.md#v0-wild-level-curve)
+before they are claimed on the v0 scale.
 
 Wayfarer uses the selected catch-window scenarios to validate traversal
 accessibility. Generation fails if profile shape or totals drift, an eligible
@@ -294,7 +300,7 @@ Automated validation must cover:
 
 - Exact profile values, totals, ten-entry views, and every weighted-roll
   boundary for all three qualities.
-- Empty-entry exclusion, Trainer Rating filtering, renormalization, and Lure
+- Empty-entry exclusion, TR filtering, renormalization, and Lure
   mirroring for both full and filtered profiles.
 - Raw slot handoff to the randomizer, zero-data spots, rod-independent Feebas,
   and the unchanged bite probabilities and modifier cap.

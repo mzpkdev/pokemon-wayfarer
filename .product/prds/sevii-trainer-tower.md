@@ -14,8 +14,8 @@ or Wayfarer's regional progression.
 ### Availability
 
 Trainer Tower is available whenever the player can reach Seven Island. It does
-not require a League clear, a Rainbow Pass, Celio's repair, the National Pokédex,
-another Sevii objective, or a minimum Trainer Rating.
+not require a league win, a Rainbow Pass, Celio's repair, the National Pokédex,
+another Sevii objective, or a minimum Trainer Rating (TR).
 
 The lobby remains a safe service area with healing, its Mart, challenge
 information, and the records board. Starting, abandoning, winning, or losing a
@@ -52,11 +52,11 @@ format, speech, species, moves, held items, abilities, AI, and opponent graphics
 Do not require e-Reader data, Mystery Gift, external records, or a downloaded
 Trainer set. Mixed mode selects from the same built-in format rows.
 
-Trainer Tower remains a facility context. Opponents do not use ordinary-Trainer,
+Trainer Tower remains a facility context. Opponents do not use regular trainer,
 Gym, League, or story scaling and do not award experience or prize money. Retain
 the source facility's party-level normalization against the player's highest
 usable party level. The facility must never permanently modify the player's
-party, opponent data, or Trainer Rating.
+party, opponent data, or TR.
 
 ### Timing and records
 
@@ -100,7 +100,7 @@ The frozen local set awards Up-Grade for Single, Dragon Scale for Double, Metal
 Coat for Knockout, and King's Rock for Mixed.
 
 Prizes are repeatable on later successful runs. They are not gated by record
-improvement and do not affect Trainer Rating, badges, League qualification, or
+improvement and do not affect TR, badges, League qualification, or
 Sevii story state.
 
 ## Boundaries
@@ -112,8 +112,8 @@ Sevii story state.
 - Preserve the four formats, eight-floor course, source parties, timing identity,
   records, and prize table.
 - Trainer Tower opponents are not ordinary Sevii Trainers and never enter the
-  ordinary scaling inventory or rematch system.
-- The exterior's ordinary Trainers, wild encounters, items, and ferry geography
+  regular trainer scaling inventory or rematch system.
+- The exterior's regular trainers, wild encounters, items, and ferry geography
   remain owned by the exploration and Trainer-restoration contracts.
 
 ## Interactions
@@ -149,7 +149,7 @@ has not been exercised end to end.
   pending reward without replaying the run.
 - Abandon through the elevator and reset during a run. Preserve earlier records
   and all unrelated state.
-- Confirm no experience, prize money, Trainer Rating, badge, League, ferry, or
+- Confirm no experience, prize money, TR, badge, League, ferry, or
   story change from any facility battle.
 
 ## References

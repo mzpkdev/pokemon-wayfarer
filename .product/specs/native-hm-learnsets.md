@@ -13,7 +13,11 @@ existing implementation and retains authority for standalone builds.
 
 This specification defines the level-up learnset additions that let selected wild Pokémon provide Cut, Flash, Surf, Strength, Rock Smash, Waterfall, Dive, or Whirlpool before the matching HM is obtained. It covers Emerald, FireRed, LeafGreen, and HNS using the current level-up learnsets. Dive additions apply only to Emerald. HNS receives Whirlpool additions but no Dive additions.
 
-The feature changes species learnsets only. It does not change encounters, HM compatibility, move data, field-action eligibility, story rewards, map access, fishing availability, or Trainer Rating scaling. The existing HM field-use system remains responsible for resolving a party Pokémon that knows the move and for enforcing terrain and map context.
+The feature changes species learnsets only. It does not change encounters, HM
+compatibility, move data, field-action eligibility, story rewards, map access,
+fishing availability, or Trainer Rating (TR) scaling. The existing HM field-use
+system remains responsible for resolving a party Pokémon that knows the move and
+for enforcing terrain and map context.
 
 Fly remains excluded. Wild-species and learnset randomizers may replace the authored species or moves and are outside the native-roster guarantee.
 
@@ -29,11 +33,19 @@ Do not add a runtime moveset override, encounter-specific move field, or post-ca
 
 At a level that already contains one or more moves, place the additions after all existing entries at that level. When a row assigns several utility moves at one level, preserve the order shown. Existing entries and their relative ordering remain unchanged.
 
-Normal wild creation keeps the last four distinct level-up moves available at the caught level. Repeating a utility move before it has left that four-move set does not refresh its position, so every repeat below is placed at the first level where the move would otherwise be absent after existing same-level moves are processed.
+Normal wild creation keeps the last four distinct level-up moves available at
+the caught level. Repeating a utility move before it has left that four-move set
+does not refresh its position, so every repeat below is placed at the first
+level where the move would otherwise be absent after existing same-level moves
+are processed.
 
 ### Coverage inventory
 
-The following existing encounter profiles establish the required two-place coverage. Each regional row applies only to its corresponding build: Kanto to FireRed and LeafGreen, Johto to HNS, and Hoenn to Emerald. Level ranges are authored levels before Trainer Rating projection. Floors or rooms of one dungeon count as one place. No encounter data changes are authorized.
+The following existing encounter profiles establish the required two-place
+coverage. Each regional row applies only to its corresponding build: Kanto to
+FireRed and LeafGreen, Johto to HNS, and Hoenn to Emerald. Level ranges are
+authored levels before TR projection. Floors or rooms of one dungeon count as
+one place. No encounter data changes are authorized.
 
 | Region | Anchor | Utility moves | Qualifying existing places and authored levels |
 | --- | --- | --- | --- |
@@ -68,19 +80,28 @@ The following existing encounter profiles establish the required two-place cover
 | Hoenn | Barboach | Waterfall | Route 111 or Route 114 and Route 120 or Meteor Falls fishing, 10 to 45 |
 | Hoenn | Carvanha | Waterfall, Dive | Route 118 and Route 119 fishing, 10 to 45 |
 
-Aipom's qualifying profiles are stored as Rock Smash encounter data but are also consumed by the independent Headbutt interaction. Aipom counts only through Headbutt access; Rock Smash cannot be required to obtain its native Rock Smash user.
+Aipom's qualifying profiles are stored as Rock Smash encounter data but are also
+consumed by the independent Headbutt interaction. Aipom counts only through
+Headbutt access; Rock Smash cannot be required to obtain its native Rock Smash
+user.
 
 Chinchou also supplies the HNS Kanto Surf crossings. The six Vermilion, port,
 and Cinnabar day/night profiles author it at level 5. Its schedule therefore
 starts at level 5 and preserves all three utility moves through level 100 across
-the Rating 0 to 80 range.
+the TR 0 to 80 range.
 
 The Olivine port and Cianwood Chinchou records are also the approved HNS
-Whirlpool source for the full Rating 0 to 80 range. Mantine remains an
+Whirlpool source for the full TR 0 to 80 range. Mantine remains an
 additional Whirlpool source where its global level floor permits it; Mantyke
 does not receive the utility role.
 
-Trainer Rating projects ordinary encounters above their authored levels. The authored additions must therefore preserve every assigned utility move in the active four-move set at every level from the anchor's lowest qualifying level through level 100. This is deliberately stronger than checking only the listed authored ranges and covers every current projection, including the convergence toward level 90 at Rating 80.
+TR projects ordinary encounters above their authored levels. The authored additions must therefore preserve every assigned utility move in the active four-move set at every level from the anchor's lowest qualifying level through level 100. This is deliberately stronger than checking only the listed authored ranges and covers every current projection, including the convergence toward level 90 at TR 80.
+
+The TR 0 to 80 ranges above are on today's scale. v0: TR 0 to
+160 (0 to 24 badges) on the [v0 TR scale](player-trainer-rating.md#formula-v0).
+The Chinchou ranges need data re-verification against the
+[v0 wild level curve](trainer-rating-wild-encounter-scaling.md#v0-wild-level-curve)
+before this specification claims them there.
 
 ### Anchor schedules
 
@@ -164,11 +185,17 @@ The feature adds no persistent state and requires no save migration. Existing Po
 
 ### Validation
 
-Add deterministic learnset coverage around the existing Pokémon learnset tests. For every anchor in its applicable build, select the current learnset and construct its initial moveset at every integer level from the lowest qualifying level in the coverage inventory through level 100. At every level, assert that all assigned utility moves are among the four known moves. The test must exercise the production initial-moveset path rather than a separately reimplemented last-four calculation.
+Add deterministic learnset coverage around the existing Pokémon learnset tests.
+For every anchor in its applicable build, select the current learnset and
+construct its initial moveset at every integer level from the lowest qualifying
+level in the coverage inventory through level 100. At every level, assert that
+all assigned utility moves are among the four known moves. The test must
+exercise the production initial-moveset path rather than a separately
+reimplemented last-four calculation.
 
 Add data validation in each applicable build that enumerates the named
 qualifying encounter profiles, all applicable version and time-of-day variants,
-every authored level in each selected slot, and every Trainer Rating in the
+every authored level in each selected slot, and every TR in the
 anchor record's declared range. Project each level through the production
 scaling function, construct the caught anchor's moveset, and assert that all
 assigned utility moves remain present. Mantine's range is 10 through 80; the

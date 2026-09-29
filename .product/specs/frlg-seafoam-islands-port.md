@@ -69,7 +69,7 @@ Revive, Big Pearl, Ultra Ball, Nugget, and the B4F Water Stone. Each uses
 collision-safe placement and a one-time Wayfarer flag. Reuse HNS Seafoam 1F
 and B1F land encounters as donors under the selected FRLG map identities.
 Adapt FireRed/LeafGreen tables for B2F, B3F, and B4F through Wayfarer's
-day/night and Trainer Rating pipeline. A floor without an authored night
+day/night and Trainer Rating (TR) pipeline. A floor without an authored night
 source may use its day table at night. Keep standalone HNS bindings available;
 the selected Wayfarer catalog covers every active Seafoam floor.
 

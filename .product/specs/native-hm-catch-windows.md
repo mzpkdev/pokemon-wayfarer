@@ -91,8 +91,8 @@ Existing unrelated native duplicates are not removed to satisfy
 this rule. The feature does not change a utility's move data or field PP rules.
 
 Assignments are species-level learnset changes, not wild-only overrides.
-Ordinary Trainer, egg, gift or other creation paths that already consume the
-same level-up learnsets continue to do so. Audit affected ordinary Trainer
+Regular trainer, egg, gift or other creation paths that already consume the
+same level-up learnsets continue to do so. Audit affected regular trainer
 movesets for balance; do not modify explicit custom movesets as part of this
 data transformation.
 
@@ -129,9 +129,9 @@ the oldest if necessary. A repeated native occurrence is only reconsidered if
 its move has already left the current moveset.
 
 A catch window is the inclusive set of levels 1-100 at which that algorithm
-produces a moveset containing the utility. It is not a Trainer Rating range.
-Test presence and absence, including
-the levels immediately outside each declared window.
+produces a moveset containing the utility. It is not a Trainer Rating (TR)
+range. Test presence and absence, including the levels immediately outside each
+declared window.
 
 Leveling an owned Pokemon follows normal move-learning choices. Its utility
 does not disappear when it crosses the window's upper bound. Evolution keeps
@@ -152,7 +152,7 @@ Examples from the modern attachment, useful as deterministic fixtures:
 
 ## Encounter coverage contract
 
-Keep Trainer Rating projection, slot eligibility, devolution, profile offsets,
+Keep TR projection, slot eligibility, devolution, profile offsets,
 time aliases and Standard Rod weighting unchanged. Evaluate the effective
 species at the projected caught level, not only the authored slot species.
 Underlevel evolved slots may provide predecessors; a high-level base slot
@@ -194,6 +194,13 @@ mode, with applicable day/night profiles and each Standard Rod quality checked
 separately. Do not substitute a daytime witness for a night gap or require the
 player to wait. Hoenn's static encounter profile is evaluated in both clock
 cases rather than inventing a separate night population.
+
+TR 0-80 throughout this specification is today's scale. v0: TR
+0-160 (0 to 24 badges) on the [v0 TR scale](player-trainer-rating.md#formula-v0).
+The coverage results here, including the TR 35 Super Rod cells (≈ 7 badges,
+v0 TR 72), were computed on today's curve and need data
+re-verification against the [v0 wild level curve](trainer-rating-wild-encounter-scaling.md#v0-wild-level-curve);
+this specification does not yet claim them on the v0 scale.
 Water encounters cannot certify acquisition before Surf. The inventory must
 also verify rod and capture preparation assumptions; it does not promise
 recovery after a player deliberately loses their last usable Surf carrier.

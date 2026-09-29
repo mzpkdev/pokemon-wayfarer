@@ -101,7 +101,7 @@ that errand a general Kanto traversal gate. The choice does not impose a
 requirement to finish a regional story before exploring or traveling.
 
 All starts use the same initial money and challenge settings and begin at
-Trainer Rating 0, with no badges or League clears. Existing challenge options
+Trainer Rating (TR) 0, with no badges or league wins. Existing challenge options
 may change starter species through their current rules; the chosen local
 starter slot still determines the region's rival branch.
 
@@ -142,7 +142,7 @@ Aqua attendant once they have received their first partner. Their first
 departure goes to Olivine, and they use the regular circuit from then on.
 They do not play or receive the rewards of Johto's maiden voyage in this scope.
 
-Neither route requires a badge, League clear, fare, timetable, or completion
+Neither route requires a badge, league win, fare, timetable, or completion
 of the other region's opening. Reaching Slateport remains part of the Hoenn
 journey through the existing roads and local ferry routes. S.S. Tidal keeps
 its separate service and requirements.
@@ -177,7 +177,7 @@ FireRed, and LeafGreen retain their current introductions and behavior.
 This change adds the Pallet Kanto origin but no custom playable origin, random
 start, origin change after starting, second player identity, new appearance
 assets, or new difficulty mode. The Kanto starter roster is the FRLG trio.
-The feature does not alter Trainer Rating, regional badge accounting, League
+The feature does not alter TR, regional badge accounting, League
 eligibility or order, encounter scaling, mart stock, or the open-world field
 move rules. It adds no cross-region Fly menu or new transport destination.
 

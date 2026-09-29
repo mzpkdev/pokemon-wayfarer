@@ -8,10 +8,18 @@ scaling and unrelated mechanics remain unchanged; standalone builds retain
 their existing contract.
 
 PRD: [Wayfarer Hoenn integration](../prds/wayfarer-hoenn-integration.md)
-Implemented: Outdated
+Implemented: Partial; content and Today's circuit runtime exist, full
+content/balance acceptance remains separate.
 
-The League policy now requires TR-based levels with unchanged Tier 3 rosters.
-The implementation still uses static League levels.
+Today's [circuit producer](../../game/src/league_circuit.c) uses fixed Tier 3
+Hoenn admission, the
+[League level resolver](../../game/src/trainer_party_scaling.c) uses the
+player's Trainer Rating (TR) saved when entering a league, and the shared
+six-slot Gym feature is disabled by default in
+[configuration](../../game/include/config/trainer_party_scaling.h). The
+[PRD](../prds/wayfarer-hoenn-integration.md) summarizes the v0
+[notable trainers](notable-trainers.md) and [Leagues](leagues.md) successors,
+which this content port does not implement.
 
 ## Scope
 
@@ -44,7 +52,7 @@ Wayfarer includes the Emerald versions of the following content:
   the main campaign;
 - map NPCs, dialogue, shops, Pokémon Centers, Marts, item balls, hidden items,
   gifts, and in-game trades on those maps;
-- ordinary Trainers, rivals, Team Aqua and Team Magma battles, Gym Leaders,
+- regular trainers, rivals, Team Aqua and Team Magma battles, Gym Leaders,
   Elite Four members, and the Champion;
 - authored land, water, Rock Smash, and fishing populations; and
 - the Emerald main story from the adapted Route 101 opening through the Hoenn
@@ -109,23 +117,27 @@ ID. Ordinary IDs remain below the runtime foundation's partner boundary at
 
 Trainer records follow these rules:
 
-- Ordinary Trainers, rivals, and team encounters match the Emerald-authored
+- Regular trainers, rivals, and team encounters match the Emerald-authored
   species, levels, moves, held items, AI, party size, battle type, and
-  double-battle behavior in source data. Ordinary Trainers and Gym members
-  then apply [Trainer-party scaling](trainer-party-scaling.md) at battle
-  creation; rivals and bosses remain excluded. Initial Gym Leader badge battles
-  use the separate [Gym Leader scaling](gym-leader-scaling.md), which owns their
-  six-slot rosters and Trainer Rating selection. Leader rematches remain static.
-  The Hoenn League retains its Tier 3 source rosters and applies the separate
-  [League scaling specification](league-scaling.md) to their battle levels.
-  Species, party sizes, moves, items, abilities, and AI remain authored.
+  double-battle behavior in source data. Regular trainers and Gym members then
+  apply [Trainer-party scaling](trainer-party-scaling.md) at battle creation;
+  rivals and bosses remain excluded. Initial Gym Leader badge battles use the
+  separate [Gym Leader scaling](gym-leader-scaling.md), which owns their current
+  six-slot rosters and player-TR selection. In the v0 design, singles Gym
+  Leaders instead use their own TR, grown from world progress, and six-slot
+  roster; source Emerald parties are provenance, not mandatory opening teams. In
+  v0, Tate and Liza are one notable duo that keeps its double battle and badge
+  and stays out of league lineups. Today's Hoenn League retains its Tier 3
+  source rosters and applies the separate [League scaling
+  specification](league-scaling.md) to their battle levels. Species, party
+  sizes, moves, items, abilities, and AI remain authored.
 - Other than an initial Gym Leader badge battle enrolled in the Gym Leader
   scaling specification, the same authored party is selected regardless of the
-  player's Trainer Rating or HNS difficulty option.
-- Ordinary Trainer object coordinates, movement types, trainer types, and sight
+    player's TR or HNS difficulty option.
+- Regular trainer object coordinates, movement types, trainer types, and sight
   ranges remain unchanged.
 - A traversal change may move a scripted story actor, but it cannot silently
-  move or shorten the sight range of an ordinary Trainer.
+  move or shorten the sight range of a regular trainer.
 - Defeat state uses the dedicated Wayfarer Trainer bitset rather than a flag
   calculated from the global Trainer ID.
 - Defeating a Hoenn Trainer cannot mark an HNS Trainer defeated, and the reverse
@@ -153,11 +165,11 @@ the Emerald values. Profile generation targets Wayfarer explicitly. A profile
 must not disappear merely because its original label belonged to the Emerald
 build.
 
-Ordinary wild Pokémon pass through the existing HNS Trainer Rating level
-projection. The interregional League circuit owns the Wayfarer rating inputs:
+Ordinary wild Pokémon pass through the existing HNS TR level projection. The
+interregional League circuit owns the Wayfarer TR inputs:
 Hoenn badges contribute to the global badge total, and the Hoenn League
 provides the final circuit milestone. Other Hoenn story variables do not add
-rating inputs. The effective population exposed to normal encounters is also
+TR inputs. The effective population exposed to normal encounters is also
 exposed to systems such as DexNav and Pokédex area data when those systems
 already consume ordinary encounter profiles.
 
@@ -172,7 +184,7 @@ wild scaling unless an existing approved specification already says otherwise:
 - battle-facility or other special populations.
 
 Tests must cover at least one Hoenn profile for every encounter method at
-several Trainer Ratings, including the minimum and maximum production rating.
+several TR values, including the minimum and maximum production TR.
 The population before level projection must match Emerald exactly.
 
 ### Native utility learnsets
@@ -283,19 +295,23 @@ coincidence.
 
 Hoenn has eight badge results. Gym scripts award and check the corresponding
 Hoenn badge. Hoenn-local checks such as Norman's availability count only Hoenn
-badges. Hoenn League entry instead uses the global twenty-four-badge circuit
-and requires the shared Indigo and Sevii Masters Challenge clears. Trainer
+badges. Entering the Hoenn League instead uses the global twenty-four-badge
+circuit and requires the shared Indigo and Sevii Masters Challenge wins. Trainer
 cards or badge displays that show regional progress identify the region. The
 separate circuit summary shows the global total and stage results.
 
-The [free badge collection revision](wayfarer-interregional-league-circuit.md)
-is pending implementation. It requires all eight Hoenn badges to remain
-obtainable with no League clears while preserving coherent regional quests,
-including Juan's weather storyline. Norman must leave an undefeated Wattson
-in his Gym. New Mauville relocation becomes eligible once both the Balance
-and Dynamo Badges are earned, regardless of their award order.
+Today's [circuit contract](wayfarer-interregional-league-circuit.md) requires
+all eight Hoenn badges to remain obtainable with no league wins while
+preserving coherent regional quests, including Juan's weather storyline.
+The [Norman victory script](../../game/data/maps/PetalburgCity_Gym/scripts.inc)
+now calls the [Wattson relocation helper](../../game/data/maps/MauvilleCity_Gym/scripts.inc),
+which requires both Norman's defeat and the Dynamo Badge. An undefeated Wattson
+therefore remains in his Gym, and relocation is independent of award order.
+These source checks establish the implemented branch, not campaign playtest
+acceptance. The v0 per-leader TR changes singles Gym strength
+without adding a league-win prerequisite or changing badge ownership.
 
-Hoenn badges alter Wayfarer Trainer Rating through the global badge total.
+Hoenn badges alter Wayfarer TR through the global badge total.
 Other Hoenn story milestones do not. HNS field-move rules remain active in
 Hoenn. Story checks that deliberately require a Hoenn badge still use the
 Hoenn badge, but ordinary field-move execution does not restore Emerald's
@@ -359,13 +375,17 @@ standalone HNS continues to present Whirlpool as HM08.
 
 ### Hoenn League and game clear
 
-The Hoenn League is Wayfarer's fixed Tier 3 League. Entry requires all
-twenty-four badges and prior shared Indigo and Sevii Masters Challenge clears,
-as defined by the interregional League circuit. It uses a Hoenn-specific
-Champion and game-clear result. Its Tier 3 rosters remain authored and
-unchanged; battle levels follow
-the [League scaling specification](league-scaling.md), using TR captured at
-run admission and retained through save/load.
+Today, Hoenn is fixed Tier 3 after all twenty-four badges and committed Indigo
+and Masters first league wins. Its authored source rosters use the player's TR
+saved when entering the league, under [League scaling](league-scaling.md).
+Hoenn-specific Champion/game-clear ownership and local cleanup remain in force.
+
+The v0 [Leagues design](leagues.md) replaces today's admission, league order,
+and fixed participants with [invitations](leagues.md#invitations) and
+league-score lineups; [Notable trainers](notable-trainers.md) owns their TR
+and teams.
+Completion still owns this league's result and regional effects, independently
+of who was selected.
 
 Completing it must:
 
@@ -415,20 +435,24 @@ Static and automated validation must prove all of the following:
 6. The adapted opening skips Emerald's replacement-player initialization and
    preserves the Wayfarer player, family, home, clock, party, Bag, money,
    Pokédex, storage, options, and Trainer ID.
-7. Every Trainer reference resolves to the expected authored source party and
-   a distinct defeat bit. Non-League Hoenn source parties other than enrolled
+7. Every Trainer reference resolves to the expected authored source party and a
+   distinct defeat bit. Non-League Hoenn source parties other than enrolled
    initial Gym Leader rosters match Emerald, while Hoenn League parties match
-   the fixed Tier 3 content. Eligible ordinary battle parties then apply the
-   separate Trainer-party projection; initial Gym Leader badge battles follow
-   the Gym Leader scaling specification. Hoenn League battle levels follow the
+      today's fixed Tier 3 content. When implementing the v0 successor design,
+   validate resolved rosters and the saved event lineup instead; original
+   Emerald parties serve as provenance references. Eligible regular trainer
+   battle parties then apply the separate Trainer-party projection; initial Gym
+   Leader badge battles follow the Gym Leader scaling specification. Hoenn
+   League battle levels follow the
    [League scaling specification](league-scaling.md) using the run snapshot.
 8. Every ordinary HNS and Hoenn Trainer remains below ID 2,048, every partner
    Trainer remains at or above 2,048, and partner battles resolve correctly.
 9. Global difficulty does not change ordinary Hoenn source roster selection.
-   Trainer Rating transforms eligible ordinary and Gym-member battle parties
+      TR transforms eligible regular trainer and Gym member battle parties
    under the Trainer-party scaling specification. Enrolled initial Gym Leader
-   badge battles follow the separate Gym Leader scaling specification; leader
-   rematches remain static.
+   badge battles follow the separate Gym Leader scaling specification. Leader
+   rematches remain static Today; on adoption they follow the notable model
+   through the [every-battle rule](notable-trainers.md#trainer-rating).
 10. Every authored ordinary wild profile exists in Wayfarer, preserves its
    source population, and uses HNS level projection.
 11. HNS and Hoenn native utility schedules are both present, and Hoenn-sourced
@@ -454,8 +478,8 @@ Static and automated validation must prove all of the following:
     | Hoenn | set | set | allowed |
 
 15. Each Hoenn Gym awards the correct regional badge; Hoenn-local story checks
-    use Hoenn badges; and League entry and Trainer
-    Rating use the global badge total.
+        use Hoenn badges; and entering a league and TR use the global badge
+    total.
 16. Sootopolis remains unavailable until Hoenn Dive authorization and its
     original late-game progression are satisfied.
 17. Opening-network topology and representative runtime map loads remain

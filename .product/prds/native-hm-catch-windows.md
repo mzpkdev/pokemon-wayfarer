@@ -9,8 +9,8 @@ Attachments: [Original distribution and research package](../research/native-hm-
 ## Intent
 
 Let players find field-move users among a wider range of compatible wild
-Pokemon. Which species knows a utility when caught should change with its
-level, while the world continues to offer useful options across Trainer Rating
+Pokemon. Which species knows a utility when caught should change with its level,
+while the world continues to offer useful options across Trainer Rating (TR)
 (TR) 0-80.
 
 The existing design repeats utility entries to keep a few anchor species
@@ -37,7 +37,7 @@ target. Static simulation passing does not establish production acceptance.
 
 A fresh catch receives its ordinary level-derived moves. A young Tentacool may
 know Surf, while a higher-level Staryu supplies that role later. The player can
-catch a suitable companion for their current Rating without searching for one
+catch a suitable companion for their current TR without searching for one
 permanent designated HM species.
 
 Utility moves remain ordinary battle moves. They use normal move slots and may
@@ -90,7 +90,7 @@ is not part of this guarantee.
 
 Coverage is a property of the available roster, not each individual species.
 The old two-places-per-anchor rule and the requirement that Chinchou or Wailmer
-personally cover every Rating no longer apply. Evolution-only, optional and
+personally cover every TR no longer apply. Evolution-only, optional and
 special-area entries may enrich the roster but cannot stand in for ordinary,
 reachable acquisition evidence.
 
@@ -110,6 +110,10 @@ Rod fishing encounter. Sum eligible carrier outcomes within that source;
 never add probabilities from different places or methods. For fishing, 8%
 means 2% per unmodified cast at the Old Rod's 25% bite rate. Land-encounter
 probability is conditional on encountering a Pokemon, not on each step.
+
+TR 0-80 is today's scale. On the [v0 scale](player-trainer-rating.md#how-you-earn-it)
+the range becomes TR 0-160 (0 to 24 badges). The 8% floor must be re-checked
+against the new wild curve before it is claimed there.
 
 Dragon's Den requires local Whirlpool acquisition before the shrine obstacle,
 after Clair's defeat, with Surf already available. Blackthorn's Surf acquisition
@@ -148,7 +152,7 @@ claiming a species always knows the move.
 ## Boundaries
 
 Do not change HM item locations, rewards, move power, accuracy, PP, battle
-effects, terrain checks, Trainer Rating calculation or encounter projection.
+effects, terrain checks, TR calculation or encounter projection.
 Keep field-use eligibility and Dive authorization unchanged. A native Dive
 move does not bypass Steven's Hoenn grant or the existing HNS authorization.
 Do not activate a field action in maps where it is not supported merely because

@@ -140,8 +140,8 @@ Chat word in the Wayfarer build.
 Construct opponent levels through the source Trainer Tower normalization using
 the highest-level usable Pokémon in the captured player party. Clamp to legal
 levels and apply the same normalized level consistently to all opponents created
-for that floor. Do not apply Trainer Rating, ordinary-Trainer scaling, Gym or
-League scaling, random roster overrides, rematches, or wild-encounter
+for that floor. Do not apply Trainer Rating (TR), regular trainer scaling, Gym
+or League scaling, random roster overrides, rematches, or wild-encounter
 predecessor resolution.
 
 Set the facility battle type before party construction. Preserve no-EXP and
@@ -160,7 +160,7 @@ PP, and status.
 | Reset/power loss | Discard the unsaved active run on next boot; preserve prior records |
 
 Facility loss does not deduct money, trigger an ordinary blackout warp, set an
-ordinary Trainer flag, advance story, or authorize trainer-only wild mode.
+regular trainer flag, advance story, or authorize trainer-only wild mode.
 Challenge-specific fainting and Nuzlocke hooks must use the repository's existing
 facility exclusion. Focused mechanics tests cover these facility boundaries.
 

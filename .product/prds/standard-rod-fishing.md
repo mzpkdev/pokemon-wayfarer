@@ -53,7 +53,7 @@ that would compound probabilities and make the last entries functionally
 unavailable.
 
 The profiles below total 100. When all entries are eligible, each value is the
-entry's percentage among successful fishing encounters. If Trainer Rating
+entry's percentage among successful fishing encounters. If Trainer Rating (TR)
 makes an entry ineligible, the game removes that entry and renormalizes the
 remaining values.
 
@@ -161,7 +161,7 @@ accessibility check and cannot rely on a trophy-level probability.
 Under the selected profile, the least likely Old Rod entries have a 2% chance
 among successful encounters. Required traversal recovery follows the approved
 Native HM catch-window contract: an eligible catch must actually know the
-required utility at the relevant Trainer Rating and time. One reachable source
+required utility at the relevant TR and time. One reachable source
 must provide at least 8% per successful Old Rod encounter, or the qualifying
 land-source chance, without adding probabilities across locations. A fishing
 source therefore provides at least 2% per unmodified cast at the Old Rod's 25%
@@ -169,8 +169,10 @@ bite rate, averaging no more than 50 casts. Lure use is not required.
 
 The selected nearby-source report owns the qualifying catches and includes
 Surf and the Den's required Whirlpool acquisition. Ineligible-entry filtering
-must preserve a qualifying nearby known-move source at every Trainer Rating
-from 0 through 80 under that contract.
+must preserve a qualifying nearby known-move source at every TR
+from 0 through 80 under that contract. That is today's scale; on the
+[v0 scale](player-trainer-rating.md#how-you-earn-it) the range becomes
+TR 0 through 160 (0 to 24 badges), to be re-checked against the new wild curve.
 
 An upgrade should be noticeable during ordinary play. Good Rod should make the
 former Good and Super entries collectively more common than they are with Old
@@ -235,7 +237,7 @@ rod quality. They do not need to display exact slot probabilities.
 
 ## Interactions
 
-- Trainer Rating determines entry eligibility before the unified weighted
+- TR determines entry eligibility before the unified weighted
   roll. After selection, level projection and predecessor resolution determine
   the encounter outcome as they do for other ordinary encounters.
 - If one or more entries are ineligible, the game renormalizes the current
@@ -259,7 +261,7 @@ rod quality. They do not need to display exact slot probabilities.
   actual fishing encounter.
 
 This feature supersedes the Old, Good, and Super partition-selection rule in
-the Trainer Rating wild encounter scaling design. Trainer Rating continues to
+the TR wild encounter scaling design. TR continues to
 own the effective level and species outcome after an authored entry is
 selected.
 

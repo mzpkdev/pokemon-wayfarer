@@ -8,7 +8,7 @@ Implemented: Yes
 This specification defines the ordinary wild encounter profiles compiled for
 the Wayfarer Sevii map port. It covers FRLG source provenance, FireRed and
 LeafGreen counterpart resolution, explicit day/night identity, Altering Cave,
-Trainer Rating interaction, and validation.
+Trainer Rating (TR) interaction, and validation.
 
 The [map port specification](sevii-exploration-map-port.md) owns map inclusion,
 travel, interiors, environmental scripts, and the absence of story and
@@ -127,7 +127,7 @@ standalone Emerald, FireRed, LeafGreen, and HNS builds. Add Wayfarer population
 and offset assertions so a profile cannot compile under the right guard but
 resolve to the wrong header at runtime.
 
-Ordinary Sevii encounters pass through the existing Trainer Rating projection,
+Ordinary Sevii encounters pass through the existing TR projection,
 predecessor resolution, species floors, Lures, ability attraction, randomizer
 handoff, and Standard Rod mechanics. The derived authored table is the input to
 those systems. No Sevii-specific rating offset, species floor, rod rule, Lure
@@ -158,7 +158,7 @@ reports:
   slots, species, levels, and counterpart groups;
 - deterministic counterpart-resolution proofs and any omission;
 - resolved day, morning, evening, and night pointers;
-- authored and effective species at every integer Trainer Rating supported by
+- authored and effective species at every integer TR supported by
   production; and
 - Altering Cave's default-only result and the seven Tanoby chamber results.
 
@@ -180,7 +180,7 @@ any Birth Island or Navel Rock encounter change.
 5. Connect the profiles to the selected maps, Pokedex area data, DexNav, and
    the ordinary runtime scaling path.
 6. Generate the audit, run mechanics tests, and sample every method in an
-   emulator at low and high Trainer Rating.
+   emulator at low and high TR.
 
 ### Validation
 
@@ -203,7 +203,7 @@ Runtime acceptance samples at least one land, Surf, Rock Smash, and fishing
 profile on each island that provides the method, every Tanoby chamber, the
 default Altering Cave, and a mixed FireRed/LeafGreen counterpart profile. Run
 each sample at day and night and compare the pre-modifier profile identity.
-Repeat representative profiles at the minimum and maximum Trainer Rating.
+Repeat representative profiles at the minimum and maximum TR.
 
 ## References
 

@@ -1,20 +1,27 @@
-# Ordinary Trainer and Gym-member scaling
+# Regular trainer and Gym member scaling
 
-PRD: [Ordinary Trainer and Gym-member scaling](../prds/trainer-party-scaling.md)
-Implemented: Outdated
+PRD: [Regular trainer and Gym member scaling](../prds/trainer-party-scaling.md)
+Implemented: Partial; runtime policies exist, campaign balance acceptance remains pending.
 
-The shared policy contract now includes separate League routing. League level
-scaling is pending implementation; ordinary transformation rules are unchanged.
+Today's routing includes [League scaling](league-scaling.md) with the player's
+TR saved when entering a league, so League levels scale from that saved TR. See
+[the level resolver](../../game/src/trainer_party_scaling.c) and
+[the circuit producer](../../game/src/league_circuit.c). The v0 TR design
+(rescaled formula, uncapped TR, scalers, and notable trainers' separate TR) is
+in [Player Trainer Rating](player-trainer-rating.md); this document owns the
+v0 regular trainer level curve in
+[v0 regular trainer level curve](#v0-regular-trainer-level-curve). Everything
+else here is Today.
 
 ## Scope and authority
 
 Implement for `IS_WAYFARER`. Standalone builds retain their existing behavior.
-This specification owns automatic party transformation for ordinary opposing
-Trainers and Gym members. It does not implement Trainer Rating advancement,
+This specification owns automatic party transformation for regular opposing
+trainers and Gym members. It does not implement Trainer Rating (TR) advancement,
 boss scaling, new rematches, or new rosters.
 
 Use `GetTrainerRating()` as the only progression input. Store no per-Trainer
-scaled roster, cap, level, or historical Rating in save data. Keep the source
+scaled roster, cap, level, or historical TR in save data. Keep the source
 Trainer records immutable.
 
 ## Classification contract
@@ -23,18 +30,22 @@ Generate a compact policy table indexed by the active Wayfarer Trainer ID.
 Use five policies: `ORDINARY`, `GYM_MEMBER`, `GYM_LEADER`, `LEAGUE`, and
 `EXCLUDED`.
 Every populated Trainer ID must have exactly one policy. `GYM_LEADER` routes
-only enrolled initial badge battles to the separate [Gym Leader scaling
-specification](gym-leader-scaling.md); it never receives this specification's
-ordinary transformation. Until that feature is enabled, its records use the
-existing `EXCLUDED` fallback. `LEAGUE` routes the fifteen enrolled circuit
-runtime IDs to the separate [League scaling specification](league-scaling.md),
-including its run-context validation and authored fallback when scaling is
-disabled. Those fifteen positions cover seventeen possible source parties:
-Blue's one Wayfarer runtime ID may resolve to any of three reviewed FRLG source
-variants. Raw FRLG IDs are provenance and must not index the active policy
-table.
-Unclassified IDs fail generation; invalid runtime
-IDs fail closed to existing unscaled behavior.
+only enrolled initial badge battles to the separate
+[Gym Leader scaling specification](gym-leader-scaling.md); it never receives
+this specification's regular trainer transformation. The dedicated six-slot Gym
+feature is disabled by `B_GYM_LEADER_SCALING` in the default configuration; its
+compiled plans would use player TR when enabled. Disabled paths retain existing
+authored behavior. Giovanni's initial Viridian battle separately uses a bespoke
+five-slot player-TR projection in
+[party construction](../../game/src/battle_main.c). The v0 notable trainer TR
+and rosters belong to the [Notable trainers](notable-trainers.md) and Gym
+specifications. `LEAGUE` currently routes the fifteen enrolled circuit runtime
+IDs to the separate [League scaling specification](league-scaling.md), including
+its run-context validation and authored fallback when scaling is disabled. Those
+fifteen positions cover seventeen possible source parties: Blue's one Wayfarer
+runtime ID may resolve to any of three reviewed FRLG source variants. Raw FRLG
+IDs are provenance and must not index the active policy table. Unclassified IDs
+fail generation; invalid runtime IDs fail closed to existing unscaled behavior.
 
 A populated ID has a nonempty party in at least one selectable difficulty
 variant after roster overrides are resolved. Zero-initialized table holes do
@@ -49,22 +60,25 @@ from existing data, so authors review classifications rather than rewrite
 parties. Reject duplicate IDs, unknown IDs, stale references, and missing IDs.
 
 Gym-map references are discovery evidence, not the runtime classifier. Use the
-opposing Trainer ID at runtime; do not apply a Gym bonus merely because a
-battle takes place on a Gym map. Require explicit review when one ID serves
-both Gym-member and ordinary roles. Select one documented policy for that ID,
+opposing Trainer ID at runtime; do not apply a Gym bonus merely because a battle
+takes place on a Gym map. Require explicit review when one ID serves both
+Gym-member and regular trainer roles. Select one documented policy for that ID,
 or split its source ID before enrolling it; never infer a context-dependent
 policy silently.
 
-Exclude all Gym Leaders from the ordinary transformation. Only IDs explicitly
-enrolled as initial badge battles may use the `GYM_LEADER` routing policy in
-the [Gym Leader scaling specification](gym-leader-scaling.md). Enumerate their
-aliases and scripted variants explicitly: enrolled initial-badge variants use
-that policy, while rematch and other story variants remain excluded.
-Exclude all rival variants, villain bosses and admins, Elite Four, Champions,
-other story bosses, and tutorial opponents from ordinary transformation.
-Explicitly enrolled circuit IDs use `LEAGUE` routing; other Elite Four and
-Champion variants remain `EXCLUDED`. Shared classes must not cause boss
-enrollment. Ordinary scripted battles and villain grunts remain eligible.
+Exclude all Gym Leaders from the regular trainer transformation. Only IDs
+explicitly enrolled as initial badge battles may use the `GYM_LEADER` routing
+policy in the [Gym Leader scaling specification](gym-leader-scaling.md).
+Enumerate their aliases and scripted variants explicitly: enrolled initial-badge
+variants use that policy, while rematch and other story variants remain
+excluded Today; on adoption a leader's rematch and story battles follow the
+notable model through the
+[every-battle rule](notable-trainers.md#trainer-rating). Exclude all rival variants, villain bosses and admins, Elite Four,
+Champions, other story bosses, and tutorial opponents from regular trainer
+transformation. Explicitly enrolled circuit IDs use `LEAGUE` routing; other
+Elite Four and Champion variants remain `EXCLUDED`. Shared classes must not
+cause boss enrollment. Regular trainers' scripted battles and villain grunts
+remain eligible.
 
 Facility, link, recorded, external-party, partner, and player-party construction
 paths are excluded by battle context before ID policy is considered. Include
@@ -74,9 +88,10 @@ eligible context does not authorize scaling.
 
 ## Level projection
 
-Author the following data independently from the wild and player-cap curves:
+Author the following regular trainer level curve independently from the wild
+level curve and the level cap curve:
 
-| Rating | Trainer baseline |
+| TR | Level |
 | ---: | ---: |
 | 0 | 7 |
 | 4 | 8 |
@@ -88,10 +103,11 @@ Author the following data independently from the wild and player-cap curves:
 | 65 | 72 |
 | 80 | 92 |
 
-Clamp Rating to 0 through 80. Interpolate adjacent baseline anchors linearly,
+Clamp TR to 0 through 80. Interpolate adjacent curve anchors linearly,
 rounding exact halves upward. For integer division define `roundSigned(n/d)`
 as nearest integer with exact halves away from zero and positive denominator.
-For authored level `L` in 1 through 100:
+For authored level `L` in 1 through 100, with the authored level bonus as
+`identityAdjustment` and the curve as `baseline`:
 
 ```text
 identityAdjustment = clamp(roundSigned((L - 5) / 5), -1, 8)
@@ -102,15 +118,35 @@ effectiveLevel = clamp(baseline(Rating) + identityAdjustment + roleBonus, 1, 100
 Project each selected slot independently. Party order and size do not change;
 the compression and level-100 clamp may make previously distinct levels equal.
 No random level jitter, player-party matching, wild profile offsets, species
-floors, or enemy clamp to the player soft cap applies. Because the baseline is
-monotonic and adjustments are constant, no cumulative high-water projection
-loop is necessary.
+floors, or enemy clamp to the player's level cap applies. Because the curve is
+monotonic and bonuses are constant, no cumulative maximum projection loop is
+necessary.
 
-Read Rating once when constructing an eligible battle's opponents. Both
-opponents in a two-Trainer battle share this snapshot but retain independent
-policies. A boss paired with an ordinary Trainer remains unscaled while the
-ordinary Trainer scales. Reuse the snapshot if setup reconstructs a party;
-discard it after the battle. Retry after a loss starts a new snapshot.
+Read TR once when constructing an eligible battle's opponents. Both opponents in
+a two-Trainer battle share this snapshot but retain independent policies. A boss
+paired with a regular trainer remains unscaled while the regular trainer scales.
+Reuse the snapshot if setup reconstructs a party; discard it after the battle.
+Retry after a loss starts a new snapshot.
+
+## v0 regular trainer level curve
+
+On the [v0 TR scale](player-trainer-rating.md#formula-v0) the regular
+trainer level curve uses these placeholder anchors instead of the table above,
+interpolated as a [scaler](player-trainer-rating.md#scalers) and flat past
+TR 160:
+
+| Badges | v0 TR | Regular trainer level | Level cap | Gap to cap |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 0 | 9 | 15 | −6 |
+| 4 | 40 | 27 | 28 | −1 |
+| 8 | 80 | 44 | 50 | −6 |
+| 16 | 120 | 62 | 75 | −13 |
+| 24 | 160 | 82 | 100 | −18 |
+
+Regular trainers press close to the level cap early and fall behind late; the
+late challenge comes from [notable trainers](notable-trainers.md). The authored
+level bonus, the Gym-member +2, the 1–100 clamp, and the battle-start snapshot
+are unchanged and apply on top of this curve.
 
 ## Species, moves, and per-Pokémon fields
 
@@ -126,12 +162,19 @@ have no inferred reverse relationship. Do not forward-evolve base species.
 Preserve exact forms unless a validated predecessor edge specifies otherwise.
 Report powerful species with no numeric predecessor for balance review.
 
+**v0.** The paragraphs above describe Today. In v0 predecessor resolution
+follows the shared
+[downward rule](player-trainer-rating.md#evolution-stages), which also steps
+down non-level evolutions through the shared evolution-level table (an
+effective Lv 30 Alakazam becomes Kadabra). Forms, wild-floor exclusion, and no
+forward evolution are unchanged.
+
 The default move policy for every eligible slot is `LEVEL_UP`: create its
 normal four-move set for the final species and effective level using the current
 learnset. Bypass `CustomTrainerPartyAssignMoves` for these slots, including
 slots that originally authored custom moves. Do not retain late-game custom
 moves as an accidental fallback. Honor existing move-randomizer policy after
-this baseline where that option explicitly applies.
+this default where that option explicitly applies.
 
 A reviewed `AUTHORED_MOVES` exception is keyed by roster-owner ID and authored
 slot index, with a reason. It retains the original move tuple only when the
@@ -189,33 +232,33 @@ valid abilities for the randomized species. Do not use wild-randomizer state
 as the Trainer-randomizer switch.
 
 Existing explicit IV/EV challenge options run after base party creation as they
-do today. They do not replace the Rating level calculation. Inventory any other
+do today. They do not replace the TR level calculation. Inventory any other
 level-changing options or post-creation hooks and prevent double scaling for
 eligible opponents. A player challenge level cap does not clamp enemy levels.
 Document option precedence in the implementation audit before shipping.
 
-Battle XP uses actual constructed Pokémon under the existing XP and player
-soft-cap rules. Preserve prize money, rematch flags, defeat flags, scripts,
-Trainer AI selection, and reward eligibility. Do not rewrite authored levels
-merely to make reward readers observe projected values.
+Battle XP uses actual constructed Pokémon under the existing XP and level cap
+rules. Preserve prize money, rematch flags, defeat flags, scripts, Trainer AI
+selection, and reward eligibility. Do not rewrite authored levels merely to make
+reward readers observe projected values.
 
 ## Generation and audit
 
 The implementation must deliver a deterministic host command that inventories
 all compiled Wayfarer Trainer records and emits policy data plus a reviewable
 report. Validate all selectable pool slots and resolved overrides, not only
-the first party-size entries. Enumerate every Rating 0 through 80 using the
+the first party-size entries. Enumerate every TR 0 through 80 using the
 current learnset for each eligible source slot. Cache equivalent calculations
 where useful; emit summarized intervals rather than duplicate rows.
 
 Report coverage counts by policy and region, excluded reasons, unresolved
 classification candidates, custom-move replacements, move exceptions, species
 changes, invalid or falling-back abilities, gender adjustments, gimmick
-suppression, empty move sets, held-item concerns, and parties above the player
-soft cap. Separate fatal structural failures from balance-review observations.
+suppression, empty move sets, held-item concerns, and parties above the player's
+level cap. Separate fatal structural failures from balance-review observations.
 
-Include baseline and effective level ranges, party sizes, and representative
-full parties at Ratings 0, 4, 8, 16, 30, 40, 55, 63, 65, 68, 76, and 80.
+Include curve and effective level ranges, party sizes, and representative
+full parties at TR 0, 4, 8, 16, 30, 40, 55, 63, 65, 68, 76, and 80.
 Identify the highest-level and largest early parties and high-stat species
 that remain unevolved by policy. Show authored prize-money inputs alongside
 effective levels and XP inputs. No claim that those populations are balanced
@@ -227,11 +270,11 @@ all custom-move Trainers into excluded opponents to satisfy the audit.
 
 ## Validation and rollout
 
-1. Test every Rating and authored level against an independent integer oracle,
+1. Test every TR and authored level against an independent integer oracle,
    exact anchors, signed rounding, bonuses, bounds, and monotonicity.
-2. Test ordinary, Gym-member, `GYM_LEADER` and `LEAGUE` routing, and excluded policies,
-   shared-class bosses, aliases, rematch variants, sparse IDs, and missing
-   manifest records.
+2. Test `ORDINARY`, `GYM_MEMBER`, `GYM_LEADER` and `LEAGUE` routing, and
+      excluded policies, shared-class bosses, aliases, rematch variants, sparse
+   IDs, and missing manifest records.
 3. Test multi-stage reversal, ambiguous ancestry rejection, forms, non-level
    evolutions, no forward evolution, and no wild floor filtering.
 4. Test move regeneration and exceptions below and at thresholds, changed
@@ -239,17 +282,17 @@ all custom-move Trainers into excluded opponents to satisfy the audit.
 5. Test legal ability and gender assignment after reversal and randomization,
    species-specific items and gimmicks, and retained IV/EV and AI behavior.
 6. Test real battle construction, pools, two opponents with mixed policies,
-   stable Rating snapshots, retries, and no extra projection RNG consumption.
+      stable TR snapshots, retries, and no extra projection RNG consumption.
 7. Test randomizer and challenge precedence, player/partner/debug construction,
    facility exclusions, and recorded/link battle bypasses.
 8. Verify defeat and rematch persistence, existing money rules, and battle XP
    from effective levels. Verify that player party levels never affect output.
 
-Compile affected paths for every supported product and build a complete
-Wayfarer release ROM. Run focused battle integration tests and the generated
-inventory audit. Playtest representative parties across included regions at
-Rating 0, a middle milestone, and Rating 80, including Gym-member doubles and
-the highest-risk early parties reported by the audit.
+Compile affected paths for every supported product and build a complete Wayfarer
+release ROM. Run focused battle integration tests and the generated inventory
+audit. Playtest representative parties across included regions at TR 0, a middle
+milestone, and TR 80, including Gym-member doubles and the highest-risk early
+parties reported by the audit.
 
 Land classification and audit tooling before enabling runtime scaling. Enable
 the shared feature only after all IDs are classified and structural validation
@@ -257,6 +300,11 @@ passes. Keep one build-time feature switch that restores authored construction
 for rollback; it must bypass level, species, and move transformation together.
 No save migration is required. Formula changes must regenerate the report and
 repeat affected balance checks.
+
+## Later
+
+- Forward evolution for regular trainers: late routes currently show
+  high-level unevolved species.
 
 ## References
 
