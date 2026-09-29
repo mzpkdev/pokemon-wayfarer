@@ -629,6 +629,9 @@ implementations stay active until then.
   ceiling TR, so extra TR stays meaningful; AI skill tiers belong to
   [Trainer AI](trainer-ai.md#later).
 - Offsets that shrink as TR rises.
+- Gym arenas: a fixed field condition for both sides in a Gym battle, from
+  the Gym as a place rather than the leader, like the leagues'
+  [halls](leagues.md#halls).
 
 ## References
 

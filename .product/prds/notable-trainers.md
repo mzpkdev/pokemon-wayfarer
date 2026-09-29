@@ -272,6 +272,8 @@ well they play, and combat difficulty belong to playtesting.
 - Better items and moves once teams reach level 100; smarter AI is
   [Trainer AI](trainer-ai.md#later)'s.
 - Tighter level spreads at the top.
+- Gym arenas with their own field conditions for both sides, like the
+  leagues' [halls](leagues.md#design).
 
 ## Specifications
 
