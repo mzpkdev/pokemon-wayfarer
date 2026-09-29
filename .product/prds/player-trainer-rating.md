@@ -224,6 +224,18 @@ changes yours.
   guaranteed seats at the Sevii Masters
   ([selection](../specs/leagues.md#selection-and-order)).
 - **Match 1-5:** a position in the lineup.
+- **Hall:** a league room where one match is fought, named after an Elite
+  Four member whose theme the room carries (such as Lorelei's Hall) without
+  meaning they fight there. Match 1 is in the first hall, match 2 in the
+  second, and so on. The Sevii Masters' halls honour Johto's old Elite Four,
+  whose rooms it reuses; the Champion's Rooms and a room with no theme
+  honour no one ([halls](../specs/leagues.md#halls)).
+- **Hall condition:** the one field condition a hall always has, such as
+  snow, Trick Room, or Stealth Rock, in effect for both sides from the start
+  of the battle. Snow and sandstorm also show in the room and last until
+  something replaces them; rooms, terrain, and Tailwind wear off after a few
+  turns; hazards stay until cleared. The Champion's Rooms and rooms with no
+  theme are neutral, with none.
 - **First league win:** your first win at a given league, which brings its
   one-time effects; later wins are repeat wins (prize money and the title,
   plus a Gallery win at the Masters).

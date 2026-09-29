@@ -11,9 +11,10 @@ them. Someone always holds each league's title. Each lineup is the five
 strongest trainers who are willing to come (favouring those at home and
 fresh, with aloof trainers joining only a strong enough base lineup), with no
 randomness, fought in ascending order. At the Masters the aloof rule is off
-and notable trainers who are Masters have guaranteed seats. Balance is
-informational for now. Terms follow the
-[glossary](player-trainer-rating.md#glossary).
+and notable trainers who are Masters have guaranteed seats. Each themed
+Elite Four room is a named hall with one fixed field condition for both
+sides; the Champion rooms are neutral. Balance is informational for now.
+Terms follow the [glossary](player-trainer-rating.md#glossary).
 
 ## Intent
 
@@ -139,6 +140,36 @@ home there. Being a Master gives no seat at Indigo or Hoenn.
 **Battle order.** Ascending TR: the weakest of the five fights first and the
 strongest last.
 
+**Halls.** Each match is fought in a **hall**, one of the league's rooms. At
+Indigo and Hoenn each Elite Four room is a named hall that honours one of
+that league's own Elite Four, such as Lorelei's Hall. The Sevii Masters'
+basement reuses the rooms of Johto's old Elite Four, and its themed rooms
+honour them in the same way. A room keeps its look, plus the hall's weather
+where it has one: snow falls in Lorelei's Hall. Its name honours the Elite
+Four member without implying who fights there: in any event, whoever the
+lineup puts in that match is the occupant. Each hall has one fixed **hall
+condition** that applies to both sides from the start of the battle. It's
+the hall's identity, not a balancing lever. Match 1 is fought in the first
+hall, match 2 in the second, and so on, so the ascending battle order decides
+who lands in which hall.
+
+| League | Hall 1 | Hall 2 | Hall 3 | Hall 4 | Hall 5 |
+| --- | --- | --- | --- | --- | --- |
+| Indigo | Lorelei's Hall: snow | Bruno's Hall: sandstorm | Agatha's Hall: Trick Room (5 turns) | Lance's Hall: Tailwind for both sides (temporary) | Champion's Room: neutral |
+| Hoenn | Sidney's Hall: Magic Room (5 turns) | Phoebe's Hall: Trick Room (5 turns) | Glacia's Hall: snow | Drake's Hall: Tailwind for both sides (temporary) | Champion's Room: neutral |
+| Sevii Masters | Will's Hall: Psychic Terrain (5 turns) | Koga's Hall: Toxic Spikes on both sides | Bruno's Hall: Stealth Rock on both sides | Unnamed room: neutral | Champion's Room: neutral |
+
+Weather lasts until something replaces it, as overworld weather does when a
+battle starts outdoors. Trick Room, Magic Room, Psychic Terrain, and Tailwind
+wear off after a few turns. Toxic Spikes and Stealth Rock stay down until a
+Pokémon clears them, and they greet both leads as the battle opens. The
+Masters' fourth room has no theme of its own, so it stays unnamed and
+neutral, and the Champion's Rooms are neutral everywhere: the last match is
+just the best. Because each condition is known in advance and fixed, the
+player can plan a team for each hall, and matchups emerge on their own: a
+trainer who happens to land in the hall that suits their team is more
+dangerous there than anywhere else.
+
 **Strength.** Each opponent uses their own TR, team, and levels, exactly as in
 any other battle with them. There is no league-specific adjustment.
 [Notable trainers](notable-trainers.md) owns trainer TR and how it grows,
@@ -170,14 +201,19 @@ caretaker, not from an official league, and her first call says that Lorelei,
 retired to Four Island, spoke of the player. That is story only: Lorelei stays
 an ordinary notable trainer with no guaranteed seat. The **Masters Gallery**
 on the basement wall tallies each Masters winner's wins, including trainers
-who won the events the player declined.
+who won the events the player declined. The lobby, or a sign at each hall's
+door, names the hall and its condition, so the player knows what's ahead
+before the match starts, and a snow or sandstorm hall shows its weather in
+the room.
 
 **Balance.** Informational for now: the balance explorer simulates a run of
 invitations for a chosen TR and badge split and the player's answer to each,
 showing who calls and why, each event's lineup, who is tired, and who reigns,
 and for any event each trainer's league score, the base lineup level, and which
 aloof trainers join or skip, and, at the Masters, who has reigned where, who
-is a Master, and which seats are guaranteed; tuning comes later. The lineup
+is a Master, and which seats are guaranteed; tuning comes later. The explorer
+doesn't show each match's hall yet (Later). Hall conditions aren't tuned
+against lineups: they're identity, and they apply to both sides. The lineup
 comes from the strongest trainers of the moment, so it tends to sit a little
 above the player; with all 24 badges both sides reach level 100, and tougher
 endgame teams (better items, stats, movesets) are Later. With the aloof rule
@@ -247,29 +283,32 @@ invitations by phone and which league calls, accepting and declining, one attemp
 champions, reign records and Masters, first and repeat wins, notable Kanto,
 Johto, and Hoenn singles trainers, home and away, the league score, the
 traveller and aloof traits and the base lineup level, the lineup, guaranteed
-seats at the Masters, battle order, and the Masters' caretaker and Gallery.
+seats at the Masters, battle order, the halls and their conditions, and the
+Masters' caretaker and Gallery.
 
 Out of scope for v0: seeded or reputation-based league choice, news of who won
 the events the player declined (beyond the Masters Gallery), special
 invitational events, doubles at the Masters, any status or reward for winning
-the Masters beyond its Gallery win, prize money, and title, and balance
-targets for leagues. Red's unlock after all three leagues and Blue's Dojo stay
+the Masters beyond its Gallery win, prize money, and title, balance
+targets for leagues, and field conditions outside the leagues' halls (such
+as Gym arenas). Red's unlock after all three leagues and Blue's Dojo stay
 as they are. Today's circuit, with its fixed order and replays, stays
 documented as Today until this design is adopted; its record, ceremony, and
 unlock rules carry over to first wins. Player TR follows
 [Player Trainer Rating](player-trainer-rating.md), where league wins add
 nothing. Wild encounters, shops, regular trainers, and standalone builds
-follow their own contracts; other battles with notable trainers follow their
-own TR.
+follow their own contracts, except that the snow and sandstorm halls' shared
+room maps carry their weather into standalone FRLG and Emerald too; other
+battles with notable trainers follow their own TR.
 
 ## Specifications
 
 - [Leagues specification](../specs/leagues.md): registry, eligibility,
   invitations (qualification, the countdown, which league calls, accept and
   decline), fatigue, the league score, lineup selection (with the Masters'
-  guaranteed seats), ordering, the event lineup, reigning champions and reign
-  records, battle construction, the win commit, saved state, load validation,
-  and presentation.
+  guaranteed seats), ordering, the halls, the event lineup, reigning champions
+  and reign records, battle construction (with the hall condition), the win
+  commit, saved state, load validation, and presentation.
 - [Notable trainers specification](../specs/notable-trainers.md): TR, home
   regions, the traveller and aloof traits, willingness, scalers, and
   rosters.
@@ -293,6 +332,11 @@ own TR.
 - Role windows (such as elite and headliner) and standing-based selection.
 - Matchmaking lineups around the player's TR.
 - NPC badge records.
+- Gym arenas with their own field conditions, like the halls
+  ([Notable trainers](notable-trainers.md#later)).
+- Each match's hall and its condition in the balance explorer.
+- A theme for the Masters' fourth room (Karen's old room), making it a
+  named hall with a condition to match.
 
 ## References
 

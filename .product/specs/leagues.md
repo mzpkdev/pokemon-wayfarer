@@ -15,8 +15,11 @@ declining runs the event without them. A league score per eligible trainer (Trai
 willingness, from travel cost and fatigue), aloof trainers joining only a
 base lineup near their level (never at the Masters), guaranteed Masters seats
 for notable trainers who have reigned at both Indigo and Hoenn, the top five
-by league score with no randomness, ascending battle order, a **reigning
-champion** per league, reign records, and first-win one-time effects. Balance is informational for now. Today's
+by league score with no randomness, ascending battle order, match N in
+**hall** N (each themed Elite Four room a named hall with one fixed **hall
+condition** for both sides; Champion rooms neutral), a
+**reigning champion** per league, reign records, and first-win one-time
+effects. Balance is informational for now. Today's
 [interregional circuit](wayfarer-interregional-league-circuit.md) stays the
 record of Today's admission, fixed league order, and replays.
 
@@ -26,9 +29,9 @@ Own, for each `IS_WAYFARER` league: the league registry, eligibility,
 location regions, invitations (the qualification gate, the countdown, which
 league calls, accepting and declining), fatigue, the league score, the base
 lineup and its level, the aloof rule, reign records and Masters, lineup
-selection (with the Masters' guaranteed seats) and battle order, the event
-lineup, the reigning champion, the Masters Gallery, battle construction,
-entering an
+selection (with the Masters' guaranteed seats) and battle order, the halls
+and their conditions, the event lineup, the reigning champion, the Masters
+Gallery, battle construction (with the hall condition hook), entering an
 accepted event, active runs and dispatch, the win commit, first and repeat
 wins, saved state, load validation, presentation, and regional integration.
 
@@ -81,6 +84,65 @@ a location region, which decides who is at home there:
 | Indigo | Kanto, Johto |
 | Masters | Neutral location: home to everyone |
 | Hoenn | Hoenn |
+
+### Halls
+
+Each league has an ordered list of five **halls**, one per match, authored in
+the league registry (a location property, never a trainer's). A hall has:
+
+| Field | Contract |
+| --- | --- |
+| `room` | The map that hosts the match: the league's room chain at the same position. |
+| `name` | The hall's displayed name, or none for a room that honours no one. |
+| `honours` | The Elite Four member the hall is named for (the league's own; at the Masters, Johto's old Elite Four whose rooms it reuses), or none. |
+| `condition` | One hall condition, or neutral. |
+| `weather` | The room map's own weather (`map.json`): the condition's weather for a snow or sandstorm hall, otherwise none. |
+
+A **hall condition** starts the battle already in effect for both sides:
+
+| Condition | Battle start | Lasts |
+| --- | --- | --- |
+| Snow | Snow weather, also falling in the room | Until replaced, like overworld weather |
+| Sandstorm | Sandstorm weather, also blowing in the room | Until replaced, like overworld weather |
+| Trick Room | Trick Room | 5 turns |
+| Magic Room | Magic Room | 5 turns |
+| Psychic Terrain | Psychic Terrain | 5 turns |
+| Tailwind (both sides) | Tailwind on the player's side and on the opponent's side | The engine's temporary Tailwind (4 turns) on each side |
+| Toxic Spikes (both sides) | One layer of Toxic Spikes on each side | Until cleared, like any hazard |
+| Stealth Rock (both sides) | Stealth Rock on each side | Until cleared, like any hazard |
+
+Starting hazards also hit both leads: the first-turn switch-in events run
+the hazard block for every battler, and the engine then handles any lead that
+fainted from them (`FIRST_TURN_FAINTED_BATTLERS` in
+[battle_main.c](../../game/src/battle_main.c)). Toxic Spikes poison each
+grounded lead that isn't immune, and a grounded Poison-type switching in
+absorbs its side's layer, as usual.
+
+The v0 halls, by match:
+
+| Match | Indigo | Hoenn | Masters |
+| --- | --- | --- | --- |
+| 1 | Lorelei's Hall (`PokemonLeague_LoreleisRoom_Frlg`): snow | Sidney's Hall (`EverGrandeCity_SidneysRoom`): Magic Room | Will's Hall (`PokemonLeague_WillsRoom_hns`): Psychic Terrain |
+| 2 | Bruno's Hall (`PokemonLeague_BrunosRoom_Frlg`): sandstorm | Phoebe's Hall (`EverGrandeCity_PhoebesRoom`): Trick Room | Koga's Hall (`PokemonLeague_KogasRoom_hns`): Toxic Spikes (both sides) |
+| 3 | Agatha's Hall (`PokemonLeague_AgathasRoom_Frlg`): Trick Room | Glacia's Hall (`EverGrandeCity_GlaciasRoom`): snow | Bruno's Hall (`PokemonLeague_BrunosRoom_hns`): Stealth Rock (both sides) |
+| 4 | Lance's Hall (`PokemonLeague_LancesRoom_Frlg`): Tailwind (both sides) | Drake's Hall (`EverGrandeCity_DrakesRoom`): Tailwind (both sides) | Unnamed (`PokemonLeague_KarensRoom_hns`): neutral |
+| 5 | Champion's Room (`PokemonLeague_ChampionsRoom_Frlg`): neutral | Champion's Room (`EverGrandeCity_ChampionsRoom`): neutral | `PokemonLeague_ChampionsRoom_hns`: neutral |
+
+Each chain is Today's room chain in
+[league_circuit.c](../../game/src/league_circuit.c) (`sIndigoRooms`,
+`sHoennRooms`, `sMastersRooms`), where the room at position N already hosts
+match N. Indigo's and Hoenn's four Elite Four rooms map one to one onto
+matches 1-4, and their Champion's Room hosts match 5, honouring no one. The
+Masters reuses the HNS rooms of Johto's old Elite Four, and a room becomes a
+named hall only where its art is themed to that member's type: Will's room
+(violet floor, glowing crystal pillars) reads as Psychic, Koga's (green
+floor, potted plants) as Poison, and Bruno's (sand-coloured floor, stacked
+boulder pillars) as Rock and Fighting. Karen's room (teal floor, plain stone
+pillars) shows no Dark theme, so it stays unnamed and neutral, and the HNS
+Champion's Room is neutral. The Emerald corridors `EverGrandeCity_Hall1` to
+`EverGrandeCity_Hall5` are passages between rooms, not halls: no match is
+fought there. A room keeps its look (map, tiles, music), plus the hall's
+weather where it has one, and a hall's name never implies who fights there.
 
 ## Registry and eligibility
 
@@ -265,6 +327,9 @@ seats. When the player accepts or declines an invitation:
    highest. Equal league scores break by ascending `characterId`.
 8. **Battle order.** Order the five by ascending TR, so the strongest fights
    last. Equal TRs break by ascending `characterId`.
+9. **Halls.** Match N is fought in the league's [hall](#halls) N, so the
+   battle order decides who lands in which hall. Hall conditions play no part
+   in selection or order.
 
 The **most recent resolved lineup** is the lineup of the most recent resolved
 event at any league: an accepted event that ended (won, lost, or left), or a
@@ -481,6 +546,58 @@ content version, and preserve member identity through ordering and gimmick
 remapping. Content is immutable at runtime; do not edit shared Gym or story
 parties.
 
+### Hall condition
+
+The hall condition comes from the [location registry](#halls), never from
+the trainer: construction ignores the selected trainer's authored
+`struct Trainer.startingStatus`, and no authored trainer data supplies a
+hall condition. Resolve it at battle start, alongside the battle snapshot,
+from the validated league, room, and match, and write it once per battle
+through a per-battle override, as
+[Trainer AI](trainer-ai.md#runtime-and-the-override-point) writes its flags:
+
+- **Rooms, terrain, Tailwind, and hazards** use the engine's starting
+  statuses (`STARTING_STATUS_*` in
+  [constants/battle.h](../../game/include/constants/battle.h)). Battle start
+  ORs the trainer's `startingStatus` into `gStartingStatuses`
+  ([battle_main.c](../../game/src/battle_main.c),
+  `UNPACK_STARTING_STATUS_TO_BATTLE`); directly after that, a league match
+  replaces `gStartingStatuses` with the hall's: `trickRoomTemporary`,
+  `magicRoomTemporary`, or `psychicTerrainTemporary` (5 turns each); both
+  `tailwindPlayerTemporary` and `tailwindOpponentTemporary` (the engine's
+  `B_TAILWIND_TURNS` duration on each side); both `toxicSpikesPlayerL1` and
+  `toxicSpikesOpponentL1`; or both `stealthRockPlayer` and
+  `stealthRockOpponent`. The first-turn starting-status step
+  (`FIRST_TURN_EVENTS_STARTING_STATUS`, through
+  `TryFieldEffects(FIELD_EFFECT_TRAINER_STATUSES)` in
+  [battle_util.c](../../game/src/battle_util.c)) applies them with their
+  usual messages and animations, one after another, and clears each flag as
+  it applies it.
+- **Weather** has no starting status; it comes from the room itself. A snow
+  or sandstorm hall's room map carries that weather in its `map.json`
+  (`WEATHER_SNOW` for `PokemonLeague_LoreleisRoom_Frlg` and
+  `EverGrandeCity_GlaciasRoom`, `WEATHER_SANDSTORM` for
+  `PokemonLeague_BrunosRoom_Frlg`), map loading saves and starts it
+  (`SetSavedWeatherFromCurrMapHeader()` and `DoCurrentWeather()` in
+  [overworld.c](../../game/src/overworld.c)), and the
+  battle's first-turn weather step (`FIELD_EFFECT_OVERWORLD_WEATHER` in
+  battle_util.c) turns it into battle weather as it does outdoors: it reads
+  `GetCurrentWeather()` and sets `gBattleWeather` with no duration, so it
+  lasts until replaced, and `B_OVERWORLD_SNOW` makes overworld snow battle
+  snow. No battle-side weather override or Wayfarer-only map patch is
+  needed. These maps are shared with the standalone FRLG and Emerald builds,
+  so their rooms show the weather there too, and a battle in them starts in
+  it; that is accepted, since only Wayfarer is a product target. No hall room
+  script sets or resets weather today, and none may.
+
+A neutral hall writes no starting status and keeps the room's own weather
+(none in every league room today), and its empty `gStartingStatuses` also
+discards anything the trainer's authored data contributed. The starting
+statuses belong to the battle: the engine consumes them as it applies them,
+reconstruction of the same match writes the same condition, and every other
+battle, including debug battles and Gym and story battles, reads the
+engine's usual sources unchanged.
+
 Challenge options keep their overrides. Party randomizers keep their
 precedence but cannot reroll participants: the trainer species randomizer may
 bypass authored parties as it does today but still uses the saved people and
@@ -576,6 +693,14 @@ in dialogue. The last opponent is this lineup's finalist, whatever their title.
 Dialogue cannot assume Blue occupies Indigo or Lance ends Masters. Masters
 never calls its winner a regional Champion.
 
+The lobby, or a sign at each hall's door, names the hall and its condition
+("Lorelei's Hall: snow") before the match; a neutral room shows no condition.
+A snow or sandstorm hall shows its weather in the room.
+The hall's name honours its Elite Four member and never stands for the
+occupant: dialogue and signs never say or suggest that the honoured member
+fights there. The condition starts with the engine's usual start messages and
+animations for that weather, room, or Tailwind.
+
 ## Records, ceremonies, and integration
 
 ### First and repeat wins
@@ -656,7 +781,8 @@ Masters Gallery. For a selected event it reports every eligible trainer's TR,
 team level, willingness, league score, rank, and reign flags, the base lineup
 level, each aloof trainer's check (team level against base lineup level + 10,
 joins or skips; at the Masters, the aloof rule off), the Master seats, and
-the resulting lineup. It asserts no fixed lineup,
+the resulting lineup. It doesn't show each match's hall and condition yet
+([Later](#later)). It asserts no fixed lineup,
 finalist, or strength target. The report is informational; it also confirms
 that no aloof trainer in an Indigo or Hoenn lineup is more than 10 levels
 above the base lineup level. The Gym ladder and team targets stay in
@@ -671,7 +797,14 @@ evidence (not yet run):
 1. **Registry.** Reject duplicate characters or aliases, unresolved source
    IDs, missing assets, double-battle flags, and trainers without valid
    growth values or a valid roster. The build must hold at least five eligible
-   trainers who are not aloof.
+   trainers who are not aloof. Each league has exactly five halls whose rooms
+   match its room chain in order; Indigo and Hoenn halls 1-4 each honour a
+   distinct member of that league's own Elite Four; the Masters' halls 1-3
+   honour Will, Koga, and Bruno, and its fourth room and each Champion's Room
+   are neutral and honour no one; every condition is one of neutral, snow,
+   sandstorm, Trick Room, Magic Room, Psychic Terrain, Tailwind (both
+   sides), Toxic Spikes (both sides), or Stealth Rock (both sides); a hall
+   has weather exactly when its condition is snow or sandstorm.
 2. **Selection.** Fixtures at several world progress values, including one
    where growth reorders the lineup: willingness for at-home, away
    non-traveller, away traveller, fatigued, and floored cases at each league,
@@ -752,7 +885,23 @@ evidence (not yet run):
     again after a reload until answered; lobbies name the reigning champion.
     The Masters' calls come from the caretaker, the first naming Lorelei;
     the Gallery shows the winners of declined Masters events too.
-12. **Load validation.** Corrupt invitation state, call numbers, accepted
+12. **Halls.** Every match is fought in its hall and starts with that hall's
+    condition on both sides: snow and sandstorm last until a move or ability
+    replaces them; Trick Room, Magic Room, and Psychic Terrain end after 5
+    turns; Tailwind is up on both sides and ends on each after the engine's
+    temporary duration; Toxic Spikes and Stealth Rock are down on both sides,
+    hit both leads, and stay until cleared. The same trainer gets each hall's
+    condition in whichever match they fight, a trainer with an authored
+    `startingStatus` gets only the hall's, and neutral rooms start clear. A
+    snow or sandstorm hall shows its weather in the room on entry, after a
+    reload, and after returning from the battle, and the room is otherwise
+    unchanged; the lobby or door sign names the hall and its condition; the
+    condition is the same when the match is reconstructed after a reload;
+    and no other Wayfarer battle or map (Gym, story, or debug) gains a hall
+    condition or weather. In standalone FRLG and Emerald, Lorelei's,
+    Bruno's, and Glacia's rooms show their weather and their battles start
+    in it; that change is accepted.
+13. **Load validation.** Corrupt invitation state, call numbers, accepted
     events, runs, lineups, most recent resolved lineups, reign flags, Gallery
     counts, schema, or callbacks are rejected without regenerating, calling,
     advancing, or rewarding; a Masters invitation without both lifetime wins is
@@ -765,8 +914,9 @@ evidence (not yet run):
     was saved again before the next event resolved, then loaded under a build
     that removes a character who reigns at Hoenn or has a Gallery count, is
     pruned, not rejected.
-13. **Standalone.** FRLG, HNS, and Emerald League behavior, travel, recovery,
-    and phone calls are unchanged.
+14. **Standalone.** FRLG, HNS, and Emerald League behavior, travel, recovery,
+    and phone calls are unchanged, apart from the accepted hall-room weather
+    (item 12).
 
 Run the trainer/scaling mechanics suites and extend
 [mechanics coverage](../../game/test/league_circuit.c),
@@ -798,6 +948,11 @@ Report balance playtesting separately from structural checks.
 - A Trainer Card view of the three leagues and their reigning champions.
 - Winning-team records per league event, and presentation of a player's
   record across a run of events.
+- Gym arenas with their own field conditions, like the halls
+  ([Notable trainers](notable-trainers.md#later)).
+- Each match's hall and condition in the balance explorer.
+- A theme for the Masters' fourth room (Karen's old room), making it a
+  named hall with a condition to match.
 
 ## References
 
