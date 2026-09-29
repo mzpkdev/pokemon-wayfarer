@@ -155,7 +155,8 @@ top five by league score (TR scaled by willingness), favouring trainers at
 home. Emerald source parties remain provenance
 references rather than required opening or circuit teams. In the v0 design,
 Tate and Liza are one notable duo that keeps its double battle and badge;
-leagues are singles only, so the duo stays out of league lineups.
+leagues field trainers who battle alone, so the duo stays out of league
+lineups.
 
 Ordinary Hoenn wild encounters retain Emerald's species, methods, weights, and
 locations while using the HNS TR level projection. Hoenn badges

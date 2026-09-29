@@ -32,7 +32,9 @@ their validation. Consumers link here rather than restating it.
   uses.
 
 Regular trainers, Gym members, wild Pokémon, facilities, partners, and
-link or recorded battles keep their current AI flags. Standalone builds are
+link or recorded battles keep their current AI flags; the one exception is a
+notable trainer partnering the player at the Sevii Masters, who resolves
+here like any notable trainer. Standalone builds are
 unchanged.
 
 ## Engine model
@@ -208,7 +210,17 @@ encounter's authored AI line along with its party
   so its last slots need not be aces.
 - **Double battles** keep the engine's automatic Double Battle flag. Tate &
   Liza share one play style (Field marshal), one TR, and one resolved flag
-  set, written for both opponent battlers. Leagues are singles only.
+  set, written for both opponent battlers.
+- **Tag matches** at the Sevii Masters
+  ([Leagues](leagues.md#tag-matches)) put three notable trainers in one
+  battle: two opponents and the player's partner. Each resolves their own
+  flags from their own snapshot (their TR, and the aces among the three they
+  bring), and the override writes all three: opponent A to battler 1,
+  opponent B to battler 3, and the partner to battler 2, where
+  `BattleAI_SetupFlags()` puts `gPartnerTrainerId`'s flags. With a partner,
+  the engine copies no flags into the player's side for prediction, and the
+  override adds none. Ace protection counts each trainer's own three.
+  Every other league match is singles.
 
 ## Validation
 

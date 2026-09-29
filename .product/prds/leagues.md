@@ -10,11 +10,13 @@ waits for them, with one attempt; decline and the season goes on without
 them. Someone always holds each league's title. Each lineup is the five
 strongest trainers who are willing to come (favouring those at home and
 fresh, with aloof trainers joining only a strong enough base lineup), with no
-randomness, fought in ascending order. At the Masters the aloof rule is off
-and notable trainers who are Masters have guaranteed seats. Each themed
-Elite Four room is a named hall with one fixed field condition for both
-sides; the Champion rooms are neutral. Balance is informational for now.
-Terms follow the [glossary](player-trainer-rating.md#glossary).
+randomness, fought in ascending order. The Masters is a tag-battle league:
+the player and a partner they asked by phone face four pairs from an
+eight-strong lineup, then the partner in a singles final. There the aloof
+rule is off, and notable trainers who are Masters have guaranteed seats.
+Each themed Elite Four room is a named hall with one fixed field condition
+for both sides; the Champion rooms are neutral. Balance is informational for
+now. Terms follow the [glossary](player-trainer-rating.md#glossary).
 
 ## Intent
 
@@ -37,7 +39,8 @@ which remain the record of Today.
 ## Design
 
 **Leagues.** Indigo, Sevii Masters, and Hoenn keep their public entrances,
-rooms, and ceremonies. Each league event is a five-match singles lineup.
+rooms, and ceremonies. An Indigo or Hoenn event is five singles matches; a
+Sevii Masters event is four tag battles and a singles final.
 
 **The Sevii Masters.** The Masters isn't an official league. It lives in a
 hidden basement under Seven Island's battle house: an off-the-record club
@@ -46,6 +49,32 @@ trainer who runs the house, keeps the door. A **Master** is anyone, the player
 or a notable trainer, who has been champion at both Indigo and Hoenn at some
 point, whether or not they reign there now. A Masters title never counts
 toward it.
+
+**Tag battles at the Masters.** The Masters plays as a team game. The player
+brings a **partner**, a notable trainer they asked by phone, and in each of
+the four themed halls the two of them fight a pair from the lineup in a
+**tag battle**: two against two, each trainer with three Pokémon. The pairs
+come weakest first, and each hall's condition applies as usual. If the pair
+of them win all four, the caretaker heals both sides fully, and the
+Champion's Room settles who is best: a singles final between the player and
+their partner, each with their full team.
+
+**The partner.** The partner is whoever the player last asked. Any notable
+trainer whose phone number the player holds can be asked, and the ask always
+succeeds. A notable trainer gives the player their number the first time the
+player beats them
+([Notable trainers](notable-trainers.md#phone-numbers)). If the player has
+never asked anyone, Lorelei steps in: she spoke of the player to the
+caretaker, and she comes along. The partner is never in the lineup, so
+asking a strong trainer also keeps them off the other side. The partner is
+fixed when the player answers the invitation; asking someone else later
+changes the next Masters event, not this one.
+
+**Bringing three.** Tag battles let each trainer bring only three Pokémon.
+At each hall's door the player picks three from their current party, and
+their Pokémon keep their damage from one hall to the next. Notable trainers
+bring their best three, aces first. The final is a full battle: after the
+heal, the player uses their whole party and the partner their whole team.
 
 **Qualifying.** The player qualifies for invitations once their TR reaches
 80, which in v0 means 8 badges from any regions; later sources of TR may
@@ -95,9 +124,10 @@ same league.
 **Decline.** Declining costs nothing. The event goes ahead without the player
 straight away, and its strongest trainer takes the title.
 
-**Pool.** Every notable singles trainer can be invited to any league. Tate &
-Liza are notable but fight only as a double battle, so they are left out; Red
-(separate mastery encounter) is not notable.
+**Pool.** Every notable trainer who battles alone can be invited to any
+league. Tate & Liza are notable but fight only together, as a duo, so they
+are left out of every league, as opponents and as partners; Red (separate
+mastery encounter) is not notable.
 
 **Home and away.** Every notable trainer has a home region, and some have
 the traveller trait ([Notable trainers](notable-trainers.md)). A
@@ -131,14 +161,18 @@ the same Masters always give the same lineup.
 
 **The Masters lineup.** The Masters is elite by definition, the company aloof
 trainers seek, so the aloof rule doesn't apply there: there is no base lineup,
-and everyone may come. Notable trainers who are Masters get guaranteed seats;
-if more than five are Masters, the five with the highest league scores sit.
+and everyone may come. Its lineup has eight opponents, and the partner is
+never one of them. Notable trainers who are Masters get guaranteed seats;
+if more than eight are Masters, the eight with the highest league scores sit.
 The remaining seats go to the highest league scores, as anywhere. Fatigue
 still lowers everyone's league score, a Master's included, and everyone is at
-home there. Being a Master gives no seat at Indigo or Hoenn.
+home there. Being a Master gives no seat at Indigo or Hoenn, and a Master
+who is the player's partner gives up their seat.
 
-**Battle order.** Ascending TR: the weakest of the five fights first and the
-strongest last.
+**Battle order.** Ascending TR: the weakest of the lineup fights first and the
+strongest last. At the Masters the eight are paired in the same order: the
+two weakest are the first pair, the next two the second, and the two
+strongest the last pair.
 
 **Halls.** Each match is fought in a **hall**, one of the league's rooms. At
 Indigo and Hoenn each Elite Four room is a named hall that honours one of
@@ -155,7 +189,8 @@ different. Karen's Hall is the one exception: its room shows no theme, so its
 Wonder Room comes from Karen's own "strong or weak is only perception".
 Match 1 is fought in the first
 hall, match 2 in the second, and so on, so the ascending battle order decides
-who lands in which hall.
+who lands in which hall. At the Masters, pair 1 is fought in the first hall,
+and so on, and the final is in the Champion's Room.
 
 | League | Hall 1 | Hall 2 | Hall 3 | Hall 4 | Hall 5 |
 | --- | --- | --- | --- | --- | --- |
@@ -166,7 +201,8 @@ who lands in which hall.
 Weather lasts until something replaces it, as overworld weather does when a
 battle starts outdoors. Rooms, terrains, Tailwind, and Sea of Fire wear off
 after a few turns. Sticky Web and Stealth Rock stay down until a Pokémon
-clears them, and they greet both leads as the battle opens. The
+clears them, and they greet every lead as the battle opens (two per side in
+a tag battle). A side's condition covers both of its Pokémon. The
 Champion's Rooms are neutral everywhere: the last match is
 just the best. Because each condition is known in advance and fixed, the
 player can plan a team for each hall, and matchups emerge on their own: a
@@ -174,7 +210,9 @@ trainer who happens to land in the hall that suits their team is more
 dangerous there than anywhere else.
 
 **Strength.** Each opponent uses their own TR, team, and levels, exactly as in
-any other battle with them. There is no league-specific adjustment.
+any other battle with them. There is no league-specific adjustment. In a tag
+battle each notable trainer, opponent or partner, brings the best three of
+that team, aces first; in the final the partner brings all of it.
 [Notable trainers](notable-trainers.md) owns trainer TR and how it grows,
 the scalers that turn TR into team level and team size (which grows in
 steps), and rosters. The player's TR enters only through how far each
@@ -182,10 +220,13 @@ trainer has grown, and through qualifying.
 
 **Reigning champion.** Every event crowns someone. If the player wins, they
 are the league's reigning champion. If they lose or decline, the strongest
-trainer of that event's lineup takes the title. Either way the champion reigns
-until the league's next event. The game remembers, for each notable trainer,
-whether they have ever reigned at Indigo and whether they have ever reigned at
-Hoenn; once both are true, they are a Master for good.
+trainer of that event's lineup takes the title. At the Masters, a player who
+loses the final hands the title to their partner, who beat them; a loss in
+a hall, or leaving before the final, crowns the lineup's strongest, as
+anywhere. Either way the champion reigns until the league's next event. The
+game remembers, for each notable trainer, whether they have ever reigned at
+Indigo and whether they have ever reigned at Hoenn; once both are true, they
+are a Master for good.
 
 **Winning.** The player's first win at each league keeps today's records,
 ceremonies, and unlocks, all once only. Their first wins at both Indigo and
@@ -201,8 +242,12 @@ TR for a first league win until that design is adopted.
 Pokégear/PokéNav-style phone as in HeartGold/SoulSilver and Emerald; the exact
 phone screens are an implementation detail. The Masters' call comes from the
 caretaker, not from an official league, and her first call says that Lorelei,
-retired to Four Island, spoke of the player. That is story only: Lorelei stays
-an ordinary notable trainer with no guaranteed seat. The **Masters Gallery**
+retired to Four Island, spoke of the player. Lorelei is also the partner who
+steps in until the player asks someone; otherwise she stays an ordinary
+notable trainer with no guaranteed seat. The player asks a partner with a
+phone call to that trainer, from the phone's contacts. Accepting a Masters
+invitation names the four pairs and the partner, and in the lobby the
+caretaker introduces each pair before its hall. The **Masters Gallery**
 on the basement wall tallies each Masters winner's wins, including trainers
 who won the events the player declined. The lobby, or a sign at each hall's
 door, names the hall and its condition, so the player knows what's ahead
@@ -213,15 +258,19 @@ the room.
 invitations for a chosen TR and badge split and the player's answer to each,
 showing who calls and why, each event's lineup, who is tired, and who reigns,
 and for any event each trainer's league score, the base lineup level, and which
-aloof trainers join or skip, and, at the Masters, who has reigned where, who
-is a Master, and which seats are guaranteed; tuning comes later. The explorer
-doesn't show each match's hall yet (Later). Hall conditions aren't tuned
-against lineups: they're identity, and they apply to both sides. The lineup
-comes from the strongest trainers of the moment, so it tends to sit a little
-above the player; with all 24 badges both sides reach level 100, and tougher
-endgame teams (better items, stats, movesets) are Later. With the aloof rule
-off, the Champions come to the Masters at any world progress: Lance (TR 200,
-level 100) attends from the Masters' first call.
+aloof trainers join or skip, and, at the Masters, who has reigned where, who is
+a Master, and which seats are guaranteed; tuning comes later. The explorer
+doesn't show each match's hall yet, or the Masters' tag format: its Masters
+lineups still have five seats and no partner (Later). Hall conditions aren't
+tuned against lineups: they're identity, and they apply to both sides. The
+lineup comes from the strongest trainers of the moment, so it tends to sit a
+little above the player; with all 24 badges both sides reach level 100, and
+tougher endgame teams (better items, stats, movesets) are Later. With the aloof
+rule off, the Champions come to the Masters at any world progress: Lance (TR
+200, level 100) attends from the Masters' first call. The tag format isn't tuned
+either: in the halls the partner's three stand beside the player's, and the
+pairs rise to the strongest two of the eight, while the final pits the player
+against a partner they chose, strong or not.
 
 ## Sample playthrough
 
@@ -232,29 +281,40 @@ each accepted event on the day of its call, as in the balance explorer.
 1. Day 7: Indigo calls first (it ties with Hoenn on badges, so Indigo). The
    base lineup tops out at level 82, so the aloof Champions (levels 99-100)
    stay away. The player accepts and beats Koga, Karen, Blue, Giovanni, and
-   Jasmine: their first Indigo win, with its Hall of Fame.
+   Jasmine: their first Indigo win, with its Hall of Fame. Each of the five
+   gives the player their phone number, as the Gym Leaders they beat for
+   their badges already have (all but Tate & Liza, who give none).
 2. Day 14: Hoenn calls. The player accepts and beats Sidney, Winona, Juan,
    Phoebe, and Norman. With Indigo and Hoenn both won, the player is a Master.
 3. Day 21: the phone rings, and it is the caretaker of Seven Island's battle
-   house: Lorelei spoke of the player, and there is a room downstairs. The aloof
-   rule is off at the Masters, so the Champions come; the lineup is Giovanni,
-   Jasmine, Steven, Wallace, and Lance. The player declines. Lance takes the
-   Masters title, and the Masters Gallery records his win. A Masters title
-   doesn't make him a Master.
+   house: Lorelei spoke of the player, and there is a room downstairs. The
+   player has never asked anyone, so Lorelei would be their partner. The
+   aloof rule is off at the Masters, so the Champions come; the eight are
+   Koga, Karen, Blue, Giovanni, Jasmine, Steven, Wallace, and Lance. The
+   player declines. Lance takes the Masters title, and the Masters Gallery
+   records his win. A Masters title doesn't make him a Master.
 4. Days 28 to 49: the player declines everything. Blue takes Indigo's title,
    then Giovanni, a traveller, takes Hoenn's away from home; the Masters
    crowns Lance again; then Giovanni takes Indigo's title too. He has now
    reigned at both, so he is a Master for good.
 5. Day 56: Norman takes Hoenn's title. Day 63: at the Masters, Giovanni's
    seat is guaranteed, though his league score would have put him in the top
-   five anyway. Lance wins the declined event and adds a Gallery win.
+   eight anyway. Lance wins the declined event and adds a Gallery win.
 6. Days 70 and 77: Blue reigns at Indigo again, Giovanni at Hoenn again.
-   Day 84: the Masters calls. Giovanni fought at Hoenn a week earlier, so he
-   is tired: league score 65, far below Blue's 129. His guaranteed seat still
-   holds, and Blue sits out. The lineup is Giovanni, Jasmine, Steven, Wallace,
-   and Lance. The player accepts and wins: a Gallery win for the player, with
-   prize money and the Masters title, and no Hall of Fame, Ribbon, or regional
-   title.
+   Before the next call, the player phones Blue, whose number they have held
+   since day 7, and asks him to be their partner; he agrees.
+7. Day 84: the Masters calls. Giovanni fought at Hoenn a week earlier, so he is
+   tired: league score 65, too low for a seat on its own. His guaranteed seat
+   still holds. Blue is the partner, so he is out of the lineup, and Erika takes
+   the last seat. The pairs, weakest first, are Erika and Koga, Karen and
+   Giovanni, Jasmine and Steven, and Wallace and Lance. The player accepts. At
+   each hall's door they pick three, and their Pokémon carry their damage from
+   hall to hall. Beside Blue they beat all four pairs, the last one, Wallace and
+   Lance, under Karen's Hall's Wonder Room. The caretaker heals everyone, and in
+   the Champion's Room the player beats Blue, full team against full team: a
+   Gallery win for the player, with prize money and the Masters title, and no
+   Hall of Fame, Ribbon, or regional title. Had Blue won the final, he would
+   have taken the title.
 
 ## Records and recognition
 
@@ -276,45 +336,51 @@ Gallery win at the Masters).
 - Red unlocks after all three leagues have been won. Blue's Saffron Dojo battle
   unlocks after the first Indigo win.
 - Whoever fights last is presented as the final opponent without inventing
-  Champion history. Dialogue never assumes a fixed person in any room.
+  Champion history; at the Masters that is the partner. Dialogue never
+  assumes a fixed person in any room.
 - Each lobby names the reigning champion.
 
 ## Boundaries
 
 In: the three leagues, qualifying, which leagues know the player,
-invitations by phone and which league calls, accepting and declining, one attempt per accepted event, reigning
-champions, reign records and Masters, first and repeat wins, notable Kanto,
-Johto, and Hoenn singles trainers, home and away, the league score, the
-traveller and aloof traits and the base lineup level, the lineup, guaranteed
-seats at the Masters, battle order, the halls and their conditions, and the
-Masters' caretaker and Gallery.
+invitations by phone and which league calls, accepting and declining, one
+attempt per accepted event, reigning champions, reign records and Masters,
+first and repeat wins, notable Kanto, Johto, and Hoenn trainers who battle
+alone, home and away, the league score, the traveller and aloof traits and
+the base lineup level, the lineup, guaranteed seats at the Masters, battle
+order, the halls and their conditions, the Masters' tag format (the partner
+asked by phone, the pairs, picking three at each door, and the singles
+final), and the Masters' caretaker and Gallery. Phone numbers belong to
+[Notable trainers](notable-trainers.md#phone-numbers).
 
 Out of scope for v0: seeded or reputation-based league choice, news of who won
 the events the player declined (beyond the Masters Gallery), special
-invitational events, doubles at the Masters, any status or reward for winning
-the Masters beyond its Gallery win, prize money, and title, balance
-targets for leagues, and field conditions outside the leagues' halls (such
-as Gym arenas). Red's unlock after all three leagues and Blue's Dojo stay
-as they are. Today's circuit, with its fixed order and replays, stays
-documented as Today until this design is adopted; its record, ceremony, and
-unlock rules carry over to first wins. Player TR follows
-[Player Trainer Rating](player-trainer-rating.md), where league wins add
-nothing. Wild encounters, shops, regular trainers, and standalone builds
-follow their own contracts, except that the snow and sandstorm halls' shared
-room maps carry their weather into standalone FRLG too; other
-battles with notable trainers follow their own TR.
+invitational events, tag or double battles at Indigo or Hoenn, a partner who can
+refuse, any use of phone numbers beyond asking a partner, any status or reward
+for winning the Masters beyond its Gallery win, prize money, and title, balance
+targets for leagues, and field conditions outside the leagues' halls (such as
+Gym arenas). Red's unlock after all three leagues and Blue's Dojo stay as they
+are. Today's circuit, with its fixed order and replays, stays documented as
+Today until this design is adopted; its record, ceremony, and unlock rules carry
+over to first wins. Player TR follows [Player Trainer
+Rating](player-trainer-rating.md), where league wins add nothing. Wild
+encounters, shops, regular trainers, and standalone builds follow their own
+contracts, except that the snow and sandstorm halls' shared room maps carry
+their weather into standalone FRLG too; other battles with notable trainers
+follow their own TR.
 
 ## Specifications
 
 - [Leagues specification](../specs/leagues.md): registry, eligibility,
   invitations (qualification, the countdown, which league calls, accept and
   decline), fatigue, the league score, lineup selection (with the Masters'
-  guaranteed seats), ordering, the halls, the event lineup, reigning champions
-  and reign records, battle construction (with the hall condition), the win
+  guaranteed seats), the partner, ordering and pairing, the halls, the event
+  lineup, reigning champions and reign records, battle construction (with
+  the hall condition and the Masters' tag matches and final), the win
   commit, saved state, load validation, and presentation.
 - [Notable trainers specification](../specs/notable-trainers.md): TR, home
-  regions, the traveller and aloof traits, willingness, scalers, and
-  rosters.
+  regions, the traveller and aloof traits, willingness, scalers, rosters,
+  and phone contacts.
 - [Player Trainer Rating specification](../specs/player-trainer-rating.md):
   the player's TR, which league wins do not raise in v0.
 
@@ -338,6 +404,14 @@ battles with notable trainers follow their own TR.
 - Gym arenas with their own field conditions, like the halls
   ([Notable trainers](notable-trainers.md#later)).
 - Each match's hall and its condition in the balance explorer.
+- Explorer support for the tag format: the partner, eight-seat Masters
+  lineups, the pairs, and each notable's three for a tag battle.
+- A friendship score with each contact, raised by partnering and other
+  shared play.
+- Picky partners: contacts who turn the player down, by friendship or by
+  trait, such as an aloof trainer refusing a weak player.
+- Asking a partner in person, meeting them in the overworld.
+- Gifts and trades with contacts.
 
 ## References
 
