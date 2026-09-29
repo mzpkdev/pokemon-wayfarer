@@ -34,6 +34,9 @@ rather than restating it.
 - [Trainer AI](trainer-ai.md) owns the AI flags of every notable trainer
   battle: the play style, AI skill, ace protection, and the boss flag.
 - [Leagues](leagues.md) owns league lineups and their lifecycle.
+- [Notable haunts](notable-haunts.md) places notable trainers in the
+  overworld and owns the meaning of the manner and buddy values
+  ([below](#manner-and-buddy)).
 - [Player Trainer Rating](player-trainer-rating.md) owns the player's TR,
   the scaler definition, and the downward rule and shared evolution-level table
   ([evolution stages](player-trainer-rating.md#evolution-stages));
@@ -113,8 +116,9 @@ willingness.
 A **trait** is an opt-in yes/no behaviour of a notable trainer, authored per
 entry as a boolean that defaults to `false`. Traits are independent of each
 other and of the archetype. v0 has two traits, **traveller** and **aloof**;
-in v0 only the [league lineup rule](leagues.md#selection-and-order) reads
-them. Assignments follow lore and are reviewable content.
+the [league lineup rule](leagues.md#selection-and-order) and
+[haunt placement](notable-haunts.md#candidates) read them. Assignments
+follow lore and are reviewable content.
 
 ### Traveller
 
@@ -157,6 +161,13 @@ a boolean **boss flag** (`bossOmniscient`, Lance only in v0).
 [Trainer AI](trainer-ai.md) owns both, the style assignments, and the AI
 flags each battle resolves from them, the trainer's TR, and the resolved
 team's aces.
+
+## Manner and buddy
+
+Each entry also authors a **manner** (`warm`, `proud`, or `cold`) and a
+**buddy** (one roster slot, 1-6). Notable trainers also appear at haunts in
+the overworld, and [Notable haunts](notable-haunts.md#trainer-values) owns
+what these two values mean.
 
 ## Trainer rating
 
@@ -495,8 +506,9 @@ TR, another trainer, or a random team.
 ## Phone contacts
 
 A notable trainer's phone number, given at the player's first win over
-them, is owned by [Sevii Masters](sevii-masters.md#phone-contacts), its
-only user in v0.
+them, is owned by [Sevii Masters](sevii-masters.md#phone-contacts), which
+uses it to ask a partner; [haunts](notable-haunts.md#relationship-beat)
+read it to tell friends from strangers.
 
 ## Validation
 
@@ -615,10 +627,6 @@ implementations stay active until then.
 ## Later
 
 - Notable trainer status for more characters, such as Red.
-- Overworld locations for notable trainers, read through willingness:
-  travellers roam and everyone else stays in their home region.
-- An overworld use of the aloof trait, such as aloof trainers keeping away
-  from weak areas.
 - Difficulty signposting: in-world hints about who is too strong (Gym guides,
   NPC gossip, a Trainer Card line), since TR is hidden.
 - Testable feel targets for playtesting (first Gym winnable with a lightly
@@ -646,6 +654,7 @@ implementations stay active until then.
 - [Player Trainer Rating](player-trainer-rating.md)
 - [Leagues](leagues.md)
 - [Sevii Masters](sevii-masters.md)
+- [Notable haunts](notable-haunts.md)
 - [Gym Leader scaling](gym-leader-scaling.md)
 - [Trainer AI](trainer-ai.md)
 - [Player progression](trainer-rating-party-progression.md)

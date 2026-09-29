@@ -86,15 +86,17 @@ At a location, a place such as a league that picks who turns up, a trainer
 is at home when the place belongs to their region, or is neutral ground like
 Sevii Masters, and away otherwise.
 Most trainers aren't travellers: being away costs them a lot of willingness
-to turn up. In this first version only leagues use this
-([Leagues](leagues.md)).
+to turn up. Leagues use this ([Leagues](leagues.md)), and so do haunts,
+where a trainer who isn't a traveller only appears in their home region
+([Notable haunts](notable-haunts.md)).
 
 ### Traits
 
 A **trait** is an opt-in yes-or-no quirk of a notable trainer; a trainer
-without it behaves the default way. This first version has two traits, and
-only leagues pay attention to them ([Leagues](leagues.md)). Neither has
-anything to do with how a trainer grows.
+without it behaves the default way. This first version has two traits, which
+leagues and haunts pay attention to ([Leagues](leagues.md),
+[Notable haunts](notable-haunts.md)). Neither has anything to do with how a
+trainer grows.
 
 A **traveller** goes wherever the action is: being away costs them very
 little willingness. The travellers are Brock, Misty, Giovanni, Blue, Bruno,
@@ -188,6 +190,12 @@ The first time you beat a notable trainer, they give you their phone
 number, which the [Sevii Masters](sevii-masters.md#design) uses to find you
 a partner.
 
+### Out in the world
+
+Between their Gym and league battles, notable trainers also turn up at
+haunts around the overworld, where a friend gives gossip, a rematch, and a
+quest ([Notable haunts](notable-haunts.md)).
+
 FRLG, Emerald, and HNS parties are references for recognizable content, not
 required teams. Challenge options such as trainer items, trainer IVs and EVs,
 and the level cap apply on top, as they do today.
@@ -258,10 +266,6 @@ well they play, and combat difficulty belong to playtesting.
 ## Later
 
 - More notable trainers, such as Red.
-- Notable trainers met around the world according to the traveller trait:
-  travellers roam and everyone else stays in their home region.
-- Aloof trainers keeping their distance around the world too, not only from
-  leagues.
 - Hints in the world about who is too strong for you right now: Gym guides,
   gossip, or a line on your Trainer Card.
 - Concrete feel checks for playtesters, such as winning the first Gym with a
@@ -288,6 +292,8 @@ well they play, and combat difficulty belong to playtesting.
   inventory, TR and its growth, scalers, rosters, and the battle snapshot.
 - [Sevii Masters specification](../specs/sevii-masters.md): phone contacts,
   given for a first win over a notable trainer.
+- [Notable haunts specification](../specs/notable-haunts.md): where notable
+  trainers appear in the overworld, and the manner and buddy values.
 - [Gym Leader scaling](../specs/gym-leader-scaling.md): badge-encounter
   coverage and battle construction.
 - [Trainer AI specification](../specs/trainer-ai.md): play styles, AI skill,
@@ -298,6 +304,7 @@ well they play, and combat difficulty belong to playtesting.
 - [Player Trainer Rating](player-trainer-rating.md)
 - [Leagues](leagues.md)
 - [Sevii Masters](sevii-masters.md)
+- [Notable haunts](notable-haunts.md)
 - [Trainer AI](trainer-ai.md)
 - [Regular trainer and Gym member scaling](trainer-party-scaling.md)
 - [Player progression](../specs/trainer-rating-party-progression.md)

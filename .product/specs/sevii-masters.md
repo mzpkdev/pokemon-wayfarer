@@ -86,19 +86,23 @@ the trainer as a partner, and debug battles set nothing. The bit is never
 cleared by play. Tate & Liza give no number, since in v0 a contact's only
 use is being asked as a partner, which the duo cannot be.
 
-In v0 the only use is asking a contact to be the player's
+On the phone, the only use is asking a contact to be the player's
 [partner](#partner); calling a contact otherwise does nothing new.
+[Notable haunts](notable-haunts.md#relationship-beat) read the contact bit
+to treat a trainer as a friend.
 
 ## Partner
 
 At the Masters the player fights beside a **partner**: the notable trainer
 they last asked. The saved **partner choice** is none or one `characterId`.
 
-- **Asking.** From the phone's contact list, the player can ask any contact
-  to be their partner once they are a Master (the Masters knows them),
+- **Asking.** The player can ask any contact to be their partner once they
+  are a Master (the Masters knows them): from the phone's contact list
   whenever they can make a call (in the overworld, with no script, battle,
-  or ceremony running). The ask always succeeds: it saves that contact as
-  the partner choice, replacing any earlier one, and does nothing else. Only
+  or ceremony running), or in person through a friend's Team up at a
+  [haunt](notable-haunts.md#relationship-beat). The ask always succeeds: it
+  saves that contact as the partner choice, replacing any earlier one, and
+  does nothing else. Only
   a league-eligible contact can be asked (Tate & Liza give no number), and
   no trait, TR, reign, or friendship check applies.
 - **Default.** With no partner choice (the player has never asked anyone),
@@ -518,7 +522,6 @@ Extend the [league tests](leagues.md#acceptance) with these cases.
 - A friendship score per contact, raised by partnering and other shared
   play.
 - Picky partners who can refuse, by friendship or by trait (such as aloof).
-- Asking a partner in person in the overworld.
 - Gifts and trades with contacts.
 
 ## References
@@ -526,5 +529,6 @@ Extend the [league tests](leagues.md#acceptance) with these cases.
 - [Sevii Masters PRD](../prds/sevii-masters.md)
 - [Leagues](leagues.md)
 - [Notable trainers](notable-trainers.md)
+- [Notable haunts](notable-haunts.md)
 - [Trainer AI](trainer-ai.md)
 - [Interregional League circuit](wayfarer-interregional-league-circuit.md)

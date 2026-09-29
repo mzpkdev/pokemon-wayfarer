@@ -220,7 +220,8 @@ changes yours.
 - **Aloof:** a trait; an aloof trainer joins a league only when its base
   lineup is close enough to their own team level, and skips it when there is
   no base lineup ([selection](../specs/leagues.md#selection-and-order)). The
-  rule is off at the Sevii Masters.
+  rule is off at the Sevii Masters. At haunts, an aloof trainer only visits
+  remote elite ones.
 - **Base lineup:** an Indigo or Hoenn event's five best trainers by league
   score who are not aloof, picked before any aloof trainer is considered.
 - **Base lineup level:** the highest team level in the base lineup.
@@ -242,6 +243,20 @@ changes yours.
   or Lorelei if you have never asked anyone. They fight beside you in the
   tag battles, never in the lineup, and face you in the final
   ([partner](../specs/sevii-masters.md#partner)).
+- **Haunt:** an overworld spot where you can meet a notable trainer between
+  their Gym and league battles. No haunt belongs to one trainer: each is
+  filled by whoever fits it best at the time
+  ([haunts](../specs/notable-haunts.md#haunts)).
+- **Manner:** a notable trainer's warm, proud, or cold nature, which decides
+  the quests they give: warm trainers ask you for help, proud ones challenge
+  or enlist you, and cold ones command you
+  ([trainer values](../specs/notable-haunts.md#trainer-values)).
+- **Buddy:** a notable trainer's companion Pokémon, one slot of their
+  roster, named at its current stage, so Brock's buddy is Onix early and
+  Steelix later ([trainer values](../specs/notable-haunts.md#trainer-values)).
+- **Momentum:** whether a notable trainer is rising (getting stronger fast
+  right now) or settled; rising trainers go training at haunts, settled ones
+  relax or sightsee ([momentum](../specs/notable-haunts.md#momentum)).
 - **Hall:** a league room where one match is fought, named after an Elite
   Four member whose theme the room carries (such as Lorelei's Hall) without
   meaning they fight there. Match 1 is in the first hall, match 2 in the
