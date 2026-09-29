@@ -19,7 +19,7 @@ Every trainer has all 12.
 | `MEET` | introducing themselves the first time (includes their name) |
 | `NOT_YET` | famous but unbeaten: "beat me properly first". Gym Leaders may mention their GYM; Elite Four and Champions don't |
 | `NEWS` | lead-in before a gossip line |
-| `ASK` | lead-in to a request or favour |
+| `ASK` | attention-getter before whatever the haunt proposes: no movement, favour, request content or implied destination or activity |
 | `YES` | the player agreed |
 | `NO` | the player declined |
 | `NOT_READY` | the player doesn't meet a requirement yet |
@@ -37,7 +37,7 @@ the notable-trainer catalog, and the
 - **Manner** is `warm`, `proud` or `cold`. It says which quests a trainer can
   give, not how they sound: warm trainers ask you for help, proud ones
   challenge or enlist you, and cold ones command you. Each quest type lists
-  the manners it fits. `ASK` lines lean the same way. Where a manner may
+  the manners it fits. `ASK` lines carry the manner only as tone. Where a manner may
   surprise, a **Manner reason** gives the canon behind it.
 - **Buddy** names one roster slot: the slot number (1-6, as in the catalog
   spec) and the species as authored. It is the trainer's anime companion, or
@@ -70,6 +70,12 @@ the notable-trainer catalog, and the
   there, so "come back later" lines are fine.
 - **Tone:** dated or uncomfortable gags are left out. Villains stay
   villainous.
+- **ASK is only an attention-getter before whatever the haunt proposes.** No
+  movement (come, walk, go, follow, along, with me), no favour (help, hand,
+  favor, assist), no request content, no implied destination or activity. It
+  must read naturally before any haunt proposal, e.g. "...These tunnels run
+  through to Vermilion. Walk it with me?", "...I dropped my {ITEM} somewhere
+  here. Help me look?", "...Your best one against my {ACE}?"
 - **Tate & Liza** alternate halves of every line ("TATE: … LIZA: …").
 
 ## Source priority
@@ -101,7 +107,7 @@ Buddy: slot 1, Steelix (ONIX early). Anime Onix.
 | MEET | I'm BROCK. I train Rock types, and I cook for them too! |
 | NOT_YET | Test your rock-hard will at my GYM first. Then we'll talk. |
 | NEWS | Word travels fast between breeders. Listen to this... |
-| ASK | Could you lend a hand? A good breeder never turns down help. |
+| ASK | Hey, I've got an idea. |
 | YES | Great! I'll have a hot meal ready when you're done. |
 | NO | No worries. Just don't skip any meals, okay? |
 | NOT_READY | Not yet. Even Rock types need time to harden. |
@@ -126,7 +132,7 @@ Buddy: slot 2, Golduck (PSYDUCK early). Anime Psyduck.
 | MEET | I'm MISTY! My policy? An all-out offensive with Water types! |
 | NOT_YET | Beat me at my GYM first. My Water types won't go easy! |
 | NEWS | Okay, listen up! You'll want to hear this. |
-| ASK | Hey, do me a favor? I'll owe you one... maybe. |
+| ASK | Okay, listen up! |
 | YES | Now that's what I like to hear! Let's go! |
 | NO | Hmph! Fine. Don't come crying to me later! |
 | NOT_READY | Not yet! Come back when you can keep up with me. |
@@ -152,7 +158,7 @@ Buddy: slot 1, Raichu (PIKACHU early). His anime Raichu, and the Pikachu gag.
 | MEET | Name's LT. SURGE, the Lightning American! Nice to meet ya! |
 | NOT_YET | Hey, kid! Win at my GYM first. Then we'll talk like soldiers! |
 | NEWS | Listen up, kid! Here's the latest intel. |
-| ASK | I got a mission for ya, kid. You up for it? |
+| ASK | Listen up, soldier! |
 | YES | Now that's a soldier! Move out! |
 | NO | Hah! Chickened out, huh? Suit yourself, kid. |
 | NOT_READY | Negative, kid! You won't live long in combat like that! |
@@ -177,7 +183,7 @@ Buddy: slot 1, Vileplume (ODDISH, then GLOOM). Anime Gloom.
 | MEET | Pleased to meet you. I am ERIKA. I teach flower arranging. |
 | NOT_YET | Please visit my GYM first. We shall have a proper match there. |
 | NEWS | Oh, I heard the most curious thing... |
-| ASK | If it isn't too much trouble, might I ask a favor? |
+| ASK | Might I suggest something? |
 | YES | How kind of you. Thank you ever so much. |
 | NO | Oh, I see. That's quite all right. |
 | NOT_READY | Perhaps not yet. Patience helps flowers bloom, too. |
@@ -201,7 +207,7 @@ Buddy: slot 1, Venomoth (VENONAT early). Iconic ace.
 | MEET | I'm JANINE, daughter of KOGA, and a ninja in training! |
 | NOT_YET | Face me at my GYM first. A ninja doesn't allow shortcuts! |
 | NEWS | Psst! A good ninja hears everything. Listen... |
-| ASK | Could you help me? Think of it as ninja training! |
+| ASK | Hee hee! Psst, psst! |
 | YES | Thank you! Father would call that honorable. |
 | NO | Oh... all right. I'll handle it myself! |
 | NOT_READY | Not yet! Even a ninja trains before a mission. |
@@ -227,7 +233,7 @@ Buddy: slot 4, Gengar (GASTLY, then HAUNTER). Anime Haunter.
 | MEET | I am SABRINA. I have had psychic powers since childhood. |
 | NOT_YET | My GYM awaits. I have already seen how our battle ends. |
 | NEWS | My mind picked something up. Listen. |
-| ASK | I sense that you can help me. I will not ask twice. |
+| ASK | I foresee something. Pay attention. |
 | YES | As I foresaw. |
 | NO | I knew you would refuse. It changes nothing. |
 | NOT_READY | No. Your future is not yet clear enough. |
@@ -252,7 +258,7 @@ Buddy: slot 1, Magmortar (MAGMAR early). His RBY and FRLG ace.
 | MEET | Hah! I am BLAINE! Quizmaster and red-hot Fire trainer! |
 | NOT_YET | Hah! Pass my GYM quiz and beat me there first! |
 | NEWS | Quiz time! No, wait... just some news. Listen! |
-| ASK | Riddle me this: will you do me a favor? |
+| ASK | Hey, kid, hear me out. |
 | YES | Correct answer! Hah! |
 | NO | Wrong answer! Hah! Well, suit yourself. |
 | NOT_READY | Buzz! Not yet! Come back with the right answer. |
@@ -276,7 +282,7 @@ Buddy: slot 4, Persian (MEOWTH early). Anime Persian.
 | MEET | I am GIOVANNI. Remember the name. Others have learned to. |
 | NOT_YET | Earn your way through my GYM first. Then I may notice you. |
 | NEWS | TEAM ROCKET hears everything. Listen well. |
-| ASK | I have a task for you. Consider it... an opportunity. |
+| ASK | I have a proposition. |
 | YES | A wise decision. |
 | NO | Hmph. You'll regret wasting my time. |
 | NOT_READY | You are not worth my time yet. Come back stronger. |
@@ -300,7 +306,7 @@ Buddy: slot 1, Umbreon (EEVEE early). Anime Gary's Umbreon.
 | MEET | I'm BLUE! Remember it, 'cause I'm the best there is! |
 | NOT_YET | Beat me in a real battle first. Till then, I'm the best! |
 | NEWS | Heh, bet you haven't heard this one yet. |
-| ASK | Hey, do me a favor. And don't make it weird. |
+| ASK | Hey, {PLAYER}. A second? |
 | YES | Heh, knew you'd say yes! |
 | NO | Pfft. Whatever. Your loss! |
 | NOT_READY | What, that's it? You're not ready. Come back later! |
@@ -325,7 +331,7 @@ Buddy: slot 1, Lapras. Her RBY and FRLG ace and Masters EX partner.
 | MEET | I am LORELEI. No one can best me with icy POKéMON. |
 | NOT_YET | Defeat me in battle first. Until then, you're on thin ice. |
 | NEWS | I heard something interesting. Listen closely. |
-| ASK | I'd like to ask a favor. Don't make me ask twice. |
+| ASK | Hmph. I have something to say. |
 | YES | Good. I knew I could count on you. |
 | NO | Pity. I'll find someone else. |
 | NOT_READY | Not yet. Come back once you're a little sharper. |
@@ -350,7 +356,7 @@ Buddy: slot 1, Machamp (MACHOP, then MACHOKE). Iconic ace.
 | MEET | I am BRUNO! I train with my POKéMON, body and soul! |
 | NOT_YET | Hoo hah! Defeat me in battle first! Then we'll talk! |
 | NEWS | Hmm. I heard something between training sets. Listen. |
-| ASK | I need your strength for something. Will you help? |
+| ASK | Hey. Listen closely. |
 | YES | Hoo hah! A true fighter's answer! |
 | NO | Hmph. A fighter knows his limits. I respect that. |
 | NOT_READY | Not yet. Train harder, then face this again! |
@@ -374,7 +380,7 @@ Buddy: slot 1, Gengar (GASTLY, then HAUNTER). Iconic ace.
 | MEET | I am AGATHA. Remember that name, child. OAK surely does. |
 | NOT_YET | Beat me in battle first, child. Then I might listen. |
 | NEWS | Hee hee. Old ears still hear plenty. Listen, child. |
-| ASK | You. Child. I have a task for you. Don't dawdle. |
+| ASK | Kukuku... a thought occurs to me. |
 | YES | Hmph. Good. Don't disappoint me. |
 | NO | Bah! Young people! |
 | NOT_READY | Hah! Not yet, child. You'd only bore me. |
@@ -399,7 +405,7 @@ Buddy: slot 1, Dragonite (DRATINI, then DRAGONAIR). Iconic ace.
 | MEET | I'm LANCE, a trainer of dragons. It's a pleasure. |
 | NOT_YET | Defeat me in battle first. Dragons respect only strength. |
 | NEWS | I've been keeping an eye on things. Listen. |
-| ASK | I need someone I can trust. Will you help me? |
+| ASK | You. Child. Pay attention. |
 | YES | I knew I could count on you. |
 | NO | I understand. The offer stands. |
 | NOT_READY | Not yet. A dragon's power must be earned. |
@@ -430,7 +436,7 @@ Buddy: slot 1, Crobat (ZUBAT, then GOLBAT). His HGSS ace.
 | MEET | I am KOGA. I live in shadows, a ninja! |
 | NOT_YET | Best me in battle first. Until then, you walk in my shadow. |
 | NEWS | A ninja gathers secrets. Here is one. |
-| ASK | I have a task that needs discretion. Will you accept? |
+| ASK | Hm? Just a moment. |
 | YES | Fwahahaha! Good. Move swiftly. |
 | NO | So be it. A ninja works alone in any case. |
 | NOT_READY | Too soon. Patience is the first of the ninja arts. |
@@ -455,7 +461,7 @@ Buddy: slot 1, Pidgeot (PIDGEY, then PIDGEOTTO). Anime and HGSS Pidgeotto.
 | MEET | I'm FALKNER. I carry on my father's work with bird POKéMON. |
 | NOT_YET | Beat me at my GYM first. My birds won't fall so easily! |
 | NEWS | Word flies fast. Here's what I heard. |
-| ASK | I have a job for a skilled trainer. Are you up to it? |
+| ASK | Excuse me, if I may! |
 | YES | Thank you! Father always said to rely on good friends. |
 | NO | I see. I'll manage on my own, then. |
 | NOT_READY | Not yet. Even fledglings need time before they fly. |
@@ -482,7 +488,7 @@ Buddy: slot 1, Scizor (SCYTHER early). Anime and GSC Scyther.
 | MEET | I'm BUGSY! I never lose when it comes to Bug POKéMON! |
 | NOT_YET | Beat me at my GYM first! It'll help my research, too! |
 | NEWS | Oh! I've been taking notes, and I heard this... |
-| ASK | Could you help me with something? It's for research! |
+| ASK | Oh! Hey, hey, wait a second! |
 | YES | Yes! Science thanks you! I do, too! |
 | NO | Aww... Okay. I'll add it to my notes anyway. |
 | NOT_READY | Not yet! Every bug has to molt before it grows. |
@@ -506,7 +512,7 @@ Buddy: slot 1, Miltank. Anime and GSC Miltank.
 | MEET | Hi! I'm WHITNEY! Everyone got into POKéMON, so I did too! |
 | NOT_YET | Beat me at my GYM first! ...And no making me cry! |
 | NEWS | Ooh, ooh! You've gotta hear this! |
-| ASK | Pretty please? I need a teeny favor! |
+| ASK | Ooh, ooh, I have an idea! |
 | YES | Yay! You're the best! |
 | NO | Waaah! Meanie! ...Just kidding. Mostly. |
 | NOT_READY | Nuh-uh! Not yet! Come back when you're ready! |
@@ -531,7 +537,7 @@ Buddy: slot 1, Gengar (GASTLY, then HAUNTER). Anime Gengar.
 | MEET | I'm MORTY. I train to see what others cannot. |
 | NOT_YET | Face me at my GYM first. Then I'll see you clearly. |
 | NEWS | EUSINE told me something. You should hear it. |
-| ASK | I need help with something only you can do. |
+| ASK | Ah, a moment of your time. |
 | YES | Thank you. I sensed you would agree. |
 | NO | I understand. Perhaps another time. |
 | NOT_READY | The vision isn't clear yet. Come back later. |
@@ -559,7 +565,7 @@ Buddy: slot 1, Poliwrath (POLIWAG, then POLIWHIRL). Anime and GSC Poliwrath.
 | MEET | I'm CHUCK! My POKéMON crush stones and shatter bones! |
 | NOT_YET | Beat me at my GYM first! Then we'll talk as equals! |
 | NEWS | WAHAHAH! Listen up! I heard this during training! |
-| ASK | I need a hand! Can you help me out? |
+| ASK | Hey, kid! Eyes on me! |
 | YES | WAHAHAH! That's the spirit! |
 | NO | Hmm! Fine. I'll just train harder! |
 | NOT_READY | Not yet! Toughen up and come back! |
@@ -585,7 +591,7 @@ Ampharos.
 | MEET | Um... I'm JASMINE. I use... the Steel type. Nice to meet you. |
 | NOT_YET | Um... please beat me at my GYM first. I'll do my best. |
 | NEWS | Um... I heard something. May I tell you? |
-| ASK | Um... could I ask you something? Only if it's okay... |
+| ASK | Oh, might I have a word? |
 | YES | Oh, thank you... Really, thank you. |
 | NO | Oh... I understand. It's all right. |
 | NOT_READY | Um... I don't think you're ready yet. I'm sorry. |
@@ -610,7 +616,7 @@ Buddy: slot 1, Mamoswine (SWINUB, then PILOSWINE). Anime Piloswine.
 | MEET | I am PRYCE. I've been with POKéMON since before you were born. |
 | NOT_YET | Beat me at my GYM first, youngster. Experience is earned. |
 | NEWS | At my age, one hears things. Listen. |
-| ASK | Would you help an old man with a task? |
+| ASK | Ho ho. Now, listen well. |
 | YES | Hm. You have a good heart. |
 | NO | Hm. I'll not force you. |
 | NOT_READY | Not yet. Tests come to all of us, in their own time. |
@@ -636,7 +642,7 @@ Buddy: slot 2, Dragonite (DRATINI, then DRAGONAIR). Anime Dragonair.
 | MEET | I am CLAIR. The world's best dragon master. |
 | NOT_YET | Beat me at my GYM first. Even then, I may not accept it! |
 | NEWS | Listen. I'll only say this once. |
-| ASK | I need something done. You'll do it, won't you? |
+| ASK | Hmph. Hear me out. |
 | YES | Naturally. I expected nothing less. |
 | NO | Hmph! I didn't need your help anyway. |
 | NOT_READY | You? Not yet. Dragons don't bow to the unready. |
@@ -660,7 +666,7 @@ Buddy: slot 1, Xatu (NATU early). His GSC and HGSS ace.
 | MEET | I am WILL. I have trained all around the world. |
 | NOT_YET | Defeat me in battle first. I will not lose so easily. |
 | NEWS | My psychic POKéMON sensed something. Listen. |
-| ASK | I have a task worthy of your skill. Will you take it on? |
+| ASK | Hmm. I have something to say. |
 | YES | Very good. |
 | NO | Then go. I have no use for hesitation. |
 | NOT_READY | You are not ready. My {BUDDY} sees it clearly. |
@@ -686,7 +692,7 @@ Buddy: slot 1, Umbreon (EEVEE early). Her GSC and HGSS ace.
 | MEET | I'm KAREN. I use Dark types. Remember that. |
 | NOT_YET | Defeat me first. Then we'll see what kind of trainer you are. |
 | NEWS | I heard something you might find interesting. |
-| ASK | I need a favor. Don't make me wait. |
+| ASK | Ahem. A word. |
 | YES | Good. I like decisive trainers. |
 | NO | Fine. Your choice. I respect that. |
 | NOT_READY | Not yet. Come back when you've really grown. |
@@ -715,7 +721,7 @@ Buddy: slot 1, Probopass (NOSEPASS early). Anime and RSE Nosepass.
 | MEET | I'm ROXANNE. I study POKéMON battles, and I love to teach! |
 | NOT_YET | Please take on my GYM first. Study hard, then battle me! |
 | NEWS | Class, attention please! ...Oh, sorry. Habit. Listen... |
-| ASK | May I ask for your help? Think of it as homework! |
+| ASK | Um... excuse me? Sorry! |
 | YES | Excellent! Full marks for you! |
 | NO | I see. We'll revisit it later. |
 | NOT_READY | Not quite. You still need to study a little more. |
@@ -741,7 +747,7 @@ Buddy: slot 1, Hariyama (MAKUHITA early). Anime and RSE Makuhita.
 | MEET | I'm BRAWLY! Fighting and surfing, that's my whole deal! |
 | NOT_YET | Beat me at my GYM first! Show me what you're made of! |
 | NEWS | Dude, you gotta hear this! |
-| ASK | Can you help me out? I'll owe you big. |
+| ASK | Hey! Quick question! |
 | YES | Awesome! Let's ride this one out! |
 | NO | No big deal! There's always another wave. |
 | NOT_READY | Not yet, dude. Keep paddling! |
@@ -766,7 +772,7 @@ Buddy: slot 1, Manectric (ELECTRIKE early). His RSE ace.
 | MEET | Wahahahah! I'm WATTSON! Old, but still full of sparks! |
 | NOT_YET | Wahahahah! Beat me at my GYM first! |
 | NEWS | Wahahahah! Here's a shocking bit of news! |
-| ASK | I've got a job for you, youngster! Will you do it? |
+| ASK | Hey, hey, listen up! |
 | YES | Wahahahah! Electrifying! |
 | NO | Wahahahah! Fine, fine! Maybe next time! |
 | NOT_READY | Not yet! You need a bit more charge in your battery! |
@@ -790,7 +796,7 @@ Buddy: slot 1, Torkoal. Anime and RSE Torkoal.
 | MEET | I'm FLANNERY! My grandfather taught me all about fire! |
 | NOT_YET | Beat me at my GYM first! I'll show you my hottest moves! |
 | NEWS | Ooh, hot news! Listen! |
-| ASK | Can I ask a favor? Is a GYM LEADER even allowed to? |
+| ASK | Oh, um... can I say something? |
 | YES | Yes! That's the fiery spirit I like! |
 | NO | Oh... Right. No, I'm fine! Totally fine! |
 | NOT_READY | Not yet! Come back with more fire in your heart! |
@@ -816,7 +822,7 @@ Buddy: slot 1, Slaking (SLAKOTH, then VIGOROTH). Anime and RSE Slaking.
 | MEET | I'm NORMAN. A GYM LEADER, but a father first. |
 | NOT_YET | Earn the right at my GYM first. I don't hold back. |
 | NEWS | I heard something. You should know about it. |
-| ASK | I'd like to ask a favor. Will you help me? |
+| ASK | Ahem. Might I have a word? |
 | YES | Thank you. I knew you had it in you. |
 | NO | I understand. Every trainer makes their own choices. |
 | NOT_READY | Not yet. Strength comes from steady effort. |
@@ -842,7 +848,7 @@ Buddy: slot 1, Altaria (SWABLU early). Anime and RSE Altaria.
 | MEET | I am WINONA. I have become one with bird POKéMON. |
 | NOT_YET | Please face me at my GYM first. Our grace awaits you. |
 | NEWS | A little bird told me something. Listen. |
-| ASK | Might I ask your help? I'd be most grateful. |
+| ASK | Hmm. Listen carefully. |
 | YES | Thank you. That was graceful of you. |
 | NO | I see. Perhaps another time, then. |
 | NOT_READY | Not yet. Even the strongest wings must grow first. |
@@ -867,7 +873,7 @@ Buddy: slot 1, Solrock. Tate's half of the anime pair; the duo has one buddy.
 | MEET | TATE: I'm TATE! LIZA: And I'm LIZA! We're twins! |
 | NOT_YET | TATE: Beat us at our GYM... LIZA: ...first, okay? |
 | NEWS | TATE: Guess what? LIZA: We heard something! |
-| ASK | TATE: Can you help us? LIZA: Pretty please? |
+| ASK | TATE: Hey, listen! LIZA: Ooh, wait! |
 | YES | TATE: Yay! LIZA: We knew you would! |
 | NO | TATE: Aww... LIZA: ...no fair! |
 | NOT_READY | TATE: Not yet! LIZA: You're not strong enough! |
@@ -893,7 +899,7 @@ Buddy: slot 1, Kingdra (HORSEA, then SEADRA). His Emerald ace.
 | MEET | I am JUAN. It was I who taught WALLACE all he knows. |
 | NOT_YET | Show me your artistry at my GYM first. Then we'll speak. |
 | NEWS | Allow me to share a little something. |
-| ASK | Might I trouble you for a favor? It would be... exquisite. |
+| ASK | Ahem. May I have your attention? |
 | YES | Magnificent! Such grace in your answer. |
 | NO | Ah, how unfortunate. No matter. |
 | NOT_READY | Not yet. True artistry requires more polish. |
@@ -918,7 +924,7 @@ Buddy: slot 1, Absol. His RSE ace.
 | MEET | I'm SIDNEY of the ELITE FOUR. Let's enjoy ourselves, huh? |
 | NOT_YET | Beat me in a real battle first. Then we'll talk big. |
 | NEWS | Heh. Got something you'll wanna hear. |
-| ASK | Hey, I got a favor to ask. You in? |
+| ASK | Hey, hey, ooh, listen! |
 | YES | That's good! Looking real good! |
 | NO | Heh, fine by me. No hard feelings. |
 | NOT_READY | Nah, not yet. Come back with more guts. |
@@ -945,7 +951,7 @@ Buddy: slot 1, Dusknoir (DUSKULL, then DUSCLOPS). Anime and RSE Dusclops.
 | MEET | Ahahaha! I'm PHOEBE! I can commune with Ghost POKéMON! |
 | NOT_YET | Beat me in battle first! My ghosts are dying to meet you! |
 | NEWS | Ooh, {BUDDY} whispered this to me! |
-| ASK | Hey, could you help me with something? Pleeease? |
+| ASK | Ooh, wait, wait! Listen! |
 | YES | Ahahaha! Yay! Thank you! |
 | NO | Aww, you're no fun! Oh well! |
 | NOT_READY | Not yet! Come back when you're a bit stronger! |
@@ -971,7 +977,7 @@ Buddy: slot 1, Walrein (SPHEAL, then SEALEO). Her RSE ace.
 | MEET | I am GLACIA. I traveled from afar to hone my icy skills. |
 | NOT_YET | Defeat me in battle first. So far, I've met only weaklings. |
 | NEWS | I heard something. Perhaps it will interest you. |
-| ASK | I have a request. Do try not to disappoint me. |
+| ASK | Mmm. Pay attention. |
 | YES | Good. Don't make me regret it. |
 | NO | As expected. How disappointing. |
 | NOT_READY | No. I've no time for trainers who aren't ready. |
@@ -996,7 +1002,7 @@ Buddy: slot 1, Salamence (BAGON, then SHELGON). His RSE ace.
 | MEET | I am DRAKE. I raise dragons. Do you know what that takes? |
 | NOT_YET | Defeat me in battle first. Then we'll talk as equals. |
 | NEWS | Listen well. I'll not repeat myself. |
-| ASK | I need a steady hand for this. Will you help? |
+| ASK | Hmph. Listen. |
 | YES | Good. That took virtue. |
 | NO | Hmph. Knowing your limits is its own kind of wisdom. |
 | NOT_READY | Not yet. Raising dragons takes virtue. So does this. |
@@ -1022,7 +1028,7 @@ Buddy: slot 1, Milotic (FEEBAS early). Anime and RSE Milotic.
 | MEET | Allow me to present myself. I am WALLACE. Elegance is my art. |
 | NOT_YET | Battle me first, with all the grace you can muster. |
 | NEWS | A little something I heard. Listen closely. |
-| ASK | Might I ask a favor? Do say yes, with elegance. |
+| ASK | Ah, a moment, if you please. |
 | YES | Splendid! Your answer shines brilliantly. |
 | NO | A pity. But I won't insist. |
 | NOT_READY | Not yet. Polish your style a little more. |
@@ -1048,7 +1054,7 @@ partner.
 | MEET | I'm STEVEN. I'm crazy about rare stones. Nice to meet you. |
 | NOT_YET | Defeat me in battle first. I'll be waiting. |
 | NEWS | I heard something interesting. Want to hear it? |
-| ASK | Could you help me with something? I'd appreciate it. |
+| ASK | Oh, pardon me. Something just occurred to me. |
 | YES | Thanks. I knew I could count on you. |
 | NO | That's fine. I'll manage. |
 | NOT_READY | Not yet. Give it more time, then come find me. |

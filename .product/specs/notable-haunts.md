@@ -253,7 +253,8 @@ table is a hard qualifier for placement:
 | Quiz | ✅ | ✅ | ✅ | lesson |
 | One on one | ✅ | ✅ | ✅ | lesson |
 
-Every quest runs `ASK`, then the haunt's own quest line, then a yes or no:
+Every quest runs `ASK` (an attention-getter), then the haunt's own quest
+line (the proposal), then a yes or no:
 `YES` starts it, `NO` ends the talk. A requirement the player doesn't meet,
 or a failed attempt, uses `NOT_READY`. Completing it runs `PRAISE`, then the
 [reward](#rewards-and-claims).
@@ -356,11 +357,14 @@ A haunt's dialogue is assembled from two sources:
 - **Haunt lines**, authored per haunt: its quest line and, for a walk, its
   done line. They describe only the place and the activity, never a
   trainer's personality, manner, or history, so they read true for every
-  candidate. A quest line is an instruction that follows `ASK` ("Walk the
-  tunnel with me, out to the VERMILION side."), so the same line works
-  after a warm plea, a proud dare, or a cold order.
+  candidate. A quest line is the proposal that follows `ASK` ("Walk it with
+  me, out to the VERMILION side?"), so the same line works after a warm,
+  proud, or cold attention-getter.
+  **Writing rule:** haunt lines carry the content of the proposal, including
+  whether it is a favour or an invitation; voice bits carry only
+  personality.
 - **Voice bits**, twelve per trainer: `HELLO`, `MEET`, `NOT_YET`, `NEWS`,
-  `ASK`, `YES`, `NO`, `NOT_READY`, `PRAISE`, `GIFT`, `BYE`, and `QUIRK`
+  `ASK` (an attention-getter only, never a request), `YES`, `NO`, `NOT_READY`, `PRAISE`, `GIFT`, `BYE`, and `QUIRK`
   ([voice bits](../research/notable-trainer-voices.md)). They carry the
   personality and never mention a place.
 
@@ -425,9 +429,8 @@ progress 40 both are placed before the cave's turn, and Will takes it.
 BROCK: Hey, {PLAYER}! Good to see you. Eating well, I hope?   HELLO
 BROCK: Word travels fast between breeders. Listen to this...  NEWS
 BROCK: I hear MISTY hangs around PALLET TOWN.                 gossip
-BROCK: Could you lend a hand? A good breeder never turns      ASK
-       down help.
-BROCK: Walk the tunnel with me, out to the VERMILION side.    quest line
+BROCK: Hey, I've got an idea.                                 ASK
+BROCK: Walk it with me, out to the VERMILION side?            quest line
 > Yes
 BROCK: Great! I'll have a hot meal ready when you're done.    YES
   (wild DIGLETT pairs are tag battles beside BROCK)
@@ -459,9 +462,8 @@ GIOVANNI: Go. We will meet again.                             BYE
 GIOVANNI: So. {PLAYER}. You keep turning up.                  HELLO
 GIOVANNI: TEAM ROCKET hears everything. Listen well.          NEWS
 GIOVANNI: I hear BLUE hangs around ROUTE 1.                   gossip
-GIOVANNI: I have a task for you. Consider it... an            ASK
-          opportunity.
-GIOVANNI: Walk the tunnel with me, out to the VERMILION side. quest line
+GIOVANNI: I have a proposition.                               ASK
+GIOVANNI: Walk it with me, out to the VERMILION side?         quest line
 > Yes
 GIOVANNI: A wise decision.                                    YES
 GIOVANNI: That's the VERMILION side. We made it through.      done line
