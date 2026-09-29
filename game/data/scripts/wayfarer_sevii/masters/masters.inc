@@ -62,7 +62,12 @@ WayfarerSevii_Masters_Box::
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
 	specialvar VAR_RESULT, LeagueCircuit_IsEligible
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Masters_BoxClosed
+#if WAYFARER_LEAGUE_EVENTS
+	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
+	call LeagueEvent_EventScript_HallBoard
+#else
 	msgbox WayfarerSevii_Masters_Text_BoxOpen, MSGBOX_SIGN
+#endif
 	end
 
 WayfarerSevii_Masters_BoxClosed::

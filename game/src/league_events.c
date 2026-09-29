@@ -26,7 +26,7 @@
 // Increment the relevant entry whenever accepted-lineup meaning changes.
 static const u32 sLeagueContentVersions[LEAGUE_EVENT_CONTENT_VERSION_COUNT] =
 {
-    1, // league registry
+    2, // league registry and hall conditions
     1, // trainer rosters
     1, // world progress and trainer scalers
     1, // growth archetypes

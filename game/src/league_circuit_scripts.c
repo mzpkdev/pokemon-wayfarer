@@ -8,6 +8,7 @@
 #if WAYFARER_LEAGUE_EVENTS
 #include "data.h"
 #include "league_events.h"
+#include "league_halls.h"
 #include "constants/characters.h"
 #include "constants/event_objects.h"
 #include "constants/vars.h"
@@ -30,6 +31,7 @@ extern const u8 LeagueCircuit_Text_NoAcceptedEvent[];
 #if WAYFARER_LEAGUE_EVENTS
 static const u8 sLeagueEventUnknownTrainer[] = _("TRAINER");
 static const u8 sLeagueEventLineupLabel[] = _("Your opponents:");
+static const u8 sLeagueEventChampionRoom[] = _("Champion's Room");
 
 static const struct LeagueSavedTeam *GetCurrentLeagueRoomTeam(void)
 {
@@ -105,6 +107,30 @@ u16 LeagueEvent_BufferLineup(void)
         }
         ptr = StringCopy(ptr, GetLeagueEventMemberName(team));
         if (match == 1 || match == 3)
+            *ptr++ = CHAR_PROMPT_CLEAR;
+    }
+    *ptr = EOS;
+    return TRUE;
+}
+
+u16 LeagueEvent_BufferHallBoard(void)
+{
+    const struct LeagueHall *hall;
+    u8 *ptr = gStringVar4;
+    u8 match;
+
+    for (match = 0; match < LEAGUE_LINEUP_SIZE; match++)
+    {
+        hall = GetLeagueHall((enum LeagueId)gSpecialVar_0x8004, match);
+        if (hall == NULL || hall->conditionName == NULL)
+        {
+            gStringVar4[0] = EOS;
+            return FALSE;
+        }
+        ptr = StringCopy(ptr, hall->name != NULL ? hall->name : sLeagueEventChampionRoom);
+        *ptr++ = CHAR_NEWLINE;
+        ptr = StringCopy(ptr, hall->conditionName);
+        if (match < LEAGUE_LINEUP_SIZE - 1)
             *ptr++ = CHAR_PROMPT_CLEAR;
     }
     *ptr = EOS;

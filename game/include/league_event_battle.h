@@ -4,8 +4,11 @@
 #include "global.h"
 #include "league_event_types.h"
 
+struct StartingStatuses;
+
 bool32 IsLeagueEventBattleInProgress(void);
 bool32 GetPreparedLeagueEventBattle(u16 trainerId, const struct LeagueSavedTeam **team, u8 *acceptanceOptions);
+bool32 GetPreparedLeagueHallStartingStatuses(struct StartingStatuses *out);
 bool32 GetLeagueEventFrozenAbilityForMon(const struct Pokemon *mon, u16 *ability);
 bool32 GetLeagueEventFrozenAbilityForPartyIndex(u8 index, u16 *ability);
 bool32 GetLeagueEventFrozenTypesForMon(const struct Pokemon *mon, u8 types[2]);

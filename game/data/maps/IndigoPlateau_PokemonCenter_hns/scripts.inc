@@ -34,6 +34,13 @@ IndigoPlateau_EventScript_LeagueEventEntrance::
 #endif
 #endif
 
+#if IS_WAYFARER && WAYFARER_LEAGUE_EVENTS
+IndigoPlateau_EventScript_HallBoard::
+	setvar VAR_0x8004, CIRCUIT_STAGE_INDIGO
+	call LeagueEvent_EventScript_HallBoard
+	end
+#endif
+
 
 IndigoPlateau_EventScript_Cooltrainer::
 	msgbox IndigoPlateau_Text_CooltrainerM, MSGBOX_NPC

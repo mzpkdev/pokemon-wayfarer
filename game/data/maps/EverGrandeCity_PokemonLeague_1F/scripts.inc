@@ -97,6 +97,10 @@ EverGrandeCity_PokemonLeague_1F_EventScript_DoorGuard::
 	waitmessage
 	waitfanfare
 	closemessage
+#if IS_WAYFARER && WAYFARER_LEAGUE_EVENTS
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
+	call LeagueEvent_EventScript_OfferHallBoard
+#endif
 	copyobjectxytoperm LOCALID_LEAGUE_GUARD_1
 	copyobjectxytoperm LOCALID_LEAGUE_GUARD_2
 	setflag FLAG_ENTERED_ELITE_FOUR
@@ -124,6 +128,10 @@ EverGrandeCity_PokemonLeague_1F_EventScript_GoForth::
 	waitmovement 0
 	msgbox EverGrandeCity_PokemonLeague_1F_Text_GoForth, MSGBOX_DEFAULT
 	closemessage
+#if IS_WAYFARER && WAYFARER_LEAGUE_EVENTS
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
+	call LeagueEvent_EventScript_OfferHallBoard
+#endif
 	applymovement VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
 	releaseall

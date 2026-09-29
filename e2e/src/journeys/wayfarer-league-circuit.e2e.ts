@@ -196,6 +196,104 @@ const rooms = {
   masters: ["league-will", "league-koga", "league-bruno", "league-karen", "league-lance"],
   hoenn: ["league-sidney", "league-phoebe", "league-glacia", "league-drake", "league-wallace"],
 } as const
+
+const hallFieldMask = (1 << 0) | (1 << 1) | (1 << 2) | (1 << 6) | (1 << 7) | (1 << 9)
+const hallSideMask = (1 << 4) | (1 << 9)
+const hallWeatherMask = (1 << 5) | (1 << 7)
+
+const hallConditions = {
+  indigo: [{ weather: 1 << 7 }, { weather: 1 << 5 }, { field: 1 << 1 }, { side: 1 << 4 }, {}],
+  hoenn: [{ field: 1 << 0 }, { hazard: 1 }, { field: 1 << 7 }, { side: 1 << 9 }, {}],
+  masters: [{ field: 1 << 9 }, { field: 1 << 6 }, { hazard: 2 }, { field: 1 << 2 }, {}],
+} as const
+
+const expectHallCondition = async (
+  game: GameSession,
+  stage: keyof typeof hallConditions,
+  match: number,
+): Promise<void> => {
+  const battle = (await game.state.read()).battle
+  const expected = hallConditions[stage][match]!
+  const field = "field" in expected ? expected.field : 0
+  const side = "side" in expected ? expected.side : 0
+  const hazard = "hazard" in expected ? expected.hazard : 0
+  expect(battle.active).toBe(true)
+  expect(battle.fieldStatuses & hallFieldMask).toBe(field)
+  expect(battle.sideStatuses.map((status) => status & hallSideMask)).toEqual([side, side])
+  expect(battle.hazardMasks).toEqual([hazard, hazard])
+  if ("weather" in expected) expect(battle.weather & hallWeatherMask).toBe(expected.weather)
+}
+
+const hallBoards = {
+  indigo: [
+    "Lorelei",
+    "Snow",
+    "Bruno",
+    "Sandstorm",
+    "Agatha",
+    "Trick Room",
+    "Lance",
+    "Tailwind",
+    "Champion",
+    "Neutral",
+  ],
+  hoenn: [
+    "Sidney",
+    "Magic Room",
+    "Phoebe",
+    "Sticky Web",
+    "Glacia",
+    "Misty Terrain",
+    "Drake",
+    "Sea of Fire",
+    "Champion",
+    "Neutral",
+  ],
+  masters: [
+    "Will",
+    "Psychic Terrain",
+    "Koga",
+    "Grassy Terrain",
+    "Bruno",
+    "Stealth Rock",
+    "Karen",
+    "Wonder Room",
+    "Champion",
+    "Neutral",
+  ],
+} as const
+
+const captureHall = async (game: GameSession, filename: string): Promise<void> => {
+  if (!process.env.SKYEMU_CAPTURE_DIR) return
+  await fs.promises.mkdir(process.env.SKYEMU_CAPTURE_DIR, { recursive: true })
+  await fs.promises.writeFile(
+    path.join(process.env.SKYEMU_CAPTURE_DIR, `${filename}.png`),
+    await game.screenshot(),
+  )
+}
+
+const readHallBoard = async (game: GameSession, stage: keyof typeof hallBoards): Promise<void> => {
+  for (let attempt = 0; attempt < 240; attempt++) {
+    const state = await game.state.read()
+    if (state.dialogue.fullText.includes(hallBoards[stage][0]!)) {
+      const text = state.dialogue.fullText
+      let previous = -1
+      for (const label of hallBoards[stage]) {
+        const at = text.indexOf(label, previous + 1)
+        expect(at, `${stage} board omitted ${label}: ${text}`).toBeGreaterThan(previous)
+        previous = at
+      }
+      await game.wait.until((visible) => visible.dialogueOpen, `${stage} hall board visible`)
+      await game.wait.frames(4)
+      await captureHall(game, `${stage}-hall-board`)
+      return
+    }
+    if (state.dialogueOpen || state.scriptActive || state.controlsLocked)
+      await game.controls.press("a")
+    else await game.wait.frames(10)
+  }
+  throw new Error(`${stage} hall board did not open: ${JSON.stringify(await game.state.read())}`)
+}
 const admitIndigo = async (game: GameSession, replay = false): Promise<number> => {
   const start = await game.state.read()
   if (start.map.name === "indigo-league-lobby" && (start.player.x !== 32 || start.player.y !== 4)) {
@@ -267,6 +365,12 @@ const finishRoomChain = async (
     await expect(game.state.read()).resolves.toMatchObject({
       circuit: { event: { id: accepted.id, worldProgress: rating, lineup: accepted.lineup } },
     })
+    if (stage === "indigo")
+      expect((await game.state.read()).map.weather).toBe(index === 0 ? 4 : index === 1 ? 8 : 0)
+    if (stage === "indigo" && index < 2 && !replay && process.env.SKYEMU_CAPTURE_DIR) {
+      await game.wait.frames(45)
+      await captureHall(game, index === 0 ? "lorelei-hall-snow" : "bruno-hall-sandstorm")
+    }
     const automaticBattle = (await game.state.read()).battle.active
     if (!automaticBattle) {
       await walkTo(
@@ -285,6 +389,7 @@ const finishRoomChain = async (
       },
       circuit: { run: { active: true, stage, replay, ratingAtEntry: rating } },
     })
+    await expectHallCondition(game, stage, index)
     // Starting the Champion battle is not a committed Indigo victory.
     if (stage === "indigo" && index === 4 && !replay)
       await expect(game.story.flag("hideDojoBlue")).resolves.toBe(true)
@@ -303,14 +408,26 @@ const finishRoomChain = async (
     await game.battle.win()
     if (index === 4) break
     await finishVictoryScript(game, `${stage} ${map} victory`)
+    if (stage === "indigo")
+      expect((await game.state.read()).map.weather).toBe(index === 0 ? 4 : index === 1 ? 8 : 0)
+    if (stage === "indigo" && index < 2 && !replay && process.env.SKYEMU_CAPTURE_DIR) {
+      await game.wait.frames(45)
+      await captureHall(game, index === 0 ? "lorelei-snow-return" : "bruno-sandstorm-return")
+    }
     const expectedLeagueState = index + (stage === "indigo" ? 1 : 2)
     await expect(game.story.var("leagueState")).resolves.toBe(expectedLeagueState)
-    if (index === 0 || index === 2) {
+    if (index === 0 || index === 2 || (stage === "indigo" && index === 1)) {
       await game.saveAndReload()
       await expect(game.story.var("leagueState")).resolves.toBe(expectedLeagueState)
       await expect(game.state.read()).resolves.toMatchObject({
         circuit: { run: { active: true, stage, replay, ratingAtEntry: rating } },
       })
+      if (stage === "indigo")
+        expect((await game.state.read()).map.weather).toBe(index === 0 ? 4 : index === 1 ? 8 : 0)
+      if (stage === "indigo" && index < 2 && !replay && process.env.SKYEMU_CAPTURE_DIR) {
+        await game.wait.frames(45)
+        await captureHall(game, index === 0 ? "lorelei-snow-reload" : "bruno-sandstorm-reload")
+      }
     }
     if (stage === "indigo") {
       await walkTo(game, 5, index === 3 ? 9 : 6)
@@ -353,6 +470,56 @@ describe.sequential("Wayfarer League Circuit", () => {
 
   afterEach(async () => {
     await game.close()
+  })
+
+  it("explains all five Indigo hall conditions on the optional lobby sign", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { position: { map: "indigo-league-lobby", x: 30, y: 7 }, facing: "up" },
+    })
+    await game.player.interact()
+    await readHallBoard(game, "indigo")
+    await finishFieldScript(game, "Indigo hall board")
+  })
+
+  it("explains Hoenn halls when asked at the lobby guard", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { position: { map: "hoenn-league-lobby", x: 9, y: 3 }, facing: "up" },
+      circuit: { badges: { hoenn: 8 } },
+    })
+    await game.player.interact()
+    await readHallBoard(game, "hoenn")
+    await finishFieldScript(game, "Hoenn hall explanation")
+  })
+
+  it("explains Masters halls at the caretaker's box before entering", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { position: { map: "sevii-seven-island-house-room1", x: 4, y: 2 }, facing: "up" },
+      circuit: {
+        badges: { kanto: 8, johto: 8, hoenn: 8 },
+        clears: { indigo: true, hoenn: true },
+      },
+    })
+    await game.player.interact()
+    await readHallBoard(game, "masters")
+    await finishFieldScript(game, "Masters hall board")
+  })
+
+  it("does not carry hall conditions into a debug wild battle", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      party: [{ species: "lapras", level: 100 }],
+    })
+    expect((await game.state.read()).map.weather).toBe(0)
+    await game.battle.startWild({ species: "rattata", level: 5, moves: ["tackle"] })
+    await startTrainerBattle(game, "neutral debug battle", false)
+    const { battle } = await game.state.read()
+    expect(battle.weather & hallWeatherMask).toBe(0)
+    expect(battle.fieldStatuses & hallFieldMask).toBe(0)
+    expect(battle.sideStatuses.map((status) => status & hallSideMask)).toEqual([0, 0])
+    expect(battle.hazardMasks).toEqual([0, 0])
   })
 
   it("keeps Dojo Blue hidden until the committed Indigo clear", async () => {
@@ -555,6 +722,10 @@ describe.sequential("Wayfarer League Circuit", () => {
       },
     })
     await startTrainerBattle(game, "Red after circuit completion")
+    const redBattle = (await game.state.read()).battle
+    expect(redBattle.fieldStatuses & hallFieldMask).toBe(0)
+    expect(redBattle.sideStatuses.map((status) => status & hallSideMask)).toEqual([0, 0])
+    expect(redBattle.hazardMasks).toEqual([0, 0])
     await game.battle.win()
     for (let attempt = 0; attempt < 600; attempt++) {
       const state = await game.state.read()
@@ -852,6 +1023,7 @@ describe.sequential("Wayfarer League Circuit", () => {
           run: { active: true, stage: "hoenn", replay: false, ratingAtEntry: rating },
         },
       })
+      await expectHallCondition(game, "hoenn", index)
       await game.battle.win()
       if (index === 4) break
       await finishVictoryScript(game, `${room} victory`)

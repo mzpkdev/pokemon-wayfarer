@@ -469,6 +469,12 @@ struct E2ETestState
     u16 leagueEventLeadSpecies[E2E_TEST_LEAGUE_LINEUP_SIZE];
     u8 leagueEventTeamSizes[E2E_TEST_LEAGUE_LINEUP_SIZE];
     u8 leagueEventLeadLevels[E2E_TEST_LEAGUE_LINEUP_SIZE];
+    u32 battleFieldStatuses;
+    u32 battleSideStatuses[2];
+    u16 battleWeather;
+    u8 overworldWeather;
+    u8 battleHazardMasks[2]; // Bit 0 Sticky Web, bit 1 Stealth Rock.
+    u8 reservedHallDiagnostics[3];
 };
 
 struct E2ETestAbi

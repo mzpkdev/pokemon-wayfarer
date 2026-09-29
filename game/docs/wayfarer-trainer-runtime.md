@@ -26,6 +26,7 @@ content must preserve the existing regional HM acquisition requirements.
 | `notable_moves.c` | Shared evolution step-down and per-trainer move pools, using game learnsets. |
 | `notable_ai.c` | Play styles, skill tiers, ace protection, and boss flags. |
 | `league_selection.c` | League registry, willingness, fatigue, aloof eligibility, Masters seats, and deterministic lineup order. |
+| `league_halls.c` | Ordered hall locations, names, conditions, and their battle starting statuses. |
 | `league_events.c` | Accepted events, saved teams, content validation, reigning champions, reign records, and Gallery counts. |
 | `league_circuit.c` | Room admission, battle progress, event resolution, recovery, and first-win integration. |
 | `battle_main.c` | Eligible opponent preparation, battle snapshot lifetime, and construction through the existing Pokémon constructor. |
@@ -91,3 +92,19 @@ The future clock integration must initialize countdown timestamps from its own
 in-game day count; this slice does not read RTC days or schedule calls. The
 Masters Gallery counts are persisted; the full Gallery presentation and phone
 results remain separate work.
+
+## League halls
+
+Each league's five matches use fixed halls. Their conditions belong to the
+location, independent of the selected trainer and saved team. A prepared league
+battle replaces trainer-authored starting statuses with its hall's statuses;
+the three neutral Champion's Rooms clear those statuses. Other battle contexts
+keep the engine's normal starting-status sources.
+
+The engine applies temporary rooms and terrains for five turns, Tailwind and
+Sea of Fire to both sides for four turns, and Sticky Web or Stealth Rock to
+both sides until cleared. Starting hazards affect the opening Pokémon too.
+Lorelei's and Indigo Bruno's maps carry snow and sandstorm respectively, using
+normal overworld weather and battle-weather handling. Those shared maps also
+have weather in standalone FRLG. Optional lobby boards describe the halls and
+their conditions before entry.

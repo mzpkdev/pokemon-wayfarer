@@ -1,7 +1,10 @@
 # Leagues
 
 PRD: [Leagues](../prds/leagues.md)
-Implemented: No
+Implemented: Partial. The [runtime slice](../../game/docs/wayfarer-trainer-runtime.md)
+provides lobby acceptance, selected and saved teams, event resolution, and hall
+conditions. Clock-driven invitations, call rotation, decline resolution, phone
+presentation, reigning-champion lobby text, and the Gallery wall remain deferred.
 Design status: v0 approved: leagues as locations whose **league events**
 reach the player as **invitations** by phone. From player TR 80 a league
 calls every 7 in-game days (restarted when each invitation resolves, stopped

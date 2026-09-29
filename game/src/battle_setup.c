@@ -5,6 +5,7 @@
 #include "load_save.h"
 #include "battle_setup.h"
 #include "league_event_battle.h"
+#include "league_halls.h"
 #include "league_events.h"
 #include "league_circuit.h"
 #include "trainer_party_scaling.h"
@@ -124,6 +125,7 @@ static EWRAM_DATA struct
 {
     u32 eventId;
     u16 sourceTrainerId;
+    const struct LeagueHall *hall;
     s8 match;
     bool8 active;
 } sLeagueEventBattle;
@@ -1458,6 +1460,7 @@ void InitTrainerBattleParameter(void)
     sTrainerBattleEndScript = NULL;
 #if WAYFARER_LEAGUE_EVENTS
     sLeagueEventBattle.active = FALSE;
+    sLeagueEventBattle.hall = NULL;
     sLeagueEventVictoryProof.valid = FALSE;
     ResetLeagueEventMonOverrides();
 #endif
@@ -1468,6 +1471,7 @@ void ResetLeagueEventBattleProof(void)
 #if WAYFARER_LEAGUE_EVENTS
     sLeagueEventVictoryProof.valid = FALSE;
     sLeagueEventBattle.active = FALSE;
+    sLeagueEventBattle.hall = NULL;
     ResetLeagueEventMonOverrides();
 #endif
 }
@@ -1498,6 +1502,16 @@ bool32 GetPreparedLeagueEventBattle(u16 trainerId, const struct LeagueSavedTeam 
 #else
     return FALSE;
 #endif
+}
+
+bool32 GetPreparedLeagueHallStartingStatuses(struct StartingStatuses *out)
+{
+#if WAYFARER_LEAGUE_EVENTS
+    if (out != NULL && sLeagueEventBattle.active && sLeagueEventBattle.hall != NULL
+     && GetAcceptedLeagueEventId() == sLeagueEventBattle.eventId)
+        return BuildLeagueHallStartingStatuses(sLeagueEventBattle.hall, out);
+#endif
+    return FALSE;
 }
 
 bool32 ConsumeLeagueEventBattleVictory(u32 eventId, u8 match)
@@ -1531,10 +1545,12 @@ static bool32 TryPrepareLeagueEventBattle(void)
 {
     const struct LeagueScalingRoster *carrier;
     const struct LeagueSavedTeam *team;
+    const struct LeagueHall *hall;
     enum CircuitStage stage;
     s8 match;
 
     sLeagueEventBattle.active = FALSE;
+    sLeagueEventBattle.hall = NULL;
     if (gIsDebugBattle)
         return TRUE;
     stage = GetActiveLeagueRunStage();
@@ -1555,10 +1571,15 @@ static bool32 TryPrepareLeagueEventBattle(void)
      || !GetAcceptedLeagueEventMember(match, &team)
      || team->sourceTrainerId >= TRAINERS_COUNT || team->teamSize == 0)
         return FALSE;
+    hall = GetLeagueHall(GetAcceptedLeagueEventLeagueId(), match);
+    if (!ValidateLeagueHallRegistry() || hall == NULL
+     || hall->room != GetCircuitStageRoom(stage, match))
+        return FALSE;
 
     sLeagueEventBattle.eventId = GetAcceptedLeagueEventId();
     sLeagueEventBattle.match = match;
     sLeagueEventBattle.sourceTrainerId = team->sourceTrainerId;
+    sLeagueEventBattle.hall = hall;
     sLeagueEventBattle.active = TRUE;
     TRAINER_BATTLE_PARAM.opponentA = team->sourceTrainerId;
     return TRUE;

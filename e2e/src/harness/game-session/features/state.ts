@@ -61,6 +61,7 @@ export type GameState = {
     name: GameMap | "unknown"
     mapGroup: number
     mapNum: number
+    weather: number
   }
   player: {
     x: number
@@ -182,6 +183,10 @@ export type GameState = {
   battle: {
     trainerOnly: TrainerOnlySnapshot
     active: boolean
+    weather: number
+    fieldStatuses: number
+    sideStatuses: number[]
+    hazardMasks: number[]
     dialogue: { sequence: number; text: string; rawText: number[] }
     ui: (typeof battleUiStates)[number]
     cursor: number | null
@@ -433,6 +438,7 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
         name: mapName(snapshot.mapGroup, snapshot.mapNum),
         mapGroup: snapshot.mapGroup,
         mapNum: snapshot.mapNum,
+        weather: snapshot.overworldWeather,
       },
       player: {
         x: snapshot.x,
@@ -565,6 +571,10 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
       battle: {
         trainerOnly: snapshot.trainerOnly,
         active: snapshot.battleActive,
+        weather: snapshot.battleWeather,
+        fieldStatuses: snapshot.battleFieldStatuses,
+        sideStatuses: snapshot.battleSideStatuses,
+        hazardMasks: snapshot.battleHazardMasks,
         dialogue: {
           sequence: snapshot.battleDialogueSequence,
           text: decodeFieldMessageText(snapshot.battleDialogueText),

@@ -4,6 +4,7 @@
 #include "battle.h"
 #include "battle_main.h"
 #include "battle_setup.h"
+#include "battle_util.h"
 #include "e2e_test.h"
 #include "challenge_menu.h"
 #include "event_data.h"
@@ -13,6 +14,7 @@
 #include "fieldmap.h"
 #include "field_player_avatar.h"
 #include "field_screen_effect.h"
+#include "field_weather.h"
 #include "item.h"
 #include "league_circuit.h"
 #include "config/league_circuit.h"
@@ -57,7 +59,7 @@ EWRAM_DATA volatile struct E2ETestState gE2ETestState;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
-    .version = 25,
+    .version = 26,
     .requestSize = sizeof(struct E2ETestRequest),
     .resultSize = sizeof(struct E2ETestResult),
     .stateSize = sizeof(struct E2ETestState),
@@ -75,7 +77,7 @@ STATIC_ASSERT(offsetof(struct E2ETestRequest, status) == 87, E2ETestRequestStatu
 STATIC_ASSERT(sizeof(struct E2ETestResult) == 16, E2ETestResultSize);
 STATIC_ASSERT(offsetof(struct E2ETestResult, status) == 14, E2ETestResultStatusOffset);
 STATIC_ASSERT(sizeof(struct E2ETestObservedObjectEvent) == 12, E2ETestObservedObjectEventSize);
-STATIC_ASSERT(sizeof(struct E2ETestState) == 1732, E2ETestStateSize);
+STATIC_ASSERT(sizeof(struct E2ETestState) == 1752, E2ETestStateSize);
 STATIC_ASSERT(offsetof(struct E2ETestState, trainerRating) == 1684, E2ETestStateTrainerRatingOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, leagueRunRating) == 1688, E2ETestStateLeagueRunRatingOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, leagueEventId) == 1692, E2ETestLeagueEventIdOffset);
@@ -95,6 +97,10 @@ STATIC_ASSERT(offsetof(struct E2ETestState, objectEvents) == 972, E2ETestObjectE
 STATIC_ASSERT(offsetof(struct E2ETestState, battleDialogueSequence) == 1164, E2ETestBattleDialogueSequenceOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, battleDialogueText) == 1168, E2ETestBattleDialogueTextOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, awaitingButton) == 1680, E2ETestAwaitingButtonOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, battleFieldStatuses) == 1732, E2ETestBattleFieldStatusesOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, battleWeather) == 1744, E2ETestBattleWeatherOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, overworldWeather) == 1746, E2ETestOverworldWeatherOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, battleHazardMasks) == 1747, E2ETestBattleHazardMasksOffset);
 STATIC_ASSERT(sizeof(struct E2ETestAbi) == 16, E2ETestAbiSize);
 
 enum E2ETestInternalStage
@@ -1468,6 +1474,25 @@ static void UpdateState(void)
     gE2ETestState.lastUsedItem = gLastUsedItem;
     gE2ETestState.battleEnemyLevel = 0;
     gE2ETestState.battleActive = gMain.inBattle;
+    gE2ETestState.battleFieldStatuses = gMain.inBattle ? gFieldStatuses : 0;
+    gE2ETestState.battleSideStatuses[0] = gMain.inBattle ? gSideStatuses[B_SIDE_PLAYER] : 0;
+    gE2ETestState.battleSideStatuses[1] = gMain.inBattle ? gSideStatuses[B_SIDE_OPPONENT] : 0;
+    gE2ETestState.battleWeather = gMain.inBattle ? gBattleWeather : 0;
+    gE2ETestState.overworldWeather = 0;
+    gE2ETestState.battleHazardMasks[0] = 0;
+    gE2ETestState.battleHazardMasks[1] = 0;
+    for (i = 0; i < 3; i++)
+        gE2ETestState.reservedHallDiagnostics[i] = 0;
+    if (gMain.inBattle && gBattleStruct != NULL)
+    {
+        for (i = 0; i < 2; i++)
+        {
+            if (IsHazardOnSide(i, HAZARDS_STICKY_WEB))
+                gE2ETestState.battleHazardMasks[i] |= 1;
+            if (IsHazardOnSide(i, HAZARDS_STEALTH_ROCK))
+                gE2ETestState.battleHazardMasks[i] |= 2;
+        }
+    }
     gE2ETestState.catchSwapState = sCatchSwapState;
     gE2ETestState.catchSwapCursor = sCatchSwapCursor;
     gE2ETestState.catchSwapSelectedParty = sCatchSwapSelectedParty;
@@ -1556,6 +1581,9 @@ static void UpdateState(void)
 
     if (gSaveBlock1Ptr == NULL)
         return;
+
+    if (overworld)
+        gE2ETestState.overworldWeather = GetCurrentWeather();
 
     for (i = 0; i < E2E_TEST_LEAGUE_COUNT; i++)
     {

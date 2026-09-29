@@ -37,6 +37,7 @@ enum CircuitCommitResult
 };
 
 enum CircuitStage GetActiveLeagueRunStage(void);
+u16 GetCircuitStageRoom(enum CircuitStage stage, u8 match);
 bool8 IsActiveLeagueRunReplay(void);
 bool32 GetCircuitRunBattleRating(enum CircuitStage stage, u32 encounterIndex, u32 *rating);
 bool8 ValidateCircuitRoomBattle(enum CircuitStage stage, u8 encounterIndex);

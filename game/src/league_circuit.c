@@ -55,6 +55,14 @@ static const u16 *GetStageRooms(enum CircuitStage stage)
     return sHoennRooms;
 }
 
+u16 GetCircuitStageRoom(enum CircuitStage stage, u8 match)
+{
+    if (stage < CIRCUIT_STAGE_INDIGO || stage > CIRCUIT_STAGE_HOENN
+     || match >= LEAGUE_EVENT_LINEUP_SIZE)
+        return MAP_UNDEFINED;
+    return GetStageRooms(stage)[match];
+}
+
 static bool8 WarpIsMap(const struct WarpData *warp, u16 map)
 {
     return warp->mapGroup == MAP_GROUP(map) && warp->mapNum == MAP_NUM(map);

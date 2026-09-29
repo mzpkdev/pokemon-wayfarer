@@ -762,6 +762,7 @@ gSpecials::
 	def_special LeagueEvent_SetRoomGraphics
 	def_special LeagueEvent_BufferChampion
 	def_special LeagueEvent_BufferLineup
+	def_special LeagueEvent_BufferHallBoard
 #endif
 
 #if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED

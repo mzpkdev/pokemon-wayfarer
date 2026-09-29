@@ -13,10 +13,10 @@ export type TrainerOnlySnapshot = {
   outcome: number
 }
 
-const abiVersion = 25
+const abiVersion = 26
 const expectedRequestSize = 380
 const expectedResultSize = 16
-const expectedStateSize = 1732
+const expectedStateSize = 1752
 const expectedRequestStatusOffset = 87
 const expectedResultStatusOffset = 14
 
@@ -283,6 +283,11 @@ export type StateSnapshot = {
   battleEnemyMoves: number[]
   battleEnemyLevel: number
   battleActive: boolean
+  battleFieldStatuses: number
+  battleSideStatuses: number[]
+  battleWeather: number
+  overworldWeather: number
+  battleHazardMasks: number[]
   caughtSpecies: number
   lastUsedItem: number
   catchSwapState: number
@@ -933,6 +938,11 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     lastUsedItem: uint16(bytes, 316),
     battleEnemyLevel: bytes[318]!,
     battleActive: bytes[319] === 1,
+    battleFieldStatuses: uint32(bytes, 1732),
+    battleSideStatuses: [uint32(bytes, 1736), uint32(bytes, 1740)],
+    battleWeather: uint16(bytes, 1744),
+    overworldWeather: bytes[1746]!,
+    battleHazardMasks: Array.from(bytes.slice(1747, 1749)),
     catchSwapState: bytes[320]!,
     catchSwapCursor: bytes[321]!,
     catchSwapSelectedParty: bytes[322]!,

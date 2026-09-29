@@ -4804,6 +4804,15 @@ static void DoBattleIntro(void)
                     statusesOpponentB = GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentB);
             }
             STARTING_STATUS_DEFINITIONS(UNPACK_STARTING_STATUS_TO_BATTLE);
+#if WAYFARER_LEAGUE_EVENTS
+            // A hall's condition belongs to the room, not the selected
+            // trainer. This also removes authored statuses in neutral halls.
+            {
+                struct StartingStatuses hallStatuses;
+                if (GetPreparedLeagueHallStartingStatuses(&hallStatuses))
+                    gStartingStatuses = hallStatuses;
+            }
+#endif
             gBattleMainFunc = TryDoEventsBeforeFirstTurn;
         }
         break;

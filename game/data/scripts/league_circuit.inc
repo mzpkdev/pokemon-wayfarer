@@ -45,6 +45,23 @@ LeagueEvent_EventScript_SetRoomGraphics::
 	special LeagueEvent_SetRoomGraphics
 	end
 
+LeagueEvent_EventScript_HallBoard::
+	specialvar VAR_RESULT, LeagueEvent_BufferHallBoard
+	goto_if_eq VAR_RESULT, FALSE, LeagueEvent_EventScript_HallBoardUnavailable
+	msgbox gStringVar4, MSGBOX_SIGN
+	return
+
+LeagueEvent_EventScript_HallBoardUnavailable:
+	msgbox LeagueCircuit_Text_Unavailable, MSGBOX_SIGN
+	return
+
+LeagueEvent_EventScript_OfferHallBoard::
+	msgbox LeagueEvent_Text_HallsOffer, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, LeagueEvent_EventScript_HallBoardDeclined
+	call LeagueEvent_EventScript_HallBoard
+LeagueEvent_EventScript_HallBoardDeclined:
+	return
+
 LeagueEvent_EventScript_RoomIntro::
 	special LeagueEvent_BufferRoomName
 	msgbox LeagueEvent_Text_RoomIntro
@@ -127,6 +144,10 @@ LeagueEvent_Text_AlreadyAccepted::
 
 LeagueEvent_Text_Declined::
 	.string "Come back when you're ready.$"
+
+LeagueEvent_Text_HallsOffer::
+	.string "Want to see each HALL'S\n"
+	.string "battle condition?$"
 #endif
 
 LeagueCircuit_EventScript_EntryDenied::

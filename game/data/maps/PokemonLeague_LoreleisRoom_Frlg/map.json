@@ -8,7 +8,7 @@
   "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_POKEMON_LEAGUE",
   "requires_flash": false,
-  "weather": "WEATHER_NONE",
+  "weather": "WEATHER_SNOW",
   "map_type": "MAP_TYPE_INDOOR",
   "allow_cycling": false,
   "allow_escaping": false,

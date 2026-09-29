@@ -23,14 +23,14 @@ import { decodeFieldMessageText } from "./features/state"
 const abi: SessionAbi = {
   requestSize: 380,
   resultSize: 16,
-  stateSize: 1732,
+  stateSize: 1752,
   requestStatusOffset: 87,
   resultStatusOffset: 14,
   flagsOffset: 0x1270,
   varsOffset: 0x1340,
 }
 
-const abiBytes = (version = 25): Uint8Array => {
+const abiBytes = (version = 26): Uint8Array => {
   const bytes = new Uint8Array(16)
   const view = new DataView(bytes.buffer)
   for (const [index, value] of [
@@ -77,7 +77,26 @@ const expectNoFixtureMutations = (bytes: Uint8Array) => {
   expect(Array.from(bytes.slice(356))).toEqual(Array(24).fill(0))
 }
 
-describe("game-session v25 protocol", () => {
+describe("game-session v26 protocol", () => {
+  it("decodes hall weather and both battle sides without mixing field and room state", () => {
+    const stateBytes = new Uint8Array(abi.stateSize)
+    const view = new DataView(stateBytes.buffer)
+    view.setUint32(1732, 1 << 9, true)
+    view.setUint32(1736, 1 << 4, true)
+    view.setUint32(1740, 1 << 9, true)
+    view.setUint16(1744, 1 << 7, true)
+    stateBytes[1746] = 4
+    stateBytes[1747] = 1
+    stateBytes[1748] = 2
+
+    expect(parseStateSnapshot(stateBytes)).toMatchObject({
+      battleFieldStatuses: 1 << 9,
+      battleSideStatuses: [1 << 4, 1 << 9],
+      battleWeather: 1 << 7,
+      overworldWeather: 4,
+      battleHazardMasks: [1, 2],
+    })
+  })
   it("round-trips 32-bit player and frozen league ratings without truncation", () => {
     const requestBytes = encodeCommandRequest(abi, { ...request(), trainerRating: 0x12345678 })
     const requestView = new DataView(requestBytes.buffer)
