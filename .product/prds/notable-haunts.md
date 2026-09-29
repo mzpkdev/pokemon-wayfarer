@@ -10,7 +10,7 @@ a trainer as a **stranger**, as someone **famous**, or as a **friend** whose
 number they hold; friends offer gossip, a rematch, and the haunt's one
 **quest**. Haunt lines describe only the place and activity, and each
 trainer's **voice bits** supply the personality. v0 authors the Kanto list;
-weights, gates, and rewards are placeholders. Terms follow the
+weights, gates, and reward pools are placeholders. Terms follow the
 [glossary](player-trainer-rating.md#glossary).
 
 ## Intent
@@ -108,10 +108,18 @@ they sound: warm trainers ask for help, proud ones challenge or enlist the
 player, and cold ones command. A warm trainer can admit they lost something;
 a cold one would never ask the player to fetch a POKéMON.
 
-The reward comes from the trainer: an item for their signature POKéMON's
-type, or a lesson that teaches one of the moves they like. A friend gives
-the reward once while they are placed at that haunt; when someone else takes
-the haunt, its quest can be done again.
+The reward comes from the trainer, never from the quest: the haunt carries
+the ask, and the trainer carries the reward. Each trainer has a short
+**reward pool**, an ordered list of about five items and lessons, much like
+their move pool. A lesson teaches the player's chosen POKéMON the next move
+from the trainer's move pool that it can learn. Each entry opens once the
+trainer's TR reaches its gate, so modest gifts come first and strong held
+items come late. Every quest the player finishes with a trainer, at any
+haunt, pays their next entry; if it isn't open yet, or the pool is used up,
+the trainer pays prize money instead, as much as a rematch win. A friend
+gives one reward while they are placed at a haunt; when someone else takes
+the haunt, its quest can be done again. The starting pools are in
+[notable trainer reward pools](../research/notable-trainer-rewards.md).
 
 ### Voices
 
@@ -137,23 +145,25 @@ there; Brock and Giovanni fit it best.
    player has beaten him at Pewter, so he is a friend. He greets them,
    passes on gossip about where Misty is, and asks them to walk the tunnel
    with him. On the way, pairs of wild Diglett are tag battles with Brock
-   at the player's side. At the Vermilion exit he thanks them with a Metal
-   Coat.
+   at the player's side. At the Vermilion exit he thanks them with Pewter
+   Crunchies, the first entry of his reward pool.
 3. The player comes back: Brock is still there, but his reward is claimed,
    so he chats and offers a rematch.
 4. After the next badge, Brock and Giovanni are both placed elsewhere
    before the cave's turn, and Will, a Johto traveller the player has never
    met, turns up. He introduces himself and offers a battle; the player
    wins and gets his number. Now he is a friend, and the walk can be done
-   again with him.
+   again with him, paying the first entry of Will's own pool. Brock's next
+   quest, wherever he turns up, will pay his second entry, a Hard Stone.
 
 ## Boundaries
 
 In: the haunt pool and tags, placement, momentum, the relationship beat
 (stranger, famous, friend), the five quest types and their manners, quest
-rewards, the voice-bit writing rule, manner and buddy as trainer values, the
-Kanto haunt list, retiring the HNS cameos and the Dojo rematch hub, and the
-saved state for all of this.
+rewards from each trainer's reward pool, the voice-bit writing rule,
+manner, buddy, and reward pool as trainer values, the Kanto haunt list,
+retiring the HNS cameos and the Dojo rematch hub, and the saved state for
+all of this.
 
 Unchanged: every battle with a notable trainer uses their current TR and
 team ([Notable trainers](notable-trainers.md)); phone numbers are given as
@@ -170,7 +180,8 @@ a friend.
 Informational for now. Rematches pay prize money like any notable battle,
 and haunt battles give no TR. The Dojo rematches' Battle Points are gone.
 The placement weights, the elite gate (player TR 80), the momentum window,
-and the rewards are placeholders to tune in playtesting. With only the Kanto
+and the reward pools and their gates are placeholders to tune in
+playtesting. With only the Kanto
 list in v0, every traveller from Johto and Hoenn is placed in Kanto, and
 trainers from those regions who don't travel have no haunt yet.
 

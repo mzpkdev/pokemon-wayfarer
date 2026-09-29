@@ -11,16 +11,17 @@ manners) pick candidates, a placeholder score (theme from aces, activity from
 play style and **momentum**, hometown, setting) ranks them, and haunts fill
 one at a time in an order that rotates with world progress. The player meets
 a placed trainer as a **stranger**, **famous**, or a **friend**; friends
-give gossip, a rematch, and the quest, whose reward is claimed once per
-placement. Dialogue splices manner-neutral haunt lines with each trainer's
-**voice bits**. Weights, gates, momentum values, and rewards are
+give gossip, a rematch, and the quest, which pays once per placement. The
+reward comes from the trainer's own **reward pool**, never from the quest
+type. Dialogue splices manner-neutral haunt lines with each trainer's
+**voice bits**. Weights, gates, momentum values, and reward pools are
 placeholders; balance is informational.
 
 ## Scope
 
 Own, in `IS_WAYFARER`: the haunt catalog and its tags, the meaning of the
-**manner** and **buddy** trainer values, placement and momentum, the
-relationship beat, the five quest types and their rewards and claims,
+**manner**, **buddy**, and **reward pool** trainer values, placement and
+momentum, the relationship beat, the five quest types, rewards and claims,
 dialogue assembly, the Kanto haunt list, retiring the HNS cameos and the
 Saffron Dojo rematch room, the haunts' saved state and load validation,
 presentation, the balance report, and acceptance.
@@ -28,7 +29,8 @@ presentation, the balance report, and acceptance.
 - [Notable trainers](notable-trainers.md) owns the trainers: inventory,
   home region, the traveller and aloof traits, TR and its growth, rosters,
   the downward rule's use, move pools, and the battle snapshot. It also holds
-  the manner and buddy fields in the catalog; this spec owns what they mean.
+  the manner, buddy, and reward pool data in the catalog; this spec owns
+  what they mean.
 - [Sevii Masters](sevii-masters.md) owns phone contacts (the contact bit and
   the first-win rule), the partner choice, and the runtime partner slot.
 - [Leagues](leagues.md) owns invitations and the accepted event lineup.
@@ -36,7 +38,9 @@ presentation, the balance report, and acceptance.
 - [Gym Leader scaling](gym-leader-scaling.md) owns battle construction for
   every notable battle, including the ones at haunts.
 - The voice bits themselves are content in
-  [notable trainer voice bits](../research/notable-trainer-voices.md).
+  [notable trainer voice bits](../research/notable-trainer-voices.md), and
+  the v0 reward pools in
+  [notable trainer reward pools](../research/notable-trainer-rewards.md).
 
 ## Haunts
 
@@ -64,9 +68,9 @@ willingness, travel cost, or fatigue.
 
 ## Trainer values
 
-Each notable trainer entry authors two values for haunts, alongside its
+Each notable trainer entry authors three values for haunts, alongside its
 other catalog content
-([Notable trainers](notable-trainers.md#manner-and-buddy)):
+([Notable trainers](notable-trainers.md#haunt-values-manner-buddy-reward-pool)):
 
 - **Manner:** `warm`, `proud`, or `cold`. Manner is a quest qualifier, not a
   tone: warm trainers ask the player for help, proud ones challenge or enlist
@@ -82,10 +86,14 @@ other catalog content
   current world progress. It resolves the same way whether or not the slot
   has joined the trainer's team yet: the buddy travels with the trainer even
   when it doesn't battle.
+- **Reward pool:** the ordered list of what the trainer gives for finished
+  quests ([rewards and claims](#rewards-and-claims)).
 
-The v0 values are in the
+The v0 manners and buddies are in the
 [voice bits](../research/notable-trainer-voices.md) (the `Manner:` and
-`Buddy:` lines), to be copied into the catalog. Tate & Liza author both like
+`Buddy:` lines), and the v0 pools are in
+[notable trainer reward pools](../research/notable-trainer-rewards.md); both
+are to be copied into the catalog. Tate & Liza author all three like
 everyone else, though the duo is never placed in v0.
 
 A trainer's **hometown** is not authored: it is the city of their badge
@@ -245,13 +253,16 @@ notable battle, from a battle snapshot at the start, and pay prize money
 Each haunt has one quest type. Only friends give quests, and the manner
 table is a hard qualifier for placement:
 
-| Quest | Warm | Proud | Cold | Reward |
-| --- | --- | --- | --- | --- |
-| Walk with me | ✅ | ✅ | ✅ | type item |
-| Lost something | ✅ | ❌ | ❌ | type item |
-| Catch me one | ✅ | ✅ | ❌ | type item |
-| Quiz | ✅ | ✅ | ✅ | lesson |
-| One on one | ✅ | ✅ | ✅ | lesson |
+| Quest | Warm | Proud | Cold |
+| --- | --- | --- | --- |
+| Walk with me | ✅ | ✅ | ✅ |
+| Lost something | ✅ | ❌ | ❌ |
+| Catch me one | ✅ | ✅ | ❌ |
+| Quiz | ✅ | ✅ | ✅ |
+| One on one | ✅ | ✅ | ✅ |
+
+The quest type decides only the ask. Every quest pays the same way, from the
+trainer's [reward pool](#rewards-and-claims).
 
 Every quest runs `ASK` (an attention-getter), then the haunt's own quest
 line (the proposal), then a yes or no:
@@ -348,18 +359,68 @@ Each haunt has a saved **claim bit**. It is set when the reward is given
 and cleared when the haunt's placement changes, so each placement pays out
 once, and a new trainer at the haunt can give it again.
 
-- **Type item:** the type-boosting held item for the primary type of the
-  signature POKéMON's authored species (Brock's Steelix gives Metal Coat,
-  Giovanni's Rhyperior gives Soft Sand), given with `GIFT`, whose `{ITEM}`
-  names it. Type item names reach 14 characters (NEVER-MELT ICE), and
-  every `GIFT` line still fits 70 characters with that. With no room in the
-  Bag, the reward waits and the claim stays open.
-- **Lesson:** the trainer teaches one move from their
-  [move pool](notable-trainers.md#move-pools). The player picks a pool
-  entry, then a POKéMON from the party or boxes that can learn it, on the
-  storage screen's move tutor mode; entries no POKéMON can learn are shown
-  but refused. The lesson uses `PRAISE` and no `GIFT`. Cancelling leaves
-  the claim open.
+The reward comes from the trainer, never from the quest: the haunt carries
+the ask, and the trainer carries the reward. Finishing any haunt quest with
+a trainer pays from their **reward pool**, wherever they are placed.
+
+**Reward pool.** Each notable trainer authors one ordered reward pool, held
+in the catalog
+([Notable trainers](notable-trainers.md#haunt-values-manner-buddy-reward-pool))
+like manner and buddy. Each entry is an **item** (one `ITEM_*` constant) or a
+**lesson** (below), and has a **from TR** gate, as a move pool entry has a
+[from level](notable-trainers.md#move-pools): the entry opens once the
+trainer's current TR reaches the gate. The v0 pools are in
+[notable trainer reward pools](../research/notable-trainer-rewards.md).
+
+**What a quest pays.** Each trainer has a saved **reward counter**: how many
+pool entries the player has received from them. When a quest completes, the
+next entry (the one after the counter) is the reward if it exists and its
+gate is at most the trainer's current TR. Otherwise, because the pool is used
+up or the next entry is still gated, the trainer pays the **fallback**.
+Gates never decrease along a pool, so entries come strictly in order and
+none is skipped.
+
+- **Item:** given with `GIFT`, whose `{ITEM}` names it. With no room in the
+  Bag, the reward waits: the claim stays open and the counter doesn't move.
+- **Lesson:** the player picks a POKéMON from the party or boxes on the
+  storage screen's move tutor mode, and the trainer teaches it the first move
+  in their [move pool](notable-trainers.md#move-pools) that it can learn and
+  doesn't know yet. Only POKéMON with such a move can be picked. "Can learn"
+  is the move pool's eligibility for an entry with a from level, at any
+  level: a level-up move of the current species or an earlier form, a
+  TM/tutor move of the current species, or an egg move of the line's base
+  species. The move pool's from levels play no part here. The move is
+  learned through the usual learn-move prompts, replacing a move if the
+  POKéMON knows four. The lesson uses `PRAISE` and no `GIFT`. Cancelling
+  leaves the claim open and the counter unchanged; with no POKéMON that can
+  learn anything from the pool, the trainer answers `NOT_READY`.
+- **Fallback:** prize money, exactly what a rematch win with the trainer
+  would pay right now: the [prize money](#prize-money) rule for their
+  signature POKéMON (slot 1 has offset 0 and is always last in battle order,
+  so its level is `teamLevel(tr)`) with their class's rate. A system line
+  names the amount; there is no `GIFT`, and the counter doesn't move.
+
+The fallback is money because it always fits: it needs no Bag room, so it
+never waits; it grows with the trainer; it adds nothing a rematch doesn't
+already pay, so it can't bend the item curve; and it leaves no pile of
+repeated items. A repeat of the trainer's type item was the alternative,
+rejected because it can wait on a full Bag and, repeated, is worth nothing.
+
+The claim bit and the counter change together, when the reward is given
+(for the fallback, only the claim bit). A reward that waits or is cancelled
+changes neither.
+
+**Pool rules**, checked with the catalog:
+
+- A pool has 1 to 15 entries, the most a 4-bit counter records; v0 authors
+  five or six.
+- Every item is an existing `ITEM_*` constant in
+  [items.h](../../game/include/constants/items.h), never `ITEM_NONE`.
+- Gates are whole numbers from 0, never decrease along the pool, and are at
+  most the trainer's peak TR, so every entry can open.
+- A lesson entry needs a trainer with a non-empty move pool.
+- Every `GIFT` line fits 70 characters with the longest item name in that
+  trainer's pool (v0 names reach 16 characters: PEWTER CRUNCHIES).
 
 ## Dialogue
 
@@ -451,9 +512,17 @@ BROCK: Great! I knew I could count on you.                     YES
 BROCK: That's the VERMILION side. We made it through.         done line
 BROCK: Nicely done! That's rock-hard willpower if I ever saw  PRAISE
        it.
-BROCK: Take this METAL COAT. A good breeder always shares     GIFT
-       supplies.
+BROCK: Take this PEWTER CRUNCHIES. A good breeder always      GIFT
+       shares supplies.
 ```
+
+The PEWTER CRUNCHIES are the first entry of Brock's
+[reward pool](../research/notable-trainer-rewards.md#brock) (from TR 0); the
+walk and Steelix's type play no part. His reward counter is now 1, so his
+next quest, here after a placement change or at any other haunt, pays the
+HARD STONE (from TR 0). The entry after that is a lesson from TR 40, which he
+reaches at world progress 32; a quest before then pays the fallback prize
+money.
 
 **Leaving early** (the player tries the north entrance's warp to Route 2
 mid-walk):
@@ -496,9 +565,15 @@ GIOVANNI: Walk it with me, out to the VERMILION side?         quest line
 GIOVANNI: A wise decision.                                    YES
 GIOVANNI: That's the VERMILION side. We made it through.      done line
 GIOVANNI: Impressive. I rarely have cause to say that.        PRAISE
-GIOVANNI: Take this SOFT SAND. Consider it a loan, not a      GIFT
+GIOVANNI: Take this NUGGET. Consider it a loan, not a         GIFT
           kindness.
 ```
+
+At world progress 140 Giovanni is at TR 131, past every gate in his
+[pool](../research/notable-trainer-rewards.md#giovanni) (the last is TR
+120), but pools pay in order: this first quest gives his first entry, the
+NUGGET. Had the player already finished a quest with him at another haunt,
+the same walk would pay his second entry, SOFT SAND.
 
 His **Chat** is "Ah, PERSIAN. The only one who never disappoints me.": his
 buddy is roster slot 4, which steps down to MEOWTH below level 28. At world
@@ -610,9 +685,11 @@ The storage-screen selection modes are the `sPcMonSelectionTypes` table in
 in [party_menu.h](../../game/include/constants/party_menu.h). Catch me one
 uses `SELECT_PC_MON_TRADE`, which filters by the species in
 `gSpecialVar_0x8009`, as Jasmine's Steelix trade does today
-([Olivine Gym](../../game/data/maps/OlivineCity_Gym_hns/scripts.inc)). A
-lesson uses `SELECT_PC_MON_MOVE_TUTOR`, which filters by whether a POKéMON
-can learn the move.
+([Olivine Gym](../../game/data/maps/OlivineCity_Gym_hns/scripts.inc)).
+`SELECT_PC_MON_MOVE_TUTOR` filters by one move (`gSpecialVar_0x8005`), using
+the species' teachable list (`CanMonLearnMove`). A lesson needs a filter over
+the whole move pool with the [lesson](#rewards-and-claims) eligibility, so it
+needs a variant of that mode that also picks the move.
 
 ### Cameos and the Dojo
 
@@ -659,13 +736,17 @@ Haunts add:
 - one **met bit** per placeable notable trainer (every entry but Tate &
   Liza);
 - one **claim bit** per haunt;
+- one **reward counter** per notable trainer entry, 4 bits each (0-15),
+  so 38 × 4 bits in v0. Tate & Liza's counter stays 0 until the duo is
+  placed ([rewards and claims](#rewards-and-claims));
 - the **current placement**: one `characterId` or none per haunt. It is
   derivable from the inputs, and is saved to detect changes for the claim
   bits and to hold the walking trainer during a walk; and
 - the **quest in progress**: a walk (its haunt) or a found lost thing (its
   haunt), cleared on load and on whiteout.
 
-New Game saves every met bit and claim bit clear, the placement for world
+New Game saves every met bit and claim bit clear, every reward counter at
+0, the placement for world
 progress 0, and no quest in progress. With follower NPCs enabled,
 SaveBlock3 also holds the engine's follower state, which a walk uses.
 
@@ -676,12 +757,16 @@ On every load, before the overworld runs:
 1. **Quest in progress.** Clear it; if a follower NPC is present, remove
    it. A walk interrupted by a reload is unfinished
    ([walk](#walk-with-me)).
-2. **Pruning.** Drop the met bits of characters no longer in the registry
-   and the claim bits and placements of haunts no longer in the catalog.
-3. **Checks.** Met bits exist only for known placeable trainers; claim bits
-   and placements only for known haunts; a saved placement names known
-   characters, each at most once. A failed check is an invalid save, never
-   a reason to reward anything.
+2. **Pruning.** Drop the met bits and reward counters of characters no
+   longer in the registry, and the claim bits and placements of haunts no
+   longer in the catalog. A reward counter above its trainer's current pool
+   length (the pool got shorter) is lowered to that length: the pool counts
+   as used up, and nothing is taken back or paid.
+3. **Checks.** Met bits exist only for known placeable trainers; reward
+   counters only for known trainers; claim bits and placements only for
+   known haunts; a saved placement names known characters, each at most
+   once. A failed check is an invalid save, never a reason to reward
+   anything.
 4. **Recompute.** Compute the placement from the current inputs and compare
    it with the saved one, clearing the claim bit of every haunt whose
    trainer changed, then save it.
@@ -716,7 +801,8 @@ Required implementation evidence (not yet run):
 1. **Catalog.** Every haunt has valid tags, existing maps, an active
    meeting spot, and its quest details (a walk's start and exit, a lost
    spot, a catch species on its wild table); every notable trainer has a
-   manner and a buddy slot 1-6.
+   manner, a buddy slot 1-6, and a reward pool that passes the
+   [pool rules](#rewards-and-claims).
 2. **Buddy.** `{BUDDY}` resolves to the slot's stepped-down species at every
    world progress, including a slot not yet on the team (Giovanni's slot 4
    is MEOWTH at world progress 10 and PERSIAN at 40; Brock's slot 1 is ONIX
@@ -743,14 +829,25 @@ Required implementation evidence (not yet run):
    the runtime partner slot; Catch me one refuses the last able party
    POKéMON; the quiz asks the same questions on every attempt.
 7. **Claims.** A reward is given once per placement; a changed placement
-   reopens it; a full Bag or a cancelled lesson keeps it open.
-8. **Dialogue.** Every assembled line resolves its slots and fits its text
+   reopens it; a full Bag, a cancelled lesson, or no POKéMON able to learn
+   keeps it open and leaves the reward counter unchanged.
+8. **Reward pools.** The reward never depends on the quest type. Quests
+   with one trainer at different haunts pay that trainer's pool in order,
+   one entry each; a gated next entry or a used-up pool pays the fallback
+   (prize money equal to a rematch win at current TR) and leaves the counter
+   alone; entries open by the trainer's current TR, so a quest just before
+   and just after a gate pays the fallback and then the entry. A lesson
+   teaches the first move in pool order the chosen POKéMON can learn and
+   doesn't know, and offers only POKéMON with such a move. Brock's first
+   quest gives PEWTER CRUNCHIES and Giovanni's gives a NUGGET.
+9. **Dialogue.** Every assembled line resolves its slots and fits its text
    box with worst-case values; gossip names only met, placed trainers.
-9. **Cameos.** No cameo or Dojo rematch seat remains in Wayfarer; the Dojo
-   back room works as a haunt; no Battle Points come from haunts.
-10. **Save.** A new game and a reload give the saved state described above;
-    corrupt met bits, claim bits, or placements are rejected, and removed
-    characters or haunts are pruned.
+10. **Cameos.** No cameo or Dojo rematch seat remains in Wayfarer; the Dojo
+    back room works as a haunt; no Battle Points come from haunts.
+11. **Save.** A new game and a reload give the saved state described above;
+    corrupt met bits, reward counters, claim bits, or placements are
+    rejected; removed characters or haunts are pruned; and a counter past a
+    shortened pool is lowered to its length.
 
 ## Open questions
 
@@ -790,3 +887,4 @@ Required implementation evidence (not yet run):
 - [Gym Leader scaling](gym-leader-scaling.md)
 - [Trainer AI](trainer-ai.md)
 - [Notable trainer voice bits](../research/notable-trainer-voices.md)
+- [Notable trainer reward pools](../research/notable-trainer-rewards.md)
