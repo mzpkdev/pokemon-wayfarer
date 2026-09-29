@@ -204,8 +204,8 @@ battle setup.
 
 An accepted event waits for the player, who has one attempt. Winning makes the
 player the reigning champion, commits any first league win, and releases the
-event; a repeat win gives prize money and the title only (plus the Gallery
-win at the Masters). In v0 a win adds no
+event; a repeat win gives prize money and the title only (plus the [Gallery
+win](sevii-masters.md#masters-gallery) at the Masters). In v0 a win adds no
 player TR ([Player Trainer Rating](player-trainer-rating.md)); Today's +8 per
 first league win stays until adoption. Losing or leaving ends the event with
 no league win or reward and crowns the lineup's strongest, as does declining.
