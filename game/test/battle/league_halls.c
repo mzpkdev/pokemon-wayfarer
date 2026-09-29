@@ -163,11 +163,13 @@ SINGLE_BATTLE_TEST("League hall opening Stealth Rock lets a fainted lead be repl
     } WHEN {
         // This replacement happens before the first move-selection turn.
         TURN { SKIP_TURN(player); SEND_OUT(player, 1); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
         MESSAGE("Pointed stones dug into WOBBUFFET!");
         MESSAGE("WOBBUFFET fainted!");
         MESSAGE("Go! WYNAUT!");
         MESSAGE("Pointed stones dug into WYNAUT!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
     } THEN {
         EXPECT_EQ(player->species, SPECIES_WYNAUT);
         EXPECT_LT(player->hp, player->maxHP);
