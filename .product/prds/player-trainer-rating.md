@@ -232,9 +232,10 @@ changes yours.
 - **Hall condition:** the one field condition a hall always has, such as
   snow, Trick Room, or Stealth Rock, in effect for both sides from the start
   of the battle. Snow and sandstorm also show in the room and last until
-  something replaces them; rooms, terrain, and Tailwind wear off after a few
-  turns; hazards stay until cleared. The Champion's Rooms and rooms with no
-  theme are neutral, with none.
+  something replaces them; rooms, terrains, Tailwind, and Sea of Fire wear
+  off after a few turns; hazards stay until cleared. Each hall's condition
+  matches the room's look, and no two halls share one. The Champion's Rooms
+  are neutral, with none.
 - **First league win:** your first win at a given league, which brings its
   one-time effects; later wins are repeat wins (prize money and the title,
   plus a Gallery win at the Masters).

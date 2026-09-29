@@ -98,7 +98,9 @@ the league registry (a location property, never a trainer's). A hall has:
 | `condition` | One hall condition, or neutral. |
 | `weather` | The room map's own weather (`map.json`): the condition's weather for a snow or sandstorm hall, otherwise none. |
 
-A **hall condition** starts the battle already in effect for both sides:
+A **hall condition** starts the battle already in effect for both sides. It
+is chosen from the room's look (its floor, pillars, and decor), never from
+who fought there before, and no two halls share a condition:
 
 | Condition | Battle start | Lasts |
 | --- | --- | --- |
@@ -108,7 +110,10 @@ A **hall condition** starts the battle already in effect for both sides:
 | Magic Room | Magic Room | 5 turns |
 | Wonder Room | Wonder Room | 5 turns |
 | Psychic Terrain | Psychic Terrain | 5 turns |
+| Grassy Terrain | Grassy Terrain | 5 turns |
+| Misty Terrain | Misty Terrain | 5 turns |
 | Tailwind (both sides) | Tailwind on the player's side and on the opponent's side | The engine's temporary Tailwind (4 turns) on each side |
+| Sea of Fire (both sides) | Sea of Fire on the player's side and on the opponent's side | The engine's temporary Sea of Fire (4 turns) on each side |
 | Toxic Spikes (both sides) | One layer of Toxic Spikes on each side | Until cleared, like any hazard |
 | Stealth Rock (both sides) | Stealth Rock on each side | Until cleared, like any hazard |
 
@@ -124,9 +129,9 @@ The v0 halls, by match:
 | Match | Indigo | Hoenn | Masters |
 | --- | --- | --- | --- |
 | 1 | Lorelei's Hall (`PokemonLeague_LoreleisRoom_Frlg`): snow | Sidney's Hall (`EverGrandeCity_SidneysRoom`): Magic Room | Will's Hall (`PokemonLeague_WillsRoom_hns`): Psychic Terrain |
-| 2 | Bruno's Hall (`PokemonLeague_BrunosRoom_Frlg`): sandstorm | Phoebe's Hall (`EverGrandeCity_PhoebesRoom`): Trick Room | Koga's Hall (`PokemonLeague_KogasRoom_hns`): Toxic Spikes (both sides) |
-| 3 | Agatha's Hall (`PokemonLeague_AgathasRoom_Frlg`): Trick Room | Glacia's Hall (`EverGrandeCity_GlaciasRoom`): snow | Bruno's Hall (`PokemonLeague_BrunosRoom_hns`): Stealth Rock (both sides) |
-| 4 | Lance's Hall (`PokemonLeague_LancesRoom_Frlg`): Tailwind (both sides) | Drake's Hall (`EverGrandeCity_DrakesRoom`): Tailwind (both sides) | Karen's Hall (`PokemonLeague_KarensRoom_hns`): Wonder Room |
+| 2 | Bruno's Hall (`PokemonLeague_BrunosRoom_Frlg`): sandstorm | Phoebe's Hall (`EverGrandeCity_PhoebesRoom`): Grassy Terrain | Koga's Hall (`PokemonLeague_KogasRoom_hns`): Toxic Spikes (both sides) |
+| 3 | Agatha's Hall (`PokemonLeague_AgathasRoom_Frlg`): Trick Room | Glacia's Hall (`EverGrandeCity_GlaciasRoom`): Misty Terrain | Bruno's Hall (`PokemonLeague_BrunosRoom_hns`): Stealth Rock (both sides) |
+| 4 | Lance's Hall (`PokemonLeague_LancesRoom_Frlg`): Tailwind (both sides) | Drake's Hall (`EverGrandeCity_DrakesRoom`): Sea of Fire (both sides) | Karen's Hall (`PokemonLeague_KarensRoom_hns`): Wonder Room |
 | 5 | Champion's Room (`PokemonLeague_ChampionsRoom_Frlg`): neutral | Champion's Room (`EverGrandeCity_ChampionsRoom`): neutral | `PokemonLeague_ChampionsRoom_hns`: neutral |
 
 Each chain is Today's room chain in
@@ -558,17 +563,19 @@ from the validated league, room, and match, and write it once per battle
 through a per-battle override, as
 [Trainer AI](trainer-ai.md#runtime-and-the-override-point) writes its flags:
 
-- **Rooms, terrain, Tailwind, and hazards** use the engine's starting
-  statuses (`STARTING_STATUS_*` in
+- **Rooms, terrains, Tailwind, Sea of Fire, and hazards** use the engine's
+  starting statuses (`STARTING_STATUS_*` in
   [constants/battle.h](../../game/include/constants/battle.h)). Battle start
   ORs the trainer's `startingStatus` into `gStartingStatuses`
   ([battle_main.c](../../game/src/battle_main.c),
   `UNPACK_STARTING_STATUS_TO_BATTLE`); directly after that, a league match
   replaces `gStartingStatuses` with the hall's: `trickRoomTemporary`,
-  `magicRoomTemporary`, `wonderRoomTemporary`, or `psychicTerrainTemporary`
-  (5 turns each); both
+  `magicRoomTemporary`, `wonderRoomTemporary`, `psychicTerrainTemporary`,
+  `grassyTerrainTemporary`, or `mistyTerrainTemporary` (5 turns each); both
   `tailwindPlayerTemporary` and `tailwindOpponentTemporary` (the engine's
-  `B_TAILWIND_TURNS` duration on each side); both `toxicSpikesPlayerL1` and
+  `B_TAILWIND_TURNS` duration on each side); both
+  `seaOfFirePlayerTemporary` and `seaOfFireOpponentTemporary` (4 turns on
+  each side); both `toxicSpikesPlayerL1` and
   `toxicSpikesOpponentL1`; or both `stealthRockPlayer` and
   `stealthRockOpponent`. The first-turn starting-status step
   (`FIRST_TURN_EVENTS_STARTING_STATUS`, through
@@ -578,8 +585,7 @@ through a per-battle override, as
   it applies it.
 - **Weather** has no starting status; it comes from the room itself. A snow
   or sandstorm hall's room map carries that weather in its `map.json`
-  (`WEATHER_SNOW` for `PokemonLeague_LoreleisRoom_Frlg` and
-  `EverGrandeCity_GlaciasRoom`, `WEATHER_SANDSTORM` for
+  (`WEATHER_SNOW` for `PokemonLeague_LoreleisRoom_Frlg`, `WEATHER_SANDSTORM` for
   `PokemonLeague_BrunosRoom_Frlg`), map loading saves and starts it
   (`SetSavedWeatherFromCurrMapHeader()` and `DoCurrentWeather()` in
   [overworld.c](../../game/src/overworld.c)), and the
@@ -588,9 +594,9 @@ through a per-battle override, as
   `GetCurrentWeather()` and sets `gBattleWeather` with no duration, so it
   lasts until replaced, and `B_OVERWORLD_SNOW` makes overworld snow battle
   snow. No battle-side weather override or Wayfarer-only map patch is
-  needed. These maps are shared with the standalone FRLG and Emerald builds,
-  so their rooms show the weather there too, and a battle in them starts in
-  it; that is accepted, since only Wayfarer is a product target. No hall room
+  needed. These maps are shared with the standalone FRLG build, so its rooms
+  show the weather there too, and a battle in them starts in it; that is
+  accepted, since only Wayfarer is a product target. No hall room
   script sets or resets weather today, and none may.
 
 A neutral hall writes no starting status and keeps the room's own weather
@@ -702,7 +708,7 @@ A snow or sandstorm hall shows its weather in the room.
 The hall's name honours its Elite Four member and never stands for the
 occupant: dialogue and signs never say or suggest that the honoured member
 fights there. The condition starts with the engine's usual start messages and
-animations for that weather, room, or Tailwind.
+animations for that weather, room, terrain, Tailwind, Sea of Fire, or hazard.
 
 ## Records, ceremonies, and integration
 
@@ -805,9 +811,11 @@ evidence (not yet run):
    distinct member of that league's own Elite Four; the Masters' halls 1-4
    honour Will, Koga, Bruno, and Karen, and each Champion's Room is neutral
    and honours no one; every condition is one of neutral, snow, sandstorm,
-   Trick Room, Magic Room, Wonder Room, Psychic Terrain, Tailwind (both
-   sides), Toxic Spikes (both sides), or Stealth Rock (both sides); a hall
-   has weather exactly when its condition is snow or sandstorm.
+   Trick Room, Magic Room, Wonder Room, Psychic Terrain, Grassy Terrain,
+   Misty Terrain, Sea of Fire (both sides), Tailwind (both
+   sides), Toxic Spikes (both sides), or Stealth Rock (both sides); no two
+   halls share a condition other than neutral; a hall has weather exactly
+   when its condition is snow or sandstorm.
 2. **Selection.** Fixtures at several world progress values, including one
    where growth reorders the lineup: willingness for at-home, away
    non-traveller, away traveller, fatigued, and floored cases at each league,
@@ -890,8 +898,8 @@ evidence (not yet run):
     the Gallery shows the winners of declined Masters events too.
 12. **Halls.** Every match is fought in its hall and starts with that hall's
     condition on both sides: snow and sandstorm last until a move or ability
-    replaces them; Trick Room, Magic Room, and Psychic Terrain end after 5
-    turns; Tailwind is up on both sides and ends on each after the engine's
+    replaces them; rooms and terrains end after 5 turns; Tailwind and Sea
+    of Fire are up on both sides and end on each after the engine's
     temporary duration; Toxic Spikes and Stealth Rock are down on both sides,
     hit both leads, and stay until cleared. The same trainer gets each hall's
     condition in whichever match they fight, a trainer with an authored
@@ -901,8 +909,8 @@ evidence (not yet run):
     unchanged; the lobby or door sign names the hall and its condition; the
     condition is the same when the match is reconstructed after a reload;
     and no other Wayfarer battle or map (Gym, story, or debug) gains a hall
-    condition or weather. In standalone FRLG and Emerald, Lorelei's,
-    Bruno's, and Glacia's rooms show their weather and their battles start
+    condition or weather. In standalone FRLG, Lorelei's and Bruno's rooms
+    show their weather and their battles start
     in it; that change is accepted.
 13. **Load validation.** Corrupt invitation state, call numbers, accepted
     events, runs, lineups, most recent resolved lineups, reign flags, Gallery
