@@ -34,7 +34,7 @@ static u8 HandleReplaceSector(u16, const struct SaveSectorLocation *);
 static u32 SaveBlock3Size(u32);
 static void CopyToSaveBlock3(u32, struct SaveSector *);
 static void CopyFromSaveBlock3(u32, struct SaveSector *);
-#if IS_WAYFARER
+#if IS_WAYFARER && !WAYFARER_LEAGUE_EVENTS
 static u8 ReplaceSaveBlock3Chunk(u16);
 #endif
 
@@ -323,6 +323,7 @@ static u32 RestoreSaveBackupVarsAndIncrement(const struct SaveSectorLocation *lo
     return 0;
 }
 
+#if !WAYFARER_LEAGUE_EVENTS
 static u32 RestoreSaveBackupVars(const struct SaveSectorLocation *locations)
 {
     gReadWriteSector = &gSaveDataBuffer;
@@ -332,6 +333,7 @@ static u32 RestoreSaveBackupVars(const struct SaveSectorLocation *locations)
     gDamagedSaveSectors = 0;
     return 0;
 }
+#endif
 
 static u8 HandleWriteIncrementalSector(u16 numSectors, const struct SaveSectorLocation *locations)
 {
@@ -460,6 +462,7 @@ static u8 HandleReplaceSector(u16 sectorId, const struct SaveSectorLocation *loc
     }
 }
 
+#if !WAYFARER_LEAGUE_EVENTS
 static u8 WriteSectorSignatureByte_NoOffset(u16 sectorId, const struct SaveSectorLocation *locations)
 {
     // Adjust sector id for current save slot
@@ -484,6 +487,7 @@ static u8 WriteSectorSignatureByte_NoOffset(u16 sectorId, const struct SaveSecto
         return SAVE_STATUS_OK;
     }
 }
+#endif
 
 static u8 CopySectorSignatureByte(u16 sectorId, const struct SaveSectorLocation *locations)
 {
@@ -509,6 +513,7 @@ static u8 CopySectorSignatureByte(u16 sectorId, const struct SaveSectorLocation 
     }
 }
 
+#if !WAYFARER_LEAGUE_EVENTS
 static u8 WriteSectorSignatureByte(u16 sectorId, const struct SaveSectorLocation *locations)
 {
     // Adjust sector id for current save slot
@@ -532,6 +537,7 @@ static u8 WriteSectorSignatureByte(u16 sectorId, const struct SaveSectorLocation
         return SAVE_STATUS_OK;
     }
 }
+#endif
 
 static u8 TryLoadSaveSlot(u16 sectorId, struct SaveSectorLocation *locations)
 {
@@ -1435,7 +1441,7 @@ void Test_CopySaveBlock3ToSector(u32 sectorId, struct SaveSector *sector)
 }
 #endif
 
-#if IS_WAYFARER
+#if IS_WAYFARER && !WAYFARER_LEAGUE_EVENTS
 static u8 ReplaceSaveBlock3Chunk(u16 sectorId)
 {
     u16 sector = sectorId + gLastWrittenSector;
