@@ -97,4 +97,32 @@ TEST("Notable pool recognizes earlier level moves and base egg moves")
     EXPECT_EQ(members[1].moves[0], MOVE_FLAIL);
 }
 
+TEST("Notable egg moves include hatchling ancestry without scaling parties to babies")
+{
+    struct TrainerMon member = {.species = SPECIES_PIKACHU, .lvl = 20};
+    const struct NotableMovePoolEntry pool[] = {{MOVE_WISH, 20}};
+
+    EXPECT(ResolveNotableTrainerMoves(&member, 1, 1, pool, ARRAY_COUNT(pool), FALSE));
+    EXPECT_EQ(member.species, SPECIES_PIKACHU);
+    EXPECT_EQ(member.moves[0], MOVE_WISH); // Pichu's egg move.
+    EXPECT_EQ(StepDownSpeciesToLevel(SPECIES_PIKACHU, 1), SPECIES_PIKACHU);
+    member.species = SPECIES_RAICHU;
+    EXPECT(ResolveNotableTrainerMoves(&member, 1, 1, pool, ARRAY_COUNT(pool), FALSE));
+    EXPECT_EQ(member.moves[0], MOVE_WISH);
+}
+
+TEST("Notable baby egg moves still require their authored from level")
+{
+    struct TrainerMon member = {.species = SPECIES_PIKACHU, .lvl = 19};
+    const struct NotableMovePoolEntry pool[] = {{MOVE_WISH, 0}, {MOVE_WISH, 20}};
+    u32 i;
+
+    EXPECT(ResolveNotableTrainerMoves(&member, 1, 1, pool, ARRAY_COUNT(pool), FALSE));
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        EXPECT_NE(member.moves[i], MOVE_WISH);
+    member.lvl = 20;
+    EXPECT(ResolveNotableTrainerMoves(&member, 1, 1, pool, ARRAY_COUNT(pool), FALSE));
+    EXPECT_EQ(member.moves[0], MOVE_WISH);
+}
+
 #endif

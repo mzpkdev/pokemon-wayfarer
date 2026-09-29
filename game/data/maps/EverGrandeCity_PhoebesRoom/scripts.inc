@@ -48,7 +48,11 @@ EverGrandeCity_PhoebesRoom_EventScript_Phoebe::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
 	setvar VAR_0x8005, 1
+#if WAYFARER_LEAGUE_EVENTS
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
+#else
 	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
+#endif
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
 #endif
 	lock
@@ -56,6 +60,8 @@ EverGrandeCity_PhoebesRoom_EventScript_Phoebe::
 #if WAYFARER_LEAGUE_EVENTS
 	specialvar VAR_RESULT, LeagueCircuit_IsCurrentRoomDefeated
 	goto_if_eq VAR_RESULT, TRUE, EverGrandeCity_PhoebesRoom_EventScript_PostBattleSpeech
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
 #else
 	goto_if_set FLAG_DEFEATED_ELITE_4_PHOEBE, EverGrandeCity_PhoebesRoom_EventScript_PostBattleSpeech
 #endif

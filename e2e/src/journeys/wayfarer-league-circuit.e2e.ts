@@ -1027,6 +1027,26 @@ describe.sequential("Wayfarer League Circuit", () => {
       await game.battle.win()
       if (index === 4) break
       await finishVictoryScript(game, `${room} victory`)
+      // Let the queued progress save return to the main loop before sending input.
+      const victoryFrame = (await game.state.read()).frame
+      await game.wait.until(
+        (state) => state.frame > victoryFrame + 1 && state.ready && state.map.name === room,
+        `${room} automatic save completed`,
+        3_600,
+      )
+      await game.player.interact()
+      await game.wait.until(
+        (state) => state.dialogueOpen,
+        `${room} defeated trainer dialogue opened`,
+      )
+      await finishFieldScript(game, `${room} defeated trainer dialogue`)
+      await expect(game.state.read()).resolves.toMatchObject({
+        map: { name: room },
+        circuit: {
+          run: { active: true, stage: "hoenn", replay: false, ratingAtEntry: rating },
+          event: { id: accepted.id, acceptedLeague: "hoenn", lineup: accepted.lineup },
+        },
+      })
       await game.saveAndReload()
       await walkTo(game, 5, 6)
       await walkTo(game, 5, 3)

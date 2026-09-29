@@ -1066,7 +1066,6 @@ static bool32 FindMonWithFlagsAndSuperEffective(enum BattlerId battler, u16 flag
 
     for (u32 monIndex = firstId; monIndex < lastId; monIndex++)
     {
-        u16 species;
         enum Ability monAbility;
         uq4_12_t typeMultiplier;
         u16 moveFlags = 0;
@@ -1078,9 +1077,8 @@ static bool32 FindMonWithFlagsAndSuperEffective(enum BattlerId battler, u16 flag
         if (IsAceMon(battler, monIndex))
             continue;
 
-        species = GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG);
         monAbility = GetPartyMonAbilityForSwitchCalc(battler, monIndex, &party[monIndex]);
-        typeMultiplier = CalcPartyMonTypeEffectivenessMultiplier(gLastLandedMoves[battler], species, monAbility);
+        typeMultiplier = CalcPartyMonTypeEffectivenessMultiplierForMon(gLastLandedMoves[battler], &party[monIndex], monAbility);
         UpdateMoveResultFlags(typeMultiplier, &moveFlags);
         if (moveFlags & flags)
         {

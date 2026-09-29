@@ -24,6 +24,22 @@ BADGE_ENCOUNTERS = {
 }
 
 
+# Pool authoring rules from the notable-trainer specification.
+FRUSTRATION = {move: category for category, moves in {
+    "sleep": ["Hypnosis", "Sleep Powder", "Spore", "Lovely Kiss", "Yawn", "Sing", "Grass Whistle", "Dark Void"],
+    "evasion": ["Double Team", "Minimize", "Smokescreen", "Sand Attack", "Flash", "Kinesis", "Mud Slap"],
+    "OHKO": ["Sheer Cold", "Fissure", "Horn Drill", "Guillotine"],
+    "trapping": ["Bind", "Wrap", "Fire Spin", "Whirlpool", "Sand Tomb", "Clamp", "Infestation", "Magma Storm",
+                 "Snap Trap", "Thunder Cage", "Mean Look", "Block", "Spider Web", "Jaw Lock", "Anchor Shot",
+                 "Spirit Shackle", "Octolock", "Fairy Lock", "Thousand Waves"],
+    "Perish Song": ["Perish Song"],
+    "Destiny Bond": ["Destiny Bond"],
+    "infatuation/confusion": ["Attract", "Swagger", "Flatter", "Confuse Ray", "Supersonic", "Sweet Kiss",
+                              "Teeter Dance", "Dynamic Punch"],
+}.items() for move in moves}
+TOXIC_MOVES = ("Toxic", "Toxic Spikes")
+
+
 def symbol(prefix: str, name: str) -> str:
     return prefix + re.sub(r"[^A-Z0-9]+", "_", name.upper()).strip("_")
 
@@ -32,8 +48,31 @@ def known_symbols(path: str, prefix: str) -> set[str]:
     return set(re.findall(r"\b" + prefix + r"[A-Z0-9_]+", (ROOT / path).read_text()))
 
 
+def validate_frustration(name, pool):
+    """At most one frustration category per pool (FRUSTRATION), and no evasion with Toxic or Toxic Spikes."""
+    found = {}
+    categories = {symbol("MOVE_", move): category for move, category in FRUSTRATION.items()}
+    pool_moves = {symbol("MOVE_", entry["move"]) for entry in pool}
+    for entry in pool:
+        category = categories.get(symbol("MOVE_", entry["move"]))
+        if category:
+            found.setdefault(category, []).append(entry["move"])
+    if len(found) > 1:
+        listed = "; ".join(f"{category}: {', '.join(moves)}" for category, moves in found.items())
+        raise ValueError(f"{name} move pool: at most one frustration category, found {listed}")
+    toxic = [move for move in TOXIC_MOVES if symbol("MOVE_", move) in pool_moves]
+    if "evasion" in found and toxic:
+        raise ValueError(f"{name} move pool: evasion ({', '.join(found['evasion'])}) never pairs with"
+                         f" {', '.join(toxic)}")
+
+
 def validate(data: dict) -> None:
     trainers = data["trainers"]
+    limit = re.search(r"^#define MAX_NOTABLE_MOVE_POOL (\d+)$",
+                      (ROOT / "include/notable_moves.h").read_text(), re.M)
+    if limit is None:
+        raise ValueError("runtime move-pool capacity is missing")
+    pool_capacity = int(limit.group(1))
     if data["version"] != 1 or len(trainers) != 38:
         raise ValueError("v0 requires catalog version 1 and exactly 38 entries")
     known = {
@@ -77,11 +116,16 @@ def validate(data: dict) -> None:
                 value = slot.get(field)
                 if value and symbol(prefix, value) not in known[prefix]:
                     raise ValueError(f"{name}: unknown {field} {value}")
-        if not trainer["movePool"]:
-            raise ValueError(f"{name}: empty move pool")
+        if not 1 <= len(trainer["movePool"]) <= pool_capacity:
+            raise ValueError(f"{name}: move pool must contain 1..{pool_capacity} entries")
         for entry in trainer["movePool"]:
-            if symbol("MOVE_", entry["move"]) not in known["MOVE_"] or not 0 <= entry.get("fromLevel", 0) <= 100:
+            move = symbol("MOVE_", entry["move"])
+            if move == "MOVE_NONE" or move not in known["MOVE_"]:
                 raise ValueError(f"{name}: invalid move pool entry {entry}")
+            if "fromLevel" in entry and (type(entry["fromLevel"]) is not int
+                                         or not 1 <= entry["fromLevel"] <= 100):
+                raise ValueError(f"{name}: fromLevel must be an integer from 1 to 100")
+        validate_frustration(name, trainer["movePool"])
         for alias in trainer["encounterIds"]:
             if alias not in opponents or alias in aliases:
                 raise ValueError(f"{name}: unknown or duplicate encounter alias {alias}")

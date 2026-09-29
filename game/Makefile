@@ -526,6 +526,7 @@ endif
 
 .PHONY: notable-trainers-audit
 notable-trainers-audit:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/notable_trainers -p 'test_*.py' -q
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/notable_trainers/generate.py --check
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/notable_trainers/evolution.py --check
 

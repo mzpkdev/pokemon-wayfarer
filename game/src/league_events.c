@@ -31,7 +31,7 @@ static const u32 sLeagueContentVersions[LEAGUE_EVENT_CONTENT_VERSION_COUNT] =
     1, // world progress and trainer scalers
     1, // growth archetypes
     1, // evolution-level table
-    1, // move pools and learnsets
+    2, // move pools and learnsets
     1, // play styles and AI tiers
 };
 

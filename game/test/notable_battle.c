@@ -3,6 +3,7 @@
 #include "battle_ai_main.h"
 #include "battle_main.h"
 #include "battle_setup.h"
+#include "battle_util.h"
 #include "battle_util2.h"
 #include "data.h"
 #include "debug.h"
@@ -284,6 +285,77 @@ TEST("Notable league opponent uses the frozen run entry rating")
     FreeBattleResources();
 #endif
 }
+
+#if WAYFARER_LEAGUE_EVENTS
+TEST("Off-field Future Sight and reserve AI use accepted league types after option changes")
+{
+    const struct LeagueSavedTeam *team;
+    u8 selectedIndex = PARTY_SIZE;
+    u8 selectedType = NUMBER_OF_MON_TYPES;
+    u8 count, i, typeSlot;
+    u16 probeMove = MOVE_NONE;
+    uq4_12_t liveMultiplier = 0, frozenMultiplier = 0;
+    u16 carrier = TRAINER_WAYFARER_INDIGO_LORELEI;
+
+    WayfarerInitPersistentState();
+    for (i = 0; i < 8; i++)
+        SetBadgeStateForRegion(REGION_KANTO, i, TRUE);
+    SetTrainerRating(80);
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Type = TRUE;
+    EXPECT(Test_AdmitCircuitRun(CIRCUIT_STAGE_INDIGO));
+    EXPECT(GetAcceptedLeagueEventMember(0, &team));
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Type = FALSE;
+
+    BeginNotableConstruction(80, BATTLE_TYPE_TRAINER);
+    TRAINER_BATTLE_PARAM.mode = TRAINER_BATTLE_SINGLE_NO_INTRO_TEXT;
+    TRAINER_BATTLE_PARAM.opponentA = carrier;
+    BattleSetup_ConfigureTrainerBattle(NULL);
+    EXPECT_EQ(TRAINER_BATTLE_PARAM.opponentA, team->sourceTrainerId);
+    count = CreateNPCTrainerPartyForOpponent(gEnemyParty, team->sourceTrainerId, TRUE, gBattleTypeFlags);
+    EXPECT_EQ(count, team->teamSize);
+    for (i = 0; i < count && selectedIndex == PARTY_SIZE; i++)
+    {
+        const struct LeagueSavedMon *saved = &team->members[team->battleOrder[i]];
+        u8 naturalType0 = GetSpeciesType(saved->species, 0);
+        u8 naturalType1 = GetSpeciesType(saved->species, 1);
+        for (typeSlot = 0; typeSlot < 2; typeSlot++)
+            if (saved->types[typeSlot] != naturalType0 && saved->types[typeSlot] != naturalType1)
+            {
+                selectedIndex = i;
+                selectedType = saved->types[typeSlot];
+                break;
+            }
+    }
+    EXPECT_LT(selectedIndex, count);
+    if (selectedIndex < count)
+    {
+        gBattlerPartyIndexes[B_BATTLER_1] = (selectedIndex + 1) % count;
+        gBattleStruct->futureSight[B_BATTLER_0].partyIndex = selectedIndex;
+        EXPECT(IsFutureSightAttackerInParty(B_BATTLER_1, B_BATTLER_0, MOVE_FUTURE_SIGHT));
+        EXPECT(HasFutureSightPartyMonStab(&gEnemyParty[selectedIndex], selectedType));
+        for (u16 move = 1; move < MOVES_COUNT; move++)
+        {
+            u16 species = GetMonData(&gEnemyParty[selectedIndex], MON_DATA_SPECIES);
+            frozenMultiplier = CalcPartyMonTypeEffectivenessMultiplierForMon(move, &gEnemyParty[selectedIndex], ABILITY_NONE);
+            liveMultiplier = CalcPartyMonTypeEffectivenessMultiplier(move, species, ABILITY_NONE);
+            if (frozenMultiplier != liveMultiplier)
+            {
+                probeMove = move;
+                break;
+            }
+        }
+        EXPECT_NE(probeMove, MOVE_NONE);
+        if (probeMove != MOVE_NONE)
+            EXPECT_NE(frozenMultiplier, liveMultiplier);
+        ResetLeagueEventBattleProof();
+        EXPECT(!HasFutureSightPartyMonStab(&gEnemyParty[selectedIndex], selectedType));
+        if (probeMove != MOVE_NONE)
+            EXPECT_EQ(CalcPartyMonTypeEffectivenessMultiplierForMon(probeMove, &gEnemyParty[selectedIndex], ABILITY_NONE), liveMultiplier);
+    }
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Type = FALSE;
+    FreeBattleResources();
+}
+#endif
 
 #if WAYFARER_LEAGUE_EVENTS
 TEST("Corrupt accepted lineup cannot fall through to the old league room carrier")

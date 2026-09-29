@@ -7896,6 +7896,19 @@ static inline s32 DoMoveDamageCalc(struct BattleContext *ctx)
     return DoMoveDamageCalcVars(ctx);
 }
 
+bool32 HasFutureSightPartyMonStab(struct Pokemon *partyMon, enum Type moveType)
+{
+    u8 frozenTypes[2];
+    u32 species;
+
+    // Future Sight still uses its original user's party mon after a switch.
+    // A league event's accepted types may differ from the current options.
+    if (GetLeagueEventFrozenTypesForMon(partyMon, frozenTypes))
+        return frozenTypes[0] == moveType || frozenTypes[1] == moveType;
+    species = GetMonData(partyMon, MON_DATA_SPECIES);
+    return GetSpeciesType(species, 0) == moveType || GetSpeciesType(species, 1) == moveType;
+}
+
 static inline s32 DoFutureSightAttackDamageCalcVars(struct BattleContext *ctx)
 {
     s32 dmg;
@@ -7909,7 +7922,6 @@ static inline s32 DoFutureSightAttackDamageCalcVars(struct BattleContext *ctx)
     struct Pokemon *party = GetBattlerParty(battlerAtk);
     struct Pokemon *partyMon = &party[gBattleStruct->futureSight[battlerDef].partyIndex];
     u32 partyMonLevel = GetMonData(partyMon, MON_DATA_LEVEL);
-    u32 partyMonSpecies = GetMonData(partyMon, MON_DATA_SPECIES);
     gBattleMovePower = GetMovePower(move);
 
     if (IsBattleMovePhysical(move))
@@ -7929,7 +7941,7 @@ static inline s32 DoFutureSightAttackDamageCalcVars(struct BattleContext *ctx)
     }
 
     // Same type attack bonus
-    if (GetSpeciesType(partyMonSpecies, 0) == moveType || GetSpeciesType(partyMonSpecies, 1) == moveType)
+    if (HasFutureSightPartyMonStab(partyMon, moveType))
         DAMAGE_APPLY_MODIFIER(UQ_4_12(1.5));
     else
         DAMAGE_APPLY_MODIFIER(UQ_4_12(1.0));
@@ -8452,10 +8464,9 @@ uq4_12_t CalcTypeEffectivenessMultiplier(struct BattleContext *ctx)
     return modifier;
 }
 
-uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(enum Move move, u16 speciesDef, enum Ability abilityDef)
+static uq4_12_t CalcPartyMonTypeEffectivenessMultiplierByTypes(enum Move move, enum Type moveType, enum Type type1, enum Type type2, enum Ability abilityDef)
 {
     uq4_12_t modifier = UQ_4_12(1.0);
-    enum Type moveType = GetBattleMoveType(move);
 
     if (move != MOVE_STRUGGLE && moveType != TYPE_MYSTERY)
     {
@@ -8465,9 +8476,9 @@ uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(enum Move move, u16 speciesDef,
         ctx.updateFlags = FALSE;
         ctx.abilityDef = abilityDef;
 
-        MulByTypeEffectiveness(&ctx, &modifier, GetSpeciesType(speciesDef, 0));
-        if (GetSpeciesType(speciesDef, 1) != GetSpeciesType(speciesDef, 0))
-            MulByTypeEffectiveness(&ctx, &modifier, GetSpeciesType(speciesDef, 1));
+        MulByTypeEffectiveness(&ctx, &modifier, type1);
+        if (type2 != type1)
+            MulByTypeEffectiveness(&ctx, &modifier, type2);
 
         if (ctx.moveType == TYPE_GROUND && abilityDef == ABILITY_LEVITATE && !(gFieldStatuses & STATUS_FIELD_GRAVITY))
             modifier = UQ_4_12(0.0);
@@ -8476,6 +8487,31 @@ uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(enum Move move, u16 speciesDef,
     }
 
     return modifier;
+}
+
+uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(enum Move move, u16 speciesDef, enum Ability abilityDef)
+{
+    enum Type moveType = GetBattleMoveType(move);
+    if (move == MOVE_STRUGGLE || moveType == TYPE_MYSTERY)
+        return UQ_4_12(1.0);
+    return CalcPartyMonTypeEffectivenessMultiplierByTypes(move, moveType,
+        GetSpeciesType(speciesDef, 0), GetSpeciesType(speciesDef, 1), abilityDef);
+}
+
+uq4_12_t CalcPartyMonTypeEffectivenessMultiplierForMon(enum Move move, struct Pokemon *mon, enum Ability abilityDef)
+{
+    u8 frozenTypes[2];
+    u16 species;
+    enum Type moveType = GetBattleMoveType(move);
+
+    if (move == MOVE_STRUGGLE || moveType == TYPE_MYSTERY)
+        return UQ_4_12(1.0);
+
+    if (GetLeagueEventFrozenTypesForMon(mon, frozenTypes))
+        return CalcPartyMonTypeEffectivenessMultiplierByTypes(move, moveType, frozenTypes[0], frozenTypes[1], abilityDef);
+    species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    return CalcPartyMonTypeEffectivenessMultiplierByTypes(move, moveType,
+        GetSpeciesType(species, 0), GetSpeciesType(species, 1), abilityDef);
 }
 
 static uq4_12_t GetInverseTypeMultiplier(uq4_12_t multiplier)

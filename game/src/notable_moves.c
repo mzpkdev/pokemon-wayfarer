@@ -6,7 +6,6 @@
 #include "constants/pokemon.h"
 #include "constants/species.h"
 
-#define MAX_NOTABLE_MOVE_POOL 32
 #define MAX_NOTABLE_ANCESTRY 8
 
 struct NotablePredecessor
@@ -32,6 +31,19 @@ static const struct NotablePredecessor *FindPredecessor(u16 species)
     }
     if (low < ARRAY_COUNT(sNotablePredecessors) && sNotablePredecessors[low].species == species)
         return &sNotablePredecessors[low];
+    return NULL;
+}
+
+// Babies are excluded from party step-down, but own their lines' egg moves.
+static const struct NotablePredecessor *FindEggMovePredecessor(u16 species)
+{
+    const struct NotablePredecessor *edge = FindPredecessor(species);
+    u32 i;
+    if (edge != NULL)
+        return edge;
+    for (i = 0; i < ARRAY_COUNT(sNotableBabyPredecessors); i++)
+        if (sNotableBabyPredecessors[i].species == species)
+            return &sNotableBabyPredecessors[i];
     return NULL;
 }
 
@@ -69,7 +81,7 @@ static u16 GetLineBase(u16 species)
     u32 depth;
     for (depth = 0; depth < MAX_NOTABLE_ANCESTRY; depth++)
     {
-        const struct NotablePredecessor *edge = FindPredecessor(species);
+        const struct NotablePredecessor *edge = FindEggMovePredecessor(species);
         if (edge == NULL)
             break;
         species = edge->predecessor;

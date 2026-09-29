@@ -3,6 +3,8 @@
 
 #include "notable_trainers.h"
 
+#define MAX_NOTABLE_MOVE_POOL 32
+
 struct TrainerMon;
 
 // Apply the shared evolution-level table's downward rule to the authored species.
