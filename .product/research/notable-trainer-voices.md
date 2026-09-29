@@ -1,10 +1,11 @@
 # Notable trainer voice bits (review draft)
 
 Voice bits are short reusable lines for the 38 notable trainers in
-`devtools/ui/src/modules/trainer-balance/catalog.json`. Generic "haunt"
-dialogue (overworld meeting spots) splices them in, so one haunt script works
-for any trainer. The haunt line carries the facts of the place. The trainer's
-bits carry personality.
+`devtools/ui/src/modules/trainer-balance/catalog.json`.
+[Notable haunts](../prds/notable-haunts.md) splice them into generic dialogue
+at overworld meeting spots, so one haunt script works for any trainer. The
+haunt line carries the facts of the place and its activity. The trainer's bits
+carry personality.
 
 Status: review draft. Nothing here is wired into scripts yet.
 
@@ -14,8 +15,8 @@ Every trainer has all 12.
 
 | Bit | When |
 | --- | --- |
-| `HELLO` | a friend greets you |
-| `MEET` | introducing themselves to a stranger (includes their name) |
+| `HELLO` | greets a player they have met before |
+| `MEET` | introducing themselves the first time (includes their name) |
 | `NOT_YET` | famous but unbeaten: "beat me properly first". Gym Leaders may mention their GYM; Elite Four and Champions don't |
 | `NEWS` | lead-in before a gossip line |
 | `ASK` | lead-in to a request or favour |
@@ -27,23 +28,49 @@ Every trainer has all 12.
 | `BYE` | farewell |
 | `QUIRK` | a signature aside showing their character |
 
+## Trainer values
+
+Each trainer also carries two values that haunts read. They are authored in
+the notable-trainer catalog, and the
+[haunts spec](../specs/notable-haunts.md#trainer-values) owns their meaning.
+
+- **Manner** is `warm`, `proud` or `cold`. It says which quests a trainer can
+  give, not how they sound: warm trainers ask you for help, proud ones
+  challenge or enlist you, and cold ones command you. Each quest type lists
+  the manners it fits. `ASK` lines lean the same way. Where a manner may
+  surprise, a **Manner reason** gives the canon behind it.
+- **Buddy** names one roster slot: the slot number (1-6, as in the catalog
+  spec) and the species as authored. It is the trainer's anime companion, or
+  their later-game companion, or else their iconic ace. `{BUDDY}` resolves at
+  runtime to that slot's current species after the
+  [downward rule](../specs/player-trainer-rating.md#evolution-stages), even
+  before the slot has joined the team. So Brock's buddy is ONIX early in the
+  journey and STEELIX later.
+
 ## Rules
 
 - **Haunt-safe.** No places, map features, times or weather. No claims about
   the player's team. No type claims about the location. The trainer's own
   team or type is fine.
 - **Named POKéMON** appear only when the species is on that trainer's catalog
-  roster. Otherwise the line uses `{ACE}` or stays generic.
-- **Slots:** `{PLAYER}`, `{ITEM}`, `{ACE}`, `{NAME}`. Names in `MEET` are
-  written out, so `{NAME}` isn't used in this draft.
+  roster. The buddy is never named: lines use `{BUDDY}` and must read
+  correctly at every stage ("{BUDDY} gets fussy if I burn the rice" works for
+  ONIX and STEELIX). Other species stay generic or use `{ACE}`.
+- **Nicknames** are allowed when canon has one. Jasmine's AMPHY is the only
+  nickname used; it reads for every stage and is noted in her section.
+- **Slots:** `{PLAYER}`, `{ITEM}`, `{ACE}` (the signature POKéMON's current
+  species) and `{BUDDY}`. `{GOSSIP}` belongs to haunt dialogue and follows
+  `NEWS`. Trainers write their own name out in `MEET`, so there is no name
+  slot.
 - **Length:** each line fits one GBA text box, 2 lines of about 36
-  characters, so 70 characters at most. Line breaks are left to the text
-  formatter. Game text style: POKéMON, GYM, names in caps.
+  characters, so 70 characters at most, counting `{PLAYER}` as 7 characters,
+  `{ITEM}` as 12, and `{ACE}` and `{BUDDY}` as 10. Line breaks are left to
+  the text formatter. Game text style: POKéMON, GYM, names in caps.
+- **Revisits.** A haunt can always be revisited while the trainer is placed
+  there, so "come back later" lines are fine.
 - **Tone:** dated or uncomfortable gags are left out. Villains stay
   villainous.
 - **Tate & Liza** alternate halves of every line ("TATE: … LIZA: …").
-- **Manner** is one of `warm`, `proud` or `cold`. It follows the placeholder
-  assignment unless canon clearly disagrees, and every change gives a reason.
 
 ## Source priority
 
@@ -66,6 +93,8 @@ needs checking before the lines ship.
 
 Manner: **warm**
 
+Buddy: slot 1, Steelix (ONIX early). Anime Onix.
+
 | Bit | Line |
 | --- | --- |
 | HELLO | Hey, {PLAYER}! Good to see you. Eating well, I hope? |
@@ -79,15 +108,17 @@ Manner: **warm**
 | PRAISE | Nicely done! That's rock-hard willpower if I ever saw it. |
 | GIFT | Take this {ITEM}. A good breeder always shares supplies. |
 | BYE | Take care! And keep your POKéMON well fed! |
-| QUIRK | STEELIX gets fussy if I burn the rice. So do my little siblings. |
+| QUIRK | {BUDDY} gets fussy if I burn the rice. So do my little siblings. |
 
 Hooks: cooking for friends and POKéMON (anime); dream of becoming a POKéMON
 Breeder (anime); a big family of younger siblings he looks after (anime);
-"rock-hard willpower" (RBY/FRLG gym text) (verify).
+"rock-hard willpower" (RBY/FRLG gym text) (verify); his Onix (anime).
 
 ### Misty
 
 Manner: **warm**
+
+Buddy: slot 2, Golduck (PSYDUCK early). Anime Psyduck.
 
 | Bit | Line |
 | --- | --- |
@@ -101,16 +132,19 @@ Manner: **warm**
 | NOT_READY | Not yet! Come back when you can keep up with me. |
 | PRAISE | Wow, not bad! You'd almost make a decent Water trainer! |
 | GIFT | Take this {ITEM}! Don't say I never gave you anything! |
-| BYE | See ya! And don't go getting soft on me! |
+| BYE | See ya! ...{BUDDY}, get back in your ball! Not again! |
 | QUIRK | Just keep Bug POKéMON away from me. Seriously. Ugh! |
 
 Hooks: "My policy is an all-out offensive with Water-type POKéMON!" (RBY/FRLG
 gym text); dream of becoming a Water POKéMON Master (anime); fear of Bug
-POKéMON (anime); quick, feisty temper (anime).
+POKéMON (anime); quick, feisty temper (anime); Psyduck popping out of its
+ball uninvited (anime).
 
 ### Lt. Surge
 
 Manner: **proud**
+
+Buddy: slot 1, Raichu (PIKACHU early). His anime Raichu, and the Pikachu gag.
 
 | Bit | Line |
 | --- | --- |
@@ -125,7 +159,7 @@ Manner: **proud**
 | PRAISE | Ahaha! You're the real deal, kid! Outstanding! |
 | GIFT | Supply drop, kid: one {ITEM}! Use it well! |
 | BYE | Dismissed, kid! Stay sharp! |
-| QUIRK | ELECTRIC POKéMON saved me in the war! RAICHU never lets me forget. |
+| QUIRK | ELECTRIC POKéMON saved me in the war! {BUDDY} never lets me forget. |
 
 Hooks: "Hey, kid!", "You won't live long in combat!" and "Electric POKéMON
 saved me during the war!" (RBY/FRLG); "The Lightning American!" title (RBY/FRLG
@@ -134,6 +168,8 @@ gym sign); his Raichu beating Ash's unevolved Pikachu (anime).
 ### Erika
 
 Manner: **warm**
+
+Buddy: slot 1, Vileplume (ODDISH, then GLOOM). Anime Gloom.
 
 | Bit | Line |
 | --- | --- |
@@ -156,6 +192,8 @@ Hooks: dozing off (RBY/FRLG, HGSS); "I teach the art of flower arranging"
 ### Janine
 
 Manner: **warm**
+
+Buddy: slot 1, Venomoth (VENONAT early). Iconic ace.
 
 | Bit | Line |
 | --- | --- |
@@ -181,6 +219,8 @@ Masters EX).
 
 Manner: **cold**
 
+Buddy: slot 4, Gengar (GASTLY, then HAUNTER). Anime Haunter.
+
 | Bit | Line |
 | --- | --- |
 | HELLO | {PLAYER}. I foresaw that you would come. |
@@ -194,16 +234,17 @@ Manner: **cold**
 | PRAISE | Even I did not foresee that. Well done. |
 | GIFT | Take this {ITEM}. My visions say you will need it. |
 | BYE | We will meet again. I have seen it. |
-| QUIRK | A Ghost POKéMON once made me laugh. It was... unexpected. |
+| QUIRK | {BUDDY} once made me laugh. It was... unexpected. |
 
 Hooks: "I had a vision of your arrival! I have had psychic powers since I was
-a child" (RBY/FRLG); Ash's Haunter making her laugh (anime). The laughing
-Pokémon is kept generic: the catalog tags Gengar as "anime Haunter", but in
-the anime it was Haunter.
+a child" (RBY/FRLG); Ash's Haunter making her laugh (anime), which the
+catalog files as her Gengar slot ("anime Haunter").
 
 ### Blaine
 
 Manner: **proud**
+
+Buddy: slot 1, Magmortar (MAGMAR early). His RBY and FRLG ace.
 
 | Bit | Line |
 | --- | --- |
@@ -227,6 +268,8 @@ BURN HEAL!" (RBY/FRLG).
 
 Manner: **cold**
 
+Buddy: slot 4, Persian (MEOWTH early). Anime Persian.
+
 | Bit | Line |
 | --- | --- |
 | HELLO | So. {PLAYER}. You keep turning up. |
@@ -240,7 +283,7 @@ Manner: **cold**
 | PRAISE | Impressive. I rarely have cause to say that. |
 | GIFT | Take this {ITEM}. Consider it a loan, not a kindness. |
 | BYE | Go. We will meet again. |
-| QUIRK | Ah, PERSIAN. The only one who never disappoints me. |
+| QUIRK | Ah, {BUDDY}. The only one who never disappoints me. |
 
 Hooks: Persian at his side (anime); boss of TEAM ROCKET (RBY/FRLG, HGSS,
 Let's Go). He stays cold and transactional throughout.
@@ -248,6 +291,8 @@ Let's Go). He stays cold and transactional throughout.
 ### Blue
 
 Manner: **proud**
+
+Buddy: slot 1, Umbreon (EEVEE early). Anime Gary's Umbreon.
 
 | Bit | Line |
 | --- | --- |
@@ -272,6 +317,8 @@ with trust and love (RBY/FRLG).
 
 Manner: **proud**
 
+Buddy: slot 1, Lapras. Her RBY and FRLG ace and Masters EX partner.
+
 | Bit | Line |
 | --- | --- |
 | HELLO | Ah, {PLAYER}. Come to see me? How refreshing. |
@@ -284,7 +331,7 @@ Manner: **proud**
 | NOT_READY | Not yet. Come back once you're a little sharper. |
 | PRAISE | Impressive. You kept your cool. I respect that. |
 | GIFT | Take this {ITEM}. Consider it a cool reward. |
-| BYE | Come along, LAPRAS. Until next time. |
+| BYE | Come along, {BUDDY}. Until next time. |
 | QUIRK | Don't tell anyone, but I collect POKéMON dolls. They're adorable. |
 
 Hooks: "No one can best me when it comes to icy POKéMON!" (RBY/FRLG);
@@ -294,6 +341,8 @@ full of POKéMON dolls (FRLG Sevii postgame) (verify).
 ### Bruno
 
 Manner: **proud**
+
+Buddy: slot 1, Machamp (MACHOP, then MACHOKE). Iconic ace.
 
 | Bit | Line |
 | --- | --- |
@@ -308,7 +357,7 @@ Manner: **proud**
 | PRAISE | Hoo hah! Superior power! You've earned my respect! |
 | GIFT | Take this {ITEM}. Use it to grow even stronger! |
 | BYE | Train hard! Hoo hah! |
-| QUIRK | MACHAMP and I have trained side by side for years. Muscles never lie! |
+| QUIRK | {BUDDY} and I have trained together for years. Muscles never lie! |
 
 Hooks: "Hoo hah!" and "We will grind you down with our superior power!"
 (RBY/FRLG, HGSS); training alongside his Fighting POKéMON (RBY/FRLG, HGSS).
@@ -316,6 +365,8 @@ Hooks: "Hoo hah!" and "We will grind you down with our superior power!"
 ### Agatha
 
 Manner: **cold**
+
+Buddy: slot 1, Gengar (GASTLY, then HAUNTER). Iconic ace.
 
 | Bit | Line |
 | --- | --- |
@@ -329,7 +380,7 @@ Manner: **cold**
 | NOT_READY | Hah! Not yet, child. You'd only bore me. |
 | PRAISE | Not bad. POKéMON are for fighting, and you know it. |
 | GIFT | Take this {ITEM}. Don't make me regret it. |
-| BYE | Off with you, child. GENGAR and I have things to do. |
+| BYE | Off with you, child. {BUDDY} and I have things to do. |
 | QUIRK | That old duff OAK was tough once. Now he fiddles with his POKéDEX! |
 
 Hooks: old rivalry with Prof. Oak, "That old duff was once tough and
@@ -339,6 +390,8 @@ handsome", "POKéMON are for fighting!" and calling the player "child"
 ### Lance
 
 Manner: **proud**
+
+Buddy: slot 1, Dragonite (DRATINI, then DRAGONAIR). Iconic ace.
 
 | Bit | Line |
 | --- | --- |
@@ -352,12 +405,14 @@ Manner: **proud**
 | NOT_READY | Not yet. A dragon's power must be earned. |
 | PRAISE | Remarkable. You have the heart of a dragon master. |
 | GIFT | Take this {ITEM}. Use it well, as I know you will. |
-| BYE | Until next time. DRAGONITE, let's go! |
+| BYE | Until next time. {BUDDY}, let's go! |
 | QUIRK | My cousin CLAIR pushes me hard. She'll never admit it, though. |
 
 Hooks: dragon master (RBY/FRLG, GSC/HGSS); Dragonite (RBY/FRLG, GSC/HGSS
 ace); cousin Clair (GSC/HGSS). Lance's catalog home region is Kanto, so he is
 filed here.
+Manner reason: a heroic mentor in HGSS, he enlists the player as a fellow
+trainer rather than asking favours.
 
 ---
 
@@ -366,6 +421,8 @@ filed here.
 ### Koga
 
 Manner: **cold**
+
+Buddy: slot 1, Crobat (ZUBAT, then GOLBAT). His HGSS ace.
 
 | Bit | Line |
 | --- | --- |
@@ -382,13 +439,15 @@ Manner: **cold**
 | BYE | Until our paths cross again. Fwahahaha! |
 | QUIRK | JANINE trains hard. She'll surpass me someday. Don't tell her. |
 
-Hooks: "Fwahahaha!" (RBY/FRLG, GSC/HGSS); "I live in shadows, a ninja!" (GSC/HGSS
-Elite Four text); father of Janine (GSC/HGSS). His catalog home region is
-Johto, so he is filed here.
+Hooks: "Fwahahaha!" (RBY/FRLG, GSC/HGSS); "I live in shadows, a ninja!"
+(GSC/HGSS Elite Four text); father of Janine (GSC/HGSS). His catalog home
+region is Johto, so he is filed here.
 
 ### Falkner
 
-Manner: **proud** (placeholder was warm)
+Manner: **proud**
+
+Buddy: slot 1, Pidgeot (PIDGEY, then PIDGEOTTO). Anime and HGSS Pidgeotto.
 
 | Bit | Line |
 | --- | --- |
@@ -396,7 +455,7 @@ Manner: **proud** (placeholder was warm)
 | MEET | I'm FALKNER. I carry on my father's work with bird POKéMON. |
 | NOT_YET | Beat me at my GYM first. My birds won't fall so easily! |
 | NEWS | Word flies fast. Here's what I heard. |
-| ASK | May I ask a favor? I'd be in your debt. |
+| ASK | I have a job for a skilled trainer. Are you up to it? |
 | YES | Thank you! Father always said to rely on good friends. |
 | NO | I see. I'll manage on my own, then. |
 | NOT_READY | Not yet. Even fledglings need time before they fly. |
@@ -408,12 +467,14 @@ Manner: **proud** (placeholder was warm)
 Hooks: carrying on his father's bird POKéMON legacy (GSC/HGSS); "People say
 you can clip Flying-type POKéMON's wings with a jolt of electricity... I won't
 allow such insults" (GSC/HGSS).
-Manner reason: in canon he takes pride in his birds and his father, and he
-bristles at slights, so proud fits better than warm.
+Manner reason: he takes pride in his birds and his father and bristles at
+slights, so he challenges the player rather than asking for help.
 
 ### Bugsy
 
 Manner: **warm**
+
+Buddy: slot 1, Scizor (SCYTHER early). Anime and GSC Scyther.
 
 | Bit | Line |
 | --- | --- |
@@ -428,14 +489,16 @@ Manner: **warm**
 | PRAISE | Wow! That was amazing! Can I write it down? |
 | GIFT | Take this {ITEM}! I found it during my research. |
 | BYE | Bye! If you spot a rare bug, tell me first! |
-| QUIRK | Did you know SCIZOR's pincers have eye patterns? Fascinating! |
+| QUIRK | I measure {BUDDY} every day. For research! It hates that. |
 
 Hooks: "I never lose when it comes to Bug POKéMON" and his research (GSC/HGSS);
-Scyther as his signature (anime, GSC; SCIZOR on roster).
+Scyther as his signature (anime, GSC).
 
 ### Whitney
 
 Manner: **warm**
+
+Buddy: slot 1, Miltank. Anime and GSC Miltank.
 
 | Bit | Line |
 | --- | --- |
@@ -447,7 +510,7 @@ Manner: **warm**
 | YES | Yay! You're the best! |
 | NO | Waaah! Meanie! ...Just kidding. Mostly. |
 | NOT_READY | Nuh-uh! Not yet! Come back when you're ready! |
-| PRAISE | Wow! That was so cool! MILTANK thinks so too! |
+| PRAISE | Wow! That was so cool! {BUDDY} thinks so too! |
 | GIFT | This {ITEM} is for you! Yay, presents! |
 | BYE | Bye-bye! Call me sometime, 'kay? |
 | QUIRK | Waaaah! ...Sorry. I cry when I lose. I'm fine now! |
@@ -458,7 +521,9 @@ PokéGear).
 
 ### Morty
 
-Manner: **proud** (not in any placeholder list)
+Manner: **warm**
+
+Buddy: slot 1, Gengar (GASTLY, then HAUNTER). Anime Gengar.
 
 | Bit | Line |
 | --- | --- |
@@ -478,13 +543,15 @@ Manner: **proud** (not in any placeholder list)
 Hooks: training to meet the legendary rainbow POKéMON (Ho-Oh), which isn't
 named because it isn't on his roster (GSC/HGSS); "I can see what you cannot"
 mystic sight (GSC/HGSS) (verify); friendship with Eusine
-(Crystal/HGSS).
-Manner reason: Morty isn't in any placeholder list. He is serene and sure of
-his calling rather than chummy or hostile, so I proposed proud.
+(Crystal/HGSS); his Gengar (anime).
+Manner reason: he is gentle and quietly kind to the player, and he asks for
+help rather than setting tests.
 
 ### Chuck
 
 Manner: **warm**
+
+Buddy: slot 1, Poliwrath (POLIWAG, then POLIWHIRL). Anime and GSC Poliwrath.
 
 | Bit | Line |
 | --- | --- |
@@ -509,6 +576,9 @@ Hooks: "WAHAHAH!" and "My POKéMON will crush stones and shatter bones!"
 
 Manner: **warm**
 
+Buddy: slot 3, Ampharos (MAREEP, then FLAAFFY). Amphy, the lighthouse
+Ampharos.
+
 | Bit | Line |
 | --- | --- |
 | HELLO | Oh... {PLAYER}. Um... hello. It's nice to see you. |
@@ -522,14 +592,17 @@ Manner: **warm**
 | PRAISE | That was wonderful... You're really strong. |
 | GIFT | Um... please take this {ITEM}. I hope it helps. |
 | BYE | Goodbye... Please take care. |
-| QUIRK | AMPHAROS was sick once. I stayed by its side. It's strong now. |
+| QUIRK | AMPHY was sick once. I stayed by its side. It's strong now. |
 
 Hooks: nursing the sick Ampharos, Amphy (GSC/HGSS, anime); shy, halting
 speech (GSC/HGSS); Steel type and Steelix (GSC/HGSS, anime).
+Nickname: her lines say AMPHY, which fits MAREEP, FLAAFFY and AMPHAROS alike.
 
 ### Pryce
 
 Manner: **proud**
+
+Buddy: slot 1, Mamoswine (SWINUB, then PILOSWINE). Anime Piloswine.
 
 | Bit | Line |
 | --- | --- |
@@ -544,16 +617,18 @@ Manner: **proud**
 | PRAISE | Hm! You remind me of myself, long ago. |
 | GIFT | Take this {ITEM}. At my age, I've little use for it. |
 | BYE | Go on, then. Don't keep your POKéMON waiting. |
-| QUIRK | MAMOSWINE and I have been together a long, long time. |
+| QUIRK | {BUDDY} and I have been together a long, long time. |
 
 Hooks: an elder who has "seen and suffered much" and "been with POKéMON since
 before you were born" (GSC/HGSS); his lifelong bond with Piloswine (anime)
-(verify), with MAMOSWINE on the roster. His "winter trainer" title is left out because
-it's a season word.
+(verify), which is his MAMOSWINE slot. His "winter trainer" title is left
+out because it's a season word.
 
 ### Clair
 
 Manner: **proud**
+
+Buddy: slot 2, Dragonite (DRATINI, then DRAGONAIR). Anime Dragonair.
 
 | Bit | Line |
 | --- | --- |
@@ -575,7 +650,9 @@ accept defeat and withholding the badge (GSC/HGSS); cousin Lance (GSC/HGSS).
 
 ### Will
 
-Manner: **cold**
+Manner: **proud**
+
+Buddy: slot 1, Xatu (NATU early). His GSC and HGSS ace.
 
 | Bit | Line |
 | --- | --- |
@@ -583,10 +660,10 @@ Manner: **cold**
 | MEET | I am WILL. I have trained all around the world. |
 | NOT_YET | Defeat me in battle first. I will not lose so easily. |
 | NEWS | My psychic POKéMON sensed something. Listen. |
-| ASK | I require your assistance. Do not disappoint me. |
+| ASK | I have a task worthy of your skill. Will you take it on? |
 | YES | Very good. |
 | NO | Then go. I have no use for hesitation. |
-| NOT_READY | You are not ready. My XATU sees it clearly. |
+| NOT_READY | You are not ready. My {BUDDY} sees it clearly. |
 | PRAISE | ...Impressive. The mask hides a great deal, but not that. |
 | GIFT | Take this {ITEM}. Consider it a courtesy. |
 | BYE | Farewell. Do not keep me waiting next time. |
@@ -594,10 +671,14 @@ Manner: **cold**
 
 Hooks: "I have trained all around the world, making my psychic POKéMON
 powerful" (GSC/HGSS); his mask (GSC/HGSS design); Xatu (GSC/HGSS ace).
+Manner reason: he is reserved and formal, but he tests challengers rather than
+ordering them about.
 
 ### Karen
 
 Manner: **cold**
+
+Buddy: slot 1, Umbreon (EEVEE early). Her GSC and HGSS ace.
 
 | Bit | Line |
 | --- | --- |
@@ -626,6 +707,8 @@ people. Truly skilled trainers should try to win with their favorites."
 
 Manner: **warm**
 
+Buddy: slot 1, Probopass (NOSEPASS early). Anime and RSE Nosepass.
+
 | Bit | Line |
 | --- | --- |
 | HELLO | Hello, {PLAYER}! Ready for another lesson? |
@@ -639,7 +722,7 @@ Manner: **warm**
 | PRAISE | Wonderful! That was textbook-perfect! |
 | GIFT | Take this {ITEM}. A reward for such a good student! |
 | BYE | Goodbye! Don't forget to review your notes! |
-| QUIRK | PROBOPASS always faces north. It's very dependable! |
+| QUIRK | {BUDDY} always faces north. It's very dependable! |
 
 Hooks: teaching at the Trainer's School (anime, RSE/ORAS); learning that book
 study needs real battle experience (anime, ORAS) (verify); Nosepass as her
@@ -649,6 +732,8 @@ Nosepass per the POKéDEX) (verify).
 ### Brawly
 
 Manner: **warm**
+
+Buddy: slot 1, Hariyama (MAKUHITA early). Anime and RSE Makuhita.
 
 | Bit | Line |
 | --- | --- |
@@ -663,7 +748,7 @@ Manner: **warm**
 | PRAISE | Whoa! You made a much bigger splash than I expected! |
 | GIFT | Take this {ITEM}! Keep riding high! |
 | BYE | Later! Stay stoked! |
-| QUIRK | HARIYAMA and I train like we surf: wipe out, get back up! |
+| QUIRK | {BUDDY} and I train like we surf: wipe out, get back up! |
 
 Hooks: surfer persona (RSE/ORAS, anime); "You made a much bigger splash than I
 expected!" (RSE/ORAS); Makuhita/Hariyama (RSE/ORAS ace, anime). The wave
@@ -672,6 +757,8 @@ lines are surfing slang about himself, not claims about the location.
 ### Wattson
 
 Manner: **warm**
+
+Buddy: slot 1, Manectric (ELECTRIKE early). His RSE ace.
 
 | Bit | Line |
 | --- | --- |
@@ -693,7 +780,9 @@ building GYM traps and gadgets (RSE) (verify).
 
 ### Flannery
 
-Manner: **proud**
+Manner: **warm**
+
+Buddy: slot 1, Torkoal. Anime and RSE Torkoal.
 
 | Bit | Line |
 | --- | --- |
@@ -713,10 +802,13 @@ Manner: **proud**
 Hooks: taking over from her grandfather (RSE/ORAS); admitting she "tried too
 hard to be someone I'm not" after losing (RSE/ORAS); Torkoal (RSE/ORAS ace,
 anime).
+Manner reason: under the act she is eager and friendly, so she asks for help.
 
 ### Norman
 
 Manner: **warm**
+
+Buddy: slot 1, Slaking (SLAKOTH, then VIGOROTH). Anime and RSE Slaking.
 
 | Bit | Line |
 | --- | --- |
@@ -731,15 +823,18 @@ Manner: **warm**
 | PRAISE | Well done! You've grown. I can see it. |
 | GIFT | Take this {ITEM}. Use it wisely. |
 | BYE | Take care. And keep training hard. |
-| QUIRK | SLAKING looks lazy, but its power is anything but. |
+| QUIRK | Don't judge {BUDDY} by its moods. Its power is the real thing. |
 
 Hooks: devoted father (the player's father in RSE/ORAS; May and Max's father
-in the anime); Slaking (RSE/ORAS ace, anime). The lines never say he is the
-player's father.
+in the anime); Slaking (RSE/ORAS ace, anime), whose line fits the lazy
+SLAKOTH, the restless VIGOROTH and SLAKING alike. The lines never say he is
+the player's father.
 
 ### Winona
 
 Manner: **warm**
+
+Buddy: slot 1, Altaria (SWABLU early). Anime and RSE Altaria.
 
 | Bit | Line |
 | --- | --- |
@@ -754,7 +849,7 @@ Manner: **warm**
 | PRAISE | Splendid! You soared beautifully. |
 | GIFT | Please take this {ITEM}. May it lift your spirits. |
 | BYE | Farewell. May you soar ever higher. |
-| QUIRK | ALTARIA hums when it's happy. Listen closely sometime. |
+| QUIRK | {BUDDY} hums when it's happy. Listen closely sometime. |
 
 Hooks: "I have become one with bird POKéMON and have soared the skies"
 (RSE/ORAS); elegant grace in battle (RSE/ORAS); Altaria (RSE/ORAS ace; the
@@ -762,7 +857,9 @@ humming is from the POKéDEX).
 
 ### Tate & Liza
 
-Manner: **warm** (placeholder was cold)
+Manner: **warm**
+
+Buddy: slot 1, Solrock. Tate's half of the anime pair; the duo has one buddy.
 
 | Bit | Line |
 | --- | --- |
@@ -781,12 +878,14 @@ Manner: **warm** (placeholder was cold)
 
 Hooks: twins who read each other's minds, "Hehehe... Were you surprised?"
 (RSE/ORAS); Solrock and Lunatone (RSE/ORAS, anime).
-Manner reason: in canon they are playful, teasing kids, which reads warm, not
-cold.
+Manner reason: they are playful, teasing kids who ask for help, never
+command it.
 
 ### Juan
 
 Manner: **proud**
+
+Buddy: slot 1, Kingdra (HORSEA, then SEADRA). His Emerald ace.
 
 | Bit | Line |
 | --- | --- |
@@ -809,7 +908,9 @@ in these lines); "Ahahaha" laugh (verify).
 
 ### Sidney
 
-Manner: **proud** (placeholder was cold)
+Manner: **proud**
+
+Buddy: slot 1, Absol. His RSE ace.
 
 | Bit | Line |
 | --- | --- |
@@ -824,23 +925,26 @@ Manner: **proud** (placeholder was cold)
 | PRAISE | How do you like that? Eh, it was fun, so it's all good! |
 | GIFT | Catch! One {ITEM} for you. Don't mention it. |
 | BYE | Later! Let's have another blast sometime! |
-| QUIRK | ABSOL shows up when trouble's coming. Me? I just like trouble. |
+| QUIRK | {BUDDY} shows up when trouble's coming. Me? I just like trouble. |
 
 Hooks: "I like that look you're giving me", "That's good! Looking real good!"
 and "Eh, it was fun, so it doesn't matter" (RSE/ORAS); Absol (RSE/ORAS ace;
 the omen of disaster is from the POKéDEX).
-Manner reason: in canon he is friendly and cocky, not cold.
+Manner reason: he is friendly and cocky, so he dares the player rather than
+ordering them.
 
 ### Phoebe
 
-Manner: **warm** (placeholder was cold)
+Manner: **warm**
+
+Buddy: slot 1, Dusknoir (DUSKULL, then DUSCLOPS). Anime and RSE Dusclops.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Ahahaha! {PLAYER}! Hi! The ghosts said you'd drop by! |
 | MEET | Ahahaha! I'm PHOEBE! I can commune with Ghost POKéMON! |
 | NOT_YET | Beat me in battle first! My ghosts are dying to meet you! |
-| NEWS | Ooh, a little ghost whispered this to me! |
+| NEWS | Ooh, {BUDDY} whispered this to me! |
 | ASK | Hey, could you help me with something? Pleeease? |
 | YES | Ahahaha! Yay! Thank you! |
 | NO | Aww, you're no fun! Oh well! |
@@ -852,13 +956,14 @@ Manner: **warm** (placeholder was cold)
 
 Hooks: "Ahahaha!" and gaining "the ability to commune with Ghost-type
 POKéMON" during training (RSE/ORAS); a grandmother tied to her training
-(RSE/ORAS) (verify); Dusclops, now
-DUSKNOIR (RSE/ORAS ace).
-Manner reason: in canon she is cheerful and bubbly, so warm.
+(RSE/ORAS) (verify); Dusclops (RSE/ORAS ace, anime).
+Manner reason: she is cheerful and bubbly, and she asks for help.
 
 ### Glacia
 
 Manner: **cold**
+
+Buddy: slot 1, Walrein (SPHEAL, then SEALEO). Her RSE ace.
 
 | Bit | Line |
 | --- | --- |
@@ -882,6 +987,8 @@ are challenges by weak Trainers" (RSE/ORAS); "How hot your spirits burn!"
 ### Drake
 
 Manner: **proud**
+
+Buddy: slot 1, Salamence (BAGON, then SHELGON). His RSE ace.
 
 | Bit | Line |
 | --- | --- |
@@ -907,6 +1014,8 @@ old-sailor look (RSE/ORAS design, not used in lines) (verify); Salamence
 
 Manner: **proud**
 
+Buddy: slot 1, Milotic (FEEBAS early). Anime and RSE Milotic.
+
 | Bit | Line |
 | --- | --- |
 | HELLO | Ah, {PLAYER}. Elegant as ever, I see. |
@@ -920,15 +1029,18 @@ Manner: **proud**
 | PRAISE | Magnificent! Your battle style is truly elegant. |
 | GIFT | Please accept this {ITEM}. It suits you beautifully. |
 | BYE | Farewell! May your style shine ever brighter. |
-| QUIRK | MILOTIC's beauty is matched only by its strength. Lovely, no? |
+| QUIRK | {BUDDY} taught me that true beauty takes patience. Lovely, no? |
 
 Hooks: elegance and POKéMON Contests (Emerald/ORAS, anime Wallace Cup);
-Milotic (RSE/Emerald/ORAS ace, anime); student of Juan (Emerald, not used in
-lines).
+Milotic (RSE/Emerald/ORAS ace, anime), which the patience line fits from
+FEEBAS up; student of Juan (Emerald, not used in lines).
 
 ### Steven
 
-Manner: **warm** (placeholder was proud)
+Manner: **warm**
+
+Buddy: slot 1, Metagross (BELDUM, then METANG). His RSE ace and Masters EX
+partner.
 
 | Bit | Line |
 | --- | --- |
@@ -947,51 +1059,25 @@ Manner: **warm** (placeholder was proud)
 
 Hooks: rare-stone collector (RSE/ORAS, Masters EX); Metagross (RSE/ORAS ace,
 Masters EX sync pair).
-Manner reason: in canon he is a courteous, generous mentor who keeps handing
-out help, which reads warm more than proud.
+Manner reason: he is a courteous, generous mentor who asks for help as
+readily as he gives it.
 
 ---
 
 ## Open questions
 
-1. **Morty's manner.** He wasn't in any placeholder list. I proposed proud; it
-   needs sign-off.
-2. **Manner changes.** Falkner (warm to proud), Tate & Liza (cold to warm),
-   Sidney (cold to proud), Phoebe (cold to warm) and Steven (proud to warm)
-   need sign-off. Borderline cases I left alone: Flannery (proud, though
-   underneath she is insecure and friendly), Will (cold, though he's more
-   aloof and polite than hostile) and Lance (proud, though in HGSS he's a
-   heroic mentor).
-3. **Rosters missing canonical companions.** These hooks are held back or
-   kept generic because the species isn't on the roster:
-   - Misty: Psyduck popping out; Golduck is tagged in its place. Togepi is
-     also absent.
-   - Brock: Onix; the lines use STEELIX.
-   - Lt. Surge: the Pikachu-versus-Raichu gag.
-   - Sabrina: Haunter; the catalog tags Gengar as "anime Haunter".
-   - Pryce: Piloswine; the lines use MAMOSWINE.
-   - Morty: Ho-Oh, described but not named.
-   - Roxanne: Nosepass; the lines use PROBOPASS.
-   - Phoebe: Dusclops; DUSKNOIR is on the roster but not named in the lines.
-   Should a baby-form nickname ever be allowed?
-4. **Jasmine's "Amphy".** The lines say AMPHAROS rather than the nickname
-   Amphy. Is the nickname OK in haunt text?
-5. **Koga's and Lance's grouping** follows catalog `homeRegion` (Koga is
+1. **Koga's and Lance's grouping** follows catalog `homeRegion` (Koga is
    Johto, Lance is Kanto). Flip either if haunts group by first appearance
    instead.
-6. **Lt. Surge's "war" line** is canon and kept light. Drop it if even that
+2. **Lt. Surge's "war" line** is canon and kept light. Drop it if even that
    feels off-tone.
-7. **Length measurement.** Line lengths are raw text with slots unexpanded.
-   The GBA box is measured in pixels, not characters. Check the lines with
-   long `{ITEM}`/`{ACE}` values, and the Tate & Liza speaker labels, in-engine.
-8. **`{NAME}` slot** isn't used. The meaning I assumed (the trainer's own name)
-   needs confirming.
-9. **Unverified wording.** Items marked `(verify)` are canon I'm confident of
+3. **Length measurement.** Line lengths are counted in characters with slots
+   at their worst-case lengths. The GBA box is measured in pixels, not
+   characters. Check the lines with long `{ITEM}`, `{ACE}` and `{BUDDY}`
+   values, the AMPHY nickname, and the Tate & Liza speaker labels, in-engine.
+4. **Unverified wording.** Items marked `(verify)` are canon I'm confident of
    in spirit but not in exact source or wording: Brock "rock-hard willpower",
    Janine's disguise line, Lorelei's doll collection, Morty "see what you
    cannot", Pryce and Piloswine, Roxanne's book-versus-battle lesson and
    Probopass facing north, Wattson's traps and gadgets, Juan's laugh, Phoebe's
    grandmother, and Drake's "virtue" line and sailor look.
-10. **Haunt adjacency.** Lines like Blue's "Come back later!" and Morty's
-    "Come back later" assume the haunt can be revisited. Confirm that always
-    holds, or swap in a neutral line.

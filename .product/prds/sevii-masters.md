@@ -74,16 +74,19 @@ partner their whole team.
 
 **Phone numbers.** The first time the player beats a notable trainer, in any
 battle with them, that trainer gives the player their phone number and joins
-the phone's contacts for good. Tate and Liza, a duo, give none. In this first
-version a contact is for one thing: asking them to be the player's partner.
+the phone's contacts for good. Tate and Liza, a duo, give none. Here a
+contact is for one thing: asking them to be the player's partner.
+[Notable haunts](notable-haunts.md) also treat contacts as friends.
 
 **The partner.** The partner is whoever the player last asked. Any contact
-can be asked once the player is a Master, and the ask always succeeds. If
-the player has never asked anyone, Lorelei steps in: she spoke of the player
-to the caretaker, and she comes along. The partner is never in the lineup,
-so asking a strong trainer also keeps them off the other side. The partner
-is fixed when the player answers the invitation; asking someone else later
-changes the next Masters event, not this one.
+can be asked once the player is a Master, and the ask always succeeds. The
+player asks by phone, or in person when they meet the contact at a
+[haunt](notable-haunts.md#design). If the player has never asked anyone,
+Lorelei steps in: she spoke of the player to the caretaker, and she comes
+along. The partner is never in the lineup, so asking a strong trainer also
+keeps them off the other side. The partner is fixed when the player answers
+the invitation; asking someone else later changes the next Masters event,
+not this one.
 
 **The title.** A player who loses the final hands the title to their
 partner, who beat them; a loss in a hall, or leaving before the final,
@@ -169,9 +172,9 @@ by phone, the Masters' title rules, and the Masters Gallery. The league
 machinery it shares, including its halls, belongs to [Leagues](leagues.md).
 
 Out of scope for v0: tag or double battles at Indigo or Hoenn, a partner who
-can refuse, any use of phone numbers beyond asking a partner, and any status
-or reward for winning the Masters beyond its Gallery win, prize money, and
-title.
+can refuse, any use of phone numbers here beyond asking a partner, and any
+status or reward for winning the Masters beyond its Gallery win, prize
+money, and title.
 
 ## Open risks
 
@@ -197,11 +200,11 @@ title.
   shared play.
 - Picky partners: contacts who turn the player down, by friendship or by
   trait, such as an aloof trainer refusing a weak player.
-- Asking a partner in person, meeting them in the overworld.
 - Gifts and trades with contacts.
 
 ## References
 
 - [Leagues](leagues.md)
 - [Notable trainers](notable-trainers.md)
+- [Notable haunts](notable-haunts.md)
 - [Player Trainer Rating](player-trainer-rating.md)
