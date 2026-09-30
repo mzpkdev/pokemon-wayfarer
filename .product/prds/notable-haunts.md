@@ -108,7 +108,7 @@ it is done:
 | --- | --- |
 | Walk with me | The trainer follows the player to the haunt's exit; wild POKéMON on the way are tag battles beside them. |
 | Lost something | Something valuable went missing at the haunt; the player finds it. |
-| Catch me one | The player hands the trainer a POKéMON that lives at the haunt. |
+| Catch me one | The player catches a POKéMON that lives at the haunt and shows it to the trainer, keeping it. |
 | Quiz | The trainer quizzes the player on type matchups for their aces. |
 | One on one | One of the player's POKéMON against the trainer's lead ace. |
 
@@ -204,6 +204,18 @@ comes on his studious play style when Brock is elsewhere; Steven, who would
 love the fossils, is aloof and never visits a public place. The
 [specification](../specs/notable-haunts.md#worked-example-pewter-museum)
 works it through.
+
+A fifth, Viridian Forest, is remote, Bug- and Grass-themed, where trainers
+study and sightsee among the trees. Its quest is Catch me one: "A wild
+Pikachu lives around here. Catch one and show me?" Pikachu comes from the
+forest's own grass, about one encounter in four; the player catches one,
+shows it from the party or the boxes, and keeps it, and the trainer pays
+their next reward. Bugsy, a Johto traveller on a Bug-hunting trip, is its
+natural regular, as the HNS cameo already has it, and Erika takes it on her
+Grass aces when Bugsy is elsewhere. The
+[specification](../specs/notable-haunts.md#worked-example-viridian-forest)
+works it through. With it, the five worked haunts cover all five quest
+types.
 
 ## Boundaries
 

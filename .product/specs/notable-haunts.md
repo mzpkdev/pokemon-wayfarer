@@ -215,8 +215,8 @@ each jump. At world progress 0 everyone is settled.
 When the new placement differs from the saved one at a haunt (another
 trainer, or empty), that haunt's claim bit is cleared
 ([rewards and claims](#rewards-and-claims)), and so is its
-[lost-something](#lost-something) search and found state; then the new
-placement is saved.
+[lost-something](#lost-something) search state or
+[Catch me one](#catch-me-one) asked bit; then the new placement is saved.
 
 ## Talk flow
 
@@ -243,7 +243,9 @@ Every talk runs three steps:
    `YES` and runs the quest as its section says; `NO` gives the trainer's
    `NO`, costs nothing, and the next talk proposes again. At a Lost
    something haunt whose keepsake the player has found, the completion
-   takes the proposal's place ([Lost something](#lost-something)). Once the
+   takes the proposal's place ([Lost something](#lost-something)), and at
+   a Catch me one haunt whose quest the player has accepted, the showing
+   or `NOT_READY` does ([Catch me one](#catch-me-one)). Once the
    claim bit is set (the quest was completed during this placement), the
    trainer's `QUIRK` instead.
 3. **Farewell:** `BYE`. A talk that starts a walk ends at `YES` instead;
@@ -401,11 +403,31 @@ as it does near a hidden item.
 
 ### Catch me one
 
-The haunt authors one species from its own wild table. The player shows
-one POKéMON of that species (any form, not an Egg) from the party or the
-boxes, picked on the storage screen
-([storage-screen modes](#storage-screen-modes)); the player keeps it, and
-nothing is traded. With none to show, `NOT_READY`.
+The haunt authors one species from its own wild table, the `{LOCAL}` of its
+quest line. The player catches one and shows it; nothing is handed over or
+traded, and the player keeps the POKéMON. The haunt keeps a saved **asked
+bit** for this placement.
+
+- **Proposal.** "A wild {LOCAL} lives around here. Catch one and show me?"
+  (the quest line after `ASK`).
+- **YES:** the trainer's `YES`, then `BYE`, and the asked bit is set.
+- **NO:** the trainer's `NO`, then `BYE`; the next talk proposes again.
+- **Showing.** Once the asked bit is set, a talk is the greeting and then,
+  in place of the proposal, the storage selection screen over the party and
+  the boxes ([storage-screen modes](#storage-screen-modes)), with every
+  POKéMON that isn't that species dimmed. Any form of the species counts;
+  an Egg never does. Picking a match shows it: the haunt's done line "That's
+  a fine one. Thanks for showing me.", `PRAISE`, the
+  [reward](#rewards-and-claims) (an item through `GIFT`), and `BYE`, +10
+  friendship as a completed quest. The POKéMON stays where it was.
+  Cancelling, or picking a dimmed one, ends the talk with `BYE` and changes
+  nothing.
+- **None to show.** With the asked bit set and no match in the party or the
+  boxes, the talk is the greeting, `NOT_READY`, and `BYE`, and the storage
+  screen doesn't open.
+- **Expiry.** The quest stays open for the whole placement. The asked bit
+  clears with the claim bit when the reward is given and when the haunt's
+  placement changes ([fill](#fill)).
 
 ### Quiz
 
@@ -568,7 +590,8 @@ changes neither.
 A haunt's dialogue is assembled from two sources:
 
 - **Haunt lines**, authored per haunt: its quest line, a done line for a
-  walk or a Lost something (and optionally for a One on one), a hint per
+  walk, a Lost something, or a Catch me one (and optionally for a One on
+  one), a hint per
   lost spot, and optionally a loss line for a One on one. The Quiz's
   question templates, done line, and loss line are shared by every Quiz
   haunt. They describe
@@ -1037,8 +1060,8 @@ Everyone else scores 0 or 1: a settled trainer's 1 for relax and sightsee.
   order.
 - **Travellers** come only as leftovers: when `wp mod 18` is 11-16,
   Seafoam takes Lorelei and Pallet takes Misty before the Cape's turn, and
-  it gets a 0- or 1-point fit such as Bugsy or Brawly (or Lt. Surge or
-  Bruno); when it is 7-10, all 14 candidates are placed before the Cape's
+  it gets a 0- or 1-point fit such as Brawly, a traveller (or Lt. Surge
+  or Bruno); when it is 7-10, all 14 candidates are placed before the Cape's
   turn and it stays empty.
 
 What v0 can't say waits for the routine design: a pull that keeps Misty at
@@ -1217,11 +1240,11 @@ What v0 can't say waits for the routine design: distance from home for
 Blaine, a scholarly pull for Blue beyond his play style, and a pull that
 keeps Brock at his own town's museum rather than Viridian City. When `wp
 mod 18` is 5-8 every candidate is placed before the Museum's turn and it
-stays empty; at 9 it gets a leftover (Brawly). These counts follow the v0 weights and the
-current Kanto list, and move with them.
+stays empty; at 9 it gets a leftover (Brawly). These counts follow the v0
+weights and the current Kanto list, and move with them.
 
 **Brock, a Friend** (world progress 20, where `20 mod 18 = 2`: Viridian
-City and Viridian Forest go to Giovanni and Erika, and the Museum's turn
+City and Viridian Forest go to Giovanni and Bugsy, and the Museum's turn
 gives Brock 7). The player beat him at Pewter, which made him a Friend (20
 points); no quest with him yet, so his reward counter is 0. At world
 progress 20 his TR is 35 and his team level 25, and his team of three is
@@ -1348,6 +1371,178 @@ Museum as the home of Oak's grandson, with no Rock ace at all. A public,
 indoor place keeps every aloof trainer out before any score is read, which
 is why Steven, the one trainer who would travel for fossils, never visits.
 
+## Worked example: Viridian Forest
+
+**Tags.** Region Kanto; themes Bug and Grass; not elite; no hometown;
+activities study and sightsee (trainers come to watch the forest's bugs or
+just wander it); setting remote; capacity 1; quest Catch me one, `{LOCAL}`
+PIKACHU. Map `ViridianForest_hns`. The meeting spot is (39, 53) on the
+strip of short grass (x 39-40, y 50-57) that runs through the tall-grass
+clearing south of the forest's centre (x 25-42, y 49-60); the buddy stands
+beside it at (40, 53). Both tiles are free of collision and of the map's
+objects, outside every wandering trainer's range and clear of the Pichu
+scene triggers. HNS's Bugsy cameo stands at (37, 30), on the path north of
+the clearing ("I came to KANTO to look for BUG-TYPE POKéMON").
+
+**Quest.** PIKACHU is on the forest's own land tables,
+`gViridianForest_hns_Day` and `gViridianForest_hns_Night` in
+[wild_encounters.json](../../game/src/data/wild_encounters.json), at Lv 3
+among Caterpie, Weedle, Metapod, Kakuna, and Spinarak. It fills slots 1
+and 9, worth 20% and 4% of land encounters, so 24% day and night: about one
+encounter in four in the clearing's grass. The haunt authors:
+
+| Line | Text |
+| --- | --- |
+| Quest line | "A wild {LOCAL} lives around here. Catch one and show me?" |
+| Done line | "That's a fine one. Thanks for showing me." |
+
+`YES` gives the trainer's `YES` and `BYE`. The next talk with a PIKACHU in
+the party or the boxes opens the storage screen with everything else
+dimmed; showing it plays the done line, `PRAISE`, the next reward-pool
+entry through `GIFT`, and `BYE`, worth +10 friendship, and the player keeps
+the PIKACHU. With none to show, it is `NOT_READY` and `BYE`. `NO` is the
+trainer's `NO`. The quest stays open all placement.
+
+**Who's likely, and why.** The setting is remote but the forest is not
+elite, so no aloof trainer is a candidate. Scores at world progress 20 (two
+badges; placeholder weights; momentum from the explorer's growth curves):
+
+| Trainer | Theme | Style | Momentum | Score |
+| --- | ---: | ---: | ---: | ---: |
+| Bugsy | 4 (Scizor, Bug) | 0 (Sweeper) | 1 (settled) | 5 |
+| Erika | 4 (Vileplume, Grass) | 0 (Hexer) | 0 (rising) | 4 |
+| Janine | 4 (Venomoth, Bug) | 0 (Hexer) | 0 (rising) | 4 |
+| Misty | 0 | 2 (Field marshal) | 1 (settled) | 3 |
+
+Brock, Blue, and Will score 2 on study or sightsee; everyone else 0 or 1.
+
+- **Bugsy** is a Johto traveller with Bug aces (Scizor and Heracross), and
+  the HNS cameo already puts him here. While he is settled he scores 5 to
+  Erika's 4, so he holds the forest whenever he is free at its turn: below
+  TR 80, world progress 10-21 and 28-39 (`wp mod 18` 10-17 or 0-3). From
+  about world progress 44 he is rising, 4 like Erika, and ties go to her,
+  earlier in catalog order, so later he holds it only while she is placed
+  elsewhere first (world progress 45-48 and 62-66, when the Celadon
+  rooftop takes her).
+- **Erika** has Grass aces (Vileplume and Victreebel) and is from Kanto.
+  She holds the forest when Bugsy isn't placed there: world progress 0-3,
+  where both are settled on 5 and she wins the tie, and 49-57 and 67-75.
+  Janine's Venomoth scores the same as Erika, but Janine comes later in
+  catalog order and v0 never seats her here below TR 80.
+- **Others** come only as leftovers: Brawly or Blue at world progress 8-9,
+  26-27, and 44. When `wp mod 18` is 4-7 every candidate is placed before
+  the forest's turn and it stays empty.
+
+What v0 can't say waits for the routine design: Bugsy's research trip as a
+reason to prefer the forest over any Bug-friendly spot, Erika's taste for
+gardens over a wild wood, and why Janine, Kanto's other Bug user, would
+come. These counts follow the v0 weights and the current Kanto list, and
+move with them.
+
+**Bugsy, a Friend** (world progress 20, where `20 mod 18 = 2` and he holds
+the forest with 5). The player beat him at the Azalea Gym, which made him a
+Friend (20 points); no quest with him yet, so his reward counter is 0. At
+world progress 20 his TR is 28 and his team level 20, so his buddy, slot 1
+(Scizor), is Lv 20 and steps down to SCYTHER (Scizor needs Lv 40). He
+greets with `HELLO`:
+
+```text
+BUGSY: Hi, {PLAYER}! Seen any interesting Bug POKéMON         HELLO
+       lately?
+BUGSY: Oh! Hey, hey, wait a second!                           ASK
+BUGSY: A wild PIKACHU lives around here. Catch one and show   quest line
+       me?
+> Yes
+BUGSY: Yes! Science thanks you! I do, too!                    YES
+BUGSY: Bye! If you spot a rare bug, tell me first!            BYE
+```
+
+The player walks into the clearing's tall grass and catches a PIKACHU
+(Lv 3, about one encounter in four), then talks to him again:
+
+```text
+BUGSY: Hi, {PLAYER}! Seen any interesting Bug POKéMON         HELLO
+       lately?
+  (the storage screen opens over the party and boxes, with
+   everything but PIKACHU dimmed; the player picks the
+   PIKACHU, which stays in the party)
+BUGSY: That's a fine one. Thanks for showing me.              done line
+BUGSY: Wow! That was amazing! Can I write it down?            PRAISE
+BUGSY: Take this SILVER POWDER! I found it during my          GIFT
+       research.
+BUGSY: Bye! If you spot a rare bug, tell me first!            BYE
+```
+
+SILVER POWDER is the first entry of his
+[pool](../research/notable-trainer-rewards.md#bugsy) (from world progress
+0). The quest adds 10 points (20 + 10 = 30), and he stays a Friend. Talking
+to him again during this placement:
+
+```text
+BUGSY: Hi, {PLAYER}! Seen any interesting Bug POKéMON         HELLO
+       lately?
+BUGSY: I measure SCYTHER every day. For research! It hates    QUIRK
+       that.
+BUGSY: Bye! If you spot a rare bug, tell me first!            BYE
+```
+
+His buddy is slot 1, so the `QUIRK` names SCYTHER until his team level
+reaches 40.
+
+**Erika at Met** (world progress 50, where `50 mod 18 = 14`: Bugsy and
+Erika both score 4, and she wins the tie on catalog order). The player met
+her once at a haunt (+1), so she is Met, and her reward counter is 0. The
+PIKACHU caught for Bugsy is in a box by now. She greets with `AGAIN`:
+
+```text
+ERIKA: Oh, hello again. I remember you. Please, relax a       AGAIN
+       while.
+ERIKA: Might I suggest something?                             ASK
+ERIKA: A wild PIKACHU lives around here. Catch one and show   quest line
+       me?
+> Yes
+ERIKA: How kind of you. Thank you ever so much.               YES
+ERIKA: Farewell. Oh... I think I'll close my eyes a           BYE
+       moment...
+```
+
+The asked bit is set. The next talk opens the storage screen at once:
+
+```text
+ERIKA: Oh, hello again. I remember you. Please, relax a       AGAIN
+       while.
+  (the storage screen opens; the player picks the PIKACHU
+   in box 2, which stays there)
+ERIKA: That's a fine one. Thanks for showing me.              done line
+ERIKA: Oh my, how splendid! You have a gardener's patience.   PRAISE
+ERIKA: Please accept this ROSE INCENSE. A small gift, but     GIFT
+       sincere.
+ERIKA: Farewell. Oh... I think I'll close my eyes a           BYE
+       moment...
+```
+
+ROSE INCENSE is the first entry of Erika's
+[pool](../research/notable-trainer-rewards.md#erika) (from world progress
+0). The quest adds 10 points (1 + 10 = 11), and she is still Met. A player
+with no PIKACHU would have heard her `NOT_READY` instead ("Perhaps not
+yet. Patience helps flowers bloom, too.") and could come back after
+catching one.
+
+**What this example shows.** Catching is the challenge: the ask sends the
+player into the grass for a species they may not have yet, which pushes
+the POKéDEX along, and they keep what they catch. The species comes from
+the haunt's own wild table, so the ask always fits the place and never
+asks for something that doesn't live there. The forest is a traveller's
+natural home: Bugsy, from Johto, turns up where the HNS cameo already had
+him, on theme alone. And it gives the player a reason to linger in an
+early area, and to come back to it later with a new trainer in the
+clearing.
+
+With this example, the five worked haunts cover all five quest types:
+Walk with me (Diglett's Cave), One on one (Celadon Game Corner), Lost
+something (Cerulean Cape), Quiz (Pewter Museum), and Catch me one
+(Viridian Forest).
+
 ## Kanto haunts
 
 The v0 Kanto list, in catalog order. It is a draft: the tags, quests, and
@@ -1358,8 +1553,10 @@ Wayfarer retired their HNS versions
 lost-spot tiles are chosen at implementation after checking collision and
 existing objects; the
 [Celadon Game Corner's](#worked-example-celadon-game-corner),
-[Cerulean Cape's](#worked-example-cerulean-cape), and
-[Pewter Museum's](#worked-example-pewter-museum) are worked out already.
+[Cerulean Cape's](#worked-example-cerulean-cape),
+[Pewter Museum's](#worked-example-pewter-museum), and
+[Viridian Forest's](#worked-example-viridian-forest) are worked out
+already.
 Every haunt has capacity 1.
 
 | # | Haunt | Maps | Themes | Elite | Hometown | Activities | Setting | Quest |
@@ -1367,7 +1564,7 @@ Every haunt has capacity 1.
 | 1 | Pallet Town | `PalletTown_hns` | Water | – | – | relax | public | Catch me one: Krabby |
 | 2 | Route 1 | `Route1_hns` | Normal, Flying | – | – | train | public | Walk with me: from the Pallet end to the Viridian City edge |
 | 3 | Viridian City | `ViridianCity_hns` | Ground | – | Viridian | sightsee | public | One on one |
-| 4 | Viridian Forest | `ViridianForest_hns` | Bug, Grass | – | – | study | remote | Catch me one: Pikachu |
+| 4 | Viridian Forest | `ViridianForest_hns` | Bug, Grass | – | – | study, sightsee | remote | Catch me one: Pikachu |
 | 5 | Pewter Museum | `PewterCity_Museum_1F_hns` | Rock | – | Pewter | study, sightsee | public | Quiz |
 | 6 | Mt. Moon outside | `MtMoon_Outside_hns` | Rock, Fairy | – | – | sightsee | remote | Lost something |
 | 7 | Cerulean Cape | `Route25_hns` | Water | – | Cerulean | relax, sightsee | remote | Lost something: near the fence, by the rocks, by the pond |
@@ -1455,13 +1652,20 @@ free during a walk, since Masters tag matches never run in the overworld.
 The storage-screen selection modes are the `sPcMonSelectionTypes` table in
 [chooseboxmon.c](../../game/src/chooseboxmon.c), named by `SELECT_PC_MON_*`
 in [party_menu.h](../../game/include/constants/party_menu.h). Catch me one
-uses `SELECT_PC_MON_TRADE`, which filters by the species in
-`gSpecialVar_0x8009`, as Jasmine's Steelix trade does today
-([Olivine Gym](../../game/data/maps/OlivineCity_Gym_hns/scripts.inc)).
-`SELECT_PC_MON_MOVE_TUTOR` filters by one move (`gSpecialVar_0x8005`), using
-the species' teachable list (`CanMonLearnMove`). A lesson needs a filter over
-the whole move pool with the [lesson](#rewards-and-claims) eligibility, so it
-needs a variant of that mode that also picks the move.
+reuses `SELECT_PC_MON_TRADE`, the mode Jasmine's Steelix trade uses today
+([Olivine Gym](../../game/data/maps/OlivineCity_Gym_hns/scripts.inc)),
+only to pick and show; nothing is traded. Its filter, `IsMatchingSpecies`,
+matches the species in `gSpecialVar_0x8009` by `MON_DATA_SPECIES_OR_EGG`,
+so Eggs never match; the storage screen draws every excluded POKéMON
+transparent (`ShouldBoxmonSpriteBeTransparent` in
+[pokemon_storage_system.c](../../game/src/pokemon_storage_system.c)), which
+is the dimming, and picking one returns `VAR_RESULT` `FALSE`. The filter
+compares exact species, so "any form" needs a variant that compares the
+base species. `SELECT_PC_MON_MOVE_TUTOR` filters by one move
+(`gSpecialVar_0x8005`), using the species' teachable list
+(`CanMonLearnMove`). A lesson needs a filter over the whole move pool with
+the [lesson](#rewards-and-claims) eligibility, so it needs a variant of
+that mode that also picks the move.
 
 ### Cameos and the Dojo
 
@@ -1520,14 +1724,16 @@ Haunts add:
   (the player said `YES`), or found (the keepsake is in hand). It lasts the
   whole placement, through reloads and whiteouts, and clears with the claim
   bit when the haunt's placement changes. The active spot is derived from
-  the placement and not saved ([Lost something](#lost-something)); and
+  the placement and not saved ([Lost something](#lost-something));
+- one **asked bit** per Catch me one haunt, set by `YES` and cleared with
+  the claim bit ([Catch me one](#catch-me-one)); and
 - the **quest in progress**: a walk (its haunt), cleared on load and on
   whiteout.
 
-New Game saves every claim bit clear, every reward counter at 0, the
-placement for world progress 0, every search state at none, and no quest in
-progress. With follower NPCs enabled, SaveBlock3 also holds the engine's
-follower state, which a walk uses.
+New Game saves every claim bit clear, every reward counter at 0, the placement
+for world progress 0, every search state at none, every asked bit clear, and no
+quest in progress. With follower NPCs enabled, SaveBlock3 also holds the
+engine's follower state, which a walk uses.
 
 ## Load validation
 
@@ -1537,20 +1743,22 @@ On every load, before the overworld runs:
    it. A walk interrupted by a reload is unfinished
    ([walk](#walk-with-me)).
 2. **Pruning.** Drop the reward counters of characters no longer in the
-   registry, and the claim bits, search states, and placements of haunts no
-   longer in the catalog, or search states of haunts whose quest is no
-   longer Lost something. A reward counter above its trainer's current pool
-   length (the pool got shorter) is lowered to that length: the pool counts
-   as used up, and nothing is taken back or paid.
+   registry, and the claim bits, search states, asked bits, and placements of
+   haunts no longer in the catalog, or search states and asked bits of haunts
+   whose quest type changed. A reward counter above its trainer's current pool
+   length (the pool got shorter) is lowered to that length: the pool counts as
+   used up, and nothing is taken back or paid.
 3. **Checks.** Reward counters exist only for known trainers; claim bits
    and placements only for known haunts, and search states only for known
    Lost something haunts, never the unused fourth value, and never
-   searching or found at an empty haunt or with the claim bit set; a saved
+   searching or found at an empty haunt or with the claim bit set; asked
+   bits only for known Catch me one haunts, never set at an empty haunt or
+   with the claim bit set; a saved
    placement names known characters, each at most once. A failed check is
    an invalid save, never a reason to reward anything.
 4. **Recompute.** Compute the placement from the current inputs and compare
-   it with the saved one, clearing the claim bit and search state of every
-   haunt whose trainer changed, then save it.
+   it with the saved one, clearing the claim bit, search state, and asked
+   bit of every haunt whose trainer changed, then save it.
 
 ## Presentation
 
@@ -1611,29 +1819,30 @@ Required implementation evidence (not yet run):
    talk is the greeting, `QUIRK`, and `BYE`. No haunt line uses `NOT_YET` or
    `NEWS`. Only the first talk (+1) and a completed quest (+10) add points at a
    haunt; a quest that crosses the Friend threshold hands over the number once.
-6. **Quests.** Each quest completes, fails, and retries as specified; a
-   walk ends unfinished on whiteout and on reload, and a wrong exit asks
-   "Giving up on the walk?" (YES ends it with the trainer's `NO` line, NO
-   steps the player back one tile and the walk continues);
-   Fly, Teleport, and an Escape Rope are refused during a walk; its wild
-   battles are double battles beside the trainer with their best three from
-   the runtime partner slot; Catch me one refuses the last able party
-   POKéMON; the quiz's questions, answers, and options match golden
-   fixtures built from the type chart (Brock's lone ONIX gives Fighting,
-   Normal, and Electric; Blue's KADABRA and EEVEE give Bug, Fighting, and
-   Fighting), every wrong option is wrong under the chart, a wrong answer
-   ends the attempt with the loss line and no penalty, and the same stages
-   give the same questions on every attempt; a One on one
-   loss plays the haunt's loss line (or `NOT_READY`), costs nothing, and
-   leaves the claim bit clear, and a win adds +10 as a quest, never +20.
-   Lost something picks the same active spot for the same placed trainer
-   (catalog position mod spot count) and names its hint in the proposal;
-   the spot is inert before `YES`, after it is found, and once the claim
-   bit is set; after `YES` it is found by facing it and pressing A, stays
+6. **Quests.** Each quest completes, fails, and retries as specified; a walk
+   ends unfinished on whiteout and on reload, and a wrong exit asks "Giving up
+   on the walk?" (YES ends it with the trainer's `NO` line, NO steps the player
+   back one tile and the walk continues); Fly, Teleport, and an Escape Rope are
+   refused during a walk; its wild battles are double battles beside the trainer
+   with their best three from the runtime partner slot; Catch me one opens the
+   storage screen only after `YES` and with a match, dims every non-match,
+   accepts any form but never an Egg, leaves the shown POKéMON with the player,
+   answers `NOT_READY` with none to show, and stays open through the placement;
+   the quiz's questions, answers, and options match golden fixtures built from
+   the type chart (Brock's lone ONIX gives Fighting, Normal, and Electric;
+   Blue's KADABRA and EEVEE give Bug, Fighting, and Fighting), every wrong
+   option is wrong under the chart, a wrong answer ends the attempt with the
+   loss line and no penalty, and the same stages give the same questions on
+   every attempt; a One on one loss plays the haunt's loss line (or
+   `NOT_READY`), costs nothing, and leaves the claim bit clear, and a win adds
+   +10 as a quest, never +20. Lost something picks the same active spot for the
+   same placed trainer (catalog position mod spot count) and names its hint in
+   the proposal; the spot is inert before `YES`, after it is found, and once the
+   claim bit is set; after `YES` it is found by facing it and pressing A, stays
    armed across leaving, whiteout, and reload, is re-armed by the next
-   placement's `YES`, and makes the Dowsing Machine respond; finding it
-   adds no Bag item; the next talk plays the done line, `PRAISE`, the
-   reward, and `BYE` for +10; and a reshuffle clears an open search.
+   placement's `YES`, and makes the Dowsing Machine respond; finding it adds no
+   Bag item; the next talk plays the done line, `PRAISE`, the reward, and `BYE`
+   for +10; and a reshuffle clears an open search.
 7. **Claims.** A reward is given once per placement; a changed placement
    reopens it; a full Bag, a cancelled lesson, or no POKéMON able to learn
    keeps it open and leaves the reward counter unchanged.
@@ -1652,11 +1861,11 @@ Required implementation evidence (not yet run):
 10. **Cameos.** No cameo or Dojo rematch seat remains in Wayfarer; the Dojo
     back room works as a haunt; no stranger battle, rematch, prize money
     beyond the quest fallback, or Battle Points come from haunts.
-11. **Save.** A new game and a reload give the saved state described above;
-    a search state survives a reload and clears with its haunt's placement;
-    corrupt reward counters, claim bits, search states, or placements are
-    rejected; removed characters or haunts are pruned; and a counter past a
-    shortened pool is lowered to its length.
+11. **Save.** A new game and a reload give the saved state described above; a
+    search state or asked bit survives a reload and clears with its haunt's
+    placement; corrupt reward counters, claim bits, search states, asked bits,
+    or placements are rejected; removed characters or haunts are pruned; and a
+    counter past a shortened pool is lowered to its length.
 
 ## Open questions
 
