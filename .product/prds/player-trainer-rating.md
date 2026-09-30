@@ -270,14 +270,14 @@ changes yours.
   relax or sightsee ([momentum](../specs/notable-haunts.md#momentum)).
 - **World news:** the one news feed the world shares, built from what is
   true right now (league titles, where notable trainers are, your fame) and
-  passed on by friends, townsfolk, TV, and radio
-  ([World news](world-news.md)).
+  passed on by townsfolk, TV, and radio, and later by notable friends over
+  the phone ([World news](world-news.md)).
 - **News item:** one fact in that feed, written with a neutral template,
   such as "MISTY hangs around PALLET TOWN"
   ([templates](../specs/world-news.md#templates)).
-- **Gossip:** a news item passed on in person: by a notable friend after
-  their news lead-in, or by a townsperson chosen as a gossip
-  ([channels](../specs/world-news.md#channels)).
+- **Gossip:** a townsperson chosen to pass on local news in person, after
+  a short lead-in; haunts carry no gossip
+  ([townsfolk](../specs/world-news.md#townsfolk)).
 - **Hall:** a league room where one match is fought, named after an Elite
   Four member whose theme the room carries (such as Lorelei's Hall) without
   meaning they fight there. Match 1 is in the first hall, match 2 in the

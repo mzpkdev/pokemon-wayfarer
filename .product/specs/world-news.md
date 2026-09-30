@@ -6,31 +6,28 @@ Design status: v0 draft for review: the **feed** is a pure function of world
 state (league titles, reign records, the call counter, haunt placement,
 momentum, badges, TR, lifetime wins) and adds no saved data. Each
 **news item** is written with one of 15 neutral third-person **templates**,
-tagged by topic, scope, and weight. Four **channels** filter the feed and
-frame the item: notable friends (`NEWS` bit, whereabouts first), townsfolk
-gossips (shared lead-ins, local scope), TV (anchor intro and outro,
-headlines), and a new PokéNav radio station (DJ intro and outro, headlines).
-Picks are deterministic from the speaker and `step = world progress + call
-counter`; broadcasts walk the headlines with a cursor kept in RAM. Emerald's
-TV system and PokéNews are retired: every API entry point keeps its name,
-most as stubs, 964 bytes of SaveBlock1 are freed, and record mixing loses
-its TV part.
+tagged by topic, scope, and weight. Three **channels** filter the feed and
+frame the item: townsfolk gossips (shared lead-ins, local scope), TV
+(anchor intro and outro, headlines), and a new PokéNav radio station (DJ
+intro and outro, headlines). Notable friends pass on news later, by phone;
+haunts carry no gossip. Picks are deterministic from the speaker and
+`step = world progress + call counter`; broadcasts walk the headlines with
+a cursor kept in RAM. Emerald's TV system and PokéNews are retired: every
+API entry point keeps its name, most as stubs, 964 bytes of SaveBlock1 are
+freed, and record mixing loses its TV part.
 Template wording, wrapper lines, and the gossip catalog are draft content.
 
 ## Scope
 
 Own, in `IS_WAYFARER`: the feed and its items, the template pool and its
-tags, fame gating, the four channels and their wrapper lines, rotation, the
+tags, fame gating, the three channels and their wrapper lines, rotation, the
 townsfolk gossip catalog, the World news TV script and screen rule, the
 World news radio station, retiring Emerald's TV system and PokéNews, the
 dependency decisions, and acceptance.
 
-- [Notable haunts](notable-haunts.md) owns the notable channel's rules: who
-  gossips (Friend and above), the whereabouts pick
-  ([gossip](notable-haunts.md#gossip)), the `NEWS` voice bit, placement, and
-  the fame rule for a notable speaker
-  ([relationship beat](notable-haunts.md#relationship-beat)). This spec
-  owns the wording of the item that follows `NEWS`.
+- [Notable haunts](notable-haunts.md) owns placement, momentum, and the
+  haunt catalog; World news only reads them. Haunts offer only their quest
+  and carry no gossip ([talk flow](notable-haunts.md#talk-flow)).
 - [Leagues](leagues.md) and [Sevii Masters](sevii-masters.md) own titles,
   reign records, the call counter, and who is a Master; World news only
   reads them.
@@ -121,14 +118,10 @@ so `LEAGUE_LATEST` covers both ("took the title").
 
 ### Fame
 
-Player items reach a speaker only through **fame**:
-
-- **Notable speaker:** the haunts' rule: the player's TR is at least
-  `min(80, speaker's TR − 10)`, or the player reigns at any league, or is a
-  Master ([relationship beat](notable-haunts.md#relationship-beat)).
-- **Every other speaker** (townsfolk, TV, radio): its global part: the
-  player's TR is at least 80, or the player reigns at any league, or is a
-  Master.
+Player items reach a speaker only through **fame**. Every v0 speaker
+(townsfolk, TV, radio) uses the global part of the haunts' fame rule
+([talk flow](notable-haunts.md#talk-flow)): the player's TR is at least 80,
+or the player reigns at any league, or is a Master.
 
 Without fame, a channel skips every player item. Fame needs no saved data.
 
@@ -199,7 +192,6 @@ player items without [fame](#fame).
 
 | Channel | Speaker's region | Candidates | Frame |
 | --- | --- | --- | --- |
-| Notable friends | – | Whereabouts first, then every other item | `NEWS` bit |
 | Townsfolk | The gossip's map | Local items for that region, any weight | Lead-in |
 | TV | The TV's map | Headlines: global, or local for that region | Anchor |
 | Radio | The player's map | Headlines: global, or local for that region | DJ |
@@ -208,25 +200,10 @@ The **region of a map** is `GetRegionForSectionId` of its map section
 ([regions.h](../../game/include/regions.h)); Sevii maps count as Kanto. A
 region outside Kanto, Johto, and Hoenn has no local items.
 
-### Notable friends
-
-A notable trainer at Friend or above says `NEWS` and one item during their
-haunt talk ([relationship beat](notable-haunts.md#relationship-beat)):
-
-1. **Whereabouts first.** The haunts' gossip rule picks a trainer: the next
-   placed trainer after the speaker in trainer catalog order, wrapping,
-   whose stage is Met or above ([gossip](notable-haunts.md#gossip)). The
-   item is that trainer's whereabouts item.
-2. **Otherwise**, the candidates are every item that is not a whereabouts
-   item and does not name the speaker, with player items only when the
-   player's fame reaches this speaker. The pick is by
-   [rotation](#rotation).
-3. With no candidate, `NEWS` and the item are both skipped.
-
-```text
-BROCK: Word travels fast between breeders. Listen to this...  NEWS
-BROCK: MISTY hangs around PALLET TOWN.                        WHERE_HAUNT
-```
+**Whereabouts** stay in the v0 feed: townsfolk tell local whereabouts items,
+and TV and radio air `WHERE_ELITE`, the only whereabouts headline. Notable
+friends are not a v0 channel; they pass on news later by phone
+([Also later](#also-later)).
 
 ### Townsfolk
 
@@ -344,7 +321,6 @@ first league call. With `n` candidates:
 
 | Channel | Pick |
 | --- | --- |
-| Notable friends (after whereabouts) | candidate `(characterId + step) mod n` |
 | Townsfolk | candidate `(map section + rank + step) mod n` |
 | TV and radio | candidates `(step + cursor + j) mod n`, for `j` from 0 to `min(3, n) − 1` |
 
@@ -516,7 +492,7 @@ gets its own spec.
   (`outbreakDaysLeft` or a world-progress rule), since `UpdateTVShowsPerDay`
   no longer counts it down.
 - **News.** A headline, local to the route's region, while it lasts; later
-  also a phone call from a Close friend, as in Gold and Silver.
+  also a phone call from a notable friend, as in Gold and Silver.
 
 ### Market sales
 
@@ -545,8 +521,12 @@ gets its own spec.
 
 ### Also later
 
-- **Phone calls:** Close friends call with an item from the feed
-  ([phone contacts](sevii-masters.md#phone-contacts)).
+- **Phone calls:** a notable trainer at Friend or above, who is a phone
+  contact ([phone contacts](sevii-masters.md#phone-contacts)), calls with
+  one item from the feed, led in by their `NEWS` voice bit
+  ([voice bits](../research/notable-trainer-voices.md)). Their fame check
+  uses the haunts' full rule ([talk flow](notable-haunts.md#talk-flow)),
+  and the item never names the caller.
 - **Daily rotation:** `step` adds the in-game day count.
 
 ## Saved state
@@ -554,8 +534,7 @@ gets its own spec.
 World news adds no saved data. Everything it reads is saved by its owners:
 league titles, reign records, the call counter and last call numbers
 ([Leagues](leagues.md#saved-state)); lifetime wins; the haunt placement
-([Notable haunts](notable-haunts.md#saved-state)); friendship
-([Notable trainers](notable-trainers.md#friendship)); badges and TR. The
+([Notable haunts](notable-haunts.md#saved-state)); badges and TR. The
 broadcast cursor lives in RAM only.
 
 Retiring TV removes `tvShows` and `pokeNews` from SaveBlock1
@@ -575,7 +554,6 @@ Nothing of World news's own is loaded. On load:
 
 ## Presentation
 
-- **Notable friends:** the trainer's speaker label on both lines.
 - **Townsfolk:** the gossip's usual text box, lead-in and fact on separate
   pages.
 - **TV:** sign-style boxes with the screen lit; the screen turns off after
@@ -595,13 +573,13 @@ Required implementation evidence (not yet run):
    league, `LEAGUE_LATEST` names the other league that called most recently;
    with one league calling alone, it names that league.
 3. **Fame.** Player items reach townsfolk, TV, and radio only at TR 80, a
-   title, or Master; a notable speaker uses the haunts' rule.
+   title, or Master.
 4. **Templates.** Every template follows the writing rule, and every
    resolved item fits its box with worst-case slots; radio lines fit 38
    characters.
-5. **Channels.** A friend gives whereabouts first and falls back as
-   specified; townsfolk give only local items; TV and radio give only
-   headlines, global or local.
+5. **Channels.** Townsfolk give only local items, whereabouts included; TV
+   and radio give only headlines, global or local; no haunt talk says a
+   news item.
 6. **Rotation.** Two gossips on one map give different items whenever there
    are at least two candidates; repeated TV broadcasts walk the headlines in
    order and wrap; the cursor resets on load.
@@ -631,7 +609,7 @@ Required implementation evidence (not yet run):
   rather than instead of it.
 - Whether townsfolk should also repeat global headlines (`LEAGUE_MASTER`,
   the Masters' title, `PLAYER_KNOWN`, `PLAYER_MASTER`), which v0 leaves to
-  TV, radio, and friends.
+  TV and radio.
 - The radio station's position, name, and music.
 - Where a World news DJ or anchor could be met in person: the Lavender
   Radio Station (`LavenderTown_RadioStation_hns`, today a lobby with the
