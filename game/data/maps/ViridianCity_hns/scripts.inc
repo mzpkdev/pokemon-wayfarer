@@ -1,3 +1,5 @@
+#include "config/viridian_walker_poc.h"
+
 ViridianCity_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, ViridianCity_KantoOnLoad
 	map_script MAP_SCRIPT_ON_TRANSITION, ViridianCity_EventScript_CityEnter
@@ -8,6 +10,11 @@ ViridianCity_hns_MapScripts::
 @ FLAG_TEMP_4 hides the FRLG residents from other origins. VAR_TEMP_1 arms the
 @ FRLG locked-Gym-door trigger while the Pallet-origin opening is active.
 ViridianCity_KantoOnLoad:
+	#if VIRIDIAN_WALKER_POC
+	clearflag FLAG_TEMP_5
+	#else
+	setflag FLAG_TEMP_5
+	#endif
 	setflag FLAG_TEMP_4
 	setvar VAR_TEMP_1, 0
 	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
@@ -20,6 +27,7 @@ ViridianCity_KantoLoadDone:
 	end
 #else
 ViridianCity_KantoOnLoad:
+	setflag FLAG_TEMP_5
 	setflag FLAG_TEMP_4
 	end
 #endif
@@ -27,6 +35,47 @@ ViridianCity_KantoOnLoad:
 ViridianCity_EventScript_CityEnter::
 	setflag FLAG_VISITED_VIRIDIAN_CITY
 	end
+
+ViridianCity_EventScript_WalkerPoc::
+	lock
+	faceplayer
+	goto_if_eq VAR_TEMP_2, 0, ViridianCity_WalkerPoc_Grass
+	goto_if_eq VAR_TEMP_2, 1, ViridianCity_WalkerPoc_Mart
+	goto_if_eq VAR_TEMP_2, 2, ViridianCity_WalkerPoc_Center
+	goto_if_eq VAR_TEMP_2, 3, ViridianCity_WalkerPoc_Route1
+	goto_if_eq VAR_TEMP_2, 4, ViridianCity_WalkerPoc_Route2
+	msgbox ViridianCity_WalkerPoc_TextRoute22, MSGBOX_DEFAULT
+	goto ViridianCity_WalkerPoc_Done
+ViridianCity_WalkerPoc_Grass:
+	msgbox ViridianCity_WalkerPoc_TextGrass, MSGBOX_DEFAULT
+	goto ViridianCity_WalkerPoc_Done
+ViridianCity_WalkerPoc_Mart:
+	msgbox ViridianCity_WalkerPoc_TextMart, MSGBOX_DEFAULT
+	goto ViridianCity_WalkerPoc_Done
+ViridianCity_WalkerPoc_Center:
+	msgbox ViridianCity_WalkerPoc_TextCenter, MSGBOX_DEFAULT
+	goto ViridianCity_WalkerPoc_Done
+ViridianCity_WalkerPoc_Route1:
+	msgbox ViridianCity_WalkerPoc_TextRoute1, MSGBOX_DEFAULT
+	goto ViridianCity_WalkerPoc_Done
+ViridianCity_WalkerPoc_Route2:
+	msgbox ViridianCity_WalkerPoc_TextRoute2, MSGBOX_DEFAULT
+ViridianCity_WalkerPoc_Done:
+	release
+	end
+
+ViridianCity_WalkerPoc_TextGrass:
+	.string "Checking the green strip!$"
+ViridianCity_WalkerPoc_TextMart:
+	.string "Heading to the POKé MART!$"
+ViridianCity_WalkerPoc_TextCenter:
+	.string "Heading to the POKéMON CENTER!$"
+ViridianCity_WalkerPoc_TextRoute1:
+	.string "Off to ROUTE 1!$"
+ViridianCity_WalkerPoc_TextRoute2:
+	.string "Off to ROUTE 2!$"
+ViridianCity_WalkerPoc_TextRoute22:
+	.string "Off to ROUTE 22!$"
 
 ViridianCity_OnFrame::
 	map_script_2 VAR_OAK_MT_SILVER_CALL, 1, ViridianCity_EventScript_OakCall

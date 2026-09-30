@@ -3,7 +3,7 @@
 
 #include "config/viridian_walker_poc.h"
 
-#define VIRIDIAN_WALKER_LOCAL_ID 250
+#define VIRIDIAN_WALKER_LOCAL_ID LOCALID_VIRIDIAN_WALKER_POC
 
 enum ViridianWalkerGoal {
     WALKER_GOAL_GRASS,
@@ -30,6 +30,7 @@ struct ViridianWalkerDebug {
     u16 searchNodes;
     u16 searchFrames;
     u16 maxNodesPerFrame;
+    u16 maxSliceVblanks;
     u16 grassTilesFound;
     u16 blockedSteps;
     s16 x;

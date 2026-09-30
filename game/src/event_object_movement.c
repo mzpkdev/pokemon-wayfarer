@@ -1,4 +1,5 @@
 #include "global.h"
+#include "viridian_walker_poc.h"
 #include "malloc.h"
 #include "battle_anim.h"
 #include "battle_pyramid.h"
@@ -3200,6 +3201,10 @@ void RemoveObjectEventsOutsideView(void)
 
 static void RemoveObjectEventIfOutsideView(struct ObjectEvent *objectEvent)
 {
+#if IS_WAYFARER && VIRIDIAN_WALKER_POC
+    if (ViridianWalker_IsObject(objectEvent))
+        return;
+#endif
     s16 left =   gSaveBlock1Ptr->pos.x - 2;
     s16 right =  gSaveBlock1Ptr->pos.x + 17;
     s16 top =    gSaveBlock1Ptr->pos.y;

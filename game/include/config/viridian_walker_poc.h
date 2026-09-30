@@ -2,6 +2,6 @@
 #define GUARD_CONFIG_VIRIDIAN_WALKER_POC_H
 
 // One switch for the disposable Viridian walker experiment.
-#define VIRIDIAN_WALKER_POC TRUE
+#define VIRIDIAN_WALKER_POC 1
 
 #endif

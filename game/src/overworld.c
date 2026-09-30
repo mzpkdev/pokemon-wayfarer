@@ -1,4 +1,5 @@
 #include "global.h"
+#include "viridian_walker_poc.h"
 #include "trainer_only_encounter.h"
 #include "league_circuit.h"
 #include "overworld.h"
@@ -1999,6 +2000,9 @@ static void OverworldBasic(void)
 {
     ScriptContext_RunScript();
     RunTasks();
+#if IS_WAYFARER && VIRIDIAN_WALKER_POC
+    ViridianWalker_Update();
+#endif
     AnimateSprites();
     CameraUpdate();
     UpdateCameraPanning();
