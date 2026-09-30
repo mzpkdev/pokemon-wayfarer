@@ -11,8 +11,9 @@ reigned at both Indigo and Hoenn, the aloof rule off, and the **partner**
 the eight pair up in ascending order. Four **tag matches** (the player and
 partner against a pair, three Pokémon each, the player picking three at each
 door with damage carrying over) lead to a full-team singles final against
-the partner after a full heal. A notable trainer's phone number comes with
-the player's first win over them. The **Masters Gallery** tallies every
+the partner after a full heal. A notable trainer's phone number comes when their
+[friendship](notable-trainers.md#friendship) reaches Friend, which a first
+win over them does. The **Masters Gallery** tallies every
 Masters winner; the partner reigns when the player loses the final.
 
 ## Scope
@@ -76,20 +77,23 @@ Winning the Masters adds a Gallery win and gives no new status.
 
 ## Phone contacts
 
-Each notable trainer except the Tate & Liza duo has a **contact bit**: set,
-the player holds their phone number and the trainer is a **contact** on the
-phone ([phone calls](../../game/src/match_call.c)). The bit is set, once, at
-the first committed win of any battle against that trainer: a Gym, rematch,
-story, or league battle, singles or a tag match (where both opponents' bits
-are set). A loss, a draw, fleeing, a declined league event, a battle beside
-the trainer as a partner, and debug battles set nothing. The bit is never
-cleared by play. Tate & Liza give no number, since in v0 a contact's only
-use is being asked as a partner, which the duo cannot be.
+A notable trainer other than the Tate & Liza duo is a **contact** on the
+phone ([phone calls](../../game/src/match_call.c)) when their
+[friendship stage](notable-trainers.md#friendship) is Friend or above, and
+the player then holds their phone number. The number is handed over when the
+score first crosses the Friend threshold, by any route: the first committed
+win against them (a Gym, rematch, story, or league battle, singles or a tag
+match, where both opponents count) is enough, and so are finished haunt
+quests. Nothing else sets it: a loss, a draw, fleeing, a declined league
+event, a battle beside the trainer as a partner, and debug battles add no
+friendship. Friendship never decreases, so a contact stays one. Tate & Liza
+keep a score but give no number, since in v0 a contact's only use is being
+asked as a partner, which the duo cannot be.
 
 On the phone, the only use is asking a contact to be the player's
 [partner](#partner); calling a contact otherwise does nothing new.
-[Notable haunts](notable-haunts.md#relationship-beat) read the contact bit
-to treat a trainer as a friend.
+[Notable haunts](notable-haunts.md#relationship-beat) read the friendship
+stage, not the phone.
 
 ## Partner
 
@@ -102,12 +106,12 @@ they last asked. The saved **partner choice** is none or one `characterId`.
   or ceremony running), or in person through a friend's Team up at a
   [haunt](notable-haunts.md#relationship-beat). The ask always succeeds: it
   saves that contact as the partner choice, replacing any earlier one, and
-  does nothing else. Only
-  a league-eligible contact can be asked (Tate & Liza give no number), and
-  no trait, TR, reign, or friendship check applies.
+  does nothing else. Only a league-eligible contact can be asked (Tate & Liza
+  give no number), and no trait, TR, or reign check applies: Friend or above
+  is the only requirement.
 - **Default.** With no partner choice (the player has never asked anyone),
   the partner is **Lorelei**, who spoke of the player to the caretaker. She
-  needs no contact bit.
+  needs no friendship.
 - **Resolution.** The partner is resolved when the player accepts or
   declines a Masters invitation, before any other selection step: the
   partner choice, or Lorelei without one. An accepted event records that
@@ -353,7 +357,8 @@ singles match. Winning it wins the event; losing it crowns the partner
 
 The Masters adds to the [league saved state](leagues.md#saved-state):
 
-- one **contact bit** per notable trainer except Tate & Liza;
+- no contact state of its own: a contact is read from
+  [friendship](notable-trainers.md#friendship), which Notable trainers save;
 - the [partner choice](#partner): none or one `characterId`;
 - the [Masters Gallery](#masters-gallery) win counts, one per notable
   trainer and one for the player; and
@@ -364,7 +369,7 @@ The Masters adds to the [league saved state](leagues.md#saved-state):
 An accepted Masters event's lineup also holds the partner, and the most
 recent resolved lineup holds eight `characterId`s after a declined Masters
 event, or eight and the partner after an accepted one. The reign flags are
-unchanged by the tag format. New Game saves every contact bit clear, no
+unchanged by the tag format. New Game saves no
 partner choice, and every Gallery count 0.
 
 ## Load validation
@@ -379,17 +384,18 @@ The Masters adds to [Load validation](leagues.md#load-validation):
   with the match unfought; the reset is neither a win nor a loss. A tag
   selection that names slots outside the saved party is corrupt.
 - **Pruning.** Alongside the shared pruning, whatever the content versions
-  say: drop the contact bits and Gallery counts of characters no longer in
-  the registry, keeping the rest, and clear a partner choice naming one (so
-  Lorelei steps in again). If a content version differs from the build's,
-  also clear a partner choice who is no longer an eligible character.
+  say: drop the Gallery counts of characters no longer in the registry
+  (friendship scores prune under [Notable
+  trainers](notable-trainers.md#friendship)), keeping the rest, and clear a
+  partner choice naming one (so Lorelei steps in again). If a content version
+  differs from the build's, also clear a partner choice who is no longer an
+  eligible character.
 - **Checks.** An accepted Masters event holds eight distinct eligible
   characters and an eligible partner who is none of the eight. The most
   recent resolved lineup may hold eight or nine distinct known characters.
-  The partner choice is none or a known eligible character whose contact bit
-  is set. Contact bits and Gallery counts exist only for known notable
-  trainers (and the player's Gallery count); a contact bit for an unknown
-  character is otherwise an invalid save. A trainer reigning at the Masters
+  The partner choice is none or a known eligible character at friendship
+  stage Friend or above. Gallery counts exist only for known notable
+  trainers (and the player's Gallery count). A trainer reigning at the Masters
   has a Gallery count of at least 1, and so does the player reigning there.
   A tag selection exists only in a Masters run at matches 1-4 and names one
   to three distinct party slots.
@@ -457,13 +463,15 @@ Required implementation evidence (not yet run), alongside
    moves in); the same eight whether the player accepts or declines with the
    same partner; pairs taken two by two in battle order; fatigue read from
    an accepted Masters event including its partner.
-4. **Contacts.** A first win over a trainer sets their bit exactly once, in
-   each kind of battle, both opponents' bits after a won tag match; a loss, a
-   decline, partnering, and debug battles set none; Tate & Liza never get a
-   bit; bits survive reloads and prune with removed characters.
+4. **Contacts.** A trainer is a contact exactly when their friendship stage
+   is Friend or above; the number is handed over once, when the score first
+   crosses the Friend threshold, by a first win in each kind of battle (both
+   opponents after a won tag match) or by finished haunt quests; a loss, a
+   decline, partnering, and debug battles add none; Tate & Liza give no
+   number.
 5. **Partner.** With no ask, the partner is Lorelei, with or without her
-   number; asking any contact always succeeds and sets the partner, the
-   latest ask winning; a non-contact and Tate & Liza cannot be asked, and no
+   number; asking any contact always succeeds and sets the partner, the latest
+   ask winning; a trainer below Friend and Tate & Liza cannot be asked, and no
    one can be asked before the player is a Master; an ask while an accepted
    Masters event waits leaves that event's partner and lineup unchanged and
    applies to the next. Accepting saves the partner with the lineup, and
@@ -503,12 +511,12 @@ Required implementation evidence (not yet run), alongside
 9. **Presentation.** The Masters' calls come from the caretaker, the first
    naming Lorelei; accepting names the pairs, the Master seats, and the
    partner; the partner shows their back pic beside the player.
-10. **Load validation.** Corrupt partner choices, contact bits, tag
+10. **Load validation.** Corrupt partner choices, tag
     selections, and Gallery counts are rejected without regenerating or
     rewarding, and so is a trainer reigning at the Masters with a Gallery
     count of 0. A save that went through one content change and was saved
     again before the next event resolved, then loaded under a build that
-    removes a character with a Gallery count or a contact bit, or who is the
+    removes a character with a Gallery count, or who is the
     partner choice, is pruned, not rejected.
 
 Extend the [league tests](leagues.md#acceptance) with these cases.
@@ -519,9 +527,10 @@ Extend the [league tests](leagues.md#acceptance) with these cases.
   beyond each winner's count.
 - Explorer support for the Masters' tag format: the partner, eight seats,
   the pairs, and each notable's three for a tag match.
-- A friendship score per contact, raised by partnering and other shared
-  play.
-- Picky partners who can refuse, by friendship or by trait (such as aloof).
+- Partnering as a source of friendship points
+  ([Notable trainers](notable-trainers.md#friendship)).
+- Picky partners who can refuse, by a higher stage or by trait (such as
+  aloof).
 - Gifts and trades with contacts.
 
 ## References

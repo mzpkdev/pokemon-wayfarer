@@ -1,16 +1,16 @@
 # Sevii Masters
 
-Implemented: No
-Specification: [Sevii Masters specification](../specs/sevii-masters.md)
-Design status: v0 approved: the Sevii Masters is an off-the-record club for
-champions, one of the three [Leagues](leagues.md), that calls the player once
-they are a Master, with wins at both Indigo and Hoenn. It plays as a team
-game: the player and a partner they asked by phone face four pairs from an
-eight-strong lineup in tag battles, then the partner in a singles final.
-There the aloof rule is off, and notable trainers who are Masters have
-guaranteed seats. A notable trainer gives the player their phone number the
-first time the player beats them. The Masters Gallery tallies every winner.
-Balance is informational for now. Terms follow the
+Implemented: No Specification: [Sevii Masters
+specification](../specs/sevii-masters.md) Design status: v0 approved: the
+Sevii Masters is an off-the-record club for champions, one of the three
+[Leagues](leagues.md), that calls the player once they are a Master, with wins
+at both Indigo and Hoenn. It plays as a team game: the player and a partner
+they asked by phone face four pairs from an eight-strong lineup in tag
+battles, then the partner in a singles final. There the aloof rule is off, and
+notable trainers who are Masters have guaranteed seats. A notable trainer
+gives the player their phone number once they become a Friend, which the first
+win over them does. The Masters Gallery tallies every winner. Balance is
+informational for now. Terms follow the
 [glossary](player-trainer-rating.md#glossary).
 
 ## Intent
@@ -72,11 +72,13 @@ opponent or partner, bring their best three, aces first. The final is a
 full battle: after the heal, the player uses their whole party and the
 partner their whole team.
 
-**Phone numbers.** The first time the player beats a notable trainer, in any
-battle with them, that trainer gives the player their phone number and joins
-the phone's contacts for good. Tate and Liza, a duo, give none. Here a
-contact is for one thing: asking them to be the player's partner.
-[Notable haunts](notable-haunts.md) also treat contacts as friends.
+**Phone numbers.** When a notable trainer becomes a Friend
+([friendship](notable-trainers.md#friendship)), they give the player their
+phone number and join the phone's contacts for good. The first win over them,
+in any battle, is enough, and so is helping them at haunts. Tate and Liza, a
+duo, give none. Here a contact is for one thing: asking them to be the
+player's partner. [Notable haunts](notable-haunts.md) read the same
+friendship for their greetings.
 
 **The partner.** The partner is whoever the player last asked. Any contact
 can be asked once the player is a Master, and the ask always succeeds. The
@@ -130,9 +132,9 @@ player holds all eight Kanto badges and all eight Hoenn badges, TR 120,
 throughout, and fights each accepted event on the day of its call.
 
 1. Day 7: the player beats Koga, Karen, Blue, Giovanni, and Jasmine at
-   Indigo. Each of the five gives the player their phone number, as the Gym
-   Leaders they beat for their badges already have (all but Tate & Liza,
-   who give none).
+   Indigo. Each of the five becomes a Friend and gives the player their
+   phone number, as the Gym Leaders they beat for their badges already have
+   (all but Tate & Liza, who give none).
 2. Day 14: with Indigo and Hoenn both won, the player is a Master.
 3. Day 21: the phone rings, and it is the caretaker of Seven Island's battle
    house: Lorelei spoke of the player, and there is a room downstairs. The
@@ -196,10 +198,9 @@ money, and title.
   what the Gallery shows beyond each winner's win count.
 - Explorer support for the tag format: the partner, eight-seat Masters
   lineups, the pairs, and each notable's three for a tag battle.
-- A friendship score with each contact, raised by partnering and other
-  shared play.
-- Picky partners: contacts who turn the player down, by friendship or by
-  trait, such as an aloof trainer refusing a weak player.
+- Partnering raising friendship.
+- Picky partners: contacts who turn the player down, by a higher stage or
+  by trait, such as an aloof trainer refusing a weak player.
 - Gifts and trades with contacts.
 
 ## References

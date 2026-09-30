@@ -11,13 +11,19 @@ Status: review draft. Nothing here is wired into scripts yet.
 
 ## Bits
 
-Every trainer has all 12.
+Every trainer has all 15. A haunt picks the greeting by the trainer's
+[friendship stage](../specs/notable-trainers.md#friendship): `MEET` or
+`HEARD` for a stranger, `AGAIN` at Met, `HELLO` at Friend, and `CLOSE` at
+Close.
 
 | Bit | When |
 | --- | --- |
-| `HELLO` | greets a player they have met before |
+| `HELLO` | greets a friend |
+| `AGAIN` | greets a player they have met before but are not friends with yet |
+| `CLOSE` | a warmer greeting for a close friend |
 | `MEET` | introducing themselves the first time (includes their name) |
-| `NOT_YET` | famous but unbeaten: "beat me properly first". Gym Leaders may mention their GYM; Elite Four and Champions don't |
+| `HEARD` | a first meeting, but they know the player by reputation; always contains `{PLAYER}` |
+| `NOT_YET` | first fight still ahead: "beat me properly first". Gym Leaders may mention their GYM; Elite Four and Champions don't |
 | `NEWS` | lead-in before a gossip line |
 | `ASK` | attention-getter before whatever the haunt proposes: no movement, favour, request content or implied destination or activity |
 | `YES` | the player agreed |
@@ -30,15 +36,12 @@ Every trainer has all 12.
 
 ## Trainer values
 
-Each trainer also carries two values that haunts read. They are authored in
+Each trainer also carries a buddy value that haunts read. It is authored in
 the notable-trainer catalog, and the
-[haunts spec](../specs/notable-haunts.md#trainer-values) owns their meaning.
+[haunts spec](../specs/notable-haunts.md#trainer-values) owns its meaning.
+Personality lives only in the voice bits: haunt lines never imply the trainer
+needs help or is asking a favour, so every trainer can voice every quest.
 
-- **Manner** is `warm`, `proud` or `cold`. It says which quests a trainer can
-  give, not how they sound: warm trainers ask you for help, proud ones
-  challenge or enlist you, and cold ones command you. Each quest type lists
-  the manners it fits. `ASK` lines carry the manner only as tone. Where a manner may
-  surprise, a **Manner reason** gives the canon behind it.
 - **Buddy** names one roster slot: the slot number (1-6, as in the catalog
   spec) and the species as authored. It is the trainer's anime companion, or
   their later-game companion, or else their iconic ace. `{BUDDY}` resolves at
@@ -74,8 +77,8 @@ the notable-trainer catalog, and the
   movement (come, walk, go, follow, along, with me), no favour (help, hand,
   favor, assist), no request content, no implied destination or activity. It
   must read naturally before any haunt proposal, e.g. "...These tunnels run
-  through to Vermilion. Walk it with me?", "...I dropped my {ITEM} somewhere
-  here. Help me look?", "...Your best one against my {ACE}?"
+  through to Vermilion. Walk it with me?", "...Something valuable went missing
+  around here. Find it?", "...Your best one against my {ACE}?"
 - **YES is pure approval of the player's answer.** No movement (go, move
   out, let's go, come, walk, follow), no timing (later, when you're done,
   after) and no assumed activity (meal, battle, search, walk, quiz). It must
@@ -83,6 +86,11 @@ the notable-trainer catalog, and the
   walks with the player. `NO`, `NOT_READY` and `PRAISE` likewise assume no
   specific activity, movement or place. Their mood and the trainer's own
   hooks (cooking, Water types, war stories) are fine.
+- **Greetings by friendship.** `HEARD` knows the player only by reputation,
+  so it makes no claim about what they did and always holds `{PLAYER}`.
+  `AGAIN` is polite and still getting acquainted; `CLOSE` is the warmest
+  greeting. All three follow the haunt-safe rules above and assume no
+  activity.
 - **Tate & Liza** alternate halves of every line ("TATE: … LIZA: …").
 
 ## Source priority
@@ -104,18 +112,19 @@ needs checking before the lines ship.
 
 ### Brock
 
-Manner: **warm**
-
 Buddy: slot 1, Steelix (ONIX early). Anime Onix.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Hey, {PLAYER}! Good to see you. Eating well, I hope? |
+| AGAIN | Oh, hi again! Still getting to know each other, huh? |
+| CLOSE | {PLAYER}! Good to see you, friend. There is always a plate for you. |
 | MEET | I'm BROCK. I train Rock types, and I cook for them too! |
+| HEARD | So you're {PLAYER}? Word's out! Have you eaten yet? |
 | NOT_YET | Test your rock-hard will at my GYM first. Then we'll talk. |
 | NEWS | Word travels fast between breeders. Listen to this... |
 | ASK | Hey, I've got an idea. |
-| YES | Great! I knew I could count on you. |
+| YES | Great! That's the spirit! |
 | NO | No worries. Just don't skip any meals, okay? |
 | NOT_READY | Not yet. Even Rock types need time to harden. |
 | PRAISE | Nicely done! That's rock-hard willpower if I ever saw it. |
@@ -129,14 +138,15 @@ Breeder (anime); a big family of younger siblings he looks after (anime);
 
 ### Misty
 
-Manner: **warm**
-
 Buddy: slot 2, Golduck (PSYDUCK early). Anime Psyduck.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Hey, {PLAYER}! Took you long enough! |
+| AGAIN | Oh, it's you again. Fine, I guess I'm getting used to you. |
+| CLOSE | Hey, {PLAYER}! Best friend alert! Don't tell anyone I said so. |
 | MEET | I'm MISTY! My policy? An all-out offensive with Water types! |
+| HEARD | You're {PLAYER}? I've heard things. They'd better be true! |
 | NOT_YET | Beat me at my GYM first. My Water types won't go easy! |
 | NEWS | Okay, listen up! You'll want to hear this. |
 | ASK | Okay, listen up! |
@@ -155,14 +165,15 @@ ball uninvited (anime).
 
 ### Lt. Surge
 
-Manner: **proud**
-
 Buddy: slot 1, Raichu (PIKACHU early). His anime Raichu, and the Pikachu gag.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Hey, kid! {PLAYER}! Still standing? Good! |
+| AGAIN | Hey, kid! You again! Starting to grow on me, ya know! |
+| CLOSE | Hey there, {PLAYER}! My favorite soldier! At ease, friend! |
 | MEET | Name's LT. SURGE, the Lightning American! Nice to meet ya! |
+| HEARD | Hey, kid! You're {PLAYER}, right? I heard you're tough! |
 | NOT_YET | Hey, kid! Win at my GYM first. Then we'll talk like soldiers! |
 | NEWS | Listen up, kid! Here's the latest intel. |
 | ASK | Listen up, soldier! |
@@ -180,14 +191,15 @@ gym sign); his Raichu beating Ash's unevolved Pikachu (anime).
 
 ### Erika
 
-Manner: **warm**
-
 Buddy: slot 1, Vileplume (ODDISH, then GLOOM). Anime Gloom.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Oh... {PLAYER}? Forgive me, I was nearly asleep. Hello! |
+| AGAIN | Oh, hello again. I remember you. Please, relax a while. |
+| CLOSE | Dear {PLAYER}. Your company is a joy. Please, stay a moment. |
 | MEET | Pleased to meet you. I am ERIKA. I teach flower arranging. |
+| HEARD | Oh... you are {PLAYER}? I have heard such lovely things. |
 | NOT_YET | Please visit my GYM first. We shall have a proper match there. |
 | NEWS | Oh, I heard the most curious thing... |
 | ASK | Might I suggest something? |
@@ -204,14 +216,15 @@ Hooks: dozing off (RBY/FRLG, HGSS); "I teach the art of flower arranging"
 
 ### Janine
 
-Manner: **warm**
-
 Buddy: slot 1, Venomoth (VENONAT early). Iconic ace.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Fufufufu... Surprised? It's just me! Hello, {PLAYER}! |
+| AGAIN | Fufufu! You again! I'm starting to see through you! |
+| CLOSE | {PLAYER}! Fufufu, there's no need to hide from you anymore! |
 | MEET | I'm JANINE, daughter of KOGA, and a ninja in training! |
+| HEARD | Fufufu! You're {PLAYER}! My spies told me all about you! |
 | NOT_YET | Face me at my GYM first. A ninja doesn't allow shortcuts! |
 | NEWS | Psst! A good ninja hears everything. Listen... |
 | ASK | Hee hee! Psst, psst! |
@@ -230,14 +243,15 @@ Masters EX).
 
 ### Sabrina
 
-Manner: **cold**
-
 Buddy: slot 4, Gengar (GASTLY, then HAUNTER). Anime Haunter.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | {PLAYER}. I foresaw that you would come. |
+| AGAIN | We meet again. I remember you. That is rare. |
+| CLOSE | {PLAYER}. I see you clearly now. You are a true friend. |
 | MEET | I am SABRINA. I have had psychic powers since childhood. |
+| HEARD | You are {PLAYER}. Your name reached me before you did. |
 | NOT_YET | My GYM awaits. I have already seen how our battle ends. |
 | NEWS | My mind picked something up. Listen. |
 | ASK | I foresee something. Pay attention. |
@@ -255,14 +269,15 @@ catalog files as her Gengar slot ("anime Haunter").
 
 ### Blaine
 
-Manner: **proud**
-
 Buddy: slot 1, Magmortar (MAGMAR early). His RBY and FRLG ace.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Hah! {PLAYER}! Got your BURN HEAL handy? |
+| AGAIN | Hah! Back again! You're getting to be a familiar face! |
+| CLOSE | Hah! {PLAYER}, my friend! Always a hot time with you! |
 | MEET | Hah! I am BLAINE! Quizmaster and red-hot Fire trainer! |
+| HEARD | Hah! You're {PLAYER}! Heard you're a real hot shot! |
 | NOT_YET | Hah! Pass my GYM quiz and beat me there first! |
 | NEWS | Quiz time! No, wait... just some news. Listen! |
 | ASK | Hey, kid, hear me out. |
@@ -279,14 +294,15 @@ BURN HEAL!" (RBY/FRLG).
 
 ### Giovanni
 
-Manner: **cold**
-
 Buddy: slot 4, Persian (MEOWTH early). Anime Persian.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | So. {PLAYER}. You keep turning up. |
+| AGAIN | You again. I am beginning to remember your face. |
+| CLOSE | {PLAYER}. You have earned my trust. Do not waste it. |
 | MEET | I am GIOVANNI. Remember the name. Others have learned to. |
+| HEARD | So. You are {PLAYER}. I have heard your name. Often. |
 | NOT_YET | Earn your way through my GYM first. Then I may notice you. |
 | NEWS | TEAM ROCKET hears everything. Listen well. |
 | ASK | I have a proposition. |
@@ -303,14 +319,15 @@ Let's Go). He stays cold and transactional throughout.
 
 ### Blue
 
-Manner: **proud**
-
 Buddy: slot 1, Umbreon (EEVEE early). Anime Gary's Umbreon.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Yo, {PLAYER}! Miss me? Course you did. |
+| AGAIN | Oh, you again. Keep this up and I'll remember you! |
+| CLOSE | Yo, {PLAYER}! My rival and my friend. Don't let it go to your head. |
 | MEET | I'm BLUE! Remember it, 'cause I'm the best there is! |
+| HEARD | You're {PLAYER}? Everyone's talking about you. Not me, though. |
 | NOT_YET | Beat me in a real battle first. Till then, I'm the best! |
 | NEWS | Heh, bet you haven't heard this one yet. |
 | ASK | Hey, {PLAYER}. A second? |
@@ -328,18 +345,19 @@ with trust and love (RBY/FRLG).
 
 ### Lorelei
 
-Manner: **proud**
-
 Buddy: slot 1, Lapras. Her RBY and FRLG ace and Masters EX partner.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Ah, {PLAYER}. Come to see me? How refreshing. |
+| AGAIN | Ah, you again. I am beginning to know you. |
+| CLOSE | Dear {PLAYER}. I am truly glad to see you. Stay a while. |
 | MEET | I am LORELEI. No one can best me with icy POKéMON. |
+| HEARD | You're {PLAYER}? I have heard so much about you. |
 | NOT_YET | Defeat me in battle first. Until then, you're on thin ice. |
 | NEWS | I heard something interesting. Listen closely. |
 | ASK | Hmph. I have something to say. |
-| YES | Good. I knew I could count on you. |
+| YES | Good. I expected nothing less. |
 | NO | Pity. I'll find someone else. |
 | NOT_READY | Not yet. Come back once you're a little sharper. |
 | PRAISE | Impressive. You kept your cool. I respect that. |
@@ -353,14 +371,15 @@ full of POKéMON dolls (FRLG Sevii postgame) (verify).
 
 ### Bruno
 
-Manner: **proud**
-
 Buddy: slot 1, Machamp (MACHOP, then MACHOKE). Iconic ace.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Hoo hah! {PLAYER}! Still training hard? |
+| AGAIN | Hoo hah! You again! Your face is familiar now! |
+| CLOSE | Hoo hah! {PLAYER}! My friend! Our bond is strong as steel! |
 | MEET | I am BRUNO! I train with my POKéMON, body and soul! |
+| HEARD | Hoo hah! You are {PLAYER}! I have heard of your strength! |
 | NOT_YET | Hoo hah! Defeat me in battle first! Then we'll talk! |
 | NEWS | Hmm. I heard something between training sets. Listen. |
 | ASK | Hey. Listen closely. |
@@ -377,14 +396,15 @@ Hooks: "Hoo hah!" and "We will grind you down with our superior power!"
 
 ### Agatha
 
-Manner: **cold**
-
 Buddy: slot 1, Gengar (GASTLY, then HAUNTER). Iconic ace.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Hmph. {PLAYER}. Still kicking, are you? |
+| AGAIN | Hmph. You again, child. You're persistent, I'll give you that. |
+| CLOSE | Hmph. {PLAYER}. Fine, you're all right, child. Don't tell anyone. |
 | MEET | I am AGATHA. Remember that name, child. OAK surely does. |
+| HEARD | Hmph. So you're {PLAYER}. I've heard the rumors, child. |
 | NOT_YET | Beat me in battle first, child. Then I might listen. |
 | NEWS | Hee hee. Old ears still hear plenty. Listen, child. |
 | ASK | Kukuku... a thought occurs to me. |
@@ -402,18 +422,19 @@ handsome", "POKéMON are for fighting!" and calling the player "child"
 
 ### Lance
 
-Manner: **proud**
-
 Buddy: slot 1, Dragonite (DRATINI, then DRAGONAIR). Iconic ace.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | {PLAYER}. Good to see you. You're looking strong. |
+| AGAIN | Good to see you again. I'm glad our paths crossed. |
+| CLOSE | {PLAYER}! My friend. It's always good to see you. |
 | MEET | I'm LANCE, a trainer of dragons. It's a pleasure. |
+| HEARD | So you're {PLAYER}. Your name has reached even me. |
 | NOT_YET | Defeat me in battle first. Dragons respect only strength. |
 | NEWS | I've been keeping an eye on things. Listen. |
 | ASK | You. Child. Pay attention. |
-| YES | I knew I could count on you. |
+| YES | A fine answer. |
 | NO | I understand. The offer stands. |
 | NOT_READY | Not yet. A dragon's power must be earned. |
 | PRAISE | Remarkable. You have the heart of a dragon master. |
@@ -424,8 +445,6 @@ Buddy: slot 1, Dragonite (DRATINI, then DRAGONAIR). Iconic ace.
 Hooks: dragon master (RBY/FRLG, GSC/HGSS); Dragonite (RBY/FRLG, GSC/HGSS
 ace); cousin Clair (GSC/HGSS). Lance's catalog home region is Kanto, so he is
 filed here.
-Manner reason: a heroic mentor in HGSS, he enlists the player as a fellow
-trainer rather than asking favours.
 
 ---
 
@@ -433,14 +452,15 @@ trainer rather than asking favours.
 
 ### Koga
 
-Manner: **cold**
-
 Buddy: slot 1, Crobat (ZUBAT, then GOLBAT). His HGSS ace.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Fwahahaha! {PLAYER}. You did not sense me, did you? |
+| AGAIN | Fwahaha! You again. Your steps are familiar to me now. |
+| CLOSE | Fwahaha! {PLAYER}. I trust few. You are one of them. |
 | MEET | I am KOGA. I live in shadows, a ninja! |
+| HEARD | Fwahaha! You are {PLAYER}. My shadows spoke of you. |
 | NOT_YET | Best me in battle first. Until then, you walk in my shadow. |
 | NEWS | A ninja gathers secrets. Here is one. |
 | ASK | Hm? Just a moment. |
@@ -458,14 +478,15 @@ region is Johto, so he is filed here.
 
 ### Falkner
 
-Manner: **proud**
-
 Buddy: slot 1, Pidgeot (PIDGEY, then PIDGEOTTO). Anime and HGSS Pidgeotto.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | {PLAYER}! Good timing. My birds are itching to fly. |
+| AGAIN | Oh, hello again! We keep running into each other, don't we? |
+| CLOSE | {PLAYER}! You're a true friend. My birds love you, too! |
 | MEET | I'm FALKNER. I carry on my father's work with bird POKéMON. |
+| HEARD | You're {PLAYER}? My father would want to hear of you! |
 | NOT_YET | Beat me at my GYM first. My birds won't fall so easily! |
 | NEWS | Word flies fast. Here's what I heard. |
 | ASK | Excuse me, if I may! |
@@ -480,19 +501,18 @@ Buddy: slot 1, Pidgeot (PIDGEY, then PIDGEOTTO). Anime and HGSS Pidgeotto.
 Hooks: carrying on his father's bird POKéMON legacy (GSC/HGSS); "People say
 you can clip Flying-type POKéMON's wings with a jolt of electricity... I won't
 allow such insults" (GSC/HGSS).
-Manner reason: he takes pride in his birds and his father and bristles at
-slights, so he challenges the player rather than asking for help.
 
 ### Bugsy
-
-Manner: **warm**
 
 Buddy: slot 1, Scizor (SCYTHER early). Anime and GSC Scyther.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Hi, {PLAYER}! Seen any interesting Bug POKéMON lately? |
+| AGAIN | Hi again! I'm starting to learn your habits. For research! |
+| CLOSE | {PLAYER}! My best research partner! I saved you a note! |
 | MEET | I'm BUGSY! I never lose when it comes to Bug POKéMON! |
+| HEARD | You're {PLAYER}? I've read about you! Can I study you? |
 | NOT_YET | Beat me at my GYM first! It'll help my research, too! |
 | NEWS | Oh! I've been taking notes, and I heard this... |
 | ASK | Oh! Hey, hey, wait a second! |
@@ -509,14 +529,15 @@ Scyther as his signature (anime, GSC).
 
 ### Whitney
 
-Manner: **warm**
-
 Buddy: slot 1, Miltank. Anime and GSC Miltank.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Hiii, {PLAYER}! I'm so glad to see you! |
+| AGAIN | Hiii again! I remember you! We should hang out more! |
+| CLOSE | {PLAYER}! Yay! You're my bestest friend! Come on, hang out! |
 | MEET | Hi! I'm WHITNEY! Everyone got into POKéMON, so I did too! |
+| HEARD | Wait, you're {PLAYER}? Everyone's talking about you! |
 | NOT_YET | Beat me at my GYM first! ...And no making me cry! |
 | NEWS | Ooh, ooh! You've gotta hear this! |
 | ASK | Ooh, ooh, I have an idea! |
@@ -534,14 +555,15 @@ PokéGear).
 
 ### Morty
 
-Manner: **warm**
-
 Buddy: slot 1, Gengar (GASTLY, then HAUNTER). Anime Gengar.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | {PLAYER}. I had a feeling you'd come. |
+| AGAIN | We meet again. I sense we will grow close. |
+| CLOSE | {PLAYER}. I see a bright bond between us. I'm glad you came. |
 | MEET | I'm MORTY. I train to see what others cannot. |
+| HEARD | You are {PLAYER}. I saw your name in a vision. |
 | NOT_YET | Face me at my GYM first. Then I'll see you clearly. |
 | NEWS | EUSINE told me something. You should hear it. |
 | ASK | Ah, a moment of your time. |
@@ -557,19 +579,18 @@ Hooks: training to meet the legendary rainbow POKéMON (Ho-Oh), which isn't
 named because it isn't on his roster (GSC/HGSS); "I can see what you cannot"
 mystic sight (GSC/HGSS) (verify); friendship with Eusine
 (Crystal/HGSS); his Gengar (anime).
-Manner reason: he is gentle and quietly kind to the player, and he asks for
-help rather than setting tests.
 
 ### Chuck
-
-Manner: **warm**
 
 Buddy: slot 1, Poliwrath (POLIWAG, then POLIWHIRL). Anime and GSC Poliwrath.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | WAHAHAH! {PLAYER}! Good to see you, buddy! |
+| AGAIN | WAHAHAH! You again! I'm getting used to that face! |
+| CLOSE | WAHAHAH! {PLAYER}! My buddy! Pals train together, right? |
 | MEET | I'm CHUCK! My POKéMON crush stones and shatter bones! |
+| HEARD | WAHAHAH! You're {PLAYER}! I heard you've got guts! |
 | NOT_YET | Beat me at my GYM first! Then we'll talk as equals! |
 | NEWS | WAHAHAH! Listen up! I heard this during training! |
 | ASK | Hey, kid! Eyes on me! |
@@ -587,15 +608,16 @@ Hooks: "WAHAHAH!" and "My POKéMON will crush stones and shatter bones!"
 
 ### Jasmine
 
-Manner: **warm**
-
 Buddy: slot 3, Ampharos (MAREEP, then FLAAFFY). Amphy, the lighthouse
 Ampharos.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Oh... {PLAYER}. Um... hello. It's nice to see you. |
+| AGAIN | Oh... um... hello again. I remember you. |
+| CLOSE | {PLAYER}... I'm so happy to see you. You're my friend. |
 | MEET | Um... I'm JASMINE. I use... the Steel type. Nice to meet you. |
+| HEARD | Um... you're {PLAYER}? I have... heard about you. |
 | NOT_YET | Um... please beat me at my GYM first. I'll do my best. |
 | NEWS | Um... I heard something. May I tell you? |
 | ASK | Oh, might I have a word? |
@@ -613,14 +635,15 @@ Nickname: her lines say AMPHY, which fits MAREEP, FLAAFFY and AMPHAROS alike.
 
 ### Pryce
 
-Manner: **proud**
-
 Buddy: slot 1, Mamoswine (SWINUB, then PILOSWINE). Anime Piloswine.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Ah, {PLAYER}. Good. An old man enjoys some company. |
+| AGAIN | Ah, you again. An old man remembers a good face. |
+| CLOSE | {PLAYER}! My dear friend. An old man treasures such company. |
 | MEET | I am PRYCE. I've been with POKéMON since before you were born. |
+| HEARD | Hm. So you're {PLAYER}. Even an old man hears the talk. |
 | NOT_YET | Beat me at my GYM first, youngster. Experience is earned. |
 | NEWS | At my age, one hears things. Listen. |
 | ASK | Ho ho. Now, listen well. |
@@ -639,19 +662,20 @@ out because it's a season word.
 
 ### Clair
 
-Manner: **proud**
-
 Buddy: slot 2, Dragonite (DRATINI, then DRAGONAIR). Anime Dragonair.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Oh, it's you, {PLAYER}. Hmph. Fine, I'll say hello. |
+| AGAIN | You again? Hmph. I suppose I'm used to you now. |
+| CLOSE | {PLAYER}. Hmph. Fine, you're a friend. Don't make it weird. |
 | MEET | I am CLAIR. The world's best dragon master. |
+| HEARD | You're {PLAYER}? Hmph. I've heard. Don't get cocky. |
 | NOT_YET | Beat me at my GYM first. Even then, I may not accept it! |
 | NEWS | Listen. I'll only say this once. |
 | ASK | Hmph. Hear me out. |
 | YES | Naturally. I expected nothing less. |
-| NO | Hmph! I didn't need your help anyway. |
+| NO | Hmph! Suit yourself. |
 | NOT_READY | You? Not yet. Dragons don't bow to the unready. |
 | PRAISE | ...Fine. I'll admit it. That was impressive. |
 | GIFT | Take this {ITEM}. Don't read anything into it. |
@@ -663,14 +687,15 @@ accept defeat and withholding the badge (GSC/HGSS); cousin Lance (GSC/HGSS).
 
 ### Will
 
-Manner: **proud**
-
 Buddy: slot 1, Xatu (NATU early). His GSC and HGSS ace.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | {PLAYER}. We meet again. As expected. |
+| AGAIN | We meet again. I am beginning to know you. |
+| CLOSE | {PLAYER}. I trust you more than most. Do not tell anyone. |
 | MEET | I am WILL. I have trained all around the world. |
+| HEARD | So you are {PLAYER}. Your name has reached me, mask and all. |
 | NOT_YET | Defeat me in battle first. I will not lose so easily. |
 | NEWS | My psychic POKéMON sensed something. Listen. |
 | ASK | Hmm. I have something to say. |
@@ -684,19 +709,18 @@ Buddy: slot 1, Xatu (NATU early). His GSC and HGSS ace.
 
 Hooks: "I have trained all around the world, making my psychic POKéMON
 powerful" (GSC/HGSS); his mask (GSC/HGSS design); Xatu (GSC/HGSS ace).
-Manner reason: he is reserved and formal, but he tests challengers rather than
-ordering them about.
 
 ### Karen
-
-Manner: **cold**
 
 Buddy: slot 1, Umbreon (EEVEE early). Her GSC and HGSS ace.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Oh, {PLAYER}. Good. I was getting bored. |
+| AGAIN | Oh, you again. You're growing on me. A little. |
+| CLOSE | Oh, {PLAYER}. Good. I really did hope you'd come. |
 | MEET | I'm KAREN. I use Dark types. Remember that. |
+| HEARD | You're {PLAYER}? I've heard you trust your POKéMON. |
 | NOT_YET | Defeat me first. Then we'll see what kind of trainer you are. |
 | NEWS | I heard something you might find interesting. |
 | ASK | Ahem. A word. |
@@ -718,14 +742,15 @@ people. Truly skilled trainers should try to win with their favorites."
 
 ### Roxanne
 
-Manner: **warm**
-
 Buddy: slot 1, Probopass (NOSEPASS early). Anime and RSE Nosepass.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Hello, {PLAYER}! Ready for another lesson? |
+| AGAIN | Hello again! I remember you. Your progress is fascinating! |
+| CLOSE | {PLAYER}! My favorite student! I kept a page for you! |
 | MEET | I'm ROXANNE. I study POKéMON battles, and I love to teach! |
+| HEARD | You're {PLAYER}? Your name is in all my notes! |
 | NOT_YET | Please take on my GYM first. Study hard, then battle me! |
 | NEWS | Class, attention please! ...Oh, sorry. Habit. Listen... |
 | ASK | Um... excuse me? Sorry! |
@@ -744,14 +769,15 @@ Nosepass per the POKéDEX) (verify).
 
 ### Brawly
 
-Manner: **warm**
-
 Buddy: slot 1, Hariyama (MAKUHITA early). Anime and RSE Makuhita.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Hey, {PLAYER}! Totally stoked to see you! |
+| AGAIN | Hey, you again! Getting to know you is a total wave! |
+| CLOSE | {PLAYER}! My bro! Always stoked to ride with you! |
 | MEET | I'm BRAWLY! Fighting and surfing, that's my whole deal! |
+| HEARD | Dude, you're {PLAYER}? Everyone's buzzing about you! |
 | NOT_YET | Beat me at my GYM first! Show me what you're made of! |
 | NEWS | Dude, you gotta hear this! |
 | ASK | Hey! Quick question! |
@@ -769,14 +795,15 @@ lines are surfing slang about himself, not claims about the location.
 
 ### Wattson
 
-Manner: **warm**
-
 Buddy: slot 1, Manectric (ELECTRIKE early). His RSE ace.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Wahahahah! {PLAYER}! You look fully charged! |
+| AGAIN | Wahahahah! You again! Your face is getting familiar! |
+| CLOSE | Wahahahah! {PLAYER}! My dear friend! You light me up! |
 | MEET | Wahahahah! I'm WATTSON! Old, but still full of sparks! |
+| HEARD | Wahahahah! You're {PLAYER}! I heard you're a live wire! |
 | NOT_YET | Wahahahah! Beat me at my GYM first! |
 | NEWS | Wahahahah! Here's a shocking bit of news! |
 | ASK | Hey, hey, listen up! |
@@ -793,14 +820,15 @@ building GYM traps and gadgets (RSE) (verify).
 
 ### Flannery
 
-Manner: **warm**
-
 Buddy: slot 1, Torkoal. Anime and RSE Torkoal.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Oh, {PLAYER}! Hi! I mean... Ahem. Greetings! |
+| AGAIN | Oh, hi again! I'm starting to get to know you! |
+| CLOSE | {PLAYER}! You're my friend! I can be myself with you! |
 | MEET | I'm FLANNERY! My grandfather taught me all about fire! |
+| HEARD | Wait, you're {PLAYER}? Gramps told me all about you! |
 | NOT_YET | Beat me at my GYM first! I'll show you my hottest moves! |
 | NEWS | Ooh, hot news! Listen! |
 | ASK | Oh, um... can I say something? |
@@ -815,18 +843,18 @@ Buddy: slot 1, Torkoal. Anime and RSE Torkoal.
 Hooks: taking over from her grandfather (RSE/ORAS); admitting she "tried too
 hard to be someone I'm not" after losing (RSE/ORAS); Torkoal (RSE/ORAS ace,
 anime).
-Manner reason: under the act she is eager and friendly, so she asks for help.
 
 ### Norman
-
-Manner: **warm**
 
 Buddy: slot 1, Slaking (SLAKOTH, then VIGOROTH). Anime and RSE Slaking.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Ah, {PLAYER}. Good to see you. Keeping strong? |
+| AGAIN | Ah, hello again. I'm glad to see you back. |
+| CLOSE | {PLAYER}. You're like family. I am always glad to see you. |
 | MEET | I'm NORMAN. A GYM LEADER, but a father first. |
+| HEARD | So you're {PLAYER}. I've heard a lot about you. |
 | NOT_YET | Earn the right at my GYM first. I don't hold back. |
 | NEWS | I heard something. You should know about it. |
 | ASK | Ahem. Might I have a word? |
@@ -845,14 +873,15 @@ the player's father.
 
 ### Winona
 
-Manner: **warm**
-
 Buddy: slot 1, Altaria (SWABLU early). Anime and RSE Altaria.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Hello, {PLAYER}. It's always a pleasure. |
+| AGAIN | Ah, hello again. I remember you well. |
+| CLOSE | {PLAYER}. I'm truly glad of your company, dear friend. |
 | MEET | I am WINONA. I have become one with bird POKéMON. |
+| HEARD | You are {PLAYER}? Word of you has travelled far. |
 | NOT_YET | Please face me at my GYM first. Our grace awaits you. |
 | NEWS | A little bird told me something. Listen. |
 | ASK | Hmm. Listen carefully. |
@@ -870,14 +899,15 @@ humming is from the POKéDEX).
 
 ### Tate & Liza
 
-Manner: **warm**
-
 Buddy: slot 1, Solrock. Tate's half of the anime pair; the duo has one buddy.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | TATE: Hey, {PLAYER}! LIZA: We knew you'd come! |
+| AGAIN | TATE: Oh, it's you again! LIZA: We remember you! |
+| CLOSE | TATE: {PLAYER}! LIZA: Our best friend! We're so happy! |
 | MEET | TATE: I'm TATE! LIZA: And I'm LIZA! We're twins! |
+| HEARD | TATE: You're {PLAYER}! LIZA: We've heard all about you! |
 | NOT_YET | TATE: Beat us at our GYM... LIZA: ...first, okay? |
 | NEWS | TATE: Guess what? LIZA: We heard something! |
 | ASK | TATE: Hey, listen! LIZA: Ooh, wait! |
@@ -891,19 +921,18 @@ Buddy: slot 1, Solrock. Tate's half of the anime pair; the duo has one buddy.
 
 Hooks: twins who read each other's minds, "Hehehe... Were you surprised?"
 (RSE/ORAS); Solrock and Lunatone (RSE/ORAS, anime).
-Manner reason: they are playful, teasing kids who ask for help, never
-command it.
 
 ### Juan
-
-Manner: **proud**
 
 Buddy: slot 1, Kingdra (HORSEA, then SEADRA). His Emerald ace.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Ah, {PLAYER}. How delightful to see you again. |
+| AGAIN | Ah, hello again! Our paths cross gracefully. |
+| CLOSE | Ah, dear {PLAYER}! My friend! What a delight! |
 | MEET | I am JUAN. It was I who taught WALLACE all he knows. |
+| HEARD | Ah, you are {PLAYER}! Your fame precedes you. |
 | NOT_YET | Show me your artistry at my GYM first. Then we'll speak. |
 | NEWS | Allow me to share a little something. |
 | ASK | Ahem. May I have your attention? |
@@ -921,14 +950,15 @@ in these lines); "Ahahaha" laugh (verify).
 
 ### Sidney
 
-Manner: **proud**
-
 Buddy: slot 1, Absol. His RSE ace.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Hey, {PLAYER}! I like that look you're giving me! |
+| AGAIN | Hey, it's you again! I like where this is going! |
+| CLOSE | Hey, {PLAYER}! My partner in trouble! Let's have a blast! |
 | MEET | I'm SIDNEY of the ELITE FOUR. Let's enjoy ourselves, huh? |
+| HEARD | Hey, you're {PLAYER}? I've heard you're a blast! |
 | NOT_YET | Beat me in a real battle first. Then we'll talk big. |
 | NEWS | Heh. Got something you'll wanna hear. |
 | ASK | Hey, hey, ooh, listen! |
@@ -943,19 +973,18 @@ Buddy: slot 1, Absol. His RSE ace.
 Hooks: "I like that look you're giving me", "That's good! Looking real good!"
 and "Eh, it was fun, so it doesn't matter" (RSE/ORAS); Absol (RSE/ORAS ace;
 the omen of disaster is from the POKéDEX).
-Manner reason: he is friendly and cocky, so he dares the player rather than
-ordering them.
 
 ### Phoebe
-
-Manner: **warm**
 
 Buddy: slot 1, Dusknoir (DUSKULL, then DUSCLOPS). Anime and RSE Dusclops.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Ahahaha! {PLAYER}! Hi! The ghosts said you'd drop by! |
+| AGAIN | Ahahaha! You again! The ghosts remember you, too! |
+| CLOSE | Ahahaha! {PLAYER}! My friend! Even the ghosts adore you! |
 | MEET | Ahahaha! I'm PHOEBE! I can commune with Ghost POKéMON! |
+| HEARD | Ahahaha! You're {PLAYER}! The ghosts whispered your name! |
 | NOT_YET | Beat me in battle first! My ghosts are dying to meet you! |
 | NEWS | Ooh, {BUDDY} whispered this to me! |
 | ASK | Ooh, wait, wait! Listen! |
@@ -970,18 +999,18 @@ Buddy: slot 1, Dusknoir (DUSKULL, then DUSCLOPS). Anime and RSE Dusclops.
 Hooks: "Ahahaha!" and gaining "the ability to commune with Ghost-type
 POKéMON" during training (RSE/ORAS); a grandmother tied to her training
 (RSE/ORAS) (verify); Dusclops (RSE/ORAS ace, anime).
-Manner reason: she is cheerful and bubbly, and she asks for help.
 
 ### Glacia
-
-Manner: **cold**
 
 Buddy: slot 1, Walrein (SPHEAL, then SEALEO). Her RSE ace.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | {PLAYER}. So you've come. I hope you won't bore me. |
+| AGAIN | You again. I may remember you after all. |
+| CLOSE | {PLAYER}. You do not bore me. I count that as friendship. |
 | MEET | I am GLACIA. I traveled from afar to hone my icy skills. |
+| HEARD | So you are {PLAYER}. I have heard of you. Barely. |
 | NOT_YET | Defeat me in battle first. So far, I've met only weaklings. |
 | NEWS | I heard something. Perhaps it will interest you. |
 | ASK | Mmm. Pay attention. |
@@ -999,14 +1028,15 @@ are challenges by weak Trainers" (RSE/ORAS); "How hot your spirits burn!"
 
 ### Drake
 
-Manner: **proud**
-
 Buddy: slot 1, Salamence (BAGON, then SHELGON). His RSE ace.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | {PLAYER}. Good. You've still got fire in your eyes. |
+| AGAIN | You again. I am beginning to take note of you. |
+| CLOSE | {PLAYER}. A friend of dragons is a friend of mine. |
 | MEET | I am DRAKE. I raise dragons. Do you know what that takes? |
+| HEARD | You are {PLAYER}. Sailors speak of you. Rumors, at least. |
 | NOT_YET | Defeat me in battle first. Then we'll talk as equals. |
 | NEWS | Listen well. I'll not repeat myself. |
 | ASK | Hmph. Listen. |
@@ -1025,14 +1055,15 @@ old-sailor look (RSE/ORAS design, not used in lines) (verify); Salamence
 
 ### Wallace
 
-Manner: **proud**
-
 Buddy: slot 1, Milotic (FEEBAS early). Anime and RSE Milotic.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | Ah, {PLAYER}. Elegant as ever, I see. |
+| AGAIN | Ah, hello again! I do remember you fondly. |
+| CLOSE | Dear {PLAYER}! A friend as elegant as you is rare. |
 | MEET | Allow me to present myself. I am WALLACE. Elegance is my art. |
+| HEARD | Ah, you are {PLAYER}! Your reputation is quite elegant. |
 | NOT_YET | Battle me first, with all the grace you can muster. |
 | NEWS | A little something I heard. Listen closely. |
 | ASK | Ah, a moment, if you please. |
@@ -1050,19 +1081,20 @@ FEEBAS up; student of Juan (Emerald, not used in lines).
 
 ### Steven
 
-Manner: **warm**
-
 Buddy: slot 1, Metagross (BELDUM, then METANG). His RSE ace and Masters EX
 partner.
 
 | Bit | Line |
 | --- | --- |
 | HELLO | {PLAYER}! Good to see you. Found any rare stones? |
+| AGAIN | Oh, hello again! Good to see you back. |
+| CLOSE | {PLAYER}! My friend! I saved you a special stone to see. |
 | MEET | I'm STEVEN. I'm crazy about rare stones. Nice to meet you. |
+| HEARD | You're {PLAYER}? I've heard of you! Like a rare gem! |
 | NOT_YET | Defeat me in battle first. I'll be waiting. |
 | NEWS | I heard something interesting. Want to hear it? |
 | ASK | Oh, pardon me. Something just occurred to me. |
-| YES | Thanks. I knew I could count on you. |
+| YES | Splendid. I'm glad you're in. |
 | NO | That's fine. I'll manage. |
 | NOT_READY | Not yet. Give it more time, then come find me. |
 | PRAISE | Impressive. You and your POKéMON really shine. |
@@ -1072,8 +1104,6 @@ partner.
 
 Hooks: rare-stone collector (RSE/ORAS, Masters EX); Metagross (RSE/ORAS ace,
 Masters EX sync pair).
-Manner reason: he is a courteous, generous mentor who asks for help as
-readily as he gives it.
 
 ---
 

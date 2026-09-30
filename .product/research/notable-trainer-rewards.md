@@ -19,30 +19,29 @@ placeholders.
   [move pool](../specs/notable-trainers.md#move-pools) that it can learn and
   doesn't know yet. The Why column names the move most learners get first;
   the real move depends on the POKéMON.
-- **From TR.** Each entry opens once the trainer's own current TR reaches its
-  gate, like a move pool's from level. Gates are non-decreasing and never
-  above the trainer's peak TR, so every entry is reachable.
+- **From world progress.** Each entry opens once world progress (the
+  player's TR) reaches its gate. Gates are plain numbers and never decrease
+  along the pool. A trainer's own TR plays no part.
 - **Order.** Each finished quest pays the next entry the player hasn't
-  received. If that entry is still gated, or the pool is used up, the
-  trainer pays the **fallback** instead.
+  received, strictly in order. If that entry is still gated, or the pool is
+  used up, the trainer pays the **fallback** instead and the counter stays.
 - **Fallback.** Prize money: exactly what a rematch win with that trainer
   would pay right now ([prize money](../specs/notable-haunts.md#prize-money)).
 
 ### Power bands
 
-The gates follow three bands of the trainer's TR, so strong items arrive when
+The gates follow three bands of world progress, so strong items arrive when
 the world is strong too:
 
-| Band | From TR | What goes there |
+| Band | From world progress | What goes there |
 | --- | ---: | --- |
 | Modest | 0 | Type-boosting items, food and medicine, balls, valuables, contest and charm items. |
 | Useful | 40 (lessons) or 50 (items) | Lessons, situational held items (Quick Claw, Scope Lens, Light Clay, weather rocks, White Herb), stones for middling lines. |
 | Strong | 80 | Leftovers, Life Orb, Choice items, Assault Vest, Expert Belt, Focus Sash, Weakness Policy, Lucky Egg, and evolution items for strong lines (Dragon Scale, Protector, Razor Claw, Reaper Cloth, Dusk, Dawn, Shiny, and Fire Stone for Arcanine). |
 
-A trainer whose peak TR is below 80 (Wattson, at 75) carries nothing from the
-strong band except his signature line's stone, gated at his peak. Lance
-(always TR 200) and Agatha (always TR 95) are Legends, so their whole pools
-open at once; they only become friends after a league win, so that's fine.
+Gates no longer depend on the trainer's own TR, so Lance and Agatha, whose
+TR never changes, no longer open their whole pools at once: their entries
+open as world progress rises, like everyone else's.
 
 ### Sources
 
@@ -60,7 +59,7 @@ no canon hook, the entry fits the trainer's type, roster, or move pool.
 
 TR 25 → 100 (Steady).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Pewter Crunchies (`ITEM_PEWTER_CRUNCHIES`) | item | 0 | Pewter City's own snack (Let's Go); Brock cooks for everyone (anime). |
 | 2 | Hard Stone (`ITEM_HARD_STONE`) | item | 0 | Rock type; his Aerodactyl holds one. |
@@ -72,7 +71,7 @@ TR 25 → 100 (Steady).
 
 TR 26 → 110 (Star).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Mystic Water (`ITEM_MYSTIC_WATER`) | item | 0 | Water type; her Starmie holds one. |
 | 2 | Pearl (`ITEM_PEARL`) | item | 0 | Sea treasure for a would-be Water POKéMON Master (anime). |
@@ -85,7 +84,7 @@ TR 26 → 110 (Star).
 
 TR 30 → 95 (Veteran).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Magnet (`ITEM_MAGNET`) | item | 0 | Electric type; his Raichu holds one. |
 | 2 | Lesson | lesson | 40 | Pool top: Thunder Wave, then Thunderbolt. |
@@ -97,7 +96,7 @@ TR 30 → 95 (Veteran).
 
 TR 28 → 150 (Steady).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Rose Incense (`ITEM_ROSE_INCENSE`) | item | 0 | Her Celadon perfume shop (anime). |
 | 2 | Miracle Seed (`ITEM_MIRACLE_SEED`) | item | 0 | Grass type; her Bellossom holds one. |
@@ -110,7 +109,7 @@ TR 28 → 150 (Steady).
 
 TR 27 → 100 (Prodigy).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Poison Barb (`ITEM_POISON_BARB`) | item | 0 | Poison type. |
 | 2 | Smoke Ball (`ITEM_SMOKE_BALL`) | item | 0 | A ninja's smoke bomb (HGSS, Masters EX). |
@@ -122,7 +121,7 @@ TR 27 → 100 (Prodigy).
 
 TR 24 → 180 (Sleeper).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Twisted Spoon (`ITEM_TWISTED_SPOON`) | item | 0 | Spoon bending; her Alakazam holds one. |
 | 2 | Poké Doll (`ITEM_POKE_DOLL`) | item | 0 | Her doll house and her habit of turning people into dolls (anime). |
@@ -134,7 +133,7 @@ TR 24 → 180 (Sleeper).
 
 TR 37 → 90 (Comeback).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Burn Heal (`ITEM_BURN_HEAL`) | item | 0 | "You better have BURN HEAL!" (RBY/FRLG). |
 | 2 | Charcoal (`ITEM_CHARCOAL`) | item | 0 | Fire type. |
@@ -147,7 +146,7 @@ TR 37 → 90 (Comeback).
 
 TR 24 → 166 (Burst).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Nugget (`ITEM_NUGGET`) | item | 0 | The Rocket recruiter's Nugget on Nugget Bridge (RBY/FRLG). |
 | 2 | Soft Sand (`ITEM_SOFT_SAND`) | item | 0 | Ground type. |
@@ -160,7 +159,7 @@ TR 24 → 166 (Burst).
 
 TR 0 → 170 (Rival).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Silk Scarf (`ITEM_SILK_SCARF`) | item | 0 | Normal type, for the Eevee he starts with. |
 | 2 | Black Glasses (`ITEM_BLACK_GLASSES`) | item | 20 | Dark type, for Gary's Umbreon (anime). |
@@ -173,7 +172,7 @@ TR 0 → 170 (Rival).
 
 TR 42 → 92 (Veteran).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Never-Melt Ice (`ITEM_NEVER_MELT_ICE`) | item | 0 | "No one can best me when it comes to icy POKéMON!" (RBY/FRLG). |
 | 2 | Lesson | lesson | 45 | Pool top: Shell Smash, then Icicle Spear. |
@@ -185,7 +184,7 @@ TR 42 → 92 (Veteran).
 
 TR 45 → 94 (Comeback).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Black Belt (`ITEM_BLACK_BELT`) | item | 0 | Fighting type. |
 | 2 | Macho Brace (`ITEM_MACHO_BRACE`) | item | 0 | Trains alongside his POKéMON (RBY/FRLG, HGSS). |
@@ -197,7 +196,7 @@ TR 45 → 94 (Comeback).
 
 TR 95 (Legend).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Spell Tag (`ITEM_SPELL_TAG`) | item | 0 | Ghost type. |
 | 2 | Lesson | lesson | 50 | Pool top: Mean Look, then Curse. |
@@ -209,7 +208,7 @@ TR 95 (Legend).
 
 TR 200 (Legend).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Dragon Fang (`ITEM_DRAGON_FANG`) | item | 0 | Dragon type; the dragon master (RBY/FRLG, HGSS). |
 | 2 | Lesson | lesson | 50 | The mentor who enlists the player (HGSS); pool top: Hyper Beam, then Extreme Speed. |
@@ -223,7 +222,7 @@ TR 200 (Legend).
 
 TR 44 → 150 (Steady).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Poison Barb (`ITEM_POISON_BARB`) | item | 0 | Poison type, shared with his daughter Janine. |
 | 2 | Lesson | lesson | 45 | "I live in shadows, a ninja!" (HGSS); pool top: Toxic, then Substitute. |
@@ -235,7 +234,7 @@ TR 44 → 150 (Steady).
 
 TR 22 → 80 (Prodigy).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Sharp Beak (`ITEM_SHARP_BEAK`) | item | 0 | Flying type. |
 | 2 | Pretty Feather (`ITEM_PRETTY_FEATHER`) | item | 0 | A keepsake of his father's bird POKéMON (HGSS). |
@@ -247,7 +246,7 @@ TR 22 → 80 (Prodigy).
 
 TR 24 → 100 (Star).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Silver Powder (`ITEM_SILVER_POWDER`) | item | 0 | Bug type. |
 | 2 | Sport Ball (`ITEM_SPORT_BALL`) | item | 0 | The Bug-Catching Contest ball (GSC/HGSS). |
@@ -259,7 +258,7 @@ TR 24 → 100 (Star).
 
 TR 26 → 95 (Star).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Moomoo Milk (`ITEM_MOOMOO_MILK`) | item | 0 | Miltank's milk from Moomoo Farm (GSC/HGSS). |
 | 2 | Silk Scarf (`ITEM_SILK_SCARF`) | item | 0 | Normal type. |
@@ -271,7 +270,7 @@ TR 26 → 95 (Star).
 
 TR 26 → 171 (Sleeper).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Spell Tag (`ITEM_SPELL_TAG`) | item | 0 | Ghost type. |
 | 2 | Lesson | lesson | 40 | Pool top: Hypnosis, then Dream Eater. |
@@ -283,7 +282,7 @@ TR 26 → 171 (Sleeper).
 
 TR 34 → 85 (Burst).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Black Belt (`ITEM_BLACK_BELT`) | item | 0 | Fighting type; his Poliwrath holds one. |
 | 2 | Lesson | lesson | 40 | Dynamic Punch, his GSC/HGSS TM, tops his pool. |
@@ -295,7 +294,7 @@ TR 34 → 85 (Burst).
 
 TR 24 → 166 (Steady).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Magnet (`ITEM_MAGNET`) | item | 0 | Electric type, for Amphy the lighthouse Ampharos (GSC/HGSS). |
 | 2 | Lesson | lesson | 40 | Iron Tail, her GSC/HGSS TM, tops her pool. |
@@ -307,7 +306,7 @@ TR 24 → 166 (Steady).
 
 TR 40 → 92 (Comeback).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Rage Candy Bar (`ITEM_RAGE_CANDY_BAR`) | item | 0 | Mahogany Town's souvenir sweet (GSC/HGSS). |
 | 2 | Never-Melt Ice (`ITEM_NEVER_MELT_ICE`) | item | 0 | Ice type. |
@@ -319,7 +318,7 @@ TR 40 → 92 (Comeback).
 
 TR 21 → 185 (Sleeper).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Dragon Fang (`ITEM_DRAGON_FANG`) | item | 0 | "The world's best dragon master" (GSC/HGSS). |
 | 2 | Lesson | lesson | 40 | Her HGSS TM is Dragon Pulse; pool top: Dragon Dance, then Dragon Pulse. |
@@ -331,7 +330,7 @@ TR 21 → 185 (Sleeper).
 
 TR 41 → 110 (Prodigy).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Strange Souvenir (`ITEM_STRANGE_SOUVENIR`) | item | 0 | "I have trained all around the world" (GSC/HGSS). |
 | 2 | Twisted Spoon (`ITEM_TWISTED_SPOON`) | item | 0 | Psychic type; his Xatu holds one. |
@@ -343,7 +342,7 @@ TR 41 → 110 (Prodigy).
 
 TR 47 → 155 (Steady).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Black Glasses (`ITEM_BLACK_GLASSES`) | item | 0 | Dark type; her Houndoom wears them. |
 | 2 | Soothe Bell (`ITEM_SOOTHE_BELL`) | item | 0 | "Win with their favorites" (GSC/HGSS); Umbreon evolves by friendship. |
@@ -357,7 +356,7 @@ TR 47 → 155 (Steady).
 
 TR 24 → 90 (Steady).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Hard Stone (`ITEM_HARD_STONE`) | item | 0 | Rock type. |
 | 2 | Lesson | lesson | 40 | The Trainers' School teacher (anime, RSE); Rock Tomb, her RSE TM, tops her pool. |
@@ -369,7 +368,7 @@ TR 24 → 90 (Steady).
 
 TR 24 → 90 (Burst).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Black Belt (`ITEM_BLACK_BELT`) | item | 0 | Fighting type. |
 | 2 | Wave Incense (`ITEM_WAVE_INCENSE`) | item | 0 | The surfer (RSE/ORAS, anime); Surf is in his pool. |
@@ -381,19 +380,19 @@ TR 24 → 90 (Burst).
 
 TR 32 → 75 (Veteran).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Magnet (`ITEM_MAGNET`) | item | 0 | Electric type. |
 | 2 | Cell Battery (`ITEM_CELL_BATTERY`) | item | 0 | The tinkerer behind New Mauville's generator (RSE) (verify). |
 | 3 | Lesson | lesson | 40 | Pool top: Thunder Wave, then Volt Switch. |
 | 4 | Air Balloon (`ITEM_AIR_BALLOON`) | item | 50 | One of his gadgets. |
-| 5 | Thunder Stone (`ITEM_THUNDER_STONE`) | item | 75 | Magneton into Magnezone, a roster ace; gated at his peak TR. |
+| 5 | Thunder Stone (`ITEM_THUNDER_STONE`) | item | 75 | Magneton into Magnezone, a roster ace; the last entry of his pool. |
 
 ### Flannery
 
 TR 23 → 100 (Star).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Lava Cookie (`ITEM_LAVA_COOKIE`) | item | 0 | Lavaridge Town's specialty (RSE/ORAS). |
 | 2 | Charcoal (`ITEM_CHARCOAL`) | item | 0 | Fire type. |
@@ -405,7 +404,7 @@ TR 23 → 100 (Star).
 
 TR 26 → 164 (Steady).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Silk Scarf (`ITEM_SILK_SCARF`) | item | 0 | Normal type. |
 | 2 | Lesson | lesson | 40 | Facade, his RSE TM, tops his pool. |
@@ -417,7 +416,7 @@ TR 26 → 164 (Steady).
 
 TR 18 → 172 (Sleeper).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Sharp Beak (`ITEM_SHARP_BEAK`) | item | 0 | "One with bird POKéMON" (RSE/ORAS). |
 | 2 | Lesson | lesson | 40 | Aerial Ace, her RSE TM, tops her pool. |
@@ -431,7 +430,7 @@ TR 26 → 170 (Star). **Unused in v0:** the duo is never placed at a haunt
 ([placement](../specs/notable-haunts.md#candidates)), so this pool waits for
 Later. It is authored so the catalog check covers every entry.
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Stardust (`ITEM_STARDUST`) | item | 0 | The Mossdeep Space Center; Solrock and Lunatone came from space (RSE). |
 | 2 | Lesson | lesson | 40 | Calm Mind, their RSE TM, tops their pool. |
@@ -443,7 +442,7 @@ Later. It is authored so the catalog check covers every entry.
 
 TR 23 → 185 (Sleeper).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Mystic Water (`ITEM_MYSTIC_WATER`) | item | 0 | Water type. |
 | 2 | Lesson | lesson | 40 | "It was I who taught WALLACE everything" (Emerald); Water Pulse, his TM, tops his pool. |
@@ -455,7 +454,7 @@ TR 23 → 185 (Sleeper).
 
 TR 41 → 105 (Prodigy).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Black Glasses (`ITEM_BLACK_GLASSES`) | item | 0 | Dark type. |
 | 2 | Lesson | lesson | 45 | Pool top: Sucker Punch, then Swords Dance. |
@@ -467,7 +466,7 @@ TR 41 → 105 (Prodigy).
 
 TR 43 → 150 (Steady).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Spell Tag (`ITEM_SPELL_TAG`) | item | 0 | Ghost type. |
 | 2 | Cleanse Tag (`ITEM_CLEANSE_TAG`) | item | 0 | "It's not haunted. Probably!" (her `GIFT`); Mt. Pyre training (RSE/ORAS). |
@@ -479,7 +478,7 @@ TR 43 → 150 (Steady).
 
 TR 44 → 90 (Veteran).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Never-Melt Ice (`ITEM_NEVER_MELT_ICE`) | item | 0 | "To hone my icy skills" (RSE/ORAS). |
 | 2 | Lesson | lesson | 45 | Pool top: Hail, then Blizzard. |
@@ -491,7 +490,7 @@ TR 44 → 90 (Veteran).
 
 TR 45 → 93 (Veteran).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Dragon Fang (`ITEM_DRAGON_FANG`) | item | 0 | Dragon type. |
 | 2 | Big Pearl (`ITEM_BIG_PEARL`) | item | 0 | The old sailor (RSE/ORAS design) (verify). |
@@ -503,7 +502,7 @@ TR 45 → 93 (Veteran).
 
 TR 48 → 190 (Star).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Blue Scarf (`ITEM_BLUE_SCARF`) | item | 0 | The Beauty contest scarf; POKéMON Contests (Emerald/ORAS, anime). |
 | 2 | Mystic Water (`ITEM_MYSTIC_WATER`) | item | 0 | Water type. |
@@ -515,7 +514,7 @@ TR 48 → 190 (Star).
 
 TR 50 → 195 (Burst).
 
-| # | Entry | Kind | From TR | Why |
+| # | Entry | Kind | From world progress | Why |
 | ---: | --- | --- | ---: | --- |
 | 1 | Hard Stone (`ITEM_HARD_STONE`) | item | 0 | A stone from the collector (RSE/ORAS, Masters EX). |
 | 2 | Everstone (`ITEM_EVERSTONE`) | item | 0 | Another stone, modest and useful. |
