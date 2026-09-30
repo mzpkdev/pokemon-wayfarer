@@ -25,7 +25,7 @@ uses (see the table).
 | `MEET` | introducing themselves the first time (includes their name) |
 | `HEARD` | a first meeting, but the player's fame has reached them (see the haunts spec); always contains `{PLAYER}` |
 | `NOT_YET` | first fight still ahead: "beat me properly first". Gym Leaders may mention their GYM; Elite Four and Champions don't. Reserved for places that host battles (such as Gyms or future rematch spots); haunts host none, so they don't use it in v0 |
-| `NEWS` | lead-in before a gossip line. Unused by haunts in v0, which carry no gossip; reserved for world news or later uses |
+| `NEWS` | lead-in before a gossip line. Unused by haunts in v0, which carry no gossip; reserved for later uses |
 | `ASK` | attention-getter before whatever the haunt proposes: no movement, favour, request content or implied destination or activity |
 | `YES` | the player agreed |
 | `NO` | the player declined |
