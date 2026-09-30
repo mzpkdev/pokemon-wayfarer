@@ -1,0 +1,62 @@
+{
+  "implementation_commit": "e759b906be",
+  "branch": "task/viridian-walker-poc",
+  "build_commands": [
+    "make -C game -j16 CXX=g++ e2e",
+    "make -C game -j16 CXX=g++ wayfarer"
+  ],
+  "builds_serialized": true,
+  "source_sha256": {
+    "game/data/maps/Route1_hns/map.json": "8f0743fd4a82e35c99205b103f2a61010271df8a4650cd3ec68909b24ab04501",
+    "game/data/maps/Route1_hns/scripts.inc": "111723bfdfe37cc0739044778db16f28a6ac975409bb07dec5e306fc1251e0a3",
+    "game/data/maps/Route2_hns/map.json": "c5da81b2422784f6a1145804da53f33e277fc776283490f0e7754c18af8bcda9",
+    "game/data/maps/Route2_hns/scripts.inc": "7c170404a49c95143849310860dc04b953ad09493492d66c7898aff9f49ac3ae",
+    "game/data/maps/ViridianCity_hns/scripts.inc": "3a09d9ba0149d310a899fba0e357e01e51eab717e28cb1cebc0110c4da7092d1",
+    "game/include/global.h": "b164b187645747f4ab28fa0b23de210caa50bea9182f5aea16f456e648693535",
+    "game/include/save.h": "4ccb01b7606227c2daf919cba9c631c1b6dff037b3aa2a264975743c69c3c519",
+    "game/include/viridian_walker_poc.h": "0ed7bed417e1e6ce89df75f6c8b7c500f6ea84446da9bc2d5c47cad2f5948362",
+    "game/include/viridian_walker_world.h": "5544356e41264d48115f555560c82a840ea221bde43f11c81248a148291002fe",
+    "game/src/new_game.c": "6c9a9aaabfe6d0e5f9d77498eae21d9c5053efe7ee9a932b5752333bfb2477d2",
+    "game/src/overworld.c": "8b45f19e1025f07544d46e4de37ff2fa250e65172084079b299d462e2d263ebf",
+    "game/src/viridian_walker_poc.c": "643c710bd2c82ad15c62d8b6c2f770155bdf9b419c9fc66658e18fefc518aefa",
+    "game/src/viridian_walker_world.c": "21a88e2fcaf80d9e4defbdc6bf1c5d1924177764defc91fd0f3ad88a4629f77c"
+  },
+  "artifact_sha256": {
+    "game/pokemon-wayfarer-e2e.gba": "b400e919a70e93f0c06bcf6692409139bfa4fa1afe4080e3ae0b0272f3fef7e8",
+    "game/pokemon-wayfarer-e2e.sym": "3b1e92a810339472f41e12a78c618e7771042fb46ec5dc628034aa1b83b9c38d",
+    "game/pokewayfarer.gba": "178a741cbfcd4c8a057d05e0eef065fb217ee79742a2e12a91fed1d20b375d1f",
+    "e2e/node_modules/skyemu-static/vendor/SkyEmu": "086cc22a551c6fe833dcf298ad238a1b0289fb33d96e3345f5ee4404882490eb"
+  },
+  "memory_bytes": {
+    "world_save": 12,
+    "bfs_heap_workspace": 11200,
+    "e2e_ewram": 255468,
+    "e2e_iwram": 25652,
+    "normal_ewram": 249560,
+    "normal_iwram": 25644,
+    "phase2_static_ewram_delta": 40,
+    "phase2_static_iwram_delta": 0
+  },
+  "save_reload": "passed: real Save menu, observed GBA soft reset, valid flash load, exact 12 saved bytes before and after Continue",
+  "limits": [
+    "No cold SkyEmu process restart proof because host save flushing races accelerated stepping",
+    "No physical GBA hardware run",
+    "No full Route1 local round trip or Forest traversal test"
+  ],
+  "verifier_sha256": "88caa270dee98b69716a046137a73383095b253b5be546b3c75aecfc3aa3bd07",
+  "scenarios": {
+    "follow": "passed, including local gate handoff and uniqueness",
+    "linger": "passed, four real map transitions and north reentry",
+    "save": "passed via console soft reset and Continue"
+  },
+  "evidence_sha256": {
+    ".product/research/viridian-walker-poc-phase2/follow-results.json": "2c11c5e1467034b8ee77cbd22b6f0ffd5cd7556ba847c5522d8195cef5407804",
+    ".product/research/viridian-walker-poc-phase2/follow-route2-giovanni.png": "c95f4d83e1a89f68101da801c6ce42b7b20954cd073ab59f6fee7bf3a1afff95",
+    ".product/research/viridian-walker-poc-phase2/follow-route2-moving.png": "645722bcdcaca4d4d278953dfb5f85c7b599a78c41890c20851ea26297d3fffa",
+    ".product/research/viridian-walker-poc-phase2/host-flush-diagnostic.txt": "3300fa10f9a0075ac9065ab20d6115b90e94104ff8deb56c0973a6aa4eff8254",
+    ".product/research/viridian-walker-poc-phase2/linger-results.json": "f87644875e7dc7ee37789acbf88ed3a9d5fbdda0fa8baea2f6250bed2712ed23",
+    ".product/research/viridian-walker-poc-phase2/reload-center-after-continue.png": "24577e69a847489c8f2a797df035417d6a0b86b8269081d011113d35bfbfe3cb",
+    ".product/research/viridian-walker-poc-phase2/save-results.json": "3fd319172ba84d504dd46c8996fb58c79a55620d61001f38c12859f00a95ed99",
+    ".product/research/viridian-walker-poc-phase2/save-success.png": "467fb420364c8b037f2239b2a9683208815606d656599e80dee6f97d2a6766e3"
+  }
+}

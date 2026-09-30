@@ -8,6 +8,8 @@ selects New Game on the title screen, and reads only ROM-exported telemetry.
 from __future__ import annotations
 
 import argparse
+import contextlib
+import hashlib
 import json
 import os
 import shutil
@@ -27,6 +29,9 @@ ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_SKYEMU = ROOT / "e2e/node_modules/skyemu-static/vendor/SkyEmu"
 VIRIDIAN_MAP_GROUP = 0
 VIRIDIAN_MAP_NUM = 32
+VIRIDIAN_MAP = 32
+ROUTE2_MAP = 42
+FOREST_GATE_MAP = (23 << 8) | 2
 MAX_READ_BYTES = 448
 MAP_OFFSET = 7
 GOALS = ("grass", "mart", "center", "route1", "route2", "route22")
@@ -115,6 +120,49 @@ def wait_for_ready(client: SkyEmu, process: subprocess.Popen[bytes], ready: thre
         raise RuntimeError(f"SkyEmu announced HTTP server but was not ready: {status}")
 
 
+@contextlib.contextmanager
+def skyemu_session(binary: Path, rom: Path, data_home: Path, log_path: Path):
+    """Run one emulator process; a second session reloads the same ROM/flash."""
+    port = reserve_port()
+    with log_path.open("ab") as log:
+        process = subprocess.Popen(
+            ["xvfb-run", "--auto-servernum", str(binary), "http_server", str(port), str(rom)],
+            env={**os.environ, "XDG_DATA_HOME": str(data_home)},
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            start_new_session=True,
+        )
+        announced = threading.Event()
+
+        def copy_output() -> None:
+            assert process.stdout is not None
+            for line in process.stdout:
+                log.write(line)
+                log.flush()
+                if f"Starting HCS: http://localhost:{port}".encode() in line:
+                    announced.set()
+
+        output_thread = threading.Thread(target=copy_output, daemon=True)
+        output_thread.start()
+        client = SkyEmu(port)
+        try:
+            wait_for_ready(client, process, announced)
+            client.check("/load_rom", {"path": str(rom), "pause": "1"})
+            for button in ("A", "B", "Up", "Down", "Left", "Right", "L", "R", "Start", "Select"):
+                client.check("/input", {button: "0"})
+            yield client
+        finally:
+            if process.poll() is None:
+                os.killpg(process.pid, signal.SIGTERM)
+                try:
+                    process.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    os.killpg(process.pid, signal.SIGKILL)
+                    process.wait(timeout=10)
+            output_thread.join(timeout=2)
+
+
 def read_player_object(client: SkyEmu, symbols: dict[str, int]) -> tuple[int, int, int] | None:
     base = symbols["gObjectEvents"]
     for index in range(16):
@@ -141,6 +189,13 @@ def walker_snapshot(client: SkyEmu, symbols: dict[str, int]) -> dict[str, int]:
         "last_completed_goal", "used_grass_fallback", "max_slice_scanlines",
     )
     return dict(zip(keys, values, strict=True))
+
+
+def actor_snapshot(client: SkyEmu, symbols: dict[str, int]) -> dict[str, int]:
+    snapshot = walker_snapshot(client, symbols)
+    raw = client.read(symbols["gViridianWalkerDebug"] + 36, 3)
+    snapshot["current_map"], snapshot["local_id"] = struct.unpack("<HB", raw)
+    return snapshot
 
 
 def read_location(client: SkyEmu, symbols: dict[str, int]) -> tuple[int, int, int, int] | None:
@@ -183,11 +238,12 @@ def boot_new_game(
 
 
 def move_player_to(
-    client: SkyEmu, symbols: dict[str, int], target_x: int, target_y: int
+    client: SkyEmu, symbols: dict[str, int], target_x: int, target_y: int,
+    max_steps: int = 8,
 ) -> int:
-    """Walk by real D-pad input; only intended for the known Center sidewalk."""
+    """Walk by real D-pad input along caller-selected clear waypoints."""
     frames = 0
-    for _ in range(8):
+    for _ in range(max_steps):
         player = read_player_object(client, symbols)
         if player is None:
             raise RuntimeError("Player object vanished while positioning obstruction")
@@ -212,6 +268,387 @@ def move_player_to(
         else:
             raise RuntimeError(f"Player could not walk {direction} from {(x, y)} after six presses")
     raise RuntimeError(f"Player did not reach {(target_x, target_y)}")
+
+
+def read_world_record(client: SkyEmu, symbols: dict[str, int]) -> dict[str, int | str]:
+    """Read the actual 12-byte SaveBlock3 record, never a RAM-only mirror."""
+    base = client.u32(symbols["gSaveBlock3Ptr"])
+    offset = client.u16(symbols["gViridianWalkerWorldSaveOffset"])
+    size = client.u16(symbols["gViridianWalkerWorldSaveSize"])
+    if not 0x02000000 <= base < 0x02040000 or size != 12:
+        raise RuntimeError(f"Invalid world save record location/size: {base:#x}+{offset}, {size}")
+    raw = client.read(base + offset, size)
+    values = struct.unpack("<HH8B", raw)
+    keys = ("current_map", "destination_map", "arrival", "state", "crossing",
+            "x", "y", "goal", "dwell", "reserved")
+    # Seven byte fields plus one alignment byte follow the two map IDs.
+    # Keep raw bytes to compare across the real save/reload without normalizing.
+    data: dict[str, int | str] = dict(zip(keys, values, strict=True))
+    data["raw_hex"] = raw.hex()
+    return data
+
+
+def read_world_debug(client: SkyEmu, symbols: dict[str, int]) -> dict[str, int]:
+    raw = client.read(symbols["gViridianWalkerWorldDebug"], 14)
+    values = struct.unpack("<5H4B", raw)
+    keys = ("heartbeats", "hops", "actor_exits", "from_map", "to_map",
+            "last_arrival", "last_crossing", "last_x", "last_y")
+    return dict(zip(keys, values, strict=True))
+
+
+def read_giovanni_object(client: SkyEmu, symbols: dict[str, int], map_num: int) -> dict[str, int] | None:
+    """Require a visible, active Giovanni object rather than trusting world state alone."""
+    for index in range(16):
+        raw = client.read(symbols["gObjectEvents"] + index * 0x24, 0x24)
+        if not raw[0] & 1 or raw[1] & 0x20 or struct.unpack_from("<H", raw, 4)[0] != 485:
+            continue
+        if raw[9] == map_num and raw[10] == 0:
+            x, y = struct.unpack_from("<hh", raw, 0x10)
+            return {"slot": index, "local_id": raw[8], "x": x - MAP_OFFSET, "y": y - MAP_OFFSET}
+    return None
+
+
+def active_giovanni_objects(client: SkyEmu, symbols: dict[str, int]) -> list[dict[str, int]]:
+    actors = []
+    all_objects = client.read(symbols["gObjectEvents"], 16 * 0x24)
+    for index in range(16):
+        raw = all_objects[index * 0x24:(index + 1) * 0x24]
+        if raw[0] & 1 and struct.unpack_from("<H", raw, 4)[0] == 485 and raw[10] == 0 and raw[9] in (32, 41, 42):
+            x, y = struct.unpack_from("<hh", raw, 0x10)
+            actors.append({"slot": index, "map_num": raw[9], "local_id": raw[8],
+                           "x": x - MAP_OFFSET, "y": y - MAP_OFFSET})
+    return actors
+
+
+def save_block1_prefix(client: SkyEmu, symbols: dict[str, int]) -> dict[str, object]:
+    pointer = client.u32(symbols["gSaveBlock1Ptr"])
+    if not 0x02000000 <= pointer < 0x02040000:
+        raise RuntimeError(f"Invalid SaveBlock1 pointer {pointer:#x}")
+    raw = client.read(pointer, 32)
+    return {"save_version": struct.unpack_from("<H", raw)[0], "prefix_hex": raw.hex(),
+            "save_counter": client.u32(symbols["gSaveCounter"])}
+
+
+def wait_field_unlocked(client: SkyEmu, symbols: dict[str, int], limit: int = 900) -> int:
+    for elapsed in range(0, limit + 1, 30):
+        if not field_controls_locked(client, symbols) and read_player_object(client, symbols):
+            return elapsed
+        client.step(30)
+    raise RuntimeError(f"Field controls stayed locked for {limit} emulated frames")
+
+
+def wait_for_world_map(
+    client: SkyEmu, symbols: dict[str, int], map_id: int, limit: int,
+) -> tuple[dict[str, int | str], int]:
+    for elapsed in range(0, limit + 1, 30):
+        record = read_world_record(client, symbols)
+        if record["current_map"] == map_id:
+            return record, elapsed
+        client.step(30)
+    raise RuntimeError(f"Giovanni never reached saved map {map_id:#x}; last={record}")
+
+
+def enter_center(client: SkyEmu, symbols: dict[str, int], output: Path, label: str) -> dict[str, object]:
+    if (location := read_location(client, symbols)) is None or location[:2] != (0, 32):
+        raise RuntimeError(f"Center entry requires Viridian, got {location}")
+    wait_field_unlocked(client, symbols)
+    move_player_to(client, symbols, 30 + MAP_OFFSET, 37 + MAP_OFFSET)
+    for _ in range(10):
+        client.press("Up", hold=3, release=25)
+        client.step(30)
+        location = read_location(client, symbols)
+        if location and location[:2] == (12, 0):
+            wait_field_unlocked(client, symbols)
+            client.screenshot(output / f"{label}-center-inside.png")
+            return {"location": location, "world": read_world_record(client, symbols),
+                    "world_debug": read_world_debug(client, symbols)}
+    raise RuntimeError(f"Player did not enter Center through door: {location}")
+
+
+def leave_center(client: SkyEmu, symbols: dict[str, int], output: Path, label: str) -> dict[str, object]:
+    if (location := read_location(client, symbols)) is None or location[:2] != (12, 0):
+        raise RuntimeError(f"Center exit requires interior, got {location}")
+    wait_field_unlocked(client, symbols)
+    for _ in range(10):
+        client.press("Down", hold=3, release=25)
+        client.step(30)
+        location = read_location(client, symbols)
+        if location and location[:2] == (0, 32):
+            wait_field_unlocked(client, symbols)
+            client.screenshot(output / f"{label}-viridian-return.png")
+            return {"location": location, "world": read_world_record(client, symbols),
+                    "world_debug": read_world_debug(client, symbols)}
+    raise RuntimeError(f"Player did not leave Center through door: {location}")
+
+
+def phase2_follow(client: SkyEmu, symbols: dict[str, int], output: Path) -> dict[str, object]:
+    """Walk the real Viridian north connection shortly after Giovanni exits."""
+    evidence: dict[str, object] = {"fresh_world": read_world_record(client, symbols),
+                                   "fresh_debug": read_world_debug(client, symbols)}
+    if evidence["fresh_world"]["current_map"] != VIRIDIAN_MAP:
+        raise RuntimeError(f"Fresh Giovanni is not in Viridian: {evidence['fresh_world']}")
+    wait_field_unlocked(client, symbols)
+    move_player_to(client, symbols, 26 + MAP_OFFSET, 37 + MAP_OFFSET)
+    move_player_to(client, symbols, 26 + MAP_OFFSET, 3 + MAP_OFFSET, max_steps=40)
+    client.screenshot(output / "follow-viridian-north-wait.png")
+    departed, waited = wait_for_world_map(client, symbols, ROUTE2_MAP, 10000)
+    evidence["departed_to_route2"] = departed
+    evidence["frames_waiting_near_exit"] = waited
+    evidence["debug_after_exit"] = read_world_debug(client, symbols)
+    expected_x = departed["crossing"] - 16
+    if departed["arrival"] != 2 or departed["x"] != expected_x or departed["y"] != 79:
+        raise RuntimeError(f"Route2 arrival did not match north connection: {departed}")
+    client.screenshot(output / "follow-giovanni-departed.png")
+    # From Viridian x26, the +16 connection offset places the player at
+    # Route2 x10. Stay behind the actor rather than teleporting or arranging.
+    move_player_to(client, symbols, 26 + MAP_OFFSET, MAP_OFFSET, max_steps=5)
+    for attempt in range(10):
+        client.press("Up", hold=3, release=25)
+        client.step(15)
+        location = read_location(client, symbols)
+        if location and location[:2] == (0, 42):
+            evidence["player_route2_location"] = location
+            evidence["crossing_attempts"] = attempt + 1
+            break
+    else:
+        raise RuntimeError(f"Player did not cross north connection to Route2: {location}")
+    for elapsed in range(0, 600, 10):
+        actor = read_giovanni_object(client, symbols, 42)
+        if actor:
+            evidence["first_route2_actor"] = actor
+            evidence["actor_observed_after_frames"] = elapsed
+            break
+        client.step(10)
+    else:
+        raise RuntimeError(f"Giovanni object absent on Route2 after follow; world={read_world_record(client, symbols)}")
+    wait_field_unlocked(client, symbols)
+    client.screenshot(output / "follow-route2-giovanni.png")
+    evidence["world_on_route2"] = read_world_record(client, symbols)
+    evidence["route2_actor_debug"] = actor_snapshot(client, symbols)
+    evidence["route2_active_giovanni"] = active_giovanni_objects(client, symbols)
+    if evidence["world_on_route2"]["current_map"] != ROUTE2_MAP:
+        raise RuntimeError(f"Giovanni world record left Route2 before player arrived: {evidence['world_on_route2']}")
+    if evidence["route2_actor_debug"]["current_map"] != ROUTE2_MAP or actor["local_id"] != evidence["route2_actor_debug"]["local_id"]:
+        raise RuntimeError(f"Route2 object and actor telemetry disagree: {actor}, {evidence['route2_actor_debug']}")
+    if len(evidence["route2_active_giovanni"]) != 1:
+        raise RuntimeError(f"Expected exactly one Giovanni on Route2: {evidence['route2_active_giovanni']}")
+    if actor["y"] < 68:
+        raise RuntimeError(f"Giovanni was not near Route2 south edge: {actor}")
+    if abs(actor["x"] - expected_x) > 5:
+        raise RuntimeError(f"Giovanni did not enter near matching Route2 x={expected_x}: {actor}")
+    for elapsed in range(0, 900, 30):
+        client.step(30)
+        moved = read_giovanni_object(client, symbols, 42)
+        if moved and (moved["x"], moved["y"]) != (actor["x"], actor["y"]):
+            evidence["route2_actor_moved"] = moved
+            evidence["movement_after_frames"] = elapsed + 30
+            client.screenshot(output / "follow-route2-moving.png")
+            break
+    else:
+        raise RuntimeError(f"Giovanni did not continue walking on Route2: {actor}")
+
+    before_gate = read_world_debug(client, symbols)
+    evidence["before_gate_debug"] = before_gate
+    for elapsed in range(0, 6000, 30):
+        client.step(30)
+        actors = active_giovanni_objects(client, symbols)
+        if len(actors) > 1:
+            raise RuntimeError(f"Duplicate Giovanni objects during Route2 walk: {actors}")
+        world = read_world_record(client, symbols)
+        if world["current_map"] == FOREST_GATE_MAP:
+            after_gate = read_world_debug(client, symbols)
+            evidence["gate_handoff"] = {
+                "frames_after_first_route2_step": elapsed + 30,
+                "world": world,
+                "before_debug": before_gate,
+                "after_debug": after_gate,
+                "active_giovanni": actors,
+                "last_actor_cost": actor_snapshot(client, symbols),
+            }
+            client.screenshot(output / "follow-route2-gate-handoff.png")
+            if world["state"] != 2 or world["arrival"] != 5:
+                raise RuntimeError(f"Route2 gate handoff lacks inside/door state: {world}")
+            if after_gate["actor_exits"] <= before_gate["actor_exits"]:
+                raise RuntimeError(f"Route2 gate transition was not reported by local actor: {after_gate}")
+            if after_gate["heartbeats"] != before_gate["heartbeats"]:
+                raise RuntimeError(f"Route2 gate transition came from an off-screen heartbeat: {before_gate}, {after_gate}")
+            if actors:
+                raise RuntimeError(f"Giovanni was not removed after entering gate: {actors}")
+            return evidence
+    raise RuntimeError(f"Giovanni did not enter Forest gate from Route2: {read_world_record(client, symbols)}")
+
+
+def phase2_linger(client: SkyEmu, symbols: dict[str, int], output: Path) -> dict[str, object]:
+    """Use real Center transitions to tick an off-screen traveller around the graph."""
+    evidence: dict[str, object] = {"fresh_world": read_world_record(client, symbols),
+                                   "fresh_debug": read_world_debug(client, symbols),
+                                   "heartbeats": []}
+    off_map, waited = wait_for_world_map(client, symbols, ROUTE2_MAP, 10000)
+    evidence["left_viridian"] = off_map
+    evidence["frames_until_north_exit"] = waited
+    client.screenshot(output / "linger-after-north-exit.png")
+    saw_gate = False
+    for index in range(8):
+        inside = enter_center(client, symbols, output, f"linger-{index:02d}")
+        evidence["heartbeats"].append({"transition": "enter_center", **inside})
+        saw_gate |= inside["world"]["current_map"] == FOREST_GATE_MAP
+        outside = leave_center(client, symbols, output, f"linger-{index:02d}")
+        evidence["heartbeats"].append({"transition": "return_viridian", **outside})
+        saw_gate |= outside["world"]["current_map"] == FOREST_GATE_MAP
+        if saw_gate and outside["world"]["current_map"] == VIRIDIAN_MAP:
+            observed_maps = [tick["world"]["current_map"] for tick in evidence["heartbeats"]]
+            gate_index = observed_maps.index(FOREST_GATE_MAP)
+            if ROUTE2_MAP not in observed_maps[gate_index + 1:]:
+                raise RuntimeError(f"Giovanni skipped Route2 on return from gate: {observed_maps}")
+            if outside["world"]["arrival"] != 1:
+                raise RuntimeError(f"Giovanni returned to Viridian from wrong edge: {outside['world']}")
+            for elapsed in range(0, 240, 10):
+                actor = read_giovanni_object(client, symbols, 32)
+                if actor:
+                    evidence["reentered_actor"] = actor
+                    evidence["reentered_world"] = read_world_record(client, symbols)
+                    evidence["reentered_actor_debug"] = actor_snapshot(client, symbols)
+                    evidence["reentry_observed_after_frames"] = elapsed
+                    client.screenshot(output / "linger-north-reentry.png")
+                    if actor["y"] > 8:
+                        raise RuntimeError(f"Giovanni returned away from Viridian north edge: {actor}")
+                    expected_x = outside["world"]["crossing"] + 16
+                    if abs(actor["x"] - expected_x) > 5:
+                        raise RuntimeError(f"Giovanni returned at wrong Viridian x={expected_x}: {actor}")
+                    return evidence
+                client.step(10)
+            raise RuntimeError(f"World says Viridian after gate but actor absent: {outside['world']}")
+    raise RuntimeError(f"No gate round trip and Viridian re-entry in eight Center transitions: {evidence['heartbeats']}")
+
+
+def select_start_action(client: SkyEmu, symbols: dict[str, int], action: int) -> list[int]:
+    wait_field_unlocked(client, symbols)
+    client.press("Start", hold=3, release=30)
+    for _ in range(10):
+        actions = list(client.read(symbols["sCurrentStartMenuActions"], 9))
+        if field_controls_locked(client, symbols) and action in actions:
+            break
+        client.step(30)
+    else:
+        raise RuntimeError(f"Start menu did not open with action {action}: {actions}")
+    target = actions.index(action)
+    for _ in range(12):
+        cursor = client.read(symbols["sStartMenuCursorPos"], 1)[0]
+        if cursor == target:
+            break
+        client.press("Down", hold=3, release=19)
+    else:
+        raise RuntimeError(f"Could not select Start action {action}: cursor={cursor}, actions={actions}")
+    client.press("A", hold=3, release=30)
+    return actions
+
+
+def phase2_save_before(client: SkyEmu, symbols: dict[str, int], output: Path) -> dict[str, object]:
+    """Save with the game's own menu while Giovanni is off the player's map."""
+    evidence: dict[str, object] = {"fresh_world": read_world_record(client, symbols)}
+    off_map, waited = wait_for_world_map(client, symbols, ROUTE2_MAP, 10000)
+    evidence["left_viridian"] = off_map
+    evidence["frames_until_north_exit"] = waited
+    evidence["center_entry"] = enter_center(client, symbols, output, "save")
+    before = read_world_record(client, symbols)
+    evidence["before_save"] = before
+    evidence["save_block1_before_save"] = save_block1_prefix(client, symbols)
+    if before["current_map"] == (12 << 8):
+        raise RuntimeError("Giovanni is on player's Center map before save")
+    evidence["start_menu_actions"] = select_start_action(client, symbols, 5)
+    client.step(120)
+    client.screenshot(output / "save-confirmation.png")
+    # Fresh game: Save action -> confirmation text -> Yes/No default Yes ->
+    # saving text -> success message/timer. A advances each real game prompt.
+    for attempt in range(12):
+        if not field_controls_locked(client, symbols):
+            evidence["save_ui_a_presses"] = attempt
+            break
+        client.press("A", hold=3, release=90)
+        if attempt in (0, 1, 2, 3):
+            client.screenshot(output / f"save-progress-{attempt + 1}.png")
+    else:
+        raise RuntimeError("Game Save menu did not return to field after 12 A presses")
+    client.step(180)
+    after = read_world_record(client, symbols)
+    evidence["after_save"] = after
+    evidence["save_block1_after_save"] = save_block1_prefix(client, symbols)
+    evidence["saved_field_location"] = read_location(client, symbols)
+    if after["raw_hex"] != before["raw_hex"]:
+        raise RuntimeError(f"Off-map world changed during Save UI: before={before}, after={after}")
+    client.screenshot(output / "save-field-after-success.png")
+    return evidence
+
+
+def phase2_save_after(
+    client: SkyEmu, symbols: dict[str, int], output: Path, saved: dict[str, int | str],
+    evidence: dict[str, object],
+) -> dict[str, object]:
+    """Inspect loaded flash before Continue, then verify after real Continue."""
+    for elapsed in range(0, 12000, 30):
+        status = client.u16(symbols["gSaveFileStatus"])
+        if status == 1:
+            evidence["save_status_loaded_after_frames"] = elapsed
+            break
+        if status == 2:
+            evidence["corrupt_status_after_frames"] = elapsed
+            evidence["save_block1_on_corrupt_load"] = save_block1_prefix(client, symbols)
+            evidence["world_on_corrupt_load"] = read_world_record(client, symbols)
+            client.step(600)
+            client.screenshot(output / "reload-corrupt-title.png")
+            raise RuntimeError("Reloaded ROM reported SAVE_STATUS_CORRUPT (2)")
+        client.step(30)
+    else:
+        raise RuntimeError(f"Reloaded ROM did not find valid flash save (status={status})")
+    title_record = read_world_record(client, symbols)
+    evidence["title_before_continue"] = title_record
+    evidence["save_block1_before_continue"] = save_block1_prefix(client, symbols)
+    if title_record["raw_hex"] != saved["raw_hex"]:
+        raise RuntimeError(f"Saved world differs before Continue: saved={saved}, loaded={title_record}")
+    client.screenshot(output / "reload-title-with-save.png")
+    for index in range(50):
+        client.press("A", hold=2, release=2)
+        client.step(56)
+        location = read_location(client, symbols)
+        player = read_player_object(client, symbols)
+        callback2 = client.u32(symbols["gMain"] + 4) & ~1
+        if (location and location[:2] == (12, 0) and player is not None
+            and callback2 == (symbols["CB2_Overworld"] & ~1)):
+            wait_field_unlocked(client, symbols)
+            evidence["continued_location"] = read_location(client, symbols)
+            evidence["continue_frames"] = (index + 1) * 60
+            evidence["overworld_callback2"] = callback2
+            break
+    else:
+        raise RuntimeError(f"Reloaded ROM did not Continue into Center field: {location}, callback2={callback2:#x}")
+    continued = read_world_record(client, symbols)
+    evidence["after_continue"] = continued
+    evidence["save_block1_after_continue"] = save_block1_prefix(client, symbols)
+    client.screenshot(output / "reload-center-after-continue.png")
+    if continued["raw_hex"] != saved["raw_hex"]:
+        raise RuntimeError(f"Saved world changed across Continue: saved={saved}, continued={continued}")
+    return evidence
+
+
+def gba_soft_reset(client: SkyEmu, symbols: dict[str, int]) -> dict[str, int]:
+    """Restart the game through its controller chord, retaining emulated flash."""
+    counter_address = symbols["gMain"] + 0x20
+    before = client.u32(counter_address)
+    buttons = ("A", "B", "Select", "Start")
+    for button in buttons:
+        client.check("/input", {button: "1"})
+    try:
+        client.step(2)
+    finally:
+        for button in buttons:
+            client.check("/input", {button: "0"})
+    for elapsed in range(2, 122, 2):
+        after = client.u32(counter_address)
+        if after < before:
+            return {"vblank_before": before, "vblank_after": after,
+                    "reset_observed_after_frames": elapsed}
+        client.step(2)
+    raise RuntimeError(f"GBA soft reset did not restart main loop (vblank={before}->{after})")
 
 
 def try_talk_to_walker(
@@ -465,6 +902,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--lifecycle", action="store_true",
                         help="then enter/leave Center and open/close Bag, checking walker resumes")
     parser.add_argument("--startup-only", action="store_true", help="debug startup before walker is linked")
+    parser.add_argument("--phase2", choices=("follow", "linger", "save"),
+                        help="run one fresh phase 2 scenario with real controls")
     return parser.parse_args()
 
 
@@ -477,62 +916,48 @@ def main() -> int:
         raise ValueError("--max-frames must be positive")
     if not 1 <= args.min_goals <= len(GOALS):
         raise ValueError("--min-goals must be between 1 and 6")
+    if args.phase2 and (args.startup_only or args.lifecycle):
+        raise ValueError("--phase2 runs separately from --startup-only and --lifecycle")
     args.output.mkdir(parents=True, exist_ok=True)
     symbols = read_symbols(args.symbols)
     required = {"gSaveBlock1Ptr", "gObjectEvents"}
-    if not args.startup_only:
+    if not args.startup_only or args.phase2:
         required.add("gViridianWalkerDebug")
-    if args.lifecycle:
+    if args.lifecycle or args.phase2:
         required.update(("sCurrentStartMenuActions", "sStartMenuCursorPos", "sLockFieldControls"))
+    if args.phase2:
+        required.update(("gSaveBlock3Ptr", "gViridianWalkerWorldSaveOffset",
+                         "gViridianWalkerWorldSaveSize"))
+    if args.phase2 == "save":
+        required.update(("gSaveFileStatus", "gSaveCounter", "gMain", "CB2_Overworld"))
     if missing := sorted(required - symbols.keys()):
         raise RuntimeError(f"symbol file lacks {', '.join(missing)}")
-    port = reserve_port()
     with tempfile.TemporaryDirectory(prefix="viridian-walker-skyemu-") as temp:
         temp_dir = Path(temp)
         rom = temp_dir / "walker.gba"
         shutil.copyfile(args.rom, rom)
         log_path = args.output / "skyemu.log"
-        with log_path.open("wb") as log:
-            process = subprocess.Popen(
-                ["xvfb-run", "--auto-servernum", str(args.skyemu), "http_server", str(port), str(rom)],
-                env={**os.environ, "XDG_DATA_HOME": str(temp_dir / "xdg")},
-                stdin=subprocess.DEVNULL,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                start_new_session=True,
-            )
-            announced = threading.Event()
-
-            def copy_output() -> None:
-                assert process.stdout is not None
-                for line in process.stdout:
-                    log.write(line)
-                    log.flush()
-                    if f"Starting HCS: http://localhost:{port}".encode() in line:
-                        announced.set()
-
-            output_thread = threading.Thread(target=copy_output, daemon=True)
-            output_thread.start()
-            client = SkyEmu(port)
-            try:
-                wait_for_ready(client, process, announced)
-                client.check("/load_rom", {"path": str(rom), "pause": "1"})
-                for button in ("A", "B", "Up", "Down", "Left", "Right", "L", "R", "Start", "Select"):
-                    client.check("/input", {button: "0"})
+        log_path.write_bytes(b"")
+        result: dict[str, object] = {"scenario": args.phase2 or "phase1",
+                                     "fresh_rom_copy": True}
+        try:
+            with skyemu_session(args.skyemu, rom, temp_dir / "xdg", log_path) as client:
                 frame = boot_new_game(client, symbols, args.output, args.startup_only)
-                result = {"startup_frames": frame, "viridian": read_location(client, symbols)}
-                if not args.startup_only:
-                    try:
-                        result.update(run_walker(client, symbols, args.output, args.max_frames,
-                                                 args.min_goals))
-                    except Exception as error:
-                        result["error"] = str(error)
-                        result["last_walker_telemetry"] = walker_snapshot(client, symbols)
-                        client.screenshot(args.output / "failure.png")
-                        (args.output / "results.json").write_text(json.dumps(result, indent=2) + "\n")
-                        raise
-                (args.output / "results.json").write_text(json.dumps(result, indent=2) + "\n")
-                if not args.startup_only:
+                result.update({"startup_frames": frame, "viridian": read_location(client, symbols)})
+                if args.phase2 == "follow":
+                    result["phase2"] = phase2_follow(client, symbols, args.output)
+                elif args.phase2 == "linger":
+                    result["phase2"] = phase2_linger(client, symbols, args.output)
+                elif args.phase2 == "save":
+                    result["phase2"] = phase2_save_before(client, symbols, args.output)
+                    result["reload_method"] = "gba_soft_reset"
+                    result["reset"] = gba_soft_reset(client, symbols)
+                    result["reload"] = {}
+                    phase2_save_after(client, symbols, args.output,
+                                      result["phase2"]["after_save"], result["reload"])
+                elif not args.startup_only:
+                    result.update(run_walker(client, symbols, args.output, args.max_frames,
+                                             args.min_goals))
                     if len(result["distinct_goals"]) < args.min_goals:
                         raise RuntimeError(f"Walker did not complete {args.min_goals} distinct goals")
                     if not result["real_player_block"]["observed"]:
@@ -540,24 +965,25 @@ def main() -> int:
                     if args.min_goals == 6 and not result["travel_reentry_observed"]:
                         raise RuntimeError("No travel exit re-entry was observed")
                     if args.lifecycle:
-                        try:
-                            result["lifecycle"] = check_lifecycle(client, symbols, args.output)
-                        except Exception as error:
-                            result["lifecycle_error"] = str(error)
-                            result["last_walker_telemetry"] = walker_snapshot(client, symbols)
-                            (args.output / "results.json").write_text(json.dumps(result, indent=2) + "\n")
-                            raise
-                        (args.output / "results.json").write_text(json.dumps(result, indent=2) + "\n")
-                return 0
-            finally:
-                if process.poll() is None:
-                    os.killpg(process.pid, signal.SIGTERM)
-                    try:
-                        process.wait(timeout=10)
-                    except subprocess.TimeoutExpired:
-                        os.killpg(process.pid, signal.SIGKILL)
-                        process.wait(timeout=10)
-                output_thread.join(timeout=2)
+                        result["lifecycle"] = check_lifecycle(client, symbols, args.output)
+                (args.output / "results.json").write_text(json.dumps(result, indent=2) + "\n")
+
+            if args.phase2 == "save":
+                # The host .sav is diagnostic only. SkyEmu may flush an incomplete
+                # snapshot to it; acceptance uses the real GBA soft reset above.
+                save_file = rom.with_suffix(".sav")
+                if save_file.is_file():
+                    result["host_save_bytes"] = save_file.stat().st_size
+                    retained_save = args.output / "saved-game.sav"
+                    shutil.copyfile(save_file, retained_save)
+                    result["host_save_file"] = str(retained_save)
+                    result["host_save_sha256"] = hashlib.sha256(retained_save.read_bytes()).hexdigest()
+                (args.output / "results.json").write_text(json.dumps(result, indent=2) + "\n")
+            return 0
+        except Exception as error:
+            result["error"] = str(error)
+            (args.output / "results.json").write_text(json.dumps(result, indent=2) + "\n")
+            raise
 
 
 if __name__ == "__main__":

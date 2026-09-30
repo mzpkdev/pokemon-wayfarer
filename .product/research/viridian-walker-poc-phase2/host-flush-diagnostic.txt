@@ -1,0 +1,42 @@
+Flash image: /tmp/viridian-phase2-save-diagnostic/saved-game.sav
+Size: 131072 bytes (32 x 4096-byte sectors)
+Footer: id @ +0xFF4, checksum @ +0xFF6, signature @ +0xFF8, counter @ +0xFFC
+Expected signature: 0x08012025
+
+Slot 0 (physical sectors 0-13):
+  00: erased (all FF)
+  01: erased (all FF)
+  02: erased (all FF)
+  03: erased (all FF)
+  04: erased (all FF)
+  05: erased (all FF)
+  06: erased (all FF)
+  07: erased (all FF)
+  08: erased (all FF)
+  09: erased (all FF)
+  10: erased (all FF)
+  11: erased (all FF)
+  12: erased (all FF)
+  13: erased (all FF)
+
+Slot 1 (physical sectors 14-27):
+  14: erased (all FF)
+  15: id=0x0000 signature=0x08012025 counter=1 checksum=0xF660 computed_full_payload=0xF660 last_non_FF_offset=4095
+  16: id=0x0001 signature=0x08012025 counter=1 checksum=0x9D39 computed_full_payload=0x9D39 last_non_FF_offset=4095
+  17: id=0x0002 signature=0x08012025 counter=1 checksum=0xD3C3 computed_full_payload=0xD3C3 last_non_FF_offset=4095
+  18: id=0x0003 signature=0x08012025 counter=1 checksum=0xBE2F computed_full_payload=0xBE2F last_non_FF_offset=4095
+  19: id=0xFFFF signature=0xFFFFFFFF counter=4294967295 checksum=0xFFFF computed_full_payload=None last_non_FF_offset=507
+  20: erased (all FF)
+  21: erased (all FF)
+  22: erased (all FF)
+  23: erased (all FF)
+  24: erased (all FF)
+  25: erased (all FF)
+  26: erased (all FF)
+  27: erased (all FF)
+
+Evidence: physical sectors 15-18 are complete valid records with IDs 0-3, counter 1, and matching checksums.
+Physical sector 19 has programmed bytes only at offsets 0-507, no footer; sectors 20-27 remain erased.
+GetSaveValidStatus therefore finds slot 0 EMPTY and slot 1 ERROR, then returns SAVE_STATUS_CORRUPT.
+The Wayfarer save-version and persistent-state guard is not reached.
+The flash image was captured during an incomplete sector write; the cause of interruption or host flush timing remains to be established.

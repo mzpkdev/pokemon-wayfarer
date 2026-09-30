@@ -1,0 +1,182 @@
+{
+  "scenario": "save",
+  "fresh_rom_copy": true,
+  "startup_frames": 690,
+  "viridian": [
+    0,
+    32,
+    30,
+    37
+  ],
+  "phase2": {
+    "fresh_world": {
+      "current_map": 32,
+      "destination_map": 5890,
+      "arrival": 0,
+      "state": 0,
+      "crossing": 0,
+      "x": 33,
+      "y": 36,
+      "goal": 0,
+      "dwell": 0,
+      "reserved": 0,
+      "raw_hex": "200002170000002124000000"
+    },
+    "left_viridian": {
+      "current_map": 42,
+      "destination_map": 5890,
+      "arrival": 2,
+      "state": 0,
+      "crossing": 26,
+      "x": 10,
+      "y": 79,
+      "goal": 4,
+      "dwell": 0,
+      "reserved": 0,
+      "raw_hex": "2a00021702001a0a4f040000"
+    },
+    "frames_until_north_exit": 990,
+    "center_entry": {
+      "location": [
+        12,
+        0,
+        7,
+        8
+      ],
+      "world": {
+        "current_map": 5890,
+        "destination_map": 41,
+        "arrival": 5,
+        "state": 2,
+        "crossing": 6,
+        "x": 7,
+        "y": 9,
+        "goal": 4,
+        "dwell": 2,
+        "reserved": 0,
+        "raw_hex": "021729000502060709040200"
+      },
+      "world_debug": {
+        "heartbeats": 1,
+        "hops": 1,
+        "actor_exits": 1,
+        "from_map": 42,
+        "to_map": 5890,
+        "last_arrival": 5,
+        "last_crossing": 6,
+        "last_x": 7,
+        "last_y": 9
+      }
+    },
+    "before_save": {
+      "current_map": 5890,
+      "destination_map": 41,
+      "arrival": 5,
+      "state": 2,
+      "crossing": 6,
+      "x": 7,
+      "y": 9,
+      "goal": 4,
+      "dwell": 2,
+      "reserved": 0,
+      "raw_hex": "021729000502060709040200"
+    },
+    "save_block1_before_save": {
+      "save_version": 11,
+      "prefix_hex": "0b000000070008000c000000ffffffff00000000000000000000000000000000",
+      "save_counter": 0
+    },
+    "start_menu_actions": [
+      1,
+      2,
+      4,
+      5,
+      6,
+      7,
+      0,
+      0,
+      0
+    ],
+    "save_ui_a_presses": 4,
+    "after_save": {
+      "current_map": 5890,
+      "destination_map": 41,
+      "arrival": 5,
+      "state": 2,
+      "crossing": 6,
+      "x": 7,
+      "y": 9,
+      "goal": 4,
+      "dwell": 2,
+      "reserved": 0,
+      "raw_hex": "021729000502060709040200"
+    },
+    "save_block1_after_save": {
+      "save_version": 11,
+      "prefix_hex": "0b000000070008000c000000ffffffff00000000000000000000000000000000",
+      "save_counter": 1
+    },
+    "saved_field_location": [
+      12,
+      0,
+      7,
+      8
+    ]
+  },
+  "reload_method": "gba_soft_reset",
+  "reset": {
+    "vblank_before": 2643,
+    "vblank_after": 0,
+    "reset_observed_after_frames": 14
+  },
+  "reload": {
+    "save_status_loaded_after_frames": 240,
+    "title_before_continue": {
+      "current_map": 5890,
+      "destination_map": 41,
+      "arrival": 5,
+      "state": 2,
+      "crossing": 6,
+      "x": 7,
+      "y": 9,
+      "goal": 4,
+      "dwell": 2,
+      "reserved": 0,
+      "raw_hex": "021729000502060709040200"
+    },
+    "save_block1_before_continue": {
+      "save_version": 11,
+      "prefix_hex": "0b000000070008000c000000ffffffff00000000000000000000000000000000",
+      "save_counter": 1
+    },
+    "continued_location": [
+      12,
+      0,
+      7,
+      8
+    ],
+    "continue_frames": 420,
+    "overworld_callback2": 135918044,
+    "after_continue": {
+      "current_map": 5890,
+      "destination_map": 41,
+      "arrival": 5,
+      "state": 2,
+      "crossing": 6,
+      "x": 7,
+      "y": 9,
+      "goal": 4,
+      "dwell": 2,
+      "reserved": 0,
+      "raw_hex": "021729000502060709040200"
+    },
+    "save_block1_after_continue": {
+      "save_version": 11,
+      "prefix_hex": "0b000000070008000c000000ffffffff00000000000000000000000000000000",
+      "save_counter": 1
+    }
+  },
+  "host_save_bytes": 131072,
+  "host_save_file": "/tmp/viridian-phase2-save-final/saved-game.sav",
+  "host_save_sha256": "192b6c3b26aaf11da877695f8e6a3c91de2bcf6a836504515b709865c0cee1de"
+}

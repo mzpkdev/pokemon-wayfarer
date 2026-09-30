@@ -1,5 +1,8 @@
 # Viridian walker proof of concept
 
+The sections before **Phase 2** record the original six-stop experiment. The
+current branch runs the Phase 2 itinerary; use its validation commands below.
+
 This experiment tests one autonomous notable trainer on the 56×50 HNS Viridian
 map. It is disposable branch-only code, controlled by `VIRIDIAN_WALKER_POC` in
 `game/include/config/viridian_walker_poc.h`. Giovanni completed all six goals in
@@ -153,3 +156,144 @@ and occupancy. Walking respects the engine’s ledge and water restrictions but
 has no jump or surf planner; no exhaustive elevation/ledge test suite was added.
 For a larger haunts system, share a search workspace and scheduling budget,
 measure several active actors, and model persistent travel separately.
+
+## Phase 2: saved travel between maps
+
+Phase 2 replaces the six-stop local demonstration above with a saved itinerary:
+Viridian’s green strip → Route 2’s southern section → the southern Forest gate,
+then back through Viridian toward Route 1. The gate is the destination;
+Giovanni does not traverse the Forest in this slice.
+
+The world layer (`viridian_walker_world.c/.h`) adds a 12-byte record to
+SaveBlock3: current and destination map IDs, arrival kind and crossing coordinate,
+local x/y, state, goal, and dwell count. Its states are travelling, at a spot,
+and inside a building. POC builds use save version 11; the disabled POC retains
+version 10. Start a fresh Phase 2 game; there is no prerelease save migration.
+
+Heartbeats run from `LoadMapFromCameraTransition` and `LoadMapFromWarp` after
+the player’s new map is known. One eligible tick advances an off-map traveller
+one graph edge. The gate adds two heartbeat ticks of dwell. A trainer on the
+player’s newly loaded map stays there, allowing the player to follow. Continue
+initializes the map observation without advancing the simulation; opening the
+Bag is also not a travel heartbeat. This is transition-driven world time, not
+continuous movement or real-time travel on unloaded maps. If the player leaves
+while Giovanni is walking to a local activity, the off-map abstraction can skip
+the remaining local walk and advance one graph edge at the next heartbeat.
+
+The graph is `Route 1 ↔ Viridian ↔ Route 2 south ↔ Forest south gate`.
+A read-only collision/elevation flood found Route 2’s north and south components
+separated by solid rows 41–45. Although its northern boundary connects to
+Pewter, Giovanni cannot walk there from the southern entrance. The middle-gate
+bypass requires removing a Cut tree at `(15,69)`. The selected Forest gate is
+reachable without Cut; the static flood found a 43-step path from `(9,79)` to
+`(6,51)`. This flood approximates movement; local runtime paths use the engine’s
+full collision checks.
+
+Connection crossings use source-map offsets: Viridian north `(x,0)` becomes
+Route 2 `(x−16,79)`, and the return becomes Viridian `(x+16,0)`. The walkable
+lanes are Viridian x=22–27 / Route 2 x=6–11. Viridian south uses Route 1’s offset
+of 2. Route 2 warps `(5,51)` and `(6,51)` enter gate warp 0 at `(7,9)`; the reverse
+warp returns to `(5,51)`, with the outdoor actor resuming at `(5,52)`.
+
+Future graph generation should extract connections and warp pairs, then check
+reachability between their entrances using NPC collision, elevation, and ability
+rules. Map-level adjacency alone misses disconnected regions, Cut trees, and
+interior gatehouses. A graph node may need to represent a walkable region within
+a map rather than an entire map.
+
+The local actor still uses one 11,200-byte heap workspace, now indexed by the
+current map dimensions: Viridian 56×50, Route 2 30×80, and Route 1 50×40. It
+reports each completed step to the saved record. Heap resets discard the search
+workspace; menus and map reloads restore the actor from saved position and plan
+again. They no longer restart the itinerary. Connection handoffs commit when
+the held exit step starts, so a player crossing immediately cannot outrun the
+saved handoff. Cleanup identifies the actor by map and local ID, including the
+old-map object retained during a scrolling connection transition.
+
+The integration touches `new_game.c`, `overworld.c`, `global.h`, and `save.h`,
+plus the POC actor and new world module. Route 1 and Route 2 receive Giovanni
+object events and goal dialogue in `map.json`/`scripts.inc`; template events
+stay hidden until the simulation places Giovanni there. The follower remains
+disabled, and only one Giovanni object is active. No map tile binaries changed.
+
+Build and exercise the current itinerary with:
+
+```sh
+make -C game -j16 CXX=g++ e2e
+python3 game/tools/viridian_walker_poc/verify.py \
+  --rom game/pokemon-wayfarer-e2e.gba --symbols game/pokemon-wayfarer-e2e.sym \
+  --output /tmp/viridian-phase2-follow --phase2 follow
+python3 game/tools/viridian_walker_poc/verify.py \
+  --rom game/pokemon-wayfarer-e2e.gba --symbols game/pokemon-wayfarer-e2e.sym \
+  --output /tmp/viridian-phase2-linger --phase2 linger
+python3 game/tools/viridian_walker_poc/verify.py \
+  --rom game/pokemon-wayfarer-e2e.gba --symbols game/pokemon-wayfarer-e2e.sym \
+  --output /tmp/viridian-phase2-save --phase2 save
+make -C game -j16 CXX=g++ wayfarer
+```
+
+Both targets build successfully. The E2E image uses 255,468 bytes EWRAM and
+25,652 bytes IWRAM; the normal Wayfarer image uses 249,560 and 25,644 bytes.
+Against Phase 1, the E2E build adds **40 static EWRAM bytes**, including the
+**12-byte saved record**, and no static IWRAM. The BFS heap workspace remains
+11,200 bytes. The measured Route 2 search expanded **401 nodes in 63 elapsed
+VBlank frames**, including transition scheduling, with at most eight expansions
+per update. The largest observed slice in the follow run was **141 scanlines**,
+about **10.35 ms / 0.62 GBA frame**. These are observed costs, not a worst-case
+bound; the Phase 1 scheduling caveat still applies.
+
+The final follow run crossed Giovanni from Viridian `(25,0)` to Route 2 `(9,79)`.
+The player followed at `(10,79)`, saw exactly one Giovanni at `(9,79)`, and saw him
+step to `(9,78)` within 30 frames. He then reached the Forest gate after another
+690 frames. The local-actor exit counter increased from one to two while the
+heartbeat count stayed at one and abstract hops stayed at zero. No duplicate
+Giovanni appeared, and the actor was removed after entering the gate.
+[Follow telemetry](viridian-walker-poc-phase2/follow-results.json),
+[arrival screenshot](viridian-walker-poc-phase2/follow-route2-giovanni.png), and
+[moving screenshot](viridian-walker-poc-phase2/follow-route2-moving.png) capture
+this handoff. The gate entry is verified by actor/world telemetry; the player
+remained near Route 2's southern edge during that part of the test.
+
+The linger run used four actual Center transitions: gate with two dwell ticks,
+gate with one, Route 2 at `(5,52)`, then Viridian at `(24,0)` with north arrival.
+It observed an active Viridian Giovanni object at that matching north edge.
+The player stayed near the Center, so the re-entry evidence is
+[object and saved-state telemetry](viridian-walker-poc-phase2/linger-results.json),
+not an on-camera sighting at the north boundary.
+
+The first save/reload attempt exposed a SkyEmu harness issue: killing the
+process immediately after accelerated stepping left its host `.sav` with only
+four complete sectors and part of the fifth, despite the in-game success text.
+The existing E2E harness documents this non-atomic host flush. The POC verifier
+therefore uses the same GBA reset chord and normal boot/Continue path to read
+serialized emulated flash. This does not use a savestate or write game memory.
+A cold host-process restart is not claimed as validated.
+
+The save test passed: the reset counter dropped from 2,643 to zero, normal boot
+reported a valid flash save after 240 frames, and Continue restored the player
+to the Center. Giovanni's exact 12 saved bytes were
+`021729000502060709040200` before save, after boot, and after Continue: inside
+the Forest gate, destination Route 1, door arrival, two dwell ticks remaining.
+Continue did not advance world time.
+[Save/reload telemetry](viridian-walker-poc-phase2/save-results.json),
+[save success](viridian-walker-poc-phase2/save-success.png), and
+[restored Center](viridian-walker-poc-phase2/reload-center-after-continue.png)
+record the check. The screenshots show the player's save/restore; Giovanni is
+inside another building and is verified through the saved record.
+
+[Build/source hashes](viridian-walker-poc-phase2/validation.json) identify the
+tested binaries. Raw scenario captures remain in `/tmp/viridian-phase2-*-final`;
+build logs are `/tmp/viridian-phase2-e2e-build.log` and
+`/tmp/viridian-phase2-wayfarer-build.log`. The failed cold-restart attempt's
+[sector audit](viridian-walker-poc-phase2/host-flush-diagnostic.txt) records the
+host-file flush limitation separately.
+
+**Updated verdict:** the two-layer design is viable for this slice. A saved
+12-byte world record can drive abstract travel and restore one visible actor
+at the correct connection or door. The main scaling risks are the local BFS
+frame budget, limited object slots, and building a graph of walkable regions
+rather than merely connected map names. Door orientation and gatehouse routing
+need explicit semantics. This POC does not establish continuous off-screen
+travel, full-Forest traversal, many simultaneous trainers, or physical-hardware
+performance. Route 1 is implemented in the itinerary but its complete local
+round trip was not part of the three required emulator scenarios.

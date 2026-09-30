@@ -1,0 +1,203 @@
+{
+  "scenario": "follow",
+  "fresh_rom_copy": true,
+  "startup_frames": 690,
+  "viridian": [
+    0,
+    32,
+    30,
+    37
+  ],
+  "phase2": {
+    "fresh_world": {
+      "current_map": 32,
+      "destination_map": 5890,
+      "arrival": 0,
+      "state": 0,
+      "crossing": 0,
+      "x": 33,
+      "y": 36,
+      "goal": 0,
+      "dwell": 0,
+      "reserved": 0,
+      "raw_hex": "200002170000002124000000"
+    },
+    "fresh_debug": {
+      "heartbeats": 0,
+      "hops": 0,
+      "actor_exits": 0,
+      "from_map": 0,
+      "to_map": 0,
+      "last_arrival": 0,
+      "last_crossing": 0,
+      "last_x": 0,
+      "last_y": 0
+    },
+    "departed_to_route2": {
+      "current_map": 42,
+      "destination_map": 5890,
+      "arrival": 2,
+      "state": 0,
+      "crossing": 25,
+      "x": 9,
+      "y": 79,
+      "goal": 4,
+      "dwell": 0,
+      "reserved": 0,
+      "raw_hex": "2a000217020019094f040000"
+    },
+    "frames_waiting_near_exit": 120,
+    "debug_after_exit": {
+      "heartbeats": 0,
+      "hops": 0,
+      "actor_exits": 1,
+      "from_map": 32,
+      "to_map": 42,
+      "last_arrival": 2,
+      "last_crossing": 25,
+      "last_x": 9,
+      "last_y": 79
+    },
+    "player_route2_location": [
+      0,
+      42,
+      10,
+      79
+    ],
+    "crossing_attempts": 1,
+    "first_route2_actor": {
+      "slot": 2,
+      "local_id": 13,
+      "x": 9,
+      "y": 79
+    },
+    "actor_observed_after_frames": 0,
+    "world_on_route2": {
+      "current_map": 42,
+      "destination_map": 5890,
+      "arrival": 2,
+      "state": 0,
+      "crossing": 25,
+      "x": 9,
+      "y": 79,
+      "goal": 4,
+      "dwell": 0,
+      "reserved": 0,
+      "raw_hex": "2a000217020019094f040000"
+    },
+    "route2_actor_debug": {
+      "completed": 2,
+      "replans": 1,
+      "searches": 4,
+      "search_nodes": 224,
+      "search_frames": 35,
+      "max_nodes_per_frame": 8,
+      "max_slice_vblanks": 1,
+      "grass_tiles_found": 0,
+      "blocked_steps": 1,
+      "x": 16,
+      "y": 86,
+      "goal_x": 32,
+      "goal_y": 7,
+      "next_x": 32,
+      "next_y": 6,
+      "phase": 1,
+      "goal": 11,
+      "last_completed_goal": 4,
+      "used_grass_fallback": 0,
+      "max_slice_scanlines": 141,
+      "current_map": 42,
+      "local_id": 13
+    },
+    "route2_active_giovanni": [
+      {
+        "slot": 2,
+        "map_num": 42,
+        "local_id": 13,
+        "x": 9,
+        "y": 79
+      }
+    ],
+    "route2_actor_moved": {
+      "slot": 2,
+      "local_id": 13,
+      "x": 9,
+      "y": 78
+    },
+    "movement_after_frames": 30,
+    "before_gate_debug": {
+      "heartbeats": 1,
+      "hops": 0,
+      "actor_exits": 1,
+      "from_map": 32,
+      "to_map": 42,
+      "last_arrival": 2,
+      "last_crossing": 25,
+      "last_x": 9,
+      "last_y": 79
+    },
+    "gate_handoff": {
+      "frames_after_first_route2_step": 690,
+      "world": {
+        "current_map": 5890,
+        "destination_map": 41,
+        "arrival": 5,
+        "state": 2,
+        "crossing": 6,
+        "x": 7,
+        "y": 9,
+        "goal": 11,
+        "dwell": 2,
+        "reserved": 0,
+        "raw_hex": "0217290005020607090b0200"
+      },
+      "before_debug": {
+        "heartbeats": 1,
+        "hops": 0,
+        "actor_exits": 1,
+        "from_map": 32,
+        "to_map": 42,
+        "last_arrival": 2,
+        "last_crossing": 25,
+        "last_x": 9,
+        "last_y": 79
+      },
+      "after_debug": {
+        "heartbeats": 1,
+        "hops": 0,
+        "actor_exits": 2,
+        "from_map": 42,
+        "to_map": 5890,
+        "last_arrival": 5,
+        "last_crossing": 6,
+        "last_x": 7,
+        "last_y": 9
+      },
+      "active_giovanni": [],
+      "last_actor_cost": {
+        "completed": 3,
+        "replans": 1,
+        "searches": 4,
+        "search_nodes": 401,
+        "search_frames": 63,
+        "max_nodes_per_frame": 8,
+        "max_slice_vblanks": 1,
+        "grass_tiles_found": 0,
+        "blocked_steps": 1,
+        "x": 13,
+        "y": 58,
+        "goal_x": 13,
+        "goal_y": 59,
+        "next_x": 13,
+        "next_y": 58,
+        "phase": 0,
+        "goal": 11,
+        "last_completed_goal": 11,
+        "used_grass_fallback": 0,
+        "max_slice_scanlines": 141,
+        "current_map": 42,
+        "local_id": 13
+      }
+    }
+  }
+}
