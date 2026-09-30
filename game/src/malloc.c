@@ -1,4 +1,5 @@
 #include "global.h"
+#include "viridian_walker_poc.h"
 #include "malloc.h"
 #if TESTING
 #include "test/test.h"
@@ -197,6 +198,10 @@ bool32 CheckMemBlockInternal(void *heapStart, void *pointer)
 
 void InitHeap(void *heapStart, u32 heapSize)
 {
+#if IS_WAYFARER && VIRIDIAN_WALKER_POC
+    if (heapStart == gHeap)
+        ViridianWalker_OnHeapReset();
+#endif
     sHeapStart = heapStart;
     sHeapSize = heapSize;
     PutFirstMemBlockHeader(heapStart, heapSize);

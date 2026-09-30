@@ -43,11 +43,13 @@ struct ViridianWalkerDebug {
     u8 goal;
     u8 lastCompletedGoal;
     u8 usedGrassFallback;
+    u16 maxSliceScanlines;
 };
 
 #if IS_WAYFARER && VIRIDIAN_WALKER_POC
 extern struct ViridianWalkerDebug gViridianWalkerDebug;
 void ViridianWalker_Update(void);
+void ViridianWalker_OnHeapReset(void);
 bool8 ViridianWalker_IsObject(const struct ObjectEvent *objectEvent);
 #endif
 
