@@ -24,6 +24,9 @@
 #include "trade.h"
 #include "battle.h"
 #include "link.h"
+#if WAYFARER_MULTIPLAYER_POC
+#include "multiplayer_poc.h"
+#endif
 #include "link_rfu.h"
 #include "constants/rgb.h"
 #include "constants/trade.h"
@@ -612,6 +615,10 @@ static void ProcessRecvCmds(u8 unused)
             break;
         case LINKCMD_SEND_HELD_KEYS:
             gLinkPartnersHeldKeys[i] = gRecvCmds[i][1];
+#if WAYFARER_MULTIPLAYER_POC
+            if (MultiplayerPoc_IsRunning())
+                MultiplayerPoc_ReceiveCmd(i, gRecvCmds[i]);
+#endif
             break;
         }
     }
@@ -671,6 +678,15 @@ static void BuildSendCmd(u16 command)
         gSendCmd[0] = LINKCMD_DUMMY_2;
         break;
     case LINKCMD_SEND_HELD_KEYS:
+#if WAYFARER_MULTIPLAYER_POC
+        if (MultiplayerPoc_IsRunning())
+        {
+            gSendCmd[0] = LINKCMD_SEND_HELD_KEYS;
+            gSendCmd[1] = LINK_KEY_CODE_EMPTY;
+            MultiplayerPoc_BuildSendCmd(gSendCmd);
+            break;
+        }
+#endif
         if (gHeldKeyCodeToSend == 0 || gLinkTransferringData)
             break;
 

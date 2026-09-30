@@ -1,0 +1,15 @@
+# Both carts connect, leave cleanly, then reconnect through controller input.
+2 0 304
+2 1 304
+5 0 000
+5 1 000
+200 0 304
+200 1 304
+203 0 000
+203 1 000
+260 0 304
+260 1 304
+263 0 000
+263 1 000
+350 0 010
+380 0 000

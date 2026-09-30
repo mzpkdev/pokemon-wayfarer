@@ -66,6 +66,7 @@ COMPARE     ?= 0
 TEST         ?= 0
 # Builds the playable test ROM used by the external SkyEmu suite.
 E2E          ?= 0
+WAYFARER_MULTIPLAYER_POC ?= 0
 # Enables -fanalyzer C flag to analyze in depth potential UBs
 ANALYZE      ?= 0
 # Count unused warnings as errors. Used by RH-Hideout's repo
@@ -107,6 +108,14 @@ $(foreach capability,$(LEGACY_MULTIBOOT_CAPABILITIES),$(if $(and $(filter 1,$(wo
 ifeq ($(GAME_VERSION),POKEMON_WAYFARER)
 $(foreach capability,$(LEGACY_MULTIBOOT_CAPABILITIES),$(if $(filter 1,$($(capability))),$(error Wayfarer requires $(capability)=0)))
 endif
+ifneq ($(filter-out 0 1,$(WAYFARER_MULTIPLAYER_POC)),)
+$(error WAYFARER_MULTIPLAYER_POC must be 0 or 1)
+endif
+ifeq ($(WAYFARER_MULTIPLAYER_POC),1)
+ifneq ($(GAME_VERSION),POKEMON_WAYFARER)
+$(error WAYFARER_MULTIPLAYER_POC requires BUILD=wayfarer)
+endif
+endif
 
 # Default make rule
 all: rom
@@ -144,6 +153,9 @@ endif
 ifeq ($(E2E),1)
 	FILE_NAME := pokemon-wayfarer-e2e
 endif
+ifeq ($(WAYFARER_MULTIPLAYER_POC),1)
+	FILE_NAME := $(FILE_NAME)-poc
+endif
 
 ROM_NAME := $(FILE_NAME).gba
 OBJ_DIR_NAME := $(BUILD_DIR)/$(BUILD_NAME)$(MAP_LAYOUT_STORAGE_BUILD_SUFFIX)
@@ -176,12 +188,15 @@ endif
 ifeq ($(RELEASE),1)
   OBJ_DIR := $(OBJ_DIR_NAME_RELEASE)
 endif
+ifeq ($(WAYFARER_MULTIPLAYER_POC),1)
+  OBJ_DIR := $(OBJ_DIR)-poc
+endif
 ELF := $(ROM:.gba=.elf)
 MAP := $(ROM:.gba=.map)
 SYM := $(ROM:.gba=.sym)
 ROM_REPORT := $(ROM:.gba=-size.json)
-E2E_ROM := pokemon-wayfarer-e2e.gba
-E2E_SYM := pokemon-wayfarer-e2e.sym
+E2E_ROM := pokemon-wayfarer-e2e$(if $(filter 1,$(WAYFARER_MULTIPLAYER_POC)),-poc).gba
+E2E_SYM := $(E2E_ROM:.gba=.sym)
 
 WAYFARER_ROM_BASELINE ?=
 # Set this to 1 only when deliberately creating the first report for a new
@@ -257,6 +272,7 @@ else
 O_LEVEL ?= 2
 endif
 CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=1 -DTESTING=$(TEST) -D$(GAME_VERSION) -std=gnu17
+override CPPFLAGS += -DWAYFARER_MULTIPLAYER_POC=$(WAYFARER_MULTIPLAYER_POC)
 override CPPFLAGS += $(foreach capability,$(LEGACY_MULTIBOOT_CAPABILITIES),-D$(capability)=$($(capability)))
 ifeq ($(GAME_VERSION),POKEMON_WAYFARER)
   override CPPFLAGS += -DPOKEMON_HNS

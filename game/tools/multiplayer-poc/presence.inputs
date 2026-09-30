@@ -1,0 +1,12 @@
+# Frame is relative to E2E arrange completion when --stage-e2e is used.
+# Columns: frame player key-mask(hex). Masks are native GBA KEYINPUT bits.
+# SELECT+L+R starts the native ROM link experiment on each side.
+2 0 304
+2 1 304
+5 0 000
+5 1 000
+# Different movement on each cartridge after link establishment.
+180 0 010
+210 0 000
+220 1 020
+250 1 000

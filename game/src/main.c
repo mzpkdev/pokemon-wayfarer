@@ -22,6 +22,9 @@
 #include "text.h"
 #include "intro.h"
 #include "main.h"
+#if WAYFARER_MULTIPLAYER_POC
+#include "multiplayer_poc.h"
+#endif
 #include "trainer_hill.h"
 #include "test_runner.h"
 #include "constants/rgb.h"
@@ -182,7 +185,13 @@ void AgbMainLoop(void)
 
 static void UpdateLinkAndCallCallbacks(void)
 {
-    if (!HandleLinkConnection())
+    bool8 skipCallbacks = HandleLinkConnection();
+#if WAYFARER_MULTIPLAYER_POC
+    // This runs even when cable traffic is absent, so disconnects cannot trap
+    // the player behind the inherited linked-room callback gate.
+    MultiplayerPoc_Update();
+#endif
+    if (!skipCallbacks)
         CallCallbacks();
 }
 

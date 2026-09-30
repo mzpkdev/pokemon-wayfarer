@@ -1,0 +1,9 @@
+# Used with --stage-position 20,12: enter New Bark player's house and leave.
+2 0 304
+2 1 304
+5 0 000
+5 1 000
+150 0 040
+175 0 000
+250 0 080
+275 0 000

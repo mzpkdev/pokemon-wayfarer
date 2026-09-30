@@ -13,6 +13,9 @@
 #include "sound.h"
 #include "mail.h"
 #include "overworld.h"
+#if WAYFARER_MULTIPLAYER_POC
+#include "multiplayer_poc.h"
+#endif
 #include "decompress.h"
 #include "constants/songs.h"
 #include "constants/items.h"
@@ -351,6 +354,11 @@ bool8 IsWritingMailAllowed(enum Item itemId)
 
 bool8 MenuHelpers_IsLinkActive(void)
 {
+#if WAYFARER_MULTIPLAYER_POC
+    // The PoC keeps normal, independent menus rather than linked-room menus.
+    if (MultiplayerPoc_IsRunning())
+        return FALSE;
+#endif
     if (IsOverworldLinkActive() == TRUE || gReceivedRemoteLinkPlayers == 1)
         return TRUE;
     else
@@ -367,6 +375,12 @@ static bool8 IsActiveOverworldLinkBusy(void)
 
 bool8 MenuHelpers_ShouldWaitForLinkRecv(void)
 {
+#if WAYFARER_MULTIPLAYER_POC
+    // Linked-room menus wait for remote key queues. The PoC exchanges only
+    // snapshots and keeps each player's normal menus independent.
+    if (MultiplayerPoc_IsRunning())
+        return FALSE;
+#endif
     if (IsActiveOverworldLinkBusy() == TRUE || IsLinkRecvQueueAtOverworldMax() == TRUE )
         return TRUE;
     else

@@ -2,6 +2,9 @@
 #include "trainer_only_encounter.h"
 #include "league_circuit.h"
 #include "overworld.h"
+#if WAYFARER_MULTIPLAYER_POC
+#include "multiplayer_poc.h"
+#endif
 #include "constants/heal_locations.h"
 #include "battle_pyramid.h"
 #include "battle_setup.h"
@@ -1822,7 +1825,13 @@ static void DoCB1_Overworld(u16 newKeys, u16 heldKeys)
 void CB1_Overworld(void)
 {
     if (gMain.callback2 == CB2_Overworld)
+    {
+#if WAYFARER_MULTIPLAYER_POC
+        if (MultiplayerPoc_TryToggle())
+            return;
+#endif
         DoCB1_Overworld(gMain.newKeys, gMain.heldKeys);
+    }
 }
 
 #define TINT_NIGHT Q_8_8(0.456) | Q_8_8(0.456) << 8 | Q_8_8(0.615) << 16
@@ -2406,7 +2415,13 @@ void CB2_ContinueSavedGame(void)
 
 static void FieldClearVBlankHBlankCallbacks(void)
 {
+#if WAYFARER_MULTIPLAYER_POC
+    // A Center exit normally closes the Cable Club link. Independent PoC map
+    // transitions must keep its separate cable session alive.
+    if (UsedPokemonCenterWarp() == TRUE && !MultiplayerPoc_IsRunning())
+#else
     if (UsedPokemonCenterWarp() == TRUE)
+#endif
         CloseLink();
 
     if (gWirelessCommType != 0)
@@ -3586,6 +3601,11 @@ bool32 Overworld_SendKeysToLinkIsRunning(void)
 
 bool32 IsSendingKeysOverCable(void)
 {
+#if WAYFARER_MULTIPLAYER_POC
+    // Ordinary play must not stop advancing while a peer packet is late.
+    if (MultiplayerPoc_IsRunning())
+        return FALSE;
+#endif
     if (gWirelessCommType != 0)
         return FALSE;
     else if (!IsSendingKeysToLink())

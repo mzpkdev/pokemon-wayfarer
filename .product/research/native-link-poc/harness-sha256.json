@@ -1,0 +1,9 @@
+{
+  "game/tools/multiplayer-poc/README.md": "cb72fceeb7c6457846e57c781574265b96ade1a2d93e925e41e290f468eb7ec9",
+  "game/tools/multiplayer-poc/bag.inputs": "85d580803415c6976e81bd784d3695fb8b2ca5a050fbb89710bb73e7a469c979",
+  "game/tools/multiplayer-poc/link.c": "c2f22a2a48819be598eb6ac62f541801bac96b85fe9e60ebe4fb4222ec54425c",
+  "game/tools/multiplayer-poc/map-door.inputs": "ca0dd6369e75f215b04ffa2a111ea01dd17570b25f757511788b1770aea77518",
+  "game/tools/multiplayer-poc/presence.inputs": "ebd0ee3b81e3763cbe7a6026f10fd79a158c8350c8a43a3355994d218ef3595d",
+  "game/tools/multiplayer-poc/rejoin.inputs": "6dc39d9aeea191fa86fd1b8a4bc72ffd34bfd80c762ed3472a57b5b2bea9d9fd",
+  "game/tools/multiplayer-poc/run.py": "4212c80e84728effe5249ec7f5475fdb30417b8afd5e44c6c7ff6cad13e90ef9"
+}

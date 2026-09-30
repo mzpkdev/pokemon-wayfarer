@@ -1,0 +1,9 @@
+{
+  "game/Makefile": "c23c5e54cfea7a0508a04fb54917985c69b78dcf92cb7ce86768eb6be08328e7",
+  "game/include/multiplayer_poc.h": "9f2487365c61160e46284a933c1dd371471cac4e2662b1607370678f7a3b26d0",
+  "game/src/multiplayer_poc.c": "ce134039272f050298fd61e5fb6ff67f2e67e6066c06614eff43a75214016a38",
+  "game/src/link.c": "dfce9c8671976da758a9bf3e20e76e19e08998438a46ed8d1280cf0d54f3f280",
+  "game/src/main.c": "229da186b2aab4cd108ef309c24e5af73712e381892056b0d19485f6cf940bdf",
+  "game/src/menu_helpers.c": "ca007f014aa83cbd17382b0e5e6ec99a129189b445cf03784d6339111d27c168",
+  "game/src/overworld.c": "eb77a1af0a15ba965aa8491238c5767c9aed8832b308e66e9afe3e070b5a6b60"
+}
