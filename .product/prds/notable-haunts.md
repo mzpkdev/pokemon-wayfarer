@@ -77,8 +77,9 @@ How a meeting goes depends on the trainer's **friendship** with the player
 
 - **Stranger:** the player has never talked to them. They introduce
   themselves, or greet the player as someone they have heard of when the
-  player has a reputation with them (a badge from their home region, a reign
-  at any league, or being a Master), and offer an optional battle; beat them
+  player's fame has reached them (the player is famous everywhere at TR 80,
+  or close to their own TR, or holds a league title or is a Master), and
+  offer an optional battle; beat them
   and they give their number.
 - **Met:** they remember the player and greet them again. Quests are open,
   so the player can help them and build the friendship.
@@ -139,9 +140,9 @@ go sightseeing; its quest is Walk with me, from the Route 2 entrance to the
 Vermilion exit. Any Kanto trainer or non-aloof traveller can be placed
 there; Brock and Giovanni fit it best.
 
-1. With one badge, the player finds Giovanni there. The player has a
-   reputation with him (a Kanto badge) but hasn't beaten him, so he greets
-   them as someone he has heard of and sends the player to his Gym.
+1. With one badge, the player finds Giovanni there. The player's fame
+   hasn't reached him yet, and they haven't beaten him, so he introduces
+   himself and sends the player to his Gym.
 2. With three badges, the order has shifted and Brock takes the cave. The
    player has beaten him at Pewter, so he is a friend. He greets them,
    passes on gossip about where Misty is, and asks them to walk the tunnel

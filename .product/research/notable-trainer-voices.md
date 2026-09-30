@@ -22,7 +22,7 @@ Close.
 | `AGAIN` | greets a player they have met before but are not friends with yet |
 | `CLOSE` | a warmer greeting for a close friend |
 | `MEET` | introducing themselves the first time (includes their name) |
-| `HEARD` | a first meeting, but they know the player by reputation; always contains `{PLAYER}` |
+| `HEARD` | a first meeting, but the player's fame has reached them (see the haunts spec); always contains `{PLAYER}` |
 | `NOT_YET` | first fight still ahead: "beat me properly first". Gym Leaders may mention their GYM; Elite Four and Champions don't |
 | `NEWS` | lead-in before a gossip line |
 | `ASK` | attention-getter before whatever the haunt proposes: no movement, favour, request content or implied destination or activity |
@@ -86,7 +86,7 @@ needs help or is asking a favour, so every trainer can voice every quest.
   walks with the player. `NO`, `NOT_READY` and `PRAISE` likewise assume no
   specific activity, movement or place. Their mood and the trainer's own
   hooks (cooking, Water types, war stories) are fine.
-- **Greetings by friendship.** `HEARD` knows the player only by reputation,
+- **Greetings by friendship.** `HEARD` knows the player only by fame,
   so it makes no claim about what they did and always holds `{PLAYER}`.
   `AGAIN` is polite and still getting acquainted; `CLOSE` is the warmest
   greeting. All three follow the haunt-safe rules above and assume no

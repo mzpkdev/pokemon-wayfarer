@@ -240,6 +240,9 @@ changes yours.
   trainer has for the player. It only goes up, through a few bounded events:
   a first talk, a win, a finished haunt quest
   ([friendship](../specs/notable-trainers.md#friendship)).
+- **Fame:** whether a stranger has heard of you: your TR is 80 or more, or
+  within 10 of theirs, or you hold a league title or are a Master
+  ([notable haunts](../specs/notable-haunts.md#relationship-beat)).
 - **Friendship stage:** Stranger, Met, Friend, or Close, read from the
   friendship score against fixed thresholds. Other systems read only the
   stage.
