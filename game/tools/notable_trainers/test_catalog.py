@@ -20,6 +20,40 @@ class CatalogValidationTests(unittest.TestCase):
     def test_current_catalog(self):
         generate.validate(self.catalog)
 
+    def without_natures(self):
+        catalog = copy.deepcopy(self.catalog)
+        for trainer in catalog["trainers"]:
+            for slot in trainer["roster"]:
+                slot["nature"] = None
+        return catalog
+
+    def test_authored_nature_reaches_generated_roster(self):
+        catalog = self.without_natures()
+        slot = catalog["trainers"][0]["roster"][0]
+        for nature in ("Adamant", "Hardy"):
+            with self.subTest(nature=nature):
+                slot["nature"] = nature
+                generate.validate(catalog)
+                _, table, _ = generate.generate(catalog)
+                self.assertIn(f".nature = NATURE_{nature.upper()}", table)
+
+    def test_unset_nature_preserves_constructor_default(self):
+        catalog = self.without_natures()
+        slot = catalog["trainers"][0]["roster"][0]
+        slot["nature"] = None
+        expected = generate.generate(catalog)
+        del slot["nature"]
+        generate.validate(catalog)
+        self.assertEqual(generate.generate(catalog), expected)
+        self.assertNotIn(".nature =", expected[1])
+
+    def test_invalid_nature_is_rejected(self):
+        for nature in ("Unknown", "Random", "May Synchronize", "", 0, True):
+            with self.subTest(nature=nature), self.assertRaisesRegex(ValueError, "unknown nature"):
+                catalog = copy.deepcopy(self.catalog)
+                catalog["trainers"][0]["roster"][0]["nature"] = nature
+                generate.validate(catalog)
+
     def test_runtime_pool_capacity(self):
         pool = [{"move": "Bind"}] * 32
         generate.validate(self.with_pool(pool))

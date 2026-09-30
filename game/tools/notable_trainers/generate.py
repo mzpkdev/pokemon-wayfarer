@@ -80,6 +80,9 @@ def validate(data: dict) -> None:
         "MOVE_": known_symbols("include/constants/moves.h", "MOVE_"),
         "ITEM_": known_symbols("include/constants/items.h", "ITEM_"),
         "ABILITY_": known_symbols("include/constants/abilities.h", "ABILITY_"),
+        # TrainerMon requires a concrete nature, not wild-encounter sentinels.
+        "NATURE_": set(re.findall(r"^#define (NATURE_[A-Z0-9_]+)\s+\d+\b",
+                                  (ROOT / "include/constants/pokemon.h").read_text(), re.M)),
         "OBJ_EVENT_GFX_": known_symbols("include/constants/event_objects.h", "OBJ_EVENT_GFX_"),
     }
     opponent_headers = list((ROOT / "include/constants").glob("opponents*.h"))
@@ -116,6 +119,10 @@ def validate(data: dict) -> None:
                 value = slot.get(field)
                 if value and symbol(prefix, value) not in known[prefix]:
                     raise ValueError(f"{name}: unknown {field} {value}")
+            nature = slot.get("nature")
+            if nature is not None and (not isinstance(nature, str)
+                                       or symbol("NATURE_", nature) not in known["NATURE_"]):
+                raise ValueError(f"{name}: unknown nature {nature}")
         if not 1 <= len(trainer["movePool"]) <= pool_capacity:
             raise ValueError(f"{name}: move pool must contain 1..{pool_capacity} entries")
         for entry in trainer["movePool"]:
@@ -174,6 +181,8 @@ def generate(data: dict) -> tuple[str, str, str]:
                 fields.append(f".heldItem = {symbol('ITEM_', slot['item'])}")
             if slot.get("ability"):
                 fields.append(f".ability = {symbol('ABILITY_', slot['ability'])}")
+            if slot.get("nature") is not None:
+                fields.append(f".nature = {symbol('NATURE_', slot['nature'])}")
             lines.append("            {" + ", ".join(fields) + "},")
         lines += ["        },", "        .levelOffsets = {" + ", ".join(str(s["levelOffset"]) for s in t["roster"]) + "},", f"        .aceMask = {sum((1 << i) for i, s in enumerate(t['roster']) if s['isAce'])},", f"        .movePool = {key},", f"        .movePoolCount = ARRAY_COUNT({key}),", "    },"]
     lines += ["};", "", "struct NotableEncounterAlias", "{", "    u16 trainerId;", "    u8 characterId;", "};", "", "static const struct NotableEncounterAlias sNotableEncounterAliases[] =", "{"]
