@@ -76,10 +76,10 @@ Other unmerged task branches remain outside this investigation.
 ## What the Wayfarer PoC established
 
 [Draft PR #144][wayfarer-poc-pr] records the disposable `multiplayer-poc` task.
-The [completed follow-up report][wayfarer-poc-followup], [ROM code][wayfarer-poc-code],
+The [session-flow report][wayfarer-poc-session], [earlier follow-up report][wayfarer-poc-followup], [ROM code][wayfarer-poc-code],
 [test runner and input scripts][wayfarer-poc-runner], and
 [retained evidence][wayfarer-poc-evidence] are pinned to commit
-`eff36caeee3019af524d68a598e19b2280ae9d70`, so the findings remain traceable
+`f344b6d246d3b3bd12e56262c6e5d21c0980c775`, so the findings remain traceable
 if the PR is later closed. The [first presence report][wayfarer-poc-report]
 records the earlier milestone; the follow-up corrects its door-rendering
 interpretation. The experiment is disabled by default with
@@ -97,10 +97,11 @@ without requiring an emulator script in the player's multiplayer protocol.
 | Experiment | Observed result | Remaining limit |
 | --- | --- | --- |
 | Presence and exploration | Players moved independently, used the Bag, took different maps, and rejoined from one side. The longer linked, idle, and compiled-out door controls showed a visible interior. Earlier black screenshots caught transition fades; no rendering patch was needed. | Only named maps and routes were exercised. Crowded maps, smooth remote animation, appearance, latency, and long sessions need tests. |
-| Solo encounter | One player completed a normal wild battle and returned to the field while the peer kept moving. A one-per-16-update presence rate outside ordinary field callbacks kept receive queues at 2 and 3 in that run. | Other battle types and menus may have different timing or resources. |
+| Solo encounters and map overlap | Both players completed separate wild fights with distinct original Pokémon, dealt and received damage, and returned to exploration while staying connected. Repeated house and Pokémon Center journeys also passed while the peer used the Bag. | Named routes and encounters only; other battle types, crowded scenes, and long sessions may expose different timing or resources. |
 | Two-human co-op | Both players consented, selected different moves, won against NPCs, restored their distinct original parties, and saved one Potion each. The release ROM also passed without E2E hooks. | Fixed level-25 rental parties and one encounter are test fixtures, not campaign balancing, capture, or story credit. |
 | Interruption and persistence | Cable removal during partner preview or the action menu returned both players to local play with original parties and no reward. Sampled partial reward writes loaded the older save generation after a damaged-save warning; successful writes retained one reward. Replay suppressed a duplicate for an already-claimed player. Full-bag rewards persisted as pending and were claimed after reload, an ordinary Bag toss, and retry. | Sampled emulator cuts do not cover all flash timings or physical power loss. The two cartridges do not commit atomically. The flash driver's reported-write-error path remains source-reviewed only. |
-| Ordinary saving while exploring | START → SAVE → YES completed a coherent local save, but the active presence session failed. Both games returned to local play and later reconnected manually. | Keeping presence connected across a full ordinary save needs an explicit transition or tested pause. |
+| Ordinary saving while exploring | Saving on player 0, player 1, and both simultaneously closed the native link, wrote coherent local saves, and automatically reconnected. Cancelling before confirmation kept the original connection. Cable removal during a save still allowed a valid local write and bounded recovery. | Presence pauses during writing. Reconnection needs both players to become available within a bounded window; prolonged absence needs Connect again. |
+| Player-facing session flow | START → LINK connects and leaves, shows status, and handles explicit invite/accept/decline/cancel. The release-ROM co-op journey automatically rejoined after party restoration and reward saves. Mixed release/E2E ROMs were rejected before presence. | Fixed encounter and two players only. Matching ROM fingerprints check compatibility, not identity or trust. |
 | Frontends and hardware | Headless mGBA 0.10.5 serial runs passed. Ordinary mGBA Qt 0.10.2 and 0.10.5 booted and loaded saves; native multiplayer windows did not establish two running games in bounded probes. | GUI link compatibility is unresolved. Physical GBAs, cable timing, RFU, internet, and cross-emulator sessions are untested. |
 
 The [solo door record](native-link-solo-control.md) remains as historical evidence
@@ -109,25 +110,30 @@ the fade, including a compiled-out control, so the earlier claim of an unresolve
 rendering fault is superseded. The [follow-up report][wayfarer-poc-followup]
 contains the screenshots and traces.
 
-The save result needs a precise reading. A full ordinary in-game save blocked
-player 0's normal callbacks for about 282 emulated frames (about 4.7 seconds).
-Its receive queue reached 50 and the active link failed while player 1 continued
-moving. The local flash save succeeded with a coherent, checksum-valid
-14-sector generation; the players could reconnect afterward. This is a current
-PoC session-lifecycle limit, not evidence that saving corrupts progress or that
-GBA links inherently cannot support saving. A production flow could end the
-session before saving and reconnect, or implement and test a coordinated pause.
-Neither behavior is implemented for ordinary saves in this PoC. The co-op reward
-path deliberately closes the cable after agreeing the result and before its
-automatic full save; shared presence likewise requires reconnecting afterward.
+The earlier full-save experiment blocked normal callbacks for about 282 emulated
+frames, filled a receive queue, and dropped presence while the local save itself
+succeeded. The [session-flow batch][wayfarer-poc-session] addresses that lifecycle
+fault: save confirmation requests a coordinated native close, the write waits
+until the transport is closed, and settled field callbacks reconnect afterward.
+Either player and simultaneous saves passed. Cancelling before the write leaves
+the session alone. Cable-loss tests still saved locally and exhausted a bounded
+retry window without trapping movement. This is a deliberate interruption of
+presence, not uninterrupted communication during flash programming.
+
+The same session intent survives a completed co-op battle. Both original parties
+are restored and each local reward save finishes before reconnecting. A release
+run through ordinary menus passed this full journey. Invitations also passed
+from either player, simultaneously, and while the recipient stayed in Bag before
+returning and explicitly accepting. Holding A as an invitation appeared did not
+accept it accidentally. These are named tested flows, not general story co-op.
 
 ### Costs and integration lessons
 
 | Linked allocation | Default release | PoC release | Difference |
 | --- | ---: | ---: | ---: |
-| Used ROM bytes | 31,731,080 | 31,737,968 | +6,888 |
-| Static EWRAM bytes | 249,413 | 252,909 | +3,496 |
-| Static IWRAM bytes | 25,612 | 25,608 | −4 |
+| Used ROM bytes | 31,731,080 | 31,745,652 | +14,572 |
+| Static EWRAM bytes | 249,413 | 253,073 | +3,660 |
+| Static IWRAM bytes | 25,612 | 25,612 | 0 |
 
 Both releases passed the existing 512 KiB ROM-reserve check. These are linked
 section sizes for the complete experimental release build, including encounter
@@ -137,9 +143,12 @@ or bandwidth measurements. The first presence-only milestone was smaller
 
 The PoC reuses Emerald's `LINKCMD_SEND_HELD_KEYS` envelope for map, tile position,
 facing, and in-overworld snapshots, including a heartbeat while stationary.
-It adds a link type and versioned protocol, but no ROM/content hash check;
-matching builds are currently a tester requirement. gpSP's Pokémon-specific
-transport and physical hardware still need separate tests.
+Protocol version 3 now checks a 128-bit fingerprint derived from SHA-256 of the
+complete emitted ROM, with its own fingerprint slot excluded. Both peers must
+verify a match before presence becomes active. The unstamped ELF placeholder
+fails closed in source; run the stamped `.gba`. The disabled release remains
+byte-for-byte identical to the previous baseline and passes boot. gpSP's
+Pokémon-specific transport and physical hardware still need separate tests.
 
 The integration work exposed assumptions that source-only feasibility research
 could not settle:
@@ -154,11 +163,11 @@ could not settle:
 - Correct received coordinates initially rendered on the wrong tiles. Applying
   normal camera offsets fixed the peer placement; packet assertions need visual
   checks alongside them.
-- Center map loading contains an implicit link close. The PoC guards that path,
-  but the Center journey remains untested.
-- A full ordinary save suspends link processing long enough to overflow the
-  receive queue in this implementation. A save transition belongs in the
-  session design, even when each personal flash save remains valid.
+- Center map loading contains an implicit link close. The PoC guards that path;
+  three repeated Cherrygrove Center journeys now passed with a peer outside.
+- A synchronous flash write can starve link processing. Coordinating a native
+  close before writing and retaining intent to reconnect solved the sampled
+  ordinary-save cases without changing ownership of personal progress.
 - Existing Tower multi-battle controllers can run two human allies against NPCs,
   but party preview, link handoff, battle-end cleanup, and independent reward
   persistence require explicit integration.
@@ -178,8 +187,9 @@ proposal later in this document remains a product proposal. It needs decisions
 on eligibility, difficulty, reward identities, and session rules before
 production implementation.
 
-Resolve ordinary GUI link setup, test real GBA cable hardware, and make saving
-an explicit session transition. Then test longer and more varied journeys,
+The user deferred platform validation for this session-flow batch. Ordinary GUI
+link setup and real GBA cable hardware still need proof. Saving now has an explicit
+transition in the PoC; extend its evidence to longer and more varied journeys,
 including crowded maps, other menus and battles, and uneven story progress.
 Internet, RFU, four players, and cross-emulator connections remain separate
 compatibility experiments.
@@ -659,9 +669,8 @@ participation, cutscenes, personal prerequisites, and rewards exist.
 
 For synchronized battles, propose disallowing unilateral rewind/save-state load
 and unsupported fast-forward combinations. These actions can move one participant
-to a different history. Ordinary in-game saves also need a defined session
-transition: the current PoC drops an active presence link during a unilateral
-save, although the local save succeeds and manual reconnect works. A ROM cannot
+to a different history. Ordinary in-game saves now use a tested close/write/rejoin
+flow in the PoC; supported platforms still need that complete journey tested. A ROM cannot
 reliably police every emulator feature, so unsupported actions need clear recovery
 behavior and documentation. Independent exploration should not require permanent
 frame-by-frame agreement on unrelated RNG or local menus.
@@ -671,9 +680,9 @@ frame-by-frame agreement on unrelated RNG or local menus.
 | Experiment | Evidence needed to proceed |
 | --- | --- |
 | Existing link baseline | Headless mGBA native serial linking passed. Establish ordinary cable play on two physical GBAs and two running games in supported emulator GUI link modes; record versions, setup, and failures. |
-| Presence follow-up | Movement, Bag use, the controlled house journey, one-sided reconnect, and one complete solo battle passed. Test other maps, menus, crowded scenes, animation, resource use, frame time, and visible delay. |
+| Presence follow-up | Movement, Bag use, repeated house and Center journeys, one-sided reconnect, and simultaneous independent wild fights passed. Test other maps, menus, crowded scenes, animation, resource use, frame time, and visible delay. |
 | Network disruption | Emulated cable removal during exploration, partner preview, and battle action recovered in named tests. Still test delayed/lost traffic, other encounter phases, stale-message rejection, save-state loading, and fast-forward. |
-| Saving while exploring | An ordinary unilateral save succeeded locally but dropped the active link after callback suspension and receive-queue saturation. Define an explicit end-and-reconnect flow or prove a coordinated pause across both supported devices. |
+| Saving while exploring | Coordinated close/write/rejoin passed for either player and simultaneous ordinary saves; cancellation kept the link. Cable removal still permitted a coherent local save and bounded recovery. Repeat on supported GUI emulators and physical devices and sample more transition timings. |
 | Divergent saves | Different story flags and ratings cannot silently change the other player's save or expose unusable traversal. |
 | One co-op encounter | A fixed rental encounter passed with distinct human moves, agreed win, exact party restoration, and separate rewards. Replay, pending inventory, and sampled partial-save recovery passed. Extend to real party ownership, varied outcomes, eligibility, and gameplay difficulty. |
 | Device matrix | Repeat the full journey on two physical GBAs, one local emulator setup, and each promised remote/phone setup. Optional adapter-to-emulator play is a separate target. |
@@ -734,7 +743,8 @@ The next investigation should resolve these gaps:
 1. Test ordinary emulator GUI link setup and two physical GBAs. The headless
    native-link runner passed, but Qt's second native multiplayer window stayed
    white in bounded 0.10.2 and 0.10.5 probes. The door-rendering question is
-   resolved as a transition fade; repeat routes beyond that one house.
+   resolved as a transition fade; repeated house and Center routes now pass in
+   the headless runner. Platform work was deferred, not waived.
 2. Specify conflicting map states: doors, collision, NPC visibility, puzzles,
    and cutscenes. Personal progress alone does not define a coherent shared
    scene. Explicit shared encounters may need their own temporary scene state.
@@ -744,8 +754,10 @@ The next investigation should resolve these gaps:
 4. Define mixed-strength parties, cooperative difficulty, fainting, item use,
    capture ownership, and incompatible challenge options. Connection must not
    permanently raise another player's Trainer Rating or derived progression.
-5. Design ordinary-save session transitions and recovery when only one
-   cartridge records an outcome. The PoC sampled partial reward writes,
+5. Broaden the tested ordinary-save transition and recovery when only one
+   cartridge records an outcome. Close/write/rejoin now passes for either or
+   both players, but device timing and prolonged peer absence need more coverage.
+   The PoC sampled partial reward writes,
    asymmetric replay, and a pending full-bag reward; it did not exhaust every
    write timing, real flash power failure, or the save driver's error return.
 6. Extend the measured static ROM/RAM baseline with runtime resource, crowded-map,
@@ -753,7 +765,8 @@ The next investigation should resolve these gaps:
    before importing code; the PoC did not import another hack's co-op implementation.
 
 The separate [PoC draft PR #144][wayfarer-poc-pr] now supplies presence, a fixed
-two-human encounter, and local reward/recovery observations. Keep its code
+two-human encounter, menu-based session flow, save/reconnection, and local
+reward/recovery observations. Keep its code
 separate from production feature approval. A draft PR is an experiment record,
 not a merge recommendation; physical-hardware and ordinary emulator-link
 validation remain necessary.
@@ -838,8 +851,10 @@ or save model.
 [local-runtime]: ../specs/wayfarer-runtime-foundation.md
 
 [wayfarer-poc-pr]: https://github.com/mzpkdev/pokemon-wayfarer/pull/144
-[wayfarer-poc-report]: https://github.com/mzpkdev/pokemon-wayfarer/blob/eff36caeee3019af524d68a598e19b2280ae9d70/.product/research/native-link-multiplayer-poc.md
-[wayfarer-poc-followup]: https://github.com/mzpkdev/pokemon-wayfarer/blob/eff36caeee3019af524d68a598e19b2280ae9d70/.product/research/native-link-multiplayer-followup.md
-[wayfarer-poc-code]: https://github.com/mzpkdev/pokemon-wayfarer/blob/eff36caeee3019af524d68a598e19b2280ae9d70/game/src/multiplayer_poc.c
-[wayfarer-poc-runner]: https://github.com/mzpkdev/pokemon-wayfarer/tree/eff36caeee3019af524d68a598e19b2280ae9d70/game/tools/multiplayer-poc
-[wayfarer-poc-evidence]: https://github.com/mzpkdev/pokemon-wayfarer/tree/eff36caeee3019af524d68a598e19b2280ae9d70/.product/research/native-link-poc-followup
+[wayfarer-poc-report]: https://github.com/mzpkdev/pokemon-wayfarer/blob/f344b6d246d3b3bd12e56262c6e5d21c0980c775/.product/research/native-link-multiplayer-poc.md
+[wayfarer-poc-followup]: https://github.com/mzpkdev/pokemon-wayfarer/blob/f344b6d246d3b3bd12e56262c6e5d21c0980c775/.product/research/native-link-multiplayer-followup.md
+[wayfarer-poc-code]: https://github.com/mzpkdev/pokemon-wayfarer/blob/f344b6d246d3b3bd12e56262c6e5d21c0980c775/game/src/multiplayer_poc.c
+[wayfarer-poc-runner]: https://github.com/mzpkdev/pokemon-wayfarer/tree/f344b6d246d3b3bd12e56262c6e5d21c0980c775/game/tools/multiplayer-poc
+[wayfarer-poc-evidence]: https://github.com/mzpkdev/pokemon-wayfarer/tree/f344b6d246d3b3bd12e56262c6e5d21c0980c775/.product/research/native-link-poc-session
+
+[wayfarer-poc-session]: https://github.com/mzpkdev/pokemon-wayfarer/blob/f344b6d246d3b3bd12e56262c6e5d21c0980c775/.product/research/native-link-multiplayer-session-flow.md
