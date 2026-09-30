@@ -2,6 +2,7 @@
 #define GUARD_SAVE_H
 
 #include "main.h"
+#include "config/viridian_walker_poc.h"
 
 // Each 4 KiB flash sector contains 3968 bytes of actual data followed by 116 bytes of SaveBlock3 and then 12 bytes of footer.
 #define SECTOR_DATA_SIZE 3968
@@ -17,7 +18,11 @@
 #define SPECIAL_SECTOR_SENTINEL 0xB39D
 
 #if IS_WAYFARER
+#if VIRIDIAN_WALKER_POC
+#define SAVE_VERSION       11
+#else
 #define SAVE_VERSION       10
+#endif
 #else
 #define SAVE_VERSION       5
 #endif

@@ -59,6 +59,7 @@
 #include "wayfarer_origin.h"
 #include "wayfarer_appearance.h"
 #include "viridian_walker_poc.h"
+#include "viridian_walker_world.h"
 #if IS_WAYFARER && VIRIDIAN_WALKER_POC
 #include "constants/heal_locations.h"
 #endif
@@ -351,6 +352,7 @@ void NewGameInitData(void)
 #if VIRIDIAN_WALKER_POC
     // The POC keeps normal new-game initialization but starts on Viridian's
     // Pokémon Center sidewalk instead of running an origin opening.
+    ViridianWorld_InitNewGame();
     gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation = HEAL_LOCATION_VIRIDIAN_CITY_HNS;
     SetLastHealLocationWarp(HEAL_LOCATION_VIRIDIAN_CITY_HNS);
     SetWarpDestination(MAP_GROUP(MAP_VIRIDIAN_CITY_HNS), MAP_NUM(MAP_VIRIDIAN_CITY_HNS),

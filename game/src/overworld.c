@@ -1,5 +1,6 @@
 #include "global.h"
 #include "viridian_walker_poc.h"
+#include "viridian_walker_world.h"
 #include "trainer_only_encounter.h"
 #include "league_circuit.h"
 #include "overworld.h"
@@ -994,6 +995,9 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
         AbortMapLayoutLoad(layoutError, mapGroup, mapNum, gMapHeader.mapLayoutId);
         return;
     }
+#if IS_WAYFARER && VIRIDIAN_WALKER_POC
+    ViridianWorld_OnMapLoad();
+#endif
     reloadPrimaryTileset = previousLayout->primaryTileset != gMapHeader.mapLayout->primaryTileset
                         || GetNumTilesInPrimary(previousLayout) != GetNumTilesInPrimary(gMapHeader.mapLayout)
                         || GetNumPalsInPrimary(previousLayout) != GetNumPalsInPrimary(gMapHeader.mapLayout);
@@ -1075,6 +1079,9 @@ static bool32 LoadMapFromWarp(bool32 a1)
                            gSaveBlock1Ptr->location.mapNum, gMapHeader.mapLayoutId);
         return FALSE;
     }
+#if IS_WAYFARER && VIRIDIAN_WALKER_POC
+    ViridianWorld_OnMapLoad();
+#endif
 
     if (a1 != TRUE && isIndoors)
     {
@@ -2353,6 +2360,9 @@ void CB2_ContinueSavedGame(void)
         UnlockPlayerFieldControls();
         ResetInitialPlayerAvatarState();
         gFieldCallback = FieldCB_FadeTryShowMapPopup;
+#if IS_WAYFARER && VIRIDIAN_WALKER_POC
+        ViridianWorld_OnContinue(TRUE);
+#endif
         SetMainCallback2(CB2_LoadMap);
         return;
     }
@@ -2393,6 +2403,9 @@ void CB2_ContinueSavedGame(void)
     InitMatchCallCounters();
     if (UseContinueGameWarp() == TRUE)
     {
+#if IS_WAYFARER && VIRIDIAN_WALKER_POC
+        ViridianWorld_OnContinue(TRUE);
+#endif
         ClearContinueGameWarpStatus();
         SetWarpDestinationToContinueGameWarp();
         WarpIntoMap();
@@ -2401,6 +2414,9 @@ void CB2_ContinueSavedGame(void)
     }
     else
     {
+#if IS_WAYFARER && VIRIDIAN_WALKER_POC
+        ViridianWorld_OnContinue(FALSE);
+#endif
         TryPutTodaysRivalTrainerOnAir();
         gFieldCallback = FieldCB_FadeTryShowMapPopup;
         SetMainCallback1(CB1_Overworld);

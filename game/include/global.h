@@ -406,6 +406,8 @@ struct WayfarerPalletOpeningState
 };
 #endif
 
+#include "viridian_walker_world.h"
+
 struct SaveBlock3
 {
     struct SiiRtcInfo fakeRTC;
@@ -430,6 +432,9 @@ struct SaveBlock3
     struct WayfarerCoastPersistentState wayfarerCoast;
     struct WayfarerPalletOpeningState wayfarerPalletOpening;
     u16 wayfarerTowerTrainerDefeats;
+#if VIRIDIAN_WALKER_POC
+    struct ViridianWalkerWorldState viridianWalkerWorld;
+#endif
 #endif
 }; /* max size 1624 bytes */
 
