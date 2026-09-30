@@ -426,8 +426,8 @@ bit** for this placement.
   boxes, the talk is the greeting, `NOT_READY`, and `BYE`, and the storage
   screen doesn't open.
 - **Expiry.** The quest stays open for the whole placement. The asked bit
-  clears with the claim bit when the reward is given and when the haunt's
-  placement changes ([fill](#fill)).
+  clears when the reward is given, as the claim bit is set, and when the
+  haunt's placement changes, with the claim bit ([fill](#fill)).
 
 ### Quiz
 
