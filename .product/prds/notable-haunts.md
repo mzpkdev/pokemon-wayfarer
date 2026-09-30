@@ -3,15 +3,15 @@
 Implemented: No Specification: [Notable haunts
 specification](../specs/notable-haunts.md) Design status: v0 draft for review:
 notable trainers spend their time between Gyms and leagues at **haunts**, one
-shared pool of overworld spots that names no trainer. Placement fills each
-haunt with the best-fitting free trainer, recomputed whenever world progress
-changes, with no seeds. The player meets a trainer by their **friendship**: a
-stranger, then met, a friend, and close; quests open once they have met, and
-friends offer gossip and a rematch. A trainer gives the haunt's one **quest**.
-Haunt lines describe only the place and activity, and each trainer's **voice
-bits** supply the personality. v0 authors the Kanto list; weights, gates, and
-reward pools are placeholders. Terms follow the
-[glossary](player-trainer-rating.md#glossary).
+shared pool of overworld spots that names no trainer. Placement fills each haunt
+with the best-fitting free trainer, recomputed whenever world progress changes,
+with no seeds. A haunt offers only its own **quest**: no battle offers, no
+rematches, and no menu. Every talk greets the player by the trainer's
+**friendship** (a stranger, then met, a friend, and close), proposes the quest
+while it is open, and says goodbye. Haunt lines describe only the place and
+activity, and each trainer's **voice bits** supply the personality. v0 authors
+the Kanto list; weights, gates, and reward pools are placeholders. Terms follow
+the [glossary](player-trainer-rating.md#glossary).
 
 ## Intent
 
@@ -21,8 +21,9 @@ player should bump into them out in the overworld: Brock resting in a cave,
 Lt. Surge watching the harbour, a Hoenn traveller passing through Kanto.
 Meetings should emerge rather than be scripted one by one: a small pool of
 places, each able to host many trainers, filled by who fits best at this
-point in the journey. Every meeting should sound like that trainer, and a
-friend should always have something to do with the player.
+point in the journey. Every meeting should sound like that trainer, and
+every placement should give the player one thing to do with them: the
+haunt's quest.
 
 ## Design
 
@@ -72,30 +73,33 @@ are in an accepted league lineup, or while they are the player's
 
 ### Meeting a trainer
 
-How a meeting goes depends on the trainer's **friendship** with the player
-([Notable trainers](notable-trainers.md#friendship)), which only grows:
+A haunt offers only its quest. There is no battle offer, rematch, or menu there,
+and every talk goes the same way:
 
-- **Stranger:** the player has never talked to them. They introduce
-  themselves, or greet the player as someone they have heard of when the
-  player's fame has reached them (the player is famous everywhere at TR 80,
-  or close to their own TR, or holds a league title or is a Master), and
-  offer an optional battle; beat them
-  and they give their number.
-- **Met:** they remember the player and greet them again. Quests are open,
-  so the player can help them and build the friendship.
-- **Friend:** they greet the player warmly, share a piece of gossip, offer a
-  rematch at their current strength, and give the haunt's quest. They have
-  given their number.
-- **Close:** the same, with a warmer greeting.
+1. **A greeting** by the trainer's **friendship** with the player
+   ([Notable trainers](notable-trainers.md#friendship)), which only grows:
+   - **Stranger:** the player has never talked to them. They introduce
+     themselves, or greet the player as someone they have heard of when the
+     player's fame has reached them (the player is famous everywhere at TR
+     80, or close to their own TR, or holds a league title or is a Master).
+   - **Met:** they remember the player and greet them again.
+   - **Friend:** they greet the player warmly. They have given their number.
+   - **Close:** a warmer greeting still.
+2. **The quest**, proposed while it is still open during this placement; the
+   player says yes or no, and no costs nothing: the next talk asks again.
+   Once the quest is done, the trainer shares a quirk instead.
+3. **A goodbye.**
 
-A trainer whose first fight belongs to their Gym or league won't battle the
-player until that fight is won, at any stage. The player can revisit a haunt
-as often as they like while the trainer is placed there.
+The first talk makes the trainer Met, so a first meeting both introduces them
+and proposes the quest. Friendship grows through that first talk, through
+finished quests, and through battles won against them elsewhere (Gym, story,
+league); haunts offer none of their own. The player can revisit a haunt as often
+as they like while the trainer is placed there.
 
 ### Quests
 
-Each haunt has one quest, which a trainer gives once they have met the
-player:
+Each haunt has one quest, which the trainer proposes at every talk until
+it is done:
 
 | Quest | What happens |
 | --- | --- |
@@ -117,7 +121,7 @@ from the trainer's move pool that it can learn. Each entry opens once
 world progress reaches its gate, so modest gifts come first and strong held
 items come late. Every quest the player finishes with a trainer, at any
 haunt, pays their next entry; if it isn't open yet, or the pool is used up,
-the trainer pays prize money instead, as much as a rematch win. A trainer
+the trainer pays prize money instead, as much as a win over them. A trainer
 gives one reward while they are placed at a haunt; when someone else takes
 the haunt, its quest can be done again. The starting pools are in
 [notable trainer reward pools](../research/notable-trainer-rewards.md).
@@ -126,12 +130,12 @@ the haunt, its quest can be done again. The starting pools are in
 
 Haunt lines describe only the place and the activity. Personality comes from
 each trainer's fifteen **voice bits**, short reusable lines for greeting,
-asking, thanking, and so on
-([voice bits](../research/notable-trainer-voices.md)). Lines can mention the
-player, the reward item, the trainer's ace, their **buddy**, and a piece of
-gossip. A trainer's buddy is their companion POKéMON, one slot of their
-roster, shown at its current stage: Brock's buddy is Onix early in the
-journey and Steelix later.
+asking, thanking, and so on ([voice
+bits](../research/notable-trainer-voices.md)). Lines can mention the player, the
+reward item, the trainer's ace, and their **buddy**. Haunts carry no gossip in
+v0. A trainer's buddy is their companion POKéMON, one slot of their roster,
+shown at its current stage: Brock's buddy is Onix early in the journey and
+Steelix later.
 
 ## Sample playthrough
 
@@ -140,28 +144,36 @@ go sightseeing; its quest is Walk with me, from the Route 2 entrance to the
 Vermilion exit. Any Kanto trainer or non-aloof traveller can be placed
 there; Brock and Giovanni fit it best.
 
-1. With one badge, the player finds Giovanni there. The player's fame
-   hasn't reached him yet, and they haven't beaten him, so he introduces
-   himself and sends the player to his Gym.
-2. With three badges, the order has shifted and Brock takes the cave. The
-   player has beaten him at Pewter, so he is a friend. He greets them,
-   passes on gossip about where Misty is, and asks them to walk the tunnel
-   with him. On the way, pairs of wild Diglett are tag battles with Brock
-   at the player's side. At the Vermilion exit he thanks them with Pewter
-   Crunchies, the first entry of his reward pool.
-3. The player comes back: Brock is still there, but his reward is claimed,
-   so he chats and offers a rematch.
-4. After the next badge, Brock and Giovanni are both placed elsewhere
-   before the cave's turn, and Will, a Johto traveller the player has never
-   met, turns up. He introduces himself and offers a battle; the player
-   wins and gets his number. Now he is a Friend, and the walk can be done
-   again with him, paying the first entry of Will's own pool. Brock's next
-   quest, wherever he turns up, will pay his second entry, a Hard Stone.
+1. With one badge, the player finds Giovanni there. They have never talked,
+   and the player's fame hasn't reached him, so he introduces himself, and in
+   the same talk proposes a walk through the tunnel. The player says no; it
+   costs nothing, and the next time Giovanni greets them as someone he has
+   met and asks again. This time they say yes.
+2. On the walk, pairs of wild Diglett are tag battles with Giovanni at the
+   player's side. Heading back towards Route 2 asks whether they are giving
+   up; saying yes ends the walk with no reward, and so does a whiteout.
+   Either way Giovanni is back at his spot and the walk can start again. At
+   the Vermilion exit he hands over a Nugget, the first entry of his reward
+   pool, and says goodbye.
+3. The player comes back: Giovanni is still there, but his reward is
+   claimed, so he greets them, remarks on his Meowth, and says goodbye.
+4. After a later badge the cast reshuffles and Misty takes the cave. The
+   player beat her at her Gym, so she is already a friend. The walk is open
+   again with her, and it pays the first entry of her own pool, Mystic
+   Water; after that, she greets the player, shares her quirk, and says
+   goodbye.
+5. Late in the game, Brock is close with the player after a Gym win and
+   several quests. At the cave he greets them warmly and proposes the walk,
+   which now pays a lesson from his pool, open once world progress reaches
+   40. His quirk now names Steelix, since his Onix has grown up with the
+   world. Giovanni's next quest, wherever he turns up, will pay his second
+   entry, Soft Sand.
 
 ## Boundaries
 
-In: the haunt pool and tags, placement, momentum, the relationship beat
-(friendship stages), the five quest types, quest
+In: the haunt pool and tags, placement, momentum, the talk flow (greetings
+by friendship stage, the quest proposal, and the quirk), the five quest
+types, quest
 rewards from each trainer's reward pool, the voice-bit writing rule,
 buddy and reward pool as trainer values, the Kanto haunt list,
 retiring the HNS cameos and the Dojo rematch hub, and the saved state for
@@ -179,28 +191,28 @@ become a friend.
 
 ## Balance
 
-Informational for now. Rematches pay prize money like any notable battle,
-and haunt battles give no TR. The Dojo rematches' Battle Points are gone.
-The placement weights, the elite gate (player TR 80), the momentum window,
-and the reward pools and their gates are placeholders to tune in
-playtesting. With only the Kanto
-list in v0, every traveller from Johto and Hoenn is placed in Kanto, and
-trainers from those regions who don't travel have no haunt yet.
+Informational for now. Haunts offer no battles of their own, so they give no TR,
+no Battle Points, and no prize money beyond a quest's fallback. The Dojo
+rematches and their Battle Points are gone. The placement weights, the elite
+gate (player TR 80), the momentum window, and the reward pools and their gates
+are placeholders to tune in playtesting. With only the Kanto list in v0, every
+traveller from Johto and Hoenn is placed in Kanto, and trainers from those
+regions who don't travel have no haunt yet.
 
 ## Presentation
 
 The placed trainer stands at the haunt's spot with their buddy beside them.
-Talking to them runs the meeting for their friendship stage; a trainer who has
-met the player offers a short menu of battle, quest, and chat, plus teaming up
-for the Masters once the player is a Master and they are a Friend. Dialogue is
-spliced from haunt lines and the trainer's voice bits.
+Talking to them runs straight through: a greeting for their friendship
+stage, the quest proposal with a yes or no (or a quirk once the quest is
+done), and a goodbye, with no menu. Dialogue is spliced from haunt lines and
+the trainer's voice bits.
 
 ## Interactions
 
-- **Phone numbers.** A win over a stranger at a haunt makes them a Friend
-  and gives their number ([Sevii Masters](sevii-masters.md#design)). A Friend
-  at a haunt can also be asked to be the Masters partner in person, with the
-  same effect as asking by phone.
+- **Phone numbers.** A trainer who becomes a Friend, through a win in any
+  battle elsewhere or through quests at haunts, gives their number
+  ([Sevii Masters](sevii-masters.md#design)). Asking them to be the Masters
+  partner happens by phone, never at a haunt.
 - **Leagues.** A trainer in an accepted league lineup leaves their haunt
   until the event ends.
 - **Existing cameos.** The HNS cameos, one-off meetings that send the player
@@ -208,6 +220,8 @@ spliced from haunt lines and the trainer's voice bits.
   by haunts. Today several Johto cameos never appear, because nothing
   reveals them, which also locks away those leaders' Dojo rematches and
   Jasmine's trade ([cameo bug](../specs/notable-haunts.md#cameos-and-the-dojo)).
+  Haunts host no rematches, so the Dojo's rematches have no replacement
+  until rematch spots come ([Later](#later)).
 
 ## Open risks
 
@@ -218,7 +232,7 @@ spliced from haunt lines and the trainer's voice bits.
 ## Specifications
 
 - [Notable haunts specification](../specs/notable-haunts.md): haunt tags,
-  trainer values, placement and momentum, the relationship beat, quests and
+  trainer values, placement and momentum, the talk flow, quests and
   rewards, dialogue assembly, the Kanto list, engine notes, saved state,
   load validation, and acceptance.
 
@@ -230,6 +244,8 @@ spliced from haunt lines and the trainer's voice bits.
   trainer's roster.
 - Haunts behind access conditions, such as a key item or a story beat.
 - More ways to raise friendship: gifts, tag battles, trades.
+- Rematches at haunts or at dedicated rematch spots.
+- Gossip at haunts: a friend telling the player where another trainer is.
 - Haunt lists for Johto, Hoenn, and Sevii.
 - Explorer support: placements per world progress and the fit of each
   trainer.

@@ -25,8 +25,8 @@ placeholders.
 - **Order.** Each finished quest pays the next entry the player hasn't
   received, strictly in order. If that entry is still gated, or the pool is
   used up, the trainer pays the **fallback** instead and the counter stays.
-- **Fallback.** Prize money: exactly what a rematch win with that trainer
-  would pay right now ([prize money](../specs/notable-haunts.md#prize-money)).
+- **Fallback.** Prize money: exactly what a win over that trainer would pay
+  right now ([prize money](../specs/notable-haunts.md#prize-money)).
 
 ### Power bands
 

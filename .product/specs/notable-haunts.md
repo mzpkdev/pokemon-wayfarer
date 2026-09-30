@@ -9,11 +9,13 @@ world progress and a few saved facts, with no seeds: hard qualifiers
 (region or traveller, aloof only at remote elite haunts) pick candidates,
 a placeholder score (theme from aces, activity from play style and
 **momentum**, hometown) ranks them, and haunts fill
-one at a time in an order that rotates with world progress. The greeting
-follows the trainer's **friendship stage** (Stranger, Met, Friend, Close),
-quests open at Met, and friends give gossip and a rematch; a quest pays once
-per placement. The
-reward comes from the trainer's own **reward pool**, never from the quest
+one at a time in an order that rotates with world progress. A haunt offers
+only its own quest: no battle offers, no rematches, and no menu. Every
+talk runs a greeting by the trainer's **friendship stage** (Stranger, Met,
+Friend, Close), then the quest proposal while the quest is open or the
+trainer's quirk once it is done, then a farewell; a quest pays once per
+placement.
+The reward comes from the trainer's own **reward pool**, never from the quest
 type. Dialogue splices favour-free haunt lines with each trainer's
 **voice bits**. Weights, gates, momentum values, and reward pools are
 placeholders; balance is informational.
@@ -22,7 +24,7 @@ placeholders; balance is informational.
 
 Own, in `IS_WAYFARER`: the haunt catalog and its tags, the meaning of the
 **buddy** and **reward pool** trainer values, placement and
-momentum, the relationship beat, the five quest types, rewards and claims,
+momentum, the talk flow, the five quest types, rewards and claims,
 dialogue assembly, the Kanto haunt list, retiring the HNS cameos and the
 Saffron Dojo rematch room, the haunts' saved state and load validation,
 presentation, the balance report, and acceptance.
@@ -33,11 +35,13 @@ presentation, the balance report, and acceptance.
   the buddy and reward pool data in the catalog; this spec owns
   what they mean.
 - [Sevii Masters](sevii-masters.md) owns phone contacts (a trainer at Friend
-  or above), the partner choice, and the runtime partner slot.
+  or above), asking a partner by phone, the partner choice, and the runtime
+  partner slot.
 - [Leagues](leagues.md) owns invitations and the accepted event lineup.
 - [Trainer AI](trainer-ai.md) owns the AI flags of every battle here.
 - [Gym Leader scaling](gym-leader-scaling.md) owns battle construction for
-  every notable battle, including the ones at haunts.
+  every notable battle, including a walk's partner and One on one's lead
+  ace.
 - The voice bits themselves are content in
   [notable trainer voice bits](../research/notable-trainer-voices.md), and
   the v0 reward pools in
@@ -194,80 +198,68 @@ trainer, or empty), that haunt's claim bit is cleared
 ([rewards and claims](#rewards-and-claims)); then the new placement is
 saved.
 
-## Relationship beat
+## Talk flow
 
-Talking to the placed trainer runs the relationship beat, written once for
-all haunts. It reads the trainer's [friendship
-stage](notable-trainers.md#friendship) (Stranger, Met, Friend, or Close)
-when the talk starts, and never the score or the events behind it.
+A haunt offers only its own quest. There are no battle offers, no rematches, no
+team-up, and no menu at haunts. Talking to the placed trainer runs the talk
+flow, written once for all haunts. It reads the trainer's [friendship
+stage](notable-trainers.md#friendship) (Stranger, Met, Friend, or Close) when
+the talk starts, and never the score or the events behind it.
 
-**Greeting ladder.** The stage picks the greeting:
+Every talk runs three steps:
 
-| Stage | Greeting |
-| --- | --- |
-| Stranger | `MEET`, or `HEARD` when the player's **fame** reaches them. |
-| Met | `AGAIN`. |
-| Friend | `HELLO`. |
-| Close | `CLOSE`. |
+1. **Greeting**, picked by the stage:
+
+   | Stage | Greeting |
+   | --- | --- |
+   | Stranger | `MEET`, or `HEARD` when the player's **fame** reaches them. |
+   | Met | `AGAIN`. |
+   | Friend | `HELLO`. |
+   | Close | `CLOSE`. |
+
+2. **Proposal or quirk.** While the haunt's claim bit is clear (the quest is
+   still open during this placement), the [quest](#quests) proposal: `ASK`,
+   the haunt's proposal line, and [YES / NO]. `YES` gives the trainer's
+   `YES` and runs the quest as its section says; `NO` gives the trainer's
+   `NO`, costs nothing, and the next talk proposes again. Once the claim bit
+   is set (the quest was completed during this placement), the trainer's
+   `QUIRK` instead.
+3. **Farewell:** `BYE`. A talk that starts a walk ends at `YES` instead;
+   the walk's own `BYE` comes at the exit ([walk](#walk-with-me)).
+
+The first talk makes a Stranger Met (+1) at its start, after the greeting
+is picked, so a first meeting introduces the trainer (`MEET` or `HEARD`)
+**and** proposes the quest in the same talk. After the quest is completed
+during this placement, every talk is the greeting, `QUIRK`, and `BYE`, until
+the placement changes and the claim bit clears.
 
 The player's **fame** reaches a trainer when the player's TR is at least
 `min(80, their TR − 10)`, or the player reigns as champion at any
 [league](leagues.md) or is a [Master](sevii-masters.md#master). TR 80 is
 where every league knows the player
-([qualifying](leagues.md#qualifying)), so from there every stranger has
+([qualifying](leagues.md#qualification)), so from there every stranger has
 heard of them; below it, a trainer notices the player once the player's TR
 comes within 10 of their own, read at the moment of the meeting. Titles
 count because league wins give no TR. Fame needs no saved data and only
 changes a Stranger's greeting: `HEARD` is one line per trainer, with no
 levels, since it plays at most once per trainer.
 
-**Gym gate.** Separate from friendship: a trainer whose first fight belongs
-to their Gym, story, or league (their home region is the haunt's region) and
-whom the player has not yet beaten adds `NOT_YET` after the greeting and
-offers no battle, whatever the stage. A traveller away from home has no such
-gate. The gate lifts with the first win over them, in any battle.
+**Points.** A haunt adds [friendship](notable-trainers.md#friendship)
+through two events only: the first talk (+1) and a completed quest (+10).
+Repeat talks, declining, and quirks add nothing. Haunts offer no battles
+of their own, so no battle win happens here: One on one is a quest, and
+its win counts as the completed quest, not as a battle won.
 
-After the greeting and the gate line, the beat depends on the stage:
-
-- **Stranger:** unless the Gym gate holds, an offer to battle: `YES` and the
-  battle, or `NO`. A win: `PRAISE`, the number (the first win reaches Friend,
-  so they give it), and `BYE`. With the gate, `BYE` follows. A loss is an
-  ordinary trainer loss, and the player blacks out as after any trainer
-  battle; declining or losing can be retried on any later visit. The talk
-  itself makes them Met.
-- **Met:** the menu (below).
-- **Friend and Close:** `NEWS` and the [gossip](#gossip) line, then the menu.
-
-**Points.** A haunt talk adds [friendship](notable-trainers.md#friendship)
-through these events only: the first talk (+1), a battle won (+20: the first
-win over them, and a rematch win at most once per placement), and a finished
-quest (+10). Each haunt has a saved **rematch bit**, set when a rematch win
-there is counted and cleared with the claim bit when the haunt's placement
-changes ([claims](#rewards-and-claims)). Repeat chats add nothing.
-
-The **menu** offers, until the player picks **Bye** (`BYE`):
-
-- **Battle:** a rematch, singles with the trainer's whole team at their
-  current TR (every battle uses current TR:
-  [Notable trainers](notable-trainers.md#trainer-rating)). Shown only when
-  the Gym gate allows it. It can be repeated.
-- **Quest:** only while the haunt's claim bit is clear
-  ([quests](#quests)). Quests open at Met, so friendship can grow by helping.
-- **Chat:** the trainer's `QUIRK`.
-- **Team up:** only at Friend or above, and only once the player is a
-  Master. It asks the trainer to be the player's Masters partner in person,
-  with exactly the effect of the phone ask
-  ([partner](sevii-masters.md#partner)). The trainer then stops being
-  placed, so they leave the haunt once the talk ends.
-
-Haunt battles (a stranger's battle and a rematch) are built like any
-notable battle, from a battle snapshot at the start, and pay prize money
-([Prize money](#prize-money)). They give no TR and no Battle Points.
+**Teaming up.** Asking a trainer to be the Masters partner happens only by
+phone ([partner](sevii-masters.md#partner)), never at a haunt. A trainer who
+becomes the partner stops being placed, so they leave their haunt.
 
 ## Quests
 
 Each haunt has one quest type. Only a trainer at Met or above gives quests,
-and every trainer can give every quest type. Each type has one proposal
+which every talk reaches, since the first talk makes the trainer Met before
+the proposal ([talk flow](#talk-flow)); every trainer can give every quest
+type. Each type has one proposal
 line, written so it never implies the trainer needs help or is asking a
 favour ([dialogue](#dialogue)):
 
@@ -284,9 +276,9 @@ from the trainer's [reward pool](#rewards-and-claims).
 
 Every quest runs `ASK` (an attention-getter), then the haunt's own quest
 line (the proposal), then a yes or no:
-`YES` starts it, `NO` ends the talk. A requirement the player doesn't meet,
-or a failed attempt, uses `NOT_READY`. Completing it runs `PRAISE`, then the
-[reward](#rewards-and-claims).
+`YES` starts it, `NO` ends it ([talk flow](#talk-flow)). A requirement the
+player doesn't meet, or a failed attempt, uses `NOT_READY`. Completing it
+runs `PRAISE`, then the [reward](#rewards-and-claims), then `BYE`.
 
 ### Walk with me
 
@@ -308,8 +300,8 @@ other warp or map edge that leaves the quest maps).
   snapshot built at each battle's start into the runtime partner slot.
   Regular trainer battles on the way are unchanged.
 - **Complete.** Stepping through the exit with the trainer following ends
-  the walk: the haunt's done line, `PRAISE`, and the reward. The follower
-  leaves, and the trainer is back at their haunt.
+  the walk: the haunt's done line, `PRAISE`, the reward, and `BYE`. The
+  follower leaves, and the trainer is back at their haunt.
 - **Wrong exit.** While the walk is in progress, a trigger at each
   wrong-exit warp or map edge stops the player and shows the haunt line
   "Giving up on the walk?" with [YES / NO].
@@ -326,13 +318,15 @@ other warp or map edge that leaves the quest maps).
 
 ### Lost something
 
-The haunt authors one hidden spot on its quest maps. While a trainer is
-placed there and the claim bit is clear, the spot can be searched: finding
-it gives the player the lost thing, a transient **found** state, not a Bag
-item. Talking to the trainer with it completes the quest; before that, the
-trainer answers `NOT_READY`. The found state clears on reload, on whiteout, and
-when the placement changes, and the spot can be searched again while the
-claim is open.
+The haunt authors one hidden spot on its quest maps. While a trainer is placed
+there and the claim bit is clear, the spot can be searched, whether or not the
+player has said `YES`: finding it gives the player the lost thing, a transient
+**found** state, not a Bag item. `YES` to the proposal before that gives `YES`
+and `BYE`, and the player goes searching. Talking to the trainer with the lost
+thing completes the quest: the greeting, then `PRAISE` and the reward in place
+of the proposal, then `BYE`. The found state clears on reload, on whiteout, and
+when the placement changes, and the spot can be searched again while the claim
+is open.
 
 ### Catch me one
 
@@ -411,15 +405,16 @@ strictly in order: a gated entry is never skipped.
   POKéMON knows four. The lesson uses `PRAISE` and no `GIFT`. Cancelling
   leaves the claim open and the counter unchanged; with no POKéMON that can
   learn anything from the pool, the trainer answers `NOT_READY`.
-- **Fallback:** prize money, exactly what a rematch win with the trainer
-  would pay right now: the [prize money](#prize-money) rule for their
+- **Fallback:** prize money, exactly what a win over the trainer would pay
+  right now: the [prize money](#prize-money) rule for their
   signature POKéMON (slot 1 has offset 0 and is always last in battle order,
   so its level is `teamLevel(tr)`) with their class's rate. A system line
   names the amount; there is no `GIFT`, and the counter doesn't move.
 
 The fallback is money because it always fits: it needs no Bag room, so it
-never waits; it grows with the trainer; it adds nothing a rematch doesn't
-already pay, so it can't bend the item curve; and it leaves no pile of
+never waits; it grows with the trainer; it adds nothing a battle with the
+trainer doesn't already pay, so it can't bend the item curve; and it leaves
+no pile of
 repeated items. A repeat of the trainer's type item was the alternative,
 rejected because it can wait on a full Bag and, repeated, is worth nothing.
 
@@ -457,7 +452,10 @@ A haunt's dialogue is assembled from two sources:
   `NOT_READY`, `PRAISE` (these three assume no specific activity, movement,
   or place), `GIFT`, `BYE`, and `QUIRK`
   ([voice bits](../research/notable-trainer-voices.md)). They carry the
-  personality and never mention a place.
+  personality and never mention a place. Haunts use thirteen of them in v0:
+  `NOT_YET` is reserved for places that host battles (such as Gyms or
+  future rematch spots), and `NEWS` is unused by haunts, reserved for world
+  news or later uses. Haunts carry no gossip in v0.
 
 Both use these slots:
 
@@ -468,18 +466,10 @@ Both use these slots:
 | `{ACE}` | The signature POKéMON's current species. |
 | `{BUDDY}` | The buddy slot's current species ([trainer values](#trainer-values)). |
 | `{LOCAL}` | The haunt's catch species (only in a Catch me one line). |
-| `{GOSSIP}` | The gossip line (below). |
 
-Speaker labels ("BROCK:") and system messages (the battle offer, the number
-given, the menu, the quiz) are generic text, the same for every trainer.
-
-### Gossip
-
-`{GOSSIP}` is one system line naming where another trainer is: the next
-placed trainer after the speaker in trainer catalog order, wrapping, whose
-stage is Met or above, and their haunt's name ("I hear LT. SURGE hangs
-around the VERMILION harbour."). With no such trainer, `NEWS` and the
-gossip are both skipped. The template's wording is content.
+Speaker labels ("BROCK:") and system messages (the [YES / NO] prompt, the
+number given, the quiz, a lesson's pick, the fallback amount) are generic
+text, the same for every trainer.
 
 ## Worked example: Diglett's Cave
 
@@ -517,142 +507,165 @@ rooftop, so Giovanni takes it; at world progress 40 Brock, Giovanni, and
 Misty are placed before the cave's turn, and Will takes it (his tie with
 Drake goes to catalog order).
 
-**Brock, a Stranger whose fame hasn't reached him** (if he stood here at
-world progress 10: the player's TR 10 is below `min(80, 30 − 10) = 20`;
-Brock is unbeaten at Pewter, so the Gym gate holds):
+The scenes below follow one save through the cave. Friendship points are
+the [talk flow's](#talk-flow) and
+[Notable trainers'](notable-trainers.md#friendship) events; rewards come
+from each trainer's
+[reward pool](../research/notable-trainer-rewards.md).
 
-```text
-BROCK: I'm BROCK. I train Rock types, and I cook for them    MEET
-       too!
-BROCK: Test your rock-hard will at my GYM first. Then we'll   NOT_YET
-       talk.
-BROCK: Take care! And keep your POKéMON well fed!             BYE
-```
-
-The talk adds 1 point: Brock is now Met.
-
-**Brock, a Stranger who has heard of the player** (world progress 30, a
-first meeting: the player's TR 30 reaches `min(80, 39 − 10) = 29`, so
-`HEARD` replaces `MEET`):
-
-```text
-BROCK: So you're {PLAYER}? Word's out! Have you eaten yet?    HEARD
-BROCK: Test your rock-hard will at my GYM first. Then we'll   NOT_YET
-       talk.
-BROCK: Take care! And keep your POKéMON well fed!             BYE
-```
-
-**Brock, Met** (the second talk, still unbeaten): the greeting is `AGAIN`,
-then the Gym gate line, then a menu with Quest, Chat, and Bye but no Battle:
-
-```text
-BROCK: Oh, hi again! Still getting to know each other, huh?   AGAIN
-BROCK: Test your rock-hard will at my GYM first. Then we'll   NOT_YET
-       talk.
-> Quest
-BROCK: Hey, I've got an idea.                                 ASK
-BROCK: Walk it with me, out to the VERMILION side?            quest line
-```
-
-The walk runs as below. Finishing it adds 10 points (1 + 10 = 11), so he is
-still Met; a second quest would take him to 21, a Friend, with no battle
-ever won.
-
-**Brock, a Friend with the walk** (world progress 30, TR 39: his buddy is
-ONIX; the player beat him at Pewter, so the first win made him a Friend and
-he gave his number):
-
-```text
-BROCK: Hey, {PLAYER}! Good to see you. Eating well, I hope?   HELLO
-BROCK: Word travels fast between breeders. Listen to this...  NEWS
-BROCK: I hear MISTY hangs around PALLET TOWN.                 gossip
-BROCK: Hey, I've got an idea.                                 ASK
-BROCK: Walk it with me, out to the VERMILION side?            quest line
-> Yes
-BROCK: Great! I knew I could count on you.                     YES
-  (wild DIGLETT pairs are tag battles beside BROCK)
-BROCK: That's the VERMILION side. We made it through.         done line
-BROCK: Nicely done! That's rock-hard willpower if I ever saw  PRAISE
-       it.
-BROCK: Take this PEWTER CRUNCHIES. A good breeder always      GIFT
-       shares supplies.
-```
-
-The PEWTER CRUNCHIES are the first entry of Brock's
-[reward pool](../research/notable-trainer-rewards.md#brock) (from world
-progress 0); the walk and Steelix's type play no part. His reward counter is
-now 1, so his next quest, here after a placement change or at any other
-haunt, pays the HARD STONE (from world progress 0). The entry after that is a
-lesson from world progress 40; a quest before then pays the fallback prize
-money and leaves the counter alone. The walk also added 10 points to his
-friendship.
-
-**Brock, Close** (world progress 50; after rematches and quests his score
-passed 60): the greeting is `CLOSE`, and the rest is a Friend's.
-
-```text
-BROCK: {PLAYER}! Good to see you, friend. There is always a   CLOSE
-       plate for you.
-BROCK: Word travels fast between breeders. Listen to this...  NEWS
-BROCK: I hear MISTY hangs around PALLET TOWN.                 gossip
-```
-
-**Leaving early** (the player tries the north entrance's warp to Route 2
-mid-walk):
-
-```text
-HAUNT: Giving up on the walk?
-> Yes
-BROCK: No worries. Just don't skip any meals, okay?           NO
-```
-
-With Giovanni the same YES gives "Hmph. You'll regret wasting my time."
-(`NO`). Either way the walk ends with no reward and the claim bit clear,
-and the trainer is back at their haunt spot. Answering No steps the player
-back one tile and the walk goes on.
-
-Back at the cave, **Chat** gives "ONIX gets fussy if I burn the rice. So do
-my little siblings." (`QUIRK`), and **Bye** gives "Take care! And keep your
-POKéMON well fed!"
-
-**Giovanni, a Stranger** (world progress 10, before his Viridian battle,
-first meeting: the player's TR 10 is below `min(80, 24 − 10) = 14`, so he
-has not heard of them):
+**Scene 1: Giovanni's first meeting** (world progress 10, so Giovanni holds
+the cave, as above; the player's TR 10 is below `min(80, 24 − 10) = 14`, so
+his fame hasn't reached him and he greets with `MEET`). The talk makes him
+Met (+1) at its start, so the quest is proposed at once:
 
 ```text
 GIOVANNI: I am GIOVANNI. Remember the name. Others have       MEET
           learned to.
-GIOVANNI: Earn your way through my GYM first. Then I may      NOT_YET
-          notice you.
+GIOVANNI: I have a proposition.                               ASK
+GIOVANNI: Walk it with me, out to the VERMILION side?         quest line
+> No
+GIOVANNI: Hmph. You'll regret wasting my time.                NO
 GIOVANNI: Go. We will meet again.                             BYE
 ```
 
-**Giovanni, a Friend** (world progress 140, after the player beat him):
+Declining costs nothing. The next talk greets the player as Met and
+proposes again:
 
 ```text
-GIOVANNI: So. {PLAYER}. You keep turning up.                  HELLO
-GIOVANNI: TEAM ROCKET hears everything. Listen well.          NEWS
-GIOVANNI: I hear BLUE hangs around ROUTE 1.                   gossip
+GIOVANNI: You again. I am beginning to remember your face.    AGAIN
 GIOVANNI: I have a proposition.                               ASK
 GIOVANNI: Walk it with me, out to the VERMILION side?         quest line
 > Yes
 GIOVANNI: A wise decision.                                    YES
+```
+
+Answering Yes in the first talk gives the same `YES` straight after `MEET`
+and the proposal. Either way the talk ends at `YES`, and the walk starts.
+
+**Scene 2: the walk.** Giovanni follows the player through the tunnel:
+
+```text
+  (wild pairs, such as two DIGLETT, are tag battles, with
+   GIOVANNI's best three beside the player's first three)
+```
+
+If the player heads back to the north entrance's warp to Route 2:
+
+```text
+HAUNT: Giving up on the walk?
+> Yes
+GIOVANNI: Hmph. You'll regret wasting my time.                NO
+```
+
+The walk ends with no reward and the claim bit clear, and Giovanni is back
+at his haunt spot; answering No steps the player back one tile and the walk
+goes on. A whiteout in a tag battle ends the walk the same way, silently:
+the player wakes at the POKéMON Center, and the next talk at the cave is
+`AGAIN` and the proposal again. Stepping through the Vermilion exit with
+Giovanni following completes it:
+
+```text
 GIOVANNI: That's the VERMILION side. We made it through.      done line
 GIOVANNI: Impressive. I rarely have cause to say that.        PRAISE
 GIOVANNI: Take this NUGGET. Consider it a loan, not a         GIFT
           kindness.
+GIOVANNI: Go. We will meet again.                             BYE
 ```
 
-At world progress 140 every gate in Giovanni's
-[pool](../research/notable-trainer-rewards.md#giovanni) is open (the last is
-120), but pools pay in order: this first quest gives his first entry, the
-NUGGET. Had the player already finished a quest with him at another haunt,
-the same walk would pay his second entry, SOFT SAND.
+The NUGGET is the first entry of Giovanni's
+[pool](../research/notable-trainer-rewards.md#giovanni) (from world progress
+0); the walk plays no part. His reward counter is now 1, so his next quest,
+here after a placement change or at any other haunt, pays SOFT SAND. The
+quest adds 10 points (1 + 10 = 11), so he is still Met.
 
-His **Chat** is "Ah, PERSIAN. The only one who never disappoints me.": his
-buddy is roster slot 4, which steps down to MEOWTH below level 28. At world
-progress 10 (TR 24, team level 17) the same line would say MEOWTH; from
-world progress 40 (team level 39) it says PERSIAN.
+**Scene 3: talking after completion.** The claim bit is set for this
+placement, so every talk is the greeting, `QUIRK`, and `BYE`:
+
+```text
+GIOVANNI: You again. I am beginning to remember your face.    AGAIN
+GIOVANNI: Ah, MEOWTH. The only one who never disappoints me.  QUIRK
+GIOVANNI: Go. We will meet again.                             BYE
+```
+
+His buddy is roster slot 4, which steps down to MEOWTH below level 28: at
+world progress 10 (TR 24, team level 17) the line says MEOWTH; from world
+progress 40 (team level 39) it says PERSIAN. Repeat talks add no points.
+
+**Scene 4: Misty, a Friend, after a reshuffle.** World progress rises, the
+placement is recomputed, and say Misty now takes the cave (an illustration:
+the real placement depends on the whole fill). The haunt's trainer changed,
+so its claim bit cleared and the walk is open again. The player beat Misty
+at Cerulean, and that first win made her a Friend (20 points) and gave her
+number. Her stage is Friend when the talk starts, so she greets with
+`HELLO`, and this first talk adds nothing (only a Stranger's does):
+
+```text
+MISTY: Hey, {PLAYER}! Took you long enough!                   HELLO
+MISTY: Okay, listen up!                                       ASK
+MISTY: Walk it with me, out to the VERMILION side?            quest line
+> Yes
+MISTY: Now that's what I like to hear!                        YES
+  (the walk runs as in scene 2, with MISTY beside the player)
+MISTY: That's the VERMILION side. We made it through.         done line
+MISTY: Wow, not bad! You'd almost make a decent Water         PRAISE
+       trainer!
+MISTY: Take this MYSTIC WATER! Don't say I never gave you     GIFT
+       anything!
+MISTY: See ya! ...{BUDDY}, get back in your ball! Not again!  BYE
+```
+
+MYSTIC WATER is the first entry of her
+[pool](../research/notable-trainer-rewards.md#misty), and the quest takes
+her to 30 points. Talking to her again during this placement:
+
+```text
+MISTY: Hey, {PLAYER}! Took you long enough!                   HELLO
+MISTY: Just keep Bug POKéMON away from me. Seriously. Ugh!    QUIRK
+MISTY: See ya! ...{BUDDY}, get back in your ball! Not again!  BYE
+```
+
+`{BUDDY}` is her slot 2 at its current stage: PSYDUCK early, GOLDUCK later.
+
+**Scene 5: Brock, Close, late game** (world progress 60, if Brock stands
+here). The player met him at a haunt before his Gym (+1), beat him at Pewter
+(+20), and finished four quests with him at haunts (+40), so his score is
+61: Close. The first two paid PEWTER CRUNCHIES and the HARD STONE; the next
+two came before world progress 40, while his third entry was still gated,
+so they paid the fallback prize money and left his reward counter at 2.
+
+```text
+BROCK: {PLAYER}! Good to see you, friend. There is always a   CLOSE
+       plate for you.
+BROCK: Hey, I've got an idea.                                 ASK
+BROCK: Walk it with me, out to the VERMILION side?            quest line
+> Yes
+BROCK: Great! That's the spirit!                              YES
+  (the walk runs as in scene 2, with BROCK beside the player)
+BROCK: That's the VERMILION side. We made it through.         done line
+BROCK: Nicely done! That's rock-hard willpower if I ever saw  PRAISE
+       it.
+  (the player picks a POKéMON on the storage screen; BROCK
+   teaches it the first move in his pool it can learn and
+   doesn't know yet)
+BROCK: Take care! And keep your POKéMON well fed!             BYE
+```
+
+The lesson is the third entry of Brock's
+[pool](../research/notable-trainer-rewards.md#brock), open from world
+progress 40; a lesson uses `PRAISE` and no `GIFT`. His counter is now 3, and
+his next entry, the OVAL STONE (from world progress 50), is open too.
+Talking to him again during this placement:
+
+```text
+BROCK: {PLAYER}! Good to see you, friend. There is always a   CLOSE
+       plate for you.
+BROCK: STEELIX gets fussy if I burn the rice. So do my little QUIRK
+       siblings.
+BROCK: Take care! And keep your POKéMON well fed!             BYE
+```
+
+His buddy is roster slot 1, ONIX until world progress 57, so at world
+progress 60 the `QUIRK` names STEELIX.
 
 ## Kanto haunts
 
@@ -791,7 +804,9 @@ needs a variant of that mode that also picks the move.
 
 ### Prize money
 
-Haunt battles pay prize money on the snapshot level basis a
+Haunts host no trainer battles that pay: a walk's battles are wild, and
+One on one pays no prize money. Only the quest
+[fallback](#rewards-and-claims) pays money, on the snapshot level basis a
 [tag match](sevii-masters.md#tag-matches) uses: the level of the last member
 the trainer brings, with their class's rate. Battle Points from Dojo
 rematches are not carried over.
@@ -807,7 +822,7 @@ is unchecked; this needs checking before walks are built.
 
 Haunts add:
 
-- one **claim bit** and one **rematch bit** per haunt. Friendship is saved by
+- one **claim bit** per haunt. Friendship is saved by
   [Notable trainers](notable-trainers.md#friendship), and haunts read only
   its stage;
 - one **reward counter** per notable trainer entry, 4 bits each (0-15),
@@ -819,9 +834,8 @@ Haunts add:
 - the **quest in progress**: a walk (its haunt) or a found lost thing (its
   haunt), cleared on load and on whiteout.
 
-New Game saves every claim bit and rematch bit clear, every reward counter at
-0, the placement for world
-progress 0, and no quest in progress. With follower NPCs enabled,
+New Game saves every claim bit clear, every reward counter at 0, the placement
+for world progress 0, and no quest in progress. With follower NPCs enabled,
 SaveBlock3 also holds the engine's follower state, which a walk uses.
 
 ## Load validation
@@ -832,12 +846,12 @@ On every load, before the overworld runs:
    it. A walk interrupted by a reload is unfinished
    ([walk](#walk-with-me)).
 2. **Pruning.** Drop the reward counters of characters no longer in the
-   registry, and the claim bits, rematch bits, and placements of haunts no
+   registry, and the claim bits and placements of haunts no
    longer in the catalog. A reward counter above its trainer's current pool
    length (the pool got shorter) is lowered to that length: the pool counts
    as used up, and nothing is taken back or paid.
-3. **Checks.** Reward counters exist only for known trainers; claim bits,
-   rematch bits, and placements only for known haunts; a saved placement
+3. **Checks.** Reward counters exist only for known trainers; claim bits
+   and placements only for known haunts; a saved placement
    names known characters, each at most once. A failed check is an invalid
    save, never a reason to reward anything.
 4. **Recompute.** Compute the placement from the current inputs and compare
@@ -852,8 +866,8 @@ On every load, before the overworld runs:
   one.
 - Speaker labels name the trainer ("BROCK:"); Tate & Liza's lines keep
   their split format for when the duo is placed later.
-- The menu lists Battle (when the Gym gate allows), the quest's name (while
-  unclaimed), Chat, Team up (Friend or above, for a Master), and Bye.
+- Talking runs the [talk flow](#talk-flow) straight through; there is no
+  menu. The quest proposal ends in a [YES / NO] prompt.
 - During a walk the trainer follows the player; the double wild battles
   show them beside the player with their back pic.
 
@@ -873,7 +887,7 @@ Required implementation evidence (not yet run):
 
 1. **Catalog.** Every haunt has valid tags, existing maps, an active
    meeting spot, and its quest details (a walk's start and exit, a lost
-   spot, a catch species on its wild table); every notable trainer has a
+   spot, a catch species on its wild table); every notable trainer has
    a buddy slot 1-6 and a reward pool that passes the
    [pool rules](#rewards-and-claims).
 2. **Buddy.** `{BUDDY}` resolves to the slot's stepped-down species at every
@@ -889,17 +903,18 @@ Required implementation evidence (not yet run):
    ties match golden fixtures from host tooling; an inactive elite haunt is
    empty; accepting an event, asking a partner, and becoming a Master each
    recompute it. A walking trainer keeps their haunt until the walk ends.
-5. **Friendship beat.** The greeting follows the stage: a Stranger gets
-   `MEET`, or `HEARD` when the player's fame reaches them (the player's TR
-   at least `min(80, their TR − 10)`, a reign at any league, or being a
-   Master), Met gets `AGAIN`,
-   Friend `HELLO`, Close `CLOSE`; a trainer whose first fight is still ahead
-   adds `NOT_YET` and offers no battle at any stage; quests open at Met; the
-   menu shows Battle only when the gate allows it, and Team up only at
-   Friend or above for a Master, and it sets the partner choice; a stranger
-   battle win reaches Friend and hands over the number once; first talk,
-   quests, and a rematch win once per placement add their points and nothing
-   else does.
+5. **Talk flow.** Every talk is a greeting, then the proposal or `QUIRK`, then
+   `BYE`, with no menu, battle offer, or team-up at any stage. The greeting
+   follows the stage: a Stranger gets `MEET`, or `HEARD` when the player's fame
+   reaches them (the player's TR at least `min(80, their TR − 10)`, a reign at
+   any league, or being a Master), Met gets `AGAIN`, Friend `HELLO`, Close
+   `CLOSE`. A first talk makes the trainer Met and proposes the quest in the
+   same talk; while the claim bit is clear every talk proposes it (`ASK`, the
+   proposal, [YES / NO]), `NO` changes nothing and the next talk proposes again,
+   and a talk that starts a walk ends at `YES`; once the claim bit is set every
+   talk is the greeting, `QUIRK`, and `BYE`. No haunt line uses `NOT_YET` or
+   `NEWS`. Only the first talk (+1) and a completed quest (+10) add points at a
+   haunt; a quest that crosses the Friend threshold hands over the number once.
 6. **Quests.** Each quest completes, fails, and retries as specified; a
    walk ends unfinished on whiteout and on reload, and a wrong exit asks
    "Giving up on the walk?" (YES ends it with the trainer's `NO` line, NO
@@ -914,32 +929,33 @@ Required implementation evidence (not yet run):
 8. **Reward pools.** The reward never depends on the quest type. Quests
    with one trainer at different haunts pay that trainer's pool in order,
    one entry each; a gated next entry or a used-up pool pays the fallback
-   (prize money equal to a rematch win at current TR) and leaves the counter
-   alone; entries open by world progress, never the trainer's TR, so a quest
-   just before and just after a gate pays the fallback and then the entry,
-   and Lance's and Agatha's pools open gradually. A lesson
+   (prize money equal to a win over the trainer at current TR) and leaves
+   the counter alone; entries open by world progress, never the trainer's
+   TR, so a quest just before and just after a gate pays the fallback and
+   then the entry, and Lance's and Agatha's pools open gradually. A lesson
    teaches the first move in pool order the chosen POKéMON can learn and
    doesn't know, and offers only POKéMON with such a move. Brock's first
    quest gives PEWTER CRUNCHIES and Giovanni's gives a NUGGET.
 9. **Dialogue.** Every assembled line resolves its slots and fits its text
-   box with worst-case values; gossip names only met, placed trainers.
+   box with worst-case values; no haunt dialogue carries gossip.
 10. **Cameos.** No cameo or Dojo rematch seat remains in Wayfarer; the Dojo
-    back room works as a haunt; no Battle Points come from haunts.
+    back room works as a haunt; no stranger battle, rematch, prize money
+    beyond the quest fallback, or Battle Points come from haunts.
 11. **Save.** A new game and a reload give the saved state described above;
-    corrupt reward counters, claim bits, rematch bits, or placements are
+    corrupt reward counters, claim bits, or placements are
     rejected; removed characters or haunts are pruned; and a counter past a
     shortened pool is lowered to its length.
 
 ## Open questions
 
-- Whether rematches need a limit on prize money too: friendship points are
-  already limited to one rematch per placement.
 - Whether a minimum score should leave a haunt empty rather than host a
   poor fit, since v0 has more Kanto haunts than Kanto candidates.
 - When to retire the Johto cameos and their Dojo seats: with the Kanto
-  list, which turns the rematch room into the Dojo back room and leaves
-  Johto trainers who don't travel without rematches until Johto's list, or
-  later, with the back room waiting for Johto's list too.
+  list, which turns the rematch room into the Dojo back room, or later, with
+  the back room waiting for Johto's list too.
+- Where Gym Leader rematches go: haunts offer no rematches, so retiring the
+  Dojo rematch room leaves no rematches until rematch spots exist
+  ([Later](#later)).
 - Where Jasmine's Steelix trade goes once the Dojo seats retire.
 - Whether a follower NPC turns regular trainer battles on the way into
   partner battles; the design assumes it doesn't.
@@ -956,6 +972,10 @@ Required implementation evidence (not yet run):
   own line.
 - **More friendship sources:** gifts, tag battles beside a trainer, trades,
   and partnering ([friendship](notable-trainers.md#friendship)).
+- **Rematches** at haunts or at dedicated rematch spots, where `NOT_YET`
+  could gate a trainer whose first fight is still ahead.
+- **Gossip at haunts:** a friend telling the player where another trainer
+  is, led in by `NEWS`.
 - **Other regions:** haunt lists for Johto, Hoenn, and Sevii, and Tate &
   Liza at haunts.
 - **Explorer support** for the [balance report](#balance-report).
