@@ -1,0 +1,46 @@
+{
+  "review_base": "3e820fb584",
+  "runtime_commit": "e2c676707c7f7ac239d869580dbbf71ce7465d7e",
+  "source_sha256": {
+    "game/data/maps/ViridianCity_hns/map.json": "79dd41f7381b3b260c33c168424069a168f68ee84213f0628bcdaded12ec166c",
+    "game/data/maps/ViridianCity_hns/scripts.inc": "e867f2e7508fcea0f85cf6f4052d7a9940743ad6703d8495b7c315be761bdb42",
+    "game/include/config/viridian_walker_poc.h": "b268ad3e7de3beec4761fb3e6ae95a6278457a510946811247e6d8177463e6d4",
+    "game/include/viridian_walker_poc.h": "67355ecf986661187f573337f88b18dae73a792c0201d259086d51f75db1a426",
+    "game/src/data/wayfarer_sevii_maps.json": "2e95ff6487cb6c4081bdd0a3187d688614e076528ba9f426c4c7585b72f64bcc",
+    "game/src/event_object_movement.c": "38a32570572c3ce71897fb61d033e989865cb1dbbaa62f5d003681e306b4a022",
+    "game/src/main_menu.c": "aa4eafd940f406e0d0e377c0cd45438a184f011bf0d296b4bb51cc08a6b2eaa3",
+    "game/src/malloc.c": "84bf623940ea0333ed7ac314c14fef1108b28779ad1cbc3e7eb419e914361a72",
+    "game/src/new_game.c": "6cc4a31d0c13aad55263cc1b978be903b104efbc69274cdb90111ec401ed76b9",
+    "game/src/overworld.c": "4341c2e31ccf45883b0335e92e26a208b96e790bdb48fb6743d71671806314dd",
+    "game/src/viridian_walker_poc.c": "e284b93b6fd65ff1b9f43a18d3f229fc6b09f8b3762972c14253b0d34ca51fe7",
+    "game/tools/viridian_walker_poc/verify.py": "333891b01d938a53a4f888a13e73c949108b3dd6f68df9685138c0d81a190b0b"
+  },
+  "artifacts_sha256": {
+    "game/pokemon-wayfarer-e2e.gba": "0fd59c3f8b6c1a0a87e76e90a756b1ab607621967d1c8a46443b80ffad990952",
+    "game/pokemon-wayfarer-e2e.sym": "600484ef8139a3d919e0b86c22f10dd80853383bc31675581f05265872036212",
+    "game/pokewayfarer.gba": "f7dab8c62af176f3b4ca315a41dcb13d4e3f47725a88541a168bcd788d7f0796"
+  },
+  "builds": {
+    "status": "passed",
+    "commands": [
+      "make -C game -j16 CXX=g++ e2e",
+      "make -C game -j16 CXX=g++ wayfarer"
+    ],
+    "logs": [
+      "/tmp/viridian-e2e-build.log",
+      "/tmp/viridian-wayfarer-build.log"
+    ]
+  },
+  "runtime": {
+    "status": "passed",
+    "command": "python3 game/tools/viridian_walker_poc/verify.py --rom game/pokemon-wayfarer-e2e.gba --symbols game/pokemon-wayfarer-e2e.sym --output /tmp/viridian-walker-complete --min-goals 6 --lifecycle",
+    "evidence": "/tmp/viridian-walker-complete",
+    "result": "results.json",
+    "environment": "Linux, pinned skyemu-static under Xvfb; fresh isolated save, real controller input; no ROM memory writes"
+  },
+  "limits": [
+    "No physical GBA run",
+    "One actor and one map",
+    "POC-off module compiled, full disabled-ROM startup not exercised"
+  ]
+}

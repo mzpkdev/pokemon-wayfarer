@@ -126,15 +126,19 @@ def read_player_object(client: SkyEmu, symbols: dict[str, int]) -> tuple[int, in
     return None
 
 
+def field_controls_locked(client: SkyEmu, symbols: dict[str, int]) -> bool:
+    return bool(client.read(symbols["sLockFieldControls"], 1)[0])
+
+
 def walker_snapshot(client: SkyEmu, symbols: dict[str, int]) -> dict[str, int]:
-    raw = client.read(symbols["gViridianWalkerDebug"], 34)
-    values = struct.unpack("<9H6h4B", raw)
+    raw = client.read(symbols["gViridianWalkerDebug"], 36)
+    values = struct.unpack("<9H6h4BH", raw)
     keys = (
         "completed", "replans", "searches", "search_nodes", "search_frames",
         "max_nodes_per_frame", "max_slice_vblanks", "grass_tiles_found",
         "blocked_steps", "x", "y",
         "goal_x", "goal_y", "next_x", "next_y", "phase", "goal",
-        "last_completed_goal", "used_grass_fallback",
+        "last_completed_goal", "used_grass_fallback", "max_slice_scanlines",
     )
     return dict(zip(keys, values, strict=True))
 
@@ -180,23 +184,33 @@ def boot_new_game(
 
 def move_player_to(
     client: SkyEmu, symbols: dict[str, int], target_x: int, target_y: int
-) -> tuple[int, int]:
+) -> int:
     """Walk by real D-pad input; only intended for the known Center sidewalk."""
+    frames = 0
     for _ in range(8):
         player = read_player_object(client, symbols)
         if player is None:
             raise RuntimeError("Player object vanished while positioning obstruction")
         _, x, y = player
         if (x, y) == (target_x, target_y):
-            return x, y
+            return frames
         if y != target_y:
             direction = "Down" if target_y > y else "Up"
         else:
             direction = "Right" if target_x > x else "Left"
-        client.press(direction, hold=2, release=18)
-        updated = read_player_object(client, symbols)
-        if updated is None or updated[1:] == (x, y):
-            raise RuntimeError(f"Player could not walk {direction} from {(x, y)}")
+        # The first keypress may only change facing, as it did in the first
+        # emulator run. Later presses may land during map-name or fade locks.
+        for attempt in range(6):
+            client.press(direction, hold=3, release=19)
+            frames += 22
+            updated = read_player_object(client, symbols)
+            if updated is not None and updated[1:] != (x, y):
+                break
+            if attempt < 5:
+                client.step(12)
+                frames += 12
+        else:
+            raise RuntimeError(f"Player could not walk {direction} from {(x, y)} after six presses")
     raise RuntimeError(f"Player did not reach {(target_x, target_y)}")
 
 
@@ -213,9 +227,15 @@ def try_talk_to_walker(
     direction = "Right" if dx == 1 else "Left" if dx == -1 else "Down" if dy == 1 else "Up"
     client.press(direction, hold=2, release=2)
     client.press("A", hold=2, release=40)
+    # Let the one-line message finish printing before capturing it. A single
+    # B while text is still printing only fast-forwards the text.
+    client.step(120)
     client.screenshot(output / "walker-interaction.png")
     client.press("B", hold=2, release=20)
-    return {"attempted": True, "direction": direction, "frame_cost": 68,
+    client.press("B", hold=2, release=20)
+    client.step(30)
+    client.screenshot(output / "walker-interaction-dismissed.png")
+    return {"attempted": True, "direction": direction, "frame_cost": 240,
             "screenshot": "walker-interaction.png"}
 
 
@@ -239,15 +259,14 @@ def run_walker(
     player = read_player_object(client, symbols)
     if player is None or player[1:] != (30 + MAP_OFFSET, 37 + MAP_OFFSET):
         raise RuntimeError(f"Unexpected New Game player position: {player}")
-    move_player_to(client, symbols, 28 + MAP_OFFSET, 37 + MAP_OFFSET)
-    elapsed += 40
+    elapsed += move_player_to(client, symbols, 28 + MAP_OFFSET, 37 + MAP_OFFSET)
     client.screenshot(output / "player-clear-of-center.png")
     blocked = False
     intercept_attempted = False
     completed: list[int] = []
     transitions: list[dict[str, object]] = []
     reentries: list[dict[str, object]] = []
-    last_exit_goal: int | None = None
+    hidden_exit_goal: int | None = None
 
     while elapsed < max_frames:
         # These are deliberate emulated-frame advances, rather than repeated
@@ -258,10 +277,13 @@ def run_walker(
         current = walker_snapshot(client, symbols)
         if current["phase"] > 4 or current["goal"] >= len(GOALS):
             raise RuntimeError(f"Invalid walker telemetry after {elapsed} frames: {current}")
-        if last["phase"] == 4 and current["phase"] != 4:
+        if last["phase"] != 4 and current["phase"] == 4:
+            hidden_goal = current["last_completed_goal"]
+            hidden_exit_goal = hidden_goal if hidden_goal >= 3 else None
+        if last["phase"] == 4 and current["phase"] != 4 and hidden_exit_goal is not None:
             reentry = {
                 "frame": elapsed,
-                "from_exit": GOALS[last_exit_goal] if last_exit_goal is not None else None,
+                "from_exit": GOALS[hidden_exit_goal],
                 "hidden_position": [last["x"], last["y"]],
                 "entry_position": [current["x"], current["y"]],
                 "entry_goal": GOALS[current["goal"]],
@@ -271,6 +293,7 @@ def run_walker(
             reentries.append(reentry)
             client.screenshot(output / f"reentry-{len(reentries):02d}.png")
             print(f"frame {elapsed}: travel re-entry {reentry}", flush=True)
+            hidden_exit_goal = None
         if reentries and reentries[-1]["first_walk_position"] is None and current["phase"] == 2:
             reentries[-1]["first_walk_position"] = [current["x"], current["y"]]
             reentries[-1]["first_walk_frame"] = elapsed
@@ -279,8 +302,6 @@ def run_walker(
             if goal >= len(GOALS):
                 raise RuntimeError(f"Invalid completed goal after {elapsed} frames: {current}")
             completed.append(goal)
-            if goal >= 3:
-                last_exit_goal = goal
             event = {"frame": elapsed, "goal": GOALS[goal], "telemetry": current}
             transitions.append(event)
             client.screenshot(output / f"goal-{len(completed):02d}-{GOALS[goal]}.png")
@@ -296,8 +317,7 @@ def run_walker(
             intercept_attempted = True
             before = current
             try:
-                move_player_to(client, symbols, 30 + MAP_OFFSET, 37 + MAP_OFFSET)
-                elapsed += 40
+                elapsed += move_player_to(client, symbols, 30 + MAP_OFFSET, 37 + MAP_OFFSET)
                 client.screenshot(output / "center-player-obstruction.png")
                 print(f"frame {elapsed}: player walked into Center approach", flush=True)
                 for _ in range(150):
@@ -322,8 +342,7 @@ def run_walker(
                         elapsed += int(interaction.get("frame_cost", 0))
                         break
             finally:
-                move_player_to(client, symbols, 28 + MAP_OFFSET, 37 + MAP_OFFSET)
-                elapsed += 40
+                elapsed += move_player_to(client, symbols, 28 + MAP_OFFSET, 37 + MAP_OFFSET)
             if not blocked:
                 result["real_player_block"] = {
                     "observed": False, "reason": "No blocked-step and replan counter increase during Center approach",
@@ -348,6 +367,92 @@ def run_walker(
     return result
 
 
+def check_lifecycle(client: SkyEmu, symbols: dict[str, int], output: Path) -> dict[str, object]:
+    """Use real controls to leave Viridian, return, and open/close Start."""
+    evidence: dict[str, object] = {}
+    move_player_to(client, symbols, 30 + MAP_OFFSET, 37 + MAP_OFFSET)
+    for _ in range(10):
+        client.press("Up", hold=3, release=25)
+        client.step(30)
+        if (location := read_location(client, symbols)) and location[:2] == (12, 0):
+            evidence["center_location"] = location
+            client.screenshot(output / "lifecycle-center-inside.png")
+            break
+    else:
+        raise RuntimeError(f"Player did not enter Center through its real door: {location}")
+
+    # The indoor exit at map (7,8) returns to the Viridian Center warp.
+    client.step(90)
+    for _ in range(10):
+        client.press("Down", hold=3, release=25)
+        client.step(30)
+        if (location := read_location(client, symbols)) and location[:2] == (0, 32):
+            evidence["returned_location"] = location
+            client.screenshot(output / "lifecycle-center-return.png")
+            break
+    else:
+        raise RuntimeError(f"Player did not leave Center through its real exit: {location}")
+
+    # Map loading may reset walker telemetry; take the baseline after return.
+    client.step(90)
+    before = walker_snapshot(client, symbols)
+    evidence["after_return_before"] = before
+    for _ in range(30):
+        client.step(30)
+        after = walker_snapshot(client, symbols)
+        if after["phase"] and (after["x"], after["y"]) != (before["x"], before["y"]):
+            evidence["after_return_progress"] = after
+            client.screenshot(output / "lifecycle-walker-after-return.png")
+            break
+    else:
+        raise RuntimeError(f"Walker did not move after Center return: {after}")
+
+    client.press("Start", hold=3, release=30)
+    client.screenshot(output / "lifecycle-start-menu.png")
+    actions = list(client.read(symbols["sCurrentStartMenuActions"], 9))
+    if 2 not in actions:
+        raise RuntimeError(f"Start menu has no Bag action: {actions}")
+    bag_index = actions.index(2)
+    evidence["start_menu_actions"] = actions
+    evidence["bag_action_index"] = bag_index
+    for _ in range(12):
+        cursor = client.read(symbols["sStartMenuCursorPos"], 1)[0]
+        if cursor == bag_index:
+            break
+        client.press("Down", hold=3, release=19)
+    else:
+        raise RuntimeError(f"Could not select Bag action at index {bag_index}; cursor={cursor}")
+    client.press("A", hold=3, release=120)
+    client.screenshot(output / "lifecycle-bag.png")
+    client.press("B", hold=3, release=60)
+    client.screenshot(output / "lifecycle-bag-return.png")
+    # Bag returns to an *open* Start menu after a field fade. A B sent during
+    # that fade is ignored. Repeat with frame advances until field controls
+    # actually unlock, then capture the closed-menu evidence.
+    for attempt in range(8):
+        if not field_controls_locked(client, symbols):
+            break
+        client.press("B", hold=3, release=30)
+        client.step(30)
+    else:
+        client.screenshot(output / "lifecycle-menu-stuck.png")
+        raise RuntimeError("Start menu kept field controls locked after Bag return")
+    evidence["menu_exit_b_presses"] = attempt
+    client.screenshot(output / "lifecycle-menu-closed.png")
+    before = walker_snapshot(client, symbols)
+    evidence["after_menu_before"] = before
+    for _ in range(30):
+        client.step(30)
+        after = walker_snapshot(client, symbols)
+        if after["phase"] and (after["x"], after["y"]) != (before["x"], before["y"]):
+            evidence["after_menu_progress"] = after
+            client.screenshot(output / "lifecycle-walker-after-menu.png")
+            break
+    else:
+        raise RuntimeError(f"Walker did not move after Start menu returned: {after}")
+    return evidence
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--rom", type=Path, required=True, help="built POC .gba")
@@ -357,6 +462,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-frames", type=int, default=30000)
     parser.add_argument("--min-goals", type=int, default=3,
                         help="minimum distinct completed goals (1–6; use 6 for full tour)")
+    parser.add_argument("--lifecycle", action="store_true",
+                        help="then enter/leave Center and open/close Bag, checking walker resumes")
     parser.add_argument("--startup-only", action="store_true", help="debug startup before walker is linked")
     return parser.parse_args()
 
@@ -375,6 +482,8 @@ def main() -> int:
     required = {"gSaveBlock1Ptr", "gObjectEvents"}
     if not args.startup_only:
         required.add("gViridianWalkerDebug")
+    if args.lifecycle:
+        required.update(("sCurrentStartMenuActions", "sStartMenuCursorPos", "sLockFieldControls"))
     if missing := sorted(required - symbols.keys()):
         raise RuntimeError(f"symbol file lacks {', '.join(missing)}")
     port = reserve_port()
@@ -430,6 +539,15 @@ def main() -> int:
                         raise RuntimeError("Real-player block and replan were not observed")
                     if args.min_goals == 6 and not result["travel_reentry_observed"]:
                         raise RuntimeError("No travel exit re-entry was observed")
+                    if args.lifecycle:
+                        try:
+                            result["lifecycle"] = check_lifecycle(client, symbols, args.output)
+                        except Exception as error:
+                            result["lifecycle_error"] = str(error)
+                            result["last_walker_telemetry"] = walker_snapshot(client, symbols)
+                            (args.output / "results.json").write_text(json.dumps(result, indent=2) + "\n")
+                            raise
+                        (args.output / "results.json").write_text(json.dumps(result, indent=2) + "\n")
                 return 0
             finally:
                 if process.poll() is None:
