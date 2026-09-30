@@ -277,7 +277,8 @@ the trainer's voice bits.
 
 - Walk with me needs the engine's NPC followers, which are switched off and
   cost save space when enabled, and they may clash with the overworld
-  POKéMON that already follow the player.
+  POKéMON that already follow the player. The
+  [travel proof of concept](../research/notable-trainer-travel-poc.md) switched those POKéMON off to run.
 
 ## Specifications
 
@@ -296,6 +297,10 @@ the trainer's voice bits.
 - More ways to raise friendship: gifts, tag battles, trades.
 - Rematches at haunts or at dedicated rematch spots.
 - Gossip at haunts: a friend telling the player where another trainer is.
+- Trainers who walk to their haunts along routines instead of being
+  placed, with at most two or three in one place; a
+  [travel proof of concept](../research/notable-trainer-travel-poc.md) showed on-map pathfinding and saved travel between
+  maps are viable.
 - Haunt lists for Johto, Hoenn, and Sevii.
 - Explorer support: placements per world progress and the fit of each
   trainer.
@@ -307,3 +312,4 @@ the trainer's voice bits.
 - [Leagues](leagues.md)
 - [Trainer AI](trainer-ai.md)
 - [Notable trainer voice bits](../research/notable-trainer-voices.md)
+- [Notable trainer travel proof of concept](../research/notable-trainer-travel-poc.md)

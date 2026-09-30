@@ -1759,6 +1759,29 @@ Notes:
 
 Verified facts about the current build that the design depends on.
 
+### Travel and on-map walking
+
+A proof of concept ([research](../research/notable-trainer-travel-poc.md),
+closed PR [#146](https://github.com/mzpkdev/pokemon-wayfarer/pull/146)) ran
+one notable trainer in the real ROM. It showed that the design direction
+beyond v0's static placement is viable: a small AI with a bounded
+breadth-first search over the engine's collision checks walks one map, and a
+12-byte saved world record per trainer, advanced by a roamer-style heartbeat
+on map changes, lets them really travel between maps. Following them across
+an edge and finding them again after lingering both held, and so did save
+and reload.
+
+Its constraints shape any travel built on haunts:
+
+- the travel graph needs walkable regions within maps, not whole maps
+  (Route 2 is split and gated by Cut);
+- heartbeat time only moves on map changes, so dwelling and interiors need a
+  gameplay timer;
+- about 0.6 of a frame per search slice and a 16-slot object pool fit two or
+  three walkers per map, with a shared search schedule;
+- doors need one collision exception;
+- the proof of concept disabled the player's following POKéMON.
+
 ### Follower NPCs
 
 - The engine's follower NPCs are compiled out: `FNPC_ENABLE_NPC_FOLLOWERS`
@@ -1983,7 +2006,9 @@ rematches are not carried over.
 Overworld POKéMON followers are on (`OW_FOLLOWERS_ENABLED` `TRUE` in
 [overworld.h](../../game/include/config/overworld.h)). Whether a follower
 NPC and the player's following POKéMON can share the path behind the player
-is unchecked; this needs checking before walks are built.
+is unchecked; this needs checking before walks are built. The
+[travel proof of concept](../research/notable-trainer-travel-poc.md) disabled the player's following POKéMON to
+free object slots, so this stays open.
 
 ## Saved state
 
@@ -2210,6 +2235,10 @@ Required implementation evidence (not yet run):
 - **Explorer support** for the [balance report](#balance-report).
 - **Worked Bring me and Swap battle haunts**, and their places in the
   [Kanto list](#kanto-haunts).
+- **Travel between haunts:** trainers walking to their haunts instead of
+  being placed, following routines with a per-place cap of two or three,
+  built on the two-layer model the
+  [travel proof of concept](../research/notable-trainer-travel-poc.md) validated.
 - **More item kinds** for Bring me, and a Bag screen that lists only the
   kind's items instead of refusing the rest in place.
 
@@ -2223,3 +2252,4 @@ Required implementation evidence (not yet run):
 - [Trainer AI](trainer-ai.md)
 - [Notable trainer voice bits](../research/notable-trainer-voices.md)
 - [Notable trainer reward pools](../research/notable-trainer-rewards.md)
+- [Notable trainer travel proof of concept](../research/notable-trainer-travel-poc.md)
