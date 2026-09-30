@@ -4,7 +4,9 @@
 #if WAYFARER_MULTIPLAYER_POC
 
 #define MULTIPLAYER_POC_DIAG_MAGIC 0x504F4331 // "POC1"
-#define MULTIPLAYER_POC_PROTOCOL_VERSION 1
+#define MULTIPLAYER_POC_DIAG_VERSION 1
+#define MULTIPLAYER_POC_PROTOCOL_VERSION 2
+#define MULTIPLAYER_POC_PACKET_MAGIC 0x5750 // "WP"
 #define LINKTYPE_WAYFARER_POC 0x7711
 
 enum MultiplayerPocState
@@ -57,8 +59,10 @@ extern volatile struct MultiplayerPocDiag gMultiplayerPocDiag;
 bool8 MultiplayerPoc_TryToggle(void);
 void MultiplayerPoc_Update(void);
 void MultiplayerPoc_BuildSendCmd(u16 *cmd);
+bool8 MultiplayerPoc_ShouldSendCmd(void);
 void MultiplayerPoc_ReceiveCmd(u8 playerId, const u16 *cmd);
 bool8 MultiplayerPoc_IsRunning(void);
+void MultiplayerPoc_BattleDetach(void);
 
 #endif
 

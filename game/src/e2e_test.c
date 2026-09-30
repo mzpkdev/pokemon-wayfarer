@@ -410,6 +410,21 @@ static bool32 ApplyBagFixtures(void)
                 BagPocket_SetSlotItemIdAndCount(pocket, i, ITEM_POKE_BALL, 1);
         }
     }
+    if (sRequest.fullPocketMask & E2E_TEST_FULL_POCKET_MEDICINE)
+    {
+        struct BagPocket *pocket = &gBagPockets[POCKET_MEDICINE];
+
+        for (i = 0; i < pocket->capacity; i++)
+        {
+            struct ItemSlot slot = BagPocket_GetSlotData(pocket, i);
+
+            // Fill both slots and existing stacks, so a staged Potion cannot
+            // accept the reward despite an otherwise full Medicine pocket.
+            BagPocket_SetSlotItemIdAndCount(pocket, i,
+                                            slot.itemId == ITEM_NONE ? ITEM_ANTIDOTE : slot.itemId,
+                                            MAX_BAG_ITEM_CAPACITY);
+        }
+    }
 
     return TRUE;
 }

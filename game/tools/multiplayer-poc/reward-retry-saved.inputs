@@ -1,0 +1,22 @@
+# Boot both saved cartridges through title and select Continue with A.
+20 0 008
+20 1 008
+22 0 000
+22 1 000
+300 0 008
+300 1 008
+302 0 000
+302 1 000
+850 0 008
+850 1 008
+853 0 000
+853 1 000
+1050 0 001
+1050 1 001
+1053 0 000
+1053 1 000
+# Both loaded games invoke the local retry chord after Continue reaches field.
+1600 0 301
+1600 1 301
+1603 0 000
+1603 1 000

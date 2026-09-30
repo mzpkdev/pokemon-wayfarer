@@ -4,6 +4,7 @@
 #include "overworld.h"
 #if WAYFARER_MULTIPLAYER_POC
 #include "multiplayer_poc.h"
+#include "multiplayer_poc_battle.h"
 #endif
 #include "constants/heal_locations.h"
 #include "battle_pyramid.h"
@@ -3603,7 +3604,7 @@ bool32 IsSendingKeysOverCable(void)
 {
 #if WAYFARER_MULTIPLAYER_POC
     // Ordinary play must not stop advancing while a peer packet is late.
-    if (MultiplayerPoc_IsRunning())
+    if (MultiplayerPoc_IsRunning() || MultiplayerPocBattle_OwnsTransport())
         return FALSE;
 #endif
     if (gWirelessCommType != 0)

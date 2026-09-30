@@ -6,11 +6,14 @@ import binascii
 import hashlib
 import json
 import os
+import re
+import shlex
 from pathlib import Path
 import shutil
 import subprocess
 import tempfile
 import struct
+import sys
 import zlib
 
 
@@ -19,6 +22,19 @@ DIAG_FIELDS = (
     "magic", "version", "size", "state", "error", "localId", "peerId", "localMap",
     "peerMap", "localX", "localY", "peerX", "peerY", "localFacing", "peerFacing",
     "txCount", "rxCount", "lastCmd", "peerVisible", "frame",
+)
+BATTLE_FIELDS = (
+    "magic", "version", "size", "state", "error", "encounterId", "localPlayerId",
+    "localBattlerId", "peerWord", "localMoveChoices", "localLastChosenMove",
+    "localLastChosenTurn", "localExecutedMoves", "localLastExecutedMove",
+    "localLastExecutedTurn", "beforePartyHash", "afterPartyHash",
+    "beforePartyCount", "afterPartyCount", "localOutcome", "peerOutcome",
+    "resultAgreed", "rewardResult", "frame",
+)
+REWARD_FIELDS = (
+    "magic", "version", "size", "encounterId", "ledgerState", "bagPotionCount",
+    "savePhase", "saveResult", "operationResult", "grantAttempts",
+    "grantsCommitted", "duplicateSuppressions", "retryCount", "saveAttempts",
 )
 
 
@@ -82,8 +98,29 @@ def main() -> int:
                         help="arrange two fresh New Bark games via the existing E2E mailbox")
     parser.add_argument("--stage-position", default=None,
                         help="optional raw New Bark map x,y for both E2E fixtures")
+    parser.add_argument("--stage-party", action="store_true",
+                        help="arrange distinct level-8 Bulbasaur/Charmander originals")
+    parser.add_argument("--stage-full-medicine", action="store_true",
+                        help="fill Medicine pocket via the E2E-only fixture flag")
     parser.add_argument("--diagnostic", default="gMultiplayerPocDiag")
     parser.add_argument("--diagnostic-size", type=int, default=80)
+    parser.add_argument("--enable-saves", action="store_true",
+                        help="mount separate mGBA flash files and export them after core shutdown")
+    parser.add_argument("--save0", type=Path, help="initial flash file for player 0")
+    parser.add_argument("--save1", type=Path, help="initial flash file for player 1")
+    parser.add_argument("--e2e-save-frame", type=int, default=0,
+                        help="input-relative frame for the existing E2E real-save command")
+    parser.add_argument("--e2e-save-player", choices=("both", "0", "1"), default="both",
+                        help="which staged player receives the E2E real-save command")
+    parser.add_argument("--e2e-wild-battle-frame", type=int, default=0,
+                        help="input-relative frame to request the existing E2E wild battle")
+    parser.add_argument("--e2e-wild-battle-player", choices=("both", "0", "1"), default="0",
+                        help="staged player(s) entering local wild battle")
+    parser.add_argument("--cut-reward-phase", choices=("before", "writing", "success"),
+                        help="stop both CPUs when the selected player's reward save reaches this phase")
+    parser.add_argument("--cut-player", type=int, choices=(0, 1), default=0)
+    parser.add_argument("--cut-delay-frames", type=int, default=0,
+                        help="frames to remain in the selected phase before stopping")
     parser.add_argument("--require-presence", action="store_true",
                         help="fail unless both ROMs received each other's native packets")
     parser.add_argument("--timeout", type=int, default=180, help="wall-clock seconds")
@@ -94,6 +131,25 @@ def main() -> int:
         parser.error("disconnect frame must be between 0 and frames - 1")
     if args.require_presence and (args.diagnostic_size != 80 or args.disconnect_frame):
         parser.error("presence assertion needs 80-byte diagnostics and no cable removal")
+    if (args.save0 or args.save1) and not args.enable_saves:
+        parser.error("--save0/--save1 require --enable-saves")
+    if (args.stage_party or args.stage_full_medicine) and not args.stage_e2e:
+        parser.error("stage party/full medicine requires --stage-e2e")
+    if args.e2e_save_frame and (not args.enable_saves or not args.stage_e2e
+                                or not 0 < args.e2e_save_frame < args.frames):
+        parser.error("E2E save frame requires staged game, saves, and a frame within run")
+    if args.e2e_wild_battle_frame and (not args.stage_e2e
+                                       or not 0 < args.e2e_wild_battle_frame < args.frames):
+        parser.error("E2E wild battle frame requires staged game and a frame within run")
+    if args.e2e_save_frame and args.e2e_wild_battle_frame:
+        parser.error("E2E save and wild battle requests cannot share one mailbox run")
+    if args.cut_reward_phase and not args.enable_saves:
+        parser.error("reward power cut requires --enable-saves")
+    if args.cut_delay_frames < 0 or (args.cut_delay_frames and not args.cut_reward_phase):
+        parser.error("cut delay must be nonnegative and requires a reward phase")
+    for save in (args.save0, args.save1):
+        if save and (not save.is_file() or save.stat().st_size == 0):
+            parser.error(f"initial save is missing or empty: {save}")
     stage_x = stage_y = 0x8000
     if args.stage_position is not None:
         if not args.stage_e2e:
@@ -121,16 +177,22 @@ def main() -> int:
     output.mkdir(parents=True, exist_ok=True)
     for old in output.glob("player*.png"):
         old.unlink()
-    for pattern in ("player*.ppm", "player*.diag"):
+    for pattern in ("player*.ppm", "player*.diag", "player*.battle", "player*.reward"):
         for old in output.glob(pattern):
             old.unlink()
-    (output / "diagnostics.json").unlink(missing_ok=True)
+    for name in ("diagnostics.json", "battle.json", "reward.json", "cut.json"):
+        (output / name).unlink(missing_ok=True)
     (output / "link.log").unlink(missing_ok=True)
+    if args.enable_saves:
+        for player in range(2):
+            (output / f"player{player}.sav").unlink(missing_ok=True)
     symbols = symbols_for(args.elf.resolve())
     required = [args.diagnostic] if args.diagnostic_size else []
     if args.stage_e2e:
         required += ["gE2ETestAbi", "gE2ETestRequest", "gE2ETestResult"]
     missing = sorted(set(required) - symbols.keys())
+    if args.cut_reward_phase and "gMultiplayerPocRewardDiag" not in symbols:
+        missing.append("gMultiplayerPocRewardDiag")
     if missing:
         parser.error(f"matching ELF lacks symbols: {', '.join(missing)}")
     (output / "provenance.txt").write_text(
@@ -138,6 +200,13 @@ def main() -> int:
         f"libmgba.a SHA256: {digest(library)}\n"
         f"ROM SHA256: {digest(args.rom.resolve())}\n"
         f"ELF SHA256: {digest(args.elf.resolve())}\n"
+        f"run.py SHA256: {digest(Path(__file__).resolve())}\n"
+        f"link.c SHA256: {digest(HERE / 'link.c')}\n"
+        f"inputs SHA256: {digest(args.inputs.resolve())}\n"
+        + "".join(f"save{player} SHA256: {digest(save.resolve())}\n"
+                  for player, save in enumerate((args.save0, args.save1)) if save)
+        + f"cwd: {Path.cwd()}\n"
+        + f"command: {shlex.join(sys.argv)}\n"
         + "".join(f"{key}=0x{symbols[key]:08x}\n" for key in required)
     )
     with tempfile.TemporaryDirectory(prefix="wayfarer-multiplayer-link-") as temporary:
@@ -152,6 +221,9 @@ def main() -> int:
         )
         for player in range(2):
             shutil.copyfile(args.rom.resolve(), work / f"player{player}.gba")
+        for player, save in enumerate((args.save0, args.save1)):
+            if save:
+                shutil.copyfile(save.resolve(), work / f"player{player}.sav")
         shutil.copyfile(args.inputs.resolve(), work / "inputs.txt")
         watches = (
             ("gLinkStatus", 4, 0), ("gShouldAdvanceLinkState", 1, 0),
@@ -162,14 +234,39 @@ def main() -> int:
             ("gRecvQueueCount", 1, 0xfbd, "gLink"),
             ("gLinkType", 2, 0), ("gMainCB2", 4, 4, "gMain"),
             ("gMainSerialCB", 4, 24, "gMain"), ("gMainState", 1, 0x438, "gMain"),
+            ("gPaletteFadeFlags", 4, 12, "gPaletteFade"),
+            ("gPaletteFadeColor", 4, 16, "gPaletteFade"),
+            ("gMapLayoutLoadError", 4, 0),
+            ("gMapLayoutLoadErrorActive", 1, 10, "gMapLayoutLoadError"),
+            ("gMapHeaderLayoutId", 2, 0x12, "gMapHeader"),
+            ("gPlttBufferFaded", 2, 0),
+            ("gPlttBufferUnfaded", 2, 0),
+            ("gE2ERequestStatus", 1, 87, "gE2ETestRequest"),
+            ("gE2ERequestCommand", 1, 86, "gE2ETestRequest"),
+            ("gE2EResultStatus", 1, 14, "gE2ETestResult"),
+            ("gSaveFileStatus", 1, 0), ("gSaveCounter", 4, 0),
+            ("gPlayerPartyCount", 1, 0), ("gSaveBlock1Ptr", 4, 0),
+            ("gSaveBlock2Ptr", 4, 0),
+            ("battleState", 4, 12, "gMultiplayerPocBattleDiag"),
+            ("battleError", 4, 16, "gMultiplayerPocBattleDiag"),
+            ("battleChoiceCount", 4, 36, "gMultiplayerPocBattleDiag"),
+            ("battleChosenMove", 4, 40, "gMultiplayerPocBattleDiag"),
+            ("battleAnimationCount", 4, 48, "gMultiplayerPocBattleDiag"),
+            ("battleAnimatedMove", 4, 52, "gMultiplayerPocBattleDiag"),
+            ("battleAgreed", 4, 84, "gMultiplayerPocBattleDiag"),
+            ("rewardLedger", 4, 16, "gMultiplayerPocRewardDiag"),
+            ("rewardSavePhase", 4, 24, "gMultiplayerPocRewardDiag"),
+            ("rewardCommitted", 4, 40, "gMultiplayerPocRewardDiag"),
         )
-        (work / "watch.txt").write_text("".join(
+        watch_text = "".join(
             f"{name} {symbols[base] + offset:08x} {width}\n"
             for item in watches
             for name, width, offset, *alias in (item,)
             for base in (alias[0] if alias else name,)
             if base in symbols
-        ))
+        )
+        watch_text += "DISPCNT 04000000 2\nBLDCNT 04000050 2\nBLDY 04000054 2\n"
+        (work / "watch.txt").write_text(watch_text)
         (work / "captures.txt").write_text("\n".join(map(str, capture_frames)) + "\n")
         command = [
             str(executable), "player0.gba", "player1.gba", str(args.frames), "inputs.txt",
@@ -180,6 +277,18 @@ def main() -> int:
             hex(symbols.get("gE2ETestRequest", 0) if args.stage_e2e else 0),
             hex(symbols.get("gE2ETestResult", 0) if args.stage_e2e else 0),
             str(stage_x), str(stage_y),
+            "1" if args.enable_saves else "0",
+            str(args.e2e_save_frame),
+            {"both": "3", "0": "1", "1": "2"}[args.e2e_save_player],
+            "1" if args.stage_party else "0",
+            hex(symbols.get("gMultiplayerPocBattleDiag", 0)),
+            hex(symbols.get("gMultiplayerPocRewardDiag", 0)),
+            str(args.e2e_wild_battle_frame),
+            {"both": "3", "0": "1", "1": "2"}[args.e2e_wild_battle_player],
+            {None: "0", "before": "4", "writing": "2", "success": "3"}[args.cut_reward_phase],
+            str(args.cut_player),
+            str(args.cut_delay_frames),
+            "1" if args.stage_full_medicine else "0",
         ]
         environment = dict(os.environ, XDG_CONFIG_HOME=str(work), XDG_DATA_HOME=str(work))
         status = 1
@@ -200,6 +309,27 @@ def main() -> int:
             source = work / f"player{player}.diag"
             if source.exists():
                 shutil.copyfile(source, output / source.name)
+            for suffix in ("battle", "reward"):
+                source = work / f"player{player}.{suffix}"
+                if source.exists():
+                    shutil.copyfile(source, output / source.name)
+            source = work / f"player{player}.sav"
+            if args.enable_saves and source.exists():
+                shutil.copyfile(source, output / source.name)
+    if args.cut_reward_phase:
+        match = re.search(
+            r"power_cut player=(\d+) phase=(\d+) firstFrame=(\d+) "
+            r"cutFrame=(\d+) peerPhase=(\d+) battleState=(\d+) agreed=(\d+)",
+            (output / "link.log").read_text()
+        )
+        if match:
+            cut = dict(zip(("player", "phase", "firstFrame", "cutFrame", "peerPhase",
+                            "battleState", "resultAgreed"),
+                           map(int, match.groups())))
+            (output / "cut.json").write_text(json.dumps(cut, indent=2) + "\n")
+        else:
+            print("FAIL: requested reward power cut did not occur")
+            status = 1
     have_diagnostics = all((output / f"player{p}.diag").exists() for p in range(2))
     if args.diagnostic_size == 80 and have_diagnostics:
         diagnostics = [
@@ -231,6 +361,20 @@ def main() -> int:
     elif args.diagnostic_size == 80:
         print("FAIL: expected diagnostic data from both cartridges")
         status = 1
+    for label, fields, count, magic in (
+        ("battle", BATTLE_FIELDS, 24, 0x42415431),
+        ("reward", REWARD_FIELDS, 14, 0x52574431),
+    ):
+        files = [output / f"player{player}.{label}" for player in range(2)]
+        if all(path.exists() for path in files):
+            values = [dict(zip(fields, struct.unpack(f"<{count}I", path.read_bytes())))
+                      for path in files]
+            if all(value["magic"] == magic and value["size"] == count * 4
+                   for value in values):
+                (output / f"{label}.json").write_text(json.dumps(values, indent=2) + "\n")
+            else:
+                print(f"FAIL: invalid {label} diagnostic data")
+                status = 1
     print((output / "link.log").read_text(), end="")
     print(f"Artifacts: {output}")
     return status

@@ -1,0 +1,12 @@
+mGBA version: 0.10.5
+libmgba.a SHA256: ac09dc48409e9d863a640e9429b8e24569f4eb43e2689dad4c06a66a952a603f
+ROM SHA256: c4776cacbf29a66a96cf4c29782ac148dfc96ab990bb5101cab3ae0d541a6f6a
+ELF SHA256: 46b22a0b86d6e65dc7d9f199739c392ae009fc2ccaecddf36d652511a7e7a48c
+run.py SHA256: f23cd53c01615192dc3ef803f836de04a5a7d87595095a5d11e402a71c58e0f6
+link.c SHA256: 5e9b3024e11b375e6ddfc7c1b1f707227bc624e4884db2fa29d614a06ea79901
+inputs SHA256: 02e04e3faf71796710f2d5caff15a0ceeff615db1f035a81cb15bb591daf03e9
+save0 SHA256: 9cbf1b984d6ac861a3ff4debf061df9a711ea4ad86bfe84f727088cdaf222be5
+save1 SHA256: eaebc6fa9b51af2c84c6da69a9e9932f5c47b24a8a6a3a4aa1f6141df38c950b
+cwd: /home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/multiplayer-poc/pokemon-wayfarer
+command: game/tools/multiplayer-poc/run.py game/pokemon-wayfarer-e2e-poc.gba game/pokemon-wayfarer-e2e-poc.elf --mgba-source /tmp/wayfarer-multiplayer-poc-tools/mgba-0.10.5 --mgba-build /tmp/wayfarer-multiplayer-poc-tools/build --inputs game/tools/multiplayer-poc/coop-distinct.inputs --enable-saves --save0 /tmp/wayfarer-multiplayer-poc-phase2/full-medicine-baseline/player0.sav --save1 /tmp/wayfarer-multiplayer-poc-phase2/full-medicine-baseline/player1.sav --frames 8500 --capture-frames 3500,7000,8400 --output /tmp/wayfarer-multiplayer-poc-phase2/full-medicine-pending --timeout 300
+gMultiplayerPocDiag=0x020351ec

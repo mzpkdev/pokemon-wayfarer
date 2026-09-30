@@ -1,0 +1,2 @@
+mGBA - WAYFARER -  Player 1 of 2 (45.4 fps) - 0.10.5
+mGBA - WAYFARER -  Player 2 of 2 - 0.10.5

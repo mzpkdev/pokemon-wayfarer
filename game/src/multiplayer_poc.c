@@ -4,17 +4,21 @@
 
 #include "event_object_movement.h"
 #include "field_player_avatar.h"
+#include "field_screen_effect.h"
 #include "fieldmap.h"
 #include "link.h"
 #include "main.h"
 #include "multiplayer_poc.h"
+#include "multiplayer_poc_battle.h"
+#include "multiplayer_poc_reward.h"
 #include "overworld.h"
+#include "script.h"
 #include "sprite.h"
 
-#define POC_PACKET_MAGIC 0x5750 // "WP"
 #define POC_CONNECT_TIMEOUT_FRAMES 600
 #define POC_PEER_TIMEOUT_FRAMES 180
 #define POC_SPRITE_RETRY_FRAMES 30
+#define POC_AWAY_HEARTBEAT_INTERVAL 16
 
 EWRAM_DATA volatile struct MultiplayerPocDiag gMultiplayerPocDiag;
 
@@ -27,6 +31,7 @@ static EWRAM_DATA bool8 sLocalInField;
 static EWRAM_DATA bool8 sPeerInField;
 static EWRAM_DATA bool8 sInitialized;
 static EWRAM_DATA bool8 sConsumeSelect;
+static EWRAM_DATA bool8 sConsumeClaim;
 
 STATIC_ASSERT(sizeof(struct MultiplayerPocDiag) == 80, MultiplayerPocDiagSize);
 
@@ -35,7 +40,7 @@ static void InitPocIfNeeded(void)
     if (sInitialized)
         return;
     gMultiplayerPocDiag.magic = MULTIPLAYER_POC_DIAG_MAGIC;
-    gMultiplayerPocDiag.version = MULTIPLAYER_POC_PROTOCOL_VERSION;
+    gMultiplayerPocDiag.version = MULTIPLAYER_POC_DIAG_VERSION;
     gMultiplayerPocDiag.size = sizeof(struct MultiplayerPocDiag);
     gMultiplayerPocDiag.peerId = 0xFFFFFFFF;
     gMultiplayerPocDiag.peerMap = 0xFFFFFFFF;
@@ -65,6 +70,7 @@ static void ClearPeerSprite(void)
 
 static void StopPoc(enum MultiplayerPocState state, enum MultiplayerPocError error)
 {
+    MultiplayerPocBattle_OnPresenceLost();
     ClearPeerSprite();
     CloseLink();
     ClearLinkCallback();
@@ -82,6 +88,17 @@ bool8 MultiplayerPoc_IsRunning(void)
         || gMultiplayerPocDiag.state == MULTIPLAYER_POC_ACTIVE;
 }
 
+void MultiplayerPoc_BattleDetach(void)
+{
+    ClearPeerSprite();
+    ClearLinkCallback();
+    SetSuppressLinkErrorMessage(FALSE);
+    gMultiplayerPocDiag.state = MULTIPLAYER_POC_IDLE;
+    gMultiplayerPocDiag.error = MULTIPLAYER_POC_ERROR_NONE;
+    sPendingError = MULTIPLAYER_POC_ERROR_NONE;
+    sPeerInField = FALSE;
+}
+
 bool8 MultiplayerPoc_TryToggle(void)
 {
     // FieldGetPlayerInput counts held SELECT frames and interprets its release
@@ -90,6 +107,29 @@ bool8 MultiplayerPoc_TryToggle(void)
     {
         if (!JOY_HELD(SELECT_BUTTON))
             sConsumeSelect = FALSE;
+        return TRUE;
+    }
+
+    if (sConsumeClaim)
+    {
+        if (!JOY_HELD(A_BUTTON))
+            sConsumeClaim = FALSE;
+        return TRUE;
+    }
+
+    if (MultiplayerPocBattle_TryRequest())
+        return TRUE;
+
+    // Explicit local retry after making bag space. It does not implicitly
+    // connect, start a battle, or accept a reward on the other cartridge.
+    if (JOY_NEW(A_BUTTON)
+     && (gMain.heldKeys & (L_BUTTON | R_BUTTON)) == (L_BUTTON | R_BUTTON)
+     && !ArePlayerFieldControlsLocked()
+     && IsPlayerStandingStill()
+     && !MultiplayerPocBattle_OwnsTransport())
+    {
+        sConsumeClaim = TRUE;
+        MultiplayerPocReward_TryClaimPending();
         return TRUE;
     }
 
@@ -212,22 +252,23 @@ void MultiplayerPoc_Update(void)
     u8 status;
 
     InitPocIfNeeded();
+    MultiplayerPocReward_UpdateDiag();
     gMultiplayerPocDiag.frame++;
     CaptureLocalState();
-
-    if (!MultiplayerPoc_IsRunning())
-        return;
-
-    if (sPendingError)
+    if (MultiplayerPoc_IsRunning() && sPendingError)
     {
         StopPoc(MULTIPLAYER_POC_FAILED, sPendingError);
         return;
     }
-    if (HasLinkErrorOccurred())
+    if (MultiplayerPoc_IsRunning() && HasLinkErrorOccurred())
     {
         StopPoc(MULTIPLAYER_POC_FAILED, MULTIPLAYER_POC_ERROR_TRANSPORT);
         return;
     }
+
+    MultiplayerPocBattle_Update();
+    if (MultiplayerPocBattle_OwnsTransport() || !MultiplayerPoc_IsRunning())
+        return;
 
     if (gMultiplayerPocDiag.state == MULTIPLAYER_POC_CONNECTING)
     {
@@ -288,13 +329,32 @@ void MultiplayerPoc_BuildSendCmd(u16 *cmd)
     if (gMultiplayerPocDiag.state != MULTIPLAYER_POC_ACTIVE)
         return;
 
-    cmd[2] = POC_PACKET_MAGIC;
+    cmd[2] = MULTIPLAYER_POC_PACKET_MAGIC;
     cmd[3] = MULTIPLAYER_POC_PROTOCOL_VERSION;
     cmd[4] = gMultiplayerPocDiag.localMap;
     cmd[5] = gMultiplayerPocDiag.localX;
     cmd[6] = gMultiplayerPocDiag.localY;
     cmd[7] = (gMultiplayerPocDiag.localFacing & 0xF) | (sLocalInField << 8);
     gMultiplayerPocDiag.txCount++;
+}
+
+bool8 MultiplayerPoc_ShouldSendCmd(void)
+{
+    u32 battleState = gMultiplayerPocBattleDiag.state;
+
+    if (gMultiplayerPocDiag.state != MULTIPLAYER_POC_ACTIVE)
+        return TRUE;
+    if (gMultiplayerPocDiag.rxCount == 0)
+        return TRUE;
+    // Both players consent at full rate before handing the cable to battle.
+    if (battleState >= POC_BATTLE_OFFER && battleState <= POC_BATTLE_GO)
+        return TRUE;
+    if (sLocalInField && sPeerInField)
+        return TRUE;
+    // Full-screen menus and solo battles update their main callback more
+    // slowly. Empty link commands let their receive queue drain while a
+    // periodic snapshot still satisfies the presence watchdog.
+    return (gMultiplayerPocDiag.frame & (POC_AWAY_HEARTBEAT_INTERVAL - 1)) == 0;
 }
 
 void MultiplayerPoc_ReceiveCmd(u8 playerId, const u16 *cmd)
@@ -304,7 +364,7 @@ void MultiplayerPoc_ReceiveCmd(u8 playerId, const u16 *cmd)
         return;
 
     gMultiplayerPocDiag.lastCmd = cmd[0];
-    if (cmd[2] != POC_PACKET_MAGIC
+    if (cmd[2] != MULTIPLAYER_POC_PACKET_MAGIC
      || cmd[3] != MULTIPLAYER_POC_PROTOCOL_VERSION)
     {
         sPendingError = MULTIPLAYER_POC_ERROR_PROTOCOL;
@@ -321,6 +381,7 @@ void MultiplayerPoc_ReceiveCmd(u8 playerId, const u16 *cmd)
     sPeerInField = (cmd[7] & 0x100) != 0;
     sLastPeerFrame = gMultiplayerPocDiag.frame;
     gMultiplayerPocDiag.rxCount++;
+    MultiplayerPocBattle_OnPeerWord(cmd[1]);
     if (HasPeerSprite()
      && gSprites[sPeerSpriteId].animNum
         != GetFaceDirectionAnimNum(gMultiplayerPocDiag.peerFacing))

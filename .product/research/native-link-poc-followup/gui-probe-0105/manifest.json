@@ -1,0 +1,10 @@
+{
+  "official-noble.tar.xz": "0bbf1e7ca511cd4b443239b97546f699df72211241a1db9177e331866031d8e9",
+  "root/usr/bin/mgba-qt": "359e92e8cdcc0b43fc1d97993ab436332f29e21f7d6adf07a2cbfe28de75afea",
+  "root/usr/lib/libmgba.so.0.10.5": "440300df58dd056e8886f10316e3ccfcd290b838c1bfbef3935f21229dfb084e",
+  "phase1.gba": "997dadfcc493f97b8c835243a6beb19676bb9964a31b39fae532a979ee0731ff",
+  "phase1-peer.gba": "997dadfcc493f97b8c835243a6beb19676bb9964a31b39fae532a979ee0731ff",
+  "version": "0.10.5 (26b7884bc25a5933960f3cdcd98bac1ae14d42e2)",
+  "official_asset": "https://github.com/mgba-emu/mgba/releases/download/0.10.5/mGBA-0.10.5-ubuntu64-noble.tar.xz",
+  "scope": "phase1 baseline ROM, ordinary official Qt binary, unmodified ROM, no memory injection"
+}

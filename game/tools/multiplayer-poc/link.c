@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-enum { PLAYERS = 2, WIDTH = 240, HEIGHT = 160, MAX_EVENTS = 256, MAX_WATCH = 16,
+enum { PLAYERS = 2, WIDTH = 240, HEIGHT = 160, MAX_EVENTS = 256, MAX_WATCH = 64,
        MAX_CAPTURE = 16 };
 
 struct InputEvent { unsigned frame, player, keys; };
@@ -40,7 +40,21 @@ struct Runner {
     int ready;
     unsigned originFrame;
     unsigned stageX, stageY;
+    unsigned stageParty;
+    unsigned stageFullMedicine;
+    unsigned saveFrame;
+    unsigned saveMask;
+    int saveRequested[PLAYERS];
+    int saveReady[PLAYERS];
+    unsigned wildBattleFrame, wildBattleMask;
+    int wildBattleRequested[PLAYERS];
+    int wildBattleReady[PLAYERS];
     uint32_t diagAddress;
+    uint32_t battleDiagAddress;
+    uint32_t rewardDiagAddress;
+    unsigned cutPhase, cutPlayer, cutDelay;
+    unsigned cutSeenFrame;
+    int cutTriggered;
     struct Watch watch[MAX_WATCH];
     unsigned watchCount;
     unsigned lastWatchFrame[PLAYERS];
@@ -201,11 +215,19 @@ static void load_capture(struct Runner *r, const char *path)
     fclose(file);
 }
 
+static uint32_t hash_memory(struct mCore *core, uint32_t address, unsigned size)
+{
+    uint32_t hash = 2166136261u;
+    for (unsigned i = 0; i < size; ++i)
+        hash = (hash ^ core->busRead8(core, address + i)) * 16777619u;
+    return hash;
+}
+
 static void snapshot(struct Runner *r, int player)
 {
     struct mCore *core = r->core[player];
     unsigned frame = core->frameCounter(core);
-    if (frame % 60 || frame == r->lastWatchFrame[player]) return;
+    if (frame % 30 || frame == r->lastWatchFrame[player]) return;
     r->lastWatchFrame[player] = frame;
     printf("watch player=%d frame=%u mode=%d attachedMulti=%d phase=%d siocnt=%04x rcnt=%04x",
            player, frame, r->node[player].mode, r->link.attachedMulti,
@@ -217,6 +239,43 @@ static void snapshot(struct Runner *r, int player)
             : w->width == 2 ? core->busRead16(core, w->address)
             : core->busRead32(core, w->address);
         printf(" %s=%08x", w->name, value);
+    }
+    unsigned nonblack = 0, vramNonzero = 0, paletteNonzero = 0;
+    for (unsigned i = 0; i < WIDTH * HEIGHT; ++i)
+        nonblack += (r->pixels[player][i] & 0x00ffffff) != 0;
+    for (unsigned address = 0x06000000; address < 0x06018000; address += 2)
+        vramNonzero += core->busRead16(core, address) != 0;
+    for (unsigned address = 0x05000000; address < 0x05000400; address += 2)
+        paletteNonzero += core->busRead16(core, address) != 0;
+    printf(" imageNonblack=%u vramNonzero=%u paletteNonzero=%u",
+           nonblack, vramNonzero, paletteNonzero);
+    for (unsigned i = 0; i < r->watchCount; ++i)
+        if (!strcmp(r->watch[i].name, "gPlttBufferFaded")
+            || !strcmp(r->watch[i].name, "gPlttBufferUnfaded")) {
+            uint32_t hash = 2166136261u;
+            unsigned nonzero = 0;
+            for (unsigned j = 0; j < 512; ++j) {
+                unsigned value = core->busRead16(core, r->watch[i].address + j * 2);
+                nonzero += value != 0;
+                hash = (hash ^ value) * 16777619u;
+            }
+            printf(" %sNonzero=%u %sHash=%08x", r->watch[i].name, nonzero,
+                   r->watch[i].name, hash);
+        }
+    for (unsigned i = 0; i < r->watchCount; ++i) {
+        if (strcmp(r->watch[i].name, "gSaveBlock1Ptr")
+            && strcmp(r->watch[i].name, "gSaveBlock2Ptr")) continue;
+        uint32_t pointer = core->busRead32(core, r->watch[i].address);
+        if (pointer < 0x02000000 || pointer > 0x0203ffff) continue;
+        if (!strcmp(r->watch[i].name, "gSaveBlock1Ptr"))
+            printf(" hashParty=%08x hashBag=%08x hashFlags=%08x hashVars=%08x ledger=%04x",
+                   hash_memory(core, pointer + 572, 600),
+                   hash_memory(core, pointer + 1380, 2612),
+                   hash_memory(core, pointer + 6540, 304),
+                   hash_memory(core, pointer + 6844, 512),
+                   core->busRead16(core, pointer + 4324));
+        if (!strcmp(r->watch[i].name, "gSaveBlock2Ptr"))
+            printf(" hashFrontier=%08x", hash_memory(core, pointer + 1612, 2272));
     }
     if (r->diagAddress) {
         uint32_t base = r->diagAddress;
@@ -274,6 +333,16 @@ static void stage_game(struct Runner *r, int player)
         core->busWrite8(core, r->e2eRequest + 84, 3); /* instant text */
         core->busWrite8(core, r->e2eRequest + 85, 1); /* seeded */
         core->busWrite8(core, r->e2eRequest + 86, 1); /* arrange */
+        if (r->stageParty) {
+            /* ABI v23: one original party member on each cartridge. These
+             * fixture bytes define independent local progress, not packets. */
+            core->busWrite16(core, r->e2eRequest + 88, player ? 4 : 1);
+            core->busWrite16(core, r->e2eRequest + 90, player ? 10 : 33);
+            core->busWrite8(core, r->e2eRequest + 98, 8);
+            core->busWrite8(core, r->e2eRequest + 356, 1);
+        }
+        if (r->stageFullMedicine)
+            core->busWrite8(core, r->e2eRequest + 361, 0x10); /* full Medicine pocket */
         core->busWrite8(core, r->e2eRequest + r->e2eStatusOffset, 1); /* pending last */
         r->staged[player] = 1;
         printf("e2e_arrange_requested player=%d frame=%u\n", player, frame);
@@ -296,6 +365,66 @@ static void stage_game(struct Runner *r, int player)
         r->originFrame = f0 > f1 ? f0 : f1;
         r->ready = 1;
         printf("input_origin_frame=%u\n", r->originFrame);
+    }
+}
+
+static void save_staged_game(struct Runner *r, int player)
+{
+    if (!r->saveFrame || !(r->saveMask & (1u << player)) || !r->ready) return;
+    struct mCore *core = r->core[player];
+    unsigned frame = core->frameCounter(core);
+    if (frame < r->originFrame + r->saveFrame) return;
+    if (!r->saveRequested[player]) {
+        /* Existing E2E command calls the game's real TrySavingData path. */
+        for (unsigned i = 0; i < 372; ++i) core->busWrite8(core, r->e2eRequest + i, 0);
+        core->busWrite32(core, r->e2eRequest, player + 1001);
+        core->busWrite8(core, r->e2eRequest + 86, 3); /* SAVE */
+        core->busWrite8(core, r->e2eRequest + r->e2eStatusOffset, 1); /* PENDING */
+        r->saveRequested[player] = 1;
+        printf("e2e_save_requested player=%d frame=%u\n", player, frame);
+    }
+    if (!r->saveReady[player]) {
+        unsigned status = core->busRead8(core, r->e2eRequest + r->e2eStatusOffset);
+        if (status == 4) {
+            fprintf(stderr, "e2e save failed player=%d error=%u\n", player,
+                    core->busRead16(core, r->e2eResult + 12));
+            exit(1);
+        }
+        if (status == 3) {
+            r->saveReady[player] = 1;
+            printf("e2e_save_ready player=%d frame=%u\n", player, frame);
+        }
+    }
+}
+
+static void start_staged_wild_battle(struct Runner *r, int player)
+{
+    if (!r->wildBattleFrame || !(r->wildBattleMask & (1u << player)) || !r->ready) return;
+    struct mCore *core = r->core[player];
+    unsigned frame = core->frameCounter(core);
+    if (frame < r->originFrame + r->wildBattleFrame) return;
+    if (!r->wildBattleRequested[player]) {
+        for (unsigned i = 0; i < 372; ++i) core->busWrite8(core, r->e2eRequest + i, 0);
+        core->busWrite32(core, r->e2eRequest, player + 2001);
+        core->busWrite16(core, r->e2eRequest + 344, 10); /* Caterpie */
+        core->busWrite16(core, r->e2eRequest + 346, 33); /* Tackle */
+        core->busWrite8(core, r->e2eRequest + 354, 3);
+        core->busWrite8(core, r->e2eRequest + 86, 2); /* START_WILD_BATTLE */
+        core->busWrite8(core, r->e2eRequest + r->e2eStatusOffset, 1);
+        r->wildBattleRequested[player] = 1;
+        printf("e2e_wild_battle_requested player=%d frame=%u\n", player, frame);
+    }
+    if (!r->wildBattleReady[player]) {
+        unsigned status = core->busRead8(core, r->e2eRequest + r->e2eStatusOffset);
+        if (status == 4) {
+            fprintf(stderr, "e2e wild battle failed player=%d error=%u\n", player,
+                    core->busRead16(core, r->e2eResult + 12));
+            exit(1);
+        }
+        if (status == 3) {
+            r->wildBattleReady[player] = 1;
+            printf("e2e_wild_battle_ready player=%d frame=%u\n", player, frame);
+        }
     }
 }
 
@@ -331,15 +460,17 @@ static void dump_diag(struct mCore *core, const char *path, uint32_t address, un
 
 int main(int argc, char **argv)
 {
-    if (argc != 15) {
-        fprintf(stderr, "usage: link ROM0 ROM1 FRAMES INPUT_SCRIPT WATCH_SCRIPT CAPTURE_SCRIPT DIAG_ADDR DIAG_SIZE DISCONNECT_FRAME E2E_ABI E2E_REQUEST E2E_RESULT STAGE_X STAGE_Y\n");
+    if (argc != 27) {
+        fprintf(stderr, "usage: link ROM0 ROM1 FRAMES INPUT_SCRIPT WATCH_SCRIPT CAPTURE_SCRIPT DIAG_ADDR DIAG_SIZE DISCONNECT_FRAME E2E_ABI E2E_REQUEST E2E_RESULT STAGE_X STAGE_Y ENABLE_SAVES E2E_SAVE_FRAME E2E_SAVE_MASK STAGE_PARTY BATTLE_DIAG REWARD_DIAG WILD_BATTLE_FRAME WILD_BATTLE_MASK CUT_PHASE CUT_PLAYER CUT_DELAY FULL_MEDICINE\n");
         return 2;
     }
     unsigned frames = number(argv[3]);
     uint32_t diag = number(argv[7]);
     unsigned diagSize = number(argv[8]);
     unsigned disconnectFrame = number(argv[9]);
-    if (!frames || diagSize > 1024 || (disconnectFrame && disconnectFrame >= frames)) return 2;
+    unsigned enableSaves = number(argv[15]);
+    if (!frames || diagSize > 1024 || enableSaves > 1
+        || (disconnectFrame && disconnectFrame >= frames)) return 2;
 
     struct Runner r = { 0 };
     r.diagAddress = diag;
@@ -348,6 +479,26 @@ int main(int argc, char **argv)
     r.e2eResult = number(argv[12]);
     r.stageX = number(argv[13]);
     r.stageY = number(argv[14]);
+    r.saveFrame = number(argv[16]);
+    r.saveMask = number(argv[17]);
+    r.stageParty = number(argv[18]);
+    r.battleDiagAddress = number(argv[19]);
+    r.rewardDiagAddress = number(argv[20]);
+    r.wildBattleFrame = number(argv[21]);
+    r.wildBattleMask = number(argv[22]);
+    r.cutPhase = number(argv[23]);
+    r.cutPlayer = number(argv[24]);
+    r.cutDelay = number(argv[25]);
+    r.stageFullMedicine = number(argv[26]);
+    r.cutSeenFrame = UINT32_MAX;
+    if (r.saveMask < 1 || r.saveMask > 3 || r.stageParty > 1
+        || r.wildBattleMask < 1 || r.wildBattleMask > 3
+        || (r.wildBattleFrame && (!r.e2eRequest || r.wildBattleFrame >= frames))
+        || r.stageFullMedicine > 1
+        || (r.cutPhase && (r.cutPhase < 2 || r.cutPhase > 4
+            || r.cutPlayer >= PLAYERS || !r.rewardDiagAddress || !enableSaves
+            || (r.cutPhase == 4 && !r.battleDiagAddress)))) return 2;
+    if (r.saveFrame && (!r.e2eRequest || !enableSaves || r.saveFrame >= frames)) return 2;
     r.ready = !r.e2eRequest;
     struct mLogger logger = { .log = log_message };
     mLogSetDefaultLogger(&logger);
@@ -379,6 +530,10 @@ int main(int argc, char **argv)
             fprintf(stderr, "could not load ROM for player %d\n", i);
             return 1;
         }
+        if (enableSaves && !mCoreAutoloadSave(r.core[i])) {
+            fprintf(stderr, "could not load save for player %d\n", i);
+            return 1;
+        }
         r.core[i]->setVideoBuffer(r.core[i], r.pixels[i], WIDTH);
         r.core[i]->reset(r.core[i]);
         GBASIOLockstepNodeCreate(&r.node[i]);
@@ -400,6 +555,8 @@ int main(int argc, char **argv)
         for (int i = 0; i < PLAYERS; ++i) {
             if (!r.awake[i]) continue;
             stage_game(&r, i);
+            save_staged_game(&r, i);
+            start_staged_wild_battle(&r, i);
             apply_input(&r, i);
             snapshot(&r, i);
             if (r.ready) {
@@ -415,6 +572,28 @@ int main(int argc, char **argv)
             }
             r.core[i]->runLoop(r.core[i]);
             ++active;
+        }
+        if (r.cutPhase) {
+            unsigned phase = r.core[r.cutPlayer]->busRead32(
+                r.core[r.cutPlayer], r.rewardDiagAddress + 24);
+            unsigned battleState = r.battleDiagAddress ? r.core[r.cutPlayer]->busRead32(
+                r.core[r.cutPlayer], r.battleDiagAddress + 12) : 0;
+            unsigned agreed = r.battleDiagAddress ? r.core[r.cutPlayer]->busRead32(
+                r.core[r.cutPlayer], r.battleDiagAddress + 84) : 0;
+            unsigned frame = r.core[r.cutPlayer]->frameCounter(r.core[r.cutPlayer]);
+            int phaseReached = r.cutPhase == 4
+                ? battleState == 9 && agreed == 1 && phase == 0
+                : phase == r.cutPhase;
+            if (phaseReached && r.cutSeenFrame == UINT32_MAX)
+                r.cutSeenFrame = frame;
+            if (phaseReached && frame - r.cutSeenFrame >= r.cutDelay) {
+                unsigned peerPhase = r.core[1 - r.cutPlayer]->busRead32(
+                    r.core[1 - r.cutPlayer], r.rewardDiagAddress + 24);
+                printf("power_cut player=%u phase=%u firstFrame=%u cutFrame=%u peerPhase=%u battleState=%u agreed=%u\n",
+                       r.cutPlayer, phase, r.cutSeenFrame, frame, peerPhase, battleState, agreed);
+                r.cutTriggered = 1;
+                break;
+            }
         }
         if (++loops % 100000 == 0) {
             unsigned f0 = r.core[0]->frameCounter(r.core[0]);
@@ -443,6 +622,20 @@ int main(int argc, char **argv)
             printf("cable_removed frame=%u\n", disconnectFrame);
         }
     }
+    if (r.saveFrame && ((r.saveMask & 1u && !r.saveReady[0])
+        || (r.saveMask & 2u && !r.saveReady[1]))) {
+        fprintf(stderr, "E2E save did not finish on selected cartridges\n");
+        result = 1;
+    }
+    if (r.wildBattleFrame && ((r.wildBattleMask & 1u && !r.wildBattleReady[0])
+        || (r.wildBattleMask & 2u && !r.wildBattleReady[1]))) {
+        fprintf(stderr, "E2E wild battle did not reach battle UI on selected cartridges\n");
+        result = 1;
+    }
+    if (r.cutPhase && !r.cutTriggered) {
+        fprintf(stderr, "requested reward save phase cut was not reached\n");
+        result = 1;
+    }
     for (int i = 0; i < PLAYERS; ++i) {
         char path[32];
         snprintf(path, sizeof(path), "player%d.ppm", i);
@@ -451,11 +644,33 @@ int main(int argc, char **argv)
             snprintf(path, sizeof(path), "player%d.diag", i);
             dump_diag(r.core[i], path, diag, diagSize);
         }
+        if (r.battleDiagAddress) {
+            snprintf(path, sizeof(path), "player%d.battle", i);
+            dump_diag(r.core[i], path, r.battleDiagAddress, 96);
+        }
+        if (r.rewardDiagAddress) {
+            snprintf(path, sizeof(path), "player%d.reward", i);
+            dump_diag(r.core[i], path, r.rewardDiagAddress, 56);
+        }
         printf("player=%d frames=%u keys=0x%x sio_mode=%d\n", i,
                r.core[i]->frameCounter(r.core[i]), r.applied[i], r.node[i].mode);
     }
     fflush(stdout);
-    /* Deliberately let process teardown release cores and drivers. The lockstep
-     * driver has pointers into each core and deinit ordering is subtle. */
+    /* Remove the serial drivers before destroying the cores. Core deinit
+     * flushes each emulated flash save through its own mGBA VFile. */
+    for (int i = 0; i < PLAYERS; ++i) {
+        if (r.node[i].p) {
+            struct GBA *gba = r.core[i]->board;
+            GBASIOSetDriver(&gba->sio, NULL, SIO_MULTI);
+            GBASIOSetDriver(&gba->sio, NULL, SIO_NORMAL_32);
+            GBASIOLockstepDetachNode(&r.link, &r.node[i]);
+        }
+    }
+    mLockstepDeinit(&r.link.d);
+    for (int i = 0; i < PLAYERS; ++i) {
+        mCoreConfigDeinit(&r.core[i]->config);
+        r.core[i]->deinit(r.core[i]);
+        free(r.pixels[i]);
+    }
     return result;
 }

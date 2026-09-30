@@ -1,0 +1,13 @@
+Official mGBA Qt 0.10.5 compatibility probe, 2026-09-30
+
+Official GitHub release asset mGBA-0.10.5-ubuntu64-noble.tar.xz, local dpkg-deb extraction of libmgba.deb and mgba-qt.deb only. Dependencies from ../gui-probe/root reused, no system install or compilation. Crucial: official libmgba is in root/usr/lib, which precedes the 0.10.2 dependencies path; --version confirmed 0.10.5 (26b7884bc25a5933960f3cdcd98bac1ae14d42e2). See manifest.json hashes and release.json official metadata.
+
+probe.py launches Xvfb :89 -screen 0 1280x800x24 and root/usr/bin/mgba-qt phase1.gba with isolated env.json, QT_QPA_PLATFORM=xcb. Config includes override.BWFE hardware=1 (RTC), pauseOnFocusLost=0, pauseOnMinimize=0. No ROM changes, memory injection, custom emulator runner, or networking script. Screen capture reads X pixels via xwd and converts them losslessly to PNG.
+
+Input sequence: load first ROM copied from ../baseline-artifacts; saved game copies from ../fixture-valid-save-long/player0.sav and player1.sav. Return pulses skip intro/title; X acts as A and selects Continue. First core reaches New Bark Town before opening the second. File > New multiplayer window opens native second window. Load phase1-peer.gba through file chooser. Titles confirm Player 1 of 2 and Player 2 of 2, saved in paired-titles.txt.
+
+Observed: first core independently boots/Continues and renders field. After second ROM loads, second screen stays white with no FPS title. First remains rendered in field. Tried first L+R+SELECT chord (a+s+BackSpace), second Reset then Start; second stayed white. Tried resetting both linked windows, then Start independently: both stayed white (0105-both-reset.png). No successful peer Continue or visible peer presence established. GUI log contained no explanatory error.
+
+Conclusion: ordinary official 0.10.5 GUI single-core Continue works. Native GUI two-window sessions open but this bounded Xvfb probe did not obtain two running games/presence. Same broad second-core observation as distribution0.10.2, despite newer official binary and first-core-in-field loading sequence. This does not prove a ROM defect, global emulator incompatibility, or anything about real hardware/network latency. No further Qt/build/debugger expansion. Processes terminated.
+
+Evidence: 0105-open-dialog.png shows first player in New Bark plus native file chooser; 0105-two-loaded.png shows native paired state; 0105-primary-link-peer-reset.png and 0105-both-reset.png preserve unsuccessful variations. paired-titles.txt, final-titles.txt, manifest.json, env.json, config/mgba/config.ini, probe.py record setup.

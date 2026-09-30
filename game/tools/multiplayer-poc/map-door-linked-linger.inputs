@@ -1,0 +1,9 @@
+# Link both players, enter the house on P0, stay inside, then return outside.
+2 0 304
+2 1 304
+5 0 000
+5 1 000
+150 0 040
+175 0 000
+600 0 080
+625 0 000

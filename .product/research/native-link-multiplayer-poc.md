@@ -1,6 +1,9 @@
 # Native-link multiplayer proof of concept
 
-Status: disposable research experiment. Do not merge this branch into production.
+Status: first-milestone record from PoC commit
+`1dbf6922e4fc45f2fd4f3018097f32e54a018219`. Do not merge this experiment into production.
+See the [follow-up experiments](native-link-multiplayer-followup.md) for later
+rendering controls, independent-play, cooperative-encounter, and reward work.
 
 This experiment follows [multiplayer research PR #143](https://github.com/mzpkdev/pokemon-wayfarer/pull/143).
 It starts independently from Wayfarer commit
@@ -108,7 +111,7 @@ connected pair can satisfy the presence assertion.
 | Full Bag open/close | Observed working while the peer moved. At 1,200 post-stage frames both remained active; P0 sent/received 1,140/1,137 packets, P1 1,172/1,137. [Bag capture](native-link-poc/bag-open.png). |
 | Orderly leave/rejoin | Both players toggled off, then on. The trace shows the cable closed between sessions; final state active, 236/233 sends/receives each, updated positions visible. One-sided departure/rejoin is not established by this case. |
 | Simulated cable removal | Detached one mGBA serial driver at input frame 240. Both games reached transport-error state, hid the peer, and advanced through emulator frame 601 in the overworld. Save durability and physical unplug behavior were not tested. |
-| Map leave/return | Protocol/map updates continued, but indoor rendering failed; see below. Pokémon Center exit remains untested. |
+| Map leave/return | Protocol/map updates continued. Black captures were later identified as normal transition fades by the [long-stay controls](native-link-multiplayer-followup.md#rendering-control-the-earlier-black-frame-was-a-fade). Pokémon Center exit was not covered at this milestone. |
 | Default build | Build, symbol exclusion, and main-menu boot passed. |
 | Physical cable / other emulators | Not tested. |
 
@@ -130,25 +133,23 @@ summaries](native-link-poc/cases/) support these observations; each includes the
 same tested ROM's provenance. The pinned harness source is identified by
 [these hashes](native-link-poc/harness-sha256.json).
 
-### Observed failure: indoor rendering
+### Door captures: interpretation corrected by follow-up
 
-The house-entry sequence changes player 0's map from New Bark Town (0) to the
-player's house (259), while player 1 stays outside. The peer receives the new map
-and disappears; both sessions keep exchanging packets. Returning outside restores
-both visibility and rendering. **The indoor screen is black while the callback
-has already returned to `CB2_Overworld`. Map transitions therefore fail the full
-acceptance criterion.** The cause is unresolved; the retained Pokémon Center guard
-is source-reviewed but has not been demonstrated on a Center exit.
+The first house-entry sequence changed player 0's map from New Bark Town (0) to
+the player's house (259), while player 1 stayed outside. Both sessions kept
+exchanging packets. The black images below were originally interpreted as a
+rendering failure. Longer linked, idle, and compiled-out controls showed that
+these captures fall during normal entry/exit fades; the stable interior renders
+correctly. See the [follow-up evidence](native-link-multiplayer-followup.md#rendering-control-the-earlier-black-frame-was-a-fade).
 
-| Interior failure, player 0 | After exiting, player 0 |
+| Transition fade, player 0 | After exiting, player 0 |
 | --- | --- |
-| ![Black interior](native-link-poc/indoor-failure.png) | ![Exterior restored](native-link-poc/exterior-return.png) |
+| ![Transition fade](native-link-poc/indoor-failure.png) | ![Exterior restored](native-link-poc/exterior-return.png) |
 
 Captures are at input-relative frames 290 and 360. The harness input origin is
-emulator frame 101; diagnostic watch frames use absolute emulator frames. The
-black capture falls between the map-259 observation at absolute frame 360 and the
-return to map 0 at frame 420. This is a short regression reproduction, not a
-claim that every interior or warp behaves identically.
+emulator frame 101; diagnostic watch frames use absolute emulator frames.
+`CB2_Overworld` can be active while a palette fade is still running, so that
+callback alone does not establish a stable display state.
 
 ### Implementation lessons
 

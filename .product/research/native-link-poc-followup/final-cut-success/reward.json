@@ -1,0 +1,34 @@
+[
+  {
+    "magic": 1381450801,
+    "version": 1,
+    "size": 56,
+    "encounterId": 1,
+    "ledgerState": 0,
+    "bagPotionCount": 0,
+    "savePhase": 3,
+    "saveResult": 1,
+    "operationResult": 1,
+    "grantAttempts": 1,
+    "grantsCommitted": 1,
+    "duplicateSuppressions": 0,
+    "retryCount": 0,
+    "saveAttempts": 1
+  },
+  {
+    "magic": 1381450801,
+    "version": 1,
+    "size": 56,
+    "encounterId": 1,
+    "ledgerState": 2,
+    "bagPotionCount": 1,
+    "savePhase": 3,
+    "saveResult": 1,
+    "operationResult": 1,
+    "grantAttempts": 1,
+    "grantsCommitted": 1,
+    "duplicateSuppressions": 0,
+    "retryCount": 0,
+    "saveAttempts": 1
+  }
+]

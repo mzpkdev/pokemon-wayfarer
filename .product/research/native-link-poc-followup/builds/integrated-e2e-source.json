@@ -1,0 +1,16 @@
+{
+  "base_commit": "1dbf6922e4fc45f2fd4f3018097f32e54a018219",
+  "changed_rom_inputs": {
+    "game/include/multiplayer_poc.h": "e8aac535fee3287c95f68729ac6c15a48e943eb1b4720f05735bf00ceb316aad",
+    "game/include/multiplayer_poc_battle.h": "5e41e4844bdcdede8f039933c4ee8119cb38f9ff7a4f68e553a36fc48f478cf4",
+    "game/include/multiplayer_poc_reward.h": "5d3fc8f69268015592b1620bd88675a5c03a6cd371540da9497a897006b0976a",
+    "game/src/battle_controller_player.c": "f4a4a710eed7ad1bad2a03aa34d20969acf95016abdb2bfbc1180db1512edf5c",
+    "game/src/battle_main.c": "41ebab12d192ab195c67038c42601e1e611cf0faaa36910625e7ef77c148b77b",
+    "game/src/link.c": "53ee2d4caad37659cef1bd5a112fb90d26a5c51eed0a811d3d0aaa7b7b45a1d0",
+    "game/src/multiplayer_poc.c": "e87fdae80a839ea3928ab8e263e92a51d4462c785e8fb3dc04006d685886ad96",
+    "game/src/multiplayer_poc_battle.c": "7157525e895b1a5d7283775b5f594d9e589217e50138cf5512deb428a51cab3d",
+    "game/src/multiplayer_poc_reward.c": "8a8a62ecb78b4a47940528e4706eaef1c6944efad8f1a411d757d0a1edc8f2be",
+    "game/src/overworld.c": "ed83fd63300dfd1648cc5999db514d439e76ad15c32b2ab8d567fc1bc6a7d566"
+  },
+  "scope": "All tracked/untracked game changes versus base commit, excluding independent multiplayer-poc host tooling. Unchanged build inputs inherited from base commit."
+}

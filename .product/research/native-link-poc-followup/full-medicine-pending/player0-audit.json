@@ -1,0 +1,735 @@
+{
+  "path": "/tmp/wayfarer-multiplayer-poc-phase2/full-medicine-pending/player0.sav",
+  "bytes": 131088,
+  "sha256": "665bb6639bbf495e66428559effcca2c1e5b99750947956dda342de3f7c98825",
+  "rtc_trailer_bytes": 16,
+  "slots": [
+    {
+      "slot": 0,
+      "status": "OK",
+      "full_id_bitset": true,
+      "generations": [
+        2
+      ],
+      "coherent_generation": true,
+      "loader_counter": 2,
+      "sectors": [
+        {
+          "physical": 0,
+          "id": 12,
+          "counter": 2,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 1,
+          "id": 13,
+          "counter": 2,
+          "signature": "08012025",
+          "checksum_stored": 61745,
+          "checksum_calculated": 61745,
+          "valid": true
+        },
+        {
+          "physical": 2,
+          "id": 0,
+          "counter": 2,
+          "signature": "08012025",
+          "checksum_stored": 58768,
+          "checksum_calculated": 58768,
+          "valid": true
+        },
+        {
+          "physical": 3,
+          "id": 1,
+          "counter": 2,
+          "signature": "08012025",
+          "checksum_stored": 52042,
+          "checksum_calculated": 52042,
+          "valid": true
+        },
+        {
+          "physical": 4,
+          "id": 2,
+          "counter": 2,
+          "signature": "08012025",
+          "checksum_stored": 62888,
+          "checksum_calculated": 62888,
+          "valid": true
+        },
+        {
+          "physical": 5,
+          "id": 3,
+          "counter": 2,
+          "signature": "08012025",
+          "checksum_stored": 48687,
+          "checksum_calculated": 48687,
+          "valid": true
+        },
+        {
+          "physical": 6,
+          "id": 4,
+          "counter": 2,
+          "signature": "08012025",
+          "checksum_stored": 15825,
+          "checksum_calculated": 15825,
+          "valid": true
+        },
+        {
+          "physical": 7,
+          "id": 5,
+          "counter": 2,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 8,
+          "id": 6,
+          "counter": 2,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 9,
+          "id": 7,
+          "counter": 2,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 10,
+          "id": 8,
+          "counter": 2,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 11,
+          "id": 9,
+          "counter": 2,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 12,
+          "id": 10,
+          "counter": 2,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 13,
+          "id": 11,
+          "counter": 2,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        }
+      ]
+    },
+    {
+      "slot": 1,
+      "status": "OK",
+      "full_id_bitset": true,
+      "generations": [
+        1
+      ],
+      "coherent_generation": true,
+      "loader_counter": 1,
+      "sectors": [
+        {
+          "physical": 14,
+          "id": 13,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 61745,
+          "checksum_calculated": 61745,
+          "valid": true
+        },
+        {
+          "physical": 15,
+          "id": 0,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 47931,
+          "checksum_calculated": 47931,
+          "valid": true
+        },
+        {
+          "physical": 16,
+          "id": 1,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 4585,
+          "checksum_calculated": 4585,
+          "valid": true
+        },
+        {
+          "physical": 17,
+          "id": 2,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 56934,
+          "checksum_calculated": 56934,
+          "valid": true
+        },
+        {
+          "physical": 18,
+          "id": 3,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 48687,
+          "checksum_calculated": 48687,
+          "valid": true
+        },
+        {
+          "physical": 19,
+          "id": 4,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 44903,
+          "checksum_calculated": 44903,
+          "valid": true
+        },
+        {
+          "physical": 20,
+          "id": 5,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 21,
+          "id": 6,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 22,
+          "id": 7,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 23,
+          "id": 8,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 24,
+          "id": 9,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 25,
+          "id": 10,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 26,
+          "id": 11,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 27,
+          "id": 12,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        }
+      ]
+    }
+  ],
+  "selected_slot": 0,
+  "selected_counter": 2,
+  "selected_coherent": true,
+  "potion_count": 0,
+  "ledger": [
+    161,
+    1
+  ],
+  "bag_item_totals": {
+    "43": 91908
+  },
+  "bag_encryption_key_low16": 41858,
+  "party_count": 1,
+  "party_mon_sha256": [
+    "b3d3e5e2065d7680ff1bb2844d3b6bc375063eba09d92c8d521ba690914d0c71",
+    "cd00e292c5970d3c5e2f0ffa5171e555bc46bfc4faddfb4a418b6840b86e79a3",
+    "cd00e292c5970d3c5e2f0ffa5171e555bc46bfc4faddfb4a418b6840b86e79a3",
+    "cd00e292c5970d3c5e2f0ffa5171e555bc46bfc4faddfb4a418b6840b86e79a3",
+    "cd00e292c5970d3c5e2f0ffa5171e555bc46bfc4faddfb4a418b6840b86e79a3",
+    "cd00e292c5970d3c5e2f0ffa5171e555bc46bfc4faddfb4a418b6840b86e79a3"
+  ],
+  "flags_set": [
+    57,
+    59,
+    73,
+    78,
+    79,
+    80,
+    81,
+    99,
+    112,
+    127,
+    129,
+    130,
+    137,
+    157,
+    158,
+    167,
+    175,
+    176,
+    179,
+    181,
+    182,
+    183,
+    184,
+    185,
+    186,
+    189,
+    190,
+    191,
+    192,
+    193,
+    194,
+    195,
+    196,
+    197,
+    198,
+    199,
+    200,
+    201,
+    202,
+    203,
+    204,
+    205,
+    206,
+    207,
+    208,
+    209,
+    210,
+    212,
+    213,
+    215,
+    216,
+    217,
+    218,
+    230,
+    467,
+    605,
+    742,
+    759,
+    760,
+    761,
+    762,
+    874,
+    875,
+    876,
+    877,
+    878,
+    879,
+    880,
+    881,
+    882,
+    883,
+    884,
+    885,
+    886,
+    887,
+    889,
+    974,
+    975,
+    976,
+    977,
+    978,
+    979,
+    980,
+    981,
+    982,
+    983,
+    984,
+    1090,
+    1091,
+    1092,
+    1093,
+    1094,
+    1118,
+    1205,
+    2192,
+    2201,
+    2347,
+    2352,
+    2400,
+    2401
+  ],
+  "vars_nonzero": {
+    "16400": 69,
+    "16448": 9770,
+    "16455": 32768,
+    "16459": 51197,
+    "16460": 3308,
+    "16463": 32768,
+    "16501": 2,
+    "16521": 1,
+    "16530": 1
+  },
+  "ranges": {
+    "saveblock1": {
+      "bytes": 15760,
+      "sha256": "3426a42685cee0e5e08af5cada52cba696124b1ea607e9a37a2eac925f4f88e2"
+    },
+    "saveblock2": {
+      "bytes": 3892,
+      "sha256": "e370d77f530378e7de21e63c016a45e3ab474f29cdc8681349ba7c1510469d0a"
+    },
+    "saveblock3_unchecksummed": {
+      "bytes": 1160,
+      "sha256": "8eb967ffff23f5dbeb8ed5b310a6178dac1edc69c5261b8c8d9a1820f1fe3503"
+    },
+    "pc": {
+      "bytes": 34144,
+      "sha256": "953afce7ee039192dcbcee4006a8edc084f85b85458b6c43175b2d670700a076"
+    },
+    "bag": {
+      "bytes": 2612,
+      "sha256": "f53e59fef434847a1cb7e2b4a5c19d3d900bcc3cbd8a7cd325b1161a3baf4aff"
+    },
+    "flags": {
+      "bytes": 304,
+      "sha256": "999d5a6811f97bbf4865f952bbcd4a3acf4c5ccab6c69928daf88cbbb96b340a"
+    },
+    "vars": {
+      "bytes": 512,
+      "sha256": "b423ed02fd847ea7cabf77a06e61d38b87e2ba0fc1d2fcf9edc6d533def1a204"
+    },
+    "party": {
+      "bytes": 600,
+      "sha256": "d549526a8f9e34a3ff37b3a84b521f5af196b5960d67666eebe688871c3df8b7"
+    },
+    "ledger": {
+      "bytes": 2,
+      "sha256": "ef1534d0c6cfe8a961a19e64689dc8ba07d92b0498121852cc77c7fab995e9e2"
+    },
+    "party_count": {
+      "bytes": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+    },
+    "frontier": {
+      "bytes": 2272,
+      "sha256": "5042d18fab400b5106a082f51e45d883b4ebf33c0f4d1a881562e20205f468fe"
+    }
+  },
+  "notes": [
+    "SaveBlock3 chunks are NOT covered by sector checksums.",
+    "Generation coherence is stronger than the game loader full-ID-bitset check.",
+    "Party/frontier report raw reconstructed bytes, not battle-semantic interpretation."
+  ],
+  "layout": {
+    "sb1_size": 15760,
+    "sb2_size": 3892,
+    "sb3_size": 1160,
+    "bag_offset": 1380,
+    "bag_size": 2612,
+    "ledger_offset": 4324,
+    "flags_offset": 6540,
+    "flags_size": 304,
+    "vars_offset": 6844,
+    "vars_size": 512,
+    "party_offset": 572,
+    "party_size": 600,
+    "party_count_offset": 568,
+    "frontier_offset": 1612,
+    "frontier_size": 2272,
+    "pc_size": 34144,
+    "encryption_key_offset": 172,
+    "medicine_offset": 3624,
+    "medicine_count": 92,
+    "potion_id": 28
+  },
+  "layout_sha256": "c74c547a91dda3bed0edaea2bb1cc5b9fb2f11aa5ce6b5c9d323b73180182009",
+  "comparison": {
+    "baseline": "/tmp/wayfarer-multiplayer-poc-phase2/full-medicine-baseline/player0.sav",
+    "baseline_sha256": "9cbf1b984d6ac861a3ff4debf061df9a711ea4ad86bfe84f727088cdaf222be5",
+    "ranges": {
+      "saveblock1": {
+        "equal": false,
+        "changed_byte_count": 1663,
+        "first_changed_offsets": [
+          1172,
+          1173,
+          1174,
+          1175,
+          1176,
+          1177,
+          1382,
+          1383,
+          1386,
+          1387,
+          1390,
+          1391,
+          1394,
+          1395,
+          1398,
+          1399,
+          1402,
+          1403,
+          1406,
+          1407,
+          1410,
+          1411,
+          1414,
+          1415,
+          1418,
+          1419,
+          1422,
+          1423,
+          1426,
+          1427,
+          1430,
+          1431,
+          1434,
+          1435,
+          1438,
+          1439,
+          1442,
+          1443,
+          1446,
+          1447,
+          1450,
+          1451,
+          1454,
+          1455,
+          1458,
+          1459,
+          1462,
+          1463,
+          1466,
+          1467,
+          1470,
+          1471,
+          1474,
+          1475,
+          1478,
+          1479,
+          1482,
+          1483,
+          1486,
+          1487,
+          1490,
+          1491,
+          1494,
+          1495
+        ],
+        "before_sha256": "421ec12a5d7620f8e42224490eece80263380fc562c37d75119da18e12e1e945",
+        "after_sha256": "3426a42685cee0e5e08af5cada52cba696124b1ea607e9a37a2eac925f4f88e2"
+      },
+      "saveblock2": {
+        "equal": false,
+        "changed_byte_count": 12,
+        "first_changed_offsets": [
+          16,
+          17,
+          18,
+          163,
+          172,
+          173,
+          174,
+          175,
+          500,
+          501,
+          502,
+          503
+        ],
+        "before_sha256": "14d4b8ac5d2ce3cb6109ab2228eba9338fbeef103cc6a0923f062057331d30ee",
+        "after_sha256": "e370d77f530378e7de21e63c016a45e3ab474f29cdc8681349ba7c1510469d0a"
+      },
+      "saveblock3_unchecksummed": {
+        "equal": true,
+        "changed_byte_count": 0,
+        "first_changed_offsets": [],
+        "before_sha256": "8eb967ffff23f5dbeb8ed5b310a6178dac1edc69c5261b8c8d9a1820f1fe3503",
+        "after_sha256": "8eb967ffff23f5dbeb8ed5b310a6178dac1edc69c5261b8c8d9a1820f1fe3503"
+      },
+      "pc": {
+        "equal": true,
+        "changed_byte_count": 0,
+        "first_changed_offsets": [],
+        "before_sha256": "953afce7ee039192dcbcee4006a8edc084f85b85458b6c43175b2d670700a076",
+        "after_sha256": "953afce7ee039192dcbcee4006a8edc084f85b85458b6c43175b2d670700a076"
+      },
+      "bag": {
+        "equal": false,
+        "changed_byte_count": 1306,
+        "first_changed_offsets": [
+          2,
+          3,
+          6,
+          7,
+          10,
+          11,
+          14,
+          15,
+          18,
+          19,
+          22,
+          23,
+          26,
+          27,
+          30,
+          31,
+          34,
+          35,
+          38,
+          39,
+          42,
+          43,
+          46,
+          47,
+          50,
+          51,
+          54,
+          55,
+          58,
+          59,
+          62,
+          63,
+          66,
+          67,
+          70,
+          71,
+          74,
+          75,
+          78,
+          79,
+          82,
+          83,
+          86,
+          87,
+          90,
+          91,
+          94,
+          95,
+          98,
+          99,
+          102,
+          103,
+          106,
+          107,
+          110,
+          111,
+          114,
+          115,
+          118,
+          119,
+          122,
+          123,
+          126,
+          127
+        ],
+        "before_sha256": "fd38f6b7776d41a65049bb1791e8acdf4695320271a96d5d90bc02cc141e52ba",
+        "after_sha256": "f53e59fef434847a1cb7e2b4a5c19d3d900bcc3cbd8a7cd325b1161a3baf4aff"
+      },
+      "flags": {
+        "equal": true,
+        "changed_byte_count": 0,
+        "first_changed_offsets": [],
+        "before_sha256": "999d5a6811f97bbf4865f952bbcd4a3acf4c5ccab6c69928daf88cbbb96b340a",
+        "after_sha256": "999d5a6811f97bbf4865f952bbcd4a3acf4c5ccab6c69928daf88cbbb96b340a"
+      },
+      "vars": {
+        "equal": true,
+        "changed_byte_count": 0,
+        "first_changed_offsets": [],
+        "before_sha256": "b423ed02fd847ea7cabf77a06e61d38b87e2ba0fc1d2fcf9edc6d533def1a204",
+        "after_sha256": "b423ed02fd847ea7cabf77a06e61d38b87e2ba0fc1d2fcf9edc6d533def1a204"
+      },
+      "party": {
+        "equal": true,
+        "changed_byte_count": 0,
+        "first_changed_offsets": [],
+        "before_sha256": "d549526a8f9e34a3ff37b3a84b521f5af196b5960d67666eebe688871c3df8b7",
+        "after_sha256": "d549526a8f9e34a3ff37b3a84b521f5af196b5960d67666eebe688871c3df8b7"
+      },
+      "ledger": {
+        "equal": false,
+        "changed_byte_count": 2,
+        "first_changed_offsets": [
+          0,
+          1
+        ],
+        "before_sha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7",
+        "after_sha256": "ef1534d0c6cfe8a961a19e64689dc8ba07d92b0498121852cc77c7fab995e9e2"
+      },
+      "party_count": {
+        "equal": true,
+        "changed_byte_count": 0,
+        "first_changed_offsets": [],
+        "before_sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "after_sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+      },
+      "frontier": {
+        "equal": true,
+        "changed_byte_count": 0,
+        "first_changed_offsets": [],
+        "before_sha256": "5042d18fab400b5106a082f51e45d883b4ebf33c0f4d1a881562e20205f468fe",
+        "after_sha256": "5042d18fab400b5106a082f51e45d883b4ebf33c0f4d1a881562e20205f468fe"
+      }
+    },
+    "bag_logical_equal": true,
+    "potion_delta": 0,
+    "before_ledger": [
+      0,
+      0
+    ],
+    "after_ledger": [
+      161,
+      1
+    ]
+  },
+  "assertions": {
+    "passed": true,
+    "errors": []
+  }
+}

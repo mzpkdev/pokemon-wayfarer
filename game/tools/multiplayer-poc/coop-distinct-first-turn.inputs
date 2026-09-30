@@ -1,0 +1,43 @@
+# Like coop-from-saves.inputs; each cart chooses its own attack.
+20 0 008
+20 1 008
+22 0 000
+22 1 000
+300 0 008
+300 1 008
+302 0 000
+302 1 000
+850 0 008
+850 1 008
+853 0 000
+853 1 000
+1050 0 001
+1050 1 001
+1053 0 000
+1053 1 000
+1300 0 304
+1300 1 304
+1303 0 000
+1303 1 000
+1450 0 308
+1450 1 308
+1453 0 000
+1453 1 000
+# Fight on both synchronized action menus.
+3550 0 001
+3550 1 001
+3553 0 000
+3553 1 000
+# P0 picks first move. P1 navigates to its second move.
+3630 0 001
+3633 0 000
+# Guest selects Quick Attack in the top-right move slot before committing.
+3670 1 010
+3673 1 000
+3750 1 001
+3753 1 000
+# Confirm target and dismiss battle text in subsequent turns.
+3850 0 001
+3850 1 001
+3853 0 000
+3853 1 000

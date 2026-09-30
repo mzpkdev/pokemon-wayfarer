@@ -1,0 +1,29 @@
+{
+  "phase1.gba": "997dadfcc493f97b8c835243a6beb19676bb9964a31b39fae532a979ee0731ff",
+  "root/usr/games/mgba-qt": "a59544d1eb1ab688613306f76bc98cc928c7c848f7264f5cc9deb8b65212584c",
+  "root/usr/lib/x86_64-linux-gnu/libmgba.so.0.10.2": "0c87a12341640e6a2d325e59e76eb4b002947771ad4d8814b216e3b99817d68d",
+  "package": "mgba-qt 0.10.2+dfsg-1.1build3 (Ubuntu noble, amd64)",
+  "rom_source": "/tmp/wayfarer-multiplayer-poc-phase2/baseline-artifacts/pokemon-wayfarer-e2e-poc.gba",
+  "downloaded_packages": [
+    "libqt5multimedia5_5.15.13-1_amd64.deb",
+    "libqt5dbus5t64_5.15.13+dfsg-1ubuntu1_amd64.deb",
+    "libqt5core5t64_5.15.13+dfsg-1ubuntu1_amd64.deb",
+    "libqt5gui5t64_5.15.13+dfsg-1ubuntu1_amd64.deb",
+    "libdouble-conversion3_3.3.0-1build1_amd64.deb",
+    "libmgba0.10t64_0.10.2+dfsg-1.1build3_amd64.deb",
+    "libqt5widgets5t64_5.15.13+dfsg-1ubuntu1_amd64.deb",
+    "libqt5network5t64_5.15.13+dfsg-1ubuntu1_amd64.deb",
+    "libxcb-xinput0_1.15-1ubuntu2_amd64.deb",
+    "libswscale7_7%3a6.1.1-3ubuntu5_amd64.deb",
+    "x11-apps_7.7+11build3_amd64.deb",
+    "libxcb-xinerama0_1.15-1ubuntu2_amd64.deb",
+    "mgba-qt_0.10.2+dfsg-1.1build3_amd64.deb",
+    "mgba-common_0.10.2+dfsg-1.1build3_all.deb",
+    "libsdl2-2.0-0_2.30.0+dfsg-1ubuntu3.1_amd64.deb",
+    "libmd4c0_0.4.8-1build1_amd64.deb",
+    "libxdo3_1%3a3.20160805.1-5build1_amd64.deb",
+    "libzip4t64_1.7.3-1.1ubuntu2_amd64.deb",
+    "libpcre2-16-0_10.42-4ubuntu2.1_amd64.deb",
+    "xdotool_1%3a3.20160805.1-5build1_amd64.deb"
+  ]
+}

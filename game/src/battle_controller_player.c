@@ -54,6 +54,9 @@
 #include "pokedex.h"
 #include "test/battle.h"
 #include "test/test_runner_battle.h"
+#if WAYFARER_MULTIPLAYER_POC
+#include "multiplayer_poc_battle.h"
+#endif
 
 static void PlayerHandleLoadMonSprite(enum BattlerId battler);
 static void PlayerHandleDrawTrainerPic(enum BattlerId battler);
@@ -80,6 +83,13 @@ static void PlayerHandleLinkStandbyMsg(enum BattlerId battler);
 static void PlayerHandleResetActionMoveSelection(enum BattlerId battler);
 static void PlayerHandleEndLinkBattle(enum BattlerId battler);
 static void PlayerHandleBattleDebug(enum BattlerId battler);
+#if WAYFARER_MULTIPLAYER_POC
+static void PlayerHandlePocMoveAnimation(enum BattlerId battler);
+static void PlayerEmitPocMoveChoice(enum BattlerId battler, u32 choice);
+#define EmitPlayerMoveChoice(battler, choice) PlayerEmitPocMoveChoice(battler, choice)
+#else
+#define EmitPlayerMoveChoice(battler, choice) BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, choice)
+#endif
 
 static void PlayerBufferRunCommand(enum BattlerId battler);
 static void MoveSelectionDisplayPpNumber(enum BattlerId battler);
@@ -118,7 +128,11 @@ static void (*const sPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(enum BattlerId
     [CONTROLLER_PALETTEFADE]              = PlayerHandlePaletteFade,
     [CONTROLLER_BALLTHROWANIM]            = BtlController_HandleBallThrowAnim,
     [CONTROLLER_PAUSE]                    = PlayerHandlePause,
+#if WAYFARER_MULTIPLAYER_POC
+    [CONTROLLER_MOVEANIMATION]            = PlayerHandlePocMoveAnimation,
+#else
     [CONTROLLER_MOVEANIMATION]            = BtlController_HandleMoveAnimation,
+#endif
     [CONTROLLER_PRINTSTRING]              = BtlController_HandlePrintString,
     [CONTROLLER_PRINTSTRINGPLAYERONLY]    = BtlController_HandlePrintStringPlayerOnly,
     [CONTROLLER_CHOOSEACTION]             = PlayerHandleChooseAction,
@@ -158,6 +172,33 @@ static void (*const sPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(enum BattlerId
     [CONTROLLER_DEBUGMENU]                = PlayerHandleBattleDebug,
     [CONTROLLER_TERMINATOR_NOP]           = BtlController_TerminatorNop
 };
+
+#if WAYFARER_MULTIPLAYER_POC
+static void PlayerEmitPocMoveChoice(enum BattlerId battler, u32 choice)
+{
+    u8 slot = (u8)choice & ~RET_GIMMICK;
+
+    // Record the local controller's submitted choice. The battle turn state
+    // itself runs on the cable master, so it cannot prove the guest's input.
+    if (choice != 0xFFFF && slot < MAX_MON_MOVES)
+    {
+        struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)&gBattleResources->bufferA[battler][4];
+        MultiplayerPocBattle_RecordMoveChoice(battler, moveInfo->moves[slot], gBattleTurnCounter);
+    }
+    BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, choice);
+}
+
+static void PlayerHandlePocMoveAnimation(enum BattlerId battler)
+{
+    BattleControllerFunc before = gBattlerControllerFuncs[battler];
+    u16 move = gBattleResources->bufferA[battler][1]
+             | (gBattleResources->bufferA[battler][2] << 8);
+
+    BtlController_HandleMoveAnimation(battler);
+    if (gBattlerControllerFuncs[battler] != before)
+        MultiplayerPocBattle_RecordMoveAnimation(battler, move, gBattleTurnCounter);
+}
+#endif
 
 void SetControllerToPlayer(enum BattlerId battler)
 {
@@ -500,9 +541,9 @@ void HandleInputChooseTarget(enum BattlerId battler)
         PlaySE(SE_SELECT);
         gSprites[gBattlerSpriteIds[gMultiUsePlayerCursor]].callback = SpriteCB_HideAsMoveTarget;
         if (gBattleStruct->gimmick.playerSelect)
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
+            EmitPlayerMoveChoice(battler, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
         else
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
+            EmitPlayerMoveChoice(battler, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
         EndBounceEffect(gMultiUsePlayerCursor, BOUNCE_HEALTHBOX);
         TryHideLastUsedBall();
         HideGimmickTriggerSprite();
@@ -661,9 +702,9 @@ void HandleInputShowEntireFieldTargets(enum BattlerId battler)
         PlaySE(SE_SELECT);
         HideAllTargets();
         if (gBattleStruct->gimmick.playerSelect)
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
+            EmitPlayerMoveChoice(battler, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
         else
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
+            EmitPlayerMoveChoice(battler, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
         HideGimmickTriggerSprite();
         BtlController_Complete(battler);
     }
@@ -689,9 +730,9 @@ void HandleInputShowTargets(enum BattlerId battler)
         PlaySE(SE_SELECT);
         HideAllTargets();
         if (gBattleStruct->gimmick.playerSelect)
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
+            EmitPlayerMoveChoice(battler, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
         else
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
+            EmitPlayerMoveChoice(battler, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
         HideGimmickTriggerSprite();
         TryHideLastUsedBall();
         BtlController_Complete(battler);
@@ -815,9 +856,9 @@ void HandleInputChooseMove(enum BattlerId battler)
         case 0:
         default:
             if (gBattleStruct->gimmick.playerSelect)
-                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
+                EmitPlayerMoveChoice(battler, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
             else
-                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
+                EmitPlayerMoveChoice(battler, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
             HideGimmickTriggerSprite();
             TryHideLastUsedBall();
             BtlController_Complete(battler);
@@ -855,7 +896,7 @@ void HandleInputChooseMove(enum BattlerId battler)
         }
         else
         {
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, 0xFFFF);
+            EmitPlayerMoveChoice(battler, 0xFFFF);
             HideGimmickTriggerSprite();
             BtlController_Complete(battler);
             TryToHideMoveInfoWindow();
@@ -1259,13 +1300,21 @@ static void SetLinkBattleEndCallbacks(enum BattlerId battler)
 {
     if (gWirelessCommType == 0)
     {
-        if (gReceivedRemoteLinkPlayers == 0)
+        if (gReceivedRemoteLinkPlayers == 0
+#if WAYFARER_MULTIPLAYER_POC
+         || MultiplayerPocBattle_IsExperimentActive()
+#endif
+        )
         {
             m4aSongNumStop(SE_LOW_HEALTH, FlagGet(FLAG_SYS_GBS_ENABLED));
             gMain.inBattle = FALSE;
             gMain.callback1 = gPreBattleCallback1;
             SetMainCallback2(CB2_InitEndLinkBattle);
-            if (gBattleOutcome == B_OUTCOME_WON)
+            if (gBattleOutcome == B_OUTCOME_WON
+#if WAYFARER_MULTIPLAYER_POC
+             && !MultiplayerPocBattle_IsExperimentActive()
+#endif
+            )
                 TryPutLinkBattleTvShowOnAir();
             FreeAllWindowBuffers();
         }
@@ -1295,7 +1344,12 @@ void SetBattleEndCallbacks(enum BattlerId battler)
             if (IsLinkTaskFinished())
             {
                 if (gWirelessCommType == 0)
+                {
+#if WAYFARER_MULTIPLAYER_POC
+                    if (!MultiplayerPocBattle_IsExperimentActive())
+#endif
                     SetCloseLinkCallback();
+                }
                 else
                     SetLinkStandbyCallback();
 
@@ -2176,7 +2230,7 @@ static void PlayerChooseMoveInBattlePalace(enum BattlerId battler)
     if (--gBattleStruct->arenaMindPoints[battler] == 0)
     {
         gBattlePalaceMoveSelectionRngValue = gRngValue;
-        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, ChooseMoveAndTargetInBattlePalace(battler));
+        EmitPlayerMoveChoice(battler, ChooseMoveAndTargetInBattlePalace(battler));
         BtlController_Complete(battler);
     }
 }

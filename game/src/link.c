@@ -26,6 +26,7 @@
 #include "link.h"
 #if WAYFARER_MULTIPLAYER_POC
 #include "multiplayer_poc.h"
+#include "multiplayer_poc_battle.h"
 #endif
 #include "link_rfu.h"
 #include "constants/rgb.h"
@@ -618,6 +619,11 @@ static void ProcessRecvCmds(u8 unused)
 #if WAYFARER_MULTIPLAYER_POC
             if (MultiplayerPoc_IsRunning())
                 MultiplayerPoc_ReceiveCmd(i, gRecvCmds[i]);
+            else if (MultiplayerPocBattle_IsResultExchange()
+                  && i != GetMultiplayerId()
+                  && gRecvCmds[i][2] == MULTIPLAYER_POC_PACKET_MAGIC
+                  && gRecvCmds[i][3] == MULTIPLAYER_POC_PROTOCOL_VERSION)
+                MultiplayerPocBattle_OnPeerWord(gRecvCmds[i][1]);
 #endif
             break;
         }
@@ -679,11 +685,23 @@ static void BuildSendCmd(u16 command)
         break;
     case LINKCMD_SEND_HELD_KEYS:
 #if WAYFARER_MULTIPLAYER_POC
-        if (MultiplayerPoc_IsRunning())
+        if (MultiplayerPoc_IsRunning() || MultiplayerPocBattle_IsResultExchange())
         {
+            if (MultiplayerPoc_IsRunning() && !MultiplayerPoc_ShouldSendCmd())
+            {
+                CpuFill16(0, gSendCmd, sizeof(gSendCmd));
+                break;
+            }
             gSendCmd[0] = LINKCMD_SEND_HELD_KEYS;
-            gSendCmd[1] = LINK_KEY_CODE_EMPTY;
-            MultiplayerPoc_BuildSendCmd(gSendCmd);
+            gSendCmd[1] = MultiplayerPocBattle_GetTxWord();
+            if (MultiplayerPoc_IsRunning())
+                MultiplayerPoc_BuildSendCmd(gSendCmd);
+            else
+            {
+                CpuFill16(0, &gSendCmd[2], 6 * sizeof(gSendCmd[0]));
+                gSendCmd[2] = MULTIPLAYER_POC_PACKET_MAGIC;
+                gSendCmd[3] = MULTIPLAYER_POC_PROTOCOL_VERSION;
+            }
             break;
         }
 #endif
@@ -1555,6 +1573,14 @@ void SetLinkErrorBuffer(u32 status, u8 lastSendQueueCount, u8 lastRecvQueueCount
 void CB2_LinkError(void)
 {
     u8 *tilemapBuffer;
+
+#if WAYFARER_MULTIPLAYER_POC
+    if (MultiplayerPocBattle_OwnsTransport())
+    {
+        MultiplayerPocBattle_AbortFromLinkError();
+        return;
+    }
+#endif
 
     SetGpuReg(REG_OFFSET_DISPCNT, 0);
     m4aMPlayStop(&gMPlayInfo_SE1);

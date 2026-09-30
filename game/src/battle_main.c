@@ -86,6 +86,9 @@
 #include "constants/weather.h"
 #include "cable_club.h"
 #include "test/test_runner_battle.h"
+#if WAYFARER_MULTIPLAYER_POC
+#include "multiplayer_poc_battle.h"
+#endif
 
 extern const struct BgTemplate gBattleBgTemplates[];
 extern const struct WindowTemplate *const gBattleWindowTemplates[];
@@ -684,6 +687,10 @@ static void CB2_InitBattleInternal(void)
 
     gMain.inBattle = TRUE;
     gSaveBlock2Ptr->frontier.disableRecordBattle = FALSE;
+#if WAYFARER_MULTIPLAYER_POC
+    if (MultiplayerPocBattle_IsExperimentActive())
+        gSaveBlock2Ptr->frontier.disableRecordBattle = TRUE;
+#endif
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
@@ -1399,7 +1406,10 @@ static void CB2_HandleStartMultiPartnerBattle(void)
         // Finish, start battle
         if (BattleInitAllSprites(&gBattleCommunication[SPRITES_INIT_STATE1], &gBattleCommunication[SPRITES_INIT_STATE2]))
         {
-            TrySetLinkBattleTowerEnemyPartyLevel();
+#if WAYFARER_MULTIPLAYER_POC
+            if (!MultiplayerPocBattle_IsExperimentActive())
+#endif
+                TrySetLinkBattleTowerEnemyPartyLevel();
             gPreBattleCallback1 = gMain.callback1;
             gMain.callback1 = BattleMainCB1;
             SetMainCallback2(BattleMainCB2);

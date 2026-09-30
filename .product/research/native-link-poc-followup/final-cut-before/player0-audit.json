@@ -1,0 +1,585 @@
+{
+  "path": "/tmp/wayfarer-multiplayer-poc-phase2/final-cut-before/player0.sav",
+  "bytes": 131088,
+  "sha256": "9f448a89a733b8f17c8e196ce956856e79e6b4ff5635f29c8cb64b77aeac97af",
+  "rtc_trailer_bytes": 16,
+  "slots": [
+    {
+      "slot": 0,
+      "status": "EMPTY",
+      "full_id_bitset": false,
+      "generations": [],
+      "coherent_generation": false,
+      "loader_counter": 0,
+      "sectors": [
+        {
+          "physical": 0,
+          "id": 65535,
+          "counter": 4294967295,
+          "signature": "ffffffff",
+          "checksum_stored": 65535,
+          "checksum_calculated": null,
+          "valid": false
+        },
+        {
+          "physical": 1,
+          "id": 65535,
+          "counter": 4294967295,
+          "signature": "ffffffff",
+          "checksum_stored": 65535,
+          "checksum_calculated": null,
+          "valid": false
+        },
+        {
+          "physical": 2,
+          "id": 65535,
+          "counter": 4294967295,
+          "signature": "ffffffff",
+          "checksum_stored": 65535,
+          "checksum_calculated": null,
+          "valid": false
+        },
+        {
+          "physical": 3,
+          "id": 65535,
+          "counter": 4294967295,
+          "signature": "ffffffff",
+          "checksum_stored": 65535,
+          "checksum_calculated": null,
+          "valid": false
+        },
+        {
+          "physical": 4,
+          "id": 65535,
+          "counter": 4294967295,
+          "signature": "ffffffff",
+          "checksum_stored": 65535,
+          "checksum_calculated": null,
+          "valid": false
+        },
+        {
+          "physical": 5,
+          "id": 65535,
+          "counter": 4294967295,
+          "signature": "ffffffff",
+          "checksum_stored": 65535,
+          "checksum_calculated": null,
+          "valid": false
+        },
+        {
+          "physical": 6,
+          "id": 65535,
+          "counter": 4294967295,
+          "signature": "ffffffff",
+          "checksum_stored": 65535,
+          "checksum_calculated": null,
+          "valid": false
+        },
+        {
+          "physical": 7,
+          "id": 65535,
+          "counter": 4294967295,
+          "signature": "ffffffff",
+          "checksum_stored": 65535,
+          "checksum_calculated": null,
+          "valid": false
+        },
+        {
+          "physical": 8,
+          "id": 65535,
+          "counter": 4294967295,
+          "signature": "ffffffff",
+          "checksum_stored": 65535,
+          "checksum_calculated": null,
+          "valid": false
+        },
+        {
+          "physical": 9,
+          "id": 65535,
+          "counter": 4294967295,
+          "signature": "ffffffff",
+          "checksum_stored": 65535,
+          "checksum_calculated": null,
+          "valid": false
+        },
+        {
+          "physical": 10,
+          "id": 65535,
+          "counter": 4294967295,
+          "signature": "ffffffff",
+          "checksum_stored": 65535,
+          "checksum_calculated": null,
+          "valid": false
+        },
+        {
+          "physical": 11,
+          "id": 65535,
+          "counter": 4294967295,
+          "signature": "ffffffff",
+          "checksum_stored": 65535,
+          "checksum_calculated": null,
+          "valid": false
+        },
+        {
+          "physical": 12,
+          "id": 65535,
+          "counter": 4294967295,
+          "signature": "ffffffff",
+          "checksum_stored": 65535,
+          "checksum_calculated": null,
+          "valid": false
+        },
+        {
+          "physical": 13,
+          "id": 65535,
+          "counter": 4294967295,
+          "signature": "ffffffff",
+          "checksum_stored": 65535,
+          "checksum_calculated": null,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "slot": 1,
+      "status": "OK",
+      "full_id_bitset": true,
+      "generations": [
+        1
+      ],
+      "coherent_generation": true,
+      "loader_counter": 1,
+      "sectors": [
+        {
+          "physical": 14,
+          "id": 13,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 61745,
+          "checksum_calculated": 61745,
+          "valid": true
+        },
+        {
+          "physical": 15,
+          "id": 0,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 6871,
+          "checksum_calculated": 6871,
+          "valid": true
+        },
+        {
+          "physical": 16,
+          "id": 1,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 29680,
+          "checksum_calculated": 29680,
+          "valid": true
+        },
+        {
+          "physical": 17,
+          "id": 2,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 47690,
+          "checksum_calculated": 47690,
+          "valid": true
+        },
+        {
+          "physical": 18,
+          "id": 3,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 48687,
+          "checksum_calculated": 48687,
+          "valid": true
+        },
+        {
+          "physical": 19,
+          "id": 4,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 6379,
+          "checksum_calculated": 6379,
+          "valid": true
+        },
+        {
+          "physical": 20,
+          "id": 5,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 21,
+          "id": 6,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 22,
+          "id": 7,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 23,
+          "id": 8,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 24,
+          "id": 9,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 25,
+          "id": 10,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 26,
+          "id": 11,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        },
+        {
+          "physical": 27,
+          "id": 12,
+          "counter": 1,
+          "signature": "08012025",
+          "checksum_stored": 0,
+          "checksum_calculated": 0,
+          "valid": true
+        }
+      ]
+    }
+  ],
+  "selected_slot": 1,
+  "selected_counter": 1,
+  "selected_coherent": true,
+  "potion_count": 0,
+  "ledger": [
+    0,
+    0
+  ],
+  "bag_item_totals": {},
+  "bag_encryption_key_low16": 42066,
+  "party_count": 1,
+  "party_mon_sha256": [
+    "b3d3e5e2065d7680ff1bb2844d3b6bc375063eba09d92c8d521ba690914d0c71",
+    "cd00e292c5970d3c5e2f0ffa5171e555bc46bfc4faddfb4a418b6840b86e79a3",
+    "cd00e292c5970d3c5e2f0ffa5171e555bc46bfc4faddfb4a418b6840b86e79a3",
+    "cd00e292c5970d3c5e2f0ffa5171e555bc46bfc4faddfb4a418b6840b86e79a3",
+    "cd00e292c5970d3c5e2f0ffa5171e555bc46bfc4faddfb4a418b6840b86e79a3",
+    "cd00e292c5970d3c5e2f0ffa5171e555bc46bfc4faddfb4a418b6840b86e79a3"
+  ],
+  "flags_set": [
+    57,
+    59,
+    73,
+    78,
+    79,
+    80,
+    81,
+    99,
+    112,
+    127,
+    129,
+    130,
+    137,
+    157,
+    158,
+    167,
+    175,
+    176,
+    179,
+    181,
+    182,
+    183,
+    184,
+    185,
+    186,
+    189,
+    190,
+    191,
+    192,
+    193,
+    194,
+    195,
+    196,
+    197,
+    198,
+    199,
+    200,
+    201,
+    202,
+    203,
+    204,
+    205,
+    206,
+    207,
+    208,
+    209,
+    210,
+    212,
+    213,
+    215,
+    216,
+    217,
+    218,
+    230,
+    467,
+    605,
+    742,
+    759,
+    760,
+    761,
+    762,
+    874,
+    875,
+    876,
+    877,
+    878,
+    879,
+    880,
+    881,
+    882,
+    883,
+    884,
+    885,
+    886,
+    887,
+    889,
+    974,
+    975,
+    976,
+    977,
+    978,
+    979,
+    980,
+    981,
+    982,
+    983,
+    984,
+    1090,
+    1091,
+    1092,
+    1093,
+    1094,
+    1118,
+    1205,
+    2192,
+    2201,
+    2347,
+    2352,
+    2400,
+    2401
+  ],
+  "vars_nonzero": {
+    "16400": 69,
+    "16448": 9770,
+    "16455": 32768,
+    "16459": 43316,
+    "16460": 56644,
+    "16463": 32768,
+    "16501": 2,
+    "16521": 1,
+    "16530": 1
+  },
+  "ranges": {
+    "saveblock1": {
+      "bytes": 15760,
+      "sha256": "28118f46ea0e04fcd84446943542d1401c95757bbe70654eea03858915c7cf6a"
+    },
+    "saveblock2": {
+      "bytes": 3892,
+      "sha256": "1602375e2e18297d6d43964e15f50eed21156201d400cb1fdb3d4f09c45ae69a"
+    },
+    "saveblock3_unchecksummed": {
+      "bytes": 1160,
+      "sha256": "8eb967ffff23f5dbeb8ed5b310a6178dac1edc69c5261b8c8d9a1820f1fe3503"
+    },
+    "pc": {
+      "bytes": 34144,
+      "sha256": "953afce7ee039192dcbcee4006a8edc084f85b85458b6c43175b2d670700a076"
+    },
+    "bag": {
+      "bytes": 2612,
+      "sha256": "deadc32a708c75cf0df0787db30ab54d9912dab130d372da78702722d5c2a37f"
+    },
+    "flags": {
+      "bytes": 304,
+      "sha256": "999d5a6811f97bbf4865f952bbcd4a3acf4c5ccab6c69928daf88cbbb96b340a"
+    },
+    "vars": {
+      "bytes": 512,
+      "sha256": "f22596f3bb8be9aef4cb1b48bb1bdd893309b7327112607131472a0bf2118191"
+    },
+    "party": {
+      "bytes": 600,
+      "sha256": "d549526a8f9e34a3ff37b3a84b521f5af196b5960d67666eebe688871c3df8b7"
+    },
+    "ledger": {
+      "bytes": 2,
+      "sha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7"
+    },
+    "party_count": {
+      "bytes": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+    },
+    "frontier": {
+      "bytes": 2272,
+      "sha256": "5042d18fab400b5106a082f51e45d883b4ebf33c0f4d1a881562e20205f468fe"
+    }
+  },
+  "notes": [
+    "SaveBlock3 chunks are NOT covered by sector checksums.",
+    "Generation coherence is stronger than the game loader full-ID-bitset check.",
+    "Party/frontier report raw reconstructed bytes, not battle-semantic interpretation."
+  ],
+  "layout": {
+    "sb1_size": 15760,
+    "sb2_size": 3892,
+    "sb3_size": 1160,
+    "bag_offset": 1380,
+    "bag_size": 2612,
+    "ledger_offset": 4324,
+    "flags_offset": 6540,
+    "flags_size": 304,
+    "vars_offset": 6844,
+    "vars_size": 512,
+    "party_offset": 572,
+    "party_size": 600,
+    "party_count_offset": 568,
+    "frontier_offset": 1612,
+    "frontier_size": 2272,
+    "pc_size": 34144,
+    "encryption_key_offset": 172,
+    "medicine_offset": 3624,
+    "medicine_count": 92,
+    "potion_id": 28
+  },
+  "layout_sha256": "c74c547a91dda3bed0edaea2bb1cc5b9fb2f11aa5ce6b5c9d323b73180182009",
+  "comparison": {
+    "baseline": "/tmp/wayfarer-multiplayer-poc-phase2/integrated-party-baseline/player0.sav",
+    "baseline_sha256": "9f448a89a733b8f17c8e196ce956856e79e6b4ff5635f29c8cb64b77aeac97af",
+    "ranges": {
+      "saveblock1": {
+        "equal": true,
+        "changed_byte_count": 0,
+        "first_changed_offsets": [],
+        "before_sha256": "28118f46ea0e04fcd84446943542d1401c95757bbe70654eea03858915c7cf6a",
+        "after_sha256": "28118f46ea0e04fcd84446943542d1401c95757bbe70654eea03858915c7cf6a"
+      },
+      "saveblock2": {
+        "equal": true,
+        "changed_byte_count": 0,
+        "first_changed_offsets": [],
+        "before_sha256": "1602375e2e18297d6d43964e15f50eed21156201d400cb1fdb3d4f09c45ae69a",
+        "after_sha256": "1602375e2e18297d6d43964e15f50eed21156201d400cb1fdb3d4f09c45ae69a"
+      },
+      "saveblock3_unchecksummed": {
+        "equal": true,
+        "changed_byte_count": 0,
+        "first_changed_offsets": [],
+        "before_sha256": "8eb967ffff23f5dbeb8ed5b310a6178dac1edc69c5261b8c8d9a1820f1fe3503",
+        "after_sha256": "8eb967ffff23f5dbeb8ed5b310a6178dac1edc69c5261b8c8d9a1820f1fe3503"
+      },
+      "pc": {
+        "equal": true,
+        "changed_byte_count": 0,
+        "first_changed_offsets": [],
+        "before_sha256": "953afce7ee039192dcbcee4006a8edc084f85b85458b6c43175b2d670700a076",
+        "after_sha256": "953afce7ee039192dcbcee4006a8edc084f85b85458b6c43175b2d670700a076"
+      },
+      "bag": {
+        "equal": true,
+        "changed_byte_count": 0,
+        "first_changed_offsets": [],
+        "before_sha256": "deadc32a708c75cf0df0787db30ab54d9912dab130d372da78702722d5c2a37f",
+        "after_sha256": "deadc32a708c75cf0df0787db30ab54d9912dab130d372da78702722d5c2a37f"
+      },
+      "flags": {
+        "equal": true,
+        "changed_byte_count": 0,
+        "first_changed_offsets": [],
+        "before_sha256": "999d5a6811f97bbf4865f952bbcd4a3acf4c5ccab6c69928daf88cbbb96b340a",
+        "after_sha256": "999d5a6811f97bbf4865f952bbcd4a3acf4c5ccab6c69928daf88cbbb96b340a"
+      },
+      "vars": {
+        "equal": true,
+        "changed_byte_count": 0,
+        "first_changed_offsets": [],
+        "before_sha256": "f22596f3bb8be9aef4cb1b48bb1bdd893309b7327112607131472a0bf2118191",
+        "after_sha256": "f22596f3bb8be9aef4cb1b48bb1bdd893309b7327112607131472a0bf2118191"
+      },
+      "party": {
+        "equal": true,
+        "changed_byte_count": 0,
+        "first_changed_offsets": [],
+        "before_sha256": "d549526a8f9e34a3ff37b3a84b521f5af196b5960d67666eebe688871c3df8b7",
+        "after_sha256": "d549526a8f9e34a3ff37b3a84b521f5af196b5960d67666eebe688871c3df8b7"
+      },
+      "ledger": {
+        "equal": true,
+        "changed_byte_count": 0,
+        "first_changed_offsets": [],
+        "before_sha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7",
+        "after_sha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7"
+      },
+      "party_count": {
+        "equal": true,
+        "changed_byte_count": 0,
+        "first_changed_offsets": [],
+        "before_sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "after_sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+      },
+      "frontier": {
+        "equal": true,
+        "changed_byte_count": 0,
+        "first_changed_offsets": [],
+        "before_sha256": "5042d18fab400b5106a082f51e45d883b4ebf33c0f4d1a881562e20205f468fe",
+        "after_sha256": "5042d18fab400b5106a082f51e45d883b4ebf33c0f4d1a881562e20205f468fe"
+      }
+    },
+    "bag_logical_equal": true,
+    "potion_delta": 0,
+    "before_ledger": [
+      0,
+      0
+    ],
+    "after_ledger": [
+      0,
+      0
+    ]
+  },
+  "assertions": {
+    "passed": true,
+    "errors": []
+  }
+}
