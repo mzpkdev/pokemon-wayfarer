@@ -183,6 +183,17 @@ trainer's next reward; a loss costs nothing, and the bet stays open. The
 [specification](../specs/notable-haunts.md#worked-example-celadon-game-corner)
 works it through.
 
+A third, Cerulean Cape, is the quiet clifftop past Bill's house on Route 25:
+Water-themed, Misty's hometown, remote, where trainers relax and sightsee.
+Its quest is Lost something: the trainer mentions something went missing
+"by the rocks" or "near the fence", and the player searches that spot,
+which stays open while they come and go until the cast reshuffles; the
+Dowsing Machine helps. Finding it and reporting back pays the trainer's
+next reward. Misty is its natural regular, the iconic pairing from HGSS,
+and Lorelei takes it on her Water aces when Misty is elsewhere. The
+[specification](../specs/notable-haunts.md#worked-example-cerulean-cape)
+works it through.
+
 ## Boundaries
 
 In: the haunt pool and tags, placement, momentum, the talk flow (greetings

@@ -214,8 +214,9 @@ each jump. At world progress 0 everyone is settled.
 
 When the new placement differs from the saved one at a haunt (another
 trainer, or empty), that haunt's claim bit is cleared
-([rewards and claims](#rewards-and-claims)); then the new placement is
-saved.
+([rewards and claims](#rewards-and-claims)), and so is its
+[lost-something](#lost-something) search and found state; then the new
+placement is saved.
 
 ## Talk flow
 
@@ -240,9 +241,11 @@ Every talk runs three steps:
    still open during this placement), the [quest](#quests) proposal: `ASK`,
    the haunt's proposal line, and [YES / NO]. `YES` gives the trainer's
    `YES` and runs the quest as its section says; `NO` gives the trainer's
-   `NO`, costs nothing, and the next talk proposes again. Once the claim bit
-   is set (the quest was completed during this placement), the trainer's
-   `QUIRK` instead.
+   `NO`, costs nothing, and the next talk proposes again. At a Lost
+   something haunt whose keepsake the player has found, the completion
+   takes the proposal's place ([Lost something](#lost-something)). Once the
+   claim bit is set (the quest was completed during this placement), the
+   trainer's `QUIRK` instead.
 3. **Farewell:** `BYE`. A talk that starts a walk ends at `YES` instead;
    the walk's own `BYE` comes at the exit ([walk](#walk-with-me)).
 
@@ -285,7 +288,7 @@ favour ([dialogue](#dialogue)):
 | Quest | Proposal line |
 | --- | --- |
 | Walk with me | "Walk it with me, out to the VERMILION side?" (the haunt names its own destination) |
-| Lost something | "Something valuable went missing around here. Find it?" |
+| Lost something | "Something valuable went missing around here, {HINT}. Find it?" |
 | Catch me one | "A wild {LOCAL} lives around here. Catch one and show me?" |
 | Quiz | "Three questions on type matchups. Think you can answer them?" |
 | One on one | "Your best POKéMON against {ACE}. Up for it?" |
@@ -342,15 +345,59 @@ other warp or map edge that leaves the quest maps).
 
 ### Lost something
 
-The haunt authors one hidden spot on its quest maps. While a trainer is placed
-there and the claim bit is clear, the spot can be searched, whether or not the
-player has said `YES`: finding it gives the player the lost thing, a transient
-**found** state, not a Bag item. `YES` to the proposal before that gives `YES`
-and `BYE`, and the player goes searching. Talking to the trainer with the lost
-thing completes the quest: the greeting, then `PRAISE` and the reward in place
-of the proposal, then `BYE`. The found state clears on reload, on whiteout, and
-when the placement changes, and the spot can be searched again while the claim
-is open.
+The haunt authors two or three **lost spots** on its quest maps, in order.
+Each spot is one tile, walkable or faced from a walkable tile, with a
+**hint**: a short neutral phrase of a few words that follows "around here,"
+("near the fence", "by the rocks"). Hints name only the place, so they read
+true for every trainer.
+
+**The active spot.** One spot per placement is active, picked from the
+placed trainer: spot `i mod k` in authored order (counting from 0), where
+`i` is the trainer's position in the trainer catalog order (the order that
+breaks [fill](#fill) ties) and `k` is the haunt's spot count. It is a pure
+function of the placement, with no seed and no saved data, and it holds for
+the whole placement; world progress is not used because it rises while the
+same trainer stays, and the spot would move mid-search. A trainer placed at
+the same haunt again uses the same spot. `{HINT}` in the proposal resolves
+to the active spot's hint.
+
+- **Proposal.** "Something valuable went missing around here, {HINT}. Find
+  it?" (the quest line after `ASK`).
+- **YES:** the trainer's `YES`, then `BYE`. The active spot becomes
+  searchable: an invisible scripted background event, found by facing its
+  tile and pressing A, like a hidden item. It stays searchable while the
+  claim bit is clear and nothing has been found during this placement,
+  through leaving the map, whiteouts, and reloads, so the player can leave
+  and come back. Unlike a hidden item, whose flag is set once for good, it
+  is **re-armable per placement**: the next placement arms a spot again
+  after its own `YES`. A talk while the search is open and nothing is found
+  proposes again as usual; `YES` changes nothing, and `NO` doesn't close
+  the search.
+- **Finding it** plays the haunt system line "{PLAYER} found the lost
+  keepsake!" and sets the haunt's **found** state. The keepsake is flavour,
+  not a Bag item: it takes no room and cannot be used or lost.
+- **Completing.** The next talk with the placed trainer is the greeting,
+  then, in place of the proposal, the haunt's done line, `PRAISE`, the
+  [reward](#rewards-and-claims) (an item through `GIFT`), and `BYE`: +10
+  friendship as a completed quest. Giving the reward sets the claim bit and
+  returns the search state to none; a reward that waits (a full Bag, a
+  cancelled lesson) leaves the found state set, so the next talk completes
+  it again.
+- **NO:** the trainer's `NO`, then `BYE`; nothing is armed, and the next
+  talk proposes again.
+- **Expiry.** When the haunt's placement changes, its search and found
+  state clear with its claim bit ([fill](#fill)), so an unfinished search
+  expires at the next reshuffle.
+
+**Item finder.** The build has one: `ITEM_DOWSING_MACHINE` (alias
+`ITEM_ITEMFINDER`), a key item given in Ecruteak City (HNS), on Route 110
+(Emerald), and in the Route 11 gate (FRLG). Its scan,
+`ItemfinderCheckForHiddenItems` in
+[item_use.c](../../game/src/item_use.c), only counts `BG_EVENT_HIDDEN_ITEM`
+events whose flag is clear, so today it ignores a scripted background
+event. Haunts extend that scan to also count the active lost spot while its
+search is open and nothing is found, so the Dowsing Machine beeps near it
+as it does near a hidden item.
 
 ### Catch me one
 
@@ -471,9 +518,10 @@ changes neither.
 A haunt's dialogue is assembled from two sources:
 
 - **Haunt lines**, authored per haunt: its quest line, a done line for a
-  walk (and optionally for a One on one), and optionally a loss line for a
-  One on one. They describe only the place and the activity, never a
-  trainer's personality or history, so they read true for every candidate.
+  walk or a Lost something (and optionally for a One on one), a hint per
+  lost spot, and optionally a loss line for a One on one. They describe
+  only the place and the activity, never a trainer's personality or
+  history, so they read true for every candidate.
   A quest line is the proposal that follows `ASK` ("Walk it with me, out to
   the VERMILION side?"), so the same line works after any attention-getter.
   **Writing rules:** haunt lines carry the content of the proposal, and
@@ -500,10 +548,11 @@ Both use these slots:
 | `{ACE}` | The signature POKéMON's current species. |
 | `{BUDDY}` | The buddy slot's current species ([trainer values](#trainer-values)). |
 | `{LOCAL}` | The haunt's catch species (only in a Catch me one line). |
+| `{HINT}` | The active lost spot's hint (only in a Lost something line). |
 
 Speaker labels ("BROCK:") and system messages (the [YES / NO] prompt, the
-number given, the quiz, a lesson's pick, the fallback amount) are generic
-text, the same for every trainer.
+number given, the quiz, a lesson's pick, the fallback amount, the found
+keepsake) are generic text, the same for every trainer.
 
 ## Worked example: Diglett's Cave
 
@@ -857,6 +906,199 @@ the proposal comes back at the next talk, while the win pays like any other
 quest. Capacity 1 indoors means one trainer at one spot beside the slot
 machines, with room for the buddy and nothing else in the way.
 
+## Worked example: Cerulean Cape
+
+**Tags.** Region Kanto; theme Water; not elite; hometown Cerulean;
+activities relax and sightsee (trainers come to unwind by the sea or take
+in the view); setting remote; capacity 1; quest Lost something. Map
+`Route25_hns`, the cape at the east end of Route 25, past Bill's house
+(door warp at (85, 13)). The cape proper is the fenced clifftop at x
+97-100, y 12-19, reached by the steps at (98-99, 21-22) from the lower path
+(y 23). The meeting spot is (100, 14), near the cape's north-east corner;
+the buddy stands beside it at (99, 14). Both tiles are free of collision
+and of the map's objects, clear of the Suicune scene's tiles ((99, 12),
+(98, 14), and its triggers on y 16) and of the story date's (100, 17) and
+(100, 18).
+
+**Lost spots**, in authored order, each checked against the map's
+collision:
+
+| # | Spot | Tile | Found from | Hint |
+| ---: | --- | --- | --- | --- |
+| 0 | The grass inside the cape's west fence | (97, 18), walkable | (97, 17), (98, 18), or (97, 19) | "near the fence" |
+| 1 | The cliff foot at the east end of the lower path, where the cape's rock meets the sea | (102, 22), rock | (102, 23), facing north | "by the rocks" |
+| 2 | The south bank of the pond in front of Bill's house | (84, 22), walkable | (83, 22), (85, 22), or (84, 23) | "by the pond" |
+
+There is no bench outside Bill's house, so the third spot uses the pond,
+the landmark in front of the house (x 78-91, y 19-21). The active spot is
+the placed trainer's catalog position mod 3
+([Lost something](#lost-something)): Misty (position 1) hides it by the
+rocks, Lorelei (position 9) near the fence.
+
+**Quest.** The haunt authors:
+
+| Line | Text |
+| --- | --- |
+| Quest line | "Something valuable went missing around here, {HINT}. Find it?" |
+| Done line | "That's the one. Good eyes." |
+
+`YES` gives the trainer's `YES` and `BYE`, and arms the active spot. Facing
+it and pressing A finds the keepsake; the Dowsing Machine, if the player has
+it, responds near it. The next talk is the greeting, the done line,
+`PRAISE`, the next reward-pool entry through `GIFT`, and `BYE`, worth +10
+friendship. `NO` is the trainer's `NO` and `BYE`. The search survives
+leaving Route 25 and coming back, and expires when the Cape's placement
+changes.
+
+**Who's likely, and why.** The setting is remote but the Cape is not elite,
+so no aloof trainer is a candidate. Scores at world progress 20 (two badges;
+placeholder weights; momentum from the explorer's growth curves):
+
+| Trainer | Theme | Style | Momentum | Hometown | Score |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Misty | 4 (Starmie, Water) | 2 (Field marshal) | 1 (settled) | 3 | 10 |
+| Lorelei | 4 (Lapras, Water) | 0 (Sweeper) | 0 (rising) | 0 | 4 |
+| Will | 2 (Slowbro, Water) | 2 (Field marshal) | 0 (rising) | 0 | 4 |
+
+Everyone else scores 0 or 1: a settled trainer's 1 for relax and sightsee.
+
+- **Misty** is the iconic pairing: her hometown, her Water theme, and a
+  Field marshal's sightsee, plus relax while she is settled. HGSS puts her
+  on the cape, on the date that HNS keeps at (100, 17) during the Power
+  Plant story, and HNS's own Misty cameo stands on Route 25 at (81, 17),
+  just west of Bill's house ("I love the sunset here!"). She scores 10
+  while settled and 9 while rising (around world progress 34-37 and from
+  41 on). Even so, v0 doesn't always seat her here: in [fill](#fill) order
+  she goes to the first haunt where she is the best free candidate. Below
+  TR 80 (18 active haunts, `start = wp mod 18`), Pallet Town (Water, relax)
+  takes her whenever its turn comes before the Cape's, since she scores 4
+  or 5 there and wins ties with Lorelei on catalog order; the Vermilion
+  harbour does the same when its turn comes first. So she stands on the
+  Cape when `wp mod 18` is 1-6, and never while she is in an accepted
+  event lineup or is the partner.
+- **Lorelei** has Water/Ice aces (Lapras, Cloyster), is from Kanto, and is
+  not aloof, so the Cape scores her 4 on theme alone; as a rising Sweeper
+  she gets no activity points. She holds it when Misty is away: when `wp
+  mod 18` is 17 or 0 (Pallet takes Misty first, and Lorelei is the best
+  free candidate left), or whenever Misty is booked into a league event or
+  asked as the partner. Will ties her on 4 but comes later in catalog
+  order.
+- **Travellers** come only as leftovers: when `wp mod 18` is 11-16,
+  Seafoam takes Lorelei and Pallet takes Misty before the Cape's turn, and
+  it gets a 0- or 1-point fit such as Bugsy or Brawly (or Lt. Surge or
+  Bruno); when it is 7-10, all 14 candidates are placed before the Cape's
+  turn and it stays empty.
+
+What v0 can't say waits for the routine design: a pull that keeps Misty at
+her own Cape rather than Pallet Town, the sunset hour the HNS cameo loves,
+and a reason beyond theme for Lorelei to be here. These counts follow the
+v0 weights and the current Kanto list, and move with them.
+
+**Misty, a Friend** (world progress 20, where `20 mod 18 = 2` and she holds
+the Cape with 10). The player's two badges are Brock's and Misty's, and that
+win made her a Friend (20 points); no quest with her yet, so her reward
+counter is 0. Her spot is by the rocks. At world progress 20 her TR is 30
+and her team level 21, so her buddy, slot 2 (Golduck, offset −2), is Lv 19
+and steps down to PSYDUCK (Golduck needs Lv 33); `{BUDDY}` says PSYDUCK
+until world progress 61, where her team level reaches 35. She greets with
+`HELLO`:
+
+```text
+MISTY: Hey, {PLAYER}! Took you long enough!                   HELLO
+MISTY: Okay, listen up!                                       ASK
+MISTY: Something valuable went missing around here, by the    quest line
+       rocks. Find it?
+> Yes
+MISTY: Now that's what I like to hear!                        YES
+MISTY: See ya! ...PSYDUCK, get back in your ball! Not again!  BYE
+```
+
+The spot is armed. Leaving for Cerulean and coming back changes nothing;
+the player searches the rocky corner below the cape:
+
+```text
+  (the player walks down the steps to the lower path, faces
+   the rock at (102, 22) from (102, 23), and presses A)
+HAUNT: {PLAYER} found the lost keepsake!
+```
+
+Talking to Misty again:
+
+```text
+MISTY: Hey, {PLAYER}! Took you long enough!                   HELLO
+MISTY: That's the one. Good eyes.                             done line
+MISTY: Wow, not bad! You'd almost make a decent Water         PRAISE
+       trainer!
+MISTY: Take this MYSTIC WATER! Don't say I never gave you     GIFT
+       anything!
+MISTY: See ya! ...PSYDUCK, get back in your ball! Not again!  BYE
+```
+
+MYSTIC WATER is the first entry of her
+[pool](../research/notable-trainer-rewards.md#misty) (from world progress
+0). The quest adds 10 points (20 + 10 = 30), and she stays a Friend; from
+now on every talk this placement is `HELLO`, her `QUIRK`, and `BYE`.
+
+**Lorelei at Met: no, then yes** (world progress 36, where `36 mod 18 = 0`:
+Pallet Town's turn comes first and takes Misty, and Lorelei holds the Cape
+with 4). The player met her once at a haunt (+1), so she is Met, and her
+reward counter is 0. Her spot is near the fence. Her buddy is slot 1,
+Lapras, which never evolves, so `{BUDDY}` is always LAPRAS. She greets with
+`AGAIN`, and the player declines first:
+
+```text
+LORELEI: Ah, you again. I am beginning to know you.           AGAIN
+LORELEI: Hmph. I have something to say.                       ASK
+LORELEI: Something valuable went missing around here, near    quest line
+         the fence. Find it?
+> No
+LORELEI: Pity. I'll find someone else.                        NO
+LORELEI: Come along, LAPRAS. Until next time.                 BYE
+```
+
+Declining arms nothing and costs nothing. The next talk proposes again:
+
+```text
+LORELEI: Ah, you again. I am beginning to know you.           AGAIN
+LORELEI: Hmph. I have something to say.                       ASK
+LORELEI: Something valuable went missing around here, near    quest line
+         the fence. Find it?
+> Yes
+LORELEI: Good. I expected nothing less.                       YES
+LORELEI: Come along, LAPRAS. Until next time.                 BYE
+```
+
+The player searches inside the cape's west fence, then talks to her:
+
+```text
+  (the player faces the grass at (97, 18), inside the west
+   fence, and presses A)
+HAUNT: {PLAYER} found the lost keepsake!
+LORELEI: Ah, you again. I am beginning to know you.           AGAIN
+LORELEI: That's the one. Good eyes.                           done line
+LORELEI: Impressive. You kept your cool. I respect that.      PRAISE
+LORELEI: Take this NEVER-MELT ICE. Consider it a cool         GIFT
+         reward.
+LORELEI: Come along, LAPRAS. Until next time.                 BYE
+```
+
+NEVER-MELT ICE is the first entry of Lorelei's
+[pool](../research/notable-trainer-rewards.md#lorelei) (from world progress
+0). Her next entry, a lesson, opens at world progress 45, so a quest with
+her before then pays the fallback prize money. The quest adds 10 points (1 +
+10 = 11), and she is still Met.
+
+**What this example shows.** Exploration is the quest: the proposal points
+at a place, the player walks the cape and its lower path looking for it,
+and the Dowsing Machine helps, with no battle at all. The spot comes from
+the placement, so Misty always hides it by the rocks and Lorelei near the
+fence, and the search waits while the player comes and goes. A hometown
+pull and a theme pull compete for one spot: Misty brings both, but v0's
+fill can send her to Pallet Town first, leaving the Cape to Lorelei on
+theme alone, and to travellers when neither is free. And it is the calmest
+mood in the list: remote, relax and sightsee, a clifftop by the sea, where
+the quest is a stroll.
+
 ## Kanto haunts
 
 The v0 Kanto list, in catalog order. It is a draft: the tags, quests, and
@@ -864,10 +1106,11 @@ species are content for review. Every map exists under
 `game/data/maps/`; Seafoam and Cinnabar use the FRLG port's maps, since
 Wayfarer retired their HNS versions
 ([retirement](frlg-cinnabar-seafoam-hns-retirement.md)). Spots, exits, and
-hidden-item tiles are chosen at implementation after checking collision and
-existing objects; the Celadon Game Corner's spot is
-[worked out](#worked-example-celadon-game-corner) already. Every haunt has
-capacity 1.
+lost-spot tiles are chosen at implementation after checking collision and
+existing objects; the
+[Celadon Game Corner's](#worked-example-celadon-game-corner) and
+[Cerulean Cape's](#worked-example-cerulean-cape) are worked out already.
+Every haunt has capacity 1.
 
 | # | Haunt | Maps | Themes | Elite | Hometown | Activities | Setting | Quest |
 | ---: | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -877,7 +1120,7 @@ capacity 1.
 | 4 | Viridian Forest | `ViridianForest_hns` | Bug, Grass | – | – | study | remote | Catch me one: Pikachu |
 | 5 | Pewter Museum | `PewterCity_Museum_1F_hns` | Rock | – | Pewter | study | public | Quiz |
 | 6 | Mt. Moon outside | `MtMoon_Outside_hns` | Rock, Fairy | – | – | sightsee | remote | Lost something |
-| 7 | Cerulean Cape | `Route25_hns` | Water | – | Cerulean | relax | remote | Lost something |
+| 7 | Cerulean Cape | `Route25_hns` | Water | – | Cerulean | relax, sightsee | remote | Lost something: near the fence, by the rocks, by the pond |
 | 8 | Rock Tunnel | `RockTunnel_B1F_hns`, `RockTunnel_1F_hns` | Rock, Fighting | – | – | train | remote | Walk with me: from the north Route 10 entrance to the south one |
 | 9 | Power Plant | `Route10_PowerPlantEntrance_hns`, `PowerPlant_Frlg` | Electric | – | – | study | remote | Catch me one: Voltorb |
 | 10 | Lavender Soul House | `LavenderTown_SoulHouse_hns` | Ghost | – | – | lie low | public | Quiz |
@@ -1023,12 +1266,18 @@ Haunts add:
 - the **current placement**: one `characterId` or none per haunt. It is
   derivable from the inputs, and is saved to detect changes for the claim
   bits and to hold the walking trainer during a walk; and
-- the **quest in progress**: a walk (its haunt) or a found lost thing (its
-  haunt), cleared on load and on whiteout.
+- one **search state** per Lost something haunt, 2 bits: none, searching
+  (the player said `YES`), or found (the keepsake is in hand). It lasts the
+  whole placement, through reloads and whiteouts, and clears with the claim
+  bit when the haunt's placement changes. The active spot is derived from
+  the placement and not saved ([Lost something](#lost-something)); and
+- the **quest in progress**: a walk (its haunt), cleared on load and on
+  whiteout.
 
-New Game saves every claim bit clear, every reward counter at 0, the placement
-for world progress 0, and no quest in progress. With follower NPCs enabled,
-SaveBlock3 also holds the engine's follower state, which a walk uses.
+New Game saves every claim bit clear, every reward counter at 0, the
+placement for world progress 0, every search state at none, and no quest in
+progress. With follower NPCs enabled, SaveBlock3 also holds the engine's
+follower state, which a walk uses.
 
 ## Load validation
 
@@ -1038,17 +1287,20 @@ On every load, before the overworld runs:
    it. A walk interrupted by a reload is unfinished
    ([walk](#walk-with-me)).
 2. **Pruning.** Drop the reward counters of characters no longer in the
-   registry, and the claim bits and placements of haunts no
-   longer in the catalog. A reward counter above its trainer's current pool
+   registry, and the claim bits, search states, and placements of haunts no
+   longer in the catalog, or search states of haunts whose quest is no
+   longer Lost something. A reward counter above its trainer's current pool
    length (the pool got shorter) is lowered to that length: the pool counts
    as used up, and nothing is taken back or paid.
 3. **Checks.** Reward counters exist only for known trainers; claim bits
-   and placements only for known haunts; a saved placement
-   names known characters, each at most once. A failed check is an invalid
-   save, never a reason to reward anything.
+   and placements only for known haunts, and search states only for known
+   Lost something haunts, never the unused fourth value, and never
+   searching or found at an empty haunt or with the claim bit set; a saved
+   placement names known characters, each at most once. A failed check is
+   an invalid save, never a reason to reward anything.
 4. **Recompute.** Compute the placement from the current inputs and compare
-   it with the saved one, clearing the claim bit of every haunt whose
-   trainer changed, then save it.
+   it with the saved one, clearing the claim bit and search state of every
+   haunt whose trainer changed, then save it.
 
 ## Presentation
 
@@ -1079,8 +1331,9 @@ Required implementation evidence (not yet run):
 
 1. **Catalog.** Every haunt has valid tags (one or two activities from the
    shared list, and capacity 1 in v0), existing maps, an active meeting
-   spot, and its quest details (a walk's start and exit, a lost
-   spot, a catch species on its wild table); every notable trainer has
+   spot, and its quest details (a walk's start and exit, two or three lost
+   spots, each on a reachable tile with a hint, a catch species on its wild
+   table); every notable trainer has
    a buddy slot 1-6 and a reward pool that passes the
    [pool rules](#rewards-and-claims).
 2. **Buddy.** `{BUDDY}` resolves to the slot's stepped-down species at every
@@ -1118,6 +1371,14 @@ Required implementation evidence (not yet run):
    POKéMON; the quiz asks the same questions on every attempt; a One on one
    loss plays the haunt's loss line (or `NOT_READY`), costs nothing, and
    leaves the claim bit clear, and a win adds +10 as a quest, never +20.
+   Lost something picks the same active spot for the same placed trainer
+   (catalog position mod spot count) and names its hint in the proposal;
+   the spot is inert before `YES`, after it is found, and once the claim
+   bit is set; after `YES` it is found by facing it and pressing A, stays
+   armed across leaving, whiteout, and reload, is re-armed by the next
+   placement's `YES`, and makes the Dowsing Machine respond; finding it
+   adds no Bag item; the next talk plays the done line, `PRAISE`, the
+   reward, and `BYE` for +10; and a reshuffle clears an open search.
 7. **Claims.** A reward is given once per placement; a changed placement
    reopens it; a full Bag, a cancelled lesson, or no POKéMON able to learn
    keeps it open and leaves the reward counter unchanged.
@@ -1137,7 +1398,8 @@ Required implementation evidence (not yet run):
     back room works as a haunt; no stranger battle, rematch, prize money
     beyond the quest fallback, or Battle Points come from haunts.
 11. **Save.** A new game and a reload give the saved state described above;
-    corrupt reward counters, claim bits, or placements are
+    a search state survives a reload and clears with its haunt's placement;
+    corrupt reward counters, claim bits, search states, or placements are
     rejected; removed characters or haunts are pruned; and a counter past a
     shortened pool is lowered to its length.
 
@@ -1154,6 +1416,10 @@ Required implementation evidence (not yet run):
 - Where Jasmine's Steelix trade goes once the Dojo seats retire.
 - Whether a follower NPC turns regular trainer battles on the way into
   partner battles; the design assumes it doesn't.
+- What a haunt does while its map hosts a story scene with a trainer it
+  could hold: Misty's Route 25 date stands at (100, 17) on the Cerulean
+  Cape while `FLAG_HIDE_ROUTE25_MISTY` is clear, so a placed Misty would
+  meet herself.
 
 ## Later
 
