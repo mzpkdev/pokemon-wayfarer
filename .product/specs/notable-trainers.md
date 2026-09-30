@@ -193,9 +193,9 @@ Events only add weighted points (placeholders):
 
 | Event | Points | Bounds |
 | --- | ---: | --- |
-| First talk | +1 | Once: when a [haunt](notable-haunts.md#relationship-beat) talk starts with the trainer at Stranger. |
-| Battle won | +20 | The first win over them, in any kind of battle; after that, a haunt rematch win, at most once per placement. |
-| Haunt quest completed | +10 | Each completed [quest](notable-haunts.md#quests). |
+| First talk | +1 | Once: when a [haunt](notable-haunts.md#talk-flow) talk starts with the trainer at Stranger. |
+| Battle won | +20 | The first win over them, in any kind of battle. After that, a repeat win counts at most once per step of world progress: only if no repeat win over them has counted since world progress last rose. |
+| Haunt quest completed | +10 | Each completed [quest](notable-haunts.md#quests), at most once per placement. |
 
 Rules:
 
@@ -204,23 +204,31 @@ Rules:
 - **A first win always counts**, whatever the kind of battle (Gym, rematch,
   story, league, singles or a tag match, where both opponents count). A loss,
   a draw, fleeing, a declined league event, a battle beside the trainer as a
-  partner, and debug battles add nothing. The first win alone reaches Friend.
-- **Consumers read only the stage, never the events or the score.** They are
-  the [haunts](notable-haunts.md#relationship-beat) (greetings, quests, the
-  menu) and [Sevii Masters](sevii-masters.md#phone-contacts): a trainer at
-  Friend or above is a contact, and any contact can be the partner. The
-  number is handed over when the score first crosses the Friend threshold,
-  by any route (a win, or quests), with one system line that names the
-  trainer. Tate & Liza keep a score, but they give no number and cannot be
-  the partner, and they are not placed at haunts in v0.
+  partner, a One on one quest battle (it counts as the quest), and debug
+  battles add nothing. The first win alone reaches Friend.
+- **Which battles count.** Haunts offer no battles of their own, so wins come
+  from Gym, story, and league battles, and later from rematch spots. Only
+  battles that can come again (league events, and future rematch spots) give
+  repeat wins, and the step cap keeps them from being farmed: a repeat win
+  counts only if world progress has risen since the last repeat win that
+  counted.
+- **Consumers read only the stage, never the events or the score.** They are the
+  [haunts](notable-haunts.md#talk-flow) (greetings and quests) and [Sevii
+  Masters](sevii-masters.md#phone-contacts): a trainer at Friend or above is a
+  contact, and any contact can be the partner. The number is handed over when
+  the score first crosses the Friend threshold, by any route (a win, or quests),
+  with one system line that names the trainer. Tate & Liza keep a score, but
+  they give no number and cannot be the partner, and they are not placed at
+  haunts in v0.
 
-Saved state: one score byte per notable trainer and one **first-win bit**
-per notable trainer (the bit records that the first win was counted); the
-haunts add one rematch bit per haunt
-([claims](notable-haunts.md#rewards-and-claims)). New Game saves every score
-at 0 and every bit clear. On load, drop the scores and bits of characters no
-longer in the registry; a first-win bit set with a score under the Friend
-threshold, or a score for an unknown character, is an invalid save.
+Saved state: one score byte per notable trainer, one **first-win bit** per
+notable trainer (the bit records that the first win was counted), and one
+**repeat-win bit** per notable trainer (set when a repeat win counts, and
+cleared for every trainer whenever world progress rises). New Game saves every
+score at 0 and every bit clear. On load, drop the scores and bits of characters
+no longer in the registry; a first-win bit set with a score under the Friend
+threshold, a repeat-win bit set without the first-win bit, or a score for an
+unknown character, is an invalid save.
 
 Later sources of points (gifts, tag battles beside the trainer, trades,
 partnering) are not in v0.
@@ -621,11 +629,11 @@ a partner.
   entries, and battle order, each level in 1–100 and the battle order derived as above (filler
   slots, then aces, each in reverse list order; slot 1 last), matching the
   Brock example at every team size.
-- Friendship: scores start at 0 and never decrease, cap at 255, and the
-  stage follows the thresholds (0, 1, 20, 60); a first win adds 20 once in
-  every kind of battle (both opponents of a tag match), a repeat win adds
-  nothing outside a haunt rematch, which adds 20 once per placement; a first
-  talk adds 1 once; a quest adds 10; losses, declines, and partnering add
+- Friendship: scores start at 0 and never decrease, cap at 255, and the stage
+  follows the thresholds (0, 1, 20, 60); a first win adds 20 once in every kind
+  of battle (both opponents of a tag match), a repeat win adds 20 at most once
+  per step of world progress and nothing more until world progress rises; a
+  first talk adds 1 once; a quest adds 10; losses, declines, and partnering add
   nothing; the number is handed over once, at the Friend crossing; scores
   survive reloads and prune with removed characters.
 - Determinism: trainer TR and resolution are pure functions of world progress

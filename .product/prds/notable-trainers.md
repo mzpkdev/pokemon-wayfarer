@@ -197,8 +197,8 @@ who becomes a Friend gives you their phone number, which the
 ### Out in the world
 
 Between their Gym and league battles, notable trainers also turn up at
-haunts around the overworld, where a friend gives gossip, a rematch, and a
-quest ([Notable haunts](notable-haunts.md)).
+haunts around the overworld, where each offers the haunt's quest
+([Notable haunts](notable-haunts.md)).
 
 FRLG, Emerald, and HNS parties are references for recognizable content, not
 required teams. Challenge options such as trainer items, trainer IVs and EVs,

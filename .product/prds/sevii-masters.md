@@ -75,15 +75,15 @@ partner their whole team.
 **Phone numbers.** When a notable trainer becomes a Friend
 ([friendship](notable-trainers.md#friendship)), they give the player their
 phone number and join the phone's contacts for good. The first win over them,
-in any battle, is enough, and so is helping them at haunts. Tate and Liza, a
+in any battle, is enough, and so are finished quests at haunts. Tate and Liza, a
 duo, give none. Here a contact is for one thing: asking them to be the
 player's partner. [Notable haunts](notable-haunts.md) read the same
 friendship for their greetings.
 
 **The partner.** The partner is whoever the player last asked. Any contact
-can be asked once the player is a Master, and the ask always succeeds. The
-player asks by phone, or in person when they meet the contact at a
-[haunt](notable-haunts.md#design). If the player has never asked anyone,
+(a Friend or closer) can be asked by phone once the player is a Master, and
+the ask always succeeds; there is no asking in person at
+[haunts](notable-haunts.md#design). If the player has never asked anyone,
 Lorelei steps in: she spoke of the player to the caretaker, and she comes
 along. The partner is never in the lineup, so asking a strong trainer also
 keeps them off the other side. The partner is fixed when the player answers

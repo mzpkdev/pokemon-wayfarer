@@ -14,7 +14,8 @@ Status: review draft. Nothing here is wired into scripts yet.
 Every trainer has all 15. A haunt picks the greeting by the trainer's
 [friendship stage](../specs/notable-trainers.md#friendship): `MEET` or
 `HEARD` for a stranger, `AGAIN` at Met, `HELLO` at Friend, and `CLOSE` at
-Close.
+Close. Haunts use 13 of them in v0; `NOT_YET` and `NEWS` are kept for other
+uses (see the table).
 
 | Bit | When |
 | --- | --- |
@@ -23,8 +24,8 @@ Close.
 | `CLOSE` | a warmer greeting for a close friend |
 | `MEET` | introducing themselves the first time (includes their name) |
 | `HEARD` | a first meeting, but the player's fame has reached them (see the haunts spec); always contains `{PLAYER}` |
-| `NOT_YET` | first fight still ahead: "beat me properly first". Gym Leaders may mention their GYM; Elite Four and Champions don't |
-| `NEWS` | lead-in before a gossip line |
+| `NOT_YET` | first fight still ahead: "beat me properly first". Gym Leaders may mention their GYM; Elite Four and Champions don't. Reserved for places that host battles (such as Gyms or future rematch spots); haunts host none, so they don't use it in v0 |
+| `NEWS` | lead-in before a gossip line. Unused by haunts in v0, which carry no gossip; reserved for world news or later uses |
 | `ASK` | attention-getter before whatever the haunt proposes: no movement, favour, request content or implied destination or activity |
 | `YES` | the player agreed |
 | `NO` | the player declined |
@@ -62,9 +63,8 @@ needs help or is asking a favour, so every trainer can voice every quest.
 - **Nicknames** are allowed when canon has one. Jasmine's AMPHY is the only
   nickname used; it reads for every stage and is noted in her section.
 - **Slots:** `{PLAYER}`, `{ITEM}`, `{ACE}` (the signature POKéMON's current
-  species) and `{BUDDY}`. `{GOSSIP}` belongs to haunt dialogue and follows
-  `NEWS`. Trainers write their own name out in `MEET`, so there is no name
-  slot.
+  species) and `{BUDDY}`. Trainers write their own name out in `MEET`, so
+  there is no name slot.
 - **Length:** each line fits one GBA text box, 2 lines of about 36
   characters, so 70 characters at most, counting `{PLAYER}` as 7 characters,
   `{ITEM}` as 16 (the longest reward-pool item name), and `{ACE}` and `{BUDDY}` as 10. Line breaks are left to

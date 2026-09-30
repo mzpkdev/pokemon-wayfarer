@@ -92,7 +92,7 @@ asked as a partner, which the duo cannot be.
 
 On the phone, the only use is asking a contact to be the player's
 [partner](#partner); calling a contact otherwise does nothing new.
-[Notable haunts](notable-haunts.md#relationship-beat) read the friendship
+[Notable haunts](notable-haunts.md#talk-flow) read the friendship
 stage, not the phone.
 
 ## Partner
@@ -101,10 +101,11 @@ At the Masters the player fights beside a **partner**: the notable trainer
 they last asked. The saved **partner choice** is none or one `characterId`.
 
 - **Asking.** The player can ask any contact to be their partner once they
-  are a Master (the Masters knows them): from the phone's contact list
-  whenever they can make a call (in the overworld, with no script, battle,
-  or ceremony running), or in person through a friend's Team up at a
-  [haunt](notable-haunts.md#relationship-beat). The ask always succeeds: it
+  are a Master (the Masters knows them), by phone only: from the phone's
+  contact list whenever they can make a call (in the overworld, with no
+  script, battle, or ceremony running). The contact exists from Friend, so
+  any Friend or closer can be asked; there is no in-person ask at
+  [haunts](notable-haunts.md#talk-flow). The ask always succeeds: it
   saves that contact as the partner choice, replacing any earlier one, and
   does nothing else. Only a league-eligible contact can be asked (Tate & Liza
   give no number), and no trait, TR, or reign check applies: Friend or above
