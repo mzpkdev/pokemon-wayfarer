@@ -2,13 +2,16 @@
 
 Observed 2026-09-30 after the linked-door experiment in
 [PoC PR #144](https://github.com/mzpkdev/pokemon-wayfarer/pull/144).
-The same PoC-enabled ROM reproduced the black interior with no active multiplayer
-session. This control does not establish the cause or the behavior of a build
-with the PoC compiled out.
+**Historical short-script control.** The same PoC-enabled ROM captured a black
+frame with no active multiplayer session. The [completed follow-up](https://github.com/mzpkdev/pokemon-wayfarer/blob/eff36caeee3019af524d68a598e19b2280ae9d70/.product/research/native-link-multiplayer-followup.md#rendering-control-the-earlier-black-frame-was-a-fade)
+held the player indoors longer and repeated the route with multiplayer compiled
+out. Both controls showed a visible interior after the transition. The black
+frame below was a fade, not a sustained indoor rendering defect. No rendering
+patch was needed. This short run alone did not establish that conclusion.
 
 ## Reproduction
 
-Use the [pinned runner](https://github.com/mzpkdev/pokemon-wayfarer/blob/1dbf6922e4fc45f2fd4f3018097f32e54a018219/game/tools/multiplayer-poc/README.md)
+Use the [original pinned runner](https://github.com/mzpkdev/pokemon-wayfarer/blob/1dbf6922e4fc45f2fd4f3018097f32e54a018219/game/tools/multiplayer-poc/README.md)
 and its dependency setup. Save the following as `solo-door.inputs`; it removes
 only the connection chord from the recorded door journey:
 
@@ -38,8 +41,9 @@ emulator frame 391, between the observations below. Image SHA-256:
 `47fbde60709a27683035d7b385f06dd1447f68c6548272758e15a335cf3bc15e`.
 
 The trace shows map 259 with the session idle and no sent/received packets,
-then return to map 0. These are observed diagnostic values, not assertions of
-complete map-rendering or save correctness.
+then return to map 0. These are observed diagnostic values. The image sample
+landed during a fade; later visible frames in the longer linked, idle, and
+compiled-out controls supersede the earlier unresolved-rendering inference.
 
 ```text
 input_origin_frame=101
