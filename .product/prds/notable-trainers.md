@@ -184,11 +184,15 @@ Brock's wall of rocks or Whitney's stubborn Miltank. Stronger trainers play
 smarter, their aces are held back until the end, and a rare boss like Lance
 knows everything about your party ([Trainer AI](trainer-ai.md)).
 
-### Phone numbers
+### Friendship
 
-The first time you beat a notable trainer, they give you their phone
-number, which the [Sevii Masters](sevii-masters.md#design) uses to find you
-a partner.
+Every notable trainer has a friendship with you that only grows. It starts
+at Stranger and moves to **Met** when you first talk, **Friend** once you
+have won against them or helped them with a few quests, and **Close** after
+a lot more of both. Nothing else moves it, and chatting again and again adds
+nothing ([friendship](../specs/notable-trainers.md#friendship)). A trainer
+who becomes a Friend gives you their phone number, which the
+[Sevii Masters](sevii-masters.md#design) uses to find you a partner.
 
 ### Out in the world
 
@@ -289,11 +293,12 @@ well they play, and combat difficulty belong to playtesting.
 ## Specifications
 
 - [Notable trainers specification](../specs/notable-trainers.md):
-  inventory, TR and its growth, scalers, rosters, and the battle snapshot.
+  inventory, TR and its growth, scalers, rosters, friendship, and the battle
+  snapshot.
 - [Sevii Masters specification](../specs/sevii-masters.md): phone contacts,
-  given for a first win over a notable trainer.
+  given when a notable trainer becomes a Friend.
 - [Notable haunts specification](../specs/notable-haunts.md): where notable
-  trainers appear in the overworld, and the manner and buddy values.
+  trainers appear in the overworld, and the buddy value.
 - [Gym Leader scaling](../specs/gym-leader-scaling.md): badge-encounter
   coverage and battle construction.
 - [Trainer AI specification](../specs/trainer-ai.md): play styles, AI skill,

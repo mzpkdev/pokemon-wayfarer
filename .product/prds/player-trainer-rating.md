@@ -236,8 +236,15 @@ changes yours.
 - **Tag battle:** two against two, each trainer bringing three Pokémon: you
   and your partner against a pair from the lineup in each Sevii Masters
   hall ([tag matches](../specs/sevii-masters.md#tag-matches)).
-- **Contact:** a notable trainer whose phone number you hold. Each gives you
-  their number the first time you beat them
+- **Friendship score:** a saved number from 0 to 255 that each notable
+  trainer has for the player. It only goes up, through a few bounded events:
+  a first talk, a win, a finished haunt quest
+  ([friendship](../specs/notable-trainers.md#friendship)).
+- **Friendship stage:** Stranger, Met, Friend, or Close, read from the
+  friendship score against fixed thresholds. Other systems read only the
+  stage.
+- **Contact:** a notable at Friend or above, whose phone number you hold. Each
+  gives you their number when they first reach Friend
   ([phone contacts](../specs/sevii-masters.md#phone-contacts)).
 - **Partner:** the contact you last asked to join you at the Sevii Masters,
   or Lorelei if you have never asked anyone. They fight beside you in the
@@ -247,10 +254,6 @@ changes yours.
   their Gym and league battles. No haunt belongs to one trainer: each is
   filled by whoever fits it best at the time
   ([haunts](../specs/notable-haunts.md#haunts)).
-- **Manner:** a notable trainer's warm, proud, or cold nature, which decides
-  the quests they give: warm trainers ask you for help, proud ones challenge
-  or enlist you, and cold ones command you
-  ([trainer values](../specs/notable-haunts.md#trainer-values)).
 - **Buddy:** a notable trainer's companion Pokémon, one slot of their
   roster, named at its current stage, so Brock's buddy is Onix early and
   Steelix later ([trainer values](../specs/notable-haunts.md#trainer-values)).

@@ -35,8 +35,8 @@ rather than restating it.
   battle: the play style, AI skill, ace protection, and the boss flag.
 - [Leagues](leagues.md) owns league lineups and their lifecycle.
 - [Notable haunts](notable-haunts.md) places notable trainers in the
-  overworld and owns the meaning of the manner, buddy, and reward pool
-  values ([below](#haunt-values-manner-buddy-reward-pool)).
+  overworld and owns the meaning of the buddy and reward pool
+  values ([below](#haunt-values-buddy-reward-pool)).
 - [Player Trainer Rating](player-trainer-rating.md) owns the player's TR,
   the scaler definition, and the downward rule and shared evolution-level table
   ([evolution stages](player-trainer-rating.md#evolution-stages));
@@ -162,16 +162,68 @@ a boolean **boss flag** (`bossOmniscient`, Lance only in v0).
 flags each battle resolves from them, the trainer's TR, and the resolved
 team's aces.
 
-## Haunt values: manner, buddy, reward pool
+## Haunt values: buddy, reward pool
 
-Each entry also authors a **manner** (`warm`, `proud`, or `cold`) and a
-**buddy** (one roster slot, 1-6). Notable trainers also appear at haunts in
-the overworld, and [Notable haunts](notable-haunts.md#trainer-values) owns
-what these two values mean.
+Each entry also authors a **buddy** (one roster slot, 1-6). Notable trainers
+also appear at haunts in the overworld, and
+[Notable haunts](notable-haunts.md#trainer-values) owns what it means.
 Each entry also authors a **reward pool**, an ordered list of items and
 lessons with a from-TR gate each, which pays for finished haunt quests;
 [Notable haunts](notable-haunts.md#rewards-and-claims) owns what it means
 and its rules.
+
+## Friendship
+
+Each notable trainer, Tate & Liza included, has a **friendship score**: one
+saved byte, 0-255, that starts at 0 and **never decreases**; additions stop
+at 255. The **stage** is read from the score against fixed thresholds, and
+nothing else moves a stage.
+
+| Stage | Score at least | Notes |
+| --- | ---: | --- |
+| Stranger | 0 | The player has not talked to them. |
+| Met | 1 | They know the player. |
+| Friend | 20 | They give their phone number. |
+| Close | 60 | The warmest stage. |
+
+The thresholds are the same for every trainer in v0, and they are
+placeholder data like the weights below.
+
+Events only add weighted points (placeholders):
+
+| Event | Points | Bounds |
+| --- | ---: | --- |
+| First talk | +1 | Once: when a [haunt](notable-haunts.md#relationship-beat) talk starts with the trainer at Stranger. |
+| Battle won | +20 | The first win over them, in any kind of battle; after that, a haunt rematch win, at most once per placement. |
+| Haunt quest completed | +10 | Each completed [quest](notable-haunts.md#quests). |
+
+Rules:
+
+- **Points come only from explicit, bounded events.** Nothing passive adds
+  any: repeat chats, time, world progress, and visits give nothing.
+- **A first win always counts**, whatever the kind of battle (Gym, rematch,
+  story, league, singles or a tag match, where both opponents count). A loss,
+  a draw, fleeing, a declined league event, a battle beside the trainer as a
+  partner, and debug battles add nothing. The first win alone reaches Friend.
+- **Consumers read only the stage, never the events or the score.** They are
+  the [haunts](notable-haunts.md#relationship-beat) (greetings, quests, the
+  menu) and [Sevii Masters](sevii-masters.md#phone-contacts): a trainer at
+  Friend or above is a contact, and any contact can be the partner. The
+  number is handed over when the score first crosses the Friend threshold,
+  by any route (a win, or quests), with one system line that names the
+  trainer. Tate & Liza keep a score, but they give no number and cannot be
+  the partner, and they are not placed at haunts in v0.
+
+Saved state: one score byte per notable trainer and one **first-win bit**
+per notable trainer (the bit records that the first win was counted); the
+haunts add one rematch bit per haunt
+([claims](notable-haunts.md#rewards-and-claims)). New Game saves every score
+at 0 and every bit clear. On load, drop the scores and bits of characters no
+longer in the registry; a first-win bit set with a score under the Friend
+threshold, or a score for an unknown character, is an invalid save.
+
+Later sources of points (gifts, tag battles beside the trainer, trades,
+partnering) are not in v0.
 
 ## Trainer rating
 
@@ -509,10 +561,11 @@ TR, another trainer, or a random team.
 
 ## Phone contacts
 
-A notable trainer's phone number, given at the player's first win over
-them, is owned by [Sevii Masters](sevii-masters.md#phone-contacts), which
-uses it to ask a partner; [haunts](notable-haunts.md#relationship-beat)
-read it to tell friends from strangers.
+A notable trainer's phone number comes when their [friendship](#friendship)
+first reaches Friend, and a contact is a trainer at Friend or above. Sevii
+Masters owns the phone side
+([phone contacts](sevii-masters.md#phone-contacts)): it uses contacts to ask
+a partner.
 
 ## Validation
 
@@ -568,6 +621,13 @@ read it to tell friends from strangers.
   entries, and battle order, each level in 1–100 and the battle order derived as above (filler
   slots, then aces, each in reverse list order; slot 1 last), matching the
   Brock example at every team size.
+- Friendship: scores start at 0 and never decrease, cap at 255, and the
+  stage follows the thresholds (0, 1, 20, 60); a first win adds 20 once in
+  every kind of battle (both opponents of a tag match), a repeat win adds
+  nothing outside a haunt rematch, which adds 20 once per placement; a first
+  talk adds 1 once; a quest adds 10; losses, declines, and partnering add
+  nothing; the number is handed over once, at the Friend crossing; scores
+  survive reloads and prune with removed characters.
 - Determinism: trainer TR and resolution are pure functions of world progress
   and content, independent of party, badges or league wins beyond their effect
   on player TR, save seed, query order, call history, reloads, and battle RNG.
