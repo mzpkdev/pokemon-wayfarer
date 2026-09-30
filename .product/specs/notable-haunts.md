@@ -24,7 +24,7 @@ placeholders; balance is informational.
 
 Own, in `IS_WAYFARER`: the haunt catalog and its tags, the meaning of the
 **buddy** and **reward pool** trainer values, placement and
-momentum, the talk flow, the five quest types, rewards and claims,
+momentum, the talk flow, the seven quest types, rewards and claims,
 dialogue assembly, the Kanto haunt list, retiring the HNS cameos and the
 Saffron Dojo rematch room, the haunts' saved state and load validation,
 presentation, the balance report, and acceptance.
@@ -271,8 +271,8 @@ levels, since it plays at most once per trainer.
 **Points.** A haunt adds [friendship](notable-trainers.md#friendship)
 through two events only: the first talk (+1) and a completed quest (+10).
 Repeat talks, declining, and quirks add nothing. Haunts offer no battles
-of their own, so no battle win happens here: One on one is a quest, and
-its win counts as the completed quest, not as a battle won.
+of their own, so no battle win happens here: One on one and Swap battle are
+quests, and their wins count as the completed quest, not as a battle won.
 
 **Teaming up.** Asking a trainer to be the Masters partner happens only by
 phone ([partner](sevii-masters.md#partner)), never at a haunt. A trainer who
@@ -294,6 +294,8 @@ favour ([dialogue](#dialogue)):
 | Catch me one | "A wild {LOCAL} lives around here. Catch one and show me?" |
 | Quiz | "Three questions on type matchups. Think you can answer them?" |
 | One on one | "Your best POKéMON against {ACE}. Up for it?" |
+| Bring me | "Got a {KIND} on you? Bring me one." |
+| Swap battle | "Let's trade places. I'll borrow your lead POKéMON; you take {ACE}. Deal?" |
 
 A haunt may author its own proposal line for its quest type, under the same
 writing rules; the [Celadon Game Corner](#worked-example-celadon-game-corner)
@@ -305,7 +307,8 @@ Every quest runs `ASK` (an attention-getter), then the haunt's own quest
 line (the proposal), then a yes or no:
 `YES` starts it, `NO` ends it ([talk flow](#talk-flow)). A requirement the
 player doesn't meet, or a failed attempt, uses `NOT_READY`, unless there is
-a loss line (One on one's, if the haunt authors one, and the Quiz's).
+a loss line (One on one's, if the haunt authors one, the Quiz's, and Swap
+battle's).
 Completing it runs the haunt's done line if it has one, then `PRAISE`, then
 the [reward](#rewards-and-claims), then `BYE`.
 
@@ -515,6 +518,151 @@ Cancelling the choice starts nothing.
   `BYE`. There is no penalty; the claim bit stays clear, so the quest stays
   open this placement and the next talk proposes it again.
 
+### Bring me
+
+The haunt authors one **item kind** that fits the place, the `{KIND}` of
+its quest line: a berry for a garden or a forest, a healing item for a
+POKéMON Center area or a training spot, a fossil or a stone for a cave or
+the museum, a pearl or shell for the seaside. The player hands over one
+item of that kind from the Bag. It is one talk, with no saved state.
+
+**Kinds.** A kind is one row of a closed kind table, resolved from the
+item data (`gItemsInfo` in [items.h](../../game/src/data/items.h), whose
+`struct ItemInfo` is in [item.h](../../game/include/item.h)). Each row
+names one Bag **pocket** and a **match**: the whole pocket, a set of
+`sortType` values (`enum ItemSortType` in
+[item.h](../../game/include/item.h)), or an authored list of `ITEM_*`
+constants when no field isolates the kind. An item belongs to a kind when
+it sits in the row's pocket, passes the match, and is not important
+(`importance` 0), so key items never count. Every row keeps to one
+pocket, since the Bag screen below can't switch pockets. With
+`I_COMBINE_BAG_POCKETS` `TRUE`
+([config/item.h](../../game/include/config/item.h)), the treasures fold
+into the Items pocket (`POCKET_TREASURES` is `POCKET_ITEMS` in
+[constants/item.h](../../game/include/constants/item.h)).
+
+| Kind | `{KIND}` | Pocket | Match | Items today |
+| --- | --- | --- | --- | --- |
+| berry | "BERRY" | `POCKET_BERRIES` | the whole pocket | the berries, `FIRST_BERRY_INDEX` to `LAST_BERRY_INDEX` |
+| healing | "healing item" | `POCKET_MEDICINE` | `ITEM_TYPE_HEALTH_RECOVERY` | 21, from POTION and FRESH WATER to REVIVE and SACRED ASH |
+| fossil | "fossil" | `POCKET_ITEMS` | `ITEM_TYPE_FOSSIL` | 15, HELIX FOSSIL to FOSSILIZED DINO |
+| stone | "stone" | `POCKET_ITEMS` | `ITEM_TYPE_EVOLUTION_STONE`, `ITEM_TYPE_SHARD` | the ten evolution stones and the four shards |
+| pearl | "pearl or shell" | `POCKET_ITEMS` | list: `ITEM_PEARL`, `ITEM_BIG_PEARL`, `ITEM_PEARL_STRING`, `ITEM_SHOAL_SHELL` | those four |
+
+The pearl kind is a list because its items share `ITEM_TYPE_SELLABLE`
+with nuggets, mushrooms, and stardust. Fossils are ordinary items in
+Wayfarer (`I_KEY_FOSSILS >= GEN_4 || IS_WAYFARER` in
+[items.h](../../game/src/data/items.h)), so they are not key items. Each
+`{KIND}` text starts with a consonant, so "a {KIND}" reads right. A new
+kind is a new row, under the same rules.
+
+- **Proposal.** "Got a {KIND} on you? Bring me one." (the quest line after
+  `ASK`).
+- **YES:** the trainer's `YES`. With no item of the kind in the Bag, then
+  `NOT_READY` and `BYE`, and the Bag doesn't open. Otherwise the Bag opens
+  on the kind's pocket with pocket switching off, in a new "choose an item
+  of kind K" mode ([Bag kind screen](#bag-kind-screen)).
+  - **A matching item:** one is removed from the Bag, then the haunt's
+    done line (default "That's the one. Just what this place calls
+    for."), `PRAISE`, the [reward](#rewards-and-claims) (the next
+    reward-pool entry through `GIFT`), and `BYE`: +10 friendship as a
+    completed quest. The removal goes with the reward: a reward that
+    waits (a full Bag, a cancelled lesson) leaves the item in the Bag, and
+    the next talk proposes again.
+  - **A wrong pick** (an item of the pocket outside the kind) is refused
+    on the Bag screen with a system line, "That's not a {KIND}.", and the
+    screen stays open. **Cancelling** closes it, then `BYE`. Nothing is
+    lost, and the quest stays open this placement.
+- **NO:** the trainer's `NO`, then `BYE`; the next talk proposes again.
+
+**Cost.** The only real cost is the item: one cheap, thematic item of the
+player's choosing, so they can give the cheapest they hold (an ORAN BERRY,
+a POTION, a shard). The fossil kind is the dearest, since a fossil given
+away is a revival forgone, so it suits a haunt where fossils are no
+rarity.
+
+### Swap battle
+
+A sibling of [One on one](#one-on-one): the player and the trainer trade
+places for a singles battle. The player fights with the trainer's
+**signature ace**, their signature POKéMON (roster slot 1) exactly as
+their battle snapshot resolves it at current TR, so `{ACE}` names the
+stage it fights at; the trainer fights with a copy of the player's
+**lead**, the first party POKéMON that is not an Egg and not fainted.
+
+- **Proposal.** "Let's trade places. I'll borrow your lead POKéMON; you
+  take {ACE}. Deal?" (the quest line after `ASK`).
+- **YES:** the trainer's `YES`, then the swap, the battle, and the restore,
+  in one script with no save point
+  ([save and reset](#save-and-reset-during-a-swap)). With no able POKéMON,
+  `NOT_READY` and `BYE` instead.
+  1. **Park.** The whole party is saved as it is (`SavePlayerParty`), as
+     tag battles do (`PrepareForFollowerNPCBattle` in
+     [follower_npc.c](../../game/src/follower_npc.c)) and as the Battle
+     Factory does for its rentals ([engine](#swap-battle-engine)).
+  2. **Build.** The party becomes the ace alone: slot 0, a party of one,
+     built from the battle snapshot as a One on one lead ace is, with the
+     trainer's name as OT and the trainer's fixed trainer ID, never the
+     player's. The trainer's party is a copy of the lead, fully healed
+     (HP, PP, and status), with its species, form, level, moves, ability,
+     nature, IVs, EVs, held item, and nickname as they are. The trainer
+     controls it with their own AI flags
+     ([Trainer AI](trainer-ai.md)).
+  3. **Battle.** A singles trainer battle against the placed trainer, with
+     no prize money and no blackout, like One on one, and without the
+     Frontier battle type, which would make the ace always obey.
+  4. **Restore.** Won or lost, the parked party is reloaded
+     (`LoadPlayerParty`), untouched, and the overworld follower is
+     refreshed. The ace and the copy leave with the battle.
+- **Win:** the haunt's done line (default "You made it listen. Not bad at
+  all."), `PRAISE`, the [reward](#rewards-and-claims) (an item through
+  `GIFT`), and `BYE`. The win counts as the completed quest (+10), never as
+  a battle won (+20) ([talk flow](#talk-flow)).
+- **Loss:** the haunt's loss line (default "It had a mind of its own. Try
+  again?"), then `BYE`. There is no penalty; the claim bit stays clear, so
+  the quest stays open this placement and the next talk proposes it again.
+- **NO:** the trainer's `NO`, then `BYE`.
+
+**Obedience.** The ace may ignore orders, and that is intended: it is the
+point of the quest. Nothing new is needed; the existing Wayfarer rule does
+it ([Swap battle engine](#swap-battle-engine)). For a POKéMON whose OT is
+someone else, the rule compares its current level with the player's soft
+level cap from their TR, so an ace above the cap may loaf, use another
+move, or nap, more often the further it stands above the cap. An ace at or
+below the cap always obeys, so the quest is easiest early in a trainer's
+growth, or once the player's TR catches up.
+
+**Borrowed POKéMON.** Neither side gains experience (the battle runs with
+`FLAG_DISABLE_EXP_GAIN` set), so the ace never levels up, learns a move, or
+evolves. Catching is impossible, as in every trainer battle. Held items are
+consumed only on the copies: the lead's copy may eat its berry, and the
+real lead still holds it afterwards. Items the player uses from the Bag
+during the battle are spent, as in any battle.
+
+**Restored untouched.** The real party comes back exactly as it was parked:
+no damage, no status, no fainting, no friendship loss, and no held item
+used. The Pokédex changes only harmlessly: the battle marks the enemy's
+sent-out POKéMON as seen, which here is the player's own species, already
+registered, and the player's side is never marked
+([Swap battle engine](#swap-battle-engine)).
+
+#### Save and reset during a swap
+
+No save may happen while the party is swapped. The swap, the battle, and
+the restore run in one script, as a
+[Masters tag match](sevii-masters.md#reset) does, so a reset at any moment
+reloads the last save, where the party is whole: the quest is simply
+unfought and stays open. The parked party lives in the save block's party
+(`gSaveBlock1Ptr->playerParty`), which every save overwrites with the live
+party (`CopyPartyAndObjectsToSave` in
+[load_save.c](../../game/src/load_save.c)). So a save routine that ever
+runs in that window (such as a future autosave) must write the parked
+party, never the swapped one, as the Frontier's own save does
+(`SaveGameFrontier` in [frontier_util.c](../../game/src/frontier_util.c)
+reloads the real party, saves, then puts the rentals back). The quest in
+progress records the swap while it lasts ([saved state](#saved-state));
+[load validation](#load-validation) recovers a save that holds it.
+
 ### Rewards and claims
 
 Each haunt has a saved **claim bit**. It is set when the reward is given
@@ -594,7 +742,9 @@ A haunt's dialogue is assembled from two sources:
   one), a hint per
   lost spot, and optionally a loss line for a One on one. The Quiz's
   question templates, done line, and loss line are shared by every Quiz
-  haunt. They describe
+  haunt. A Bring me haunt authors its kind, and a Bring me or Swap battle
+  haunt may author its own done line (and a Swap battle one its loss
+  line), with the defaults in their sections. They describe
   only the place and the activity, never a trainer's personality or
   history, so they read true for every candidate.
   A quest line is the proposal that follows `ASK` ("Walk it with me, out to
@@ -624,10 +774,12 @@ Both use these slots:
 | `{BUDDY}` | The buddy slot's current species ([trainer values](#trainer-values)). |
 | `{LOCAL}` | The haunt's catch species (only in a Catch me one line). |
 | `{HINT}` | The active lost spot's hint (only in a Lost something line). |
+| `{KIND}` | The haunt's item kind's display text, such as "BERRY" or "healing item" (only in a Bring me line and its refusal). |
 
 Speaker labels ("BROCK:") and system messages (the [YES / NO] prompt, the
 number given, the quiz's answer options, a lesson's pick, the fallback
-amount, the found keepsake) are generic text, the same for every trainer.
+amount, the found keepsake, a refused Bring me pick) are generic text, the
+same for every trainer.
 
 ## Worked example: Diglett's Cave
 
@@ -1538,10 +1690,10 @@ him, on theme alone. And it gives the player a reason to linger in an
 early area, and to come back to it later with a new trainer in the
 clearing.
 
-With this example, the five worked haunts cover all five quest types:
-Walk with me (Diglett's Cave), One on one (Celadon Game Corner), Lost
+With this example, the five worked haunts cover the first five quest
+types: Walk with me (Diglett's Cave), One on one (Celadon Game Corner), Lost
 something (Cerulean Cape), Quiz (Pewter Museum), and Catch me one
-(Viridian Forest).
+(Viridian Forest). Bring me and Swap battle have no worked haunt yet.
 
 ## Kanto haunts
 
@@ -1667,6 +1819,132 @@ base species. `SELECT_PC_MON_MOVE_TUTOR` filters by one move
 the [lesson](#rewards-and-claims) eligibility, so it needs a variant of
 that mode that also picks the move.
 
+### Bag kind screen
+
+- **Today.** `special Bag_ChooseBerry` (`Bag_ChooseBerry` in
+  [berry.c](../../game/src/berry.c)) opens `CB2_ChooseBerry` in
+  [item_menu.c](../../game/src/item_menu.c):
+  `GoToBagMenu(ITEMMENULOCATION_BERRY_TREE, POCKET_BERRIES, ...)`. For that
+  location, and for `ITEMMENULOCATION_BERRY_BLENDER_CRUSH` and
+  `ITEMMENULOCATION_BERRY_TREE_MULCH`, `GoToBagMenu` sets
+  `pocketSwitchDisabled`. The locations are the `ITEMMENULOCATION_*` enum
+  in [item_menu.h](../../game/include/item_menu.h). A pick leaves the item
+  in `gSpecialVar_ItemId` (`VAR_ITEM_ID`); cancelling sets it to
+  `ITEM_NONE`. The Route 14 Pidgeotto
+  ([scripts](../../game/data/maps/Route14_hns/scripts.inc)) runs
+  `special Bag_ChooseBerry`, `waitstate`, then `removeitem VAR_ITEM_ID, 1`
+  before it checks the berry, so a wrong berry is lost there.
+- **Refusing in place.** The mulch location already refuses a wrong item
+  without closing: `Task_FadeAndCloseBagMenuIfMulch` closes the Bag only
+  for the eight mulches and otherwise prints a can't-use message
+  (`DisplayDadsAdviceCannotUseItemMessage`), leaving the list open.
+- **Needed.** A new location, `ITEMMENULOCATION_HAUNT_KIND`, and a special
+  `Bag_ChooseItemOfKind` that reads the kind from a script variable, opens
+  the Bag on that kind's pocket with pocket switching off, and closes on a
+  pick only if the item belongs to the kind (the mulch pattern with the
+  kind table as the test), printing "That's not a {KIND}." otherwise. A
+  check `HasItemOfKind` answers the none-owned case before the screen
+  opens. The script removes the item with `removeitem VAR_ITEM_ID, 1` only
+  after the pick passed, never before as Route 14 does.
+
+### Swap battle engine
+
+- **Parking.** `SavePlayerParty` in
+  [load_save.c](../../game/src/load_save.c) copies the live party and its
+  count into the save block's party (`SavePlayerPartyMon` in
+  [pokemon.c](../../game/src/pokemon.c) writes
+  `gSaveBlock1Ptr->playerParty`), and `LoadPlayerParty` copies them back.
+  Tag battles park this way: `PrepareForFollowerNPCBattle` and
+  `RestorePartyAfterFollowerNPCBattle` in
+  [follower_npc.c](../../game/src/follower_npc.c), and the Masters
+  reference flow ([tag matches](sevii-masters.md#tag-matches)).
+- **Factory rentals.** The Battle Factory lobby runs
+  `special SavePlayerParty` when the attendant starts a challenge, then
+  `SetPlayerAndOpponentParties` in
+  [battle_factory.c](../../game/src/battle_factory.c) zeroes the party and
+  builds the rentals into `gPlayerParty` with `CreateFacilityMon`, under
+  `READ_OTID_FROM_SAVE`, so rentals carry the player's ID. After a
+  challenge the lobby runs `special LoadPlayerParty` and
+  `callnative UpdateFollowingPokemon`
+  ([lobby](../../game/data/maps/BattleFrontier_BattleFactoryLobby/scripts.inc)).
+  Swap battle copies the park and restore, and refreshes the follower the
+  same way, but not the OT: the ace must read as someone else's.
+- **Building the ace into the party.** `CreateTrainerPartyForPlayer` in
+  [battle_main.c](../../game/src/battle_main.c) already writes a trainer's
+  party into `gPlayerParty`. The ace needs the same, from the battle
+  snapshot, into slot 0 alone. NPC trainer POKéMON get a random OT ID but
+  the player's OT name (`CreateMon` in
+  [pokemon.c](../../game/src/pokemon.c) sets `MON_DATA_OT_NAME` to
+  `playerName`), so the build sets `MON_DATA_OT_NAME` to the trainer's name
+  and `MON_DATA_OT_ID` to a fixed ID per trainer, flipped by one bit if it
+  equals the player's.
+- **The enemy party from a copy.** `CreateNPCTrainerParty` runs for every
+  non-link trainer battle and rewrites `gEnemyParty` from the trainer's
+  data (`CB2_InitBattleInternal` in
+  [battle_main.c](../../game/src/battle_main.c)); it returns early only for
+  `TRAINER_SECRET_BASE`, a partner ID, or an unknown trainer, which is how
+  a secret base battle keeps its prebuilt party
+  (`CreateSecretBaseEnemyParty` in [pokemon.c](../../game/src/pokemon.c)).
+  The union room writes `gEnemyParty[i]` straight from `gPlayerParty`
+  copies ([union_room_battle.c](../../game/src/union_room_battle.c)). Swap
+  battle needs a flag that skips `CreateNPCTrainerParty` for one battle
+  while keeping the notable trainer's identity (name, class, pics, AI
+  flags), with `gEnemyParty[0]` set from a `struct Pokemon` copy of the
+  lead beforehand.
+- **Obedience.** `GetAttackerObedienceForAction` in
+  [battle_util.c](../../game/src/battle_util.c): AI battlers always obey,
+  and so does any POKéMON in a `BATTLE_TYPE_FRONTIER` battle. Under
+  `IS_WAYFARER` the obedience level is `GetTrainerRatingSoftLevelCap()`
+  ([trainer_rating.c](../../game/src/trainer_rating.c)), with only Eggs
+  exempt. The level checked is the POKéMON's met level when
+  `IsOtherTrainer` ([pokemon.c](../../game/src/pokemon.c)) says it is the
+  player's own (same OT ID and name), and its current level when it is
+  someone else's. A level above the cap then risks disobeying at random,
+  more often the further above it is. So the ace, with the trainer's OT,
+  is checked at its current level against the player's cap, and the
+  trainer's copy of the lead, under AI, always obeys.
+- **Experience.** `Cmd_getexp` in
+  [battle_script_commands.c](../../game/src/battle_script_commands.c)
+  skips experience when `FLAG_DISABLE_EXP_GAIN`
+  ([flags.h](../../game/include/constants/flags.h)) is set; the swap sets
+  it for the battle and clears it at the restore. The Frontier battle
+  type would also stop experience (`BattleTypeAllowsExp`), but it would
+  also force obedience, so it is not used.
+- **Catching.** A ball thrown in a trainer battle is blocked
+  (`BattleScript_TrainerBallBlock` in
+  [battle_script_commands.c](../../game/src/battle_script_commands.c)),
+  so nothing extra is needed.
+- **Pokédex.** At the end of a battle, `battle_main.c` marks every
+  sent-out enemy POKéMON as seen (`HandleSetPokedexFlagFromMon` with
+  `FLAG_SET_SEEN`), and skips the player's side while
+  `B_PARTNER_MONS_MARKED_SEEN` is `FALSE`
+  ([config/battle.h](../../game/include/config/battle.h)). The enemy here
+  is the player's own species, so nothing new is recorded, and the ace is
+  never marked seen through this battle.
+- **Risks.**
+  - *Gimmicks.* The snapshot may give the ace a gimmick (Mega Evolution,
+    Tera) that the trainer's data enables; in the player's hands it would
+    depend on the player's key items instead. Neither side uses a gimmick
+    in a Swap battle; the ace keeps its held item.
+  - *Held items and abilities.* The lead's copy is a whole
+    `struct Pokemon` copy, so its ability number, personality, nature,
+    IVs, EVs, moves, PP, friendship, and held item carry over exactly; a
+    form tied to a held item stays as it is. The ace carries what the
+    snapshot resolves.
+  - *Names.* The copy keeps its nickname and the player's OT name, so the
+    battle shows the trainer sending out the player's nickname ("BROCK
+    sent out SPARKY"); this is intended, since it is the player's POKéMON
+    on loan. The ace shows its species name.
+  - *Post-battle effects.* Anything the engine does to `gPlayerParty` as
+    the battle ends (friendship loss on fainting, Pickup, Pokérus spread)
+    touches only the ace, which the restore discards. The restore must run
+    before any post-battle evolution check; with experience off, none
+    triggers.
+  - *Whiteout.* A loss must not black out: the party is a lone fainted
+    ace. The engine skips the whiteout when `B_FLAG_NO_WHITEOUT` names a
+    set flag ([battle_setup.c](../../game/src/battle_setup.c)); it is 0
+    today, so this needs the same no-blackout route as One on one.
+
 ### Cameos and the Dojo
 
 - **Cameos.** HNS places a one-off cameo of many Gym Leaders on the
@@ -1694,7 +1972,7 @@ that mode that also picks the move.
 ### Prize money
 
 Haunts host no trainer battles that pay: a walk's battles are wild, and
-One on one pays no prize money. Only the quest
+One on one and Swap battle pay no prize money. Only the quest
 [fallback](#rewards-and-claims) pays money, on the snapshot level basis a
 [tag match](sevii-masters.md#tag-matches) uses: the level of the last member
 the trainer brings, with their class's rate. Battle Points from Dojo
@@ -1728,7 +2006,9 @@ Haunts add:
 - one **asked bit** per Catch me one haunt, set by `YES` and cleared with
   the claim bit ([Catch me one](#catch-me-one)); and
 - the **quest in progress**: a walk (its haunt), cleared on load and on
-  whiteout.
+  whiteout, or a Swap battle (its haunt), set when the party is parked and
+  cleared at the restore. Bring me adds nothing: it runs within one talk.
+  Swap battle adds nothing per placement either.
 
 New Game saves every claim bit clear, every reward counter at 0, the placement
 for world progress 0, every search state at none, every asked bit clear, and no
@@ -1741,7 +2021,11 @@ On every load, before the overworld runs:
 
 1. **Quest in progress.** Clear it; if a follower NPC is present, remove
    it. A walk interrupted by a reload is unfinished
-   ([walk](#walk-with-me)).
+   ([walk](#walk-with-me)). A Swap battle in progress means the save was
+   written mid-swap, which [normal play never
+   does](#save-and-reset-during-a-swap); the saved party is the parked
+   one, so keep it as it is, clear `FLAG_DISABLE_EXP_GAIN`, and leave the
+   quest unfought and open: neither a win nor a loss.
 2. **Pruning.** Drop the reward counters of characters no longer in the
    registry, and the claim bits, search states, asked bits, and placements of
    haunts no longer in the catalog, or search states and asked bits of haunts
@@ -1772,6 +2056,8 @@ On every load, before the overworld runs:
   menu. The quest proposal ends in a [YES / NO] prompt.
 - During a walk the trainer follows the player; the double wild battles
   show them beside the player with their back pic.
+- In a Swap battle the player's side shows the ace, and the trainer sends
+  out the copy of the player's lead under its own nickname.
 
 ## Balance report
 
@@ -1791,7 +2077,7 @@ Required implementation evidence (not yet run):
    shared list, and capacity 1 in v0), existing maps, an active meeting
    spot, and its quest details (a walk's start and exit, two or three lost
    spots, each on a reachable tile with a hint, a catch species on its wild
-   table); every notable trainer has
+   table, a Bring me kind from the kind table); every notable trainer has
    a buddy slot 1-6 and a reward pool that passes the
    [pool rules](#rewards-and-claims).
 2. **Buddy.** `{BUDDY}` resolves to the slot's stepped-down species at every
@@ -1843,25 +2129,43 @@ Required implementation evidence (not yet run):
    placement's `YES`, and makes the Dowsing Machine respond; finding it adds no
    Bag item; the next talk plays the done line, `PRAISE`, the reward, and `BYE`
    for +10; and a reshuffle clears an open search.
-7. **Claims.** A reward is given once per placement; a changed placement
+7. **Bring me.** The Bag opens only after `YES` and only with an item of
+   the kind in the Bag (otherwise `NOT_READY`), on the kind's pocket with
+   no pocket switching; every item the kind table resolves is accepted and
+   every other is refused in place with nothing removed; key items never
+   count; a matching pick removes exactly one, plays the done line,
+   `PRAISE`, the reward, and `BYE` for +10; a cancel or a waiting reward
+   removes nothing and leaves the quest open.
+8. **Swap battle.** `YES` parks the party, and the player fights with only
+   the signature ace at its snapshot stage, with the trainer's OT name and
+   ID, against a healed copy of the first able non-Egg party POKéMON under
+   the trainer's AI; with the player's TR giving a soft cap below the ace's
+   level the ace can disobey, and at or above it never does; neither side
+   gains experience; afterwards the party equals the parked one exactly
+   (HP, PP, status, held items, friendship) after a win and after a loss;
+   a win adds +10 as a quest, never +20; a loss plays the loss line, costs
+   nothing, and leaves the claim bit clear; a reset mid-swap reloads a
+   whole party with the quest open, and a save written mid-swap is
+   recovered on load with the parked party.
+9. **Claims.** A reward is given once per placement; a changed placement
    reopens it; a full Bag, a cancelled lesson, or no POKéMON able to learn
    keeps it open and leaves the reward counter unchanged.
-8. **Reward pools.** The reward never depends on the quest type. Quests
-   with one trainer at different haunts pay that trainer's pool in order,
-   one entry each; a gated next entry or a used-up pool pays the fallback
-   (prize money equal to a win over the trainer at current TR) and leaves
-   the counter alone; entries open by world progress, never the trainer's
-   TR, so a quest just before and just after a gate pays the fallback and
-   then the entry, and Lance's and Agatha's pools open gradually. A lesson
-   teaches the first move in pool order the chosen POKéMON can learn and
-   doesn't know, and offers only POKéMON with such a move. Brock's first
-   quest gives PEWTER CRUNCHIES and Giovanni's gives a NUGGET.
-9. **Dialogue.** Every assembled line resolves its slots and fits its text
-   box with worst-case values; no haunt dialogue carries gossip.
-10. **Cameos.** No cameo or Dojo rematch seat remains in Wayfarer; the Dojo
+10. **Reward pools.** The reward never depends on the quest type. Quests
+    with one trainer at different haunts pay that trainer's pool in order,
+    one entry each; a gated next entry or a used-up pool pays the fallback
+    (prize money equal to a win over the trainer at current TR) and leaves
+    the counter alone; entries open by world progress, never the trainer's
+    TR, so a quest just before and just after a gate pays the fallback and
+    then the entry, and Lance's and Agatha's pools open gradually. A lesson
+    teaches the first move in pool order the chosen POKéMON can learn and
+    doesn't know, and offers only POKéMON with such a move. Brock's first
+    quest gives PEWTER CRUNCHIES and Giovanni's gives a NUGGET.
+11. **Dialogue.** Every assembled line resolves its slots and fits its text
+    box with worst-case values; no haunt dialogue carries gossip.
+12. **Cameos.** No cameo or Dojo rematch seat remains in Wayfarer; the Dojo
     back room works as a haunt; no stranger battle, rematch, prize money
     beyond the quest fallback, or Battle Points come from haunts.
-11. **Save.** A new game and a reload give the saved state described above; a
+13. **Save.** A new game and a reload give the saved state described above; a
     search state or asked bit survives a reload and clears with its haunt's
     placement; corrupt reward counters, claim bits, search states, asked bits,
     or placements are rejected; removed characters or haunts are pruned; and a
@@ -1904,6 +2208,10 @@ Required implementation evidence (not yet run):
 - **Other regions:** haunt lists for Johto, Hoenn, and Sevii, and Tate &
   Liza at haunts.
 - **Explorer support** for the [balance report](#balance-report).
+- **Worked Bring me and Swap battle haunts**, and their places in the
+  [Kanto list](#kanto-haunts).
+- **More item kinds** for Bring me, and a Bag screen that lists only the
+  kind's items instead of refusing the rest in place.
 
 ## References
 

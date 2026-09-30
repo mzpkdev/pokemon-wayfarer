@@ -111,6 +111,8 @@ it is done:
 | Catch me one | The player catches a POKéMON that lives at the haunt and shows it to the trainer, keeping it. |
 | Quiz | The trainer quizzes the player on type matchups for their aces. |
 | One on one | One of the player's POKéMON against the trainer's lead ace. |
+| Bring me | The player brings one cheap item of a kind that fits the place, such as a berry, a healing item, or a stone, and hands it over. |
+| Swap battle | The two trade places: the player battles with the trainer's ace, which may not listen, against a copy of the player's lead. The player's own party comes back untouched. |
 
 Every trainer can give every quest. Haunt quest lines never imply the trainer
 needs help or is asking a favour, and personality comes only from the
@@ -214,13 +216,13 @@ their next reward. Bugsy, a Johto traveller on a Bug-hunting trip, is its
 natural regular, as the HNS cameo already has it, and Erika takes it on her
 Grass aces when Bugsy is elsewhere. The
 [specification](../specs/notable-haunts.md#worked-example-viridian-forest)
-works it through. With it, the five worked haunts cover all five quest
-types.
+works it through. With it, the five worked haunts cover the first five
+quest types; Bring me and Swap battle have no worked haunt yet.
 
 ## Boundaries
 
 In: the haunt pool and tags, placement, momentum, the talk flow (greetings
-by friendship stage, the quest proposal, and the quirk), the five quest
+by friendship stage, the quest proposal, and the quirk), the seven quest
 types, quest
 rewards from each trainer's reward pool, the voice-bit writing rule,
 buddy and reward pool as trainer values, the Kanto haunt list,
@@ -234,8 +236,8 @@ to [Leagues](leagues.md).
 
 Out of scope for v0: haunt lists for Johto, Hoenn, and Sevii; two trainers in
 one haunt; trades, item swaps, and gifts at haunts (and as friendship
-sources); Tate & Liza at haunts, since the duo gives no number and could never
-become a friend.
+sources), beyond the one item a Bring me quest asks for; Tate & Liza at
+haunts, since the duo gives no number and could never become a friend.
 
 ## Balance
 
