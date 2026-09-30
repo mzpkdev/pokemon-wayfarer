@@ -1,0 +1,4 @@
+frame=1 callback2=0x00000000 flash_present=0 menu_ready=0
+frame=530 callback2=0x08197155 flash_present=1 menu_ready=1
+PASS: main menu smoke
+Diagnostics: /tmp/wayfarer-multiplayer-poc-phase2/default-release-boot
