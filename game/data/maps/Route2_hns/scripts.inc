@@ -1,7 +1,29 @@
 Route2_hns_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, Route2_WalkerPocOnLoad
 	map_script MAP_SCRIPT_ON_TRANSITION, Route2_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters
 	.byte 0
+
+Route2_WalkerPocOnLoad:
+	setflag FLAG_TEMP_6
+	end
+
+Route2_EventScript_WalkerPoc::
+	lock
+	faceplayer
+	goto_if_eq VAR_TEMP_2, 10, Route2_WalkerPoc_Back
+	msgbox Route2_Text_WalkerPoc_Gate, MSGBOX_DEFAULT
+	goto Route2_WalkerPoc_Done
+Route2_WalkerPoc_Back:
+	msgbox Route2_Text_WalkerPoc_Back, MSGBOX_DEFAULT
+Route2_WalkerPoc_Done:
+	release
+	end
+
+Route2_Text_WalkerPoc_Gate:
+	.string "Heading to the FOREST GATE!$"
+Route2_Text_WalkerPoc_Back:
+	.string "Heading back to VIRIDIAN!$"
 
 Route2_OnTransition: 
 	callnative SetTimeBasedEncounters
@@ -114,4 +136,3 @@ Route2_Text_Sign:
 
 Route2_Text_DiglettsCaveSign:
 	.string "DIGLETT'S CAVE$"
-

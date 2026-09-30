@@ -1,5 +1,6 @@
 #include "global.h"
 #include "viridian_walker_poc.h"
+#include "viridian_walker_world.h"
 
 #if IS_WAYFARER && VIRIDIAN_WALKER_POC
 
@@ -12,17 +13,15 @@
 #include "constants/event_object_movement.h"
 #include "constants/map_event_ids.h"
 
-#define WALKER_WIDTH 56
-#define WALKER_HEIGHT 50
-#define WALKER_TILES (WALKER_WIDTH * WALKER_HEIGHT)
+#define WALKER_MAX_TILES (56 * 50)
 #define WALKER_SEARCH_SLICE 8
 #define WALKER_BLOCKED_LIMIT 4
 
-// 11,200 bytes on the engine heap while Viridian is loaded; no bulk EWRAM/IWRAM static data.
+// A bounded 11,200-byte workspace handles every supported outdoor map.
 struct WalkerWork {
-    u16 queue[WALKER_TILES];
-    u8 back[WALKER_TILES];
-    u8 path[WALKER_TILES];
+    u16 queue[WALKER_MAX_TILES];
+    u8 back[WALKER_MAX_TILES];
+    u8 path[WALKER_MAX_TILES];
 };
 
 EWRAM_DATA struct ViridianWalkerDebug gViridianWalkerDebug = {0};
@@ -36,16 +35,20 @@ static EWRAM_DATA u8 sBlocked = 0;
 static EWRAM_DATA u8 sInStep = FALSE;
 static EWRAM_DATA u8 sExitStep = FALSE;
 static EWRAM_DATA u8 sDoorStep = FALSE;
-static EWRAM_DATA u8 sEntryStep = FALSE;
+static EWRAM_DATA u8 sExitReported = FALSE;
 static EWRAM_DATA u8 sGrassEmoted = FALSE;
 static EWRAM_DATA u8 sInitialized = FALSE;
-static EWRAM_DATA u8 sRecoverAfterHeapReset = FALSE;
 static EWRAM_DATA u16 sSearchStartFrame = 0;
-static EWRAM_DATA s16 sDoorX = 0;
-static EWRAM_DATA s16 sDoorY = 0;
+static EWRAM_DATA s16 sWidth = 0;
+static EWRAM_DATA s16 sHeight = 0;
+static EWRAM_DATA u16 sTileCount = 0;
+static EWRAM_DATA u16 sActiveMap = 0;
+static EWRAM_DATA u8 sActiveMapValid = FALSE;
 
 static const s8 sDx[5] = {0, 0, 0, -1, 1};
 static const s8 sDy[5] = {0, 1, -1, 0, 0};
+
+static bool8 CanWalkFrom(struct ObjectEvent *walker, s16 x, s16 y, enum Direction direction);
 
 static u32 ScanlineStamp(void)
 {
@@ -64,75 +67,107 @@ void ViridianWalker_OnHeapReset(void)
 {
     // InitHeap immediately overwrites the allocator headers. Never Free this
     // pointer afterwards; the next field frame allocates a fresh workspace.
-    if (sWork != NULL)
-        sRecoverAfterHeapReset = TRUE;
     sWork = NULL;
     sInitialized = FALSE;
 }
 
+static u16 CurrentMap(void)
+{
+    return (gSaveBlock1Ptr->location.mapGroup << 8) | gSaveBlock1Ptr->location.mapNum;
+}
+
 static bool8 OnMap(void)
 {
-    return gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_VIRIDIAN_CITY_HNS)
-        && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_VIRIDIAN_CITY_HNS);
+    u16 map = CurrentMap();
+    return map == MAP_VIRIDIAN_CITY_HNS || map == MAP_ROUTE2_HNS || map == MAP_ROUTE1_HNS;
+}
+
+static bool8 IsSupportedMap(u16 map)
+{
+    return map == MAP_VIRIDIAN_CITY_HNS || map == MAP_ROUTE2_HNS || map == MAP_ROUTE1_HNS;
+}
+
+static u8 LocalId(u16 map)
+{
+    if (map == MAP_VIRIDIAN_CITY_HNS)
+        return LOCALID_VIRIDIAN_WALKER_POC;
+    if (map == MAP_ROUTE2_HNS)
+        return LOCALID_ROUTE2_WALKER_POC;
+    return LOCALID_ROUTE1_WALKER_POC;
 }
 
 bool8 ViridianWalker_IsObject(const struct ObjectEvent *objectEvent)
 {
-    return OnMap() && objectEvent->localId == VIRIDIAN_WALKER_LOCAL_ID;
+    return OnMap() && objectEvent->mapGroup == gSaveBlock1Ptr->location.mapGroup
+        && objectEvent->mapNum == gSaveBlock1Ptr->location.mapNum
+        && objectEvent->localId == LocalId(CurrentMap());
 }
 
 static struct ObjectEvent *GetWalker(void)
 {
     u8 id;
-    if (TryGetObjectEventIdByLocalIdAndMap(VIRIDIAN_WALKER_LOCAL_ID,
-        MAP_NUM(MAP_VIRIDIAN_CITY_HNS), MAP_GROUP(MAP_VIRIDIAN_CITY_HNS), &id))
+    if (TryGetObjectEventIdByLocalIdAndMap(LocalId(CurrentMap()),
+        gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &id))
         return NULL;
     return &gObjectEvents[id];
 }
 
 static bool8 RecoverWalker(struct ObjectEvent *walker)
 {
-    static const s16 sSafeSidewalk[][2] = {
-        {32 + MAP_OFFSET, 37 + MAP_OFFSET},
-        {33 + MAP_OFFSET, 37 + MAP_OFFSET},
-        {31 + MAP_OFFSET, 37 + MAP_OFFSET},
-        {32 + MAP_OFFSET, 38 + MAP_OFFSET},
+    const struct ViridianWalkerWorldState *world = ViridianWorld_Get();
+    static const s8 offsets[][3] = {
+        {0, 0, DIR_NONE}, {0, -1, DIR_NORTH}, {-1, 0, DIR_WEST},
+        {1, 0, DIR_EAST}, {0, 1, DIR_SOUTH},
     };
-    s16 x = walker->currentCoords.x;
-    s16 y = walker->currentCoords.y;
+    s16 x, y;
+    s16 savedX = world->x + MAP_OFFSET;
+    s16 savedY = world->y + MAP_OFFSET;
+    u8 elevation = MapGridGetElevationAt(savedX, savedY);
     u8 i;
     ObjectEventClearHeldMovementIfActive(walker);
-    if (walker->invisible || x < MAP_OFFSET || x >= WALKER_WIDTH + MAP_OFFSET
-     || y < MAP_OFFSET || y >= WALKER_HEIGHT + MAP_OFFSET)
+    for (i = 0; i < ARRAY_COUNT(offsets); i++)
     {
-        for (i = 0; i < ARRAY_COUNT(sSafeSidewalk); i++)
-        {
-            x = sSafeSidewalk[i][0];
-            y = sSafeSidewalk[i][1];
-            if (GetObjectObjectCollidesWith(walker, x, y, FALSE) == OBJECT_EVENTS_COUNT)
-                break;
-        }
-        if (i == ARRAY_COUNT(sSafeSidewalk))
-            return FALSE;
+        x = world->x + MAP_OFFSET + offsets[i][0];
+        y = world->y + MAP_OFFSET + offsets[i][1];
+        if (x < MAP_OFFSET || y < MAP_OFFSET || x >= sWidth + MAP_OFFSET || y >= sHeight + MAP_OFFSET)
+            continue;
+        if (MapGridGetCollisionAt(x, y) != 0 || MapGridGetElevationAt(x, y) != elevation)
+            continue;
+        if (i != 0 && !CanWalkFrom(walker, savedX, savedY, offsets[i][2]))
+            continue;
+        if (GetObjectObjectCollidesWith(walker, x, y, FALSE) == OBJECT_EVENTS_COUNT)
+            break;
     }
+    if (i == ARRAY_COUNT(offsets))
+        return FALSE;
     MoveObjectEventToMapCoords(walker, x, y);
     walker->currentElevation = walker->previousElevation = MapGridGetElevationAt(x, y);
     walker->invisible = FALSE;
-    sRecoverAfterHeapReset = FALSE;
     return TRUE;
 }
 
 static u16 TileIndex(s16 x, s16 y)
 {
-    return y * WALKER_WIDTH + x;
+    return y * sWidth + x;
 }
 
-static void NextGoal(void)
+static void NextGoal(struct ObjectEvent *walker)
 {
-    sGoal = (sGoal + 1) % 6;
+    u16 map = CurrentMap();
+    if (map == MAP_VIRIDIAN_CITY_HNS)
+        sGoal = ViridianWorld_Get()->destinationMap == MAP_ROUTE1_HNS
+            ? WALKER_GOAL_ROUTE1 : WALKER_GOAL_ROUTE2;
+    else if (map == MAP_ROUTE1_HNS)
+        sGoal = sGoal == WALKER_GOAL_ROUTE1_SPOT
+            ? WALKER_GOAL_ROUTE1_RETURN : WALKER_GOAL_ROUTE1_SPOT;
+    else
+        sGoal = ViridianWorld_Get()->destinationMap == MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS
+            ? WALKER_GOAL_ROUTE2_GATE : WALKER_GOAL_ROUTE2_RETURN;
     sBlocked = 0;
     gViridianWalkerDebug.goal = sGoal;
     VarSet(VAR_TEMP_2, sGoal);
+    ViridianWorld_ActorMoved(walker->currentCoords.x - MAP_OFFSET,
+        walker->currentCoords.y - MAP_OFFSET, sGoal);
     gViridianWalkerDebug.phase = WALKER_PHASE_SEARCH;
     sRead = sWrite = 0;
 }
@@ -141,9 +176,9 @@ static void BeginSearch(struct ObjectEvent *walker)
 {
     s16 x = walker->currentCoords.x - MAP_OFFSET;
     s16 y = walker->currentCoords.y - MAP_OFFSET;
-    if (x < 0 || x >= WALKER_WIDTH || y < 0 || y >= WALKER_HEIGHT)
+    if (x < 0 || x >= sWidth || y < 0 || y >= sHeight)
     {
-        NextGoal();
+        NextGoal(walker);
         return;
     }
     memset(sWork->back, 0xFF, sizeof(sWork->back));
@@ -185,17 +220,28 @@ static bool8 IsGoalTile(struct ObjectEvent *walker, s16 x, s16 y)
         destination = MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS;
         break;
     case WALKER_GOAL_ROUTE1:
-        return y == WALKER_HEIGHT - 1
+        return CurrentMap() == MAP_VIRIDIAN_CITY_HNS && y == sHeight - 1
             && GetMapBorderIdAt(x + MAP_OFFSET, y + MAP_OFFSET + 1) != CONNECTION_INVALID
             && CanWalkFrom(walker, x + MAP_OFFSET, y + MAP_OFFSET, DIR_SOUTH);
     case WALKER_GOAL_ROUTE2:
-        return y == 0
+        return CurrentMap() == MAP_VIRIDIAN_CITY_HNS && y == 0
             && GetMapBorderIdAt(x + MAP_OFFSET, y + MAP_OFFSET - 1) != CONNECTION_INVALID
             && CanWalkFrom(walker, x + MAP_OFFSET, y + MAP_OFFSET, DIR_NORTH);
+    case WALKER_GOAL_ROUTE1_SPOT:
+        return CurrentMap() == MAP_ROUTE1_HNS && x == 31 && y == 15;
+    case WALKER_GOAL_ROUTE1_RETURN:
+        return CurrentMap() == MAP_ROUTE1_HNS && y == 0
+            && GetMapBorderIdAt(x + MAP_OFFSET, y + MAP_OFFSET - 1) != CONNECTION_INVALID
+            && CanWalkFrom(walker, x + MAP_OFFSET, y + MAP_OFFSET, DIR_NORTH);
+    case WALKER_GOAL_ROUTE2_RETURN:
+        return CurrentMap() == MAP_ROUTE2_HNS && y == sHeight - 1
+            && GetMapBorderIdAt(x + MAP_OFFSET, y + MAP_OFFSET + 1) != CONNECTION_INVALID
+            && CanWalkFrom(walker, x + MAP_OFFSET, y + MAP_OFFSET, DIR_SOUTH);
+    case WALKER_GOAL_ROUTE2_GATE:
+        destination = MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS;
+        break;
     default:
-        return x == 0
-            && GetMapBorderIdAt(x + MAP_OFFSET - 1, y + MAP_OFFSET) != CONNECTION_INVALID
-            && CanWalkFrom(walker, x + MAP_OFFSET, y + MAP_OFFSET, DIR_WEST);
+        return FALSE;
     }
     for (i = 0; i < gMapHeader.events->warpCount; i++)
     {
@@ -211,13 +257,13 @@ static void FinishSearch(u16 target)
 {
     u16 count = 0;
     u16 source = sWork->queue[0];
-    gViridianWalkerDebug.goalX = target % WALKER_WIDTH + MAP_OFFSET;
-    gViridianWalkerDebug.goalY = target / WALKER_WIDTH + MAP_OFFSET;
-    while (target != source && count < WALKER_TILES)
+    gViridianWalkerDebug.goalX = target % sWidth + MAP_OFFSET;
+    gViridianWalkerDebug.goalY = target / sWidth + MAP_OFFSET;
+    while (target != source && count < sTileCount)
     {
         u8 direction = sWork->back[target];
         sWork->path[count++] = direction;
-        target -= sDx[direction] + sDy[direction] * WALKER_WIDTH;
+        target -= sDx[direction] + sDy[direction] * sWidth;
     }
     sRemaining = count;
     gViridianWalkerDebug.phase = WALKER_PHASE_WALK;
@@ -232,8 +278,8 @@ static void SearchSlice(struct ObjectEvent *walker)
     while (sRead < sWrite && expanded < WALKER_SEARCH_SLICE)
     {
         u16 tile = sWork->queue[sRead++];
-        s16 x = tile % WALKER_WIDTH;
-        s16 y = tile / WALKER_WIDTH;
+        s16 x = tile % sWidth;
+        s16 y = tile / sWidth;
         u8 dir;
         expanded++;
         gViridianWalkerDebug.searchNodes++;
@@ -248,7 +294,7 @@ static void SearchSlice(struct ObjectEvent *walker)
             s16 ny = y + sDy[dir];
             u16 next;
             struct ObjectEvent probe;
-            if (nx < 0 || nx >= WALKER_WIDTH || ny < 0 || ny >= WALKER_HEIGHT)
+            if (nx < 0 || nx >= sWidth || ny < 0 || ny >= sHeight)
                 continue;
             next = TileIndex(nx, ny);
             if (sWork->back[next] != 0xFF)
@@ -273,65 +319,98 @@ static void SearchSlice(struct ObjectEvent *walker)
     if (elapsedScanlines > gViridianWalkerDebug.maxSliceScanlines)
         gViridianWalkerDebug.maxSliceScanlines = elapsedScanlines;
     if (sRead == sWrite && gViridianWalkerDebug.phase == WALKER_PHASE_SEARCH)
-        NextGoal();
+        NextGoal(walker);
 }
 
 static enum Direction ExitDirection(void)
 {
-    if (sGoal == WALKER_GOAL_ROUTE1)
+    if (sGoal == WALKER_GOAL_ROUTE1 || sGoal == WALKER_GOAL_ROUTE2_RETURN)
         return DIR_SOUTH;
-    if (sGoal == WALKER_GOAL_ROUTE2)
+    if (sGoal == WALKER_GOAL_ROUTE2 || sGoal == WALKER_GOAL_ROUTE1_RETURN)
         return DIR_NORTH;
     return DIR_WEST;
 }
 
+static const struct MapConnection *FindExitConnection(u16 destination, enum Connection direction)
+{
+    const struct MapConnections *connections = gMapHeader.connections;
+    s32 i;
+    if (connections == NULL)
+        return NULL;
+    for (i = 0; i < connections->count; i++)
+    {
+        const struct MapConnection *connection = &connections->connections[i];
+        if (connection->direction == direction && connection->mapGroup == MAP_GROUP(destination)
+         && connection->mapNum == MAP_NUM(destination))
+            return connection;
+    }
+    return NULL;
+}
+
+static bool8 ReportExit(struct ObjectEvent *walker)
+{
+    s16 x = walker->currentCoords.x - MAP_OFFSET;
+    u16 map = CurrentMap();
+    u16 destination;
+    enum Connection direction;
+    u8 arrival;
+    const struct MapConnection *connection;
+    const struct MapHeader *destinationHeader;
+    s16 destX, destY;
+    if (map == MAP_VIRIDIAN_CITY_HNS && sGoal == WALKER_GOAL_ROUTE2)
+        destination = MAP_ROUTE2_HNS;
+    else if (map == MAP_VIRIDIAN_CITY_HNS && sGoal == WALKER_GOAL_ROUTE1)
+        destination = MAP_ROUTE1_HNS;
+    else if ((map == MAP_ROUTE2_HNS && sGoal == WALKER_GOAL_ROUTE2_RETURN)
+          || (map == MAP_ROUTE1_HNS && sGoal == WALKER_GOAL_ROUTE1_RETURN))
+        destination = MAP_VIRIDIAN_CITY_HNS;
+    else
+        return FALSE;
+    direction = ExitDirection() == DIR_NORTH ? CONNECTION_NORTH : CONNECTION_SOUTH;
+    connection = FindExitConnection(destination, direction);
+    if (connection == NULL)
+        return FALSE;
+    destinationHeader = GetMapHeaderFromConnection(connection);
+    destX = x - connection->offset;
+    destY = direction == CONNECTION_NORTH ? destinationHeader->mapLayout->height - 1 : 0;
+    if (destX < 0 || destX >= destinationHeader->mapLayout->width)
+        return FALSE;
+    arrival = direction == CONNECTION_NORTH ? WORLD_ARRIVAL_SOUTH : WORLD_ARRIVAL_NORTH;
+    ViridianWorld_ActorCrossedExit(destination, arrival, x, destX, destY);
+    sExitReported = TRUE;
+    return TRUE;
+}
+
 static void CompleteGoal(struct ObjectEvent *walker)
 {
+    s16 x = walker->currentCoords.x - MAP_OFFSET;
     gViridianWalkerDebug.completed++;
     gViridianWalkerDebug.lastCompletedGoal = sGoal;
     sGrassEmoted = FALSE;
-    sWait = sGoal == WALKER_GOAL_GRASS ? 120 : 180;
-    if (sGoal == WALKER_GOAL_GRASS)
+    sWait = sGoal == WALKER_GOAL_GRASS || sGoal == WALKER_GOAL_ROUTE1_SPOT ? 120 : 180;
+    if (sGoal == WALKER_GOAL_GRASS || sGoal == WALKER_GOAL_ROUTE1_SPOT)
+    {
+        ViridianWorld_ActorAtSpot(x, walker->currentCoords.y - MAP_OFFSET, sGoal);
         gViridianWalkerDebug.phase = WALKER_PHASE_WAIT;
+    }
+    else if (sGoal == WALKER_GOAL_ROUTE2_GATE)
+    {
+        ViridianWorld_ActorInside(MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS);
+        RemoveObjectEvent(walker);
+        Free(sWork);
+        sWork = NULL;
+        sInitialized = FALSE;
+        gViridianWalkerDebug.phase = WALKER_PHASE_INACTIVE;
+    }
     else
     {
-        sDoorX = walker->currentCoords.x;
-        sDoorY = walker->currentCoords.y;
-        walker->invisible = TRUE;
-        // An invisible active event still collides. Park it in the unused
-        // corner of the map grid while the visit/travel timer runs.
-        MoveObjectEventToMapCoords(walker, 0, 0);
-        gViridianWalkerDebug.phase = WALKER_PHASE_HIDDEN;
+        sExitReported = FALSE;
+        RemoveObjectEvent(walker);
+        Free(sWork);
+        sWork = NULL;
+        sInitialized = FALSE;
+        gViridianWalkerDebug.phase = WALKER_PHASE_INACTIVE;
     }
-}
-
-static bool8 FindEntrance(struct ObjectEvent *walker, u8 fromGoal, s16 *x, s16 *y, enum Direction *inward)
-{
-    s16 i;
-    u8 incoming = fromGoal == WALKER_GOAL_ROUTE1 ? WALKER_GOAL_ROUTE2
-        : fromGoal == WALKER_GOAL_ROUTE2 ? WALKER_GOAL_ROUTE22 : WALKER_GOAL_ROUTE1;
-    for (i = 0; i < (incoming == WALKER_GOAL_ROUTE22 ? WALKER_HEIGHT : WALKER_WIDTH); i++)
-    {
-        s16 px = incoming == WALKER_GOAL_ROUTE22 ? 0 : i;
-        s16 py = incoming == WALKER_GOAL_ROUTE1 ? WALKER_HEIGHT - 1
-            : incoming == WALKER_GOAL_ROUTE2 ? 0 : i;
-        s16 gx = px + MAP_OFFSET;
-        s16 gy = py + MAP_OFFSET;
-        enum Direction outward = incoming == WALKER_GOAL_ROUTE1 ? DIR_SOUTH
-            : incoming == WALKER_GOAL_ROUTE2 ? DIR_NORTH : DIR_WEST;
-        if (MapGridGetCollisionAt(gx, gy)
-         || GetMapBorderIdAt(gx + sDx[outward], gy + sDy[outward]) == CONNECTION_INVALID
-         || !CanWalkFrom(walker, gx, gy, outward)
-         || !CanWalkFrom(walker, gx + sDx[outward], gy + sDy[outward], GetOppositeDirection(outward))
-         || GetObjectObjectCollidesWith(walker, gx, gy, FALSE) != OBJECT_EVENTS_COUNT)
-            continue;
-        *x = gx;
-        *y = gy;
-        *inward = incoming == WALKER_GOAL_ROUTE1 ? DIR_NORTH
-            : incoming == WALKER_GOAL_ROUTE2 ? DIR_SOUTH : DIR_EAST;
-        return TRUE;
-    }
-    return FALSE;
 }
 
 static void Replan(struct ObjectEvent *walker)
@@ -340,7 +419,7 @@ static void Replan(struct ObjectEvent *walker)
     gViridianWalkerDebug.blockedSteps++;
     sInStep = FALSE;
     if (++sBlocked >= WALKER_BLOCKED_LIMIT)
-        NextGoal();
+        NextGoal(walker);
     else
         BeginSearch(walker);
 }
@@ -374,21 +453,18 @@ static void WalkStep(struct ObjectEvent *walker)
             CompleteGoal(walker);
             return;
         }
-        if (sEntryStep)
-        {
-            sEntryStep = FALSE;
-            NextGoal();
-            return;
-        }
+        ViridianWorld_ActorMoved(walker->currentCoords.x - MAP_OFFSET,
+            walker->currentCoords.y - MAP_OFFSET, sGoal);
     }
     if (sRemaining == 0)
     {
-        if (sGoal == WALKER_GOAL_GRASS)
+        if (sGoal == WALKER_GOAL_GRASS || sGoal == WALKER_GOAL_ROUTE1_SPOT)
         {
             CompleteGoal(walker);
             return;
         }
-        if (sGoal < WALKER_GOAL_ROUTE1)
+        if (sGoal == WALKER_GOAL_MART || sGoal == WALKER_GOAL_CENTER
+         || sGoal == WALKER_GOAL_ROUTE2_GATE)
         {
             dir = DIR_NORTH;
             sDoorStep = TRUE;
@@ -427,13 +503,23 @@ static void WalkStep(struct ObjectEvent *walker)
     gViridianWalkerDebug.nextX = nx;
     gViridianWalkerDebug.nextY = ny;
     sInStep = TRUE;
+    if (sExitStep && !ReportExit(walker))
+    {
+        ObjectEventClearHeldMovementIfActive(walker);
+        sExitStep = FALSE;
+        Replan(walker);
+    }
 }
 
 static void DiscoverGrass(void)
 {
     s16 x, y;
-    for (y = 0; y < WALKER_HEIGHT; y++)
-        for (x = 0; x < WALKER_WIDTH; x++)
+    gViridianWalkerDebug.grassTilesFound = 0;
+    gViridianWalkerDebug.usedGrassFallback = 0;
+    if (CurrentMap() != MAP_VIRIDIAN_CITY_HNS)
+        return;
+    for (y = 0; y < sHeight; y++)
+        for (x = 0; x < sWidth; x++)
             if (MetatileBehavior_IsTallGrass(MapGridGetMetatileBehaviorAt(x + MAP_OFFSET, y + MAP_OFFSET)))
                 gViridianWalkerDebug.grassTilesFound++;
     if (gViridianWalkerDebug.grassTilesFound == 0)
@@ -443,45 +529,104 @@ static void DiscoverGrass(void)
 void ViridianWalker_Update(void)
 {
     struct ObjectEvent *walker;
-    if (!OnMap())
+    const struct ViridianWalkerWorldState *world;
+    u16 map;
+    if (gSaveBlock1Ptr == NULL)
+        return;
+    map = CurrentMap();
+    if (!sActiveMapValid || sActiveMap != map)
     {
+        u16 oldMap = sActiveMap;
+        u8 i;
+        // Camera connections can retain the source object's slot during the
+        // seam. Its full source-map identity distinguishes it from the actor
+        // freshly spawned on the destination map.
+        if (sActiveMapValid && IsSupportedMap(oldMap))
+            for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
+                if (gObjectEvents[i].active
+                 && gObjectEvents[i].mapGroup == MAP_GROUP(oldMap)
+                 && gObjectEvents[i].mapNum == MAP_NUM(oldMap)
+                 && gObjectEvents[i].localId == LocalId(oldMap))
+                    RemoveObjectEvent(&gObjectEvents[i]);
         if (sWork != NULL)
-        {
             Free(sWork);
-            sWork = NULL;
-        }
+        sWork = NULL;
         sInitialized = FALSE;
-        sRecoverAfterHeapReset = FALSE;
-        sInStep = sExitStep = sDoorStep = sEntryStep = FALSE;
+        sInStep = sExitStep = sDoorStep = sExitReported = FALSE;
         sRemaining = sRead = sWrite = sWait = 0;
         sBlocked = 0;
+        sActiveMap = map;
+        sActiveMapValid = TRUE;
         gViridianWalkerDebug.phase = WALKER_PHASE_INACTIVE;
+    }
+    if (!OnMap())
+    {
         return;
     }
+    sWidth = gMapHeader.mapLayout->width;
+    sHeight = gMapHeader.mapLayout->height;
+    sTileCount = sWidth * sHeight;
+    if (sTileCount > WALKER_MAX_TILES)
+        return;
+    world = ViridianWorld_Get();
+    gViridianWalkerDebug.currentMap = map;
+    gViridianWalkerDebug.localId = LocalId(map);
     walker = GetWalker();
+    if (!ViridianWorld_IsOnPlayerMap())
+    {
+        // The source actor may still be finishing the held edge animation.
+        if (sExitStep && walker != NULL)
+            WalkStep(walker);
+        else if (walker != NULL)
+            RemoveObjectEvent(walker);
+        return;
+    }
     if (walker == NULL)
     {
-        TrySpawnObjectEvent(VIRIDIAN_WALKER_LOCAL_ID,
-            MAP_NUM(MAP_VIRIDIAN_CITY_HNS), MAP_GROUP(MAP_VIRIDIAN_CITY_HNS));
+        TrySpawnObjectEvent(LocalId(map), MAP_NUM(map), MAP_GROUP(map));
         walker = GetWalker();
+        sInitialized = FALSE;
     }
     if (walker == NULL)
-        return;
-    if (sRecoverAfterHeapReset && !RecoverWalker(walker))
         return;
     if (!sInitialized)
     {
+        if (!RecoverWalker(walker))
+            return;
         sWork = Alloc(sizeof(*sWork));
         if (sWork == NULL)
             return;
-        memset(&gViridianWalkerDebug, 0, sizeof(gViridianWalkerDebug));
         DiscoverGrass();
-        sInStep = sExitStep = sDoorStep = sEntryStep = FALSE;
+        sInStep = sExitStep = sDoorStep = sExitReported = FALSE;
+        sGrassEmoted = FALSE;
         sRemaining = sRead = sWrite = sWait = 0;
         sBlocked = 0;
-        sGoal = WALKER_GOAL_GRASS;
+        if (map == MAP_VIRIDIAN_CITY_HNS && world->goal == WALKER_GOAL_GRASS
+         && world->state == WORLD_STATE_AT_SPOT)
+            sGoal = WALKER_GOAL_GRASS;
+        else if (map == MAP_ROUTE1_HNS && world->goal == WALKER_GOAL_ROUTE1_SPOT
+         && world->state == WORLD_STATE_AT_SPOT && world->dwell != 0)
+            sGoal = WALKER_GOAL_ROUTE1_SPOT;
+        else if (map == MAP_ROUTE1_HNS)
+            sGoal = world->goal == WALKER_GOAL_ROUTE1_RETURN
+                ? WALKER_GOAL_ROUTE1_RETURN : WALKER_GOAL_ROUTE1_SPOT;
+        else if (map == MAP_ROUTE2_HNS)
+            sGoal = world->destinationMap == MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS
+                ? WALKER_GOAL_ROUTE2_GATE : WALKER_GOAL_ROUTE2_RETURN;
+        else
+            sGoal = world->destinationMap == MAP_ROUTE1_HNS
+                ? WALKER_GOAL_ROUTE1 : WALKER_GOAL_ROUTE2;
         VarSet(VAR_TEMP_2, sGoal);
-        BeginSearch(walker);
+        gViridianWalkerDebug.goal = sGoal;
+        if (world->state == WORLD_STATE_AT_SPOT && world->dwell != 0
+         && (sGoal == WALKER_GOAL_GRASS || sGoal == WALKER_GOAL_ROUTE1_SPOT))
+        {
+            sWait = 120;
+            sGrassEmoted = FALSE;
+            gViridianWalkerDebug.phase = WALKER_PHASE_WAIT;
+        }
+        else
+            BeginSearch(walker);
         sInitialized = TRUE;
     }
     gViridianWalkerDebug.x = walker->currentCoords.x;
@@ -508,42 +653,7 @@ void ViridianWalker_Update(void)
                 sGrassEmoted = TRUE;
         }
         else if (ObjectEventClearHeldMovementIfFinished(walker))
-            NextGoal();
-        break;
-    case WALKER_PHASE_HIDDEN:
-        if (sWait != 0)
-            sWait--;
-        else
-        {
-            if (sGoal < WALKER_GOAL_ROUTE1)
-            {
-                s16 x = sDoorX;
-                s16 y = sDoorY + 1;
-                if (GetObjectObjectCollidesWith(walker, x, y, FALSE) != OBJECT_EVENTS_COUNT)
-                    break;
-                MoveObjectEventToMapCoords(walker, x, y);
-                walker->currentElevation = walker->previousElevation = MapGridGetElevationAt(x, y);
-                walker->invisible = FALSE;
-                NextGoal();
-            }
-            else
-            {
-                s16 x, y;
-                enum Direction inward;
-                if (!FindEntrance(walker, sGoal, &x, &y, &inward)
-                 || GetObjectObjectCollidesWith(walker, x, y, FALSE) != OBJECT_EVENTS_COUNT)
-                    break;
-                MoveObjectEventToMapCoords(walker, x - sDx[inward], y - sDy[inward]);
-                walker->currentElevation = walker->previousElevation = MapGridGetElevationAt(x, y);
-                walker->invisible = FALSE;
-                if (ObjectEventSetHeldMovement(walker, GetWalkNormalMovementAction(inward)))
-                    break;
-                gViridianWalkerDebug.nextX = x;
-                gViridianWalkerDebug.nextY = y;
-                sEntryStep = sInStep = TRUE;
-                gViridianWalkerDebug.phase = WALKER_PHASE_WALK;
-            }
-        }
+            NextGoal(walker);
         break;
     }
 }

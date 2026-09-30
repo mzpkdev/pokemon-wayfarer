@@ -156,6 +156,20 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route1_EventScript_KantoBoy",
       "flag": "FLAG_TEMP_2"
+    },
+    {
+      "local_id": "LOCALID_ROUTE1_WALKER_POC",
+      "graphics_id": "OBJ_EVENT_GFX_GIOVANNI_HNS",
+      "x": 24,
+      "y": 1,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Route1_EventScript_WalkerPoc",
+      "flag": "FLAG_TEMP_6"
     }
   ],
   "warp_events": [],

@@ -8,6 +8,7 @@ Route1_hns_MapScripts::
 @ FLAG_TEMP_1 hides the HNS Trainers during the opening; FLAG_TEMP_2 hides the
 @ FRLG Route 1 residents (Mart clerk, ledge boy) from every other origin.
 Route1_KantoOnLoad:
+	setflag FLAG_TEMP_6
 	setflag FLAG_TEMP_2
 	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
 	goto_if_eq VAR_RESULT, FALSE, Route1_KantoShowTrainers
@@ -22,6 +23,7 @@ Route1_KantoShowTrainers:
 	end
 #else
 Route1_KantoOnLoad:
+	setflag FLAG_TEMP_6
 	setflag FLAG_TEMP_2
 	end
 #endif
@@ -29,6 +31,23 @@ Route1_KantoOnLoad:
 Route1_OnTransition: 
 	callnative SetTimeBasedEncounters
 	end
+
+Route1_EventScript_WalkerPoc::
+	lock
+	faceplayer
+	goto_if_eq VAR_TEMP_2, 8, Route1_WalkerPoc_Visit
+	msgbox Route1_Text_WalkerPoc_Back, MSGBOX_DEFAULT
+	goto Route1_WalkerPoc_Done
+Route1_WalkerPoc_Visit:
+	msgbox Route1_Text_WalkerPoc_Visit, MSGBOX_DEFAULT
+Route1_WalkerPoc_Done:
+	release
+	end
+
+Route1_Text_WalkerPoc_Visit:
+	.string "Taking a look at ROUTE 1!$"
+Route1_Text_WalkerPoc_Back:
+	.string "Heading back to VIRIDIAN!$"
 
 Route1_EventScript_SchoolboyDanny::
 #if IS_WAYFARER

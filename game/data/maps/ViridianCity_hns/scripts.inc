@@ -10,11 +10,7 @@ ViridianCity_hns_MapScripts::
 @ FLAG_TEMP_4 hides the FRLG residents from other origins. VAR_TEMP_1 arms the
 @ FRLG locked-Gym-door trigger while the Pallet-origin opening is active.
 ViridianCity_KantoOnLoad:
-	#if VIRIDIAN_WALKER_POC
-	clearflag FLAG_TEMP_5
-	#else
 	setflag FLAG_TEMP_5
-	#endif
 	setflag FLAG_TEMP_4
 	setvar VAR_TEMP_1, 0
 	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin

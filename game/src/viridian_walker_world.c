@@ -5,7 +5,6 @@
 
 #include "overworld.h"
 
-#define WORLD_MAP_NONE 0xFFFF
 #define WORLD_DOOR_DWELL 2
 
 STATIC_ASSERT(sizeof(struct ViridianWalkerWorldState) == 12, ViridianWalkerWorldSaveSize);
@@ -13,7 +12,8 @@ STATIC_ASSERT(sizeof(struct ViridianWalkerWorldState) == 12, ViridianWalkerWorld
 const volatile u16 gViridianWalkerWorldSaveOffset = offsetof(struct SaveBlock3, viridianWalkerWorld);
 const volatile u16 gViridianWalkerWorldSaveSize = sizeof(struct ViridianWalkerWorldState);
 EWRAM_DATA struct ViridianWalkerWorldDebug gViridianWalkerWorldDebug = {0};
-static EWRAM_DATA u16 sPreviousPlayerMap = WORLD_MAP_NONE;
+// Zero means no previous load; real map IDs are stored with one added.
+static EWRAM_DATA u16 sPreviousPlayerMapPlusOne = 0;
 
 static struct ViridianWalkerWorldState *GetMutable(void)
 {
@@ -65,7 +65,7 @@ void ViridianWorld_InitNewGame(void)
     struct ViridianWalkerWorldState *world = GetMutable();
     memset(world, 0, gViridianWalkerWorldSaveSize);
     memset(&gViridianWalkerWorldDebug, 0, sizeof(gViridianWalkerWorldDebug));
-    sPreviousPlayerMap = WORLD_MAP_NONE;
+    sPreviousPlayerMapPlusOne = 0;
     world->currentMap = MAP_VIRIDIAN_CITY_HNS;
     world->destinationMap = MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS;
     world->arrival = WORLD_ARRIVAL_NONE;
@@ -79,7 +79,7 @@ void ViridianWorld_OnContinue(bool8 loadsWarp)
 {
     // Continue rebuilds the saved map without going through LoadMapFromWarp.
     // A continue-game warp does use that loader, but is still not travel.
-    sPreviousPlayerMap = loadsWarp ? WORLD_MAP_NONE : GetPlayerMap();
+    sPreviousPlayerMapPlusOne = loadsWarp ? 0 : GetPlayerMap() + 1;
 }
 
 void ViridianWorld_ActorMoved(u8 x, u8 y, u8 goal)
@@ -214,14 +214,14 @@ void ViridianWorld_OnMapLoad(void)
     u16 playerMap = GetPlayerMap();
 
     // The first load after boot is a new game or Continue, never a travel tick.
-    if (sPreviousPlayerMap == WORLD_MAP_NONE)
+    if (sPreviousPlayerMapPlusOne == 0)
     {
-        sPreviousPlayerMap = playerMap;
+        sPreviousPlayerMapPlusOne = playerMap + 1;
         return;
     }
-    if (sPreviousPlayerMap == playerMap)
+    if (sPreviousPlayerMapPlusOne == playerMap + 1)
         return;
-    sPreviousPlayerMap = playerMap;
+    sPreviousPlayerMapPlusOne = playerMap + 1;
     gViridianWalkerWorldDebug.heartbeats++;
     if (world->currentMap == playerMap)
         return;

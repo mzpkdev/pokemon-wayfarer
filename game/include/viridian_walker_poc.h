@@ -12,6 +12,10 @@ enum ViridianWalkerGoal {
     WALKER_GOAL_ROUTE1,
     WALKER_GOAL_ROUTE2,
     WALKER_GOAL_ROUTE22,
+    WALKER_GOAL_ROUTE1_SPOT = 8,
+    WALKER_GOAL_ROUTE1_RETURN,
+    WALKER_GOAL_ROUTE2_RETURN,
+    WALKER_GOAL_ROUTE2_GATE,
 };
 
 enum ViridianWalkerPhase {
@@ -44,6 +48,8 @@ struct ViridianWalkerDebug {
     u8 lastCompletedGoal;
     u8 usedGrassFallback;
     u16 maxSliceScanlines;
+    u16 currentMap;
+    u8 localId;
 };
 
 #if IS_WAYFARER && VIRIDIAN_WALKER_POC
