@@ -194,6 +194,17 @@ and Lorelei takes it on her Water aces when Misty is elsewhere. The
 [specification](../specs/notable-haunts.md#worked-example-cerulean-cape)
 works it through.
 
+A fourth, the Pewter Museum, is public and indoors, Rock-themed, Brock's
+hometown, where trainers study and sightsee among the fossils. Its quest is
+a Quiz: three type-matchup questions about the trainer's own aces as they
+stand right now, such as what hits Brock's Onix super effectively. All
+three right pays the trainer's next reward; a wrong answer costs nothing,
+and the quiz stays open. Brock is its regular, and Blue, Oak's grandson,
+comes on his studious play style when Brock is elsewhere; Steven, who would
+love the fossils, is aloof and never visits a public place. The
+[specification](../specs/notable-haunts.md#worked-example-pewter-museum)
+works it through.
+
 ## Boundaries
 
 In: the haunt pool and tags, placement, momentum, the talk flow (greetings

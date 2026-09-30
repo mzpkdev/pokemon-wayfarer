@@ -302,10 +302,10 @@ quest pays the same way, from the trainer's
 Every quest runs `ASK` (an attention-getter), then the haunt's own quest
 line (the proposal), then a yes or no:
 `YES` starts it, `NO` ends it ([talk flow](#talk-flow)). A requirement the
-player doesn't meet, or a failed attempt, uses `NOT_READY`, unless the haunt
-authors its own loss line (One on one). Completing it runs the haunt's done
-line if it has one, then `PRAISE`, then the [reward](#rewards-and-claims),
-then `BYE`.
+player doesn't meet, or a failed attempt, uses `NOT_READY`, unless there is
+a loss line (One on one's, if the haunt authors one, and the Quiz's).
+Completing it runs the haunt's done line if it has one, then `PRAISE`, then
+the [reward](#rewards-and-claims), then `BYE`.
 
 ### Walk with me
 
@@ -409,20 +409,70 @@ nothing is traded. With none to show, `NOT_READY`.
 
 ### Quiz
 
-Three type-matchup questions about the trainer's aces, generated without
-randomness:
+Three multiple-choice type-matchup questions about the trainer's aces at
+their current stage, generated from the engine's type chart
+(`gTypeEffectivenessTable` in
+[types_info.h](../../game/src/data/types_info.h)) without randomness.
 
-1. List the distinct types of the aces in the trainer's current team, at
-   their current species, in battle order; repeat the list until it has
-   three entries. With no ace on the team, use the signature POKéMON's
-   current species.
-2. Question `i` names type `T` of entry `i`: "Which type is weak to `T`?"
-   The correct answer is the first type, in the type chart's order, that `T`
-   hits super effectively; the other two choices are the first two types
-   `T` doesn't. If `T` hits nothing super effectively, the question asks
-   "Which type resists `T`?" instead, with the choices built the same way.
-3. All three right completes the quest. A wrong answer ends the attempt with
-   `NOT_READY`; the next attempt asks the same questions.
+- **Proposal.** "Three questions on type matchups. Think you can answer
+  them?" (the quest line after `ASK`).
+- **YES:** the trainer's `YES`, then the questions, one at a time.
+- **All three right:** the done line "All correct. You really know your
+  stuff.", `PRAISE`, the [reward](#rewards-and-claims) (an item through
+  `GIFT`), and `BYE`: +10 friendship as a completed quest.
+- **A wrong answer** ends the attempt at once: the loss line "Not quite.
+  Brush up and try again.", then `BYE`. There is no penalty; the claim bit
+  stays clear, so the quiz stays open this placement, and the next attempt
+  asks the same questions while the aces' stages are unchanged.
+- **NO:** the trainer's `NO`, then `BYE`.
+
+**Templates.** Three haunt-line question templates, neutral like every
+haunt line; `{ACE}` names the question's ace:
+
+| # | Template | Correct answer: an attacking type whose multiplier against the ace is |
+| ---: | --- | --- |
+| 1 | "What type hits {ACE} super effectively?" (weakness) | 2 or more |
+| 2 | "What does {ACE}'s type resist?" (resistance) | above 0 and below 1 |
+| 3 | "Which move type can't touch {ACE}?" (immunity) | 0 |
+
+**Generating the questions:**
+
+1. **Aces.** List the aces on the trainer's current team at their current
+   species, in battle order; with no ace on the team, use the signature
+   POKéMON's current species. Repeat the list until it has three entries:
+   question `i` asks about entry `i`.
+2. **Multiplier.** An attacking type's multiplier against a species is the
+   product of the chart's entries for each of the species' types, so a
+   dual type counts both (Water against Rock/Ground is 2 × 2 = 4, Electric
+   against it 1 × 0 = 0). Types are the eighteen battle types in the
+   chart's order (Normal, Fighting, Flying, Poison, Ground, Rock, Bug,
+   Ghost, Steel, Fire, Water, Grass, Electric, Psychic, Ice, Dragon, Dark,
+   Fairy); `TYPE_NONE`, `TYPE_MYSTERY`, and `TYPE_STELLAR` never appear.
+   Abilities, held items, and moves with special matchups play no part.
+3. **Template.** Question `i` prefers template `i`. It takes the first
+   template, trying the preferred one and then the others in the order 1,
+   2, 3, that has a correct answer for its ace and hasn't been asked about
+   that species in this quiz yet. So an ace with no immunity (or no
+   resistance) is asked another template instead. If every template with a
+   correct answer was already asked about that species (one ace for all
+   three questions), the question takes the first template in the same
+   order that still has an unused correct answer, and uses that. If nothing
+   is left, which only a lone pure Normal-type ace reaches (one weakness,
+   one immunity, no resistance), the question repeats question 1.
+4. **Correct answer.** The first qualifying type in chart order (or the
+   first not used yet, in the case above).
+5. **Wrong options.** Three types that are clearly wrong under the chart:
+   - weakness: types with a multiplier below 1 (resisted or immune) in
+     chart order, then neutral ones (exactly 1) if fewer than three;
+   - resistance and immunity: types with a multiplier of 2 or more in
+     chart order, then neutral ones if fewer than three. Immune types are
+     never offered on a resistance question, nor resisted ones on an
+     immunity question, so no option is arguable.
+6. **Options.** The correct answer and the three wrong options, four in
+   all, shown in chart order, so the correct one's place varies.
+
+Every type combination in the current chart has at least one weakness, so
+every question has an answer.
 
 ### One on one
 
@@ -519,7 +569,9 @@ A haunt's dialogue is assembled from two sources:
 
 - **Haunt lines**, authored per haunt: its quest line, a done line for a
   walk or a Lost something (and optionally for a One on one), a hint per
-  lost spot, and optionally a loss line for a One on one. They describe
+  lost spot, and optionally a loss line for a One on one. The Quiz's
+  question templates, done line, and loss line are shared by every Quiz
+  haunt. They describe
   only the place and the activity, never a trainer's personality or
   history, so they read true for every candidate.
   A quest line is the proposal that follows `ASK` ("Walk it with me, out to
@@ -545,14 +597,14 @@ Both use these slots:
 | --- | --- |
 | `{PLAYER}` | The player's name. |
 | `{ITEM}` | The reward item (only in `GIFT`). |
-| `{ACE}` | The signature POKéMON's current species. |
+| `{ACE}` | The signature POKéMON's current species; in a quiz question, that question's ace at its current species. |
 | `{BUDDY}` | The buddy slot's current species ([trainer values](#trainer-values)). |
 | `{LOCAL}` | The haunt's catch species (only in a Catch me one line). |
 | `{HINT}` | The active lost spot's hint (only in a Lost something line). |
 
 Speaker labels ("BROCK:") and system messages (the [YES / NO] prompt, the
-number given, the quiz, a lesson's pick, the fallback amount, the found
-keepsake) are generic text, the same for every trainer.
+number given, the quiz's answer options, a lesson's pick, the fallback
+amount, the found keepsake) are generic text, the same for every trainer.
 
 ## Worked example: Diglett's Cave
 
@@ -1099,6 +1151,203 @@ theme alone, and to travellers when neither is free. And it is the calmest
 mood in the list: remote, relax and sightsee, a clifftop by the sea, where
 the quest is a stroll.
 
+## Worked example: Pewter Museum
+
+**Tags.** Region Kanto; theme Rock; not elite; hometown Pewter; activities
+study and sightsee (trainers come to read up on fossils or just look
+around); setting public; capacity 1; quest Quiz. Map
+`PewterCity_Museum_1F_hns`. The fossil displays are two glass cases at x
+3-6 on y 4 and y 7, each with a "Bones of an ancient dragon POKéMON" sign at
+(4, 4) and (4, 7). The meeting spot is (7, 4), the walkable tile at the east
+end of the upper case; the buddy stands beside it at (8, 4). Both tiles are
+free of collision and of the room's objects, and they block neither the
+signs' reading tiles ((4, 3), (4, 5), (4, 6), (4, 8)) nor the way from the
+doors at (14, 9) and (22, 9) to the stairs at (8, 8).
+
+**Quest.** The Museum uses the shared [Quiz](#quiz) lines:
+
+| Line | Text |
+| --- | --- |
+| Quest line | "Three questions on type matchups. Think you can answer them?" |
+| Done line | "All correct. You really know your stuff." |
+| Loss line | "Not quite. Brush up and try again." |
+
+`YES` gives the trainer's `YES` and three questions on their aces at their
+current stages. All three right is the done line, `PRAISE`, the next
+reward-pool entry through `GIFT`, and `BYE`, worth +10 friendship; a wrong
+answer is the loss line and `BYE`, with no penalty, and the quiz stays open
+this placement. `NO` is the trainer's `NO`, as anywhere.
+
+**Who's likely, and why.** The setting is public, so no aloof trainer is a
+candidate. That keeps out Steven, who collects rare stones and would love
+the fossils, and never comes. Scores at world progress 20 (two badges;
+placeholder weights; momentum from the explorer's growth curves):
+
+| Trainer | Theme | Style | Momentum | Hometown | Score |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Brock | 2 (Aerodactyl, Rock) | 2 (Field marshal) | 0 (rising) | 3 | 7 |
+| Misty | 0 | 2 (Field marshal) | 1 (settled) | 0 | 3 |
+| Blue | 0 | 2 (Tactician) | 0 (rising) | 0 | 2 |
+| Will | 0 | 2 (Field marshal) | 0 (rising) | 0 | 2 |
+
+Everyone else scores 0 or 1. Study and sightsee are both play-style
+activities (study for Bombers, Field marshals, and Tacticians; sightsee for
+Field marshals), so the Museum draws on style more than most haunts.
+
+- **Brock** is the home fit: Pewter is his hometown, Aerodactyl gives the
+  Rock theme (his signature Steelix is Steel/Ground), and as a Field
+  marshal studying is his routine. He scores 7 while rising and 8 while
+  settled, the Museum's best by far, so he holds it unless an earlier haunt
+  in the [fill](#fill) takes him. Below TR 80 that happens when `wp mod
+  18` is 5-9 (Mt. Moon outside or the Celadon rooftop) or 10-14 (Viridian
+  City, Ground and sightsee, where his Steelix scores 6); the Museum is his
+  when it is 15-17 or 0-4.
+- **Blue** is Oak's grandson, and the play-style table already maps his
+  Tactician style to study, so the Museum scores him 2 with no Rock ace at
+  all. He holds it when Brock is away: when `wp mod 18` is 10-14, Viridian
+  City takes Brock first, and Blue ties Will on 2 and wins on catalog
+  order.
+- **Blaine** is a scientist, and his Gym's quiz machines (RBY/FRLG) make him a
+  natural quizmaster, but as a Gambler with Fire aces he scores 0, or 1
+  while settled. He is from Kanto, so v0 lets him in; that Cinnabar is far
+  away and he doesn't travel isn't modelled. He could only come as a
+  leftover, and below TR 80 the fill never seats him here.
+
+What v0 can't say waits for the routine design: distance from home for
+Blaine, a scholarly pull for Blue beyond his play style, and a pull that
+keeps Brock at his own town's museum rather than Viridian City. When `wp mod 18` is 5-8 every
+candidate is placed before the Museum's turn and it stays empty; at 9 it
+gets a leftover (Brawly). These counts follow the v0 weights and the
+current Kanto list, and move with them.
+
+**Brock, a Friend** (world progress 20, where `20 mod 18 = 2`: Viridian
+City and Viridian Forest go to Giovanni and Erika, and the Museum's turn
+gives Brock 7). The player beat him at Pewter, which made him a Friend (20
+points); no quest with him yet, so his reward counter is 0. At world
+progress 20 his TR is 35 and his team level 25, and his team of three is
+ONIX, GEODUDE, and GOLBAT: his Aerodactyl slot hasn't joined yet, so his
+only ace on the team is his signature Steelix, stepped down to ONIX (Lv 25;
+Steelix needs Lv 35). All three questions are about ONIX (Rock/Ground), one
+per template, following the [generation rules](#quiz):
+
+| # | Template | Correct | Options (multiplier against ONIX) |
+| ---: | --- | --- | --- |
+| 1 | weakness | FIGHTING | NORMAL (0.5), FIGHTING (2), FLYING (0.5), POISON (0.25) |
+| 2 | resistance | NORMAL | NORMAL (0.5), FIGHTING (2), GROUND (2), STEEL (2) |
+| 3 | immunity | ELECTRIC | FIGHTING (2), GROUND (2), STEEL (2), ELECTRIC (0) |
+
+Water and Grass hit ONIX four times over, but Fighting comes first in
+chart order, so it is the answer. He greets with `HELLO`:
+
+```text
+BROCK: Hey, {PLAYER}! Good to see you. Eating well, I hope?   HELLO
+BROCK: Hey, I've got an idea.                                 ASK
+BROCK: Three questions on type matchups. Think you can        quest line
+       answer them?
+> Yes
+BROCK: Great! That's the spirit!                              YES
+BROCK: What type hits ONIX super effectively?                 question 1
+  [NORMAL / FIGHTING / FLYING / POISON]
+> FIGHTING
+BROCK: What does ONIX's type resist?                          question 2
+  [NORMAL / FIGHTING / GROUND / STEEL]
+> NORMAL
+BROCK: Which move type can't touch ONIX?                      question 3
+  [FIGHTING / GROUND / STEEL / ELECTRIC]
+> ELECTRIC
+BROCK: All correct. You really know your stuff.               done line
+BROCK: Nicely done! That's rock-hard willpower if I ever saw  PRAISE
+       it.
+BROCK: Take this PEWTER CRUNCHIES. A good breeder always      GIFT
+       shares supplies.
+BROCK: Take care! And keep your POKéMON well fed!             BYE
+```
+
+PEWTER CRUNCHIES is the first entry of his
+[pool](../research/notable-trainer-rewards.md#brock) (from world progress
+0). The quest adds 10 points (20 + 10 = 30), and he stays a Friend. The
+questions teach the matchups of the ONIX the player just faced at his Gym.
+
+**Blue at Met: a wrong answer, then all right** (world progress 30, where
+`30 mod 18 = 12`: Viridian City's turn comes first and takes Brock with 6,
+and Blue holds the Museum with 2). The player met him once at a haunt (+1)
+and hasn't beaten him, so he is Met, and his reward counter is 0. At world
+progress 30 his TR is 37 and his team level 26, and his team is PIDGEOTTO,
+KADABRA, and EEVEE in battle order: his aces are KADABRA (Alakazam, Lv 26,
+stepped down below Lv 42) and EEVEE (his signature Umbreon, Lv 26, stepped
+down below Lv 30). Their
+battle order, KADABRA then EEVEE, repeats to KADABRA, EEVEE, KADABRA:
+
+| # | Ace | Template | Correct | Options (multiplier) |
+| ---: | --- | --- | --- | --- |
+| 1 | KADABRA (Psychic) | weakness | BUG | NORMAL (1), FIGHTING (0.5), BUG (2), PSYCHIC (0.5) |
+| 2 | EEVEE (Normal) | weakness, for resistance | FIGHTING | NORMAL (1), FIGHTING (2), FLYING (1), GHOST (0) |
+| 3 | KADABRA (Psychic) | resistance, for immunity | FIGHTING | FIGHTING (0.5), BUG (2), GHOST (2), DARK (2) |
+
+A pure Normal type resists nothing, so question 2 falls back to the
+weakness template; a Psychic type is immune to nothing, so question 3 falls
+back to resistance, the first template not yet asked about KADABRA. KADABRA
+resists only Fighting and Psychic, so question 1's third wrong option is a
+neutral NORMAL. He greets with `AGAIN`, and the player
+slips on question 2:
+
+```text
+BLUE: Oh, you again. Keep this up and I'll remember you!      AGAIN
+BLUE: Hey, {PLAYER}. A second?                                ASK
+BLUE: Three questions on type matchups. Think you can answer  quest line
+      them?
+> Yes
+BLUE: Heh, knew you'd say yes!                                YES
+BLUE: What type hits KADABRA super effectively?               question 1
+  [NORMAL / FIGHTING / BUG / PSYCHIC]
+> BUG
+BLUE: What type hits EEVEE super effectively?                 question 2
+  [NORMAL / FIGHTING / FLYING / GHOST]
+> NORMAL
+BLUE: Not quite. Brush up and try again.                      loss line
+BLUE: Smell ya later!                                         BYE
+```
+
+No penalty and no change: the claim bit stays clear, his counter stays at
+0, and no points change. The next talk asks the same questions, since his
+stages haven't changed:
+
+```text
+BLUE: Oh, you again. Keep this up and I'll remember you!      AGAIN
+BLUE: Hey, {PLAYER}. A second?                                ASK
+BLUE: Three questions on type matchups. Think you can answer  quest line
+      them?
+> Yes
+BLUE: Heh, knew you'd say yes!                                YES
+BLUE: What type hits KADABRA super effectively?               question 1
+  [NORMAL / FIGHTING / BUG / PSYCHIC]
+> BUG
+BLUE: What type hits EEVEE super effectively?                 question 2
+  [NORMAL / FIGHTING / FLYING / GHOST]
+> FIGHTING
+BLUE: What does KADABRA's type resist?                        question 3
+  [FIGHTING / BUG / GHOST / DARK]
+> FIGHTING
+BLUE: All correct. You really know your stuff.                done line
+BLUE: Not bad! ...For someone who isn't me, anyway.           PRAISE
+BLUE: Take this SILK SCARF. Gramps says I should share. Ugh.  GIFT
+BLUE: Smell ya later!                                         BYE
+```
+
+SILK SCARF is the first entry of Blue's
+[pool](../research/notable-trainer-rewards.md#blue) (from world progress
+0); his next, BLACK GLASSES, is open too (from world progress 20). The quest
+adds 10 points (1 + 10 = 11), and he is still Met.
+
+**What this example shows.** Knowledge is the challenge: the quiz is about
+the POKéMON the trainer actually uses right now, so it teaches the matchups
+the player will need against them, and it changes as their team grows.
+Studying is a routine step, drawn from play style: Brock comes for his
+hometown and Rock theme, but Blue comes on his Tactician style alone, the
+Museum as the home of Oak's grandson, with no Rock ace at all. A public,
+indoor place keeps every aloof trainer out before any score is read, which
+is why Steven, the one trainer who would travel for fossils, never visits.
+
 ## Kanto haunts
 
 The v0 Kanto list, in catalog order. It is a draft: the tags, quests, and
@@ -1108,8 +1357,9 @@ Wayfarer retired their HNS versions
 ([retirement](frlg-cinnabar-seafoam-hns-retirement.md)). Spots, exits, and
 lost-spot tiles are chosen at implementation after checking collision and
 existing objects; the
-[Celadon Game Corner's](#worked-example-celadon-game-corner) and
-[Cerulean Cape's](#worked-example-cerulean-cape) are worked out already.
+[Celadon Game Corner's](#worked-example-celadon-game-corner),
+[Cerulean Cape's](#worked-example-cerulean-cape), and
+[Pewter Museum's](#worked-example-pewter-museum) are worked out already.
 Every haunt has capacity 1.
 
 | # | Haunt | Maps | Themes | Elite | Hometown | Activities | Setting | Quest |
@@ -1118,7 +1368,7 @@ Every haunt has capacity 1.
 | 2 | Route 1 | `Route1_hns` | Normal, Flying | – | – | train | public | Walk with me: from the Pallet end to the Viridian City edge |
 | 3 | Viridian City | `ViridianCity_hns` | Ground | – | Viridian | sightsee | public | One on one |
 | 4 | Viridian Forest | `ViridianForest_hns` | Bug, Grass | – | – | study | remote | Catch me one: Pikachu |
-| 5 | Pewter Museum | `PewterCity_Museum_1F_hns` | Rock | – | Pewter | study | public | Quiz |
+| 5 | Pewter Museum | `PewterCity_Museum_1F_hns` | Rock | – | Pewter | study, sightsee | public | Quiz |
 | 6 | Mt. Moon outside | `MtMoon_Outside_hns` | Rock, Fairy | – | – | sightsee | remote | Lost something |
 | 7 | Cerulean Cape | `Route25_hns` | Water | – | Cerulean | relax, sightsee | remote | Lost something: near the fence, by the rocks, by the pond |
 | 8 | Rock Tunnel | `RockTunnel_B1F_hns`, `RockTunnel_1F_hns` | Rock, Fighting | – | – | train | remote | Walk with me: from the north Route 10 entrance to the south one |
@@ -1368,7 +1618,12 @@ Required implementation evidence (not yet run):
    Fly, Teleport, and an Escape Rope are refused during a walk; its wild
    battles are double battles beside the trainer with their best three from
    the runtime partner slot; Catch me one refuses the last able party
-   POKéMON; the quiz asks the same questions on every attempt; a One on one
+   POKéMON; the quiz's questions, answers, and options match golden
+   fixtures built from the type chart (Brock's lone ONIX gives Fighting,
+   Normal, and Electric; Blue's KADABRA and EEVEE give Bug, Fighting, and
+   Fighting), every wrong option is wrong under the chart, a wrong answer
+   ends the attempt with the loss line and no penalty, and the same stages
+   give the same questions on every attempt; a One on one
    loss plays the haunt's loss line (or `NOT_READY`), costs nothing, and
    leaves the claim bit clear, and a win adds +10 as a quest, never +20.
    Lost something picks the same active spot for the same placed trainer
