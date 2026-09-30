@@ -1215,9 +1215,9 @@ Field marshals), so the Museum draws on style more than most haunts.
 
 What v0 can't say waits for the routine design: distance from home for
 Blaine, a scholarly pull for Blue beyond his play style, and a pull that
-keeps Brock at his own town's museum rather than Viridian City. When `wp mod 18` is 5-8 every
-candidate is placed before the Museum's turn and it stays empty; at 9 it
-gets a leftover (Brawly). These counts follow the v0 weights and the
+keeps Brock at his own town's museum rather than Viridian City. When `wp
+mod 18` is 5-8 every candidate is placed before the Museum's turn and it
+stays empty; at 9 it gets a leftover (Brawly). These counts follow the v0 weights and the
 current Kanto list, and move with them.
 
 **Brock, a Friend** (world progress 20, where `20 mod 18 = 2`: Viridian
