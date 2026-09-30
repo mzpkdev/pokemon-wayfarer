@@ -10,6 +10,7 @@
 #include "malloc.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
+#include "script.h"
 #include "constants/event_object_movement.h"
 #include "constants/map_event_ids.h"
 
@@ -30,6 +31,7 @@ static EWRAM_DATA u16 sRead = 0;
 static EWRAM_DATA u16 sWrite = 0;
 static EWRAM_DATA u16 sRemaining = 0;
 static EWRAM_DATA u16 sWait = 0;
+static EWRAM_DATA u8 sSearchRetryWait = 0;
 static EWRAM_DATA u8 sGoal = 0;
 static EWRAM_DATA u8 sBlocked = 0;
 static EWRAM_DATA u8 sInStep = FALSE;
@@ -83,12 +85,55 @@ static u16 CurrentMap(void)
 static bool8 OnMap(void)
 {
     u16 map = CurrentMap();
-    return map == MAP_VIRIDIAN_CITY_HNS || map == MAP_ROUTE2_HNS || map == MAP_ROUTE1_HNS;
+    return map == MAP_VIRIDIAN_CITY_HNS || map == MAP_ROUTE2_HNS || map == MAP_ROUTE1_HNS
+        || map == MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS
+        || map == MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS || map == MAP_VIRIDIAN_CITY_MART_HNS;
 }
 
 static bool8 IsSupportedMap(u16 map)
 {
-    return map == MAP_VIRIDIAN_CITY_HNS || map == MAP_ROUTE2_HNS || map == MAP_ROUTE1_HNS;
+    return map == MAP_VIRIDIAN_CITY_HNS || map == MAP_ROUTE2_HNS || map == MAP_ROUTE1_HNS
+        || map == MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS
+        || map == MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS || map == MAP_VIRIDIAN_CITY_MART_HNS;
+}
+
+static bool8 IsInteriorMap(u16 map)
+{
+    return map == MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS
+        || map == MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS || map == MAP_VIRIDIAN_CITY_MART_HNS;
+}
+
+static bool8 IsInteriorSpotGoal(u8 goal)
+{
+    return goal == WALKER_GOAL_GATE_SPOT || goal == WALKER_GOAL_CENTER_SPOT
+        || goal == WALKER_GOAL_MART_SPOT;
+}
+
+static bool8 IsInteriorExitGoal(u8 goal)
+{
+    return goal == WALKER_GOAL_GATE_EXIT || goal == WALKER_GOAL_CENTER_EXIT
+        || goal == WALKER_GOAL_MART_EXIT;
+}
+
+static bool8 IsDoorGoal(u8 goal)
+{
+    return goal == WALKER_GOAL_MART || goal == WALKER_GOAL_CENTER
+        || goal == WALKER_GOAL_ROUTE2_GATE || IsInteriorSpotGoal(goal)
+        || IsInteriorExitGoal(goal);
+}
+
+static u8 InteriorSpotGoal(u16 map)
+{
+    if (map == MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS)
+        return WALKER_GOAL_GATE_SPOT;
+    if (map == MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS)
+        return WALKER_GOAL_CENTER_SPOT;
+    return WALKER_GOAL_MART_SPOT;
+}
+
+static u8 InteriorExitGoal(u16 map)
+{
+    return InteriorSpotGoal(map) + 1;
 }
 
 static u8 LocalId(u16 map)
@@ -97,7 +142,13 @@ static u8 LocalId(u16 map)
         return LOCALID_VIRIDIAN_WALKER_POC;
     if (map == MAP_ROUTE2_HNS)
         return LOCALID_ROUTE2_WALKER_POC;
-    return LOCALID_ROUTE1_WALKER_POC;
+    if (map == MAP_ROUTE1_HNS)
+        return LOCALID_ROUTE1_WALKER_POC;
+    if (map == MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS)
+        return LOCALID_GATE_FOREST_WALKER_POC;
+    if (map == MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS)
+        return LOCALID_VIRIDIAN_CENTER_WALKER_POC;
+    return LOCALID_VIRIDIAN_MART_WALKER_POC;
 }
 
 static bool8 IsWalkerIdentity(const struct ObjectEvent *objectEvent, u16 map)
@@ -121,7 +172,10 @@ bool8 ViridianWalker_IsObject(const struct ObjectEvent *objectEvent)
 {
     return IsWalkerIdentity(objectEvent, MAP_VIRIDIAN_CITY_HNS)
         || IsWalkerIdentity(objectEvent, MAP_ROUTE2_HNS)
-        || IsWalkerIdentity(objectEvent, MAP_ROUTE1_HNS);
+        || IsWalkerIdentity(objectEvent, MAP_ROUTE1_HNS)
+        || IsWalkerIdentity(objectEvent, MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS)
+        || IsWalkerIdentity(objectEvent, MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS)
+        || IsWalkerIdentity(objectEvent, MAP_VIRIDIAN_CITY_MART_HNS);
 }
 
 bool8 ViridianWalker_HasVisibleActorOnMap(u16 map)
@@ -182,15 +236,22 @@ static void NextGoal(struct ObjectEvent *walker)
 {
     u16 map = CurrentMap();
     if (map == MAP_VIRIDIAN_CITY_HNS)
-        sGoal = ViridianWorld_Get()->destinationMap == MAP_ROUTE1_HNS
-            ? WALKER_GOAL_ROUTE1 : WALKER_GOAL_ROUTE2;
+    {
+        u16 destination = ViridianWorld_Get()->destinationMap;
+        sGoal = destination == MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS ? WALKER_GOAL_CENTER
+            : destination == MAP_VIRIDIAN_CITY_MART_HNS ? WALKER_GOAL_MART
+            : destination == MAP_ROUTE1_HNS ? WALKER_GOAL_ROUTE1 : WALKER_GOAL_ROUTE2;
+    }
     else if (map == MAP_ROUTE1_HNS)
         sGoal = sGoal == WALKER_GOAL_ROUTE1_SPOT
             ? WALKER_GOAL_ROUTE1_RETURN : WALKER_GOAL_ROUTE1_SPOT;
-    else
+    else if (map == MAP_ROUTE2_HNS)
         sGoal = ViridianWorld_Get()->destinationMap == MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS
             ? WALKER_GOAL_ROUTE2_GATE : WALKER_GOAL_ROUTE2_RETURN;
+    else
+        sGoal = IsInteriorSpotGoal(sGoal) ? InteriorExitGoal(map) : InteriorSpotGoal(map);
     sBlocked = 0;
+    sSearchRetryWait = 0;
     gViridianWalkerDebug.goal = sGoal;
     VarSet(VAR_TEMP_2, sGoal);
     ViridianWorld_ActorMoved(walker->currentCoords.x - MAP_OFFSET,
@@ -222,12 +283,21 @@ static void BeginSearch(struct ObjectEvent *walker)
 
 static bool8 CanWalkFrom(struct ObjectEvent *walker, s16 x, s16 y, enum Direction direction)
 {
-    struct ObjectEvent probe = *walker;
-    probe.currentCoords.x = x;
-    probe.currentCoords.y = y;
-    probe.currentElevation = MapGridGetElevationAt(x, y);
-    probe.currentMetatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
-    return GetCollisionAtCoords(&probe, x + sDx[direction], y + sDy[direction], direction) == COLLISION_NONE;
+    struct Coords16 oldCoords = walker->currentCoords;
+    u8 oldElevation = walker->currentElevation;
+    u8 oldBehavior = walker->currentMetatileBehavior;
+    bool8 clear;
+    // Use the real object pointer so occupancy ignores this actor's own
+    // template tile when recovering beside the player's warp landing.
+    walker->currentCoords.x = x;
+    walker->currentCoords.y = y;
+    walker->currentElevation = MapGridGetElevationAt(x, y);
+    walker->currentMetatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
+    clear = GetCollisionAtCoords(walker, x + sDx[direction], y + sDy[direction], direction) == COLLISION_NONE;
+    walker->currentCoords = oldCoords;
+    walker->currentElevation = oldElevation;
+    walker->currentMetatileBehavior = oldBehavior;
+    return clear;
 }
 
 static bool8 IsGoalTile(struct ObjectEvent *walker, s16 x, s16 y)
@@ -267,6 +337,18 @@ static bool8 IsGoalTile(struct ObjectEvent *walker, s16 x, s16 y)
     case WALKER_GOAL_ROUTE2_GATE:
         destination = MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS;
         break;
+    case WALKER_GOAL_GATE_SPOT:
+        return CurrentMap() == MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS && x == 7 && y == 5;
+    case WALKER_GOAL_GATE_EXIT:
+        return CurrentMap() == MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS && x == 7 && y == 8;
+    case WALKER_GOAL_CENTER_SPOT:
+        return CurrentMap() == MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS && x == 6 && y == 5;
+    case WALKER_GOAL_CENTER_EXIT:
+        return CurrentMap() == MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS && x == 7 && y == 7;
+    case WALKER_GOAL_MART_SPOT:
+        return CurrentMap() == MAP_VIRIDIAN_CITY_MART_HNS && x == 5 && y == 5;
+    case WALKER_GOAL_MART_EXIT:
+        return CurrentMap() == MAP_VIRIDIAN_CITY_MART_HNS && x == 4 && y == 6;
     default:
         return FALSE;
     }
@@ -346,7 +428,15 @@ static void SearchSlice(struct ObjectEvent *walker)
     if (elapsedScanlines > gViridianWalkerDebug.maxSliceScanlines)
         gViridianWalkerDebug.maxSliceScanlines = elapsedScanlines;
     if (sRead == sWrite && gViridianWalkerDebug.phase == WALKER_PHASE_SEARCH)
-        NextGoal(walker);
+    {
+        if (IsDoorGoal(sGoal))
+        {
+            sRead = sWrite = 0;
+            sSearchRetryWait = 30;
+        }
+        else
+            NextGoal(walker);
+    }
 }
 
 static enum Direction ExitDirection(void)
@@ -489,9 +579,31 @@ static void CompleteGoal(struct ObjectEvent *walker)
         ViridianWorld_ActorAtSpot(x, walker->currentCoords.y - MAP_OFFSET, sGoal);
         gViridianWalkerDebug.phase = WALKER_PHASE_WAIT;
     }
-    else if (sGoal == WALKER_GOAL_ROUTE2_GATE)
+    else if (IsInteriorSpotGoal(sGoal))
     {
-        ViridianWorld_ActorInside(MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS);
+        ViridianWorld_ActorAtInteriorSpot(x, walker->currentCoords.y - MAP_OFFSET, sGoal);
+        gViridianWalkerDebug.phase = WALKER_PHASE_WAIT;
+    }
+    else if (sGoal == WALKER_GOAL_MART || sGoal == WALKER_GOAL_CENTER
+          || sGoal == WALKER_GOAL_ROUTE2_GATE)
+    {
+        ViridianWorld_ActorInside(sGoal == WALKER_GOAL_MART ? MAP_VIRIDIAN_CITY_MART_HNS
+            : sGoal == WALKER_GOAL_CENTER ? MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS
+            : MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS);
+        RemoveObjectEvent(walker);
+        Free(sWork);
+        sWork = NULL;
+        sInitialized = FALSE;
+        gViridianWalkerDebug.phase = WALKER_PHASE_INACTIVE;
+    }
+    else if (IsInteriorExitGoal(sGoal))
+    {
+        if (sGoal == WALKER_GOAL_GATE_EXIT)
+            ViridianWorld_ActorReturnedFromDoor(MAP_ROUTE2_HNS, 6, 52);
+        else if (sGoal == WALKER_GOAL_CENTER_EXIT)
+            ViridianWorld_ActorReturnedFromDoor(MAP_VIRIDIAN_CITY_HNS, 31, 37);
+        else
+            ViridianWorld_ActorReturnedFromDoor(MAP_VIRIDIAN_CITY_HNS, 41, 28);
         RemoveObjectEvent(walker);
         Free(sWork);
         sWork = NULL;
@@ -515,7 +627,17 @@ static void Replan(struct ObjectEvent *walker)
     gViridianWalkerDebug.blockedSteps++;
     sInStep = FALSE;
     if (++sBlocked >= WALKER_BLOCKED_LIMIT)
-        NextGoal(walker);
+    {
+        if (IsDoorGoal(sGoal))
+        {
+            sBlocked = 0;
+            sRead = sWrite = 0;
+            sSearchRetryWait = 30;
+            gViridianWalkerDebug.phase = WALKER_PHASE_SEARCH;
+        }
+        else
+            NextGoal(walker);
+    }
     else
         BeginSearch(walker);
 }
@@ -554,15 +676,16 @@ static void WalkStep(struct ObjectEvent *walker)
     }
     if (sRemaining == 0)
     {
-        if (sGoal == WALKER_GOAL_GRASS || sGoal == WALKER_GOAL_ROUTE1_SPOT)
+        if (sGoal == WALKER_GOAL_GRASS || sGoal == WALKER_GOAL_ROUTE1_SPOT
+         || IsInteriorSpotGoal(sGoal))
         {
             CompleteGoal(walker);
             return;
         }
         if (sGoal == WALKER_GOAL_MART || sGoal == WALKER_GOAL_CENTER
-         || sGoal == WALKER_GOAL_ROUTE2_GATE)
+         || sGoal == WALKER_GOAL_ROUTE2_GATE || IsInteriorExitGoal(sGoal))
         {
-            dir = DIR_NORTH;
+            dir = IsInteriorExitGoal(sGoal) ? DIR_SOUTH : DIR_NORTH;
             sDoorStep = TRUE;
         }
         else
@@ -580,6 +703,13 @@ static void WalkStep(struct ObjectEvent *walker)
         // Outdoor door metatiles are flagged impassable. Scripted movement may
         // cross that one known warp tile, but never an occupied tile.
         if (GetObjectObjectCollidesWith(walker, nx, ny, FALSE) != OBJECT_EVENTS_COUNT)
+        {
+            sDoorStep = FALSE;
+            Replan(walker);
+            return;
+        }
+        if (IsInteriorExitGoal(sGoal)
+         && GetCollisionAtCoords(walker, nx, ny, dir) != COLLISION_NONE)
         {
             sDoorStep = FALSE;
             Replan(walker);
@@ -810,6 +940,7 @@ void ViridianWalker_Update(void)
             ? ProxyDirection(connection, world->currentMap, world->goal) : DIR_NONE;
         sInStep = sExitStep = sDoorStep = sExitReported = FALSE;
         sRemaining = sRead = sWrite = sWait = 0;
+        sSearchRetryWait = 0;
         sBlocked = 0;
         if (migrateProxy)
             sInitialized = TRUE;
@@ -822,6 +953,11 @@ void ViridianWalker_Update(void)
         return;
     }
     if (sTileCount > WALKER_MAX_TILES)
+        return;
+    // faceplayer starts a held face action that unfreezes the selected NPC.
+    // The script still owns it until field controls unlock; only the sprite
+    // callback should advance during dialogue, not this AI or its dwell timer.
+    if (ArePlayerFieldControlsLocked())
         return;
     world = ViridianWorld_Get();
     gViridianWalkerDebug.currentMap = map;
@@ -869,6 +1005,8 @@ void ViridianWalker_Update(void)
     }
     if (walker == NULL)
     {
+        if (ArePlayerFieldControlsLocked())
+            return;
         TrySpawnObjectEvent(LocalId(map), MAP_NUM(map), MAP_GROUP(map));
         walker = GetWalker();
         sInitialized = FALSE;
@@ -886,6 +1024,7 @@ void ViridianWalker_Update(void)
         sInStep = sExitStep = sDoorStep = sExitReported = FALSE;
         sGrassEmoted = FALSE;
         sRemaining = sRead = sWrite = sWait = 0;
+        sSearchRetryWait = 0;
         sBlocked = 0;
         if (map == MAP_VIRIDIAN_CITY_HNS && world->goal == WALKER_GOAL_GRASS
          && world->state == WORLD_STATE_AT_SPOT)
@@ -899,13 +1038,23 @@ void ViridianWalker_Update(void)
         else if (map == MAP_ROUTE2_HNS)
             sGoal = world->destinationMap == MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS
                 ? WALKER_GOAL_ROUTE2_GATE : WALKER_GOAL_ROUTE2_RETURN;
+        else if (IsInteriorMap(map))
+            sGoal = world->goal == InteriorExitGoal(map)
+                || (world->state == WORLD_STATE_AT_SPOT && world->dwell == 0)
+                ? InteriorExitGoal(map) : InteriorSpotGoal(map);
         else
-            sGoal = world->destinationMap == MAP_ROUTE1_HNS
+            sGoal = world->destinationMap == MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS
+                ? WALKER_GOAL_CENTER
+                : world->destinationMap == MAP_VIRIDIAN_CITY_MART_HNS
+                ? WALKER_GOAL_MART
+                : world->destinationMap == MAP_ROUTE1_HNS
                 ? WALKER_GOAL_ROUTE1 : WALKER_GOAL_ROUTE2;
         VarSet(VAR_TEMP_2, sGoal);
         gViridianWalkerDebug.goal = sGoal;
-        if (world->state == WORLD_STATE_AT_SPOT && world->dwell != 0
-         && (sGoal == WALKER_GOAL_GRASS || sGoal == WALKER_GOAL_ROUTE1_SPOT))
+        if (world->state == WORLD_STATE_AT_SPOT
+         && ((world->dwell != 0 && (sGoal == WALKER_GOAL_GRASS
+              || sGoal == WALKER_GOAL_ROUTE1_SPOT))
+          || IsInteriorSpotGoal(sGoal)))
         {
             sWait = 120;
             sGrassEmoted = FALSE;
@@ -923,7 +1072,12 @@ void ViridianWalker_Update(void)
     {
     case WALKER_PHASE_SEARCH:
         if (sWrite == 0)
-            BeginSearch(walker);
+        {
+            if (sSearchRetryWait != 0)
+                sSearchRetryWait--;
+            else
+                BeginSearch(walker);
+        }
         else
             SearchSlice(walker);
         break;
@@ -931,7 +1085,22 @@ void ViridianWalker_Update(void)
         WalkStep(walker);
         break;
     case WALKER_PHASE_WAIT:
-        if (sWait != 0)
+        if (IsInteriorSpotGoal(sGoal))
+        {
+            if (world->dwell != 0)
+            {
+                if (!(gMain.vblankCounter1 & 1))
+                    ViridianWorld_InteriorTick();
+            }
+            else if (!sGrassEmoted)
+            {
+                if (!ObjectEventSetHeldMovement(walker, GetFaceDirectionMovementAction(DIR_SOUTH)))
+                    sGrassEmoted = TRUE;
+            }
+            else if (ObjectEventClearHeldMovementIfFinished(walker))
+                NextGoal(walker);
+        }
+        else if (sWait != 0)
             sWait--;
         else if (!sGrassEmoted)
         {

@@ -1,9 +1,31 @@
 ViridianCity_Mart_hns_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, ViridianCity_Mart_WalkerPocOnLoad
 #if IS_WAYFARER
 	map_script MAP_SCRIPT_ON_TRANSITION, ViridianCity_Mart_KantoOnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, ViridianCity_Mart_KantoOnFrame
 #endif
 	.byte 0
+
+ViridianCity_Mart_WalkerPocOnLoad:
+	setflag FLAG_TEMP_6
+	end
+
+ViridianCity_Mart_EventScript_WalkerPoc::
+	lock
+	faceplayer
+	goto_if_eq VAR_TEMP_2, 17, ViridianCity_Mart_WalkerPocExit
+	msgbox ViridianCity_Mart_Text_WalkerPocSpot, MSGBOX_DEFAULT
+	goto ViridianCity_Mart_WalkerPocDone
+ViridianCity_Mart_WalkerPocExit:
+	msgbox ViridianCity_Mart_Text_WalkerPocExit, MSGBOX_DEFAULT
+ViridianCity_Mart_WalkerPocDone:
+	release
+	end
+
+ViridianCity_Mart_Text_WalkerPocSpot:
+	.string "Looking around the POKé MART!$"
+ViridianCity_Mart_Text_WalkerPocExit:
+	.string "Heading back into VIRIDIAN!$"
 
 #if IS_WAYFARER
 ViridianCity_Mart_KantoOnTransition:

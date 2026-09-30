@@ -6,7 +6,8 @@
 #include "overworld.h"
 #include "viridian_walker_poc.h"
 
-#define WORLD_DOOR_DWELL 2
+#define WORLD_INTERIOR_DWELL_TICKS 150 // Two rendered frames per tick, five seconds.
+#define WORLD_HEARTBEAT_DWELL_TICKS 75 // Two off-map transitions approximate that stop.
 
 STATIC_ASSERT(sizeof(struct ViridianWalkerWorldState) == 12, ViridianWalkerWorldSaveSize);
 
@@ -34,7 +35,14 @@ static u16 GetPlayerMap(void)
 bool8 ViridianWorld_IsOnPlayerMap(void)
 {
     const struct ViridianWalkerWorldState *world = ViridianWorld_Get();
-    return world->state != WORLD_STATE_INSIDE && world->currentMap == GetPlayerMap();
+    return world->currentMap == GetPlayerMap();
+}
+
+static bool8 IsInteriorMap(u16 map)
+{
+    return map == MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS
+        || map == MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS
+        || map == MAP_VIRIDIAN_CITY_MART_HNS;
 }
 
 static void SetPosition(u16 map, u8 arrival, u8 crossing, u8 x, u8 y)
@@ -57,8 +65,16 @@ static void AdvanceDestination(void)
 {
     struct ViridianWalkerWorldState *world = GetMutable();
     if (world->currentMap == world->destinationMap)
-        world->destinationMap = world->destinationMap == MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS
-            ? MAP_ROUTE1_HNS : MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS;
+    {
+        if (world->destinationMap == MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS)
+            world->destinationMap = MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS;
+        else if (world->destinationMap == MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS)
+            world->destinationMap = MAP_VIRIDIAN_CITY_MART_HNS;
+        else if (world->destinationMap == MAP_VIRIDIAN_CITY_MART_HNS)
+            world->destinationMap = MAP_ROUTE1_HNS;
+        else
+            world->destinationMap = MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS;
+    }
 }
 
 void ViridianWorld_InitNewGame(void)
@@ -91,6 +107,10 @@ void ViridianWorld_ActorMoved(u8 x, u8 y, u8 goal)
     world->x = x;
     world->y = y;
     world->goal = goal;
+    if (IsInteriorMap(world->currentMap)
+     && (goal == WALKER_GOAL_GATE_SPOT || goal == WALKER_GOAL_CENTER_SPOT
+      || goal == WALKER_GOAL_MART_SPOT))
+        return;
     world->state = WORLD_STATE_TRAVELLING;
     world->dwell = 0;
 }
@@ -131,6 +151,26 @@ void ViridianWorld_ActorAtSpot(u8 x, u8 y, u8 goal)
     world->dwell = 1;
 }
 
+void ViridianWorld_ActorAtInteriorSpot(u8 x, u8 y, u8 goal)
+{
+    struct ViridianWalkerWorldState *world = GetMutable();
+    if (!ViridianWorld_IsOnPlayerMap() || !IsInteriorMap(world->currentMap))
+        return;
+    world->x = x;
+    world->y = y;
+    world->goal = goal;
+    world->state = WORLD_STATE_AT_SPOT;
+    world->dwell = WORLD_INTERIOR_DWELL_TICKS;
+}
+
+void ViridianWorld_InteriorTick(void)
+{
+    struct ViridianWalkerWorldState *world = GetMutable();
+    if (ViridianWorld_IsOnPlayerMap() && IsInteriorMap(world->currentMap)
+     && world->state == WORLD_STATE_AT_SPOT && world->dwell > 0)
+        world->dwell--;
+}
+
 void ViridianWorld_ActorCrossedExit(u16 toMap, u8 arrival, u8 crossing, u8 x, u8 y)
 {
     struct ViridianWalkerWorldState *world = GetMutable();
@@ -168,7 +208,10 @@ void ViridianWorld_ActorInside(u16 interiorMap)
         return;
     SetPosition(interiorMap, WORLD_ARRIVAL_DOOR, world->x, x, y);
     world->state = WORLD_STATE_INSIDE;
-    world->dwell = WORLD_DOOR_DWELL;
+    world->dwell = WORLD_INTERIOR_DWELL_TICKS;
+    world->goal = interiorMap == MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS ? WALKER_GOAL_GATE_SPOT
+        : interiorMap == MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS ? WALKER_GOAL_CENTER_SPOT
+        : WALKER_GOAL_MART_SPOT;
     AdvanceDestination();
     gViridianWalkerWorldDebug.actorExits++;
 }
@@ -176,11 +219,12 @@ void ViridianWorld_ActorInside(u16 interiorMap)
 void ViridianWorld_ActorReturnedFromDoor(u16 outdoorMap, u8 x, u8 y)
 {
     struct ViridianWalkerWorldState *world = GetMutable();
-    if (world->state != WORLD_STATE_INSIDE)
+    if (!ViridianWorld_IsOnPlayerMap() || !IsInteriorMap(world->currentMap))
         return;
     SetPosition(outdoorMap, WORLD_ARRIVAL_DOOR, world->crossing, x, y);
-    world->state = WORLD_STATE_AT_SPOT;
-    world->dwell = 1;
+    world->state = WORLD_STATE_TRAVELLING;
+    world->dwell = 0;
+    gViridianWalkerWorldDebug.actorExits++;
 }
 
 // These are the walkable south-side connections. Route 2's northern Pewter
@@ -193,16 +237,32 @@ static void HopOneMap(void)
     case MAP_VIRIDIAN_CITY_HNS:
         if (world->destinationMap == MAP_ROUTE1_HNS)
             SetPosition(MAP_ROUTE1_HNS, WORLD_ARRIVAL_NORTH, 25, 23, 0);
+        else if (world->destinationMap == MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS)
+        {
+            SetPosition(MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS, WORLD_ARRIVAL_DOOR, 30, 7, 8);
+            world->goal = WALKER_GOAL_CENTER_SPOT;
+            world->state = WORLD_STATE_INSIDE;
+            world->dwell = WORLD_INTERIOR_DWELL_TICKS;
+        }
+        else if (world->destinationMap == MAP_VIRIDIAN_CITY_MART_HNS)
+        {
+            SetPosition(MAP_VIRIDIAN_CITY_MART_HNS, WORLD_ARRIVAL_DOOR, 40, 4, 7);
+            world->goal = WALKER_GOAL_MART_SPOT;
+            world->state = WORLD_STATE_INSIDE;
+            world->dwell = WORLD_INTERIOR_DWELL_TICKS;
+        }
         else
             SetPosition(MAP_ROUTE2_HNS, WORLD_ARRIVAL_SOUTH, 24, 8, 79);
-        world->state = WORLD_STATE_TRAVELLING;
+        if (!IsInteriorMap(world->currentMap))
+            world->state = WORLD_STATE_TRAVELLING;
         break;
     case MAP_ROUTE2_HNS:
         if (world->destinationMap == MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS)
         {
             SetPosition(MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS, WORLD_ARRIVAL_DOOR, 6, 7, 9);
+            world->goal = WALKER_GOAL_GATE_SPOT;
             world->state = WORLD_STATE_INSIDE;
-            world->dwell = WORLD_DOOR_DWELL;
+            world->dwell = WORLD_INTERIOR_DWELL_TICKS;
         }
         else
         {
@@ -211,7 +271,7 @@ static void HopOneMap(void)
         }
         break;
     case MAP_GATE_ROUTE2_VIRIDIAN_FOREST_HNS:
-        SetPosition(MAP_ROUTE2_HNS, WORLD_ARRIVAL_DOOR, 7, 5, 52);
+        SetPosition(MAP_ROUTE2_HNS, WORLD_ARRIVAL_DOOR, 7, 6, 52);
         world->state = WORLD_STATE_TRAVELLING;
         break;
     case MAP_ROUTE1_HNS:
@@ -219,11 +279,11 @@ static void HopOneMap(void)
         world->state = WORLD_STATE_TRAVELLING;
         break;
     case MAP_VIRIDIAN_CITY_MART_HNS:
-        SetPosition(MAP_VIRIDIAN_CITY_HNS, WORLD_ARRIVAL_DOOR, 40, 40, 28);
+        SetPosition(MAP_VIRIDIAN_CITY_HNS, WORLD_ARRIVAL_DOOR, 40, 41, 28);
         world->state = WORLD_STATE_AT_SPOT;
         break;
     case MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS:
-        SetPosition(MAP_VIRIDIAN_CITY_HNS, WORLD_ARRIVAL_DOOR, 30, 30, 37);
+        SetPosition(MAP_VIRIDIAN_CITY_HNS, WORLD_ARRIVAL_DOOR, 30, 31, 37);
         world->state = WORLD_STATE_AT_SPOT;
         break;
     default:
@@ -256,7 +316,8 @@ static void OnMapLoad(bool8 cameraTransition)
         return;
     if (world->dwell > 0)
     {
-        world->dwell--;
+        world->dwell = world->dwell > WORLD_HEARTBEAT_DWELL_TICKS
+            ? world->dwell - WORLD_HEARTBEAT_DWELL_TICKS : 0;
         if (world->dwell > 0)
             return;
     }

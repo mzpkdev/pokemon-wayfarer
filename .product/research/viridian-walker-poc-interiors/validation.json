@@ -1,0 +1,88 @@
+{
+  "base_commit": "95b61aff2f9f7f19e9cd9d918b0eb61c209ff806",
+  "source_sha256": {
+    "game/Makefile": "03d7716561b85fc4ce42bd332728648e58e52b5058ea928068340b771f182eda",
+    "game/data/maps/Gate_Route2_ViridianForest_hns/map.json": "8d96e1584c73ed398a30dca8f1e94d5a6138120730bb4fd8432d8f4e80f0ebb2",
+    "game/data/maps/Gate_Route2_ViridianForest_hns/scripts.inc": "b7a3526ac8970ee6e4f494302ba4e053a3ad06f7dd9076d5399c7a12bbe41c52",
+    "game/data/maps/ViridianCity_Mart_hns/map.json": "0f8934bde465ac9a6dc6636849663222c46043a2b927d97afcbba31dbf603c52",
+    "game/data/maps/ViridianCity_Mart_hns/scripts.inc": "2d65845ea107636ab712eb6507afb1ac61f28518cdcb9cd8e9261af157c52b2b",
+    "game/data/maps/ViridianCity_PokemonCenter_hns/map.json": "d0465e8505767ab64370a60813a6b24270840c51f383fae0866b7f15cdea3681",
+    "game/data/maps/ViridianCity_PokemonCenter_hns/scripts.inc": "0511035a822386946fd557d3a85ea475e1547b0f33d5014eba1ac6775cef061e",
+    "game/include/config/viridian_walker_poc.h": "b268ad3e7de3beec4761fb3e6ae95a6278457a510946811247e6d8177463e6d4",
+    "game/include/viridian_walker_poc.h": "3aa4406a80df904bc17e4b58f2aef49f11bf0e198c400c1ce982cb98462d8459",
+    "game/include/viridian_walker_world.h": "693ff59259c761f56a9bfe5c1a845efa2913c122212892474fc22907b1ae639d",
+    "game/src/viridian_walker_poc.c": "f426989ab5b098b43011adafbf73c841c6daffd8ac5495f3a7fb699d1c8fe3b0",
+    "game/src/viridian_walker_world.c": "06d63c6bed232d8774dd65716a497d69e3f452f561f1e82280249535ae60ce2d",
+    "game/tools/viridian_walker_poc/verify.py": "e087c630c1a872fdbe7564605c05f81ae7bbf2949aac7d0d396d123644ab3919"
+  },
+  "artifact_sha256": {
+    "game/pokewayfarer.gba": "61607dbee7085b52c76ede1a6f90d0e12d3f0ad41d4212775168938b80278186",
+    "game/pokemon-wayfarer-e2e.gba": "09a4bf1c3f675b21fe1469d4a74c5f628144fdd0db07a52a09ecb62ce736d5be",
+    "game/pokemon-wayfarer-e2e.sym": "7820746bd7a6472efa93e4ba2d2fb59912b15ff3527cba22fdf5bdbab4e6e067",
+    "e2e/node_modules/skyemu-static/vendor/SkyEmu": "086cc22a551c6fe833dcf298ad238a1b0289fb33d96e3345f5ee4404882490eb"
+  },
+  "builds": [
+    "make -C game -j16 CXX=g++ e2e",
+    "make -C game -j16 CXX=g++ wayfarer"
+  ],
+  "checks": {
+    "gate": {
+      "status": "passed",
+      "raw_results_sha256": "c434ab9df371e101cffbc341d67b7d8ec307f98eed8b9fb79a62a05c7698fbaa",
+      "raw_directory": "/tmp/viridian-interiors/final-gate"
+    },
+    "city": {
+      "status": "passed",
+      "raw_results_sha256": "138fe7d2c3f04e792ce95e988cb33a0455598f6d35cf4004411dca5fd0868705",
+      "raw_directory": "/tmp/viridian-interiors/final-city"
+    },
+    "save": {
+      "status": "passed",
+      "raw_results_sha256": "795cb2c942c592bc3be283968d07e49d0588615d9b7b3ff49623246c78175f83",
+      "raw_directory": "/tmp/viridian-interiors/final-save"
+    },
+    "seam": {
+      "status": "passed",
+      "raw_results_sha256": "367da12e7ff3e51599041c28879c42d85a2cb9502d5acea14d946be29f6960b7",
+      "raw_directory": "/tmp/viridian-interiors/final-seam"
+    },
+    "return": {
+      "status": "passed",
+      "raw_results_sha256": "2432440bb45d0d9fc347f5129e95e7986df296cd6eeed655d3afd65b7dfc82b1",
+      "raw_directory": "/tmp/viridian-interiors/final-return"
+    }
+  },
+  "memory_bytes": {
+    "normal_ewram": 249564,
+    "normal_iwram": 25644,
+    "normal_rom": 32096024,
+    "e2e_ewram": 255472,
+    "e2e_iwram": 25652,
+    "saved_world": 12,
+    "bfs_heap_workspace": 11200
+  },
+  "evidence_sha256": {
+    "center-dialogue.png": "9d655f6940edd02a2bee4da173cd61b8b9e644097dd0f7a8e37593ae909dadc4",
+    "center-outside.png": "ce9f6177b4aa07216ba967d9c6658e4a99c6add6a506d2177d1a6df9276ab556",
+    "center-trace.tsv": "b86eb1adb6457400ae1031d545c48ce4a6bf82d618abc2ab8627cb23f0d66b8c",
+    "center-turn.png": "0cd5de4a5fc012fc430a2b1242c999242fef77b3e1f433df7a2d7d6ad9547893",
+    "gate-dialogue.png": "0066f95fdf712dbe63a493dcd26518fd7ea6c0ea7c241a6d5ade90fe6fb4f917",
+    "gate-outside.png": "3a190d8fddd830ba7883ee2d951f23557ebf1d7353f5d5798dd820f583b9bc1b",
+    "gate-trace.tsv": "3869b340a472a46fc724132ac6841f92612f6c2f557c97afd450db8d46e205e5",
+    "gate-turn.png": "7849d937734ba64c958500e4c518e352d648ba3c4f1b5e96a783a51273247cdb",
+    "mart-blocked-trace.tsv": "0c4c5b84b62ffd9d1a5ec209ffc31741e4869eb892632c1d9081a4956cfb20ee",
+    "mart-blocked.png": "5f4a732c6daad6a9282de1e0143771b1ef4ac7857f6bb6f82f4c71a7c76ece25",
+    "mart-dialogue.png": "72fbc6b0d0134db576ae5f433e14f041dcb379c32f5585925f933d785ea579cb",
+    "mart-outside.png": "51b8d023c9267b5facffa4957ed3e1fb1c00216a1df8e3578a0397047046c9d1",
+    "mart-trace.tsv": "617ce19223a169cac6f0888503758a4a753e81685a3a3d20fc5a84b7d200dc6e",
+    "results.json": "60db42421c1c59de4818ce934609d42527d7287d3b01ca230cdb311ac8e64c62",
+    "saved-center.png": "9dd53b1bef093da72c3f830f93227aeea2dcd56c0c6fb8d3958dce607045ec32"
+  },
+  "limits": [
+    "Cold SkyEmu host-process restart is not validated; save check uses in-game flash save and GBA soft reset/Continue.",
+    "Offscreen world movement remains driven by map transitions, not elapsed wall time.",
+    "No Forest traversal or healing/purchase actions.",
+    "Runtime interior save/Continue covers Center dwell only; Bag and approach/exit saves were reviewed in code."
+  ],
+  "review": "Independent critic reviewed frozen source, all five final result files, and representative final PNGs: no actionable findings. All three visible indoor visits, dialogue pause, actor-driven exit and outdoor follow accepted; direction changes are trace-backed. Root independently inspected final images and verified source hashes. Only Center dwell was runtime save/Continue tested; Bag and mid-walk/exit restoration were source-reviewed."
+}

@@ -364,3 +364,92 @@ object slot and sprite throughout. See [results and per-frame tables](viridian-w
 [Giovanni returning into Viridian](viridian-walker-poc-seam/fixed-return-cross.png).
 Raw full-frame PNG sequences are under `/tmp/viridian-seam-final-*`; the rebuilt
 normal ROM remains `game/pokewayfarer.gba`.
+
+### Followable indoor stops
+
+The Forest south gate is now a visible stop. Giovanni walks to `(7,5)`, pauses
+for about five seconds, turns south, and walks back through the Route 2 door.
+His return itinerary visits Viridian's Pokémon Center and Poké Mart in the same
+way, at `(6,5)` and `(5,5)`, before continuing to Route 1 and back north. The
+initial green-strip/Route 2 walk is retained. He does not traverse the Forest,
+heal Pokémon, or buy items in this POC.
+
+The changes are in `viridian_walker_poc.c/.h`, `viridian_walker_world.c/.h`,
+the three interiors' `map.json` and `scripts.inc`, and the SkyEmu verifier.
+Each interior adds one hidden Giovanni object template and goal dialogue.
+The existing POC switch still controls actor/world code; templates remain
+hidden when disabled. No map tile binaries changed. The follower stays disabled.
+
+Destination map now encodes the loop's next stop: gate → Center → Mart →
+Route 1 → gate. Position, goal, state, and remaining pause fit in the existing
+**12-byte saved record**, with no save-version change. A pause unit represents
+two active field frames. The local actor restores its indoor approach, pause,
+or exit goal after a reload. Off-screen progress still uses map-transition
+heartbeats, consuming 75 pause units per eligible transition. Leaving a building
+ahead of Giovanni can therefore abstract away his remaining unseen walk;
+there is no continuous off-screen clock.
+
+Door transitions needed two specific fixes. Fresh spawning waits until player
+controls unlock, so the engine's forced door step can finish. Outdoor return
+positions are one tile east of the player's landing: Route 2 `(6,52)`, Center
+`(31,37)`, and Mart `(41,28)`. Recovery checks occupancy before placement.
+The earlier gate-return coordinate in this report is superseded by `(6,52)`.
+Indoor searches retry the same goal with a 30-frame delay when blocked, rather
+than silently skipping the visit or despawning at an occupied exit.
+
+Testing also exposed a real dialogue bug: `faceplayer` unfreezes its object as
+part of a held movement, so testing only the object's `frozen` bit let the pause
+timer continue. The POC now suspends its AI while player field controls are
+locked; engine sprite callbacks still finish held animations. All three final
+dialogue checks retain identical saved world bytes over 120 locked frames.
+
+Both builds pass. Static memory remains **249,564 EWRAM / 25,644 IWRAM bytes**
+for the playable ROM and **255,472 / 25,652** for E2E: no increase from the seam
+fix. The single **11,200-byte BFS heap workspace** is reused indoors. Searches
+remain capped at eight expansions per update. Across the final recorded runs,
+the largest observed slice was **144 scanlines**, approximately **10.57 ms /
+0.63 GBA frame**; the outbound Route 2 search recorded 413 nodes and 64 elapsed
+VBlank frames. These are observations, not worst-case guarantees. The normal
+ROM uses 32,096,024 bytes before padding.
+
+Final SkyEmu validation passed on frozen source and matching ROM/symbols:
+
+- Gate: follow inside, visible approach/pause/dialogue/turn/exit, follow outside,
+  and observe Giovanni moving again on Route 2.
+- Center and Mart: follow both visits and both exits, with outdoor movement
+  continuing toward the next destination. During a **360-frame** Mart doorway
+  blockage, Giovanni stayed visible inside and searches increased from 8 to 17;
+  clearing the doorway let him leave normally.
+- Save indoors: use the real Save menu, GBA reset, and Continue. Flash reload
+  restores the exact record `000c010c05011e06050e9200`; Giovanni reappears at the
+  Center stop with the remaining pause, which resumes ticking.
+- Seam regressions: immediate following with a return crossing, plus Giovanni's
+  southward return while the player crosses first. The respective 201- and
+  118-frame recordings report no visibility gap, duplicate, or position jump.
+
+Reproduce with the build commands above and `verify.py --phase2 interior-gate`,
+`--phase2 interior-city`, and `--phase2 interior-save`, each with explicit
+`--rom`, `--symbols`, and a separate `--output` directory. The existing
+`--phase2 seam --seam-follow prompt --seam-bounce` and `--phase2 seam-return`
+cover the borders. These use fresh games and real controller input, without
+test warps or memory writes. The gate approach avoids Route 2 grass because
+wild encounters can otherwise interrupt the test player's walk. Cold emulator
+process restart remains outside the save claim, as explained above.
+The indoor save check covers the Center pause; Bag return and saves during the
+approach or exit were reviewed in code, not separately exercised in SkyEmu.
+
+[Results and compact traces](viridian-walker-poc-interiors/results.json),
+[source/build hashes](viridian-walker-poc-interiors/validation.json),
+[gate turn](viridian-walker-poc-interiors/gate-turn.png),
+[Center dialogue](viridian-walker-poc-interiors/center-dialogue.png),
+[Mart blockage](viridian-walker-poc-interiors/mart-blocked.png), and
+[restored indoor actor](viridian-walker-poc-interiors/saved-center.png)
+retain the evidence. Full raw runs are in `/tmp/viridian-interiors/final-*`.
+The playable build is `game/pokewayfarer.gba`.
+
+**Verdict:** followable indoor haunts are viable with the same small actor and
+search budget. The main remaining scaling risks are authoring valid indoor
+spots and door approaches, arbitrating cramped entrances for several actors,
+and replacing the transition-driven off-screen timing with the intended world
+schedule. The current stops and return offsets are deliberately limited to
+these three buildings.

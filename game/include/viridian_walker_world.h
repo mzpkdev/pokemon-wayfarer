@@ -66,6 +66,8 @@ void ViridianWorld_ActorMoved(u8 x, u8 y, u8 goal);
 void ViridianWorld_ActorMovedAcrossSeam(u8 x, u8 y, u8 goal);
 void ViridianWorld_ActorEnteredPlayerMapFromProxy(u16 toMap, u8 arrival, u8 crossing, u8 x, u8 y);
 void ViridianWorld_ActorAtSpot(u8 x, u8 y, u8 goal);
+void ViridianWorld_ActorAtInteriorSpot(u8 x, u8 y, u8 goal);
+void ViridianWorld_InteriorTick(void);
 void ViridianWorld_ActorCrossedExit(u16 toMap, u8 arrival, u8 crossing, u8 x, u8 y);
 void ViridianWorld_ActorInside(u16 interiorMap);
 void ViridianWorld_ActorReturnedFromDoor(u16 outdoorMap, u8 x, u8 y);

@@ -1,6 +1,28 @@
 ViridianCity_PokemonCenter_hns_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, ViridianCity_PokemonCenter_WalkerPocOnLoad
 	map_script MAP_SCRIPT_ON_TRANSITION, ViridianCity_PokemonCenter_OnTransition
 	.byte 0
+
+ViridianCity_PokemonCenter_WalkerPocOnLoad:
+	setflag FLAG_TEMP_6
+	end
+
+ViridianCity_PokemonCenter_EventScript_WalkerPoc::
+	lock
+	faceplayer
+	goto_if_eq VAR_TEMP_2, 15, ViridianCity_PokemonCenter_WalkerPocExit
+	msgbox ViridianCity_PokemonCenter_Text_WalkerPocSpot, MSGBOX_DEFAULT
+	goto ViridianCity_PokemonCenter_WalkerPocDone
+ViridianCity_PokemonCenter_WalkerPocExit:
+	msgbox ViridianCity_PokemonCenter_Text_WalkerPocExit, MSGBOX_DEFAULT
+ViridianCity_PokemonCenter_WalkerPocDone:
+	release
+	end
+
+ViridianCity_PokemonCenter_Text_WalkerPocSpot:
+	.string "Resting at the POKéMON CENTER!$"
+ViridianCity_PokemonCenter_Text_WalkerPocExit:
+	.string "Heading back into VIRIDIAN!$"
 
 ViridianCity_PokemonCenter_OnTransition::
 	setrespawn HEAL_LOCATION_VIRIDIAN_CITY_HNS

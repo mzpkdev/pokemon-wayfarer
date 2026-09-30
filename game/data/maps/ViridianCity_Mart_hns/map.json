@@ -66,6 +66,20 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "SootopolisCity_PokemonCenter_1F_EventScript_DoubleEdgeTutor",
       "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_VIRIDIAN_MART_WALKER_POC",
+      "graphics_id": "OBJ_EVENT_GFX_GIOVANNI_HNS",
+      "x": 4,
+      "y": 6,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "ViridianCity_Mart_EventScript_WalkerPoc",
+      "flag": "FLAG_TEMP_6"
     }
   ],
   "warp_events": [

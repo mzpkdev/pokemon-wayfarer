@@ -1,0 +1,2073 @@
+{
+  "gate": {
+    "status": "passed",
+    "raw_results": "/tmp/viridian-interiors/final-gate/results.json",
+    "evidence": {
+      "scenario": "interior-gate",
+      "fresh_rom_copy": true,
+      "startup_frames": 750,
+      "viridian": [
+        0,
+        32,
+        30,
+        37
+      ],
+      "phase2": {
+        "outbound": {
+          "fresh_world": {
+            "current_map": 32,
+            "destination_map": 5890,
+            "arrival": 0,
+            "state": 0,
+            "crossing": 0,
+            "x": 33,
+            "y": 34,
+            "goal": 0,
+            "dwell": 0,
+            "reserved": 0,
+            "raw_hex": "200002170000002122000000"
+          },
+          "fresh_debug": {
+            "heartbeats": 0,
+            "hops": 0,
+            "actor_exits": 0,
+            "from_map": 0,
+            "to_map": 0,
+            "last_arrival": 0,
+            "last_crossing": 0,
+            "last_x": 0,
+            "last_y": 0
+          },
+          "departed_to_route2": {
+            "current_map": 42,
+            "destination_map": 5890,
+            "arrival": 2,
+            "state": 0,
+            "crossing": 26,
+            "x": 10,
+            "y": 79,
+            "goal": 4,
+            "dwell": 0,
+            "reserved": 0,
+            "raw_hex": "2a00021702001a0a4f040000"
+          },
+          "frames_waiting_near_exit": 270,
+          "debug_after_exit": {
+            "heartbeats": 0,
+            "hops": 0,
+            "actor_exits": 1,
+            "from_map": 32,
+            "to_map": 42,
+            "last_arrival": 2,
+            "last_crossing": 26,
+            "last_x": 10,
+            "last_y": 79
+          },
+          "player_route2_location": [
+            0,
+            42,
+            8,
+            79
+          ],
+          "crossing_attempts": 1,
+          "first_route2_actor": {
+            "slot": 3,
+            "local_id": 13,
+            "x": 10,
+            "y": 75
+          },
+          "actor_observed_after_frames": 0,
+          "world_on_route2": {
+            "current_map": 42,
+            "destination_map": 5890,
+            "arrival": 2,
+            "state": 0,
+            "crossing": 26,
+            "x": 10,
+            "y": 75,
+            "goal": 4,
+            "dwell": 0,
+            "reserved": 0,
+            "raw_hex": "2a00021702001a0a4b040000"
+          },
+          "route2_actor_debug": {
+            "completed": 2,
+            "replans": 0,
+            "searches": 3,
+            "search_nodes": 216,
+            "search_frames": 34,
+            "max_nodes_per_frame": 8,
+            "max_slice_vblanks": 1,
+            "grass_tiles_found": 0,
+            "blocked_steps": 0,
+            "x": 17,
+            "y": 82,
+            "goal_x": 33,
+            "goal_y": 7,
+            "next_x": 33,
+            "next_y": 2,
+            "phase": 1,
+            "goal": 11,
+            "last_completed_goal": 4,
+            "used_grass_fallback": 0,
+            "max_slice_scanlines": 142,
+            "current_map": 42,
+            "local_id": 13
+          },
+          "route2_active_giovanni": [
+            {
+              "slot": 3,
+              "map_num": 42,
+              "local_id": 13,
+              "x": 10,
+              "y": 75
+            }
+          ],
+          "route2_actor_moved": {
+            "slot": 3,
+            "local_id": 13,
+            "x": 10,
+            "y": 73
+          },
+          "movement_after_frames": 60,
+          "before_gate_debug": {
+            "heartbeats": 1,
+            "hops": 0,
+            "actor_exits": 1,
+            "from_map": 32,
+            "to_map": 42,
+            "last_arrival": 2,
+            "last_crossing": 26,
+            "last_x": 10,
+            "last_y": 79
+          },
+          "gate_handoff": {
+            "frames_after_first_route2_step": 630,
+            "world": {
+              "current_map": 5890,
+              "destination_map": 3072,
+              "arrival": 5,
+              "state": 2,
+              "crossing": 6,
+              "x": 7,
+              "y": 9,
+              "goal": 12,
+              "dwell": 150,
+              "reserved": 0,
+              "raw_hex": "0217000c05020607090c9600"
+            },
+            "before_debug": {
+              "heartbeats": 1,
+              "hops": 0,
+              "actor_exits": 1,
+              "from_map": 32,
+              "to_map": 42,
+              "last_arrival": 2,
+              "last_crossing": 26,
+              "last_x": 10,
+              "last_y": 79
+            },
+            "after_debug": {
+              "heartbeats": 1,
+              "hops": 0,
+              "actor_exits": 2,
+              "from_map": 42,
+              "to_map": 5890,
+              "last_arrival": 5,
+              "last_crossing": 6,
+              "last_x": 7,
+              "last_y": 9
+            },
+            "active_giovanni": [],
+            "last_actor_cost": {
+              "completed": 3,
+              "replans": 0,
+              "searches": 3,
+              "search_nodes": 413,
+              "search_frames": 64,
+              "max_nodes_per_frame": 8,
+              "max_slice_vblanks": 1,
+              "grass_tiles_found": 0,
+              "blocked_steps": 0,
+              "x": 13,
+              "y": 58,
+              "goal_x": 13,
+              "goal_y": 59,
+              "next_x": 13,
+              "next_y": 58,
+              "phase": 0,
+              "goal": 11,
+              "last_completed_goal": 11,
+              "used_grass_fallback": 0,
+              "max_slice_scanlines": 142,
+              "current_map": 42,
+              "local_id": 13
+            }
+          }
+        },
+        "route2_path": [
+          [
+            9,
+            79
+          ],
+          [
+            9,
+            69
+          ],
+          [
+            5,
+            69
+          ],
+          [
+            5,
+            62
+          ],
+          [
+            13,
+            62
+          ],
+          [
+            13,
+            55
+          ],
+          [
+            11,
+            55
+          ],
+          [
+            11,
+            54
+          ],
+          [
+            6,
+            54
+          ],
+          [
+            6,
+            53
+          ]
+        ],
+        "player_gate_entry": [
+          23,
+          2,
+          7,
+          9
+        ],
+        "visit": {
+          "kind": "gate",
+          "samples": 110,
+          "entry_world": {
+            "current_map": 5890,
+            "destination_map": 3072,
+            "arrival": 5,
+            "state": 2,
+            "crossing": 6,
+            "x": 7,
+            "y": 9,
+            "goal": 12,
+            "dwell": 150,
+            "reserved": 0,
+            "raw_hex": "0217000c05020607090c9600"
+          },
+          "entry_actor": {
+            "slot": 1,
+            "x": 7,
+            "y": 7,
+            "local_id": 1,
+            "sprite_id": 2,
+            "facing": 2,
+            "visible": true
+          },
+          "spot_after_frames": 50,
+          "spot_actor": {
+            "slot": 1,
+            "x": 7,
+            "y": 5,
+            "local_id": 1,
+            "sprite_id": 2,
+            "facing": 2,
+            "visible": true
+          },
+          "spot_world": {
+            "current_map": 5890,
+            "destination_map": 3072,
+            "arrival": 5,
+            "state": 1,
+            "crossing": 6,
+            "x": 7,
+            "y": 5,
+            "goal": 12,
+            "dwell": 147,
+            "reserved": 0,
+            "raw_hex": "0217000c05010607050c9300"
+          },
+          "park_path": [
+            [
+              7,
+              8
+            ],
+            [
+              7,
+              6
+            ],
+            [
+              6,
+              6
+            ],
+            [
+              6,
+              5
+            ]
+          ],
+          "talk_lock_after_frames": 0,
+          "talk_world_before_print": {
+            "current_map": 5890,
+            "destination_map": 3072,
+            "arrival": 5,
+            "state": 1,
+            "crossing": 6,
+            "x": 7,
+            "y": 5,
+            "goal": 12,
+            "dwell": 89,
+            "reserved": 0,
+            "raw_hex": "0217000c05010607050c5900"
+          },
+          "talk_world": {
+            "current_map": 5890,
+            "destination_map": 3072,
+            "arrival": 5,
+            "state": 1,
+            "crossing": 6,
+            "x": 7,
+            "y": 5,
+            "goal": 12,
+            "dwell": 89,
+            "reserved": 0,
+            "raw_hex": "0217000c05010607050c5900"
+          },
+          "talk_dismiss_presses": 1,
+          "wait_path": [
+            [
+              6,
+              8
+            ]
+          ],
+          "turn": {
+            "frame": 156,
+            "actor": {
+              "slot": 1,
+              "x": 7,
+              "y": 5,
+              "local_id": 1,
+              "sprite_id": 2,
+              "facing": 1,
+              "visible": true
+            },
+            "walker": {
+              "completed": 4,
+              "replans": 0,
+              "searches": 4,
+              "search_nodes": 12,
+              "search_frames": 3,
+              "max_nodes_per_frame": 8,
+              "max_slice_vblanks": 1,
+              "grass_tiles_found": 0,
+              "blocked_steps": 0,
+              "x": 14,
+              "y": 12,
+              "goal_x": 14,
+              "goal_y": 12,
+              "next_x": 14,
+              "next_y": 12,
+              "phase": 3,
+              "goal": 12,
+              "last_completed_goal": 12,
+              "used_grass_fallback": 0,
+              "max_slice_scanlines": 142,
+              "current_map": 5890,
+              "local_id": 1
+            },
+            "world": {
+              "current_map": 5890,
+              "destination_map": 3072,
+              "arrival": 5,
+              "state": 1,
+              "crossing": 6,
+              "x": 7,
+              "y": 5,
+              "goal": 12,
+              "dwell": 0,
+              "reserved": 0,
+              "raw_hex": "0217000c05010607050c0000"
+            }
+          },
+          "outside_world": {
+            "current_map": 42,
+            "destination_map": 3072,
+            "arrival": 5,
+            "state": 0,
+            "crossing": 6,
+            "x": 6,
+            "y": 52,
+            "goal": 13,
+            "dwell": 0,
+            "reserved": 0,
+            "raw_hex": "2a00000c05000606340d0000"
+          },
+          "outside_debug": {
+            "heartbeats": 2,
+            "hops": 0,
+            "actor_exits": 3,
+            "from_map": 5890,
+            "to_map": 42,
+            "last_arrival": 5,
+            "last_crossing": 6,
+            "last_x": 6,
+            "last_y": 52
+          },
+          "exit_after_frames": 226,
+          "player_return": [
+            0,
+            42,
+            5,
+            51
+          ],
+          "outdoor_actor": {
+            "slot": 2,
+            "local_id": 13,
+            "x": 6,
+            "y": 52
+          },
+          "outdoor_debug": {
+            "completed": 5,
+            "replans": 0,
+            "searches": 6,
+            "search_nodes": 176,
+            "search_frames": 23,
+            "max_nodes_per_frame": 8,
+            "max_slice_vblanks": 1,
+            "grass_tiles_found": 0,
+            "blocked_steps": 0,
+            "x": 13,
+            "y": 59,
+            "goal_x": 14,
+            "goal_y": 15,
+            "next_x": 14,
+            "next_y": 16,
+            "phase": 1,
+            "goal": 10,
+            "last_completed_goal": 13,
+            "used_grass_fallback": 0,
+            "max_slice_scanlines": 144,
+            "current_map": 42,
+            "local_id": 13
+          },
+          "outdoor_actor_moved": {
+            "slot": 2,
+            "local_id": 13,
+            "x": 6,
+            "y": 53
+          },
+          "outdoor_movement_after_frames": 40
+        }
+      }
+    }
+  },
+  "city": {
+    "status": "passed",
+    "raw_results": "/tmp/viridian-interiors/final-city/results.json",
+    "evidence": {
+      "scenario": "interior-city",
+      "fresh_rom_copy": true,
+      "startup_frames": 750,
+      "viridian": [
+        0,
+        32,
+        30,
+        37
+      ],
+      "phase2": {
+        "round_trip": {
+          "fresh_world": {
+            "current_map": 32,
+            "destination_map": 5890,
+            "arrival": 0,
+            "state": 0,
+            "crossing": 0,
+            "x": 33,
+            "y": 34,
+            "goal": 0,
+            "dwell": 0,
+            "reserved": 0,
+            "raw_hex": "200002170000002122000000"
+          },
+          "fresh_debug": {
+            "heartbeats": 0,
+            "hops": 0,
+            "actor_exits": 0,
+            "from_map": 0,
+            "to_map": 0,
+            "last_arrival": 0,
+            "last_crossing": 0,
+            "last_x": 0,
+            "last_y": 0
+          },
+          "heartbeats": [
+            {
+              "transition": "enter_center",
+              "location": [
+                12,
+                0,
+                7,
+                8
+              ],
+              "world": {
+                "current_map": 5890,
+                "destination_map": 3072,
+                "arrival": 5,
+                "state": 2,
+                "crossing": 6,
+                "x": 7,
+                "y": 9,
+                "goal": 12,
+                "dwell": 150,
+                "reserved": 0,
+                "raw_hex": "0217000c05020607090c9600"
+              },
+              "world_debug": {
+                "heartbeats": 1,
+                "hops": 1,
+                "actor_exits": 1,
+                "from_map": 42,
+                "to_map": 5890,
+                "last_arrival": 5,
+                "last_crossing": 6,
+                "last_x": 7,
+                "last_y": 9
+              }
+            },
+            {
+              "transition": "return_viridian",
+              "location": [
+                0,
+                32,
+                30,
+                37
+              ],
+              "world": {
+                "current_map": 5890,
+                "destination_map": 3072,
+                "arrival": 5,
+                "state": 2,
+                "crossing": 6,
+                "x": 7,
+                "y": 9,
+                "goal": 12,
+                "dwell": 75,
+                "reserved": 0,
+                "raw_hex": "0217000c05020607090c4b00"
+              },
+              "world_debug": {
+                "heartbeats": 2,
+                "hops": 1,
+                "actor_exits": 1,
+                "from_map": 42,
+                "to_map": 5890,
+                "last_arrival": 5,
+                "last_crossing": 6,
+                "last_x": 7,
+                "last_y": 9
+              }
+            },
+            {
+              "transition": "enter_center",
+              "location": [
+                12,
+                0,
+                7,
+                8
+              ],
+              "world": {
+                "current_map": 42,
+                "destination_map": 3072,
+                "arrival": 5,
+                "state": 0,
+                "crossing": 7,
+                "x": 6,
+                "y": 52,
+                "goal": 12,
+                "dwell": 0,
+                "reserved": 0,
+                "raw_hex": "2a00000c05000706340c0000"
+              },
+              "world_debug": {
+                "heartbeats": 3,
+                "hops": 2,
+                "actor_exits": 1,
+                "from_map": 5890,
+                "to_map": 42,
+                "last_arrival": 5,
+                "last_crossing": 7,
+                "last_x": 6,
+                "last_y": 52
+              }
+            },
+            {
+              "transition": "return_viridian",
+              "location": [
+                0,
+                32,
+                30,
+                37
+              ],
+              "world": {
+                "current_map": 32,
+                "destination_map": 3072,
+                "arrival": 1,
+                "state": 0,
+                "crossing": 8,
+                "x": 24,
+                "y": 0,
+                "goal": 12,
+                "dwell": 0,
+                "reserved": 0,
+                "raw_hex": "2000000c01000818000c0000"
+              },
+              "world_debug": {
+                "heartbeats": 4,
+                "hops": 3,
+                "actor_exits": 1,
+                "from_map": 42,
+                "to_map": 32,
+                "last_arrival": 1,
+                "last_crossing": 8,
+                "last_x": 24,
+                "last_y": 0
+              }
+            }
+          ],
+          "left_viridian": {
+            "current_map": 42,
+            "destination_map": 5890,
+            "arrival": 2,
+            "state": 0,
+            "crossing": 26,
+            "x": 10,
+            "y": 79,
+            "goal": 4,
+            "dwell": 0,
+            "reserved": 0,
+            "raw_hex": "2a00021702001a0a4f040000"
+          },
+          "frames_until_north_exit": 960,
+          "reentered_actor": {
+            "slot": 3,
+            "local_id": 26,
+            "x": 24,
+            "y": 0
+          },
+          "reentered_world": {
+            "current_map": 32,
+            "destination_map": 3072,
+            "arrival": 1,
+            "state": 0,
+            "crossing": 8,
+            "x": 24,
+            "y": 0,
+            "goal": 12,
+            "dwell": 0,
+            "reserved": 0,
+            "raw_hex": "2000000c01000818000c0000"
+          },
+          "reentered_actor_debug": {
+            "completed": 2,
+            "replans": 0,
+            "searches": 2,
+            "search_nodes": 1001,
+            "search_frames": 137,
+            "max_nodes_per_frame": 8,
+            "max_slice_vblanks": 0,
+            "grass_tiles_found": 0,
+            "blocked_steps": 0,
+            "x": 33,
+            "y": 7,
+            "goal_x": 33,
+            "goal_y": 7,
+            "next_x": 33,
+            "next_y": 6,
+            "phase": 0,
+            "goal": 4,
+            "last_completed_goal": 4,
+            "used_grass_fallback": 0,
+            "max_slice_scanlines": 74,
+            "current_map": 32,
+            "local_id": 26
+          },
+          "reentry_observed_after_frames": 0
+        },
+        "center_handoff": {
+          "world": {
+            "current_map": 3072,
+            "destination_map": 3073,
+            "arrival": 5,
+            "state": 2,
+            "crossing": 30,
+            "x": 7,
+            "y": 8,
+            "goal": 14,
+            "dwell": 150,
+            "reserved": 0,
+            "raw_hex": "000c010c05021e07080e9600"
+          },
+          "frames": 810,
+          "before": {
+            "heartbeats": 4,
+            "hops": 3,
+            "actor_exits": 1,
+            "from_map": 42,
+            "to_map": 32,
+            "last_arrival": 1,
+            "last_crossing": 8,
+            "last_x": 24,
+            "last_y": 0
+          },
+          "after": {
+            "heartbeats": 4,
+            "hops": 3,
+            "actor_exits": 2,
+            "from_map": 32,
+            "to_map": 3072,
+            "last_arrival": 5,
+            "last_crossing": 30,
+            "last_x": 7,
+            "last_y": 8
+          }
+        },
+        "center_entry": [
+          12,
+          0,
+          7,
+          8
+        ],
+        "center_visit": {
+          "kind": "center",
+          "samples": 113,
+          "entry_world": {
+            "current_map": 3072,
+            "destination_map": 3073,
+            "arrival": 5,
+            "state": 2,
+            "crossing": 30,
+            "x": 7,
+            "y": 8,
+            "goal": 14,
+            "dwell": 150,
+            "reserved": 0,
+            "raw_hex": "000c010c05021e07080e9600"
+          },
+          "entry_actor": {
+            "slot": 6,
+            "x": 7,
+            "y": 6,
+            "local_id": 6,
+            "sprite_id": 7,
+            "facing": 2,
+            "visible": true
+          },
+          "spot_after_frames": 50,
+          "spot_actor": {
+            "slot": 6,
+            "x": 6,
+            "y": 5,
+            "local_id": 6,
+            "sprite_id": 7,
+            "facing": 3,
+            "visible": true
+          },
+          "spot_world": {
+            "current_map": 3072,
+            "destination_map": 3073,
+            "arrival": 5,
+            "state": 1,
+            "crossing": 30,
+            "x": 6,
+            "y": 5,
+            "goal": 14,
+            "dwell": 146,
+            "reserved": 0,
+            "raw_hex": "000c010c05011e06050e9200"
+          },
+          "park_path": [
+            [
+              7,
+              7
+            ],
+            [
+              7,
+              6
+            ],
+            [
+              6,
+              6
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              5,
+              5
+            ]
+          ],
+          "talk_lock_after_frames": 0,
+          "talk_world_before_print": {
+            "current_map": 3072,
+            "destination_map": 3073,
+            "arrival": 5,
+            "state": 1,
+            "crossing": 30,
+            "x": 6,
+            "y": 5,
+            "goal": 14,
+            "dwell": 91,
+            "reserved": 0,
+            "raw_hex": "000c010c05011e06050e5b00"
+          },
+          "talk_world": {
+            "current_map": 3072,
+            "destination_map": 3073,
+            "arrival": 5,
+            "state": 1,
+            "crossing": 30,
+            "x": 6,
+            "y": 5,
+            "goal": 14,
+            "dwell": 91,
+            "reserved": 0,
+            "raw_hex": "000c010c05011e06050e5b00"
+          },
+          "talk_dismiss_presses": 1,
+          "wait_path": [
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              6
+            ],
+            [
+              6,
+              7
+            ]
+          ],
+          "turn": {
+            "frame": 159,
+            "actor": {
+              "slot": 6,
+              "x": 6,
+              "y": 5,
+              "local_id": 6,
+              "sprite_id": 7,
+              "facing": 1,
+              "visible": true
+            },
+            "walker": {
+              "completed": 4,
+              "replans": 0,
+              "searches": 4,
+              "search_nodes": 13,
+              "search_frames": 3,
+              "max_nodes_per_frame": 8,
+              "max_slice_vblanks": 1,
+              "grass_tiles_found": 0,
+              "blocked_steps": 0,
+              "x": 13,
+              "y": 12,
+              "goal_x": 13,
+              "goal_y": 12,
+              "next_x": 13,
+              "next_y": 12,
+              "phase": 3,
+              "goal": 14,
+              "last_completed_goal": 14,
+              "used_grass_fallback": 0,
+              "max_slice_scanlines": 131,
+              "current_map": 3072,
+              "local_id": 6
+            },
+            "world": {
+              "current_map": 3072,
+              "destination_map": 3073,
+              "arrival": 5,
+              "state": 1,
+              "crossing": 30,
+              "x": 6,
+              "y": 5,
+              "goal": 14,
+              "dwell": 0,
+              "reserved": 0,
+              "raw_hex": "000c010c05011e06050e0000"
+            }
+          },
+          "outside_world": {
+            "current_map": 32,
+            "destination_map": 3073,
+            "arrival": 5,
+            "state": 0,
+            "crossing": 30,
+            "x": 31,
+            "y": 37,
+            "goal": 15,
+            "dwell": 0,
+            "reserved": 0,
+            "raw_hex": "2000010c05001e1f250f0000"
+          },
+          "outside_debug": {
+            "heartbeats": 5,
+            "hops": 3,
+            "actor_exits": 3,
+            "from_map": 3072,
+            "to_map": 32,
+            "last_arrival": 5,
+            "last_crossing": 30,
+            "last_x": 31,
+            "last_y": 37
+          },
+          "exit_after_frames": 229,
+          "player_return": [
+            0,
+            32,
+            30,
+            36
+          ],
+          "outdoor_actor": {
+            "slot": 3,
+            "local_id": 26,
+            "x": 31,
+            "y": 37
+          },
+          "outdoor_debug": {
+            "completed": 5,
+            "replans": 0,
+            "searches": 5,
+            "search_nodes": 13,
+            "search_frames": 4,
+            "max_nodes_per_frame": 8,
+            "max_slice_vblanks": 1,
+            "grass_tiles_found": 0,
+            "blocked_steps": 0,
+            "x": 14,
+            "y": 15,
+            "goal_x": 14,
+            "goal_y": 14,
+            "next_x": 14,
+            "next_y": 15,
+            "phase": 0,
+            "goal": 15,
+            "last_completed_goal": 15,
+            "used_grass_fallback": 0,
+            "max_slice_scanlines": 140,
+            "current_map": 32,
+            "local_id": 26
+          },
+          "outdoor_actor_moved": {
+            "slot": 3,
+            "local_id": 26,
+            "x": 32,
+            "y": 37
+          },
+          "outdoor_movement_after_frames": 60
+        },
+        "mart_approach": [
+          [
+            33,
+            37
+          ],
+          [
+            33,
+            28
+          ],
+          [
+            41,
+            28
+          ]
+        ],
+        "mart_handoff": {
+          "world": {
+            "current_map": 3073,
+            "destination_map": 41,
+            "arrival": 5,
+            "state": 2,
+            "crossing": 40,
+            "x": 4,
+            "y": 7,
+            "goal": 16,
+            "dwell": 150,
+            "reserved": 0,
+            "raw_hex": "010c29000502280407109600"
+          },
+          "frames": 0,
+          "before": {
+            "heartbeats": 6,
+            "hops": 3,
+            "actor_exits": 3,
+            "from_map": 3072,
+            "to_map": 32,
+            "last_arrival": 5,
+            "last_crossing": 30,
+            "last_x": 31,
+            "last_y": 37
+          },
+          "after": {
+            "heartbeats": 6,
+            "hops": 3,
+            "actor_exits": 4,
+            "from_map": 32,
+            "to_map": 3073,
+            "last_arrival": 5,
+            "last_crossing": 40,
+            "last_x": 4,
+            "last_y": 7
+          }
+        },
+        "mart_entry": [
+          12,
+          1,
+          4,
+          7
+        ],
+        "mart_visit": {
+          "kind": "mart",
+          "samples": 50,
+          "entry_world": {
+            "current_map": 3073,
+            "destination_map": 41,
+            "arrival": 5,
+            "state": 2,
+            "crossing": 40,
+            "x": 4,
+            "y": 7,
+            "goal": 16,
+            "dwell": 150,
+            "reserved": 0,
+            "raw_hex": "010c29000502280407109600"
+          },
+          "entry_actor": {
+            "slot": 5,
+            "x": 4,
+            "y": 5,
+            "local_id": 5,
+            "sprite_id": 6,
+            "facing": 2,
+            "visible": true
+          },
+          "spot_after_frames": 40,
+          "spot_actor": {
+            "slot": 5,
+            "x": 5,
+            "y": 5,
+            "local_id": 5,
+            "sprite_id": 6,
+            "facing": 4,
+            "visible": true
+          },
+          "spot_world": {
+            "current_map": 3073,
+            "destination_map": 41,
+            "arrival": 5,
+            "state": 1,
+            "crossing": 40,
+            "x": 5,
+            "y": 5,
+            "goal": 16,
+            "dwell": 146,
+            "reserved": 0,
+            "raw_hex": "010c29000501280505109200"
+          },
+          "park_path": [
+            [
+              4,
+              6
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              5,
+              4
+            ]
+          ],
+          "talk_lock_after_frames": 0,
+          "talk_world_before_print": {
+            "current_map": 3073,
+            "destination_map": 41,
+            "arrival": 5,
+            "state": 1,
+            "crossing": 40,
+            "x": 5,
+            "y": 5,
+            "goal": 16,
+            "dwell": 103,
+            "reserved": 0,
+            "raw_hex": "010c29000501280505106700"
+          },
+          "talk_world": {
+            "current_map": 3073,
+            "destination_map": 41,
+            "arrival": 5,
+            "state": 1,
+            "crossing": 40,
+            "x": 5,
+            "y": 5,
+            "goal": 16,
+            "dwell": 103,
+            "reserved": 0,
+            "raw_hex": "010c29000501280505106700"
+          },
+          "talk_dismiss_presses": 1,
+          "blocked_exit": {
+            "before": {
+              "completed": 7,
+              "replans": 0,
+              "searches": 8,
+              "search_nodes": 24,
+              "search_frames": 6,
+              "max_nodes_per_frame": 8,
+              "max_slice_vblanks": 1,
+              "grass_tiles_found": 0,
+              "blocked_steps": 0,
+              "x": 12,
+              "y": 12,
+              "goal_x": 12,
+              "goal_y": 12,
+              "next_x": 12,
+              "next_y": 12,
+              "phase": 1,
+              "goal": 17,
+              "last_completed_goal": 16,
+              "used_grass_fallback": 0,
+              "max_slice_scanlines": 140,
+              "current_map": 3073,
+              "local_id": 5
+            },
+            "after": {
+              "completed": 7,
+              "replans": 0,
+              "searches": 17,
+              "search_nodes": 39,
+              "search_frames": 8,
+              "max_nodes_per_frame": 8,
+              "max_slice_vblanks": 1,
+              "grass_tiles_found": 0,
+              "blocked_steps": 0,
+              "x": 12,
+              "y": 12,
+              "goal_x": 12,
+              "goal_y": 12,
+              "next_x": 12,
+              "next_y": 12,
+              "phase": 1,
+              "goal": 17,
+              "last_completed_goal": 16,
+              "used_grass_fallback": 0,
+              "max_slice_scanlines": 140,
+              "current_map": 3073,
+              "local_id": 5
+            },
+            "held_frames": 360,
+            "samples": 37
+          },
+          "turn": {
+            "frame": 0,
+            "actor": {
+              "slot": 5,
+              "x": 5,
+              "y": 5,
+              "local_id": 5,
+              "sprite_id": 6,
+              "facing": 1,
+              "visible": true
+            },
+            "walker": {
+              "completed": 7,
+              "replans": 0,
+              "searches": 18,
+              "search_nodes": 8,
+              "search_frames": 2,
+              "max_nodes_per_frame": 8,
+              "max_slice_vblanks": 1,
+              "grass_tiles_found": 0,
+              "blocked_steps": 0,
+              "x": 12,
+              "y": 12,
+              "goal_x": 11,
+              "goal_y": 13,
+              "next_x": 12,
+              "next_y": 12,
+              "phase": 2,
+              "goal": 17,
+              "last_completed_goal": 16,
+              "used_grass_fallback": 0,
+              "max_slice_scanlines": 140,
+              "current_map": 3073,
+              "local_id": 5
+            },
+            "world": {
+              "current_map": 3073,
+              "destination_map": 41,
+              "arrival": 5,
+              "state": 0,
+              "crossing": 40,
+              "x": 5,
+              "y": 5,
+              "goal": 17,
+              "dwell": 0,
+              "reserved": 0,
+              "raw_hex": "010c29000500280505110000"
+            }
+          },
+          "outside_world": {
+            "current_map": 32,
+            "destination_map": 41,
+            "arrival": 5,
+            "state": 0,
+            "crossing": 40,
+            "x": 41,
+            "y": 28,
+            "goal": 17,
+            "dwell": 0,
+            "reserved": 0,
+            "raw_hex": "20002900050028291c110000"
+          },
+          "outside_debug": {
+            "heartbeats": 7,
+            "hops": 3,
+            "actor_exits": 5,
+            "from_map": 3073,
+            "to_map": 32,
+            "last_arrival": 5,
+            "last_crossing": 40,
+            "last_x": 41,
+            "last_y": 28
+          },
+          "exit_after_frames": 49,
+          "player_return": [
+            0,
+            32,
+            40,
+            27
+          ],
+          "outdoor_actor": {
+            "slot": 3,
+            "local_id": 26,
+            "x": 41,
+            "y": 28
+          },
+          "outdoor_debug": {
+            "completed": 8,
+            "replans": 0,
+            "searches": 18,
+            "search_nodes": 8,
+            "search_frames": 2,
+            "max_nodes_per_frame": 8,
+            "max_slice_vblanks": 1,
+            "grass_tiles_found": 0,
+            "blocked_steps": 0,
+            "x": 11,
+            "y": 14,
+            "goal_x": 11,
+            "goal_y": 13,
+            "next_x": 11,
+            "next_y": 14,
+            "phase": 0,
+            "goal": 17,
+            "last_completed_goal": 17,
+            "used_grass_fallback": 0,
+            "max_slice_scanlines": 140,
+            "current_map": 32,
+            "local_id": 26
+          },
+          "outdoor_actor_moved": {
+            "slot": 3,
+            "local_id": 26,
+            "x": 41,
+            "y": 29
+          },
+          "outdoor_movement_after_frames": 100
+        }
+      }
+    }
+  },
+  "save": {
+    "status": "passed",
+    "raw_results": "/tmp/viridian-interiors/final-save/results.json",
+    "evidence": {
+      "scenario": "interior-save",
+      "fresh_rom_copy": true,
+      "startup_frames": 750,
+      "viridian": [
+        0,
+        32,
+        30,
+        37
+      ],
+      "phase2": {
+        "round_trip": {
+          "fresh_world": {
+            "current_map": 32,
+            "destination_map": 5890,
+            "arrival": 0,
+            "state": 0,
+            "crossing": 0,
+            "x": 33,
+            "y": 34,
+            "goal": 0,
+            "dwell": 0,
+            "reserved": 0,
+            "raw_hex": "200002170000002122000000"
+          },
+          "fresh_debug": {
+            "heartbeats": 0,
+            "hops": 0,
+            "actor_exits": 0,
+            "from_map": 0,
+            "to_map": 0,
+            "last_arrival": 0,
+            "last_crossing": 0,
+            "last_x": 0,
+            "last_y": 0
+          },
+          "heartbeats": [
+            {
+              "transition": "enter_center",
+              "location": [
+                12,
+                0,
+                7,
+                8
+              ],
+              "world": {
+                "current_map": 5890,
+                "destination_map": 3072,
+                "arrival": 5,
+                "state": 2,
+                "crossing": 6,
+                "x": 7,
+                "y": 9,
+                "goal": 12,
+                "dwell": 150,
+                "reserved": 0,
+                "raw_hex": "0217000c05020607090c9600"
+              },
+              "world_debug": {
+                "heartbeats": 1,
+                "hops": 1,
+                "actor_exits": 1,
+                "from_map": 42,
+                "to_map": 5890,
+                "last_arrival": 5,
+                "last_crossing": 6,
+                "last_x": 7,
+                "last_y": 9
+              }
+            },
+            {
+              "transition": "return_viridian",
+              "location": [
+                0,
+                32,
+                30,
+                37
+              ],
+              "world": {
+                "current_map": 5890,
+                "destination_map": 3072,
+                "arrival": 5,
+                "state": 2,
+                "crossing": 6,
+                "x": 7,
+                "y": 9,
+                "goal": 12,
+                "dwell": 75,
+                "reserved": 0,
+                "raw_hex": "0217000c05020607090c4b00"
+              },
+              "world_debug": {
+                "heartbeats": 2,
+                "hops": 1,
+                "actor_exits": 1,
+                "from_map": 42,
+                "to_map": 5890,
+                "last_arrival": 5,
+                "last_crossing": 6,
+                "last_x": 7,
+                "last_y": 9
+              }
+            },
+            {
+              "transition": "enter_center",
+              "location": [
+                12,
+                0,
+                7,
+                8
+              ],
+              "world": {
+                "current_map": 42,
+                "destination_map": 3072,
+                "arrival": 5,
+                "state": 0,
+                "crossing": 7,
+                "x": 6,
+                "y": 52,
+                "goal": 12,
+                "dwell": 0,
+                "reserved": 0,
+                "raw_hex": "2a00000c05000706340c0000"
+              },
+              "world_debug": {
+                "heartbeats": 3,
+                "hops": 2,
+                "actor_exits": 1,
+                "from_map": 5890,
+                "to_map": 42,
+                "last_arrival": 5,
+                "last_crossing": 7,
+                "last_x": 6,
+                "last_y": 52
+              }
+            },
+            {
+              "transition": "return_viridian",
+              "location": [
+                0,
+                32,
+                30,
+                37
+              ],
+              "world": {
+                "current_map": 32,
+                "destination_map": 3072,
+                "arrival": 1,
+                "state": 0,
+                "crossing": 8,
+                "x": 24,
+                "y": 0,
+                "goal": 12,
+                "dwell": 0,
+                "reserved": 0,
+                "raw_hex": "2000000c01000818000c0000"
+              },
+              "world_debug": {
+                "heartbeats": 4,
+                "hops": 3,
+                "actor_exits": 1,
+                "from_map": 42,
+                "to_map": 32,
+                "last_arrival": 1,
+                "last_crossing": 8,
+                "last_x": 24,
+                "last_y": 0
+              }
+            }
+          ],
+          "left_viridian": {
+            "current_map": 42,
+            "destination_map": 5890,
+            "arrival": 2,
+            "state": 0,
+            "crossing": 26,
+            "x": 10,
+            "y": 79,
+            "goal": 4,
+            "dwell": 0,
+            "reserved": 0,
+            "raw_hex": "2a00021702001a0a4f040000"
+          },
+          "frames_until_north_exit": 960,
+          "reentered_actor": {
+            "slot": 3,
+            "local_id": 26,
+            "x": 24,
+            "y": 0
+          },
+          "reentered_world": {
+            "current_map": 32,
+            "destination_map": 3072,
+            "arrival": 1,
+            "state": 0,
+            "crossing": 8,
+            "x": 24,
+            "y": 0,
+            "goal": 12,
+            "dwell": 0,
+            "reserved": 0,
+            "raw_hex": "2000000c01000818000c0000"
+          },
+          "reentered_actor_debug": {
+            "completed": 2,
+            "replans": 0,
+            "searches": 2,
+            "search_nodes": 1001,
+            "search_frames": 139,
+            "max_nodes_per_frame": 8,
+            "max_slice_vblanks": 0,
+            "grass_tiles_found": 0,
+            "blocked_steps": 0,
+            "x": 33,
+            "y": 7,
+            "goal_x": 33,
+            "goal_y": 7,
+            "next_x": 33,
+            "next_y": 6,
+            "phase": 0,
+            "goal": 4,
+            "last_completed_goal": 4,
+            "used_grass_fallback": 0,
+            "max_slice_scanlines": 74,
+            "current_map": 32,
+            "local_id": 26
+          },
+          "reentry_observed_after_frames": 0
+        },
+        "center_arrival": {
+          "current_map": 3072,
+          "destination_map": 3073,
+          "arrival": 5,
+          "state": 2,
+          "crossing": 30,
+          "x": 7,
+          "y": 8,
+          "goal": 14,
+          "dwell": 150,
+          "reserved": 0,
+          "raw_hex": "000c010c05021e07080e9600"
+        },
+        "center_entry": [
+          12,
+          0,
+          7,
+          8
+        ],
+        "spot_after_frames": 50,
+        "before_save": {
+          "current_map": 3072,
+          "destination_map": 3073,
+          "arrival": 5,
+          "state": 1,
+          "crossing": 30,
+          "x": 6,
+          "y": 5,
+          "goal": 14,
+          "dwell": 146,
+          "reserved": 0,
+          "raw_hex": "000c010c05011e06050e9200"
+        },
+        "spot_actor": {
+          "slot": 6,
+          "x": 6,
+          "y": 5,
+          "local_id": 6,
+          "sprite_id": 7,
+          "facing": 3,
+          "visible": true
+        },
+        "start_menu_actions": [
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          0,
+          0,
+          0
+        ],
+        "save_ui_a_presses": 4,
+        "after_save": {
+          "current_map": 3072,
+          "destination_map": 3073,
+          "arrival": 5,
+          "state": 1,
+          "crossing": 30,
+          "x": 6,
+          "y": 5,
+          "goal": 14,
+          "dwell": 138,
+          "reserved": 0,
+          "raw_hex": "000c010c05011e06050e8a00"
+        },
+        "save_counter": 1
+      },
+      "reload_method": "gba_soft_reset",
+      "reset": {
+        "vblank_before": 4046,
+        "vblank_after": 0,
+        "reset_observed_after_frames": 14
+      },
+      "reload": {
+        "save_status_loaded_after_frames": 240,
+        "title_world": {
+          "current_map": 3072,
+          "destination_map": 3073,
+          "arrival": 5,
+          "state": 1,
+          "crossing": 30,
+          "x": 6,
+          "y": 5,
+          "goal": 14,
+          "dwell": 146,
+          "reserved": 0,
+          "raw_hex": "000c010c05011e06050e9200"
+        },
+        "continue_after_frames": 420,
+        "continued_actor": {
+          "slot": 6,
+          "x": 6,
+          "y": 5,
+          "local_id": 6,
+          "sprite_id": 6,
+          "facing": 3,
+          "visible": true
+        },
+        "continued_location": [
+          12,
+          0,
+          7,
+          8
+        ],
+        "continued_world": {
+          "current_map": 3072,
+          "destination_map": 3073,
+          "arrival": 5,
+          "state": 1,
+          "crossing": 30,
+          "x": 6,
+          "y": 5,
+          "goal": 14,
+          "dwell": 145,
+          "reserved": 0,
+          "raw_hex": "000c010c05011e06050e9100"
+        }
+      }
+    }
+  },
+  "seam": {
+    "status": "passed",
+    "raw_results": "/tmp/viridian-interiors/final-seam/results.json",
+    "evidence": {
+      "scenario": "seam",
+      "fresh_rom_copy": true,
+      "startup_frames": 750,
+      "viridian": [
+        0,
+        32,
+        30,
+        37
+      ],
+      "phase2": {
+        "follow": "prompt",
+        "bounce_requested": true,
+        "frames_waiting_for_approach": 135,
+        "samples": 201,
+        "violations": [],
+        "departure_frame": 77,
+        "departure_visible": true,
+        "viridian_frames_after_departure": 1,
+        "crossing_frame": 101,
+        "bounce": {
+          "before_debug": {
+            "heartbeats": 1,
+            "hops": 0,
+            "actor_exits": 1,
+            "from_map": 32,
+            "to_map": 42,
+            "last_arrival": 2,
+            "last_crossing": 26,
+            "last_x": 10,
+            "last_y": 79
+          },
+          "actor_visible_before": true,
+          "start_frame": 102,
+          "down_crossing_frame": 124,
+          "up_crossing_frame": 170,
+          "after_debug": {
+            "heartbeats": 3,
+            "hops": 0,
+            "actor_exits": 1,
+            "from_map": 32,
+            "to_map": 42,
+            "last_arrival": 2,
+            "last_crossing": 26,
+            "last_x": 10,
+            "last_y": 79
+          },
+          "world": {
+            "current_map": 42,
+            "destination_map": 5890,
+            "arrival": 2,
+            "state": 0,
+            "crossing": 26,
+            "x": 10,
+            "y": 76,
+            "goal": 11,
+            "dwell": 0,
+            "reserved": 0,
+            "raw_hex": "2a00021702001a0a4c0b0000"
+          }
+        },
+        "final_location": [
+          0,
+          42,
+          8,
+          79
+        ],
+        "final_world": {
+          "current_map": 42,
+          "destination_map": 5890,
+          "arrival": 2,
+          "state": 0,
+          "crossing": 26,
+          "x": 10,
+          "y": 76,
+          "goal": 11,
+          "dwell": 0,
+          "reserved": 0,
+          "raw_hex": "2a00021702001a0a4c0b0000"
+        }
+      }
+    }
+  },
+  "return": {
+    "status": "passed",
+    "raw_results": "/tmp/viridian-interiors/final-return/results.json",
+    "evidence": {
+      "scenario": "seam-return",
+      "fresh_rom_copy": true,
+      "startup_frames": 750,
+      "viridian": [
+        0,
+        32,
+        30,
+        37
+      ],
+      "phase2": {
+        "outbound": {
+          "fresh_world": {
+            "current_map": 32,
+            "destination_map": 5890,
+            "arrival": 0,
+            "state": 0,
+            "crossing": 0,
+            "x": 33,
+            "y": 34,
+            "goal": 0,
+            "dwell": 0,
+            "reserved": 0,
+            "raw_hex": "200002170000002122000000"
+          },
+          "fresh_debug": {
+            "heartbeats": 0,
+            "hops": 0,
+            "actor_exits": 0,
+            "from_map": 0,
+            "to_map": 0,
+            "last_arrival": 0,
+            "last_crossing": 0,
+            "last_x": 0,
+            "last_y": 0
+          },
+          "departed_to_route2": {
+            "current_map": 42,
+            "destination_map": 5890,
+            "arrival": 2,
+            "state": 0,
+            "crossing": 26,
+            "x": 10,
+            "y": 79,
+            "goal": 4,
+            "dwell": 0,
+            "reserved": 0,
+            "raw_hex": "2a00021702001a0a4f040000"
+          },
+          "frames_waiting_near_exit": 270,
+          "debug_after_exit": {
+            "heartbeats": 0,
+            "hops": 0,
+            "actor_exits": 1,
+            "from_map": 32,
+            "to_map": 42,
+            "last_arrival": 2,
+            "last_crossing": 26,
+            "last_x": 10,
+            "last_y": 79
+          },
+          "player_route2_location": [
+            0,
+            42,
+            8,
+            79
+          ],
+          "crossing_attempts": 1,
+          "first_route2_actor": {
+            "slot": 3,
+            "local_id": 13,
+            "x": 10,
+            "y": 75
+          },
+          "actor_observed_after_frames": 0,
+          "world_on_route2": {
+            "current_map": 42,
+            "destination_map": 5890,
+            "arrival": 2,
+            "state": 0,
+            "crossing": 26,
+            "x": 10,
+            "y": 75,
+            "goal": 4,
+            "dwell": 0,
+            "reserved": 0,
+            "raw_hex": "2a00021702001a0a4b040000"
+          },
+          "route2_actor_debug": {
+            "completed": 2,
+            "replans": 0,
+            "searches": 3,
+            "search_nodes": 200,
+            "search_frames": 33,
+            "max_nodes_per_frame": 8,
+            "max_slice_vblanks": 1,
+            "grass_tiles_found": 0,
+            "blocked_steps": 0,
+            "x": 17,
+            "y": 82,
+            "goal_x": 33,
+            "goal_y": 7,
+            "next_x": 33,
+            "next_y": 2,
+            "phase": 1,
+            "goal": 11,
+            "last_completed_goal": 4,
+            "used_grass_fallback": 0,
+            "max_slice_scanlines": 130,
+            "current_map": 42,
+            "local_id": 13
+          },
+          "route2_active_giovanni": [
+            {
+              "slot": 3,
+              "map_num": 42,
+              "local_id": 13,
+              "x": 10,
+              "y": 75
+            }
+          ],
+          "route2_actor_moved": {
+            "slot": 3,
+            "local_id": 13,
+            "x": 10,
+            "y": 73
+          },
+          "movement_after_frames": 60,
+          "before_gate_debug": {
+            "heartbeats": 1,
+            "hops": 0,
+            "actor_exits": 1,
+            "from_map": 32,
+            "to_map": 42,
+            "last_arrival": 2,
+            "last_crossing": 26,
+            "last_x": 10,
+            "last_y": 79
+          },
+          "gate_handoff": {
+            "frames_after_first_route2_step": 630,
+            "world": {
+              "current_map": 5890,
+              "destination_map": 3072,
+              "arrival": 5,
+              "state": 2,
+              "crossing": 6,
+              "x": 7,
+              "y": 9,
+              "goal": 12,
+              "dwell": 150,
+              "reserved": 0,
+              "raw_hex": "0217000c05020607090c9600"
+            },
+            "before_debug": {
+              "heartbeats": 1,
+              "hops": 0,
+              "actor_exits": 1,
+              "from_map": 32,
+              "to_map": 42,
+              "last_arrival": 2,
+              "last_crossing": 26,
+              "last_x": 10,
+              "last_y": 79
+            },
+            "after_debug": {
+              "heartbeats": 1,
+              "hops": 0,
+              "actor_exits": 2,
+              "from_map": 42,
+              "to_map": 5890,
+              "last_arrival": 5,
+              "last_crossing": 6,
+              "last_x": 7,
+              "last_y": 9
+            },
+            "active_giovanni": [],
+            "last_actor_cost": {
+              "completed": 3,
+              "replans": 0,
+              "searches": 3,
+              "search_nodes": 413,
+              "search_frames": 63,
+              "max_nodes_per_frame": 8,
+              "max_slice_vblanks": 1,
+              "grass_tiles_found": 0,
+              "blocked_steps": 0,
+              "x": 13,
+              "y": 58,
+              "goal_x": 13,
+              "goal_y": 59,
+              "next_x": 13,
+              "next_y": 58,
+              "phase": 0,
+              "goal": 11,
+              "last_completed_goal": 11,
+              "used_grass_fallback": 0,
+              "max_slice_scanlines": 130,
+              "current_map": 42,
+              "local_id": 13
+            }
+          }
+        },
+        "heartbeats": [
+          {
+            "direction": "Down",
+            "location": [
+              0,
+              32,
+              24,
+              0
+            ],
+            "world": {
+              "current_map": 5890,
+              "destination_map": 3072,
+              "arrival": 5,
+              "state": 2,
+              "crossing": 6,
+              "x": 7,
+              "y": 9,
+              "goal": 12,
+              "dwell": 75,
+              "reserved": 0,
+              "raw_hex": "0217000c05020607090c4b00"
+            },
+            "debug": {
+              "heartbeats": 2,
+              "hops": 0,
+              "actor_exits": 2,
+              "from_map": 42,
+              "to_map": 5890,
+              "last_arrival": 5,
+              "last_crossing": 6,
+              "last_x": 7,
+              "last_y": 9
+            }
+          },
+          {
+            "direction": "Up",
+            "location": [
+              0,
+              42,
+              8,
+              79
+            ],
+            "world": {
+              "current_map": 42,
+              "destination_map": 3072,
+              "arrival": 5,
+              "state": 0,
+              "crossing": 7,
+              "x": 6,
+              "y": 52,
+              "goal": 12,
+              "dwell": 0,
+              "reserved": 0,
+              "raw_hex": "2a00000c05000706340c0000"
+            },
+            "debug": {
+              "heartbeats": 3,
+              "hops": 1,
+              "actor_exits": 2,
+              "from_map": 5890,
+              "to_map": 42,
+              "last_arrival": 5,
+              "last_crossing": 7,
+              "last_x": 6,
+              "last_y": 52
+            }
+          }
+        ],
+        "samples": 118,
+        "violations": [],
+        "return_approach_frames": 610,
+        "return_approach_actor": {
+          "slot": 2,
+          "local_id": 13,
+          "x": 9,
+          "y": 75
+        },
+        "before_return_exit_debug": {
+          "heartbeats": 3,
+          "hops": 1,
+          "actor_exits": 2,
+          "from_map": 5890,
+          "to_map": 42,
+          "last_arrival": 5,
+          "last_crossing": 7,
+          "last_x": 6,
+          "last_y": 52
+        },
+        "player_crossing_frame": 46,
+        "actor_return_frame": 88,
+        "after_return_exit_debug": {
+          "heartbeats": 4,
+          "hops": 1,
+          "actor_exits": 3,
+          "from_map": 42,
+          "to_map": 32,
+          "last_arrival": 1,
+          "last_crossing": 9,
+          "last_x": 25,
+          "last_y": 0
+        },
+        "final_location": [
+          0,
+          32,
+          24,
+          0
+        ],
+        "final_world": {
+          "current_map": 32,
+          "destination_map": 3072,
+          "arrival": 1,
+          "state": 0,
+          "crossing": 9,
+          "x": 25,
+          "y": 0,
+          "goal": 10,
+          "dwell": 0,
+          "reserved": 0,
+          "raw_hex": "2000000c01000919000a0000"
+        }
+      }
+    }
+  }
+}

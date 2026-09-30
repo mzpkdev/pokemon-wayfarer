@@ -32,6 +32,8 @@ VIRIDIAN_MAP_NUM = 32
 VIRIDIAN_MAP = 32
 ROUTE2_MAP = 42
 FOREST_GATE_MAP = (23 << 8) | 2
+CENTER_MAP = 12 << 8
+MART_MAP = (12 << 8) | 1
 MAX_READ_BYTES = 448
 MAP_OFFSET = 7
 GOALS = ("grass", "mart", "center", "route1", "route2", "route22")
@@ -40,6 +42,7 @@ GOALS = ("grass", "mart", "center", "route1", "route2", "route22")
 class SkyEmu:
     def __init__(self, port: int):
         self.url = f"http://127.0.0.1:{port}"
+        self.diagnostic_output: Path | None = None
 
     def request(self, endpoint: str, params: dict[str, str] | None = None) -> bytes:
         suffix = "?" + urllib.parse.urlencode(params) if params else ""
@@ -285,7 +288,47 @@ def move_player_straight_held(
                 return elapsed
     finally:
         client.check("/input", {direction: "0"})
+    if client.diagnostic_output is not None:
+        raw_objects = client.read(symbols["gObjectEvents"], 16 * 0x24)
+        objects = []
+        for slot in range(16):
+            raw = raw_objects[slot * 0x24:(slot + 1) * 0x24]
+            if raw[0] & 1:
+                x, y = struct.unpack_from("<hh", raw, 0x10)
+                objects.append({"slot": slot, "graphics_id": struct.unpack_from("<H", raw, 4)[0],
+                                "local_id": raw[8], "map_num": raw[9], "map_group": raw[10],
+                                "x": x - MAP_OFFSET, "y": y - MAP_OFFSET,
+                                "flags_0": raw[0], "flags_1": raw[1]})
+        diagnostic = {"direction": direction, "target_grid": target,
+                      "last_player": player, "location": read_location(client, symbols),
+                      "field_controls_locked": field_controls_locked(client, symbols),
+                      "actor": actor_snapshot(client, symbols),
+                      "world": read_world_record(client, symbols), "active_objects": objects}
+        (client.diagnostic_output / "held-movement-failure.json").write_text(
+            json.dumps(diagnostic, indent=2) + "\n")
+        client.screenshot(client.diagnostic_output / "held-movement-failure.png")
     raise RuntimeError(f"Held {direction} did not reach grid coordinate {target}: {player}")
+
+
+def walk_player_waypoints(client: SkyEmu, symbols: dict[str, int],
+                          waypoints: list[tuple[int, int]]) -> list[tuple[int, int]]:
+    """Follow a short checked route with ordinary held D-pad input."""
+    visited = []
+    for x, y in waypoints:
+        player = read_player_object(client, symbols)
+        if player is None:
+            raise RuntimeError("Player object vanished on waypoint walk")
+        px, py = player[1] - MAP_OFFSET, player[2] - MAP_OFFSET
+        if (px, py) == (x, y):
+            continue
+        if px != x and py != y:
+            raise RuntimeError(f"Waypoint {(x, y)} is not straight from {(px, py)}")
+        direction = ("Right" if x > px else "Left") if px != x else ("Down" if y > py else "Up")
+        move_player_straight_held(client, symbols, direction,
+                                  (x if px != x else y) + MAP_OFFSET, max_frames=1000)
+        client.step(18)
+        visited.append((x, y))
+    return visited
 
 
 def read_world_record(client: SkyEmu, symbols: dict[str, int]) -> dict[str, int | str]:
@@ -324,6 +367,82 @@ def read_giovanni_object(client: SkyEmu, symbols: dict[str, int], map_num: int) 
             x, y = struct.unpack_from("<hh", raw, 0x10)
             return {"slot": index, "local_id": raw[8], "x": x - MAP_OFFSET, "y": y - MAP_OFFSET}
     return None
+
+
+def read_indoor_giovanni(client: SkyEmu, symbols: dict[str, int], map_id: int) -> dict[str, int] | None:
+    """Read the active interior actor, including its facing and sprite state."""
+    actors = []
+    raw_objects = client.read(symbols["gObjectEvents"], 16 * 0x24)
+    for slot in range(16):
+        raw = raw_objects[slot * 0x24:(slot + 1) * 0x24]
+        if (not raw[0] & 1 or struct.unpack_from("<H", raw, 4)[0] != 485
+            or raw[9] != (map_id & 0xFF) or raw[10] != (map_id >> 8)):
+            continue
+        sprite_id = raw[0x23]
+        sprite = client.read(symbols["gSprites"] + sprite_id * 0x44, 0x44)
+        x, y = struct.unpack_from("<hh", raw, 0x10)
+        actors.append({"slot": slot, "x": x - MAP_OFFSET, "y": y - MAP_OFFSET,
+                       "local_id": raw[8], "sprite_id": sprite_id,
+                       "facing": struct.unpack_from("<H", raw, 0x18)[0] & 0xF,
+                       "visible": not raw[1] & 0x60 and bool(sprite[0x3E] & 1)
+                                  and not bool(sprite[0x3E] & 4)})
+    if len(actors) > 1:
+        raise RuntimeError(f"Duplicate Giovanni objects inside map {map_id:#x}: {actors}")
+    return actors[0] if actors else None
+
+
+INTERIOR = {
+    "gate": {"map": FOREST_GATE_MAP, "outside": ROUTE2_MAP,
+             "spot": (7, 5), "spot_goal": 12, "exit_goal": 13,
+             "park": (6, 5), "park_path": [(7, 8), (7, 6), (6, 6), (6, 5)],
+             "wait": (6, 8), "wait_path": [(6, 8)], "exit_approach": (7, 8)},
+    "center": {"map": CENTER_MAP, "outside": VIRIDIAN_MAP,
+               "spot": (6, 5), "spot_goal": 14, "exit_goal": 15,
+               "park": (5, 5), "park_path": [(7, 7), (7, 6), (6, 6), (5, 6), (5, 5)],
+               "wait": (6, 7), "wait_path": [(5, 6), (6, 6), (6, 7)],
+               "exit_approach": (7, 7)},
+    "mart": {"map": MART_MAP, "outside": VIRIDIAN_MAP,
+             "spot": (5, 5), "spot_goal": 16, "exit_goal": 17,
+             "park": (5, 4), "park_path": [(4, 6), (4, 4), (5, 4)],
+             "wait": (5, 6), "wait_path": [(4, 4), (4, 6), (5, 6)],
+             "exit_approach": (4, 6)},
+}
+
+
+def enter_warp_up(client: SkyEmu, symbols: dict[str, int], map_id: int,
+                  output: Path, label: str) -> tuple[int, int, int, int]:
+    """Enter the tile immediately north by real Up input."""
+    for _ in range(12):
+        client.press("Up", hold=3, release=25)
+        client.step(15)
+        location = read_location(client, symbols)
+        if location and location[:2] == (map_id >> 8, map_id & 0xFF):
+            for elapsed in range(0, 900, 10):
+                actor = read_indoor_giovanni(client, symbols, map_id)
+                callback2 = client.u32(symbols["gMain"] + 4) & ~1
+                if (actor and actor["visible"] and not field_controls_locked(client, symbols)
+                    and callback2 == (symbols["CB2_Overworld"] & ~1)):
+                    break
+                client.step(10)
+            else:
+                raise RuntimeError(f"{label} field never loaded visible Giovanni: {actor}")
+            client.screenshot(output / f"{label}-inside-entry.png")
+            return location
+    raise RuntimeError(f"Player did not enter {label}: {location}")
+
+
+def leave_warp_down(client: SkyEmu, symbols: dict[str, int], map_id: int,
+                    output: Path, label: str) -> tuple[int, int, int, int]:
+    """Leave the tile immediately south by real Down input."""
+    for _ in range(12):
+        client.press("Down", hold=3, release=25)
+        client.step(15)
+        location = read_location(client, symbols)
+        if location and location[:2] == (map_id >> 8, map_id & 0xFF):
+            wait_field_unlocked(client, symbols)
+            client.screenshot(output / f"{label}-outside-return.png")
+            return location
+    raise RuntimeError(f"Player did not leave {label}: {location}")
 
 
 def active_giovanni_objects(client: SkyEmu, symbols: dict[str, int]) -> list[dict[str, int]]:
@@ -912,6 +1031,317 @@ def phase2_linger(client: SkyEmu, symbols: dict[str, int], output: Path) -> dict
     raise RuntimeError(f"No gate round trip and Viridian re-entry in eight Center transitions: {evidence['heartbeats']}")
 
 
+def observe_indoor_visit(client: SkyEmu, symbols: dict[str, int], output: Path,
+                         kind: str, block_exit: bool = False) -> dict[str, object]:
+    """Follow a visit in the field, including dialogue and the real return warp."""
+    place = INTERIOR[kind]
+    map_id = place["map"]
+    evidence: dict[str, object] = {"kind": kind, "samples": []}
+    samples: list[dict[str, object]] = evidence["samples"]
+    if (location := read_location(client, symbols))[:2] != (map_id >> 8, map_id & 0xFF):
+        raise RuntimeError(f"{kind} observation started outside interior: {location}")
+    before = read_world_debug(client, symbols)
+    evidence["entry_world"] = read_world_record(client, symbols)
+    evidence["entry_actor"] = read_indoor_giovanni(client, symbols, map_id)
+    client.screenshot(output / f"{kind}-entry.png")
+    for elapsed in range(0, 900, 10):
+        actor = read_indoor_giovanni(client, symbols, map_id)
+        walker = actor_snapshot(client, symbols)
+        if actor and actor["visible"] and (actor["x"], actor["y"]) == place["spot"] \
+                and walker["goal"] == place["spot_goal"] and walker["phase"] == 3:
+            evidence["spot_after_frames"] = elapsed
+            evidence["spot_actor"] = actor
+            evidence["spot_world"] = read_world_record(client, symbols)
+            client.screenshot(output / f"{kind}-pause.png")
+            break
+        client.step(10)
+    else:
+        raise RuntimeError(f"Giovanni did not visibly reach {kind} spot: {actor}, {walker}")
+    if evidence["spot_world"]["state"] != 1:
+        raise RuntimeError(f"{kind} spot was not saved as AT_SPOT: {evidence['spot_world']}")
+
+    evidence["park_path"] = walk_player_waypoints(client, symbols, place["park_path"])
+    if (player := read_player_object(client, symbols))[1:] != tuple(v + MAP_OFFSET for v in place["park"]):
+        raise RuntimeError(f"Could not park beside {kind} Giovanni: {player}")
+    actor = read_indoor_giovanni(client, symbols, map_id)
+    if actor is None or (actor["x"], actor["y"]) != place["spot"]:
+        raise RuntimeError(f"Giovanni left {kind} spot before dialogue: {actor}")
+    dx, dy = actor["x"] + MAP_OFFSET - player[1], actor["y"] + MAP_OFFSET - player[2]
+    if abs(dx) + abs(dy) != 1:
+        raise RuntimeError(f"Player is not adjacent to Giovanni in {kind}: {player}, {actor}")
+    facing = "Right" if dx == 1 else "Left" if dx == -1 else "Down" if dy == 1 else "Up"
+    client.press(facing, hold=2, release=2)
+    client.press("A", hold=2, release=12)
+    for elapsed in range(0, 120, 5):
+        if field_controls_locked(client, symbols):
+            evidence["talk_lock_after_frames"] = elapsed
+            break
+        client.step(5)
+    else:
+        raise RuntimeError(f"Talking to {kind} Giovanni did not lock field controls")
+    evidence["talk_world_before_print"] = read_world_record(client, symbols)
+    client.step(120)
+    evidence["talk_world"] = read_world_record(client, symbols)
+    if evidence["talk_world"]["raw_hex"] != evidence["talk_world_before_print"]["raw_hex"]:
+        raise RuntimeError(f"{kind} dwell advanced during locked dialogue: "
+                           f"{evidence['talk_world_before_print']}, {evidence['talk_world']}")
+    client.screenshot(output / f"{kind}-dialogue.png")
+    for presses in range(1, 5):
+        client.press("B", hold=2, release=22)
+        if not field_controls_locked(client, symbols):
+            evidence["talk_dismiss_presses"] = presses
+            break
+    else:
+        raise RuntimeError(f"{kind} dialogue did not close after four B presses")
+    client.screenshot(output / f"{kind}-dialogue-closed.png")
+
+    if block_exit:
+        # The Mart exit approach (4,6) is one tile left of the safe wait (5,6).
+        walk_player_waypoints(client, symbols, [(4, 4), (4, 6)])
+        for elapsed in range(0, 720, 10):
+            walker = actor_snapshot(client, symbols)
+            world = read_world_record(client, symbols)
+            if world["current_map"] != map_id:
+                raise RuntimeError(f"{kind} Giovanni escaped through occupied exit: {world}")
+            if walker["goal"] == place["exit_goal"]:
+                break
+            client.step(10)
+        else:
+            raise RuntimeError(f"Giovanni did not target the occupied {kind} exit: {walker}")
+        blocked_before = actor_snapshot(client, symbols)
+        blocked_trace = []
+        for held in range(0, 370, 10):
+            walker = actor_snapshot(client, symbols)
+            world = read_world_record(client, symbols)
+            actor = read_indoor_giovanni(client, symbols, map_id)
+            player = read_player_object(client, symbols)
+            blocked_trace.append({"held_frames": held, "walker": walker,
+                                  "world": world, "actor": actor})
+            if (world["current_map"] != map_id or actor is None or not actor["visible"]
+                or (actor["x"], actor["y"]) == (4, 6)
+                or player[1:] != (4 + MAP_OFFSET, 6 + MAP_OFFSET)):
+                raise RuntimeError(f"Occupied {kind} exit lost actor/player continuity: {blocked_trace[-1]}")
+            if held < 360:
+                client.step(10)
+        blocked_after = actor_snapshot(client, symbols)
+        evidence["blocked_exit"] = {"before": blocked_before, "after": blocked_after,
+                                     "held_frames": 360, "samples": blocked_trace}
+        (output / f"{kind}-blocked-exit-trace.json").write_text(
+            json.dumps(evidence["blocked_exit"], indent=2) + "\n")
+        client.screenshot(output / f"{kind}-blocked-exit.png")
+        if (blocked_after["searches"] - blocked_before["searches"] < 3
+            and blocked_after["replans"] - blocked_before["replans"] < 3):
+            raise RuntimeError(f"Giovanni did not retry occupied {kind} exit over 360 frames: "
+                               f"{blocked_before}, {blocked_after}")
+        walk_player_waypoints(client, symbols, [(5, 6)])
+    else:
+        # The park tile is already off the exit path. Walking to the door now
+        # can spend the remaining dwell and miss the one-frame south turn.
+        evidence["wait_path"] = []
+
+    south_at_spot = False
+    elapsed = 0
+    while elapsed <= 1000:
+        actor = read_indoor_giovanni(client, symbols, map_id)
+        walker = actor_snapshot(client, symbols)
+        world = read_world_record(client, symbols)
+        sample = {"frame": elapsed, "actor": actor, "walker": walker, "world": world}
+        samples.append(sample)
+        if actor and (actor["x"], actor["y"]) == place["spot"] and actor["facing"] == 1 \
+                and world["dwell"] == 0:
+            south_at_spot = True
+            if "turn" not in evidence:
+                evidence["turn"] = sample
+                client.screenshot(output / f"{kind}-turn-south.png")
+        if world["current_map"] == place["outside"]:
+            after = read_world_debug(client, symbols)
+            evidence["outside_world"] = world
+            evidence["outside_debug"] = after
+            evidence["exit_after_frames"] = elapsed
+            client.screenshot(output / f"{kind}-giovanni-exit.png")
+            (output / f"{kind}-indoor-trace.json").write_text(json.dumps(evidence, indent=2) + "\n")
+            if after["actor_exits"] <= before["actor_exits"]:
+                raise RuntimeError(f"{kind} exit was not performed by the local actor: {before}, {after}")
+            if after["heartbeats"] != before["heartbeats"]:
+                raise RuntimeError(f"{kind} exit was advanced by off-screen heartbeat: {before}, {after}")
+            if not south_at_spot and not block_exit:
+                raise RuntimeError(f"Giovanni did not visibly turn south before leaving {kind}")
+            break
+        step = 1 if world["dwell"] <= 15 or walker["goal"] == place["exit_goal"] else 10
+        client.step(step)
+        elapsed += step
+    else:
+        (output / f"{kind}-indoor-trace.json").write_text(json.dumps(evidence, indent=2) + "\n")
+        raise RuntimeError(f"Giovanni did not leave {kind} after his indoor activity: {samples[-1]}")
+    if read_indoor_giovanni(client, symbols, map_id) is not None:
+        raise RuntimeError(f"Giovanni remained inside {kind} after world exit")
+    if not block_exit:
+        evidence["wait_path"] = walk_player_waypoints(client, symbols, place["wait_path"])
+    walk_player_waypoints(client, symbols, [place["exit_approach"]])
+    evidence["player_return"] = leave_warp_down(client, symbols, place["outside"], output, kind)
+    for elapsed in range(0, 300, 10):
+        actor = read_giovanni_object(client, symbols, place["outside"] & 0xFF)
+        if actor:
+            evidence["outdoor_actor"] = actor
+            evidence["outdoor_debug"] = actor_snapshot(client, symbols)
+            client.screenshot(output / f"{kind}-outdoor-follow.png")
+            break
+        client.step(10)
+    else:
+        raise RuntimeError(f"Giovanni was absent outdoors after following out of {kind}")
+    if evidence["outdoor_debug"]["current_map"] != place["outside"]:
+        raise RuntimeError(f"{kind} outdoor actor/world map mismatch: {evidence['outdoor_debug']}")
+    for elapsed in range(0, 480, 20):
+        client.step(20)
+        moved = read_giovanni_object(client, symbols, place["outside"] & 0xFF)
+        if moved and (moved["x"], moved["y"]) != (evidence["outdoor_actor"]["x"],
+                                                    evidence["outdoor_actor"]["y"]):
+            evidence["outdoor_actor_moved"] = moved
+            evidence["outdoor_movement_after_frames"] = elapsed + 20
+            client.screenshot(output / f"{kind}-outdoor-moving.png")
+            break
+    else:
+        raise RuntimeError(f"Giovanni did not keep walking outside {kind}: {evidence['outdoor_actor']}")
+    return evidence
+
+
+def phase2_interior_gate(client: SkyEmu, symbols: dict[str, int], output: Path) -> dict[str, object]:
+    """Follow the first Route2 gate visit with real field controls."""
+    evidence: dict[str, object] = {"outbound": phase2_follow(client, symbols, output)}
+    # This edge route avoids every Route2 encounter tile. The shorter central
+    # path crosses tall grass and can interrupt held movement with a battle.
+    evidence["route2_path"] = walk_player_waypoints(client, symbols,
+        [(8, 79), (9, 79), (9, 69), (5, 69), (5, 62), (13, 62),
+         (13, 55), (11, 55), (11, 54), (6, 54), (6, 53)])
+    # Both adjacent door tiles lead to the same gate. Enter on the nearer side;
+    # the actor is already inside, so neither outdoor tile is occupied.
+    walk_player_waypoints(client, symbols, [(6, 52)])
+    evidence["player_gate_entry"] = enter_warp_up(client, symbols, FOREST_GATE_MAP,
+                                                    output, "gate")
+    evidence["visit"] = observe_indoor_visit(client, symbols, output, "gate")
+    return evidence
+
+
+def phase2_interior_city(client: SkyEmu, symbols: dict[str, int], output: Path) -> dict[str, object]:
+    """Join the return journey through the Center and Mart on one fresh game."""
+    evidence: dict[str, object] = {"round_trip": phase2_linger(client, symbols, output)}
+    # Move aside before Giovanni arrives at the Center's outdoor door tile.
+    walk_player_waypoints(client, symbols, [(29, 37)])
+    center_before = read_world_debug(client, symbols)
+    center_world, frames = wait_for_world_map(client, symbols, CENTER_MAP, 3000)
+    center_after = read_world_debug(client, symbols)
+    evidence["center_handoff"] = {"world": center_world, "frames": frames,
+                                  "before": center_before, "after": center_after}
+    if center_after["actor_exits"] <= center_before["actor_exits"] \
+            or center_after["heartbeats"] != center_before["heartbeats"]:
+        raise RuntimeError(f"Center entry did not come from Giovanni's local walk: {evidence['center_handoff']}")
+    walk_player_waypoints(client, symbols, [(30, 37)])
+    evidence["center_entry"] = enter_warp_up(client, symbols, CENTER_MAP, output, "center")
+    evidence["center_visit"] = observe_indoor_visit(client, symbols, output, "center")
+
+    # Giovanni returns east of the forced Center landing. The player takes a
+    # parallel road to the Mart and waits one tile east of its door approach.
+    mart_before = read_world_debug(client, symbols)
+    evidence["mart_approach"] = walk_player_waypoints(client, symbols,
+                                                        [(33, 37), (33, 28), (41, 28)])
+    mart_world, frames = wait_for_world_map(client, symbols, MART_MAP, 3000)
+    mart_after = read_world_debug(client, symbols)
+    evidence["mart_handoff"] = {"world": mart_world, "frames": frames,
+                                "before": mart_before, "after": mart_after}
+    if mart_after["actor_exits"] <= mart_before["actor_exits"] \
+            or mart_after["heartbeats"] != mart_before["heartbeats"]:
+        raise RuntimeError(f"Mart entry did not come from Giovanni's local walk: {evidence['mart_handoff']}")
+    walk_player_waypoints(client, symbols, [(40, 28)])
+    evidence["mart_entry"] = enter_warp_up(client, symbols, MART_MAP, output, "mart")
+    evidence["mart_visit"] = observe_indoor_visit(client, symbols, output, "mart", block_exit=True)
+    return evidence
+
+
+def phase2_interior_save_before(client: SkyEmu, symbols: dict[str, int],
+                                output: Path) -> dict[str, object]:
+    """Save through the real menu while Giovanni is paused inside the Center."""
+    evidence: dict[str, object] = {"round_trip": phase2_linger(client, symbols, output)}
+    walk_player_waypoints(client, symbols, [(29, 37)])
+    evidence["center_arrival"] = wait_for_world_map(client, symbols, CENTER_MAP, 3000)[0]
+    walk_player_waypoints(client, symbols, [(30, 37)])
+    evidence["center_entry"] = enter_warp_up(client, symbols, CENTER_MAP, output, "inside-save")
+    for elapsed in range(0, 900, 10):
+        actor = read_indoor_giovanni(client, symbols, CENTER_MAP)
+        walker = actor_snapshot(client, symbols)
+        world = read_world_record(client, symbols)
+        if (actor and actor["visible"] and (actor["x"], actor["y"]) == (6, 5)
+            and walker["goal"] == 14 and walker["phase"] == 3 and world["state"] == 1):
+            evidence["spot_after_frames"] = elapsed
+            break
+        client.step(10)
+    else:
+        raise RuntimeError(f"Giovanni did not pause at Center before save: {actor}, {walker}, {world}")
+    evidence["before_save"] = world
+    evidence["spot_actor"] = actor
+    client.screenshot(output / "inside-save-center-spot.png")
+    evidence["start_menu_actions"] = select_start_action(client, symbols, 5)
+    client.step(120)
+    client.screenshot(output / "inside-save-confirmation.png")
+    for attempt in range(12):
+        if not field_controls_locked(client, symbols):
+            evidence["save_ui_a_presses"] = attempt
+            break
+        client.press("A", hold=3, release=90)
+    else:
+        raise RuntimeError("Indoor Save menu did not return to field after 12 A presses")
+    evidence["after_save"] = read_world_record(client, symbols)
+    evidence["save_counter"] = client.u32(symbols["gSaveCounter"])
+    if evidence["save_counter"] == 0:
+        raise RuntimeError("Indoor Save menu returned without a flash save")
+    client.screenshot(output / "inside-save-field-after-success.png")
+    return evidence
+
+
+def phase2_interior_save_after(client: SkyEmu, symbols: dict[str, int], output: Path,
+                               saved: dict[str, int | str]) -> dict[str, object]:
+    """Prove real flash bytes and the visible interior actor survive Continue."""
+    evidence: dict[str, object] = {}
+    for elapsed in range(0, 12000, 30):
+        status = client.u16(symbols["gSaveFileStatus"])
+        if status == 1:
+            evidence["save_status_loaded_after_frames"] = elapsed
+            break
+        if status == 2:
+            client.screenshot(output / "inside-save-corrupt-title.png")
+            raise RuntimeError("Indoor save reloaded as SAVE_STATUS_CORRUPT")
+        client.step(30)
+    else:
+        raise RuntimeError(f"Indoor flash save did not load (status={status})")
+    title = read_world_record(client, symbols)
+    evidence["title_world"] = title
+    if title["raw_hex"] != saved["raw_hex"]:
+        raise RuntimeError(f"Indoor saved record changed at title: saved={saved}, title={title}")
+    client.screenshot(output / "inside-save-reload-title.png")
+    for index in range(50):
+        client.press("A", hold=2, release=2)
+        client.step(56)
+        location = read_location(client, symbols)
+        actor = read_indoor_giovanni(client, symbols, CENTER_MAP)
+        callback2 = client.u32(symbols["gMain"] + 4) & ~1
+        if (location and location[:2] == (CENTER_MAP >> 8, CENTER_MAP & 0xFF)
+            and actor and actor["visible"] and not field_controls_locked(client, symbols)
+            and callback2 == (symbols["CB2_Overworld"] & ~1)):
+            evidence["continue_after_frames"] = (index + 1) * 60
+            evidence["continued_actor"] = actor
+            evidence["continued_location"] = location
+            break
+    else:
+        raise RuntimeError(f"Continue did not restore visible Center Giovanni: {location}, {actor}")
+    continued = read_world_record(client, symbols)
+    evidence["continued_world"] = continued
+    client.screenshot(output / "inside-save-continued-center.png")
+    if (continued["current_map"] != CENTER_MAP or continued["state"] != 1
+        or continued["goal"] != 14 or (continued["x"], continued["y"]) != (6, 5)
+        or not 0 < continued["dwell"] <= saved["dwell"]):
+        raise RuntimeError(f"Continue did not resume saved Center visit: {saved}, {continued}")
+    return evidence
+
+
 def select_start_action(client: SkyEmu, symbols: dict[str, int], action: int) -> list[int]:
     wait_field_unlocked(client, symbols)
     client.press("Start", hold=3, release=30)
@@ -1293,7 +1723,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--lifecycle", action="store_true",
                         help="then enter/leave Center and open/close Bag, checking walker resumes")
     parser.add_argument("--startup-only", action="store_true", help="debug startup before walker is linked")
-    parser.add_argument("--phase2", choices=("follow", "linger", "save", "seam", "seam-return"),
+    parser.add_argument("--phase2", choices=("follow", "linger", "save", "seam", "seam-return",
+                                             "interior-gate", "interior-city", "interior-save"),
                         help="run one fresh phase 2 scenario with real controls")
     parser.add_argument("--seam-follow", choices=("prompt", "delayed", "late"), default="prompt",
                         help="on seam scenario, wait 1, 60, or 160 frames before crossing")
@@ -1325,11 +1756,13 @@ def main() -> int:
     if args.phase2:
         required.update(("gSaveBlock3Ptr", "gViridianWalkerWorldSaveOffset",
                          "gViridianWalkerWorldSaveSize"))
-    if args.phase2 == "save":
+    if args.phase2 in ("save", "interior-save"):
         required.update(("gSaveFileStatus", "gSaveCounter", "gMain", "CB2_Overworld"))
-    if args.phase2 in ("seam", "seam-return"):
+    if args.phase2 in ("seam", "seam-return", "interior-gate", "interior-city", "interior-save"):
         required.update(("gSprites", "gSpriteCoordOffsetX", "gSpriteCoordOffsetY",
                          "gViridianWalkerWorldDebug"))
+    if args.phase2 in ("interior-gate", "interior-city", "interior-save"):
+        required.update(("gMain", "CB2_Overworld"))
     if missing := sorted(required - symbols.keys()):
         raise RuntimeError(f"symbol file lacks {', '.join(missing)}")
     with tempfile.TemporaryDirectory(prefix="viridian-walker-skyemu-") as temp:
@@ -1342,6 +1775,7 @@ def main() -> int:
                                      "fresh_rom_copy": True}
         try:
             with skyemu_session(args.skyemu, rom, temp_dir / "xdg", log_path) as client:
+                client.diagnostic_output = args.output
                 frame = boot_new_game(client, symbols, args.output, args.startup_only)
                 result.update({"startup_frames": frame, "viridian": read_location(client, symbols)})
                 if args.phase2 == "follow":
@@ -1360,6 +1794,16 @@ def main() -> int:
                                                     args.seam_follow, args.seam_bounce)
                 elif args.phase2 == "seam-return":
                     result["phase2"] = phase2_seam_return(client, symbols, args.output)
+                elif args.phase2 == "interior-gate":
+                    result["phase2"] = phase2_interior_gate(client, symbols, args.output)
+                elif args.phase2 == "interior-city":
+                    result["phase2"] = phase2_interior_city(client, symbols, args.output)
+                elif args.phase2 == "interior-save":
+                    result["phase2"] = phase2_interior_save_before(client, symbols, args.output)
+                    result["reload_method"] = "gba_soft_reset"
+                    result["reset"] = gba_soft_reset(client, symbols)
+                    result["reload"] = phase2_interior_save_after(client, symbols, args.output,
+                                                                   result["phase2"]["before_save"])
                 elif not args.startup_only:
                     result.update(run_walker(client, symbols, args.output, args.max_frames,
                                              args.min_goals))
