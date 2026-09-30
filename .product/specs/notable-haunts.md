@@ -205,14 +205,21 @@ when the talk starts, and never the score or the events behind it.
 
 | Stage | Greeting |
 | --- | --- |
-| Stranger | `MEET`, or `HEARD` when the player has a **reputation** with them. |
+| Stranger | `MEET`, or `HEARD` when the player's **fame** reaches them. |
 | Met | `AGAIN`. |
 | Friend | `HELLO`. |
 | Close | `CLOSE`. |
 
-A **reputation** means the player holds a badge from the trainer's home
-region, reigns as champion at any [league](leagues.md), or is a
-[Master](sevii-masters.md#master). It only changes a Stranger's greeting.
+The player's **fame** reaches a trainer when the player's TR is at least
+`min(80, their TR − 10)`, or the player reigns as champion at any
+[league](leagues.md) or is a [Master](sevii-masters.md#master). TR 80 is
+where every league knows the player
+([qualifying](leagues.md#qualifying)), so from there every stranger has
+heard of them; below it, a trainer notices the player once the player's TR
+comes within 10 of their own, read at the moment of the meeting. Titles
+count because league wins give no TR. Fame needs no saved data and only
+changes a Stranger's greeting: `HEARD` is one line per trainer, with no
+levels, since it plays at most once per trainer.
 
 **Gym gate.** Separate from friendship: a trainer whose first fight belongs
 to their Gym, story, or league (their home region is the haunt's region) and
@@ -510,9 +517,9 @@ rooftop, so Giovanni takes it; at world progress 40 Brock, Giovanni, and
 Misty are placed before the cave's turn, and Will takes it (his tie with
 Drake goes to catalog order).
 
-**Brock, a Stranger** (world progress 30, the player's three badges are all
-from Hoenn, so no reputation; Brock is unbeaten at Pewter, so the Gym gate
-holds):
+**Brock, a Stranger whose fame hasn't reached him** (if he stood here at
+world progress 10: the player's TR 10 is below `min(80, 30 − 10) = 20`;
+Brock is unbeaten at Pewter, so the Gym gate holds):
 
 ```text
 BROCK: I'm BROCK. I train Rock types, and I cook for them    MEET
@@ -524,8 +531,9 @@ BROCK: Take care! And keep your POKéMON well fed!             BYE
 
 The talk adds 1 point: Brock is now Met.
 
-**Brock, a Stranger with a reputation** (the same, but the player holds a
-Kanto badge, so `HEARD` replaces `MEET`):
+**Brock, a Stranger who has heard of the player** (world progress 30, a
+first meeting: the player's TR 30 reaches `min(80, 39 − 10) = 29`, so
+`HEARD` replaces `MEET`):
 
 ```text
 BROCK: So you're {PLAYER}? Word's out! Have you eaten yet?    HEARD
@@ -607,12 +615,13 @@ Back at the cave, **Chat** gives "ONIX gets fussy if I burn the rice. So do
 my little siblings." (`QUIRK`), and **Bye** gives "Take care! And keep your
 POKéMON well fed!"
 
-**Giovanni, a Stranger with a reputation** (world progress 10, before his
-Viridian battle, first meeting; the player holds a Kanto badge):
+**Giovanni, a Stranger** (world progress 10, before his Viridian battle,
+first meeting: the player's TR 10 is below `min(80, 24 − 10) = 14`, so he
+has not heard of them):
 
 ```text
-GIOVANNI: So. You are {PLAYER}. I have heard your name.       HEARD
-          Often.
+GIOVANNI: I am GIOVANNI. Remember the name. Others have       MEET
+          learned to.
 GIOVANNI: Earn your way through my GYM first. Then I may      NOT_YET
           notice you.
 GIOVANNI: Go. We will meet again.                             BYE
@@ -881,8 +890,9 @@ Required implementation evidence (not yet run):
    empty; accepting an event, asking a partner, and becoming a Master each
    recompute it. A walking trainer keeps their haunt until the walk ends.
 5. **Friendship beat.** The greeting follows the stage: a Stranger gets
-   `MEET`, or `HEARD` with a reputation (a badge from the trainer's home
-   region, a reign at any league, or being a Master), Met gets `AGAIN`,
+   `MEET`, or `HEARD` when the player's fame reaches them (the player's TR
+   at least `min(80, their TR − 10)`, a reign at any league, or being a
+   Master), Met gets `AGAIN`,
    Friend `HELLO`, Close `CLOSE`; a trainer whose first fight is still ahead
    adds `NOT_YET` and offers no battle at any stage; quests open at Met; the
    menu shows Battle only when the gate allows it, and Team up only at
