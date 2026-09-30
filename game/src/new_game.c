@@ -58,6 +58,10 @@
 #include "wayfarer_persistence.h"
 #include "wayfarer_origin.h"
 #include "wayfarer_appearance.h"
+#include "viridian_walker_poc.h"
+#if IS_WAYFARER && VIRIDIAN_WALKER_POC
+#include "constants/heal_locations.h"
+#endif
 
 extern const u8 EventScript_ResetAllMapFlags[];
 #if IS_FRLG
@@ -255,6 +259,10 @@ void NewGameInitData(void)
     gSaveBlock1Ptr->saveVersion = SAVE_VERSION;
     SetDefaultChallengeSettings();
     gSaveBlock3Ptr->challengeSettings = savedChallenge;
+#if IS_WAYFARER && VIRIDIAN_WALKER_POC
+    // This persistent option keeps the extra follower object slot free on every map load.
+    gSaveBlock3Ptr->challengeSettings.followerEnable = 1;
+#endif
     ClearAllMail();
     gSaveBlock2Ptr->specialSaveWarpFlags = 0;
     gSaveBlock2Ptr->gcnLinkFlags = 0;
@@ -340,6 +348,14 @@ void NewGameInitData(void)
 #endif
 #if IS_WAYFARER
     WayfarerInitializeOrigin(startingOriginId);
+#if VIRIDIAN_WALKER_POC
+    // The POC keeps normal new-game initialization but starts on Viridian's
+    // Pokémon Center sidewalk instead of running an origin opening.
+    gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation = HEAL_LOCATION_VIRIDIAN_CITY_HNS;
+    SetLastHealLocationWarp(HEAL_LOCATION_VIRIDIAN_CITY_HNS);
+    SetWarpDestination(MAP_GROUP(MAP_VIRIDIAN_CITY_HNS), MAP_NUM(MAP_VIRIDIAN_CITY_HNS),
+                       WARP_ID_NONE, 30, 37);
+#endif
     WarpIntoMap();
 #endif
 }

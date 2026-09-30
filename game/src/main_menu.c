@@ -40,6 +40,12 @@
 #include "title_screen.h"
 #include "window.h"
 #include "mystery_gift_menu.h"
+#include "viridian_walker_poc.h"
+
+#if IS_WAYFARER && VIRIDIAN_WALKER_POC
+#include "wayfarer_appearance.h"
+#include "wayfarer_origin.h"
+#endif
 
 /*
  * Main menu state machine
@@ -1107,7 +1113,22 @@ static void Task_HandleMainMenuAPressed(u8 taskId)
                     sCurrItemAndOptionMenuCheck = 0;
                 else
                     sCurrItemAndOptionMenuCheck |= OPTION_MENU_FLAG;
+#if IS_WAYFARER && VIRIDIAN_WALKER_POC
+                // Start the walker POC with a valid Wayfarer profile, bypassing Oak's speech.
+                WayfarerResetPendingOrigin();
+                WayfarerResetPendingAppearance();
+                if (WayfarerConfirmPendingOrigin(ORIGIN_NEW_BARK)
+                 && WayfarerConfirmPendingAppearance(APPEARANCE_GOLD))
+                {
+                    StringCopy(gSaveBlock2Ptr->playerName, COMPOUND_STRING("GOLD"));
+                    gMain.state = 0;
+                    SetMainCallback2(CB2_NewGame);
+                }
+                else
+                    SetMainCallback2(CB2_InitTitleScreen);
+#else
                 StartNewGameSceneHns();
+#endif
                 return;
             }
 
