@@ -1,0 +1,28 @@
+{
+  "pokewayfarer-release": {
+    "gba_sha256": "a06269293728ee6ebbb9c632663292045c89b76d77e6e9f80be09352acb48099",
+    "elf_sha256": "cb15f3985090e5f43d7ab00f261642d3aabd6cbc036128c499b29fa083630c12",
+    "poc_symbol_count": 0,
+    "build_tag_symbol": [],
+    "matches_previous_disabled_rom": true
+  },
+  "pokewayfarer-release-poc": {
+    "gba_sha256": "3b7a7450b1c32e04fd855cd286509b1838d4116bcf62d6121d223262f1645ebe",
+    "elf_sha256": "bc093b4c40801b95547965f83424142c4e6248c93e044263382582597f1186a6",
+    "poc_symbol_count": 15,
+    "build_tag_symbol": [
+      "09b8fba8 R gMultiplayerPocBuildTag"
+    ],
+    "verified_build_id": "1041f1a1c40d69482351148978621af6"
+  },
+  "pokemon-wayfarer-e2e-poc": {
+    "gba_sha256": "f06860f08869f2c5f31d69aaf5aaa3d402fa2f7241f3ff63ecb6da667ae18779",
+    "elf_sha256": "e38940f9302230daf3a6f23f4953bca31ce9688b1a42773d6f3b0a9b2c190493",
+    "poc_symbol_count": 46,
+    "build_tag_symbol": [
+      "097173a4 R gMultiplayerPocBuildTag"
+    ],
+    "verified_build_id": "06d0b449e239c4b3e3a11b3061e443f0"
+  },
+  "source_note": "After both flag1 builds, the only ROM-input edit was a Makefile filter excluding the new menu translation unit only when flag0. It restored exact disabled ROM identity; flag1 inputs unchanged."
+}

@@ -1,5 +1,7 @@
 # Native-link multiplayer proof of concept
 
+For the next session-flow batch, see [ordinary saving, menus, and reconnection](native-link-multiplayer-session-flow.md). The observations below retain their original tested-build scope.
+
 Status: first-milestone record from PoC commit
 `1dbf6922e4fc45f2fd4f3018097f32e54a018219`. Do not merge this experiment into production.
 See the [follow-up experiments](native-link-multiplayer-followup.md) for later

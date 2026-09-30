@@ -20,6 +20,15 @@ enum MultiplayerPocBattleState
     POC_BATTLE_RETURNING,
     POC_BATTLE_COMPLETE,
     POC_BATTLE_ABORTED,
+    POC_BATTLE_CANCELING,
+};
+
+enum MultiplayerPocInviteStatus
+{
+    POC_INVITE_NONE,
+    POC_INVITE_OUTGOING,
+    POC_INVITE_INCOMING,
+    POC_INVITE_STARTING,
 };
 
 enum MultiplayerPocBattleError
@@ -29,6 +38,8 @@ enum MultiplayerPocBattleError
     POC_BATTLE_ERROR_LINK_LOST,
     POC_BATTLE_ERROR_RESULT_TIMEOUT,
     POC_BATTLE_ERROR_RESULT_MISMATCH,
+    POC_BATTLE_ERROR_DECLINED,
+    POC_BATTLE_ERROR_CANCELED,
 };
 
 // All fields are 32-bit for stable emulator memory inspection. EWRAM only.
@@ -63,6 +74,13 @@ struct MultiplayerPocBattleDiag
 extern volatile struct MultiplayerPocBattleDiag gMultiplayerPocBattleDiag;
 
 bool8 MultiplayerPocBattle_TryRequest(void);
+bool8 MultiplayerPocBattle_CanInvite(void);
+bool8 MultiplayerPocBattle_CanAccept(void);
+bool8 MultiplayerPocBattle_RequestInvite(void);
+bool8 MultiplayerPocBattle_AcceptInvite(void);
+bool8 MultiplayerPocBattle_DeclineInvite(void);
+bool8 MultiplayerPocBattle_CancelInvite(void);
+enum MultiplayerPocInviteStatus MultiplayerPocBattle_GetInviteStatus(void);
 u16 MultiplayerPocBattle_GetTxWord(void);
 void MultiplayerPocBattle_OnPeerWord(u16 word);
 void MultiplayerPocBattle_Update(void);

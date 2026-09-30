@@ -1,0 +1,100 @@
+make: Entering directory '/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/multiplayer-poc/pokemon-wayfarer/game'
+PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_sevii_trainers/generate.py
+PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_sevii_trainers/generate.py
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release/src/trainer_only_encounter.o src/trainer_only_encounter.c
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_hoenn_content -p 'test_*.py' -q
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_hoenn_entry -p 'test_*.py' -q
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/mapjson/tests -p 'test_wayfarer_catalog.py' -q
+PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/generate.py --check
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release/src/battle_controller_trainer_only.o src/battle_controller_trainer_only.c
+PYTHONDONTWRITEBYTECODE=1 python3 tools/surfable/tests/test_surfable_pokemon_pic_aliases.py
+Surf pixel aliases: 139 active pairs, 61 aliases, 78 independent shiny sheets; 430080 bytes
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/surfable/tests -p 'test_*.py' -q
+----------------------------------------------------------------------
+Ran 7 tests in 0.170s
+
+OK
+----------------------------------------------------------------------
+Ran 14 tests in 0.810s
+
+OK
+----------------------------------------------------------------------
+Ran 10 tests in 4.768s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tools/learnset_helpers/test_make_teachables.py -q
+----------------------------------------------------------------------
+Ran 29 tests in 4.949s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_sevii_scripts -p 'test_*.py' -q
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_source_constants -p 'test_*.py' -q
+----------------------------------------------------------------------
+Ran 15 tests in 0.983s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_sevii_port/tests -p 'test_*.py' -q
+----------------------------------------------------------------------
+Ran 17 tests in 0.040s
+
+OK
+----------------------------------------------------------------------
+Ran 20 tests in 1.447s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_regional_campaign -p 'test_*.py' -q
+----------------------------------------------------------------------
+Ran 8 tests in 0.005s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tools/mapjson/tests/test_wayfarer_steven_dive_reward.py -q
+----------------------------------------------------------------------
+Ran 5 tests in 0.002s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_hoenn_content/generate.py --output build/wayfarer-hoenn-content-manifest.json
+Wayfarer Hoenn content audit passed: build/wayfarer-hoenn-content-manifest.json (518 maps)
+{"counts": {"EXCLUDED": 223, "GYM_LEADER": 31, "GYM_MEMBER": 119, "ORDINARY": 1422}, "populated_ids": 1795, "structural_failures": []}
+PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/league.py --check
+Validated 15 fixed League rosters, all authored fields, and 81 rating inventories
+cd build/wayfarer-hybrid-release && arm-none-eabi-gcc -march=armv4t -mabi=apcs-gnu -mcpu=arm7tdmi -Xlinker -Map=../../pokewayfarer-release.map -Xlinker --print-memory-usage -Xassembler -meabi=5 -Xassembler -march=armv4t -Xassembler -mcpu=arm7tdmi -Xlinker --gc-sections -Xlinker -flto=auto -T ../../ld_script_modern.ld -o ../../pokewayfarer-release.elf <objs> <libs>
+/usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/bin/ld: /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp//libc.a(libc_a-closer.o): in function `_close_r':
+/build/newlib-38V0JC/newlib-4.4.0.20231231/build/arm-none-eabi/thumb/nofp/newlib/../../../../../newlib/libc/reent/closer.c:47:(.text+0xc): warning: _close is not implemented and will always fail
+/usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/bin/ld: /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp//libc.a(libc_a-closer.o): note: the message above does not take linker garbage collection into account
+/usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/bin/ld: /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp//libc.a(libc_a-lseekr.o): in function `_lseek_r':
+/build/newlib-38V0JC/newlib-4.4.0.20231231/build/arm-none-eabi/thumb/nofp/newlib/../../../../../newlib/libc/reent/lseekr.c:49:(.text+0x10): warning: _lseek is not implemented and will always fail
+/usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/bin/ld: /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp//libc.a(libc_a-lseekr.o): note: the message above does not take linker garbage collection into account
+/usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/bin/ld: /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp//libc.a(libc_a-readr.o): in function `_read_r':
+/build/newlib-38V0JC/newlib-4.4.0.20231231/build/arm-none-eabi/thumb/nofp/newlib/../../../../../newlib/libc/reent/readr.c:49:(.text+0x10): warning: _read is not implemented and will always fail
+/usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/bin/ld: /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp//libc.a(libc_a-readr.o): note: the message above does not take linker garbage collection into account
+/usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/bin/ld: /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp//libc.a(libc_a-writer.o): in function `_write_r':
+/build/newlib-38V0JC/newlib-4.4.0.20231231/build/arm-none-eabi/thumb/nofp/newlib/../../../../../newlib/libc/reent/writer.c:49:(.text+0x10): warning: _write is not implemented and will always fail
+../../include/faraway_island.h:4:5: warning: type of 'GetMewMoveDirection' does not match original declaration [-Wlto-type-mismatch]
+    4 | u32 GetMewMoveDirection(void);
+      |     ^
+../../src/faraway_island.c:50:16: note: return value type mismatch
+   50 | enum Direction GetMewMoveDirection(void)
+      |                ^
+../../src/faraway_island.c:50:16: note: type 'Direction' should match type 'u32'
+../../src/faraway_island.c:50:16: note: 'GetMewMoveDirection' was previously declared here
+../../src/mystery_gift_client.c: In function 'Client_Init':
+../../src/mystery_gift_client.c:102:5: warning: 'memcpy' reading 1024 bytes from a region of size 16 [-Wstringop-overread]
+  102 |     memcpy(client->script, gMysteryGiftClientScript_Init, MG_LINK_BUFFER_SIZE);
+      |     ^
+../../src/mystery_gift_scripts.c:13:35: note: source object 'gMysteryGiftClientScript_Init' of size 16
+   13 | const struct MysteryGiftClientCmd gMysteryGiftClientScript_Init[] = {
+      |                                   ^
+/usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/bin/ld: /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp//libc.a(libc_a-writer.o): note: the message above does not take linker garbage collection into account
+Memory region         Used Size  Region Size  %age Used
+           EWRAM:      249413 B       256 KB     95.14%
+           IWRAM:       25612 B        32 KB     78.16%
+             ROM:    31731080 B        32 MB     94.57%
+tools/gbafix/gbafix pokewayfarer-release.elf -t"WAYFARER" -cBWFE -m01 -r0 --silent
+arm-none-eabi-objcopy -O binary pokewayfarer-release.elf pokewayfarer-release.gba
+PYTHONDONTWRITEBYTECODE=1 python3 tools/rom_report/rom_report.py --symbols pokewayfarer-release.map --build wayfarer --release --baseline tools/rom_report/accepted_wayfarer_baseline.json --output pokewayfarer-release-size.json
+tools/gbafix/gbafix pokewayfarer-release.gba -p --silent
+make: Leaving directory '/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/multiplayer-poc/pokemon-wayfarer/game'

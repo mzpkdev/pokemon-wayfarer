@@ -1,0 +1,19 @@
+mGBA version: 0.10.5
+libmgba.a SHA256: ac09dc48409e9d863a640e9429b8e24569f4eb43e2689dad4c06a66a952a603f
+ROM0 SHA256: f06860f08869f2c5f31d69aaf5aaa3d402fa2f7241f3ff63ecb6da667ae18779
+ROM1 SHA256: f06860f08869f2c5f31d69aaf5aaa3d402fa2f7241f3ff63ecb6da667ae18779
+ELF0 SHA256: e38940f9302230daf3a6f23f4953bca31ce9688b1a42773d6f3b0a9b2c190493
+ELF1 SHA256: e38940f9302230daf3a6f23f4953bca31ce9688b1a42773d6f3b0a9b2c190493
+run.py SHA256: 60f11d3ca0f68628c1fc25a9757be82311c986df0d54e139e67b8be6d7d01f3b
+link.c SHA256: cf4e8036bcc18cd0d36db83e64507ef3d9149a59efae31a27a54c3bbcafa063e
+inputs SHA256: c9adfbe6d872692c1c67312e332976c4d98d0a9171bfb2480cc8d321695cb37d
+cwd: /home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/multiplayer-poc/pokemon-wayfarer
+command: /tmp/wayfarer-multiplayer-poc-phase3/center-runner/run.py /tmp/wayfarer-multiplayer-poc-phase3/build3/pokemon-wayfarer-e2e-poc.gba /tmp/wayfarer-multiplayer-poc-phase3/build3/pokemon-wayfarer-e2e-poc.elf --mgba-source /tmp/wayfarer-multiplayer-poc-tools/mgba-0.10.5 --mgba-build /tmp/wayfarer-multiplayer-poc-tools/build --inputs /tmp/wayfarer-multiplayer-poc-phase3/center-repeat.inputs --stage-e2e --stage-map 0,1 --stage-position 47,8 --frames 2450 --capture-frames 150,400,800,1100,1500,1750,2200,2400 --output /tmp/wayfarer-multiplayer-poc-phase3/center-repeat --require-presence --expect-session-status 2,2 --expect-session-error 0,0
+player0:gMultiplayerPocDiag=0x020351e8
+player0:gE2ETestAbi=0x095041b0
+player0:gE2ETestRequest=0x02002b2c
+player0:gE2ETestResult=0x020015e4
+player1:gMultiplayerPocDiag=0x020351e8
+player1:gE2ETestAbi=0x095041b0
+player1:gE2ETestRequest=0x02002b2c
+player1:gE2ETestResult=0x020015e4

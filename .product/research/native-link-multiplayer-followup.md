@@ -1,5 +1,7 @@
 # Native-link multiplayer follow-up experiments
 
+For the next session-flow batch, see [ordinary saving, menus, and reconnection](native-link-multiplayer-session-flow.md). The observations below retain their original tested-build scope.
+
 Status: follow-up experiments completed with the limits below, on [draft PR #144](https://github.com/mzpkdev/pokemon-wayfarer/pull/144).
 This is disposable research, with the ROM changes disabled by default. It does
 not approve production multiplayer, progression, or save policies.

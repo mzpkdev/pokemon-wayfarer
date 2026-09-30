@@ -55,6 +55,11 @@ interior rendered from relative frame 260 through 550 with no map-load error
 in both the linked PoC and compiled-out control. The user can reproduce the
 stable interior with `--stage-position 20,12 --frames 800 --capture-frames
 200,230,260,300,400,550,650,700` and a linger script.
+`--stage-map group,num` forwards another map ID through the existing E2E
+arrange request; the default still uses the checkpoint map. With
+`center-repeat.inputs --stage-map 0,1 --stage-position 47,8 --frames 2400`,
+P0 walks through the Cherrygrove Pokémon Center door three times while P1
+uses the Bag outside.
 
 `--enable-saves` mounts independent emulated flash files and exports them as
 `player0.sav` and `player1.sav` after both cores shut down. Supply `--save0`
@@ -78,6 +83,11 @@ to connect, consent with L+R+START, choose different local moves, and dismiss
 the battle text. `coop-distinct-first-turn.inputs` stops after the first move
 pair; `coop-abort-walk.inputs` checks field controls after cable removal.
 `coop-autoadvance.inputs` retains the initial same-move research run.
+For two simultaneous, independent wild battles, combine `--stage-party
+--e2e-wild-battle-player both` with `both-wild-run.inputs` to flee or
+`both-wild-fight.inputs` to choose attacks and finish both battles.
+`map-bag-overlap.inputs --stage-position 20,12` repeats the house doorway
+while the other player opens the Bag.
 The runner exports
 the ROM's `battle.json` and `reward.json` diagnostics when those symbols exist.
 Its watch log includes display/palette state, save status, party count, and
@@ -155,6 +165,57 @@ pending save in fresh cores, use `pending-bag-toss.inputs` to discard one full
 Antidote stack through the ordinary Bag and retry with L+R+A, then audit P0
 for Potion 1 and ledger `0xa1,2`. This fixture is artificial; no received
 link packets or reward outcomes are injected by the runner.
+
+## Start-menu session experiments
+
+The later session PoC adds a LINK action to the ordinary Start menu.
+`ui-connect.inputs` chooses Start → LINK → Connect on both E2E-arranged
+cartridges with ordinary buttons; `ui-connect-saves.inputs` does the same
+after loading two distinct saves through ordinary Continue. The older
+`presence.inputs` SELECT+L+R chord remains a historical research shortcut.
+`ui-decline.inputs`, `ui-cancel.inputs`, `ui-arrival-held-a.inputs`, and
+`ui-leave.inputs` cover explicit invitation refusal, outgoing cancellation,
+an A button held across an incoming prompt, and explicit Leave. The
+`release-*.inputs` scripts use a normal release ROM and saved cartridges to
+exercise full invited co-op play, player-1 invitation, simultaneous invites,
+an invite while the other Bag is open, and ordinary local Save.
+`save-p0.inputs`, `save-p1.inputs`, `save-both.inputs`, and
+`save-cancel.inputs` use ordinary Start-menu Save on E2E-arranged games; the
+E2E fixture does not inject save results.
+
+`--stage-menu-unlocks` sets the HNS Pokedex and Pokenav flags through the E2E
+arrange request. DexNav is disabled in the current ROM configuration. LINK
+then makes nine normal Start-menu actions: `max-menu-bottom.inputs` scrolls
+to the ninth action, EXIT, and selects it, while `max-menu-link.inputs`
+returns from EXIT to LINK and opens it. The option leaves normal menu logic
+to render and navigate the entries.
+
+The runner resolves symbols independently for each cartridge. Optional
+`--rom1 path --elf1 path` supplies a different, matching player-1 ROM/ELF
+pair; both options must appear together. Its `session.json` contains the
+72-byte session diagnostic from each ROM, including status, save hold and
+reconnect counters, and the stamped build ID. `--require-session` fails if
+either is missing or malformed. `--expect-session-status 2,2` and
+`--expect-session-error 0,0` assert final active sessions. A real-build
+fingerprint rejection uses two *built* ROMs with the same valid baseline
+saves and controller script:
+
+```sh
+python3 game/tools/multiplayer-poc/run.py RELEASE.gba RELEASE.elf \
+  --rom1 E2E.gba --elf1 E2E.elf \
+  --mgba-source /tmp/wayfarer-multiplayer-poc-tools/mgba-0.10.5 \
+  --mgba-build /tmp/wayfarer-multiplayer-poc-tools/build \
+  --inputs game/tools/multiplayer-poc/ui-mismatch-status.inputs \
+  --enable-saves --save0 BASELINE/player0.sav --save1 BASELINE/player1.sav \
+  --frames 3100 --require-session --expect-session-status 7,7 \
+  --expect-session-error 7,7 --output OUTPUT
+```
+
+Replace the uppercase paths with matching build artifacts and the distinct
+saved games from the baseline recipe above. The validated release-versus-E2E
+pair rejects the connection with build mismatch error 7 before presence
+becomes active, and reopening LINK displays the reason. An identical release
+pair with `ui-connect-saves.inputs` instead reaches status 2 on both sides.
 
 For interruption experiments, add `--cut-reward-phase writing --cut-player 0
 --cut-delay-frames N` to the full co-op run. The runner stops both emulated

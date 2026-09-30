@@ -448,6 +448,9 @@ endif
 # Collect sources
 C_SRCS_IN := $(wildcard $(C_SUBDIR)/*.c $(C_SUBDIR)/*/*.c $(C_SUBDIR)/*/*/*.c)
 C_SRCS := $(foreach src,$(C_SRCS_IN),$(if $(findstring .inc.c,$(src)),,$(src)))
+ifeq ($(WAYFARER_MULTIPLAYER_POC),0)
+C_SRCS := $(filter-out $(C_SUBDIR)/multiplayer_poc_menu.c,$(C_SRCS))
+endif
 C_OBJS := $(patsubst $(C_SUBDIR)/%.c,$(C_BUILDDIR)/%.o,$(C_SRCS))
 
 TEST_SRCS_IN := $(wildcard $(TEST_SUBDIR)/*.c $(TEST_SUBDIR)/*/*.c $(TEST_SUBDIR)/*/*/*.c)
@@ -801,6 +804,19 @@ endif
 $(ROM): $(ELF)
 	$(OBJCOPY) -O binary $< $@
 	$(FIX) $@ -p --silent
+ifeq ($(WAYFARER_MULTIPLAYER_POC),1)
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/multiplayer_build_id/stamp.py $@
+endif
+ifeq ($(WAYFARER_MULTIPLAYER_POC),1)
+$(ROM): tools/multiplayer_build_id/stamp.py
+endif
+
+.PHONY: multiplayer-build-id-test multiplayer-build-id-verify
+multiplayer-build-id-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/multiplayer_build_id -p 'test_*.py' -q
+
+multiplayer-build-id-verify: $(ROM)
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/multiplayer_build_id/stamp.py --verify $(ROM)
 
 $(ROM_REPORT): $(ELF) tools/rom_report/rom_report.py $(ROM_REPORT_BASELINE_DEP)
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/rom_report/rom_report.py --symbols $(MAP) --build $(BUILD_NAME) $(if $(filter 1,$(RELEASE)),--release) $(ROM_REPORT_BASELINE_ARGS) --output $@

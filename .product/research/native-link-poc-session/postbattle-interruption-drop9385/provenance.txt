@@ -1,0 +1,15 @@
+mGBA version: 0.10.5
+libmgba.a SHA256: ac09dc48409e9d863a640e9429b8e24569f4eb43e2689dad4c06a66a952a603f
+ROM0 SHA256: 3b7a7450b1c32e04fd855cd286509b1838d4116bcf62d6121d223262f1645ebe
+ROM1 SHA256: 3b7a7450b1c32e04fd855cd286509b1838d4116bcf62d6121d223262f1645ebe
+ELF0 SHA256: bc093b4c40801b95547965f83424142c4e6248c93e044263382582597f1186a6
+ELF1 SHA256: bc093b4c40801b95547965f83424142c4e6248c93e044263382582597f1186a6
+run.py SHA256: b78e59c8d275449ba9eeebd109a673a39eff4a9423c4df50cbb74cba3636a9a3
+link.c SHA256: 4bf7cf4f1df86086c2d38936a60c2abcab6ae09271578be7f251b35c3fe19b69
+inputs SHA256: ab26dbdf40ad04928f23fc297af0e80ae94439c01576a92f2f583d297dc5cd8a
+save0 SHA256: 9f448a89a733b8f17c8e196ce956856e79e6b4ff5635f29c8cb64b77aeac97af
+save1 SHA256: c7cf827d5e358b93a0eac6632a4007b0e0708d2750cddacf1710bd0979fbe590
+cwd: /home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/multiplayer-poc/pokemon-wayfarer
+command: /tmp/wayfarer-multiplayer-poc-phase3/save-interruption-tools/run.py game/pokewayfarer-release-poc.gba game/pokewayfarer-release-poc.elf --mgba-source /tmp/wayfarer-multiplayer-poc-tools/mgba-0.10.5 --mgba-build /tmp/wayfarer-multiplayer-poc-tools/build --enable-saves --save0 /tmp/wayfarer-multiplayer-poc-phase2/integrated-party-baseline/player0.sav --save1 /tmp/wayfarer-multiplayer-poc-phase2/integrated-party-baseline/player1.sav --require-session --inputs /tmp/wayfarer-multiplayer-poc-phase3/save-interruption-tools/postbattle-drop9400.inputs --disconnect-frame 9385 --frames 12000 --capture-frames 9350,9400,9450,9650,11000 --output /tmp/wayfarer-multiplayer-poc-phase3/postbattle-interruption-drop9385 --timeout 300
+player0:gMultiplayerPocDiag=0x02023154
+player1:gMultiplayerPocDiag=0x02023154

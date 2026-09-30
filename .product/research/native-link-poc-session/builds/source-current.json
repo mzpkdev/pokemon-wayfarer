@@ -1,0 +1,17 @@
+{
+  "base_commit": "eff36caeee3019af524d68a598e19b2280ae9d70",
+  "changed_rom_inputs": {
+    "game/Makefile": "b3eb25065b0c9e3882ea80f27cbd911db318d827ed7804cf0e283e3cdf9586bf",
+    "game/include/multiplayer_poc.h": "e1be4df3533877f095a28c995b0870e4742f86fc2c650a27ca33b3931b0d9232",
+    "game/include/multiplayer_poc_battle.h": "28d84ff59e8d003b9f2fcd59c45b6efc68fd6341d00250f61636970b07962c00",
+    "game/include/multiplayer_poc_menu.h": "167b29ab337f860a039e254ac60ea2eefe83dc17709d21aa8261584d0497f664",
+    "game/src/link.c": "1b9324ddbc778a14d8b95d5bbac8341dbffa396492aa4fe71c4e35461fde57f3",
+    "game/src/multiplayer_poc.c": "b9c03af52f8ccecac744134dcf17bde51e442a71db574c340ddb76036efd8b0d",
+    "game/src/multiplayer_poc_battle.c": "3273d8b715d84e75a515f9f21c829aff5c1de07237d794674b026b281a1d173b",
+    "game/src/multiplayer_poc_menu.c": "31676355b1a60e994a1b1a5626bb731c5286e36710d06d02d7ced1684926b829",
+    "game/src/start_menu.c": "7d64250542b876c75aae4e764b091521d4b67f8a0f9d4485d8549aa5364a9aec",
+    "game/tools/multiplayer_build_id/stamp.py": "97429b396411ebfdd878d30242bd9a9a99f361aa5e7a7f6d2bb5c0892045258f",
+    "game/tools/multiplayer_build_id/test_stamp.py": "747d7e4686c52a91c1bf6bd4ebd449f06493c95b5220e70c8fc58bd7e35b6267"
+  },
+  "scope": "All tracked/untracked game changes versus base commit, excluding independent multiplayer-poc host tooling. Unchanged build inputs inherited from base commit."
+}

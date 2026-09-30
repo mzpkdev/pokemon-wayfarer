@@ -1,0 +1,148 @@
+make: Entering directory '/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/multiplayer-poc/pokemon-wayfarer/game'
+PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_sevii_trainers/generate.py
+PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_sevii_trainers/generate.py
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/multiplayer_poc_menu.d -I include -I tools/agbcc/include src/multiplayer_poc_menu.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/battle_controller_player.d -I include -I tools/agbcc/include src/battle_controller_player.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/battle_main.d -I include -I tools/agbcc/include src/battle_main.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/battle_message.d -I include -I tools/agbcc/include src/battle_message.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/battle_script_commands.d -I include -I tools/agbcc/include src/battle_script_commands.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/e2e_test.d -I include -I tools/agbcc/include src/e2e_test.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/field_message_box.d -I include -I tools/agbcc/include src/field_message_box.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/item_menu.d -I include -I tools/agbcc/include src/item_menu.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/link.d -I include -I tools/agbcc/include src/link.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/main.d -I include -I tools/agbcc/include src/main.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/menu_helpers.d -I include -I tools/agbcc/include src/menu_helpers.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/multiplayer_poc.d -I include -I tools/agbcc/include src/multiplayer_poc.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/multiplayer_poc_battle.d -I include -I tools/agbcc/include src/multiplayer_poc_battle.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/overworld.d -I include -I tools/agbcc/include src/overworld.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/party_menu.d -I include -I tools/agbcc/include src/party_menu.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/pokemon_storage_system.d -I include -I tools/agbcc/include src/pokemon_storage_system.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/pokemon_summary_screen.d -I include -I tools/agbcc/include src/pokemon_summary_screen.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/scrcmd.d -I include -I tools/agbcc/include src/scrcmd.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/script_menu.d -I include -I tools/agbcc/include src/script_menu.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/start_menu.d -I include -I tools/agbcc/include src/start_menu.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/starter_choose.d -I include -I tools/agbcc/include src/starter_choose.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-release-poc/src/trainer_card.d -I include -I tools/agbcc/include src/trainer_card.c
+PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_sevii_trainers/generate.py
+PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_sevii_trainers/generate.py
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/trainer_card.o src/trainer_card.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/trainer_only_encounter.o src/trainer_only_encounter.c
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_hoenn_content -p 'test_*.py' -q
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_hoenn_entry -p 'test_*.py' -q
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/mapjson/tests -p 'test_wayfarer_catalog.py' -q
+PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/generate.py --check
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/multiplayer_poc_menu.o src/multiplayer_poc_menu.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/battle_controller_trainer_only.o src/battle_controller_trainer_only.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/battle_controller_player.o src/battle_controller_player.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/battle_message.o src/battle_message.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/battle_main.o src/battle_main.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/battle_script_commands.o src/battle_script_commands.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/e2e_test.o src/e2e_test.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/field_message_box.o src/field_message_box.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/item_menu.o src/item_menu.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/link.o src/link.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/main.o src/main.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/menu_helpers.o src/menu_helpers.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/multiplayer_poc.o src/multiplayer_poc.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/multiplayer_poc_battle.o src/multiplayer_poc_battle.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/overworld.o src/overworld.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/party_menu.o src/party_menu.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/pokemon_storage_system.o src/pokemon_storage_system.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/pokemon_summary_screen.o src/pokemon_summary_screen.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/scrcmd.o src/scrcmd.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/script_menu.o src/script_menu.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/start_menu.o src/start_menu.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-release-poc/src/starter_choose.o src/starter_choose.c
+PYTHONDONTWRITEBYTECODE=1 python3 tools/surfable/tests/test_surfable_pokemon_pic_aliases.py
+Surf pixel aliases: 139 active pairs, 61 aliases, 78 independent shiny sheets; 430080 bytes
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/surfable/tests -p 'test_*.py' -q
+----------------------------------------------------------------------
+Ran 7 tests in 0.069s
+
+OK
+----------------------------------------------------------------------
+Ran 14 tests in 1.040s
+
+OK
+----------------------------------------------------------------------
+Ran 10 tests in 4.494s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tools/learnset_helpers/test_make_teachables.py -q
+----------------------------------------------------------------------
+Ran 29 tests in 4.470s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_sevii_scripts -p 'test_*.py' -q
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_source_constants -p 'test_*.py' -q
+----------------------------------------------------------------------
+Ran 15 tests in 0.819s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_sevii_port/tests -p 'test_*.py' -q
+----------------------------------------------------------------------
+Ran 17 tests in 0.029s
+
+OK
+----------------------------------------------------------------------
+Ran 20 tests in 1.160s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_regional_campaign -p 'test_*.py' -q
+----------------------------------------------------------------------
+Ran 8 tests in 0.004s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tools/mapjson/tests/test_wayfarer_steven_dive_reward.py -q
+----------------------------------------------------------------------
+Ran 5 tests in 0.001s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_hoenn_content/generate.py --output build/wayfarer-hoenn-content-manifest.json
+Wayfarer Hoenn content audit passed: build/wayfarer-hoenn-content-manifest.json (518 maps)
+{"counts": {"EXCLUDED": 223, "GYM_LEADER": 31, "GYM_MEMBER": 119, "ORDINARY": 1422}, "populated_ids": 1795, "structural_failures": []}
+PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/league.py --check
+Validated 15 fixed League rosters, all authored fields, and 81 rating inventories
+cd build/wayfarer-hybrid-release-poc && arm-none-eabi-gcc -march=armv4t -mabi=apcs-gnu -mcpu=arm7tdmi -Xlinker -Map=../../pokewayfarer-release-poc.map -Xlinker --print-memory-usage -Xassembler -meabi=5 -Xassembler -march=armv4t -Xassembler -mcpu=arm7tdmi -Xlinker --gc-sections -Xlinker -flto=auto -T ../../ld_script_modern.ld -o ../../pokewayfarer-release-poc.elf <objs> <libs>
+/usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/bin/ld: /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp//libc.a(libc_a-closer.o): in function `_close_r':
+/build/newlib-38V0JC/newlib-4.4.0.20231231/build/arm-none-eabi/thumb/nofp/newlib/../../../../../newlib/libc/reent/closer.c:47:(.text+0xc): warning: _close is not implemented and will always fail
+/usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/bin/ld: /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp//libc.a(libc_a-closer.o): note: the message above does not take linker garbage collection into account
+/usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/bin/ld: /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp//libc.a(libc_a-lseekr.o): in function `_lseek_r':
+/build/newlib-38V0JC/newlib-4.4.0.20231231/build/arm-none-eabi/thumb/nofp/newlib/../../../../../newlib/libc/reent/lseekr.c:49:(.text+0x10): warning: _lseek is not implemented and will always fail
+/usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/bin/ld: /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp//libc.a(libc_a-lseekr.o): note: the message above does not take linker garbage collection into account
+/usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/bin/ld: /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp//libc.a(libc_a-readr.o): in function `_read_r':
+/build/newlib-38V0JC/newlib-4.4.0.20231231/build/arm-none-eabi/thumb/nofp/newlib/../../../../../newlib/libc/reent/readr.c:49:(.text+0x10): warning: _read is not implemented and will always fail
+/usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/bin/ld: /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp//libc.a(libc_a-readr.o): note: the message above does not take linker garbage collection into account
+/usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/bin/ld: /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp//libc.a(libc_a-writer.o): in function `_write_r':
+/build/newlib-38V0JC/newlib-4.4.0.20231231/build/arm-none-eabi/thumb/nofp/newlib/../../../../../newlib/libc/reent/writer.c:49:(.text+0x10): warning: _write is not implemented and will always fail
+../../include/faraway_island.h:4:5: warning: type of 'GetMewMoveDirection' does not match original declaration [-Wlto-type-mismatch]
+    4 | u32 GetMewMoveDirection(void);
+      |     ^
+../../src/faraway_island.c:50:16: note: return value type mismatch
+   50 | enum Direction GetMewMoveDirection(void)
+      |                ^
+../../src/faraway_island.c:50:16: note: type 'Direction' should match type 'u32'
+../../src/faraway_island.c:50:16: note: 'GetMewMoveDirection' was previously declared here
+../../src/mystery_gift_client.c: In function 'Client_Init':
+../../src/mystery_gift_client.c:102:5: warning: 'memcpy' reading 1024 bytes from a region of size 16 [-Wstringop-overread]
+  102 |     memcpy(client->script, gMysteryGiftClientScript_Init, MG_LINK_BUFFER_SIZE);
+      |     ^
+../../src/mystery_gift_scripts.c:13:35: note: source object 'gMysteryGiftClientScript_Init' of size 16
+   13 | const struct MysteryGiftClientCmd gMysteryGiftClientScript_Init[] = {
+      |                                   ^
+/usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/bin/ld: /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp//libc.a(libc_a-writer.o): note: the message above does not take linker garbage collection into account
+Memory region         Used Size  Region Size  %age Used
+           EWRAM:      253073 B       256 KB     96.54%
+           IWRAM:       25612 B        32 KB     78.16%
+             ROM:    31745652 B        32 MB     94.61%
+tools/gbafix/gbafix pokewayfarer-release-poc.elf -t"WAYFARER" -cBWFE -m01 -r0 --silent
+arm-none-eabi-objcopy -O binary pokewayfarer-release-poc.elf pokewayfarer-release-poc.gba
+PYTHONDONTWRITEBYTECODE=1 python3 tools/rom_report/rom_report.py --symbols pokewayfarer-release-poc.map --build wayfarer --release --baseline tools/rom_report/accepted_wayfarer_baseline.json --output pokewayfarer-release-poc-size.json
+tools/gbafix/gbafix pokewayfarer-release-poc.gba -p --silent
+PYTHONDONTWRITEBYTECODE=1 python3 tools/multiplayer_build_id/stamp.py pokewayfarer-release-poc.gba
+1041f1a1c40d69482351148978621af6
+make: Leaving directory '/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/multiplayer-poc/pokemon-wayfarer/game'

@@ -394,6 +394,13 @@ void CloseLink(void)
     DisableSerial();
 }
 
+#if WAYFARER_MULTIPLAYER_POC
+bool8 MultiplayerPoc_LinkIsOpen(void)
+{
+    return sLinkOpen;
+}
+#endif
+
 static void TestBlockTransfer(u8 nothing, u8 is, u8 used)
 {
     u8 i;

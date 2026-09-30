@@ -1,0 +1,46 @@
+# Open ordinary Start menus on both freshly arranged cartridges.
+160 0 008
+160 1 008
+163 0 000
+163 1 000
+# Four discrete DOWN presses select LINK (fifth action).
+210 0 080
+210 1 080
+213 0 000
+213 1 000
+230 0 080
+230 1 080
+233 0 000
+233 1 000
+250 0 080
+250 1 080
+253 0 000
+253 1 000
+270 0 080
+270 1 080
+273 0 000
+273 1 000
+300 0 001
+300 1 001
+303 0 000
+303 1 000
+# Explicit Connect in each offline Multiplayer menu.
+550 0 001
+550 1 001
+553 0 000
+553 1 000
+# Reopen Multiplayer status on P0 after the shared session is active.
+1400 0 008
+1403 0 000
+# Start cursor remembers LINK; open connected status, then Invite.
+1550 0 001
+1553 0 000
+1750 0 001
+1753 0 000
+# P0 reopens the outgoing status and chooses Cancel; P1 waits at the prompt.
+2050 0 008
+2053 0 000
+2100 0 001
+2103 0 000
+2300 0 001
+2303 0 000

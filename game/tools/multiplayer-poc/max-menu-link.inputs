@@ -1,0 +1,27 @@
+# Pokedex and Pokenav are unlocked by --stage-menu-unlocks.
+160 0 008
+163 0 000
+# Nine actions total with LINK. Move from first (Pokedex) to last (Exit).
+220 0 080
+223 0 000
+240 0 080
+243 0 000
+260 0 080
+263 0 000
+280 0 080
+283 0 000
+300 0 080
+303 0 000
+320 0 080
+323 0 000
+340 0 080
+343 0 000
+360 0 080
+363 0 000
+# From Exit, step back up to LINK and open it.
+390 0 040
+393 0 000
+410 0 040
+413 0 000
+450 0 001
+453 0 000

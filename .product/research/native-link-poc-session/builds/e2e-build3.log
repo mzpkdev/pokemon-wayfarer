@@ -1,0 +1,83 @@
+make: Entering directory '/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/multiplayer-poc/pokemon-wayfarer/game'
+PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_sevii_trainers/generate.py
+PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_sevii_trainers/generate.py
+tools/scaninc/scaninc -M build/wayfarer-hybrid-e2e-poc/src/multiplayer_poc.d -I include -I tools/agbcc/include src/multiplayer_poc.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-e2e-poc/src/multiplayer_poc_menu.d -I include -I tools/agbcc/include src/multiplayer_poc_menu.c
+tools/scaninc/scaninc -M build/wayfarer-hybrid-e2e-poc/src/start_menu.d -I include -I tools/agbcc/include src/start_menu.c
+PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_sevii_trainers/generate.py
+PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_sevii_trainers/generate.py
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_hoenn_content -p 'test_*.py' -q
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_hoenn_entry -p 'test_*.py' -q
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/mapjson/tests -p 'test_wayfarer_catalog.py' -q
+PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/generate.py --check
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-e2e-poc/src/multiplayer_poc_menu.o src/multiplayer_poc_menu.c
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-e2e-poc/src/start_menu.o src/start_menu.c
+PYTHONDONTWRITEBYTECODE=1 python3 tools/surfable/tests/test_surfable_pokemon_pic_aliases.py
+/usr/lib/gcc/arm-none-eabi/13.2.1/cc1 -quiet <flags> -o build/wayfarer-hybrid-e2e-poc/src/multiplayer_poc.o src/multiplayer_poc.c
+Surf pixel aliases: 139 active pairs, 61 aliases, 78 independent shiny sheets; 430080 bytes
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/surfable/tests -p 'test_*.py' -q
+----------------------------------------------------------------------
+Ran 7 tests in 0.065s
+
+OK
+----------------------------------------------------------------------
+Ran 14 tests in 0.823s
+
+OK
+----------------------------------------------------------------------
+Ran 29 tests in 4.468s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_sevii_scripts -p 'test_*.py' -q
+----------------------------------------------------------------------
+Ran 10 tests in 4.925s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tools/learnset_helpers/test_make_teachables.py -q
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_source_constants -p 'test_*.py' -q
+----------------------------------------------------------------------
+Ran 15 tests in 0.917s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_sevii_port/tests -p 'test_*.py' -q
+----------------------------------------------------------------------
+Ran 17 tests in 0.032s
+
+OK
+----------------------------------------------------------------------
+Ran 20 tests in 1.272s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_regional_campaign -p 'test_*.py' -q
+----------------------------------------------------------------------
+Ran 8 tests in 0.004s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tools/mapjson/tests/test_wayfarer_steven_dive_reward.py -q
+----------------------------------------------------------------------
+Ran 5 tests in 0.001s
+
+OK
+PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_hoenn_content/generate.py --output build/wayfarer-hoenn-content-manifest.json
+Wayfarer Hoenn content audit passed: build/wayfarer-hoenn-content-manifest.json (518 maps)
+{"counts": {"EXCLUDED": 223, "GYM_LEADER": 31, "GYM_MEMBER": 119, "ORDINARY": 1422}, "populated_ids": 1795, "structural_failures": []}
+PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/league.py --check
+Validated 15 fixed League rosters, all authored fields, and 81 rating inventories
+Memory region         Used Size  Region Size  %age Used
+           EWRAM:      258992 B       256 KB     98.80%
+           IWRAM:       25652 B        32 KB     78.28%
+             ROM:    32119040 B        32 MB     95.72%
+cd build/wayfarer-hybrid-e2e-poc && arm-none-eabi-ld -Map ../../pokemon-wayfarer-e2e-poc.map --print-memory-usage --gc-sections -T ../../ld_script_modern.ld -o ../../pokemon-wayfarer-e2e-poc.elf <objs> <libs> | cat
+tools/gbafix/gbafix pokemon-wayfarer-e2e-poc.elf -t"WAYFARER" -cBWFE -m01 -r0 --silent
+arm-none-eabi-objcopy -O binary pokemon-wayfarer-e2e-poc.elf pokemon-wayfarer-e2e-poc.gba
+arm-none-eabi-objdump -t pokemon-wayfarer-e2e-poc.elf | sort -u | grep -E "^0[2389]" | perl -p -e 's/^(\w{8}) (\w).{6} \S+\t(\w{8}) (\S+)$/\1 \2 \3 \4/g' > pokemon-wayfarer-e2e-poc.sym
+tools/gbafix/gbafix pokemon-wayfarer-e2e-poc.gba -p --silent
+PYTHONDONTWRITEBYTECODE=1 python3 tools/multiplayer_build_id/stamp.py pokemon-wayfarer-e2e-poc.gba
+06d0b449e239c4b3e3a11b3061e443f0
+PYTHONDONTWRITEBYTECODE=1 python3 tools/surfable/tests/test_surfable_pokemon_pic_aliases.py --symbols pokemon-wayfarer-e2e-poc.sym
+Surf pixel aliases: 139 active pairs, 61 aliases, 78 independent shiny sheets; 430080 bytes; linked symbols verified
+make: Leaving directory '/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/multiplayer-poc/pokemon-wayfarer/game'

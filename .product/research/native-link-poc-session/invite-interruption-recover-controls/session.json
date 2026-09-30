@@ -1,0 +1,42 @@
+[
+  {
+    "magic": 1397052209,
+    "version": 1,
+    "size": 72,
+    "status": 5,
+    "error": 1,
+    "wanted": 1,
+    "localSaveHold": 0,
+    "peerSaveRequested": 0,
+    "closeCount": 2,
+    "reconnectCount": 2,
+    "attemptCount": 3,
+    "helloPagesSeen": 0,
+    "helloPeerConfirmed": 0,
+    "buildMatch": 0,
+    "buildId0": 1236586502,
+    "buildId1": 3015981538,
+    "buildId2": 807117283,
+    "buildId3": 4030981217
+  },
+  {
+    "magic": 1397052209,
+    "version": 1,
+    "size": 72,
+    "status": 5,
+    "error": 1,
+    "wanted": 1,
+    "localSaveHold": 0,
+    "peerSaveRequested": 0,
+    "closeCount": 2,
+    "reconnectCount": 2,
+    "attemptCount": 3,
+    "helloPagesSeen": 0,
+    "helloPeerConfirmed": 0,
+    "buildMatch": 0,
+    "buildId0": 1236586502,
+    "buildId1": 3015981538,
+    "buildId2": 807117283,
+    "buildId3": 4030981217
+  }
+]

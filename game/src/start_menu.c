@@ -1,4 +1,8 @@
 #include "global.h"
+#if WAYFARER_MULTIPLAYER_POC
+#include "multiplayer_poc.h"
+#include "multiplayer_poc_menu.h"
+#endif
 #include "trainer_tower.h"
 #include "config/save.h"
 #include "battle_pike.h"
@@ -74,6 +78,9 @@ enum
     MENU_ACTION_DEBUG,
     MENU_ACTION_DEXNAV,
     MENU_ACTION_RETIRE_BUG_CONTEST,
+#if WAYFARER_MULTIPLAYER_POC
+    MENU_ACTION_MULTIPLAYER,
+#endif
 };
 
 // Save status
@@ -94,7 +101,13 @@ EWRAM_DATA static u8 sStartClockWindowId = 0;
 EWRAM_DATA static u8 sBattlePyramidFloorWindowId = 0;
 EWRAM_DATA static u8 sStartMenuCursorPos = 0;
 EWRAM_DATA static u8 sNumStartMenuActions = 0;
+#if WAYFARER_MULTIPLAYER_POC
+#define POC_START_MENU_VISIBLE_ROWS 8
+EWRAM_DATA static u8 sCurrentStartMenuActions[10] = {0};
+EWRAM_DATA static u8 sStartMenuScroll = 0;
+#else
 EWRAM_DATA static u8 sCurrentStartMenuActions[9] = {0};
+#endif
 EWRAM_DATA static s8 sInitStartMenuData[2] = {0};
 
 EWRAM_DATA static u8 (*sSaveDialogCallback)(void) = NULL;
@@ -103,6 +116,9 @@ EWRAM_DATA static bool8 sSavingComplete = FALSE;
 EWRAM_DATA static u8 sSaveInfoWindowId = 0;
 
 // Menu action callbacks
+#if WAYFARER_MULTIPLAYER_POC
+static bool8 StartMenuMultiplayerCallback(void);
+#endif
 static bool8 StartMenuPokedexCallback(void);
 static bool8 StartMenuPokemonCallback(void);
 static bool8 StartMenuBagCallback(void);
@@ -206,10 +222,17 @@ static const struct WindowTemplate sWindowTemplate_PyramidPeak = {
     .baseBlock = 0x8
 };
 
+#if WAYFARER_MULTIPLAYER_POC
+static const u8 sText_MenuMultiplayer[] = _("LINK");
+#endif
+
 static const u8 sText_MenuDebug[] = _("DEBUG");
 
 static const struct MenuAction sStartMenuItems[] =
 {
+#if WAYFARER_MULTIPLAYER_POC
+    [MENU_ACTION_MULTIPLAYER] = {sText_MenuMultiplayer, {.u8_void = StartMenuMultiplayerCallback}},
+#endif
     [MENU_ACTION_POKEDEX]         = {gText_MenuPokedex, {.u8_void = StartMenuPokedexCallback}},
     [MENU_ACTION_POKEMON]         = {gText_MenuPokemon, {.u8_void = StartMenuPokemonCallback}},
     [MENU_ACTION_BAG]             = {gText_MenuBag,     {.u8_void = StartMenuBagCallback}},
@@ -383,6 +406,9 @@ static void BuildNormalStartMenu(void)
     AddStartMenuAction(MENU_ACTION_PLAYER);
     if (WayfarerTrainerTowerIsSaveAllowed())
         AddStartMenuAction(MENU_ACTION_SAVE);
+#if WAYFARER_MULTIPLAYER_POC
+    AddStartMenuAction(MENU_ACTION_MULTIPLAYER);
+#endif
     AddStartMenuAction(MENU_ACTION_OPTION);
     AddStartMenuAction(MENU_ACTION_EXIT);
 }
@@ -399,6 +425,9 @@ static void BuildDebugStartMenu(void)
         AddStartMenuAction(MENU_ACTION_POKENAV);
     AddStartMenuAction(MENU_ACTION_PLAYER);
     AddStartMenuAction(MENU_ACTION_SAVE);
+#if WAYFARER_MULTIPLAYER_POC
+    AddStartMenuAction(MENU_ACTION_MULTIPLAYER);
+#endif
     AddStartMenuAction(MENU_ACTION_OPTION);
 }
 
@@ -568,6 +597,41 @@ static void RemoveExtraStartMenuWindows(void)
     }
 }
 
+#if WAYFARER_MULTIPLAYER_POC
+static bool32 PrintStartMenuActions(s8 *pIndex, u32 count)
+{
+    s8 index = *pIndex;
+    u8 end = min(sNumStartMenuActions, sStartMenuScroll + POC_START_MENU_VISIBLE_ROWS);
+
+    do
+    {
+        u8 row = index - sStartMenuScroll;
+        if (sStartMenuItems[sCurrentStartMenuActions[index]].func.u8_void == StartMenuPlayerNameCallback)
+        {
+            PrintPlayerNameOnWindow(GetStartMenuWindowId(), sStartMenuItems[sCurrentStartMenuActions[index]].text, 8, (row << 4) + 9);
+        }
+        else
+        {
+            StringExpandPlaceholders(gStringVar4, sStartMenuItems[sCurrentStartMenuActions[index]].text);
+            AddTextPrinterParameterized(GetStartMenuWindowId(), FONT_NORMAL, gStringVar4, 8, (row << 4) + 9, TEXT_SKIP_DRAW, NULL);
+        }
+
+        index++;
+        if (index >= end)
+        {
+            *pIndex = index;
+            return TRUE;
+        }
+
+        count--;
+    }
+    while (count != 0);
+
+    *pIndex = index;
+    return FALSE;
+}
+
+#else
 static bool32 PrintStartMenuActions(s8 *pIndex, u32 count)
 {
     s8 index = *pIndex;
@@ -599,6 +663,43 @@ static bool32 PrintStartMenuActions(s8 *pIndex, u32 count)
     return FALSE;
 }
 
+#endif
+
+#if WAYFARER_MULTIPLAYER_POC
+static u8 StartMenuVisibleCount(void)
+{
+    return min(sNumStartMenuActions, POC_START_MENU_VISIBLE_ROWS);
+}
+
+static void SetStartMenuScroll(void)
+{
+    if (sStartMenuCursorPos >= sNumStartMenuActions)
+        sStartMenuCursorPos = 0;
+    if (sStartMenuCursorPos < sStartMenuScroll)
+        sStartMenuScroll = sStartMenuCursorPos;
+    if (sStartMenuCursorPos >= sStartMenuScroll + POC_START_MENU_VISIBLE_ROWS)
+        sStartMenuScroll = sStartMenuCursorPos - POC_START_MENU_VISIBLE_ROWS + 1;
+    if (sStartMenuScroll + StartMenuVisibleCount() > sNumStartMenuActions)
+        sStartMenuScroll = sNumStartMenuActions - StartMenuVisibleCount();
+}
+
+static void MovePocStartMenuCursor(s8 delta)
+{
+    s8 index;
+    if (delta < 0)
+        sStartMenuCursorPos = sStartMenuCursorPos == 0 ? sNumStartMenuActions - 1 : sStartMenuCursorPos - 1;
+    else
+        sStartMenuCursorPos = (sStartMenuCursorPos + 1) % sNumStartMenuActions;
+    SetStartMenuScroll();
+    index = sStartMenuScroll;
+    FillWindowPixelBuffer(GetStartMenuWindowId(), PIXEL_FILL(1));
+    PrintStartMenuActions(&index, POC_START_MENU_VISIBLE_ROWS);
+    InitMenuNormal(GetStartMenuWindowId(), FONT_NORMAL, 0, 9, 16,
+                   StartMenuVisibleCount(), sStartMenuCursorPos - sStartMenuScroll);
+    CopyWindowToVram(GetStartMenuWindowId(), COPYWIN_GFX);
+}
+#endif
+
 static bool32 InitStartMenuStep(void)
 {
     s8 state = sInitStartMenuData[0];
@@ -610,12 +711,20 @@ static bool32 InitStartMenuStep(void)
         break;
     case 1:
         BuildStartMenuActions();
+#if WAYFARER_MULTIPLAYER_POC
+        SetStartMenuScroll();
+#endif
         sInitStartMenuData[0]++;
         break;
     case 2:
         LoadMessageBoxAndBorderGfx();
+#if WAYFARER_MULTIPLAYER_POC
+        DrawStdWindowFrame(AddStartMenuWindow(StartMenuVisibleCount()), FALSE);
+        sInitStartMenuData[1] = sStartMenuScroll;
+#else
         DrawStdWindowFrame(AddStartMenuWindow(sNumStartMenuActions), FALSE);
         sInitStartMenuData[1] = 0;
+#endif
         sInitStartMenuData[0]++;
         break;
     case 3:
@@ -635,7 +744,12 @@ static bool32 InitStartMenuStep(void)
             sInitStartMenuData[0]++;
         break;
     case 6:
+#if WAYFARER_MULTIPLAYER_POC
+        InitMenuNormal(GetStartMenuWindowId(), FONT_NORMAL, 0, 9, 16,
+                       StartMenuVisibleCount(), sStartMenuCursorPos - sStartMenuScroll);
+#else
         sStartMenuCursorPos = InitMenuNormal(GetStartMenuWindowId(), FONT_NORMAL, 0, 9, 16, sNumStartMenuActions, sStartMenuCursorPos);
+#endif
         CopyWindowToVram(GetStartMenuWindowId(), COPYWIN_MAP);
         return TRUE;
     }
@@ -722,13 +836,21 @@ static bool8 HandleStartMenuInput(void)
     if (JOY_NEW(DPAD_UP))
     {
         PlaySECursorMove(SE_SELECT);
+#if WAYFARER_MULTIPLAYER_POC
+        MovePocStartMenuCursor(-1);
+#else
         sStartMenuCursorPos = Menu_MoveCursor(-1);
+#endif
     }
 
     if (JOY_NEW(DPAD_DOWN))
     {
         PlaySECursorMove(SE_SELECT);
+#if WAYFARER_MULTIPLAYER_POC
+        MovePocStartMenuCursor(1);
+#else
         sStartMenuCursorPos = Menu_MoveCursor(1);
+#endif
     }
 
     if (JOY_NEW(A_BUTTON))
@@ -746,6 +868,9 @@ static bool8 HandleStartMenuInput(void)
         gMenuCallback = sStartMenuItems[sCurrentStartMenuActions[sStartMenuCursorPos]].func.u8_void;
 
         if (gMenuCallback != StartMenuSaveCallback
+#if WAYFARER_MULTIPLAYER_POC
+            && gMenuCallback != StartMenuMultiplayerCallback
+#endif
             && gMenuCallback != StartMenuExitCallback
             && gMenuCallback != StartMenuDebugCallback
             && gMenuCallback != StartMenuSafariZoneRetireCallback
@@ -889,6 +1014,16 @@ static bool8 StartMenuOptionCallback(void)
     return FALSE;
 }
 
+#if WAYFARER_MULTIPLAYER_POC
+static bool8 StartMenuMultiplayerCallback(void)
+{
+    RemoveExtraStartMenuWindows();
+    HideStartMenu();
+    MultiplayerPocMenu_Open();
+    return TRUE;
+}
+#endif
+
 static bool8 StartMenuExitCallback(void)
 {
     RemoveExtraStartMenuWindows();
@@ -1011,6 +1146,9 @@ static bool8 SaveCallback(void)
         return FALSE;
     case SAVE_SUCCESS:
     case SAVE_ERROR:    // Close start menu
+#if WAYFARER_MULTIPLAYER_POC
+        MultiplayerPoc_EndLocalSave();
+#endif
         ClearDialogWindowAndFrameToTransparent(0, TRUE);
         ScriptUnfreezeObjectEvents();
         UnlockPlayerFieldControls();
@@ -1113,6 +1251,9 @@ static void SaveGameTask(u8 taskId)
         return;
     }
 
+#if WAYFARER_MULTIPLAYER_POC
+    MultiplayerPoc_EndLocalSave();
+#endif
     DestroyTask(taskId);
     ScriptContext_Enable();
 }
@@ -1283,6 +1424,14 @@ static u8 SaveSavingMessageCallback(void)
 static u8 SaveDoSaveCallback(void)
 {
     u8 saveStatus;
+
+#if WAYFARER_MULTIPLAYER_POC
+    // Confirmation is complete. Keep advancing callbacks until both link
+    // ends have closed; the synchronous flash write must never run live.
+    MultiplayerPoc_BeginLocalSave();
+    if (!MultiplayerPoc_IsLocalSaveReady())
+        return SAVE_IN_PROGRESS;
+#endif
 
     IncrementGameStat(GAME_STAT_SAVED_GAME);
     PausePyramidChallenge();
