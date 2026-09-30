@@ -1,0 +1,13 @@
+{
+  "rom_commit": "a5ade8fa28",
+  "scenario": "delayed follow",
+  "violations": [
+    "frame 94: Giovanni vanished while still on screen at y=40",
+    "Giovanni did not continue at least two Route2 tiles before player crossing",
+    "frame 94: Giovanni disappeared at visible screen position (144,40)"
+  ],
+  "departure_frame": 78,
+  "evidence_directory": "/tmp/viridian-seam-baseline/verifier-delayed",
+  "present_frame": 95,
+  "absent_frame": 96
+}

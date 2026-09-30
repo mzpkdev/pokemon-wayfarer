@@ -1,0 +1,606 @@
+{
+  "delayed": {
+    "passed": true,
+    "raw_directory": "/tmp/viridian-seam-final-delayed",
+    "raw_results_sha256": "0547afde83c49d9eb9ec126aebf887764b5c9f38d6a9f6c27099bfa525042077",
+    "frames": 190,
+    "violations": [],
+    "actor_sprite_pairs": [
+      [
+        3,
+        6
+      ]
+    ],
+    "max_active_actors": 1,
+    "departure_frame": 76,
+    "crossing_frame": 159,
+    "final_world": {
+      "current_map": 42,
+      "destination_map": 5890,
+      "arrival": 2,
+      "state": 0,
+      "crossing": 26,
+      "x": 10,
+      "y": 76,
+      "goal": 4,
+      "dwell": 0,
+      "reserved": 0,
+      "raw_hex": "2a00021702001a0a4c040000"
+    }
+  },
+  "prompt": {
+    "passed": true,
+    "raw_directory": "/tmp/viridian-seam-final-prompt",
+    "raw_results_sha256": "67a5453c5b424692d6c20a5c099e8af25e2e48f0a2ae28c8e7b5a1b1c3ae2958",
+    "frames": 200,
+    "violations": [],
+    "actor_sprite_pairs": [
+      [
+        3,
+        6
+      ]
+    ],
+    "max_active_actors": 1,
+    "departure_frame": 76,
+    "crossing_frame": 100,
+    "bounce": {
+      "before_debug": {
+        "heartbeats": 1,
+        "hops": 0,
+        "actor_exits": 1,
+        "from_map": 32,
+        "to_map": 42,
+        "last_arrival": 2,
+        "last_crossing": 26,
+        "last_x": 10,
+        "last_y": 79
+      },
+      "actor_visible_before": true,
+      "start_frame": 101,
+      "down_crossing_frame": 123,
+      "up_crossing_frame": 169,
+      "after_debug": {
+        "heartbeats": 3,
+        "hops": 0,
+        "actor_exits": 1,
+        "from_map": 32,
+        "to_map": 42,
+        "last_arrival": 2,
+        "last_crossing": 26,
+        "last_x": 10,
+        "last_y": 79
+      },
+      "world": {
+        "current_map": 42,
+        "destination_map": 5890,
+        "arrival": 2,
+        "state": 0,
+        "crossing": 26,
+        "x": 10,
+        "y": 76,
+        "goal": 11,
+        "dwell": 0,
+        "reserved": 0,
+        "raw_hex": "2a00021702001a0a4c0b0000"
+      }
+    },
+    "final_world": {
+      "current_map": 42,
+      "destination_map": 5890,
+      "arrival": 2,
+      "state": 0,
+      "crossing": 26,
+      "x": 10,
+      "y": 76,
+      "goal": 11,
+      "dwell": 0,
+      "reserved": 0,
+      "raw_hex": "2a00021702001a0a4c0b0000"
+    }
+  },
+  "late": {
+    "passed": true,
+    "raw_directory": "/tmp/viridian-seam-final-late",
+    "raw_results_sha256": "54a1dd6d6ca1386141fff5decb967e614f0981b6dda78cc3487a4d871b195a3e",
+    "frames": 290,
+    "violations": [],
+    "actor_sprite_pairs": [
+      [
+        2,
+        6
+      ],
+      [
+        3,
+        6
+      ]
+    ],
+    "max_active_actors": 1,
+    "departure_frame": 76,
+    "crossing_frame": 259,
+    "final_world": {
+      "current_map": 42,
+      "destination_map": 5890,
+      "arrival": 2,
+      "state": 0,
+      "crossing": 26,
+      "x": 10,
+      "y": 73,
+      "goal": 4,
+      "dwell": 0,
+      "reserved": 0,
+      "raw_hex": "2a00021702001a0a49040000"
+    }
+  },
+  "seam-return": {
+    "passed": true,
+    "raw_directory": "/tmp/viridian-seam-final-seam-return",
+    "raw_results_sha256": "107155c697ccd73ed0e5ba847ff796b0b8473593b13bfde783b7d46f0ea23901",
+    "frames": 114,
+    "violations": [],
+    "actor_sprite_pairs": [
+      [
+        2,
+        7
+      ]
+    ],
+    "max_active_actors": 1,
+    "player_crossing_frame": 46,
+    "actor_return_frame": 84,
+    "before_return_exit_debug": {
+      "heartbeats": 3,
+      "hops": 1,
+      "actor_exits": 2,
+      "from_map": 5890,
+      "to_map": 42,
+      "last_arrival": 5,
+      "last_crossing": 7,
+      "last_x": 5,
+      "last_y": 52
+    },
+    "after_return_exit_debug": {
+      "heartbeats": 4,
+      "hops": 1,
+      "actor_exits": 3,
+      "from_map": 42,
+      "to_map": 32,
+      "last_arrival": 1,
+      "last_crossing": 9,
+      "last_x": 25,
+      "last_y": 0
+    },
+    "final_world": {
+      "current_map": 32,
+      "destination_map": 41,
+      "arrival": 1,
+      "state": 0,
+      "crossing": 9,
+      "x": 25,
+      "y": 0,
+      "goal": 10,
+      "dwell": 0,
+      "reserved": 0,
+      "raw_hex": "2000290001000919000a0000"
+    }
+  },
+  "linger": {
+    "passed": true,
+    "raw_directory": "/tmp/viridian-seam-final-linger",
+    "raw_results_sha256": "158bf533519b58e8ba61e4fa482543ba02829cbb24fef7332b53983364aedc8d",
+    "evidence": {
+      "scenario": "linger",
+      "fresh_rom_copy": true,
+      "startup_frames": 690,
+      "viridian": [
+        0,
+        32,
+        30,
+        37
+      ],
+      "phase2": {
+        "fresh_world": {
+          "current_map": 32,
+          "destination_map": 5890,
+          "arrival": 0,
+          "state": 0,
+          "crossing": 0,
+          "x": 33,
+          "y": 36,
+          "goal": 0,
+          "dwell": 0,
+          "reserved": 0,
+          "raw_hex": "200002170000002124000000"
+        },
+        "fresh_debug": {
+          "heartbeats": 0,
+          "hops": 0,
+          "actor_exits": 0,
+          "from_map": 0,
+          "to_map": 0,
+          "last_arrival": 0,
+          "last_crossing": 0,
+          "last_x": 0,
+          "last_y": 0
+        },
+        "heartbeats": [
+          {
+            "transition": "enter_center",
+            "location": [
+              12,
+              0,
+              7,
+              8
+            ],
+            "world": {
+              "current_map": 5890,
+              "destination_map": 41,
+              "arrival": 5,
+              "state": 2,
+              "crossing": 6,
+              "x": 7,
+              "y": 9,
+              "goal": 4,
+              "dwell": 2,
+              "reserved": 0,
+              "raw_hex": "021729000502060709040200"
+            },
+            "world_debug": {
+              "heartbeats": 1,
+              "hops": 1,
+              "actor_exits": 1,
+              "from_map": 42,
+              "to_map": 5890,
+              "last_arrival": 5,
+              "last_crossing": 6,
+              "last_x": 7,
+              "last_y": 9
+            }
+          },
+          {
+            "transition": "return_viridian",
+            "location": [
+              0,
+              32,
+              30,
+              37
+            ],
+            "world": {
+              "current_map": 5890,
+              "destination_map": 41,
+              "arrival": 5,
+              "state": 2,
+              "crossing": 6,
+              "x": 7,
+              "y": 9,
+              "goal": 4,
+              "dwell": 1,
+              "reserved": 0,
+              "raw_hex": "021729000502060709040100"
+            },
+            "world_debug": {
+              "heartbeats": 2,
+              "hops": 1,
+              "actor_exits": 1,
+              "from_map": 42,
+              "to_map": 5890,
+              "last_arrival": 5,
+              "last_crossing": 6,
+              "last_x": 7,
+              "last_y": 9
+            }
+          },
+          {
+            "transition": "enter_center",
+            "location": [
+              12,
+              0,
+              7,
+              8
+            ],
+            "world": {
+              "current_map": 42,
+              "destination_map": 41,
+              "arrival": 5,
+              "state": 0,
+              "crossing": 7,
+              "x": 5,
+              "y": 52,
+              "goal": 4,
+              "dwell": 0,
+              "reserved": 0,
+              "raw_hex": "2a0029000500070534040000"
+            },
+            "world_debug": {
+              "heartbeats": 3,
+              "hops": 2,
+              "actor_exits": 1,
+              "from_map": 5890,
+              "to_map": 42,
+              "last_arrival": 5,
+              "last_crossing": 7,
+              "last_x": 5,
+              "last_y": 52
+            }
+          },
+          {
+            "transition": "return_viridian",
+            "location": [
+              0,
+              32,
+              30,
+              36
+            ],
+            "world": {
+              "current_map": 32,
+              "destination_map": 41,
+              "arrival": 1,
+              "state": 0,
+              "crossing": 8,
+              "x": 24,
+              "y": 0,
+              "goal": 4,
+              "dwell": 0,
+              "reserved": 0,
+              "raw_hex": "200029000100081800040000"
+            },
+            "world_debug": {
+              "heartbeats": 4,
+              "hops": 3,
+              "actor_exits": 1,
+              "from_map": 42,
+              "to_map": 32,
+              "last_arrival": 1,
+              "last_crossing": 8,
+              "last_x": 24,
+              "last_y": 0
+            }
+          }
+        ],
+        "left_viridian": {
+          "current_map": 42,
+          "destination_map": 5890,
+          "arrival": 2,
+          "state": 0,
+          "crossing": 26,
+          "x": 10,
+          "y": 79,
+          "goal": 4,
+          "dwell": 0,
+          "reserved": 0,
+          "raw_hex": "2a00021702001a0a4f040000"
+        },
+        "frames_until_north_exit": 990,
+        "reentered_actor": {
+          "slot": 3,
+          "local_id": 26,
+          "x": 24,
+          "y": 0
+        },
+        "reentered_world": {
+          "current_map": 32,
+          "destination_map": 41,
+          "arrival": 1,
+          "state": 0,
+          "crossing": 8,
+          "x": 24,
+          "y": 0,
+          "goal": 4,
+          "dwell": 0,
+          "reserved": 0,
+          "raw_hex": "200029000100081800040000"
+        },
+        "reentered_actor_debug": {
+          "completed": 2,
+          "replans": 0,
+          "searches": 3,
+          "search_nodes": 616,
+          "search_frames": 89,
+          "max_nodes_per_frame": 8,
+          "max_slice_vblanks": 1,
+          "grass_tiles_found": 0,
+          "blocked_steps": 0,
+          "x": 31,
+          "y": 7,
+          "goal_x": 33,
+          "goal_y": 7,
+          "next_x": 33,
+          "next_y": 6,
+          "phase": 1,
+          "goal": 3,
+          "last_completed_goal": 4,
+          "used_grass_fallback": 1,
+          "max_slice_scanlines": 107,
+          "current_map": 32,
+          "local_id": 26
+        },
+        "reentry_observed_after_frames": 0
+      }
+    }
+  },
+  "save": {
+    "passed": true,
+    "raw_directory": "/tmp/viridian-seam-final-save",
+    "raw_results_sha256": "f46ef9e412268ff0c7edf779676caf08ca2285b8e8a72513f389446935d3770d",
+    "evidence": {
+      "scenario": "save",
+      "fresh_rom_copy": true,
+      "startup_frames": 690,
+      "viridian": [
+        0,
+        32,
+        30,
+        37
+      ],
+      "phase2": {
+        "fresh_world": {
+          "current_map": 32,
+          "destination_map": 5890,
+          "arrival": 0,
+          "state": 0,
+          "crossing": 0,
+          "x": 33,
+          "y": 36,
+          "goal": 0,
+          "dwell": 0,
+          "reserved": 0,
+          "raw_hex": "200002170000002124000000"
+        },
+        "left_viridian": {
+          "current_map": 42,
+          "destination_map": 5890,
+          "arrival": 2,
+          "state": 0,
+          "crossing": 26,
+          "x": 10,
+          "y": 79,
+          "goal": 4,
+          "dwell": 0,
+          "reserved": 0,
+          "raw_hex": "2a00021702001a0a4f040000"
+        },
+        "frames_until_north_exit": 990,
+        "center_entry": {
+          "location": [
+            12,
+            0,
+            7,
+            8
+          ],
+          "world": {
+            "current_map": 5890,
+            "destination_map": 41,
+            "arrival": 5,
+            "state": 2,
+            "crossing": 6,
+            "x": 7,
+            "y": 9,
+            "goal": 4,
+            "dwell": 2,
+            "reserved": 0,
+            "raw_hex": "021729000502060709040200"
+          },
+          "world_debug": {
+            "heartbeats": 1,
+            "hops": 1,
+            "actor_exits": 1,
+            "from_map": 42,
+            "to_map": 5890,
+            "last_arrival": 5,
+            "last_crossing": 6,
+            "last_x": 7,
+            "last_y": 9
+          }
+        },
+        "before_save": {
+          "current_map": 5890,
+          "destination_map": 41,
+          "arrival": 5,
+          "state": 2,
+          "crossing": 6,
+          "x": 7,
+          "y": 9,
+          "goal": 4,
+          "dwell": 2,
+          "reserved": 0,
+          "raw_hex": "021729000502060709040200"
+        },
+        "save_block1_before_save": {
+          "save_version": 11,
+          "prefix_hex": "0b000000070008000c000000ffffffff00000000000000000000000000000000",
+          "save_counter": 0
+        },
+        "start_menu_actions": [
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          0,
+          0,
+          0
+        ],
+        "save_ui_a_presses": 4,
+        "after_save": {
+          "current_map": 5890,
+          "destination_map": 41,
+          "arrival": 5,
+          "state": 2,
+          "crossing": 6,
+          "x": 7,
+          "y": 9,
+          "goal": 4,
+          "dwell": 2,
+          "reserved": 0,
+          "raw_hex": "021729000502060709040200"
+        },
+        "save_block1_after_save": {
+          "save_version": 11,
+          "prefix_hex": "0b000000070008000c000000ffffffff00000000000000000000000000000000",
+          "save_counter": 1
+        },
+        "saved_field_location": [
+          12,
+          0,
+          7,
+          8
+        ]
+      },
+      "reload_method": "gba_soft_reset",
+      "reset": {
+        "vblank_before": 2643,
+        "vblank_after": 0,
+        "reset_observed_after_frames": 14
+      },
+      "reload": {
+        "save_status_loaded_after_frames": 240,
+        "title_before_continue": {
+          "current_map": 5890,
+          "destination_map": 41,
+          "arrival": 5,
+          "state": 2,
+          "crossing": 6,
+          "x": 7,
+          "y": 9,
+          "goal": 4,
+          "dwell": 2,
+          "reserved": 0,
+          "raw_hex": "021729000502060709040200"
+        },
+        "save_block1_before_continue": {
+          "save_version": 11,
+          "prefix_hex": "0b000000070008000c000000ffffffff00000000000000000000000000000000",
+          "save_counter": 1
+        },
+        "continued_location": [
+          12,
+          0,
+          7,
+          8
+        ],
+        "continue_frames": 420,
+        "overworld_callback2": 135918044,
+        "after_continue": {
+          "current_map": 5890,
+          "destination_map": 41,
+          "arrival": 5,
+          "state": 2,
+          "crossing": 6,
+          "x": 7,
+          "y": 9,
+          "goal": 4,
+          "dwell": 2,
+          "reserved": 0,
+          "raw_hex": "021729000502060709040200"
+        },
+        "save_block1_after_continue": {
+          "save_version": 11,
+          "prefix_hex": "0b000000070008000c000000ffffffff00000000000000000000000000000000",
+          "save_counter": 1
+        }
+      },
+      "host_save_bytes": 131072,
+      "host_save_file": "/tmp/viridian-seam-final-save/saved-game.sav",
+      "host_save_sha256": "1b12f858aee8af945dbb761bcde2c73124b486512a2ce69e060721c40ba785be"
+    }
+  }
+}

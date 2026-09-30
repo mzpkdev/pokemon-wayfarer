@@ -270,6 +270,24 @@ def move_player_to(
     raise RuntimeError(f"Player did not reach {(target_x, target_y)}")
 
 
+def move_player_straight_held(
+    client: SkyEmu, symbols: dict[str, int], direction: str, target: int,
+    max_frames: int = 800,
+) -> int:
+    """Hold one real direction, stopping as soon as the target tile begins."""
+    axis = 1 if direction in ("Left", "Right") else 2
+    client.check("/input", {direction: "1"})
+    try:
+        for elapsed in range(2, max_frames + 1, 2):
+            client.step(2)
+            player = read_player_object(client, symbols)
+            if player and player[axis] == target:
+                return elapsed
+    finally:
+        client.check("/input", {direction: "0"})
+    raise RuntimeError(f"Held {direction} did not reach grid coordinate {target}: {player}")
+
+
 def read_world_record(client: SkyEmu, symbols: dict[str, int]) -> dict[str, int | str]:
     """Read the actual 12-byte SaveBlock3 record, never a RAM-only mirror."""
     base = client.u32(symbols["gSaveBlock3Ptr"])
@@ -318,6 +336,240 @@ def active_giovanni_objects(client: SkyEmu, symbols: dict[str, int]) -> list[dic
             actors.append({"slot": index, "map_num": raw[9], "local_id": raw[8],
                            "x": x - MAP_OFFSET, "y": y - MAP_OFFSET})
     return actors
+
+
+def seam_frame(client: SkyEmu, symbols: dict[str, int], frame: int,
+               output: Path) -> dict[str, object]:
+    """Read the real object and sprite state on one emulated video frame."""
+    actors = []
+    player = read_player_object(client, symbols)
+    # SaveBlock1's map changes before camera update rebases object coordinates.
+    # The player object is in the same coordinate frame as every other object:
+    # Viridian north y is near 7, Route2 south y is near 86.
+    route2_object_frame = player is not None and player[2] >= 50
+    raw_objects = client.read(symbols["gObjectEvents"], 16 * 0x24)
+    for slot in range(16):
+        raw = raw_objects[slot * 0x24:(slot + 1) * 0x24]
+        if not raw[0] & 1 or struct.unpack_from("<H", raw, 4)[0] != 485:
+            continue
+        x, y = struct.unpack_from("<hh", raw, 0x10)
+        sprite_id = raw[0x23]
+        sprite = client.read(symbols["gSprites"] + sprite_id * 0x44, 0x44)
+        sx, sy, sx2, sy2 = struct.unpack_from("<hhhh", sprite, 0x20)
+        corner_x, corner_y = struct.unpack_from("<bb", sprite, 0x28)
+        flags = sprite[0x3E]
+        offset_x = client.u16(symbols["gSpriteCoordOffsetX"])
+        offset_y = client.u16(symbols["gSpriteCoordOffsetY"])
+        offset_x = struct.unpack("<h", struct.pack("<H", offset_x))[0]
+        offset_y = struct.unpack("<h", struct.pack("<H", offset_y))[0]
+        actor = {"slot": slot, "map_group": raw[10], "map_num": raw[9],
+                 "local_id": raw[8], "x": x - MAP_OFFSET, "y": y - MAP_OFFSET,
+                 "object_invisible": bool(raw[1] & 0x20),
+                 "object_offscreen": bool(raw[1] & 0x40),
+                 "sprite_id": sprite_id, "sprite_in_use": bool(flags & 1),
+                 "sprite_invisible": bool(flags & 4),
+                 "screen_x": sx + sx2 + corner_x + (offset_x if flags & 2 else 0),
+                 "screen_y": sy + sy2 + corner_y + (offset_y if flags & 2 else 0)}
+        actor["rendered"] = (actor["sprite_in_use"] and not actor["sprite_invisible"]
+                             and not actor["object_invisible"]
+                             and -32 <= actor["screen_x"] <= 239
+                             and -32 <= actor["screen_y"] <= 159)
+        if route2_object_frame:
+            actor["route2_x"], actor["route2_y"] = actor["x"], actor["y"]
+        else:
+            actor["route2_x"], actor["route2_y"] = actor["x"] - 16, actor["y"] + 80
+        actors.append(actor)
+    sample: dict[str, object] = {"frame": frame, "location": read_location(client, symbols),
+                                 "player": player, "route2_object_frame": route2_object_frame,
+                                 "world": read_world_record(client, symbols), "actors": actors}
+    client.screenshot(output / f"{frame:04d}.png")
+    return sample
+
+
+def phase2_seam(client: SkyEmu, symbols: dict[str, int], output: Path,
+                follow: str, bounce: bool) -> dict[str, object]:
+    """Observe the north connection continuously, then cross using real input."""
+    wait_field_unlocked(client, symbols)
+    # x24 is a clear north road lane; the wandering NPC can block x26.
+    move_player_straight_held(client, symbols, "Left", 24 + MAP_OFFSET)
+    client.step(18)
+    move_player_straight_held(client, symbols, "Up", MAP_OFFSET)
+    client.step(18)
+    if (location := read_location(client, symbols))[:2] != (0, 32):
+        raise RuntimeError(f"Player crossed before seam observation: {location}")
+    for waited in range(0, 10000, 5):
+        walker = actor_snapshot(client, symbols)
+        world = read_world_record(client, symbols)
+        if (world["current_map"] == VIRIDIAN_MAP and walker["goal"] == 4
+            and walker["phase"] == 2 and walker["y"] - MAP_OFFSET <= 4):
+            break
+        client.step(5)
+    else:
+        raise RuntimeError(f"Giovanni did not approach north seam: {walker}, {world}")
+
+    frames_dir = output / f"seam-{follow}-frames"
+    frames_dir.mkdir(exist_ok=True)
+    evidence: dict[str, object] = {"follow": follow, "bounce_requested": bounce,
+                                   "frames_waiting_for_approach": waited,
+                                   "samples": [], "violations": []}
+    samples: list[dict[str, object]] = evidence["samples"]
+    violations: list[str] = evidence["violations"]
+    departure_frame = None
+    first_route2_actor_y = None
+    last_visible_y = None
+    try:
+        for frame in range(340 if follow == "late" else 220):
+            sample = seam_frame(client, symbols, frame, frames_dir)
+            samples.append(sample)
+            current_map = sample["world"]["current_map"]
+            visible = [a for a in sample["actors"] if a["rendered"]]
+            if len(sample["actors"]) > 1 or len(visible) > 1:
+                violations.append(f"frame {frame}: duplicate Giovanni objects/sprites")
+            if current_map == ROUTE2_MAP and departure_frame is None:
+                departure_frame = frame
+                first_route2_actor_y = sample["world"]["y"]
+                evidence["departure_frame"] = frame
+                evidence["departure_visible"] = bool(visible)
+                if not visible:
+                    violations.append(f"frame {frame}: Giovanni absent at Route2 world departure")
+            if current_map == ROUTE2_MAP and sample["location"][:2] == (0, 32):
+                if visible:
+                    last_visible_y = visible[0]["screen_y"]
+                elif last_visible_y is not None and last_visible_y >= 0:
+                    violations.append(f"frame {frame}: Giovanni vanished while still on screen at y={last_visible_y}")
+                    last_visible_y = None
+            if departure_frame is not None:
+                held = {"prompt": 1, "delayed": 60, "late": 160}[follow]
+                if frame - departure_frame >= held:
+                    evidence["viridian_frames_after_departure"] = frame - departure_frame
+                    break
+            client.step(1)
+        else:
+            raise RuntimeError("Seam sampling ended before Giovanni departed")
+        if first_route2_actor_y is None:
+            raise RuntimeError("No Route2 world departure was observed")
+        if follow == "delayed" and samples[-1]["world"]["y"] > first_route2_actor_y - 2:
+            violations.append("Giovanni did not continue at least two Route2 tiles before player crossing")
+        if follow == "late":
+            seam_samples = samples[departure_frame:]
+            visible_y = [a["screen_y"] for s in seam_samples for a in s["actors"] if a["rendered"]]
+            evidence["late_last_world_y"] = samples[-1]["world"]["y"]
+            evidence["late_lowest_visible_screen_y"] = min(visible_y) if visible_y else None
+            evidence["late_actor_visible_at_follow"] = any(a["rendered"] for a in samples[-1]["actors"])
+            if samples[-1]["world"]["y"] > first_route2_actor_y - 5:
+                violations.append("Giovanni stopped before walking five Route2 tiles past the seam")
+            if evidence["late_actor_visible_at_follow"]:
+                violations.append("Giovanni remained visible at the connection strip edge after 160 frames")
+            if not visible_y or min(visible_y) > -32:
+                violations.append("Giovanni did not visibly walk above the viewport before leaving it")
+        # The player stands on Viridian y=0. One real Up step crosses the map
+        # connection; sample every frame of the key hold and field transition.
+        frame = len(samples)
+        for attempt in range(5):
+            client.check("/input", {"Up": "1"})
+            for _ in range(3):
+                client.step(1)
+                sample = seam_frame(client, symbols, frame, frames_dir)
+                samples.append(sample)
+                frame += 1
+            client.check("/input", {"Up": "0"})
+            for _ in range(20):
+                client.step(1)
+                sample = seam_frame(client, symbols, frame, frames_dir)
+                samples.append(sample)
+                frame += 1
+            if samples[-1]["location"][:2] == (0, 42):
+                evidence["crossing_frame"] = frame - 1
+                break
+        else:
+            raise RuntimeError(f"Player failed to cross seam: {samples[-1]['location']}")
+        if bounce:
+            before_bounce = read_world_debug(client, symbols)
+            visible_before = [a for a in samples[-1]["actors"] if a["rendered"]]
+            evidence["bounce"] = {"before_debug": before_bounce,
+                                   "actor_visible_before": bool(visible_before),
+                                   "start_frame": frame}
+            if not visible_before:
+                violations.append("Giovanni was not visible before the player bounced between maps")
+            for direction, target_map in (("Down", (0, 32)), ("Up", (0, 42))):
+                for attempt in range(8):
+                    client.check("/input", {direction: "1"})
+                    try:
+                        for _ in range(3):
+                            client.step(1)
+                            sample = seam_frame(client, symbols, frame, frames_dir)
+                            samples.append(sample)
+                            frame += 1
+                    finally:
+                        client.check("/input", {direction: "0"})
+                    for _ in range(20):
+                        client.step(1)
+                        sample = seam_frame(client, symbols, frame, frames_dir)
+                        samples.append(sample)
+                        frame += 1
+                    if samples[-1]["location"][:2] == target_map:
+                        evidence["bounce"][f"{direction.lower()}_crossing_frame"] = frame - 1
+                        break
+                else:
+                    raise RuntimeError(f"Player failed to bounce {direction} into {target_map}")
+            after_bounce = read_world_debug(client, symbols)
+            evidence["bounce"]["after_debug"] = after_bounce
+            evidence["bounce"]["world"] = read_world_record(client, symbols)
+            if after_bounce["hops"] != before_bounce["hops"]:
+                violations.append("Travel hop advanced visible Giovanni during player bounce")
+            if evidence["bounce"]["world"]["current_map"] != ROUTE2_MAP:
+                violations.append("Giovanni left Route2 during short player bounce")
+        for _ in range(30):
+            client.step(1)
+            sample = seam_frame(client, symbols, frame, frames_dir)
+            samples.append(sample)
+            frame += 1
+        if samples[-1]["world"]["current_map"] != ROUTE2_MAP:
+            violations.append("Giovanni world record left Route2 during player crossing")
+        last_rendered = None
+        for sample in samples:
+            if len(sample["actors"]) > 1:
+                violations.append(f"frame {sample['frame']}: duplicate Giovanni objects")
+            if sample["world"]["current_map"] != ROUTE2_MAP:
+                continue
+            rendered = [actor for actor in sample["actors"] if actor["rendered"]]
+            if rendered:
+                current = rendered[0]
+                if last_rendered and sample["frame"] == last_rendered["frame"] + 1:
+                    pixel_delta = max(abs(current["screen_x"] - last_rendered["screen_x"]),
+                                      abs(current["screen_y"] - last_rendered["screen_y"]))
+                    if pixel_delta > 8:
+                        violations.append(f"frame {sample['frame']}: visible Giovanni jumped {pixel_delta} screen pixels")
+                last_rendered = {"frame": sample["frame"], **current}
+            elif last_rendered and (-16 <= last_rendered["screen_x"] <= 239
+                                    and -16 <= last_rendered["screen_y"] <= 159):
+                violations.append(f"frame {sample['frame']}: Giovanni disappeared at visible screen position "
+                                  f"({last_rendered['screen_x']},{last_rendered['screen_y']})")
+                last_rendered = None
+        # Actor coordinates from source and destination maps share one Route2
+        # coordinate system. A tile jump at the seam is never a walk animation.
+        previous = None
+        for sample in samples:
+            actors = sample["actors"]
+            if len(actors) != 1:
+                continue
+            actor = actors[0]
+            if "route2_x" not in actor:
+                continue
+            if previous is not None:
+                distance = abs(actor["route2_x"] - previous["route2_x"]) + abs(actor["route2_y"] - previous["route2_y"])
+                elapsed = sample["frame"] - previous["frame"]
+                if distance > 1 + elapsed // 12:
+                    violations.append(f"frame {sample['frame']}: Giovanni jumped {distance} tiles in {elapsed} frames")
+            previous = {"frame": sample["frame"], "route2_x": actor["route2_x"],
+                        "route2_y": actor["route2_y"]}
+        evidence["final_location"] = samples[-1]["location"]
+        evidence["final_world"] = samples[-1]["world"]
+        if violations:
+            raise RuntimeError(f"North seam continuity failed: {violations[:6]}")
+        return evidence
+    finally:
+        (output / f"seam-{follow}-trace.json").write_text(json.dumps(evidence, indent=2) + "\n")
 
 
 def save_block1_prefix(client: SkyEmu, symbols: dict[str, int]) -> dict[str, object]:
@@ -388,20 +640,27 @@ def phase2_follow(client: SkyEmu, symbols: dict[str, int], output: Path) -> dict
     if evidence["fresh_world"]["current_map"] != VIRIDIAN_MAP:
         raise RuntimeError(f"Fresh Giovanni is not in Viridian: {evidence['fresh_world']}")
     wait_field_unlocked(client, symbols)
-    move_player_to(client, symbols, 26 + MAP_OFFSET, 37 + MAP_OFFSET)
-    move_player_to(client, symbols, 26 + MAP_OFFSET, 3 + MAP_OFFSET, max_steps=40)
+    # The central x26 lane has a wandering NPC; x24 is the clear road lane.
+    move_player_straight_held(client, symbols, "Left", 24 + MAP_OFFSET)
+    client.step(18)
+    move_player_straight_held(client, symbols, "Up", 3 + MAP_OFFSET)
+    client.step(18)
     client.screenshot(output / "follow-viridian-north-wait.png")
     departed, waited = wait_for_world_map(client, symbols, ROUTE2_MAP, 10000)
     evidence["departed_to_route2"] = departed
     evidence["frames_waiting_near_exit"] = waited
     evidence["debug_after_exit"] = read_world_debug(client, symbols)
     expected_x = departed["crossing"] - 16
-    if departed["arrival"] != 2 or departed["x"] != expected_x or departed["y"] != 79:
-        raise RuntimeError(f"Route2 arrival did not match north connection: {departed}")
+    exit_debug = evidence["debug_after_exit"]
+    if (departed["arrival"] != 2 or exit_debug["from_map"] != VIRIDIAN_MAP
+        or exit_debug["to_map"] != ROUTE2_MAP or exit_debug["last_arrival"] != 2
+        or exit_debug["last_crossing"] != departed["crossing"]
+        or exit_debug["last_x"] != expected_x or exit_debug["last_y"] != 79):
+        raise RuntimeError(f"Route2 exit did not match north connection: {departed}, {exit_debug}")
     client.screenshot(output / "follow-giovanni-departed.png")
-    # From Viridian x26, the +16 connection offset places the player at
-    # Route2 x10. Stay behind the actor rather than teleporting or arranging.
-    move_player_to(client, symbols, 26 + MAP_OFFSET, MAP_OFFSET, max_steps=5)
+    # From Viridian x24, the +16 connection offset places the player at
+    # Route2 x8. Stay behind the actor rather than teleporting or arranging.
+    move_player_to(client, symbols, 24 + MAP_OFFSET, MAP_OFFSET, max_steps=5)
     for attempt in range(10):
         client.press("Up", hold=3, release=25)
         client.step(15)
@@ -476,6 +735,138 @@ def phase2_follow(client: SkyEmu, symbols: dict[str, int], output: Path) -> dict
                 raise RuntimeError(f"Giovanni was not removed after entering gate: {actors}")
             return evidence
     raise RuntimeError(f"Giovanni did not enter Forest gate from Route2: {read_world_record(client, symbols)}")
+
+
+def phase2_seam_return(client: SkyEmu, symbols: dict[str, int], output: Path) -> dict[str, object]:
+    """Cross south ahead of Giovanni and watch his actual Route2 exit."""
+    evidence: dict[str, object] = {"outbound": phase2_follow(client, symbols, output),
+                                   "heartbeats": [], "samples": [], "violations": []}
+    # Forest gate dwell is released by two real player map transitions. Keep
+    # the player at Route2's south edge while Giovanni walks back from y52.
+    for direction, expected_map in (("Down", (0, 32)), ("Up", (0, 42))):
+        for attempt in range(10):
+            client.press(direction, hold=3, release=25)
+            client.step(15)
+            if (location := read_location(client, symbols))[:2] == expected_map:
+                wait_field_unlocked(client, symbols)
+                evidence["heartbeats"].append({"direction": direction, "location": location,
+                                                "world": read_world_record(client, symbols),
+                                                "debug": read_world_debug(client, symbols)})
+                client.screenshot(output / f"return-player-{direction.lower()}.png")
+                break
+        else:
+            raise RuntimeError(f"Player did not cross {direction} for return setup: {location}")
+    if evidence["heartbeats"][-1]["world"]["current_map"] != ROUTE2_MAP:
+        raise RuntimeError(f"Gate dwell did not return Giovanni to Route2: {evidence['heartbeats']}")
+    for elapsed in range(0, 6000, 5):
+        world = read_world_record(client, symbols)
+        actor = read_giovanni_object(client, symbols, 42)
+        if world["current_map"] != ROUTE2_MAP:
+            raise RuntimeError(f"Giovanni left Route2 before player could watch south approach: {world}")
+        if actor and actor["y"] >= 75 and actor_snapshot(client, symbols)["goal"] == 10:
+            evidence["return_approach_frames"] = elapsed
+            evidence["return_approach_actor"] = actor
+            break
+        client.step(5)
+    else:
+        raise RuntimeError(f"Giovanni never approached Route2 south edge: {world}, {actor}")
+
+    frames_dir = output / "seam-return-frames"
+    frames_dir.mkdir(exist_ok=True)
+    samples: list[dict[str, object]] = evidence["samples"]
+    violations: list[str] = evidence["violations"]
+    before_exit = read_world_debug(client, symbols)
+    evidence["before_return_exit_debug"] = before_exit
+    frame = 0
+    try:
+        sample = seam_frame(client, symbols, frame, frames_dir)
+        samples.append(sample)
+        if not any(a["rendered"] for a in sample["actors"]):
+            violations.append("Giovanni was not visible at Route2 south approach")
+        frame += 1
+        for attempt in range(8):
+            client.check("/input", {"Down": "1"})
+            try:
+                for _ in range(3):
+                    client.step(1)
+                    samples.append(seam_frame(client, symbols, frame, frames_dir))
+                    frame += 1
+            finally:
+                client.check("/input", {"Down": "0"})
+            for _ in range(20):
+                client.step(1)
+                samples.append(seam_frame(client, symbols, frame, frames_dir))
+                frame += 1
+            if samples[-1]["location"][:2] == (0, 32):
+                evidence["player_crossing_frame"] = frame - 1
+                break
+        else:
+            raise RuntimeError(f"Player did not cross south ahead of Giovanni: {samples[-1]['location']}")
+        return_frame = None
+        for _ in range(240):
+            client.step(1)
+            sample = seam_frame(client, symbols, frame, frames_dir)
+            samples.append(sample)
+            if sample["world"]["current_map"] == VIRIDIAN_MAP and return_frame is None:
+                return_frame = frame
+                evidence["actor_return_frame"] = frame
+            frame += 1
+            if return_frame is not None and frame - return_frame >= 30:
+                break
+        if return_frame is None:
+            raise RuntimeError(f"Giovanni never actually crossed south into Viridian: {samples[-1]['world']}")
+        if return_frame <= evidence["player_crossing_frame"]:
+            violations.append("Giovanni crossed before the player cleared the Route2 edge")
+
+        last_visible = None
+        previous_actor = None
+        for sample in samples:
+            actors = sample["actors"]
+            if len(actors) > 1:
+                violations.append(f"frame {sample['frame']}: duplicate Giovanni actors")
+            visible = [a for a in actors if a["rendered"]]
+            if visible:
+                current = visible[0]
+                if last_visible and sample["frame"] == last_visible["frame"] + 1:
+                    dx = abs(current["screen_x"] - last_visible["screen_x"])
+                    dy = abs(current["screen_y"] - last_visible["screen_y"])
+                    if max(dx, dy) > 8:
+                        violations.append(f"frame {sample['frame']}: Giovanni jumped {max(dx, dy)} pixels")
+                last_visible = {"frame": sample["frame"], **current}
+            elif last_visible and (-16 <= last_visible["screen_x"] <= 239
+                                   and -16 <= last_visible["screen_y"] <= 159):
+                violations.append(f"frame {sample['frame']}: Giovanni vanished at visible screen position")
+                last_visible = None
+            if len(actors) == 1:
+                current = actors[0]
+                if previous_actor and sample["frame"] == previous_actor["frame"] + 1:
+                    distance = abs(current["route2_x"] - previous_actor["route2_x"]) + abs(current["route2_y"] - previous_actor["route2_y"])
+                    if distance > 1:
+                        violations.append(f"frame {sample['frame']}: Giovanni jumped {distance} tiles")
+                    if (sample["world"]["current_map"] == ROUTE2_MAP
+                        and current["route2_y"] < previous_actor["route2_y"]):
+                        violations.append(f"frame {sample['frame']}: Giovanni reversed north during south approach")
+                previous_actor = {"frame": sample["frame"], **current}
+        exit_sample = samples[return_frame]
+        if not exit_sample["actors"] or exit_sample["actors"][0]["route2_y"] < 80:
+            violations.append("World switched to Viridian before Giovanni reached Route2 south edge")
+        after_exit = read_world_debug(client, symbols)
+        evidence["after_return_exit_debug"] = after_exit
+        if (after_exit["actor_exits"] <= before_exit["actor_exits"]
+            or after_exit["from_map"] != ROUTE2_MAP or after_exit["to_map"] != VIRIDIAN_MAP
+            or after_exit["last_arrival"] != 1
+            or after_exit["last_x"] != after_exit["last_crossing"] + 16
+            or after_exit["last_y"] != 0):
+            violations.append(f"South exit telemetry did not match Route2 connection: {after_exit}")
+        if after_exit["hops"] != before_exit["hops"]:
+            violations.append("Off-screen hop advanced Giovanni during visible south return")
+        evidence["final_location"] = samples[-1]["location"]
+        evidence["final_world"] = samples[-1]["world"]
+        if violations:
+            raise RuntimeError(f"South seam continuity failed: {violations[:6]}")
+        return evidence
+    finally:
+        (output / "seam-return-trace.json").write_text(json.dumps(evidence, indent=2) + "\n")
 
 
 def phase2_linger(client: SkyEmu, symbols: dict[str, int], output: Path) -> dict[str, object]:
@@ -902,8 +1293,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--lifecycle", action="store_true",
                         help="then enter/leave Center and open/close Bag, checking walker resumes")
     parser.add_argument("--startup-only", action="store_true", help="debug startup before walker is linked")
-    parser.add_argument("--phase2", choices=("follow", "linger", "save"),
+    parser.add_argument("--phase2", choices=("follow", "linger", "save", "seam", "seam-return"),
                         help="run one fresh phase 2 scenario with real controls")
+    parser.add_argument("--seam-follow", choices=("prompt", "delayed", "late"), default="prompt",
+                        help="on seam scenario, wait 1, 60, or 160 frames before crossing")
+    parser.add_argument("--seam-bounce", action="store_true",
+                        help="after prompt crossing, bounce to Viridian and back to test heartbeat guard")
     return parser.parse_args()
 
 
@@ -918,6 +1313,8 @@ def main() -> int:
         raise ValueError("--min-goals must be between 1 and 6")
     if args.phase2 and (args.startup_only or args.lifecycle):
         raise ValueError("--phase2 runs separately from --startup-only and --lifecycle")
+    if args.seam_bounce and args.phase2 != "seam":
+        raise ValueError("--seam-bounce requires --phase2 seam")
     args.output.mkdir(parents=True, exist_ok=True)
     symbols = read_symbols(args.symbols)
     required = {"gSaveBlock1Ptr", "gObjectEvents"}
@@ -930,6 +1327,9 @@ def main() -> int:
                          "gViridianWalkerWorldSaveSize"))
     if args.phase2 == "save":
         required.update(("gSaveFileStatus", "gSaveCounter", "gMain", "CB2_Overworld"))
+    if args.phase2 in ("seam", "seam-return"):
+        required.update(("gSprites", "gSpriteCoordOffsetX", "gSpriteCoordOffsetY",
+                         "gViridianWalkerWorldDebug"))
     if missing := sorted(required - symbols.keys()):
         raise RuntimeError(f"symbol file lacks {', '.join(missing)}")
     with tempfile.TemporaryDirectory(prefix="viridian-walker-skyemu-") as temp:
@@ -955,6 +1355,11 @@ def main() -> int:
                     result["reload"] = {}
                     phase2_save_after(client, symbols, args.output,
                                       result["phase2"]["after_save"], result["reload"])
+                elif args.phase2 == "seam":
+                    result["phase2"] = phase2_seam(client, symbols, args.output,
+                                                    args.seam_follow, args.seam_bounce)
+                elif args.phase2 == "seam-return":
+                    result["phase2"] = phase2_seam_return(client, symbols, args.output)
                 elif not args.startup_only:
                     result.update(run_walker(client, symbols, args.output, args.max_frames,
                                              args.min_goals))

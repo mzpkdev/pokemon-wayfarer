@@ -57,6 +57,7 @@ extern struct ViridianWalkerDebug gViridianWalkerDebug;
 void ViridianWalker_Update(void);
 void ViridianWalker_OnHeapReset(void);
 bool8 ViridianWalker_IsObject(const struct ObjectEvent *objectEvent);
+bool8 ViridianWalker_HasVisibleActorOnMap(u16 map);
 #endif
 
 #endif

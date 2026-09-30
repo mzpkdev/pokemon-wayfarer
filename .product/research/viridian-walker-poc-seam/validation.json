@@ -1,0 +1,49 @@
+{
+  "base_commit": "a5ade8fa28",
+  "branch": "task/viridian-walker-poc",
+  "source_sha256": {
+    "game/include/viridian_walker_poc.h": "fd0fb7d1ebbfea8cac94c4b9af8681a3282c0effdecff3264d532069ab9c4fff",
+    "game/include/viridian_walker_world.h": "843ddc285b16a7d8f3657aae6a9f608f99751fec1557fac98d3adb6e0d444865",
+    "game/src/overworld.c": "c1186057ee8560363c5ded3fb59f40d08c634a6666eb11142f32d0d19d424590",
+    "game/src/viridian_walker_poc.c": "836921e219b83bfd5184343975bf2eb4abd5785ec7fe69f4d0e82acb93b90939",
+    "game/src/viridian_walker_world.c": "7b5dcd16db483bd8b064020f9f35838b960a96ac32e6a3bc3440f8b044ec6672",
+    "game/tools/viridian_walker_poc/verify.py": "ead78af4180caa1c275d5b138d5dd5db87b0d34971a37d305f9c53f83b8c6575"
+  },
+  "artifact_sha256": {
+    "game/pokewayfarer.gba": "9e936d063660913320462948e9753642d1087e1bd0cc469882c3b729f00f9b92",
+    "game/pokemon-wayfarer-e2e.gba": "9d8e78ea102629fdc4d116757de4686a24a5cc43b760362cb61198ec2c1ae79c",
+    "game/pokemon-wayfarer-e2e.sym": "422cf3f45926dd4d5f4c19a7a8c1894746bcc1b42b7ab5617e668faf7b4fa7bb",
+    "e2e/node_modules/skyemu-static/vendor/SkyEmu": "086cc22a551c6fe833dcf298ad238a1b0289fb33d96e3345f5ee4404882490eb"
+  },
+  "build_commands": [
+    "make -C game -j16 CXX=g++ e2e",
+    "make -C game -j16 CXX=g++ wayfarer"
+  ],
+  "builds_serialized": true,
+  "memory_bytes": {
+    "normal_ewram": 249564,
+    "normal_iwram": 25644,
+    "e2e_ewram": 255472,
+    "e2e_iwram": 25652,
+    "seam_static_ewram_delta": 4,
+    "seam_static_iwram_delta": 0,
+    "world_save": 12,
+    "bfs_heap_workspace": 11200
+  },
+  "checks": "All six final scenarios passed; seam-return includes full follow-to-gate validation.",
+  "review": "Source and timed outbound/incoming captures reviewed; direction finding fixed; right-edge respawn bound narrowed.",
+  "evidence_sha256": {
+    ".product/research/viridian-walker-poc-seam/baseline-after.png": "265cec52c1b230c22bab6d63e9847ea3c928e7dd4e0036229b18640eae9f46e4",
+    ".product/research/viridian-walker-poc-seam/baseline-before.png": "265cec52c1b230c22bab6d63e9847ea3c928e7dd4e0036229b18640eae9f46e4",
+    ".product/research/viridian-walker-poc-seam/baseline.json": "09486e9b534465cb229d6760dcd24a1b854caad3cfd53be703e74f06377ccdd4",
+    ".product/research/viridian-walker-poc-seam/delayed-frames.tsv": "17ed5bf9b17c6934ba8d43af67e332c66382dd434ed54e9c66b608d156d8b4f6",
+    ".product/research/viridian-walker-poc-seam/fixed-during-player-cross.png": "bcc7c5f6083a8a6e9f302ceae60dc64c13f9fccda8f1094e3c82561570e450da",
+    ".product/research/viridian-walker-poc-seam/fixed-player-bounce.png": "44ad32e2fefd6b0cdabbbc6b2cb0ce41fca3b1be7ab80e3fe1f60691ab5dce2c",
+    ".product/research/viridian-walker-poc-seam/fixed-return-cross.png": "64ef620ffda47c1f83de39bcba77f3060dd6f7213006f8c383e2846e554ffeec",
+    ".product/research/viridian-walker-poc-seam/fixed-visible-before-player-cross.png": "f80bbc88bbbf11b1656be0016c12794fbe8e8b2396f08f9c6db7b7e5b8ddda32",
+    ".product/research/viridian-walker-poc-seam/late-frames.tsv": "85c8187d63cfe81abe1354d3ec1242f8f77209c7f578c0280c95ffb37937a746",
+    ".product/research/viridian-walker-poc-seam/prompt-frames.tsv": "5fea9f5227e7a9145dc0f92730ef5d05ee2e6686a984c4c29f2d3add2a6313db",
+    ".product/research/viridian-walker-poc-seam/results.json": "eaed7a648d16589c87e97a84ed40436cd2ae6be5fce52f69c0ac96052f98a97f",
+    ".product/research/viridian-walker-poc-seam/seam-return-frames.tsv": "b9cbc12bdd7302527fa12b9a7393657a4af315b95c06bd934ec93197ab764e19"
+  }
+}

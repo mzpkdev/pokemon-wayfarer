@@ -996,7 +996,7 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
         return;
     }
 #if IS_WAYFARER && VIRIDIAN_WALKER_POC
-    ViridianWorld_OnMapLoad();
+    ViridianWorld_OnCameraTransition();
 #endif
     reloadPrimaryTileset = previousLayout->primaryTileset != gMapHeader.mapLayout->primaryTileset
                         || GetNumTilesInPrimary(previousLayout) != GetNumTilesInPrimary(gMapHeader.mapLayout)

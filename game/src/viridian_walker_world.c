@@ -4,6 +4,7 @@
 #if IS_WAYFARER && VIRIDIAN_WALKER_POC
 
 #include "overworld.h"
+#include "viridian_walker_poc.h"
 
 #define WORLD_DOOR_DWELL 2
 
@@ -92,6 +93,30 @@ void ViridianWorld_ActorMoved(u8 x, u8 y, u8 goal)
     world->goal = goal;
     world->state = WORLD_STATE_TRAVELLING;
     world->dwell = 0;
+}
+
+void ViridianWorld_ActorMovedAcrossSeam(u8 x, u8 y, u8 goal)
+{
+    // The actor remains visible in the loaded connection strip while its
+    // authoritative map is already the adjoining map.
+    struct ViridianWalkerWorldState *world = GetMutable();
+    world->x = x;
+    world->y = y;
+    world->goal = goal;
+    world->state = WORLD_STATE_TRAVELLING;
+    world->dwell = 0;
+}
+
+void ViridianWorld_ActorEnteredPlayerMapFromProxy(u16 toMap, u8 arrival, u8 crossing, u8 x, u8 y)
+{
+    struct ViridianWalkerWorldState *world = GetMutable();
+    if (toMap != GetPlayerMap() || world->currentMap == toMap)
+        return;
+    SetPosition(toMap, arrival, crossing, x, y);
+    world->state = WORLD_STATE_TRAVELLING;
+    world->dwell = 0;
+    AdvanceDestination();
+    gViridianWalkerWorldDebug.actorExits++;
 }
 
 void ViridianWorld_ActorAtSpot(u8 x, u8 y, u8 goal)
@@ -208,10 +233,11 @@ static void HopOneMap(void)
     gViridianWalkerWorldDebug.hops++;
 }
 
-void ViridianWorld_OnMapLoad(void)
+static void OnMapLoad(bool8 cameraTransition)
 {
     struct ViridianWalkerWorldState *world = GetMutable();
     u16 playerMap = GetPlayerMap();
+    u16 previousMap = sPreviousPlayerMapPlusOne - 1;
 
     // The first load after boot is a new game or Continue, never a travel tick.
     if (sPreviousPlayerMapPlusOne == 0)
@@ -225,6 +251,9 @@ void ViridianWorld_OnMapLoad(void)
     gViridianWalkerWorldDebug.heartbeats++;
     if (world->currentMap == playerMap)
         return;
+    if (cameraTransition && world->currentMap == previousMap
+     && ViridianWalker_HasVisibleActorOnMap(previousMap))
+        return;
     if (world->dwell > 0)
     {
         world->dwell--;
@@ -234,6 +263,16 @@ void ViridianWorld_OnMapLoad(void)
     if (world->state == WORLD_STATE_AT_SPOT || world->state == WORLD_STATE_INSIDE)
         world->state = WORLD_STATE_TRAVELLING;
     HopOneMap();
+}
+
+void ViridianWorld_OnMapLoad(void)
+{
+    OnMapLoad(FALSE);
+}
+
+void ViridianWorld_OnCameraTransition(void)
+{
+    OnMapLoad(TRUE);
 }
 
 #endif // IS_WAYFARER && VIRIDIAN_WALKER_POC

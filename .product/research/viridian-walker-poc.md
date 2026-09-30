@@ -297,3 +297,70 @@ need explicit semantics. This POC does not establish continuous off-screen
 travel, full-Forest traversal, many simultaneous trainers, or physical-hardware
 performance. Route 1 is implemented in the itinerary but its complete local
 round trip was not part of the three required emulator scenarios.
+
+### Seam visibility follow-up
+
+Player testing exposed a gap in the initial Phase 2 proof: Viridian's connected
+Route 2 tiles remain visible before the player changes maps. The POC removed
+Giovanni as soon as he finished his exit step, then spawned him again when the
+player crossed. A valid saved destination did not guarantee visual continuity.
+The new regression observes individual frames on both sides of that boundary,
+including the interval while the player is still in Viridian.
+
+The baseline regression reproduced an actor removal at sampled frame 94 with
+sprite bounds still at screen `(144,40)`; screenshots show Giovanni present at
+frame 95 and absent at frame 96. The delayed-follow case also found that his
+saved Route 2 position did not advance while the player waited. These captures
+are retained in `/tmp/viridian-seam-baseline/verifier-delayed`.
+
+The fix retains the existing object and sprite in the loaded connection strip,
+continues its normal walking animation with engine collision checks, and saves
+its position in the neighboring map's coordinates. When the player crosses,
+the engine rebases the object's coordinates and the POC changes its map/local
+identity without replacing its sprite. It finishes any held step before
+starting the destination map's BFS. The same mechanism handles the player
+crossing ahead of an approaching trainer: his actual goal determines whether
+he walks toward or away from the player's map.
+
+Camera transitions still count as heartbeats, but a visible connected actor
+cannot advance through the abstract graph. Ordinary interior transitions keep
+the Phase 2 heartbeat behavior. Offscreen actors retire after their animation;
+recovery can reconstruct a visible border actor from saved coordinates. The
+save record and save version are unchanged. The fix adds **four static EWRAM
+bytes**, no static IWRAM, and no additional search workspace. Normal/E2E EWRAM
+usage is now 249,564/255,472 bytes respectively; IWRAM remains 25,644/25,652.
+
+The regression captures every emulated frame around the transition, including
+object identity, sprite bounds, saved coordinates, and screenshots. It covers
+following immediately, waiting 60 frames, waiting 160 frames until Giovanni
+leaves the viewport, bouncing across the boundary, and entering Viridian ahead
+of him on his return trip. The return test first follows him into the Forest
+gate, then uses two actual boundary transitions to release his gate dwell;
+there is no test warp or memory arrangement.
+
+```sh
+python3 game/tools/viridian_walker_poc/verify.py \
+  --rom game/pokemon-wayfarer-e2e.gba --symbols game/pokemon-wayfarer-e2e.sym \
+  --output /tmp/viridian-seam-prompt --phase2 seam --seam-follow prompt --seam-bounce
+# Repeat with --seam-follow delayed or late, omitting --seam-bounce.
+# Use --phase2 seam-return for the incoming/overtake case.
+```
+
+This remains a bounded POC: the border actor walks through the loaded connection
+strip and waits if collision blocks it. Full goal pathfinding resumes when the
+player enters its map; it does not search an entire unloaded neighbor. The
+runtime seam checks cover Viridian/Route 2. Route 1 shares the implementation
+but was not separately exercised at its border.
+
+All six final checks passed against the rebuilt ROM: delayed, prompt with
+bounce, late, return/overtake (including the full outbound gate walk), linger,
+and save/reset/Continue. The four seam recordings contain 190, 200, 290, and
+114 individually sampled frames respectively, with no reported visibility gap,
+duplicate, or position jump. The delayed and bounce runs retain the same
+object slot and sprite throughout. See [results and per-frame tables](viridian-walker-poc-seam/results.json),
+[build/source hashes](viridian-walker-poc-seam/validation.json),
+[visible before player crossing](viridian-walker-poc-seam/fixed-visible-before-player-cross.png),
+[during crossing](viridian-walker-poc-seam/fixed-during-player-cross.png), and
+[Giovanni returning into Viridian](viridian-walker-poc-seam/fixed-return-cross.png).
+Raw full-frame PNG sequences are under `/tmp/viridian-seam-final-*`; the rebuilt
+normal ROM remains `game/pokewayfarer.gba`.

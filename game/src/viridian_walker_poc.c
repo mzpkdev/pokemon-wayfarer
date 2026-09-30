@@ -36,6 +36,10 @@ static EWRAM_DATA u8 sInStep = FALSE;
 static EWRAM_DATA u8 sExitStep = FALSE;
 static EWRAM_DATA u8 sDoorStep = FALSE;
 static EWRAM_DATA u8 sExitReported = FALSE;
+static EWRAM_DATA u8 sProxyActive = FALSE;
+static EWRAM_DATA u8 sProxyStep = FALSE;
+static EWRAM_DATA u8 sPostSeamStep = FALSE;
+static EWRAM_DATA u8 sProxyDirection = DIR_NONE;
 static EWRAM_DATA u8 sGrassEmoted = FALSE;
 static EWRAM_DATA u8 sInitialized = FALSE;
 static EWRAM_DATA u16 sSearchStartFrame = 0;
@@ -96,11 +100,34 @@ static u8 LocalId(u16 map)
     return LOCALID_ROUTE1_WALKER_POC;
 }
 
+static bool8 IsWalkerIdentity(const struct ObjectEvent *objectEvent, u16 map)
+{
+    return objectEvent->active && IsSupportedMap(map)
+        && objectEvent->mapGroup == MAP_GROUP(map)
+        && objectEvent->mapNum == MAP_NUM(map)
+        && objectEvent->localId == LocalId(map);
+}
+
+static struct ObjectEvent *FindActorOnMap(u16 map)
+{
+    u8 i;
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
+        if (IsWalkerIdentity(&gObjectEvents[i], map))
+            return &gObjectEvents[i];
+    return NULL;
+}
+
 bool8 ViridianWalker_IsObject(const struct ObjectEvent *objectEvent)
 {
-    return OnMap() && objectEvent->mapGroup == gSaveBlock1Ptr->location.mapGroup
-        && objectEvent->mapNum == gSaveBlock1Ptr->location.mapNum
-        && objectEvent->localId == LocalId(CurrentMap());
+    return IsWalkerIdentity(objectEvent, MAP_VIRIDIAN_CITY_HNS)
+        || IsWalkerIdentity(objectEvent, MAP_ROUTE2_HNS)
+        || IsWalkerIdentity(objectEvent, MAP_ROUTE1_HNS);
+}
+
+bool8 ViridianWalker_HasVisibleActorOnMap(u16 map)
+{
+    struct ObjectEvent *walker = FindActorOnMap(map);
+    return walker != NULL && !walker->invisible && !walker->offScreen;
 }
 
 static struct ObjectEvent *GetWalker(void)
@@ -347,6 +374,72 @@ static const struct MapConnection *FindExitConnection(u16 destination, enum Conn
     return NULL;
 }
 
+static const struct MapConnection *FindBorderConnection(u16 destination)
+{
+    const struct MapConnection *connection = FindExitConnection(destination, CONNECTION_NORTH);
+    if (connection == NULL)
+        connection = FindExitConnection(destination, CONNECTION_SOUTH);
+    return connection;
+}
+
+static bool8 ProjectWorldToBorder(const struct MapConnection *connection, u8 worldX, u8 worldY,
+    s16 *x, s16 *y, u8 *direction)
+{
+    const struct MapHeader *destination = GetMapHeaderFromConnection(connection);
+    *x = worldX + connection->offset;
+    if (connection->direction == CONNECTION_NORTH)
+    {
+        *y = worldY - destination->mapLayout->height;
+        *direction = DIR_NORTH;
+        return *x >= 0 && *x < sWidth && *y < 0 && *y >= -MAP_OFFSET;
+    }
+    *y = worldY + sHeight;
+    *direction = DIR_SOUTH;
+    return *x >= 0 && *x < sWidth && *y >= sHeight && *y < sHeight + MAP_OFFSET;
+}
+
+static bool8 ProjectBorderToWorld(const struct MapConnection *connection, s16 x, s16 y,
+    u8 *worldX, u8 *worldY)
+{
+    const struct MapHeader *destination = GetMapHeaderFromConnection(connection);
+    s16 destX = x - connection->offset;
+    s16 destY = connection->direction == CONNECTION_NORTH
+        ? y + destination->mapLayout->height : y - sHeight;
+    if (destX < 0 || destX >= destination->mapLayout->width
+     || destY < 0 || destY >= destination->mapLayout->height)
+        return FALSE;
+    *worldX = destX;
+    *worldY = destY;
+    return TRUE;
+}
+
+static bool8 ProxyHeadsIntoPlayerMap(u16 worldMap, u8 goal)
+{
+    u16 playerMap = CurrentMap();
+    return (worldMap == MAP_VIRIDIAN_CITY_HNS
+             && ((playerMap == MAP_ROUTE2_HNS && goal == WALKER_GOAL_ROUTE2)
+              || (playerMap == MAP_ROUTE1_HNS && goal == WALKER_GOAL_ROUTE1)))
+        || (playerMap == MAP_VIRIDIAN_CITY_HNS
+             && ((worldMap == MAP_ROUTE2_HNS && goal == WALKER_GOAL_ROUTE2_RETURN)
+              || (worldMap == MAP_ROUTE1_HNS && goal == WALKER_GOAL_ROUTE1_RETURN)));
+}
+
+static u8 ProxyDirection(const struct MapConnection *connection, u16 worldMap, u8 goal)
+{
+    u8 outward = connection->direction == CONNECTION_NORTH ? DIR_NORTH : DIR_SOUTH;
+    if (ProxyHeadsIntoPlayerMap(worldMap, goal))
+        return outward == DIR_NORTH ? DIR_SOUTH : DIR_NORTH;
+    return outward;
+}
+
+static bool8 ProxyWouldBeVisible(s16 x, s16 y)
+{
+    x += MAP_OFFSET;
+    y += MAP_OFFSET;
+    return x >= gSaveBlock1Ptr->pos.x - 2 && x < gSaveBlock1Ptr->pos.x + 16
+        && y >= gSaveBlock1Ptr->pos.y - 2 && y <= gSaveBlock1Ptr->pos.y + 16;
+}
+
 static bool8 ReportExit(struct ObjectEvent *walker)
 {
     s16 x = walker->currentCoords.x - MAP_OFFSET;
@@ -378,6 +471,9 @@ static bool8 ReportExit(struct ObjectEvent *walker)
     arrival = direction == CONNECTION_NORTH ? WORLD_ARRIVAL_SOUTH : WORLD_ARRIVAL_NORTH;
     ViridianWorld_ActorCrossedExit(destination, arrival, x, destX, destY);
     sExitReported = TRUE;
+    sProxyActive = TRUE;
+    sProxyStep = TRUE;
+    sProxyDirection = ExitDirection();
     return TRUE;
 }
 
@@ -511,6 +607,129 @@ static void WalkStep(struct ObjectEvent *walker)
     }
 }
 
+static void StopProxy(struct ObjectEvent *walker)
+{
+    if (walker != NULL)
+        RemoveObjectEvent(walker);
+    if (sWork != NULL)
+        Free(sWork);
+    sWork = NULL;
+    sInitialized = FALSE;
+    sProxyActive = sProxyStep = sExitStep = sInStep = FALSE;
+    gViridianWalkerDebug.phase = WALKER_PHASE_INACTIVE;
+}
+
+static bool8 RecoverProxy(struct ObjectEvent *walker)
+{
+    const struct ViridianWalkerWorldState *world = ViridianWorld_Get();
+    const struct MapConnection *connection = FindBorderConnection(world->currentMap);
+    s16 x, y;
+    if (connection == NULL || !ProjectWorldToBorder(connection, world->x, world->y,
+        &x, &y, &sProxyDirection))
+        return FALSE;
+    ObjectEventClearHeldMovementIfActive(walker);
+    MoveObjectEventToMapCoords(walker, x + MAP_OFFSET, y + MAP_OFFSET);
+    walker->currentElevation = walker->previousElevation = MapGridGetElevationAt(
+        x + MAP_OFFSET, y + MAP_OFFSET);
+    walker->invisible = FALSE;
+    sGoal = world->goal;
+    gViridianWalkerDebug.goal = sGoal;
+    sProxyDirection = ProxyDirection(connection, world->currentMap, sGoal);
+    sProxyStep = sExitStep = sInStep = FALSE;
+    sInitialized = TRUE;
+    return TRUE;
+}
+
+static void UpdateProxy(struct ObjectEvent *walker)
+{
+    const struct ViridianWalkerWorldState *world = ViridianWorld_Get();
+    const struct MapConnection *connection;
+    s16 nx, ny;
+    u8 worldX, worldY;
+    if (!sInitialized && !RecoverProxy(walker))
+    {
+        StopProxy(walker);
+        return;
+    }
+    if (walker->frozen)
+        return;
+    if (sProxyStep)
+    {
+        u8 wasExitStep = sExitStep;
+        if (!ObjectEventClearHeldMovementIfFinished(walker))
+            return;
+        sProxyStep = sInStep = FALSE;
+        if (wasExitStep)
+        {
+            sExitStep = FALSE;
+            gViridianWalkerDebug.completed++;
+            gViridianWalkerDebug.lastCompletedGoal = sGoal;
+            if (sWork != NULL)
+            {
+                Free(sWork);
+                sWork = NULL;
+            }
+        }
+        else
+        {
+            connection = FindBorderConnection(world->currentMap);
+            if (connection != NULL && ProjectBorderToWorld(connection,
+                walker->currentCoords.x - MAP_OFFSET, walker->currentCoords.y - MAP_OFFSET,
+                &worldX, &worldY))
+                ViridianWorld_ActorMovedAcrossSeam(worldX, worldY, sGoal);
+        }
+    }
+    if (walker->offScreen)
+    {
+        StopProxy(walker);
+        return;
+    }
+    connection = FindBorderConnection(world->currentMap);
+    if (connection == NULL)
+    {
+        StopProxy(walker);
+        return;
+    }
+    nx = walker->currentCoords.x + sDx[sProxyDirection];
+    ny = walker->currentCoords.y + sDy[sProxyDirection];
+    if (ProxyHeadsIntoPlayerMap(world->currentMap, sGoal)
+     && ((connection->direction == CONNECTION_NORTH && ny == MAP_OFFSET)
+      || (connection->direction == CONNECTION_SOUTH && ny == sHeight - 1 + MAP_OFFSET)))
+    {
+        if (GetCollisionAtCoords(walker, nx, ny, sProxyDirection) != COLLISION_NONE)
+            return;
+        if (ObjectEventSetHeldMovement(walker, GetWalkNormalMovementAction(sProxyDirection)))
+            return;
+        ViridianWorld_ActorEnteredPlayerMapFromProxy(CurrentMap(),
+            connection->direction == CONNECTION_NORTH ? WORLD_ARRIVAL_NORTH : WORLD_ARRIVAL_SOUTH,
+            world->x, nx - MAP_OFFSET, ny - MAP_OFFSET);
+        sProxyActive = sProxyStep = FALSE;
+        sPostSeamStep = TRUE;
+        sInitialized = FALSE;
+        return;
+    }
+    if (!ProjectBorderToWorld(connection, nx - MAP_OFFSET, ny - MAP_OFFSET, &worldX, &worldY))
+    {
+        StopProxy(walker);
+        return;
+    }
+    if (GetCollisionAtCoords(walker, nx, ny, sProxyDirection) != COLLISION_NONE)
+    {
+        // Once collision data ends, retire only after the sprite itself has
+        // left the viewport. A blocking actor keeps us in place until clear.
+        if (walker->offScreen)
+            StopProxy(walker);
+        return;
+    }
+    if (ObjectEventSetHeldMovement(walker, GetWalkNormalMovementAction(sProxyDirection)))
+        return;
+    ViridianWorld_ActorMovedAcrossSeam(worldX, worldY, sGoal);
+    sProxyStep = TRUE;
+    gViridianWalkerDebug.nextX = nx;
+    gViridianWalkerDebug.nextY = ny;
+    gViridianWalkerDebug.phase = WALKER_PHASE_WALK;
+}
+
 static void DiscoverGrass(void)
 {
     s16 x, y;
@@ -526,35 +745,74 @@ static void DiscoverGrass(void)
         gViridianWalkerDebug.usedGrassFallback = 1;
 }
 
+static void RetagActor(struct ObjectEvent *walker, u16 map)
+{
+    walker->mapGroup = MAP_GROUP(map);
+    walker->mapNum = MAP_NUM(map);
+    walker->localId = LocalId(map);
+    walker->initialCoords = walker->currentCoords;
+}
+
 void ViridianWalker_Update(void)
 {
     struct ObjectEvent *walker;
     const struct ViridianWalkerWorldState *world;
+    const struct MapConnection *connection;
     u16 map;
     if (gSaveBlock1Ptr == NULL)
         return;
     map = CurrentMap();
+    if (OnMap())
+    {
+        sWidth = gMapHeader.mapLayout->width;
+        sHeight = gMapHeader.mapLayout->height;
+        sTileCount = sWidth * sHeight;
+    }
     if (!sActiveMapValid || sActiveMap != map)
     {
         u16 oldMap = sActiveMap;
-        u8 i;
+        struct ObjectEvent *oldWalker = sActiveMapValid ? FindActorOnMap(oldMap) : NULL;
+        bool8 migrateLocal = FALSE;
+        bool8 migrateProxy = FALSE;
+        u8 direction = DIR_NONE;
+        s16 borderX, borderY;
         // Camera connections can retain the source object's slot during the
         // seam. Its full source-map identity distinguishes it from the actor
         // freshly spawned on the destination map.
-        if (sActiveMapValid && IsSupportedMap(oldMap))
-            for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
-                if (gObjectEvents[i].active
-                 && gObjectEvents[i].mapGroup == MAP_GROUP(oldMap)
-                 && gObjectEvents[i].mapNum == MAP_NUM(oldMap)
-                 && gObjectEvents[i].localId == LocalId(oldMap))
-                    RemoveObjectEvent(&gObjectEvents[i]);
+        world = ViridianWorld_Get();
+        if (oldWalker != NULL && IsSupportedMap(map) && gCamera.active)
+        {
+            if (sProxyActive && world->currentMap == map)
+                migrateLocal = TRUE;
+            else if (world->currentMap == oldMap && !oldWalker->offScreen)
+            {
+                connection = FindBorderConnection(oldMap);
+                if (connection != NULL && ProjectWorldToBorder(connection, world->x, world->y,
+                    &borderX, &borderY, &direction))
+                    migrateProxy = TRUE;
+            }
+        }
+        if (oldWalker != NULL)
+        {
+            if (migrateLocal || migrateProxy)
+                RetagActor(oldWalker, map);
+            else
+                RemoveObjectEvent(oldWalker);
+        }
         if (sWork != NULL)
             Free(sWork);
         sWork = NULL;
         sInitialized = FALSE;
+        sPostSeamStep = migrateLocal && oldWalker->heldMovementActive;
+        sProxyActive = migrateProxy;
+        sProxyStep = migrateProxy && oldWalker->heldMovementActive;
+        sProxyDirection = migrateProxy
+            ? ProxyDirection(connection, world->currentMap, world->goal) : DIR_NONE;
         sInStep = sExitStep = sDoorStep = sExitReported = FALSE;
         sRemaining = sRead = sWrite = sWait = 0;
         sBlocked = 0;
+        if (migrateProxy)
+            sInitialized = TRUE;
         sActiveMap = map;
         sActiveMapValid = TRUE;
         gViridianWalkerDebug.phase = WALKER_PHASE_INACTIVE;
@@ -563,9 +821,6 @@ void ViridianWalker_Update(void)
     {
         return;
     }
-    sWidth = gMapHeader.mapLayout->width;
-    sHeight = gMapHeader.mapLayout->height;
-    sTileCount = sWidth * sHeight;
     if (sTileCount > WALKER_MAX_TILES)
         return;
     world = ViridianWorld_Get();
@@ -574,12 +829,43 @@ void ViridianWalker_Update(void)
     walker = GetWalker();
     if (!ViridianWorld_IsOnPlayerMap())
     {
-        // The source actor may still be finishing the held edge animation.
-        if (sExitStep && walker != NULL)
-            WalkStep(walker);
+        s16 borderX, borderY;
+        bool8 canShowProxy = FALSE;
+        connection = FindBorderConnection(world->currentMap);
+        if (connection != NULL && world->state == WORLD_STATE_TRAVELLING
+         && ProjectWorldToBorder(connection, world->x, world->y,
+            &borderX, &borderY, &sProxyDirection)
+         && ProxyWouldBeVisible(borderX, borderY))
+            canShowProxy = TRUE;
+        if (canShowProxy)
+            sProxyDirection = ProxyDirection(connection, world->currentMap, world->goal);
+        if (!sProxyActive && canShowProxy)
+        {
+            sProxyActive = TRUE;
+            sInitialized = FALSE;
+        }
+        if (sProxyActive && walker != NULL)
+            UpdateProxy(walker);
         else if (walker != NULL)
             RemoveObjectEvent(walker);
+        else if (canShowProxy)
+        {
+            TrySpawnObjectEvent(LocalId(map), MAP_NUM(map), MAP_GROUP(map));
+            walker = GetWalker();
+            if (walker != NULL)
+            {
+                sProxyActive = TRUE;
+                sInitialized = FALSE;
+                UpdateProxy(walker);
+            }
+        }
         return;
+    }
+    if (sPostSeamStep && walker != NULL)
+    {
+        if (!ObjectEventClearHeldMovementIfFinished(walker))
+            return;
+        sPostSeamStep = FALSE;
     }
     if (walker == NULL)
     {
