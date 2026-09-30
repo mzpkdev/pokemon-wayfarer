@@ -38,8 +38,11 @@ playthrough. Each haunt has tags that describe it:
 - whether it is **elite**: an elite haunt only opens once the player's TR
   reaches its gate, and it is the only kind an aloof trainer visits;
 - its **hometown**, when it sits in a Gym Leader's city;
-- its **activity**: training, study, leisure, worship, or sightseeing;
-- its **setting**: public, such as a harbour, or remote, such as a cave; and
+- up to two **activities** from one shared list: train, care, study, home,
+  relax, gamble, shop, lie low, and sightsee;
+- its **setting**: public, such as a harbour, or remote, such as a cave;
+- its **capacity**, how many trainers it holds at once: 1 unless a haunt
+  says otherwise, and 1 for every haunt in v0; and
 - the map details its quest needs.
 
 ### Who goes where
@@ -140,9 +143,11 @@ Steelix later.
 ## Sample playthrough
 
 Diglett's Cave is a Kanto haunt with a Ground theme, remote, where trainers
-go sightseeing; its quest is Walk with me, from the Route 2 entrance to the
-Vermilion exit. Any Kanto trainer or non-aloof traveller can be placed
-there; Brock and Giovanni fit it best.
+come to train or lie low; its quest is Walk with me, from the Route 2
+entrance to the Vermilion exit. Any Kanto trainer or non-aloof traveller can
+be placed there; Giovanni fits it best, then Brock and Drake. (The switch to
+the shared activity list moved these scores, so exactly who is free for the
+cave at each badge is pending the routine design.)
 
 1. With one badge, the player finds Giovanni there. They have never talked,
    and the player's fame hasn't reached him, so he introduces himself, and in
@@ -168,6 +173,15 @@ there; Brock and Giovanni fit it best.
    40. His quirk now names Steelix, since his Onix has grown up with the
    world. Giovanni's next quest, wherever he turns up, will pay his second
    entry, Soft Sand.
+
+A second worked haunt, the Celadon Game Corner, is public and draws
+trainers by one activity, gamble: Lt. Surge is its natural regular, Blaine
+the rarer one. Its quest is One on one framed as a bet, "One POKéMON each,
+winner takes the pot": the player's one POKéMON against the trainer's ace
+at its current stage, such as Lt. Surge's Pikachu early on. A win pays the
+trainer's next reward; a loss costs nothing, and the bet stays open. The
+[specification](../specs/notable-haunts.md#worked-example-celadon-game-corner)
+works it through.
 
 ## Boundaries
 

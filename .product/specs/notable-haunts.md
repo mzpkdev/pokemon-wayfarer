@@ -3,14 +3,14 @@
 PRD: [Notable haunts](../prds/notable-haunts.md)
 Implemented: No
 Design status: v0 draft for review: one shared pool of **haunts**, each
-tagged by region, theme types, elite gate, hometown, activity, setting, and
-one **quest**, and naming no trainer. **Placement** is a pure function of
-world progress and a few saved facts, with no seeds: hard qualifiers
-(region or traveller, aloof only at remote elite haunts) pick candidates,
-a placeholder score (theme from aces, activity from play style and
-**momentum**, hometown) ranks them, and haunts fill
-one at a time in an order that rotates with world progress. A haunt offers
-only its own quest: no battle offers, no rematches, and no menu. Every
+tagged by region, theme types, elite gate, hometown, up to two activities,
+setting, capacity, and one **quest**, and naming no trainer. **Placement**
+is a pure function of world progress and a few saved facts, with no seeds:
+hard qualifiers (region or traveller, aloof only at remote elite haunts)
+pick candidates, a placeholder score (theme from aces, activity from play
+style and **momentum**, hometown) ranks them, and haunts fill one at a time
+in an order that rotates with world progress. A haunt offers only its own
+quest: no battle offers, no rematches, and no menu. Every
 talk runs a greeting by the trainer's **friendship stage** (Stranger, Met,
 Friend, Close), then the quest proposal while the quest is open or the
 trainer's quirk once it is done, then a farewell; a quest pays once per
@@ -60,10 +60,26 @@ No haunt names or prefers a specific trainer. Each haunt authors:
 | Theme types | zero to three types | Draws trainers whose aces share a type. |
 | Elite | none, or a gate TR | An elite haunt is active only while world progress is at least its gate. |
 | Hometown | none, or a Gym city | Draws the Gym Leader of that city. |
-| Activity | `training`, `study`, `leisure`, `worship`, `sightseeing` | What trainers do there. |
+| Activities | one or two [activities](#activities) | What trainers do there. |
 | Setting | `public`, `remote` | Public places are busy; remote ones are out of the way. |
+| Capacity | a whole number, 1 by default | How many trainers the haunt holds at once. |
 | Quest | one [quest type](#quests) and its details | The quest a trainer gives there. |
 | Meeting spot | map and tile | Where the placed trainer stands. |
+
+### Activities
+
+A haunt carries one or two activities from one shared list: **train**,
+**care**, **study**, **home**, **relax**, **gamble**, **shop**, **lie low**,
+and **sightsee**. The list is closed; a haunt never invents its own. Play
+styles and momentum point at the same words ([score](#score)).
+
+### Capacity
+
+Capacity is 1 unless a haunt authors more. Every v0 haunt keeps 1, so
+placement holds at most one trainer per haunt and the talk flow assumes one.
+What a capacity above 1 does waits for the routine design.
+
+### Active haunts
 
 A non-elite haunt is always active. Elite gates are placeholders; every
 Kanto elite haunt uses TR 80, the league qualification TR. An inactive haunt
@@ -103,8 +119,9 @@ Giovanni Viridian.
 
 ## Placement
 
-A **placement** maps each active haunt to at most one trainer, and each
-trainer to at most one haunt. It is a pure function of:
+A **placement** maps each active haunt to at most one trainer (its
+[capacity](#capacity), 1 in v0), and each trainer to at most one haunt. It
+is a pure function of:
 
 - world progress (`GetTrainerRating()`);
 - the accepted league event, if any, and its
@@ -142,8 +159,8 @@ parts. The weights are placeholders to tune:
 | --- | ---: | --- |
 | Theme (signature) | 4 | A type of the signature POKéMON's authored species is one of the haunt's theme types. |
 | Theme (other ace) | 2 | Otherwise, a type of another ace's authored species is a theme type. |
-| Activity (play style) | 2 | The haunt's activity is one of the play style's activities (table below). |
-| Activity (momentum) | 1 | The haunt's activity is one of the momentum's activities. |
+| Activity (play style) | 2 | One of the haunt's activities is one of the play style's activities (table below). |
+| Activity (momentum) | 1 | One of the haunt's activities is one of the momentum's activities. |
 | Hometown | 3 | The haunt's hometown is the trainer's hometown. |
 
 Types come from the authored (final-stage) species of the roster's ace
@@ -152,19 +169,21 @@ aces are Steelix (Steel, Ground) and Aerodactyl (Rock, Flying).
 
 | Play style | Activities |
 | --- | --- |
-| Gambler | leisure |
+| Gambler | gamble |
 | Bomber | study |
-| Sweeper | training |
-| Field marshal | study, sightseeing |
-| Hexer | worship |
-| Turtle | leisure |
-| Brawler | training |
+| Sweeper | train |
+| Field marshal | study, sightsee |
+| Hexer | lie low |
+| Turtle | relax |
+| Brawler | train |
 | Tactician | study |
 
 | Momentum | Activities |
 | --- | --- |
-| Rising | training |
-| Settled | leisure, sightseeing |
+| Rising | train |
+| Settled | relax, sightsee |
+
+Each part counts once, however many of the haunt's activities match.
 
 ### Momentum
 
@@ -271,14 +290,19 @@ favour ([dialogue](#dialogue)):
 | Quiz | "Three questions on type matchups. Think you can answer them?" |
 | One on one | "Your best POKéMON against {ACE}. Up for it?" |
 
-The quest type decides only the proposal. Every quest pays the same way,
-from the trainer's [reward pool](#rewards-and-claims).
+A haunt may author its own proposal line for its quest type, under the same
+writing rules; the [Celadon Game Corner](#worked-example-celadon-game-corner)
+frames One on one as a bet. The quest type decides only the proposal. Every
+quest pays the same way, from the trainer's
+[reward pool](#rewards-and-claims).
 
 Every quest runs `ASK` (an attention-getter), then the haunt's own quest
 line (the proposal), then a yes or no:
 `YES` starts it, `NO` ends it ([talk flow](#talk-flow)). A requirement the
-player doesn't meet, or a failed attempt, uses `NOT_READY`. Completing it
-runs `PRAISE`, then the [reward](#rewards-and-claims), then `BYE`.
+player doesn't meet, or a failed attempt, uses `NOT_READY`, unless the haunt
+authors its own loss line (One on one). Completing it runs the haunt's done
+line if it has one, then `PRAISE`, then the [reward](#rewards-and-claims),
+then `BYE`.
 
 ### Walk with me
 
@@ -355,13 +379,22 @@ randomness:
 
 ### One on one
 
-The player chooses one able party POKéMON, which fights the trainer's
-**lead ace**: their signature POKéMON (roster slot 1) exactly as their
-battle snapshot resolves it at current TR, alone. It is a singles battle
-with no prize money and no blackout: the chosen POKéMON keeps its damage,
-experience, and level-ups, and the party is restored around it, as a
-[tag match's party restore](sevii-masters.md#party-and-heal) does. A win
-completes the quest; a loss is `NOT_READY`, and it can be tried again.
+The player chooses one able party POKéMON on the existing choose-3 screen
+([choose three](sevii-masters.md#party-and-heal)) limited to one, and it
+fights the trainer's **lead ace**: their signature POKéMON (roster slot 1)
+exactly as their battle snapshot resolves it at current TR, alone, so
+`{ACE}` names the stage it fights at. It is a singles battle with no prize
+money and no blackout: the chosen POKéMON keeps its damage, experience, and
+level-ups, and the party is restored around it, as a
+[tag match's party restore](sevii-masters.md#party-and-heal) does.
+Cancelling the choice starts nothing.
+
+- **Win:** the haunt's done line, if it authors one, then `PRAISE`, the
+  reward, and `BYE`. The win counts as the completed quest (+10), never as
+  a battle won ([talk flow](#talk-flow)).
+- **Loss:** the haunt's loss line, or `NOT_READY` if it authors none, then
+  `BYE`. There is no penalty; the claim bit stays clear, so the quest stays
+  open this placement and the next talk proposes it again.
 
 ### Rewards and claims
 
@@ -437,8 +470,9 @@ changes neither.
 
 A haunt's dialogue is assembled from two sources:
 
-- **Haunt lines**, authored per haunt: its quest line and, for a walk, its
-  done line. They describe only the place and the activity, never a
+- **Haunt lines**, authored per haunt: its quest line, a done line for a
+  walk (and optionally for a One on one), and optionally a loss line for a
+  One on one. They describe only the place and the activity, never a
   trainer's personality or history, so they read true for every candidate.
   A quest line is the proposal that follows `ASK` ("Walk it with me, out to
   the VERMILION side?"), so the same line works after any attention-getter.
@@ -473,8 +507,9 @@ text, the same for every trainer.
 
 ## Worked example: Diglett's Cave
 
-**Tags.** Region Kanto; theme Ground; not elite; no hometown; activity
-sightseeing; setting remote; quest Walk with me. Maps
+**Tags.** Region Kanto; theme Ground; not elite; no hometown; activities
+train and lie low (trainers come to train in the tunnel or to keep out of
+sight); setting remote; capacity 1; quest Walk with me. Maps
 `DiglettsCave_EntranceNorth_hns`, `DiglettsCave_Tunnel_hns`, and
 `DiglettsCave_EntranceSouth_hns`. The meeting spot is in the north
 entrance, where Brock's cameo stands today; the exit is the south
@@ -488,24 +523,29 @@ Agatha, Lance, Glacia, Wallace, and Steven are aloof, and this haunt is not
 elite. 
 Every quest type is open to every trainer.
 
-**Scores** at world progress 30 (three badges; placeholder weights):
+**Scores** at world progress 30 (three badges; placeholder weights;
+momentum from the explorer's growth curves):
 
 | Trainer | Theme | Style | Momentum | Score |
 | --- | ---: | ---: | ---: | ---: |
-| Brock | 4 (Steelix, Ground) | 2 (Field marshal) | 0 (rising) | 6 |
-| Giovanni | 4 (Rhyperior, Ground) | 0 (Brawler) | 1 (settled) | 5 |
-| Misty | 0 | 2 (Field marshal) | 1 (settled) | 3 |
-| Will | 0 | 2 (Field marshal) | 0 (rising) | 2 |
-| Drake | 2 (Flygon, Ground) | 0 (Sweeper) | 0 (rising) | 2 |
+| Giovanni | 4 (Rhyperior, Ground) | 2 (Brawler) | 0 (settled) | 6 |
+| Brock | 4 (Steelix, Ground) | 0 (Field marshal) | 1 (rising) | 5 |
+| Drake | 2 (Flygon, Ground) | 2 (Sweeper) | 1 (rising) | 5 |
+| Erika | 0 | 2 (Hexer) | 1 (rising) | 3 |
+| Janine | 0 | 2 (Hexer) | 1 (rising) | 3 |
+| Lorelei | 0 | 2 (Sweeper) | 1 (rising) | 3 |
+| Bruno | 0 | 2 (Brawler) | 1 (rising) | 3 |
+| Bugsy | 0 | 2 (Sweeper) | 0 (settled) | 2 |
+| Brawly | 0 | 2 (Brawler) | 0 (settled) | 2 |
 
-Everyone else scores 0 or 1. Brock fits best, then Giovanni. At world
-progress 30 the fill order starts at the Celadon rooftop
-(`30 mod 18 = 12`, with the four elite haunts inactive), so the cave is the
-third haunt to fill, and Brock is still free: he takes it. At world progress
-10 the cave fills while Giovanni is free but Brock is already on the Celadon
-rooftop, so Giovanni takes it; at world progress 40 Brock, Giovanni, and
-Misty are placed before the cave's turn, and Will takes it (his tie with
-Drake goes to catalog order).
+Everyone else scores 0 or 1. Giovanni fits best, then Brock and Drake. The
+switch from "sightseeing" to train and lie low moved these numbers: Brock
+lost his Field marshal points, and Giovanni and the training styles gained.
+Who is still free at the cave's turn in the fill depends on every other
+haunt's scores, which the new activities also shift, so the fill order
+walk-through is **pending the routine design** and not restated here. The
+scenes below keep their world progress and assume the placements they
+name.
 
 The scenes below follow one save through the cave. Friendship points are
 the [talk flow's](#talk-flow) and
@@ -513,10 +553,11 @@ the [talk flow's](#talk-flow) and
 from each trainer's
 [reward pool](../research/notable-trainer-rewards.md).
 
-**Scene 1: Giovanni's first meeting** (world progress 10, so Giovanni holds
-the cave, as above; the player's TR 10 is below `min(80, 24 − 10) = 14`, so
-his fame hasn't reached him and he greets with `MEET`). The talk makes him
-Met (+1) at its start, so the quest is proposed at once:
+**Scene 1: Giovanni's first meeting** (world progress 10, assuming Giovanni
+holds the cave, as his top score there suggests; the player's TR 10 is below
+`min(80, 24 − 10) = 14`, so his fame hasn't reached him and he greets with
+`MEET`). The talk makes him Met (+1) at its start, so the quest is proposed
+at once:
 
 ```text
 GIOVANNI: I am GIOVANNI. Remember the name. Others have       MEET
@@ -667,6 +708,155 @@ BROCK: Take care! And keep your POKéMON well fed!             BYE
 His buddy is roster slot 1, ONIX until world progress 57, so at world
 progress 60 the `QUIRK` names STEELIX.
 
+## Worked example: Celadon Game Corner
+
+**Tags.** Region Kanto; no theme types; not elite; no hometown; activity
+gamble; setting public; capacity 1; quest One on one, framed as a bet. Map
+`CeladonCity_GameCorner_hns`. The meeting spot is tile (12, 11), the
+walkable tile at the south end of the east bank of slot machines (the
+machines fill x 12-13, y 6-10); the buddy stands beside it at (13, 11). Both
+tiles are free of collision and of the room's existing objects.
+
+**Quest.** The haunt authors its own One on one lines
+([One on one](#one-on-one)):
+
+| Line | Text |
+| --- | --- |
+| Quest line | "One POKéMON each, winner takes the pot. Your best against {ACE}?" |
+| Done line (win) | "Jackpot! You cleaned out the house." |
+| Loss line | "The house wins this time. Come back for a rematch." |
+
+`YES` runs the trainer's `YES`, then the player picks one POKéMON on the
+choose-3 screen limited to one, and the trainer sends their signature ace
+alone at its current stage, the one `{ACE}` just named. A win is the done
+line, `PRAISE`, the next reward-pool entry through `GIFT`, and `BYE`, worth
++10 friendship as a completed quest (not +20 as a battle won). A loss is the
+loss line and `BYE`: no penalty, no coins, and the quest stays open this
+placement. `NO` is the trainer's `NO`, as anywhere.
+
+**Who's likely, and why.** With no theme and no hometown, only the activity
+scores here, so the v0 score is 2 for a Gambler and 0 for everyone else
+(no momentum lists gamble). The setting is public, so no aloof trainer is a
+candidate.
+
+- **Lt. Surge** is a Gambler: 2 points. He is also earliest in catalog order
+  among the Gamblers who can reach Kanto, so he wins ties. His hometown,
+  nearby Vermilion, scores nothing here; a pull towards places near home
+  waits for the routine design.
+- **Giovanni** is a Brawler, so v0 gives him 0 here; he lands at the Game
+  Corner only as a leftover, when Surge and Blaine are placed elsewhere and
+  he is the earliest free trainer left. The pull the design wants, the Game
+  Corner as the old Rocket hideout's front and a gambling or business angle,
+  needs a trainer-level affinity that v0 lacks and waits for the routine
+  design.
+- **Erika** is Celadon's own Gym Leader, but the Game Corner carries no
+  hometown tag, and as a Hexer (lie low) gambling isn't her thing: 0 points.
+  v0 can still seat her as a zero-score leftover, since she comes before
+  Giovanni in catalog order; keeping her out entirely is for the routine
+  design.
+- **Blaine** is a Gambler too, with the same 2 points, so ties go to Surge
+  and Blaine takes the Game Corner only while Surge is placed elsewhere. He
+  is no traveller and Cinnabar is far away, which should make him rare
+  here, but v0 has no distance; that also waits for the routine design.
+
+**Lt. Surge, a Friend, early** (world progress 10, if Surge holds the Game
+Corner). The player's one badge so far is Surge's, and that first win made
+him a Friend (20 points). At world progress 10 his TR is 40 and his team
+level 28, so his signature Raichu (slot 1) steps down to PIKACHU (Raichu
+needs Lv 30): `{ACE}` says PIKACHU, and PIKACHU, Lv 28, is what he sends.
+His stage is Friend, so he greets with `HELLO`:
+
+```text
+LT. SURGE: Hey, kid! {PLAYER}! Still standing? Good!          HELLO
+LT. SURGE: Listen up, soldier!                                ASK
+LT. SURGE: One POKéMON each, winner takes the pot. Your best  quest line
+           against PIKACHU?
+> Yes
+LT. SURGE: Now that's a soldier!                              YES
+  (the player picks one POKéMON on the choose-3 screen,
+   limited to one; LT. SURGE sends PIKACHU, Lv 28, alone,
+   and it faints)
+LT. SURGE: Jackpot! You cleaned out the house.                done line
+LT. SURGE: Ahaha! You're the real deal, kid! Outstanding!     PRAISE
+LT. SURGE: Supply drop, kid: one MAGNET! Use it well!         GIFT
+LT. SURGE: Dismissed, kid! Stay sharp!                        BYE
+```
+
+MAGNET is the first entry of his
+[pool](../research/notable-trainer-rewards.md#lt-surge) (from world progress
+0). The quest adds 10 points (20 + 10 = 30), and he stays a Friend. Talking
+to him again during this placement:
+
+```text
+LT. SURGE: Hey, kid! {PLAYER}! Still standing? Good!          HELLO
+LT. SURGE: ELECTRIC POKéMON saved me in the war! PIKACHU      QUIRK
+           never lets me forget.
+LT. SURGE: Dismissed, kid! Stay sharp!                        BYE
+```
+
+His buddy is slot 1 too, so the `QUIRK` names PIKACHU until his team level
+reaches 30 (world progress 13 on his curve, so in practice from the second
+badge, at world progress 20, it says RAICHU).
+
+**Giovanni at Met: a loss, then a win** (world progress 40, if Giovanni holds
+the Game Corner). This is the save from Diglett's Cave: he has 11 points
+(Met) and his reward counter is 1. World progress 40 is four badges, where
+his Burst growth jumps: his TR goes from 24 to 60 and his team level from 17
+to 39. His signature Rhyperior (slot 1) steps down below Lv 55 to Rhydon and
+below Lv 42 to RHYHORN, so at Lv 39 `{ACE}` says RHYHORN. (His Burst curve
+steps his team level through 17, 39, 59, 82, and 100, so the v0 curve never
+shows Rhydon: Rhyhorn until world progress 80, then Rhyperior.) He greets
+with `AGAIN`:
+
+```text
+GIOVANNI: You again. I am beginning to remember your face.    AGAIN
+GIOVANNI: I have a proposition.                               ASK
+GIOVANNI: One POKéMON each, winner takes the pot. Your best   quest line
+          against RHYHORN?
+> Yes
+GIOVANNI: A wise decision.                                    YES
+  (the player picks one POKéMON; GIOVANNI sends RHYHORN,
+   Lv 39, alone, and the player's POKéMON faints)
+GIOVANNI: The house wins this time. Come back for a rematch.  loss line
+GIOVANNI: Go. We will meet again.                             BYE
+```
+
+The claim bit stays clear, his counter stays at 1, and no points change.
+The next talk proposes the bet again:
+
+```text
+GIOVANNI: You again. I am beginning to remember your face.    AGAIN
+GIOVANNI: I have a proposition.                               ASK
+GIOVANNI: One POKéMON each, winner takes the pot. Your best   quest line
+          against RHYHORN?
+> Yes
+GIOVANNI: A wise decision.                                    YES
+  (this time the player's POKéMON wins)
+GIOVANNI: Jackpot! You cleaned out the house.                 done line
+GIOVANNI: Impressive. I rarely have cause to say that.        PRAISE
+GIOVANNI: Take this SOFT SAND. Consider it a loan, not a      GIFT
+          kindness.
+GIOVANNI: Go. We will meet again.                             BYE
+```
+
+SOFT SAND is the second entry of Giovanni's
+[pool](../research/notable-trainer-rewards.md#giovanni), as Diglett's Cave
+promised: the pool follows the trainer, whichever haunt he is at. The quest
+adds 10 points (11 + 10 = 21), which crosses the Friend threshold, so he
+hands over his number with the one system line
+[Notable trainers](notable-trainers.md#friendship) describes.
+
+**What this example shows.** The public setting keeps every aloof trainer
+out before any score is read, so the aloof filter works on setting alone. A
+haunt with no theme and no hometown draws its trainers by activity alone,
+here gamble from the Gambler play style, and the reasons the design wants
+beyond that (Giovanni's history, Erika's distaste, Blaine's distance) are
+left to the routine design rather than faked with tags. One on one is a
+battle quest whose loss is harmless: no blackout, no money, no penalty, and
+the proposal comes back at the next talk, while the win pays like any other
+quest. Capacity 1 indoors means one trainer at one spot beside the slot
+machines, with room for the buddy and nothing else in the way.
+
 ## Kanto haunts
 
 The v0 Kanto list, in catalog order. It is a draft: the tags, quests, and
@@ -675,32 +865,34 @@ species are content for review. Every map exists under
 Wayfarer retired their HNS versions
 ([retirement](frlg-cinnabar-seafoam-hns-retirement.md)). Spots, exits, and
 hidden-item tiles are chosen at implementation after checking collision and
-existing objects.
+existing objects; the Celadon Game Corner's spot is
+[worked out](#worked-example-celadon-game-corner) already. Every haunt has
+capacity 1.
 
-| # | Haunt | Maps | Themes | Elite | Hometown | Activity | Setting | Quest |
+| # | Haunt | Maps | Themes | Elite | Hometown | Activities | Setting | Quest |
 | ---: | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | Pallet Town | `PalletTown_hns` | Water | – | – | leisure | public | Catch me one: Krabby |
-| 2 | Route 1 | `Route1_hns` | Normal, Flying | – | – | training | public | Walk with me: from the Pallet end to the Viridian City edge |
-| 3 | Viridian City | `ViridianCity_hns` | Ground | – | Viridian | sightseeing | public | One on one |
+| 1 | Pallet Town | `PalletTown_hns` | Water | – | – | relax | public | Catch me one: Krabby |
+| 2 | Route 1 | `Route1_hns` | Normal, Flying | – | – | train | public | Walk with me: from the Pallet end to the Viridian City edge |
+| 3 | Viridian City | `ViridianCity_hns` | Ground | – | Viridian | sightsee | public | One on one |
 | 4 | Viridian Forest | `ViridianForest_hns` | Bug, Grass | – | – | study | remote | Catch me one: Pikachu |
 | 5 | Pewter Museum | `PewterCity_Museum_1F_hns` | Rock | – | Pewter | study | public | Quiz |
-| 6 | Mt. Moon outside | `MtMoon_Outside_hns` | Rock, Fairy | – | – | sightseeing | remote | Lost something |
-| 7 | Cerulean Cape | `Route25_hns` | Water | – | Cerulean | leisure | remote | Lost something |
-| 8 | Rock Tunnel | `RockTunnel_B1F_hns`, `RockTunnel_1F_hns` | Rock, Fighting | – | – | training | remote | Walk with me: from the north Route 10 entrance to the south one |
+| 6 | Mt. Moon outside | `MtMoon_Outside_hns` | Rock, Fairy | – | – | sightsee | remote | Lost something |
+| 7 | Cerulean Cape | `Route25_hns` | Water | – | Cerulean | relax | remote | Lost something |
+| 8 | Rock Tunnel | `RockTunnel_B1F_hns`, `RockTunnel_1F_hns` | Rock, Fighting | – | – | train | remote | Walk with me: from the north Route 10 entrance to the south one |
 | 9 | Power Plant | `Route10_PowerPlantEntrance_hns`, `PowerPlant_Frlg` | Electric | – | – | study | remote | Catch me one: Voltorb |
-| 10 | Lavender Soul House | `LavenderTown_SoulHouse_hns` | Ghost | – | – | worship | public | Quiz |
-| 11 | Vermilion harbour | `VermilionCity_PortOutside_hns` | Water, Electric | – | Vermilion | sightseeing | public | Catch me one: Chinchou |
-| 12 | Celadon Game Corner | `CeladonCity_GameCorner_hns` | – | – | Celadon | leisure | public | One on one |
-| 13 | Celadon rooftop | `CeladonCity_DepartmentStore_RoofDay_hns`, `CeladonCity_DepartmentStore_RoofNight_hns` | Grass | – | Celadon | sightseeing | public | Lost something |
-| 14 | Saffron Fighting Dojo | `SaffronCity_FightingDojo_hns` | Fighting | – | Saffron | training | public | One on one |
+| 10 | Lavender Soul House | `LavenderTown_SoulHouse_hns` | Ghost | – | – | lie low | public | Quiz |
+| 11 | Vermilion harbour | `VermilionCity_PortOutside_hns` | Water, Electric | – | Vermilion | sightsee | public | Catch me one: Chinchou |
+| 12 | Celadon Game Corner | `CeladonCity_GameCorner_hns` | – | – | – | gamble | public | One on one |
+| 13 | Celadon rooftop | `CeladonCity_DepartmentStore_RoofDay_hns`, `CeladonCity_DepartmentStore_RoofNight_hns` | Grass | – | Celadon | sightsee | public | Lost something |
+| 14 | Saffron Fighting Dojo | `SaffronCity_FightingDojo_hns` | Fighting | – | Saffron | train | public | One on one |
 | 15 | Dojo back room | `SaffronCity_FightingDojoVIP_hns` | Psychic | TR 80 | Saffron | study | remote | Quiz |
-| 16 | Diglett's Cave | `DiglettsCave_EntranceNorth_hns`, `DiglettsCave_Tunnel_hns`, `DiglettsCave_EntranceSouth_hns` | Ground | – | – | sightseeing | remote | Walk with me: from the Route 2 entrance to the Vermilion exit |
-| 17 | Safari Zone | `FuchsiaCity_SafariZoneEntrance_hns` and its Beach, Brush, Cave, and Mountain areas | Normal, Poison | – | Fuchsia | sightseeing | public | Catch me one: Kangaskhan |
-| 18 | Seafoam Islands | `SeafoamIslands_1F_Frlg` | Ice, Water | – | – | training | remote | One on one |
-| 19 | Cinnabar shore | `CinnabarIsland_Frlg` | Fire | – | Cinnabar | leisure | public | Quiz |
-| 20 | Victory Road | `VictoryRoadKanto_1F_hns`, `VictoryRoadKanto_B1F_hns`, `VictoryRoadKanto_B2F_hns` | Rock, Fighting, Dragon | TR 80 | – | training | remote | Walk with me: from the Route 23 entrance to the Reception Gate exit |
-| 21 | Cerulean Cave | `CeruleanCave_1F_hns`, `CeruleanCave_B1F_hns`, `CeruleanCave_B2F_hns` | Psychic | TR 80 | – | training | remote | Catch me one: Ditto |
-| 22 | Indigo Plateau Pokémon Center | `IndigoPlateau_PokemonCenter_hns` | – | TR 80 | – | leisure | public | Quiz |
+| 16 | Diglett's Cave | `DiglettsCave_EntranceNorth_hns`, `DiglettsCave_Tunnel_hns`, `DiglettsCave_EntranceSouth_hns` | Ground | – | – | train, lie low | remote | Walk with me: from the Route 2 entrance to the Vermilion exit |
+| 17 | Safari Zone | `FuchsiaCity_SafariZoneEntrance_hns` and its Beach, Brush, Cave, and Mountain areas | Normal, Poison | – | Fuchsia | sightsee | public | Catch me one: Kangaskhan |
+| 18 | Seafoam Islands | `SeafoamIslands_1F_Frlg` | Ice, Water | – | – | train | remote | One on one |
+| 19 | Cinnabar shore | `CinnabarIsland_Frlg` | Fire | – | Cinnabar | relax | public | Quiz |
+| 20 | Victory Road | `VictoryRoadKanto_1F_hns`, `VictoryRoadKanto_B1F_hns`, `VictoryRoadKanto_B2F_hns` | Rock, Fighting, Dragon | TR 80 | – | train | remote | Walk with me: from the Route 23 entrance to the Reception Gate exit |
+| 21 | Cerulean Cave | `CeruleanCave_1F_hns`, `CeruleanCave_B1F_hns`, `CeruleanCave_B2F_hns` | Psychic | TR 80 | – | train | remote | Catch me one: Ditto |
+| 22 | Indigo Plateau Pokémon Center | `IndigoPlateau_PokemonCenter_hns` | – | TR 80 | – | relax | public | Quiz |
 
 Notes:
 
@@ -885,8 +1077,9 @@ target. It is not built yet ([Later](#later)).
 
 Required implementation evidence (not yet run):
 
-1. **Catalog.** Every haunt has valid tags, existing maps, an active
-   meeting spot, and its quest details (a walk's start and exit, a lost
+1. **Catalog.** Every haunt has valid tags (one or two activities from the
+   shared list, and capacity 1 in v0), existing maps, an active meeting
+   spot, and its quest details (a walk's start and exit, a lost
    spot, a catch species on its wild table); every notable trainer has
    a buddy slot 1-6 and a reward pool that passes the
    [pool rules](#rewards-and-claims).
@@ -922,7 +1115,9 @@ Required implementation evidence (not yet run):
    Fly, Teleport, and an Escape Rope are refused during a walk; its wild
    battles are double battles beside the trainer with their best three from
    the runtime partner slot; Catch me one refuses the last able party
-   POKéMON; the quiz asks the same questions on every attempt.
+   POKéMON; the quiz asks the same questions on every attempt; a One on one
+   loss plays the haunt's loss line (or `NOT_READY`), costs nothing, and
+   leaves the claim bit clear, and a win adds +10 as a quest, never +20.
 7. **Claims.** A reward is given once per placement; a changed placement
    reopens it; a full Bag, a cancelled lesson, or no POKéMON able to learn
    keeps it open and leaves the reward counter unchanged.
