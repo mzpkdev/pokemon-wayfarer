@@ -6,12 +6,20 @@ EverGrandeCity_SidneysRoom_MapScripts::
 	.byte 0
 
 EverGrandeCity_SidneysRoom_OnTransition:
+#if WAYFARER_LEAGUE_EVENTS
+	special LeagueEvent_SetRoomGraphics
+#endif
 	setflag FLAG_MET_SCOTT_IN_EVERGRANDE
 	setflag FLAG_HIDE_EVER_GRANDE_POKEMON_CENTER_1F_SCOTT
 	end
 
 EverGrandeCity_SidneysRoom_OnLoad:
+#if WAYFARER_LEAGUE_EVENTS
+	specialvar VAR_RESULT, LeagueCircuit_IsCurrentRoomDefeated
+	call_if_eq VAR_RESULT, TRUE, EverGrandeCity_SidneysRoom_EventScript_ResetAdvanceToNextRoom
+#else
 	call_if_set FLAG_DEFEATED_ELITE_4_SIDNEY, EverGrandeCity_SidneysRoom_EventScript_ResetAdvanceToNextRoom
+#endif
 	call_if_eq VAR_ELITE_4_STATE, 1, EverGrandeCity_SidneysRoom_EventScript_CloseDoor
 	end
 
@@ -51,20 +59,43 @@ EverGrandeCity_SidneysRoom_EventScript_Sidney::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
 	setvar VAR_0x8005, 0
+#if WAYFARER_LEAGUE_EVENTS
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
+#else
 	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
+#endif
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
 #endif
 	lock
 	faceplayer
+#if WAYFARER_LEAGUE_EVENTS
+	specialvar VAR_RESULT, LeagueCircuit_IsCurrentRoomDefeated
+	goto_if_eq VAR_RESULT, TRUE, EverGrandeCity_SidneysRoom_EventScript_PostBattleSpeech
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
+#else
 	goto_if_set FLAG_DEFEATED_ELITE_4_SIDNEY, EverGrandeCity_SidneysRoom_EventScript_PostBattleSpeech
+#endif
 	playbgm MUS_ENCOUNTER_ELITE_FOUR, FALSE
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_RoomIntro
+#else
 	msgbox EverGrandeCity_SidneysRoom_Text_IntroSpeech, MSGBOX_DEFAULT
+#endif
+#if WAYFARER_LEAGUE_EVENTS
+	trainerbattle_no_intro TRAINER_SIDNEY, LeagueEvent_Text_RoomWin
+#else
 	trainerbattle_no_intro TRAINER_SIDNEY, EverGrandeCity_SidneysRoom_Text_Defeat
+#endif
 	goto EverGrandeCity_SidneysRoom_EventScript_Defeated
 	end
 
 EverGrandeCity_SidneysRoom_EventScript_PostBattleSpeech::
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_RoomAfter
+#else
 	msgbox EverGrandeCity_SidneysRoom_Text_PostBattleSpeech, MSGBOX_DEFAULT
+#endif
 	release
 	end
 
@@ -77,7 +108,11 @@ EverGrandeCity_SidneysRoom_EventScript_Defeated::
 #endif
 	setflag FLAG_DEFEATED_ELITE_4_SIDNEY
 	call PokemonLeague_EliteFour_SetAdvanceToNextRoomMetatiles
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_RoomAfter
+#else
 	msgbox EverGrandeCity_SidneysRoom_Text_PostBattleSpeech, MSGBOX_DEFAULT
+#endif
 	release
 	end
 

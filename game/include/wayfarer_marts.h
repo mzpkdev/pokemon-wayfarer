@@ -41,7 +41,7 @@ struct WayfarerMartProfile
 };
 
 const struct WayfarerMartProfile *WayfarerGetMartProfile(u16 profileId);
-bool8 WayfarerResolveMartProfile(u16 profileId, u8 trainerRating, bool8 challengeEnabled, u16 *items, u8 capacity);
+bool8 WayfarerResolveMartProfile(u16 profileId, u32 trainerRating, bool8 challengeEnabled, u16 *items, u8 capacity);
 void WayfarerOpenMartProfile(void);
 u16 WayfarerLookupMartProfileForSharedClerk(void);
 

@@ -29,7 +29,13 @@ const finishScript = (
   description: string,
   advanceActionMenu = false,
 ): Promise<void> =>
-  advanceUntil(game, (state) => state.ready && !state.dialogueOpen, description, 240, advanceActionMenu)
+  advanceUntil(
+    game,
+    (state) => state.ready && !state.dialogueOpen,
+    description,
+    240,
+    advanceActionMenu,
+  )
 
 const warpTo = async (game: GameSession, location: Location): Promise<void> => {
   await game.player.warp(location.map, location.x, location.y, location.facing)
@@ -198,7 +204,7 @@ describe.sequential("Wayfarer Sevii independent story journeys", () => {
     await expect(game.story.flag("seviiIapapaBerryReceived")).resolves.toBe(true)
   })
 
-  it("gates Moltres at TR 54 and resolves only a TR 55 knockout across reload", async () => {
+  it("gates Moltres at TR 119 and resolves only a TR 120 knockout across reload", async () => {
     const moltres = {
       map: "sevii-mt-ember-summit",
       x: 9,
@@ -208,23 +214,23 @@ describe.sequential("Wayfarer Sevii independent story journeys", () => {
     await game.arrange({
       checkpoint: "new-bark-after-intro",
       player: { position: moltres, facing: moltres.facing },
-      story: { vars: { trainerRating: 54 } },
+      story: { vars: { trainerRating: 119 } },
       party: [...strongParty()].map((mon) => ({ ...mon, moves: [...mon.moves] })),
       determinism: { textSpeed: "instant" },
     })
-    expect((await game.state.read()).circuit.trainerRating).toBe(54)
+    expect((await game.state.read()).circuit.trainerRating).toBe(119)
     await game.player.interact()
     await advanceUntil(
       game,
       (state) => state.dialogue.text.includes("radiates overwhelming"),
-      "Moltres TR 54 refusal",
+      "Moltres TR 119 refusal",
     )
     expect((await game.state.read()).battle.active).toBe(false)
-    await finishScript(game, "Moltres TR 54 refusal")
+    await finishScript(game, "Moltres TR 119 refusal")
     await expect(game.story.flag("seviiMoltresResolved")).resolves.toBe(false)
 
-    await game.story.setVar("trainerRating", 55)
-    await startObjectiveBattle(game, moltres, "Moltres at TR 55")
+    await game.story.setVar("trainerRating", 120)
+    await startObjectiveBattle(game, moltres, "Moltres at TR 120")
     expect((await game.state.read()).battle.enemy).toMatchObject({ species: "moltres", level: 50 })
     await game.battle.lose()
     await advanceUntil(

@@ -3,6 +3,9 @@
 @ and the shared FRLG door helper are linked in the Wayfarer build.
 
 PokemonLeague_LoreleisRoom_Frlg_MapScripts::
+#if WAYFARER_LEAGUE_EVENTS
+	map_script MAP_SCRIPT_ON_TRANSITION, LeagueEvent_EventScript_SetRoomGraphics
+#endif
 	map_script MAP_SCRIPT_ON_RESUME, WayfarerIndigo_LoreleiOnResume
 	map_script MAP_SCRIPT_ON_LOAD, WayfarerIndigo_LoreleiOnLoad
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, WayfarerIndigo_LoreleiOnWarp
@@ -39,10 +42,18 @@ WayfarerIndigo_EventScript_Lorelei::
 	setvar VAR_0x8005, 0
 	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
 	goto_if_eq VAR_RESULT, FALSE, WayfarerIndigo_InvalidRun
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_RoomIntro
+#else
 	msgbox WayfarerIndigo_Text_LoreleiIntro
+#endif
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
+#if WAYFARER_LEAGUE_EVENTS
+	trainerbattle_no_intro TRAINER_WAYFARER_INDIGO_LORELEI, LeagueEvent_Text_RoomWin
+#else
 	trainerbattle_no_intro TRAINER_WAYFARER_INDIGO_LORELEI, WayfarerIndigo_Text_LoreleiWin
+#endif
 	clearflag FLAG_TEMP_5
 	setvar VAR_0x8004, CIRCUIT_STAGE_INDIGO
 	setvar VAR_0x8005, 0
@@ -50,11 +61,18 @@ WayfarerIndigo_EventScript_Lorelei::
 	goto_if_eq VAR_RESULT, FALSE, WayfarerIndigo_InvalidRun
 	call PokemonLeague_EventScript_OpenDoor
 WayfarerIndigo_LoreleiDefeated::
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_RoomAfter
+#else
 	msgbox WayfarerIndigo_Text_LoreleiAfter
+#endif
 	release
 	end
 
 PokemonLeague_BrunosRoom_Frlg_MapScripts::
+#if WAYFARER_LEAGUE_EVENTS
+	map_script MAP_SCRIPT_ON_TRANSITION, LeagueEvent_EventScript_SetRoomGraphics
+#endif
 	map_script MAP_SCRIPT_ON_RESUME, WayfarerIndigo_BrunoOnResume
 	map_script MAP_SCRIPT_ON_LOAD, WayfarerIndigo_BrunoOnLoad
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, WayfarerIndigo_BrunoOnWarp
@@ -91,10 +109,18 @@ WayfarerIndigo_EventScript_Bruno::
 	setvar VAR_0x8005, 1
 	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
 	goto_if_eq VAR_RESULT, FALSE, WayfarerIndigo_InvalidRun
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_RoomIntro
+#else
 	msgbox WayfarerIndigo_Text_BrunoIntro
+#endif
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
+#if WAYFARER_LEAGUE_EVENTS
+	trainerbattle_no_intro TRAINER_WAYFARER_INDIGO_BRUNO, LeagueEvent_Text_RoomWin
+#else
 	trainerbattle_no_intro TRAINER_WAYFARER_INDIGO_BRUNO, WayfarerIndigo_Text_BrunoWin
+#endif
 	clearflag FLAG_TEMP_5
 	setvar VAR_0x8004, CIRCUIT_STAGE_INDIGO
 	setvar VAR_0x8005, 1
@@ -102,11 +128,18 @@ WayfarerIndigo_EventScript_Bruno::
 	goto_if_eq VAR_RESULT, FALSE, WayfarerIndigo_InvalidRun
 	call PokemonLeague_EventScript_OpenDoor
 WayfarerIndigo_BrunoDefeated::
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_RoomAfter
+#else
 	msgbox WayfarerIndigo_Text_BrunoAfter
+#endif
 	release
 	end
 
 PokemonLeague_AgathasRoom_Frlg_MapScripts::
+#if WAYFARER_LEAGUE_EVENTS
+	map_script MAP_SCRIPT_ON_TRANSITION, LeagueEvent_EventScript_SetRoomGraphics
+#endif
 	map_script MAP_SCRIPT_ON_RESUME, WayfarerIndigo_AgathaOnResume
 	map_script MAP_SCRIPT_ON_LOAD, WayfarerIndigo_AgathaOnLoad
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, WayfarerIndigo_AgathaOnWarp
@@ -143,10 +176,18 @@ WayfarerIndigo_EventScript_Agatha::
 	setvar VAR_0x8005, 2
 	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
 	goto_if_eq VAR_RESULT, FALSE, WayfarerIndigo_InvalidRun
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_RoomIntro
+#else
 	msgbox WayfarerIndigo_Text_AgathaIntro
+#endif
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
+#if WAYFARER_LEAGUE_EVENTS
+	trainerbattle_no_intro TRAINER_WAYFARER_INDIGO_AGATHA, LeagueEvent_Text_RoomWin
+#else
 	trainerbattle_no_intro TRAINER_WAYFARER_INDIGO_AGATHA, WayfarerIndigo_Text_AgathaWin
+#endif
 	clearflag FLAG_TEMP_5
 	setvar VAR_0x8004, CIRCUIT_STAGE_INDIGO
 	setvar VAR_0x8005, 2
@@ -154,11 +195,18 @@ WayfarerIndigo_EventScript_Agatha::
 	goto_if_eq VAR_RESULT, FALSE, WayfarerIndigo_InvalidRun
 	call PokemonLeague_EventScript_OpenDoor
 WayfarerIndigo_AgathaDefeated::
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_RoomAfter
+#else
 	msgbox WayfarerIndigo_Text_AgathaAfter
+#endif
 	release
 	end
 
 PokemonLeague_LancesRoom_Frlg_MapScripts::
+#if WAYFARER_LEAGUE_EVENTS
+	map_script MAP_SCRIPT_ON_TRANSITION, LeagueEvent_EventScript_SetRoomGraphics
+#endif
 	map_script MAP_SCRIPT_ON_RESUME, WayfarerIndigo_LanceOnResume
 	map_script MAP_SCRIPT_ON_LOAD, WayfarerIndigo_LanceOnLoad
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, WayfarerIndigo_LanceOnWarp
@@ -256,10 +304,18 @@ WayfarerIndigo_EventScript_Lance::
 	setvar VAR_0x8005, 3
 	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
 	goto_if_eq VAR_RESULT, FALSE, WayfarerIndigo_InvalidRun
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_RoomIntro
+#else
 	msgbox WayfarerIndigo_Text_LanceIntro
+#endif
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
+#if WAYFARER_LEAGUE_EVENTS
+	trainerbattle_no_intro TRAINER_WAYFARER_INDIGO_LANCE, LeagueEvent_Text_RoomWin
+#else
 	trainerbattle_no_intro TRAINER_WAYFARER_INDIGO_LANCE, WayfarerIndigo_Text_LanceWin
+#endif
 	clearflag FLAG_TEMP_5
 	setvar VAR_0x8004, CIRCUIT_STAGE_INDIGO
 	setvar VAR_0x8005, 3
@@ -267,11 +323,18 @@ WayfarerIndigo_EventScript_Lance::
 	goto_if_eq VAR_RESULT, FALSE, WayfarerIndigo_InvalidRun
 	call PokemonLeague_EventScript_OpenDoorLance
 WayfarerIndigo_LanceDefeated::
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_RoomAfter
+#else
 	msgbox WayfarerIndigo_Text_LanceAfter
+#endif
 	release
 	end
 
 PokemonLeague_ChampionsRoom_Frlg_MapScripts::
+#if WAYFARER_LEAGUE_EVENTS
+	map_script MAP_SCRIPT_ON_TRANSITION, LeagueEvent_EventScript_SetRoomGraphics
+#endif
 	map_script MAP_SCRIPT_ON_RESUME, WayfarerIndigo_ChampionOnResume
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, WayfarerIndigo_ChampionOnWarp
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, WayfarerIndigo_ChampionOnFrame
@@ -302,17 +365,29 @@ WayfarerIndigo_ChampionBattle::
 	setvar VAR_0x8005, 4
 	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
 	goto_if_eq VAR_RESULT, FALSE, WayfarerIndigo_InvalidRun
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_ChampionIntro
+#else
 	msgbox WayfarerIndigo_Text_BlueIntro
+#endif
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
+#if WAYFARER_LEAGUE_EVENTS
+	trainerbattle_no_intro TRAINER_WAYFARER_INDIGO_BLUE, LeagueEvent_Text_RoomWin
+#else
 	trainerbattle_no_intro TRAINER_WAYFARER_INDIGO_BLUE, WayfarerIndigo_Text_BlueWin
+#endif
 	clearflag FLAG_TEMP_5
 	setvar VAR_0x8004, CIRCUIT_STAGE_INDIGO
 	setvar VAR_0x8005, 4
 	specialvar VAR_RESULT, LeagueCircuit_RecordRoomVictory
 	goto_if_eq VAR_RESULT, FALSE, WayfarerIndigo_InvalidRun
 	setvar VAR_TEMP_1, 1
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_ChampionAfter
+#else
 	msgbox WayfarerIndigo_Text_BlueAfter
+#endif
 
 WayfarerIndigo_ChampionResumeCompleted::
 	warp MAP_POKEMON_LEAGUE_HALL_OF_FAME, 5, 12

@@ -755,6 +755,15 @@ gSpecials::
 	def_special LeagueCircuit_HasClearedStage
 	def_special LeagueCircuit_BeginRun
 	def_special LeagueCircuit_CommitAndRegisterIndigo
+#if WAYFARER_LEAGUE_EVENTS
+	def_special LeagueEvent_Accept
+	def_special LeagueEvent_GetAcceptedLeague
+	def_special LeagueEvent_BufferRoomName
+	def_special LeagueEvent_SetRoomGraphics
+	def_special LeagueEvent_BufferChampion
+	def_special LeagueEvent_BufferLineup
+	def_special LeagueEvent_BufferHallBoard
+#endif
 
 #if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
 	def_special WayfarerOpenMartProfile

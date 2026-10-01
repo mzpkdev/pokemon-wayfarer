@@ -27,6 +27,9 @@ EverGrandeCity_ChampionsRoom_ResumeCompleted::
 #endif
 
 EverGrandeCity_ChampionsRoom_OnTransition:
+#if WAYFARER_LEAGUE_EVENTS
+	special LeagueEvent_SetRoomGraphics
+#endif
 	call Common_EventScript_SetupRivalGfxId
 	end
 
@@ -73,16 +76,38 @@ EverGrandeCity_ChampionsRoom_EventScript_Wallace::
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
 #endif
 	playbgm MUS_ENCOUNTER_CHAMPION, FALSE
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_ChampionIntro
+#else
 	msgbox EverGrandeCity_ChampionsRoom_Text_IntroSpeech, MSGBOX_DEFAULT
+#endif
+#if WAYFARER_LEAGUE_EVENTS
+	trainerbattle_no_intro TRAINER_WALLACE, LeagueEvent_Text_RoomWin
+#else
 	trainerbattle_no_intro TRAINER_WALLACE, EverGrandeCity_ChampionsRoom_Text_Defeat
+#endif
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
 	setvar VAR_0x8005, 4
 	specialvar VAR_RESULT, LeagueCircuit_RecordRoomVictory
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
 #endif
+#if WAYFARER_LEAGUE_EVENTS
+	goto EverGrandeCity_ChampionsRoom_EventScript_LeagueEventDefeated
+#else
 	goto EverGrandeCity_ChampionsRoom_EventScript_Defeated
 	end
+#endif
+
+#if WAYFARER_LEAGUE_EVENTS
+EverGrandeCity_ChampionsRoom_EventScript_LeagueEventDefeated::
+	call LeagueEvent_EventScript_ChampionAfter
+	setflag FLAG_HIDE_PETALBURG_GYM_GREETER
+	warp MAP_EVER_GRANDE_CITY_HALL_OF_FAME, 7, 16
+	waitstate
+	releaseall
+	end
+#endif
 
 EverGrandeCity_ChampionsRoom_EventScript_Defeated::
 	playse SE_DOOR

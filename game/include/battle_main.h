@@ -112,6 +112,8 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
 void ModifyPersonalityForNature(u32 *personality, u32 newNature);
 u32 GeneratePersonalityForGender(u32 gender, u32 species);
 void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon *partyEntry);
+void ResetNotableBattleSnapshot(void);
+bool32 GetNotableBattleAiFlags(u16 trainerId, u64 *flags);
 bool32 CanPlayerForfeitNormalTrainerBattle(void);
 bool32 DidPlayerForfeitNormalTrainerBattle(void);
 void BattleDebug_WonBattle(void);

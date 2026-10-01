@@ -146,7 +146,7 @@ describe.sequential("Wayfarer appearance Surf and fishing", () => {
           facing: "up",
           position: { map: "blackthorn-city", x: 18, y: 26 },
         },
-        story: { vars: { blackthornCityState: 2 } },
+        story: { flags: { disableEncounters: true }, vars: { blackthornCityState: 2 } },
         party: [{ species: "lapras", level: 50, moves: ["surf"] }],
         bag: { items: { oldRod: 1 } },
         determinism: { textSpeed: "instant", rngSeed: 1 },

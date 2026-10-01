@@ -9,6 +9,7 @@
 #include "battle_pike.h"
 #include "battle_pyramid.h"
 #include "battle_setup.h"
+#include "league_event_battle.h"
 #include "battle_tower.h"
 #include "battle_z_move.h"
 #include "caps.h"
@@ -5099,9 +5100,10 @@ enum Ability GetAbilityBySpecies(u16 species, u8 abilityNum)
 
 enum Ability GetMonAbility(struct Pokemon *mon)
 {
-    u16 species = GetMonData(mon, MON_DATA_SPECIES);
-    u8 abilityNum = GetMonData(mon, MON_DATA_ABILITY_NUM);
-    return GetAbilityBySpecies(species, abilityNum);
+    u16 frozenAbility;
+    if (GetLeagueEventFrozenAbilityForMon(mon, &frozenAbility))
+        return frozenAbility;
+    return GetAbilityBySpecies(GetMonData(mon, MON_DATA_SPECIES), GetMonData(mon, MON_DATA_ABILITY_NUM));
 }
 
 void CreateSecretBaseEnemyParty(struct SecretBase *secretBaseRecord)
@@ -5434,6 +5436,8 @@ void PokemonToBattleMon(struct Pokemon *src, struct BattlePokemon *dst)
 {
     s32 i;
     u8 nickname[POKEMON_NAME_BUFFER_SIZE];
+    u8 frozenTypes[2];
+    u16 frozenAbility;
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
@@ -5466,9 +5470,15 @@ void PokemonToBattleMon(struct Pokemon *src, struct BattlePokemon *dst)
     dst->otId = GetMonData(src, MON_DATA_OT_ID);
     dst->types[0] = GetSpeciesType(dst->species, 0);
     dst->types[1] = GetSpeciesType(dst->species, 1);
+    if (GetLeagueEventFrozenTypesForMon(src, frozenTypes))
+    {
+        dst->types[0] = frozenTypes[0];
+        dst->types[1] = frozenTypes[1];
+    }
     dst->types[2] = TYPE_MYSTERY;
     dst->isShiny = IsMonShiny(src);
-    dst->ability = GetAbilityBySpecies(dst->species, dst->abilityNum);
+    dst->ability = GetLeagueEventFrozenAbilityForMon(src, &frozenAbility)
+        ? frozenAbility : GetAbilityBySpecies(dst->species, dst->abilityNum);
     GetMonData(src, MON_DATA_NICKNAME, nickname);
     StringCopy_Nickname(dst->nickname, nickname);
     GetMonData(src, MON_DATA_OT_NAME, dst->otName);

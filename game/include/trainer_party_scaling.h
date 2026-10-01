@@ -72,7 +72,7 @@ u32 GetTrainerScalingPolicy(u32 trainerId);
 u16 ResolveTrainerScalingSpecies(u16 species, u8 level);
 bool32 IsTrainerScalingBattleContext(u32 battleTypeFlags);
 void ResetTrainerScalingSnapshot(void);
-u8 GetTrainerScalingSnapshot(void);
+u32 GetTrainerScalingSnapshot(void);
 bool32 HasTrainerScalingMoveException(u32 owner, u32 slot);
 bool32 CanRetainTrainerScalingMoves(const struct TrainerMon *entry, u16 species, u8 level);
 u32 GetTrainerScalingAbility(u16 species, u32 authoredAbility, u32 personalityHash);

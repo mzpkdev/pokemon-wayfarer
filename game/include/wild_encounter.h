@@ -170,23 +170,23 @@ enum TimeOfDay GetTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea area
 // species/weights for RandomizeWildEncounter to map in its established order.
 bool8 GetWildEncounterProfileView(const struct WildEncounterProfileContext *context, struct WildEncounterProfileView *view);
 bool8 GetWildEncounterProfileEntry(const struct WildEncounterProfileView *view, u8 slot, const struct WildPokemon **entry);
-u8 ProjectWildEncounterLevelWithOffset(u8 authoredLevel, u16 trainerRating, s8 levelOffset);
-u8 ProjectWildEncounterLevel(const struct WildEncounterProfileView *view, u8 authoredLevel, u16 trainerRating);
-bool8 GetWildEncounterSpeciesOutcome(const struct WildEncounterProfileView *view, u8 slot, u8 authoredLevel, u16 trainerRating, bool8 isWildRandomized, struct WildEncounterSpeciesOutcome *outcome);
+u8 ProjectWildEncounterLevelWithOffset(u8 authoredLevel, u32 trainerRating, s8 levelOffset);
+u8 ProjectWildEncounterLevel(const struct WildEncounterProfileView *view, u8 authoredLevel, u32 trainerRating);
+bool8 GetWildEncounterSpeciesOutcome(const struct WildEncounterProfileView *view, u8 slot, u8 authoredLevel, u32 trainerRating, bool8 isWildRandomized, struct WildEncounterSpeciesOutcome *outcome);
 bool8 GetCurrentWildEncounterSpeciesOutcome(const struct WildEncounterProfileView *view, u8 slot, u8 authoredLevel, struct WildEncounterSpeciesOutcome *outcome);
-bool8 IsWildEncounterProfileSlotEligible(const struct WildEncounterProfileView *view, u8 slot, u16 trainerRating, bool8 isWildRandomized);
-u16 GetWildEncounterProfileEligibleWeight(const struct WildEncounterProfileView *view, u16 trainerRating, bool8 isWildRandomized);
-u16 GetWildEncounterProfileEffectiveWeight(const struct WildEncounterProfileView *view, u8 slot, u16 trainerRating, bool8 isWildRandomized);
-bool8 SelectWildEncounterProfileSlot(const struct WildEncounterProfileView *view, u16 trainerRating, bool8 isWildRandomized, u16 roll, u8 *slot);
+bool8 IsWildEncounterProfileSlotEligible(const struct WildEncounterProfileView *view, u8 slot, u32 trainerRating, bool8 isWildRandomized);
+u16 GetWildEncounterProfileEligibleWeight(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized);
+u16 GetWildEncounterProfileEffectiveWeight(const struct WildEncounterProfileView *view, u8 slot, u32 trainerRating, bool8 isWildRandomized);
+bool8 SelectWildEncounterProfileSlot(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized, u16 roll, u8 *slot);
 // Type-attraction chooses uniformly among matching eligible slots, unlike the
 // normal weighted selection. A false return also represents the legacy
 // no-op case where every eligible slot already matches the requested type.
-bool8 SelectWildEncounterProfileTypeSlot(const struct WildEncounterProfileView *view, u16 trainerRating, bool8 isWildRandomized, u8 type, u8 roll, u8 *slot);
+bool8 SelectWildEncounterProfileTypeSlot(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized, u8 type, u8 roll, u8 *slot);
 // Lures reverse the eligible slot sequence after weighted selection. Keeping
 // this deterministic helper in the core ensures filtered profiles cannot map
 // an otherwise valid selection back onto a locked authored slot.
-bool8 GetWildEncounterProfileMirroredEligibleSlot(const struct WildEncounterProfileView *view, u16 trainerRating, bool8 isWildRandomized, u8 slot, u8 *mirroredSlot);
-bool8 DoesWildEncounterProfileHaveAvailableEntries(const struct WildEncounterProfileView *view, u16 trainerRating, bool8 isWildRandomized);
+bool8 GetWildEncounterProfileMirroredEligibleSlot(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized, u8 slot, u8 *mirroredSlot);
+bool8 DoesWildEncounterProfileHaveAvailableEntries(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized);
 bool8 IsCurrentWildEncounterProfileSlotEligible(const struct WildEncounterProfileView *view, u8 slot);
 u16 GetCurrentWildEncounterProfileEligibleWeight(const struct WildEncounterProfileView *view);
 u16 GetCurrentWildEncounterProfileEffectiveWeight(const struct WildEncounterProfileView *view, u8 slot);
@@ -197,7 +197,7 @@ u16 GenerateFeebasFishingWildMonForTesting(u8 rod);
 #if IS_HNS
 // Deterministic Hoenn Sound selection with ability attraction and Lures off.
 // A failed radio override falls through to the supplied base-weight roll.
-bool8 SelectWildEncounterProfileSlotWithHoennSoundForTesting(const struct WildEncounterProfileView *view, u16 trainerRating, bool8 isWildRandomized, bool8 isHoennSoundPlaying, u8 activationRoll, u8 selectionRoll, u16 baseRoll, u8 *slot);
+bool8 SelectWildEncounterProfileSlotWithHoennSoundForTesting(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized, bool8 isHoennSoundPlaying, u8 activationRoll, u8 selectionRoll, u16 baseRoll, u8 *slot);
 #endif
 #if RANDOMIZER_AVAILABLE == TRUE
 u16 RandomizeWildEncounterProfileEntryForTesting(const struct WildEncounterProfileView *view, u8 slot, u8 mapNum, u8 mapGroup, enum WildPokemonArea area);

@@ -9,6 +9,7 @@
 #include "overworld.h"
 #include "hall_of_fame.h"
 #include "league_circuit.h"
+#include "league_events.h"
 #include "pokemon_storage_system.h"
 #include "trainer_hill.h"
 #include "trainer_tower.h"
@@ -23,6 +24,9 @@
 static u16 CalculateChecksum(void *, u16);
 static bool8 ReadFlashSector(u8, struct SaveSector *);
 static u8 GetSaveValidStatus(const struct SaveSectorLocation *);
+#if WAYFARER_LEAGUE_EVENTS
+static bool32 TryLoadPreviousLeagueEventSlot(const struct SaveSectorLocation *);
+#endif
 static u8 CopySaveSlotData(u16, struct SaveSectorLocation *);
 static u8 TryWriteSector(u8, u8 *);
 static u8 HandleWriteSector(u16, const struct SaveSectorLocation *);
@@ -30,7 +34,7 @@ static u8 HandleReplaceSector(u16, const struct SaveSectorLocation *);
 static u32 SaveBlock3Size(u32);
 static void CopyToSaveBlock3(u32, struct SaveSector *);
 static void CopyFromSaveBlock3(u32, struct SaveSector *);
-#if IS_WAYFARER
+#if IS_WAYFARER && !WAYFARER_LEAGUE_EVENTS
 static u8 ReplaceSaveBlock3Chunk(u16);
 #endif
 
@@ -91,6 +95,13 @@ struct
 STATIC_ASSERT(sizeof(struct SaveBlock3) <= SAVE_BLOCK_3_CHUNK_SIZE * NUM_SECTORS_PER_SLOT, SaveBlock3FreeSpace);
 #if IS_WAYFARER
 STATIC_ASSERT(sizeof(struct SaveBlock3) <= 1624, WayfarerSaveBlock3SectorAllocation);
+STATIC_ASSERT(sizeof(struct LeagueSavedMon) == 44, LeagueSavedMonSerializedSize);
+STATIC_ASSERT(sizeof(struct LeagueSavedTeam) == 288, LeagueSavedTeamSerializedSize);
+STATIC_ASSERT(sizeof(struct LeagueSavedTeams) == 1456, LeagueSavedTeamsSerializedSize);
+STATIC_ASSERT(LEAGUE_EVENT_LINEUP_SIZE == LEAGUE_LINEUP_SIZE, LeagueEventLineupCount);
+STATIC_ASSERT(LEAGUE_EVENT_NOTABLE_COUNT == NOTABLE_TRAINER_COUNT, LeagueEventTrainerCount);
+STATIC_ASSERT(sizeof(struct LeagueEventState) <= 256, LeagueEventStateSerializedBudget);
+STATIC_ASSERT(sizeof(struct PokemonStorage) <= 35712, WayfarerPokemonStorageSectorAllocation);
 STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn) < 1024, WayfarerHoennStateRuntimeBudget);
 STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn.vars) == 512, WayfarerHoennVarBankSize);
 STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn.persistentFlags) == 188, WayfarerHoennFlagBankSize);
@@ -123,6 +134,18 @@ STATIC_ASSERT(sizeof(struct SaveBlock1) <= SECTOR_DATA_SIZE * (SECTOR_ID_SAVEBLO
 STATIC_ASSERT(sizeof(struct PokemonStorage) <= SECTOR_DATA_SIZE * (SECTOR_ID_PKMN_STORAGE_END - SECTOR_ID_PKMN_STORAGE_START + 1), PokemonStorageFreeSpace);
 
 COMMON_DATA u16 gLastWrittenSector = 0;
+#if WAYFARER_LEAGUE_EVENTS
+enum WayfarerIncrementalSavePhase
+{
+    WAYFARER_INCREMENTAL_IDLE,
+    WAYFARER_INCREMENTAL_WRITING,
+    WAYFARER_INCREMENTAL_REPLACE_LAST,
+    WAYFARER_INCREMENTAL_SEAL_LAST,
+    WAYFARER_INCREMENTAL_DONE,
+    WAYFARER_INCREMENTAL_FAILED,
+};
+static u8 sWayfarerIncrementalSavePhase;
+#endif
 COMMON_DATA u32 gLastSaveCounter = 0;
 COMMON_DATA u16 gLastKnownGoodSector = 0;
 COMMON_DATA u32 gDamagedSaveSectors = 0;
@@ -300,6 +323,7 @@ static u32 RestoreSaveBackupVarsAndIncrement(const struct SaveSectorLocation *lo
     return 0;
 }
 
+#if !WAYFARER_LEAGUE_EVENTS
 static u32 RestoreSaveBackupVars(const struct SaveSectorLocation *locations)
 {
     gReadWriteSector = &gSaveDataBuffer;
@@ -309,6 +333,7 @@ static u32 RestoreSaveBackupVars(const struct SaveSectorLocation *locations)
     gDamagedSaveSectors = 0;
     return 0;
 }
+#endif
 
 static u8 HandleWriteIncrementalSector(u16 numSectors, const struct SaveSectorLocation *locations)
 {
@@ -437,6 +462,7 @@ static u8 HandleReplaceSector(u16 sectorId, const struct SaveSectorLocation *loc
     }
 }
 
+#if !WAYFARER_LEAGUE_EVENTS
 static u8 WriteSectorSignatureByte_NoOffset(u16 sectorId, const struct SaveSectorLocation *locations)
 {
     // Adjust sector id for current save slot
@@ -461,6 +487,7 @@ static u8 WriteSectorSignatureByte_NoOffset(u16 sectorId, const struct SaveSecto
         return SAVE_STATUS_OK;
     }
 }
+#endif
 
 static u8 CopySectorSignatureByte(u16 sectorId, const struct SaveSectorLocation *locations)
 {
@@ -486,6 +513,7 @@ static u8 CopySectorSignatureByte(u16 sectorId, const struct SaveSectorLocation 
     }
 }
 
+#if !WAYFARER_LEAGUE_EVENTS
 static u8 WriteSectorSignatureByte(u16 sectorId, const struct SaveSectorLocation *locations)
 {
     // Adjust sector id for current save slot
@@ -509,6 +537,7 @@ static u8 WriteSectorSignatureByte(u16 sectorId, const struct SaveSectorLocation
         return SAVE_STATUS_OK;
     }
 }
+#endif
 
 static u8 TryLoadSaveSlot(u16 sectorId, struct SaveSectorLocation *locations)
 {
@@ -541,6 +570,8 @@ static u8 CopySaveSlotData(u16 sectorId, struct SaveSectorLocation *locations)
         ReadFlashSector(i + slotOffset, gReadWriteSector);
 
         id = gReadWriteSector->id;
+        if (id >= NUM_SECTORS_PER_SLOT || gReadWriteSector->counter != gSaveCounter)
+            continue;
         if (id == 0)
             gLastWrittenSector = i;
 
@@ -567,6 +598,7 @@ static u8 GetSaveValidStatus(const struct SaveSectorLocation *locations)
     u32 saveSlot2Counter = 0;
     u32 validSectorFlags = 0;
     bool8 signatureValid = FALSE;
+    bool8 counterFound = FALSE;
     u8 saveSlot1Status;
     u8 saveSlot2Status;
 
@@ -577,10 +609,17 @@ static u8 GetSaveValidStatus(const struct SaveSectorLocation *locations)
         if (gReadWriteSector->signature == SECTOR_SIGNATURE)
         {
             signatureValid = TRUE;
+            if (gReadWriteSector->id >= NUM_SECTORS_PER_SLOT)
+                continue;
             checksum = CalculateChecksum(gReadWriteSector->data, locations[gReadWriteSector->id].size);
-            if (gReadWriteSector->checksum == checksum)
+            if (gReadWriteSector->checksum == checksum
+             && (!counterFound || gReadWriteSector->counter == saveSlot1Counter))
             {
-                saveSlot1Counter = gReadWriteSector->counter;
+                if (!counterFound)
+                {
+                    saveSlot1Counter = gReadWriteSector->counter;
+                    counterFound = TRUE;
+                }
                 validSectorFlags |= 1 << gReadWriteSector->id;
             }
         }
@@ -601,6 +640,7 @@ static u8 GetSaveValidStatus(const struct SaveSectorLocation *locations)
 
     validSectorFlags = 0;
     signatureValid = FALSE;
+    counterFound = FALSE;
 
     // Check save slot 2
     for (i = 0; i < NUM_SECTORS_PER_SLOT; i++)
@@ -609,10 +649,17 @@ static u8 GetSaveValidStatus(const struct SaveSectorLocation *locations)
         if (gReadWriteSector->signature == SECTOR_SIGNATURE)
         {
             signatureValid = TRUE;
+            if (gReadWriteSector->id >= NUM_SECTORS_PER_SLOT)
+                continue;
             checksum = CalculateChecksum(gReadWriteSector->data, locations[gReadWriteSector->id].size);
-            if (gReadWriteSector->checksum == checksum)
+            if (gReadWriteSector->checksum == checksum
+             && (!counterFound || gReadWriteSector->counter == saveSlot2Counter))
             {
-                saveSlot2Counter = gReadWriteSector->counter;
+                if (!counterFound)
+                {
+                    saveSlot2Counter = gReadWriteSector->counter;
+                    counterFound = TRUE;
+                }
                 validSectorFlags |= 1 << gReadWriteSector->id;
             }
         }
@@ -683,6 +730,38 @@ static u8 GetSaveValidStatus(const struct SaveSectorLocation *locations)
     gLastWrittenSector = 0;
     return SAVE_STATUS_CORRUPT;
 }
+
+#if WAYFARER_LEAGUE_EVENTS
+static bool32 TryLoadPreviousLeagueEventSlot(const struct SaveSectorLocation *locations)
+{
+    u32 previousCounter = gSaveCounter - 1;
+    u16 slotOffset = NUM_SECTORS_PER_SLOT * (previousCounter % NUM_SAVE_SLOTS);
+    u32 validIds = 0;
+    u16 i, id;
+
+    gReadWriteSector = &gSaveDataBuffer;
+    for (i = 0; i < NUM_SECTORS_PER_SLOT; i++)
+    {
+        ReadFlashSector(slotOffset + i, gReadWriteSector);
+        id = gReadWriteSector->id;
+        if (id >= NUM_SECTORS_PER_SLOT || gReadWriteSector->signature != SECTOR_SIGNATURE
+         || gReadWriteSector->counter != previousCounter
+         || gReadWriteSector->checksum != CalculateChecksum(gReadWriteSector->data, locations[id].size))
+            return FALSE;
+        validIds |= 1 << id;
+    }
+    if (validIds != (1 << NUM_SECTORS_PER_SLOT) - 1)
+        return FALSE;
+
+    gSaveCounter = previousCounter;
+    CopySaveSlotData(FULL_SAVE_SLOT, gRamSaveSectorLocations);
+    CopyPartyAndObjectsFromSave();
+    return gSaveBlock1Ptr->saveVersionMagic == SAVE_VERSION_MAGIC
+        && gSaveBlock1Ptr->saveVersion == SAVE_VERSION
+        && WayfarerPersistentStateIsValid()
+        && ValidateLeagueEventState();
+}
+#endif
 
 static u8 TryLoadSaveSector(u8 sectorId, u8 *data, u16 size)
 {
@@ -813,6 +892,12 @@ u8 HandleSavingData(u8 saveType)
         break;
     case SAVE_LINK:
     case SAVE_EREADER: // Dummied, now duplicate of SAVE_LINK
+#if WAYFARER_LEAGUE_EVENTS
+        // League event metadata and frozen teams span SaveBlock3 and PC
+        // storage. They must commit in the same complete save slot.
+        CopyPartyAndObjectsToSave();
+        WriteSaveSectorOrSlot(FULL_SAVE_SLOT, gRamSaveSectorLocations);
+#else
         // Used by link / Battle Frontier
         // Write only SaveBlocks 1 and 2 (skips the PC)
         CopyPartyAndObjectsToSave();
@@ -827,6 +912,7 @@ u8 HandleSavingData(u8 saveType)
              i <= SECTOR_ID_PKMN_STORAGE_END && SaveBlock3Size(i) != 0;
              i++)
             ReplaceSaveBlock3Chunk(i);
+#endif
 #endif
         break;
     case SAVE_OVERWRITE_DIFFERENT_FILE:
@@ -859,6 +945,12 @@ u8 TrySavingData(u8 saveType)
     HandleSavingData(saveType);
     if (!gDamagedSaveSectors)
     {
+#if WAYFARER_LEAGUE_EVENTS
+        if (saveType == SAVE_NORMAL || saveType == SAVE_HALL_OF_FAME
+         || saveType == SAVE_OVERWRITE_DIFFERENT_FILE || saveType == SAVE_LINK
+         || saveType == SAVE_EREADER)
+            AcknowledgeLeagueProgressSave();
+#endif
         gSaveAttemptStatus = SAVE_STATUS_OK;
         return SAVE_STATUS_OK;
     }
@@ -913,6 +1005,23 @@ bool8 LinkFullSave_SetLastSectorSignature(void)
 
 bool8 WriteSaveBlock2(void)
 {
+#if WAYFARER_LEAGUE_EVENTS
+    // Keep link callers' one-sector-per-frame cadence while committing the
+    // event metadata and its PC-storage team payload in a complete slot.
+    sWayfarerIncrementalSavePhase = WAYFARER_INCREMENTAL_FAILED;
+    if (LinkFullSave_Init())
+    {
+        gSaveAttemptStatus = SAVE_STATUS_ERROR;
+        return TRUE;
+    }
+    if (LinkFullSave_WriteSector() || gDamagedSaveSectors)
+    {
+        gSaveAttemptStatus = SAVE_STATUS_ERROR;
+        return TRUE;
+    }
+    sWayfarerIncrementalSavePhase = WAYFARER_INCREMENTAL_WRITING;
+    return FALSE;
+#else
     if (gFlashMemoryPresent != TRUE)
         return TRUE;
 
@@ -924,6 +1033,7 @@ bool8 WriteSaveBlock2(void)
     // so this function only saves the first sector (SECTOR_ID_SAVEBLOCK2)
     HandleReplaceSectorAndVerify(gIncrementalSectorId + 1, gRamSaveSectorLocations);
     return FALSE;
+#endif
 }
 
 // Used in conjunction with WriteSaveBlock2 to write both for certain link saves.
@@ -931,6 +1041,36 @@ bool8 WriteSaveBlock2(void)
 // It returns TRUE when finished.
 bool8 WriteSaveBlock1Sector(void)
 {
+#if WAYFARER_LEAGUE_EVENTS
+    switch (sWayfarerIncrementalSavePhase)
+    {
+    case WAYFARER_INCREMENTAL_WRITING:
+        if (LinkFullSave_WriteSector())
+            sWayfarerIncrementalSavePhase = gDamagedSaveSectors
+                ? WAYFARER_INCREMENTAL_FAILED : WAYFARER_INCREMENTAL_REPLACE_LAST;
+        break;
+    case WAYFARER_INCREMENTAL_REPLACE_LAST:
+        LinkFullSave_ReplaceLastSector();
+        sWayfarerIncrementalSavePhase = gDamagedSaveSectors
+            ? WAYFARER_INCREMENTAL_FAILED : WAYFARER_INCREMENTAL_SEAL_LAST;
+        break;
+    case WAYFARER_INCREMENTAL_SEAL_LAST:
+        LinkFullSave_SetLastSectorSignature();
+        sWayfarerIncrementalSavePhase = gDamagedSaveSectors
+            ? WAYFARER_INCREMENTAL_FAILED : WAYFARER_INCREMENTAL_DONE;
+        if (sWayfarerIncrementalSavePhase == WAYFARER_INCREMENTAL_DONE)
+        {
+            AcknowledgeLeagueProgressSave();
+            gSaveAttemptStatus = SAVE_STATUS_OK;
+        }
+        break;
+    default:
+        break;
+    }
+    if (sWayfarerIncrementalSavePhase == WAYFARER_INCREMENTAL_FAILED)
+        gSaveAttemptStatus = SAVE_STATUS_ERROR;
+    return sWayfarerIncrementalSavePhase == WAYFARER_INCREMENTAL_DONE;
+#else
     bool32 finished = FALSE;
     u16 sectorId = ++gIncrementalSectorId; // Because WriteSaveBlock2 will have been called prior, this will be SECTOR_ID_SAVEBLOCK1_START
     if (sectorId <= SECTOR_ID_SAVEBLOCK1_END)
@@ -964,6 +1104,7 @@ bool8 WriteSaveBlock1Sector(void)
         DoSaveFailedScreen(SAVE_LINK);
 
     return finished;
+#endif
 }
 
 u8 LoadGameSave(u8 saveType)
@@ -1003,7 +1144,12 @@ u8 LoadGameSave(u8 saveType)
 
 #if IS_WAYFARER
     if (saveType != SAVE_HALL_OF_FAME)
+    {
         WayfarerTrainerTowerResetTransientState();
+#if WAYFARER_LEAGUE_EVENTS
+        ResetLeagueCircuitTransientState();
+#endif
+    }
 
     // Prerelease layouts have no compatibility baseline. Reject before any
     // migration or regional repair can mutate the loaded story state.
@@ -1016,6 +1162,18 @@ u8 LoadGameSave(u8 saveType)
             gSaveFileStatus = SAVE_STATUS_CORRUPT;
             return SAVE_STATUS_CORRUPT;
         }
+#if WAYFARER_LEAGUE_EVENTS
+        if (!ValidateLeagueEventState())
+        {
+            if (!TryLoadPreviousLeagueEventSlot(gRamSaveSectorLocations))
+            {
+                gSaveFileStatus = SAVE_STATUS_CORRUPT;
+                return SAVE_STATUS_CORRUPT;
+            }
+            status = SAVE_STATUS_ERROR;
+            gSaveFileStatus = status;
+        }
+#endif
         WayfarerValidatePersistentState();
     }
     return status;
@@ -1283,7 +1441,7 @@ void Test_CopySaveBlock3ToSector(u32 sectorId, struct SaveSector *sector)
 }
 #endif
 
-#if IS_WAYFARER
+#if IS_WAYFARER && !WAYFARER_LEAGUE_EVENTS
 static u8 ReplaceSaveBlock3Chunk(u16 sectorId)
 {
     u16 sector = sectorId + gLastWrittenSector;

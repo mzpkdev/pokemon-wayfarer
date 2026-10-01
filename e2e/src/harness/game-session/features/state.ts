@@ -61,6 +61,7 @@ export type GameState = {
     name: GameMap | "unknown"
     mapGroup: number
     mapNum: number
+    weather: number
   }
   player: {
     x: number
@@ -119,6 +120,18 @@ export type GameState = {
     leagues: Record<(typeof circuitStages)[number], (typeof leagueStatuses)[number]>
     regionalChampions: Record<(typeof leagueRegions)[number], boolean>
     trainerRating: number
+    event: {
+      id: number
+      acceptedLeague: (typeof circuitStages)[number] | null
+      worldProgress: number
+      invitationState: number
+      lineup: {
+        characterId: number
+        leadSpecies: Species | "unknown"
+        leadLevel: number
+        teamSize: number
+      }[]
+    }
     run: {
       active: boolean
       stage: (typeof circuitStages)[number] | null
@@ -170,6 +183,10 @@ export type GameState = {
   battle: {
     trainerOnly: TrainerOnlySnapshot
     active: boolean
+    weather: number
+    fieldStatuses: number
+    sideStatuses: number[]
+    hazardMasks: number[]
     dialogue: { sequence: number; text: string; rawText: number[] }
     ui: (typeof battleUiStates)[number]
     cursor: number | null
@@ -421,6 +438,7 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
         name: mapName(snapshot.mapGroup, snapshot.mapNum),
         mapGroup: snapshot.mapGroup,
         mapNum: snapshot.mapNum,
+        weather: snapshot.overworldWeather,
       },
       player: {
         x: snapshot.x,
@@ -495,6 +513,18 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
           ]),
         ) as GameState["circuit"]["regionalChampions"],
         trainerRating: snapshot.trainerRating,
+        event: {
+          id: snapshot.leagueEventId,
+          acceptedLeague: circuitStages[snapshot.leagueEventAcceptedLeague - 1] ?? null,
+          worldProgress: snapshot.leagueEventWorldProgress,
+          invitationState: snapshot.leagueEventInvitationState,
+          lineup: snapshot.leagueEventCharacterIds.map((characterId, index) => ({
+            characterId,
+            leadSpecies: nameByValue(species, snapshot.leagueEventLeadSpecies[index] ?? 0),
+            leadLevel: snapshot.leagueEventLeadLevels[index] ?? 0,
+            teamSize: snapshot.leagueEventTeamSizes[index] ?? 0,
+          })),
+        },
         run: {
           active: snapshot.leagueRunActive,
           stage: circuitStages[snapshot.leagueRunStage - 1] ?? null,
@@ -541,6 +571,10 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
       battle: {
         trainerOnly: snapshot.trainerOnly,
         active: snapshot.battleActive,
+        weather: snapshot.battleWeather,
+        fieldStatuses: snapshot.battleFieldStatuses,
+        sideStatuses: snapshot.battleSideStatuses,
+        hazardMasks: snapshot.battleHazardMasks,
         dialogue: {
           sequence: snapshot.battleDialogueSequence,
           text: decodeFieldMessageText(snapshot.battleDialogueText),

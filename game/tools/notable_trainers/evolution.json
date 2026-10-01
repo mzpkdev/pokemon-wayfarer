@@ -1,0 +1,1560 @@
+{
+  "version": 1,
+  "chains": {
+    "Abomasnow": [
+      "Snover",
+      40,
+      "Abomasnow"
+    ],
+    "Absol": [
+      "Absol"
+    ],
+    "Aerodactyl": [
+      "Aerodactyl"
+    ],
+    "Aggron": [
+      "Aron",
+      32,
+      "Lairon",
+      42,
+      "Aggron"
+    ],
+    "Alakazam": [
+      "Abra",
+      16,
+      "Kadabra",
+      42,
+      "Alakazam"
+    ],
+    "Altaria": [
+      "Swablu",
+      35,
+      "Altaria"
+    ],
+    "Ampharos": [
+      "Mareep",
+      15,
+      "Flaaffy",
+      30,
+      "Ampharos"
+    ],
+    "Arbok": [
+      "Ekans",
+      22,
+      "Arbok"
+    ],
+    "Arcanine": [
+      "Growlithe",
+      35,
+      "Arcanine"
+    ],
+    "Ariados": [
+      "Spinarak",
+      22,
+      "Ariados"
+    ],
+    "Armaldo": [
+      "Anorith",
+      40,
+      "Armaldo"
+    ],
+    "Banette": [
+      "Shuppet",
+      37,
+      "Banette"
+    ],
+    "Bastiodon": [
+      "Shieldon",
+      30,
+      "Bastiodon"
+    ],
+    "Beedrill": [
+      "Weedle",
+      7,
+      "Kakuna",
+      10,
+      "Beedrill"
+    ],
+    "Bellossom": [
+      "Oddish",
+      21,
+      "Gloom",
+      36,
+      "Bellossom"
+    ],
+    "Blissey": [
+      "Chansey",
+      40,
+      "Blissey"
+    ],
+    "Breloom": [
+      "Shroomish",
+      23,
+      "Breloom"
+    ],
+    "Bronzong": [
+      "Bronzor",
+      33,
+      "Bronzong"
+    ],
+    "Butterfree": [
+      "Caterpie",
+      7,
+      "Metapod",
+      10,
+      "Butterfree"
+    ],
+    "Cacturne": [
+      "Cacnea",
+      32,
+      "Cacturne"
+    ],
+    "Camerupt": [
+      "Numel",
+      33,
+      "Camerupt"
+    ],
+    "Charizard": [
+      "Charmander",
+      16,
+      "Charmeleon",
+      36,
+      "Charizard"
+    ],
+    "Claydol": [
+      "Baltoy",
+      36,
+      "Claydol"
+    ],
+    "Clefable": [
+      "Clefairy",
+      36,
+      "Clefable"
+    ],
+    "Cloyster": [
+      "Shellder",
+      34,
+      "Cloyster"
+    ],
+    "Cradily": [
+      "Lileep",
+      40,
+      "Cradily"
+    ],
+    "Crawdaunt": [
+      "Corphish",
+      30,
+      "Crawdaunt"
+    ],
+    "Crobat": [
+      "Zubat",
+      22,
+      "Golbat",
+      38,
+      "Crobat"
+    ],
+    "Dewgong": [
+      "Seel",
+      34,
+      "Dewgong"
+    ],
+    "Dodrio": [
+      "Doduo",
+      31,
+      "Dodrio"
+    ],
+    "Dragonite": [
+      "Dratini",
+      30,
+      "Dragonair",
+      55,
+      "Dragonite"
+    ],
+    "Drifblim": [
+      "Drifloon",
+      28,
+      "Drifblim"
+    ],
+    "Dugtrio": [
+      "Diglett",
+      26,
+      "Dugtrio"
+    ],
+    "Dusknoir": [
+      "Duskull",
+      37,
+      "Dusclops",
+      50,
+      "Dusknoir"
+    ],
+    "Electivire": [
+      "Electabuzz",
+      45,
+      "Electivire"
+    ],
+    "Electrode": [
+      "Voltorb",
+      30,
+      "Electrode"
+    ],
+    "Espeon": [
+      "Eevee",
+      30,
+      "Espeon"
+    ],
+    "Exeggutor": [
+      "Exeggcute",
+      34,
+      "Exeggutor"
+    ],
+    "Flareon": [
+      "Eevee",
+      30,
+      "Flareon"
+    ],
+    "Flygon": [
+      "Trapinch",
+      35,
+      "Vibrava",
+      45,
+      "Flygon"
+    ],
+    "Forretress": [
+      "Pineco",
+      31,
+      "Forretress"
+    ],
+    "Froslass": [
+      "Snorunt",
+      42,
+      "Froslass"
+    ],
+    "Gallade": [
+      "Ralts",
+      20,
+      "Kirlia",
+      30,
+      "Gallade"
+    ],
+    "Garchomp": [
+      "Gible",
+      24,
+      "Gabite",
+      48,
+      "Garchomp"
+    ],
+    "Gardevoir": [
+      "Ralts",
+      20,
+      "Kirlia",
+      30,
+      "Gardevoir"
+    ],
+    "Gengar": [
+      "Gastly",
+      25,
+      "Haunter",
+      42,
+      "Gengar"
+    ],
+    "Girafarig": [
+      "Girafarig"
+    ],
+    "Glaceon": [
+      "Eevee",
+      30,
+      "Glaceon"
+    ],
+    "Glalie": [
+      "Snorunt",
+      42,
+      "Glalie"
+    ],
+    "Golduck": [
+      "Psyduck",
+      33,
+      "Golduck"
+    ],
+    "Golem": [
+      "Geodude",
+      25,
+      "Graveler",
+      38,
+      "Golem"
+    ],
+    "Grumpig": [
+      "Spoink",
+      32,
+      "Grumpig"
+    ],
+    "Gyarados": [
+      "Magikarp",
+      20,
+      "Gyarados"
+    ],
+    "Hariyama": [
+      "Makuhita",
+      24,
+      "Hariyama"
+    ],
+    "Heracross": [
+      "Heracross"
+    ],
+    "Hitmonchan": [
+      "Hitmonchan"
+    ],
+    "Hitmonlee": [
+      "Hitmonlee"
+    ],
+    "Hitmontop": [
+      "Hitmontop"
+    ],
+    "Honchkrow": [
+      "Murkrow",
+      36,
+      "Honchkrow"
+    ],
+    "Houndoom": [
+      "Houndour",
+      24,
+      "Houndoom"
+    ],
+    "Hypno": [
+      "Drowzee",
+      26,
+      "Hypno"
+    ],
+    "Jolteon": [
+      "Eevee",
+      30,
+      "Jolteon"
+    ],
+    "Jumpluff": [
+      "Hoppip",
+      18,
+      "Skiploom",
+      27,
+      "Jumpluff"
+    ],
+    "Jynx": [
+      "Jynx"
+    ],
+    "Kabutops": [
+      "Kabuto",
+      40,
+      "Kabutops"
+    ],
+    "Kangaskhan": [
+      "Kangaskhan"
+    ],
+    "Kingdra": [
+      "Horsea",
+      32,
+      "Seadra",
+      45,
+      "Kingdra"
+    ],
+    "Lanturn": [
+      "Chinchou",
+      27,
+      "Lanturn"
+    ],
+    "Lapras": [
+      "Lapras"
+    ],
+    "Linoone": [
+      "Zigzagoon",
+      20,
+      "Linoone"
+    ],
+    "Lucario": [
+      "Lucario"
+    ],
+    "Ludicolo": [
+      "Lotad",
+      14,
+      "Lombre",
+      36,
+      "Ludicolo"
+    ],
+    "Lunatone": [
+      "Lunatone"
+    ],
+    "Luvdisc": [
+      "Luvdisc"
+    ],
+    "Luxray": [
+      "Shinx",
+      15,
+      "Luxio",
+      30,
+      "Luxray"
+    ],
+    "Machamp": [
+      "Machop",
+      28,
+      "Machoke",
+      38,
+      "Machamp"
+    ],
+    "Magcargo": [
+      "Slugma",
+      38,
+      "Magcargo"
+    ],
+    "Magmortar": [
+      "Magmar",
+      45,
+      "Magmortar"
+    ],
+    "Magnezone": [
+      "Magnemite",
+      30,
+      "Magneton",
+      45,
+      "Magnezone"
+    ],
+    "Mamoswine": [
+      "Swinub",
+      33,
+      "Piloswine",
+      45,
+      "Mamoswine"
+    ],
+    "Manectric": [
+      "Electrike",
+      26,
+      "Manectric"
+    ],
+    "Marowak": [
+      "Cubone",
+      28,
+      "Marowak"
+    ],
+    "Medicham": [
+      "Meditite",
+      37,
+      "Medicham"
+    ],
+    "Metagross": [
+      "Beldum",
+      20,
+      "Metang",
+      45,
+      "Metagross"
+    ],
+    "Mightyena": [
+      "Poochyena",
+      18,
+      "Mightyena"
+    ],
+    "Milotic": [
+      "Feebas",
+      30,
+      "Milotic"
+    ],
+    "Miltank": [
+      "Miltank"
+    ],
+    "Mismagius": [
+      "Misdreavus",
+      36,
+      "Mismagius"
+    ],
+    "Mr. Mime": [
+      "Mr. Mime"
+    ],
+    "Muk": [
+      "Grimer",
+      38,
+      "Muk"
+    ],
+    "Nidoking": [
+      "Nidoran♂",
+      16,
+      "Nidorino",
+      36,
+      "Nidoking"
+    ],
+    "Nidoqueen": [
+      "Nidoran♀",
+      16,
+      "Nidorina",
+      36,
+      "Nidoqueen"
+    ],
+    "Ninetales": [
+      "Vulpix",
+      35,
+      "Ninetales"
+    ],
+    "Noctowl": [
+      "Hoothoot",
+      20,
+      "Noctowl"
+    ],
+    "Omastar": [
+      "Omanyte",
+      40,
+      "Omastar"
+    ],
+    "Parasect": [
+      "Paras",
+      24,
+      "Parasect"
+    ],
+    "Pelipper": [
+      "Wingull",
+      25,
+      "Pelipper"
+    ],
+    "Persian": [
+      "Meowth",
+      28,
+      "Persian"
+    ],
+    "Pidgeot": [
+      "Pidgey",
+      18,
+      "Pidgeotto",
+      36,
+      "Pidgeot"
+    ],
+    "Politoed": [
+      "Poliwag",
+      25,
+      "Poliwhirl",
+      36,
+      "Politoed"
+    ],
+    "Poliwrath": [
+      "Poliwag",
+      25,
+      "Poliwhirl",
+      36,
+      "Poliwrath"
+    ],
+    "Primeape": [
+      "Mankey",
+      28,
+      "Primeape"
+    ],
+    "Probopass": [
+      "Nosepass",
+      40,
+      "Probopass"
+    ],
+    "Raichu": [
+      "Pikachu",
+      30,
+      "Raichu"
+    ],
+    "Rampardos": [
+      "Cranidos",
+      30,
+      "Rampardos"
+    ],
+    "Rapidash": [
+      "Ponyta",
+      40,
+      "Rapidash"
+    ],
+    "Relicanth": [
+      "Relicanth"
+    ],
+    "Rhyperior": [
+      "Rhyhorn",
+      42,
+      "Rhydon",
+      55,
+      "Rhyperior"
+    ],
+    "Rotom": [
+      "Rotom"
+    ],
+    "Sableye": [
+      "Sableye"
+    ],
+    "Salamence": [
+      "Bagon",
+      30,
+      "Shelgon",
+      50,
+      "Salamence"
+    ],
+    "Scizor": [
+      "Scyther",
+      40,
+      "Scizor"
+    ],
+    "Sharpedo": [
+      "Carvanha",
+      30,
+      "Sharpedo"
+    ],
+    "Shedinja": [
+      "Nincada",
+      20,
+      "Shedinja"
+    ],
+    "Shiftry": [
+      "Seedot",
+      14,
+      "Nuzleaf",
+      36,
+      "Shiftry"
+    ],
+    "Skarmory": [
+      "Skarmory"
+    ],
+    "Slaking": [
+      "Slakoth",
+      18,
+      "Vigoroth",
+      36,
+      "Slaking"
+    ],
+    "Slowbro": [
+      "Slowpoke",
+      37,
+      "Slowbro"
+    ],
+    "Snorlax": [
+      "Snorlax"
+    ],
+    "Solrock": [
+      "Solrock"
+    ],
+    "Spinda": [
+      "Spinda"
+    ],
+    "Spiritomb": [
+      "Spiritomb"
+    ],
+    "Staraptor": [
+      "Starly",
+      14,
+      "Staravia",
+      34,
+      "Staraptor"
+    ],
+    "Starmie": [
+      "Staryu",
+      30,
+      "Starmie"
+    ],
+    "Steelix": [
+      "Onix",
+      35,
+      "Steelix"
+    ],
+    "Sudowoodo": [
+      "Sudowoodo"
+    ],
+    "Swellow": [
+      "Taillow",
+      22,
+      "Swellow"
+    ],
+    "Tangrowth": [
+      "Tangela",
+      40,
+      "Tangrowth"
+    ],
+    "Tentacruel": [
+      "Tentacool",
+      30,
+      "Tentacruel"
+    ],
+    "Torkoal": [
+      "Torkoal"
+    ],
+    "Toxicroak": [
+      "Croagunk",
+      37,
+      "Toxicroak"
+    ],
+    "Tropius": [
+      "Tropius"
+    ],
+    "Umbreon": [
+      "Eevee",
+      30,
+      "Umbreon"
+    ],
+    "Ursaring": [
+      "Teddiursa",
+      30,
+      "Ursaring"
+    ],
+    "Venomoth": [
+      "Venonat",
+      31,
+      "Venomoth"
+    ],
+    "Victreebel": [
+      "Bellsprout",
+      21,
+      "Weepinbell",
+      36,
+      "Victreebel"
+    ],
+    "Vileplume": [
+      "Oddish",
+      21,
+      "Gloom",
+      36,
+      "Vileplume"
+    ],
+    "Wailord": [
+      "Wailmer",
+      40,
+      "Wailord"
+    ],
+    "Walrein": [
+      "Spheal",
+      32,
+      "Sealeo",
+      44,
+      "Walrein"
+    ],
+    "Weavile": [
+      "Sneasel",
+      38,
+      "Weavile"
+    ],
+    "Weezing": [
+      "Koffing",
+      35,
+      "Weezing"
+    ],
+    "Whiscash": [
+      "Barboach",
+      30,
+      "Whiscash"
+    ],
+    "Wigglytuff": [
+      "Jigglypuff",
+      36,
+      "Wigglytuff"
+    ],
+    "Xatu": [
+      "Natu",
+      25,
+      "Xatu"
+    ],
+    "Yanmega": [
+      "Yanma",
+      36,
+      "Yanmega"
+    ]
+  },
+  "notFinal": [
+    "Girafarig",
+    "Primeape",
+    "Ursaring"
+  ],
+  "babies": [
+    "Pichu",
+    "Cleffa",
+    "Igglybuff",
+    "Togepi",
+    "Tyrogue",
+    "Smoochum",
+    "Elekid",
+    "Magby",
+    "Azurill",
+    "Wynaut",
+    "Budew",
+    "Chingling",
+    "Bonsly",
+    "Mime Jr.",
+    "Happiny",
+    "Munchlax",
+    "Riolu",
+    "Mantyke",
+    "Toxel"
+  ],
+  "nonLevelEdges": [
+    {
+      "predecessor": "SPECIES_EEVEE",
+      "successor": "SPECIES_VAPOREON",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_SUNKERN",
+      "successor": "SPECIES_SUNFLORA",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_SLOWPOKE",
+      "successor": "SPECIES_SLOWKING",
+      "level": 42
+    },
+    {
+      "predecessor": "SPECIES_PORYGON",
+      "successor": "SPECIES_PORYGON2",
+      "level": 42
+    },
+    {
+      "predecessor": "SPECIES_SKITTY",
+      "successor": "SPECIES_DELCATTY",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_CLAMPERL",
+      "successor": "SPECIES_HUNTAIL",
+      "level": 42
+    },
+    {
+      "predecessor": "SPECIES_CLAMPERL",
+      "successor": "SPECIES_GOREBYSS",
+      "level": 42
+    },
+    {
+      "predecessor": "SPECIES_ROSELIA",
+      "successor": "SPECIES_ROSERADE",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_AIPOM",
+      "successor": "SPECIES_AMBIPOM",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_BUNEARY",
+      "successor": "SPECIES_LOPUNNY",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_LICKITUNG",
+      "successor": "SPECIES_LICKILICKY",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_TOGETIC",
+      "successor": "SPECIES_TOGEKISS",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_EEVEE",
+      "successor": "SPECIES_LEAFEON",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_GLIGAR",
+      "successor": "SPECIES_GLISCOR",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_PORYGON2",
+      "successor": "SPECIES_PORYGON_Z",
+      "level": 52
+    },
+    {
+      "predecessor": "SPECIES_PANSAGE",
+      "successor": "SPECIES_SIMISAGE",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_PANSEAR",
+      "successor": "SPECIES_SIMISEAR",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_PANPOUR",
+      "successor": "SPECIES_SIMIPOUR",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_MUNNA",
+      "successor": "SPECIES_MUSHARNA",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_BOLDORE",
+      "successor": "SPECIES_GIGALITH",
+      "level": 42
+    },
+    {
+      "predecessor": "SPECIES_WOOBAT",
+      "successor": "SPECIES_SWOOBAT",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_GURDURR",
+      "successor": "SPECIES_CONKELDURR",
+      "level": 42
+    },
+    {
+      "predecessor": "SPECIES_SWADLOON",
+      "successor": "SPECIES_LEAVANNY",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_COTTONEE",
+      "successor": "SPECIES_WHIMSICOTT",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_PETILIL",
+      "successor": "SPECIES_LILLIGANT",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_MINCCINO",
+      "successor": "SPECIES_CINCCINO",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_KARRABLAST",
+      "successor": "SPECIES_ESCAVALIER",
+      "level": 42
+    },
+    {
+      "predecessor": "SPECIES_EELEKTRIK",
+      "successor": "SPECIES_EELEKTROSS",
+      "level": 49
+    },
+    {
+      "predecessor": "SPECIES_LAMPENT",
+      "successor": "SPECIES_CHANDELURE",
+      "level": 51
+    },
+    {
+      "predecessor": "SPECIES_SHELMET",
+      "successor": "SPECIES_ACCELGOR",
+      "level": 42
+    },
+    {
+      "predecessor": "SPECIES_FLOETTE_RED",
+      "successor": "SPECIES_FLORGES_RED",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_DOUBLADE",
+      "successor": "SPECIES_AEGISLASH_SHIELD",
+      "level": 45
+    },
+    {
+      "predecessor": "SPECIES_SPRITZEE",
+      "successor": "SPECIES_AROMATISSE",
+      "level": 42
+    },
+    {
+      "predecessor": "SPECIES_SWIRLIX",
+      "successor": "SPECIES_SLURPUFF",
+      "level": 42
+    },
+    {
+      "predecessor": "SPECIES_HELIOPTILE",
+      "successor": "SPECIES_HELIOLISK",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_EEVEE",
+      "successor": "SPECIES_SYLVEON",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_CHARJABUG",
+      "successor": "SPECIES_VIKAVOLT",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_CRABRAWLER",
+      "successor": "SPECIES_CRABOMINABLE",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_STEENEE",
+      "successor": "SPECIES_TSAREENA",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_TYPE_NULL",
+      "successor": "SPECIES_SILVALLY_NORMAL",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_POIPOLE",
+      "successor": "SPECIES_NAGANADEL",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_APPLIN",
+      "successor": "SPECIES_FLAPPLE",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_APPLIN",
+      "successor": "SPECIES_APPLETUN",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_CLOBBOPUS",
+      "successor": "SPECIES_GRAPPLOCT",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_SINISTEA_PHONY",
+      "successor": "SPECIES_POLTEAGEIST_PHONY",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_FARFETCHD_GALAR",
+      "successor": "SPECIES_SIRFETCHD",
+      "level": 40
+    },
+    {
+      "predecessor": "SPECIES_YAMASK_GALAR",
+      "successor": "SPECIES_RUNERIGUS",
+      "level": 40
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_STRAWBERRY_VANILLA_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_SNOM",
+      "successor": "SPECIES_FROSMOTH",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_KUBFU",
+      "successor": "SPECIES_URSHIFU_SINGLE_STRIKE",
+      "level": 40
+    },
+    {
+      "predecessor": "SPECIES_STANTLER",
+      "successor": "SPECIES_WYRDEER",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_SCYTHER",
+      "successor": "SPECIES_KLEAVOR",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_URSARING",
+      "successor": "SPECIES_URSALUNA",
+      "level": 40
+    },
+    {
+      "predecessor": "SPECIES_BASCULIN_WHITE_STRIPED",
+      "successor": "SPECIES_BASCULEGION_M",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_SNEASEL_HISUI",
+      "successor": "SPECIES_SNEASLER",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_QWILFISH_HISUI",
+      "successor": "SPECIES_OVERQWIL",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_PIKACHU",
+      "successor": "SPECIES_RAICHU_ALOLA",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_SANDSHREW_ALOLA",
+      "successor": "SPECIES_SANDSLASH_ALOLA",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_VULPIX_ALOLA",
+      "successor": "SPECIES_NINETALES_ALOLA",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_MEOWTH_ALOLA",
+      "successor": "SPECIES_PERSIAN_ALOLA",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_EXEGGCUTE",
+      "successor": "SPECIES_EXEGGUTOR_ALOLA",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_SLOWPOKE_GALAR",
+      "successor": "SPECIES_SLOWBRO_GALAR",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_SLOWPOKE_GALAR",
+      "successor": "SPECIES_SLOWKING_GALAR",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_DARUMAKA_GALAR",
+      "successor": "SPECIES_DARMANITAN_GALAR_STANDARD",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_GROWLITHE_HISUI",
+      "successor": "SPECIES_ARCANINE_HISUI",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_VOLTORB_HISUI",
+      "successor": "SPECIES_ELECTRODE_HISUI",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_PETILIL",
+      "successor": "SPECIES_LILLIGANT_HISUI",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_FLOETTE_YELLOW",
+      "successor": "SPECIES_FLORGES_YELLOW",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_FLOETTE_ORANGE",
+      "successor": "SPECIES_FLORGES_ORANGE",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_FLOETTE_BLUE",
+      "successor": "SPECIES_FLORGES_BLUE",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_FLOETTE_WHITE",
+      "successor": "SPECIES_FLORGES_WHITE",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_SINISTEA_ANTIQUE",
+      "successor": "SPECIES_POLTEAGEIST_ANTIQUE",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_STRAWBERRY_RUBY_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_STRAWBERRY_MATCHA_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_STRAWBERRY_MINT_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_STRAWBERRY_LEMON_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_STRAWBERRY_SALTED_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_STRAWBERRY_RUBY_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_STRAWBERRY_CARAMEL_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_STRAWBERRY_RAINBOW_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_KUBFU",
+      "successor": "SPECIES_URSHIFU_RAPID_STRIKE",
+      "level": 40
+    },
+    {
+      "predecessor": "SPECIES_BASCULIN_WHITE_STRIPED",
+      "successor": "SPECIES_BASCULEGION_F",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_BERRY_VANILLA_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_BERRY_RUBY_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_BERRY_MATCHA_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_BERRY_MINT_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_BERRY_LEMON_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_BERRY_SALTED_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_BERRY_RUBY_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_BERRY_CARAMEL_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_BERRY_RAINBOW_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_LOVE_VANILLA_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_LOVE_RUBY_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_LOVE_MATCHA_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_LOVE_MINT_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_LOVE_LEMON_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_LOVE_SALTED_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_LOVE_RUBY_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_LOVE_CARAMEL_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_LOVE_RAINBOW_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_STAR_VANILLA_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_STAR_RUBY_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_STAR_MATCHA_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_STAR_MINT_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_STAR_LEMON_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_STAR_SALTED_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_STAR_RUBY_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_STAR_CARAMEL_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_STAR_RAINBOW_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_CLOVER_VANILLA_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_CLOVER_RUBY_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_CLOVER_MATCHA_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_CLOVER_MINT_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_CLOVER_LEMON_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_CLOVER_SALTED_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_CLOVER_RUBY_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_CLOVER_CARAMEL_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_CLOVER_RAINBOW_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_FLOWER_VANILLA_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_FLOWER_RUBY_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_FLOWER_MATCHA_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_FLOWER_MINT_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_FLOWER_LEMON_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_FLOWER_SALTED_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_FLOWER_RUBY_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_FLOWER_CARAMEL_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_FLOWER_RAINBOW_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_RIBBON_VANILLA_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_RIBBON_RUBY_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_RIBBON_MATCHA_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_RIBBON_MINT_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_RIBBON_LEMON_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_RIBBON_SALTED_CREAM",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_RIBBON_RUBY_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_RIBBON_CARAMEL_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_MILCERY",
+      "successor": "SPECIES_ALCREMIE_RIBBON_RAINBOW_SWIRL",
+      "level": 30
+    },
+    {
+      "predecessor": "SPECIES_PAWMO",
+      "successor": "SPECIES_PAWMOT",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_CHARCADET",
+      "successor": "SPECIES_ARMAROUGE",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_CHARCADET",
+      "successor": "SPECIES_CERULEDGE",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_TADBULB",
+      "successor": "SPECIES_BELLIBOLT",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_BRAMBLIN",
+      "successor": "SPECIES_BRAMBLEGHAST",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_CAPSAKID",
+      "successor": "SPECIES_SCOVILLAIN",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_RELLOR",
+      "successor": "SPECIES_RABSCA",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_CETODDLE",
+      "successor": "SPECIES_CETITAN",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_PRIMEAPE",
+      "successor": "SPECIES_ANNIHILAPE",
+      "level": 38
+    },
+    {
+      "predecessor": "SPECIES_GIRAFARIG",
+      "successor": "SPECIES_FARIGIRAF",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_DUNSPARCE",
+      "successor": "SPECIES_DUDUNSPARCE_TWO_SEGMENT",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_DUNSPARCE",
+      "successor": "SPECIES_DUDUNSPARCE_THREE_SEGMENT",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_BISHARP",
+      "successor": "SPECIES_KINGAMBIT",
+      "level": 62
+    },
+    {
+      "predecessor": "SPECIES_GIMMIGHOUL_CHEST",
+      "successor": "SPECIES_GHOLDENGO",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_APPLIN",
+      "successor": "SPECIES_DIPPLIN",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_POLTCHAGEIST_COUNTERFEIT",
+      "successor": "SPECIES_SINISTCHA_UNREMARKABLE",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_POLTCHAGEIST_ARTISAN",
+      "successor": "SPECIES_SINISTCHA_MASTERPIECE",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_URSARING",
+      "successor": "SPECIES_URSALUNA_BLOODMOON",
+      "level": 40
+    },
+    {
+      "predecessor": "SPECIES_DURALUDON",
+      "successor": "SPECIES_ARCHALUDON",
+      "level": 35
+    },
+    {
+      "predecessor": "SPECIES_DIPPLIN",
+      "successor": "SPECIES_HYDRAPPLE",
+      "level": 45
+    }
+  ]
+}

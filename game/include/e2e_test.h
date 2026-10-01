@@ -12,6 +12,7 @@
 #define E2E_TEST_MAX_PC_SLOTS 8
 #define E2E_TEST_MAX_PARTY_MENU_ACTIONS 8
 #define E2E_TEST_LEAGUE_COUNT 3
+#define E2E_TEST_LEAGUE_LINEUP_SIZE 5
 #define E2E_TEST_FIELD_MESSAGE_TEXT_LENGTH 32
 // Expanded field messages can span several text boxes. Keep the original short
 // observation for ABI consumers that only need a prefix and expose this larger,
@@ -53,6 +54,7 @@ enum E2ETestCommand
     E2E_TEST_COMMAND_GIFT_STORAGE_CAPACITY,
     E2E_TEST_COMMAND_OBSERVE_VAR,
     E2E_TEST_COMMAND_SET_VAR,
+    E2E_TEST_COMMAND_SET_TRAINER_RATING,
 };
 
 enum E2ETestCheckpoint
@@ -295,6 +297,9 @@ struct E2ETestRequest
     u8 appearanceId;
     u8 decoratedSecretBase;
     u8 reserved;
+    u32 trainerRating;
+    bool8 applyTrainerRating;
+    u8 reserved2[3];
 };
 
 struct E2ETestObservedPcSlot
@@ -399,11 +404,11 @@ struct E2ETestState
     u8 leagueClears[E2E_TEST_LEAGUE_COUNT];
     u8 leagueStatuses[E2E_TEST_LEAGUE_COUNT];
     u8 globalBadgeCount;
-    u8 trainerRating;
+    u8 reservedTrainerRating;
     u8 trainerCardState;
     bool8 leagueRunActive;
     u8 leagueRunStage;
-    u8 leagueRunRating;
+    u8 reservedLeagueRunRating;
     u8 originIntroStage;
     u16 startingOriginId;
     u16 johtoStarterChoice;
@@ -454,6 +459,22 @@ struct E2ETestState
     // continues; dialogueOpen alone cannot distinguish that from "done".
     u8 awaitingButton;
     u8 reserved2[3];
+    u32 trainerRating;
+    u32 leagueRunRating;
+    u32 leagueEventId;
+    u32 leagueEventWorldProgress;
+    u8 leagueEventAcceptedLeague;
+    u8 leagueEventInvitationState;
+    u16 leagueEventCharacterIds[E2E_TEST_LEAGUE_LINEUP_SIZE];
+    u16 leagueEventLeadSpecies[E2E_TEST_LEAGUE_LINEUP_SIZE];
+    u8 leagueEventTeamSizes[E2E_TEST_LEAGUE_LINEUP_SIZE];
+    u8 leagueEventLeadLevels[E2E_TEST_LEAGUE_LINEUP_SIZE];
+    u32 battleFieldStatuses;
+    u32 battleSideStatuses[2];
+    u16 battleWeather;
+    u8 overworldWeather;
+    u8 battleHazardMasks[2]; // Bit 0 Sticky Web, bit 1 Stealth Rock.
+    u8 reservedHallDiagnostics[3];
 };
 
 struct E2ETestAbi

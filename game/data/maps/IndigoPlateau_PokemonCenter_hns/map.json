@@ -151,7 +151,18 @@
       "wayfarer_dest_map": "MAP_POKEMON_LEAGUE_LORELEIS_ROOM"
     }
   ],
-  "coord_events": [],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 32,
+      "y": 3,
+      "elevation": 0,
+      "var": "VAR_TEMP_F",
+      "var_value": "0",
+      "script": "IndigoPlateau_EventScript_LeagueEventEntrance",
+      "wayfarer_only": true
+    }
+  ],
   "bg_events": [
     {
       "type": "sign",
@@ -191,7 +202,8 @@
       "y": 6,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "RuinsOfAlph_PuzzleAndRewardChambers_MapScript_StatueDescription"
+      "script": "RuinsOfAlph_PuzzleAndRewardChambers_MapScript_StatueDescription",
+      "wayfarer_script": "IndigoPlateau_EventScript_HallBoard"
     },
     {
       "type": "sign",

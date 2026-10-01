@@ -1,5 +1,6 @@
 #include "global.h"
 #include "config/league_circuit.h"
+#include "config/notable_trainers.h"
 #include "event_data.h"
 #include "league_circuit.h"
 #include "league_run_helpers.h"
@@ -13,6 +14,97 @@
 #include "constants/wayfarer_origin.h"
 
 #if IS_WAYFARER
+
+#if WAYFARER_V0_TRAINERS
+TEST("V0 Trainer Rating derives every badge count without league-win contribution")
+{
+    u32 badges, clears, index;
+
+    for (badges = 0; badges <= 24; badges++)
+    {
+        for (index = 0; index < 24; index++)
+            SetBadgeStateForRegion(REGION_KANTO + index / 8, index % 8, index < badges);
+        for (clears = 0; clears < 8; clears++)
+        {
+            u32 expected = badges <= 8 ? badges * 10 : 80 + (badges - 8) * 5;
+            SetCircuitClearForTesting(CIRCUIT_STAGE_INDIGO, (clears & 1) != 0);
+            SetCircuitClearForTesting(CIRCUIT_STAGE_MASTERS, (clears & 2) != 0);
+            SetCircuitClearForTesting(CIRCUIT_STAGE_HOENN, (clears & 4) != 0);
+            SetTrainerRating(0);
+            EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), expected);
+            EXPECT_EQ(GetTrainerRating(), expected);
+            EXPECT_EQ(gSaveBlock3Ptr->wayfarerHoenn.trainerRatingHighWater, expected);
+        }
+    }
+}
+
+TEST("V0 Trainer Rating keeps uncapped saved high water and level cap flattens")
+{
+    u32 index;
+    for (index = 0; index < 24; index++)
+        SetBadgeStateForRegion(REGION_KANTO + index / 8, index % 8, FALSE);
+    SetTrainerRating(0);
+    EXPECT_EQ(GetTrainerRating(), 0);
+    SetTrainerRating(65536);
+    EXPECT_EQ(GetTrainerRating(), 65536);
+    EXPECT_EQ(GetTrainerRatingSoftLevelCap(), 100);
+    SetTrainerRating(100);
+    EXPECT_EQ(GetTrainerRating(), 100);
+    EXPECT_EQ(GetTrainerRatingSoftLevelCap(), 63);
+    for (index = 0; index < 8; index++)
+        SetBadgeStateForRegion(REGION_JOHTO, index, TRUE);
+    EXPECT_EQ(GetTrainerRating(), 100);
+    SetTrainerRating(0);
+    EXPECT_EQ(GetTrainerRating(), 80);
+}
+
+TEST("V0 Trainer Rating level cap follows reviewed badge milestones")
+{
+    static const u16 anchors[][2] = {
+        { 0, 15 }, { 40, 28 }, { 80, 50 }, { 120, 75 }, { 160, 100 },
+    };
+    u32 i;
+    for (i = 0; i < ARRAY_COUNT(anchors); i++)
+    {
+        SetTrainerRating(anchors[i][0]);
+        EXPECT_EQ(GetTrainerRatingSoftLevelCap(), anchors[i][1]);
+    }
+    SetTrainerRating(20);
+    EXPECT_EQ(GetTrainerRatingSoftLevelCap(), 22);
+    SetTrainerRating(65536);
+    EXPECT_EQ(GetTrainerRatingSoftLevelCap(), 100);
+}
+
+TEST("V0 Trainer Rating high water survives a production save above u16")
+{
+    u8 loadStatus;
+
+    CheckForFlashMemory();
+    if (gFlashMemoryPresent != TRUE)
+    {
+        gFlashMemoryPresent = TRUE;
+        InitFlashTimer();
+    }
+    ASSUME(gPokemonStoragePtr != NULL);
+    ClearSaveData();
+    Save_ResetSaveCounters();
+    gSaveBlock1Ptr->saveVersionMagic = SAVE_VERSION_MAGIC;
+    gSaveBlock1Ptr->saveVersion = SAVE_VERSION;
+    WayfarerInitPersistentState();
+    gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_NEW_BARK;
+    gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation = HEAL_LOCATION_NEW_BARK_TOWN_HNS;
+    SetTrainerRating(65536);
+    HandleSavingData(SAVE_NORMAL);
+    ClearSav1();
+    ClearSav2();
+    ClearSav3();
+    loadStatus = LoadGameSave(SAVE_NORMAL);
+    EXPECT_EQ(loadStatus, SAVE_STATUS_OK);
+    EXPECT_EQ(GetTrainerRating(), 65536);
+    ClearSaveData();
+    Save_ResetSaveCounters();
+}
+#else
 
 TEST("Trainer Rating initializes new Wayfarer saves at zero")
 {
@@ -209,6 +301,7 @@ TEST("Trainer Rating soft cap interpolates every seeded rating monotonically")
     SetTrainerRating(2);
     EXPECT_EQ(GetTrainerRatingSoftLevelCap(), 16);
 }
+#endif // WAYFARER_V0_TRAINERS
 
 TEST("Trainer Rating experience reduction grants full experience through the cap")
 {

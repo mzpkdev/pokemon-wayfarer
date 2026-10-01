@@ -2034,6 +2034,10 @@ void CB2_OverworldBasic(void)
 void CB2_Overworld(void)
 {
     bool32 fading = (gPaletteFade.active != 0);
+#if IS_WAYFARER
+    if (!fading && !ScriptContext_IsEnabled() && SavePendingLeagueProgress())
+        return;
+#endif
     if (fading)
         SetVBlankCallback(NULL);
     OverworldBasic();

@@ -39,8 +39,7 @@ const waitForTrainerBattle = async (
       (!state.battle.active && (state.dialogueOpen || state.scriptActive || state.controlsLocked))
     )
       await game.controls.press("a", { holdFrames: 1, releaseFrames: 1 })
-    else
-      await game.wait.frames(4)
+    else await game.wait.frames(4)
   }
   throw new Error(
     `${description} did not reach its action menu: ${JSON.stringify(await game.state.read())}`,
@@ -102,11 +101,14 @@ const chargeVsSeekerOnKindleRoad = async (game: GameSession): Promise<void> => {
   for (let step = 1; step <= 100; step++) {
     const direction = step % 2 === 1 ? "up" : "down"
     const y = direction === "up" ? 54 : 55
-    await game.controls.press(direction, { holdFrames: 10, releaseFrames: 10 })
-    await game.wait.until(
-      (state) => state.ready && state.player.x === 10 && state.player.y === y,
-      `Vs Seeker charge step ${step}`,
-    )
+    await game.wait.until(async (state) => {
+      if (state.ready && state.player.x === 10 && state.player.y === y) return true
+      // A tap can only turn the player or land during the previous step's
+      // animation. Keep walking until the next tile is actually reached.
+      if (state.ready) await game.player.move(direction)
+      return false
+    }, `Vs Seeker charge step ${step}`)
+    await game.wait.frames(16)
   }
   await game.wait.frames(120)
 }

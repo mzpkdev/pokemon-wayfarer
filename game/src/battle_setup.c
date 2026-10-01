@@ -4,6 +4,12 @@
 #include "bug_contest.h"
 #include "load_save.h"
 #include "battle_setup.h"
+#include "league_event_battle.h"
+#include "league_halls.h"
+#include "league_events.h"
+#include "league_circuit.h"
+#include "trainer_party_scaling.h"
+#include "config/league_circuit.h"
 #include "battle_tower.h"
 #include "battle_transition.h"
 #include "main.h"
@@ -21,6 +27,7 @@
 #include "script_pokemon_util.h"
 #include "palette.h"
 #include "pokemon.h"
+#include "pokemon_storage_system.h"
 #include "window.h"
 #include "event_object_movement.h"
 #include "event_scripts.h"
@@ -113,6 +120,22 @@ EWRAM_DATA TrainerBattleParameter gTrainerBattleParameter = {0};
 EWRAM_DATA u16 gPartnerTrainerId = 0;
 EWRAM_DATA static u8 *sTrainerBattleEndScript = NULL;
 EWRAM_DATA static bool8 sShouldCheckTrainerBScript = FALSE;
+#if WAYFARER_LEAGUE_EVENTS
+static EWRAM_DATA struct
+{
+    u32 eventId;
+    u16 sourceTrainerId;
+    const struct LeagueHall *hall;
+    s8 match;
+    bool8 active;
+} sLeagueEventBattle;
+static EWRAM_DATA struct
+{
+    u32 eventId;
+    s8 match;
+    bool8 valid;
+} sLeagueEventVictoryProof;
+#endif
 EWRAM_DATA static u8 sNoOfPossibleTrainerRetScripts = 0;
 
 // The first transition is used if the enemy Pokémon are lower level than our Pokémon.
@@ -1435,7 +1458,133 @@ void InitTrainerBattleParameter(void)
 {
     memset(gTrainerBattleParameter.data, 0, sizeof(TrainerBattleParameter));
     sTrainerBattleEndScript = NULL;
+#if WAYFARER_LEAGUE_EVENTS
+    sLeagueEventBattle.active = FALSE;
+    sLeagueEventBattle.hall = NULL;
+    sLeagueEventVictoryProof.valid = FALSE;
+    ResetLeagueEventMonOverrides();
+#endif
 }
+
+void ResetLeagueEventBattleProof(void)
+{
+#if WAYFARER_LEAGUE_EVENTS
+    sLeagueEventVictoryProof.valid = FALSE;
+    sLeagueEventBattle.active = FALSE;
+    sLeagueEventBattle.hall = NULL;
+    ResetLeagueEventMonOverrides();
+#endif
+}
+
+bool32 IsLeagueEventBattleInProgress(void)
+{
+#if WAYFARER_LEAGUE_EVENTS
+    return sLeagueEventBattle.active;
+#else
+    return FALSE;
+#endif
+}
+
+bool32 GetPreparedLeagueEventBattle(u16 trainerId, const struct LeagueSavedTeam **team, u8 *acceptanceOptions)
+{
+#if WAYFARER_LEAGUE_EVENTS
+    const struct LeagueSavedTeam *saved;
+
+    if (team == NULL || acceptanceOptions == NULL || !sLeagueEventBattle.active
+     || trainerId != sLeagueEventBattle.sourceTrainerId
+     || GetAcceptedLeagueEventId() != sLeagueEventBattle.eventId
+     || !GetAcceptedLeagueEventMember(sLeagueEventBattle.match, &saved)
+     || saved->sourceTrainerId != trainerId)
+        return FALSE;
+    *team = saved;
+    *acceptanceOptions = gPokemonStoragePtr->leagueEventTeams.acceptanceOptions;
+    return TRUE;
+#else
+    return FALSE;
+#endif
+}
+
+bool32 GetPreparedLeagueHallStartingStatuses(struct StartingStatuses *out)
+{
+#if WAYFARER_LEAGUE_EVENTS
+    if (out != NULL && sLeagueEventBattle.active && sLeagueEventBattle.hall != NULL
+     && GetAcceptedLeagueEventId() == sLeagueEventBattle.eventId)
+        return BuildLeagueHallStartingStatuses(sLeagueEventBattle.hall, out);
+#endif
+    return FALSE;
+}
+
+bool32 ConsumeLeagueEventBattleVictory(u32 eventId, u8 match)
+{
+#if WAYFARER_LEAGUE_EVENTS
+    if (!sLeagueEventVictoryProof.valid || sLeagueEventVictoryProof.eventId != eventId
+     || sLeagueEventVictoryProof.match != match)
+        return FALSE;
+    sLeagueEventVictoryProof.valid = FALSE;
+    return TRUE;
+#else
+    return FALSE;
+#endif
+}
+
+#if TESTING
+void SetLeagueEventBattleVictoryForTesting(u32 eventId, u8 match)
+{
+#if WAYFARER_LEAGUE_EVENTS
+    sLeagueEventVictoryProof.eventId = eventId;
+    sLeagueEventVictoryProof.match = match;
+    sLeagueEventVictoryProof.valid = TRUE;
+#endif
+}
+#endif
+
+#if WAYFARER_LEAGUE_EVENTS
+// The script's fixed trainer is only a room carrier. Bind the accepted
+// opponent before presentation, music, battle type, and reward lookup.
+static bool32 TryPrepareLeagueEventBattle(void)
+{
+    const struct LeagueScalingRoster *carrier;
+    const struct LeagueSavedTeam *team;
+    const struct LeagueHall *hall;
+    enum CircuitStage stage;
+    s8 match;
+
+    sLeagueEventBattle.active = FALSE;
+    sLeagueEventBattle.hall = NULL;
+    if (gIsDebugBattle)
+        return TRUE;
+    stage = GetActiveLeagueRunStage();
+    carrier = GetLeagueScalingRoster(TRAINER_BATTLE_PARAM.opponentA, TRAINER_BATTLE_PARAM.opponentA);
+    // The normal room accessor rejects a corrupt saved lineup. Check the
+    // original carrier and room first so that rejection cannot fall through
+    // to the carrier's authored party.
+    if (carrier != NULL && carrier->stage == stage
+     && ValidateCircuitRoomBattle(stage, carrier->encounterIndex)
+     && !ValidateLeagueEventState())
+        return FALSE;
+    match = GetCurrentLeagueEventMatch();
+    if (match < 0)
+        return TRUE;
+    if (carrier == NULL || carrier->stage != stage || carrier->encounterIndex != match)
+        return TRUE;
+    if (!ValidateCircuitRoomBattle(stage, match)
+     || !GetAcceptedLeagueEventMember(match, &team)
+     || team->sourceTrainerId >= TRAINERS_COUNT || team->teamSize == 0)
+        return FALSE;
+    hall = GetLeagueHall(GetAcceptedLeagueEventLeagueId(), match);
+    if (!ValidateLeagueHallRegistry() || hall == NULL
+     || hall->room != GetCircuitStageRoom(stage, match))
+        return FALSE;
+
+    sLeagueEventBattle.eventId = GetAcceptedLeagueEventId();
+    sLeagueEventBattle.match = match;
+    sLeagueEventBattle.sourceTrainerId = team->sourceTrainerId;
+    sLeagueEventBattle.hall = hall;
+    sLeagueEventBattle.active = TRUE;
+    TRAINER_BATTLE_PARAM.opponentA = team->sourceTrainerId;
+    return TRUE;
+}
+#endif
 
 void TrainerBattleLoadArgs(const u8 *data)
 {
@@ -1502,6 +1651,13 @@ void SetMapVarsToTrainerB(void)
 // expects parameters have been loaded correctly with TrainerBattleLoadArgs
 const u8 *BattleSetup_ConfigureTrainerBattle(const u8 *data)
 {
+#if WAYFARER_LEAGUE_EVENTS
+    // A corrupt or incomplete accepted team must never use the carrier's old
+    // authored party as a fallback. Its post-battle script will reject the
+    // missing victory proof and route through the room's denial path.
+    if (!TryPrepareLeagueEventBattle())
+        return EventScript_NoNormalTrainerBattle;
+#endif
     switch (TRAINER_BATTLE_PARAM.mode)
     {
     case TRAINER_BATTLE_SINGLE_NO_INTRO_TEXT:
@@ -1650,6 +1806,10 @@ u8 GetRivalBattleFlags(void)
 
 bool8 GetTrainerFlag(void)
 {
+#if WAYFARER_LEAGUE_EVENTS
+    if (sLeagueEventBattle.active && TRAINER_BATTLE_PARAM.opponentA == sLeagueEventBattle.sourceTrainerId)
+        return FALSE;
+#endif
     if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
         return GetBattlePyramidTrainerFlag(gSelectedObjectEvent);
     else if (InTrainerHill())
@@ -2020,6 +2180,27 @@ static void HandleBattleVariantEndParty(void)
 
 static void CB2_EndTrainerBattle(void)
 {
+#if WAYFARER_LEAGUE_EVENTS
+    bool8 wasLeagueEventBattle = sLeagueEventBattle.active;
+
+    if (wasLeagueEventBattle)
+    {
+        u32 eventId = sLeagueEventBattle.eventId;
+        sLeagueEventBattle.active = FALSE;
+        if (gBattleOutcome == B_OUTCOME_WON && GetAcceptedLeagueEventId() == eventId)
+        {
+            sLeagueEventVictoryProof.eventId = eventId;
+            sLeagueEventVictoryProof.match = sLeagueEventBattle.match;
+            sLeagueEventVictoryProof.valid = TRUE;
+        }
+        else
+        {
+            sLeagueEventVictoryProof.valid = FALSE;
+            if (GetAcceptedLeagueEventId() == eventId)
+                EndLeagueRun();
+        }
+    }
+#endif
     HandleBattleVariantEndParty();
 
     gIsDebugBattle = FALSE;
@@ -2078,7 +2259,11 @@ static void CB2_EndTrainerBattle(void)
     {
         SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
         DowngradeBadPoison();
-        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE && !InTrainerHillChallenge())
+        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE && !InTrainerHillChallenge()
+#if WAYFARER_LEAGUE_EVENTS
+         && !wasLeagueEventBattle
+#endif
+        )
         {
             RegisterTrainerInMatchCall();
             SetBattledTrainersFlags();

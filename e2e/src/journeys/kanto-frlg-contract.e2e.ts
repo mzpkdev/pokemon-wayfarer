@@ -263,7 +263,7 @@ const battleBlue = async (game: GameSession, script: FieldTranscript, variant: V
   await script.say([text.lab.battleChallenge], "Blue's challenge")
   await battle.runUntil((state) => state.battle.active, "battle start", 3_000)
   const opening = await game.state.read()
-  expect(opening.battle.enemy).toMatchObject({ species: variant.starter.rival, level: 5 })
+  expect(opening.battle.enemy).toMatchObject({ species: "eevee", level: 5 })
   await battle.runUntil(() => battle.seen.length >= lines.intro.length, "Oak's battle introduction")
   battle.expectSeen(lines.intro, "battle introduction")
 

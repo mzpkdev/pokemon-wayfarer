@@ -13,10 +13,10 @@ export type TrainerOnlySnapshot = {
   outcome: number
 }
 
-const abiVersion = 23
-const expectedRequestSize = 372
+const abiVersion = 26
+const expectedRequestSize = 380
 const expectedResultSize = 16
-const expectedStateSize = 1684
+const expectedStateSize = 1752
 const expectedRequestStatusOffset = 87
 const expectedResultStatusOffset = 14
 
@@ -53,6 +53,7 @@ export const commands = {
   giftStorageCapacity: 10,
   observeVar: 11,
   setVar: 12,
+  setTrainerRating: 13,
 } as const
 export const fullPocketMasks = {
   items: 1 << 0,
@@ -214,6 +215,7 @@ export type CommandRequest = {
   applyLeagueCircuit?: boolean
   appearanceId?: number
   decoratedSecretBase?: boolean
+  trainerRating?: number
 }
 
 export type ArrangeRequest = Omit<CommandRequest, "command" | "useRngSeed" | "wildMon"> & {
@@ -281,6 +283,11 @@ export type StateSnapshot = {
   battleEnemyMoves: number[]
   battleEnemyLevel: number
   battleActive: boolean
+  battleFieldStatuses: number
+  battleSideStatuses: number[]
+  battleWeather: number
+  overworldWeather: number
+  battleHazardMasks: number[]
   caughtSpecies: number
   lastUsedItem: number
   catchSwapState: number
@@ -310,6 +317,14 @@ export type StateSnapshot = {
   leagueRunStage: number
   leagueRunRating: number
   leagueRunReplay: boolean
+  leagueEventId: number
+  leagueEventWorldProgress: number
+  leagueEventAcceptedLeague: number
+  leagueEventInvitationState: number
+  leagueEventCharacterIds: number[]
+  leagueEventLeadSpecies: number[]
+  leagueEventTeamSizes: number[]
+  leagueEventLeadLevels: number[]
   regionalChampionMask: number
   starterChooseStage: number
   playerAppearanceId: number
@@ -447,6 +462,16 @@ export const encodeCommandRequest = (abi: SessionAbi, request: CommandRequest): 
   view.setUint8(368, request.applyLeagueCircuit ? 1 : 0)
   view.setUint8(369, request.appearanceId ?? 0)
   view.setUint8(370, request.decoratedSecretBase ? 1 : 0)
+  if (request.trainerRating !== undefined) {
+    if (
+      !Number.isInteger(request.trainerRating) ||
+      request.trainerRating < 0 ||
+      request.trainerRating > 0xffffffff
+    )
+      throw new Error("Trainer Rating must be an unsigned 32-bit integer")
+    view.setUint32(372, request.trainerRating, true)
+    view.setUint8(376, 1)
+  }
   return bytes
 }
 
@@ -714,6 +739,37 @@ export const encodeSetVarRequest = (
     leagueClears: [false, false, false],
   })
 
+export const encodeSetTrainerRatingRequest = (
+  abi: SessionAbi,
+  requestId: number,
+  rating: number,
+): Uint8Array =>
+  encodeCommandRequest(abi, {
+    requestId,
+    command: commands.setTrainerRating,
+    mapGroup: keepMap,
+    mapNum: keepMap,
+    x: keepCoordinate,
+    y: keepCoordinate,
+    rngSeed: 0,
+    useRngSeed: false,
+    vars: [],
+    flags: [],
+    checkpoint: 0,
+    facing: 0,
+    textSpeed: 0,
+    party: [],
+    bagItems: [],
+    pcSlots: [],
+    wildMon: emptyMon(),
+    currentBox: 0,
+    hmsOverwrite: false,
+    fullPocketMask: 0,
+    regionalBadgeCounts: [0, 0, 0],
+    leagueClears: [false, false, false],
+    trainerRating: rating,
+  })
+
 export const encodeGiftStorageCapacityRequest = (
   abi: SessionAbi,
   requestId: number,
@@ -882,6 +938,11 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     lastUsedItem: uint16(bytes, 316),
     battleEnemyLevel: bytes[318]!,
     battleActive: bytes[319] === 1,
+    battleFieldStatuses: uint32(bytes, 1732),
+    battleSideStatuses: [uint32(bytes, 1736), uint32(bytes, 1740)],
+    battleWeather: uint16(bytes, 1744),
+    overworldWeather: bytes[1746]!,
+    battleHazardMasks: Array.from(bytes.slice(1747, 1749)),
     catchSwapState: bytes[320]!,
     catchSwapCursor: bytes[321]!,
     catchSwapSelectedParty: bytes[322]!,
@@ -903,12 +964,24 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     leagueClears: Array.from(bytes.slice(343, 346), (value) => value === 1),
     leagueStatuses: Array.from(bytes.slice(346, 349)),
     globalBadgeCount: bytes[349]!,
-    trainerRating: bytes[350]!,
+    trainerRating: uint32(bytes, 1684),
     trainerCardState: bytes[351]!,
     leagueRunActive: bytes[352] === 1,
     leagueRunStage: bytes[353]!,
-    leagueRunRating: bytes[354]!,
+    leagueRunRating: uint32(bytes, 1688),
     leagueRunReplay: bytes[441] !== 0,
+    leagueEventId: uint32(bytes, 1692),
+    leagueEventWorldProgress: uint32(bytes, 1696),
+    leagueEventAcceptedLeague: bytes[1700]!,
+    leagueEventInvitationState: bytes[1701]!,
+    leagueEventCharacterIds: Array.from({ length: 5 }, (_, index) =>
+      uint16(bytes, 1702 + index * 2),
+    ),
+    leagueEventLeadSpecies: Array.from({ length: 5 }, (_, index) =>
+      uint16(bytes, 1712 + index * 2),
+    ),
+    leagueEventTeamSizes: Array.from(bytes.slice(1722, 1727)),
+    leagueEventLeadLevels: Array.from(bytes.slice(1727, 1732)),
     regionalChampionMask: bytes[442]!,
     starterChooseStage: bytes[373]!,
     playerAppearanceId: bytes[382]!,

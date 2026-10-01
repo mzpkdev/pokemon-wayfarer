@@ -7,6 +7,8 @@
 #include "load_save.h"
 #include "malloc.h"
 #include "league_circuit.h"
+#include "league_events.h"
+#include "trainer_rating.h"
 #include "overworld.h"
 #include "regions.h"
 #include "script_pokemon_util.h"
@@ -24,14 +26,18 @@ static bool8 sUseNonCircuitGameClear;
 static bool8 sIndigoHallOfFameCommitPending;
 static bool8 sIndigoHallOfFameSaveTransaction;
 static bool8 sIndigoHallOfFameSaveCountIncremented;
-static u8 sIndigoHallOfFameRatingAtEntry;
-static u8 sIndigoHallOfFameStoredRatingBefore;
+static u32 sIndigoHallOfFameRatingAtEntry;
+static u32 sIndigoHallOfFameStoredRatingBefore;
 // The rollback snapshot is too large for IWRAM, where it would shrink the
 // shared stack, so it lives on the heap only while a transaction is open.
 static struct IndigoHallOfFameSnapshot
 {
     struct Pokemon party[PARTY_SIZE];
     TVShow tvShows[TV_SHOWS_COUNT];
+#if WAYFARER_LEAGUE_EVENTS
+    struct LeagueEventState leagueEvent;
+    struct LeagueSavedTeams leagueEventTeams;
+#endif
 } *sIndigoHallOfFameSnapshot;
 static struct WarpData sIndigoHallOfFameContinueWarpBefore;
 static u32 sIndigoHallOfFameCountBefore;
@@ -56,6 +62,10 @@ u16 LeagueCircuit_CommitAndRegisterIndigo(void)
     if (sIndigoHallOfFameSnapshot == NULL)
         return FALSE;
 
+#if WAYFARER_LEAGUE_EVENTS
+    sIndigoHallOfFameSnapshot->leagueEvent = gSaveBlock3Ptr->leagueEvent;
+    sIndigoHallOfFameSnapshot->leagueEventTeams = gPokemonStoragePtr->leagueEventTeams;
+#endif
     memcpy(sIndigoHallOfFameSnapshot->party, gPlayerParty, sizeof(gPlayerParty));
     memcpy(sIndigoHallOfFameSnapshot->tvShows, gSaveBlock1Ptr->tvShows, sizeof(gSaveBlock1Ptr->tvShows));
     sIndigoHallOfFameContinueWarpBefore = gSaveBlock1Ptr->continueGameWarp;
@@ -84,7 +94,7 @@ u16 LeagueCircuit_CommitAndRegisterIndigo(void)
     sIndigoHallOfFameSaveTransaction = TRUE;
     sIndigoHallOfFameSaveCountIncremented = FALSE;
     sIndigoHallOfFameRatingAtEntry = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.ratingAtEntry;
-    sIndigoHallOfFameStoredRatingBefore = VarGet(VAR_TRAINER_RATING);
+    sIndigoHallOfFameStoredRatingBefore = GetTrainerRating();
     SetMainCallback2(CB2_DoHallOfFameScreenFrlg);
     return TRUE;
 #else
@@ -107,8 +117,14 @@ void FinishIndigoHallOfFameSaveTransaction(bool8 success)
     if (!sIndigoHallOfFameSaveTransaction)
         return;
     sIndigoHallOfFameSaveTransaction = FALSE;
+    if (success)
+        AcknowledgeLeagueProgressSave();
     if (!success)
     {
+#if WAYFARER_LEAGUE_EVENTS
+        gSaveBlock3Ptr->leagueEvent = sIndigoHallOfFameSnapshot->leagueEvent;
+        gPokemonStoragePtr->leagueEventTeams = sIndigoHallOfFameSnapshot->leagueEventTeams;
+#endif
         RollbackIndigoHallOfFameCommit(sIndigoHallOfFameRatingAtEntry,
                                       sIndigoHallOfFameStoredRatingBefore);
         SetGameClearStateForRegion(REGION_KANTO, sIndigoHallOfFameKantoClearBefore);

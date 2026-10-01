@@ -1,4 +1,7 @@
 EverGrandeCity_GlaciasRoom_MapScripts::
+#if WAYFARER_LEAGUE_EVENTS
+	map_script MAP_SCRIPT_ON_TRANSITION, LeagueEvent_EventScript_SetRoomGraphics
+#endif
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, EverGrandeCity_GlaciasRoom_OnFrame
 	map_script MAP_SCRIPT_ON_LOAD, EverGrandeCity_GlaciasRoom_OnLoad
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, EverGrandeCity_GlaciasRoom_OnWarp
@@ -24,7 +27,12 @@ EverGrandeCity_GlaciasRoom_EventScript_WalkInCloseDoor::
 	end
 
 EverGrandeCity_GlaciasRoom_OnLoad:
+#if WAYFARER_LEAGUE_EVENTS
+	specialvar VAR_RESULT, LeagueCircuit_IsCurrentRoomDefeated
+	call_if_eq VAR_RESULT, TRUE, EverGrandeCity_GlaciasRoom_EventScript_ResetAdvanceToNextRoom
+#else
 	call_if_set FLAG_DEFEATED_ELITE_4_GLACIA, EverGrandeCity_GlaciasRoom_EventScript_ResetAdvanceToNextRoom
+#endif
 	call_if_eq VAR_ELITE_4_STATE, 3, EverGrandeCity_GlaciasRoom_EventScript_CloseDoor
 	end
 
@@ -40,20 +48,43 @@ EverGrandeCity_GlaciasRoom_EventScript_Glacia::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
 	setvar VAR_0x8005, 2
+#if WAYFARER_LEAGUE_EVENTS
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
+#else
 	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
+#endif
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
 #endif
 	lock
 	faceplayer
+#if WAYFARER_LEAGUE_EVENTS
+	specialvar VAR_RESULT, LeagueCircuit_IsCurrentRoomDefeated
+	goto_if_eq VAR_RESULT, TRUE, EverGrandeCity_GlaciasRoom_EventScript_PostBattleSpeech
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
+#else
 	goto_if_set FLAG_DEFEATED_ELITE_4_GLACIA, EverGrandeCity_GlaciasRoom_EventScript_PostBattleSpeech
+#endif
 	playbgm MUS_ENCOUNTER_ELITE_FOUR, FALSE
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_RoomIntro
+#else
 	msgbox EverGrandeCity_GlaciasRoom_Text_IntroSpeech, MSGBOX_DEFAULT
+#endif
+#if WAYFARER_LEAGUE_EVENTS
+	trainerbattle_no_intro TRAINER_GLACIA, LeagueEvent_Text_RoomWin
+#else
 	trainerbattle_no_intro TRAINER_GLACIA, EverGrandeCity_GlaciasRoom_Text_Defeat
+#endif
 	goto EverGrandeCity_GlaciasRoom_EventScript_Defeated
 	end
 
 EverGrandeCity_GlaciasRoom_EventScript_PostBattleSpeech::
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_RoomAfter
+#else
 	msgbox EverGrandeCity_GlaciasRoom_Text_PostBattleSpeech, MSGBOX_DEFAULT
+#endif
 	release
 	end
 
@@ -66,7 +97,11 @@ EverGrandeCity_GlaciasRoom_EventScript_Defeated::
 #endif
 	setflag FLAG_DEFEATED_ELITE_4_GLACIA
 	call PokemonLeague_EliteFour_SetAdvanceToNextRoomMetatiles
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_RoomAfter
+#else
 	msgbox EverGrandeCity_GlaciasRoom_Text_PostBattleSpeech, MSGBOX_DEFAULT
+#endif
 	release
 	end
 

@@ -3,6 +3,7 @@
 #include "event_data.h"
 #include "load_save.h"
 #include "main.h"
+#include "malloc.h"
 #include "event_scripts.h"
 #include "field_screen_effect.h"
 #include "field_specials.h"
@@ -14,6 +15,7 @@
 #include "script.h"
 #include "trainer_rating.h"
 #include "wayfarer_persistence.h"
+#include "league_events.h"
 #include "wayfarer_sevii_story.h"
 #include "wayfarer_sevii_state.h"
 #include "wayfarer_origin.h"
@@ -22,6 +24,7 @@
 #include "wayfarer_ss_anne.h"
 #include "test/test.h"
 #include "gba/flash_internal.h"
+#include "agb_flash.h"
 #include "constants/heal_locations.h"
 #include "constants/opponents.h"
 #include "constants/maps.h"
@@ -30,7 +33,7 @@
 
 #if IS_WAYFARER
 
-TEST("Wayfarer Power Plant Zapdos requires TR 55 and unresolved dedicated state")
+TEST("Wayfarer Power Plant Zapdos requires its scaled TR threshold and unresolved dedicated state")
 {
     FlagClear(FLAG_WAYFARER_POWER_PLANT_ZAPDOS_RESOLVED);
     EXPECT_NE(FLAG_WAYFARER_POWER_PLANT_ZAPDOS_RESOLVED, FLAG_HIDE_ZAPDOS);
@@ -103,7 +106,6 @@ TEST("Wayfarer Bill rescue state is distinct from Anne completion state")
 extern int GameClear(void);
 
 EWRAM_DATA static struct SaveSector sWayfarerTestSector = {0};
-EWRAM_DATA static u8 sWayfarerTestChunks[NUM_SECTORS_PER_SLOT][SAVE_BLOCK_3_CHUNK_SIZE] = {0};
 EWRAM_DATA static u8 sWayfarerExpectedSaveBlock3[sizeof(struct SaveBlock3)] = {0};
 EWRAM_DATA static struct RegionMap sWayfarerTestRegionMap = {0};
 
@@ -710,9 +712,12 @@ TEST("Wayfarer invalid saved origin is rejected without rebuilding regional stat
 TEST("Wayfarer SaveBlock3 chunks round trip without replacing sector payloads")
 {
     u8 *saved = (u8 *)gSaveBlock3Ptr;
+    u8 (*chunks)[SAVE_BLOCK_3_CHUNK_SIZE] = Alloc(NUM_SECTORS_PER_SLOT * SAVE_BLOCK_3_CHUNK_SIZE);
     u32 i;
     u32 sectorId;
     u32 lastUsedSector = (sizeof(struct SaveBlock3) - 1) / SAVE_BLOCK_3_CHUNK_SIZE;
+
+    ASSUME(chunks != NULL);
 
     for (i = 0; i < sizeof(sWayfarerExpectedSaveBlock3); i++)
         sWayfarerExpectedSaveBlock3[i] = (i * 37 + 11) & 0xFF;
@@ -722,7 +727,7 @@ TEST("Wayfarer SaveBlock3 chunks round trip without replacing sector payloads")
     {
         memset(&sWayfarerTestSector, 0xA5, sizeof(sWayfarerTestSector));
         Test_CopySaveBlock3ToSector(sectorId, &sWayfarerTestSector);
-        memcpy(sWayfarerTestChunks[sectorId], sWayfarerTestSector.saveBlock3Chunk, SAVE_BLOCK_3_CHUNK_SIZE);
+        memcpy(chunks[sectorId], sWayfarerTestSector.saveBlock3Chunk, SAVE_BLOCK_3_CHUNK_SIZE);
         EXPECT_EQ(sWayfarerTestSector.data[0], 0xA5);
         EXPECT_EQ(sWayfarerTestSector.data[SECTOR_DATA_SIZE - 1], 0xA5);
     }
@@ -730,7 +735,7 @@ TEST("Wayfarer SaveBlock3 chunks round trip without replacing sector payloads")
     memset(saved, 0, sizeof(sWayfarerExpectedSaveBlock3));
     for (sectorId = 0; sectorId < NUM_SECTORS_PER_SLOT; sectorId++)
     {
-        memcpy(sWayfarerTestSector.saveBlock3Chunk, sWayfarerTestChunks[sectorId], SAVE_BLOCK_3_CHUNK_SIZE);
+        memcpy(sWayfarerTestSector.saveBlock3Chunk, chunks[sectorId], SAVE_BLOCK_3_CHUNK_SIZE);
         Test_CopySaveBlock3FromSector(sectorId, &sWayfarerTestSector);
     }
 
@@ -738,8 +743,10 @@ TEST("Wayfarer SaveBlock3 chunks round trip without replacing sector payloads")
         EXPECT_EQ(saved[i], sWayfarerExpectedSaveBlock3[i]);
     EXPECT(Test_GetSaveBlock3ChunkSize(lastUsedSector) > 0);
     EXPECT_EQ(Test_GetSaveBlock3ChunkSize(lastUsedSector + 1), 0);
+    Free(chunks);
 }
 
+#if !WAYFARER_LEAGUE_EVENTS
 TEST("Wayfarer incremental partial save commits and reloads every SaveBlock3 chunk")
 {
     u8 *saveBlock3Bytes = (u8 *)gSaveBlock3Ptr;
@@ -810,6 +817,7 @@ TEST("Wayfarer incremental partial save commits and reloads every SaveBlock3 chu
     WayfarerSeviiRematchStageSet(63, 3);
     WayfarerSeviiRematchPendingSet(63, TRUE);
     WayfarerKanto_InitializeOpening();
+    InitLeagueEventState();
     memcpy(sWayfarerExpectedSaveBlock3, saveBlock3Bytes, sizeof(sWayfarerExpectedSaveBlock3));
 
     // If a storage sector payload is accidentally replaced instead of merely
@@ -887,6 +895,7 @@ TEST("Wayfarer incremental partial save commits and reloads every SaveBlock3 chu
     EXPECT(storageRoundTrip);
     EXPECT(lastUsedSector >= SECTOR_ID_PKMN_STORAGE_START);
 }
+#endif
 
 static void PrepareOriginFlashFixture(void)
 {
@@ -907,7 +916,153 @@ static void PrepareOriginFlashFixture(void)
     gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_OLIVINE_CITY_HNS);
     gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_OLIVINE_CITY_HNS);
     WayfarerInitPersistentState();
+    gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_NEW_BARK;
+    gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation = HEAL_LOCATION_OLIVINE_CITY_HNS;
 }
+
+#if WAYFARER_LEAGUE_EVENTS
+TEST("Wayfarer multiplayer incremental save API commits a complete event image")
+{
+    u8 *tail;
+    bool8 startFailed, finished;
+    bool8 boundedWrites = TRUE;
+    u8 status;
+    u8 calls = 0;
+    u16 before;
+
+    ASSUME(gPokemonStoragePtr != NULL);
+    PrepareOriginFlashFixture();
+    gFlashMemoryPresent = FALSE;
+    EXPECT(WriteSaveBlock2());
+    EXPECT(!WriteSaveBlock1Sector());
+    gFlashMemoryPresent = TRUE;
+    tail = (u8 *)&gPokemonStoragePtr->leagueEventTeams;
+    tail[sizeof(struct LeagueSavedTeams) - 1] = 0x83;
+    gSaveBlock3Ptr->wayfarerCoast.flags[0] = 0x47;
+    startFailed = WriteSaveBlock2();
+    boundedWrites = gIncrementalSectorId == 1;
+    finished = FALSE;
+    while (!finished && calls < NUM_SECTORS_PER_SLOT + 4 && !gDamagedSaveSectors)
+    {
+        before = gIncrementalSectorId;
+        finished = WriteSaveBlock1Sector();
+        if (gIncrementalSectorId < before || gIncrementalSectorId > before + 1)
+            boundedWrites = FALSE;
+        calls++;
+    }
+    memset(&gPokemonStoragePtr->leagueEventTeams, 0, sizeof(gPokemonStoragePtr->leagueEventTeams));
+    ClearSav1();
+    ClearSav2();
+    ClearSav3();
+    status = LoadGameSave(SAVE_NORMAL);
+    EXPECT(!startFailed);
+    EXPECT(boundedWrites);
+    EXPECT(finished);
+    EXPECT_EQ(status, SAVE_STATUS_OK);
+    EXPECT_EQ(gSaveBlock3Ptr->wayfarerCoast.flags[0], 0x47);
+    EXPECT_EQ(((u8 *)&gPokemonStoragePtr->leagueEventTeams)[sizeof(struct LeagueSavedTeams) - 1], 0x83);
+    ClearSaveData();
+    Save_ResetSaveCounters();
+}
+
+TEST("Wayfarer link save persists the coupled league team tail")
+{
+    u8 *tail;
+    u8 status;
+
+    ASSUME(gPokemonStoragePtr != NULL);
+    PrepareOriginFlashFixture();
+    tail = (u8 *)&gPokemonStoragePtr->leagueEventTeams;
+    tail[sizeof(struct LeagueSavedTeams) - 1] = 0x5A;
+    HandleSavingData(SAVE_NORMAL);
+    tail[sizeof(struct LeagueSavedTeams) - 1] = 0xC3;
+    HandleSavingData(SAVE_LINK);
+    memset(&gPokemonStoragePtr->leagueEventTeams, 0, sizeof(gPokemonStoragePtr->leagueEventTeams));
+    ClearSav1();
+    ClearSav2();
+    ClearSav3();
+    status = LoadGameSave(SAVE_NORMAL);
+    EXPECT_EQ(status, SAVE_STATUS_OK);
+    EXPECT_EQ(((u8 *)&gPokemonStoragePtr->leagueEventTeams)[sizeof(struct LeagueSavedTeams) - 1], 0xC3);
+    ClearSaveData();
+    Save_ResetSaveCounters();
+}
+
+TEST("Wayfarer interrupted mixed-counter slot loads complete previous event image")
+{
+    u8 *tail;
+    u8 status;
+    u16 physicalSector;
+    u32 firstCounter;
+    bool32 changed;
+
+    ASSUME(gPokemonStoragePtr != NULL);
+    PrepareOriginFlashFixture();
+    tail = (u8 *)&gPokemonStoragePtr->leagueEventTeams;
+    tail[sizeof(struct LeagueSavedTeams) - 1] = 0x31;
+    gSaveBlock3Ptr->wayfarerCoast.flags[0] = 0x42;
+    HandleSavingData(SAVE_NORMAL);
+    firstCounter = gSaveCounter;
+    tail[sizeof(struct LeagueSavedTeams) - 1] = 0xA7;
+    gSaveBlock3Ptr->wayfarerCoast.flags[0] = 0xB8;
+    HandleSavingData(SAVE_NORMAL);
+
+    physicalSector = (SECTOR_ID_PKMN_STORAGE_END + gLastWrittenSector) % NUM_SECTORS_PER_SLOT;
+    physicalSector += NUM_SECTORS_PER_SLOT * (gSaveCounter % NUM_SAVE_SLOTS);
+    ReadFlash(physicalSector, 0, (u8 *)&sWayfarerTestSector, SECTOR_SIZE);
+    changed = sWayfarerTestSector.id == SECTOR_ID_PKMN_STORAGE_END
+           && sWayfarerTestSector.counter == gSaveCounter;
+    sWayfarerTestSector.counter = firstCounter;
+    if (ProgramFlashSectorAndVerify(physicalSector, (u8 *)&sWayfarerTestSector) != 0)
+        changed = FALSE;
+    memset(&gPokemonStoragePtr->leagueEventTeams, 0, sizeof(gPokemonStoragePtr->leagueEventTeams));
+    ClearSav1();
+    ClearSav2();
+    ClearSav3();
+    status = LoadGameSave(SAVE_NORMAL);
+    EXPECT(changed);
+    EXPECT_EQ(status, SAVE_STATUS_ERROR);
+    EXPECT_EQ(gSaveBlock3Ptr->wayfarerCoast.flags[0], 0x42);
+    EXPECT_EQ(((u8 *)&gPokemonStoragePtr->leagueEventTeams)[sizeof(struct LeagueSavedTeams) - 1], 0x31);
+    ClearSaveData();
+    Save_ResetSaveCounters();
+}
+
+TEST("Wayfarer corrupted event sidecar falls back to previous complete slot")
+{
+    u32 eventChecksumOffset = offsetof(struct SaveBlock3, leagueEvent)
+                            + offsetof(struct LeagueEventState, stateChecksum);
+    u16 sectorId = eventChecksumOffset / SAVE_BLOCK_3_CHUNK_SIZE;
+    u16 chunkOffset = eventChecksumOffset % SAVE_BLOCK_3_CHUNK_SIZE;
+    u16 physicalSector;
+    u8 status;
+    bool32 changed;
+
+    ASSUME(gPokemonStoragePtr != NULL);
+    PrepareOriginFlashFixture();
+    gSaveBlock3Ptr->wayfarerCoast.flags[0] = 0x29;
+    HandleSavingData(SAVE_NORMAL);
+    gSaveBlock3Ptr->wayfarerCoast.flags[0] = 0xDA;
+    HandleSavingData(SAVE_NORMAL);
+
+    physicalSector = (sectorId + gLastWrittenSector) % NUM_SECTORS_PER_SLOT;
+    physicalSector += NUM_SECTORS_PER_SLOT * (gSaveCounter % NUM_SAVE_SLOTS);
+    ReadFlash(physicalSector, 0, (u8 *)&sWayfarerTestSector, SECTOR_SIZE);
+    changed = sWayfarerTestSector.id == sectorId;
+    sWayfarerTestSector.saveBlock3Chunk[chunkOffset] ^= 1;
+    if (ProgramFlashSectorAndVerify(physicalSector, (u8 *)&sWayfarerTestSector) != 0)
+        changed = FALSE;
+    ClearSav1();
+    ClearSav2();
+    ClearSav3();
+    status = LoadGameSave(SAVE_NORMAL);
+    EXPECT(changed);
+    EXPECT_EQ(status, SAVE_STATUS_ERROR);
+    EXPECT_EQ(gSaveBlock3Ptr->wayfarerCoast.flags[0], 0x29);
+    ClearSaveData();
+    Save_ResetSaveCounters();
+}
+#endif
 
 TEST("Wayfarer all four appearances round trip through flash away from home")
 {
@@ -1035,6 +1190,9 @@ TEST("Wayfarer save loader resumes a registered custom origin without reapplying
 
     ASSUME(gPokemonStoragePtr != NULL);
     PrepareOriginFlashFixture();
+    // This case exercises first-time registration; the shared flash fixture
+    // otherwise carries a valid origin for reload tests.
+    gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_NONE;
     EXPECT(Test_WayfarerRegisterOriginProfile(&sSavedCustomOrigin));
     EXPECT(WayfarerInitializeOrigin(SAVED_CUSTOM_ORIGIN));
     WarpIntoMap();
