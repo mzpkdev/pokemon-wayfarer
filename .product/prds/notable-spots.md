@@ -30,7 +30,9 @@ something ordinary. Spots differ from haunts in three ways:
 
 - **Found, not authored.** Spots are found automatically from map data:
   doors, tile types, and the people already standing on each map. Nobody
-  writes a spot list by hand, apart from a few benches and lookouts.
+  writes a spot list by hand, apart from a few benches and lookouts and a
+  short list of **named spots**: one-off places with character, such as
+  Oak's Lab, the Olivine Café, or Mt. Pyre's summit.
 - **One pool for every region.** Kanto, Johto, Hoenn, and Sevii all have
   spots from the start, wherever the maps have Centers, Marts, grass, and
   water.
@@ -56,6 +58,7 @@ doors.
 | Water's edge | land tiles beside fishable water | Faces the water in a "fishing" pose, with the odd "!". |
 | Town squares and benches | open town areas, plus a few authored benches and lookouts | Idles and looks around. |
 | Chatting with an NPC | a person already standing on the map | Stands beside them, facing them, with the odd "…". |
+| Named spot | a short authored list | Stands at the place, doing what it's for: studying at a lab, relaxing at a café, sightseeing at a tower. |
 
 **Just leaving.** A trainer visiting another Gym is never found standing
 inside it. When the player walks into a Gym a visitor is at, the visitor
@@ -80,8 +83,10 @@ The activity picks a spot kind, and the kind picks a spot:
 | visit | other Gyms, chatting with an NPC |
 
 The activities are the ones haunts already use, plus two new ones: **fish**
-and **visit**. A trainer picks a spot near their home base, or anywhere
-further afield if they are a traveller. A Gym Leader's home base is their
+and **visit**. Every activity can also use the named spots that list it, so
+study, sightseeing, and lying low have everyday places too. A trainer
+picks a spot near their home base, or anywhere further afield if they are
+a traveller. A Gym Leader's home base is their
 Gym city; everyone else has one home map from canon, such as Pallet Town
 for Blue or Mossdeep City for Steven
 ([home base](../specs/notable-spots.md#home-base)). How far "near" reaches
@@ -117,9 +122,9 @@ There are no quests, battles, or menus at spots.
 
 ## Boundaries
 
-In: the spot kinds, how each is found from map data, the per-map room for
-notables, how an activity picks a spot, the activity line per spot kind,
-follow-ups at spots, and the "just leaving" Gym visit.
+In: the spot kinds, how each is found from map data, the named spots, the
+per-map room for notables, how an activity picks a spot, the activity line
+per spot kind, follow-ups at spots, and the "just leaving" Gym visit.
 
 Unchanged: v0 haunt placement, haunt quests, and the haunt talk flow; Gym
 battles and badges; every battle with a notable trainer
@@ -179,7 +184,8 @@ beside a seat. Talking to them runs straight through with no menu.
 ## Later
 
 - Authoring favourites, with the routines.
-- More spot kinds, such as libraries, harbours, or Day Care fences.
+- More found kinds, such as libraries, if the named-spot list grows too
+  long to write by hand.
 - Per-trainer activity lines, if the shared ones get stale.
 
 ## References
@@ -189,3 +195,4 @@ beside a seat. Talking to them runs straight through with no menu.
 - [Notable trainer travel proof of concept](../research/notable-trainer-travel-poc.md)
 - [Travel and on-map walking](../specs/notable-haunts.md#travel-and-on-map-walking)
 - [Notable spots inventory (draft)](../research/notable-spots-inventory.md)
+- [Notable named spots (starting list)](../research/notable-named-spots.md)

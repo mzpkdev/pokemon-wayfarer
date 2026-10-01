@@ -4,13 +4,16 @@ Related PRD: [Notable spots](../prds/notable-spots.md)
 
 Related spec: [Notable spots](../specs/notable-spots.md)
 
+Related list: [Notable named spots](notable-named-spots.md)
+
 Evidence: [inventory.py](notable-spots-inventory/inventory.py), a
 read-only Python script (standard library only), and its outputs
 [per-map.csv](notable-spots-inventory/per-map.csv) (one row per scanned
-map, counts per kind) and
-[inventory.json](notable-spots-inventory/inventory.json) (scope, totals,
-findings, and the chosen NPCs per map). Every number below comes from one
-run of the script against `game/` at the time of writing:
+map, counts per kind under the revised rules) and
+[inventory.json](notable-spots-inventory/inventory.json) (scope, totals
+under both rule sets, findings, named-spot results, and the chosen NPCs
+per map). Every number below comes from one run of the script against
+`game/` at the time of writing:
 
     python3 .product/research/notable-spots-inventory/inventory.py
 
@@ -21,12 +24,19 @@ real build-time tool: what pool do the spec's detection rules actually
 produce on Wayfarer's maps, and where do the rules miss, misfire, or need
 changing?
 
+The first run answered that for the rules as first drafted and proposed
+nine changes. The spec now carries those changes, plus an authored ninth
+kind, [named spots](../specs/notable-spots.md#named-spots). This revision
+re-runs the inventory under both rule sets and checks every named-spot row.
+
 ## Method
 
 The script applies the spec's
 [spot kinds](../specs/notable-spots.md#spot-kinds) and
-[detection sources](../specs/notable-spots.md#detection-sources) as
-written, then reports where they disagree with the content.
+[detection sources](../specs/notable-spots.md#detection-sources) twice:
+the **draft** rules (the spec before this revision, as the first run read
+it) and the **revised** rules (the spec now). It reports the counts under
+both, and where the revised rules still disagree with the content.
 
 ### Scope
 
@@ -95,9 +105,9 @@ from the map's warp tiles and connection edges that treats always-present
 objects as walls and lets ledges be jumped one way. Elevation and the
 one-sided `MB_IMPASSABLE_*` behaviours are ignored, so it is approximate.
 
-Per kind, as the spec states it:
+Per kind, the draft rules (the rows the first run used):
 
-| Kind | Rule as run |
+| Kind | Draft rule as run |
 | --- | --- |
 | Pokémon Center | An outdoor map's warp (town, city, route, ocean route) into a `MAP_TYPE_INDOOR` map with a nurse sprite. Spots: free tiles facing `MB_COUNTER`, minus the tile in front of the nurse. |
 | Game Corner | Same door rule; slot-machine signs (`_EventScript_SlotMachineN`). Spots: the tile behind each sign along its facing. |
@@ -108,12 +118,28 @@ Per kind, as the spec states it:
 | Town square | On town and city maps: centres of a 3×3 block of reachable, non-grass land, at least 3 tiles (Chebyshev) from any warp, sign, or object. A **square** is an 8-connected group of such centres. |
 | NPC chat | See the filter below. Spots: each free tile 4-adjacent to the NPC. |
 
-Classification order is the spec's: Center, Game Corner, Mart, Gym.
+Classification order was the draft spec's: Center, Game Corner, Mart, Gym.
+
+The revised rules change these (the spec's
+[detection sources](../specs/notable-spots.md#detection-sources) hold the
+exact wording):
+
+| Kind | Revised rule as run |
+| --- | --- |
+| Doors | From an outdoor-typed map that isn't a rooftop (outdoor type, no connections, every warp into an interior with no warp to an outdoor map) into a `MAP_TYPE_INDOOR` or `MAP_TYPE_NONE` map. |
+| Pokémon Center | A nurse and at least one `MB_COUNTER` tile, no Gym music, whatever the map type. Where the map has one `MB_COUNTER` tile, the counter row extends along the collision tiles beside it, and spots are the free tiles beyond it, away from the nurse. |
+| Mart and store | The door's interior plus interiors reached by interior warps (not through a Center, Game Corner, or Gym) that have shelves or a vendor. A store needs shelves on some map and a vendor (clerk sprite or `pokemart` script) on some map; floors are the maps with shelves. On FRLG layouts in a map with a vendor, `MB_POKEMON_CENTER_BOOKSHELF` is a shelf. Keyed by floor set. |
+| Gym | Gym music, checked after Center, Game Corner, and store. |
+| Authored drops | `GoldenrodCity_BikeShop_hns` as a store; `SaffronCity_FightingDojo_hns` as a Gym. |
+| Water's edge | As before, on maps that aren't interiors, have no Gym music, and have fishing encounters. |
+| Town square | Not on rooftops. At most 3 squares per map, the largest by centre count; each stands on the centre nearest its group's mean. |
+| NPC chat | Unchanged: the filter below already ran in the first inventory, and the spec now states it. |
 
 ### NPC chat filter
 
 An object event is a chat partner when all of these hold, checked in
-order (the rejection counts are over all 1,012 maps):
+order (the rejection counts are over all 1,012 maps). The spec now states
+this filter, with `MOVEMENT_TYPE_NONE` left out:
 
 1. It's a plain object, not a clone.
 2. `trainer_type` is `TRAINER_TYPE_NONE` (rejects 1,046 trainers).
@@ -137,158 +163,216 @@ order (the rejection counts are over all 1,012 maps):
 
 ## Counts
 
-Per kind per region. Indented rows break a kind down; the first row of each
-kind is the number of places.
+Per kind per region, under the revised rules. Where the draft rules gave a
+different number, the cell reads "draft → revised". Indented rows break a
+kind down; the first row of each kind is the number of places.
 
 | Kind | Kanto | Johto | Hoenn | Sevii | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Maps scanned | 217 | 259 | 401 | 135 | 1,012 |
 | Pokémon Centers | 11 | 13 | 18 | 8 | 50 |
-| › counter tiles | 47 | 66 | 3 | 64 | 180 |
-| Marts and stores | 7 | 7 | 12 | 0 | 26 |
-| › floors | 7 | 7 | 12 | 0 | 26 |
-| › shelf tiles | 127 | 179 | 227 | 0 | 533 |
+| › counter tiles | 47 → 51 | 66 | 3 → 79 | 64 | 180 → 260 |
+| Marts and stores | 7 → 9 | 7 | 12 → 14 | 0 → 4 | 26 → 34 |
+| › floors | 7 → 12 | 7 → 10 | 12 → 17 | 0 → 4 | 26 → 43 |
+| › shelf tiles | 127 → 280 | 179 → 247 | 227 → 314 | 0 → 54 | 533 → 895 |
 | Game Corners | 1 | 1 | 1 | 0 | 3 |
 | › slot tiles | 16 | 16 | 12 | 0 | 44 |
 | Gyms | 8 | 8 | 8 | 0 | 24 |
 | Tall-grass maps | 23 | 40 | 25 | 15 | 103 |
 | › patches (6+ tiles) | 53 | 129 | 104 | 65 | 351 |
 | › tiles | 2,518 | 5,668 | 2,801 | 2,192 | 13,179 |
-| Water's-edge maps | 28 | 63 | 50 | 17 | 158 |
-| › stretches | 88 | 262 | 187 | 63 | 600 |
-| › tiles | 1,034 | 2,147 | 1,467 | 691 | 5,339 |
-| Town and city maps | 11 | 15 | 16 | 7 | 49 |
-| › with a square | 11 | 15 | 15 | 7 | 48 |
-| › squares | 119 | 87 | 107 | 26 | 339 |
-| › square tiles | 1,874 | 1,360 | 1,596 | 221 | 5,051 |
+| Water's-edge maps | 28 → 26 | 63 → 49 | 50 → 42 | 17 | 158 → 134 |
+| › stretches | 88 → 85 | 262 → 218 | 187 → 169 | 63 | 600 → 535 |
+| › tiles | 1,034 → 944 | 2,147 → 1,762 | 1,467 → 1,384 | 691 | 5,339 → 4,781 |
+| Town and city maps | 11 → 10 | 15 → 14 | 16 | 7 | 49 → 47 |
+| › with a square | 11 → 10 | 15 → 14 | 15 | 7 | 48 → 46 |
+| › squares | 119 → 29 | 87 → 40 | 107 → 42 | 26 → 17 | 339 → 128 |
+| › square tiles | 1,874 → 1,277 | 1,360 → 1,181 | 1,596 → 1,224 | 221 → 192 | 5,051 → 3,874 |
 | NPC-chat maps | 103 | 107 | 187 | 40 | 437 |
 | › NPCs | 183 | 198 | 402 | 60 | 843 |
 | › adjacent tiles | 510 | 589 | 1,076 | 168 | 2,343 |
+| Named spots | 10 | 22 | 21 | 6 | 59 |
+
+Equal totals can hide swaps. Kanto's 11 Centers gain Viridian's and lose
+the Fighting Dojo. Johto's 7 stores gain the Goldenrod department store and
+lose the Goldenrod Bike Shop. Kanto's 8 Gyms would be 9 without the
+authored drop, since the Fighting Dojo has Gym music. "Square tiles" now
+counts only the centres in the squares kept.
 
 The full per-map list is
 [per-map.csv](notable-spots-inventory/per-map.csv): 1,012 rows with the
-region, map type, layout family, and every count above, plus the
-tall-grass patch sizes and, for store floors, the store they belong to.
-The chosen NPCs per map (tile and sprite) and the rejection reasons are in
-[inventory.json](notable-spots-inventory/inventory.json) under `maps`.
+region, map type, layout family, and every revised count above, plus the
+tall-grass patch sizes, the store a floor belongs to, why a map's water's
+edge was dropped, whether it's a rooftop, and each kept square's standing
+tile. The chosen NPCs per map (tile and sprite) and the rejection reasons
+are in [inventory.json](notable-spots-inventory/inventory.json) under
+`maps`; the draft totals and findings are under `draft_region_totals` and
+`draft_findings`.
 
-Largest per map:
+Largest per map, revised:
 
 - **Tall grass:** `SixIsland_PatternBush_Frlg` 737 tiles,
   `ViridianForest_hns` 558, `Route34_hns` 446.
 - **Water's edge:** `Route12_hns` 290 tiles,
   `SevenIsland_TanobyRuins_Frlg` 183, `WhirlIslands_B1F_hns` 141.
-- **Squares:** `LilycoveCity` 397 tiles, `CeruleanCity_hns` 383,
-  `ViridianCity_hns` 379.
+- **Squares:** `LilycoveCity` 314 centres in its 3 squares,
+  `ViridianCity_hns` 286, `EcruteakCity_hns` 240.
 - **NPC chats:** `BattleFrontier_OutsideEast` 16 NPCs, then the three Game
   Corners (8 or 9 each).
 
 The spec's own examples check out: `Route1_hns` has 206 tall-grass tiles,
 `Route25_hns` 41 tall-grass and 286 fishable water tiles (244 ocean plus
-42 pond), `CeladonCity_hns` 18 pond tiles, and the Celadon HNS Game Corner
-16 slot-machine signs.
+42 pond), `CeladonCity_hns` 18 pond tiles, the Celadon HNS Game Corner 16
+slot-machine signs, and `RustboroCity_PokemonCenter_1F` 5 counter tiles
+under the Emerald counter rule.
 
-## Findings
+## Changes applied
 
-### Misses
+The nine proposals from the first run, as the spec now states them. Where
+a proposal offered a choice or left a value open, the spec makes it
+precise, as noted.
 
-- **Viridian City's Center.** `ViridianCity_PokemonCenter_hns` is
-  `MAP_TYPE_NONE`, so the "door into a `MAP_TYPE_INDOOR` map" rule drops
-  it. Kanto's 11 Centers hide this: they include a false hit (below).
-  Other `MAP_TYPE_NONE` interiors in scope: `CeladonCity_House1_hns`,
-  `CeladonCity_House2_hns`, `NewBarkTown_Lab_hns`, `Route12_House_hns`.
-- **Emerald Center counters.** In all 15 Hoenn town Centers and the
-  Battle Frontier Center, the only `MB_COUNTER` tile is the one in front
-  of the nurse; the rest of the counter is plain collision. So the counter
-  rule yields **0 counter spots** in those 16 Centers (Hoenn's 3 come from
-  `TrainerHill_Entrance` and `EverGrandeCity_PokemonLeague_1F`). HNS and
-  FRLG Centers mark the whole counter row (`CeruleanCity_PokemonCenter_hns`
-  gives 5 spots after the nurse's tile).
-- **Every FRLG Mart.** FRLG Mart shelves read as
-  `MB_POKEMON_CENTER_BOOKSHELF` (`0xE2`) after the engine's FRLG
-  normalisation, not as a shop shelf (12 such tiles in each of
-  `CinnabarIsland_Mart_Frlg`, `ThreeIsland_Mart_Frlg`,
-  `FourIsland_Mart_Frlg`, `SixIsland_Mart_Frlg`,
-  `SevenIsland_Mart_Frlg`). No FRLG map in scope has a shop-shelf tile, so
-  **Sevii has no Marts** and Kanto loses Cinnabar's.
-- **Department stores.** The rule wants the door's own interior to have
-  shelves and a clerk. The ground floors of
-  `CeladonCity_DepartmentStore_1F_hns`,
-  `GoldenrodCity_DepartmentStore_1F_hns`, and
-  `LilycoveCity_DepartmentStore_1F` have neither, so none of the three
-  stores is found, and the Celadon and Goldenrod upper floors (2F-4F,
-  which do have shelves and clerks) show up as orphan content.
-  Lilycove's sales staff aren't clerk sprites at all (`WOMAN_3`, `COOK`),
-  and `CeladonCity_DepartmentStore_5F_hns` and
-  `GoldenrodCity_DepartmentStore_6F_hns` have shelves but no clerk.
-- **Other shops.** `LavaridgeTown_HerbShop` has shelves and a shop script
-  but no clerk sprite; `MahoganyTown_Shop_hns` sells only through the
-  granny's script and has no shelf tiles.
-- **Two Island Joyful Game Corner** has Game Corner music and no slot
-  machines, as the spec already says, so it yields nothing.
-- **Unreached grass.** 62 patches of 6 or more tiles on 35 maps touch no
-  reachable land, for example 5 on `Route23_hns` and 4 each on
-  `Route34_hns` and `Route47_hns`. Some are truly behind ledges, cut trees,
-  or water; some are artefacts of ignoring elevation. The real tool needs
-  the engine's collision rules here.
+1. **Interior test.** A door's destination is an interior when its
+   `map_type` is `MAP_TYPE_INDOOR` or `MAP_TYPE_NONE`. The Center test reads
+   content only, so it no longer depends on the map type. Made precise:
+   the door's source must also not be a rooftop (defined by warps and
+   connections, not names), so a rooftop warp isn't an outdoor door.
+2. **Store rule.** The door's interior plus every interior reached by
+   interior warps, shelves somewhere, a vendor somewhere (a clerk sprite or
+   a `pokemart` script), keyed by floor set. Made precise: the walk passes
+   only through maps with shelves or a vendor, never through a Center, Game
+   Corner, or Gym, so elevator cars aren't part of a store; every floor in
+   scope is reached by stairs or escalators anyway.
+3. **FRLG shelves.** `MB_POKEMON_CENTER_BOOKSHELF` is a shelf on FRLG
+   layouts in a map with a vendor.
+4. **Center counter.** Where a map has one `MB_COUNTER` tile, the counter
+   row is that tile plus the unbroken run of collision tiles beside it in
+   the same row; spots are the free tiles beyond it, away from the nurse.
+   Made precise: "in line with" is that row, and "facing it" is the side
+   away from the nurse.
+5. **Classification order.** A Center needs a nurse, at least one
+   `MB_COUNTER` tile, and no Gym music; both conditions keep the Fighting
+   Dojo out. Made precise: the Dojo then classifies as a Gym through its
+   music, so the authored drop list removes it as a Gym.
+6. **Water's edge.** The first run offered two alternatives; the spec takes
+   both: no interiors (which also covers every Gym in scope), no Gym music,
+   and fishing encounters on the map.
+7. **Squares.** Rooftops excluded; at most 3 squares per map. Made precise:
+   ranked by centre count, ties to the top-left tile, standing on the
+   centre nearest the group's mean.
+8. **NPC chats.** The villain-team, Pokémon-sprite, notable-cameo, prop,
+   and scripted-actor exclusions are in the spec. Made precise: standing
+   `MOVEMENT_TYPE_NONE` people stay out; the authored list can add one.
+9. **Counts.** The spec now says 52 in-scope maps carry a nurse, and 49
+   town and city maps are in scope (47 without the two `MAP_TYPE_CITY`
+   rooftops), instead of 73, 51, and 37 across the whole repo.
 
-### False or doubtful hits
+Two corrections ride along: the **Cianwood pharmacy**
+(`MAP_CIANWOOD_SHOP_HNS`) is no longer named as a Mart; the spec says it's
+the pharmacy, which content detection rightly skips, and it's a named spot.
+The **Goldenrod Bike Shop** leaves the store kind through the authored drop
+list and is a named spot instead.
 
-- **Saffron Fighting Dojo.** `SaffronCity_FightingDojo_hns` has a nurse
-  (the rematch hub), so it's classified a Center before its Gym music is
-  checked. Kanto's real Center count is 10 found plus Viridian missed.
-- **Goldenrod Bike Shop.** `GoldenrodCity_BikeShop_hns` has shelves and a
-  clerk, so it counts as a Mart. Arguably fine, but it isn't somewhere you
-  stock up.
-- **Rooftops typed as cities.** `CeladonCity_Apartments_RoofDay_hns` and
-  `GoldenrodCity_DepartmentStore_7F_hns` are `MAP_TYPE_CITY`, so they get
-  squares, and a rooftop warp counts as an "outdoor door" into the top
-  floor. `SafariZoneGate_hns` (town), `LakeOfRage_hns`,
-  `MtSilver_Outside_hns` (cities) and `IndigoPlateau_hns` (town) also get
-  squares.
-- **Indoor water.** Water's edge isn't limited to outdoor maps:
-  `CeruleanCity_Gym_hns` gives 70 edge tiles around its pool,
-  `BattleFrontier_BattlePalaceCorridor` 23, `AquaHideout_1F` 18. 24 maps
-  with edge tiles have no fishing encounters at all.
-- **Grass without wild Pokémon.** `AzaleaTown_hns` has tall-grass patches
-  but no land encounters.
-- **Squares are far too many.** 339 squares, 5,051 centre tiles: Cerulean
-  alone has 22 squares. The 3×3 rule finds every wide path. It needs a cap
-  per map, or it needs to rank by openness.
-- **Optional Hoenn systems.** The Battle Frontier is reachable and
-  contributes a Center, a Mart, and the busiest NPC map
-  (`BattleFrontier_OutsideEast`, 16). `TrainerHill_Entrance` and
-  `TrainerTower_Lobby_Frlg` count as Centers through their nurses.
+## Resolved findings
 
-### Ambiguous
+- **Viridian City's Center** (`MAP_TYPE_NONE`) is found.
+- **Emerald Center counters.** All 16 Emerald Centers have counter spots
+  (4 or 5 each); Hoenn goes from 3 counter tiles to 79. No Center in scope
+  is left without counter spots.
+- **FRLG Marts.** `CinnabarIsland_Mart_Frlg` and the Three, Four, Six, and
+  Seven Island Marts are found: Sevii has 4 stores, Kanto 9.
+- **Department stores.** Celadon (2F-5F), Goldenrod (2F-4F and 6F), and
+  Lilycove (2F-5F) are found, each as one store keyed by its floors, and
+  the rooftop door no longer finds a second copy. Goldenrod 5F (TM clerk,
+  no shelves) is part of its store but not a floor.
+- **Lavaridge Herb Shop** is found as a store through its shop script, so
+  it isn't a named spot.
+- **Saffron Fighting Dojo** is neither a Center nor a Gym.
+- **Rooftops.** `CeladonCity_Apartments_RoofDay_hns`,
+  `CeladonCity_DepartmentStore_RoofDay_hns`, and
+  `GoldenrodCity_DepartmentStore_7F_hns` give no squares and aren't
+  outdoor doors.
+- **Indoor and fishless water.** 24 maps lose their water's edge (558
+  tiles): 5 interiors (`CeruleanCity_Gym_hns` 70, the two Battle Palace
+  rooms, `AquaHideout_1F`, `LilycoveCity_Harbor`) and 19 maps with no
+  fishing encounters.
+- **Too many squares.** 339 squares become 128; 33 maps hit the cap of 3.
+- **Wrong counts** in the spec are restated for Wayfarer's scope.
+- **Benches and lookouts.** Named spots now carry the one-off places the
+  first run said needed an authored list (labs, towers, harbours, Day
+  Cares); benches and lookouts stay in the authored overrides.
 
-- **`MOVEMENT_TYPE_NONE` people.** HNS uses it for lights and items, but
-  also for some people (kimono girls, officers). The spec's movement rule
-  drops all of them; after the other filters, 90 remain that may be
-  genuine standing NPCs.
-- **Scripted actors.** The `local_id` check catches 190, but HNS objects
-  often have no `local_id`, so HNS story actors with flag `0` can slip
-  through. A rejected-or-kept list per map is in `inventory.json` for
-  review.
-- **Store identity.** A door from a rooftop finds the same department
-  store from the top floor down. The tool must key a store by its floor
-  set, not by its door.
+## Remaining issues
 
-### Maps that need the authored list
+- **Fishless ponds.** Requiring fishing encounters drops the ponds on
+  `Route33_hns` (46 tiles), `Route38_hns` (116), `Route39_hns` (89),
+  `Route48_hns` (27), `LakeOfRageLowTide_hns` (34), `MtMoon_Outside_hns`
+  (20), `BellchimeTrail_hns` (36), `WhirlIslands_LugiaChamber_hns` (19),
+  and the Battle Frontier's two outdoor maps. That follows "fish where the
+  player could", but if these ponds should have fishing tables, that's a
+  wild-encounter question, and the edges come back once they do.
+- **Squares on non-town maps.** `SafariZoneGate_hns`, `LakeOfRage_hns`, and
+  `MtSilver_Outside_hns` are typed town or city and keep 3 squares each;
+  `IndigoPlateau_hns` keeps 1. They are candidates for the drop list.
+  `PacifidlogTown` still has no square; `IndigoPlateau_hns` and
+  `FiveIsland_Frlg` have 1, and `CinnabarIsland_Frlg`, `LavaridgeTown`,
+  `OldaleTown`, `VerdanturfTown`, `SevenIsland_Frlg`, and `SixIsland_Frlg`
+  2 each. Those want authored benches or lookouts.
+- **Centers in optional buildings.** `EverGrandeCity_PokemonLeague_1F`,
+  `TrainerHill_Entrance`, and `TrainerTower_Lobby_Frlg` pass the Center
+  test (nurse and counter). They are real healing counters, so they're
+  kept; Trainer Hill and the Trainer Tower also have named spots, on tiles
+  away from the counter.
+- **Shelves outside stores.** `CeladonCity_Apartments_1F_hns` and
+  `TinTower_RoofDay_hns` have shop-shelf behaviours with no vendor
+  (probably decor tiles); the pharmacy and the Goldenrod Bike Shop are
+  there by design. None yields a spot.
+- **The Dojo as a Gym.** The drop list handles it. A rule would also work
+  (a Gym needs a leader in
+  [Gym Leader scaling's](../specs/gym-leader-scaling.md) coverage), but
+  that ties detection to the catalog; it's left as a later option.
+- **Unreached grass.** 62 patches of 6 or more tiles on 35 maps still touch
+  no reachable land; some are artefacts of ignoring elevation.
+  `AzaleaTown_hns` still has tall grass and no land encounters.
+- **Scripted actors.** HNS objects often have no `local_id`, so HNS story
+  actors with flag `0` can still slip through the NPC filter.
+- **HNS Battle Tent copies.** `TrainerHill_Courtyard_hns` (Route 40) warps
+  into HNS copies of the Slateport Battle Tent, which the region tagging
+  counts as Johto. They add a few NPC chats; the real tool should decide
+  whether they belong.
+- **Two Island Joyful Game Corner** still has Game Corner music and no
+  slot machines, so it yields nothing, as the spec says.
+- **Approximate collision.** Elevation and one-sided walls are still
+  ignored, so reachability and the named-spot walkability check are
+  approximate (Sootopolis's raised paths, for example).
 
-- **Benches and lookouts.** No behaviour marks them, so every bench and
-  lookout is authored. `PacifidlogTown` has no square at all (all bridges
-  and water); `IndigoPlateau_hns` and `FiveIsland_Frlg` have 1, and
-  `CinnabarIsland_Frlg`, `SevenIsland_Frlg`, `SixIsland_Frlg`,
-  `LavaridgeTown`, `OldaleTown`, and `VerdanturfTown` 2 each. Those want
-  authored benches or lookouts.
-- **Drops.** The rooftop squares above, and squares on
-  `SafariZoneGate_hns` and `IndigoPlateau_hns`, are candidates for the
-  drop list or a map-type fix.
-- **Center seats.** The wall rule wasn't run; the counter numbers show
-  that Hoenn Centers will lean entirely on it (or on authored seats).
+## Named-spot validation
 
-### HNS, FRLG, and Emerald differences
+The script reads the four tables in
+[notable named spots](notable-named-spots.md) and checks each row the way
+the spec's [validation](../specs/notable-spots.md#named-spots) says: the
+map exists, is in scope (this note's [scope](#scope)), and is in the
+row's region; the tile is inside, walkable, reachable, and free of objects
+and warps; it isn't a worked-out haunt standing tile or a duplicate; the
+activities are one or two from the list; the capacity fits (1 on an
+interior, up to 2 elsewhere, with a free neighbour for a second trainer).
+
+**Result: 59 rows (Kanto 10, Johto 22, Hoenn 21, Sevii 6), all pass.**
+Each row's derived facing, notes, and problems are in `inventory.json`
+under `findings.named_spots`. Notes:
+
+- Three Kanto rows share a map with a v0 haunt: Vermilion harbour, the
+  Fighting Dojo, and the Safari Zone gate. Only four haunt standing tiles
+  are worked out (Celadon Game Corner, Cerulean Cape, Pewter Museum,
+  Viridian Forest), so for the rest, the haunt author must avoid the named
+  spot's tile.
+- Four rows sit on detected water's-edge tiles (Vermilion harbour, Lake of
+  Rage, Olivine harbour, Berry Forest), which the extraction then drops.
+- The list drops the Johto Battle Tower (not in Wayfarer; HNS's Route 40
+  leads to `TrainerHill_Courtyard_hns`, listed instead) and the Lavaridge
+  Herb Shop (now a detected store).
+
+## HNS, FRLG, and Emerald differences
 
 - **Attribute format.** FRLG attributes are 32-bit with a 9-bit behaviour;
   HNS and Emerald are 16-bit. HNS and FRLG layouts have 640 primary
@@ -307,22 +391,9 @@ The spec's own examples check out: `Route1_hns` has 206 tall-grass tiles,
   of 47), and only 180 of HNS's 264 such warps sit on a door behaviour;
   the rest include arrow warps into gates and plain tiles. So the door
   behaviour is a poor filter; the warp's destination is the real signal.
-- **Map types.** HNS uses `MAP_TYPE_CITY` for rooftops and
-  `MAP_TYPE_NONE` for some interiors; FRLG Sevii uses only
-  `MAP_TYPE_TOWN`.
-
-### Where the spec is wrong
-
-- "73 maps carry" a nurse: true across all of `game/data/maps`, but only
-  52 are in Wayfarer's scope. Likewise "51 town and 37 city maps": 49 are
-  in scope.
-- `MAP_CIANWOOD_SHOP_HNS` is named as a Mart whose name breaks the
-  pattern. It's the Cianwood pharmacy: shelves, no clerk, no shop, and its
-  script gives the Secret Potion. Content detection rightly skips it.
-- "A door is a spot source only when it leads ... into an interior
-  (`map_type` `MAP_TYPE_INDOOR`)" misses Viridian's Center.
-- The store rule as written finds no department store.
-- The Center counter rule finds no counter spots in Emerald Centers.
+- **Map types.** HNS types rooftops `MAP_TYPE_CITY` or `MAP_TYPE_ROUTE`,
+  and some interiors `MAP_TYPE_NONE`; FRLG Sevii types every island town
+  `MAP_TYPE_TOWN`, never `MAP_TYPE_CITY`.
 
 ## Recommendations
 
@@ -338,39 +409,13 @@ For the real tool:
 3. **Reuse the engine's collision.** Model elevation and one-sided
    impassable behaviours, or reachability will both over- and under-count.
 4. **Report, don't hide.** Emit the findings lists in this note (content
-   without a door, music without content, rooftops typed as cities) as a
+   without a door, music without content, rooftops, dropped edges) as a
    build-time report beside the per-map counts.
+5. **Validate named spots** as the script does, and fail the build on a
+   bad row.
 
-Proposed spec changes (for the spec owner; the spec isn't edited here):
-
-1. **Interior test.** Treat a destination as an interior when its
-   `map_type` is `MAP_TYPE_INDOOR` or `MAP_TYPE_NONE`, or fix Viridian's
-   Center to `MAP_TYPE_INDOOR`.
-2. **Store rule.** A store is the door's interior plus every interior
-   reached by interior warps; the floors are the ones with shelves; and
-   the store needs a **vendor** somewhere: a clerk sprite or an object
-   whose script opens a shop (`pokemart`). Key the store by its floor set.
-   Run as a check, this rule finds Kanto 9 stores on 12 floors, Johto 8 on
-   11, Hoenn 14 on 17, and Sevii 4 on 4: the three department stores, the
-   FRLG Marts, and the Lavaridge Herb Shop. It loses none of the 26 the
-   spec's rule finds.
-3. **FRLG shelves.** Count `MB_POKEMON_CENTER_BOOKSHELF` as a shelf on
-   FRLG layouts in a map with a vendor.
-4. **Center counter.** Where only one `MB_COUNTER` tile exists, take the
-   counter row as the impassable tiles in line with the nurse's counter
-   tile, and stand on the free tiles facing it.
-5. **Classification order.** Check Gym music before the nurse, or skip
-   maps with Gym music in the Center test, so the Fighting Dojo isn't a
-   Center.
-6. **Water's edge.** Limit it to outdoor and cave maps (not
-   `MAP_TYPE_INDOOR`), or require fishing encounters on the map.
-7. **Squares.** Exclude rooftop maps and keep at most a placeholder 2-3
-   squares per map, choosing the largest and most open.
-8. **NPC chats.** Add the villain-team and Pokémon-sprite exclusions and
-   the scripted-actor check to the filter, and decide whether standing
-   `MOVEMENT_TYPE_NONE` people count.
-9. **Counts.** Drop the whole-repo counts (73 nurses, 51 towns, 37 cities)
-   or restate them for Wayfarer's scope.
+The nine spec changes this note first proposed are now in the spec
+([changes applied](#changes-applied)).
 
 ## Limits
 
@@ -379,12 +424,16 @@ Proposed spec changes (for the spec owner; the spec isn't edited here):
   isn't ported.
 - Reachability ignores elevation and one-sided walls; scripted entries
   outside `warp*` commands (specials, dynamic warps, dive) aren't followed.
-- Center side seats, Gym exit warps, and haunt overlaps weren't computed.
-- Patch and clearance sizes are the spec's placeholders (6 tiles and 3
-  tiles).
+- Center side seats and Gym exit warps weren't computed. Haunt overlaps
+  are checked only against the four worked-out haunt standing tiles.
+- Patch, clearance, and square-cap sizes are the spec's placeholders (6
+  tiles, 3 tiles, and 3 squares).
+- The draft column re-runs the first inventory's rules in the same script,
+  so it matches the first run's numbers exactly.
 
 ## References
 
 - [Notable spots PRD](../prds/notable-spots.md)
 - [Notable spots specification](../specs/notable-spots.md)
+- [Notable named spots](notable-named-spots.md)
 - [Notable trainer travel proof of concept](notable-trainer-travel-poc.md)

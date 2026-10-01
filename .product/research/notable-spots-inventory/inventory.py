@@ -2,12 +2,15 @@
 """Draft inventory of the notable-spots pool, read-only.
 
 Applies the detection rules in .product/specs/notable-spots.md to the real
-map data under game/ and writes:
+map data under game/, both as first drafted ("draft") and as revised after
+this inventory ("revised"), checks the named spots listed in
+.product/research/notable-named-spots.md, and writes:
 
-  per-map.csv     one row per scanned map, counts per spot kind
-  inventory.json  scope, per-map detail, per-region totals, findings
+  per-map.csv     one row per scanned map, revised counts per spot kind
+  inventory.json  scope, per-region totals (revised and draft), findings,
+                  named-spot results, and per-map NPC detail
 
-next to this script, and prints the per-region tables as Markdown. Nothing
+next to this script, and prints the before-and-after table as Markdown. Nothing
 under game/ is written. Python 3 standard library only.
 
     python3 .product/research/notable-spots-inventory/inventory.py
@@ -44,6 +47,54 @@ CLERK_GFX = {"OBJ_EVENT_GFX_MART_EMPLOYEE", "OBJ_EVENT_GFX_MART_EMPLOYEE_HNS",
 GYM_MUSIC = {"MUS_GYM", "MUS_HG_GYM", "MUS_RG_GYM"}
 CORNER_MUSIC = {"MUS_GAME_CORNER", "MUS_HG_GAME_CORNER", "MUS_RG_GAME_CORNER"}
 SLOT_SCRIPT = re.compile(r"_EventScript_SlotMachine\d*$")
+
+INTERIOR_TYPES = {"MAP_TYPE_INDOOR", "MAP_TYPE_NONE"}  # revised interior test
+SQUARES_PER_MAP = 3  # revised placeholder: largest squares kept per map
+# Revised rule: authored drop list (spec, authored overrides). A detected
+# place on these maps is dropped. The bike shop is a named spot instead;
+# the Fighting Dojo has Gym music but no Gym Leader, and is a haunt and a
+# named spot.
+DROPPED_PLACES = {"GoldenrodCity_BikeShop_hns": "mart",
+                  "SaffronCity_FightingDojo_hns": "gym"}
+NAMED_SPOTS_DOC = REPO / ".product/research/notable-named-spots.md"
+ACTIVITIES = {"train", "care", "study", "home", "relax", "shop", "gamble",
+              "sightsee", "fish", "visit", "lie low"}
+# Haunt standing tiles worked out in the haunts spec (worked examples).
+HAUNT_TILES = {("CeladonCity_GameCorner_hns", 12, 11): "Celadon Game Corner",
+               ("Route25_hns", 100, 14): "Cerulean Cape",
+               ("PewterCity_Museum_1F_hns", 7, 4): "Pewter Museum",
+               ("ViridianForest_hns", 39, 53): "Viridian Forest"}
+# Maps of the v0 Kanto haunts (haunts spec, Kanto haunts table).
+HAUNT_MAPS = {
+    "PalletTown_hns": "Pallet Town", "Route1_hns": "Route 1",
+    "ViridianCity_hns": "Viridian City", "ViridianForest_hns": "Viridian Forest",
+    "PewterCity_Museum_1F_hns": "Pewter Museum",
+    "MtMoon_Outside_hns": "Mt. Moon outside", "Route25_hns": "Cerulean Cape",
+    "RockTunnel_B1F_hns": "Rock Tunnel", "RockTunnel_1F_hns": "Rock Tunnel",
+    "Route10_PowerPlantEntrance_hns": "Power Plant",
+    "PowerPlant_Frlg": "Power Plant",
+    "LavenderTown_SoulHouse_hns": "Lavender Soul House",
+    "VermilionCity_PortOutside_hns": "Vermilion harbour",
+    "CeladonCity_GameCorner_hns": "Celadon Game Corner",
+    "CeladonCity_DepartmentStore_RoofDay_hns": "Celadon rooftop",
+    "SaffronCity_FightingDojo_hns": "Saffron Fighting Dojo",
+    "SaffronCity_FightingDojoVIP_hns": "Dojo back room",
+    "DiglettsCave_EntranceNorth_hns": "Diglett's Cave",
+    "DiglettsCave_Tunnel_hns": "Diglett's Cave",
+    "DiglettsCave_EntranceSouth_hns": "Diglett's Cave",
+    "FuchsiaCity_SafariZoneEntrance_hns": "Safari Zone",
+    "FuchsiaCity_SafariZoneBeach_hns": "Safari Zone",
+    "FuchsiaCity_SafariZoneBrush_hns": "Safari Zone",
+    "FuchsiaCity_SafariZoneCave_hns": "Safari Zone",
+    "FuchsiaCity_SafariZoneMountain_hns": "Safari Zone",
+    "SeafoamIslands_1F_Frlg": "Seafoam Islands",
+    "CinnabarIsland_Frlg": "Cinnabar shore",
+    "VictoryRoadKanto_1F_hns": "Victory Road",
+    "VictoryRoadKanto_B1F_hns": "Victory Road",
+    "VictoryRoadKanto_B2F_hns": "Victory Road",
+    "CeruleanCave_1F_hns": "Cerulean Cave", "CeruleanCave_B1F_hns": "Cerulean Cave",
+    "CeruleanCave_B2F_hns": "Cerulean Cave",
+    "IndigoPlateau_PokemonCenter_hns": "Indigo Plateau Pokémon Center"}
 
 PATCH_MIN = 6        # spec placeholder: smallest tall-grass patch
 SQUARE_CLEARANCE = 3  # spec placeholder: tiles from any warp, sign, object
@@ -588,6 +639,7 @@ def analyse(data, ev, all_maps):
         "family": layout_family(layout), "map_type": data["map_type"],
         "music": data["music"], "mapsec": data["region_map_section"],
         "w": grid.w, "h": grid.h,
+        "connections": len(wayfarer_connections(data)),
     }
     gfx = [o.get("graphics_id", "") for o in objects]
     info["nurse"] = any(g in NURSE_GFX for g in gfx)
@@ -614,6 +666,35 @@ def analyse(data, ev, all_maps):
     info["center_counter_spots"] = len([t for t, c in counters
                                         if t not in nurse_front])
     info["mart_shelf_spots"] = len(facing_tiles(grid, reach, free, SHELF))
+    # Revised shelf rule: on FRLG layouts in a map with a vendor, the
+    # normalised MB_POKEMON_CENTER_BOOKSHELF is a Mart shelf too.
+    shelf_kinds = set(SHELF)
+    if grid.family == "frlg" and (info["clerk"] or info["vendor"]):
+        shelf_kinds.add(MB["MB_POKEMON_CENTER_BOOKSHELF"])
+    info["shelf_tiles_revised"] = sum(count[b] for b in shelf_kinds)
+    info["mart_shelf_spots_revised"] = len(
+        facing_tiles(grid, reach, free, shelf_kinds))
+    # Revised counter rule: where the map has a single MB_COUNTER tile, the
+    # counter row is that tile plus the unbroken run of impassable tiles
+    # beside it in the same row; stand on the free tiles on the far side of
+    # the row from the nurse, minus the tile in front of the nurse.
+    counter_xy = [(x, y) for y in range(grid.h) for x in range(grid.w)
+                  if grid.b(x, y) in COUNTER]
+    revised = {t for t, c in counters if t not in nurse_front}
+    if len(counter_xy) == 1 and nurses:
+        cx, cy = counter_xy[0]
+        side = 1 if nurses[0][1] < cy else -1
+        row = [cx]
+        for step in (-1, 1):
+            x = cx + step
+            while grid.inside(x, cy) and grid.col[cy * grid.w + x] != 0:
+                row.append(x)
+                x += step
+        revised = {(x, cy + side) for x in row
+                   if (x, cy + side) in free and (x, cy + side) not in nurse_front}
+    info["center_counter_spots_revised"] = len(revised)
+    info["_counter_revised"] = revised
+    info["_shelf_revised"] = {t for t, _ in facing_tiles(grid, reach, free, shelf_kinds)}
     stands = 0
     for sign in slot_signs:
         dx, dy = {"BG_EVENT_PLAYER_FACING_EAST": (1, 0),
@@ -650,10 +731,12 @@ def analyse(data, ev, all_maps):
     info["water_tiles"] = sum(count[b] for b in FISHABLE)
     info["water_edge_spots"] = len(edge)
     info["water_edge_stretches"] = len(components(edge, N8))
+    info["_edge"] = set(edge)
 
     # Town squares.
     info["square_tiles"] = 0
     info["squares"] = 0
+    info["square_groups"] = []
     if data["map_type"] in SQUARE_TYPES:
         anchors = ev["_warps"] | object_tiles | {
             (b["x"], b["y"]) for b in ev["bg_events"]}
@@ -667,7 +750,19 @@ def analyse(data, ev, all_maps):
                        for ax, ay in anchors):
                 centres.append((x, y))
         info["square_tiles"] = len(centres)
-        info["squares"] = len(components(centres, N8))
+        groups = components(centres, N8)
+        info["squares"] = len(groups)
+        # Revised: rank squares by size (largest first, then the group's
+        # top-left tile) and stand on the tile nearest each group's middle.
+        ranked = []
+        for group in groups:
+            mx = sum(x for x, _ in group) / len(group)
+            my = sum(y for _, y in group) / len(group)
+            stand = min(group, key=lambda t: ((t[0] - mx) ** 2 + (t[1] - my) ** 2,
+                                              t[1], t[0]))
+            ranked.append((-len(group), min(group, key=lambda t: (t[1], t[0])),
+                           len(group), stand))
+        info["square_groups"] = [(size, stand) for _, _, size, stand in sorted(ranked)]
 
     # NPC chats.
     script = scripts_text(data, all_maps)
@@ -715,6 +810,12 @@ def analyse(data, ev, all_maps):
         if reason:
             rejects[reason] += 1
     info["npc_chats"] = chats
+    info["_npc_tiles"] = {(c["x"] + dx, c["y"] + dy) for c in chats for dx, dy in N4
+                          if (c["x"] + dx, c["y"] + dy) in free}
+    info["_grid"], info["_reach"], info["_free"] = grid, reach, free
+    info["_grass"] = grass
+    info["_objects"] = object_tiles
+    info["_signs"] = {(b["x"], b["y"]) for b in ev["bg_events"]}
     info["npc_rejects"] = dict(rejects)
     info["warps"] = [{"x": w["x"], "y": w["y"], "dest": w.get("dest_map"),
                       "door": grid.inside(w["x"], w["y"])
@@ -740,6 +841,137 @@ def classify(info):
     if info["music"] in GYM_MUSIC:
         return "gym"
     return None
+
+
+def classify_revised(info):
+    """Revised content classification (spec as revised), first match wins.
+
+    A Center needs a nurse and at least one MB_COUNTER tile and no Gym music,
+    whatever its map type. Stores are found separately (find_stores)."""
+    if (info["nurse"] and info["counter_tiles"]
+            and info["music"] not in GYM_MUSIC):
+        return "center"
+    if info["slot_signs"]:
+        return "game_corner"
+    if info["music"] in GYM_MUSIC:
+        return "gym"
+    return None
+
+
+def find_rooftops(infos, by_id):
+    """Outdoor-typed maps with no connections whose every warp leads to an
+    interior that itself has no warp to an outdoor-typed map."""
+    roofs = set()
+    for name, info in infos.items():
+        if info["map_type"] not in OUTDOOR_TYPES or info["connections"]:
+            continue
+        dests = [by_id.get(w["dest"]) for w in info["warps"]]
+        if not dests or any(d is None or d["map_type"] not in INTERIOR_TYPES
+                            for d in dests):
+            continue
+        if all(by_id.get(w2["dest"], {}).get("map_type") not in OUTDOOR_TYPES
+               or by_id[w2["dest"]]["name"] == name
+               for d in dests for w2 in infos[d["name"]]["warps"]):
+            roofs.add(name)
+    return roofs
+
+
+def parse_named_spots():
+    """Rows of the named-spot tables: region heading, then table rows."""
+    rows, region = [], None
+    if not NAMED_SPOTS_DOC.exists():
+        return rows
+    for line in NAMED_SPOTS_DOC.read_text(encoding="utf-8").splitlines():
+        heading = re.match(r"^## (Kanto|Johto|Hoenn|Sevii)\b", line)
+        if heading:
+            region = heading.group(1)
+            continue
+        if line.startswith("## "):
+            region = None
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if not region or len(cells) < 6 or not cells[0].isdigit():
+            continue
+        map_match = re.search(r"`(\w+)`", cells[2])
+        tile = re.search(r"\((\d+),\s*(\d+)\)", cells[3])
+        rows.append({
+            "region": region, "n": int(cells[0]), "spot": cells[1],
+            "map": map_match.group(1) if map_match else cells[2],
+            "x": int(tile.group(1)) if tile else None,
+            "y": int(tile.group(2)) if tile else None,
+            "activities": [a.strip() for a in cells[4].split(",")],
+            "capacity": int(cells[5]) if cells[5].isdigit() else None,
+        })
+    return rows
+
+
+def validate_named_spots(infos, all_maps, revised_tiles):
+    results = []
+    seen_tiles = set()
+    for row in parse_named_spots():
+        problems, notes = [], []
+        name = row["map"]
+        info = infos.get(name)
+        if name not in all_maps:
+            problems.append("map does not exist")
+        elif info is None:
+            problems.append("map not in Wayfarer scope")
+        else:
+            if info["region"] != row["region"]:
+                problems.append("map is in %s" % info["region"])
+            x, y = row["x"], row["y"]
+            grid = info["_grid"]
+            if x is None or not grid.inside(x, y):
+                problems.append("tile outside the map")
+            else:
+                if not grid.land(x, y):
+                    problems.append("tile not walkable")
+                elif (x, y) not in info["_reach"]:
+                    problems.append("tile not reachable")
+                elif (x, y) not in info["_free"]:
+                    problems.append("tile holds an object or warp")
+                if (name, x, y) in HAUNT_TILES:
+                    problems.append("on the standing tile of haunt "
+                                    + HAUNT_TILES[(name, x, y)])
+                if (name, x, y) in seen_tiles:
+                    problems.append("duplicate tile")
+                seen_tiles.add((name, x, y))
+                kinds = sorted(k for k, tiles in revised_tiles.get(name, {}).items()
+                               if (x, y) in tiles)
+                if kinds:
+                    notes.append("drops detected " + "/".join(kinds) + " tile")
+                # Facing: toward the first 4-neighbour (up, left, right,
+                # down) that holds an object, a sign, a counter, a shelf, or
+                # fishable water; otherwise down.
+                signs = info["_signs"]
+                row["facing"] = "down"
+                for label, (dx, dy) in (("up", (0, -1)), ("left", (-1, 0)),
+                                        ("right", (1, 0)), ("down", (0, 1))):
+                    nx, ny = x + dx, y + dy
+                    if grid.inside(nx, ny) and (
+                            (nx, ny) in info["_objects"] or (nx, ny) in signs
+                            or grid.b(nx, ny) in COUNTER | SHELF | FISHABLE):
+                        row["facing"] = label
+                        break
+                # A capacity-2 spot seats its second trainer on the first
+                # free 4-neighbour, in the same order.
+                row["second"] = next(
+                    ((x + dx, y + dy) for dx, dy in ((0, -1), (-1, 0), (1, 0), (0, 1))
+                     if (x + dx, y + dy) in info["_free"]
+                     and (name, x + dx, y + dy) not in HAUNT_TILES), None)
+            indoor = info["map_type"] in INTERIOR_TYPES
+            cap = row["capacity"]
+            if cap == 2 and not row.get("second"):
+                problems.append("no free tile for a second trainer")
+            if cap is None or cap < 1 or cap > (1 if indoor else 2):
+                problems.append("capacity %s over the %s cap" % (
+                    cap, "indoor 1" if indoor else "outdoor 2"))
+            if name in HAUNT_MAPS:
+                notes.append("map hosts haunt " + HAUNT_MAPS[name])
+        acts = row["activities"]
+        if not 1 <= len(acts) <= 2 or any(a not in ACTIVITIES for a in acts):
+            problems.append("activities %s" % acts)
+        results.append(dict(row, ok=not problems, problems=problems, notes=notes))
+    return results
 
 
 def main():
@@ -866,8 +1098,119 @@ def main():
         if not any(w["door"] for w in infos[src]["warps"]
                    if by_id.get(w["dest"], {}).get("name") == dest_name)})
 
-    # Per-map rows.
+    # ------------------------------------------------------------------
+    # Revised rules (the spec after the inventory's proposed changes).
+    # ------------------------------------------------------------------
+    wild = load_json(GAME / "src/data/wild_encounters.json")["wild_encounter_groups"][0]["encounters"]
+    sevii_wild = load_json(GAME / "src/data/wayfarer_sevii_wild_encounters.json")["profiles"]
+    land = {e["map"] for e in wild if "land_mons" in e} | {
+        p["map"] for p in sevii_wild if p["method"] == "land_mons"}
+    fishing = {e["map"] for e in wild if "fishing_mons" in e} | {
+        p["map"] for p in sevii_wild if p["method"] == "fishing_mons"}
+    rooftops = find_rooftops(infos, by_id)
+    door_rev = defaultdict(set)
+    for name, info in infos.items():
+        if info["map_type"] not in OUTDOOR_TYPES or name in rooftops:
+            continue
+        for warp in info["warps"]:
+            dest = by_id.get(warp["dest"])
+            if dest and dest["map_type"] in INTERIOR_TYPES:
+                door_rev[dest["name"]].add(name)
+    sites_rev = {}
+    for interior in door_rev:
+        kind = classify_revised(infos[interior])
+        if kind and DROPPED_PLACES.get(interior) != kind:
+            sites_rev[interior] = kind
+
+    def shelves_rev(n):
+        return bool(infos[n]["shelf_tiles_revised"])
+
+    def vendor_rev(n):
+        return infos[n]["clerk"] or infos[n]["vendor"]
+
+    def other_kind(n):
+        return classify_revised(infos[n]) is not None
+
+    stores_rev = {}
+    for interior in sorted(door_rev):
+        if other_kind(interior) or DROPPED_PLACES.get(interior) == "mart":
+            continue
+        seen, queue = {interior}, deque([interior])
+        while queue:
+            current = queue.popleft()
+            for warp in infos[current]["warps"]:
+                dest = by_id.get(warp["dest"])
+                if (dest and dest["name"] not in seen
+                        and dest["map_type"] in INTERIOR_TYPES
+                        and not other_kind(dest["name"])
+                        and (shelves_rev(dest["name"]) or vendor_rev(dest["name"]))):
+                    seen.add(dest["name"])
+                    queue.append(dest["name"])
+        floors = sorted(n for n in seen if shelves_rev(n))
+        if floors and any(vendor_rev(n) for n in seen):
+            stores_rev.setdefault(tuple(floors), (interior, sorted(seen)))
+    store_rev_of = {}
+    store_maps_rev = {}
+    for floors, (interior, maps_) in stores_rev.items():
+        store_maps_rev[interior] = {"floors": list(floors), "maps": maps_}
+        for floor in floors:
+            store_rev_of[floor] = interior
+
+    def edge_excluded(name, info):
+        if not info["water_edge_spots"]:
+            return ""
+        if info["map_type"] in INTERIOR_TYPES:
+            return "interior"
+        if info["music"] in GYM_MUSIC:
+            return "gym"
+        if info["id"] not in fishing:
+            return "no fishing encounters"
+        return ""
+
+    revised_tiles = {}
     rows = []
+    for name, info in infos.items():
+        kind = sites_rev.get(name)
+        store = store_rev_of.get(name, "")
+        edge_cut = edge_excluded(name, info)
+        squares = [] if name in rooftops else info["square_groups"][:SQUARES_PER_MAP]
+        row = {
+            "region": info["region"], "map": name,
+            "map_type": info["map_type"].replace("MAP_TYPE_", ""),
+            "family": info["family"],
+            "center": 1 if kind == "center" else 0,
+            "center_counter_tiles": info["center_counter_spots_revised"] if kind == "center" else 0,
+            "mart_floor": 1 if store else 0,
+            "mart_shelf_tiles": info["mart_shelf_spots_revised"] if store else 0,
+            "store_of": store,
+            "game_corner": 1 if kind == "game_corner" else 0,
+            "slot_tiles": info["slot_spots"] if kind == "game_corner" else 0,
+            "gym": 1 if kind == "gym" else 0,
+            "tall_grass_tiles": info["tall_grass_tiles"],
+            "grass_patches": len(info["grass_patches"]),
+            "grass_patch_sizes": " ".join(map(str, info["grass_patches"])),
+            "water_edge_tiles": 0 if edge_cut else info["water_edge_spots"],
+            "water_edge_stretches": 0 if edge_cut else info["water_edge_stretches"],
+            "water_edge_dropped": edge_cut,
+            "rooftop": 1 if name in rooftops else 0,
+            "square_tiles": sum(size for size, _ in squares),
+            "squares": len(squares),
+            "square_stands": " ".join("%d,%d" % stand for _, stand in squares),
+            "npc_chats": len(info["npc_chats"]),
+            "npc_chat_tiles": sum(c["adjacent"] for c in info["npc_chats"]),
+        }
+        rows.append(row)
+        revised_tiles[name] = {
+            "center counter": info["_counter_revised"] if kind == "center" else set(),
+            "shelf": info["_shelf_revised"] if store else set(),
+            "water's edge": set() if edge_cut else info["_edge"],
+            "square": {stand for _, stand in squares},
+            "NPC chat": info["_npc_tiles"],
+        }
+    named = validate_named_spots(infos, all_maps, revised_tiles)
+
+    # Draft per-map rows (the spec's rules before the revision).
+    draft_rows = []
     for name, info in infos.items():
         kind = sites.get(name)
         floor_of = store_floors.get(name)
@@ -893,7 +1236,7 @@ def main():
             "npc_chats": len(info["npc_chats"]),
             "npc_chat_tiles": sum(c["adjacent"] for c in info["npc_chats"]),
         }
-        rows.append(row)
+        draft_rows.append(row)
     rows.sort(key=lambda r: (REGIONS.index(r["region"]), r["map"]))
     fields = list(rows[0].keys())
     with (HERE / "per-map.csv").open("w", newline="", encoding="utf-8") as f:
@@ -901,30 +1244,37 @@ def main():
         writer.writeheader()
         writer.writerows(rows)
 
-    # Region totals.
-    totals = {r: Counter() for r in REGIONS}
-    maps_per_region = Counter()
-    for row in rows:
-        t = totals[row["region"]]
-        maps_per_region[row["region"]] += 1
-        for key in ("center", "center_counter_tiles", "mart_floor",
-                    "mart_shelf_tiles", "game_corner", "slot_tiles", "gym",
-                    "tall_grass_tiles", "grass_patches", "water_edge_tiles",
-                    "water_edge_stretches", "square_tiles", "squares",
-                    "npc_chats", "npc_chat_tiles"):
-            t[key] += row[key]
-        if row["store_of"] == row["map"]:
-            t["stores"] += 1
-        if row["square_tiles"]:
-            t["square_maps"] += 1
-        if row["map_type"] in ("TOWN", "CITY"):
-            t["town_city_maps"] += 1
-        if row["tall_grass_tiles"]:
-            t["grass_maps"] += 1
-        if row["water_edge_tiles"]:
-            t["water_maps"] += 1
-        if row["npc_chats"]:
-            t["npc_maps"] += 1
+    # Region totals, draft and revised.
+    def region_totals(rows, revised):
+        totals = {r: Counter() for r in REGIONS}
+        for row in rows:
+            t = totals[row["region"]]
+            t["maps"] += 1
+            for key in ("center", "center_counter_tiles", "mart_floor",
+                        "mart_shelf_tiles", "game_corner", "slot_tiles", "gym",
+                        "tall_grass_tiles", "grass_patches", "water_edge_tiles",
+                        "water_edge_stretches", "square_tiles", "squares",
+                        "npc_chats", "npc_chat_tiles"):
+                t[key] += row[key]
+            if not revised and row["store_of"] == row["map"]:
+                t["stores"] += 1
+            if row["square_tiles"]:
+                t["square_maps"] += 1
+            if row["map_type"] in ("TOWN", "CITY") and not row.get("rooftop"):
+                t["town_city_maps"] += 1
+            if row["tall_grass_tiles"]:
+                t["grass_maps"] += 1
+            if row["water_edge_tiles"]:
+                t["water_maps"] += 1
+            if row["npc_chats"]:
+                t["npc_maps"] += 1
+        if revised:
+            for interior in store_maps_rev:
+                totals[infos[interior]["region"]]["stores"] += 1
+        return totals
+    draft_totals = region_totals(draft_rows, False)
+    totals = region_totals(rows, True)
+    maps_per_region = Counter(r["region"] for r in rows)
 
     rejects = Counter()
     for info in infos.values():
@@ -956,12 +1306,6 @@ def main():
                 door_stats[i["family"]]["outdoor_to_indoor_warps"] += 1
                 door_stats[i["family"]]["door_behaviour"] += w["door"]
                 door_stats[i["family"]]["collision_bit_set"] += w["blocked"]
-    wild = load_json(GAME / "src/data/wild_encounters.json")["wild_encounter_groups"][0]["encounters"]
-    sevii_wild = load_json(GAME / "src/data/wayfarer_sevii_wild_encounters.json")["profiles"]
-    land = {e["map"] for e in wild if "land_mons" in e} | {
-        p["map"] for p in sevii_wild if p["method"] == "land_mons"}
-    fishing = {e["map"] for e in wild if "fishing_mons" in e} | {
-        p["map"] for p in sevii_wild if p["method"] == "fishing_mons"}
     grass_no_land = sorted(n for n, i in infos.items()
                            if i["grass_patches"] and i["id"] not in land)
     edge_no_fishing = sorted(n for n, i in infos.items()
@@ -1020,10 +1364,59 @@ def main():
             (n, i["tall_grass_tiles"]) for n, i in infos.items()
             if i["grass_patches"] and i["map_type"] == "MAP_TYPE_INDOOR"),
         "family_behaviour_presence": {k: dict(v) for k, v in family_behaviour.items()},
+    }
+    nurse_maps = sorted(n for n, i in infos.items() if i["nurse"])
+    revised_findings = {
+        "in_scope_nurse_maps": len(nurse_maps),
+        "in_scope_town_city_maps": sum(1 for n, i in infos.items()
+                                       if i["map_type"] in SQUARE_TYPES),
+        "in_scope_town_city_maps_without_rooftops": sum(
+            1 for n, i in infos.items()
+            if i["map_type"] in SQUARE_TYPES and n not in rooftops),
+        "rooftops": sorted(rooftops),
+        "dropped_places": DROPPED_PLACES,
+        "nurse_maps_not_centers": sorted(
+            (n, "gym music" if infos[n]["music"] in GYM_MUSIC else
+             "no counter" if not infos[n]["counter_tiles"] else "no outdoor door")
+            for n in nurse_maps if sites_rev.get(n) != "center"),
+        "centers_without_counter_spots": sorted(
+            n for n, k in sites_rev.items() if k == "center"
+            and not infos[n]["center_counter_spots_revised"]),
+        "centers_from_optional_systems": sorted(
+            n for n, k in sites_rev.items() if k == "center"
+            and not re.search(r"PokemonCenter|Pokecenter", n)),
+        "gyms_not_named_gym": sorted(
+            n for n, k in sites_rev.items() if k == "gym" and "Gym" not in n),
+        "stores": dict(sorted(store_maps_rev.items())),
+        "stores_without_shelf_spots": sorted(
+            i for i, v in store_maps_rev.items()
+            if not any(infos[f]["mart_shelf_spots_revised"] for f in v["floors"])),
+        "shelf_maps_outside_stores": sorted(
+            n for n, i in infos.items() if i["shelf_tiles_revised"]
+            and n not in store_rev_of and not other_kind(n)),
+        "draft_marts_lost": sorted(
+            n for n, k in sites.items() if k == "mart" and n not in store_rev_of
+            and n not in store_maps_rev),
+        "water_edge_dropped": dict(sorted(
+            (r["map"], [r["water_edge_dropped"], infos[r["map"]]["water_edge_spots"]])
+            for r in rows if r["water_edge_dropped"])),
+        "water_edge_kept_on_caves": sorted(
+            r["map"] for r in rows if r["water_edge_tiles"]
+            and r["map_type"] not in ("TOWN", "CITY", "ROUTE", "OCEAN_ROUTE")),
+        "maps_with_squares_capped": sorted(
+            (n, len(i["square_groups"])) for n, i in infos.items()
+            if len(i["square_groups"]) > SQUARES_PER_MAP and n not in rooftops),
+        "town_city_maps_without_square": sorted(
+            r["map"] for r in rows if r["map_type"] in ("TOWN", "CITY")
+            and not r["rooftop"] and not r["squares"]),
         "top_grass_tiles": top("tall_grass_tiles"),
         "top_water_edge_tiles": top("water_edge_tiles"),
         "top_npc_chats": top("npc_chats"),
         "top_square_tiles": top("square_tiles"),
+        "named_spots": named,
+        "named_spot_counts": {r: sum(1 for n in named if n["region"] == r)
+                              for r in REGIONS},
+        "named_spot_failures": [n for n in named if not n["ok"]],
     }
     out = {
         "scope": {
@@ -1037,10 +1430,14 @@ def main():
                 "selected but unreachable by warps, connections, scripted warps", [])),
         },
         "region_totals": {r: dict(totals[r]) for r in REGIONS},
-        "sites": {k: sorted(n for n, kk in sites.items() if kk == k)
-                  for k in ("center", "mart", "game_corner", "gym")},
-        "store_floors": dict(sorted(store_floors.items())),
-        "findings": findings,
+        "draft_region_totals": {r: dict(draft_totals[r]) for r in REGIONS},
+        "sites": {k: sorted(n for n, kk in sites_rev.items() if kk == k)
+                  for k in ("center", "game_corner", "gym")},
+        "draft_sites": {k: sorted(n for n, kk in sites.items() if kk == k)
+                        for k in ("center", "mart", "game_corner", "gym")},
+        "draft_store_floors": dict(sorted(store_floors.items())),
+        "findings": revised_findings,
+        "draft_findings": findings,
         # Per-map counts live in per-map.csv; keep only the lists here.
         "maps": {n: {"npc_chats": [[c["x"], c["y"], c["graphics_id"]]
                                    for c in i["npc_chats"]],
@@ -1051,41 +1448,58 @@ def main():
     (HERE / "inventory.json").write_text(
         json.dumps(out, indent=1, default=list) + "\n")
 
-    # Markdown summary on stdout.
+    # Markdown summary on stdout: revised counts, with the draft rules'
+    # count before an arrow where they differ.
     print("In-scope maps:", len(infos), dict(maps_per_region))
     print("Excluded:", dict(excluded.most_common()))
     header = "| Kind | " + " | ".join(REGIONS) + " | Total |"
     print(header)
     print("| --- |" + " ---: |" * (len(REGIONS) + 1))
     lines = [
-        ("Maps scanned", lambda r: maps_per_region[r]),
-        ("Pokémon Centers", lambda r: totals[r]["center"]),
-        ("  counter tiles", lambda r: totals[r]["center_counter_tiles"]),
-        ("Marts and stores", lambda r: totals[r]["stores"]),
-        ("  floors", lambda r: totals[r]["mart_floor"]),
-        ("  shelf tiles", lambda r: totals[r]["mart_shelf_tiles"]),
-        ("Game Corners", lambda r: totals[r]["game_corner"]),
-        ("  slot tiles", lambda r: totals[r]["slot_tiles"]),
-        ("Gyms", lambda r: totals[r]["gym"]),
-        ("Tall-grass maps", lambda r: totals[r]["grass_maps"]),
-        ("  patches (>= %d)" % PATCH_MIN, lambda r: totals[r]["grass_patches"]),
-        ("  tiles", lambda r: totals[r]["tall_grass_tiles"]),
-        ("Water's-edge maps", lambda r: totals[r]["water_maps"]),
-        ("  stretches", lambda r: totals[r]["water_edge_stretches"]),
-        ("  tiles", lambda r: totals[r]["water_edge_tiles"]),
-        ("Town and city maps", lambda r: totals[r]["town_city_maps"]),
-        ("  with a square", lambda r: totals[r]["square_maps"]),
-        ("  squares", lambda r: totals[r]["squares"]),
-        ("  square tiles", lambda r: totals[r]["square_tiles"]),
-        ("NPC-chat maps", lambda r: totals[r]["npc_maps"]),
-        ("  NPCs", lambda r: totals[r]["npc_chats"]),
-        ("  adjacent tiles", lambda r: totals[r]["npc_chat_tiles"]),
+        ("Maps scanned", "maps"),
+        ("Pokémon Centers", "center"),
+        ("› counter tiles", "center_counter_tiles"),
+        ("Marts and stores", "stores"),
+        ("› floors", "mart_floor"),
+        ("› shelf tiles", "mart_shelf_tiles"),
+        ("Game Corners", "game_corner"),
+        ("› slot tiles", "slot_tiles"),
+        ("Gyms", "gym"),
+        ("Tall-grass maps", "grass_maps"),
+        ("› patches (%d+ tiles)" % PATCH_MIN, "grass_patches"),
+        ("› tiles", "tall_grass_tiles"),
+        ("Water's-edge maps", "water_maps"),
+        ("› stretches", "water_edge_stretches"),
+        ("› tiles", "water_edge_tiles"),
+        ("Town and city maps", "town_city_maps"),
+        ("› with a square", "square_maps"),
+        ("› squares", "squares"),
+        ("› square tiles", "square_tiles"),
+        ("NPC-chat maps", "npc_maps"),
+        ("› NPCs", "npc_chats"),
+        ("› adjacent tiles", "npc_chat_tiles"),
     ]
-    for label, fn in lines:
-        values = [fn(r) for r in REGIONS]
-        print(f"| {label} | " + " | ".join(map(str, values)) + f" | {sum(values)} |")
+
+    def cell(before, after):
+        fmt = lambda v: f"{v:,}"
+        return fmt(after) if before == after else f"{fmt(before)} → {fmt(after)}"
+    for label, key in lines:
+        before = [draft_totals[r][key] for r in REGIONS]
+        after = [totals[r][key] for r in REGIONS]
+        cells = [cell(b, a) for b, a in zip(before, after)]
+        cells.append(cell(sum(before), sum(after)))
+        print(f"| {label} | " + " | ".join(cells) + " |")
     print()
-    print(json.dumps(findings, indent=1, default=list))
+    print("Named spots:", revised_findings["named_spot_counts"],
+          "failures:", len(revised_findings["named_spot_failures"]))
+    for n in named:
+        flag = "ok  " if n["ok"] else "FAIL"
+        print(f"  {flag} {n['region']} {n['n']:2d} {n['map']} ({n['x']}, {n['y']})"
+              f" {n.get('facing', '')} {'; '.join(n['problems'] + n['notes'])}")
+    print()
+    print(json.dumps({k: v for k, v in revised_findings.items()
+                      if k not in ("named_spots", "stores")},
+                     indent=1, default=list))
 
 
 if __name__ == "__main__":

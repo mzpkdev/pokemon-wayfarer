@@ -327,6 +327,105 @@
  },
  "region_totals": {
   "Kanto": {
+   "maps": 217,
+   "center": 11,
+   "center_counter_tiles": 51,
+   "mart_floor": 12,
+   "mart_shelf_tiles": 280,
+   "game_corner": 1,
+   "slot_tiles": 16,
+   "gym": 8,
+   "tall_grass_tiles": 2518,
+   "grass_patches": 53,
+   "water_edge_tiles": 944,
+   "water_edge_stretches": 85,
+   "square_tiles": 1277,
+   "squares": 29,
+   "npc_chats": 183,
+   "npc_chat_tiles": 510,
+   "npc_maps": 103,
+   "square_maps": 10,
+   "town_city_maps": 10,
+   "water_maps": 26,
+   "grass_maps": 23,
+   "stores": 9
+  },
+  "Johto": {
+   "maps": 259,
+   "center": 13,
+   "center_counter_tiles": 66,
+   "mart_floor": 10,
+   "mart_shelf_tiles": 247,
+   "game_corner": 1,
+   "slot_tiles": 16,
+   "gym": 8,
+   "tall_grass_tiles": 5668,
+   "grass_patches": 129,
+   "water_edge_tiles": 1762,
+   "water_edge_stretches": 218,
+   "square_tiles": 1181,
+   "squares": 40,
+   "npc_chats": 198,
+   "npc_chat_tiles": 589,
+   "npc_maps": 107,
+   "square_maps": 14,
+   "town_city_maps": 14,
+   "grass_maps": 40,
+   "water_maps": 49,
+   "stores": 7
+  },
+  "Hoenn": {
+   "maps": 401,
+   "center": 18,
+   "center_counter_tiles": 79,
+   "mart_floor": 17,
+   "mart_shelf_tiles": 314,
+   "game_corner": 1,
+   "slot_tiles": 12,
+   "gym": 8,
+   "tall_grass_tiles": 2801,
+   "grass_patches": 104,
+   "water_edge_tiles": 1384,
+   "water_edge_stretches": 169,
+   "square_tiles": 1224,
+   "squares": 42,
+   "npc_chats": 402,
+   "npc_chat_tiles": 1076,
+   "npc_maps": 187,
+   "water_maps": 42,
+   "grass_maps": 25,
+   "square_maps": 15,
+   "town_city_maps": 16,
+   "stores": 14
+  },
+  "Sevii": {
+   "maps": 135,
+   "center": 8,
+   "center_counter_tiles": 64,
+   "mart_floor": 4,
+   "mart_shelf_tiles": 54,
+   "game_corner": 0,
+   "slot_tiles": 0,
+   "gym": 0,
+   "tall_grass_tiles": 2192,
+   "grass_patches": 65,
+   "water_edge_tiles": 691,
+   "water_edge_stretches": 63,
+   "square_tiles": 192,
+   "squares": 17,
+   "npc_chats": 60,
+   "npc_chat_tiles": 168,
+   "square_maps": 7,
+   "town_city_maps": 7,
+   "water_maps": 17,
+   "npc_maps": 40,
+   "grass_maps": 15,
+   "stores": 4
+  }
+ },
+ "draft_region_totals": {
+  "Kanto": {
+   "maps": 217,
    "center": 11,
    "center_counter_tiles": 47,
    "mart_floor": 7,
@@ -350,6 +449,7 @@
    "grass_maps": 23
   },
   "Johto": {
+   "maps": 259,
    "center": 13,
    "center_counter_tiles": 66,
    "mart_floor": 7,
@@ -373,6 +473,7 @@
    "water_maps": 63
   },
   "Hoenn": {
+   "maps": 401,
    "center": 18,
    "center_counter_tiles": 3,
    "mart_floor": 12,
@@ -396,6 +497,7 @@
    "town_city_maps": 16
   },
   "Sevii": {
+   "maps": 135,
    "center": 8,
    "center_counter_tiles": 64,
    "mart_floor": 0,
@@ -419,6 +521,91 @@
   }
  },
  "sites": {
+  "center": [
+   "AzaleaTown_PokemonCenter_hns",
+   "BattleFrontier_PokemonCenter_1F",
+   "BlackthornCity_PokemonCenter_hns",
+   "CeladonCity_PokemonCenter_hns",
+   "CeruleanCity_PokemonCenter_hns",
+   "CherrygroveCity_PokemonCenter_hns",
+   "CianwoodPokecenter_hns",
+   "CinnabarIsland_PokemonCenter_1F_Frlg",
+   "DewfordTown_PokemonCenter_1F",
+   "EcruteakCity_PokemonCenter_hns",
+   "EverGrandeCity_PokemonCenter_1F",
+   "EverGrandeCity_PokemonLeague_1F",
+   "FallarborTown_PokemonCenter_1F",
+   "FiveIsland_PokemonCenter_1F_Frlg",
+   "FortreeCity_PokemonCenter_1F",
+   "FourIsland_PokemonCenter_1F_Frlg",
+   "FuchsiaCity_PokemonCenter_hns",
+   "GoldenrodCity_PokemonCenter_hns",
+   "IndigoPlateau_PokemonCenter_hns",
+   "LavaridgeTown_PokemonCenter_1F",
+   "LavenderTown_PokemonCenter_hns",
+   "LilycoveCity_PokemonCenter_1F",
+   "MahoganyTown_PokemonCenter_hns",
+   "MauvilleCity_PokemonCenter_1F",
+   "MossdeepCity_PokemonCenter_1F",
+   "MtSilver_PokemonCenter_hns",
+   "OldaleTown_PokemonCenter_1F",
+   "OlivineCity_PokemonCenter_hns",
+   "OneIsland_PokemonCenter_1F_Frlg",
+   "PacifidlogTown_PokemonCenter_1F",
+   "PetalburgCity_PokemonCenter_1F",
+   "PewterCity_PokemonCenter_hns",
+   "Route32_PokemonCenter_hns",
+   "Route4_PokemonCenter_hns",
+   "Route9_PokemonCenter_hns",
+   "RustboroCity_PokemonCenter_1F",
+   "SafariZoneGate_PokemonCenter_hns",
+   "SaffronCity_PokemonCenter_hns",
+   "SevenIsland_PokemonCenter_1F_Frlg",
+   "SixIsland_PokemonCenter_1F_Frlg",
+   "SlateportCity_PokemonCenter_1F",
+   "SootopolisCity_PokemonCenter_1F",
+   "ThreeIsland_PokemonCenter_1F_Frlg",
+   "TrainerHill_Entrance",
+   "TrainerTower_Lobby_Frlg",
+   "TwoIsland_PokemonCenter_1F_Frlg",
+   "VerdanturfTown_PokemonCenter_1F",
+   "VermilionCity_PokemonCenter_hns",
+   "VioletCity_PokemonCenter_hns",
+   "ViridianCity_PokemonCenter_hns"
+  ],
+  "game_corner": [
+   "CeladonCity_GameCorner_hns",
+   "GoldenrodCity_GameCorner_hns",
+   "MauvilleCity_GameCorner"
+  ],
+  "gym": [
+   "AzaleaTown_Gym_hns",
+   "BlackthornCity_Gym_hns",
+   "CeladonCity_Gym_hns",
+   "CeruleanCity_Gym_hns",
+   "CianwoodGym_hns",
+   "CinnabarIsland_Gym_Frlg",
+   "DewfordTown_Gym",
+   "EcruteakCity_Gym_hns",
+   "FortreeCity_Gym",
+   "FuchsiaCity_Gym_hns",
+   "GoldenrodCity_Gym_hns",
+   "LavaridgeTown_Gym_1F",
+   "MahoganyTown_Gym_hns",
+   "MauvilleCity_Gym",
+   "MossdeepCity_Gym",
+   "OlivineCity_Gym_hns",
+   "PetalburgCity_Gym",
+   "PewterCity_Gym_hns",
+   "RustboroCity_Gym",
+   "SaffronCity_Gym_hns",
+   "SootopolisCity_Gym_1F",
+   "VermilionCity_Gym_hns",
+   "VioletCity_Gym_hns",
+   "ViridianCity_Gym_Frlg"
+  ]
+ },
+ "draft_sites": {
   "center": [
    "AzaleaTown_PokemonCenter_hns",
    "BattleFrontier_PokemonCenter_1F",
@@ -531,8 +718,1973 @@
    "ViridianCity_Gym_Frlg"
   ]
  },
- "store_floors": {},
+ "draft_store_floors": {},
  "findings": {
+  "in_scope_nurse_maps": 52,
+  "in_scope_town_city_maps": 49,
+  "in_scope_town_city_maps_without_rooftops": 47,
+  "rooftops": [
+   "CeladonCity_Apartments_RoofDay_hns",
+   "CeladonCity_DepartmentStore_RoofDay_hns",
+   "GoldenrodCity_DepartmentStore_7F_hns"
+  ],
+  "dropped_places": {
+   "GoldenrodCity_BikeShop_hns": "mart",
+   "SaffronCity_FightingDojo_hns": "gym"
+  },
+  "nurse_maps_not_centers": [
+   [
+    "SaffronCity_FightingDojoVIP_hns",
+    "no outdoor door"
+   ],
+   [
+    "SaffronCity_FightingDojo_hns",
+    "gym music"
+   ]
+  ],
+  "centers_without_counter_spots": [],
+  "centers_from_optional_systems": [
+   "EverGrandeCity_PokemonLeague_1F",
+   "TrainerHill_Entrance",
+   "TrainerTower_Lobby_Frlg"
+  ],
+  "gyms_not_named_gym": [],
+  "stores": {
+   "AzaleaTown_Mart_hns": {
+    "floors": [
+     "AzaleaTown_Mart_hns"
+    ],
+    "maps": [
+     "AzaleaTown_Mart_hns"
+    ]
+   },
+   "BattleFrontier_Mart": {
+    "floors": [
+     "BattleFrontier_Mart"
+    ],
+    "maps": [
+     "BattleFrontier_Mart"
+    ]
+   },
+   "BlackthornCity_Mart_hns": {
+    "floors": [
+     "BlackthornCity_Mart_hns"
+    ],
+    "maps": [
+     "BlackthornCity_Mart_hns"
+    ]
+   },
+   "CeladonCity_DepartmentStore_1F_hns": {
+    "floors": [
+     "CeladonCity_DepartmentStore_2F_hns",
+     "CeladonCity_DepartmentStore_3F_hns",
+     "CeladonCity_DepartmentStore_4F_hns",
+     "CeladonCity_DepartmentStore_5F_hns"
+    ],
+    "maps": [
+     "CeladonCity_DepartmentStore_1F_hns",
+     "CeladonCity_DepartmentStore_2F_hns",
+     "CeladonCity_DepartmentStore_3F_hns",
+     "CeladonCity_DepartmentStore_4F_hns",
+     "CeladonCity_DepartmentStore_5F_hns"
+    ]
+   },
+   "CeruleanCity_Mart_hns": {
+    "floors": [
+     "CeruleanCity_Mart_hns"
+    ],
+    "maps": [
+     "CeruleanCity_Mart_hns"
+    ]
+   },
+   "CherrygroveCity_Mart_hns": {
+    "floors": [
+     "CherrygroveCity_Mart_hns"
+    ],
+    "maps": [
+     "CherrygroveCity_Mart_hns"
+    ]
+   },
+   "CinnabarIsland_Mart_Frlg": {
+    "floors": [
+     "CinnabarIsland_Mart_Frlg"
+    ],
+    "maps": [
+     "CinnabarIsland_Mart_Frlg"
+    ]
+   },
+   "EcruteakCity_Mart_hns": {
+    "floors": [
+     "EcruteakCity_Mart_hns"
+    ],
+    "maps": [
+     "EcruteakCity_Mart_hns"
+    ]
+   },
+   "FallarborTown_Mart": {
+    "floors": [
+     "FallarborTown_Mart"
+    ],
+    "maps": [
+     "FallarborTown_Mart"
+    ]
+   },
+   "FortreeCity_Mart": {
+    "floors": [
+     "FortreeCity_Mart"
+    ],
+    "maps": [
+     "FortreeCity_Mart"
+    ]
+   },
+   "FourIsland_Mart_Frlg": {
+    "floors": [
+     "FourIsland_Mart_Frlg"
+    ],
+    "maps": [
+     "FourIsland_Mart_Frlg"
+    ]
+   },
+   "FuchsiaCity_Mart_hns": {
+    "floors": [
+     "FuchsiaCity_Mart_hns"
+    ],
+    "maps": [
+     "FuchsiaCity_Mart_hns"
+    ]
+   },
+   "GoldenrodCity_DepartmentStore_1F_hns": {
+    "floors": [
+     "GoldenrodCity_DepartmentStore_2F_hns",
+     "GoldenrodCity_DepartmentStore_3F_hns",
+     "GoldenrodCity_DepartmentStore_4F_hns",
+     "GoldenrodCity_DepartmentStore_6F_hns"
+    ],
+    "maps": [
+     "GoldenrodCity_DepartmentStore_1F_hns",
+     "GoldenrodCity_DepartmentStore_2F_hns",
+     "GoldenrodCity_DepartmentStore_3F_hns",
+     "GoldenrodCity_DepartmentStore_4F_hns",
+     "GoldenrodCity_DepartmentStore_5F_hns",
+     "GoldenrodCity_DepartmentStore_6F_hns"
+    ]
+   },
+   "LavaridgeTown_HerbShop": {
+    "floors": [
+     "LavaridgeTown_HerbShop"
+    ],
+    "maps": [
+     "LavaridgeTown_HerbShop"
+    ]
+   },
+   "LavaridgeTown_Mart": {
+    "floors": [
+     "LavaridgeTown_Mart"
+    ],
+    "maps": [
+     "LavaridgeTown_Mart"
+    ]
+   },
+   "LavenderTown_Mart_hns": {
+    "floors": [
+     "LavenderTown_Mart_hns"
+    ],
+    "maps": [
+     "LavenderTown_Mart_hns"
+    ]
+   },
+   "LilycoveCity_DepartmentStore_1F": {
+    "floors": [
+     "LilycoveCity_DepartmentStore_2F",
+     "LilycoveCity_DepartmentStore_3F",
+     "LilycoveCity_DepartmentStore_4F",
+     "LilycoveCity_DepartmentStore_5F"
+    ],
+    "maps": [
+     "LilycoveCity_DepartmentStoreRooftop",
+     "LilycoveCity_DepartmentStore_1F",
+     "LilycoveCity_DepartmentStore_2F",
+     "LilycoveCity_DepartmentStore_3F",
+     "LilycoveCity_DepartmentStore_4F",
+     "LilycoveCity_DepartmentStore_5F"
+    ]
+   },
+   "MauvilleCity_Mart": {
+    "floors": [
+     "MauvilleCity_Mart"
+    ],
+    "maps": [
+     "MauvilleCity_Mart"
+    ]
+   },
+   "MossdeepCity_Mart": {
+    "floors": [
+     "MossdeepCity_Mart"
+    ],
+    "maps": [
+     "MossdeepCity_Mart"
+    ]
+   },
+   "OldaleTown_Mart": {
+    "floors": [
+     "OldaleTown_Mart"
+    ],
+    "maps": [
+     "OldaleTown_Mart"
+    ]
+   },
+   "OlivineCity_Mart_hns": {
+    "floors": [
+     "OlivineCity_Mart_hns"
+    ],
+    "maps": [
+     "OlivineCity_Mart_hns"
+    ]
+   },
+   "PetalburgCity_Mart": {
+    "floors": [
+     "PetalburgCity_Mart"
+    ],
+    "maps": [
+     "PetalburgCity_Mart"
+    ]
+   },
+   "PewterCity_Mart_hns": {
+    "floors": [
+     "PewterCity_Mart_hns"
+    ],
+    "maps": [
+     "PewterCity_Mart_hns"
+    ]
+   },
+   "RustboroCity_Mart": {
+    "floors": [
+     "RustboroCity_Mart"
+    ],
+    "maps": [
+     "RustboroCity_Mart"
+    ]
+   },
+   "SaffronCity_Mart_hns": {
+    "floors": [
+     "SaffronCity_Mart_hns"
+    ],
+    "maps": [
+     "SaffronCity_Mart_hns"
+    ]
+   },
+   "SevenIsland_Mart_Frlg": {
+    "floors": [
+     "SevenIsland_Mart_Frlg"
+    ],
+    "maps": [
+     "SevenIsland_Mart_Frlg"
+    ]
+   },
+   "SixIsland_Mart_Frlg": {
+    "floors": [
+     "SixIsland_Mart_Frlg"
+    ],
+    "maps": [
+     "SixIsland_Mart_Frlg"
+    ]
+   },
+   "SlateportCity_Mart": {
+    "floors": [
+     "SlateportCity_Mart"
+    ],
+    "maps": [
+     "SlateportCity_Mart"
+    ]
+   },
+   "SootopolisCity_Mart": {
+    "floors": [
+     "SootopolisCity_Mart"
+    ],
+    "maps": [
+     "SootopolisCity_Mart"
+    ]
+   },
+   "ThreeIsland_Mart_Frlg": {
+    "floors": [
+     "ThreeIsland_Mart_Frlg"
+    ],
+    "maps": [
+     "ThreeIsland_Mart_Frlg"
+    ]
+   },
+   "VerdanturfTown_Mart": {
+    "floors": [
+     "VerdanturfTown_Mart"
+    ],
+    "maps": [
+     "VerdanturfTown_Mart"
+    ]
+   },
+   "VermilionCity_Mart_hns": {
+    "floors": [
+     "VermilionCity_Mart_hns"
+    ],
+    "maps": [
+     "VermilionCity_Mart_hns"
+    ]
+   },
+   "VioletCity_Mart_hns": {
+    "floors": [
+     "VioletCity_Mart_hns"
+    ],
+    "maps": [
+     "VioletCity_Mart_hns"
+    ]
+   },
+   "ViridianCity_Mart_hns": {
+    "floors": [
+     "ViridianCity_Mart_hns"
+    ],
+    "maps": [
+     "ViridianCity_Mart_hns"
+    ]
+   }
+  },
+  "stores_without_shelf_spots": [],
+  "shelf_maps_outside_stores": [
+   "CeladonCity_Apartments_1F_hns",
+   "CianwoodShop_hns",
+   "GoldenrodCity_BikeShop_hns",
+   "TinTower_RoofDay_hns"
+  ],
+  "draft_marts_lost": [
+   "GoldenrodCity_BikeShop_hns"
+  ],
+  "water_edge_dropped": {
+   "AquaHideout_1F": [
+    "interior",
+    18
+   ],
+   "AzaleaTown_hns": [
+    "no fishing encounters",
+    1
+   ],
+   "BattleFrontier_BattlePalaceBattleRoom": [
+    "interior",
+    5
+   ],
+   "BattleFrontier_BattlePalaceCorridor": [
+    "interior",
+    23
+   ],
+   "BattleFrontier_OutsideEast": [
+    "no fishing encounters",
+    28
+   ],
+   "BattleFrontier_OutsideWest": [
+    "no fishing encounters",
+    5
+   ],
+   "BellchimeTrail_hns": [
+    "no fishing encounters",
+    36
+   ],
+   "CeruleanCity_Gym_hns": [
+    "interior",
+    70
+   ],
+   "CliffEdgeGate_hns": [
+    "no fishing encounters",
+    1
+   ],
+   "IcePath_1F_hns": [
+    "no fishing encounters",
+    9
+   ],
+   "IcePath_B3F_hns": [
+    "no fishing encounters",
+    2
+   ],
+   "LakeOfRageLowTide_hns": [
+    "no fishing encounters",
+    34
+   ],
+   "LilycoveCity_Harbor": [
+    "interior",
+    1
+   ],
+   "MauvilleCity": [
+    "no fishing encounters",
+    2
+   ],
+   "MtMoon_Outside_hns": [
+    "no fishing encounters",
+    20
+   ],
+   "MtSilver_SummitDay_hns": [
+    "no fishing encounters",
+    3
+   ],
+   "Route33_hns": [
+    "no fishing encounters",
+    46
+   ],
+   "Route36_hns": [
+    "no fishing encounters",
+    1
+   ],
+   "Route38_hns": [
+    "no fishing encounters",
+    116
+   ],
+   "Route39_hns": [
+    "no fishing encounters",
+    89
+   ],
+   "Route46_hns": [
+    "no fishing encounters",
+    1
+   ],
+   "Route48_hns": [
+    "no fishing encounters",
+    27
+   ],
+   "TerraCave_End": [
+    "no fishing encounters",
+    1
+   ],
+   "WhirlIslands_LugiaChamber_hns": [
+    "no fishing encounters",
+    19
+   ]
+  },
+  "water_edge_kept_on_caves": [
+   "AbandonedShip_Rooms_B1F",
+   "CeruleanCave_1F_hns",
+   "CeruleanCave_B2F_hns",
+   "DarkCave_NorthSide_hns",
+   "DarkCave_SouthSide_hns",
+   "DragonsDen_Cavern_hns",
+   "FourIsland_IcefallCave_Back_Frlg",
+   "FourIsland_IcefallCave_Entrance_Frlg",
+   "FuchsiaCity_SafariZoneCave_hns",
+   "MeteorFalls_1F_1R",
+   "MeteorFalls_1F_2R",
+   "MeteorFalls_B1F_1R",
+   "MeteorFalls_B1F_2R",
+   "MtMortar_1F_North_hns",
+   "MtMortar_1F_South_hns",
+   "MtMortar_2F_hns",
+   "MtMortar_B1F_hns",
+   "MtSilver_1F_WaterfallRoom_hns",
+   "SeafoamIslands_B3F_Frlg",
+   "SeafoamIslands_B4F_Frlg",
+   "SlowpokeWell_B1F_hns",
+   "SlowpokeWell_B2F_hns",
+   "TohjoFalls_Cavern_hns",
+   "UnionCave_1F_hns",
+   "UnionCave_B1F_hns",
+   "UnionCave_B2F_hns",
+   "VictoryRoadKanto_B1F_hns",
+   "VictoryRoad_B2F",
+   "WhirlIslands_1F_hns",
+   "WhirlIslands_B1F_hns",
+   "WhirlIslands_B3F_hns",
+   "WhirlIslands_Descent_hns"
+  ],
+  "maps_with_squares_capped": [
+   [
+    "AzaleaTown_hns",
+    7
+   ],
+   [
+    "BlackthornCity_hns",
+    9
+   ],
+   [
+    "CeladonCity_hns",
+    18
+   ],
+   [
+    "CeruleanCity_hns",
+    22
+   ],
+   [
+    "CherrygroveCity_hns",
+    5
+   ],
+   [
+    "CianwoodCity_hns",
+    5
+   ],
+   [
+    "EcruteakCity_hns",
+    5
+   ],
+   [
+    "FortreeCity",
+    4
+   ],
+   [
+    "FourIsland_Frlg",
+    11
+   ],
+   [
+    "FuchsiaCity_hns",
+    12
+   ],
+   [
+    "GoldenrodCity_hns",
+    8
+   ],
+   [
+    "LakeOfRage_hns",
+    5
+   ],
+   [
+    "LavenderTown_hns",
+    6
+   ],
+   [
+    "LilycoveCity",
+    16
+   ],
+   [
+    "LittlerootTown",
+    6
+   ],
+   [
+    "Mahoganytown_hns",
+    6
+   ],
+   [
+    "MauvilleCity",
+    9
+   ],
+   [
+    "MossdeepCity",
+    13
+   ],
+   [
+    "MtSilver_Outside_hns",
+    5
+   ],
+   [
+    "NewBarkTown_hns",
+    5
+   ],
+   [
+    "OlivineCity_hns",
+    12
+   ],
+   [
+    "PalletTown_hns",
+    5
+   ],
+   [
+    "PetalburgCity",
+    5
+   ],
+   [
+    "PewterCity_hns",
+    12
+   ],
+   [
+    "RustboroCity",
+    17
+   ],
+   [
+    "SafariZoneGate_hns",
+    5
+   ],
+   [
+    "SaffronCity_hns",
+    18
+   ],
+   [
+    "SlateportCity",
+    12
+   ],
+   [
+    "SootopolisCity",
+    10
+   ],
+   [
+    "ThreeIsland_Frlg",
+    4
+   ],
+   [
+    "VermilionCity_hns",
+    13
+   ],
+   [
+    "VioletCity_hns",
+    7
+   ],
+   [
+    "ViridianCity_hns",
+    9
+   ]
+  ],
+  "town_city_maps_without_square": [
+   "PacifidlogTown"
+  ],
+  "top_grass_tiles": [
+   [
+    737,
+    "SixIsland_PatternBush_Frlg"
+   ],
+   [
+    558,
+    "ViridianForest_hns"
+   ],
+   [
+    446,
+    "Route34_hns"
+   ],
+   [
+    364,
+    "Route38_hns"
+   ],
+   [
+    357,
+    "Route45_hns"
+   ],
+   [
+    339,
+    "SixIsland_RuinValley_Frlg"
+   ],
+   [
+    325,
+    "PetalburgWoods"
+   ],
+   [
+    317,
+    "Route48_hns"
+   ]
+  ],
+  "top_water_edge_tiles": [
+   [
+    290,
+    "Route12_hns"
+   ],
+   [
+    183,
+    "SevenIsland_TanobyRuins_Frlg"
+   ],
+   [
+    141,
+    "WhirlIslands_B1F_hns"
+   ],
+   [
+    138,
+    "Route110"
+   ],
+   [
+    136,
+    "SafariZone_Top_Right_hns"
+   ],
+   [
+    132,
+    "Route27_hns"
+   ],
+   [
+    110,
+    "MossdeepCity"
+   ],
+   [
+    105,
+    "Route114"
+   ]
+  ],
+  "top_npc_chats": [
+   [
+    16,
+    "BattleFrontier_OutsideEast"
+   ],
+   [
+    9,
+    "MauvilleCity_GameCorner"
+   ],
+   [
+    8,
+    "GoldenrodCity_GameCorner_hns"
+   ],
+   [
+    8,
+    "CeladonCity_GameCorner_hns"
+   ],
+   [
+    7,
+    "SlateportCity"
+   ],
+   [
+    7,
+    "SafariZoneGate_SafariZoneEntrance_hns"
+   ],
+   [
+    7,
+    "Route24_hns"
+   ],
+   [
+    7,
+    "LilycoveCity_ContestLobby"
+   ]
+  ],
+  "top_square_tiles": [
+   [
+    314,
+    "LilycoveCity"
+   ],
+   [
+    286,
+    "ViridianCity_hns"
+   ],
+   [
+    240,
+    "EcruteakCity_hns"
+   ],
+   [
+    239,
+    "CeruleanCity_hns"
+   ],
+   [
+    238,
+    "LavenderTown_hns"
+   ],
+   [
+    165,
+    "MossdeepCity"
+   ],
+   [
+    164,
+    "OlivineCity_hns"
+   ],
+   [
+    162,
+    "SlateportCity"
+   ]
+  ],
+  "named_spots": [
+   {
+    "region": "Kanto",
+    "n": 1,
+    "spot": "Oak's Lab",
+    "map": "PalletTown_Lab_hns",
+    "x": 18,
+    "y": 14,
+    "activities": [
+     "study"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     18,
+     13
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Kanto",
+    "n": 2,
+    "spot": "Cinnabar Lab",
+    "map": "CinnabarIsland_PokemonLab_ExperimentRoom_Frlg",
+    "x": 11,
+    "y": 4,
+    "activities": [
+     "study"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     11,
+     3
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Kanto",
+    "n": 3,
+    "spot": "Vermilion Fan Club",
+    "map": "VermilionCity_FanClub_hns",
+    "x": 9,
+    "y": 7,
+    "activities": [
+     "visit",
+     "relax"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     9,
+     6
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Kanto",
+    "n": 4,
+    "spot": "Vermilion harbour",
+    "map": "VermilionCity_PortOutside_hns",
+    "x": 24,
+    "y": 5,
+    "activities": [
+     "sightsee",
+     "fish"
+    ],
+    "capacity": 2,
+    "facing": "up",
+    "second": [
+     23,
+     5
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": [
+     "drops detected water's edge tile",
+     "map hosts haunt Vermilion harbour"
+    ]
+   },
+   {
+    "region": "Kanto",
+    "n": 5,
+    "spot": "Fighting Dojo",
+    "map": "SaffronCity_FightingDojo_hns",
+    "x": 8,
+    "y": 11,
+    "activities": [
+     "train"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     8,
+     10
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": [
+     "map hosts haunt Saffron Fighting Dojo"
+    ]
+   },
+   {
+    "region": "Kanto",
+    "n": 6,
+    "spot": "Cerulean Bike Shop",
+    "map": "CeruleanCity_BikeShop_hns",
+    "x": 3,
+    "y": 5,
+    "activities": [
+     "shop"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     3,
+     4
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Kanto",
+    "n": 7,
+    "spot": "Lavender Name Rater",
+    "map": "LavenderTown_House3_hns",
+    "x": 8,
+    "y": 5,
+    "activities": [
+     "visit"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     8,
+     4
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Kanto",
+    "n": 8,
+    "spot": "Safari Zone gate",
+    "map": "FuchsiaCity_SafariZoneEntrance_hns",
+    "x": 10,
+    "y": 6,
+    "activities": [
+     "sightsee"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     10,
+     5
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": [
+     "map hosts haunt Safari Zone"
+    ]
+   },
+   {
+    "region": "Kanto",
+    "n": 9,
+    "spot": "Bill's Sea Cottage",
+    "map": "Route25_BillsHouse_hns",
+    "x": 11,
+    "y": 7,
+    "activities": [
+     "visit",
+     "study"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     11,
+     6
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Kanto",
+    "n": 10,
+    "spot": "Cycling Road",
+    "map": "Route17_hns",
+    "x": 14,
+    "y": 7,
+    "activities": [
+     "sightsee"
+    ],
+    "capacity": 2,
+    "facing": "down",
+    "second": [
+     14,
+     6
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 1,
+    "spot": "Sprout Tower",
+    "map": "SproutTower_3F_hns",
+    "x": 6,
+    "y": 4,
+    "activities": [
+     "sightsee",
+     "train"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     6,
+     3
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 2,
+    "spot": "Bell Tower",
+    "map": "TinTower_1F_hns",
+    "x": 12,
+    "y": 14,
+    "activities": [
+     "sightsee"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     12,
+     13
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 3,
+    "spot": "Burned Tower",
+    "map": "BurnedTower_1F_hns",
+    "x": 21,
+    "y": 8,
+    "activities": [
+     "sightsee",
+     "lie low"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     21,
+     7
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 4,
+    "spot": "Radio Tower",
+    "map": "GoldenrodCity_RadioTower_1F_hns",
+    "x": 8,
+    "y": 6,
+    "activities": [
+     "sightsee",
+     "visit"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     8,
+     5
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 5,
+    "spot": "Olivine Lighthouse",
+    "map": "OlivineCity_Lighthouse_hns",
+    "x": 160,
+    "y": 10,
+    "activities": [
+     "sightsee"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     159,
+     10
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 6,
+    "spot": "Ruins of Alph",
+    "map": "RuinsOfAlph_Outside_hns",
+    "x": 33,
+    "y": 18,
+    "activities": [
+     "sightsee",
+     "study"
+    ],
+    "capacity": 2,
+    "facing": "down",
+    "second": [
+     33,
+     17
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 7,
+    "spot": "Ruins research center",
+    "map": "RuinsOfAlph_Lab_hns",
+    "x": 4,
+    "y": 6,
+    "activities": [
+     "study"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     4,
+     5
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 8,
+    "spot": "Lake of Rage",
+    "map": "LakeOfRage_hns",
+    "x": 42,
+    "y": 34,
+    "activities": [
+     "sightsee",
+     "fish"
+    ],
+    "capacity": 2,
+    "facing": "left",
+    "second": [
+     43,
+     34
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": [
+     "drops detected water's edge tile"
+    ]
+   },
+   {
+    "region": "Johto",
+    "n": 9,
+    "spot": "Elm's Lab",
+    "map": "NewBarkTown_Lab_hns",
+    "x": 2,
+    "y": 9,
+    "activities": [
+     "study"
+    ],
+    "capacity": 1,
+    "facing": "up",
+    "second": [
+     1,
+     9
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 10,
+    "spot": "Earl's Academy",
+    "map": "VioletCity_TrainerSchool_hns",
+    "x": 8,
+    "y": 11,
+    "activities": [
+     "study"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     8,
+     10
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 11,
+    "spot": "Olivine Caf\u00e9",
+    "map": "OlivineCity_Cafe_hns",
+    "x": 1,
+    "y": 6,
+    "activities": [
+     "relax"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     1,
+     5
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 12,
+    "spot": "Olivine harbour",
+    "map": "OlivineCity_PortOutside_hns",
+    "x": 18,
+    "y": 6,
+    "activities": [
+     "sightsee"
+    ],
+    "capacity": 2,
+    "facing": "down",
+    "second": [
+     18,
+     5
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": [
+     "drops detected water's edge tile"
+    ]
+   },
+   {
+    "region": "Johto",
+    "n": 13,
+    "spot": "Route 34 Day Care",
+    "map": "Route34_DayCare_hns",
+    "x": 5,
+    "y": 4,
+    "activities": [
+     "care",
+     "visit"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     5,
+     3
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 14,
+    "spot": "Goldenrod Name Rater",
+    "map": "GoldenrodCity_House1_hns",
+    "x": 8,
+    "y": 5,
+    "activities": [
+     "visit"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     8,
+     4
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 15,
+    "spot": "Goldenrod flower shop",
+    "map": "GoldenrodCity_FlowerShop_hns",
+    "x": 4,
+    "y": 5,
+    "activities": [
+     "shop"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     4,
+     4
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 16,
+    "spot": "Goldenrod Bike Shop",
+    "map": "GoldenrodCity_BikeShop_hns",
+    "x": 6,
+    "y": 5,
+    "activities": [
+     "shop"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     6,
+     4
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 17,
+    "spot": "Cianwood pharmacy",
+    "map": "CianwoodShop_hns",
+    "x": 10,
+    "y": 9,
+    "activities": [
+     "shop",
+     "care"
+    ],
+    "capacity": 1,
+    "facing": "up",
+    "second": [
+     9,
+     9
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 18,
+    "spot": "Mahogany shop",
+    "map": "MahoganyTown_Shop_hns",
+    "x": 5,
+    "y": 3,
+    "activities": [
+     "shop"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     4,
+     3
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 19,
+    "spot": "National Park",
+    "map": "NationalPark_Normal_hns",
+    "x": 20,
+    "y": 11,
+    "activities": [
+     "relax",
+     "sightsee"
+    ],
+    "capacity": 2,
+    "facing": "down",
+    "second": [
+     20,
+     10
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 20,
+    "spot": "Safari Zone gate",
+    "map": "SafariZoneGate_SafariZoneEntrance_hns",
+    "x": 8,
+    "y": 8,
+    "activities": [
+     "sightsee"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     8,
+     7
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 21,
+    "spot": "Dance Theater",
+    "map": "EcruteakCity_Theater_hns",
+    "x": 10,
+    "y": 14,
+    "activities": [
+     "sightsee",
+     "relax"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     10,
+     13
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Johto",
+    "n": 22,
+    "spot": "Route 40 battle courtyard",
+    "map": "TrainerHill_Courtyard_hns",
+    "x": 24,
+    "y": 31,
+    "activities": [
+     "train"
+    ],
+    "capacity": 2,
+    "facing": "down",
+    "second": [
+     24,
+     30
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 1,
+    "spot": "Mt. Pyre summit",
+    "map": "MtPyre_Summit",
+    "x": 20,
+    "y": 4,
+    "activities": [
+     "sightsee"
+    ],
+    "capacity": 2,
+    "facing": "down",
+    "second": [
+     20,
+     3
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 2,
+    "spot": "Sootopolis",
+    "map": "SootopolisCity",
+    "x": 44,
+    "y": 41,
+    "activities": [
+     "sightsee",
+     "relax"
+    ],
+    "capacity": 2,
+    "facing": "down",
+    "second": [
+     44,
+     40
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 3,
+    "spot": "Seaside Cycling Road",
+    "map": "Route110",
+    "x": 11,
+    "y": 17,
+    "activities": [
+     "sightsee"
+    ],
+    "capacity": 2,
+    "facing": "down",
+    "second": [
+     11,
+     16
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 4,
+    "spot": "Birch's Lab",
+    "map": "LittlerootTown_ProfessorBirchsLab",
+    "x": 2,
+    "y": 8,
+    "activities": [
+     "study"
+    ],
+    "capacity": 1,
+    "facing": "up",
+    "second": [
+     1,
+     8
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 5,
+    "spot": "Weather Institute",
+    "map": "Route119_WeatherInstitute_1F",
+    "x": 18,
+    "y": 6,
+    "activities": [
+     "study"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     18,
+     5
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 6,
+    "spot": "Mossdeep Space Center",
+    "map": "MossdeepCity_SpaceCenter_1F",
+    "x": 4,
+    "y": 3,
+    "activities": [
+     "study",
+     "sightsee"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     4,
+     2
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 7,
+    "spot": "Rustboro Trainer's School",
+    "map": "RustboroCity_PokemonSchool",
+    "x": 6,
+    "y": 8,
+    "activities": [
+     "study"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     6,
+     7
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 8,
+    "spot": "Seashore House",
+    "map": "Route109_SeashoreHouse",
+    "x": 4,
+    "y": 7,
+    "activities": [
+     "relax"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     3,
+     7
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 9,
+    "spot": "Lavaridge hot spring",
+    "map": "LavaridgeTown",
+    "x": 6,
+    "y": 3,
+    "activities": [
+     "relax"
+    ],
+    "capacity": 2,
+    "facing": "down",
+    "second": [
+     6,
+     2
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 10,
+    "spot": "Slateport Fan Club",
+    "map": "SlateportCity_PokemonFanClub",
+    "x": 3,
+    "y": 3,
+    "activities": [
+     "visit"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     2,
+     3
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 11,
+    "spot": "Lilycove Trainer Fan Club",
+    "map": "LilycoveCity_PokemonTrainerFanClub",
+    "x": 9,
+    "y": 4,
+    "activities": [
+     "visit"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     9,
+     3
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 12,
+    "spot": "Slateport harbour",
+    "map": "SlateportCity_Harbor",
+    "x": 1,
+    "y": 7,
+    "activities": [
+     "sightsee"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     1,
+     6
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 13,
+    "spot": "Lilycove harbour",
+    "map": "LilycoveCity_Harbor",
+    "x": 1,
+    "y": 7,
+    "activities": [
+     "sightsee"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     1,
+     6
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 14,
+    "spot": "Route 117 Day Care",
+    "map": "Route117_PokemonDayCare",
+    "x": 8,
+    "y": 4,
+    "activities": [
+     "care",
+     "visit"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     8,
+     3
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 15,
+    "spot": "Slateport Name Rater",
+    "map": "SlateportCity_NameRatersHouse",
+    "x": 3,
+    "y": 4,
+    "activities": [
+     "visit"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     3,
+     3
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 16,
+    "spot": "Trainer Hill",
+    "map": "TrainerHill_Entrance",
+    "x": 12,
+    "y": 12,
+    "activities": [
+     "train"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     12,
+     11
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 17,
+    "spot": "Battle Tower",
+    "map": "BattleFrontier_BattleTowerLobby",
+    "x": 21,
+    "y": 7,
+    "activities": [
+     "train"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     21,
+     6
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 18,
+    "spot": "Mauville Bike Shop",
+    "map": "MauvilleCity_BikeShop",
+    "x": 5,
+    "y": 5,
+    "activities": [
+     "shop"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     5,
+     4
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 19,
+    "spot": "Pretty Petal flower shop",
+    "map": "Route104_PrettyPetalFlowerShop",
+    "x": 4,
+    "y": 4,
+    "activities": [
+     "shop"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     4,
+     3
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 20,
+    "spot": "Route 123 berry rows",
+    "map": "Route123",
+    "x": 13,
+    "y": 4,
+    "activities": [
+     "relax"
+    ],
+    "capacity": 2,
+    "facing": "down",
+    "second": [
+     13,
+     3
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Hoenn",
+    "n": 21,
+    "spot": "Safari Zone gate",
+    "map": "Route121_SafariZoneEntrance",
+    "x": 14,
+    "y": 4,
+    "activities": [
+     "sightsee"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     14,
+     3
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Sevii",
+    "n": 1,
+    "spot": "Ember Spa",
+    "map": "OneIsland_KindleRoad_EmberSpa_Frlg",
+    "x": 13,
+    "y": 12,
+    "activities": [
+     "relax",
+     "care"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     13,
+     11
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Sevii",
+    "n": 2,
+    "spot": "Trainer Tower",
+    "map": "TrainerTower_Lobby_Frlg",
+    "x": 16,
+    "y": 13,
+    "activities": [
+     "train"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     16,
+     12
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Sevii",
+    "n": 3,
+    "spot": "Four Island Day Care",
+    "map": "FourIsland_PokemonDayCare_Frlg",
+    "x": 8,
+    "y": 6,
+    "activities": [
+     "care",
+     "visit"
+    ],
+    "capacity": 1,
+    "facing": "down",
+    "second": [
+     7,
+     6
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Sevii",
+    "n": 4,
+    "spot": "Berry Forest",
+    "map": "ThreeIsland_BerryForest_Frlg",
+    "x": 28,
+    "y": 11,
+    "activities": [
+     "relax",
+     "sightsee"
+    ],
+    "capacity": 2,
+    "facing": "down",
+    "second": [
+     27,
+     11
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": [
+     "drops detected water's edge tile"
+    ]
+   },
+   {
+    "region": "Sevii",
+    "n": 5,
+    "spot": "Tanoby Ruins",
+    "map": "SevenIsland_TanobyRuins_Frlg",
+    "x": 118,
+    "y": 14,
+    "activities": [
+     "sightsee",
+     "study"
+    ],
+    "capacity": 2,
+    "facing": "down",
+    "second": [
+     117,
+     14
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   },
+   {
+    "region": "Sevii",
+    "n": 6,
+    "spot": "Cape Brink",
+    "map": "TwoIsland_CapeBrink_Frlg",
+    "x": 15,
+    "y": 17,
+    "activities": [
+     "relax",
+     "sightsee"
+    ],
+    "capacity": 2,
+    "facing": "down",
+    "second": [
+     14,
+     17
+    ],
+    "ok": true,
+    "problems": [],
+    "notes": []
+   }
+  ],
+  "named_spot_counts": {
+   "Kanto": 10,
+   "Johto": 22,
+   "Hoenn": 21,
+   "Sevii": 6
+  },
+  "named_spot_failures": []
+ },
+ "draft_findings": {
   "content_matches_without_outdoor_door": {
    "mart": [
     "CeladonCity_DepartmentStore_2F_hns",
@@ -1256,143 +3408,7 @@
     "maps_with_counters": 26,
     "maps_with_tall_grass": 16
    }
-  },
-  "top_grass_tiles": [
-   [
-    737,
-    "SixIsland_PatternBush_Frlg"
-   ],
-   [
-    558,
-    "ViridianForest_hns"
-   ],
-   [
-    446,
-    "Route34_hns"
-   ],
-   [
-    364,
-    "Route38_hns"
-   ],
-   [
-    357,
-    "Route45_hns"
-   ],
-   [
-    339,
-    "SixIsland_RuinValley_Frlg"
-   ],
-   [
-    325,
-    "PetalburgWoods"
-   ],
-   [
-    317,
-    "Route48_hns"
-   ]
-  ],
-  "top_water_edge_tiles": [
-   [
-    290,
-    "Route12_hns"
-   ],
-   [
-    183,
-    "SevenIsland_TanobyRuins_Frlg"
-   ],
-   [
-    141,
-    "WhirlIslands_B1F_hns"
-   ],
-   [
-    138,
-    "Route110"
-   ],
-   [
-    136,
-    "SafariZone_Top_Right_hns"
-   ],
-   [
-    132,
-    "Route27_hns"
-   ],
-   [
-    116,
-    "Route38_hns"
-   ],
-   [
-    110,
-    "MossdeepCity"
-   ]
-  ],
-  "top_npc_chats": [
-   [
-    16,
-    "BattleFrontier_OutsideEast"
-   ],
-   [
-    9,
-    "MauvilleCity_GameCorner"
-   ],
-   [
-    8,
-    "GoldenrodCity_GameCorner_hns"
-   ],
-   [
-    8,
-    "CeladonCity_GameCorner_hns"
-   ],
-   [
-    7,
-    "SlateportCity"
-   ],
-   [
-    7,
-    "SafariZoneGate_SafariZoneEntrance_hns"
-   ],
-   [
-    7,
-    "Route24_hns"
-   ],
-   [
-    7,
-    "LilycoveCity_ContestLobby"
-   ]
-  ],
-  "top_square_tiles": [
-   [
-    397,
-    "LilycoveCity"
-   ],
-   [
-    383,
-    "CeruleanCity_hns"
-   ],
-   [
-    379,
-    "ViridianCity_hns"
-   ],
-   [
-    253,
-    "LavenderTown_hns"
-   ],
-   [
-    250,
-    "MossdeepCity"
-   ],
-   [
-    248,
-    "EcruteakCity_hns"
-   ],
-   [
-    224,
-    "SlateportCity"
-   ],
-   [
-    216,
-    "OlivineCity_hns"
-   ]
-  ]
+  }
  },
  "maps": {
   "AbandonedShip_CaptainsOffice": {
