@@ -6,17 +6,18 @@ Design status: the everyday layer of the future **routine and travel**
 design. Spots switch on together with routines and travel; v0 haunt
 placement is unchanged, and nothing in this spec runs before then. Spots
 are found automatically from map data, in one pool for every region, and
-carry no quests. Capacity values, the search radius, and the activity
-lines are placeholders.
+carry no quests. Home bases are decided, and a first talk at a spot counts
+for friendship. Capacity values, the search radius, and the activity lines
+are placeholders.
 
 ## Scope
 
 Own, in `IS_WAYFARER`: the spot kinds and how each is detected from map
 data, the build-time spot extraction and its authored overrides, spot
 capacity, the activity-to-kind mapping and the two new activities
-(**fish** and **visit**), choosing a spot, favourites as a trainer value,
-the talk flow at spots and its activity lines, the walker behaviours each
-kind needs, the Gym exit-spawn rule, and the saved-state stance.
+(**fish** and **visit**), choosing a spot, home bases and favourites as
+trainer values, the talk flow at spots and its activity lines, the walker
+behaviours each kind needs, the Gym exit-spawn rule, and the saved-state stance.
 
 - [Notable haunts](notable-haunts.md) owns the haunts, their placement and
   quests, the [activity list](notable-haunts.md#activities) that spots
@@ -24,13 +25,14 @@ kind needs, the Gym exit-spawn rule, and the saved-state stance.
   follow-up steps spots reuse, and the
   [travel engine note](notable-haunts.md#travel-and-on-map-walking).
 - The routine design (future work) owns activity cycles: when a trainer
-  does which activity, home bases, travel between maps, the world record,
+  does which activity, travel between maps, the world record,
   and the heartbeat. This spec owns only what happens once an activity is
   chosen. The
   [travel proof of concept](../research/notable-trainer-travel-poc.md) is
   its evidence so far.
 - [Notable trainers](notable-trainers.md) owns friendship and its events,
-  and holds favourites in the catalog once they are authored.
+  and holds home bases, and favourites once they are authored, in the
+  catalog.
 - [Gym Leader scaling](gym-leader-scaling.md) owns badge-encounter
   coverage, which names each Gym's leader.
 
@@ -249,7 +251,7 @@ When a routine step gives a trainer an activity, the spot is a pure
 function of:
 
 - the trainer and their activity;
-- their **home base** and search radius (from the routine design);
+- their [home base](#home-base) and the search radius;
 - the current occupancy: every other notable's destination, from the
   travel records and the haunt placement;
 - world progress (`GetTrainerRating()`); and
@@ -275,6 +277,43 @@ Steps:
 
 Nothing is random and nothing new is saved: the same inputs give the same
 spot.
+
+### Home base
+
+A trainer's **home base** is the one map that spot choice measures from. It
+is a trainer value in the notable-trainer catalog, alongside buddy and
+reward pool
+([haunt and routine values](notable-trainers.md#haunt-and-routine-values)),
+and this spec owns what it means.
+
+- **Gym Leaders:** their Gym city, the town or city map whose door leads
+  into their Gym ([Gym Leader scaling](gym-leader-scaling.md) names each
+  Gym's leader). Giovanni is a Gym Leader in the catalog, so his is
+  Viridian City. Tate & Liza's is Mossdeep City, though they are never
+  placed.
+- **Everyone else:** one authored home map, grounded in canon:
+
+| Trainer | Home map | Why |
+| --- | --- | --- |
+| Blue | `PalletTown_hns` | His hometown. |
+| Lorelei | `FourIsland_Frlg` | Her home in FireRed and LeafGreen. |
+| Bruno | `OneIsland_Frlg` | Where he appears in FireRed and LeafGreen. |
+| Agatha | `LavenderTown_hns` | The ghost town, home of the Pokémon Tower. |
+| Koga | `FuchsiaCity_hns` | His old Gym city, now his daughter Janine's. |
+| Lance | `BlackthornCity_hns` | His dragon-clan home. |
+| Will | `IndigoPlateau_hns` | His post at the League. |
+| Karen | `IndigoPlateau_hns` | Her post at the League. |
+| Sidney | `EverGrandeCity` | His post at the Hoenn League. |
+| Glacia | `EverGrandeCity` | Her post at the Hoenn League. |
+| Phoebe | `MtPyre_Summit` | Where her grandmother keeps the orbs. |
+| Drake | `LilycoveCity` | A sailor by the sea. |
+| Wallace | `SootopolisCity` | His home city and former Gym. |
+| Steven | `MossdeepCity` | His house (`MossdeepCity_StevensHouse`). |
+
+Each map is the variant Wayfarer plays: HNS for Kanto and Johto, FireRed
+and LeafGreen for Sevii, Emerald for Hoenn. Steven's home map is the city
+that holds his house. The 3-hop and 8-hop radii in
+[step 3](#choosing-a-spot) stay placeholders.
 
 ### Favourites
 
@@ -320,7 +359,9 @@ Talking to a trainer at a spot runs three steps, with no menu:
 
 1. **Greeting**, by friendship stage, exactly as the haunt
    [talk flow](notable-haunts.md#talk-flow) picks it (`MEET` or `HEARD`,
-   `AGAIN`, `HELLO`, `CLOSE`).
+   `AGAIN`, `HELLO`, `CLOSE`). A first talk at a spot is the +1 "first
+   talk" [friendship](notable-trainers.md#friendship) event, as at a haunt:
+   friendship lives on the trainer, so meeting them anywhere counts.
 2. **Follow-up or activity line.** The follow-ups play at spots as at
    haunts, in the same order, at most one per talk:
    1. [Courier delivery](notable-haunts.md#delivery), while the trainer is
@@ -354,6 +395,30 @@ review:
 | Water's edge | "Waiting for a bite." |
 | Town squares and benches | "Taking a breather." |
 | Chatting with an NPC | "Just catching up with someone here." |
+
+### Courier recipients at spots
+
+Once routines run, a [Courier recipient](notable-haunts.md#the-recipient)
+can be a trainer out at a spot, not only one at a haunt. `{PLACE}` then
+says the spot map's own location name: the name of its region-map section,
+such as "CERULEAN CITY" or "ROUTE 2". Spots have no authored name of their
+own, unlike a haunt's Name.
+
+The source is each map's `region_map_section`
+([CeruleanCity_hns/map.json](../../game/data/maps/CeruleanCity_hns/map.json),
+line 6: `MAPSEC_CERULEAN_CITY`), which mapjson writes into the map header
+([mapjson.cpp](../../game/tools/mapjson/mapjson.cpp), line 1185) as
+`regionMapSectionId`. `GetMapName`
+([region_map.c](../../game/src/region_map.c), line 2652) turns a section
+into its name, such as "CERULEAN CITY"
+([region_map_sections.json](../../game/src/data/region_map/region_map_sections.json),
+lines 728-729). The debug warp menu reads another map's name the same way,
+through `Overworld_GetMapHeaderByGroupAndId`
+([debug.c](../../game/src/debug.c), line 1543). One catch: `GetMapName`
+looks names up in `GetActiveRegionMapEntries` (line 306), which picks the
+Hoenn, Sevii, or Kanto and Johto table from the *player's* current map.
+Naming a recipient on a map from another region needs the table for that
+map's region, not the player's.
 
 ### Saved state
 
@@ -432,19 +497,6 @@ gameplay timer the proof of concept named.
   signals, not names; the Two Island Joyful Game Corner has Game Corner
   music but no slot machines, so it yields no spot; and tileset attribute
   formats differ by family.
-
-## Open questions
-
-- Whether a first talk at a spot counts as the +1 "first talk" friendship
-  event, as a haunt's does
-  ([friendship](notable-trainers.md#friendship)). It would let a Courier
-  delivery at a spot greet a Stranger exactly as at a haunt.
-- Once routines run, whether a Courier recipient can be anyone out at a
-  spot, not only at a haunt, and what `{PLACE}` says for a spot: the map's
-  location name from `region_map_section` (such as `MAPSEC_CERULEAN_CITY`)
-  is the likely source.
-- What a home base is for a trainer who isn't a Gym Leader, and the real
-  radius values; both belong to the routine design.
 
 ## Later
 

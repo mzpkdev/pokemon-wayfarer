@@ -102,7 +102,7 @@ willingness, travel cost, or fatigue.
 
 Each notable trainer entry authors two values for haunts, alongside its
 other catalog content
-([Notable trainers](notable-trainers.md#haunt-values-buddy-reward-pool)):
+([Notable trainers](notable-trainers.md#haunt-and-routine-values)):
 
 - **Buddy:** one roster slot number (1-6), the trainer's companion: their
   anime companion where there is one, otherwise a later-game companion or
@@ -1258,7 +1258,9 @@ once, in the talk that names them, so world progress is safe here.
 **No pin.** The parcel never holds the recipient in place: placement
 ignores it, as it ignores friendship and claims, and the recipient keeps
 moving with every reshuffle (and, later, with travel). `{PLACE}` is true
-only at the moment the sender says it.
+only at the moment the sender says it. Once routines run, a recipient can
+also be out at a spot, and `{PLACE}` then says that map's location name
+([spots](notable-spots.md#courier-recipients-at-spots)).
 
 #### Giving the parcel
 
@@ -1516,7 +1518,7 @@ a trainer pays from their **reward pool**, wherever they are placed.
 
 **Reward pool.** Each notable trainer authors one ordered reward pool, held
 in the catalog
-([Notable trainers](notable-trainers.md#haunt-values-buddy-reward-pool))
+([Notable trainers](notable-trainers.md#haunt-and-routine-values))
 like the buddy. Each entry is an **item** (one `ITEM_*` constant) or a
 **lesson** (below), and has a **from world progress** gate: the entry opens
 once world progress (`GetTrainerRating()`, the player's TR) reaches the

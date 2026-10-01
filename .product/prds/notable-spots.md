@@ -81,7 +81,11 @@ The activity picks a spot kind, and the kind picks a spot:
 
 The activities are the ones haunts already use, plus two new ones: **fish**
 and **visit**. A trainer picks a spot near their home base, or anywhere
-further afield if they are a traveller. The same situation always gives the
+further afield if they are a traveller. A Gym Leader's home base is their
+Gym city; everyone else has one home map from canon, such as Pallet Town
+for Blue or Mossdeep City for Steven
+([home base](../specs/notable-spots.md#home-base)). How far "near" reaches
+is still a placeholder. The same situation always gives the
 same choice; nothing is random.
 
 Places have room for only a few notables at a time. An indoor map, such as
@@ -100,7 +104,8 @@ routines, not now.
 Talking to a trainer at a spot is short:
 
 1. **A greeting**, by friendship, exactly as at a haunt
-   ([haunts](notable-haunts.md#meeting-a-trainer)).
+   ([haunts](notable-haunts.md#meeting-a-trainer)). Meeting a trainer for
+   the first time at a spot makes them Met, just as at a haunt.
 2. **What they are doing**, one line shared by every trainer at that kind
    of spot, such as "Just stocking up on supplies." or "Taking a breather."
    If a follow-up from an earlier quest is waiting, it plays here instead:
@@ -140,7 +145,9 @@ beside a seat. Talking to them runs straight through with no menu.
 - **Egg sitting and Courier.** A trainer with an egg out asks after it at a
   spot as they would at a haunt, and a Courier recipient takes the parcel
   wherever the player finds them
-  ([talk flow](../specs/notable-haunts.md#talk-flow)).
+  ([talk flow](../specs/notable-haunts.md#talk-flow)). Once routines run,
+  the recipient can be out at a spot, and the sender names the town or
+  route they were last seen in, such as "CERULEAN CITY".
 - **Gyms.** A visitor walks out as the player walks in, and never blocks
   the Gym battle or its trainers.
 - **Following Pokémon.** The Pokémon that walks behind the player competes
@@ -162,11 +169,6 @@ beside a seat. Talking to them runs straight through with no menu.
 - Is two or three notables on one outdoor map lively or crowded?
 - Is the one shared line per spot kind enough, or does it get repetitive?
 - Does "just leaving" read as a visit, or as a bug?
-
-## Open questions
-
-- What a trainer's home base is for anyone who isn't a Gym Leader, and how
-  far "near" reaches; both belong to the routine design.
 
 ## Specifications
 

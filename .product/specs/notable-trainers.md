@@ -36,10 +36,10 @@ rather than restating it.
 - [Leagues](leagues.md) owns league lineups and their lifecycle.
 - [Notable haunts](notable-haunts.md) places notable trainers in the
   overworld and owns the meaning of the buddy and reward pool
-  values ([below](#haunt-values-buddy-reward-pool)).
+  values ([below](#haunt-and-routine-values)).
 - [Notable spots](notable-spots.md) is the everyday layer of the future
-  routine and travel design, and will own the favourite-spots value once
-  it is authored.
+  routine and travel design. It owns the meaning of the home-base value,
+  and will own the favourite-spots value once it is authored.
 - [Player Trainer Rating](player-trainer-rating.md) owns the player's TR,
   the scaler definition, and the downward rule and shared evolution-level table
   ([evolution stages](player-trainer-rating.md#evolution-stages));
@@ -165,7 +165,7 @@ a boolean **boss flag** (`bossOmniscient`, Lance only in v0).
 flags each battle resolves from them, the trainer's TR, and the resolved
 team's aces.
 
-## Haunt values: buddy, reward pool
+## Haunt and routine values
 
 Each entry also authors a **buddy** (one roster slot, 1-6). Notable trainers
 also appear at haunts in the overworld, and
@@ -173,7 +173,10 @@ also appear at haunts in the overworld, and
 Each entry also authors a **reward pool**, an ordered list of items and
 lessons with a from-TR gate each, which pays for finished haunt quests;
 [Notable haunts](notable-haunts.md#rewards-and-claims) owns what it means
-and its rules.
+and its rules. Each entry also carries a **home base**, the map a
+trainer's routine measures from;
+[Notable spots](notable-spots.md#home-base) owns what it means and lists
+each trainer's.
 
 ## Friendship
 
@@ -196,7 +199,7 @@ Events only add weighted points (placeholders):
 
 | Event | Points | Bounds |
 | --- | ---: | --- |
-| First talk | +1 | Once: when a [haunt](notable-haunts.md#talk-flow) talk starts with the trainer at Stranger. |
+| First talk | +1 | Once: when a talk starts with the trainer at Stranger, at a [haunt](notable-haunts.md#talk-flow) or anywhere they are met, such as a [spot](notable-spots.md#talk-flow). |
 | Battle won | +20 | The first win over them, in any kind of battle. After that, a repeat win counts at most once per step of world progress: only if no repeat win over them has counted since world progress last rose. |
 | Haunt quest completed | +10 | Each completed [quest](notable-haunts.md#quests), at most once per placement. |
 
