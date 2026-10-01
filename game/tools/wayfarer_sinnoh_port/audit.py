@@ -50,6 +50,10 @@ def validate_porymap_contract(root: Path, rows: list[dict[str, Any]]) -> dict[st
 
 def expected_imported_map(row: dict[str, Any]) -> dict[str, Any]:
     properties = row["map_properties"]
+    # Preserve the donor flag while allowing an explicit Wayfarer presentation choice.
+    show_map_name = properties.get("target_show_map_name", properties["show_map_name"])
+    if not isinstance(show_map_name, bool):
+        raise FoundationError(f"Sinnoh map {row['target_map']} has an invalid popup flag")
     return {
         "id": row["target_map_id"], "name": row["target_map"], "game_version": "sinnoh",
         "layout": row["target_layout"], "region": "REGION_SINNOH",
@@ -57,7 +61,7 @@ def expected_imported_map(row: dict[str, Any]) -> dict[str, Any]:
         "music": properties["music"], "weather": properties["weather"],
         "map_type": properties["map_type"], "requires_flash": properties["requires_flash"],
         "allow_cycling": properties["allow_cycling"], "allow_escaping": properties["allow_escaping"],
-        "allow_running": properties["allow_running"], "show_map_name": properties["show_map_name"],
+        "allow_running": properties["allow_running"], "show_map_name": show_map_name,
         "battle_scene": properties["battle_scene"], "warp_events": effective_warps(row),
         # The frozen donor represents no connections as numeric 0; populated
         # rows preserve their explicit connection vectors.
