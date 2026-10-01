@@ -92,7 +92,9 @@ and every talk goes the same way:
    player says yes or no, and no costs nothing: the next talk asks again.
    Once the quest is done, the trainer shares a quirk instead. While the
    trainer has an egg out from Egg sitting, they ask after it in its place,
-   once per meeting.
+   once per meeting. While the player carries a Courier parcel, its
+   recipient receives it in the quest's place, and its sender says where
+   the recipient was last seen.
 3. **A goodbye.**
 
 The first talk makes the trainer Met, so a first meeting both introduces them
@@ -118,9 +120,11 @@ it is done:
 | Trade | The trainer offers one of their fillers, never an ace, for a POKéMON of their type from the player's party. It's accepted if its line is worth at least as much as the filler's; the player's POKéMON then takes that filler's place on the trainer's team, keeps who it is, and evolves as the trainer grows. A later Trade quest offers it back. |
 | Wanted | The trainer asks for the strongest wild POKéMON that lives at the haunt and shares a type with their aces, worked out from the haunt's wild tables rather than authored, and offers their best filler worth no more than it. The player gives one from the party; it works like Trade, with no value check, since the offer is fair by construction. If every filler is worth more, the trainer has nothing fair to offer. |
 | Egg sitting | The trainer asks the player to hold on to an egg of one of their filler lines for a while, nothing more. At a later meeting, at any haunt, they ask after it. If the player has hatched it, the trainer is surprised, tells the player to keep it, and pays the reward; if it is still an egg, the player can keep holding it or hand it back; if it is gone, the trainer is shocked, then lets it go. Nothing costs the player anything. |
+| Courier | The trainer asks the player to take a parcel to another trainer from their home region who is out at a haunt right now: "Could you take this to {OTHER}? Last I heard, they were around {PLACE}." The recipient keeps moving as usual, so the place is only a hint; asking the sender again gives the latest, or says the recipient is away at a league. Handing it over at any meeting with the recipient, at any haunt and even a first meeting, pays the recipient's next reward and raises friendship with both trainers. One parcel at a time, with no expiry and no penalty. |
 
 Every trainer can give every quest. Haunt quest lines never imply the trainer
-needs help or is asking a favour, except Egg sitting's plain request, and
+needs help or is asking a favour, except Egg sitting's and Courier's plain
+requests, and
 personality comes only from the trainer's voice bits.
 
 The reward comes from the trainer, never from the quest: the haunt carries
@@ -222,8 +226,8 @@ natural regular, as the HNS cameo already has it, and Erika takes it on her
 Grass aces when Bugsy is elsewhere. The
 [specification](../specs/notable-haunts.md#worked-example-viridian-forest)
 works it through. With it, the five worked haunts cover the first five
-quest types; Bring me, Swap battle, Trade, Wanted, and Egg sitting have no
-worked haunt yet.
+quest types; Bring me, Swap battle, Trade, Wanted, Egg sitting, and Courier
+have no worked haunt yet.
 
 Trade is the first slice of the parked
 [trainer roster influence](trainer-roster-influence.md) design. The trainer
@@ -254,9 +258,11 @@ rules.
 ## Boundaries
 
 In: the haunt pool and tags, placement, momentum, the talk flow (greetings
-by friendship stage, the quest proposal, and the quirk), the ten quest
+by friendship stage, the quest proposal, and the quirk), the eleven quest
 types, including Trade and Wanted and the traded slot they leave on a
-trainer's team, and Egg sitting and its follow-up at a later meeting,
+trainer's team, Egg sitting and its follow-up at a later meeting, and
+Courier, its PARCEL key item, and its delivery to a recipient wherever
+they are,
 quest rewards from each trainer's reward pool, the voice-bit writing rule,
 buddy and reward pool as trainer values, the Kanto haunt list, retiring the
 HNS cameos and the Dojo rematch hub, and the saved state for all of this.
@@ -342,6 +348,10 @@ the trainer's voice bits.
 - More ways to raise friendship: gifts and tag battles.
 - Rematches at haunts or at dedicated rematch spots.
 - Gossip at haunts: a friend telling the player where another trainer is.
+- More ways to find a Courier recipient: phone calls to the sender, gossip,
+  a Gym guide saying they're out somewhere, and routines the player can
+  learn; with real travel, the sender can say where the recipient is
+  heading.
 - Trainers who walk to their haunts along routines instead of being
   placed, with at most two or three in one place; a
   [travel proof of concept](../research/notable-trainer-travel-poc.md) showed on-map pathfinding and saved travel between

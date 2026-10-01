@@ -12,10 +12,11 @@ style and **momentum**, hometown) ranks them, and haunts fill one at a time
 in an order that rotates with world progress. A haunt offers only its own
 quest: no battle offers, no rematches, and no menu. Every
 talk runs a greeting by the trainer's **friendship stage** (Stranger, Met,
-Friend, Close), then an Egg sitting follow-up while the trainer's egg is
-outstanding, or else the quest proposal while the quest is open or the
-trainer's quirk once it is done, then a farewell; a quest pays once per
-placement.
+Friend, Close), then a follow-up (a Courier delivery, an Egg sitting
+follow-up while the trainer's egg is outstanding, or a Courier sender's
+news of the recipient), or else the quest proposal while the quest is open
+or the trainer's quirk once it is done, then a farewell; a quest pays once
+per placement.
 The reward comes from the trainer's own **reward pool**, never from the quest
 type. Dialogue splices favour-free haunt lines with each trainer's
 **voice bits**. Weights, gates, momentum values, and reward pools are
@@ -25,11 +26,11 @@ placeholders; balance is informational.
 
 Own, in `IS_WAYFARER`: the haunt catalog and its tags, the meaning of the
 **buddy** and **reward pool** trainer values, placement and
-momentum, the talk flow, the ten quest types (with the traded slots of
-Trade and Wanted, and Egg sitting's outstanding eggs), rewards and claims,
-dialogue assembly, the Kanto haunt list, retiring the HNS cameos and the
-Saffron Dojo rematch room, the haunts' saved state and load validation,
-presentation, the balance report, and acceptance.
+momentum, the talk flow, the eleven quest types (with the traded slots of
+Trade and Wanted, Egg sitting's outstanding eggs, and Courier's parcel),
+rewards and claims, dialogue assembly, the Kanto haunt list, retiring the
+HNS cameos and the Saffron Dojo rematch room, the haunts' saved state and
+load validation, presentation, the balance report, and acceptance.
 
 - [Notable trainers](notable-trainers.md) owns the trainers: inventory,
   home region, the traveller and aloof traits, TR and its growth, rosters,
@@ -67,6 +68,7 @@ No haunt names or prefers a specific trainer. Each haunt authors:
 | Activities | one or two [activities](#activities) | What trainers do there. |
 | Setting | `public`, `remote` | Public places are busy; remote ones are out of the way. |
 | Capacity | a whole number, 1 by default | How many trainers the haunt holds at once. |
+| Name | display text, at most 20 characters | What `{PLACE}` says for the haunt, such as "CERULEAN CAPE" ([Courier](#courier)). |
 | Quest | one [quest type](#quests) and its details | The quest a trainer gives there. |
 | Meeting spot | map and tile | Where the placed trainer stands. |
 
@@ -221,8 +223,11 @@ trainer, or empty), that haunt's claim bit is cleared
 ([rewards and claims](#rewards-and-claims)), and so is its
 [lost-something](#lost-something) search state,
 [Catch me one](#catch-me-one) asked bit, or [Trade](#accepted) or
-[Wanted](#wanted) owed bit;
-then the new placement is saved.
+[Wanted](#wanted) owed bit, and its Egg sitting
+[follow-up bit](#the-follow-up). When the trainer changes at a haunt that
+held or now holds an active parcel's sender or recipient, the parcel's
+[trail bit](#refreshing-the-trail) clears too. Then the new placement is
+saved.
 
 ## Talk flow
 
@@ -243,11 +248,25 @@ Every talk runs three steps:
    | Friend | `HELLO`. |
    | Close | `CLOSE`. |
 
-2. **Follow-up, proposal, or quirk.** While the trainer has an
-   outstanding egg from [Egg sitting](#egg-sitting), its
-   [follow-up](#the-follow-up) comes first, once per meeting or whenever
-   the hatchling is found; it takes this step's place in that talk, and the
-   next talk returns to the haunt's own quest. Otherwise, while the haunt's
+2. **Follow-up, proposal, or quirk.** A **follow-up** comes first: a
+   quest from an earlier meeting, settled or recalled at this one. At most
+   one plays per talk, it takes this step's place in that talk, and the
+   next talk returns to the haunt's own quest. In order, the first that
+   applies:
+   1. **Courier delivery**, while the trainer is the recipient of the
+      player's active parcel, at every talk until it is delivered
+      ([delivery](#delivery)).
+   2. **Egg sitting follow-up**, while the trainer has an outstanding egg
+      from [Egg sitting](#egg-sitting): once per meeting, or whenever the
+      hatchling is found ([follow-up](#the-follow-up)).
+   3. **Courier trail**, while the trainer is the sender of the active
+      parcel and its trail bit is clear
+      ([refreshing the trail](#refreshing-the-trail)).
+
+   A delivery comes first because it settles the one parcel and pays; an
+   egg follow-up before the trail because it may pay, while the trail only
+   informs. Each keeps its own bit, so one never uses up another: the one
+   that waits plays at the next talk. Otherwise, while the haunt's
    claim bit is clear (the quest is still open during this placement), the
    [quest](#quests) proposal: `ASK`,
    the haunt's proposal line, and [YES / NO]. `YES` gives the trainer's
@@ -261,7 +280,9 @@ Every talk runs three steps:
    ([Trade](#accepted)), and at a Wanted haunt with no fair offer, its
    no-offer line and `NOT_READY` do ([Wanted](#no-fair-offer)). At an
    Egg sitting haunt while the trainer's egg is outstanding or their eggs
-   are used up, `QUIRK` does ([Egg sitting](#giving-the-egg)).
+   are used up, `QUIRK` does ([Egg sitting](#giving-the-egg)), and so it
+   does at a Courier haunt while a parcel is active or no recipient
+   exists ([Courier](#giving-the-parcel)).
    Once the
    claim bit is set (the quest was completed during this placement), the
    trainer's `QUIRK` instead.
@@ -272,8 +293,8 @@ The first talk makes a Stranger Met (+1) at its start, after the greeting
 is picked, so a first meeting introduces the trainer (`MEET` or `HEARD`)
 **and** proposes the quest in the same talk. After the quest is completed
 during this placement, every talk is the greeting, `QUIRK`, and `BYE`, until
-the placement changes and the claim bit clears, except a talk an Egg
-sitting [follow-up](#the-follow-up) takes.
+the placement changes and the claim bit clears, except a talk a follow-up
+takes.
 
 The player's **fame** reaches a trainer when the player's TR is at least
 `min(80, their TR − 10)`, or the player reigns as champion at any
@@ -289,7 +310,8 @@ levels, since it plays at most once per trainer.
 **Points.** A haunt adds [friendship](notable-trainers.md#friendship)
 through two events only: the first talk (+1) and a completed quest (+10).
 An Egg sitting quest completes at its hatched follow-up, not when the egg
-is given.
+is given, and a Courier quest at its delivery, which adds +10 with both
+the sender and the recipient.
 Repeat talks, declining, and quirks add nothing. Haunts offer no battles
 of their own, so no battle win happens here: One on one and Swap battle are
 quests, and their wins count as the completed quest, not as a battle won.
@@ -306,8 +328,8 @@ which every talk reaches, since the first talk makes the trainer Met before
 the proposal ([talk flow](#talk-flow)); every trainer can give every quest
 type. Each type has one proposal
 line, written so it never implies the trainer needs help or is asking a
-favour ([dialogue](#dialogue)), except Egg sitting's, which asks one by
-design:
+favour ([dialogue](#dialogue)), except Egg sitting's and Courier's, which
+ask one by design:
 
 | Quest | Proposal line |
 | --- | --- |
@@ -320,7 +342,8 @@ design:
 | Swap battle | "One POKéMON each. Pick your best?" (the swap is revealed only after the pick) |
 | Trade | "I'd trade {FILLER} for one of yours. Interested?" (a [trade-back](#trade-back) has its own line) |
 | Wanted | "I've been looking for a {WANTED}. Got one to trade?" (a [trade-back](#trade-back) takes its place, as at Trade) |
-| Egg sitting | "Could you hold on to this egg for a while?" (the one favour by design; its [follow-up](#the-follow-up) comes at a later meeting) |
+| Egg sitting | "Could you hold on to this egg for a while?" (a favour by design; its [follow-up](#the-follow-up) comes at a later meeting) |
+| Courier | "Could you take this to {OTHER}? Last I heard, they were around {PLACE}." (a favour by design; the [delivery](#delivery) comes at a meeting with {OTHER}) |
 
 A haunt may author its own proposal line for its quest type, under the same
 writing rules; the [Celadon Game Corner](#worked-example-celadon-game-corner)
@@ -1025,7 +1048,7 @@ the trainer at a haunt. The player keeps the hatchling, and only the
 hatched follow-up says so: no line before it mentions hatching or hints
 that the player keeps anything. Egg sitting has no worked haunt yet.
 
-Its proposal is the one quest line that asks a favour, by design
+Its proposal asks a favour by design, as [Courier](#courier)'s does
 ([dialogue](#dialogue)); it names no place, person, or need, so every
 trainer can voice it.
 
@@ -1119,7 +1142,8 @@ since the species is never checked.
 At a talk with a trainer who has an outstanding egg, the follow-up takes
 the place of the proposal or `QUIRK` when the hatchling is found, or when
 the haunt's **follow-up bit** is clear. The bit is set when the egg is
-given or a follow-up plays at the haunt, and clears with the claim bit when
+given or an Egg sitting follow-up plays at the haunt (a Courier follow-up
+never sets it), and clears with the claim bit when
 the haunt's placement changes. So the meeting that gave the egg never asks
 after it unhatched, the other follow-ups play once per meeting and the next
 talk returns to the haunt's own quest, and a hatched follow-up plays as
@@ -1157,7 +1181,9 @@ claim: it never reads or sets the claim bit, so the haunt's own quest is
 still open on the next talk if it was before. A hatched follow-up moves the
 reward counter like any completed quest. The follow-up comes before every
 other replacement of the proposal (a found keepsake, an owed reward, a
-Catch me one showing), which waits for the next talk.
+Catch me one showing, a Courier trail), which waits for the next talk; only
+a Courier [delivery](#delivery) comes before it
+([talk flow](#talk-flow)).
 
 #### Egg limits
 
@@ -1173,12 +1199,164 @@ Catch me one showing), which waits for the next talk.
   entries sooner but never adds to them; past the pool, it pays the
   fallback.
 
+### Courier
+
+The trainer, the **sender**, asks the player to take a parcel to another
+notable trainer, the **recipient**. Like [Egg sitting](#egg-sitting), it
+spans **two meetings**: the haunt quest hands the parcel over, and a
+follow-up at a meeting with the recipient, at any haunt, settles it. It
+reuses Egg sitting's follow-up rules (a follow-up takes the place of the
+proposal or `QUIRK` for one talk, never touches the claim bit, and the next
+talk returns to the haunt's own quest) and its place in the
+[talk flow](#talk-flow)'s follow-up step, where the order between the two
+quests is set. Courier has no worked haunt yet.
+
+Its proposal asks a favour by design, as Egg sitting's does
+([dialogue](#dialogue)). It names a person and a place, but both are
+derived, never authored, so every trainer can voice it.
+
+#### The recipient
+
+The recipient is derived when the sender would propose, from the current
+placement only:
+
+1. **Region list.** Every trainer placed at a haunt right now who shares
+   the sender's home region
+   ([home region](notable-trainers.md#home-region-and-travel)), since they
+   would plausibly know each other. Never the sender; Tate & Liza are never
+   placed, so never them.
+2. **Fallback list.** If the region list is empty, every trainer placed
+   at a haunt right now, of any region, other than the sender.
+3. **Pick.** Order the list by trainer catalog order (the order that breaks
+   [fill](#fill) ties), starting with the first trainer after the sender
+   and wrapping around. The recipient is entry `wp mod m` (counting from
+   0), where `wp` is world progress and `m` the list's length. At offset 0
+   it is the next qualifying trainer after the sender; the offset rotates
+   with world progress, as the [fill](#fill) order does, so the same
+   sender at the same haunt names someone else as the journey goes on.
+4. **No one.** With both lists empty, there is no recipient, and the haunt
+   offers no parcel ([giving the parcel](#giving-the-parcel)).
+
+The recipient is saved at `YES`, so a rising world progress never changes
+it afterwards. Lost something's spot avoids world progress because it is
+derived for the whole placement and never saved; the recipient is derived
+once, in the talk that names them, so world progress is safe here.
+
+**No pin.** The parcel never holds the recipient in place: placement
+ignores it, as it ignores friendship and claims, and the recipient keeps
+moving with every reshuffle (and, later, with travel). `{PLACE}` is true
+only at the moment the sender says it.
+
+#### Giving the parcel
+
+The talk checks, in order:
+
+1. **Follow-up.** A follow-up may take the talk, as the
+   [talk flow](#talk-flow) says; the sender's own trail plays here.
+2. **No parcel to give.** While a parcel is active (one at a time across
+   the whole game, [limits](#courier-limits)), or with no recipient, the
+   haunt behaves as if its quest were completed for that talk: the
+   greeting, `QUIRK`, and `BYE`. The claim bit stays clear, so the quest
+   opens again in this placement once the parcel is delivered or a
+   recipient exists.
+3. **Proposal.** "Could you take this to {OTHER}? Last I heard, they were
+   around {PLACE}." (the quest line after `ASK`). `{OTHER}` is the
+   recipient's name and `{PLACE}` the name of the recipient's current
+   haunt: a hint, not a pin. The recipient is always placed at this moment,
+   so the proposal never needs an [away line](#away-lines).
+
+- **NO:** the trainer's `NO`, then `BYE`; the next talk proposes again,
+  naming whoever the placement gives then.
+- **YES:** the trainer's `YES`, then the key-item fanfare and the system
+  line "{PLAYER} received the PARCEL.", and `BYE`. With no room in the Key
+  Items pocket, nothing is given: the trainer's `NOT_READY` and `BYE`, and
+  the quest stays open.
+
+Giving the parcel sets the haunt's claim bit, with no reward and no
+friendship: both wait for the [delivery](#delivery). It also saves the
+**courier state** (the sender, the recipient, the active flag, and the
+[trail bit](#refreshing-the-trail), set) and adds the
+[PARCEL](#courier-engine) to the Bag, all in one script with no save point,
+as at a trade.
+
+#### Away lines
+
+Wherever the sender names the recipient, an unplaced recipient is named by
+why they are away instead of by `{PLACE}`. The lines are shared and
+neutral, and each replaces the whole "Last I heard…" sentence:
+
+| Recipient | Line |
+| --- | --- |
+| In the accepted event lineup | "{OTHER}'s off at the {LEAGUE} right now." |
+| The resolved [partner](sevii-masters.md#partner) | "Last I heard, {OTHER} was travelling with you!" |
+| Not placed for any other reason | "Nobody's seen {OTHER} around lately." |
+
+`{LEAGUE}` names the accepted event's league: "INDIGO LEAGUE", "HOENN
+LEAGUE", or, since the Masters stays off the record
+([identity](sevii-masters.md#identity)), "SEVII ISLANDS". The checks go in
+the table's order. In v0 only the [trail](#refreshing-the-trail) uses them,
+since the proposal always names a placed recipient.
+
+#### Refreshing the trail
+
+At a talk with the sender while the parcel is active and its **trail
+bit** is clear, the trail follow-up takes the place of the proposal or
+`QUIRK`: "Still got my parcel? Last I heard, {OTHER} was around {PLACE}."
+with the recipient's current haunt, or "Still got my parcel?" and the
+[away line](#away-lines), then `BYE`. It sets the trail bit, so it plays
+once and the next talk returns to the haunt's own quest.
+
+The trail bit is set when the parcel is given or the trail plays, and
+clears when a recompute changes the trainer at a haunt that held or now
+holds the sender or the recipient ([fill](#fill)): the sender is at a new
+meeting, or the recipient may have moved. So the sender retells the trail
+only when it can have changed.
+
+#### Delivery
+
+At any talk with the recipient, at any haunt, while the parcel is active,
+the delivery takes the place of the proposal or `QUIRK`. It works at a
+first meeting too: the greeting (`MEET` or `HEARD`) and the Stranger's +1,
+then the delivery. The recipient says "A parcel from {SENDER}? For me?
+Thank you!", where `{SENDER}` is the sender's name; then the recipient's
+`PRAISE`, the recipient's [reward](#rewards-and-claims) (their next
+reward-pool entry through `GIFT`, or their fallback), and `BYE`.
+
+When the reward is given, in one script: the PARCEL is removed, the
+courier state is cleared, and friendship rises by +10 with the sender and
++10 with the recipient, each as a completed quest; the recipient's reward
+counter moves, the sender's doesn't. The courier is then settled. A reward
+that waits (a full Bag, a cancelled lesson, no POKéMON able to learn)
+changes nothing, the parcel stays active, and the next talk with the
+recipient delivers again. The delivery never reads or sets any haunt's
+claim bit: the recipient's own haunt quest is still open on the next talk
+if it was before.
+
+The sender needn't be met again: their +10 counts wherever they are,
+placed or not, as the quest completed at the placement that gave the
+parcel. A sender or recipient who crosses Friend this way hands over their
+number at once, with the one system line
+[Notable trainers](notable-trainers.md#friendship) gives any route.
+
+#### Courier limits
+
+- **One parcel at a time**, across all trainers: one PARCEL key item and
+  one saved courier state.
+- **No expiry and no penalty.** A parcel stays active through reshuffles,
+  league events, partnering, and reloads until it is delivered; the
+  player loses nothing by holding it.
+- One parcel per placement at a haunt: the claim bit.
+- **Abuse.** Each parcel pays one reward-pool entry, from the recipient's
+  ordered pool, and +10 twice; one parcel at a time and the claim bit cap
+  it at one per placement, so it pays no faster than two ordinary quests.
+
 ### Rewards and claims
 
 Each haunt has a saved **claim bit**. It is set when the reward is given
-(at an Egg sitting haunt, when the egg is given) and cleared when the
-haunt's placement changes, so each placement pays out
-once, and a new trainer at the haunt can give it again.
+(at an Egg sitting haunt, when the egg is given; at a Courier haunt, when
+the parcel is given) and cleared when the haunt's placement changes, so
+each placement pays out once, and a new trainer at the haunt can give it
+again.
 
 The reward comes from the trainer, never from the quest: the haunt carries
 the ask, and the trainer carries the reward. Finishing any haunt quest with
@@ -1233,6 +1411,8 @@ The claim bit and the counter change together, when the reward is given
 (for the fallback, only the claim bit). A reward that waits or is cancelled
 changes neither. Egg sitting is the exception: the egg sets the claim bit,
 and the hatched [follow-up](#the-follow-up) moves only the counter.
+Courier is the same: the parcel sets the claim bit at the sender's haunt,
+and the [delivery](#delivery) moves only the recipient's counter.
 
 **Pool rules**, checked with the catalog:
 
@@ -1261,7 +1441,8 @@ A haunt's dialogue is assembled from two sources:
   no-offer lines, and the trade-back proposal are shared. Every Egg
   sitting line is shared: the proposal and the
   [follow-up](#the-follow-up)'s question, hatched, still-an-egg,
-  given-back, and gone lines. They
+  given-back, and gone lines. Every Courier line is shared too: the
+  proposal, the away lines, the trail, and the delivery. They
   describe only the place and the activity, never a trainer's personality or
   history, so they read true for every candidate.
   A quest line is the proposal that follows `ASK` ("Walk it with me, out to
@@ -1269,8 +1450,10 @@ A haunt's dialogue is assembled from two sources:
   **Writing rules:** haunt lines carry the content of the proposal, and
   haunt lines never imply the trainer needs help or is asking a favour, so
   every trainer can voice every quest; voice bits carry only personality.
-  Egg sitting's proposal and its still-an-egg line are the exceptions: a
-  plain favour with no need behind it, which every trainer can still voice.
+  Egg sitting's proposal and its still-an-egg line, and Courier's proposal
+  and trail, are the exceptions: a plain favour with no need behind it,
+  which every trainer can still voice. Courier's lines name another
+  trainer and a haunt, but only through derived slots.
   No Egg sitting line before the hatched follow-up mentions hatching or
   hints that the player keeps the hatchling.
 - **Voice bits**, fifteen per trainer: `HELLO`, `AGAIN`, `CLOSE`, `MEET`,
@@ -1299,13 +1482,17 @@ Both use these slots:
 | `{FILLER}` | The trainer's offered filler at its current stage, such as "OMANYTE" (only in a Trade proposal, [the offer](#the-offer), or Wanted's offer line, [Wanted's offer](#wanteds-offer)). |
 | `{WANTED}` | The haunt's wanted species for the placed trainer, such as "SWINUB" (only in Wanted's proposal, offer, and no-offer lines; [the wanted species](#the-wanted-species)). |
 | `{TRADED}` | The nickname of the POKéMON the player traded to the trainer (only in a trade-back proposal). |
+| `{OTHER}` | The [recipient](#the-recipient)'s name (only in Courier's proposal, trail, and away lines). |
+| `{PLACE}` | The `Name` of the recipient's current haunt at that moment, such as "CERULEAN CAPE": a hint, not a pin (only in Courier's proposal and trail). |
+| `{SENDER}` | The sender's name (only in Courier's delivery line). |
+| `{LEAGUE}` | The accepted event's league, such as "INDIGO LEAGUE" (only in Courier's [away line](#away-lines)). |
 
 Speaker labels ("BROCK:") and system messages (the [YES / NO] prompt, the
 number given, the quiz's answer options, a lesson's pick, the fallback
 amount, the found keepsake, a refused Bring me pick, a held item with no
-Bag room at a trade, a received egg or one sent to the PC, and the
-player's explanation of a gone egg) are generic text, the same for every
-trainer.
+Bag room at a trade, a received egg or one sent to the PC, the
+player's explanation of a gone egg, and a received PARCEL) are generic
+text, the same for every trainer.
 
 ## Worked example: Diglett's Cave
 
@@ -2219,8 +2406,8 @@ clearing.
 With this example, the five worked haunts cover the first five quest
 types: Walk with me (Diglett's Cave), One on one (Celadon Game Corner), Lost
 something (Cerulean Cape), Quiz (Pewter Museum), and Catch me one
-(Viridian Forest). Bring me, Swap battle, and Trade have no worked haunt
-yet.
+(Viridian Forest). Bring me, Swap battle, Trade, Wanted, Egg sitting, and
+Courier have no worked haunt yet.
 
 ## Kanto haunts
 
@@ -2265,6 +2452,10 @@ Every haunt has capacity 1.
 
 Notes:
 
+- **Names.** The Haunt column is each haunt's `Name` tag, in capitals in
+  game ("CERULEAN CAPE"). Two exceed 20 characters and shorten: Saffron
+  Fighting Dojo to "FIGHTING DOJO", and Indigo Plateau Pokémon Center to
+  "INDIGO PLATEAU".
 - **Sabrina's spot.** Sabrina is aloof, so she can only be placed at a
   remote elite haunt. The Dojo back room (the Dojo's rematch room today) is
   Saffron's: its Psychic theme and Saffron hometown make her its best fit
@@ -2607,6 +2798,31 @@ that mode that also picks the move.
   `gSpecialVar_MonBoxPos` (or `ZeroBoxMonAt`), and from the party with
   `ZeroMonData` and `CompactPartySlots`.
 
+### Courier engine
+
+- **The item.** FRLG's `ITEM_OAKS_PARCEL` is an alias of `ITEM_PARCEL`
+  (746, [items.h](../../game/include/constants/items.h)), a key item named
+  "PARCEL" whose description is Oak's ("A parcel for Prof. Oak from a
+  Pokémon Mart's clerk.", [items.h data](../../game/src/data/items.h)).
+  Reusing it would collide with the Pallet opening:
+  `WayfarerKanto_TryReceiveParcel` gives Oak's parcel only when the Bag
+  has none, and `WayfarerKanto_TryAcceptParcel` takes any one away
+  ([wayfarer_kanto_opening.c](../../game/src/wayfarer_kanto_opening.c)),
+  so a courier parcel held at that point would stand in for Oak's.
+  **Recommendation:** a new Wayfarer-only key item, `ITEM_COURIER_PARCEL`,
+  added after `ITEM_SILPH_CARD_KEY` under `POKEMON_WAYFARER`, which sets the
+  precedent of a Wayfarer key item reusing an existing icon. Its name is
+  "PARCEL", its description generic ("A parcel to deliver for a friend."),
+  its pocket `POCKET_KEY_ITEMS`, its use `ItemUseOutOfBattle_CannotUse`,
+  its importance nonzero so it can't be tossed, sold, or held, and its icon
+  `gItemIcon_Parcel`.
+- **Delivery is script logic.** The talk script compares the talked-to
+  trainer with the saved recipient, and the sender's trail and away lines
+  read the current placement (`{PLACE}` from the recipient's haunt). When
+  real travel replaces placement, the same reads go to the world record
+  ([travel](#travel-and-on-map-walking)); nothing in the parcel depends on
+  how the recipient got where they are.
+
 ### Cameos and the Dojo
 
 - **Cameos.** HNS places a one-off cameo of many Gym Leaders on the
@@ -2682,6 +2898,13 @@ Haunts add:
   haunt and notable-trainer state already claims
   ([trade engine](#trade-engine)); the egg itself is a normal POKéMON in
   the player's party or boxes, so nothing per egg is stored;
+- one **courier state** for the whole game ([Courier](#courier)): the
+  sender's and the recipient's `characterId` (6 bits each, as in a
+  traded-slot record), the active flag, and the
+  [trail bit](#refreshing-the-trail), 14 bits packed into **2 bytes**
+  beside the reward counters in SaveBlock3's haunt state, well within its
+  464 free bytes. The PARCEL itself is a key item in the Bag, saved with
+  it;
 - the **traded-slot records** (below); and
 - the **quest in progress**: a walk (its haunt), cleared on load and on
   whiteout, or a Swap battle (its haunt), set when the party is parked and
@@ -2733,7 +2956,8 @@ overflow.
 New Game saves every claim bit clear, every reward counter at 0, the placement
 for world progress 0, every search state at none, every asked bit, owed bit,
 follow-up bit, and outstanding bit clear, every eggs-given count at 0, every
-traded-slot record free, and no quest in progress. With follower
+traded-slot record free, no active parcel (the courier state all zero), and
+no quest in progress. With follower
 NPCs enabled, SaveBlock3 also holds the engine's follower state, which a walk
 uses.
 
@@ -2755,7 +2979,12 @@ On every load, before the overworld runs:
    or Wanted haunts. Drop the follow-up bits of haunts no longer in the
    catalog, and the outstanding bits and eggs-given counts of characters no
    longer in the registry; their eggs stay with the player as ordinary
-   POKéMON. A reward counter above its trainer's current pool
+   POKéMON. An active parcel whose sender or recipient is no longer in the
+   registry, or is no longer placeable (Tate & Liza), is settled: the
+   PARCEL is removed from the Bag, the courier state is cleared, and
+   nothing is paid. The Bag follows the courier state: a PARCEL with no
+   active parcel is removed, and an active parcel with no PARCEL in the
+   Bag gets it back. A reward counter above its trainer's current pool
    length (the pool got shorter) is lowered to that length: the pool counts as
    used up, and nothing is taken back or paid. A traded-slot record is freed
    when its trainer is no longer in the registry, its species no longer
@@ -2773,7 +3002,8 @@ On every load, before the overworld runs:
    only at a known haunt, never at an empty one; an outstanding bit and an
    eggs-given count only for known trainers, never a count above the cap
    (15, so the check guards a lowered cap), and never an outstanding bit
-   with a count of 0. Each
+   with a count of 0; an active courier state names a sender and a
+   recipient that differ, and an inactive one is all zero. Each
    traded-slot record in use names a known character, at most one record
    per character, a slot from 2 to 6, a trade level from 1 to 100, a
    nature below 25, an ability slot below 3, a valid ball, a nickname and
@@ -2782,7 +3012,9 @@ On every load, before the overworld runs:
    reward anything.
 4. **Recompute.** Compute the placement from the current inputs and compare
    it with the saved one, clearing the claim bit, search state, asked bit,
-   and follow-up bit of every haunt whose trainer changed, then save it.
+   and follow-up bit of every haunt whose trainer changed, and the trail
+   bit when that haunt held or now holds the parcel's sender or recipient,
+   then save it.
 
 ## Presentation
 
@@ -2819,7 +3051,8 @@ It is not built yet ([Later](#later)).
 Required implementation evidence (not yet run):
 
 1. **Catalog.** Every haunt has valid tags (one or two activities from the
-   shared list, and capacity 1 in v0), existing maps, an active meeting
+   shared list, capacity 1 in v0, and a name of at most 20 characters),
+   existing maps, an active meeting
    spot, and its quest details (a walk's start and exit, two or three lost
    spots, each on a reachable tile with a hint, a catch species on its wild
    table, a Bring me kind from the kind table, local species on a Wanted
@@ -2839,8 +3072,9 @@ Required implementation evidence (not yet run):
    ties match golden fixtures from host tooling; an inactive elite haunt is
    empty; accepting an event, asking a partner, and becoming a Master each
    recompute it. A walking trainer keeps their haunt until the walk ends.
-5. **Talk flow.** Every talk is a greeting, then the proposal or `QUIRK` (or an
-   Egg sitting follow-up in their place), then `BYE`, with no menu, battle
+5. **Talk flow.** Every talk is a greeting, then the proposal or `QUIRK` (or a
+   follow-up in their place: a Courier delivery, else an Egg sitting
+   follow-up, else a Courier trail), then `BYE`, with no menu, battle
    offer, or team-up at any stage. The greeting follows the stage: a Stranger
    gets `MEET`, or `HEARD` when the player's fame reaches them (the player's TR
    at least `min(80, their TR − 10)`, a reign at any league, or being a Master),
@@ -2974,10 +3208,31 @@ Required implementation evidence (not yet run):
     change in friendship. No outcome costs the player anything; a settled
     egg lets a later Egg sitting quest give the next one, with a new
     personality. A different POKéMON of the same species never counts.
-12. **Claims.** A reward is given once per placement; a changed placement
+12. **Courier.** The proposal names a recipient placed right now, never the
+    sender: the trainer at offset `wp mod m`, from the first after the
+    sender in catalog order, among placed trainers of the sender's home
+    region, or of any region when none is placed, matching golden fixtures
+    from host tooling; `{PLACE}` is the recipient's current haunt name. With
+    no one to name, or while a parcel is active anywhere, a Courier haunt
+    gives `QUIRK` with the claim bit clear. `NO` changes nothing; `YES` gives
+    the PARCEL (`ITEM_COURIER_PARCEL`, never `ITEM_OAKS_PARCEL`, so the
+    Pallet opening's parcel works with a courier parcel held), sets the
+    claim bit, and pays nothing. Placement never reads the parcel: the
+    recipient moves as usual. At the sender's next meeting, the trail names
+    the recipient's current haunt, or the away line for a league lineup,
+    the partner, or no haunt, once, and again only after a recompute
+    changes the sender's or the recipient's haunt. At any talk with the
+    recipient, at any haunt and at a first meeting after `MEET` or `HEARD`,
+    the delivery line, the recipient's `PRAISE`, their next reward-pool
+    entry, and `BYE` play, +10 with each of the sender and the recipient;
+    the PARCEL is removed and the courier settled, and a waiting reward
+    leaves it active. A delivery comes before an Egg sitting follow-up, and
+    that before the trail; none touches a claim bit, and the haunt's own
+    quest returns at the next talk. No expiry or penalty applies.
+13. **Claims.** A reward is given once per placement; a changed placement
    reopens it; a full Bag, a cancelled lesson, or no POKéMON able to learn
    keeps it open and leaves the reward counter unchanged.
-13. **Reward pools.** The reward never depends on the quest type. Quests
+14. **Reward pools.** The reward never depends on the quest type. Quests
     with one trainer at different haunts pay that trainer's pool in order,
     one entry each; a gated next entry or a used-up pool pays the fallback
     (prize money equal to a win over the trainer at current TR) and leaves
@@ -2987,21 +3242,24 @@ Required implementation evidence (not yet run):
     teaches the first move in pool order the chosen POKéMON can learn and
     doesn't know, and offers only POKéMON with such a move. Brock's first
     quest gives PEWTER CRUNCHIES and Giovanni's gives a NUGGET.
-14. **Dialogue.** Every assembled line resolves its slots and fits its text
+15. **Dialogue.** Every assembled line resolves its slots and fits its text
     box with worst-case values; no haunt dialogue carries gossip.
-15. **Cameos.** No cameo or Dojo rematch seat remains in Wayfarer; the Dojo
+16. **Cameos.** No cameo or Dojo rematch seat remains in Wayfarer; the Dojo
     back room works as a haunt; no stranger battle, rematch, prize money
     beyond the quest fallback, or Battle Points come from haunts.
-16. **Save.** A new game and a reload give the saved state described above; a
+17. **Save.** A new game and a reload give the saved state described above; a
     search state, asked bit, owed bit, follow-up bit, outstanding bit,
-    eggs-given count, or traded-slot record survives a reload, and the
-    first four clear with their haunt's placement; corrupt reward counters,
-    claim bits, search states, asked bits, owed bits, follow-up bits,
-    outstanding bits, eggs-given counts, placements, or traded-slot records
-    are rejected; removed characters or
-    haunts are pruned, and so are records of removed species or of slots no
-    longer fillers; a counter past a shortened pool is lowered to its
-    length; and the record pool fits `PokemonStorageFreeSpace`.
+    eggs-given count, traded-slot record, or courier state survives a
+    reload, and the first four clear with their haunt's placement; corrupt
+    reward counters, claim bits, search states, asked bits, owed bits,
+    follow-up bits, outstanding bits, eggs-given counts, placements,
+    traded-slot records, or courier states are rejected; removed characters
+    or haunts are pruned, and so are records of removed species or of slots
+    no longer fillers; a parcel with a removed sender or recipient is
+    settled with the PARCEL removed and nothing paid, and the PARCEL in the
+    Bag follows the courier state; a counter past a shortened pool is
+    lowered to its length; and the record pool fits
+    `PokemonStorageFreeSpace`.
 
 ## Open questions
 
@@ -3056,7 +3314,7 @@ Required implementation evidence (not yet run):
 - **Explorer support** for the [balance report](#balance-report).
 - **Favourite species for Wanted:** a per-trainer override of the derived
   wanted species for canon moments, such as Brock's existing Rhyhorn trade.
-- **Worked Bring me, Swap battle, Trade, Wanted, and Egg sitting
+- **Worked Bring me, Swap battle, Trade, Wanted, Egg sitting, and Courier
   haunts**, and their places in the [Kanto list](#kanto-haunts).
 - **"Show me a hatchling":** a cheap variant of
   [Egg sitting](#egg-sitting) with no egg handed over: the player shows any
@@ -3065,6 +3323,10 @@ Required implementation evidence (not yet run):
 - **Eggs as reward-pool entries:** a third entry type beside items and
   lessons, such as a Close friend's egg of their buddy's line: a Dratini
   egg from Lance, after HGSS's Dratini gift.
+- **More Courier hint sources:** phone calls to the sender, gossip at
+  haunts, a Gym guide's "out at {PLACE}", and routines the player can
+  learn. Once real travel exists, `{PLACE}` can become "heading toward
+  {PLACE}" while the recipient is on the move ([Courier](#courier)).
 - **Travel between haunts:** trainers walking to their haunts instead of
   being placed, following routines with a per-place cap of two or three,
   built on the two-layer model the
