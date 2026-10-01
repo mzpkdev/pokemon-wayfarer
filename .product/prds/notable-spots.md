@@ -106,11 +106,11 @@ a Center or a Mart, holds one. An outdoor map holds two or three in all,
 counting both spots and haunts. A trainer never goes to a full place; they
 pick the next one instead.
 
-**Favourites.** Later, a trainer can have up to three favourite spots for a
-signature habit: Lt. Surge at the Celadon Game Corner, or Erika on the
-department store's perfume floor. A favourite wins whenever it has room;
-otherwise the trainer picks as usual. Favourites are written with the
-routines, not now.
+**Favourites.** A trainer has up to three favourite spots for a signature
+habit: Lt. Surge at the Celadon Game Corner, or Erika on the Celadon
+department store's gift floor. A favourite wins whenever it has room;
+otherwise the trainer picks as usual. Favourites are authored with the
+routines in [notable trainer routines](../research/notable-trainer-routines.md).
 
 ### Meeting a trainer at a spot
 
@@ -138,9 +138,9 @@ Unchanged: v0 haunt placement, haunt quests, and the haunt talk flow; Gym
 battles and badges; every battle with a notable trainer
 ([Notable trainers](notable-trainers.md)).
 
-Out of scope: the routines themselves (when a trainer does which activity),
-travel between maps, and favourites, all of which come with the routine and
-travel design. Quests, battles, rewards, and gifts at spots. Spots are the
+Out of scope: the routines themselves (when a trainer does which activity)
+and travel between maps, which the
+[world simulation](notable-world-simulation.md) owns. Quests, battles, rewards, and gifts at spots. Spots are the
 destinations of the [world simulation](notable-world-simulation.md).
 
 ## Presentation
@@ -192,7 +192,6 @@ beside a seat. Talking to them runs straight through with no menu.
 
 ## Later
 
-- Authoring favourites, with the routines.
 - More found kinds, such as libraries, if the named-spot list grows too
   long to write by hand.
 - Per-trainer activity lines, if the shared ones get stale.
