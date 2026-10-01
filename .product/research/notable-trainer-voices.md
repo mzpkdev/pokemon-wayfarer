@@ -3,7 +3,7 @@
 Voice bits are short reusable lines for the 38 notable trainers in
 `devtools/ui/src/modules/trainer-balance/catalog.json`.
 [Notable haunts](../prds/notable-haunts.md) splice them into generic dialogue
-at overworld meeting spots, so one haunt script works for any trainer. The
+at haunts in the overworld, so one haunt script works for any trainer. The
 haunt line carries the facts of the place and its activity. The trainer's bits
 carry personality.
 
