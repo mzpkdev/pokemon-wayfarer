@@ -67,6 +67,14 @@ and the player can still stop them for a word. A Gym's own leader is never
 a visitor there. A trainer can visit a Gym whose leader the player hasn't
 beaten yet, and the visitor never stands in the way of the badge battle.
 
+**Behaviour.** Each kind of spot behaves the same way everywhere: a
+handful of templates (stand and face, wander in an area, browse the
+shelves, just leaving, sit or idle) cover every kind. The spot finder only
+says where a spot is and which tiles it needs; nobody scripts what a
+trainer does at each detected spot, and a named spot picks its template
+from its activity unless its author chooses otherwise
+([behaviour templates](../specs/notable-spots.md#behaviour-templates)).
+
 ### Who goes where
 
 Each trainer's routine (future work) moves them through **activities**.
@@ -187,6 +195,8 @@ beside a seat. Talking to them runs straight through with no menu.
 - More found kinds, such as libraries, if the named-spot list grows too
   long to write by hand.
 - Per-trainer activity lines, if the shared ones get stale.
+- Trainers whose pace at a spot follows their play style or momentum, such
+  as a rising trainer moving faster.
 
 ## References
 

@@ -27,6 +27,10 @@ is in the build yet.
 - **Capacity.** 1 on an interior map (`MAP_TYPE_INDOOR` or
   `MAP_TYPE_NONE`), 1 or 2 elsewhere. A second trainer stands on the first
   free 4-neighbour of the tile, in the same order.
+- **Template.** No column: every row takes the default template for the
+  activity the trainer is doing there
+  ([behaviour templates](../specs/notable-spots.md#behaviour-templates)).
+  A row that needs another adds a Template column later.
 - **Haunt.** The haunt that shares the map, if any. A named spot never
   uses a haunt's standing tile; the two share the map's
   [capacity](../specs/notable-spots.md#capacity).

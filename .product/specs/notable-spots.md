@@ -18,7 +18,7 @@ data, the build-time spot extraction and its authored overrides, the named
 spots and their validation, spot capacity, the activity-to-kind mapping
 and the two new activities (**fish** and **visit**), choosing a spot, home
 bases and favourites as trainer values, the talk flow at spots and its
-activity lines, the walker behaviours each kind needs, the Gym exit-spawn
+activity lines, the behaviour templates each kind uses, the Gym exit-spawn
 rule, and the saved-state stance.
 
 - [Notable haunts](notable-haunts.md) owns the haunts, their placement and
@@ -326,6 +326,7 @@ Each row authors:
 | Tile | `(x, y)` | Where the trainer stands. |
 | Activities | one or two from the [activity list](notable-haunts.md#activities), with the spots' fish and visit | What a trainer does there: train, care, study, home, relax, shop, gamble, sightsee, fish, visit, or lie low. |
 | Capacity | 1, or 2 outdoors | How many trainers it holds at once. |
+| Template | optional: Stand and face, or Sit or idle | How the trainer behaves there; without one, the default for the activity ([behaviour templates](#behaviour-templates)). |
 | Note | a short phrase | Why the place is there; for review only, never shown in game. |
 
 The row has no facing of its own: the trainer faces the first 4-neighbour
@@ -505,6 +506,137 @@ Rules:
 - A visitor appears at most once per entry: leaving and re-entering finds
   the Gym empty until the routine sends someone again.
 
+### Behaviour templates
+
+The extraction outputs **where** each spot is, plus the few tiles its
+behaviour needs. Behaviour itself is authored **once per kind**, as a
+small library of templates in code. Nothing is authored per detected spot.
+
+**Per-kind data.** For each kind, the [spot table](#spot-extraction)
+holds the tiles its template needs, as the
+[detection sources](#detection-sources) define them:
+
+| Kind | Data per spot |
+| --- | --- |
+| Center counter | A standing tile beyond the counter row, facing the counter, toward the nurse. |
+| Center side | A tile next to a side wall, facing into the room. |
+| Mart and store | A shelf's front tile (the standing tile) and its facing toward the shelf; the store's floor list, and the interior warp tiles between floors. |
+| Game Corner | A slot machine's standing tile, facing its sign. |
+| Gym visitor | The exit warp tile, plus the path to it: each free tile within a placeholder 3 tiles of the exit, nearest first, with its steps to the exit. |
+| Tall grass | The patch area: its tall-grass tiles. |
+| Water's edge | An edge tile, facing the water tile beside it. |
+| Square | Its standing tile (the centre nearest the group's mean), plus its area: the square's centres. |
+| Bench or lookout | The authored tile and facing. |
+| NPC chat | The NPC's object and tile, an adjacent free standing tile, and the facing toward the NPC. |
+| Named spot | The authored tile, its derived facing, the second trainer's tile at capacity 2, and its template. |
+
+**Capabilities.** The templates use only what the walker can already do.
+The [travel proof of concept](../research/notable-trainer-travel-poc.md)
+verified walking to a tile with the engine's collision and re-planning
+when blocked, dwelling, and passing through a door (south-facing doors
+only, its constraint 6). Facing is an ordinary movement
+action, and the emotes are the ones in
+[walker behaviours](#walker-behaviours): "!" with
+`MOVEMENT_ACTION_EMOTE_EXCLAMATION_MARK`
+([event_object_movement.h](../../game/include/constants/event_object_movement.h),
+line 177), and "…" through `FLDEFF_EMOTE`
+([field_effects.h](../../game/include/constants/field_effects.h),
+line 38), with "?" as the fallback.
+
+**The five templates:**
+
+1. **Stand and face.** Walk to the anchor tile, face the target, and
+   idle. Now and then, show the kind's emote, if it has one.
+2. **Wander in area.** Pick a tile in the area, walk to it, pause, and
+   repeat. During a pause, the trainer may turn to look around. The
+   anchor is the area tile nearest the trainer's arrival.
+3. **Browse.** Stand and face, then after a while move to another shelf's
+   front tile on the same floor, or now and then to another floor of the
+   same store.
+4. **Just leaving.** Spawn near the exit and walk out, as
+   [just leaving](#just-leaving) describes.
+5. **Sit or idle.** Stand on a fixed tile, facing a fixed direction, with
+   no emote. No sitting frame exists, so "sitting" is standing still.
+
+**Kinds and templates:**
+
+| Kind | Template | Emote |
+| --- | --- | --- |
+| Center counter | Stand and face | none |
+| Center side | Sit or idle | none |
+| Mart and store | Browse | none |
+| Game Corner | Stand and face | none |
+| Other Gyms | Just leaving | none |
+| Tall grass | Wander in area | "!" |
+| Water's edge | Stand and face (the "fishing" pose) | "!" |
+| Town square | Wander in area | none |
+| Bench or lookout | Sit or idle | none |
+| Chatting with an NPC | Stand and face | "…" ("?" as fallback) |
+| Named spot | The row's template; by default, from the activity | see below |
+
+A named spot is one tile, so it takes Stand and face or Sit or idle; the
+other three need an area, floors, or an exit. A row may name its template
+in an optional Template field. Without one, the template follows the
+activity the trainer is doing there, as the
+[activity line](#talk-flow) does:
+
+| Activity | Default template | Emote |
+| --- | --- | --- |
+| study | Stand and face | none |
+| care | Stand and face | none |
+| shop | Stand and face | none |
+| gamble | Stand and face | none |
+| train | Stand and face | "!" |
+| fish | Stand and face | "!" |
+| visit | Stand and face | "…" ("?" as fallback) |
+| relax | Sit or idle | none |
+| sightsee | Sit or idle | none |
+| home | Sit or idle | none |
+| lie low | Sit or idle | none |
+
+A second trainer at a capacity-2 named spot runs the same template on
+their own tile, with the facing derived the same way.
+
+**Choices.** Wander's next tile, Browse's next shelf, and "now and then"
+are deterministic, never drawn from the engine's random number
+generator: a cosmetic walker must not shift the encounter and battle
+rolls. Each walker keeps a step counter `k` in RAM, starting at 0. The
+next tile or shelf is entry `(c + 7k) mod n` of the area or floor list,
+skipping the current and taken ones, where `c` is the trainer's position
+in catalog order and `n` the number of entries (if 7 divides `n`, the
+stride is the next prime that doesn't). An emote shows on the dwell ticks
+where `(c + t) mod 8 = 0`, with `t` the walker's tick counter: the
+placeholder 1 in 8 of [spot kinds](#spot-kinds). Browse takes another
+floor on every third move, when the store has one and that floor is
+under its [capacity](#capacity); the move is an exit through an interior
+warp, and hands off to the travel record as a door does.
+
+**Timing.** All timings are shared constants, the same for every kind and
+trainer (placeholders):
+
+| Constant | Placeholder |
+| --- | ---: |
+| Dwell tick | 60 frames |
+| Emote cadence | 1 in 8 dwell ticks |
+| Wander pause | 3 dwell ticks |
+| Browse interval | 8 dwell ticks |
+| Browse floor change | every 3rd move |
+
+**No saved state.** Templates add nothing to the save. The step and tick
+counters live in the local actor's RAM, as the proof of concept's walker
+state does, and are rebuilt on load or when the engine heap resets on
+menus and warps (its constraint 4): the actor walks back to the spot's
+anchor and starts the template over. So a reload can change where a
+wandering trainer stands, but never which spot they are at.
+
+**What gets authored.**
+
+- About five templates, in code, once.
+- The kind → template table above.
+- One template choice per named spot, mostly left to the default.
+
+Nothing is authored per detected spot.
+
 ### Talk flow
 
 Talking to a trainer at a spot runs three steps, with no menu:
@@ -606,7 +738,8 @@ blockdata, and metatile attributes, applies the detection rules, the
 authored overrides, and the named spots (after
 [validating](#named-spots) them), and writes one spot table **per map**:
 for each spot its kind, tile (or patch), facing, and kind details (store,
-Gym exit warp, NPC object, or a named spot's activities and capacity).
+Gym exit warp, NPC object, or a named spot's activities and capacity): the
+[per-kind data](#behaviour-templates) its template needs.
 The output order is fixed (kind, then y, then x), so spot tables are
 stable between builds. It runs beside the existing per-map
 generation
@@ -620,12 +753,12 @@ counts per map, so detection gaps show up in review.
 ### Walker behaviours
 
 The proof of concept's walker walks to a tile and re-plans when blocked.
-Spots add:
+The [behaviour templates](#behaviour-templates) build on that, and need:
 
-- **Face and dwell:** stand on the spot tile facing its direction.
-- **Roam a patch:** walk to another tile of the same tall-grass patch after
-  each dwell, chosen by the same deterministic rotation as the
-  [pick](#choosing-a-spot).
+- **Face and dwell:** stand on a tile facing a direction, counting dwell
+  ticks.
+- **Wander:** walk to another tile of an area (a tall-grass patch or a
+  square) after a pause, chosen by the templates' deterministic rotation.
 - **Emotes:** "!" with `MOVEMENT_ACTION_EMOTE_EXCLAMATION_MARK`
   ([event_object_movement.h](../../game/include/constants/event_object_movement.h),
   line 177). "…" needs an emote frame: `FLDEFF_EMOTE`
@@ -671,6 +804,8 @@ gameplay timer the proof of concept named.
 - More detected kinds, such as libraries, if the named-spot list grows
   past what is comfortable to author.
 - Per-trainer activity lines, if the shared ones get stale.
+- Play style or momentum tweaking template timing, so that a rising
+  trainer moves faster (shorter pauses and browse intervals).
 
 ## References
 
