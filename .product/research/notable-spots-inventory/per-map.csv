@@ -69,7 +69,7 @@ Kanto,LavenderTown_RadioStation_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1
 Kanto,LavenderTown_SoulHouse_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,4
 Kanto,LavenderTown_hns,TOWN,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,238,3,"21,22 6,26 13,4",1,3
 Kanto,MtMoon_Cave_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
-Kanto,MtMoon_Outside_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,0,0,no fishing encounters,0,0,0,,0,0
+Kanto,MtMoon_Outside_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,20,1,,0,0,0,,0,0
 Kanto,MtMoon_Shop_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
 Kanto,PalletTown_House2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Kanto,PalletTown_Lab_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
@@ -221,8 +221,8 @@ Johto,AzaleaTown_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Johto,AzaleaTown_KurtsHouse_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
 Johto,AzaleaTown_Mart_hns,INDOOR,hns,0,0,1,29,AzaleaTown_Mart_hns,0,0,0,0,0,,0,0,,0,0,0,,2,5
 Johto,AzaleaTown_PokemonCenter_hns,INDOOR,hns,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
-Johto,AzaleaTown_hns,TOWN,hns,0,0,0,0,,0,0,0,16,1,10,0,0,no fishing encounters,0,93,3,"35,18 16,18 56,24",1,4
-Johto,BellchimeTrail_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,0,0,no fishing encounters,0,0,0,,0,0
+Johto,AzaleaTown_hns,TOWN,hns,0,0,0,0,,0,0,0,16,1,10,1,1,,0,93,3,"35,18 16,18 56,24",1,4
+Johto,BellchimeTrail_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,36,1,,0,0,0,,0,0
 Johto,BlackthornCity_Gym_hns,INDOOR,hns,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,1,2
 Johto,BlackthornCity_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Johto,BlackthornCity_House2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
@@ -246,7 +246,7 @@ Johto,CianwoodHouse3_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
 Johto,CianwoodPokecenter_hns,INDOOR,hns,1,4,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
 Johto,CianwoodShop_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Johto,CliffEdgeCave_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
-Johto,CliffEdgeGate_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,no fishing encounters,0,0,0,,1,2
+Johto,CliffEdgeGate_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,1,1,,0,0,0,,1,2
 Johto,DarkCave_NorthSide_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,4,1,,0,0,0,,0,0
 Johto,DarkCave_SouthSide_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,23,4,,0,0,0,,0,0
 Johto,DragonsDen_Cavern_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,21,3,,0,0,0,,0,0
@@ -307,15 +307,15 @@ Johto,GoldenrodCity_UndergroundStorage_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0
 Johto,GoldenrodCity_UndergroundSwitches_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Johto,GoldenrodCity_UndergroundTunnel_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Johto,GoldenrodCity_hns,CITY,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,73,3,"34,20 35,38 19,33",0,0
-Johto,IcePath_1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,no fishing encounters,0,0,0,,0,0
+Johto,IcePath_1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,9,6,,0,0,0,,0,0
 Johto,IcePath_B1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Johto,IcePath_B2F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
-Johto,IcePath_B3F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,no fishing encounters,0,0,0,,0,0
+Johto,IcePath_B3F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,2,1,,0,0,0,,0,0
 Johto,IcePath_B4F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Johto,IlexForest_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,23,2,,0,0,0,,1,3
 Johto,IndigoPlateau_PokemonCenter_hns,INDOOR,hns,1,8,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
 Johto,IndigoPlateau_hns,TOWN,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,9,1,"11,14",0,0
-Johto,LakeOfRageLowTide_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,0,0,no fishing encounters,0,0,0,,0,0
+Johto,LakeOfRageLowTide_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,34,10,,0,0,0,,0,0
 Johto,LakeOfRage_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
 Johto,LakeOfRage_House2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
 Johto,LakeOfRage_hns,CITY,hns,0,0,0,0,,0,0,0,0,0,,45,7,,0,65,3,"31,42 42,36 13,42",1,3
@@ -337,7 +337,7 @@ Johto,MtSilver_MountainSide_hns,ROUTE,hns,0,0,0,0,,0,0,0,230,11,40 24 23 14 14 1
 Johto,MtSilver_Outside_hns,CITY,hns,0,0,0,0,,0,0,0,163,4,107 16 13 8,5,2,,0,13,3,"37,26 31,13 25,25",0,0
 Johto,MtSilver_PokemonCenter_hns,INDOOR,hns,1,4,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
 Johto,MtSilver_Snow_hns,ROUTE,hns,0,0,0,0,,0,0,0,165,12,21 15 14 10 9 9 8 7 7 7 7 6,0,0,,0,0,0,,0,0
-Johto,MtSilver_SummitDay_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,0,0,no fishing encounters,0,0,0,,0,0
+Johto,MtSilver_SummitDay_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,3,1,,0,0,0,,0,0
 Johto,NationalPark_BugContest_hns,ROUTE,hns,0,0,0,0,,0,0,0,230,1,184,0,0,,0,0,0,,0,0
 Johto,NationalPark_Normal_hns,ROUTE,hns,0,0,0,0,,0,0,0,230,1,184,0,0,,0,0,0,,0,0
 Johto,NewBarkTown_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
@@ -383,25 +383,25 @@ Johto,Route30_hns,ROUTE,hns,0,0,0,0,,0,0,0,192,6,42 36 36 32 12 10,19,3,,0,0,0,,
 Johto,Route31_hns,ROUTE,hns,0,0,0,0,,0,0,0,130,5,38 35 23 16 6,11,2,,0,0,0,,2,8
 Johto,Route32_PokemonCenter_hns,INDOOR,hns,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
 Johto,Route32_hns,ROUTE,hns,0,0,0,0,,0,0,0,235,7,52 44 44 41 28 17 7,52,3,,0,0,0,,3,7
-Johto,Route33_hns,ROUTE,hns,0,0,0,0,,0,0,0,56,2,29 27,0,0,no fishing encounters,0,0,0,,1,4
+Johto,Route33_hns,ROUTE,hns,0,0,0,0,,0,0,0,56,2,29 27,46,2,,0,0,0,,1,4
 Johto,Route34_DayCare_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Johto,Route34_hns,ROUTE,hns,0,0,0,0,,0,0,0,446,5,225 102 20 12 8,19,3,,0,0,0,,0,0
 Johto,Route35_hns,ROUTE,hns,0,0,0,0,,0,0,0,116,1,87,8,1,,0,0,0,,0,0
-Johto,Route36_hns,ROUTE,hns,0,0,0,0,,0,0,0,90,3,15 13 8,0,0,no fishing encounters,0,0,0,,2,6
+Johto,Route36_hns,ROUTE,hns,0,0,0,0,,0,0,0,90,3,15 13 8,1,1,,0,0,0,,2,6
 Johto,Route37_hns,ROUTE,hns,0,0,0,0,,0,0,0,190,3,66 46 26,0,0,,0,0,0,,0,0
-Johto,Route38_hns,ROUTE,hns,0,0,0,0,,0,0,0,364,3,108 88 70,0,0,no fishing encounters,0,0,0,,0,0
+Johto,Route38_hns,ROUTE,hns,0,0,0,0,,0,0,0,364,3,108 88 70,116,9,,0,0,0,,0,0
 Johto,Route39_Barn_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Johto,Route39_FarmHouse_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
-Johto,Route39_hns,ROUTE,hns,0,0,0,0,,0,0,0,177,2,84 57,0,0,no fishing encounters,0,0,0,,1,4
+Johto,Route39_hns,ROUTE,hns,0,0,0,0,,0,0,0,177,2,84 57,89,2,,0,0,0,,1,4
 Johto,Route40_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,28,1,,0,0,0,,2,7
 Johto,Route41_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,30,7,,0,0,0,,0,0
 Johto,Route42_hns,ROUTE,hns,0,0,0,0,,0,0,0,35,1,35,21,6,,0,0,0,,1,2
 Johto,Route43_hns,ROUTE,hns,0,0,0,0,,0,0,0,209,6,58 56 20 18 13 12,20,4,,0,0,0,,0,0
 Johto,Route44_hns,ROUTE,hns,0,0,0,0,,0,0,0,64,1,56,66,6,,0,0,0,,0,0
 Johto,Route45_hns,ROUTE,hns,0,0,0,0,,0,0,0,357,11,50 45 44 41 34 29 28 27 25 24 10,58,13,,0,0,0,,0,0
-Johto,Route46_hns,ROUTE,hns,0,0,0,0,,0,0,0,98,1,86,0,0,no fishing encounters,0,0,0,,0,0
+Johto,Route46_hns,ROUTE,hns,0,0,0,0,,0,0,0,98,1,86,1,1,,0,0,0,,0,0
 Johto,Route47_hns,ROUTE,hns,0,0,0,0,,0,0,0,110,0,,50,10,,0,0,0,,0,0
-Johto,Route48_hns,ROUTE,hns,0,0,0,0,,0,0,0,317,2,125 96,0,0,no fishing encounters,0,0,0,,0,0
+Johto,Route48_hns,ROUTE,hns,0,0,0,0,,0,0,0,317,2,125 96,27,6,,0,0,0,,0,0
 Johto,RuinsOfAlph_B1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
 Johto,RuinsOfAlph_Lab_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
 Johto,RuinsOfAlph_Outside_hns,ROUTE,hns,0,0,0,0,,0,0,0,61,2,36 25,19,4,,0,0,0,,4,9
@@ -474,7 +474,7 @@ Johto,WhirlIslands_B1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,141,10,,0,0,0,,0,
 Johto,WhirlIslands_B2F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Johto,WhirlIslands_B3F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,47,6,,0,0,0,,0,0
 Johto,WhirlIslands_Descent_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,37,3,,0,0,0,,0,0
-Johto,WhirlIslands_LugiaChamber_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,no fishing encounters,0,0,0,,0,0
+Johto,WhirlIslands_LugiaChamber_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,19,2,,0,0,0,,0,0
 Hoenn,AbandonedShip_CaptainsOffice,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
 Hoenn,AbandonedShip_Corridors_1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Hoenn,AbandonedShip_Corridors_B1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
@@ -531,8 +531,8 @@ Hoenn,BattleFrontier_Lounge7,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,10
 Hoenn,BattleFrontier_Lounge8,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
 Hoenn,BattleFrontier_Lounge9,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
 Hoenn,BattleFrontier_Mart,INDOOR,emerald,0,0,1,18,BattleFrontier_Mart,0,0,0,0,0,,0,0,,0,0,0,,2,5
-Hoenn,BattleFrontier_OutsideEast,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,0,0,no fishing encounters,0,0,0,,16,42
-Hoenn,BattleFrontier_OutsideWest,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,0,0,no fishing encounters,0,0,0,,5,11
+Hoenn,BattleFrontier_OutsideEast,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,28,3,,0,0,0,,16,42
+Hoenn,BattleFrontier_OutsideWest,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,5,1,,0,0,0,,5,11
 Hoenn,BattleFrontier_PokemonCenter_1F,INDOOR,emerald,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,11
 Hoenn,BattleFrontier_PokemonCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
 Hoenn,BattleFrontier_RankingHall,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,4
@@ -638,7 +638,7 @@ Hoenn,MagmaHideout_3F_1R,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Hoenn,MagmaHideout_3F_2R,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Hoenn,MagmaHideout_3F_3R,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Hoenn,MagmaHideout_4F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
-Hoenn,MauvilleCity,CITY,emerald,0,0,0,0,,0,0,0,0,0,,0,0,no fishing encounters,0,63,3,"4,9 16,2 35,9",4,14
+Hoenn,MauvilleCity,CITY,emerald,0,0,0,0,,0,0,0,0,0,,2,1,,0,63,3,"4,9 16,2 35,9",4,14
 Hoenn,MauvilleCity_BikeShop,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
 Hoenn,MauvilleCity_GameCorner,INDOOR,emerald,0,0,0,0,,1,12,0,0,0,,0,0,,0,0,0,,9,30
 Hoenn,MauvilleCity_Gym,INDOOR,emerald,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,1,2
@@ -844,7 +844,7 @@ Hoenn,SootopolisCity_MysteryEventsHouse_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,
 Hoenn,SootopolisCity_MysteryEventsHouse_B1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Hoenn,SootopolisCity_PokemonCenter_1F,INDOOR,emerald,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Hoenn,SootopolisCity_PokemonCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
-Hoenn,TerraCave_End,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,no fishing encounters,0,0,0,,0,0
+Hoenn,TerraCave_End,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,1,1,,0,0,0,,0,0
 Hoenn,TerraCave_Entrance,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Hoenn,TrainerHill_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
 Hoenn,TrainerHill_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0

@@ -218,22 +218,20 @@ true: `MB_POND_WATER`, `MB_OCEAN_WATER`, `MB_DEEP_WATER`,
 currents (the water behaviours start at line 21 of
 [metatile_behaviors.h](../../game/include/constants/metatile_behaviors.h)).
 It is the same check the rods use
-([fishing.c](../../game/src/fishing.c), line 583), so a trainer only
-"fishes" where the player could. The trainer faces that water tile.
+([fishing.c](../../game/src/fishing.c), line 583), so a trainer stands
+where the player could cast a line. The trainer faces that water tile.
 `Route25_hns` has 244 ocean and 42 pond tiles, and `CeladonCity_hns` 18
 pond tiles. Ledges and warp tiles never qualify. The map must also:
 
 - not be an interior (`MAP_TYPE_INDOOR` or `MAP_TYPE_NONE`), which drops
-  pools such as the Cerulean Gym's and the Battle Palace's;
-- not have Gym music; and
-- have fishing encounters: a `fishing_mons` entry for the map in
-  [wild_encounters.json](../../game/src/data/wild_encounters.json), or a
-  `fishing_mons` profile in
-  [wayfarer_sevii_wild_encounters.json](../../game/src/data/wayfarer_sevii_wild_encounters.json).
-  Where no rod gets a bite, nobody waits for one: this drops decorative
-  ponds such as those on `Route38_hns` and `MtMoon_Outside_hns`.
+  pools such as the Cerulean Gym's and the Battle Palace's; and
+- not have Gym music.
 
-Caves keep their edges when they have fishing encounters.
+The map doesn't need fishing encounters. Standing by a pond is a fine
+place to relax or fish even where no rod gets a bite, so decorative ponds
+such as those on `Route38_hns` and `MtMoon_Outside_hns` count. There the
+"fishing" pose is flavour: the trainer only faces the water and stands
+still, so nothing claims a bite is possible. Caves keep their edges too.
 
 **Town squares and benches.** Maps whose `map_type` is `MAP_TYPE_TOWN` or
 `MAP_TYPE_CITY` (as at
@@ -387,7 +385,7 @@ picks the spot kinds it can use:
 | shop | Poké Mart and department store |
 | gamble | Game Corner |
 | train | tall grass (plus haunts tagged train) |
-| relax | town squares and benches (plus waterside haunts tagged relax) |
+| relax | town squares and benches, water's edge (plus waterside haunts tagged relax) |
 | fish | water's edge |
 | visit | other Gyms, chatting with an NPC |
 

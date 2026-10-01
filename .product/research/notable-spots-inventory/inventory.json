@@ -337,8 +337,8 @@
    "gym": 8,
    "tall_grass_tiles": 2518,
    "grass_patches": 53,
-   "water_edge_tiles": 944,
-   "water_edge_stretches": 85,
+   "water_edge_tiles": 964,
+   "water_edge_stretches": 86,
    "square_tiles": 1277,
    "squares": 29,
    "npc_chats": 183,
@@ -346,7 +346,7 @@
    "npc_maps": 103,
    "square_maps": 10,
    "town_city_maps": 10,
-   "water_maps": 26,
+   "water_maps": 27,
    "grass_maps": 23,
    "stores": 9
   },
@@ -361,8 +361,8 @@
    "gym": 8,
    "tall_grass_tiles": 5668,
    "grass_patches": 129,
-   "water_edge_tiles": 1762,
-   "water_edge_stretches": 218,
+   "water_edge_tiles": 2147,
+   "water_edge_stretches": 262,
    "square_tiles": 1181,
    "squares": 40,
    "npc_chats": 198,
@@ -371,7 +371,7 @@
    "square_maps": 14,
    "town_city_maps": 14,
    "grass_maps": 40,
-   "water_maps": 49,
+   "water_maps": 63,
    "stores": 7
   },
   "Hoenn": {
@@ -385,14 +385,14 @@
    "gym": 8,
    "tall_grass_tiles": 2801,
    "grass_patches": 104,
-   "water_edge_tiles": 1384,
-   "water_edge_stretches": 169,
+   "water_edge_tiles": 1420,
+   "water_edge_stretches": 175,
    "square_tiles": 1224,
    "squares": 42,
    "npc_chats": 402,
    "npc_chat_tiles": 1076,
    "npc_maps": 187,
-   "water_maps": 42,
+   "water_maps": 46,
    "grass_maps": 25,
    "square_maps": 15,
    "town_city_maps": 16,
@@ -1061,10 +1061,6 @@
     "interior",
     18
    ],
-   "AzaleaTown_hns": [
-    "no fishing encounters",
-    1
-   ],
    "BattleFrontier_BattlePalaceBattleRoom": [
     "interior",
     5
@@ -1073,97 +1069,71 @@
     "interior",
     23
    ],
-   "BattleFrontier_OutsideEast": [
-    "no fishing encounters",
-    28
-   ],
-   "BattleFrontier_OutsideWest": [
-    "no fishing encounters",
-    5
-   ],
-   "BellchimeTrail_hns": [
-    "no fishing encounters",
-    36
-   ],
    "CeruleanCity_Gym_hns": [
     "interior",
     70
    ],
-   "CliffEdgeGate_hns": [
-    "no fishing encounters",
-    1
-   ],
-   "IcePath_1F_hns": [
-    "no fishing encounters",
-    9
-   ],
-   "IcePath_B3F_hns": [
-    "no fishing encounters",
-    2
-   ],
-   "LakeOfRageLowTide_hns": [
-    "no fishing encounters",
-    34
-   ],
    "LilycoveCity_Harbor": [
     "interior",
     1
-   ],
-   "MauvilleCity": [
-    "no fishing encounters",
-    2
-   ],
-   "MtMoon_Outside_hns": [
-    "no fishing encounters",
-    20
-   ],
-   "MtSilver_SummitDay_hns": [
-    "no fishing encounters",
-    3
-   ],
-   "Route33_hns": [
-    "no fishing encounters",
-    46
-   ],
-   "Route36_hns": [
-    "no fishing encounters",
-    1
-   ],
-   "Route38_hns": [
-    "no fishing encounters",
-    116
-   ],
-   "Route39_hns": [
-    "no fishing encounters",
-    89
-   ],
-   "Route46_hns": [
-    "no fishing encounters",
-    1
-   ],
-   "Route48_hns": [
-    "no fishing encounters",
-    27
-   ],
-   "TerraCave_End": [
-    "no fishing encounters",
-    1
-   ],
-   "WhirlIslands_LugiaChamber_hns": [
-    "no fishing encounters",
-    19
    ]
+  },
+  "water_edge_previous_totals": {
+   "Kanto": {
+    "water_maps": 26,
+    "water_edge_stretches": 85,
+    "water_edge_tiles": 944
+   },
+   "Johto": {
+    "water_maps": 49,
+    "water_edge_stretches": 218,
+    "water_edge_tiles": 1762
+   },
+   "Hoenn": {
+    "water_maps": 42,
+    "water_edge_stretches": 169,
+    "water_edge_tiles": 1384
+   },
+   "Sevii": {
+    "water_maps": 17,
+    "water_edge_stretches": 63,
+    "water_edge_tiles": 691
+   }
+  },
+  "water_edge_restored": {
+   "AzaleaTown_hns": 1,
+   "BattleFrontier_OutsideEast": 28,
+   "BattleFrontier_OutsideWest": 5,
+   "BellchimeTrail_hns": 36,
+   "CliffEdgeGate_hns": 1,
+   "IcePath_1F_hns": 9,
+   "IcePath_B3F_hns": 2,
+   "LakeOfRageLowTide_hns": 34,
+   "MauvilleCity": 2,
+   "MtMoon_Outside_hns": 20,
+   "MtSilver_SummitDay_hns": 3,
+   "Route33_hns": 46,
+   "Route36_hns": 1,
+   "Route38_hns": 116,
+   "Route39_hns": 89,
+   "Route46_hns": 1,
+   "Route48_hns": 27,
+   "TerraCave_End": 1,
+   "WhirlIslands_LugiaChamber_hns": 19
   },
   "water_edge_kept_on_caves": [
    "AbandonedShip_Rooms_B1F",
    "CeruleanCave_1F_hns",
    "CeruleanCave_B2F_hns",
+   "CliffEdgeGate_hns",
    "DarkCave_NorthSide_hns",
    "DarkCave_SouthSide_hns",
    "DragonsDen_Cavern_hns",
    "FourIsland_IcefallCave_Back_Frlg",
    "FourIsland_IcefallCave_Entrance_Frlg",
    "FuchsiaCity_SafariZoneCave_hns",
+   "IcePath_1F_hns",
+   "IcePath_B3F_hns",
    "MeteorFalls_1F_1R",
    "MeteorFalls_1F_2R",
    "MeteorFalls_B1F_1R",
@@ -1177,6 +1147,7 @@
    "SeafoamIslands_B4F_Frlg",
    "SlowpokeWell_B1F_hns",
    "SlowpokeWell_B2F_hns",
+   "TerraCave_End",
    "TohjoFalls_Cavern_hns",
    "UnionCave_1F_hns",
    "UnionCave_B1F_hns",
@@ -1186,7 +1157,8 @@
    "WhirlIslands_1F_hns",
    "WhirlIslands_B1F_hns",
    "WhirlIslands_B3F_hns",
-   "WhirlIslands_Descent_hns"
+   "WhirlIslands_Descent_hns",
+   "WhirlIslands_LugiaChamber_hns"
   ],
   "maps_with_squares_capped": [
    [
@@ -1385,12 +1357,12 @@
     "Route27_hns"
    ],
    [
-    110,
-    "MossdeepCity"
+    116,
+    "Route38_hns"
    ],
    [
-    105,
-    "Route114"
+    110,
+    "MossdeepCity"
    ]
   ],
   "top_npc_chats": [

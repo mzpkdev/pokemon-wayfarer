@@ -10,7 +10,9 @@ this inventory ("revised"), checks the named spots listed in
   inventory.json  scope, per-region totals (revised and draft), findings,
                   named-spot results, and per-map NPC detail
 
-next to this script, and prints the before-and-after table as Markdown. Nothing
+next to this script, and prints the before-and-after table as Markdown,
+plus the water's edge under its previous rule (fishing encounters
+required) against the relaxed rule now in the spec. Nothing
 under game/ is written. Python 3 standard library only.
 
     python3 .product/research/notable-spots-inventory/inventory.py
@@ -1163,9 +1165,15 @@ def main():
             return "interior"
         if info["music"] in GYM_MUSIC:
             return "gym"
-        if info["id"] not in fishing:
-            return "no fishing encounters"
         return ""
+
+    # The rule before it was relaxed also required fishing encounters on
+    # the map. Kept only to report which edges came back.
+    def edge_excluded_previous(name, info):
+        cut = edge_excluded(name, info)
+        if not cut and info["water_edge_spots"] and info["id"] not in fishing:
+            return "no fishing encounters"
+        return cut
 
     revised_tiles = {}
     rows = []
@@ -1365,6 +1373,20 @@ def main():
             if i["grass_patches"] and i["map_type"] == "MAP_TYPE_INDOOR"),
         "family_behaviour_presence": {k: dict(v) for k, v in family_behaviour.items()},
     }
+    # Water's edge under the previous rule (fishing encounters required),
+    # against the relaxed rule now in the spec.
+    edge_previous_totals = {r: Counter() for r in REGIONS}
+    edge_restored = {}
+    for n, i in infos.items():
+        if not edge_excluded(n, i) and i["water_edge_spots"]:
+            if edge_excluded_previous(n, i):
+                edge_restored[n] = i["water_edge_spots"]
+                continue
+            t = edge_previous_totals[i["region"]]
+            t["water_maps"] += 1
+            t["water_edge_stretches"] += i["water_edge_stretches"]
+            t["water_edge_tiles"] += i["water_edge_spots"]
+    edge_previous_totals = {r: dict(t) for r, t in edge_previous_totals.items()}
     nurse_maps = sorted(n for n, i in infos.items() if i["nurse"])
     revised_findings = {
         "in_scope_nurse_maps": len(nurse_maps),
@@ -1400,6 +1422,8 @@ def main():
         "water_edge_dropped": dict(sorted(
             (r["map"], [r["water_edge_dropped"], infos[r["map"]]["water_edge_spots"]])
             for r in rows if r["water_edge_dropped"])),
+        "water_edge_previous_totals": edge_previous_totals,
+        "water_edge_restored": edge_restored,
         "water_edge_kept_on_caves": sorted(
             r["map"] for r in rows if r["water_edge_tiles"]
             and r["map_type"] not in ("TOWN", "CITY", "ROUTE", "OCEAN_ROUTE")),
@@ -1485,6 +1509,16 @@ def main():
         return fmt(after) if before == after else f"{fmt(before)} → {fmt(after)}"
     for label, key in lines:
         before = [draft_totals[r][key] for r in REGIONS]
+        after = [totals[r][key] for r in REGIONS]
+        cells = [cell(b, a) for b, a in zip(before, after)]
+        cells.append(cell(sum(before), sum(after)))
+        print(f"| {label} | " + " | ".join(cells) + " |")
+    print()
+    print("Water's edge, previous rule (fishing encounters) → now:")
+    print(header)
+    print("| --- |" + " ---: |" * (len(REGIONS) + 1))
+    for label, key in lines[12:15]:
+        before = [edge_previous_totals[r].get(key, 0) for r in REGIONS]
         after = [totals[r][key] for r in REGIONS]
         cells = [cell(b, a) for b, a in zip(before, after)]
         cells.append(cell(sum(before), sum(after)))

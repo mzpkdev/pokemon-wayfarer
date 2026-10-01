@@ -28,6 +28,8 @@ The first run answered that for the rules as first drafted and proposed
 nine changes. The spec now carries those changes, plus an authored ninth
 kind, [named spots](../specs/notable-spots.md#named-spots). This revision
 re-runs the inventory under both rule sets and checks every named-spot row.
+Since then the water's-edge rule has been relaxed: it no longer needs
+fishing encounters on the map ([relaxed water's edge](#relaxed-waters-edge)).
 
 ## Method
 
@@ -131,7 +133,7 @@ exact wording):
 | Mart and store | The door's interior plus interiors reached by interior warps (not through a Center, Game Corner, or Gym) that have shelves or a vendor. A store needs shelves on some map and a vendor (clerk sprite or `pokemart` script) on some map; floors are the maps with shelves. On FRLG layouts in a map with a vendor, `MB_POKEMON_CENTER_BOOKSHELF` is a shelf. Keyed by floor set. |
 | Gym | Gym music, checked after Center, Game Corner, and store. |
 | Authored drops | `GoldenrodCity_BikeShop_hns` as a store; `SaffronCity_FightingDojo_hns` as a Gym. |
-| Water's edge | As before, on maps that aren't interiors, have no Gym music, and have fishing encounters. |
+| Water's edge | As before, on maps that aren't interiors and have no Gym music. Fishing encounters aren't needed. |
 | Town square | Not on rooftops. At most 3 squares per map, the largest by centre count; each stands on the centre nearest its group's mean. |
 | NPC chat | Unchanged: the filter below already ran in the first inventory, and the spec now states it. |
 
@@ -181,9 +183,9 @@ kind down; the first row of each kind is the number of places.
 | Tall-grass maps | 23 | 40 | 25 | 15 | 103 |
 | › patches (6+ tiles) | 53 | 129 | 104 | 65 | 351 |
 | › tiles | 2,518 | 5,668 | 2,801 | 2,192 | 13,179 |
-| Water's-edge maps | 28 → 26 | 63 → 49 | 50 → 42 | 17 | 158 → 134 |
-| › stretches | 88 → 85 | 262 → 218 | 187 → 169 | 63 | 600 → 535 |
-| › tiles | 1,034 → 944 | 2,147 → 1,762 | 1,467 → 1,384 | 691 | 5,339 → 4,781 |
+| Water's-edge maps | 28 → 27 | 63 | 50 → 46 | 17 | 158 → 153 |
+| › stretches | 88 → 86 | 262 | 187 → 175 | 63 | 600 → 586 |
+| › tiles | 1,034 → 964 | 2,147 | 1,467 → 1,420 | 691 | 5,339 → 5,222 |
 | Town and city maps | 11 → 10 | 15 → 14 | 16 | 7 | 49 → 47 |
 | › with a square | 11 → 10 | 15 → 14 | 15 | 7 | 48 → 46 |
 | › squares | 119 → 29 | 87 → 40 | 107 → 42 | 26 → 17 | 339 → 128 |
@@ -192,6 +194,24 @@ kind down; the first row of each kind is the number of places.
 | › NPCs | 183 | 198 | 402 | 60 | 843 |
 | › adjacent tiles | 510 | 589 | 1,076 | 168 | 2,343 |
 | Named spots | 10 | 22 | 21 | 6 | 59 |
+
+### Relaxed water's edge
+
+The water's-edge rule first required fishing encounters on the map. It
+now drops that requirement (the spec's
+[detection sources](../specs/notable-spots.md#detection-sources)). The
+script still computes the previous rule to show the difference:
+
+| Kind | Kanto | Johto | Hoenn | Sevii | Total |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Water's-edge maps | 26 → 27 | 49 → 63 | 42 → 46 | 17 | 134 → 153 |
+| › stretches | 85 → 86 | 218 → 262 | 169 → 175 | 63 | 535 → 586 |
+| › tiles | 944 → 964 | 1,762 → 2,147 | 1,384 → 1,420 | 691 | 4,781 → 5,222 |
+
+19 maps come back, with 441 tiles. They are listed under
+[resolved findings](#resolved-findings) and in `inventory.json` under
+`findings.water_edge_restored`; the previous totals are under
+`findings.water_edge_previous_totals`.
 
 Equal totals can hide swaps. Kanto's 11 Centers gain Viridian's and lose
 the Fighting Dojo. Johto's 7 stores gain the Goldenrod department store and
@@ -254,9 +274,12 @@ precise, as noted.
    `MB_COUNTER` tile, and no Gym music; both conditions keep the Fighting
    Dojo out. Made precise: the Dojo then classifies as a Gym through its
    music, so the authored drop list removes it as a Gym.
-6. **Water's edge.** The first run offered two alternatives; the spec takes
+6. **Water's edge.** The first run offered two alternatives; the spec took
    both: no interiors (which also covers every Gym in scope), no Gym music,
-   and fishing encounters on the map.
+   and fishing encounters on the map. The fishing requirement has since
+   been dropped ([relaxed water's edge](#relaxed-waters-edge)): standing by
+   a pond is a fine relax or fish spot without a bite, so relax picks
+   water's edge too, and the "fishing" pose is flavour there.
 7. **Squares.** Rooftops excluded; at most 3 squares per map. Made precise:
    ranked by centre count, ties to the top-left tile, standing on the
    centre nearest the group's mean.
@@ -292,10 +315,20 @@ list and is a named spot instead.
   `CeladonCity_DepartmentStore_RoofDay_hns`, and
   `GoldenrodCity_DepartmentStore_7F_hns` give no squares and aren't
   outdoor doors.
-- **Indoor and fishless water.** 24 maps lose their water's edge (558
-  tiles): 5 interiors (`CeruleanCity_Gym_hns` 70, the two Battle Palace
-  rooms, `AquaHideout_1F`, `LilycoveCity_Harbor`) and 19 maps with no
-  fishing encounters.
+- **Indoor water.** 5 interiors lose their water's edge (117 tiles):
+  `CeruleanCity_Gym_hns` 70, the two Battle Palace rooms (28),
+  `AquaHideout_1F` 18, and `LilycoveCity_Harbor` 1.
+- **Fishless ponds.** The previous rule dropped 19 maps with no fishing
+  encounters; under the relaxed rule all 19 come back (441 tiles):
+  - Johto: `Route38_hns` 116, `Route39_hns` 89, `Route33_hns` 46,
+    `BellchimeTrail_hns` 36, `LakeOfRageLowTide_hns` 34, `Route48_hns`
+    27, `WhirlIslands_LugiaChamber_hns` 19, `IcePath_1F_hns` 9,
+    `MtSilver_SummitDay_hns` 3, `IcePath_B3F_hns` 2, and 1 each on
+    `AzaleaTown_hns`, `CliffEdgeGate_hns`, `Route36_hns`, and
+    `Route46_hns`;
+  - Kanto: `MtMoon_Outside_hns` 20;
+  - Hoenn: `BattleFrontier_OutsideEast` 28, `BattleFrontier_OutsideWest`
+    5, `MauvilleCity` 2, and `TerraCave_End` 1.
 - **Too many squares.** 339 squares become 128; 33 maps hit the cap of 3.
 - **Wrong counts** in the spec are restated for Wayfarer's scope.
 - **Benches and lookouts.** Named spots now carry the one-off places the
@@ -304,13 +337,10 @@ list and is a named spot instead.
 
 ## Remaining issues
 
-- **Fishless ponds.** Requiring fishing encounters drops the ponds on
-  `Route33_hns` (46 tiles), `Route38_hns` (116), `Route39_hns` (89),
-  `Route48_hns` (27), `LakeOfRageLowTide_hns` (34), `MtMoon_Outside_hns`
-  (20), `BellchimeTrail_hns` (36), `WhirlIslands_LugiaChamber_hns` (19),
-  and the Battle Frontier's two outdoor maps. That follows "fish where the
-  player could", but if these ponds should have fishing tables, that's a
-  wild-encounter question, and the edges come back once they do.
+- **Tiny restored edges.** Five of the restored maps have a single
+  water's-edge tile (`AzaleaTown_hns`, `CliffEdgeGate_hns`, `Route36_hns`,
+  `Route46_hns`, `TerraCave_End`). They may be stray water tiles; a review
+  can drop any that look wrong through the authored drop list.
 - **Squares on non-town maps.** `SafariZoneGate_hns`, `LakeOfRage_hns`, and
   `MtSilver_Outside_hns` are typed town or city and keep 3 squares each;
   `IndigoPlateau_hns` keeps 1. They are candidates for the drop list.
@@ -367,7 +397,11 @@ under `findings.named_spots`. Notes:
   Viridian Forest), so for the rest, the haunt author must avoid the named
   spot's tile.
 - Four rows sit on detected water's-edge tiles (Vermilion harbour, Lake of
-  Rage, Olivine harbour, Berry Forest), which the extraction then drops.
+  Rage, Olivine harbour, Berry Forest). The spec's rule resolves each: a
+  detected spot on a named spot's tile is dropped, so the named spot wins
+  its tile. All four maps already had fishing encounters, so the relaxed
+  rule changes nothing here: none of the 19 restored maps holds a named
+  spot, and no new overlap appears.
 - The list drops the Johto Battle Tower (not in Wayfarer; HNS's Route 40
   leads to `TrainerHill_Courtyard_hns`, listed instead) and the Lavaridge
   Herb Shop (now a detected store).

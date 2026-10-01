@@ -78,7 +78,7 @@ The activity picks a spot kind, and the kind picks a spot:
 | shop | Poké Mart, department store |
 | gamble | Game Corner |
 | train | tall grass (or a training haunt) |
-| relax | town squares and benches (or a waterside haunt) |
+| relax | town squares and benches, water's edge (or a waterside haunt) |
 | fish | water's edge |
 | visit | other Gyms, chatting with an NPC |
 
