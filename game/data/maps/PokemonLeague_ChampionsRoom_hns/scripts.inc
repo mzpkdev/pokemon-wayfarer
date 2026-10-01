@@ -1,4 +1,7 @@
 PokemonLeague_ChampionsRoom_hns_MapScripts::
+#if WAYFARER_LEAGUE_EVENTS
+	map_script MAP_SCRIPT_ON_TRANSITION, LeagueEvent_EventScript_SetRoomGraphics
+#endif
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 	map_script MAP_SCRIPT_ON_LOAD, ChampionRoom_OnLoad
 #endif

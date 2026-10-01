@@ -46,7 +46,7 @@ describe.sequential("Hoenn-origin League admission without the maiden voyage", (
   for (const stage of [
     {
       stage: "indigo",
-      badges: { hoenn: 8 },
+      badges: { johto: 1, hoenn: 7 },
       clears: {},
       lobby: "indigo-league-lobby",
       room: "indigo-lorelei",
@@ -56,7 +56,7 @@ describe.sequential("Hoenn-origin League admission without the maiden voyage", (
     {
       stage: "masters",
       badges: { johto: 8, hoenn: 8 },
-      clears: { indigo: true },
+      clears: { indigo: true, hoenn: true },
       lobby: "sevii-seven-island-house-room1",
       room: "league-will",
       x: 3,
@@ -64,8 +64,8 @@ describe.sequential("Hoenn-origin League admission without the maiden voyage", (
     },
     {
       stage: "hoenn",
-      badges: { kanto: 8, johto: 8, hoenn: 8 },
-      clears: { indigo: true, masters: true },
+      badges: { hoenn: 8 },
+      clears: {},
       lobby: "hoenn-league-lobby",
       room: "league-sidney",
       x: 9,
@@ -95,9 +95,13 @@ describe.sequential("Hoenn-origin League admission without the maiden voyage", (
             (state) => state.ready,
             "Hoenn admission dialogue did not finish",
           )
+          await walkTo(game, 9, 2)
+          await advanceOpeningUntil(game, (state) => state.ready, "Hoenn event acceptance")
           await enterNorth(game, "hoenn-league-hall5")
         } else if (stage.stage === "indigo") {
           await walkTo(game, 32, 4)
+          await walkTo(game, 32, 3)
+          await advanceOpeningUntil(game, (state) => state.ready, "Indigo event acceptance")
         } else {
           await game.player.interact()
         }
@@ -115,6 +119,11 @@ describe.sequential("Hoenn-origin League admission without the maiden voyage", (
             },
           },
         })
+        expect(admitted.circuit.event).toMatchObject({
+          acceptedLeague: stage.stage,
+          worldProgress: before.circuit.trainerRating,
+        })
+        expect(admitted.circuit.event.lineup.every((member) => member.characterId > 0)).toBe(true)
         await game.saveAndReload()
         const reloaded = await game.state.read()
         expect(reloaded.origin).toMatchObject({
@@ -124,6 +133,7 @@ describe.sequential("Hoenn-origin League admission without the maiden voyage", (
           hoennReceived: admitted.origin.hoennReceived,
         })
         expect(reloaded.circuit.run).toEqual(admitted.circuit.run)
+        expect(reloaded.circuit.event).toEqual(admitted.circuit.event)
         await walkTo(game, 6, stage.stage === "hoenn" ? 6 : stage.stage === "indigo" ? 6 : 7)
         await game.player.interact()
         await advanceOpeningUntil(
@@ -142,7 +152,13 @@ describe.sequential("Hoenn-origin League admission without the maiden voyage", (
               ratingAtEntry: before.circuit.trainerRating,
             },
           },
-          battle: { active: true },
+          battle: {
+            active: true,
+            enemy: {
+              species: admitted.circuit.event.lineup[0]!.leadSpecies,
+              level: admitted.circuit.event.lineup[0]!.leadLevel,
+            },
+          },
         })
         expect(await game.inventory.contains("ssTicket")).toBe(false)
       } finally {

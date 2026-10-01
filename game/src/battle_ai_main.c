@@ -7,6 +7,8 @@
 #include "battle_ai_items.h"
 #include "battle_ai_switch.h"
 #include "battle_ai_main.h"
+#include "battle_main.h"
+#include "config/notable_trainers.h"
 #include "battle_controllers.h"
 #include "battle_factory.h"
 #include "battle_setup.h"
@@ -315,6 +317,34 @@ void BattleAI_SetupFlags(void)
         gAiThinkingStruct->aiFlags[B_BATTLER_2] = aiFlags;
         gAiThinkingStruct->aiFlags[B_BATTLER_0] = aiFlags;
     }
+
+#if IS_WAYFARER && WAYFARER_V0_TRAINERS
+    // Preparation freezes notable AI alongside its team. Apply it after the
+    // standard setup so prediction and opponent decisions use the same flags.
+    {
+        u64 flags;
+        bool32 notable = FALSE;
+        if (GetNotableBattleAiFlags(TRAINER_BATTLE_PARAM.opponentA, &flags))
+        {
+            gAiThinkingStruct->aiFlags[B_BATTLER_1] = flags;
+            if (!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+                gAiThinkingStruct->aiFlags[B_BATTLER_3] = flags;
+            notable = TRUE;
+        }
+        if ((gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+         && GetNotableBattleAiFlags(TRAINER_BATTLE_PARAM.opponentB, &flags))
+        {
+            gAiThinkingStruct->aiFlags[B_BATTLER_3] = flags;
+            notable = TRUE;
+        }
+        if (notable && !(gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) && !IsAiVsAiBattle())
+        {
+            flags = gAiThinkingStruct->aiFlags[B_BATTLER_1] | gAiThinkingStruct->aiFlags[B_BATTLER_3];
+            gAiThinkingStruct->aiFlags[B_BATTLER_0] = flags;
+            gAiThinkingStruct->aiFlags[B_BATTLER_2] = flags;
+        }
+    }
+#endif
 }
 
 void BattleAI_SetupAIData(u8 defaultScoreMoves, enum BattlerId battler)

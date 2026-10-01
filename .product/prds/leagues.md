@@ -1,6 +1,8 @@
 # Leagues
 
-Implemented: No
+Implemented: Partial. Lobby acceptance, selected and saved teams, event
+resolution, and hall conditions are playable. Timed phone invitations, call
+rotation, declined events, and championship-history presentation remain.
 Design status: v0 approved: once the player qualifies (TR 80), a league
 phones with an invitation every seven in-game days; only leagues that know
 them call (where they hold a badge; the [Sevii Masters](sevii-masters.md)

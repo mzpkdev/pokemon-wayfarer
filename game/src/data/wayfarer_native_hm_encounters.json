@@ -11,6 +11,13 @@
     {
       "map": "MAP_MOSSDEEP_CITY",
       "method": "fishing_mons",
+      "slot": 2,
+      "expected_species": "SPECIES_MAGIKARP",
+      "species": "SPECIES_HORSEA"
+    },
+    {
+      "map": "MAP_MOSSDEEP_CITY",
+      "method": "fishing_mons",
       "slot": 4,
       "expected_species": "SPECIES_WAILMER",
       "species": "SPECIES_KINGLER"
@@ -28,6 +35,13 @@
       "slot": 0,
       "expected_species": "SPECIES_MAGIKARP",
       "species": "SPECIES_SHARPEDO"
+    },
+    {
+      "map": "MAP_PACIFIDLOG_TOWN",
+      "method": "fishing_mons",
+      "slot": 2,
+      "expected_species": "SPECIES_MAGIKARP",
+      "species": "SPECIES_HORSEA"
     },
     {
       "map": "MAP_PACIFIDLOG_TOWN",

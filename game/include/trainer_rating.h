@@ -5,8 +5,8 @@
 #define TRAINER_RATING_MAX 80
 
 u8 ClampTrainerRating(u16 rating);
-u8 GetTrainerRating(void);
-void SetTrainerRating(u16 rating);
+u32 GetTrainerRating(void);
+void SetTrainerRating(u32 rating);
 void InitializeTrainerRatingForNewGame(void);
 void InitializeTrainerRatingForSaveMigration(void);
 u8 GetTrainerRatingSoftLevelCap(void);

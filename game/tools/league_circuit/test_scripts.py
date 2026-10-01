@@ -176,8 +176,8 @@ class CircuitScriptTests(unittest.TestCase):
 
     def test_lobby_admission_remains_live_and_room_scripts_never_recapture(self):
         self.assertIn("LeagueCircuit_IsEligible", script("EverGrandeCity_PokemonLeague_1F"))
-        for venue in ("PokemonLeague_*_hns", "EverGrandeCity_*"):
-            for path in (GAME / "data/maps").glob(venue + "/scripts.inc"):
+        for map_pattern in ("PokemonLeague_*_hns", "EverGrandeCity_*"):
+            for path in (GAME / "data/maps").glob(map_pattern + "/scripts.inc"):
                 self.assertNotIn("LeagueCircuit_BeginRun", path.read_text())
 
     def test_champion_completion_and_hall_of_fame_validate_before_effects(self):

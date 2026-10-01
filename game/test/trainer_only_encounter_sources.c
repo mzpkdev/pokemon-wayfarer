@@ -154,13 +154,19 @@ TEST("Trainer-only native encounter sources generate and initialize with an empt
     for (u32 i = SOURCE_LAND; i <= SOURCE_SWEET_SCENT; i++)
         PARAMETRIZE(source = i);
 
-    struct EncounterSourceTestSnapshot snapshot;
+    // Sweet Scent's encounter path is too deep for a two-party IWRAM stack copy.
+    struct EncounterSourceTestSnapshot *snapshot = Alloc(sizeof(*snapshot));
     u32 seed;
     bool32 started = FALSE;
     bool32 passed = TRUE;
     u16 *layoutCopy = NULL;
 
-    SnapshotEncounterSourceTestState(&snapshot);
+    if (snapshot == NULL)
+    {
+        EXPECT(FALSE);
+        return;
+    }
+    SnapshotEncounterSourceTestState(snapshot);
 
     PrepareSource(source);
     passed &= GetCurrentMapWildMonHeaderId() != HEADER_NONE;
@@ -186,7 +192,8 @@ TEST("Trainer-only native encounter sources generate and initialize with an empt
     if (source == SOURCE_FISHING)
         passed &= gIsFishingEncounter;
     Free(layoutCopy);
-    RestoreEncounterSourceTestState(&snapshot);
+    RestoreEncounterSourceTestState(snapshot);
+    Free(snapshot);
     EXPECT(passed);
 }
 

@@ -10,11 +10,19 @@ WayfarerMasters_EventScript_Will::
 	goto_if_eq VAR_RESULT, TRUE, WayfarerMasters_EventScript_AlreadyWon
 	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_MastersEntryDenied
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_RoomOffer
+#else
 	msgbox WayfarerMasters_Text_Will, MSGBOX_YESNO
+#endif
 	goto_if_eq VAR_RESULT, NO, WayfarerMasters_EventScript_Withdraw
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
+#if WAYFARER_LEAGUE_EVENTS
+	trainerbattle_no_intro TRAINER_WILL_2_HNS, LeagueEvent_Text_RoomWin
+#else
 	trainerbattle_no_intro TRAINER_WILL_2_HNS, WayfarerMasters_Text_Win
+#endif
 	clearflag FLAG_TEMP_5
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
 	setvar VAR_0x8005, 0
@@ -31,11 +39,19 @@ WayfarerMasters_EventScript_Koga::
 	goto_if_eq VAR_RESULT, TRUE, WayfarerMasters_EventScript_AlreadyWon
 	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_MastersEntryDenied
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_RoomOffer
+#else
 	msgbox WayfarerMasters_Text_Koga, MSGBOX_YESNO
+#endif
 	goto_if_eq VAR_RESULT, NO, WayfarerMasters_EventScript_Withdraw
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
+#if WAYFARER_LEAGUE_EVENTS
+	trainerbattle_no_intro TRAINER_KOGA_2_HNS, LeagueEvent_Text_RoomWin
+#else
 	trainerbattle_no_intro TRAINER_KOGA_2_HNS, WayfarerMasters_Text_Win
+#endif
 	clearflag FLAG_TEMP_5
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
 	setvar VAR_0x8005, 1
@@ -52,11 +68,19 @@ WayfarerMasters_EventScript_Bruno::
 	goto_if_eq VAR_RESULT, TRUE, WayfarerMasters_EventScript_AlreadyWon
 	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_MastersEntryDenied
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_RoomOffer
+#else
 	msgbox WayfarerMasters_Text_Bruno, MSGBOX_YESNO
+#endif
 	goto_if_eq VAR_RESULT, NO, WayfarerMasters_EventScript_Withdraw
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
+#if WAYFARER_LEAGUE_EVENTS
+	trainerbattle_no_intro TRAINER_BRUNO_2_HNS, LeagueEvent_Text_RoomWin
+#else
 	trainerbattle_no_intro TRAINER_BRUNO_2_HNS, WayfarerMasters_Text_Win
+#endif
 	clearflag FLAG_TEMP_5
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
 	setvar VAR_0x8005, 2
@@ -73,11 +97,19 @@ WayfarerMasters_EventScript_Karen::
 	goto_if_eq VAR_RESULT, TRUE, WayfarerMasters_EventScript_AlreadyWon
 	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_MastersEntryDenied
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_RoomOffer
+#else
 	msgbox WayfarerMasters_Text_Karen, MSGBOX_YESNO
+#endif
 	goto_if_eq VAR_RESULT, NO, WayfarerMasters_EventScript_Withdraw
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
+#if WAYFARER_LEAGUE_EVENTS
+	trainerbattle_no_intro TRAINER_KAREN_2_HNS, LeagueEvent_Text_RoomWin
+#else
 	trainerbattle_no_intro TRAINER_KAREN_2_HNS, WayfarerMasters_Text_Win
+#endif
 	clearflag FLAG_TEMP_5
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
 	setvar VAR_0x8005, 3
@@ -103,17 +135,29 @@ WayfarerMasters_EventScript_Lance::
 	goto_if_eq VAR_RESULT, TRUE, WayfarerMasters_EventScript_ChampionResume
 	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_MastersEntryDenied
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_ChampionOffer
+#else
 	msgbox WayfarerMasters_Text_Lance, MSGBOX_YESNO
+#endif
 	goto_if_eq VAR_RESULT, NO, WayfarerMasters_EventScript_Withdraw
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
+#if WAYFARER_LEAGUE_EVENTS
+	trainerbattle_no_intro TRAINER_LANCE_2_HNS, LeagueEvent_Text_RoomWin
+#else
 	trainerbattle_no_intro TRAINER_LANCE_2_HNS, WayfarerMasters_Text_Win
+#endif
 	clearflag FLAG_TEMP_5
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
 	setvar VAR_0x8005, 4
 	specialvar VAR_RESULT, LeagueCircuit_RecordRoomVictory
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_MastersEntryDenied
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_MastersAfter
+#else
 	msgbox WayfarerMasters_Text_LanceAfter
+#endif
 
 WayfarerMasters_EventScript_ChampionResume::
 	warpsilent MAP_POKEMON_LEAGUE_HALL_OF_FAME_HNS, 0
@@ -166,7 +210,7 @@ WayfarerMasters_Text_Lance::
 WayfarerMasters_Text_Win::
 	.string "You have won this battle.$"
 WayfarerMasters_Text_Next::
-	.string "The next MASTER awaits.$"
+	.string "The next opponent awaits.$"
 WayfarerMasters_Text_LanceAfter::
 	.string "The MASTERS GALLERY is ahead.$"
 WayfarerMasters_Text_Gallery::

@@ -25,8 +25,11 @@ const waitForFieldScriptStart = (game: GameSession, description: string): Promis
 const startScriptedBattle = async (game: GameSession, description: string): Promise<void> => {
   for (let attempt = 0; attempt < 240; attempt++) {
     const state = await game.state.read()
-    if (state.battle.active) return
-    if (state.dialogueOpen || state.scriptActive) {
+    if (state.battle.ui === "action-menu") return
+    if (state.battle.active) {
+      if (state.battle.ui === "text") await game.controls.press("a")
+      else await game.wait.frames(12)
+    } else if (state.dialogueOpen || state.scriptActive) {
       await game.wait.frames(30)
       await game.controls.press("a")
     } else await game.wait.frames(12)
@@ -176,6 +179,7 @@ describe.sequential("HNS Magnet Train restoration", () => {
     await game.player.interact()
     await startScriptedBattle(game, "Route 24 Rocket battle")
     await game.battle.win()
+    await game.controls.press("a")
     await finishFieldScript(game, "Route 24 Rocket victory")
     await expect(game.story.var("kantoRocketStoryState")).resolves.toBe(5)
     await expect(game.story.flag("hideCeruleanCapeRocket")).resolves.toBe(true)

@@ -19,8 +19,23 @@ WayfarerSevii_Masters_OldWoman::
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
 	specialvar VAR_RESULT, LeagueCircuit_IsEligible
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Masters_Denied
+#if WAYFARER_LEAGUE_EVENTS
+	specialvar VAR_RESULT, LeagueEvent_GetAcceptedLeague
+	goto_if_eq VAR_RESULT, CIRCUIT_STAGE_MASTERS, WayfarerSevii_Masters_Proceed
+	msgbox LeagueEvent_Text_Offer, MSGBOX_YESNO
+#else
 	msgbox WayfarerSevii_Masters_Text_Offer, MSGBOX_YESNO
+#endif
 	goto_if_eq VAR_RESULT, NO, WayfarerSevii_Masters_Declined
+	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
+#if WAYFARER_LEAGUE_EVENTS
+	specialvar VAR_RESULT, LeagueEvent_Accept
+	goto_if_ne VAR_RESULT, LEAGUE_ACCEPT_OK, WayfarerSevii_Masters_Denied
+	specialvar VAR_RESULT, LeagueEvent_BufferLineup
+	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Masters_Denied
+	msgbox gStringVar4
+WayfarerSevii_Masters_Proceed:
+#endif
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
 	specialvar VAR_RESULT, LeagueCircuit_BeginRun
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Masters_Denied
@@ -47,7 +62,12 @@ WayfarerSevii_Masters_Box::
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
 	specialvar VAR_RESULT, LeagueCircuit_IsEligible
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Masters_BoxClosed
+#if WAYFARER_LEAGUE_EVENTS
+	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
+	call LeagueEvent_EventScript_HallBoard
+#else
 	msgbox WayfarerSevii_Masters_Text_BoxOpen, MSGBOX_SIGN
+#endif
 	end
 
 WayfarerSevii_Masters_BoxClosed::

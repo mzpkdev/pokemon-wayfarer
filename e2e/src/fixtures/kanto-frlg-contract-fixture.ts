@@ -364,7 +364,7 @@ const speciesNames = { bulbasaur: "BULBASAUR", squirtle: "SQUIRTLE", charmander:
 /** Engine battle lines around Oak's tutorial for the first Blue battle. */
 export const firstBattleLines = (starter: (typeof frlgStarterMatrix)[number], player: string) => {
   const text = frlgPalletDialogue(player).lab
-  const rivalMon = speciesNames[starter.rival]
+  const rivalMon = "EEVEE"
   return {
     intro: [
       `You are challenged by RIVAL ${kantoRivalName}!`,

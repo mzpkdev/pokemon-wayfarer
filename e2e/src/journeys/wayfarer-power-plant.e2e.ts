@@ -1,7 +1,14 @@
 import { beforeAll, describe, expect, it } from "webanvil/test"
 
-import { GameSession, type Direction, type GameMap } from "../harness/game-session"
+import {
+  GameSession,
+  partyMenuActions,
+  type Direction,
+  type GameMap,
+} from "../harness/game-session"
 import { catchWithMasterBallAndSwap } from "../playbooks/battle-catch-swap"
+import { openFieldPartyMenuActions, selectFieldPartyAction } from "../playbooks/field-party-menu"
+import { advanceOpeningUntil } from "../playbooks/regional-opening"
 
 const lobby = "power-plant-entrance" as const
 const hall = "power-plant-old-hall" as const
@@ -212,15 +219,27 @@ const runFromBattle = async (game: GameSession): Promise<void> => {
   await settleField(game, "Zapdos Run return")
 }
 
-const useBattleTeleport = async (game: GameSession): Promise<void> => {
-  await waitForBattle(game, "Zapdos Teleport")
+const assertSingleMonBattleTeleportFails = async (game: GameSession): Promise<void> => {
+  await waitForBattle(game, "Zapdos battle Teleport")
   const cursor = (await game.state.read()).battle.cursor ?? 0
   if (cursor % 2 === 1) await game.controls.press("left")
   if (Math.floor(cursor / 2) === 1) await game.controls.press("up")
   await game.controls.press("a")
   await game.wait.until((state) => state.battle.ui === "move-menu", "Zapdos move menu", 1_200)
   await game.controls.press("a")
-  await settleField(game, "Zapdos Teleport return")
+
+  let sawFailure = false
+  for (let attempt = 0; attempt < 240; attempt++) {
+    const state = await game.state.read()
+    if (state.battle.dialogue.text.includes("But it failed!")) sawFailure = true
+    if (sawFailure && state.battle.ui === "action-menu") return
+    if (!state.battle.active) throw new Error("Battle Teleport escaped instead of failing")
+    if (state.battle.ui === "text" || state.battle.ui === "other") await game.controls.press("a")
+    else await game.wait.frames(12)
+  }
+  throw new Error(
+    `Single-mon battle Teleport failure did not resolve: ${JSON.stringify(await game.state.read())}`,
+  )
 }
 
 describe.sequential("Wayfarer Power Plant old generating hall", () => {
@@ -443,7 +462,7 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
   it("walks continuously from the worker entrance through the hall to Zapdos", async () => {
     await arrangeAt(game, { map: lobby, x: 3, y: 13 }, "up", {
       flags: { powerPlantZapdosHidden: false, powerPlantZapdosResolved: false },
-      vars: { trainerRating: 54 },
+      vars: { trainerRating: 119 },
     })
     await chooseWorkerOffer(game, true)
     await game.wait.forMap(hall)
@@ -710,24 +729,24 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
     expect((await game.state.read()).battle.active).toBe(false)
   })
 
-  it("refuses TR 54 and starts a fixed level-50 Zapdos battle at TR 55", async () => {
+  it("refuses TR 119 and starts a fixed level-50 Zapdos battle at TR 120", async () => {
     await arrangeAt(game, { map: hall, x: 5, y: 10 }, "down", {
       flags: { powerPlantZapdosHidden: false, powerPlantZapdosResolved: false },
-      vars: { trainerRating: 54 },
+      vars: { trainerRating: 119 },
     })
     expect(await game.story.flag("powerPlantZapdosHidden")).toBe(false)
-    await interactWithZapdos(game, "Zapdos TR 54")
+    await interactWithZapdos(game, "Zapdos TR 119")
     await advanceUntil(
       game,
       (state) => state.dialogue.text.toLowerCase().includes("watches you warily"),
-      "Zapdos TR 54 refusal",
+      "Zapdos TR 119 refusal",
     )
     expect((await game.state.read()).battle.active).toBe(false)
     expect(await game.story.flag("powerPlantZapdosResolved")).toBe(false)
-    await settleField(game, "Zapdos TR 54 refusal")
+    await settleField(game, "Zapdos TR 119 refusal")
 
-    await game.story.setVar("trainerRating", 55)
-    await startZapdos(game, "Zapdos TR 55")
+    await game.story.setVar("trainerRating", 120)
+    await startZapdos(game, "Zapdos TR 120")
     await game.battle.lose()
     await advanceUntil(
       game,
@@ -744,7 +763,7 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
   it("permanently resolves a Zapdos knockout across save, reentry, and champion state", async () => {
     await arrangeAt(game, { map: hall, x: 5, y: 10 }, "down", {
       flags: { powerPlantZapdosHidden: false, powerPlantZapdosResolved: false },
-      vars: { trainerRating: 55 },
+      vars: { trainerRating: 120 },
     })
     await startZapdos(game, "Zapdos knockout")
     await game.battle.win()
@@ -762,7 +781,7 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
   it("permanently resolves a Zapdos capture across save and reentry", async () => {
     await arrangeAt(game, { map: hall, x: 5, y: 10 }, "down", {
       flags: { powerPlantZapdosHidden: false, powerPlantZapdosResolved: false },
-      vars: { trainerRating: 55 },
+      vars: { trainerRating: 120 },
       items: { masterBall: 1 },
       party: Array.from({ length: 6 }, () => ({ species: "pidgey" as const, level: 50 })),
     })
@@ -777,20 +796,31 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
     expect((await game.state.read()).battle.active).toBe(false)
   })
 
-  it("returns Zapdos after Run and player Teleport map reentry", async () => {
+  it("returns Zapdos after Run and field Teleport map reentry", async () => {
     await arrangeAt(game, { map: hall, x: 5, y: 10 }, "down", {
       flags: { powerPlantZapdosHidden: false, powerPlantZapdosResolved: false },
-      vars: { trainerRating: 55 },
-      party: [{ species: "pidgey", level: 100, moves: ["teleport", "tackle"] }],
+      vars: { trainerRating: 120 },
+      party: [{ species: "umbreon", level: 100, moves: ["teleport", "tackle"] }],
     })
     await startZapdos(game, "Zapdos Run")
     await runFromBattle(game)
     expect(await game.story.flag("powerPlantZapdosResolved")).toBe(false)
     expect(await game.story.flag("powerPlantZapdosHidden")).toBe(true)
     await reenterHall(game)
-    await interactWithZapdos(game, "Zapdos after Run")
-    await waitForBattle(game, "Zapdos after Run")
-    await useBattleTeleport(game)
+    await startZapdos(game, "Zapdos after Run")
+    await assertSingleMonBattleTeleportFails(game)
+    await runFromBattle(game)
+    // Field Teleport is allowed on routes, not inside the old hall.
+    await game.player.warp("route-10", 5, 49, "up")
+    await game.wait.forReady()
+    await openFieldPartyMenuActions(game)
+    expect((await game.state.read()).partyMenu.actions).toContain(partyMenuActions.teleport)
+    await selectFieldPartyAction(game, partyMenuActions.teleport)
+    await advanceOpeningUntil(
+      game,
+      (state) => state.ready && !state.partyMenu.open,
+      "Zapdos field Teleport return",
+    )
     expect(await game.story.flag("powerPlantZapdosResolved")).toBe(false)
     await expect(game.state.read()).resolves.toMatchObject({
       map: { name: "players-bedroom" },
@@ -805,7 +835,7 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
   it("keeps Zapdos retryable after a real blackout and has no exterior duplicate", async () => {
     await arrangeAt(game, { map: hall, x: 5, y: 10 }, "down", {
       flags: { powerPlantZapdosHidden: false, powerPlantZapdosResolved: false },
-      vars: { trainerRating: 55 },
+      vars: { trainerRating: 120 },
       party: [{ species: "pidgey", level: 1, moves: ["tackle"] }],
     })
     await startZapdos(game, "Zapdos blackout")
@@ -821,7 +851,7 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
     await settleField(game, "Zapdos blackout retry victory")
 
     await arrangeAt(game, { map: "route-10", x: 5, y: 49 }, "up", {
-      vars: { trainerRating: 55 },
+      vars: { trainerRating: 120 },
     })
     await game.player.interact()
     await game.wait.frames(90)

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "config/notable_trainers.h"
 #include "battle.h"
 #include "battle_main.h"
 #include "battle_setup.h"
@@ -20,6 +21,7 @@
 
 #if IS_WAYFARER
 
+#if !WAYFARER_V0_TRAINERS
 static const u8 sBaselineOracle[] = {
     7, 7, 8, 8, 8, 9, 9, 10, 10, 11, 11, 12, 13, 13, 14, 14, 15,
     16, 16, 17, 17, 18, 18, 19, 19, 20, 20, 21, 21, 22, 22, 23, 24,
@@ -27,6 +29,26 @@ static const u8 sBaselineOracle[] = {
     45, 46, 47, 48, 50, 51, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70,
     72, 73, 75, 76, 77, 79, 80, 81, 83, 84, 85, 87, 88, 89, 91, 92,
 };
+#endif
+
+static u32 BaselineOracle(u32 rating)
+{
+#if WAYFARER_V0_TRAINERS
+    static const u32 anchors[][2] = {{0, 9}, {40, 27}, {80, 44}, {120, 62}, {160, 82}};
+    for (u32 i = 1; i < ARRAY_COUNT(anchors); i++)
+    {
+        if (rating < anchors[i][0])
+        {
+            u32 span = anchors[i][0] - anchors[i - 1][0];
+            u32 rise = (rating - anchors[i - 1][0]) * (anchors[i][1] - anchors[i - 1][1]);
+            return anchors[i - 1][1] + (2 * rise + span) / (2 * span);
+        }
+    }
+    return 82;
+#else
+    return sBaselineOracle[min(rating, 80)];
+#endif
+}
 
 static u32 ScalingLevelOracle(u32 rating, s32 level, bool32 gym)
 {
@@ -42,9 +64,10 @@ static u32 ScalingLevelOracle(u32 rating, s32 level, bool32 gym)
             distance = error;
         }
     }
-    return min(100, sBaselineOracle[min(rating, 80)] + nearest + 2 * gym);
+    return min(100, BaselineOracle(rating) + nearest + 2 * gym);
 }
 
+#if !WAYFARER_V0_TRAINERS
 static const struct TrainerMon sGymLeaderPlanTestParty[PARTY_SIZE] = {
     {.species = SPECIES_GEODUDE},
     {.species = SPECIES_ONIX},
@@ -194,6 +217,7 @@ TEST("Gym Leader plans reject malformed metadata before construction")
     invalid.legacyParty = NULL;
     EXPECT(!BuildGymLeaderScalingPlan(&invalid, 0, &plan));
 }
+#endif // !WAYFARER_V0_TRAINERS
 
 TEST("Trainer scaling matches an independent oracle for every Rating and authored level")
 {
@@ -203,7 +227,13 @@ TEST("Trainer scaling matches an independent oracle for every Rating and authore
         for (level = 1; level <= 100; level++)
         {
             u32 previous = 0;
-            for (rating = 0; rating <= 80; rating++)
+            for (rating = 0; rating <=
+#if WAYFARER_V0_TRAINERS
+                 160;
+#else
+                 80;
+#endif
+                 rating++)
             {
                 u32 actual = GetTrainerScalingLevel(rating, level, policy);
                 EXPECT_EQ(actual, ScalingLevelOracle(rating, level, policy == TRAINER_SCALING_GYM_MEMBER));
@@ -234,8 +264,12 @@ TEST("Trainer scaling reverses numeric chains without wild floors or forward evo
     EXPECT_EQ(ResolveTrainerScalingSpecies(SPECIES_CHARIZARD, 36), SPECIES_CHARIZARD);
     EXPECT_EQ(ResolveTrainerScalingSpecies(SPECIES_CHARMANDER, 100), SPECIES_CHARMANDER);
     EXPECT_EQ(ResolveTrainerScalingSpecies(SPECIES_SCYTHER, 7), SPECIES_SCYTHER);
+#if WAYFARER_V0_TRAINERS
+    EXPECT_EQ(ResolveTrainerScalingSpecies(SPECIES_RAICHU, 7), SPECIES_PIKACHU);
+#else
     EXPECT_EQ(ResolveTrainerScalingSpecies(SPECIES_RAICHU, 7), SPECIES_RAICHU);
     EXPECT_EQ(ResolveTrainerScalingSpecies(SPECIES_RAICHU_ALOLA, 7), SPECIES_RAICHU_ALOLA);
+#endif
 }
 
 TEST("Trainer scaling legal abilities use the final species")
@@ -277,10 +311,20 @@ TEST("Trainer scaling snapshot stays fixed through reconstruction and resets for
     SetTrainerRating(0);
     ResetTrainerScalingSnapshot();
     EXPECT_EQ(GetTrainerScalingSnapshot(), 0);
-    SetTrainerRating(80);
+    SetTrainerRating(
+#if WAYFARER_V0_TRAINERS
+                     65536);
+#else
+                     80);
+#endif
     EXPECT_EQ(GetTrainerScalingSnapshot(), 0);
     ResetTrainerScalingSnapshot();
-    EXPECT_EQ(GetTrainerScalingSnapshot(), 80);
+    EXPECT_EQ(GetTrainerScalingSnapshot(),
+#if WAYFARER_V0_TRAINERS
+              65536);
+#else
+              80);
+#endif
     ResetTrainerScalingSnapshot();
 }
 
@@ -363,8 +407,13 @@ TEST("Trainer scaling constructs reversed parties with legal moves and retained 
     PrepareScalingPartyTest(0);
     struct Pokemon *party = AllocZeroed(PARTY_SIZE * sizeof(*party));
     EXPECT_EQ(CreateNPCTrainerPartyForOpponent(party, TRAINER_JOEY_2_HNS, TRUE, BATTLE_TYPE_TRAINER), 3);
+#if WAYFARER_V0_TRAINERS
+    EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPECIES), SPECIES_CHARMELEON);
+    EXPECT_EQ(GetMonData(&party[0], MON_DATA_LEVEL), 17);
+#else
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPECIES), SPECIES_CHARMANDER);
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_LEVEL), 15);
+#endif
     EXPECT_EQ(GetMonAbility(&party[0]), ABILITY_BLAZE);
     EXPECT_EQ(GetMonGender(&party[0]), MON_FEMALE);
     EXPECT_EQ(GetNature(&party[0]), NATURE_ADAMANT);
@@ -376,9 +425,18 @@ TEST("Trainer scaling constructs reversed parties with legal moves and retained 
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPDEF_IV), 26);
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_HP_EV), 20);
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPEED_EV), 32);
+#if WAYFARER_V0_TRAINERS
+    EXPECT_EQ(GetMonData(&party[1], MON_DATA_SPECIES), SPECIES_CHARMELEON);
+#else
     EXPECT_EQ(GetMonData(&party[1], MON_DATA_SPECIES), SPECIES_CHARMANDER);
+#endif
     EXPECT_EQ(GetMonData(&party[2], MON_DATA_SPECIES), SPECIES_SCYTHER);
-    EXPECT_EQ(GetMonData(&party[2], MON_DATA_LEVEL), 7);
+    EXPECT_EQ(GetMonData(&party[2], MON_DATA_LEVEL),
+#if WAYFARER_V0_TRAINERS
+              9);
+#else
+              7);
+#endif
     for (u32 i = 0; i < 3; i++)
         EXPECT(HasLegalLevelMoves(&party[i]));
     EXPECT_EQ(GetTrainerStructFromId(TRAINER_JOEY_2_HNS)->party[0].lvl, 60);
@@ -392,15 +450,36 @@ TEST("Trainer scaling resolves aliases and pools before projecting selected slot
     PrepareScalingPartyTest(0);
     struct Pokemon *party = AllocZeroed(PARTY_SIZE * sizeof(*party));
     EXPECT_EQ(CreateNPCTrainerPartyForOpponent(party, TRAINER_JOEY_3_HNS, TRUE, BATTLE_TYPE_TRAINER), 3);
-    EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPECIES), SPECIES_CHARMANDER);
+    EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPECIES),
+#if WAYFARER_V0_TRAINERS
+              SPECIES_CHARMELEON);
+#else
+              SPECIES_CHARMANDER);
+#endif
     EXPECT_EQ(CreateNPCTrainerPartyForOpponent(party, TRAINER_JOEY_4_HNS, TRUE, BATTLE_TYPE_TRAINER), 2);
-    EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPECIES), SPECIES_CHARMANDER);
+    EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPECIES),
+#if WAYFARER_V0_TRAINERS
+              SPECIES_CHARMELEON);
+    EXPECT_EQ(GetMonData(&party[0], MON_DATA_LEVEL), 17);
+#else
+              SPECIES_CHARMANDER);
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_LEVEL), 15);
+#endif
     EXPECT_EQ(GetMonData(&party[1], MON_DATA_SPECIES), SPECIES_SCYTHER);
-    EXPECT_EQ(GetMonData(&party[1], MON_DATA_LEVEL), 14);
+    EXPECT_EQ(GetMonData(&party[1], MON_DATA_LEVEL),
+#if WAYFARER_V0_TRAINERS
+              16);
+#else
+              14);
+#endif
     CreateNPCTrainerPartyForOpponent(party, TRAINER_JOEY_5_HNS, TRUE, BATTLE_TYPE_TRAINER);
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPECIES), SPECIES_RATTATA);
-    EXPECT_EQ(GetMonData(&party[0], MON_DATA_LEVEL), 7);
+    EXPECT_EQ(GetMonData(&party[0], MON_DATA_LEVEL),
+#if WAYFARER_V0_TRAINERS
+              9);
+#else
+              7);
+#endif
     Free(party);
 }
 
@@ -411,7 +490,13 @@ TEST("Trainer scaling constructs production roster samples from Johto Kanto and 
     u32 rating, trainer;
 
     ASSUME(B_TRAINER_PARTY_SCALING);
-    for (rating = 0; rating <= 80; rating += 40)
+    for (rating = 0; rating <=
+#if WAYFARER_V0_TRAINERS
+         160;
+#else
+         80;
+#endif
+         rating += 40)
     {
         PrepareScalingPartyTest(rating);
         for (trainer = 0; trainer < ARRAY_COUNT(trainers); trainer++)
@@ -435,11 +520,27 @@ TEST("Trainer scaling keeps mixed opponents independent and shares the battle Ra
     CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_ROD_HNS, TRUE, flags);
     SetTrainerRating(80);
     CreateNPCTrainerPartyForOpponent(&gEnemyParty[3], TRAINER_JOEY_2_HNS, FALSE, flags);
-    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), 9);
-    EXPECT_EQ(GetMonData(&gEnemyParty[3], MON_DATA_LEVEL), 15);
-    EXPECT_EQ(GetMonData(&gEnemyParty[5], MON_DATA_LEVEL), 7);
+    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL),
+#if WAYFARER_V0_TRAINERS
+              11);
+#else
+              9);
+#endif
+    EXPECT_EQ(GetMonData(&gEnemyParty[3], MON_DATA_LEVEL),
+#if WAYFARER_V0_TRAINERS
+              17);
+#else
+              15);
+#endif
+    EXPECT_EQ(GetMonData(&gEnemyParty[5], MON_DATA_LEVEL),
+#if WAYFARER_V0_TRAINERS
+              9);
+#else
+              7);
+#endif
     EXPECT_EQ((u32)gBattleStruct->opponentMonCanDynamax, (1 << 0) | (1 << 3));
     EXPECT_EQ((u32)gBattleStruct->opponentMonCanTera, (1 << 0) | (1 << 3));
+#if !WAYFARER_V0_TRAINERS
     CreateNPCTrainerPartyForOpponent(&gEnemyParty[3], TRAINER_FALKNER_1_HNS, FALSE, flags);
     EXPECT_EQ(GetMonData(&gEnemyParty[3], MON_DATA_LEVEL), 60);
     EXPECT_EQ(GetMonData(&gEnemyParty[3], MON_DATA_SPECIES), SPECIES_CHARIZARD);
@@ -447,9 +548,15 @@ TEST("Trainer scaling keeps mixed opponents independent and shares the battle Ra
     EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), 9);
     EXPECT_EQ((u32)gBattleStruct->opponentMonCanDynamax, 1 << 0);
     EXPECT_EQ((u32)gBattleStruct->opponentMonCanTera, 1 << 0);
+#endif
     ResetTrainerScalingSnapshot();
     CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_ROD_HNS, TRUE, flags);
-    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), 94);
+    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL),
+#if WAYFARER_V0_TRAINERS
+              46);
+#else
+              94);
+#endif
     FreeBattleResources();
 }
 
@@ -506,7 +613,11 @@ TEST("Trainer scaling randomization retains the authored mapping inputs and scal
     for (u32 i = 0; i < 3; i++)
     {
         EXPECT_EQ(GetMonData(&party[i], MON_DATA_SPECIES), expected[i]);
+#if WAYFARER_V0_TRAINERS
+        EXPECT_EQ(GetMonData(&party[i], MON_DATA_LEVEL), i == 2 ? 9 : 17);
+#else
         EXPECT_EQ(GetMonData(&party[i], MON_DATA_LEVEL), i == 2 ? 7 : 15);
+#endif
         EXPECT(HasLegalLevelMoves(&party[i]));
         u32 ability = GetMonAbility(&party[i]);
         bool32 valid = FALSE;
@@ -528,11 +639,21 @@ TEST("Trainer scaling preserves defeat flags and ignores player party levels")
     SetTrainerFlag(TRAINER_JOEY_2_HNS);
     CreateMon(&gPlayerParty[0], SPECIES_MAGIKARP, 100, 0, OTID_STRUCT_RANDOM_NO_SHINY);
     CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_JOEY_2_HNS, TRUE, BATTLE_TYPE_TRAINER);
-    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), 42);
+    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL),
+#if WAYFARER_V0_TRAINERS
+              35);
+#else
+              42);
+#endif
     EXPECT(HasTrainerBeenFought(TRAINER_JOEY_2_HNS));
     CreateMon(&gPlayerParty[0], SPECIES_MAGIKARP, 1, 0, OTID_STRUCT_RANDOM_NO_SHINY);
     CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_JOEY_2_HNS, TRUE, BATTLE_TYPE_TRAINER);
-    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), 42);
+    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL),
+#if WAYFARER_V0_TRAINERS
+              35);
+#else
+              42);
+#endif
     EXPECT(HasTrainerBeenFought(TRAINER_JOEY_2_HNS));
     ClearTrainerFlag(TRAINER_JOEY_2_HNS);
 }
@@ -545,7 +666,12 @@ TEST("Trainer scaling challenge IV and EV options do not replace Rating levels")
     gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingEVs = 1;
     gSaveBlock3Ptr->challengeSettings.tx_Challenges_LevelCap = 1;
     CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_JOEY_2_HNS, TRUE, BATTLE_TYPE_TRAINER);
-    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL),
+#if WAYFARER_V0_TRAINERS
+              52);
+#else
+              100);
+#endif
     EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_HP_IV), GetCurrentTrainerIVs());
     EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_HP_EV), GetCurrentTrainerEVs());
     gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingIVs = FALSE;

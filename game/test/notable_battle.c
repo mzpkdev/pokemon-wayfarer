@@ -1,0 +1,435 @@
+#include "global.h"
+#include "battle.h"
+#include "battle_ai_main.h"
+#include "battle_main.h"
+#include "battle_setup.h"
+#include "battle_util.h"
+#include "battle_util2.h"
+#include "data.h"
+#include "debug.h"
+#include "event_data.h"
+#include "event_scripts.h"
+#include "league_event_battle.h"
+#include "league_events.h"
+#include "league_circuit.h"
+#include "league_run_helpers.h"
+#include "notable_trainers.h"
+#include "pokemon.h"
+#include "randomizer.h"
+#include "test/test.h"
+#include "trainer_party_scaling.h"
+#include "trainer_rating.h"
+#include "wayfarer_persistence.h"
+#include "config/notable_trainers.h"
+#include "config/league_circuit.h"
+#include "constants/battle_setup.h"
+#include "constants/battle_ai.h"
+#include "constants/items.h"
+#include "constants/maps.h"
+#include "constants/moves.h"
+#include "constants/opponents.h"
+#include "constants/species.h"
+#include "constants/wayfarer_celadon_hideout_trainers.h"
+#include "constants/wayfarer_indigo_trainers.h"
+#include "constants/wayfarer_kanto_trainers.h"
+#include "constants/wayfarer_viridian_trainers.h"
+
+#if IS_WAYFARER && WAYFARER_V0_TRAINERS
+
+static void BeginNotableConstruction(u32 rating, u32 battleTypeFlags)
+{
+    gBattleTypeFlags = battleTypeFlags;
+    gIsDebugBattle = FALSE;
+    SetTrainerRating(rating);
+    ResetTrainerScalingSnapshot();
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Trainer = FALSE;
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Moves = FALSE;
+    gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingIVs = FALSE;
+    gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingEVs = FALSE;
+    AllocateBattleResources();
+}
+
+TEST("Notable battle builds Blue's first Pallet rival party and overrides tutorial AI")
+{
+    struct NotableTrainerSnapshot probe;
+    u64 flags;
+    u16 blue = TRAINER_WAYFARER_KANTO_BLUE_BULBASAUR;
+    BeginNotableConstruction(0, BATTLE_TYPE_TRAINER | BATTLE_TYPE_FIRST_BATTLE);
+    TRAINER_BATTLE_PARAM.opponentA = blue;
+    TRAINER_BATTLE_PARAM.opponentB = 0;
+    EXPECT_EQ(GetTrainerScalingSnapshot(), 0);
+    EXPECT(GetNotableTrainerForEncounter(blue) != NULL);
+    EXPECT(ResolveNotableTrainerSnapshot(GetNotableTrainerForEncounter(blue),
+                                         GetTrainerScalingSnapshot(), FALSE, &probe));
+    EXPECT_NE(probe.aiFlags, 0);
+    EXPECT(GetTrainerStructFromId(blue)->party != NULL);
+    EXPECT_GT(GetTrainerStructFromId(blue)->partySize, 0);
+
+    EXPECT_EQ(CreateNPCTrainerPartyForOpponent(gEnemyParty, blue, TRUE, gBattleTypeFlags), 1);
+    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), 5);
+    EXPECT_EQ(GetMonData(&gEnemyParty[1], MON_DATA_SPECIES), SPECIES_NONE);
+    EXPECT(GetNotableBattleAiFlags(blue, &flags));
+    EXPECT(flags & AI_FLAG_BASIC_TRAINER);
+    EXPECT(flags & AI_FLAG_ACE_POKEMON);
+    BattleAI_SetupFlags();
+    EXPECT_EQ(gAiThinkingStruct->aiFlags[B_BATTLER_1], flags);
+    EXPECT_EQ(gAiThinkingStruct->aiFlags[B_BATTLER_3], flags);
+    EXPECT_EQ(gAiThinkingStruct->aiFlags[B_BATTLER_0], flags);
+    EXPECT_EQ(gAiThinkingStruct->aiFlags[B_BATTLER_2], flags);
+    FreeBattleResources();
+}
+
+TEST("Notable battle preserves Brock's slot metadata and freezes his ordered team")
+{
+    u16 species[PARTY_SIZE];
+    u16 items[PARTY_SIZE];
+    u8 levels[PARTY_SIZE];
+    u32 i;
+    BeginNotableConstruction(160, BATTLE_TYPE_TRAINER);
+
+    EXPECT_EQ(CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_BROCK_HNS, TRUE, gBattleTypeFlags), PARTY_SIZE);
+    // Fillers are sent first. Aerodactyl and Steelix are the last two aces.
+    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_SPECIES), SPECIES_OMASTAR);
+    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM), ITEM_FOCUS_BAND);
+    EXPECT_EQ(GetMonData(&gEnemyParty[1], MON_DATA_HELD_ITEM), ITEM_SCOPE_LENS);
+    EXPECT_EQ(GetMonData(&gEnemyParty[3], MON_DATA_HELD_ITEM), ITEM_QUICK_CLAW);
+    EXPECT_EQ(GetMonData(&gEnemyParty[4], MON_DATA_SPECIES), SPECIES_AERODACTYL);
+    EXPECT_EQ(GetMonData(&gEnemyParty[5], MON_DATA_SPECIES), SPECIES_STEELIX);
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        species[i] = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES);
+        items[i] = GetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM);
+        levels[i] = GetMonData(&gEnemyParty[i], MON_DATA_LEVEL);
+        EXPECT_NE(GetMonData(&gEnemyParty[i], MON_DATA_MOVE1), MOVE_NONE);
+    }
+
+    SetTrainerRating(0);
+    EXPECT_EQ(CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_BROCK_HNS, TRUE, gBattleTypeFlags), PARTY_SIZE);
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_SPECIES), species[i]);
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM), items[i]);
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_LEVEL), levels[i]);
+    }
+    FreeBattleResources();
+}
+
+TEST("Notable battle uses Giovanni's character roster in story and badge encounters")
+{
+    u16 species[PARTY_SIZE];
+    u32 i, count;
+    BeginNotableConstruction(80, BATTLE_TYPE_TRAINER);
+    count = CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_VIRIDIAN_GYM_GIOVANNI_HNS, TRUE, gBattleTypeFlags);
+    EXPECT_GT(count, 1);
+    for (i = 0; i < count; i++)
+        species[i] = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES);
+    ResetTrainerScalingSnapshot();
+    EXPECT_EQ(CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS, TRUE, gBattleTypeFlags), count);
+    for (i = 0; i < count; i++)
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_SPECIES), species[i]);
+    FreeBattleResources();
+}
+
+TEST("Notable battle freezes challenge IV and EV overrides with the team")
+{
+    u32 iv, ev;
+    BeginNotableConstruction(160, BATTLE_TYPE_TRAINER);
+    gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingIVs = 1;
+    gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingEVs = 2;
+    EXPECT_EQ(CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_BROCK_HNS, TRUE, gBattleTypeFlags), PARTY_SIZE);
+    iv = GetMonData(&gEnemyParty[0], MON_DATA_HP_IV);
+    ev = GetMonData(&gEnemyParty[0], MON_DATA_HP_EV);
+    EXPECT_EQ(ev, 128);
+    gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingIVs = 0;
+    gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingEVs = 3;
+    EXPECT_EQ(CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_BROCK_HNS, TRUE, gBattleTypeFlags), PARTY_SIZE);
+    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_HP_IV), iv);
+    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_HP_EV), ev);
+    gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingIVs = 0;
+    gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingEVs = 0;
+    FreeBattleResources();
+}
+
+TEST("Notable battle keeps Tate and Liza a double with alternating ace order")
+{
+    u64 flags;
+    BeginNotableConstruction(0, BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE);
+    TRAINER_BATTLE_PARAM.opponentA = TRAINER_TATE_AND_LIZA_1;
+    TRAINER_BATTLE_PARAM.opponentB = 0;
+    EXPECT_EQ(CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_TATE_AND_LIZA_1, TRUE, gBattleTypeFlags), 2);
+    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_SPECIES), SPECIES_LUNATONE);
+    EXPECT_EQ(GetMonData(&gEnemyParty[1], MON_DATA_SPECIES), SPECIES_SOLROCK);
+    EXPECT(GetNotableBattleAiFlags(TRAINER_TATE_AND_LIZA_1, &flags));
+    EXPECT(flags & AI_FLAG_DOUBLE_BATTLE);
+    BattleAI_SetupFlags();
+    EXPECT_EQ(gAiThinkingStruct->aiFlags[B_BATTLER_1], flags);
+    EXPECT_EQ(gAiThinkingStruct->aiFlags[B_BATTLER_3], flags);
+    FreeBattleResources();
+
+    BeginNotableConstruction(160, BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE);
+    EXPECT_EQ(CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_TATE_AND_LIZA_1, TRUE, gBattleTypeFlags), PARTY_SIZE);
+    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_SPECIES), SPECIES_GRUMPIG);
+    EXPECT_EQ(GetMonData(&gEnemyParty[1], MON_DATA_SPECIES), SPECIES_XATU);
+    EXPECT_EQ(GetMonData(&gEnemyParty[2], MON_DATA_SPECIES), SPECIES_CLAYDOL);
+    EXPECT_EQ(GetMonData(&gEnemyParty[3], MON_DATA_SPECIES), SPECIES_GARDEVOIR);
+    EXPECT_EQ(GetMonData(&gEnemyParty[4], MON_DATA_SPECIES), SPECIES_LUNATONE);
+    EXPECT_EQ(GetMonData(&gEnemyParty[5], MON_DATA_SPECIES), SPECIES_SOLROCK);
+    FreeBattleResources();
+}
+
+TEST("Notable battle species randomizer uses the source party and disables ace protection")
+{
+    u16 trainerId = TRAINER_VIRIDIAN_GYM_GIOVANNI_HNS;
+    const struct Trainer *source = GetTrainerStructFromId(trainerId);
+    u64 flags;
+    u32 i;
+    BeginNotableConstruction(160, BATTLE_TYPE_TRAINER);
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Trainer = TRUE;
+    EXPECT_EQ(CreateNPCTrainerPartyForOpponent(gEnemyParty, trainerId, TRUE, gBattleTypeFlags), source->partySize);
+    for (i = 0; i < source->partySize; i++)
+    {
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_SPECIES),
+                  RandomizeTrainerMon(source->trainerClass, i, source->partySize, source->party[i].species));
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_LEVEL), source->party[i].lvl);
+    }
+    EXPECT(GetNotableBattleAiFlags(trainerId, &flags));
+    EXPECT_EQ(flags & (AI_FLAG_ACE_POKEMON | AI_FLAG_DOUBLE_ACE_POKEMON), 0);
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Trainer = FALSE;
+    FreeBattleResources();
+}
+
+TEST("Notable league opponent uses the frozen run entry rating")
+{
+#if WAYFARER_LEAGUE_EVENTS
+    struct BattlePokemon battleMon;
+    const struct LeagueSavedTeam *team;
+    const struct LeagueSavedTeam *prepared;
+    u8 options, count, i;
+    u16 carrier = TRAINER_WAYFARER_INDIGO_LORELEI;
+    u32 changedSpecies;
+
+    WayfarerInitPersistentState();
+    for (i = 0; i < 8; i++)
+        SetBadgeStateForRegion(REGION_KANTO, i, TRUE);
+    SetTrainerRating(80);
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Abilities = TRUE;
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Type = TRUE;
+    EXPECT(Test_AdmitCircuitRun(CIRCUIT_STAGE_INDIGO));
+    EXPECT(GetAcceptedLeagueEventMember(0, &team));
+    EXPECT_EQ(GetAcceptedLeagueEventWorldProgress(), 80);
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Abilities = FALSE;
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Type = FALSE;
+    BeginNotableConstruction(160, BATTLE_TYPE_TRAINER);
+    TRAINER_BATTLE_PARAM.mode = TRAINER_BATTLE_SINGLE_NO_INTRO_TEXT;
+    TRAINER_BATTLE_PARAM.opponentA = carrier;
+    BattleSetup_ConfigureTrainerBattle(NULL);
+    EXPECT_EQ(TRAINER_BATTLE_PARAM.opponentA, team->sourceTrainerId);
+    EXPECT(GetPreparedLeagueEventBattle(team->sourceTrainerId, &prepared, &options));
+    EXPECT_EQ(prepared, team);
+    count = CreateNPCTrainerPartyForOpponent(gEnemyParty, team->sourceTrainerId, TRUE, gBattleTypeFlags);
+    EXPECT_EQ(count, team->teamSize);
+    for (i = 0; i < count; i++)
+    {
+        const struct LeagueSavedMon *saved = &team->members[team->battleOrder[i]];
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_SPECIES), saved->species);
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_LEVEL), saved->level);
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM), saved->heldItem);
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_MOVE1), saved->moves[0]);
+        EXPECT_EQ(GetMonAbility(&gEnemyParty[i]), saved->ability);
+        PokemonToBattleMon(&gEnemyParty[i], &battleMon);
+        EXPECT_EQ(battleMon.ability, saved->ability);
+        EXPECT_EQ(battleMon.types[0], saved->types[0]);
+        EXPECT_EQ(battleMon.types[1], saved->types[1]);
+    }
+    // TryFormChange uses these same setters. A new species uses its own
+    // ability and types instead of inheriting the original saved identity.
+    changedSpecies = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES) == SPECIES_ROTOM
+        ? SPECIES_ROTOM_HEAT : SPECIES_ROTOM;
+    SetMonData(&gEnemyParty[0], MON_DATA_SPECIES, &changedSpecies);
+    CalculateMonStats(&gEnemyParty[0]);
+    PokemonToBattleMon(&gEnemyParty[0], &battleMon);
+    EXPECT_EQ(battleMon.ability, GetAbilityBySpecies(changedSpecies, battleMon.abilityNum));
+    EXPECT_EQ(battleMon.types[0], GetSpeciesType(changedSpecies, 0));
+    EXPECT_EQ(battleMon.types[1], GetSpeciesType(changedSpecies, 1));
+    SetTrainerRating(0);
+    EXPECT_EQ(CreateNPCTrainerPartyForOpponent(gEnemyParty, team->sourceTrainerId, TRUE, gBattleTypeFlags), count);
+    for (i = 0; i < count; i++)
+    {
+        const struct LeagueSavedMon *saved = &team->members[team->battleOrder[i]];
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_SPECIES), saved->species);
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_LEVEL), saved->level);
+    }
+    ResetLeagueEventBattleProof();
+    FreeBattleResources();
+#else
+    struct NotableTrainerSnapshot entry;
+    u16 leagueId = TRAINER_WAYFARER_INDIGO_LORELEI;
+    u16 map = MAP_POKEMON_LEAGUE_LORELEIS_ROOM;
+    BeginNotableConstruction(160, BATTLE_TYPE_TRAINER);
+    gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active = TRUE;
+    gSaveBlock3Ptr->wayfarerHoenn.leagueRun.stage = CIRCUIT_STAGE_INDIGO;
+    gSaveBlock3Ptr->wayfarerHoenn.leagueRun.ratingAtEntry = 40;
+    gSaveBlock3Ptr->wayfarerHoenn.indigoRoomDefeats = 0;
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(map);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(map);
+    VarSet(VAR_LEAGUE_STATE, 1);
+    EXPECT(ResolveNotableTrainerSnapshot(GetNotableTrainerForEncounter(leagueId), 40, FALSE, &entry));
+
+    EXPECT_EQ(CreateNPCTrainerPartyForOpponent(gEnemyParty, leagueId, TRUE, gBattleTypeFlags), entry.teamSize);
+    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), entry.members[entry.battleOrder[0]].lvl);
+    EXPECT_NE(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), 100);
+    SetTrainerRating(0);
+    EXPECT_EQ(CreateNPCTrainerPartyForOpponent(gEnemyParty, leagueId, TRUE, gBattleTypeFlags), entry.teamSize);
+    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), entry.members[entry.battleOrder[0]].lvl);
+    gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active = FALSE;
+    FreeBattleResources();
+#endif
+}
+
+#if WAYFARER_LEAGUE_EVENTS
+TEST("Off-field Future Sight and reserve AI use accepted league types after option changes")
+{
+    const struct LeagueSavedTeam *team;
+    u8 selectedIndex = PARTY_SIZE;
+    u8 selectedType = NUMBER_OF_MON_TYPES;
+    u8 count, i, typeSlot;
+    u16 probeMove = MOVE_NONE;
+    uq4_12_t liveMultiplier = 0, frozenMultiplier = 0;
+    u16 carrier = TRAINER_WAYFARER_INDIGO_LORELEI;
+
+    WayfarerInitPersistentState();
+    for (i = 0; i < 8; i++)
+        SetBadgeStateForRegion(REGION_KANTO, i, TRUE);
+    SetTrainerRating(80);
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Type = TRUE;
+    EXPECT(Test_AdmitCircuitRun(CIRCUIT_STAGE_INDIGO));
+    EXPECT(GetAcceptedLeagueEventMember(0, &team));
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Type = FALSE;
+
+    BeginNotableConstruction(80, BATTLE_TYPE_TRAINER);
+    TRAINER_BATTLE_PARAM.mode = TRAINER_BATTLE_SINGLE_NO_INTRO_TEXT;
+    TRAINER_BATTLE_PARAM.opponentA = carrier;
+    BattleSetup_ConfigureTrainerBattle(NULL);
+    EXPECT_EQ(TRAINER_BATTLE_PARAM.opponentA, team->sourceTrainerId);
+    count = CreateNPCTrainerPartyForOpponent(gEnemyParty, team->sourceTrainerId, TRUE, gBattleTypeFlags);
+    EXPECT_EQ(count, team->teamSize);
+    for (i = 0; i < count && selectedIndex == PARTY_SIZE; i++)
+    {
+        const struct LeagueSavedMon *saved = &team->members[team->battleOrder[i]];
+        u8 naturalType0 = GetSpeciesType(saved->species, 0);
+        u8 naturalType1 = GetSpeciesType(saved->species, 1);
+        for (typeSlot = 0; typeSlot < 2; typeSlot++)
+            if (saved->types[typeSlot] != naturalType0 && saved->types[typeSlot] != naturalType1)
+            {
+                selectedIndex = i;
+                selectedType = saved->types[typeSlot];
+                break;
+            }
+    }
+    EXPECT_LT(selectedIndex, count);
+    if (selectedIndex < count)
+    {
+        gBattlerPartyIndexes[B_BATTLER_1] = (selectedIndex + 1) % count;
+        gBattleStruct->futureSight[B_BATTLER_0].partyIndex = selectedIndex;
+        EXPECT(IsFutureSightAttackerInParty(B_BATTLER_1, B_BATTLER_0, MOVE_FUTURE_SIGHT));
+        EXPECT(HasFutureSightPartyMonStab(&gEnemyParty[selectedIndex], selectedType));
+        for (u16 move = 1; move < MOVES_COUNT; move++)
+        {
+            u16 species = GetMonData(&gEnemyParty[selectedIndex], MON_DATA_SPECIES);
+            frozenMultiplier = CalcPartyMonTypeEffectivenessMultiplierForMon(move, &gEnemyParty[selectedIndex], ABILITY_NONE);
+            liveMultiplier = CalcPartyMonTypeEffectivenessMultiplier(move, species, ABILITY_NONE);
+            if (frozenMultiplier != liveMultiplier)
+            {
+                probeMove = move;
+                break;
+            }
+        }
+        EXPECT_NE(probeMove, MOVE_NONE);
+        if (probeMove != MOVE_NONE)
+            EXPECT_NE(frozenMultiplier, liveMultiplier);
+        ResetLeagueEventBattleProof();
+        EXPECT(!HasFutureSightPartyMonStab(&gEnemyParty[selectedIndex], selectedType));
+        if (probeMove != MOVE_NONE)
+            EXPECT_EQ(CalcPartyMonTypeEffectivenessMultiplierForMon(probeMove, &gEnemyParty[selectedIndex], ABILITY_NONE), liveMultiplier);
+    }
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Type = FALSE;
+    FreeBattleResources();
+}
+#endif
+
+#if WAYFARER_LEAGUE_EVENTS
+TEST("Corrupt accepted lineup cannot fall through to the old league room carrier")
+{
+    const struct LeagueSavedTeam *team;
+    const u8 *script;
+    u8 firstSlot;
+    u8 originalType;
+    u16 carrier = TRAINER_WAYFARER_INDIGO_LORELEI;
+    u8 i;
+
+    WayfarerInitPersistentState();
+    for (i = 0; i < 8; i++)
+        SetBadgeStateForRegion(REGION_KANTO, i, TRUE);
+    SetTrainerRating(80);
+    EXPECT(Test_AdmitCircuitRun(CIRCUIT_STAGE_INDIGO));
+    EXPECT(GetAcceptedLeagueEventMember(0, &team));
+    firstSlot = team->battleOrder[0];
+    originalType = team->members[firstSlot].types[0];
+    gPokemonStoragePtr->leagueEventTeams.lineup[0].members[firstSlot].types[0] = NUMBER_OF_MON_TYPES;
+    EXPECT(!ValidateLeagueEventState());
+
+    gIsDebugBattle = FALSE;
+    TRAINER_BATTLE_PARAM.mode = TRAINER_BATTLE_SINGLE_NO_INTRO_TEXT;
+    TRAINER_BATTLE_PARAM.opponentA = carrier;
+    script = BattleSetup_ConfigureTrainerBattle(NULL);
+    EXPECT_EQ(script, EventScript_NoNormalTrainerBattle);
+    EXPECT_EQ(TRAINER_BATTLE_PARAM.opponentA, carrier);
+    EXPECT(!IsLeagueEventBattleInProgress());
+
+    gPokemonStoragePtr->leagueEventTeams.lineup[0].members[firstSlot].types[0] = originalType;
+    EXPECT(ValidateLeagueEventState());
+    ResetLeagueEventBattleProof();
+}
+#endif
+
+TEST("Notable league preparation fails before changing an existing party")
+{
+    u16 leagueId = TRAINER_WAYFARER_INDIGO_LORELEI;
+    const struct Trainer *source = GetTrainerStructFromId(leagueId);
+    u16 species[PARTY_SIZE];
+    u8 levels[PARTY_SIZE];
+    u64 flags;
+    u32 i;
+    BeginNotableConstruction(80, BATTLE_TYPE_TRAINER);
+    gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active = FALSE;
+    EXPECT_EQ(CreateNPCTrainerPartyFromTrainer(gEnemyParty, source, TRUE, gBattleTypeFlags), source->partySize);
+    for (i = 0; i < source->partySize; i++)
+    {
+        species[i] = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES);
+        levels[i] = GetMonData(&gEnemyParty[i], MON_DATA_LEVEL);
+    }
+    EXPECT_EQ(CreateNPCTrainerPartyForOpponent(gEnemyParty, leagueId, TRUE, gBattleTypeFlags), 0);
+    EXPECT(!GetNotableBattleAiFlags(leagueId, &flags));
+    for (i = 0; i < source->partySize; i++)
+    {
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_SPECIES), species[i]);
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_LEVEL), levels[i]);
+    }
+    FreeBattleResources();
+}
+
+TEST("Notable battle excluded contexts keep source parties and clear prepared AI")
+{
+    u64 flags;
+    const struct Trainer *source = GetTrainerStructFromId(TRAINER_BROCK_HNS);
+    BeginNotableConstruction(160, BATTLE_TYPE_TRAINER);
+    EXPECT_GT(CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_BROCK_HNS, TRUE, gBattleTypeFlags), 0);
+    EXPECT(GetNotableBattleAiFlags(TRAINER_BROCK_HNS, &flags));
+    gBattleTypeFlags |= BATTLE_TYPE_RECORDED;
+    EXPECT_EQ(CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_BROCK_HNS, TRUE, gBattleTypeFlags), source->partySize);
+    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_SPECIES), source->party[0].species);
+    EXPECT(!GetNotableBattleAiFlags(TRAINER_BROCK_HNS, &flags));
+    FreeBattleResources();
+}
+
+#endif

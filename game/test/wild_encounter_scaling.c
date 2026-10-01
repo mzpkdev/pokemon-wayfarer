@@ -1,4 +1,5 @@
 #include "global.h"
+#include "config/notable_trainers.h"
 #include "fishing.h"
 #include "randomizer.h"
 #include "test/test.h"
@@ -183,6 +184,24 @@ static bool8 FindProfileForMap(u16 map, enum TimeOfDay timeOfDay, enum WildPokem
 
 TEST("Wild encounter scaling follows anchors, high-water marks, and bounds")
 {
+#if WAYFARER_V0_TRAINERS
+    static const u16 ratings[] = { 0, 40, 80, 120, 160 };
+    static const u8 levels[] = { 6, 24, 40, 58, 78 };
+    u32 i, rating;
+    u8 previous = 0;
+
+    for (i = 0; i < ARRAY_COUNT(ratings); i++)
+        EXPECT_EQ(ProjectWildEncounterLevelWithOffset(6, ratings[i], 0), levels[i]);
+    for (rating = 0; rating <= 160; rating++)
+    {
+        u8 level = ProjectWildEncounterLevelWithOffset(6, rating, 0);
+        EXPECT_GE(level, previous);
+        previous = level;
+    }
+    EXPECT_EQ(ProjectWildEncounterLevelWithOffset(6, 65536, 0), 78);
+    EXPECT_EQ(ProjectWildEncounterLevelWithOffset(6, 0, -8), 1);
+    EXPECT_EQ(ProjectWildEncounterLevelWithOffset(90, 160, 20), MAX_LEVEL);
+#else
     static const u8 sRatings[] = { 0, 4, 8, 16, 30, 40, 55, 65, 80 };
     static const u8 sExpectedLevels[] = { 5, 6, 8, 13, 20, 32, 50, 70, 90 };
     static const u8 sAuthoredLevels[] = { 1, MAX_LEVEL };
@@ -208,6 +227,7 @@ TEST("Wild encounter scaling follows anchors, high-water marks, and bounds")
     EXPECT_EQ(ProjectWildEncounterLevelWithOffset(5, 65535, 0), 90);
     EXPECT_EQ(ProjectWildEncounterLevelWithOffset(5, 0, -8), 1);
     EXPECT_EQ(ProjectWildEncounterLevelWithOffset(90, 80, 20), MAX_LEVEL);
+#endif
 }
 
 TEST("Standard Rod: every fishing quality uses the generated ten-slot profile")
@@ -386,12 +406,33 @@ TEST("Kanto Chinchou records retain exact Old Rod accessibility")
         { CINNABAR_ENCOUNTER_MAP, TIME_NIGHT },
     };
     u8 recordId;
+    u8 firstRecord = 0, lastRecord = ARRAY_COUNT(sRecords);
+    u16 firstRating = 0, lastRating =
+#if WAYFARER_V0_TRAINERS
+        161;
+#else
+        81;
+#endif
     u32 oldRodBitePercent = CalculateFishingBiteOddsWithBonuses(OLD_ROD, FALSE, 0, 0, 0);
+
+#if WAYFARER_V0_TRAINERS
+    // Split exhaustive v0 coverage so each mechanics case stays within the
+    // GBA runner timeout after the projection range doubled.
+    for (u8 candidate = 0; candidate < ARRAY_COUNT(sRecords); candidate++)
+        for (u8 block = 0; block < 18; block++)
+            PARAMETRIZE_LABEL("record %d TR %d-%d", candidate, block * 9, min(block * 9 + 8, 160))
+            {
+                firstRecord = candidate;
+                lastRecord = candidate + 1;
+                firstRating = block * 9;
+                lastRating = min(firstRating + 9, 161);
+            }
+#endif
 
     EXPECT_EQ(oldRodBitePercent, 25);
     EXPECT_EQ(oldRodBitePercent * 11, 275);
 
-    for (recordId = 0; recordId < ARRAY_COUNT(sRecords); recordId++)
+    for (recordId = firstRecord; recordId < lastRecord; recordId++)
     {
         struct WildEncounterProfileView view;
         u8 lowestEffectiveLevel = MAX_LEVEL;
@@ -401,7 +442,7 @@ TEST("Kanto Chinchou records retain exact Old Rod accessibility")
         EXPECT_EQ(view.wildMonsInfo->encounterRate, 30);
         EXPECT_EQ(view.entryCount, FISH_WILD_COUNT);
 
-        for (rating = 0; rating <= 80; rating++)
+        for (rating = firstRating; rating < lastRating; rating++)
         {
             u16 chinchouWeight = 0;
             u8 slot;
@@ -428,7 +469,13 @@ TEST("Kanto Chinchou records retain exact Old Rod accessibility")
             }
             EXPECT_EQ(chinchouWeight, 11);
         }
-        EXPECT_EQ(lowestEffectiveLevel, 5);
+        if (firstRating == 0)
+            EXPECT_EQ(lowestEffectiveLevel,
+#if WAYFARER_V0_TRAINERS
+                  6);
+#else
+                  5);
+#endif
     }
 }
 
@@ -454,6 +501,25 @@ TEST("Johto Mantine anchors remain eligible throughout the protected rating rang
     const struct WildEncounterSpeciesMetadata *mantineMetadata = NULL;
     u16 metadataId;
     u8 recordId;
+    u8 firstRecord = 0, lastRecord = ARRAY_COUNT(sRecords);
+    u16 firstRating =
+#if WAYFARER_V0_TRAINERS
+        25, lastRating = 161;
+#else
+        10, lastRating = 81;
+#endif
+
+#if WAYFARER_V0_TRAINERS
+    for (u8 candidate = 0; candidate < ARRAY_COUNT(sRecords); candidate++)
+        for (u8 block = 0; block < 17; block++)
+            PARAMETRIZE_LABEL("record %d TR %d-%d", candidate, 25 + block * 8, min(32 + block * 8, 160))
+            {
+                firstRecord = candidate;
+                lastRecord = candidate + 1;
+                firstRating = 25 + block * 8;
+                lastRating = min(firstRating + 8, 161);
+            }
+#endif
 
     for (metadataId = 0; metadataId < gWildEncounterSpeciesMetadataCount; metadataId++)
     {
@@ -467,7 +533,7 @@ TEST("Johto Mantine anchors remain eligible throughout the protected rating rang
     EXPECT_EQ(mantineMetadata->minimumLevel, 14);
     EXPECT_EQ(mantineMetadata->predecessorSpecies, SPECIES_NONE);
 
-    for (recordId = 0; recordId < ARRAY_COUNT(sRecords); recordId++)
+    for (recordId = firstRecord; recordId < lastRecord; recordId++)
     {
         struct WildEncounterProfileView view;
         u8 mantineSlotCount = 0;
@@ -500,7 +566,7 @@ TEST("Johto Mantine anchors remain eligible throughout the protected rating rang
             EXPECT_EQ(entry->minLevel, sRecords[recordId].minLevels[expectedSlotId]);
             EXPECT_EQ(entry->maxLevel, sRecords[recordId].maxLevels[expectedSlotId]);
 
-            for (rating = 10; rating <= 80; rating++)
+            for (rating = firstRating; rating < lastRating; rating++)
             {
                 u8 authoredLevel;
 

@@ -104,7 +104,8 @@ export const createArrangeApi = (runtime: SessionRuntime, mailbox: MailboxApi): 
     if (appearanceStyle !== undefined && !Object.hasOwn(appearanceIds, appearanceStyle))
       throw new Error("Appearance style must be 1, 2, 3, or 4")
     const appearanceId = appearanceStyle === undefined ? 0 : appearanceIds[appearanceStyle]
-    const vars = entries(options.story?.vars)
+    const vars = entries(options.story?.vars).filter(([name]) => name !== "trainerRating")
+    const trainerRating = options.story?.vars?.trainerRating
     const flags = entries(options.story?.flags)
     const party = options.party ?? []
     const hmBagItems = entries(options.bag?.hms)
@@ -195,6 +196,7 @@ export const createArrangeApi = (runtime: SessionRuntime, mailbox: MailboxApi): 
           regionalBadgeCounts,
           leagueClears,
           applyLeagueCircuit: options.circuit !== undefined,
+          trainerRating,
           decoratedSecretBase: options.secretBase?.decorated ?? false,
         }),
       "arrange game",

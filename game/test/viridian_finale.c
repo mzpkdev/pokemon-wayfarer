@@ -3,6 +3,7 @@
 #include "battle_main.h"
 #include "battle_setup.h"
 #include "config/league_circuit.h"
+#include "config/notable_trainers.h"
 #include "data.h"
 #include "debug.h"
 #include "event_data.h"
@@ -87,6 +88,7 @@ static void PrepareViridianParty(u32 rating)
     gSaveBlock3Ptr->challengeSettings.tx_Random_Moves = FALSE;
 }
 
+#if !WAYFARER_V0_TRAINERS
 TEST("Viridian Giovanni constructs five FRLG source slots with Gym levels and authored moves")
 {
     static const u16 species[] = {
@@ -121,6 +123,7 @@ TEST("Viridian Giovanni constructs five FRLG source slots with Gym levels and au
     }
     Free(party);
 }
+#endif
 
 TEST("Viridian Giovanni scaling is confined to an ordinary trainer battle")
 {

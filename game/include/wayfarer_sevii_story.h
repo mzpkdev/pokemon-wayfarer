@@ -5,7 +5,13 @@
 
 // The three Kanto birds share this readiness policy. It is deliberately a
 // threshold rather than a cost, and it is independent of story completion.
+#include "config/notable_trainers.h"
+
+#if WAYFARER_V0_TRAINERS
+#define WAYFARER_BIRD_CAPTURE_TR 120
+#else
 #define WAYFARER_BIRD_CAPTURE_TR 55
+#endif
 
 bool8 WayfarerSeviiPartyHasSpecies(u16 species);
 bool8 WayfarerSeviiPartyMonHasSpecies(u8 partyIndex, u16 species);

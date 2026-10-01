@@ -3,6 +3,10 @@
 #include "event_data.h"
 #include "test/test.h"
 #include "trainer_rating.h"
+#include "league_circuit.h"
+#include "wayfarer_persistence.h"
+#include "config/notable_trainers.h"
+#include "constants/regions.h"
 #include "wild_encounter.h"
 
 static const struct WildPokemon sDexNavNormalMons[] =
@@ -45,8 +49,12 @@ static struct WildEncounterProfileView MakeDexNavNormalProfile(void)
     };
 }
 
-static u8 ResetDexNavTrainerRating(void)
+static u32 ResetDexNavTrainerRating(void)
 {
+#if WAYFARER_V0_TRAINERS
+    for (u32 index = 0; index < 24; index++)
+        SetBadgeStateForRegion(REGION_KANTO + index / 8, index % 8, FALSE);
+#endif
     FlagClear(FLAG_BADGE01_GET);
     FlagClear(FLAG_BADGE02_GET);
     FlagClear(FLAG_BADGE03_GET);
@@ -82,7 +90,7 @@ TEST("DexNav leaves hidden data raw while ordinary profiles use effective specie
 {
     struct WildEncounterProfileView profile = MakeDexNavNormalProfile();
     struct WildEncounterSpeciesOutcome outcome;
-    u8 trainerRating;
+    u32 trainerRating;
 
     trainerRating = ResetDexNavTrainerRating();
     EXPECT_EQ(GetTrainerRating(), trainerRating);
@@ -103,7 +111,7 @@ TEST("DexNav ordinary detector fallback mirrors the eligible profile only for lu
 {
     struct WildEncounterProfileView profile = MakeDexNavNormalProfile();
     u8 slot;
-    u8 trainerRating;
+    u32 trainerRating;
 
     trainerRating = ResetDexNavTrainerRating();
     EXPECT_EQ(GetTrainerRating(), trainerRating);
@@ -126,7 +134,7 @@ TEST("DexNav selected species preserve conditional raw source and level weights"
     struct WildEncounterProfileView profile = MakeDexNavNormalProfile();
     struct WildEncounterSpeciesOutcome outcome;
     bool8 accepted;
-    u8 trainerRating;
+    u32 trainerRating;
 
     trainerRating = ResetDexNavTrainerRating();
     EXPECT_EQ(GetTrainerRating(), trainerRating);

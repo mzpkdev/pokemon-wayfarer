@@ -1,4 +1,5 @@
 #include "global.h"
+#include "config/notable_trainers.h"
 #include "battle.h"
 #include "battle_main.h"
 #include "data.h"
@@ -15,7 +16,7 @@
 #include "wayfarer_persistence.h"
 #include "constants/maps.h"
 
-#if IS_WAYFARER
+#if IS_WAYFARER && !WAYFARER_V0_TRAINERS
 
 TEST("League tiers keep authored fallback without an admitted run")
 {
@@ -280,7 +281,7 @@ TEST("League species randomizer preserves the complete authored constructor bypa
 #endif
 }
 
-#elif !IS_FRLG
+#elif !IS_FRLG && !IS_WAYFARER
 
 TEST("Standalone League constructor keeps authored parties")
 {

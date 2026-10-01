@@ -1043,6 +1043,7 @@ static bool32 HandleEndTurnSecondEventBlock(enum BattlerId battler)
     case SECOND_EVENT_BLOCK_SEA_OF_FIRE:
         if (gSideTimers[side].seaOfFireTimer > 0 && --gSideTimers[side].seaOfFireTimer == 0)
         {
+            gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_SEA_OF_FIRE;
             BattleScriptExecute(BattleScript_TheSeaOfFireDisappeared);
             effect = TRUE;

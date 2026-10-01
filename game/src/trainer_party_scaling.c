@@ -2,8 +2,14 @@
 #include "pokemon.h"
 #include "data.h"
 #include "config/battle.h"
+#include "config/notable_trainers.h"
 #include "trainer_rating.h"
 #include "trainer_party_scaling.h"
+#include "trainer_scaler.h"
+#if WAYFARER_V0_TRAINERS
+#include "battle_main.h"
+#include "notable_moves.h"
+#endif
 #include "league_circuit.h"
 #include "constants/abilities.h"
 #include "constants/battle.h"
@@ -28,7 +34,9 @@ struct TrainerScalingMoveException
 #if IS_WAYFARER
 #include "data/trainer_scaling/move_exceptions.h"
 #include "data/trainer_scaling/policies.h"
+#if !WAYFARER_V0_TRAINERS
 #include "data/trainer_scaling/predecessors.h"
+#endif
 #include "data/trainer_scaling/league.h"
 #if B_GYM_LEADER_SCALING
 #include "data/trainer_scaling/gym_leaders.h"
@@ -36,7 +44,14 @@ struct TrainerScalingMoveException
 #endif
 
 static EWRAM_DATA bool8 sHasRatingSnapshot = FALSE;
-static EWRAM_DATA u8 sRatingSnapshot = 0;
+static EWRAM_DATA u32 sRatingSnapshot = 0;
+
+#if WAYFARER_V0_TRAINERS
+static const struct TrainerScalerAnchor sRegularTrainerLevelsV0[] =
+{
+    { 0, 9 }, { 40, 27 }, { 80, 44 }, { 120, 62 }, { 160, 82 },
+};
+#endif
 
 u8 GetLeagueScalingBaseline(u32 rating)
 {
@@ -95,15 +110,22 @@ bool32 IsLeagueScalingRosterValid(const struct LeagueScalingRoster *roster, cons
 
 u8 GetTrainerScalingLevel(u32 rating, u32 authoredLevel, u32 policy)
 {
+#if !WAYFARER_V0_TRAINERS
     static const u8 anchors[][2] = {{0, 7}, {4, 8}, {8, 10}, {16, 15}, {30, 22}, {40, 34}, {55, 52}, {65, 72}, {80, 92}};
     u32 i;
+#endif
     s32 adjustment, level;
+#if !WAYFARER_V0_TRAINERS
     rating = min(rating, 80);
+#endif
     authoredLevel = min(max(authoredLevel, 1), 100);
     adjustment = (s32)authoredLevel - 5;
     adjustment = adjustment < 0 ? -((-adjustment + 2) / 5) : (adjustment + 2) / 5;
     adjustment = min(max(adjustment, -1), 8);
     level = 92;
+#if WAYFARER_V0_TRAINERS
+    level = EvaluateTrainerScaler(sRegularTrainerLevelsV0, ARRAY_COUNT(sRegularTrainerLevelsV0), rating, FALSE);
+#else
     for (i = 1; i < ARRAY_COUNT(anchors); i++)
     {
         if (rating <= anchors[i][0])
@@ -114,6 +136,7 @@ u8 GetTrainerScalingLevel(u32 rating, u32 authoredLevel, u32 policy)
             break;
         }
     }
+#endif
     return min(max(level + adjustment + (policy == TRAINER_SCALING_GYM_MEMBER ? 2 : 0), 1), 100);
 }
 
@@ -264,6 +287,9 @@ u32 GetTrainerScalingPolicy(u32 trainerId)
 
 u16 ResolveTrainerScalingSpecies(u16 species, u8 level)
 {
+#if WAYFARER_V0_TRAINERS
+    return StepDownSpeciesToLevel(species, level);
+#else
 #if IS_WAYFARER
     u32 depth;
     for (depth = 0; depth < ARRAY_COUNT(sTrainerScalingPredecessors); depth++)
@@ -286,6 +312,7 @@ u16 ResolveTrainerScalingSpecies(u16 species, u8 level)
     }
 #endif
     return species;
+#endif
 }
 
 bool32 IsTrainerScalingBattleContext(u32 flags)
@@ -302,9 +329,12 @@ void ResetTrainerScalingSnapshot(void)
 {
     sHasRatingSnapshot = FALSE;
     sRatingSnapshot = 0;
+#if WAYFARER_V0_TRAINERS
+    ResetNotableBattleSnapshot();
+#endif
 }
 
-u8 GetTrainerScalingSnapshot(void)
+u32 GetTrainerScalingSnapshot(void)
 {
     if (!sHasRatingSnapshot)
     {
