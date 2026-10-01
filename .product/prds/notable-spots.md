@@ -188,3 +188,4 @@ beside a seat. Talking to them runs straight through with no menu.
 - [Notable trainers](notable-trainers.md)
 - [Notable trainer travel proof of concept](../research/notable-trainer-travel-poc.md)
 - [Travel and on-map walking](../specs/notable-haunts.md#travel-and-on-map-walking)
+- [Notable spots inventory (draft)](../research/notable-spots-inventory.md)

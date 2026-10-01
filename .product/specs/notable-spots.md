@@ -511,3 +511,4 @@ gameplay timer the proof of concept named.
 - [Notable trainers](notable-trainers.md)
 - [Gym Leader scaling](gym-leader-scaling.md)
 - [Notable trainer travel proof of concept](../research/notable-trainer-travel-poc.md)
+- [Notable spots inventory (draft)](../research/notable-spots-inventory.md)
