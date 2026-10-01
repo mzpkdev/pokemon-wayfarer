@@ -24,10 +24,11 @@ placeholders; balance is informational.
 
 Own, in `IS_WAYFARER`: the haunt catalog and its tags, the meaning of the
 **buddy** and **reward pool** trainer values, placement and
-momentum, the talk flow, the eight quest types (with Trade's traded slots),
-rewards and claims, dialogue assembly, the Kanto haunt list, retiring the HNS
-cameos and the Saffron Dojo rematch room, the haunts' saved state and load
-validation, presentation, the balance report, and acceptance.
+momentum, the talk flow, the nine quest types (with the traded slots of
+Trade and Wanted), rewards and claims, dialogue assembly, the Kanto haunt
+list, retiring the HNS cameos and the Saffron Dojo rematch room, the
+haunts' saved state and load validation, presentation, the balance report,
+and acceptance.
 
 - [Notable trainers](notable-trainers.md) owns the trainers: inventory,
   home region, the traveller and aloof traits, TR and its growth, rosters,
@@ -218,7 +219,8 @@ When the new placement differs from the saved one at a haunt (another
 trainer, or empty), that haunt's claim bit is cleared
 ([rewards and claims](#rewards-and-claims)), and so is its
 [lost-something](#lost-something) search state,
-[Catch me one](#catch-me-one) asked bit, or [Trade](#accepted) owed bit;
+[Catch me one](#catch-me-one) asked bit, or [Trade](#accepted) or
+[Wanted](#wanted) owed bit;
 then the new placement is saved.
 
 ## Talk flow
@@ -249,7 +251,9 @@ Every talk runs three steps:
    takes the proposal's place ([Lost something](#lost-something)), and at
    a Catch me one haunt whose quest the player has accepted, the showing
    or `NOT_READY` does ([Catch me one](#catch-me-one)), and at a Trade
-   haunt whose reward is owed, the completion does ([Trade](#accepted)).
+   or Wanted haunt whose reward is owed, the completion does
+   ([Trade](#accepted)), and at a Wanted haunt with no fair offer, its
+   no-offer line and `NOT_READY` do ([Wanted](#no-fair-offer)).
    Once the
    claim bit is set (the quest was completed during this placement), the
    trainer's `QUIRK` instead.
@@ -303,6 +307,7 @@ favour ([dialogue](#dialogue)):
 | Bring me | "Got a {KIND} on you? Bring me one." |
 | Swap battle | "One POKéMON each. Pick your best?" (the swap is revealed only after the pick) |
 | Trade | "I'd trade {FILLER} for one of yours. Interested?" (a [trade-back](#trade-back) has its own line) |
+| Wanted | "I've been looking for a {WANTED}. Got one to trade?" (a [trade-back](#trade-back) takes its place, as at Trade) |
 
 A haunt may author its own proposal line for its quest type, under the same
 writing rules; the [Celadon Game Corner](#worked-example-celadon-game-corner)
@@ -316,7 +321,9 @@ line (the proposal), then a yes or no:
 player doesn't meet, or a failed attempt, uses `NOT_READY`, unless there is
 a loss line (One on one's, if the haunt authors one, the Quiz's, and Swap
 battle's). A trade the value check refuses plays "That's not a fair
-trade." and the trainer's `NO` ([Trade](#the-value-check)).
+trade." and the trainer's `NO` ([Trade](#the-value-check)), and a Wanted
+haunt with no fair offer plays its no-offer line and `NOT_READY` in place
+of the proposal ([Wanted](#no-fair-offer)).
 Completing it runs the haunt's done line if it has one, then `PRAISE`, then
 the [reward](#rewards-and-claims), then `BYE`.
 
@@ -833,9 +840,9 @@ when it resolves the team; this section owns the rules.
 
 #### Trade-back
 
-A later Trade quest with the same trainer, at any Trade haunt and in another
-placement, offers the player's POKéMON back for the exact filler they
-received.
+A later Trade or Wanted quest with the same trainer, at any Trade or
+[Wanted](#wanted) haunt and in another placement, offers the player's
+POKéMON back for the exact filler they received.
 
 - **Proposal.** "I'd trade {TRADED} back for the one you got from me.
   Interested?" `{TRADED}` is the traded POKéMON's nickname.
@@ -858,8 +865,9 @@ received.
 
 Nothing is duplicated: the received filler goes back, and the player's
 POKéMON leaves the trainer's team. A player who no longer has the filler,
-released or traded away, gets `NOT_READY` from every Trade haunt that
-trainer stands at, while the trainer keeps the POKéMON.
+released or traded away, gets `NOT_READY` from every Trade or
+[Wanted](#wanted) haunt that trainer stands at, while the trainer keeps
+the POKéMON.
 
 #### Limits
 
@@ -870,6 +878,129 @@ trainer stands at, while the trainer keeps the POKéMON.
   trade with a trainer who holds none plays the proposal as usual, and its
   `YES` is followed by `NOT_READY` and `BYE` before the screen opens. A
   trade-back frees a record.
+
+### Wanted
+
+The trainer asks for one wild species that lives at the haunt and offers
+one of their fillers for it. It is a [Trade](#trade) with a fixed ask: the
+held item rule, the trade scene, the received filler, the traded slot, the
+trade-back, and the limits are Trade's, and this section gives only what
+differs. Wanted has no worked haunt yet.
+
+#### The wanted species
+
+The **wanted species** is derived, never authored: the strongest wild
+species that lives at the haunt and shares a type with the trainer's aces.
+
+1. **Lives at the haunt.** A species lives at the haunt when it fills a
+   slot of a wild table on one of the haunt's maps. The tables are the
+   `gWildMonHeaders` entries of
+   [wild_encounters.json](../../game/src/data/wild_encounters.json) whose
+   `map` is one of the haunt's maps, under every time-of-day label the
+   Wayfarer build emits for that map (`_Day`, `_Night`, or none), and all
+   four methods count: `land_mons`, `water_mons`, `fishing_mons`, and
+   `rock_smash_mons`. A table whose `encounter_rate` is 0 never runs, so
+   it is skipped, and so is a `SPECIES_NONE` slot. The tables mark no slot
+   as gated by an item, a rod, or a flag, so every other slot counts as
+   catchable: fishing with any rod, and surfing and Rock Smash too, since
+   the quest stays open the whole placement. A retired map whose header
+   the Wayfarer build drops has no tables.
+2. **Shares a type.** One of its types is a type of one of the trainer's
+   aces, read from the ace slots' authored species, as
+   [Trade's pick](#the-pick) reads them.
+3. **Strongest.** The highest [line value](#the-value-check), from the same
+   generated table. Ties go to the lowest species number. Every stage of a
+   line shares its value unless the line branches, so a tie inside a line
+   names its earliest local stage.
+4. **Fallback.** With no local species sharing a type, the strongest local
+   species of any type, by the same order.
+
+The wanted species reads only the haunt's tables, the line values, and the
+aces' authored species. A traded slot is never an ace, so no trade changes
+it, and day and night tables are pooled, so the time of day doesn't either.
+It is stable for the whole placement, and the same for that trainer at that
+haunt in every placement. `{WANTED}` names it.
+
+A Wanted haunt needs local species: one whose maps have no table with a
+species, such as an indoor haunt, fails the build
+([trade engine](#trade-engine)).
+
+#### Wanted's offer
+
+The **offered filler** is the trainer's best filler worth no more than the
+wanted species: of their filler slots (never an ace), the one with the
+highest line value that is at most the wanted species' line value. A
+filler's line value is read at its current stage, as Trade's
+[offer](#the-offer) reads it. Ties go to the slot earliest in battle order,
+the highest-numbered, as Trade's offer does. `{FILLER}` names it.
+
+The player's POKéMON is worth at least the filler by construction, so there
+is no value check.
+
+#### No fair offer
+
+When every filler's line value is above the wanted species', the trainer
+has nothing fair to offer. In place of the proposal, the talk plays the
+shared haunt line "I've been looking for a {WANTED}, but I've nothing fair
+to trade for one.", then the trainer's `NOT_READY` and `BYE`, with no
+[YES / NO]. The claim bit stays clear, and since the case depends only on
+the haunt and the trainer, it lasts the placement.
+
+Offering the lowest filler anyway was rejected: the player would get more
+than they give, and the trainer's team would lose value in that slot, so
+the trade would be unfair the other way.
+
+#### Giving one
+
+The talk checks, in order:
+
+1. **Trade-back.** While the trainer holds a
+   [traded slot](#the-trainers-team-after-a-trade), from a Trade or a
+   Wanted haunt, the quest is the [trade-back](#trade-back), exactly as at
+   a Trade haunt; the wanted species plays no part.
+2. **No fair offer**, as above.
+3. **Proposal.** "I've been looking for a {WANTED}. Got one to trade?"
+   (the quest line after `ASK`). It is neutral, so any trainer can say it.
+
+- **NO:** the trainer's `NO`, then `BYE`; the next talk proposes again.
+- **YES:** the trainer's `YES`. With every traded-slot record in use,
+  `NOT_READY` and `BYE` follow, as at Trade ([limits](#limits)). With no
+  eligible POKéMON in the party, `NOT_READY` and `BYE`, the screen doesn't
+  open, and the quest stays open this placement. Otherwise the shared haunt
+  line "My {FILLER} for your {WANTED}, then." names the offer, and the
+  party-only selection screen opens, as at [Trade's pick](#the-pick). A
+  party POKéMON is eligible when it is of the wanted species (any form, as
+  at [Catch me one](#catch-me-one)), not an Egg, and not the player's last
+  able POKéMON. Every other POKéMON is dimmed and can't be picked.
+  Cancelling ends the talk with `BYE` and changes nothing.
+- **Accepted:** exactly as at Trade ([accepted](#accepted)): the held item,
+  the scene, the received filler at the given POKéMON's level and stepped
+  down, the done line (a Wanted haunt may author its own), `PRAISE`, the
+  reward, and `BYE`, +10 as a completed quest, with the owed bit. The given
+  POKéMON takes the offered filler's slot under
+  [the trainer's team after a trade](#the-trainers-team-after-a-trade).
+
+Trade's [limits](#limits) cover both quest types together: one traded slot
+per trainer, one trade or trade-back per placement (the claim bit), and
+sixteen records across all trainers.
+
+#### Wanted examples
+
+Illustrative, from the current wild tables and catalog rosters; line values
+come from the species data (the best final form's base stat total). None of
+these haunts is a Wanted haunt in the [Kanto list](#kanto-haunts).
+
+| Haunt | Local species (line value) | Trainer (ace types) | Wanted | Offer |
+| --- | --- | --- | --- | --- |
+| Diglett's Cave | Tunnel only, day and night: SWINUB (530, Mamoswine), DIGLETT and DUGTRIO (425), WOBBUFFET (405); the entrances have no tables | Brock (Steel, Ground, Rock, Flying) | SWINUB, Ground | Slot 5, OMANYTE at world progress 0 (Omastar 495; ties with Golem and Kabutops, higher slot wins; Crobat's 535 is above) |
+| Diglett's Cave | As above | Giovanni (Ground, Rock, Normal, Poison) | SWINUB, Ground | Slot 3, the Nidoqueen line (505), over Dugtrio and Marowak (425) |
+| Cerulean Cape | Fishing: MAGIKARP and GYARADOS (540), POLIWAG and POLIWHIRL (510), GOLDEEN (450), WOOPER (430); water and fishing: PSYDUCK (500), SLOWPOKE (490); land: ODDISH (490), ABRA (500), BELLSPROUT (490), PIDGEY (479), and four Bug basics (395) | Misty (Water, Psychic, Flying, Dragon) | MAGIKARP (ties GYARADOS at 540, lower number) | Slot 5, LAPRAS (535), over Golduck and Politoed (500) |
+| Viridian Forest | PIKACHU (485, Raichu), SPINARAK (400, Ariados), CATERPIE, METAPOD, WEEDLE, KAKUNA (395) | Bugsy (Bug, Steel, Fighting) | SPINARAK, Bug | Slot 6, the Ariados line (400), equal value, over Beedrill and Butterfree (395) |
+| Viridian Forest | As above | Erika (Grass, Poison) | SPINARAK, Poison (no fallback: Weedle, Kakuna, and Spinarak are Poison) | None: Tangrowth 535, Bellossom 490, Jumpluff 460, Parasect 405 are all above 400, so [no fair offer](#no-fair-offer) |
+
+Neither Diglett's Cave trainer wants DIGLETT: SWINUB, in both of the
+tunnel's tables, outranks it through Mamoswine. Misty wants MAGIKARP, so a
+fished GYARADOS doesn't count ([open questions](#open-questions)).
 
 ### Rewards and claims
 
@@ -952,8 +1083,9 @@ A haunt's dialogue is assembled from two sources:
   question templates, done line, and loss line are shared by every Quiz
   haunt. A Bring me haunt authors its kind, and a Bring me or Swap battle
   haunt may author its own done line (and a Swap battle one its loss
-  line), with the defaults in their sections. A Trade haunt may author its
-  done line; the refusal line and the trade-back proposal are shared. They
+  line), with the defaults in their sections. A Trade or Wanted haunt may
+  author its done line; the refusal line, Wanted's proposal, offer, and
+  no-offer lines, and the trade-back proposal are shared. They
   describe only the place and the activity, never a trainer's personality or
   history, so they read true for every candidate.
   A quest line is the proposal that follows `ASK` ("Walk it with me, out to
@@ -984,7 +1116,8 @@ Both use these slots:
 | `{LOCAL}` | The haunt's catch species (only in a Catch me one line). |
 | `{HINT}` | The active lost spot's hint (only in a Lost something line). |
 | `{KIND}` | The haunt's item kind's display text, such as "BERRY" or "healing item" (only in a Bring me line and its refusal). |
-| `{FILLER}` | The trainer's offered filler at its current stage, such as "OMANYTE" (only in a Trade proposal; [the offer](#the-offer)). |
+| `{FILLER}` | The trainer's offered filler at its current stage, such as "OMANYTE" (only in a Trade proposal, [the offer](#the-offer), or Wanted's offer line, [Wanted's offer](#wanteds-offer)). |
+| `{WANTED}` | The haunt's wanted species for the placed trainer, such as "SWINUB" (only in Wanted's proposal, offer, and no-offer lines; [the wanted species](#the-wanted-species)). |
 | `{TRADED}` | The nickname of the POKéMON the player traded to the trainer (only in a trade-back proposal). |
 
 Speaker labels ("BROCK:") and system messages (the [YES / NO] prompt, the
@@ -2209,7 +2342,8 @@ that mode that also picks the move.
   screen tests party members by `&gPlayerParty[i].box`. Trade needs a new
   `SELECT_PC_MON_*` mode whose filter excludes any POKéMON outside
   `gPlayerParty`, an Egg, the last able member, a POKéMON with none of the
-  trainer's ace types (or, for a trade-back, any but the received filler),
+  trainer's ace types (for Wanted, any not of the wanted species; for a
+  trade-back, any but the received filler),
   and is strict (`isStrict`), so an excluded one can't be picked, as
   the Day Care mode does.
 - **Line values.** `GetTotalBaseStat` in
@@ -2223,6 +2357,13 @@ that mode that also picks the move.
   data and emits one `u16` line value per species into a generated header,
   about 3 KB of ROM; the build regenerates it, and a test checks it against
   the species data, so a stat or evolution change can't leave it stale.
+- **Wanted species.** The same generator emits each Wanted haunt's local
+  species ([the wanted species](#the-wanted-species)) in wanted order, line
+  value descending and then species number ascending, read from the wild
+  headers the build emits for its maps. At runtime the first entry that
+  shares a type with the trainer's aces is the wanted species, else the
+  first entry. An empty list fails the build, and a test checks the lists
+  against the wild encounter data.
 - **Where the records live.** SaveBlock1 measures 15,760 of its 15,872
   bytes, leaving 112; SaveBlock2 3,892 of 3,968; SaveBlock3 1,160 of its
   1,624 (`WayfarerSaveBlock3SectorAllocation` in
@@ -2298,8 +2439,8 @@ Haunts add:
   the placement and not saved ([Lost something](#lost-something));
 - one **asked bit** per Catch me one haunt, set by `YES` and cleared with
   the claim bit ([Catch me one](#catch-me-one)); and
-- one **owed bit** per Trade haunt, set when a trade's reward waits and
-  cleared with the claim bit ([Trade](#accepted));
+- one **owed bit** per Trade or Wanted haunt, set when a trade's reward
+  waits and cleared with the claim bit ([Trade](#accepted));
 - the **traded-slot records** (below); and
 - the **quest in progress**: a walk (its haunt), cleared on load and on
   whiteout, or a Swap battle (its haunt), set when the party is parked and
@@ -2369,7 +2510,7 @@ On every load, before the overworld runs:
    registry, and the claim bits, search states, asked bits, and placements of
    haunts no longer in the catalog, or search states and asked bits of haunts
    whose quest type changed, and owed bits of haunts that are no longer Trade
-   haunts. A reward counter above its trainer's current pool
+   or Wanted haunts. A reward counter above its trainer's current pool
    length (the pool got shorter) is lowered to that length: the pool counts as
    used up, and nothing is taken back or paid. A traded-slot record is freed
    when its trainer is no longer in the registry, its species no longer
@@ -2383,12 +2524,13 @@ On every load, before the overworld runs:
    bits only for known Catch me one haunts, never set at an empty haunt or
    with the claim bit set; a saved
    placement names known characters, each at most once; an owed bit only
-   at a known Trade haunt, never at an empty one. Each traded-slot record
-   in use names a known character, at most one record per character, a slot
-   from 2 to 6, a trade level from 1 to 100, a nature below 25, an ability
-   slot below 3, a valid ball, a nickname and OT name each ended within
-   their length, and zero reserved bytes; a free record is all zero. A
-   failed check is an invalid save, never a reason to reward anything.
+   at a known Trade or Wanted haunt, never at an empty one. Each
+   traded-slot record in use names a known character, at most one record
+   per character, a slot from 2 to 6, a trade level from 1 to 100, a
+   nature below 25, an ability slot below 3, a valid ball, a nickname and
+   OT name each ended within their length, and zero reserved bytes; a free
+   record is all zero. A failed check is an invalid save, never a reason to
+   reward anything.
 4. **Recompute.** Compute the placement from the current inputs and compare
    it with the saved one, clearing the claim bit, search state, and asked
    bit of every haunt whose trainer changed, then save it.
@@ -2418,8 +2560,10 @@ Informational. The
 for a chosen world progress, accepted lineup, and partner: each trainer's
 momentum and candidate haunts, each haunt's score table, the fill order,
 and the placement, plus a sweep over world progress 0-160 showing how often
-each trainer sits at each haunt and how many haunts are empty. It asserts no
-target. It is not built yet ([Later](#later)).
+each trainer sits at each haunt and how many haunts are empty. For each
+Wanted haunt it also shows every candidate's wanted species and offer, and
+flags pairs with [no fair offer](#no-fair-offer). It asserts no target.
+It is not built yet ([Later](#later)).
 
 ## Acceptance
 
@@ -2429,7 +2573,8 @@ Required implementation evidence (not yet run):
    shared list, and capacity 1 in v0), existing maps, an active meeting
    spot, and its quest details (a walk's start and exit, two or three lost
    spots, each on a reachable tile with a hint, a catch species on its wild
-   table, a Bring me kind from the kind table); every notable trainer has
+   table, a Bring me kind from the kind table, local species on a Wanted
+   haunt's maps); every notable trainer has
    a buddy slot 1-6 and a reward pool that passes the
    [pool rules](#rewards-and-claims).
 2. **Buddy.** `{BUDDY}` resolves to the slot's stepped-down species at every
@@ -2528,10 +2673,32 @@ Required implementation evidence (not yet run):
    frees the slot; one trade or trade-back per placement; with all sixteen
    records in use a new trade answers `NOT_READY`; a reset during a trade
    leaves neither the trade nor the record.
-10. **Claims.** A reward is given once per placement; a changed placement
+10. **Wanted.** The wanted species matches golden fixtures from host
+    tooling: the local species of the land, water, fishing, and rock smash
+    tables of every time of day on the haunt's maps, skipping zero-rate
+    tables and `SPECIES_NONE`, ranked by line value and then lowest species
+    number; the first sharing an ace type, else the first of any type
+    (Brock and Giovanni at Diglett's Cave want SWINUB, Misty at the
+    Cerulean Cape MAGIKARP, Bugsy and Erika at Viridian Forest SPINARAK);
+    it is the same at every talk, time of day, and placement for that
+    trainer and haunt; a Wanted haunt with no local species fails the
+    build. The offer is the filler with the highest line value at most the
+    wanted species', ties to the highest-numbered slot, never an ace
+    (Brock's OMANYTE at world progress 0, Misty's LAPRAS); with no such
+    filler, the no-offer line, `NOT_READY`, and `BYE` replace the proposal
+    and the claim bit stays clear (Erika at Viridian Forest). After `YES`
+    the offer line names `{FILLER}`, and the screen opens over the party
+    only, where only the wanted species (any form, not an Egg, not the last
+    able member) can be picked; with none, `NOT_READY` and no screen; there
+    is no value check; an accepted trade runs exactly as Trade's (held
+    item, scene, received filler, done line, `PRAISE`, reward, `BYE`, +10,
+    owed bit, traded slot). A trainer holding a traded slot offers the
+    trade-back at a Wanted haunt, and Trade and Wanted share one traded
+    slot per trainer, one trade per placement, and the sixteen records.
+11. **Claims.** A reward is given once per placement; a changed placement
    reopens it; a full Bag, a cancelled lesson, or no POKéMON able to learn
    keeps it open and leaves the reward counter unchanged.
-11. **Reward pools.** The reward never depends on the quest type. Quests
+12. **Reward pools.** The reward never depends on the quest type. Quests
     with one trainer at different haunts pay that trainer's pool in order,
     one entry each; a gated next entry or a used-up pool pays the fallback
     (prize money equal to a win over the trainer at current TR) and leaves
@@ -2541,12 +2708,12 @@ Required implementation evidence (not yet run):
     teaches the first move in pool order the chosen POKéMON can learn and
     doesn't know, and offers only POKéMON with such a move. Brock's first
     quest gives PEWTER CRUNCHIES and Giovanni's gives a NUGGET.
-12. **Dialogue.** Every assembled line resolves its slots and fits its text
+13. **Dialogue.** Every assembled line resolves its slots and fits its text
     box with worst-case values; no haunt dialogue carries gossip.
-13. **Cameos.** No cameo or Dojo rematch seat remains in Wayfarer; the Dojo
+14. **Cameos.** No cameo or Dojo rematch seat remains in Wayfarer; the Dojo
     back room works as a haunt; no stranger battle, rematch, prize money
     beyond the quest fallback, or Battle Points come from haunts.
-14. **Save.** A new game and a reload give the saved state described above; a
+15. **Save.** A new game and a reload give the saved state described above; a
     search state, asked bit, owed bit, or traded-slot record survives a
     reload, and the first three clear with their haunt's placement; corrupt
     reward counters, claim bits, search states, asked bits, owed bits,
@@ -2567,8 +2734,14 @@ Required implementation evidence (not yet run):
   ([Later](#later)).
 - Where Jasmine's Steelix trade goes once the Dojo seats retire.
 - Whether a trainer whose received filler the player no longer has should
-  ever offer something else: today every Trade haunt they stand at answers
-  `NOT_READY` ([trade-back](#trade-back)).
+  ever offer something else: today every Trade or Wanted haunt they stand
+  at answers `NOT_READY` ([trade-back](#trade-back)).
+- Whether placement should steer a trainer with
+  [no fair offer](#no-fair-offer) away from a Wanted haunt, as Erika at
+  Viridian Forest would be, instead of leaving its quest unavailable.
+- Whether a later stage of the wanted species' line should count at a
+  Wanted haunt: Misty at the Cerulean Cape wants MAGIKARP, so a fished
+  GYARADOS doesn't ([Wanted examples](#wanted-examples)).
 - Whether sixteen traded-slot records are enough, or the pool should hold
   one per placeable trainer ([saved state](#saved-state)).
 - Whether a follower NPC turns regular trainer battles on the way into
@@ -2600,8 +2773,10 @@ Required implementation evidence (not yet run):
 - **Other regions:** haunt lists for Johto, Hoenn, and Sevii, and Tate &
   Liza at haunts.
 - **Explorer support** for the [balance report](#balance-report).
-- **Worked Bring me, Swap battle, and Trade haunts**, and their places in
-  the [Kanto list](#kanto-haunts).
+- **Favourite species for Wanted:** a per-trainer override of the derived
+  wanted species for canon moments, such as Brock's existing Rhyhorn trade.
+- **Worked Bring me, Swap battle, Trade, and Wanted haunts**, and their
+  places in the [Kanto list](#kanto-haunts).
 - **Travel between haunts:** trainers walking to their haunts instead of
   being placed, following routines with a per-place cap of two or three,
   built on the two-layer model the

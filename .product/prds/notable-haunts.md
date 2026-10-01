@@ -114,6 +114,7 @@ it is done:
 | Bring me | The player brings one cheap item of a kind that fits the place, such as a berry, a healing item, or a stone, and hands it over. |
 | Swap battle | It looks like a One on one: the player picks their best POKéMON, and only then the trainer reveals the twist. The two trade places: the player battles with the trainer's ace, which may not listen, against a copy of their own pick. The player's own party comes back untouched. |
 | Trade | The trainer offers one of their fillers, never an ace, for a POKéMON of their type from the player's party. It's accepted if its line is worth at least as much as the filler's; the player's POKéMON then takes that filler's place on the trainer's team, keeps who it is, and evolves as the trainer grows. A later Trade quest offers it back. |
+| Wanted | The trainer asks for the strongest wild POKéMON that lives at the haunt and shares a type with their aces, worked out from the haunt's wild tables rather than authored, and offers their best filler worth no more than it. The player gives one from the party; it works like Trade, with no value check, since the offer is fair by construction. If every filler is worth more, the trainer has nothing fair to offer. |
 
 Every trainer can give every quest. Haunt quest lines never imply the trainer
 needs help or is asking a favour, and personality comes only from the
@@ -218,7 +219,8 @@ natural regular, as the HNS cameo already has it, and Erika takes it on her
 Grass aces when Bugsy is elsewhere. The
 [specification](../specs/notable-haunts.md#worked-example-viridian-forest)
 works it through. With it, the five worked haunts cover the first five
-quest types; Bring me, Swap battle, and Trade have no worked haunt yet.
+quest types; Bring me, Swap battle, Trade, and Wanted have no worked haunt
+yet.
 
 Trade is the first slice of the parked
 [trainer roster influence](trainer-roster-influence.md) design. The trainer
@@ -237,11 +239,12 @@ the save cost.
 ## Boundaries
 
 In: the haunt pool and tags, placement, momentum, the talk flow (greetings
-by friendship stage, the quest proposal, and the quirk), the eight quest
-types, including Trade and the traded slot it leaves on a trainer's team,
-quest rewards from each trainer's reward pool, the voice-bit writing rule,
-buddy and reward pool as trainer values, the Kanto haunt list, retiring the
-HNS cameos and the Dojo rematch hub, and the saved state for all of this.
+by friendship stage, the quest proposal, and the quirk), the nine quest
+types, including Trade and Wanted and the traded slot they leave on a
+trainer's team, quest rewards from each trainer's reward pool, the
+voice-bit writing rule, buddy and reward pool as trainer values, the Kanto
+haunt list, retiring the HNS cameos and the Dojo rematch hub, and the saved
+state for all of this.
 
 Unchanged: every battle with a notable trainer uses their current TR and team
 ([Notable trainers](notable-trainers.md)), which reads a traded slot; phone
@@ -251,8 +254,8 @@ Friend; league lineups belong to [Leagues](leagues.md).
 Out of scope for v0: haunt lists for Johto, Hoenn, and Sevii; two trainers in
 one haunt; authored trade offers, item swaps, and gifts at haunts (and as
 friendship sources), beyond the one item a Bring me quest asks for and the
-generic Trade quest; Tate & Liza at haunts, since the duo gives no number and
-could never become a friend.
+generic Trade and Wanted quests; Tate & Liza at haunts, since the duo gives
+no number and could never become a friend.
 
 ## Balance
 
@@ -314,6 +317,8 @@ the trainer's voice bits.
 - Item swaps, and gifts from a trainer's roster.
 - Trade value overrides for outliers such as Shuckle, only if playtest shows
   the plain value check being abused.
+- A favourite species per trainer for Wanted, overriding the derived one for
+  canon moments such as Brock's Rhyhorn trade.
 - Haunts behind access conditions, such as a key item or a story beat.
 - More ways to raise friendship: gifts and tag battles.
 - Rematches at haunts or at dedicated rematch spots.
