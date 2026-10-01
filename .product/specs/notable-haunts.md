@@ -24,16 +24,18 @@ placeholders; balance is informational.
 
 Own, in `IS_WAYFARER`: the haunt catalog and its tags, the meaning of the
 **buddy** and **reward pool** trainer values, placement and
-momentum, the talk flow, the seven quest types, rewards and claims,
-dialogue assembly, the Kanto haunt list, retiring the HNS cameos and the
-Saffron Dojo rematch room, the haunts' saved state and load validation,
-presentation, the balance report, and acceptance.
+momentum, the talk flow, the eight quest types (with Trade's traded slots),
+rewards and claims, dialogue assembly, the Kanto haunt list, retiring the HNS
+cameos and the Saffron Dojo rematch room, the haunts' saved state and load
+validation, presentation, the balance report, and acceptance.
 
 - [Notable trainers](notable-trainers.md) owns the trainers: inventory,
   home region, the traveller and aloof traits, TR and its growth, rosters,
   the downward rule's use, move pools, and the battle snapshot. It also holds
   the buddy and reward pool data in the catalog; this spec owns
-  what they mean.
+  what they mean, and the rules of a [traded slot](#trade).
+- [Trainer roster influence](trainer-roster-influence.md) is the parked
+  design that Trade starts; it stays parked beyond this v0 slice.
 - [Sevii Masters](sevii-masters.md) owns phone contacts (a trainer at Friend
   or above), asking a partner by phone, the partner choice, and the runtime
   partner slot.
@@ -215,8 +217,9 @@ each jump. At world progress 0 everyone is settled.
 When the new placement differs from the saved one at a haunt (another
 trainer, or empty), that haunt's claim bit is cleared
 ([rewards and claims](#rewards-and-claims)), and so is its
-[lost-something](#lost-something) search state or
-[Catch me one](#catch-me-one) asked bit; then the new placement is saved.
+[lost-something](#lost-something) search state,
+[Catch me one](#catch-me-one) asked bit, or [Trade](#accepted) owed bit;
+then the new placement is saved.
 
 ## Talk flow
 
@@ -245,7 +248,9 @@ Every talk runs three steps:
    something haunt whose keepsake the player has found, the completion
    takes the proposal's place ([Lost something](#lost-something)), and at
    a Catch me one haunt whose quest the player has accepted, the showing
-   or `NOT_READY` does ([Catch me one](#catch-me-one)). Once the
+   or `NOT_READY` does ([Catch me one](#catch-me-one)), and at a Trade
+   haunt whose reward is owed, the completion does ([Trade](#accepted)).
+   Once the
    claim bit is set (the quest was completed during this placement), the
    trainer's `QUIRK` instead.
 3. **Farewell:** `BYE`. A talk that starts a walk ends at `YES` instead;
@@ -273,6 +278,7 @@ through two events only: the first talk (+1) and a completed quest (+10).
 Repeat talks, declining, and quirks add nothing. Haunts offer no battles
 of their own, so no battle win happens here: One on one and Swap battle are
 quests, and their wins count as the completed quest, not as a battle won.
+A trade or a trade-back counts as a completed quest too.
 
 **Teaming up.** Asking a trainer to be the Masters partner happens only by
 phone ([partner](sevii-masters.md#partner)), never at a haunt. A trainer who
@@ -296,6 +302,7 @@ favour ([dialogue](#dialogue)):
 | One on one | "Your best POKéMON against {ACE}. Up for it?" |
 | Bring me | "Got a {KIND} on you? Bring me one." |
 | Swap battle | "One POKéMON each. Pick your best?" (the swap is revealed only after the pick) |
+| Trade | "I'd trade {FILLER} for one of yours. Interested?" (a [trade-back](#trade-back) has its own line) |
 
 A haunt may author its own proposal line for its quest type, under the same
 writing rules; the [Celadon Game Corner](#worked-example-celadon-game-corner)
@@ -308,7 +315,8 @@ line (the proposal), then a yes or no:
 `YES` starts it, `NO` ends it ([talk flow](#talk-flow)). A requirement the
 player doesn't meet, or a failed attempt, uses `NOT_READY`, unless there is
 a loss line (One on one's, if the haunt authors one, the Quiz's, and Swap
-battle's).
+battle's). A trade the value check refuses plays "That's not a fair
+trade." and the trainer's `NO` ([Trade](#the-value-check)).
 Completing it runs the haunt's done line if it has one, then `PRAISE`, then
 the [reward](#rewards-and-claims), then `BYE`.
 
@@ -674,6 +682,195 @@ reloads the real party, saves, then puts the rentals back). The quest in
 progress records the swap while it lasts ([saved state](#saved-state));
 [load validation](#load-validation) recovers a save that holds it.
 
+### Trade
+
+The trainer offers one of their filler POKéMON for one of the player's, and
+the player's POKéMON then joins the trainer's team in that filler's place.
+It is the v0 slice of
+[trainer roster influence](trainer-roster-influence.md#trades): one generic
+offer per trainer, decided by a fixed value check, with no authored offers.
+Trade has no worked haunt yet.
+
+#### The offer
+
+The **offered filler** is the trainer's filler slot that comes earliest in
+their [battle order](notable-trainers.md#rosters) when all six roster slots
+are counted: the highest-numbered slot that isn't an ace. It is never an ace.
+Like the [buddy](#trainer-values), it resolves whether or not the slot has
+joined the team yet: its species is the slot's authored species after the
+[downward rule](player-trainer-rating.md#evolution-stages) at the slot's
+member level at the current world progress. Every roster has at least three
+filler slots, so every trainer has an offer. Brock's is slot 5, so at world
+progress 0 he offers OMANYTE (slot 5 is Omastar, stepped down).
+
+`{FILLER}` names the offered filler at that stage. While the trainer holds a
+[traded slot](#the-trainers-team-after-a-trade), the quest is a
+[trade-back](#trade-back) instead.
+
+- **Proposal.** "I'd trade {FILLER} for one of yours. Interested?" (the
+  quest line after `ASK`).
+- **NO:** the trainer's `NO`, then `BYE`; the next talk proposes again.
+- **YES:** the trainer's `YES`, then the pick.
+
+#### The pick
+
+The storage selection screen opens over the **party only**, since a trade
+is a commitment ([storage-screen modes](#storage-screen-modes)). Boxed
+POKéMON never count. A party POKéMON is eligible when it is:
+
+1. **of the trainer's type:** one of its current species' types is a type
+   of one of the trainer's aces, read from the ace slots' authored species
+   as the [score](#score) reads them (Brock: Steel, Ground, Rock, Flying);
+2. **not an Egg;** and
+3. **not the player's last able POKéMON:** not the only party member that
+   is neither fainted nor an Egg.
+
+Every other POKéMON is dimmed and can't be picked. Cancelling ends the talk
+with `BYE` and changes nothing. With no eligible POKéMON in the party, the
+talk is `NOT_READY` and `BYE`, and the screen doesn't open.
+
+#### The value check
+
+A picked POKéMON is accepted when, exactly:
+
+```text
+lineValue(picked species) >= lineValue(offered filler's species)
+```
+
+A species' **line value** is the highest base stat total
+(`GetTotalBaseStat`) among the final forms it can reach through its
+evolutions (`GetSpeciesEvolutions`), every branch included. A final form is
+a species with no evolution, so a species with none uses its own total.
+Mega Evolutions, Gigantamax forms, and other battle-only forms never count;
+they aren't evolution targets, and the generator skips any that is. A
+regional form follows its own line: Alolan Geodude counts Alolan Golem.
+Values are read from the built species data, so they follow the build's
+stat configuration ([trade engine](#trade-engine)).
+
+There is no tolerance, no band, and no exception list. Buffing the trainer
+with a stronger POKéMON is always allowed, legendaries included. For Brock's
+OMANYTE (line value 495, Omastar's), a Geodude (Golem's 495) is accepted,
+and a Pidgey (Pidgeot's 479; Mega Pidgeot doesn't count) is refused.
+Outliers such as Shuckle, whose own 505 sits far above its use, pass as
+their totals say; overrides wait for playtest ([Later](#later)).
+
+**Refused:** the haunt line "That's not a fair trade.", then the trainer's
+`NO` and `BYE`. Nothing is lost, and the quest stays open this placement.
+
+#### Accepted
+
+1. **Held item.** The picked POKéMON's held item goes to the Bag. With no
+   room for it, the system line "There's no room in the BAG for its held
+   item." ends the talk with `BYE`: nothing is traded, and the quest stays
+   open.
+2. **The scene.** The in-game trade scene plays (`DoInGameTradeScene`), and
+   the player receives the offered filler in the picked POKéMON's party
+   slot.
+3. **The received filler.** It is built at **the level of the POKéMON the
+   player gave**, as in-game trades already do, at the offered stage
+   stepped down by the downward rule if that level is below the stage's
+   evolution level; it is never built above the offered stage. It carries:
+   - OT: the trainer, with the fixed trainer ID per trainer that
+     [Swap battle](#swap-battle-engine) uses and the trainer's name, cut to
+     the OT name's seven characters ("LT. SUR");
+   - personality: a fixed function of the trainer's `characterId` and the
+     slot, never shiny, so the same trainer and slot always give the same
+     individual ([trade-back](#trade-back) relies on it);
+   - from the roster slot: its resolved ability, nature, and IVs; no EVs and
+     no held item;
+   - its level-up moveset at its level, as `CreateInGameTradePokemon` gives,
+     a POKé BALL, no nickname, and the in-game trade met location.
+
+   The scene's own trade evolution then runs as in any in-game trade, so a
+   received Kadabra becomes Alakazam.
+4. **Completion.** The haunt's done line (default "A fair trade. Look after
+   that one."), `PRAISE`, the [reward](#rewards-and-claims) (the next
+   reward-pool entry through `GIFT`), and `BYE`: +10 friendship as a
+   completed quest. The trade has happened by then, so a reward that waits
+   (a full Bag, a cancelled lesson) sets the haunt's **owed bit**: the next
+   talk is the greeting, then, in place of the proposal, the done line,
+   `PRAISE`, the reward, and `BYE`, as a found keepsake does at
+   [Lost something](#lost-something). The owed bit clears when the reward is
+   given and, with the claim bit, when the haunt's placement changes
+   ([fill](#fill)); the trade stands either way.
+
+The pick, the scene, and the record run in one script with no save point,
+so a reset reloads a save that holds neither the trade nor the record. The
+next save writes the party and the record together.
+
+#### The trainer's team after a trade
+
+The player's POKéMON **takes the offered filler's roster slot**, its
+**traded slot**. A trainer holds at most one traded slot at a time.
+
+- **Identity.** It keeps its species and form as traded, its nickname,
+  shininess, gender (its personality), nature, IVs, and ability.
+- **Level and moves.** In the trainer's battles it is a member like any
+  other: it joins when the team reaches the slot, takes the trainer's team
+  level and the slot's level offset, takes its moves from the trainer's
+  [move pool](notable-trainers.md#move-pools), visited as a filler in list
+  order, and keeps the slot's held item and EVs.
+- **Evolution.** Unlike every other member, it **evolves forward** and
+  never steps down. Its stage starts from the species it was traded as and
+  follows each next evolution whose
+  [evolution level](player-trainer-rating.md#evolution-stages) (the game's
+  level, or the shared table's entry) is at most its member level. At a
+  branch it takes the first evolution in the game's evolution data whose
+  gender condition its gender meets, ignoring every other condition. An
+  evolution with no level, such as one out of a baby form, never happens.
+  It **never steps down below the stage it was traded at**, at any member
+  level: a Golem traded to Brock is a Golem even at Lv 20.
+- **Place.** It is always a filler, never an ace, and the slot's battle
+  order position applies.
+- **Buddy and ace.** The signature POKéMON, slot 1, is always an ace, so
+  `{ACE}` and the Quiz never read a traded slot. When the traded slot is the
+  trainer's buddy slot, the traded POKéMON is the buddy: `{BUDDY}` names its
+  current species on the trainer's team, and it stands beside the trainer.
+  It stays the buddy after a trade-back, as the slot's own filler again.
+
+[Notable trainers](notable-trainers.md#battle-snapshot) reads the traded slot
+when it resolves the team; this section owns the rules.
+
+#### Trade-back
+
+A later Trade quest with the same trainer, at any Trade haunt and in another
+placement, offers the player's POKéMON back for the exact filler they
+received.
+
+- **Proposal.** "I'd trade {TRADED} back for the one you got from me.
+  Interested?" `{TRADED}` is the traded POKéMON's nickname.
+- **YES:** the trainer's `YES`, then the party-only selection screen, where
+  only the received filler counts: the party POKéMON with the personality
+  that trainer and slot give and the trainer as OT (ID and name), whatever it
+  has become, and not the player's last able POKéMON. Everything else is dimmed.
+  With no match in the party, `NOT_READY` and `BYE`. Cancelling changes nothing.
+- **No value check:** a trade-back is a reversal, so nothing is weighed.
+- **Accepted.** The held item rule and the scene run as above. The player
+  receives their POKéMON at the level of the filler handed back, which is
+  never below its trade level, at the stage it reaches from its traded
+  species by the forward rule above. It keeps everything the record holds:
+  species and form as traded (or later), personality, OT ID, OT name and
+  gender, nickname, nature, IVs, ability, shininess, and ball. It returns
+  with its level-up moveset at that level and no held item; its old moves,
+  EVs, friendship, and ribbons are not kept. Then the done line, `PRAISE`,
+  the reward, and `BYE`, +10 as a completed quest, with the owed bit as
+  above. The traded slot clears, and the slot is its own filler again.
+
+Nothing is duplicated: the received filler goes back, and the player's
+POKéMON leaves the trainer's team. A player who no longer has the filler,
+released or traded away, gets `NOT_READY` from every Trade haunt that
+trainer stands at, while the trainer keeps the POKéMON.
+
+#### Limits
+
+- One traded slot per trainer.
+- One trade, or one trade-back, per placement: the claim bit.
+- At most sixteen traded slots across all trainers, the size of the saved
+  record pool ([saved state](#saved-state)). With every record in use, a
+  trade with a trainer who holds none plays the proposal as usual, and its
+  `YES` is followed by `NOT_READY` and `BYE` before the screen opens. A
+  trade-back frees a record.
+
 ### Rewards and claims
 
 Each haunt has a saved **claim bit**. It is set when the reward is given
@@ -755,8 +952,9 @@ A haunt's dialogue is assembled from two sources:
   question templates, done line, and loss line are shared by every Quiz
   haunt. A Bring me haunt authors its kind, and a Bring me or Swap battle
   haunt may author its own done line (and a Swap battle one its loss
-  line), with the defaults in their sections. They describe
-  only the place and the activity, never a trainer's personality or
+  line), with the defaults in their sections. A Trade haunt may author its
+  done line; the refusal line and the trade-back proposal are shared. They
+  describe only the place and the activity, never a trainer's personality or
   history, so they read true for every candidate.
   A quest line is the proposal that follows `ASK` ("Walk it with me, out to
   the VERMILION side?"), so the same line works after any attention-getter.
@@ -786,11 +984,13 @@ Both use these slots:
 | `{LOCAL}` | The haunt's catch species (only in a Catch me one line). |
 | `{HINT}` | The active lost spot's hint (only in a Lost something line). |
 | `{KIND}` | The haunt's item kind's display text, such as "BERRY" or "healing item" (only in a Bring me line and its refusal). |
+| `{FILLER}` | The trainer's offered filler at its current stage, such as "OMANYTE" (only in a Trade proposal; [the offer](#the-offer)). |
+| `{TRADED}` | The nickname of the POKéMON the player traded to the trainer (only in a trade-back proposal). |
 
 Speaker labels ("BROCK:") and system messages (the [YES / NO] prompt, the
 number given, the quiz's answer options, a lesson's pick, the fallback
-amount, the found keepsake, a refused Bring me pick) are generic text, the
-same for every trainer.
+amount, the found keepsake, a refused Bring me pick, a held item with no
+Bag room at a trade) are generic text, the same for every trainer.
 
 ## Worked example: Diglett's Cave
 
@@ -1704,7 +1904,8 @@ clearing.
 With this example, the five worked haunts cover the first five quest
 types: Walk with me (Diglett's Cave), One on one (Celadon Game Corner), Lost
 something (Cerulean Cape), Quiz (Pewter Museum), and Catch me one
-(Viridian Forest). Bring me and Swap battle have no worked haunt yet.
+(Viridian Forest). Bring me, Swap battle, and Trade have no worked haunt
+yet.
 
 ## Kanto haunts
 
@@ -1979,6 +2180,61 @@ that mode that also picks the move.
     set flag ([battle_setup.c](../../game/src/battle_setup.c)); it is 0
     today, so this needs the same no-blackout route as One on one.
 
+### Trade engine
+
+- **The scene.** `DoInGameTradeScene` in [trade.c](../../game/src/trade.c)
+  starts `CB2_InitInGameTrade`, which shows `gEnemyParty[0]` as the
+  partner's POKéMON and takes the partner's name from its OT name. The
+  scene's `TradeMons` swaps the player's POKéMON and `gEnemyParty[0]`
+  whole, clears the given POKéMON's mail, and sets the received one's
+  friendship to 70; then the in-game trade path checks a trade evolution
+  (`GetEvolutionTargetSpecies` with `EVO_MODE_TRADE`) on the received
+  POKéMON. So the given POKéMON sits in `gEnemyParty[0]` after the scene,
+  where the record is read from.
+- **Building the filler.** `CreateInGameTradePokemon` calls
+  `CreateInGameTradePokemonInternal`, which builds `gEnemyParty[0]` from
+  the static `sIngameTrades` table at the level of the selected POKéMON
+  (`GetLevelFromBoxMonExp` on `GetSelectedBoxMonFromPcOrParty()`), with
+  `GiveMonInitialMoveset` and `METLOC_IN_GAME_TRADE`. Trade needs a variant
+  that takes the species, personality, OT, ability, nature, and IVs from
+  the trainer's [offer](#accepted) instead of the table, keeping the level
+  rule; the trade-back builds the player's POKéMON from its record the
+  same way. `MON_DATA_OT_NAME` holds `PLAYER_NAME_LENGTH` (7) characters,
+  shorter than a trainer name (`TRAINER_NAME_LENGTH`, 10), so long trainer
+  names are cut. The OT gender comes from the trainer's `gender` bit
+  (`struct Trainer` in [data.h](../../game/include/data.h)).
+- **Party-only pick.** Every storage-screen mode opens the party and the
+  boxes together while `OW_CHOOSE_FROM_PC_AND_PARTY` is `TRUE`
+  ([config/overworld.h](../../game/include/config/overworld.h)); the
+  screen tests party members by `&gPlayerParty[i].box`. Trade needs a new
+  `SELECT_PC_MON_*` mode whose filter excludes any POKéMON outside
+  `gPlayerParty`, an Egg, the last able member, a POKéMON with none of the
+  trainer's ace types (or, for a trade-back, any but the received filler),
+  and is strict (`isStrict`), so an excluded one can't be picked, as
+  the Day Care mode does.
+- **Line values.** `GetTotalBaseStat` in
+  [battle_ai_util.c](../../game/src/battle_ai_util.c) sums the six base
+  stats; `GetSpeciesEvolutions` ([pokemon.h](../../game/include/pokemon.h))
+  lists a species' evolutions. Megas and other in-battle forms are form
+  changes, not evolutions, and the species flags `isMegaEvolution`,
+  `isPrimalReversion`, `isUltraBurst`, `isGigantamax`, and `isTeraForm`
+  mark the rest. A host generator next to the trainer scaling tools
+  (`game/tools/trainer_scaling/line_values.py`) walks the built species
+  data and emits one `u16` line value per species into a generated header,
+  about 3 KB of ROM; the build regenerates it, and a test checks it against
+  the species data, so a stat or evolution change can't leave it stale.
+- **Where the records live.** SaveBlock1 measures 15,760 of its 15,872
+  bytes, leaving 112; SaveBlock2 3,892 of 3,968; SaveBlock3 1,160 of its
+  1,624 (`WayfarerSaveBlock3SectorAllocation` in
+  [save.c](../../game/src/save.c)), and the rest of SaveBlock3 is wanted by
+  the other haunt and notable-trainer state and by follower NPCs.
+  `struct PokemonStorage`
+  ([pokemon_storage_system.h](../../game/include/pokemon_storage_system.h))
+  measures 34,144 of its nine sectors' 35,712 bytes, leaving 1,568, and its
+  size is already asserted (`PokemonStorageFreeSpace` in save.c). The
+  record pool is appended there ([saved state](#saved-state)). Sizes were
+  measured by compiling `sizeof` against this branch's headers.
+
 ### Cameos and the Dojo
 
 - **Cameos.** HNS places a one-off cameo of many Gym Leaders on the
@@ -2001,7 +2257,8 @@ that mode that also picks the move.
   `CinnabarIsland_hns`, which Wayfarer retired, so it is likely unreachable
   as well.
 - Retiring the cameos removes these dead ends; Jasmine's trade needs a new
-  home, since trades at haunts are [Later](#later).
+  home, since haunt [trades](#trade) are generic, never a trainer's
+  authored offer.
 
 ### Prize money
 
@@ -2041,15 +2298,61 @@ Haunts add:
   the placement and not saved ([Lost something](#lost-something));
 - one **asked bit** per Catch me one haunt, set by `YES` and cleared with
   the claim bit ([Catch me one](#catch-me-one)); and
+- one **owed bit** per Trade haunt, set when a trade's reward waits and
+  cleared with the claim bit ([Trade](#accepted));
+- the **traded-slot records** (below); and
 - the **quest in progress**: a walk (its haunt), cleared on load and on
   whiteout, or a Swap battle (its haunt), set when the party is parked and
   cleared at the restore. Bring me adds nothing: it runs within one talk.
-  Swap battle adds nothing per placement either.
+  Swap battle adds nothing per placement either, and a trade runs in one
+  script, so it needs no quest in progress.
+
+**Traded-slot records.** A pool of sixteen records, each naming its
+trainer, holds every [traded slot](#the-trainers-team-after-a-trade); a
+trainer has at most one. A record holds everything needed to rebuild the
+player's POKéMON on the trainer's team and to hand it back:
+
+| Field | Size | Holds |
+| --- | ---: | --- |
+| `personality` | 32 bits | Gender, the natural nature, and every personality-derived trait. |
+| `otId` | 32 bits | The original OT ID. |
+| `species` | 16 bits | Species and form as traded (forms are species IDs); the stage floor. |
+| `otName` | 7 bytes | The original OT name. |
+| `nickname` | 12 bytes | `POKEMON_NAME_LENGTH` characters. |
+| `characterId` | 6 bits | The trainer. |
+| `slot` | 3 bits | The roster slot it replaced, 2-6; 0 marks a free record. |
+| `tradeLevel` | 7 bits | Its level when traded, 1-100. |
+| `ivs` | 30 bits | Six IVs, 5 bits each. |
+| `nature` | 5 bits | Its nature, mints included (the hidden nature). |
+| `abilityNum` | 2 bits | Its ability slot. |
+| `shiny` | 1 bit | Shininess as it was. |
+| `otGender` | 1 bit | The original OT's gender. |
+| `ball` | 6 bits | Its POKé BALL. |
+| `language` | 3 bits | Its language. |
+
+That is 29 bytes of whole fields and 64 bits packed into two words, 37
+bytes, padded to **40 bytes** a record with three reserved zero bytes, so
+the pool takes **640 bytes**. It is appended to `struct PokemonStorage`,
+whose nine sectors have 1,568 bytes free; the 928 left stay free. It
+never goes in SaveBlock1, which has 112 bytes left, and it doesn't fit in
+SaveBlock3, whose 464 free bytes the other haunt and notable-trainer state
+needs first ([trade engine](#trade-engine)). The received filler needs no
+record: its personality and OT derive from the trainer and slot.
+
+**Budget risk.** The pool caps traded slots at sixteen across all
+trainers ([limits](#limits)). One record for each of the 37 placeable
+trainers would take 1,480 of the storage sectors' 1,568 free bytes,
+leaving 88; that removes the cap but spends nearly all the save's last
+large free space, so it is not proposed. The storage struct is shared with
+the PC boxes, so a later change to box count or box layout competes for
+the same bytes; `PokemonStorageFreeSpace` fails the build rather than
+overflow.
 
 New Game saves every claim bit clear, every reward counter at 0, the placement
-for world progress 0, every search state at none, every asked bit clear, and no
-quest in progress. With follower NPCs enabled, SaveBlock3 also holds the
-engine's follower state, which a walk uses.
+for world progress 0, every search state at none, every asked bit and owed bit
+clear, every traded-slot record free, and no quest in progress. With follower
+NPCs enabled, SaveBlock3 also holds the engine's follower state, which a walk
+uses.
 
 ## Load validation
 
@@ -2065,17 +2368,27 @@ On every load, before the overworld runs:
 2. **Pruning.** Drop the reward counters of characters no longer in the
    registry, and the claim bits, search states, asked bits, and placements of
    haunts no longer in the catalog, or search states and asked bits of haunts
-   whose quest type changed. A reward counter above its trainer's current pool
+   whose quest type changed, and owed bits of haunts that are no longer Trade
+   haunts. A reward counter above its trainer's current pool
    length (the pool got shorter) is lowered to that length: the pool counts as
-   used up, and nothing is taken back or paid.
+   used up, and nothing is taken back or paid. A traded-slot record is freed
+   when its trainer is no longer in the registry, its species no longer
+   exists or has become an Egg, Mega, or other battle-only form, or its slot
+   is no longer a filler slot: the slot reverts to its authored filler, the
+   player's POKéMON is gone, and nothing is paid back.
 3. **Checks.** Reward counters exist only for known trainers; claim bits
    and placements only for known haunts, and search states only for known
    Lost something haunts, never the unused fourth value, and never
    searching or found at an empty haunt or with the claim bit set; asked
    bits only for known Catch me one haunts, never set at an empty haunt or
    with the claim bit set; a saved
-   placement names known characters, each at most once. A failed check is
-   an invalid save, never a reason to reward anything.
+   placement names known characters, each at most once; an owed bit only
+   at a known Trade haunt, never at an empty one. Each traded-slot record
+   in use names a known character, at most one record per character, a slot
+   from 2 to 6, a trade level from 1 to 100, a nature below 25, an ability
+   slot below 3, a valid ball, a nickname and OT name each ended within
+   their length, and zero reserved bytes; a free record is all zero. A
+   failed check is an invalid save, never a reason to reward anything.
 4. **Recompute.** Compute the placement from the current inputs and compare
    it with the saved one, clearing the claim bit, search state, and asked
    bit of every haunt whose trainer changed, then save it.
@@ -2094,6 +2407,9 @@ On every load, before the overworld runs:
   show them beside the player with their back pic.
 - In a Swap battle the player's side shows the ace, and the trainer sends
   out the copy of the player's pick under its own nickname.
+- A trade plays the in-game trade scene, with the trainer's name as the
+  partner. When the traded slot is the buddy slot, the POKéMON object
+  beside the trainer is the traded POKéMON at its current stage.
 
 ## Balance report
 
@@ -2185,10 +2501,37 @@ Required implementation evidence (not yet run):
    nothing, and leaves the claim bit clear; a reset mid-swap reloads a
    whole party with the quest open, and a save written mid-swap is
    recovered on load with the parked party.
-9. **Claims.** A reward is given once per placement; a changed placement
+9. **Trade.** The offer is the highest-numbered filler slot of the six at
+   its stepped-down stage, never an ace, and `{FILLER}` names it (Brock's
+   OMANYTE at world progress 0); the screen opens only after `YES`, over
+   the party only, dimming boxed POKéMON, Eggs, the last able member, and
+   any without one of the aces' types, and none of them can be picked;
+   with none eligible, `NOT_READY`; the value check matches golden line
+   values from host tooling (final forms through every branch, own total
+   without evolutions, no Megas, Gigantamax or battle-only forms, regional
+   lines apart), accepts at equal values and refuses one below with "That's
+   not a fair trade." and `NO`, leaving everything as it was; a held item
+   goes to the Bag, or with no room nothing is traded; an accepted trade
+   plays the in-game trade scene and gives the filler at the given
+   POKéMON's level, stepped down and never above the offered stage, with
+   the trainer as OT, the same personality for the same trainer and slot,
+   and the scene's trade evolution; then the done line, `PRAISE`, the
+   reward, and `BYE` for +10, and a waiting reward sets the owed bit and is
+   paid at the next talk. In the trainer's battles the traded POKéMON holds
+   the slot's place in battle order, never an ace, at their team level and
+   slot offset, with its species, nickname, shininess, gender, nature, IVs,
+   and ability, moves from their pool, evolving forward by the evolution
+   levels and never below its traded stage; as the buddy slot it is
+   `{BUDDY}`. A later Trade quest with that trainer offers it back for the
+   received filler only, identified by personality and OT, with no value
+   check, returns it with its record intact at the filler's level, and
+   frees the slot; one trade or trade-back per placement; with all sixteen
+   records in use a new trade answers `NOT_READY`; a reset during a trade
+   leaves neither the trade nor the record.
+10. **Claims.** A reward is given once per placement; a changed placement
    reopens it; a full Bag, a cancelled lesson, or no POKéMON able to learn
    keeps it open and leaves the reward counter unchanged.
-10. **Reward pools.** The reward never depends on the quest type. Quests
+11. **Reward pools.** The reward never depends on the quest type. Quests
     with one trainer at different haunts pay that trainer's pool in order,
     one entry each; a gated next entry or a used-up pool pays the fallback
     (prize money equal to a win over the trainer at current TR) and leaves
@@ -2198,16 +2541,19 @@ Required implementation evidence (not yet run):
     teaches the first move in pool order the chosen POKéMON can learn and
     doesn't know, and offers only POKéMON with such a move. Brock's first
     quest gives PEWTER CRUNCHIES and Giovanni's gives a NUGGET.
-11. **Dialogue.** Every assembled line resolves its slots and fits its text
+12. **Dialogue.** Every assembled line resolves its slots and fits its text
     box with worst-case values; no haunt dialogue carries gossip.
-12. **Cameos.** No cameo or Dojo rematch seat remains in Wayfarer; the Dojo
+13. **Cameos.** No cameo or Dojo rematch seat remains in Wayfarer; the Dojo
     back room works as a haunt; no stranger battle, rematch, prize money
     beyond the quest fallback, or Battle Points come from haunts.
-13. **Save.** A new game and a reload give the saved state described above; a
-    search state or asked bit survives a reload and clears with its haunt's
-    placement; corrupt reward counters, claim bits, search states, asked bits,
-    or placements are rejected; removed characters or haunts are pruned; and a
-    counter past a shortened pool is lowered to its length.
+14. **Save.** A new game and a reload give the saved state described above; a
+    search state, asked bit, owed bit, or traded-slot record survives a
+    reload, and the first three clear with their haunt's placement; corrupt
+    reward counters, claim bits, search states, asked bits, owed bits,
+    placements, or traded-slot records are rejected; removed characters or
+    haunts are pruned, and so are records of removed species or of slots no
+    longer fillers; a counter past a shortened pool is lowered to its
+    length; and the record pool fits `PokemonStorageFreeSpace`.
 
 ## Open questions
 
@@ -2220,6 +2566,11 @@ Required implementation evidence (not yet run):
   Dojo rematch room leaves no rematches until rematch spots exist
   ([Later](#later)).
 - Where Jasmine's Steelix trade goes once the Dojo seats retire.
+- Whether a trainer whose received filler the player no longer has should
+  ever offer something else: today every Trade haunt they stand at answers
+  `NOT_READY` ([trade-back](#trade-back)).
+- Whether sixteen traded-slot records are enough, or the pool should hold
+  one per placeable trainer ([saved state](#saved-state)).
 - Whether a follower NPC turns regular trainer battles on the way into
   partner battles; the design assumes it doesn't.
 - What a haunt does while its map hosts a story scene with a trainer it
@@ -2232,13 +2583,16 @@ Required implementation evidence (not yet run):
 - **Situations:** "The coach" (a trainer training the player's POKéMON),
   two trainers in one haunt, "Show me" (the player shows a POKéMON rather
   than handing it over), services, and challenge battles with conditions.
-- **Trades at haunts**, under the trade fairness rules, and **item swaps**.
+- **Item swaps** at haunts.
+- **Trade value overrides**, only if playtest shows abuse: per-species line
+  values for outliers such as Shuckle, whose base stat total outruns its
+  use.
 - **Access:** haunts gated by a key item, an HM, or a story beat, beyond
   the elite gate.
 - **Gifts from the roster:** a friend giving the player a POKéMON of their
   own line.
-- **More friendship sources:** gifts, tag battles beside a trainer, trades,
-  and partnering ([friendship](notable-trainers.md#friendship)).
+- **More friendship sources:** gifts, tag battles beside a trainer, and
+  partnering ([friendship](notable-trainers.md#friendship)).
 - **Rematches** at haunts or at dedicated rematch spots, where `NOT_YET`
   could gate a trainer whose first fight is still ahead.
 - **Gossip at haunts:** a friend telling the player where another trainer
@@ -2246,8 +2600,8 @@ Required implementation evidence (not yet run):
 - **Other regions:** haunt lists for Johto, Hoenn, and Sevii, and Tate &
   Liza at haunts.
 - **Explorer support** for the [balance report](#balance-report).
-- **Worked Bring me and Swap battle haunts**, and their places in the
-  [Kanto list](#kanto-haunts).
+- **Worked Bring me, Swap battle, and Trade haunts**, and their places in
+  the [Kanto list](#kanto-haunts).
 - **Travel between haunts:** trainers walking to their haunts instead of
   being placed, following routines with a per-place cap of two or three,
   built on the two-layer model the
@@ -2266,3 +2620,4 @@ Required implementation evidence (not yet run):
 - [Notable trainer voice bits](../research/notable-trainer-voices.md)
 - [Notable trainer reward pools](../research/notable-trainer-rewards.md)
 - [Notable trainer travel proof of concept](../research/notable-trainer-travel-poc.md)
+- [Trainer roster influence](trainer-roster-influence.md)

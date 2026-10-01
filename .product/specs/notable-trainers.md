@@ -418,7 +418,10 @@ Aerodactyl (ace).
 
 Members step down by level through the
 [downward rule](player-trainer-rating.md#evolution-stages) and never evolve
-forward. Moves are resolved from the [move pool](#move-pools) against the
+forward, except a POKéMON the player traded into a filler slot, which takes
+the slot's species and evolves forward, never below its traded stage
+([traded slot](notable-haunts.md#the-trainers-team-after-a-trade)).
+Moves are resolved from the [move pool](#move-pools) against the
 member's current species, so a stepped-down member needs no special case.
 Brock (a Steady, start TR 25, peak TR 100) shows it: his slot 1 Steelix
 (offset 0) appears as Onix until his team level reaches 35 (world progress
@@ -491,8 +494,8 @@ learn level, so they need a from level, and it alone decides their timing.
   TM/tutor or as an egg move (these need a from level); every eligible member is
   below its from level or, without one, its learn level; or every eligible
   member already knows it or has four pool moves. It wakes when a member that
-  can use it joins, evolves, or reaches the level (Later, also when a traded
-  Pokémon joins). Nothing is saved; resolution is a pure function of the team
+  can use it joins, evolves, or reaches the level, a traded POKéMON
+  included. Nothing is saved; resolution is a pure function of the team
   and the pool.
 - **Stepping down.** No special case: learnability is always checked against
   the current species and its earlier forms, never a later form.
@@ -501,8 +504,9 @@ learn level, so they need a from level, and it alone decides their timing.
   [Gym Leader scaling](gym-leader-scaling.md#overrides-and-enablement) owns
   that precedence.
 - **Per-slot content.** Held items, abilities, natures, and IVs/EVs stay per
-  roster slot. Traded Pokémon (Later) keep their own record moves and don't
-  draw from the pool ([roster influence](trainer-roster-influence.md#trades)).
+  roster slot. A POKéMON the player traded into a filler slot draws from the
+  pool like any filler, but keeps its own ability, nature, and IVs
+  ([traded slot](notable-haunts.md#the-trainers-team-after-a-trade)).
 
 **Frustration rule.** When authoring a pool, draw on at most one
 frustration category per trainer, and keep the trainer's most iconic one. A
@@ -551,8 +555,11 @@ progress, scaler, archetype, roster, evolution-level table, move pool, and
 learnset content versions, and the resolved team
 before constructing the opponent: per member, the roster slot index and every
 resolved battle value the snapshot uses (species/form, level, moves, item,
-ability, nature, IVs/EVs, and battle order). Reconstruction within the battle
-reuses that snapshot, and the battle's AI flags are resolved alongside it
+ability, nature, IVs/EVs, and battle order). Resolution reads the trainer's
+traded slot, if any, whose rules
+[Notable haunts](notable-haunts.md#the-trainers-team-after-a-trade) owns.
+Reconstruction within the battle reuses that snapshot, and the battle's AI
+flags are resolved alongside it
 ([Trainer AI](trainer-ai.md#runtime-and-the-override-point)); teardown clears it, and world progress gained during the
 battle never changes it. A retry at the same world progress produces an
 identical team (battle RNG may still differ); a retry after the player gained TR
@@ -711,8 +718,9 @@ implementations stay active until then.
 - Weighting TR sources differently for world progress.
 - Notable trainers also growing from their own battles.
 - Filler pools (weighted picks with seeded variation and gameplay-flag
-  modifiers) and trades that fill filler slots; aces stay fixed
-  ([roster influence](trainer-roster-influence.md)).
+  modifiers) and authored trade offers that fill filler slots; aces stay
+  fixed ([roster influence](trainer-roster-influence.md)). Haunt
+  [trades](notable-haunts.md#trade) are the v0 slice.
 - Quality scalers beyond Lv 100 (items, IVs/EVs, movesets) with a higher
   ceiling TR, so extra TR stays meaningful; AI skill tiers belong to
   [Trainer AI](trainer-ai.md#later).

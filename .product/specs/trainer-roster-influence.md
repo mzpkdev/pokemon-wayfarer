@@ -44,6 +44,10 @@ Each trainer has one filler pool, which may hold more than six options.
 
 ## Trades
 
+The haunts' [Trade quest](notable-haunts.md#trade) is the v0 slice of this
+section and owns its own rules (a generic offer, a value check, and moves from
+the move pool); what follows stays parked.
+
 - **Offers** are predefined per trainer: a wanted species (any individual
   qualifies) for one filler option, never an ace. The traded-away filler
   leaves the pool through one save flag per offer.

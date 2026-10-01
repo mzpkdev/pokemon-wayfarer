@@ -126,7 +126,9 @@ the downward rule and the shared evolution-level table; consumers link here.
 **Downward rule.** A Pokémon whose level is below its stage's evolution level
 steps down its predecessor chain, one stage at a time, until the level supports
 the stage. There is never forward evolution: a low stage at a high level stays
-as it is.
+as it is. The one exception is a POKéMON the player traded to a notable
+trainer, which evolves forward by these levels and never steps down below its
+traded stage ([traded slot](notable-haunts.md#the-trainers-team-after-a-trade)).
 
 **No baby forms.** Stepping down never enters a baby form, whatever the
 evolution method: the chain ends at the first stage above the baby, which

@@ -113,6 +113,7 @@ it is done:
 | One on one | One of the player's POKéMON against the trainer's lead ace. |
 | Bring me | The player brings one cheap item of a kind that fits the place, such as a berry, a healing item, or a stone, and hands it over. |
 | Swap battle | It looks like a One on one: the player picks their best POKéMON, and only then the trainer reveals the twist. The two trade places: the player battles with the trainer's ace, which may not listen, against a copy of their own pick. The player's own party comes back untouched. |
+| Trade | The trainer offers one of their fillers, never an ace, for a POKéMON of their type from the player's party. It's accepted if its line is worth at least as much as the filler's; the player's POKéMON then takes that filler's place on the trainer's team, keeps who it is, and evolves as the trainer grows. A later Trade quest offers it back. |
 
 Every trainer can give every quest. Haunt quest lines never imply the trainer
 needs help or is asking a favour, and personality comes only from the
@@ -217,27 +218,41 @@ natural regular, as the HNS cameo already has it, and Erika takes it on her
 Grass aces when Bugsy is elsewhere. The
 [specification](../specs/notable-haunts.md#worked-example-viridian-forest)
 works it through. With it, the five worked haunts cover the first five
-quest types; Bring me and Swap battle have no worked haunt yet.
+quest types; Bring me, Swap battle, and Trade have no worked haunt yet.
+
+Trade is the first slice of the parked
+[trainer roster influence](trainer-roster-influence.md) design. The trainer
+offers the filler that leads their battle order, "I'd trade OMANYTE for one of
+yours. Interested?", and accepts a POKéMON that shares a type with their aces
+when the best final form its line can reach has a base stat total at least
+as high as the filler's line. A refusal costs nothing. An accepted trade
+plays the usual in-game trade scene, and the player gets the filler at the
+level of the POKéMON they gave. That POKéMON keeps its nickname, shininess,
+nature, IVs, and ability in the trainer's battles, uses the trainer's moves
+and levels, evolves as they grow, and never appears weaker than when it was
+traded. A later Trade quest with the same trainer swaps the two back. The
+[specification](../specs/notable-haunts.md#trade) works out the rules and
+the save cost.
 
 ## Boundaries
 
 In: the haunt pool and tags, placement, momentum, the talk flow (greetings
-by friendship stage, the quest proposal, and the quirk), the seven quest
-types, quest
-rewards from each trainer's reward pool, the voice-bit writing rule,
-buddy and reward pool as trainer values, the Kanto haunt list,
-retiring the HNS cameos and the Dojo rematch hub, and the saved state for
-all of this.
+by friendship stage, the quest proposal, and the quirk), the eight quest
+types, including Trade and the traded slot it leaves on a trainer's team,
+quest rewards from each trainer's reward pool, the voice-bit writing rule,
+buddy and reward pool as trainer values, the Kanto haunt list, retiring the
+HNS cameos and the Dojo rematch hub, and the saved state for all of this.
 
 Unchanged: every battle with a notable trainer uses their current TR and team
-([Notable trainers](notable-trainers.md)); phone numbers are given as [Sevii
-Masters](sevii-masters.md#design) describes, at Friend; league lineups belong
-to [Leagues](leagues.md).
+([Notable trainers](notable-trainers.md)), which reads a traded slot; phone
+numbers are given as [Sevii Masters](sevii-masters.md#design) describes, at
+Friend; league lineups belong to [Leagues](leagues.md).
 
 Out of scope for v0: haunt lists for Johto, Hoenn, and Sevii; two trainers in
-one haunt; trades, item swaps, and gifts at haunts (and as friendship
-sources), beyond the one item a Bring me quest asks for; Tate & Liza at
-haunts, since the duo gives no number and could never become a friend.
+one haunt; authored trade offers, item swaps, and gifts at haunts (and as
+friendship sources), beyond the one item a Bring me quest asks for and the
+generic Trade quest; Tate & Liza at haunts, since the duo gives no number and
+could never become a friend.
 
 ## Balance
 
@@ -279,6 +294,11 @@ the trainer's voice bits.
   cost save space when enabled, and they may clash with the overworld
   POKéMON that already follow the player. The
   [travel proof of concept](../research/notable-trainer-travel-poc.md) switched those POKéMON off to run.
+- Trades need saved space for the player's POKéMON on trainers' teams. The
+  main save blocks have little room left, so the
+  [specification](../specs/notable-haunts.md#saved-state) puts sixteen
+  records in the PC storage's spare bytes, which caps traded POKéMON at
+  sixteen across all trainers.
 
 ## Specifications
 
@@ -291,10 +311,11 @@ the trainer's voice bits.
 
 - Situations beyond one trainer and one quest: "The coach", two trainers in
   one haunt, "Show me", services, and challenge battles.
-- Trades at haunts under trade fairness rules, item swaps, and gifts from a
-  trainer's roster.
+- Item swaps, and gifts from a trainer's roster.
+- Trade value overrides for outliers such as Shuckle, only if playtest shows
+  the plain value check being abused.
 - Haunts behind access conditions, such as a key item or a story beat.
-- More ways to raise friendship: gifts, tag battles, trades.
+- More ways to raise friendship: gifts and tag battles.
 - Rematches at haunts or at dedicated rematch spots.
 - Gossip at haunts: a friend telling the player where another trainer is.
 - Trainers who walk to their haunts along routines instead of being
@@ -311,5 +332,6 @@ the trainer's voice bits.
 - [Sevii Masters](sevii-masters.md)
 - [Leagues](leagues.md)
 - [Trainer AI](trainer-ai.md)
+- [Trainer roster influence](trainer-roster-influence.md)
 - [Notable trainer voice bits](../research/notable-trainer-voices.md)
 - [Notable trainer travel proof of concept](../research/notable-trainer-travel-poc.md)
