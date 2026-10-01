@@ -1063,14 +1063,19 @@ save point, as at a trade.
 
 - **Species.** The **egg species** comes from the filler slot that
   Trade's [offer](#the-offer) names: the highest-numbered slot that isn't an
-  ace, so never an ace line. It is that slot's authored species walked back
-  through its pre-evolutions to the line's earliest stage that isn't a baby
-  form, the same baby list the
-  [downward rule](player-trainer-rating.md#evolution-stages) never steps
-  into. A line that starts with a baby gives the stage just above it, as a
-  stepped-down slot ends there. Brock's slot 5 (Omastar) gives an OMANYTE
-  egg; a Raichu filler gives PIKACHU, never PICHU, and a Snorlax filler
-  SNORLAX. The authored species is read, never a
+  ace, so never an ace line. It is **the species breeding would produce**
+  from that slot's authored species, by the Day Care's own rules: its
+  pre-evolutions walked all the way back (`GetEggSpecies`,
+  [daycare.c](../../game/src/daycare.c)), then an incense baby turned back
+  into the regular offspring, as breeding without the incense does
+  (`AlterEggSpeciesWithIncenseItem` and `sIncenseBabyTable` in the same
+  file). Babies that need no incense do hatch: a Raichu filler gives a
+  PICHU egg, a Clefable filler a CLEFFA. Incense babies don't: a Snorlax
+  filler gives SNORLAX, an Azumarill filler MARILL. Brock's slot 5
+  (Omastar) gives an OMANYTE egg. The
+  [downward rule](player-trainer-rating.md#evolution-stages)'s "never into a
+  baby" is about trainers' teams and doesn't apply to eggs. The authored
+  species is read, never a
   [traded slot](#the-trainers-team-after-a-trade)'s POKéMON, and world
   progress plays no part, so the species is fixed per trainer.
 - **The trainer's touch.** The egg knows the egg species' level-up moveset
@@ -2943,9 +2948,10 @@ Required implementation evidence (not yet run):
 11. **Egg sitting.** The proposal is "Could you hold on to this egg for a
     while?", and no line before the hatched follow-up mentions hatching or
     hints that the player keeps the hatchling. `NO` changes nothing; `YES`
-    gives an egg of the earliest non-baby stage of the line in the
-    highest-numbered filler slot's authored species, never an ace line or a
-    traded slot (Brock's OMANYTE; a Raichu filler gives PIKACHU), knowing
+    gives an egg of the species breeding would produce from the
+    highest-numbered filler slot's authored species, by the Day Care's own
+    rules without incense, never an ace line or a traded slot (Brock's
+    OMANYTE; a Raichu filler gives PICHU, a Snorlax filler SNORLAX), knowing
     the first egg move of that species in the trainer's move pool order,
     never shiny, with the personality its golden fixture gives for that
     `characterId` and count; with a full party it goes to the PC, and with
