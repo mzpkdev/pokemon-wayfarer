@@ -7,6 +7,7 @@
 #include "load_save.h"
 #include "save.h"
 #include "test/test.h"
+#include "wayfarer_world.h"
 #include "trainer_rating.h"
 #include "wayfarer_persistence.h"
 #include "gba/flash_internal.h"
@@ -94,6 +95,7 @@ TEST("V0 Trainer Rating high water survives a production save above u16")
     gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_NEW_BARK;
     gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation = HEAL_LOCATION_NEW_BARK_TOWN_HNS;
     SetTrainerRating(65536);
+    WayfarerWorld_InitNewGame();  // a saved game always has a seeded world state
     HandleSavingData(SAVE_NORMAL);
     ClearSav1();
     ClearSav2();

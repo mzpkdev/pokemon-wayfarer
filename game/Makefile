@@ -396,7 +396,7 @@ RULES_NO_SCAN += league-circuit-test trainer-party-scaling-generate trainer-part
 RULES_NO_SCAN += summary-screen-test
 RULES_NO_SCAN += wayfarer-sevii-content-test wayfarer-sevii-content-audit
 RULES_NO_SCAN += legacy-multiboot-test
-RULES_NO_SCAN += wayfarer-world-test
+RULES_NO_SCAN += wayfarer-world-test wayfarer-world-report-test
 .PHONY: all rom agbcc modern compare check debug release
 .PHONY: $(RULES_NO_SCAN)
 
@@ -533,7 +533,7 @@ notable-trainers-audit:
 
 ifeq ($(BUILD_NAME),wayfarer)
 check: notable-trainers-audit
-check: wayfarer-world-test
+check: wayfarer-world-test wayfarer-world-report-test
 $(ELF) $(TESTELF): | notable-trainers-audit
 endif
 

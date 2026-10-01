@@ -10,6 +10,7 @@
 #include "trainer_rating.h"
 #include "wayfarer_persistence.h"
 #include "test/test.h"
+#include "wayfarer_world.h"
 #include "gba/flash_internal.h"
 #include "constants/notable_trainers.h"
 #include "constants/heal_locations.h"
@@ -43,6 +44,7 @@ static void PrepareLeagueEventTest(u8 kantoBadges, u8 hoennBadges, u32 trainerTR
         SetBadgeStateForRegion(REGION_HOENN, badge, badge < hoennBadges);
     }
     SetTrainerRating(trainerTR);
+    WayfarerWorld_InitNewGame();  // a saved game always has a seeded world state
 }
 
 TEST("League acceptance preserves RNG and rejects a second event without changing its snapshot")

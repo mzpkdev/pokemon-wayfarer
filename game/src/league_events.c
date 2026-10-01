@@ -12,6 +12,7 @@
 #include "randomizer.h"
 #include "save.h"
 #include "config/league_circuit.h"
+#include "wayfarer_world.h"
 #include "constants/abilities.h"
 #include "constants/items.h"
 #include "constants/moves.h"
@@ -492,6 +493,9 @@ bool32 ResolveLeagueEvent(enum LeagueEventOutcome outcome, u32 expectedEventId)
     }
     for (i = 0; i < LEAGUE_EVENT_LINEUP_SIZE; i++)
         state->recentIds[i] = teams->lineup[i].characterId;
+    // Life events for the overworld simulation, in the same transaction.
+    WayfarerWorld_OnLeagueResolved(state->recentIds, LEAGUE_EVENT_LINEUP_SIZE, outcome == LEAGUE_EVENT_WON,
+                                   champion == LEAGUE_EVENT_PLAYER_CHAMPION ? 0 : champion);
     state->invitationState = LEAGUE_INVITATION_COUNTING_DOWN;
     state->invitedLeague = LEAGUE_ID_NONE;
     state->daysRemaining = 7;

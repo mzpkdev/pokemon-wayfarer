@@ -25,3 +25,8 @@ endif
 wayfarer-world-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_world -p 'test_*.py' -q
 
+# The offline report (tools/wayfarer_world_report) compiles the simulation
+# core against the generated tables on the host.
+.PHONY: wayfarer-world-report-test
+wayfarer-world-report-test: $(WAYFARER_WORLD_TABLES)
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_world_report -p 'test_*.py' -q

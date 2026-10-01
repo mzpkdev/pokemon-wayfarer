@@ -20,6 +20,7 @@
 #include "trainer_rating.h"
 #include "wayfarer_persistence.h"
 #include "config/league_circuit.h"
+#include "wayfarer_world.h"
 
 static u16 CalculateChecksum(void *, u16);
 static bool8 ReadFlashSector(u8, struct SaveSector *);
@@ -1178,6 +1179,11 @@ u8 LoadGameSave(u8 saveType)
         }
 #endif
         WayfarerValidatePersistentState();
+        if (!WayfarerWorld_OnLoad())
+        {
+            gSaveFileStatus = SAVE_STATUS_CORRUPT;
+            return SAVE_STATUS_CORRUPT;
+        }
     }
     return status;
 #endif
