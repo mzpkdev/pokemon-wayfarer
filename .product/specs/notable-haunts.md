@@ -26,8 +26,9 @@ placeholders; balance is informational.
 
 Own, in `IS_WAYFARER`: the haunt catalog and its tags, the meaning of the
 **buddy** and **reward pool** trainer values, placement and
-momentum, the talk flow, the eleven quest types (with the traded slots of
-Trade and Wanted, Egg sitting's outstanding eggs, and Courier's parcel),
+momentum, the talk flow, the twelve quest types (with the traded slots of
+Trade and Wanted, Egg sitting's outstanding eggs, Courier's parcel, and
+Handicap's one attempt per trainer),
 rewards and claims, dialogue assembly, the Kanto haunt list, retiring the
 HNS cameos and the Saffron Dojo rematch room, the haunts' saved state and
 load validation, presentation, the balance report, and acceptance.
@@ -282,7 +283,9 @@ Every talk runs three steps:
    Egg sitting haunt while the trainer's egg is outstanding or their eggs
    are used up, `QUIRK` does ([Egg sitting](#giving-the-egg)), and so it
    does at a Courier haunt while a parcel is active or no recipient
-   exists ([Courier](#giving-the-parcel)).
+   exists ([Courier](#giving-the-parcel)). At a Handicap haunt, an owed
+   reward's completion, the callback, or the gate's line and `QUIRK` does
+   ([Handicap](#the-gate)).
    Once the
    claim bit is set (the quest was completed during this placement), the
    trainer's `QUIRK` instead.
@@ -313,8 +316,9 @@ An Egg sitting quest completes at its hatched follow-up, not when the egg
 is given, and a Courier quest at its delivery, which adds +10 with both
 the sender and the recipient.
 Repeat talks, declining, and quirks add nothing. Haunts offer no battles
-of their own, so no battle win happens here: One on one and Swap battle are
-quests, and their wins count as the completed quest, not as a battle won.
+of their own, so no battle win happens here: One on one, Swap battle, and
+Handicap are quests, and their wins count as the completed quest, not as a
+battle won. A Handicap loss counts as the completed quest too.
 A trade or a trade-back counts as a completed quest too.
 
 **Teaming up.** Asking a trainer to be the Masters partner happens only by
@@ -344,6 +348,7 @@ ask one by design:
 | Wanted | "I've been looking for a {WANTED}. Got one to trade?" (a [trade-back](#trade-back) takes its place, as at Trade) |
 | Egg sitting | "Could you hold on to this egg for a while?" (a favour by design; its [follow-up](#the-follow-up) comes at a later meeting) |
 | Courier | "Could you take this to {OTHER}? Last I heard, they were around {PLACE}." (a favour by design; the [delivery](#delivery) comes at a meeting with {OTHER}) |
+| Handicap | "Your whole team against my {ACE}. Think that's enough?" (only while the trainer's TR is far above the player's, and one attempt per trainer, ever; [the gate](#the-gate)) |
 
 A haunt may author its own proposal line for its quest type, under the same
 writing rules; the [Celadon Game Corner](#worked-example-celadon-game-corner)
@@ -359,9 +364,13 @@ a loss line (One on one's, if the haunt authors one, the Quiz's, and Swap
 battle's). A trade the value check refuses plays "That's not a fair
 trade." and the trainer's `NO` ([Trade](#the-value-check)), and a Wanted
 haunt with no fair offer plays its no-offer line and `NOT_READY` in place
-of the proposal ([Wanted](#no-fair-offer)).
+of the proposal ([Wanted](#no-fair-offer)). A Handicap whose gate isn't
+met plays its own line and `QUIRK` instead of the proposal, and its loss
+line is no failure: a Handicap pays on a loss too
+([Handicap](#the-handicap-outcome)).
 Completing it runs the haunt's done line if it has one, then `PRAISE`, then
-the [reward](#rewards-and-claims), then `BYE`.
+the [reward](#rewards-and-claims), then `BYE`; a Handicap loss skips
+`PRAISE`.
 
 ### Walk with me
 
@@ -1350,13 +1359,152 @@ number at once, with the one system line
   ordered pool, and +10 twice; one parcel at a time and the claim bit cap
   it at one per placement, so it pays no faster than two ordinary quests.
 
+### Handicap
+
+A trainer far ahead of the player offers to fight the player's whole team
+with their signature ace alone. It reuses [One on one](#one-on-one)'s ace
+and its no-blackout route, but the player brings everything: the full party
+and the Bag. Handicap has no worked haunt yet.
+
+**Not retryable.** Handicap is the only quest type that isn't retryable:
+each trainer gives **one attempt, ever**, at any of their Handicap haunts,
+and it pays the reward whether the player wins or loses. Every other quest
+stays open after a failure; this one is a humbling one-shot moment with a
+trainer far ahead, not a wall to grind against, so a loss still pays and
+the trainer never offers it again.
+
+#### The gate
+
+The trainer offers a Handicap only while their **current TR** (from their
+[battle snapshot](notable-trainers.md#battle-snapshot)) is at least the
+player's TR (`GetTrainerRating()`) plus the **handicap margin**, a
+placeholder **40**. It is checked at every talk that would propose the
+quest, and nothing about it is saved.
+
+The talk checks, in order, after any [follow-up](#talk-flow):
+
+1. **Owed reward.** While the haunt's owed bit is set
+   ([the outcome](#the-handicap-outcome)), the owed completion.
+2. **Claim bit set**, the trainer's `QUIRK`, as at any completed quest.
+3. **Attempted.** While the trainer's **handicap attempted** bit is set,
+   the [callback](#after-a-handicap), whatever the TRs.
+4. **Gate not met.** The shared line "Heh. You don't need my handicap
+   anymore.", then `QUIRK`, then `BYE`. The claim bit stays clear and the
+   attempt is not used up, so the proposal returns at any later talk where
+   the gate holds, at this placement or another.
+5. **Proposal.** `ASK`, "Your whole team against my {ACE}. Think that's
+   enough?", and [YES / NO]. `NO` gives the trainer's `NO`, then `BYE`, and
+   changes nothing.
+
+The gate fails in two ways that play the same: the player has caught up
+(the trainer was once 40 TR ahead and is no longer), or the trainer was
+never that far ahead (Brock at world progress 0 has TR 25, under the
+player's 0 plus 40). The haunt keeps no history to tell them apart, and it
+needs none: either way the trainer's TR isn't well above the player's, so
+there is no offer, and the line reads true for both. Both TRs move over a
+journey, so the gate can open and close again; Lance, at TR 200, passes it
+at every player TR up to 160.
+
+#### The handicap battle
+
+`YES` gives the trainer's `YES`, and the battle follows at once: a normal
+singles trainer battle against the placed trainer.
+
+- **The trainer's team** is the signature ace (roster slot 1) alone,
+  exactly as their battle snapshot resolves it at current TR, as
+  One on one's lead ace is: its stage by the
+  [downward rule](player-trainer-rating.md#evolution-stages) at
+  `teamLevel(tr)` (slot 1's offset is 0), capped at Lv 100, the moves it has
+  in the full resolved team, and its normal held item, ability, nature, and
+  IVs and EVs. It is **never a second ace** or a filler, even for a Double
+  Ace trainer. `{ACE}` names the stage it fights at.
+- **Totem aura.** The ace starts the battle at **+1 Attack, Defense,
+  Speed, Sp. Atk, and Sp. Def**, shown before the first turn with the
+  engine's "…aura flared to life!" message; accuracy and evasion stay at
+  0, as a totem's "all stats" boost leaves them. The boost is ordinary
+  stat stages, set up by the engine's totem boost command
+  ([Handicap engine](#handicap-engine)), so the player can answer it the
+  usual ways (Haze, Clear Smog, Spectral Thief, a copied boost).
+- **The smartest AI.** The ace battles with the trainer's
+  [resolved flags](trainer-ai.md#resolution) at their best: Basic, their
+  play style, **every AI skill tier up to 3 (Predictive)** whatever their
+  TR, Ace Pokemon (one ace), and the boss flag's **Omniscient**, whether or
+  not the trainer has the boss flag. This is a per-battle override of the
+  resolution, written at the [override
+  point](trainer-ai.md#runtime-and-the-override-point) and into the
+  prediction slots, as every notable battle's flags are.
+- **The player** uses their full party and Bag, unrestricted: any lead,
+  switching, and items, with experience, level-ups, and evolution as in
+  any trainer battle.
+- **No prize money and no blackout**, by the route One on one uses. After
+  a win the party stays as the battle left it, as after any battle. After
+  a loss the whole party is fainted and no whiteout heals it, so the party
+  is fully healed (`HealPlayerParty`) before the loss line.
+
+Win or loss counts as the completed quest (+10), never as a battle won
+(+20), even as a first win over the trainer ([talk flow](#talk-flow)).
+
+#### The handicap outcome
+
+When the battle ends, in one script with no save point, the trainer's
+**handicap attempted** bit is set, and after a win their **handicap
+beaten** bit too. Then:
+
+- **Win:** "…Six against one, and you actually did it.", then `PRAISE`,
+  the [reward](#rewards-and-claims) (the next reward-pool entry through
+  `GIFT`), and `BYE`: +10 friendship as a completed quest. The line is
+  fixed text and says six whatever the party's size.
+- **Loss:** "Not bad for being outnumbered. Take this anyway.", then the
+  reward through `GIFT`, and `BYE`: +10 friendship as a completed quest.
+  There is **no `PRAISE`** after a loss: every v0 `PRAISE` congratulates a
+  success ("Even I did not foresee that. Well done."), so it reads wrong
+  after a defeat, and the loss line is already the neutral beat. A lesson
+  reward, which normally follows `PRAISE`, follows the loss line instead.
+
+The reward sets the claim bit and moves the counter as for any quest. The
+attempt is spent before the reward, so a reward that waits (a full Bag, a
+cancelled lesson) sets the haunt's **owed bit**, as at
+[Trade](#accepted): the next talk is the greeting, then, in place of the
+callback, the outcome line again (win or loss by the beaten bit), `PRAISE`
+after a win, the reward, and `BYE`. The owed bit clears when the reward is
+given and, with the claim bit, when the haunt's placement changes.
+
+#### After a handicap
+
+At any Handicap haunt whose placed trainer's attempted bit is set, the
+**callback** takes the proposal's place while the claim bit is clear:
+
+| Outcome | Callback |
+| --- | --- |
+| Won (beaten bit set) | "Still thinking about our six-on-one?" |
+| Lost | "Come back when you can take me one-on-one." |
+
+then `BYE`, with no `QUIRK` in that talk: the callback is the trainer's
+remark for the step. It sets the claim bit, with no reward and no
+friendship, as Egg sitting's egg and Courier's parcel do, so it plays once
+per placement; every later talk there is the greeting, `QUIRK`, and `BYE`,
+as after any completed quest, until the placement changes. A Handicap haunt
+whose trainer has made their attempt therefore never proposes again.
+
+#### Handicap limits
+
+- **One attempt per trainer, ever**, across all their Handicap haunts, so
+  at most one Handicap reward per trainer.
+- **Resets.** The attempted bit is saved with the next save, like every
+  outcome; a reset before saving reloads a save in which the attempt is
+  unused. That is accepted, as for any one-time battle in the game.
+- **The beaten bit is a record.** In v0 it only picks the callback line
+  and the owed completion's outcome line; nothing else reads it. It is kept
+  for later gossip, phone calls, and the trainer card ([Later](#later)).
+
 ### Rewards and claims
 
 Each haunt has a saved **claim bit**. It is set when the reward is given
 (at an Egg sitting haunt, when the egg is given; at a Courier haunt, when
-the parcel is given) and cleared when the haunt's placement changes, so
-each placement pays out once, and a new trainer at the haunt can give it
-again.
+the parcel is given; at a Handicap haunt, also when a
+[callback](#after-a-handicap) plays) and cleared when the haunt's
+placement changes, so each placement pays out once, and a new trainer at
+the haunt can give it again.
 
 The reward comes from the trainer, never from the quest: the haunt carries
 the ask, and the trainer carries the reward. Finishing any haunt quest with
@@ -1442,7 +1590,9 @@ A haunt's dialogue is assembled from two sources:
   sitting line is shared: the proposal and the
   [follow-up](#the-follow-up)'s question, hatched, still-an-egg,
   given-back, and gone lines. Every Courier line is shared too: the
-  proposal, the away lines, the trail, and the delivery. They
+  proposal, the away lines, the trail, and the delivery. So is every
+  Handicap line: the proposal, the gate's line, the win and loss lines, and
+  the two callbacks ([Handicap](#handicap)). They
   describe only the place and the activity, never a trainer's personality or
   history, so they read true for every candidate.
   A quest line is the proposal that follows `ASK` ("Walk it with me, out to
@@ -2406,8 +2556,8 @@ clearing.
 With this example, the five worked haunts cover the first five quest
 types: Walk with me (Diglett's Cave), One on one (Celadon Game Corner), Lost
 something (Cerulean Cape), Quiz (Pewter Museum), and Catch me one
-(Viridian Forest). Bring me, Swap battle, Trade, Wanted, Egg sitting, and
-Courier have no worked haunt yet.
+(Viridian Forest). Bring me, Swap battle, Trade, Wanted, Egg sitting,
+Courier, and Handicap have no worked haunt yet.
 
 ## Kanto haunts
 
@@ -2823,6 +2973,72 @@ that mode that also picks the move.
   ([travel](#travel-and-on-map-walking)); nothing in the parcel depends on
   how the recipient got where they are.
 
+### Handicap engine
+
+- **Totem boost.** The `settotemboost battler, atk, def, speed, spatk,
+  spdef, acc, evas` script macro
+  ([event.inc](../../game/asm/macros/event.inc)) runs
+  `callnative ScriptSetTotemBoost`
+  ([battle_main.c](../../game/src/battle_main.c)), which queues the stage
+  changes for that battler position in `gQueuedStatBoosts`. The next
+  battle applies them before the first turn
+  (`FIRST_TURN_EVENTS_TOTEM_BOOST` in battle_main.c runs
+  `BattleScript_TotemVar` in
+  [battle_scripts_1.s](../../game/data/battle_scripts_1.s) for every
+  battler with a queued boost); `BS_GetTotemBoost` in
+  [battle_script_commands.c](../../game/src/battle_script_commands.c)
+  plays `BattleScript_TotemFlaredToLife` ("{B_DEF_NAME_WITH_PREFIX}'s aura
+  flared to life!", `STRINGID_AURAFLAREDTOLIFE` in
+  [battle_message.c](../../game/src/battle_message.c)) and raises each
+  stat in turn, then the queue is cleared. Nothing checks the battle type,
+  so it works in a trainer battle as in a wild one, and HNS already uses
+  it that way: `settotemboost B_POSITION_OPPONENT_LEFT, …` directly before
+  `trainerbattle_no_intro TRAINER_ZUKI_HNS`
+  ([Ecruteak Theater](../../game/data/maps/EcruteakCity_Theater_hns/scripts.inc)).
+  The Handicap talk script runs
+  `settotemboost B_POSITION_OPPONENT_LEFT, 1, 1, 1, 1, 1` immediately
+  before it starts the battle, with nothing between them that could start
+  another battle. `B_POSITION_OPPONENT_LEFT` is position 1
+  ([constants/battle.h](../../game/include/constants/battle.h)), the
+  opponent's battler in singles.
+- **The ace-only team.** [Gym Leader scaling](gym-leader-scaling.md) owns
+  battle construction; the Handicap needs it to resolve the full snapshot
+  and then build the enemy party from slot 1 alone, so the ace keeps the
+  moves, item, and stage it has in the full team. Swap battle's prebuilt
+  `gEnemyParty[0]` with `CreateNPCTrainerParty` skipped
+  ([Swap battle engine](#swap-battle-engine)) is one route; a construction
+  parameter is the other.
+- **AI override.** `BattleAI_SetupFlags` in
+  [battle_ai_main.c](../../game/src/battle_ai_main.c) sets the opponent's
+  flags from the trainer's data (`GetAiFlags` for `B_BATTLER_1`) and copies
+  them into the player-side prediction slots (`B_BATTLER_0` and
+  `B_BATTLER_2`). The [Trainer AI override
+  point](trainer-ai.md#runtime-and-the-override-point) writes after it; for
+  a Handicap it writes the resolution with skill tiers 0-3 and
+  `AI_FLAG_OMNISCIENT`
+  ([battle_ai.h](../../game/include/constants/battle_ai.h)), whose
+  comments recommend Omniscient alongside Predict Switch and Predict Move.
+- **No whiteout.** The engine skips the whiteout when `B_FLAG_NO_WHITEOUT`
+  names a set flag (`battle_setup.c`), and its config note warns that the
+  party is not healed then
+  ([config/battle.h](../../game/include/config/battle.h)); it is 0 today,
+  so this is One on one's route. After a loss the script heals the party
+  with `special HealPlayerParty`
+  ([script_pokemon_util.c](../../game/src/script_pokemon_util.c)).
+- **Doubles against one POKéMON** (for the [Later](#later) two-on-one
+  variant). A trainer battle becomes a double battle from the trainer's
+  battle type alone, with no party-size check
+  ([battle_setup.c](../../game/src/battle_setup.c)). At battle start,
+  battle_main.c marks every battler with no valid POKéMON absent, on
+  either side ("for example when starting a double battle with only one
+  pokemon"), and `TwoOpponentIntroMons`
+  ([battle_controllers.c](../../game/src/battle_controllers.c)) sends out
+  one opponent when its partner slot is empty. So a double battle against
+  a one-POKéMON team is supported by the engine as read, but that marking
+  is skipped for trainer-only encounters (`IsTrainerOnlyEncounter`) and in
+  the Safari Zone, and it is untested here; it needs a battle test before
+  the variant is designed.
+
 ### Cameos and the Dojo
 
 - **Cameos.** HNS places a one-off cameo of many Gym Leaders on the
@@ -2851,7 +3067,7 @@ that mode that also picks the move.
 ### Prize money
 
 Haunts host no trainer battles that pay: a walk's battles are wild, and
-One on one and Swap battle pay no prize money. Only the quest
+One on one, Swap battle, and Handicap pay no prize money. Only the quest
 [fallback](#rewards-and-claims) pays money, on the snapshot level basis a
 [tag match](sevii-masters.md#tag-matches) uses: the level of the last member
 the trainer brings, with their class's rate. Battle Points from Dojo
@@ -2886,8 +3102,9 @@ Haunts add:
   the placement and not saved ([Lost something](#lost-something));
 - one **asked bit** per Catch me one haunt, set by `YES` and cleared with
   the claim bit ([Catch me one](#catch-me-one)); and
-- one **owed bit** per Trade or Wanted haunt, set when a trade's reward
-  waits and cleared with the claim bit ([Trade](#accepted));
+- one **owed bit** per Trade, Wanted, or Handicap haunt, set when a
+  trade's or a handicap battle's reward waits and cleared with the claim
+  bit ([Trade](#accepted), [Handicap](#the-handicap-outcome));
 - one **follow-up bit** per haunt, set when an egg is given or an Egg
   sitting follow-up plays there and cleared with the claim bit
   ([follow-up](#the-follow-up));
@@ -2898,6 +3115,13 @@ Haunts add:
   haunt and notable-trainer state already claims
   ([trade engine](#trade-engine)); the egg itself is a normal POKéMON in
   the player's party or boxes, so nothing per egg is stored;
+- per notable trainer entry, a **handicap attempted** bit and a **handicap
+  beaten** bit ([Handicap](#handicap)), 2 bits each, so 38 × 2 bits, 76
+  bits or **10 bytes** in v0, beside the reward counters in SaveBlock3's
+  haunt state, well within its 464 free bytes. They never clear: one
+  attempt per trainer, ever. Beyond picking the callback line, nothing
+  reads the beaten bit in v0; it is a record for later gossip, phone
+  calls, and the trainer card;
 - one **courier state** for the whole game ([Courier](#courier)): the
   sender's and the recipient's `characterId` (6 bits each, as in a
   traded-slot record), the active flag, and the
@@ -2910,7 +3134,9 @@ Haunts add:
   whiteout, or a Swap battle (its haunt), set when the party is parked and
   cleared at the restore. Bring me adds nothing: it runs within one talk.
   Swap battle adds nothing per placement either, and a trade runs in one
-  script, so it needs no quest in progress.
+  script, so it needs no quest in progress. Neither does a handicap
+  battle: the battle and its bits run in one script, and the party is
+  never swapped.
 
 **Traded-slot records.** A pool of sixteen records, each naming its
 trainer, holds every [traded slot](#the-trainers-team-after-a-trade); a
@@ -2955,11 +3181,10 @@ overflow.
 
 New Game saves every claim bit clear, every reward counter at 0, the placement
 for world progress 0, every search state at none, every asked bit, owed bit,
-follow-up bit, and outstanding bit clear, every eggs-given count at 0, every
-traded-slot record free, no active parcel (the courier state all zero), and
-no quest in progress. With follower
-NPCs enabled, SaveBlock3 also holds the engine's follower state, which a walk
-uses.
+follow-up bit, outstanding bit, and handicap bit clear, every eggs-given
+count at 0, every traded-slot record free, no active parcel (the courier
+state all zero), and no quest in progress. With follower NPCs enabled,
+SaveBlock3 also holds the engine's follower state, which a walk uses.
 
 ## Load validation
 
@@ -2975,8 +3200,9 @@ On every load, before the overworld runs:
 2. **Pruning.** Drop the reward counters of characters no longer in the
    registry, and the claim bits, search states, asked bits, and placements of
    haunts no longer in the catalog, or search states and asked bits of haunts
-   whose quest type changed, and owed bits of haunts that are no longer Trade
-   or Wanted haunts. Drop the follow-up bits of haunts no longer in the
+   whose quest type changed, and owed bits of haunts that are no longer Trade,
+   Wanted, or Handicap haunts. Drop the handicap bits of characters no
+   longer in the registry. Drop the follow-up bits of haunts no longer in the
    catalog, and the outstanding bits and eggs-given counts of characters no
    longer in the registry; their eggs stay with the player as ordinary
    POKéMON. An active parcel whose sender or recipient is no longer in the
@@ -2998,7 +3224,10 @@ On every load, before the overworld runs:
    bits only for known Catch me one haunts, never set at an empty haunt or
    with the claim bit set; a saved
    placement names known characters, each at most once; an owed bit only
-   at a known Trade or Wanted haunt, never at an empty one; a follow-up bit
+   at a known Trade, Wanted, or Handicap haunt, never at an empty one, and
+   at a Handicap haunt only when its placed trainer's attempted bit is set;
+   handicap bits only for known trainers, and never a beaten bit without
+   the attempted bit; a follow-up bit
    only at a known haunt, never at an empty one; an outstanding bit and an
    eggs-given count only for known trainers, never a count above the cap
    (15, so the check guards a lowered cap), and never an outstanding bit
@@ -3030,6 +3259,9 @@ On every load, before the overworld runs:
   show them beside the player with their back pic.
 - In a Swap battle the player's side shows the ace, and the trainer sends
   out the copy of the player's pick under its own nickname.
+- A handicap battle is an ordinary singles battle against the lone ace,
+  which opens with the totem animation and "…aura flared to life!" before
+  the first turn.
 - A trade plays the in-game trade scene, with the trainer's name as the
   partner. When the traded slot is the buddy slot, the POKéMON object
   beside the trainer is the traded POKéMON at its current stage.
@@ -3045,6 +3277,34 @@ each trainer sits at each haunt and how many haunts are empty. For each
 Wanted haunt it also shows every candidate's wanted species and offer, and
 flags pairs with [no fair offer](#no-fair-offer). It asserts no target.
 It is not built yet ([Later](#later)).
+
+**Handicap margin.** For each world progress the report shows which
+trainers pass the Handicap [gate](#the-gate), and for each the ace's level
+against the player's level cap, so the margin is tuned with numbers toward
+"humbling but fair and beatable". The ace's level is `teamLevel` at the
+trainer's TR, and the cap is the
+[v0 level cap curve](trainer-rating-party-progression.md#v0-level-cap-curve)
+at the player's. At the gate itself (trainer TR exactly the player's plus
+the margin), the placeholder anchors give:
+
+| Player TR | Level cap | Margin 30 | Margin 40 | Margin 50 |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 15 | Lv 21 (+6) | Lv 28 (+13) | Lv 34 (+19) |
+| 20 | 22 | Lv 34 (+12) | Lv 39 (+17) | Lv 45 (+23) |
+| 40 | 28 | Lv 45 (+17) | Lv 50 (+22) | Lv 56 (+28) |
+| 60 | 39 | Lv 56 (+17) | Lv 63 (+24) | Lv 69 (+30) |
+| 80 | 50 | Lv 69 (+19) | Lv 75 (+25) | Lv 81 (+31) |
+| 100 | 63 | Lv 81 (+18) | Lv 88 (+25) | Lv 94 (+31) |
+| 120 | 75 | Lv 94 (+19) | Lv 100 (+25) | Lv 100 (+25) |
+| 140 | 88 | Lv 100 (+12) | Lv 100 (+12) | Lv 100 (+12) |
+| 160 | 100 | Lv 100 (0) | Lv 100 (0) | Lv 100 (0) |
+
+At margin 40 the ace sits 13 to 25 levels above the cap through most of
+the journey, before its +1 aura; past TR 120 the Lv 100 ceiling shrinks
+the gap, so the aura and the smartest AI carry the handicap at the end.
+The gate is only a floor: a trainer further ahead sits higher. Agatha (TR
+95, Lv 59) faces a player at TR 0 with a 44-level gap, and Lance (TR 200,
+Lv 100) an 85-level gap ([open questions](#open-questions)).
 
 ## Acceptance
 
@@ -3229,10 +3489,37 @@ Required implementation evidence (not yet run):
     leaves it active. A delivery comes before an Egg sitting follow-up, and
     that before the trail; none touches a claim bit, and the haunt's own
     quest returns at the next talk. No expiry or penalty applies.
-13. **Claims.** A reward is given once per placement; a changed placement
-   reopens it; a full Bag, a cancelled lesson, or no POKéMON able to learn
-   keeps it open and leaves the reward counter unchanged.
-14. **Reward pools.** The reward never depends on the quest type. Quests
+13. **Handicap.** The proposal, "Your whole team against my {ACE}. Think
+    that's enough?", plays only while the trainer's current TR is at least
+    the player's TR plus the margin (40), checked at each talk: one TR
+    below, the gate's line, `QUIRK`, and `BYE` play, the claim bit stays
+    clear, and the attempt stays unused. `NO` changes nothing. `YES` starts
+    a singles battle against the signature ace alone at its snapshot stage,
+    level (capped at Lv 100), moves, and held item, never with a second ace
+    or a filler (a Double Ace trainer brings one POKéMON); the ace opens at
+    +1 Attack, Defense, Speed, Sp. Atk, and Sp. Def with the aura message,
+    and accuracy and evasion at 0; its flags are the trainer's resolution
+    with every skill tier through Predictive and Omniscient, at every
+    trainer TR and with or without the boss flag, written to the opponent
+    and the prediction slots; the player uses the full party and Bag; no
+    prize money is paid and a loss never blacks out, leaving the party
+    fully healed. A win plays "…Six against one, and you actually did
+    it.", `PRAISE`, the next reward-pool entry, and `BYE`, sets the
+    attempted and beaten bits, and adds +10, never +20; a loss plays "Not
+    bad for being outnumbered. Take this anyway.", the reward with no
+    `PRAISE`, and `BYE`, sets only the attempted bit, and adds +10. It is
+    the only quest that isn't retryable: after either outcome no Handicap
+    haunt ever proposes again with that trainer, in this or any later
+    placement. There, the first talk of each placement plays the callback,
+    "Still thinking about our six-on-one?" after a win or "Come back when
+    you can take me one-on-one." after a loss, then `BYE`, and sets the
+    claim bit with no reward or friendship; later talks give `QUIRK`. A
+    waiting reward sets the owed bit and is paid with the outcome line at
+    the next talk.
+14. **Claims.** A reward is given once per placement; a changed placement
+    reopens it; a full Bag, a cancelled lesson, or no POKéMON able to learn
+    keeps it open and leaves the reward counter unchanged.
+15. **Reward pools.** The reward never depends on the quest type. Quests
     with one trainer at different haunts pay that trainer's pool in order,
     one entry each; a gated next entry or a used-up pool pays the fallback
     (prize money equal to a win over the trainer at current TR) and leaves
@@ -3242,18 +3529,20 @@ Required implementation evidence (not yet run):
     teaches the first move in pool order the chosen POKéMON can learn and
     doesn't know, and offers only POKéMON with such a move. Brock's first
     quest gives PEWTER CRUNCHIES and Giovanni's gives a NUGGET.
-15. **Dialogue.** Every assembled line resolves its slots and fits its text
+16. **Dialogue.** Every assembled line resolves its slots and fits its text
     box with worst-case values; no haunt dialogue carries gossip.
-16. **Cameos.** No cameo or Dojo rematch seat remains in Wayfarer; the Dojo
+17. **Cameos.** No cameo or Dojo rematch seat remains in Wayfarer; the Dojo
     back room works as a haunt; no stranger battle, rematch, prize money
     beyond the quest fallback, or Battle Points come from haunts.
-17. **Save.** A new game and a reload give the saved state described above; a
+18. **Save.** A new game and a reload give the saved state described above; a
     search state, asked bit, owed bit, follow-up bit, outstanding bit,
-    eggs-given count, traded-slot record, or courier state survives a
-    reload, and the first four clear with their haunt's placement; corrupt
-    reward counters, claim bits, search states, asked bits, owed bits,
-    follow-up bits, outstanding bits, eggs-given counts, placements,
-    traded-slot records, or courier states are rejected; removed characters
+    eggs-given count, handicap bit, traded-slot record, or courier state
+    survives a reload, and the first four clear with their haunt's
+    placement, while handicap bits never clear; corrupt reward counters,
+    claim bits, search states, asked bits, owed bits, follow-up bits,
+    outstanding bits, eggs-given counts, handicap bits (a beaten bit
+    without its attempted bit), placements, traded-slot records, or courier
+    states are rejected; removed characters
     or haunts are pruned, and so are records of removed species or of slots
     no longer fillers; a parcel with a removed sender or recipient is
     settled with the PARCEL removed and nothing paid, and the PARCEL in the
@@ -3278,6 +3567,10 @@ Required implementation evidence (not yet run):
 - Whether placement should steer a trainer with
   [no fair offer](#no-fair-offer) away from a Wanted haunt, as Erika at
   Viridian Forest would be, instead of leaving its quest unavailable.
+- Whether the Handicap gate needs a ceiling as well as its margin: the
+  margin is only a floor, so Lance (TR 200) offers his Lv 100 ace to a
+  player capped at Lv 15, 85 levels above the cap
+  ([balance report](#balance-report)).
 - Whether a later stage of the wanted species' line should count at a
   Wanted haunt: Misty at the Cerulean Cape wants MAGIKARP, so a fished
   GYARADOS doesn't ([Wanted examples](#wanted-examples)).
@@ -3314,8 +3607,8 @@ Required implementation evidence (not yet run):
 - **Explorer support** for the [balance report](#balance-report).
 - **Favourite species for Wanted:** a per-trainer override of the derived
   wanted species for canon moments, such as Brock's existing Rhyhorn trade.
-- **Worked Bring me, Swap battle, Trade, Wanted, Egg sitting, and Courier
-  haunts**, and their places in the [Kanto list](#kanto-haunts).
+- **Worked Bring me, Swap battle, Trade, Wanted, Egg sitting, Courier, and
+  Handicap haunts**, and their places in the [Kanto list](#kanto-haunts).
 - **"Show me a hatchling":** a cheap variant of
   [Egg sitting](#egg-sitting) with no egg handed over: the player shows any
   POKéMON of the trainer's type that they hatched (met level 0, the
@@ -3333,6 +3626,14 @@ Required implementation evidence (not yet run):
   [travel proof of concept](../research/notable-trainer-travel-poc.md) validated.
 - **More item kinds** for Bring me, and a Bag screen that lists only the
   kind's items instead of refusing the rest in place.
+- **Two-on-one Handicap:** a variant format in which two of the player's
+  POKéMON battle the lone ace at once, as a double battle against a
+  one-POKéMON team. The engine appears to support it but it is untested
+  ([Handicap engine](#handicap-engine)).
+- **Last stand:** the reverse of [Handicap](#handicap): one of the
+  player's POKéMON against the trainer's full team.
+- **Gossip about handicap wins:** other trainers, phone calls, and the
+  trainer card reading the [handicap beaten](#saved-state) bit.
 
 ## References
 

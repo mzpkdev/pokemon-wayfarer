@@ -121,6 +121,7 @@ it is done:
 | Wanted | The trainer asks for the strongest wild POKéMON that lives at the haunt and shares a type with their aces, worked out from the haunt's wild tables rather than authored, and offers their best filler worth no more than it. The player gives one from the party; it works like Trade, with no value check, since the offer is fair by construction. If every filler is worth more, the trainer has nothing fair to offer. |
 | Egg sitting | The trainer asks the player to hold on to an egg of one of their filler lines for a while, nothing more. At a later meeting, at any haunt, they ask after it. If the player has hatched it, the trainer is surprised, tells the player to keep it, and pays the reward; if it is still an egg, the player can keep holding it or hand it back; if it is gone, the trainer is shocked, then lets it go. Nothing costs the player anything. |
 | Courier | The trainer asks the player to take a parcel to another trainer from their home region who is out at a haunt right now: "Could you take this to {OTHER}? Last I heard, they were around {PLACE}." The recipient keeps moving as usual, so the place is only a hint; asking the sender again gives the latest, or says the recipient is away at a league. Handing it over at any meeting with the recipient, at any haunt and even a first meeting, pays the recipient's next reward and raises friendship with both trainers. One parcel at a time, with no expiry and no penalty. |
+| Handicap | Offered only by a trainer whose TR is well above the player's (a placeholder 40 TR ahead): "Your whole team against my {ACE}. Think that's enough?" The player's full party and Bag face the trainer's signature ace alone, never a second ace, at full strength with a +1 totem aura on Attack, Defense, Speed, Sp. Atk, and Sp. Def, and the trainer's smartest AI. Win or lose, the trainer pays their next reward, but each trainer offers it once, ever: the only quest that can't be retried, a humbling one-shot moment rather than a wall. Afterwards the trainer recalls the six-on-one instead. |
 
 Every trainer can give every quest. Haunt quest lines never imply the trainer
 needs help or is asking a favour, except Egg sitting's and Courier's plain
@@ -226,8 +227,8 @@ natural regular, as the HNS cameo already has it, and Erika takes it on her
 Grass aces when Bugsy is elsewhere. The
 [specification](../specs/notable-haunts.md#worked-example-viridian-forest)
 works it through. With it, the five worked haunts cover the first five
-quest types; Bring me, Swap battle, Trade, Wanted, Egg sitting, and Courier
-have no worked haunt yet.
+quest types; Bring me, Swap battle, Trade, Wanted, Egg sitting, Courier,
+and Handicap have no worked haunt yet.
 
 Trade is the first slice of the parked
 [trainer roster influence](trainer-roster-influence.md) design. The trainer
@@ -258,17 +259,19 @@ rules.
 ## Boundaries
 
 In: the haunt pool and tags, placement, momentum, the talk flow (greetings
-by friendship stage, the quest proposal, and the quirk), the eleven quest
+by friendship stage, the quest proposal, and the quirk), the twelve quest
 types, including Trade and Wanted and the traded slot they leave on a
 trainer's team, Egg sitting and its follow-up at a later meeting, and
 Courier, its PARCEL key item, and its delivery to a recipient wherever
-they are,
+they are, and Handicap, offered once per trainer ever and paid win or lose;
 quest rewards from each trainer's reward pool, the voice-bit writing rule,
 buddy and reward pool as trainer values, the Kanto haunt list, retiring the
 HNS cameos and the Dojo rematch hub, and the saved state for all of this.
 
 Unchanged: every battle with a notable trainer uses their current TR and team
-([Notable trainers](notable-trainers.md)), which reads a traded slot; phone
+([Notable trainers](notable-trainers.md)), which reads a traded slot, except
+that a Handicap brings only the signature ace, with its aura and the
+trainer's smartest [AI](trainer-ai.md); phone
 numbers are given as [Sevii Masters](sevii-masters.md#design) describes, at
 Friend; league lineups belong to [Leagues](leagues.md).
 
@@ -357,6 +360,9 @@ the trainer's voice bits.
   [travel proof of concept](../research/notable-trainer-travel-poc.md) showed on-map pathfinding and saved travel between
   maps are viable.
 - Haunt lists for Johto, Hoenn, and Sevii.
+- A two-on-one Handicap, with two of the player's POKéMON against the lone
+  ace at once; Last stand, the reverse, with one of the player's POKéMON
+  against the trainer's full team; and gossip about handicap wins.
 - Explorer support: placements per world progress and the fit of each
   trainer.
 
