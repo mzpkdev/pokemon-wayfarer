@@ -2176,7 +2176,8 @@ Required implementation evidence (not yet run):
    the signature ace at its snapshot stage, with the trainer's OT name and
    ID, against a healed copy of the able non-Egg POKéMON the player picked
    under the trainer's AI, the proposal never mentions a swap, and the
-   reveal line plays only after the pick; with the player's TR giving a soft cap below the ace's
+   reveal line plays only after the pick; with the player's TR giving a
+   soft cap below the ace's
    level the ace can disobey, and at or above it never does; neither side
    gains experience; afterwards the party equals the parked one exactly
    (HP, PP, status, held items, friendship) after a win and after a loss;
