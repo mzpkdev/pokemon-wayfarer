@@ -3186,7 +3186,9 @@ leaving 88; that removes the cap but spends nearly all the save's last
 large free space, so it is not proposed. The storage struct is shared with
 the PC boxes, so a later change to box count or box layout competes for
 the same bytes; `PokemonStorageFreeSpace` fails the build rather than
-overflow.
+overflow. The [save layout
+decision](notable-world-simulation.md#where-it-lives) drops one PC box (14
+to 13) to make room for this pool, the world state, and the Masters teams.
 
 New Game saves every claim bit clear, every reward counter at 0, the placement
 for world progress 0, every search state at none, every asked bit, owed bit,

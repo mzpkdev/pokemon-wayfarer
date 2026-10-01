@@ -38,8 +38,8 @@ rather than restating it.
   overworld and owns the meaning of the buddy and reward pool
   values ([below](#haunt-and-routine-values)).
 - [Notable spots](notable-spots.md) is the everyday layer of the future
-  routine and travel design. It owns the meaning of the home-base value,
-  and will own the favourite-spots value once it is authored.
+  routine and travel design. It owns the meaning of the home-base and
+  favourite-spots values.
 - [Player Trainer Rating](player-trainer-rating.md) owns the player's TR,
   the scaler definition, and the downward rule and shared evolution-level table
   ([evolution stages](player-trainer-rating.md#evolution-stages));

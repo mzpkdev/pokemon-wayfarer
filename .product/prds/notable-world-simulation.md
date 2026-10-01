@@ -8,7 +8,7 @@ Design status: draft for review. It is the **routine and travel** design
 that [spots](notable-spots.md) were waiting for. Destinations are spots
 only; haunts join later, and until then v0 haunt placement works exactly
 as the [haunts PRD](notable-haunts.md) describes. Numbers are
-placeholders, and where the save data lives still needs a decision. Terms
+placeholders. The save data's home is decided: the PC loses one box. Terms
 follow the [glossary](player-trainer-rating.md#glossary).
 
 ## Intent
@@ -25,8 +25,10 @@ door, and find them again later where their day took them.
 
 ### Who lives in the world
 
-Every notable trainer is out in the world except **Tate & Liza**, who are
-never placed. A trainer is out of the world for a while when:
+Every notable trainer who can walk on screen is out in the world: 27 of
+them in v0. Tate & Liza are never placed, and ten more have no walking
+sprite yet ([below](#known-limitation-walking-sprites)); those 11 stay as
+they are today. A trainer is out of the world for a while when:
 
 - they are in a league event the player has accepted, until it ends:
   they are at the league;
@@ -36,6 +38,22 @@ never placed. A trainer is out of the world for a while when:
 A trainer placed at a **haunt** stays there, as today. A **Gym Leader the
 player hasn't beaten yet stays home** in their Gym, ready for the badge
 battle; they start going out once the player has their badge.
+
+### Known limitation: walking sprites
+
+A trainer who walks around needs a sprite that walks. Only 27 notable
+trainers have one: the Kanto and Johto trainers (HNS sprites), Lorelei
+(her FireRed and LeafGreen sprite), and Norman, Juan, Wallace, and Steven
+(Emerald). The other 11 have a sprite that can only face each way:
+Roxanne, Brawly, Wattson, Flannery, Winona, Tate & Liza, Sidney, Phoebe,
+Glacia, Drake, and Agatha.
+
+For now those 11 are not in the world simulation. They stand where they
+always stood, in their Gyms and story scenes, and turn up at haunts as
+before. Their routines are written and wait for them. Hoenn feels this
+most, since only four of its notables walk. New walking sprites can bring
+them in later; a shared stand-in sprite would make them lose their look,
+so it isn't used.
 
 ### Two layers
 
@@ -74,13 +92,20 @@ repeat, such as Brock's train, care, study, home. Each activity picks a
 nearby spot by the spots rules, and the trainer walks there, stays a
 while, and moves on to the next.
 
-Examples (placeholders):
+A trainer can also have up to three **favourite spots**, the places
+they're known for, even far from home: Lt. Surge at the Vermilion harbour
+and the Celadon Game Corner, Giovanni at the Game Corner and lying low in
+Johto. A favourite wins whenever it's free. Every trainer's cycle and
+favourites are written in the
+[routines research file](../research/notable-trainer-routines.md).
+
+Examples:
 
 | Trainer | Cycle |
 | --- | --- |
 | Brock | train → care → study → home |
-| Misty | relax → train → home |
-| Lt. Surge | home → visit (the harbour) → gamble |
+| Misty | relax → train → fish → home |
+| Lt. Surge | home → visit (the harbour) → gamble → train |
 | Erika | home → shop → relax |
 | Giovanni | gamble → lie low → home |
 
@@ -116,8 +141,9 @@ Unchanged: where spots are and how a spot is chosen for an activity
 ([Notable spots](notable-spots.md)); v0 haunt placement, quests, and the
 haunt talk flow; leagues, lineups, and every battle.
 
-Out of scope: haunts as destinations, favourites, surfing and cutting
-walkers, and the in-game clock, all for later. Quests or battles out in
+Out of scope: haunts as destinations, surfing and cutting walkers, the
+in-game clock, and walking sprites for the trainers who lack one, all for
+later. Quests or battles out in
 the world.
 
 ## Presentation
@@ -145,10 +171,11 @@ by a road stays visible until they walk out of view.
 
 ## Constraints
 
-- The world's saved data is about **312 bytes**. Once saved leagues land,
-  no part of the save has that room free, so space has to be made first,
-  for example by giving up one PC box
-  ([save budget](../specs/notable-world-simulation.md#save-budget)).
+- The world's saved data is about **232 bytes** for 27 trainers (312 once
+  all 37 walk). Once saved leagues land, no part of the save has that room
+  free, so the PC drops from 14 boxes to 13 to make it, alongside the
+  haunts' trade pool and the Masters teams
+  ([where it lives](../specs/notable-world-simulation.md#where-it-lives)).
 - Only two or three trainers can be on screen on one map, because the
   overworld holds 16 people and each walker costs processing time
   ([travel proof of concept](../research/notable-trainer-travel-poc.md)).
@@ -174,9 +201,9 @@ by a road stays visible until they walk out of view.
 
 - The in-game clock moving the world while the player stands still.
 - Haunts as destinations.
-- Favourite spots, with the routine content.
 - Trainers who surf and cut, when their team can.
-- Every trainer's activity cycle, written as content.
+- Walking sprites for the 11 trainers who only face, so they join the
+  world.
 
 ## References
 

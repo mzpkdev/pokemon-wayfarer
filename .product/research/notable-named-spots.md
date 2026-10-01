@@ -44,7 +44,7 @@ All 59 rows below pass the checks.
 | 1 | Oak's Lab | `PalletTown_Lab_hns` | (18, 14) | study | 1 | – | Kanto's research hub, beside Oak's aides. |
 | 2 | Cinnabar Lab | `CinnabarIsland_PokemonLab_ExperimentRoom_Frlg` | (11, 4) | study | 1 | – | The fossil-revival room, by the scientist. |
 | 3 | Vermilion Fan Club | `VermilionCity_FanClub_hns` | (9, 7) | visit, relax | 1 | – | Trading stories with the chairman's members. |
-| 4 | Vermilion harbour | `VermilionCity_PortOutside_hns` | (24, 5) | sightsee, fish | 2 | Vermilion harbour | The east end of the S.S. Anne pier. |
+| 4 | Vermilion harbour | `VermilionCity_PortOutside_hns` | (24, 5) | sightsee, visit | 2 | Vermilion harbour | The east end of the S.S. Anne pier, where sailors come and go. |
 | 5 | Fighting Dojo | `SaffronCity_FightingDojo_hns` | (8, 11) | train | 1 | Saffron Fighting Dojo | The training floor, off the haunt's spot. |
 | 6 | Cerulean Bike Shop | `CeruleanCity_BikeShop_hns` | (3, 5) | shop | 1 | – | Browsing the bikes. |
 | 7 | Lavender Name Rater | `LavenderTown_House3_hns` | (8, 5) | visit | 1 | – | Waiting on a nickname. |
@@ -136,6 +136,11 @@ All 59 rows below pass the checks.
 - **Berry Forest.** Its berry trees aren't among the retained Sevii events
   in `game/src/data/wayfarer_sevii_maps.json`, so the forest has no berry
   objects in Wayfarer; the row is kept as a nature spot.
+- **Vermilion harbour activities.** The row lists sightsee and visit, so
+  Lt. Surge's harbour visit lands here. A row holds at most two
+  activities, so fish was dropped: the harbour map still has 41 detected
+  water's-edge tiles (in two stretches), so a fish step there still finds
+  a spot.
 - **Cycling Road.** Most of Route 17 is `MB_CYCLING_ROAD_PULL_DOWN`; the
   tile at (14, 7) is plain `MB_NORMAL`, so a standing trainer isn't on a
   forced-movement tile.

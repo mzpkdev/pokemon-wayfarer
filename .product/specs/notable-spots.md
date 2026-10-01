@@ -34,8 +34,9 @@ rule, and the saved-state stance.
   its evidence so far. Spots are the destinations of the
   [world simulation](notable-world-simulation.md), which specifies all of that.
 - [Notable trainers](notable-trainers.md) owns friendship and its events,
-  and holds home bases, and favourites once they are authored, in the
-  catalog.
+  and holds home bases and favourites in the catalog. Favourites are
+  authored with each trainer's activity cycle in the
+  [routines research file](../research/notable-trainer-routines.md).
 - [Gym Leader scaling](gym-leader-scaling.md) owns badge-encounter
   coverage, which names each Gym's leader.
 
@@ -473,15 +474,24 @@ that holds his house. The 3-hop and 8-hop radii in
 A trainer value, alongside buddy and reward pool: up to **3 favourite spot
 references**, each a map and a kind, and for a tile-precise habit, a tile.
 A favourite can name a named spot by its map and tile.
-A favourite is an optional override for a signature habit:
+A favourite is an optional override for a signature habit, and ignores the
+radius, so it reaches signature places outside the home radius:
 
 - Lt. Surge: the Celadon Game Corner (`CeladonCity_GameCorner_hns`,
-  gamble);
-- Erika: the Celadon department store's perfume floor (shop).
+  gamble) and the Vermilion harbour named spot (visit);
+- Erika: the Celadon department store's 4F gift floor
+  (`CeladonCity_DepartmentStore_4F_hns`, shop), since the store has no
+  perfume floor;
+- Giovanni: the Celadon Game Corner (gamble) and the Burned Tower named
+  spot (lie low).
 
 A favourite is used whenever it fits the activity and has room; otherwise
-the derived pick runs. Favourites are **authored later, with routines**;
-none exist now.
+the derived pick runs. Each serves one step of the trainer's activity
+cycle, and both are authored together in the
+[routines research file](../research/notable-trainer-routines.md), whose
+check resolves every favourite to a spot that offers its activity. Aloof
+trainers' favourites are remote spots, and a non-traveller's stay in their
+home region.
 
 ### Just leaving
 
@@ -801,7 +811,9 @@ gameplay timer the proof of concept named.
 
 ## Later
 
-- Authoring favourites, with routines.
+- Favourites and routines moving from the
+  [research file](../research/notable-trainer-routines.md) into the
+  catalog.
 - More detected kinds, such as libraries, if the named-spot list grows
   past what is comfortable to author.
 - Per-trainer activity lines, if the shared ones get stale.
@@ -817,3 +829,4 @@ gameplay timer the proof of concept named.
 - [Notable trainer travel proof of concept](../research/notable-trainer-travel-poc.md)
 - [Notable spots inventory (draft)](../research/notable-spots-inventory.md)
 - [Notable named spots (starting list)](../research/notable-named-spots.md)
+- [Notable trainer routines](../research/notable-trainer-routines.md)

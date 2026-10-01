@@ -373,6 +373,11 @@ event, or eight and the partner after an accepted one. The reign flags are
 unchanged by the tag format. New Game saves no
 partner choice, and every Gallery count 0.
 
+The composed teams of the eight and the partner live in `PokemonStorage`
+with the league teams; the room for them comes from the [save layout
+decision](notable-world-simulation.md#where-it-lives) to drop one PC box
+(14 to 13).
+
 ## Load validation
 
 The Masters adds to [Load validation](leagues.md#load-validation):

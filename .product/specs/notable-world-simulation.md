@@ -8,8 +8,8 @@ Design status: draft for review. The model is decided: a saved, abstract
 [travel proof of concept](../research/notable-trainer-travel-poc.md)
 showed. Destinations are [spots](notable-spots.md) only. Routines, life
 events, the walker graph, the saved record, and the local actor budget are
-specified here. Every number marked placeholder is waiting for tuning, and
-the [save layout](#where-it-lives) needs a decision before implementation.
+specified here. Every number marked placeholder is waiting for tuning. The
+[save layout](#where-it-lives) is decided: one PC box fewer.
 
 ## Scope
 
@@ -42,10 +42,19 @@ determinism, the debug and balance report, and acceptance.
 
 ### Who is simulated
 
-Every notable trainer in the
+A notable trainer in the
 [inventory](notable-trainers.md#notable-trainer-inventory) is simulated
-except **Tate & Liza**, who are never placed. That is **37 trainers**, each
-with one saved [world record](#the-world-record).
+when they have a walking overworld sprite. That is **27 trainers**, each
+with one saved [world record](#the-world-record): Brock, Misty, Lt. Surge,
+Erika, Janine, Sabrina, Blaine, Giovanni, Blue, Lorelei, Bruno, Koga,
+Lance, Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce, Clair, Will,
+Karen, Norman, Juan, Wallace, and Steven.
+
+The other **11 entries** are not simulated in v0: Tate & Liza, who are
+never placed, and ten trainers whose sprite can only face, not walk
+([walking sprites](#known-limitation-walking-sprites)). They have no
+record and no routine, and behave as today: their fixed map objects and
+v0 haunt placement are unchanged.
 
 At any moment a simulated trainer is in exactly one **state**. The first
 row that applies wins:
@@ -96,6 +105,37 @@ at home in their Gym takes no local actor and doesn't count towards the
 Gym's [capacity](notable-spots.md#capacity). While a leader is pinned at
 a haunt or away and still unbeaten, their Gym object stays shown, as v0
 already shows both today.
+
+### Known limitation: walking sprites
+
+A local actor walks, so only a trainer with a **Full** overworld sprite
+can be simulated: the standard 9-frame sheet, facing and walking in all
+four directions, animated by `sAnimTable_Standard`
+([object_event_anims.h](../../game/src/data/object_events/object_event_anims.h),
+line 1223). A read-only sprite audit found:
+
+- **Full (27, simulated):** the HNS `*_HNS` sprites for the Kanto and
+  Johto trainers; FireRed and LeafGreen's `LORELEI`, compiled through the
+  Sevii block, for Lorelei; and Emerald's `NORMAN`, `JUAN`, `WALLACE`, and
+  `STEVEN`.
+- **Face-only (11, not simulated):** a 3-frame sheet that faces each way
+  but has no walk frames. Roxanne, Brawly, Wattson, Flannery, Winona,
+  Tate & Liza, Sidney, Phoebe, Glacia, Drake, and Agatha.
+
+Evidence: the graphics pointer table
+([object_event_graphics_info_pointers.h](../../game/src/data/object_events/object_event_graphics_info_pointers.h):
+the HNS block near lines 1068-1108, the Emerald entries near 678-691 and
+775, the Sevii block near 953-1016), and the sheet sizes in
+`graphics/object_events/pics/people/` (144×32 for a Full sheet, 48×32 for
+a face-only one). Frames were counted from sheet widths and the pic and
+animation tables, not checked visually.
+
+Hoenn is hit hardest: only Norman, Juan, Wallace, and Steven walk there.
+The face-only trainers' routines stay authored, marked not simulated in
+v0, in the [routines research file](../research/notable-trainer-routines.md),
+so they can join once they walk. The fix is new 9-frame sheets for the
+11; a generic stand-in sprite would break their identity, so it is
+rejected for v0 ([later](#later)).
 
 ### Two layers
 
@@ -313,38 +353,32 @@ Each trainer authors an **activity cycle**: an ordered list of **3-4
 steps**, each one activity from the
 [activity list](notable-spots.md#activities-and-kinds) (care, shop,
 gamble, train, relax, fish, visit, study, home, sightsee, lie low). The
-cycle repeats. Cycles are catalog content, authored later in a research
-file; until then, a trainer without one uses the placeholder default
-**train → care → relax → home**.
+cycle repeats. Cycles and [favourites](notable-spots.md#favourites) are
+authored together, per trainer, in the
+[routines research file](../research/notable-trainer-routines.md), which
+then moves into the catalog. A trainer without a cycle would use the
+placeholder default **train → care → relax → home**; every simulated
+trainer has one.
 
-Examples (placeholders, for review):
-
-| Trainer | Cycle | Spot kinds it lands on |
-| --- | --- | --- |
-| Brock | train → care → study → home | tall grass near Pewter; the Pewter Center; a study named spot (Oak's Lab or Bill's Sea Cottage, if within his traveller radius); his Gym |
-| Misty | relax → train → home | water's edge or a Cerulean square; tall grass on Routes 24-25; her Gym |
-| Lt. Surge | home → visit (harbour) → gamble | his Gym; the Vermilion harbour named spot; the Celadon Game Corner |
-| Erika | home → shop → relax | her Gym; the Celadon department store; a Celadon square or pond edge |
-| Giovanni | gamble → lie low → home | the Celadon Game Corner; a lie-low named spot; his Viridian Gym |
-
-Two of these show what content must settle. The Vermilion harbour row
-lists sightsee and fish, not visit, so Lt. Surge's harbour step needs
-visit added to that row or the step written as sightsee. And the only
-Game Corner in Kanto is in Celadon, and the only lie-low named spot is the
-Burned Tower in Johto. Both are probably beyond Giovanni's placeholder
-8-hop radius from Viridian, so those steps would be skipped until a
-[favourite](notable-spots.md#favourites) (which ignores the radius) or a
-nearer named spot exists. The [itinerary report](#debug-and-balance-report)
-shows this per trainer.
+A favourite is how a trainer reaches a signature place outside their
+home radius. Lt. Surge's cycle is home → visit → gamble → train: his visit
+favourite is the Vermilion harbour named spot, which now lists visit, and
+his gamble favourite is the Celadon Game Corner, 5 map hops from Vermilion.
+Giovanni's is gamble → lie low → home: the Celadon Game Corner and the
+Burned Tower (the only lie-low named spot, in Johto) are both beyond his
+8-hop radius from Viridian, so his favourites reach them. The routines
+file's check finds a candidate for every step of every cycle; the
+[itinerary report](#debug-and-balance-report) shows skips per trainer in
+play.
 
 #### Choosing the step's spot
 
 Each step picks one spot by the
 [spots rules](notable-spots.md#choosing-a-spot): its kinds, favourites
-first once they exist, then candidates within the home-base radius
-(placeholder 3 hops, or 8 for a traveller), excluding taken spots and full
-maps, nearest first, with the spots spec's rotating tie-break. The
-routine adds these filters before the pick:
+first (used when free, else the derived pick), then candidates within the
+home-base radius (placeholder 3 hops, or 8 for a traveller), excluding
+taken spots and full maps, nearest first, with the spots spec's rotating
+tie-break. The routine adds these filters before the pick:
 
 - **Aloof** trainers never pick a **public** spot: kinds Pokémon Center,
   Poké Mart and department store, Game Corner, other Gyms, town squares
@@ -562,8 +596,10 @@ and zeros elsewhere.
 **Header, 4 bytes:** a schema version (1 byte), a reserved byte, and the
 walker graph's 16-bit content hash.
 
-**Total:** 37 × 8 = 296 bytes of records, plus 9 and 4, is 309 bytes,
-**312 bytes** padded to a word.
+**Total:** 27 × 8 = 216 bytes of records, plus 9 and 4, is 229 bytes,
+**232 bytes** padded to a word. Adding the ten face-only trainers later
+([walking sprites](#known-limitation-walking-sprites)) takes it to 37
+records, 312 bytes.
 
 #### Save budget
 
@@ -604,12 +640,13 @@ saved league teams (`LeagueSavedTeams`, 1,456 bytes, 288 per team) to
 - **SaveBlock3** is where the proof of concept put its record, next to
   the haunt state. With PR #139 it has 276 bytes free; the haunt and
   friendship state above take about 133 of them, and the follower NPC 24,
-  leaving about **120**. The world's 312 bytes **do not fit**. Today, on
+  leaving about **120**. The world's 232 bytes **do not fit**. Today, on
   main, they would fit (464 free), but only by taking the space the
   haunts and leagues already count on.
 - **`PokemonStorage`** has 112 bytes free with PR #139. That already
   can't hold the haunts' 640-byte traded-slot pool or the Masters'
-  larger lineup, let alone the world. It **does not fit** either.
+  larger lineup, let alone the world. With 14 boxes it **does not fit**
+  either; with 13 it does ([where it lives](#where-it-lives)).
 - **SaveBlock1** (112 free) and **SaveBlock2** (76 free) are too small.
 - The **special sectors** (Hall of Fame, Trainer Hill, recorded battle,
   sectors 28-31) sit outside the two alternating save slots, so they
@@ -617,33 +654,59 @@ saved league teams (`LeagueSavedTeams`, 1,456 bytes, 288 per team) to
 
 **Risk, plainly:** once saved leagues land, no save block has room for
 the world simulation, and `PokemonStorage` is already short for the
-haunts and the Masters. This is a save-layout decision that has to be
-made before the simulation (or the trade pool, or the Masters lineup) is
-built.
+haunts and the Masters. The [decision below](#where-it-lives) frees a PC
+box to make that room.
 
 #### Where it lives
 
-**Recommended layout:**
+**Decision: one PC box fewer (14 to 13).** This is a **cross-cutting
+save-layout decision**: it frees the room in `PokemonStorage` that the
+world state, the haunts' trade pool, and the Masters' extra teams all need,
+and each of those specs points here.
+
+- **Freed.** A box is 30 slots of the 80-byte `BoxPokemon`, a 9-byte name,
+  and a wallpaper byte, 2,410 bytes. The struct then pads the fusion
+  Pokémon that follow to a word, so `sizeof(struct PokemonStorage)` drops
+  by **2,408 bytes**: from 34,144 to 31,736 on main, and from 35,600 to
+  33,192 with PR #139 (`sizeof` compiled with `arm-none-eabi-gcc
+  -mabi=apcs-gnu`, as the build does, against this branch and PR #139's
+  headers). The nine storage sectors hold 35,712 bytes.
+- **What it hosts.** With PR #139, `PokemonStorage` has **2,520 bytes**
+  free after the change. It takes the `WayfarerWorldState` (232 for the
+  27 simulated trainers), the haunts'
+  [traded-slot pool](notable-haunts.md#saved-state) (640), and the
+  [Masters lineup](sevii-masters.md#saved-state) growth: 8 opponents and the
+  partner at 288 bytes a team, 2,592 plus PR #139's 16-byte header, against
+  PR #139's 1,456, so about 1,152 more. That is 2,024 bytes, leaving a
+  margin of about **496 bytes**. Adding the ten face-only trainers later
+  (80 bytes, 312 in all) leaves about **416**. Without PR #139 (main
+  today) 3,976 bytes would be free.
+- **Depends on PR #139.** Saved leagues
+  ([#139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)) add
+  `LeagueSavedTeams` to `PokemonStorage`, so the margin above is counted
+  with it merged. If Leagues later saves its teams more compactly, the
+  margin grows; if it grows them, the margin shrinks first.
+- **Game-wide.** `TOTAL_BOXES_COUNT`
+  ([pokemon_storage_system.h](../../game/include/pokemon_storage_system.h),
+  line 4) is read across the PC code, so the PC shows **13 boxes** in every
+  Wayfarer game, not only for the simulation. Prerelease saves don't carry
+  over and need no migration, per the repository's save policy
+  ([AGENTS.md](../../AGENTS.md#save-compatibility)).
+
+**Layout:**
 
 1. Keep the record at **8 bytes** and the whole world state as **one
-   contiguous struct** (`WayfarerWorldState`, 312 bytes) with a
+   contiguous struct** (`WayfarerWorldState`, 232 bytes) with a
    `STATIC_ASSERT` on its size, never in SaveBlock1.
-2. Put it in **`PokemonStorage`**, after freeing room there. The largest
-   lever is **one PC box fewer** (14 to 13): a box is 30 × 80-byte
-   `BoxPokemon` plus a 9-byte name and a wallpaper byte, **2,410 bytes**.
-   With PR #139's 112 free, that gives 2,522: room for the world (312),
-   the traded-slot pool (640), and the Masters lineup growth (about
-   1,150), with about 420 to spare. The alternative is for Leagues to save
-   its teams more compactly (for example, without fields that resolution
-   can rebuild), which is Leagues' decision.
-3. If SaveBlock3 is freed instead (it holds the Hoenn variable bank, 512
-   bytes, among others), it is the better home: the record then sits with
-   the haunt state, as in the proof of concept.
+2. Append it to **`PokemonStorage`**, after the 13 boxes, beside the trade
+   pool and the league teams.
+3. Keep the build-time size check: `PokemonStorageFreeSpace`
+   ([save.c](../../game/src/save.c), line 123) fails the build rather than
+   overflowing the storage sectors.
 
-Either way, `PokemonStorageFreeSpace` or the SaveBlock3 allocation assert
-fails the build rather than overflowing. Shrinking the record further
-(about 6 bytes, by deriving the crossing from the edge's lane and
-narrowing dwell) saves about 75 bytes and doesn't change the conclusion.
+Shrinking the record further (about 6 bytes, by deriving the crossing from
+the edge's lane and narrowing dwell) would save about 75 bytes; it isn't
+needed with the margin above.
 
 ### New Game
 
@@ -749,8 +812,9 @@ Verified against `game/` at the time of writing; line numbers may drift.
   [save.c](../../game/src/save.c), line 93). `PokemonStorageFreeSpace`
   asserts the storage size (line 123). Sectors 28-31 are the special
   sectors (save.h, lines 33-36). `struct PokemonStorage` holds 14 boxes
+  today
   ([pokemon_storage_system.h](../../game/include/pokemon_storage_system.h),
-  line 4).
+  line 4); the [save layout](#where-it-lives) takes it to 13.
 - **Map sizes.** The largest layout is 170×160
   (`LAYOUT_OLIVINE_CITY_LIGHTHOUSE_HNS`,
   [layouts.json](../../game/data/layouts/layouts.json)), so u8 tiles and
@@ -767,7 +831,9 @@ their haunt.
 
 ## Acceptance
 
-1. **Scope.** Tate & Liza have no record; the other 37 do. Each derived
+1. **Scope.** The 27 trainers with a walking sprite have a record; Tate &
+   Liza and the ten face-only trainers have none and keep their fixed map
+   objects and haunt placement. Each derived
    state applies exactly when its table row says, with the given
    precedence.
 2. **Follow across an edge.** A trainer leaving the player's map by an
@@ -803,8 +869,6 @@ their haunt.
 
 ## Open questions
 
-- **Save layout** (blocking): free a PC box, compact the league teams, or
-  free SaveBlock3 ([where it lives](#where-it-lives)).
 - **Following Pokémon:** accept the recommended rule (actors first, the
   follower hidden while slots are tight), or keep followers and cap
   actors at 2 outdoors.
@@ -821,10 +885,6 @@ their haunt.
   waiting.
 - **Story-gated walls:** whether the walker graph reads flagged blockers
   at New Game only (placeholder) or rebuilds edges as story flags change.
-- **Lt. Surge's harbour:** add visit to the Vermilion harbour row, or make
-  the step sightsee.
-- **Radius and favourites:** whether Giovanni-style steps wait for
-  favourites, or the traveller radius grows.
 - **Own-Gym talk:** whether talking to a beaten leader at home in their
   Gym keeps the Gym's script or runs the spots talk flow.
 
@@ -834,11 +894,14 @@ their haunt.
   ticks between map changes, so dwelling and interiors move while the
   player stands still.
 - **Haunts as destinations** ([above](#haunts-later)).
-- **Favourites authoring**, with the routine content.
+- **Walking sprites for the face-only trainers:** new 9-frame sheets for
+  the 11 ([walking sprites](#known-limitation-walking-sprites)), so they
+  can be simulated with the routines already authored.
 - **Surf- and Cut-aware walkers:** water and Cut edges in the graph, for
   trainers whose team can use them.
-- **Routine content file:** every trainer's cycle in a research file, then
-  the catalog.
+- **Routines into the catalog:** the
+  [routines research file's](../research/notable-trainer-routines.md)
+  cycles and favourites become catalog values.
 - Play style or momentum shaping dwell lengths.
 
 ## References
@@ -852,4 +915,5 @@ their haunt.
 - [Notable trainer travel proof of concept](../research/notable-trainer-travel-poc.md)
 - [Notable spots inventory (draft)](../research/notable-spots-inventory.md)
 - [Notable named spots (starting list)](../research/notable-named-spots.md)
+- [Notable trainer routines](../research/notable-trainer-routines.md)
 - [Kanto and Johto inter-region travel](../research/kanto-johto-inter-region-travel.md)

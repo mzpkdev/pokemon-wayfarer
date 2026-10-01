@@ -277,6 +277,10 @@ changes yours.
   activities on repeat, such as Brock's train, care, study, home; each
   picks a spot
   ([activity cycle](../specs/notable-world-simulation.md#activity-cycle)).
+- **Favourite spot:** one of up to three places a notable trainer is known
+  for, such as Lt. Surge's Celadon Game Corner; it serves one step of
+  their activity cycle and wins whenever it is free, even far from home
+  ([favourites](../specs/notable-spots.md#favourites)).
 - **Life event:** a short break from the routine after league news:
   preparing (training before an event or while rising), recovering
   (resting after one), celebrating (a new champion out in public), or
