@@ -12,7 +12,8 @@ style and **momentum**, hometown) ranks them, and haunts fill one at a time
 in an order that rotates with world progress. A haunt offers only its own
 quest: no battle offers, no rematches, and no menu. Every
 talk runs a greeting by the trainer's **friendship stage** (Stranger, Met,
-Friend, Close), then the quest proposal while the quest is open or the
+Friend, Close), then an Egg sitting follow-up while the trainer's egg is
+outstanding, or else the quest proposal while the quest is open or the
 trainer's quirk once it is done, then a farewell; a quest pays once per
 placement.
 The reward comes from the trainer's own **reward pool**, never from the quest
@@ -24,11 +25,11 @@ placeholders; balance is informational.
 
 Own, in `IS_WAYFARER`: the haunt catalog and its tags, the meaning of the
 **buddy** and **reward pool** trainer values, placement and
-momentum, the talk flow, the nine quest types (with the traded slots of
-Trade and Wanted), rewards and claims, dialogue assembly, the Kanto haunt
-list, retiring the HNS cameos and the Saffron Dojo rematch room, the
-haunts' saved state and load validation, presentation, the balance report,
-and acceptance.
+momentum, the talk flow, the ten quest types (with the traded slots of
+Trade and Wanted, and Egg sitting's outstanding eggs), rewards and claims,
+dialogue assembly, the Kanto haunt list, retiring the HNS cameos and the
+Saffron Dojo rematch room, the haunts' saved state and load validation,
+presentation, the balance report, and acceptance.
 
 - [Notable trainers](notable-trainers.md) owns the trainers: inventory,
   home region, the traveller and aloof traits, TR and its growth, rosters,
@@ -242,8 +243,13 @@ Every talk runs three steps:
    | Friend | `HELLO`. |
    | Close | `CLOSE`. |
 
-2. **Proposal or quirk.** While the haunt's claim bit is clear (the quest is
-   still open during this placement), the [quest](#quests) proposal: `ASK`,
+2. **Follow-up, proposal, or quirk.** While the trainer has an
+   outstanding egg from [Egg sitting](#egg-sitting), its
+   [follow-up](#the-follow-up) comes first, once per meeting or whenever
+   the hatchling is found; it takes this step's place in that talk, and the
+   next talk returns to the haunt's own quest. Otherwise, while the haunt's
+   claim bit is clear (the quest is still open during this placement), the
+   [quest](#quests) proposal: `ASK`,
    the haunt's proposal line, and [YES / NO]. `YES` gives the trainer's
    `YES` and runs the quest as its section says; `NO` gives the trainer's
    `NO`, costs nothing, and the next talk proposes again. At a Lost
@@ -253,7 +259,9 @@ Every talk runs three steps:
    or `NOT_READY` does ([Catch me one](#catch-me-one)), and at a Trade
    or Wanted haunt whose reward is owed, the completion does
    ([Trade](#accepted)), and at a Wanted haunt with no fair offer, its
-   no-offer line and `NOT_READY` do ([Wanted](#no-fair-offer)).
+   no-offer line and `NOT_READY` do ([Wanted](#no-fair-offer)). At an
+   Egg sitting haunt while the trainer's egg is outstanding or their eggs
+   are used up, `QUIRK` does ([Egg sitting](#giving-the-egg)).
    Once the
    claim bit is set (the quest was completed during this placement), the
    trainer's `QUIRK` instead.
@@ -264,7 +272,8 @@ The first talk makes a Stranger Met (+1) at its start, after the greeting
 is picked, so a first meeting introduces the trainer (`MEET` or `HEARD`)
 **and** proposes the quest in the same talk. After the quest is completed
 during this placement, every talk is the greeting, `QUIRK`, and `BYE`, until
-the placement changes and the claim bit clears.
+the placement changes and the claim bit clears, except a talk an Egg
+sitting [follow-up](#the-follow-up) takes.
 
 The player's **fame** reaches a trainer when the player's TR is at least
 `min(80, their TR − 10)`, or the player reigns as champion at any
@@ -279,6 +288,8 @@ levels, since it plays at most once per trainer.
 
 **Points.** A haunt adds [friendship](notable-trainers.md#friendship)
 through two events only: the first talk (+1) and a completed quest (+10).
+An Egg sitting quest completes at its hatched follow-up, not when the egg
+is given.
 Repeat talks, declining, and quirks add nothing. Haunts offer no battles
 of their own, so no battle win happens here: One on one and Swap battle are
 quests, and their wins count as the completed quest, not as a battle won.
@@ -295,7 +306,8 @@ which every talk reaches, since the first talk makes the trainer Met before
 the proposal ([talk flow](#talk-flow)); every trainer can give every quest
 type. Each type has one proposal
 line, written so it never implies the trainer needs help or is asking a
-favour ([dialogue](#dialogue)):
+favour ([dialogue](#dialogue)), except Egg sitting's, which asks one by
+design:
 
 | Quest | Proposal line |
 | --- | --- |
@@ -308,6 +320,7 @@ favour ([dialogue](#dialogue)):
 | Swap battle | "One POKéMON each. Pick your best?" (the swap is revealed only after the pick) |
 | Trade | "I'd trade {FILLER} for one of yours. Interested?" (a [trade-back](#trade-back) has its own line) |
 | Wanted | "I've been looking for a {WANTED}. Got one to trade?" (a [trade-back](#trade-back) takes its place, as at Trade) |
+| Egg sitting | "Could you hold on to this egg for a while?" (the one favour by design; its [follow-up](#the-follow-up) comes at a later meeting) |
 
 A haunt may author its own proposal line for its quest type, under the same
 writing rules; the [Celadon Game Corner](#worked-example-celadon-game-corner)
@@ -1002,10 +1015,164 @@ Neither Diglett's Cave trainer wants DIGLETT: SWINUB, in both of the
 tunnel's tables, outranks it through Mamoswine. Misty wants MAGIKARP, so a
 fished GYARADOS doesn't count ([open questions](#open-questions)).
 
+### Egg sitting
+
+The trainer asks the player to hold on to an egg for a while. It is the
+first quest that spans **two meetings**: the haunt quest hands the egg
+over, and a [follow-up](#the-follow-up) at a later meeting with the same
+trainer, at any haunt, settles it. A **meeting** here is one placement of
+the trainer at a haunt. The player keeps the hatchling, and only the
+hatched follow-up says so: no line before it mentions hatching or hints
+that the player keeps anything. Egg sitting has no worked haunt yet.
+
+Its proposal is the one quest line that asks a favour, by design
+([dialogue](#dialogue)); it names no place, person, or need, so every
+trainer can voice it.
+
+#### Giving the egg
+
+The talk checks, in order:
+
+1. **Follow-up.** While the trainer has an outstanding egg, the
+   [follow-up](#the-follow-up) may take the talk, as the
+   [talk flow](#talk-flow) says.
+2. **No egg to give.** While the trainer has an outstanding egg, or has
+   given fifteen ([egg limits](#egg-limits)), the haunt behaves as if its
+   quest were completed for that trainer: the greeting, `QUIRK`, and `BYE`.
+   The claim bit stays clear, so the quest opens again in this placement
+   once the trainer's egg is settled.
+3. **Proposal.** "Could you hold on to this egg for a while?" (the quest
+   line after `ASK`). It mentions no hatching and no keeping.
+
+- **NO:** the trainer's `NO`, then `BYE`; the next talk proposes again.
+- **YES:** the trainer's `YES`, then the [egg](#the-egg) is given with the
+  system line "{PLAYER} received an EGG.", and `BYE`. With a full party
+  the egg goes to the PC, as the `giveegg` command already does, and the
+  system line "There's no room in the party. The EGG was sent to the PC."
+  follows. With the PC full too, nothing is given: the trainer's
+  `NOT_READY` and `BYE`, and the quest stays open.
+
+Giving the egg sets the haunt's claim bit, with no reward and no
+friendship: the quest's reward and its +10 wait for the hatched
+follow-up. It also sets the trainer's **outstanding bit**, raises their
+**eggs-given count** by one, and sets the haunt's
+[follow-up bit](#the-follow-up), all in one script with the gift and no
+save point, as at a trade.
+
+#### The egg
+
+- **Species.** The **egg species** comes from the filler slot that
+  Trade's [offer](#the-offer) names: the highest-numbered slot that isn't an
+  ace, so never an ace line. It is that slot's authored species walked back
+  through its pre-evolutions to the line's earliest stage that isn't a baby
+  form, the same baby list the
+  [downward rule](player-trainer-rating.md#evolution-stages) never steps
+  into. A line that starts with a baby gives the stage just above it, as a
+  stepped-down slot ends there. Brock's slot 5 (Omastar) gives an OMANYTE
+  egg; a Raichu filler gives PIKACHU, never PICHU, and a Snorlax filler
+  SNORLAX. The authored species is read, never a
+  [traded slot](#the-trainers-team-after-a-trade)'s POKéMON, and world
+  progress plays no part, so the species is fixed per trainer.
+- **The trainer's touch.** The egg knows the egg species' level-up moveset
+  at the hatch level, plus the first move in the trainer's
+  [move pool](notable-trainers.md#move-pools), in pool order and whatever
+  its from level, that is an egg move of the egg species and that the egg
+  doesn't already know. It is added as the Day Care adds an inherited egg
+  move: into a free slot, or pushing out the first move when four are
+  known. With no such move in the pool, the egg has its moveset only. The
+  moves carry over at hatching.
+- **Identity.** The egg's personality is a fixed function of the
+  trainer's `characterId` and their eggs-given count once this egg is
+  counted (1-15), salted apart from Trade's
+  [received filler](#accepted), so nothing per egg needs storing: the
+  outstanding egg is the one at the trainer's current count. Gender,
+  nature, and every other trait the game derives from personality follow.
+  It is never shiny. Like every given egg it has the player as OT, random
+  IVs, a POKé BALL, and met level 0.
+- **Hatching.** The normal egg steps, with `P_EGG_CYCLE_LENGTH` at
+  `GEN_3`: the egg starts with its species' egg cycles, one cycle passes
+  per 256 steps while it is in the party (a boxed egg doesn't progress),
+  and it hatches at the first 256-step tick after the cycles reach 0. That
+  is up to (cycles + 1) × 256 steps: about 4,100 for the 15-cycle fillers
+  (Geodude, Zubat, Pidgey, Rattata), 5,400 for 20 (Horsea, Psyduck,
+  Oddish), 6,700 for 25 (Onix), and 7,900 for 30 (Omanyte). Flame Body,
+  Magma Armor, or Steam Engine in the party nearly halves it. It hatches at
+  Lv 1.
+
+**Recognition.** The trainer's **egg** is a POKéMON with the outstanding
+egg's personality and the player's OT ID that is still an Egg. Their
+**hatchling** has the same personality and OT ID, is no longer an Egg,
+and has met level 0, which hatching sets: so the player hatched it. The
+egg is looked for in the party and every box; the hatchling in the party,
+every box, and the Day Care, so a hatchling left there still counts. A
+chance match on personality and OT ID, 1 in 2^32, is ignored. A
+randomizer that changes the species at hatching changes nothing here,
+since the species is never checked.
+
+#### The follow-up
+
+At a talk with a trainer who has an outstanding egg, the follow-up takes
+the place of the proposal or `QUIRK` when the hatchling is found, or when
+the haunt's **follow-up bit** is clear. The bit is set when the egg is
+given or a follow-up plays at the haunt, and clears with the claim bit when
+the haunt's placement changes. So the meeting that gave the egg never asks
+after it unhatched, the other follow-ups play once per meeting and the next
+talk returns to the haunt's own quest, and a hatched follow-up plays as
+soon as the hatchling exists.
+
+The trainer asks "Still holding on to my egg?", and then:
+
+- **Hatched:** the hatchling is found. The trainer is surprised: "It
+  hatched?! …It's already attached to you. Keep it. It belongs with you
+  now." Then `PRAISE`, the [reward](#rewards-and-claims) (the next
+  reward-pool entry through `GIFT`), and `BYE`, +10 friendship as a
+  completed quest. This is the first line to say the player keeps it. The
+  egg is settled when the reward is given; a reward that waits (a full Bag,
+  a cancelled lesson, no POKéMON able to learn) leaves it outstanding, and
+  the next talk follows up again.
+- **Still an egg:** the egg is found unhatched. "Thanks for keeping it
+  safe. Could you hold on to it a little longer?" and [YES / NO].
+  - **YES:** the trainer's `YES`, then `BYE`. It stays outstanding.
+  - **NO:** the player gives the egg back: it is removed from the party or
+    its box. "Of course. Thanks for looking after it.", then `BYE`. The egg
+    is settled with no reward and no friendship.
+- **Gone:** neither is found, since the egg or hatchling was traded or
+  released. The player answers silently, as the games' protagonist does:
+  the system line "{PLAYER} explained what happened…", then the trainer's
+  "…You WHAT?!" and, calmer, "…Well. I hope it's in good hands, wherever
+  it is.", then `BYE`. The egg is settled silently, with no reward, no
+  friendship change, and no penalty, so the follow-up can't loop forever
+  on an egg that won't come back.
+
+A settled egg clears the outstanding bit; the eggs-given count stays, so a
+later Egg sitting quest, below the cap, gives the next egg.
+
+**The follow-up and the claim.** The follow-up is separate from the haunt
+claim: it never reads or sets the claim bit, so the haunt's own quest is
+still open on the next talk if it was before. A hatched follow-up moves the
+reward counter like any completed quest. The follow-up comes before every
+other replacement of the proposal (a found keepsake, an owed reward, a
+Catch me one showing), which waits for the next talk.
+
+#### Egg limits
+
+- One outstanding egg per trainer.
+- At most fifteen eggs per trainer, the most the 4-bit count records; after
+  that, an Egg sitting haunt gives that trainer's `QUIRK`.
+- One egg per placement at a haunt: the claim bit.
+- **Abuse.** The prize is a Lv 1 hatchling of a filler line, after a walk
+  of 4,000 to 8,000 steps, with one egg outstanding per trainer. Its worth
+  is capped by the filler tier, as Trade's received filler is, and its one
+  egg move is a move the trainer already uses. The hatched follow-up pays
+  from the same ordered reward pool as every quest, so it reaches the pool's
+  entries sooner but never adds to them; past the pool, it pays the
+  fallback.
+
 ### Rewards and claims
 
 Each haunt has a saved **claim bit**. It is set when the reward is given
-and cleared when the haunt's placement changes, so each placement pays out
+(at an Egg sitting haunt, when the egg is given) and cleared when the
+haunt's placement changes, so each placement pays out
 once, and a new trainer at the haunt can give it again.
 
 The reward comes from the trainer, never from the quest: the haunt carries
@@ -1059,7 +1226,8 @@ rejected because it can wait on a full Bag and, repeated, is worth nothing.
 
 The claim bit and the counter change together, when the reward is given
 (for the fallback, only the claim bit). A reward that waits or is cancelled
-changes neither.
+changes neither. Egg sitting is the exception: the egg sets the claim bit,
+and the hatched [follow-up](#the-follow-up) moves only the counter.
 
 **Pool rules**, checked with the catalog:
 
@@ -1085,7 +1253,10 @@ A haunt's dialogue is assembled from two sources:
   haunt may author its own done line (and a Swap battle one its loss
   line), with the defaults in their sections. A Trade or Wanted haunt may
   author its done line; the refusal line, Wanted's proposal, offer, and
-  no-offer lines, and the trade-back proposal are shared. They
+  no-offer lines, and the trade-back proposal are shared. Every Egg
+  sitting line is shared: the proposal and the
+  [follow-up](#the-follow-up)'s question, hatched, still-an-egg,
+  given-back, and gone lines. They
   describe only the place and the activity, never a trainer's personality or
   history, so they read true for every candidate.
   A quest line is the proposal that follows `ASK` ("Walk it with me, out to
@@ -1093,6 +1264,10 @@ A haunt's dialogue is assembled from two sources:
   **Writing rules:** haunt lines carry the content of the proposal, and
   haunt lines never imply the trainer needs help or is asking a favour, so
   every trainer can voice every quest; voice bits carry only personality.
+  Egg sitting's proposal and its still-an-egg line are the exceptions: a
+  plain favour with no need behind it, which every trainer can still voice.
+  No Egg sitting line before the hatched follow-up mentions hatching or
+  hints that the player keeps the hatchling.
 - **Voice bits**, fifteen per trainer: `HELLO`, `AGAIN`, `CLOSE`, `MEET`,
   `HEARD` (with `{PLAYER}`), `NOT_YET`, `NEWS`,
   `ASK` (an attention-getter only, never a request), `YES` (pure approval
@@ -1123,7 +1298,9 @@ Both use these slots:
 Speaker labels ("BROCK:") and system messages (the [YES / NO] prompt, the
 number given, the quiz's answer options, a lesson's pick, the fallback
 amount, the found keepsake, a refused Bring me pick, a held item with no
-Bag room at a trade) are generic text, the same for every trainer.
+Bag room at a trade, a received egg or one sent to the PC, and the
+player's explanation of a gone egg) are generic text, the same for every
+trainer.
 
 ## Worked example: Diglett's Cave
 
@@ -2376,6 +2553,55 @@ that mode that also picks the move.
   record pool is appended there ([saved state](#saved-state)). Sizes were
   measured by compiling `sizeof` against this branch's headers.
 
+### Egg engine
+
+- **Giving an egg.** The `giveegg` macro
+  ([event.inc](../../game/asm/macros/event.inc)) takes only a species.
+  `ScrCmd_giveegg` ([scrcmd.c](../../game/src/scrcmd.c)) calls
+  `ScriptGiveEgg`
+  ([script_pokemon_util.c](../../game/src/script_pokemon_util.c)), which
+  builds the egg with `CreateEgg` ([daycare.c](../../game/src/daycare.c))
+  and hands it over through `GiveCapturedMonToPlayer`
+  ([pokemon.c](../../game/src/pokemon.c)), returning
+  `MON_GIVEN_TO_PARTY`, `MON_GIVEN_TO_PC`, or `MON_CANT_GIVE` in
+  `VAR_RESULT`. `CreateEgg` calls `CreateRandomMonWithIVs`, so the
+  personality is random; it gives the level-up moveset at
+  `EGG_HATCH_LEVEL` (1, since `P_EGG_HATCH_LEVEL` is `GEN_LATEST`), a POKé
+  BALL, the egg nickname, met level 0, and the species' `eggCycles` in the
+  friendship field. `GiveCapturedMonToPlayer` sets the player as OT and,
+  with no free party slot, sends the egg to the PC (`CopyMonToPC`), which is
+  where Egg sitting's full-party rule comes from.
+- **A variant is needed.** Egg sitting needs a command beside `giveegg`
+  that takes the trainer: it builds the egg as `CreateEgg` does, but with
+  `CreateMonWithIVs` and the derived [personality](#the-egg), clears
+  `MON_DATA_IS_SHINY`, adds the trainer's egg move as `BuildEggMoveset`
+  does (`GiveMoveToMon`, then `DeleteFirstMoveAndGiveMoveToMon` when four
+  are known), and gives it through `GiveCapturedMonToPlayer`, keeping the
+  result codes. Egg moves come from `GetSpeciesEggMoves`
+  ([pokemon.h](../../game/include/pokemon.h)).
+- **Steps.** `TryProduceOrHatchEgg` in daycare.c counts one cycle each
+  256 steps under `P_EGG_CYCLE_LENGTH` `GEN_3`
+  ([config/pokemon.h](../../game/include/config/pokemon.h)), over
+  `gPlayerParty` only, and lowers each party egg's friendship by
+  `GetEggCyclesToSubtract()` (2 with Magma Armor, Flame Body, or Steam
+  Engine in the party, [egg_hatch.c](../../game/src/egg_hatch.c)); an egg
+  already at 0 hatches.
+- **Hatching.** `CreateHatchedMon` in egg_hatch.c rebuilds the POKéMON
+  with the egg's personality, moves, IVs, shininess, and ball and the
+  player's OT ID; `AddHatchedMonToParty` then sets met level 0 ("hatched
+  at" on the summary) and the current map as met location. The egg itself
+  also has met level 0, so recognition tells an egg from a hatchling by
+  `MON_DATA_IS_EGG`. With the randomizer's egg option on,
+  `CreateHatchedMon` may change the species, which recognition ignores.
+- **Finding and removing.** A small special scans the party, every box,
+  and the Day Care for a POKéMON with a given personality and the player's
+  OT ID, and reports which it found, an egg or a hatchling. Giving the egg
+  back removes it: from a box through `RemoveSelectedPcMon`
+  ([pokemon_storage_system.c](../../game/src/pokemon_storage_system.c)),
+  which reads the box and position from `gSpecialVar_MonBoxId` and
+  `gSpecialVar_MonBoxPos` (or `ZeroBoxMonAt`), and from the party with
+  `ZeroMonData` and `CompactPartySlots`.
+
 ### Cameos and the Dojo
 
 - **Cameos.** HNS places a one-off cameo of many Gym Leaders on the
@@ -2441,6 +2667,16 @@ Haunts add:
   the claim bit ([Catch me one](#catch-me-one)); and
 - one **owed bit** per Trade or Wanted haunt, set when a trade's reward
   waits and cleared with the claim bit ([Trade](#accepted));
+- one **follow-up bit** per haunt, set when an egg is given or an Egg
+  sitting follow-up plays there and cleared with the claim bit
+  ([follow-up](#the-follow-up));
+- per notable trainer entry, one **outstanding bit** and a 4-bit
+  **eggs-given count** (0-15), 5 bits each, so 38 × 5 bits, 190 bits or 24
+  bytes in v0 ([Egg sitting](#egg-sitting)). They sit with the reward
+  counters in the haunt state in SaveBlock3, whose 464 free bytes the
+  haunt and notable-trainer state already claims
+  ([trade engine](#trade-engine)); the egg itself is a normal POKéMON in
+  the player's party or boxes, so nothing per egg is stored;
 - the **traded-slot records** (below); and
 - the **quest in progress**: a walk (its haunt), cleared on load and on
   whiteout, or a Swap battle (its haunt), set when the party is parked and
@@ -2490,8 +2726,9 @@ the same bytes; `PokemonStorageFreeSpace` fails the build rather than
 overflow.
 
 New Game saves every claim bit clear, every reward counter at 0, the placement
-for world progress 0, every search state at none, every asked bit and owed bit
-clear, every traded-slot record free, and no quest in progress. With follower
+for world progress 0, every search state at none, every asked bit, owed bit,
+follow-up bit, and outstanding bit clear, every eggs-given count at 0, every
+traded-slot record free, and no quest in progress. With follower
 NPCs enabled, SaveBlock3 also holds the engine's follower state, which a walk
 uses.
 
@@ -2510,7 +2747,10 @@ On every load, before the overworld runs:
    registry, and the claim bits, search states, asked bits, and placements of
    haunts no longer in the catalog, or search states and asked bits of haunts
    whose quest type changed, and owed bits of haunts that are no longer Trade
-   or Wanted haunts. A reward counter above its trainer's current pool
+   or Wanted haunts. Drop the follow-up bits of haunts no longer in the
+   catalog, and the outstanding bits and eggs-given counts of characters no
+   longer in the registry; their eggs stay with the player as ordinary
+   POKéMON. A reward counter above its trainer's current pool
    length (the pool got shorter) is lowered to that length: the pool counts as
    used up, and nothing is taken back or paid. A traded-slot record is freed
    when its trainer is no longer in the registry, its species no longer
@@ -2524,7 +2764,11 @@ On every load, before the overworld runs:
    bits only for known Catch me one haunts, never set at an empty haunt or
    with the claim bit set; a saved
    placement names known characters, each at most once; an owed bit only
-   at a known Trade or Wanted haunt, never at an empty one. Each
+   at a known Trade or Wanted haunt, never at an empty one; a follow-up bit
+   only at a known haunt, never at an empty one; an outstanding bit and an
+   eggs-given count only for known trainers, never a count above the cap
+   (15, so the check guards a lowered cap), and never an outstanding bit
+   with a count of 0. Each
    traded-slot record in use names a known character, at most one record
    per character, a slot from 2 to 6, a trade level from 1 to 100, a
    nature below 25, an ability slot below 3, a valid ball, a nickname and
@@ -2532,8 +2776,8 @@ On every load, before the overworld runs:
    record is all zero. A failed check is an invalid save, never a reason to
    reward anything.
 4. **Recompute.** Compute the placement from the current inputs and compare
-   it with the saved one, clearing the claim bit, search state, and asked
-   bit of every haunt whose trainer changed, then save it.
+   it with the saved one, clearing the claim bit, search state, asked bit,
+   and follow-up bit of every haunt whose trainer changed, then save it.
 
 ## Presentation
 
@@ -2590,18 +2834,19 @@ Required implementation evidence (not yet run):
    ties match golden fixtures from host tooling; an inactive elite haunt is
    empty; accepting an event, asking a partner, and becoming a Master each
    recompute it. A walking trainer keeps their haunt until the walk ends.
-5. **Talk flow.** Every talk is a greeting, then the proposal or `QUIRK`, then
-   `BYE`, with no menu, battle offer, or team-up at any stage. The greeting
-   follows the stage: a Stranger gets `MEET`, or `HEARD` when the player's fame
-   reaches them (the player's TR at least `min(80, their TR − 10)`, a reign at
-   any league, or being a Master), Met gets `AGAIN`, Friend `HELLO`, Close
-   `CLOSE`. A first talk makes the trainer Met and proposes the quest in the
-   same talk; while the claim bit is clear every talk proposes it (`ASK`, the
-   proposal, [YES / NO]), `NO` changes nothing and the next talk proposes again,
-   and a talk that starts a walk ends at `YES`; once the claim bit is set every
-   talk is the greeting, `QUIRK`, and `BYE`. No haunt line uses `NOT_YET` or
-   `NEWS`. Only the first talk (+1) and a completed quest (+10) add points at a
-   haunt; a quest that crosses the Friend threshold hands over the number once.
+5. **Talk flow.** Every talk is a greeting, then the proposal or `QUIRK` (or an
+   Egg sitting follow-up in their place), then `BYE`, with no menu, battle
+   offer, or team-up at any stage. The greeting follows the stage: a Stranger
+   gets `MEET`, or `HEARD` when the player's fame reaches them (the player's TR
+   at least `min(80, their TR − 10)`, a reign at any league, or being a Master),
+   Met gets `AGAIN`, Friend `HELLO`, Close `CLOSE`. A first talk makes the
+   trainer Met and proposes the quest in the same talk; while the claim bit is
+   clear every talk proposes it (`ASK`, the proposal, [YES / NO]), `NO` changes
+   nothing and the next talk proposes again, and a talk that starts a walk ends
+   at `YES`; once the claim bit is set every talk is the greeting, `QUIRK`, and
+   `BYE`. No haunt line uses `NOT_YET` or `NEWS`. Only the first talk (+1) and a
+   completed quest (+10) add points at a haunt; a quest that crosses the Friend
+   threshold hands over the number once.
 6. **Quests.** Each quest completes, fails, and retries as specified; a walk
    ends unfinished on whiteout and on reload, and a wrong exit asks "Giving up
    on the walk?" (YES ends it with the trainer's `NO` line, NO steps the player
@@ -2695,10 +2940,38 @@ Required implementation evidence (not yet run):
     owed bit, traded slot). A trainer holding a traded slot offers the
     trade-back at a Wanted haunt, and Trade and Wanted share one traded
     slot per trainer, one trade per placement, and the sixteen records.
-11. **Claims.** A reward is given once per placement; a changed placement
+11. **Egg sitting.** The proposal is "Could you hold on to this egg for a
+    while?", and no line before the hatched follow-up mentions hatching or
+    hints that the player keeps the hatchling. `NO` changes nothing; `YES`
+    gives an egg of the earliest non-baby stage of the line in the
+    highest-numbered filler slot's authored species, never an ace line or a
+    traded slot (Brock's OMANYTE; a Raichu filler gives PIKACHU), knowing
+    the first egg move of that species in the trainer's move pool order,
+    never shiny, with the personality its golden fixture gives for that
+    `characterId` and count; with a full party it goes to the PC, and with
+    the PC full too the talk is `NOT_READY` and nothing changes. Giving it
+    sets the claim bit, pays nothing, and adds no friendship. With an egg
+    outstanding, an Egg sitting haunt gives `QUIRK`, and so does one whose
+    trainer has given fifteen. At a later meeting with that trainer, at any
+    haunt, the follow-up replaces the proposal or `QUIRK` once per meeting,
+    or whenever the hatchling is found, and never at the meeting that gave
+    the egg while it is unhatched; the next talk returns to the haunt's own
+    quest, whose claim bit the follow-up never touches. A hatchling, found
+    by personality, the player's OT ID, not an Egg, and met level 0, in the
+    party, a box, or the Day Care, plays the surprised reveal, `PRAISE`,
+    the next reward-pool entry, and `BYE` for +10, and settles the egg; a
+    waiting reward leaves it outstanding. An unhatched egg, in the party or
+    a box, plays the still-an-egg line and [YES / NO]: `YES` keeps it
+    outstanding, and `NO` removes exactly that egg and settles it with no
+    reward. With neither found, the explanation, "…You WHAT?!", the calmer
+    line, and `BYE` play and the egg is settled with no reward and no
+    change in friendship. No outcome costs the player anything; a settled
+    egg lets a later Egg sitting quest give the next one, with a new
+    personality. A different POKéMON of the same species never counts.
+12. **Claims.** A reward is given once per placement; a changed placement
    reopens it; a full Bag, a cancelled lesson, or no POKéMON able to learn
    keeps it open and leaves the reward counter unchanged.
-12. **Reward pools.** The reward never depends on the quest type. Quests
+13. **Reward pools.** The reward never depends on the quest type. Quests
     with one trainer at different haunts pay that trainer's pool in order,
     one entry each; a gated next entry or a used-up pool pays the fallback
     (prize money equal to a win over the trainer at current TR) and leaves
@@ -2708,16 +2981,18 @@ Required implementation evidence (not yet run):
     teaches the first move in pool order the chosen POKéMON can learn and
     doesn't know, and offers only POKéMON with such a move. Brock's first
     quest gives PEWTER CRUNCHIES and Giovanni's gives a NUGGET.
-13. **Dialogue.** Every assembled line resolves its slots and fits its text
+14. **Dialogue.** Every assembled line resolves its slots and fits its text
     box with worst-case values; no haunt dialogue carries gossip.
-14. **Cameos.** No cameo or Dojo rematch seat remains in Wayfarer; the Dojo
+15. **Cameos.** No cameo or Dojo rematch seat remains in Wayfarer; the Dojo
     back room works as a haunt; no stranger battle, rematch, prize money
     beyond the quest fallback, or Battle Points come from haunts.
-15. **Save.** A new game and a reload give the saved state described above; a
-    search state, asked bit, owed bit, or traded-slot record survives a
-    reload, and the first three clear with their haunt's placement; corrupt
-    reward counters, claim bits, search states, asked bits, owed bits,
-    placements, or traded-slot records are rejected; removed characters or
+16. **Save.** A new game and a reload give the saved state described above; a
+    search state, asked bit, owed bit, follow-up bit, outstanding bit,
+    eggs-given count, or traded-slot record survives a reload, and the
+    first four clear with their haunt's placement; corrupt reward counters,
+    claim bits, search states, asked bits, owed bits, follow-up bits,
+    outstanding bits, eggs-given counts, placements, or traded-slot records
+    are rejected; removed characters or
     haunts are pruned, and so are records of removed species or of slots no
     longer fillers; a counter past a shortened pool is lowered to its
     length; and the record pool fits `PokemonStorageFreeSpace`.
@@ -2775,8 +3050,15 @@ Required implementation evidence (not yet run):
 - **Explorer support** for the [balance report](#balance-report).
 - **Favourite species for Wanted:** a per-trainer override of the derived
   wanted species for canon moments, such as Brock's existing Rhyhorn trade.
-- **Worked Bring me, Swap battle, Trade, and Wanted haunts**, and their
-  places in the [Kanto list](#kanto-haunts).
+- **Worked Bring me, Swap battle, Trade, Wanted, and Egg sitting
+  haunts**, and their places in the [Kanto list](#kanto-haunts).
+- **"Show me a hatchling":** a cheap variant of
+  [Egg sitting](#egg-sitting) with no egg handed over: the player shows any
+  POKéMON of the trainer's type that they hatched (met level 0, the
+  player's OT ID), as Catch me one's showing works.
+- **Eggs as reward-pool entries:** a third entry type beside items and
+  lessons, such as a Close friend's egg of their buddy's line: a Dratini
+  egg from Lance, after HGSS's Dratini gift.
 - **Travel between haunts:** trainers walking to their haunts instead of
   being placed, following routines with a per-place cap of two or three,
   built on the two-layer model the

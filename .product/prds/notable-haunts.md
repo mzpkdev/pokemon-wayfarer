@@ -90,7 +90,9 @@ and every talk goes the same way:
    - **Close:** a warmer greeting still.
 2. **The quest**, proposed while it is still open during this placement; the
    player says yes or no, and no costs nothing: the next talk asks again.
-   Once the quest is done, the trainer shares a quirk instead.
+   Once the quest is done, the trainer shares a quirk instead. While the
+   trainer has an egg out from Egg sitting, they ask after it in its place,
+   once per meeting.
 3. **A goodbye.**
 
 The first talk makes the trainer Met, so a first meeting both introduces them
@@ -115,10 +117,11 @@ it is done:
 | Swap battle | It looks like a One on one: the player picks their best POKéMON, and only then the trainer reveals the twist. The two trade places: the player battles with the trainer's ace, which may not listen, against a copy of their own pick. The player's own party comes back untouched. |
 | Trade | The trainer offers one of their fillers, never an ace, for a POKéMON of their type from the player's party. It's accepted if its line is worth at least as much as the filler's; the player's POKéMON then takes that filler's place on the trainer's team, keeps who it is, and evolves as the trainer grows. A later Trade quest offers it back. |
 | Wanted | The trainer asks for the strongest wild POKéMON that lives at the haunt and shares a type with their aces, worked out from the haunt's wild tables rather than authored, and offers their best filler worth no more than it. The player gives one from the party; it works like Trade, with no value check, since the offer is fair by construction. If every filler is worth more, the trainer has nothing fair to offer. |
+| Egg sitting | The trainer asks the player to hold on to an egg of one of their filler lines for a while, nothing more. At a later meeting, at any haunt, they ask after it. If the player has hatched it, the trainer is surprised, tells the player to keep it, and pays the reward; if it is still an egg, the player can keep holding it or hand it back; if it is gone, the trainer is shocked, then lets it go. Nothing costs the player anything. |
 
 Every trainer can give every quest. Haunt quest lines never imply the trainer
-needs help or is asking a favour, and personality comes only from the
-trainer's voice bits.
+needs help or is asking a favour, except Egg sitting's plain request, and
+personality comes only from the trainer's voice bits.
 
 The reward comes from the trainer, never from the quest: the haunt carries
 the ask, and the trainer carries the reward. Each trainer has a short
@@ -219,8 +222,8 @@ natural regular, as the HNS cameo already has it, and Erika takes it on her
 Grass aces when Bugsy is elsewhere. The
 [specification](../specs/notable-haunts.md#worked-example-viridian-forest)
 works it through. With it, the five worked haunts cover the first five
-quest types; Bring me, Swap battle, Trade, and Wanted have no worked haunt
-yet.
+quest types; Bring me, Swap battle, Trade, Wanted, and Egg sitting have no
+worked haunt yet.
 
 Trade is the first slice of the parked
 [trainer roster influence](trainer-roster-influence.md) design. The trainer
@@ -236,15 +239,27 @@ traded. A later Trade quest with the same trainer swaps the two back. The
 [specification](../specs/notable-haunts.md#trade) works out the rules and
 the save cost.
 
+Egg sitting is the first quest that spans two meetings. The trainer asks
+"Could you hold on to this egg for a while?", and the egg hatches into the
+base form of one of their fillers, knowing a move from their move pool.
+Nothing says the player keeps it. At the trainer's next meeting, wherever it
+is, they ask "Still holding on to my egg?", and only a hatched egg brings
+the reveal: "It hatched?! …It's already attached to you. Keep it. It
+belongs with you now." Each trainer has at most one egg out at a time, and
+the game recognises the egg and hatchling by a personality derived from
+the trainer, so the save holds only a few bits per trainer. The
+[specification](../specs/notable-haunts.md#egg-sitting) works out the
+rules.
+
 ## Boundaries
 
 In: the haunt pool and tags, placement, momentum, the talk flow (greetings
-by friendship stage, the quest proposal, and the quirk), the nine quest
+by friendship stage, the quest proposal, and the quirk), the ten quest
 types, including Trade and Wanted and the traded slot they leave on a
-trainer's team, quest rewards from each trainer's reward pool, the
-voice-bit writing rule, buddy and reward pool as trainer values, the Kanto
-haunt list, retiring the HNS cameos and the Dojo rematch hub, and the saved
-state for all of this.
+trainer's team, and Egg sitting and its follow-up at a later meeting,
+quest rewards from each trainer's reward pool, the voice-bit writing rule,
+buddy and reward pool as trainer values, the Kanto haunt list, retiring the
+HNS cameos and the Dojo rematch hub, and the saved state for all of this.
 
 Unchanged: every battle with a notable trainer uses their current TR and team
 ([Notable trainers](notable-trainers.md)), which reads a traded slot; phone
@@ -253,9 +268,9 @@ Friend; league lineups belong to [Leagues](leagues.md).
 
 Out of scope for v0: haunt lists for Johto, Hoenn, and Sevii; two trainers in
 one haunt; authored trade offers, item swaps, and gifts at haunts (and as
-friendship sources), beyond the one item a Bring me quest asks for and the
-generic Trade and Wanted quests; Tate & Liza at haunts, since the duo gives
-no number and could never become a friend.
+friendship sources), beyond the one item a Bring me quest asks for, the
+generic Trade and Wanted quests, and Egg sitting's egg; Tate & Liza at
+haunts, since the duo gives no number and could never become a friend.
 
 ## Balance
 
@@ -315,6 +330,10 @@ the trainer's voice bits.
 - Situations beyond one trainer and one quest: "The coach", two trainers in
   one haunt, "Show me", services, and challenge battles.
 - Item swaps, and gifts from a trainer's roster.
+- "Show me a hatchling", a cheap Egg sitting variant: the player shows any
+  POKéMON of the trainer's type that they hatched.
+- Eggs as reward-pool entries, such as a Close friend's egg of their
+  buddy's line, like a Dratini egg from Lance.
 - Trade value overrides for outliers such as Shuckle, only if playtest shows
   the plain value check being abused.
 - A favourite species per trainer for Wanted, overriding the derived one for
