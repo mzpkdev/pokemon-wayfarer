@@ -155,6 +155,9 @@ automatic double-battle flag and the two auto-includes); the resolver
 reproduces them because it writes after that setup. Resolution is a pure
 function of play style, trainer TR, aces, the boss flag, the battle type, and
 trainer-species randomization: no save seed, RNG, player party, or call history.
+One override sits on top: a
+[Handicap](notable-haunts.md#handicap) quest battle uses tier 3
+(Predictive) plus Omniscient and Ace Pokemon, whatever the trainer's TR.
 
 Examples (placeholder growth; badges → world progress 0 / 40 / 80 / 120 / 160):
 

@@ -204,7 +204,8 @@ Rules:
 - **A first win always counts**, whatever the kind of battle (Gym, rematch,
   story, league, singles or a tag match, where both opponents count). A loss,
   a draw, fleeing, a declined league event, a battle beside the trainer as a
-  partner, a One on one quest battle (it counts as the quest), and debug
+  partner, a One on one, Swap battle, or Handicap quest battle (each
+  counts as the quest, win or lose), and debug
   battles add nothing. The first win alone reaches Friend.
 - **Which battles count.** Haunts offer no battles of their own, so wins come
   from Gym, story, and league battles, and later from rematch spots. Only
