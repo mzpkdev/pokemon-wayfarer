@@ -3,7 +3,7 @@
 Implemented: No Specification: [Notable haunts
 specification](../specs/notable-haunts.md) Design status: v0 draft for review:
 notable trainers spend their time between Gyms and leagues at **haunts**, one
-shared pool of overworld spots that names no trainer. Placement fills each haunt
+shared pool of authored places that names no trainer. Placement fills each haunt
 with the best-fitting free trainer, recomputed whenever world progress changes,
 with no seeds. A haunt offers only its own **quest**: no battle offers, no
 rematches, and no menu. Every talk greets the player by the trainer's
@@ -29,7 +29,7 @@ haunt's quest.
 
 ### Haunts
 
-A **haunt** is an overworld spot where a notable trainer can be found. No
+A **haunt** is an authored place where a notable trainer can be found. No
 haunt names a trainer, and one haunt serves many trainers over a
 playthrough. Each haunt has tags that describe it:
 
@@ -44,6 +44,10 @@ playthrough. Each haunt has tags that describe it:
 - its **capacity**, how many trainers it holds at once: 1 unless a haunt
   says otherwise, and 1 for every haunt in v0; and
 - the map details its quest needs.
+
+Haunts are the highlights; [spots](notable-spots.md) are the everyday layer
+of the future routine and travel design, the places without quests where
+trainers will spend most of their time once routines and travel switch on.
 
 ### Who goes where
 
@@ -169,9 +173,9 @@ cave at each badge is pending the routine design.)
 2. On the walk, pairs of wild Diglett are tag battles with Giovanni at the
    player's side. Heading back towards Route 2 asks whether they are giving
    up; saying yes ends the walk with no reward, and so does a whiteout.
-   Either way Giovanni is back at his spot and the walk can start again. At
-   the Vermilion exit he hands over a Nugget, the first entry of his reward
-   pool, and says goodbye.
+   Either way Giovanni is back at his standing tile and the walk can start
+   again. At the Vermilion exit he hands over a Nugget, the first entry of
+   his reward pool, and says goodbye.
 3. The player comes back: Giovanni is still there, but his reward is
    claimed, so he greets them, remarks on his Meowth, and says goodbye.
 4. After a later badge the cast reshuffles and Misty takes the cave. The
@@ -293,11 +297,11 @@ regions who don't travel have no haunt yet.
 
 ## Presentation
 
-The placed trainer stands at the haunt's spot with their buddy beside them.
-Talking to them runs straight through: a greeting for their friendship
-stage, the quest proposal with a yes or no (or a quirk once the quest is
-done), and a goodbye, with no menu. Dialogue is spliced from haunt lines and
-the trainer's voice bits.
+The placed trainer stands at the haunt's standing tile with their buddy
+beside them. Talking to them runs straight through: a greeting for their
+friendship stage, the quest proposal with a yes or no (or a quirk once the
+quest is done), and a goodbye, with no menu. Dialogue is spliced from haunt
+lines and the trainer's voice bits.
 
 ## Interactions
 
@@ -333,6 +337,8 @@ the trainer's voice bits.
   trainer values, placement and momentum, the talk flow, quests and
   rewards, dialogue assembly, the Kanto list, engine notes, saved state,
   load validation, and acceptance.
+- [Notable spots specification](../specs/notable-spots.md): the everyday
+  places of the future routine and travel design.
 
 ## Later
 
@@ -369,6 +375,7 @@ the trainer's voice bits.
 ## References
 
 - [Notable trainers](notable-trainers.md)
+- [Notable spots](notable-spots.md)
 - [Sevii Masters](sevii-masters.md)
 - [Leagues](leagues.md)
 - [Trainer AI](trainer-ai.md)

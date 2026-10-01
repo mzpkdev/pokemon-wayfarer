@@ -37,6 +37,9 @@ rather than restating it.
 - [Notable haunts](notable-haunts.md) places notable trainers in the
   overworld and owns the meaning of the buddy and reward pool
   values ([below](#haunt-values-buddy-reward-pool)).
+- [Notable spots](notable-spots.md) is the everyday layer of the future
+  routine and travel design, and will own the favourite-spots value once
+  it is authored.
 - [Player Trainer Rating](player-trainer-rating.md) owns the player's TR,
   the scaler definition, and the downward rule and shared evolution-level table
   ([evolution stages](player-trainer-rating.md#evolution-stages));
@@ -736,6 +739,7 @@ implementations stay active until then.
 - [Leagues](leagues.md)
 - [Sevii Masters](sevii-masters.md)
 - [Notable haunts](notable-haunts.md)
+- [Notable spots](notable-spots.md)
 - [Gym Leader scaling](gym-leader-scaling.md)
 - [Trainer AI](trainer-ai.md)
 - [Player progression](trainer-rating-party-progression.md)

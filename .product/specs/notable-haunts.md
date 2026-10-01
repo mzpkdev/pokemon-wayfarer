@@ -40,6 +40,10 @@ load validation, presentation, the balance report, and acceptance.
   what they mean, and the rules of a [traded slot](#trade).
 - [Trainer roster influence](trainer-roster-influence.md) is the parked
   design that Trade starts; it stays parked beyond this v0 slice.
+- [Notable spots](notable-spots.md) is the everyday layer of the future
+  routine and travel design: places found from map data, with no quests,
+  where trainers spend most of their time; it switches on with routines and
+  travel and leaves v0 placement unchanged.
 - [Sevii Masters](sevii-masters.md) owns phone contacts (a trainer at Friend
   or above), asking a partner by phone, the partner choice, and the runtime
   partner slot.
@@ -55,7 +59,7 @@ load validation, presentation, the balance report, and acceptance.
 
 ## Haunts
 
-A **haunt** is one authored entry in the haunt catalog: a meeting spot on
+A **haunt** is one authored entry in the haunt catalog: a standing tile on
 one map, plus the maps its quest uses. The catalog is an ordered list (the
 **catalog order**) across all regions; v0 authors only [Kanto](#kanto-haunts).
 No haunt names or prefers a specific trainer. Each haunt authors:
@@ -71,7 +75,7 @@ No haunt names or prefers a specific trainer. Each haunt authors:
 | Capacity | a whole number, 1 by default | How many trainers the haunt holds at once. |
 | Name | display text, at most 20 characters | What `{PLACE}` says for the haunt, such as "CERULEAN CAPE" ([Courier](#courier)). |
 | Quest | one [quest type](#quests) and its details | The quest a trainer gives there. |
-| Meeting spot | map and tile | Where the placed trainer stands. |
+| Standing tile | map and tile | Where the placed trainer stands. |
 
 ### Activities
 
@@ -374,7 +378,7 @@ the [reward](#rewards-and-claims), then `BYE`; a Handicap loss skips
 
 ### Walk with me
 
-The haunt authors a **start** (its meeting spot), an **exit** (one warp
+The haunt authors a **start** (its standing tile), an **exit** (one warp
 or map edge of its quest maps), and its **wrong-exit triggers** (every
 other warp or map edge that leaves the quest maps).
 
@@ -398,7 +402,7 @@ other warp or map edge that leaves the quest maps).
   wrong-exit warp or map edge stops the player and shows the haunt line
   "Giving up on the walk?" with [YES / NO].
   - **YES:** the trainer's `NO` line. The walk ends with no reward and the
-    claim bit still clear, the trainer returns to their haunt spot, and the
+    claim bit still clear, the trainer returns to their standing tile, and the
     player leaves.
   - **NO:** the player is stepped back one tile and the walk continues.
 - **Unfinished.** A whiteout or a reload ends the walk silently, and giving
@@ -582,7 +586,7 @@ Cancelling the choice starts nothing.
 
 The haunt authors one **item kind** that fits the place, the `{KIND}` of
 its quest line: a berry for a garden or a forest, a healing item for a
-POKéMON Center area or a training spot, a fossil or a stone for a cave or
+POKéMON Center area or a training ground, a fossil or a stone for a cave or
 the museum, a pearl or shell for the seaside. The player hands over one
 item of that kind from the Bag. It is one talk, with no saved state.
 
@@ -1247,7 +1251,7 @@ placement only:
    offers no parcel ([giving the parcel](#giving-the-parcel)).
 
 The recipient is saved at `YES`, so a rising world progress never changes
-it afterwards. Lost something's spot avoids world progress because it is
+it afterwards. Lost something's active spot avoids world progress because it is
 derived for the whole placement and never saved; the recipient is derived
 once, in the talk that names them, so world progress is safe here.
 
@@ -1650,7 +1654,7 @@ text, the same for every trainer.
 train and lie low (trainers come to train in the tunnel or to keep out of
 sight); setting remote; capacity 1; quest Walk with me. Maps
 `DiglettsCave_EntranceNorth_hns`, `DiglettsCave_Tunnel_hns`, and
-`DiglettsCave_EntranceSouth_hns`. The meeting spot is in the north
+`DiglettsCave_EntranceSouth_hns`. The standing tile is in the north
 entrance, where Brock's cameo stands today; the exit is the south
 entrance's warp to `MAP_VERMILION_CITY_HNS`. The tunnel's wild table holds
 Diglett and Dugtrio (with Swinub and Wobbuffet).
@@ -1738,7 +1742,7 @@ GIOVANNI: Hmph. You'll regret wasting my time.                NO
 ```
 
 The walk ends with no reward and the claim bit clear, and Giovanni is back
-at his haunt spot; answering No steps the player back one tile and the walk
+at his standing tile; answering No steps the player back one tile and the walk
 goes on. A whiteout in a tag battle ends the walk the same way, silently:
 the player wakes at the POKéMON Center, and the next talk at the cave is
 `AGAIN` and the proposal again. Stepping through the Vermilion exit with
@@ -1851,7 +1855,7 @@ progress 60 the `QUIRK` names STEELIX.
 
 **Tags.** Region Kanto; no theme types; not elite; no hometown; activity
 gamble; setting public; capacity 1; quest One on one, framed as a bet. Map
-`CeladonCity_GameCorner_hns`. The meeting spot is tile (12, 11), the
+`CeladonCity_GameCorner_hns`. The standing tile is tile (12, 11), the
 walkable tile at the south end of the east bank of slot machines (the
 machines fill x 12-13, y 6-10); the buddy stands beside it at (13, 11). Both
 tiles are free of collision and of the room's existing objects.
@@ -1993,7 +1997,7 @@ beyond that (Giovanni's history, Erika's distaste, Blaine's distance) are
 left to the routine design rather than faked with tags. One on one is a
 battle quest whose loss is harmless: no blackout, no money, no penalty, and
 the proposal comes back at the next talk, while the win pays like any other
-quest. Capacity 1 indoors means one trainer at one spot beside the slot
+quest. Capacity 1 indoors means one trainer at one standing tile beside the slot
 machines, with room for the buddy and nothing else in the way.
 
 ## Worked example: Cerulean Cape
@@ -2004,7 +2008,7 @@ in the view); setting remote; capacity 1; quest Lost something. Map
 `Route25_hns`, the cape at the east end of Route 25, past Bill's house
 (door warp at (85, 13)). The cape proper is the fenced clifftop at x
 97-100, y 12-19, reached by the steps at (98-99, 21-22) from the lower path
-(y 23). The meeting spot is (100, 14), near the cape's north-east corner;
+(y 23). The standing tile is (100, 14), near the cape's north-east corner;
 the buddy stands beside it at (99, 14). Both tiles are free of collision
 and of the map's objects, clear of the Suicune scene's tiles ((99, 12),
 (98, 14), and its triggers on y 16) and of the story date's (100, 17) and
@@ -2087,7 +2091,7 @@ v0 weights and the current Kanto list, and move with them.
 **Misty, a Friend** (world progress 20, where `20 mod 18 = 2` and she holds
 the Cape with 10). The player's two badges are Brock's and Misty's, and that
 win made her a Friend (20 points); no quest with her yet, so her reward
-counter is 0. Her spot is by the rocks. At world progress 20 her TR is 30
+counter is 0. Her lost spot is by the rocks. At world progress 20 her TR is 30
 and her team level 21, so her buddy, slot 2 (Golduck, offset −2), is Lv 19
 and steps down to PSYDUCK (Golduck needs Lv 33); `{BUDDY}` says PSYDUCK
 until world progress 61, where her team level reaches 35. She greets with
@@ -2103,7 +2107,7 @@ MISTY: Now that's what I like to hear!                        YES
 MISTY: See ya! ...PSYDUCK, get back in your ball! Not again!  BYE
 ```
 
-The spot is armed. Leaving for Cerulean and coming back changes nothing;
+The lost spot is armed. Leaving for Cerulean and coming back changes nothing;
 the player searches the rocky corner below the cape:
 
 ```text
@@ -2132,7 +2136,7 @@ now on every talk this placement is `HELLO`, her `QUIRK`, and `BYE`.
 **Lorelei at Met: no, then yes** (world progress 36, where `36 mod 18 = 0`:
 Pallet Town's turn comes first and takes Misty, and Lorelei holds the Cape
 with 4). The player met her once at a haunt (+1), so she is Met, and her
-reward counter is 0. Her spot is near the fence. Her buddy is slot 1,
+reward counter is 0. Her lost spot is near the fence. Her buddy is slot 1,
 Lapras, which never evolves, so `{BUDDY}` is always LAPRAS. She greets with
 `AGAIN`, and the player declines first:
 
@@ -2180,10 +2184,10 @@ her before then pays the fallback prize money. The quest adds 10 points (1 +
 
 **What this example shows.** Exploration is the quest: the proposal points
 at a place, the player walks the cape and its lower path looking for it,
-and the Dowsing Machine helps, with no battle at all. The spot comes from
+and the Dowsing Machine helps, with no battle at all. The lost spot comes from
 the placement, so Misty always hides it by the rocks and Lorelei near the
 fence, and the search waits while the player comes and goes. A hometown
-pull and a theme pull compete for one spot: Misty brings both, but v0's
+pull and a theme pull compete for one haunt: Misty brings both, but v0's
 fill can send her to Pallet Town first, leaving the Cape to Lorelei on
 theme alone, and to travellers when neither is free. And it is the calmest
 mood in the list: remote, relax and sightsee, a clifftop by the sea, where
@@ -2196,7 +2200,7 @@ study and sightsee (trainers come to read up on fossils or just look
 around); setting public; capacity 1; quest Quiz. Map
 `PewterCity_Museum_1F_hns`. The fossil displays are two glass cases at x
 3-6 on y 4 and y 7, each with a "Bones of an ancient dragon POKéMON" sign at
-(4, 4) and (4, 7). The meeting spot is (7, 4), the walkable tile at the east
+(4, 4) and (4, 7). The standing tile is (7, 4), the walkable tile at the east
 end of the upper case; the buddy stands beside it at (8, 4). Both tiles are
 free of collision and of the room's objects, and they block neither the
 signs' reading tiles ((4, 3), (4, 5), (4, 6), (4, 8)) nor the way from the
@@ -2391,7 +2395,7 @@ is why Steven, the one trainer who would travel for fossils, never visits.
 **Tags.** Region Kanto; themes Bug and Grass; not elite; no hometown;
 activities study and sightsee (trainers come to watch the forest's bugs or
 just wander it); setting remote; capacity 1; quest Catch me one, `{LOCAL}`
-PIKACHU. Map `ViridianForest_hns`. The meeting spot is (39, 53) on the
+PIKACHU. Map `ViridianForest_hns`. The standing tile is (39, 53) on the
 strip of short grass (x 39-40, y 50-57) that runs through the tall-grass
 clearing south of the forest's centre (x 25-42, y 49-60); the buddy stands
 beside it at (40, 53). Both tiles are free of collision and of the map's
@@ -2449,7 +2453,7 @@ Brock, Blue, and Will score 2 on study or sightsee; everyone else 0 or 1.
   the forest's turn and it stays empty.
 
 What v0 can't say waits for the routine design: Bugsy's research trip as a
-reason to prefer the forest over any Bug-friendly spot, Erika's taste for
+reason to prefer the forest over any Bug-friendly haunt, Erika's taste for
 gardens over a wild wood, and why Janine, Kanto's other Bug user, would
 come. These counts follow the v0 weights and the current Kanto list, and
 move with them.
@@ -2565,8 +2569,8 @@ The v0 Kanto list, in catalog order. It is a draft: the tags, quests, and
 species are content for review. Every map exists under
 `game/data/maps/`; Seafoam and Cinnabar use the FRLG port's maps, since
 Wayfarer retired their HNS versions
-([retirement](frlg-cinnabar-seafoam-hns-retirement.md)). Spots, exits, and
-lost-spot tiles are chosen at implementation after checking collision and
+([retirement](frlg-cinnabar-seafoam-hns-retirement.md)). Standing tiles, exits,
+and lost-spot tiles are chosen at implementation after checking collision and
 existing objects; the
 [Celadon Game Corner's](#worked-example-celadon-game-corner),
 [Cerulean Cape's](#worked-example-cerulean-cape),
@@ -2606,7 +2610,7 @@ Notes:
   game ("CERULEAN CAPE"). Two exceed 20 characters and shorten: Saffron
   Fighting Dojo to "FIGHTING DOJO", and Indigo Plateau Pokémon Center to
   "INDIGO PLATEAU".
-- **Sabrina's spot.** Sabrina is aloof, so she can only be placed at a
+- **Sabrina's haunt.** Sabrina is aloof, so she can only be placed at a
   remote elite haunt. The Dojo back room (the Dojo's rematch room today) is
   Saffron's: its Psychic theme and Saffron hometown make her its best fit
   from TR 80, and it absorbs the rematch room.
@@ -3098,8 +3102,8 @@ Haunts add:
 - one **search state** per Lost something haunt, 2 bits: none, searching
   (the player said `YES`), or found (the keepsake is in hand). It lasts the
   whole placement, through reloads and whiteouts, and clears with the claim
-  bit when the haunt's placement changes. The active spot is derived from
-  the placement and not saved ([Lost something](#lost-something));
+  bit when the haunt's placement changes. The active lost spot is derived
+  from the placement and not saved ([Lost something](#lost-something));
 - one **asked bit** per Catch me one haunt, set by `YES` and cleared with
   the claim bit ([Catch me one](#catch-me-one)); and
 - one **owed bit** per Trade, Wanted, or Handicap haunt, set when a
@@ -3247,7 +3251,7 @@ On every load, before the overworld runs:
 
 ## Presentation
 
-- The placed trainer stands at the haunt's meeting spot with their buddy
+- The placed trainer stands at the haunt's standing tile with their buddy
   beside them as a POKéMON object at its current species, as the Dojo's
   rematch room shows its leaders' POKéMON today. An empty haunt shows no
   one.
@@ -3312,8 +3316,8 @@ Required implementation evidence (not yet run):
 
 1. **Catalog.** Every haunt has valid tags (one or two activities from the
    shared list, capacity 1 in v0, and a name of at most 20 characters),
-   existing maps, an active meeting
-   spot, and its quest details (a walk's start and exit, two or three lost
+   existing maps, an active standing
+   tile, and its quest details (a walk's start and exit, two or three lost
    spots, each on a reachable tile with a hint, a catch species on its wild
    table, a Bring me kind from the kind table, local species on a Wanted
    haunt's maps); every notable trainer has
@@ -3639,6 +3643,7 @@ Required implementation evidence (not yet run):
 
 - [Notable haunts PRD](../prds/notable-haunts.md)
 - [Notable trainers](notable-trainers.md)
+- [Notable spots](notable-spots.md)
 - [Sevii Masters](sevii-masters.md)
 - [Leagues](leagues.md)
 - [Gym Leader scaling](gym-leader-scaling.md)

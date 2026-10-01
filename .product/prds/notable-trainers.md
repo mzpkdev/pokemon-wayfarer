@@ -198,7 +198,9 @@ who becomes a Friend gives you their phone number, which the
 
 Between their Gym and league battles, notable trainers also turn up at
 haunts around the overworld, where each offers the haunt's quest
-([Notable haunts](notable-haunts.md)).
+([Notable haunts](notable-haunts.md)). Once routines and travel arrive,
+they spend the rest of their time at everyday [spots](notable-spots.md),
+such as a Pokémon Center or the edge of a pond.
 
 FRLG, Emerald, and HNS parties are references for recognizable content, not
 required teams. Challenge options such as trainer items, trainer IVs and EVs,
@@ -299,6 +301,8 @@ well they play, and combat difficulty belong to playtesting.
   given when a notable trainer becomes a Friend.
 - [Notable haunts specification](../specs/notable-haunts.md): where notable
   trainers appear in the overworld, and the buddy value.
+- [Notable spots specification](../specs/notable-spots.md): the everyday
+  places of the future routine and travel design.
 - [Gym Leader scaling](../specs/gym-leader-scaling.md): badge-encounter
   coverage and battle construction.
 - [Trainer AI specification](../specs/trainer-ai.md): play styles, AI skill,
@@ -310,6 +314,7 @@ well they play, and combat difficulty belong to playtesting.
 - [Leagues](leagues.md)
 - [Sevii Masters](sevii-masters.md)
 - [Notable haunts](notable-haunts.md)
+- [Notable spots](notable-spots.md)
 - [Trainer AI](trainer-ai.md)
 - [Regular trainer and Gym member scaling](trainer-party-scaling.md)
 - [Player progression](../specs/trainer-rating-party-progression.md)

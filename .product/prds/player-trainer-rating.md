@@ -253,10 +253,15 @@ changes yours.
   or Lorelei if you have never asked anyone. They fight beside you in the
   tag battles, never in the lineup, and face you in the final
   ([partner](../specs/sevii-masters.md#partner)).
-- **Haunt:** an overworld spot where you can meet a notable trainer between
-  their Gym and league battles. No haunt belongs to one trainer: each is
-  filled by whoever fits it best at the time
+- **Haunt:** an authored overworld place, with a quest, where you can meet
+  a notable trainer between their Gym and league battles. No haunt belongs
+  to one trainer: each is filled by whoever fits it best at the time
   ([haunts](../specs/notable-haunts.md#haunts)).
+- **Spot:** an everyday place, such as a Pokémon Center counter, a Mart
+  shelf, or a patch of tall grass, found automatically from map data, where
+  a notable trainer spends most of their time once routines and travel
+  arrive. Spots have no quests; haunts are the highlights
+  ([spots](../specs/notable-spots.md#spots)).
 - **Buddy:** a notable trainer's companion Pokémon, one slot of their
   roster, named at its current stage, so Brock's buddy is Onix early and
   Steelix later ([trainer values](../specs/notable-haunts.md#trainer-values)).
