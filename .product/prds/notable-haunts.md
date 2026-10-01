@@ -112,7 +112,7 @@ it is done:
 | Quiz | The trainer quizzes the player on type matchups for their aces. |
 | One on one | One of the player's POKéMON against the trainer's lead ace. |
 | Bring me | The player brings one cheap item of a kind that fits the place, such as a berry, a healing item, or a stone, and hands it over. |
-| Swap battle | The two trade places: the player battles with the trainer's ace, which may not listen, against a copy of the player's lead. The player's own party comes back untouched. |
+| Swap battle | It looks like a One on one: the player picks their best POKéMON, and only then the trainer reveals the twist. The two trade places: the player battles with the trainer's ace, which may not listen, against a copy of their own pick. The player's own party comes back untouched. |
 
 Every trainer can give every quest. Haunt quest lines never imply the trainer
 needs help or is asking a favour, and personality comes only from the

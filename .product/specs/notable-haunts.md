@@ -295,7 +295,7 @@ favour ([dialogue](#dialogue)):
 | Quiz | "Three questions on type matchups. Think you can answer them?" |
 | One on one | "Your best POKéMON against {ACE}. Up for it?" |
 | Bring me | "Got a {KIND} on you? Bring me one." |
-| Swap battle | "Let's trade places. I'll borrow your lead POKéMON; you take {ACE}. Deal?" |
+| Swap battle | "One POKéMON each. Pick your best?" (the swap is revealed only after the pick) |
 
 A haunt may author its own proposal line for its quest type, under the same
 writing rules; the [Celadon Game Corner](#worked-example-celadon-game-corner)
@@ -587,15 +587,25 @@ A sibling of [One on one](#one-on-one): the player and the trainer trade
 places for a singles battle. The player fights with the trainer's
 **signature ace**, their signature POKéMON (roster slot 1) exactly as
 their battle snapshot resolves it at current TR, so `{ACE}` names the
-stage it fights at; the trainer fights with a copy of the player's
-**lead**, the first party POKéMON that is not an Egg and not fainted.
+stage it fights at; the trainer fights with a copy of the POKéMON the
+**player picks**.
 
-- **Proposal.** "Let's trade places. I'll borrow your lead POKéMON; you
-  take {ACE}. Deal?" (the quest line after `ASK`).
-- **YES:** the trainer's `YES`, then the swap, the battle, and the restore,
-  in one script with no save point
-  ([save and reset](#save-and-reset-during-a-swap)). With no able POKéMON,
-  `NOT_READY` and `BYE` instead.
+**The twist stays hidden until the pick.** The proposal reads exactly like
+a [One on one](#one-on-one), so the player chooses their best, expecting
+to fight with it; only then does the trainer reveal the swap, and the
+player faces their own pick.
+
+- **Proposal.** "One POKéMON each. Pick your best?" (the quest line after
+  `ASK`; it never mentions a swap).
+- **YES:** the trainer's `YES`, then the pick: the player chooses one able,
+  non-Egg POKéMON from the party on the same choose-one screen One on one
+  uses. Cancelling the pick ends the talk with nothing lost, as `NO` does.
+  With no able POKéMON, `NOT_READY` and `BYE` instead.
+- **Reveal.** After the pick, the haunt's reveal line: "Here's the twist:
+  you take {ACE}, and I'll take yours!" (default; a haunt may author its
+  own). The battle follows at once, with no further choice, since nothing
+  can be lost. Then the swap, the battle, and the restore run in one script
+  with no save point ([save and reset](#save-and-reset-during-a-swap)).
   1. **Park.** The whole party is saved as it is (`SavePlayerParty`), as
      tag battles do (`PrepareForFollowerNPCBattle` in
      [follower_npc.c](../../game/src/follower_npc.c)) and as the Battle
@@ -603,7 +613,8 @@ stage it fights at; the trainer fights with a copy of the player's
   2. **Build.** The party becomes the ace alone: slot 0, a party of one,
      built from the battle snapshot as a One on one lead ace is, with the
      trainer's name as OT and the trainer's fixed trainer ID, never the
-     player's. The trainer's party is a copy of the lead, fully healed
+     player's. The trainer's party is a copy of the picked POKéMON, fully
+     healed
      (HP, PP, and status), with its species, form, level, moves, ability,
      nature, IVs, EVs, held item, and nickname as they are. The trainer
      controls it with their own AI flags
@@ -635,8 +646,8 @@ growth, or once the player's TR catches up.
 **Borrowed POKéMON.** Neither side gains experience (the battle runs with
 `FLAG_DISABLE_EXP_GAIN` set), so the ace never levels up, learns a move, or
 evolves. Catching is impossible, as in every trainer battle. Held items are
-consumed only on the copies: the lead's copy may eat its berry, and the
-real lead still holds it afterwards. Items the player uses from the Bag
+consumed only on the copies: the pick's copy may eat its berry, and the
+real POKéMON still holds it afterwards. Items the player uses from the Bag
 during the battle are spent, as in any battle.
 
 **Restored untouched.** The real party comes back exactly as it was parked:
@@ -1925,7 +1936,7 @@ that mode that also picks the move.
   someone else's. A level above the cap then risks disobeying at random,
   more often the further above it is. So the ace, with the trainer's OT,
   is checked at its current level against the player's cap, and the
-  trainer's copy of the lead, under AI, always obeys.
+  trainer's copy of the pick, under AI, always obeys.
 - **Experience.** `Cmd_getexp` in
   [battle_script_commands.c](../../game/src/battle_script_commands.c)
   skips experience when `FLAG_DISABLE_EXP_GAIN`
@@ -1949,7 +1960,7 @@ that mode that also picks the move.
     Tera) that the trainer's data enables; in the player's hands it would
     depend on the player's key items instead. Neither side uses a gimmick
     in a Swap battle; the ace keeps its held item.
-  - *Held items and abilities.* The lead's copy is a whole
+  - *Held items and abilities.* The pick's copy is a whole
     `struct Pokemon` copy, so its ability number, personality, nature,
     IVs, EVs, moves, PP, friendship, and held item carry over exactly; a
     form tied to a held item stays as it is. The ace carries what the
@@ -2082,7 +2093,7 @@ On every load, before the overworld runs:
 - During a walk the trainer follows the player; the double wild battles
   show them beside the player with their back pic.
 - In a Swap battle the player's side shows the ace, and the trainer sends
-  out the copy of the player's lead under its own nickname.
+  out the copy of the player's pick under its own nickname.
 
 ## Balance report
 
@@ -2163,8 +2174,9 @@ Required implementation evidence (not yet run):
    removes nothing and leaves the quest open.
 8. **Swap battle.** `YES` parks the party, and the player fights with only
    the signature ace at its snapshot stage, with the trainer's OT name and
-   ID, against a healed copy of the first able non-Egg party POKéMON under
-   the trainer's AI; with the player's TR giving a soft cap below the ace's
+   ID, against a healed copy of the able non-Egg POKéMON the player picked
+   under the trainer's AI, the proposal never mentions a swap, and the
+   reveal line plays only after the pick; with the player's TR giving a soft cap below the ace's
    level the ace can disobey, and at or above it never does; neither side
    gains experience; afterwards the party equals the parked one exactly
    (HP, PP, status, held items, friendship) after a win and after a loss;
