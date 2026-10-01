@@ -51,6 +51,7 @@ data/wayfarer_hoenn_source_constants.inc
 data/wayfarer_common_source_constants.inc
 src/data/wayfarer_common_source_constants.h
 src/data/wayfarer_map_sources.h
+src/data/wayfarer_world/tables.h
 include/constants/heal_locations.h
 include/constants/script_commands.h
 tools/trainerproc/trainerproc

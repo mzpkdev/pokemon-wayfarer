@@ -25,6 +25,7 @@ import {
   parseStateSnapshot,
   storageUiStates,
   storageModes,
+  totalPcBoxes,
   trainerCardStates,
   uiModes,
 } from "../protocol"
@@ -601,7 +602,7 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
           cursor: snapshot.catchSwapCursor === 0xff ? null : snapshot.catchSwapCursor,
           selectedParty:
             snapshot.catchSwapSelectedParty < 6 ? snapshot.catchSwapSelectedParty : null,
-          box: snapshot.catchSwapBox < 14 ? snapshot.catchSwapBox : null,
+          box: snapshot.catchSwapBox < totalPcBoxes ? snapshot.catchSwapBox : null,
           slot: snapshot.catchSwapSlot < 30 ? snapshot.catchSwapSlot : null,
         },
       },

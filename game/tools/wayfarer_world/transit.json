@@ -1,0 +1,15 @@
+{
+  "_comment": "Transit links (world simulation spec, walker graph): authored one-hop edges open to travellers only, placeholders for the scripted ships and trains. Each link is one directed edge from the node holding the boarding tile to the node holding the landing warp's tile on the target map. Transit never reads tickets or story flags.",
+  "links": [
+    {"name": "S.S. Aqua", "from": "OlivineCity_PortInside_hns", "board": [8, 15], "to": "VermilionCity_PortInside_hns", "landing_warp": 0},
+    {"name": "S.S. Aqua", "from": "VermilionCity_PortInside_hns", "board": [8, 9], "to": "OlivineCity_PortInside_hns", "landing_warp": 0},
+    {"name": "Magnet Train", "from": "GoldenrodCity_TrainStation_hns", "board": [16, 21], "to": "SaffronCity_TrainStation_hns", "landing_warp": 0},
+    {"name": "Magnet Train", "from": "SaffronCity_TrainStation_hns", "board": [137, 21], "to": "GoldenrodCity_TrainStation_hns", "landing_warp": 0},
+    {"name": "Hoenn ferry", "from": "SlateportCity_Harbor", "board": [8, 11], "to": "BattleFrontier_OutsideWest", "landing_warp": 8},
+    {"name": "Hoenn ferry", "from": "BattleFrontier_OutsideWest", "board": [19, 67], "to": "SlateportCity_Harbor", "landing_warp": 0},
+    {"name": "Hoenn ferry", "from": "LilycoveCity_Harbor", "board": [8, 11], "to": "BattleFrontier_OutsideWest", "landing_warp": 8},
+    {"name": "Hoenn ferry", "from": "BattleFrontier_OutsideWest", "board": [19, 67], "to": "LilycoveCity_Harbor", "landing_warp": 0},
+    {"name": "Sevii ferry", "from": "VermilionCity_PortInside_hns", "board": [8, 9], "to": "OneIsland_Harbor_Frlg", "landing_warp": 0},
+    {"name": "Sevii ferry", "from": "OneIsland_Harbor_Frlg", "board": [8, 5], "to": "VermilionCity_PortInside_hns", "landing_warp": 0}
+  ]
+}

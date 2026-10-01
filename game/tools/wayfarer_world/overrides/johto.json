@@ -1,0 +1,13 @@
+{
+  "_comment": "Johto spot overrides (notable-spots spec, authored overrides). add: {map, x, y, facing (DIR_*), kind: bench | center_side}. drop: {map, kind} drops a whole detected place; {map, x, y[, kind]} drops one spot. ignore_objects: {map, local_id} objects the walker graph treats as passable (story blockers the simulation outlives).",
+  "ignore_objects": [
+    {"map": "AzaleaTown_hns", "local_id": 3, "what": "Rocket at the Azalea Gym door", "why": "Story blocker on the Gym door's only approach tile, present at New Game. The Gym's own leader is home-locked until the player holds the badge, which needs this blocker gone, so the static walker graph treats it as passable."},
+    {"map": "GoldenrodCity_hns", "local_id": 34, "what": "Beauty at the Goldenrod Gym door", "why": "Story blocker on the Gym door's only approach tile, present at New Game. The Gym's own leader is home-locked until the player holds the badge, which needs this blocker gone, so the static walker graph treats it as passable."},
+    {"map": "EcruteakCity_hns", "local_id": 2, "what": "Sage at the Ecruteak Gym door", "why": "Story blocker on the Gym door's only approach tile, present at New Game. The Gym's own leader is home-locked until the player holds the badge, which needs this blocker gone, so the static walker graph treats it as passable."},
+    {"map": "Mahoganytown_hns", "local_id": 4, "what": "Fat Man at the Mahogany Gym door", "why": "Story blocker on the Gym door's only approach tile, present at New Game. The Gym's own leader is home-locked until the player holds the badge, which needs this blocker gone, so the static walker graph treats it as passable."}
+  ],
+  "add": [],
+  "drop": [
+    {"map": "GoldenrodCity_BikeShop_hns", "kind": "store", "why": "Shelves and a clerk, but not somewhere to stock up; it is a named spot."}
+  ]
+}

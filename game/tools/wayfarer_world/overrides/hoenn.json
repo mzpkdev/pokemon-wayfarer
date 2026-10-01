@@ -1,0 +1,8 @@
+{
+  "_comment": "Hoenn spot overrides (notable-spots spec, authored overrides). add: {map, x, y, facing (DIR_*), kind: bench | center_side}. drop: {map, kind} drops a whole detected place; {map, x, y[, kind]} drops one spot. ignore_objects: {map, local_id} objects the walker graph treats as passable (story blockers the simulation outlives).",
+  "ignore_objects": [
+    {"map": "MauvilleCity", "local_id": 6, "what": "Wally at the Mauville Gym door", "why": "Story blocker on the Gym door's only approach tile, present at New Game. The Gym's own leader is home-locked until the player holds the badge, which needs this blocker gone, so the static walker graph treats it as passable."}
+  ],
+  "add": [],
+  "drop": []
+}

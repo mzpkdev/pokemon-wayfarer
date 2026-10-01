@@ -1,0 +1,10 @@
+{
+  "_comment": "Kanto spot overrides (notable-spots spec, authored overrides). add: {map, x, y, facing (DIR_*), kind: bench | center_side}. drop: {map, kind} drops a whole detected place; {map, x, y[, kind]} drops one spot. ignore_objects: {map, local_id} objects the walker graph treats as passable (story blockers the simulation outlives).",
+  "ignore_objects": [
+    {"map": "VermilionCity_hns", "local_id": 20, "what": "Cut tree in front of the Vermilion Gym", "why": "The walker graph has no Cut edges, and this tree is the only way between Vermilion City and its Gym's door, so Lt. Surge could never walk home to his Gym. Treated as passable (a Cut-aware walker is spec 'Later')."}
+  ],
+  "add": [],
+  "drop": [
+    {"map": "SaffronCity_FightingDojo_hns", "kind": "gym", "why": "Gym music but no Gym Leader; it is a haunt and a named spot."}
+  ]
+}
