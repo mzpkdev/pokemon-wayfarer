@@ -5,18 +5,17 @@ resolution, and hall conditions are playable. Timed phone invitations, call
 rotation, declined events, and championship-history presentation remain.
 Design status: v0 approved: once the player qualifies (TR 80), a league
 phones with an invitation every seven in-game days; only leagues that know
-them call (where they hold a badge; the Sevii Masters, an off-the-record club
-for champions, once they are a Master, with wins at both Indigo and Hoenn),
-taking turns: whichever called longest ago calls next. Accept and the event
-waits for them, with one attempt; decline and the season goes on without
-them. Someone always holds each league's title. Each lineup is the five
-strongest trainers who are willing to come (favouring those at home and
-fresh, with aloof trainers joining only a strong enough base lineup), with no
-randomness, fought in ascending order. At the Masters the aloof rule is off
-and notable trainers who are Masters have guaranteed seats. Each themed
-Elite Four room is a named hall with one fixed field condition for both
-sides; the Champion rooms are neutral. Balance is informational for now.
-Terms follow the [glossary](player-trainer-rating.md#glossary).
+them call (where they hold a badge; the [Sevii Masters](sevii-masters.md)
+once they are a Master), taking turns: whichever called longest ago calls
+next. Accept and the event waits for them, with one attempt; decline and the
+season goes on without them. Someone always holds each league's title. Each
+lineup is the five strongest trainers who are willing to come (favouring
+those at home and fresh, with aloof trainers joining only a strong enough
+base lineup), with no randomness, fought in ascending order; the Sevii
+Masters changes the lineup and the format. Each themed Elite Four room is a
+named hall with one fixed field condition for both sides; the Champion rooms
+are neutral. Balance is informational for now. Terms follow the
+[glossary](player-trainer-rating.md#glossary).
 
 ## Intent
 
@@ -39,15 +38,12 @@ which remain the record of Today.
 ## Design
 
 **Leagues.** Indigo, Sevii Masters, and Hoenn keep their public entrances,
-rooms, and ceremonies. Each league event is a five-match singles lineup.
+rooms, and ceremonies. An Indigo or Hoenn event is five singles matches.
 
-**The Sevii Masters.** The Masters isn't an official league. It lives in a
-hidden basement under Seven Island's battle house: an off-the-record club
-where champions find out who is actually best. An old caretaker, the retired
-trainer who runs the house, keeps the door. A **Master** is anyone, the player
-or a notable trainer, who has been champion at both Indigo and Hoenn at some
-point, whether or not they reign there now. A Masters title never counts
-toward it.
+**The Sevii Masters.** The Masters is an off-the-record club for champions,
+with its own lineup, tag-battle format, partner, and Gallery; [Sevii
+Masters](sevii-masters.md) owns those rules, and everything here applies to
+it otherwise.
 
 **Qualifying.** The player qualifies for invitations once their TR reaches
 80, which in v0 means 8 badges from any regions; later sources of TR may
@@ -72,8 +68,7 @@ clock's design, which hasn't been written yet.
 
 **Who calls.** Only a league that knows the player calls: Indigo once they
 hold a Kanto or Johto badge, Hoenn once they hold a Hoenn badge, and the Sevii
-Masters once they are a Master: they have won both Indigo and Hoenn at least
-once, in either order. Until then the Masters never calls. The leagues
+Masters once they are a [Master](sevii-masters.md#design). The leagues
 that know them take turns: the one that called longest ago calls next, and one
 that has never called goes first. When that is a tie, the league where they
 have earned the most badges calls (Indigo counts Kanto and Johto badges,
@@ -97,9 +92,10 @@ same league.
 **Decline.** Declining costs nothing. The event goes ahead without the player
 straight away, and its strongest trainer takes the title.
 
-**Pool.** Every notable singles trainer can be invited to any league. Tate &
-Liza are notable but fight only as a double battle, so they are left out; Red
-(separate mastery encounter) is not notable.
+**Pool.** Every notable trainer who battles alone can be invited to any
+league. Tate & Liza are notable but fight only together, as a duo, so they
+are left out of every league, as opponents and as partners; Red (separate
+mastery encounter) is not notable.
 
 **Home and away.** Every notable trainer has a home region, and some have
 the traveller trait ([Notable trainers](notable-trainers.md)). A
@@ -128,18 +124,10 @@ strong enough to deserve them.
 Everyone still eligible is then ranked by league score, and the five highest
 make the lineup. Apart from the aloof, nobody is ruled out: a strong enough
 trainer shows up even far from home or tired.
-There is no dice roll, so the same world progress, the same last event, and
-the same Masters always give the same lineup.
+There is no dice roll, so the same world progress and the same last event
+always give the same lineup.
 
-**The Masters lineup.** The Masters is elite by definition, the company aloof
-trainers seek, so the aloof rule doesn't apply there: there is no base lineup,
-and everyone may come. Notable trainers who are Masters get guaranteed seats;
-if more than five are Masters, the five with the highest league scores sit.
-The remaining seats go to the highest league scores, as anywhere. Fatigue
-still lowers everyone's league score, a Master's included, and everyone is at
-home there. Being a Master gives no seat at Indigo or Hoenn.
-
-**Battle order.** Ascending TR: the weakest of the five fights first and the
+**Battle order.** Ascending TR: the weakest of the lineup fights first and the
 strongest last.
 
 **Halls.** Each match is fought in a **hall**, one of the league's rooms. At
@@ -157,7 +145,8 @@ different. Karen's Hall is the one exception: its room shows no theme, so its
 Wonder Room comes from Karen's own "strong or weak is only perception".
 Match 1 is fought in the first
 hall, match 2 in the second, and so on, so the ascending battle order decides
-who lands in which hall.
+who lands in which hall; at the Masters, [pairs](sevii-masters.md#design)
+do.
 
 | League | Hall 1 | Hall 2 | Hall 3 | Hall 4 | Hall 5 |
 | --- | --- | --- | --- | --- | --- |
@@ -167,16 +156,17 @@ who lands in which hall.
 
 Weather lasts until something replaces it, as overworld weather does when a
 battle starts outdoors. Rooms, terrains, Tailwind, and Sea of Fire wear off
-after a few turns. Sticky Web and Stealth Rock stay down until a Pokémon
-clears them, and they greet both leads as the battle opens. The
-Champion's Rooms are neutral everywhere: the last match is
-just the best. Because each condition is known in advance and fixed, the
+after a few turns. Sticky Web and Stealth Rock stay down until a Pokémon clears
+them, and they greet every lead as the battle opens. A side's condition covers
+every Pokémon on it. The Champion's Rooms are neutral everywhere: the last match
+is just the best. Because each condition is known in advance and fixed, the
 player can plan a team for each hall, and matchups emerge on their own: a
-trainer who happens to land in the hall that suits their team is more
-dangerous there than anywhere else.
+trainer who happens to land in the hall that suits their team is more dangerous
+there than anywhere else.
 
 **Strength.** Each opponent uses their own TR, team, and levels, exactly as in
-any other battle with them. There is no league-specific adjustment.
+any other battle with them. There is no league-specific adjustment, apart
+from the three a notable trainer brings to a Masters tag battle.
 [Notable trainers](notable-trainers.md) owns trainer TR and how it grows,
 the scalers that turn TR into team level and team size (which grows in
 steps), and rosters. The player's TR enters only through how far each
@@ -184,46 +174,38 @@ trainer has grown, and through qualifying.
 
 **Reigning champion.** Every event crowns someone. If the player wins, they
 are the league's reigning champion. If they lose or decline, the strongest
-trainer of that event's lineup takes the title. Either way the champion reigns
-until the league's next event. The game remembers, for each notable trainer,
-whether they have ever reigned at Indigo and whether they have ever reigned at
-Hoenn; once both are true, they are a Master for good.
+trainer of that event's lineup takes the title ([at the
+Masters](sevii-masters.md#design), a lost final crowns the partner). Either
+way the champion reigns until the league's next event. The game remembers,
+for each notable trainer, whether they have ever reigned at Indigo and
+whether they have ever reigned at Hoenn, which decides who is a Master.
 
 **Winning.** The player's first win at each league keeps today's records,
-ceremonies, and unlocks, all once only. Their first wins at both Indigo and
-Hoenn make them a Master, which opens the Sevii Masters' turns. Winning the
-Masters brings a Gallery win, prize money, and the title, and no new status.
-Winning again brings prize money and the title back, plus another Gallery win
-at the Masters. No win gives the player
-TR: a league is a test, not a source of power
-([Player Trainer Rating](player-trainer-rating.md)). Today, the ROM still adds
-TR for a first league win until that design is adopted.
+ceremonies, and unlocks, all once only; what the Masters gives is in [Sevii
+Masters](sevii-masters.md#design). Winning again brings prize money and the
+title back. No win gives the player TR: a league is a test, not a source of
+power ([Player Trainer Rating](player-trainer-rating.md)). Today, the ROM
+still adds TR for a first league win until that design is adopted.
 
 **Presentation.** Invitations and results come by phone call, on a
 Pokégear/PokéNav-style phone as in HeartGold/SoulSilver and Emerald; the exact
-phone screens are an implementation detail. The Masters' call comes from the
-caretaker, not from an official league, and her first call says that Lorelei,
-retired to Four Island, spoke of the player. That is story only: Lorelei stays
-an ordinary notable trainer with no guaranteed seat. The **Masters Gallery**
-on the basement wall tallies each Masters winner's wins, including trainers
-who won the events the player declined. The lobby, or a sign at each hall's
-door, names the hall and its condition, so the player knows what's ahead
-before the match starts, and a snow or sandstorm hall shows its weather in
-the room.
+phone screens are an implementation detail. The Masters' calls come from its
+caretaker ([Sevii Masters](sevii-masters.md#presentation)). The lobby, or a
+sign at each hall's door, names the hall and its condition, so the player
+knows what's ahead before the match starts, and a snow or sandstorm hall
+shows its weather in the room.
 
 **Balance.** Informational for now: the balance explorer simulates a run of
 invitations for a chosen TR and badge split and the player's answer to each,
 showing who calls and why, each event's lineup, who is tired, and who reigns,
 and for any event each trainer's league score, the base lineup level, and which
-aloof trainers join or skip, and, at the Masters, who has reigned where, who
-is a Master, and which seats are guaranteed; tuning comes later. The explorer
-doesn't show each match's hall yet (Later). Hall conditions aren't tuned
-against lineups: they're identity, and they apply to both sides. The lineup
-comes from the strongest trainers of the moment, so it tends to sit a little
-above the player; with all 24 badges both sides reach level 100, and tougher
-endgame teams (better items, stats, movesets) are Later. With the aloof rule
-off, the Champions come to the Masters at any world progress: Lance (TR 200,
-level 100) attends from the Masters' first call.
+aloof trainers join or skip, and who has reigned at Indigo and Hoenn (the
+Masters adds [its own](sevii-masters.md#balance)); tuning comes later. The
+explorer doesn't show each match's hall yet (Later). Hall conditions aren't
+tuned against lineups: they're identity, and they apply to both sides. The
+lineup comes from the strongest trainers of the moment, so it tends to sit a
+little above the player; with all 24 badges both sides reach level 100, and
+tougher endgame teams (better items, stats, movesets) are Later.
 
 ## Sample playthrough
 
@@ -236,43 +218,26 @@ each accepted event on the day of its call, as in the balance explorer.
    stay away. The player accepts and beats Koga, Karen, Blue, Giovanni, and
    Jasmine: their first Indigo win, with its Hall of Fame.
 2. Day 14: Hoenn calls. The player accepts and beats Sidney, Winona, Juan,
-   Phoebe, and Norman. With Indigo and Hoenn both won, the player is a Master.
-3. Day 21: the phone rings, and it is the caretaker of Seven Island's battle
-   house: Lorelei spoke of the player, and there is a room downstairs. The aloof
-   rule is off at the Masters, so the Champions come; the lineup is Giovanni,
-   Jasmine, Steven, Wallace, and Lance. The player declines. Lance takes the
-   Masters title, and the Masters Gallery records his win. A Masters title
-   doesn't make him a Master.
-4. Days 28 to 49: the player declines everything. Blue takes Indigo's title,
-   then Giovanni, a traveller, takes Hoenn's away from home; the Masters
-   crowns Lance again; then Giovanni takes Indigo's title too. He has now
-   reigned at both, so he is a Master for good.
-5. Day 56: Norman takes Hoenn's title. Day 63: at the Masters, Giovanni's
-   seat is guaranteed, though his league score would have put him in the top
-   five anyway. Lance wins the declined event and adds a Gallery win.
-6. Days 70 and 77: Blue reigns at Indigo again, Giovanni at Hoenn again.
-   Day 84: the Masters calls. Giovanni fought at Hoenn a week earlier, so he
-   is tired: league score 65, far below Blue's 129. His guaranteed seat still
-   holds, and Blue sits out. The lineup is Giovanni, Jasmine, Steven, Wallace,
-   and Lance. The player accepts and wins: a Gallery win for the player, with
-   prize money and the Masters title, and no Hall of Fame, Ribbon, or regional
-   title.
+   Phoebe, and Norman. With Indigo and Hoenn both won, the player is a
+   Master, so from day 21 the Sevii Masters takes every third call (days 21,
+   42, 63, and 84; see [Sevii Masters](sevii-masters.md#sample-playthrough)).
+3. Days 28 to 49: the player declines everything. Blue takes Indigo's title,
+   then Giovanni, a traveller, takes Hoenn's away from home; then Giovanni
+   takes Indigo's title too. He has now reigned at both.
+4. Day 56: Norman takes Hoenn's title. Days 70 and 77: Blue reigns at Indigo
+   again, Giovanni at Hoenn again. Then the Masters calls on day 84
+   ([Sevii Masters](sevii-masters.md#sample-playthrough)).
 
 ## Records and recognition
 
 The player's first win at each league keeps Today's records, as the
 [interregional League circuit](wayfarer-interregional-league-circuit.md)
-implements them; repeat wins give prize money and the title only (plus the
-Gallery win at the Masters).
+implements them; repeat wins give prize money and the title only.
 
 - Indigo's first win grants the shared Kanto/Johto Champion recognition with
   one Hall of Fame registration and Champion Ribbon flow.
-- The Masters Gallery tallies each Masters winner's wins, the player's or a
-  notable trainer's. Every Masters win gives a Gallery win, prize money, and
-  the title, and never a regional Champion title, Hall of Fame registration,
-  Ribbon, or new status.
-- First wins at both Indigo and Hoenn make the player a Master, which opens
-  the Masters' calls.
+- The Sevii Masters gives no regional recognition; its Gallery and title are
+  in [Sevii Masters](sevii-masters.md#design).
 - Hoenn keeps its own Champion recognition, Hall of Fame, and regional
   cleanup, and its first league win runs the full completion credits.
 - Red unlocks after all three leagues have been won. Blue's Saffron Dojo battle
@@ -284,36 +249,39 @@ Gallery win at the Masters).
 ## Boundaries
 
 In: the three leagues, qualifying, which leagues know the player,
-invitations by phone and which league calls, accepting and declining, one attempt per accepted event, reigning
-champions, reign records and Masters, first and repeat wins, notable Kanto,
-Johto, and Hoenn singles trainers, home and away, the league score, the
-traveller and aloof traits and the base lineup level, the lineup, guaranteed
-seats at the Masters, battle order, the halls and their conditions, and the
-Masters' caretaker and Gallery.
+invitations by phone and which league calls, accepting and declining, one
+attempt per accepted event, reigning champions, reign records, first and
+repeat wins, notable Kanto, Johto, and Hoenn trainers who battle alone, home
+and away, the league score, the traveller and aloof traits and the base
+lineup level, the lineup, battle order, and the halls and their conditions.
+The Sevii Masters' own rules, its format, partner, phone numbers, and
+Gallery, belong to [Sevii Masters](sevii-masters.md).
 
 Out of scope for v0: seeded or reputation-based league choice, news of who won
 the events the player declined (beyond the Masters Gallery), special
-invitational events, doubles at the Masters, any status or reward for winning
-the Masters beyond its Gallery win, prize money, and title, balance
-targets for leagues, and field conditions outside the leagues' halls (such
-as Gym arenas). Red's unlock after all three leagues and Blue's Dojo stay
-as they are. Today's circuit, with its fixed order and replays, stays
-documented as Today until this design is adopted; its record, ceremony, and
-unlock rules carry over to first wins. Player TR follows
-[Player Trainer Rating](player-trainer-rating.md), where league wins add
-nothing. Wild encounters, shops, regular trainers, and standalone builds
-follow their own contracts, except that the snow and sandstorm halls' shared
-room maps carry their weather into standalone FRLG too; other
-battles with notable trainers follow their own TR.
+invitational events, balance targets for leagues, and field conditions
+outside the leagues' halls (such as Gym arenas). Red's unlock after all
+three leagues and Blue's Dojo stay as they are. Today's circuit, with its
+fixed order and replays, stays documented as Today until this design is
+adopted; its record, ceremony, and unlock rules carry
+over to first wins. Player TR follows [Player Trainer
+Rating](player-trainer-rating.md), where league wins add nothing. Wild
+encounters, shops, regular trainers, and standalone builds follow their own
+contracts, except that the snow and sandstorm halls' shared room maps carry
+their weather into standalone FRLG too; other battles with notable trainers
+follow their own TR.
 
 ## Specifications
 
 - [Leagues specification](../specs/leagues.md): registry, eligibility,
   invitations (qualification, the countdown, which league calls, accept and
-  decline), fatigue, the league score, lineup selection (with the Masters'
-  guaranteed seats), ordering, the halls, the event lineup, reigning champions
-  and reign records, battle construction (with the hall condition), the win
-  commit, saved state, load validation, and presentation.
+  decline), fatigue, the league score, lineup selection, ordering, the halls,
+  the event lineup, reigning champions and reign records, battle construction
+  (with the hall condition), the win commit, saved state, load validation,
+  and presentation.
+- [Sevii Masters specification](../specs/sevii-masters.md): the Master
+  rule, phone contacts, the partner, the Masters' lineup and pairs, the tag
+  matches and final, and the Gallery.
 - [Notable trainers specification](../specs/notable-trainers.md): TR, home
   regions, the traveller and aloof traits, willingness, scalers, and
   rosters.
@@ -331,8 +299,6 @@ battles with notable trainers follow their own TR.
   the player.
 - Balancing tools: tuning travel cost, fatigue, and the aloof margin against
   the lineup reports, and league balance targets.
-- More of the Masters' story: the caretaker's later calls and lines, and what
-  the Gallery shows beyond each winner's win count.
 - Seeded lineups and rotation.
 - Role windows (such as elite and headliner) and standing-based selection.
 - Matchmaking lineups around the player's TR.
@@ -340,10 +306,12 @@ battles with notable trainers follow their own TR.
 - Gym arenas with their own field conditions, like the halls
   ([Notable trainers](notable-trainers.md#later)).
 - Each match's hall and its condition in the balance explorer.
+- The Masters' own Later items are in [Sevii Masters](sevii-masters.md#later).
 
 ## References
 
 - [Player Trainer Rating](player-trainer-rating.md)
+- [Sevii Masters](sevii-masters.md)
 - [Notable trainers](notable-trainers.md)
 - [Interregional League circuit](wayfarer-interregional-league-circuit.md)
 - [League scaling](league-scaling.md)

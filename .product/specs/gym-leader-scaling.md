@@ -55,7 +55,10 @@ not in this inventory; the
 routes them to the same TR and roster, built under this document's construction
 rules. Facilities, partners, link/recorded/external battles, tutorials, and
 other special contexts stay excluded, and raw party entry points cannot bypass
-the check. Shared source aliases must not enroll an excluded battle; split or
+the check; the Sevii Masters' tag matches, with two notable opponents and a
+notable partner, are notable battles built as
+[Sevii Masters](sevii-masters.md#tag-matches) describes. Shared source
+aliases must not enroll an excluded battle; split or
 disambiguate them. Reject missing, duplicated, stale, or unresolved coverage at
 generation time, author in the source/generator pipeline rather than generated
 C, and report the source and canonical mapping of every covered encounter.

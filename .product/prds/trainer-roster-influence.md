@@ -26,6 +26,10 @@ ideas let the filler slots change; the aces never do.
   away, and evolves as the trainer grows. It keeps its moves and learns new ones
   only by levelling up; its new trainer never teaches it anything, not even
   from their move pool.
+  v0 ships a first slice of this as the Trade quest at
+  [haunts](notable-haunts.md#quests): one generic filler offer per trainer and
+  a fixed value check, and there the traded Pokémon does take moves from the
+  trainer's move pool.
 - **Evolution gifts.** A trainer accepts an item such as a Water Stone, and a
   filler Pokémon appears evolved from then on.
 

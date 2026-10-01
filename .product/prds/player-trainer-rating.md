@@ -162,7 +162,9 @@ changes yours.
   for league invitations. TR never decreases, so it happens once.
 - **Known (by a league):** a league knows you once you hold a badge from its
   region: Indigo with a Kanto or Johto badge, Hoenn with a Hoenn badge. Sevii
-  Masters knows you once you are a Master. Only a league that knows you calls.
+  Masters knows you once you are a
+  [Master](../specs/sevii-masters.md#master). Only a league that knows you
+  calls.
 - **Invitation:** a league's phone call inviting you to its next event. Once
   you qualify, a league that knows you calls every seven in-game days, the
   leagues taking turns
@@ -176,9 +178,11 @@ changes yours.
   event lineup and the event waits for you, with one attempt; declining lets
   the event run without you.
 - **League event:** one tournament at a league, held for one invitation.
-- **Event lineup:** the five opponents of a league event, picked when you
-  accept or decline; an accepted event keeps them, with their teams, until it
-  ends.
+- **Event lineup:** the five opponents of a league event (eight at the
+  Sevii Masters, whose accepted event also keeps your partner;
+  [lineup](../specs/sevii-masters.md#lineup)), picked when you accept or
+  decline; an accepted event keeps them, with their teams,
+  until it ends.
 - **Reigning champion:** who holds a league's title until its next event: you
   if you won the last one, otherwise the strongest trainer of that event's
   lineup.
@@ -186,9 +190,10 @@ changes yours.
   Indigo and Hoenn at some point, whether or not they reign now; a Masters
   title never counts. The Sevii Masters calls you once you are a Master, and
   gives notable trainers who are Masters guaranteed seats
-  ([reign records](../specs/leagues.md#reign-records)).
+  ([Master](../specs/sevii-masters.md#master)).
 - **Masters Gallery:** the Sevii Masters' tally of each Masters winner's
-  wins, including the winners of events you declined.
+  wins, including the winners of events you declined
+  ([Gallery](../specs/sevii-masters.md#masters-gallery)).
 - **Home region:** a notable trainer's region (Kanto, Johto, or Hoenn).
 - **Trait:** an opt-in yes/no behaviour of a notable trainer; every trait
   defaults to no. v0 has two: traveller and aloof.
@@ -215,15 +220,83 @@ changes yours.
 - **Aloof:** a trait; an aloof trainer joins a league only when its base
   lineup is close enough to their own team level, and skips it when there is
   no base lineup ([selection](../specs/leagues.md#selection-and-order)). The
-  rule is off at the Sevii Masters.
+  rule is off at the Sevii Masters. At haunts, an aloof trainer only visits
+  remote elite ones.
 - **Base lineup:** an Indigo or Hoenn event's five best trainers by league
   score who are not aloof, picked before any aloof trainer is considered.
 - **Base lineup level:** the highest team level in the base lineup.
 - **League score:** a trainer's TR scaled down by their willingness; the
-  event lineup is the five highest among those who join, after any Masters'
-  guaranteed seats at the Sevii Masters
-  ([selection](../specs/leagues.md#selection-and-order)).
-- **Match 1-5:** a position in the lineup.
+  event lineup is the five highest among those who join
+  ([selection](../specs/leagues.md#selection-and-order)); eight at the Sevii
+  Masters, after its Masters' guaranteed seats and never your partner
+  ([lineup](../specs/sevii-masters.md#lineup)).
+- **Match 1-5:** a position in the battle order. At the Sevii Masters,
+  matches 1-4 are tag battles against the pairs, weakest first, and match 5
+  is the final against your partner.
+- **Tag battle:** two against two, each trainer bringing three Pokémon: you
+  and your partner against a pair from the lineup in each Sevii Masters
+  hall ([tag matches](../specs/sevii-masters.md#tag-matches)).
+- **Friendship score:** a saved number from 0 to 255 that each notable
+  trainer has for the player. It only goes up, through a few bounded events:
+  a first talk, a win, a finished haunt quest
+  ([friendship](../specs/notable-trainers.md#friendship)).
+- **Fame:** whether a stranger has heard of you: your TR is 80 or more, or
+  within 10 of theirs, or you hold a league title or are a Master
+  ([notable haunts](../specs/notable-haunts.md#talk-flow)).
+- **Friendship stage:** Stranger, Met, Friend, or Close, read from the
+  friendship score against fixed thresholds. Other systems read only the
+  stage.
+- **Contact:** a notable at Friend or above, whose phone number you hold. Each
+  gives you their number when they first reach Friend
+  ([phone contacts](../specs/sevii-masters.md#phone-contacts)).
+- **Partner:** the contact you last asked to join you at the Sevii Masters,
+  or Lorelei if you have never asked anyone. They fight beside you in the
+  tag battles, never in the lineup, and face you in the final
+  ([partner](../specs/sevii-masters.md#partner)).
+- **Haunt:** an authored overworld place, with a quest, where you can meet
+  a notable trainer between their Gym and league battles. No haunt belongs
+  to one trainer: each is filled by whoever fits it best at the time
+  ([haunts](../specs/notable-haunts.md#haunts)).
+- **Spot:** an everyday place, such as a Pokémon Center counter, a Mart
+  shelf, or a patch of tall grass, found automatically from map data, where
+  a notable trainer spends most of their time once routines and travel
+  arrive. Spots have no quests; haunts are the highlights
+  ([spots](../specs/notable-spots.md#spots)).
+- **World simulation:** the saved, off-screen record of where every
+  notable trainer is and where they are heading, which moves them between
+  spots; on the player's map they walk for real
+  ([world simulation](../specs/notable-world-simulation.md#two-layers)).
+- **Heartbeat:** one tick of the world simulation, on each map change:
+  every notable trainer off the player's map takes one step of their way
+  or spends one more beat at their spot
+  ([heartbeat](../specs/notable-world-simulation.md#heartbeat)).
+- **Routine:** how a notable trainer spends their time: a home base, an
+  activity cycle, and life events that break into it
+  ([routines](../specs/notable-world-simulation.md#routines)).
+- **Activity cycle:** a notable trainer's three or four everyday
+  activities on repeat, such as Brock's train, care, study, home; each
+  picks a spot
+  ([activity cycle](../specs/notable-world-simulation.md#activity-cycle)).
+- **Favourite spot:** one of up to three places a notable trainer is known
+  for, such as Lt. Surge's Celadon Game Corner; it serves one step of
+  their activity cycle and wins whenever it is free, even far from home
+  ([favourites](../specs/notable-spots.md#favourites)).
+- **Life event:** a short break from the routine after league news:
+  preparing (training before an event or while rising), recovering
+  (resting after one), celebrating (a new champion out in public), or
+  brooding (the final's loser somewhere remote)
+  ([life events](../specs/notable-world-simulation.md#life-events)).
+- **Buddy:** a notable trainer's companion Pokémon, one slot of their
+  roster, named at its current stage, so Brock's buddy is Onix early and
+  Steelix later ([trainer values](../specs/notable-haunts.md#trainer-values)).
+- **Reward pool:** a notable trainer's short, ordered list of gifts for
+  quests at haunts: items, and lessons that teach one of the moves they
+  like. Each opens once the trainer's TR is high enough, and each quest
+  pays the next one
+  ([rewards and claims](../specs/notable-haunts.md#rewards-and-claims)).
+- **Momentum:** whether a notable trainer is rising (getting stronger fast
+  right now) or settled; rising trainers go training at haunts, settled ones
+  relax or sightsee ([momentum](../specs/notable-haunts.md#momentum)).
 - **Hall:** a league room where one match is fought, named after an Elite
   Four member whose theme the room carries (such as Lorelei's Hall) without
   meaning they fight there. Match 1 is in the first hall, match 2 in the

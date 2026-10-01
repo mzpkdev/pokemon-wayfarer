@@ -1,0 +1,1013 @@
+region,map,map_type,family,center,center_counter_tiles,mart_floor,mart_shelf_tiles,store_of,game_corner,slot_tiles,gym,tall_grass_tiles,grass_patches,grass_patch_sizes,water_edge_tiles,water_edge_stretches,water_edge_dropped,rooftop,square_tiles,squares,square_stands,npc_chats,npc_chat_tiles
+Kanto,CeladonCity_Apartments_1F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,CeladonCity_Apartments_2F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,CeladonCity_Apartments_3F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,9
+Kanto,CeladonCity_Apartments_RoofDay_hns,CITY,hns,0,0,0,0,,0,0,0,0,0,,0,0,,1,0,0,,0,0
+Kanto,CeladonCity_Apartments_RoofHouse_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,CeladonCity_DepartmentStore_1F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,CeladonCity_DepartmentStore_2F_hns,INDOOR,hns,0,0,1,36,CeladonCity_DepartmentStore_1F_hns,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Kanto,CeladonCity_DepartmentStore_3F_hns,INDOOR,hns,0,0,1,23,CeladonCity_DepartmentStore_1F_hns,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Kanto,CeladonCity_DepartmentStore_4F_hns,INDOOR,hns,0,0,1,34,CeladonCity_DepartmentStore_1F_hns,0,0,0,0,0,,0,0,,0,0,0,,2,5
+Kanto,CeladonCity_DepartmentStore_5F_hns,INDOOR,hns,0,0,1,46,CeladonCity_DepartmentStore_1F_hns,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,CeladonCity_DepartmentStore_RoofDay_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,0,0,,1,0,0,,1,3
+Kanto,CeladonCity_GameCorner_hns,INDOOR,hns,0,0,0,0,,1,16,0,0,0,,0,0,,0,0,0,,8,23
+Kanto,CeladonCity_Gym_hns,INDOOR,hns,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,0,0
+Kanto,CeladonCity_House1_hns,NONE,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,4,11
+Kanto,CeladonCity_House2_hns,NONE,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,CeladonCity_PokemonCenter_hns,INDOOR,hns,1,4,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,CeladonCity_hns,CITY,hns,0,0,0,0,,0,0,0,0,0,,6,1,,0,83,3,"10,24 13,3 13,35",2,4
+Kanto,CeruleanCave_1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,27,8,,0,0,0,,0,0
+Kanto,CeruleanCave_B1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,CeruleanCave_B2F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,20,4,,0,0,0,,0,0
+Kanto,CeruleanCity_BikeShop_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,CeruleanCity_Gym_hns,INDOOR,hns,0,0,0,0,,0,0,1,0,0,,0,0,interior,0,0,0,,0,0
+Kanto,CeruleanCity_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,CeruleanCity_House2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,CeruleanCity_House3_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Kanto,CeruleanCity_Mart_hns,INDOOR,hns,0,0,1,18,CeruleanCity_Mart_hns,0,0,0,0,0,,0,0,,0,0,0,,2,5
+Kanto,CeruleanCity_PokemonCenter_hns,INDOOR,hns,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Kanto,CeruleanCity_hns,CITY,hns,0,0,0,0,,0,0,0,0,0,,29,2,,0,239,3,"35,15 41,38 21,41",1,2
+Kanto,CinnabarIsland_Frlg,TOWN,frlg,0,0,0,0,,0,0,0,0,0,,34,3,,0,4,2,"15,2 17,5",1,3
+Kanto,CinnabarIsland_Gym_Frlg,INDOOR,frlg,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,1,3
+Kanto,CinnabarIsland_Mart_Frlg,INDOOR,frlg,0,0,1,14,CinnabarIsland_Mart_Frlg,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Kanto,CinnabarIsland_PokemonCenter_1F_Frlg,INDOOR,frlg,1,6,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,CinnabarIsland_PokemonCenter_2F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
+Kanto,CinnabarIsland_PokemonLab_Entrance_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,CinnabarIsland_PokemonLab_ExperimentRoom_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,CinnabarIsland_PokemonLab_Lounge_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,8
+Kanto,CinnabarIsland_PokemonLab_ResearchRoom_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,DiglettsCave_EntranceNorth_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,DiglettsCave_EntranceSouth_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,DiglettsCave_Tunnel_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,FuchsiaCity_Gym_hns,INDOOR,hns,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,0,0
+Kanto,FuchsiaCity_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,FuchsiaCity_House2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Kanto,FuchsiaCity_Mart_hns,INDOOR,hns,0,0,1,19,FuchsiaCity_Mart_hns,0,0,0,0,0,,0,0,,0,0,0,,2,5
+Kanto,FuchsiaCity_PokemonCenter_hns,INDOOR,hns,1,4,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Kanto,FuchsiaCity_Route15_Gate_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,FuchsiaCity_SafariZoneBeach_hns,OCEAN_ROUTE,hns,0,0,0,0,,0,0,0,144,1,135,37,3,,0,0,0,,1,4
+Kanto,FuchsiaCity_SafariZoneBrush_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,FuchsiaCity_SafariZoneCave_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,25,4,,0,0,0,,0,0
+Kanto,FuchsiaCity_SafariZoneEntrance_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,6,12
+Kanto,FuchsiaCity_SafariZoneMountain_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,30,1,,0,0,0,,0,0
+Kanto,FuchsiaCity_hns,CITY,hns,0,0,0,0,,0,0,0,0,0,,9,1,,0,112,3,"25,15 22,37 4,21",2,7
+Kanto,Gate_CeladonCity_Route16_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,Gate_FuchsiaCity_Route18_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,Gate_Route2_ViridianForest_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,Gate_Route2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,Gate_SaffronCity_Route5_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,Gate_SaffronCity_Route6_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,Gate_SaffronCity_Route7_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,Gate_SaffronCity_Route8_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,Gate_ViridianForest_Route2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,LavenderTown_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,4
+Kanto,LavenderTown_House2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,LavenderTown_House3_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,LavenderTown_Mart_hns,INDOOR,hns,0,0,1,18,LavenderTown_Mart_hns,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Kanto,LavenderTown_PokemonCenter_hns,INDOOR,hns,1,4,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,9
+Kanto,LavenderTown_RadioStation_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,LavenderTown_SoulHouse_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,4
+Kanto,LavenderTown_hns,TOWN,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,238,3,"21,22 6,26 13,4",1,3
+Kanto,MtMoon_Cave_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Kanto,MtMoon_Outside_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,20,1,,0,0,0,,0,0
+Kanto,MtMoon_Shop_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Kanto,PalletTown_House2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,PalletTown_Lab_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,PalletTown_RedsHouse_1F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,PalletTown_RedsHouse_2F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,PalletTown_hns,TOWN,hns,0,0,0,0,,0,0,0,0,0,,10,1,,0,35,3,"6,15 11,3 20,6",1,4
+Kanto,PewterCity_Gym_hns,INDOOR,hns,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,1,3
+Kanto,PewterCity_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,PewterCity_House2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,PewterCity_Mart_hns,INDOOR,hns,0,0,1,18,PewterCity_Mart_hns,0,0,0,0,0,,0,0,,0,0,0,,2,5
+Kanto,PewterCity_Museum_1F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,9
+Kanto,PewterCity_Museum_2F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,4
+Kanto,PewterCity_PokemonCenter_hns,INDOOR,hns,1,4,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,4
+Kanto,PewterCity_hns,CITY,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,128,3,"33,33 19,13 40,15",1,3
+Kanto,PokemonLeague_AgathasRoom_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,PokemonLeague_BrunosRoom_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,PokemonLeague_ChampionsRoom_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,PokemonLeague_HallOfFame_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,PokemonLeague_LancesRoom_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,PokemonLeague_LoreleisRoom_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,PokemonMansion_1F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,PokemonMansion_2F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,PokemonMansion_3F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,PokemonMansion_B1F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,PokemonTower_2F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Kanto,PokemonTower_3F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,PokemonTower_4F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,PokemonTower_5F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,PokemonTower_6F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,PokemonTower_7F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,PowerPlant_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,RockTunnel_1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,RockTunnel_B1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,RocketHideout_B1F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,RocketHideout_B2F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,RocketHideout_B3F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,RocketHideout_B4F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,RocketHideout_Elevator_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,Route10_PowerPlantBackRoom_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,Route10_PowerPlantEntrance_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,4,11
+Kanto,Route10_hns,ROUTE,hns,0,0,0,0,,0,0,0,140,2,44 32,39,2,,0,0,0,,0,0
+Kanto,Route11_hns,ROUTE,hns,0,0,0,0,,0,0,0,302,7,90 82 40 32 24 20 10,0,0,,0,0,0,,0,0
+Kanto,Route12_House_hns,NONE,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,Route12_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,290,12,,0,0,0,,0,0
+Kanto,Route13_hns,ROUTE,hns,0,0,0,0,,0,0,0,30,1,30,60,2,,0,0,0,,0,0
+Kanto,Route14_hns,ROUTE,hns,0,0,0,0,,0,0,0,30,1,30,0,0,,0,0,0,,0,0
+Kanto,Route15_hns,ROUTE,hns,0,0,0,0,,0,0,0,119,3,43 41 31,1,1,,0,0,0,,0,0
+Kanto,Route16_House_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,Route16_hns,ROUTE,hns,0,0,0,0,,0,0,0,25,1,25,0,0,,0,0,0,,0,0
+Kanto,Route17_hns,ROUTE,hns,0,0,0,0,,0,0,0,34,1,30,0,0,,0,0,0,,0,0
+Kanto,Route18_hns,ROUTE,hns,0,0,0,0,,0,0,0,50,1,48,0,0,,0,0,0,,0,0
+Kanto,Route19_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,0,0,,15,2,,0,0,0,,0,0
+Kanto,Route1_hns,ROUTE,hns,0,0,0,0,,0,0,0,206,6,48 30 30 28 20 10,0,0,,0,0,0,,0,0
+Kanto,Route20_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,0,0,,36,5,,0,0,0,,0,0
+Kanto,Route21_North_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,36,0,,0,0,,0,0,0,,0,0
+Kanto,Route21_South_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,0,0,,16,1,,0,0,0,,0,0
+Kanto,Route22_hns,ROUTE,hns,0,0,0,0,,0,0,0,65,2,35 30,15,2,,0,0,0,,0,0
+Kanto,Route24_hns,ROUTE,hns,0,0,0,0,,0,0,0,43,1,43,16,1,,0,0,0,,7,21
+Kanto,Route25_BillsHouse_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,Route25_hns,ROUTE,hns,0,0,0,0,,0,0,0,41,2,21 20,22,3,,0,0,0,,1,4
+Kanto,Route2_House_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,Route2_hns,ROUTE,hns,0,0,0,0,,0,0,0,84,2,49 35,0,0,,0,0,0,,0,0
+Kanto,Route3_hns,ROUTE,hns,0,0,0,0,,0,0,0,116,2,67 49,0,0,,0,0,0,,0,0
+Kanto,Route4_PokemonCenter_hns,INDOOR,hns,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,Route4_hns,ROUTE,hns,0,0,0,0,,0,0,0,84,1,84,0,0,,0,0,0,,0,0
+Kanto,Route5_House_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Kanto,Route5_TunnelEntrance_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,Route5_hns,ROUTE,hns,0,0,0,0,,0,0,0,66,1,66,0,0,,0,0,0,,0,0
+Kanto,Route6_TunnelEntrance_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,Route6_hns,ROUTE,hns,0,0,0,0,,0,0,0,194,5,50 37 17 14 12,34,2,,0,0,0,,0,0
+Kanto,Route7_TunnelEntrance_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,Route7_hns,ROUTE,hns,0,0,0,0,,0,0,0,36,1,36,0,0,,0,0,0,,0,0
+Kanto,Route8_TunnelEntrance_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,Route8_hns,ROUTE,hns,0,0,0,0,,0,0,0,56,1,48,0,0,,0,0,0,,0,0
+Kanto,Route9_PokemonCenter_hns,INDOOR,hns,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,Route9_hns,ROUTE,hns,0,0,0,0,,0,0,0,59,2,41 18,0,0,,0,0,0,,0,0
+Kanto,SSAnne_1F_Corridor_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,8
+Kanto,SSAnne_1F_Room1_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SSAnne_1F_Room2_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,SSAnne_1F_Room3_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Kanto,SSAnne_1F_Room4_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SSAnne_1F_Room5_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SSAnne_1F_Room6_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,SSAnne_1F_Room7_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SSAnne_2F_Corridor_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SSAnne_2F_Room1_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,SSAnne_2F_Room2_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SSAnne_2F_Room3_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,1
+Kanto,SSAnne_2F_Room4_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SSAnne_2F_Room5_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,5
+Kanto,SSAnne_2F_Room6_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Kanto,SSAnne_3F_Corridor_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SSAnne_B1F_Corridor_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SSAnne_B1F_Room1_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SSAnne_B1F_Room2_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SSAnne_B1F_Room3_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SSAnne_B1F_Room4_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SSAnne_B1F_Room5_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,SSAnne_CaptainsOffice_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SSAnne_Deck_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Kanto,SSAnne_Kitchen_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,5,10
+Kanto,SaffronCity_CopyCatsHouse_1F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,4
+Kanto,SaffronCity_CopyCatsHouse_2F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SaffronCity_FightingDojoVIP_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,7
+Kanto,SaffronCity_FightingDojo_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,4
+Kanto,SaffronCity_Gym_hns,INDOOR,hns,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,0,0
+Kanto,SaffronCity_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SaffronCity_Mart_hns,INDOOR,hns,0,0,1,18,SaffronCity_Mart_hns,0,0,0,0,0,,0,0,,0,0,0,,2,5
+Kanto,SaffronCity_PokemonCenter_hns,INDOOR,hns,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,10
+Kanto,SaffronCity_SilphCo_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,1
+Kanto,SaffronCity_TrainStation_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,4
+Kanto,SaffronCity_Tunnel_NS_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SaffronCity_Tunnel_SW_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SaffronCity_hns,CITY,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,92,3,"39,17 27,41 9,26",4,12
+Kanto,SeafoamIslands_1F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SeafoamIslands_B1F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SeafoamIslands_B2F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,SeafoamIslands_B3F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,13,3,,0,0,0,,0,0
+Kanto,SeafoamIslands_B4F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,20,5,,0,0,0,,0,0
+Kanto,SilphCo_10F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,4
+Kanto,SilphCo_11F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Kanto,SilphCo_2F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,1
+Kanto,SilphCo_3F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,SilphCo_4F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Kanto,SilphCo_5F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,4
+Kanto,SilphCo_6F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,5,14
+Kanto,SilphCo_7F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,10
+Kanto,SilphCo_8F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,SilphCo_9F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,SilphCo_Elevator_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,VermilionCity_FanClub_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,4
+Kanto,VermilionCity_Gym_hns,INDOOR,hns,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,0,0
+Kanto,VermilionCity_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,VermilionCity_House2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Kanto,VermilionCity_House3_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,VermilionCity_Mart_hns,INDOOR,hns,0,0,1,18,VermilionCity_Mart_hns,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Kanto,VermilionCity_PokemonCenter_hns,INDOOR,hns,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,4
+Kanto,VermilionCity_PortInside_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Kanto,VermilionCity_PortOutside_hns,OCEAN_ROUTE,hns,0,0,0,0,,0,0,0,0,0,,41,2,,0,0,0,,1,3
+Kanto,VermilionCity_hns,CITY,hns,0,0,0,0,,0,0,0,0,0,,83,11,,0,60,3,"38,42 22,7 54,17",2,7
+Kanto,ViridianCity_Gym_Frlg,INDOOR,frlg,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,1,3
+Kanto,ViridianCity_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Kanto,ViridianCity_Mart_hns,INDOOR,hns,0,0,1,18,ViridianCity_Mart_hns,0,0,0,0,0,,0,0,,0,0,0,,3,8
+Kanto,ViridianCity_PokemonCenter_hns,NONE,hns,1,4,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Kanto,ViridianCity_hns,CITY,hns,0,0,0,0,,0,0,0,0,0,,16,3,,0,286,3,"38,30 32,43 18,30",1,2
+Kanto,ViridianForest_hns,ROUTE,hns,0,0,0,0,,0,0,0,558,9,178 69 60 50 45 40 32 22 16,0,0,,0,0,0,,0,0
+Johto,AzaleaTown_Gym_hns,INDOOR,hns,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,1,3
+Johto,AzaleaTown_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,AzaleaTown_KurtsHouse_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,AzaleaTown_Mart_hns,INDOOR,hns,0,0,1,29,AzaleaTown_Mart_hns,0,0,0,0,0,,0,0,,0,0,0,,2,5
+Johto,AzaleaTown_PokemonCenter_hns,INDOOR,hns,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Johto,AzaleaTown_hns,TOWN,hns,0,0,0,0,,0,0,0,16,1,10,1,1,,0,93,3,"35,18 16,18 56,24",1,4
+Johto,BellchimeTrail_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,36,1,,0,0,0,,0,0
+Johto,BlackthornCity_Gym_hns,INDOOR,hns,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,1,2
+Johto,BlackthornCity_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,BlackthornCity_House2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,BlackthornCity_House3_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,BlackthornCity_Mart_hns,INDOOR,hns,0,0,1,30,BlackthornCity_Mart_hns,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,BlackthornCity_PokemonCenter_hns,INDOOR,hns,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,BlackthornCity_hns,CITY,hns,0,0,0,0,,0,0,0,0,0,,24,6,,0,98,3,"20,43 20,28 30,28",3,9
+Johto,BurnedTower_1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,BurnedTower_B1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,CherrygroveCity_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,CherrygroveCity_House2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,CherrygroveCity_House3_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,8
+Johto,CherrygroveCity_Mart_hns,INDOOR,hns,0,0,1,29,CherrygroveCity_Mart_hns,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Johto,CherrygroveCity_PokemonCenter_hns,INDOOR,hns,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,10
+Johto,CherrygroveCity_hns,CITY,hns,0,0,0,0,,0,0,0,0,0,,12,3,,0,98,3,"39,17 32,8 44,10",1,4
+Johto,CianwoodCity_hns,CITY,hns,0,0,0,0,,0,0,0,0,0,,39,1,,0,43,3,"19,39 17,25 18,51",0,0
+Johto,CianwoodGym_hns,INDOOR,hns,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,0,0
+Johto,CianwoodHouse1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,CianwoodHouse2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Johto,CianwoodHouse3_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,CianwoodPokecenter_hns,INDOOR,hns,1,4,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Johto,CianwoodShop_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,CliffEdgeCave_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,CliffEdgeGate_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,1,1,,0,0,0,,1,2
+Johto,DarkCave_NorthSide_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,4,1,,0,0,0,,0,0
+Johto,DarkCave_SouthSide_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,23,4,,0,0,0,,0,0
+Johto,DragonsDen_Cavern_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,21,3,,0,0,0,,0,0
+Johto,DragonsDen_Entrance_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,DragonsDen_Shrine_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Johto,EcruteakCity_Gym_hns,INDOOR,hns,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,0,0
+Johto,EcruteakCity_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Johto,EcruteakCity_House2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,EcruteakCity_Mart_hns,INDOOR,hns,0,0,1,29,EcruteakCity_Mart_hns,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Johto,EcruteakCity_PokemonCenter_hns,INDOOR,hns,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Johto,EcruteakCity_SageOffice1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,8
+Johto,EcruteakCity_SageOffice2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,EcruteakCity_Theater_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,EcruteakCity_hns,CITY,hns,0,0,0,0,,0,0,0,0,0,,23,4,,0,240,3,"34,37 15,46 2,54",6,19
+Johto,EmbeddedTower_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,FallarborTown_BattleTentBattleRoom_hns,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,FallarborTown_BattleTentCorridor_hns,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,FallarborTown_BattleTentLobby_hns,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,4
+Johto,Gate_AzaleaTown_IlexForest_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,Gate_EcruteakCity_Route38_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,Gate_EcruteakCity_Route42_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,Gate_GoldenrodCity_Route35_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,5
+Johto,Gate_IlexForest_Route34_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Johto,Gate_MahoganyTown_Route43_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,Gate_NationalPark_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,6,15
+Johto,Gate_Route29_Route46_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,Gate_Route31_VioletCity_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,Gate_Route40_TrainerHill_Courtyard_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,Gate_Route43_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,Gate_RuinsOfAlph_Route32_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,Gate_RuinsOfAlph_Route36_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,GoldenrodCity_BikeShop_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,GoldenrodCity_BillsHouse_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,GoldenrodCity_DepartmentStoreBasement_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,GoldenrodCity_DepartmentStoreElevator_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,GoldenrodCity_DepartmentStore_1F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Johto,GoldenrodCity_DepartmentStore_2F_hns,INDOOR,hns,0,0,1,14,GoldenrodCity_DepartmentStore_1F_hns,0,0,0,0,0,,0,0,,0,0,0,,3,9
+Johto,GoldenrodCity_DepartmentStore_3F_hns,INDOOR,hns,0,0,1,26,GoldenrodCity_DepartmentStore_1F_hns,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,GoldenrodCity_DepartmentStore_4F_hns,INDOOR,hns,0,0,1,28,GoldenrodCity_DepartmentStore_1F_hns,0,0,0,0,0,,0,0,,0,0,0,,2,5
+Johto,GoldenrodCity_DepartmentStore_5F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,GoldenrodCity_DepartmentStore_6F_hns,INDOOR,hns,0,0,1,4,GoldenrodCity_DepartmentStore_1F_hns,0,0,0,0,0,,0,0,,0,0,0,,3,11
+Johto,GoldenrodCity_DepartmentStore_7F_hns,CITY,hns,0,0,0,0,,0,0,0,0,0,,0,0,,1,0,0,,1,3
+Johto,GoldenrodCity_FlowerShop_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,6
+Johto,GoldenrodCity_GameCorner_hns,INDOOR,hns,0,0,0,0,,1,16,0,0,0,,0,0,,0,0,0,,8,25
+Johto,GoldenrodCity_Gym_hns,INDOOR,hns,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,0,0
+Johto,GoldenrodCity_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,GoldenrodCity_House2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,8
+Johto,GoldenrodCity_House3_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Johto,GoldenrodCity_PokemonCenter_hns,INDOOR,hns,1,7,0,0,,0,0,0,0,0,,0,0,,0,0,0,,5,14
+Johto,GoldenrodCity_RadioTower_1F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,GoldenrodCity_RadioTower_2F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Johto,GoldenrodCity_RadioTower_3F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Johto,GoldenrodCity_RadioTower_4F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Johto,GoldenrodCity_RadioTower_5F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,GoldenrodCity_TrainStation_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Johto,GoldenrodCity_UndergroundEntrance_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,GoldenrodCity_UndergroundStorage_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,GoldenrodCity_UndergroundSwitches_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,GoldenrodCity_UndergroundTunnel_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,GoldenrodCity_hns,CITY,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,73,3,"34,20 35,38 19,33",0,0
+Johto,IcePath_1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,9,6,,0,0,0,,0,0
+Johto,IcePath_B1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,IcePath_B2F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,IcePath_B3F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,2,1,,0,0,0,,0,0
+Johto,IcePath_B4F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,IlexForest_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,23,2,,0,0,0,,1,3
+Johto,IndigoPlateau_PokemonCenter_hns,INDOOR,hns,1,8,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,IndigoPlateau_hns,TOWN,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,9,1,"11,14",0,0
+Johto,LakeOfRageLowTide_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,34,10,,0,0,0,,0,0
+Johto,LakeOfRage_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,LakeOfRage_House2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,LakeOfRage_hns,CITY,hns,0,0,0,0,,0,0,0,0,0,,45,7,,0,65,3,"31,42 42,36 13,42",1,3
+Johto,MahoganyTown_Gym_hns,INDOOR,hns,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,1,2
+Johto,MahoganyTown_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,8
+Johto,MahoganyTown_PokemonCenter_hns,INDOOR,hns,1,4,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,4
+Johto,MahoganyTown_Shop_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Johto,Mahoganytown_hns,TOWN,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,84,3,"18,14 37,12 16,20",0,0
+Johto,MtMortar_1F_North_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,11,3,,0,0,0,,0,0
+Johto,MtMortar_1F_South_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,63,11,,0,0,0,,0,0
+Johto,MtMortar_2F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,93,22,,0,0,0,,0,0
+Johto,MtMortar_B1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,36,6,,0,0,0,,1,3
+Johto,MtSilver_1F_ItemRoom_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,MtSilver_1F_MoltresRoom_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,MtSilver_1F_WaterfallRoom_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,26,5,,0,0,0,,0,0
+Johto,MtSilver_2F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,MtSilver_3F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,MtSilver_MountainSide_hns,ROUTE,hns,0,0,0,0,,0,0,0,230,11,40 24 23 14 14 10 9 9 8 8 6,0,0,,0,0,0,,0,0
+Johto,MtSilver_Outside_hns,CITY,hns,0,0,0,0,,0,0,0,163,4,107 16 13 8,5,2,,0,13,3,"37,26 31,13 25,25",0,0
+Johto,MtSilver_PokemonCenter_hns,INDOOR,hns,1,4,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,MtSilver_Snow_hns,ROUTE,hns,0,0,0,0,,0,0,0,165,12,21 15 14 10 9 9 8 7 7 7 7 6,0,0,,0,0,0,,0,0
+Johto,MtSilver_SummitDay_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,3,1,,0,0,0,,0,0
+Johto,NationalPark_BugContest_hns,ROUTE,hns,0,0,0,0,,0,0,0,230,1,184,0,0,,0,0,0,,0,0
+Johto,NationalPark_Normal_hns,ROUTE,hns,0,0,0,0,,0,0,0,230,1,184,0,0,,0,0,0,,0,0
+Johto,NewBarkTown_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,NewBarkTown_House2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,NewBarkTown_Lab_hns,NONE,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,NewBarkTown_PlayersHouse_1F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,NewBarkTown_PlayersHouse_2F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,NewBarkTown_hns,TOWN,hns,0,0,0,0,,0,0,0,0,0,,5,1,,0,71,3,"17,14 5,13 21,22",0,0
+Johto,OlivineCity_Cafe_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,OlivineCity_Gym_hns,INDOOR,hns,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,1,3
+Johto,OlivineCity_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,OlivineCity_House2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,OlivineCity_House3_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,OlivineCity_Lighthouse_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Johto,OlivineCity_Mart_hns,INDOOR,hns,0,0,1,29,OlivineCity_Mart_hns,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Johto,OlivineCity_PokemonCenter_hns,INDOOR,hns,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,OlivineCity_PortInside_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,OlivineCity_PortOutside_hns,OCEAN_ROUTE,hns,0,0,0,0,,0,0,0,0,0,,39,2,,0,0,0,,1,3
+Johto,OlivineCity_hns,CITY,hns,0,0,0,0,,0,0,0,36,0,,38,4,,0,164,3,"19,48 19,5 20,62",2,5
+Johto,PokemonLeague_BrunosRoom_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,PokemonLeague_ChampionsRoom_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,PokemonLeague_HallOfFame_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,PokemonLeague_KarensRoom_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,PokemonLeague_KogasRoom_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,PokemonLeague_WillsRoom_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,ReceptionGate_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,RocketHideout_B1F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,RocketHideout_B2F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,RocketHideout_B3F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,Route23_hns,ROUTE,hns,0,0,0,0,,0,0,0,70,0,,0,0,,0,0,0,,0,0
+Johto,Route26North_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,Route26_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,Route26_House2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,Route26_hns,ROUTE,hns,0,0,0,0,,0,0,0,211,7,80 28 25 18 14 9 8,35,5,,0,0,0,,0,0
+Johto,Route27_House_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,Route27_hns,ROUTE,hns,0,0,0,0,,0,0,0,93,5,42 17 7 6 6,132,8,,0,0,0,,1,3
+Johto,Route28_House_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,Route28_hns,ROUTE,hns,0,0,0,0,,0,0,0,218,8,122 29 18 12 12 8 6 6,25,3,,0,0,0,,0,0
+Johto,Route29_hns,ROUTE,hns,0,0,0,0,,0,0,0,295,7,95 52 49 31 30 26 12,0,0,,0,0,0,,6,21
+Johto,Route30_House_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,Route30_MrPokemonsHouse_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,Route30_hns,ROUTE,hns,0,0,0,0,,0,0,0,192,6,42 36 36 32 12 10,19,3,,0,0,0,,0,0
+Johto,Route31_hns,ROUTE,hns,0,0,0,0,,0,0,0,130,5,38 35 23 16 6,11,2,,0,0,0,,2,8
+Johto,Route32_PokemonCenter_hns,INDOOR,hns,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Johto,Route32_hns,ROUTE,hns,0,0,0,0,,0,0,0,235,7,52 44 44 41 28 17 7,52,3,,0,0,0,,3,7
+Johto,Route33_hns,ROUTE,hns,0,0,0,0,,0,0,0,56,2,29 27,46,2,,0,0,0,,1,4
+Johto,Route34_DayCare_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,Route34_hns,ROUTE,hns,0,0,0,0,,0,0,0,446,5,225 102 20 12 8,19,3,,0,0,0,,0,0
+Johto,Route35_hns,ROUTE,hns,0,0,0,0,,0,0,0,116,1,87,8,1,,0,0,0,,0,0
+Johto,Route36_hns,ROUTE,hns,0,0,0,0,,0,0,0,90,3,15 13 8,1,1,,0,0,0,,2,6
+Johto,Route37_hns,ROUTE,hns,0,0,0,0,,0,0,0,190,3,66 46 26,0,0,,0,0,0,,0,0
+Johto,Route38_hns,ROUTE,hns,0,0,0,0,,0,0,0,364,3,108 88 70,116,9,,0,0,0,,0,0
+Johto,Route39_Barn_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,Route39_FarmHouse_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Johto,Route39_hns,ROUTE,hns,0,0,0,0,,0,0,0,177,2,84 57,89,2,,0,0,0,,1,4
+Johto,Route40_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,28,1,,0,0,0,,2,7
+Johto,Route41_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,30,7,,0,0,0,,0,0
+Johto,Route42_hns,ROUTE,hns,0,0,0,0,,0,0,0,35,1,35,21,6,,0,0,0,,1,2
+Johto,Route43_hns,ROUTE,hns,0,0,0,0,,0,0,0,209,6,58 56 20 18 13 12,20,4,,0,0,0,,0,0
+Johto,Route44_hns,ROUTE,hns,0,0,0,0,,0,0,0,64,1,56,66,6,,0,0,0,,0,0
+Johto,Route45_hns,ROUTE,hns,0,0,0,0,,0,0,0,357,11,50 45 44 41 34 29 28 27 25 24 10,58,13,,0,0,0,,0,0
+Johto,Route46_hns,ROUTE,hns,0,0,0,0,,0,0,0,98,1,86,1,1,,0,0,0,,0,0
+Johto,Route47_hns,ROUTE,hns,0,0,0,0,,0,0,0,110,0,,50,10,,0,0,0,,0,0
+Johto,Route48_hns,ROUTE,hns,0,0,0,0,,0,0,0,317,2,125 96,27,6,,0,0,0,,0,0
+Johto,RuinsOfAlph_B1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,RuinsOfAlph_Lab_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,RuinsOfAlph_Outside_hns,ROUTE,hns,0,0,0,0,,0,0,0,61,2,36 25,19,4,,0,0,0,,4,9
+Johto,RuinsOfAlph_PuzzleAndRewardChambers_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,RuinsOfAlph_WordsRoom1_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,RuinsOfAlph_WordsRoom2_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,RuinsOfAlph_WordsRoom3_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,RuinsOfAlph_WordsRoom4_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,SSAqua_1F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,SSAqua_B1F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,SSAqua_CaptainsRoom_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,SSAqua_PlayersRoom_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,SSAqua_RoomNE_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,SSAqua_RoomNNE_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,SSAqua_RoomNW_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,SSAqua_RoomSE_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,SSAqua_RoomSSE_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,SSAqua_RoomSSW_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,SSAqua_RoomSW_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,SafariZoneGate_PokemonCenter_hns,INDOOR,hns,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,SafariZoneGate_SafariZoneEntrance_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,7,20
+Johto,SafariZoneGate_hns,TOWN,hns,0,0,0,0,,0,0,0,4,0,,0,0,,0,26,3,"16,26 12,18 17,12",3,10
+Johto,SafariZone_Enterance_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,SafariZone_Low_Left_hns,ROUTE,hns,0,0,0,0,,0,0,0,12,0,,0,0,,0,0,0,,0,0
+Johto,SafariZone_Low_Mid_hns,ROUTE,hns,0,0,0,0,,0,0,0,93,3,28 28 15,27,1,,0,0,0,,0,0
+Johto,SafariZone_Low_Right_hns,OCEAN_ROUTE,hns,0,0,0,0,,0,0,0,24,0,,81,3,,0,0,0,,0,0
+Johto,SafariZone_Top_Left_hns,ROUTE,hns,0,0,0,0,,0,0,0,110,3,66 26 8,0,0,,0,0,0,,0,0
+Johto,SafariZone_Top_Mid_hns,ROUTE,hns,0,0,0,0,,0,0,0,134,3,66 40 28,0,0,,0,0,0,,0,0
+Johto,SafariZone_Top_Right_hns,OCEAN_ROUTE,hns,0,0,0,0,,0,0,0,65,2,44 18,136,1,,0,0,0,,0,0
+Johto,SlateportCity_BattleTentBattleRoom_hns,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,SlateportCity_BattleTentCorridor_hns,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,SlateportCity_BattleTentLobby_hns,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,8
+Johto,SlowpokeWell_B1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,7,2,,0,0,0,,0,0
+Johto,SlowpokeWell_B2F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,2,2,,0,0,0,,0,0
+Johto,SproutTower_1F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Johto,SproutTower_2F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,SproutTower_3F_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,TinTower_1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,TinTower_2F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,TinTower_3F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,TinTower_4F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,TinTower_5F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,TinTower_6F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,TinTower_7F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,TinTower_8F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,TinTower_9F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,TinTower_RoofDay_hns,ROUTE,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,TohjoFalls_Cavern_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,7,3,,0,0,0,,0,0
+Johto,TohjoFalls_GiovanniRoom_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,TrainerHill_Courtyard_hns,ROUTE,hns,0,0,0,0,,0,0,0,14,0,,0,0,,0,0,0,,4,11
+Johto,UnionCave_1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,63,5,,0,0,0,,0,0
+Johto,UnionCave_B1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,24,5,,0,0,0,,0,0
+Johto,UnionCave_B2F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,10,1,,0,0,0,,0,0
+Johto,VerdanturfTown_BattleTentBattleRoom_hns,INDOOR,emerald,0,0,0,0,,0,0,0,6,0,,0,0,,0,0,0,,0,0
+Johto,VerdanturfTown_BattleTentCorridor_hns,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,VerdanturfTown_BattleTentLobby_hns,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,4
+Johto,VictoryRoadKanto_1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,VictoryRoadKanto_B1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,22,1,,0,0,0,,0,0
+Johto,VictoryRoadKanto_B2F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,VioletCity_Gym_hns,INDOOR,hns,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,1,3
+Johto,VioletCity_House1_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Johto,VioletCity_House2_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Johto,VioletCity_Mart_hns,INDOOR,hns,0,0,1,29,VioletCity_Mart_hns,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Johto,VioletCity_PokemonCenter_hns,INDOOR,hns,1,4,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,9
+Johto,VioletCity_TrainerSchool_hns,INDOOR,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,6,18
+Johto,VioletCity_hns,CITY,hns,0,0,0,0,,0,0,0,2,0,,11,5,,0,104,3,"7,19 34,40 12,37",1,2
+Johto,WhirlIslands_1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,24,4,,0,0,0,,0,0
+Johto,WhirlIslands_B1F_Inner_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,WhirlIslands_B1F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,141,10,,0,0,0,,0,0
+Johto,WhirlIslands_B2F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Johto,WhirlIslands_B3F_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,47,6,,0,0,0,,0,0
+Johto,WhirlIslands_Descent_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,37,3,,0,0,0,,0,0
+Johto,WhirlIslands_LugiaChamber_hns,UNDERGROUND,hns,0,0,0,0,,0,0,0,0,0,,19,2,,0,0,0,,0,0
+Hoenn,AbandonedShip_CaptainsOffice,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,AbandonedShip_Corridors_1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,AbandonedShip_Corridors_B1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,AbandonedShip_Deck,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,AbandonedShip_Room_B1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,AbandonedShip_Rooms2_1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,AbandonedShip_Rooms2_B1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,AbandonedShip_Rooms_1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,AbandonedShip_Rooms_B1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,8,1,,0,0,0,,1,1
+Hoenn,AlteringCave,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,AncientTomb,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,AquaHideout_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,interior,0,0,0,,0,0
+Hoenn,AquaHideout_B1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,AquaHideout_B2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,ArtisanCave_1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,ArtisanCave_B1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattleArenaBattleRoom,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattleArenaCorridor,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattleArenaLobby,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,4
+Hoenn,BattleFrontier_BattleDomeBattleRoom,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattleDomeCorridor,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattleDomeLobby,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattleDomePreBattleRoom,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattleFactoryBattleRoom,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattleFactoryLobby,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,5,9
+Hoenn,BattleFrontier_BattleFactoryPreBattleRoom,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattlePalaceBattleRoom,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,interior,0,0,0,,0,0
+Hoenn,BattleFrontier_BattlePalaceCorridor,INDOOR,emerald,0,0,0,0,,0,0,0,18,0,,0,0,interior,0,0,0,,0,0
+Hoenn,BattleFrontier_BattlePalaceLobby,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,6
+Hoenn,BattleFrontier_BattlePikeCorridor,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattlePikeLobby,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,5
+Hoenn,BattleFrontier_BattlePikeRoomFinal,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattlePikeRoomNormal,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattlePikeRoomWildMons,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattlePikeThreePathRoom,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattlePyramidFloor,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattlePyramidLobby,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattlePyramidTop,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattleTowerBattleRoom,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattleTowerCorridor,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattleTowerElevator,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattleTowerLobby,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,5,9
+Hoenn,BattleFrontier_BattleTowerMultiBattleRoom,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattleTowerMultiCorridor,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_BattleTowerMultiPartnerRoom,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_ExchangeServiceCorner,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,4
+Hoenn,BattleFrontier_Lounge1,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,BattleFrontier_Lounge2,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,4,11
+Hoenn,BattleFrontier_Lounge3,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,4,12
+Hoenn,BattleFrontier_Lounge4,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Hoenn,BattleFrontier_Lounge5,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,8
+Hoenn,BattleFrontier_Lounge6,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,4
+Hoenn,BattleFrontier_Lounge7,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,10
+Hoenn,BattleFrontier_Lounge8,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,BattleFrontier_Lounge9,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,BattleFrontier_Mart,INDOOR,emerald,0,0,1,18,BattleFrontier_Mart,0,0,0,0,0,,0,0,,0,0,0,,2,5
+Hoenn,BattleFrontier_OutsideEast,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,28,3,,0,0,0,,16,42
+Hoenn,BattleFrontier_OutsideWest,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,5,1,,0,0,0,,5,11
+Hoenn,BattleFrontier_PokemonCenter_1F,INDOOR,emerald,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,11
+Hoenn,BattleFrontier_PokemonCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
+Hoenn,BattleFrontier_RankingHall,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,4
+Hoenn,BattleFrontier_ReceptionGate,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,BattleFrontier_ScottsHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,CaveOfOrigin_1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,CaveOfOrigin_B1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,CaveOfOrigin_Entrance,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,DesertRuins,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,DesertUnderpass,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,DewfordTown,TOWN,emerald,0,0,0,0,,0,0,0,0,0,,15,3,,0,23,3,"3,15 8,2 5,6",1,4
+Hoenn,DewfordTown_Gym,INDOOR,emerald,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,1,3
+Hoenn,DewfordTown_Hall,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,9
+Hoenn,DewfordTown_House1,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,DewfordTown_House2,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Hoenn,DewfordTown_PokemonCenter_1F,INDOOR,emerald,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,DewfordTown_PokemonCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
+Hoenn,EverGrandeCity,CITY,emerald,0,0,0,0,,0,0,0,0,0,,5,1,,0,139,3,"22,18 18,47 26,52",0,0
+Hoenn,EverGrandeCity_ChampionsRoom,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,EverGrandeCity_DrakesRoom,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,EverGrandeCity_GlaciasRoom,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,EverGrandeCity_Hall1,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,EverGrandeCity_Hall2,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,EverGrandeCity_Hall3,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,EverGrandeCity_Hall4,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,EverGrandeCity_Hall5,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,EverGrandeCity_HallOfFame,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,EverGrandeCity_PhoebesRoom,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,EverGrandeCity_PokemonCenter_1F,INDOOR,emerald,1,4,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Hoenn,EverGrandeCity_PokemonCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
+Hoenn,EverGrandeCity_PokemonLeague_1F,INDOOR,emerald,1,1,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,EverGrandeCity_PokemonLeague_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
+Hoenn,EverGrandeCity_SidneysRoom,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,FallarborTown,TOWN,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,27,3,"3,11 16,10 11,18",1,3
+Hoenn,FallarborTown_BattleTentBattleRoom,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,FallarborTown_BattleTentCorridor,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,FallarborTown_BattleTentLobby,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Hoenn,FallarborTown_CozmosHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,FallarborTown_Mart,INDOOR,emerald,0,0,1,19,FallarborTown_Mart,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,FallarborTown_MoveRelearnersHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,FallarborTown_PokemonCenter_1F,INDOOR,emerald,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Hoenn,FallarborTown_PokemonCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
+Hoenn,FieryPath,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,FortreeCity,CITY,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,13,3,"2,9 37,9 32,13",4,9
+Hoenn,FortreeCity_DecorationShop,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,3
+Hoenn,FortreeCity_Gym,INDOOR,emerald,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,1,3
+Hoenn,FortreeCity_House1,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,5
+Hoenn,FortreeCity_House2,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,4
+Hoenn,FortreeCity_House3,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,FortreeCity_House4,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Hoenn,FortreeCity_House5,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Hoenn,FortreeCity_Mart,INDOOR,emerald,0,0,1,19,FortreeCity_Mart,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,FortreeCity_PokemonCenter_1F,INDOOR,emerald,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,12
+Hoenn,FortreeCity_PokemonCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
+Hoenn,GraniteCave_1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,4
+Hoenn,GraniteCave_B1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,GraniteCave_B2F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,GraniteCave_StevensRoom,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,IslandCave,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,JaggedPass,ROUTE,emerald,0,0,0,0,,0,0,0,18,2,10 8,0,0,,0,0,0,,0,0
+Hoenn,LavaridgeTown,TOWN,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,18,2,"16,10 9,10",6,17
+Hoenn,LavaridgeTown_Gym_1F,INDOOR,emerald,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,1,4
+Hoenn,LavaridgeTown_Gym_B1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,LavaridgeTown_HerbShop,INDOOR,emerald,0,0,1,7,LavaridgeTown_HerbShop,0,0,0,0,0,,0,0,,0,0,0,,1,4
+Hoenn,LavaridgeTown_House,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,4
+Hoenn,LavaridgeTown_Mart,INDOOR,emerald,0,0,1,19,LavaridgeTown_Mart,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,LavaridgeTown_PokemonCenter_1F,INDOOR,emerald,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,8
+Hoenn,LavaridgeTown_PokemonCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
+Hoenn,LilycoveCity,CITY,emerald,0,0,0,0,,0,0,0,0,0,,42,5,,0,314,3,"56,27 34,17 32,30",7,19
+Hoenn,LilycoveCity_ContestHall,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,LilycoveCity_ContestLobby,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,7,22
+Hoenn,LilycoveCity_CoveLilyMotel_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,LilycoveCity_CoveLilyMotel_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,LilycoveCity_DepartmentStoreElevator,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,1
+Hoenn,LilycoveCity_DepartmentStoreRooftop,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Hoenn,LilycoveCity_DepartmentStore_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,LilycoveCity_DepartmentStore_2F,INDOOR,emerald,0,0,1,19,LilycoveCity_DepartmentStore_1F,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,LilycoveCity_DepartmentStore_3F,INDOOR,emerald,0,0,1,19,LilycoveCity_DepartmentStore_1F,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,LilycoveCity_DepartmentStore_4F,INDOOR,emerald,0,0,1,19,LilycoveCity_DepartmentStore_1F,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,LilycoveCity_DepartmentStore_5F,INDOOR,emerald,0,0,1,23,LilycoveCity_DepartmentStore_1F,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Hoenn,LilycoveCity_Harbor,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,interior,0,0,0,,0,0
+Hoenn,LilycoveCity_House1,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Hoenn,LilycoveCity_House2,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Hoenn,LilycoveCity_House3,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,6,16
+Hoenn,LilycoveCity_House4,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,LilycoveCity_LilycoveMuseum_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,10
+Hoenn,LilycoveCity_LilycoveMuseum_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,LilycoveCity_MoveDeletersHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,LilycoveCity_PokemonCenter_1F,INDOOR,emerald,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,4
+Hoenn,LilycoveCity_PokemonCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
+Hoenn,LilycoveCity_PokemonTrainerFanClub,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,LittlerootTown,TOWN,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,30,3,"9,4 1,14 6,11",0,0
+Hoenn,LittlerootTown_BrendansHouse_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,LittlerootTown_BrendansHouse_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,LittlerootTown_MaysHouse_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,LittlerootTown_MaysHouse_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,LittlerootTown_ProfessorBirchsLab,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MagmaHideout_1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MagmaHideout_2F_1R,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MagmaHideout_2F_2R,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MagmaHideout_2F_3R,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MagmaHideout_3F_1R,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MagmaHideout_3F_2R,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MagmaHideout_3F_3R,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MagmaHideout_4F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MauvilleCity,CITY,emerald,0,0,0,0,,0,0,0,0,0,,2,1,,0,63,3,"4,9 16,2 35,9",4,14
+Hoenn,MauvilleCity_BikeShop,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,MauvilleCity_GameCorner,INDOOR,emerald,0,0,0,0,,1,12,0,0,0,,0,0,,0,0,0,,9,30
+Hoenn,MauvilleCity_Gym,INDOOR,emerald,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,1,2
+Hoenn,MauvilleCity_House1,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,MauvilleCity_House2,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,MauvilleCity_Mart,INDOOR,emerald,0,0,1,19,MauvilleCity_Mart,0,0,0,0,0,,0,0,,0,0,0,,2,4
+Hoenn,MauvilleCity_PokemonCenter_1F,INDOOR,emerald,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Hoenn,MauvilleCity_PokemonCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,6
+Hoenn,MeteorFalls_1F_1R,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,22,5,,0,0,0,,0,0
+Hoenn,MeteorFalls_1F_2R,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,25,2,,0,0,0,,0,0
+Hoenn,MeteorFalls_B1F_1R,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,31,4,,0,0,0,,0,0
+Hoenn,MeteorFalls_B1F_2R,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,5,1,,0,0,0,,0,0
+Hoenn,MeteorFalls_StevensCave,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MirageTower_1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MirageTower_2F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MirageTower_3F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MirageTower_4F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MossdeepCity,CITY,emerald,0,0,0,0,,0,0,0,0,0,,110,8,,0,165,3,"9,23 48,14 33,19",3,9
+Hoenn,MossdeepCity_GameCorner_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MossdeepCity_GameCorner_B1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MossdeepCity_Gym,INDOOR,emerald,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,1,4
+Hoenn,MossdeepCity_House1,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,MossdeepCity_House2,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,MossdeepCity_House3,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,MossdeepCity_House4,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,MossdeepCity_Mart,INDOOR,emerald,0,0,1,21,MossdeepCity_Mart,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,MossdeepCity_PokemonCenter_1F,INDOOR,emerald,1,4,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Hoenn,MossdeepCity_PokemonCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
+Hoenn,MossdeepCity_SpaceCenter_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,MossdeepCity_SpaceCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MossdeepCity_StevensHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MtChimney,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MtChimney_CableCarStation,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MtPyre_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,6
+Hoenn,MtPyre_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,4
+Hoenn,MtPyre_3F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MtPyre_4F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MtPyre_5F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MtPyre_6F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,MtPyre_Exterior,ROUTE,emerald,0,0,0,0,,0,0,0,50,3,24 17 9,0,0,,0,0,0,,0,0
+Hoenn,MtPyre_Summit,ROUTE,emerald,0,0,0,0,,0,0,0,38,3,19 10 9,0,0,,0,0,0,,1,2
+Hoenn,NewMauville_Entrance,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,NewMauville_Inside,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,OldaleTown,TOWN,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,46,2,"8,12 9,3",1,4
+Hoenn,OldaleTown_House1,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,OldaleTown_House2,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,OldaleTown_Mart,INDOOR,emerald,0,0,1,19,OldaleTown_Mart,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,OldaleTown_PokemonCenter_1F,INDOOR,emerald,1,4,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,10
+Hoenn,OldaleTown_PokemonCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
+Hoenn,PacifidlogTown,TOWN,emerald,0,0,0,0,,0,0,0,0,0,,92,3,,0,0,0,,3,5
+Hoenn,PacifidlogTown_House1,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,PacifidlogTown_House2,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,PacifidlogTown_House3,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,5
+Hoenn,PacifidlogTown_House4,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,PacifidlogTown_House5,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,PacifidlogTown_PokemonCenter_1F,INDOOR,emerald,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,4,11
+Hoenn,PacifidlogTown_PokemonCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
+Hoenn,PetalburgCity,CITY,emerald,0,0,0,0,,0,0,0,0,0,,19,4,,0,50,3,"15,23 25,18 5,11",0,0
+Hoenn,PetalburgCity_Gym,INDOOR,emerald,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,0,0
+Hoenn,PetalburgCity_House1,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,PetalburgCity_House2,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,PetalburgCity_Mart,INDOOR,emerald,0,0,1,18,PetalburgCity_Mart,0,0,0,0,0,,0,0,,0,0,0,,3,9
+Hoenn,PetalburgCity_PokemonCenter_1F,INDOOR,emerald,1,4,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,10
+Hoenn,PetalburgCity_PokemonCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
+Hoenn,PetalburgCity_WallysHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Hoenn,PetalburgWoods,ROUTE,emerald,0,0,0,0,,0,0,0,325,13,60 39 26 26 23 23 22 21 19 18 18 16 14,0,0,,0,0,0,,1,4
+Hoenn,Route101,ROUTE,emerald,0,0,0,0,,0,0,0,91,4,28 23 20 20,0,0,,0,0,0,,1,4
+Hoenn,Route102,ROUTE,emerald,0,0,0,0,,0,0,0,143,6,34 34 26 18 17 14,11,1,,0,0,0,,1,4
+Hoenn,Route103,ROUTE,emerald,0,0,0,0,,0,0,0,92,3,42 30 20,17,3,,0,0,0,,1,3
+Hoenn,Route104,ROUTE,emerald,0,0,0,0,,0,0,0,126,4,51 34 29 9,104,7,,0,0,0,,5,15
+Hoenn,Route104_MrBrineysHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route104_PrettyPetalFlowerShop,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route105,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,5,1,,0,0,0,,0,0
+Hoenn,Route106,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,33,2,,0,0,0,,0,0
+Hoenn,Route107,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,8,1,,0,0,0,,0,0
+Hoenn,Route108,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,2,2,,0,0,0,,0,0
+Hoenn,Route109,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,57,3,,0,0,0,,5,12
+Hoenn,Route109_SeashoreHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Hoenn,Route110,ROUTE,emerald,0,0,0,0,,0,0,0,212,5,62 49 38 20 7,138,35,,0,0,0,,2,6
+Hoenn,Route110_SeasideCyclingRoadNorthEntrance,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route110_SeasideCyclingRoadSouthEntrance,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route110_TrickHouseCorridor,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route110_TrickHouseEnd,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route110_TrickHouseEntrance,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route110_TrickHousePuzzle1,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route110_TrickHousePuzzle2,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route110_TrickHousePuzzle3,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route110_TrickHousePuzzle4,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route110_TrickHousePuzzle5,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route110_TrickHousePuzzle6,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route110_TrickHousePuzzle7,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route110_TrickHousePuzzle8,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route111,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,12,4,,0,0,0,,5,18
+Hoenn,Route111_OldLadysRestStop,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,Route111_WinstrateFamilysHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,4,8
+Hoenn,Route112,ROUTE,emerald,0,0,0,0,,0,0,0,59,3,26 19 14,0,0,,0,0,0,,0,0
+Hoenn,Route112_CableCarStation,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route113,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route113_GlassWorkshop,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,4
+Hoenn,Route114,ROUTE,emerald,0,0,0,0,,0,0,0,88,3,46 30 12,105,9,,0,0,0,,1,3
+Hoenn,Route114_FossilManiacsHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,Route114_FossilManiacsTunnel,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route114_LanettesHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route115,ROUTE,emerald,0,0,0,0,,0,0,0,20,1,20,49,5,,0,0,0,,0,0
+Hoenn,Route116,ROUTE,emerald,0,0,0,0,,0,0,0,138,3,57 34 30,0,0,,0,0,0,,0,0
+Hoenn,Route116_TunnelersRestHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,10
+Hoenn,Route117,ROUTE,emerald,0,0,0,0,,0,0,0,65,4,29 11 9 6,33,3,,0,0,0,,1,3
+Hoenn,Route117_PokemonDayCare,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route118,ROUTE,emerald,0,0,0,0,,0,0,0,110,4,42 37 16 15,35,7,,0,0,0,,1,2
+Hoenn,Route119,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,36,7,,0,0,0,,1,3
+Hoenn,Route119_House,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Hoenn,Route119_WeatherInstitute_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route119_WeatherInstitute_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route120,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,71,9,,0,0,0,,0,0
+Hoenn,Route121,ROUTE,emerald,0,0,0,0,,0,0,0,140,9,23 20 20 19 17 12 12 10 7,4,1,,0,0,0,,1,2
+Hoenn,Route121_SafariZoneEntrance,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route122,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,10,2,,0,0,0,,0,0
+Hoenn,Route123,ROUTE,emerald,0,0,0,0,,0,0,0,164,6,37 35 29 26 20 17,20,1,,0,0,0,,1,1
+Hoenn,Route123_BerryMastersHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,Route124,OCEAN_ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,23,1,,0,0,0,,0,0
+Hoenn,Route124_DivingTreasureHuntersHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,Route125,OCEAN_ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,44,5,,0,0,0,,0,0
+Hoenn,Route126,OCEAN_ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,4,2,,0,0,0,,0,0
+Hoenn,Route127,OCEAN_ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,2,2,,0,0,0,,0,0
+Hoenn,Route128,OCEAN_ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route129,OCEAN_ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route130,OCEAN_ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route131,OCEAN_ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route132,OCEAN_ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Route133,OCEAN_ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,7,1,,0,0,0,,0,0
+Hoenn,Route134,OCEAN_ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,15,1,,0,0,0,,0,0
+Hoenn,RustboroCity,CITY,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,113,3,"22,8 16,41 13,51",6,24
+Hoenn,RustboroCity_CuttersHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,RustboroCity_DevonCorp_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,RustboroCity_DevonCorp_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,5,13
+Hoenn,RustboroCity_DevonCorp_3F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,RustboroCity_Flat1_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,RustboroCity_Flat1_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,RustboroCity_Flat2_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,RustboroCity_Flat2_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,RustboroCity_Flat2_3F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,RustboroCity_Gym,INDOOR,emerald,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,1,3
+Hoenn,RustboroCity_House1,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,RustboroCity_House2,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,4
+Hoenn,RustboroCity_House3,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,5
+Hoenn,RustboroCity_Mart,INDOOR,emerald,0,0,1,19,RustboroCity_Mart,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,RustboroCity_PokemonCenter_1F,INDOOR,emerald,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,RustboroCity_PokemonCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
+Hoenn,RustboroCity_PokemonSchool,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,6,12
+Hoenn,RusturfTunnel,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SSTidalCorridor,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SSTidalLowerDeck,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SSTidalRooms,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SafariZone_North,ROUTE,emerald,0,0,0,0,,0,0,0,174,4,65 47 35 27,0,0,,0,0,0,,0,0
+Hoenn,SafariZone_Northeast,ROUTE,emerald,0,0,0,0,,0,0,0,97,4,42 33 15 7,0,0,,0,0,0,,3,12
+Hoenn,SafariZone_Northwest,ROUTE,emerald,0,0,0,0,,0,0,0,217,6,49 43 36 34 32 23,12,1,,0,0,0,,1,3
+Hoenn,SafariZone_RestHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,7
+Hoenn,SafariZone_South,ROUTE,emerald,0,0,0,0,,0,0,0,149,4,53 37 32 27,0,0,,0,0,0,,1,3
+Hoenn,SafariZone_Southeast,ROUTE,emerald,0,0,0,0,,0,0,0,164,7,37 25 19 18 16 13 8,33,2,,0,0,0,,1,4
+Hoenn,SafariZone_Southwest,ROUTE,emerald,0,0,0,0,,0,0,0,97,3,45 27 25,42,2,,0,0,0,,1,3
+Hoenn,ScorchedSlab,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,ShoalCave_LowTideEntranceRoom,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,ShoalCave_LowTideIceRoom,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,ShoalCave_LowTideInnerRoom,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,ShoalCave_LowTideLowerRoom,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,ShoalCave_LowTideStairsRoom,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SkyPillar_1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SkyPillar_2F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SkyPillar_3F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SkyPillar_4F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SkyPillar_5F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SkyPillar_Entrance,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SkyPillar_Outside,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SkyPillar_Top,ROUTE,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SlateportCity,CITY,emerald,0,0,0,0,,0,0,0,0,0,,21,4,,0,162,3,"16,13 17,36 8,30",7,17
+Hoenn,SlateportCity_BattleTentBattleRoom,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SlateportCity_BattleTentCorridor,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SlateportCity_BattleTentLobby,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,3,8
+Hoenn,SlateportCity_Harbor,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SlateportCity_House,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,SlateportCity_Mart,INDOOR,emerald,0,0,1,19,SlateportCity_Mart,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,SlateportCity_NameRatersHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,SlateportCity_OceanicMuseum_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SlateportCity_OceanicMuseum_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SlateportCity_PokemonCenter_1F,INDOOR,emerald,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Hoenn,SlateportCity_PokemonCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
+Hoenn,SlateportCity_PokemonFanClub,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,5,15
+Hoenn,SlateportCity_SternsShipyard_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Hoenn,SlateportCity_SternsShipyard_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,4
+Hoenn,SootopolisCity,CITY,emerald,0,0,0,0,,0,0,0,0,0,,35,3,,0,17,3,"47,43 12,33 26,21",0,0
+Hoenn,SootopolisCity_Gym_1F,INDOOR,emerald,0,0,0,0,,0,0,1,0,0,,0,0,,0,0,0,,1,3
+Hoenn,SootopolisCity_Gym_B1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SootopolisCity_House1,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Hoenn,SootopolisCity_House2,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,SootopolisCity_House3,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,SootopolisCity_House4,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,5
+Hoenn,SootopolisCity_House5,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,SootopolisCity_House6,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SootopolisCity_House7,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,SootopolisCity_LotadAndSeedotHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,SootopolisCity_Mart,INDOOR,emerald,0,0,1,19,SootopolisCity_Mart,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,SootopolisCity_MysteryEventsHouse_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SootopolisCity_MysteryEventsHouse_B1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SootopolisCity_PokemonCenter_1F,INDOOR,emerald,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,SootopolisCity_PokemonCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
+Hoenn,TerraCave_End,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,1,1,,0,0,0,,0,0
+Hoenn,TerraCave_Entrance,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,TrainerHill_1F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,TrainerHill_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,TrainerHill_3F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,TrainerHill_4F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,TrainerHill_Elevator,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,TrainerHill_Entrance,INDOOR,emerald,1,2,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,TrainerHill_Roof,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,Underwater_MarineCave,UNDERWATER,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Underwater_Route105,UNDERWATER,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Underwater_Route124,UNDERWATER,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Underwater_Route125,UNDERWATER,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Underwater_Route126,UNDERWATER,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Underwater_Route127,UNDERWATER,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Underwater_Route128,UNDERWATER,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Underwater_Route129,UNDERWATER,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Underwater_SeafloorCavern,UNDERWATER,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,Underwater_SootopolisCity,UNDERWATER,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,VerdanturfTown,TOWN,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,44,2,"14,10 4,10",0,0
+Hoenn,VerdanturfTown_BattleTentBattleRoom,INDOOR,emerald,0,0,0,0,,0,0,0,6,0,,0,0,,0,0,0,,0,0
+Hoenn,VerdanturfTown_BattleTentCorridor,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,VerdanturfTown_BattleTentLobby,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,4
+Hoenn,VerdanturfTown_FriendshipRatersHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,VerdanturfTown_House,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,4
+Hoenn,VerdanturfTown_Mart,INDOOR,emerald,0,0,1,18,VerdanturfTown_Mart,0,0,0,0,0,,0,0,,0,0,0,,3,8
+Hoenn,VerdanturfTown_PokemonCenter_1F,INDOOR,emerald,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Hoenn,VerdanturfTown_PokemonCenter_2F,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,2
+Hoenn,VerdanturfTown_WandasHouse,INDOOR,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Hoenn,VictoryRoad_1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,VictoryRoad_B1F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Hoenn,VictoryRoad_B2F,UNDERGROUND,emerald,0,0,0,0,,0,0,0,0,0,,22,5,,0,0,0,,0,0
+Sevii,FiveIsland_Frlg,TOWN,frlg,0,0,0,0,,0,0,0,0,0,,25,3,,0,6,1,"12,10",1,3
+Sevii,FiveIsland_Harbor_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,1
+Sevii,FiveIsland_House1_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,2
+Sevii,FiveIsland_House2_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_LostCave_Entrance_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_LostCave_Room10_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_LostCave_Room11_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_LostCave_Room12_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_LostCave_Room13_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_LostCave_Room14_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_LostCave_Room1_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_LostCave_Room2_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_LostCave_Room3_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_LostCave_Room4_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_LostCave_Room5_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_LostCave_Room6_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_LostCave_Room7_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_LostCave_Room8_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_LostCave_Room9_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_Meadow_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,101,5,32 25 13 12 7,36,6,,0,0,0,,0,0
+Sevii,FiveIsland_MemorialPillar_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,61,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_PokemonCenter_1F_Frlg,INDOOR,frlg,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Sevii,FiveIsland_PokemonCenter_2F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_ResortGorgeous_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,0,0,,85,2,,0,0,0,,0,0
+Sevii,FiveIsland_ResortGorgeous_House_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_RocketWarehouse_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FiveIsland_WaterLabyrinth_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FourIsland_Frlg,TOWN,frlg,0,0,0,0,,0,0,0,9,0,,21,4,,0,45,3,"11,18 37,29 6,17",3,6
+Sevii,FourIsland_Harbor_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,1
+Sevii,FourIsland_House1_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Sevii,FourIsland_House2_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FourIsland_IcefallCave_1F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FourIsland_IcefallCave_B1F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FourIsland_IcefallCave_Back_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,5,3,,0,0,0,,0,0
+Sevii,FourIsland_IcefallCave_Entrance_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,40,3,,0,0,0,,0,0
+Sevii,FourIsland_LoreleisHouse_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FourIsland_Mart_Frlg,INDOOR,frlg,0,0,1,13,FourIsland_Mart_Frlg,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Sevii,FourIsland_PokemonCenter_1F_Frlg,INDOOR,frlg,1,6,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Sevii,FourIsland_PokemonCenter_2F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,FourIsland_PokemonDayCare_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,MtEmber_Exterior_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,63,3,20 13 10,0,0,,0,0,0,,1,2
+Sevii,MtEmber_RubyPath_1F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,MtEmber_RubyPath_B1F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,MtEmber_RubyPath_B1F_Stairs_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,MtEmber_RubyPath_B2F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,MtEmber_RubyPath_B2F_Stairs_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,MtEmber_RubyPath_B3F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,MtEmber_RubyPath_B4F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,MtEmber_RubyPath_B5F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,MtEmber_SummitPath_1F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,MtEmber_SummitPath_2F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,MtEmber_SummitPath_3F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,MtEmber_Summit_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,OneIsland_Frlg,TOWN,frlg,0,0,0,0,,0,0,0,0,0,,6,2,,0,6,3,"12,14 16,9 19,12",1,4
+Sevii,OneIsland_Harbor_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,1
+Sevii,OneIsland_House1_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Sevii,OneIsland_House2_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,4
+Sevii,OneIsland_KindleRoad_EmberSpa_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,4,9
+Sevii,OneIsland_KindleRoad_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,89,3,44 29 15,75,8,,0,0,0,,0,0
+Sevii,OneIsland_PokemonCenter_1F_Frlg,INDOOR,frlg,1,5,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Sevii,OneIsland_PokemonCenter_2F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,OneIsland_TreasureBeach_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,44,0,,0,0,,0,0,0,,0,0
+Sevii,SevenIsland_Frlg,TOWN,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,10,2,"8,12 8,2",2,6
+Sevii,SevenIsland_Harbor_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,1
+Sevii,SevenIsland_House_Room1_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SevenIsland_House_Room2_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SevenIsland_Mart_Frlg,INDOOR,frlg,0,0,1,14,SevenIsland_Mart_Frlg,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Sevii,SevenIsland_PokemonCenter_1F_Frlg,INDOOR,frlg,1,6,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Sevii,SevenIsland_PokemonCenter_2F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SevenIsland_SevaultCanyon_Entrance_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,130,5,39 33 27 17 14,0,0,,0,0,0,,0,0
+Sevii,SevenIsland_SevaultCanyon_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,163,8,35 33 33 18 16 14 7 7,0,0,,0,0,0,,1,3
+Sevii,SevenIsland_SevaultCanyon_House_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SevenIsland_SevaultCanyon_TanobyKey_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SevenIsland_TanobyRuins_DilfordChamber_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SevenIsland_TanobyRuins_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,0,0,,183,8,,0,0,0,,0,0
+Sevii,SevenIsland_TanobyRuins_LiptooChamber_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SevenIsland_TanobyRuins_MoneanChamber_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SevenIsland_TanobyRuins_RixyChamber_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SevenIsland_TanobyRuins_ScufibChamber_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SevenIsland_TanobyRuins_ViapoisChamber_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SevenIsland_TanobyRuins_WeepthChamber_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SevenIsland_TrainerTower_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,0,0,,24,3,,0,0,0,,0,0
+Sevii,SixIsland_AlteringCave_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SixIsland_DottedHole_1F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SixIsland_DottedHole_B1F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SixIsland_DottedHole_B2F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SixIsland_DottedHole_B3F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SixIsland_DottedHole_B4F_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SixIsland_DottedHole_SapphireRoom_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SixIsland_Frlg,TOWN,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,18,2,"21,17 11,19",2,7
+Sevii,SixIsland_GreenPath_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,0,0,,10,2,,0,0,0,,0,0
+Sevii,SixIsland_Harbor_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,1
+Sevii,SixIsland_House_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Sevii,SixIsland_Mart_Frlg,INDOOR,frlg,0,0,1,13,SixIsland_Mart_Frlg,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SixIsland_OutcastIsland_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,0,0,,5,1,,0,0,0,,0,0
+Sevii,SixIsland_PatternBush_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,737,2,731 6,0,0,,0,0,0,,0,0
+Sevii,SixIsland_PokemonCenter_1F_Frlg,INDOOR,frlg,1,6,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,7
+Sevii,SixIsland_PokemonCenter_2F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,SixIsland_RuinValley_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,339,19,65 23 22 22 22 19 18 18 16 13 13 12 12 11 10 10 10 10 10,4,2,,0,0,0,,0,0
+Sevii,SixIsland_WaterPath_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,82,1,79,60,8,,0,0,0,,0,0
+Sevii,SixIsland_WaterPath_House1_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,4
+Sevii,SixIsland_WaterPath_House2_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Sevii,ThreeIsland_BerryForest_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,248,10,31 29 26 24 18 15 15 13 9 9,40,4,,0,0,0,,0,0
+Sevii,ThreeIsland_BondBridge_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,78,5,19 18 14 14 13,49,2,,0,0,0,,0,0
+Sevii,ThreeIsland_DunsparceTunnel_Frlg,UNDERGROUND,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,ThreeIsland_Frlg,TOWN,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,73,3,"8,12 10,31 14,22",1,3
+Sevii,ThreeIsland_Harbor_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,1
+Sevii,ThreeIsland_House1_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,ThreeIsland_House2_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,2,6
+Sevii,ThreeIsland_House3_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Sevii,ThreeIsland_House4_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Sevii,ThreeIsland_House5_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,ThreeIsland_Mart_Frlg,INDOOR,frlg,0,0,1,14,ThreeIsland_Mart_Frlg,0,0,0,0,0,,0,0,,0,0,0,,2,5
+Sevii,ThreeIsland_PokemonCenter_1F_Frlg,INDOOR,frlg,1,6,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Sevii,ThreeIsland_PokemonCenter_2F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,ThreeIsland_Port_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,16,1,16,0,0,,0,0,0,,1,4
+Sevii,TrainerTower_1F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,TrainerTower_2F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,TrainerTower_3F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,TrainerTower_4F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,TrainerTower_5F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,TrainerTower_6F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,TrainerTower_7F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,TrainerTower_8F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,TrainerTower_Elevator_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,TrainerTower_Lobby_Frlg,INDOOR,frlg,1,24,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,TrainerTower_Roof_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,TwoIsland_CapeBrink_Frlg,ROUTE,frlg,0,0,0,0,,0,0,0,32,3,16 10 6,23,2,,0,0,0,,0,0
+Sevii,TwoIsland_CapeBrink_House_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Sevii,TwoIsland_Frlg,TOWN,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,34,3,"16,8 35,4 27,15",5,18
+Sevii,TwoIsland_Harbor_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,1
+Sevii,TwoIsland_House_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Sevii,TwoIsland_JoyfulGameCorner_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0
+Sevii,TwoIsland_PokemonCenter_1F_Frlg,INDOOR,frlg,1,6,0,0,,0,0,0,0,0,,0,0,,0,0,0,,1,3
+Sevii,TwoIsland_PokemonCenter_2F_Frlg,INDOOR,frlg,0,0,0,0,,0,0,0,0,0,,0,0,,0,0,0,,0,0

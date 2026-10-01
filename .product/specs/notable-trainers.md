@@ -34,6 +34,12 @@ rather than restating it.
 - [Trainer AI](trainer-ai.md) owns the AI flags of every notable trainer
   battle: the play style, AI skill, ace protection, and the boss flag.
 - [Leagues](leagues.md) owns league lineups and their lifecycle.
+- [Notable haunts](notable-haunts.md) places notable trainers in the
+  overworld and owns the meaning of the buddy and reward pool
+  values ([below](#haunt-and-routine-values)).
+- [Notable spots](notable-spots.md) is the everyday layer of the future
+  routine and travel design. It owns the meaning of the home-base and
+  favourite-spots values.
 - [Player Trainer Rating](player-trainer-rating.md) owns the player's TR,
   the scaler definition, and the downward rule and shared evolution-level table
   ([evolution stages](player-trainer-rating.md#evolution-stages));
@@ -70,7 +76,8 @@ the battle order is Grumpig, Xatu, Claydol, Gardevoir, Lunatone, Solrock: Tate
 brings Xatu, Gardevoir, and Solrock, and Liza brings Grumpig, Claydol, and
 Lunatone. At world progress 0 (TR 26, two Pokémon) Tate brings Solrock and
 Liza Lunatone. Every notable rule applies to them (world progress, battle snapshot,
-construction); they are league-ineligible because leagues are singles only
+construction); they are league-ineligible, as opponents and as partners,
+because leagues field trainers who battle alone
 ([Leagues](leagues.md#registry-and-eligibility)).
 
 Mapping each encounter ID of these characters (Gym, rematch, league, and
@@ -112,8 +119,9 @@ willingness.
 A **trait** is an opt-in yes/no behaviour of a notable trainer, authored per
 entry as a boolean that defaults to `false`. Traits are independent of each
 other and of the archetype. v0 has two traits, **traveller** and **aloof**;
-in v0 only the [league lineup rule](leagues.md#selection-and-order) reads
-them. Assignments follow lore and are reviewable content.
+the [league lineup rule](leagues.md#selection-and-order) and
+[haunt placement](notable-haunts.md#candidates) read them. Assignments
+follow lore and are reviewable content.
 
 ### Traveller
 
@@ -145,9 +153,9 @@ strong trainer with a proud or distant persona):
 | Sabrina | Cold and distant. |
 | Karen | "Strong Pokémon, weak Pokémon": disdains weak company. |
 
-Everyone else is not aloof. The Tate & Liza duo is never aloof, since leagues
-are singles only. The aloof rule does not apply at the Sevii Masters
-([Leagues selection](leagues.md#selection-and-order)).
+Everyone else is not aloof. The Tate & Liza duo is never aloof, since it is
+league-ineligible. The aloof rule does not apply at the Sevii Masters
+([Sevii Masters](sevii-masters.md#lineup)).
 
 ## Trainer AI
 
@@ -156,6 +164,82 @@ a boolean **boss flag** (`bossOmniscient`, Lance only in v0).
 [Trainer AI](trainer-ai.md) owns both, the style assignments, and the AI
 flags each battle resolves from them, the trainer's TR, and the resolved
 team's aces.
+
+## Haunt and routine values
+
+Each entry also authors a **buddy** (one roster slot, 1-6). Notable trainers
+also appear at haunts in the overworld, and
+[Notable haunts](notable-haunts.md#trainer-values) owns what it means.
+Each entry also authors a **reward pool**, an ordered list of items and
+lessons with a from-TR gate each, which pays for finished haunt quests;
+[Notable haunts](notable-haunts.md#rewards-and-claims) owns what it means
+and its rules. Each entry also carries a **home base**, the map a
+trainer's routine measures from;
+[Notable spots](notable-spots.md#home-base) owns what it means and lists
+each trainer's. The [world simulation](notable-world-simulation.md) moves
+every trainer through a routine from that home base.
+
+## Friendship
+
+Each notable trainer, Tate & Liza included, has a **friendship score**: one
+saved byte, 0-255, that starts at 0 and **never decreases**; additions stop
+at 255. The **stage** is read from the score against fixed thresholds, and
+nothing else moves a stage.
+
+| Stage | Score at least | Notes |
+| --- | ---: | --- |
+| Stranger | 0 | The player has not talked to them. |
+| Met | 1 | They know the player. |
+| Friend | 20 | They give their phone number. |
+| Close | 60 | The warmest stage. |
+
+The thresholds are the same for every trainer in v0, and they are
+placeholder data like the weights below.
+
+Events only add weighted points (placeholders):
+
+| Event | Points | Bounds |
+| --- | ---: | --- |
+| First talk | +1 | Once: when a talk starts with the trainer at Stranger, at a [haunt](notable-haunts.md#talk-flow) or anywhere they are met, such as a [spot](notable-spots.md#talk-flow). |
+| Battle won | +20 | The first win over them, in any kind of battle. After that, a repeat win counts at most once per step of world progress: only if no repeat win over them has counted since world progress last rose. |
+| Haunt quest completed | +10 | Each completed [quest](notable-haunts.md#quests), at most once per placement. |
+
+Rules:
+
+- **Points come only from explicit, bounded events.** Nothing passive adds
+  any: repeat chats, time, world progress, and visits give nothing.
+- **A first win always counts**, whatever the kind of battle (Gym, rematch,
+  story, league, singles or a tag match, where both opponents count). A loss,
+  a draw, fleeing, a declined league event, a battle beside the trainer as a
+  partner, a One on one, Swap battle, or Handicap quest battle (each
+  counts as the quest, win or lose), and debug
+  battles add nothing. The first win alone reaches Friend.
+- **Which battles count.** Haunts offer no battles of their own, so wins come
+  from Gym, story, and league battles, and later from rematch spots. Only
+  battles that can come again (league events, and future rematch spots) give
+  repeat wins, and the step cap keeps them from being farmed: a repeat win
+  counts only if world progress has risen since the last repeat win that
+  counted.
+- **Consumers read only the stage, never the events or the score.** They are the
+  [haunts](notable-haunts.md#talk-flow) (greetings and quests) and [Sevii
+  Masters](sevii-masters.md#phone-contacts): a trainer at Friend or above is a
+  contact, and any contact can be the partner. The number is handed over when
+  the score first crosses the Friend threshold, by any route (a win, or quests),
+  with one system line that names the trainer. Tate & Liza keep a score, but
+  they give no number and cannot be the partner, and they are not placed at
+  haunts in v0.
+
+Saved state: one score byte per notable trainer, one **first-win bit** per
+notable trainer (the bit records that the first win was counted), and one
+**repeat-win bit** per notable trainer (set when a repeat win counts, and
+cleared for every trainer whenever world progress rises). New Game saves every
+score at 0 and every bit clear. On load, drop the scores and bits of characters
+no longer in the registry; a first-win bit set with a score under the Friend
+threshold, a repeat-win bit set without the first-win bit, or a score for an
+unknown character, is an invalid save.
+
+Later sources of points (gifts, tag battles beside the trainer, trades,
+partnering) are not in v0.
 
 ## Trainer rating
 
@@ -342,7 +426,10 @@ Aerodactyl (ace).
 
 Members step down by level through the
 [downward rule](player-trainer-rating.md#evolution-stages) and never evolve
-forward. Moves are resolved from the [move pool](#move-pools) against the
+forward, except a POKéMON the player traded into a filler slot, which takes
+the slot's species and evolves forward, never below its traded stage
+([traded slot](notable-haunts.md#the-trainers-team-after-a-trade)).
+Moves are resolved from the [move pool](#move-pools) against the
 member's current species, so a stepped-down member needs no special case.
 Brock (a Steady, start TR 25, peak TR 100) shows it: his slot 1 Steelix
 (offset 0) appears as Onix until his team level reaches 35 (world progress
@@ -415,8 +502,8 @@ learn level, so they need a from level, and it alone decides their timing.
   TM/tutor or as an egg move (these need a from level); every eligible member is
   below its from level or, without one, its learn level; or every eligible
   member already knows it or has four pool moves. It wakes when a member that
-  can use it joins, evolves, or reaches the level (Later, also when a traded
-  Pokémon joins). Nothing is saved; resolution is a pure function of the team
+  can use it joins, evolves, or reaches the level, a traded POKéMON
+  included. Nothing is saved; resolution is a pure function of the team
   and the pool.
 - **Stepping down.** No special case: learnability is always checked against
   the current species and its earlier forms, never a later form.
@@ -425,8 +512,9 @@ learn level, so they need a from level, and it alone decides their timing.
   [Gym Leader scaling](gym-leader-scaling.md#overrides-and-enablement) owns
   that precedence.
 - **Per-slot content.** Held items, abilities, natures, and IVs/EVs stay per
-  roster slot. Traded Pokémon (Later) keep their own record moves and don't
-  draw from the pool ([roster influence](trainer-roster-influence.md#trades)).
+  roster slot. A POKéMON the player traded into a filler slot draws from the
+  pool like any filler, but keeps its own ability, nature, and IVs
+  ([traded slot](notable-haunts.md#the-trainers-team-after-a-trade)).
 
 **Frustration rule.** When authoring a pool, draw on at most one
 frustration category per trainer, and keep the trainer's most iconic one. A
@@ -475,20 +563,32 @@ progress, scaler, archetype, roster, evolution-level table, move pool, and
 learnset content versions, and the resolved team
 before constructing the opponent: per member, the roster slot index and every
 resolved battle value the snapshot uses (species/form, level, moves, item,
-ability, nature, IVs/EVs, and battle order). Reconstruction within the battle
-reuses that snapshot, and the battle's AI flags are resolved alongside it
+ability, nature, IVs/EVs, and battle order). Resolution reads the trainer's
+traded slot, if any, whose rules
+[Notable haunts](notable-haunts.md#the-trainers-team-after-a-trade) owns.
+Reconstruction within the battle reuses that snapshot, and the battle's AI
+flags are resolved alongside it
 ([Trainer AI](trainer-ai.md#runtime-and-the-override-point)); teardown clears it, and world progress gained during the
 battle never changes it. A retry at the same world progress produces an
 identical team (battle RNG may still differ); a retry after the player gained TR
 uses the higher world progress. Accepting a league invitation computes every
 eligible trainer's TR and league score at that moment and captures the
-selected trainers' battle snapshots in the event lineup, frozen for that
-event; there the league state's
+selected trainers' battle snapshots (and at the Sevii Masters the
+[partner's](sevii-masters.md#event-lineup)) in the event lineup, frozen for
+that event; there the league state's
 [content versions](leagues.md#saved-state) stand in for each snapshot's own. Declining also computes the event lineup (and the league scores) at
 that moment, but captures no teams.
 [Leagues](leagues.md#event-lineup) owns that lifecycle. Invalid content or a
 failed resolution fails preparation; never substitute player TR for a trainer's
 TR, another trainer, or a random team.
+
+## Phone contacts
+
+A notable trainer's phone number comes when their [friendship](#friendship)
+first reaches Friend, and a contact is a trainer at Friend or above. Sevii
+Masters owns the phone side
+([phone contacts](sevii-masters.md#phone-contacts)): it uses contacts to ask
+a partner.
 
 ## Validation
 
@@ -544,6 +644,13 @@ TR, another trainer, or a random team.
   entries, and battle order, each level in 1–100 and the battle order derived as above (filler
   slots, then aces, each in reverse list order; slot 1 last), matching the
   Brock example at every team size.
+- Friendship: scores start at 0 and never decrease, cap at 255, and the stage
+  follows the thresholds (0, 1, 20, 60); a first win adds 20 once in every kind
+  of battle (both opponents of a tag match), a repeat win adds 20 at most once
+  per step of world progress and nothing more until world progress rises; a
+  first talk adds 1 once; a quest adds 10; losses, declines, and partnering add
+  nothing; the number is handed over once, at the Friend crossing; scores
+  survive reloads and prune with removed characters.
 - Determinism: trainer TR and resolution are pure functions of world progress
   and content, independent of party, badges or league wins beyond their effect
   on player TR, save seed, query order, call history, reloads, and battle RNG.
@@ -607,10 +714,6 @@ implementations stay active until then.
 ## Later
 
 - Notable trainer status for more characters, such as Red.
-- Overworld locations for notable trainers, read through willingness:
-  travellers roam and everyone else stays in their home region.
-- An overworld use of the aloof trait, such as aloof trainers keeping away
-  from weak areas.
 - Difficulty signposting: in-world hints about who is too strong (Gym guides,
   NPC gossip, a Trainer Card line), since TR is hidden.
 - Testable feel targets for playtesting (first Gym winnable with a lightly
@@ -623,8 +726,9 @@ implementations stay active until then.
 - Weighting TR sources differently for world progress.
 - Notable trainers also growing from their own battles.
 - Filler pools (weighted picks with seeded variation and gameplay-flag
-  modifiers) and trades that fill filler slots; aces stay fixed
-  ([roster influence](trainer-roster-influence.md)).
+  modifiers) and authored trade offers that fill filler slots; aces stay
+  fixed ([roster influence](trainer-roster-influence.md)). Haunt
+  [trades](notable-haunts.md#trade) are the v0 slice.
 - Quality scalers beyond Lv 100 (items, IVs/EVs, movesets) with a higher
   ceiling TR, so extra TR stays meaningful; AI skill tiers belong to
   [Trainer AI](trainer-ai.md#later).
@@ -637,6 +741,9 @@ implementations stay active until then.
 
 - [Player Trainer Rating](player-trainer-rating.md)
 - [Leagues](leagues.md)
+- [Sevii Masters](sevii-masters.md)
+- [Notable haunts](notable-haunts.md)
+- [Notable spots](notable-spots.md)
 - [Gym Leader scaling](gym-leader-scaling.md)
 - [Trainer AI](trainer-ai.md)
 - [Player progression](trainer-rating-party-progression.md)
