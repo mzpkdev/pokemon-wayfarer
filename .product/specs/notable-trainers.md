@@ -176,7 +176,8 @@ lessons with a from-TR gate each, which pays for finished haunt quests;
 and its rules. Each entry also carries a **home base**, the map a
 trainer's routine measures from;
 [Notable spots](notable-spots.md#home-base) owns what it means and lists
-each trainer's.
+each trainer's. The [world simulation](notable-world-simulation.md) moves
+every trainer through a routine from that home base.
 
 ## Friendship
 

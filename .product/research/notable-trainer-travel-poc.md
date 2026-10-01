@@ -4,6 +4,8 @@ Related PRD: [Notable haunts](../prds/notable-haunts.md)
 
 Related spec: [Notable haunts](../specs/notable-haunts.md)
 
+Superseded by spec: [Notable world simulation](../specs/notable-world-simulation.md)
+
 Evidence: closed draft PR
 [#146](https://github.com/mzpkdev/pokemon-wayfarer/pull/146), branch
 `task/viridian-walker-poc`. The branch's

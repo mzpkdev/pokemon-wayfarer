@@ -2656,6 +2656,9 @@ Its constraints shape any travel built on haunts:
 - doors need one collision exception;
 - the proof of concept disabled the player's following POKéMON.
 
+The [world simulation](notable-world-simulation.md) builds this travel on
+spots; haunts join it later as a destination kind.
+
 ### Follower NPCs
 
 - The engine's follower NPCs are compiled out: `FNPC_ENABLE_NPC_FOLLOWERS`

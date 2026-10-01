@@ -140,7 +140,8 @@ battles and badges; every battle with a notable trainer
 
 Out of scope: the routines themselves (when a trainer does which activity),
 travel between maps, and favourites, all of which come with the routine and
-travel design. Quests, battles, rewards, and gifts at spots.
+travel design. Quests, battles, rewards, and gifts at spots. Spots are the
+destinations of the [world simulation](notable-world-simulation.md).
 
 ## Presentation
 

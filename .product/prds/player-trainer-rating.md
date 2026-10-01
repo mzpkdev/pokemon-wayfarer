@@ -262,6 +262,26 @@ changes yours.
   a notable trainer spends most of their time once routines and travel
   arrive. Spots have no quests; haunts are the highlights
   ([spots](../specs/notable-spots.md#spots)).
+- **World simulation:** the saved, off-screen record of where every
+  notable trainer is and where they are heading, which moves them between
+  spots; on the player's map they walk for real
+  ([world simulation](../specs/notable-world-simulation.md#two-layers)).
+- **Heartbeat:** one tick of the world simulation, on each map change:
+  every notable trainer off the player's map takes one step of their way
+  or spends one more beat at their spot
+  ([heartbeat](../specs/notable-world-simulation.md#heartbeat)).
+- **Routine:** how a notable trainer spends their time: a home base, an
+  activity cycle, and life events that break into it
+  ([routines](../specs/notable-world-simulation.md#routines)).
+- **Activity cycle:** a notable trainer's three or four everyday
+  activities on repeat, such as Brock's train, care, study, home; each
+  picks a spot
+  ([activity cycle](../specs/notable-world-simulation.md#activity-cycle)).
+- **Life event:** a short break from the routine after league news:
+  preparing (training before an event or while rising), recovering
+  (resting after one), celebrating (a new champion out in public), or
+  brooding (the final's loser somewhere remote)
+  ([life events](../specs/notable-world-simulation.md#life-events)).
 - **Buddy:** a notable trainer's companion Pokémon, one slot of their
   roster, named at its current stage, so Brock's buddy is Onix early and
   Steelix later ([trainer values](../specs/notable-haunts.md#trainer-values)).

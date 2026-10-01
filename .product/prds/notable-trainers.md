@@ -200,7 +200,9 @@ Between their Gym and league battles, notable trainers also turn up at
 haunts around the overworld, where each offers the haunt's quest
 ([Notable haunts](notable-haunts.md)). Once routines and travel arrive,
 they spend the rest of their time at everyday [spots](notable-spots.md),
-such as a Pokémon Center or the edge of a pond.
+such as a Pokémon Center or the edge of a pond. The
+[world simulation](notable-world-simulation.md) moves them between those
+places on daily routines.
 
 FRLG, Emerald, and HNS parties are references for recognizable content, not
 required teams. Challenge options such as trainer items, trainer IVs and EVs,

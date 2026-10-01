@@ -31,7 +31,8 @@ rule, and the saved-state stance.
   and the heartbeat. This spec owns only what happens once an activity is
   chosen. The
   [travel proof of concept](../research/notable-trainer-travel-poc.md) is
-  its evidence so far.
+  its evidence so far. Spots are the destinations of the
+  [world simulation](notable-world-simulation.md), which specifies all of that.
 - [Notable trainers](notable-trainers.md) owns friendship and its events,
   and holds home bases, and favourites once they are authored, in the
   catalog.
