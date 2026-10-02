@@ -1,4 +1,5 @@
 {
+  "bridge": true,
   "browse": true,
   "budget": true,
   "deadend": true,

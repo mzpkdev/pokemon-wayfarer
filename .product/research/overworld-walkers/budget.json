@@ -74,9 +74,9 @@
   "template_moves": 5,
   "spawns": 3,
   "searches": 7,
-  "maxSliceScanlines": 217,
+  "maxSliceScanlines": 162,
   "maxSearchNodes": 966,
-  "maxSearchFrames": 242,
+  "maxSearchFrames": 225,
   "records": {
     "lorelei": {
       "node": 67,
@@ -135,7 +135,7 @@
     ".product/research/overworld-walkers/budget-later.png"
   ],
   "debug": {
-    "frames": 1396,
+    "frames": 1441,
     "spawns": 3,
     "removals": 1,
     "edgeExits": 1,
@@ -156,16 +156,16 @@
     "restores": 0,
     "lastSearchNodes": 72,
     "maxSearchNodes": 966,
-    "lastSearchFrames": 18,
-    "maxSearchFrames": 242,
-    "maxSliceScanlines": 217,
+    "lastSearchFrames": 17,
+    "maxSearchFrames": 225,
+    "maxSliceScanlines": 162,
     "maxSliceNodes": 8,
-    "workspaceBytes": 10136,
+    "workspaceBytes": 11308,
     "currentMap": 32,
     "followerHidden": 0,
     "activeActors": 2,
     "storySuppressed": 0,
-    "worldState": 33634036,
+    "worldState": 33634056,
     "actors": [
       {
         "index": 0,
@@ -193,7 +193,7 @@
         "template": 3,
         "atSpot": 1,
         "blocked": 0,
-        "x": 17,
+        "x": 20,
         "y": 31,
         "goalX": 21,
         "goalY": 31,
@@ -235,13 +235,14 @@
     "lastHeartbeatScanlines": 27,
     "maxHeartbeatScanlines": 27,
     "maxSpawnScanlines": 59,
-    "maxUpdateScanlines": 229,
+    "maxUpdateScanlines": 176,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
     "lastContextScanlines": 16,
-    "lastFailNodes": 0
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 16
   },
   "pass": true,
   "emulated_frames": 1890

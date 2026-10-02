@@ -175,7 +175,8 @@
     "visitorsVanished": 0,
     "culls": 0,
     "lastContextScanlines": 0,
-    "lastFailNodes": 0
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 0
   },
   "pass": true,
   "emulated_frames": 1254

@@ -53,12 +53,12 @@
     "maxSearchFrames": 1,
     "maxSliceScanlines": 6,
     "maxSliceNodes": 1,
-    "workspaceBytes": 10136,
+    "workspaceBytes": 11308,
     "currentMap": 4613,
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634052,
+    "worldState": 33634092,
     "actors": [
       {
         "index": 0,
@@ -128,13 +128,14 @@
     "lastHeartbeatScanlines": 28,
     "maxHeartbeatScanlines": 28,
     "maxSpawnScanlines": 21,
-    "maxUpdateScanlines": 39,
+    "maxUpdateScanlines": 40,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
     "lastContextScanlines": 15,
-    "lastFailNodes": 0
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 0
   },
   "pass": true,
   "emulated_frames": 642

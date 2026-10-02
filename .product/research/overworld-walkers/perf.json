@@ -3,35 +3,35 @@
     {
       "warp": 1,
       "frames": 42,
-      "heartbeat_scanlines": 67,
+      "heartbeat_scanlines": 68,
       "context_scanlines": 10,
       "trace": "0000000000000000000000000000040005000000"
     },
     {
       "warp": 2,
       "frames": 40,
-      "heartbeat_scanlines": 71,
+      "heartbeat_scanlines": 72,
       "context_scanlines": 10,
       "trace": "0000000000000000000000000000030004000000"
     },
     {
       "warp": 3,
       "frames": 42,
-      "heartbeat_scanlines": 81,
+      "heartbeat_scanlines": 82,
       "context_scanlines": 10,
       "trace": "0300000002000200020000000000020004000000"
     },
     {
       "warp": 4,
       "frames": 42,
-      "heartbeat_scanlines": 554,
+      "heartbeat_scanlines": 565,
       "context_scanlines": 10,
       "trace": "0100000001000100010000000000140005000000"
     },
     {
       "warp": 5,
       "frames": 44,
-      "heartbeat_scanlines": 593,
+      "heartbeat_scanlines": 601,
       "context_scanlines": 10,
       "trace": "0001000057001100110000000000070007000000"
     },
@@ -45,35 +45,35 @@
     {
       "warp": 7,
       "frames": 42,
-      "heartbeat_scanlines": 273,
+      "heartbeat_scanlines": 275,
       "context_scanlines": 10,
       "trace": "7800000021000900090000000000060008000000"
     },
     {
       "warp": 8,
       "frames": 40,
-      "heartbeat_scanlines": 224,
+      "heartbeat_scanlines": 226,
       "context_scanlines": 10,
       "trace": "5d0000001f000800080000000000050004000000"
     },
     {
       "warp": 9,
       "frames": 42,
-      "heartbeat_scanlines": 310,
+      "heartbeat_scanlines": 313,
       "context_scanlines": 10,
       "trace": "4a0000001f000a000a00000000000a0004000000"
     },
     {
       "warp": 10,
       "frames": 42,
-      "heartbeat_scanlines": 293,
+      "heartbeat_scanlines": 299,
       "context_scanlines": 10,
       "trace": "480000001f000f000f0000000000030004000000"
     },
     {
       "warp": 11,
       "frames": 42,
-      "heartbeat_scanlines": 347,
+      "heartbeat_scanlines": 354,
       "context_scanlines": 10,
       "trace": "360000001e000b000b0000000000050009000000"
     },
@@ -85,11 +85,11 @@
       "trace": "2000000015000600060000000000030004000000"
     }
   ],
-  "max_heartbeat_scanlines": 593,
-  "mean_heartbeat_scanlines": 263.5833333333333,
-  "max_heartbeat_frames": 2.6,
+  "max_heartbeat_scanlines": 601,
+  "mean_heartbeat_scanlines": 267.0833333333333,
+  "max_heartbeat_frames": 2.64,
   "debug": {
-    "frames": 369,
+    "frames": 368,
     "spawns": 0,
     "removals": 0,
     "edgeExits": 0,
@@ -119,7 +119,7 @@
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634068,
+    "worldState": 33634056,
     "actors": [
       {
         "index": 0,
@@ -187,7 +187,7 @@
       }
     ],
     "lastHeartbeatScanlines": 88,
-    "maxHeartbeatScanlines": 593,
+    "maxHeartbeatScanlines": 601,
     "maxSpawnScanlines": 6,
     "maxUpdateScanlines": 16,
     "backOffs": 0,
@@ -195,7 +195,8 @@
     "visitorsVanished": 0,
     "culls": 0,
     "lastContextScanlines": 10,
-    "lastFailNodes": 0
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 0
   },
   "pass": true,
   "emulated_frames": 814

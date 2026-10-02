@@ -1,135 +1,214 @@
 {
-  "track": [
-    [
-      26,
-      41
-    ],
-    [
-      26,
-      42
-    ],
-    [
-      26,
-      43
-    ],
-    [
-      26,
-      44
-    ],
-    [
-      26,
-      45
-    ],
-    [
-      26,
-      46
-    ],
-    [
-      26,
-      47
-    ],
-    [
-      26,
-      48
-    ],
-    [
-      26,
-      49
-    ],
-    [
-      26,
-      50
-    ],
-    [
-      26,
-      51
-    ],
-    [
-      27,
-      51
-    ],
-    [
-      28,
-      51
-    ],
-    [
-      28,
-      52
-    ],
-    [
-      29,
-      52
-    ],
-    [
-      30,
-      52
-    ],
-    [
-      31,
-      52
-    ],
-    [
-      32,
-      52
-    ],
+  "spot": 4920,
+  "node": 693,
+  "arrived_after_frames": 3008,
+  "delta": {
+    "searches": 1,
+    "searchFails": 0,
+    "arrivals": 1,
+    "replans": 0
+  },
+  "deck_track": [
     [
       33,
-      52
+      90
     ],
     [
       34,
-      51
+      90
     ],
     [
       35,
-      50
+      90
     ],
     [
-      36,
-      50
+      35,
+      89
     ],
     [
-      37,
-      50
+      35,
+      88
     ],
     [
-      38,
-      50
+      35,
+      87
     ],
     [
-      39,
-      50
+      35,
+      86
+    ],
+    [
+      35,
+      85
+    ],
+    [
+      35,
+      84
+    ],
+    [
+      34,
+      84
+    ],
+    [
+      33,
+      84
+    ],
+    [
+      32,
+      84
+    ],
+    [
+      31,
+      84
+    ],
+    [
+      30,
+      84
+    ],
+    [
+      29,
+      84
+    ],
+    [
+      28,
+      84
+    ],
+    [
+      27,
+      84
+    ],
+    [
+      26,
+      84
+    ],
+    [
+      25,
+      84
+    ],
+    [
+      24,
+      84
+    ],
+    [
+      23,
+      84
+    ],
+    [
+      22,
+      84
+    ],
+    [
+      21,
+      84
+    ],
+    [
+      20,
+      84
+    ],
+    [
+      19,
+      84
+    ],
+    [
+      18,
+      84
+    ],
+    [
+      17,
+      84
+    ],
+    [
+      16,
+      84
+    ],
+    [
+      15,
+      84
+    ],
+    [
+      14,
+      84
+    ],
+    [
+      13,
+      84
+    ],
+    [
+      12,
+      84
+    ],
+    [
+      11,
+      84
+    ],
+    [
+      10,
+      84
+    ],
+    [
+      9,
+      84
+    ],
+    [
+      8,
+      84
+    ],
+    [
+      7,
+      84
+    ],
+    [
+      6,
+      84
+    ],
+    [
+      6,
+      83
+    ],
+    [
+      6,
+      82
+    ],
+    [
+      6,
+      81
+    ],
+    [
+      6,
+      80
     ]
   ],
-  "diagonal_steps": 2,
-  "warp_exits": 1,
   "record": {
-    "node": 217,
+    "node": 693,
     "destKind": 1,
-    "destId": 2170,
+    "destId": 4920,
     "state": 1,
     "waited": 0,
     "arrival": 0,
     "crossing": 0,
     "step": 0,
-    "activity": 6,
-    "dwell": 1,
+    "activity": 5,
+    "dwell": 3,
     "lifeEvent": 0,
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "d9901e1200c00200"
+    "hex": "b512ce1400a00600"
   },
+  "maxSliceScanlines": 187,
+  "maxSearchNodes": 1567,
+  "workspaceBytes": 11308,
+  "maxFinishScanlines": 125,
   "screenshots": [
-    ".product/research/overworld-walkers/stairs-after.png"
+    ".product/research/overworld-walkers/bridge-north.png"
   ],
   "debug": {
-    "frames": 552,
+    "frames": 2962,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
-    "warpExits": 1,
-    "arrivals": 0,
+    "warpExits": 0,
+    "arrivals": 1,
     "rebases": 0,
     "stripEntries": 0,
     "replans": 0,
@@ -143,34 +222,34 @@
     "floorChanges": 0,
     "heapResets": 5,
     "restores": 0,
-    "lastSearchNodes": 447,
-    "maxSearchNodes": 447,
-    "lastSearchFrames": 113,
-    "maxSearchFrames": 113,
-    "maxSliceScanlines": 184,
+    "lastSearchNodes": 1567,
+    "maxSearchNodes": 1567,
+    "lastSearchFrames": 350,
+    "maxSearchFrames": 350,
+    "maxSliceScanlines": 187,
     "maxSliceNodes": 8,
     "workspaceBytes": 11308,
-    "currentMap": 6,
+    "currentMap": 7970,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634080,
+    "worldState": 33633992,
     "actors": [
       {
         "index": 0,
         "slot": 8,
         "mode": 1,
-        "phase": 6,
-        "goalKind": 3,
-        "objectId": 5,
-        "template": 0,
-        "atSpot": 0,
+        "phase": 5,
+        "goalKind": 0,
+        "objectId": 3,
+        "template": 1,
+        "atSpot": 1,
         "blocked": 0,
-        "x": 39,
-        "y": 50,
-        "goalX": 39,
-        "goalY": 49,
-        "goalEdge": 75
+        "x": 16,
+        "y": 33,
+        "goalX": 16,
+        "goalY": 33,
+        "goalEdge": 65535
       },
       {
         "index": 1,
@@ -223,16 +302,16 @@
     ],
     "lastHeartbeatScanlines": 27,
     "maxHeartbeatScanlines": 27,
-    "maxSpawnScanlines": 37,
-    "maxUpdateScanlines": 188,
+    "maxSpawnScanlines": 58,
+    "maxUpdateScanlines": 196,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
     "lastContextScanlines": 16,
     "lastFailNodes": 0,
-    "maxFinishScanlines": 9
+    "maxFinishScanlines": 125
   },
   "pass": true,
-  "emulated_frames": 996
+  "emulated_frames": 3412
 }

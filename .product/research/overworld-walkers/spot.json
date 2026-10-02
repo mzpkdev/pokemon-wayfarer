@@ -14,7 +14,7 @@
       "template": 0,
       "atSpot": 0,
       "blocked": 0,
-      "x": 30,
+      "x": 29,
       "y": 39,
       "goalX": 13,
       "goalY": 39,
@@ -30,7 +30,7 @@
       "template": 0,
       "atSpot": 0,
       "blocked": 0,
-      "x": 30,
+      "x": 29,
       "y": 39,
       "goalX": 13,
       "goalY": 39,
@@ -74,7 +74,7 @@
     ".product/research/overworld-walkers/spot-template.png"
   ],
   "debug": {
-    "frames": 1175,
+    "frames": 1179,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -93,18 +93,18 @@
     "floorChanges": 0,
     "heapResets": 6,
     "restores": 0,
-    "lastSearchNodes": 356,
+    "lastSearchNodes": 331,
     "maxSearchNodes": 412,
-    "lastSearchFrames": 89,
-    "maxSearchFrames": 104,
-    "maxSliceScanlines": 214,
+    "lastSearchFrames": 70,
+    "maxSearchFrames": 83,
+    "maxSliceScanlines": 140,
     "maxSliceNodes": 8,
-    "workspaceBytes": 10136,
+    "workspaceBytes": 11308,
     "currentMap": 32,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33633996,
+    "worldState": 33634056,
     "actors": [
       {
         "index": 0,
@@ -174,14 +174,15 @@
     "lastHeartbeatScanlines": 27,
     "maxHeartbeatScanlines": 27,
     "maxSpawnScanlines": 23,
-    "maxUpdateScanlines": 217,
+    "maxUpdateScanlines": 154,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
     "lastContextScanlines": 16,
-    "lastFailNodes": 0
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 7
   },
   "pass": true,
-  "emulated_frames": 1708
+  "emulated_frames": 1672
 }

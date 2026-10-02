@@ -174,18 +174,6 @@
     [
       10,
       78
-    ],
-    [
-      10,
-      78
-    ],
-    [
-      10,
-      78
-    ],
-    [
-      10,
-      78
     ]
   ],
   "actor_after_cross": {
@@ -215,7 +203,7 @@
     "atSpot": 0,
     "blocked": 0,
     "x": 10,
-    "y": 75,
+    "y": 74,
     "goalX": 5,
     "goalY": 51,
     "goalEdge": 316
@@ -517,20 +505,6 @@
       ]
     },
     {
-      "frame": 923,
-      "map": 42,
-      "blue_objects": 1,
-      "blue": [
-        [
-          10,
-          78
-        ]
-      ],
-      "mode": [
-        1
-      ]
-    },
-    {
       "frame": 924,
       "map": 42,
       "blue_objects": 1,
@@ -546,20 +520,6 @@
     },
     {
       "frame": 925,
-      "map": 42,
-      "blue_objects": 1,
-      "blue": [
-        [
-          10,
-          78
-        ]
-      ],
-      "mode": [
-        1
-      ]
-    },
-    {
-      "frame": 926,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -767,20 +727,6 @@
       "mode": [
         1
       ]
-    },
-    {
-      "frame": 941,
-      "map": 42,
-      "blue_objects": 1,
-      "blue": [
-        [
-          10,
-          78
-        ]
-      ],
-      "mode": [
-        1
-      ]
     }
   ],
   "screenshots": [
@@ -789,7 +735,7 @@
     ".product/research/overworld-walkers/edge-route2-moving.png"
   ],
   "debug": {
-    "frames": 1009,
+    "frames": 1025,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 1,
@@ -810,16 +756,16 @@
     "restores": 0,
     "lastSearchNodes": 419,
     "maxSearchNodes": 1004,
-    "lastSearchFrames": 106,
-    "maxSearchFrames": 252,
-    "maxSliceScanlines": 215,
+    "lastSearchFrames": 84,
+    "maxSearchFrames": 213,
+    "maxSliceScanlines": 148,
     "maxSliceNodes": 8,
-    "workspaceBytes": 10136,
+    "workspaceBytes": 11308,
     "currentMap": 42,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634076,
+    "worldState": 33634068,
     "actors": [
       {
         "index": 0,
@@ -832,7 +778,7 @@
         "atSpot": 0,
         "blocked": 0,
         "x": 10,
-        "y": 75,
+        "y": 74,
         "goalX": 5,
         "goalY": 51,
         "goalEdge": 316
@@ -888,15 +834,16 @@
     ],
     "lastHeartbeatScanlines": 63,
     "maxHeartbeatScanlines": 63,
-    "maxSpawnScanlines": 23,
-    "maxUpdateScanlines": 225,
+    "maxSpawnScanlines": 31,
+    "maxUpdateScanlines": 164,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
     "lastContextScanlines": 16,
-    "lastFailNodes": 0
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 16
   },
   "pass": true,
-  "emulated_frames": 1480
+  "emulated_frames": 1434
 }
