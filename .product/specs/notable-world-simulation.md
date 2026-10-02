@@ -308,7 +308,9 @@ heartbeat when several long trips start together (all-badges report:
 about 520 expanded nodes per heartbeat on average). On the ROM the
 worst map-load heartbeat measured was 1,642 scanlines (about 7 frames,
 during the warp fade; 60 warps with all badges), and a warp took 46
-frames at most against main's 40. That cost is accepted.
+frames at most against main's 40. The first-search cost was accepted at
+about 900 nodes and 3 frames; the higher peak since the Elite Four fly is
+under review.
 
 **Generator outputs**, one ROM table each, in a fixed order (map order,
 then component top-left tile) so ids are stable between builds of the
