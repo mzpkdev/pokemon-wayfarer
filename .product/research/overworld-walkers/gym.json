@@ -48,7 +48,7 @@
     ".product/research/overworld-walkers/gym-leader-out.png"
   ],
   "debug": {
-    "frames": 516,
+    "frames": 510,
     "spawns": 1,
     "removals": 1,
     "edgeExits": 0,
@@ -73,12 +73,12 @@
     "maxSearchFrames": 1,
     "maxSliceScanlines": 5,
     "maxSliceNodes": 1,
-    "workspaceBytes": 5564,
+    "workspaceBytes": 10136,
     "currentMap": 3332,
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634004,
+    "worldState": 33634096,
     "actors": [
       {
         "index": 0,
@@ -144,8 +144,18 @@
         "goalY": 0,
         "goalEdge": 0
       }
-    ]
+    ],
+    "lastHeartbeatScanlines": 107,
+    "maxHeartbeatScanlines": 107,
+    "maxSpawnScanlines": 18,
+    "maxUpdateScanlines": 38,
+    "backOffs": 0,
+    "handoffs": 0,
+    "visitorsVanished": 0,
+    "culls": 0,
+    "lastContextScanlines": 63,
+    "lastFailNodes": 0
   },
   "pass": true,
-  "emulated_frames": 812
+  "emulated_frames": 802
 }

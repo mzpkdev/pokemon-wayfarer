@@ -1,63 +1,132 @@
 {
-  "record_at_exit": {
-    "node": 247,
-    "destKind": 1,
-    "destId": 2244,
-    "state": 1,
-    "waited": 0,
-    "arrival": 0,
-    "crossing": 0,
-    "step": 0,
-    "activity": 0,
-    "dwell": 2,
-    "lifeEvent": 0,
-    "lifeSteps": 0,
-    "stayBits": 0,
-    "reserved": 0,
-    "hex": "f710311200000400"
-  },
-  "spawn_tile_inside": [
-    5,
-    8
+  "track": [
+    [
+      26,
+      41
+    ],
+    [
+      26,
+      42
+    ],
+    [
+      26,
+      43
+    ],
+    [
+      26,
+      44
+    ],
+    [
+      26,
+      45
+    ],
+    [
+      26,
+      46
+    ],
+    [
+      26,
+      47
+    ],
+    [
+      26,
+      48
+    ],
+    [
+      26,
+      49
+    ],
+    [
+      26,
+      50
+    ],
+    [
+      26,
+      51
+    ],
+    [
+      27,
+      51
+    ],
+    [
+      28,
+      51
+    ],
+    [
+      28,
+      52
+    ],
+    [
+      29,
+      52
+    ],
+    [
+      30,
+      52
+    ],
+    [
+      31,
+      52
+    ],
+    [
+      32,
+      52
+    ],
+    [
+      33,
+      52
+    ],
+    [
+      34,
+      51
+    ],
+    [
+      35,
+      50
+    ],
+    [
+      36,
+      50
+    ],
+    [
+      37,
+      50
+    ],
+    [
+      38,
+      50
+    ],
+    [
+      39,
+      50
+    ]
   ],
-  "phases_after_spawn": [
-    2,
-    4
-  ],
-  "player_inside": [
-    7,
-    8
-  ],
-  "actor_at_spot": [
-    6,
-    4
-  ],
+  "diagonal_steps": 2,
+  "warp_exits": 1,
   "record": {
-    "node": 247,
+    "node": 217,
     "destKind": 1,
-    "destId": 2244,
+    "destId": 2170,
     "state": 1,
     "waited": 0,
     "arrival": 0,
     "crossing": 0,
     "step": 0,
-    "activity": 0,
-    "dwell": 2,
+    "activity": 6,
+    "dwell": 1,
     "lifeEvent": 0,
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "f710311200000400"
+    "hex": "d9901e1200c00200"
   },
   "screenshots": [
-    ".product/research/overworld-walkers/door-outside-after-entry.png",
-    ".product/research/overworld-walkers/door-inside-walking.png",
-    ".product/research/overworld-walkers/door-inside-at-counter.png"
+    ".product/research/overworld-walkers/stairs-after.png"
   ],
   "debug": {
-    "frames": 422,
-    "spawns": 2,
-    "removals": 1,
+    "frames": 552,
+    "spawns": 1,
+    "removals": 0,
     "edgeExits": 0,
     "warpExits": 1,
     "arrivals": 0,
@@ -65,43 +134,43 @@
     "stripEntries": 0,
     "replans": 0,
     "blockedSteps": 0,
-    "searches": 2,
+    "searches": 1,
     "searchFails": 0,
     "localDwellBeats": 0,
     "localAdvances": 0,
     "emotes": 0,
     "templateMoves": 0,
     "floorChanges": 0,
-    "heapResets": 6,
+    "heapResets": 5,
     "restores": 0,
-    "lastSearchNodes": 20,
-    "maxSearchNodes": 20,
-    "lastSearchFrames": 5,
-    "maxSearchFrames": 5,
-    "maxSliceScanlines": 197,
+    "lastSearchNodes": 447,
+    "maxSearchNodes": 447,
+    "lastSearchFrames": 117,
+    "maxSearchFrames": 117,
+    "maxSliceScanlines": 244,
     "maxSliceNodes": 8,
     "workspaceBytes": 10136,
-    "currentMap": 3072,
+    "currentMap": 6,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634020,
+    "worldState": 33634084,
     "actors": [
       {
         "index": 0,
         "slot": 8,
         "mode": 1,
-        "phase": 5,
-        "goalKind": 0,
-        "objectId": 6,
-        "template": 1,
-        "atSpot": 1,
+        "phase": 6,
+        "goalKind": 3,
+        "objectId": 5,
+        "template": 0,
+        "atSpot": 0,
         "blocked": 0,
-        "x": 6,
-        "y": 4,
-        "goalX": 6,
-        "goalY": 4,
-        "goalEdge": 65535
+        "x": 39,
+        "y": 50,
+        "goalX": 39,
+        "goalY": 49,
+        "goalEdge": 75
       },
       {
         "index": 1,
@@ -152,10 +221,10 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 74,
-    "maxHeartbeatScanlines": 74,
-    "maxSpawnScanlines": 24,
-    "maxUpdateScanlines": 200,
+    "lastHeartbeatScanlines": 27,
+    "maxHeartbeatScanlines": 27,
+    "maxSpawnScanlines": 37,
+    "maxUpdateScanlines": 247,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
@@ -164,5 +233,5 @@
     "lastFailNodes": 0
   },
   "pass": true,
-  "emulated_frames": 726
+  "emulated_frames": 996
 }

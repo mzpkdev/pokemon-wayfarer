@@ -29,7 +29,7 @@
     ".product/research/overworld-walkers/browse-next-shelf.png"
   ],
   "debug": {
-    "frames": 1732,
+    "frames": 1725,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -50,16 +50,16 @@
     "restores": 0,
     "lastSearchNodes": 22,
     "maxSearchNodes": 32,
-    "lastSearchFrames": 5,
-    "maxSearchFrames": 7,
-    "maxSliceScanlines": 143,
+    "lastSearchFrames": 6,
+    "maxSearchFrames": 8,
+    "maxSliceScanlines": 212,
     "maxSliceNodes": 8,
-    "workspaceBytes": 5564,
+    "workspaceBytes": 10136,
     "currentMap": 3073,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634008,
+    "worldState": 33634016,
     "actors": [
       {
         "index": 0,
@@ -125,8 +125,18 @@
         "goalY": 0,
         "goalEdge": 0
       }
-    ]
+    ],
+    "lastHeartbeatScanlines": 76,
+    "maxHeartbeatScanlines": 76,
+    "maxSpawnScanlines": 18,
+    "maxUpdateScanlines": 219,
+    "backOffs": 0,
+    "handoffs": 0,
+    "visitorsVanished": 0,
+    "culls": 0,
+    "lastContextScanlines": 16,
+    "lastFailNodes": 0
   },
   "pass": true,
-  "emulated_frames": 2026
+  "emulated_frames": 2014
 }

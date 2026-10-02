@@ -1,10 +1,16 @@
 {
   "browse": true,
   "budget": true,
+  "deadend": true,
+  "decoys": true,
   "door": true,
   "edge": true,
   "gym": true,
+  "gymentry": true,
   "linger": true,
+  "midstep": true,
+  "perf": true,
   "save": true,
-  "spot": true
+  "spot": true,
+  "stairs": true
 }

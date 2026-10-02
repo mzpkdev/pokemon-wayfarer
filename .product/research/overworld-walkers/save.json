@@ -99,7 +99,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634012,
+    "worldState": 33634044,
     "actors": [
       {
         "index": 0,
@@ -165,8 +165,18 @@
         "goalY": 0,
         "goalEdge": 0
       }
-    ]
+    ],
+    "lastHeartbeatScanlines": 0,
+    "maxHeartbeatScanlines": 0,
+    "maxSpawnScanlines": 5,
+    "maxUpdateScanlines": 17,
+    "backOffs": 0,
+    "handoffs": 0,
+    "visitorsVanished": 0,
+    "culls": 0,
+    "lastContextScanlines": 0,
+    "lastFailNodes": 0
   },
   "pass": true,
-  "emulated_frames": 1264
+  "emulated_frames": 1254
 }
