@@ -1,0 +1,6 @@
+{
+  "_comment": "Authored Dive links for the off-screen water links (water.py, world simulation spec, walker graph). Each row joins two open-water tiles that Dive and emerge connect, both directions, so the off-screen simulation can cross between the two water bodies. The on-screen walker never uses water. Sootopolis's only way out is diving through Underwater_SootopolisCity, whose warp leads to Underwater_Route126 (45, 65); emerging there surfaces on Route126 at the same tile.",
+  "dive": [
+    {"name": "Sootopolis Dive", "from": "SootopolisCity", "water": [29, 54], "to": "Route126", "water_to": [45, 65]}
+  ]
+}

@@ -90,7 +90,8 @@ enum WorldEmote
     WORLD_EMOTE_ELLIPSIS,
 };
 
-// An edge leaves its source node by a map side, a warp, or a transit link.
+// An edge leaves its source node by a map side, a warp, a transit link, or
+// water. Water edges are off-screen only: the walker never routes across one.
 enum WorldEdgeKind
 {
     WORLD_EDGE_NONE,
@@ -100,6 +101,7 @@ enum WorldEdgeKind
     WORLD_EDGE_WEST,
     WORLD_EDGE_WARP,
     WORLD_EDGE_TRANSIT,
+    WORLD_EDGE_WATER,
 };
 
 // How a trainer entered their current node; a map side is the side of the
@@ -113,7 +115,8 @@ enum WorldArrival
     WORLD_ARRIVAL_WEST,
     WORLD_ARRIVAL_DOOR,
     WORLD_ARRIVAL_TRANSIT,
-    WORLD_ARRIVAL_COUNT,
+    WORLD_ARRIVAL_WATER,    // crossing: the reverse water edge's index among the node's edges
+    WORLD_ARRIVAL_COUNT,    // at most 8: the record's arrival field is 3 bits
 };
 
 enum WorldState

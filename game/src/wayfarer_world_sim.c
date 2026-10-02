@@ -176,6 +176,7 @@ u8 WorldSim_ArrivalForEdge(u8 edgeKind)
     case WORLD_EDGE_WEST:    return WORLD_ARRIVAL_EAST;
     case WORLD_EDGE_WARP:    return WORLD_ARRIVAL_DOOR;
     case WORLD_EDGE_TRANSIT: return WORLD_ARRIVAL_TRANSIT;
+    case WORLD_EDGE_WATER:   return WORLD_ARRIVAL_WATER;
     }
     return WORLD_ARRIVAL_NONE;
 }

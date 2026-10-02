@@ -6,6 +6,7 @@ import authored
 import graph
 import maps
 import spots as sp
+import water
 from maps import BuildError, INTERIOR_TYPES, REGIONS, TOWN_TYPES
 
 REGION_INDEX = {r: i for i, r in enumerate(REGIONS)}
@@ -24,7 +25,7 @@ class Edge:
 
 
 class WorldGraph:
-    def __init__(self, world, named_rows=None, overrides=None, transit=None):
+    def __init__(self, world, named_rows=None, overrides=None, transit=None, dive=None):
         self.world = world
         self.problems = []
         self.overrides = overrides or authored.Overrides()
@@ -70,6 +71,28 @@ class WorldGraph:
         rows = named_rows if named_rows is not None else authored.load_named()
         named = authored.build_named(rows, world, det, self.problems)
         named_tiles = {(s.map.name, s.x, s.y) for s in named}
+        with_warp = set()
+        for info in world.scope:
+            for w in info.events["warps"]:
+                for comp in b.warp_sources(info, w):
+                    with_warp.add((info.name, comp))
+
+        # Off-screen water links between the land components that already
+        # matter (an edge, a warp or a spot), so islands with nothing on
+        # them don't become nodes.
+        seeds = set(with_warp)
+        for r in self.raw_links:
+            seeds.add((r[0], r[1]))
+            seeds.add((r[2], r[3]))
+        for s in detected + named:
+            if s.comp is not None and not self.overrides.dropped(s):
+                seeds.add((s.map.name, s.comp))
+        order = {info.name: k for k, info in enumerate(world.scope)}
+        seeds = sorted(seeds, key=lambda mc: (order[mc[0]], mc[1]))
+        self.water_report = {}
+        self.raw_links += water.water_links(
+            b, seeds, dive if dive is not None else water.load_dive(), self.problems,
+            self.water_report)
 
         # A spot must be reachable: its component has an edge (in or out).
         # Components with a warp tile but no usable edge still become nodes
@@ -79,11 +102,6 @@ class WorldGraph:
             linked.add((r[0], r[1]))
             linked.add((r[2], r[3]))
         self.linked = linked
-        with_warp = set()
-        for info in world.scope:
-            for w in info.events["warps"]:
-                for comp in b.warp_sources(info, w):
-                    with_warp.add((info.name, comp))
         self.dropped = Counter()
         self.unreachable = defaultdict(Counter)
         kept = []
@@ -153,6 +171,16 @@ class WorldGraph:
             if len(n.edges) > 255:
                 raise BuildError("node %d (%s) has %d edges" % (n.id, n.map.name, len(n.edges)))
             self.edges += n.edges
+        # A water edge's c: the reverse edge's position among the target's
+        # edges, so an arrival by water can find its landing shore tile.
+        for e in self.edges:
+            if e.kind == graph.KIND_WATER:
+                back = [k for k, r in enumerate(self.nodes[e.target].edges)
+                        if r.kind == graph.KIND_WATER and r.target == e.source]
+                if len(back) != 1:
+                    raise BuildError("water edge %d -> %d has %d reverse edges"
+                                     % (e.source, e.target, len(back)))
+                e.c = back[0]
         if len(self.edges) > 0xFFFF:
             raise BuildError("too many edges")
 

@@ -59,7 +59,11 @@ struct WayfarerWorldNode
 // Map side: a, b = lane run on the source map's border (inclusive, along the
 // side), c = the lane's first coordinate on the target map. Warp: a, b = the
 // warp tile, c = the destination warp id on the target map. Transit: a, b =
-// the boarding tile, c = the landing warp id on the target map.
+// the boarding tile, c = the landing warp id on the target map. Water
+// (off-screen only, open to every trainer; both ends are land nodes): a, b =
+// the source node's shore tile (land, next to the water it boards), c = the
+// reverse water edge's index among the target node's edges, whose a, b are
+// the landing shore tile; a water arrival records c as its crossing.
 struct WayfarerWorldEdge
 {
     u16 target;

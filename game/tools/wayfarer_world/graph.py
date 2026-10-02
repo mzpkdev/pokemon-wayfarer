@@ -36,9 +36,10 @@ from collections import defaultdict, deque
 
 from maps import BuildError, read_text
 
-KIND_NORTH, KIND_SOUTH, KIND_EAST, KIND_WEST, KIND_WARP, KIND_TRANSIT = 1, 2, 3, 4, 5, 6
+KIND_NORTH, KIND_SOUTH, KIND_EAST, KIND_WEST, KIND_WARP, KIND_TRANSIT, KIND_WATER = range(1, 8)
 EDGE_KIND_NAMES = {1: "WORLD_EDGE_NORTH", 2: "WORLD_EDGE_SOUTH", 3: "WORLD_EDGE_EAST",
-                   4: "WORLD_EDGE_WEST", 5: "WORLD_EDGE_WARP", 6: "WORLD_EDGE_TRANSIT"}
+                   4: "WORLD_EDGE_WEST", 5: "WORLD_EDGE_WARP", 6: "WORLD_EDGE_TRANSIT",
+                   7: "WORLD_EDGE_WATER"}
 CONNECTION_KIND = {"up": KIND_NORTH, "down": KIND_SOUTH, "right": KIND_EAST,
                    "left": KIND_WEST}
 
