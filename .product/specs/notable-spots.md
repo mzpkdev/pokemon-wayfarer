@@ -472,7 +472,9 @@ that holds his house. The 3-hop and 8-hop radii in
 ### Favourites
 
 A trainer value, alongside buddy and reward pool: up to **3 favourite spot
-references**, each a map and a kind, and for a tile-precise habit, a tile.
+references**, each a map and a kind, and for a tile-precise habit, a tile
+(or a band of rows, which keeps the favourite to the part of a map the
+walker graph reaches, as for Meteor Falls).
 A favourite can name a named spot by its map and tile.
 A favourite is an optional override for a signature habit, and ignores the
 radius, so it reaches signature places outside the home radius:
