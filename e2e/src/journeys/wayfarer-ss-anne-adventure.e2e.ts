@@ -31,7 +31,15 @@ const settleField = async (game: GameSession, description: string): Promise<void
       continue
     }
     readyFrames = 0
-    if (state.dialogueOpen || state.scriptActive || state.controlsLocked || state.battle.active)
+    // Press only when text, a choice or a battle is waiting. A press while a
+    // script is still closing its message can land on the frame it releases
+    // and talk to the sailor again, which sails on the next presses.
+    if (
+      state.dialogueOpen ||
+      state.dialogue.awaitingButton ||
+      state.choice.kind !== "none" ||
+      state.battle.active
+    )
       await game.controls.press("a")
     else await game.wait.frames(12)
   }

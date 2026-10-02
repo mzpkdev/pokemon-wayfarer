@@ -45,8 +45,11 @@ export const moveSilph = async (game: GameSession, direction: Direction, x: numb
 
 export const waitSilphBattle = async (game: GameSession): Promise<void> => {
   for (let attempt = 0; attempt < 240; attempt++) {
-    if ((await game.state.read()).battle.ui === "action-menu") return
-    await game.controls.press("a")
+    const state = await game.state.read()
+    if (state.battle.ui === "action-menu") return
+    // Inside a battle, advance text only; a press while the action menu
+    // opens would pick FIGHT before the menu is ever observed.
+    if (!state.battle.active || state.battle.ui === "text") await game.controls.press("a")
     await game.wait.frames(12)
   }
   throw new Error(`Silph battle did not start: ${JSON.stringify(await game.state.read())}`)
