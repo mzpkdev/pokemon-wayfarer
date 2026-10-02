@@ -3,427 +3,427 @@
     {
       "warp": 1,
       "frames": 42,
-      "heartbeat_scanlines": 132,
+      "heartbeat_scanlines": 119,
       "context_scanlines": 10,
-      "trace": "0000000000000000000000000000030004000000"
+      "trace": "0000000000000000000000000000010000000000"
     },
     {
       "warp": 2,
       "frames": 42,
-      "heartbeat_scanlines": 286,
+      "heartbeat_scanlines": 320,
       "context_scanlines": 10,
-      "trace": "da000000da000100010000000000040004000000"
+      "trace": "da000000da000100010000000000050000000000"
     },
     {
       "warp": 3,
-      "frames": 42,
-      "heartbeat_scanlines": 456,
+      "frames": 44,
+      "heartbeat_scanlines": 701,
       "context_scanlines": 10,
-      "trace": "710200005a020300040000000000020004000000"
+      "trace": "450400005a020500050001000000010000000000"
     },
     {
       "warp": 4,
-      "frames": 42,
-      "heartbeat_scanlines": 567,
+      "frames": 46,
+      "heartbeat_scanlines": 1642,
       "context_scanlines": 10,
-      "trace": "0c0000000c000100050000000000130004000000"
+      "trace": "4102000035020200070000000000120000000000"
     },
     {
       "warp": 5,
       "frames": 42,
-      "heartbeat_scanlines": 490,
+      "heartbeat_scanlines": 475,
       "context_scanlines": 10,
-      "trace": "7801000060001100150000000000040006000000"
+      "trace": "7801000060001100170000000000020000000000"
     },
     {
       "warp": 6,
       "frames": 40,
-      "heartbeat_scanlines": 137,
+      "heartbeat_scanlines": 135,
       "context_scanlines": 10,
-      "trace": "0b0000000b000100160000000000020004000000"
+      "trace": "0b0000000b000100170000000000010000000000"
     },
     {
       "warp": 7,
       "frames": 42,
-      "heartbeat_scanlines": 257,
+      "heartbeat_scanlines": 255,
       "context_scanlines": 10,
-      "trace": "00000000000000000f0000000000040005000000"
+      "trace": "0000000000000000100000000000030001000000"
     },
     {
       "warp": 8,
       "frames": 42,
-      "heartbeat_scanlines": 478,
+      "heartbeat_scanlines": 486,
       "context_scanlines": 10,
-      "trace": "d1020000940202000d0000000000020004000000"
+      "trace": "db020000990203000f0000000000010000000000"
     },
     {
       "warp": 9,
       "frames": 42,
-      "heartbeat_scanlines": 326,
+      "heartbeat_scanlines": 332,
       "context_scanlines": 10,
-      "trace": "00000000000000000d0000000000090004000000"
+      "trace": "00000000000000000f0000000000080000000000"
     },
     {
       "warp": 10,
       "frames": 42,
-      "heartbeat_scanlines": 363,
+      "heartbeat_scanlines": 364,
       "context_scanlines": 10,
-      "trace": "48010000fe000800110000000000030004000000"
+      "trace": "4c01000002010800130000000000020000000000"
     },
     {
       "warp": 11,
       "frames": 42,
-      "heartbeat_scanlines": 263,
+      "heartbeat_scanlines": 250,
       "context_scanlines": 10,
-      "trace": "1f0000001e000200120000000000050006000000"
+      "trace": "1f0000001e000200130000000000030000000000"
     },
     {
       "warp": 12,
       "frames": 40,
-      "heartbeat_scanlines": 136,
+      "heartbeat_scanlines": 134,
       "context_scanlines": 10,
-      "trace": "180000000b0003000e0000000000030004000000"
+      "trace": "180000000b0003000f0000000000020000000000"
     },
     {
       "warp": 13,
       "frames": 42,
-      "heartbeat_scanlines": 329,
+      "heartbeat_scanlines": 318,
       "context_scanlines": 10,
-      "trace": "92000000890003000e0000000000060004000000"
+      "trace": "92000000890003000f0000000000040000000000"
     },
     {
       "warp": 14,
       "frames": 42,
-      "heartbeat_scanlines": 399,
+      "heartbeat_scanlines": 365,
       "context_scanlines": 10,
-      "trace": "9d01000046010500100000000000040004000000"
+      "trace": "01010000aa000500110000000000040000000000"
     },
     {
       "warp": 15,
       "frames": 42,
-      "heartbeat_scanlines": 290,
+      "heartbeat_scanlines": 498,
       "context_scanlines": 10,
-      "trace": "480000001d000300120000000000040004000000"
+      "trace": "9901000046010500130001000000030000000000"
     },
     {
       "warp": 16,
-      "frames": 40,
-      "heartbeat_scanlines": 169,
+      "frames": 44,
+      "heartbeat_scanlines": 800,
       "context_scanlines": 10,
-      "trace": "4300000024000300110000000000020004000000"
+      "trace": "800100003d010400130000000000010000000000"
     },
     {
       "warp": 17,
       "frames": 42,
-      "heartbeat_scanlines": 159,
+      "heartbeat_scanlines": 212,
       "context_scanlines": 10,
-      "trace": "0100000001000100110000000000050006000000"
+      "trace": "0100000001000100130000000000030000000000"
     },
     {
       "warp": 18,
       "frames": 40,
       "heartbeat_scanlines": 170,
       "context_scanlines": 10,
-      "trace": "0400000002000300120000000000020004000000"
+      "trace": "0400000002000300140000000000010000000000"
     },
     {
       "warp": 19,
-      "frames": 44,
-      "heartbeat_scanlines": 544,
+      "frames": 42,
+      "heartbeat_scanlines": 530,
       "context_scanlines": 10,
-      "trace": "620200002d020200100000000000040004000000"
+      "trace": "620200002d020200110000000000020000000000"
     },
     {
       "warp": 20,
       "frames": 40,
-      "heartbeat_scanlines": 109,
+      "heartbeat_scanlines": 100,
       "context_scanlines": 10,
-      "trace": "05000000030002000d0000000000020004000000"
+      "trace": "05000000030002000d0000000000010000000000"
     },
     {
       "warp": 21,
       "frames": 42,
-      "heartbeat_scanlines": 272,
+      "heartbeat_scanlines": 313,
       "context_scanlines": 10,
-      "trace": "110000000d0002000d0000000000060004000000"
+      "trace": "110000000d0002000d0000000000060000000000"
     },
     {
       "warp": 22,
       "frames": 40,
-      "heartbeat_scanlines": 251,
+      "heartbeat_scanlines": 273,
       "context_scanlines": 10,
-      "trace": "250000000c0005000b0000000000050004000000"
+      "trace": "2f0000000c0006000d0000000000050000000000"
     },
     {
       "warp": 23,
-      "frames": 42,
-      "heartbeat_scanlines": 274,
+      "frames": 44,
+      "heartbeat_scanlines": 719,
       "context_scanlines": 10,
-      "trace": "46000000240004000d0000000000080006000000"
+      "trace": "e9030000a3030500100000000000050000000000"
     },
     {
       "warp": 24,
-      "frames": 42,
-      "heartbeat_scanlines": 519,
+      "frames": 40,
+      "heartbeat_scanlines": 247,
       "context_scanlines": 10,
-      "trace": "6f0200005a020500100000000000040004000000"
+      "trace": "150000000f000400110000000000030000000000"
     },
     {
       "warp": 25,
       "frames": 44,
       "heartbeat_scanlines": 742,
       "context_scanlines": 10,
-      "trace": "3703000022030300120000000000060005000000"
+      "trace": "3703000022030300130000000000050001000000"
     },
     {
       "warp": 26,
       "frames": 42,
-      "heartbeat_scanlines": 286,
+      "heartbeat_scanlines": 554,
       "context_scanlines": 10,
-      "trace": "430100001a010400100000000000020004000000"
+      "trace": "9d0300005a020500120000000000010000000000"
     },
     {
       "warp": 27,
       "frames": 42,
-      "heartbeat_scanlines": 125,
+      "heartbeat_scanlines": 122,
       "context_scanlines": 10,
-      "trace": "20000000200001000e0000000000030004000000"
+      "trace": "20000000200001000f0000000000020000000000"
     },
     {
       "warp": 28,
       "frames": 40,
-      "heartbeat_scanlines": 118,
+      "heartbeat_scanlines": 136,
       "context_scanlines": 10,
-      "trace": "120000000a0002000e0000000000020004000000"
+      "trace": "120000000a0002000f0000000000020001000000"
     },
     {
       "warp": 29,
       "frames": 42,
-      "heartbeat_scanlines": 293,
+      "heartbeat_scanlines": 291,
       "context_scanlines": 10,
-      "trace": "02000000020001000c0000000000080006000000"
+      "trace": "0c0000000a0002000e0000000000060000000000"
     },
     {
       "warp": 30,
       "frames": 40,
-      "heartbeat_scanlines": 244,
+      "heartbeat_scanlines": 248,
       "context_scanlines": 10,
-      "trace": "64000000340006000f0000000000040004000000"
+      "trace": "6400000034000600110000000000030000000000"
     },
     {
       "warp": 31,
       "frames": 42,
-      "heartbeat_scanlines": 276,
+      "heartbeat_scanlines": 267,
       "context_scanlines": 10,
-      "trace": "6600000061000300100000000000040004000000"
+      "trace": "6600000061000300120000000000020000000000"
     },
     {
       "warp": 32,
       "frames": 40,
-      "heartbeat_scanlines": 129,
+      "heartbeat_scanlines": 133,
       "context_scanlines": 10,
-      "trace": "02000000010002000f0000000000030004000000"
+      "trace": "0200000001000200110000000000020000000000"
     },
     {
       "warp": 33,
       "frames": 42,
-      "heartbeat_scanlines": 142,
+      "heartbeat_scanlines": 141,
       "context_scanlines": 10,
-      "trace": "63000000600002000a0000000000030004000000"
+      "trace": "63000000600002000c0000000000020000000000"
     },
     {
       "warp": 34,
       "frames": 42,
-      "heartbeat_scanlines": 551,
+      "heartbeat_scanlines": 610,
       "context_scanlines": 10,
-      "trace": "39030000340302000a0000000000060004000000"
+      "trace": "c9030000340303000b0000000000050000000000"
     },
     {
       "warp": 35,
       "frames": 42,
-      "heartbeat_scanlines": 282,
+      "heartbeat_scanlines": 172,
       "context_scanlines": 10,
-      "trace": "530000002d0006000d0000000000070006000000"
+      "trace": "26000000130005000e0000000000050000000000"
     },
     {
       "warp": 36,
       "frames": 42,
-      "heartbeat_scanlines": 295,
+      "heartbeat_scanlines": 334,
       "context_scanlines": 10,
-      "trace": "7700000069000600110000000000060004000000"
+      "trace": "7700000069000600120000000000060000000000"
     },
     {
       "warp": 37,
       "frames": 42,
-      "heartbeat_scanlines": 219,
+      "heartbeat_scanlines": 241,
       "context_scanlines": 10,
-      "trace": "4300000033000600120000000000020004000000"
+      "trace": "7a00000033000800140000000000000000000000"
     },
     {
       "warp": 38,
       "frames": 40,
-      "heartbeat_scanlines": 129,
+      "heartbeat_scanlines": 137,
       "context_scanlines": 10,
-      "trace": "00000000000000000d0000000000040004000000"
+      "trace": "00000000000000000f0000000000030000000000"
     },
     {
       "warp": 39,
       "frames": 42,
-      "heartbeat_scanlines": 273,
+      "heartbeat_scanlines": 277,
       "context_scanlines": 10,
-      "trace": "5e0000003d0002000a0000000000040004000000"
+      "trace": "5e0000003d0002000c0000000000030000000000"
     },
     {
       "warp": 40,
       "frames": 42,
-      "heartbeat_scanlines": 457,
+      "heartbeat_scanlines": 465,
       "context_scanlines": 10,
-      "trace": "470000001e0003000b0000000000070004000000"
+      "trace": "470000001e0003000d0000000000060000000000"
     },
     {
       "warp": 41,
       "frames": 42,
-      "heartbeat_scanlines": 284,
+      "heartbeat_scanlines": 274,
       "context_scanlines": 10,
-      "trace": "7e0000003e0006000f0000000000040006000000"
+      "trace": "7e0000003e000600120000000000020000000000"
     },
     {
       "warp": 42,
       "frames": 40,
-      "heartbeat_scanlines": 246,
+      "heartbeat_scanlines": 235,
       "context_scanlines": 10,
-      "trace": "32000000240002000f0000000000060004000000"
+      "trace": "3200000024000200110000000000040000000000"
     },
     {
       "warp": 43,
-      "frames": 44,
-      "heartbeat_scanlines": 729,
+      "frames": 42,
+      "heartbeat_scanlines": 274,
       "context_scanlines": 10,
-      "trace": "d603000092030500120000000000040004000000"
+      "trace": "4400000020000400120000000000030001000000"
     },
     {
       "warp": 44,
       "frames": 40,
-      "heartbeat_scanlines": 221,
+      "heartbeat_scanlines": 227,
       "context_scanlines": 10,
-      "trace": "0d0000000b000200120000000000030004000000"
+      "trace": "170000000b000300120000000000030000000000"
     },
     {
       "warp": 45,
-      "frames": 42,
-      "heartbeat_scanlines": 484,
+      "frames": 44,
+      "heartbeat_scanlines": 951,
       "context_scanlines": 10,
-      "trace": "300200002c020300120000000000040004000000"
+      "trace": "c205000092030400130000000000040000000000"
     },
     {
       "warp": 46,
       "frames": 40,
-      "heartbeat_scanlines": 126,
+      "heartbeat_scanlines": 119,
       "context_scanlines": 10,
-      "trace": "28000000110003000f0000000000010004000000"
+      "trace": "2800000011000300100000000000000000000000"
     },
     {
       "warp": 47,
       "frames": 42,
-      "heartbeat_scanlines": 141,
+      "heartbeat_scanlines": 126,
       "context_scanlines": 10,
-      "trace": "00000000000000000c0000000000050006000000"
+      "trace": "00000000000000000d0000000000030000000000"
     },
     {
       "warp": 48,
       "frames": 42,
-      "heartbeat_scanlines": 331,
+      "heartbeat_scanlines": 328,
       "context_scanlines": 10,
-      "trace": "0c000000060003000b0000000000070004000000"
+      "trace": "0c000000060003000c0000000000060000000000"
     },
     {
       "warp": 49,
       "frames": 42,
-      "heartbeat_scanlines": 483,
+      "heartbeat_scanlines": 480,
       "context_scanlines": 10,
-      "trace": "24010000fe000600100000000000060004000000"
+      "trace": "2801000002010600100000000000050000000000"
     },
     {
       "warp": 50,
-      "frames": 40,
-      "heartbeat_scanlines": 258,
+      "frames": 42,
+      "heartbeat_scanlines": 565,
       "context_scanlines": 10,
-      "trace": "6500000035000400120000000000040004000000"
+      "trace": "4b030000e6020500130000000000030000000000"
     },
     {
       "warp": 51,
       "frames": 42,
-      "heartbeat_scanlines": 133,
+      "heartbeat_scanlines": 170,
       "context_scanlines": 10,
-      "trace": "150000000a0003000e0000000000020004000000"
+      "trace": "150000000a0003000f0000000000020000000000"
     },
     {
       "warp": 52,
       "frames": 42,
-      "heartbeat_scanlines": 306,
+      "heartbeat_scanlines": 317,
       "context_scanlines": 10,
-      "trace": "03000000030001000c0000000000040004000000"
+      "trace": "0d0000000a0002000e0000000000030000000000"
     },
     {
       "warp": 53,
       "frames": 42,
-      "heartbeat_scanlines": 290,
+      "heartbeat_scanlines": 280,
       "context_scanlines": 10,
-      "trace": "ec000000da0003000e0000000000050006000000"
+      "trace": "ec000000da000300100000000000030000000000"
     },
     {
       "warp": 54,
-      "frames": 42,
-      "heartbeat_scanlines": 561,
+      "frames": 40,
+      "heartbeat_scanlines": 252,
       "context_scanlines": 10,
-      "trace": "fa020000e60203000c0001000000050004000000"
+      "trace": "14000000130002000e0001000000040000000000"
     },
     {
       "warp": 55,
       "frames": 44,
-      "heartbeat_scanlines": 617,
+      "heartbeat_scanlines": 620,
       "context_scanlines": 10,
-      "trace": "73000000340005000f0000000000060004000000"
+      "trace": "7300000034000500110000000000040000000000"
     },
     {
       "warp": 56,
-      "frames": 40,
-      "heartbeat_scanlines": 227,
+      "frames": 42,
+      "heartbeat_scanlines": 542,
       "context_scanlines": 10,
-      "trace": "130000000f000400110000000000030004000000"
+      "trace": "f9020000e6020500130000000000020000000000"
     },
     {
       "warp": 57,
       "frames": 42,
-      "heartbeat_scanlines": 280,
+      "heartbeat_scanlines": 279,
       "context_scanlines": 10,
-      "trace": "0e0000000b0002000e0000000000040004000000"
+      "trace": "0e0000000b0002000f0000000000030000000000"
     },
     {
       "warp": 58,
       "frames": 40,
-      "heartbeat_scanlines": 239,
+      "heartbeat_scanlines": 248,
       "context_scanlines": 10,
-      "trace": "150000000c0003000e0000000000020004000000"
+      "trace": "150000000c0003000f0000000000020000000000"
     },
     {
       "warp": 59,
       "frames": 42,
-      "heartbeat_scanlines": 271,
+      "heartbeat_scanlines": 266,
       "context_scanlines": 10,
-      "trace": "17000000170001000c0000000000060006000000"
+      "trace": "1c000000170002000e0000000000040000000000"
     },
     {
       "warp": 60,
       "frames": 42,
-      "heartbeat_scanlines": 289,
+      "heartbeat_scanlines": 295,
       "context_scanlines": 10,
-      "trace": "ed000000d00005000d0000000000040004000000"
+      "trace": "f2000000d50005000f0000000000030000000000"
     }
   ],
-  "max_heartbeat_scanlines": 742,
-  "mean_heartbeat_scanlines": 307.55,
-  "max_heartbeat_frames": 3.25,
+  "max_heartbeat_scanlines": 1642,
+  "mean_heartbeat_scanlines": 357.93333333333334,
+  "max_heartbeat_frames": 7.2,
   "debug": {
     "frames": 1642,
     "spawns": 0,
@@ -455,7 +455,7 @@
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634088,
+    "worldState": 33634040,
     "actors": [
       {
         "index": 0,
@@ -522,8 +522,8 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 289,
-    "maxHeartbeatScanlines": 742,
+    "lastHeartbeatScanlines": 295,
+    "maxHeartbeatScanlines": 1642,
     "maxSpawnScanlines": 6,
     "maxUpdateScanlines": 16,
     "backOffs": 0,
@@ -536,5 +536,5 @@
     "walkOffs": 0
   },
   "pass": true,
-  "emulated_frames": 2812
+  "emulated_frames": 2822
 }

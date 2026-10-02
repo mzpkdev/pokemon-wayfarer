@@ -61,7 +61,7 @@
         "y": 14,
         "goalX": 15,
         "goalY": 31,
-        "goalEdge": 1105
+        "goalEdge": 1107
       },
       "done": true,
       "delta": {
@@ -160,7 +160,7 @@
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634072,
+    "worldState": 33634092,
     "actors": [
       {
         "index": 0,
@@ -227,8 +227,8 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 27,
-    "maxHeartbeatScanlines": 27,
+    "lastHeartbeatScanlines": 21,
+    "maxHeartbeatScanlines": 21,
     "maxSpawnScanlines": 71,
     "maxUpdateScanlines": 138,
     "backOffs": 0,

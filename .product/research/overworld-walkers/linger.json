@@ -4,7 +4,7 @@
       "step": "start",
       "player_map": 3072,
       "heartbeats": 1,
-      "heartbeat_scanlines": 76,
+      "heartbeat_scanlines": 69,
       "lorelei": {
         "node": 117,
         "destKind": 1,
@@ -44,7 +44,7 @@
       "step": "into the Mart",
       "player_map": 3073,
       "heartbeats": 2,
-      "heartbeat_scanlines": 125,
+      "heartbeat_scanlines": 116,
       "warp_frames": 42,
       "lorelei": {
         "node": 94,
@@ -102,7 +102,7 @@
       "step": "into the Center",
       "player_map": 3072,
       "heartbeats": 3,
-      "heartbeat_scanlines": 351,
+      "heartbeat_scanlines": 378,
       "warp_frames": 42,
       "lorelei": {
         "node": 121,
@@ -144,8 +144,8 @@
       "step": "into the Mart again",
       "player_map": 3073,
       "heartbeats": 4,
-      "heartbeat_scanlines": 328,
-      "warp_frames": 42,
+      "heartbeat_scanlines": 574,
+      "warp_frames": 44,
       "lorelei": {
         "node": 121,
         "destKind": 1,
@@ -194,15 +194,15 @@
         "y": 2,
         "goalX": 4,
         "goalY": 7,
-        "goalEdge": 721
+        "goalEdge": 722
       }
     },
     {
       "step": "into the Center again",
       "player_map": 3072,
       "heartbeats": 5,
-      "heartbeat_scanlines": 40,
-      "warp_frames": 40,
+      "heartbeat_scanlines": 511,
+      "warp_frames": 44,
       "lorelei": {
         "node": 121,
         "destKind": 1,
@@ -255,7 +255,7 @@
     5
   ],
   "debug": {
-    "frames": 188,
+    "frames": 189,
     "spawns": 2,
     "removals": 0,
     "edgeExits": 0,
@@ -278,14 +278,14 @@
     "maxSearchNodes": 0,
     "lastSearchFrames": 0,
     "maxSearchFrames": 0,
-    "maxSliceScanlines": 56,
-    "maxSliceNodes": 4,
+    "maxSliceScanlines": 57,
+    "maxSliceNodes": 5,
     "workspaceBytes": 11308,
     "currentMap": 3072,
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634096,
+    "worldState": 33634016,
     "actors": [
       {
         "index": 0,
@@ -352,8 +352,8 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 40,
-    "maxHeartbeatScanlines": 351,
+    "lastHeartbeatScanlines": 511,
+    "maxHeartbeatScanlines": 574,
     "maxSpawnScanlines": 18,
     "maxUpdateScanlines": 61,
     "backOffs": 0,
@@ -366,5 +366,5 @@
     "walkOffs": 0
   },
   "pass": true,
-  "emulated_frames": 512
+  "emulated_frames": 518
 }

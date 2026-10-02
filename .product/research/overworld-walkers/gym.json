@@ -20,7 +20,7 @@
   "leader_objects_while_home": 1,
   "visitor_spawn_tile": [
     6,
-    14
+    13
   ],
   "visitor_first_seen": {
     "index": 0,
@@ -33,10 +33,10 @@
     "atSpot": 0,
     "blocked": 0,
     "x": 6,
-    "y": 14,
+    "y": 13,
     "goalX": 6,
     "goalY": 14,
-    "goalEdge": 727
+    "goalEdge": 728
   },
   "leader_hidden_while_out": true,
   "leader_hidden_after_walking": true,
@@ -64,7 +64,7 @@
     ".product/research/overworld-walkers/gym-leader-out.png"
   ],
   "debug": {
-    "frames": 513,
+    "frames": 511,
     "spawns": 1,
     "removals": 1,
     "edgeExits": 0,
@@ -94,7 +94,7 @@
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634020,
+    "worldState": 33634056,
     "actors": [
       {
         "index": 0,
@@ -161,8 +161,8 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 121,
-    "maxHeartbeatScanlines": 121,
+    "lastHeartbeatScanlines": 112,
+    "maxHeartbeatScanlines": 112,
     "maxSpawnScanlines": 19,
     "maxUpdateScanlines": 39,
     "backOffs": 0,
@@ -175,5 +175,5 @@
     "walkOffs": 0
   },
   "pass": true,
-  "emulated_frames": 806
+  "emulated_frames": 804
 }

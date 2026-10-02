@@ -119,8 +119,8 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 26,
-    "maxHeartbeatScanlines": 26,
+    "lastHeartbeatScanlines": 20,
+    "maxHeartbeatScanlines": 20,
     "maxSpawnScanlines": 18,
     "maxUpdateScanlines": 77,
     "backOffs": 0,
