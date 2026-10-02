@@ -142,6 +142,7 @@ bool8 WayfarerWorld_OnLoad(void)
     void *workspace;
     bool8 valid;
 
+    WorldSim_ResetPathCache();  // EWRAM isn't cleared at boot
     if (state->schemaVersion != WORLD_SCHEMA_VERSION)
         return FALSE;
     // Without a workspace only the reachability check is skipped: a full

@@ -70,6 +70,9 @@ void WorldSim_AdvanceRoutine(struct WayfarerWorldState *state, u8 slot, const st
 // The first edge of the shortest path from the trainer's node to their
 // destination, or 0xFFFF. Used by the local actor to walk to the next hop.
 u16 WorldSim_NextEdge(const struct WayfarerWorldState *state, u8 slot, void *workspace, struct WayfarerWorldTrace *trace);
+// Forget every cached travel path (New Game and the engine's load check do
+// this; the cache only saves searches, it never changes a result).
+void WorldSim_ResetPathCache(void);
 // Move a record along an edge (a local actor left the map, or a heartbeat hop).
 void WorldSim_TakeEdge(struct WayfarerWorldState *state, u8 slot, u16 edgeIndex, u8 crossing);
 // A local actor reached its spot.

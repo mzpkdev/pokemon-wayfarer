@@ -387,6 +387,33 @@ TEST("A blocked traveller waits one heartbeat, then reroutes or waits again")
     Free(workspace);
 }
 
+TEST("Cached travel paths give the same next hop as a new search")
+{
+    struct WayfarerWorldContext ctx;
+    void *workspace = Alloc(WorldSim_WorkspaceSize());
+    u16 heartbeat, cached, fresh, checked = 0;
+    u8 slot;
+
+    Context(&ctx, TRUE, MAP_UNDEFINED);
+    WorldSim_NewGame(&sState, &ctx, workspace);
+    for (heartbeat = 0; heartbeat < HEARTBEATS; heartbeat++)
+    {
+        WorldSim_Heartbeat(&sState, &ctx, workspace, NULL);
+        for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT; slot++)
+        {
+            if (sState.records[slot].state != WORLD_STATE_TRAVELLING)
+                continue;
+            cached = WorldSim_NextEdge(&sState, slot, workspace, NULL);
+            WorldSim_ResetPathCache();
+            fresh = WorldSim_NextEdge(&sState, slot, workspace, NULL);
+            EXPECT_EQ(cached, fresh);
+            checked++;
+        }
+    }
+    EXPECT(checked > 0);
+    Free(workspace);
+}
+
 TEST("Load checks reject bad records and a content change re-seats them")
 {
     struct WayfarerWorldContext ctx;

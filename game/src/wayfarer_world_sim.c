@@ -21,9 +21,11 @@
 struct Search
 {
     u16 *queue;
-    u16 *via;     // first edge of the path from the source, or EDGE_NONE
+    u16 *via;     // the node a node was discovered from, VIA_SOURCE, or EDGE_NONE
     u8 *depth;
     u16 tail;     // nodes queued: exactly the ones with via set
+    u16 source;
+    bool8 transit;
 };
 
 static const u16 sActivityKinds[WORLD_ACTIVITY_COUNT] =
@@ -475,6 +477,8 @@ static void SearchFrom(struct Search *search, void *workspace, bool8 clean, u16 
         SearchInit(search, workspace);
     }
     search->tail = 0;
+    search->source = source;
+    search->transit = transit;
     if (source >= gWayfarerWorldNodeCount)
         return;
     search->via[source] = VIA_SOURCE;
@@ -505,7 +509,7 @@ static void SearchFrom(struct Search *search, void *workspace, bool8 clean, u16 
                 continue;
             if (avoidCount != 0 && next != targetA && MapListed(avoidMaps, avoidCount, gWayfarerWorldNodes[next].map))
                 continue;
-            search->via[next] = (node == source) ? e : search->via[node];
+            search->via[next] = node;
             search->depth[next] = search->depth[node] + 1;
             search->queue[tail++] = next;
             if (next == targetA)
@@ -538,24 +542,120 @@ static u8 SearchDepth(const struct Search *search, u16 node)
     return search->depth[node];
 }
 
+// The first edge in table order from one node to another that the search
+// may take: the edge that discovered `to` (a later duplicate never does).
+static u16 EdgeBetween(u16 from, u16 to, bool8 transit)
+{
+    const struct WayfarerWorldNode *data = &gWayfarerWorldNodes[from];
+    u16 e;
+    for (e = data->firstEdge; e < data->firstEdge + data->edgeCount; e++)
+    {
+        if (gWayfarerWorldEdges[e].target == to && !(gWayfarerWorldEdges[e].kind == WORLD_EDGE_TRANSIT && !transit))
+            return e;
+    }
+    return EDGE_NONE;
+}
+
+// The first edge of the path to a found node: the edge from the source to
+// the path's first node (the discovery order makes it the lowest such edge).
 static u16 SearchFirstEdge(const struct Search *search, u16 node)
 {
     if (node >= gWayfarerWorldNodeCount || search->via[node] == EDGE_NONE || search->via[node] == VIA_SOURCE)
         return EDGE_NONE;
-    return search->via[node];
+    while (search->via[node] != search->source)
+        node = search->via[node];
+    return EdgeBetween(search->source, node, search->transit);
+}
+
+// Travel path cache (EWRAM, rebuilt on demand): the first nodes of each
+// trainer's last searched path to their destination. Every suffix of a
+// breadth-first path is the path a new search from that node would find
+// (ties go the same way), so following it gives the same hops as searching
+// at every heartbeat; long trips over Surf-linked seas would otherwise
+// search most of the graph each heartbeat. Reroutes (avoiding full maps)
+// always search.
+#define PATH_CACHE_NODES 24
+
+struct PathCache
+{
+    u16 dest;
+    u8 count;     // nodes held; 0 = empty
+    u16 nodes[PATH_CACHE_NODES];
+};
+
+static SIM_CACHE struct PathCache sPaths[WORLD_SIM_TRAINER_COUNT];
+
+void WorldSim_ResetPathCache(void)
+{
+    u8 slot;
+    for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT; slot++)
+        sPaths[slot].count = 0;
+}
+
+static u16 CachedFirstEdge(u8 slot, u16 node, u16 dest)
+{
+    const struct PathCache *path = &sPaths[slot];
+    u8 i;
+    if (path->dest != dest || path->count > PATH_CACHE_NODES)
+        return EDGE_NONE;
+    for (i = 0; i + 1 < path->count; i++)
+    {
+        if (path->nodes[i] == node)
+            return EdgeBetween(node, path->nodes[i + 1], IsTraveller(slot));
+    }
+    return EDGE_NONE;
+}
+
+static void CachePath(u8 slot, const struct Search *search, u16 dest)
+{
+    struct PathCache *path = &sPaths[slot];
+    u16 node = dest;
+    u8 depth;
+
+    path->count = 0;
+    if (dest >= gWayfarerWorldNodeCount || search->via[dest] == EDGE_NONE)
+        return;
+    depth = search->depth[dest];
+    path->dest = dest;
+    for (;;)
+    {
+        if (depth < PATH_CACHE_NODES)
+            path->nodes[depth] = node;
+        if (depth == 0)
+            break;
+        node = search->via[node];
+        depth--;
+    }
+    path->count = search->depth[dest] + 1 < PATH_CACHE_NODES ? search->depth[dest] + 1 : PATH_CACHE_NODES;
+}
+
+// The first edge towards the trainer's destination: from the cached path,
+// or a new search (cached for the next hops).
+static u16 TravelFirstEdge(u8 slot, u16 node, u16 dest, void *workspace, bool8 *clean, struct WayfarerWorldTrace *trace)
+{
+    struct Search search;
+    u16 edge = CachedFirstEdge(slot, node, dest);
+
+    if (edge != EDGE_NONE)
+        return edge;
+    SearchFrom(&search, workspace, *clean, node, dest, WORLD_NODE_NONE, Trainer(slot)->searchBound,
+               IsTraveller(slot), NULL, 0, trace);
+    edge = SearchFirstEdge(&search, dest);
+    CachePath(slot, &search, dest);
+    SearchRelease(&search);
+    *clean = TRUE;
+    return edge;
 }
 
 u16 WorldSim_NextEdge(const struct WayfarerWorldState *state, u8 slot, void *workspace, struct WayfarerWorldTrace *trace)
 {
-    struct Search search;
     const struct WayfarerWorldRecord *record = &state->records[slot];
     u16 dest = WorldSim_DestNode(state, slot);
+    bool8 clean = FALSE;
 
     if (dest == WORLD_NODE_NONE || dest == record->node)
         return EDGE_NONE;
-    Search(&search, workspace, record->node, dest, WORLD_NODE_NONE, Trainer(slot)->searchBound,
-           IsTraveller(slot), NULL, 0, trace);
-    return SearchFirstEdge(&search, dest);
+    return TravelFirstEdge(slot, record->node, dest, workspace, &clean, trace);
 }
 
 // ---------------------------------------------------------------------------
@@ -1167,7 +1267,6 @@ void WorldSim_Heartbeat(struct WayfarerWorldState *state, const struct WayfarerW
     u8 homeHops[WORLD_SIM_TRAINER_COUNT];
     u16 firstEdge[WORLD_SIM_TRAINER_COUNT];
     u8 slot, count = 0, i, j;
-    struct Search search;
     bool8 clean = FALSE;
     // A trainer whose derived state changed has already acted this heartbeat.
     u32 changed = WorldSim_ApplyDerived(state, ctx, workspace, trace);
@@ -1185,14 +1284,8 @@ void WorldSim_Heartbeat(struct WayfarerWorldState *state, const struct WayfarerW
             continue;
         destNode = record->state == WORLD_STATE_TRAVELLING ? WorldSim_DestNode(state, slot) : WORLD_NODE_NONE;
         homeHops[slot] = HomeHopsFrom(slot, record->node);
-        if (destNode != WORLD_NODE_NONE)
-        {
-            SearchFrom(&search, workspace, clean, record->node, destNode, WORLD_NODE_NONE,
-                       Trainer(slot)->searchBound, IsTraveller(slot), NULL, 0, trace);
-            firstEdge[slot] = SearchFirstEdge(&search, destNode);
-            SearchRelease(&search);
-            clean = TRUE;
-        }
+        if (destNode != WORLD_NODE_NONE && destNode != record->node)
+            firstEdge[slot] = TravelFirstEdge(slot, record->node, destNode, workspace, &clean, trace);
 
         // Priority order: fewer hops home first, then catalog order.
         for (i = count; i > 0 && homeHops[order[i - 1]] > homeHops[slot]; i--)
@@ -1276,6 +1369,7 @@ static void SeatAll(struct WayfarerWorldState *state, const struct WayfarerWorld
 void WorldSim_NewGame(struct WayfarerWorldState *state, const struct WayfarerWorldContext *ctx, void *workspace)
 {
     (void)workspace;
+    WorldSim_ResetPathCache();
     state->schemaVersion = WORLD_SCHEMA_VERSION;
     state->reserved = 0;
     state->contentHash = gWayfarerWorldContentHash;
