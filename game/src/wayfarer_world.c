@@ -181,7 +181,7 @@ static void RunHeartbeat(void)
     gWayfarerWorldDebug.lastTrace = (struct WayfarerWorldTrace){0};
     WorldSim_Heartbeat(WayfarerWorld_GetState(), &ctx, workspace, &gWayfarerWorldDebug.lastTrace);
     Free(workspace);
-    WayfarerWalkers_NoteHeartbeat(WayfarerWalkers_ScanlineStamp() - start, contextDone - start);
+    WayfarerWalkers_NoteHeartbeat(WayfarerWalkers_ScanlinesSince(start), (s32)(contextDone - start) < 0 ? 0 : contextDone - start);
     gWayfarerWorldDebug.heartbeats++;
     gWayfarerWorldDebug.lastHeartbeatMap = ctx.playerMap;
 }

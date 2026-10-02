@@ -39,6 +39,7 @@
 
 #define WALKER_MAX_TILES        7320    // ROUTE47_HNS, the largest in-scope layout
 #define WALKER_QUEUE_SIZE       1024    // ring queue; a grid frontier stays far below
+#define WALKER_LAYER_MAX        64      // second-elevation states on elevation-15 tiles
 #define WALKER_PATH_MAX         192     // steps per plan; longer walks re-plan on the way
 #define WALKER_SEARCH_SLICE     8       // node expansions per field update
 #define WALKER_AWAY_NODES       160     // a back-off search gives up after this many
@@ -66,6 +67,8 @@
 #define NO_EDGE     0xFFFF
 #define SLOT_NONE   0xFF
 #define TILE_UNSEEN 0xFF
+#define STATE_LAYER 0x8000
+#define LAYER_NONE  0xFF
 
 enum
 {
@@ -131,6 +134,17 @@ struct WalkerActor
 struct WalkerWork
 {
     u8 tiles[WALKER_MAX_TILES];
+    // An elevation-15 tile (a bridge) carries the walker's elevation, so it
+    // can be reached in two states (over and under): the second one lives
+    // here. Queue entries and states are a tile index, or STATE_LAYER | an
+    // index into this table.
+    u16 layerTile[WALKER_LAYER_MAX];
+    u8 layerValue[WALKER_LAYER_MAX];    // as tiles[]
+    u8 layerCount;
+    // Whether each state was reached from a second state: bits by tile for
+    // tiles[] (written with the tile, so never cleared), bytes for layers.
+    u8 fromLayer[(WALKER_MAX_TILES + 7) / 8];
+    bool8 layerFromLayer[WALKER_LAYER_MAX];
     u16 queue[WALKER_QUEUE_SIZE];
     u8 path[WALKER_ACTOR_COUNT][WALKER_PATH_MAX];
 };
@@ -182,6 +196,7 @@ static EWRAM_DATA u32 sVisitorsSeen = 0;    // Gym visitors spawned during this 
 static EWRAM_DATA u32 sYielded = 0;         // handed off for the rest of this visit
 static EWRAM_DATA bool8 sHideFollower = FALSE;
 static EWRAM_DATA bool8 sFollowerFlagOurs = FALSE;
+static EWRAM_DATA bool8 sFollowerRemoved = FALSE;   // survives map changes: a seam keeps it removed
 static EWRAM_DATA u8 sSpawnTimer = 0;
 static EWRAM_DATA u8 sSpawnBackoff = 0;
 static EWRAM_DATA struct RecentEntry sRecentEntries[WALKER_ACTOR_COUNT] = {0};
@@ -189,6 +204,7 @@ static EWRAM_DATA struct RecentEntry sRecentEntries[WALKER_ACTOR_COUNT] = {0};
 STATIC_ASSERT(sizeof(struct WayfarerWalkerActorDebug) == 16, WalkerActorDebugSize);
 STATIC_ASSERT(sizeof(struct WayfarerWalkersDebug) == 64 + 16 * WALKER_ACTOR_COUNT + 32, WalkersDebugSize);
 STATIC_ASSERT(DIR_NORTHEAST <= 15, WalkerMoveFitsANibble);
+STATIC_ASSERT(WALKER_MAX_TILES < STATE_LAYER, WalkerTileFitsAState);
 
 // DIR_SOUTH..DIR_EAST are 1..4; the stair diagonals DIR_SOUTHWEST..DIR_NORTHEAST 5..8.
 static const s8 sDx[9] = {0, 0, 0, -1, 1, -1, 1, -1, 1};
@@ -216,9 +232,23 @@ static u32 ScanlineStamp(void)
     return first * 228 + (vcount + 68) % 228;
 }
 
+// Scanlines since a stamp. The VBlank interrupt that counts frames can run a
+// few lines after VCOUNT reaches 160, so a stamp taken in between reads one
+// frame early: a negative span counts as 0.
+static u32 ScanlinesSince(u32 start)
+{
+    s32 span = ScanlineStamp() - start;
+    return span < 0 ? 0 : span;
+}
+
 u32 WayfarerWalkers_ScanlineStamp(void)
 {
     return ScanlineStamp();
+}
+
+u32 WayfarerWalkers_ScanlinesSince(u32 start)
+{
+    return ScanlinesSince(start);
 }
 
 void WayfarerWalkers_NoteHeartbeat(u32 scanlines, u32 contextScanlines)
@@ -371,6 +401,12 @@ static bool8 IsSpawnTile(s16 x, s16 y)
         }
     }
     return TRUE;
+}
+
+// A step onto or off these may be a diagonal (GetSidewaysStairsCollision).
+static bool8 IsSidewaysStairs(u8 behavior)
+{
+    return MetatileBehavior_IsSidewaysStairsLeftSideAny(behavior) || MetatileBehavior_IsSidewaysStairsRightSideAny(behavior);
 }
 
 // The elevation an object settles on at a tile (ObjectEventUpdateElevation
@@ -561,6 +597,11 @@ static void SettleHeldMovement(struct ObjectEvent *obj)
     obj->heldMovementActive = FALSE;
     obj->heldMovementFinished = FALSE;
     obj->directionOverwrite = DIR_NONE;
+    // Collision also counts the step's start tile (previousCoords) until
+    // the next step: let go of it. (The engine settles the elevation from
+    // both tiles on the object's next frame; no map grid is read here, as
+    // Continue can run this before the map is loaded.)
+    ShiftStillObjectEventCoords(obj);
 }
 
 // ---------------------------------------------------------------------------
@@ -942,12 +983,9 @@ static void TrySpawn(void)
     // matters when there are more candidates than room.
     if (count > room)
     {
-        void *workspace = Alloc(WorldSim_WorkspaceSize());
-        if (workspace == NULL)
-            return;
+        // A table lookup: no search workspace.
         for (i = 0; i < count; i++)
-            hops[order[i]] = WorldSim_HomeHops(State(), order[i], workspace);
-        Free(workspace);
+            hops[order[i]] = WorldSim_HomeHops(State(), order[i]);
         for (i = 1; i < count; i++)
         {
             u8 value = order[i];
@@ -1102,28 +1140,71 @@ static bool8 IsGoalTile(struct WalkerActor *actor, struct ObjectEvent *obj, s16 
     return FALSE;
 }
 
+static u16 StateTile(u16 state)
+{
+    return (state & STATE_LAYER) ? sWork->layerTile[state & ~STATE_LAYER] : state;
+}
+
+static u8 StateValue(u16 state)
+{
+    return (state & STATE_LAYER) ? sWork->layerValue[state & ~STATE_LAYER] : sWork->tiles[state];
+}
+
+static u8 FindLayer(u16 tile)
+{
+    u8 i;
+    for (i = 0; i < sWork->layerCount; i++)
+    {
+        if (sWork->layerTile[i] == tile)
+            return i;
+    }
+    return LAYER_NONE;
+}
+
+// The state a path came from: the tile the move came from, in the state
+// recorded when this one was reached.
+static u16 PreviousState(u16 state)
+{
+    u16 tile = StateTile(state);
+    u8 move = StateValue(state) & 0xF;
+    u16 previous = tile - (sDx[move] + sDy[move] * MapWidth());
+    bool8 fromLayer = (state & STATE_LAYER) ? sWork->layerFromLayer[state & ~STATE_LAYER]
+                                            : (sWork->fromLayer[tile >> 3] >> (tile & 7)) & 1;
+    return fromLayer ? (STATE_LAYER | FindLayer(previous)) : previous;
+}
+
+static void SetFromLayer(u16 tile, bool8 fromLayer)
+{
+    if (fromLayer)
+        sWork->fromLayer[tile >> 3] |= 1 << (tile & 7);
+    else
+        sWork->fromLayer[tile >> 3] &= ~(1 << (tile & 7));
+}
+
 static void FinishSearch(struct WalkerActor *actor, u16 goal)
 {
-    u16 width = MapWidth(), length = 0, tile = goal, take, i;
+    u16 length = 0, state = goal, take, i;
     u8 *path = sWork->path[ActorIndex(actor)];
+    u32 start = ScanlineStamp(), cost;
 
-    while (tile != sSearch.source && length < WALKER_MAX_TILES)
+    while (state != sSearch.source && length < WALKER_MAX_TILES + WALKER_LAYER_MAX)
     {
-        u8 move = sWork->tiles[tile] & 0xF;
-        tile -= sDx[move] + sDy[move] * width;
+        state = PreviousState(state);
         length++;
     }
     take = length < WALKER_PATH_MAX ? length : WALKER_PATH_MAX;
-    tile = goal;
+    state = goal;
     i = length;
-    while (tile != sSearch.source && i > 0)
+    while (state != sSearch.source && i > 0)
     {
-        u8 move = sWork->tiles[tile] & 0xF;
         i--;
         if (i < take)
-            path[i] = move;
-        tile -= sDx[move] + sDy[move] * width;
+            path[i] = StateValue(state) & 0xF;
+        state = PreviousState(state);
     }
+    cost = ScanlinesSince(start);
+    if (cost > gWayfarerWalkersDebug.maxFinishScanlines)
+        gWayfarerWalkersDebug.maxFinishScanlines = cost;
     actor->pathLen = take;
     actor->pathPos = 0;
     actor->truncated = take < length;
@@ -1202,6 +1283,7 @@ static void BeginSearch(struct WalkerActor *actor)
     sSearch.startFrame = gMain.vblankCounter1;
     sWork->queue[0] = sSearch.source;
     sWork->tiles[sSearch.source] = (obj->currentElevation & 0xF) << 4;
+    sWork->layerCount = 0;
 }
 
 static void SearchSlice(void)
@@ -1214,9 +1296,10 @@ static void SearchSlice(void)
 
     while (sSearch.read != sSearch.write && expanded < WALKER_SEARCH_SLICE)
     {
-        u16 tile = sWork->queue[sSearch.read % WALKER_QUEUE_SIZE];
+        u16 state = sWork->queue[sSearch.read % WALKER_QUEUE_SIZE], tile = StateTile(state);
         s16 x = tile % width, y = tile / width;
-        u8 elevation = sWork->tiles[tile] >> 4;
+        u8 elevation = StateValue(state) >> 4;
+        bool8 onStairs = IsSidewaysStairs(MapGridGetMetatileBehaviorAt(x + MAP_OFFSET, y + MAP_OFFSET));
         u8 dir;
 
         sSearch.read++;
@@ -1224,14 +1307,23 @@ static void SearchSlice(void)
         expanded++;
         if (IsGoalTile(actor, obj, x, y, elevation))
         {
-            FinishSearch(actor, tile);
+            FinishSearch(actor, state);
             break;
         }
         for (dir = DIR_SOUTH; dir <= DIR_EAST; dir++)
         {
-            u8 move = ProbeStep(obj, x + MAP_OFFSET, y + MAP_OFFSET, elevation, dir);
-            s16 nx, ny;
+            s16 nx = x + sDx[dir], ny = y + sDy[dir];
             u16 next;
+            u8 move, nextElevation;
+            // Off sideways stairs a step is straight: a neighbour already
+            // seen (or off the map) needs no collision probe, unless it is a
+            // bridge tile with a second state still free.
+            if (!onStairs && (nx < 0 || ny < 0 || nx >= width || ny >= height
+                              || (sWork->tiles[ny * width + nx] != TILE_UNSEEN
+                                  && MapGridGetElevationAt(nx + MAP_OFFSET, ny + MAP_OFFSET) != 15
+                                  && !IsSidewaysStairs(MapGridGetMetatileBehaviorAt(nx + MAP_OFFSET, ny + MAP_OFFSET)))))
+                continue;
+            move = ProbeStep(obj, x + MAP_OFFSET, y + MAP_OFFSET, elevation, dir);
             if (move == DIR_NONE)
                 continue;
             nx = x + sDx[move];
@@ -1239,15 +1331,34 @@ static void SearchSlice(void)
             if (nx < 0 || ny < 0 || nx >= width || ny >= height)
                 continue;
             next = ny * width + nx;
-            if (sWork->tiles[next] != TILE_UNSEEN || (u16)(sSearch.write - sSearch.read) >= WALKER_QUEUE_SIZE)
+            if ((u16)(sSearch.write - sSearch.read) >= WALKER_QUEUE_SIZE)
                 continue;
-            sWork->tiles[next] = move | (RestElevation(nx + MAP_OFFSET, ny + MAP_OFFSET, elevation) << 4);
-            sWork->queue[sSearch.write % WALKER_QUEUE_SIZE] = next;
+            nextElevation = RestElevation(nx + MAP_OFFSET, ny + MAP_OFFSET, elevation);
+            if (sWork->tiles[next] == TILE_UNSEEN)
+            {
+                sWork->tiles[next] = move | (nextElevation << 4);
+                SetFromLayer(next, (state & STATE_LAYER) != 0);
+                sWork->queue[sSearch.write % WALKER_QUEUE_SIZE] = next;
+            }
+            else if ((sWork->tiles[next] >> 4) != nextElevation && sWork->layerCount < WALKER_LAYER_MAX
+                  && MapGridGetElevationAt(nx + MAP_OFFSET, ny + MAP_OFFSET) == 15 && FindLayer(next) == LAYER_NONE)
+            {
+                // The bridge tile's other state (over or under).
+                u8 layer = sWork->layerCount++;
+                sWork->layerTile[layer] = next;
+                sWork->layerValue[layer] = move | (nextElevation << 4);
+                sWork->layerFromLayer[layer] = (state & STATE_LAYER) != 0;
+                sWork->queue[sSearch.write % WALKER_QUEUE_SIZE] = STATE_LAYER | layer;
+            }
+            else
+            {
+                continue;
+            }
             sSearch.write++;
         }
     }
 
-    elapsed = ScanlineStamp() - start;
+    elapsed = ScanlinesSince(start);
     if (elapsed > gWayfarerWalkersDebug.maxSliceScanlines)
         gWayfarerWalkersDebug.maxSliceScanlines = elapsed;
     if (expanded > gWayfarerWalkersDebug.maxSliceNodes)
@@ -1498,10 +1609,10 @@ static void ChooseGoal(struct WalkerActor *actor, struct ObjectEvent *obj)
             actor->justLeaving = TRUE;
             edge = VisitorExitEdge(record, spot, obj);
             if (edge != NO_EDGE)
-            {
                 SetEdgeGoal(actor, edge);
-                return;
-            }
+            else
+                FinishLeaving(actor);   // never stand on the exit mat
+            return;
         }
         else if (spot != NULL && spot->node == record->node)
         {
@@ -2161,13 +2272,23 @@ static void UpdateFollower(void)
         // scripts set it (Fortree and Mossdeep Gyms, Trainer Hill...) keep it.
         FlagSet(FLAG_TEMP_HIDE_FOLLOWER);
         sFollowerFlagOurs = TRUE;
+        sFollowerRemoved = TRUE;
         RemoveFollowingPokemon();
     }
     else if (!hide && sFollowerFlagOurs)
     {
         FlagClear(FLAG_TEMP_HIDE_FOLLOWER);
         sFollowerFlagOurs = FALSE;
+        sFollowerRemoved = FALSE;
         UpdateFollowingPokemon();
+    }
+    else if (!hide && sFollowerRemoved && !FlagGet(FLAG_TEMP_HIDE_FOLLOWER))
+    {
+        // A map seam cleared our flag but nothing respawns the follower
+        // there (a warp would): bring it back once there's room.
+        sFollowerRemoved = FALSE;
+        if (GetFollowerObject() == NULL)
+            UpdateFollowingPokemon();
     }
     sHideFollower = hide;
     gWayfarerWalkersDebug.followerHidden = sFollowerFlagOurs;
@@ -2346,7 +2467,7 @@ void WayfarerWalkers_Update(void)
                 u32 spawnStart = ScanlineStamp(), spawnCost;
                 sSpawnBackoff = 0;
                 TrySpawn();
-                spawnCost = ScanlineStamp() - spawnStart;
+                spawnCost = ScanlinesSince(spawnStart);
                 if (spawnCost > gWayfarerWalkersDebug.maxSpawnScanlines)
                     gWayfarerWalkersDebug.maxSpawnScanlines = spawnCost;
             }
@@ -2355,7 +2476,7 @@ void WayfarerWalkers_Update(void)
     }
     PublishState();
     {
-        u32 cost = ScanlineStamp() - start;
+        u32 cost = ScanlinesSince(start);
         if (cost > gWayfarerWalkersDebug.maxUpdateScanlines)
             gWayfarerWalkersDebug.maxUpdateScanlines = cost;
     }
@@ -2448,6 +2569,7 @@ void WayfarerWalkers_Reset(void)
     sTransition = TRANSITION_NONE;
     sHideFollower = FALSE;
     sFollowerFlagOurs = FALSE;
+    sFollowerRemoved = FALSE;
     sVisitorsSeen = 0;
     sYielded = 0;
 }

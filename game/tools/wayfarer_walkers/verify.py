@@ -356,7 +356,7 @@ class Game:
         (out["lastHeartbeatScanlines"], out["maxHeartbeatScanlines"], out["maxSpawnScanlines"],
          out["maxUpdateScanlines"]) = struct.unpack_from("<4I", raw, tail)
         (out["backOffs"], out["handoffs"], out["visitorsVanished"], out["culls"],
-         out["lastContextScanlines"], out["lastFailNodes"]) = struct.unpack_from("<6H", raw, tail + 16)
+         out["lastContextScanlines"], out["lastFailNodes"], out["maxFinishScanlines"]) = struct.unpack_from("<7H", raw, tail + 16)
         return out
 
     def stable(self, read):
@@ -1198,7 +1198,44 @@ def scenario_perf(game: Game) -> dict:
     return result
 
 
-SCENARIOS = {"spot": scenario_spot, "edge": scenario_edge, "door": scenario_door,
+def scenario_bridge(game: Game) -> dict:
+    """F4: a path that crosses a bridge tile at its second elevation (Route 119).
+
+    Route 119's deck (rows 84-85, elevation 4) shares elevation-15 tiles with
+    the path underneath it (x 26-27, elevation 3). From the south a walker
+    first reaches (26,84) and (27,84) from below; the way west along the deck
+    crosses the same tiles at elevation 4. A search that keeps one state per
+    tile loses everything north of the bridge."""
+    route = TABLES.map_id("MAP_ROUTE119")
+    sx, sy = 16, 33
+    spot, node = TABLES.spot("MAP_ROUTE119", "WATER_EDGE", sx, sy)
+    boot(game, route, 30, 30, DIR_SOUTH)
+    place_blue(game, node=node, destId=spot, state=STATE_TRAVELLING, arrival=2,  # WORLD_ARRIVAL_SOUTH
+               crossing=18, activity=ACTIVITY_FISH, dwell=3)
+    before = game.walker_debug()
+    game.warp(route, 30, 30, DIR_SOUTH)
+    deck, arrived = [], None
+    for f in range(0, 7200, 8):
+        game.emu.step(8)
+        a = game.actor_for(SLOT_BLUE)
+        if a and 80 <= a["y"] <= 90 and (not deck or deck[-1] != (a["x"], a["y"])):
+            deck.append((a["x"], a["y"]))
+        if a and a["atSpot"] and (a["x"], a["y"]) == (sx, sy):
+            arrived = f
+            break
+    after = game.walker_debug()
+    record = game.record(SLOT_BLUE)
+    delta = {k: after[k] - before[k] for k in ("searches", "searchFails", "arrivals", "replans")}
+    result = {"spot": spot, "node": node, "arrived_after_frames": arrived, "delta": delta,
+              "deck_track": deck, "record": record, "maxSliceScanlines": after["maxSliceScanlines"],
+              "maxSearchNodes": after["maxSearchNodes"], "workspaceBytes": after["workspaceBytes"],
+              "maxFinishScanlines": after["maxFinishScanlines"], "screenshots": [game.shot("bridge-north")], "debug": after}
+    result["pass"] = (arrived is not None and delta["searchFails"] == 0 and delta["arrivals"] >= 1
+                      and record["state"] == STATE_DWELLING and record["destId"] == spot)
+    return result
+
+
+SCENARIOS = {"spot": scenario_spot, "bridge": scenario_bridge, "edge": scenario_edge, "door": scenario_door,
              "linger": scenario_linger, "save": scenario_save, "gym": scenario_gym,
              "budget": scenario_budget, "browse": scenario_browse, "deadend": scenario_deadend,
              "gymentry": scenario_gymentry, "stairs": scenario_stairs, "midstep": scenario_midstep,

@@ -255,16 +255,24 @@ u8 WorldSim_Occupancy(const struct WayfarerWorldState *state, u16 map, u8 except
     return count;
 }
 
+// The caches below live in EWRAM: IWRAM is kept for the stack and the
+// engine's hot data.
+#ifdef __arm__
+#define SIM_CACHE __attribute__((section(".sbss")))  // EWRAM_DATA
+#else
+#define SIM_CACHE
+#endif
+
 // Spot choice asks for map occupancy for every candidate; while one choice
 // runs the records don't change. On the first question, CountsOnMap is
 // summarised per trainer (the maps they count on); every answer is then a
 // scan of that summary.
-static u16 sCountMapA[WORLD_SIM_TRAINER_COUNT];   // 0xFFFF: counts nowhere
-static u16 sCountMapB[WORLD_SIM_TRAINER_COUNT];   // 0xFFFF: none
-static u16 sCountNotMap[WORLD_SIM_TRAINER_COUNT]; // a leader at home: never on their Gym's map
-static u8 sOccupancySlot;       // the slot the summary excepts
-static bool8 sOccupancyActive;  // a spot choice is running
-static bool8 sOccupancyReady;   // the summary is built
+static SIM_CACHE u16 sCountMapA[WORLD_SIM_TRAINER_COUNT];   // 0xFFFF: counts nowhere
+static SIM_CACHE u16 sCountMapB[WORLD_SIM_TRAINER_COUNT];   // 0xFFFF: none
+static SIM_CACHE u16 sCountNotMap[WORLD_SIM_TRAINER_COUNT]; // a leader at home: never on their Gym's map
+static SIM_CACHE u8 sOccupancySlot;       // the slot the summary excepts
+static SIM_CACHE bool8 sOccupancyActive;  // a spot choice is running
+static SIM_CACHE bool8 sOccupancyReady;   // the summary is built
 
 static void SummariseOccupancy(const struct WayfarerWorldState *state, u8 exceptSlot)
 {
@@ -291,9 +299,9 @@ static void SummariseOccupancy(const struct WayfarerWorldState *state, u8 except
 }
 
 #define OCCUPANCY_CACHE_SIZE 16
-static u16 sOccupancyMaps[OCCUPANCY_CACHE_SIZE];
-static u8 sOccupancyCounts[OCCUPANCY_CACHE_SIZE];
-static u8 sOccupancyCached;
+static SIM_CACHE u16 sOccupancyMaps[OCCUPANCY_CACHE_SIZE];
+static SIM_CACHE u8 sOccupancyCounts[OCCUPANCY_CACHE_SIZE];
+static SIM_CACHE u8 sOccupancyCached;
 
 static u8 CachedOccupancy(const struct WayfarerWorldState *state, u16 map, u8 exceptSlot)
 {
@@ -342,9 +350,9 @@ static u8 SpotHolders(const struct WayfarerWorldState *state, u16 spot, u8 excep
 
 // While a spot choice runs: the spots the other trainers hold (SpotHolders'
 // rule), gathered once instead of per candidate.
-static u16 sHeldSpots[WORLD_SIM_TRAINER_COUNT];
-static u8 sHeldCount;
-static bool8 sHeldReady;
+static SIM_CACHE u16 sHeldSpots[WORLD_SIM_TRAINER_COUNT];
+static SIM_CACHE u8 sHeldCount;
+static SIM_CACHE bool8 sHeldReady;
 
 static void GatherHeldSpots(const struct WayfarerWorldState *state, u8 exceptSlot)
 {
@@ -1373,9 +1381,8 @@ void WorldSim_OnLeagueResolved(struct WayfarerWorldState *state, const u16 *line
 // ---------------------------------------------------------------------------
 // Local actor helpers
 
-u8 WorldSim_HomeHops(const struct WayfarerWorldState *state, u8 slot, void *workspace)
+u8 WorldSim_HomeHops(const struct WayfarerWorldState *state, u8 slot)
 {
-    (void)workspace;
     return HomeHopsFrom(slot, state->records[slot].node);
 }
 

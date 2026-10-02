@@ -1088,13 +1088,24 @@ u8 FldEff_QuestionMarkIcon(void)
         u8 emotion = gFieldEffectArguments[7];
         spriteId = CreateSpriteAtEnd(&sSpriteTemplate_Emote, 0, 0, 0x52);
         if (spriteId == MAX_SPRITES)
+        {
+#if IS_WAYFARER
+            // As for the exclamation mark: no phantom active effect, or the
+            // follower's interaction script waits on FLDEFF_EMOTE forever.
+            FieldEffectActiveListRemove(FLDEFF_EMOTE);
+#endif
             return 0;
+        }
         SetIconSpriteData(&gSprites[spriteId], FLDEFF_EMOTE, emotion); // Set animation based on emotion
         UpdateSpritePaletteByTemplate(&sSpriteTemplate_Emote, &gSprites[spriteId]);
         return 0;
     }
     spriteId = CreateSpriteAtEnd(&sSpriteTemplate_ExclamationQuestionMark, 0, 0, 0x52);
 
+#if IS_WAYFARER
+    if (spriteId == MAX_SPRITES)
+        FieldEffectActiveListRemove(FLDEFF_QUESTION_MARK_ICON);
+#endif
     if (spriteId != MAX_SPRITES)
     {
         SetIconSpriteData(&gSprites[spriteId], FLDEFF_QUESTION_MARK_ICON, 1);

@@ -109,7 +109,8 @@ struct WayfarerWalkersDebug
     u16 culls;                  // off-screen walkers that gave their slot back
     u16 lastContextScanlines;   // the heartbeat's WayfarerWorld_BuildContext
     u16 lastFailNodes;          // nodes a failed search expanded
-    u16 padding[2];
+    u16 maxFinishScanlines;     // the path rebuild at a search's end
+    u16 padding;
 };
 
 extern struct WayfarerWalkersDebug gWayfarerWalkersDebug;
@@ -126,6 +127,7 @@ bool8 WayfarerWalkers_HideTemplate(const struct ObjectEventTemplate *template);
 bool8 WayfarerWalkers_HideFollower(void);
 // Profiling: the heartbeat's cost, measured by wayfarer_world.c.
 u32 WayfarerWalkers_ScanlineStamp(void);
+u32 WayfarerWalkers_ScanlinesSince(u32 start);
 void WayfarerWalkers_NoteHeartbeat(u32 scanlines, u32 contextScanlines);
 
 #endif // IS_WAYFARER

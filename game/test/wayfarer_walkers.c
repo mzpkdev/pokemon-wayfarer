@@ -129,7 +129,6 @@ TEST("Browse moves the stay to another shelf, travelling when it is on another f
 
 TEST("Spawn priority counts graph hops from the current node home")
 {
-    void *workspace = Alloc(WorldSim_WorkspaceSize());
     u8 slot;
 
     ClearRecords();
@@ -138,13 +137,12 @@ TEST("Spawn priority counts graph hops from the current node home")
         const struct WayfarerWorldTrainer *trainer = &gWayfarerWorldTrainers[slot];
         u16 e = gWayfarerWorldNodes[trainer->homeNode].firstEdge;
         sWalkerState.records[slot].node = trainer->homeNode;
-        EXPECT_EQ(WorldSim_HomeHops(&sWalkerState, slot, workspace), 0);
+        EXPECT_EQ(WorldSim_HomeHops(&sWalkerState, slot), 0);
         if (gWayfarerWorldNodes[trainer->homeNode].edgeCount == 0)
             continue;
         sWalkerState.records[slot].node = gWayfarerWorldEdges[e].target;
-        EXPECT(WorldSim_HomeHops(&sWalkerState, slot, workspace) >= 1);
+        EXPECT(WorldSim_HomeHops(&sWalkerState, slot) >= 1);
     }
-    Free(workspace);
 }
 
 // The generated home-hop table must equal a search over the same edges.

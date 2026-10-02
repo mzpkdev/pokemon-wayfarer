@@ -89,7 +89,7 @@ u8 WorldSim_TemplateEmote(const struct WayfarerWorldSpot *spot, u8 activity);
 
 // Local actor helpers (wayfarer_walkers.c). All engine-free and deterministic.
 // Graph hops from the trainer's node to their home node (priority order), or 0xFF.
-u8 WorldSim_HomeHops(const struct WayfarerWorldState *state, u8 slot, void *workspace);
+u8 WorldSim_HomeHops(const struct WayfarerWorldState *state, u8 slot);
 // TRUE when the spot already holds as many trainers as it can (except exceptSlot).
 bool8 WorldSim_SpotTaken(const struct WayfarerWorldState *state, u16 spot, u8 exceptSlot);
 // A template moves the stay to another spot of the same kind (Browse): keeps
