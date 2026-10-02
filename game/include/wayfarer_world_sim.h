@@ -60,7 +60,50 @@ u32 WorldSim_ApplyDerived(struct WayfarerWorldState *state, const struct Wayfare
 // On load: only entering a derived state applies; leaving one waits for the
 // next heartbeat, so a reload never changes how the world evolves.
 void WorldSim_ApplyDerivedOnLoad(struct WayfarerWorldState *state, const struct WayfarerWorldContext *ctx);
+// The map-change heartbeat, all at once: WorldSim_HeartbeatBegin, then
+// WorldSim_HeartbeatStep until it returns TRUE.
 void WorldSim_Heartbeat(struct WayfarerWorldState *state, const struct WayfarerWorldContext *ctx, void *workspace, struct WayfarerWorldTrace *trace);
+
+// The same heartbeat spread over calls (the engine runs a few steps per
+// frame). The caller keeps this between calls; it holds no pointers, so it
+// survives a heap reset that loses the workspace.
+struct WayfarerWorldHeartbeat
+{
+    u32 worldProgress;                      // the context's, as at Begin
+    u32 provisionalMask;
+    u32 risingMask;
+    u16 firstEdge;                          // the current trainer's, once known
+    u8 order[WORLD_SIM_TRAINER_COUNT];      // trainers left to act, in priority order
+    u8 count;
+    u8 next;                                // index in order of the trainer acting now
+    u8 phase;
+    u8 attempt;                             // a routine advance's spot choices so far
+    u8 attemptMax;
+    bool8 active;                           // Begin ran and some trainer hasn't acted yet
+    bool8 clean;                            // the workspace's search marks are clear
+    bool8 searchLive;                       // a search for the current trainer is under way in the workspace
+};
+
+// Applies the derived states and fixes who acts, in which order. The frozen
+// mask and the player's map count as they are now.
+void WorldSim_HeartbeatBegin(struct WayfarerWorldHeartbeat *hb, struct WayfarerWorldState *state,
+                             const struct WayfarerWorldContext *ctx, struct WayfarerWorldTrace *trace);
+// Acts for trainers in order, spending about `budget` work units (always at
+// least one). A unit is one node a search expands, a search's start, a few
+// trainers of a reroute's full-map check, a dwell tick, a spot choice or a
+// hop. A heavy unit (WorldSim_HeartbeatNextIsHeavy) is only ever the first
+// of a call. TRUE once every trainer has acted. The workspace must be
+// WorldSim_WorkspaceSize() bytes; it may change between calls only after
+// WorldSim_HeartbeatLostWorkspace.
+bool8 WorldSim_HeartbeatStep(struct WayfarerWorldHeartbeat *hb, struct WayfarerWorldState *state, void *workspace,
+                             u16 budget, struct WayfarerWorldTrace *trace);
+// The next unit may take a large part of a frame (one spot choice of a
+// routine advance): a caller slicing by time starts its next slice with it.
+bool8 WorldSim_HeartbeatNextIsHeavy(const struct WayfarerWorldHeartbeat *hb);
+// The workspace is gone (heap reset): the search under way restarts on the next step.
+void WorldSim_HeartbeatLostWorkspace(struct WayfarerWorldHeartbeat *hb);
+// TRUE while the trainer in this slot still has to act in this heartbeat.
+bool8 WorldSim_HeartbeatIsPending(const struct WayfarerWorldHeartbeat *hb, u8 slot);
 // The life-event hook at league event resolution. lineup is in battle order;
 // championId is a NOTABLE_TRAINER_* or 0 when the player won.
 void WorldSim_OnLeagueResolved(struct WayfarerWorldState *state, const u16 *lineup, u8 count, bool8 playerWon, u16 championId);

@@ -2011,6 +2011,7 @@ static void OverworldBasic(void)
     RunTasks();
 #if IS_WAYFARER
     WayfarerWalkers_Update();
+    WayfarerWorld_Update();
 #endif
     AnimateSprites();
     CameraUpdate();

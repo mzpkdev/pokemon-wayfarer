@@ -305,12 +305,16 @@ the 12-node cache runs out, is still a breadth-first search to the
 destination; across the Surf-linked seas and the Elite Four fly it can
 expand about 930 nodes in one search, and up to about 2,500 nodes in one
 heartbeat when several long trips start together (all-badges report:
-about 520 expanded nodes per heartbeat on average). On the ROM the
-worst map-load heartbeat measured was 1,642 scanlines (about 7 frames,
-during the warp fade; 60 warps with all badges), and a warp took 46
-frames at most against main's 40. The first-search cost was accepted at
-about 900 nodes and 3 frames; the higher peak since the Elite Four fly is
-under review.
+about 520 expanded nodes per heartbeat on average). Inside the map load
+this cost up to 1,642 scanlines (about 7 frames, with all badges), a
+visible stutter on a seamless edge. The heartbeat is therefore
+[spread over the following field frames](#heartbeat): on the E2E ROM a
+warp now takes 40.1 frames on average and 42 at most (main: 40), and the
+worst single frame of heartbeat work is 158 scanlines on a seam and 188
+on warps. That worst frame is one spot choice, which can't be split (up
+to about 120 scanlines). The remaining cost is time: a heartbeat finishes
+after 9 field frames on a seam (median; worst 53), and the walkers on the
+player's map pause until it does.
 
 **Generator outputs**, one ROM table each, in a fixed order (map order,
 then component top-left tile) so ids are stable between builds of the
@@ -374,6 +378,34 @@ scripts that reload the same map without a transition.
    the player can follow a trainer, and a trainer the player walks in on
    is still there.
 4. Spawn local actors ([world to local](#handoff-world-to-local)).
+
+**Spread over frames.** Step 1, the priority order, and who counts as on the
+player's map or frozen are fixed at the map load. Step 2 then runs a few
+trainers at a time in the following field frames, in that order, within a
+per-frame budget:
+
+- at most 88 scanlines together with the walkers' update;
+- ending 40 lines before the next VBlank;
+- never during a palette fade.
+
+A breadth-first search or a reroute's full-map check can stop and resume
+between frames. A spot choice always starts a frame's share. The result is
+exactly the heartbeat run at once (the balance report's itineraries are
+byte-identical), because a trainer's next hop depends only on its own record
+and its own cached path.
+
+Until the heartbeat is done:
+
+- **Walkers.** The walkers' AI, spawning and world writes pause, as with
+  locked controls. A trainer that lands on the player's map spawns a few
+  frames later.
+- **Writes.** Anything that writes or saves the world finishes the rest at
+  once first: another map load, a save, league resolution, and a Gym
+  visitor's exit. So does the object of a Gym Leader who hasn't acted yet,
+  which is decided behind the warp's fade.
+- **Heap resets.** A heap reset (battle, menu) only restarts the search that
+  was under way.
+- **New Game, Continue and load** drop it.
 
 **Default: map-change time.** Dwell is counted in heartbeats. This is
 recommended for v0 because it is proven, cheap, saved, and deterministic.
@@ -807,9 +839,10 @@ shift encounter or battle rolls. Every choice comes from saved state,
 world progress, league state, and content, through fixed rules: spot
 choice (the spots spec's rotation), [priority order](#priority), path
 ties by edge order, and the life-event hook. The same save and the same
-sequence of map loads always give the same world. Continue doesn't
-advance it; a save and reload restores identical record bytes (proof of
-concept).
+sequence of map loads always give the same world, however the heartbeat
+is spread over frames and wherever a heap reset interrupts it. Continue
+doesn't advance it; a save and reload restores identical record bytes
+(proof of concept).
 
 ### Debug and balance report
 
@@ -826,8 +859,9 @@ loads, or "stays on one map"). It reports:
   an outdoor map.
 - **Coverage:** per trainer, the share of heartbeats per activity and
   per region; spots never used; trainers who never leave home.
-- **Cost:** search nodes visited per heartbeat (worst and mean), to check
-  the heartbeat fits inside a map transition.
+- **Cost:** search nodes visited per heartbeat (worst and mean). In game
+  the heartbeat is spread over frames, so this is total work, not a single
+  frame's.
 
 In game, a debug menu shows a trainer's record, warps the player to a
 trainer, and forces a heartbeat. Balance is informational.

@@ -225,13 +225,21 @@ static void ChooseGoal(struct WalkerActor *actor, struct ObjectEvent *obj);
 static u32 ScanlineStamp(void)
 {
     u32 first, second;
-    u16 vcount;
+    u16 vcount, pending;
+    // Line 160 starts VBlank, but the interrupt that counts the frame can
+    // come a little later (it does in SkyEmu): a stamp read there would be a
+    // whole frame (228 lines) early. Wait that line out (at most one line).
     do
     {
         first = *(volatile u32 *)&gMain.vblankCounter1;
         vcount = REG_VCOUNT;
+        pending = REG_IF & INTR_FLAG_VBLANK;
         second = *(volatile u32 *)&gMain.vblankCounter1;
-    } while (first != second);
+    } while (first != second || vcount == 160);
+    // Later in VBlank with the interrupt still not taken (interrupts off):
+    // the counter is one behind.
+    if (pending && vcount > 160)
+        first++;
     return first * 228 + (vcount + 68) % 228;
 }
 
@@ -252,6 +260,15 @@ u32 WayfarerWalkers_ScanlineStamp(void)
 u32 WayfarerWalkers_ScanlinesSince(u32 start)
 {
     return ScanlinesSince(start);
+}
+
+static EWRAM_DATA u32 sLastUpdateScanlines = 0;
+static EWRAM_DATA u32 sLastUpdateVblank = 0;
+
+// This frame's update only: a map load's frame (a warp) has none.
+u32 WayfarerWalkers_LastUpdateScanlines(void)
+{
+    return sLastUpdateVblank == gMain.vblankCounter1 ? sLastUpdateScanlines : 0;
 }
 
 void WayfarerWalkers_NoteHeartbeat(u32 scanlines, u32 contextScanlines)
@@ -1620,10 +1637,18 @@ static void YieldVisit(struct WalkerActor *actor)
 // A Gym visitor leaves at once: the visit ends and the record moves on.
 static void FinishLeaving(struct WalkerActor *actor)
 {
-    struct WayfarerWorldRecord *record = Record(actor);
-    const struct WayfarerWorldSpot *spot = DestSpot(record, actor->slot);
+    struct WayfarerWorldRecord *record;
+    const struct WayfarerWorldSpot *spot;
     struct WayfarerWorldContext ctx;
-    u16 edge = NO_EDGE, node = record->node;
+    u16 edge = NO_EDGE, node;
+
+    // The one world write that can come while the heartbeat is still
+    // running (story scenes and slot culls run with the AI paused): the
+    // records it reads and changes must be the finished heartbeat's.
+    WayfarerWorld_FinishHeartbeatEarly();
+    record = Record(actor);
+    spot = DestSpot(record, actor->slot);
+    node = record->node;
 
     if (spot != NULL && spot->kind == WORLD_SPOT_GYM && spot->node == record->node)
         edge = ExitEdgeForWarp(record->node, spot->x, spot->y);
@@ -2029,6 +2054,14 @@ static void OnSeam(void)
             continue;
         if (actor->mode == WALKER_MODE_LEAVING)
         {
+            RemoveActor(actor);
+            continue;
+        }
+        if (WayfarerWorld_IsSlotPending(actor->slot))
+        {
+            // Released to the heartbeat at the transition (off the new map
+            // and out of view): it would be dropped below whether or not its
+            // record has hopped yet, so drop it without waiting for that.
             RemoveActor(actor);
             continue;
         }
@@ -2584,6 +2617,8 @@ void WayfarerWalkers_Update(void)
     u16 map;
     u32 start;
 
+    sLastUpdateScanlines = 0;
+    sLastUpdateVblank = gMain.vblankCounter1;
     if (gSaveBlock1Ptr == NULL || gMapHeader.mapLayout == NULL || gMapHeader.events == NULL)
         return;
     start = ScanlineStamp();
@@ -2605,7 +2640,11 @@ void WayfarerWalkers_Update(void)
 
     // Talks, menus and scripts lock the field controls: the AI and its dwell
     // stay suspended (the engine still finishes a step already under way).
-    if (!ArePlayerFieldControlsLocked())
+    // So do they while the map load's heartbeat is still running (from a
+    // few frames to a few dozen in busy frames): the walkers' world writes
+    // and spawns then come after it, as when it ran inside the map load,
+    // and it gets the frame's spare time to itself.
+    if (!ArePlayerFieldControlsLocked() && !WayfarerWorld_IsHeartbeatPending())
     {
         RunScheduler();
         for (i = 0; i < WALKER_ACTOR_COUNT; i++)
@@ -2634,6 +2673,7 @@ void WayfarerWalkers_Update(void)
     PublishState();
     {
         u32 cost = ScanlinesSince(start);
+        sLastUpdateScanlines = cost;
         if (cost > gWayfarerWalkersDebug.maxUpdateScanlines)
             gWayfarerWalkersDebug.maxUpdateScanlines = cost;
     }
@@ -2782,7 +2822,15 @@ bool8 WayfarerWalkers_HideTemplate(const struct ObjectEventTemplate *template)
         if (trainer->leaderLocalId == 0 || trainer->gymNode == WORLD_NODE_NONE)
             continue;
         if (template->localId == trainer->leaderLocalId && WorldSim_NodeMap(trainer->gymNode) == map)
+        {
+            // The objects of a map spawn as it loads. A leader still to act
+            // in the heartbeat may be on the way home: decide from the
+            // finished heartbeat, as before it was spread over frames. (Gyms
+            // are entered by warp, so this runs behind the fade.)
+            if (WayfarerWorld_IsSlotPending(slot))
+                WayfarerWorld_FinishHeartbeatEarly();
             return !IsLeaderObjectShown(slot);
+        }
     }
     return FALSE;
 }

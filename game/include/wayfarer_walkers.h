@@ -100,7 +100,7 @@ struct WayfarerWalkersDebug
     u16 storySuppressed;
     u32 worldState;         // address of the saved WayfarerWorldState (it moves on heap resets)
     struct WayfarerWalkerActorDebug actors[WALKER_ACTOR_COUNT];
-    u32 lastHeartbeatScanlines; // WayfarerWorld_OnMapLoad's heartbeat, VCOUNT-based
+    u32 lastHeartbeatScanlines; // the last heartbeat's work over all its frames, VCOUNT-based
     u32 maxHeartbeatScanlines;
     u32 maxSpawnScanlines;      // one TrySpawn
     u32 maxUpdateScanlines;     // one whole WayfarerWalkers_Update
@@ -130,6 +130,8 @@ bool8 WayfarerWalkers_HideFollower(void);
 u32 WayfarerWalkers_ScanlineStamp(void);
 u32 WayfarerWalkers_ScanlinesSince(u32 start);
 void WayfarerWalkers_NoteHeartbeat(u32 scanlines, u32 contextScanlines);
+// Scanlines the last WayfarerWalkers_Update took (the heartbeat's steps share the frame).
+u32 WayfarerWalkers_LastUpdateScanlines(void);
 
 #endif // IS_WAYFARER
 #endif // GUARD_WAYFARER_WALKERS_H

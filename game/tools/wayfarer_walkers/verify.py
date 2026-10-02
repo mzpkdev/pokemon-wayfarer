@@ -15,6 +15,8 @@ symbol reads and screenshots:
   door    following through a door into an interior
   linger  off-screen trainers hop once per heartbeat; on-map trainers don't
   save    save, reset, Continue: identical records, actors at saved tiles
+  perf    heartbeat cost over 60 warps, all 25 trainers simulated
+  seam    heartbeat cost per frame across a seamless edge (Viridian <-> Route 2)
 
 Usage:
   python3 game/tools/wayfarer_walkers/verify.py --rom ROM --symbols SYM \\
@@ -147,6 +149,14 @@ WALKER_DEBUG_FIELDS = (
     "maxSliceNodes", "workspaceBytes", "currentMap",
 )
 ACTOR_COUNT = 4
+# struct WayfarerWorldDebug past its first 8 bytes and the 28-byte trace:
+# the sliced heartbeat's fields (ROMs before it don't have them).
+WORLD_DEBUG_SLICED_FIELDS = (
+    "lastHeartbeatFrames", "maxHeartbeatFrames", "maxStepScanlines", "maxFrameScanlines",
+    "maxFinishScanlines", "pendingAtLoad", "forcedFinishes", "workspaceLosses", "pending",
+)
+WORLD_DEBUG_SLICED_OFFSET = 36
+SCANLINES_PER_FRAME = 228
 
 
 class SkyEmu:
@@ -314,10 +324,12 @@ class Game:
     def arrange(self, map_id: int, x: int, y: int, facing: int = DIR_SOUTH) -> None:
         self.command(CMD_ARRANGE, map_id, x, y, facing)
         self.settle()
+        self.finish_heartbeat()
 
     def warp(self, map_id: int, x: int, y: int, facing: int = DIR_SOUTH) -> None:
         self.command(CMD_WARP, map_id, x, y, facing)
         self.settle()
+        self.finish_heartbeat()
 
     def save(self) -> None:
         self.command(CMD_SAVE)
@@ -370,10 +382,38 @@ class Game:
                 return value
         raise RuntimeError("Could not take a consistent snapshot")
 
+    @property
+    def sliced(self) -> bool:
+        """The ROM spreads the heartbeat over frames (round 4 and later)."""
+        return "sHeartbeat" in self.sym
+
     def world_debug(self) -> dict:
-        raw = self.emu.read(self.sym["gWayfarerWorldDebug"], 8)
-        return dict(zip(("heartbeats", "skippedHeartbeats", "lastHeartbeatMap", "reseats"),
-                        struct.unpack("<4H", raw)))
+        size = WORLD_DEBUG_SLICED_OFFSET + 2 * len(WORLD_DEBUG_SLICED_FIELDS) if self.sliced else 8
+        raw = self.emu.read(self.sym["gWayfarerWorldDebug"], size)
+        out = dict(zip(("heartbeats", "skippedHeartbeats", "lastHeartbeatMap", "reseats"),
+                       struct.unpack_from("<4H", raw, 0)))
+        if self.sliced:
+            out.update(zip(WORLD_DEBUG_SLICED_FIELDS,
+                           struct.unpack_from(f"<{len(WORLD_DEBUG_SLICED_FIELDS)}H", raw, WORLD_DEBUG_SLICED_OFFSET)))
+        return out
+
+    def reset_frame_maxima(self) -> None:
+        """Zero the per-frame worst cases so a scenario measures only itself."""
+        tail = 64 + 16 * ACTOR_COUNT
+        self.emu.write(self.sym["gWayfarerWalkersDebug"] + tail + 12, bytes(4))  # maxUpdateScanlines
+        if self.sliced:
+            # maxHeartbeatFrames, maxStepScanlines, maxFrameScanlines, maxFinishScanlines
+            self.emu.write(self.sym["gWayfarerWorldDebug"] + WORLD_DEBUG_SLICED_OFFSET + 2, bytes(8))
+
+    def finish_heartbeat(self, limit: int = 600) -> None:
+        """On a sliced ROM the map load's heartbeat runs on for a few frames
+        after the controls unlock: wait until the records are settled."""
+        if self.sliced:
+            self.wait_for(lambda: not self.world_debug()["pending"], limit, step=1, what="the heartbeat to finish")
+
+    def wait_heartbeat(self, before: int, limit: int = 600) -> None:
+        """Until the heartbeat after `before` has finished (it may take a few frames)."""
+        self.wait_for(lambda: self.world_debug()["heartbeats"] > before, limit, step=1, what="the heartbeat")
 
     def state_address(self) -> int:
         address = self.walker_debug()["worldState"]
@@ -742,6 +782,7 @@ def arrange_with_badges(game: Game, map_id: int, x: int, y: int, kanto_badges: i
     if game.emu.read(game.sym["gE2ETestResult"] + 14, 1)[0] != STATUS_SUCCESS:
         raise RuntimeError("Arrange with badges failed")
     game.settle()
+    game.finish_heartbeat()
 
 
 def gym_objects(game: Game, gfx: int) -> list:
@@ -1186,20 +1227,87 @@ def scenario_perf(game: Game) -> dict:
     """Heartbeat cost with every badge held: all 25 trainers simulated."""
     game.emu.step(240)
     arrange_with_badges(game, CENTER, 7, 6, 8, 8, 8)
+    game.reset_frame_maxima()
     rows = []
     for i in range(60):
         map_id, x, y = (MART, 4, 6) if i % 2 == 0 else (CENTER, 7, 6)
+        heartbeats = game.world_debug()["heartbeats"]
         before = game.emu.frames
-        game.warp(map_id, x, y, DIR_NORTH)
-        rows.append({"warp": i + 1, "frames": game.emu.frames - before,
+        # Frames per warp: until the controls unlock, as on earlier ROMs.
+        game.command(CMD_WARP, map_id, x, y, DIR_NORTH)
+        game.settle()
+        frames = game.emu.frames - before
+        game.wait_heartbeat(heartbeats)
+        world = game.world_debug()
+        rows.append({"warp": i + 1, "frames": frames,
                      "heartbeat_scanlines": game.walker_debug()["lastHeartbeatScanlines"],
+                     "heartbeat_frames": world.get("lastHeartbeatFrames"),
                      "context_scanlines": game.walker_debug()["lastContextScanlines"],
                      "trace": game.emu.read(game.sym["gWayfarerWorldDebug"] + 8, 20).hex()})
     dbg = game.walker_debug()
-    scan = [r["heartbeat_scanlines"] for r in rows]
-    result = {"warps": rows, "max_heartbeat_scanlines": max(scan), "mean_heartbeat_scanlines": sum(scan) / len(scan),
-              "max_heartbeat_frames": round(max(scan) / 228, 2), "debug": dbg}
+    world = game.world_debug()
+    scan = sorted(r["heartbeat_scanlines"] for r in rows)
+    frames = [r["frames"] for r in rows]
+    result = {"warps": rows,
+              # The whole heartbeat's work (all its frames on a sliced ROM).
+              "max_heartbeat_scanlines": scan[-1], "mean_heartbeat_scanlines": sum(scan) / len(scan),
+              "median_heartbeat_scanlines": scan[len(scan) // 2],
+              "max_heartbeat_frames": round(scan[-1] / SCANLINES_PER_FRAME, 2),
+              "over_two_frames": sum(1 for v in scan if v > 2 * SCANLINES_PER_FRAME),
+              "mean_warp_frames": sum(frames) / len(frames), "max_warp_frames": max(frames),
+              "max_walker_update_scanlines": dbg["maxUpdateScanlines"], "world": world, "debug": dbg}
+    if game.sliced:
+        # What a single frame carried: the worst frame of heartbeat work, and
+        # with the walkers' update in the same frame.
+        result["max_step_scanlines"] = world["maxStepScanlines"]
+        result["max_frame_scanlines"] = world["maxFrameScanlines"]
+        result["max_finish_scanlines"] = world["maxFinishScanlines"]
+        result["frames_per_heartbeat_max"] = max(r["heartbeat_frames"] for r in rows)
     result["pass"] = True
+    return result
+
+
+def scenario_seam(game: Game) -> dict:
+    """Heartbeat cost per frame on a seamless edge: Viridian <-> Route 2, every badge held."""
+    game.emu.step(240)
+    arrange_with_badges(game, VIRIDIAN, 27, 2, 8, 8, 8)
+    game.emu.step(30)
+    game.reset_frame_maxima()
+    rows = []
+    crossings = 30
+    for i in range(crossings):
+        north = i % 2 == 0
+        heartbeats = game.world_debug()["heartbeats"]
+        before = game.emu.frames
+        # Two tiles past the seam: Route 2 is 80 tiles tall, Viridian's top row is 0.
+        game.walk("Up" if north else "Down", "y", 77 if north else 2)
+        game.wait_heartbeat(heartbeats)
+        world = game.world_debug()
+        dbg = game.walker_debug()
+        rows.append({"crossing": i + 1, "to": "Route 2" if north else "Viridian", "map": game.current_map(),
+                     "frames": game.emu.frames - before,
+                     "heartbeat_scanlines": dbg["lastHeartbeatScanlines"],
+                     "heartbeat_frames": world.get("lastHeartbeatFrames")})
+    world = game.world_debug()
+    dbg = game.walker_debug()
+    scan = sorted(r["heartbeat_scanlines"] for r in rows)
+    result = {"crossings": rows, "heartbeats": world["heartbeats"],
+              "max_heartbeat_scanlines": scan[-1], "median_heartbeat_scanlines": scan[len(scan) // 2],
+              "mean_heartbeat_scanlines": sum(scan) / len(scan),
+              "max_walker_update_scanlines": dbg["maxUpdateScanlines"], "world": world, "debug": dbg}
+    if game.sliced:
+        result["max_step_scanlines"] = world["maxStepScanlines"]
+        result["max_frame_scanlines"] = world["maxFrameScanlines"]
+        result["max_finish_scanlines"] = world["maxFinishScanlines"]
+        result["frames_per_heartbeat_max"] = max(r["heartbeat_frames"] for r in rows)
+        # Target: no frame carries more than half a frame of heartbeat plus walker work.
+        result["within_target"] = world["maxFrameScanlines"] <= SCANLINES_PER_FRAME // 2
+    else:
+        # The whole heartbeat ran in the seam's frame, after the walkers' update.
+        result["max_frame_scanlines_estimate"] = scan[-1] + dbg["maxUpdateScanlines"]
+    maps = [r["map"] for r in rows]
+    result["pass"] = (all(m == (ROUTE2 if i % 2 == 0 else VIRIDIAN) for i, m in enumerate(maps))
+                      and (not game.sliced or (world["pendingAtLoad"] == 0 and world["forcedFinishes"] == 0)))
     return result
 
 
@@ -1399,7 +1507,7 @@ SCENARIOS = {"spot": scenario_spot, "bridge": scenario_bridge, "walkoff": scenar
              "linger": scenario_linger, "save": scenario_save, "gym": scenario_gym,
              "budget": scenario_budget, "browse": scenario_browse, "deadend": scenario_deadend,
              "gymentry": scenario_gymentry, "stairs": scenario_stairs, "midstep": scenario_midstep,
-             "decoys": scenario_decoys, "perf": scenario_perf}
+             "decoys": scenario_decoys, "perf": scenario_perf, "seam": scenario_seam}
 
 
 def main(argv=None) -> int:

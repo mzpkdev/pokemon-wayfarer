@@ -13,7 +13,7 @@ implementation map. Only `IS_WAYFARER` builds compile it.
 | Build-time tables | `tools/wayfarer_world/` | Walker graph (nodes, edges), spot table, routines, candidate lists, validation, content hash. Writes `src/data/wayfarer_world/tables.h` (generated, gitignored). |
 | Table types | `include/wayfarer_world_data.h`, `include/constants/wayfarer_world.h` | Record and save layout, ROM table structs, enums. Engine-free. |
 | Simulation core | `src/wayfarer_world_sim.c`, `include/wayfarer_world_sim.h` | Routines, life events, spot choice, travel, capacity, priority, New Game seating, load checks. Engine-free and deterministic. |
-| Engine seam | `src/wayfarer_world.c`, `include/wayfarer_world.h` | Builds the context from league state and badges, runs the heartbeat on map loads, New Game, load validation, the league resolution hook. |
+| Engine seam | `src/wayfarer_world.c`, `include/wayfarer_world.h` | Builds the context from league state and badges, starts the heartbeat on map loads and runs it over the next field frames, New Game, load validation, the league resolution hook. |
 | Local actor | `src/wayfarer_walkers.c`, `include/wayfarer_walkers.h` | The on-screen walkers on the player's map: spawning from records, the shared grid search, handoffs both ways, connection strips, behaviour templates, local dwell, the Gym leader object, the follower rule, the local actor block. |
 | Offline report | `tools/wayfarer_world_report/` | Runs the core on the host for N heartbeats and reports itineraries, crowding, coverage and cost. |
 
@@ -52,8 +52,48 @@ transaction.
 `WayfarerWorld_OnMapLoad` runs from `LoadMapFromWarp` and
 `LoadMapFromCameraTransition`, beside the roamer hooks. It skips Continue
 (`WayfarerWorld_OnContinue`), New Game's first warp, and reloads of the same
-map. It allocates the search workspace (5 bytes per node) from the heap for
-the heartbeat only.
+map. Otherwise it only starts the heartbeat: `WorldSim_HeartbeatBegin` applies
+the derived states and fixes the priority order, the frozen mask and the
+player's map as they are at the load.
+
+`WayfarerWorld_Update` runs from `OverworldBasic` right after the walkers'
+update and calls `WorldSim_HeartbeatStep` one work unit at a time (a node a
+search expands, a search's start, five trainers of a reroute's full-map check,
+a dwell tick, a spot choice or a hop):
+
+- **Budget.** At most 88 scanlines with the walkers' update. Steps also stop
+  40 lines before the next VBlank, because the rest of the field frame after
+  the hook needs 16 to 32 lines (rarely 56) and an overrun is a lag frame.
+- **Fades.** Nothing runs during a palette fade, such as a warp's fade-in.
+- **Spot choices.** A spot choice (about 20 lines on average, up to about
+  120 measured) only ever starts a frame's slice.
+- **Starvation.** A frame with no time left skips its turn, but never more
+  than 8 frames in a row (60 during a fade): then one unit runs anyway.
+
+The search workspace (5 bytes per node, plus 136 bytes for a sliced search's
+state and the maps a reroute avoids) is allocated on the first step and held
+until the heartbeat ends. A warp resets the heap right after
+`LoadMapFromWarp`, so it can't be allocated at the load.
+
+`WorldSim_Heartbeat` (Begin, then Step until done) is the same heartbeat at
+once. The offline report and the tests use it. A trainer's first edge is found
+just before it acts. That matches finding them all first, because it depends
+only on the trainer's own record and path-cache entry, and acting changes
+only those.
+
+Edge cases:
+
+| Case | Handling |
+| --- | --- |
+| Another map load while one is pending | `OnMapLoad` finishes it at once first (`pendingAtLoad`). |
+| A save | `CopyPartyAndObjectsToSave`, the first step of every save path, finishes it (`forcedFinishes`). |
+| League resolution | `WayfarerWorld_OnLeagueResolved` finishes it before setting life events. |
+| A Gym Leader's own object | `WayfarerWalkers_HideTemplate` finishes it if that leader hasn't acted yet, so the leader's object matches the finished heartbeat. Gyms are entered by warp, so this runs behind the fade. |
+| A Gym visitor leaving (`FinishLeaving`, reachable from story-scene and slot checks) | Finishes it before writing the record. |
+| Walkers | Their AI, spawns and world writes pause while it runs, as with locked controls. A walker released to the heartbeat at a seam is dropped at once. |
+| `InitHeap(gHeap)` | `WayfarerWorld_OnHeapReset` forgets the workspace (never frees it). The search under way restarts on the next frame with a new one; trainers that already acted stay done. |
+| New Game, Continue, load | Drop any pending heartbeat. |
+| No heap for the workspace | The trainers still to act skip this heartbeat, as a whole heartbeat used to. |
 
 ## Local actor
 
@@ -62,10 +102,11 @@ Engine hooks, all `IS_WAYFARER` only:
 
 | Hook | Where | Why |
 | --- | --- | --- |
-| `WayfarerWalkers_Update` | `OverworldBasic` | The walkers' per-frame update. |
+| `WayfarerWalkers_Update`, then `WayfarerWorld_Update` | `OverworldBasic` | The walkers' per-frame update, then the pending heartbeat's steps. |
 | `WayfarerWalkers_OnWarp` / `OnCameraTransition` | `LoadMapFromWarp` / `LoadMapFromCameraTransition`, before the heartbeat | Drop actors on warps; keep them across a seam; set the frozen mask the heartbeat reads. |
 | `WayfarerWalkers_OnContinue`, `WayfarerWalkers_Reset` | `WayfarerWorld_OnContinue`, `WayfarerWorld_InitNewGame` | Read the local actor block once on Continue; reset on New Game. |
-| `WayfarerWalkers_OnHeapReset` | `InitHeap(gHeap)` | The search workspace is dropped; actors re-plan from their tiles. |
+| `WayfarerWalkers_OnHeapReset`, `WayfarerWorld_OnHeapReset` | `InitHeap(gHeap)` | The search workspaces are dropped; actors re-plan from their tiles; the heartbeat restarts its current search. |
+| `WayfarerWorld_FinishHeartbeatEarly` | `CopyPartyAndObjectsToSave` | A save never holds half a heartbeat. |
 | `WayfarerWalkers_IsActorObject` | `RemoveObjectEventIfOutsideView` | Actors aren't culled off view while the walker layer owns them. |
 | `WayfarerWalkers_HideTemplate` | `TrySpawnObjectEvents` | A Gym Leader's own object stays hidden (also on scroll) while the leader is out. |
 | null template guard | `GetObjectEventScriptPointerByLocalIdAndMap` | Runtime actors have no template; talking to one does nothing until stage 4. |
@@ -87,7 +128,8 @@ actor's state for `tools/wayfarer_walkers/verify.py`, the SkyEmu verifier
 ## Checks
 
 - `make BUILD=wayfarer check TESTS=test/wayfarer_world_sim.c` runs the core's
-  mechanics tests against the generated tables; `test/wayfarer_walkers.c`
+  mechanics tests against the generated tables, including a sliced heartbeat
+  (tiny steps, lost workspaces) against one run at once; `test/wayfarer_walkers.c`
   covers the local actor's pure helpers.
 - `python3 tools/wayfarer_walkers/verify.py --rom pokemon-wayfarer-e2e.gba
   --symbols pokemon-wayfarer-e2e.sym` drives the E2E ROM in headless SkyEmu.

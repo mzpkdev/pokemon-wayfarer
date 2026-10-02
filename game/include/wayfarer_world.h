@@ -17,6 +17,17 @@ struct WayfarerWorldDebug
     u16 lastHeartbeatMap;
     u16 reseats;             // content-hash changes on load
     struct WayfarerWorldTrace lastTrace;
+    // The heartbeat spread over field frames (read by the SkyEmu verifier,
+    // tools/wayfarer_walkers/verify.py; keep the layout in sync with it).
+    u16 lastHeartbeatFrames; // field frames the last heartbeat spanned (waiting ones too)
+    u16 maxHeartbeatFrames;
+    u16 maxStepScanlines;    // worst frame of heartbeat work: Begin, or one frame's steps
+    u16 maxFrameScanlines;   // worst frame of steps plus the walkers' update
+    u16 maxFinishScanlines;  // worst rest of a heartbeat finished at once (below)
+    u16 pendingAtLoad;       // map loads that finished the previous heartbeat first
+    u16 forcedFinishes;      // saves, league results, Gym leader objects and Gym visitors that did
+    u16 workspaceLosses;     // heap resets while a heartbeat was pending
+    u16 pending;             // a heartbeat is still running
 };
 
 extern struct WayfarerWorldDebug gWayfarerWorldDebug;
@@ -29,9 +40,18 @@ void WayfarerWorld_InitNewGame(void);
 void WayfarerWorld_OnContinue(bool8 loadsWarp);
 // Load validation; FALSE is an invalid save.
 bool8 WayfarerWorld_OnLoad(void);
-// The heartbeat: a map load from a warp or a camera transition.
+// The heartbeat: a map load from a warp or a camera transition starts it;
+// WayfarerWorld_Update runs it a few steps per field frame.
 void WayfarerWorld_OnMapLoad(void);
+void WayfarerWorld_Update(void);                // OverworldBasic, after WayfarerWalkers_Update
+void WayfarerWorld_OnHeapReset(void);           // InitHeap(gHeap)
 void WayfarerWorld_ForceHeartbeat(void);
+// Anything that writes or saves the world state, or shows what a pending
+// trainer's record decides, finishes the pending heartbeat first.
+bool8 WayfarerWorld_IsHeartbeatPending(void);
+bool8 WayfarerWorld_IsSlotPending(u8 slot);     // that trainer hasn't acted yet
+void WayfarerWorld_FinishHeartbeat(void);
+void WayfarerWorld_FinishHeartbeatEarly(void);  // the same, counted in forcedFinishes
 // A Gym Leader whose badge the player doesn't hold yet.
 bool8 WayfarerWorld_IsLeaderUnbeaten(u8 slot);
 // League event resolution (ResolveLeagueEvent); lineup in battle order.

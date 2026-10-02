@@ -1,6 +1,7 @@
 // Engine side of the notable world simulation: builds the context the core
-// reads from saved league state and badges, runs the map-change heartbeat,
-// seeds New Game, and validates the world state on load.
+// reads from saved league state and badges, runs the map-change heartbeat
+// (spread over the following field frames), seeds New Game, and validates
+// the world state on load.
 // Spec: .product/specs/notable-world-simulation.md.
 
 #include "global.h"
@@ -11,6 +12,7 @@
 #include "league_selection.h"
 #include "malloc.h"
 #include "overworld.h"
+#include "palette.h"
 #include "pokemon_storage_system.h"
 #include "trainer_rating.h"
 #include "wayfarer_walkers.h"
@@ -21,6 +23,34 @@ EWRAM_DATA struct WayfarerWorldDebug gWayfarerWorldDebug = {0};
 EWRAM_DATA u32 gWayfarerWorldFrozenMask = 0;
 static EWRAM_DATA bool8 sSkipNextHeartbeat = FALSE;
 static EWRAM_DATA u16 sLastMap = 0;
+
+// The pending heartbeat. A map load starts it (Begin, cheap); every field
+// frame then runs steps until the frame's share of the budget is spent.
+// The workspace is allocated on the first step: a warp resets the heap
+// right after LoadMapFromWarp. A heap reset loses it (never Free it then).
+static EWRAM_DATA struct WayfarerWorldHeartbeat sHeartbeat = {0};
+static EWRAM_DATA void *sHeartbeatWorkspace = NULL;
+static EWRAM_DATA u32 sHeartbeatScanlines = 0;  // the pending heartbeat's work so far
+static EWRAM_DATA u8 sStarvedFrames = 0;
+
+// Per field frame, the walkers' update and the simulation's steps together
+// stay under this many scanlines (a frame is 228); the steps take what the
+// walkers left. A heavy unit (one spot choice: about 20 lines on average,
+// up to about 120) only ever starts a frame's slice, so it never lands on
+// top of a spent budget.
+#define FRAME_BUDGET_SCANLINES  88
+// And they end this many lines before the next VBlank: the rest of the
+// field frame after this hook (sprites, the camera, the palette fade) takes
+// 16 to 32 lines, rarely 56, and an overrun is a lag frame.
+#define FRAME_END_MARGIN        40
+// A frame with no time left runs no steps, but never more than this many in
+// a row: then one work unit runs anyway, so the heartbeat always moves on.
+#define STARVED_FRAMES_MAX      8
+// The same during a palette fade, which lasts well under a second.
+#define FADE_FRAMES_MAX         60
+// Work units per step call between scanline checks: one (a node expansion
+// is one or two scanlines, a few trainers of a full-map check up to ~20).
+#define STEP_UNITS              1
 
 static const u8 sBadgeRegions[] =
 {
@@ -111,10 +141,34 @@ bool8 WayfarerWorld_IsLeaderUnbeaten(u8 slot)
     return !GetBadgeStateForRegion(sBadgeRegions[trainer->badgeRegion], trainer->badgeIndex);
 }
 
+static void SetPending(bool8 pending)
+{
+    sHeartbeat.active = pending;
+    gWayfarerWorldDebug.pending = pending;
+}
+
+static void FreeHeartbeatWorkspace(void)
+{
+    if (sHeartbeatWorkspace != NULL)
+        Free(sHeartbeatWorkspace);
+    sHeartbeatWorkspace = NULL;
+}
+
+// New Game, Continue and a save load replace the world state: whatever
+// heartbeat was pending belonged to the old one.
+static void DropHeartbeat(void)
+{
+    SetPending(FALSE);
+    FreeHeartbeatWorkspace();
+}
+
 void WayfarerWorld_InitNewGame(void)
 {
     struct WayfarerWorldContext ctx;
-    void *workspace = Alloc(WorldSim_WorkspaceSize());
+    void *workspace;
+
+    DropHeartbeat();
+    workspace = Alloc(WorldSim_WorkspaceSize());
 
     WayfarerWorld_BuildContext(&ctx);
     WorldSim_NewGame(WayfarerWorld_GetState(), &ctx, workspace);
@@ -128,6 +182,7 @@ void WayfarerWorld_InitNewGame(void)
 
 void WayfarerWorld_OnContinue(bool8 loadsWarp)
 {
+    DropHeartbeat();
     gWayfarerWorldFrozenMask = 0;
     WayfarerWalkers_OnContinue();
     sSkipNextHeartbeat = loadsWarp;
@@ -142,6 +197,7 @@ bool8 WayfarerWorld_OnLoad(void)
     void *workspace;
     bool8 valid;
 
+    DropHeartbeat();
     WorldSim_ResetPathCache();  // EWRAM isn't cleared at boot
     if (state->schemaVersion != WORLD_SCHEMA_VERSION)
         return FALSE;
@@ -166,31 +222,188 @@ bool8 WayfarerWorld_OnLoad(void)
     return valid;
 }
 
-static void RunHeartbeat(void)
+// One frame's heartbeat work (Begin, or a frame's steps), and the frame's
+// total with the walkers' update that ran before it in the same frame.
+static void NoteFrameCost(u32 scanlines)
 {
-    struct WayfarerWorldContext ctx;
-    u32 start = WayfarerWalkers_ScanlineStamp(), contextDone;
-    void *workspace = Alloc(WorldSim_WorkspaceSize());
+    u32 frame = scanlines + WayfarerWalkers_LastUpdateScanlines();
+    sHeartbeatScanlines += scanlines;
+    if (scanlines > gWayfarerWorldDebug.maxStepScanlines)
+        gWayfarerWorldDebug.maxStepScanlines = scanlines > 0xFFFF ? 0xFFFF : scanlines;
+    if (frame > gWayfarerWorldDebug.maxFrameScanlines)
+        gWayfarerWorldDebug.maxFrameScanlines = frame > 0xFFFF ? 0xFFFF : frame;
+}
 
-    if (workspace == NULL)
+static bool8 EnsureHeartbeatWorkspace(void)
+{
+    if (sHeartbeatWorkspace == NULL)
     {
+        sHeartbeatWorkspace = Alloc(WorldSim_WorkspaceSize());
+        if (sHeartbeatWorkspace == NULL)
+            return FALSE;
+        // A new block: its contents are garbage, so no search marks can be
+        // trusted (the first one after Begin clears them anyway).
+        WorldSim_HeartbeatLostWorkspace(&sHeartbeat);
+    }
+    return TRUE;
+}
+
+static void CompleteHeartbeat(void)
+{
+    SetPending(FALSE);
+    FreeHeartbeatWorkspace();
+    WayfarerWalkers_NoteHeartbeat(sHeartbeatScanlines, gWayfarerWalkersDebug.lastContextScanlines);
+    gWayfarerWorldDebug.heartbeats++;
+    if (gWayfarerWorldDebug.lastHeartbeatFrames > gWayfarerWorldDebug.maxHeartbeatFrames)
+        gWayfarerWorldDebug.maxHeartbeatFrames = gWayfarerWorldDebug.lastHeartbeatFrames;
+}
+
+// Runs whatever is left of the pending heartbeat now. Every world write
+// outside the heartbeat (a save, the league hook, a new map load, a Gym
+// visitor's exit) comes after this, so it sees the heartbeat whole, as it
+// did when the heartbeat ran inside the map load.
+void WayfarerWorld_FinishHeartbeat(void)
+{
+    u32 start;
+
+    if (!sHeartbeat.active)
+        return;
+    start = WayfarerWalkers_ScanlineStamp();
+    if (!EnsureHeartbeatWorkspace())
+    {
+        // No heap for a search: the trainers still to act skip this
+        // heartbeat, as a whole heartbeat used to when its allocation failed.
+        SetPending(FALSE);
         gWayfarerWorldDebug.skippedHeartbeats++;
         return;
     }
+    while (!WorldSim_HeartbeatStep(&sHeartbeat, WayfarerWorld_GetState(), sHeartbeatWorkspace, 0xFFFF,
+                                   &gWayfarerWorldDebug.lastTrace))
+        ;
+    {
+        u32 cost = WayfarerWalkers_ScanlinesSince(start);
+        sHeartbeatScanlines += cost;
+        if (cost > gWayfarerWorldDebug.maxFinishScanlines)
+            gWayfarerWorldDebug.maxFinishScanlines = cost > 0xFFFF ? 0xFFFF : cost;
+    }
+    CompleteHeartbeat();
+}
+
+bool8 WayfarerWorld_IsHeartbeatPending(void)
+{
+    return sHeartbeat.active;
+}
+
+bool8 WayfarerWorld_IsSlotPending(u8 slot)
+{
+    return WorldSim_HeartbeatIsPending(&sHeartbeat, slot);
+}
+
+void WayfarerWorld_FinishHeartbeatEarly(void)
+{
+    if (!sHeartbeat.active)
+        return;
+    gWayfarerWorldDebug.forcedFinishes++;
+    WayfarerWorld_FinishHeartbeat();
+}
+
+static void BeginHeartbeat(void)
+{
+    struct WayfarerWorldContext ctx;
+    u32 start = WayfarerWalkers_ScanlineStamp(), contextDone;
+
     WayfarerWorld_BuildContext(&ctx);
     contextDone = WayfarerWalkers_ScanlineStamp();
+    gWayfarerWalkersDebug.lastContextScanlines = (s32)(contextDone - start) < 0 ? 0 : contextDone - start;
     gWayfarerWorldDebug.lastTrace = (struct WayfarerWorldTrace){0};
-    WorldSim_Heartbeat(WayfarerWorld_GetState(), &ctx, workspace, &gWayfarerWorldDebug.lastTrace);
-    Free(workspace);
-    WayfarerWalkers_NoteHeartbeat(WayfarerWalkers_ScanlinesSince(start), (s32)(contextDone - start) < 0 ? 0 : contextDone - start);
-    gWayfarerWorldDebug.heartbeats++;
+    gWayfarerWorldDebug.lastHeartbeatFrames = 0;
     gWayfarerWorldDebug.lastHeartbeatMap = ctx.playerMap;
+    sHeartbeatScanlines = 0;
+    // Fixes who acts and in what order, with the frozen mask and the
+    // player's map as they are now; the walkers' later changes to the
+    // frozen mask don't reach this heartbeat.
+    WorldSim_HeartbeatBegin(&sHeartbeat, WayfarerWorld_GetState(), &ctx, &gWayfarerWorldDebug.lastTrace);
+    gWayfarerWorldDebug.pending = TRUE;
+    NoteFrameCost(WayfarerWalkers_ScanlinesSince(start));
+}
+
+// Once per field frame (OverworldBasic, after the walkers' update). Scripts,
+// locked controls and menus don't stop it: it only moves off-screen records,
+// and the walkers keep their hands off the world while it runs.
+void WayfarerWorld_Update(void)
+{
+    u32 start, walkers, budget, line, cost;
+    bool8 done;
+
+    if (!sHeartbeat.active)
+        return;
+    gWayfarerWorldDebug.lastHeartbeatFrames++;
+    walkers = WayfarerWalkers_LastUpdateScanlines();
+    budget = walkers < FRAME_BUDGET_SCANLINES ? FRAME_BUDGET_SCANLINES - walkers : 0;
+    // Lines since this frame's VBlank began; the frame ends at 228.
+    line = (REG_VCOUNT + 68) % 228;
+    if (line + FRAME_END_MARGIN >= 228)
+        budget = 0;
+    else if (budget > 228 - FRAME_END_MARGIN - line)
+        budget = 228 - FRAME_END_MARGIN - line;
+    // A palette fade (a warp's fade-in) already fills the frame: wait for it.
+    if (gPaletteFade.active || budget == 0)
+    {
+        if (++sStarvedFrames < (gPaletteFade.active ? FADE_FRAMES_MAX : STARVED_FRAMES_MAX))
+            return;
+        budget = 0;  // just the one unit
+    }
+    sStarvedFrames = 0;
+    start = WayfarerWalkers_ScanlineStamp();
+    if (!EnsureHeartbeatWorkspace())
+    {
+        // No heap for a search: the trainers still to act skip this
+        // heartbeat, as a whole heartbeat used to when its allocation failed.
+        SetPending(FALSE);
+        gWayfarerWorldDebug.skippedHeartbeats++;
+        return;
+    }
+    do
+    {
+        done = WorldSim_HeartbeatStep(&sHeartbeat, WayfarerWorld_GetState(), sHeartbeatWorkspace, STEP_UNITS,
+                                      &gWayfarerWorldDebug.lastTrace);
+    } while (!done && WayfarerWalkers_ScanlinesSince(start) < budget && !WorldSim_HeartbeatNextIsHeavy(&sHeartbeat));
+    cost = WayfarerWalkers_ScanlinesSince(start);
+    NoteFrameCost(cost);
+    if (done)
+        CompleteHeartbeat();
+}
+
+void WayfarerWorld_OnHeapReset(void)
+{
+#if TESTING
+    // The test runner resets the heap between tests: nothing carries over.
+    SetPending(FALSE);
+#endif
+    // InitHeap overwrote the allocator: the block is gone, never Free it.
+    // The trainer whose search was under way searches again on the next
+    // frame with a new workspace; trainers that already acted stay done.
+    if (sHeartbeatWorkspace == NULL)
+        return;
+    sHeartbeatWorkspace = NULL;
+    if (sHeartbeat.active)
+    {
+        WorldSim_HeartbeatLostWorkspace(&sHeartbeat);
+        gWayfarerWorldDebug.workspaceLosses++;
+    }
 }
 
 void WayfarerWorld_OnMapLoad(void)
 {
     u16 map = CurrentMap();
 
+    // A map load while the last heartbeat is still running: finish it first,
+    // so heartbeats never overlap and keep their order.
+    if (sHeartbeat.active)
+    {
+        gWayfarerWorldDebug.pendingAtLoad++;
+        WayfarerWorld_FinishHeartbeat();
+    }
     if (sSkipNextHeartbeat || map == sLastMap)
     {
         // Continue, New Game's first warp, or a script reloading the same map.
@@ -200,17 +413,22 @@ void WayfarerWorld_OnMapLoad(void)
         return;
     }
     sLastMap = map;
-    RunHeartbeat();
+    BeginHeartbeat();
 }
 
+// All at once (a debugging hook).
 void WayfarerWorld_ForceHeartbeat(void)
 {
+    WayfarerWorld_FinishHeartbeat();
     sLastMap = CurrentMap();
-    RunHeartbeat();
+    BeginHeartbeat();
+    WayfarerWorld_FinishHeartbeat();
 }
 
 void WayfarerWorld_OnLeagueResolved(const u16 *lineup, u8 count, bool8 playerWon, u16 championId)
 {
+    // Life events change how the routine advances: never mid-heartbeat.
+    WayfarerWorld_FinishHeartbeatEarly();
     WorldSim_OnLeagueResolved(WayfarerWorld_GetState(), lineup, count, playerWon, championId);
 }
 

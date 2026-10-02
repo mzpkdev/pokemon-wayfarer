@@ -13,6 +13,7 @@
 #include "save_location.h"
 #include "script_pokemon_util.h"
 #include "trainer_hill.h"
+#include "wayfarer_world.h"
 #include "gba/flash_internal.h"
 #include "decoration_inventory.h"
 #include "agb_flash.h"
@@ -241,6 +242,11 @@ void LoadObjectEvents(void)
 
 void CopyPartyAndObjectsToSave(void)
 {
+#if IS_WAYFARER
+    // Every save path copies the party first: a save never holds half a
+    // heartbeat of the world state (PC storage) it writes next.
+    WayfarerWorld_FinishHeartbeatEarly();
+#endif
     SavePlayerParty();
     SaveObjectEvents();
 }

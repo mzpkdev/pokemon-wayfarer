@@ -222,6 +222,115 @@ TEST("The same map loads give identical world records")
     Free(workspace);
 }
 
+// The context for heartbeat n of the sliced-versus-whole comparison: the
+// player and the frozen mask move around so both exclusions get exercised.
+static void SlicedContext(struct WayfarerWorldContext *ctx, u16 heartbeat)
+{
+    static const u16 sMaps[] = {MAP_VIRIDIAN_CITY_HNS, MAP_PALLET_TOWN_HNS, MAP_UNDEFINED, MAP_ROUTE2_HNS};
+    Context(ctx, TRUE, sMaps[heartbeat % ARRAY_COUNT(sMaps)]);
+    ctx->worldProgress = 40 + heartbeat / 16;
+    ctx->frozenMask = (heartbeat % 5 == 0) ? (0x00421084u << (heartbeat % 3)) : 0;
+}
+
+static u32 BeatChecksum(const struct WayfarerWorldState *state, const struct WayfarerWorldTrace *trace)
+{
+    const u8 *bytes = (const u8 *)state;
+    u32 i, sum = 2166136261u;
+    for (i = 0; i < sizeof(*state); i++)
+        sum = (sum ^ bytes[i]) * 16777619u;
+    sum = (sum ^ trace->searchNodes) * 16777619u;
+    sum = (sum ^ trace->searchNodesMax) * 16777619u;
+    sum = (sum ^ trace->searches) * 16777619u;
+    sum = (sum ^ trace->hops) * 16777619u;
+    sum = (sum ^ trace->waits) * 16777619u;
+    sum = (sum ^ trace->reroutes) * 16777619u;
+    sum = (sum ^ trace->advances) * 16777619u;
+    sum = (sum ^ trace->skips) * 16777619u;
+    return sum;
+}
+
+TEST("A heartbeat spread over tiny steps, with lost workspaces, matches one run at once")
+{
+    struct WayfarerWorldContext ctx;
+    struct WayfarerWorldTrace whole = {0}, sliced = {0};
+    struct WayfarerWorldHeartbeat hb;
+    u32 size = WorldSim_WorkspaceSize();
+    void *workspaces[2] = {Alloc(size), Alloc(size)};
+    u32 *sums = Alloc(HEARTBEATS * sizeof(u32));
+    u32 tick = 0, steps = 0, losses = 0;
+    u16 heartbeat;
+    u8 current = 0;
+
+    // Whole heartbeats first (New Game resets the shared path cache, so the
+    // second run starts from the same cache as the first).
+    SlicedContext(&ctx, 0);
+    WorldSim_NewGame(&sState, &ctx, workspaces[0]);
+    for (heartbeat = 0; heartbeat < HEARTBEATS; heartbeat++)
+    {
+        struct WayfarerWorldTrace beat = {0};
+        SlicedContext(&ctx, heartbeat);
+        WorldSim_Heartbeat(&sState, &ctx, workspaces[0], &beat);
+        sums[heartbeat] = BeatChecksum(&sState, &beat);
+        whole.searchNodes += beat.searchNodes;
+        whole.searches += beat.searches;
+        whole.hops += beat.hops;
+        whole.waits += beat.waits;
+        whole.reroutes += beat.reroutes;
+        whole.advances += beat.advances;
+        whole.skips += beat.skips;
+    }
+
+    SlicedContext(&ctx, 0);
+    WorldSim_NewGame(&sOther, &ctx, workspaces[0]);
+    for (heartbeat = 0; heartbeat < HEARTBEATS; heartbeat++)
+    {
+        struct WayfarerWorldTrace beat = {0};
+        SlicedContext(&ctx, heartbeat);
+        bool8 lost = FALSE;
+        WorldSim_HeartbeatBegin(&hb, &sOther, &ctx, &beat);
+        for (;;)
+        {
+            tick++;
+            // Once per heartbeat the heap resets: a different block full of
+            // garbage replaces the workspace, on even heartbeats in the
+            // middle of a search, on odd ones between two searches.
+            if (!lost && (heartbeat % 2 == 0 ? hb.searchLive : (hb.clean && !hb.searchLive)))
+            {
+                current ^= 1;
+                memset(workspaces[current], 0xA5, size);
+                WorldSim_HeartbeatLostWorkspace(&hb);
+                lost = TRUE;
+                losses++;
+            }
+            steps++;
+            if (WorldSim_HeartbeatStep(&hb, &sOther, workspaces[current], 1 + tick % 3, &beat))
+                break;
+        }
+        EXPECT_EQ(sums[heartbeat], BeatChecksum(&sOther, &beat));
+        sliced.searchNodes += beat.searchNodes;
+        sliced.searches += beat.searches;
+        sliced.hops += beat.hops;
+        sliced.waits += beat.waits;
+        sliced.reroutes += beat.reroutes;
+        sliced.advances += beat.advances;
+        sliced.skips += beat.skips;
+    }
+    EXPECT(memcmp(&sState, &sOther, sizeof(sState)) == 0);
+    EXPECT_EQ(whole.searchNodes, sliced.searchNodes);
+    EXPECT_EQ(whole.searches, sliced.searches);
+    EXPECT_EQ(whole.hops, sliced.hops);
+    EXPECT_EQ(whole.waits, sliced.waits);
+    EXPECT_EQ(whole.reroutes, sliced.reroutes);
+    EXPECT_EQ(whole.advances, sliced.advances);
+    EXPECT_EQ(whole.skips, sliced.skips);
+    EXPECT(whole.hops > 0 && whole.searches > 0);
+    EXPECT(steps > 4 * HEARTBEATS);   // really spread out
+    EXPECT(losses > HEARTBEATS / 4);
+    Free(sums);
+    Free(workspaces[1]);
+    Free(workspaces[0]);
+}
+
 TEST("Aloof trainers never take a public spot")
 {
     struct WayfarerWorldContext ctx;
