@@ -44,14 +44,13 @@ determinism, the debug and balance report, and acceptance.
 
 A notable trainer in the
 [inventory](notable-trainers.md#notable-trainer-inventory) is simulated
-when they have a walking overworld sprite. That is **27 trainers**, each
+when they have a walking overworld sprite. That is **25 trainers**, each
 with one saved [world record](#the-world-record): Brock, Misty, Lt. Surge,
-Erika, Janine, Sabrina, Blaine, Giovanni, Blue, Lorelei, Bruno, Koga,
-Lance, Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce, Clair, Will,
+Erika, Janine, Sabrina, Blaine, Giovanni, Blue, Lorelei, Lance, Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce, Clair, Will,
 Karen, Norman, Juan, Wallace, and Steven.
 
-The other **11 entries** are not simulated in v0: Tate & Liza, who are
-never placed, and ten trainers whose sprite can only face, not walk
+The other **13 entries** are not simulated in v0: Tate & Liza, who are
+never placed, and twelve trainers whose sprite can only face, not walk
 ([walking sprites](#known-limitation-walking-sprites)). They have no
 record and no routine, and behave as today: their fixed map objects and
 v0 haunt placement are unchanged.
@@ -114,13 +113,13 @@ four directions, animated by `sAnimTable_Standard`
 ([object_event_anims.h](../../game/src/data/object_events/object_event_anims.h),
 line 1223). A read-only sprite audit found:
 
-- **Full (27, simulated):** the HNS `*_HNS` sprites for the Kanto and
+- **Full (25, simulated):** the HNS `*_HNS` sprites for the Kanto and
   Johto trainers; FireRed and LeafGreen's `LORELEI`, compiled through the
   Sevii block, for Lorelei; and Emerald's `NORMAN`, `JUAN`, `WALLACE`, and
   `STEVEN`.
-- **Face-only (11, not simulated):** a 3-frame sheet that faces each way
+- **Face-only (13, not simulated):** a 3-frame sheet that faces each way
   but has no walk frames. Roxanne, Brawly, Wattson, Flannery, Winona,
-  Tate & Liza, Sidney, Phoebe, Glacia, Drake, and Agatha.
+  Tate & Liza, Sidney, Phoebe, Glacia, Drake, Agatha, Bruno, and Koga.
 
 Evidence: the graphics pointer table
 ([object_event_graphics_info_pointers.h](../../game/src/data/object_events/object_event_graphics_info_pointers.h):
@@ -128,13 +127,15 @@ the HNS block near lines 1068-1108, the Emerald entries near 678-691 and
 775, the Sevii block near 953-1016), and the sheet sizes in
 `graphics/object_events/pics/people/` (144×32 for a Full sheet, 48×32 for
 a face-only one). Frames were counted from sheet widths and the pic and
-animation tables, not checked visually.
+animation tables, not checked visually. An earlier count said 27 Full
+sprites; Bruno's and Koga's sheets (HNS and FireRed) are 48×32, face-only,
+so the confirmed count is 25.
 
 Hoenn is hit hardest: only Norman, Juan, Wallace, and Steven walk there.
 The face-only trainers' routines stay authored, marked not simulated in
 v0, in the [routines research file](../research/notable-trainer-routines.md),
 so they can join once they walk. The fix is new 9-frame sheets for the
-11; a generic stand-in sprite would break their identity, so it is
+13; a generic stand-in sprite would break their identity, so it is
 rejected for v0 ([later](#later)).
 
 ### Two layers
@@ -596,10 +597,10 @@ and zeros elsewhere.
 **Header, 4 bytes:** a schema version (1 byte), a reserved byte, and the
 walker graph's 16-bit content hash.
 
-**Total:** 27 × 8 = 216 bytes of records, plus 9 and 4, is 229 bytes,
-**232 bytes** padded to a word. Adding the ten face-only trainers later
-([walking sprites](#known-limitation-walking-sprites)) takes it to 37
-records, 312 bytes.
+**Total:** 25 × 8 = 200 bytes of records, plus 9 and 4, is 213 bytes,
+**216 bytes** padded to a word. Adding the twelve placeable face-only
+trainers later ([walking sprites](#known-limitation-walking-sprites)) takes
+it to 37 records, 312 bytes.
 
 #### Save budget
 
@@ -640,7 +641,7 @@ saved league teams (`LeagueSavedTeams`, 1,456 bytes, 288 per team) to
 - **SaveBlock3** is where the proof of concept put its record, next to
   the haunt state. With PR #139 it has 276 bytes free; the haunt and
   friendship state above take about 133 of them, and the follower NPC 24,
-  leaving about **120**. The world's 232 bytes **do not fit**. Today, on
+  leaving about **120**. The world's 216 bytes **do not fit**. Today, on
   main, they would fit (464 free), but only by taking the space the
   haunts and leagues already count on.
 - **`PokemonStorage`** has 112 bytes free with PR #139. That already
@@ -672,14 +673,14 @@ and each of those specs points here.
   -mabi=apcs-gnu`, as the build does, against this branch and PR #139's
   headers). The nine storage sectors hold 35,712 bytes.
 - **What it hosts.** With PR #139, `PokemonStorage` has **2,520 bytes**
-  free after the change. It takes the `WayfarerWorldState` (232 for the
-  27 simulated trainers), the haunts'
+  free after the change. It takes the `WayfarerWorldState` (216 for the
+  25 simulated trainers), the haunts'
   [traded-slot pool](notable-haunts.md#saved-state) (640), and the
   [Masters lineup](sevii-masters.md#saved-state) growth: 8 opponents and the
   partner at 288 bytes a team, 2,592 plus PR #139's 16-byte header, against
-  PR #139's 1,456, so about 1,152 more. That is 2,024 bytes, leaving a
-  margin of about **496 bytes**. Adding the ten face-only trainers later
-  (80 bytes, 312 in all) leaves about **416**. Without PR #139 (main
+  PR #139's 1,456, so about 1,152 more. That is 2,008 bytes, leaving a
+  margin of about **512 bytes**. Adding the twelve face-only trainers later
+  (96 bytes, 312 in all) leaves about **416**. Without PR #139 (main
   today) 3,976 bytes would be free.
 - **Depends on PR #139.** Saved leagues
   ([#139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)) add
@@ -696,7 +697,7 @@ and each of those specs points here.
 **Layout:**
 
 1. Keep the record at **8 bytes** and the whole world state as **one
-   contiguous struct** (`WayfarerWorldState`, 232 bytes) with a
+   contiguous struct** (`WayfarerWorldState`, 216 bytes) with a
    `STATIC_ASSERT` on its size, never in SaveBlock1.
 2. Append it to **`PokemonStorage`**, after the 13 boxes, beside the trade
    pool and the league teams.
@@ -831,8 +832,8 @@ their haunt.
 
 ## Acceptance
 
-1. **Scope.** The 27 trainers with a walking sprite have a record; Tate &
-   Liza and the ten face-only trainers have none and keep their fixed map
+1. **Scope.** The 25 trainers with a walking sprite have a record; Tate &
+   Liza and the twelve face-only trainers have none and keep their fixed map
    objects and haunt placement. Each derived
    state applies exactly when its table row says, with the given
    precedence.
@@ -895,7 +896,7 @@ their haunt.
   player stands still.
 - **Haunts as destinations** ([above](#haunts-later)).
 - **Walking sprites for the face-only trainers:** new 9-frame sheets for
-  the 11 ([walking sprites](#known-limitation-walking-sprites)), so they
+  the 13 ([walking sprites](#known-limitation-walking-sprites)), so they
   can be simulated with the routines already authored.
 - **Surf- and Cut-aware walkers:** water and Cut edges in the graph, for
   trainers whose team can use them.

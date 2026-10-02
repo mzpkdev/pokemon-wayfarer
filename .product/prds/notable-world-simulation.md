@@ -25,9 +25,9 @@ door, and find them again later where their day took them.
 
 ### Who lives in the world
 
-Every notable trainer who can walk on screen is out in the world: 27 of
-them in v0. Tate & Liza are never placed, and ten more have no walking
-sprite yet ([below](#known-limitation-walking-sprites)); those 11 stay as
+Every notable trainer who can walk on screen is out in the world: 25 of
+them in v0. Tate & Liza are never placed, and twelve more have no walking
+sprite yet ([below](#known-limitation-walking-sprites)); those 13 stay as
 they are today. A trainer is out of the world for a while when:
 
 - they are in a league event the player has accepted, until it ends:
@@ -41,14 +41,15 @@ battle; they start going out once the player has their badge.
 
 ### Known limitation: walking sprites
 
-A trainer who walks around needs a sprite that walks. Only 27 notable
-trainers have one: the Kanto and Johto trainers (HNS sprites), Lorelei
+A trainer who walks around needs a sprite that walks. Only 25 notable
+trainers have one: the Kanto and Johto trainers (HNS sprites, except Bruno
+and Koga), Lorelei
 (her FireRed and LeafGreen sprite), and Norman, Juan, Wallace, and Steven
-(Emerald). The other 11 have a sprite that can only face each way:
+(Emerald). The other 13 have a sprite that can only face each way:
 Roxanne, Brawly, Wattson, Flannery, Winona, Tate & Liza, Sidney, Phoebe,
-Glacia, Drake, and Agatha.
+Glacia, Drake, Agatha, Bruno, and Koga.
 
-For now those 11 are not in the world simulation. They stand where they
+For now those 13 are not in the world simulation. They stand where they
 always stood, in their Gyms and story scenes, and turn up at haunts as
 before. Their routines are written and wait for them. Hoenn feels this
 most, since only four of its notables walk. New walking sprites can bring
@@ -171,7 +172,7 @@ by a road stays visible until they walk out of view.
 
 ## Constraints
 
-- The world's saved data is about **232 bytes** for 27 trainers (312 once
+- The world's saved data is about **216 bytes** for 25 trainers (312 once
   all 37 walk). Once saved leagues land, no part of the save has that room
   free, so the PC drops from 14 boxes to 13 to make it, alongside the
   haunts' trade pool and the Masters teams
@@ -202,7 +203,7 @@ by a road stays visible until they walk out of view.
 - The in-game clock moving the world while the player stands still.
 - Haunts as destinations.
 - Trainers who surf and cut, when their team can.
-- Walking sprites for the 11 trainers who only face, so they join the
+- Walking sprites for the 13 trainers who only face, so they join the
   world.
 
 ## References

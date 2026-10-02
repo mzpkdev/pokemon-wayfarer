@@ -8,11 +8,11 @@ runs each cycle from the trainer's home base, and
 [spot choice](../specs/notable-spots.md#choosing-a-spot) uses the
 favourites first.
 
-**27 are simulated in v0.** Ten trainers have only a face-only overworld
+**25 are simulated in v0.** Twelve trainers have only a face-only overworld
 sprite, with no walk cycle, so they aren't simulated for now
 ([walking sprites](../specs/notable-world-simulation.md#known-limitation-walking-sprites)):
-Agatha, Roxanne, Brawly, Wattson, Flannery, Winona, Sidney, Phoebe,
-Glacia, and Drake. Their routines stay authored here for later, each
+Agatha, Bruno, Koga, Roxanne, Brawly, Wattson, Flannery, Winona, Sidney,
+Phoebe, Glacia, and Drake. Their routines stay authored here for later, each
 marked **Not simulated in v0 (sprite limitation)**. The check still
 validates them, so they are ready once they can walk, but leaves them out
 of the shared favourites, since they never take a spot.
@@ -229,6 +229,7 @@ it can't be a favourite.
 ### Bruno
 
 - **Home base:** `OneIsland_Frlg` (where he appears in FRLG). Traveller.
+- **Not simulated in v0 (sprite limitation).** Authored for later.
 
 | Step | Activity | Why |
 | ---: | --- | --- |
@@ -263,6 +264,7 @@ be her favourite.
 ### Koga
 
 - **Home base:** `FuchsiaCity_hns` (his old Gym city).
+- **Not simulated in v0 (sprite limitation).** Authored for later.
 
 | Step | Activity | Why |
 | ---: | --- | --- |
@@ -695,7 +697,7 @@ nothing pairs with). It counts map hops, not walker-graph nodes, applies no
 walking filters (a Surf-only connection counts), and has no transit edges,
 so Sevii's islands and Sootopolis reach only what their own maps link to.
 
-**Result:** 37 routines (27 simulated in v0, 10 kept for later), 134
+**Result:** 37 routines (25 simulated in v0, 12 kept for later), 134
 steps and 67 favourites. Every step has a candidate, and every favourite
 passes. Favourites shared by v0 trainers, each a second choice when taken:
 
@@ -703,10 +705,10 @@ passes. Favourites shared by v0 trainers, each a second choice when taken:
   Giovanni;
 - the Dragon's Den cavern (outdoor, 3): Lance and Clair;
 - Oak's Lab (1): Brock and Blue;
-- the Safari Zone gate in Fuchsia (1): Janine and Koga;
 - the National Park (2): Bugsy and Whitney;
 - the Cianwood pharmacy (1): Chuck and Jasmine;
 - the Ruins of Alph (2): Falkner, Will, and Steven.
 
 Once the face-only trainers walk, Wattson and Sidney share the Mauville
-Game Corner, and Lorelei and Glacia share Icefall Cave.
+Game Corner, Lorelei and Glacia share Icefall Cave, and Janine and Koga
+share the Safari Zone gate in Fuchsia (1).
