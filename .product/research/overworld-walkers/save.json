@@ -61,7 +61,16 @@
     "heartbeats": 0,
     "skippedHeartbeats": 0,
     "lastHeartbeatMap": 0,
-    "reseats": 0
+    "reseats": 0,
+    "lastHeartbeatFrames": 0,
+    "maxHeartbeatFrames": 0,
+    "maxStepScanlines": 0,
+    "maxFrameScanlines": 0,
+    "maxFinishScanlines": 0,
+    "pendingAtLoad": 0,
+    "forcedFinishes": 0,
+    "workspaceLosses": 0,
+    "pending": 0
   },
   "restores": 1,
   "screenshots": [
@@ -69,7 +78,7 @@
     ".product/research/overworld-walkers/save-after-continue.png"
   ],
   "debug": {
-    "frames": 54,
+    "frames": 56,
     "spawns": 0,
     "removals": 0,
     "edgeExits": 0,
@@ -99,7 +108,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634072,
+    "worldState": 33634024,
     "actors": [
       {
         "index": 0,

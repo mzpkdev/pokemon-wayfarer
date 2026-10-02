@@ -1,0 +1,369 @@
+{
+  "crossings": [
+    {
+      "crossing": 1,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 116,
+      "heartbeat_scanlines": 188,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 2,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 168,
+      "heartbeat_scanlines": 323,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 3,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 128,
+      "heartbeat_scanlines": 629,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 4,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 110,
+      "heartbeat_scanlines": 1405,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 5,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 186,
+      "heartbeat_scanlines": 382,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 6,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 100,
+      "heartbeat_scanlines": 192,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 7,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 122,
+      "heartbeat_scanlines": 185,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 8,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 104,
+      "heartbeat_scanlines": 236,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 9,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 128,
+      "heartbeat_scanlines": 568,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 10,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 104,
+      "heartbeat_scanlines": 396,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 11,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 166,
+      "heartbeat_scanlines": 221,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 12,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 104,
+      "heartbeat_scanlines": 117,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 13,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 128,
+      "heartbeat_scanlines": 266,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 14,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 170,
+      "heartbeat_scanlines": 376,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 15,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 124,
+      "heartbeat_scanlines": 427,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 16,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 94,
+      "heartbeat_scanlines": 741,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 17,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 134,
+      "heartbeat_scanlines": 170,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 18,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 160,
+      "heartbeat_scanlines": 203,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 19,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 170,
+      "heartbeat_scanlines": 322,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 20,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 90,
+      "heartbeat_scanlines": 187,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 21,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 124,
+      "heartbeat_scanlines": 259,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 22,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 100,
+      "heartbeat_scanlines": 267,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 23,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 130,
+      "heartbeat_scanlines": 785,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 24,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 104,
+      "heartbeat_scanlines": 247,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 25,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 126,
+      "heartbeat_scanlines": 592,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 26,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 100,
+      "heartbeat_scanlines": 774,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 27,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 122,
+      "heartbeat_scanlines": 130,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 28,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 104,
+      "heartbeat_scanlines": 186,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 29,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 126,
+      "heartbeat_scanlines": 263,
+      "heartbeat_frames": null
+    },
+    {
+      "crossing": 30,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 170,
+      "heartbeat_scanlines": 240,
+      "heartbeat_frames": null
+    }
+  ],
+  "heartbeats": 31,
+  "max_heartbeat_scanlines": 1405,
+  "median_heartbeat_scanlines": 266,
+  "mean_heartbeat_scanlines": 375.9,
+  "max_walker_update_scanlines": 135,
+  "world": {
+    "heartbeats": 31,
+    "skippedHeartbeats": 1,
+    "lastHeartbeatMap": 32,
+    "reseats": 0
+  },
+  "debug": {
+    "frames": 2626,
+    "spawns": 8,
+    "removals": 8,
+    "edgeExits": 0,
+    "warpExits": 0,
+    "arrivals": 0,
+    "rebases": 2,
+    "stripEntries": 0,
+    "replans": 0,
+    "blockedSteps": 0,
+    "searches": 9,
+    "searchFails": 0,
+    "localDwellBeats": 0,
+    "localAdvances": 0,
+    "emotes": 0,
+    "templateMoves": 0,
+    "floorChanges": 0,
+    "heapResets": 4,
+    "restores": 0,
+    "lastSearchNodes": 156,
+    "maxSearchNodes": 415,
+    "lastSearchFrames": 31,
+    "maxSearchFrames": 90,
+    "maxSliceScanlines": 105,
+    "maxSliceNodes": 7,
+    "workspaceBytes": 11308,
+    "currentMap": 32,
+    "followerHidden": 0,
+    "activeActors": 0,
+    "storySuppressed": 0,
+    "worldState": 33634028,
+    "actors": [
+      {
+        "index": 0,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 1,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 2,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 3,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      }
+    ],
+    "lastHeartbeatScanlines": 240,
+    "maxHeartbeatScanlines": 1405,
+    "maxSpawnScanlines": 49,
+    "maxUpdateScanlines": 135,
+    "backOffs": 0,
+    "handoffs": 0,
+    "visitorsVanished": 0,
+    "culls": 0,
+    "lastContextScanlines": 10,
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 51,
+    "walkOffs": 0
+  },
+  "max_frame_scanlines_estimate": 1540,
+  "pass": true,
+  "emulated_frames": 4160
+}

@@ -78,9 +78,9 @@
   "template_moves": 5,
   "spawns": 3,
   "searches": 7,
-  "maxSliceScanlines": 109,
+  "maxSliceScanlines": 133,
   "maxSearchNodes": 966,
-  "maxSearchFrames": 238,
+  "maxSearchFrames": 246,
   "records": {
     "lorelei": {
       "node": 94,
@@ -139,7 +139,7 @@
     ".product/research/overworld-walkers/budget-later.png"
   ],
   "debug": {
-    "frames": 1475,
+    "frames": 1465,
     "spawns": 3,
     "removals": 1,
     "edgeExits": 1,
@@ -160,16 +160,16 @@
     "restores": 0,
     "lastSearchNodes": 72,
     "maxSearchNodes": 966,
-    "lastSearchFrames": 21,
-    "maxSearchFrames": 238,
-    "maxSliceScanlines": 109,
+    "lastSearchFrames": 16,
+    "maxSearchFrames": 246,
+    "maxSliceScanlines": 133,
     "maxSliceNodes": 7,
     "workspaceBytes": 11308,
     "currentMap": 32,
     "followerHidden": 0,
     "activeActors": 2,
     "storySuppressed": 0,
-    "worldState": 33634116,
+    "worldState": 33634064,
     "actors": [
       {
         "index": 0,
@@ -191,8 +191,8 @@
         "index": 1,
         "slot": 9,
         "mode": 1,
-        "phase": 5,
-        "goalKind": 0,
+        "phase": 4,
+        "goalKind": 1,
         "objectId": 3,
         "template": 3,
         "atSpot": 1,
@@ -236,15 +236,15 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 20,
-    "maxHeartbeatScanlines": 20,
+    "lastHeartbeatScanlines": 24,
+    "maxHeartbeatScanlines": 24,
     "maxSpawnScanlines": 59,
-    "maxUpdateScanlines": 138,
+    "maxUpdateScanlines": 137,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
-    "lastContextScanlines": 16,
+    "lastContextScanlines": 15,
     "lastFailNodes": 0,
     "maxFinishScanlines": 10,
     "walkOffs": 0

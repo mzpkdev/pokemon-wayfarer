@@ -1,7 +1,7 @@
 {
   "exit_tile_viridian": [
     26,
-    -1
+    0
   ],
   "record_at_exit": {
     "node": 121,
@@ -49,11 +49,7 @@
     ],
     [
       10,
-      78
-    ],
-    [
-      10,
-      78
+      79
     ],
     [
       10,
@@ -199,7 +195,7 @@
   "rebases": 1,
   "samples": [
     {
-      "frame": 930,
+      "frame": 931,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -213,7 +209,7 @@
       ]
     },
     {
-      "frame": 932,
+      "frame": 933,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -227,7 +223,7 @@
       ]
     },
     {
-      "frame": 934,
+      "frame": 935,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -241,7 +237,7 @@
       ]
     },
     {
-      "frame": 936,
+      "frame": 937,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -255,7 +251,7 @@
       ]
     },
     {
-      "frame": 938,
+      "frame": 939,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -269,13 +265,13 @@
       ]
     },
     {
-      "frame": 940,
+      "frame": 941,
       "map": 32,
       "blue_objects": 1,
       "blue": [
         [
           26,
-          -2
+          -1
         ]
       ],
       "mode": [
@@ -283,21 +279,7 @@
       ]
     },
     {
-      "frame": 942,
-      "map": 32,
-      "blue_objects": 1,
-      "blue": [
-        [
-          26,
-          -2
-        ]
-      ],
-      "mode": [
-        2
-      ]
-    },
-    {
-      "frame": 944,
+      "frame": 943,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -325,7 +307,7 @@
       ]
     },
     {
-      "frame": 945,
+      "frame": 946,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -339,7 +321,7 @@
       ]
     },
     {
-      "frame": 945,
+      "frame": 946,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -353,7 +335,7 @@
       ]
     },
     {
-      "frame": 945,
+      "frame": 946,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -367,7 +349,21 @@
       ]
     },
     {
-      "frame": 947,
+      "frame": 946,
+      "map": 32,
+      "blue_objects": 1,
+      "blue": [
+        [
+          26,
+          -2
+        ]
+      ],
+      "mode": [
+        2
+      ]
+    },
+    {
+      "frame": 948,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -437,20 +433,6 @@
       ]
     },
     {
-      "frame": 956,
-      "map": 42,
-      "blue_objects": 1,
-      "blue": [
-        [
-          10,
-          78
-        ]
-      ],
-      "mode": [
-        1
-      ]
-    },
-    {
       "frame": 957,
       "map": 42,
       "blue_objects": 1,
@@ -465,7 +447,7 @@
       ]
     },
     {
-      "frame": 958,
+      "frame": 959,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -479,7 +461,7 @@
       ]
     },
     {
-      "frame": 959,
+      "frame": 960,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -535,21 +517,7 @@
       ]
     },
     {
-      "frame": 964,
-      "map": 42,
-      "blue_objects": 1,
-      "blue": [
-        [
-          10,
-          78
-        ]
-      ],
-      "mode": [
-        1
-      ]
-    },
-    {
-      "frame": 966,
+      "frame": 965,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -591,7 +559,21 @@
       ]
     },
     {
-      "frame": 971,
+      "frame": 970,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 972,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -681,7 +663,7 @@
     ".product/research/overworld-walkers/edge-route2-moving.png"
   ],
   "debug": {
-    "frames": 1072,
+    "frames": 1069,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 1,
@@ -702,16 +684,16 @@
     "restores": 0,
     "lastSearchNodes": 419,
     "maxSearchNodes": 1004,
-    "lastSearchFrames": 84,
-    "maxSearchFrames": 198,
-    "maxSliceScanlines": 126,
-    "maxSliceNodes": 8,
+    "lastSearchFrames": 86,
+    "maxSearchFrames": 210,
+    "maxSliceScanlines": 125,
+    "maxSliceNodes": 7,
     "workspaceBytes": 11308,
     "currentMap": 42,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634068,
+    "worldState": 33634112,
     "actors": [
       {
         "index": 0,
@@ -778,19 +760,19 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 103,
-    "maxHeartbeatScanlines": 103,
-    "maxSpawnScanlines": 63,
-    "maxUpdateScanlines": 136,
+    "lastHeartbeatScanlines": 163,
+    "maxHeartbeatScanlines": 163,
+    "maxSpawnScanlines": 22,
+    "maxUpdateScanlines": 142,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
-    "lastContextScanlines": 15,
+    "lastContextScanlines": 16,
     "lastFailNodes": 0,
-    "maxFinishScanlines": 10,
+    "maxFinishScanlines": 11,
     "walkOffs": 0
   },
   "pass": true,
-  "emulated_frames": 1414
+  "emulated_frames": 1422
 }

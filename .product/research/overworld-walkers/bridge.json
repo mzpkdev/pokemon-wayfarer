@@ -1,7 +1,7 @@
 {
   "spot": 6092,
   "node": 889,
-  "arrived_after_frames": 3008,
+  "arrived_after_frames": 3016,
   "delta": {
     "searches": 1,
     "searchFails": 0,
@@ -195,7 +195,7 @@
     "reserved": 0,
     "hex": "7913f31500a00600"
   },
-  "maxSliceScanlines": 149,
+  "maxSliceScanlines": 140,
   "maxSearchNodes": 1567,
   "workspaceBytes": 11308,
   "maxFinishScanlines": 39,
@@ -203,7 +203,7 @@
     ".product/research/overworld-walkers/bridge-north.png"
   ],
   "debug": {
-    "frames": 3025,
+    "frames": 3024,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -224,16 +224,16 @@
     "restores": 0,
     "lastSearchNodes": 1567,
     "maxSearchNodes": 1567,
-    "lastSearchFrames": 352,
-    "maxSearchFrames": 352,
-    "maxSliceScanlines": 149,
+    "lastSearchFrames": 361,
+    "maxSearchFrames": 361,
+    "maxSliceScanlines": 140,
     "maxSliceNodes": 8,
     "workspaceBytes": 11308,
     "currentMap": 7970,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634104,
+    "worldState": 33634056,
     "actors": [
       {
         "index": 0,
@@ -300,19 +300,19 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 21,
-    "maxHeartbeatScanlines": 21,
-    "maxSpawnScanlines": 24,
-    "maxUpdateScanlines": 159,
+    "lastHeartbeatScanlines": 24,
+    "maxHeartbeatScanlines": 24,
+    "maxSpawnScanlines": 71,
+    "maxUpdateScanlines": 145,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
-    "lastContextScanlines": 16,
+    "lastContextScanlines": 15,
     "lastFailNodes": 0,
     "maxFinishScanlines": 39,
     "walkOffs": 0
   },
   "pass": true,
-  "emulated_frames": 3412
+  "emulated_frames": 3420
 }

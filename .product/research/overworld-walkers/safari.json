@@ -22,7 +22,7 @@
     }
   },
   "debug": {
-    "frames": 1450,
+    "frames": 1457,
     "spawns": 2,
     "removals": 0,
     "edgeExits": 0,
@@ -43,16 +43,16 @@
     "restores": 0,
     "lastSearchNodes": 345,
     "maxSearchNodes": 345,
-    "lastSearchFrames": 65,
-    "maxSearchFrames": 65,
-    "maxSliceScanlines": 64,
+    "lastSearchFrames": 66,
+    "maxSearchFrames": 66,
+    "maxSliceScanlines": 61,
     "maxSliceNodes": 7,
     "workspaceBytes": 11308,
     "currentMap": 7704,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634004,
+    "worldState": 33634008,
     "actors": [
       {
         "index": 0,
@@ -119,10 +119,10 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 20,
-    "maxHeartbeatScanlines": 20,
+    "lastHeartbeatScanlines": 25,
+    "maxHeartbeatScanlines": 25,
     "maxSpawnScanlines": 18,
-    "maxUpdateScanlines": 77,
+    "maxUpdateScanlines": 70,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
@@ -136,5 +136,5 @@
     ".product/research/overworld-walkers/safari-top-mid.png"
   ],
   "pass": true,
-  "emulated_frames": 1800
+  "emulated_frames": 1806
 }

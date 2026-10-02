@@ -130,7 +130,7 @@
     ".product/research/overworld-walkers/mortar-at-spot.png"
   ],
   "debug": {
-    "frames": 2258,
+    "frames": 2259,
     "spawns": 3,
     "removals": 1,
     "edgeExits": 0,
@@ -160,7 +160,7 @@
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634092,
+    "worldState": 33634060,
     "actors": [
       {
         "index": 0,
@@ -227,10 +227,10 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 21,
-    "maxHeartbeatScanlines": 21,
+    "lastHeartbeatScanlines": 25,
+    "maxHeartbeatScanlines": 25,
     "maxSpawnScanlines": 71,
-    "maxUpdateScanlines": 138,
+    "maxUpdateScanlines": 139,
     "backOffs": 0,
     "handoffs": 1,
     "visitorsVanished": 0,

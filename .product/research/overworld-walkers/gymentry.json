@@ -51,7 +51,7 @@
     "maxSearchNodes": 1,
     "lastSearchFrames": 1,
     "maxSearchFrames": 1,
-    "maxSliceScanlines": 6,
+    "maxSliceScanlines": 7,
     "maxSliceNodes": 1,
     "workspaceBytes": 11308,
     "currentMap": 4613,
@@ -125,15 +125,15 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 21,
-    "maxHeartbeatScanlines": 21,
+    "lastHeartbeatScanlines": 25,
+    "maxHeartbeatScanlines": 25,
     "maxSpawnScanlines": 21,
     "maxUpdateScanlines": 40,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
-    "lastContextScanlines": 15,
+    "lastContextScanlines": 14,
     "lastFailNodes": 0,
     "maxFinishScanlines": 0,
     "walkOffs": 0
