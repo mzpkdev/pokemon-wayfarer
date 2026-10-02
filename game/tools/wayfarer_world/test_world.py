@@ -176,12 +176,13 @@ class Graph(unittest.TestCase):
 
     def test_route2_is_split(self):
         # The spec's two halves (solid rows 41-45) hold, and the Cut trees at
-        # (11, 13), (18, 26), (15, 62) and (15, 69) split them further, since
-        # walkers never cut: five nodes, not the spec's two.
+        # (18, 26), (15, 62) and (15, 69) split them further, since walkers
+        # never cut: four nodes, not the spec's two. The tree at (11, 13) is
+        # an authored override (the way to Diglett's Cave).
         _, wg, _ = full()
         nodes = wg.map_nodes("Route2_hns")
         self.assertEqual([(n.x, n.y) for n in nodes],
-                         [(8, 0), (13, 3), (16, 27), (18, 46), (5, 51)])
+                         [(8, 0), (16, 27), (18, 46), (5, 51)])
         pewter = [n for n in nodes if any(wg.nodes[e.target].map.name == "PewterCity_hns"
                                           for e in n.edges)]
         viridian = [n for n in nodes if any(wg.nodes[e.target].map.name == "ViridianCity_hns"

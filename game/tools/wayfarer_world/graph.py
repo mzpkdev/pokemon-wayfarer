@@ -93,6 +93,11 @@ class Walk:
             "MB_POND_WATER", "MB_OCEAN_WATER", "MB_INTERIOR_DEEP_WATER",
             "MB_DEEP_WATER", "MB_SOOTOPOLIS_DEEP_WATER", "MB_EASTWARD_CURRENT",
             "MB_WESTWARD_CURRENT", "MB_NORTHWARD_CURRENT", "MB_SOUTHWARD_CURRENT")
+        # Behaviours a warp event can fire from (doors, ladders, stairs,
+        # escalators, arrow and special warps, holes).
+        self.warp_behaviours = {v for k, v in c.mb.items()
+                                if any(w in k for w in ("WARP", "DOOR", "LADDER", "ESCALATOR",
+                                                        "HOLE", "STAIR"))}
         self.hole_warps = c.set_of("MB_MT_PYRE_HOLE", "MB_CRACKED_FLOOR_HOLE",
                                    "MB_FALL_WARP", "MB_CRACKED_FLOOR")
 
@@ -425,6 +430,13 @@ class GraphBuilder:
             if beh in self.walk.hole_warps:
                 rep["skipped_warps"]["hole or fall warp"] += 1
                 continue
+            # A fall's landing tile carries a warp event so the fall knows
+            # where to land; on a plain floor tile it never fires
+            # (TryStartWarpEventScript needs a warp behaviour), so it is not
+            # a way out (Victory Road B1F's landings back to 1F).
+            if (info.const, k) in self.fall_landings and beh not in self.walk.warp_behaviours:
+                rep["skipped_warps"]["fall landing, not a warp"] += 1
+                continue
             if beh in self.walk.consts.surfable:
                 rep["skipped_warps"]["water warp (Surf or Dive)"] += 1
                 continue
@@ -469,8 +481,20 @@ class GraphBuilder:
         return out
 
     def build_incoming(self):
-        """Warps into each (map, warp id): resolves MAP_DYNAMIC returns."""
+        """Warps into each (map, warp id): resolves MAP_DYNAMIC returns.
+        Also collects the landing warps of holes (fall_landings)."""
         self.incoming = defaultdict(list)
+        self.fall_landings = set()
+        for info in self.world.scope:
+            grid = self.floods[info.name].grid
+            for warp in info.events["warps"]:
+                if not grid.inside(warp["x"], warp["y"]) or \
+                        grid.b(warp["x"], warp["y"]) not in self.walk.hole_warps:
+                    continue
+                try:
+                    self.fall_landings.add((warp["dest_map"], int(warp["dest_warp"], 0)))
+                except ValueError:
+                    pass
         for info in self.world.scope:
             for j, warp in enumerate(info.events["warps"]):
                 try:

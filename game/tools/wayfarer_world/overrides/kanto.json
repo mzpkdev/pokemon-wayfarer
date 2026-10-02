@@ -6,7 +6,10 @@
     {"map": "VermilionCity_hns", "local_id": 8, "what": "Snorlax collision object", "why": "See local 1."},
     {"map": "VermilionCity_hns", "local_id": 9, "what": "Snorlax collision object", "why": "See local 1."},
     {"map": "VermilionCity_hns", "local_id": 10, "what": "Snorlax collision object", "why": "See local 1."},
-    {"map": "VermilionCity_hns", "local_id": 11, "what": "Snorlax collision object", "why": "See local 1."}
+    {"map": "VermilionCity_hns", "local_id": 11, "what": "Snorlax collision object", "why": "See local 1."},
+    {"map": "Route2_hns", "local_id": 9, "what": "Cut tree on Route 2 at (11, 13)", "why": "User decision (follow-up 3): the only way between Pewter's side of Route 2 and Diglett's Cave, which every route from Pewter, Viridian and Indigo Plateau to Vermilion, the Magnet Train and the Kanto ferry needs. Treated as passable; the local walker still meets the real tree."},
+    {"map": "VictoryRoadKanto_B1F_hns", "local_id": 7, "what": "Strength boulder on Victory Road B1F at (48, 12)", "why": "User decision (follow-up 3): with B2F's boulder at (28, 42), the only thing keeping Will and Karen at Indigo Plateau. Treated as passable; the local walker still meets the real boulder."},
+    {"map": "VictoryRoadKanto_B2F_hns", "local_id": 1, "what": "Strength boulder on Victory Road B2F at (28, 42)", "why": "See VictoryRoadKanto_B1F_hns local 7."}
   ],
   "add": [],
   "drop": [

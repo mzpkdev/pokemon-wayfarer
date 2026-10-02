@@ -12,7 +12,8 @@ Off-screen, a notable trainer has the water HMs (Surf, Waterfall,
 Whirlpool); land HMs (Cut, Strength, Rock Smash) still block. Two water
 tiles are joined when a surfing object could step between them: the
 directional walls and the elevation-mismatch rule as on land, and map
-connections as lanes. Authored Dive links (water.json) join two water tiles
+connections as lanes. A warp on water (Route 40's row into Route 41) joins
+its tile to the landing water, or lands on a shore. Authored Dive links (water.json) join two water tiles
 that Dive and emerge connect, such as Sootopolis's lake and Route 126.
 
 A land node touches the water at its shore: a state at elevation 3 next to a
@@ -64,7 +65,8 @@ class WaterFlood:
                 1 if grid.col[i] == 0 and i not in solid and (
                     grid.mb[i] in self.surf or (grid.mb[i] in bridges and grid.elev[i] == 15))
                 else 0 for i in range(grid.w * grid.h))
-        self.extra = {}  # (map, tile) -> [(map, tile)]: lanes and Dive links
+        self.extra = {}  # (map, tile) -> [(map, tile)]: lanes, water warps and Dive links
+        self.extra_shores = {}  # (map, comp) -> [(shore tile, water tile)]: warps from water
 
     def is_water(self, name, x, y):
         grid = self.b.floods[name].grid
@@ -112,6 +114,49 @@ class WaterFlood:
     def link(self, u, v):
         self.extra.setdefault(u, []).append(v)
         self.extra.setdefault(v, []).append(u)
+
+    def warps(self, report):
+        """Warps on water (graph.py skips them for walkers): a water warp
+        joins its tile to the landing tile's water, or makes the landing
+        tile a shore of the land node it lands in. Route 40's bottom row
+        of water warps is the way into Route 41."""
+        b = self.b
+        hole = b.walk.hole_warps
+        count = 0
+        for info in b.world.scope:
+            grid = b.floods[info.name].grid
+            for warp in info.events["warps"]:
+                x, y = warp["x"], warp["y"]
+                if not grid.inside(x, y):
+                    continue
+                i = y * grid.w + x
+                if grid.mb[i] not in self.surf or grid.mb[i] in hole or grid.col[i] != 0:
+                    continue
+                target = b.by_const.get(warp["dest_map"])
+                try:
+                    land = int(warp["dest_warp"], 0)
+                except ValueError:
+                    continue
+                if target is None or not 0 <= land < len(target.events["warps"]):
+                    continue
+                dest = target.events["warps"][land]
+                tgrid = b.floods[target.name].grid
+                tx, ty = dest["x"], dest["y"]
+                if not tgrid.inside(tx, ty):
+                    continue
+                j = ty * tgrid.w + tx
+                self.water[info.name][i] = 1
+                if tgrid.mb[j] in self.surf and tgrid.col[j] == 0:
+                    self.water[target.name][j] = 1
+                    self.link((info.name, i), (target.name, j))
+                    count += 1
+                    continue
+                comp = b.floods[target.name].tile_component(tx, ty, dest["elevation"])
+                if comp is not None:
+                    self.extra_shores.setdefault((target.name, comp), []).append(
+                        ((tx, ty), (info.name, i)))
+                    count += 1
+        report["water_warps"] = count
 
     def dive(self, rows, problems):
         for row in rows:
@@ -173,7 +218,7 @@ class WaterFlood:
                 if grid.mb[i] in leave or grid.mb[j] in enter:
                     continue
                 out.append(((x, y), (name, j)))
-        return out
+        return out + self.extra_shores.get((name, comp), [])
 
 
 def water_links(builder, seeds, dive_rows, problems, report):
@@ -182,6 +227,7 @@ def water_links(builder, seeds, dive_rows, problems, report):
     flood = WaterFlood(builder)
     flood.lanes()
     flood.dive(dive_rows, problems)
+    flood.warps(report)
     label = {}
     queue = deque()
     pairs = {}

@@ -24,8 +24,7 @@
           "serves": "care",
           "map": "Route34_DayCare_hns",
           "kind": "named",
-          "label": "Route 34 Day Care",
-          "disabled": "Every route from PewterCity_hns needs Route 2's Cut tree at (11, 13), between Pewter's side of Route 2 and Diglett's Cave (minimal blocker set; Vermilion's Snorlax, a story gate, is already ignored). Walkers don't cut, and the tree is not a story gate."
+          "label": "Route 34 Day Care"
         },
         {
           "serves": "study",
@@ -243,21 +242,15 @@
           "serves": "gamble",
           "map": "CeladonCity_GameCorner_hns",
           "kind": "game_corner",
-          "note": "Celadon Game Corner",
-          "disabled": "Every route from ViridianCity_hns needs Route 2's Cut tree at (11, 13), between Pewter's side of Route 2 and Diglett's Cave (minimal blocker set; Vermilion's Snorlax, a story gate, is already ignored). Walkers don't cut, and the tree is not a story gate."
+          "note": "Celadon Game Corner"
         },
         {
           "serves": "lie low",
           "map": "BurnedTower_1F_hns",
           "kind": "named",
-          "label": "Burned Tower",
-          "disabled": "Every route from ViridianCity_hns needs Route 2's Cut tree at (11, 13), between Pewter's side of Route 2 and Diglett's Cave (minimal blocker set; Vermilion's Snorlax, a story gate, is already ignored). Walkers don't cut, and the tree is not a story gate."
+          "label": "Burned Tower"
         }
-      ],
-      "allow_skip": {
-        "gamble": "No gamble spot within 8 hops of ViridianCity_hns on foot and no reachable favourite; the runtime skips the step.",
-        "lie low": "No lie low spot within 8 hops of ViridianCity_hns on foot and no reachable favourite; the runtime skips the step."
-      }
+      ]
     },
     {
       "slug": "blue",
@@ -575,8 +568,7 @@
           "serves": "train",
           "map": "TrainerHill_Courtyard_hns",
           "kind": "named",
-          "label": "Route 40 battle courtyard",
-          "disabled": "Route 41's layout walls the Route 40 and Olivine sea off from the Cianwood sea: a row of collision-flagged ocean tiles (elevation 0, collision 1) at y = 13 and wall columns around the inner sea leave no water path, even off-screen. Cianwood's other exit, Cliff Edge Gate, leads only to Routes 47 and 48. The player can't surf it either, so this looks like a map-data question for LAYOUT_ROUTE41_HNS."
+          "label": "Route 40 battle courtyard"
         },
         {
           "serves": "care",
@@ -584,10 +576,7 @@
           "kind": "named",
           "label": "Cianwood pharmacy"
         }
-      ],
-      "allow_skip": {
-        "train": "No train spot within 3 hops of CianwoodCity_hns on foot and no reachable favourite; the runtime skips the step."
-      }
+      ]
     },
     {
       "slug": "jasmine",
@@ -618,8 +607,7 @@
           "serves": "care",
           "map": "CianwoodShop_hns",
           "kind": "named",
-          "label": "Cianwood pharmacy",
-          "disabled": "Route 41's layout walls the Route 40 and Olivine sea off from the Cianwood sea: a row of collision-flagged ocean tiles (elevation 0, collision 1) at y = 13 and wall columns around the inner sea leave no water path, even off-screen. Cianwood's other exit, Cliff Edge Gate, leads only to Routes 47 and 48. The player can't surf it either, so this looks like a map-data question for LAYOUT_ROUTE41_HNS."
+          "label": "Cianwood pharmacy"
         },
         {
           "serves": "relax",
@@ -707,14 +695,14 @@
           "map": "RuinsOfAlph_Outside_hns",
           "kind": "named",
           "label": "Ruins of Alph",
-          "disabled": "Indigo Plateau's way out runs through Victory Road's Strength boulders at B1F (48, 12) and B2F (28, 42), and on to Johto's Magnet Train past Route 2's Cut tree at (11, 13) (minimal blocker set; the reception gate's guards, story gates, are already ignored). Walkers don't push boulders or cut, and these are not story gates."
+          "disabled": "Victory Road is one-way for walkers: from the League reception gate it climbs to Route 23 only by falling through 1F's hole at (17, 16) and jumping B1F's ledge at (31..33, 23), and from Indigo Plateau there is no way down (the holes' landing tiles on B1F are not warps). Walkers never fall or jump ledges, so Indigo Plateau's node never reaches Johto, even with the Strength boulders ignored."
         },
         {
           "serves": "train",
           "map": "BattleFrontier_BattleTowerLobby",
           "kind": "named",
           "label": "Battle Tower",
-          "disabled": "Indigo Plateau's way out runs through Victory Road's Strength boulders at B1F (48, 12) and B2F (28, 42), and on to Vermilion's Kanto ferry past Route 2's Cut tree at (11, 13) (minimal blocker set; the reception gate's guards, story gates, are already ignored). Walkers don't push boulders or cut, and these are not story gates."
+          "disabled": "Victory Road is one-way for walkers: from the League reception gate it climbs to Route 23 only by falling through 1F's hole at (17, 16) and jumping B1F's ledge at (31..33, 23), and from Indigo Plateau there is no way down (the holes' landing tiles on B1F are not warps). Walkers never fall or jump ledges, so Indigo Plateau's node never reaches the Kanto ferry, even with the Strength boulders ignored."
         }
       ],
       "allow_skip": {
@@ -740,14 +728,14 @@
           "map": "Route28_hns",
           "kind": "tall_grass",
           "note": "Route 28",
-          "disabled": "Indigo Plateau reaches Route 28 only through Victory Road's Strength boulders at B1F (48, 12) and B2F (28, 42) (the Mt. Silver guard, a story gate, is already ignored). Walkers don't push boulders, and they are not story gates."
+          "disabled": "Victory Road is one-way for walkers: from the League reception gate it climbs to Route 23 only by falling through 1F's hole at (17, 16) and jumping B1F's ledge at (31..33, 23), and from Indigo Plateau there is no way down (the holes' landing tiles on B1F are not warps). Walkers never fall or jump ledges, so Indigo Plateau's node never reaches Route 28, even with the Strength boulders ignored."
         },
         {
           "serves": "relax",
           "map": "VictoryRoadKanto_B1F_hns",
           "kind": "water_edge",
           "note": "Victory Road",
-          "disabled": "The water's edge on Victory Road B1F lies behind the Strength boulder at (48, 12) (local 7). Walkers don't push boulders, and it is not a story gate."
+          "disabled": "Victory Road is one-way for walkers: from the League reception gate it climbs to Route 23 only by falling through 1F's hole at (17, 16) and jumping B1F's ledge at (31..33, 23), and from Indigo Plateau there is no way down (the holes' landing tiles on B1F are not warps). Walkers never fall or jump ledges, so Indigo Plateau's node never reaches B1F's water's edge, even with the Strength boulders ignored."
         }
       ],
       "allow_skip": {
