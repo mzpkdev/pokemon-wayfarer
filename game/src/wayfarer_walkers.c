@@ -195,7 +195,14 @@ struct WalkerAdvance
     u8 attempt;
     u8 attemptMax;
     u8 padding;
-    u32 worldProgress;  // the context's fields an advance reads, as it started
+};
+
+// The context fields an advance reads, as the queue's first advance started
+// (league state, badges and rating only change in scripts and battles, when
+// the queue waits, and a league result flushes it first).
+struct WalkerAdvanceContext
+{
+    u32 worldProgress;
     u32 provisionalMask;
     u32 risingMask;
 };
@@ -241,6 +248,7 @@ static EWRAM_DATA struct RecentEntry sRecentEntries[WALKER_ACTOR_COUNT] = {0};
 static EWRAM_DATA u16 sRestoreMap = 0;      // the map the Continue restore is for
 static EWRAM_DATA struct WalkerAdvance sAdvances[WALKER_ACTOR_COUNT] = {0};
 static EWRAM_DATA u8 sAdvanceCount = 0;
+static EWRAM_DATA struct WalkerAdvanceContext sAdvanceContext = {0};
 static EWRAM_DATA struct WalkerEdgeJob sEdgeJob = {0};
 static EWRAM_DATA void *sJobWorkspace = NULL;
 
@@ -1508,20 +1516,24 @@ static void QueueAdvance(u8 slot)
 
     if (IsAdvancing(slot))
         return;
-    BuildContext(&ctx);
     gWayfarerWalkersDebug.localAdvances++;
     if (sAdvanceCount >= ARRAY_COUNT(sAdvances))
     {
         // One per actor: never full. At once if it were.
+        BuildContext(&ctx);
         WorldSim_AdvanceRoutine(State(), slot, &ctx, NULL);
         return;
+    }
+    if (sAdvanceCount == 0)
+    {
+        BuildContext(&ctx);
+        sAdvanceContext.worldProgress = ctx.worldProgress;
+        sAdvanceContext.provisionalMask = ctx.provisionalMask;
+        sAdvanceContext.risingMask = ctx.risingMask;
     }
     job = &sAdvances[sAdvanceCount++];
     job->slot = slot;
     job->attempt = job->attemptMax = 0;
-    job->worldProgress = ctx.worldProgress;
-    job->provisionalMask = ctx.provisionalMask;
-    job->risingMask = ctx.risingMask;
     gWayfarerWalkersDebug.worldJobs++;
 }
 
@@ -1531,9 +1543,9 @@ static void StepAdvance(void)
     struct WalkerAdvance *job = &sAdvances[0];
     struct WayfarerWorldContext ctx = {0};
 
-    ctx.worldProgress = job->worldProgress;
-    ctx.provisionalMask = job->provisionalMask;
-    ctx.risingMask = job->risingMask;
+    ctx.worldProgress = sAdvanceContext.worldProgress;
+    ctx.provisionalMask = sAdvanceContext.provisionalMask;
+    ctx.risingMask = sAdvanceContext.risingMask;
     if (!WorldSim_IsSimulated(&State()->records[job->slot])
      || WorldSim_AdvanceRoutineStep(State(), job->slot, &ctx, NULL, &job->attempt, &job->attemptMax))
     {

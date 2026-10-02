@@ -38,11 +38,55 @@ static EWRAM_DATA u8 sStarvedFrames = 0;
 // else writes the records meanwhile: walkers wait while a heartbeat is
 // pending), without the multi-frame hitch in the seam's frame.
 // Up to this many queue: running back and forth over a seam can cross again
-// before even the queued heartbeat has begun.
-#define DEFERRED_MAX 3
-static EWRAM_DATA struct WayfarerWorldContext sDeferredContexts[DEFERRED_MAX] = {0};
+// before even the queued heartbeat has begun. Kept packed (EWRAM is tight in
+// the mechanics-test build): derived states at 4 bits each.
+#define DEFERRED_MAX 2
+#define DERIVED_PACKED_NONE 0xF
+struct DeferredContext
+{
+    u32 worldProgress;
+    u32 provisionalMask;
+    u32 risingMask;
+    u32 frozenMask;
+    u16 playerMap;
+    u8 derived[(WORLD_SIM_TRAINER_COUNT + 1) / 2];
+};
+STATIC_ASSERT(WORLD_STATE_COUNT <= DERIVED_PACKED_NONE, DerivedStatesFitANibble);
+static EWRAM_DATA struct DeferredContext sDeferredContexts[DEFERRED_MAX] = {0};
 static EWRAM_DATA u8 sDeferredCount = 0;
 #define sDeferredBegin (sDeferredCount != 0)
+
+static void PackContext(struct DeferredContext *packed, const struct WayfarerWorldContext *ctx)
+{
+    u8 slot;
+    packed->worldProgress = ctx->worldProgress;
+    packed->provisionalMask = ctx->provisionalMask;
+    packed->risingMask = ctx->risingMask;
+    packed->frozenMask = ctx->frozenMask;
+    packed->playerMap = ctx->playerMap;
+    memset(packed->derived, 0, sizeof(packed->derived));
+    for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT; slot++)
+    {
+        u8 value = ctx->derived[slot] == WORLD_DERIVED_NONE ? DERIVED_PACKED_NONE : ctx->derived[slot];
+        packed->derived[slot / 2] |= value << ((slot & 1) * 4);
+    }
+}
+
+static void UnpackContext(struct WayfarerWorldContext *ctx, const struct DeferredContext *packed)
+{
+    u8 slot;
+    *ctx = (struct WayfarerWorldContext){0};
+    ctx->worldProgress = packed->worldProgress;
+    ctx->provisionalMask = packed->provisionalMask;
+    ctx->risingMask = packed->risingMask;
+    ctx->frozenMask = packed->frozenMask;
+    ctx->playerMap = packed->playerMap;
+    for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT; slot++)
+    {
+        u8 value = (packed->derived[slot / 2] >> ((slot & 1) * 4)) & 0xF;
+        ctx->derived[slot] = value == DERIVED_PACKED_NONE ? WORLD_DERIVED_NONE : value;
+    }
+}
 
 // Per field frame, the walkers' update and the simulation's steps together
 // stay under this many scanlines (a frame is 228); the steps take what the
@@ -287,7 +331,8 @@ static void CompleteHeartbeat(void)
     {
         // The next heartbeat (a seam crossed again) starts now, as it was
         // at its map load; the workspace carries over.
-        struct WayfarerWorldContext ctx = sDeferredContexts[0];
+        struct WayfarerWorldContext ctx;
+        UnpackContext(&ctx, &sDeferredContexts[0]);
         sDeferredCount--;
         memmove(&sDeferredContexts[0], &sDeferredContexts[1], sizeof(sDeferredContexts[0]) * sDeferredCount);
         BeginHeartbeatWith(&ctx, 0);
@@ -480,7 +525,9 @@ void WayfarerWorld_OnMapLoad(bool8 seam)
     sLastMap = map;
     if (defer)
     {
-        WayfarerWorld_BuildContext(&sDeferredContexts[sDeferredCount++]);
+        struct WayfarerWorldContext ctx;
+        WayfarerWorld_BuildContext(&ctx);
+        PackContext(&sDeferredContexts[sDeferredCount++], &ctx);
         gWayfarerWorldDebug.deferredBegins++;
         return;
     }
