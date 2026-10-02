@@ -28,7 +28,7 @@
         "blockedSteps": 0
       },
       "record": {
-        "node": 505,
+        "node": 504,
         "destKind": 1,
         "destId": 3634,
         "state": 1,
@@ -42,7 +42,7 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "f9918c1300a00600"
+        "hex": "f8918c1300a00600"
       },
       "record_map": "MAP_MT_MORTAR_1F_NORTH_HNS"
     },
@@ -61,7 +61,7 @@
         "y": 14,
         "goalX": 15,
         "goalY": 31,
-        "goalEdge": 1120
+        "goalEdge": 1105
       },
       "done": true,
       "delta": {
@@ -74,7 +74,7 @@
         "blockedSteps": 0
       },
       "record": {
-        "node": 519,
+        "node": 518,
         "destKind": 1,
         "destId": 3763,
         "state": 1,
@@ -88,7 +88,7 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "07d2ac1300a00600"
+        "hex": "06d2ac1300a00600"
       },
       "record_map": "MAP_MT_MORTAR_B1F_HNS"
     },
@@ -105,7 +105,7 @@
         "blockedSteps": 0
       },
       "record": {
-        "node": 505,
+        "node": 504,
         "destKind": 1,
         "destId": 3637,
         "state": 0,
@@ -119,13 +119,13 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "f9518d0300a00600"
+        "hex": "f8518d0300a00600"
       },
       "record_map": "MAP_MT_MORTAR_1F_NORTH_HNS"
     }
   },
-  "pocket_node": 506,
-  "node": 505,
+  "pocket_node": 505,
+  "node": 504,
   "screenshots": [
     ".product/research/overworld-walkers/mortar-at-spot.png"
   ],
@@ -160,7 +160,7 @@
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634028,
+    "worldState": 33634072,
     "actors": [
       {
         "index": 0,

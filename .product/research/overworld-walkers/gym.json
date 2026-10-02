@@ -1,6 +1,6 @@
 {
   "brock_record_home": {
-    "node": 297,
+    "node": 296,
     "destKind": 2,
     "destId": 16383,
     "state": 1,
@@ -14,7 +14,7 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "29e1ff1f00180900"
+    "hex": "28e1ff1f00180900"
   },
   "leader_template_gfx": 464,
   "leader_objects_while_home": 1,
@@ -36,14 +36,14 @@
     "y": 14,
     "goalX": 6,
     "goalY": 14,
-    "goalEdge": 738
+    "goalEdge": 727
   },
   "leader_hidden_while_out": true,
   "leader_hidden_after_walking": true,
   "blue_after_leaving": {
     "node": 96,
     "destKind": 1,
-    "destId": 9695,
+    "destId": 9709,
     "state": 0,
     "waited": 0,
     "arrival": 5,
@@ -55,7 +55,7 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "60d0770915c80200"
+    "hex": "60507b0915c80200"
   },
   "visitor_gone_and_not_respawned": true,
   "screenshots": [
@@ -94,7 +94,7 @@
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634072,
+    "worldState": 33634020,
     "actors": [
       {
         "index": 0,

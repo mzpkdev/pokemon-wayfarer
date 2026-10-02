@@ -4,7 +4,7 @@
     -1
   ],
   "record_at_exit": {
-    "node": 122,
+    "node": 121,
     "destKind": 1,
     "destId": 4194,
     "state": 0,
@@ -18,7 +18,7 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "7a90180452600600"
+    "hex": "7990180452600600"
   },
   "expected_crossing": 10,
   "heartbeats_during_cross": 1,
@@ -178,7 +178,7 @@
     "y": 78,
     "goalX": 5,
     "goalY": 51,
-    "goalEdge": 440
+    "goalEdge": 442
   },
   "actor_after_90_frames": {
     "index": 0,
@@ -194,7 +194,7 @@
     "y": 75,
     "goalX": 5,
     "goalY": 51,
-    "goalEdge": 440
+    "goalEdge": 442
   },
   "rebases": 1,
   "samples": [
@@ -711,7 +711,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634116,
+    "worldState": 33634052,
     "actors": [
       {
         "index": 0,
@@ -727,7 +727,7 @@
         "y": 75,
         "goalX": 5,
         "goalY": 51,
-        "goalEdge": 440
+        "goalEdge": 442
       },
       {
         "index": 1,

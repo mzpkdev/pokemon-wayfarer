@@ -120,7 +120,7 @@
         "y": 39,
         "goalX": 9,
         "goalY": 40,
-        "goalEdge": 313
+        "goalEdge": 315
       },
       "pushed": "Up"
     }
@@ -139,7 +139,7 @@
     "y": 39,
     "goalX": 9,
     "goalY": 40,
-    "goalEdge": 313
+    "goalEdge": 315
   },
   "track": [
     [
@@ -253,7 +253,7 @@
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634008,
+    "worldState": 33634112,
     "actors": [
       {
         "index": 0,

@@ -1,6 +1,6 @@
 {
   "spot": 6092,
-  "node": 892,
+  "node": 889,
   "arrived_after_frames": 3008,
   "delta": {
     "searches": 1,
@@ -179,7 +179,7 @@
     ]
   ],
   "record": {
-    "node": 892,
+    "node": 889,
     "destKind": 1,
     "destId": 6092,
     "state": 1,
@@ -193,7 +193,7 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "7c13f31500a00600"
+    "hex": "7913f31500a00600"
   },
   "maxSliceScanlines": 149,
   "maxSearchNodes": 1567,
@@ -233,7 +233,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634024,
+    "worldState": 33634060,
     "actors": [
       {
         "index": 0,

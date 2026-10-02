@@ -117,7 +117,7 @@
       "hex": "5e10231100a00400"
     },
     "blue": {
-      "node": 122,
+      "node": 121,
       "destKind": 1,
       "destId": 4194,
       "state": 0,
@@ -131,7 +131,7 @@
       "lifeSteps": 0,
       "stayBits": 0,
       "reserved": 0,
-      "hex": "7a90180452600600"
+      "hex": "7990180452600600"
     }
   },
   "screenshots": [
@@ -169,7 +169,7 @@
     "followerHidden": 0,
     "activeActors": 2,
     "storySuppressed": 0,
-    "worldState": 33634108,
+    "worldState": 33634056,
     "actors": [
       {
         "index": 0,

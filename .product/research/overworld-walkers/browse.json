@@ -4,14 +4,14 @@
     2769,
     2758
   ],
-  "next_destination": 9695,
+  "next_destination": 9709,
   "local_dwell_beats": 2,
   "local_advances": 1,
   "warp_exits": 1,
   "record_after": {
     "node": 94,
     "destKind": 1,
-    "destId": 9695,
+    "destId": 9709,
     "state": 0,
     "waited": 0,
     "arrival": 5,
@@ -23,7 +23,7 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "5ed077091dc80200"
+    "hex": "5e507b091dc80200"
   },
   "screenshots": [
     ".product/research/overworld-walkers/browse-next-shelf.png"
@@ -59,7 +59,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634092,
+    "worldState": 33634004,
     "actors": [
       {
         "index": 0,
@@ -75,7 +75,7 @@
         "y": 7,
         "goalX": 4,
         "goalY": 7,
-        "goalEdge": 732
+        "goalEdge": 721
       },
       {
         "index": 1,
