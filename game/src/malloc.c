@@ -1,5 +1,6 @@
 #include "global.h"
 #include "malloc.h"
+#include "wayfarer_walkers.h"
 #if TESTING
 #include "test/test.h"
 #endif
@@ -197,6 +198,10 @@ bool32 CheckMemBlockInternal(void *heapStart, void *pointer)
 
 void InitHeap(void *heapStart, u32 heapSize)
 {
+#if IS_WAYFARER && !TESTING
+    if (heapStart == gHeap)
+        WayfarerWalkers_OnHeapReset();
+#endif
     sHeapStart = heapStart;
     sHeapSize = heapSize;
     PutFirstMemBlockHeader(heapStart, heapSize);

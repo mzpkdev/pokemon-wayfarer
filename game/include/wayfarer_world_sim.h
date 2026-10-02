@@ -87,6 +87,22 @@ u8 WorldSim_ArrivalForEdge(u8 edgeKind);
 u8 WorldSim_DefaultTemplate(const struct WayfarerWorldSpot *spot, u8 activity);
 u8 WorldSim_TemplateEmote(const struct WayfarerWorldSpot *spot, u8 activity);
 
+// Local actor helpers (wayfarer_walkers.c). All engine-free and deterministic.
+// Graph hops from the trainer's node to their home node (priority order), or 0xFF.
+u8 WorldSim_HomeHops(const struct WayfarerWorldState *state, u8 slot, void *workspace);
+// TRUE when the spot already holds as many trainers as it can (except exceptSlot).
+bool8 WorldSim_SpotTaken(const struct WayfarerWorldState *state, u16 spot, u8 exceptSlot);
+// A template moves the stay to another spot of the same kind (Browse): keeps
+// the activity and dwell; travelling when the spot is on another node.
+void WorldSim_ChangeSpot(struct WayfarerWorldState *state, u8 slot, u16 spot);
+// A map-side edge's crossing on the target map for a step out at coord (a..b).
+u8 WorldSim_LaneCrossing(const struct WayfarerWorldEdge *edge, u8 coord);
+// Behaviour template choice: entry (c + 7k) mod n, with the stride moved to
+// the next prime that doesn't divide n when 7 does.
+u16 WorldSim_TemplateIndex(u8 c, u16 k, u16 n);
+// Emote cadence: the dwell ticks t where (c + t) mod 8 == 0.
+bool8 WorldSim_IsEmoteTick(u8 c, u16 t);
+
 // Local actor block helpers.
 void WorldSim_ClearLocalActors(struct WayfarerWorldState *state);
 bool8 WorldSim_GetLocalActor(const struct WayfarerWorldState *state, u8 index, u8 *slot, u8 *x, u8 *y, u8 *facing);

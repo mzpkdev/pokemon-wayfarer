@@ -1,4 +1,5 @@
 #include "global.h"
+#include "wayfarer_walkers.h"
 #include "malloc.h"
 #include "battle_anim.h"
 #include "battle_pyramid.h"
@@ -3164,6 +3165,11 @@ void TrySpawnObjectEvents(s16 cameraX, s16 cameraY)
 
             if (top <= npcY && bottom >= npcY && left <= npcX && right >= npcX && !FlagGet(template->flagId))
             {
+#if IS_WAYFARER
+                // A Gym Leader's own object while the leader is out.
+                if (WayfarerWalkers_HideTemplate(template))
+                    continue;
+#endif
                 if (IsLightSpriteGfxId(template->graphicsId))
                     SpawnLightSprite(npcX, npcY, cameraX, cameraY, GetLightTypeFromTemplate(template));
                 else
@@ -3200,6 +3206,11 @@ void RemoveObjectEventsOutsideView(void)
 
 static void RemoveObjectEventIfOutsideView(struct ObjectEvent *objectEvent)
 {
+#if IS_WAYFARER
+    // Notable walkers stay while the walker layer owns them (off view too).
+    if (WayfarerWalkers_IsActorObject(objectEvent))
+        return;
+#endif
     s16 left =   gSaveBlock1Ptr->pos.x - 2;
     s16 right =  gSaveBlock1Ptr->pos.x + 17;
     s16 top =    gSaveBlock1Ptr->pos.y;
@@ -3989,9 +4000,14 @@ void SetObjectEventDirection(struct ObjectEvent *objectEvent, enum Direction dir
 
 static const u8 *GetObjectEventScriptPointerByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
 {
+    const struct ObjectEventTemplate *template;
     if (localId == OBJ_EVENT_ID_FOLLOWER)
         return EventScript_Follower;
-    return GetObjectEventTemplateByLocalIdAndMap(localId, mapNum, mapGroup)->script;
+    template = GetObjectEventTemplateByLocalIdAndMap(localId, mapNum, mapGroup);
+    // Runtime objects (notable walkers) have no template and no script.
+    if (template == NULL)
+        return NULL;
+    return template->script;
 }
 
 const u8 *GetObjectEventScriptPointerByObjectEventId(u8 objectEventId)

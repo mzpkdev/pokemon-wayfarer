@@ -1,0 +1,10 @@
+{
+  "browse": true,
+  "budget": true,
+  "door": true,
+  "edge": true,
+  "gym": true,
+  "linger": true,
+  "save": true,
+  "spot": true
+}

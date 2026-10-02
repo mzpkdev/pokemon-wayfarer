@@ -13,6 +13,7 @@
 #include "overworld.h"
 #include "pokemon_storage_system.h"
 #include "trainer_rating.h"
+#include "wayfarer_walkers.h"
 #include "wayfarer_persistence.h"
 #include "constants/regions.h"
 
@@ -102,6 +103,14 @@ void WayfarerWorld_BuildContext(struct WayfarerWorldContext *ctx)
     ctx->frozenMask = gWayfarerWorldFrozenMask;
 }
 
+bool8 WayfarerWorld_IsLeaderUnbeaten(u8 slot)
+{
+    const struct WayfarerWorldTrainer *trainer = &gWayfarerWorldTrainers[slot];
+    if (!(trainer->flags & WORLD_TRAINER_FLAG_GYM_LEADER) || trainer->badgeRegion >= ARRAY_COUNT(sBadgeRegions))
+        return FALSE;
+    return !GetBadgeStateForRegion(sBadgeRegions[trainer->badgeRegion], trainer->badgeIndex);
+}
+
 void WayfarerWorld_InitNewGame(void)
 {
     struct WayfarerWorldContext ctx;
@@ -111,6 +120,7 @@ void WayfarerWorld_InitNewGame(void)
     WorldSim_NewGame(WayfarerWorld_GetState(), &ctx, workspace);
     Free(workspace);
     gWayfarerWorldFrozenMask = 0;
+    WayfarerWalkers_Reset();
     // The warp into the starting map is not a heartbeat.
     sSkipNextHeartbeat = TRUE;
     sLastMap = 0xFFFF;
@@ -119,6 +129,7 @@ void WayfarerWorld_InitNewGame(void)
 void WayfarerWorld_OnContinue(bool8 loadsWarp)
 {
     gWayfarerWorldFrozenMask = 0;
+    WayfarerWalkers_OnContinue();
     sSkipNextHeartbeat = loadsWarp;
     sLastMap = CurrentMap();
 }

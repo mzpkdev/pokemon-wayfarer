@@ -32,6 +32,8 @@ bool8 WayfarerWorld_OnLoad(void);
 // The heartbeat: a map load from a warp or a camera transition.
 void WayfarerWorld_OnMapLoad(void);
 void WayfarerWorld_ForceHeartbeat(void);
+// A Gym Leader whose badge the player doesn't hold yet.
+bool8 WayfarerWorld_IsLeaderUnbeaten(u8 slot);
 // League event resolution (ResolveLeagueEvent); lineup in battle order.
 void WayfarerWorld_OnLeagueResolved(const u16 *lineup, u8 count, bool8 playerWon, u16 championId);
 

@@ -1,5 +1,6 @@
 #include "global.h"
 #include "wayfarer_world.h"
+#include "wayfarer_walkers.h"
 #include "trainer_only_encounter.h"
 #include "league_circuit.h"
 #include "overworld.h"
@@ -1037,6 +1038,7 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
     UpdateLocationHistoryForRoamer();
     MoveAllRoamers();
 #if IS_WAYFARER
+    WayfarerWalkers_OnCameraTransition();
     WayfarerWorld_OnMapLoad();
 #endif
     TryShowRoamerFlash();
@@ -1127,6 +1129,7 @@ static bool32 LoadMapFromWarp(bool32 a1)
     UpdateLocationHistoryForRoamer();
     MoveAllRoamersToOtherLocationSets();
 #if IS_WAYFARER
+    WayfarerWalkers_OnWarp();
     WayfarerWorld_OnMapLoad();
 #endif
     gChainFishingDexNavStreak = 0;
@@ -2006,6 +2009,9 @@ static void OverworldBasic(void)
 {
     ScriptContext_RunScript();
     RunTasks();
+#if IS_WAYFARER
+    WayfarerWalkers_Update();
+#endif
     AnimateSprites();
     CameraUpdate();
     UpdateCameraPanning();

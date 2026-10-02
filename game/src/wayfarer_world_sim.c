@@ -1194,6 +1194,67 @@ void WorldSim_OnLeagueResolved(struct WayfarerWorldState *state, const u16 *line
 }
 
 // ---------------------------------------------------------------------------
+// Local actor helpers
+
+u8 WorldSim_HomeHops(const struct WayfarerWorldState *state, u8 slot, void *workspace)
+{
+    struct Search search;
+    Search(&search, workspace, state->records[slot].node, Trainer(slot)->homeNode, WORLD_NODE_NONE,
+           Trainer(slot)->searchBound, IsTraveller(slot), NULL, 0, NULL);
+    return SearchDepth(&search, Trainer(slot)->homeNode);
+}
+
+bool8 WorldSim_SpotTaken(const struct WayfarerWorldState *state, u16 spot, u8 exceptSlot)
+{
+    if (spot >= gWayfarerWorldSpotCount)
+        return TRUE;
+    return IsSpotTaken(state, spot, exceptSlot);
+}
+
+void WorldSim_ChangeSpot(struct WayfarerWorldState *state, u8 slot, u16 spot)
+{
+    struct WayfarerWorldRecord *record = &state->records[slot];
+    if (spot >= gWayfarerWorldSpotCount || !WorldSim_IsSimulated(record))
+        return;
+    record->destKind = WORLD_DEST_SPOT;
+    record->destId = spot;
+    record->waited = FALSE;
+    if (SpotNode(spot) != record->node)
+        record->state = WORLD_STATE_TRAVELLING;
+}
+
+u8 WorldSim_LaneCrossing(const struct WayfarerWorldEdge *edge, u8 coord)
+{
+    if (coord < edge->a)
+        coord = edge->a;
+    if (coord > edge->b)
+        coord = edge->b;
+    return edge->c + (coord - edge->a);
+}
+
+u16 WorldSim_TemplateIndex(u8 c, u16 k, u16 n)
+{
+    static const u8 sPrimes[] = {7, 11, 13, 17, 19, 23, 29, 31};
+    u32 stride = 7;
+    u8 i;
+
+    if (n == 0)
+        return 0;
+    for (i = 0; i < sizeof(sPrimes); i++)
+    {
+        stride = sPrimes[i];
+        if (n % stride != 0)
+            break;
+    }
+    return ((u32)c + stride * k) % n;
+}
+
+bool8 WorldSim_IsEmoteTick(u8 c, u16 t)
+{
+    return ((u32)c + t) % 8 == 0;
+}
+
+// ---------------------------------------------------------------------------
 // Local actor block
 
 void WorldSim_ClearLocalActors(struct WayfarerWorldState *state)
