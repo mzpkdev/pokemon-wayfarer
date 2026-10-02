@@ -126,7 +126,9 @@ same way gives the same world.
 ### Travel
 
 Trainers walk from map to map along real paths that a person can walk:
-no surfing, no cutting trees, no jumping down ledges the wrong way. They
+no cutting trees, no jumping down ledges. On screen they never surf;
+out of sight they may cross water, as if they came by boat, so island
+towns and lakeside places are part of their world. They
 take one step of their route each heartbeat. Places have room for only a
 few notables at once, one inside a building and two or three outdoors; a
 trainer who finds the way full waits a beat or goes around.
@@ -142,7 +144,7 @@ Unchanged: where spots are and how a spot is chosen for an activity
 ([Notable spots](notable-spots.md)); v0 haunt placement, quests, and the
 haunt talk flow; leagues, lineups, and every battle.
 
-Out of scope: haunts as destinations, surfing and cutting walkers, the
+Out of scope: haunts as destinations, walkers who surf or cut in view, the
 in-game clock, and walking sprites for the trainers who lack one, all for
 later. Quests or battles out in
 the world.

@@ -168,6 +168,7 @@ current node is on the player's new map, in
 | --- | --- |
 | Travelling, arrived by an edge | The entered edge, at the crossing tile in this map's coordinates; if taken, the nearest free tile of the same lane. |
 | Travelling, arrived by a door or a transit edge | The first free 4-neighbour of the door's landing tile, never the player's own landing tile. |
+| Travelling, arrived by water | Near the shore tile of the reverse water edge (the crossing indexes it among the node's edges), on land. |
 | Dwelling | The spot's anchor tile, starting the spot's template. A Gym visit spawns by the ["just leaving"](notable-spots.md#just-leaving) rule instead. |
 | On the player's map at the last save | The tile saved in the [local actor block](#the-world-record). |
 
@@ -220,12 +221,17 @@ Cut tree at (15, 69), so its south end can't reach Pewter on foot, and
 Route 2's north border includes wall tiles
 ([constraints](../research/notable-trainer-travel-poc.md#constraints-discovered)).
 
-**Nodes** are **walkable regions within maps**: each 4-connected component
-of tiles a walking NPC can reach, flood-filled with NPC collision and
-elevation rules on every playable map in scope (the
+**Nodes** are **walkable regions within maps**: each strongly connected
+component of the moves a walking NPC can make, flood-filled with NPC
+collision and elevation rules on every playable map in scope (the
 [spot extraction's](notable-spots.md#spot-extraction) reachable maps).
-Route 2 gives two nodes, not one. A component with no edge, no spot, and
-no warp is dropped.
+Every tile of a node reaches every other on foot. Moves are two-way
+except on sideways stairs (a diagonal step one way can be a wall the other
+way) and across a bridge's elevation memory, so a pocket that a walker can
+enter but not leave, or leave but not enter, is its own node: Mt. Mortar
+1F North's door at (66, 61) and its water's edge at (56, 20) are separate
+nodes. Route 2 gives two nodes, not one. A component with no edge, no
+spot, and no warp is dropped.
 
 **Edges** connect nodes:
 
@@ -239,15 +245,52 @@ no warp is dropped.
   [travellers](notable-trainers.md#traveller) only, one hop each:
   placeholders are the S.S. Aqua (Olivine Port to Vermilion Port) and the
   Magnet Train (Goldenrod to Saffron), plus Hoenn's and Sevii's ferries.
-  Transit never reads the player's tickets or story flags.
+  Transit never reads the player's tickets or story flags. The Kanto
+  ferry links Slateport's and Lilycove's harbors with Vermilion Port, and
+  the Seagallop links One Island with the other Sevii harbors.
+- **Water (off-screen only):** two land nodes whose Surf-connected water
+  meets, open to every trainer. Water is the surfable tiles (waterfalls
+  included), the water under a bridge, and the authored Dive link out of
+  Sootopolis (to Route 126); whirlpools don't block it. Off-screen, a
+  notable has the water HMs. Each water tile belongs to its nearest
+  shore, and two nodes are linked when their water meets, so a sea gives
+  a sparse set of links, not every pair. A shore is a land tile at
+  elevation 3 from which the player could Surf. Both ends are land, so a
+  record always rests on land. The local walker never routes across
+  water: a walker whose next hop is a water edge hands off like a walker
+  leaving by an exit, and the record crosses at a heartbeat. The record's
+  arrival is "water", and its crossing indexes the reverse water edge,
+  whose shore tile is where an arrival by water spawns.
 
-**Filters (v0):** walking only. No Surf, Cut, Strength, Rock Smash,
-Waterfall, Dive, or ledge jumps; Cut trees, boulders, and smashable rocks
-are solid. **One-way edges** are kept one-way: a ledge drop splits a
-region into two nodes with a one-way edge, and holes and one-way warps
-point one way. Story-gated objects with a flag are treated as solid when
-they are present at New Game (placeholder; see
-[open questions](#open-questions)).
+**Filters (v0):** walking on land. No Cut, Strength, Rock Smash, or
+ledge jumps on land; Cut trees, boulders, and smashable rocks are solid.
+**One-way moves** never join nodes: holes and one-way warps point one way,
+and ledges are solid (walkers never jump). Objects present at New Game are
+solid, except the authored story gates in the overrides'
+`ignore_objects`: objects a scene or flag removes for good, such as Gym
+door blockers, the Bell Tower sage, Vermilion's Snorlax, the League
+reception gate's guards, Cliff Edge Gate's engineers, Route 120's bridge
+Kecleon, and Route 121's Aqua grunts. A Cut tree or boulder is overridden
+only when it is the one way to a leader's own Gym (Vermilion's tree). The
+local walker still meets the real objects.
+
+**Known limitation: unreachable favourites.** A favourite the graph can't
+reach stays in the routines file, disabled with the obstacle that blocks
+it, and the cycle step it serves may be skipped. Today:
+
+- Victory Road's Strength boulders (B1F (48, 12), B2F (28, 42)) keep Will
+  and Karen at Indigo Plateau. Route 2's Cut tree at (11, 13) blocks every
+  route between Pewter's side of Route 2 and Diglett's Cave, which Brock's
+  Route 34 Day Care, Giovanni's Game Corner and Burned Tower, and Will's
+  favourites need.
+- Route 41's layout walls the Route 40 and Olivine sea off from the
+  Cianwood sea, so Chuck's Route 40 courtyard and Jasmine's Cianwood
+  pharmacy stay out of reach.
+- Route 120's ledges are the only way from Fortree to Route 121 and
+  Lilycove, and Lilycove's shore is a separate beach, so Juan's Lilycove
+  Fan Club stays out of reach.
+
+Any other unreachable favourite fails the build.
 
 **Generator outputs**, one ROM table each, in a fixed order (map order,
 then component top-left tile) so ids are stable between builds of the
@@ -578,7 +621,7 @@ and y, state, goal, and dwell. Spots change it:
 | `destKind` | 2 | None, spot, or home place; the fourth value is reserved for [haunts](#haunts-later). |
 | `destId` | 14 | The spot id (0-16,383) in the generated spot table. |
 | `state` | 3 | Travelling, Dwelling, Away: league, Away: partner, Pinned, or Home-locked. |
-| `arrival` | 3 | None, north, south, east, west, door, or transit. |
+| `arrival` | 3 | None, north, south, east, west, door, transit, or water (all 8 values used). |
 | `crossing` | 8 | The crossing coordinate along the entered edge. |
 | `step` | 2 | The position in the activity cycle (0-3). |
 | `activity` | 4 | The current step's activity (11 values). |
@@ -898,8 +941,10 @@ their haunt.
 - **Walking sprites for the face-only trainers:** new 9-frame sheets for
   the 13 ([walking sprites](#known-limitation-walking-sprites)), so they
   can be simulated with the routines already authored.
-- **Surf- and Cut-aware walkers:** water and Cut edges in the graph, for
-  trainers whose team can use them.
+- **Surf- and Cut-aware walkers:** walkers that surf, cut, or push
+  boulders in view, and Cut and Strength edges in the graph, for trainers
+  whose team can use them. Off-screen water edges exist already
+  ([walker graph](#walker-graph)).
 - **Routines into the catalog:** the
   [routines research file's](../research/notable-trainer-routines.md)
   cycles and favourites become catalog values.
