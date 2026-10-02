@@ -574,12 +574,13 @@ static u16 SearchFirstEdge(const struct Search *search, u16 node)
 // at every heartbeat; long trips over Surf-linked seas would otherwise
 // search most of the graph each heartbeat. Reroutes (avoiding full maps)
 // always search.
-#define PATH_CACHE_NODES 24
+#define PATH_CACHE_NODES 12  // re-search every 11 hops; EWRAM is tight (the test build)
 
 struct PathCache
 {
     u16 dest;
     u8 count;     // nodes held; 0 = empty
+    u8 padding;
     u16 nodes[PATH_CACHE_NODES];
 };
 

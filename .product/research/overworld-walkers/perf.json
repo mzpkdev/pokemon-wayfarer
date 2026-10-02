@@ -87,21 +87,21 @@
     {
       "warp": 13,
       "frames": 42,
-      "heartbeat_scanlines": 269,
+      "heartbeat_scanlines": 333,
       "context_scanlines": 10,
-      "trace": "09000000080002000c0000000000070005000000"
+      "trace": "92000000890003000c0000000000070005000000"
     },
     {
       "warp": 14,
-      "frames": 40,
-      "heartbeat_scanlines": 248,
+      "frames": 42,
+      "heartbeat_scanlines": 369,
       "context_scanlines": 10,
-      "trace": "40000000210005000f0000000000040005000000"
+      "trace": "7a0100003a0106000f0000000000040005000000"
     },
     {
       "warp": 15,
       "frames": 42,
-      "heartbeat_scanlines": 287,
+      "heartbeat_scanlines": 273,
       "context_scanlines": 10,
       "trace": "340000001a000300110000000000050006000000"
     },
@@ -129,7 +129,7 @@
     {
       "warp": 19,
       "frames": 42,
-      "heartbeat_scanlines": 285,
+      "heartbeat_scanlines": 286,
       "context_scanlines": 10,
       "trace": "37000000350002000d0000000000060006000000"
     },
@@ -143,7 +143,7 @@
     {
       "warp": 21,
       "frames": 42,
-      "heartbeat_scanlines": 250,
+      "heartbeat_scanlines": 173,
       "context_scanlines": 10,
       "trace": "0f0000000d0002000b0000000000060004000000"
     },
@@ -227,7 +227,7 @@
     {
       "warp": 33,
       "frames": 42,
-      "heartbeat_scanlines": 129,
+      "heartbeat_scanlines": 130,
       "context_scanlines": 10,
       "trace": "6300000060000200090000000000020004000000"
     },
@@ -241,16 +241,16 @@
     {
       "warp": 35,
       "frames": 42,
-      "heartbeat_scanlines": 265,
+      "heartbeat_scanlines": 286,
       "context_scanlines": 10,
-      "trace": "2a000000130007000d0000000000070006000000"
+      "trace": "570000002d0008000d0000000000070006000000"
     },
     {
       "warp": 36,
       "frames": 40,
-      "heartbeat_scanlines": 222,
+      "heartbeat_scanlines": 271,
       "context_scanlines": 10,
-      "trace": "0e00000007000500110000000000050004000000"
+      "trace": "7700000069000600110000000000050004000000"
     },
     {
       "warp": 37,
@@ -276,7 +276,7 @@
     {
       "warp": 40,
       "frames": 42,
-      "heartbeat_scanlines": 395,
+      "heartbeat_scanlines": 394,
       "context_scanlines": 10,
       "trace": "360000001e0004000c0000000000060004000000"
     },
@@ -290,7 +290,7 @@
     {
       "warp": 42,
       "frames": 40,
-      "heartbeat_scanlines": 243,
+      "heartbeat_scanlines": 242,
       "context_scanlines": 10,
       "trace": "32000000240002000d0000000000070004000000"
     },
@@ -373,10 +373,10 @@
     },
     {
       "warp": 54,
-      "frames": 40,
-      "heartbeat_scanlines": 243,
+      "frames": 42,
+      "heartbeat_scanlines": 539,
       "context_scanlines": 10,
-      "trace": "14000000130002000a0001000000060005000000"
+      "trace": "c8020000b40203000a0001000000060005000000"
     },
     {
       "warp": 55,
@@ -422,7 +422,7 @@
     }
   ],
   "max_heartbeat_scanlines": 727,
-  "mean_heartbeat_scanlines": 251.65,
+  "mean_heartbeat_scanlines": 259.31666666666666,
   "max_heartbeat_frames": 3.19,
   "debug": {
     "frames": 1639,
@@ -455,7 +455,7 @@
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634032,
+    "worldState": 33634108,
     "actors": [
       {
         "index": 0,
@@ -536,5 +536,5 @@
     "walkOffs": 0
   },
   "pass": true,
-  "emulated_frames": 2794
+  "emulated_frames": 2798
 }
