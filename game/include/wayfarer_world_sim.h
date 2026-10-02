@@ -51,11 +51,15 @@ void WorldSim_NewGame(struct WayfarerWorldState *state, const struct WayfarerWor
 // Content hash changed: re-seat as New Game does, keeping cycle steps and life events.
 void WorldSim_Reseat(struct WayfarerWorldState *state, const struct WayfarerWorldContext *ctx, void *workspace);
 // Load checks other than the local actor tiles (which need map dimensions).
+// Without a workspace, the destination reachability check is skipped.
 bool8 WorldSim_IsValid(const struct WayfarerWorldState *state, void *workspace);
 // Local actor block checks against the saved map and its size in tiles.
 bool8 WorldSim_LocalActorsValid(const struct WayfarerWorldState *state, u16 map, u16 width, u16 height);
-// Step 1 of a heartbeat; also run on load.
-void WorldSim_ApplyDerived(struct WayfarerWorldState *state, const struct WayfarerWorldContext *ctx, void *workspace, struct WayfarerWorldTrace *trace);
+// Step 1 of a heartbeat. Returns the slots it changed.
+u32 WorldSim_ApplyDerived(struct WayfarerWorldState *state, const struct WayfarerWorldContext *ctx, void *workspace, struct WayfarerWorldTrace *trace);
+// On load: only entering a derived state applies; leaving one waits for the
+// next heartbeat, so a reload never changes how the world evolves.
+void WorldSim_ApplyDerivedOnLoad(struct WayfarerWorldState *state, const struct WayfarerWorldContext *ctx);
 void WorldSim_Heartbeat(struct WayfarerWorldState *state, const struct WayfarerWorldContext *ctx, void *workspace, struct WayfarerWorldTrace *trace);
 // The life-event hook at league event resolution. lineup is in battle order;
 // championId is a NOTABLE_TRAINER_* or 0 when the player won.

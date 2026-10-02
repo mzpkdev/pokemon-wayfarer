@@ -445,4 +445,50 @@ TEST("Load checks reject bad records and a content change re-seats them")
     Free(workspace);
 }
 
+TEST("A Gym Leader stays home while a visitor is in their Gym")
+{
+    struct WayfarerWorldContext ctx;
+    void *workspace = Alloc(WorldSim_WorkspaceSize());
+    u8 leader = WorldSim_SlotForCharacter(NOTABLE_TRAINER_GIOVANNI);
+    u8 visitor = WorldSim_SlotForCharacter(NOTABLE_TRAINER_BLUE);
+    const struct WayfarerWorldTrainer *trainer = &gWayfarerWorldTrainers[leader];
+    u16 gymMap = WorldSim_NodeMap(trainer->gymNode), heartbeat;
+
+    ASSUME(trainer->ownGymSpot != WORLD_SPOT_NONE);
+    Context(&ctx, TRUE, MAP_UNDEFINED);
+    WorldSim_NewGame(&sState, &ctx, workspace);
+    // The leader dwells at home with his dwell about to run out, and a
+    // visitor stands at the Gym's visitor spot.
+    sState.records[leader].node = trainer->gymNode;
+    sState.records[leader].state = WORLD_STATE_DWELLING;
+    sState.records[leader].destKind = WORLD_DEST_HOME;
+    sState.records[leader].destId = WORLD_SPOT_NONE;
+    sState.records[leader].activity = WORLD_ACTIVITY_HOME;
+    sState.records[leader].dwell = 1;
+    sState.records[visitor].node = gWayfarerWorldSpots[trainer->ownGymSpot].node;
+    sState.records[visitor].state = WORLD_STATE_DWELLING;
+    sState.records[visitor].destKind = WORLD_DEST_SPOT;
+    sState.records[visitor].destId = trainer->ownGymSpot;
+    sState.records[visitor].arrival = WORLD_ARRIVAL_NONE;
+    sState.records[visitor].activity = WORLD_ACTIVITY_VISIT;
+    sState.records[visitor].dwell = 20;
+    // Make him want to go out: a provisional lineup turns his steps into train.
+    ctx.provisionalMask = 1u << leader;
+    for (heartbeat = 0; heartbeat < 6; heartbeat++)
+    {
+        WorldSim_Heartbeat(&sState, &ctx, workspace, NULL);
+        EXPECT_LE(WorldSim_Occupancy(&sState, gymMap, 0xFF), 1);
+        EXPECT_EQ((u32)sState.records[leader].destKind, WORLD_DEST_HOME);
+        EXPECT_EQ((u32)sState.records[leader].node, trainer->gymNode);
+    }
+    // Once the visitor moves on, caps still hold whatever the leader does.
+    for (heartbeat = 0; heartbeat < 40; heartbeat++)
+    {
+        WorldSim_Heartbeat(&sState, &ctx, workspace, NULL);
+        EXPECT_LE(WorldSim_Occupancy(&sState, gymMap, 0xFF), 1);
+        EXPECT(CapsHold(&sState));
+    }
+    Free(workspace);
+}
+
 #endif // IS_WAYFARER

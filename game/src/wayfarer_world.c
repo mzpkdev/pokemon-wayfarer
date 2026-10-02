@@ -133,9 +133,9 @@ bool8 WayfarerWorld_OnLoad(void)
 
     if (state->schemaVersion != WORLD_SCHEMA_VERSION)
         return FALSE;
+    // Without a workspace only the reachability check is skipped: a full
+    // heap must never make a good save look invalid.
     workspace = Alloc(WorldSim_WorkspaceSize());
-    if (workspace == NULL)
-        return FALSE;
     WayfarerWorld_BuildContext(&ctx);
     if (state->contentHash != gWayfarerWorldContentHash)
     {
@@ -148,8 +148,9 @@ bool8 WayfarerWorld_OnLoad(void)
          && header != NULL && header->mapLayout != NULL
          && WorldSim_LocalActorsValid(state, CurrentMap(), header->mapLayout->width, header->mapLayout->height);
     if (valid)
-        WorldSim_ApplyDerived(state, &ctx, workspace, NULL);
-    Free(workspace);
+        WorldSim_ApplyDerivedOnLoad(state, &ctx);
+    if (workspace != NULL)
+        Free(workspace);
     return valid;
 }
 

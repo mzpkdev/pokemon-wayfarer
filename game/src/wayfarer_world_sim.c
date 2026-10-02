@@ -646,8 +646,14 @@ static void FallBack(struct WayfarerWorldState *state, u8 slot, const struct Way
     struct WayfarerWorldRecord *record = &state->records[slot];
     if (ChooseSpot(state, slot, ctx, WORLD_ACTIVITY_HOME, WORLD_LIFE_NONE, trace))
         return;
-    record->destKind = WORLD_DEST_NONE;
-    record->destId = 0;
+    // Staying put keeps the spot they stand on, so nobody else takes it.
+    if (WorldSim_DestNode(state, slot) != record->node
+     || (record->destKind != WORLD_DEST_NONE && !(IsLeader(slot) && record->destKind == WORLD_DEST_HOME)
+         && IsSpotTaken(state, record->destId, slot)))
+    {
+        record->destKind = WORLD_DEST_NONE;
+        record->destId = 0;
+    }
     record->state = WORLD_STATE_DWELLING;
     record->arrival = WORLD_ARRIVAL_NONE;
     record->crossing = 0;
@@ -663,6 +669,14 @@ void WorldSim_AdvanceRoutine(struct WayfarerWorldState *state, u8 slot, const st
 
     if (trace != NULL)
         trace->advances++;
+    // A leader at home takes no room in their Gym. Leaving it would make them
+    // count there while a visitor is inside, so they stay home until it's free.
+    if (IsLeaderHome(state, slot) && record->node == trainer->gymNode && IsMapFull(state, record->node, slot))
+    {
+        record->state = WORLD_STATE_DWELLING;
+        record->dwell = 1;
+        return;
+    }
     while (attempts++ < maxAttempts)
     {
         u8 activity, lifeEvent = WORLD_LIFE_NONE;
@@ -741,18 +755,20 @@ static void RestartCycle(struct WayfarerWorldRecord *record, u8 slot)
     record->step = trainer->cycle[0] == WORLD_ACTIVITY_HOME ? 0 : trainer->cycleLength - 1;
 }
 
-void WorldSim_ApplyDerived(struct WayfarerWorldState *state, const struct WayfarerWorldContext *ctx, void *workspace, struct WayfarerWorldTrace *trace)
+static u32 ApplyDerived(struct WayfarerWorldState *state, const struct WayfarerWorldContext *ctx,
+                        struct WayfarerWorldTrace *trace, bool8 enterOnly)
 {
+    u32 changed = 0;
     u8 slot;
-    (void)workspace;
     for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT; slot++)
     {
         struct WayfarerWorldRecord *record = &state->records[slot];
         u8 want = ctx->derived[slot];
         u8 current = WorldSim_IsSimulated(record) ? WORLD_DERIVED_NONE : record->state;
 
-        if (want == current)
+        if (want == current || (enterOnly && want == WORLD_DERIVED_NONE))
             continue;
+        changed |= 1u << slot;
         if (want != WORLD_DERIVED_NONE)
         {
             if (want == WORLD_STATE_HOME_LOCKED)
@@ -775,12 +791,16 @@ void WorldSim_ApplyDerived(struct WayfarerWorldState *state, const struct Wayfar
         switch (current)
         {
         case WORLD_STATE_AWAY_PARTNER:
-            RestartCycle(record, slot);
+            // The next advance takes the routine's first step.
+            record->step = Trainer(slot)->cycleLength - 1;
             // fallthrough
         case WORLD_STATE_AWAY_LEAGUE:
-            // Back at the home base, picking the next step at once.
+            // Back at the home base, picking the next step at once. Whatever
+            // spot they held before going away is no longer theirs.
             record->node = Trainer(slot)->homeNode;
             record->state = WORLD_STATE_DWELLING;
+            record->destKind = WORLD_DEST_NONE;
+            record->destId = 0;
             WorldSim_AdvanceRoutine(state, slot, ctx, trace);
             break;
         case WORLD_STATE_PINNED:
@@ -803,6 +823,21 @@ void WorldSim_ApplyDerived(struct WayfarerWorldState *state, const struct Wayfar
             break;
         }
     }
+    return changed;
+}
+
+u32 WorldSim_ApplyDerived(struct WayfarerWorldState *state, const struct WayfarerWorldContext *ctx, void *workspace, struct WayfarerWorldTrace *trace)
+{
+    (void)workspace;
+    return ApplyDerived(state, ctx, trace, FALSE);
+}
+
+// Load: a trainer who has gone away (or is home-locked) leaves the world at
+// once, so the restored map never shows them. Coming back is a routine step
+// and waits for the next heartbeat, exactly as without the reload.
+void WorldSim_ApplyDerivedOnLoad(struct WayfarerWorldState *state, const struct WayfarerWorldContext *ctx)
+{
+    ApplyDerived(state, ctx, NULL, TRUE);
 }
 
 // ---------------------------------------------------------------------------
@@ -823,6 +858,10 @@ void WorldSim_TakeEdge(struct WayfarerWorldState *state, u8 slot, u16 edgeIndex,
     struct WayfarerWorldRecord *record = &state->records[slot];
     const struct WayfarerWorldEdge *edge = &gWayfarerWorldEdges[edgeIndex];
 
+    // Leaving the spot ends the stay: a dwelling record becomes travelling,
+    // since a dwelling record never carries an arrival.
+    if (record->state == WORLD_STATE_DWELLING)
+        record->state = WORLD_STATE_TRAVELLING;
     record->node = edge->target;
     record->arrival = WorldSim_ArrivalForEdge(edge->kind);
     record->crossing = crossing;
@@ -866,6 +905,7 @@ static void Travel(struct WayfarerWorldState *state, u8 slot, u16 firstEdge, voi
     struct WayfarerWorldRecord *record = &state->records[slot];
     u16 destNode = WorldSim_DestNode(state, slot);
     u16 fullMaps[WORLD_SIM_TRAINER_COUNT * 2];
+    u16 rerouted;
     u8 fullCount = 0, other;
     struct Search search;
 
@@ -879,20 +919,23 @@ static void Travel(struct WayfarerWorldState *state, u8 slot, u16 firstEdge, voi
         // Unreachable within the bound: give the step up.
         return;
     }
-    if (HopAllowed(state, slot, firstEdge, destNode))
-    {
-        Hop(state, slot, firstEdge, trace);
-        return;
-    }
     if (!record->waited)
     {
+        if (HopAllowed(state, slot, firstEdge, destNode))
+        {
+            Hop(state, slot, firstEdge, trace);
+            return;
+        }
+        // Blocked: wait one heartbeat.
         record->waited = TRUE;
         if (trace != NULL)
             trace->waits++;
         return;
     }
 
-    // Blocked twice: reroute around every full map, if a path exists.
+    // Blocked before: route around every full map, if a path exists. The
+    // waited bit stays set across rerouted hops, so the next heartbeat keeps
+    // avoiding the full map instead of heading straight back to it.
     for (other = 0; other < WORLD_SIM_TRAINER_COUNT; other++)
     {
         const struct WayfarerWorldRecord *otherRecord = &state->records[other];
@@ -912,12 +955,17 @@ static void Travel(struct WayfarerWorldState *state, u8 slot, u16 firstEdge, voi
     }
     Search(&search, workspace, record->node, destNode, WORLD_NODE_NONE, Trainer(slot)->searchBound,
            IsTraveller(slot), fullMaps, fullCount, trace);
-    firstEdge = SearchFirstEdge(&search, destNode);
-    if (firstEdge != EDGE_NONE && HopAllowed(state, slot, firstEdge, destNode))
+    rerouted = SearchFirstEdge(&search, destNode);
+    if (rerouted != EDGE_NONE && HopAllowed(state, slot, rerouted, destNode))
     {
-        if (trace != NULL)
-            trace->reroutes++;
-        Hop(state, slot, firstEdge, trace);
+        Hop(state, slot, rerouted, trace);
+        if (rerouted != firstEdge)
+        {
+            if (trace != NULL)
+                trace->reroutes++;
+            if (record->state == WORLD_STATE_TRAVELLING)
+                record->waited = TRUE;
+        }
     }
     else if (trace != NULL)
     {
@@ -940,8 +988,8 @@ void WorldSim_Heartbeat(struct WayfarerWorldState *state, const struct WayfarerW
     u16 firstEdge[WORLD_SIM_TRAINER_COUNT];
     u8 slot, count = 0, i, j;
     struct Search search;
-
-    WorldSim_ApplyDerived(state, ctx, workspace, trace);
+    // A trainer whose derived state changed has already acted this heartbeat.
+    u32 changed = WorldSim_ApplyDerived(state, ctx, workspace, trace);
 
     // One search per acting trainer gives both the priority (hops from the
     // current node home) and the path's first edge.
@@ -951,7 +999,7 @@ void WorldSim_Heartbeat(struct WayfarerWorldState *state, const struct WayfarerW
         u16 destNode;
 
         firstEdge[slot] = EDGE_NONE;
-        if (!WorldSim_IsSimulated(record) || IsOnPlayerMap(state, slot, ctx) || (ctx->frozenMask & (1u << slot)))
+        if (!WorldSim_IsSimulated(record) || IsOnPlayerMap(state, slot, ctx) || ((ctx->frozenMask | changed) & (1u << slot)))
             continue;
         destNode = record->state == WORLD_STATE_TRAVELLING ? WorldSim_DestNode(state, slot) : WORLD_NODE_NONE;
         Search(&search, workspace, record->node, Trainer(slot)->homeNode, destNode, Trainer(slot)->searchBound,
@@ -1091,7 +1139,7 @@ bool8 WorldSim_IsValid(const struct WayfarerWorldState *state, void *workspace)
         if (!WorldSim_IsSimulated(record))
             continue;
         destNode = WorldSim_DestNode(state, slot);
-        if (destNode == WORLD_NODE_NONE || destNode == record->node)
+        if (destNode == WORLD_NODE_NONE || destNode == record->node || workspace == NULL)
             continue;
         Search(&search, workspace, record->node, destNode, WORLD_NODE_NONE, HOPS_NONE - 1, IsTraveller(slot), NULL, 0, NULL);
         if (SearchDepth(&search, destNode) == HOPS_NONE)

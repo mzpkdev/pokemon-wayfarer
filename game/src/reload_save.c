@@ -23,6 +23,8 @@ void ReloadSave(void)
     SetSaveBlocksPointers(GetSaveBlocksPointersBaseOffset());
     ResetMenuAndMonGlobals();
     Save_ResetSaveCounters();
+    // The EWRAM reset zeroed the heap; loading may allocate (world-state checks).
+    InitHeap(gHeap, HEAP_SIZE);
     LoadGameSave(SAVE_NORMAL);
     if (gSaveFileStatus == SAVE_STATUS_EMPTY || gSaveFileStatus == SAVE_STATUS_CORRUPT)
     {
