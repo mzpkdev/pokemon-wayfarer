@@ -69,7 +69,7 @@
     ".product/research/overworld-walkers/save-after-continue.png"
   ],
   "debug": {
-    "frames": 56,
+    "frames": 54,
     "spawns": 0,
     "removals": 0,
     "edgeExits": 0,
@@ -99,7 +99,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634044,
+    "worldState": 33634080,
     "actors": [
       {
         "index": 0,

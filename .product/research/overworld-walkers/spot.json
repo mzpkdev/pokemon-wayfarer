@@ -74,7 +74,7 @@
     ".product/research/overworld-walkers/spot-template.png"
   ],
   "debug": {
-    "frames": 1179,
+    "frames": 1209,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -95,16 +95,16 @@
     "restores": 0,
     "lastSearchNodes": 331,
     "maxSearchNodes": 412,
-    "lastSearchFrames": 70,
-    "maxSearchFrames": 83,
-    "maxSliceScanlines": 140,
-    "maxSliceNodes": 8,
+    "lastSearchFrames": 73,
+    "maxSearchFrames": 77,
+    "maxSliceScanlines": 63,
+    "maxSliceNodes": 7,
     "workspaceBytes": 11308,
     "currentMap": 32,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634056,
+    "worldState": 33634024,
     "actors": [
       {
         "index": 0,
@@ -174,15 +174,15 @@
     "lastHeartbeatScanlines": 27,
     "maxHeartbeatScanlines": 27,
     "maxSpawnScanlines": 23,
-    "maxUpdateScanlines": 154,
+    "maxUpdateScanlines": 71,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
     "lastContextScanlines": 16,
     "lastFailNodes": 0,
-    "maxFinishScanlines": 7
+    "maxFinishScanlines": 4
   },
   "pass": true,
-  "emulated_frames": 1672
+  "emulated_frames": 1676
 }

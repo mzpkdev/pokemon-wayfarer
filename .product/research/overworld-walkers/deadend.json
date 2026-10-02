@@ -54,7 +54,7 @@
     ".product/research/overworld-walkers/deadend-player-out.png"
   ],
   "debug": {
-    "frames": 788,
+    "frames": 834,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -76,15 +76,15 @@
     "lastSearchNodes": 5,
     "maxSearchNodes": 343,
     "lastSearchFrames": 2,
-    "maxSearchFrames": 81,
-    "maxSliceScanlines": 173,
-    "maxSliceNodes": 8,
+    "maxSearchFrames": 87,
+    "maxSliceScanlines": 140,
+    "maxSliceNodes": 7,
     "workspaceBytes": 11308,
     "currentMap": 12,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634052,
+    "worldState": 33634036,
     "actors": [
       {
         "index": 0,
@@ -153,16 +153,16 @@
     ],
     "lastHeartbeatScanlines": 27,
     "maxHeartbeatScanlines": 27,
-    "maxSpawnScanlines": 25,
-    "maxUpdateScanlines": 176,
+    "maxSpawnScanlines": 78,
+    "maxUpdateScanlines": 165,
     "backOffs": 2,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
     "lastContextScanlines": 16,
     "lastFailNodes": 581,
-    "maxFinishScanlines": 11
+    "maxFinishScanlines": 8
   },
   "pass": true,
-  "emulated_frames": 1216
+  "emulated_frames": 1264
 }
