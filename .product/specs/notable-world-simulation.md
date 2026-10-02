@@ -250,8 +250,9 @@ spot, and no warp is dropped.
   the Seagallop links One Island with the other Sevii harbors.
 - **Water (off-screen only):** two land nodes whose Surf-connected water
   meets, open to every trainer. Water is the surfable tiles (waterfalls
-  included), the water under a bridge, and the authored Dive link out of
-  Sootopolis (to Route 126); whirlpools don't block it. Off-screen, a
+  included), the water under a bridge, warps on water (Route 40's row of
+  warps into Route 41, the way to Cianwood), and the authored Dive link out
+  of Sootopolis (to Route 126); whirlpools don't block it. Off-screen, a
   notable has the water HMs. Each water tile belongs to its nearest
   shore, and two nodes are linked when their water meets, so a sea gives
   a sparse set of links, not every pair. A shore is a land tile at
@@ -264,33 +265,44 @@ spot, and no warp is dropped.
 
 **Filters (v0):** walking on land. No Cut, Strength, Rock Smash, or
 ledge jumps on land; Cut trees, boulders, and smashable rocks are solid.
-**One-way moves** never join nodes: holes and one-way warps point one way,
-and ledges are solid (walkers never jump). Objects present at New Game are
+**One-way moves** never join nodes: walkers never fall through holes or
+jump ledges, and one-way warps point one way. A warp event on a plain floor
+tile that only marks where a fall lands never fires
+(`TryStartWarpEventScript` needs a warp behaviour), so it is no edge. Objects present at New Game are
 solid, except the authored story gates in the overrides'
 `ignore_objects`: objects a scene or flag removes for good, such as Gym
 door blockers, the Bell Tower sage, Vermilion's Snorlax, the League
 reception gate's guards, Cliff Edge Gate's engineers, Route 120's bridge
 Kecleon, and Route 121's Aqua grunts. A Cut tree or boulder is overridden
-only when it is the one way to a leader's own Gym (Vermilion's tree). The
-local walker still meets the real objects.
+only when it is the one way to a leader's own Gym (Vermilion's tree) or by
+an explicit product decision: Route 2's Cut tree at (11, 13), the way to
+Diglett's Cave, and Victory Road's Strength boulders at B1F (48, 12) and
+B2F (28, 42). The local walker still meets the real objects.
 
 **Known limitation: unreachable favourites.** A favourite the graph can't
 reach stays in the routines file, disabled with the obstacle that blocks
 it, and the cycle step it serves may be skipped. Today:
 
-- Victory Road's Strength boulders (B1F (48, 12), B2F (28, 42)) keep Will
-  and Karen at Indigo Plateau. Route 2's Cut tree at (11, 13) blocks every
-  route between Pewter's side of Route 2 and Diglett's Cave, which Brock's
-  Route 34 Day Care, Giovanni's Game Corner and Burned Tower, and Will's
-  favourites need.
-- Route 41's layout walls the Route 40 and Olivine sea off from the
-  Cianwood sea, so Chuck's Route 40 courtyard and Jasmine's Cianwood
-  pharmacy stay out of reach.
+- Victory Road is one-way for walkers: from the League reception gate it
+  climbs to Route 23 only by falling through 1F's hole at (17, 16) and
+  jumping B1F's ledge at (31..33, 23), and from Indigo Plateau there is no
+  way down. Will and Karen stay at Indigo Plateau, with their four
+  favourites disabled.
 - Route 120's ledges are the only way from Fortree to Route 121 and
   Lilycove, and Lilycove's shore is a separate beach, so Juan's Lilycove
   Fan Club stays out of reach.
 
 Any other unreachable favourite fails the build.
+
+**Known limitation: a long trip's first search.** Each heartbeat a
+travelling trainer follows its cached path (the first nodes of its last
+search, which every later search from those nodes would repeat), so most
+heartbeats search little: about 200 expanded nodes per heartbeat on
+average in the all-badges report. A trip's first search, and every
+search after the cache runs out, is still a breadth-first search to the
+destination; across the Surf-linked seas it can expand about 900 nodes
+in one heartbeat (Steven's trips to Johto and Sevii, Wallace's around
+Hoenn's sea). That cost is accepted.
 
 **Generator outputs**, one ROM table each, in a fixed order (map order,
 then component top-left tile) so ids are stable between builds of the
