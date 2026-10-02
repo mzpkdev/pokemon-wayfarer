@@ -1,7 +1,13 @@
 {
   "_comment": "Hoenn spot overrides (notable-spots spec, authored overrides). add: {map, x, y, facing (DIR_*), kind: bench | center_side}. drop: {map, kind} drops a whole detected place; {map, x, y[, kind]} drops one spot. ignore_objects: {map, local_id} objects the walker graph treats as passable (story blockers the simulation outlives).",
   "ignore_objects": [
-    {"map": "MauvilleCity", "local_id": 6, "what": "Wally at the Mauville Gym door", "why": "Story blocker on the Gym door's only approach tile, present at New Game. The Gym's own leader is home-locked until the player holds the badge, which needs this blocker gone, so the static walker graph treats it as passable."}
+    {"map": "MauvilleCity", "local_id": 6, "what": "Wally at the Mauville Gym door", "why": "Story blocker on the Gym door's only approach tile, present at New Game. The Gym's own leader is home-locked until the player holds the badge, which needs this blocker gone, so the static walker graph treats it as passable."},
+    {"map": "Route120", "local_id": 30, "what": "Invisible Kecleon on the Route 120 bridge", "why": "Story gate (Devon Scope, FLAG_HIDE_ROUTE_120_KECLEON_BRIDGE) on the only path between Route 120's north half (Fortree) and its south half (Route 121, Lilycove). Treated as passable so Hoenn's east is one walker region."},
+    {"map": "Route120", "local_id": 36, "what": "Kecleon's shadow on the Route 120 bridge", "why": "The bridge Kecleon's shadow object on the same tile; removed with it."},
+    {"map": "Route120", "local_id": 31, "what": "Steven beside the Route 120 bridge", "why": "Present at New Game until the Kecleon scene (FLAG_HIDE_ROUTE_120_STEVEN), next to the bridge Kecleon on the same one-tile-wide path; part of the same story gate."},
+    {"map": "Route121", "local_id": 12, "what": "Team Aqua grunts on Route 121", "why": "Story blockers (FLAG_HIDE_ROUTE_121_TEAM_AQUA_GRUNTS, gone after Mt. Pyre) standing in the only gap between Route 121's west half and Lilycove's side. Treated as passable, with locals 13 and 14."},
+    {"map": "Route121", "local_id": 13, "what": "Team Aqua grunt on Route 121", "why": "See local 12."},
+    {"map": "Route121", "local_id": 14, "what": "Team Aqua grunt on Route 121", "why": "See local 12."}
   ],
   "add": [],
   "drop": []

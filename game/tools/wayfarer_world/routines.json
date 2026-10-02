@@ -1,5 +1,5 @@
 {
-  "_comment": "Activity cycles and favourites, converted from .product/research/notable-trainer-routines.md, in catalog order. Only entries with simulated: true are emitted (the 25 with a Full walking sprite; Bruno's and Koga's sheets are face-only); the face-only trainers keep their routines here for later. A favourite is a named spot (kind named, by label and map) or every detected spot of one kind on one map (optionally one tile: x, y). Traveller and aloof come from tools/notable_trainers/catalog.json.",
+  "_comment": "Activity cycles and favourites, converted from .product/research/notable-trainer-routines.md, in catalog order. Only entries with simulated: true are emitted (the 25 with a Full walking sprite; Bruno's and Koga's sheets are face-only); the face-only trainers keep their routines here for later. A favourite is a named spot (kind named, by label and map) or every detected spot of one kind on one map (optionally one tile: x, y; or a band of rows: rows [first, last], which keeps the run contiguous). Traveller and aloof come from tools/notable_trainers/catalog.json.",
   "trainers": [
     {
       "slug": "brock",

@@ -4,8 +4,12 @@ The off-screen simulation may cross water ("arrives by boat" while unseen);
 the on-screen walker never does. A water edge joins two land nodes, so a
 record always rests on land and a walker always spawns on land.
 
-Water is the surfable tiles (TILE_FLAG_SURFABLE) without collision bits or a
-New Game object, minus waterfalls (Waterfall is a further HM). Two water
+Water is the surfable tiles (TILE_FLAG_SURFABLE, waterfalls included)
+and the tiles under a bridge (MB_BRIDGE_OVER_*, elevation 15) without
+collision bits or a New Game object; whirlpools (objects running
+EventScript_Whirlpool, Johto's 2x2 blockers) don't count as objects here.
+Off-screen, a notable trainer has the water HMs (Surf, Waterfall,
+Whirlpool); land HMs (Cut, Strength, Rock Smash) still block. Two water
 tiles are joined when a surfing object could step between them: the
 directional walls and the elevation-mismatch rule as on land, and map
 connections as lanes. Authored Dive links (water.json) join two water tiles
@@ -32,6 +36,7 @@ import graph
 from maps import load_json, TOOL_DIR
 
 ELEVATION_DEFAULT = 3
+WHIRLPOOL_SCRIPT = "EventScript_Whirlpool"
 
 
 def load_dive(path=None):
@@ -45,14 +50,20 @@ class WaterFlood:
         self.b = builder
         walk = builder.walk
         c = walk.consts
-        self.surf = set(c.surfable) - {c.mb["MB_WATERFALL"]}
+        self.surf = set(c.surfable)
+        # A surfer keeps elevation 1 under a bridge at elevation 15.
+        bridges = {v for k, v in c.mb.items()
+                   if k.startswith("MB_BRIDGE_OVER_") and k != "MB_BRIDGE_OVER_ICE"}
         self.water = {}
         for info in builder.world.scope:
             grid = builder.floods[info.name].grid
-            solid = builder.solid[info.name]
+            whirlpools = {o["y"] * grid.w + o["x"] for o in info.events["objects"]
+                          if o["script"] == WHIRLPOOL_SCRIPT and grid.inside(o["x"], o["y"])}
+            solid = builder.solid[info.name] - whirlpools
             self.water[info.name] = bytearray(
-                1 if grid.col[i] == 0 and grid.mb[i] in self.surf and i not in solid else 0
-                for i in range(grid.w * grid.h))
+                1 if grid.col[i] == 0 and i not in solid and (
+                    grid.mb[i] in self.surf or (grid.mb[i] in bridges and grid.elev[i] == 15))
+                else 0 for i in range(grid.w * grid.h))
         self.extra = {}  # (map, tile) -> [(map, tile)]: lanes and Dive links
 
     def is_water(self, name, x, y):

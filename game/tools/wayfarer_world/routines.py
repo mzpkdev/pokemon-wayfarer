@@ -380,8 +380,10 @@ class Routines:
             run = [i for i, s in enumerate(wg.spots) if s.map is info and s.kind == sp.NAMED
                    and s.label == f.get("label")]
         else:
+            rows = f.get("rows", [0, 255])
             run = [i for i, s in enumerate(wg.spots) if s.map is info and s.kind == kind
-                   and ("x" not in f or (s.x, s.y) == (f["x"], f["y"]))]
+                   and ("x" not in f or (s.x, s.y) == (f["x"], f["y"]))
+                   and rows[0] <= s.y <= rows[1]]
         if not run:
             raise BuildError(tag + ": resolves to no %s spot" % f.get("kind"))
         if run != list(range(run[0], run[0] + len(run))):
