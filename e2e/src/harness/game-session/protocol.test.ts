@@ -31,7 +31,7 @@ const abi: SessionAbi = {
   varsOffset: 0x1340,
 }
 
-const abiBytes = (version = 27): Uint8Array => {
+const abiBytes = (version = 28): Uint8Array => {
   const bytes = new Uint8Array(16)
   const view = new DataView(bytes.buffer)
   for (const [index, value] of [

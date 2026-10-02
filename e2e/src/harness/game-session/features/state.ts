@@ -375,21 +375,27 @@ export const decodeFieldMessageText = (bytes: number[]): string => {
 export const describeState = (state: GameState): string =>
   `phase=${state.phase}, map=${state.map.name}(${state.map.mapGroup}:${state.map.mapNum}), position=${state.player.x}:${state.player.y}, facing=${state.player.facing}, ready=${state.ready}, controlsLocked=${state.controlsLocked}, scriptActive=${state.scriptActive}, dialogueOpen=${state.dialogueOpen}, battle=${state.battle.ui}, storage=${state.storage.ui}/${state.storage.mode}@${state.storage.cursor.area}:${state.storage.cursor.position}`
 
-// A heavy frame such as a battle transition can leave the ROM mid-update for
-// a few frames in a row; anything longer means the hook stopped publishing.
-const maxUncommittedStateFrames = 30
+// The ROM publishes each whole snapshot into one of two buffers and then
+// flips gE2ETestStateCommittedIndex, so a read never advances the emulator.
+// Another caller's step can run between the index read and the buffer read
+// (the runtime serialises calls, not this pair): the index is read again and
+// the buffer's commit stamp checked, and the pair is retried if either moved.
+const maxStateReadAttempts = 8
 
 const readCommittedState = async (runtime: SessionRuntime): Promise<Uint8Array> => {
-  const address = runtime.address("gE2ETestState")
-  for (let elapsed = 0; ; elapsed++) {
-    const bytes = await runtime.readBytes(address, runtime.abi.stateSize)
-    if (isCommittedStateSnapshot(bytes)) return bytes
-    if (elapsed >= maxUncommittedStateFrames)
-      throw new Error(
-        `Test ROM state stayed mid-update for ${maxUncommittedStateFrames} frames (frame=${parseStateSnapshot(bytes).frame})`,
-      )
-    await runtime.advance(1)
+  const indexAddress = runtime.address("gE2ETestStateCommittedIndex")
+  const buffers = runtime.address("gE2ETestStateCommitted")
+  const size = runtime.abi.stateSize
+  let bytes: Uint8Array = new Uint8Array(size)
+  for (let attempt = 0; attempt < maxStateReadAttempts; attempt++) {
+    const index = (await runtime.readBytes(indexAddress, 1))[0]! & 1
+    bytes = await runtime.readBytes(buffers + index * size, size)
+    const again = (await runtime.readBytes(indexAddress, 1))[0]! & 1
+    if (again === index && isCommittedStateSnapshot(bytes)) return bytes
   }
+  throw new Error(
+    `Test ROM state changed under ${maxStateReadAttempts} reads in a row (frame=${parseStateSnapshot(bytes).frame})`,
+  )
 }
 
 export const createStateApi = (runtime: SessionRuntime): StateApi => ({

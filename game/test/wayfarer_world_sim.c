@@ -9,6 +9,7 @@
 #if IS_WAYFARER
 
 #define HEARTBEATS 200
+#define DETOUR_HEARTBEAT 100
 
 static const u16 sSimulated[WORLD_SIM_TRAINER_COUNT] =
 {
@@ -224,12 +225,84 @@ TEST("The same map loads give identical world records")
 
 // The context for heartbeat n of the sliced-versus-whole comparison: the
 // player and the frozen mask move around so both exclusions get exercised.
+// Sets up a blocked trip with a detour: the mover travels from a node with
+// two edges into different maps, both one hop from a common goal node, the
+// first (the search's choice) into an interior (cap 1) map that a filler
+// then holds. Blocking it leaves the detour. FALSE if no such place exists.
+static bool8 SetUpDetour(struct WayfarerWorldState *state, void *workspace, u8 mover, u8 filler,
+                         u16 *startNode, u16 *firstEdge)
+{
+    u16 node, e;
+
+    for (node = 0; node < gWayfarerWorldNodeCount; node++)
+    {
+        const struct WayfarerWorldNode *data = &gWayfarerWorldNodes[node];
+        u16 a, b;
+        for (a = data->firstEdge; a < data->firstEdge + data->edgeCount; a++)
+        {
+            u16 ta = gWayfarerWorldEdges[a].target;
+            if (gWayfarerWorldEdges[a].kind == WORLD_EDGE_TRANSIT || !(gWayfarerWorldNodes[ta].flags & WORLD_NODE_FLAG_INTERIOR)
+             || WorldSim_Occupancy(state, WorldSim_NodeMap(ta), mover) != 0)
+                continue;
+            for (b = data->firstEdge; b < data->firstEdge + data->edgeCount; b++)
+            {
+                u16 tb = gWayfarerWorldEdges[b].target, ea;
+                if (b == a || gWayfarerWorldEdges[b].kind == WORLD_EDGE_TRANSIT
+                 || WorldSim_NodeMap(tb) == WorldSim_NodeMap(ta) || WorldSim_NodeMap(tb) == WorldSim_NodeMap(node)
+                 || WorldSim_Occupancy(state, WorldSim_NodeMap(tb), mover) >= WorldSim_MapCapacity(tb))
+                    continue;
+                for (ea = gWayfarerWorldNodes[ta].firstEdge; ea < gWayfarerWorldNodes[ta].firstEdge + gWayfarerWorldNodes[ta].edgeCount; ea++)
+                {
+                    u16 goal = gWayfarerWorldEdges[ea].target;
+                    if (WorldSim_NodeMap(goal) == WorldSim_NodeMap(ta) || WorldSim_NodeMap(goal) == WorldSim_NodeMap(node)
+                     || WorldSim_NodeMap(goal) == WorldSim_NodeMap(tb) || !IsEdgeTarget(tb, goal))
+                        continue;
+                    for (e = 0; e < gWayfarerWorldSpotCount; e++)
+                    {
+                        if (gWayfarerWorldSpots[e].node == goal)
+                            break;
+                    }
+                    if (e == gWayfarerWorldSpotCount)
+                        continue;
+                    state->records[mover].node = node;
+                    state->records[mover].state = WORLD_STATE_TRAVELLING;
+                    state->records[mover].destKind = WORLD_DEST_SPOT;
+                    state->records[mover].destId = e;
+                    state->records[mover].arrival = WORLD_ARRIVAL_NONE;
+                    state->records[mover].waited = FALSE;
+                    WorldSim_ResetPathCache();
+                    if (WorldSim_NextEdge(state, mover, workspace, NULL) != a)
+                        continue;
+                    state->records[filler].node = ta;
+                    state->records[filler].state = WORLD_STATE_DWELLING;
+                    state->records[filler].destKind = WORLD_DEST_NONE;
+                    state->records[filler].destId = 0;
+                    state->records[filler].arrival = WORLD_ARRIVAL_NONE;
+                    state->records[filler].dwell = 60;
+                    *startNode = node;
+                    *firstEdge = a;
+                    return TRUE;
+                }
+            }
+        }
+    }
+    return FALSE;
+}
+
 static void SlicedContext(struct WayfarerWorldContext *ctx, u16 heartbeat)
 {
     static const u16 sMaps[] = {MAP_VIRIDIAN_CITY_HNS, MAP_PALLET_TOWN_HNS, MAP_UNDEFINED, MAP_ROUTE2_HNS};
     Context(ctx, TRUE, sMaps[heartbeat % ARRAY_COUNT(sMaps)]);
     ctx->worldProgress = 40 + heartbeat / 16;
     ctx->frozenMask = (heartbeat % 5 == 0) ? (0x00421084u << (heartbeat % 3)) : 0;
+    // A league lineup goes away and comes back every 24 heartbeats, so
+    // returns (and their spot choices, in the sliced phase) are covered.
+    if (heartbeat % 24 >= 16)
+    {
+        ctx->derived[WorldSim_SlotForCharacter(NOTABLE_TRAINER_WILL)] = WORLD_STATE_AWAY_LEAGUE;
+        ctx->derived[WorldSim_SlotForCharacter(NOTABLE_TRAINER_KAREN)] = WORLD_STATE_AWAY_LEAGUE;
+        ctx->derived[WorldSim_SlotForCharacter(NOTABLE_TRAINER_LANCE)] = WORLD_STATE_AWAY_LEAGUE;
+    }
 }
 
 static u32 BeatChecksum(const struct WayfarerWorldState *state, const struct WayfarerWorldTrace *trace)
@@ -258,8 +331,9 @@ TEST("A heartbeat spread over tiny steps, with lost workspaces, matches one run 
     void *workspaces[2] = {Alloc(size), Alloc(size)};
     u32 *sums = Alloc(HEARTBEATS * sizeof(u32));
     u32 tick = 0, steps = 0, losses = 0;
-    u16 heartbeat;
+    u16 heartbeat, detourNode, detourEdge;
     u8 current = 0;
+    bool8 detoured = FALSE;
 
     // Whole heartbeats first (New Game resets the shared path cache, so the
     // second run starts from the same cache as the first).
@@ -269,6 +343,8 @@ TEST("A heartbeat spread over tiny steps, with lost workspaces, matches one run 
     {
         struct WayfarerWorldTrace beat = {0};
         SlicedContext(&ctx, heartbeat);
+        if (heartbeat == DETOUR_HEARTBEAT)
+            detoured = SetUpDetour(&sState, workspaces[0], WorldSim_SlotForCharacter(NOTABLE_TRAINER_STEVEN), 0, &detourNode, &detourEdge);
         WorldSim_Heartbeat(&sState, &ctx, workspaces[0], &beat);
         sums[heartbeat] = BeatChecksum(&sState, &beat);
         whole.searchNodes += beat.searchNodes;
@@ -287,6 +363,8 @@ TEST("A heartbeat spread over tiny steps, with lost workspaces, matches one run 
         struct WayfarerWorldTrace beat = {0};
         SlicedContext(&ctx, heartbeat);
         bool8 lost = FALSE;
+        if (heartbeat == DETOUR_HEARTBEAT)
+            SetUpDetour(&sOther, workspaces[current], WorldSim_SlotForCharacter(NOTABLE_TRAINER_STEVEN), 0, &detourNode, &detourEdge);
         WorldSim_HeartbeatBegin(&hb, &sOther, &ctx, &beat);
         for (;;)
         {
@@ -324,6 +402,11 @@ TEST("A heartbeat spread over tiny steps, with lost workspaces, matches one run 
     EXPECT_EQ(whole.advances, sliced.advances);
     EXPECT_EQ(whole.skips, sliced.skips);
     EXPECT(whole.hops > 0 && whole.searches > 0);
+    // The blocked-traveller paths ran and still matched (a blocked trip
+    // with a detour is set up at one heartbeat, the same in both runs).
+    EXPECT(detoured);
+    EXPECT(whole.waits > 0);
+    EXPECT(whole.reroutes > 0);
     EXPECT(steps > 4 * HEARTBEATS);   // really spread out
     EXPECT(losses > HEARTBEATS / 4);
     Free(sums);
@@ -486,13 +569,52 @@ TEST("A blocked traveller waits one heartbeat, then reroutes or waits again")
     }
     ctx.playerMap = map;  // and the fillers stay put on it
     startNode = sState.records[mover].node;
-    WorldSim_Heartbeat(&sState, &ctx, workspace, NULL);
-    EXPECT_EQ((u32)sState.records[mover].node, startNode);
-    EXPECT_EQ((u32)sState.records[mover].waited, TRUE);
-    WorldSim_Heartbeat(&sState, &ctx, workspace, NULL);
-    // Rerouted around the full map, or still waiting in place.
-    EXPECT(sState.records[mover].node == startNode || WorldSim_NodeMap(sState.records[mover].node) != map);
+    {
+        struct WayfarerWorldTrace first = {0}, second = {0};
+        WorldSim_Heartbeat(&sState, &ctx, workspace, &first);
+        EXPECT_EQ((u32)sState.records[mover].node, startNode);
+        EXPECT_EQ((u32)sState.records[mover].waited, TRUE);
+        EXPECT_EQ(first.waits, 1);
+        EXPECT_EQ(first.hops, 0);
+        WorldSim_Heartbeat(&sState, &ctx, workspace, &second);
+        // Never into the full map: rerouted around it, or waiting again.
+        EXPECT(sState.records[mover].node == startNode || WorldSim_NodeMap(sState.records[mover].node) != map);
+        EXPECT_EQ(second.hops + second.waits, 1);
+        EXPECT_EQ(second.reroutes, second.hops);
+    }
     EXPECT(placed > 0);
+    Free(workspace);
+}
+
+// A trainer blocked by a full map takes the detour when one exists.
+TEST("A blocked traveller takes a detour around the full map")
+{
+    struct WayfarerWorldContext ctx;
+    void *workspace = Alloc(WorldSim_WorkspaceSize());
+    u16 node = 0xFFFF, firstEdge = 0xFFFF;
+    u8 mover = WorldSim_SlotForCharacter(NOTABLE_TRAINER_STEVEN), filler = 0, slot;
+    bool8 found;
+    struct WayfarerWorldTrace first = {0}, second = {0};
+
+    Context(&ctx, TRUE, MAP_UNDEFINED);
+    WorldSim_NewGame(&sState, &ctx, workspace);
+    found = SetUpDetour(&sState, workspace, mover, filler, &node, &firstEdge);
+    ASSUME(found);
+    // Only the mover acts.
+    for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT; slot++)
+    {
+        if (slot != mover)
+            ctx.frozenMask |= 1u << slot;
+    }
+    EXPECT(!WorldSim_HopAllowed(&sState, mover, firstEdge));
+    WorldSim_Heartbeat(&sState, &ctx, workspace, &first);
+    EXPECT_EQ(first.waits, 1);
+    EXPECT_EQ((u32)sState.records[mover].node, node);
+    WorldSim_Heartbeat(&sState, &ctx, workspace, &second);
+    EXPECT_EQ(second.reroutes, 1);
+    EXPECT_EQ(second.hops, 1);
+    EXPECT(WorldSim_NodeMap(sState.records[mover].node) != WorldSim_NodeMap(gWayfarerWorldEdges[firstEdge].target));
+    EXPECT_NE((u32)sState.records[mover].node, node);
     Free(workspace);
 }
 
@@ -557,6 +679,25 @@ TEST("Load checks reject bad records and a content change re-seats them")
     EXPECT(!WorldSim_LocalActorsValid(&sOther, WorldSim_NodeMap(sOther.records[slot].node), 3, 40));
     WorldSim_SetLocalActor(&sOther, 1, slot, 5, 5, DIR_NORTH);
     EXPECT(!WorldSim_LocalActorsValid(&sOther, WorldSim_NodeMap(sOther.records[slot].node), 40, 40));
+    // The same trainer twice can only be a corrupt save; an entry off the
+    // saved map (the location was repaired to another map) or outside its
+    // size is a stale hint to clear.
+    EXPECT_EQ(WorldSim_CheckLocalActors(&sOther, WorldSim_NodeMap(sOther.records[slot].node), 40, 40),
+              WORLD_LOCAL_ACTORS_CORRUPT);
+    sOther.localActors[1 * WORLD_LOCAL_ACTOR_BYTES] = WORLD_LOCAL_ACTOR_NONE;
+    sOther.localActors[1 * WORLD_LOCAL_ACTOR_BYTES + 1] = 0;
+    sOther.localActors[1 * WORLD_LOCAL_ACTOR_BYTES + 2] = 0;
+    EXPECT_EQ(WorldSim_CheckLocalActors(&sOther, WorldSim_NodeMap(sOther.records[slot].node), 40, 40),
+              WORLD_LOCAL_ACTORS_OK);
+    EXPECT_EQ(WorldSim_CheckLocalActors(&sOther, WorldSim_NodeMap(sOther.records[slot].node) ^ 1, 40, 40),
+              WORLD_LOCAL_ACTORS_STALE);
+    EXPECT_EQ(WorldSim_CheckLocalActors(&sOther, WorldSim_NodeMap(sOther.records[slot].node), 3, 40),
+              WORLD_LOCAL_ACTORS_STALE);
+    sOther.localActors[2 * WORLD_LOCAL_ACTOR_BYTES + 1] = 7;  // an empty entry with a stray byte
+    EXPECT_EQ(WorldSim_CheckLocalActors(&sOther, WorldSim_NodeMap(sOther.records[slot].node), 40, 40),
+              WORLD_LOCAL_ACTORS_CORRUPT);
+    sOther.localActors[2 * WORLD_LOCAL_ACTOR_BYTES + 1] = 0;
+    WorldSim_SetLocalActor(&sOther, 1, slot, 5, 5, DIR_NORTH);
     {
         u8 s, x, y, facing;
         EXPECT(WorldSim_GetLocalActor(&sOther, 0, &s, &x, &y, &facing));
@@ -623,6 +764,198 @@ TEST("A Gym Leader stays home while a visitor is in their Gym")
         WorldSim_Heartbeat(&sState, &ctx, workspace, NULL);
         EXPECT_LE(WorldSim_Occupancy(&sState, gymMap, 0xFF), 1);
         EXPECT(CapsHold(&sState));
+    }
+    Free(workspace);
+}
+
+// A local actor's exit commits a hop like an off-screen one (the critic's
+// run 149: Will and Steven both walked out of Ecruteak into its cap-1 Route
+// 38 gate): with one trainer in the gate, the next one may not follow, while
+// a hop into the trainer's own destination map is always allowed.
+TEST("A walker's exit into a full map is not allowed")
+{
+    struct WayfarerWorldContext ctx;
+    void *workspace = Alloc(WorldSim_WorkspaceSize());
+    u8 will = WorldSim_SlotForCharacter(NOTABLE_TRAINER_WILL), steven = WorldSim_SlotForCharacter(NOTABLE_TRAINER_STEVEN);
+    u16 node, src, e, gateEdge = 0xFFFF, spot;
+
+    Context(&ctx, TRUE, MAP_UNDEFINED);
+    WorldSim_NewGame(&sState, &ctx, workspace);
+    // An outdoor node with a door into an interior (cap 1) map nobody is on.
+    for (src = 0; src < gWayfarerWorldNodeCount && gateEdge == 0xFFFF; src++)
+    {
+        const struct WayfarerWorldNode *data = &gWayfarerWorldNodes[src];
+        if (data->flags & WORLD_NODE_FLAG_INTERIOR)
+            continue;
+        for (e = data->firstEdge; e < data->firstEdge + data->edgeCount && gateEdge == 0xFFFF; e++)
+        {
+            u16 target = gWayfarerWorldEdges[e].target;
+            if ((gWayfarerWorldNodes[target].flags & WORLD_NODE_FLAG_INTERIOR) && gWayfarerWorldEdges[e].kind == WORLD_EDGE_WARP
+             && WorldSim_Occupancy(&sState, WorldSim_NodeMap(target), 0xFF) == 0)
+                gateEdge = e;
+        }
+    }
+    ASSUME(gateEdge != 0xFFFF);
+    node = gWayfarerWorldEdges[gateEdge].target;
+    for (src = 0; src < gWayfarerWorldNodeCount; src++)
+    {
+        const struct WayfarerWorldNode *data = &gWayfarerWorldNodes[src];
+        if (gateEdge >= data->firstEdge && gateEdge < data->firstEdge + data->edgeCount)
+            break;
+    }
+    // Both stand outside, travelling somewhere far (a spot on another map).
+    for (spot = 0; spot < gWayfarerWorldSpotCount; spot++)
+    {
+        if (WorldSim_NodeMap(gWayfarerWorldSpots[spot].node) != WorldSim_NodeMap(node)
+         && !(gWayfarerWorldNodes[gWayfarerWorldSpots[spot].node].flags & WORLD_NODE_FLAG_INTERIOR))
+            break;
+    }
+    ASSUME(spot < gWayfarerWorldSpotCount);
+    sState.records[will].state = sState.records[steven].state = WORLD_STATE_TRAVELLING;
+    sState.records[will].destKind = sState.records[steven].destKind = WORLD_DEST_SPOT;
+    sState.records[will].destId = sState.records[steven].destId = spot;
+    sState.records[will].node = sState.records[steven].node = src;
+    sState.records[will].arrival = sState.records[steven].arrival = WORLD_ARRIVAL_NONE;
+    EXPECT(WorldSim_HopAllowed(&sState, will, gateEdge));
+    WorldSim_TakeEdge(&sState, will, gateEdge, gWayfarerWorldEdges[gateEdge].c);
+    EXPECT_EQ(WorldSim_Occupancy(&sState, WorldSim_NodeMap(node), 0xFF), 1);
+    EXPECT(!WorldSim_HopAllowed(&sState, steven, gateEdge));
+    // Into one's own destination's map room was reserved by spot choice.
+    for (spot = 0; spot < gWayfarerWorldSpotCount; spot++)
+    {
+        if (WorldSim_NodeMap(gWayfarerWorldSpots[spot].node) == WorldSim_NodeMap(node))
+            break;
+    }
+    if (spot < gWayfarerWorldSpotCount)
+    {
+        sState.records[steven].destId = spot;
+        EXPECT(WorldSim_HopAllowed(&sState, steven, gateEdge));
+    }
+    EXPECT(!WorldSim_HopAllowed(&sState, steven, 0xFFFF));
+    Free(workspace);
+}
+
+// The local actor plans a trip's first edge a slice per frame: the result is
+// the whole search's, also when the workspace is lost (and scribbled over)
+// halfway, and the cache answers without one.
+TEST("A trip's first edge found in slices matches the whole search")
+{
+    struct WayfarerWorldContext ctx;
+    u32 size = WorldSim_WorkspaceSize();
+    void *workspaces[2] = {Alloc(size), Alloc(size)};
+    u16 heartbeat, checked = 0, longest = 0;
+    u8 slot;
+
+    Context(&ctx, TRUE, MAP_UNDEFINED);
+    WorldSim_NewGame(&sState, &ctx, workspaces[0]);
+    for (heartbeat = 0; heartbeat < 60; heartbeat++)
+    {
+        WorldSim_Heartbeat(&sState, &ctx, workspaces[0], NULL);
+        for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT; slot++)
+        {
+            u16 whole, sliced = 0xFFFF, cached;
+            u16 calls = 0;
+            u8 current = 0;
+            bool8 done;
+            if (sState.records[slot].state != WORLD_STATE_TRAVELLING)
+                continue;
+            WorldSim_ResetPathCache();
+            whole = WorldSim_NextEdge(&sState, slot, workspaces[0], NULL);
+            WorldSim_ResetPathCache();
+            done = WorldSim_NextEdgeBegin(&sState, slot, workspaces[current], FALSE, &sliced);
+            while (!done)
+            {
+                calls++;
+                if (calls == 3)
+                {
+                    // A heap reset: a new block of garbage, the search restarts.
+                    current ^= 1;
+                    memset(workspaces[current], 0x5A, size);
+                    done = WorldSim_NextEdgeBegin(&sState, slot, workspaces[current], FALSE, &sliced);
+                    continue;
+                }
+                done = WorldSim_NextEdgeRun(&sState, slot, workspaces[current], 1 + calls % 4, &sliced, NULL);
+            }
+            EXPECT_EQ(sliced, whole);
+            // Cached now: answered without a workspace.
+            EXPECT(WorldSim_NextEdgeBegin(&sState, slot, NULL, FALSE, &cached) || whole == 0xFFFF);
+            if (whole != 0xFFFF)
+                EXPECT_EQ(cached, whole);
+            if (calls > longest)
+                longest = calls;
+            checked++;
+        }
+    }
+    EXPECT(checked > 0);
+    EXPECT(longest > 4);   // some searches really were spread out
+    Free(workspaces[1]);
+    Free(workspaces[0]);
+}
+
+// Back from the league onto a full home map, a trainer stays away until
+// there is room; when they do come back, their next step is chosen in the
+// heartbeat's sliced phase (first in its order), not inside Begin.
+TEST("Trainers back from the league never overfill home and choose in slices")
+{
+    struct WayfarerWorldContext ctx;
+    struct WayfarerWorldHeartbeat hb;
+    void *workspace = Alloc(WorldSim_WorkspaceSize());
+    u8 will = WorldSim_SlotForCharacter(NOTABLE_TRAINER_WILL), karen = WorldSim_SlotForCharacter(NOTABLE_TRAINER_KAREN);
+    u16 home = gWayfarerWorldTrainers[will].homeNode, homeMap = WorldSim_NodeMap(home), heartbeat;
+    u8 slot, parked = 0;
+
+    ASSUME(gWayfarerWorldTrainers[karen].homeNode == home);
+    Context(&ctx, TRUE, MAP_UNDEFINED);
+    WorldSim_NewGame(&sState, &ctx, workspace);
+    ctx.derived[will] = ctx.derived[karen] = WORLD_STATE_AWAY_LEAGUE;
+    WorldSim_Heartbeat(&sState, &ctx, workspace, NULL);
+    EXPECT_EQ((u32)sState.records[will].state, WORLD_STATE_AWAY_LEAGUE);
+    // Park others at home, dwelling, up to the cap.
+    for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT && WorldSim_Occupancy(&sState, homeMap, 0xFF) < WorldSim_MapCapacity(home); slot++)
+    {
+        struct WayfarerWorldRecord *record = &sState.records[slot];
+        if (slot == will || slot == karen || !WorldSim_IsSimulated(record))
+            continue;
+        record->node = home;
+        record->state = WORLD_STATE_DWELLING;
+        record->destKind = WORLD_DEST_NONE;
+        record->destId = 0;
+        record->arrival = WORLD_ARRIVAL_NONE;
+        record->dwell = 3;
+        parked++;
+    }
+    ASSUME(WorldSim_Occupancy(&sState, homeMap, 0xFF) == WorldSim_MapCapacity(home));
+    ctx.derived[will] = ctx.derived[karen] = WORLD_DERIVED_NONE;
+    for (heartbeat = 0; heartbeat < 40; heartbeat++)
+    {
+        WorldSim_Heartbeat(&sState, &ctx, workspace, NULL);
+        // Home is still full on the first one: both stay away.
+        if (heartbeat == 0)
+        {
+            EXPECT_EQ((u32)sState.records[will].state, WORLD_STATE_AWAY_LEAGUE);
+            EXPECT_EQ((u32)sState.records[karen].state, WORLD_STATE_AWAY_LEAGUE);
+        }
+        EXPECT_LE(WorldSim_Occupancy(&sState, homeMap, 0xFF), WorldSim_MapCapacity(home));
+        EXPECT(CapsHold(&sState));
+    }
+    (void)parked;
+
+    // A return with room: Begin seats them at home with no step chosen yet;
+    // the first step picks it.
+    WorldSim_NewGame(&sState, &ctx, workspace);
+    ctx.derived[will] = WORLD_STATE_AWAY_LEAGUE;
+    WorldSim_Heartbeat(&sState, &ctx, workspace, NULL);
+    ctx.derived[will] = WORLD_DERIVED_NONE;
+    if (WorldSim_Occupancy(&sState, homeMap, will) < WorldSim_MapCapacity(home))
+    {
+        WorldSim_HeartbeatBegin(&hb, &sState, &ctx, NULL);
+        EXPECT_EQ((u32)sState.records[will].state, WORLD_STATE_DWELLING);
+        EXPECT_EQ((u32)sState.records[will].destKind, WORLD_DEST_NONE);
+        EXPECT_EQ((u32)sState.records[will].node, home);
+        EXPECT_EQ(hb.order[0], will);
+        while (!WorldSim_HeartbeatStep(&hb, &sState, workspace, 1, NULL))
+            ;
+        EXPECT_NE((u32)sState.records[will].destKind, WORLD_DEST_NONE);
     }
     Free(workspace);
 }

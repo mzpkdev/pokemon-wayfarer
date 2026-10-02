@@ -15,8 +15,14 @@ symbol reads and screenshots:
   door    following through a door into an interior
   linger  off-screen trainers hop once per heartbeat; on-map trainers don't
   save    save, reset, Continue: identical records, actors at saved tiles
-  perf    heartbeat cost over 60 warps, all 25 trainers simulated
+  perf    heartbeat cost over 60 warps, all 25 trainers simulated (gated by ceilings)
   seam    heartbeat cost per frame across a seamless edge (Viridian <-> Route 2)
+  recross running back and forth over that seam while a heartbeat is pending
+  longtrip a watched trainer whose stay ends plans a long trip (Will at Indigo)
+  striplane a strip actor blocked straight ahead leaves the seam (Route 134 -> 133)
+
+The verifier refuses a ROM whose content hash differs from the worktree's
+generated tables.h: node and spot ids would not match.
 
 Usage:
   python3 game/tools/wayfarer_walkers/verify.py --rom ROM --symbols SYM \\
@@ -69,6 +75,10 @@ class WorldTables:
             start = text.index(name + "[] = {")
             return text[start:text.index("\n};", start)]
         self.nodes = [m for m in re.findall(r"/\*\s*\d+ \*/ \{(MAP_\w+),", block("gWayfarerWorldNodes"))]
+        # {map, firstEdge, x, y, edgeCount, flags}
+        self.node_edges = [(int(f), int(c)) for f, c in re.findall(
+            r"/\*\s*\d+ \*/ \{MAP_\w+, (\d+), \d+, \d+, (\d+),", block("gWayfarerWorldNodes"))]
+        self.content_hash = int(re.search(r"gWayfarerWorldContentHash = (0x[0-9A-Fa-f]+);", text).group(1), 16)
         self.spots = [(int(n), kind, int(x), int(y)) for n, kind, x, y in re.findall(
             r"/\*\s*\d+ \*/ \{(\d+), \w+, \d+, (WORLD_SPOT_\w+), (\d+), (\d+),", block("gWayfarerWorldSpots"))]
         self.edges = [(int(t), kind, int(a), int(b), int(c)) for t, kind, a, b, c in re.findall(
@@ -76,6 +86,13 @@ class WorldTables:
 
     def map_id(self, name: str) -> int:
         return self.maps[name]
+
+    def edge_source(self, edge: int) -> int:
+        """The node whose edge range holds this edge."""
+        for i, (first, count) in enumerate(self.node_edges):
+            if first <= edge < first + count:
+                return i
+        raise KeyError(edge)
 
     def spot(self, map_name: str, kind: str, x: int, y: int) -> tuple[int, int]:
         """(spot id, node) of the spot of this kind on this map's tile."""
@@ -154,9 +171,18 @@ ACTOR_COUNT = 4
 WORLD_DEBUG_SLICED_FIELDS = (
     "lastHeartbeatFrames", "maxHeartbeatFrames", "maxStepScanlines", "maxFrameScanlines",
     "maxFinishScanlines", "pendingAtLoad", "forcedFinishes", "workspaceLosses", "pending",
+    "workspaceWaits", "deferredBegins",
 )
 WORLD_DEBUG_SLICED_OFFSET = 36
 SCANLINES_PER_FRAME = 228
+# Regression ceilings (critic loop cycle 1, T3): a scenario fails past them.
+# The design target, half a frame of heartbeat plus walker work, is reported
+# beside them (within_target) but not gated: a single spot choice (up to
+# about 120 lines) landing on a busy frame can exceed it.
+CEILING_FRAME_SCANLINES = 200   # worst frame of simulation (heartbeat steps + walkers, or walkers alone)
+CEILING_WARP_FRAMES = 44        # frames per warp until the controls unlock (main: 40)
+TARGET_FRAME_SCANLINES = SCANLINES_PER_FRAME // 2
+FLAG_RUNNING_SHOES = 0x895      # e2e catalog: runningShoes
 
 
 class SkyEmu:
@@ -347,7 +373,7 @@ class Game:
     # World state -------------------------------------------------------------
 
     def walker_debug(self) -> dict:
-        raw = self.emu.read(self.sym["gWayfarerWalkersDebug"], 64 + 16 * ACTOR_COUNT + 32)
+        raw = self.emu.read(self.sym["gWayfarerWalkersDebug"], 64 + 16 * ACTOR_COUNT + 40)
         out = {"frames": struct.unpack_from("<I", raw, 0)[0]}
         values = struct.unpack_from("<26H", raw, 4)
         out.update(zip(WALKER_DEBUG_FIELDS, values))
@@ -370,6 +396,8 @@ class Game:
         (out["backOffs"], out["handoffs"], out["visitorsVanished"], out["culls"],
          out["lastContextScanlines"], out["lastFailNodes"], out["maxFinishScanlines"],
          out["walkOffs"]) = struct.unpack_from("<8H", raw, tail + 16)
+        (out["worldJobs"], out["maxJobScanlines"], out["capacityWaits"],
+         out["stripTimeouts"]) = struct.unpack_from("<4H", raw, tail + 32)
         return out
 
     def stable(self, read):
@@ -401,6 +429,7 @@ class Game:
         """Zero the per-frame worst cases so a scenario measures only itself."""
         tail = 64 + 16 * ACTOR_COUNT
         self.emu.write(self.sym["gWayfarerWalkersDebug"] + tail + 12, bytes(4))  # maxUpdateScanlines
+        self.emu.write(self.sym["gWayfarerWalkersDebug"] + tail + 34, bytes(2))  # maxJobScanlines
         if self.sliced:
             # maxHeartbeatFrames, maxStepScanlines, maxFrameScanlines, maxFinishScanlines
             self.emu.write(self.sym["gWayfarerWorldDebug"] + WORLD_DEBUG_SLICED_OFFSET + 2, bytes(8))
@@ -766,11 +795,15 @@ SLOT_BROCK = 0
 
 
 def arrange_with_badges(game: Game, map_id: int, x: int, y: int, kanto_badges: int,
-                        johto_badges: int = 0, hoenn_badges: int = 0, facing: int = DIR_NORTH) -> None:
+                        johto_badges: int = 0, hoenn_badges: int = 0, facing: int = DIR_NORTH,
+                        flags: tuple = ()) -> None:
     game.request_id += 1
     req = bytearray(game.abi["requestSize"])
     struct.pack_into("<IHHhhI", req, 0, game.request_id, map_id >> 8, map_id & 0xFF, x, y, 1)
     req[80], req[81], req[84], req[85], req[86] = CHECKPOINT_NEW_BARK_AFTER_INTRO, facing, 0xFF, 1, CMD_ARRANGE
+    for i, flag in enumerate(flags):     # struct E2ETestFlagPatch flags[8] at offset 48
+        struct.pack_into("<HBB", req, 48 + 4 * i, flag, 1, 0)
+    req[83] = len(flags)
     req[362], req[363], req[364] = kanto_badges, johto_badges, hoenn_badges  # regional badge counts
     req[368] = 1                # apply the league circuit fixture (badges)
     address = game.sym["gE2ETestRequest"]
@@ -1046,7 +1079,8 @@ def scenario_deadend(game: Game) -> dict:
               "player": game.player(), "back_offs": after["backOffs"] - before["backOffs"],
               "handoffs": after["handoffs"] - before["handoffs"], "blue_after": game.actor_for(SLOT_BLUE),
               "record": game.record(SLOT_BLUE), "screenshots": [shot_blocked, shot_out], "debug": after}
-    result["pass"] = bool(behind) and escaped and (result["back_offs"] >= 1 or result["handoffs"] >= 1)
+    result["pass"] = bool(in_corridor) and bool(behind) and escaped \
+        and (result["back_offs"] >= 1 or result["handoffs"] >= 1)
     return result
 
 
@@ -1263,7 +1297,12 @@ def scenario_perf(game: Game) -> dict:
         result["max_frame_scanlines"] = world["maxFrameScanlines"]
         result["max_finish_scanlines"] = world["maxFinishScanlines"]
         result["frames_per_heartbeat_max"] = max(r["heartbeat_frames"] for r in rows)
-    result["pass"] = True
+    result["ceilings"] = {"frame_scanlines": CEILING_FRAME_SCANLINES, "warp_frames": CEILING_WARP_FRAMES}
+    result["target"] = {"frame_scanlines": TARGET_FRAME_SCANLINES,
+                        "within_target": game.sliced and world["maxFrameScanlines"] <= TARGET_FRAME_SCANLINES}
+    result["pass"] = (game.sliced and world["maxFrameScanlines"] <= CEILING_FRAME_SCANLINES
+                      and dbg["maxUpdateScanlines"] <= CEILING_FRAME_SCANLINES
+                      and max(frames) <= CEILING_WARP_FRAMES)
     return result
 
 
@@ -1301,13 +1340,160 @@ def scenario_seam(game: Game) -> dict:
         result["max_finish_scanlines"] = world["maxFinishScanlines"]
         result["frames_per_heartbeat_max"] = max(r["heartbeat_frames"] for r in rows)
         # Target: no frame carries more than half a frame of heartbeat plus walker work.
-        result["within_target"] = world["maxFrameScanlines"] <= SCANLINES_PER_FRAME // 2
+        result["within_target"] = world["maxFrameScanlines"] <= TARGET_FRAME_SCANLINES
     else:
         # The whole heartbeat ran in the seam's frame, after the walkers' update.
         result["max_frame_scanlines_estimate"] = scan[-1] + dbg["maxUpdateScanlines"]
     maps = [r["map"] for r in rows]
+    result["ceilings"] = {"frame_scanlines": CEILING_FRAME_SCANLINES}
     result["pass"] = (all(m == (ROUTE2 if i % 2 == 0 else VIRIDIAN) for i, m in enumerate(maps))
-                      and (not game.sliced or (world["pendingAtLoad"] == 0 and world["forcedFinishes"] == 0)))
+                      and game.sliced and world["pendingAtLoad"] == 0 and world["forcedFinishes"] == 0
+                      and world["maxFrameScanlines"] <= CEILING_FRAME_SCANLINES
+                      and dbg["maxUpdateScanlines"] <= CEILING_FRAME_SCANLINES)
+    return result
+
+
+def scenario_recross(game: Game) -> dict:
+    """E7: running back and forth over the Viridian <-> Route 2 seam, every
+    badge held, so a camera transition often comes while the last crossing's
+    heartbeat is still pending (pendingAtLoad). The new heartbeat then
+    queues behind the pending one (deferredBegins, up to three deep) instead
+    of finishing it inside the seam's frame; only a full queue still finishes
+    at once (maxFinishScanlines, reported, not gated). Gated: the case was
+    hit, a heartbeat was queued, and no sliced frame passed the ceiling."""
+    game.emu.step(240)
+    arrange_with_badges(game, VIRIDIAN, 27, 1, 8, 8, 8, flags=(FLAG_RUNNING_SHOES,))
+    game.emu.step(30)
+    game.reset_frame_maxima()
+    start = game.world_debug()
+    rows = []
+    game.emu.hold("B", 1)
+    try:
+        for i in range(40):
+            north = i % 2 == 0
+            before = game.emu.frames
+            target = ROUTE2 if north else VIRIDIAN
+            pending = game.world_debug()["pending"]
+            reached = hold_until(game, "Up" if north else "Down", lambda: game.current_map() == target, limit=240)
+            rows.append({"crossing": i + 1, "to": "Route 2" if north else "Viridian", "reached": reached,
+                         "frames": game.emu.frames - before, "pending_before": pending})
+    finally:
+        game.emu.hold("B", 0)
+    game.finish_heartbeat()
+    world = game.world_debug()
+    dbg = game.walker_debug()
+    result = {"crossings": rows, "pending_at_load": world["pendingAtLoad"] - start["pendingAtLoad"],
+              "deferred_begins": world["deferredBegins"] - start["deferredBegins"],
+              "heartbeats": world["heartbeats"] - start["heartbeats"],
+              "max_finish_scanlines": world["maxFinishScanlines"],
+              "max_frame_scanlines": world["maxFrameScanlines"], "max_step_scanlines": world["maxStepScanlines"],
+              "max_walker_update_scanlines": dbg["maxUpdateScanlines"],
+              "mean_crossing_frames": sum(r["frames"] for r in rows) / len(rows),
+              "world": world, "debug": dbg, "screenshots": [game.shot("recross-after")]}
+    result["ceilings"] = {"frame_scanlines": CEILING_FRAME_SCANLINES}
+    result["pass"] = (all(r["reached"] for r in rows) and result["pending_at_load"] >= 1
+                      and result["deferred_begins"] >= 1
+                      and world["maxFrameScanlines"] <= CEILING_FRAME_SCANLINES
+                      and dbg["maxUpdateScanlines"] <= CEILING_FRAME_SCANLINES)
+    return result
+
+
+SLOT_WILL = 19
+SLOT_STEVEN = 24
+
+
+def scenario_longtrip(game: Game) -> dict:
+    """E1: a watched trainer's stay ends and his next step is far away.
+
+    Will dwells at home at Indigo Plateau with one heartbeat of dwell left;
+    his next step (study) is the Ruins of Alph, a long trip whose first edge
+    is the Elite Four fly. The routine advance (one spot choice per frame) and
+    the trip's first search (a slice per frame) must not land in one frame:
+    the walkers' worst update stays under the ceiling. He then hands off at
+    the fly (an off-screen link) and walks out of view."""
+    INDIGO = TABLES.map_id("MAP_INDIGO_PLATEAU_HNS")
+    node = TABLES.main_node("MAP_INDIGO_PLATEAU_HNS")
+    home_spot = next(i for i, (n, *_r) in enumerate(TABLES.spots) if n == node)
+    ruins = {i for i, (n, kind, *_r) in enumerate(TABLES.spots)
+             if TABLES.nodes[n] == "MAP_RUINS_OF_ALPH_OUTSIDE_HNS" and kind == "WORLD_SPOT_NAMED"}
+    game.emu.step(240)
+    arrange_with_badges(game, INDIGO, 11, 12, 8, 8, 8)
+    game.write_record(SLOT_WILL, node=node, destKind=DEST_SPOT, destId=home_spot, state=STATE_DWELLING,
+                      arrival=ARRIVAL_NONE, crossing=0, activity=8, dwell=1, waited=0, step=3,
+                      lifeEvent=0, lifeSteps=0, stayBits=0, reserved=0)
+    game.warp(INDIGO, 11, 12, DIR_NORTH)
+    game.wait_for(lambda: (game.actor_for(SLOT_WILL) or {}).get("atSpot"), 900, step=4, what="Will at his spot")
+    game.reset_frame_maxima()
+    before = game.walker_debug()
+    # Ten dwell ticks of a second each run his last heartbeat of dwell down.
+    advanced = game.wait_for(lambda: game.walker_debug()["localAdvances"] > before["localAdvances"], 900, step=2,
+                             what="the local dwell running out")
+    advance_frame = game.emu.frames
+    planned_at = None
+    for _ in range(0, 1200, 2):
+        game.emu.step(2)
+        dbg = game.walker_debug()
+        actor = game.actor_for(SLOT_WILL)
+        if dbg["handoffs"] > before["handoffs"] or actor is None or actor["mode"] == 3 or actor["phase"] in (3, 4):
+            planned_at = game.emu.frames
+            break
+    record = game.record(SLOT_WILL)
+    game.emu.step(120)
+    after = game.walker_debug()
+    result = {"record_after": record, "dest_is_ruins": record["destId"] in ruins,
+              "frames_advance_to_plan": (planned_at - advance_frame) if planned_at else None,
+              "world_jobs": after["worldJobs"] - before["worldJobs"],
+              "handoffs": after["handoffs"] - before["handoffs"],
+              "max_job_scanlines": after["maxJobScanlines"],
+              "max_walker_update_scanlines": after["maxUpdateScanlines"],
+              "ceilings": {"frame_scanlines": CEILING_FRAME_SCANLINES},
+              "screenshots": [game.shot("longtrip-after")], "debug": after}
+    result["pass"] = (bool(advanced) and planned_at is not None and result["dest_is_ruins"]
+                      and result["world_jobs"] >= 2 and result["handoffs"] >= 1
+                      and after["maxUpdateScanlines"] <= CEILING_FRAME_SCANLINES)
+    return result
+
+
+def scenario_striplane(game: Game) -> dict:
+    """E2: a strip actor blocked straight ahead doesn't stand in the seam.
+
+    Route 134's shallows (75-79, 26-34; the player waits at (75, 29), in view) cross into Route 133's (0, 26-32),
+    whose next column is wall: a walker that steps out east becomes a strip
+    actor that can't walk straight on. It must go after a moment (it was
+    handed off as it stepped out) instead of standing there while visible."""
+    R134 = TABLES.map_id("MAP_ROUTE134")
+    spot, node133 = TABLES.spot("MAP_ROUTE133", "WATER_EDGE", 0, 29)
+    lane = next(i for i, (t, kind, a, b, c) in enumerate(TABLES.edges) if t == node133 and kind == "WORLD_EDGE_EAST")
+    src = TABLES.edge_source(lane)   # Route 134's shallows
+    boot(game, R134, 75, 29, DIR_EAST)
+    game.write_record(SLOT_STEVEN, node=src, destKind=DEST_SPOT, destId=spot, state=STATE_TRAVELLING,
+                      arrival=ARRIVAL_NONE, crossing=0, activity=ACTIVITY_FISH, dwell=3, waited=0, step=0,
+                      lifeEvent=0, lifeSteps=0, stayBits=0, reserved=0)
+    before = game.walker_debug()
+    game.warp(R134, 75, 29, DIR_EAST)
+    game.wait_for(lambda: game.actor_for(SLOT_STEVEN), 400, step=2, what="Steven spawned")
+    track, exit_frame, stalled, gone = [], None, None, None
+    for _ in range(0, 2400):
+        game.emu.step(1)
+        dbg = game.walker_debug()
+        a = next((a for a in dbg["actors"] if a["slot"] == SLOT_STEVEN and a["mode"]), None)
+        state = (a["mode"], a["x"], a["y"]) if a else None
+        if not track or track[-1][1] != state:
+            track.append((game.emu.frames, state))
+        if exit_frame is None and dbg["edgeExits"] > before["edgeExits"]:
+            exit_frame = game.emu.frames
+        if a and a["mode"] == 2:
+            stalled = stalled or a
+        if exit_frame is not None and a is None:
+            gone = game.emu.frames
+            break
+    after = game.walker_debug()
+    record = game.record(SLOT_STEVEN)
+    result = {"strip_actor": stalled, "track": track, "player": game.player(),
+              "removed_after_frames": gone - exit_frame if gone else None,
+              "strip_timeouts": after["stripTimeouts"] - before["stripTimeouts"],
+              "record": record, "screenshots": [game.shot("striplane-after")], "debug": after}
+    result["pass"] = (bool(gone) and bool(stalled) and result["strip_timeouts"] >= 1 and record["node"] == node133)
     return result
 
 
@@ -1413,7 +1599,8 @@ def scenario_walkoff(game: Game) -> dict:
 
 
 def scenario_mortar(game: Game) -> dict:
-    """Follow-up 2 (F5): Mt Mortar 1F North agrees with the generator on screen.
+    """Follow-up 2 (F5): Mt Mortar 1F North agrees with the generator on screen,
+    and (critic loop T2) the pocket is reachable through the graph.
 
     The generator now floods one-way stair moves as directed: nodes are
     strongly connected components. From the B1F door (15, 31) the water's
@@ -1462,9 +1649,26 @@ def scenario_mortar(game: Game) -> dict:
                              activity=ACTIVITY_FISH, dwell=3),
                         lambda d, b: d["handoffs"] > b["handoffs"] and game.actor_for(slot) is None,
                         "Will handed off at the water", limit=3000, spawn=False)
-    result = {"legs": legs, "pocket_node": pocket_node, "node": node, "screenshots": shots,
+    # Through the graph, off-screen (critic loop T2): from Route 42, Will
+    # reaches the pocket over the ROM's own edges, one hop per heartbeat; the
+    # way up Mt Mortar crosses 1F South's foam row (y=28) as a surfer does.
+    route42 = TABLES.main_node("MAP_ROUTE42_HNS")
+    game.write_record(slot, node=route42, destKind=DEST_SPOT, destId=pocket, state=STATE_TRAVELLING, arrival=0,
+                      crossing=0, activity=ACTIVITY_FISH, dwell=3, waited=0, step=0, lifeEvent=0, lifeSteps=0,
+                      stayBits=0, reserved=0)
+    nodes = [route42]
+    CENTER_MAP, MART_MAP = CENTER, MART
+    for i in range(24):
+        game.warp(MART_MAP if i % 2 == 0 else CENTER_MAP, 4 if i % 2 == 0 else 7, 6, DIR_NORTH)
+        rec = game.record(slot)
+        nodes.append(rec["node"])
+        if rec["node"] == pocket_node:
+            break
+    legs_graph = {"nodes": nodes, "maps": [TABLES.nodes[n] for n in nodes], "reached": nodes[-1] == pocket_node,
+                  "record": game.record(slot)}
+    result = {"legs": legs, "graph_leg": legs_graph, "pocket_node": pocket_node, "node": node, "screenshots": shots,
               "debug": game.walker_debug()}
-    result["pass"] = (pocket_node != node
+    result["pass"] = (pocket_node != node and legs_graph["reached"]
                       and all(legs[k]["done"] and legs[k]["delta"].get("searchFails") == 0 for k in legs))
     return result
 
@@ -1507,7 +1711,22 @@ SCENARIOS = {"spot": scenario_spot, "bridge": scenario_bridge, "walkoff": scenar
              "linger": scenario_linger, "save": scenario_save, "gym": scenario_gym,
              "budget": scenario_budget, "browse": scenario_browse, "deadend": scenario_deadend,
              "gymentry": scenario_gymentry, "stairs": scenario_stairs, "midstep": scenario_midstep,
-             "decoys": scenario_decoys, "perf": scenario_perf, "seam": scenario_seam}
+             "decoys": scenario_decoys, "perf": scenario_perf, "seam": scenario_seam,
+             "recross": scenario_recross, "longtrip": scenario_longtrip, "striplane": scenario_striplane}
+
+
+def check_content_hash(rom: Path, symbols: dict, tables) -> None:
+    """T4: node and spot ids come from the worktree's tables.h, so the ROM
+    must have been built from the same tables (the same content hash)."""
+    address = symbols.get("gWayfarerWorldContentHash")
+    if address is None or not 0x08000000 <= address < 0x0A000000:
+        raise SystemExit("verify.py: the ROM's symbols have no gWayfarerWorldContentHash in ROM")
+    with rom.open("rb") as handle:
+        handle.seek(address - 0x08000000)
+        value = struct.unpack("<H", handle.read(2))[0]
+    if value != tables.content_hash:
+        raise SystemExit(f"verify.py: the ROM's world content hash {value:#06x} differs from the worktree's "
+                         f"tables.h ({tables.content_hash:#06x}); rebuild the ROM or regenerate the tables")
 
 
 def main(argv=None) -> int:
@@ -1520,7 +1739,7 @@ def main(argv=None) -> int:
     args = parser.parse_args(argv)
     args.output.mkdir(parents=True, exist_ok=True)
     symbols = read_symbols(args.symbols)
-    load_world_ids(ROOT / "game")
+    check_content_hash(args.rom, symbols, load_world_ids(ROOT / "game"))
     names = sorted(SCENARIOS) if args.scenario == "all" else [args.scenario]
     results = {}
     failed = False

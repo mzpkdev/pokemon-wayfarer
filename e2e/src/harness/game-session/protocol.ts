@@ -13,7 +13,7 @@ export type TrainerOnlySnapshot = {
   outcome: number
 }
 
-const abiVersion = 27
+const abiVersion = 28
 const expectedRequestSize = 380
 const expectedResultSize = 16
 const expectedStateSize = 1756
