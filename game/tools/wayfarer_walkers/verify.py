@@ -774,7 +774,7 @@ def scenario_gym(game: Game) -> dict:
                arrival=ARRIVAL_NONE, crossing=0, activity=6, dwell=1)
     exits_before = game.walker_debug()["warpExits"]
     game.warp(PEWTER_GYM, 9, 11, DIR_NORTH)
-    visitor = game.wait_for(lambda: game.actor_for(SLOT_BLUE), 120, what="the visitor")
+    visitor = game.wait_for(lambda: game.actor_for(SLOT_BLUE), 120, step=1, what="the visitor")
     visitor_tile = (visitor["x"], visitor["y"])
     leader_hidden = len(gym_objects(game, template_gfx)) == 0
     game.emu.step(4)
@@ -794,6 +794,7 @@ def scenario_gym(game: Game) -> dict:
         "leader_template_gfx": template_gfx,
         "leader_objects_while_home": shown_home,
         "visitor_spawn_tile": visitor_tile,
+        "visitor_first_seen": visitor,
         "leader_hidden_while_out": leader_hidden,
         "leader_hidden_after_walking": still_hidden,
         "blue_after_leaving": blue_after,
@@ -803,7 +804,10 @@ def scenario_gym(game: Game) -> dict:
     }
     result["pass"] = (brock_home["state"] == STATE_DWELLING and brock_home["node"] == NODE_PEWTER_GYM
                       and shown_home == 1 and leader_hidden and still_hidden
-                      and visitor_tile in ((6, 13), (5, 14), (7, 14)) and visitor_tile != (9, 11)
+                      and (visitor_tile in ((6, 13), (5, 14), (7, 14))
+                           # or already stepping out (spawned beside the mat and planned at once)
+                           or (visitor_tile == (6, 14) and visitor["phase"] == 6 and visitor["goalKind"] == 3))
+                      and visitor_tile != (9, 11)
                       and blue_after["node"] == NODE_PEWTER and blue_after["destId"] != SPOT_PEWTER_GYM
                       and no_return)
     return result
@@ -1183,7 +1187,7 @@ def scenario_perf(game: Game) -> dict:
     game.emu.step(240)
     arrange_with_badges(game, CENTER, 7, 6, 8, 8, 8)
     rows = []
-    for i in range(12):
+    for i in range(60):
         map_id, x, y = (MART, 4, 6) if i % 2 == 0 else (CENTER, 7, 6)
         before = game.emu.frames
         game.warp(map_id, x, y, DIR_NORTH)
