@@ -56,16 +56,10 @@
 EWRAM_DATA volatile struct E2ETestRequest gE2ETestRequest;
 EWRAM_DATA volatile struct E2ETestResult gE2ETestResult;
 EWRAM_DATA volatile struct E2ETestState gE2ETestState;
-// Committed copies for the host: E2ETest_Update copies each whole snapshot
-// into the buffer the host isn't told about, then flips the index. A host
-// that pauses emulation mid-update reads the last whole snapshot without
-// advancing the game (it re-reads if a step ran between its reads).
-EWRAM_DATA volatile struct E2ETestState gE2ETestStateCommitted[2];
-EWRAM_DATA volatile u8 gE2ETestStateCommittedIndex;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
-    .version = 28,
+    .version = 27,
     .requestSize = sizeof(struct E2ETestRequest),
     .resultSize = sizeof(struct E2ETestResult),
     .stateSize = sizeof(struct E2ETestState),
@@ -1817,13 +1811,8 @@ void E2ETest_Update(void)
     // The emulator host can pause anywhere inside UpdateState, for example on
     // a lag frame. frame is bumped first and committedFrame is stamped after
     // the last field write, so a snapshot is complete only when they match.
-    u8 next;
-
     UpdateState();
     gE2ETestState.committedFrame = gE2ETestState.frame;
-    next = gE2ETestStateCommittedIndex ^ 1;
-    CpuCopy32((const void *)&gE2ETestState, (void *)&gE2ETestStateCommitted[next], sizeof(gE2ETestState));
-    gE2ETestStateCommittedIndex = next;
     UpdateRequest();
 }
 
