@@ -25,7 +25,7 @@
           "map": "Route34_DayCare_hns",
           "kind": "named",
           "label": "Route 34 Day Care",
-          "disabled": "Unreachable on foot from PewterCity_hns under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "disabled": "Every route from PewterCity_hns needs Route 2's Cut tree at (11, 13), between Pewter's side of Route 2 and Diglett's Cave (minimal blocker set; Vermilion's Snorlax, a story gate, is already ignored). Walkers don't cut, and the tree is not a story gate."
         },
         {
           "serves": "study",
@@ -215,7 +215,9 @@
           "map": "SeafoamIslands_B3F_Frlg",
           "kind": "water_edge",
           "note": "Seafoam Islands B3F",
-          "disabled": "Unreachable on foot from CinnabarIsland_Frlg under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "x": 28,
+          "y": 14,
+          "why": "The one water's edge on B3F that a walker reaches: the floor's other shores lie behind Strength boulders (locals 3-6), which walkers don't push."
         }
       ]
     },
@@ -242,14 +244,14 @@
           "map": "CeladonCity_GameCorner_hns",
           "kind": "game_corner",
           "note": "Celadon Game Corner",
-          "disabled": "Unreachable on foot from ViridianCity_hns under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "disabled": "Every route from ViridianCity_hns needs Route 2's Cut tree at (11, 13), between Pewter's side of Route 2 and Diglett's Cave (minimal blocker set; Vermilion's Snorlax, a story gate, is already ignored). Walkers don't cut, and the tree is not a story gate."
         },
         {
           "serves": "lie low",
           "map": "BurnedTower_1F_hns",
           "kind": "named",
           "label": "Burned Tower",
-          "disabled": "Unreachable on foot from ViridianCity_hns under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "disabled": "Every route from ViridianCity_hns needs Route 2's Cut tree at (11, 13), between Pewter's side of Route 2 and Diglett's Cave (minimal blocker set; Vermilion's Snorlax, a story gate, is already ignored). Walkers don't cut, and the tree is not a story gate."
         }
       ],
       "allow_skip": {
@@ -302,8 +304,7 @@
           "serves": "relax",
           "map": "FourIsland_IcefallCave_Entrance_Frlg",
           "kind": "water_edge",
-          "note": "Icefall Cave",
-          "disabled": "Unreachable on foot from FourIsland_Frlg under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "note": "Icefall Cave"
         },
         {
           "serves": "care",
@@ -410,8 +411,7 @@
           "serves": "relax",
           "map": "DragonsDen_Cavern_hns",
           "kind": "water_edge",
-          "note": "Dragon's Den",
-          "disabled": "Unreachable on foot from BlackthornCity_hns under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "note": "Dragon's Den"
         }
       ]
     },
@@ -543,8 +543,7 @@
           "serves": "sightsee",
           "map": "TinTower_1F_hns",
           "kind": "named",
-          "label": "Bell Tower",
-          "disabled": "Unreachable on foot from EcruteakCity_hns under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "label": "Bell Tower"
         },
         {
           "serves": "relax",
@@ -577,7 +576,7 @@
           "map": "TrainerHill_Courtyard_hns",
           "kind": "named",
           "label": "Route 40 battle courtyard",
-          "disabled": "Unreachable on foot from CianwoodCity_hns under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "disabled": "Route 41's layout walls the Route 40 and Olivine sea off from the Cianwood sea: a row of collision-flagged ocean tiles (elevation 0, collision 1) at y = 13 and wall columns around the inner sea leave no water path, even off-screen. Cianwood's other exit, Cliff Edge Gate, leads only to Routes 47 and 48. The player can't surf it either, so this looks like a map-data question for LAYOUT_ROUTE41_HNS."
         },
         {
           "serves": "care",
@@ -620,7 +619,7 @@
           "map": "CianwoodShop_hns",
           "kind": "named",
           "label": "Cianwood pharmacy",
-          "disabled": "Unreachable on foot from OlivineCity_hns under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "disabled": "Route 41's layout walls the Route 40 and Olivine sea off from the Cianwood sea: a row of collision-flagged ocean tiles (elevation 0, collision 1) at y = 13 and wall columns around the inner sea leave no water path, even off-screen. Cianwood's other exit, Cliff Edge Gate, leads only to Routes 47 and 48. The player can't surf it either, so this looks like a map-data question for LAYOUT_ROUTE41_HNS."
         },
         {
           "serves": "relax",
@@ -685,8 +684,7 @@
           "serves": "relax",
           "map": "DragonsDen_Cavern_hns",
           "kind": "water_edge",
-          "note": "Dragon's Den",
-          "disabled": "Unreachable on foot from BlackthornCity_hns under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "note": "Dragon's Den"
         }
       ]
     },
@@ -709,14 +707,14 @@
           "map": "RuinsOfAlph_Outside_hns",
           "kind": "named",
           "label": "Ruins of Alph",
-          "disabled": "Unreachable on foot from IndigoPlateau_hns under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "disabled": "Indigo Plateau's way out runs through Victory Road's Strength boulders at B1F (48, 12) and B2F (28, 42), and on to Johto's Magnet Train past Route 2's Cut tree at (11, 13) (minimal blocker set; the reception gate's guards, story gates, are already ignored). Walkers don't push boulders or cut, and these are not story gates."
         },
         {
           "serves": "train",
           "map": "BattleFrontier_BattleTowerLobby",
           "kind": "named",
           "label": "Battle Tower",
-          "disabled": "Unreachable on foot from IndigoPlateau_hns under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "disabled": "Indigo Plateau's way out runs through Victory Road's Strength boulders at B1F (48, 12) and B2F (28, 42), and on to Vermilion's Kanto ferry past Route 2's Cut tree at (11, 13) (minimal blocker set; the reception gate's guards, story gates, are already ignored). Walkers don't push boulders or cut, and these are not story gates."
         }
       ],
       "allow_skip": {
@@ -742,14 +740,14 @@
           "map": "Route28_hns",
           "kind": "tall_grass",
           "note": "Route 28",
-          "disabled": "Unreachable on foot from IndigoPlateau_hns under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "disabled": "Indigo Plateau reaches Route 28 only through Victory Road's Strength boulders at B1F (48, 12) and B2F (28, 42) (the Mt. Silver guard, a story gate, is already ignored). Walkers don't push boulders, and they are not story gates."
         },
         {
           "serves": "relax",
           "map": "VictoryRoadKanto_B1F_hns",
           "kind": "water_edge",
           "note": "Victory Road",
-          "disabled": "Unreachable on foot from IndigoPlateau_hns under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "disabled": "The water's edge on Victory Road B1F lies behind the Strength boulder at (48, 12) (local 7). Walkers don't push boulders, and it is not a story gate."
         }
       ],
       "allow_skip": {
@@ -953,20 +951,16 @@
           "serves": "sightsee",
           "map": "SootopolisCity",
           "kind": "named",
-          "label": "Sootopolis",
-          "disabled": "Unreachable on foot from SootopolisCity under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "label": "Sootopolis"
         },
         {
           "serves": "visit",
           "map": "LilycoveCity_PokemonTrainerFanClub",
           "kind": "named",
           "label": "Lilycove Trainer Fan Club",
-          "disabled": "Unreachable on foot from SootopolisCity under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "disabled": "Lilycove City's streets join the rest of Hoenn only by Route 121, which reaches Fortree only down Route 120's ledges (rows 59-64), and walkers never jump ledges. Lilycove's shore is its east beach, a separate area with no walkable link to the streets, so water can't reach the Fan Club either."
         }
-      ],
-      "allow_skip": {
-        "sightsee": "No sightsee spot within 3 hops of SootopolisCity on foot and no reachable favourite; the runtime skips the step."
-      }
+      ]
     },
     {
       "slug": "sidney",
@@ -1080,15 +1074,13 @@
           "serves": "relax",
           "map": "SootopolisCity",
           "kind": "water_edge",
-          "note": "Sootopolis lake",
-          "disabled": "Unreachable on foot from SootopolisCity under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "note": "Sootopolis lake"
         },
         {
           "serves": "fish",
           "map": "Route119",
           "kind": "water_edge",
-          "note": "Route 119",
-          "disabled": "Unreachable on foot from SootopolisCity under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "note": "Route 119"
         }
       ]
     },
@@ -1110,28 +1102,26 @@
           "serves": "study",
           "map": "RuinsOfAlph_Outside_hns",
           "kind": "named",
-          "label": "Ruins of Alph",
-          "disabled": "Unreachable on foot from MossdeepCity under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "label": "Ruins of Alph"
         },
         {
           "serves": "relax",
           "map": "MeteorFalls_1F_1R",
           "kind": "water_edge",
           "note": "Meteor Falls",
-          "disabled": "Unreachable on foot from MossdeepCity under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "rows": [
+            0,
+            22
+          ],
+          "why": "Rows 0-22 hold the water's edges joined to the cave's entrances; the lower river's islands at (19, 23) and (16, 38) touch only water that no entrance reaches."
         },
         {
           "serves": "sightsee",
           "map": "SevenIsland_TanobyRuins_Frlg",
           "kind": "named",
-          "label": "Tanoby Ruins",
-          "disabled": "Unreachable on foot from MossdeepCity under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+          "label": "Tanoby Ruins"
         }
-      ],
-      "allow_skip": {
-        "study": "No study spot within 8 hops of MossdeepCity on foot and no reachable favourite; the runtime skips the step.",
-        "sightsee": "No sightsee spot within 8 hops of MossdeepCity on foot and no reachable favourite; the runtime skips the step."
-      }
+      ]
     }
   ]
 }
