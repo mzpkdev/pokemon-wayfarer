@@ -25,10 +25,12 @@ ledges are solid. Sideways stairs follow GetCollisionAtCoords's special
 cases and GetSidewaysStairsCollision's diagonal steps (stair_move below).
 Objects present at New Game are solid on their template tile.
 
-A node is a connected component of states (an undirected union of the
-allowed moves). The allowed-move relation is symmetric except across a
-bridge's elevation memory; the generator counts asymmetric moves and
-reports them.
+A node is a strongly connected component of states under the allowed
+(directed) moves. Moves are symmetric except on sideways stairs (a
+diagonal step one way may be a wall or a different diagonal the other way)
+and across a bridge's elevation memory; a one-way move inside a map joins
+nothing, so a pocket that can be entered but not left (or the reverse) is
+its own node. The generator counts asymmetric moves and reports them.
 """
 
 import re
@@ -142,6 +144,46 @@ def stair_move(walk, grid, walkable, i, e, j, dx, dy):
     return y * w + x
 
 
+def strongly_connected(states, adj):
+    """Strongly connected components (Tarjan's, iterative): lists of states."""
+    index, low, on_stack, stack, out = {}, {}, set(), [], []
+    counter = 0
+    for root in states:
+        if root in index:
+            continue
+        index[root] = low[root] = counter
+        counter += 1
+        stack.append(root)
+        on_stack.add(root)
+        work = [(root, iter(adj.get(root, ())))]
+        while work:
+            v, it = work[-1]
+            w = next(it, None)
+            if w is None:
+                work.pop()
+                if work:
+                    u = work[-1][0]
+                    low[u] = min(low[u], low[v])
+                if low[v] == index[v]:
+                    comp = []
+                    while True:
+                        x = stack.pop()
+                        on_stack.discard(x)
+                        comp.append(x)
+                        if x == v:
+                            break
+                    out.append(comp)
+            elif w not in index:
+                index[w] = low[w] = counter
+                counter += 1
+                stack.append(w)
+                on_stack.add(w)
+                work.append((w, iter(adj.get(w, ()))))
+            elif w in on_stack:
+                low[v] = min(low[v], index[w])
+    return out
+
+
 def mismatch(e, m):
     """IsElevationMismatchAt(e, tile at elevation m)."""
     return e != 0 and m != 0 and m != 15 and m != e
@@ -169,24 +211,7 @@ class MapFlood:
             moves.append((dx, dy, leave, enter))
         self.moves = moves
 
-        parent = {}
-
-        def find(a):
-            root = a
-            while parent[root] != root:
-                root = parent[root]
-            while parent[a] != root:
-                parent[a], a = root, parent[a]
-            return root
-
-        def union(a, b):
-            ra, rb = find(a), find(b)
-            if ra != rb:
-                if ra < rb:
-                    parent[rb] = ra
-                else:
-                    parent[ra] = rb
-
+        parent = {}  # every reachable state
         queue = deque()
         for i in range(n):
             if walkable[i] and elev[i] != 15:
@@ -230,15 +255,19 @@ class MapFlood:
                 if t not in parent:
                     parent[t] = t
                     queue.append(t)
-                union(s, t)
                 edges_seen.add((s, t))
         self.asymmetric = sum(1 for s, t in edges_seen if (t, s) not in edges_seen)
-        comps = defaultdict(list)
-        for s in parent:
-            comps[find(s)].append(s)
+        # Components are strongly connected: a one-way move (a sideways
+        # stair's diagonal, a bridge's elevation memory) joins two states
+        # only when moves lead back as well, so every state of a node can
+        # reach every other one on foot, as the local walker must.
+        adj = defaultdict(list)
+        for a, b in sorted(edges_seen):
+            adj[a].append(b)
+        comps = strongly_connected(sorted(parent), adj)
         # Components ordered by their first tile in scan order (y, then x),
         # then by elevation for two bridge layers starting on one tile.
-        ordered = sorted(comps.values(), key=lambda states: min(states))
+        ordered = sorted(comps, key=lambda states: min(states))
         self.components = []
         self.comp_of = {}
         self.tile_comps = defaultdict(list)

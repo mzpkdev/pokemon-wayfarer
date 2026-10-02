@@ -204,6 +204,38 @@ class Graph(unittest.TestCase):
         self.assertTrue(out)
         self.assertEqual(out[0].c, 4)  # lands on the city's warp 4, the door
 
+    def test_one_way_stairs_split_mt_mortar(self):
+        # Sideways stairs are one-way in places: the door from 1F South at
+        # (66, 61) and the water's-edge pocket at (56..59, 20) can't reach
+        # each other on foot in either direction, so they are separate
+        # nodes (the walker's grid search agrees, verifier F5).
+        _, wg, _ = full()
+        flood = wg.builder.floods["MtMortar_1F_North_hns"]
+        door = flood.tile_component(66, 61)
+        pocket = flood.tile_component(56, 20)
+        self.assertNotEqual(door, pocket)
+        self.assertEqual(flood.tile_component(66, 33), door)
+        self.assertEqual(flood.tile_component(15, 31), flood.tile_component(53, 14))
+
+    def test_strongly_connected(self):
+        adj = {1: [2], 2: [1, 3], 3: [4], 4: [3]}
+        comps = sorted(sorted(c) for c in graph.strongly_connected([1, 2, 3, 4], adj))
+        self.assertEqual(comps, [[1, 2], [3, 4]])
+
+    def test_water_edges_pair_up_on_land(self):
+        _, wg, _ = full()
+        water = [e for e in wg.edges if e.kind == graph.KIND_WATER]
+        self.assertTrue(water)
+        for e in water:
+            back = wg.nodes[e.target].edges[e.c]
+            self.assertEqual((back.kind, back.target), (graph.KIND_WATER, e.source))
+            flood = wg.builder.floods[wg.nodes[e.source].map.name]
+            self.assertEqual(flood.walkable[e.b * flood.grid.w + e.a], 1)
+        # Sootopolis's only way out is the authored Dive link.
+        soot = {n.id for n in wg.map_nodes("SootopolisCity")}
+        out = {wg.nodes[e.target].map.name for e in water if e.source in soot}
+        self.assertTrue(out - {"SootopolisCity"})
+
     def test_edges_sorted_and_targets_exist(self):
         _, wg, _ = full()
         for n in wg.nodes:
