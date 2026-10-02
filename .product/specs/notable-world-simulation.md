@@ -252,7 +252,10 @@ spot, and no warp is dropped.
   meets, open to every trainer. Water is the surfable tiles (waterfalls
   included), the water under a bridge, warps on water (Route 40's row of
   warps into Route 41, the way to Cianwood), and the authored Dive link out
-  of Sootopolis (to Route 126); whirlpools don't block it. Off-screen, a
+  of Sootopolis (to Route 126); whirlpools don't block it. One authored
+  land-to-land link travels the same way: the Elite Four's fly between
+  Indigo Plateau and the Victory Road reception gate (`water.json` "fly"),
+  since Victory Road is one-way on foot. Off-screen, a
   notable has the water HMs. Each water tile belongs to its nearest
   shore, and two nodes are linked when their water meets, so a sea gives
   a sparse set of links, not every pair. A shore is a land tile at
@@ -283,11 +286,11 @@ B2F (28, 42). The local walker still meets the real objects.
 reach stays in the routines file, disabled with the obstacle that blocks
 it, and the cycle step it serves may be skipped. Today:
 
-- Victory Road is one-way for walkers: from the League reception gate it
-  climbs to Route 23 only by falling through 1F's hole at (17, 16) and
-  jumping B1F's ledge at (31..33, 23), and from Indigo Plateau there is no
-  way down. Will and Karen stay at Indigo Plateau, with their four
-  favourites disabled.
+- (Resolved.) Victory Road is one-way for walkers: from the League
+  reception gate it climbs to Route 23 only by falling through 1F's hole
+  and jumping B1F's ledge, and from Indigo Plateau there is no way down on
+  foot. The authored Elite Four fly (above) joins Indigo Plateau and the
+  reception gate off-screen, so Will's and Karen's favourites are reachable.
 - Route 120's ledges are the only way from Fortree to Route 121 and
   Lilycove, and Lilycove's shore is a separate beach, so Juan's Lilycove
   Fan Club stays out of reach.
@@ -297,12 +300,15 @@ Any other unreachable favourite fails the build.
 **Known limitation: a long trip's first search.** Each heartbeat a
 travelling trainer follows its cached path (the first nodes of its last
 search, which every later search from those nodes would repeat), so most
-heartbeats search little: about 200 expanded nodes per heartbeat on
-average in the all-badges report. A trip's first search, and every
-search after the cache runs out, is still a breadth-first search to the
-destination; across the Surf-linked seas it can expand about 900 nodes
-in one heartbeat (Steven's trips to Johto and Sevii, Wallace's around
-Hoenn's sea). That cost is accepted.
+heartbeats search little. A trip's first search, and every search after
+the 12-node cache runs out, is still a breadth-first search to the
+destination; across the Surf-linked seas and the Elite Four fly it can
+expand about 930 nodes in one search, and up to about 2,500 nodes in one
+heartbeat when several long trips start together (all-badges report:
+about 520 expanded nodes per heartbeat on average). On the ROM the
+worst map-load heartbeat measured was 1,642 scanlines (about 7 frames,
+during the warp fade; 60 warps with all badges), and a warp took 46
+frames at most against main's 40. That cost is accepted.
 
 **Generator outputs**, one ROM table each, in a fixed order (map order,
 then component top-left tile) so ids are stable between builds of the
