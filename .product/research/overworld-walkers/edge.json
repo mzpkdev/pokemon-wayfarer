@@ -1,12 +1,12 @@
 {
   "exit_tile_viridian": [
     26,
-    0
+    -1
   ],
   "record_at_exit": {
-    "node": 88,
+    "node": 122,
     "destKind": 1,
-    "destId": 3416,
+    "destId": 4194,
     "state": 0,
     "waited": 0,
     "arrival": 2,
@@ -18,7 +18,7 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "5810560352600600"
+    "hex": "7a90180452600600"
   },
   "expected_crossing": 10,
   "heartbeats_during_cross": 1,
@@ -49,7 +49,11 @@
     ],
     [
       10,
-      79
+      78
+    ],
+    [
+      10,
+      78
     ],
     [
       10,
@@ -174,7 +178,7 @@
     "y": 78,
     "goalX": 5,
     "goalY": 51,
-    "goalEdge": 316
+    "goalEdge": 440
   },
   "actor_after_90_frames": {
     "index": 0,
@@ -190,12 +194,12 @@
     "y": 75,
     "goalX": 5,
     "goalY": 51,
-    "goalEdge": 316
+    "goalEdge": 440
   },
   "rebases": 1,
   "samples": [
     {
-      "frame": 929,
+      "frame": 930,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -209,7 +213,7 @@
       ]
     },
     {
-      "frame": 931,
+      "frame": 932,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -223,7 +227,7 @@
       ]
     },
     {
-      "frame": 933,
+      "frame": 934,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -237,7 +241,7 @@
       ]
     },
     {
-      "frame": 935,
+      "frame": 936,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -251,7 +255,7 @@
       ]
     },
     {
-      "frame": 937,
+      "frame": 938,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -265,21 +269,7 @@
       ]
     },
     {
-      "frame": 939,
-      "map": 32,
-      "blue_objects": 1,
-      "blue": [
-        [
-          26,
-          -1
-        ]
-      ],
-      "mode": [
-        2
-      ]
-    },
-    {
-      "frame": 941,
+      "frame": 940,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -293,7 +283,7 @@
       ]
     },
     {
-      "frame": 943,
+      "frame": 942,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -321,7 +311,7 @@
       ]
     },
     {
-      "frame": 944,
+      "frame": 945,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -335,7 +325,7 @@
       ]
     },
     {
-      "frame": 944,
+      "frame": 945,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -349,7 +339,7 @@
       ]
     },
     {
-      "frame": 944,
+      "frame": 945,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -363,7 +353,21 @@
       ]
     },
     {
-      "frame": 946,
+      "frame": 945,
+      "map": 32,
+      "blue_objects": 1,
+      "blue": [
+        [
+          26,
+          -2
+        ]
+      ],
+      "mode": [
+        2
+      ]
+    },
+    {
+      "frame": 947,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -377,7 +381,7 @@
       ]
     },
     {
-      "frame": 948,
+      "frame": 949,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -391,7 +395,7 @@
       ]
     },
     {
-      "frame": 950,
+      "frame": 951,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -405,7 +409,7 @@
       ]
     },
     {
-      "frame": 952,
+      "frame": 953,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -419,7 +423,7 @@
       ]
     },
     {
-      "frame": 954,
+      "frame": 955,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -489,7 +493,7 @@
       ]
     },
     {
-      "frame": 960,
+      "frame": 961,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -503,7 +507,7 @@
       ]
     },
     {
-      "frame": 961,
+      "frame": 962,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -531,7 +535,7 @@
       ]
     },
     {
-      "frame": 965,
+      "frame": 964,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -559,7 +563,7 @@
       ]
     },
     {
-      "frame": 968,
+      "frame": 967,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -615,20 +619,6 @@
       ]
     },
     {
-      "frame": 974,
-      "map": 42,
-      "blue_objects": 1,
-      "blue": [
-        [
-          10,
-          78
-        ]
-      ],
-      "mode": [
-        1
-      ]
-    },
-    {
       "frame": 975,
       "map": 42,
       "blue_objects": 1,
@@ -655,6 +645,34 @@
       "mode": [
         1
       ]
+    },
+    {
+      "frame": 977,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 978,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
     }
   ],
   "screenshots": [
@@ -663,7 +681,7 @@
     ".product/research/overworld-walkers/edge-route2-moving.png"
   ],
   "debug": {
-    "frames": 1067,
+    "frames": 1072,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 1,
@@ -684,16 +702,16 @@
     "restores": 0,
     "lastSearchNodes": 419,
     "maxSearchNodes": 1004,
-    "lastSearchFrames": 87,
+    "lastSearchFrames": 84,
     "maxSearchFrames": 198,
-    "maxSliceScanlines": 130,
+    "maxSliceScanlines": 126,
     "maxSliceNodes": 8,
     "workspaceBytes": 11308,
     "currentMap": 42,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634116,
+    "worldState": 33634100,
     "actors": [
       {
         "index": 0,
@@ -709,7 +727,7 @@
         "y": 75,
         "goalX": 5,
         "goalY": 51,
-        "goalEdge": 316
+        "goalEdge": 440
       },
       {
         "index": 1,
@@ -760,18 +778,19 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 146,
-    "maxHeartbeatScanlines": 146,
-    "maxSpawnScanlines": 23,
-    "maxUpdateScanlines": 139,
+    "lastHeartbeatScanlines": 112,
+    "maxHeartbeatScanlines": 112,
+    "maxSpawnScanlines": 63,
+    "maxUpdateScanlines": 136,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
     "lastContextScanlines": 15,
     "lastFailNodes": 0,
-    "maxFinishScanlines": 10
+    "maxFinishScanlines": 10,
+    "walkOffs": 0
   },
   "pass": true,
-  "emulated_frames": 1410
+  "emulated_frames": 1414
 }

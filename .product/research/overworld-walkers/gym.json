@@ -1,6 +1,6 @@
 {
   "brock_record_home": {
-    "node": 254,
+    "node": 297,
     "destKind": 2,
     "destId": 16383,
     "state": 1,
@@ -14,20 +14,36 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "fee0ff1f00180900"
+    "hex": "29e1ff1f00180900"
   },
   "leader_template_gfx": 464,
   "leader_objects_while_home": 1,
   "visitor_spawn_tile": [
     6,
-    13
+    14
   ],
+  "visitor_first_seen": {
+    "index": 0,
+    "slot": 8,
+    "mode": 1,
+    "phase": 6,
+    "goalKind": 3,
+    "objectId": 3,
+    "template": 0,
+    "atSpot": 0,
+    "blocked": 0,
+    "x": 6,
+    "y": 14,
+    "goalX": 6,
+    "goalY": 14,
+    "goalEdge": 738
+  },
   "leader_hidden_while_out": true,
   "leader_hidden_after_walking": true,
   "blue_after_leaving": {
-    "node": 68,
+    "node": 96,
     "destKind": 1,
-    "destId": 7135,
+    "destId": 9695,
     "state": 0,
     "waited": 0,
     "arrival": 5,
@@ -39,7 +55,7 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "44d0f70615c80200"
+    "hex": "60d0770915c80200"
   },
   "visitor_gone_and_not_respawned": true,
   "screenshots": [
@@ -48,7 +64,7 @@
     ".product/research/overworld-walkers/gym-leader-out.png"
   ],
   "debug": {
-    "frames": 511,
+    "frames": 513,
     "spawns": 1,
     "removals": 1,
     "edgeExits": 0,
@@ -145,8 +161,8 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 61,
-    "maxHeartbeatScanlines": 61,
+    "lastHeartbeatScanlines": 121,
+    "maxHeartbeatScanlines": 121,
     "maxSpawnScanlines": 19,
     "maxUpdateScanlines": 39,
     "backOffs": 0,
@@ -155,8 +171,9 @@
     "culls": 0,
     "lastContextScanlines": 16,
     "lastFailNodes": 0,
-    "maxFinishScanlines": 0
+    "maxFinishScanlines": 0,
+    "walkOffs": 0
   },
   "pass": true,
-  "emulated_frames": 804
+  "emulated_frames": 806
 }

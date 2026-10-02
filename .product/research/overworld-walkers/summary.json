@@ -10,8 +10,11 @@
   "gymentry": true,
   "linger": true,
   "midstep": true,
+  "mortar": true,
   "perf": true,
+  "safari": true,
   "save": true,
   "spot": true,
-  "stairs": true
+  "stairs": true,
+  "walkoff": true
 }

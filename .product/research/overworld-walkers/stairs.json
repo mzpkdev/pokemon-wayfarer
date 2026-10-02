@@ -108,9 +108,9 @@
   "diagonal_steps": 2,
   "warp_exits": 1,
   "record": {
-    "node": 217,
+    "node": 260,
     "destKind": 1,
-    "destId": 2170,
+    "destId": 2674,
     "state": 1,
     "waited": 0,
     "arrival": 0,
@@ -122,13 +122,13 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "d9901e1200c00200"
+    "hex": "04919c1200c00200"
   },
   "screenshots": [
     ".product/research/overworld-walkers/stairs-after.png"
   ],
   "debug": {
-    "frames": 579,
+    "frames": 578,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -149,16 +149,16 @@
     "restores": 0,
     "lastSearchNodes": 447,
     "maxSearchNodes": 447,
-    "lastSearchFrames": 160,
-    "maxSearchFrames": 160,
-    "maxSliceScanlines": 151,
+    "lastSearchFrames": 159,
+    "maxSearchFrames": 159,
+    "maxSliceScanlines": 156,
     "maxSliceNodes": 7,
     "workspaceBytes": 11308,
     "currentMap": 6,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634016,
+    "worldState": 33634068,
     "actors": [
       {
         "index": 0,
@@ -174,7 +174,7 @@
         "y": 49,
         "goalX": 39,
         "goalY": 49,
-        "goalEdge": 75
+        "goalEdge": 86
       },
       {
         "index": 1,
@@ -227,16 +227,17 @@
     ],
     "lastHeartbeatScanlines": 27,
     "maxHeartbeatScanlines": 27,
-    "maxSpawnScanlines": 82,
-    "maxUpdateScanlines": 154,
+    "maxSpawnScanlines": 79,
+    "maxUpdateScanlines": 172,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
     "lastContextScanlines": 16,
     "lastFailNodes": 0,
-    "maxFinishScanlines": 5
+    "maxFinishScanlines": 5,
+    "walkOffs": 0
   },
   "pass": true,
-  "emulated_frames": 1034
+  "emulated_frames": 1032
 }

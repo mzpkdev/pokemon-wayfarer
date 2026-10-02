@@ -6,9 +6,9 @@
       "heartbeats": 1,
       "heartbeat_scanlines": 76,
       "lorelei": {
-        "node": 83,
+        "node": 117,
         "destKind": 1,
-        "destId": 995,
+        "destId": 1366,
         "state": 0,
         "waited": 0,
         "arrival": 0,
@@ -20,12 +20,12 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "53d0f80000600600"
+        "hex": "7590550100600600"
       },
       "blue": {
-        "node": 248,
+        "node": 291,
         "destKind": 1,
-        "destId": 2250,
+        "destId": 2754,
         "state": 1,
         "waited": 0,
         "arrival": 0,
@@ -37,19 +37,19 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "f890321200200200"
+        "hex": "2391b01200200200"
       }
     },
     {
       "step": "into the Mart",
       "player_map": 3073,
       "heartbeats": 2,
-      "heartbeat_scanlines": 75,
+      "heartbeat_scanlines": 125,
       "warp_frames": 42,
       "lorelei": {
-        "node": 67,
+        "node": 94,
         "destKind": 1,
-        "destId": 995,
+        "destId": 1366,
         "state": 0,
         "waited": 0,
         "arrival": 2,
@@ -61,12 +61,12 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "43d0f800ca600600"
+        "hex": "5e905501ca600600"
       },
       "blue": {
-        "node": 248,
+        "node": 291,
         "destKind": 1,
-        "destId": 2250,
+        "destId": 2754,
         "state": 1,
         "waited": 0,
         "arrival": 0,
@@ -78,7 +78,7 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "f890321200200200"
+        "hex": "2391b01200200200"
       },
       "blue_actor": {
         "index": 0,
@@ -102,12 +102,12 @@
       "step": "into the Center",
       "player_map": 3072,
       "heartbeats": 3,
-      "heartbeat_scanlines": 74,
-      "warp_frames": 40,
+      "heartbeat_scanlines": 350,
+      "warp_frames": 42,
       "lorelei": {
-        "node": 88,
+        "node": 122,
         "destKind": 1,
-        "destId": 995,
+        "destId": 1366,
         "state": 1,
         "waited": 0,
         "arrival": 0,
@@ -119,12 +119,12 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "58d0f81000600600"
+        "hex": "7a90551100600600"
       },
       "blue": {
-        "node": 248,
+        "node": 291,
         "destKind": 1,
-        "destId": 7135,
+        "destId": 9695,
         "state": 0,
         "waited": 0,
         "arrival": 0,
@@ -136,7 +136,7 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "f8d0f70600c80200"
+        "hex": "23d1770900c80200"
       },
       "blue_actor": null
     },
@@ -144,12 +144,12 @@
       "step": "into the Mart again",
       "player_map": 3073,
       "heartbeats": 4,
-      "heartbeat_scanlines": 35,
-      "warp_frames": 40,
+      "heartbeat_scanlines": 315,
+      "warp_frames": 42,
       "lorelei": {
-        "node": 88,
+        "node": 122,
         "destKind": 1,
-        "destId": 995,
+        "destId": 1366,
         "state": 1,
         "waited": 0,
         "arrival": 0,
@@ -161,12 +161,12 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "58d0f81000600400"
+        "hex": "7a90551100600400"
       },
       "blue": {
-        "node": 248,
+        "node": 291,
         "destKind": 1,
-        "destId": 7135,
+        "destId": 9695,
         "state": 0,
         "waited": 0,
         "arrival": 0,
@@ -178,7 +178,7 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "f8d0f70600c80200"
+        "hex": "23d1770900c80200"
       },
       "blue_actor": {
         "index": 0,
@@ -194,19 +194,19 @@
         "y": 2,
         "goalX": 4,
         "goalY": 7,
-        "goalEdge": 569
+        "goalEdge": 732
       }
     },
     {
       "step": "into the Center again",
       "player_map": 3072,
       "heartbeats": 5,
-      "heartbeat_scanlines": 44,
+      "heartbeat_scanlines": 40,
       "warp_frames": 40,
       "lorelei": {
-        "node": 88,
+        "node": 122,
         "destKind": 1,
-        "destId": 995,
+        "destId": 1366,
         "state": 1,
         "waited": 0,
         "arrival": 0,
@@ -218,12 +218,12 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "58d0f81000600200"
+        "hex": "7a90551100600200"
       },
       "blue": {
-        "node": 67,
+        "node": 94,
         "destKind": 1,
-        "destId": 7135,
+        "destId": 9695,
         "state": 0,
         "waited": 0,
         "arrival": 5,
@@ -235,17 +235,17 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "43d0f7061dc80200"
+        "hex": "5ed077091dc80200"
       },
       "blue_actor": null
     }
   ],
   "lorelei_nodes": [
-    83,
-    67,
-    88,
-    88,
-    88
+    117,
+    94,
+    122,
+    122,
+    122
   ],
   "heartbeats": [
     1,
@@ -255,7 +255,7 @@
     5
   ],
   "debug": {
-    "frames": 187,
+    "frames": 188,
     "spawns": 2,
     "removals": 0,
     "edgeExits": 0,
@@ -278,14 +278,14 @@
     "maxSearchNodes": 0,
     "lastSearchFrames": 0,
     "maxSearchFrames": 0,
-    "maxSliceScanlines": 57,
+    "maxSliceScanlines": 56,
     "maxSliceNodes": 4,
     "workspaceBytes": 11308,
     "currentMap": 3072,
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634020,
+    "worldState": 33634024,
     "actors": [
       {
         "index": 0,
@@ -352,8 +352,8 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 44,
-    "maxHeartbeatScanlines": 76,
+    "lastHeartbeatScanlines": 40,
+    "maxHeartbeatScanlines": 350,
     "maxSpawnScanlines": 18,
     "maxUpdateScanlines": 61,
     "backOffs": 0,
@@ -362,8 +362,9 @@
     "culls": 0,
     "lastContextScanlines": 16,
     "lastFailNodes": 0,
-    "maxFinishScanlines": 0
+    "maxFinishScanlines": 0,
+    "walkOffs": 0
   },
   "pass": true,
-  "emulated_frames": 508
+  "emulated_frames": 512
 }

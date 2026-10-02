@@ -1,6 +1,6 @@
 {
-  "spot": 4920,
-  "node": 693,
+  "spot": 6092,
+  "node": 892,
   "arrived_after_frames": 3008,
   "delta": {
     "searches": 1,
@@ -179,9 +179,9 @@
     ]
   ],
   "record": {
-    "node": 693,
+    "node": 892,
     "destKind": 1,
-    "destId": 4920,
+    "destId": 6092,
     "state": 1,
     "waited": 0,
     "arrival": 0,
@@ -193,7 +193,7 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "b512ce1400a00600"
+    "hex": "7c13f31500a00600"
   },
   "maxSliceScanlines": 149,
   "maxSearchNodes": 1567,
@@ -233,7 +233,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634076,
+    "worldState": 33634000,
     "actors": [
       {
         "index": 0,
@@ -310,7 +310,8 @@
     "culls": 0,
     "lastContextScanlines": 16,
     "lastFailNodes": 0,
-    "maxFinishScanlines": 39
+    "maxFinishScanlines": 39,
+    "walkOffs": 0
   },
   "pass": true,
   "emulated_frames": 3412

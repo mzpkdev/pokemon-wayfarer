@@ -83,9 +83,9 @@
   "maxSearchFrames": 238,
   "records": {
     "lorelei": {
-      "node": 67,
+      "node": 94,
       "destKind": 1,
-      "destId": 843,
+      "destId": 1171,
       "state": 1,
       "waited": 0,
       "arrival": 0,
@@ -97,12 +97,12 @@
       "lifeSteps": 0,
       "stayBits": 0,
       "reserved": 0,
-      "hex": "43d0d21000800400"
+      "hex": "5ed0241100800400"
     },
     "lance": {
-      "node": 67,
+      "node": 94,
       "destKind": 1,
-      "destId": 836,
+      "destId": 1164,
       "state": 1,
       "waited": 0,
       "arrival": 0,
@@ -114,12 +114,12 @@
       "lifeSteps": 0,
       "stayBits": 0,
       "reserved": 0,
-      "hex": "4310d11000a00400"
+      "hex": "5e10231100a00400"
     },
     "blue": {
-      "node": 88,
+      "node": 122,
       "destKind": 1,
-      "destId": 3416,
+      "destId": 4194,
       "state": 0,
       "waited": 0,
       "arrival": 2,
@@ -131,7 +131,7 @@
       "lifeSteps": 0,
       "stayBits": 0,
       "reserved": 0,
-      "hex": "5810560352600600"
+      "hex": "7a90180452600600"
     }
   },
   "screenshots": [
@@ -169,7 +169,7 @@
     "followerHidden": 0,
     "activeActors": 2,
     "storySuppressed": 0,
-    "worldState": 33634032,
+    "worldState": 33634024,
     "actors": [
       {
         "index": 0,
@@ -238,7 +238,7 @@
     ],
     "lastHeartbeatScanlines": 27,
     "maxHeartbeatScanlines": 27,
-    "maxSpawnScanlines": 60,
+    "maxSpawnScanlines": 59,
     "maxUpdateScanlines": 138,
     "backOffs": 0,
     "handoffs": 0,
@@ -246,7 +246,8 @@
     "culls": 0,
     "lastContextScanlines": 16,
     "lastFailNodes": 0,
-    "maxFinishScanlines": 10
+    "maxFinishScanlines": 10,
+    "walkOffs": 0
   },
   "pass": true,
   "emulated_frames": 1890
