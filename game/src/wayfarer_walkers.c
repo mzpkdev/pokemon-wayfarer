@@ -57,6 +57,7 @@
 #define WALKER_YIELD_BLOCKS     2       // steps blocked by the player before backing off
 #define WALKER_BACKOFFS_MAX     3       // back-offs per visit before handing off
 #define WALKER_BACKOFF_WAIT     180
+#define WALKER_WALKOFF_FRAMES   600     // a walk-off gives up (vanishes) after this long
 #define WALKER_AWAY_DISTANCE    3
 #define WALKER_SPAWN_CLEARANCE  2       // never spawn this close to the player
 #define WALKER_SPAWN_AHEAD      4       // nor this far straight ahead of them
@@ -118,7 +119,7 @@ struct WalkerActor
     u16 wait;
     u8 frames;          // frames into the current dwell tick
     u8 dwellTicks;      // dwell ticks towards one heartbeat of local dwell
-    u16 t;              // template tick counter
+    u16 t;              // template tick counter; frames into a walk-off
     u16 k;              // template move counter
     u8 pauseTicks;
     bool8 actionPending;
@@ -870,6 +871,15 @@ static bool8 SpawnTile(u8 slot, s16 *x, s16 *y, u8 *facing)
             return FALSE;
         }
         break;
+    case WORLD_ARRIVAL_WATER:
+        // Landed from across the water: on the shore tile of the way back.
+        if (crossing < node->edgeCount)
+        {
+            const struct WayfarerWorldEdge *edge = &gWayfarerWorldEdges[node->firstEdge + crossing];
+            if (edge->kind == WORLD_EDGE_WATER)
+                return NearestSpawnTile(edge->a, edge->b, 0, WALKER_NEAR_RADIUS, x, y);
+        }
+        break;
     }
     // Travelling without an arrival (their stay here just ended off-screen):
     // the first spot of this node, as somewhere they plausibly were.
@@ -1231,6 +1241,11 @@ static void FailSearch(struct WalkerActor *actor)
     sSearch.actor = NO_ACTOR;
     gWayfarerWalkersDebug.searchFails++;
     gWayfarerWalkersDebug.lastFailNodes = sSearch.expanded;
+    if (actor->mode == WALKER_MODE_LEAVING)
+    {
+        RemoveActor(actor);     // no way out: vanish in place
+        return;
+    }
     if (actor->justLeaving)
     {
         // A Gym visitor that can't reach the exit (the player is in the
@@ -1377,7 +1392,8 @@ static void RunScheduler(void)
     {
         for (i = 0; i < WALKER_ACTOR_COUNT; i++)
         {
-            if (sActors[i].mode == WALKER_MODE_LOCAL && sActors[i].phase == WALKER_PHASE_QUEUED
+            if ((sActors[i].mode == WALKER_MODE_LOCAL || sActors[i].mode == WALKER_MODE_LEAVING)
+             && sActors[i].phase == WALKER_PHASE_QUEUED
              && sActors[i].stepKind == STEP_NONE)
                 break;
         }
@@ -1521,6 +1537,72 @@ static void SetEdgeGoal(struct WalkerActor *actor, u16 edgeIndex)
     RequestSearch(actor);
 }
 
+// A handed-off walker walks to the nearest way out of its node (a map side
+// or a door, away from the player) and is removed there or once out of
+// view. It no longer stands for its record: the record moves on at the
+// heartbeats as if the walker had vanished. With no exit, it vanishes now.
+static void StartWalkOff(struct WalkerActor *actor, u16 node)
+{
+    struct ObjectEvent *obj = ActorObject(actor);
+    const struct WayfarerWorldNode *data;
+    s16 x = obj->currentCoords.x - MAP_OFFSET, y = obj->currentCoords.y - MAP_OFFSET;
+    u16 e, best = NO_EDGE, bestDistance = 0xFFFF;
+
+    if (node >= gWayfarerWorldNodeCount || WorldSim_NodeMap(node) != CurrentMap() || !IsVisible(obj))
+    {
+        RemoveActor(actor);
+        return;
+    }
+    data = &gWayfarerWorldNodes[node];
+    for (e = data->firstEdge; e < data->firstEdge + data->edgeCount; e++)
+    {
+        const struct WayfarerWorldEdge *edge = &gWayfarerWorldEdges[e];
+        s16 ex, ey;
+        u16 distance;
+        switch (edge->kind)
+        {
+        case WORLD_EDGE_NORTH: ex = (edge->a + edge->b) / 2; ey = 0; break;
+        case WORLD_EDGE_SOUTH: ex = (edge->a + edge->b) / 2; ey = MapHeight() - 1; break;
+        case WORLD_EDGE_WEST:  ex = 0; ey = (edge->a + edge->b) / 2; break;
+        case WORLD_EDGE_EAST:  ex = MapWidth() - 1; ey = (edge->a + edge->b) / 2; break;
+        case WORLD_EDGE_WARP:
+            ex = edge->a;
+            ey = edge->b;
+            // Never the door the player stands at.
+            if (PlayerDistance(ex + MAP_OFFSET, ey + MAP_OFFSET) <= 1)
+                continue;
+            break;
+        default:
+            continue;   // transit and the like aren't walked to
+        }
+        distance = Distance(x, y, ex, ey);
+        if (distance < bestDistance)
+        {
+            bestDistance = distance;
+            best = e;
+        }
+    }
+    if (best == NO_EDGE)
+    {
+        RemoveActor(actor);
+        return;
+    }
+    actor->mode = WALKER_MODE_LEAVING;
+    actor->justLeaving = FALSE;
+    actor->atSpot = FALSE;
+    actor->blocked = 0;
+    actor->pushFrames = 0;
+    actor->t = 0;
+    SetEdgeGoal(actor, best);
+}
+
+static void EndWalkOff(struct WalkerActor *actor, bool8 walkedOff)
+{
+    if (walkedOff)
+        gWayfarerWalkersDebug.walkOffs++;
+    RemoveActor(actor);
+}
+
 // Hand off for the rest of this visit: the record stays where it is and
 // moves on at the heartbeats; no new actor until the next map load.
 static void YieldVisit(struct WalkerActor *actor)
@@ -1532,7 +1614,7 @@ static void YieldVisit(struct WalkerActor *actor)
     }
     sYielded |= 1u << actor->slot;
     gWayfarerWalkersDebug.handoffs++;
-    RemoveActor(actor);
+    StartWalkOff(actor, Record(actor)->node);
 }
 
 // A Gym visitor leaves at once: the visit ends and the record moves on.
@@ -1541,7 +1623,7 @@ static void FinishLeaving(struct WalkerActor *actor)
     struct WayfarerWorldRecord *record = Record(actor);
     const struct WayfarerWorldSpot *spot = DestSpot(record, actor->slot);
     struct WayfarerWorldContext ctx;
-    u16 edge = NO_EDGE;
+    u16 edge = NO_EDGE, node = record->node;
 
     if (spot != NULL && spot->kind == WORLD_SPOT_GYM && spot->node == record->node)
         edge = ExitEdgeForWarp(record->node, spot->x, spot->y);
@@ -1554,7 +1636,7 @@ static void FinishLeaving(struct WalkerActor *actor)
     }
     sVisitorsSeen |= 1u << actor->slot;
     gWayfarerWalkersDebug.visitorsVanished++;
-    RemoveActor(actor);
+    StartWalkOff(actor, node);
 }
 
 // Make room for the player: walk to an open tile away from them, wait, then
@@ -1649,6 +1731,13 @@ static void ChooseGoal(struct WalkerActor *actor, struct ObjectEvent *obj)
         actor->wait = WALKER_UNREACHABLE_WAIT << WALKER_FAILS_MAX;
         return;
     }
+    if (gWayfarerWorldEdges[edge].kind == WORLD_EDGE_WATER)
+    {
+        // An off-screen-only link (across water): nobody is seen making it.
+        // Hand off and walk out of view; the record crosses at a heartbeat.
+        YieldVisit(actor);
+        return;
+    }
     SetEdgeGoal(actor, edge);
 }
 
@@ -1673,6 +1762,15 @@ static bool8 IsPlayerAhead(struct ObjectEvent *obj, u8 dir)
 static void OnBlocked(struct WalkerActor *actor, bool8 byPlayer)
 {
     gWayfarerWalkersDebug.blockedSteps++;
+    if (actor->mode == WALKER_MODE_LEAVING)
+    {
+        // Leaving and still in the way: vanish rather than block.
+        if (byPlayer || ++actor->blocked >= WALKER_BLOCKED_LIMIT)
+            RemoveActor(actor);
+        else
+            RequestSearch(actor);
+        return;
+    }
     if (byPlayer && ++actor->playerBlocks >= WALKER_YIELD_BLOCKS)
     {
         StartBackOff(actor);
@@ -1697,6 +1795,12 @@ static void OnGoalReached(struct WalkerActor *actor, struct ObjectEvent *obj)
     struct WayfarerWorldRecord *record = Record(actor);
     s16 x = obj->currentCoords.x, y = obj->currentCoords.y;
 
+    if (actor->mode == WALKER_MODE_LEAVING)
+    {
+        // At the way out (the lane or beside the door): gone.
+        EndWalkOff(actor, TRUE);
+        return;
+    }
     switch (actor->goalKind)
     {
     case WALKER_GOAL_TILE:
@@ -1923,6 +2027,11 @@ static void OnSeam(void)
 
         if (actor->mode == WALKER_MODE_NONE)
             continue;
+        if (actor->mode == WALKER_MODE_LEAVING)
+        {
+            RemoveActor(actor);
+            continue;
+        }
         obj = ActorObject(actor);
         record = Record(actor);
         AbortSearchFor(actor);
@@ -2152,6 +2261,47 @@ static bool8 IsPlayerPushing(const struct ObjectEvent *obj)
     return player->facingDirection == DirectionTowards(px, py, obj->currentCoords.x, obj->currentCoords.y);
 }
 
+// Pushing for real: facing the walker with that direction held.
+static bool8 IsPlayerPressingInto(const struct ObjectEvent *obj)
+{
+    static const u16 sDirKeys[5] = {0, DPAD_DOWN, DPAD_UP, DPAD_LEFT, DPAD_RIGHT};
+    u8 facing = Player()->facingDirection;
+    return IsPlayerPushing(obj) && facing >= DIR_SOUTH && facing <= DIR_EAST && (gMain.heldKeys & sDirKeys[facing]);
+}
+
+// A walk-off: out of view, pushed against, or too slow, it vanishes.
+static void UpdateLeaving(struct WalkerActor *actor, struct ObjectEvent *obj)
+{
+    if (!IsVisible(obj))
+    {
+        EndWalkOff(actor, TRUE);
+        return;
+    }
+    // Still pushed against as long as a yield takes (not just the push that
+    // started the walk-off): vanish.
+    if (IsPlayerPressingInto(obj))
+        actor->pushFrames++;
+    else
+        actor->pushFrames = 0;
+    if (++actor->t >= WALKER_WALKOFF_FRAMES || actor->pushFrames >= WALKER_YIELD_FRAMES)
+    {
+        RemoveActor(actor);
+        return;
+    }
+    switch (actor->phase)
+    {
+    case WALKER_PHASE_PLAN:
+    case WALKER_PHASE_IDLE:
+        RequestSearch(actor);
+        break;
+    case WALKER_PHASE_WALK:
+        WalkStep(actor, obj);
+        break;
+    default:
+        break;
+    }
+}
+
 static void UpdateActor(struct WalkerActor *actor)
 {
     struct ObjectEvent *obj = ActorObject(actor);
@@ -2176,6 +2326,11 @@ static void UpdateActor(struct WalkerActor *actor)
     if (actor->mode == WALKER_MODE_STRIP)
     {
         UpdateStrip(actor, obj);
+        return;
+    }
+    if (actor->mode == WALKER_MODE_LEAVING)
+    {
+        UpdateLeaving(actor, obj);
         return;
     }
     if (!WorldSim_IsSimulated(record) || WorldSim_NodeMap(record->node) != CurrentMap()
@@ -2342,7 +2497,9 @@ static void PublishState(void)
         debug->slot = SLOT_NONE;
         if (actor->mode == WALKER_MODE_NONE)
             continue;
-        mask |= 1u << actor->slot;
+        // A walker leaving no longer stands for its record.
+        if (actor->mode != WALKER_MODE_LEAVING)
+            mask |= 1u << actor->slot;
         debug->slot = actor->slot;
         debug->mode = actor->mode;
         debug->phase = actor->phase;
@@ -2596,7 +2753,7 @@ void WayfarerWalkers_OnHeapReset(void)
             SettleHeldMovement(obj);
             actor->actionPending = FALSE;
         }
-        if (actor->mode == WALKER_MODE_LOCAL
+        if ((actor->mode == WALKER_MODE_LOCAL || actor->mode == WALKER_MODE_LEAVING)
          && (actor->phase == WALKER_PHASE_QUEUED || actor->phase == WALKER_PHASE_SEARCH || actor->phase == WALKER_PHASE_WALK))
         {
             actor->phase = WALKER_PHASE_PLAN;

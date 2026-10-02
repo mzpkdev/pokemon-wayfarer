@@ -356,7 +356,8 @@ class Game:
         (out["lastHeartbeatScanlines"], out["maxHeartbeatScanlines"], out["maxSpawnScanlines"],
          out["maxUpdateScanlines"]) = struct.unpack_from("<4I", raw, tail)
         (out["backOffs"], out["handoffs"], out["visitorsVanished"], out["culls"],
-         out["lastContextScanlines"], out["lastFailNodes"], out["maxFinishScanlines"]) = struct.unpack_from("<7H", raw, tail + 16)
+         out["lastContextScanlines"], out["lastFailNodes"], out["maxFinishScanlines"],
+         out["walkOffs"]) = struct.unpack_from("<8H", raw, tail + 16)
         return out
 
     def stable(self, read):
@@ -1235,7 +1236,71 @@ def scenario_bridge(game: Game) -> dict:
     return result
 
 
-SCENARIOS = {"spot": scenario_spot, "bridge": scenario_bridge, "edge": scenario_edge, "door": scenario_door,
+def scenario_walkoff(game: Game) -> dict:
+    """Follow-up 1: a walker that hands off walks out of view instead of
+    vanishing where it stands.
+
+    Blue stands at Viridian's pond (13, 39). The player keeps pushing against
+    him: each push makes him back off, and the fourth hands him off. He then
+    walks to the nearest way out of Viridian (a door or a map side) and is
+    removed there or once he leaves the camera's view."""
+    boot(game, VIRIDIAN, 13, 43, DIR_NORTH)
+    place_blue(game, node=NODE_VIRIDIAN, destId=SPOT_VIRIDIAN_WATER, state=STATE_DWELLING,
+               activity=ACTIVITY_FISH, dwell=6)
+    game.warp(VIRIDIAN, 13, 43, DIR_NORTH)
+    game.wait_for(lambda: game.actor_for(SLOT_BLUE), 400, step=2, what="Blue spawned")
+    game.emu.step(60)
+    before = game.walker_debug()
+
+    def towards(axis: str, target: int, positive: str, negative: str) -> None:
+        here = game.player()[axis]
+        if here != target:
+            hold_until(game, positive if target > here else negative,
+                       lambda: game.player()[axis] == target, limit=240)
+
+    rounds, leaving, shots = [], None, []
+    for _ in range(10):
+        blue = game.actor_for(SLOT_BLUE)
+        if blue is None or blue["mode"] == 3:
+            leaving = blue
+            break
+        # Stand south of Blue (or as near as the ground allows), then push north.
+        towards("x", blue["x"], "Right", "Left")
+        towards("y", blue["y"] + 1, "Down", "Up")
+        player = game.player()
+        push = {(0, 1): "Up", (0, -1): "Down", (1, 0): "Left", (-1, 0): "Right"}.get(
+            (player["x"] - blue["x"], player["y"] - blue["y"]))
+        if push:
+            hold_until(game, push, lambda: (game.actor_for(SLOT_BLUE) or {"mode": 3})["mode"] == 3
+                       or (game.actor_for(SLOT_BLUE) or {})["goalKind"] == 4, limit=90)
+        rounds.append({"player": game.player(), "blue": game.actor_for(SLOT_BLUE), "pushed": push})
+        game.emu.step(30)
+    else:
+        leaving = game.actor_for(SLOT_BLUE)
+    if leaving and leaving["mode"] == 3:
+        game.emu.step(20)
+        shots.append(game.shot("walkoff-leaving"))
+    track = []
+    gone = None
+    for f in range(0, 900, 4):
+        game.emu.step(4)
+        blue = game.actor_for(SLOT_BLUE)
+        if blue is None:
+            gone = f
+            break
+        if not track or track[-1] != (blue["x"], blue["y"]):
+            track.append((blue["x"], blue["y"]))
+    after = game.walker_debug()
+    delta = {k: after[k] - before[k] for k in ("backOffs", "handoffs", "walkOffs", "removals")}
+    result = {"rounds": rounds, "leaving": leaving, "track": track, "gone_after_frames": gone,
+              "delta": delta, "player": game.player(), "record": game.record(SLOT_BLUE),
+              "screenshots": shots, "debug": after}
+    result["pass"] = (delta["handoffs"] >= 1 and delta["walkOffs"] >= 1 and gone is not None
+                      and len(track) >= 2)
+    return result
+
+
+SCENARIOS = {"spot": scenario_spot, "bridge": scenario_bridge, "walkoff": scenario_walkoff, "edge": scenario_edge, "door": scenario_door,
              "linger": scenario_linger, "save": scenario_save, "gym": scenario_gym,
              "budget": scenario_budget, "browse": scenario_browse, "deadend": scenario_deadend,
              "gymentry": scenario_gymentry, "stairs": scenario_stairs, "midstep": scenario_midstep,

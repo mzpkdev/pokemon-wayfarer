@@ -24,6 +24,7 @@ enum WalkerMode
     WALKER_MODE_NONE,
     WALKER_MODE_LOCAL,  // on the player's map; the record follows it
     WALKER_MODE_STRIP,  // in a loaded connection strip, walking out of view
+    WALKER_MODE_LEAVING,// handed off: walking to the nearest exit, then removed
 };
 
 enum WalkerPhase
@@ -110,7 +111,7 @@ struct WayfarerWalkersDebug
     u16 lastContextScanlines;   // the heartbeat's WayfarerWorld_BuildContext
     u16 lastFailNodes;          // nodes a failed search expanded
     u16 maxFinishScanlines;     // the path rebuild at a search's end
-    u16 padding;
+    u16 walkOffs;               // handed-off walkers that walked out of view or to an exit
 };
 
 extern struct WayfarerWalkersDebug gWayfarerWalkersDebug;
