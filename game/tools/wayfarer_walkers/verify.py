@@ -1300,7 +1300,98 @@ def scenario_walkoff(game: Game) -> dict:
     return result
 
 
-SCENARIOS = {"spot": scenario_spot, "bridge": scenario_bridge, "walkoff": scenario_walkoff, "edge": scenario_edge, "door": scenario_door,
+def scenario_mortar(game: Game) -> dict:
+    """Follow-up 2 (F5): Mt Mortar 1F North agrees with the generator on screen.
+
+    The generator now floods one-way stair moves as directed: nodes are
+    strongly connected components. From the B1F door (15, 31) the water's
+    edge (53, 14) is in the same node; Pryce's pocket (56, 20) is reachable
+    from there only across water, which the off-screen simulation crosses
+    (the walker hands off and walks out of view). Legs: in to (53, 14), back
+    out through a door, and asked for (56, 20): a handoff, no failed search."""
+    MORTAR = TABLES.map_id("MAP_MT_MORTAR_1F_NORTH_HNS")
+    spot, node = TABLES.spot("MAP_MT_MORTAR_1F_NORTH_HNS", "WATER_EDGE", 53, 14)
+    pocket, pocket_node = TABLES.spot("MAP_MT_MORTAR_1F_NORTH_HNS", "WATER_EDGE", 56, 20)
+    back_spot, _ = TABLES.spot("MAP_MT_MORTAR_B1F_HNS", "NPC_CHAT", 39, 9)
+    door = next(i for i, w in enumerate(json.loads((ROOT / "game/data/maps/MtMortar_1F_North_hns/map.json")
+                                                   .read_text())["warp_events"]) if (w["x"], w["y"]) == (15, 31))
+    slot = 19   # Will: a Johto trainer, so his routes may stay in Mt Mortar (Will's can't leave Kanto)
+    keys = ("searches", "searchFails", "arrivals", "warpExits", "handoffs", "walkOffs", "blockedSteps")
+    legs = {}
+
+    def run(fields, until, what, limit=9000, spawn=True):
+        try:
+            return leg(fields, until, what, limit, spawn)
+        except RuntimeError as error:
+            return {"done": False, "error": str(error), "debug": game.walker_debug(),
+                    "record": game.record(slot), "delta": {}, "record_map": ""}
+
+    def leg(fields, until, what, limit, spawn):
+        before = game.walker_debug()
+        base = dict(destKind=DEST_SPOT, waited=0, step=0, lifeEvent=0, lifeSteps=0, stayBits=0, reserved=0)
+        base.update(fields)
+        game.write_record(slot, **base)
+        game.warp(MORTAR, 23, 58, DIR_NORTH)    # the player waits in another node, out of the way
+        spawned = game.wait_for(lambda: game.actor_for(slot), 400, step=2, what="Will spawned") if spawn else None
+        done = game.wait_for(lambda: until(game.walker_debug(), before), limit, step=8, what=what)
+        after = game.walker_debug()
+        return {"spawned": spawned, "done": bool(done), "delta": {k: after[k] - before[k] for k in keys},
+                "record": game.record(slot), "record_map": TABLES.nodes[game.record(slot)["node"]]}
+
+    boot(game, MORTAR, 23, 58, DIR_NORTH)
+    legs["in"] = run(dict(node=node, destId=spot, state=STATE_TRAVELLING, arrival=ARRIVAL_DOOR, crossing=door,
+                          activity=ACTIVITY_FISH, dwell=3),
+                     lambda d, b: d["arrivals"] > b["arrivals"], "Will at (53, 14)")
+    shots = [game.shot("mortar-at-spot")]
+    legs["back"] = run(dict(node=node, destId=back_spot, state=STATE_TRAVELLING, arrival=0, crossing=0,
+                            activity=ACTIVITY_FISH, dwell=3),
+                       lambda d, b: d["warpExits"] > b["warpExits"], "Will out through a door")
+    legs["water"] = run(dict(node=node, destId=pocket, state=STATE_TRAVELLING, arrival=0, crossing=0,
+                             activity=ACTIVITY_FISH, dwell=3),
+                        lambda d, b: d["handoffs"] > b["handoffs"] and game.actor_for(slot) is None,
+                        "Will handed off at the water", limit=3000, spawn=False)
+    result = {"legs": legs, "pocket_node": pocket_node, "node": node, "screenshots": shots,
+              "debug": game.walker_debug()}
+    result["pass"] = (pocket_node != node
+                      and all(legs[k]["done"] and legs[k]["delta"].get("searchFails") == 0 for k in legs))
+    return result
+
+
+def scenario_safari(game: Game) -> dict:
+    """Follow-up 2 (F5): the Safari Zone stair pockets agree on screen.
+
+    With one-way stair moves directed, the east and west lanes of Low Mid and
+    Top Mid are their own nodes (the Engineers gate the expansions). Blue
+    enters each main area by its south lane and walks to a spot in the main
+    node; the player waits in the (separate) west lane."""
+    cases = [("MAP_SAFARI_ZONE_LOW_MID_HNS", "TALL_GRASS", (23, 13), 18, (0, 14)),
+             ("MAP_SAFARI_ZONE_TOP_MID_HNS", "TALL_GRASS", (10, 6), 19, (0, 15))]
+    legs = {}
+    for name, kind, (sx, sy), crossing, (px, py) in cases:
+        map_id = TABLES.map_id(name)
+        spot, node = TABLES.spot(name, kind, sx, sy)
+        boot(game, map_id, px, py, DIR_EAST)
+        place_blue(game, node=node, destId=spot, state=STATE_TRAVELLING, arrival=2, crossing=crossing,  # south
+                   activity=ACTIVITY_TRAIN, dwell=3)
+        before = game.walker_debug()
+        game.warp(map_id, px, py, DIR_EAST)
+        try:
+            game.wait_for(lambda: game.actor_for(SLOT_BLUE), 400, step=2, what="Blue spawned")
+            arrived = game.wait_for(lambda: (lambda a: a and a["atSpot"] and (a["x"], a["y"]) == (sx, sy))(
+                game.actor_for(SLOT_BLUE)), 6000, step=8, what=f"Blue at {name} {sx, sy}")
+            error = None
+        except RuntimeError as failure:
+            arrived, error = None, str(failure)
+        after = game.walker_debug()
+        legs[name] = {"arrived": bool(arrived), "error": error,
+                      "delta": {k: after[k] - before[k] for k in ("searches", "searchFails", "arrivals", "blockedSteps")}}
+    result = {"legs": legs, "debug": game.walker_debug(), "screenshots": [game.shot("safari-top-mid")]}
+    result["pass"] = all(v["arrived"] and v["delta"]["searchFails"] == 0 for v in legs.values())
+    return result
+
+
+SCENARIOS = {"spot": scenario_spot, "bridge": scenario_bridge, "walkoff": scenario_walkoff, "mortar": scenario_mortar,
+             "safari": scenario_safari, "edge": scenario_edge, "door": scenario_door,
              "linger": scenario_linger, "save": scenario_save, "gym": scenario_gym,
              "budget": scenario_budget, "browse": scenario_browse, "deadend": scenario_deadend,
              "gymentry": scenario_gymentry, "stairs": scenario_stairs, "midstep": scenario_midstep,
