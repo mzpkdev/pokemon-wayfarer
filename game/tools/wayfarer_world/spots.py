@@ -222,7 +222,7 @@ class Detector:
         return None
 
     def dropped_place(self, info, kind):
-        return (info.name, kind) in self.overrides.drop_places
+        return self.overrides.dropped_place(info.name, kind)
 
     def find_places(self):
         by_const = self.builder.by_const

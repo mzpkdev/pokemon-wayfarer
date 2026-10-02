@@ -8,6 +8,11 @@ Water is the surfable tiles (TILE_FLAG_SURFABLE, waterfalls included)
 and the tiles under a bridge (MB_BRIDGE_OVER_*, elevation 15) without
 collision bits or a New Game object; whirlpools (objects running
 EventScript_Whirlpool, Johto's 2x2 blockers) don't count as objects here.
+A surfer stays at elevation 1 and only dismounts on an elevation mismatch
+(CheckForObjectEventCollision, field_player_avatar.c), so it also crosses
+collision-free elevation-1 land tiles (a waterfall's foam row, Mt Mortar
+1F South y=28) that it reaches from water: those are "shallows", passable
+from water but never a shore or a Dive end themselves.
 Off-screen, a notable trainer has the water HMs (Surf, Waterfall,
 Whirlpool); land HMs (Cut, Strength, Rock Smash) still block. Two water
 tiles are joined when a surfing object could step between them: the
@@ -81,6 +86,7 @@ class WaterFlood:
         bridges = {v for k, v in c.mb.items()
                    if k.startswith("MB_BRIDGE_OVER_") and k != "MB_BRIDGE_OVER_ICE"}
         self.water = {}
+        self.shallow = {}
         for info in builder.world.scope:
             grid = builder.floods[info.name].grid
             whirlpools = {o["y"] * grid.w + o["x"] for o in info.events["objects"]
@@ -90,12 +96,22 @@ class WaterFlood:
                 1 if grid.col[i] == 0 and i not in solid and (
                     grid.mb[i] in self.surf or (grid.mb[i] in bridges and grid.elev[i] == 15))
                 else 0 for i in range(grid.w * grid.h))
+            # Shallows: collision-free elevation-1 land a surfer moves onto
+            # (no elevation mismatch), except ledges (a jump, not a step).
+            self.shallow[info.name] = bytearray(
+                1 if not self.water[info.name][i] and grid.col[i] == 0 and grid.elev[i] == 1
+                and i not in builder.solid[info.name] and grid.mb[i] not in walk.ledges
+                else 0 for i in range(grid.w * grid.h))
         self.extra = {}  # (map, tile) -> [(map, tile)]: lanes, water warps and Dive links
         self.extra_shores = {}  # (map, comp) -> [(shore tile, water tile)]: warps from water
 
     def is_water(self, name, x, y):
         grid = self.b.floods[name].grid
         return grid.inside(x, y) and self.water[name][y * grid.w + x] == 1
+
+    def swimmable(self, name, i):
+        """Water, or shallows a surfer crosses."""
+        return self.water[name][i] or self.shallow[name][i]
 
     @staticmethod
     def elevations_meet(a, b):
@@ -127,9 +143,11 @@ class WaterFlood:
                     move = graph.EAST
                 leave, enter = b.walk.move_rules[move]
                 for (sx, sy), (tx, ty) in pairs:
-                    if not self.is_water(info.name, sx, sy) or not self.is_water(target.name, tx, ty):
+                    if not ga.inside(sx, sy) or not gb.inside(tx, ty):
                         continue
                     i, j = sy * ga.w + sx, ty * gb.w + tx
+                    if not self.swimmable(info.name, i) or not self.swimmable(target.name, j):
+                        continue
                     if ga.mb[i] in leave or gb.mb[j] in enter:
                         continue
                     if not self.elevations_meet(ga.elev[i], gb.elev[j]):
@@ -203,13 +221,14 @@ class WaterFlood:
         name, i = u
         grid = self.b.floods[name].grid
         water = self.water[name]
+        shallow = self.shallow[name]
         x, y = i % grid.w, i // grid.w
         for dx, dy in graph.N4:
             nx, ny = x + dx, y + dy
             if not grid.inside(nx, ny):
                 continue
             j = ny * grid.w + nx
-            if not water[j]:
+            if not water[j] and not shallow[j]:
                 continue
             leave, enter = self.b.walk.move_rules[(dx, dy)]
             if grid.mb[i] in leave or grid.mb[j] in enter:

@@ -5,7 +5,10 @@ worktree's generated map files are for another map version.
 """
 
 import copy
+import os
+import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -25,6 +28,10 @@ from maps import BuildError  # noqa: E402
 ROOT = maps.DEFAULT_ROOT
 HAVE_WAYFARER_MAPS = ((ROOT / ".map_version.wayfarer").exists()
                       and (ROOT / "data/maps/groups.inc").exists())
+if os.environ.get("WAYFARER_WORLD_REQUIRE_MAPS") == "1" and not HAVE_WAYFARER_MAPS:
+    # make check on the Wayfarer map version: a missing map output is a
+    # failure, not a reason to skip the map tests.
+    raise RuntimeError("the Wayfarer build's mapjson outputs are missing")
 NEEDS_MAPS = unittest.skipUnless(HAVE_WAYFARER_MAPS,
                                  "needs the Wayfarer build's mapjson outputs")
 _FULL = {}
@@ -247,6 +254,65 @@ class Graph(unittest.TestCase):
         self.assertTrue(any(e.source in indigo and e.target in gate for e in water))
         self.assertTrue(any(e.source in gate and e.target in indigo for e in water))
 
+    def test_only_firing_warps_are_edges(self):
+        # A warp edge needs a warp event the engine fires: a warp behaviour
+        # on its tile, a TryStartWarpEventScript layout fallback, or an
+        # authored script door (Petalburg Gym). The walker's door step-in
+        # (wayfarer_walkers.c, IsGoalTile) only ever targets such a tile.
+        world, wg, _ = full()
+        b = wg.builder
+        for n in wg.nodes:
+            for e in n.edges:
+                if e.kind != graph.KIND_WARP:
+                    continue
+                self.assertTrue(b.fires(n.map, e.warp_id), (n.map.name, e.warp_id))
+        # Terra Cave's dormant entrances (solid rock on five routes) are not
+        # a hub between those routes.
+        terra = {n.id for n in wg.nodes if n.map.name.startswith("TerraCave")}
+        into = {n.map.name for n in wg.nodes for e in n.edges if e.target in terra
+                and not n.map.name.startswith("TerraCave")}
+        self.assertEqual(into, set())
+        # A fall's landing back up (Burned Tower B1F (16, 12)) is no edge.
+        b1f = wg.map_nodes("BurnedTower_B1F_hns")
+        self.assertFalse(any(wg.nodes[e.target].map.name == "BurnedTower_1F_hns"
+                             and e.kind == graph.KIND_WARP and e.warp_id == 1
+                             for n in b1f for e in n.edges))
+        # Petalburg Gym's script doors still lead from the lobby to Norman.
+        gym = wg.map_nodes("PetalburgCity_Gym")
+        lobby = next(n for n in gym if wg.builder.floods["PetalburgCity_Gym"].tile_component(4, 110) == n.comp)
+        top = next(n for n in gym if wg.builder.floods["PetalburgCity_Gym"].tile_component(4, 3) == n.comp)
+        seen, todo = {lobby.id}, [lobby.id]
+        while todo:
+            for e in wg.nodes[todo.pop()].edges:
+                if wg.nodes[e.target].map.name == "PetalburgCity_Gym" and e.target not in seen:
+                    seen.add(e.target)
+                    todo.append(e.target)
+        self.assertIn(top.id, seen)
+
+    def test_script_warp_validation(self):
+        world, wg, _ = full()
+        with self.assertRaises(BuildError):
+            build.WorldGraph(world, overrides=_overrides(self, {"script_warps": [
+                {"map": "PetalburgCity_Gym", "warps": [0]}]})).check()
+
+    def test_surfer_crosses_foam_rows(self):
+        # Mt Mortar 1F South's row y=28 (plain floor at elevation 1) splits
+        # the waterfall from the lower pool; a surfer crosses it, so the
+        # upper floors and 1F North's (56, 20) pocket are reachable.
+        _, wg, _ = full()
+        flood = wg.builder.floods["MtMortar_1F_North_hns"]
+        pocket = wg.node_of[("MtMortar_1F_North_hns", flood.tile_component(56, 20))]
+        start = wg.node_of[("MtMortar_1F_North_hns", flood.tile_component(66, 61))]
+        seen, todo = {start}, [start]
+        while todo:
+            for e in wg.nodes[todo.pop()].edges:
+                if e.target not in seen:
+                    seen.add(e.target)
+                    todo.append(e.target)
+        self.assertIn(pocket, seen)
+        mortar = [n.id for n in wg.nodes if n.map.name.startswith("MtMortar")]
+        self.assertEqual([n for n in mortar if n not in seen], [])
+
     def test_edges_sorted_and_targets_exist(self):
         _, wg, _ = full()
         for n in wg.nodes:
@@ -295,6 +361,29 @@ class Spots(unittest.TestCase):
         self.assertEqual(spots_on(wg, "GoldenrodCity_BikeShop_hns", sp.STORE), [])
         self.assertEqual(spots_on(wg, "SaffronCity_FightingDojo_hns", sp.GYM), [])
         self.assertTrue(spots_on(wg, "GoldenrodCity_BikeShop_hns", sp.NAMED))
+
+    def test_one_spot_per_tile(self):
+        # Each spot seats its own trainer, so no tile (nor a named spot's
+        # second tile) holds two spots; the more specific kind keeps it.
+        _, wg, _ = full()
+        seats = {}
+        for s in wg.spots:
+            tiles = [(s.x, s.y)] + ([tuple(s.second)] if s.second else [])
+            for x, y in tiles:
+                self.assertNotIn((s.map.name, x, y), seats)
+                seats[(s.map.name, x, y)] = s
+        # Violet Mart's clerk tile keeps its store spot, not the NPC chat.
+        self.assertNotIn((6, 3), [(x, y) for x, y, _ in spots_on(wg, "VioletCity_Mart_hns", sp.NPC_CHAT)])
+        self.assertIn((6, 3), [(x, y) for x, y, _ in spots_on(wg, "VioletCity_Mart_hns", sp.STORE)])
+
+    def test_drops_must_match(self):
+        _, wg, _ = full()
+        self.assertEqual(wg.overrides.unused_drops(), [])
+        bad = _overrides(self, {"drop": [{"map": "GoldenrodCity_BikeShop_hns", "kind": "gym"},
+                                         {"map": "ViridianCity_hns", "x": 1, "y": 1}]})
+        text = "\n".join(bad.unused_drops())
+        self.assertIn("GoldenrodCity_BikeShop_hns has no detected gym", text)
+        self.assertIn("ViridianCity_hns has no detected spot at (1, 1)", text)
 
     def test_spot_order_and_runs(self):
         _, wg, _ = full()
@@ -368,6 +457,25 @@ class Routines(unittest.TestCase):
         # Viridian's Gym draws Giovanni with FireRed's sprite.
         self.assertIn("OBJ_EVENT_GFX_GIOVANNI", by_name["Giovanni"].alt_graphics)
 
+    def test_rom_paths_stay_in_region(self):
+        # The ROM's search has no region limit; the build checks that each
+        # non-traveller's ROM paths are its region-limited ones. Lorelei's
+        # paths are all in Sevii: limited to Kanto, the check must fail.
+        _, wg, rt = full()
+        t = next(t for t in rt.trainers if t.slug == "lorelei")
+        self.assertFalse(t.traveller)
+        saved, before = t.regions, list(rt.problems)
+        try:
+            t.regions = {"Kanto"}
+            rt.check_rom_paths(t, t.name, sorted({t.home_node} | {wg.spots[i].node for i in t.candidates}
+                                                 | {wg.spots[i].node for f in t.favourites
+                                                    for i in range(f[0], f[0] + f[1])}),
+                               rt.allowed(t))
+            self.assertTrue(any("ROM's path" in p or "home-hop" in p for p in rt.problems[len(before):]))
+        finally:
+            t.regions = saved
+            rt.problems[:] = before
+
     def test_broken_favourite_fails(self):
         _, wg, _ = full()
         data = maps.load_json(maps.TOOL_DIR / "routines.json")
@@ -396,11 +504,33 @@ class Routines(unittest.TestCase):
         return d
 
 
+def _overrides(case, extra):
+    """An Overrides from a copy of the authored files plus `extra` in a new
+    file."""
+    import shutil
+    d = tempfile.mkdtemp(prefix="wayfarer-world-overrides-")
+    case.addCleanup(lambda: shutil.rmtree(d, ignore_errors=True))
+    for path in sorted((maps.TOOL_DIR / "overrides").glob("*.json")):
+        shutil.copy(path, d)
+    (Path(d) / "zz_test.json").write_text(maps.json.dumps(extra), encoding="utf-8")
+    return authored.Overrides(Path(d))
+
+
 @NEEDS_MAPS
 class Determinism(unittest.TestCase):
     def test_two_runs_identical(self):
-        _, _, first, report = generate.generate(ROOT)
-        _, _, second, _ = generate.generate(ROOT)
+        # Two processes with different hash seeds: set and dict iteration
+        # order must not reach the tables.
+        outputs = []
+        with tempfile.TemporaryDirectory() as tmp:
+            for seed in ("1", "777"):
+                out, rep = Path(tmp) / ("tables%s.h" % seed), Path(tmp) / ("report%s.json" % seed)
+                env = dict(os.environ, PYTHONHASHSEED=seed, PYTHONDONTWRITEBYTECODE="1")
+                subprocess.run([sys.executable, str(Path(generate.__file__)), "--root", str(ROOT),
+                                "--output", str(out), "--report", str(rep)],
+                               check=True, env=env, capture_output=True)
+                outputs.append((out.read_text(), __import__("json").loads(rep.read_text())))
+        (first, report), (second, _) = outputs
         self.assertEqual(first, second)
         self.assertIn("gWayfarerWorldContentHash = %s;" % report["content_hash"], first)
 

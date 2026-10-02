@@ -8,7 +8,7 @@ graph and spot table.
 
 import re
 import struct
-from collections import deque
+from collections import defaultdict, deque
 
 import graph
 import spots as sp
@@ -359,8 +359,78 @@ class Routines:
         t.search_bound = max(worst, 2 * t.radius)
         if t.search_bound > 255:
             self.problems.append("%s: search bound %d does not fit a u8" % (tag, t.search_bound))
+        if not t.traveller and not stuck:
+            self.check_rom_paths(t, tag, sorted(targets), neighbours)
         t.targets = len(targets)
         return t
+
+    def check_rom_paths(self, t, tag, targets, neighbours):
+        """The ROM searches without the region limit (SearchRun and the
+        home-hop table only skip transit edges), so a non-traveller's
+        in-ROM paths must be the region-limited ones this build measured:
+        between any two of its targets the ROM's breadth-first path (edges
+        in table order, first discovery wins) stays in the home regions and
+        has the same length, and the home-hop table agrees on every node of
+        those paths. A map change that opened a shorter way through another
+        region fails here instead of letting the ROM leave the region."""
+        nodes = self.wg.nodes
+        free = {}
+        for nid in range(len(nodes)):
+            free[nid] = [tg for tg, kind in self.adj[nid] if kind != graph.KIND_TRANSIT]
+        visited = set()
+        for a in targets:
+            limited = self.bfs(a, neighbours)
+            parent, depth = {a: None}, {a: 0}
+            queue = deque([a])
+            while queue:
+                cur = queue.popleft()
+                for nxt in free[cur]:
+                    if nxt not in parent:
+                        parent[nxt], depth[nxt] = cur, depth[cur] + 1
+                        queue.append(nxt)
+            for b in targets:
+                path, cur = [], b
+                while cur is not None:
+                    path.append(cur)
+                    cur = parent.get(cur)
+                outside = [n for n in path if nodes[n].region not in t.regions]
+                if depth.get(b) != limited.get(b) or outside:
+                    n = nodes[outside[0]] if outside else nodes[b]
+                    self.problems.append(
+                        "%s: the ROM's path from node %d to node %d (no region limit) %s "
+                        "(node %d, %s %d,%d); the build measured %s hops in %s"
+                        % (tag, a, b, "leaves the home regions" if outside else
+                           "is %s hops" % depth.get(b), n.id, n.map.name, n.x, n.y,
+                           limited.get(b), "/".join(sorted(t.regions))))
+                    return
+                visited.update(path)
+        # emit.home_hops: the unrestricted reverse distance to home, against
+        # the region-limited one (an edge counts if its target is in region).
+        reverse = defaultdict(list)
+        for n in nodes:
+            for e in n.edges:
+                if e.kind != graph.KIND_TRANSIT:
+                    reverse[e.target].append(n.id)
+
+        def hops_home(limit):
+            dist = {t.home_node: 0}
+            queue = deque([t.home_node])
+            while queue:
+                cur = queue.popleft()
+                if limit and nodes[cur].region not in t.regions:
+                    continue
+                for prev in reverse[cur]:
+                    if prev not in dist:
+                        dist[prev] = dist[cur] + 1
+                        queue.append(prev)
+            return dist
+        rom, limited = hops_home(False), hops_home(True)
+        for n in sorted(visited):
+            if limited.get(n) != rom.get(n):
+                self.problems.append("%s: the home-hop table gives node %d (%s) %s hops home; "
+                                     "the region-limited search %s"
+                                     % (tag, n, nodes[n].map.name, rom.get(n), limited.get(n)))
+                return
 
     def favourite(self, t, f, cycle):
         wg = self.wg

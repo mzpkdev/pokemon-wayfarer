@@ -93,13 +93,64 @@ class Walk:
             "MB_POND_WATER", "MB_OCEAN_WATER", "MB_INTERIOR_DEEP_WATER",
             "MB_DEEP_WATER", "MB_SOOTOPOLIS_DEEP_WATER", "MB_EASTWARD_CURRENT",
             "MB_WESTWARD_CURRENT", "MB_NORTHWARD_CURRENT", "MB_SOUTHWARD_CURRENT")
-        # Behaviours a warp event can fire from (doors, ladders, stairs,
-        # escalators, arrow and special warps, holes).
-        self.warp_behaviours = {v for k, v in c.mb.items()
-                                if any(w in k for w in ("WARP", "DOOR", "LADDER", "ESCALATOR",
-                                                        "HOLE", "STAIR"))}
+        # Behaviours a warp event fires from (field_control_avatar.c): a
+        # step onto IsWarpMetatileBehavior's tiles (TryStartWarpEventScript,
+        # TryDoorWarp), or pressing on into an arrow or directional stair
+        # warp (TryArrowWarp: IsArrowWarpMetatileBehavior,
+        # IsDirectionalStairWarpMetatileBehavior). A warp event on any other
+        # tile (a fall's landing, a dormant Terra Cave entrance, a Center's
+        # decorative side tiles) never fires unless a script fires it
+        # (overrides `script_warps`).
+        self.fireable = c.set_of(
+            "MB_ANIMATED_DOOR", "MB_LADDER", "MB_UP_ESCALATOR", "MB_DOWN_ESCALATOR",
+            "MB_NON_ANIMATED_DOOR", "MB_WATER_DOOR", "MB_DEEP_SOUTH_WARP",
+            "MB_LAVARIDGE_GYM_B1F_WARP", "MB_LAVARIDGE_GYM_1F_WARP", "MB_AQUA_HIDEOUT_WARP",
+            "MB_MT_PYRE_HOLE", "MB_MOSSDEEP_GYM_WARP", "MB_BRIDGE_OVER_OCEAN",
+            "MB_NORTH_ARROW_WARP", "MB_WATER_NORTH_ARROW_WARP", "MB_STAIRS_OUTSIDE_ABANDONED_SHIP",
+            "MB_SOUTH_ARROW_WARP", "MB_WATER_SOUTH_ARROW_WARP", "MB_SHOAL_CAVE_ENTRANCE",
+            "MB_WEST_ARROW_WARP", "MB_EAST_ARROW_WARP",
+            "MB_UP_RIGHT_STAIR_WARP", "MB_UP_LEFT_STAIR_WARP",
+            "MB_DOWN_RIGHT_STAIR_WARP", "MB_DOWN_LEFT_STAIR_WARP")
         self.hole_warps = c.set_of("MB_MT_PYRE_HOLE", "MB_CRACKED_FLOOR_HOLE",
                                    "MB_FALL_WARP", "MB_CRACKED_FLOOR")
+
+
+def engine_warp_fallbacks(root):
+    """TryStartWarpEventScript's layout fallbacks (field_control_avatar.c):
+    warp events that fire from tiles without a warp behaviour. Returns a
+    function fallback(layout id, warp index, warp, behaviour name) -> bool.
+
+    The Cinnabar Port layouts' list is read from the source; the Pallet,
+    Viridian Gym and Seafoam preview rules are mirrored here, and the build
+    fails if the source no longer has them, so the two can't drift apart."""
+    text = read_text(root / "src/field_control_avatar.c")
+
+    def cases(function):
+        start = text.find("static bool8 %s(" % function)
+        if start < 0:
+            raise BuildError("field_control_avatar.c: %s is gone; update "
+                             "graph.engine_warp_fallbacks" % function)
+        body = text[start:text.index("\n}", start)]
+        return set(re.findall(r"case (LAYOUT_\w+):", body))
+
+    cinnabar = cases("IsCinnabarPortWarpFallbackLayout")
+    pallet = cases("IsPalletOpeningWarpFallback")
+    for needle in ("gMapHeader.mapLayoutId == LAYOUT_VIRIDIAN_CITY_GYM",
+                   "gMapHeader.mapLayoutId == LAYOUT_SEAFOAM_ISLANDS_1F_COAST_POC"):
+        if needle not in text:
+            raise BuildError("field_control_avatar.c: %r is gone; update "
+                             "graph.engine_warp_fallbacks" % needle)
+
+    def fallback(layout, k, warp, behaviour):
+        if layout in cinnabar and behaviour in ("MB_NORMAL", "MB_CAVE"):
+            return True
+        if layout in pallet and k == 0:
+            return True
+        if layout == "LAYOUT_VIRIDIAN_CITY_GYM" and 0 <= k <= 2 \
+                and (warp["x"], warp["y"]) == (16 + k, 22):
+            return True
+        return layout == "LAYOUT_SEAFOAM_ISLANDS_1F_COAST_POC" and k in (3, 4)
+    return fallback
 
 
 def stair_move(walk, grid, walkable, i, e, j, dx, dy):
@@ -323,9 +374,11 @@ def solid_object_tiles(info, grid, new_game_flags, canonical, ignored=()):
 class GraphBuilder:
     """Floods every in-scope map and builds connection and warp edges."""
 
-    def __init__(self, world, new_game_flags, canonical, ignored=()):
+    def __init__(self, world, new_game_flags, canonical, ignored=(), script_warps=()):
         self.world = world
         self.walk = Walk(world)
+        self.script_warps = set(script_warps)
+        self.engine_fallback = engine_warp_fallbacks(world.root)
         self.floods = {}
         self.report = {"dynamic_warps": defaultdict(int), "skipped_warps": defaultdict(int),
                        "asymmetric_moves": 0}
@@ -404,6 +457,17 @@ class GraphBuilder:
                         comps += [c for _, c in flood.states_of(nx, ny)]
         return sorted(set(comps))
 
+    def fires(self, info, k, beh=None):
+        """Can warp event k of `info` fire? A warp behaviour on its tile, one
+        of the engine's layout fallbacks, or an authored script door
+        (overrides `script_warps`)."""
+        warp = info.events["warps"][k]
+        if beh is None:
+            beh = self.floods[info.name].grid.b(warp["x"], warp["y"])
+        return (beh in self.walk.fireable or (info.name, k) in self.script_warps
+                or self.engine_fallback(info.layout["id"], k, warp,
+                                        self.walk.consts.mb_name.get(beh)))
+
     def landing_component(self, target, warp_index):
         """The component holding a destination warp's landing tile."""
         flood = self.floods[target.name]
@@ -430,15 +494,18 @@ class GraphBuilder:
             if beh in self.walk.hole_warps:
                 rep["skipped_warps"]["hole or fall warp"] += 1
                 continue
-            # A fall's landing tile carries a warp event so the fall knows
-            # where to land; on a plain floor tile it never fires
-            # (TryStartWarpEventScript needs a warp behaviour), so it is not
-            # a way out (Victory Road B1F's landings back to 1F).
-            if (info.const, k) in self.fall_landings and beh not in self.walk.warp_behaviours:
-                rep["skipped_warps"]["fall landing, not a warp"] += 1
-                continue
             if beh in self.walk.consts.surfable:
                 rep["skipped_warps"]["water warp (Surf or Dive)"] += 1
+                continue
+            # Only a warp that can fire is a way out: a fall's landing tile
+            # (Victory Road B1F's landings back to 1F), a dormant entrance
+            # on solid rock (Terra Cave's, which would otherwise join five
+            # Hoenn routes), a hidden or locked door and a Center's side
+            # tiles carry warp events the player never triggers.
+            if not self.fires(info, k, beh):
+                why = ("fall landing, not a warp" if (info.const, k) in self.fall_landings
+                       else "never fires (no warp behaviour)")
+                rep["skipped_warps"][why] += 1
                 continue
             sources = self.warp_sources(info, warp)
             if not sources:

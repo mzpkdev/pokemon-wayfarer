@@ -70,17 +70,39 @@ def resolve_maps(values, names):
     return out
 
 
+def dependencies(binary):
+    """Every file the last build read (cc -MM: the sources, tables.h and
+    every header, such as WORLD_CAPACITY_* in constants/wayfarer_world.h),
+    or None when there is no list yet."""
+    deps = binary.with_suffix(".d")
+    if not deps.exists():
+        return None
+    text = deps.read_text().replace("\\\n", " ")
+    paths = []
+    for line in text.splitlines():
+        if ":" in line:
+            paths += [GAME / p for p in line.split(":", 1)[1].split()]
+    return paths
+
+
 def build(binary):
     if not TABLES.exists():
         raise SystemExit(f"{TABLES} is missing: build the Wayfarer ROM (or run its generator) first")
-    newest = max(p.stat().st_mtime for p in SOURCES + [TABLES])
-    if binary.exists() and binary.stat().st_mtime >= newest:
-        return
+    deps = dependencies(binary)
+    if binary.exists() and deps is not None:
+        inputs = SOURCES + [TABLES] + deps
+        if all(p.exists() for p in inputs) and binary.stat().st_mtime >= max(p.stat().st_mtime for p in inputs):
+            return
     binary.parent.mkdir(parents=True, exist_ok=True)
     cc = os.environ.get("HOSTCC", "cc")
-    cmd = [cc, "-std=gnu11", "-O2", "-Wall", "-DPOKEMON_WAYFARER", "-iquote", str(GAME / 'include'), "-iquote", str(GAME / 'src'),
-           "-o", str(binary)] + [str(s) for s in SOURCES]
+    flags = ["-std=gnu11", "-DPOKEMON_WAYFARER", "-iquote", str(GAME / 'include'), "-iquote", str(GAME / 'src')]
+    cmd = [cc, "-O2", "-Wall"] + flags + ["-o", str(binary)] + [str(s) for s in SOURCES]
     subprocess.run(cmd, check=True)
+    # Every header the sources read (cc -MM, all three sources), so an edit
+    # to any of them, not only to the sources or tables.h, rebuilds.
+    listing = subprocess.run([cc, "-MM"] + flags + [os.path.relpath(s, GAME) for s in SOURCES],
+                             check=True, capture_output=True, text=True, cwd=GAME).stdout
+    binary.with_suffix(".d").write_text(listing)
 
 
 def run(binary, args):

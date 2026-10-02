@@ -1,5 +1,5 @@
 {
-  "_comment": "Hoenn spot overrides (notable-spots spec, authored overrides). add: {map, x, y, facing (DIR_*), kind: bench | center_side}. drop: {map, kind} drops a whole detected place; {map, x, y[, kind]} drops one spot. ignore_objects: {map, local_id} objects the walker graph treats as passable (story blockers the simulation outlives).",
+  "_comment": "Hoenn spot overrides (notable-spots spec, authored overrides). add: {map, x, y, facing (DIR_*), kind: bench | center_side}. drop: {map, kind} drops a whole detected place; {map, x, y[, kind]} drops one spot. ignore_objects: {map, local_id} objects the walker graph treats as passable (story blockers the simulation outlives). script_warps: {map, warps: [warp ids]} warp events on tiles without a warp behaviour that a script fires (graph.py takes only warps that can fire).",
   "ignore_objects": [
     {"map": "MauvilleCity", "local_id": 6, "what": "Wally at the Mauville Gym door", "why": "Story blocker on the Gym door's only approach tile, present at New Game. The Gym's own leader is home-locked until the player holds the badge, which needs this blocker gone, so the static walker graph treats it as passable."},
     {"map": "Route120", "local_id": 30, "what": "Invisible Kecleon on the Route 120 bridge", "why": "Story gate (Devon Scope, FLAG_HIDE_ROUTE_120_KECLEON_BRIDGE) on the only path between Route 120's north half (Fortree) and its south half (Route 121, Lilycove). Treated as passable so Hoenn's east is one walker region."},
@@ -8,6 +8,9 @@
     {"map": "Route121", "local_id": 12, "what": "Team Aqua grunts on Route 121", "why": "Story blockers (FLAG_HIDE_ROUTE_121_TEAM_AQUA_GRUNTS, gone after Mt. Pyre) standing in the only gap between Route 121's west half and Lilycove's side. Treated as passable, with locals 13 and 14."},
     {"map": "Route121", "local_id": 13, "what": "Team Aqua grunt on Route 121", "why": "See local 12."},
     {"map": "Route121", "local_id": 14, "what": "Team Aqua grunt on Route 121", "why": "See local 12."}
+  ],
+  "script_warps": [
+    {"map": "PetalburgCity_Gym", "warps": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37], "what": "Petalburg Gym's room doors and room entrances", "why": "Each room's door is a sign event (PetalburgCity_Gym_EventScript_*RoomDoor) that runs warpdoor once VAR_PETALBURG_GYM_STATE reaches 6, and the door scripts set each room's entrance tiles to METATILE_PetalburgGym_RoomEntrance_* (MB_SOUTH_ARROW_WARP). On the static map both are plain floor, so these warps are listed as firing: they are the only way from the lobby to Norman's room."}
   ],
   "add": [],
   "drop": []

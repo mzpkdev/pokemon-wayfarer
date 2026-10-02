@@ -31,13 +31,22 @@ class WorldGraph:
         self.overrides = overrides or authored.Overrides()
         self.flags = maps.new_game_flags(world.root)
         self.builder = graph.GraphBuilder(world, self.flags, maps.flag_aliases(world.root),
-                                          self.overrides.ignore_objects)
+                                          self.overrides.ignore_objects,
+                                          self.overrides.script_warps)
         b = self.builder
         for (name, local_id), why in sorted(self.overrides.ignore_objects.items()):
             info = world.maps.get(name)
             if info is None or not info.in_scope or not any(
                     o["local_id"] == local_id for o in info.events["objects"]):
                 self.problems.append("ignore_objects: %s has no object %d in scope" % (name, local_id))
+        for (name, k) in sorted(self.overrides.script_warps):
+            info = world.maps.get(name)
+            if info is None or not info.in_scope or not 0 <= k < len(info.events["warps"]):
+                self.problems.append("script_warps: %s has no warp %d in scope" % (name, k))
+            elif b.floods[name].grid.b(info.events["warps"][k]["x"],
+                                       info.events["warps"][k]["y"]) in b.walk.fireable:
+                self.problems.append("script_warps: %s warp %d already fires (a warp behaviour); "
+                                     "drop the entry" % (name, k))
         b.build_incoming()
         # Raw links between (map, component) pairs.
         raw = []  # (src map, src comp, dst map, dst comp, kind, a, b, c, warp id, label)
@@ -122,11 +131,13 @@ class WorldGraph:
             if s.area is not None:
                 s.area = [t for t in s.area if (s.map.name, t[0], t[1]) not in named_tiles]
             kept.append(s)
+        self.problems += self.overrides.unused_drops()
         for s in named:
             if (s.map.name, s.comp) not in linked:
                 self.problems.append("named spot %r (%s): tile (%d, %d) is not reachable "
                                      "from the map's warps and edges" % (s.label, s.map.name, s.x, s.y))
-        all_spots = kept + [s for s in named if (s.map.name, s.comp) in linked]
+        all_spots = self.one_seat_per_tile(
+            kept, [s for s in named if (s.map.name, s.comp) in linked])
         used = linked | with_warp
 
         # Nodes in map order, then component order (first tile in scan order).
@@ -205,6 +216,33 @@ class WorldGraph:
                     s.flags |= sp.FLAG_CAPACITY_2
                 s.flags |= s.template << sp.TEMPLATE_SHIFT
         self.layout_data()
+
+    def one_seat_per_tile(self, detected, named):
+        """No two spots seat a trainer on one tile (each spot holds its own
+        trainer, so two spots on a tile would put two trainers there). A
+        named spot keeps its tile and its second trainer's tile; otherwise
+        the most specific kind wins (the kind order: Center, store, Game
+        Corner, Gym, tall grass, water's edge, square, bench, NPC chat), so
+        a Mart keeps its store spot and loses the NPC chat on the clerk's
+        tile. Deduplicated here rather than at runtime: spot choice stays
+        one occupancy check per spot."""
+        seats = {}
+        for s in named:
+            seats[(s.map.name, s.x, s.y)] = s
+            if s.second is not None:
+                seats[(s.map.name,) + tuple(s.second)] = s
+        out = list(named)
+        for s in sorted(detected, key=lambda s: s.key()):
+            tile = (s.map.name, s.x, s.y)
+            if tile in seats:
+                self.dropped["shares a tile with another spot"] += 1
+                self.detector.findings["dropped_shared_tile"].append(
+                    [s.map.name, sp.KIND_KEYS[s.kind], s.x, s.y,
+                     sp.KIND_KEYS[seats[tile].kind]])
+                continue
+            seats[tile] = s
+            out.append(s)
+        return out
 
     def transit_link(self, link):
         b = self.builder

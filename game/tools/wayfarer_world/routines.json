@@ -202,12 +202,16 @@
         "study",
         "relax"
       ],
+      "allow_skip": {
+        "study": "His study favourite, the Cinnabar Lab, is disabled (its room doors never fire) and no study spot is within 3 hops of Cinnabar Island."
+      },
       "favourites": [
         {
           "serves": "study",
           "map": "CinnabarIsland_PokemonLab_ExperimentRoom_Frlg",
           "kind": "named",
-          "label": "Cinnabar Lab"
+          "label": "Cinnabar Lab",
+          "disabled": "The Lab entrance's room doors (13-25, 5) are warp events on plain floor (MB_NORMAL) in LAYOUT_CINNABAR_ISLAND_POKEMON_LAB_ENTRANCE: TryStartWarpEventScript never fires them (its Cinnabar fallback lists only the _PORT layouts), so the Experiment Room can't be walked into."
         },
         {
           "serves": "relax",

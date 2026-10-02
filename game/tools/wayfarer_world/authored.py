@@ -1,7 +1,7 @@
 """Authored inputs: named spots, overrides, transit links."""
 
 from maps import BuildError, INTERIOR_TYPES, TOOL_DIR, load_json
-from spots import DIR_NAMES, KIND_BY_KEY, NAMED, Spot
+from spots import DIR_NAMES, KIND_BY_KEY, KIND_KEYS, NAMED, Spot
 
 ACTIVITIES = ["care", "shop", "gamble", "train", "relax", "fish", "visit",
               "study", "home", "sightsee", "lie low"]
@@ -20,6 +20,8 @@ class Overrides:
         self.adds, self.drop_places, self.drop_tiles = [], set(), set()
         self.seats = {}
         self.ignore_objects = {}
+        self.script_warps = {}
+        self.used_drops = set()
         self.files = []
         for path in sorted(directory.glob("*.json")):
             self.files.append(path)
@@ -36,6 +38,12 @@ class Overrides:
                     self.seats.setdefault(entry["map"], []).append(entry)
             for entry in data.get("ignore_objects", []):
                 self.ignore_objects[(entry["map"], entry["local_id"])] = entry.get("why", "")
+            for entry in data.get("script_warps", []):
+                ids = entry.get("warps")
+                if not entry.get("map") or not ids or not all(isinstance(k, int) for k in ids):
+                    raise BuildError("%s: script_warps %s needs a map and warp ids" % (path.name, entry))
+                for k in ids:
+                    self.script_warps[(entry["map"], k)] = entry.get("why", "")
             for entry in data.get("drop", []):
                 kind = entry.get("kind")
                 if kind is not None and kind not in KIND_BY_KEY:
@@ -50,10 +58,33 @@ class Overrides:
 
     def dropped(self, spot):
         name = spot.map.name
-        if (name, spot.kind) in self.drop_places:
+        for key, table in (((name, spot.kind), self.drop_places),
+                           ((name, spot.x, spot.y, None), self.drop_tiles),
+                           ((name, spot.x, spot.y, spot.kind), self.drop_tiles)):
+            if key in table:
+                self.used_drops.add(key)
+                return True
+        return False
+
+    def dropped_place(self, name, kind):
+        """A whole detected place (a Mart, a Gym) dropped by `drop`."""
+        if (name, kind) in self.drop_places:
+            self.used_drops.add((name, kind))
             return True
-        return ((name, spot.x, spot.y, None) in self.drop_tiles
-                or (name, spot.x, spot.y, spot.kind) in self.drop_tiles)
+        return False
+
+    def unused_drops(self):
+        """`drop` entries that matched no detected place or spot: a typo in
+        a map, tile or kind would otherwise drop nothing, silently."""
+        out = []
+        for key in sorted(self.drop_places | self.drop_tiles, key=repr):
+            if key not in self.used_drops:
+                if len(key) == 2:
+                    out.append("drop: %s has no detected %s place or spot" % (key[0], KIND_KEYS[key[1]]))
+                else:
+                    kind = "spot" if key[3] is None else KIND_KEYS[key[3]] + " spot"
+                    out.append("drop: %s has no detected %s at (%d, %d)" % (key[0], kind, key[1], key[2]))
+        return out
 
 
 def load_named(path=None):

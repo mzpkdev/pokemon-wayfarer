@@ -1,5 +1,5 @@
 {
-  "_comment": "Sevii spot overrides (notable-spots spec, authored overrides). add: {map, x, y, facing (DIR_*), kind: bench | center_side}. drop: {map, kind} drops a whole detected place; {map, x, y[, kind]} drops one spot. ignore_objects: {map, local_id} objects the walker graph treats as passable (story blockers the simulation outlives).",
+  "_comment": "Sevii spot overrides (notable-spots spec, authored overrides). add: {map, x, y, facing (DIR_*), kind: bench | center_side}. drop: {map, kind} drops a whole detected place; {map, x, y[, kind]} drops one spot. ignore_objects: {map, local_id} objects the walker graph treats as passable (story blockers the simulation outlives). script_warps: {map, warps: [warp ids]} warp events on tiles without a warp behaviour that a script fires (graph.py takes only warps that can fire).",
   "ignore_objects": [],
   "add": [],
   "drop": []

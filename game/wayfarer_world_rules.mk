@@ -21,9 +21,16 @@ $(WAYFARER_WORLD_TABLES): $(WAYFARER_WORLD_INPUTS) $(MAP_EVENTS) $(MAP_CONNECTIO
 	@touch $@
 endif
 
+# On the Wayfarer map version the map tests need that version's mapjson
+# outputs: depend on them, and fail rather than skip if they are missing, so
+# a parallel `make check` can't pass with the map tests skipped.
 .PHONY: wayfarer-world-test
+ifeq ($(MAP_VERSION),wayfarer)
+wayfarer-world-test: $(MAP_EVENTS) $(MAP_CONNECTIONS) $(MAP_HEADERS) $(MAPS_DIR)/groups.inc $(MAP_VERSION_STAMP)
+wayfarer-world-test: WAYFARER_WORLD_REQUIRE_MAPS := 1
+endif
 wayfarer-world-test:
-	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_world -p 'test_*.py' -q
+	WAYFARER_WORLD_REQUIRE_MAPS=$(WAYFARER_WORLD_REQUIRE_MAPS) PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_world -p 'test_*.py' -q
 
 # The offline report (tools/wayfarer_world_report) compiles the simulation
 # core against the generated tables on the host.
