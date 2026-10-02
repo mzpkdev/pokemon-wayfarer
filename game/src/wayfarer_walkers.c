@@ -41,7 +41,9 @@
 #define WALKER_QUEUE_SIZE       1024    // ring queue; a grid frontier stays far below
 #define WALKER_LAYER_MAX        64      // second-elevation states on elevation-15 tiles
 #define WALKER_PATH_MAX         192     // steps per plan; longer walks re-plan on the way
-#define WALKER_SEARCH_SLICE     8       // node expansions per field update
+#define WALKER_SEARCH_SLICE     8       // node expansions per field update, at most
+#define WALKER_SLICE_SCANLINES  48      // and no more once a slice has run this long:
+                                        // the overworld's own frame must still fit
 #define WALKER_AWAY_NODES       160     // a back-off search gives up after this many
 #define WALKER_BLOCKED_LIMIT    4       // blocked steps before the goal is dropped
 #define WALKER_RETRY_FRAMES     30
@@ -1185,23 +1187,20 @@ static void FinishSearch(struct WalkerActor *actor, u16 goal)
 {
     u16 length = 0, state = goal, take, i;
     u8 *path = sWork->path[ActorIndex(actor)];
+    u8 last[WALKER_PATH_MAX];
     u32 start = ScanlineStamp(), cost;
 
+    // One walk back from the goal: the moves come out last first, so keep
+    // the most recent WALKER_PATH_MAX of them (the path's first steps).
     while (state != sSearch.source && length < WALKER_MAX_TILES + WALKER_LAYER_MAX)
     {
+        last[length % WALKER_PATH_MAX] = StateValue(state) & 0xF;
         state = PreviousState(state);
         length++;
     }
     take = length < WALKER_PATH_MAX ? length : WALKER_PATH_MAX;
-    state = goal;
-    i = length;
-    while (state != sSearch.source && i > 0)
-    {
-        i--;
-        if (i < take)
-            path[i] = StateValue(state) & 0xF;
-        state = PreviousState(state);
-    }
+    for (i = 0; i < take; i++)
+        path[i] = last[(length - 1 - i) % WALKER_PATH_MAX];
     cost = ScanlinesSince(start);
     if (cost > gWayfarerWalkersDebug.maxFinishScanlines)
         gWayfarerWalkersDebug.maxFinishScanlines = cost;
@@ -1294,7 +1293,8 @@ static void SearchSlice(void)
     u32 start = ScanlineStamp(), elapsed;
     u8 expanded = 0;
 
-    while (sSearch.read != sSearch.write && expanded < WALKER_SEARCH_SLICE)
+    while (sSearch.read != sSearch.write && expanded < WALKER_SEARCH_SLICE
+        && (expanded == 0 || ScanlinesSince(start) < WALKER_SLICE_SCANLINES))
     {
         u16 state = sWork->queue[sSearch.read % WALKER_QUEUE_SIZE], tile = StateTile(state);
         s16 x = tile % width, y = tile / width;
