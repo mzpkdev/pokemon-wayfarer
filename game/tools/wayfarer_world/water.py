@@ -44,6 +44,31 @@ def load_dive(path=None):
     return load_json(path or TOOL_DIR / "water.json")["dive"]
 
 
+def load_fly(path=None):
+    return load_json(path or TOOL_DIR / "water.json").get("fly", [])
+
+
+def fly_links(builder, rows, problems):
+    """Authored land-to-land off-screen links (water.json "fly"), both ways."""
+    raw = []
+    for row in rows:
+        ends = []
+        for name, (x, y) in ((row["from"], row["tile"]), (row["to"], row["tile_to"])):
+            info = builder.world.maps.get(name)
+            comp = None
+            if info is not None and info.in_scope:
+                comp = builder.floods[name].tile_component(x, y, ELEVATION_DEFAULT)
+            if comp is None:
+                problems.append("water.json %s: %s (%d, %d) is not walkable ground" % (row["name"], name, x, y))
+                break
+            ends.append((name, comp, x, y))
+        if len(ends) == 2:
+            (ma, ca, xa, ya), (mb, cb, xb, yb) = ends
+            raw.append((ma, ca, mb, cb, graph.KIND_WATER, xa, ya, 0, 0xFF, None))
+            raw.append((mb, cb, ma, ca, graph.KIND_WATER, xb, yb, 0, 0xFF, None))
+    return raw
+
+
 class WaterFlood:
     """Water tiles of every in-scope map and their adjacency."""
 

@@ -237,6 +237,16 @@ class Graph(unittest.TestCase):
         out = {wg.nodes[e.target].map.name for e in water if e.source in soot}
         self.assertTrue(out - {"SootopolisCity"})
 
+    def test_elite_four_fly_joins_indigo_and_the_reception_gate(self):
+        # Victory Road is one-way on foot; the authored fly link is the way
+        # down from Indigo Plateau (and back), off-screen only.
+        _, wg, _ = full()
+        indigo = {n.id for n in wg.map_nodes("IndigoPlateau_hns")}
+        gate = {n.id for n in wg.map_nodes("ReceptionGate_hns")}
+        water = [e for e in wg.edges if e.kind == graph.KIND_WATER]
+        self.assertTrue(any(e.source in indigo and e.target in gate for e in water))
+        self.assertTrue(any(e.source in gate and e.target in indigo for e in water))
+
     def test_edges_sorted_and_targets_exist(self):
         _, wg, _ = full()
         for n in wg.nodes:

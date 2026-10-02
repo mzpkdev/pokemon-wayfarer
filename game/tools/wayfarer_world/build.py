@@ -93,6 +93,7 @@ class WorldGraph:
         self.raw_links += water.water_links(
             b, seeds, dive if dive is not None else water.load_dive(), self.problems,
             self.water_report)
+        self.raw_links += water.fly_links(b, water.load_fly(), self.problems)
 
         # A spot must be reachable: its component has an edge (in or out).
         # Components with a warp tile but no usable edge still become nodes

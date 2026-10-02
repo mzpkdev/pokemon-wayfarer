@@ -694,21 +694,15 @@
           "serves": "study",
           "map": "RuinsOfAlph_Outside_hns",
           "kind": "named",
-          "label": "Ruins of Alph",
-          "disabled": "Victory Road is one-way for walkers: from the League reception gate it climbs to Route 23 only by falling through 1F's hole at (17, 16) and jumping B1F's ledge at (31..33, 23), and from Indigo Plateau there is no way down (the holes' landing tiles on B1F are not warps). Walkers never fall or jump ledges, so Indigo Plateau's node never reaches Johto, even with the Strength boulders ignored."
+          "label": "Ruins of Alph"
         },
         {
           "serves": "train",
           "map": "BattleFrontier_BattleTowerLobby",
           "kind": "named",
-          "label": "Battle Tower",
-          "disabled": "Victory Road is one-way for walkers: from the League reception gate it climbs to Route 23 only by falling through 1F's hole at (17, 16) and jumping B1F's ledge at (31..33, 23), and from Indigo Plateau there is no way down (the holes' landing tiles on B1F are not warps). Walkers never fall or jump ledges, so Indigo Plateau's node never reaches the Kanto ferry, even with the Strength boulders ignored."
+          "label": "Battle Tower"
         }
-      ],
-      "allow_skip": {
-        "study": "No study spot within 8 hops of IndigoPlateau_hns on foot and no reachable favourite; the runtime skips the step.",
-        "train": "No train spot within 8 hops of IndigoPlateau_hns on foot and no reachable favourite; the runtime skips the step."
-      }
+      ]
     },
     {
       "slug": "karen",
@@ -727,21 +721,15 @@
           "serves": "train",
           "map": "Route28_hns",
           "kind": "tall_grass",
-          "note": "Route 28",
-          "disabled": "Victory Road is one-way for walkers: from the League reception gate it climbs to Route 23 only by falling through 1F's hole at (17, 16) and jumping B1F's ledge at (31..33, 23), and from Indigo Plateau there is no way down (the holes' landing tiles on B1F are not warps). Walkers never fall or jump ledges, so Indigo Plateau's node never reaches Route 28, even with the Strength boulders ignored."
+          "note": "Route 28"
         },
         {
           "serves": "relax",
           "map": "VictoryRoadKanto_B1F_hns",
           "kind": "water_edge",
-          "note": "Victory Road",
-          "disabled": "Victory Road is one-way for walkers: from the League reception gate it climbs to Route 23 only by falling through 1F's hole at (17, 16) and jumping B1F's ledge at (31..33, 23), and from Indigo Plateau there is no way down (the holes' landing tiles on B1F are not warps). Walkers never fall or jump ledges, so Indigo Plateau's node never reaches B1F's water's edge, even with the Strength boulders ignored."
+          "note": "Victory Road"
         }
-      ],
-      "allow_skip": {
-        "train": "No train spot within 3 hops of IndigoPlateau_hns on foot and no reachable favourite; the runtime skips the step.",
-        "relax": "No relax spot within 3 hops of IndigoPlateau_hns on foot and no reachable favourite; the runtime skips the step."
-      }
+      ]
     },
     {
       "slug": "roxanne",
