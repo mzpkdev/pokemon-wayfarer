@@ -43,6 +43,7 @@ enum WalkerGoal
     WALKER_GOAL_TILE,   // a spot's anchor or a template tile
     WALKER_GOAL_EDGE,   // a lane tile on a map side, then a step out
     WALKER_GOAL_WARP,   // beside a warp (door, stairs, transit), then a step in
+    WALKER_GOAL_AWAY,   // backing off: an open tile away from the player
 };
 
 // Exported for the SkyEmu verifier (tools/wayfarer_walkers/verify.py); keep
@@ -98,6 +99,17 @@ struct WayfarerWalkersDebug
     u16 storySuppressed;
     u32 worldState;         // address of the saved WayfarerWorldState (it moves on heap resets)
     struct WayfarerWalkerActorDebug actors[WALKER_ACTOR_COUNT];
+    u32 lastHeartbeatScanlines; // WayfarerWorld_OnMapLoad's heartbeat, VCOUNT-based
+    u32 maxHeartbeatScanlines;
+    u32 maxSpawnScanlines;      // one TrySpawn
+    u32 maxUpdateScanlines;     // one whole WayfarerWalkers_Update
+    u16 backOffs;               // walkers that made room for the player
+    u16 handoffs;               // walkers that left for the rest of a visit
+    u16 visitorsVanished;       // Gym visitors that left without walking out
+    u16 culls;                  // off-screen walkers that gave their slot back
+    u16 lastContextScanlines;   // the heartbeat's WayfarerWorld_BuildContext
+    u16 lastFailNodes;          // nodes a failed search expanded
+    u16 padding[2];
 };
 
 extern struct WayfarerWalkersDebug gWayfarerWalkersDebug;
@@ -112,6 +124,9 @@ void WayfarerWalkers_OnHeapReset(void);             // InitHeap(gHeap)
 bool8 WayfarerWalkers_IsActorObject(const struct ObjectEvent *objectEvent);
 bool8 WayfarerWalkers_HideTemplate(const struct ObjectEventTemplate *template);
 bool8 WayfarerWalkers_HideFollower(void);
+// Profiling: the heartbeat's cost, measured by wayfarer_world.c.
+u32 WayfarerWalkers_ScanlineStamp(void);
+void WayfarerWalkers_NoteHeartbeat(u32 scanlines, u32 contextScanlines);
 
 #endif // IS_WAYFARER
 #endif // GUARD_WAYFARER_WALKERS_H

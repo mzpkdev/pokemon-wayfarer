@@ -45,24 +45,76 @@ MAX_READ_BYTES = 448
 MAP_OFFSET = 7
 OBJECT_SIZE = 0x24
 
-# Maps (group << 8 | num), from include/constants/map_groups.h.
-VIRIDIAN = (0 << 8) | 32
-ROUTE1 = (0 << 8) | 41
-ROUTE2 = (0 << 8) | 42
-CENTER = (12 << 8) | 0
-MART = (12 << 8) | 1
+# Maps, nodes and spots are looked up in include/constants/map_groups.h and
+# the generated src/data/wayfarer_world/tables.h when the verifier starts
+# (load_world_ids), so they follow the walker graph if it changes.
+VIRIDIAN = ROUTE1 = ROUTE2 = CENTER = MART = None
+NODE_VIRIDIAN = NODE_ROUTE1 = NODE_ROUTE2_SOUTH = NODE_CENTER = NODE_MART = None
+SPOT_VIRIDIAN_WATER = SPOT_ROUTE2_GRASS = SPOT_FOREST_GRASS = SPOT_CENTER_COUNTER = SPOT_MART_SHELF = None
 
-# Walker graph nodes and spots (src/data/wayfarer_world/tables.h, hash 0xACD5).
-NODE_VIRIDIAN = 67
-NODE_ROUTE1 = 83
-NODE_ROUTE2_SOUTH = 88
-NODE_CENTER = 247
-NODE_MART = 248
-SPOT_VIRIDIAN_WATER = 835       # water's edge (13, 39) facing north: Stand and face, "!"
-SPOT_ROUTE2_GRASS = 995         # tall grass patch, Route 2 south (9, 58)
-SPOT_FOREST_GRASS = 3416        # tall grass patch in Viridian Forest, past Route 2 south
-SPOT_CENTER_COUNTER = 2244      # Center counter (6, 4) facing north
-SPOT_MART_SHELF = 2250          # Mart shelf (7, 2) facing north: Browse
+
+class WorldTables:
+    """The generated walker graph and spot tables, parsed from tables.h."""
+
+    def __init__(self, game_root: Path):
+        import re
+        text = (game_root / "src/data/wayfarer_world/tables.h").read_text()
+        groups = (game_root / "include/constants/map_groups.h").read_text()
+        self.maps = {m[0]: (int(m[2]) << 8) | int(m[1])
+                     for m in re.findall(r"(MAP_\w+)\s*=\s*\((\d+) \| \((\d+) << 8\)\)", groups)}
+
+        def block(name):
+            start = text.index(name + "[] = {")
+            return text[start:text.index("\n};", start)]
+        self.nodes = [m for m in re.findall(r"/\*\s*\d+ \*/ \{(MAP_\w+),", block("gWayfarerWorldNodes"))]
+        self.spots = [(int(n), kind, int(x), int(y)) for n, kind, x, y in re.findall(
+            r"/\*\s*\d+ \*/ \{(\d+), \w+, \d+, (WORLD_SPOT_\w+), (\d+), (\d+),", block("gWayfarerWorldSpots"))]
+        self.edges = [(int(t), kind, int(a), int(b), int(c)) for t, kind, a, b, c in re.findall(
+            r"/\*\s*\d+ \*/ \{(\d+), (WORLD_EDGE_\w+), (\d+), (\d+), (\d+),", block("gWayfarerWorldEdges"))]
+
+    def map_id(self, name: str) -> int:
+        return self.maps[name]
+
+    def spot(self, map_name: str, kind: str, x: int, y: int) -> tuple[int, int]:
+        """(spot id, node) of the spot of this kind on this map's tile."""
+        for i, (node, k, sx, sy) in enumerate(self.spots):
+            if k == "WORLD_SPOT_" + kind and (sx, sy) == (x, y) and self.nodes[node] == map_name:
+                return i, node
+        raise KeyError(f"No {kind} spot at {(x, y)} on {map_name}")
+
+    def main_node(self, map_name: str) -> int:
+        """The node of this map holding the most spots (the lowest on a tie)."""
+        counts = {}
+        for node, *_ in self.spots:
+            if self.nodes[node] == map_name:
+                counts[node] = counts.get(node, 0) + 1
+        if not counts:
+            return self.nodes.index(map_name)
+        return max(sorted(counts), key=lambda n: counts[n])
+
+
+def load_world_ids(game_root: Path) -> WorldTables:
+    tables = WorldTables(game_root)
+    ids = {
+        "VIRIDIAN": tables.map_id("MAP_VIRIDIAN_CITY_HNS"),
+        "ROUTE1": tables.map_id("MAP_ROUTE1_HNS"),
+        "ROUTE2": tables.map_id("MAP_ROUTE2_HNS"),
+        "CENTER": tables.map_id("MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS"),
+        "MART": tables.map_id("MAP_VIRIDIAN_CITY_MART_HNS"),
+    }
+    # water's edge (13, 39) facing north: Stand and face, "!"
+    ids["SPOT_VIRIDIAN_WATER"], ids["NODE_VIRIDIAN"] = tables.spot("MAP_VIRIDIAN_CITY_HNS", "WATER_EDGE", 13, 39)
+    ids["SPOT_VIRIDIAN_WATER_2"], _ = tables.spot("MAP_VIRIDIAN_CITY_HNS", "WATER_EDGE", 14, 39)
+    ids["SPOT_VIRIDIAN_SQUARE"], _ = tables.spot("MAP_VIRIDIAN_CITY_HNS", "SQUARE", 18, 30)   # Wander in area
+    ids["SPOT_ROUTE2_GRASS"], ids["NODE_ROUTE2_SOUTH"] = tables.spot("MAP_ROUTE2_HNS", "TALL_GRASS", 9, 58)
+    ids["SPOT_FOREST_GRASS"], _ = tables.spot("MAP_VIRIDIAN_FOREST_HNS", "TALL_GRASS", 34, 15)  # past Route 2 south
+    ids["SPOT_CENTER_COUNTER"], ids["NODE_CENTER"] = tables.spot("MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS", "CENTER_COUNTER", 6, 4)
+    ids["SPOT_MART_SHELF"], ids["NODE_MART"] = tables.spot("MAP_VIRIDIAN_CITY_MART_HNS", "STORE", 7, 2)  # Browse
+    ids["NODE_ROUTE1"] = tables.main_node("MAP_ROUTE1_HNS")
+    globals().update(ids)
+    globals()["TABLES"] = tables
+    return tables
+
 
 SLOT_BLUE = 8
 SLOT_LORELEI = 9
@@ -283,7 +335,7 @@ class Game:
     # World state -------------------------------------------------------------
 
     def walker_debug(self) -> dict:
-        raw = self.emu.read(self.sym["gWayfarerWalkersDebug"], 64 + 16 * ACTOR_COUNT)
+        raw = self.emu.read(self.sym["gWayfarerWalkersDebug"], 64 + 16 * ACTOR_COUNT + 32)
         out = {"frames": struct.unpack_from("<I", raw, 0)[0]}
         values = struct.unpack_from("<26H", raw, 4)
         out.update(zip(WALKER_DEBUG_FIELDS, values))
@@ -300,6 +352,11 @@ class Game:
                            "x": x, "y": y, "goalX": a[12], "goalY": a[13],
                            "goalEdge": struct.unpack_from("<H", a, 14)[0]})
         out["actors"] = actors
+        tail = 64 + 16 * ACTOR_COUNT
+        (out["lastHeartbeatScanlines"], out["maxHeartbeatScanlines"], out["maxSpawnScanlines"],
+         out["maxUpdateScanlines"]) = struct.unpack_from("<4I", raw, tail)
+        (out["backOffs"], out["handoffs"], out["visitorsVanished"], out["culls"],
+         out["lastContextScanlines"], out["lastFailNodes"]) = struct.unpack_from("<6H", raw, tail + 16)
         return out
 
     def stable(self, read):
@@ -632,12 +689,17 @@ def scenario_linger(game: Game) -> dict:
     place_blue(game, node=NODE_MART, destId=SPOT_MART_SHELF, state=STATE_DWELLING,
                arrival=ARRIVAL_NONE, crossing=0, activity=ACTIVITY_SHOP, dwell=1)
     trace = [{"step": "start", "player_map": game.current_map(), "heartbeats": game.world_debug()["heartbeats"],
+              "heartbeat_scanlines": game.walker_debug()["lastHeartbeatScanlines"],
               "lorelei": game.record(SLOT_LORELEI), "blue": game.record(SLOT_BLUE)}]
     for name, (map_id, x, y) in (("into the Mart", (MART, 4, 6)), ("into the Center", (CENTER, 7, 6)),
                                  ("into the Mart again", (MART, 4, 6)), ("into the Center again", (CENTER, 7, 6))):
+        before = game.emu.frames
         game.warp(map_id, x, y, DIR_NORTH)
+        frames_taken = game.emu.frames - before
         trace.append({"step": name, "player_map": game.current_map(),
                       "heartbeats": game.world_debug()["heartbeats"],
+                      "heartbeat_scanlines": game.walker_debug()["lastHeartbeatScanlines"],
+                      "warp_frames": frames_taken,
                       "lorelei": game.record(SLOT_LORELEI), "blue": game.record(SLOT_BLUE),
                       "blue_actor": game.actor_for(SLOT_BLUE)})
         if name == "into the Mart":
@@ -659,21 +721,16 @@ def scenario_linger(game: Game) -> dict:
     return result
 
 
-PEWTER = (0 << 8) | 33
-PEWTER_GYM = (13 << 8) | 4
-NODE_PEWTER = 68
-NODE_PEWTER_GYM = 254
-SPOT_PEWTER_GYM = 2300          # the Gym visitor spot: exit warp (6, 14)
 SLOT_BROCK = 0
-GFX_BROCK = None
 
 
-def arrange_with_badges(game: Game, map_id: int, x: int, y: int, kanto_badges: int) -> None:
+def arrange_with_badges(game: Game, map_id: int, x: int, y: int, kanto_badges: int,
+                        johto_badges: int = 0, hoenn_badges: int = 0, facing: int = DIR_NORTH) -> None:
     game.request_id += 1
     req = bytearray(game.abi["requestSize"])
     struct.pack_into("<IHHhhI", req, 0, game.request_id, map_id >> 8, map_id & 0xFF, x, y, 1)
-    req[80], req[81], req[84], req[85], req[86] = CHECKPOINT_NEW_BARK_AFTER_INTRO, DIR_NORTH, 0xFF, 1, CMD_ARRANGE
-    req[362] = kanto_badges     # regional badge counts: Kanto, Johto, Hoenn
+    req[80], req[81], req[84], req[85], req[86] = CHECKPOINT_NEW_BARK_AFTER_INTRO, facing, 0xFF, 1, CMD_ARRANGE
+    req[362], req[363], req[364] = kanto_badges, johto_badges, hoenn_badges  # regional badge counts
     req[368] = 1                # apply the league circuit fixture (badges)
     address = game.sym["gE2ETestRequest"]
     game.emu.write(address, bytes(req))
@@ -692,6 +749,10 @@ def gym_objects(game: Game, gfx: int) -> list:
 
 def scenario_gym(game: Game) -> dict:
     """The Gym Leader's own object and a "just leaving" visitor."""
+    PEWTER = TABLES.map_id("MAP_PEWTER_CITY_HNS")
+    PEWTER_GYM = TABLES.map_id("MAP_PEWTER_CITY_GYM_HNS")
+    NODE_PEWTER = TABLES.main_node("MAP_PEWTER_CITY_HNS")
+    SPOT_PEWTER_GYM, NODE_PEWTER_GYM = TABLES.spot("MAP_PEWTER_CITY_GYM_HNS", "GYM", 6, 14)
     game.emu.step(240)
     arrange_with_badges(game, PEWTER, 15, 18, 1)   # Boulder Badge held: Brock is simulated
     game.warp(PEWTER_GYM, 9, 11, DIR_NORTH)
@@ -748,8 +809,6 @@ def scenario_gym(game: Game) -> dict:
 
 
 SLOT_LANCE = 10
-SPOT_VIRIDIAN_SQUARE = 843      # town square (18, 30): Wander in area
-SPOT_VIRIDIAN_WATER_2 = 836     # water's edge (14, 39)
 
 
 def plain_record(**fields) -> dict:
@@ -809,7 +868,7 @@ def scenario_browse(game: Game) -> dict:
     for i in range(0, 3000, 10):
         game.emu.step(10)
         rec = game.record(SLOT_BLUE)
-        if rec["node"] == NODE_MART and rec["destId"] != shelves[-1] and 2250 <= rec["destId"] <= 2267:
+        if rec["node"] == NODE_MART and rec["destId"] != shelves[-1] and TABLES.spots[rec["destId"]][1] == "WORLD_SPOT_STORE":
             shelves.append(rec["destId"])
             if shot is None:
                 game.emu.step(60)
@@ -895,9 +954,255 @@ def scenario_save(game: Game) -> dict:
     return result
 
 
+def hold_until(game: Game, button: str, predicate, limit: int = 600) -> bool:
+    """Hold a button until predicate() holds (checked every 2 frames)."""
+    game.emu.hold(button, 1)
+    try:
+        for _ in range(0, limit, 2):
+            game.emu.step(2)
+            if predicate():
+                return True
+    finally:
+        game.emu.hold(button, 0)
+    return False
+
+
+def scenario_deadend(game: Game) -> dict:
+    """H2: a walker never traps the player in a 1-wide dead end (Route 30).
+
+    Blue plans his walk to the water's edge at the tip of the dead end
+    (47, 49) while the corridor (36-47, 49) is free; the player then gets
+    into the corridor ahead of him, so he walks in behind the player and
+    stands between them and the only way out. Before the yield rule he
+    stood there for good."""
+    ROUTE30 = TABLES.map_id("MAP_ROUTE30_HNS")
+    spot, node = TABLES.spot("MAP_ROUTE30_HNS", "WATER_EDGE", 47, 49)
+    boot(game, ROUTE30, 35, 47, DIR_SOUTH)
+    place_blue(game, node=node, destId=spot, state=STATE_TRAVELLING, arrival=ARRIVAL_DOOR, crossing=0,
+               activity=ACTIVITY_FISH, dwell=3)
+    game.warp(ROUTE30, 35, 47, DIR_SOUTH)
+    game.wait_for(lambda: (game.actor_for(SLOT_BLUE) or {}).get("phase") == 4, 400, step=2, what="Blue walking")
+    # Into the corridor, ahead of Blue.
+    game.walk("Down", "y", 49)
+    in_corridor = hold_until(game, "Right", lambda: game.player()["x"] >= 44, limit=600)
+    game.emu.step(8)
+    # Blue follows into the corridor and is stopped by the player.
+    behind = game.wait_for(lambda: (lambda a: a and a["y"] == 49 and 36 <= a["x"] <= 43)(game.actor_for(SLOT_BLUE)),
+                           1200, what="Blue in the corridor behind the player")
+    game.emu.step(40)
+    shot_blocked = game.shot("deadend-blocked")
+    before = game.walker_debug()
+    # The player walks back out west: Blue must make room.
+    escaped = hold_until(game, "Left", lambda: game.player()["x"] <= 34, limit=1800)
+    shot_out = game.shot("deadend-player-out")
+    after = game.walker_debug()
+    result = {"player_in_corridor": in_corridor, "blue_behind_player": behind, "player_escaped": escaped,
+              "player": game.player(), "back_offs": after["backOffs"] - before["backOffs"],
+              "handoffs": after["handoffs"] - before["handoffs"], "blue_after": game.actor_for(SLOT_BLUE),
+              "record": game.record(SLOT_BLUE), "screenshots": [shot_blocked, shot_out], "debug": after}
+    result["pass"] = bool(behind) and escaped and (result["back_offs"] >= 1 or result["handoffs"] >= 1)
+    return result
+
+
+def scenario_gymentry(game: Game) -> dict:
+    """H3: a Gym visitor never blocks the entrance (Saffron Gym, three exit mats)."""
+    SAFFRON_GYM = TABLES.map_id("MAP_SAFFRON_CITY_GYM_HNS")
+    spot, node = TABLES.spot("MAP_SAFFRON_CITY_GYM_HNS", "GYM", 14, 23)
+    game.emu.step(240)
+    arrange_with_badges(game, SAFFRON_GYM, 14, 23, 8)
+    place_blue(game, node=node, destId=spot, state=STATE_DWELLING, arrival=ARRIVAL_NONE, crossing=0,
+               activity=6, dwell=1)
+    before = game.walker_debug()
+    # The player arrives on the exit mat facing into the Gym.
+    game.warp(SAFFRON_GYM, 14, 23, DIR_NORTH)
+    spawned = None
+    for _ in range(0, 120):
+        game.emu.step(1)
+        spawned = spawned or game.actor_for(SLOT_BLUE)
+    shot = game.shot("gymentry-visitor")
+    # The player walks straight in; nothing may stand in the way.
+    walked_in = hold_until(game, "Up", lambda: game.player()["y"] <= 19, limit=400)
+    game.emu.step(120)
+    after = game.walker_debug()
+    blue = game.record(SLOT_BLUE)
+    left = (after["warpExits"] - before["warpExits"]) + (after["visitorsVanished"] - before["visitorsVanished"])
+    tile = (spawned["x"], spawned["y"]) if spawned else None
+    result = {"visitor_spawn_tile": tile, "player_walked_in": walked_in, "visitor_left": left,
+              "visitor_removed": game.actor_for(SLOT_BLUE) is None, "record_after": blue,
+              "screenshots": [shot, game.shot("gymentry-after")], "debug": after}
+    # The first tile seen can already be a sibling exit mat (13, 23) or
+    # (15, 23): the visitor steps out through it at once.
+    result["pass"] = (walked_in and left >= 1 and result["visitor_removed"] and blue["node"] != node
+                      and (tile is None or tile not in ((14, 22), (14, 21), (14, 20))))
+    return result
+
+
+def scenario_stairs(game: Game) -> dict:
+    """H4: the walker takes sideways stairs as the graph does (Olivine Lighthouse door)."""
+    OLIVINE = TABLES.map_id("MAP_OLIVINE_CITY_HNS")
+    spot, node = TABLES.spot("MAP_OLIVINE_CITY_LIGHTHOUSE_HNS", "NPC_CHAT", 5, 4)
+    olivine = TABLES.main_node("MAP_OLIVINE_CITY_HNS")
+    boot(game, OLIVINE, 41, 51, DIR_WEST)
+    # From the Mart door (warp 3) up the sideways stairs to the Lighthouse (warp 0).
+    place_blue(game, node=olivine, destId=spot, state=STATE_TRAVELLING, arrival=ARRIVAL_DOOR, crossing=3,
+               activity=6, dwell=1)
+    exits_before = game.walker_debug()["warpExits"]
+    game.warp(OLIVINE, 41, 51, DIR_WEST)
+    track, diagonal = [], 0
+    for _ in range(0, 2400, 2):
+        game.emu.step(2)
+        dbg = game.walker_debug()
+        a = next((a for a in dbg["actors"] if a["slot"] == SLOT_BLUE and a["mode"]), None)
+        if a:
+            if track and abs(track[-1][0] - a["x"]) == 1 and abs(track[-1][1] - a["y"]) == 1:
+                diagonal += 1
+            if not track or track[-1] != (a["x"], a["y"]):
+                track.append((a["x"], a["y"]))
+        if dbg["warpExits"] > exits_before:
+            break
+    rec = game.record(SLOT_BLUE)
+    result = {"track": track, "diagonal_steps": diagonal, "warp_exits": game.walker_debug()["warpExits"] - exits_before,
+              "record": rec, "screenshots": [game.shot("stairs-after")], "debug": game.walker_debug()}
+    result["pass"] = result["warp_exits"] == 1 and rec["node"] == node and diagonal >= 1 \
+        and game.walker_debug()["searchFails"] == 0
+    return result
+
+
+def scenario_midstep(game: Game) -> dict:
+    """H1/M1: a step under way at a menu or a save never replays without collision."""
+    boot(game, VIRIDIAN, 16, 41, DIR_NORTH)
+    place_blue(game, node=NODE_VIRIDIAN, destId=SPOT_VIRIDIAN_WATER, state=STATE_TRAVELLING,
+               arrival=ARRIVAL_DOOR, crossing=4, activity=ACTIVITY_FISH, dwell=3)
+    game.warp(VIRIDIAN, 16, 41, DIR_NORTH)
+    game.wait_for(lambda: game.actor_for(SLOT_BLUE), 160, what="Blue's actor")
+
+    def blue_object():
+        a = game.actor_for(SLOT_BLUE)
+        raw = game.emu.read(game.sym["gObjectEvents"] + a["objectId"] * OBJECT_SIZE, OBJECT_SIZE)
+        x, y = struct.unpack_from("<hh", raw, 0x10)
+        return {"held": bool(raw[0] & 0x40), "x": x - MAP_OFFSET, "y": y - MAP_OFFSET}
+
+    # Menu: open the Start menu while a step is under way. The AI pauses
+    # while the controls are locked, so the finished step stays "held"
+    # until the walker clears it; the Bag then tears the field down. When
+    # the field comes back (the Start menu still open, the AI still paused)
+    # the object must not move: a replayed step would shift it a tile with
+    # no collision check.
+    game.wait_for(lambda: blue_object()["held"], 600, step=1, what="a step under way")
+    game.emu.press("Start")
+    at_menu = blue_object()
+    game.emu.step(30)
+    game.emu.press("Down")
+    game.emu.press("A")
+    game.emu.step(90)
+    in_bag = blue_object()
+    game.emu.press("B")
+    game.emu.step(90)
+    back = blue_object()
+    still_menu = game.controls_locked()
+    game.emu.press("B")
+    game.emu.step(20)
+    game.settle()
+    menu_ok = (back["x"], back["y"]) == (in_bag["x"], in_bag["y"]) and still_menu
+
+    # Save on the frame a step starts, reset, Continue.
+    game.wait_for(lambda: blue_object()["held"], 1200, step=1, what="another step under way")
+    held_at_save = blue_object()
+    game.save()
+    objects_at_save = game.objects()
+    block = game.local_actor_block()
+    for b in ("A", "B", "Select", "Start"):
+        game.emu.hold(b, 1)
+    game.emu.step(2)
+    for b in ("A", "B", "Select", "Start"):
+        game.emu.hold(b, 0)
+    game.emu.step(60)
+    for _ in range(0, 900, 4):
+        game.emu.step(4)
+        if game.emu.u16(game.sym["gSaveFileStatus"]) == 1:
+            break
+    for _ in range(60):
+        game.emu.step(30)
+        dbg = game.walker_debug()
+        if dbg["currentMap"] == VIRIDIAN and dbg["worldState"] and not game.controls_locked() \
+                and any(o["isPlayer"] for o in game.objects()):
+            break
+        game.emu.press("A")
+    restored = game.wait_for(lambda: game.actor_for(SLOT_BLUE), 400, step=1, what="Blue restored")
+    objects_after_continue = game.objects()
+    game.settle()
+    arrived = game.wait_for(lambda: (game.actor_for(SLOT_BLUE) or {}).get("atSpot"), 2400, what="arrival after Continue")
+    final = game.actor_for(SLOT_BLUE)
+    result = {"menu": {"at_menu": at_menu, "in_bag": in_bag, "back_16_frames": back, "no_replayed_step": menu_ok},
+              "save": {"held_at_save": held_at_save, "block": block, "restored": restored, "final": final,
+                       "objects_after_continue": objects_after_continue, "objects_at_save": objects_at_save},
+              "screenshots": [game.shot("midstep-after-continue")], "debug": game.walker_debug()}
+    # The save can land on the frame a step is issued but not yet applied:
+    # the object is then saved on the step's start tile. Either way it comes
+    # back within one tile of the step under way (a replayed step would add
+    # one more), and it carries on to its spot instead of freezing.
+    result["pass"] = (menu_ok and at_menu["held"] and block[0] is not None
+                      and abs(restored["x"] - held_at_save["x"]) + abs(restored["y"] - held_at_save["y"]) <= 1
+                      and game.walker_debug()["restores"] >= 1
+                      and bool(arrived) and (final["x"], final["y"]) == (13, 39))
+    return result
+
+
+def scenario_decoys(game: Game) -> dict:
+    """M4: the Gym Leader object is matched by local id (Fuchsia's Janine decoys stay)."""
+    FUCHSIA_GYM = TABLES.map_id("MAP_FUCHSIA_CITY_GYM_HNS")
+    VIRIDIAN_GYM = TABLES.map_id("MAP_VIRIDIAN_CITY_GYM")
+    slot_janine, slot_giovanni = 4, 7
+    game.emu.step(240)
+    arrange_with_badges(game, FUCHSIA_GYM, 6, 10, 8)
+    away = dict(destKind=DEST_SPOT, destId=SPOT_VIRIDIAN_WATER, state=STATE_TRAVELLING, arrival=ARRIVAL_NONE,
+                crossing=0, activity=ACTIVITY_FISH, dwell=3, waited=0, lifeEvent=0, lifeSteps=0, stayBits=0, reserved=0)
+    game.write_record(slot_janine, node=NODE_VIRIDIAN, **away)
+    game.write_record(slot_giovanni, node=NODE_ROUTE1, **away)
+    game.warp(FUCHSIA_GYM, 6, 10, DIR_NORTH)
+    game.emu.step(30)
+    fuchsia = [o for o in game.objects() if not o["isPlayer"]]
+    fuchsia_shot = game.shot("decoys-fuchsia")
+    game.warp(VIRIDIAN_GYM, 4, 4, DIR_NORTH)
+    game.emu.step(30)
+    viridian = [o for o in game.objects() if not o["isPlayer"]]
+    result = {"fuchsia_objects": fuchsia, "viridian_objects": viridian,
+              "screenshots": [fuchsia_shot, game.shot("decoys-viridian-gym")]}
+    janine_gfx = {o["gfx"] for o in fuchsia if o["localId"] in (1, 2, 3, 4)} if fuchsia else set()
+    decoys = [o for o in fuchsia if o["localId"] in (1, 2, 3, 4, 5) and o["gfx"] in janine_gfx]
+    result["decoys_visible"] = sorted(o["localId"] for o in decoys)
+    result["giovanni_objects"] = [o for o in viridian if o["gfx"] == 309]
+    result["pass"] = (5 not in result["decoys_visible"] and len(result["decoys_visible"]) >= 1
+                      and not result["giovanni_objects"])
+    return result
+
+
+def scenario_perf(game: Game) -> dict:
+    """Heartbeat cost with every badge held: all 25 trainers simulated."""
+    game.emu.step(240)
+    arrange_with_badges(game, CENTER, 7, 6, 8, 8, 8)
+    rows = []
+    for i in range(12):
+        map_id, x, y = (MART, 4, 6) if i % 2 == 0 else (CENTER, 7, 6)
+        before = game.emu.frames
+        game.warp(map_id, x, y, DIR_NORTH)
+        rows.append({"warp": i + 1, "frames": game.emu.frames - before,
+                     "heartbeat_scanlines": game.walker_debug()["lastHeartbeatScanlines"],
+                     "context_scanlines": game.walker_debug()["lastContextScanlines"],
+                     "trace": game.emu.read(game.sym["gWayfarerWorldDebug"] + 8, 20).hex()})
+    dbg = game.walker_debug()
+    scan = [r["heartbeat_scanlines"] for r in rows]
+    result = {"warps": rows, "max_heartbeat_scanlines": max(scan), "mean_heartbeat_scanlines": sum(scan) / len(scan),
+              "max_heartbeat_frames": round(max(scan) / 228, 2), "debug": dbg}
+    result["pass"] = True
+    return result
+
+
 SCENARIOS = {"spot": scenario_spot, "edge": scenario_edge, "door": scenario_door,
              "linger": scenario_linger, "save": scenario_save, "gym": scenario_gym,
-             "budget": scenario_budget, "browse": scenario_browse}
+             "budget": scenario_budget, "browse": scenario_browse, "deadend": scenario_deadend,
+             "gymentry": scenario_gymentry, "stairs": scenario_stairs, "midstep": scenario_midstep,
+             "decoys": scenario_decoys, "perf": scenario_perf}
 
 
 def main(argv=None) -> int:
@@ -910,6 +1215,7 @@ def main(argv=None) -> int:
     args = parser.parse_args(argv)
     args.output.mkdir(parents=True, exist_ok=True)
     symbols = read_symbols(args.symbols)
+    load_world_ids(ROOT / "game")
     names = sorted(SCENARIOS) if args.scenario == "all" else [args.scenario]
     results = {}
     failed = False

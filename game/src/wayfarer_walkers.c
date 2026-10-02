@@ -8,6 +8,17 @@
 // a bounded grid search at eight expansions per field update, re-planning
 // when blocked, the door-step exception, the seam rebase, and dropping the
 // search workspace on heap resets.
+//
+// The grid search follows the engine's own step rules, the same ones the
+// walker graph generator (tools/wayfarer_world/graph.py) floods with:
+// GetCollisionAtCoords (with its sideways-stair diagonal steps), ledges and
+// water as walls, and the elevation an object settles on after a step
+// (ObjectEventUpdateElevation: the tile's, unless the tile is 15).
+//
+// A walker never traps the player: pushed against, or blocked by the
+// player, it backs off to an open tile away from them, and after a few
+// tries (or with nowhere to go) it hands off to its record and leaves for
+// the rest of the visit.
 
 #include "global.h"
 #include "wayfarer_walkers.h"
@@ -30,12 +41,22 @@
 #define WALKER_QUEUE_SIZE       1024    // ring queue; a grid frontier stays far below
 #define WALKER_PATH_MAX         192     // steps per plan; longer walks re-plan on the way
 #define WALKER_SEARCH_SLICE     8       // node expansions per field update
+#define WALKER_AWAY_NODES       160     // a back-off search gives up after this many
 #define WALKER_BLOCKED_LIMIT    4       // blocked steps before the goal is dropped
 #define WALKER_RETRY_FRAMES     30
 #define WALKER_UNREACHABLE_WAIT 240     // stand still (or play the template), then retry
+#define WALKER_FAILS_MAX        3       // the retry wait doubles up to this many failures
 #define WALKER_SPAWN_PERIOD     8
+#define WALKER_SPAWN_BACKOFF    64      // frames before retrying a spawn that found no room
 #define WALKER_NEAR_RADIUS      3
 #define WALKER_LANE_SCAN        10
+#define WALKER_YIELD_FRAMES     40      // the player pushing against a walker this long
+#define WALKER_YIELD_BLOCKS     2       // steps blocked by the player before backing off
+#define WALKER_BACKOFFS_MAX     3       // back-offs per visit before handing off
+#define WALKER_BACKOFF_WAIT     180
+#define WALKER_AWAY_DISTANCE    3
+#define WALKER_SPAWN_CLEARANCE  2       // never spawn this close to the player
+#define WALKER_SPAWN_AHEAD      4       // nor this far straight ahead of them
 #define WANDER_PAUSE_TICKS      3
 #define BROWSE_INTERVAL_TICKS   8
 #define BROWSE_FLOOR_EVERY      3
@@ -44,6 +65,7 @@
 #define NO_ACTOR    0xFF
 #define NO_EDGE     0xFFFF
 #define SLOT_NONE   0xFF
+#define TILE_UNSEEN 0xFF
 
 enum
 {
@@ -53,7 +75,7 @@ enum
     STEP_EXIT_WARP, // into a warp: removed afterwards
     STEP_STRIP,     // a strip actor's step
     STEP_ENTER,     // a strip actor stepping into the player's map
-    STEP_SETTLE,    // a step carried across a map change
+    STEP_SETTLE,    // a step carried across a map change or a menu
 };
 
 enum
@@ -70,8 +92,8 @@ struct WalkerActor
     u8 objectId;
     u8 phase;
     u8 goalKind;
-    u8 goalDir;         // edge: the side's direction; warp: unused
-    u8 goalX;
+    u8 goalDir;         // edge: the side's direction
+    u8 goalX;           // tile goal, warp tile, or the player's tile for a back-off
     u8 goalY;
     u16 goalEdge;
     u8 laneA;
@@ -96,14 +118,19 @@ struct WalkerActor
     u8 pauseTicks;
     bool8 actionPending;
     bool8 justLeaving;
+    u8 failures;        // consecutive failed searches
+    u8 playerBlocks;    // steps blocked by the player
+    u8 backOffs;        // back-offs this visit
+    u8 pushFrames;      // frames the player has pushed against this walker
     u8 padding;
 };
 
 // Shared heap workspace for the one grid search that runs at a time.
+// tiles[]: TILE_UNSEEN, or the move into the tile (DIR_SOUTH..DIR_NORTHEAST,
+// low nibble) and the elevation the walker settles on there (high nibble).
 struct WalkerWork
 {
-    u8 visited[(WALKER_MAX_TILES + 7) / 8];
-    u8 back[(WALKER_MAX_TILES + 3) / 4];    // 2-bit direction into each tile
+    u8 tiles[WALKER_MAX_TILES];
     u16 queue[WALKER_QUEUE_SIZE];
     u8 path[WALKER_ACTOR_COUNT][WALKER_PATH_MAX];
 };
@@ -152,16 +179,22 @@ static EWRAM_DATA bool8 sActiveMapValid = FALSE;
 static EWRAM_DATA u8 sTransition = TRANSITION_NONE;
 static EWRAM_DATA u16 sMapNode = 0;  // set on every map change
 static EWRAM_DATA u32 sVisitorsSeen = 0;    // Gym visitors spawned during this entry
+static EWRAM_DATA u32 sYielded = 0;         // handed off for the rest of this visit
 static EWRAM_DATA bool8 sHideFollower = FALSE;
+static EWRAM_DATA bool8 sFollowerFlagOurs = FALSE;
 static EWRAM_DATA u8 sSpawnTimer = 0;
+static EWRAM_DATA u8 sSpawnBackoff = 0;
 static EWRAM_DATA struct RecentEntry sRecentEntries[WALKER_ACTOR_COUNT] = {0};
 
 STATIC_ASSERT(sizeof(struct WayfarerWalkerActorDebug) == 16, WalkerActorDebugSize);
-STATIC_ASSERT(sizeof(struct WayfarerWalkersDebug) == 64 + 16 * WALKER_ACTOR_COUNT, WalkersDebugSize);
+STATIC_ASSERT(sizeof(struct WayfarerWalkersDebug) == 64 + 16 * WALKER_ACTOR_COUNT + 32, WalkersDebugSize);
+STATIC_ASSERT(DIR_NORTHEAST <= 15, WalkerMoveFitsANibble);
 
-// DIR_SOUTH..DIR_EAST are 1..4.
-static const s8 sDx[5] = {0, 0, 0, -1, 1};
-static const s8 sDy[5] = {0, 1, -1, 0, 0};
+// DIR_SOUTH..DIR_EAST are 1..4; the stair diagonals DIR_SOUTHWEST..DIR_NORTHEAST 5..8.
+static const s8 sDx[9] = {0, 0, 0, -1, 1, -1, 1, -1, 1};
+static const s8 sDy[9] = {0, 1, -1, 0, 0, 1, 1, -1, -1};
+// The walking command for each move: a diagonal is a west or east step on stairs.
+static const u8 sMoveCommand[9] = {DIR_NONE, DIR_SOUTH, DIR_NORTH, DIR_WEST, DIR_EAST, DIR_WEST, DIR_EAST, DIR_WEST, DIR_EAST};
 static const u8 sOpposite[5] = {DIR_NONE, DIR_NORTH, DIR_SOUTH, DIR_EAST, DIR_WEST};
 
 static void RequestSearch(struct WalkerActor *actor);
@@ -181,6 +214,19 @@ static u32 ScanlineStamp(void)
         second = *(volatile u32 *)&gMain.vblankCounter1;
     } while (first != second);
     return first * 228 + (vcount + 68) % 228;
+}
+
+u32 WayfarerWalkers_ScanlineStamp(void)
+{
+    return ScanlineStamp();
+}
+
+void WayfarerWalkers_NoteHeartbeat(u32 scanlines, u32 contextScanlines)
+{
+    gWayfarerWalkersDebug.lastContextScanlines = contextScanlines;
+    gWayfarerWalkersDebug.lastHeartbeatScanlines = scanlines;
+    if (scanlines > gWayfarerWalkersDebug.maxHeartbeatScanlines)
+        gWayfarerWalkersDebug.maxHeartbeatScanlines = scanlines;
 }
 
 static u16 CurrentMap(void)
@@ -233,6 +279,22 @@ static struct ObjectEvent *ActorObject(const struct WalkerActor *actor)
     return &gObjectEvents[actor->objectId];
 }
 
+static struct ObjectEvent *Player(void)
+{
+    return &gObjectEvents[gPlayerAvatar.objectEventId];
+}
+
+static u16 Distance(s16 x1, s16 y1, s16 x2, s16 y2)
+{
+    return (x1 > x2 ? x1 - x2 : x2 - x1) + (y1 > y2 ? y1 - y2 : y2 - y1);
+}
+
+// MAP_OFFSET coords.
+static u16 PlayerDistance(s16 x, s16 y)
+{
+    return Distance(x, y, Player()->currentCoords.x, Player()->currentCoords.y);
+}
+
 static bool8 IsLeaderHomeInGym(u8 slot)
 {
     const struct WayfarerWorldRecord *record = &State()->records[slot];
@@ -253,25 +315,35 @@ static bool8 IsLeaderObjectShown(u8 slot)
     return WayfarerWorld_IsLeaderUnbeaten(slot);
 }
 
+static bool8 IsTrainerSprite(u8 slot, u16 gfx)
+{
+    const struct WayfarerWorldTrainer *trainer = Trainer(slot);
+    return gfx == trainer->graphicsId
+        || (trainer->altGraphicsIds[0] != 0 && gfx == trainer->altGraphicsIds[0])
+        || (trainer->altGraphicsIds[1] != 0 && gfx == trainer->altGraphicsIds[1]);
+}
+
 static bool8 IsPlayerTile(s16 x, s16 y)
 {
-    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    struct ObjectEvent *player = Player();
     return (player->currentCoords.x == x && player->currentCoords.y == y)
         || (player->previousCoords.x == x && player->previousCoords.y == y);
+}
+
+// Ledges and water are walls for walkers (the generator's rule too).
+static bool8 IsBarrier(u8 behavior)
+{
+    return MetatileBehavior_IsSurfableWaterOrUnderwater(behavior)
+        || MetatileBehavior_IsJumpNorth(behavior) || MetatileBehavior_IsJumpSouth(behavior)
+        || MetatileBehavior_IsJumpEast(behavior) || MetatileBehavior_IsJumpWest(behavior);
 }
 
 // A tile a walker may stand on (MAP_OFFSET coords).
 static bool8 IsStandable(s16 x, s16 y)
 {
-    u8 behavior;
     if (!InMap(x - MAP_OFFSET, y - MAP_OFFSET) || MapGridGetCollisionAt(x, y) != 0)
         return FALSE;
-    behavior = MapGridGetMetatileBehaviorAt(x, y);
-    if (MetatileBehavior_IsSurfableWaterOrUnderwater(behavior)
-     || MetatileBehavior_IsJumpNorth(behavior) || MetatileBehavior_IsJumpSouth(behavior)
-     || MetatileBehavior_IsJumpEast(behavior) || MetatileBehavior_IsJumpWest(behavior))
-        return FALSE;
-    return TRUE;
+    return !IsBarrier(MapGridGetMetatileBehaviorAt(x, y));
 }
 
 static bool8 IsFreeTile(s16 x, s16 y)
@@ -279,36 +351,75 @@ static bool8 IsFreeTile(s16 x, s16 y)
     return IsStandable(x, y) && GetObjectEventIdByXY(x, y) == OBJECT_EVENTS_COUNT && !IsPlayerTile(x, y);
 }
 
-// The engine's own collision check for one step from (x, y), with the
-// walker's elevation taken from the tile it would stand on. Sideways stairs
-// (a diagonal step) and ledges or water are refused.
-static bool8 CanStep(struct ObjectEvent *obj, s16 x, s16 y, u8 dir)
+// Where a walker may appear: free, not beside the player and not straight
+// ahead of them, so a spawn never stands in the player's way.
+static bool8 IsSpawnTile(s16 x, s16 y)
+{
+    struct ObjectEvent *player = Player();
+    s16 px = player->currentCoords.x, py = player->currentCoords.y;
+    u8 facing = player->facingDirection;
+    u8 i;
+
+    if (!IsFreeTile(x, y) || Distance(x, y, px, py) < WALKER_SPAWN_CLEARANCE)
+        return FALSE;
+    if (facing >= DIR_SOUTH && facing <= DIR_EAST)
+    {
+        for (i = 1; i <= WALKER_SPAWN_AHEAD; i++)
+        {
+            if (x == px + sDx[facing] * i && y == py + sDy[facing] * i)
+                return FALSE;
+        }
+    }
+    return TRUE;
+}
+
+// The elevation an object settles on at a tile (ObjectEventUpdateElevation
+// once a step is over: the tile's own, except on elevation 15).
+static u8 RestElevation(s16 x, s16 y, u8 carried)
+{
+    u8 elevation = MapGridGetElevationAt(x, y);
+    return elevation == 15 ? carried : elevation;
+}
+
+// One step from (x, y) (MAP_OFFSET coords) for an object at the given
+// elevation, by the engine's GetCollisionAtCoords: the move (DIR_SOUTH..
+// DIR_EAST, or a stair diagonal DIR_SOUTHWEST..DIR_NORTHEAST), or DIR_NONE.
+// The object's own fields are put back as they were.
+static u8 ProbeStep(struct ObjectEvent *obj, s16 x, s16 y, u8 elevation, u8 dir)
 {
     struct Coords16 coords = obj->currentCoords;
-    u8 elevation = obj->currentElevation;
+    u8 savedElevation = obj->currentElevation;
     u8 behavior = obj->currentMetatileBehavior;
     u8 overwrite = obj->directionOverwrite;
-    u8 tileElevation = MapGridGetElevationAt(x, y);
     s16 nx = x + sDx[dir], ny = y + sDy[dir];
-    u8 next;
-    bool8 clear;
+    u8 move = DIR_NONE;
 
-    next = MapGridGetMetatileBehaviorAt(nx, ny);
-    if (MetatileBehavior_IsSurfableWaterOrUnderwater(next)
-     || MetatileBehavior_IsJumpNorth(next) || MetatileBehavior_IsJumpSouth(next)
-     || MetatileBehavior_IsJumpEast(next) || MetatileBehavior_IsJumpWest(next))
-        return FALSE;
+    if (IsBarrier(MapGridGetMetatileBehaviorAt(nx, ny)))
+        return DIR_NONE;
     obj->currentCoords.x = x;
     obj->currentCoords.y = y;
-    if (tileElevation != 0 && tileElevation != 15)
-        obj->currentElevation = tileElevation;
-    obj->currentMetatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
-    clear = GetCollisionAtCoords(obj, nx, ny, dir) == COLLISION_NONE && obj->directionOverwrite == DIR_NONE;
-    obj->currentCoords = coords;
     obj->currentElevation = elevation;
+    obj->currentMetatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
+    if (GetCollisionAtCoords(obj, nx, ny, dir) == COLLISION_NONE)
+        move = obj->directionOverwrite != DIR_NONE ? obj->directionOverwrite : dir;
+    obj->currentCoords = coords;
+    obj->currentElevation = savedElevation;
     obj->currentMetatileBehavior = behavior;
     obj->directionOverwrite = overwrite;
-    return clear;
+    if (move > DIR_EAST)
+    {
+        // The stair diagonal lands beside the step: it must be walkable too.
+        s16 dx = x + sDx[move], dy = y + sDy[move];
+        if (move > DIR_NORTHEAST || MapGridGetCollisionAt(dx, dy) != 0 || IsBarrier(MapGridGetMetatileBehaviorAt(dx, dy)))
+            move = DIR_NONE;
+    }
+    return move;
+}
+
+// A step from where the object stands now.
+static u8 ProbeFromHere(struct ObjectEvent *obj, u8 dir)
+{
+    return ProbeStep(obj, obj->currentCoords.x, obj->currentCoords.y, obj->currentElevation, dir);
 }
 
 static bool8 IsVisible(const struct ObjectEvent *obj)
@@ -360,6 +471,22 @@ static u16 FirstNodeOfMap(u16 map)
             return node;
     }
     return WORLD_NODE_NONE;
+}
+
+// Spots follow map order and each map's nodes are contiguous, so the first
+// spot of a map is a lower bound on the node index.
+static u16 FirstSpotFromNode(u16 node)
+{
+    u16 low = 0, high = gWayfarerWorldSpotCount;
+    while (low < high)
+    {
+        u16 mid = (low + high) / 2;
+        if (gWayfarerWorldSpots[mid].node < node)
+            low = mid + 1;
+        else
+            high = mid;
+    }
+    return low;
 }
 
 static void NoteEntry(u8 slot, u16 edgeIndex, u8 crossing)
@@ -422,6 +549,18 @@ static void KeepEntriesFor(u16 map)
 static void BuildContext(struct WayfarerWorldContext *ctx)
 {
     WayfarerWorld_BuildContext(ctx);
+}
+
+// A step under way when the field is torn down (a menu, a battle, a save)
+// restarts from its first frame when the sprite is rebuilt and shifts the
+// object once more, with no collision check. The object already stands on
+// the step's destination tile: end the movement there.
+static void SettleHeldMovement(struct ObjectEvent *obj)
+{
+    obj->movementActionId = MOVEMENT_ACTION_NONE;
+    obj->heldMovementActive = FALSE;
+    obj->heldMovementFinished = FALSE;
+    obj->directionOverwrite = DIR_NONE;
 }
 
 // ---------------------------------------------------------------------------
@@ -493,7 +632,7 @@ static u8 SpawnElevation(s16 x, s16 y)
 {
     u8 elevation = MapGridGetElevationAt(x, y);
     if (elevation == 15)
-        elevation = gObjectEvents[gPlayerAvatar.objectEventId].currentElevation;
+        elevation = Player()->currentElevation;
     return elevation;
 }
 
@@ -530,9 +669,9 @@ static struct WalkerActor *SpawnActor(u8 slot, s16 x, s16 y, u8 facing)
 // ---------------------------------------------------------------------------
 // Spawn positions (world to local)
 
-// The first free tile within the radius, nearest first, in a fixed order:
+// The first spawn tile within the radius, nearest first, in a fixed order:
 // south rows first (doors open south), then west before east.
-static bool8 NearestFree(s16 cx, s16 cy, u8 minDistance, u8 radius, s16 *outX, s16 *outY)
+static bool8 NearestSpawnTile(s16 cx, s16 cy, u8 minDistance, u8 radius, s16 *outX, s16 *outY)
 {
     s16 d, dy, side;
     for (d = minDistance; d <= radius; d++)
@@ -543,7 +682,7 @@ static bool8 NearestFree(s16 cx, s16 cy, u8 minDistance, u8 radius, s16 *outX, s
             for (side = 0; side < (rest == 0 ? 1 : 2); side++)
             {
                 s16 x = cx + (side == 0 ? -rest : rest), y = cy + dy;
-                if (IsFreeTile(x + MAP_OFFSET, y + MAP_OFFSET))
+                if (IsSpawnTile(x + MAP_OFFSET, y + MAP_OFFSET))
                 {
                     *outX = x;
                     *outY = y;
@@ -555,7 +694,7 @@ static bool8 NearestFree(s16 cx, s16 cy, u8 minDistance, u8 radius, s16 *outX, s
     return FALSE;
 }
 
-// A lane tile on the entered side, at the crossing or the nearest free one.
+// A lane tile on the entered side, at the crossing or the nearest spawn tile.
 static bool8 LaneTile(u8 arrival, u8 crossing, s16 *outX, s16 *outY, u8 *facing)
 {
     s16 i;
@@ -570,7 +709,7 @@ static bool8 LaneTile(u8 arrival, u8 crossing, s16 *outX, s16 *outY, u8 *facing)
         case WORLD_ARRIVAL_WEST:  x = 0; y = along; *facing = DIR_EAST; break;
         default:                  x = MapWidth() - 1; y = along; *facing = DIR_WEST; break;
         }
-        if (IsFreeTile(x + MAP_OFFSET, y + MAP_OFFSET))
+        if (IsSpawnTile(x + MAP_OFFSET, y + MAP_OFFSET))
         {
             *outX = x;
             *outY = y;
@@ -578,17 +717,6 @@ static bool8 LaneTile(u8 arrival, u8 crossing, s16 *outX, s16 *outY, u8 *facing)
         }
     }
     return FALSE;
-}
-
-static u16 FirstSpotOfNode(u16 node)
-{
-    u16 spot;
-    for (spot = 0; spot < gWayfarerWorldSpotCount; spot++)
-    {
-        if (gWayfarerWorldSpots[spot].node == node)
-            return spot;
-    }
-    return WORLD_SPOT_NONE;
 }
 
 static const struct WayfarerWorldSpot *DestSpot(const struct WayfarerWorldRecord *record, u8 slot)
@@ -608,15 +736,16 @@ static bool8 IsGymVisit(const struct WayfarerWorldRecord *record, u8 slot)
     return spot != NULL && spot->kind == WORLD_SPOT_GYM && spot->node == record->node;
 }
 
-// Gym "just leaving": an approach tile, nearest the exit first, off the
-// player's arrival tile.
+// Gym "just leaving": an approach tile, nearest the exit first, never on or
+// beside the player's arrival tile nor ahead of them. A 1-wide entrance has
+// no such tile: the visitor isn't shown this entry.
 static bool8 VisitorTile(const struct WayfarerWorldSpot *spot, s16 *outX, s16 *outY, u8 *facing)
 {
     u16 i;
     for (i = 0; i < spot->dataCount; i++)
     {
         const u8 *tile = gWayfarerWorldAreaTiles[spot->dataStart + i];
-        if (IsFreeTile(tile[0] + MAP_OFFSET, tile[1] + MAP_OFFSET))
+        if (IsSpawnTile(tile[0] + MAP_OFFSET, tile[1] + MAP_OFFSET))
         {
             *outX = tile[0];
             *outY = tile[1];
@@ -627,12 +756,32 @@ static bool8 VisitorTile(const struct WayfarerWorldSpot *spot, s16 *outX, s16 *o
     return FALSE;
 }
 
+// The first node of a node's map (each map's nodes are contiguous).
+static u16 MapFirstNode(u16 node)
+{
+    while (node > 0 && gWayfarerWorldNodes[node - 1].map == gWayfarerWorldNodes[node].map)
+        node--;
+    return node;
+}
+
+// The first non-Gym spot of this node: somewhere a trainer plausibly was.
+static u16 FirstSpotOfNode(u16 node)
+{
+    u16 map = WorldSim_NodeMap(node), spot;
+    for (spot = FirstSpotFromNode(MapFirstNode(node));
+         spot < gWayfarerWorldSpotCount && WorldSim_NodeMap(gWayfarerWorldSpots[spot].node) == map; spot++)
+    {
+        if (gWayfarerWorldSpots[spot].node == node && gWayfarerWorldSpots[spot].kind != WORLD_SPOT_GYM)
+            return spot;
+    }
+    return WORLD_SPOT_NONE;
+}
+
 static bool8 SpawnTile(u8 slot, s16 *x, s16 *y, u8 *facing)
 {
     const struct WayfarerWorldRecord *record = &State()->records[slot];
     const struct WayfarerWorldSpot *spot = DestSpot(record, slot);
     const struct WayfarerWorldNode *node = &gWayfarerWorldNodes[record->node];
-
     u8 arrival = record->arrival, crossing = record->crossing;
     const struct RecentEntry *entry = FindEntry(slot, CurrentMap());
 
@@ -651,9 +800,9 @@ static bool8 SpawnTile(u8 slot, s16 *x, s16 *y, u8 *facing)
                 return VisitorTile(spot, x, y, facing);
             if (spot->facing >= DIR_SOUTH && spot->facing <= DIR_EAST)
                 *facing = spot->facing;
-            return NearestFree(spot->x, spot->y, 0, WALKER_NEAR_RADIUS, x, y);
+            return NearestSpawnTile(spot->x, spot->y, 0, WALKER_NEAR_RADIUS, x, y);
         }
-        return NearestFree(node->x, node->y, 0, WALKER_NEAR_RADIUS, x, y);
+        return NearestSpawnTile(node->x, node->y, 0, WALKER_NEAR_RADIUS, x, y);
     }
 
     switch (arrival)
@@ -668,7 +817,7 @@ static bool8 SpawnTile(u8 slot, s16 *x, s16 *y, u8 *facing)
         if (crossing < gMapHeader.events->warpCount)
         {
             const struct WarpEvent *warp = &gMapHeader.events->warps[crossing];
-            if (NearestFree(warp->x, warp->y, 1, WALKER_NEAR_RADIUS, x, y))
+            if (NearestSpawnTile(warp->x, warp->y, 1, WALKER_NEAR_RADIUS, x, y))
             {
                 *facing = DirectionTowards(warp->x, warp->y, *x, *y);
                 if (*facing == DIR_NONE)
@@ -684,22 +833,25 @@ static bool8 SpawnTile(u8 slot, s16 *x, s16 *y, u8 *facing)
     {
         u16 first = FirstSpotOfNode(record->node);
         if (first != WORLD_SPOT_NONE)
-            return NearestFree(gWayfarerWorldSpots[first].x, gWayfarerWorldSpots[first].y, 0, WALKER_NEAR_RADIUS, x, y);
+            return NearestSpawnTile(gWayfarerWorldSpots[first].x, gWayfarerWorldSpots[first].y, 0, WALKER_NEAR_RADIUS, x, y);
     }
-    return NearestFree(node->x, node->y, 0, WALKER_NEAR_RADIUS, x, y);
+    return NearestSpawnTile(node->x, node->y, 0, WALKER_NEAR_RADIUS, x, y);
 }
 
-// Story scenes win: a visible template object (or live object) with the
-// trainer's sprite on this map keeps the actor away.
+// Story scenes win: a visible template object (or live object) drawn with
+// any of the trainer's sprites on this map keeps the actor away. A Gym
+// Leader's own object is matched by its local id, not here.
 static bool8 IsStorySuppressed(u8 slot)
 {
-    u16 gfx = Trainer(slot)->graphicsId;
+    const struct WayfarerWorldTrainer *trainer = Trainer(slot);
+    bool8 ownGym = trainer->leaderLocalId != 0 && WorldSim_NodeMap(trainer->gymNode) == CurrentMap();
     u8 i;
 
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         const struct ObjectEvent *obj = &gObjectEvents[i];
-        if (obj->active && !obj->invisible && obj->graphicsId == gfx && !WayfarerWalkers_IsActorObject(obj))
+        if (obj->active && !obj->invisible && IsTrainerSprite(slot, obj->graphicsId) && !WayfarerWalkers_IsActorObject(obj)
+         && !(ownGym && obj->localId == trainer->leaderLocalId))
             return TRUE;
     }
     if (gMapHeader.events != NULL)
@@ -707,7 +859,8 @@ static bool8 IsStorySuppressed(u8 slot)
         for (i = 0; i < gMapHeader.events->objectEventCount && i < OBJECT_EVENT_TEMPLATES_COUNT; i++)
         {
             const struct ObjectEventTemplate *template = &gSaveBlock1Ptr->objectEventTemplates[i];
-            if (template->graphicsId == gfx && !FlagGet(template->flagId) && !WayfarerWalkers_HideTemplate(template))
+            if (IsTrainerSprite(slot, template->graphicsId) && !FlagGet(template->flagId)
+             && !(ownGym && template->localId == trainer->leaderLocalId))
                 return TRUE;
         }
     }
@@ -719,7 +872,7 @@ static bool8 IsSpawnCandidate(u8 slot)
     const struct WayfarerWorldRecord *record = &State()->records[slot];
     if (!WorldSim_IsSimulated(record) || WorldSim_NodeMap(record->node) != CurrentMap())
         return FALSE;
-    if (FindActorForSlot(slot) != NULL || IsLeaderHomeInGym(slot))
+    if (FindActorForSlot(slot) != NULL || IsLeaderHomeInGym(slot) || (sYielded & (1u << slot)))
         return FALSE;
     if (IsGymVisit(record, slot) && (sVisitorsSeen & (1u << slot)))
         return FALSE;
@@ -737,13 +890,17 @@ static u8 FreeObjectSlots(void)
     return count;
 }
 
+// Spawning leaves at least this many object slots free for the map's own
+// objects (Cut trees, boulders, trainers) coming into view.
+#define SPAWN_FREE_SLOTS 3
+
 // Spawns the restored local actor block first (Continue), then records on
 // this map in priority order, up to the map's capacity and the free slots.
 static void TrySpawn(void)
 {
     u8 order[WORLD_SIM_TRAINER_COUNT], hops[WORLD_SIM_TRAINER_COUNT];
-    u8 count = 0, slot, i, j, room, capacity;
-    void *workspace;
+    u8 count = 0, slot, i, j, room, capacity, locals;
+    bool8 spawned = FALSE;
 
     if (sMapNode == WORLD_NODE_NONE)
         return;
@@ -755,18 +912,24 @@ static void TrySpawn(void)
         {
             struct PendingActor *pending = &sPending[i];
             const struct WayfarerWorldRecord *record = &State()->records[pending->slot];
+            s16 x = pending->x, y = pending->y;
             if (FindActorForSlot(pending->slot) != NULL || !WorldSim_IsSimulated(record)
-             || WorldSim_NodeMap(record->node) != CurrentMap() || FreeObjectSlots() < 2)
+             || WorldSim_NodeMap(record->node) != CurrentMap() || FreeObjectSlots() < SPAWN_FREE_SLOTS)
                 continue;
-            if (SpawnActor(pending->slot, pending->x, pending->y, pending->facing) != NULL)
+            // The saved tile, unless something stands there now (a warped Continue).
+            if (!IsFreeTile(x + MAP_OFFSET, y + MAP_OFFSET) && !NearestSpawnTile(pending->x, pending->y, 1, WALKER_NEAR_RADIUS, &x, &y))
+                continue;
+            if (SpawnActor(pending->slot, x, y, pending->facing) != NULL)
                 gWayfarerWalkersDebug.restores++;
         }
         sRestorePending = FALSE;
         sPendingCount = 0;
     }
 
-    if (CountActors(WALKER_MODE_LOCAL) >= capacity)
+    locals = CountActors(WALKER_MODE_LOCAL);
+    if (locals >= capacity || FreeObjectSlots() < SPAWN_FREE_SLOTS)
         return;
+    room = capacity - locals;
     for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT; slot++)
     {
         if (IsSpawnCandidate(slot))
@@ -775,22 +938,25 @@ static void TrySpawn(void)
     if (count == 0)
         return;
 
-    // Priority order: fewer hops home first, then catalog order.
-    workspace = Alloc(WorldSim_WorkspaceSize());
-    if (workspace == NULL)
-        return;
-    for (i = 0; i < count; i++)
-        hops[order[i]] = WorldSim_HomeHops(State(), order[i], workspace);
-    Free(workspace);
-    for (i = 1; i < count; i++)
+    // Priority order (fewer hops home first, then catalog order) only
+    // matters when there are more candidates than room.
+    if (count > room)
     {
-        u8 value = order[i];
-        for (j = i; j > 0 && hops[order[j - 1]] > hops[value]; j--)
-            order[j] = order[j - 1];
-        order[j] = value;
+        void *workspace = Alloc(WorldSim_WorkspaceSize());
+        if (workspace == NULL)
+            return;
+        for (i = 0; i < count; i++)
+            hops[order[i]] = WorldSim_HomeHops(State(), order[i], workspace);
+        Free(workspace);
+        for (i = 1; i < count; i++)
+        {
+            u8 value = order[i];
+            for (j = i; j > 0 && hops[order[j - 1]] > hops[value]; j--)
+                order[j] = order[j - 1];
+            order[j] = value;
+        }
     }
 
-    room = capacity - CountActors(WALKER_MODE_LOCAL);
     for (i = 0; i < count && room > 0; i++)
     {
         s16 x, y;
@@ -798,18 +964,24 @@ static void TrySpawn(void)
         struct WalkerActor *actor;
 
         slot = order[i];
-        if (FreeObjectSlots() < 2)
+        if (FreeObjectSlots() < SPAWN_FREE_SLOTS)
             break;
         if (IsStorySuppressed(slot))
         {
             gWayfarerWalkersDebug.storySuppressed++;
+            sYielded |= 1u << slot;
             continue;
         }
         if (!SpawnTile(slot, &x, &y, &facing))
+        {
+            if (IsGymVisit(&State()->records[slot], slot))
+                sVisitorsSeen |= 1u << slot;  // no tile off the player's path: not this entry
             continue;
+        }
         actor = SpawnActor(slot, x, y, facing);
         if (actor == NULL)
             break;
+        spawned = TRUE;
         ForgetEntry(slot);
         if (IsGymVisit(Record(actor), slot))
         {
@@ -818,6 +990,8 @@ static void TrySpawn(void)
         }
         room--;
     }
+    if (!spawned)
+        sSpawnBackoff = WALKER_SPAWN_BACKOFF;
 }
 
 // On Continue without a warp the engine restores the saved objects itself;
@@ -877,24 +1051,21 @@ static bool8 EnsureWorkspace(void)
     return sWork != NULL;
 }
 
-static bool8 Visited(u16 tile)
+// An open tile: three or more standable neighbours (not a corridor).
+static bool8 IsOpenTile(s16 x, s16 y)
 {
-    return (sWork->visited[tile >> 3] >> (tile & 7)) & 1;
+    u8 dir, open = 0;
+    for (dir = DIR_SOUTH; dir <= DIR_EAST; dir++)
+    {
+        if (IsStandable(x + MAP_OFFSET + sDx[dir], y + MAP_OFFSET + sDy[dir]))
+            open++;
+    }
+    return open >= 3;
 }
 
-static void MarkVisited(u16 tile, u8 dir)
-{
-    sWork->visited[tile >> 3] |= 1 << (tile & 7);
-    sWork->back[tile >> 2] = (sWork->back[tile >> 2] & ~(3 << ((tile & 3) * 2))) | ((dir - 1) << ((tile & 3) * 2));
-}
-
-static u8 BackDir(u16 tile)
-{
-    return ((sWork->back[tile >> 2] >> ((tile & 3) * 2)) & 3) + 1;
-}
-
-// Is (x, y) (no offset) where the actor's goal is met?
-static bool8 IsGoalTile(struct WalkerActor *actor, struct ObjectEvent *obj, s16 x, s16 y)
+// Is (x, y) (no offset) where the actor's goal is met? elevation: the
+// walker's settled elevation there.
+static bool8 IsGoalTile(struct WalkerActor *actor, struct ObjectEvent *obj, s16 x, s16 y, u8 elevation)
 {
     switch (actor->goalKind)
     {
@@ -911,18 +1082,22 @@ static bool8 IsGoalTile(struct WalkerActor *actor, struct ObjectEvent *obj, s16 
         default:        if (x != MapWidth() - 1) return FALSE; along = y; break;
         }
         return along >= actor->laneA && along <= actor->laneB
-            && CanStep(obj, x + MAP_OFFSET, y + MAP_OFFSET, actor->goalDir);
+            && ProbeStep(obj, x + MAP_OFFSET, y + MAP_OFFSET, elevation, actor->goalDir) == actor->goalDir;
     }
     case WALKER_GOAL_WARP:
     {
-        s16 dx = actor->goalX - x, dy = actor->goalY - y;
-        if ((dx < 0 ? -dx : dx) + (dy < 0 ? -dy : dy) != 1)
+        u8 dir;
+        if (Distance(x, y, actor->goalX, actor->goalY) != 1)
             return FALSE;
         // Door tiles carry the collision bit: the step in is the exception.
         if (MapGridGetCollisionAt(actor->goalX + MAP_OFFSET, actor->goalY + MAP_OFFSET) != 0)
             return TRUE;
-        return CanStep(obj, x + MAP_OFFSET, y + MAP_OFFSET, DirectionTowards(x, y, actor->goalX, actor->goalY));
+        dir = DirectionTowards(x, y, actor->goalX, actor->goalY);
+        return ProbeStep(obj, x + MAP_OFFSET, y + MAP_OFFSET, elevation, dir) == dir;
     }
+    case WALKER_GOAL_AWAY:
+        // Back off: an open tile well away from the player (their tile is goalX/Y).
+        return Distance(x, y, actor->goalX, actor->goalY) >= WALKER_AWAY_DISTANCE && IsOpenTile(x, y);
     }
     return FALSE;
 }
@@ -934,8 +1109,8 @@ static void FinishSearch(struct WalkerActor *actor, u16 goal)
 
     while (tile != sSearch.source && length < WALKER_MAX_TILES)
     {
-        u8 dir = BackDir(tile);
-        tile -= sDx[dir] + sDy[dir] * width;
+        u8 move = sWork->tiles[tile] & 0xF;
+        tile -= sDx[move] + sDy[move] * width;
         length++;
     }
     take = length < WALKER_PATH_MAX ? length : WALKER_PATH_MAX;
@@ -943,16 +1118,17 @@ static void FinishSearch(struct WalkerActor *actor, u16 goal)
     i = length;
     while (tile != sSearch.source && i > 0)
     {
-        u8 dir = BackDir(tile);
+        u8 move = sWork->tiles[tile] & 0xF;
         i--;
         if (i < take)
-            path[i] = dir;
-        tile -= sDx[dir] + sDy[dir] * width;
+            path[i] = move;
+        tile -= sDx[move] + sDy[move] * width;
     }
     actor->pathLen = take;
     actor->pathPos = 0;
     actor->truncated = take < length;
     actor->phase = WALKER_PHASE_WALK;
+    actor->failures = 0;
     sSearch.actor = NO_ACTOR;
 
     gWayfarerWalkersDebug.lastSearchNodes = sSearch.expanded;
@@ -963,15 +1139,46 @@ static void FinishSearch(struct WalkerActor *actor, u16 goal)
         gWayfarerWalkersDebug.maxSearchFrames = gWayfarerWalkersDebug.lastSearchFrames;
 }
 
+static void StartBackOff(struct WalkerActor *actor);
+static void YieldVisit(struct WalkerActor *actor);
+static void FinishLeaving(struct WalkerActor *actor);
+
 static void FailSearch(struct WalkerActor *actor)
 {
+    struct ObjectEvent *obj = ActorObject(actor);
+    u16 wait;
+
     sSearch.actor = NO_ACTOR;
     gWayfarerWalkersDebug.searchFails++;
+    gWayfarerWalkersDebug.lastFailNodes = sSearch.expanded;
+    if (actor->justLeaving)
+    {
+        // A Gym visitor that can't reach the exit (the player is in the
+        // way) leaves anyway: it must never block the entrance.
+        FinishLeaving(actor);
+        return;
+    }
+    if (actor->goalKind == WALKER_GOAL_AWAY)
+    {
+        // Nowhere to back off to: hand off and leave for this visit.
+        YieldVisit(actor);
+        return;
+    }
+    if (PlayerDistance(obj->currentCoords.x, obj->currentCoords.y) <= WALKER_NEAR_RADIUS)
+    {
+        // Possibly cut off by the player: make room rather than wait.
+        StartBackOff(actor);
+        return;
+    }
     // Unreachable for now: stand still (or keep playing the template), then
-    // try again. The record moves on at a heartbeat once the player leaves.
+    // try again, less and less often. The record moves on at a heartbeat
+    // once the player leaves.
+    if (actor->failures < WALKER_FAILS_MAX)
+        actor->failures++;
+    wait = WALKER_UNREACHABLE_WAIT << actor->failures;
     actor->phase = actor->atSpot ? WALKER_PHASE_TEMPLATE : WALKER_PHASE_IDLE;
     actor->goalKind = actor->atSpot ? WALKER_GOAL_NONE : actor->goalKind;
-    actor->wait = WALKER_UNREACHABLE_WAIT;
+    actor->wait = wait;
 }
 
 static void BeginSearch(struct WalkerActor *actor)
@@ -987,14 +1194,14 @@ static void BeginSearch(struct WalkerActor *actor)
         FailSearch(actor);
         return;
     }
-    memset(sWork->visited, 0, sizeof(sWork->visited));
+    memset(sWork->tiles, TILE_UNSEEN, MapWidth() * MapHeight());
     sSearch.source = y * MapWidth() + x;
     sSearch.read = 0;
     sSearch.write = 1;
     sSearch.expanded = 0;
     sSearch.startFrame = gMain.vblankCounter1;
     sWork->queue[0] = sSearch.source;
-    sWork->visited[sSearch.source >> 3] |= 1 << (sSearch.source & 7);
+    sWork->tiles[sSearch.source] = (obj->currentElevation & 0xF) << 4;
 }
 
 static void SearchSlice(void)
@@ -1009,28 +1216,32 @@ static void SearchSlice(void)
     {
         u16 tile = sWork->queue[sSearch.read % WALKER_QUEUE_SIZE];
         s16 x = tile % width, y = tile / width;
+        u8 elevation = sWork->tiles[tile] >> 4;
         u8 dir;
 
         sSearch.read++;
         sSearch.expanded++;
         expanded++;
-        if (IsGoalTile(actor, obj, x, y))
+        if (IsGoalTile(actor, obj, x, y, elevation))
         {
             FinishSearch(actor, tile);
             break;
         }
         for (dir = DIR_SOUTH; dir <= DIR_EAST; dir++)
         {
-            s16 nx = x + sDx[dir], ny = y + sDy[dir];
+            u8 move = ProbeStep(obj, x + MAP_OFFSET, y + MAP_OFFSET, elevation, dir);
+            s16 nx, ny;
             u16 next;
+            if (move == DIR_NONE)
+                continue;
+            nx = x + sDx[move];
+            ny = y + sDy[move];
             if (nx < 0 || ny < 0 || nx >= width || ny >= height)
                 continue;
             next = ny * width + nx;
-            if (Visited(next) || !CanStep(obj, x + MAP_OFFSET, y + MAP_OFFSET, dir))
+            if (sWork->tiles[next] != TILE_UNSEEN || (u16)(sSearch.write - sSearch.read) >= WALKER_QUEUE_SIZE)
                 continue;
-            if ((u16)(sSearch.write - sSearch.read) >= WALKER_QUEUE_SIZE)
-                continue;
-            MarkVisited(next, dir);
+            sWork->tiles[next] = move | (RestElevation(nx + MAP_OFFSET, ny + MAP_OFFSET, elevation) << 4);
             sWork->queue[sSearch.write % WALKER_QUEUE_SIZE] = next;
             sSearch.write++;
         }
@@ -1041,7 +1252,8 @@ static void SearchSlice(void)
         gWayfarerWalkersDebug.maxSliceScanlines = elapsed;
     if (expanded > gWayfarerWalkersDebug.maxSliceNodes)
         gWayfarerWalkersDebug.maxSliceNodes = expanded;
-    if (sSearch.actor != NO_ACTOR && sSearch.read == sSearch.write)
+    if (sSearch.actor != NO_ACTOR
+     && (sSearch.read == sSearch.write || (actor->goalKind == WALKER_GOAL_AWAY && sSearch.expanded >= WALKER_AWAY_NODES)))
         FailSearch(actor);
 }
 
@@ -1063,12 +1275,6 @@ static void RunScheduler(void)
         BeginSearch(&sActors[i]);
         if (sSearch.actor == NO_ACTOR)
             return;
-    }
-    if (sWork == NULL)
-    {
-        sActors[sSearch.actor].phase = WALKER_PHASE_QUEUED;
-        sSearch.actor = NO_ACTOR;
-        return;
     }
     SearchSlice();
 }
@@ -1095,12 +1301,56 @@ static u16 ExitEdgeForWarp(u16 node, u8 x, u8 y)
     return NO_EDGE;
 }
 
+// The way out for a Gym visitor: the spot's exit warp, or a sibling exit
+// mat of the same door (Saffron's three) when the player stands on it.
+static u16 VisitorExitEdge(const struct WayfarerWorldRecord *record, const struct WayfarerWorldSpot *spot,
+                           const struct ObjectEvent *obj)
+{
+    const struct WayfarerWorldNode *data = &gWayfarerWorldNodes[record->node];
+    u16 exit = ExitEdgeForWarp(record->node, spot->x, spot->y), best = exit, e, bestDistance = 0xFFFF;
+
+    if (exit == NO_EDGE || !IsPlayerTile(spot->x + MAP_OFFSET, spot->y + MAP_OFFSET))
+        return exit;
+    for (e = data->firstEdge; e < data->firstEdge + data->edgeCount; e++)
+    {
+        const struct WayfarerWorldEdge *edge = &gWayfarerWorldEdges[e];
+        u16 distance;
+        if (edge->kind != WORLD_EDGE_WARP || edge->target != gWayfarerWorldEdges[exit].target
+         || IsPlayerTile(edge->a + MAP_OFFSET, edge->b + MAP_OFFSET))
+            continue;
+        distance = Distance(edge->a + MAP_OFFSET, edge->b + MAP_OFFSET, obj->currentCoords.x, obj->currentCoords.y);
+        if (distance < bestDistance)
+        {
+            bestDistance = distance;
+            best = e;
+        }
+    }
+    return best;
+}
+
 static void FaceDirection(struct WalkerActor *actor, struct ObjectEvent *obj, u8 dir)
 {
     if (dir < DIR_SOUTH || dir > DIR_EAST || obj->facingDirection == dir)
         return;
     if (!ObjectEventSetHeldMovement(obj, GetFaceDirectionMovementAction(dir)))
         actor->actionPending = TRUE;
+}
+
+// Start one walking step: a straight one (overwrite cleared) or a stair
+// diagonal (overwrite set, as GetCollisionAtCoords would for the player).
+static bool8 StartWalk(struct WalkerActor *actor, struct ObjectEvent *obj, u8 move, u8 kind)
+{
+    u8 command = sMoveCommand[move];
+    obj->directionOverwrite = move > DIR_EAST ? move : DIR_NONE;
+    if (ObjectEventSetHeldMovement(obj, GetWalkNormalMovementAction(command)))
+    {
+        obj->directionOverwrite = DIR_NONE;
+        return FALSE;
+    }
+    actor->nextX = obj->currentCoords.x + sDx[move];
+    actor->nextY = obj->currentCoords.y + sDy[move];
+    actor->stepKind = kind;
+    return TRUE;
 }
 
 static void StartTemplate(struct WalkerActor *actor, struct ObjectEvent *obj)
@@ -1160,6 +1410,78 @@ static void SetEdgeGoal(struct WalkerActor *actor, u16 edgeIndex)
     RequestSearch(actor);
 }
 
+// Hand off for the rest of this visit: the record stays where it is and
+// moves on at the heartbeats; no new actor until the next map load.
+static void YieldVisit(struct WalkerActor *actor)
+{
+    if (actor->justLeaving)
+    {
+        FinishLeaving(actor);
+        return;
+    }
+    sYielded |= 1u << actor->slot;
+    gWayfarerWalkersDebug.handoffs++;
+    RemoveActor(actor);
+}
+
+// A Gym visitor leaves at once: the visit ends and the record moves on.
+static void FinishLeaving(struct WalkerActor *actor)
+{
+    struct WayfarerWorldRecord *record = Record(actor);
+    const struct WayfarerWorldSpot *spot = DestSpot(record, actor->slot);
+    struct WayfarerWorldContext ctx;
+    u16 edge = NO_EDGE;
+
+    if (spot != NULL && spot->kind == WORLD_SPOT_GYM && spot->node == record->node)
+        edge = ExitEdgeForWarp(record->node, spot->x, spot->y);
+    if (edge != NO_EDGE)
+    {
+        WorldSim_TakeEdge(State(), actor->slot, edge, gWayfarerWorldEdges[edge].c);
+        BuildContext(&ctx);
+        WorldSim_AdvanceRoutine(State(), actor->slot, &ctx, NULL);
+        gWayfarerWalkersDebug.localAdvances++;
+    }
+    sVisitorsSeen |= 1u << actor->slot;
+    gWayfarerWalkersDebug.visitorsVanished++;
+    RemoveActor(actor);
+}
+
+// Make room for the player: walk to an open tile away from them, wait, then
+// carry on. After a few back-offs in one visit, hand off instead.
+static void StartBackOff(struct WalkerActor *actor)
+{
+    struct ObjectEvent *player = Player();
+    if (actor->justLeaving)
+    {
+        FinishLeaving(actor);
+        return;
+    }
+    if (actor->backOffs >= WALKER_BACKOFFS_MAX)
+    {
+        YieldVisit(actor);
+        return;
+    }
+    actor->backOffs++;
+    actor->playerBlocks = 0;
+    actor->pushFrames = 0;
+    actor->blocked = 0;
+    gWayfarerWalkersDebug.backOffs++;
+    actor->goalKind = WALKER_GOAL_AWAY;
+    actor->goalEdge = NO_EDGE;
+    actor->goalX = player->currentCoords.x - MAP_OFFSET;
+    actor->goalY = player->currentCoords.y - MAP_OFFSET;
+    actor->pathLen = actor->pathPos = 0;
+    actor->truncated = FALSE;
+    if (IsGoalTile(actor, ActorObject(actor), ActorObject(actor)->currentCoords.x - MAP_OFFSET,
+                   ActorObject(actor)->currentCoords.y - MAP_OFFSET, ActorObject(actor)->currentElevation))
+    {
+        actor->phase = WALKER_PHASE_IDLE;
+        actor->wait = WALKER_BACKOFF_WAIT;
+        return;
+    }
+    RequestSearch(actor);
+}
+
 static void ChooseGoal(struct WalkerActor *actor, struct ObjectEvent *obj)
 {
     struct WayfarerWorldRecord *record = Record(actor);
@@ -1174,7 +1496,7 @@ static void ChooseGoal(struct WalkerActor *actor, struct ObjectEvent *obj)
         {
             // Just leaving: straight out through the Gym's exit warp.
             actor->justLeaving = TRUE;
-            edge = ExitEdgeForWarp(record->node, spot->x, spot->y);
+            edge = VisitorExitEdge(record, spot, obj);
             if (edge != NO_EDGE)
             {
                 SetEdgeGoal(actor, edge);
@@ -1213,7 +1535,7 @@ static void ChooseGoal(struct WalkerActor *actor, struct ObjectEvent *obj)
         // No path within the bound: stand still; the heartbeat moves the
         // record on once the player has left.
         actor->phase = WALKER_PHASE_IDLE;
-        actor->wait = WALKER_UNREACHABLE_WAIT;
+        actor->wait = WALKER_UNREACHABLE_WAIT << WALKER_FAILS_MAX;
         return;
     }
     SetEdgeGoal(actor, edge);
@@ -1227,9 +1549,24 @@ static void Replan(struct WalkerActor *actor, u16 wait)
     actor->wait = wait;
 }
 
-static void OnBlocked(struct WalkerActor *actor)
+// Is the player (or the follower) on the tile a step from here would enter?
+static bool8 IsPlayerAhead(struct ObjectEvent *obj, u8 dir)
+{
+    s16 x = obj->currentCoords.x + sDx[dir], y = obj->currentCoords.y + sDy[dir];
+    u8 id = GetObjectEventIdByXY(x, y);
+    if (IsPlayerTile(x, y))
+        return TRUE;
+    return id < OBJECT_EVENTS_COUNT && gObjectEvents[id].localId == OBJ_EVENT_ID_FOLLOWER;
+}
+
+static void OnBlocked(struct WalkerActor *actor, bool8 byPlayer)
 {
     gWayfarerWalkersDebug.blockedSteps++;
+    if (byPlayer && ++actor->playerBlocks >= WALKER_YIELD_BLOCKS)
+    {
+        StartBackOff(actor);
+        return;
+    }
     if (++actor->blocked >= WALKER_BLOCKED_LIMIT)
     {
         // Four blocked steps drop the goal and re-plan from scratch.
@@ -1238,14 +1575,10 @@ static void OnBlocked(struct WalkerActor *actor)
         return;
     }
     gWayfarerWalkersDebug.replans++;
-    RequestSearch(actor);
-}
-
-static void StartStep(struct WalkerActor *actor, struct ObjectEvent *obj, u8 dir, u8 kind)
-{
-    actor->nextX = obj->currentCoords.x + sDx[dir];
-    actor->nextY = obj->currentCoords.y + sDy[dir];
-    actor->stepKind = kind;
+    if (actor->goalKind == WALKER_GOAL_NONE)
+        Replan(actor, WALKER_RETRY_FRAMES);
+    else
+        RequestSearch(actor);
 }
 
 static void OnGoalReached(struct WalkerActor *actor, struct ObjectEvent *obj)
@@ -1269,24 +1602,29 @@ static void OnGoalReached(struct WalkerActor *actor, struct ObjectEvent *obj)
         }
         StartTemplate(actor, obj);
         break;
+    case WALKER_GOAL_AWAY:
+        // Out of the player's way: wait a while before carrying on.
+        actor->goalKind = WALKER_GOAL_NONE;
+        actor->phase = WALKER_PHASE_IDLE;
+        actor->wait = WALKER_BACKOFF_WAIT;
+        break;
     case WALKER_GOAL_EDGE:
     {
         u8 dir = actor->goalDir;
         const struct WayfarerWorldEdge *edge = &gWayfarerWorldEdges[actor->goalEdge];
         u8 along = (dir == DIR_NORTH || dir == DIR_SOUTH) ? x - MAP_OFFSET : y - MAP_OFFSET;
-        if (!CanStep(obj, x, y, dir))
+        if (ProbeFromHere(obj, dir) != dir)
         {
-            OnBlocked(actor);
+            OnBlocked(actor, IsPlayerAhead(obj, dir));
             return;
         }
-        if (ObjectEventSetHeldMovement(obj, GetWalkNormalMovementAction(dir)))
+        if (!StartWalk(actor, obj, dir, STEP_EXIT_EDGE))
             return;
         // The handoff commits as the exit step starts, so a player crossing
         // at once can't outrun it.
         WorldSim_TakeEdge(State(), actor->slot, actor->goalEdge, WorldSim_LaneCrossing(edge, along));
         NoteEntry(actor->slot, actor->goalEdge, WorldSim_LaneCrossing(edge, along));
         gWayfarerWalkersDebug.edgeExits++;
-        StartStep(actor, obj, dir, STEP_EXIT_EDGE);
         actor->phase = WALKER_PHASE_EXIT;
         actor->atSpot = FALSE;
         break;
@@ -1297,12 +1635,13 @@ static void OnGoalReached(struct WalkerActor *actor, struct ObjectEvent *obj)
         u8 dir = DirectionTowards(x, y, wx, wy);
         u16 edgeIndex = actor->goalEdge;
         bool8 door = MapGridGetCollisionAt(wx, wy) != 0;
-        if (door ? GetObjectEventIdByXY(wx, wy) != OBJECT_EVENTS_COUNT || IsPlayerTile(wx, wy) : !CanStep(obj, x, y, dir))
+        if (door ? GetObjectEventIdByXY(wx, wy) != OBJECT_EVENTS_COUNT || IsPlayerTile(wx, wy)
+                 : ProbeFromHere(obj, dir) != dir)
         {
-            OnBlocked(actor);
+            OnBlocked(actor, IsPlayerAhead(obj, dir));
             return;
         }
-        if (ObjectEventSetHeldMovement(obj, GetWalkNormalMovementAction(dir)))
+        if (!StartWalk(actor, obj, dir, STEP_EXIT_WARP))
             return;
         WorldSim_TakeEdge(State(), actor->slot, edgeIndex, gWayfarerWorldEdges[edgeIndex].c);
         NoteEntry(actor->slot, edgeIndex, gWayfarerWorldEdges[edgeIndex].c);
@@ -1316,7 +1655,6 @@ static void OnGoalReached(struct WalkerActor *actor, struct ObjectEvent *obj)
             gWayfarerWalkersDebug.localAdvances++;
         }
         gWayfarerWalkersDebug.warpExits++;
-        StartStep(actor, obj, dir, STEP_EXIT_WARP);
         actor->phase = WALKER_PHASE_EXIT;
         break;
     }
@@ -1328,7 +1666,7 @@ static void OnGoalReached(struct WalkerActor *actor, struct ObjectEvent *obj)
 
 static void WalkStep(struct WalkerActor *actor, struct ObjectEvent *obj)
 {
-    u8 dir;
+    u8 move;
 
     if (actor->pathPos >= actor->pathLen)
     {
@@ -1343,27 +1681,27 @@ static void WalkStep(struct WalkerActor *actor, struct ObjectEvent *obj)
         RequestSearch(actor);
         return;
     }
-    dir = sWork->path[ActorIndex(actor)][actor->pathPos];
-    if (!CanStep(obj, obj->currentCoords.x, obj->currentCoords.y, dir))
+    move = sWork->path[ActorIndex(actor)][actor->pathPos];
+    if (move < DIR_SOUTH || move > DIR_NORTHEAST || ProbeFromHere(obj, sMoveCommand[move]) != move)
     {
-        OnBlocked(actor);
+        OnBlocked(actor, move >= DIR_SOUTH && move <= DIR_NORTHEAST && IsPlayerAhead(obj, sMoveCommand[move]));
         return;
     }
-    if (ObjectEventSetHeldMovement(obj, GetWalkNormalMovementAction(dir)))
+    if (!StartWalk(actor, obj, move, STEP_WALK))
         return;
     actor->pathPos++;
-    StartStep(actor, obj, dir, STEP_WALK);
 }
 
 static void FinishStep(struct WalkerActor *actor, struct ObjectEvent *obj)
 {
     u8 kind = actor->stepKind;
     actor->stepKind = STEP_NONE;
+    obj->directionOverwrite = DIR_NONE;
     switch (kind)
     {
     case STEP_WALK:
         if (obj->currentCoords.x != actor->nextX || obj->currentCoords.y != actor->nextY)
-            OnBlocked(actor);
+            OnBlocked(actor, FALSE);
         else
             actor->blocked = 0;
         break;
@@ -1441,28 +1779,25 @@ static void UpdateStrip(struct WalkerActor *actor, struct ObjectEvent *obj)
             actor->stripToward = FALSE;
             return;
         }
-        if (!CanStep(obj, obj->currentCoords.x, obj->currentCoords.y, dir)
-         || ObjectEventSetHeldMovement(obj, GetWalkNormalMovementAction(dir)))
+        if (ProbeFromHere(obj, dir) != dir || !StartWalk(actor, obj, dir, STEP_ENTER))
             return;
         WorldSim_TakeEdge(State(), actor->slot, edge, coord);
         gWayfarerWalkersDebug.stripEntries++;
-        StartStep(actor, obj, dir, STEP_ENTER);
         return;
     }
 
     // Past the loaded grid there is no collision data: keep walking until
     // the sprite has left the viewport.
     if (nx >= 0 && ny >= 0 && nx < gBackupMapLayout.width && ny < gBackupMapLayout.height
-     && !CanStep(obj, obj->currentCoords.x, obj->currentCoords.y, dir))
+     && ProbeFromHere(obj, dir) != dir)
         return;
-    if (ObjectEventSetHeldMovement(obj, GetWalkNormalMovementAction(dir)))
-        return;
-    StartStep(actor, obj, dir, STEP_STRIP);
+    StartWalk(actor, obj, dir, STEP_STRIP);
 }
 
 // A camera transition kept every actor's object (coordinates shifted with
-// the camera). Actors whose record is on the new map are rebased into it
-// without a respawn; the others stay in the strip while visible.
+// the camera). Actors whose record is on the new map and who stand inside it
+// are rebased into it without a respawn; the others stay in the strip while
+// visible.
 static void OnSeam(void)
 {
     u8 i;
@@ -1484,6 +1819,14 @@ static void OnSeam(void)
             actor->stepKind = (actor->stepKind == STEP_EXIT_WARP) ? STEP_EXIT_WARP : STEP_SETTLE;
         if (WorldSim_IsSimulated(record) && WorldSim_NodeMap(record->node) == map)
         {
+            // Only an actor actually standing in the new map: one whose
+            // record the heartbeat moved here from out of view is respawned
+            // by the record rules instead.
+            if (!InMap(obj->currentCoords.x - MAP_OFFSET, obj->currentCoords.y - MAP_OFFSET))
+            {
+                RemoveActor(actor);
+                continue;
+            }
             obj->mapGroup = MAP_GROUP(map);
             obj->mapNum = MAP_NUM(map);
             obj->initialCoords = obj->currentCoords;
@@ -1578,9 +1921,11 @@ static bool8 BrowseOtherFloor(struct WalkerActor *actor, const struct WayfarerWo
             continue;
         if (WorldSim_Occupancy(State(), WorldSim_NodeMap(floorNode), actor->slot) >= WorldSim_MapCapacity(floorNode))
             continue;
-        for (s = 0; s < gWayfarerWorldSpotCount; s++)
+        for (s = FirstSpotFromNode(MapFirstNode(floorNode)); s < gWayfarerWorldSpotCount; s++)
         {
             const struct WayfarerWorldSpot *other = &gWayfarerWorldSpots[s];
+            if (WorldSim_NodeMap(other->node) != WorldSim_NodeMap(floorNode))
+                break;
             if (other->node == floorNode && other->kind == WORLD_SPOT_STORE && !WorldSim_SpotTaken(State(), s, actor->slot))
             {
                 WorldSim_ChangeSpot(State(), actor->slot, s);
@@ -1686,6 +2031,16 @@ static bool8 LocalDwellTick(struct WalkerActor *actor, struct ObjectEvent *obj)
     return TRUE;
 }
 
+// The player pushing against a standing walker (adjacent, facing it).
+static bool8 IsPlayerPushing(const struct ObjectEvent *obj)
+{
+    struct ObjectEvent *player = Player();
+    s16 px = player->currentCoords.x, py = player->currentCoords.y;
+    if (Distance(px, py, obj->currentCoords.x, obj->currentCoords.y) != 1)
+        return FALSE;
+    return player->facingDirection == DirectionTowards(px, py, obj->currentCoords.x, obj->currentCoords.y);
+}
+
 static void UpdateActor(struct WalkerActor *actor)
 {
     struct ObjectEvent *obj = ActorObject(actor);
@@ -1713,10 +2068,25 @@ static void UpdateActor(struct WalkerActor *actor)
         return;
     }
     if (!WorldSim_IsSimulated(record) || WorldSim_NodeMap(record->node) != CurrentMap()
-     || (record->state == WORLD_STATE_DWELLING && IsLeaderHomeInGym(actor->slot)))
+     || (record->state == WORLD_STATE_DWELLING && IsLeaderHomeInGym(actor->slot))
+     || !InMap(obj->currentCoords.x - MAP_OFFSET, obj->currentCoords.y - MAP_OFFSET))
     {
         RemoveActor(actor);
         return;
+    }
+
+    // Never trap the player: pushed against for a while, make room.
+    if (actor->phase != WALKER_PHASE_SEARCH && IsPlayerPushing(obj))
+    {
+        if (++actor->pushFrames >= WALKER_YIELD_FRAMES)
+        {
+            StartBackOff(actor);
+            return;
+        }
+    }
+    else
+    {
+        actor->pushFrames = 0;
     }
 
     // Dwell ticks: the template's clock and the local dwell.
@@ -1767,7 +2137,8 @@ static void UpdateFollower(void)
     wanted = CountActors(WALKER_MODE_LOCAL) + CountActors(WALKER_MODE_STRIP);
     if (sMapNode != WORLD_NODE_NONE)
     {
-        u8 pending = 0, room = WorldSim_MapCapacity(sMapNode) - CountActors(WALKER_MODE_LOCAL);
+        u8 capacity = WorldSim_MapCapacity(sMapNode), locals = CountActors(WALKER_MODE_LOCAL);
+        u8 pending = 0, room = capacity > locals ? capacity - locals : 0;
         for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT && pending < room; slot++)
         {
             if (IsSpawnCandidate(slot))
@@ -1784,20 +2155,55 @@ static void UpdateFollower(void)
     // Free slots with every actor spawned and the follower out.
     freeSlots = OBJECT_EVENTS_COUNT - others - wanted - 1;
     hide = wanted != 0 && freeSlots < 2;
-    if (hide && !FlagGet(FLAG_TEMP_HIDE_FOLLOWER))
+    if (hide && !sFollowerFlagOurs && !FlagGet(FLAG_TEMP_HIDE_FOLLOWER))
     {
-        // Temp flags clear on every map load: set it again while hiding.
+        // Only our own use of the temp flag is ever cleared again: maps whose
+        // scripts set it (Fortree and Mossdeep Gyms, Trainer Hill...) keep it.
         FlagSet(FLAG_TEMP_HIDE_FOLLOWER);
+        sFollowerFlagOurs = TRUE;
         RemoveFollowingPokemon();
     }
-    if (hide == sHideFollower)
-        return;
-    sHideFollower = hide;
-    gWayfarerWalkersDebug.followerHidden = hide;
-    if (!hide)
+    else if (!hide && sFollowerFlagOurs)
     {
         FlagClear(FLAG_TEMP_HIDE_FOLLOWER);
+        sFollowerFlagOurs = FALSE;
         UpdateFollowingPokemon();
+    }
+    sHideFollower = hide;
+    gWayfarerWalkersDebug.followerHidden = sFollowerFlagOurs;
+}
+
+// Off-screen actors give their slot back when the map's own objects need it.
+static void CullForSlots(void)
+{
+    s8 i;
+    if (FreeObjectSlots() > 1)
+        return;
+    for (i = WALKER_ACTOR_COUNT - 1; i >= 0; i--)
+    {
+        struct WalkerActor *actor = &sActors[i];
+        if (actor->mode == WALKER_MODE_LOCAL && actor->stepKind == STEP_NONE && !IsVisible(ActorObject(actor)))
+        {
+            gWayfarerWalkersDebug.culls++;
+            YieldVisit(actor);
+            return;
+        }
+    }
+}
+
+// A story object that appeared after the walker (a script's addobject)
+// wins: the walker leaves.
+static void CheckStoryScenes(void)
+{
+    u8 i;
+    for (i = 0; i < WALKER_ACTOR_COUNT; i++)
+    {
+        struct WalkerActor *actor = &sActors[i];
+        if (actor->mode == WALKER_MODE_LOCAL && actor->stepKind == STEP_NONE && IsStorySuppressed(actor->slot))
+        {
+            gWayfarerWalkersDebug.storySuppressed++;
+            YieldVisit(actor);
+        }
     }
 }
 
@@ -1883,7 +2289,12 @@ static void OnMapChanged(u16 map)
     sTransition = TRANSITION_NONE;
     sMapNode = FirstNodeOfMap(map);
     sVisitorsSeen = 0;
+    sYielded = 0;
     sSpawnTimer = 0;
+    sSpawnBackoff = 0;
+    // Map loads clear temp flags: the follower flag isn't ours any more.
+    sHideFollower = FALSE;
+    sFollowerFlagOurs = FALSE;
 }
 
 // ---------------------------------------------------------------------------
@@ -1893,9 +2304,11 @@ void WayfarerWalkers_Update(void)
 {
     u8 i;
     u16 map;
+    u32 start;
 
     if (gSaveBlock1Ptr == NULL || gMapHeader.mapLayout == NULL || gMapHeader.events == NULL)
         return;
+    start = ScanlineStamp();
     gWayfarerWalkersDebug.frames++;
     map = CurrentMap();
     if (!sActiveMapValid || sActiveMap != map || sTransition != TRANSITION_NONE)
@@ -1903,6 +2316,14 @@ void WayfarerWalkers_Update(void)
     ValidateActors();
     if (sRestorePending && !sAdoptChecked)
         AdoptRestoredObjects();
+
+    if (++sSpawnTimer >= WALKER_SPAWN_PERIOD)
+    {
+        sSpawnTimer = 0;
+        // Story objects can appear during a script, with the controls locked.
+        CheckStoryScenes();
+        CullForSlots();
+    }
 
     // Talks, menus and scripts lock the field controls: the AI and its dwell
     // stay suspended (the engine still finishes a step already under way).
@@ -1914,14 +2335,30 @@ void WayfarerWalkers_Update(void)
             if (sActors[i].mode != WALKER_MODE_NONE)
                 UpdateActor(&sActors[i]);
         }
-        if (++sSpawnTimer >= WALKER_SPAWN_PERIOD)
+        if (sSpawnTimer == 0)
         {
-            sSpawnTimer = 0;
-            TrySpawn();
+            if (sSpawnBackoff > WALKER_SPAWN_PERIOD)
+            {
+                sSpawnBackoff -= WALKER_SPAWN_PERIOD;
+            }
+            else
+            {
+                u32 spawnStart = ScanlineStamp(), spawnCost;
+                sSpawnBackoff = 0;
+                TrySpawn();
+                spawnCost = ScanlineStamp() - spawnStart;
+                if (spawnCost > gWayfarerWalkersDebug.maxSpawnScanlines)
+                    gWayfarerWalkersDebug.maxSpawnScanlines = spawnCost;
+            }
             UpdateFollower();
         }
     }
     PublishState();
+    {
+        u32 cost = ScanlineStamp() - start;
+        if (cost > gWayfarerWalkersDebug.maxUpdateScanlines)
+            gWayfarerWalkersDebug.maxUpdateScanlines = cost;
+    }
 }
 
 void WayfarerWalkers_OnWarp(void)
@@ -1940,7 +2377,7 @@ void WayfarerWalkers_OnCameraTransition(void)
     // Before the heartbeat, unfreeze the trainers whose actor will be dropped:
     // not on the new map and out of view once the camera follows the player.
     // Object coordinates aren't shifted yet, but offsets from the player are.
-    const struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    const struct ObjectEvent *player = Player();
     u16 map = CurrentMap();
     u8 i;
 
@@ -1989,6 +2426,13 @@ void WayfarerWalkers_OnContinue(void)
         raw[0] = WORLD_LOCAL_ACTOR_NONE;
         raw[1] = raw[2] = 0;
     }
+    // The saved objects come back with any step that was under way at save
+    // time: end it before their sprites are rebuilt.
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    {
+        if (WayfarerWalkers_IsActorObject(&gObjectEvents[i]))
+            SettleHeldMovement(&gObjectEvents[i]);
+    }
     sRestorePending = TRUE;
     sAdoptChecked = FALSE;
 }
@@ -2003,20 +2447,33 @@ void WayfarerWalkers_Reset(void)
     sActiveMapValid = FALSE;
     sTransition = TRANSITION_NONE;
     sHideFollower = FALSE;
+    sFollowerFlagOurs = FALSE;
     sVisitorsSeen = 0;
+    sYielded = 0;
 }
 
 void WayfarerWalkers_OnHeapReset(void)
 {
     u8 i;
     // InitHeap overwrites the allocator: never Free this pointer again. Each
-    // actor re-plans from its current tile.
+    // actor re-plans from its current tile. A menu, battle or save tears the
+    // field down: a step under way would replay with no collision check when
+    // the sprites come back, so it ends here, on its destination tile.
     sWork = NULL;
     sSearch.actor = NO_ACTOR;
     gWayfarerWalkersDebug.heapResets++;
     for (i = 0; i < WALKER_ACTOR_COUNT; i++)
     {
         struct WalkerActor *actor = &sActors[i];
+        struct ObjectEvent *obj;
+        if (actor->mode == WALKER_MODE_NONE)
+            continue;
+        obj = ActorObject(actor);
+        if (obj->active && obj->localId == WALKER_LOCALID_BASE + i)
+        {
+            SettleHeldMovement(obj);
+            actor->actionPending = FALSE;
+        }
         if (actor->mode == WALKER_MODE_LOCAL
          && (actor->phase == WALKER_PHASE_QUEUED || actor->phase == WALKER_PHASE_SEARCH || actor->phase == WALKER_PHASE_WALK))
         {
@@ -2043,9 +2500,9 @@ bool8 WayfarerWalkers_HideTemplate(const struct ObjectEventTemplate *template)
     for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT; slot++)
     {
         const struct WayfarerWorldTrainer *trainer = Trainer(slot);
-        if (!(trainer->flags & WORLD_TRAINER_FLAG_GYM_LEADER) || trainer->gymNode == WORLD_NODE_NONE)
+        if (trainer->leaderLocalId == 0 || trainer->gymNode == WORLD_NODE_NONE)
             continue;
-        if (template->graphicsId == trainer->graphicsId && WorldSim_NodeMap(trainer->gymNode) == map)
+        if (template->localId == trainer->leaderLocalId && WorldSim_NodeMap(trainer->gymNode) == map)
             return !IsLeaderObjectShown(slot);
     }
     return FALSE;

@@ -120,8 +120,16 @@ struct WayfarerWorldTrainer
     u8 cycleLength;      // 3 or 4
     u8 cycle[WORLD_CYCLE_MAX_STEPS];
     u8 favouriteCount;
-    u8 padding[3];
+    u8 leaderLocalId;    // Gym Leaders: their own Gym object's local id; else 0
+    u8 padding[2];
     struct WayfarerWorldFavourite favourites[WORLD_FAVOURITE_MAX];
+    u16 altGraphicsIds[2]; // the same character's other sprites (FRLG, HNS), or 0
+};
+
+struct WayfarerWorldCandidateRange
+{
+    u16 start;
+    u16 count;
 };
 
 extern const struct WayfarerWorldNode gWayfarerWorldNodes[];
@@ -135,6 +143,10 @@ extern const u16 gWayfarerWorldStoreFloors[];
 extern const struct WayfarerWorldTrainer gWayfarerWorldTrainers[WORLD_SIM_TRAINER_COUNT];
 extern const u16 gWayfarerWorldCandidates[];   // spot ids, sorted by hops, then spot id
 extern const u8 gWayfarerWorldCandidateHops[];  // hops from the home node, per candidate
+extern const u8 gWayfarerWorldHomeHops[];
+// The candidates that offer each activity, as positions in the trainer's list.
+extern const struct WayfarerWorldCandidateRange gWayfarerWorldActivityRanges[WORLD_SIM_TRAINER_COUNT][WORLD_ACTIVITY_COUNT];
+extern const u16 gWayfarerWorldActivityCandidates[];       // [slot * node count + node]: hops to the home node, 255 none
 extern const u16 gWayfarerWorldContentHash;
 
 #endif // GUARD_WAYFARER_WORLD_DATA_H

@@ -168,6 +168,7 @@ bool8 WayfarerWorld_OnLoad(void)
 static void RunHeartbeat(void)
 {
     struct WayfarerWorldContext ctx;
+    u32 start = WayfarerWalkers_ScanlineStamp(), contextDone;
     void *workspace = Alloc(WorldSim_WorkspaceSize());
 
     if (workspace == NULL)
@@ -176,9 +177,11 @@ static void RunHeartbeat(void)
         return;
     }
     WayfarerWorld_BuildContext(&ctx);
+    contextDone = WayfarerWalkers_ScanlineStamp();
     gWayfarerWorldDebug.lastTrace = (struct WayfarerWorldTrace){0};
     WorldSim_Heartbeat(WayfarerWorld_GetState(), &ctx, workspace, &gWayfarerWorldDebug.lastTrace);
     Free(workspace);
+    WayfarerWalkers_NoteHeartbeat(WayfarerWalkers_ScanlineStamp() - start, contextDone - start);
     gWayfarerWorldDebug.heartbeats++;
     gWayfarerWorldDebug.lastHeartbeatMap = ctx.playerMap;
 }

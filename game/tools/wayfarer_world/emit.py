@@ -1,17 +1,17 @@
 """C tables for include/wayfarer_world_data.h, the content hash, the report."""
 
 import struct
-from collections import Counter, defaultdict
+from collections import Counter, defaultdict, deque
 
 import graph
 import spots as sp
 from authored import ACTIVITIES
-from routines import NODE_NONE, REGION_NONE, SIM_COUNT, SPOT_NONE
+from routines import NODE_NONE, REGION_NONE, SIM_COUNT, SPOT_NONE, spot_offers
 
 REGION_NAMES = ["WORLD_REGION_KANTO", "WORLD_REGION_JOHTO", "WORLD_REGION_HOENN",
                 "WORLD_REGION_SEVII"]
 ACTIVITY_NAMES = ["WORLD_ACTIVITY_" + a.upper().replace(" ", "_") for a in ACTIVITIES]
-NODE_SIZE, EDGE_SIZE, SPOT_SIZE, FAVOURITE_SIZE, TRAINER_SIZE = 8, 8, 12, 4, 44
+NODE_SIZE, EDGE_SIZE, SPOT_SIZE, FAVOURITE_SIZE, TRAINER_SIZE = 8, 8, 12, 4, 48
 
 
 def crc16_ccitt_false(data):
@@ -184,6 +184,9 @@ def render(wg, rt, crc):
         w("        .cycle = {%s}," % ", ".join(cycle))
         w("        .favouriteCount = %d," % len(t.favourites))
         w("        .favourites = {%s}," % favs)
+        w("        .leaderLocalId = %d," % t.leader_local_id)
+        alts = list(t.alt_graphics) + ["0"] * (2 - len(t.alt_graphics))
+        w("        .altGraphicsIds = {%s}," % ", ".join(alts))
         w("    },")
     w("};")
     w("")
@@ -196,7 +199,62 @@ def render(wg, rt, crc):
         w("    " + " ".join("%d," % h for h in (hops or [0])[k:k + 32]))
     w("};")
     w("")
+    # Per trainer and activity, the positions in the trainer's candidate list
+    # of the spots that offer the activity (in list order): a step's pick
+    # scans those, not the whole list.
+    flat, ranges = [], []
+    for t in rt.trainers:
+        row = []
+        for activity in ACTIVITIES:
+            start = len(flat)
+            flat += [pos for pos, spot in enumerate(t.candidates) if spot_offers(wg.spots[spot], activity)]
+            row.append((start, len(flat) - start))
+        ranges.append(row)
+    w("// [trainer][activity]: {start, count} into gWayfarerWorldActivityCandidates")
+    w("const struct WayfarerWorldCandidateRange gWayfarerWorldActivityRanges[WORLD_SIM_TRAINER_COUNT][WORLD_ACTIVITY_COUNT] = {")
+    for row in ranges:
+        w("    {" + ", ".join("{%d, %d}" % r for r in row) + "},")
+    w("};")
+    w("// Positions in a trainer's candidate list, by activity")
+    w("const u16 gWayfarerWorldActivityCandidates[] = {")
+    for k in range(0, max(len(flat), 1), 16):
+        w("    " + " ".join("%d," % c for c in (flat or [0])[k:k + 16]))
+    w("};")
+    w("")
+    # Hops from every node to each trainer's home node over the edges they
+    # may use (transit for travellers), 255 when unreachable: the heartbeat's
+    # priority order, without a graph search per trainer.
+    w("// [trainer * gWayfarerWorldNodeCount + node]: hops to the trainer's home node, 255 = none")
+    w("const u8 gWayfarerWorldHomeHops[] = {")
+    for t in rt.trainers:
+        dist = home_hops(wg, t.home_node, t.traveller)
+        for k in range(0, len(dist), 32):
+            w("    " + " ".join("%d," % d for d in dist[k:k + 32]))
+    w("};")
+    w("")
     return "\n".join(out), len(cands)
+
+
+def home_hops(wg, home, traveller):
+    """Shortest directed hop counts from each node to home (a reverse BFS)."""
+    reverse = defaultdict(list)
+    for n in wg.nodes:
+        for e in n.edges:
+            if e.kind == graph.KIND_TRANSIT and not traveller:
+                continue
+            reverse[e.target].append(n.id)
+    dist = [255] * len(wg.nodes)
+    dist[home] = 0
+    queue = deque([home])
+    while queue:
+        node = queue.popleft()
+        if dist[node] == 254:
+            continue
+        for prev in reverse[node]:
+            if dist[prev] == 255:
+                dist[prev] = dist[node] + 1
+                queue.append(prev)
+    return dist
 
 
 def sizes(wg, rt, candidate_count):
@@ -208,6 +266,8 @@ def sizes(wg, rt, candidate_count):
         "store_floors": len(wg.store_floors) * 2,
         "trainers": SIM_COUNT * TRAINER_SIZE,
         "candidates": candidate_count * 3,
+        "home_hops": SIM_COUNT * len(wg.nodes),
+        "activity_ranges": SIM_COUNT * len(ACTIVITIES) * 4,
     }
     out["total"] = sum(out.values())
     return out

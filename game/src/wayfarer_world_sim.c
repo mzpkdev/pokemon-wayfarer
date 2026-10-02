@@ -23,6 +23,7 @@ struct Search
     u16 *queue;
     u16 *via;     // first edge of the path from the source, or EDGE_NONE
     u8 *depth;
+    u16 tail;     // nodes queued: exactly the ones with via set
 };
 
 static const u16 sActivityKinds[WORLD_ACTIVITY_COUNT] =
@@ -254,9 +255,74 @@ u8 WorldSim_Occupancy(const struct WayfarerWorldState *state, u16 map, u8 except
     return count;
 }
 
+// Spot choice asks for map occupancy for every candidate; while one choice
+// runs the records don't change. On the first question, CountsOnMap is
+// summarised per trainer (the maps they count on); every answer is then a
+// scan of that summary.
+static u16 sCountMapA[WORLD_SIM_TRAINER_COUNT];   // 0xFFFF: counts nowhere
+static u16 sCountMapB[WORLD_SIM_TRAINER_COUNT];   // 0xFFFF: none
+static u16 sCountNotMap[WORLD_SIM_TRAINER_COUNT]; // a leader at home: never on their Gym's map
+static u8 sOccupancySlot;       // the slot the summary excepts
+static bool8 sOccupancyActive;  // a spot choice is running
+static bool8 sOccupancyReady;   // the summary is built
+
+static void SummariseOccupancy(const struct WayfarerWorldState *state, u8 exceptSlot)
+{
+    u8 slot;
+    for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT; slot++)
+    {
+        const struct WayfarerWorldRecord *record = &state->records[slot];
+        u16 destNode;
+
+        sCountMapA[slot] = sCountMapB[slot] = sCountNotMap[slot] = 0xFFFF;
+        if (slot == exceptSlot || (!WorldSim_IsSimulated(record) && record->state != WORLD_STATE_PINNED))
+            continue;
+        sCountMapA[slot] = WorldSim_NodeMap(record->node);
+        if (IsLeaderHome(state, slot))
+        {
+            sCountNotMap[slot] = WorldSim_NodeMap(Trainer(slot)->gymNode);
+            continue;
+        }
+        destNode = WorldSim_DestNode(state, slot);
+        if (destNode != WORLD_NODE_NONE)
+            sCountMapB[slot] = WorldSim_NodeMap(destNode);
+    }
+    sOccupancyReady = TRUE;
+}
+
+#define OCCUPANCY_CACHE_SIZE 16
+static u16 sOccupancyMaps[OCCUPANCY_CACHE_SIZE];
+static u8 sOccupancyCounts[OCCUPANCY_CACHE_SIZE];
+static u8 sOccupancyCached;
+
+static u8 CachedOccupancy(const struct WayfarerWorldState *state, u16 map, u8 exceptSlot)
+{
+    u8 i, count = 0;
+    if (!sOccupancyActive || exceptSlot != sOccupancySlot || map == 0xFFFF)
+        return WorldSim_Occupancy(state, map, exceptSlot);
+    for (i = 0; i < sOccupancyCached; i++)
+    {
+        if (sOccupancyMaps[i] == map)
+            return sOccupancyCounts[i];
+    }
+    if (!sOccupancyReady)
+        SummariseOccupancy(state, exceptSlot);
+    for (i = 0; i < WORLD_SIM_TRAINER_COUNT; i++)
+    {
+        if (sCountMapA[i] == map ? sCountNotMap[i] != map : sCountMapB[i] == map)
+            count++;
+    }
+    if (sOccupancyCached < OCCUPANCY_CACHE_SIZE)
+    {
+        sOccupancyMaps[sOccupancyCached] = map;
+        sOccupancyCounts[sOccupancyCached++] = count;
+    }
+    return count;
+}
+
 static bool8 IsMapFull(const struct WayfarerWorldState *state, u16 node, u8 exceptSlot)
 {
-    return WorldSim_Occupancy(state, WorldSim_NodeMap(node), exceptSlot) >= WorldSim_MapCapacity(node);
+    return CachedOccupancy(state, WorldSim_NodeMap(node), exceptSlot) >= WorldSim_MapCapacity(node);
 }
 
 static u8 SpotHolders(const struct WayfarerWorldState *state, u16 spot, u8 exceptSlot)
@@ -274,10 +340,45 @@ static u8 SpotHolders(const struct WayfarerWorldState *state, u16 spot, u8 excep
     return count;
 }
 
+// While a spot choice runs: the spots the other trainers hold (SpotHolders'
+// rule), gathered once instead of per candidate.
+static u16 sHeldSpots[WORLD_SIM_TRAINER_COUNT];
+static u8 sHeldCount;
+static bool8 sHeldReady;
+
+static void GatherHeldSpots(const struct WayfarerWorldState *state, u8 exceptSlot)
+{
+    u8 slot;
+    sHeldCount = 0;
+    for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT; slot++)
+    {
+        const struct WayfarerWorldRecord *record = &state->records[slot];
+        if (slot == exceptSlot || !WorldSim_IsSimulated(record))
+            continue;
+        if ((record->destKind == WORLD_DEST_SPOT || record->destKind == WORLD_DEST_HOME) && !IsLeaderHome(state, slot))
+            sHeldSpots[sHeldCount++] = record->destId;
+    }
+}
+
 static bool8 IsSpotTaken(const struct WayfarerWorldState *state, u16 spot, u8 exceptSlot)
 {
     const struct WayfarerWorldSpot *data = &gWayfarerWorldSpots[spot];
     u8 capacity = (data->flags & WORLD_SPOT_FLAG_CAPACITY_2) ? 2 : 1;
+    if (sOccupancyActive && exceptSlot == sOccupancySlot)
+    {
+        u8 i, holders = 0;
+        if (!sHeldReady)
+        {
+            GatherHeldSpots(state, exceptSlot);
+            sHeldReady = TRUE;
+        }
+        for (i = 0; i < sHeldCount; i++)
+        {
+            if (sHeldSpots[i] == spot)
+                holders++;
+        }
+        return holders >= capacity;
+    }
     return SpotHolders(state, spot, exceptSlot) >= capacity;
 }
 
@@ -335,15 +436,36 @@ static bool8 MapListed(const u16 *maps, u8 count, u16 map)
     return FALSE;
 }
 
+// Puts back EDGE_NONE on the nodes the last search set, so the next search
+// on the same workspace needn't clear every node.
+static void SearchRelease(struct Search *search)
+{
+    u16 i;
+    for (i = 0; i < search->tail; i++)
+        search->via[search->queue[i]] = EDGE_NONE;
+    search->tail = 0;
+}
+
 // Searches from source until both targets are found or the bound is reached.
 // avoidMaps lists maps the path may not enter (rerouting around full maps).
-static void Search(struct Search *search, void *workspace, u16 source, u16 targetA, u16 targetB, u8 bound,
-                   bool8 transit, const u16 *avoidMaps, u8 avoidCount, struct WayfarerWorldTrace *trace)
+// clean: the workspace's via[] is all EDGE_NONE already (after SearchRelease).
+static void SearchFrom(struct Search *search, void *workspace, bool8 clean, u16 source, u16 targetA, u16 targetB,
+                       u8 bound, bool8 transit, const u16 *avoidMaps, u8 avoidCount, struct WayfarerWorldTrace *trace)
 {
     u16 head = 0, tail = 0, expanded = 0;
     bool8 foundA = (targetA == WORLD_NODE_NONE), foundB = (targetB == WORLD_NODE_NONE);
 
-    SearchInit(search, workspace);
+    if (clean)
+    {
+        search->queue = (u16 *)workspace;
+        search->via = search->queue + gWayfarerWorldNodeCount;
+        search->depth = (u8 *)(search->via + gWayfarerWorldNodeCount);
+    }
+    else
+    {
+        SearchInit(search, workspace);
+    }
+    search->tail = 0;
     if (source >= gWayfarerWorldNodeCount)
         return;
     search->via[source] = VIA_SOURCE;
@@ -383,6 +505,7 @@ static void Search(struct Search *search, void *workspace, u16 source, u16 targe
                 foundB = TRUE;
         }
     }
+    search->tail = tail;
 
     if (trace != NULL)
     {
@@ -391,6 +514,12 @@ static void Search(struct Search *search, void *workspace, u16 source, u16 targe
         if (expanded > trace->searchNodesMax)
             trace->searchNodesMax = expanded;
     }
+}
+
+static void Search(struct Search *search, void *workspace, u16 source, u16 targetA, u16 targetB, u8 bound,
+                   bool8 transit, const u16 *avoidMaps, u8 avoidCount, struct WayfarerWorldTrace *trace)
+{
+    SearchFrom(search, workspace, FALSE, source, targetA, targetB, bound, transit, avoidMaps, avoidCount, trace);
 }
 
 static u8 SearchDepth(const struct Search *search, u16 node)
@@ -506,13 +635,30 @@ static u16 PickCandidate(const struct WayfarerWorldState *state, u8 slot, const 
     const struct WayfarerWorldTrainer *trainer = Trainer(slot);
     const u16 *spots = &gWayfarerWorldCandidates[trainer->candidateStart];
     const u8 *hops = &gWayfarerWorldCandidateHops[trainer->candidateStart];
-    u16 i, best = HOPS_NONE, ties = 0, chosen;
+    // Only the candidates offering the activity, in list order (sorted by
+    // hops, then spot order): the same ones SpotOffers would let through.
+    const struct WayfarerWorldCandidateRange *range;
+    const u16 *positions;
+    u16 j, i, best = HOPS_NONE, ties = 0, chosen;
     bool8 offered = FALSE;
 
-    for (i = 0; i < trainer->candidateCount; i++)
+    if (activity >= WORLD_ACTIVITY_COUNT)
     {
-        const struct WayfarerWorldSpot *data = &gWayfarerWorldSpots[spots[i]];
-        if (hops[i] > maxHops || !SpotOffers(data, activity))
+        pick->reasons |= REASON(WORLD_SKIP_RADIUS);
+        return WORLD_SPOT_NONE;
+    }
+    range = &gWayfarerWorldActivityRanges[slot][activity];
+    positions = &gWayfarerWorldActivityCandidates[range->start];
+
+    for (j = 0; j < range->count; j++)
+    {
+        const struct WayfarerWorldSpot *data;
+        i = positions[j];
+        data = &gWayfarerWorldSpots[spots[i]];
+        // Past the nearest fitting candidate there is nothing nearer.
+        if ((!farthest && best != HOPS_NONE && hops[i] > best) || hops[i] > maxHops)
+            break;
+        if (!SpotOffers(data, activity))
             continue;
         if (onlyMap != 0xFFFF && WorldSim_NodeMap(data->node) != onlyMap)
             continue;
@@ -533,9 +679,13 @@ static u16 PickCandidate(const struct WayfarerWorldState *state, u8 slot, const 
         return WORLD_SPOT_NONE;
 
     chosen = Rotation(slot, ctx) % ties;
-    for (i = 0; i < trainer->candidateCount; i++)
+    for (j = 0; j < range->count; j++)
     {
-        const struct WayfarerWorldSpot *data = &gWayfarerWorldSpots[spots[i]];
+        const struct WayfarerWorldSpot *data;
+        i = positions[j];
+        data = &gWayfarerWorldSpots[spots[i]];
+        if (hops[i] > best)
+            break;
         if (hops[i] != best || !SpotOffers(data, activity))
             continue;
         if (onlyMap != 0xFFFF && WorldSim_NodeMap(data->node) != onlyMap)
@@ -572,16 +722,24 @@ static bool8 ChooseSpot(struct WayfarerWorldState *state, u8 slot, const struct 
     u16 spot = WORLD_SPOT_NONE;
     u8 i;
 
+    // Nothing changes the records until SetDestination below.
+    sOccupancySlot = slot;
+    sOccupancyActive = TRUE;
+    sOccupancyReady = FALSE;
+    sOccupancyCached = 0;
+    sHeldReady = FALSE;
     if (activity == WORLD_ACTIVITY_HOME)
     {
         if (IsLeader(slot))
         {
+            sOccupancyActive = FALSE;
             SetDestination(state, slot, WORLD_DEST_HOME, WORLD_SPOT_NONE, activity);
             return TRUE;
         }
         if (trainer->homePlace != WORLD_SPOT_NONE
          && SpotFits(state, slot, trainer->homePlace, activity, WORLD_LIFE_NONE, TRUE, &pick))
         {
+            sOccupancyActive = FALSE;
             SetDestination(state, slot, WORLD_DEST_HOME, trainer->homePlace, activity);
             return TRUE;
         }
@@ -612,6 +770,7 @@ static bool8 ChooseSpot(struct WayfarerWorldState *state, u8 slot, const struct 
             spot = PickCandidate(state, slot, ctx, activity, lifeEvent, trainer->radius, 0xFFFF, FALSE, &pick);
     }
 
+    sOccupancyActive = FALSE;
     if (spot != WORLD_SPOT_NONE)
     {
         SetDestination(state, slot, WORLD_DEST_SPOT, spot, activity);
@@ -976,6 +1135,18 @@ static void Travel(struct WayfarerWorldState *state, u8 slot, u16 firstEdge, voi
 // ---------------------------------------------------------------------------
 // Heartbeat
 
+// Hops from a node to the trainer's home node within their search bound:
+// the generator's reverse search over the same edges, so the same as a
+// search from the node would find.
+static u8 HomeHopsFrom(u8 slot, u16 node)
+{
+    u8 hops;
+    if (node >= gWayfarerWorldNodeCount)
+        return HOPS_NONE;
+    hops = gWayfarerWorldHomeHops[(u32)slot * gWayfarerWorldNodeCount + node];
+    return hops <= Trainer(slot)->searchBound ? hops : HOPS_NONE;
+}
+
 static bool8 IsOnPlayerMap(const struct WayfarerWorldState *state, u8 slot, const struct WayfarerWorldContext *ctx)
 {
     return WorldSim_NodeMap(state->records[slot].node) == ctx->playerMap;
@@ -988,11 +1159,13 @@ void WorldSim_Heartbeat(struct WayfarerWorldState *state, const struct WayfarerW
     u16 firstEdge[WORLD_SIM_TRAINER_COUNT];
     u8 slot, count = 0, i, j;
     struct Search search;
+    bool8 clean = FALSE;
     // A trainer whose derived state changed has already acted this heartbeat.
     u32 changed = WorldSim_ApplyDerived(state, ctx, workspace, trace);
 
-    // One search per acting trainer gives both the priority (hops from the
-    // current node home) and the path's first edge.
+    // The priority (hops from the current node home) comes from the
+    // generated table; a search per travelling trainer gives the path's
+    // first edge (stopping at the destination finds the same edge).
     for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT; slot++)
     {
         struct WayfarerWorldRecord *record = &state->records[slot];
@@ -1002,11 +1175,15 @@ void WorldSim_Heartbeat(struct WayfarerWorldState *state, const struct WayfarerW
         if (!WorldSim_IsSimulated(record) || IsOnPlayerMap(state, slot, ctx) || ((ctx->frozenMask | changed) & (1u << slot)))
             continue;
         destNode = record->state == WORLD_STATE_TRAVELLING ? WorldSim_DestNode(state, slot) : WORLD_NODE_NONE;
-        Search(&search, workspace, record->node, Trainer(slot)->homeNode, destNode, Trainer(slot)->searchBound,
-               IsTraveller(slot), NULL, 0, trace);
-        homeHops[slot] = SearchDepth(&search, Trainer(slot)->homeNode);
+        homeHops[slot] = HomeHopsFrom(slot, record->node);
         if (destNode != WORLD_NODE_NONE)
+        {
+            SearchFrom(&search, workspace, clean, record->node, destNode, WORLD_NODE_NONE,
+                       Trainer(slot)->searchBound, IsTraveller(slot), NULL, 0, trace);
             firstEdge[slot] = SearchFirstEdge(&search, destNode);
+            SearchRelease(&search);
+            clean = TRUE;
+        }
 
         // Priority order: fewer hops home first, then catalog order.
         for (i = count; i > 0 && homeHops[order[i - 1]] > homeHops[slot]; i--)
@@ -1198,10 +1375,8 @@ void WorldSim_OnLeagueResolved(struct WayfarerWorldState *state, const u16 *line
 
 u8 WorldSim_HomeHops(const struct WayfarerWorldState *state, u8 slot, void *workspace)
 {
-    struct Search search;
-    Search(&search, workspace, state->records[slot].node, Trainer(slot)->homeNode, WORLD_NODE_NONE,
-           Trainer(slot)->searchBound, IsTraveller(slot), NULL, 0, NULL);
-    return SearchDepth(&search, Trainer(slot)->homeNode);
+    (void)workspace;
+    return HomeHopsFrom(slot, state->records[slot].node);
 }
 
 bool8 WorldSim_SpotTaken(const struct WayfarerWorldState *state, u16 spot, u8 exceptSlot)

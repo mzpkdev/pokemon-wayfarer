@@ -147,4 +147,103 @@ TEST("Spawn priority counts graph hops from the current node home")
     Free(workspace);
 }
 
+// The generated home-hop table must equal a search over the same edges.
+TEST("The home-hop table matches a search from every node")
+{
+    u16 *queue = Alloc(gWayfarerWorldNodeCount * sizeof(u16));
+    u8 *dist = Alloc(gWayfarerWorldNodeCount);
+    u8 slot;
+
+    for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT; slot++)
+    {
+        const struct WayfarerWorldTrainer *trainer = &gWayfarerWorldTrainers[slot];
+        bool8 transit = (trainer->flags & WORLD_TRAINER_FLAG_TRAVELLER) != 0;
+        u16 source;
+        // Sample nodes across the table: a forward search from each.
+        for (source = slot; source < gWayfarerWorldNodeCount; source += 37)
+        {
+            u16 head = 0, tail = 0, n;
+            u8 found = 0xFF;
+            for (n = 0; n < gWayfarerWorldNodeCount; n++)
+                dist[n] = 0xFF;
+            dist[source] = 0;
+            queue[tail++] = source;
+            while (head < tail)
+            {
+                u16 node = queue[head++], e;
+                const struct WayfarerWorldNode *data = &gWayfarerWorldNodes[node];
+                if (node == trainer->homeNode)
+                {
+                    found = dist[node];
+                    break;
+                }
+                for (e = data->firstEdge; e < data->firstEdge + data->edgeCount; e++)
+                {
+                    const struct WayfarerWorldEdge *edge = &gWayfarerWorldEdges[e];
+                    if ((edge->kind == WORLD_EDGE_TRANSIT && !transit) || dist[edge->target] != 0xFF || dist[node] >= 254)
+                        continue;
+                    dist[edge->target] = dist[node] + 1;
+                    queue[tail++] = edge->target;
+                }
+            }
+            EXPECT_EQ(gWayfarerWorldHomeHops[(u32)slot * gWayfarerWorldNodeCount + source], found);
+        }
+    }
+    Free(dist);
+    Free(queue);
+}
+
+// The per-activity candidate lists hold exactly the candidates offering the
+// activity, in list order.
+TEST("Activity candidate lists hold exactly the offering candidates in order")
+{
+    static const u16 kinds[WORLD_ACTIVITY_COUNT] =
+    {
+        [WORLD_ACTIVITY_CARE]   = (1 << WORLD_SPOT_CENTER_COUNTER) | (1 << WORLD_SPOT_CENTER_SIDE),
+        [WORLD_ACTIVITY_SHOP]   = (1 << WORLD_SPOT_STORE),
+        [WORLD_ACTIVITY_GAMBLE] = (1 << WORLD_SPOT_GAME_CORNER),
+        [WORLD_ACTIVITY_TRAIN]  = (1 << WORLD_SPOT_TALL_GRASS),
+        [WORLD_ACTIVITY_RELAX]  = (1 << WORLD_SPOT_SQUARE) | (1 << WORLD_SPOT_BENCH) | (1 << WORLD_SPOT_WATER_EDGE),
+        [WORLD_ACTIVITY_FISH]   = (1 << WORLD_SPOT_WATER_EDGE),
+        [WORLD_ACTIVITY_VISIT]  = (1 << WORLD_SPOT_GYM) | (1 << WORLD_SPOT_NPC_CHAT),
+    };
+    u8 slot, activity;
+
+    for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT; slot++)
+    {
+        const struct WayfarerWorldTrainer *trainer = &gWayfarerWorldTrainers[slot];
+        for (activity = 0; activity < WORLD_ACTIVITY_COUNT; activity++)
+        {
+            const struct WayfarerWorldCandidateRange *range = &gWayfarerWorldActivityRanges[slot][activity];
+            u16 i, k = 0;
+            for (i = 0; i < trainer->candidateCount; i++)
+            {
+                const struct WayfarerWorldSpot *spot = &gWayfarerWorldSpots[gWayfarerWorldCandidates[trainer->candidateStart + i]];
+                bool8 offers = spot->kind == WORLD_SPOT_NAMED
+                    ? ((spot->activities & 0xF) == activity || (spot->activities >> 4) == activity)
+                    : (kinds[activity] & (1 << spot->kind)) != 0;
+                if (!offers)
+                    continue;
+                EXPECT(k < range->count);
+                EXPECT_EQ(gWayfarerWorldActivityCandidates[range->start + k], i);
+                k++;
+            }
+            EXPECT_EQ(k, range->count);
+        }
+    }
+}
+
+TEST("Gym Leaders name their own Gym object by local id")
+{
+    u8 slot;
+    for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT; slot++)
+    {
+        const struct WayfarerWorldTrainer *trainer = &gWayfarerWorldTrainers[slot];
+        if (trainer->flags & WORLD_TRAINER_FLAG_GYM_LEADER)
+            EXPECT(trainer->leaderLocalId != 0);
+        else
+            EXPECT_EQ(trainer->leaderLocalId, 0);
+    }
+}
+
 #endif // IS_WAYFARER

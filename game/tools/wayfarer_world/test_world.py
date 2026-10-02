@@ -308,6 +308,23 @@ class Routines(unittest.TestCase):
                 self.assertEqual(wg.spots[t.own_gym_spot].kind, sp.GYM)
                 self.assertEqual(wg.nodes[t.gym_node].map, t.gym_map)
 
+    def test_leader_objects_by_local_id(self):
+        _, _, rt = full()
+        by_name = {t.name: t for t in rt.trainers}
+        for t in rt.trainers:
+            if not t.leader:
+                self.assertEqual(t.leader_local_id, 0)
+                continue
+            objects = {o["local_id"]: o for o in t.gym_map.events["objects"]}
+            self.assertIn(t.leader_local_id, objects, t.name)
+        # Fuchsia's Gym has four decoys drawn as Janine: the leader is the one
+        # running her own script.
+        janine = by_name["Janine"]
+        leader = {o["local_id"]: o for o in janine.gym_map.events["objects"]}[janine.leader_local_id]
+        self.assertTrue(leader["script"].endswith("_EventScript_Janine"))
+        # Viridian's Gym draws Giovanni with FireRed's sprite.
+        self.assertIn("OBJ_EVENT_GFX_GIOVANNI", by_name["Giovanni"].alt_graphics)
+
     def test_broken_favourite_fails(self):
         _, wg, _ = full()
         data = maps.load_json(maps.TOOL_DIR / "routines.json")

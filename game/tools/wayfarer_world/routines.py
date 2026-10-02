@@ -87,6 +87,22 @@ def sprite_sheet(root, gfx):
 FULL_SHEET = ("sAnimTable_Standard", (16, 32), (144, 32))
 
 
+GFX_VARIANT_SUFFIXES = ("", "_HNS", "_FRLG")
+
+
+def sprite_family(root, gfx):
+    """Every OBJ_EVENT_GFX_* the same character is drawn with: the name with
+    and without the _HNS / _FRLG suffixes (Viridian's Gym uses FireRed's
+    OBJ_EVENT_GFX_GIOVANNI while the walker uses OBJ_EVENT_GFX_GIOVANNI_HNS)."""
+    names = set(re.findall(r"#define (OBJ_EVENT_GFX_\w+)\s",
+                           read_text(root / "include/constants/event_objects.h")))
+    base = gfx
+    for suffix in GFX_VARIANT_SUFFIXES[1:]:
+        if base.endswith(suffix):
+            base = base[:-len(suffix)]
+    return {base + suffix for suffix in GFX_VARIANT_SUFFIXES if base + suffix in names} | {gfx}
+
+
 class Trainer:
     pass
 
@@ -195,6 +211,8 @@ class Routines:
 
         # Gym (leaders): the node a door from the home map leads into.
         t.gym_node, t.own_gym_spot, t.gym_map = NODE_NONE, SPOT_NONE, None
+        t.leader_local_id = 0
+        t.alt_graphics = sorted(sprite_family(self.root, t.graphics) - {t.graphics})[:2]
         if t.leader:
             gym = wg.world.maps.get(e.get("gym", ""))
             if gym is None or not gym.in_scope:
@@ -217,6 +235,19 @@ class Routines:
             if len(own) != 1:
                 raise BuildError("%s: %s has %d Gym spots, expected 1" % (tag, gym.name, len(own)))
             t.own_gym_spot = own[0]
+            # The Gym's own leader object (the badge battle's), by local id:
+            # Fuchsia's Gym has four decoys with Janine's sprite, so the
+            # sprite alone can't tell. Among the objects drawn with the
+            # leader's sprite family, the one running "<map>_EventScript_<Name>".
+            family = sprite_family(self.root, t.graphics)
+            drawn = [o for o in gym.events["objects"] if o["gfx"] in family]
+            key = re.sub(r"[^A-Za-z]", "", t.name)
+            named = [o for o in drawn if o["script"].endswith("_EventScript_" + key)]
+            pick = named or drawn
+            if len(pick) != 1:
+                raise BuildError("%s: %s has %d leader objects (%s), expected 1"
+                                 % (tag, gym.name, len(pick), ", ".join(o["script"] for o in pick)))
+            t.leader_local_id = pick[0]["local_id"]
             badge = e.get("badge") or {}
             if badge.get("region") not in ("Kanto", "Johto", "Hoenn") or \
                     not 0 <= badge.get("index", -1) <= 7:
