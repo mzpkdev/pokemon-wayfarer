@@ -28,9 +28,9 @@
         "blockedSteps": 0
       },
       "record": {
-        "node": 504,
+        "node": 505,
         "destKind": 1,
-        "destId": 3634,
+        "destId": 3617,
         "state": 1,
         "waited": 0,
         "arrival": 0,
@@ -42,7 +42,7 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "f8918c1300a00600"
+        "hex": "f951881300a00600"
       },
       "record_map": "MAP_MT_MORTAR_1F_NORTH_HNS"
     },
@@ -51,7 +51,7 @@
         "index": 0,
         "slot": 19,
         "mode": 1,
-        "phase": 3,
+        "phase": 2,
         "goalKind": 3,
         "objectId": 2,
         "template": 0,
@@ -61,7 +61,7 @@
         "y": 14,
         "goalX": 15,
         "goalY": 31,
-        "goalEdge": 1107
+        "goalEdge": 1083
       },
       "done": true,
       "delta": {
@@ -74,9 +74,9 @@
         "blockedSteps": 0
       },
       "record": {
-        "node": 518,
+        "node": 519,
         "destKind": 1,
-        "destId": 3763,
+        "destId": 3746,
         "state": 1,
         "waited": 0,
         "arrival": 0,
@@ -88,7 +88,7 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "06d2ac1300a00600"
+        "hex": "0792a81300a00600"
       },
       "record_map": "MAP_MT_MORTAR_B1F_HNS"
     },
@@ -105,9 +105,9 @@
         "blockedSteps": 0
       },
       "record": {
-        "node": 504,
+        "node": 505,
         "destKind": 1,
-        "destId": 3637,
+        "destId": 3620,
         "state": 0,
         "waited": 0,
         "arrival": 0,
@@ -119,18 +119,66 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "f8518d0300a00600"
+        "hex": "f911890300a00600"
       },
       "record_map": "MAP_MT_MORTAR_1F_NORTH_HNS"
     }
   },
-  "pocket_node": 505,
-  "node": 504,
+  "graph_leg": {
+    "nodes": [
+      71,
+      73,
+      504,
+      498,
+      514,
+      516,
+      513,
+      511,
+      510,
+      512,
+      505,
+      506
+    ],
+    "maps": [
+      "MAP_ROUTE42_HNS",
+      "MAP_ROUTE42_HNS",
+      "MAP_MT_MORTAR_1F_SOUTH_HNS",
+      "MAP_MT_MORTAR_1F_SOUTH_HNS",
+      "MAP_MT_MORTAR_2F_HNS",
+      "MAP_MT_MORTAR_2F_HNS",
+      "MAP_MT_MORTAR_2F_HNS",
+      "MAP_MT_MORTAR_2F_HNS",
+      "MAP_MT_MORTAR_2F_HNS",
+      "MAP_MT_MORTAR_2F_HNS",
+      "MAP_MT_MORTAR_1F_NORTH_HNS",
+      "MAP_MT_MORTAR_1F_NORTH_HNS"
+    ],
+    "reached": true,
+    "record": {
+      "node": 506,
+      "destKind": 1,
+      "destId": 3620,
+      "state": 1,
+      "waited": 0,
+      "arrival": 0,
+      "crossing": 0,
+      "step": 0,
+      "activity": 5,
+      "dwell": 3,
+      "lifeEvent": 0,
+      "lifeSteps": 0,
+      "stayBits": 0,
+      "reserved": 0,
+      "hex": "fa11891300a00600"
+    }
+  },
+  "pocket_node": 506,
+  "node": 505,
   "screenshots": [
     ".product/research/overworld-walkers/mortar-at-spot.png"
   ],
   "debug": {
-    "frames": 2259,
+    "frames": 2602,
     "spawns": 3,
     "removals": 1,
     "edgeExits": 0,
@@ -147,20 +195,20 @@
     "emotes": 0,
     "templateMoves": 0,
     "floorChanges": 0,
-    "heapResets": 7,
+    "heapResets": 18,
     "restores": 0,
     "lastSearchNodes": 331,
     "maxSearchNodes": 331,
     "lastSearchFrames": 80,
     "maxSearchFrames": 80,
-    "maxSliceScanlines": 92,
+    "maxSliceScanlines": 91,
     "maxSliceNodes": 7,
     "workspaceBytes": 11308,
-    "currentMap": 6164,
+    "currentMap": 3073,
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634060,
+    "worldState": 33634036,
     "actors": [
       {
         "index": 0,
@@ -227,19 +275,23 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 25,
-    "maxHeartbeatScanlines": 25,
-    "maxSpawnScanlines": 71,
-    "maxUpdateScanlines": 139,
+    "lastHeartbeatScanlines": 45,
+    "maxHeartbeatScanlines": 998,
+    "maxSpawnScanlines": 20,
+    "maxUpdateScanlines": 134,
     "backOffs": 0,
     "handoffs": 1,
     "visitorsVanished": 0,
     "culls": 0,
-    "lastContextScanlines": 16,
+    "lastContextScanlines": 15,
     "lastFailNodes": 0,
     "maxFinishScanlines": 15,
-    "walkOffs": 0
+    "walkOffs": 0,
+    "worldJobs": 2,
+    "maxJobScanlines": 10,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 2626
+  "emulated_frames": 3154
 }

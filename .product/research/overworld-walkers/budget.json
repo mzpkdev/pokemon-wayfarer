@@ -69,23 +69,19 @@
     [
       20,
       31
-    ],
-    [
-      21,
-      31
     ]
   ],
   "template_moves": 5,
   "spawns": 3,
   "searches": 7,
-  "maxSliceScanlines": 133,
-  "maxSearchNodes": 966,
-  "maxSearchFrames": 246,
+  "maxSliceScanlines": 137,
+  "maxSearchNodes": 964,
+  "maxSearchFrames": 249,
   "records": {
     "lorelei": {
-      "node": 94,
+      "node": 96,
       "destKind": 1,
-      "destId": 1171,
+      "destId": 1187,
       "state": 1,
       "waited": 0,
       "arrival": 0,
@@ -97,12 +93,12 @@
       "lifeSteps": 0,
       "stayBits": 0,
       "reserved": 0,
-      "hex": "5ed0241100800400"
+      "hex": "60d0281100800400"
     },
     "lance": {
-      "node": 94,
+      "node": 96,
       "destKind": 1,
-      "destId": 1164,
+      "destId": 1180,
       "state": 1,
       "waited": 0,
       "arrival": 0,
@@ -114,12 +110,12 @@
       "lifeSteps": 0,
       "stayBits": 0,
       "reserved": 0,
-      "hex": "5e10231100a00400"
+      "hex": "6010271100a00400"
     },
     "blue": {
-      "node": 121,
+      "node": 123,
       "destKind": 1,
-      "destId": 4194,
+      "destId": 4177,
       "state": 0,
       "waited": 0,
       "arrival": 2,
@@ -131,7 +127,7 @@
       "lifeSteps": 0,
       "stayBits": 0,
       "reserved": 0,
-      "hex": "7990180452600600"
+      "hex": "7b50140452600600"
     }
   },
   "screenshots": [
@@ -139,7 +135,7 @@
     ".product/research/overworld-walkers/budget-later.png"
   ],
   "debug": {
-    "frames": 1465,
+    "frames": 1452,
     "spawns": 3,
     "removals": 1,
     "edgeExits": 1,
@@ -159,17 +155,17 @@
     "heapResets": 5,
     "restores": 0,
     "lastSearchNodes": 72,
-    "maxSearchNodes": 966,
-    "lastSearchFrames": 16,
-    "maxSearchFrames": 246,
-    "maxSliceScanlines": 133,
+    "maxSearchNodes": 964,
+    "lastSearchFrames": 21,
+    "maxSearchFrames": 249,
+    "maxSliceScanlines": 137,
     "maxSliceNodes": 7,
     "workspaceBytes": 11308,
     "currentMap": 32,
     "followerHidden": 0,
     "activeActors": 2,
     "storySuppressed": 0,
-    "worldState": 33634064,
+    "worldState": 33634044,
     "actors": [
       {
         "index": 0,
@@ -197,7 +193,7 @@
         "template": 3,
         "atSpot": 1,
         "blocked": 0,
-        "x": 21,
+        "x": 20,
         "y": 31,
         "goalX": 21,
         "goalY": 31,
@@ -236,18 +232,22 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 24,
-    "maxHeartbeatScanlines": 24,
+    "lastHeartbeatScanlines": 26,
+    "maxHeartbeatScanlines": 26,
     "maxSpawnScanlines": 59,
-    "maxUpdateScanlines": 137,
+    "maxUpdateScanlines": 142,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
-    "lastContextScanlines": 15,
+    "lastContextScanlines": 16,
     "lastFailNodes": 0,
     "maxFinishScanlines": 10,
-    "walkOffs": 0
+    "walkOffs": 0,
+    "worldJobs": 1,
+    "maxJobScanlines": 15,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
   },
   "pass": true,
   "emulated_frames": 1890

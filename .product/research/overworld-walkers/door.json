@@ -1,8 +1,8 @@
 {
   "record_at_exit": {
-    "node": 289,
+    "node": 291,
     "destKind": 1,
-    "destId": 2748,
+    "destId": 2750,
     "state": 1,
     "waited": 0,
     "arrival": 0,
@@ -14,7 +14,7 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "2111af1200000400"
+    "hex": "2391af1200000400"
   },
   "spawn_tile_inside": [
     5,
@@ -33,9 +33,9 @@
     4
   ],
   "record": {
-    "node": 289,
+    "node": 291,
     "destKind": 1,
-    "destId": 2748,
+    "destId": 2750,
     "state": 1,
     "waited": 0,
     "arrival": 0,
@@ -47,7 +47,7 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "2111af1200000400"
+    "hex": "2391af1200000400"
   },
   "screenshots": [
     ".product/research/overworld-walkers/door-outside-after-entry.png",
@@ -55,7 +55,7 @@
     ".product/research/overworld-walkers/door-inside-at-counter.png"
   ],
   "debug": {
-    "frames": 432,
+    "frames": 436,
     "spawns": 2,
     "removals": 1,
     "edgeExits": 0,
@@ -85,7 +85,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634108,
+    "worldState": 33634072,
     "actors": [
       {
         "index": 0,
@@ -152,10 +152,10 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 158,
-    "maxHeartbeatScanlines": 158,
-    "maxSpawnScanlines": 24,
-    "maxUpdateScanlines": 121,
+    "lastHeartbeatScanlines": 159,
+    "maxHeartbeatScanlines": 159,
+    "maxSpawnScanlines": 25,
+    "maxUpdateScanlines": 128,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
@@ -163,8 +163,12 @@
     "lastContextScanlines": 16,
     "lastFailNodes": 0,
     "maxFinishScanlines": 2,
-    "walkOffs": 0
+    "walkOffs": 0,
+    "worldJobs": 1,
+    "maxJobScanlines": 11,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 742
+  "emulated_frames": 746
 }

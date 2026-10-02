@@ -1,12 +1,12 @@
 {
   "exit_tile_viridian": [
     26,
-    0
+    -1
   ],
   "record_at_exit": {
-    "node": 121,
+    "node": 123,
     "destKind": 1,
-    "destId": 4194,
+    "destId": 4177,
     "state": 0,
     "waited": 0,
     "arrival": 2,
@@ -18,7 +18,7 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "7990180452600600"
+    "hex": "7b50140452600600"
   },
   "expected_crossing": 10,
   "heartbeats_during_cross": 1,
@@ -49,7 +49,7 @@
     ],
     [
       10,
-      79
+      78
     ],
     [
       10,
@@ -174,7 +174,7 @@
     "y": 78,
     "goalX": 5,
     "goalY": 51,
-    "goalEdge": 442
+    "goalEdge": 444
   },
   "actor_after_90_frames": {
     "index": 0,
@@ -190,24 +190,10 @@
     "y": 75,
     "goalX": 5,
     "goalY": 51,
-    "goalEdge": 442
+    "goalEdge": 444
   },
   "rebases": 1,
   "samples": [
-    {
-      "frame": 931,
-      "map": 32,
-      "blue_objects": 1,
-      "blue": [
-        [
-          26,
-          -1
-        ]
-      ],
-      "mode": [
-        1
-      ]
-    },
     {
       "frame": 933,
       "map": 32,
@@ -275,7 +261,7 @@
         ]
       ],
       "mode": [
-        2
+        1
       ]
     },
     {
@@ -307,49 +293,7 @@
       ]
     },
     {
-      "frame": 946,
-      "map": 32,
-      "blue_objects": 1,
-      "blue": [
-        [
-          26,
-          -2
-        ]
-      ],
-      "mode": [
-        2
-      ]
-    },
-    {
-      "frame": 946,
-      "map": 32,
-      "blue_objects": 1,
-      "blue": [
-        [
-          26,
-          -2
-        ]
-      ],
-      "mode": [
-        2
-      ]
-    },
-    {
-      "frame": 946,
-      "map": 32,
-      "blue_objects": 1,
-      "blue": [
-        [
-          26,
-          -2
-        ]
-      ],
-      "mode": [
-        2
-      ]
-    },
-    {
-      "frame": 946,
+      "frame": 947,
       "map": 32,
       "blue_objects": 1,
       "blue": [
@@ -364,20 +308,62 @@
     },
     {
       "frame": 948,
-      "map": 42,
+      "map": 32,
       "blue_objects": 1,
       "blue": [
         [
-          10,
-          78
+          26,
+          -2
         ]
       ],
       "mode": [
-        1
+        2
       ]
     },
     {
-      "frame": 949,
+      "frame": 948,
+      "map": 32,
+      "blue_objects": 1,
+      "blue": [
+        [
+          26,
+          -2
+        ]
+      ],
+      "mode": [
+        2
+      ]
+    },
+    {
+      "frame": 948,
+      "map": 32,
+      "blue_objects": 1,
+      "blue": [
+        [
+          26,
+          -2
+        ]
+      ],
+      "mode": [
+        2
+      ]
+    },
+    {
+      "frame": 948,
+      "map": 32,
+      "blue_objects": 1,
+      "blue": [
+        [
+          26,
+          -2
+        ]
+      ],
+      "mode": [
+        2
+      ]
+    },
+    {
+      "frame": 950,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -475,20 +461,6 @@
       ]
     },
     {
-      "frame": 961,
-      "map": 42,
-      "blue_objects": 1,
-      "blue": [
-        [
-          10,
-          78
-        ]
-      ],
-      "mode": [
-        1
-      ]
-    },
-    {
       "frame": 962,
       "map": 42,
       "blue_objects": 1,
@@ -503,7 +475,7 @@
       ]
     },
     {
-      "frame": 963,
+      "frame": 964,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -559,7 +531,7 @@
       ]
     },
     {
-      "frame": 970,
+      "frame": 971,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -601,7 +573,7 @@
       ]
     },
     {
-      "frame": 975,
+      "frame": 974,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -615,7 +587,7 @@
       ]
     },
     {
-      "frame": 976,
+      "frame": 975,
       "map": 42,
       "blue_objects": 1,
       "blue": [
@@ -655,6 +627,34 @@
       "mode": [
         1
       ]
+    },
+    {
+      "frame": 979,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 980,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
     }
   ],
   "screenshots": [
@@ -663,7 +663,7 @@
     ".product/research/overworld-walkers/edge-route2-moving.png"
   ],
   "debug": {
-    "frames": 1069,
+    "frames": 1070,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 1,
@@ -684,8 +684,8 @@
     "restores": 0,
     "lastSearchNodes": 419,
     "maxSearchNodes": 1004,
-    "lastSearchFrames": 86,
-    "maxSearchFrames": 210,
+    "lastSearchFrames": 87,
+    "maxSearchFrames": 212,
     "maxSliceScanlines": 125,
     "maxSliceNodes": 7,
     "workspaceBytes": 11308,
@@ -693,7 +693,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634112,
+    "worldState": 33633996,
     "actors": [
       {
         "index": 0,
@@ -709,7 +709,7 @@
         "y": 75,
         "goalX": 5,
         "goalY": 51,
-        "goalEdge": 442
+        "goalEdge": 444
       },
       {
         "index": 1,
@@ -760,19 +760,23 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 163,
-    "maxHeartbeatScanlines": 163,
-    "maxSpawnScanlines": 22,
-    "maxUpdateScanlines": 142,
+    "lastHeartbeatScanlines": 165,
+    "maxHeartbeatScanlines": 165,
+    "maxSpawnScanlines": 75,
+    "maxUpdateScanlines": 137,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
-    "lastContextScanlines": 16,
+    "lastContextScanlines": 15,
     "lastFailNodes": 0,
-    "maxFinishScanlines": 11,
-    "walkOffs": 0
+    "maxFinishScanlines": 10,
+    "walkOffs": 0,
+    "worldJobs": 1,
+    "maxJobScanlines": 15,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 1422
+  "emulated_frames": 1426
 }

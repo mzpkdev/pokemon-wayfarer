@@ -108,9 +108,9 @@
   "diagonal_steps": 2,
   "warp_exits": 1,
   "record": {
-    "node": 259,
+    "node": 261,
     "destKind": 1,
-    "destId": 2674,
+    "destId": 2676,
     "state": 1,
     "waited": 0,
     "arrival": 0,
@@ -122,13 +122,13 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "03919c1200c00200"
+    "hex": "05119d1200c00200"
   },
   "screenshots": [
     ".product/research/overworld-walkers/stairs-after.png"
   ],
   "debug": {
-    "frames": 578,
+    "frames": 580,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -149,16 +149,16 @@
     "restores": 0,
     "lastSearchNodes": 447,
     "maxSearchNodes": 447,
-    "lastSearchFrames": 160,
-    "maxSearchFrames": 160,
-    "maxSliceScanlines": 158,
+    "lastSearchFrames": 161,
+    "maxSearchFrames": 161,
+    "maxSliceScanlines": 155,
     "maxSliceNodes": 7,
     "workspaceBytes": 11308,
     "currentMap": 6,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634052,
+    "worldState": 33634084,
     "actors": [
       {
         "index": 0,
@@ -174,7 +174,7 @@
         "y": 49,
         "goalX": 39,
         "goalY": 49,
-        "goalEdge": 86
+        "goalEdge": 85
       },
       {
         "index": 1,
@@ -225,19 +225,23 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 25,
-    "maxHeartbeatScanlines": 25,
-    "maxSpawnScanlines": 78,
-    "maxUpdateScanlines": 176,
+    "lastHeartbeatScanlines": 26,
+    "maxHeartbeatScanlines": 26,
+    "maxSpawnScanlines": 67,
+    "maxUpdateScanlines": 166,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
-    "lastContextScanlines": 16,
+    "lastContextScanlines": 15,
     "lastFailNodes": 0,
     "maxFinishScanlines": 6,
-    "walkOffs": 0
+    "walkOffs": 0,
+    "worldJobs": 1,
+    "maxJobScanlines": 12,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 1032
+  "emulated_frames": 1036
 }

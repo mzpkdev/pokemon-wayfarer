@@ -354,6 +354,11 @@ the build on any of these:
   4-neighbour for its second trainer.
 
 A detected spot on a named spot's tile is dropped, as on a haunt's tile.
+Likewise no two spots share a tile (each seats its own trainer): where two
+detected spots land on one tile (an NPC chat on a Mart clerk's tile, a
+water's edge inside a tall grass patch), the more specific kind keeps it,
+in kind order (Center, store, Game Corner, Gym, tall grass, water's edge,
+square, bench, NPC chat). A named spot's second tile counts as taken.
 A map can hold both a haunt and named spots, as long as their tiles differ;
 haunt authors check the named-spot list in turn.
 

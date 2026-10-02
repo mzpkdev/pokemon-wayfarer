@@ -1,17 +1,17 @@
 {
   "shelves": [
-    2754,
-    2769,
-    2758
+    2756,
+    2771,
+    2760
   ],
-  "next_destination": 9709,
+  "next_destination": 9652,
   "local_dwell_beats": 2,
   "local_advances": 1,
   "warp_exits": 1,
   "record_after": {
-    "node": 94,
+    "node": 96,
     "destKind": 1,
-    "destId": 9709,
+    "destId": 9652,
     "state": 0,
     "waited": 0,
     "arrival": 5,
@@ -23,7 +23,7 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "5e507b091dc80200"
+    "hex": "60106d091dc80200"
   },
   "screenshots": [
     ".product/research/overworld-walkers/browse-next-shelf.png"
@@ -52,14 +52,14 @@
     "maxSearchNodes": 32,
     "lastSearchFrames": 9,
     "maxSearchFrames": 12,
-    "maxSliceScanlines": 60,
+    "maxSliceScanlines": 61,
     "maxSliceNodes": 6,
     "workspaceBytes": 11308,
     "currentMap": 3073,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634068,
+    "worldState": 33634036,
     "actors": [
       {
         "index": 0,
@@ -75,7 +75,7 @@
         "y": 7,
         "goalX": 4,
         "goalY": 7,
-        "goalEdge": 722
+        "goalEdge": 721
       },
       {
         "index": 1,
@@ -126,18 +126,22 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 25,
-    "maxHeartbeatScanlines": 25,
-    "maxSpawnScanlines": 17,
+    "lastHeartbeatScanlines": 26,
+    "maxHeartbeatScanlines": 26,
+    "maxSpawnScanlines": 18,
     "maxUpdateScanlines": 64,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
-    "lastContextScanlines": 15,
+    "lastContextScanlines": 16,
     "lastFailNodes": 0,
     "maxFinishScanlines": 3,
-    "walkOffs": 0
+    "walkOffs": 0,
+    "worldJobs": 2,
+    "maxJobScanlines": 11,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
   },
   "pass": true,
   "emulated_frames": 2024

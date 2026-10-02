@@ -240,7 +240,13 @@ spot, and no warp is dropped.
   stored with the connection's offset.
 - **Warps:** a warp tile reachable from the node, to the region holding
   its destination warp's landing tile. Doors, stairs, gatehouses, cave
-  entrances, and store floors are all warps.
+  entrances, and store floors are all warps. Only a warp that can fire
+  counts: one on a warp, door, arrow or directional-stair behaviour
+  (`field_control_avatar.c`), one of the engine's layout fallbacks in
+  `TryStartWarpEventScript`, or an authored script door (overrides
+  `script_warps`: Petalburg Gym's sign doors and room entrances). Dormant
+  entrances on solid rock (Terra Cave's), fall landings, hidden or locked
+  doors and a Center's decorative side tiles are no edges.
 - **Transit:** an authored list of scripted links, open to
   [travellers](notable-trainers.md#traveller) only, one hop each:
   placeholders are the S.S. Aqua (Olivine Port to Vermilion Port) and the
@@ -250,7 +256,9 @@ spot, and no warp is dropped.
   the Seagallop links One Island with the other Sevii harbors.
 - **Water (off-screen only):** two land nodes whose Surf-connected water
   meets, open to every trainer. Water is the surfable tiles (waterfalls
-  included), the water under a bridge, warps on water (Route 40's row of
+  included), the water under a bridge, collision-free elevation-1 land a
+  surfer reaches from water (a waterfall's foam row: a surfer only
+  dismounts on an elevation mismatch), warps on water (Route 40's row of
   warps into Route 41, the way to Cianwood), and the authored Dive link out
   of Sootopolis (to Route 126); whirlpools don't block it. One authored
   land-to-land link travels the same way: the Elite Four's fly between
@@ -276,7 +284,7 @@ solid, except the authored story gates in the overrides'
 `ignore_objects`: objects a scene or flag removes for good, such as Gym
 door blockers, the Bell Tower sage, Vermilion's Snorlax, the League
 reception gate's guards, Cliff Edge Gate's engineers, Route 120's bridge
-Kecleon, and Route 121's Aqua grunts. A Cut tree or boulder is overridden
+Kecleon, Route 121's Aqua grunts, and Silver in the Burned Tower. A Cut tree or boulder is overridden
 only when it is the one way to a leader's own Gym (Vermilion's tree) or by
 an explicit product decision: Route 2's Cut tree at (11, 13), the way to
 Diglett's Cave, and Victory Road's Strength boulders at B1F (48, 12) and
@@ -294,6 +302,9 @@ it, and the cycle step it serves may be skipped. Today:
 - Route 120's ledges are the only way from Fortree to Route 121 and
   Lilycove, and Lilycove's shore is a separate beach, so Juan's Lilycove
   Fan Club stays out of reach.
+- The Cinnabar Lab entrance's room doors (FireRed layout) are plain floor
+  that never fires, so Blaine's Cinnabar Lab favourite is disabled and his
+  study step may be skipped (no study spot is within his radius).
 
 Any other unreachable favourite fails the build.
 
@@ -303,18 +314,22 @@ search, which every later search from those nodes would repeat), so most
 heartbeats search little. A trip's first search, and every search after
 the 12-node cache runs out, is still a breadth-first search to the
 destination; across the Surf-linked seas and the Elite Four fly it can
-expand about 930 nodes in one search, and up to about 2,500 nodes in one
+expand about 900 nodes in one search, and up to about 2,200 nodes in one
 heartbeat when several long trips start together (all-badges report:
-about 520 expanded nodes per heartbeat on average). Inside the map load
+about 250 expanded nodes per heartbeat on average). Inside the map load
 this cost up to 1,642 scanlines (about 7 frames, with all badges), a
 visible stutter on a seamless edge. The heartbeat is therefore
 [spread over the following field frames](#heartbeat): on the E2E ROM a
-warp now takes 40.1 frames on average and 42 at most (main: 40), and the
-worst single frame of heartbeat work is 158 scanlines on a seam and 188
+warp takes 40.3 frames on average and 42 at most (main: 40), and the
+worst single frame of heartbeat work is 147 scanlines on a seam and 191
 on warps. That worst frame is one spot choice, which can't be split (up
 to about 120 scanlines). The remaining cost is time: a heartbeat finishes
-after 9 field frames on a seam (median; worst 53), and the walkers on the
-player's map pause until it does.
+after 9 field frames on a seam (median; worst 50), and the
+walkers on the player's map pause until it does. A watched trainer
+planning a trip does the same work a slice per frame: its next step's spot
+choices one per frame, then the first search (Will at Indigo planning the
+Ruins of Alph, a 731-node search, takes 16 frames and no frame of walker
+work went over 120 scanlines in the verifier runs).
 
 **Generator outputs**, one ROM table each, in a fixed order (map order,
 then component top-left tile) so ids are stable between builds of the
@@ -400,9 +415,15 @@ Until the heartbeat is done:
   locked controls. A trainer that lands on the player's map spawns a few
   frames later.
 - **Writes.** Anything that writes or saves the world finishes the rest at
-  once first: another map load, a save, league resolution, and a Gym
-  visitor's exit. So does the object of a Gym Leader who hasn't acted yet,
-  which is decided behind the warp's fade.
+  once first: a warp's map load, a save and league resolution. So does the
+  object of a Gym Leader who hasn't acted yet, which is decided behind the
+  warp's fade. A Gym visitor that leaves meanwhile leaves its record alone.
+- **Seams.** A seam crossed again before it is done doesn't finish it
+  inside the seam's frame: the new heartbeat queues behind it (up to two)
+  with its step 1 inputs taken at that map load, the same result without
+  the hitch. A full queue finishes at once.
+- **No heap.** Without room for the search workspace it waits a frame and
+  tries again, so a heartbeat is never split.
 - **Heap resets.** A heap reset (battle, menu) only restarts the search that
   was under way.
 - **New Game, Continue and load** drop it.
@@ -579,7 +600,10 @@ When a dwell runs out (in a heartbeat, or locally while watched):
   [capacity](notable-spots.md#capacity) (interior 1, outdoor 3 as a
   placeholder, 2 if the budget needs it). A hop into the destination map
   is always allowed, since spot choice already reserved room. So no map
-  ever holds more notables than its cap.
+  ever holds more notables than its cap. A local actor's exit is a hop
+  too: a walker steps out through a map side or a door only under the same
+  rule; with the next map full it waits once, then hands off. A trainer
+  back from Away stays away while their home map is full.
 - **Blocked.** A blocked traveller **waits** one heartbeat and sets the
   record's waited bit. Blocked again, they **reroute**: the shortest path
   that avoids the full map, if one exists within the search bound;
@@ -825,9 +849,11 @@ On every load, before the overworld runs:
    its node is reachable; `destKind` is never the reserved value; arrival
    is a known value and is none while Dwelling; activity is a known value;
    `lifeSteps` is 0 when `lifeEvent` is none; the reserved bits are zero.
-   Each local actor block entry names a simulated trainer at most once, on
-   the saved map's node, with a tile inside the map. A failed check is an
-   invalid save.
+   Each local actor block entry names a simulated trainer at most once.
+   A failed check is an invalid save. An entry that no longer fits the
+   saved location (its trainer isn't simulated or isn't on that map, or
+   the tile is outside it, after a load-time repair moved the player) only
+   clears the block: it is a restore hint, never a reason to reject a save.
 3. **Recompute** the derived states and apply them as a heartbeat would,
    without advancing anyone. The local actor block is used once, for the
    restored map, and then cleared.

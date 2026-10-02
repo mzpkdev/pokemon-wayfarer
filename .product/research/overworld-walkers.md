@@ -1,5 +1,10 @@
 # Overworld walkers (stage 3: the local actor)
 
+> **Snapshot.** The results and costs below are stage 3's (eight scenarios,
+> content hash `0xACD5`). Later rounds re-ran the verifier into the same
+> evidence folder, so its JSON files and screenshots now hold the latest run.
+> [Current state](#current-state-critic-loop-cycle-1) summarises that run.
+
 Related spec: [Notable world simulation](../specs/notable-world-simulation.md)
 and [Notable spots](../specs/notable-spots.md)
 
@@ -90,3 +95,22 @@ All eight scenarios pass ([summary](overworld-walkers/summary.json)).
   frame, and the grid search probes coordinates on the real object mid-frame.
 - **Not tested:** physical hardware and a cold emulator restart. Like the
   E2E harness, the save check uses the in-game reset.
+
+## Current state (critic loop cycle 1)
+
+The evidence folder holds the run of 2026-10-03 on the E2E ROM built from
+commit `c142fbab51`, content hash `0x5375` (the verifier now refuses a ROM
+whose hash differs from the worktree's tables). All **22** scenarios pass
+([summary](overworld-walkers/summary.json)); `perf`, `seam`, `recross` and
+`longtrip` fail past ceilings of 200 scanlines in a frame and 44 frames per
+warp.
+
+| Measure | Value |
+| --- | --- |
+| Grid search workspace | 11,308 bytes of heap (per-tile moves and elevations, 64 bridge states, queue, paths) |
+| Trip search workspace | 9,204 bytes of heap, only while a watched trainer's first trip search runs |
+| Heartbeat workspace | 9,204 bytes of heap while a heartbeat is pending |
+| Static RAM | 1,649 bytes of EWRAM (simulation 964, walkers 492, world 193), 0 IWRAM |
+| Worst frame of simulation | 191 scanlines on warps, 147 on seams, 150 re-crossing a seam |
+| Frames per warp | 40.3 mean, 42 max (main: 40) |
+| Saved state | 216 bytes; Blue's record in `save` is `60d0261100a00600` |

@@ -35,7 +35,7 @@
   "record": {
     "node": 29,
     "destKind": 1,
-    "destId": 255,
+    "destId": 254,
     "state": 0,
     "waited": 0,
     "arrival": 5,
@@ -47,14 +47,14 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "1dd03f0005a00600"
+    "hex": "1d903f0005a00600"
   },
   "screenshots": [
     ".product/research/overworld-walkers/deadend-blocked.png",
     ".product/research/overworld-walkers/deadend-player-out.png"
   ],
   "debug": {
-    "frames": 834,
+    "frames": 773,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -65,7 +65,7 @@
     "replans": 1,
     "blockedSteps": 1,
     "searches": 4,
-    "searchFails": 1,
+    "searchFails": 0,
     "localDwellBeats": 0,
     "localAdvances": 0,
     "emotes": 0,
@@ -77,14 +77,14 @@
     "maxSearchNodes": 343,
     "lastSearchFrames": 2,
     "maxSearchFrames": 87,
-    "maxSliceScanlines": 140,
+    "maxSliceScanlines": 141,
     "maxSliceNodes": 7,
     "workspaceBytes": 11308,
     "currentMap": 12,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634056,
+    "worldState": 33634028,
     "actors": [
       {
         "index": 0,
@@ -151,19 +151,23 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 23,
-    "maxHeartbeatScanlines": 23,
-    "maxSpawnScanlines": 79,
-    "maxUpdateScanlines": 165,
+    "lastHeartbeatScanlines": 25,
+    "maxHeartbeatScanlines": 25,
+    "maxSpawnScanlines": 80,
+    "maxUpdateScanlines": 144,
     "backOffs": 2,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
-    "lastContextScanlines": 15,
-    "lastFailNodes": 581,
-    "maxFinishScanlines": 7,
-    "walkOffs": 0
+    "lastContextScanlines": 16,
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 8,
+    "walkOffs": 0,
+    "worldJobs": 0,
+    "maxJobScanlines": 0,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 1268
+  "emulated_frames": 1150
 }

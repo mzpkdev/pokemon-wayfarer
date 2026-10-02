@@ -43,9 +43,9 @@
     "restores": 0,
     "lastSearchNodes": 345,
     "maxSearchNodes": 345,
-    "lastSearchFrames": 66,
-    "maxSearchFrames": 66,
-    "maxSliceScanlines": 61,
+    "lastSearchFrames": 67,
+    "maxSearchFrames": 67,
+    "maxSliceScanlines": 62,
     "maxSliceNodes": 7,
     "workspaceBytes": 11308,
     "currentMap": 7704,
@@ -119,10 +119,10 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 25,
-    "maxHeartbeatScanlines": 25,
+    "lastHeartbeatScanlines": 26,
+    "maxHeartbeatScanlines": 26,
     "maxSpawnScanlines": 18,
-    "maxUpdateScanlines": 70,
+    "maxUpdateScanlines": 77,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
@@ -130,7 +130,11 @@
     "lastContextScanlines": 16,
     "lastFailNodes": 0,
     "maxFinishScanlines": 8,
-    "walkOffs": 0
+    "walkOffs": 0,
+    "worldJobs": 0,
+    "maxJobScanlines": 0,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
   },
   "screenshots": [
     ".product/research/overworld-walkers/safari-top-mid.png"

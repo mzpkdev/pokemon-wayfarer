@@ -120,7 +120,7 @@
         "y": 39,
         "goalX": 9,
         "goalY": 40,
-        "goalEdge": 315
+        "goalEdge": 318
       },
       "pushed": "Up"
     }
@@ -139,7 +139,7 @@
     "y": 39,
     "goalX": 9,
     "goalY": 40,
-    "goalEdge": 315
+    "goalEdge": 318
   },
   "track": [
     [
@@ -183,7 +183,7 @@
       39
     ]
   ],
-  "gone_after_frames": 268,
+  "gone_after_frames": 272,
   "delta": {
     "backOffs": 3,
     "handoffs": 1,
@@ -203,9 +203,9 @@
     "facing": 2
   },
   "record": {
-    "node": 94,
+    "node": 96,
     "destKind": 1,
-    "destId": 1163,
+    "destId": 1179,
     "state": 1,
     "waited": 0,
     "arrival": 0,
@@ -217,13 +217,13 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "5ed0221100a00c00"
+    "hex": "60d0261100a00c00"
   },
   "screenshots": [
     ".product/research/overworld-walkers/walkoff-leaving.png"
   ],
   "debug": {
-    "frames": 847,
+    "frames": 846,
     "spawns": 1,
     "removals": 1,
     "edgeExits": 0,
@@ -244,16 +244,16 @@
     "restores": 0,
     "lastSearchNodes": 793,
     "maxSearchNodes": 793,
-    "lastSearchFrames": 176,
-    "maxSearchFrames": 176,
-    "maxSliceScanlines": 126,
+    "lastSearchFrames": 181,
+    "maxSearchFrames": 181,
+    "maxSliceScanlines": 128,
     "maxSliceNodes": 7,
     "workspaceBytes": 11308,
     "currentMap": 32,
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634004,
+    "worldState": 33634096,
     "actors": [
       {
         "index": 0,
@@ -320,19 +320,23 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 24,
-    "maxHeartbeatScanlines": 24,
-    "maxSpawnScanlines": 22,
-    "maxUpdateScanlines": 134,
+    "lastHeartbeatScanlines": 26,
+    "maxHeartbeatScanlines": 26,
+    "maxSpawnScanlines": 23,
+    "maxUpdateScanlines": 135,
     "backOffs": 3,
     "handoffs": 1,
     "visitorsVanished": 0,
     "culls": 0,
-    "lastContextScanlines": 15,
+    "lastContextScanlines": 16,
     "lastFailNodes": 0,
     "maxFinishScanlines": 10,
-    "walkOffs": 1
+    "walkOffs": 1,
+    "worldJobs": 0,
+    "maxJobScanlines": 0,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 1182
+  "emulated_frames": 1186
 }

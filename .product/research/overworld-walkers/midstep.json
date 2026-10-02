@@ -28,7 +28,7 @@
         "slot": 8,
         "facing": 1,
         "x": 30,
-        "y": 38
+        "y": 39
       },
       null,
       null
@@ -170,7 +170,7 @@
     ".product/research/overworld-walkers/midstep-after-continue.png"
   ],
   "debug": {
-    "frames": 374,
+    "frames": 377,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -193,14 +193,14 @@
     "maxSearchNodes": 375,
     "lastSearchFrames": 71,
     "maxSearchFrames": 71,
-    "maxSliceScanlines": 69,
+    "maxSliceScanlines": 68,
     "maxSliceNodes": 8,
     "workspaceBytes": 11308,
     "currentMap": 32,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634052,
+    "worldState": 33634060,
     "actors": [
       {
         "index": 0,
@@ -278,8 +278,12 @@
     "lastContextScanlines": 0,
     "lastFailNodes": 0,
     "maxFinishScanlines": 4,
-    "walkOffs": 0
+    "walkOffs": 0,
+    "worldJobs": 0,
+    "maxJobScanlines": 0,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 1925
+  "emulated_frames": 1937
 }

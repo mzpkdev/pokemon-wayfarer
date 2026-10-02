@@ -21,8 +21,15 @@ implementation map. Only `IS_WAYFARER` builds compile it.
 
 `struct WayfarerWorldState` (216 bytes) is appended to `struct PokemonStorage`,
 which holds 13 boxes in Wayfarer builds. It is a 4-byte header (schema,
-content hash), 25 eight-byte records in catalog order, and a 9-byte local
-actor block. `save.c` asserts the sizes.
+content hash), 25 eight-byte records in catalog order, a 9-byte local
+actor block, and one byte of walker flags (whether the follower's hide flag
+is the walkers' own, so a Continue without a warp can clear it again).
+`save.c` asserts the sizes.
+
+On load, a local actor block that no longer fits the saved location (its
+trainer isn't on that map, or the tile is outside it, after a load-time
+repair such as the league run's recovery to the lobby) is cleared; only
+malformed bytes make the save corrupt (`WorldSim_CheckLocalActors`).
 
 25 trainers are simulated: the spec's 27 less Bruno and Koga, whose
 overworld sheets are face-only (48x32) in both HNS and FireRed.
@@ -75,6 +82,10 @@ state and the maps a reroute avoids) is allocated on the first step and held
 until the heartbeat ends. A warp resets the heap right after
 `LoadMapFromWarp`, so it can't be allocated at the load.
 
+Begin also brings back a trainer whose Away state ended, unless their home
+map is full (they stay away until there is room). Their next step's spot
+choices run first in the sliced phase, not inside Begin.
+
 `WorldSim_Heartbeat` (Begin, then Step until done) is the same heartbeat at
 once. The offline report and the tests use it. A trainer's first edge is found
 just before it acts. That matches finding them all first, because it depends
@@ -85,15 +96,16 @@ Edge cases:
 
 | Case | Handling |
 | --- | --- |
-| Another map load while one is pending | `OnMapLoad` finishes it at once first (`pendingAtLoad`). |
+| A warp while one is pending | `OnMapLoad` finishes it at once first, behind the fade (`pendingAtLoad`). |
+| A seam crossed again while one is pending | The new heartbeat queues (`deferredBegins`, up to three) with the context built at its load, and begins when the pending one completes: the same result as finishing it at the load, without the hitch in the seam's frame. A full queue finishes at once. |
 | A save | `CopyPartyAndObjectsToSave`, the first step of every save path, finishes it (`forcedFinishes`). |
 | League resolution | `WayfarerWorld_OnLeagueResolved` finishes it before setting life events. |
 | A Gym Leader's own object | `WayfarerWalkers_HideTemplate` finishes it if that leader hasn't acted yet, so the leader's object matches the finished heartbeat. Gyms are entered by warp, so this runs behind the fade. |
-| A Gym visitor leaving (`FinishLeaving`, reachable from story-scene and slot checks) | Finishes it before writing the record. |
-| Walkers | Their AI, spawns and world writes pause while it runs, as with locked controls. A walker released to the heartbeat at a seam is dropped at once. |
+| A Gym visitor leaving (`FinishLeaving`, reachable from story-scene and slot checks) | Leaves the record alone while one is pending (the visit's one-heartbeat dwell ends it next heartbeat); no forced finish. |
+| Walkers | Their AI, spawns, world jobs and world writes pause while it runs, as with locked controls. A walker released to the heartbeat at a seam is dropped at once. |
 | `InitHeap(gHeap)` | `WayfarerWorld_OnHeapReset` forgets the workspace (never frees it). The search under way restarts on the next frame with a new one; trainers that already acted stay done. |
 | New Game, Continue, load | Drop any pending heartbeat. |
-| No heap for the workspace | The trainers still to act skip this heartbeat, as a whole heartbeat used to. |
+| No heap for the workspace | The heartbeat waits and retries next frame (`workspaceWaits`); only a forced finish with no heap skips the trainers still to act. |
 
 ## Local actor
 
@@ -106,7 +118,7 @@ Engine hooks, all `IS_WAYFARER` only:
 | `WayfarerWalkers_OnWarp` / `OnCameraTransition` | `LoadMapFromWarp` / `LoadMapFromCameraTransition`, before the heartbeat | Drop actors on warps; keep them across a seam; set the frozen mask the heartbeat reads. |
 | `WayfarerWalkers_OnContinue`, `WayfarerWalkers_Reset` | `WayfarerWorld_OnContinue`, `WayfarerWorld_InitNewGame` | Read the local actor block once on Continue; reset on New Game. |
 | `WayfarerWalkers_OnHeapReset`, `WayfarerWorld_OnHeapReset` | `InitHeap(gHeap)` | The search workspaces are dropped; actors re-plan from their tiles; the heartbeat restarts its current search. |
-| `WayfarerWorld_FinishHeartbeatEarly` | `CopyPartyAndObjectsToSave` | A save never holds half a heartbeat. |
+| `WayfarerWorld_FinishHeartbeatEarly` | `CopyPartyAndObjectsToSave` | A save never holds half a heartbeat or half a walker's routine advance (it completes the walkers' world jobs first). |
 | `WayfarerWalkers_IsActorObject` | `RemoveObjectEventIfOutsideView` | Actors aren't culled off view while the walker layer owns them. |
 | `WayfarerWalkers_HideTemplate` | `TrySpawnObjectEvents` | A Gym Leader's own object stays hidden (also on scroll) while the leader is out. |
 | null template guard | `GetObjectEventScriptPointerByLocalIdAndMap` | Runtime actors have no template; talking to one does nothing until stage 4. |
@@ -118,12 +130,31 @@ in `src/data/wayfarer_sevii_maps.json` (the Sevii content audit pins that
 file); `UpdateFollowingPokemon` itself is untouched: the follower is hidden
 with `FLAG_TEMP_HIDE_FOLLOWER` while fewer than 2 object slots would stay free.
 
-One grid search runs at a time across all actors, 8 node expansions per field
-update, in a 5,564-byte heap workspace (1-bit visited and 2-bit back pointers
-for up to 7,320 tiles, a 1,024-entry ring queue, 192-step paths per actor).
+One grid search runs at a time across all actors, up to 8 node expansions per
+field update and stopping once a slice has run 48 scanlines, in an 11,308-byte
+heap workspace (a byte per tile for up to 7,320 tiles holding the move in and
+the settled elevation, 64 second-elevation states for bridge tiles with their
+from-layer bits, a 1,024-entry ring queue, 192-step paths per actor).
+
+World work the walkers do runs as world jobs, a slice per frame like the
+heartbeat: a watched trainer's routine advance (one spot choice per frame,
+`WorldSim_AdvanceRoutineStep`) and a trip's first search
+(`WorldSim_NextEdgeBegin`/`Run`, at most about 32 scanlines a frame, in its
+own 9 KB heap workspace while it runs; the cached path answers at once). A
+frame that runs a spot choice skips the grid search. A map load, a save and
+the league hook complete the advances first (`WayfarerWalkers_FlushWorldJobs`).
+
+Exits commit a hop like the heartbeat's: a walker checks `WorldSim_HopAllowed`
+before stepping out through a map side or a door, and while the next map is
+full it waits once, then hands off. A strip actor that can't walk straight on
+(a 1-wide lane into a wall) is removed after 30 frames.
+
 `gWayfarerWalkersDebug` exports counters, the worst slice in scanlines and each
 actor's state for `tools/wayfarer_walkers/verify.py`, the SkyEmu verifier
-(results in `.product/research/overworld-walkers.md`).
+(results in `.product/research/overworld-walkers/`, `summary.json`). The
+verifier refuses a ROM built from other tables (content hash), and `perf`,
+`seam`, `recross` and `longtrip` fail past their ceilings (200 scanlines in a
+frame, 44 frames per warp).
 
 ## Checks
 
