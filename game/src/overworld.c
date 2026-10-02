@@ -1039,7 +1039,7 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
     MoveAllRoamers();
 #if IS_WAYFARER
     WayfarerWalkers_OnCameraTransition();
-    WayfarerWorld_OnMapLoad();
+    WayfarerWorld_OnMapLoad(TRUE);
 #endif
     TryShowRoamerFlash();
     DoCurrentWeather();
@@ -1130,7 +1130,7 @@ static bool32 LoadMapFromWarp(bool32 a1)
     MoveAllRoamersToOtherLocationSets();
 #if IS_WAYFARER
     WayfarerWalkers_OnWarp();
-    WayfarerWorld_OnMapLoad();
+    WayfarerWorld_OnMapLoad(FALSE);
 #endif
     gChainFishingDexNavStreak = 0;
     RunOnLoadMapScript();

@@ -112,6 +112,10 @@ struct WayfarerWalkersDebug
     u16 lastFailNodes;          // nodes a failed search expanded
     u16 maxFinishScanlines;     // the path rebuild at a search's end
     u16 walkOffs;               // handed-off walkers that walked out of view or to an exit
+    u16 worldJobs;              // routine advances and trip searches spread over frames
+    u16 maxJobScanlines;        // worst frame of that work
+    u16 capacityWaits;          // exits put off because the next map was full
+    u16 stripTimeouts;          // strip actors removed after standing blocked
 };
 
 extern struct WayfarerWalkersDebug gWayfarerWalkersDebug;
@@ -123,6 +127,9 @@ void WayfarerWalkers_OnCameraTransition(void);      // LoadMapFromCameraTransiti
 void WayfarerWalkers_OnContinue(void);              // Continue: restore the local actor block once
 void WayfarerWalkers_Reset(void);                   // New Game
 void WayfarerWalkers_OnHeapReset(void);             // InitHeap(gHeap)
+// Completes the walkers' sliced world writes now (a map load, a save, the
+// league hook): a routine advance under way must not span them.
+void WayfarerWalkers_FlushWorldJobs(void);
 bool8 WayfarerWalkers_IsActorObject(const struct ObjectEvent *objectEvent);
 bool8 WayfarerWalkers_HideTemplate(const struct ObjectEventTemplate *template);
 bool8 WayfarerWalkers_HideFollower(void);

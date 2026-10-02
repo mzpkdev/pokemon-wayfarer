@@ -59,6 +59,9 @@
 #define WALKER_BACKOFF_WAIT     180
 #define WALKER_WALKOFF_FRAMES   600     // a walk-off gives up (vanishes) after this long
 #define WALKER_AWAY_DISTANCE    3
+#define WALKER_STRIP_BLOCKED_FRAMES 30  // a strip actor that can't step on is removed after this long
+#define WALKER_JOB_SCANLINES    32      // a frame's world-job work: a trip search's slice
+#define WALKER_JOB_NODES        4       // graph nodes per search call between clock checks
 #define WALKER_SPAWN_CLEARANCE  2       // never spawn this close to the player
 #define WALKER_SPAWN_AHEAD      4       // nor this far straight ahead of them
 #define WANDER_PAUSE_TICKS      3
@@ -128,7 +131,7 @@ struct WalkerActor
     u8 playerBlocks;    // steps blocked by the player
     u8 backOffs;        // back-offs this visit
     u8 pushFrames;      // frames the player has pushed against this walker
-    u8 padding;
+    u8 capacityWaits;   // exits put off because the next map was full
 };
 
 // Shared heap workspace for the one grid search that runs at a time.
@@ -183,6 +186,38 @@ struct PendingActor
     u8 facing;
 };
 
+// World work the walkers spread over field frames, like the heartbeat: a
+// watched trainer's routine advance (one spot choice per frame) and the
+// search for a trip's first edge (a slice per frame). One search at a time.
+struct WalkerAdvance
+{
+    u8 slot;
+    u8 attempt;
+    u8 attemptMax;
+    u8 padding;
+    u32 worldProgress;  // the context's fields an advance reads, as it started
+    u32 provisionalMask;
+    u32 risingMask;
+};
+
+enum
+{
+    EDGE_JOB_IDLE,
+    EDGE_JOB_RUNNING,
+    EDGE_JOB_DONE,
+};
+
+struct WalkerEdgeJob
+{
+    u8 slot;
+    u8 status;
+    bool8 live;         // the search is started in sJobWorkspace
+    u8 padding;
+    u16 source;         // the record's node and destination it answers for
+    u16 dest;
+    u16 edge;
+};
+
 EWRAM_DATA struct WayfarerWalkersDebug gWayfarerWalkersDebug = {0};
 static EWRAM_DATA struct WalkerActor sActors[WALKER_ACTOR_COUNT] = {0};
 static EWRAM_DATA struct WalkerWork *sWork = NULL;
@@ -203,9 +238,14 @@ static EWRAM_DATA bool8 sFollowerRemoved = FALSE;   // survives map changes: a s
 static EWRAM_DATA u8 sSpawnTimer = 0;
 static EWRAM_DATA u8 sSpawnBackoff = 0;
 static EWRAM_DATA struct RecentEntry sRecentEntries[WALKER_ACTOR_COUNT] = {0};
+static EWRAM_DATA u16 sRestoreMap = 0;      // the map the Continue restore is for
+static EWRAM_DATA struct WalkerAdvance sAdvances[WALKER_ACTOR_COUNT] = {0};
+static EWRAM_DATA u8 sAdvanceCount = 0;
+static EWRAM_DATA struct WalkerEdgeJob sEdgeJob = {0};
+static EWRAM_DATA void *sJobWorkspace = NULL;
 
 STATIC_ASSERT(sizeof(struct WayfarerWalkerActorDebug) == 16, WalkerActorDebugSize);
-STATIC_ASSERT(sizeof(struct WayfarerWalkersDebug) == 64 + 16 * WALKER_ACTOR_COUNT + 32, WalkersDebugSize);
+STATIC_ASSERT(sizeof(struct WayfarerWalkersDebug) == 64 + 16 * WALKER_ACTOR_COUNT + 40, WalkersDebugSize);
 STATIC_ASSERT(DIR_NORTHEAST <= 15, WalkerMoveFitsANibble);
 STATIC_ASSERT(WALKER_MAX_TILES < STATE_LAYER, WalkerTileFitsAState);
 
@@ -655,9 +695,13 @@ static void AbortSearchFor(struct WalkerActor *actor)
         sSearch.actor = NO_ACTOR;
 }
 
+static void CancelEdgeJob(void);
+
 static void ForgetActor(struct WalkerActor *actor)
 {
     AbortSearchFor(actor);
+    if (actor->mode != WALKER_MODE_NONE && sEdgeJob.status != EDGE_JOB_IDLE && sEdgeJob.slot == actor->slot)
+        CancelEdgeJob();
     memset(actor, 0, sizeof(*actor));
     actor->slot = SLOT_NONE;
 }
@@ -1430,6 +1474,207 @@ static void RequestSearch(struct WalkerActor *actor)
 }
 
 // ---------------------------------------------------------------------------
+// World jobs: a watched trainer's routine advance and a trip's first edge,
+// spread over field frames so no frame carries a long search or several
+// spot choices (the heartbeat's rule). The heartbeat never runs alongside
+// them: the walkers' AI waits while one is pending, and a map load, a save
+// or the league hook completes the advances first (FlushWorldJobs).
+
+static bool8 IsAdvancing(u8 slot)
+{
+    u8 i;
+    for (i = 0; i < sAdvanceCount; i++)
+    {
+        if (sAdvances[i].slot == slot)
+            return TRUE;
+    }
+    return FALSE;
+}
+
+static u32 AdvancingMask(void)
+{
+    u32 mask = 0;
+    u8 i;
+    for (i = 0; i < sAdvanceCount; i++)
+        mask |= 1u << sAdvances[i].slot;
+    return mask;
+}
+
+// The routine's next step for a trainer whose stay ended while watched.
+static void QueueAdvance(u8 slot)
+{
+    struct WayfarerWorldContext ctx;
+    struct WalkerAdvance *job;
+
+    if (IsAdvancing(slot))
+        return;
+    BuildContext(&ctx);
+    gWayfarerWalkersDebug.localAdvances++;
+    if (sAdvanceCount >= ARRAY_COUNT(sAdvances))
+    {
+        // One per actor: never full. At once if it were.
+        WorldSim_AdvanceRoutine(State(), slot, &ctx, NULL);
+        return;
+    }
+    job = &sAdvances[sAdvanceCount++];
+    job->slot = slot;
+    job->attempt = job->attemptMax = 0;
+    job->worldProgress = ctx.worldProgress;
+    job->provisionalMask = ctx.provisionalMask;
+    job->risingMask = ctx.risingMask;
+    gWayfarerWalkersDebug.worldJobs++;
+}
+
+// One spot choice of the oldest advance.
+static void StepAdvance(void)
+{
+    struct WalkerAdvance *job = &sAdvances[0];
+    struct WayfarerWorldContext ctx = {0};
+
+    ctx.worldProgress = job->worldProgress;
+    ctx.provisionalMask = job->provisionalMask;
+    ctx.risingMask = job->risingMask;
+    if (!WorldSim_IsSimulated(&State()->records[job->slot])
+     || WorldSim_AdvanceRoutineStep(State(), job->slot, &ctx, NULL, &job->attempt, &job->attemptMax))
+    {
+        sAdvanceCount--;
+        memmove(&sAdvances[0], &sAdvances[1], sizeof(sAdvances[0]) * sAdvanceCount);
+    }
+}
+
+static void FreeJobWorkspace(void)
+{
+    if (sJobWorkspace != NULL)
+        Free(sJobWorkspace);
+    sJobWorkspace = NULL;
+}
+
+static void CancelEdgeJob(void)
+{
+    sEdgeJob.status = EDGE_JOB_IDLE;
+    sEdgeJob.live = FALSE;
+    FreeJobWorkspace();
+}
+
+// The first edge of the actor's trip: TRUE with *edge once known (the cached
+// path answers at once); FALSE while its search runs in slices, or while
+// another actor's does and the cache can't answer.
+static bool8 PlanNextEdge(struct WalkerActor *actor, u16 *edge)
+{
+    const struct WayfarerWorldRecord *record = Record(actor);
+    u16 dest = WorldSim_DestNode(State(), actor->slot);
+
+    if (sEdgeJob.status != EDGE_JOB_IDLE && sEdgeJob.slot == actor->slot)
+    {
+        if (sEdgeJob.status == EDGE_JOB_RUNNING)
+            return FALSE;
+        sEdgeJob.status = EDGE_JOB_IDLE;
+        if (sEdgeJob.source == record->node && sEdgeJob.dest == dest)
+        {
+            *edge = sEdgeJob.edge;
+            return TRUE;
+        }
+    }
+    if (WorldSim_NextEdgeBegin(State(), actor->slot, NULL, FALSE, edge))
+        return TRUE;
+    if (sEdgeJob.status != EDGE_JOB_IDLE)
+        return FALSE;   // one search at a time
+    if (sJobWorkspace == NULL)
+        sJobWorkspace = Alloc(WorldSim_WorkspaceSize());
+    if (sJobWorkspace == NULL)
+    {
+        actor->wait = WALKER_RETRY_FRAMES;
+        return FALSE;
+    }
+    sEdgeJob.slot = actor->slot;
+    sEdgeJob.status = EDGE_JOB_RUNNING;
+    sEdgeJob.live = FALSE;
+    sEdgeJob.source = record->node;
+    sEdgeJob.dest = dest;
+    gWayfarerWalkersDebug.worldJobs++;
+    return FALSE;
+}
+
+// A slice of the running trip search, within the frame's job budget.
+static void RunEdgeJob(u32 start)
+{
+    const struct WayfarerWorldRecord *record = &State()->records[sEdgeJob.slot];
+    u16 edge = NO_EDGE;
+    bool8 done = FALSE;
+
+    if (record->node != sEdgeJob.source || WorldSim_DestNode(State(), sEdgeJob.slot) != sEdgeJob.dest)
+    {
+        // The question changed (it shouldn't while its actor waits): ask anew.
+        sEdgeJob.source = record->node;
+        sEdgeJob.dest = WorldSim_DestNode(State(), sEdgeJob.slot);
+        sEdgeJob.live = FALSE;
+    }
+    if (sJobWorkspace == NULL)
+    {
+        // Lost to a heap reset: the search starts again in a new one.
+        sJobWorkspace = Alloc(WorldSim_WorkspaceSize());
+        sEdgeJob.live = FALSE;
+        if (sJobWorkspace == NULL)
+            return;
+    }
+    if (!sEdgeJob.live)
+    {
+        sEdgeJob.live = TRUE;
+        done = WorldSim_NextEdgeBegin(State(), sEdgeJob.slot, sJobWorkspace, FALSE, &edge);
+    }
+    while (!done && ScanlinesSince(start) < WALKER_JOB_SCANLINES)
+        done = WorldSim_NextEdgeRun(State(), sEdgeJob.slot, sJobWorkspace, WALKER_JOB_NODES, &edge, NULL);
+    if (done)
+    {
+        sEdgeJob.status = EDGE_JOB_DONE;
+        sEdgeJob.live = FALSE;
+        sEdgeJob.edge = edge;
+        FreeJobWorkspace();
+    }
+}
+
+// This frame's world job: one spot choice (heavy: TRUE, and the grid search
+// sits this frame out), or a slice of the trip search.
+static bool8 RunWorldJobs(void)
+{
+    u32 start = ScanlineStamp(), cost;
+    bool8 heavy = FALSE;
+
+    if (sAdvanceCount != 0)
+    {
+        StepAdvance();
+        heavy = TRUE;
+    }
+    else if (sEdgeJob.status == EDGE_JOB_RUNNING)
+    {
+        RunEdgeJob(start);
+    }
+    else
+    {
+        return FALSE;
+    }
+    cost = ScanlinesSince(start);
+    if (cost > gWayfarerWalkersDebug.maxJobScanlines)
+        gWayfarerWalkersDebug.maxJobScanlines = cost > 0xFFFF ? 0xFFFF : cost;
+    return heavy;
+}
+
+void WayfarerWalkers_FlushWorldJobs(void)
+{
+    while (sAdvanceCount != 0)
+        StepAdvance();
+    // A search is only a question: whoever asked asks again.
+    if (sEdgeJob.status != EDGE_JOB_IDLE)
+        CancelEdgeJob();
+}
+
+static void DropWorldJobs(void)
+{
+    sAdvanceCount = 0;
+    CancelEdgeJob();
+}
+
+// ---------------------------------------------------------------------------
 // Goals and handoffs (local to world)
 
 static u16 ExitEdgeForWarp(u16 node, u8 x, u8 y)
@@ -1637,31 +1882,47 @@ static void YieldVisit(struct WalkerActor *actor)
 // A Gym visitor leaves at once: the visit ends and the record moves on.
 static void FinishLeaving(struct WalkerActor *actor)
 {
-    struct WayfarerWorldRecord *record;
-    const struct WayfarerWorldSpot *spot;
-    struct WayfarerWorldContext ctx;
-    u16 edge = NO_EDGE, node;
+    struct WayfarerWorldRecord *record = Record(actor);
+    const struct WayfarerWorldSpot *spot = DestSpot(record, actor->slot);
+    u16 edge = NO_EDGE, node = record->node;
 
-    // The one world write that can come while the heartbeat is still
-    // running (story scenes and slot culls run with the AI paused): the
-    // records it reads and changes must be the finished heartbeat's.
-    WayfarerWorld_FinishHeartbeatEarly();
-    record = Record(actor);
-    spot = DestSpot(record, actor->slot);
-    node = record->node;
-
-    if (spot != NULL && spot->kind == WORLD_SPOT_GYM && spot->node == record->node)
-        edge = ExitEdgeForWarp(record->node, spot->x, spot->y);
-    if (edge != NO_EDGE)
+    // Story scenes and slot culls run with the AI paused, possibly while the
+    // map load's heartbeat is still running: then the record is left alone
+    // (no forced finish, no long frame). The visit's one-heartbeat dwell
+    // ends it at the next heartbeat, and the visitor isn't shown again.
+    if (!WayfarerWorld_IsHeartbeatPending())
     {
-        WorldSim_TakeEdge(State(), actor->slot, edge, gWayfarerWorldEdges[edge].c);
-        BuildContext(&ctx);
-        WorldSim_AdvanceRoutine(State(), actor->slot, &ctx, NULL);
-        gWayfarerWalkersDebug.localAdvances++;
+        if (spot != NULL && spot->kind == WORLD_SPOT_GYM && spot->node == record->node)
+            edge = ExitEdgeForWarp(record->node, spot->x, spot->y);
+        if (edge != NO_EDGE)
+        {
+            // Out of the Gym only while the map outside has room (the
+            // off-screen hop rule); the routine moves on either way.
+            if (WorldSim_HopAllowed(State(), actor->slot, edge))
+                WorldSim_TakeEdge(State(), actor->slot, edge, gWayfarerWorldEdges[edge].c);
+            QueueAdvance(actor->slot);
+        }
     }
     sVisitorsSeen |= 1u << actor->slot;
     gWayfarerWalkersDebug.visitorsVanished++;
     StartWalkOff(actor, node);
+}
+
+// The next map is full (the off-screen hop rule, which an exit commits like
+// a hop): wait where it stands, as an off-screen trainer waits a heartbeat;
+// still full on the next try, hand off and let the heartbeats route round.
+static void CapacityBlocked(struct WalkerActor *actor)
+{
+    gWayfarerWalkersDebug.capacityWaits++;
+    if (actor->capacityWaits++ != 0)
+    {
+        YieldVisit(actor);
+        return;
+    }
+    actor->phase = actor->atSpot ? WALKER_PHASE_TEMPLATE : WALKER_PHASE_IDLE;
+    actor->goalKind = WALKER_GOAL_NONE;
+    actor->goalEdge = NO_EDGE;
+    actor->wait = WALKER_UNREACHABLE_WAIT;
 }
 
 // Make room for the player: walk to an open tile away from them, wait, then
@@ -1705,8 +1966,10 @@ static void ChooseGoal(struct WalkerActor *actor, struct ObjectEvent *obj)
     struct WayfarerWorldRecord *record = Record(actor);
     const struct WayfarerWorldSpot *spot = DestSpot(record, actor->slot);
     u16 destNode, edge;
-    void *workspace;
 
+    // The routine's next step is still being chosen (a spot choice a frame).
+    if (IsAdvancing(actor->slot))
+        return;
     actor->blocked = 0;
     if (record->state == WORLD_STATE_DWELLING)
     {
@@ -1740,14 +2003,10 @@ static void ChooseGoal(struct WalkerActor *actor, struct ObjectEvent *obj)
         SetTileGoal(actor, obj, spot->x, spot->y);
         return;
     }
-    workspace = Alloc(WorldSim_WorkspaceSize());
-    if (workspace == NULL)
-    {
-        actor->wait = WALKER_RETRY_FRAMES;
+    // A trip's first search can expand hundreds of nodes: it runs a slice a
+    // frame (RunWorldJobs) while the actor waits here.
+    if (!PlanNextEdge(actor, &edge))
         return;
-    }
-    edge = WorldSim_NextEdge(State(), actor->slot, workspace, NULL);
-    Free(workspace);
     if (edge == NO_EDGE)
     {
         // No path within the bound: stand still; the heartbeat moves the
@@ -1761,6 +2020,11 @@ static void ChooseGoal(struct WalkerActor *actor, struct ObjectEvent *obj)
         // An off-screen-only link (across water): nobody is seen making it.
         // Hand off and walk out of view; the record crosses at a heartbeat.
         YieldVisit(actor);
+        return;
+    }
+    if (!WorldSim_HopAllowed(State(), actor->slot, edge))
+    {
+        CapacityBlocked(actor);
         return;
     }
     SetEdgeGoal(actor, edge);
@@ -1858,6 +2122,12 @@ static void OnGoalReached(struct WalkerActor *actor, struct ObjectEvent *obj)
             OnBlocked(actor, IsPlayerAhead(obj, dir));
             return;
         }
+        // The map beyond may have filled while it walked to the lane.
+        if (!WorldSim_HopAllowed(State(), actor->slot, actor->goalEdge))
+        {
+            CapacityBlocked(actor);
+            return;
+        }
         if (!StartWalk(actor, obj, dir, STEP_EXIT_EDGE))
             return;
         // The handoff commits as the exit step starts, so a player crossing
@@ -1875,25 +2145,32 @@ static void OnGoalReached(struct WalkerActor *actor, struct ObjectEvent *obj)
         u8 dir = DirectionTowards(x, y, wx, wy);
         u16 edgeIndex = actor->goalEdge;
         bool8 door = MapGridGetCollisionAt(wx, wy) != 0;
+        bool8 allowed;
         if (door ? GetObjectEventIdByXY(wx, wy) != OBJECT_EVENTS_COUNT || IsPlayerTile(wx, wy)
                  : ProbeFromHere(obj, dir) != dir)
         {
             OnBlocked(actor, IsPlayerAhead(obj, dir));
             return;
         }
+        // A Gym visitor always walks out (it must never block the
+        // entrance); anyone else waits while the map beyond is full.
+        allowed = WorldSim_HopAllowed(State(), actor->slot, edgeIndex);
+        if (!allowed && !actor->justLeaving)
+        {
+            CapacityBlocked(actor);
+            return;
+        }
         if (!StartWalk(actor, obj, dir, STEP_EXIT_WARP))
             return;
-        WorldSim_TakeEdge(State(), actor->slot, edgeIndex, gWayfarerWorldEdges[edgeIndex].c);
-        NoteEntry(actor->slot, edgeIndex, gWayfarerWorldEdges[edgeIndex].c);
-        if (actor->justLeaving)
+        if (allowed)
         {
-            // A Gym visit ends as the visitor walks out: the record moves on
-            // rather than heading back to the Gym.
-            struct WayfarerWorldContext ctx;
-            BuildContext(&ctx);
-            WorldSim_AdvanceRoutine(State(), actor->slot, &ctx, NULL);
-            gWayfarerWalkersDebug.localAdvances++;
+            WorldSim_TakeEdge(State(), actor->slot, edgeIndex, gWayfarerWorldEdges[edgeIndex].c);
+            NoteEntry(actor->slot, edgeIndex, gWayfarerWorldEdges[edgeIndex].c);
         }
+        // A Gym visit ends as the visitor walks out: the record moves on
+        // rather than heading back to the Gym (a spot choice per frame).
+        if (actor->justLeaving)
+            QueueAdvance(actor->slot);
         gWayfarerWalkersDebug.warpExits++;
         actor->phase = WALKER_PHASE_EXIT;
         break;
@@ -1948,6 +2225,7 @@ static void FinishStep(struct WalkerActor *actor, struct ObjectEvent *obj)
     case STEP_EXIT_EDGE:
         // Out of the map: keep walking out of view in the connection strip.
         actor->mode = WALKER_MODE_STRIP;
+        actor->blocked = 0;
         actor->stripDir = actor->goalDir;
         actor->stripToward = FALSE;
         actor->phase = WALKER_PHASE_WALK;
@@ -1996,6 +2274,18 @@ static u16 EdgeIntoPlayerMap(u16 node, u8 side, s16 coord)
     return NO_EDGE;
 }
 
+// A strip actor walks straight only. Blocked straight ahead (a 1-wide lane
+// whose next tile is a wall, or the player standing in it), it would stand
+// in the seam, maybe across the player's way: after a moment it goes. Its
+// record was handed off when it stepped out (or stays beyond the seam).
+static void StripBlocked(struct WalkerActor *actor)
+{
+    if (++actor->blocked < WALKER_STRIP_BLOCKED_FRAMES)
+        return;
+    gWayfarerWalkersDebug.stripTimeouts++;
+    RemoveActor(actor);
+}
+
 static void UpdateStrip(struct WalkerActor *actor, struct ObjectEvent *obj)
 {
     u8 side = StripSide(obj), dir;
@@ -2014,13 +2304,21 @@ static void UpdateStrip(struct WalkerActor *actor, struct ObjectEvent *obj)
     {
         s16 coord = (dir == DIR_NORTH || dir == DIR_SOUTH) ? nx - MAP_OFFSET : ny - MAP_OFFSET;
         u16 edge = EdgeIntoPlayerMap(Record(actor)->node, side, coord);
-        if (edge == NO_EDGE)
+        // No lane here, or the player's map is full (the hop rule): it
+        // turns round and walks out of view instead of stepping in.
+        if (edge == NO_EDGE || !WorldSim_HopAllowed(State(), actor->slot, edge))
         {
             actor->stripToward = FALSE;
             return;
         }
-        if (ProbeFromHere(obj, dir) != dir || !StartWalk(actor, obj, dir, STEP_ENTER))
+        if (ProbeFromHere(obj, dir) != dir)
+        {
+            StripBlocked(actor);
             return;
+        }
+        if (!StartWalk(actor, obj, dir, STEP_ENTER))
+            return;
+        actor->blocked = 0;
         WorldSim_TakeEdge(State(), actor->slot, edge, coord);
         gWayfarerWalkersDebug.stripEntries++;
         return;
@@ -2030,8 +2328,12 @@ static void UpdateStrip(struct WalkerActor *actor, struct ObjectEvent *obj)
     // the sprite has left the viewport.
     if (nx >= 0 && ny >= 0 && nx < gBackupMapLayout.width && ny < gBackupMapLayout.height
      && ProbeFromHere(obj, dir) != dir)
+    {
+        StripBlocked(actor);
         return;
-    StartWalk(actor, obj, dir, STEP_STRIP);
+    }
+    if (StartWalk(actor, obj, dir, STEP_STRIP))
+        actor->blocked = 0;
 }
 
 // A camera transition kept every actor's object (coordinates shifted with
@@ -2101,6 +2403,7 @@ static void OnSeam(void)
          && WorldSim_NodeMap(gWayfarerWorldEdges[actor->goalEdge].target) == map)
             heading = TRUE;
         actor->mode = WALKER_MODE_STRIP;
+        actor->blocked = 0;
         actor->stripToward = heading;
         actor->phase = WALKER_PHASE_WALK;
         gWayfarerWalkersDebug.rebases++;
@@ -2262,7 +2565,6 @@ static void TemplateTick(struct WalkerActor *actor, struct ObjectEvent *obj)
 static bool8 LocalDwellTick(struct WalkerActor *actor, struct ObjectEvent *obj)
 {
     struct WayfarerWorldRecord *record = Record(actor);
-    struct WayfarerWorldContext ctx;
 
     if (record->state != WORLD_STATE_DWELLING || !actor->atSpot)
         return FALSE;
@@ -2274,9 +2576,10 @@ static bool8 LocalDwellTick(struct WalkerActor *actor, struct ObjectEvent *obj)
         record->dwell--;
     if (record->dwell != 0)
         return FALSE;
-    BuildContext(&ctx);
-    WorldSim_AdvanceRoutine(State(), actor->slot, &ctx, NULL);
-    gWayfarerWalkersDebug.localAdvances++;
+    // The next step's spot choices run a frame apart (RunWorldJobs); the
+    // actor plans once they are done.
+    QueueAdvance(actor->slot);
+    actor->capacityWaits = 0;
     actor->atSpot = FALSE;
     actor->k = actor->t = 0;
     actor->pauseTicks = 0;
@@ -2374,8 +2677,9 @@ static void UpdateActor(struct WalkerActor *actor)
         return;
     }
 
-    // Never trap the player: pushed against for a while, make room.
-    if (actor->phase != WALKER_PHASE_SEARCH && IsPlayerPushing(obj))
+    // Never trap the player: pushed against for a while, make room (also
+    // mid-search: the back-off's own search request aborts it safely).
+    if (IsPlayerPushing(obj))
     {
         if (++actor->pushFrames >= WALKER_YIELD_FRAMES)
         {
@@ -2565,8 +2869,15 @@ static void PublishState(void)
             raw[1] = raw[2] = 0;
         }
     }
-    // Trainers with an actor (or visible in a strip) are left alone by the heartbeat.
-    gWayfarerWorldFrozenMask = mask;
+    // Whether the follower's hide flag is ours goes into any save, so a
+    // Continue without a warp (temp flags kept) can clear it again.
+    if (sFollowerFlagOurs)
+        state->walkerFlags |= WORLD_WALKER_FLAG_FOLLOWER_HIDDEN;
+    else
+        state->walkerFlags &= ~WORLD_WALKER_FLAG_FOLLOWER_HIDDEN;
+    // Trainers with an actor (or visible in a strip), or whose routine
+    // advance is still under way, are left alone by the heartbeat.
+    gWayfarerWorldFrozenMask = mask | AdvancingMask();
     gWayfarerWalkersDebug.activeActors = CountActors(WALKER_MODE_LOCAL) + CountActors(WALKER_MODE_STRIP);
     gWayfarerWalkersDebug.currentMap = CurrentMap();
     gWayfarerWalkersDebug.worldState = (u32)state;
@@ -2590,10 +2901,23 @@ static void ValidateActors(void)
 
 static void OnMapChanged(u16 map)
 {
+    // A real map change (a warp or a seam) clears the temp flags; the first
+    // frame after a Continue without a warp keeps them, and with them the
+    // saved ownership of the follower's hide flag.
+    bool8 flagsCleared = sTransition != TRANSITION_NONE || sActiveMapValid;
+
     if (sTransition == TRANSITION_CAMERA && sActiveMapValid)
         OnSeam();
     else
         ForgetAllActors();
+    // The Continue restore is for the saved map only: dropped once the
+    // player is anywhere else (a Continue warp elsewhere, or out through a
+    // door before it spawned), so it never seats a trainer on another map.
+    if (sRestorePending && map != sRestoreMap)
+    {
+        sRestorePending = FALSE;
+        sPendingCount = 0;
+    }
     sSearch.actor = NO_ACTOR;
     sActiveMap = map;
     sActiveMapValid = TRUE;
@@ -2604,8 +2928,11 @@ static void OnMapChanged(u16 map)
     sSpawnTimer = 0;
     sSpawnBackoff = 0;
     // Map loads clear temp flags: the follower flag isn't ours any more.
-    sHideFollower = FALSE;
-    sFollowerFlagOurs = FALSE;
+    if (flagsCleared)
+    {
+        sHideFollower = FALSE;
+        sFollowerFlagOurs = FALSE;
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -2646,7 +2973,8 @@ void WayfarerWalkers_Update(void)
     // and it gets the frame's spare time to itself.
     if (!ArePlayerFieldControlsLocked() && !WayfarerWorld_IsHeartbeatPending())
     {
-        RunScheduler();
+        if (!RunWorldJobs())
+            RunScheduler();
         for (i = 0; i < WALKER_ACTOR_COUNT; i++)
         {
             if (sActors[i].mode != WALKER_MODE_NONE)
@@ -2682,7 +3010,9 @@ void WayfarerWalkers_Update(void)
 void WayfarerWalkers_OnWarp(void)
 {
     // The warp resets every object; the records stay on their nodes and the
-    // heartbeat that follows treats them as off-screen.
+    // heartbeat that follows treats them as off-screen. A routine advance
+    // still under way completes first (behind the fade).
+    WayfarerWalkers_FlushWorldJobs();
     ForgetAllActors();
     KeepEntriesFor(CurrentMap());
     gWayfarerWorldFrozenMask = 0;
@@ -2700,6 +3030,8 @@ void WayfarerWalkers_OnCameraTransition(void)
     u8 i;
 
     sTransition = TRANSITION_CAMERA;
+    // The heartbeat starts next: a routine advance under way completes now.
+    WayfarerWalkers_FlushWorldJobs();
     KeepEntriesFor(map);
     for (i = 0; i < WALKER_ACTOR_COUNT; i++)
     {
@@ -2723,9 +3055,16 @@ void WayfarerWalkers_OnContinue(void)
     u8 i, slot, x, y, facing;
 
     ForgetAllActors();
+    DropWorldJobs();
     memset(sRecentEntries, 0, sizeof(sRecentEntries));
     sActiveMapValid = FALSE;
+    sTransition = TRANSITION_NONE;
     sPendingCount = 0;
+    sRestoreMap = CurrentMap();
+    // The saved temp flag comes back as it was: whether it is the walkers'
+    // own is saved beside it (a map script's stays the script's).
+    sFollowerFlagOurs = (state->walkerFlags & WORLD_WALKER_FLAG_FOLLOWER_HIDDEN) && FlagGet(FLAG_TEMP_HIDE_FOLLOWER);
+    sFollowerRemoved = sFollowerFlagOurs;
     for (i = 0; i < WORLD_LOCAL_ACTOR_COUNT; i++)
     {
         if (WorldSim_GetLocalActor(state, i, &slot, &x, &y, &facing))
@@ -2758,6 +3097,7 @@ void WayfarerWalkers_OnContinue(void)
 void WayfarerWalkers_Reset(void)
 {
     ForgetAllActors();
+    DropWorldJobs();
     memset(sRecentEntries, 0, sizeof(sRecentEntries));
     sPendingCount = 0;
     sRestorePending = FALSE;
@@ -2780,6 +3120,8 @@ void WayfarerWalkers_OnHeapReset(void)
     // the sprites come back, so it ends here, on its destination tile.
     sWork = NULL;
     sSearch.actor = NO_ACTOR;
+    sJobWorkspace = NULL;   // a trip search under way starts again
+    sEdgeJob.live = FALSE;
     gWayfarerWalkersDebug.heapResets++;
     for (i = 0; i < WALKER_ACTOR_COUNT; i++)
     {

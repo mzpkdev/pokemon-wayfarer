@@ -39,7 +39,8 @@ struct WayfarerWorldState
     u16 contentHash;
     struct WayfarerWorldRecord records[WORLD_SIM_TRAINER_COUNT];
     u8 localActors[WORLD_LOCAL_ACTOR_COUNT * WORLD_LOCAL_ACTOR_BYTES];
-    u8 padding[3];
+    u8 walkerFlags;     // WORLD_WALKER_FLAG_*: the local actor layer's own saved state
+    u8 padding[2];
 };
 
 #define WORLD_STATE_SIZE 216
@@ -147,10 +148,10 @@ extern const u16 gWayfarerWorldStoreFloors[];
 extern const struct WayfarerWorldTrainer gWayfarerWorldTrainers[WORLD_SIM_TRAINER_COUNT];
 extern const u16 gWayfarerWorldCandidates[];   // spot ids, sorted by hops, then spot id
 extern const u8 gWayfarerWorldCandidateHops[];  // hops from the home node, per candidate
-extern const u8 gWayfarerWorldHomeHops[];
+extern const u8 gWayfarerWorldHomeHops[];       // [slot * node count + node]: hops to the home node, 255 none
 // The candidates that offer each activity, as positions in the trainer's list.
 extern const struct WayfarerWorldCandidateRange gWayfarerWorldActivityRanges[WORLD_SIM_TRAINER_COUNT][WORLD_ACTIVITY_COUNT];
-extern const u16 gWayfarerWorldActivityCandidates[];       // [slot * node count + node]: hops to the home node, 255 none
+extern const u16 gWayfarerWorldActivityCandidates[];       // positions in the trainer's candidate list, per activity range
 extern const u16 gWayfarerWorldContentHash;
 
 #endif // GUARD_WAYFARER_WORLD_DATA_H

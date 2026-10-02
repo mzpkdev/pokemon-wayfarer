@@ -13,6 +13,15 @@
 #define WORLD_LOCAL_ACTOR_COUNT     3
 #define WORLD_LOCAL_ACTOR_NONE      63
 
+// WorldSim_CheckLocalActors: the saved block fits the saved location, is a
+// stale restore hint to drop, or holds bytes only a corrupt save could.
+#define WORLD_LOCAL_ACTORS_OK       0
+#define WORLD_LOCAL_ACTORS_STALE    1
+#define WORLD_LOCAL_ACTORS_CORRUPT  2
+
+// WayfarerWorldState.walkerFlags.
+#define WORLD_WALKER_FLAG_FOLLOWER_HIDDEN   (1 << 0)  // FLAG_TEMP_HIDE_FOLLOWER is the walkers' own
+
 // Record field widths: node is 12 bits and destId 14 bits. The top value of
 // each is reserved as "none", so at most 4,095 nodes and 16,383 spots exist.
 #define WORLD_MAX_NODES             4095

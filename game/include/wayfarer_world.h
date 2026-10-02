@@ -28,6 +28,8 @@ struct WayfarerWorldDebug
     u16 forcedFinishes;      // saves, league results, Gym leader objects and Gym visitors that did
     u16 workspaceLosses;     // heap resets while a heartbeat was pending
     u16 pending;             // a heartbeat is still running
+    u16 workspaceWaits;      // frames a pending heartbeat waited for heap for its workspace
+    u16 deferredBegins;      // seam loads that queued their heartbeat behind a pending one
 };
 
 extern struct WayfarerWorldDebug gWayfarerWorldDebug;
@@ -42,7 +44,7 @@ void WayfarerWorld_OnContinue(bool8 loadsWarp);
 bool8 WayfarerWorld_OnLoad(void);
 // The heartbeat: a map load from a warp or a camera transition starts it;
 // WayfarerWorld_Update runs it a few steps per field frame.
-void WayfarerWorld_OnMapLoad(void);
+void WayfarerWorld_OnMapLoad(bool8 seam);      // seam: a camera transition
 void WayfarerWorld_Update(void);                // OverworldBasic, after WayfarerWalkers_Update
 void WayfarerWorld_OnHeapReset(void);           // InitHeap(gHeap)
 void WayfarerWorld_ForceHeartbeat(void);

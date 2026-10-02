@@ -53,8 +53,11 @@ void WorldSim_Reseat(struct WayfarerWorldState *state, const struct WayfarerWorl
 // Load checks other than the local actor tiles (which need map dimensions).
 // Without a workspace, the destination reachability check is skipped.
 bool8 WorldSim_IsValid(const struct WayfarerWorldState *state, void *workspace);
-// Local actor block checks against the saved map and its size in tiles.
-bool8 WorldSim_LocalActorsValid(const struct WayfarerWorldState *state, u16 map, u16 width, u16 height);
+// Local actor block checks against the saved map and its size in tiles:
+// WORLD_LOCAL_ACTORS_OK, _STALE (entries that no longer fit the location:
+// clear the block) or _CORRUPT (malformed bytes).
+u8 WorldSim_CheckLocalActors(const struct WayfarerWorldState *state, u16 map, u16 width, u16 height);
+bool8 WorldSim_LocalActorsValid(const struct WayfarerWorldState *state, u16 map, u16 width, u16 height);  // == OK
 // Step 1 of a heartbeat. Returns the slots it changed.
 u32 WorldSim_ApplyDerived(struct WayfarerWorldState *state, const struct WayfarerWorldContext *ctx, void *workspace, struct WayfarerWorldTrace *trace);
 // On load: only entering a derived state applies; leaving one waits for the
@@ -110,9 +113,27 @@ void WorldSim_OnLeagueResolved(struct WayfarerWorldState *state, const u16 *line
 
 // A dwell ran out (locally while watched): advance the routine now.
 void WorldSim_AdvanceRoutine(struct WayfarerWorldState *state, u8 slot, const struct WayfarerWorldContext *ctx, struct WayfarerWorldTrace *trace);
+// The same advance, one spot choice per call (*attempt and *attemptMax start
+// at 0); TRUE once the step is settled. Only the trainer's own record may
+// change between calls.
+bool8 WorldSim_AdvanceRoutineStep(struct WayfarerWorldState *state, u8 slot, const struct WayfarerWorldContext *ctx,
+                                  struct WayfarerWorldTrace *trace, u8 *attempt, u8 *attemptMax);
 // The first edge of the shortest path from the trainer's node to their
 // destination, or 0xFFFF. Used by the local actor to walk to the next hop.
 u16 WorldSim_NextEdge(const struct WayfarerWorldState *state, u8 slot, void *workspace, struct WayfarerWorldTrace *trace);
+// The same in slices: Begin answers at once (TRUE, *edge set) from the cached
+// path or when there is no trip; otherwise it starts a search in the
+// workspace (clean: its marks are clear; NULL only asks the cache and
+// returns FALSE) and Run expands up to `budget` nodes
+// per call, TRUE once *edge is known. The result is NextEdge's. Restart with
+// Begin if the trainer's node or destination changes or the workspace is lost.
+bool8 WorldSim_NextEdgeBegin(const struct WayfarerWorldState *state, u8 slot, void *workspace, bool8 clean, u16 *edge);
+bool8 WorldSim_NextEdgeRun(const struct WayfarerWorldState *state, u8 slot, void *workspace, u16 budget, u16 *edge,
+                           struct WayfarerWorldTrace *trace);
+// The off-screen hop rule for one edge: into the destination's map always,
+// elsewhere only while that map is under its cap. A local actor checks it
+// before it commits an exit (TakeEdge).
+bool8 WorldSim_HopAllowed(const struct WayfarerWorldState *state, u8 slot, u16 edgeIndex);
 // Forget every cached travel path (New Game and the engine's load check do
 // this; the cache only saves searches, it never changes a result).
 void WorldSim_ResetPathCache(void);
@@ -149,7 +170,7 @@ u16 WorldSim_TemplateIndex(u8 c, u16 k, u16 n);
 // Emote cadence: the dwell ticks t where (c + t) mod 8 == 0.
 bool8 WorldSim_IsEmoteTick(u8 c, u16 t);
 
-// Local actor block helpers.
+// Local actor block helpers. Clearing the block keeps walkerFlags.
 void WorldSim_ClearLocalActors(struct WayfarerWorldState *state);
 bool8 WorldSim_GetLocalActor(const struct WayfarerWorldState *state, u8 index, u8 *slot, u8 *x, u8 *y, u8 *facing);
 void WorldSim_SetLocalActor(struct WayfarerWorldState *state, u8 index, u8 slot, u8 x, u8 y, u8 facing);
