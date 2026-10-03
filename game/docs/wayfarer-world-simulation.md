@@ -184,7 +184,10 @@ NPC: not the player, the follower, a walker or the companion), the spot's kind
 and named activities, the record's activity, the player's distance while the
 walker is in view, the ticks the player has stood adjacent and facing it
 without pushing, and the nearest other local walker of each relation.
-`companion_room` never holds until the companion lands.
+`companion_room` is worked out only while dwelling, at an arrive or dwell
+decision where an idle beat can win (`Ambience_IdleCanWin`: the gate and the
+idle odds, as `Ambience_Select` is about to apply them; the companion beats
+are idle), so at most about once every four dwell ticks; never every frame.
 
 While a beat holds the walker, `UpdateActor` still runs the yield checks and
 the dwell clock, but no template move, step or plan; a search under way still
@@ -207,9 +210,80 @@ the beat's end or on a stop. `splash` is a ripple on the water tile with the
 splash's sound: `FLDEFF_SPLASH` draws at an object's feet and reads past the
 object table without one. Effects only play while the walker is in view.
 
+**Companion.** The ace companion (the "Companion" section of
+`src/wayfarer_walkers.c`) is an object with the dynamic local id `0xF9`
+(`WALKER_COMPANION_LOCALID`, one past the walkers' ids) showing the species'
+overworld follower sprite (`OBJ_EVENT_MON + species`, never shiny or
+female), spawned with `MOVEMENT_TYPE_NONE` like a walker. One per map: the
+ambience block holds its owner (the actor whose beat brought it out), its
+object and its graphics. `companion_room` holds only when all of these do:
+
+- the walker is dwelling (at its spot, template phase) and the spot is not a
+  store, the Game Corner or a Center (counter or side);
+- no companion is out;
+- at least `SPAWN_FREE_SLOTS + 1` (4) object slots are free, so the walker
+  rule's 3 remain after it spawns;
+- the follower rule, with the companion counted, still keeps the following
+  Pokémon out: its free slots (`FollowerFreeSlots`, which counts spawn
+  candidates not yet spawned and ignores the companion) minus 1 are at least
+  2;
+- two sprite palette slots are free: its dynamic palette (a full palette
+  table isn't handled by the engine: an out-of-bounds write) and one for the
+  beat's icon. This is stricter than the spec's one;
+- a tile beside the walker the walker itself could step to (free, standable,
+  elevation included), not the player's tile (current or previous) nor the
+  tile straight ahead of the player, and inside the object view the engine
+  keeps (`RemoveObjectEventIfOutsideView`; stricter than the spec, so it isn't
+  culled at once). Tiles are tried at the walker's sides first, then behind,
+  then ahead.
+
+The species is the first of `gWayfarerAmbienceTrainers[slot].companions` that
+fits. A big one (`AMBIENCE_COMPANION_BIG`, a 64×64 follower sprite: centred on
+its tile, bottom-aligned, overhanging the tiles beside it and three rows
+above) comes out only outdoors (the engine hides 64×64 followers indoors) and
+needs a free 2×2 area: it stands only west or east of the walker (above or
+below it would cover the walker), and its tile, the tile beyond it away from
+the walker and the two tiles north of those must all be standable, without an
+object and not the player's. Otherwise the next candidate is tried; with none
+the room doesn't hold (no candidate is big in today's data: every resolved
+companion has a 32×32 sprite).
+
+`companion out` takes two frames: the planned species' sprite sheet is
+decompressed first, alone (about 80 to 160 scanlines in SkyEmu: smol
+decompression in C, the engine's own cost for any follower sprite), then the
+room is checked again and the object spawns on the chosen tile facing the
+walker; without room the beat ends there, cleanly. A preloaded sheet nothing
+used is freed. `companion_do face` turns it to the walker, `companion_do jump`
+jumps it in place (each waits for its movement), and `face companion` turns
+the walker to it. It is removed (`RemoveObjectEvent`) by `companion in`, at
+its beat's end and on any interruption.
+
+It is the lowest-priority object. `CompanionFrame` runs every walker frame,
+controls locked or not: it removes any object with id `0xF9` that isn't the
+live companion (a save captured it, a reset left it), and puts the live one
+away at once, interrupting its beat, when its object vanished (culled out of
+view, a script) or fewer than `SPAWN_FREE_SLOTS` slots are free (a map object
+or a walker needs one). `UpdateFollower` (every 8 frames, when the follower
+rule decides) puts it away before the rule could hide the follower because of
+it, and `CullForSlots` removes it before any walker. A warp, a heap reset and a
+Continue switch its object off with plain field writes (`active = FALSE`):
+`RemoveObjectEvent` isn't safe there (the field's sprites may already be a
+menu's or a battle's), and nothing respawns an inactive object; the reload
+frees its sprite and palette. A seam interrupts its beat (`OnSeam`) and
+removes it. The walkers' id checks (`WayfarerWalkers_IsActorObject`,
+`AdoptRestoredObjects`, story suppression, `FacingFacts`, the NPC beats) never
+take it for a walker or an NPC.
+
+Debug counters (in the ambience block, after the log): companions out, put
+away by their beat, put away early by reason (slots, follower, vanished,
+interrupted), `companion_room` denied by its first failing condition (place,
+busy, slots, follower, palette, tile), `companion out` failures and strays
+removed.
+
 **State and RAM.** All beat state is one heap block (`struct WalkerAmbience`,
-568 bytes: a debug block, then per actor the selection state, the runner
-state, the tick and adjacency counters), allocated while walkers exist (a
+612 bytes: a debug block, then per actor the selection state, the runner
+state, the tick and adjacency counters, then the companion's owner, object,
+graphics, preloaded sheet and per-actor plan), allocated while walkers exist (a
 failed allocation retries next frame; beats just don't run) and held by the
 EWRAM pointer `sAmbience`. It costs no EWRAM: the actors' bools became
 bitfields and the template emote byte went, which pays for the pointer and
@@ -220,7 +294,7 @@ before it rewrites the heap: running beats end with plain field writes
 counters, cooldowns and quiet gaps start again in the next block.
 
 **Interruptions.** A running beat stops at once, unlocks and restores the
-walker's facing and stops its effects when the player presses into the walker
+walker's facing, stops its effects and puts its companion away when the player presses into the walker
 (at once; the back-off still needs 40 frames of pressing), at a back-off,
 yield, walk-off or a Gym visitor's leaving, while the field controls are
 locked, on a story object (via the yield), on a heap reset and on a map change
@@ -244,7 +318,17 @@ walker frame): `beatspot` (a water beat at Viridian's pond, only beats whose
 context holds), `notice` (once per approach, `stare_down` for a stoic
 trainer), `greet` (Brock and Misty greet once), `beatpush` (pressing stops a
 beat within frames and restores the facing, then the back-off) and
-`determinism` (two runs from boot give the same beat log).
+`determinism` (two runs from boot give the same beat log). The companion
+scenarios (results in `.product/research/ambience/`): `companion` (Blue at
+Viridian's pond runs `ace_play`; Umbreon stands beside him facing him, not on
+or ahead of the player, and is gone at the beat's end; the player's follower
+stays out), `companionslots` (the crowded Safari Zone Gate leaves exactly 3
+slots free: no companion, the room fails on slots), `companionfollower` (the
+gate with a follower and two trainers travelling in from its solid west side,
+spawn candidates that can't spawn: the follower rule has 2 free, none to
+spare, so no companion and the follower stays out; with the travellers gone
+the companion comes out) and `companionpush` (pressing into Blue removes his
+companion and interrupts `ace_play` within a frame).
 
 ## Checks
 

@@ -156,6 +156,29 @@ u8 Ambience_QuietGap(u8 slot)
     return gap;
 }
 
+bool8 Ambience_IdleCanWin(const struct AmbienceWalker *walker, u8 slot, u8 decision)
+{
+    u8 c, stepCount, stepsSinceBeat, decisionCounter;
+
+    if (slot >= WORLD_SIM_TRAINER_COUNT || decision == AMBIENCE_DECIDE_REACT
+     || walker->gapTicks < Ambience_QuietGap(slot))
+        return FALSE;
+    c = CatalogIndex(slot);
+    // The counters as Ambience_Select advances them first.
+    if (decision == AMBIENCE_DECIDE_STEP)
+    {
+        stepCount = walker->stepCount + 1;
+        if (stepCount >= AMBIENCE_IDLE_STEPS)
+            stepCount = 0;
+        stepsSinceBeat = walker->stepsSinceBeat;
+        if (stepsSinceBeat != 0xFF)
+            stepsSinceBeat++;
+        return (c + stepCount) % AMBIENCE_IDLE_STEPS == 0 && stepsSinceBeat >= AMBIENCE_IDLE_MIN_STEPS;
+    }
+    decisionCounter = walker->decisionCounter + 1;
+    return (c + decisionCounter) % AMBIENCE_IDLE_DECISIONS == 0;
+}
+
 u8 Ambience_Select(struct AmbienceWalker *walker, u8 *latches, u8 slot,
                    const struct AmbienceContext *ctx, u8 decision)
 {

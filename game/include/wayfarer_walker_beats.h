@@ -32,6 +32,28 @@ struct WalkerBeatLog
     u8 event;       // WALKER_BEAT_EVENT_*
 };
 
+// Why a companion was put away before its beat put it away.
+enum
+{
+    WALKER_COMPANION_AWAY_SLOTS,        // fewer than SPAWN_FREE_SLOTS object slots free (a map object or a walker needs one)
+    WALKER_COMPANION_AWAY_FOLLOWER,     // the follower rule would hide the player's following Pokemon
+    WALKER_COMPANION_AWAY_VANISHED,     // the object is gone (culled out of view, a script, a reset)
+    WALKER_COMPANION_AWAY_INTERRUPTED,  // its beat was interrupted (a push, a script, a map change...)
+    WALKER_COMPANION_AWAY_COUNT,
+};
+
+// Why companion_room didn't hold (the first failing condition).
+enum
+{
+    WALKER_COMPANION_DENY_PLACE,        // not dwelling, or at a store, the Game Corner or a Center
+    WALKER_COMPANION_DENY_BUSY,         // another companion is out on the map
+    WALKER_COMPANION_DENY_SLOTS,        // the walker rule's free object slots wouldn't be kept
+    WALKER_COMPANION_DENY_FOLLOWER,     // the follower rule would hide the following Pokemon
+    WALKER_COMPANION_DENY_PALETTE,      // no sprite palette for it and one more
+    WALKER_COMPANION_DENY_TILE,         // no tile (or 2x2 area) beside the walker for any candidate
+    WALKER_COMPANION_DENY_COUNT,
+};
+
 // Counters and the event ring, at the start of the walkers' ambience heap
 // block; verify.py reads them through the sAmbience pointer. Keep the layout
 // in sync with it. They start at 0 whenever the block is (re)allocated.
@@ -49,6 +71,13 @@ struct WalkerAmbienceDebug
     u16 logCount;       // events written; the next goes to log[logCount % WALKER_BEAT_LOG_SIZE]
     u16 padding;
     struct WalkerBeatLog log[WALKER_BEAT_LOG_SIZE];
+    // The ace companion (src/wayfarer_walkers.c, "Companion").
+    u16 companionsOut;      // spawned by "companion out"
+    u16 companionsIn;       // put away by their own beat ("companion in", or the beat's end)
+    u16 companionAway[WALKER_COMPANION_AWAY_COUNT];     // put away early, by WALKER_COMPANION_AWAY_*
+    u16 companionDenied[WALKER_COMPANION_DENY_COUNT];   // companion_room false at a decision, by its first failing WALKER_COMPANION_DENY_*
+    u16 companionOutFailed; // "companion out" found no room any more (or the spawn failed): the beat ended
+    u16 companionStrays;    // objects with the companion's local id that weren't the live companion, removed
 };
 
 // A running beat's state (the beats module's own; the walker layer only
@@ -110,6 +139,17 @@ void WalkerBeats_Displacement(const struct WalkerBeatRun *run, s8 *dx, s8 *dy);
 // Provided by src/wayfarer_walkers.c: may a beat's step go this way (a free,
 // standable tile, by the walker's own collision rules)?
 bool8 WayfarerWalkers_BeatCanStep(struct ObjectEvent *obj, u8 dir);
+// Provided by src/wayfarer_walkers.c, which owns the companion: for the
+// walker whose object this is, bring its companion out (FALSE: no room any
+// more, or the spawn failed; the beat then ends), put it away, and its live
+// companion object (NULL when none is out).
+bool8 WayfarerWalkers_CompanionOut(struct ObjectEvent *obj);
+// The frame before "companion out": decompresses the planned companion's
+// sprite sheet into VRAM (the costly part of a spawn), so it doesn't share a
+// frame with the room check and the spawn.
+void WayfarerWalkers_CompanionPrepare(struct ObjectEvent *obj);
+void WayfarerWalkers_CompanionIn(struct ObjectEvent *obj);
+struct ObjectEvent *WayfarerWalkers_Companion(const struct ObjectEvent *obj);
 
 #endif // IS_WAYFARER
 #endif // GUARD_WAYFARER_WALKER_BEATS_H

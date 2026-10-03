@@ -32,6 +32,7 @@
 #include "metatile_behavior.h"
 #include "overworld.h"
 #include "script.h"
+#include "sprite.h"
 #include "wayfarer_ambience.h"
 #include "wayfarer_walker_beats.h"
 #include "wayfarer_world.h"
@@ -267,6 +268,12 @@ struct WalkerAmbience
     u8 tickFrames[WALKER_ACTOR_COUNT];      // frames into the current ambience tick
     u8 adjacentTicks[WALKER_ACTOR_COUNT];   // ticks the player has stood adjacent, facing, not pushing
     bool8 keepWalking[WALKER_ACTOR_COUNT];  // the running beat runs alongside the walk (hum)
+    // The one companion on the map (global: one per map).
+    u8 companionOwner;      // the actor whose beat brought it out, or NO_ACTOR
+    u8 companionObject;     // its gObjectEvents index
+    u16 companionGfx;       // OBJ_EVENT_MON + species: the object must still show it
+    u16 companionSheet;     // a sprite sheet tag "companion out" preloaded, TAG_NONE when none
+    u16 companionPlan[WALKER_ACTOR_COUNT];  // the graphics the last room check chose, per actor
 };
 
 static EWRAM_DATA struct WalkerAmbience *sAmbience = NULL;
@@ -292,6 +299,7 @@ static void InterruptBeat(struct WalkerActor *actor);
 static void ForgetBeat(struct WalkerActor *actor);
 static void InitAmbienceFor(u8 index);
 static bool8 DecideBeat(struct WalkerActor *actor, struct ObjectEvent *obj, u8 decision, u32 facts);
+static s16 FollowerFreeSlots(u8 *wantedOut);
 
 // ---------------------------------------------------------------------------
 // Small helpers
@@ -2537,7 +2545,7 @@ static bool8 IsPlayerPressingInto(const struct ObjectEvent *obj)
 // dwell clock, but takes no template move, step or plan (searches still
 // finish in the background); a keep-walking beat (hum) runs alongside.
 
-#define COMPANION_LOCALID (WALKER_LOCALID_BASE + WALKER_ACTOR_COUNT)  // stage 4
+#define COMPANION_LOCALID WALKER_COMPANION_LOCALID
 
 static void InitAmbienceFor(u8 index)
 {
@@ -2561,6 +2569,8 @@ static bool8 EnsureAmbience(void)
         return FALSE;
     for (i = 0; i < WALKER_ACTOR_COUNT; i++)
         InitAmbienceFor(i);
+    sAmbience->companionOwner = NO_ACTOR;
+    sAmbience->companionSheet = TAG_NONE;
     return TRUE;
 }
 
@@ -2592,6 +2602,346 @@ static void LogBeat(const struct WalkerActor *actor, u8 beat, u8 event)
     entry->beat = beat;
     entry->event = event;
     debug->logCount++;
+}
+
+// ---------------------------------------------------------------------------
+// The ace companion (spec: notable-ambience.md, "Companion"). One per map,
+// owned by the actor whose beat brought it out, held in the ambience block
+// (owner, object, graphics) and found by its dynamic local id otherwise. It
+// is the lowest-priority object: it only comes out with room to spare
+// (companion_room), and it goes away at once when a map object, a walker or
+// the following Pokemon needs the room, when its object vanishes, or when its
+// beat ends or is interrupted. Only "companion out", "companion in" and the
+// beat's end touch it from the runner.
+
+#define FOLLOWER_FREE_SLOTS     2   // the follower rule hides it below this many free slots
+#define COMPANION_SPARE_PALETTES 1  // palettes kept free besides the companion's own (the beat's icons)
+
+// The object view the engine keeps (RemoveObjectEventIfOutsideView): a
+// companion outside it would be culled at once.
+static bool8 IsInObjectView(s16 x, s16 y)
+{
+    s16 px = gSaveBlock1Ptr->pos.x, py = gSaveBlock1Ptr->pos.y;
+    return x >= px - 2 && x <= px + 17 && y >= py && y <= py + 16;
+}
+
+static u8 FreeSpritePalettes(void)
+{
+    u8 i, count = 0;
+    for (i = gReservedSpritePaletteCount; i < 16; i++)
+    {
+        if (GetSpritePaletteTagByPaletteNum(i) == TAG_NONE)
+            count++;
+    }
+    return count;
+}
+
+// The live companion object, or NULL (none out, or its object is gone).
+static struct ObjectEvent *CompanionObject(void)
+{
+    struct ObjectEvent *obj;
+    if (sAmbience == NULL || sAmbience->companionOwner == NO_ACTOR || sAmbience->companionObject >= OBJECT_EVENTS_COUNT)
+        return NULL;
+    obj = &gObjectEvents[sAmbience->companionObject];
+    if (!obj->active || obj->localId != COMPANION_LOCALID || obj->graphicsId != sAmbience->companionGfx)
+        return NULL;
+    return obj;
+}
+
+static bool8 IsCompanionOut(void)
+{
+    return sAmbience != NULL && sAmbience->companionOwner != NO_ACTOR;
+}
+
+// Puts the companion away: removes its object (only while it is still the
+// companion's) and frees the global state. Called with live field sprites.
+static void PutCompanionAway(bool8 early, u8 reason)
+{
+    struct ObjectEvent *obj;
+    if (!IsCompanionOut())
+        return;
+    obj = CompanionObject();
+    if (obj != NULL)
+        RemoveObjectEvent(obj);
+    if (early)
+        sAmbience->debug.companionAway[reason]++;
+    else
+        sAmbience->debug.companionsIn++;
+    sAmbience->companionOwner = NO_ACTOR;
+}
+
+// Puts the companion away before its beat does, and interrupts that beat.
+static void SendCompanionAway(u8 reason)
+{
+    u8 owner;
+    if (!IsCompanionOut())
+        return;
+    owner = sAmbience->companionOwner;
+    PutCompanionAway(TRUE, reason);
+    if (owner < WALKER_ACTOR_COUNT && sActors[owner].mode != WALKER_MODE_NONE)
+        InterruptBeat(&sActors[owner]);
+}
+
+// The field is being torn down (a heap reset, a Continue): sprite calls are
+// unsafe (the sprites may already belong to a menu or a battle), so any
+// object with the companion's local id is just switched off. Nothing
+// respawns an inactive object, and the field's reload clears its sprite and
+// palette.
+static void DropCompanionObjects(void)
+{
+    u8 i;
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    {
+        if (gObjectEvents[i].active && gObjectEvents[i].localId == COMPANION_LOCALID)
+        {
+            gObjectEvents[i].active = FALSE;
+            gObjectEvents[i].graphicsId = 0;
+        }
+    }
+    if (sAmbience != NULL)
+    {
+        sAmbience->companionOwner = NO_ACTOR;
+        sAmbience->companionSheet = TAG_NONE;  // the reload frees every sheet
+    }
+}
+
+// A sheet preloaded for "companion out" goes again unless a sprite uses it
+// (the spawned companion does; its removal frees it as usual).
+static void ReleaseCompanionSheet(void)
+{
+    u16 tileStart;
+    if (sAmbience == NULL || sAmbience->companionSheet == TAG_NONE)
+        return;
+    tileStart = GetSpriteTileStartByTag(sAmbience->companionSheet);
+    if (tileStart != TAG_NONE)
+        FieldEffectFreeTilesIfUnused(tileStart);
+    sAmbience->companionSheet = TAG_NONE;
+}
+
+// The tiles beside the walker, in the order a companion takes them: its
+// sides first, then behind it, then ahead.
+static const u8 sCompanionDirs[5][4] = {
+    [DIR_NONE]  = {DIR_WEST, DIR_EAST, DIR_SOUTH, DIR_NORTH},
+    [DIR_SOUTH] = {DIR_WEST, DIR_EAST, DIR_NORTH, DIR_SOUTH},
+    [DIR_NORTH] = {DIR_WEST, DIR_EAST, DIR_SOUTH, DIR_NORTH},
+    [DIR_WEST]  = {DIR_NORTH, DIR_SOUTH, DIR_EAST, DIR_WEST},
+    [DIR_EAST]  = {DIR_NORTH, DIR_SOUTH, DIR_WEST, DIR_EAST},
+};
+
+// A free tile with nobody on it, not the player's (MAP_OFFSET coords).
+static bool8 IsEmptyTile(s16 x, s16 y)
+{
+    return IsStandable(x, y) && GetObjectEventIdByXY(x, y) == OBJECT_EVENTS_COUNT && !IsPlayerTile(x, y);
+}
+
+// A 64x64 follower sprite stands bottom-aligned and centred on its tile,
+// overhanging the tiles beside it and three rows above. Its "2x2 area" here:
+// it only stands west or east of the walker (never above or below, where it
+// would cover the walker), and its tile, the tile beyond it away from the
+// walker and the two tiles north of those must all be free.
+static bool8 HasBigArea(s16 x, s16 y, u8 dir)
+{
+    s16 bx = x + sDx[dir];
+    if (dir != DIR_WEST && dir != DIR_EAST)
+        return FALSE;
+    return IsEmptyTile(x, y - 1) && IsEmptyTile(bx, y) && IsEmptyTile(bx, y - 1);
+}
+
+// companion_room (spec, "Companion"): WALKER_COMPANION_DENY_COUNT when it
+// holds, with the tile (MAP_OFFSET coords) and the graphics of the first
+// candidate that fits; otherwise the first condition that failed.
+static u8 CompanionRoom(const struct WalkerActor *actor, struct ObjectEvent *obj, s16 *outX, s16 *outY, u16 *outGfx)
+{
+    const struct WayfarerAmbienceTrainer *trainer = &gWayfarerAmbienceTrainers[actor->slot];
+    const struct WayfarerWorldSpot *spot;
+    struct ObjectEvent *player = Player();
+    s16 aheadX = player->currentCoords.x, aheadY = player->currentCoords.y;
+    u8 i, j, tiles = 0, facing = obj->facingDirection;
+    bool8 outdoors;
+
+    if (!actor->atSpot || actor->phase != WALKER_PHASE_TEMPLATE || actor->mode != WALKER_MODE_LOCAL)
+        return WALKER_COMPANION_DENY_PLACE;
+    spot = DestSpot(Record(actor), actor->slot);
+    if (spot == NULL || spot->kind == WORLD_SPOT_STORE || spot->kind == WORLD_SPOT_GAME_CORNER
+     || spot->kind == WORLD_SPOT_CENTER_COUNTER || spot->kind == WORLD_SPOT_CENTER_SIDE)
+        return WALKER_COMPANION_DENY_PLACE;
+    if (IsCompanionOut())
+        return WALKER_COMPANION_DENY_BUSY;
+    // After spawning it the walker rule's free slots must remain.
+    if (FreeObjectSlots() < SPAWN_FREE_SLOTS + 1)
+        return WALKER_COMPANION_DENY_SLOTS;
+    // The follower rule ignores the companion (it gives way instead): with
+    // it counted, the rule must still keep the follower out.
+    if (FollowerFreeSlots(NULL) - 1 < FOLLOWER_FREE_SLOTS)
+        return WALKER_COMPANION_DENY_FOLLOWER;
+    // Its dynamic palette must load (a full table isn't handled: an out-of-
+    // bounds write), and the beat's icon needs one more.
+    if (FreeSpritePalettes() < 1 + COMPANION_SPARE_PALETTES)
+        return WALKER_COMPANION_DENY_PALETTE;
+
+    // The free tiles beside the walker it may stand on (bits by order):
+    // standable by the walker's own step rules (elevation included), in the
+    // engine's object view, not the player's tile (current or previous) nor
+    // the tile straight ahead of the player.
+    if (player->facingDirection >= DIR_SOUTH && player->facingDirection <= DIR_EAST)
+    {
+        aheadX += sDx[player->facingDirection];
+        aheadY += sDy[player->facingDirection];
+    }
+    if (facing > DIR_EAST)
+        facing = DIR_NONE;
+    for (j = 0; j < 4; j++)
+    {
+        u8 dir = sCompanionDirs[facing][j];
+        s16 x = obj->currentCoords.x + sDx[dir], y = obj->currentCoords.y + sDy[dir];
+        if ((x != aheadX || y != aheadY) && IsInObjectView(x, y) && WayfarerWalkers_BeatCanStep(obj, dir))
+            tiles |= 1 << j;
+    }
+    if (tiles == 0)
+        return WALKER_COMPANION_DENY_TILE;
+    outdoors = IsMapTypeOutdoors(gMapHeader.mapType);
+    // The first candidate that fits; a big one (outdoors only, as the engine
+    // hides 64x64 followers indoors) needs its 2x2 area.
+    for (i = 0; i < trainer->companionCount && i < AMBIENCE_COMPANION_MAX; i++)
+    {
+        u16 entry = trainer->companions[i];
+        bool8 big = (entry & AMBIENCE_COMPANION_BIG) != 0;
+        if ((entry & AMBIENCE_COMPANION_SPECIES_MASK) == SPECIES_NONE || (big && !outdoors))
+            continue;
+        for (j = 0; j < 4; j++)
+        {
+            u8 dir = sCompanionDirs[facing][j];
+            s16 x = obj->currentCoords.x + sDx[dir], y = obj->currentCoords.y + sDy[dir];
+            if (!(tiles & (1 << j)) || (big && !HasBigArea(x, y, dir)))
+                continue;
+            *outX = x;
+            *outY = y;
+            *outGfx = (entry & AMBIENCE_COMPANION_SPECIES_MASK) + OBJ_EVENT_MON;
+            return WALKER_COMPANION_DENY_COUNT;
+        }
+    }
+    return WALKER_COMPANION_DENY_TILE;
+}
+
+// The actor whose object this is (a local walker), or NULL.
+static struct WalkerActor *ActorOfObject(const struct ObjectEvent *obj)
+{
+    u8 index;
+    if (obj == NULL || !WayfarerWalkers_IsActorObject(obj))
+        return NULL;
+    index = obj->localId - WALKER_LOCALID_BASE;
+    if (sActors[index].mode == WALKER_MODE_NONE || ActorObject(&sActors[index]) != obj)
+        return NULL;
+    return &sActors[index];
+}
+
+void WayfarerWalkers_CompanionPrepare(struct ObjectEvent *obj)
+{
+    struct WalkerActor *actor = ActorOfObject(obj);
+    const struct ObjectEventGraphicsInfo *info;
+    u16 gfx, tag;
+
+    if (!OW_GFX_COMPRESS || actor == NULL || sAmbience == NULL || IsCompanionOut())
+        return;
+    ReleaseCompanionSheet();
+    gfx = sAmbience->companionPlan[ActorIndex(actor)];
+    if (gfx == 0)
+        return;
+    // The sheet's tag as the spawn will look it up (LoadSheetGraphicsInfo):
+    // only a sheet loaded here is released again.
+    info = GetObjectEventGraphicsInfo(gfx);
+    tag = info->tileTag != TAG_NONE ? info->tileTag : COMP_OW_TILE_TAG_BASE + gfx;
+    if (!info->compressed && info->tileTag == TAG_NONE)
+        return;
+    if (GetSpriteTileStartByTag(tag) != TAG_NONE)
+        return;     // already in VRAM (the player's follower, a map object)
+    if (LoadSheetGraphicsInfo(info, gfx, NULL) == tag && GetSpriteTileStartByTag(tag) != TAG_NONE)
+        sAmbience->companionSheet = tag;
+}
+
+bool8 WayfarerWalkers_CompanionOut(struct ObjectEvent *obj)
+{
+    struct WalkerActor *actor = ActorOfObject(obj);
+    struct ObjectEvent *companion;
+    s16 x, y;
+    u16 gfx;
+    u8 id, elevation;
+
+    if (actor == NULL || sAmbience == NULL)
+        return FALSE;
+    if (CompanionRoom(actor, obj, &x, &y, &gfx) != WALKER_COMPANION_DENY_COUNT)
+    {
+        ReleaseCompanionSheet();
+        sAmbience->debug.companionOutFailed++;
+        return FALSE;
+    }
+    elevation = MapGridGetElevationAt(x, y);
+    if (elevation == 15)
+        elevation = obj->currentElevation;
+    // No slot, no sprite or no VRAM: OBJECT_EVENTS_COUNT, nothing spawned.
+    id = SpawnSpecialObjectEventParameterized(gfx, MOVEMENT_TYPE_NONE, COMPANION_LOCALID, x, y, elevation);
+    ReleaseCompanionSheet();
+    if (id >= OBJECT_EVENTS_COUNT)
+    {
+        sAmbience->debug.companionOutFailed++;
+        return FALSE;
+    }
+    companion = &gObjectEvents[id];
+    ObjectEventTurn(companion, DirectionTowards(x, y, obj->currentCoords.x, obj->currentCoords.y));
+    sAmbience->companionOwner = ActorIndex(actor);
+    sAmbience->companionObject = id;
+    sAmbience->companionGfx = gfx;
+    sAmbience->debug.companionsOut++;
+    return TRUE;
+}
+
+void WayfarerWalkers_CompanionIn(struct ObjectEvent *obj)
+{
+    struct WalkerActor *actor = ActorOfObject(obj);
+    if (actor != NULL && IsCompanionOut() && sAmbience->companionOwner == ActorIndex(actor))
+        PutCompanionAway(FALSE, 0);
+}
+
+struct ObjectEvent *WayfarerWalkers_Companion(const struct ObjectEvent *obj)
+{
+    struct WalkerActor *actor = ActorOfObject(obj);
+    if (actor == NULL || !IsCompanionOut() || sAmbience->companionOwner != ActorIndex(actor))
+        return NULL;
+    return CompanionObject();
+}
+
+// Every walker frame, controls locked or not: strays go (a companion object
+// that isn't the live one: from a save, or left by a reset), and the live
+// companion gives way when its object vanished or the slots run short.
+static void CompanionFrame(void)
+{
+    u8 i, freeSlots = 0, owner;
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    {
+        struct ObjectEvent *obj = &gObjectEvents[i];
+        if (!obj->active)
+        {
+            freeSlots++;
+            continue;
+        }
+        if (obj->localId == COMPANION_LOCALID
+         && !(IsCompanionOut() && sAmbience->companionObject == i && obj->graphicsId == sAmbience->companionGfx))
+        {
+            RemoveObjectEvent(obj);
+            freeSlots++;
+            if (sAmbience != NULL)
+                sAmbience->debug.companionStrays++;
+        }
+    }
+    if (!IsCompanionOut())
+        return;
+    owner = sAmbience->companionOwner;
+    if (owner >= WALKER_ACTOR_COUNT || sActors[owner].mode != WALKER_MODE_LOCAL || !BeatRunning(&sActors[owner]))
+        PutCompanionAway(TRUE, WALKER_COMPANION_AWAY_INTERRUPTED);  // no beat holds it any more
+    else if (CompanionObject() == NULL)
+        SendCompanionAway(WALKER_COMPANION_AWAY_VANISHED);
+    else if (freeSlots < SPAWN_FREE_SLOTS)
+        SendCompanionAway(WALKER_COMPANION_AWAY_SLOTS);
 }
 
 // What the walker faces: water, grass, a counter, or an NPC (an object that
@@ -2642,7 +2992,7 @@ static void BuildAmbienceContext(const struct WalkerActor *actor, const struct O
         facts |= AMBIENCE_FACT_DWELLING;
     if (IsMapTypeOutdoors(gMapHeader.mapType))
         facts |= AMBIENCE_FACT_OUTDOORS;
-    // AMBIENCE_FACT_COMPANION_ROOM: stage 4.
+    // AMBIENCE_FACT_COMPANION_ROOM: added by DecideBeat where it can matter.
     ctx->facts = facts | FacingFacts(obj);
     ctx->spotKind = 0xFF;
     ctx->spotActivities = 0xFF;
@@ -2728,12 +3078,29 @@ static bool8 DecideWith(struct WalkerActor *actor, struct ObjectEvent *obj, u8 d
 }
 
 // A decision point. TRUE when a beat that stops the walker started.
+// companion_room is only worked out while dwelling, at a decision where an
+// idle beat can win (the companion beats are idle ones): about once every
+// four dwell ticks past the quiet gap, never every frame.
 static bool8 DecideBeat(struct WalkerActor *actor, struct ObjectEvent *obj, u8 decision, u32 facts)
 {
     struct AmbienceContext ctx;
     if (!CanStartBeat(actor, obj, decision))
         return FALSE;
     BuildAmbienceContext(actor, obj, facts, &ctx);
+    if ((ctx.facts & AMBIENCE_FACT_DWELLING)
+     && Ambience_IdleCanWin(&sAmbience->select[ActorIndex(actor)], actor->slot, decision))
+    {
+        s16 x, y;
+        u16 gfx;
+        u8 room = CompanionRoom(actor, obj, &x, &y, &gfx);
+        if (room == WALKER_COMPANION_DENY_COUNT)
+        {
+            ctx.facts |= AMBIENCE_FACT_COMPANION_ROOM;
+            sAmbience->companionPlan[ActorIndex(actor)] = gfx;
+        }
+        else
+            sAmbience->debug.companionDenied[room]++;
+    }
     return DecideWith(actor, obj, decision, &ctx);
 }
 
@@ -2757,6 +3124,12 @@ static void EndBeat(struct WalkerActor *actor, bool8 interrupted, bool8 replan)
         sAmbience->debug.interrupted++;
     else
         sAmbience->debug.ended++;
+    // Its companion goes with it ("companion in" may have put it away), and
+    // a sheet preloaded for it that it never used.
+    if (IsCompanionOut() && sAmbience->companionOwner == index)
+        PutCompanionAway(interrupted, WALKER_COMPANION_AWAY_INTERRUPTED);
+    if (!IsCompanionOut() && (gWayfarerAmbienceBeats[beat].flags & AMBIENCE_FLAG_NEEDS_COMPANION))
+        ReleaseCompanionSheet();
     Ambience_EndBeat(&sAmbience->select[index]);
     sAmbience->keepWalking[index] = FALSE;
     sAmbience->debug.running[index] = AMBIENCE_BEAT_NONE;
@@ -3152,11 +3525,12 @@ static void UpdateActor(struct WalkerActor *actor)
 // ---------------------------------------------------------------------------
 // Following Pokémon, frozen mask and the local actor block
 
-static void UpdateFollower(void)
+// Free object slots with every wanted actor spawned and the follower out.
+// The companion isn't counted: it gives way instead (CompanionRoom and
+// UpdateFollower keep one more slot for it).
+static s16 FollowerFreeSlots(u8 *wantedOut)
 {
     u8 i, others = 0, wanted, slot;
-    bool8 hide;
-    s16 freeSlots;
 
     wanted = CountActors(WALKER_MODE_LOCAL) + CountActors(WALKER_MODE_STRIP);
     if (sMapNode != WORLD_NODE_NONE)
@@ -3173,12 +3547,26 @@ static void UpdateFollower(void)
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         const struct ObjectEvent *obj = &gObjectEvents[i];
-        if (obj->active && obj->localId != OBJ_EVENT_ID_FOLLOWER && !WayfarerWalkers_IsActorObject(obj))
+        if (obj->active && obj->localId != OBJ_EVENT_ID_FOLLOWER && obj->localId != COMPANION_LOCALID
+         && !WayfarerWalkers_IsActorObject(obj))
             others++;
     }
-    // Free slots with every actor spawned and the follower out.
-    freeSlots = OBJECT_EVENTS_COUNT - others - wanted - 1;
-    hide = wanted != 0 && freeSlots < 2;
+    if (wantedOut != NULL)
+        *wantedOut = wanted;
+    return OBJECT_EVENTS_COUNT - others - wanted - 1;
+}
+
+static void UpdateFollower(void)
+{
+    u8 wanted;
+    bool8 hide;
+    s16 freeSlots = FollowerFreeSlots(&wanted);
+
+    // The companion never makes the rule hide the follower: once the rule
+    // has no slot to spare for it, it goes.
+    if (IsCompanionOut() && freeSlots - 1 < FOLLOWER_FREE_SLOTS)
+        SendCompanionAway(WALKER_COMPANION_AWAY_FOLLOWER);
+    hide = wanted != 0 && freeSlots < FOLLOWER_FREE_SLOTS;
     if (hide && !sFollowerFlagOurs && !FlagGet(FLAG_TEMP_HIDE_FOLLOWER))
     {
         // Only our own use of the temp flag is ever cleared again: maps whose
@@ -3207,12 +3595,18 @@ static void UpdateFollower(void)
     gWayfarerWalkersDebug.followerHidden = sFollowerFlagOurs;
 }
 
-// Off-screen actors give their slot back when the map's own objects need it.
+// Off-screen actors give their slot back when the map's own objects need it;
+// the companion goes before any of them.
 static void CullForSlots(void)
 {
     s8 i;
     if (FreeObjectSlots() > 1)
         return;
+    if (IsCompanionOut())
+    {
+        SendCompanionAway(WALKER_COMPANION_AWAY_SLOTS);
+        return;
+    }
     for (i = WALKER_ACTOR_COUNT - 1; i >= 0; i--)
     {
         struct WalkerActor *actor = &sActors[i];
@@ -3377,6 +3771,7 @@ void WayfarerWalkers_Update(void)
     ValidateActors();
     if (sRestorePending && !sAdoptChecked)
         AdoptRestoredObjects();
+    CompanionFrame();
 
     if (++sSpawnTimer >= WALKER_SPAWN_PERIOD)
     {
@@ -3442,6 +3837,9 @@ void WayfarerWalkers_OnWarp(void)
         WayfarerWorld_FinishHeartbeat();
     }
     WayfarerWalkers_FlushWorldJobs();
+    // The warp resets every object (and the field may already be torn
+    // down): the companion is dropped, not removed.
+    DropCompanionObjects();
     ForgetAllActors();
     KeepEntriesFor(CurrentMap());
     gWayfarerWorldFrozenMask = 0;
@@ -3488,6 +3886,9 @@ void WayfarerWalkers_OnContinue(void)
     struct WayfarerWorldState *state = State();
     u8 i, slot, x, y, facing;
 
+    // A save may have captured a companion: switched off before the saved
+    // objects' sprites come back (never respawned, so no palette load).
+    DropCompanionObjects();
     ForgetAllActors();
     DropWorldJobs();
     memset(sRecentEntries, 0, sizeof(sRecentEntries));
@@ -3530,6 +3931,7 @@ void WayfarerWalkers_OnContinue(void)
 
 void WayfarerWalkers_Reset(void)
 {
+    DropCompanionObjects();
     ForgetAllActors();
     DropWorldJobs();
     memset(sRecentEntries, 0, sizeof(sRecentEntries));
@@ -3558,7 +3960,10 @@ void WayfarerWalkers_OnHeapReset(void)
     // The ambience block is still readable here: running beats end with
     // plain field writes (facing, lock, a bowing nurse); a walker a beat left
     // off its spot's tile walks back. Latches stay in the actors; the rest
-    // starts again in a new block.
+    // starts again in a new block. The companion's object is switched off
+    // (RemoveObjectEvent isn't safe here: the field's sprites may already be
+    // a menu's or a battle's); nothing respawns it.
+    DropCompanionObjects();
     if (sAmbience != NULL)
     {
         for (i = 0; i < WALKER_ACTOR_COUNT; i++)

@@ -25,6 +25,10 @@ symbol reads and screenshots:
   greet   two friends side by side greet each other once (Brock and Misty)
   beatpush pressing into a walker stops its beat at once and restores its facing
   determinism the same inputs give the same beat log in two runs from boot
+  companion a trainer at Viridian's pond brings their ace out beside them for ace_play, then puts it away
+  companionslots with exactly the walker rule's 3 object slots free no companion ever comes out
+  companionfollower with the following Pokemon out and no slot to spare for it, the companion stays away
+  companionpush pressing into the walker puts its companion away at once and interrupts the beat
 
 The verifier refuses a ROM whose content hash differs from the worktree's
 generated tables.h: node and spot ids would not match.
@@ -821,14 +825,19 @@ def arrange_with_badges(game: Game, map_id: int, x: int, y: int, kanto_badges: i
     req[83] = len(flags)
     req[362], req[363], req[364] = kanto_badges, johto_badges, hoenn_badges  # regional badge counts
     req[368] = 1                # apply the league circuit fixture (badges)
+    submit_arrange(game, req, "arrange with badges")
+
+
+def submit_arrange(game: Game, req: bytearray, what: str) -> None:
+    """Send a hand-built arrange request and wait for the field."""
     address = game.sym["gE2ETestRequest"]
     game.emu.write(address, bytes(req))
     game.emu.write(address + 87, bytes([STATUS_PENDING]))
     game.wait_for(lambda: struct.unpack_from("<I", game.emu.read(game.sym["gE2ETestResult"], 4))[0] == game.request_id
                   and game.emu.read(game.sym["gE2ETestResult"] + 14, 1)[0] in (STATUS_SUCCESS, STATUS_ERROR),
-                  3600, step=2, what="arrange with badges")
+                  3600, step=2, what=what)
     if game.emu.read(game.sym["gE2ETestResult"] + 14, 1)[0] != STATUS_SUCCESS:
-        raise RuntimeError("Arrange with badges failed")
+        raise RuntimeError(f"{what} failed")
     game.settle()
     game.finish_heartbeat()
 
@@ -1736,6 +1745,11 @@ def scenario_safari(game: Game) -> dict:
 
 AMBIENCE_DEBUG_SIZE = 28
 AMBIENCE_LOG_SIZE = 32
+# struct WalkerAmbienceDebug's companion counters, after the log.
+AMBIENCE_COMPANION_OFFSET = AMBIENCE_DEBUG_SIZE + 8 * AMBIENCE_LOG_SIZE
+COMPANION_AWAY = ("slots", "follower", "vanished", "interrupted")
+COMPANION_DENY = ("place", "busy", "slots", "follower", "palette", "tile")
+AMBIENCE_COMPANION_SIZE = 2 * (2 + len(COMPANION_AWAY) + len(COMPANION_DENY) + 2)
 BEAT_NONE = 0xFF
 BEAT_EVENTS = ("start", "end", "interrupt")
 SLOT_MISTY = 1
@@ -1764,7 +1778,7 @@ class BeatWatcher:
         address = self.game.emu.u32(self.game.sym["sAmbience"])
         if not 0x02000000 <= address < 0x02040000:
             return None, None
-        return address, self.game.emu.read(address, AMBIENCE_DEBUG_SIZE + 8 * AMBIENCE_LOG_SIZE)
+        return address, self.game.emu.read(address, AMBIENCE_COMPANION_OFFSET + AMBIENCE_COMPANION_SIZE)
 
     def poll(self) -> list:
         """New events since the last poll."""
@@ -1789,6 +1803,13 @@ class BeatWatcher:
         self.counters = dict(zip(("started_idle", "started_transition", "started_react", "ended", "interrupted",
                                   "icons", "effects", "palette_skips", "icon_skips", "step_skips"), values))
         self.counters["running"] = list(raw[20:24])
+        values = struct.unpack_from(f"<{AMBIENCE_COMPANION_SIZE // 2}H", raw, AMBIENCE_COMPANION_OFFSET)
+        away, denied = len(COMPANION_AWAY), len(COMPANION_DENY)
+        self.counters["companion"] = {
+            "out": values[0], "in": values[1],
+            "away": dict(zip(COMPANION_AWAY, values[2:2 + away])),
+            "denied": dict(zip(COMPANION_DENY, values[2 + away:2 + away + denied])),
+            "out_failed": values[2 + away + denied], "strays": values[3 + away + denied]}
         return new
 
     def running(self, actor_index: int):
@@ -2026,6 +2047,365 @@ def scenario_determinism(game: Game) -> dict:
     return result
 
 
+# ---------------------------------------------------------------------------
+# The ace companion (the "Companion" section of src/wayfarer_walkers.c): one
+# object with the dynamic local id 0xF9 and an overworld follower sprite
+# (OBJ_EVENT_MON + species), out only while its beat runs.
+
+COMPANION_LOCALID = 0xF9
+FOLLOWER_LOCALID = 0xFE
+OBJ_EVENT_MON = 1 << 14
+DX = {DIR_SOUTH: (0, 1), DIR_NORTH: (0, -1), DIR_WEST: (-1, 0), DIR_EAST: (1, 0)}
+ACTIVITY_RELAX = 4
+ARRIVAL_WEST = 4
+
+
+def species_ids() -> dict:
+    import re
+    text = (ROOT / "game/include/constants/species.h").read_text()
+    return {m[0]: int(m[1]) for m in re.findall(r"#define (SPECIES_\w+)\s+(\d+)\b", text)}
+
+
+def first_companion(slot: int) -> int:
+    """The species id of the trainer's first companion candidate (all are 32x32 here)."""
+    report = json.loads((ROOT / "game/build/wayfarer-world-report.json").read_text())
+    return species_ids()[report["ambience"]["trainers"][slot]["companions"][0]["species"]]
+
+
+def companion_objects(game: Game) -> list:
+    return [o for o in game.objects() if o["localId"] == COMPANION_LOCALID]
+
+
+def follower_object(game: Game):
+    return next((o for o in game.objects() if o["localId"] == FOLLOWER_LOCALID), None)
+
+
+def direction_towards(x: int, y: int, tx: int, ty: int) -> int:
+    dx, dy = tx - x, ty - y
+    if abs(dy) >= abs(dx):
+        return DIR_SOUTH if dy > 0 else DIR_NORTH
+    return DIR_EAST if dx > 0 else DIR_WEST
+
+
+def arrange_party(game: Game, map_id: int, x: int, y: int, facing: int, party: list) -> None:
+    """Arrange with a party (species ids, level 20): the first one follows the player."""
+    game.request_id += 1
+    req = bytearray(game.abi["requestSize"])
+    struct.pack_into("<IHHhhI", req, 0, game.request_id, map_id >> 8, map_id & 0xFF, x, y, 1)
+    req[80], req[81], req[84], req[85], req[86] = CHECKPOINT_NEW_BARK_AFTER_INTRO, facing, 0xFF, 1, CMD_ARRANGE
+    for i, species in enumerate(party):  # struct E2ETestPartyMonFixture party[6] at offset 88, 16 bytes each
+        struct.pack_into("<H4HBB", req, 88 + 16 * i, species, 0, 0, 0, 0, 20, 0)
+    req[356] = len(party)               # partyCount
+    submit_arrange(game, req, "arrange with a party")
+
+
+class CompanionWatch:
+    """Samples the companion, the walker, the player and the follower every few frames."""
+
+    def __init__(self, game: Game, watcher: BeatWatcher, slot: int):
+        self.game, self.watcher, self.slot = game, watcher, slot
+        self.samples = []
+        self.problems = []
+        self.seen = False
+        self.max_companions = 0
+        self.follower_missing = 0
+        self.follower_hidden_flag = 0
+
+    def sample(self, expect_follower: bool) -> dict:
+        objects = self.game.objects()
+        companions = [o for o in objects if o["localId"] == COMPANION_LOCALID]
+        player = next(o for o in objects if o["isPlayer"])
+        follower = next((o for o in objects if o["localId"] == FOLLOWER_LOCALID), None)
+        walker = object_of(self.game, self.slot)
+        debug = self.game.walker_debug()
+        self.max_companions = max(self.max_companions, len(companions))
+        if expect_follower and (follower is None or follower["invisible"]):
+            self.follower_missing += 1
+        self.follower_hidden_flag = max(self.follower_hidden_flag, debug["followerHidden"])
+        sample = {"frame": debug["frames"], "companions": companions, "walker": walker,
+                  "player": (player["x"], player["y"], player["facing"]),
+                  "running": self.watcher.running(self.game.actor_for(self.slot)["index"]) if self.game.actor_for(self.slot) else None}
+        if companions:
+            self.seen = True
+        self.samples.append(sample)
+        return sample
+
+    def run(self, frames: int, step: int = 2, expect_follower: bool = False, until=None):
+        for _ in range(0, frames, step):
+            self.game.emu.step(step)
+            new = self.watcher.poll()
+            sample = self.sample(expect_follower)
+            if until and until(new, sample):
+                return sample
+        return None
+
+
+def check_placement(sample: dict, gfx: int) -> list:
+    """What's wrong with the companion in this sample (empty when it stands right)."""
+    problems = []
+    companions, walker = sample["companions"], sample["walker"]
+    if len(companions) != 1:
+        return [f"{len(companions)} companion objects"]
+    c = companions[0]
+    if c["gfx"] != gfx:
+        problems.append(f"gfx {c['gfx']:#x}, expected {gfx:#x}")
+    if walker is None:
+        return problems + ["no walker object"]
+    if abs(c["x"] - walker["x"]) + abs(c["y"] - walker["y"]) != 1:
+        problems.append(f"not beside the walker: {(c['x'], c['y'])} vs {(walker['x'], walker['y'])}")
+    if c["facing"] != direction_towards(c["x"], c["y"], walker["x"], walker["y"]):
+        problems.append(f"facing {c['facing']}, not the walker")
+    return problems
+
+
+def wait_ace(game: Game, watcher: BeatWatcher, slot: int, frames: int):
+    return watcher.watch(frames, step=2, until=lambda e: e["event"] == "start" and e["slot"] == slot
+                         and e["name"] in ("ace_play", "ace_spar"))
+
+
+def scenario_companion(game: Game) -> dict:
+    """Acceptance 5: Blue (cocky) dwelling at Viridian's pond, fishing, with
+    every object slot and palette to spare, runs ace_play; while it runs his
+    first ace (Umbreon) stands beside him, facing him, never on or straight
+    ahead of the player; it is gone when the beat ends. The player's following
+    Pokemon stays out throughout."""
+    species = species_ids()
+    expected_gfx = OBJ_EVENT_MON + first_companion(SLOT_BLUE)
+    game.emu.step(240)
+    arrange_party(game, VIRIDIAN, 15, 42, DIR_NORTH, [species["SPECIES_PIKACHU"]])
+    place_blue(game, node=NODE_VIRIDIAN, destId=SPOT_VIRIDIAN_WATER, state=STATE_DWELLING,
+               activity=ACTIVITY_FISH, dwell=60)
+    game.warp(VIRIDIAN, 15, 42, DIR_NORTH)
+    game.wait_for(lambda: (game.actor_for(SLOT_BLUE) or {}).get("atSpot"), 600, what="Blue at the pond")
+    game.walk("Up", "y", 41)    # the follower comes out of its ball once the player moves
+    follower_at_start = follower_object(game)
+    watcher = BeatWatcher(game)
+    watch = CompanionWatch(game, watcher, SLOT_BLUE)
+    game.reset_frame_maxima()
+    start = None
+    for _ in range(0, 9000, 2):
+        game.emu.step(2)
+        for e in watcher.poll():
+            if e["event"] == "start" and e["slot"] == SLOT_BLUE and e["name"] in ("ace_play", "ace_spar"):
+                start = e
+        watch.sample(expect_follower=True)
+        if start:
+            break
+        if companion_objects(game):
+            watch.problems.append("a companion came out without an ace beat")
+    # The beat runs: sample until it ends.
+    placement = []
+    shot = None
+    end = None
+    out_at = None
+    if start:
+        for _ in range(0, 600, 2):
+            game.emu.step(2)
+            new = watcher.poll()
+            sample = watch.sample(expect_follower=True)
+            if sample["companions"]:
+                if out_at is None:
+                    out_at = sample
+                    c = sample["companions"][0]
+                    px, py, pf = sample["player"]
+                    ahead = (px + DX.get(pf, (0, 0))[0], py + DX.get(pf, (0, 0))[1])
+                    if (c["x"], c["y"]) in ((px, py), ahead):
+                        watch.problems.append(f"on or ahead of the player: {(c['x'], c['y'])}")
+                placement += check_placement(sample, expected_gfx)
+                if shot is None and sample["frame"] - out_at["frame"] >= 40:
+                    shot = game.shot("companion-out")
+                    sample["walker_faces_companion"] = sample["walker"]["facing"] == direction_towards(
+                        sample["walker"]["x"], sample["walker"]["y"], c["x"], c["y"])
+                    watch.mid = sample
+            end = next((e for e in new if e["slot"] == SLOT_BLUE and e["event"] in ("end", "interrupt")), None)
+            if end:
+                break
+    game.emu.step(2)
+    after = companion_objects(game)
+    watcher.watch(240, step=4)
+    gone_later = not companion_objects(game)
+    debug = game.walker_debug()
+    mid = getattr(watch, "mid", None)
+    result = {"ace": start, "end": end, "companion_first_seen": out_at, "mid_beat": mid,
+              "expected_gfx": expected_gfx, "placement_problems": sorted(set(placement)), "problems": watch.problems,
+              "companions_after_end": after, "gone_later": gone_later,
+              "follower_at_start": follower_at_start, "follower_missing_samples": watch.follower_missing,
+              "follower_hidden_flag": watch.follower_hidden_flag, "counters": watcher.counters,
+              "max_update_scanlines": debug["maxUpdateScanlines"], "events": watcher.events,
+              "screenshots": [shot] if shot else [], "debug": debug}
+    result["pass"] = bool(start and end and end["event"] == "end" and out_at and not placement and not watch.problems
+                          and mid and mid.get("walker_faces_companion") and not after and gone_later
+                          and follower_at_start and not follower_at_start["invisible"]
+                          and watch.follower_missing == 0 and watch.follower_hidden_flag == 0
+                          and watcher.counters["companion"]["out"] == 1 and watcher.counters["companion"]["in"] == 1)
+    return result
+
+
+def gate_ids():
+    gate = TABLES.map_id("MAP_SAFARI_ZONE_GATE_HNS")
+    spot, node = TABLES.spot("MAP_SAFARI_ZONE_GATE_HNS", "NPC_CHAT", 12, 24)   # beside the worker at (12, 23)
+    return gate, spot, node
+
+
+def scenario_companionslots(game: Game) -> dict:
+    """Acceptance 5 (room): the Safari Zone Gate is crowded. With the player
+    at (16, 16), its NPCs in view and Blue dwelling at a chat spot, exactly
+    3 object slots are free (the walker rule's 3: Blue spawns at 4 free and
+    takes one). A companion would leave 2, so companion_room never holds: no
+    ace beat starts and no object with local id 0xF9 ever appears; the room
+    checks fail on slots."""
+    gate, spot, node = gate_ids()
+    game.emu.step(240)
+    game.arrange(gate, 16, 16, DIR_NORTH)
+    place_blue(game, node=node, destId=spot, state=STATE_DWELLING, activity=ACTIVITY_RELAX, dwell=60)
+    game.warp(gate, 16, 16, DIR_NORTH)
+    game.wait_for(lambda: (game.actor_for(SLOT_BLUE) or {}).get("atSpot"), 900, what="Blue at the chat spot")
+    watcher = BeatWatcher(game)
+    watch = CompanionWatch(game, watcher, SLOT_BLUE)
+    game.reset_frame_maxima()
+    min_free = OBJECT_COUNT = 16
+    for _ in range(0, 6000, 4):
+        game.emu.step(4)
+        watcher.poll()
+        sample = watch.sample(expect_follower=False)
+        min_free = min(min_free, OBJECT_COUNT - len(game.objects()))
+    shot = game.shot("companionslots")
+    aces = [e for e in watcher.starts(SLOT_BLUE) if e["name"] in ("ace_play", "ace_spar")]
+    debug = game.walker_debug()
+    companion = watcher.counters["companion"]
+    result = {"free_slots_min": min_free, "free_slots_end": OBJECT_COUNT - len(game.objects()),
+              "objects": game.objects(), "ace_starts": aces, "companion_seen": watch.seen,
+              "beats": [e["name"] for e in watcher.starts(SLOT_BLUE)], "counters": watcher.counters,
+              "max_update_scanlines": debug["maxUpdateScanlines"], "screenshots": [shot], "debug": debug}
+    result["pass"] = (result["free_slots_end"] == 3 and min_free >= 3 and not aces and not watch.seen
+                      and companion["out"] == 0 and companion["denied"]["slots"] >= 1
+                      and len(result["beats"]) >= 2)
+    return result
+
+
+def scenario_companionfollower(game: Game) -> dict:
+    """Acceptance 5 (follower): at the Safari Zone Gate with the player at
+    (16, 20) and a following Pokemon out, 10 objects are active besides the
+    follower and the walkers (the player and 9 NPCs). Blue dwells at a chat
+    spot, and two more trainers travel in from the west, where the map's
+    side is solid: they stay spawn candidates that can't spawn. The follower
+    rule counts them: 16 - 10 - 3 walkers - 1 follower = 2 free, just enough
+    to keep the follower out, while 4 slots are really free. A companion
+    would leave the rule 1, so it stays away and the follower stays out
+    (followerHidden 0, the follower object active). Control: once the two
+    travellers are elsewhere, the companion comes out at the same spot."""
+    species = species_ids()
+    gate, spot, node = gate_ids()
+    game.emu.step(240)
+    arrange_party(game, gate, 16, 21, DIR_NORTH, [species["SPECIES_PIKACHU"]])
+    place_blue(game, node=node, destId=spot, state=STATE_DWELLING, activity=ACTIVITY_RELAX, dwell=60)
+    game.warp(gate, 16, 21, DIR_NORTH)
+    game.wait_for(lambda: (game.actor_for(SLOT_BLUE) or {}).get("atSpot"), 900, what="Blue at the chat spot")
+    game.walk("Up", "y", 20)    # the follower comes out of its ball once the player moves
+    travellers = (SLOT_LORELEI, SLOT_LANCE)
+    for slot in travellers:
+        game.write_record(slot, **plain_record(node=node, destId=spot, state=STATE_TRAVELLING, arrival=ARRIVAL_WEST,
+                                               crossing=10, activity=ACTIVITY_RELAX, dwell=3))
+    watcher = BeatWatcher(game)
+    watch = CompanionWatch(game, watcher, SLOT_BLUE)
+    game.reset_frame_maxima()
+    watch.run(6000, step=4, expect_follower=True)
+    objects = game.objects()
+    # The follower rule's "others": every object but the follower, the walkers and the companion.
+    others = [o for o in objects if o["localId"] not in (FOLLOWER_LOCALID, COMPANION_LOCALID)
+              and not 0xF5 <= o["localId"] < 0xF5 + ACTOR_COUNT]
+    phase1 = {"companion_seen": watch.seen, "ace_starts": [e for e in watcher.starts(SLOT_BLUE)
+                                                           if e["name"] in ("ace_play", "ace_spar")],
+              "travellers_spawned": [game.actor_for(s) is not None for s in travellers],
+              "others": len(others), "free_slots": 16 - len(objects), "follower": follower_object(game),
+              "follower_missing_samples": watch.follower_missing, "follower_hidden_flag": watch.follower_hidden_flag,
+              "counters": json.loads(json.dumps(watcher.counters))}
+    shot = game.shot("companionfollower-held-back")
+
+    # Control: the travellers go elsewhere; the rule has room again.
+    for slot in travellers:
+        game.write_record(slot, **plain_record(node=NODE_MART, destId=SPOT_MART_SHELF, state=STATE_DWELLING,
+                                               arrival=ARRIVAL_NONE, crossing=0, activity=ACTIVITY_SHOP, dwell=60))
+    control = CompanionWatch(game, watcher, SLOT_BLUE)
+    control.run(9000, step=4, expect_follower=True, until=lambda new, sample: bool(sample["companions"]))
+    shot_control = game.shot("companionfollower-control")
+    control.run(400, step=4, expect_follower=True)
+    debug = game.walker_debug()
+    result = {"phase1": phase1, "control_companion_seen": control.seen,
+              "control_follower_missing_samples": control.follower_missing,
+              "control_follower_hidden_flag": control.follower_hidden_flag,
+              "counters": watcher.counters, "max_update_scanlines": debug["maxUpdateScanlines"],
+              "screenshots": [shot, shot_control], "debug": debug}
+    c1 = phase1["counters"]["companion"]
+    result["pass"] = (not phase1["companion_seen"] and not phase1["ace_starts"] and not any(phase1["travellers_spawned"])
+                      and phase1["others"] == 10 and phase1["free_slots"] >= 4
+                      and phase1["follower"] is not None and not phase1["follower"]["invisible"]
+                      and phase1["follower_missing_samples"] == 0 and phase1["follower_hidden_flag"] == 0
+                      and c1["out"] == 0 and c1["denied"]["follower"] >= 1 and c1["denied"]["slots"] == 0
+                      and control.seen and control.follower_missing == 0 and control.follower_hidden_flag == 0)
+    return result
+
+
+def scenario_companionpush(game: Game) -> dict:
+    """Acceptance 5 and 6: Blue's ace_play is under way with his companion out;
+    the player steps up and presses into him. The beat is interrupted and the
+    companion removed within a few frames of the press."""
+    boot(game, VIRIDIAN, 13, 41, DIR_NORTH)
+    place_blue(game, node=NODE_VIRIDIAN, destId=SPOT_VIRIDIAN_WATER, state=STATE_DWELLING,
+               activity=ACTIVITY_FISH, dwell=60)
+    game.warp(VIRIDIAN, 13, 41, DIR_NORTH)
+    game.wait_for(lambda: (game.actor_for(SLOT_BLUE) or {}).get("atSpot"), 600, what="Blue at the pond")
+    watcher = BeatWatcher(game)
+    game.reset_frame_maxima()
+    start = wait_ace(game, watcher, SLOT_BLUE, 9000)
+    out = game.wait_for(lambda: companion_objects(game), 60, step=1, what="the companion") if start else None
+    pressing_from = interrupt = gone_at = None
+    shot = shot_before = None
+    if out:
+        # Out for a moment (its jump), then the player steps up and presses.
+        game.emu.step(30)
+        watcher.poll()
+        shot_before = game.shot("companionpush-before")
+        out = companion_objects(game)
+        game.emu.hold("Up", 1)
+        try:
+            for _ in range(0, 120):
+                game.emu.step(1)
+                watcher.poll()
+                player = game.player()
+                if (player["x"], player["y"]) == (13, 40):
+                    pressing_from = game.walker_debug()["frames"]
+                    break
+            shot = game.shot("companionpush-pressing")
+            for _ in range(0, 30):
+                frame = game.walker_debug()["frames"]
+                for e in watcher.poll():
+                    if e["event"] == "interrupt" and e["slot"] == SLOT_BLUE:
+                        interrupt = e
+                if gone_at is None and not companion_objects(game):
+                    gone_at = frame
+                if interrupt and gone_at is not None:
+                    break
+                game.emu.step(1)
+        finally:
+            game.emu.hold("Up", 0)
+    watcher.watch(120, step=4)
+    debug = game.walker_debug()
+    result = {"ace": start, "companion": out, "pressing_from_frame": pressing_from, "interrupt": interrupt,
+              "gone_at_frame": gone_at,
+              "interrupt_delay": (interrupt["frame"] - pressing_from) if interrupt and pressing_from else None,
+              "gone_delay": (gone_at - pressing_from) if gone_at is not None and pressing_from else None,
+              "companions_after": companion_objects(game), "counters": watcher.counters,
+              "max_update_scanlines": debug["maxUpdateScanlines"], "events": watcher.events,
+              "screenshots": [x for x in (shot_before, shot) if x], "debug": debug}
+    result["pass"] = (start is not None and out and interrupt is not None and interrupt["beat"] == start["beat"]
+                      and result["interrupt_delay"] is not None and result["interrupt_delay"] <= 4
+                      and result["gone_delay"] is not None and result["gone_delay"] <= 4
+                      and not result["companions_after"]
+                      and watcher.counters["companion"]["away"]["interrupted"] >= 1)
+    return result
+
+
 SCENARIOS = {"spot": scenario_spot, "bridge": scenario_bridge, "walkoff": scenario_walkoff, "mortar": scenario_mortar,
              "safari": scenario_safari, "edge": scenario_edge, "door": scenario_door,
              "linger": scenario_linger, "save": scenario_save, "gym": scenario_gym,
@@ -2034,7 +2414,9 @@ SCENARIOS = {"spot": scenario_spot, "bridge": scenario_bridge, "walkoff": scenar
              "decoys": scenario_decoys, "perf": scenario_perf, "seam": scenario_seam,
              "recross": scenario_recross, "longtrip": scenario_longtrip, "striplane": scenario_striplane,
              "beatspot": scenario_beatspot, "notice": scenario_notice, "greet": scenario_greet,
-             "beatpush": scenario_beatpush, "determinism": scenario_determinism}
+             "beatpush": scenario_beatpush, "determinism": scenario_determinism,
+             "companion": scenario_companion, "companionslots": scenario_companionslots,
+             "companionfollower": scenario_companionfollower, "companionpush": scenario_companionpush}
 
 
 def check_content_hash(rom: Path, symbols: dict, tables) -> None:

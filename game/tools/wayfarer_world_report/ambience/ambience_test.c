@@ -612,6 +612,46 @@ static void TestDeterminism(void)
     CHECK(beats > 20);
 }
 
+// Ambience_IdleCanWin (the walker layer works out companion_room only when it
+// holds) agrees with Ambience_Select: ace_play holds for every trainer here,
+// so a beat is picked exactly when an idle beat can win.
+static void TestIdleCanWin(void)
+{
+    static const u8 decisions[] = {AMBIENCE_DECIDE_DWELL, AMBIENCE_DECIDE_ARRIVE, AMBIENCE_DECIDE_STEP, AMBIENCE_DECIDE_REACT};
+    struct AmbienceContext ctx = Dwelling(WORLD_SPOT_SQUARE, AMBIENCE_FACT_OUTDOORS | AMBIENCE_FACT_COMPANION_ROOM);
+    u32 slot, d, t, s, gap, agreed = 0, wins = 0;
+
+    ctx.activity = WORLD_ACTIVITY_RELAX;
+    for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT; slot++)
+    {
+        for (d = 0; d < sizeof(decisions); d++)
+        {
+            for (gap = 0; gap < 2; gap++)
+            {
+                for (t = 0; t < 8; t++)
+                {
+                    for (s = 0; s < 12; s++)
+                    {
+                        struct AmbienceWalker walker;
+                        u8 latches = 0;
+                        bool8 canWin;
+                        Ambience_InitWalker(&walker);
+                        walker.gapTicks = Ambience_QuietGap(slot) - 1 + gap;
+                        walker.decisionCounter = 252 + t;   // across the u8 wrap too
+                        walker.stepCount = s % AMBIENCE_IDLE_STEPS;
+                        walker.stepsSinceBeat = s < 6 ? s : 0xF0 + s;
+                        canWin = Ambience_IdleCanWin(&walker, slot, decisions[d]);
+                        CHECK_EQ(canWin, Peek(&walker, &latches, slot, &ctx, decisions[d]) != AMBIENCE_BEAT_NONE);
+                        agreed++;
+                        wins += canWin;
+                    }
+                }
+            }
+        }
+    }
+    CHECK(wins > 0 && wins < agreed);
+}
+
 int main(void)
 {
     TestInit();
@@ -626,6 +666,7 @@ int main(void)
     TestGreeting();
     TestLingers();
     TestDeterminism();
+    TestIdleCanWin();
     if (sFailures)
     {
         printf("%d failures\n", sFailures);

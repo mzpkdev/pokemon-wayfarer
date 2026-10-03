@@ -88,6 +88,11 @@ bool8 Ambience_BeatHolds(u8 beat, u8 slot, const struct AmbienceContext *ctx, u8
 u8 Ambience_Select(struct AmbienceWalker *walker, u8 *latches, u8 slot,
                    const struct AmbienceContext *ctx, u8 decision);
 
+// Whether an idle beat could win at this decision point (the gate and the
+// idle odds, as Ambience_Select is about to apply them; nothing advances).
+// The walker layer gathers costly idle-only facts (companion_room) only then.
+bool8 Ambience_IdleCanWin(const struct AmbienceWalker *walker, u8 slot, u8 decision);
+
 // The running beat ended (finished, skipped or interrupted): records its
 // cooldown and restarts the quiet gap.
 void Ambience_EndBeat(struct AmbienceWalker *walker);

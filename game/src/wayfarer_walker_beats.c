@@ -20,6 +20,9 @@
 //   palette load would index out of bounds, so they are skipped then.
 // - FLDEFF_EMOTE shares its id with FLDEFF_QUESTION_MARK_ICON ("?"): only one
 //   shows at a time; a busy icon waits 1 tick, then is skipped.
+// - The companion belongs to the walker layer (it spawns, validates and
+//   removes it); the runner only asks for it, and a beat whose companion
+//   didn't come out, or is gone, ends there.
 
 #include "global.h"
 #include "wayfarer_walker_beats.h"
@@ -64,6 +67,8 @@ enum
 STATIC_ASSERT(sizeof(struct WalkerBeatLog) == 8, WalkerBeatLogSize);
 STATIC_ASSERT(offsetof(struct WalkerAmbienceDebug, running) == 20, WalkerAmbienceDebugRunning);
 STATIC_ASSERT(offsetof(struct WalkerAmbienceDebug, log) == 28, WalkerAmbienceDebugLog);
+STATIC_ASSERT(offsetof(struct WalkerAmbienceDebug, companionsOut) == 28 + 8 * WALKER_BEAT_LOG_SIZE, WalkerAmbienceDebugCompanion);
+STATIC_ASSERT(sizeof(struct WalkerAmbienceDebug) == 28 + 8 * WALKER_BEAT_LOG_SIZE + 28, WalkerAmbienceDebugSize);
 
 static const s8 sDx[5] = {0, 0, 0, -1, 1};
 static const s8 sDy[5] = {0, 1, -1, 0, 0};
@@ -226,8 +231,13 @@ static u8 FaceTarget(const struct WalkerBeatRun *run, struct ObjectEvent *obj, u
         return run->target;
     case AMBIENCE_TARGET_AWAY:
         return sOpposite[run->target];
+    case AMBIENCE_TARGET_COMPANION:
+        other = WayfarerWalkers_Companion(obj);
+        if (other == NULL)
+            return DIR_NONE;
+        return DirectionTowards(obj->currentCoords.x, obj->currentCoords.y, other->currentCoords.x, other->currentCoords.y);
     }
-    return DIR_NONE;    // the companion: stage 4
+    return DIR_NONE;
 }
 
 static bool8 DoFace(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 dir, struct WalkerAmbienceDebug *debug)
@@ -533,7 +543,8 @@ static bool8 IsNurse(u16 gfx)
 static bool8 IsIdleNpc(const struct ObjectEvent *npc)
 {
     return npc->active && !npc->isPlayer && !npc->frozen && !npc->singleMovementActive && !npc->heldMovementActive
-        && !WayfarerWalkers_IsActorObject(npc) && npc->localId != OBJ_EVENT_ID_FOLLOWER;
+        && !WayfarerWalkers_IsActorObject(npc) && npc->localId != OBJ_EVENT_ID_FOLLOWER
+        && npc->localId != WALKER_COMPANION_LOCALID;
 }
 
 static bool8 DoBow(struct WalkerBeatRun *run, struct ObjectEvent *obj, struct WalkerAmbienceDebug *debug)
@@ -585,6 +596,38 @@ static void DoTurnNpc(struct ObjectEvent *obj, struct WalkerAmbienceDebug *debug
     debug->stepSkips++;
 }
 
+// companion_do: the companion faces the walker, or jumps in place; the step
+// waits for its movement. A companion that is gone ends the beat.
+static bool8 DoCompanion(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 act)
+{
+    struct ObjectEvent *companion = WayfarerWalkers_Companion(obj);
+    u8 action;
+
+    if (companion == NULL)
+    {
+        run->step = AMBIENCE_MAX_STEPS;
+        return TRUE;
+    }
+    if (run->stage == STAGE_HELD)
+        return HeldDone(companion);
+    if (act == AMBIENCE_COMPANION_ACT_JUMP)
+    {
+        action = GetJumpInPlaceMovementAction(IsCardinal(companion->facingDirection) ? companion->facingDirection : DIR_SOUTH);
+    }
+    else
+    {
+        u8 dir = DirectionTowards(companion->currentCoords.x, companion->currentCoords.y,
+                                  obj->currentCoords.x, obj->currentCoords.y);
+        if (!IsCardinal(dir) || companion->facingDirection == dir)
+            return TRUE;
+        action = GetFaceDirectionMovementAction(dir);
+    }
+    if (!Issue(companion, action))
+        return FALSE;
+    run->stage = STAGE_HELD;
+    return FALSE;
+}
+
 static bool8 RunStep(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 op, u8 arg, bool8 visible,
                      struct WalkerAmbienceDebug *debug)
 {
@@ -614,9 +657,26 @@ static bool8 RunStep(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 op, 
     case AMBIENCE_OP_EFFECT:
         DoEffect(run, obj, arg, visible, debug);
         return TRUE;
+    case AMBIENCE_OP_COMPANION_OUT:
+        // Two frames: its sprite sheet is decompressed first, alone (about
+        // 140 scanlines); then the room is checked again (it may have gone
+        // since the decision) and it spawns. Without room the beat ends
+        // here, cleanly.
+        if (run->stage == STAGE_START)
+        {
+            WayfarerWalkers_CompanionPrepare(obj);
+            run->stage = STAGE_COUNT;
+            return FALSE;
+        }
+        if (!WayfarerWalkers_CompanionOut(obj))
+            run->step = AMBIENCE_MAX_STEPS;
+        return TRUE;
+    case AMBIENCE_OP_COMPANION_IN:
+        WayfarerWalkers_CompanionIn(obj);
+        return TRUE;
+    case AMBIENCE_OP_COMPANION_DO:
+        return DoCompanion(run, obj, arg);
     default:
-        // The companion comes in stage 4: a beat that needs it ends here
-        // (companion_room never holds yet, so none is picked).
         run->step = AMBIENCE_MAX_STEPS;
         return TRUE;
     }
