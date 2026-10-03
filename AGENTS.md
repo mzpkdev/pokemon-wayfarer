@@ -14,6 +14,18 @@ Never hex-edit or directly byte-patch `game/data/layouts/**/map.bin`. Make stati
 
 The ROM hack is not yet publicly released. Backward compatibility with save data from prerelease builds is not required. Do not add migrations or preserve obsolete save layouts solely for prerelease saves, because doing so creates technical debt before the first release. Revisit this policy only when an explicit product decision or public release establishes a save-compatibility baseline.
 
+## RAM rules
+
+The GBA has 256 KB of EWRAM and 32 KB of IWRAM, and the system stack lives at the top of IWRAM with no overflow check.
+
+- Declare new buffers and state `EWRAM_DATA`. A plain `static` or global lands in IWRAM and shrinks the stack, which grows down into it; an IWRAM rollback snapshot once overflowed the stack into the heap (#136).
+- Use IWRAM only on purpose, for tiny, hot data or code.
+- Put temporary memory on the heap with `Alloc`/`Free` for the feature's lifetime only. Starting a battle and reloading the field (warps, returning from menus) reset the heap, so code must not hold heap pointers across them and must survive the reset.
+- Keep constant data in ROM tables (`const`), never in RAM caches built at runtime.
+- Pack saved and RAM structures: bitfields, the smallest fitting integer types, no padding.
+- The mechanics-test build (`make check`) is the tightest: its EWRAM is almost full and its stack has the least room. Check new RAM against it, not only the release ROM.
+- `game/tools/ram_report/ram_budget.json` holds per-build ceilings that every release, `make e2e`, and `make check` build enforces. Raising one is a deliberate, reviewed change in the PR that needs it. The release build's 4 KB stack and 4 KB EWRAM free floors are fixed in `ram_report.py`.
+
 ## Merge policy and upstream updates
 
 Normal pull requests use squash merges only, with linear history required on `main`.
