@@ -45,9 +45,14 @@ class AmbienceSelectTest(unittest.TestCase):
         self.assertIn("all ok", result.stdout)
 
     def test_never_reads_the_rng(self):
-        text = SOURCE.read_text()
-        for name in ("Random", "gRngValue", "rand("):
-            self.assertNotIn(name, text)
+        """The selection, the beat runtime and the walker layer that drives
+        them (none of the walker code reads the RNG; the spec's acceptance 7
+        says the ambience never does)."""
+        rng = re.compile(r"\bRandom\w*\s*\(|\bRandom32\b|\bgRngValue\b|\bgRng2Value\b|\brand\s*\(")
+        for path in (SOURCE, GAME / "src/wayfarer_walker_beats.c", GAME / "src/wayfarer_walkers.c"):
+            with self.subTest(path=path.name):
+                text = path.read_text()
+                self.assertNotRegex(text, rng)
 
 
 if __name__ == "__main__":

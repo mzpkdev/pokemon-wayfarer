@@ -45,6 +45,100 @@ def beat(data, beat_id):
     return next(b for b in data["beats"] if b["id"] == beat_id)
 
 
+# The spec's pool tables (.product/specs/notable-ambience.md, "The pool"),
+# transcribed: id -> (the spec's when column, the when terms that must all
+# hold, the any terms, the terms' parameters, the flags). A spot term in the
+# must-list implies dwelling. The flags are the spec's reaction limits
+# ("Selection"), hum's "without stopping the walk" (keep_walking) and the
+# derived needs_companion; every cooldown is the default 80 (the tables set
+# none). The who and steps columns are read from the spec itself.
+POOL = [
+    ("look_around", "walking", {"walking"}, set(), {}, set()),
+    ("hum", "walking", {"walking"}, set(), {}, {"keep_walking"}),
+    ("stretch", "walking, outdoors", {"walking", "outdoors"}, set(), {}, set()),
+    ("skywatch", "walking, outdoors", {"walking", "outdoors"}, set(), {}, set()),
+    ("blocked_sigh", "blocked", {"blocked"}, set(), {}, set()),
+    ("arrive_look", "arriving", {"arriving"}, set(), {}, set()),
+    ("leave_turn", "leaving", {"leaving"}, set(), {}, set()),
+    ("notice_player", "player_within 3, walking or dwelling", {"player_within"}, {"walking", "dwelling"},
+     {"player_within": 3}, {"once_per_approach"}),
+    ("stare_down", "player_within 3", {"player_within"}, set(), {"player_within": 3}, {"once_per_approach"}),
+    ("player_lingers", "player_adjacent_ticks 12", {"player_adjacent"}, set(), {"player_adjacent_ticks": 12},
+     {"once_per_episode"}),
+    ("greet_colleague", "notable_within 3, relation colleague", {"notable"}, set(),
+     {"notable_within": 3, "relation": "colleague"}, {"once_per_pair"}),
+    ("greet_friend", "notable_within 3, relation friend", {"notable"}, set(),
+     {"notable_within": 3, "relation": "friend"}, {"once_per_pair"}),
+    ("greet_family", "notable_within 3, relation family", {"notable"}, set(),
+     {"notable_within": 3, "relation": "family"}, {"once_per_pair"}),
+    ("size_up", "notable_within 3, relation rival", {"notable"}, set(),
+     {"notable_within": 3, "relation": "rival"}, {"once_per_pair"}),
+    ("grass_rustle", "spot tall_grass", {"dwelling", "spot"}, set(), {"spot": {"tall_grass"}}, set()),
+    ("grass_chase", "spot tall_grass, facing grass", {"dwelling", "spot", "facing_grass"}, set(),
+     {"spot": {"tall_grass"}}, set()),
+    ("water_bite", "spot water_edge, facing water", {"dwelling", "spot", "facing_water"}, set(),
+     {"spot": {"water_edge"}}, set()),
+    ("water_wait", "spot water_edge, facing water", {"dwelling", "spot", "facing_water"}, set(),
+     {"spot": {"water_edge"}}, set()),
+    ("counter_heal", "spot center_counter", {"dwelling", "spot"}, set(), {"spot": {"center_counter"}}, set()),
+    ("shelf_compare", "spot store", {"dwelling", "spot"}, set(), {"spot": {"store"}}, set()),
+    ("slots_result", "spot game_corner", {"dwelling", "spot"}, set(), {"spot": {"game_corner"}}, set()),
+    ("chat_talk", "spot npc_chat", {"dwelling", "spot"}, set(), {"spot": {"npc_chat"}}, set()),
+    ("people_watch", "spot square or bench", {"dwelling", "spot"}, set(), {"spot": {"square", "bench"}}, set()),
+    ("take_in_view", "spot named:sightsee or named:relax", {"dwelling", "spot"}, set(),
+     {"spot": {"named:sightsee", "named:relax"}}, set()),
+    ("push_ups", "spot tall_grass, square, or named:train", {"dwelling", "spot"}, set(),
+     {"spot": {"tall_grass", "square", "named:train"}}, set()),
+    ("meditate", "dwelling, not store or game_corner", {"dwelling", "not_spot"}, set(),
+     {"spot_not": {"store", "game_corner"}}, set()),
+    ("doze", "dwelling, activity relax or train", {"dwelling", "activity"}, set(),
+     {"activity": {"relax", "train"}}, set()),
+    ("admire_water", "facing water", {"facing_water"}, set(), {}, set()),
+    ("study_ground", "dwelling, outdoors", {"dwelling", "outdoors"}, set(), {}, set()),
+    ("flourish", "dwelling", {"dwelling"}, set(), {}, set()),
+    ("catch_breath", "walking or dwelling", set(), {"walking", "dwelling"}, {}, set()),
+    ("quick_hop", "dwelling, outdoors", {"dwelling", "outdoors"}, set(), {}, set()),
+    ("swagger", "dwelling or player_within 4", set(), {"dwelling", "player_within"}, {"player_within": 4}, set()),
+    ("ace_play", "dwelling, outdoors, companion_room, activity relax, fish, train, or sightsee",
+     {"dwelling", "outdoors", "companion_room", "activity"}, set(),
+     {"activity": {"relax", "fish", "train", "sightsee"}}, {"needs_companion"}),
+    ("ace_spar", "dwelling, companion_room, activity train", {"dwelling", "companion_room", "activity"}, set(),
+     {"activity": {"train"}}, {"needs_companion"}),
+]
+
+# Where the data spells a spec step differently (recorded in ubertask.yml):
+# a stopping beat stops on its own (stretch's "stop"), hum's "without
+# stopping" is its keep_walking flag, slots_result's parity emote and
+# chat_talk's NPC turn are primitives, "own tile" is the tile "own".
+STEP_SPELLING = {
+    ("hum", "without stopping the walk"): [],
+    ("stretch", "stop"): [],
+    ("slots_result", "then emote !! on even beat counters"): ["emote !!/X"],
+    ("slots_result", "emote X on odd"): [],
+    ("chat_talk", "NPC faces the walker"): ["turn npc"],
+    ("leave_turn", "face away from target"): ["face away"],
+}
+
+
+def spec_section(text, start, end):
+    return text[text.index(start):text.index(end, text.index(start))]
+
+
+def readable(b):
+    """A parsed beat as names: the spot kinds and activities its terms name."""
+    params = {}
+    for key, value in b.params.items():
+        if key == "spot":
+            plain, named = value
+            value = {ambience.KIND_KEYS[i] for i in plain} | {"named:" + ambience.ACTIVITIES[i] for i in named}
+        elif key == "spot_not":
+            value = {ambience.KIND_KEYS[i] for i in value}
+        elif key == "activity":
+            value = {ambience.ACTIVITIES[i] for i in value}
+        params[key] = value
+    return params
+
+
 class FakeSprites:
     """The real sprite table with some species overridden."""
 
@@ -65,18 +159,73 @@ class LoadTest(unittest.TestCase):
         self.assertEqual(amb.warnings, [])
         self.assertEqual(len(amb.trainers), 25)
 
-    def test_pool_matches_the_spec(self):
-        """Every row of the spec's pool tables, in order, with its class."""
+    def test_pool_matches_the_transcription(self):
+        """Every beat, in pool order: its when terms and parameters, flags
+        and cooldown as POOL transcribes the spec."""
         amb = load()
-        got = [(b.id, b.cls) for b in amb.beats]
-        if SPEC.exists():
-            text = SPEC.read_text(encoding="utf-8")
-            pool = text[text.index("### The pool"):text.index("### Companion")]
-            want = re.findall(r"^\| `(\w+)` \| (\w+) \|", pool, re.M)
-            self.assertEqual(got, want)
-        self.assertEqual(len(got), 35)
-        self.assertLessEqual(len(got), ambience.MAX_BEATS)
-        self.assertEqual(len({i for i, _ in got}), len(got))
+        self.assertEqual([b.id for b in amb.beats], [row[0] for row in POOL])
+        for b, (beat_id, _, all_terms, any_terms, params, flags) in zip(amb.beats, POOL):
+            with self.subTest(beat=beat_id):
+                self.assertEqual(b.all, all_terms)
+                self.assertEqual(b.any, any_terms)
+                self.assertEqual(readable(b), params)
+                self.assertEqual(b.flags, flags)
+                self.assertEqual(b.cooldown, ambience.DEFAULT_COOLDOWN)
+        self.assertLessEqual(len(amb.beats), ambience.MAX_BEATS)
+
+    @unittest.skipUnless(SPEC.exists(), "needs the spec")
+    def test_pool_matches_the_spec(self):
+        """Every row of the spec's pool tables, in order: class, when (as
+        transcribed in POOL), who and steps."""
+        amb = load()
+        text = SPEC.read_text(encoding="utf-8")
+        pool = spec_section(text, "### The pool", "### Companion")
+        rows = re.findall(r"^\| `(\w+)` \| (\w+) \| ([^|]+) \| ([^|]+) \| ([^|]+) \|$", pool, re.M)
+        self.assertEqual(len(rows), 35)
+        self.assertEqual([r[0] for r in rows], [b.id for b in amb.beats])
+        transcribed = {row[0]: row[1] for row in POOL}
+        for b, (beat_id, cls, when, who, steps) in zip(amb.beats, rows):
+            with self.subTest(beat=beat_id):
+                self.assertEqual(b.cls, cls)
+                self.assertEqual(when.strip(), transcribed[beat_id])
+                who = who.strip()
+                if who == "—":
+                    want_any, want_none = [], []
+                elif who.startswith("not "):
+                    want_any, want_none = [], [who[len("not "):]]
+                else:
+                    want_any, want_none = re.split(r",? or |, ", who), []
+                self.assertEqual(sorted(b.tags_any), sorted(want_any))
+                self.assertEqual(sorted(b.tags_none), sorted(want_none))
+                want_steps = []
+                for step in steps.strip().split(", "):
+                    want_steps += STEP_SPELLING.get((beat_id, step), [step.replace(" own tile", " own")])
+                self.assertEqual([s.text for s in b.steps], want_steps)
+
+    @unittest.skipUnless(SPEC.exists(), "needs the spec")
+    def test_tags_match_the_spec(self):
+        """The 25 walking notables' tags, as the spec's tag table lists them."""
+        text = SPEC.read_text(encoding="utf-8")
+        table = spec_section(text, "### Tags", "Preferred beats")
+        slug = {t["name"]: t["slug"] for t in CATALOG}
+        want = {}
+        for tag, names in re.findall(r"^\| `(\w+)` \| [^|]+ \| ([^|]+) \|$", table, re.M):
+            for name in names.strip().split(", "):
+                want.setdefault(slug[name], set()).add(tag)
+        got = {t.slug: set(t.tags) for t in load().trainers}
+        self.assertEqual(len(got), 25)
+        self.assertEqual(got, want)
+
+    @unittest.skipUnless(SPEC.exists(), "needs the spec")
+    def test_preferred_beats_match_the_spec(self):
+        text = SPEC.read_text(encoding="utf-8")
+        para = " ".join(spec_section(text, "Preferred beats", "\n\n").split())
+        slug = {t["name"]: t["slug"] for t in CATALOG}
+        want = {slug[name]: beat_id for name, beat_id in
+                re.findall(r"([A-Z][\w.]*(?: [A-Z][\w.]*)*) `(\w+)`", para)}
+        self.assertEqual(len(want), 10)
+        got = {t.slug: t.preferred.id for t in load().trainers if t.preferred}
+        self.assertEqual(got, want)
 
     def test_preferred_beats_resolve(self):
         amb = load()
@@ -138,6 +287,17 @@ class RelationTest(unittest.TestCase):
         champs = ambience.CHAMPIONS
         want = {frozenset((a, b)) for a in champs for b in champs if a != b} - {frozenset(("steven", "wallace"))}
         self.assertEqual(rivals, want)
+
+    def test_colleagues_need_a_home_region(self):
+        """Two Gym Leaders with no homeRegion are not colleagues."""
+        catalog = copy.deepcopy(CATALOG)
+        for t in catalog:
+            if t["slug"] in ("lt-surge", "erika"):
+                t.pop("homeRegion")
+        amb = load(catalog=catalog)
+        self.assertEqual(amb.relation("lt-surge", "erika"), "none")
+        self.assertEqual(amb.relation("lt-surge", "brock"), "none")
+        self.assertEqual(amb.relation("brock", "sabrina"), "colleague")
 
     def test_matrix_symmetric_with_empty_diagonal(self):
         m = self.amb.relations
@@ -331,6 +491,54 @@ class ValidationTest(unittest.TestCase):
         self.fails(lambda d: beat(d, "swagger").__setitem__(
             "when", [{"player_within": 3}, {"any": ["dwelling", {"player_within": 4}]}]),
             r"conflicting player_within: 3 and 4")
+
+    def test_unknown_top_level_key(self):
+        self.fails(lambda d: d.__setitem__("beat", []), r"unknown top-level key 'beat'")
+
+    def test_duplicate_key(self):
+        text = (ambience.TOOL_DIR / "ambience.json").read_text(encoding="utf-8")
+        for old, new, pattern in (
+                ('"misty":    {', '"brock": {"tags": ["stoic"]},\n    "misty":    {', r"duplicate key 'brock'"),
+                ('{"id": "hum", "class": "idle",', '{"id": "hum", "class": "idle", "class": "react",',
+                 r"duplicate key 'class'")):
+            self.assertEqual(text.count(old), 1)
+            with tempfile.TemporaryDirectory() as tmp, self.subTest(key=pattern):
+                path = Path(tmp) / "ambience.json"
+                path.write_text(text.replace(old, new), encoding="utf-8")
+                amb = ambience.Ambience(ROOT, ambience.sim_slugs(), CATALOG, ambience_path=path, sprites=sprites())
+                self.assertTrue(any(re.search(pattern, p) for p in amb.problems), amb.problems)
+                with self.assertRaises(ambience.BuildError):
+                    amb.check()
+        # The file itself loads clean through the same path.
+        self.assertEqual(ambience.Ambience(ROOT, ambience.sim_slugs(), CATALOG, sprites=sprites()).problems, [])
+
+    def test_companion_room_only_in_idle_beats(self):
+        self.fails(lambda d: beat(d, "arrive_look").__setitem__("when", ["arriving", "companion_room"]),
+                   r"'arrive_look': companion_room only in an idle beat")
+        self.fails(lambda d: beat(d, "notice_player").__setitem__(
+            "when", [{"player_within": 3}, {"any": ["walking", "companion_room"]}]),
+            r"'notice_player': companion_room only in an idle beat")
+
+    def test_blocked_only_in_react_beats(self):
+        self.fails(lambda d: beat(d, "hum").__setitem__("when", ["walking", "blocked"]),
+                   r"'hum': blocked only in a react beat")
+        self.fails(lambda d: beat(d, "leave_turn").__setitem__("when", ["leaving", "blocked"]),
+                   r"'leave_turn': blocked only in a react beat")
+
+    def test_once_per_pair_needs_notable_within(self):
+        self.fails(lambda d: beat(d, "greet_friend").__setitem__("when", [{"player_within": 3}]),
+                   r"'greet_friend': a once_per_pair beat needs a notable_within term")
+        self.fails(lambda d: beat(d, "greet_friend").__setitem__(
+            "when", [{"any": ["walking", {"notable_within": 3, "relation": "friend"}]}]),
+            r"'greet_friend': a once_per_pair beat needs a notable_within term")
+
+    def test_once_per_approach_needs_player_within(self):
+        self.fails(lambda d: beat(d, "notice_player").__setitem__("when", ["walking"]),
+                   r"'notice_player': a once_per_approach beat needs a player_within term")
+
+    def test_once_per_episode_needs_player_adjacent_ticks(self):
+        self.fails(lambda d: beat(d, "player_lingers").__setitem__("when", ["dwelling"]),
+                   r"'player_lingers': a once_per_episode beat needs a player_adjacent_ticks term")
 
     def test_companion_steps_need_the_companion_out(self):
         self.fails(self.set_steps("ace_play", ["companion_do jump", "emote happy"]),

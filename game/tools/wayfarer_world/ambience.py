@@ -11,6 +11,7 @@ emitted tables name the C constants, so a renamed constant fails the build.
 """
 
 import itertools
+import json
 import re
 from pathlib import Path
 
@@ -52,6 +53,7 @@ EFFECTS = ["ripple", "splash", "grass_shake", "dust", "sparkle"]
 WHERE = ["ahead", "own"]
 COMPANION_ACTS = ["face", "jump"]
 SPOT_KINDS = [k for k in KIND_KEYS if KIND_KEYS.index(k) != NAMED]
+TOP_KEYS = {"_comment", "trainers", "relationships", "beats"}
 BEAT_KEYS = {"id", "class", "when", "who", "flags", "cooldown", "steps", "note"}
 WHO_KEYS = {"tags_any", "tags_none", "companion"}
 TRAINER_KEYS = {"tags", "preferred", "companion", "note"}
@@ -59,6 +61,32 @@ CHAMPIONS = {"blue", "lance", "wallace", "steven"}
 
 # Wait and parameter bounds: the ROM fields are u8.
 PARAM_MAX = 255
+
+
+# A reaction limit needs the `when` term (a must, in the top-level list) its
+# latch follows: the partner a pair is greeted by, the range an approach is
+# cleared by leaving, the standing an episode ends with.
+LIMIT_TERMS = {"once_per_pair": ("notable", "notable_within"),
+               "once_per_approach": ("player_within", "player_within"),
+               "once_per_episode": ("player_adjacent", "player_adjacent_ticks")}
+
+
+def load_data(path):
+    """ambience.json -> (data, duplicate-key problems). JSON allows a key
+    twice in one object and keeps the last; here that is a mistake."""
+    duplicates = []
+
+    def pairs(items):
+        out, twice = {}, []
+        for key, value in items:
+            if key in out:
+                twice.append(key)
+            out[key] = value
+        where = " in beat %r" % out["id"] if isinstance(out.get("id"), str) else ""
+        duplicates.extend("duplicate key %r%s" % (key, where) for key in twice)
+        return out
+    data = json.loads(Path(path).read_text(encoding="utf-8"), object_pairs_hook=pairs)
+    return data, duplicates
 
 
 def activity_key(name):
@@ -549,6 +577,16 @@ def parse_beat(row):
             elif s.op == "companion_do" or (s.op == "face" and s.arg == TARGETS["companion"]):
                 if not out:
                     raise BuildError("step %r while no companion is out" % s.text)
+        terms = b.all | b.any
+        if "companion_room" in terms and b.cls != "idle":
+            raise BuildError("companion_room only in an idle beat (the walker works it out only "
+                             "where an idle beat can win)")
+        if "blocked" in terms and b.cls != "react":
+            raise BuildError("blocked only in a react beat (it holds only at the blocked react check)")
+        for flag, (fact, term) in LIMIT_TERMS.items():
+            if flag in b.flags and fact not in b.all:
+                raise BuildError("a %s beat needs a %s term in its when list (not inside an any)"
+                                 % (flag, term))
         if "keep_walking" in b.flags and any(s.op != "emote" for s in b.steps):
             raise BuildError("keep_walking beats may only show icons")
         problem = check_tile(b.steps)
@@ -580,12 +618,22 @@ class Ambience:
     def __init__(self, root, sim, catalog, ambience_path=None, sprites=None, data=None):
         self.root = Path(root)
         self.path = ambience_path or TOOL_DIR / "ambience.json"
-        self.data = data if data is not None else load_json(self.path)
+        duplicates = []
+        if data is None:
+            data, duplicates = load_data(self.path)
+        self.data = data
         self.sim = list(sim)
         self.slot = {slug: i for i, slug in enumerate(self.sim)}
         self.catalog = {t["slug"]: t for t in catalog}
         self.sprites = sprites if sprites is not None else SpeciesSprites(self.root)
-        self.problems, self.warnings = [], []
+        self.problems, self.warnings = list(duplicates), []
+        if not isinstance(self.data, dict):
+            self.problems.append("the file is not an object")
+            self.data = {}
+        unknown = sorted(set(self.data) - TOP_KEYS)
+        if unknown:
+            self.problems.append("unknown top-level key %s (%s)"
+                                 % (", ".join(map(repr, unknown)), ", ".join(sorted(TOP_KEYS))))
         self.beats, self.trainers = [], []
         self.relations = [[0] * len(self.sim) for _ in self.sim]
         self.authored_pairs = {}
@@ -726,14 +774,15 @@ class Ambience:
         """The derived relation of two simulated trainers (catalog data):
         rival: both are Champions (role "Champion");
         colleague: both Gym Leaders (role "Gym Leader") with the same
-        homeRegion, or both in {"Elite Four", "Champion"} of the same League
-        (see league()). Rival wins over colleague: Blue and Lance are both
+        homeRegion (a missing one matches nothing), or both in {"Elite
+        Four", "Champion"} of the same League (see league()). Rival wins over colleague: Blue and Lance are both
         Indigo's Champions and rivals."""
         ca, cb = self.catalog.get(a, {}), self.catalog.get(b, {})
         ra, rb = ca.get("role"), cb.get("role")
         if ra == "Champion" and rb == "Champion":
             return "rival"
-        if ra == "Gym Leader" and rb == "Gym Leader" and ca.get("homeRegion") == cb.get("homeRegion"):
+        if ra == "Gym Leader" and rb == "Gym Leader" and ca.get("homeRegion") \
+                and ca.get("homeRegion") == cb.get("homeRegion"):
             return "colleague"
         league = {"Elite Four", "Champion"}
         if ra in league and rb in league and self.league(ca) and self.league(ca) == self.league(cb):

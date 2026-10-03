@@ -53,12 +53,12 @@ standable tile. It returns to the starting tile before it ends.
 | Movement | Speed |
 | --- | --- |
 | Default walking, wander moves, browse moves, a beat's steps | **slow**: `MOVEMENT_ACTION_WALK_SLOW_*`, 32 frames a tile |
-| Walk-off after a yield or hand-off, a strip actor leaving view, a blocked edge lane | **normal**: `MOVEMENT_ACTION_WALK_NORMAL_*`, 16 frames a tile |
+| Walk-off after a yield or hand-off, a back-off from the player, a Gym visitor just leaving, a strip actor, the step out of or into the map through a side lane | **normal**: `MOVEMENT_ACTION_WALK_NORMAL_*`, 16 frames a tile |
 
-Walker timeouts measured in frames double for slow walking, so they keep the
-same length in tiles. `WALKER_WALKOFF_FRAMES` goes from 600 to 1,200, and the
-walker's other per-trip timeouts scale the same way. The search, spawn, and
-hand-off rules don't change.
+`WALKER_WALKOFF_FRAMES` goes from 600 to 1,200. The walker's other frame
+timeouts are standing waits, push counters, and scanline budgets rather than
+walking time, so they stay as they are. The search, spawn, and hand-off rules
+don't change.
 
 ### Primitives
 
@@ -328,17 +328,20 @@ tables, as it does for `routines.json`.
 
 - **Save:** nothing.
 - **RAM:** per walker, the running beat, its step index and timer, the beat and
-  decision counters, the quiet-gap timer, and a cooldown slot per beat. That's
-  under 48 bytes per walker in `EWRAM_DATA`, per the
-  [RAM rules](../../AGENTS.md).
-- **ROM:** the pool and tag tables, a few hundred bytes.
+  decision counters, the quiet-gap timer, and a cooldown slot per beat, about
+  75 bytes per walker. It lives in one heap block the walker layer allocates
+  while walkers are active (dropped on heap resets), not in static EWRAM, per
+  the [RAM rules](../../AGENTS.md): the mechanics-test build has almost no
+  EWRAM left. Only the few latches that must survive a menu sit in the
+  walker's existing EWRAM.
+- **ROM:** the pool, tag, trainer, and relation tables, about 2.5 KB.
 - **CPU:** filtering about 30 rows at a decision point, well inside the walker's
   per-frame budget. No beat may add lag frames.
 
 ### Acceptance
 
-1. Walkers walk at slow speed by default, and at normal speed only for
-   walk-offs, strip exits, and blocked lanes.
+1. Walkers walk at slow speed by default, and at normal speed only for the
+   hurried cases in [Pace](#pace).
 2. A walker at a water's edge runs `water_bite` or `water_wait` while facing
    water, and never a beat whose context doesn't hold.
 3. `notice_player` fires once as the player passes within 3 tiles of a

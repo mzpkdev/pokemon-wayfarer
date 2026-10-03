@@ -90,9 +90,11 @@ static void TestInit(void)
     Ambience_InitWalker(&walker);
     CHECK_EQ(walker.beat, AMBIENCE_BEAT_NONE);
     CHECK_EQ(walker.other, AMBIENCE_ACTOR_NONE);
-    CHECK_EQ(walker.beatCounter + walker.decisionCounter + walker.stepCount + walker.stepsSinceBeat, 0);
-    // A freshly spawned walker starts with its quiet gap already passed.
+    CHECK_EQ(walker.beatCounter + walker.decisionCounter + walker.stepCount, 0);
+    // A freshly spawned walker starts with its quiet gap already passed, and
+    // with "at least 6 steps since the last beat" holding (no last beat).
     CHECK_EQ(walker.gapTicks, 0xFF);
+    CHECK_EQ(walker.stepsSinceBeat, 0xFF);
     for (i = 0; i < AMBIENCE_MAX_BEATS; i++)
         CHECK_EQ(walker.cooldown[i], 0);
 }
@@ -152,6 +154,12 @@ static void TestGate(void)
     Ambience_InitWalker(&walker);
     AimDwellOdds(&walker, brock, TRUE);
     CHECK(Peek(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_DWELL) != AMBIENCE_BEAT_NONE);
+    // ... and its first walking window, however few steps it has taken.
+    ctx = Ctx(AMBIENCE_FACT_WALKING);
+    Ambience_InitWalker(&walker);
+    walker.stepCount = (u8)((20 - Catalog(brock) % 10 - 1) % 10);   // the next step hits the window
+    CHECK(Ambience_IdleCanWin(&walker, brock, AMBIENCE_DECIDE_STEP));
+    CHECK(Peek(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_STEP) != AMBIENCE_BEAT_NONE);
 }
 
 static void TestCounters(void)
@@ -165,18 +173,22 @@ static void TestCounters(void)
     Ambience_InitWalker(&walker);
     Peek(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_STEP);
     CHECK_EQ(walker.stepCount, 1);
-    CHECK_EQ(walker.stepsSinceBeat, 1);
+    CHECK_EQ(walker.stepsSinceBeat, 0xFF);  // saturated from the start
     CHECK_EQ(walker.decisionCounter, 0);
+    walker.stepsSinceBeat = 0;              // as a beat's end leaves it
+    Peek(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_STEP);
+    CHECK_EQ(walker.stepCount, 2);
+    CHECK_EQ(walker.stepsSinceBeat, 1);
     ctx = Dwelling(WORLD_SPOT_SQUARE, 0);
     Peek(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_DWELL);
     Peek(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_ARRIVE);
     Peek(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_LEAVE);
     CHECK_EQ(walker.decisionCounter, 3);
-    CHECK_EQ(walker.stepCount, 1);
+    CHECK_EQ(walker.stepCount, 2);
     // Nothing advances at a react check.
     Peek(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_REACT);
     CHECK_EQ(walker.decisionCounter, 3);
-    CHECK_EQ(walker.stepCount, 1);
+    CHECK_EQ(walker.stepCount, 2);
     CHECK_EQ(walker.stepsSinceBeat, 1);
     CHECK_EQ(walker.beatCounter, 0);
 }
@@ -232,7 +244,7 @@ static void TestIdleOdds(void)
     // Brock walking: look_around and hum (cheerful).
     ctx = Ctx(AMBIENCE_FACT_WALKING);
     walker = Ready();
-    since = 0;
+    since = 0xFF;   // a fresh walker: no last beat
     fired = 0;
     for (s = 1; s <= 60; s++)
     {
@@ -296,6 +308,26 @@ static void TestPick(void)
         admire += beat == BEAT_ADMIRE_WATER;
     }
     CHECK_EQ(admire, 4);    // a third
+
+    // A preferred beat that is not the last eligible row is doubled in
+    // place, next to itself (Erika at a bench, relaxing: doze).
+    {
+        u8 erika = Slot(NOTABLE_TRAINER_ERIKA);
+        static const u8 erikaList[] = {BEAT_PEOPLE_WATCH, BEAT_DOZE, BEAT_DOZE, BEAT_FLOURISH};
+        u32 doze = 0;
+        ctx = Dwelling(WORLD_SPOT_BENCH, 0);
+        ctx.activity = WORLD_ACTIVITY_RELAX;
+        walker = Ready();
+        CHECK_EQ(gWayfarerAmbienceTrainers[erika].preferred, BEAT_DOZE);
+        for (k = 0; k < 12; k++)
+        {
+            AimDwellOdds(&walker, erika, TRUE);
+            beat = Peek(&walker, &latches, erika, &ctx, AMBIENCE_DECIDE_DWELL);
+            CHECK_EQ(beat, erikaList[(Catalog(erika) + 7 * k) % 4]);
+            doze += beat == BEAT_DOZE;
+        }
+        CHECK_EQ(doze, 6);
+    }
 }
 
 static void TestCooldown(void)
@@ -523,6 +555,89 @@ static void TestGreeting(void)
     CHECK_EQ(latches, 1 << AMBIENCE_LATCH_GREETED_SHIFT);
 }
 
+// A once-limited react beat whose condition holds while it is on cooldown
+// uses up its limit: it doesn't fire late in the same approach, standing
+// episode or visit. One that loses the pick keeps its latch.
+static void TestLimitOnCooldown(void)
+{
+    u8 brock = Slot(NOTABLE_TRAINER_BROCK);
+    struct AmbienceContext ctx = Ctx(AMBIENCE_FACT_WALKING);
+    struct AmbienceWalker walker;
+    u8 latches = 0;
+
+    // notice_player on cooldown as the player comes within range.
+    Ambience_InitWalker(&walker);
+    walker.cooldown[BEAT_NOTICE_PLAYER] = 3;
+    ctx.playerDistance = 2;
+    CHECK_EQ(Ambience_Select(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_REACT), AMBIENCE_BEAT_NONE);
+    CHECK_EQ(latches, AMBIENCE_LATCH_APPROACH);
+    Ambience_Tick(&walker);
+    Ambience_Tick(&walker);
+    Ambience_Tick(&walker);
+    CHECK_EQ(walker.cooldown[BEAT_NOTICE_PLAYER], 0);
+    Ambience_UpdateLatches(&latches, brock, &ctx);
+    CHECK_EQ(Ambience_Select(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_REACT), AMBIENCE_BEAT_NONE);
+    // A new approach notices again.
+    ctx.playerDistance = 4;
+    Ambience_UpdateLatches(&latches, brock, &ctx);
+    CHECK_EQ(latches, 0);
+    ctx.playerDistance = 3;
+    CHECK_EQ(Ambience_Select(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_REACT), BEAT_NOTICE_PLAYER);
+    Ambience_EndBeat(&walker);
+
+    // Also at a non-react decision (react beats run at every decision).
+    Ambience_InitWalker(&walker);
+    latches = 0;
+    walker.cooldown[BEAT_NOTICE_PLAYER] = 3;
+    CHECK_EQ(Peek(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_STEP), AMBIENCE_BEAT_NONE);
+    CHECK_EQ(latches, AMBIENCE_LATCH_APPROACH);
+
+    // player_lingers on cooldown: the standing episode is used up.
+    ctx = Dwelling(WORLD_SPOT_SQUARE, 0);
+    ctx.adjacentTicks = 12;
+    Ambience_InitWalker(&walker);
+    latches = AMBIENCE_LATCH_APPROACH;
+    walker.cooldown[BEAT_PLAYER_LINGERS] = 1;
+    CHECK_EQ(Ambience_Select(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_REACT), AMBIENCE_BEAT_NONE);
+    CHECK(latches & AMBIENCE_LATCH_EPISODE);
+    Ambience_Tick(&walker);
+    ctx.adjacentTicks = 30;
+    Ambience_UpdateLatches(&latches, brock, &ctx);
+    CHECK_EQ(Ambience_Select(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_REACT), AMBIENCE_BEAT_NONE);
+
+    // greet_friend on cooldown: that partner (actor 1) is greeted for this
+    // visit, no other.
+    ctx = Ctx(AMBIENCE_FACT_WALKING);
+    ctx.notableDistance[AMBIENCE_RELATION_FRIEND] = 2;
+    ctx.notableActor[AMBIENCE_RELATION_FRIEND] = 1;
+    Ambience_InitWalker(&walker);
+    latches = 0;
+    walker.cooldown[BEAT_GREET_FRIEND] = 1;
+    CHECK_EQ(Ambience_Select(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_REACT), AMBIENCE_BEAT_NONE);
+    CHECK_EQ(latches, 1 << (AMBIENCE_LATCH_GREETED_SHIFT + 1));
+    Ambience_Tick(&walker);
+    CHECK_EQ(Ambience_Select(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_REACT), AMBIENCE_BEAT_NONE);
+    ctx.notableActor[AMBIENCE_RELATION_FRIEND] = 3;
+    CHECK_EQ(Ambience_Select(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_REACT), BEAT_GREET_FRIEND);
+    Ambience_EndBeat(&walker);
+
+    // Losing the pick keeps the latch: the player and a friend in the same
+    // frame. notice_player wins (k = 0 for Brock, c = 0); the greeting
+    // stays due and comes next.
+    ctx = Ctx(AMBIENCE_FACT_WALKING);
+    ctx.playerDistance = 2;
+    ctx.notableDistance[AMBIENCE_RELATION_FRIEND] = 2;
+    ctx.notableActor[AMBIENCE_RELATION_FRIEND] = 1;
+    Ambience_InitWalker(&walker);
+    latches = 0;
+    CHECK_EQ(Catalog(brock), 0);
+    CHECK_EQ(Ambience_Select(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_REACT), BEAT_NOTICE_PLAYER);
+    CHECK_EQ(latches, AMBIENCE_LATCH_APPROACH);
+    Ambience_EndBeat(&walker);
+    CHECK_EQ(Ambience_Select(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_REACT), BEAT_GREET_FRIEND);
+    CHECK_EQ(latches, AMBIENCE_LATCH_APPROACH | (1 << (AMBIENCE_LATCH_GREETED_SHIFT + 1)));
+}
+
 static void TestLingers(void)
 {
     u8 brock = Slot(NOTABLE_TRAINER_BROCK);
@@ -628,7 +743,8 @@ static void TestDeterminism(void)
 // so a beat is picked exactly when an idle beat can win.
 static void TestIdleCanWin(void)
 {
-    static const u8 decisions[] = {AMBIENCE_DECIDE_DWELL, AMBIENCE_DECIDE_ARRIVE, AMBIENCE_DECIDE_STEP, AMBIENCE_DECIDE_REACT};
+    static const u8 decisions[] = {AMBIENCE_DECIDE_DWELL, AMBIENCE_DECIDE_ARRIVE, AMBIENCE_DECIDE_LEAVE,
+                                     AMBIENCE_DECIDE_STEP, AMBIENCE_DECIDE_REACT};
     struct AmbienceContext ctx = Dwelling(WORLD_SPOT_SQUARE, AMBIENCE_FACT_OUTDOORS | AMBIENCE_FACT_COMPANION_ROOM);
     u32 slot, d, t, s, gap, agreed = 0, wins = 0;
 
@@ -675,6 +791,7 @@ int main(void)
     TestContext();
     TestApproach();
     TestGreeting();
+    TestLimitOnCooldown();
     TestLingers();
     TestDeterminism();
     TestIdleCanWin();

@@ -26,6 +26,7 @@
                         | AMBIENCE_FACT_PLAYER_WITHIN | AMBIENCE_FACT_PLAYER_ADJACENT | AMBIENCE_FACT_NOTABLE)
 #define NIBBLE_NONE     15
 #define GREETED_ACTORS  4   // bits 4..7 of the latches
+#define ONCE_FLAGS      (AMBIENCE_FLAG_ONCE_PER_APPROACH | AMBIENCE_FLAG_ONCE_PER_EPISODE | AMBIENCE_FLAG_ONCE_PER_PAIR)
 
 static u8 CatalogIndex(u8 slot)
 {
@@ -114,6 +115,20 @@ static u8 Partner(const struct WayfarerAmbienceBeat *beat, const struct Ambience
     return AMBIENCE_ACTOR_NONE;
 }
 
+// The latches a once-limited beat sets when it starts (or is passed over
+// on cooldown): its limit's bit, or 0.
+static u8 LimitLatches(const struct WayfarerAmbienceBeat *beat, u8 other)
+{
+    u8 bits = 0;
+    if (beat->flags & AMBIENCE_FLAG_ONCE_PER_APPROACH)
+        bits |= AMBIENCE_LATCH_APPROACH;
+    if (beat->flags & AMBIENCE_FLAG_ONCE_PER_EPISODE)
+        bits |= AMBIENCE_LATCH_EPISODE;
+    if (beat->flags & AMBIENCE_FLAG_ONCE_PER_PAIR)
+        bits |= GreetedBit(other);
+    return bits;
+}
+
 static bool8 LimitAllows(const struct WayfarerAmbienceBeat *beat, const struct AmbienceContext *ctx, u8 latches)
 {
     if ((beat->flags & AMBIENCE_FLAG_ONCE_PER_APPROACH) && (latches & AMBIENCE_LATCH_APPROACH))
@@ -137,8 +152,11 @@ void Ambience_InitWalker(struct AmbienceWalker *walker)
         bytes[i] = 0;
     walker->beat = AMBIENCE_BEAT_NONE;
     walker->other = AMBIENCE_ACTOR_NONE;
-    // A freshly spawned walker starts with its quiet gap already passed.
+    // A freshly spawned walker starts with its quiet gap already passed,
+    // and with "at least 6 steps since the last beat" holding (there is no
+    // last beat): both saturated.
     walker->gapTicks = 0xFF;
+    walker->stepsSinceBeat = 0xFF;
 }
 
 bool8 Ambience_BeatHolds(u8 beat, u8 slot, const struct AmbienceContext *ctx, u8 latches)
@@ -186,7 +204,7 @@ u8 Ambience_Select(struct AmbienceWalker *walker, u8 *latches, u8 slot,
 {
     // Room for every beat plus the preferred beat's second entry.
     u8 list[AMBIENCE_MAX_BEATS + 1];
-    u8 n = 0, best = AMBIENCE_CLASS_IDLE, minClass, i, beat, c, preferred;
+    u8 n = 0, best = AMBIENCE_CLASS_IDLE, minClass, i, beat, c, preferred, spent = 0;
     const struct WayfarerAmbienceBeat *row;
 
     if (slot >= WORLD_SIM_TRAINER_COUNT)
@@ -224,12 +242,30 @@ u8 Ambience_Select(struct AmbienceWalker *walker, u8 *latches, u8 slot,
 
     // Filter and class: keep only the rows of the highest class present,
     // in pool order, the preferred beat twice.
+    //
+    // A once-limited beat whose when, who and limit hold but which is on
+    // cooldown still uses up its limit here (its latches are collected and
+    // set after the loop, so they don't filter this decision's other rows):
+    // the moment it reacts to (the approach, the standing episode, meeting
+    // that partner) has come, and it must not fire late, minutes into the
+    // same approach, once the cooldown runs out. A once-limited beat that
+    // holds but loses the pick to another beat keeps its latch: the react
+    // beats that can hold together (a greeting and the player's notice or
+    // lingering) react to different things, and the loser fires at the
+    // next react check, a frame after the winner ends.
     preferred = gWayfarerAmbienceTrainers[slot].preferred;
     for (beat = 0; beat < gWayfarerAmbienceBeatCount; beat++)
     {
         row = &gWayfarerAmbienceBeats[beat];
-        if (row->cls < minClass || row->cls < best || walker->cooldown[beat] != 0)
+        if (row->cls < minClass || row->cls < best)
             continue;
+        if (walker->cooldown[beat] != 0)
+        {
+            if ((row->flags & ONCE_FLAGS) && WhoHolds(row, slot) && WhenHolds(row, ctx)
+             && LimitAllows(row, ctx, *latches))
+                spent |= LimitLatches(row, Partner(row, ctx));
+            continue;
+        }
         if (!WhoHolds(row, slot) || !WhenHolds(row, ctx) || !LimitAllows(row, ctx, *latches))
             continue;
         if (row->cls > best)
@@ -241,6 +277,7 @@ u8 Ambience_Select(struct AmbienceWalker *walker, u8 *latches, u8 slot,
         if (beat == preferred)
             list[n++] = beat;
     }
+    *latches |= spent;
     if (n == 0)
         return AMBIENCE_BEAT_NONE;
 
@@ -252,12 +289,7 @@ u8 Ambience_Select(struct AmbienceWalker *walker, u8 *latches, u8 slot,
     walker->beat = beat;
     walker->other = Partner(row, ctx);
     walker->beatCounter++;
-    if (row->flags & AMBIENCE_FLAG_ONCE_PER_APPROACH)
-        *latches |= AMBIENCE_LATCH_APPROACH;
-    if (row->flags & AMBIENCE_FLAG_ONCE_PER_EPISODE)
-        *latches |= AMBIENCE_LATCH_EPISODE;
-    if (row->flags & AMBIENCE_FLAG_ONCE_PER_PAIR)
-        *latches |= GreetedBit(walker->other);
+    *latches |= LimitLatches(row, walker->other);
     return beat;
 }
 

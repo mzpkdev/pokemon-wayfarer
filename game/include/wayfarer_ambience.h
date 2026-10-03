@@ -61,7 +61,8 @@ struct AmbienceContext
 
 // Per-walker selection state. The walker layer keeps one per actor in its
 // heap block, set up by Ambience_InitWalker when the actor spawns (and after
-// a heap reset): counters at 0, the quiet gap already passed.
+// a heap reset): counters at 0, the quiet gap and the steps since the last
+// beat already passed (saturated).
 struct AmbienceWalker
 {
     u8 beat;                // the running beat, or AMBIENCE_BEAT_NONE
@@ -86,7 +87,9 @@ bool8 Ambience_BeatHolds(u8 beat, u8 slot, const struct AmbienceContext *ctx, u8
 // and pick. Returns the beat to start (and marks it running in
 // walker, sets walker->other for a greeting, sets the latches its limit
 // needs, and advances k), or AMBIENCE_BEAT_NONE. Advances t at ARRIVE,
-// LEAVE and DWELL decisions and s at STEP decisions.
+// LEAVE and DWELL decisions and s at STEP decisions. A once-limited beat
+// that holds but is on cooldown sets its latches all the same (its moment
+// passed); one that loses the pick does not.
 u8 Ambience_Select(struct AmbienceWalker *walker, u8 *latches, u8 slot,
                    const struct AmbienceContext *ctx, u8 decision);
 

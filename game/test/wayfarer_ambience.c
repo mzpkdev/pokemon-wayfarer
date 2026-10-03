@@ -72,6 +72,27 @@ TEST("Ambience: notice_player fires once per approach and ignores the quiet gap"
     EXPECT_EQ(Ambience_Select(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_REACT), notice);
 }
 
+TEST("Ambience: notice_player on cooldown uses up the approach, and a fresh walker's steps count as passed")
+{
+    u8 brock = SlotOf(NOTABLE_TRAINER_BROCK);
+    u8 notice = FindBeat(AMBIENCE_CLASS_REACT, AMBIENCE_FACT_PLAYER_WITHIN, AMBIENCE_FLAG_ONCE_PER_APPROACH, 0, AMBIENCE_TAG_STOIC);
+    struct AmbienceContext ctx;
+    struct AmbienceWalker walker;
+    u8 latches = 0;
+
+    EXPECT(notice != AMBIENCE_BEAT_NONE);
+    Ambience_InitWalker(&walker);
+    EXPECT_EQ(walker.stepsSinceBeat, 0xFF);
+    walker.cooldown[notice] = 1;
+    InitContext(&ctx, AMBIENCE_FACT_WALKING);
+    ctx.playerDistance = 2;
+    EXPECT_EQ(Ambience_Select(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_REACT), AMBIENCE_BEAT_NONE);
+    EXPECT_EQ(latches, AMBIENCE_LATCH_APPROACH);
+    Ambience_Tick(&walker);
+    Ambience_UpdateLatches(&latches, brock, &ctx);
+    EXPECT_EQ(Ambience_Select(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_REACT), AMBIENCE_BEAT_NONE);
+}
+
 TEST("Ambience: the quiet gap holds idle beats back, three times as long for a stoic trainer")
 {
     u8 brock = SlotOf(NOTABLE_TRAINER_BROCK), sabrina = SlotOf(NOTABLE_TRAINER_SABRINA);
