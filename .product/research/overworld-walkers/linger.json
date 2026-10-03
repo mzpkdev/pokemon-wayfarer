@@ -6,7 +6,7 @@
       "heartbeats": 1,
       "heartbeat_scanlines": 26,
       "lorelei": {
-        "node": 119,
+        "node": 116,
         "destKind": 1,
         "destId": 1381,
         "state": 0,
@@ -20,10 +20,10 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "7750590100600600"
+        "hex": "7450590100600600"
       },
       "blue": {
-        "node": 292,
+        "node": 289,
         "destKind": 1,
         "destId": 2756,
         "state": 1,
@@ -37,7 +37,7 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "2411b11200200200"
+        "hex": "2111b11200200200"
       }
     },
     {
@@ -47,7 +47,7 @@
       "heartbeat_scanlines": 126,
       "warp_frames": 40,
       "lorelei": {
-        "node": 96,
+        "node": 93,
         "destKind": 1,
         "destId": 1381,
         "state": 0,
@@ -61,10 +61,10 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "60505901ca600600"
+        "hex": "5d505901ca600600"
       },
       "blue": {
-        "node": 292,
+        "node": 289,
         "destKind": 1,
         "destId": 2756,
         "state": 1,
@@ -78,7 +78,7 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "2411b11200200200"
+        "hex": "2111b11200200200"
       },
       "blue_actor": null,
       "screenshot": ".product/research/overworld-walkers/linger-mart-blue-stays.png"
@@ -87,10 +87,10 @@
       "step": "into the Center",
       "player_map": 3072,
       "heartbeats": 3,
-      "heartbeat_scanlines": 776,
+      "heartbeat_scanlines": 778,
       "warp_frames": 74,
       "lorelei": {
-        "node": 123,
+        "node": 120,
         "destKind": 1,
         "destId": 1381,
         "state": 1,
@@ -104,12 +104,12 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "7b50591100600600"
+        "hex": "7850591100600600"
       },
       "blue": {
-        "node": 292,
+        "node": 289,
         "destKind": 1,
-        "destId": 9652,
+        "destId": 9645,
         "state": 0,
         "waited": 0,
         "arrival": 0,
@@ -121,7 +121,7 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "24116d0900c80200"
+        "hex": "21516b0900c80200"
       },
       "blue_actor": null
     },
@@ -129,10 +129,10 @@
       "step": "into the Mart again",
       "player_map": 3073,
       "heartbeats": 4,
-      "heartbeat_scanlines": 1545,
-      "warp_frames": 65,
+      "heartbeat_scanlines": 1535,
+      "warp_frames": 66,
       "lorelei": {
-        "node": 123,
+        "node": 120,
         "destKind": 1,
         "destId": 1381,
         "state": 1,
@@ -146,12 +146,12 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "7b50591100600400"
+        "hex": "7850591100600400"
       },
       "blue": {
-        "node": 292,
+        "node": 289,
         "destKind": 1,
-        "destId": 9652,
+        "destId": 9645,
         "state": 0,
         "waited": 0,
         "arrival": 0,
@@ -163,7 +163,7 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "24116d0900c80200"
+        "hex": "21516b0900c80200"
       },
       "blue_actor": null
     },
@@ -171,10 +171,10 @@
       "step": "into the Center again",
       "player_map": 3072,
       "heartbeats": 5,
-      "heartbeat_scanlines": 984,
+      "heartbeat_scanlines": 1022,
       "warp_frames": 79,
       "lorelei": {
-        "node": 123,
+        "node": 120,
         "destKind": 1,
         "destId": 1381,
         "state": 1,
@@ -188,12 +188,12 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "7b50591100600200"
+        "hex": "7850591100600200"
       },
       "blue": {
-        "node": 96,
+        "node": 93,
         "destKind": 1,
-        "destId": 9652,
+        "destId": 9645,
         "state": 0,
         "waited": 0,
         "arrival": 5,
@@ -205,17 +205,17 @@
         "lifeSteps": 0,
         "stayBits": 0,
         "reserved": 0,
-        "hex": "60106d091dc80200"
+        "hex": "5d506b091dc80200"
       },
       "blue_actor": null
     }
   ],
   "lorelei_nodes": [
-    119,
-    96,
-    123,
-    123,
-    123
+    116,
+    93,
+    120,
+    120,
+    120
   ],
   "heartbeats": [
     1,
@@ -255,7 +255,7 @@
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634092,
+    "worldState": 33634028,
     "actors": [
       {
         "index": 0,
@@ -322,15 +322,15 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 984,
-    "maxHeartbeatScanlines": 1545,
+    "lastHeartbeatScanlines": 1022,
+    "maxHeartbeatScanlines": 1535,
     "maxSpawnScanlines": 5,
     "maxUpdateScanlines": 13,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
-    "lastContextScanlines": 16,
+    "lastContextScanlines": 59,
     "lastFailNodes": 0,
     "maxFinishScanlines": 0,
     "walkOffs": 0,
@@ -340,5 +340,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 604
+  "emulated_frames": 605
 }

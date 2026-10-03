@@ -49,7 +49,7 @@
   ],
   "facing": 2,
   "record": {
-    "node": 96,
+    "node": 93,
     "destKind": 1,
     "destId": 1179,
     "state": 1,
@@ -63,7 +63,7 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "60d0261100a00600"
+    "hex": "5dd0261100a00600"
   },
   "template": 1,
   "emotes": 1,
@@ -74,7 +74,7 @@
     ".product/research/overworld-walkers/spot-template.png"
   ],
   "debug": {
-    "frames": 1212,
+    "frames": 1213,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -104,7 +104,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634004,
+    "worldState": 33634112,
     "actors": [
       {
         "index": 0,

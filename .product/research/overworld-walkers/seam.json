@@ -21,207 +21,207 @@
       "to": "Route 2",
       "map": 42,
       "frames": 118,
-      "heartbeat_scanlines": 1621,
+      "heartbeat_scanlines": 1607,
       "heartbeat_frames": 34
     },
     {
       "crossing": 4,
       "to": "Viridian",
       "map": 32,
-      "frames": 170,
-      "heartbeat_scanlines": 1793,
-      "heartbeat_frames": 50
+      "frames": 168,
+      "heartbeat_scanlines": 1797,
+      "heartbeat_frames": 48
     },
     {
       "crossing": 5,
       "to": "Route 2",
       "map": 42,
-      "frames": 182,
-      "heartbeat_scanlines": 754,
+      "frames": 134,
+      "heartbeat_scanlines": 721,
       "heartbeat_frames": 18
     },
     {
       "crossing": 6,
       "to": "Viridian",
       "map": 32,
-      "frames": 182,
-      "heartbeat_scanlines": 161,
+      "frames": 98,
+      "heartbeat_scanlines": 160,
       "heartbeat_frames": 5
     },
     {
       "crossing": 7,
       "to": "Route 2",
       "map": 42,
-      "frames": 124,
-      "heartbeat_scanlines": 195,
-      "heartbeat_frames": 6
+      "frames": 184,
+      "heartbeat_scanlines": 190,
+      "heartbeat_frames": 5
     },
     {
       "crossing": 8,
       "to": "Viridian",
       "map": 32,
-      "frames": 96,
-      "heartbeat_scanlines": 285,
-      "heartbeat_frames": 6
+      "frames": 102,
+      "heartbeat_scanlines": 275,
+      "heartbeat_frames": 7
     },
     {
       "crossing": 9,
       "to": "Route 2",
       "map": 42,
-      "frames": 132,
-      "heartbeat_scanlines": 1053,
-      "heartbeat_frames": 25
+      "frames": 124,
+      "heartbeat_scanlines": 1043,
+      "heartbeat_frames": 22
     },
     {
       "crossing": 10,
       "to": "Viridian",
       "map": 32,
       "frames": 100,
-      "heartbeat_scanlines": 670,
-      "heartbeat_frames": 18
+      "heartbeat_scanlines": 675,
+      "heartbeat_frames": 17
     },
     {
       "crossing": 11,
       "to": "Route 2",
       "map": 42,
-      "frames": 182,
-      "heartbeat_scanlines": 210,
-      "heartbeat_frames": 5
+      "frames": 132,
+      "heartbeat_scanlines": 248,
+      "heartbeat_frames": 6
     },
     {
       "crossing": 12,
       "to": "Viridian",
       "map": 32,
-      "frames": 178,
-      "heartbeat_scanlines": 230,
-      "heartbeat_frames": 4
+      "frames": 104,
+      "heartbeat_scanlines": 168,
+      "heartbeat_frames": 5
     },
     {
       "crossing": 13,
       "to": "Route 2",
       "map": 42,
-      "frames": 128,
-      "heartbeat_scanlines": 383,
-      "heartbeat_frames": 11
+      "frames": 124,
+      "heartbeat_scanlines": 390,
+      "heartbeat_frames": 9
     },
     {
       "crossing": 14,
       "to": "Viridian",
       "map": 32,
-      "frames": 158,
-      "heartbeat_scanlines": 611,
-      "heartbeat_frames": 20
+      "frames": 100,
+      "heartbeat_scanlines": 613,
+      "heartbeat_frames": 18
     },
     {
       "crossing": 15,
       "to": "Route 2",
       "map": 42,
-      "frames": 122,
-      "heartbeat_scanlines": 916,
-      "heartbeat_frames": 20
+      "frames": 126,
+      "heartbeat_scanlines": 902,
+      "heartbeat_frames": 18
     },
     {
       "crossing": 16,
       "to": "Viridian",
       "map": 32,
       "frames": 98,
-      "heartbeat_scanlines": 1006,
-      "heartbeat_frames": 24
+      "heartbeat_scanlines": 1008,
+      "heartbeat_frames": 23
     },
     {
       "crossing": 17,
       "to": "Route 2",
       "map": 42,
-      "frames": 166,
-      "heartbeat_scanlines": 158,
-      "heartbeat_frames": 6
+      "frames": 118,
+      "heartbeat_scanlines": 159,
+      "heartbeat_frames": 4
     },
     {
       "crossing": 18,
       "to": "Viridian",
       "map": 32,
-      "frames": 98,
+      "frames": 176,
       "heartbeat_scanlines": 202,
-      "heartbeat_frames": 7
+      "heartbeat_frames": 5
     },
     {
       "crossing": 19,
       "to": "Route 2",
       "map": 42,
-      "frames": 124,
-      "heartbeat_scanlines": 286,
-      "heartbeat_frames": 6
+      "frames": 128,
+      "heartbeat_scanlines": 285,
+      "heartbeat_frames": 7
     },
     {
       "crossing": 20,
       "to": "Viridian",
       "map": 32,
-      "frames": 98,
-      "heartbeat_scanlines": 145,
-      "heartbeat_frames": 3
+      "frames": 90,
+      "heartbeat_scanlines": 139,
+      "heartbeat_frames": 4
     },
     {
       "crossing": 21,
       "to": "Route 2",
       "map": 42,
-      "frames": 162,
+      "frames": 168,
       "heartbeat_scanlines": 271,
-      "heartbeat_frames": 7
+      "heartbeat_frames": 10
     },
     {
       "crossing": 22,
       "to": "Viridian",
       "map": 32,
-      "frames": 100,
-      "heartbeat_scanlines": 277,
-      "heartbeat_frames": 9
+      "frames": 92,
+      "heartbeat_scanlines": 298,
+      "heartbeat_frames": 11
     },
     {
       "crossing": 23,
       "to": "Route 2",
       "map": 42,
-      "frames": 124,
-      "heartbeat_scanlines": 1973,
-      "heartbeat_frames": 46
+      "frames": 120,
+      "heartbeat_scanlines": 1975,
+      "heartbeat_frames": 45
     },
     {
       "crossing": 24,
       "to": "Viridian",
       "map": 32,
-      "frames": 174,
-      "heartbeat_scanlines": 249,
+      "frames": 98,
+      "heartbeat_scanlines": 314,
       "heartbeat_frames": 6
     },
     {
       "crossing": 25,
       "to": "Route 2",
       "map": 42,
-      "frames": 172,
-      "heartbeat_scanlines": 1322,
-      "heartbeat_frames": 27
+      "frames": 122,
+      "heartbeat_scanlines": 1318,
+      "heartbeat_frames": 28
     },
     {
       "crossing": 26,
       "to": "Viridian",
       "map": 32,
       "frames": 98,
-      "heartbeat_scanlines": 1208,
+      "heartbeat_scanlines": 1195,
       "heartbeat_frames": 32
     },
     {
       "crossing": 27,
       "to": "Route 2",
       "map": 42,
-      "frames": 116,
-      "heartbeat_scanlines": 1023,
+      "frames": 162,
+      "heartbeat_scanlines": 983,
       "heartbeat_frames": 19
     },
     {
       "crossing": 28,
       "to": "Viridian",
       "map": 32,
-      "frames": 96,
-      "heartbeat_scanlines": 239,
+      "frames": 104,
+      "heartbeat_scanlines": 182,
       "heartbeat_frames": 6
     },
     {
@@ -229,32 +229,32 @@
       "to": "Route 2",
       "map": 42,
       "frames": 124,
-      "heartbeat_scanlines": 278,
+      "heartbeat_scanlines": 273,
       "heartbeat_frames": 8
     },
     {
       "crossing": 30,
       "to": "Viridian",
       "map": 32,
-      "frames": 170,
-      "heartbeat_scanlines": 355,
-      "heartbeat_frames": 8
+      "frames": 98,
+      "heartbeat_scanlines": 346,
+      "heartbeat_frames": 10
     }
   ],
   "heartbeats": 31,
-  "max_heartbeat_scanlines": 1973,
-  "median_heartbeat_scanlines": 355,
-  "mean_heartbeat_scanlines": 618.2333333333333,
-  "max_walker_update_scanlines": 140,
+  "max_heartbeat_scanlines": 1975,
+  "median_heartbeat_scanlines": 346,
+  "mean_heartbeat_scanlines": 613.6666666666666,
+  "max_walker_update_scanlines": 136,
   "world": {
     "heartbeats": 31,
     "skippedHeartbeats": 1,
     "lastHeartbeatMap": 32,
     "reseats": 0,
-    "lastHeartbeatFrames": 8,
-    "maxHeartbeatFrames": 50,
-    "maxStepScanlines": 147,
-    "maxFrameScanlines": 147,
+    "lastHeartbeatFrames": 10,
+    "maxHeartbeatFrames": 48,
+    "maxStepScanlines": 144,
+    "maxFrameScanlines": 144,
     "maxFinishScanlines": 0,
     "pendingAtLoad": 0,
     "forcedFinishes": 0,
@@ -264,7 +264,7 @@
     "deferredBegins": 0
   },
   "debug": {
-    "frames": 2623,
+    "frames": 2611,
     "spawns": 8,
     "removals": 8,
     "edgeExits": 0,
@@ -285,16 +285,16 @@
     "restores": 0,
     "lastSearchNodes": 156,
     "maxSearchNodes": 159,
-    "lastSearchFrames": 32,
-    "maxSearchFrames": 35,
-    "maxSliceScanlines": 107,
-    "maxSliceNodes": 7,
+    "lastSearchFrames": 30,
+    "maxSearchFrames": 33,
+    "maxSliceScanlines": 110,
+    "maxSliceNodes": 8,
     "workspaceBytes": 11308,
     "currentMap": 32,
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634096,
+    "worldState": 33634044,
     "actors": [
       {
         "index": 0,
@@ -361,10 +361,10 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 355,
-    "maxHeartbeatScanlines": 1973,
-    "maxSpawnScanlines": 65,
-    "maxUpdateScanlines": 140,
+    "lastHeartbeatScanlines": 346,
+    "maxHeartbeatScanlines": 1975,
+    "maxSpawnScanlines": 53,
+    "maxUpdateScanlines": 136,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
@@ -378,14 +378,14 @@
     "capacityWaits": 0,
     "stripTimeouts": 0
   },
-  "max_step_scanlines": 147,
-  "max_frame_scanlines": 147,
+  "max_step_scanlines": 144,
+  "max_frame_scanlines": 144,
   "max_finish_scanlines": 0,
-  "frames_per_heartbeat_max": 50,
+  "frames_per_heartbeat_max": 48,
   "within_target": false,
   "ceilings": {
     "frame_scanlines": 200
   },
   "pass": true,
-  "emulated_frames": 4424
+  "emulated_frames": 4042
 }

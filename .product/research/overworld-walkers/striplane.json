@@ -13,7 +13,7 @@
     "y": 26,
     "goalX": 0,
     "goalY": 0,
-    "goalEdge": 2311
+    "goalEdge": 2296
   },
   "track": [
     [
@@ -76,9 +76,9 @@
   "removed_after_frames": 45,
   "strip_timeouts": 1,
   "record": {
-    "node": 992,
+    "node": 983,
     "destKind": 1,
-    "destId": 7032,
+    "destId": 7029,
     "state": 1,
     "waited": 0,
     "arrival": 0,
@@ -90,7 +90,7 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "e013de1600a00600"
+    "hex": "d753dd1600a00600"
   },
   "screenshots": [
     ".product/research/overworld-walkers/striplane-after.png"
@@ -126,7 +126,7 @@
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634020,
+    "worldState": 33634028,
     "actors": [
       {
         "index": 0,
@@ -193,15 +193,15 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 26,
-    "maxHeartbeatScanlines": 26,
+    "lastHeartbeatScanlines": 25,
+    "maxHeartbeatScanlines": 25,
     "maxSpawnScanlines": 31,
     "maxUpdateScanlines": 62,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
-    "lastContextScanlines": 16,
+    "lastContextScanlines": 15,
     "lastFailNodes": 0,
     "maxFinishScanlines": 1,
     "walkOffs": 0,

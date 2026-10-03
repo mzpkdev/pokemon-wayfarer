@@ -1,8 +1,8 @@
 {
   "record_after": {
-    "node": 171,
+    "node": 168,
     "destKind": 1,
-    "destId": 3365,
+    "destId": 3363,
     "state": 0,
     "waited": 0,
     "arrival": 0,
@@ -14,13 +14,13 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "ab50490300e00600"
+    "hex": "a8d0480300e00600"
   },
   "dest_is_ruins": true,
   "frames_advance_to_plan": 16,
   "world_jobs": 2,
   "handoffs": 1,
-  "max_job_scanlines": 35,
+  "max_job_scanlines": 34,
   "max_walker_update_scanlines": 67,
   "ceilings": {
     "frame_scanlines": 200
@@ -59,7 +59,7 @@
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634088,
+    "worldState": 33634032,
     "actors": [
       {
         "index": 0,
@@ -126,8 +126,8 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 22,
-    "maxHeartbeatScanlines": 22,
+    "lastHeartbeatScanlines": 21,
+    "maxHeartbeatScanlines": 21,
     "maxSpawnScanlines": 25,
     "maxUpdateScanlines": 67,
     "backOffs": 0,
@@ -139,7 +139,7 @@
     "maxFinishScanlines": 2,
     "walkOffs": 1,
     "worldJobs": 2,
-    "maxJobScanlines": 35,
+    "maxJobScanlines": 34,
     "capacityWaits": 0,
     "stripTimeouts": 0
   },

@@ -33,7 +33,7 @@
     "goalEdge": 65535
   },
   "record": {
-    "node": 29,
+    "node": 26,
     "destKind": 1,
     "destId": 254,
     "state": 0,
@@ -47,7 +47,7 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "1d903f0005a00600"
+    "hex": "1a903f0005a00600"
   },
   "screenshots": [
     ".product/research/overworld-walkers/deadend-blocked.png",
@@ -84,7 +84,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634028,
+    "worldState": 33634096,
     "actors": [
       {
         "index": 0,
@@ -154,7 +154,7 @@
     "lastHeartbeatScanlines": 25,
     "maxHeartbeatScanlines": 25,
     "maxSpawnScanlines": 80,
-    "maxUpdateScanlines": 144,
+    "maxUpdateScanlines": 145,
     "backOffs": 2,
     "handoffs": 0,
     "visitorsVanished": 0,

@@ -19,26 +19,26 @@
     {
       "warp": 3,
       "frames": 42,
-      "heartbeat_scanlines": 1623,
+      "heartbeat_scanlines": 1612,
       "heartbeat_frames": 59,
       "context_scanlines": 9,
-      "trace": "5c04000080020500050001000000010000000000"
+      "trace": "540400007c020500050001000000010000000000"
     },
     {
       "warp": 4,
       "frames": 40,
-      "heartbeat_scanlines": 1886,
-      "heartbeat_frames": 138,
+      "heartbeat_scanlines": 1892,
+      "heartbeat_frames": 140,
       "context_scanlines": 10,
-      "trace": "6502000059020200070000000000120001000000"
+      "trace": "6102000055020200070000000000120000000000"
     },
     {
       "warp": 5,
-      "frames": 42,
-      "heartbeat_scanlines": 767,
+      "frames": 40,
+      "heartbeat_scanlines": 737,
       "heartbeat_frames": 42,
       "context_scanlines": 10,
-      "trace": "7f01000053001100170000000000020000000000"
+      "trace": "6801000052001100170000000000020000000000"
     },
     {
       "warp": 6,
@@ -51,7 +51,7 @@
     {
       "warp": 7,
       "frames": 40,
-      "heartbeat_scanlines": 214,
+      "heartbeat_scanlines": 209,
       "heartbeat_frames": 28,
       "context_scanlines": 9,
       "trace": "0000000000000000100000000000030001000000"
@@ -59,39 +59,39 @@
     {
       "warp": 8,
       "frames": 40,
-      "heartbeat_scanlines": 946,
-      "heartbeat_frames": 72,
+      "heartbeat_scanlines": 940,
+      "heartbeat_frames": 71,
       "context_scanlines": 10,
-      "trace": "4502000004020300100000000000010000000000"
+      "trace": "46020000050203000f0000000000010000000000"
     },
     {
       "warp": 9,
       "frames": 40,
-      "heartbeat_scanlines": 309,
+      "heartbeat_scanlines": 301,
       "heartbeat_frames": 33,
       "context_scanlines": 10,
-      "trace": "0000000000000000100000000000080000000000"
+      "trace": "00000000000000000f0000000000080000000000"
     },
     {
       "warp": 10,
       "frames": 40,
-      "heartbeat_scanlines": 671,
-      "heartbeat_frames": 56,
+      "heartbeat_scanlines": 675,
+      "heartbeat_frames": 58,
       "context_scanlines": 10,
-      "trace": "46010000fc000800140000000000010000000000"
+      "trace": "46010000fc000800130000000000020000000000"
     },
     {
       "warp": 11,
       "frames": 40,
-      "heartbeat_scanlines": 206,
+      "heartbeat_scanlines": 248,
       "heartbeat_frames": 28,
       "context_scanlines": 9,
-      "trace": "0100000001000100130000000000030000000000"
+      "trace": "1f0000001e000200130000000000030000000000"
     },
     {
       "warp": 12,
       "frames": 40,
-      "heartbeat_scanlines": 184,
+      "heartbeat_scanlines": 189,
       "heartbeat_frames": 28,
       "context_scanlines": 10,
       "trace": "180000000b0003000f0000000000020000000000"
@@ -99,39 +99,39 @@
     {
       "warp": 13,
       "frames": 40,
-      "heartbeat_scanlines": 398,
+      "heartbeat_scanlines": 404,
       "heartbeat_frames": 33,
-      "context_scanlines": 10,
-      "trace": "880000007f0003000e0000000000040000000000"
+      "context_scanlines": 9,
+      "trace": "880000007f0003000f0000000000040000000000"
     },
     {
       "warp": 14,
       "frames": 40,
-      "heartbeat_scanlines": 603,
+      "heartbeat_scanlines": 606,
       "heartbeat_frames": 55,
       "context_scanlines": 10,
-      "trace": "fe000000a8000500100000000000050000000000"
+      "trace": "fc000000a8000500110000000000040000000000"
     },
     {
       "warp": 15,
       "frames": 40,
-      "heartbeat_scanlines": 915,
-      "heartbeat_frames": 46,
-      "context_scanlines": 10,
-      "trace": "ec01000090010600130001000000030000000000"
+      "heartbeat_scanlines": 898,
+      "heartbeat_frames": 45,
+      "context_scanlines": 9,
+      "trace": "e101000090010500130001000000030000000000"
     },
     {
       "warp": 16,
-      "frames": 40,
-      "heartbeat_scanlines": 1000,
+      "frames": 38,
+      "heartbeat_scanlines": 1002,
       "heartbeat_frames": 71,
       "context_scanlines": 10,
-      "trace": "c20100007f010400130000000000010000000000"
+      "trace": "c10100007f010400130000000000010000000000"
     },
     {
       "warp": 17,
       "frames": 40,
-      "heartbeat_scanlines": 183,
+      "heartbeat_scanlines": 184,
       "heartbeat_frames": 29,
       "context_scanlines": 10,
       "trace": "0100000001000100130000000000030000000000"
@@ -139,7 +139,7 @@
     {
       "warp": 18,
       "frames": 40,
-      "heartbeat_scanlines": 207,
+      "heartbeat_scanlines": 208,
       "heartbeat_frames": 28,
       "context_scanlines": 10,
       "trace": "0400000002000300140000000000010000000000"
@@ -147,87 +147,87 @@
     {
       "warp": 19,
       "frames": 40,
-      "heartbeat_scanlines": 761,
+      "heartbeat_scanlines": 754,
       "heartbeat_frames": 43,
-      "context_scanlines": 10,
-      "trace": "9e0100006b010200110000000000020000000000"
+      "context_scanlines": 9,
+      "trace": "9d0100006a010200110000000000020000000000"
     },
     {
       "warp": 20,
       "frames": 38,
-      "heartbeat_scanlines": 153,
+      "heartbeat_scanlines": 146,
       "heartbeat_frames": 27,
       "context_scanlines": 10,
-      "trace": "05000000030002000e0000000000010000000000"
+      "trace": "05000000030002000d0000000000010000000000"
     },
     {
       "warp": 21,
       "frames": 40,
       "heartbeat_scanlines": 284,
-      "heartbeat_frames": 30,
+      "heartbeat_frames": 31,
       "context_scanlines": 10,
-      "trace": "100000000c0002000e0000000000050000000000"
+      "trace": "100000000c0002000d0000000000060000000000"
     },
     {
       "warp": 22,
       "frames": 40,
-      "heartbeat_scanlines": 349,
-      "heartbeat_frames": 33,
+      "heartbeat_scanlines": 370,
+      "heartbeat_frames": 35,
       "context_scanlines": 10,
-      "trace": "270000000c0005000d0000000000050000000000"
+      "trace": "310000000c0006000d0000000000050000000000"
     },
     {
       "warp": 23,
       "frames": 40,
-      "heartbeat_scanlines": 1478,
+      "heartbeat_scanlines": 1476,
       "heartbeat_frames": 58,
       "context_scanlines": 9,
-      "trace": "c6030000810305000f0000000000050000000000"
+      "trace": "c20300007d030500100000000000050000000000"
     },
     {
       "warp": 24,
       "frames": 40,
-      "heartbeat_scanlines": 248,
+      "heartbeat_scanlines": 255,
       "heartbeat_frames": 30,
       "context_scanlines": 9,
-      "trace": "140000000e000400110000000000030000000000"
+      "trace": "140000000e000400120000000000030000000000"
     },
     {
       "warp": 25,
       "frames": 42,
-      "heartbeat_scanlines": 1337,
+      "heartbeat_scanlines": 1340,
       "heartbeat_frames": 54,
-      "context_scanlines": 10,
-      "trace": "1703000002030300120000000000040001000000"
+      "context_scanlines": 9,
+      "trace": "1503000000030300130000000000040001000000"
     },
     {
       "warp": 26,
       "frames": 40,
-      "heartbeat_scanlines": 581,
-      "heartbeat_frames": 48,
+      "heartbeat_scanlines": 563,
+      "heartbeat_frames": 47,
       "context_scanlines": 9,
-      "trace": "3201000009010400100000000000030001000000"
+      "trace": "2e01000005010400110000000000020000000000"
     },
     {
       "warp": 27,
       "frames": 42,
-      "heartbeat_scanlines": 1015,
-      "heartbeat_frames": 48,
+      "heartbeat_scanlines": 976,
+      "heartbeat_frames": 47,
       "context_scanlines": 10,
-      "trace": "850200004a0203000f0000000000020000000000"
+      "trace": "6a0200004a0202000f0000000000020000000000"
     },
     {
       "warp": 28,
       "frames": 40,
-      "heartbeat_scanlines": 179,
-      "heartbeat_frames": 29,
-      "context_scanlines": 9,
+      "heartbeat_scanlines": 178,
+      "heartbeat_frames": 28,
+      "context_scanlines": 10,
       "trace": "120000000a0002000e0000000000020001000000"
     },
     {
       "warp": 29,
       "frames": 40,
-      "heartbeat_scanlines": 264,
+      "heartbeat_scanlines": 259,
       "heartbeat_frames": 32,
       "context_scanlines": 10,
       "trace": "0c0000000a0002000d0000000000060000000000"
@@ -235,97 +235,97 @@
     {
       "warp": 30,
       "frames": 40,
-      "heartbeat_scanlines": 344,
+      "heartbeat_scanlines": 333,
       "heartbeat_frames": 36,
       "context_scanlines": 10,
-      "trace": "6300000034000600120000000000030000000000"
+      "trace": "6300000034000600110000000000030000000000"
     },
     {
       "warp": 31,
       "frames": 40,
-      "heartbeat_scanlines": 327,
+      "heartbeat_scanlines": 316,
       "heartbeat_frames": 30,
       "context_scanlines": 10,
-      "trace": "620000005d000300130000000000030000000000"
+      "trace": "610000005c000300120000000000030000000000"
     },
     {
       "warp": 32,
       "frames": 40,
-      "heartbeat_scanlines": 1232,
-      "heartbeat_frames": 84,
+      "heartbeat_scanlines": 1224,
+      "heartbeat_frames": 83,
       "context_scanlines": 10,
-      "trace": "1d0300001b030300130000000000020000000000"
+      "trace": "1903000017030300120000000000020000000000"
     },
     {
       "warp": 33,
-      "frames": 42,
-      "heartbeat_scanlines": 239,
-      "heartbeat_frames": 25,
-      "context_scanlines": 9,
-      "trace": "56000000530002000e0000000000000000000000"
+      "frames": 40,
+      "heartbeat_scanlines": 248,
+      "heartbeat_frames": 26,
+      "context_scanlines": 10,
+      "trace": "55000000520002000d0000000000010000000000"
     },
     {
       "warp": 34,
       "frames": 40,
-      "heartbeat_scanlines": 392,
+      "heartbeat_scanlines": 404,
       "heartbeat_frames": 40,
       "context_scanlines": 10,
-      "trace": "8f0000008f0001000b0000000000050000000000"
+      "trace": "940000008f0002000b0000000000050000000000"
     },
     {
       "warp": 35,
       "frames": 42,
-      "heartbeat_scanlines": 239,
+      "heartbeat_scanlines": 247,
       "heartbeat_frames": 32,
       "context_scanlines": 10,
-      "trace": "26000000130005000d0000000000050000000000"
+      "trace": "26000000130005000e0000000000050000000000"
     },
     {
       "warp": 36,
       "frames": 40,
       "heartbeat_scanlines": 447,
-      "heartbeat_frames": 43,
+      "heartbeat_frames": 42,
       "context_scanlines": 10,
-      "trace": "7500000067000600110000000000070000000000"
+      "trace": "7500000067000600120000000000060000000000"
     },
     {
       "warp": 37,
       "frames": 42,
-      "heartbeat_scanlines": 298,
+      "heartbeat_scanlines": 275,
       "heartbeat_frames": 26,
-      "context_scanlines": 10,
-      "trace": "5900000033000800150000000000000000000000"
+      "context_scanlines": 9,
+      "trace": "4f00000033000700140000000000000000000000"
     },
     {
       "warp": 38,
       "frames": 40,
-      "heartbeat_scanlines": 361,
-      "heartbeat_frames": 37,
+      "heartbeat_scanlines": 357,
+      "heartbeat_frames": 36,
       "context_scanlines": 10,
-      "trace": "8500000085000100100000000000030000000000"
+      "trace": "85000000850001000f0000000000030000000000"
     },
     {
       "warp": 39,
       "frames": 40,
-      "heartbeat_scanlines": 315,
-      "heartbeat_frames": 29,
-      "context_scanlines": 10,
-      "trace": "5c0000003c0002000d0000000000020000000000"
+      "heartbeat_scanlines": 319,
+      "heartbeat_frames": 30,
+      "context_scanlines": 9,
+      "trace": "5a0000003c0002000c0000000000030000000000"
     },
     {
       "warp": 40,
       "frames": 40,
-      "heartbeat_scanlines": 559,
-      "heartbeat_frames": 37,
+      "heartbeat_scanlines": 608,
+      "heartbeat_frames": 40,
       "context_scanlines": 10,
-      "trace": "290000001d0002000d0000000000060000000000"
+      "trace": "470000001e0003000d0000000000060000000000"
     },
     {
       "warp": 41,
       "frames": 42,
       "heartbeat_scanlines": 369,
-      "heartbeat_frames": 30,
-      "context_scanlines": 10,
+      "heartbeat_frames": 31,
+      "context_scanlines": 9,
       "trace": "7d0000003e000600120000000000020000000000"
     },
     {
@@ -334,20 +334,20 @@
       "heartbeat_scanlines": 268,
       "heartbeat_frames": 33,
       "context_scanlines": 10,
-      "trace": "3200000024000200110000000000040000000000"
+      "trace": "3100000024000200110000000000040000000000"
     },
     {
       "warp": 43,
       "frames": 40,
-      "heartbeat_scanlines": 716,
+      "heartbeat_scanlines": 713,
       "heartbeat_frames": 43,
       "context_scanlines": 9,
-      "trace": "7501000031010500130000000000030001000000"
+      "trace": "7301000030010500130000000000030001000000"
     },
     {
       "warp": 44,
       "frames": 40,
-      "heartbeat_scanlines": 220,
+      "heartbeat_scanlines": 230,
       "heartbeat_frames": 30,
       "context_scanlines": 10,
       "trace": "170000000b000300130000000000020000000000"
@@ -355,63 +355,63 @@
     {
       "warp": 45,
       "frames": 40,
-      "heartbeat_scanlines": 171,
+      "heartbeat_scanlines": 180,
       "heartbeat_frames": 28,
-      "context_scanlines": 10,
-      "trace": "0400000003000200110000000000040000000000"
+      "context_scanlines": 9,
+      "trace": "0400000003000200120000000000040000000000"
     },
     {
       "warp": 46,
       "frames": 40,
-      "heartbeat_scanlines": 184,
+      "heartbeat_scanlines": 193,
       "heartbeat_frames": 28,
       "context_scanlines": 10,
-      "trace": "27000000110003000e0000000000010000000000"
+      "trace": "27000000110003000f0000000000010000000000"
     },
     {
       "warp": 47,
       "frames": 40,
-      "heartbeat_scanlines": 1348,
+      "heartbeat_scanlines": 1350,
       "heartbeat_frames": 54,
-      "context_scanlines": 10,
-      "trace": "70030000700301000c0000000000030000000000"
+      "context_scanlines": 9,
+      "trace": "6c0300006c0301000d0000000000030000000000"
     },
     {
       "warp": 48,
-      "frames": 40,
-      "heartbeat_scanlines": 472,
-      "heartbeat_frames": 37,
+      "frames": 42,
+      "heartbeat_scanlines": 465,
+      "heartbeat_frames": 35,
       "context_scanlines": 10,
-      "trace": "0c000000060003000b0000000000070001000000"
+      "trace": "0c000000060003000c0000000000060000000000"
     },
     {
       "warp": 49,
-      "frames": 42,
-      "heartbeat_scanlines": 709,
-      "heartbeat_frames": 42,
+      "frames": 40,
+      "heartbeat_scanlines": 666,
+      "heartbeat_frames": 41,
       "context_scanlines": 10,
-      "trace": "3d010000fc000700110000000000050000000000"
+      "trace": "22010000fc000600100000000000050000000000"
     },
     {
       "warp": 50,
       "frames": 38,
-      "heartbeat_scanlines": 1333,
-      "heartbeat_frames": 88,
+      "heartbeat_scanlines": 1339,
+      "heartbeat_frames": 89,
       "context_scanlines": 10,
-      "trace": "3e030000db020500140000000000020000000000"
+      "trace": "3d030000da020500130000000000030000000000"
     },
     {
       "warp": 51,
       "frames": 42,
-      "heartbeat_scanlines": 203,
+      "heartbeat_scanlines": 216,
       "heartbeat_frames": 26,
       "context_scanlines": 10,
-      "trace": "0b0000000a0002000f0000000000020000000000"
+      "trace": "150000000a0003000f0000000000020000000000"
     },
     {
       "warp": 52,
       "frames": 40,
-      "heartbeat_scanlines": 367,
+      "heartbeat_scanlines": 363,
       "heartbeat_frames": 30,
       "context_scanlines": 10,
       "trace": "0f0000000c0002000d0000000000030000000000"
@@ -419,15 +419,15 @@
     {
       "warp": 53,
       "frames": 40,
-      "heartbeat_scanlines": 462,
+      "heartbeat_scanlines": 460,
       "heartbeat_frames": 36,
-      "context_scanlines": 10,
+      "context_scanlines": 9,
       "trace": "e1000000d00003000f0000000000030000000000"
     },
     {
       "warp": 54,
       "frames": 40,
-      "heartbeat_scanlines": 252,
+      "heartbeat_scanlines": 251,
       "heartbeat_frames": 33,
       "context_scanlines": 10,
       "trace": "14000000130002000d0001000000040000000000"
@@ -435,7 +435,7 @@
     {
       "warp": 55,
       "frames": 40,
-      "heartbeat_scanlines": 530,
+      "heartbeat_scanlines": 525,
       "heartbeat_frames": 39,
       "context_scanlines": 9,
       "trace": "7100000034000500100000000000050000000000"
@@ -443,50 +443,50 @@
     {
       "warp": 56,
       "frames": 40,
-      "heartbeat_scanlines": 585,
-      "heartbeat_frames": 44,
+      "heartbeat_scanlines": 593,
+      "heartbeat_frames": 45,
       "context_scanlines": 42,
-      "trace": "f5000000e3000500140000000000020000000000"
+      "trace": "f8000000e6000500140000000000020000000000"
     },
     {
       "warp": 57,
       "frames": 42,
-      "heartbeat_scanlines": 254,
+      "heartbeat_scanlines": 257,
       "heartbeat_frames": 29,
-      "context_scanlines": 10,
-      "trace": "0e0000000b0002000f0000000000030000000000"
+      "context_scanlines": 9,
+      "trace": "0e0000000b000200100000000000030000000000"
     },
     {
       "warp": 58,
       "frames": 40,
-      "heartbeat_scanlines": 1302,
-      "heartbeat_frames": 83,
+      "heartbeat_scanlines": 1291,
+      "heartbeat_frames": 82,
       "context_scanlines": 10,
-      "trace": "dc020000c70204000f0000000000030000000000"
+      "trace": "db020000c6020400100000000000020000000000"
     },
     {
       "warp": 59,
       "frames": 40,
-      "heartbeat_scanlines": 232,
-      "heartbeat_frames": 28,
+      "heartbeat_scanlines": 208,
+      "heartbeat_frames": 27,
       "context_scanlines": 10,
-      "trace": "2500000016000300100000000000030000000000"
+      "trace": "1b000000160002000f0000000000030000000000"
     },
     {
       "warp": 60,
       "frames": 40,
-      "heartbeat_scanlines": 246,
-      "heartbeat_frames": 32,
+      "heartbeat_scanlines": 237,
+      "heartbeat_frames": 31,
       "context_scanlines": 10,
-      "trace": "1e00000013000400100000000000030000000000"
+      "trace": "1e000000130004000f0000000000030000000000"
     }
   ],
-  "max_heartbeat_scanlines": 1886,
-  "mean_heartbeat_scanlines": 542.5,
-  "median_heartbeat_scanlines": 367,
-  "max_heartbeat_frames": 8.27,
+  "max_heartbeat_scanlines": 1892,
+  "mean_heartbeat_scanlines": 541.1833333333333,
+  "median_heartbeat_scanlines": 369,
+  "max_heartbeat_frames": 8.3,
   "over_two_frames": 25,
-  "mean_warp_frames": 40.3,
+  "mean_warp_frames": 40.2,
   "max_warp_frames": 42,
   "max_walker_update_scanlines": 12,
   "world": {
@@ -494,10 +494,10 @@
     "skippedHeartbeats": 1,
     "lastHeartbeatMap": 3072,
     "reseats": 0,
-    "lastHeartbeatFrames": 32,
-    "maxHeartbeatFrames": 138,
-    "maxStepScanlines": 191,
-    "maxFrameScanlines": 191,
+    "lastHeartbeatFrames": 31,
+    "maxHeartbeatFrames": 140,
+    "maxStepScanlines": 188,
+    "maxFrameScanlines": 188,
     "maxFinishScanlines": 0,
     "pendingAtLoad": 0,
     "forcedFinishes": 0,
@@ -507,7 +507,7 @@
     "deferredBegins": 0
   },
   "debug": {
-    "frames": 2544,
+    "frames": 2543,
     "spawns": 0,
     "removals": 0,
     "edgeExits": 0,
@@ -537,7 +537,7 @@
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634036,
+    "worldState": 33634040,
     "actors": [
       {
         "index": 0,
@@ -604,8 +604,8 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 246,
-    "maxHeartbeatScanlines": 1886,
+    "lastHeartbeatScanlines": 237,
+    "maxHeartbeatScanlines": 1892,
     "maxSpawnScanlines": 7,
     "maxUpdateScanlines": 12,
     "backOffs": 0,
@@ -621,10 +621,10 @@
     "capacityWaits": 0,
     "stripTimeouts": 0
   },
-  "max_step_scanlines": 191,
-  "max_frame_scanlines": 191,
+  "max_step_scanlines": 188,
+  "max_frame_scanlines": 188,
   "max_finish_scanlines": 0,
-  "frames_per_heartbeat_max": 138,
+  "frames_per_heartbeat_max": 140,
   "ceilings": {
     "frame_scanlines": 200,
     "warp_frames": 44
@@ -634,5 +634,5 @@
     "within_target": false
   },
   "pass": true,
-  "emulated_frames": 3675
+  "emulated_frames": 3667
 }

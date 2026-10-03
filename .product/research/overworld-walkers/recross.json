@@ -46,7 +46,7 @@
       "crossing": 7,
       "to": "Route 2",
       "reached": true,
-      "frames": 64,
+      "frames": 62,
       "pending_before": 1
     },
     {
@@ -60,21 +60,21 @@
       "crossing": 9,
       "to": "Route 2",
       "reached": true,
-      "frames": 46,
+      "frames": 86,
       "pending_before": 1
     },
     {
       "crossing": 10,
       "to": "Viridian",
       "reached": true,
-      "frames": 94,
+      "frames": 24,
       "pending_before": 1
     },
     {
       "crossing": 11,
       "to": "Route 2",
       "reached": true,
-      "frames": 88,
+      "frames": 48,
       "pending_before": 1
     },
     {
@@ -88,7 +88,7 @@
       "crossing": 13,
       "to": "Route 2",
       "reached": true,
-      "frames": 48,
+      "frames": 88,
       "pending_before": 1
     },
     {
@@ -102,7 +102,7 @@
       "crossing": 15,
       "to": "Route 2",
       "reached": true,
-      "frames": 94,
+      "frames": 50,
       "pending_before": 1
     },
     {
@@ -123,21 +123,21 @@
       "crossing": 18,
       "to": "Viridian",
       "reached": true,
-      "frames": 90,
+      "frames": 24,
       "pending_before": 1
     },
     {
       "crossing": 19,
       "to": "Route 2",
       "reached": true,
-      "frames": 52,
+      "frames": 54,
       "pending_before": 1
     },
     {
       "crossing": 20,
       "to": "Viridian",
       "reached": true,
-      "frames": 102,
+      "frames": 94,
       "pending_before": 1
     },
     {
@@ -158,7 +158,7 @@
       "crossing": 23,
       "to": "Route 2",
       "reached": true,
-      "frames": 88,
+      "frames": 52,
       "pending_before": 1
     },
     {
@@ -179,49 +179,49 @@
       "crossing": 26,
       "to": "Viridian",
       "reached": true,
-      "frames": 22,
+      "frames": 24,
       "pending_before": 1
     },
     {
       "crossing": 27,
       "to": "Route 2",
       "reached": true,
-      "frames": 86,
+      "frames": 46,
       "pending_before": 1
     },
     {
       "crossing": 28,
       "to": "Viridian",
       "reached": true,
-      "frames": 22,
+      "frames": 100,
       "pending_before": 1
     },
     {
       "crossing": 29,
       "to": "Route 2",
       "reached": true,
-      "frames": 54,
+      "frames": 48,
       "pending_before": 1
     },
     {
       "crossing": 30,
       "to": "Viridian",
       "reached": true,
-      "frames": 22,
+      "frames": 24,
       "pending_before": 1
     },
     {
       "crossing": 31,
       "to": "Route 2",
       "reached": true,
-      "frames": 46,
+      "frames": 54,
       "pending_before": 1
     },
     {
       "crossing": 32,
       "to": "Viridian",
       "reached": true,
-      "frames": 94,
+      "frames": 22,
       "pending_before": 1
     },
     {
@@ -242,28 +242,28 @@
       "crossing": 35,
       "to": "Route 2",
       "reached": true,
-      "frames": 50,
+      "frames": 94,
       "pending_before": 1
     },
     {
       "crossing": 36,
       "to": "Viridian",
       "reached": true,
-      "frames": 22,
+      "frames": 100,
       "pending_before": 1
     },
     {
       "crossing": 37,
       "to": "Route 2",
       "reached": true,
-      "frames": 54,
+      "frames": 50,
       "pending_before": 1
     },
     {
       "crossing": 38,
       "to": "Viridian",
       "reached": true,
-      "frames": 24,
+      "frames": 22,
       "pending_before": 1
     },
     {
@@ -281,43 +281,43 @@
       "pending_before": 1
     }
   ],
-  "pending_at_load": 14,
-  "deferred_begins": 12,
+  "pending_at_load": 19,
+  "deferred_begins": 19,
   "heartbeats": 40,
-  "max_finish_scanlines": 653,
+  "max_finish_scanlines": 660,
   "max_frame_scanlines": 150,
   "max_step_scanlines": 150,
-  "max_walker_update_scanlines": 120,
-  "mean_crossing_frames": 50.55,
+  "max_walker_update_scanlines": 125,
+  "mean_crossing_frames": 48.15,
   "world": {
     "heartbeats": 41,
     "skippedHeartbeats": 1,
     "lastHeartbeatMap": 32,
     "reseats": 0,
-    "lastHeartbeatFrames": 11,
-    "maxHeartbeatFrames": 34,
+    "lastHeartbeatFrames": 9,
+    "maxHeartbeatFrames": 35,
     "maxStepScanlines": 150,
     "maxFrameScanlines": 150,
-    "maxFinishScanlines": 653,
-    "pendingAtLoad": 14,
+    "maxFinishScanlines": 660,
+    "pendingAtLoad": 19,
     "forcedFinishes": 0,
     "workspaceLosses": 0,
     "pending": 0,
     "workspaceWaits": 0,
-    "deferredBegins": 12
+    "deferredBegins": 19
   },
   "debug": {
-    "frames": 731,
-    "spawns": 7,
-    "removals": 7,
+    "frames": 735,
+    "spawns": 5,
+    "removals": 5,
     "edgeExits": 0,
     "warpExits": 0,
     "arrivals": 0,
-    "rebases": 20,
+    "rebases": 24,
     "stripEntries": 0,
     "replans": 0,
     "blockedSteps": 0,
-    "searches": 10,
+    "searches": 8,
     "searchFails": 0,
     "localDwellBeats": 0,
     "localAdvances": 0,
@@ -337,7 +337,7 @@
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634104,
+    "worldState": 33634072,
     "actors": [
       {
         "index": 0,
@@ -404,15 +404,15 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 479,
-    "maxHeartbeatScanlines": 1617,
-    "maxSpawnScanlines": 42,
-    "maxUpdateScanlines": 120,
+    "lastHeartbeatScanlines": 563,
+    "maxHeartbeatScanlines": 1606,
+    "maxSpawnScanlines": 59,
+    "maxUpdateScanlines": 125,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
-    "lastContextScanlines": 10,
+    "lastContextScanlines": 0,
     "lastFailNodes": 0,
     "maxFinishScanlines": 0,
     "walkOffs": 0,
@@ -425,8 +425,9 @@
     ".product/research/overworld-walkers/recross-after.png"
   ],
   "ceilings": {
-    "frame_scanlines": 200
+    "frame_scanlines": 200,
+    "seam_finish_scanlines": 1000
   },
   "pass": true,
-  "emulated_frames": 2381
+  "emulated_frames": 2289
 }

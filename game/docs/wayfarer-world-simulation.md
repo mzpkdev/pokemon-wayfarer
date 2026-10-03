@@ -97,7 +97,7 @@ Edge cases:
 | Case | Handling |
 | --- | --- |
 | A warp while one is pending | `OnMapLoad` finishes it at once first, behind the fade (`pendingAtLoad`). |
-| A seam crossed again while one is pending | The new heartbeat queues (`deferredBegins`, up to three) with the context built at its load, and begins when the pending one completes: the same result as finishing it at the load, without the hitch in the seam's frame. A full queue finishes at once. |
+| A seam crossed again while one is pending | The new heartbeat queues (`deferredBegins`, up to two) with the context built at its load, and begins as the first unit of a later frame once the pending one completes: the same result as finishing it at the load, without the hitch in the seam's frame. With the queue full, only the oldest heartbeat finishes in the seam's frame, and the next begins sliced. A walker's routine advance under way stays queued across the seam. |
 | A save | `CopyPartyAndObjectsToSave`, the first step of every save path, finishes it (`forcedFinishes`). |
 | League resolution | `WayfarerWorld_OnLeagueResolved` finishes it before setting life events. |
 | A Gym Leader's own object | `WayfarerWalkers_HideTemplate` finishes it if that leader hasn't acted yet, so the leader's object matches the finished heartbeat. Gyms are entered by warp, so this runs behind the fade. |
@@ -105,7 +105,7 @@ Edge cases:
 | Walkers | Their AI, spawns, world jobs and world writes pause while it runs, as with locked controls. A walker released to the heartbeat at a seam is dropped at once. |
 | `InitHeap(gHeap)` | `WayfarerWorld_OnHeapReset` forgets the workspace (never frees it). The search under way restarts on the next frame with a new one; trainers that already acted stay done. |
 | New Game, Continue, load | Drop any pending heartbeat. |
-| No heap for the workspace | The heartbeat waits and retries next frame (`workspaceWaits`); only a forced finish with no heap skips the trainers still to act. |
+| No heap for the workspace | The heartbeat waits and retries next frame (`workspaceWaits`), at most 60 frames (walkers pause meanwhile), then the rest of it skips. A forced finish with no heap skips the rest and any queued heartbeats. |
 
 ## Local actor
 
@@ -140,8 +140,9 @@ World work the walkers do runs as world jobs, a slice per frame like the
 heartbeat: a watched trainer's routine advance (one spot choice per frame,
 `WorldSim_AdvanceRoutineStep`) and a trip's first search
 (`WorldSim_NextEdgeBegin`/`Run`, at most about 32 scanlines a frame, in its
-own 9 KB heap workspace while it runs; the cached path answers at once). A
-frame that runs a spot choice skips the grid search. A map load, a save and
+own 9 KB heap workspace while it runs; the cached path answers at once). The
+trip search and the grid search share one 48-line slice a frame, and a frame
+that runs a spot choice skips the grid search. A map load, a save and
 the league hook complete the advances first (`WayfarerWalkers_FlushWorldJobs`).
 
 Exits commit a hop like the heartbeat's: a walker checks `WorldSim_HopAllowed`
@@ -152,9 +153,10 @@ full it waits once, then hands off. A strip actor that can't walk straight on
 `gWayfarerWalkersDebug` exports counters, the worst slice in scanlines and each
 actor's state for `tools/wayfarer_walkers/verify.py`, the SkyEmu verifier
 (results in `.product/research/overworld-walkers/`, `summary.json`). The
-verifier refuses a ROM built from other tables (content hash), and `perf`,
-`seam`, `recross` and `longtrip` fail past their ceilings (200 scanlines in a
-frame, 44 frames per warp).
+verifier refuses a ROM built from other tables (content hash). `perf`,
+`seam`, `recross` and `longtrip` fail past 200 scanlines in a frame; `perf`
+also past 44 frames per warp, and `recross` past 1,000 scanlines finished
+inside one seam frame.
 
 ## Checks
 

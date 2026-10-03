@@ -1,6 +1,6 @@
 {
   "record_at_exit": {
-    "node": 291,
+    "node": 288,
     "destKind": 1,
     "destId": 2750,
     "state": 1,
@@ -14,7 +14,7 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "2391af1200000400"
+    "hex": "2091af1200000400"
   },
   "spawn_tile_inside": [
     5,
@@ -33,7 +33,7 @@
     4
   ],
   "record": {
-    "node": 291,
+    "node": 288,
     "destKind": 1,
     "destId": 2750,
     "state": 1,
@@ -47,7 +47,7 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "2391af1200000400"
+    "hex": "2091af1200000400"
   },
   "screenshots": [
     ".product/research/overworld-walkers/door-outside-after-entry.png",
@@ -78,14 +78,14 @@
     "maxSearchNodes": 20,
     "lastSearchFrames": 9,
     "maxSearchFrames": 9,
-    "maxSliceScanlines": 61,
+    "maxSliceScanlines": 117,
     "maxSliceNodes": 5,
     "workspaceBytes": 11308,
     "currentMap": 3072,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634072,
+    "worldState": 33634040,
     "actors": [
       {
         "index": 0,

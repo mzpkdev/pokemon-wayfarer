@@ -7,9 +7,9 @@
   "visitor_left": 1,
   "visitor_removed": true,
   "record_after": {
-    "node": 116,
+    "node": 113,
     "destKind": 1,
-    "destId": 9652,
+    "destId": 9645,
     "state": 0,
     "waited": 0,
     "arrival": 5,
@@ -21,7 +21,7 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "74106d0945c80200"
+    "hex": "71506b0945c80200"
   },
   "screenshots": [
     ".product/research/overworld-walkers/gymentry-visitor.png",
@@ -58,7 +58,7 @@
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634048,
+    "worldState": 33634008,
     "actors": [
       {
         "index": 0,
@@ -135,7 +135,7 @@
     "culls": 0,
     "lastContextScanlines": 14,
     "lastFailNodes": 50,
-    "maxFinishScanlines": 1,
+    "maxFinishScanlines": 2,
     "walkOffs": 1,
     "worldJobs": 1,
     "maxJobScanlines": 9,

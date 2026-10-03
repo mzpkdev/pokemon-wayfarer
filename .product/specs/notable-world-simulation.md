@@ -243,10 +243,17 @@ spot, and no warp is dropped.
   entrances, and store floors are all warps. Only a warp that can fire
   counts: one on a warp, door, arrow or directional-stair behaviour
   (`field_control_avatar.c`), one of the engine's layout fallbacks in
-  `TryStartWarpEventScript`, or an authored script door (overrides
-  `script_warps`: Petalburg Gym's sign doors and room entrances). Dormant
-  entrances on solid rock (Terra Cave's), fall landings, hidden or locked
-  doors and a Center's decorative side tiles are no edges.
+  `TryStartWarpEventScript`, one whose tile has a coord event (elevation 0
+  or matching) running a script that warps to the same map (mapjson's
+  Cinnabar Lab doors), or an authored script door (overrides
+  `script_warps`: Petalburg Gym's sign doors and room entrances). A warp
+  tile a walker can't stand on (collision, or a New Game object) fires only
+  as `TryDoorWarp` opens it: an animated door, approached from the south.
+  Dormant entrances on solid rock (Terra Cave's), fall landings, hidden or
+  locked doors, non-animated doors with collision (Cerulean's Bike Shop),
+  warp tiles under trainers and a Center's decorative side tiles are no
+  edges. A spot needs an edge into its component; a named spot without one
+  fails the build.
 - **Transit:** an authored list of scripted links, open to
   [travellers](notable-trainers.md#traveller) only, one hop each:
   placeholders are the S.S. Aqua (Olivine Port to Vermilion Port) and the
@@ -284,7 +291,11 @@ solid, except the authored story gates in the overrides'
 `ignore_objects`: objects a scene or flag removes for good, such as Gym
 door blockers, the Bell Tower sage, Vermilion's Snorlax, the League
 reception gate's guards, Cliff Edge Gate's engineers, Route 120's bridge
-Kecleon, Route 121's Aqua grunts, and Silver in the Burned Tower. A Cut tree or boulder is overridden
+Kecleon, Route 121's Aqua grunts, and Silver in the Burned Tower. Silver
+leaves only after the rival scene, which needs the Johto starter choice:
+for a visitor origin that declines Elm's offer the graph's way past him is
+off-screen only (an on-screen walker that meets him fails its search and
+leaves). A Cut tree or boulder is overridden
 only when it is the one way to a leader's own Gym (Vermilion's tree) or by
 an explicit product decision: Route 2's Cut tree at (11, 13), the way to
 Diglett's Cave, and Victory Road's Strength boulders at B1F (48, 12) and
@@ -302,9 +313,6 @@ it, and the cycle step it serves may be skipped. Today:
 - Route 120's ledges are the only way from Fortree to Route 121 and
   Lilycove, and Lilycove's shore is a separate beach, so Juan's Lilycove
   Fan Club stays out of reach.
-- The Cinnabar Lab entrance's room doors (FireRed layout) are plain floor
-  that never fires, so Blaine's Cinnabar Lab favourite is disabled and his
-  study step may be skipped (no study spot is within his radius).
 
 Any other unreachable favourite fails the build.
 
@@ -320,11 +328,11 @@ about 250 expanded nodes per heartbeat on average). Inside the map load
 this cost up to 1,642 scanlines (about 7 frames, with all badges), a
 visible stutter on a seamless edge. The heartbeat is therefore
 [spread over the following field frames](#heartbeat): on the E2E ROM a
-warp takes 40.3 frames on average and 42 at most (main: 40), and the
-worst single frame of heartbeat work is 147 scanlines on a seam and 191
+warp takes 40.2 frames on average and 42 at most (main: 40), and the
+worst single frame of heartbeat work is 144 scanlines on a seam and 188
 on warps. That worst frame is one spot choice, which can't be split (up
 to about 120 scanlines). The remaining cost is time: a heartbeat finishes
-after 9 field frames on a seam (median; worst 50), and the
+after 10 field frames on a seam (median; worst 48), and the
 walkers on the player's map pause until it does. A watched trainer
 planning a trip does the same work a slice per frame: its next step's spot
 choices one per frame, then the first search (Will at Indigo planning the
@@ -421,9 +429,12 @@ Until the heartbeat is done:
 - **Seams.** A seam crossed again before it is done doesn't finish it
   inside the seam's frame: the new heartbeat queues behind it (up to two)
   with its step 1 inputs taken at that map load, the same result without
-  the hitch. A full queue finishes at once.
+  the hitch. With the queue full, only the oldest heartbeat finishes in the
+  seam's frame (running back and forth over a seam, about 660
+  scanlines measured, a three-frame stall), and the next begins sliced.
 - **No heap.** Without room for the search workspace it waits a frame and
-  tries again, so a heartbeat is never split.
+  tries again, so a heartbeat is never split; after 60 frames (the walkers
+  wait meanwhile) the rest of it skips, as a failed allocation always did.
 - **Heap resets.** A heap reset (battle, menu) only restarts the search that
   was under way.
 - **New Game, Continue and load** drop it.

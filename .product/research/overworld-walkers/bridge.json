@@ -1,7 +1,7 @@
 {
-  "spot": 6063,
-  "node": 890,
-  "arrived_after_frames": 3016,
+  "spot": 6060,
+  "node": 881,
+  "arrived_after_frames": 3024,
   "delta": {
     "searches": 1,
     "searchFails": 0,
@@ -179,9 +179,9 @@
     ]
   ],
   "record": {
-    "node": 890,
+    "node": 881,
     "destKind": 1,
-    "destId": 6063,
+    "destId": 6060,
     "state": 1,
     "waited": 0,
     "arrival": 0,
@@ -193,17 +193,17 @@
     "lifeSteps": 0,
     "stayBits": 0,
     "reserved": 0,
-    "hex": "7ad3eb1500a00600"
+    "hex": "7113eb1500a00600"
   },
-  "maxSliceScanlines": 141,
+  "maxSliceScanlines": 143,
   "maxSearchNodes": 1567,
   "workspaceBytes": 11308,
-  "maxFinishScanlines": 40,
+  "maxFinishScanlines": 39,
   "screenshots": [
     ".product/research/overworld-walkers/bridge-north.png"
   ],
   "debug": {
-    "frames": 3023,
+    "frames": 3028,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -224,16 +224,16 @@
     "restores": 0,
     "lastSearchNodes": 1567,
     "maxSearchNodes": 1567,
-    "lastSearchFrames": 363,
-    "maxSearchFrames": 363,
-    "maxSliceScanlines": 141,
+    "lastSearchFrames": 366,
+    "maxSearchFrames": 366,
+    "maxSliceScanlines": 143,
     "maxSliceNodes": 8,
     "workspaceBytes": 11308,
     "currentMap": 7970,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634004,
+    "worldState": 33634008,
     "actors": [
       {
         "index": 0,
@@ -302,15 +302,15 @@
     ],
     "lastHeartbeatScanlines": 26,
     "maxHeartbeatScanlines": 26,
-    "maxSpawnScanlines": 77,
-    "maxUpdateScanlines": 148,
+    "maxSpawnScanlines": 73,
+    "maxUpdateScanlines": 149,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
     "lastContextScanlines": 16,
     "lastFailNodes": 0,
-    "maxFinishScanlines": 40,
+    "maxFinishScanlines": 39,
     "walkOffs": 0,
     "worldJobs": 0,
     "maxJobScanlines": 0,
@@ -318,5 +318,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 3420
+  "emulated_frames": 3428
 }
