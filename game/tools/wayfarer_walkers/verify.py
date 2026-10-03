@@ -67,7 +67,7 @@ OBJECT_SIZE = 0x24
 # (load_world_ids), so they follow the walker graph if it changes.
 VIRIDIAN = ROUTE1 = ROUTE2 = CENTER = MART = None
 NODE_VIRIDIAN = NODE_ROUTE1 = NODE_ROUTE2_SOUTH = NODE_CENTER = NODE_MART = None
-SPOT_VIRIDIAN_WATER = SPOT_ROUTE2_GRASS = SPOT_FOREST_GRASS = SPOT_CENTER_COUNTER = SPOT_MART_SHELF = None
+SPOT_VIRIDIAN_WATER = SPOT_VIRIDIAN_MART_SQUARE = SPOT_ROUTE2_GRASS = SPOT_FOREST_GRASS = SPOT_CENTER_COUNTER = SPOT_MART_SHELF = None
 
 
 class WorldTables:
@@ -134,6 +134,7 @@ def load_world_ids(game_root: Path) -> WorldTables:
     ids["SPOT_VIRIDIAN_WATER"], ids["NODE_VIRIDIAN"] = tables.spot("MAP_VIRIDIAN_CITY_HNS", "WATER_EDGE", 13, 39)
     ids["SPOT_VIRIDIAN_WATER_2"], _ = tables.spot("MAP_VIRIDIAN_CITY_HNS", "WATER_EDGE", 14, 39)
     ids["SPOT_VIRIDIAN_SQUARE"], _ = tables.spot("MAP_VIRIDIAN_CITY_HNS", "SQUARE", 18, 30)   # Wander in area
+    ids["SPOT_VIRIDIAN_MART_SQUARE"], _ = tables.spot("MAP_VIRIDIAN_CITY_HNS", "SQUARE", 39, 30)  # 4 tiles from the Mart door
     ids["SPOT_ROUTE2_GRASS"], ids["NODE_ROUTE2_SOUTH"] = tables.spot("MAP_ROUTE2_HNS", "TALL_GRASS", 9, 58)
     ids["SPOT_FOREST_GRASS"], _ = tables.spot("MAP_VIRIDIAN_FOREST_HNS", "TALL_GRASS", 34, 15)  # past Route 2 south
     ids["SPOT_CENTER_COUNTER"], ids["NODE_CENTER"] = tables.spot("MAP_VIRIDIAN_CITY_POKEMON_CENTER_HNS", "CENTER_COUNTER", 6, 4)
@@ -1874,6 +1875,46 @@ def scenario_beatspot(game: Game) -> dict:
     return result
 
 
+def scenario_arrive(game: Game) -> dict:
+    """The quiet gap starts passed and transition beats ignore it: Blue comes
+    out of the Viridian Mart door and spawns a few tiles from a square spot
+    (39, 30); he plays arrive_look as he reaches it, within seconds of
+    spawning. The player stands out of notice range, so no react beat
+    outranks it."""
+    boot(game, VIRIDIAN, 34, 33, DIR_EAST)
+    place_blue(game, node=NODE_VIRIDIAN, destId=SPOT_VIRIDIAN_MART_SQUARE, state=STATE_TRAVELLING,
+               arrival=ARRIVAL_DOOR, crossing=3, activity=ACTIVITY_RELAX, dwell=6)
+    game.warp(VIRIDIAN, 34, 33, DIR_EAST)
+    spawned = game.wait_for(lambda: game.actor_for(SLOT_BLUE), 200, what="Blue's actor")
+    spawn_tile = (spawned["x"], spawned["y"])
+    spawn_frame = game.walker_debug()["frames"]
+    watcher = BeatWatcher(game)
+    arrived_frame = None
+    for _ in range(0, 1200, 2):
+        game.emu.step(2)
+        watcher.poll()
+        actor = game.actor_for(SLOT_BLUE)
+        if actor and actor["atSpot"]:
+            arrived_frame = game.walker_debug()["frames"]
+            break
+    # The arrival beat starts in the arrival's frame (maybe already polled above).
+    watcher.watch(30, step=2)
+    shot = game.shot("arrive-look")
+    watcher.watch(300, step=4)
+    starts = watcher.starts(SLOT_BLUE)
+    arrive = next((e for e in starts if e["name"] == "arrive_look"), None)
+    distance = abs(spawn_tile[0] - 39) + abs(spawn_tile[1] - 30)
+    result = {"spawn_tile": spawn_tile, "spawn_distance": distance,
+              "arrival_frames_after_spawn": None if arrived_frame is None else arrived_frame - spawn_frame,
+              "arrive_look": arrive, "started": [e["name"] for e in starts],
+              "events": watcher.events, "counters": watcher.counters, "player": game.player(),
+              "screenshots": [shot], "debug": game.walker_debug()}
+    result["pass"] = (2 <= distance <= 5 and arrived_frame is not None and arrive is not None
+                      and starts and starts[0]["name"] == "arrive_look"
+                      and arrive["frame"] - arrived_frame <= 2)
+    return result
+
+
 def approach(game: Game, watcher: BeatWatcher, y: int, hold: int = 300) -> None:
     """Walk the player along x = 13 to row y, then stand there watching."""
     here = game.player()["y"]
@@ -2413,7 +2454,7 @@ SCENARIOS = {"spot": scenario_spot, "bridge": scenario_bridge, "walkoff": scenar
              "gymentry": scenario_gymentry, "stairs": scenario_stairs, "midstep": scenario_midstep,
              "decoys": scenario_decoys, "perf": scenario_perf, "seam": scenario_seam,
              "recross": scenario_recross, "longtrip": scenario_longtrip, "striplane": scenario_striplane,
-             "beatspot": scenario_beatspot, "notice": scenario_notice, "greet": scenario_greet,
+             "beatspot": scenario_beatspot, "arrive": scenario_arrive, "notice": scenario_notice, "greet": scenario_greet,
              "beatpush": scenario_beatpush, "determinism": scenario_determinism,
              "companion": scenario_companion, "companionslots": scenario_companionslots,
              "companionfollower": scenario_companionfollower, "companionpush": scenario_companionpush}

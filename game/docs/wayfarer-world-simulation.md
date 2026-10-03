@@ -164,7 +164,9 @@ expressive beats to the walkers. `src/wayfarer_ambience.c` picks them (the
 spec's gate, filter, class, idle odds and pick; it never reads the RNG);
 `src/wayfarer_walker_beats.c` runs a beat's primitives on the object; the
 "Notable ambience" section of `src/wayfarer_walkers.c` gathers the context,
-holds the decision points and stops beats.
+holds the decision points and stops beats. The quiet gap holds back idle
+beats only: react and transition beats (arrive_look, leave_turn) ignore it,
+and a freshly spawned walker starts with it already passed.
 
 **Decision points.** Only local actors run beats (not a Gym visitor just
 leaving, a walk-off or a strip actor), and only between steps:
@@ -291,7 +293,8 @@ the latches byte (`ambienceLatches`: notice-player, lingers and the greeted
 actors survive a menu). `InitHeap` calls `WayfarerWalkers_OnHeapReset`
 before it rewrites the heap: running beats end with plain field writes
 (facing, lock, a bowing nurse), and the pointer is dropped, never freed;
-counters, cooldowns and quiet gaps start again in the next block.
+counters and cooldowns start again in the next block, like a fresh spawn's
+(counters at 0, the quiet gap already passed).
 
 **Interruptions.** A running beat stops at once, unlocks and restores the
 walker's facing, stops its effects and puts its companion away when the player presses into the walker
@@ -315,7 +318,8 @@ inside one seam frame. The beat scenarios read `sAmbience`'s debug block (beats
 started by class, ended, interrupted, icons, effects, skips, the running beat
 per actor, and a ring of the last 32 start/end/interrupt events with their
 walker frame): `beatspot` (a water beat at Viridian's pond, only beats whose
-context holds), `notice` (once per approach, `stare_down` for a stoic
+context holds), `arrive` (Blue comes out of the Mart door 3 tiles from a
+square spot and plays `arrive_look` the moment he reaches it), `notice` (once per approach, `stare_down` for a stoic
 trainer), `greet` (Brock and Misty greet once), `beatpush` (pressing stops a
 beat within frames and restores the facing, then the back-off) and
 `determinism` (two runs from boot give the same beat log). The companion

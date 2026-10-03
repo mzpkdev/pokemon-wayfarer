@@ -137,6 +137,8 @@ void Ambience_InitWalker(struct AmbienceWalker *walker)
         bytes[i] = 0;
     walker->beat = AMBIENCE_BEAT_NONE;
     walker->other = AMBIENCE_ACTOR_NONE;
+    // A freshly spawned walker starts with its quiet gap already passed.
+    walker->gapTicks = 0xFF;
 }
 
 bool8 Ambience_BeatHolds(u8 beat, u8 slot, const struct AmbienceContext *ctx, u8 latches)
@@ -205,10 +207,13 @@ u8 Ambience_Select(struct AmbienceWalker *walker, u8 *latches, u8 slot,
     }
 
     // Gate and idle odds decide up front which classes can win, so rows
-    // that could not are never evaluated. Transition beats obey the gate;
-    // only react beats ignore it, and only they run at a react check.
-    if (decision == AMBIENCE_DECIDE_REACT || walker->gapTicks < Ambience_QuietGap(slot))
+    // that could not are never evaluated. The gate holds back idle beats
+    // only: react and transition beats ignore it (a walker always gets its
+    // arrival and leaving moments). Only react beats run at a react check.
+    if (decision == AMBIENCE_DECIDE_REACT)
         minClass = AMBIENCE_CLASS_REACT;
+    else if (walker->gapTicks < Ambience_QuietGap(slot))
+        minClass = AMBIENCE_CLASS_TRANSITION;
     else if (decision == AMBIENCE_DECIDE_STEP)
         minClass = ((c + walker->stepCount) % AMBIENCE_IDLE_STEPS == 0
                     && walker->stepsSinceBeat >= AMBIENCE_IDLE_MIN_STEPS)

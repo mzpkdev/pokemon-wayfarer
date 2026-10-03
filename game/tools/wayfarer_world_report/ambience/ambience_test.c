@@ -90,7 +90,9 @@ static void TestInit(void)
     Ambience_InitWalker(&walker);
     CHECK_EQ(walker.beat, AMBIENCE_BEAT_NONE);
     CHECK_EQ(walker.other, AMBIENCE_ACTOR_NONE);
-    CHECK_EQ(walker.beatCounter + walker.decisionCounter + walker.stepCount + walker.stepsSinceBeat + walker.gapTicks, 0);
+    CHECK_EQ(walker.beatCounter + walker.decisionCounter + walker.stepCount + walker.stepsSinceBeat, 0);
+    // A freshly spawned walker starts with its quiet gap already passed.
+    CHECK_EQ(walker.gapTicks, 0xFF);
     for (i = 0; i < AMBIENCE_MAX_BEATS; i++)
         CHECK_EQ(walker.cooldown[i], 0);
 }
@@ -130,17 +132,26 @@ static void TestGate(void)
     AimDwellOdds(&walker, sabrina, TRUE);
     CHECK_EQ(Peek(&walker, &latches, sabrina, &ctx, AMBIENCE_DECIDE_DWELL), BEAT_MEDITATE);
 
-    // React beats ignore the gap; transition beats do not.
+    // React and transition beats ignore the gap (just after a beat ended).
     ctx = Ctx(AMBIENCE_FACT_WALKING);
     ctx.playerDistance = 2;
     Ambience_InitWalker(&walker);
+    walker.gapTicks = 0;
     CHECK_EQ(Peek(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_REACT), BEAT_NOTICE_PLAYER);
     latches = 0;
     ctx = Dwelling(WORLD_SPOT_SQUARE, AMBIENCE_FACT_LEAVING);
     Ambience_InitWalker(&walker);
-    CHECK_EQ(Peek(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_LEAVE), AMBIENCE_BEAT_NONE);
-    walker.gapTicks = 0xFF;
+    walker.gapTicks = 0;
     CHECK_EQ(Peek(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_LEAVE), BEAT_LEAVE_TURN);
+    ctx = Dwelling(WORLD_SPOT_SQUARE, AMBIENCE_FACT_ARRIVING);
+    Ambience_InitWalker(&walker);
+    walker.gapTicks = 0;
+    CHECK_EQ(Peek(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_ARRIVE), BEAT_ARRIVE_LOOK);
+    // A freshly spawned walker gets its first idle beat without waiting out a gap.
+    ctx = Dwelling(WORLD_SPOT_SQUARE, 0);
+    Ambience_InitWalker(&walker);
+    AimDwellOdds(&walker, brock, TRUE);
+    CHECK(Peek(&walker, &latches, brock, &ctx, AMBIENCE_DECIDE_DWELL) != AMBIENCE_BEAT_NONE);
 }
 
 static void TestCounters(void)

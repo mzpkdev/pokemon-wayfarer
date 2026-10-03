@@ -136,7 +136,9 @@ At a decision point, with no beat running:
 1. **Gate.** Skip unless the walker's **quiet gap** has passed since its last
    beat. The gap is `16 + 4 × (c mod 3)` ticks (4 to 6 s), where `c` is the
    trainer's catalog position. For a `stoic` trainer it is three times that.
-   `react` beats ignore the gap.
+   `react` and `transition` beats ignore the gap, so a walker always gets its
+   arrival and leaving moments. A freshly spawned walker starts with its gap
+   already passed.
 2. **Filter.** The pool rows whose `when` and `who` hold, and whose cooldown has
    passed.
 3. **Class.** Keep only the highest class present: `react` beats first, then
@@ -158,7 +160,9 @@ At a decision point, with no beat running:
 - A greeting fires once per pair per map visit.
 - `player_lingers` fires once per standing-still episode.
 
-All counters live in the walker's RAM and start at 0 when the actor spawns.
+All counters live in the walker's RAM and start at 0 when the actor spawns,
+except the quiet gap, which starts as already passed. A heap reset (a warp,
+a menu, a battle) restarts them all the same way.
 Nothing reads the random number generator.
 
 ### Interruptions
@@ -212,7 +216,7 @@ Erika `doze`, Whitney `hum`, Morty `meditate`, Chuck `push_ups`, Bugsy
 
 ### The pool
 
-The first draft has 30 beats. Placeholder `wait` lengths are in ticks of
+The first draft has 35 beats. Placeholder `wait` lengths are in ticks of
 15 frames.
 
 **Walking and transitions**
