@@ -20,6 +20,7 @@
 #include "trainer_rating.h"
 #include "wayfarer_persistence.h"
 #include "config/league_circuit.h"
+#include "wayfarer_world.h"
 
 static u16 CalculateChecksum(void *, u16);
 static bool8 ReadFlashSector(u8, struct SaveSector *);
@@ -102,6 +103,9 @@ STATIC_ASSERT(LEAGUE_EVENT_LINEUP_SIZE == LEAGUE_LINEUP_SIZE, LeagueEventLineupC
 STATIC_ASSERT(LEAGUE_EVENT_NOTABLE_COUNT == NOTABLE_TRAINER_COUNT, LeagueEventTrainerCount);
 STATIC_ASSERT(sizeof(struct LeagueEventState) <= 256, LeagueEventStateSerializedBudget);
 STATIC_ASSERT(sizeof(struct PokemonStorage) <= 35712, WayfarerPokemonStorageSectorAllocation);
+STATIC_ASSERT(TOTAL_BOXES_COUNT == 13, WayfarerPcBoxCount);
+STATIC_ASSERT(sizeof(struct WayfarerWorldRecord) == 8, WayfarerWorldRecordSize);
+STATIC_ASSERT(sizeof(struct WayfarerWorldState) == WORLD_STATE_SIZE, WayfarerWorldStateSize);
 STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn) < 1024, WayfarerHoennStateRuntimeBudget);
 STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn.vars) == 512, WayfarerHoennVarBankSize);
 STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn.persistentFlags) == 188, WayfarerHoennFlagBankSize);
@@ -1175,6 +1179,11 @@ u8 LoadGameSave(u8 saveType)
         }
 #endif
         WayfarerValidatePersistentState();
+        if (!WayfarerWorld_OnLoad())
+        {
+            gSaveFileStatus = SAVE_STATUS_CORRUPT;
+            return SAVE_STATUS_CORRUPT;
+        }
     }
     return status;
 #endif

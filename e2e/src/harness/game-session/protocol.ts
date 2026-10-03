@@ -13,10 +13,11 @@ export type TrainerOnlySnapshot = {
   outcome: number
 }
 
-const abiVersion = 26
+const abiVersion = 27
 const expectedRequestSize = 380
 const expectedResultSize = 16
-const expectedStateSize = 1752
+const expectedStateSize = 1756
+const stateCommittedFrameOffset = 1752
 const expectedRequestStatusOffset = 87
 const expectedResultStatusOffset = 14
 
@@ -32,7 +33,7 @@ export const maxFullFieldMessageTextLength = 512
 export const maxBattleMessageTextLength = 512
 export const maxObjectEvents = 16
 export const leagueCount = 3
-export const totalPcBoxes = 14
+export const totalPcBoxes = 13
 export const pcBoxCapacity = 30
 export const keepMap = 0xffff
 export const keepCoordinate = -0x8000
@@ -867,6 +868,14 @@ const parseObservedObjectEvent = (bytes: Uint8Array, offset: number): ObservedOb
   visible: bytes[offset + 10] !== 0,
   moving: bytes[offset + 11] !== 0,
 })
+
+/**
+ * The ROM bumps `frame` before refreshing the state and stamps
+ * `committedFrame` after the last write. SkyEmu can pause inside that update
+ * on a lag frame, so a snapshot is whole only when the two stamps match.
+ */
+export const isCommittedStateSnapshot = (bytes: Uint8Array): boolean =>
+  uint32(bytes, 0) === uint32(bytes, stateCommittedFrameOffset)
 
 export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
   const partySpecies = Array.from({ length: maxParty }, (_, index) => uint16(bytes, 18 + index * 2))

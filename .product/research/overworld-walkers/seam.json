@@ -1,0 +1,391 @@
+{
+  "crossings": [
+    {
+      "crossing": 1,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 116,
+      "heartbeat_scanlines": 177,
+      "heartbeat_frames": 3
+    },
+    {
+      "crossing": 2,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 168,
+      "heartbeat_scanlines": 496,
+      "heartbeat_frames": 15
+    },
+    {
+      "crossing": 3,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 118,
+      "heartbeat_scanlines": 1607,
+      "heartbeat_frames": 34
+    },
+    {
+      "crossing": 4,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 168,
+      "heartbeat_scanlines": 1797,
+      "heartbeat_frames": 48
+    },
+    {
+      "crossing": 5,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 134,
+      "heartbeat_scanlines": 721,
+      "heartbeat_frames": 18
+    },
+    {
+      "crossing": 6,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 98,
+      "heartbeat_scanlines": 160,
+      "heartbeat_frames": 5
+    },
+    {
+      "crossing": 7,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 184,
+      "heartbeat_scanlines": 190,
+      "heartbeat_frames": 5
+    },
+    {
+      "crossing": 8,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 102,
+      "heartbeat_scanlines": 275,
+      "heartbeat_frames": 7
+    },
+    {
+      "crossing": 9,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 124,
+      "heartbeat_scanlines": 1043,
+      "heartbeat_frames": 22
+    },
+    {
+      "crossing": 10,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 100,
+      "heartbeat_scanlines": 675,
+      "heartbeat_frames": 17
+    },
+    {
+      "crossing": 11,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 132,
+      "heartbeat_scanlines": 248,
+      "heartbeat_frames": 6
+    },
+    {
+      "crossing": 12,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 104,
+      "heartbeat_scanlines": 168,
+      "heartbeat_frames": 5
+    },
+    {
+      "crossing": 13,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 124,
+      "heartbeat_scanlines": 390,
+      "heartbeat_frames": 9
+    },
+    {
+      "crossing": 14,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 100,
+      "heartbeat_scanlines": 613,
+      "heartbeat_frames": 18
+    },
+    {
+      "crossing": 15,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 126,
+      "heartbeat_scanlines": 902,
+      "heartbeat_frames": 18
+    },
+    {
+      "crossing": 16,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 98,
+      "heartbeat_scanlines": 1008,
+      "heartbeat_frames": 23
+    },
+    {
+      "crossing": 17,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 118,
+      "heartbeat_scanlines": 159,
+      "heartbeat_frames": 4
+    },
+    {
+      "crossing": 18,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 176,
+      "heartbeat_scanlines": 202,
+      "heartbeat_frames": 5
+    },
+    {
+      "crossing": 19,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 128,
+      "heartbeat_scanlines": 285,
+      "heartbeat_frames": 7
+    },
+    {
+      "crossing": 20,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 90,
+      "heartbeat_scanlines": 139,
+      "heartbeat_frames": 4
+    },
+    {
+      "crossing": 21,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 168,
+      "heartbeat_scanlines": 271,
+      "heartbeat_frames": 10
+    },
+    {
+      "crossing": 22,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 92,
+      "heartbeat_scanlines": 298,
+      "heartbeat_frames": 11
+    },
+    {
+      "crossing": 23,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 120,
+      "heartbeat_scanlines": 1975,
+      "heartbeat_frames": 45
+    },
+    {
+      "crossing": 24,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 98,
+      "heartbeat_scanlines": 314,
+      "heartbeat_frames": 6
+    },
+    {
+      "crossing": 25,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 122,
+      "heartbeat_scanlines": 1318,
+      "heartbeat_frames": 28
+    },
+    {
+      "crossing": 26,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 98,
+      "heartbeat_scanlines": 1195,
+      "heartbeat_frames": 32
+    },
+    {
+      "crossing": 27,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 162,
+      "heartbeat_scanlines": 983,
+      "heartbeat_frames": 19
+    },
+    {
+      "crossing": 28,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 104,
+      "heartbeat_scanlines": 182,
+      "heartbeat_frames": 6
+    },
+    {
+      "crossing": 29,
+      "to": "Route 2",
+      "map": 42,
+      "frames": 124,
+      "heartbeat_scanlines": 273,
+      "heartbeat_frames": 8
+    },
+    {
+      "crossing": 30,
+      "to": "Viridian",
+      "map": 32,
+      "frames": 98,
+      "heartbeat_scanlines": 346,
+      "heartbeat_frames": 10
+    }
+  ],
+  "heartbeats": 31,
+  "max_heartbeat_scanlines": 1975,
+  "median_heartbeat_scanlines": 346,
+  "mean_heartbeat_scanlines": 613.6666666666666,
+  "max_walker_update_scanlines": 136,
+  "world": {
+    "heartbeats": 31,
+    "skippedHeartbeats": 1,
+    "lastHeartbeatMap": 32,
+    "reseats": 0,
+    "lastHeartbeatFrames": 10,
+    "maxHeartbeatFrames": 48,
+    "maxStepScanlines": 144,
+    "maxFrameScanlines": 144,
+    "maxFinishScanlines": 0,
+    "pendingAtLoad": 0,
+    "forcedFinishes": 0,
+    "workspaceLosses": 0,
+    "pending": 0,
+    "workspaceWaits": 0,
+    "deferredBegins": 0
+  },
+  "debug": {
+    "frames": 2611,
+    "spawns": 8,
+    "removals": 8,
+    "edgeExits": 0,
+    "warpExits": 0,
+    "arrivals": 0,
+    "rebases": 2,
+    "stripEntries": 0,
+    "replans": 0,
+    "blockedSteps": 0,
+    "searches": 9,
+    "searchFails": 0,
+    "localDwellBeats": 0,
+    "localAdvances": 0,
+    "emotes": 0,
+    "templateMoves": 0,
+    "floorChanges": 0,
+    "heapResets": 4,
+    "restores": 0,
+    "lastSearchNodes": 156,
+    "maxSearchNodes": 159,
+    "lastSearchFrames": 30,
+    "maxSearchFrames": 33,
+    "maxSliceScanlines": 110,
+    "maxSliceNodes": 8,
+    "workspaceBytes": 11308,
+    "currentMap": 32,
+    "followerHidden": 0,
+    "activeActors": 0,
+    "storySuppressed": 0,
+    "worldState": 33634044,
+    "actors": [
+      {
+        "index": 0,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 1,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 2,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 3,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      }
+    ],
+    "lastHeartbeatScanlines": 346,
+    "maxHeartbeatScanlines": 1975,
+    "maxSpawnScanlines": 53,
+    "maxUpdateScanlines": 136,
+    "backOffs": 0,
+    "handoffs": 0,
+    "visitorsVanished": 0,
+    "culls": 0,
+    "lastContextScanlines": 10,
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 6,
+    "walkOffs": 0,
+    "worldJobs": 0,
+    "maxJobScanlines": 0,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
+  },
+  "max_step_scanlines": 144,
+  "max_frame_scanlines": 144,
+  "max_finish_scanlines": 0,
+  "frames_per_heartbeat_max": 48,
+  "within_target": false,
+  "ceilings": {
+    "frame_scanlines": 200
+  },
+  "pass": true,
+  "emulated_frames": 4042
+}

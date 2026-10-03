@@ -219,23 +219,44 @@ const runFromBattle = async (game: GameSession): Promise<void> => {
   await settleField(game, "Zapdos Run return")
 }
 
+const openZapdosMoveMenu = async (game: GameSession): Promise<void> => {
+  for (let attempt = 0; attempt < 120; attempt++) {
+    const state = await game.state.read()
+    if (state.battle.ui === "move-menu") return
+    if (state.battle.ui === "action-menu") {
+      const cursor = state.battle.cursor ?? 0
+      if (cursor % 2 === 1) await game.controls.press("left")
+      if (Math.floor(cursor / 2) === 1) await game.controls.press("up")
+      await game.controls.press("a")
+    }
+    await game.wait.frames(10)
+  }
+  throw new Error("Zapdos move menu not reached")
+}
+
 const assertSingleMonBattleTeleportFails = async (game: GameSession): Promise<void> => {
   await waitForBattle(game, "Zapdos battle Teleport")
-  const cursor = (await game.state.read()).battle.cursor ?? 0
-  if (cursor % 2 === 1) await game.controls.press("left")
-  if (Math.floor(cursor / 2) === 1) await game.controls.press("up")
-  await game.controls.press("a")
-  await game.wait.until((state) => state.battle.ui === "move-menu", "Zapdos move menu", 1_200)
-  await game.controls.press("a")
+  // The RNG state at the encounter depends on frame timing; a turn where the
+  // Pokémon can't act (Zapdos can leave it asleep) never tries Teleport, so
+  // pick Teleport again on the next turn.
+  for (let turn = 0; turn < 6; turn++) {
+    await openZapdosMoveMenu(game)
+    await game.controls.press("a")
 
-  let sawFailure = false
-  for (let attempt = 0; attempt < 240; attempt++) {
-    const state = await game.state.read()
-    if (state.battle.dialogue.text.includes("But it failed!")) sawFailure = true
-    if (sawFailure && state.battle.ui === "action-menu") return
-    if (!state.battle.active) throw new Error("Battle Teleport escaped instead of failing")
-    if (state.battle.ui === "text" || state.battle.ui === "other") await game.controls.press("a")
-    else await game.wait.frames(12)
+    let sawFailure = false
+    let leftMenus = false
+    for (let attempt = 0; attempt < 240; attempt++) {
+      const state = await game.state.read()
+      if (state.battle.dialogue.text.includes("But it failed!")) sawFailure = true
+      if (!state.battle.active) throw new Error("Battle Teleport escaped instead of failing")
+      if (state.battle.ui !== "action-menu" && state.battle.ui !== "move-menu") leftMenus = true
+      if (leftMenus && state.battle.ui === "action-menu") {
+        if (sawFailure) return
+        break
+      }
+      if (state.battle.ui === "text" || state.battle.ui === "other") await game.controls.press("a")
+      else await game.wait.frames(12)
+    }
   }
   throw new Error(
     `Single-mon battle Teleport failure did not resolve: ${JSON.stringify(await game.state.read())}`,

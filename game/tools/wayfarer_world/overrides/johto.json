@@ -1,0 +1,19 @@
+{
+  "_comment": "Johto spot overrides (notable-spots spec, authored overrides). add: {map, x, y, facing (DIR_*), kind: bench | center_side}. drop: {map, kind} drops a whole detected place; {map, x, y[, kind]} drops one spot. ignore_objects: {map, local_id} objects the walker graph treats as passable (story blockers the simulation outlives). script_warps: {map, warps: [warp ids]} warp events on tiles without a warp behaviour that a script fires (graph.py takes only warps that can fire).",
+  "ignore_objects": [
+    {"map": "AzaleaTown_hns", "local_id": 3, "what": "Rocket at the Azalea Gym door", "why": "Story blocker on the Gym door's only approach tile, present at New Game. The Gym's own leader is home-locked until the player holds the badge, which needs this blocker gone, so the static walker graph treats it as passable."},
+    {"map": "GoldenrodCity_hns", "local_id": 34, "what": "Beauty at the Goldenrod Gym door", "why": "Story blocker on the Gym door's only approach tile, present at New Game. The Gym's own leader is home-locked until the player holds the badge, which needs this blocker gone, so the static walker graph treats it as passable."},
+    {"map": "EcruteakCity_hns", "local_id": 2, "what": "Sage at the Ecruteak Gym door", "why": "Story blocker on the Gym door's only approach tile, present at New Game. The Gym's own leader is home-locked until the player holds the badge, which needs this blocker gone, so the static walker graph treats it as passable."},
+    {"map": "Mahoganytown_hns", "local_id": 4, "what": "Fat Man at the Mahogany Gym door", "why": "Story blocker on the Gym door's only approach tile, present at New Game. The Gym's own leader is home-locked until the player holds the badge, which needs this blocker gone, so the static walker graph treats it as passable."},
+    {"map": "EcruteakCity_SageOffice1_hns", "local_id": 3, "what": "Sage guarding the Bell Tower gate", "why": "Story gate on the only way from Ecruteak to the Bell Tower: he steps aside (FLAG_HIDE_TINTOWER_GUARD) once the player brings the Clear Bell. Morty's Bell Tower favourite is a place a notable already visits, so the static walker graph treats the sage as passable."},
+    {"map": "CliffEdgeGate_hns", "local_id": 4, "what": "Engineer at Cliff Edge Gate's stairs", "why": "Story gate (FLAG_AMPHAROS_HEALED): the engineers leave once the lighthouse Ampharos is healed. They stand on the only way between Cianwood and Route 47 (the stair's bottom exits), with local 5."},
+    {"map": "CliffEdgeGate_hns", "local_id": 5, "what": "Engineer at Cliff Edge Gate's stairs", "why": "See local 4."},
+    {"map": "ReceptionGate_hns", "local_id": 2, "what": "Guard to Mt. Silver", "why": "Story gate (FLAG_INDIGOJUNCTION_HIDE_SILVER_GUARD) on the way from the Pokemon League reception gate to Route 28 and Mt. Silver."},
+    {"map": "BurnedTower_1F_hns", "local_id": 3, "what": "Silver in the Burned Tower", "why": "Story blocker on (18, 12), the only walking way between the entrance's side of 1F and its north side, where Giovanni's Burned Tower favourite is (the scene's hole (16, 12) is a one-way fall, and B1F's tile under it carries a warp event that never fires). He leaves after the rival scene (FLAG_HIDE_BURNED_TOWER_NPCS), which runs only once the Johto starter choice is committed (BurnedTower_1F_EventScript_Silver defers otherwise). For a visitor origin that declines Elm's offer he stays for good: the graph's way past him is then off-screen only, and an on-screen walker that meets him fails its search and leaves (known limitation)."},
+    {"map": "ReceptionGate_hns", "local_id": 3, "what": "Guard to Kanto", "why": "Story gate (FLAG_INDIGOJUNCTION_HIDE_KANTO_GUARD) on the way from the Pokemon League reception gate to Route 22 and Kanto."}
+  ],
+  "add": [],
+  "drop": [
+    {"map": "GoldenrodCity_BikeShop_hns", "kind": "store", "why": "Shelves and a clerk, but not somewhere to stock up; it is a named spot."}
+  ]
+}

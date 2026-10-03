@@ -1,0 +1,18 @@
+{
+  "_comment": "Kanto spot overrides (notable-spots spec, authored overrides). add: {map, x, y, facing (DIR_*), kind: bench | center_side}. drop: {map, kind} drops a whole detected place; {map, x, y[, kind]} drops one spot. ignore_objects: {map, local_id} objects the walker graph treats as passable (story blockers the simulation outlives). script_warps: {map, warps: [warp ids]} warp events on tiles without a warp behaviour that a script fires (graph.py takes only warps that can fire).",
+  "ignore_objects": [
+    {"map": "VermilionCity_hns", "local_id": 20, "what": "Cut tree in front of the Vermilion Gym", "why": "The walker graph has no Cut edges, and this tree is the only way between Vermilion City and its Gym's door, so Lt. Surge could never walk home to his Gym. Treated as passable (a Cut-aware walker is spec 'Later')."},
+    {"map": "VermilionCity_hns", "local_id": 1, "what": "Sleeping Snorlax by Diglett's Cave", "why": "Story gate (FLAG_HIDE_VERMILION_SNORLAX): the sleeping Snorlax wakes to the Poke Flute radio and leaves for good. With its collision objects it fills the way between Vermilion City and Diglett's Cave."},
+    {"map": "VermilionCity_hns", "local_id": 8, "what": "Snorlax collision object", "why": "See local 1."},
+    {"map": "VermilionCity_hns", "local_id": 9, "what": "Snorlax collision object", "why": "See local 1."},
+    {"map": "VermilionCity_hns", "local_id": 10, "what": "Snorlax collision object", "why": "See local 1."},
+    {"map": "VermilionCity_hns", "local_id": 11, "what": "Snorlax collision object", "why": "See local 1."},
+    {"map": "Route2_hns", "local_id": 9, "what": "Cut tree on Route 2 at (11, 13)", "why": "User decision (follow-up 3): the only way between Pewter's side of Route 2 and Diglett's Cave, which every route from Pewter, Viridian and Indigo Plateau to Vermilion, the Magnet Train and the Kanto ferry needs. Treated as passable; the local walker still meets the real tree."},
+    {"map": "VictoryRoadKanto_B1F_hns", "local_id": 7, "what": "Strength boulder on Victory Road B1F at (48, 12)", "why": "User decision (follow-up 3): with B2F's boulder at (28, 42), the only thing keeping Will and Karen at Indigo Plateau. Treated as passable; the local walker still meets the real boulder."},
+    {"map": "VictoryRoadKanto_B2F_hns", "local_id": 1, "what": "Strength boulder on Victory Road B2F at (28, 42)", "why": "See VictoryRoadKanto_B1F_hns local 7."}
+  ],
+  "add": [],
+  "drop": [
+    {"map": "SaffronCity_FightingDojo_hns", "kind": "gym", "why": "Gym music but no Gym Leader; it is a haunt and a named spot."}
+  ]
+}

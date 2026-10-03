@@ -376,11 +376,22 @@ const sweepViridian = async (game: GameSession, script: FieldTranscript) => {
     y: 42,
   })
   await script.idle("before the youngster")
-  await approachObject(game, localIds.viridianYoungster, "caterpillar youngster", "down", {
-    x: 27,
-    y: 31,
-  })
-  await game.player.interact()
+  // The youngster wanders: he can start a step the frame A is pressed, so
+  // approach again until he answers, as talkTo does.
+  const asked = (await game.state.read()).dialogue.sequence
+  for (let attempt = 0; ; attempt++) {
+    await approachObject(game, localIds.viridianYoungster, "caterpillar youngster", "down", {
+      x: 27,
+      y: 31,
+    })
+    await game.player.interact()
+    const opened = await game.wait
+      .until((state) => state.dialogue.sequence > asked, "caterpillar youngster: talk", 90)
+      .then(() => true)
+      .catch(() => false)
+    if (opened) break
+    if (attempt === 5) throw new Error("caterpillar youngster never answered")
+  }
   await script.ask(viridian.caterpillarAsk, "yes", "caterpillar youngster")
   await script.say([viridian.caterpillarYes], "caterpillar answer")
   await script.idle("caterpillar youngster")

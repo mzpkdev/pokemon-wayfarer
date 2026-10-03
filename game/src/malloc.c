@@ -1,5 +1,7 @@
 #include "global.h"
 #include "malloc.h"
+#include "wayfarer_walkers.h"
+#include "wayfarer_world.h"
 #if TESTING
 #include "test/test.h"
 #endif
@@ -197,6 +199,16 @@ bool32 CheckMemBlockInternal(void *heapStart, void *pointer)
 
 void InitHeap(void *heapStart, u32 heapSize)
 {
+#if IS_WAYFARER
+    // The world's held heartbeat workspace is gone too (this one also runs
+    // in the test runner, which resets the heap between tests).
+    if (heapStart == gHeap)
+        WayfarerWorld_OnHeapReset();
+#endif
+#if IS_WAYFARER && !TESTING
+    if (heapStart == gHeap)
+        WayfarerWalkers_OnHeapReset();
+#endif
     sHeapStart = heapStart;
     sHeapSize = heapSize;
     PutFirstMemBlockHeader(heapStart, heapSize);

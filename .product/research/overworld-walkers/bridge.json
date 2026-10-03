@@ -1,0 +1,322 @@
+{
+  "spot": 6060,
+  "node": 881,
+  "arrived_after_frames": 3024,
+  "delta": {
+    "searches": 1,
+    "searchFails": 0,
+    "arrivals": 1,
+    "replans": 0
+  },
+  "deck_track": [
+    [
+      33,
+      90
+    ],
+    [
+      34,
+      90
+    ],
+    [
+      35,
+      90
+    ],
+    [
+      35,
+      89
+    ],
+    [
+      35,
+      88
+    ],
+    [
+      35,
+      87
+    ],
+    [
+      35,
+      86
+    ],
+    [
+      35,
+      85
+    ],
+    [
+      35,
+      84
+    ],
+    [
+      34,
+      84
+    ],
+    [
+      33,
+      84
+    ],
+    [
+      32,
+      84
+    ],
+    [
+      31,
+      84
+    ],
+    [
+      30,
+      84
+    ],
+    [
+      29,
+      84
+    ],
+    [
+      28,
+      84
+    ],
+    [
+      27,
+      84
+    ],
+    [
+      26,
+      84
+    ],
+    [
+      25,
+      84
+    ],
+    [
+      24,
+      84
+    ],
+    [
+      23,
+      84
+    ],
+    [
+      22,
+      84
+    ],
+    [
+      21,
+      84
+    ],
+    [
+      20,
+      84
+    ],
+    [
+      19,
+      84
+    ],
+    [
+      18,
+      84
+    ],
+    [
+      17,
+      84
+    ],
+    [
+      16,
+      84
+    ],
+    [
+      15,
+      84
+    ],
+    [
+      14,
+      84
+    ],
+    [
+      13,
+      84
+    ],
+    [
+      12,
+      84
+    ],
+    [
+      11,
+      84
+    ],
+    [
+      10,
+      84
+    ],
+    [
+      9,
+      84
+    ],
+    [
+      8,
+      84
+    ],
+    [
+      7,
+      84
+    ],
+    [
+      6,
+      84
+    ],
+    [
+      6,
+      83
+    ],
+    [
+      6,
+      82
+    ],
+    [
+      6,
+      81
+    ],
+    [
+      6,
+      80
+    ]
+  ],
+  "record": {
+    "node": 881,
+    "destKind": 1,
+    "destId": 6060,
+    "state": 1,
+    "waited": 0,
+    "arrival": 0,
+    "crossing": 0,
+    "step": 0,
+    "activity": 5,
+    "dwell": 3,
+    "lifeEvent": 0,
+    "lifeSteps": 0,
+    "stayBits": 0,
+    "reserved": 0,
+    "hex": "7113eb1500a00600"
+  },
+  "maxSliceScanlines": 143,
+  "maxSearchNodes": 1567,
+  "workspaceBytes": 11308,
+  "maxFinishScanlines": 39,
+  "screenshots": [
+    ".product/research/overworld-walkers/bridge-north.png"
+  ],
+  "debug": {
+    "frames": 3028,
+    "spawns": 1,
+    "removals": 0,
+    "edgeExits": 0,
+    "warpExits": 0,
+    "arrivals": 1,
+    "rebases": 0,
+    "stripEntries": 0,
+    "replans": 0,
+    "blockedSteps": 0,
+    "searches": 1,
+    "searchFails": 0,
+    "localDwellBeats": 0,
+    "localAdvances": 0,
+    "emotes": 0,
+    "templateMoves": 0,
+    "floorChanges": 0,
+    "heapResets": 5,
+    "restores": 0,
+    "lastSearchNodes": 1567,
+    "maxSearchNodes": 1567,
+    "lastSearchFrames": 366,
+    "maxSearchFrames": 366,
+    "maxSliceScanlines": 143,
+    "maxSliceNodes": 8,
+    "workspaceBytes": 11308,
+    "currentMap": 7970,
+    "followerHidden": 0,
+    "activeActors": 1,
+    "storySuppressed": 0,
+    "worldState": 33634008,
+    "actors": [
+      {
+        "index": 0,
+        "slot": 8,
+        "mode": 1,
+        "phase": 5,
+        "goalKind": 0,
+        "objectId": 3,
+        "template": 1,
+        "atSpot": 1,
+        "blocked": 0,
+        "x": 16,
+        "y": 33,
+        "goalX": 16,
+        "goalY": 33,
+        "goalEdge": 65535
+      },
+      {
+        "index": 1,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 2,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 3,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      }
+    ],
+    "lastHeartbeatScanlines": 26,
+    "maxHeartbeatScanlines": 26,
+    "maxSpawnScanlines": 73,
+    "maxUpdateScanlines": 149,
+    "backOffs": 0,
+    "handoffs": 0,
+    "visitorsVanished": 0,
+    "culls": 0,
+    "lastContextScanlines": 16,
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 39,
+    "walkOffs": 0,
+    "worldJobs": 0,
+    "maxJobScanlines": 0,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
+  },
+  "pass": true,
+  "emulated_frames": 3428
+}

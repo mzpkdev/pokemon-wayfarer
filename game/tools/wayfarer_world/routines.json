@@ -1,0 +1,1103 @@
+{
+  "_comment": "Activity cycles and favourites, converted from .product/research/notable-trainer-routines.md, in catalog order. Only entries with simulated: true are emitted (the 25 with a Full walking sprite; Bruno's and Koga's sheets are face-only); the face-only trainers keep their routines here for later. A favourite is a named spot (kind named, by label and map) or every detected spot of one kind on one map (optionally one tile: x, y; or a band of rows: rows [first, last], which keeps the run contiguous). Traveller and aloof come from tools/notable_trainers/catalog.json.",
+  "trainers": [
+    {
+      "slug": "brock",
+      "name": "Brock",
+      "character": "NOTABLE_TRAINER_BROCK",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_BROCK_HNS",
+      "home": "PewterCity_hns",
+      "gym": "PewterCity_Gym_hns",
+      "badge": {
+        "region": "Kanto",
+        "index": 0
+      },
+      "cycle": [
+        "train",
+        "care",
+        "study",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "care",
+          "map": "Route34_DayCare_hns",
+          "kind": "named",
+          "label": "Route 34 Day Care"
+        },
+        {
+          "serves": "study",
+          "map": "PalletTown_Lab_hns",
+          "kind": "named",
+          "label": "Oak's Lab"
+        }
+      ]
+    },
+    {
+      "slug": "misty",
+      "name": "Misty",
+      "character": "NOTABLE_TRAINER_MISTY",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_MISTY_HNS",
+      "home": "CeruleanCity_hns",
+      "gym": "CeruleanCity_Gym_hns",
+      "badge": {
+        "region": "Kanto",
+        "index": 1
+      },
+      "cycle": [
+        "relax",
+        "train",
+        "fish",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "fish",
+          "map": "Route24_hns",
+          "kind": "water_edge",
+          "note": "Nugget Bridge"
+        },
+        {
+          "serves": "relax",
+          "map": "Route25_hns",
+          "kind": "water_edge",
+          "note": "Route 25"
+        }
+      ]
+    },
+    {
+      "slug": "lt-surge",
+      "name": "Lt. Surge",
+      "character": "NOTABLE_TRAINER_LT_SURGE",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_SURGE_HNS",
+      "home": "VermilionCity_hns",
+      "gym": "VermilionCity_Gym_hns",
+      "badge": {
+        "region": "Kanto",
+        "index": 2
+      },
+      "cycle": [
+        "home",
+        "visit",
+        "gamble",
+        "train"
+      ],
+      "favourites": [
+        {
+          "serves": "visit",
+          "map": "VermilionCity_PortOutside_hns",
+          "kind": "named",
+          "label": "Vermilion harbour"
+        },
+        {
+          "serves": "gamble",
+          "map": "CeladonCity_GameCorner_hns",
+          "kind": "game_corner",
+          "note": "Celadon Game Corner"
+        }
+      ]
+    },
+    {
+      "slug": "erika",
+      "name": "Erika",
+      "character": "NOTABLE_TRAINER_ERIKA",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_ERIKA_HNS",
+      "home": "CeladonCity_hns",
+      "gym": "CeladonCity_Gym_hns",
+      "badge": {
+        "region": "Kanto",
+        "index": 3
+      },
+      "cycle": [
+        "home",
+        "shop",
+        "relax"
+      ],
+      "favourites": [
+        {
+          "serves": "shop",
+          "map": "CeladonCity_DepartmentStore_4F_hns",
+          "kind": "store",
+          "note": "Celadon Dept. Store 4F"
+        },
+        {
+          "serves": "relax",
+          "map": "CeladonCity_hns",
+          "kind": "water_edge",
+          "note": "Celadon pond"
+        }
+      ]
+    },
+    {
+      "slug": "janine",
+      "name": "Janine",
+      "character": "NOTABLE_TRAINER_JANINE",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_JANINE_HNS",
+      "home": "FuchsiaCity_hns",
+      "gym": "FuchsiaCity_Gym_hns",
+      "badge": {
+        "region": "Kanto",
+        "index": 5
+      },
+      "cycle": [
+        "train",
+        "sightsee",
+        "care",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "sightsee",
+          "map": "FuchsiaCity_SafariZoneEntrance_hns",
+          "kind": "named",
+          "label": "Safari Zone gate"
+        }
+      ]
+    },
+    {
+      "slug": "sabrina",
+      "name": "Sabrina",
+      "character": "NOTABLE_TRAINER_SABRINA",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_SABRINA_HNS",
+      "home": "SaffronCity_hns",
+      "gym": "SaffronCity_Gym_hns",
+      "badge": {
+        "region": "Kanto",
+        "index": 4
+      },
+      "cycle": [
+        "home",
+        "study",
+        "train"
+      ],
+      "favourites": [
+        {
+          "serves": "study",
+          "map": "Route25_BillsHouse_hns",
+          "kind": "named",
+          "label": "Bill's Sea Cottage"
+        }
+      ]
+    },
+    {
+      "slug": "blaine",
+      "name": "Blaine",
+      "character": "NOTABLE_TRAINER_BLAINE",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_BLAINE_HNS",
+      "home": "CinnabarIsland_Frlg",
+      "gym": "CinnabarIsland_Gym_Frlg",
+      "badge": {
+        "region": "Kanto",
+        "index": 6
+      },
+      "cycle": [
+        "home",
+        "study",
+        "relax"
+      ],
+      "favourites": [
+        {
+          "serves": "study",
+          "map": "CinnabarIsland_PokemonLab_ExperimentRoom_Frlg",
+          "kind": "named",
+          "label": "Cinnabar Lab"
+        },
+        {
+          "serves": "relax",
+          "map": "SeafoamIslands_B3F_Frlg",
+          "kind": "water_edge",
+          "note": "Seafoam Islands B3F",
+          "x": 28,
+          "y": 14,
+          "why": "The one water's edge on B3F that a walker reaches: the floor's other shores lie behind Strength boulders (locals 3-6), which walkers don't push."
+        }
+      ]
+    },
+    {
+      "slug": "giovanni",
+      "name": "Giovanni",
+      "character": "NOTABLE_TRAINER_GIOVANNI",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_GIOVANNI_HNS",
+      "home": "ViridianCity_hns",
+      "gym": "ViridianCity_Gym_Frlg",
+      "badge": {
+        "region": "Kanto",
+        "index": 7
+      },
+      "cycle": [
+        "gamble",
+        "lie low",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "gamble",
+          "map": "CeladonCity_GameCorner_hns",
+          "kind": "game_corner",
+          "note": "Celadon Game Corner"
+        },
+        {
+          "serves": "lie low",
+          "map": "BurnedTower_1F_hns",
+          "kind": "named",
+          "label": "Burned Tower"
+        }
+      ]
+    },
+    {
+      "slug": "blue",
+      "name": "Blue",
+      "character": "NOTABLE_TRAINER_BLUE",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_BLUE_HNS",
+      "home": "PalletTown_hns",
+      "cycle": [
+        "train",
+        "visit",
+        "study",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "visit",
+          "map": "ViridianCity_Gym_Frlg",
+          "kind": "gym",
+          "note": "Viridian Gym"
+        },
+        {
+          "serves": "study",
+          "map": "PalletTown_Lab_hns",
+          "kind": "named",
+          "label": "Oak's Lab"
+        }
+      ]
+    },
+    {
+      "slug": "lorelei",
+      "name": "Lorelei",
+      "character": "NOTABLE_TRAINER_LORELEI",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_LORELEI",
+      "home": "FourIsland_Frlg",
+      "cycle": [
+        "home",
+        "relax",
+        "care"
+      ],
+      "favourites": [
+        {
+          "serves": "relax",
+          "map": "FourIsland_IcefallCave_Entrance_Frlg",
+          "kind": "water_edge",
+          "note": "Icefall Cave"
+        },
+        {
+          "serves": "care",
+          "map": "FourIsland_PokemonDayCare_Frlg",
+          "kind": "named",
+          "label": "Four Island Day Care"
+        }
+      ]
+    },
+    {
+      "slug": "bruno",
+      "name": "Bruno",
+      "character": "NOTABLE_TRAINER_BRUNO",
+      "simulated": false,
+      "graphics": "OBJ_EVENT_GFX_BRUNO_HNS",
+      "home": "OneIsland_Frlg",
+      "cycle": [
+        "train",
+        "relax",
+        "care",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "train",
+          "map": "MtEmber_Exterior_Frlg",
+          "kind": "tall_grass",
+          "note": "Mt. Ember",
+          "disabled": "Unreachable on foot from OneIsland_Frlg under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+        },
+        {
+          "serves": "relax",
+          "map": "OneIsland_KindleRoad_EmberSpa_Frlg",
+          "kind": "named",
+          "label": "Ember Spa",
+          "disabled": "Unreachable on foot from OneIsland_Frlg under the v0 walker filters (no Surf, Cut, Strength, Waterfall or ledge jumps; transit only for travellers, between the authored ports)."
+        }
+      ],
+      "not_simulated": "Face-only overworld sprite (48x32 sheet, HNS and FireRed): not simulated in v0."
+    },
+    {
+      "slug": "agatha",
+      "name": "Agatha",
+      "character": "NOTABLE_TRAINER_AGATHA",
+      "simulated": false,
+      "home": "LavenderTown_hns",
+      "cycle": [
+        "home",
+        "train",
+        "relax"
+      ],
+      "favourites": [
+        {
+          "serves": "relax",
+          "map": "Route10_hns",
+          "kind": "water_edge",
+          "note": "Route 10"
+        }
+      ]
+    },
+    {
+      "slug": "koga",
+      "name": "Koga",
+      "character": "NOTABLE_TRAINER_KOGA",
+      "simulated": false,
+      "graphics": "OBJ_EVENT_GFX_KOGA_HNS",
+      "home": "FuchsiaCity_hns",
+      "cycle": [
+        "train",
+        "visit",
+        "sightsee",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "visit",
+          "map": "FuchsiaCity_Gym_hns",
+          "kind": "gym",
+          "note": "Fuchsia Gym"
+        },
+        {
+          "serves": "sightsee",
+          "map": "FuchsiaCity_SafariZoneEntrance_hns",
+          "kind": "named",
+          "label": "Safari Zone gate"
+        }
+      ],
+      "not_simulated": "Face-only overworld sprite (48x32 sheet, HNS and FireRed): not simulated in v0."
+    },
+    {
+      "slug": "lance",
+      "name": "Lance",
+      "character": "NOTABLE_TRAINER_LANCE",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_LANCE_HNS",
+      "home": "BlackthornCity_hns",
+      "cycle": [
+        "train",
+        "relax",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "relax",
+          "map": "DragonsDen_Cavern_hns",
+          "kind": "water_edge",
+          "note": "Dragon's Den"
+        }
+      ]
+    },
+    {
+      "slug": "falkner",
+      "name": "Falkner",
+      "character": "NOTABLE_TRAINER_FALKNER",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_FALKNER_HNS",
+      "home": "VioletCity_hns",
+      "gym": "VioletCity_Gym_hns",
+      "badge": {
+        "region": "Johto",
+        "index": 0
+      },
+      "cycle": [
+        "home",
+        "train",
+        "sightsee",
+        "study"
+      ],
+      "favourites": [
+        {
+          "serves": "train",
+          "map": "SproutTower_3F_hns",
+          "kind": "named",
+          "label": "Sprout Tower"
+        },
+        {
+          "serves": "sightsee",
+          "map": "RuinsOfAlph_Outside_hns",
+          "kind": "named",
+          "label": "Ruins of Alph"
+        }
+      ]
+    },
+    {
+      "slug": "bugsy",
+      "name": "Bugsy",
+      "character": "NOTABLE_TRAINER_BUGSY",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_BUGSY_HNS",
+      "home": "AzaleaTown_hns",
+      "gym": "AzaleaTown_Gym_hns",
+      "badge": {
+        "region": "Johto",
+        "index": 1
+      },
+      "cycle": [
+        "study",
+        "train",
+        "relax",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "study",
+          "map": "RuinsOfAlph_Lab_hns",
+          "kind": "named",
+          "label": "Ruins research center"
+        },
+        {
+          "serves": "relax",
+          "map": "NationalPark_Normal_hns",
+          "kind": "named",
+          "label": "National Park"
+        }
+      ]
+    },
+    {
+      "slug": "whitney",
+      "name": "Whitney",
+      "character": "NOTABLE_TRAINER_WHITNEY",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_WHITNEY_HNS",
+      "home": "GoldenrodCity_hns",
+      "gym": "GoldenrodCity_Gym_hns",
+      "badge": {
+        "region": "Johto",
+        "index": 2
+      },
+      "cycle": [
+        "shop",
+        "visit",
+        "relax",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "shop",
+          "map": "GoldenrodCity_DepartmentStore_2F_hns",
+          "kind": "store",
+          "note": "Goldenrod Dept. Store 2F"
+        },
+        {
+          "serves": "visit",
+          "map": "GoldenrodCity_RadioTower_1F_hns",
+          "kind": "named",
+          "label": "Radio Tower"
+        },
+        {
+          "serves": "relax",
+          "map": "NationalPark_Normal_hns",
+          "kind": "named",
+          "label": "National Park"
+        }
+      ]
+    },
+    {
+      "slug": "morty",
+      "name": "Morty",
+      "character": "NOTABLE_TRAINER_MORTY",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_MORTY_HNS",
+      "home": "EcruteakCity_hns",
+      "gym": "EcruteakCity_Gym_hns",
+      "badge": {
+        "region": "Johto",
+        "index": 3
+      },
+      "cycle": [
+        "home",
+        "sightsee",
+        "train",
+        "relax"
+      ],
+      "favourites": [
+        {
+          "serves": "sightsee",
+          "map": "TinTower_1F_hns",
+          "kind": "named",
+          "label": "Bell Tower"
+        },
+        {
+          "serves": "relax",
+          "map": "EcruteakCity_Theater_hns",
+          "kind": "named",
+          "label": "Dance Theater"
+        }
+      ]
+    },
+    {
+      "slug": "chuck",
+      "name": "Chuck",
+      "character": "NOTABLE_TRAINER_CHUCK",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_CHUCK_HNS",
+      "home": "CianwoodCity_hns",
+      "gym": "CianwoodGym_hns",
+      "badge": {
+        "region": "Johto",
+        "index": 4
+      },
+      "cycle": [
+        "train",
+        "care",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "train",
+          "map": "TrainerHill_Courtyard_hns",
+          "kind": "named",
+          "label": "Route 40 battle courtyard"
+        },
+        {
+          "serves": "care",
+          "map": "CianwoodShop_hns",
+          "kind": "named",
+          "label": "Cianwood pharmacy"
+        }
+      ]
+    },
+    {
+      "slug": "jasmine",
+      "name": "Jasmine",
+      "character": "NOTABLE_TRAINER_JASMINE",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_JASMINE_HNS",
+      "home": "OlivineCity_hns",
+      "gym": "OlivineCity_Gym_hns",
+      "badge": {
+        "region": "Johto",
+        "index": 5
+      },
+      "cycle": [
+        "sightsee",
+        "care",
+        "home",
+        "relax"
+      ],
+      "favourites": [
+        {
+          "serves": "sightsee",
+          "map": "OlivineCity_Lighthouse_hns",
+          "kind": "named",
+          "label": "Olivine Lighthouse"
+        },
+        {
+          "serves": "care",
+          "map": "CianwoodShop_hns",
+          "kind": "named",
+          "label": "Cianwood pharmacy"
+        },
+        {
+          "serves": "relax",
+          "map": "OlivineCity_Cafe_hns",
+          "kind": "named",
+          "label": "Olivine Café"
+        }
+      ]
+    },
+    {
+      "slug": "pryce",
+      "name": "Pryce",
+      "character": "NOTABLE_TRAINER_PRYCE",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_PRYCE_HNS",
+      "home": "Mahoganytown_hns",
+      "gym": "MahoganyTown_Gym_hns",
+      "badge": {
+        "region": "Johto",
+        "index": 6
+      },
+      "cycle": [
+        "train",
+        "sightsee",
+        "relax",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "sightsee",
+          "map": "LakeOfRage_hns",
+          "kind": "named",
+          "label": "Lake of Rage"
+        },
+        {
+          "serves": "relax",
+          "map": "IcePath_1F_hns",
+          "kind": "water_edge",
+          "note": "Ice Path"
+        }
+      ]
+    },
+    {
+      "slug": "clair",
+      "name": "Clair",
+      "character": "NOTABLE_TRAINER_CLAIR",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_CLAIR_HNS",
+      "home": "BlackthornCity_hns",
+      "gym": "BlackthornCity_Gym_hns",
+      "badge": {
+        "region": "Johto",
+        "index": 7
+      },
+      "cycle": [
+        "home",
+        "train",
+        "relax"
+      ],
+      "favourites": [
+        {
+          "serves": "relax",
+          "map": "DragonsDen_Cavern_hns",
+          "kind": "water_edge",
+          "note": "Dragon's Den"
+        }
+      ]
+    },
+    {
+      "slug": "will",
+      "name": "Will",
+      "character": "NOTABLE_TRAINER_WILL",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_WILL_HNS",
+      "home": "IndigoPlateau_hns",
+      "cycle": [
+        "study",
+        "train",
+        "relax",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "study",
+          "map": "RuinsOfAlph_Outside_hns",
+          "kind": "named",
+          "label": "Ruins of Alph"
+        },
+        {
+          "serves": "train",
+          "map": "BattleFrontier_BattleTowerLobby",
+          "kind": "named",
+          "label": "Battle Tower"
+        }
+      ]
+    },
+    {
+      "slug": "karen",
+      "name": "Karen",
+      "character": "NOTABLE_TRAINER_KAREN",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_KAREN_HNS",
+      "home": "IndigoPlateau_hns",
+      "cycle": [
+        "train",
+        "relax",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "train",
+          "map": "Route28_hns",
+          "kind": "tall_grass",
+          "note": "Route 28"
+        },
+        {
+          "serves": "relax",
+          "map": "VictoryRoadKanto_B1F_hns",
+          "kind": "water_edge",
+          "note": "Victory Road"
+        }
+      ]
+    },
+    {
+      "slug": "roxanne",
+      "name": "Roxanne",
+      "character": "NOTABLE_TRAINER_ROXANNE",
+      "simulated": false,
+      "home": "RustboroCity",
+      "gym": "RustboroCity_Gym",
+      "badge": {
+        "region": "Hoenn",
+        "index": 0
+      },
+      "cycle": [
+        "study",
+        "train",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "study",
+          "map": "RustboroCity_PokemonSchool",
+          "kind": "named",
+          "label": "Rustboro Trainer's School"
+        }
+      ]
+    },
+    {
+      "slug": "brawly",
+      "name": "Brawly",
+      "character": "NOTABLE_TRAINER_BRAWLY",
+      "simulated": false,
+      "home": "DewfordTown",
+      "gym": "DewfordTown_Gym",
+      "badge": {
+        "region": "Hoenn",
+        "index": 1
+      },
+      "cycle": [
+        "train",
+        "relax",
+        "fish",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "relax",
+          "map": "Route109_SeashoreHouse",
+          "kind": "named",
+          "label": "Seashore House"
+        },
+        {
+          "serves": "fish",
+          "map": "DewfordTown",
+          "kind": "water_edge",
+          "note": "Dewford shore"
+        }
+      ]
+    },
+    {
+      "slug": "wattson",
+      "name": "Wattson",
+      "character": "NOTABLE_TRAINER_WATTSON",
+      "simulated": false,
+      "home": "MauvilleCity",
+      "gym": "MauvilleCity_Gym",
+      "badge": {
+        "region": "Hoenn",
+        "index": 2
+      },
+      "cycle": [
+        "home",
+        "gamble",
+        "sightsee",
+        "shop"
+      ],
+      "favourites": [
+        {
+          "serves": "gamble",
+          "map": "MauvilleCity_GameCorner",
+          "kind": "game_corner",
+          "note": "Mauville Game Corner"
+        },
+        {
+          "serves": "sightsee",
+          "map": "Route110",
+          "kind": "named",
+          "label": "Seaside Cycling Road"
+        },
+        {
+          "serves": "shop",
+          "map": "MauvilleCity_BikeShop",
+          "kind": "named",
+          "label": "Mauville Bike Shop"
+        }
+      ]
+    },
+    {
+      "slug": "flannery",
+      "name": "Flannery",
+      "character": "NOTABLE_TRAINER_FLANNERY",
+      "simulated": false,
+      "home": "LavaridgeTown",
+      "gym": "LavaridgeTown_Gym_1F",
+      "badge": {
+        "region": "Hoenn",
+        "index": 3
+      },
+      "cycle": [
+        "relax",
+        "train",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "relax",
+          "map": "LavaridgeTown",
+          "kind": "named",
+          "label": "Lavaridge hot spring"
+        }
+      ]
+    },
+    {
+      "slug": "norman",
+      "name": "Norman",
+      "character": "NOTABLE_TRAINER_NORMAN",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_NORMAN",
+      "home": "PetalburgCity",
+      "gym": "PetalburgCity_Gym",
+      "badge": {
+        "region": "Hoenn",
+        "index": 4
+      },
+      "cycle": [
+        "train",
+        "home",
+        "study",
+        "relax"
+      ],
+      "favourites": [
+        {
+          "serves": "study",
+          "map": "LittlerootTown_ProfessorBirchsLab",
+          "kind": "named",
+          "label": "Birch's Lab"
+        }
+      ]
+    },
+    {
+      "slug": "winona",
+      "name": "Winona",
+      "character": "NOTABLE_TRAINER_WINONA",
+      "simulated": false,
+      "home": "FortreeCity",
+      "gym": "FortreeCity_Gym",
+      "badge": {
+        "region": "Hoenn",
+        "index": 5
+      },
+      "cycle": [
+        "home",
+        "train",
+        "study",
+        "sightsee"
+      ],
+      "favourites": [
+        {
+          "serves": "study",
+          "map": "Route119_WeatherInstitute_1F",
+          "kind": "named",
+          "label": "Weather Institute"
+        }
+      ]
+    },
+    {
+      "slug": "juan",
+      "name": "Juan",
+      "character": "NOTABLE_TRAINER_JUAN",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_JUAN",
+      "home": "SootopolisCity",
+      "gym": "SootopolisCity_Gym_1F",
+      "badge": {
+        "region": "Hoenn",
+        "index": 7
+      },
+      "cycle": [
+        "home",
+        "relax",
+        "sightsee",
+        "visit"
+      ],
+      "favourites": [
+        {
+          "serves": "sightsee",
+          "map": "SootopolisCity",
+          "kind": "named",
+          "label": "Sootopolis"
+        },
+        {
+          "serves": "visit",
+          "map": "LilycoveCity_PokemonTrainerFanClub",
+          "kind": "named",
+          "label": "Lilycove Trainer Fan Club",
+          "disabled": "Lilycove City's streets join the rest of Hoenn only by Route 121, which reaches Fortree only down Route 120's ledges (rows 59-64), and walkers never jump ledges. Lilycove's shore is its east beach, a separate area with no walkable link to the streets, so water can't reach the Fan Club either."
+        }
+      ]
+    },
+    {
+      "slug": "sidney",
+      "name": "Sidney",
+      "character": "NOTABLE_TRAINER_SIDNEY",
+      "simulated": false,
+      "home": "EverGrandeCity",
+      "cycle": [
+        "home",
+        "gamble",
+        "visit",
+        "relax"
+      ],
+      "favourites": [
+        {
+          "serves": "gamble",
+          "map": "MauvilleCity_GameCorner",
+          "kind": "game_corner",
+          "note": "Mauville Game Corner"
+        }
+      ]
+    },
+    {
+      "slug": "phoebe",
+      "name": "Phoebe",
+      "character": "NOTABLE_TRAINER_PHOEBE",
+      "simulated": false,
+      "home": "MtPyre_Summit",
+      "cycle": [
+        "home",
+        "sightsee",
+        "train",
+        "relax"
+      ],
+      "favourites": [
+        {
+          "serves": "sightsee",
+          "map": "MtPyre_Summit",
+          "kind": "named",
+          "label": "Mt. Pyre summit"
+        },
+        {
+          "serves": "train",
+          "map": "MtPyre_Summit",
+          "kind": "tall_grass",
+          "note": "Mt. Pyre summit"
+        }
+      ]
+    },
+    {
+      "slug": "glacia",
+      "name": "Glacia",
+      "character": "NOTABLE_TRAINER_GLACIA",
+      "simulated": false,
+      "home": "EverGrandeCity",
+      "cycle": [
+        "train",
+        "relax",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "relax",
+          "map": "FourIsland_IcefallCave_Entrance_Frlg",
+          "kind": "water_edge",
+          "note": "Icefall Cave"
+        }
+      ]
+    },
+    {
+      "slug": "drake",
+      "name": "Drake",
+      "character": "NOTABLE_TRAINER_DRAKE",
+      "simulated": false,
+      "home": "LilycoveCity",
+      "cycle": [
+        "sightsee",
+        "fish",
+        "train",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "sightsee",
+          "map": "LilycoveCity_Harbor",
+          "kind": "named",
+          "label": "Lilycove harbour"
+        },
+        {
+          "serves": "fish",
+          "map": "LilycoveCity",
+          "kind": "water_edge",
+          "note": "Lilycove shore"
+        }
+      ]
+    },
+    {
+      "slug": "wallace",
+      "name": "Wallace",
+      "character": "NOTABLE_TRAINER_WALLACE",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_WALLACE",
+      "home": "SootopolisCity",
+      "cycle": [
+        "relax",
+        "fish",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "relax",
+          "map": "SootopolisCity",
+          "kind": "water_edge",
+          "note": "Sootopolis lake"
+        },
+        {
+          "serves": "fish",
+          "map": "Route119",
+          "kind": "water_edge",
+          "note": "Route 119"
+        }
+      ]
+    },
+    {
+      "slug": "steven",
+      "name": "Steven",
+      "character": "NOTABLE_TRAINER_STEVEN",
+      "simulated": true,
+      "graphics": "OBJ_EVENT_GFX_STEVEN",
+      "home": "MossdeepCity",
+      "cycle": [
+        "study",
+        "relax",
+        "sightsee",
+        "home"
+      ],
+      "favourites": [
+        {
+          "serves": "study",
+          "map": "RuinsOfAlph_Outside_hns",
+          "kind": "named",
+          "label": "Ruins of Alph"
+        },
+        {
+          "serves": "relax",
+          "map": "MeteorFalls_1F_1R",
+          "kind": "water_edge",
+          "note": "Meteor Falls",
+          "rows": [
+            0,
+            22
+          ],
+          "why": "Rows 0-22 hold the water's edges joined to the cave's entrances; the lower river's islands at (19, 23) and (16, 38) touch only water that no entrance reaches."
+        },
+        {
+          "serves": "sightsee",
+          "map": "SevenIsland_TanobyRuins_Frlg",
+          "kind": "named",
+          "label": "Tanoby Ruins"
+        }
+      ]
+    }
+  ]
+}

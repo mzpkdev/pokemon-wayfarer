@@ -10,6 +10,7 @@ import {
   encodeSetTrainerRatingRequest,
   encodeSaveRequest,
   encodeWinBattleRequest,
+  isCommittedStateSnapshot,
   keepCoordinate,
   keepMap,
   parseAbi,
@@ -23,14 +24,14 @@ import { decodeFieldMessageText } from "./features/state"
 const abi: SessionAbi = {
   requestSize: 380,
   resultSize: 16,
-  stateSize: 1752,
+  stateSize: 1756,
   requestStatusOffset: 87,
   resultStatusOffset: 14,
   flagsOffset: 0x1270,
   varsOffset: 0x1340,
 }
 
-const abiBytes = (version = 26): Uint8Array => {
+const abiBytes = (version = 27): Uint8Array => {
   const bytes = new Uint8Array(16)
   const view = new DataView(bytes.buffer)
   for (const [index, value] of [
@@ -148,6 +149,17 @@ describe("game-session v26 protocol", () => {
   it("accepts only the exact versioned ABI layout", () => {
     expect(parseAbi(abiBytes())).toEqual(abi)
     expect(() => parseAbi(abiBytes(16))).toThrow("Unsupported test ROM ABI")
+  })
+
+  it("treats a state snapshot as whole only when its commit stamp matches its frame", () => {
+    const bytes = new Uint8Array(abi.stateSize)
+    const view = new DataView(bytes.buffer)
+    view.setUint32(0, 0x01020304, true)
+    expect(isCommittedStateSnapshot(bytes)).toBe(false)
+    view.setUint32(1752, 0x01020303, true)
+    expect(isCommittedStateSnapshot(bytes)).toBe(false)
+    view.setUint32(1752, 0x01020304, true)
+    expect(isCommittedStateSnapshot(bytes)).toBe(true)
   })
 
   it("encodes party-only fainted state, generic items, bounded PC slots, and a wild fixture", () => {
