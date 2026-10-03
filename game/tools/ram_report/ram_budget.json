@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "notes": "Ceilings in bytes, checked by ram_report.py on every build. Raise one only as a deliberate, reviewed change in the PR that needs it. null makes a measure report-only. The release build's 4 KB stack and 4 KB EWRAM free floors live in ram_report.py, not here.",
+  "builds": {
+    "release": {
+      "ewram_used": 252416,
+      "iwram_static": 25952
+    },
+    "e2e": {
+      "ewram_used": 258404,
+      "iwram_static": 25956
+    },
+    "test": {
+      "ewram_used": null,
+      "iwram_static": 30052,
+      "note": "EWRAM is report-only: the mechanics-test ELF already fills EWRAM to within 32 bytes of the 256 KB hardware limit, so the only possible ceiling is the limit itself, which the linker enforces."
+    }
+  }
+}
