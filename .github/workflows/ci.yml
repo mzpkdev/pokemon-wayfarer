@@ -26,6 +26,8 @@ jobs:
       rom-budget-head-used-bytes: ${{ steps.rom_budget.outputs.head-used-bytes }}
       rom-budget-capacity-bytes: ${{ steps.rom_budget.outputs.capacity-bytes }}
       rom-budget-limit-bytes: ${{ steps.rom_budget.outputs.limit-bytes }}
+      ram-budget-ready: ${{ steps.ram_budget.outputs.ready }}
+      ram-budget-values: ${{ steps.ram_budget.outputs.values }}
 
     steps:
       - name: Check out trusted classification policy
@@ -154,6 +156,57 @@ jobs:
               output.write(f"limit-bytes={head['limit']}\n")
           PY
 
+      - name: Record RAM budget comparison
+        id: ram_budget
+        # RAM rows are optional in the comment: a failure here never blocks
+        # the ROM comparison (the RAM budget itself is enforced by make).
+        continue-on-error: true
+        if: >-
+          always() &&
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.draft == false &&
+          (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
+        env:
+          BASE_MAP: rom-budget-base/game/pokewayfarer-release.map
+          HEAD_MAP: game/pokewayfarer-release.map
+        run: |
+          python3 - <<'PY'
+          import importlib.util
+          import json
+          import os
+          from pathlib import Path
+
+          # The head's parser reads both maps: the base may predate it.
+          path = Path("game/tools/ram_report/ram_report.py")
+          specification = importlib.util.spec_from_file_location("ram_report", path)
+          if specification is None or specification.loader is None:
+              raise SystemExit(f"Could not load {path}")
+          ram_report = importlib.util.module_from_spec(specification)
+          specification.loader.exec_module(ram_report)
+
+          def read_map(variable):
+              text = Path(os.environ[variable]).read_text(encoding="utf-8")
+              return ram_report.measure(ram_report.parse_map_sections(text))
+
+          keys = ("ewram_used", "ewram_free", "iwram_static", "stack_room")
+          base = read_map("BASE_MAP")
+          head = read_map("HEAD_MAP")
+          budget = ram_report.parse_budget(ram_report.DEFAULT_BUDGET.read_text(encoding="utf-8"))
+          release = budget["release"]
+          values = {
+              "base": {key: base[key] for key in keys},
+              "head": {key: head[key] for key in keys},
+              "ceilings": {key: release[key] for key in ("ewram_used", "iwram_static")},
+              "floors": {
+                  "stack_room": ram_report.RELEASE_MIN_STACK_ROOM,
+                  "ewram_free": ram_report.RELEASE_MIN_EWRAM_FREE,
+              },
+          }
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as output:
+              output.write("ready=true\n")
+              output.write("values=" + json.dumps(values, separators=(",", ":")) + "\n")
+          PY
+
   rom-budget:
     name: ROM Budget
     needs: build
@@ -178,12 +231,15 @@ jobs:
           HEAD_USED_BYTES: ${{ needs.build.outputs.rom-budget-head-used-bytes }}
           CAPACITY_BYTES: ${{ needs.build.outputs.rom-budget-capacity-bytes }}
           LIMIT_BYTES: ${{ needs.build.outputs.rom-budget-limit-bytes }}
+          RAM_READY: ${{ needs.build.outputs.ram-budget-ready }}
+          RAM_VALUES: ${{ needs.build.outputs.ram-budget-values }}
           GH_TOKEN: ${{ github.token }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           ROM_BUDGET_COMMENT: ${{ runner.temp }}/wayfarer-rom-budget-comment.md
         run: |
           python3 - <<'PY' > "$ROM_BUDGET_COMMENT"
+          import json
           import os
 
           def value(name):
@@ -221,7 +277,7 @@ jobs:
               impact = "This PR does not change ROM headroom."
 
           print("<!-- wayfarer-rom-budget -->")
-          print("### Wayfarer ROM budget")
+          print("### Wayfarer ROM and RAM budget")
           print()
           print("| Metric | This PR build | Change from base |")
           print("| --- | ---: | ---: |")
@@ -230,6 +286,47 @@ jobs:
           print(f"| Headroom before protected reserve | {amount(headroom)} | {delta(-used_delta)} |")
           print()
           print(f"{impact} The protected reserve is {amount(reserve)}.")
+
+          def ram_bytes(bytes):
+              return f"{bytes:,} B"
+
+          def ram_delta(bytes):
+              return f"{bytes:+,} B"
+
+          def ceiling(bytes):
+              return "report-only" if bytes is None else f"ceiling {ram_bytes(bytes)}"
+
+          ram = None
+          if os.environ.get("RAM_READY") == "true":
+              try:
+                  ram = json.loads(os.environ["RAM_VALUES"])
+                  for side in ("base", "head"):
+                      for key in ("ewram_used", "ewram_free", "iwram_static", "stack_room"):
+                          if type(ram[side][key]) is not int:
+                              raise ValueError(key)
+              except (KeyError, TypeError, ValueError):
+                  ram = None
+          print()
+          print("#### RAM (release build)")
+          print()
+          if ram is None:
+              print("RAM figures are unavailable for this run. The RAM budget is still enforced by the build.")
+          else:
+              base, head = ram["base"], ram["head"]
+              ceilings, floors = ram["ceilings"], ram["floors"]
+              rows = (
+                  ("EWRAM used", "ewram_used", ceiling(ceilings["ewram_used"])),
+                  ("EWRAM free", "ewram_free", f"floor {ram_bytes(floors['ewram_free'])}"),
+                  ("IWRAM static", "iwram_static", ceiling(ceilings["iwram_static"])),
+                  ("Stack room", "stack_room", f"floor {ram_bytes(floors['stack_room'])}"),
+              )
+              print("| Metric | This PR build | Change from base | Budget |")
+              print("| --- | ---: | ---: | ---: |")
+              for label, key, budget in rows:
+                  print(f"| {label} | {ram_bytes(head[key])} | {ram_delta(head[key] - base[key])} | {budget} |")
+              print()
+              print("The E2E and mechanics-test builds have their own ceilings in "
+                    "`game/tools/ram_report/ram_budget.json`, enforced when those builds run.")
           PY
 
           set -o pipefail
