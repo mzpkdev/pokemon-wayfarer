@@ -6,6 +6,7 @@ import {
   keepCoordinate,
   keepMap,
   maxMoves,
+  totalPcBoxes,
   type CommandRequest,
 } from "../protocol"
 import { type SessionRuntime } from "../runtime"
@@ -70,10 +71,10 @@ export const createValidationApi = (
       }
       switch (invalid) {
         case "current-box":
-          base.currentBox = 14
+          base.currentBox = totalPcBoxes
           break
         case "pc-box":
-          base.pcSlots = [{ box: 14, slot: 0, mon: emptyMon() }]
+          base.pcSlots = [{ box: totalPcBoxes, slot: 0, mon: emptyMon() }]
           break
         case "pc-slot":
           base.pcSlots = [{ box: 0, slot: 30, mon: emptyMon() }]

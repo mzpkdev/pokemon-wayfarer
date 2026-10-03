@@ -8,7 +8,7 @@ Reads the routine file next to this script, the trainer catalog
 
   - every placeable trainer (all catalog trainers but Tate & Liza) has a
     home base, a cycle of 3-4 known activities, and at most 3 favourites;
-    the ten face-only trainers, not simulated in v0, are checked too, so
+    the twelve face-only trainers, not simulated in v0, are checked too, so
     their routines are ready for later;
   - every favourite resolves to a named spot, or to a detected spot of
     that kind on that map, in Wayfarer's scope;
@@ -58,7 +58,7 @@ SKIPPED = {"tate-liza"}
 # routines stay authored and checked for later, but they occupy no spot,
 # so they are left out of the shared-favourite list.
 FACE_ONLY = {"roxanne", "brawly", "wattson", "flannery", "winona", "sidney",
-             "phoebe", "glacia", "drake", "agatha"}
+             "phoebe", "glacia", "drake", "agatha", "bruno", "koga"}
 
 # Detected kinds: the name used in the routine file, the per-map.csv test,
 # the activities that land on it, and whether it is public.

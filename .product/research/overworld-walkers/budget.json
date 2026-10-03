@@ -1,0 +1,254 @@
+{
+  "max_actors": 3,
+  "max_concurrent_searches": 1,
+  "lorelei_wander_tiles": [
+    [
+      13,
+      30
+    ],
+    [
+      14,
+      30
+    ],
+    [
+      14,
+      31
+    ],
+    [
+      15,
+      30
+    ],
+    [
+      15,
+      31
+    ],
+    [
+      16,
+      30
+    ],
+    [
+      16,
+      31
+    ],
+    [
+      17,
+      30
+    ],
+    [
+      17,
+      31
+    ],
+    [
+      18,
+      29
+    ],
+    [
+      18,
+      30
+    ],
+    [
+      18,
+      31
+    ],
+    [
+      19,
+      29
+    ],
+    [
+      19,
+      30
+    ],
+    [
+      19,
+      31
+    ],
+    [
+      20,
+      30
+    ],
+    [
+      20,
+      31
+    ]
+  ],
+  "template_moves": 5,
+  "spawns": 3,
+  "searches": 7,
+  "maxSliceScanlines": 124,
+  "maxSearchNodes": 964,
+  "maxSearchFrames": 256,
+  "records": {
+    "lorelei": {
+      "node": 93,
+      "destKind": 1,
+      "destId": 1187,
+      "state": 1,
+      "waited": 0,
+      "arrival": 0,
+      "crossing": 0,
+      "step": 0,
+      "activity": 4,
+      "dwell": 2,
+      "lifeEvent": 0,
+      "lifeSteps": 0,
+      "stayBits": 0,
+      "reserved": 0,
+      "hex": "5dd0281100800400"
+    },
+    "lance": {
+      "node": 93,
+      "destKind": 1,
+      "destId": 1180,
+      "state": 1,
+      "waited": 0,
+      "arrival": 0,
+      "crossing": 0,
+      "step": 0,
+      "activity": 5,
+      "dwell": 2,
+      "lifeEvent": 0,
+      "lifeSteps": 0,
+      "stayBits": 0,
+      "reserved": 0,
+      "hex": "5d10271100a00400"
+    },
+    "blue": {
+      "node": 120,
+      "destKind": 1,
+      "destId": 4174,
+      "state": 0,
+      "waited": 0,
+      "arrival": 2,
+      "crossing": 10,
+      "step": 0,
+      "activity": 3,
+      "dwell": 3,
+      "lifeEvent": 0,
+      "lifeSteps": 0,
+      "stayBits": 0,
+      "reserved": 0,
+      "hex": "7890130452600600"
+    }
+  },
+  "screenshots": [
+    ".product/research/overworld-walkers/budget-three-actors.png",
+    ".product/research/overworld-walkers/budget-later.png"
+  ],
+  "debug": {
+    "frames": 1450,
+    "spawns": 3,
+    "removals": 1,
+    "edgeExits": 1,
+    "warpExits": 0,
+    "arrivals": 1,
+    "rebases": 0,
+    "stripEntries": 0,
+    "replans": 0,
+    "blockedSteps": 0,
+    "searches": 7,
+    "searchFails": 0,
+    "localDwellBeats": 2,
+    "localAdvances": 0,
+    "emotes": 2,
+    "templateMoves": 5,
+    "floorChanges": 0,
+    "heapResets": 5,
+    "restores": 0,
+    "lastSearchNodes": 72,
+    "maxSearchNodes": 964,
+    "lastSearchFrames": 21,
+    "maxSearchFrames": 256,
+    "maxSliceScanlines": 124,
+    "maxSliceNodes": 7,
+    "workspaceBytes": 11308,
+    "currentMap": 32,
+    "followerHidden": 0,
+    "activeActors": 2,
+    "storySuppressed": 0,
+    "worldState": 33634092,
+    "actors": [
+      {
+        "index": 0,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 1,
+        "slot": 9,
+        "mode": 1,
+        "phase": 4,
+        "goalKind": 1,
+        "objectId": 3,
+        "template": 3,
+        "atSpot": 1,
+        "blocked": 0,
+        "x": 20,
+        "y": 31,
+        "goalX": 21,
+        "goalY": 31,
+        "goalEdge": 65535
+      },
+      {
+        "index": 2,
+        "slot": 10,
+        "mode": 1,
+        "phase": 5,
+        "goalKind": 0,
+        "objectId": 4,
+        "template": 1,
+        "atSpot": 1,
+        "blocked": 0,
+        "x": 14,
+        "y": 39,
+        "goalX": 14,
+        "goalY": 39,
+        "goalEdge": 65535
+      },
+      {
+        "index": 3,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      }
+    ],
+    "lastHeartbeatScanlines": 26,
+    "maxHeartbeatScanlines": 26,
+    "maxSpawnScanlines": 59,
+    "maxUpdateScanlines": 133,
+    "backOffs": 0,
+    "handoffs": 0,
+    "visitorsVanished": 0,
+    "culls": 0,
+    "lastContextScanlines": 16,
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 10,
+    "walkOffs": 0,
+    "worldJobs": 1,
+    "maxJobScanlines": 15,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
+  },
+  "pass": true,
+  "emulated_frames": 1890
+}

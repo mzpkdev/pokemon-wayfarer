@@ -21,10 +21,12 @@ import {
   choiceKinds,
   dialogueMessages,
   gamePhases,
+  isCommittedStateSnapshot,
   leagueStatuses,
   parseStateSnapshot,
   storageUiStates,
   storageModes,
+  totalPcBoxes,
   trainerCardStates,
   uiModes,
 } from "../protocol"
@@ -220,6 +222,23 @@ export type GameState = {
 }
 
 export type StateApi = {
+  /**
+   * The ROM's latest whole state snapshot. Usually a pure read. If SkyEmu
+   * paused inside the ROM's update (a lag frame), the snapshot is half
+   * written (`committedFrame !== frame`), and `read` steps the emulator one
+   * frame at a time, up to 30, until the ROM commits one: so a read can
+   * advance the game. Code that counts frames or holds a button across reads
+   * must allow for it.
+   *
+   * A side-effect-free alternative was tried (critic loop cycle 1, T11): the
+   * ROM double-buffering each committed snapshot so the host never steps.
+   * The per-frame copy (1,756 bytes) cost the E2E ROM a few scanlines every
+   * frame, enough to shift input timing and break three timing-sensitive
+   * journeys (kanto-frlg-contract, hns-johto-traversal,
+   * wayfarer-map-layout-connected), all of which pass without it. Keeping the
+   * E2E ROM's frame timing close to the shipping ROM's matters more, so the
+   * stepping stays.
+   */
   read: () => Promise<GameState>
 }
 
@@ -373,11 +392,26 @@ export const decodeFieldMessageText = (bytes: number[]): string => {
 export const describeState = (state: GameState): string =>
   `phase=${state.phase}, map=${state.map.name}(${state.map.mapGroup}:${state.map.mapNum}), position=${state.player.x}:${state.player.y}, facing=${state.player.facing}, ready=${state.ready}, controlsLocked=${state.controlsLocked}, scriptActive=${state.scriptActive}, dialogueOpen=${state.dialogueOpen}, battle=${state.battle.ui}, storage=${state.storage.ui}/${state.storage.mode}@${state.storage.cursor.area}:${state.storage.cursor.position}`
 
+// A heavy frame such as a battle transition can leave the ROM mid-update for
+// a few frames in a row; anything longer means the hook stopped publishing.
+const maxUncommittedStateFrames = 30
+
+const readCommittedState = async (runtime: SessionRuntime): Promise<Uint8Array> => {
+  const address = runtime.address("gE2ETestState")
+  for (let elapsed = 0; ; elapsed++) {
+    const bytes = await runtime.readBytes(address, runtime.abi.stateSize)
+    if (isCommittedStateSnapshot(bytes)) return bytes
+    if (elapsed >= maxUncommittedStateFrames)
+      throw new Error(
+        `Test ROM state stayed mid-update for ${maxUncommittedStateFrames} frames (frame=${parseStateSnapshot(bytes).frame})`,
+      )
+    await runtime.advance(1)
+  }
+}
+
 export const createStateApi = (runtime: SessionRuntime): StateApi => ({
   read: async () => {
-    const snapshot = parseStateSnapshot(
-      await runtime.readBytes(runtime.address("gE2ETestState"), runtime.abi.stateSize),
-    )
+    const snapshot = parseStateSnapshot(await readCommittedState(runtime))
     const bagQuantity = (item: number): number =>
       snapshot.bagItems.find((entry) => entry.item === item)?.quantity ?? 0
     const namedPcSlots = snapshot.pcSlots.map((slot) => ({
@@ -601,7 +635,7 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
           cursor: snapshot.catchSwapCursor === 0xff ? null : snapshot.catchSwapCursor,
           selectedParty:
             snapshot.catchSwapSelectedParty < 6 ? snapshot.catchSwapSelectedParty : null,
-          box: snapshot.catchSwapBox < 14 ? snapshot.catchSwapBox : null,
+          box: snapshot.catchSwapBox < totalPcBoxes ? snapshot.catchSwapBox : null,
           slot: snapshot.catchSwapSlot < 30 ? snapshot.catchSwapSlot : null,
         },
       },

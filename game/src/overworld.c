@@ -1,4 +1,6 @@
 #include "global.h"
+#include "wayfarer_world.h"
+#include "wayfarer_walkers.h"
 #include "trainer_only_encounter.h"
 #include "league_circuit.h"
 #include "overworld.h"
@@ -1035,6 +1037,10 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
         InitSecondaryTilesetAnimation();
     UpdateLocationHistoryForRoamer();
     MoveAllRoamers();
+#if IS_WAYFARER
+    WayfarerWalkers_OnCameraTransition();
+    WayfarerWorld_OnMapLoad(TRUE);
+#endif
     TryShowRoamerFlash();
     DoCurrentWeather();
     ResetFieldTasksArgs();
@@ -1122,6 +1128,10 @@ static bool32 LoadMapFromWarp(bool32 a1)
     RunOnTransitionMapScript();
     UpdateLocationHistoryForRoamer();
     MoveAllRoamersToOtherLocationSets();
+#if IS_WAYFARER
+    WayfarerWalkers_OnWarp();
+    WayfarerWorld_OnMapLoad(FALSE);
+#endif
     gChainFishingDexNavStreak = 0;
     RunOnLoadMapScript();
     return TRUE;
@@ -1999,6 +2009,10 @@ static void OverworldBasic(void)
 {
     ScriptContext_RunScript();
     RunTasks();
+#if IS_WAYFARER
+    WayfarerWalkers_Update();
+    WayfarerWorld_Update();
+#endif
     AnimateSprites();
     CameraUpdate();
     UpdateCameraPanning();
@@ -2347,6 +2361,7 @@ void CB2_ContinueSavedGame(void)
         SetWarpDestination(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum,
                            gSaveBlock1Ptr->location.warpId, gSaveBlock1Ptr->location.x,
                            gSaveBlock1Ptr->location.y);
+        WayfarerWorld_OnContinue(TRUE);
         WarpIntoMap();
         PlayTimeCounter_Start();
         ScriptContext_Init();
@@ -2393,6 +2408,9 @@ void CB2_ContinueSavedGame(void)
     InitMatchCallCounters();
     if (UseContinueGameWarp() == TRUE)
     {
+#if IS_WAYFARER
+        WayfarerWorld_OnContinue(TRUE);
+#endif
         ClearContinueGameWarpStatus();
         SetWarpDestinationToContinueGameWarp();
         WarpIntoMap();
@@ -2401,6 +2419,9 @@ void CB2_ContinueSavedGame(void)
     }
     else
     {
+#if IS_WAYFARER
+        WayfarerWorld_OnContinue(FALSE);
+#endif
         TryPutTodaysRivalTrainerOnAir();
         gFieldCallback = FieldCB_FadeTryShowMapPopup;
         SetMainCallback1(CB1_Overworld);

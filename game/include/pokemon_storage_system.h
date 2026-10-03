@@ -1,7 +1,23 @@
 #ifndef GUARD_POKEMON_STORAGE_SYSTEM_H
 #define GUARD_POKEMON_STORAGE_SYSTEM_H
 
+// The box count and layout differ per build, so the build identity must be
+// known here (include global.h first).
+#ifndef IS_WAYFARER
+#error "pokemon_storage_system.h needs constants/global.h"
+#endif
+
+#if IS_WAYFARER
+#include "wayfarer_world_data.h"
+#endif
+
+// Wayfarer gives up the 14th box to make room in PokemonStorage for the saved
+// world simulation, the haunts' trade pool, and the Masters' teams.
+#if IS_WAYFARER
+#define TOTAL_BOXES_COUNT       13
+#else
 #define TOTAL_BOXES_COUNT       14
+#endif
 #define IN_BOX_ROWS             5 // Number of rows, 6 Pokémon per row
 #define IN_BOX_COLUMNS          6 // Number of columns, 5 Pokémon per column
 #define IN_BOX_COUNT            (IN_BOX_ROWS * IN_BOX_COLUMNS)
@@ -17,6 +33,7 @@ ROWS        0   1   2   3   4   5
             24  25  26  27  28  29
 */
 
+// The offsets below are for the 14-box layout.
 struct PokemonStorage
 {
     /*0x0000*/ u8 currentBox;
@@ -26,6 +43,7 @@ struct PokemonStorage
     /*0x8432*/ struct Pokemon fusions[MAX_FUSION_STORAGE];
 #if IS_WAYFARER
     struct LeagueSavedTeams leagueEventTeams;
+    struct WayfarerWorldState wayfarerWorld;
 #endif
 };
 

@@ -44,14 +44,13 @@ determinism, the debug and balance report, and acceptance.
 
 A notable trainer in the
 [inventory](notable-trainers.md#notable-trainer-inventory) is simulated
-when they have a walking overworld sprite. That is **27 trainers**, each
+when they have a walking overworld sprite. That is **25 trainers**, each
 with one saved [world record](#the-world-record): Brock, Misty, Lt. Surge,
-Erika, Janine, Sabrina, Blaine, Giovanni, Blue, Lorelei, Bruno, Koga,
-Lance, Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce, Clair, Will,
+Erika, Janine, Sabrina, Blaine, Giovanni, Blue, Lorelei, Lance, Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce, Clair, Will,
 Karen, Norman, Juan, Wallace, and Steven.
 
-The other **11 entries** are not simulated in v0: Tate & Liza, who are
-never placed, and ten trainers whose sprite can only face, not walk
+The other **13 entries** are not simulated in v0: Tate & Liza, who are
+never placed, and twelve trainers whose sprite can only face, not walk
 ([walking sprites](#known-limitation-walking-sprites)). They have no
 record and no routine, and behave as today: their fixed map objects and
 v0 haunt placement are unchanged.
@@ -114,13 +113,13 @@ four directions, animated by `sAnimTable_Standard`
 ([object_event_anims.h](../../game/src/data/object_events/object_event_anims.h),
 line 1223). A read-only sprite audit found:
 
-- **Full (27, simulated):** the HNS `*_HNS` sprites for the Kanto and
+- **Full (25, simulated):** the HNS `*_HNS` sprites for the Kanto and
   Johto trainers; FireRed and LeafGreen's `LORELEI`, compiled through the
   Sevii block, for Lorelei; and Emerald's `NORMAN`, `JUAN`, `WALLACE`, and
   `STEVEN`.
-- **Face-only (11, not simulated):** a 3-frame sheet that faces each way
+- **Face-only (13, not simulated):** a 3-frame sheet that faces each way
   but has no walk frames. Roxanne, Brawly, Wattson, Flannery, Winona,
-  Tate & Liza, Sidney, Phoebe, Glacia, Drake, and Agatha.
+  Tate & Liza, Sidney, Phoebe, Glacia, Drake, Agatha, Bruno, and Koga.
 
 Evidence: the graphics pointer table
 ([object_event_graphics_info_pointers.h](../../game/src/data/object_events/object_event_graphics_info_pointers.h):
@@ -128,13 +127,15 @@ the HNS block near lines 1068-1108, the Emerald entries near 678-691 and
 775, the Sevii block near 953-1016), and the sheet sizes in
 `graphics/object_events/pics/people/` (144×32 for a Full sheet, 48×32 for
 a face-only one). Frames were counted from sheet widths and the pic and
-animation tables, not checked visually.
+animation tables, not checked visually. An earlier count said 27 Full
+sprites; Bruno's and Koga's sheets (HNS and FireRed) are 48×32, face-only,
+so the confirmed count is 25.
 
 Hoenn is hit hardest: only Norman, Juan, Wallace, and Steven walk there.
 The face-only trainers' routines stay authored, marked not simulated in
 v0, in the [routines research file](../research/notable-trainer-routines.md),
 so they can join once they walk. The fix is new 9-frame sheets for the
-11; a generic stand-in sprite would break their identity, so it is
+13; a generic stand-in sprite would break their identity, so it is
 rejected for v0 ([later](#later)).
 
 ### Two layers
@@ -167,6 +168,7 @@ current node is on the player's new map, in
 | --- | --- |
 | Travelling, arrived by an edge | The entered edge, at the crossing tile in this map's coordinates; if taken, the nearest free tile of the same lane. |
 | Travelling, arrived by a door or a transit edge | The first free 4-neighbour of the door's landing tile, never the player's own landing tile. |
+| Travelling, arrived by water | Near the shore tile of the reverse water edge (the crossing indexes it among the node's edges), on land. |
 | Dwelling | The spot's anchor tile, starting the spot's template. A Gym visit spawns by the ["just leaving"](notable-spots.md#just-leaving) rule instead. |
 | On the player's map at the last save | The tile saved in the [local actor block](#the-world-record). |
 
@@ -219,12 +221,17 @@ Cut tree at (15, 69), so its south end can't reach Pewter on foot, and
 Route 2's north border includes wall tiles
 ([constraints](../research/notable-trainer-travel-poc.md#constraints-discovered)).
 
-**Nodes** are **walkable regions within maps**: each 4-connected component
-of tiles a walking NPC can reach, flood-filled with NPC collision and
-elevation rules on every playable map in scope (the
+**Nodes** are **walkable regions within maps**: each strongly connected
+component of the moves a walking NPC can make, flood-filled with NPC
+collision and elevation rules on every playable map in scope (the
 [spot extraction's](notable-spots.md#spot-extraction) reachable maps).
-Route 2 gives two nodes, not one. A component with no edge, no spot, and
-no warp is dropped.
+Every tile of a node reaches every other on foot. Moves are two-way
+except on sideways stairs (a diagonal step one way can be a wall the other
+way) and across a bridge's elevation memory, so a pocket that a walker can
+enter but not leave, or leave but not enter, is its own node: Mt. Mortar
+1F North's door at (66, 61) and its water's edge at (56, 20) are separate
+nodes. Route 2 gives two nodes, not one. A component with no edge, no
+spot, and no warp is dropped.
 
 **Edges** connect nodes:
 
@@ -233,20 +240,107 @@ no warp is dropped.
   stored with the connection's offset.
 - **Warps:** a warp tile reachable from the node, to the region holding
   its destination warp's landing tile. Doors, stairs, gatehouses, cave
-  entrances, and store floors are all warps.
+  entrances, and store floors are all warps. Only a warp that can fire
+  counts: one on a warp, door, arrow or directional-stair behaviour
+  (`field_control_avatar.c`), one of the engine's layout fallbacks in
+  `TryStartWarpEventScript`, one whose tile has a coord event (elevation 0
+  or matching) running a script that warps to the same map (mapjson's
+  Cinnabar Lab doors), or an authored script door (overrides
+  `script_warps`: Petalburg Gym's sign doors and room entrances). A warp
+  tile a walker can't stand on (collision, or a New Game object) fires only
+  as `TryDoorWarp` opens it: an animated door, approached from the south.
+  Dormant entrances on solid rock (Terra Cave's), fall landings, hidden or
+  locked doors, non-animated doors with collision (Cerulean's Bike Shop),
+  warp tiles under trainers and a Center's decorative side tiles are no
+  edges. A spot needs an edge into its component; a named spot without one
+  fails the build. The check looks one edge back only: a spot in a part of
+  the graph no trainer's home reaches (Lavaridge's hot spring, Berry Forest,
+  the Pokémon Tower floors) stays in the table but is never chosen, because
+  candidates and favourites come from searches out of each home.
 - **Transit:** an authored list of scripted links, open to
   [travellers](notable-trainers.md#traveller) only, one hop each:
   placeholders are the S.S. Aqua (Olivine Port to Vermilion Port) and the
   Magnet Train (Goldenrod to Saffron), plus Hoenn's and Sevii's ferries.
-  Transit never reads the player's tickets or story flags.
+  Transit never reads the player's tickets or story flags. The Kanto
+  ferry links Slateport's and Lilycove's harbors with Vermilion Port, and
+  the Seagallop links One Island with the other Sevii harbors.
+- **Water (off-screen only):** two land nodes whose Surf-connected water
+  meets, open to every trainer. Water is the surfable tiles (waterfalls
+  included), the water under a bridge, collision-free elevation-1 land a
+  surfer reaches from water (a waterfall's foam row: a surfer only
+  dismounts on an elevation mismatch), warps on water (Route 40's row of
+  warps into Route 41, the way to Cianwood), and the authored Dive link out
+  of Sootopolis (to Route 126); whirlpools don't block it. One authored
+  land-to-land link travels the same way: the Elite Four's fly between
+  Indigo Plateau and the Victory Road reception gate (`water.json` "fly"),
+  since Victory Road is one-way on foot. Off-screen, a
+  notable has the water HMs. Each water tile belongs to its nearest
+  shore, and two nodes are linked when their water meets, so a sea gives
+  a sparse set of links, not every pair. A shore is a land tile at
+  elevation 3 from which the player could Surf. Both ends are land, so a
+  record always rests on land. The local walker never routes across
+  water: a walker whose next hop is a water edge hands off like a walker
+  leaving by an exit, and the record crosses at a heartbeat. The record's
+  arrival is "water", and its crossing indexes the reverse water edge,
+  whose shore tile is where an arrival by water spawns.
 
-**Filters (v0):** walking only. No Surf, Cut, Strength, Rock Smash,
-Waterfall, Dive, or ledge jumps; Cut trees, boulders, and smashable rocks
-are solid. **One-way edges** are kept one-way: a ledge drop splits a
-region into two nodes with a one-way edge, and holes and one-way warps
-point one way. Story-gated objects with a flag are treated as solid when
-they are present at New Game (placeholder; see
-[open questions](#open-questions)).
+**Filters (v0):** walking on land. No Cut, Strength, Rock Smash, or
+ledge jumps on land; Cut trees, boulders, and smashable rocks are solid.
+**One-way moves** never join nodes: walkers never fall through holes or
+jump ledges, and one-way warps point one way. A warp event on a plain floor
+tile that only marks where a fall lands never fires
+(`TryStartWarpEventScript` needs a warp behaviour), so it is no edge. Objects present at New Game are
+solid, except the authored story gates in the overrides'
+`ignore_objects`: objects a scene or flag removes for good, such as Gym
+door blockers, the Bell Tower sage, Vermilion's Snorlax, the League
+reception gate's guards, Cliff Edge Gate's engineers, Route 120's bridge
+Kecleon, Route 121's Aqua grunts, and Silver in the Burned Tower. Silver
+leaves only after the rival scene, which needs the Johto starter choice:
+for a visitor origin that declines Elm's offer the graph's way past him is
+off-screen only (an on-screen walker that meets him fails its search and
+leaves). A Cut tree or boulder is overridden
+only when it is the one way to a leader's own Gym (Vermilion's tree) or by
+an explicit product decision: Route 2's Cut tree at (11, 13), the way to
+Diglett's Cave, and Victory Road's Strength boulders at B1F (48, 12) and
+B2F (28, 42). The local walker still meets the real objects.
+
+**Known limitation: unreachable favourites.** A favourite the graph can't
+reach stays in the routines file, disabled with the obstacle that blocks
+it, and the cycle step it serves may be skipped. Today:
+
+- (Resolved.) Victory Road is one-way for walkers: from the League
+  reception gate it climbs to Route 23 only by falling through 1F's hole
+  and jumping B1F's ledge, and from Indigo Plateau there is no way down on
+  foot. The authored Elite Four fly (above) joins Indigo Plateau and the
+  reception gate off-screen, so Will's and Karen's favourites are reachable.
+- Route 120's ledges are the only way from Fortree to Route 121 and
+  Lilycove, and Lilycove's shore is a separate beach, so Juan's Lilycove
+  Fan Club stays out of reach.
+
+Any other unreachable favourite fails the build.
+
+**Known limitation: a long trip's first search.** Each heartbeat a
+travelling trainer follows its cached path (the first nodes of its last
+search, which every later search from those nodes would repeat), so most
+heartbeats search little. A trip's first search, and every search after
+the 12-node cache runs out, is still a breadth-first search to the
+destination; across the Surf-linked seas and the Elite Four fly it can
+expand about 900 nodes in one search, and up to about 2,200 nodes in one
+heartbeat when several long trips start together (all-badges report:
+about 250 expanded nodes per heartbeat on average). Inside the map load
+this cost up to 1,642 scanlines (about 7 frames, with all badges), a
+visible stutter on a seamless edge. The heartbeat is therefore
+[spread over the following field frames](#heartbeat): on the E2E ROM a
+warp takes 40.2 frames on average and 42 at most (main: 40), and the
+worst single frame of heartbeat work is 144 scanlines on a seam and 188
+on warps. That worst frame is one spot choice, which can't be split (up
+to about 120 scanlines). The remaining cost is time: a heartbeat finishes
+after 10 field frames on a seam (median; worst 48), and the
+walkers on the player's map pause until it does. A watched trainer
+planning a trip does the same work a slice per frame: its next step's spot
+choices one per frame, then the first search (Will at Indigo planning the
+Ruins of Alph, a 731-node search, takes 16 frames and no frame of walker
+work went over 120 scanlines in the verifier runs).
 
 **Generator outputs**, one ROM table each, in a fixed order (map order,
 then component top-left tile) so ids are stable between builds of the
@@ -310,6 +404,43 @@ scripts that reload the same map without a transition.
    the player can follow a trainer, and a trainer the player walks in on
    is still there.
 4. Spawn local actors ([world to local](#handoff-world-to-local)).
+
+**Spread over frames.** Step 1, the priority order, and who counts as on the
+player's map or frozen are fixed at the map load. Step 2 then runs a few
+trainers at a time in the following field frames, in that order, within a
+per-frame budget:
+
+- at most 88 scanlines together with the walkers' update;
+- ending 40 lines before the next VBlank;
+- never during a palette fade.
+
+A breadth-first search or a reroute's full-map check can stop and resume
+between frames. A spot choice always starts a frame's share. The result is
+exactly the heartbeat run at once (the balance report's itineraries are
+byte-identical), because a trainer's next hop depends only on its own record
+and its own cached path.
+
+Until the heartbeat is done:
+
+- **Walkers.** The walkers' AI, spawning and world writes pause, as with
+  locked controls. A trainer that lands on the player's map spawns a few
+  frames later.
+- **Writes.** Anything that writes or saves the world finishes the rest at
+  once first: a warp's map load, a save and league resolution. So does the
+  object of a Gym Leader who hasn't acted yet, which is decided behind the
+  warp's fade. A Gym visitor that leaves meanwhile leaves its record alone.
+- **Seams.** A seam crossed again before it is done doesn't finish it
+  inside the seam's frame: the new heartbeat queues behind it (up to two)
+  with its step 1 inputs taken at that map load, the same result without
+  the hitch. With the queue full, only the oldest heartbeat finishes in the
+  seam's frame (running back and forth over a seam, about 660
+  scanlines measured, a three-frame stall), and the next begins sliced.
+- **No heap.** Without room for the search workspace it waits a frame and
+  tries again, so a heartbeat is never split; after 60 frames (the walkers
+  wait meanwhile) the rest of it skips, as a failed allocation always did.
+- **Heap resets.** A heap reset (battle, menu) only restarts the search that
+  was under way.
+- **New Game, Continue and load** drop it.
 
 **Default: map-change time.** Dwell is counted in heartbeats. This is
 recommended for v0 because it is proven, cheap, saved, and deterministic.
@@ -483,7 +614,10 @@ When a dwell runs out (in a heartbeat, or locally while watched):
   [capacity](notable-spots.md#capacity) (interior 1, outdoor 3 as a
   placeholder, 2 if the budget needs it). A hop into the destination map
   is always allowed, since spot choice already reserved room. So no map
-  ever holds more notables than its cap.
+  ever holds more notables than its cap. A local actor's exit is a hop
+  too: a walker steps out through a map side or a door only under the same
+  rule; with the next map full it waits once, then hands off. A trainer
+  back from Away stays away while their home map is full.
 - **Blocked.** A blocked traveller **waits** one heartbeat and sets the
   record's waited bit. Blocked again, they **reroute**: the shortest path
   that avoids the full map, if one exists within the search bound;
@@ -577,7 +711,7 @@ and y, state, goal, and dwell. Spots change it:
 | `destKind` | 2 | None, spot, or home place; the fourth value is reserved for [haunts](#haunts-later). |
 | `destId` | 14 | The spot id (0-16,383) in the generated spot table. |
 | `state` | 3 | Travelling, Dwelling, Away: league, Away: partner, Pinned, or Home-locked. |
-| `arrival` | 3 | None, north, south, east, west, door, or transit. |
+| `arrival` | 3 | None, north, south, east, west, door, transit, or water (all 8 values used). |
 | `crossing` | 8 | The crossing coordinate along the entered edge. |
 | `step` | 2 | The position in the activity cycle (0-3). |
 | `activity` | 4 | The current step's activity (11 values). |
@@ -596,10 +730,10 @@ and zeros elsewhere.
 **Header, 4 bytes:** a schema version (1 byte), a reserved byte, and the
 walker graph's 16-bit content hash.
 
-**Total:** 27 × 8 = 216 bytes of records, plus 9 and 4, is 229 bytes,
-**232 bytes** padded to a word. Adding the ten face-only trainers later
-([walking sprites](#known-limitation-walking-sprites)) takes it to 37
-records, 312 bytes.
+**Total:** 25 × 8 = 200 bytes of records, plus 9 and 4, is 213 bytes,
+**216 bytes** padded to a word. Adding the twelve placeable face-only
+trainers later ([walking sprites](#known-limitation-walking-sprites)) takes
+it to 37 records, 312 bytes.
 
 #### Save budget
 
@@ -640,7 +774,7 @@ saved league teams (`LeagueSavedTeams`, 1,456 bytes, 288 per team) to
 - **SaveBlock3** is where the proof of concept put its record, next to
   the haunt state. With PR #139 it has 276 bytes free; the haunt and
   friendship state above take about 133 of them, and the follower NPC 24,
-  leaving about **120**. The world's 232 bytes **do not fit**. Today, on
+  leaving about **120**. The world's 216 bytes **do not fit**. Today, on
   main, they would fit (464 free), but only by taking the space the
   haunts and leagues already count on.
 - **`PokemonStorage`** has 112 bytes free with PR #139. That already
@@ -672,14 +806,14 @@ and each of those specs points here.
   -mabi=apcs-gnu`, as the build does, against this branch and PR #139's
   headers). The nine storage sectors hold 35,712 bytes.
 - **What it hosts.** With PR #139, `PokemonStorage` has **2,520 bytes**
-  free after the change. It takes the `WayfarerWorldState` (232 for the
-  27 simulated trainers), the haunts'
+  free after the change. It takes the `WayfarerWorldState` (216 for the
+  25 simulated trainers), the haunts'
   [traded-slot pool](notable-haunts.md#saved-state) (640), and the
   [Masters lineup](sevii-masters.md#saved-state) growth: 8 opponents and the
   partner at 288 bytes a team, 2,592 plus PR #139's 16-byte header, against
-  PR #139's 1,456, so about 1,152 more. That is 2,024 bytes, leaving a
-  margin of about **496 bytes**. Adding the ten face-only trainers later
-  (80 bytes, 312 in all) leaves about **416**. Without PR #139 (main
+  PR #139's 1,456, so about 1,152 more. That is 2,008 bytes, leaving a
+  margin of about **512 bytes**. Adding the twelve face-only trainers later
+  (96 bytes, 312 in all) leaves about **416**. Without PR #139 (main
   today) 3,976 bytes would be free.
 - **Depends on PR #139.** Saved leagues
   ([#139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)) add
@@ -696,7 +830,7 @@ and each of those specs points here.
 **Layout:**
 
 1. Keep the record at **8 bytes** and the whole world state as **one
-   contiguous struct** (`WayfarerWorldState`, 232 bytes) with a
+   contiguous struct** (`WayfarerWorldState`, 216 bytes) with a
    `STATIC_ASSERT` on its size, never in SaveBlock1.
 2. Append it to **`PokemonStorage`**, after the 13 boxes, beside the trade
    pool and the league teams.
@@ -729,9 +863,11 @@ On every load, before the overworld runs:
    its node is reachable; `destKind` is never the reserved value; arrival
    is a known value and is none while Dwelling; activity is a known value;
    `lifeSteps` is 0 when `lifeEvent` is none; the reserved bits are zero.
-   Each local actor block entry names a simulated trainer at most once, on
-   the saved map's node, with a tile inside the map. A failed check is an
-   invalid save.
+   Each local actor block entry names a simulated trainer at most once.
+   A failed check is an invalid save. An entry that no longer fits the
+   saved location (its trainer isn't simulated or isn't on that map, or
+   the tile is outside it, after a load-time repair moved the player) only
+   clears the block: it is a restore hint, never a reason to reject a save.
 3. **Recompute** the derived states and apply them as a heartbeat would,
    without advancing anyone. The local actor block is used once, for the
    restored map, and then cleared.
@@ -743,9 +879,10 @@ shift encounter or battle rolls. Every choice comes from saved state,
 world progress, league state, and content, through fixed rules: spot
 choice (the spots spec's rotation), [priority order](#priority), path
 ties by edge order, and the life-event hook. The same save and the same
-sequence of map loads always give the same world. Continue doesn't
-advance it; a save and reload restores identical record bytes (proof of
-concept).
+sequence of map loads always give the same world, however the heartbeat
+is spread over frames and wherever a heap reset interrupts it. Continue
+doesn't advance it; a save and reload restores identical record bytes
+(proof of concept).
 
 ### Debug and balance report
 
@@ -762,8 +899,9 @@ loads, or "stays on one map"). It reports:
   an outdoor map.
 - **Coverage:** per trainer, the share of heartbeats per activity and
   per region; spots never used; trainers who never leave home.
-- **Cost:** search nodes visited per heartbeat (worst and mean), to check
-  the heartbeat fits inside a map transition.
+- **Cost:** search nodes visited per heartbeat (worst and mean). In game
+  the heartbeat is spread over frames, so this is total work, not a single
+  frame's.
 
 In game, a debug menu shows a trainer's record, warps the player to a
 trainer, and forces a heartbeat. Balance is informational.
@@ -831,8 +969,8 @@ their haunt.
 
 ## Acceptance
 
-1. **Scope.** The 27 trainers with a walking sprite have a record; Tate &
-   Liza and the ten face-only trainers have none and keep their fixed map
+1. **Scope.** The 25 trainers with a walking sprite have a record; Tate &
+   Liza and the twelve face-only trainers have none and keep their fixed map
    objects and haunt placement. Each derived
    state applies exactly when its table row says, with the given
    precedence.
@@ -895,10 +1033,12 @@ their haunt.
   player stands still.
 - **Haunts as destinations** ([above](#haunts-later)).
 - **Walking sprites for the face-only trainers:** new 9-frame sheets for
-  the 11 ([walking sprites](#known-limitation-walking-sprites)), so they
+  the 13 ([walking sprites](#known-limitation-walking-sprites)), so they
   can be simulated with the routines already authored.
-- **Surf- and Cut-aware walkers:** water and Cut edges in the graph, for
-  trainers whose team can use them.
+- **Surf- and Cut-aware walkers:** walkers that surf, cut, or push
+  boulders in view, and Cut and Strength edges in the graph, for trainers
+  whose team can use them. Off-screen water edges exist already
+  ([walker graph](#walker-graph)).
 - **Routines into the catalog:** the
   [routines research file's](../research/notable-trainer-routines.md)
   cycles and favourites become catalog values.

@@ -11,6 +11,7 @@
 #include "trainer_rating.h"
 #include "wayfarer_persistence.h"
 #include "test/test.h"
+#include "wayfarer_world.h"
 #include "gba/flash_internal.h"
 #include "constants/heal_locations.h"
 #include "constants/maps.h"
@@ -293,6 +294,7 @@ TEST("Production save and load preserve stage, mode, Rating and room progress")
 #endif
     EXPECT(RecordCircuitRoomVictory(CIRCUIT_STAGE_INDIGO, 0));
     Test_SetLeagueMap(&gSaveBlock1Ptr->location, MAP_POKEMON_LEAGUE_BRUNOS_ROOM);
+    WayfarerWorld_InitNewGame();  // a saved game always has a seeded world state
 #if WAYFARER_LEAGUE_EVENTS
     // The settled overworld flush must save the accepted payload and the first win.
     EXPECT(SavePendingLeagueProgress());

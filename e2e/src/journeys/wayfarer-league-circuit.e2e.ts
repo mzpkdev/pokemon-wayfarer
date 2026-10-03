@@ -176,8 +176,13 @@ const walkNorthToMap = async (
 ): Promise<void> => {
   for (let attempt = 0; attempt < 200; attempt++) {
     if ((await game.state.read()).map.name === map) {
-      await game.wait.forMap(map)
-      // The room's on-frame entrance script starts one tick after the map first reports ready.
+      // The room's on-frame entrance script starts one tick after the map first
+      // reports ready. That tick can fall between polls, so a started script
+      // also counts as arrival.
+      await game.wait.until(
+        (state) => state.map.name === map && (state.ready || state.scriptActive),
+        `ready map ${map} or its entrance script`,
+      )
       await game.wait.frames(2)
       if (expectAutomaticBattle) {
         await startTrainerBattle(game, `enter ${map}`, false)

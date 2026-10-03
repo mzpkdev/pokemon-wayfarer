@@ -59,7 +59,7 @@ EWRAM_DATA volatile struct E2ETestState gE2ETestState;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
-    .version = 26,
+    .version = 27,
     .requestSize = sizeof(struct E2ETestRequest),
     .resultSize = sizeof(struct E2ETestResult),
     .stateSize = sizeof(struct E2ETestState),
@@ -77,7 +77,8 @@ STATIC_ASSERT(offsetof(struct E2ETestRequest, status) == 87, E2ETestRequestStatu
 STATIC_ASSERT(sizeof(struct E2ETestResult) == 16, E2ETestResultSize);
 STATIC_ASSERT(offsetof(struct E2ETestResult, status) == 14, E2ETestResultStatusOffset);
 STATIC_ASSERT(sizeof(struct E2ETestObservedObjectEvent) == 12, E2ETestObservedObjectEventSize);
-STATIC_ASSERT(sizeof(struct E2ETestState) == 1752, E2ETestStateSize);
+STATIC_ASSERT(sizeof(struct E2ETestState) == 1756, E2ETestStateSize);
+STATIC_ASSERT(offsetof(struct E2ETestState, committedFrame) == 1752, E2ETestStateCommittedFrameOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, trainerRating) == 1684, E2ETestStateTrainerRatingOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, leagueRunRating) == 1688, E2ETestStateLeagueRunRatingOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, leagueEventId) == 1692, E2ETestLeagueEventIdOffset);
@@ -1408,6 +1409,8 @@ static void UpdateState(void)
     bool8 storageMovingMon;
     u8 trainerCardState;
 
+    // Opens the snapshot; E2ETest_Update closes it with committedFrame.
+    gE2ETestState.frame++;
     gE2ETestState.starterChooseStage = E2ETest_GetStarterChooseStage();
     gE2ETestState.originIntroStage = 0;
 #if IS_WAYFARER
@@ -1434,7 +1437,6 @@ static void UpdateState(void)
         gE2ETestState.trainerOnlyState[10] = trainer.warned;
         gE2ETestState.trainerOnlyState[11] = gBattleOutcome;
     }
-    gE2ETestState.frame++;
     gE2ETestState.phase = E2E_TEST_GAME_PHASE_BOOT;
     gE2ETestState.ready = FALSE;
     gE2ETestState.controlsLocked = TRUE;
@@ -1806,7 +1808,11 @@ static void UpdateState(void)
 
 void E2ETest_Update(void)
 {
+    // The emulator host can pause anywhere inside UpdateState, for example on
+    // a lag frame. frame is bumped first and committedFrame is stamped after
+    // the last field write, so a snapshot is complete only when they match.
     UpdateState();
+    gE2ETestState.committedFrame = gE2ETestState.frame;
     UpdateRequest();
 }
 

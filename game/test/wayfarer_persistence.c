@@ -23,6 +23,7 @@
 #include "wayfarer_kanto_opening.h"
 #include "wayfarer_ss_anne.h"
 #include "test/test.h"
+#include "wayfarer_world.h"
 #include "gba/flash_internal.h"
 #include "agb_flash.h"
 #include "constants/heal_locations.h"
@@ -918,6 +919,7 @@ static void PrepareOriginFlashFixture(void)
     WayfarerInitPersistentState();
     gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_NEW_BARK;
     gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation = HEAL_LOCATION_OLIVINE_CITY_HNS;
+    WayfarerWorld_InitNewGame();  // a saved game always has a seeded world state
 }
 
 #if WAYFARER_LEAGUE_EVENTS

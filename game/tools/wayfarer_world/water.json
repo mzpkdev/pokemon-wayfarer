@@ -1,0 +1,33 @@
+{
+  "_comment": "Authored Dive links for the off-screen water links (water.py, world simulation spec, walker graph). Each row joins two open-water tiles that Dive and emerge connect, both directions, so the off-screen simulation can cross between the two water bodies. The on-screen walker never uses water. Sootopolis's only way out is diving through Underwater_SootopolisCity, whose warp leads to Underwater_Route126 (45, 65); emerging there surfaces on Route126 at the same tile. fly: authored land-to-land links the off-screen simulation crosses like water (the Elite Four fly between Indigo Plateau and the Victory Road reception gate, since Victory Road is one-way on foot); both directions, open to every trainer; each end is a land tile whose walkable component the link joins.",
+  "dive": [
+    {
+      "name": "Sootopolis Dive",
+      "from": "SootopolisCity",
+      "water": [
+        29,
+        54
+      ],
+      "to": "Route126",
+      "water_to": [
+        45,
+        65
+      ]
+    }
+  ],
+  "fly": [
+    {
+      "name": "Elite Four fly",
+      "from": "IndigoPlateau_hns",
+      "tile": [
+        11,
+        7
+      ],
+      "to": "ReceptionGate_hns",
+      "tile_to": [
+        11,
+        18
+      ]
+    }
+  ]
+}

@@ -20,17 +20,27 @@ export const createSessionRuntime = (
   abi: SessionAbi,
 ): SessionRuntime => {
   let measuredFrames = 0
+  // SkyEmu serves each request as it arrives, so a read sent while another
+  // caller's step runs (polling state during a pending arrange) sees memory
+  // mid-step. One queue keeps every emulator call whole.
+  let queue: Promise<unknown> = Promise.resolve()
+  const serial = <T>(call: () => Promise<T>): Promise<T> => {
+    const run = queue.then(call)
+    queue = run.catch(() => undefined)
+    return run
+  }
+
   const advance = async (frames: number): Promise<void> => {
-    const result = await client.step(frames)
+    const result = await serial(() => client.step(frames))
     if (result !== "ok") throw new Error(`SkyEmu failed to advance ${frames} frames: ${result}`)
     measuredFrames += frames
   }
 
   const press = async (button: SkyEmuButton, holdFrames = 2, releaseFrames = 2): Promise<void> => {
-    const pressed = await client.input({ [button]: 1 })
+    const pressed = await serial(() => client.input({ [button]: 1 }))
     if (pressed !== "ok") throw new Error(`SkyEmu failed to press ${button}: ${pressed}`)
     await advance(holdFrames)
-    const released = await client.input({ [button]: 0 })
+    const released = await serial(() => client.input({ [button]: 0 }))
     if (released !== "ok") throw new Error(`SkyEmu failed to release ${button}: ${released}`)
     await advance(releaseFrames)
   }
@@ -38,10 +48,10 @@ export const createSessionRuntime = (
   return {
     abi,
     address: (symbol) => symbols.address(symbol),
-    readBytes: (address, length) => client.readBytes(address, length),
-    readUint16: (address) => client.readUint16LE(address),
-    readUint32: (address) => client.readUint32LE(address),
-    writeBytes: (address, bytes) => client.writeBytes(address, bytes),
+    readBytes: (address, length) => serial(() => client.readBytes(address, length)),
+    readUint16: (address) => serial(() => client.readUint16LE(address)),
+    readUint32: (address) => serial(() => client.readUint32LE(address)),
+    writeBytes: (address, bytes) => serial(() => client.writeBytes(address, bytes)),
     advance,
     measuredFrames: () => measuredFrames,
     press,

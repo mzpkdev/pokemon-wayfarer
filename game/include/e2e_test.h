@@ -475,6 +475,9 @@ struct E2ETestState
     u8 overworldWeather;
     u8 battleHazardMasks[2]; // Bit 0 Sticky Web, bit 1 Stealth Rock.
     u8 reservedHallDiagnostics[3];
+    // Written last, after every other field. A host that pauses emulation
+    // mid-update sees committedFrame != frame and must re-read later.
+    u32 committedFrame;
 };
 
 struct E2ETestAbi
