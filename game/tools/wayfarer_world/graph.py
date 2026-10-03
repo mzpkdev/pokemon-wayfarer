@@ -111,6 +111,7 @@ class Walk:
             "MB_WEST_ARROW_WARP", "MB_EAST_ARROW_WARP",
             "MB_UP_RIGHT_STAIR_WARP", "MB_UP_LEFT_STAIR_WARP",
             "MB_DOWN_RIGHT_STAIR_WARP", "MB_DOWN_LEFT_STAIR_WARP")
+        self.animated_doors = c.set_of("MB_ANIMATED_DOOR")
         self.hole_warps = c.set_of("MB_MT_PYRE_HOLE", "MB_CRACKED_FLOOR_HOLE",
                                    "MB_FALL_WARP", "MB_CRACKED_FLOOR")
 
@@ -442,19 +443,30 @@ class GraphBuilder:
     # Warps ------------------------------------------------------------------
 
     def warp_sources(self, info, warp):
-        """Components a walker can use warp `warp` from."""
+        """Components a walker can use warp `warp` from. A warp tile it can
+        stand on fires from that tile (a step on, or pressing on from it).
+        A tile it can't stand on (collision, or a New Game object not in
+        `ignore_objects`) fires only as TryDoorWarp does: an animated door,
+        from the tile south of it, facing north; an authored script door
+        (`script_warps`: a sign event at the door) from any side."""
         flood = self.floods[info.name]
+        grid = flood.grid
         x, y = warp["x"], warp["y"]
-        if not flood.grid.inside(x, y):
+        if not grid.inside(x, y):
             return []
         comps = [c for _, c in flood.states_of(x, y)]
-        if not comps:
-            i = y * flood.grid.w + x
-            if not flood.walkable[i]:
-                for dx, dy in N4:
-                    nx, ny = x + dx, y + dy
-                    if flood.in_any(nx, ny):
-                        comps += [c for _, c in flood.states_of(nx, ny)]
+        if comps:
+            return sorted(set(comps))
+        k = next((i for i, w in enumerate(info.events["warps"]) if w is warp), None)
+        if (info.name, k) in self.script_warps:
+            sides = N4
+        elif grid.b(x, y) in self.walk.animated_doors:
+            sides = (SOUTH,)
+        else:
+            return []
+        for dx, dy in sides:
+            if flood.in_any(x + dx, y + dy):
+                comps += [c for _, c in flood.states_of(x + dx, y + dy)]
         return sorted(set(comps))
 
     def fires(self, info, k, beh=None):
@@ -466,7 +478,24 @@ class GraphBuilder:
             beh = self.floods[info.name].grid.b(warp["x"], warp["y"])
         return (beh in self.walk.fireable or (info.name, k) in self.script_warps
                 or self.engine_fallback(info.layout["id"], k, warp,
-                                        self.walk.consts.mb_name.get(beh)))
+                                        self.walk.consts.mb_name.get(beh))
+                or self.coord_warp(info, warp))
+
+    def coord_warp(self, info, warp):
+        """A coord event on the warp's tile (at elevation 0, or the warp's)
+        whose script warps to the warp's destination map: stepping on fires
+        it (mapjson's Cinnabar Lab doors, the Power Plant exits)."""
+        grid = self.floods[info.name].grid
+        for c in info.events["coords"]:
+            if (c["x"], c["y"]) != (warp["x"], warp["y"]) or not c["script"]:
+                continue
+            # GetCoordEventScriptAtPosition: elevation 0 matches any.
+            tile = grid.elev[warp["y"] * grid.w + warp["x"]]
+            if c["elevation"] not in (0, tile, warp["elevation"]):
+                continue
+            if warp["dest_map"] in self.world.script_warp_maps(c["script"]):
+                return True
+        return False
 
     def landing_component(self, target, warp_index):
         """The component holding a destination warp's landing tile."""

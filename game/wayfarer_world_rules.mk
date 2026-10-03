@@ -26,7 +26,7 @@ endif
 # a parallel `make check` can't pass with the map tests skipped.
 .PHONY: wayfarer-world-test
 ifeq ($(MAP_VERSION),wayfarer)
-wayfarer-world-test: $(MAP_EVENTS) $(MAP_CONNECTIONS) $(MAP_HEADERS) $(MAPS_DIR)/groups.inc $(MAP_VERSION_STAMP)
+wayfarer-world-test: $(MAP_EVENTS) $(MAP_CONNECTIONS) $(MAP_HEADERS) $(MAPS_DIR)/groups.inc $(INCLUDECONSTS_OUTDIR)/map_groups.h $(INCLUDECONSTS_OUTDIR)/map_event_ids.h $(MAP_VERSION_STAMP)
 wayfarer-world-test: WAYFARER_WORLD_REQUIRE_MAPS := 1
 endif
 wayfarer-world-test:

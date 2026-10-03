@@ -104,13 +104,15 @@ class WorldGraph:
             self.water_report)
         self.raw_links += water.fly_links(b, water.load_fly(), self.problems)
 
-        # A spot must be reachable: its component has an edge (in or out).
-        # Components with a warp tile but no usable edge still become nodes
-        # (the spec keeps them), but hold no spots.
-        linked = set()
+        # A spot must be reachable: some edge leads into its component (a
+        # room with only a way out, such as a door that never fires from
+        # outside, holds no spots). Components with a warp tile but no usable
+        # edge still become nodes (the spec keeps them), but hold no spots.
+        linked, entered = set(), set()
         for r in self.raw_links:
             linked.add((r[0], r[1]))
             linked.add((r[2], r[3]))
+            entered.add((r[2], r[3]))
         self.linked = linked
         self.dropped = Counter()
         self.unreachable = defaultdict(Counter)
@@ -124,7 +126,7 @@ class WorldGraph:
                 det.findings["dropped_on_named_tile"].append(
                     [s.map.name, sp.KIND_KEYS[s.kind], s.x, s.y])
                 continue
-            if (s.map.name, s.comp) not in linked:
+            if (s.map.name, s.comp) not in entered:
                 self.dropped["unreachable (no edge)"] += 1
                 self.unreachable[s.map.name][sp.KIND_KEYS[s.kind]] += 1
                 continue
@@ -133,11 +135,11 @@ class WorldGraph:
             kept.append(s)
         self.problems += self.overrides.unused_drops()
         for s in named:
-            if (s.map.name, s.comp) not in linked:
-                self.problems.append("named spot %r (%s): tile (%d, %d) is not reachable "
-                                     "from the map's warps and edges" % (s.label, s.map.name, s.x, s.y))
+            if (s.map.name, s.comp) not in entered:
+                self.problems.append("named spot %r (%s): tile (%d, %d) has no way in "
+                                     "(no edge leads into it)" % (s.label, s.map.name, s.x, s.y))
         all_spots = self.one_seat_per_tile(
-            kept, [s for s in named if (s.map.name, s.comp) in linked])
+            kept, [s for s in named if (s.map.name, s.comp) in entered])
         used = linked | with_warp
 
         # Nodes in map order, then component order (first tile in scan order).

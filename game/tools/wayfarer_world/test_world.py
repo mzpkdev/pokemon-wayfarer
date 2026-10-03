@@ -289,6 +289,51 @@ class Graph(unittest.TestCase):
                     todo.append(e.target)
         self.assertIn(top.id, seen)
 
+    def test_e2e_proven_passages(self):
+        # Passages the SkyEmu journeys walk (cinnabar-interior-port and the
+        # Seafoam and Mansion journeys): an independent check of the firing
+        # rules, not the predicate the generator uses. The Lab doors fire
+        # through mapjson's coord triggers.
+        _, wg, _ = full()
+        cases = [("PokemonMansion_1F_Frlg", 9, 13, "PokemonMansion_2F_Frlg"),
+                 ("PokemonMansion_2F_Frlg", 7, 14, "PokemonMansion_1F_Frlg"),
+                 ("PokemonMansion_2F_Frlg", 8, 3, "PokemonMansion_3F_Frlg"),
+                 ("PokemonMansion_3F_Frlg", 9, 3, "PokemonMansion_2F_Frlg"),
+                 ("PokemonMansion_1F_Frlg", 26, 27, "PokemonMansion_B1F_Frlg"),
+                 ("PokemonMansion_B1F_Frlg", 33, 29, "PokemonMansion_1F_Frlg"),
+                 ("CinnabarIsland_PokemonLab_Entrance_Frlg", 13, 6, "CinnabarIsland_PokemonLab_Lounge_Frlg"),
+                 ("CinnabarIsland_PokemonLab_Entrance_Frlg", 19, 6, "CinnabarIsland_PokemonLab_ResearchRoom_Frlg"),
+                 ("CinnabarIsland_PokemonLab_Entrance_Frlg", 25, 6, "CinnabarIsland_PokemonLab_ExperimentRoom_Frlg"),
+                 ("CinnabarIsland_PokemonLab_Lounge_Frlg", 7, 8, "CinnabarIsland_PokemonLab_Entrance_Frlg"),
+                 ("CinnabarIsland_PokemonCenter_1F_Frlg", 2, 6, "CinnabarIsland_PokemonCenter_2F_Frlg"),
+                 ("CinnabarIsland_PokemonCenter_2F_Frlg", 2, 6, "CinnabarIsland_PokemonCenter_1F_Frlg"),
+                 ("CinnabarIsland_Gym_Frlg", 25, 22, "CinnabarIsland_Frlg"),
+                 ("Route20_Frlg", 60, 9, "SeafoamIslands_1F_Frlg"),
+                 ("Route20_Frlg", 72, 15, "SeafoamIslands_1F_Frlg"),
+                 ("SeafoamIslands_1F_Frlg", 6, 20, "Route20_Frlg"),
+                 ("SeafoamIslands_1F_Frlg", 32, 20, "Route20_Frlg")]
+        for name, x, y, dest in cases:
+            node = wg.node_of[(name, wg.builder.floods[name].tile_component(x, y))]
+            targets = {wg.nodes[e.target].map.name for e in wg.nodes[node].edges}
+            self.assertIn(dest, targets, (name, x, y))
+        # Cerulean's Bike Shop door is a non-animated door with collision:
+        # TryDoorWarp opens only animated doors, so it never fires.
+        city = wg.map_nodes("CeruleanCity_hns")
+        self.assertFalse(any(wg.nodes[e.target].map.name == "CeruleanCity_BikeShop_hns"
+                             for n in city for e in n.edges))
+        # A door under a New Game object (Lavaridge Gym's trainers on their
+        # warp tiles) never fires either.
+        self.assertFalse(any(e.kind == graph.KIND_WARP and e.warp_id in (8, 9, 12, 17)
+                             for n in wg.map_nodes("LavaridgeTown_Gym_1F") for e in n.edges))
+
+    def test_named_spot_needs_a_way_in(self):
+        world, _, _ = full()
+        rows = authored.load_named() + [
+            {"region": "Kanto", "label": "Cerulean Bike Shop", "map": "CeruleanCity_BikeShop_hns",
+             "x": 3, "y": 5, "activities": ["shop"], "capacity": 1}]
+        wg = build.WorldGraph(world, named_rows=rows)
+        self.assertTrue(any("Cerulean Bike Shop" in p and "no way in" in p for p in wg.problems))
+
     def test_script_warp_validation(self):
         world, wg, _ = full()
         with self.assertRaises(BuildError):
@@ -396,7 +441,7 @@ class Spots(unittest.TestCase):
     def test_named_spots_all_present(self):
         _, wg, _ = full()
         named = [s for s in wg.spots if s.kind == sp.NAMED]
-        self.assertEqual(len(named), 59)
+        self.assertEqual(len(named), 58)
         for s in named:
             self.assertNotEqual(s.activities & 0xF, 15)
             if s.capacity == 2:
@@ -471,9 +516,29 @@ class Routines(unittest.TestCase):
                                                  | {wg.spots[i].node for f in t.favourites
                                                     for i in range(f[0], f[0] + f[1])}),
                                rt.allowed(t))
-            self.assertTrue(any("ROM's path" in p or "home-hop" in p for p in rt.problems[len(before):]))
+            self.assertTrue(any("ROM's path" in p or "home-hop" in p or "out-of-region" in p
+                                for p in rt.problems[len(before):]))
         finally:
             t.regions = saved
+            rt.problems[:] = before
+
+    def test_reroutes_cannot_leave_the_region(self):
+        # Today every out-of-region part touches a non-traveller's regions
+        # at one node at most, so the check passes (the build ran it). Make
+        # Saffron City "Johto" for a moment: a foreign pocket inside Kanto,
+        # entered from four gates, through which a reroute could pass.
+        _, wg, rt = full()
+        t = next(t for t in rt.trainers if t.slug == "lt-surge")
+        saffron = [n for n in wg.map_nodes("SaffronCity_hns")]
+        before = list(rt.problems)
+        try:
+            for n in saffron:
+                n.region = "Johto"
+            rt.check_rom_paths(t, t.name, [t.home_node], rt.allowed(t))
+            self.assertTrue(any("out-of-region part" in p for p in rt.problems[len(before):]))
+        finally:
+            for n in saffron:
+                n.region = "Kanto"
             rt.problems[:] = before
 
     def test_broken_favourite_fails(self):

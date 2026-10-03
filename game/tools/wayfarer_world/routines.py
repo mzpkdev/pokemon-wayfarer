@@ -374,6 +374,38 @@ class Routines:
         those paths. A map change that opened a shorter way through another
         region fails here instead of letting the ROM leave the region."""
         nodes = self.wg.nodes
+        # Reroutes (the ROM's search avoiding full maps) can take any simple
+        # path, not just the shortest. A simple path that leaves the home
+        # regions must come back in at a different region node, so it is
+        # impossible while every out-of-region part of the graph touches the
+        # regions at one node at most (today: Route 22 <-> the reception
+        # gate). Checked over the undirected, transit-free graph.
+        touching = defaultdict(set)
+        for n in nodes:
+            for e in n.edges:
+                if e.kind != graph.KIND_TRANSIT:
+                    touching[n.id].add(e.target)
+                    touching[e.target].add(n.id)
+        seen = set()
+        for start in range(len(nodes)):
+            if nodes[start].region in t.regions or start in seen:
+                continue
+            part, queue, portals = {start}, deque([start]), set()
+            while queue:
+                cur = queue.popleft()
+                for nxt in touching[cur]:
+                    if nodes[nxt].region in t.regions:
+                        portals.add(nxt)
+                    elif nxt not in part:
+                        part.add(nxt)
+                        queue.append(nxt)
+            seen |= part
+            if len(portals) > 1:
+                names = ", ".join("%d (%s)" % (p, nodes[p].map.name) for p in sorted(portals)[:4])
+                self.problems.append("%s: an out-of-region part of the graph (%d nodes) touches %s at "
+                                     "%d nodes (%s): a reroute could leave the region and come back"
+                                     % (tag, len(part), "/".join(sorted(t.regions)), len(portals), names))
+                return
         free = {}
         for nid in range(len(nodes)):
             free[nid] = [tg for tg, kind in self.adj[nid] if kind != graph.KIND_TRANSIT]

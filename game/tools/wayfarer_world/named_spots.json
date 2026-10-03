@@ -1,12 +1,14 @@
 {
   "_comment": "Named spots (kind WORLD_SPOT_NAMED), converted from .product/research/notable-named-spots.md. Optional 'template': 'stand_and_face' or 'sit_or_idle'; without one the runtime uses the activity's default template.",
+  "dropped": [
+    {"label": "Cerulean Bike Shop", "map": "CeruleanCity_BikeShop_hns", "why": "Its only door, Cerulean City warps 6, 8 and 9 at (13-15, 40), is MB_NON_ANIMATED_DOOR with collision: it never fires (TryDoorWarp opens only animated doors), so no edge leads in (critic loop cycle 2, T2). The shop is closed in HGSS."}
+  ],
   "spots": [
     {"region": "Kanto", "label": "Oak's Lab", "map": "PalletTown_Lab_hns", "x": 18, "y": 14, "activities": ["study"], "capacity": 1, "note": "Kanto's research hub, beside Oak's aides."},
     {"region": "Kanto", "label": "Cinnabar Lab", "map": "CinnabarIsland_PokemonLab_ExperimentRoom_Frlg", "x": 11, "y": 4, "activities": ["study"], "capacity": 1, "note": "The fossil-revival room, by the scientist."},
     {"region": "Kanto", "label": "Vermilion Fan Club", "map": "VermilionCity_FanClub_hns", "x": 9, "y": 7, "activities": ["visit", "relax"], "capacity": 1, "note": "Trading stories with the chairman's members."},
     {"region": "Kanto", "label": "Vermilion harbour", "map": "VermilionCity_PortOutside_hns", "x": 24, "y": 5, "activities": ["sightsee", "visit"], "capacity": 2, "note": "The east end of the S.S. Anne pier, where sailors come and go."},
     {"region": "Kanto", "label": "Fighting Dojo", "map": "SaffronCity_FightingDojo_hns", "x": 8, "y": 11, "activities": ["train"], "capacity": 1, "note": "The training floor, off the haunt's spot."},
-    {"region": "Kanto", "label": "Cerulean Bike Shop", "map": "CeruleanCity_BikeShop_hns", "x": 3, "y": 5, "activities": ["shop"], "capacity": 1, "note": "Browsing the bikes."},
     {"region": "Kanto", "label": "Lavender Name Rater", "map": "LavenderTown_House3_hns", "x": 8, "y": 5, "activities": ["visit"], "capacity": 1, "note": "Waiting on a nickname."},
     {"region": "Kanto", "label": "Safari Zone gate", "map": "FuchsiaCity_SafariZoneEntrance_hns", "x": 10, "y": 6, "activities": ["sightsee"], "capacity": 1, "note": "Planning a trip into the zone."},
     {"region": "Kanto", "label": "Bill's Sea Cottage", "map": "Route25_BillsHouse_hns", "x": 11, "y": 7, "activities": ["visit", "study"], "capacity": 1, "note": "Calling on Bill and his teleporter."},

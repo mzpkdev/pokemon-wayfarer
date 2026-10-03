@@ -58,13 +58,16 @@ class Overrides:
 
     def dropped(self, spot):
         name = spot.map.name
+        hit = False
+        # Every entry that matches counts as used, not just the first: a spot
+        # covered by both a place drop and a tile drop uses both.
         for key, table in (((name, spot.kind), self.drop_places),
                            ((name, spot.x, spot.y, None), self.drop_tiles),
                            ((name, spot.x, spot.y, spot.kind), self.drop_tiles)):
             if key in table:
                 self.used_drops.add(key)
-                return True
-        return False
+                hit = True
+        return hit
 
     def dropped_place(self, name, kind):
         """A whole detected place (a Mart, a Gym) dropped by `drop`."""

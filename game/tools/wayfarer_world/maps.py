@@ -237,10 +237,16 @@ def parse_events(text):
             events["warps"].append({
                 "x": int(a[0], 0), "y": int(a[1], 0), "elevation": int(a[2], 0),
                 "dest_warp": a[3], "dest_map": a[4]})
-        elif s.startswith("coord_event ") or s.startswith("coord_weather_event "):
-            macro = s.split()[0]
-            a = _args(s, macro)
-            events["coords"].append({"x": int(a[0], 0), "y": int(a[1], 0)})
+        elif s.startswith("coord_event "):
+            a = _args(s, "coord_event")
+            events["coords"].append({"x": int(a[0], 0), "y": int(a[1], 0),
+                                     "elevation": int(a[2], 0), "var": a[3],
+                                     "value": a[4], "script": a[5]})
+        elif s.startswith("coord_weather_event "):
+            a = _args(s, "coord_weather_event")
+            events["coords"].append({"x": int(a[0], 0), "y": int(a[1], 0),
+                                     "elevation": 0, "var": "", "value": "",
+                                     "script": ""})
         elif s.startswith("bg_sign_event "):
             a = _args(s, "bg_sign_event")
             events["bgs"].append({"x": int(a[0], 0), "y": int(a[1], 0),
@@ -560,6 +566,29 @@ class World:
             info.grid = Grid(self.root, info.layout, self.tilesets, self.consts)
         return info.grid
 
+    def script_warp_maps(self, label):
+        """MAP_* constants a script label warps to (any warp* command), in
+        its own body or one goto/call deep; the empty set if unknown."""
+        if not hasattr(self, "_labels"):
+            self._labels = {}
+            paths = (sorted((self.root / "data/maps").glob("*/scripts.inc"))
+                     + sorted((self.root / "data/maps").glob("*scripts*.inc"))
+                     + sorted((self.root / "data/scripts").rglob("*.inc")))
+            for path in paths:
+                text = read_text(path)
+                marks = list(re.finditer(r"^(\w+)::?[ \t]*$", text, re.M))
+                for i, m in enumerate(marks):
+                    end = marks[i + 1].start() if i + 1 < len(marks) else len(text)
+                    self._labels.setdefault(m.group(1), text[m.end():end])
+
+        def direct(body):
+            return set(re.findall(r"^\s*warp\w*\s+(MAP_\w+)", body, re.M))
+        body = self._labels.get(label, "")
+        out = direct(body)
+        for target in re.findall(r"^\s*(?:goto|call)(?:_if\w*)?\s+(?:[^\n]*,\s*)?(\w+)\s*$", body, re.M):
+            out |= direct(self._labels.get(target, ""))
+        return out
+
     def scripts_text(self, info):
         path = self.map_dir(info.scripts_owner) / "scripts.inc"
         return read_text(path) if path.exists() else ""
@@ -680,6 +709,7 @@ def input_paths(root):
     paths = set()
     paths |= {str(p.relative_to(root)) for p in (root / "data/maps").glob("*/map.json")}
     paths |= {str(p.relative_to(root)) for p in (root / "data/maps").glob("*/scripts.inc")}
+    paths |= {str(p.relative_to(root)) for p in (root / "data/maps").glob("*scripts*.inc")}
     paths |= {str(p.relative_to(root)) for p in (root / "data/layouts").rglob("map.bin")}
     paths |= {str(p.relative_to(root)) for p in (root / "data/tilesets").rglob("metatile_attributes.bin")}
     paths |= {str(p.relative_to(root)) for p in (root / "data/scripts").rglob("*.inc")}
