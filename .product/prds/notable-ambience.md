@@ -99,8 +99,9 @@ Trainers feel different without unique scripts:
 
 ### The ace comes out
 
-At some spots, the trainer's ace appears beside them for a moment: Starmie at
-Misty's water's edge, Dragonite next to Lance. It hops, the trainer smiles, and
+At some spots, the trainer's Pokémon appears beside them for a moment:
+Dragonite next to Lance, or Brock's Onix and Misty's Psyduck, since an iconic
+anime partner can stand in for the battle ace. It hops, the trainer smiles, and
 it goes back. It needs a spare object slot, so it only happens when the map has
 room.
 
@@ -154,9 +155,8 @@ room.
 
 ## Open questions
 
-- Exact cadences and pause lengths (placeholders in the spec).
-- Which ace comes out when a trainer has several (the spec uses the first ace in
-  roster order).
+- Exact cadences and pause lengths, which stay placeholders until
+  playtesting.
 
 ## References
 

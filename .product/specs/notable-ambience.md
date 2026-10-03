@@ -220,8 +220,8 @@ The first draft has 30 beats. Placeholder `wait` lengths are in ticks of
 | id | class | when | who | steps |
 | --- | --- | --- | --- | --- |
 | `look_around` | idle | walking | not stoic | wait 2, face left, wait 3, face right, wait 3, look_back |
-| `hum` | idle | walking | cheerful | emote music (keeps walking) |
-| `stretch` | idle | walking, outdoors | athletic | wait 1, jump, wait 1 |
+| `hum` | idle | walking | cheerful | emote music, without stopping the walk |
+| `stretch` | idle | walking, outdoors | athletic | stop, wait 1, jump, wait 1 |
 | `skywatch` | idle | walking, outdoors | curious, mystic, dreamy | face up, wait 6, emote pensive, look_back |
 | `blocked_sigh` | react | blocked | not stoic | emote …, wait 4 |
 | `arrive_look` | transition | arriving | — | face left, wait 2, face right, wait 2, face target |
@@ -277,10 +277,14 @@ The first draft has 30 beats. Placeholder `wait` lengths are in ticks of
 
 ### Companion
 
-- **Species:** the trainer's first ace in the
-  [catalog roster](notable-trainers.md) order, for example Starmie for Misty,
-  Steelix for Brock, and Dragonite for Lance. It is shown with that species'
-  overworld follower sprite, never shiny.
+- **Species:** the trainer's `companion` from `ambience.json` if set, otherwise
+  their first ace in [catalog roster](notable-trainers.md) order. It is shown
+  with that species' overworld follower sprite, never shiny.
+  - **The optional `companion` field** lets an iconic anime partner stand in
+    for the battle ace where it matters. It needn't be in the battle roster.
+    First draft: Brock Onix, Misty Psyduck, Erika Gloom, Bugsy Scyther.
+  - **Everyone else** shows their first ace, such as Dragonite for Lance and
+    Raichu for Lt. Surge.
 - **Room** (`companion_room`) requires all of these:
   - the walker is dwelling and not at a store, Game Corner, or Center;
   - after spawning the companion, the map would still keep the walker rule's 3
@@ -295,8 +299,10 @@ The first draft has 30 beats. Placeholder `wait` lengths are in ticks of
   following Pokémon, never blocks a spawn, and is the first object removed when
   slots are short.
 - **Large sprites:** species with 64×64 follower sprites (such as Steelix,
-  Gyarados, Lapras, and Dragonite) need a free 2×2 area, or they skip the
-  companion beat.
+  Gyarados, Lapras, and Dragonite) need a free 2×2 area. Without one, the
+  trainer's next ace in roster order that fits comes out instead. If none
+  fits, the companion beat is skipped. An authored `companion` falls back
+  the same way, to the roster's aces.
 
 ### Data
 
@@ -311,7 +317,8 @@ tables, as it does for `routines.json`.
 - a preferred beat the trainer can't qualify for;
 - a trainer with no tag;
 - a relationship naming a trainer twice;
-- a companion beat for a trainer with no ace.
+- a companion beat for a trainer with no ace;
+- a `companion` species without an overworld follower sprite.
 
 ### Saved state and costs
 
@@ -344,9 +351,8 @@ tables, as it does for `routines.json`.
 
 ## Open questions
 
-- Cadences: the quiet gap, idle odds, and the walking interval of 10 steps.
-- Whether `hum` and `stretch` should pause the walk briefly or keep moving.
-- Whether big-sprite companions should fall back to a smaller ace or skip.
+- Cadences (the quiet gap, idle odds, and the walking interval of 10 steps)
+  stay placeholders until playtesting.
 
 ## Later
 
