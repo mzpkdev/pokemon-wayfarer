@@ -530,6 +530,12 @@ The extraction outputs **where** each spot is, plus the few tiles its
 behaviour needs. Behaviour itself is authored **once per kind**, as a
 small library of templates in code. Nothing is authored per detected spot.
 
+[Notable ambience](notable-ambience.md) owns everything expressive a
+walker does on screen. The templates below keep their movement rules, and
+their emotes become the first beats of its shared pool: the tall-grass
+"!", the water's-edge "!", and the chat "…" become `grass_rustle`,
+`water_bite`, and `chat_talk`.
+
 **Per-kind data.** For each kind, the [spot table](#spot-extraction)
 holds the tiles its template needs, as the
 [detection sources](#detection-sources) define them:
