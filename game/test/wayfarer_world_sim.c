@@ -946,17 +946,15 @@ TEST("Trainers back from the league never overfill home and choose in slices")
     ctx.derived[will] = WORLD_STATE_AWAY_LEAGUE;
     WorldSim_Heartbeat(&sState, &ctx, workspace, NULL);
     ctx.derived[will] = WORLD_DERIVED_NONE;
-    if (WorldSim_Occupancy(&sState, homeMap, will) < WorldSim_MapCapacity(home))
-    {
-        WorldSim_HeartbeatBegin(&hb, &sState, &ctx, NULL);
-        EXPECT_EQ((u32)sState.records[will].state, WORLD_STATE_DWELLING);
-        EXPECT_EQ((u32)sState.records[will].destKind, WORLD_DEST_NONE);
-        EXPECT_EQ((u32)sState.records[will].node, home);
-        EXPECT_EQ(hb.order[0], will);
-        while (!WorldSim_HeartbeatStep(&hb, &sState, workspace, 1, NULL))
-            ;
-        EXPECT_NE((u32)sState.records[will].destKind, WORLD_DEST_NONE);
-    }
+    ASSUME(WorldSim_Occupancy(&sState, homeMap, will) < WorldSim_MapCapacity(home));
+    WorldSim_HeartbeatBegin(&hb, &sState, &ctx, NULL);
+    EXPECT_EQ((u32)sState.records[will].state, WORLD_STATE_DWELLING);
+    EXPECT_EQ((u32)sState.records[will].destKind, WORLD_DEST_NONE);
+    EXPECT_EQ((u32)sState.records[will].node, home);
+    EXPECT_EQ(hb.order[0], will);
+    while (!WorldSim_HeartbeatStep(&hb, &sState, workspace, 1, NULL))
+        ;
+    EXPECT_NE((u32)sState.records[will].destKind, WORLD_DEST_NONE);
     Free(workspace);
 }
 

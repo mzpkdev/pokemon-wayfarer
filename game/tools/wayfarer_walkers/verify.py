@@ -182,6 +182,9 @@ SCANLINES_PER_FRAME = 228
 CEILING_FRAME_SCANLINES = 200   # worst frame of simulation (heartbeat steps + walkers, or walkers alone)
 CEILING_WARP_FRAMES = 44        # frames per warp until the controls unlock (main: 40)
 TARGET_FRAME_SCANLINES = SCANLINES_PER_FRAME // 2
+# A seam frame with the queue full finishes one heartbeat at once: a typical
+# seam heartbeat is about 350 lines and the measured worst about 660.
+CEILING_SEAM_FINISH_SCANLINES = 1000
 FLAG_RUNNING_SHOES = 0x895      # e2e catalog: runningShoes
 
 
@@ -1085,7 +1088,9 @@ def scenario_deadend(game: Game) -> dict:
 
 
 def scenario_gymentry(game: Game) -> dict:
-    """H3: a Gym visitor never blocks the entrance (Saffron Gym, three exit mats)."""
+    """H3: a Gym visitor never blocks the entrance (Saffron Gym: the player
+    stands on the exit mat (14, 23), its one firing exit warp; the mat's side
+    tiles (13, 23) and (15, 23) carry warp events that never fire)."""
     SAFFRON_GYM = TABLES.map_id("MAP_SAFFRON_CITY_GYM_HNS")
     spot, node = TABLES.spot("MAP_SAFFRON_CITY_GYM_HNS", "GYM", 14, 23)
     game.emu.step(240)
@@ -1110,8 +1115,9 @@ def scenario_gymentry(game: Game) -> dict:
     result = {"visitor_spawn_tile": tile, "player_walked_in": walked_in, "visitor_left": left,
               "visitor_removed": game.actor_for(SLOT_BLUE) is None, "record_after": blue,
               "screenshots": [shot, game.shot("gymentry-after")], "debug": after}
-    # The first tile seen can already be a sibling exit mat (13, 23) or
-    # (15, 23): the visitor steps out through it at once.
+    # With the player on the mat the visitor can't walk out through it: it
+    # leaves without walking out (visitorsVanished), never standing in the
+    # way inside.
     result["pass"] = (walked_in and left >= 1 and result["visitor_removed"] and blue["node"] != node
                       and (tile is None or tile not in ((14, 22), (14, 21), (14, 20))))
     return result
@@ -1357,10 +1363,11 @@ def scenario_recross(game: Game) -> dict:
     """E7: running back and forth over the Viridian <-> Route 2 seam, every
     badge held, so a camera transition often comes while the last crossing's
     heartbeat is still pending (pendingAtLoad). The new heartbeat then
-    queues behind the pending one (deferredBegins, up to three deep) instead
-    of finishing it inside the seam's frame; only a full queue still finishes
-    at once (maxFinishScanlines, reported, not gated). Gated: the case was
-    hit, a heartbeat was queued, and no sliced frame passed the ceiling."""
+    queues behind the pending one (deferredBegins, up to two deep) instead
+    of finishing it inside the seam's frame; with the queue full only the
+    oldest heartbeat finishes there (maxFinishScanlines). Gated: the case was
+    hit, a heartbeat was queued, no sliced frame passed the frame ceiling,
+    and no seam frame finished more than CEILING_SEAM_FINISH_SCANLINES."""
     game.emu.step(240)
     arrange_with_badges(game, VIRIDIAN, 27, 1, 8, 8, 8, flags=(FLAG_RUNNING_SHOES,))
     game.emu.step(30)
@@ -1390,9 +1397,11 @@ def scenario_recross(game: Game) -> dict:
               "max_walker_update_scanlines": dbg["maxUpdateScanlines"],
               "mean_crossing_frames": sum(r["frames"] for r in rows) / len(rows),
               "world": world, "debug": dbg, "screenshots": [game.shot("recross-after")]}
-    result["ceilings"] = {"frame_scanlines": CEILING_FRAME_SCANLINES}
+    result["ceilings"] = {"frame_scanlines": CEILING_FRAME_SCANLINES,
+                          "seam_finish_scanlines": CEILING_SEAM_FINISH_SCANLINES}
     result["pass"] = (all(r["reached"] for r in rows) and result["pending_at_load"] >= 1
                       and result["deferred_begins"] >= 1
+                      and world["maxFinishScanlines"] <= CEILING_SEAM_FINISH_SCANLINES
                       and world["maxFrameScanlines"] <= CEILING_FRAME_SCANLINES
                       and dbg["maxUpdateScanlines"] <= CEILING_FRAME_SCANLINES)
     return result
