@@ -1,0 +1,53 @@
+Archive member included to satisfy reference by file (symbol)
+
+Discarded input sections
+
+ .text          0x00000000        0x0 src/main.o
+ .bss           0x00000000        0x0 src/main.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+EWRAM            0x02000000         0x00040000         xrw
+IWRAM            0x03000000         0x00008000         xrw
+ROM              0x08000000         0x02000000         xr
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+                0x00000004                        gNumMusicPlayers = 0x4
+
+.ewram          0x02000000        0x4 load address 0x09ef85e8
+                0x02000000                        __ewram_start = .
+ *(.ewram*)
+ .ewram         0x02000000        0x4 src/main.o
+                0x02000004                        . = ALIGN (0x4)
+                0x02000004                        __ewram_end = .
+
+.ewram.sbss     0x02000004    0x3d3e0 load address 0x09ef85ec
+ *.o(.sbss)
+ .sbss          0x02000004        0xa src/wild_encounter.o
+ .sbss          0x0203d264      0x180 src/window.o
+                0x0203d264                gWindows
+
+.iwram          0x03000000      0x198 load address 0x09ef8450
+                0x03000000                        __iwram_start = .
+ *(.iwram*)
+ .iwram.code    0x03000000      0x15c src/crt0.o
+                0x03000198                        __iwram_end = .
+
+.iwram.bss      0x03000198     0x66c8 load address 0x09ef85e8
+ *.o(.bss*)
+ .bss           0x03000198      0x9b0 data/sound_data.o
+                0x03006460                        . = ALIGN (0x4)
+
+.text           0x08000000   0x26bdd8
+ *(.text*)
+ .text          0x08000000      0x204 src/crt0.o
+
+.data.iwram     0x09ef8450      0x198
+                0x09ef8450                        __iwram_lma = .
+
+.debug_info     0x00000000   0x123456
+OUTPUT(../../pokewayfarer.elf elf32-littlearm)
+LOAD linker stubs

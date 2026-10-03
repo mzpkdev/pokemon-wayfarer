@@ -1,0 +1,28 @@
+Memory Configuration
+
+Name             Origin             Length             Attributes
+EWRAM            0x02000000         0x00040000         xrw
+IWRAM            0x03000000         0x00007f00         xrw
+IWRAM_PERSISTENT 0x03007f00         0x00000100         xrw
+ROM              0x08000000         0x02000000         xr
+
+Linker script and memory map
+
+.ewram          0x02000000        0x4 load address 0x099f1518
+ *(.ewram*)
+
+.ewram.sbss     0x02000004    0x3ffdc load address 0x099f151c
+ *.o(.sbss)
+
+.iwram          0x03000000      0x198 load address 0x099f1380
+ *(.iwram*)
+
+.iwram.bss      0x03000198     0x72cc load address 0x099f1518
+ *.o(.bss*)
+
+.iwram.persistent
+                0x03007f00        0x4
+ test/*.o(.persistent)
+ .persistent    0x03007f00        0x4 test/test_runner.o
+
+.text           0x08000000   0x26bdd8

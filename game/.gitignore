@@ -45,6 +45,7 @@ prefabs.json
 /pokefirered-*.png
 /pokeleafgreen-*.png
 /*-size.json
+/*-ram.json
 src/data/map_group_count.h
 data/wayfarer_engine_source_constants.inc
 data/wayfarer_hoenn_source_constants.inc
