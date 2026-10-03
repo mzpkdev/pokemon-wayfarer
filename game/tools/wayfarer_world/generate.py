@@ -2,10 +2,11 @@
 """Generate the notable world's walker graph, spot table and trainer tables.
 
 Writes src/data/wayfarer_world/tables.h (the definitions of every extern in
-include/wayfarer_world_data.h) and a JSON report, and exits non-zero with
-the reasons on any validation failure. Specs:
-.product/specs/notable-world-simulation.md (walker graph, travel, record)
-and .product/specs/notable-spots.md (kinds, detection, named spots).
+include/wayfarer_world_data.h and include/wayfarer_ambience_data.h) and a
+JSON report, and exits non-zero with the reasons on any validation failure.
+Specs: .product/specs/notable-world-simulation.md (walker graph, travel,
+record), .product/specs/notable-spots.md (kinds, detection, named spots) and
+.product/specs/notable-ambience.md (beats, tags, relations, companions).
 
     python3 tools/wayfarer_world/generate.py [--root game] [--output PATH]
         [--report PATH] [--print-inputs]
@@ -24,6 +25,7 @@ from pathlib import Path
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import ambience  # noqa: E402
 import build  # noqa: E402
 import emit  # noqa: E402
 import maps  # noqa: E402
@@ -35,7 +37,7 @@ REPORT = Path("build/wayfarer-world-report.json")
 
 
 def generate(root, only=None, named_rows=None, overrides=None, transit=None,
-             routines_path=None):
+             routines_path=None, ambience_path=None):
     """Build everything; returns (world graph, routines, C text, report)."""
     started = time.monotonic()
     world = maps.World(root, only=only)
@@ -44,12 +46,16 @@ def generate(root, only=None, named_rows=None, overrides=None, transit=None,
     wg.check()
     rt = routines.Routines(wg, routines_path=routines_path)
     rt.check()
+    amb = ambience.Ambience.from_routines(rt, ambience_path=ambience_path)
+    amb.check()
     crc = emit.content_hash(wg)
     text, candidate_count = emit.render(wg, rt, crc)
+    text += "\n" + emit.render_ambience(amb)
     byte_sizes = emit.sizes(wg, rt, candidate_count)
     if candidate_count > 0xFFFF:
         raise BuildError("%d candidates, over the u16 candidateStart" % candidate_count)
     rep = emit.report(wg, rt, crc, byte_sizes, time.monotonic() - started)
+    rep["ambience"] = emit.ambience_report(amb)
     return wg, rt, text, rep
 
 
@@ -89,10 +95,16 @@ def main(argv=None):
     report.write_text(json.dumps(rep, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     for warning in rt.warnings:
         print("wayfarer_world: warning: " + warning, file=sys.stderr)
+    for warning in rep["ambience"]["warnings"]:
+        print("wayfarer_world: warning: ambience: " + warning, file=sys.stderr)
     sizes = rep["table_bytes"]
     print("wayfarer_world: %d nodes, %d edges, %d spots, %d bytes of tables, hash %s (%.1fs)"
           % (rep["nodes"], rep["edges"], rep["spots"], sizes["total"], rep["content_hash"],
              rep["generator_seconds"]))
+    amb = rep["ambience"]
+    print("wayfarer_world: ambience: %d beats, %d trainers, %d related pairs, %d bytes of tables"
+          % (len(amb["beats"]), len(amb["trainers"]), len(amb["relations"]),
+             amb["rom_bytes"]["total"]))
     if rep["table_bytes_over_300k"]:
         print("wayfarer_world: warning: tables exceed 300 KB", file=sys.stderr)
     return 0

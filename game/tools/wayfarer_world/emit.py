@@ -3,6 +3,7 @@
 import struct
 from collections import Counter, defaultdict, deque
 
+import ambience as am
 import graph
 import spots as sp
 from authored import ACTIVITIES
@@ -331,4 +332,125 @@ def report(wg, rt, crc, byte_sizes, seconds):
         "new_game_hidden_flags": {k: len(v) for k, v in wg.flags.items()},
         "warnings": rt.warnings,
         "trainers": trainers,
+    }
+
+
+# --------------------------------------------------------------------------
+# Notable ambience (include/wayfarer_ambience_data.h). Not part of the
+# content hash, which guards the graph and spots only.
+# --------------------------------------------------------------------------
+
+AMBIENCE_BEAT_SIZE, AMBIENCE_TRAINER_SIZE = 44, 12
+
+
+def ambience_mask(names, prefix, keys):
+    """Symbolic bit mask: the names in `keys` order."""
+    return " | ".join(prefix + k.upper() for k in keys if k in names) or "0"
+
+
+def ambience_bits(indices, names):
+    return " | ".join("(1 << %s)" % names[i] for i in sorted(indices)) or "0"
+
+
+def render_ambience(amb):
+    kinds = sp.KIND_NAMES
+    out = []
+    w = out.append
+    w("// Notable ambience: tools/wayfarer_world/ambience.json (beats, tags, relations).")
+    w("#include \"constants/species.h\"")
+    w("#include \"constants/wayfarer_ambience.h\"")
+    w("#include \"wayfarer_ambience_data.h\"")
+    w("")
+    w("_Static_assert(sizeof(struct WayfarerAmbienceBeat) == %d, \"ambience beat layout\");"
+      % AMBIENCE_BEAT_SIZE)
+    w("_Static_assert(sizeof(struct WayfarerAmbienceTrainer) == %d, \"ambience trainer layout\");"
+      % AMBIENCE_TRAINER_SIZE)
+    w("_Static_assert(%d <= AMBIENCE_MAX_BEATS, \"ambience beat count\");" % len(amb.beats))
+    w("")
+    w("const struct WayfarerAmbienceBeat gWayfarerAmbienceBeats[] = {")
+    for b in amb.beats:
+        p = b.params
+        spot_kinds, spot_named = p.get("spot", (frozenset(), frozenset()))
+        w("    [%d] = { // %s" % (b.index, b.id))
+        w("        .all = %s," % ambience_mask(b.all, "AMBIENCE_FACT_", am.FACTS))
+        w("        .any = %s," % ambience_mask(b.any, "AMBIENCE_FACT_", am.FACTS))
+        if spot_kinds:
+            w("        .spotKinds = %s," % ambience_bits(spot_kinds, kinds))
+        if spot_named:
+            w("        .spotNamed = %s," % ambience_bits(spot_named, ACTIVITY_NAMES))
+        if p.get("spot_not"):
+            w("        .notSpotKinds = %s," % ambience_bits(p["spot_not"], kinds))
+        if p.get("activity"):
+            w("        .activities = %s," % ambience_bits(p["activity"], ACTIVITY_NAMES))
+        if b.tags_any:
+            w("        .tagsAny = %s," % ambience_mask(b.tags_any, "AMBIENCE_TAG_", am.TAGS))
+        if b.tags_none:
+            w("        .tagsNone = %s," % ambience_mask(b.tags_none, "AMBIENCE_TAG_", am.TAGS))
+        if "player_within" in p:
+            w("        .playerWithin = %d," % p["player_within"])
+        if "player_adjacent_ticks" in p:
+            w("        .adjacentTicks = %d," % p["player_adjacent_ticks"])
+        if "notable_within" in p:
+            w("        .notableWithin = %d," % p["notable_within"])
+            w("        .relation = AMBIENCE_RELATION_%s," % p["relation"].upper())
+        w("        .cls = AMBIENCE_CLASS_%s," % b.cls.upper())
+        w("        .flags = %s," % ambience_mask(b.flags, "AMBIENCE_FLAG_", am.FLAGS))
+        w("        .cooldown = %d," % b.cooldown)
+        w("        .stepCount = %d," % len(b.steps))
+        w("        .steps = {")
+        for s in b.steps:
+            w("            {AMBIENCE_OP_%s, %s}, // %s" % (s.op.upper(), s.arg_name,
+                                                        s.text.replace("\u2026", "...")))
+        w("        },")
+        w("    },")
+    w("};")
+    w("const u8 gWayfarerAmbienceBeatCount = %d;" % len(amb.beats))
+    w("")
+    w("// [slot]: {tags, preferred, companionCount, companions (species | AMBIENCE_COMPANION_BIG)}")
+    w("const struct WayfarerAmbienceTrainer gWayfarerAmbienceTrainers[WORLD_SIM_TRAINER_COUNT] = {")
+    for t in amb.trainers:
+        comps = ["%s%s" % (c, " | AMBIENCE_COMPANION_BIG" if big else "") for c, big in t.companions]
+        comps += ["SPECIES_NONE"] * (am.COMPANION_MAX - len(comps))
+        pref = ("%d /* %s */" % (t.preferred.index, t.preferred.id) if t.preferred
+                else "AMBIENCE_PREFERRED_NONE")
+        w("    [%d] = {%s, %s, %d, {%s}}, // %s" % (
+            t.slot, ambience_mask(t.tags, "AMBIENCE_TAG_", am.TAGS), pref, len(t.companions),
+            ", ".join(comps), t.name))
+    w("};")
+    w("")
+    w("// [slot][slot]: 0 none, 1 family, 2 friend, 3 rival, 4 colleague (enum AmbienceRelation)")
+    w("const u8 gWayfarerAmbienceRelations[WORLD_SIM_TRAINER_COUNT][WORLD_SIM_TRAINER_COUNT] = {")
+    for t, row in zip(amb.trainers, amb.relations):
+        w("    {%s}, // %s" % (", ".join(str(v) for v in row), t.name))
+    w("};")
+    w("")
+    return "\n".join(out)
+
+
+def ambience_sizes(amb):
+    out = {
+        "beats": len(amb.beats) * AMBIENCE_BEAT_SIZE + 1,
+        "trainers": SIM_COUNT * AMBIENCE_TRAINER_SIZE,
+        "relations": SIM_COUNT * SIM_COUNT,
+    }
+    out["total"] = sum(out.values())
+    return out
+
+
+def ambience_report(amb):
+    return {
+        "beats": [b.id for b in amb.beats],
+        "beat_classes": {b.id: b.cls for b in amb.beats},
+        "trainers": [{
+            "slot": t.slot, "slug": t.slug, "name": t.name, "tags": t.tags,
+            "preferred": t.preferred.id if t.preferred else None,
+            "preferred_index": t.preferred.index if t.preferred else None,
+            "authored_companion": t.authored_companion,
+            "companions": [{"species": c, "big": big} for c, big in t.companions],
+        } for t in amb.trainers],
+        "relations": amb.pairs(),
+        "relation_counts": dict(Counter(p["relation"] for p in amb.pairs())),
+        "rom_bytes": ambience_sizes(amb),
+        "max_beats": am.MAX_BEATS,
+        "warnings": amb.warnings,
     }

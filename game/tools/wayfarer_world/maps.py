@@ -719,6 +719,9 @@ def input_paths(root):
               if not p.name.startswith("test_")}
     paths |= {str(p.relative_to(root)) for p in TOOL_DIR.rglob("*.json")}
     paths |= {str(p.relative_to(root)) for p in (root / "include/constants").glob("flags*.h")}
+    # ambience.py: companion follower sprites and the #if configs guarding them.
+    paths |= {str(p.relative_to(root)) for p in
+              (root / "src/data/pokemon/species_info").glob("gen_*_families.h")}
     for rel in ("data/layouts/layouts.json", "data/maps/map_groups.json",
                 "src/data/region_map/region_map_sections.json",
                 "src/data/heal_locations.json", "src/data/wayfarer_sevii_maps.json",
@@ -732,6 +735,10 @@ def input_paths(root):
                 "include/constants/wayfarer_persistence.h",
                 "include/constants/wayfarer_world.h", "include/wayfarer_world_data.h",
                 "include/constants/event_objects.h",
+                "include/constants/wayfarer_ambience.h", "include/wayfarer_ambience_data.h",
+                "include/gba/defines.h", "include/config/general.h",
+                "include/config/species_enabled.h", "include/config/pokemon.h",
+                "include/config/overworld.h",
                 "src/fieldmap.c", "src/metatile_behavior.c", "src/field_control_avatar.c",
                 "src/wayfarer_persistence.c",
                 "src/data/object_events/object_event_graphics_info_pointers.h",
