@@ -1,0 +1,2 @@
+# The repository ignores *.map build outputs; these are test fixtures.
+!*.map
