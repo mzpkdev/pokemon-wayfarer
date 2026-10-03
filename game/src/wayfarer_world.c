@@ -203,6 +203,8 @@ bool8 WayfarerWorld_IsLeaderUnbeaten(u8 slot)
 static void SetPending(bool8 pending)
 {
     sHeartbeat.active = pending;
+    if (!pending)
+        sWorkspaceWaitFrames = 0;  // each heartbeat gets its own heap wait
     gWayfarerWorldDebug.pending = pending || sDeferredBegin;
 }
 

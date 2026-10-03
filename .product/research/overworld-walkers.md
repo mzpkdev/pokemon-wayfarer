@@ -101,9 +101,10 @@ All eight scenarios pass ([summary](overworld-walkers/summary.json)).
 The evidence folder holds the run of 2026-10-03 on the E2E ROM built from
 commit `2abf8fd183`, content hash `0x9F76` (the verifier now refuses a ROM
 whose hash differs from the worktree's tables). All **22** scenarios pass
-([summary](overworld-walkers/summary.json)); `perf`, `seam`, `recross` and
-`longtrip` fail past ceilings of 200 scanlines in a frame and 44 frames per
-warp.
+([summary](overworld-walkers/summary.json)). The cost gates: `perf` fails
+past 200 scanlines in a frame or 44 frames per warp, `seam` past 200
+scanlines in a frame, `recross` also past 1,000 scanlines finished in one
+seam frame, and `longtrip` past its walker-update ceiling.
 
 | Measure | Value |
 | --- | --- |

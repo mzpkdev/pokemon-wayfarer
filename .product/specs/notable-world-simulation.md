@@ -253,7 +253,10 @@ spot, and no warp is dropped.
   locked doors, non-animated doors with collision (Cerulean's Bike Shop),
   warp tiles under trainers and a Center's decorative side tiles are no
   edges. A spot needs an edge into its component; a named spot without one
-  fails the build.
+  fails the build. The check looks one edge back only: a spot in a part of
+  the graph no trainer's home reaches (Lavaridge's hot spring, Berry Forest,
+  the Pokémon Tower floors) stays in the table but is never chosen, because
+  candidates and favourites come from searches out of each home.
 - **Transit:** an authored list of scripted links, open to
   [travellers](notable-trainers.md#traveller) only, one hop each:
   placeholders are the S.S. Aqua (Olivine Port to Vermilion Port) and the

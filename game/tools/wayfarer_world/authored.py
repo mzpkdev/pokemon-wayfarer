@@ -97,8 +97,11 @@ def load_named(path=None):
 def build_named(rows, world, detector, problems):
     """Validate named-spot rows (spots spec, named spots) and make spots.
 
-    Reachability is checked later, once edges are known (a named tile's
-    component must hold a warp or an edge)."""
+    Reachability is checked later, once edges are known: some edge must lead
+    into a named tile's component. That check is local (one edge back), so a
+    named spot in a part of the graph no home reaches still passes; it is
+    never chosen, because candidates and favourites come from searches out of
+    each trainer's home."""
     out, seen = [], {}
     for row in rows:
         tag = "named spot %r (%s)" % (row.get("label"), row.get("map"))
