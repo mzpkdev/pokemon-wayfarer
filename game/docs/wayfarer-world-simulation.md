@@ -145,6 +145,12 @@ trip search and the grid search share one 48-line slice a frame, and a frame
 that runs a spot choice skips the grid search. A map load, a save and
 the league hook complete the advances first (`WayfarerWalkers_FlushWorldJobs`).
 
+Walkers stroll: every step is `MOVEMENT_ACTION_WALK_SLOW_*` (32 frames a
+tile, [notable ambience](../../.product/specs/notable-ambience.md), "Pace"),
+except a walk-off, a back-off from the player, a strip actor, and the step
+out of (or into) the map through a side lane, which walk at normal speed
+(`WalksNormalSpeed`). The walk-off timeout doubled to 1,200 frames.
+
 Exits commit a hop like the heartbeat's: a walker checks `WorldSim_HopAllowed`
 before stepping out through a map side or a door, and while the next map is
 full it waits once, then hands off. A strip actor that can't walk straight on

@@ -57,7 +57,8 @@
 #define WALKER_YIELD_BLOCKS     2       // steps blocked by the player before backing off
 #define WALKER_BACKOFFS_MAX     3       // back-offs per visit before handing off
 #define WALKER_BACKOFF_WAIT     180
-#define WALKER_WALKOFF_FRAMES   600     // a walk-off gives up (vanishes) after this long
+#define WALKER_WALKOFF_FRAMES   1200    // a walk-off gives up (vanishes) after this long
+                                        // (doubled with slow walking: the same length in tiles)
 #define WALKER_AWAY_DISTANCE    3
 #define WALKER_STRIP_BLOCKED_FRAMES 30  // a strip actor that can't step on is removed after this long
 #define WALKER_JOB_SCANLINES    32      // a frame's world-job work: a trip search's slice
@@ -1748,13 +1749,24 @@ static void FaceDirection(struct WalkerActor *actor, struct ObjectEvent *obj, u8
         actor->actionPending = TRUE;
 }
 
+// Walkers stroll (slow, 32 frames a tile) unless they have a reason to
+// hurry: a walk-off, a back-off from the player, a strip actor, or the step
+// out of (or into) the map through a side lane. Spec: notable-ambience.md, "Pace".
+static bool8 WalksNormalSpeed(const struct WalkerActor *actor, u8 kind)
+{
+    return actor->mode == WALKER_MODE_LEAVING || actor->mode == WALKER_MODE_STRIP
+        || actor->goalKind == WALKER_GOAL_AWAY
+        || kind == STEP_EXIT_EDGE || kind == STEP_ENTER || kind == STEP_STRIP;
+}
+
 // Start one walking step: a straight one (overwrite cleared) or a stair
 // diagonal (overwrite set, as GetCollisionAtCoords would for the player).
 static bool8 StartWalk(struct WalkerActor *actor, struct ObjectEvent *obj, u8 move, u8 kind)
 {
     u8 command = sMoveCommand[move];
+    u8 action = WalksNormalSpeed(actor, kind) ? GetWalkNormalMovementAction(command) : GetWalkSlowMovementAction(command);
     obj->directionOverwrite = move > DIR_EAST ? move : DIR_NONE;
-    if (ObjectEventSetHeldMovement(obj, GetWalkNormalMovementAction(command)))
+    if (ObjectEventSetHeldMovement(obj, action))
     {
         obj->directionOverwrite = DIR_NONE;
         return FALSE;
