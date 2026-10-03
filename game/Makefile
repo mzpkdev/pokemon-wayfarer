@@ -180,6 +180,27 @@ ELF := $(ROM:.gba=.elf)
 MAP := $(ROM:.gba=.map)
 SYM := $(ROM:.gba=.sym)
 ROM_REPORT := $(ROM:.gba=-size.json)
+RAM_REPORT := $(ROM:.gba=-ram.json)
+TESTMAP = $(TESTELF:.elf=.map)
+TEST_RAM_REPORT = $(TESTELF:.elf=-ram.json)
+RAM_REPORT_DEPS := tools/ram_report/ram_report.py tools/ram_report/ram_budget.json
+# The RAM budget (tools/ram_report/ram_budget.json) covers Wayfarer only: the
+# playable ROM (with or without RELEASE=1) is "release", E2E=1 is "e2e", and
+# the mechanics-test ELF is "test" (checked by `make check`). Debug and analyzer
+# builds use -Og and never ship, so they are not budgeted; other products keep
+# upstream's RAM layout and are not budgeted either.
+RAM_REPORT_BUILD :=
+ifeq ($(GAME_VERSION),POKEMON_WAYFARER)
+ifneq ($(DEBUG),1)
+ifneq ($(TEST),1)
+ifeq ($(E2E),1)
+RAM_REPORT_BUILD := e2e
+else
+RAM_REPORT_BUILD := release
+endif
+endif
+endif
+endif
 E2E_ROM := pokemon-wayfarer-e2e.gba
 E2E_SYM := pokemon-wayfarer-e2e.sym
 
@@ -391,7 +412,7 @@ MAKEFLAGS += --no-print-directory
 # Delete files that weren't built properly
 .DELETE_ON_ERROR:
 
-RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test surfable-pokemon-pixel-alias-test wild-encounter-scaling-test wild-encounter-balance-audit wayfarer-hoenn-content-test wayfarer-hoenn-content-audit wayfarer-hoenn-entry-test wayfarer-hoenn-entry-audit wayfarer-sevii-port-test wayfarer-sevii-port-audit rom-report-test
+RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test surfable-pokemon-pixel-alias-test wild-encounter-scaling-test wild-encounter-balance-audit wayfarer-hoenn-content-test wayfarer-hoenn-content-audit wayfarer-hoenn-entry-test wayfarer-hoenn-entry-audit wayfarer-sevii-port-test wayfarer-sevii-port-audit rom-report-test ram-report-test
 RULES_NO_SCAN += league-circuit-test trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit
 RULES_NO_SCAN += summary-screen-test
 RULES_NO_SCAN += wayfarer-sevii-content-test wayfarer-sevii-content-audit
@@ -486,7 +507,7 @@ $(OBJ_DIR)/ld_script_test.ld: $(LD_SCRIPT_TEST)
 
 $(TESTELF): $(OBJ_DIR)/ld_script_test.ld $(OBJS) $(TEST_OBJS) libagbsyscall tools check-tools
 	@echo "cd $(OBJ_DIR) && $(LD) -T ld_script_test.ld -o ../../$@ <objects> <test-objects> <lib>"
-	@cd $(OBJ_DIR) && $(LD) $(TESTLDFLAGS) -T ld_script_test.ld -o ../../$@ $(OBJS_REL) $(TEST_OBJS_REL) $(LIB)
+	@cd $(OBJ_DIR) && $(LD) $(TESTLDFLAGS) -Map ../../$(TESTMAP) -T ld_script_test.ld -o ../../$@ $(OBJS_REL) $(TEST_OBJS_REL) $(LIB)
 	$(FIX) $@ -t"$(TITLE)" -c$(GAME_CODE) -m$(MAKER_CODE) -r$(REVISION) -d0 --silent
 	$(PATCHELF) $(TESTELF) gTestRunnerArgv "$(TESTS:%*=%)\0"
 
@@ -496,8 +517,9 @@ else
 TEST_SKIP_IS_FAIL := \x00
 endif
 
-check: $(TESTELF) frlg-traversal-static-test hns-traversal-static-test summary-screen-test legacy-multiboot-test
+check: $(TESTELF) frlg-traversal-static-test hns-traversal-static-test summary-screen-test legacy-multiboot-test ram-report-test
 ifeq ($(BUILD_NAME),wayfarer)
+check: $(TEST_RAM_REPORT)
 check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-port-audit
 check: wayfarer-sinnoh-port-audit
 check: league-circuit-test
@@ -543,6 +565,9 @@ endif
 ifeq ($(RELEASE),1)
 rom: $(ROM_REPORT)
 endif
+ifneq (,$(RAM_REPORT_BUILD))
+rom: $(RAM_REPORT)
+endif
 ifeq ($(COMPARE),1)
 	@$(SHA1) rom.sha1
 endif
@@ -564,15 +589,15 @@ clean-assets:
 tidy: tidymodern tidycheck tidye2e tidydebug tidyrelease
 
 tidymodern:
-	rm -f poke*.gba poke*.elf poke*.map poke*-size.json
+	rm -f poke*.gba poke*.elf poke*.map poke*-size.json poke*-ram.json
 	rm -rf $(OBJ_DIR_NAME)
 
 tidycheck:
-	rm -f $(TESTELF) $(HEADLESSELF)
+	rm -f $(TESTELF) $(HEADLESSELF) $(TESTMAP) $(TEST_RAM_REPORT)
 	rm -rf $(OBJ_DIR_NAME_TEST)
 
 tidye2e:
-	rm -f $(E2E_ROM) $(E2E_ROM:.gba=.elf) $(E2E_ROM:.gba=.map) $(E2E_SYM)
+	rm -f $(E2E_ROM) $(E2E_ROM:.gba=.elf) $(E2E_ROM:.gba=.map) $(E2E_SYM) $(E2E_ROM:.gba=-ram.json)
 	rm -rf $(OBJ_DIR_NAME_E2E)
 
 tidydebug:
@@ -580,9 +605,9 @@ tidydebug:
 
 tidyrelease:
 ifeq ($(RELEASE),1)
-	rm -f $(ROM_NAME) $(ELF_NAME) $(MAP_NAME) $(ROM_REPORT)
+	rm -f $(ROM_NAME) $(ELF_NAME) $(MAP_NAME) $(ROM_REPORT) $(RAM_REPORT)
 else # Manually remove the release files on clean/tidy
-	rm -f $(FILE_NAME)-release.gba $(FILE_NAME)-release.elf $(FILE_NAME)-release.map $(FILE_NAME)-release-size.json
+	rm -f $(FILE_NAME)-release.gba $(FILE_NAME)-release.elf $(FILE_NAME)-release.map $(FILE_NAME)-release-size.json $(FILE_NAME)-release-ram.json
 endif
 	rm -rf $(OBJ_DIR_NAME_RELEASE)
 
@@ -800,6 +825,13 @@ $(ROM): $(ELF)
 $(ROM_REPORT): $(ELF) tools/rom_report/rom_report.py $(ROM_REPORT_BASELINE_DEP)
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/rom_report/rom_report.py --symbols $(MAP) --build $(BUILD_NAME) $(if $(filter 1,$(RELEASE)),--release) $(ROM_REPORT_BASELINE_ARGS) --output $@
 
+# Fails the build when RAM use breaks tools/ram_report/ram_budget.json.
+$(RAM_REPORT): $(ELF) $(RAM_REPORT_DEPS)
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/ram_report/ram_report.py --map $(MAP) --build $(RAM_REPORT_BUILD) --output $@
+
+$(TEST_RAM_REPORT): $(TESTELF) $(RAM_REPORT_DEPS)
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/ram_report/ram_report.py --map $(TESTMAP) --build test --output $@
+
 emerald: all
 firered: all
 leafgreen: all
@@ -818,6 +850,9 @@ e2e:
 	+$(MAKE) BUILD=wayfarer E2E=1 e2e-inner
 
 e2e-inner: $(E2E_ROM) $(E2E_SYM)
+ifneq (,$(RAM_REPORT_BUILD))
+e2e-inner: $(RAM_REPORT)
+endif
 
 emerald-traversal-static-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(TOOLS_DIR)/mapjson/tests -p 'test_emerald_traversal.py' -q
@@ -857,6 +892,9 @@ hns-traversal-static-test:
 
 rom-report-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/rom_report/tests -p 'test_*.py' -q
+
+ram-report-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/ram_report/tests -p 'test_*.py' -q
 
 wild-encounter-balance-audit:
 	python3 $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py --balance-audit $(WILD_ENCOUNTER_BALANCE_AUDIT)
