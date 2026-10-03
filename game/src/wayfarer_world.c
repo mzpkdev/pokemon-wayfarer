@@ -54,6 +54,10 @@ struct DeferredContext
 STATIC_ASSERT(WORLD_STATE_COUNT <= DERIVED_PACKED_NONE, DerivedStatesFitANibble);
 static EWRAM_DATA struct DeferredContext sDeferredContexts[DEFERRED_MAX] = {0};
 static EWRAM_DATA u8 sDeferredCount = 0;
+// Frames a pending heartbeat may wait for its workspace before the rest of
+// it skips (the walkers pause while it is pending).
+#define WORKSPACE_WAIT_MAX 60
+static EWRAM_DATA u8 sWorkspaceWaitFrames = 0;
 #define sDeferredBegin (sDeferredCount != 0)
 
 static void PackContext(struct DeferredContext *packed, const struct WayfarerWorldContext *ctx)
@@ -202,7 +206,7 @@ static void SetPending(bool8 pending)
     gWayfarerWorldDebug.pending = pending || sDeferredBegin;
 }
 
-static void BeginHeartbeatWith(const struct WayfarerWorldContext *ctx, u32 contextScanlines);
+static u32 BeginHeartbeatWith(const struct WayfarerWorldContext *ctx, u32 contextScanlines);
 
 static void FreeHeartbeatWorkspace(void)
 {
@@ -216,6 +220,7 @@ static void FreeHeartbeatWorkspace(void)
 static void DropHeartbeat(void)
 {
     sDeferredCount = 0;
+    sWorkspaceWaitFrames = 0;
     SetPending(FALSE);
     FreeHeartbeatWorkspace();
 }
@@ -327,27 +332,27 @@ static void CompleteHeartbeat(void)
     gWayfarerWorldDebug.heartbeats++;
     if (gWayfarerWorldDebug.lastHeartbeatFrames > gWayfarerWorldDebug.maxHeartbeatFrames)
         gWayfarerWorldDebug.maxHeartbeatFrames = gWayfarerWorldDebug.lastHeartbeatFrames;
-    if (sDeferredBegin)
-    {
-        // The next heartbeat (a seam crossed again) starts now, as it was
-        // at its map load; the workspace carries over.
-        struct WayfarerWorldContext ctx;
-        UnpackContext(&ctx, &sDeferredContexts[0]);
-        sDeferredCount--;
-        memmove(&sDeferredContexts[0], &sDeferredContexts[1], sizeof(sDeferredContexts[0]) * sDeferredCount);
-        BeginHeartbeatWith(&ctx, 0);
-        return;
-    }
-    FreeHeartbeatWorkspace();
+    // A queued heartbeat (a seam crossed again) begins on its own turn,
+    // never on top of this one's frame; it reuses the workspace.
+    if (!sDeferredBegin)
+        FreeHeartbeatWorkspace();
 }
 
-// Runs whatever is left of the pending heartbeat now. Every world write
-// outside the heartbeat (a save, the league hook, a new map load, a Gym
-// visitor's exit) comes after this, so it sees the heartbeat whole, as it
-// did when the heartbeat ran inside the map load.
-void WayfarerWorld_FinishHeartbeat(void)
+// Begins the oldest queued heartbeat, as it was at its map load. Returns
+// its cost; the caller notes it with the rest of its frame.
+static u32 BeginDeferred(void)
 {
-    u32 start;
+    struct WayfarerWorldContext ctx;
+    UnpackContext(&ctx, &sDeferredContexts[0]);
+    sDeferredCount--;
+    memmove(&sDeferredContexts[0], &sDeferredContexts[1], sizeof(sDeferredContexts[0]) * sDeferredCount);
+    return BeginHeartbeatWith(&ctx, 0);
+}
+
+// Runs the active heartbeat to its end now (only that one).
+static void FinishActive(void)
+{
+    u32 start, cost;
 
     if (!sHeartbeat.active)
         return;
@@ -355,24 +360,36 @@ void WayfarerWorld_FinishHeartbeat(void)
     if (!EnsureHeartbeatWorkspace())
     {
         // No heap for a search: the trainers still to act skip this
-        // heartbeat, as a whole heartbeat used to when its allocation failed.
+        // heartbeat, as a whole heartbeat used to when its allocation
+        // failed, and so do the queued ones (they would fail alike, and must
+        // not run later, out of order).
+        gWayfarerWorldDebug.skippedHeartbeats += 1 + sDeferredCount;
+        sDeferredCount = 0;
         SetPending(FALSE);
-        gWayfarerWorldDebug.skippedHeartbeats++;
         return;
     }
     while (!WorldSim_HeartbeatStep(&sHeartbeat, WayfarerWorld_GetState(), sHeartbeatWorkspace, 0xFFFF,
                                    &gWayfarerWorldDebug.lastTrace))
         ;
-    {
-        u32 cost = WayfarerWalkers_ScanlinesSince(start);
-        sHeartbeatScanlines += cost;
-        if (cost > gWayfarerWorldDebug.maxFinishScanlines)
-            gWayfarerWorldDebug.maxFinishScanlines = cost > 0xFFFF ? 0xFFFF : cost;
-    }
+    cost = WayfarerWalkers_ScanlinesSince(start);
+    sHeartbeatScanlines += cost;
+    if (cost > gWayfarerWorldDebug.maxFinishScanlines)
+        gWayfarerWorldDebug.maxFinishScanlines = cost > 0xFFFF ? 0xFFFF : cost;
     CompleteHeartbeat();
-    // A deferred heartbeat began as this one completed: finish it as well.
-    if (sHeartbeat.active)
-        WayfarerWorld_FinishHeartbeat();
+}
+
+// Runs whatever is left of the pending heartbeat, and of any queued behind
+// it, now. Every world write outside the heartbeat (a save, the league
+// hook, a warp's map load, a Gym leader's object) comes after this, so it
+// sees the heartbeats whole, as when they ran inside their map loads.
+void WayfarerWorld_FinishHeartbeat(void)
+{
+    while (sHeartbeat.active || sDeferredBegin)
+    {
+        if (!sHeartbeat.active)
+            BeginDeferred();
+        FinishActive();
+    }
 }
 
 bool8 WayfarerWorld_IsHeartbeatPending(void)
@@ -394,14 +411,17 @@ bool8 WayfarerWorld_IsSlotPending(u8 slot)
 
 void WayfarerWorld_FinishHeartbeatEarly(void)
 {
-    // A save or the league hook: the walkers' own sliced world writes (a
-    // watched trainer's routine advance) complete first. None is ever under
-    // way while a heartbeat is (walker AI waits for the heartbeat).
+    // A save or the league hook. The pending heartbeat finishes first, then
+    // the walkers' own sliced world writes (a watched trainer's routine
+    // advance, which a seam can leave queued behind a heartbeat): the same
+    // order as when they run out on their own (walkers wait while a
+    // heartbeat is pending).
+    if (WayfarerWorld_IsHeartbeatPending())
+    {
+        gWayfarerWorldDebug.forcedFinishes++;
+        WayfarerWorld_FinishHeartbeat();
+    }
     WayfarerWalkers_FlushWorldJobs();
-    if (!sHeartbeat.active)
-        return;
-    gWayfarerWorldDebug.forcedFinishes++;
-    WayfarerWorld_FinishHeartbeat();
 }
 
 static void BeginHeartbeat(void)
@@ -411,10 +431,10 @@ static void BeginHeartbeat(void)
 
     WayfarerWorld_BuildContext(&ctx);
     contextDone = WayfarerWalkers_ScanlineStamp();
-    BeginHeartbeatWith(&ctx, (s32)(contextDone - start) < 0 ? 0 : contextDone - start);
+    NoteFrameCost(BeginHeartbeatWith(&ctx, (s32)(contextDone - start) < 0 ? 0 : contextDone - start));
 }
 
-static void BeginHeartbeatWith(const struct WayfarerWorldContext *contextIn, u32 contextScanlines)
+static u32 BeginHeartbeatWith(const struct WayfarerWorldContext *contextIn, u32 contextScanlines)
 {
     struct WayfarerWorldContext ctx = *contextIn;
     u32 start = WayfarerWalkers_ScanlineStamp();
@@ -429,7 +449,7 @@ static void BeginHeartbeatWith(const struct WayfarerWorldContext *contextIn, u32
     // frozen mask don't reach this heartbeat.
     WorldSim_HeartbeatBegin(&sHeartbeat, WayfarerWorld_GetState(), &ctx, &gWayfarerWorldDebug.lastTrace);
     gWayfarerWorldDebug.pending = TRUE;
-    NoteFrameCost(WayfarerWalkers_ScanlinesSince(start) + contextScanlines);
+    return WayfarerWalkers_ScanlinesSince(start) + contextScanlines;
 }
 
 // Once per field frame (OverworldBasic, after the walkers' update). Scripts,
@@ -437,10 +457,10 @@ static void BeginHeartbeatWith(const struct WayfarerWorldContext *contextIn, u32
 // and the walkers keep their hands off the world while it runs.
 void WayfarerWorld_Update(void)
 {
-    u32 start, walkers, budget, line, cost;
+    u32 start, walkers, budget, line, cost = 0;
     bool8 done;
 
-    if (!sHeartbeat.active)
+    if (!sHeartbeat.active && !sDeferredBegin)
         return;
     gWayfarerWorldDebug.lastHeartbeatFrames++;
     walkers = WayfarerWalkers_LastUpdateScanlines();
@@ -460,14 +480,28 @@ void WayfarerWorld_Update(void)
     }
     sStarvedFrames = 0;
     start = WayfarerWalkers_ScanlineStamp();
+    // A queued heartbeat begins as this frame's first unit: its cost counts
+    // with the frame's steps, inside the frame's budget and end margin.
+    if (!sHeartbeat.active)
+        BeginDeferred();
     if (!EnsureHeartbeatWorkspace())
     {
         // No heap for a search right now: try again next frame, so the
         // heartbeat is never split between trainers who acted and trainers
-        // who skipped. Only a forced finish with no heap drops the rest.
+        // who skipped. The walkers wait meanwhile, so not for ever: after
+        // WORKSPACE_WAIT_MAX frames the rest of it skips, as a heartbeat
+        // whose allocation failed always did.
         gWayfarerWorldDebug.workspaceWaits++;
+        NoteFrameCost(WayfarerWalkers_ScanlinesSince(start));
+        if (++sWorkspaceWaitFrames >= WORKSPACE_WAIT_MAX)
+        {
+            sWorkspaceWaitFrames = 0;
+            gWayfarerWorldDebug.skippedHeartbeats++;
+            SetPending(FALSE);
+        }
         return;
     }
+    sWorkspaceWaitFrames = 0;
     do
     {
         done = WorldSim_HeartbeatStep(&sHeartbeat, WayfarerWorld_GetState(), sHeartbeatWorkspace, STEP_UNITS,
@@ -506,13 +540,27 @@ void WayfarerWorld_OnMapLoad(bool8 seam)
     // A map load while the last heartbeat is still running: heartbeats never
     // overlap and keep their order. Behind a warp's fade the rest runs now;
     // on a seam the new heartbeat queues behind it instead.
-    if (sHeartbeat.active)
+    if (sHeartbeat.active || sDeferredBegin)
     {
         gWayfarerWorldDebug.pendingAtLoad++;
-        if (seam && sDeferredCount < DEFERRED_MAX)
-            defer = TRUE;
-        else
+        if (!seam)
+        {
             WayfarerWorld_FinishHeartbeat();
+        }
+        else
+        {
+            // With the queue full, only the oldest heartbeat runs to its
+            // end here; the next queued one begins (sliced) to make room.
+            if (sDeferredCount >= DEFERRED_MAX)
+            {
+                if (!sHeartbeat.active)
+                    NoteFrameCost(BeginDeferred());
+                FinishActive();
+                if (sDeferredBegin)
+                    NoteFrameCost(BeginDeferred());
+            }
+            defer = sHeartbeat.active || sDeferredBegin;
+        }
     }
     if (sSkipNextHeartbeat || map == sLastMap)
     {

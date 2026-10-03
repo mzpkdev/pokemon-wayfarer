@@ -1369,7 +1369,7 @@ static void BeginSearch(struct WalkerActor *actor)
     sWork->layerCount = 0;
 }
 
-static void SearchSlice(void)
+static void SearchSlice(u32 limit)
 {
     struct WalkerActor *actor = &sActors[sSearch.actor];
     struct ObjectEvent *obj = ActorObject(actor);
@@ -1378,7 +1378,7 @@ static void SearchSlice(void)
     u8 expanded = 0;
 
     while (sSearch.read != sSearch.write && expanded < WALKER_SEARCH_SLICE
-        && (expanded == 0 || ScanlinesSince(start) < WALKER_SLICE_SCANLINES))
+        && (expanded == 0 || ScanlinesSince(start) < limit))
     {
         u16 state = sWork->queue[sSearch.read % WALKER_QUEUE_SIZE], tile = StateTile(state);
         s16 x = tile % width, y = tile / width;
@@ -1454,9 +1454,12 @@ static void SearchSlice(void)
 
 // Exactly one search at a time across all actors; requests are served in
 // actor order, which is spawn (priority) order.
-static void RunScheduler(void)
+// spent: scanlines this frame's world job already took of the shared slice.
+static void RunScheduler(u32 spent)
 {
     u8 i;
+    if (spent >= WALKER_SLICE_SCANLINES)
+        return;
     if (sSearch.actor == NO_ACTOR)
     {
         for (i = 0; i < WALKER_ACTOR_COUNT; i++)
@@ -1472,7 +1475,7 @@ static void RunScheduler(void)
         if (sSearch.actor == NO_ACTOR)
             return;
     }
-    SearchSlice();
+    SearchSlice(WALKER_SLICE_SCANLINES - spent);
 }
 
 static void RequestSearch(struct WalkerActor *actor)
@@ -1589,6 +1592,10 @@ static bool8 PlanNextEdge(struct WalkerActor *actor, u16 *edge)
     }
     if (WorldSim_NextEdgeBegin(State(), actor->slot, NULL, FALSE, edge))
         return TRUE;
+    // A finished answer its owner never came back for (it left, or was
+    // handed off) doesn't hold the search: its path is cached anyway.
+    if (sEdgeJob.status == EDGE_JOB_DONE)
+        CancelEdgeJob();
     if (sEdgeJob.status != EDGE_JOB_IDLE)
         return FALSE;   // one search at a time
     if (sJobWorkspace == NULL)
@@ -1647,15 +1654,18 @@ static void RunEdgeJob(u32 start)
 
 // This frame's world job: one spot choice (heavy: TRUE, and the grid search
 // sits this frame out), or a slice of the trip search.
-static bool8 RunWorldJobs(void)
+// This frame's world job: one spot choice, or a slice of the trip search.
+// Returns the scanlines it took; the grid search gets what is left of the
+// shared slice (WALKER_SLICE_SCANLINES), and none after a spot choice.
+static u32 RunWorldJobs(void)
 {
     u32 start = ScanlineStamp(), cost;
-    bool8 heavy = FALSE;
+    bool8 spotChoice = FALSE;
 
     if (sAdvanceCount != 0)
     {
         StepAdvance();
-        heavy = TRUE;
+        spotChoice = TRUE;
     }
     else if (sEdgeJob.status == EDGE_JOB_RUNNING)
     {
@@ -1663,12 +1673,13 @@ static bool8 RunWorldJobs(void)
     }
     else
     {
-        return FALSE;
+        return 0;
     }
     cost = ScanlinesSince(start);
     if (cost > gWayfarerWalkersDebug.maxJobScanlines)
         gWayfarerWalkersDebug.maxJobScanlines = cost > 0xFFFF ? 0xFFFF : cost;
-    return heavy;
+    // A spot choice can take most of a slice on its own: no grid search after it.
+    return (spotChoice || cost >= WALKER_SLICE_SCANLINES) ? WALKER_SLICE_SCANLINES : cost;
 }
 
 void WayfarerWalkers_FlushWorldJobs(void)
@@ -1822,6 +1833,10 @@ static void StartWalkOff(struct WalkerActor *actor, u16 node)
     s16 x = obj->currentCoords.x - MAP_OFFSET, y = obj->currentCoords.y - MAP_OFFSET;
     u16 e, best = NO_EDGE, bestDistance = 0xFFFF;
 
+    // A handed-off walker no longer plans trips: free the shared search.
+    if (sEdgeJob.status != EDGE_JOB_IDLE && sEdgeJob.slot == actor->slot)
+        CancelEdgeJob();
+
     if (node >= gWayfarerWorldNodeCount || WorldSim_NodeMap(node) != CurrentMap() || !IsVisible(obj))
     {
         RemoveActor(actor);
@@ -1912,6 +1927,8 @@ static void FinishLeaving(struct WalkerActor *actor)
             // off-screen hop rule); the routine moves on either way.
             if (WorldSim_HopAllowed(State(), actor->slot, edge))
                 WorldSim_TakeEdge(State(), actor->slot, edge, gWayfarerWorldEdges[edge].c);
+            else
+                sYielded |= 1u << actor->slot;  // still inside: never shown again this visit
             QueueAdvance(actor->slot);
         }
     }
@@ -2178,6 +2195,13 @@ static void OnGoalReached(struct WalkerActor *actor, struct ObjectEvent *obj)
         {
             WorldSim_TakeEdge(State(), actor->slot, edgeIndex, gWayfarerWorldEdges[edgeIndex].c);
             NoteEntry(actor->slot, edgeIndex, gWayfarerWorldEdges[edgeIndex].c);
+        }
+        else
+        {
+            // The visitor walked out but its record stays inside (the map
+            // beyond is full) with a new destination: no longer a Gym visit,
+            // so mark it handed off, or it would respawn in view.
+            sYielded |= 1u << actor->slot;
         }
         // A Gym visit ends as the visitor walks out: the record moves on
         // rather than heading back to the Gym (a spot choice per frame).
@@ -2985,8 +3009,7 @@ void WayfarerWalkers_Update(void)
     // and it gets the frame's spare time to itself.
     if (!ArePlayerFieldControlsLocked() && !WayfarerWorld_IsHeartbeatPending())
     {
-        if (!RunWorldJobs())
-            RunScheduler();
+        RunScheduler(RunWorldJobs());
         for (i = 0; i < WALKER_ACTOR_COUNT; i++)
         {
             if (sActors[i].mode != WALKER_MODE_NONE)
@@ -3023,7 +3046,13 @@ void WayfarerWalkers_OnWarp(void)
 {
     // The warp resets every object; the records stay on their nodes and the
     // heartbeat that follows treats them as off-screen. A routine advance
-    // still under way completes first (behind the fade).
+    // still under way completes first (behind the fade), after any
+    // heartbeat still pending, which it was waiting for.
+    if (WayfarerWorld_IsHeartbeatPending())
+    {
+        gWayfarerWorldDebug.pendingAtLoad++;
+        WayfarerWorld_FinishHeartbeat();
+    }
     WayfarerWalkers_FlushWorldJobs();
     ForgetAllActors();
     KeepEntriesFor(CurrentMap());
@@ -3042,8 +3071,12 @@ void WayfarerWalkers_OnCameraTransition(void)
     u8 i;
 
     sTransition = TRANSITION_CAMERA;
-    // The heartbeat starts next: a routine advance under way completes now.
-    WayfarerWalkers_FlushWorldJobs();
+    // A routine advance under way stays queued across the seam (no spot
+    // choices in the seam's frame): its trainer stays frozen for the
+    // heartbeat, and it resumes once the heartbeat is done. A trip search
+    // is only a question; whoever asked asks again.
+    if (sEdgeJob.status != EDGE_JOB_IDLE)
+        CancelEdgeJob();
     KeepEntriesFor(map);
     for (i = 0; i < WALKER_ACTOR_COUNT; i++)
     {
@@ -3059,6 +3092,7 @@ void WayfarerWalkers_OnCameraTransition(void)
          && (dx < -(MAP_OFFSET + 1) || dx > MAP_OFFSET + 1 || dy < -(MAP_OFFSET - 1) || dy > MAP_OFFSET - 1))
             gWayfarerWorldFrozenMask &= ~(1u << actor->slot);
     }
+    gWayfarerWorldFrozenMask |= AdvancingMask();
 }
 
 void WayfarerWalkers_OnContinue(void)
