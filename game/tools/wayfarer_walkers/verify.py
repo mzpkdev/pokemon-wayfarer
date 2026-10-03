@@ -20,6 +20,11 @@ symbol reads and screenshots:
   recross running back and forth over that seam while a heartbeat is pending
   longtrip a watched trainer whose stay ends plans a long trip (Will at Indigo)
   striplane a strip actor blocked straight ahead leaves the seam (Route 134 -> 133)
+  beatspot a trainer at a water's edge runs a water beat, and only beats whose context holds
+  notice  notice_player once per approach (Blue), stare_down for a stoic trainer (Lance)
+  greet   two friends side by side greet each other once (Brock and Misty)
+  beatpush pressing into a walker stops its beat at once and restores its facing
+  determinism the same inputs give the same beat log in two runs from boot
 
 The verifier refuses a ROM whose content hash differs from the worktree's
 generated tables.h: node and spot ids would not match.
@@ -593,12 +598,19 @@ def scenario_spot(game: Game) -> dict:
     arrived = game.wait_for(lambda: game.record(SLOT_BLUE)["state"] == STATE_DWELLING
                             and game.actor_for(SLOT_BLUE)["atSpot"], 2400, what="arrival at the spot")
     actor = game.actor_for(SLOT_BLUE)
+    # The arrival's beat (arrive_look) turns him about and ends facing the
+    # spot's way again: read the facing once it is over.
+    if "sAmbience" in game.sym:
+        watcher = BeatWatcher(game)
+        game.wait_for(lambda: watcher.running(actor["index"]) is None, 300, step=2, what="the arrival beat's end")
+        game.emu.step(4)
     obj = next(o for o in game.objects() if o["slot"] == actor["objectId"])
     screenshot_arrived = game.shot("spot-arrived")
-    # Play the template: Stand and face (north, at the water) with "!" on
-    # dwell ticks where (c + t) mod 8 == 0 (c = 8 for Blue: t = 8, 16, ...).
+    # Play the template: Stand and face (north, at the water). Its "!" is a
+    # beat now (water_bite, or Blue's swagger "!!"), after the quiet gap.
     emotes_before = game.walker_debug()["emotes"]
-    game.emu.step(60 * 9)
+    game.wait_for(lambda: game.walker_debug()["emotes"] > emotes_before, 1800, step=10, what="an icon")
+    game.emu.step(30)
     after = game.walker_debug()
     screenshot_template = game.shot("spot-template")
     record = game.record(SLOT_BLUE)
@@ -1715,13 +1727,314 @@ def scenario_safari(game: Game) -> dict:
     return result
 
 
+# ---------------------------------------------------------------------------
+# Notable ambience: beats (src/wayfarer_walker_beats.c, the "Notable ambience"
+# section of src/wayfarer_walkers.c). The beat state lives in a heap block
+# that the static pointer sAmbience points at; its first bytes are struct
+# WalkerAmbienceDebug (include/wayfarer_walker_beats.h). The block starts
+# again (counters and log at 0) after every heap reset: a warp or a menu.
+
+AMBIENCE_DEBUG_SIZE = 28
+AMBIENCE_LOG_SIZE = 32
+BEAT_NONE = 0xFF
+BEAT_EVENTS = ("start", "end", "interrupt")
+SLOT_MISTY = 1
+SLOT_GIOVANNI = 7
+
+
+def beat_names() -> list:
+    """Beat ids by index, from the world generator's report (build/wayfarer-world-report.json)."""
+    report = json.loads((ROOT / "game/build/wayfarer-world-report.json").read_text())
+    return report["ambience"]["beats"]
+
+
+class BeatWatcher:
+    """Collects the beat event ring across polls (and across block resets)."""
+
+    def __init__(self, game: Game):
+        self.game = game
+        self.names = beat_names()
+        self.pointer = None
+        self.seen = 0
+        self.events = []
+        self.lost = 0
+        self.counters = None
+
+    def read(self):
+        address = self.game.emu.u32(self.game.sym["sAmbience"])
+        if not 0x02000000 <= address < 0x02040000:
+            return None, None
+        return address, self.game.emu.read(address, AMBIENCE_DEBUG_SIZE + 8 * AMBIENCE_LOG_SIZE)
+
+    def poll(self) -> list:
+        """New events since the last poll."""
+        address, raw = self.read()
+        if raw is None:
+            self.pointer = None
+            return []
+        count = struct.unpack_from("<H", raw, 24)[0]
+        if address != self.pointer or count < self.seen:
+            self.pointer, self.seen = address, 0
+        start = max(self.seen, count - AMBIENCE_LOG_SIZE)
+        self.lost += start - self.seen
+        new = []
+        for n in range(start, count):
+            frame, actor, slot, beat, event = struct.unpack_from("<IBBBB", raw, AMBIENCE_DEBUG_SIZE + 8 * (n % AMBIENCE_LOG_SIZE))
+            new.append({"frame": frame, "actor": actor, "slot": slot, "beat": beat,
+                        "name": self.names[beat] if beat < len(self.names) else beat,
+                        "event": BEAT_EVENTS[event] if event < len(BEAT_EVENTS) else event})
+        self.seen = count
+        self.events.extend(new)
+        values = struct.unpack_from("<10H", raw, 0)
+        self.counters = dict(zip(("started_idle", "started_transition", "started_react", "ended", "interrupted",
+                                  "icons", "effects", "palette_skips", "icon_skips", "step_skips"), values))
+        self.counters["running"] = list(raw[20:24])
+        return new
+
+    def running(self, actor_index: int):
+        """The beat name the actor runs now, or None."""
+        _, raw = self.read()
+        if raw is None or raw[20 + actor_index] == BEAT_NONE:
+            return None
+        return self.names[raw[20 + actor_index]]
+
+    def watch(self, frames: int, step: int = 2, until=None):
+        """Step and poll; stop early once until(new_events) holds. Returns the event that matched."""
+        for _ in range(0, frames, step):
+            self.game.emu.step(step)
+            for event in self.poll():
+                if until and until(event):
+                    return event
+        return None
+
+    def starts(self, slot=None, name=None) -> list:
+        return [e for e in self.events if e["event"] == "start" and (slot is None or e["slot"] == slot)
+                and (name is None or e["name"] == name)]
+
+
+def object_of(game: Game, slot: int):
+    actor = game.actor_for(slot)
+    if actor is None:
+        return None
+    return next((o for o in game.objects() if o["slot"] == actor["objectId"]), None)
+
+
+def place_dwelling(game: Game, slot: int, spot: int, node: int, activity: int = ACTIVITY_FISH, dwell: int = 40) -> None:
+    game.write_record(slot, **plain_record(node=node, destId=spot, state=STATE_DWELLING, arrival=ARRIVAL_NONE,
+                                           crossing=0, activity=activity, dwell=dwell))
+
+
+def scenario_beatspot(game: Game) -> dict:
+    """Acceptance 2: Blue dwelling at Viridian's pond (13, 39), facing the
+    water, runs water_bite or water_wait, and never a beat whose context
+    doesn't hold there (no grass, store, walking or other trainers' beats)."""
+    boot(game, VIRIDIAN, 16, 43, DIR_NORTH)
+    place_blue(game, node=NODE_VIRIDIAN, destId=SPOT_VIRIDIAN_WATER, state=STATE_DWELLING,
+               activity=ACTIVITY_FISH, dwell=40)
+    game.warp(VIRIDIAN, 16, 43, DIR_NORTH)
+    game.wait_for(lambda: (game.actor_for(SLOT_BLUE) or {}).get("atSpot"), 600, what="Blue at the pond")
+    watcher = BeatWatcher(game)
+    water = watcher.watch(3600, step=2, until=lambda e: e["event"] == "start" and e["slot"] == SLOT_BLUE
+                          and e["name"] in ("water_bite", "water_wait"))
+    facing_at_start = (object_of(game, SLOT_BLUE) or {}).get("facing")
+    actor = game.actor_for(SLOT_BLUE)
+    game.emu.step(40)
+    shot = game.shot("beatspot-mid-beat")
+    watcher.watch(900, step=4)
+    # What can hold for Blue (cocky) dwelling at a water's edge facing water,
+    # the player 5+ tiles away, alone on the map.
+    allowed = {"arrive_look", "leave_turn", "water_bite", "water_wait", "swagger", "blocked_sigh"}
+    started = [e["name"] for e in watcher.starts(SLOT_BLUE)]
+    result = {"water_beat": water, "facing_at_start": facing_at_start, "actor": actor,
+              "started": started, "events": watcher.events, "counters": watcher.counters,
+              "unexpected": sorted(set(started) - allowed), "screenshots": [shot], "debug": game.walker_debug()}
+    result["pass"] = (water is not None and facing_at_start == DIR_NORTH and not result["unexpected"]
+                      and actor is not None and (actor["x"], actor["y"]) == (13, 39))
+    return result
+
+
+def approach(game: Game, watcher: BeatWatcher, y: int, hold: int = 300) -> None:
+    """Walk the player along x = 13 to row y, then stand there watching."""
+    here = game.player()["y"]
+    if here != y:
+        game.emu.hold("Up" if y < here else "Down", 1)
+        try:
+            for _ in range(0, 240, 2):
+                game.emu.step(2)
+                watcher.poll()
+                if game.player()["y"] == y:
+                    break
+        finally:
+            game.emu.hold("Up" if y < here else "Down", 0)
+    watcher.watch(hold, step=4)
+
+
+def scenario_notice(game: Game) -> dict:
+    """Acceptance 3: notice_player fires once as the player comes within 3
+    tiles of Blue (not stoic) and stays; leaving and coming back (after its
+    cooldown) fires it again. Lance (stoic) at the same spot stares instead."""
+    boot(game, VIRIDIAN, 13, 43, DIR_NORTH)
+    place_blue(game, node=NODE_VIRIDIAN, destId=SPOT_VIRIDIAN_WATER, state=STATE_DWELLING,
+               activity=ACTIVITY_FISH, dwell=60)
+    game.warp(VIRIDIAN, 13, 43, DIR_NORTH)
+    game.wait_for(lambda: (game.actor_for(SLOT_BLUE) or {}).get("atSpot"), 600, what="Blue at the pond")
+    watcher = BeatWatcher(game)
+    watcher.watch(120, step=4)
+    phases = {}
+    approach(game, watcher, 42, hold=400)                    # 3 tiles: in range, standing
+    phases["first"] = len(watcher.starts(SLOT_BLUE, "notice_player"))
+    shot = game.shot("notice-blue")
+    approach(game, watcher, 43, hold=60)                     # 4 tiles: out of range
+    watcher.watch(1300, step=8)                              # notice_player's cooldown (80 ticks)
+    phases["away"] = len(watcher.starts(SLOT_BLUE, "notice_player"))
+    approach(game, watcher, 42, hold=400)
+    phases["second"] = len(watcher.starts(SLOT_BLUE, "notice_player"))
+    blue_events = list(watcher.events)
+
+    # Lance, stoic, at the same spot; Blue elsewhere.
+    place_blue(game, node=NODE_MART, destId=SPOT_MART_SHELF, state=STATE_DWELLING, activity=ACTIVITY_SHOP, dwell=60)
+    place_dwelling(game, SLOT_LANCE, SPOT_VIRIDIAN_WATER, NODE_VIRIDIAN)
+    game.warp(VIRIDIAN, 13, 43, DIR_NORTH)
+    game.wait_for(lambda: (game.actor_for(SLOT_LANCE) or {}).get("atSpot"), 600, what="Lance at the pond")
+    lance = BeatWatcher(game)
+    lance.watch(120, step=4)
+    approach(game, lance, 42, hold=400)
+    shot_lance = game.shot("notice-lance-stare")
+    result = {"blue_notice_counts": phases, "blue_events": blue_events, "lance_events": lance.events,
+              "lance_stare": len(lance.starts(SLOT_LANCE, "stare_down")),
+              "lance_notice": len(lance.starts(SLOT_LANCE, "notice_player")),
+              "blue_stare": len(watcher.starts(SLOT_BLUE, "stare_down")),
+              "screenshots": [shot, shot_lance], "debug": game.walker_debug()}
+    result["pass"] = (phases["first"] == 1 and phases["away"] == 1 and phases["second"] == 2
+                      and result["blue_stare"] == 0 and result["lance_stare"] == 1 and result["lance_notice"] == 0)
+    return result
+
+
+def scenario_greet(game: Game) -> dict:
+    """Acceptance 4: Brock and Misty (friends) dwelling side by side at
+    Viridian's pond greet each other with greet_friend, once each this visit."""
+    game.emu.step(240)
+    arrange_with_badges(game, VIRIDIAN, 16, 42, 8)   # Kanto badges: the leaders are out
+    for slot in range(25):
+        if slot not in (SLOT_BROCK, SLOT_MISTY):
+            game.write_record(slot, **plain_record(node=NODE_MART, destId=SPOT_MART_SHELF, state=STATE_DWELLING,
+                                                   arrival=ARRIVAL_NONE, crossing=0, activity=ACTIVITY_SHOP, dwell=60))
+    place_dwelling(game, SLOT_BROCK, SPOT_VIRIDIAN_WATER, NODE_VIRIDIAN)
+    place_dwelling(game, SLOT_MISTY, SPOT_VIRIDIAN_WATER_2, NODE_VIRIDIAN)
+    game.warp(VIRIDIAN, 16, 42, DIR_NORTH)
+    watcher = BeatWatcher(game)
+    greeted = watcher.watch(900, step=2, until=lambda e: e["event"] == "start" and e["name"].startswith("greet"))
+    game.emu.step(20)
+    shot = game.shot("greet-friends")
+    watcher.watch(1500, step=4)
+    greetings = [(e["slot"], e["name"]) for e in watcher.starts() if e["name"] in
+                 ("greet_friend", "greet_colleague", "greet_family", "size_up")]
+    result = {"greetings": greetings, "events": watcher.events, "counters": watcher.counters,
+              "actors": [game.actor_for(SLOT_BROCK), game.actor_for(SLOT_MISTY)],
+              "screenshots": [shot], "debug": game.walker_debug()}
+    result["pass"] = (greeted is not None
+                      and sorted(greetings) == [(SLOT_BROCK, "greet_friend"), (SLOT_MISTY, "greet_friend")])
+    return result
+
+
+def scenario_beatpush(game: Game) -> dict:
+    """Acceptance 6: Lance stares the player down (a long beat); the player
+    presses into him: the beat stops at once, his facing comes back, and he
+    then makes room as before."""
+    boot(game, VIRIDIAN, 13, 43, DIR_NORTH)
+    place_dwelling(game, SLOT_LANCE, SPOT_VIRIDIAN_WATER, NODE_VIRIDIAN)
+    game.warp(VIRIDIAN, 13, 43, DIR_NORTH)
+    game.wait_for(lambda: (game.actor_for(SLOT_LANCE) or {}).get("atSpot"), 600, what="Lance at the pond")
+    watcher = BeatWatcher(game)
+    watcher.watch(200, step=4)
+    before = game.walker_debug()
+    start_facing = (object_of(game, SLOT_LANCE) or {}).get("facing")
+    # Into range: he starts staring; walk on up beside him and press into him.
+    stare = None
+    game.emu.hold("Up", 1)
+    try:
+        for _ in range(0, 120):
+            game.emu.step(1)
+            for e in watcher.poll():
+                if e["event"] == "start" and e["name"] == "stare_down":
+                    stare = e
+            if game.player()["y"] == 40:
+                break
+        pressing_from = game.walker_debug()["frames"]
+        mid_beat = watcher.running(game.actor_for(SLOT_LANCE)["index"])
+        shot = game.shot("beatpush-pressing")
+        interrupt, facing_after = None, None
+        for _ in range(0, 30):
+            game.emu.step(1)
+            for e in watcher.poll():
+                if e["event"] == "interrupt" and e["slot"] == SLOT_LANCE:
+                    interrupt = e
+            if interrupt:
+                break
+        game.emu.step(6)
+        facing_after = (object_of(game, SLOT_LANCE) or {}).get("facing")
+        # Keep pressing: the yield rule as before.
+        game.emu.step(80)
+    finally:
+        game.emu.hold("Up", 0)
+    watcher.watch(120, step=4)
+    after = game.walker_debug()
+    result = {"stare": stare, "running_when_pressing": mid_beat, "pressing_from_frame": pressing_from,
+              "interrupt": interrupt, "interrupt_delay": (interrupt["frame"] - pressing_from) if interrupt else None,
+              "start_facing": start_facing, "facing_after_interrupt": facing_after,
+              "back_offs": after["backOffs"] - before["backOffs"], "handoffs": after["handoffs"] - before["handoffs"],
+              "lance_after": game.actor_for(SLOT_LANCE), "events": watcher.events, "counters": watcher.counters,
+              "screenshots": [shot, game.shot("beatpush-after")], "debug": after}
+    result["pass"] = (stare is not None and mid_beat == "stare_down" and interrupt is not None
+                      and result["interrupt_delay"] <= 4 and facing_after == start_facing == DIR_NORTH
+                      and (result["back_offs"] >= 1 or result["handoffs"] >= 1))
+    return result
+
+
+def scripted_beats(game: Game) -> dict:
+    """A fixed input script (Blue at the pond, the player passing by): the
+    beat log with frames relative to its start, and the RNG state after."""
+    boot(game, VIRIDIAN, 13, 43, DIR_NORTH)
+    place_blue(game, node=NODE_VIRIDIAN, destId=SPOT_VIRIDIAN_WATER, state=STATE_DWELLING,
+               activity=ACTIVITY_FISH, dwell=60)
+    game.warp(VIRIDIAN, 13, 43, DIR_NORTH)
+    origin = game.walker_debug()["frames"]
+    watcher = BeatWatcher(game)
+    watcher.watch(1200, step=4)
+    approach(game, watcher, 42, hold=400)
+    approach(game, watcher, 43, hold=900)
+    rng = game.emu.u32(game.sym["gRngValue"]) if "gRngValue" in game.sym else None
+    return {"events": [(e["frame"] - origin, e["slot"], e["name"], e["event"]) for e in watcher.events],
+            "lost": watcher.lost, "rng": rng, "frames": game.walker_debug()["frames"] - origin}
+
+
+def scenario_determinism(game: Game) -> dict:
+    """Acceptance 7: the same inputs give the same beats on the same frames,
+    in two runs from boot (two SkyEmu sessions)."""
+    first = scripted_beats(game)
+    with tempfile.TemporaryDirectory(prefix="walkers-second-") as tmp:
+        tmp = Path(tmp)
+        rom = tmp / "rom.gba"
+        shutil.copyfile(game.rom_path, rom)
+        with skyemu_session(game.skyemu_binary, rom, tmp / "xdg", tmp / "skyemu.log") as emu:
+            second = scripted_beats(Game(emu, game.sym, game.output))
+    result = {"first": first, "second": second, "identical": first["events"] == second["events"],
+              "rng_identical": first["rng"] == second["rng"]}
+    # The RNG note is reported, not gated: the engine itself (field effects,
+    # follower, weather) may advance it; the beats never read it.
+    result["pass"] = result["identical"] and len(first["events"]) >= 2 and first["lost"] == 0
+    return result
+
+
 SCENARIOS = {"spot": scenario_spot, "bridge": scenario_bridge, "walkoff": scenario_walkoff, "mortar": scenario_mortar,
              "safari": scenario_safari, "edge": scenario_edge, "door": scenario_door,
              "linger": scenario_linger, "save": scenario_save, "gym": scenario_gym,
              "budget": scenario_budget, "browse": scenario_browse, "deadend": scenario_deadend,
              "gymentry": scenario_gymentry, "stairs": scenario_stairs, "midstep": scenario_midstep,
              "decoys": scenario_decoys, "perf": scenario_perf, "seam": scenario_seam,
-             "recross": scenario_recross, "longtrip": scenario_longtrip, "striplane": scenario_striplane}
+             "recross": scenario_recross, "longtrip": scenario_longtrip, "striplane": scenario_striplane,
+             "beatspot": scenario_beatspot, "notice": scenario_notice, "greet": scenario_greet,
+             "beatpush": scenario_beatpush, "determinism": scenario_determinism}
 
 
 def check_content_hash(rom: Path, symbols: dict, tables) -> None:
@@ -1761,6 +2074,7 @@ def main(argv=None) -> int:
             try:
                 with skyemu_session(args.skyemu, rom, tmp / "xdg", tmp / "skyemu.log") as emu:
                     game = Game(emu, symbols, args.output)
+                    game.skyemu_binary, game.rom_path = args.skyemu, args.rom
                     try:
                         result = SCENARIOS[name](game)
                     except Exception as error:  # report the state and keep going

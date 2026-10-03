@@ -15,6 +15,7 @@ implementation map. Only `IS_WAYFARER` builds compile it.
 | Simulation core | `src/wayfarer_world_sim.c`, `include/wayfarer_world_sim.h` | Routines, life events, spot choice, travel, capacity, priority, New Game seating, load checks. Engine-free and deterministic. |
 | Engine seam | `src/wayfarer_world.c`, `include/wayfarer_world.h` | Builds the context from league state and badges, starts the heartbeat on map loads and runs it over the next field frames, New Game, load validation, the league resolution hook. |
 | Local actor | `src/wayfarer_walkers.c`, `include/wayfarer_walkers.h` | The on-screen walkers on the player's map: spawning from records, the shared grid search, handoffs both ways, connection strips, behaviour templates, local dwell, the Gym leader object, the follower rule, the local actor block. |
+| Ambience | `src/wayfarer_ambience.c`, `include/wayfarer_ambience.h`; `src/wayfarer_walker_beats.c`, `include/wayfarer_walker_beats.h` | Beat selection (engine-free, deterministic); the beat runner (the primitives on a walker's object). The walker layer owns the decision points and interruptions. |
 | Offline report | `tools/wayfarer_world_report/` | Runs the core on the host for N heartbeats and reports itineraries, crowding, coverage and cost. |
 
 ## Saved state
@@ -156,13 +157,94 @@ before stepping out through a map side or a door, and while the next map is
 full it waits once, then hands off. A strip actor that can't walk straight on
 (a 1-wide lane into a wall) is removed after 30 frames.
 
+## Beats
+
+[Notable ambience](../../.product/specs/notable-ambience.md) adds short
+expressive beats to the walkers. `src/wayfarer_ambience.c` picks them (the
+spec's gate, filter, class, idle odds and pick; it never reads the RNG);
+`src/wayfarer_walker_beats.c` runs a beat's primitives on the object; the
+"Notable ambience" section of `src/wayfarer_walkers.c` gathers the context,
+holds the decision points and stops beats.
+
+**Decision points.** Only local actors run beats (not a Gym visitor just
+leaving, a walk-off or a strip actor), and only between steps:
+
+| Decision | Where |
+| --- | --- |
+| Step | `WalkStep`, before each path step; a beat that stops the walk takes the frame (hum walks on) |
+| Blocked | `WalkStep`'s blocked path when an object, not the player or a wall, is in the way (react beats only) |
+| Arrive | `OnGoalReached` when the stay starts, after `StartTemplate` |
+| Leave | `LocalDwellTick` when the dwell runs out, after `Replan`: the plan waits for the beat |
+| Dwell | each dwell tick in the template phase, before `TemplateTick` (a beat takes the template's turn) |
+| React | every frame (`AmbienceFrame`), react beats only |
+
+Context: walking (a path, between steps), dwelling (at the spot, template
+phase), outdoors, what the faced tile is (water, grass, counter) or holds (an
+NPC: not the player, the follower, a walker or the companion), the spot's kind
+and named activities, the record's activity, the player's distance while the
+walker is in view, the ticks the player has stood adjacent and facing it
+without pushing, and the nearest other local walker of each relation.
+`companion_room` never holds until the companion lands.
+
+While a beat holds the walker, `UpdateActor` still runs the yield checks and
+the dwell clock, but no template move, step or plan; a search under way still
+finishes. The templates' emotes are beats now (`grass_rustle`, `water_bite`
+and `water_wait`, `chat_talk`); `WorldSim_TemplateEmote` is no longer called.
+
+**Primitives.** Every held movement waits until the last one is cleared and
+waits for its own end. Steps are slow walks to a free, standable tile
+(`WayfarerWalkers_BeatCanStep`: the walker's collision rules); a blocked step
+is skipped with its return, and a blocked return waits 60 frames, then the
+beat ends and the walker walks back to its spot. `step back` locks the facing
+for the step only. `spin` is four face turns (the engine's spin action slides
+a tile). `bow nurse` bows the nurse (only the three nurse sprites with a bow
+animation; never Chansey) within 3 tiles, and clears her held movement after.
+`turn npc` turns the NPC on the faced tile with `ObjectEventTurn` (still and
+not a trainer only). Icons and effects are skipped when no sprite palette slot
+is free; an FLDEFF icon (or "?", which shares its effect id) that is busy
+waits a tick, then is skipped. The shaking grass is stopped after 2 ticks, at
+the beat's end or on a stop. `splash` is a ripple on the water tile with the
+splash's sound: `FLDEFF_SPLASH` draws at an object's feet and reads past the
+object table without one. Effects only play while the walker is in view.
+
+**State and RAM.** All beat state is one heap block (`struct WalkerAmbience`,
+568 bytes: a debug block, then per actor the selection state, the runner
+state, the tick and adjacency counters), allocated while walkers exist (a
+failed allocation retries next frame; beats just don't run) and held by the
+EWRAM pointer `sAmbience`. It costs no EWRAM: the actors' bools became
+bitfields and the template emote byte went, which pays for the pointer and
+the latches byte (`ambienceLatches`: notice-player, lingers and the greeted
+actors survive a menu). `InitHeap` calls `WayfarerWalkers_OnHeapReset`
+before it rewrites the heap: running beats end with plain field writes
+(facing, lock, a bowing nurse), and the pointer is dropped, never freed;
+counters, cooldowns and quiet gaps start again in the next block.
+
+**Interruptions.** A running beat stops at once, unlocks and restores the
+walker's facing and stops its effects when the player presses into the walker
+(at once; the back-off still needs 40 frames of pressing), at a back-off,
+yield, walk-off or a Gym visitor's leaving, while the field controls are
+locked, on a story object (via the yield), on a heap reset and on a map change
+(`OnSeam`, warps and removals). A walk or a jump can't be cancelled: the
+walker's `actionPending` waits for it, then it turns back. A walker the beat
+left a tile off its spot walks back.
+
+The yield rule's trigger is pressing into the walker (adjacent, facing it,
+direction held), not just standing there facing it.
+
 `gWayfarerWalkersDebug` exports counters, the worst slice in scanlines and each
 actor's state for `tools/wayfarer_walkers/verify.py`, the SkyEmu verifier
 (results in `.product/research/overworld-walkers/`, `summary.json`). The
 verifier refuses a ROM built from other tables (content hash). `perf`,
 `seam`, `recross` and `longtrip` fail past 200 scanlines in a frame; `perf`
 also past 44 frames per warp, and `recross` past 1,000 scanlines finished
-inside one seam frame.
+inside one seam frame. The beat scenarios read `sAmbience`'s debug block (beats
+started by class, ended, interrupted, icons, effects, skips, the running beat
+per actor, and a ring of the last 32 start/end/interrupt events with their
+walker frame): `beatspot` (a water beat at Viridian's pond, only beats whose
+context holds), `notice` (once per approach, `stare_down` for a stoic
+trainer), `greet` (Brock and Misty greet once), `beatpush` (pressing stops a
+beat within frames and restores the facing, then the back-off) and
+`determinism` (two runs from boot give the same beat log).
 
 ## Checks
 
