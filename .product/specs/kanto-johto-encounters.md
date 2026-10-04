@@ -173,9 +173,36 @@ fit what the map has.
 
 - Each map has a mix of its own, not a copy of its neighbour's.
 - No family is one of a table's two most common slots on more than eight maps
-  in a region, counted per method: land, and trees and rocks, have a limit of
-  eight maps; surfing and fishing together have a limit of twelve, since both
-  regions have many water maps.
+  in a region, counted per method for land and for trees and rocks. Water has
+  its own limits, under Water.
+
+### Water
+
+Every map with surfing or fishing has one water type. The table specs name each
+map's type.
+
+| Water type | Where | Cast |
+| --- | --- | --- |
+| Ponds and rivers | Fresh water on routes, in towns and in forests | Magikarp, Poliwag, Psyduck, Goldeen, Slowpoke, Marill, and Wooper in Johto |
+| Coast and sea | Coastal towns and sea routes | Magikarp, Tentacool, Krabby, Shellder, Staryu, Horsea, Chinchou, Corsola, Qwilfish, Remoraid, Slowpoke, Psyduck, and Mantine in Johto |
+| Cold water | Seafoam Islands, Ice Path, Mt. Silver's snow | Magikarp, Seel, Shellder, Horsea, Krabby, Tentacool, Slowpoke, Psyduck, Lapras |
+| Cave water | Water inside caves, such as Mt. Moon, Union Cave, Cerulean Cave and the Whirl Islands | Magikarp, Zubat, Goldeen, Psyduck, Slowpoke, Poliwag, Marill, Wooper in Johto, and sea species in sea caves such as the Whirl Islands |
+
+Rewards, babies and anchors may appear outside their type's cast where they fit,
+such as Lapras in Union Cave's depths, Dratini in Dragon's Den and the water
+starters.
+
+- **Fishing:** entry 1 is Magikarp, the classic Old Rod catch. Entry 2 is the
+  water type's staple: Poliwag in ponds and rivers, Tentacool or Krabby at sea,
+  Shellder in cold water and Goldeen in caves. Entries 3–10 hold at least four
+  different families and carry the map's own character.
+- **Surfing:** no family holds a surfing table's first slot on more than eight
+  maps in a region, so sea routes don't all lead with Tentacool.
+- **Night:** at sea, night brings its own species, such as Chinchou, Staryu
+  and Qwilfish.
+- **Kanto east:** Generation II sea species that HeartGold and SoulSilver put in
+  Kanto, such as Qwilfish, Remoraid and Chinchou, refresh the eastern sea and
+  bring Kanto east's Gen II share towards ~10–15%.
 
 ### Day and night
 

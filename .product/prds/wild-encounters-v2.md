@@ -108,6 +108,11 @@ How bonuses change over the course of the game is left to later scaling work.
   before, except in Outlands and on a dungeon's deeper floors, where tables may
   allow them. Iconic early stages are capped deliberately.
 - **Nothing is locked by progress.** Every species is available from the start.
+- **Water has types.** Every map with surfing or fishing has one water type:
+  ponds and rivers, coast and sea, cold water, or cave water. Each type has its
+  own cast, so a sea route and a pond never look alike. Fishing entry 1 is
+  Magikarp, the classic Old Rod catch, entry 2 is the water type's staple, and
+  entries 3–10 carry the map's own character, which the better rods reveal.
 - **Babies are rare finds.** The downward rule never steps into a baby, so a
   low-level Pikachu slot stays Pikachu. Instead, a table can name a baby as a
   rare slot of its own, such as Riolu in Sinjoh or Azurill in Hoenn. Like any
