@@ -2,7 +2,8 @@
 
 Implemented: No
 
-Specifications: [Prowlers](../specs/prowlers.md), [Reach assignments](../specs/reach-assignments.md)
+Specifications: [Prowlers](../specs/prowlers.md), [Reach assignments](../specs/reach-assignments.md),
+[Kanto and Johto encounters](../specs/kanto-johto-encounters.md)
 
 Design status: sketch. It replaces the retired wild-encounter docs: the
 [Kanto](kanto-wild-encounters.md) and [Johto](johto-wild-encounters.md)
