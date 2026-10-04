@@ -185,12 +185,12 @@ map's type.
 | --- | --- | --- |
 | Ponds and rivers | Fresh water on routes, in towns and in forests | Magikarp, Poliwag, Psyduck, Goldeen, Slowpoke, Marill, and Wooper in Johto |
 | Coast and sea | Coastal towns and sea routes | Magikarp, Tentacool, Krabby, Shellder, Staryu, Horsea, Chinchou, Corsola, Qwilfish, Remoraid, Slowpoke, Psyduck, and Mantine in Johto |
-| Cold water | Seafoam Islands, Ice Path, Mt. Silver's snow | Magikarp, Seel, Shellder, Horsea, Krabby, Tentacool, Slowpoke, Psyduck, Lapras |
+| Cold water | Seafoam Islands' icy depths | Magikarp, Seel, Shellder, Horsea, Krabby, Tentacool, Slowpoke, Psyduck, Lapras |
 | Cave water | Water inside caves, such as Mt. Moon, Union Cave, Cerulean Cave and the Whirl Islands | Magikarp, Zubat, Goldeen, Psyduck, Slowpoke, Poliwag, Marill, Wooper in Johto, and sea species in sea caves such as the Whirl Islands |
 
-Rewards, babies and anchors may appear outside their type's cast where they fit,
-such as Lapras in Union Cave's depths, Dratini in Dragon's Den and the water
-starters.
+Rewards, babies, anchors and native HM carriers may appear outside their type's
+cast where they fit, such as Lapras in Union Cave's depths, Dratini and Seadra
+in Dragon's Den, and the water starters.
 
 - **Fishing:** entry 1 is Magikarp, the classic Old Rod catch. Entry 2 is the
   water type's staple: Poliwag in ponds and rivers, Tentacool or Krabby at sea,

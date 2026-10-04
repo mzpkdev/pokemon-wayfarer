@@ -20,7 +20,7 @@ listed. Legendaries and mythicals belong to a later spec.
 
 - Places are ordered by reach: Road, Wilds, Outlands, then dungeons. Each place
   names its reach and its Gen I–II band, and each map is named by its map
-  constant.
+  constant. A map with surfing or fishing also names its water type.
 - Each table lists every slot in order, with its weight, and the species for
   day and night.
   - Land has 12 slots weighted 20, 20, 10, 10, 10, 10, 5, 5, 4, 4, 1 and 1%.
@@ -46,6 +46,8 @@ Road, Johto east.
 
 **`MAP_NEW_BARK_TOWN_HNS`**
 
+Water type: coast and sea.
+
 *Land*
 
 | Slot | Weight | Day | Night |
@@ -67,26 +69,26 @@ Road, Johto east.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Tentacool–Tentacruel | Chinchou–Lanturn |
-| 2 | 30% | Chinchou–Lanturn | Tentacool–Tentacruel |
+| 1 | 60% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 2 | 30% | Tentacool–Tentacruel | Tentacool–Tentacruel |
 | 3 | 5% | Shellder | Staryu |
-| 4 | 4% | Krabby–Kingler | Shellder |
-| 5 | 1% | Remoraid–Octillery | Remoraid–Octillery |
+| 4 | 4% | Krabby–Kingler | Qwilfish |
+| 5 | 1% | Corsola | Shellder |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 3 | 10% | 12% | 11% | Chinchou–Lanturn | Chinchou–Lanturn |
 | 4 | 8% | 10% | 10% | Shellder | Staryu |
-| 5 | 8% | 9% | 10% | Chinchou–Lanturn | Chinchou–Lanturn |
-| 6 | 4% | 7% | 10% | Krabby–Kingler | Shellder |
+| 5 | 8% | 9% | 10% | Krabby–Kingler | Chinchou–Lanturn |
+| 6 | 4% | 7% | 10% | Chinchou–Lanturn | Shellder |
 | 7 | 3% | 6% | 10% | Corsola | Staryu |
-| 8 | 3% | 5% | 9% | Tentacool–Tentacruel | Krabby–Kingler |
-| 9 | 2% | 4% | 9% | Qwilfish | Corsola |
-| 10 | 2% | 4% | 9% | Chinchou–Lanturn | Qwilfish |
+| 8 | 3% | 5% | 9% | Shellder | Qwilfish |
+| 9 | 2% | 4% | 9% | Qwilfish | Krabby–Kingler |
+| 10 | 2% | 4% | 9% | Chinchou–Lanturn | Chinchou–Lanturn |
 
 *Trees and rocks*
 
@@ -103,6 +105,8 @@ Road, Johto east.
 Road, Johto east.
 
 **`MAP_CHERRYGROVE_CITY_HNS`**
+
+Water type: coast and sea.
 
 *Land*
 
@@ -128,21 +132,21 @@ Road, Johto east.
 | 1 | 60% | Tentacool–Tentacruel | Tentacool–Tentacruel |
 | 2 | 30% | Krabby–Kingler | Krabby–Kingler |
 | 3 | 5% | Corsola | Staryu |
-| 4 | 4% | Shellder | Shellder |
-| 5 | 1% | Qwilfish | Qwilfish |
+| 4 | 4% | Shellder | Qwilfish |
+| 5 | 1% | Qwilfish | Corsola |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Krabby–Kingler | Krabby–Kingler |
-| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Corsola | Staryu |
-| 5 | 8% | 9% | 10% | Krabby–Kingler | Krabby–Kingler |
-| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 7 | 3% | 6% | 10% | Corsola | Staryu |
-| 8 | 3% | 5% | 9% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Krabby–Kingler | Krabby–Kingler |
+| 3 | 10% | 12% | 11% | Krabby–Kingler | Staryu |
+| 4 | 8% | 10% | 10% | Corsola | Krabby–Kingler |
+| 5 | 8% | 9% | 10% | Tentacool–Tentacruel | Corsola |
+| 6 | 4% | 7% | 10% | Krabby–Kingler | Staryu |
+| 7 | 3% | 6% | 10% | Corsola | Qwilfish |
+| 8 | 3% | 5% | 9% | Shellder | Tentacool–Tentacruel |
 | 9 | 2% | 4% | 9% | Qwilfish | Staryu |
 | 10 | 2% | 4% | 9% | Krabby–Kingler | Krabby–Kingler |
 
@@ -161,6 +165,8 @@ Road, Johto east.
 Road, Johto east.
 
 **`MAP_VIOLET_CITY_HNS`**
+
+Water type: ponds and rivers.
 
 *Land*
 
@@ -184,25 +190,25 @@ Road, Johto east.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 2 | 30% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 3 | 5% | Marill–Azumarill | Psyduck–Golduck |
-| 4 | 4% | Psyduck–Golduck | Wooper–Quagsire |
+| 2 | 30% | Marill–Azumarill | Wooper–Quagsire |
+| 3 | 5% | Psyduck–Golduck | Marill–Azumarill |
+| 4 | 4% | Poliwag–Poliwhirl | Psyduck–Golduck |
 | 5 | 1% | Magikarp–Gyarados | Magikarp–Gyarados |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Marill–Azumarill | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 8 | 3% | 5% | 9% | Psyduck–Golduck | Marill–Azumarill |
+| 3 | 10% | 12% | 11% | Marill–Azumarill | Wooper–Quagsire |
+| 4 | 8% | 10% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 5 | 8% | 9% | 10% | Psyduck–Golduck | Marill–Azumarill |
+| 6 | 4% | 7% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Marill–Azumarill | Psyduck–Golduck |
+| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Goldeen–Seaking |
 | 9 | 2% | 4% | 9% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 10 | 2% | 4% | 9% | Wooper–Quagsire | Psyduck–Golduck |
+| 10 | 2% | 4% | 9% | Goldeen–Seaking | Magikarp–Gyarados |
 
 *Trees and rocks*
 
@@ -252,6 +258,8 @@ Road, Johto west.
 
 **`MAP_ECRUTEAK_CITY_HNS`**
 
+Water type: ponds and rivers.
+
 *Land*
 
 | Slot | Weight | Day | Night |
@@ -273,26 +281,26 @@ Road, Johto west.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Marill–Azumarill | Psyduck–Golduck |
-| 2 | 30% | Psyduck–Golduck | Marill–Azumarill |
+| 1 | 60% | Marill–Azumarill | Marill–Azumarill |
+| 2 | 30% | Psyduck–Golduck | Psyduck–Golduck |
 | 3 | 5% | Poliwag–Poliwhirl | Wooper–Quagsire |
 | 4 | 4% | Magikarp–Gyarados | Poliwag–Poliwhirl |
-| 5 | 1% | Wooper–Quagsire | Magikarp–Gyarados |
+| 5 | 1% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Psyduck–Golduck | Marill–Azumarill |
-| 2 | 22% | 18% | 10% | Marill–Azumarill | Psyduck–Golduck |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 6 | 4% | 7% | 10% | Psyduck–Golduck | Poliwag–Poliwhirl |
-| 7 | 3% | 6% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
-| 8 | 3% | 5% | 9% | Marill–Azumarill | Magikarp–Gyarados |
-| 9 | 2% | 4% | 9% | Poliwag–Poliwhirl | Marill–Azumarill |
-| 10 | 2% | 4% | 9% | Wooper–Quagsire | Psyduck–Golduck |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 10% | 12% | 11% | Marill–Azumarill | Wooper–Quagsire |
+| 4 | 8% | 10% | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Marill–Azumarill | Marill–Azumarill |
+| 6 | 4% | 7% | 10% | Psyduck–Golduck | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Marill–Azumarill | Goldeen–Seaking |
+| 8 | 3% | 5% | 9% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Marill–Azumarill |
+| 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Psyduck–Golduck |
 
 *Trees and rocks*
 
@@ -309,6 +317,8 @@ Road, Johto west.
 Road, Johto west.
 
 **`MAP_OLIVINE_CITY_HNS`**
+
+Water type: coast and sea.
 
 *Land*
 
@@ -341,16 +351,16 @@ Road, Johto west.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Corsola | Remoraid–Octillery |
-| 2 | 22% | 18% | 10% | Remoraid–Octillery | Corsola |
-| 3 | 10% | 12% | 11% | Krabby–Kingler | Staryu |
-| 4 | 8% | 10% | 10% | Magikarp–Gyarados | Krabby–Kingler |
-| 5 | 8% | 9% | 10% | Corsola | Staryu |
-| 6 | 4% | 7% | 10% | Krabby–Kingler | Magikarp–Gyarados |
-| 7 | 3% | 6% | 10% | Shellder | Chinchou–Lanturn |
-| 8 | 3% | 5% | 9% | Qwilfish | Staryu |
-| 9 | 2% | 4% | 9% | Corsola | Qwilfish |
-| 10 | 2% | 4% | 9% | Tentacool–Tentacruel | Chinchou–Lanturn |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Krabby–Kingler | Krabby–Kingler |
+| 3 | 10% | 12% | 11% | Corsola | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Corsola | Corsola |
+| 5 | 8% | 9% | 10% | Remoraid–Octillery | Remoraid–Octillery |
+| 6 | 4% | 7% | 10% | Krabby–Kingler | Staryu |
+| 7 | 3% | 6% | 10% | Corsola | Chinchou–Lanturn |
+| 8 | 3% | 5% | 9% | Shellder | Staryu |
+| 9 | 2% | 4% | 9% | Qwilfish | Qwilfish |
+| 10 | 2% | 4% | 9% | Tentacool–Tentacruel | Corsola |
 
 *Trees and rocks*
 
@@ -363,6 +373,8 @@ Road, Johto west.
 | 5 | 1% | Aipom | Hoothoot–Noctowl |
 
 **`MAP_OLIVINE_CITY_PORT_OUTSIDE_HNS`**
+
+Water type: coast and sea.
 
 *Land*
 
@@ -385,32 +397,34 @@ Road, Johto west.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Tentacool–Tentacruel | Remoraid–Octillery |
-| 2 | 30% | Remoraid–Octillery | Tentacool–Tentacruel |
+| 1 | 60% | Remoraid–Octillery | Remoraid–Octillery |
+| 2 | 30% | Tentacool–Tentacruel | Tentacool–Tentacruel |
 | 3 | 5% | Corsola | Chinchou–Lanturn |
 | 4 | 4% | Chinchou–Lanturn | Staryu |
-| 5 | 1% | Qwilfish | Corsola |
+| 5 | 1% | Slowpoke–Slowbro | Corsola |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Remoraid–Octillery | Remoraid–Octillery |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| 3 | 10% | 12% | 11% | Corsola | Chinchou–Lanturn |
-| 4 | 8% | 10% | 10% | Chinchou–Lanturn | Corsola |
-| 5 | 8% | 9% | 10% | Qwilfish | Staryu |
-| 6 | 4% | 7% | 10% | Krabby–Kingler | Chinchou–Lanturn |
-| 7 | 3% | 6% | 10% | Shellder | Staryu |
-| 8 | 3% | 5% | 9% | Tentacool–Tentacruel | Krabby–Kingler |
-| 9 | 2% | 4% | 9% | Chinchou–Lanturn | Qwilfish |
-| 10 | 2% | 4% | 9% | Corsola | Magikarp–Gyarados |
+| 3 | 10% | 12% | 11% | Remoraid–Octillery | Remoraid–Octillery |
+| 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
+| 5 | 8% | 9% | 10% | Corsola | Staryu |
+| 6 | 4% | 7% | 10% | Tentacool–Tentacruel | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Krabby–Kingler | Staryu |
+| 8 | 3% | 5% | 9% | Remoraid–Octillery | Krabby–Kingler |
+| 9 | 2% | 4% | 9% | Chinchou–Lanturn | Shellder |
+| 10 | 2% | 4% | 9% | Slowpoke–Slowbro | Qwilfish |
 
 #### Cianwood City
 
 Road, Johto west.
 
 **`MAP_CIANWOOD_CITY_HNS`**
+
+Water type: coast and sea.
 
 *Land*
 
@@ -433,26 +447,26 @@ Road, Johto west.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Chinchou–Lanturn | Chinchou–Lanturn |
-| 2 | 30% | Remoraid–Octillery | Remoraid–Octillery |
+| 1 | 60% | Tentacool–Tentacruel | Chinchou–Lanturn |
+| 2 | 30% | Chinchou–Lanturn | Tentacool–Tentacruel |
 | 3 | 5% | Shellder | Staryu |
 | 4 | 4% | Staryu | Staryu |
-| 5 | 1% | Mantyke | Shellder |
+| 5 | 1% | Mantyke | Qwilfish |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Chinchou–Lanturn | Chinchou–Lanturn |
-| 2 | 22% | 18% | 10% | Remoraid–Octillery | Remoraid–Octillery |
-| 3 | 10% | 12% | 11% | Shellder | Staryu |
-| 4 | 8% | 10% | 10% | Corsola | Corsola |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 3 | 10% | 12% | 11% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Chinchou–Lanturn | Chinchou–Lanturn |
-| 6 | 4% | 7% | 10% | Qwilfish | Staryu |
-| 7 | 3% | 6% | 10% | Krabby–Kingler | Shellder |
-| 8 | 3% | 5% | 9% | Tentacool–Tentacruel | Krabby–Kingler |
-| 9 | 2% | 4% | 9% | Staryu | Staryu |
-| 10 | 2% | 4% | 9% | Chinchou–Lanturn | Qwilfish |
+| 6 | 4% | 7% | 10% | Corsola | Shellder |
+| 7 | 3% | 6% | 10% | Shellder | Staryu |
+| 8 | 3% | 5% | 9% | Remoraid–Octillery | Qwilfish |
+| 9 | 2% | 4% | 9% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 10 | 2% | 4% | 9% | Krabby–Kingler | Staryu |
 
 *Trees and rocks*
 
@@ -486,6 +500,8 @@ Road, Johto east.
 
 **`MAP_BLACKTHORN_CITY_HNS`**
 
+Water type: ponds and rivers.
+
 *Land*
 
 | Slot | Weight | Day | Night |
@@ -508,25 +524,25 @@ Road, Johto east.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 30% | Horsea–Seadra | Horsea–Seadra |
-| 3 | 5% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 4 | 4% | Marill–Azumarill | Poliwag–Poliwhirl |
-| 5 | 1% | Psyduck–Golduck | Marill–Azumarill |
+| 2 | 30% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 5% | Marill–Azumarill | Wooper–Quagsire |
+| 4 | 4% | Psyduck–Golduck | Marill–Azumarill |
+| 5 | 1% | Goldeen–Seaking | Psyduck–Golduck |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 2 | 22% | 18% | 10% | Horsea–Seadra | Horsea–Seadra |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Poliwag–Poliwhirl |
-| 6 | 4% | 7% | 10% | Horsea–Seadra | Horsea–Seadra |
-| 7 | 3% | 6% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 8 | 3% | 5% | 9% | Goldeen–Seaking | Magikarp–Gyarados |
-| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Goldeen–Seaking |
-| 10 | 2% | 4% | 9% | Marill–Azumarill | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 10% | 12% | 11% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 4 | 8% | 10% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Marill–Azumarill | Poliwag–Poliwhirl |
+| 8 | 3% | 5% | 9% | Psyduck–Golduck | Marill–Azumarill |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Psyduck–Golduck |
+| 10 | 2% | 4% | 9% | Goldeen–Seaking | Magikarp–Gyarados |
 
 *Trees and rocks*
 
@@ -593,6 +609,8 @@ Road, Johto east.
 
 **`MAP_ROUTE30_HNS`**
 
+Water type: ponds and rivers.
+
 *Land*
 
 | Slot | Weight | Day | Night |
@@ -615,25 +633,25 @@ Road, Johto east.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 2 | 30% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 3 | 5% | Marill–Azumarill | Wooper–Quagsire |
-| 4 | 4% | Magikarp–Gyarados | Marill–Azumarill |
+| 2 | 30% | Marill–Azumarill | Wooper–Quagsire |
+| 3 | 5% | Psyduck–Golduck | Marill–Azumarill |
+| 4 | 4% | Magikarp–Gyarados | Psyduck–Golduck |
 | 5 | 1% | Totodile–Feraligatr | Totodile–Feraligatr |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 7 | 3% | 6% | 10% | Marill–Azumarill | Wooper–Quagsire |
-| 8 | 3% | 5% | 9% | Goldeen–Seaking | Goldeen–Seaking |
-| 9 | 2% | 4% | 9% | Psyduck–Golduck | Marill–Azumarill |
-| 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 10% | 12% | 11% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Poliwag–Poliwhirl |
+| 5 | 8% | 9% | 10% | Marill–Azumarill | Goldeen–Seaking |
+| 6 | 4% | 7% | 10% | Psyduck–Golduck | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Poliwag–Poliwhirl | Marill–Azumarill |
+| 8 | 3% | 5% | 9% | Goldeen–Seaking | Psyduck–Golduck |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Poliwag–Poliwhirl |
+| 10 | 2% | 4% | 9% | Marill–Azumarill | Goldeen–Seaking |
 
 *Trees and rocks*
 
@@ -650,6 +668,8 @@ Road, Johto east.
 Road, Johto east.
 
 **`MAP_ROUTE31_HNS`**
+
+Water type: ponds and rivers.
 
 *Land*
 
@@ -672,25 +692,25 @@ Road, Johto east.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 2 | 30% | Marill–Azumarill | Marill–Azumarill |
-| 3 | 5% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 4 | 4% | Magikarp–Gyarados | Poliwag–Poliwhirl |
-| 5 | 1% | Psyduck–Golduck | Magikarp–Gyarados |
+| 1 | 60% | Marill–Azumarill | Marill–Azumarill |
+| 2 | 30% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 5% | Psyduck–Golduck | Wooper–Quagsire |
+| 4 | 4% | Magikarp–Gyarados | Psyduck–Golduck |
+| 5 | 1% | Goldeen–Seaking | Magikarp–Gyarados |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 2 | 22% | 18% | 10% | Marill–Azumarill | Marill–Azumarill |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 6 | 4% | 7% | 10% | Goldeen–Seaking | Poliwag–Poliwhirl |
-| 7 | 3% | 6% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 8 | 3% | 5% | 9% | Marill–Azumarill | Goldeen–Seaking |
-| 9 | 2% | 4% | 9% | Psyduck–Golduck | Marill–Azumarill |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 10% | 12% | 11% | Marill–Azumarill | Marill–Azumarill |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 6 | 4% | 7% | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Psyduck–Golduck | Goldeen–Seaking |
+| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Psyduck–Golduck |
+| 9 | 2% | 4% | 9% | Goldeen–Seaking | Marill–Azumarill |
 | 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
 
 *Trees and rocks*
@@ -708,6 +728,8 @@ Road, Johto east.
 Road, Johto east.
 
 **`MAP_ROUTE32_HNS`**
+
+Water type: coast and sea.
 
 *Land*
 
@@ -730,26 +752,26 @@ Road, Johto east.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Wooper–Quagsire | Wooper–Quagsire |
-| 2 | 30% | Qwilfish | Qwilfish |
-| 3 | 5% | Tentacool–Tentacruel | Chinchou–Lanturn |
-| 4 | 4% | Marill–Azumarill | Tentacool–Tentacruel |
-| 5 | 1% | Tentacool–Tentacruel | Marill–Azumarill |
+| 1 | 60% | Qwilfish | Qwilfish |
+| 2 | 30% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 3 | 5% | Slowpoke–Slowbro | Chinchou–Lanturn |
+| 4 | 4% | Corsola | Slowpoke–Slowbro |
+| 5 | 1% | Tentacool–Tentacruel | Staryu |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Qwilfish | Qwilfish |
-| 2 | 22% | 18% | 10% | Qwilfish | Qwilfish |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Tentacool–Tentacruel | Chinchou–Lanturn |
-| 5 | 8% | 9% | 10% | Qwilfish | Qwilfish |
-| 6 | 4% | 7% | 10% | Wooper–Quagsire | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Magikarp–Gyarados | Chinchou–Lanturn |
-| 8 | 3% | 5% | 9% | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| 9 | 2% | 4% | 9% | Qwilfish | Qwilfish |
-| 10 | 2% | 4% | 9% | Remoraid–Octillery | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 3 | 10% | 12% | 11% | Qwilfish | Qwilfish |
+| 4 | 8% | 10% | 10% | Qwilfish | Chinchou–Lanturn |
+| 5 | 8% | 9% | 10% | Tentacool–Tentacruel | Qwilfish |
+| 6 | 4% | 7% | 10% | Qwilfish | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Slowpoke–Slowbro | Qwilfish |
+| 8 | 3% | 5% | 9% | Remoraid–Octillery | Staryu |
+| 9 | 2% | 4% | 9% | Qwilfish | Slowpoke–Slowbro |
+| 10 | 2% | 4% | 9% | Corsola | Qwilfish |
 
 *Trees and rocks*
 
@@ -800,6 +822,8 @@ Road, Johto west.
 
 **`MAP_ROUTE34_HNS`**
 
+Water type: coast and sea.
+
 *Land*
 
 | Slot | Weight | Day | Night |
@@ -821,25 +845,25 @@ Road, Johto west.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| 2 | 30% | Corsola | Corsola |
+| 1 | 60% | Corsola | Corsola |
+| 2 | 30% | Tentacool–Tentacruel | Tentacool–Tentacruel |
 | 3 | 5% | Krabby–Kingler | Staryu |
 | 4 | 4% | Chinchou–Lanturn | Chinchou–Lanturn |
-| 5 | 1% | Tentacool–Tentacruel | Krabby–Kingler |
+| 5 | 1% | Slowpoke–Slowbro | Krabby–Kingler |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Corsola | Corsola |
-| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| 3 | 10% | 12% | 11% | Krabby–Kingler | Staryu |
-| 4 | 8% | 10% | 10% | Corsola | Krabby–Kingler |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Corsola |
-| 6 | 4% | 7% | 10% | Krabby–Kingler | Staryu |
-| 7 | 3% | 6% | 10% | Corsola | Chinchou–Lanturn |
-| 8 | 3% | 5% | 9% | Chinchou–Lanturn | Krabby–Kingler |
-| 9 | 2% | 4% | 9% | Qwilfish | Corsola |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Krabby–Kingler | Krabby–Kingler |
+| 3 | 10% | 12% | 11% | Corsola | Corsola |
+| 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
+| 5 | 8% | 9% | 10% | Qwilfish | Corsola |
+| 6 | 4% | 7% | 10% | Corsola | Staryu |
+| 7 | 3% | 6% | 10% | Tentacool–Tentacruel | Chinchou–Lanturn |
+| 8 | 3% | 5% | 9% | Qwilfish | Krabby–Kingler |
+| 9 | 2% | 4% | 9% | Chinchou–Lanturn | Corsola |
 | 10 | 2% | 4% | 9% | Corsola | Staryu |
 
 *Trees and rocks*
@@ -857,6 +881,8 @@ Road, Johto west.
 Road, Johto west.
 
 **`MAP_ROUTE35_HNS`**
+
+Water type: ponds and rivers.
 
 *Land*
 
@@ -880,25 +906,25 @@ Road, Johto west.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Psyduck–Golduck | Psyduck–Golduck |
-| 2 | 30% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 3 | 5% | Marill–Azumarill | Wooper–Quagsire |
-| 4 | 4% | Wooper–Quagsire | Wooper–Quagsire |
-| 5 | 1% | Poliwag–Poliwhirl | Marill–Azumarill |
+| 2 | 30% | Marill–Azumarill | Wooper–Quagsire |
+| 3 | 5% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 4 | 4% | Wooper–Quagsire | Marill–Azumarill |
+| 5 | 1% | Magikarp–Gyarados | Poliwag–Poliwhirl |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
 | 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Psyduck–Golduck | Psyduck–Golduck |
+| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
 | 3 | 10% | 12% | 11% | Marill–Azumarill | Wooper–Quagsire |
-| 4 | 8% | 10% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 5 | 8% | 9% | 10% | Wooper–Quagsire | Wooper–Quagsire |
-| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Marill–Azumarill |
-| 7 | 3% | 6% | 10% | Marill–Azumarill | Wooper–Quagsire |
-| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Poliwag–Poliwhirl |
-| 9 | 2% | 4% | 9% | Psyduck–Golduck | Psyduck–Golduck |
-| 10 | 2% | 4% | 9% | Goldeen–Seaking | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 6 | 4% | 7% | 10% | Goldeen–Seaking | Psyduck–Golduck |
+| 7 | 3% | 6% | 10% | Wooper–Quagsire | Marill–Azumarill |
+| 8 | 3% | 5% | 9% | Poliwag–Poliwhirl | Goldeen–Seaking |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Wooper–Quagsire |
+| 10 | 2% | 4% | 9% | Marill–Azumarill | Poliwag–Poliwhirl |
 
 *Trees and rocks*
 
@@ -1048,12 +1074,14 @@ Road, Johto west.
 
 **`MAP_ROUTE40_HNS`**
 
+Water type: coast and sea.
+
 *Surfing*
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| 2 | 30% | Corsola | Corsola |
+| 1 | 60% | Corsola | Corsola |
+| 2 | 30% | Tentacool–Tentacruel | Tentacool–Tentacruel |
 | 3 | 5% | Shellder | Staryu |
 | 4 | 4% | Staryu | Chinchou–Lanturn |
 | 5 | 1% | Qwilfish | Shellder |
@@ -1062,15 +1090,15 @@ Road, Johto west.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Krabby–Kingler | Krabby–Kingler |
-| 2 | 22% | 18% | 10% | Corsola | Corsola |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Staryu |
-| 4 | 8% | 10% | 10% | Shellder | Magikarp–Gyarados |
-| 5 | 8% | 9% | 10% | Corsola | Staryu |
-| 6 | 4% | 7% | 10% | Krabby–Kingler | Shellder |
-| 7 | 3% | 6% | 10% | Tentacool–Tentacruel | Chinchou–Lanturn |
-| 8 | 3% | 5% | 9% | Qwilfish | Krabby–Kingler |
-| 9 | 2% | 4% | 9% | Staryu | Tentacool–Tentacruel |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Krabby–Kingler | Krabby–Kingler |
+| 3 | 10% | 12% | 11% | Corsola | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Corsola | Corsola |
+| 5 | 8% | 9% | 10% | Qwilfish | Staryu |
+| 6 | 4% | 7% | 10% | Corsola | Shellder |
+| 7 | 3% | 6% | 10% | Staryu | Chinchou–Lanturn |
+| 8 | 3% | 5% | 9% | Tentacool–Tentacruel | Krabby–Kingler |
+| 9 | 2% | 4% | 9% | Qwilfish | Qwilfish |
 | 10 | 2% | 4% | 9% | Remoraid–Octillery | Staryu |
 
 #### Route 41
@@ -1078,6 +1106,8 @@ Road, Johto west.
 Road, Johto west.
 
 **`MAP_ROUTE41_HNS`**
+
+Water type: coast and sea.
 
 *Surfing*
 
@@ -1093,22 +1123,24 @@ Road, Johto west.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Chinchou–Lanturn | Chinchou–Lanturn |
-| 2 | 22% | 18% | 10% | Horsea–Seadra | Horsea–Seadra |
-| 3 | 10% | 12% | 11% | Qwilfish | Chinchou–Lanturn |
-| 4 | 8% | 10% | 10% | Chinchou–Lanturn | Staryu |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Chinchou–Lanturn |
-| 6 | 4% | 7% | 10% | Horsea–Seadra | Magikarp–Gyarados |
-| 7 | 3% | 6% | 10% | Corsola | Staryu |
-| 8 | 3% | 5% | 9% | Chinchou–Lanturn | Horsea–Seadra |
-| 9 | 2% | 4% | 9% | Krabby–Kingler | Qwilfish |
-| 10 | 2% | 4% | 9% | Staryu | Staryu |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 3 | 10% | 12% | 11% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
+| 5 | 8% | 9% | 10% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 6 | 4% | 7% | 10% | Shellder | Horsea–Seadra |
+| 7 | 3% | 6% | 10% | Horsea–Seadra | Staryu |
+| 8 | 3% | 5% | 9% | Corsola | Chinchou–Lanturn |
+| 9 | 2% | 4% | 9% | Chinchou–Lanturn | Shellder |
+| 10 | 2% | 4% | 9% | Qwilfish | Staryu |
 
 #### Route 42
 
 Road, Johto east.
 
 **`MAP_ROUTE42_HNS`**
+
+Water type: ponds and rivers.
 
 *Land*
 
@@ -1131,26 +1163,26 @@ Road, Johto east.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Marill–Azumarill | Marill–Azumarill |
-| 2 | 30% | Remoraid–Octillery | Remoraid–Octillery |
-| 3 | 5% | Goldeen–Seaking | Wooper–Quagsire |
-| 4 | 4% | Magikarp–Gyarados | Goldeen–Seaking |
+| 1 | 60% | Goldeen–Seaking | Goldeen–Seaking |
+| 2 | 30% | Marill–Azumarill | Marill–Azumarill |
+| 3 | 5% | Psyduck–Golduck | Wooper–Quagsire |
+| 4 | 4% | Magikarp–Gyarados | Psyduck–Golduck |
 | 5 | 1% | Poliwag–Poliwhirl | Magikarp–Gyarados |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Remoraid–Octillery | Remoraid–Octillery |
-| 2 | 22% | 18% | 10% | Marill–Azumarill | Marill–Azumarill |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
 | 3 | 10% | 12% | 11% | Goldeen–Seaking | Goldeen–Seaking |
-| 4 | 8% | 10% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Goldeen–Seaking | Magikarp–Gyarados |
-| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Magikarp–Gyarados | Goldeen–Seaking |
-| 8 | 3% | 5% | 9% | Remoraid–Octillery | Poliwag–Poliwhirl |
-| 9 | 2% | 4% | 9% | Goldeen–Seaking | Remoraid–Octillery |
-| 10 | 2% | 4% | 9% | Marill–Azumarill | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Marill–Azumarill | Goldeen–Seaking |
+| 6 | 4% | 7% | 10% | Psyduck–Golduck | Marill–Azumarill |
+| 7 | 3% | 6% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 8 | 3% | 5% | 9% | Poliwag–Poliwhirl | Psyduck–Golduck |
+| 9 | 2% | 4% | 9% | Marill–Azumarill | Goldeen–Seaking |
+| 10 | 2% | 4% | 9% | Magikarp–Gyarados | Poliwag–Poliwhirl |
 
 *Trees and rocks*
 
@@ -1167,6 +1199,8 @@ Road, Johto east.
 Road, Johto east.
 
 **`MAP_ROUTE43_HNS`**
+
+Water type: ponds and rivers.
 
 *Land*
 
@@ -1190,25 +1224,25 @@ Road, Johto east.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 30% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 3 | 5% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 4 | 4% | Marill–Azumarill | Poliwag–Poliwhirl |
-| 5 | 1% | Psyduck–Golduck | Marill–Azumarill |
+| 2 | 30% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 5% | Marill–Azumarill | Wooper–Quagsire |
+| 4 | 4% | Psyduck–Golduck | Marill–Azumarill |
+| 5 | 1% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
 | 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 3 | 10% | 12% | 11% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 4 | 8% | 10% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Goldeen–Seaking | Magikarp–Gyarados |
-| 6 | 4% | 7% | 10% | Psyduck–Golduck | Goldeen–Seaking |
-| 7 | 3% | 6% | 10% | Marill–Azumarill | Wooper–Quagsire |
-| 8 | 3% | 5% | 9% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 9 | 2% | 4% | 9% | Wooper–Quagsire | Marill–Azumarill |
-| 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Psyduck–Golduck |
+| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 6 | 4% | 7% | 10% | Psyduck–Golduck | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Marill–Azumarill | Marill–Azumarill |
+| 8 | 3% | 5% | 9% | Slowpoke–Slowbro | Psyduck–Golduck |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Slowpoke–Slowbro |
+| 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
 
 *Trees and rocks*
 
@@ -1225,6 +1259,8 @@ Road, Johto east.
 Road, Johto east.
 
 **`MAP_ROUTE44_HNS`**
+
+Water type: ponds and rivers.
 
 *Land*
 
@@ -1248,25 +1284,25 @@ Road, Johto east.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 2 | 30% | Remoraid–Octillery | Remoraid–Octillery |
-| 3 | 5% | Psyduck–Golduck | Wooper–Quagsire |
-| 4 | 4% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 5 | 1% | Marill–Azumarill | Psyduck–Golduck |
+| 2 | 30% | Psyduck–Golduck | Wooper–Quagsire |
+| 3 | 5% | Marill–Azumarill | Psyduck–Golduck |
+| 4 | 4% | Magikarp–Gyarados | Marill–Azumarill |
+| 5 | 1% | Goldeen–Seaking | Magikarp–Gyarados |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Remoraid–Octillery | Remoraid–Octillery |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 7 | 3% | 6% | 10% | Psyduck–Golduck | Wooper–Quagsire |
-| 8 | 3% | 5% | 9% | Remoraid–Octillery | Goldeen–Seaking |
-| 9 | 2% | 4% | 9% | Marill–Azumarill | Psyduck–Golduck |
-| 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 10% | 12% | 11% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 4 | 8% | 10% | 10% | Psyduck–Golduck | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Marill–Azumarill | Psyduck–Golduck |
+| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Marill–Azumarill |
+| 9 | 2% | 4% | 9% | Goldeen–Seaking | Poliwag–Poliwhirl |
+| 10 | 2% | 4% | 9% | Psyduck–Golduck | Goldeen–Seaking |
 
 *Trees and rocks*
 
@@ -1283,6 +1319,8 @@ Road, Johto east.
 Road, Johto east.
 
 **`MAP_ROUTE45_HNS`**
+
+Water type: ponds and rivers.
 
 *Land*
 
@@ -1306,24 +1344,24 @@ Road, Johto east.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 30% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 3 | 5% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 4 | 4% | Marill–Azumarill | Wooper–Quagsire |
-| 5 | 1% | Goldeen–Seaking | Marill–Azumarill |
+| 2 | 30% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 5% | Goldeen–Seaking | Wooper–Quagsire |
+| 4 | 4% | Marill–Azumarill | Goldeen–Seaking |
+| 5 | 1% | Psyduck–Golduck | Marill–Azumarill |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
 | 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 3 | 10% | 12% | 11% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 6 | 4% | 7% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 7 | 3% | 6% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 9 | 2% | 4% | 9% | Marill–Azumarill | Poliwag–Poliwhirl |
+| 5 | 8% | 9% | 10% | Poliwag–Poliwhirl | Goldeen–Seaking |
+| 6 | 4% | 7% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Marill–Azumarill | Poliwag–Poliwhirl |
+| 8 | 3% | 5% | 9% | Psyduck–Golduck | Marill–Azumarill |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Psyduck–Golduck |
 | 10 | 2% | 4% | 9% | Goldeen–Seaking | Goldeen–Seaking |
 
 *Trees and rocks*
@@ -1408,6 +1446,8 @@ Road, Johto west.
 
 **`MAP_ILEX_FOREST_HNS`**
 
+Water type: ponds and rivers.
+
 *Land*
 
 | Slot | Weight | Day | Night |
@@ -1439,16 +1479,16 @@ Road, Johto west.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 2 | 22% | 18% | 10% | Psyduck–Golduck | Psyduck–Golduck |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 6 | 4% | 7% | 10% | Goldeen–Seaking | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Marill–Azumarill | Goldeen–Seaking |
-| 8 | 3% | 5% | 9% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 9 | 2% | 4% | 9% | Psyduck–Golduck | Psyduck–Golduck |
-| 10 | 2% | 4% | 9% | Wooper–Quagsire | Marill–Azumarill |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 10% | 12% | 11% | Marill–Azumarill | Wooper–Quagsire |
+| 4 | 8% | 10% | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Marill–Azumarill | Marill–Azumarill |
+| 6 | 4% | 7% | 10% | Psyduck–Golduck | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Slowpoke–Slowbro | Psyduck–Golduck |
+| 8 | 3% | 5% | 9% | Goldeen–Seaking | Slowpoke–Slowbro |
+| 9 | 2% | 4% | 9% | Wooper–Quagsire | Goldeen–Seaking |
+| 10 | 2% | 4% | 9% | Magikarp–Gyarados | Poliwag–Poliwhirl |
 
 *Trees and rocks*
 
@@ -1465,6 +1505,8 @@ Road, Johto west.
 Wilds, Border.
 
 **`MAP_ROUTE27_HNS`**
+
+Water type: coast and sea.
 
 *Land*
 
@@ -1497,16 +1539,16 @@ Wilds, Border.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Shellder | Shellder |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 3 | 10% | 12% | 11% | Shellder | Shellder |
 | 4 | 8% | 10% | 10% | Krabby–Kingler | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Shellder | Staryu |
 | 6 | 4% | 7% | 10% | Corsola | Krabby–Kingler |
 | 7 | 3% | 6% | 10% | Staryu | Chinchou–Lanturn |
-| 8 | 3% | 5% | 9% | Tentacool–Tentacruel | Staryu |
-| 9 | 2% | 4% | 9% | Krabby–Kingler | Tentacool–Tentacruel |
-| 10 | 2% | 4% | 9% | Chinchou–Lanturn | Magikarp–Gyarados |
+| 8 | 3% | 5% | 9% | Slowpoke–Slowbro | Staryu |
+| 9 | 2% | 4% | 9% | Krabby–Kingler | Qwilfish |
+| 10 | 2% | 4% | 9% | Horsea–Seadra | Horsea–Seadra |
 
 *Trees and rocks*
 
@@ -1523,6 +1565,8 @@ Wilds, Border.
 Wilds, Johto west.
 
 **`MAP_ROUTE47_HNS`**
+
+Water type: coast and sea.
 
 *Land*
 
@@ -1545,26 +1589,26 @@ Wilds, Johto west.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Corsola | Seel–Dewgong |
-| 2 | 30% | Seel–Dewgong | Corsola |
-| 3 | 5% | Chinchou–Lanturn | Chinchou–Lanturn |
-| 4 | 4% | Shellder | Staryu |
+| 1 | 60% | Corsola | Corsola |
+| 2 | 30% | Shellder | Staryu |
+| 3 | 5% | Staryu | Shellder |
+| 4 | 4% | Slowpoke–Slowbro | Chinchou–Lanturn |
 | 5 | 1% | Mantine | Mantine |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Corsola | Corsola |
-| 2 | 22% | 18% | 10% | Seel–Dewgong | Seel–Dewgong |
-| 3 | 10% | 12% | 11% | Chinchou–Lanturn | Chinchou–Lanturn |
-| 4 | 8% | 10% | 10% | Shellder | Staryu |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Chinchou–Lanturn |
-| 6 | 4% | 7% | 10% | Corsola | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Krabby–Kingler | Krabby–Kingler |
+| 3 | 10% | 12% | 11% | Corsola | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
+| 5 | 8% | 9% | 10% | Chinchou–Lanturn | Corsola |
+| 6 | 4% | 7% | 10% | Corsola | Chinchou–Lanturn |
 | 7 | 3% | 6% | 10% | Staryu | Staryu |
-| 8 | 3% | 5% | 9% | Shellder | Krabby–Kingler |
-| 9 | 2% | 4% | 9% | Chinchou–Lanturn | Corsola |
-| 10 | 2% | 4% | 9% | Remoraid–Octillery | Chinchou–Lanturn |
+| 8 | 3% | 5% | 9% | Shellder | Shellder |
+| 9 | 2% | 4% | 9% | Remoraid–Octillery | Chinchou–Lanturn |
+| 10 | 2% | 4% | 9% | Corsola | Qwilfish |
 
 *Trees and rocks*
 
@@ -1581,6 +1625,8 @@ Wilds, Johto west.
 Wilds, Johto east.
 
 **`MAP_DARK_CAVE_SOUTH_SIDE_HNS`**
+
+Water type: cave water.
 
 *Land*
 
@@ -1603,28 +1649,30 @@ Wilds, Johto east.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Goldeen–Seaking | Chinchou–Lanturn |
-| 2 | 30% | Chinchou–Lanturn | Goldeen–Seaking |
-| 3 | 5% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 4% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 5 | 1% | Marill–Azumarill | Wooper–Quagsire |
+| 1 | 60% | Goldeen–Seaking | Goldeen–Seaking |
+| 2 | 30% | Zubat–Golbat | Zubat–Golbat |
+| 3 | 5% | Magikarp–Gyarados | Wooper–Quagsire |
+| 4 | 4% | Poliwag–Poliwhirl | Magikarp–Gyarados |
+| 5 | 1% | Marill–Azumarill | Poliwag–Poliwhirl |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Goldeen–Seaking | Chinchou–Lanturn |
-| 2 | 22% | 18% | 10% | Chinchou–Lanturn | Goldeen–Seaking |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Chinchou–Lanturn |
-| 4 | 8% | 10% | 10% | Goldeen–Seaking | Magikarp–Gyarados |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Goldeen–Seaking |
-| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Chinchou–Lanturn |
-| 7 | 3% | 6% | 10% | Chinchou–Lanturn | Magikarp–Gyarados |
-| 8 | 3% | 5% | 9% | Goldeen–Seaking | Poliwag–Poliwhirl |
-| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Wooper–Quagsire |
-| 10 | 2% | 4% | 9% | Marill–Azumarill | Goldeen–Seaking |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 10% | 12% | 11% | Goldeen–Seaking | Wooper–Quagsire |
+| 4 | 8% | 10% | 10% | Poliwag–Poliwhirl | Goldeen–Seaking |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Poliwag–Poliwhirl |
+| 6 | 4% | 7% | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Goldeen–Seaking | Psyduck–Golduck |
+| 8 | 3% | 5% | 9% | Psyduck–Golduck | Goldeen–Seaking |
+| 9 | 2% | 4% | 9% | Poliwag–Poliwhirl | Marill–Azumarill |
+| 10 | 2% | 4% | 9% | Wooper–Quagsire | Magikarp–Gyarados |
 
 **`MAP_DARK_CAVE_NORTH_SIDE_HNS`**
+
+Water type: cave water.
 
 *Land*
 
@@ -1647,9 +1695,9 @@ Wilds, Johto east.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Magikarp–Gyarados | Chinchou–Lanturn |
-| 2 | 30% | Chinchou–Lanturn | Magikarp–Gyarados |
-| 3 | 5% | Goldeen–Seaking | Wooper–Quagsire |
+| 1 | 60% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 30% | Goldeen–Seaking | Zubat–Golbat |
+| 3 | 5% | Zubat–Golbat | Wooper–Quagsire |
 | 4 | 4% | Marill–Azumarill | Goldeen–Seaking |
 | 5 | 1% | Poliwag–Poliwhirl | Marill–Azumarill |
 
@@ -1657,16 +1705,16 @@ Wilds, Johto east.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Chinchou–Lanturn |
-| 2 | 22% | 18% | 10% | Chinchou–Lanturn | Magikarp–Gyarados |
-| 3 | 10% | 12% | 11% | Goldeen–Seaking | Chinchou–Lanturn |
-| 4 | 8% | 10% | 10% | Magikarp–Gyarados | Goldeen–Seaking |
-| 5 | 8% | 9% | 10% | Goldeen–Seaking | Magikarp–Gyarados |
-| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Chinchou–Lanturn | Chinchou–Lanturn |
-| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Goldeen–Seaking |
-| 9 | 2% | 4% | 9% | Marill–Azumarill | Poliwag–Poliwhirl |
-| 10 | 2% | 4% | 9% | Goldeen–Seaking | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Wooper–Quagsire |
+| 4 | 8% | 10% | 10% | Poliwag–Poliwhirl | Magikarp–Gyarados |
+| 5 | 8% | 9% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 6 | 4% | 7% | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Psyduck–Golduck | Poliwag–Poliwhirl |
+| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Psyduck–Golduck |
+| 9 | 2% | 4% | 9% | Goldeen–Seaking | Marill–Azumarill |
+| 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Goldeen–Seaking |
 
 #### Cliff Edge Cave
 
@@ -1674,14 +1722,16 @@ Wilds, Johto west.
 
 **`MAP_CLIFF_EDGE_GATE_HNS`**
 
+Water type: coast and sea.
+
 *Surfing*
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Wooper–Quagsire | Chinchou–Lanturn |
-| 2 | 30% | Chinchou–Lanturn | Wooper–Quagsire |
-| 3 | 5% | Shellder | Staryu |
-| 4 | 4% | Tentacool–Tentacruel | Shellder |
+| 1 | 60% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 2 | 30% | Shellder | Chinchou–Lanturn |
+| 3 | 5% | Corsola | Shellder |
+| 4 | 4% | Tentacool–Tentacruel | Staryu |
 | 5 | 1% | Mantine | Mantine |
 
 **`MAP_CLIFF_EDGE_CAVE_HNS`**
@@ -1719,6 +1769,8 @@ Wilds, Border.
 
 **`MAP_TOHJO_FALLS_CAVERN_HNS`**
 
+Water type: cave water.
+
 *Land*
 
 | Slot | Weight | Day | Night |
@@ -1740,8 +1792,8 @@ Wilds, Border.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| 2 | 30% | Goldeen–Seaking | Goldeen–Seaking |
+| 1 | 60% | Goldeen–Seaking | Goldeen–Seaking |
+| 2 | 30% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 | 3 | 5% | Psyduck–Golduck | Wooper–Quagsire |
 | 4 | 4% | Marill–Azumarill | Psyduck–Golduck |
 | 5 | 1% | Poliwag–Poliwhirl | Marill–Azumarill |
@@ -1750,22 +1802,24 @@ Wilds, Border.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Goldeen–Seaking | Goldeen–Seaking |
-| 2 | 22% | 18% | 10% | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 10% | 12% | 11% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 | 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Goldeen–Seaking |
 | 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
 | 7 | 3% | 6% | 10% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 | 8 | 3% | 5% | 9% | Psyduck–Golduck | Poliwag–Poliwhirl |
-| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Psyduck–Golduck |
-| 10 | 2% | 4% | 9% | Marill–Azumarill | Magikarp–Gyarados |
+| 9 | 2% | 4% | 9% | Marill–Azumarill | Psyduck–Golduck |
+| 10 | 2% | 4% | 9% | Goldeen–Seaking | Zubat–Golbat |
 
 #### Ruins of Alph
 
 Wilds, Johto east.
 
 **`MAP_RUINS_OF_ALPH_OUTSIDE_HNS`**
+
+Water type: ponds and rivers.
 
 *Land*
 
@@ -1798,16 +1852,16 @@ Wilds, Johto east.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Wooper–Quagsire | Wooper–Quagsire |
-| 2 | 22% | 18% | 10% | Wooper–Quagsire | Wooper–Quagsire |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Poliwag–Poliwhirl | Psyduck–Golduck |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 6 | 4% | 7% | 10% | Marill–Azumarill | Poliwag–Poliwhirl |
-| 7 | 3% | 6% | 10% | Poliwag–Poliwhirl | Psyduck–Golduck |
-| 8 | 3% | 5% | 9% | Goldeen–Seaking | Marill–Azumarill |
-| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Goldeen–Seaking |
-| 10 | 2% | 4% | 9% | Wooper–Quagsire | Wooper–Quagsire |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 10% | 12% | 11% | Wooper–Quagsire | Wooper–Quagsire |
+| 4 | 8% | 10% | 10% | Wooper–Quagsire | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Marill–Azumarill | Psyduck–Golduck |
+| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Goldeen–Seaking | Marill–Azumarill |
+| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Psyduck–Golduck |
+| 9 | 2% | 4% | 9% | Wooper–Quagsire | Goldeen–Seaking |
+| 10 | 2% | 4% | 9% | Marill–Azumarill | Poliwag–Poliwhirl |
 
 *Trees and rocks*
 
@@ -1886,6 +1940,8 @@ Wilds, Johto east.
 
 **`MAP_LAKE_OF_RAGE_HNS`**
 
+Water type: ponds and rivers.
+
 *Surfing*
 
 | Slot | Weight | Day | Night |
@@ -1901,12 +1957,12 @@ Wilds, Johto east.
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
 | 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 3 | 10% | 12% | 11% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 4 | 8% | 10% | 10% | Goldeen–Seaking | Poliwag–Poliwhirl |
+| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 6 | 4% | 7% | 10% | Wooper–Quagsire | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Marill–Azumarill | Goldeen–Seaking |
+| 6 | 4% | 7% | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Wooper–Quagsire | Goldeen–Seaking |
 | 8 | 3% | 5% | 9% | Magikarp–Gyarados | Psyduck–Golduck |
 | 9 | 2% | 4% | 9% | Totodile–Feraligatr | Totodile–Feraligatr |
 | 10 | 2% | 4% | 9% | Goldeen–Seaking | Magikarp–Gyarados |
@@ -1926,6 +1982,8 @@ Wilds, Johto east.
 Outlands, Border.
 
 **`MAP_ROUTE26_HNS`**
+
+Water type: coast and sea.
 
 *Land*
 
@@ -1958,16 +2016,16 @@ Outlands, Border.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Shellder–Cloyster | Shellder–Cloyster |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Chinchou–Lanturn |
-| 4 | 8% | 10% | 10% | Krabby–Kingler | Staryu–Starmie |
-| 5 | 8% | 9% | 10% | Staryu–Starmie | Magikarp–Gyarados |
+| 3 | 10% | 12% | 11% | Shellder–Cloyster | Shellder–Cloyster |
+| 4 | 8% | 10% | 10% | Krabby–Kingler | Chinchou–Lanturn |
+| 5 | 8% | 9% | 10% | Staryu–Starmie | Staryu–Starmie |
 | 6 | 4% | 7% | 10% | Corsola | Chinchou–Lanturn |
-| 7 | 3% | 6% | 10% | Magikarp–Gyarados | Staryu–Starmie |
-| 8 | 3% | 5% | 9% | Remoraid–Octillery | Krabby–Kingler |
-| 9 | 2% | 4% | 9% | Horsea–Kingdra | Horsea–Kingdra |
-| 10 | 2% | 4% | 9% | Chinchou–Lanturn | Remoraid–Octillery |
+| 7 | 3% | 6% | 10% | Remoraid–Octillery | Staryu–Starmie |
+| 8 | 3% | 5% | 9% | Horsea–Kingdra | Horsea–Kingdra |
+| 9 | 2% | 4% | 9% | Shellder–Cloyster | Qwilfish |
+| 10 | 2% | 4% | 9% | Slowpoke–Slowbro | Remoraid–Octillery |
 
 *Trees and rocks*
 
@@ -1984,6 +2042,8 @@ Outlands, Border.
 Outlands, Border.
 
 **`MAP_ROUTE28_HNS`**
+
+Water type: ponds and rivers.
 
 *Land*
 
@@ -2007,25 +2067,25 @@ Outlands, Border.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Poliwag–Poliwrath | Poliwag–Poliwrath |
-| 2 | 30% | Poliwag–Poliwrath | Poliwag–Poliwrath |
+| 2 | 30% | Psyduck–Golduck | Psyduck–Golduck |
 | 3 | 5% | Goldeen–Seaking | Wooper–Quagsire |
-| 4 | 4% | Poliwag–Politoed | Goldeen–Seaking |
-| 5 | 1% | Magikarp–Gyarados | Poliwag–Politoed |
+| 4 | 4% | Poliwag–Politoed | Poliwag–Politoed |
+| 5 | 1% | Slowpoke–Slowbro | Slowpoke–Slowking |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Poliwag–Poliwrath | Poliwag–Poliwrath |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 2 | 22% | 18% | 10% | Poliwag–Poliwrath | Poliwag–Poliwrath |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Poliwag–Poliwrath | Poliwag–Poliwrath |
-| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Goldeen–Seaking | Psyduck–Golduck |
-| 8 | 3% | 5% | 9% | Poliwag–Politoed | Poliwag–Politoed |
+| 3 | 10% | 12% | 11% | Goldeen–Seaking | Goldeen–Seaking |
+| 4 | 8% | 10% | 10% | Psyduck–Golduck | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Poliwag–Poliwrath | Psyduck–Golduck |
+| 6 | 4% | 7% | 10% | Slowpoke–Slowbro | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Poliwag–Politoed | Poliwag–Politoed |
+| 8 | 3% | 5% | 9% | Goldeen–Seaking | Slowpoke–Slowking |
 | 9 | 2% | 4% | 9% | Psyduck–Golduck | Goldeen–Seaking |
-| 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 10 | 2% | 4% | 9% | Magikarp–Gyarados | Poliwag–Poliwrath |
 
 *Trees and rocks*
 
@@ -2042,6 +2102,8 @@ Outlands, Border.
 Dungeon, Johto east.
 
 **`MAP_UNION_CAVE_1F_HNS`**
+
+Water type: cave water.
 
 *Land*
 
@@ -2066,7 +2128,7 @@ Dungeon, Johto east.
 | --- | --- | --- | --- |
 | 1 | 60% | Wooper–Quagsire | Wooper–Quagsire |
 | 2 | 30% | Wooper–Quagsire | Wooper–Quagsire |
-| 3 | 5% | Goldeen–Seaking | Chinchou–Lanturn |
+| 3 | 5% | Goldeen–Seaking | Zubat–Golbat |
 | 4 | 4% | Poliwag–Poliwhirl | Goldeen–Seaking |
 | 5 | 1% | Psyduck–Golduck | Poliwag–Poliwhirl |
 
@@ -2074,18 +2136,20 @@ Dungeon, Johto east.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Goldeen–Seaking | Goldeen–Seaking |
-| 2 | 22% | 18% | 10% | Wooper–Quagsire | Wooper–Quagsire |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Goldeen–Seaking | Chinchou–Lanturn |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Chinchou–Lanturn |
-| 7 | 3% | 6% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 8 | 3% | 5% | 9% | Wooper–Quagsire | Wooper–Quagsire |
-| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Poliwag–Poliwhirl |
-| 10 | 2% | 4% | 9% | Chinchou–Lanturn | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 10% | 12% | 11% | Wooper–Quagsire | Wooper–Quagsire |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Zubat–Golbat |
+| 5 | 8% | 9% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Goldeen–Seaking |
+| 7 | 3% | 6% | 10% | Wooper–Quagsire | Zubat–Golbat |
+| 8 | 3% | 5% | 9% | Psyduck–Golduck | Poliwag–Poliwhirl |
+| 9 | 2% | 4% | 9% | Goldeen–Seaking | Psyduck–Golduck |
+| 10 | 2% | 4% | 9% | Marill–Azumarill | Wooper–Quagsire |
 
 **`MAP_UNION_CAVE_B1F_HNS`**
+
+Water type: cave water.
 
 *Land*
 
@@ -2108,9 +2172,9 @@ Dungeon, Johto east.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Wooper–Quagsire | Wooper–Quagsire |
-| 2 | 30% | Marill–Azumarill | Marill–Azumarill |
-| 3 | 5% | Goldeen–Seaking | Chinchou–Lanturn |
+| 1 | 60% | Marill–Azumarill | Marill–Azumarill |
+| 2 | 30% | Wooper–Quagsire | Wooper–Quagsire |
+| 3 | 5% | Goldeen–Seaking | Zubat–Golbat |
 | 4 | 4% | Poliwag–Poliwhirl | Goldeen–Seaking |
 | 5 | 1% | Psyduck–Golduck | Psyduck–Golduck |
 
@@ -2118,18 +2182,20 @@ Dungeon, Johto east.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Wooper–Quagsire | Wooper–Quagsire |
-| 2 | 22% | 18% | 10% | Marill–Azumarill | Marill–Azumarill |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Goldeen–Seaking | Chinchou–Lanturn |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Goldeen–Seaking |
-| 6 | 4% | 7% | 10% | Goldeen–Seaking | Chinchou–Lanturn |
-| 7 | 3% | 6% | 10% | Poliwag–Poliwhirl | Magikarp–Gyarados |
-| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Goldeen–Seaking |
-| 9 | 2% | 4% | 9% | Chinchou–Lanturn | Poliwag–Poliwhirl |
-| 10 | 2% | 4% | 9% | Wooper–Quagsire | Wooper–Quagsire |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 10% | 12% | 11% | Marill–Azumarill | Marill–Azumarill |
+| 4 | 8% | 10% | 10% | Wooper–Quagsire | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Goldeen–Seaking | Zubat–Golbat |
+| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Marill–Azumarill | Goldeen–Seaking |
+| 8 | 3% | 5% | 9% | Psyduck–Golduck | Zubat–Golbat |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Poliwag–Poliwhirl |
+| 10 | 2% | 4% | 9% | Wooper–Quagsire | Marill–Azumarill |
 
 **`MAP_UNION_CAVE_B2F_HNS`**
+
+Water type: coast and sea.
 
 *Land*
 
@@ -2152,26 +2218,26 @@ Dungeon, Johto east.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Wooper–Quagsire | Wooper–Quagsire |
-| 2 | 30% | Shellder | Shellder |
-| 3 | 5% | Lapras | Chinchou–Lanturn |
-| 4 | 4% | Tentacool–Tentacruel | Lapras |
-| 5 | 1% | Chinchou–Lanturn | Staryu |
+| 1 | 60% | Shellder | Shellder |
+| 2 | 30% | Tentacool–Tentacruel | Chinchou–Lanturn |
+| 3 | 5% | Lapras | Lapras |
+| 4 | 4% | Chinchou–Lanturn | Tentacool–Tentacruel |
+| 5 | 1% | Slowpoke–Slowbro | Staryu |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Shellder | Shellder |
-| 2 | 22% | 18% | 10% | Wooper–Quagsire | Wooper–Quagsire |
-| 3 | 10% | 12% | 11% | Chinchou–Lanturn | Chinchou–Lanturn |
-| 4 | 8% | 10% | 10% | Tentacool–Tentacruel | Staryu |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Chinchou–Lanturn |
-| 6 | 4% | 7% | 10% | Shellder | Magikarp–Gyarados |
-| 7 | 3% | 6% | 10% | Tentacool–Tentacruel | Staryu |
-| 8 | 3% | 5% | 9% | Chinchou–Lanturn | Tentacool–Tentacruel |
-| 9 | 2% | 4% | 9% | Krabby–Kingler | Staryu |
-| 10 | 2% | 4% | 9% | Staryu | Krabby–Kingler |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 3 | 10% | 12% | 11% | Shellder | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Chinchou–Lanturn | Shellder |
+| 5 | 8% | 9% | 10% | Shellder | Staryu |
+| 6 | 4% | 7% | 10% | Krabby–Kingler | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Chinchou–Lanturn | Staryu |
+| 8 | 3% | 5% | 9% | Tentacool–Tentacruel | Krabby–Kingler |
+| 9 | 2% | 4% | 9% | Staryu | Chinchou–Lanturn |
+| 10 | 2% | 4% | 9% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 
 #### Ice Path
 
@@ -2320,6 +2386,8 @@ Dungeon, Johto west.
 
 **`MAP_SLOWPOKE_WELL_B1F_HNS`**
 
+Water type: cave water.
+
 *Land*
 
 | Slot | Weight | Day | Night |
@@ -2344,25 +2412,27 @@ Dungeon, Johto west.
 | 1 | 60% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 | 2 | 30% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 | 3 | 5% | Marill–Azumarill | Wooper–Quagsire |
-| 4 | 4% | Psyduck–Golduck | Marill–Azumarill |
-| 5 | 1% | Wooper–Quagsire | Chinchou–Lanturn |
+| 4 | 4% | Psyduck–Golduck | Zubat–Golbat |
+| 5 | 1% | Wooper–Quagsire | Marill–Azumarill |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| 2 | 22% | 18% | 10% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
 | 3 | 10% | 12% | 11% | Marill–Azumarill | Wooper–Quagsire |
-| 4 | 8% | 10% | 10% | Goldeen–Seaking | Marill–Azumarill |
-| 5 | 8% | 9% | 10% | Wooper–Quagsire | Wooper–Quagsire |
-| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Goldeen–Seaking |
-| 7 | 3% | 6% | 10% | Marill–Azumarill | Chinchou–Lanturn |
-| 8 | 3% | 5% | 9% | Poliwag–Poliwhirl | Marill–Azumarill |
-| 9 | 2% | 4% | 9% | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| 10 | 2% | 4% | 9% | Wooper–Quagsire | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 6 | 4% | 7% | 10% | Wooper–Quagsire | Marill–Azumarill |
+| 7 | 3% | 6% | 10% | Slowpoke–Slowbro | Zubat–Golbat |
+| 8 | 3% | 5% | 9% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 9 | 2% | 4% | 9% | Goldeen–Seaking | Slowpoke–Slowbro |
+| 10 | 2% | 4% | 9% | Marill–Azumarill | Poliwag–Poliwhirl |
 
 **`MAP_SLOWPOKE_WELL_B2F_HNS`**
+
+Water type: cave water.
 
 *Land*
 
@@ -2389,22 +2459,22 @@ Dungeon, Johto west.
 | 2 | 30% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 | 3 | 5% | Slowpoke–Slowking | Wooper–Quagsire |
 | 4 | 4% | Marill–Azumarill | Slowpoke–Slowking |
-| 5 | 1% | Wooper–Quagsire | Chinchou–Lanturn |
+| 5 | 1% | Wooper–Quagsire | Zubat–Golbat |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| 2 | 22% | 18% | 10% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
 | 3 | 10% | 12% | 11% | Marill–Azumarill | Wooper–Quagsire |
-| 4 | 8% | 10% | 10% | Goldeen–Seaking | Marill–Azumarill |
-| 5 | 8% | 9% | 10% | Slowpoke–Slowking | Slowpoke–Slowking |
-| 6 | 4% | 7% | 10% | Wooper–Quagsire | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Marill–Azumarill | Chinchou–Lanturn |
-| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Marill–Azumarill |
+| 4 | 8% | 10% | 10% | Slowpoke–Slowking | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Marill–Azumarill | Slowpoke–Slowking |
+| 6 | 4% | 7% | 10% | Slowpoke–Slowbro | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Wooper–Quagsire | Zubat–Golbat |
+| 8 | 3% | 5% | 9% | Psyduck–Golduck | Marill–Azumarill |
 | 9 | 2% | 4% | 9% | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| 10 | 2% | 4% | 9% | Wooper–Quagsire | Chinchou–Lanturn |
+| 10 | 2% | 4% | 9% | Marill–Azumarill | Psyduck–Golduck |
 
 #### Burned Tower
 
@@ -2477,6 +2547,8 @@ Dungeon, Johto east.
 
 **`MAP_MT_MORTAR_1F_SOUTH_HNS`**
 
+Water type: cave water.
+
 *Land*
 
 | Slot | Weight | Day | Night |
@@ -2502,24 +2574,26 @@ Dungeon, Johto east.
 | 2 | 30% | Goldeen–Seaking | Goldeen–Seaking |
 | 3 | 5% | Psyduck–Golduck | Wooper–Quagsire |
 | 4 | 4% | Poliwag–Poliwhirl | Psyduck–Golduck |
-| 5 | 1% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 5 | 1% | Magikarp–Gyarados | Zubat–Golbat |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Goldeen–Seaking | Goldeen–Seaking |
-| 2 | 22% | 18% | 10% | Marill–Azumarill | Marill–Azumarill |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 10% | 12% | 11% | Marill–Azumarill | Marill–Azumarill |
 | 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 8 | 3% | 5% | 9% | Psyduck–Golduck | Poliwag–Poliwhirl |
-| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 10 | 2% | 4% | 9% | Marill–Azumarill | Psyduck–Golduck |
+| 5 | 8% | 9% | 10% | Poliwag–Poliwhirl | Goldeen–Seaking |
+| 6 | 4% | 7% | 10% | Psyduck–Golduck | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Marill–Azumarill | Psyduck–Golduck |
+| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Marill–Azumarill |
+| 9 | 2% | 4% | 9% | Goldeen–Seaking | Zubat–Golbat |
+| 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
 
 **`MAP_MT_MORTAR_1F_NORTH_HNS`**
+
+Water type: cave water.
 
 *Land*
 
@@ -2544,26 +2618,28 @@ Dungeon, Johto east.
 | --- | --- | --- | --- |
 | 1 | 60% | Marill–Azumarill | Wooper–Quagsire |
 | 2 | 30% | Wooper–Quagsire | Marill–Azumarill |
-| 3 | 5% | Psyduck–Golduck | Goldeen–Seaking |
+| 3 | 5% | Psyduck–Golduck | Zubat–Golbat |
 | 4 | 4% | Goldeen–Seaking | Psyduck–Golduck |
-| 5 | 1% | Magikarp–Gyarados | Chinchou–Lanturn |
+| 5 | 1% | Magikarp–Gyarados | Goldeen–Seaking |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Marill–Azumarill | Wooper–Quagsire |
-| 2 | 22% | 18% | 10% | Wooper–Quagsire | Marill–Azumarill |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Goldeen–Seaking | Chinchou–Lanturn |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Psyduck–Golduck | Goldeen–Seaking |
-| 8 | 3% | 5% | 9% | Goldeen–Seaking | Chinchou–Lanturn |
-| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Poliwag–Poliwhirl |
-| 10 | 2% | 4% | 9% | Marill–Azumarill | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 10% | 12% | 11% | Marill–Azumarill | Wooper–Quagsire |
+| 4 | 8% | 10% | 10% | Wooper–Quagsire | Marill–Azumarill |
+| 5 | 8% | 9% | 10% | Psyduck–Golduck | Zubat–Golbat |
+| 6 | 4% | 7% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Poliwag–Poliwhirl | Goldeen–Seaking |
+| 8 | 3% | 5% | 9% | Marill–Azumarill | Psyduck–Golduck |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Marill–Azumarill |
+| 10 | 2% | 4% | 9% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 
 **`MAP_MT_MORTAR_2F_HNS`**
+
+Water type: cave water.
 
 *Land*
 
@@ -2586,28 +2662,30 @@ Dungeon, Johto east.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Marill–Azumarill | Marill–Azumarill |
-| 2 | 30% | Goldeen–Seaking | Goldeen–Seaking |
+| 1 | 60% | Goldeen–Seaking | Goldeen–Seaking |
+| 2 | 30% | Marill–Azumarill | Marill–Azumarill |
 | 3 | 5% | Psyduck–Golduck | Wooper–Quagsire |
 | 4 | 4% | Poliwag–Poliwhirl | Psyduck–Golduck |
-| 5 | 1% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 5 | 1% | Slowpoke–Slowbro | Zubat–Golbat |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Goldeen–Seaking | Goldeen–Seaking |
-| 2 | 22% | 18% | 10% | Marill–Azumarill | Marill–Azumarill |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 8 | 3% | 5% | 9% | Psyduck–Golduck | Poliwag–Poliwhirl |
-| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 10 | 2% | 4% | 9% | Marill–Azumarill | Psyduck–Golduck |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 10% | 12% | 11% | Goldeen–Seaking | Goldeen–Seaking |
+| 4 | 8% | 10% | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Psyduck–Golduck | Marill–Azumarill |
+| 6 | 4% | 7% | 10% | Slowpoke–Slowbro | Zubat–Golbat |
+| 7 | 3% | 6% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 8 | 3% | 5% | 9% | Marill–Azumarill | Slowpoke–Slowbro |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Psyduck–Golduck |
+| 10 | 2% | 4% | 9% | Goldeen–Seaking | Marill–Azumarill |
 
 **`MAP_MT_MORTAR_B1F_HNS`**
+
+Water type: cave water.
 
 *Land*
 
@@ -2631,25 +2709,25 @@ Dungeon, Johto east.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Marill–Azumarill | Marill–Azumarill |
-| 2 | 30% | Goldeen–Seaking | Goldeen–Seaking |
-| 3 | 5% | Psyduck–Golduck | Wooper–Quagsire |
-| 4 | 4% | Magikarp–Gyarados | Psyduck–Golduck |
-| 5 | 1% | Poliwag–Poliwhirl | Magikarp–Gyarados |
+| 2 | 30% | Goldeen–Seaking | Zubat–Golbat |
+| 3 | 5% | Slowpoke–Slowbro | Goldeen–Seaking |
+| 4 | 4% | Psyduck–Golduck | Wooper–Quagsire |
+| 5 | 1% | Poliwag–Poliwhirl | Slowpoke–Slowbro |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Marill–Azumarill | Marill–Azumarill |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Psyduck–Golduck | Goldeen–Seaking |
-| 8 | 3% | 5% | 9% | Goldeen–Seaking | Psyduck–Golduck |
-| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Poliwag–Poliwhirl |
-| 10 | 2% | 4% | 9% | Marill–Azumarill | Magikarp–Gyarados |
+| 3 | 10% | 12% | 11% | Marill–Azumarill | Marill–Azumarill |
+| 4 | 8% | 10% | 10% | Slowpoke–Slowbro | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Goldeen–Seaking | Zubat–Golbat |
+| 6 | 4% | 7% | 10% | Psyduck–Golduck | Slowpoke–Slowbro |
+| 7 | 3% | 6% | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 8 | 3% | 5% | 9% | Poliwag–Poliwhirl | Psyduck–Golduck |
+| 9 | 2% | 4% | 9% | Slowpoke–Slowbro | Marill–Azumarill |
+| 10 | 2% | 4% | 9% | Magikarp–Gyarados | Goldeen–Seaking |
 
 #### Tin Tower
 
@@ -2794,6 +2872,8 @@ Dungeon, Johto east.
 
 **`MAP_DRAGONS_DEN_CAVERN_HNS`**
 
+Water type: cave water.
+
 *Surfing*
 
 | Slot | Weight | Day | Night |
@@ -2801,29 +2881,31 @@ Dungeon, Johto east.
 | 1 | 60% | Magikarp–Gyarados | Dratini–Dragonite |
 | 2 | 30% | Horsea–Seadra | Magikarp–Gyarados |
 | 3 | 5% | Dratini–Dragonite | Horsea–Seadra |
-| 4 | 4% | Horsea–Kingdra | Dratini–Dragonite |
-| 5 | 1% | Dratini–Dragonite | Horsea–Kingdra |
+| 4 | 4% | Slowpoke–Slowbro | Dratini–Dragonite |
+| 5 | 1% | Dratini–Dragonite | Psyduck–Golduck |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Dratini–Dragonite |
-| 2 | 22% | 18% | 10% | Horsea–Seadra | Magikarp–Gyarados |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Dratini–Dragonite |
-| 4 | 8% | 10% | 10% | Horsea–Seadra | Horsea–Seadra |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 10% | 12% | 11% | Horsea–Seadra | Dratini–Dragonite |
+| 4 | 8% | 10% | 10% | Magikarp–Gyarados | Horsea–Seadra |
 | 5 | 8% | 9% | 10% | Dratini–Dragonite | Dratini–Dragonite |
-| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 7 | 3% | 6% | 10% | Dratini–Dragonite | Horsea–Seadra |
-| 8 | 3% | 5% | 9% | Horsea–Seadra | Dratini–Dragonite |
-| 9 | 2% | 4% | 9% | Horsea–Kingdra | Horsea–Kingdra |
-| 10 | 2% | 4% | 9% | Dratini–Dragonite | Dratini–Dragonite |
+| 6 | 4% | 7% | 10% | Horsea–Seadra | Magikarp–Gyarados |
+| 7 | 3% | 6% | 10% | Psyduck–Golduck | Dratini–Dragonite |
+| 8 | 3% | 5% | 9% | Dratini–Dragonite | Horsea–Seadra |
+| 9 | 2% | 4% | 9% | Slowpoke–Slowbro | Psyduck–Golduck |
+| 10 | 2% | 4% | 9% | Goldeen–Seaking | Dratini–Dragonite |
 
 #### Whirl Islands
 
 Dungeon, Johto west.
 
 **`MAP_WHIRL_ISLANDS_1F_HNS`**
+
+Water type: coast and sea.
 
 *Land*
 
@@ -2856,18 +2938,20 @@ Dungeon, Johto west.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Corsola | Krabby–Kingler |
-| 2 | 22% | 18% | 10% | Krabby–Kingler | Corsola |
-| 3 | 10% | 12% | 11% | Qwilfish | Chinchou–Lanturn |
-| 4 | 8% | 10% | 10% | Horsea–Seadra | Qwilfish |
-| 5 | 8% | 9% | 10% | Corsola | Staryu |
-| 6 | 4% | 7% | 10% | Krabby–Kingler | Corsola |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Krabby–Kingler | Krabby–Kingler |
+| 3 | 10% | 12% | 11% | Corsola | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Qwilfish | Corsola |
+| 5 | 8% | 9% | 10% | Qwilfish | Staryu |
+| 6 | 4% | 7% | 10% | Corsola | Qwilfish |
 | 7 | 3% | 6% | 10% | Staryu | Chinchou–Lanturn |
-| 8 | 3% | 5% | 9% | Qwilfish | Staryu |
+| 8 | 3% | 5% | 9% | Krabby–Kingler | Staryu |
 | 9 | 2% | 4% | 9% | Chinchou–Lanturn | Horsea–Seadra |
-| 10 | 2% | 4% | 9% | Horsea–Seadra | Qwilfish |
+| 10 | 2% | 4% | 9% | Horsea–Seadra | Corsola |
 
 **`MAP_WHIRL_ISLANDS_B1F_HNS`**
+
+Water type: coast and sea.
 
 *Land*
 
@@ -2892,21 +2976,21 @@ Dungeon, Johto west.
 | --- | --- | --- | --- |
 | 1 | 60% | Horsea–Seadra | Chinchou–Lanturn |
 | 2 | 30% | Chinchou–Lanturn | Horsea–Seadra |
-| 3 | 5% | Mantine | Mantine |
-| 4 | 4% | Corsola | Horsea–Kingdra |
+| 3 | 5% | Mantine | Staryu |
+| 4 | 4% | Corsola | Mantine |
 | 5 | 1% | Mantyke | Corsola |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Horsea–Seadra | Chinchou–Lanturn |
-| 2 | 22% | 18% | 10% | Chinchou–Lanturn | Horsea–Seadra |
-| 3 | 10% | 12% | 11% | Corsola | Corsola |
-| 4 | 8% | 10% | 10% | Qwilfish | Staryu |
-| 5 | 8% | 9% | 10% | Horsea–Seadra | Qwilfish |
-| 6 | 4% | 7% | 10% | Corsola | Staryu |
-| 7 | 3% | 6% | 10% | Staryu | Chinchou–Lanturn |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 3 | 10% | 12% | 11% | Corsola | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
+| 5 | 8% | 9% | 10% | Qwilfish | Staryu |
+| 6 | 4% | 7% | 10% | Horsea–Seadra | Qwilfish |
+| 7 | 3% | 6% | 10% | Staryu | Staryu |
 | 8 | 3% | 5% | 9% | Remoraid–Octillery | Remoraid–Octillery |
 | 9 | 2% | 4% | 9% | Horsea–Kingdra | Horsea–Kingdra |
 | 10 | 2% | 4% | 9% | Chinchou–Lanturn | Shellder–Cloyster |
@@ -2932,6 +3016,8 @@ Dungeon, Johto west.
 
 **`MAP_WHIRL_ISLANDS_B2F_HNS`**
 
+Water type: coast and sea.
+
 *Land*
 
 | Slot | Weight | Day | Night |
@@ -2953,8 +3039,8 @@ Dungeon, Johto west.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Horsea–Seadra | Qwilfish |
-| 2 | 30% | Qwilfish | Horsea–Seadra |
+| 1 | 60% | Horsea–Seadra | Horsea–Seadra |
+| 2 | 30% | Qwilfish | Qwilfish |
 | 3 | 5% | Lapras | Chinchou–Lanturn |
 | 4 | 4% | Mantine | Lapras |
 | 5 | 1% | Horsea–Kingdra | Horsea–Kingdra |
@@ -2963,18 +3049,20 @@ Dungeon, Johto west.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Qwilfish | Qwilfish |
-| 2 | 22% | 18% | 10% | Horsea–Seadra | Horsea–Seadra |
-| 3 | 10% | 12% | 11% | Corsola | Chinchou–Lanturn |
-| 4 | 8% | 10% | 10% | Chinchou–Lanturn | Corsola |
-| 5 | 8% | 9% | 10% | Qwilfish | Staryu |
-| 6 | 4% | 7% | 10% | Horsea–Seadra | Chinchou–Lanturn |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Krabby–Kingler | Krabby–Kingler |
+| 3 | 10% | 12% | 11% | Qwilfish | Qwilfish |
+| 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
+| 5 | 8% | 9% | 10% | Corsola | Qwilfish |
+| 6 | 4% | 7% | 10% | Qwilfish | Staryu |
 | 7 | 3% | 6% | 10% | Horsea–Kingdra | Horsea–Kingdra |
 | 8 | 3% | 5% | 9% | Remoraid–Octillery | Staryu |
 | 9 | 2% | 4% | 9% | Shellder–Cloyster | Shellder–Cloyster |
-| 10 | 2% | 4% | 9% | Staryu | Remoraid–Octillery |
+| 10 | 2% | 4% | 9% | Slowpoke–Slowbro | Chinchou–Lanturn |
 
 **`MAP_WHIRL_ISLANDS_B3F_HNS`**
+
+Water type: coast and sea.
 
 *Land*
 
@@ -2997,8 +3085,8 @@ Dungeon, Johto west.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Qwilfish | Horsea–Seadra |
-| 2 | 30% | Horsea–Seadra | Qwilfish |
+| 1 | 60% | Qwilfish | Qwilfish |
+| 2 | 30% | Horsea–Seadra | Horsea–Seadra |
 | 3 | 5% | Lapras | Chinchou–Lanturn |
 | 4 | 4% | Mantine | Lapras |
 | 5 | 1% | Horsea–Kingdra | Horsea–Kingdra |
@@ -3007,18 +3095,20 @@ Dungeon, Johto west.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Qwilfish | Horsea–Seadra |
-| 2 | 22% | 18% | 10% | Horsea–Seadra | Qwilfish |
-| 3 | 10% | 12% | 11% | Corsola | Chinchou–Lanturn |
-| 4 | 8% | 10% | 10% | Krabby–Kingler | Corsola |
-| 5 | 8% | 9% | 10% | Horsea–Seadra | Staryu |
-| 6 | 4% | 7% | 10% | Qwilfish | Chinchou–Lanturn |
-| 7 | 3% | 6% | 10% | Horsea–Kingdra | Horsea–Kingdra |
-| 8 | 3% | 5% | 9% | Staryu | Krabby–Kingler |
-| 9 | 2% | 4% | 9% | Shellder–Cloyster | Shellder–Cloyster |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 3 | 10% | 12% | 11% | Qwilfish | Qwilfish |
+| 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
+| 5 | 8% | 9% | 10% | Corsola | Qwilfish |
+| 6 | 4% | 7% | 10% | Horsea–Kingdra | Staryu |
+| 7 | 3% | 6% | 10% | Staryu | Horsea–Kingdra |
+| 8 | 3% | 5% | 9% | Shellder–Cloyster | Chinchou–Lanturn |
+| 9 | 2% | 4% | 9% | Slowpoke–Slowking | Shellder–Cloyster |
 | 10 | 2% | 4% | 9% | Chinchou–Lanturn | Staryu |
 
 **`MAP_WHIRL_ISLANDS_DESCENT_HNS`**
+
+Water type: coast and sea.
 
 *Land*
 
@@ -3041,32 +3131,34 @@ Dungeon, Johto west.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Horsea–Kingdra | Chinchou–Lanturn |
-| 2 | 30% | Chinchou–Lanturn | Horsea–Kingdra |
+| 1 | 60% | Horsea–Kingdra | Horsea–Kingdra |
+| 2 | 30% | Tentacool–Tentacruel | Chinchou–Lanturn |
 | 3 | 5% | Lapras | Lapras |
 | 4 | 4% | Mantine | Tentacool–Tentacruel |
-| 5 | 1% | Tentacool–Tentacruel | Mantine |
+| 5 | 1% | Slowpoke–Slowking | Mantine |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Horsea–Kingdra | Chinchou–Lanturn |
-| 2 | 22% | 18% | 10% | Chinchou–Lanturn | Horsea–Kingdra |
-| 3 | 10% | 12% | 11% | Qwilfish | Qwilfish |
-| 4 | 8% | 10% | 10% | Shellder–Cloyster | Staryu |
-| 5 | 8% | 9% | 10% | Horsea–Kingdra | Shellder–Cloyster |
-| 6 | 4% | 7% | 10% | Corsola | Chinchou–Lanturn |
-| 7 | 3% | 6% | 10% | Staryu | Horsea–Kingdra |
-| 8 | 3% | 5% | 9% | Chinchou–Lanturn | Staryu |
-| 9 | 2% | 4% | 9% | Shellder–Cloyster | Corsola |
-| 10 | 2% | 4% | 9% | Remoraid–Octillery | Remoraid–Octillery |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Krabby–Kingler | Krabby–Kingler |
+| 3 | 10% | 12% | 11% | Horsea–Kingdra | Horsea–Kingdra |
+| 4 | 8% | 10% | 10% | Shellder–Cloyster | Chinchou–Lanturn |
+| 5 | 8% | 9% | 10% | Qwilfish | Staryu–Starmie |
+| 6 | 4% | 7% | 10% | Corsola | Shellder–Cloyster |
+| 7 | 3% | 6% | 10% | Staryu–Starmie | Chinchou–Lanturn |
+| 8 | 3% | 5% | 9% | Slowpoke–Slowking | Qwilfish |
+| 9 | 2% | 4% | 9% | Horsea–Kingdra | Staryu–Starmie |
+| 10 | 2% | 4% | 9% | Remoraid–Octillery | Horsea–Kingdra |
 
 #### Mt. Silver
 
 Dungeon, Border.
 
 **`MAP_MT_SILVER_OUTSIDE_HNS`**
+
+Water type: ponds and rivers.
 
 *Land*
 
@@ -3099,16 +3191,16 @@ Dungeon, Border.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 2 | 22% | 18% | 10% | Psyduck–Golduck | Psyduck–Golduck |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 10% | 12% | 11% | Psyduck–Golduck | Psyduck–Golduck |
 | 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 8 | 3% | 5% | 9% | Psyduck–Golduck | Psyduck–Golduck |
-| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 6 | 4% | 7% | 10% | Psyduck–Golduck | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Marill–Azumarill | Goldeen–Seaking |
+| 8 | 3% | 5% | 9% | Goldeen–Seaking | Psyduck–Golduck |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Marill–Azumarill |
+| 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Magikarp–Gyarados |
 
 *Trees and rocks*
 
@@ -3121,6 +3213,8 @@ Dungeon, Border.
 | 5 | 1% | Aipom | Scyther |
 
 **`MAP_MT_SILVER_1F_WATERFALL_ROOM_HNS`**
+
+Water type: cave water.
 
 *Land*
 
@@ -3143,8 +3237,8 @@ Dungeon, Border.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Psyduck–Golduck | Slowpoke–Slowbro |
-| 2 | 30% | Slowpoke–Slowbro | Psyduck–Golduck |
+| 1 | 60% | Psyduck–Golduck | Psyduck–Golduck |
+| 2 | 30% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 | 3 | 5% | Lapras | Lapras |
 | 4 | 4% | Goldeen–Seaking | Wooper–Quagsire |
 | 5 | 1% | Magikarp–Gyarados | Poliwag–Politoed |
@@ -3153,18 +3247,20 @@ Dungeon, Border.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Psyduck–Golduck | Slowpoke–Slowbro |
-| 2 | 22% | 18% | 10% | Slowpoke–Slowbro | Psyduck–Golduck |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Psyduck–Golduck | Goldeen–Seaking |
-| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Poliwag–Poliwrath | Poliwag–Politoed |
-| 8 | 3% | 5% | 9% | Slowpoke–Slowbro | Slowpoke–Slowking |
-| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 10 | 2% | 4% | 9% | Goldeen–Seaking | Psyduck–Golduck |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 10% | 12% | 11% | Psyduck–Golduck | Psyduck–Golduck |
+| 4 | 8% | 10% | 10% | Slowpoke–Slowbro | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Poliwag–Poliwrath | Slowpoke–Slowking |
+| 6 | 4% | 7% | 10% | Psyduck–Golduck | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Goldeen–Seaking | Poliwag–Politoed |
+| 8 | 3% | 5% | 9% | Slowpoke–Slowbro | Psyduck–Golduck |
+| 9 | 2% | 4% | 9% | Marill–Azumarill | Zubat–Golbat |
+| 10 | 2% | 4% | 9% | Magikarp–Gyarados | Goldeen–Seaking |
 
 **`MAP_MT_SILVER_MOUNTAIN_SIDE_HNS`**
+
+Water type: ponds and rivers.
 
 *Land*
 
@@ -3197,16 +3293,16 @@ Dungeon, Border.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Poliwag–Poliwrath | Poliwag–Poliwrath |
-| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Poliwag–Poliwrath | Poliwag–Poliwrath |
 | 3 | 10% | 12% | 11% | Psyduck–Golduck | Psyduck–Golduck |
 | 4 | 8% | 10% | 10% | Slowpoke–Slowbro | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
+| 6 | 4% | 7% | 10% | Psyduck–Golduck | Wooper–Quagsire |
 | 7 | 3% | 6% | 10% | Poliwag–Poliwrath | Poliwag–Politoed |
-| 8 | 3% | 5% | 9% | Psyduck–Golduck | Slowpoke–Slowking |
-| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 10 | 2% | 4% | 9% | Poliwag–Politoed | Psyduck–Golduck |
+| 8 | 3% | 5% | 9% | Slowpoke–Slowking | Slowpoke–Slowking |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Psyduck–Golduck |
+| 10 | 2% | 4% | 9% | Poliwag–Politoed | Slowpoke–Slowbro |
 
 *Trees and rocks*
 
@@ -3219,6 +3315,8 @@ Dungeon, Border.
 | 5 | 1% | Aipom–Ambipom | Scyther–Scizor |
 
 **`MAP_MT_SILVER_1F_ITEM_ROOM_HNS`**
+
+Water type: cave water.
 
 *Land*
 
@@ -3241,28 +3339,30 @@ Dungeon, Border.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Psyduck–Golduck | Psyduck–Golduck |
-| 2 | 30% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 1 | 60% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 2 | 30% | Psyduck–Golduck | Psyduck–Golduck |
 | 3 | 5% | Lapras | Wooper–Quagsire |
 | 4 | 4% | Goldeen–Seaking | Lapras |
-| 5 | 1% | Magikarp–Gyarados | Poliwag–Politoed |
+| 5 | 1% | Poliwag–Poliwrath | Zubat–Crobat |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Psyduck–Golduck | Psyduck–Golduck |
-| 2 | 22% | 18% | 10% | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Psyduck–Golduck | Goldeen–Seaking |
-| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Slowpoke–Slowking | Slowpoke–Slowking |
-| 8 | 3% | 5% | 9% | Poliwag–Poliwrath | Poliwag–Politoed |
-| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 10 | 2% | 4% | 9% | Goldeen–Seaking | Psyduck–Golduck |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 10% | 12% | 11% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 4 | 8% | 10% | 10% | Psyduck–Golduck | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Slowpoke–Slowking | Psyduck–Golduck |
+| 6 | 4% | 7% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Poliwag–Poliwrath | Slowpoke–Slowking |
+| 8 | 3% | 5% | 9% | Psyduck–Golduck | Zubat–Crobat |
+| 9 | 2% | 4% | 9% | Marill–Azumarill | Poliwag–Politoed |
+| 10 | 2% | 4% | 9% | Magikarp–Gyarados | Goldeen–Seaking |
 
 **`MAP_MT_SILVER_1F_MOLTRES_ROOM_HNS`**
+
+Water type: cave water.
 
 *Land*
 
@@ -3289,24 +3389,26 @@ Dungeon, Border.
 | 2 | 30% | Psyduck–Golduck | Psyduck–Golduck |
 | 3 | 5% | Lapras | Wooper–Quagsire |
 | 4 | 4% | Magikarp–Gyarados | Lapras |
-| 5 | 1% | Poliwag–Poliwrath | Poliwag–Politoed |
+| 5 | 1% | Poliwag–Poliwrath | Zubat–Crobat |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Goldeen–Seaking | Goldeen–Seaking |
-| 2 | 22% | 18% | 10% | Psyduck–Golduck | Psyduck–Golduck |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Poliwag–Poliwrath | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Psyduck–Golduck | Psyduck–Golduck |
-| 8 | 3% | 5% | 9% | Poliwag–Politoed | Poliwag–Politoed |
-| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 10 | 2% | 4% | 9% | Goldeen–Seaking | Goldeen–Seaking |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 10% | 12% | 11% | Psyduck–Golduck | Psyduck–Golduck |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Poliwag–Poliwrath | Goldeen–Seaking |
+| 6 | 4% | 7% | 10% | Psyduck–Golduck | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Slowpoke–Slowbro | Poliwag–Politoed |
+| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Zubat–Crobat |
+| 9 | 2% | 4% | 9% | Marill–Azumarill | Slowpoke–Slowking |
+| 10 | 2% | 4% | 9% | Goldeen–Seaking | Psyduck–Golduck |
 
 **`MAP_MT_SILVER_2F_HNS`**
+
+Water type: cave water.
 
 *Land*
 
@@ -3330,25 +3432,25 @@ Dungeon, Border.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Wooper–Quagsire | Wooper–Quagsire |
-| 2 | 30% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 30% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 | 3 | 5% | Lapras | Lapras |
 | 4 | 4% | Psyduck–Golduck | Poliwag–Politoed |
-| 5 | 1% | Goldeen–Seaking | Goldeen–Seaking |
+| 5 | 1% | Goldeen–Seaking | Zubat–Golbat |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Wooper–Quagsire | Wooper–Quagsire |
-| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 3 | 10% | 12% | 11% | Psyduck–Golduck | Psyduck–Golduck |
-| 4 | 8% | 10% | 10% | Goldeen–Seaking | Poliwag–Politoed |
-| 5 | 8% | 9% | 10% | Wooper–Quagsire | Wooper–Quagsire |
-| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Poliwag–Politoed |
-| 7 | 3% | 6% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 8 | 3% | 5% | 9% | Psyduck–Golduck | Psyduck–Golduck |
-| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 10 | 2% | 4% | 9% | Lapras | Lapras |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 10% | 12% | 11% | Wooper–Quagsire | Wooper–Quagsire |
+| 4 | 8% | 10% | 10% | Slowpoke–Slowbro | Poliwag–Politoed |
+| 5 | 8% | 9% | 10% | Psyduck–Golduck | Wooper–Quagsire |
+| 6 | 4% | 7% | 10% | Wooper–Quagsire | Slowpoke–Slowbro |
+| 7 | 3% | 6% | 10% | Goldeen–Seaking | Zubat–Golbat |
+| 8 | 3% | 5% | 9% | Lapras | Psyduck–Golduck |
+| 9 | 2% | 4% | 9% | Slowpoke–Slowking | Lapras |
+| 10 | 2% | 4% | 9% | Psyduck–Golduck | Poliwag–Politoed |
 
 **`MAP_MT_SILVER_SNOW_HNS`**
 
@@ -3408,7 +3510,7 @@ Dungeon, Border.
 | Butterfree | Azalea Town, Cherrygrove City, Ecruteak City, Goldenrod City and more |
 | Caterpie | Azalea Town, Cherrygrove City, Ecruteak City, Goldenrod City and more |
 | Chikorita | Ilex Forest, New Bark Town, Route 27, Route 29 |
-| Chinchou | Cianwood City, Cliff Edge Cave, Dark Cave, Mt. Mortar and more |
+| Chinchou | Cianwood City, Cliff Edge Cave, New Bark Town, Olivine City and more |
 | Cleffa | Mt. Mortar |
 | Cloyster | Route 26, Whirl Islands |
 | Corsola | Cherrygrove City, Cianwood City, Cliff Edge Cave, New Bark Town and more |
@@ -3417,7 +3519,7 @@ Dungeon, Border.
 | Cubone | Mt. Mortar, Union Cave |
 | Cyndaquil | Burned Tower, Route 46 |
 | Delibird | Ice Path, Mt. Silver |
-| Dewgong | Cliff Edge Cave, Ice Path, Route 47, Whirl Islands |
+| Dewgong | Cliff Edge Cave, Ice Path, Whirl Islands |
 | Ditto | Cianwood City, Olivine City, Route 34, Route 35 and more |
 | Dodrio | Mt. Silver, Route 26, Route 27, Route 28 |
 | Doduo | Mt. Silver, Route 26, Route 27, Route 28 |
@@ -3449,14 +3551,14 @@ Dungeon, Border.
 | Gligar | Blackthorn City, Dark Cave, Route 42, Route 45 and more |
 | Gloom | Blackthorn City, Cherrygrove City, Cianwood City, Ecruteak City and more |
 | Golbat | Blackthorn City, Burned Tower, Cianwood City, Cliff Edge Cave and more |
-| Goldeen | Blackthorn City, Dark Cave, Ecruteak City, Ilex Forest and more |
-| Golduck | Blackthorn City, Ecruteak City, Ilex Forest, Lake of Rage and more |
+| Goldeen | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
+| Golduck | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
 | Golem | Mt. Mortar, Mt. Silver, Route 26 |
 | Granbull | National Park, Olivine City, Route 34, Route 35 and more |
 | Graveler | Blackthorn City, Cianwood City, Cliff Edge Cave, Dark Cave and more |
 | Grimer | Olivine City, Rocket Hideout, Route 34 |
 | Growlithe | Ecruteak City, Route 35, Route 36, Route 37 and more |
-| Gyarados | Blackthorn City, Cherrygrove City, Dark Cave, Dragon's Den and more |
+| Gyarados | Blackthorn City, Cherrygrove City, Cianwood City, Dark Cave and more |
 | Happiny | Route 47 |
 | Haunter | Blackthorn City, Burned Tower, Cherrygrove City, Cianwood City and more |
 | Heracross | Lake of Rage, Mt. Silver, National Park, Route 26 and more |
@@ -3464,7 +3566,7 @@ Dungeon, Border.
 | Honchkrow | Mt. Silver, Route 26, Route 28, Tin Tower |
 | Hoothoot | Azalea Town, Blackthorn City, Cherrygrove City, Cianwood City and more |
 | Hoppip | Blackthorn City, Cherrygrove City, Cianwood City, Ecruteak City and more |
-| Horsea | Blackthorn City, Dragon's Den, Route 26, Route 41 and more |
+| Horsea | Dragon's Den, Route 26, Route 27, Route 41 and more |
 | Houndoom | Burned Tower, Ecruteak City, Mt. Silver, Route 26 and more |
 | Houndour | Burned Tower, Ecruteak City, Mt. Silver, Route 26 and more |
 | Hypno | Route 34, Route 35 |
@@ -3474,11 +3576,11 @@ Dungeon, Border.
 | Jynx | Ice Path, Mt. Silver |
 | Kadabra | Route 34, Route 35 |
 | Kakuna | Azalea Town, Ilex Forest, National Park, Route 30 and more |
-| Kingdra | Dragon's Den, Route 26, Whirl Islands |
+| Kingdra | Route 26, Whirl Islands |
 | Kingler | Cherrygrove City, Cianwood City, Cliff Edge Cave, New Bark Town and more |
 | Koffing | Burned Tower, Rocket Hideout, Slowpoke Well |
 | Krabby | Cherrygrove City, Cianwood City, Cliff Edge Cave, New Bark Town and more |
-| Lanturn | Cianwood City, Cliff Edge Cave, Dark Cave, Mt. Mortar and more |
+| Lanturn | Cianwood City, Cliff Edge Cave, New Bark Town, Olivine City and more |
 | Lapras | Mt. Silver, Route 26, Union Cave, Whirl Islands |
 | Larvitar | Mt. Silver, Route 26, Route 28 |
 | Ledian | Cherrygrove City, Ecruteak City, Goldenrod City, Ilex Forest and more |
@@ -3489,7 +3591,7 @@ Dungeon, Border.
 | Machop | Blackthorn City, Cianwood City, Dark Cave, Mt. Mortar and more |
 | Magby | Burned Tower, Mt. Silver |
 | Magcargo | Burned Tower |
-| Magikarp | Blackthorn City, Cherrygrove City, Dark Cave, Dragon's Den and more |
+| Magikarp | Blackthorn City, Cherrygrove City, Cianwood City, Dark Cave and more |
 | Magmar | Burned Tower, Mt. Silver |
 | Magmortar | Burned Tower, Mt. Silver |
 | Magnemite | Olivine City, Rocket Hideout, Route 38, Route 39 |
@@ -3515,7 +3617,7 @@ Dungeon, Border.
 | Nidorina | National Park, Route 35, Route 48 |
 | Nidorino | National Park, Route 35, Route 36 |
 | Noctowl | Azalea Town, Blackthorn City, Cherrygrove City, Cianwood City and more |
-| Octillery | Cianwood City, New Bark Town, Olivine City, Route 26 and more |
+| Octillery | Cianwood City, Olivine City, Route 26, Route 32 and more |
 | Oddish | Blackthorn City, Cherrygrove City, Cianwood City, Ecruteak City and more |
 | Onix | Cliff Edge Cave, Dark Cave, Ice Path, Mt. Mortar and more |
 | Paras | Ilex Forest, Mt. Silver, National Park |
@@ -3537,7 +3639,7 @@ Dungeon, Border.
 | Porygon | Rocket Hideout |
 | Porygon2 | Rocket Hideout |
 | Primeape | Cianwood City, Mt. Mortar, Mt. Silver, Route 26 and more |
-| Psyduck | Blackthorn City, Ecruteak City, Ilex Forest, Lake of Rage and more |
+| Psyduck | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
 | Pupitar | Mt. Silver, Route 26, Route 28 |
 | Quagsire | Blackthorn City, Cliff Edge Cave, Dark Cave, Ecruteak City and more |
 | Quilava | Burned Tower, Route 46 |
@@ -3545,22 +3647,22 @@ Dungeon, Border.
 | Rapidash | Mt. Silver, Route 26, Route 27, Route 28 and more |
 | Raticate | Burned Tower, Cherrygrove City, Mt. Mortar, New Bark Town and more |
 | Rattata | Burned Tower, Cherrygrove City, Mt. Mortar, New Bark Town and more |
-| Remoraid | Cianwood City, New Bark Town, Olivine City, Route 26 and more |
+| Remoraid | Cianwood City, Olivine City, Route 26, Route 32 and more |
 | Sandshrew | Route 26, Route 27, Union Cave |
 | Sandslash | Route 26, Route 27, Union Cave |
 | Scizor | Mt. Silver, Route 26, Route 28 |
 | Scyther | Mt. Silver, National Park, Route 26, Route 28 |
-| Seadra | Blackthorn City, Dragon's Den, Route 26, Route 41 and more |
-| Seaking | Blackthorn City, Dark Cave, Ecruteak City, Ilex Forest and more |
-| Seel | Cliff Edge Cave, Ice Path, Route 47, Whirl Islands |
+| Seadra | Dragon's Den, Route 26, Route 27, Route 41 and more |
+| Seaking | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
+| Seel | Cliff Edge Cave, Ice Path, Whirl Islands |
 | Sentret | Cherrygrove City, Ecruteak City, New Bark Town, Route 29 and more |
 | Shellder | Cherrygrove City, Cianwood City, Cliff Edge Cave, New Bark Town and more |
 | Shuckle | Cliff Edge Cave, Route 47 |
 | Skarmory | Cliff Edge Cave, Mt. Silver, Route 28, Route 47 and more |
 | Skiploom | Blackthorn City, Cherrygrove City, Cianwood City, Ecruteak City and more |
-| Slowbro | Mt. Silver, Olivine City, Route 33, Slowpoke Well and more |
-| Slowking | Mt. Silver, Slowpoke Well, Whirl Islands |
-| Slowpoke | Mt. Silver, Olivine City, Route 33, Slowpoke Well and more |
+| Slowbro | Cliff Edge Cave, Dragon's Den, Ecruteak City, Ilex Forest and more |
+| Slowking | Mt. Silver, Route 28, Slowpoke Well, Whirl Islands |
+| Slowpoke | Cliff Edge Cave, Dragon's Den, Ecruteak City, Ilex Forest and more |
 | Slugma | Burned Tower |
 | Smeargle | Ruins of Alph |
 | Smoochum | Ice Path, Mt. Silver |
@@ -3570,7 +3672,7 @@ Dungeon, Border.
 | Spearow | Blackthorn City, Cherrygrove City, Cianwood City, Mt. Silver and more |
 | Spinarak | Azalea Town, Blackthorn City, Cherrygrove City, Cianwood City and more |
 | Stantler | National Park, Tin Tower |
-| Starmie | Route 26 |
+| Starmie | Route 26, Whirl Islands |
 | Staryu | Cherrygrove City, Cianwood City, Cliff Edge Cave, New Bark Town and more |
 | Steelix | Ice Path, Mt. Silver, Union Cave |
 | Sudowoodo | Route 36 |
