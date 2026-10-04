@@ -461,8 +461,8 @@ object stays frozen on its tile facing its start facing, north, as after;
 the Start menu and the Bag (a heap reset) mid-`water_bite`, a tile off his
 spot: no 0xF9 object, he is back on (13, 39) facing north and beats start
 again in the new block; a map object given his sprite in RAM, standing in
-for a story object, stops his next beat within a spawn period and he walks
-off) and `determinism` (two runs from boot, the second starting 60 frames
+for a story object, stops his next beat within 32 frames (a spawn period
+plus up to 3 deferred periods) and he walks off) and `determinism` (two runs from boot, the second starting 60 frames
 later, give the same beat log on the same frames; a third run with another
 RNG state from the script's start gives the same beats in the same order, so
 a beat that read the RNG would come out differently there. Its frames may

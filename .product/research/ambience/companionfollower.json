@@ -128,13 +128,13 @@
       "prepares": 1
     }
   },
-  "max_update_scanlines": 94,
+  "max_update_scanlines": 148,
   "screenshots": [
     ".product/research/ambience/companionfollower-held-back.png",
     ".product/research/ambience/companionfollower-control.png"
   ],
   "debug": {
-    "frames": 6814,
+    "frames": 6794,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -164,7 +164,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634080,
+    "worldState": 33634004,
     "actors": [
       {
         "index": 0,
@@ -234,7 +234,7 @@
     "lastHeartbeatScanlines": 71,
     "maxHeartbeatScanlines": 71,
     "maxSpawnScanlines": 34,
-    "maxUpdateScanlines": 94,
+    "maxUpdateScanlines": 148,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
@@ -249,5 +249,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 7830
+  "emulated_frames": 7818
 }

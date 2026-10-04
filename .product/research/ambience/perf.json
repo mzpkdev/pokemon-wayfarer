@@ -27,7 +27,7 @@
     {
       "warp": 4,
       "frames": 40,
-      "heartbeat_scanlines": 1897,
+      "heartbeat_scanlines": 1898,
       "heartbeat_frames": 138,
       "context_scanlines": 9,
       "trace": "6102000055020200070000000000120000000000"
@@ -75,7 +75,7 @@
     {
       "warp": 10,
       "frames": 40,
-      "heartbeat_scanlines": 681,
+      "heartbeat_scanlines": 680,
       "heartbeat_frames": 59,
       "context_scanlines": 10,
       "trace": "46010000fc000800130000000000020000000000"
@@ -203,7 +203,7 @@
     {
       "warp": 26,
       "frames": 40,
-      "heartbeat_scanlines": 566,
+      "heartbeat_scanlines": 565,
       "heartbeat_frames": 48,
       "context_scanlines": 10,
       "trace": "2e01000005010400110000000000020000000000"
@@ -267,7 +267,7 @@
     {
       "warp": 34,
       "frames": 40,
-      "heartbeat_scanlines": 407,
+      "heartbeat_scanlines": 406,
       "heartbeat_frames": 40,
       "context_scanlines": 9,
       "trace": "940000008f0002000b0000000000050000000000"
@@ -299,7 +299,7 @@
     {
       "warp": 38,
       "frames": 40,
-      "heartbeat_scanlines": 359,
+      "heartbeat_scanlines": 358,
       "heartbeat_frames": 37,
       "context_scanlines": 9,
       "trace": "85000000850001000f0000000000030000000000"
@@ -315,7 +315,7 @@
     {
       "warp": 40,
       "frames": 40,
-      "heartbeat_scanlines": 609,
+      "heartbeat_scanlines": 608,
       "heartbeat_frames": 40,
       "context_scanlines": 9,
       "trace": "470000001e0003000d0000000000060000000000"
@@ -379,7 +379,7 @@
     {
       "warp": 48,
       "frames": 42,
-      "heartbeat_scanlines": 468,
+      "heartbeat_scanlines": 467,
       "heartbeat_frames": 36,
       "context_scanlines": 10,
       "trace": "0c000000060003000c0000000000060000000000"
@@ -395,7 +395,7 @@
     {
       "warp": 50,
       "frames": 38,
-      "heartbeat_scanlines": 1421,
+      "heartbeat_scanlines": 1420,
       "heartbeat_frames": 88,
       "context_scanlines": 10,
       "trace": "3d030000da020500130000000000030000000000"
@@ -481,8 +481,8 @@
       "trace": "1e000000130004000f0000000000030000000000"
     }
   ],
-  "max_heartbeat_scanlines": 1897,
-  "mean_heartbeat_scanlines": 543.1,
+  "max_heartbeat_scanlines": 1898,
+  "mean_heartbeat_scanlines": 543.0,
   "median_heartbeat_scanlines": 370,
   "max_heartbeat_frames": 8.32,
   "over_two_frames": 25,
@@ -537,7 +537,7 @@
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634072,
+    "worldState": 33634076,
     "actors": [
       {
         "index": 0,
@@ -605,7 +605,7 @@
       }
     ],
     "lastHeartbeatScanlines": 236,
-    "maxHeartbeatScanlines": 1897,
+    "maxHeartbeatScanlines": 1898,
     "maxSpawnScanlines": 6,
     "maxUpdateScanlines": 12,
     "backOffs": 0,

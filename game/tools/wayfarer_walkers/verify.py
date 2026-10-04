@@ -2417,8 +2417,9 @@ def scenario_beatlock(game: Game) -> dict:
        north, and a beat starts again in the new ambience block.
     3. Story object: mid a later beat a map object takes Lance's sprite (its
        graphicsId is written in RAM, as a story scene adding one would; the
-       picture doesn't change): the story check stops the beat within a
-       spawn period (8 frames) and he yields the visit (a walk-off)."""
+       picture doesn't change): the story check stops the beat within
+       STORY_CHECK_MAX_DELAY (a spawn period plus up to 3 deferred periods)
+       and he yields the visit (a walk-off)."""
     boot(game, VIRIDIAN, 13, 43, DIR_NORTH)
     place_dwelling(game, SLOT_LANCE, SPOT_VIRIDIAN_WATER, NODE_VIRIDIAN, dwell=60)
     game.warp(VIRIDIAN, 13, 43, DIR_NORTH)
@@ -2446,7 +2447,7 @@ def scenario_beatlock(game: Game) -> dict:
         game.emu.step(2)
         game.emu.hold("Start", 0)
         interrupt = None
-        for _ in range(30):
+        for _ in range(STORY_CHECK_MAX_DELAY + 2):
             interrupt = interrupt or next((e for e in watcher.poll() if lance_event("interrupt")(e)), None)
             if interrupt:
                 break

@@ -74,7 +74,7 @@
     "rng_end": 2901169912,
     "frames": 2510,
     "time_update_counter_at_start": 138,
-    "local_time_at_start": "22:15"
+    "local_time_at_start": "22:52"
   },
   "second": {
     "events": [
@@ -151,7 +151,7 @@
     "rng_end": 2901169912,
     "frames": 2510,
     "time_update_counter_at_start": 138,
-    "local_time_at_start": "22:15"
+    "local_time_at_start": "22:52"
   },
   "third": {
     "events": [
@@ -228,7 +228,7 @@
     "rng_end": 409675246,
     "frames": 2510,
     "time_update_counter_at_start": 138,
-    "local_time_at_start": "22:15"
+    "local_time_at_start": "22:52"
   },
   "identical": true,
   "same_beats_with_other_rng": true,

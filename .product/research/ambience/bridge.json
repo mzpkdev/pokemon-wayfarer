@@ -198,7 +198,7 @@
   "maxSliceScanlines": 46,
   "maxSearchNodes": 1567,
   "workspaceBytes": 11308,
-  "maxFinishScanlines": 40,
+  "maxFinishScanlines": 39,
   "screenshots": [
     ".product/research/ambience/bridge-north.png"
   ],
@@ -233,7 +233,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634088,
+    "worldState": 33633996,
     "actors": [
       {
         "index": 0,
@@ -303,14 +303,14 @@
     "lastHeartbeatScanlines": 25,
     "maxHeartbeatScanlines": 25,
     "maxSpawnScanlines": 25,
-    "maxUpdateScanlines": 122,
+    "maxUpdateScanlines": 121,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
     "lastContextScanlines": 15,
     "lastFailNodes": 0,
-    "maxFinishScanlines": 40,
+    "maxFinishScanlines": 39,
     "walkOffs": 0,
     "worldJobs": 0,
     "maxJobScanlines": 0,

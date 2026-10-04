@@ -4116,7 +4116,13 @@ static void UpdateFollower(void)
 {
     u8 wanted;
     bool8 hide;
-    s16 freeSlots = FollowerFreeSlots(&wanted);
+    s16 freeSlots;
+
+    // The rule itself always counts afresh (a companion_room check may have
+    // cached a count up to a spawn period old).
+    if (sAmbience != NULL)
+        sAmbience->pendingValid = FALSE;
+    freeSlots = FollowerFreeSlots(&wanted);
 
     // The companion never makes the rule hide the follower: once the rule
     // has no slot to spare for it, it goes.
