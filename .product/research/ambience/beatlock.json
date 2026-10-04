@@ -1,0 +1,384 @@
+{
+  "start_facing": 2,
+  "menu": {
+    "stare": {
+      "frame": 312,
+      "actor": 0,
+      "slot": 10,
+      "beat": 8,
+      "name": "stare_down",
+      "event": "start"
+    },
+    "running_before": "stare_down",
+    "facing_mid_beat": 1,
+    "interrupt": {
+      "frame": 353,
+      "actor": 0,
+      "slot": 10,
+      "beat": 8,
+      "name": "stare_down",
+      "event": "interrupt"
+    },
+    "interrupt_delay": 1,
+    "screenshot": ".product/research/ambience/beatlock-menu.png",
+    "locked": true,
+    "facings_under_menu": [
+      2
+    ],
+    "tiles_under_menu": [
+      [
+        13,
+        39
+      ]
+    ],
+    "always_frozen": true,
+    "held_under_menu": false,
+    "after_close": {
+      "active": true,
+      "held": false,
+      "frozen": false,
+      "facing": 2,
+      "x": 13,
+      "y": 39,
+      "gfx": 481,
+      "localId": 245
+    },
+    "running_after_close": null,
+    "pass": true
+  },
+  "bag": {
+    "beat": {
+      "frame": 1410,
+      "actor": 0,
+      "slot": 10,
+      "beat": 16,
+      "name": "water_bite",
+      "event": "start"
+    },
+    "running_before": "water_bite",
+    "tile_before": [
+      13,
+      40
+    ],
+    "interrupt": {
+      "frame": 1582,
+      "actor": 0,
+      "slot": 10,
+      "beat": 16,
+      "name": "water_bite",
+      "event": "interrupt"
+    },
+    "interrupt_delay": 1,
+    "heap_resets": 1,
+    "companions_on_return": [],
+    "actor_on_return": {
+      "index": 0,
+      "slot": 10,
+      "mode": 1,
+      "phase": 5,
+      "goalKind": 0,
+      "objectId": 2,
+      "template": 1,
+      "atSpot": 1,
+      "blocked": 0,
+      "x": 13,
+      "y": 39,
+      "goalX": 13,
+      "goalY": 39,
+      "goalEdge": 65535
+    },
+    "home_after_frames": 2,
+    "screenshot": ".product/research/ambience/beatlock-after-bag.png",
+    "resumed": {
+      "frame": 1872,
+      "actor": 0,
+      "slot": 10,
+      "beat": 17,
+      "name": "water_wait",
+      "event": "start"
+    },
+    "stray_frames": [],
+    "companion_strays_counter": 0,
+    "pass": true
+  },
+  "story": {
+    "beat": {
+      "frame": 1872,
+      "actor": 0,
+      "slot": 10,
+      "beat": 17,
+      "name": "water_wait",
+      "event": "start"
+    },
+    "npc": {
+      "slot": 1,
+      "gfx": 283,
+      "localId": 12,
+      "mapNum": 32,
+      "mapGroup": 0,
+      "x": 11,
+      "y": 37,
+      "invisible": false,
+      "isPlayer": false,
+      "facing": 4
+    },
+    "running_before": "water_wait",
+    "interrupt": {
+      "frame": 1881,
+      "actor": 0,
+      "slot": 10,
+      "beat": 17,
+      "name": "water_wait",
+      "event": "interrupt"
+    },
+    "interrupt_delay": 8,
+    "story_suppressed": 1,
+    "handoffs": 1,
+    "lance_after": {
+      "index": 0,
+      "slot": 10,
+      "mode": 3,
+      "phase": 3,
+      "goalKind": 3,
+      "objectId": 2,
+      "template": 1,
+      "atSpot": 0,
+      "blocked": 0,
+      "x": 13,
+      "y": 39,
+      "goalX": 30,
+      "goalY": 36,
+      "goalEdge": 316
+    },
+    "screenshot": ".product/research/ambience/beatlock-story.png",
+    "pass": true
+  },
+  "events": [
+    {
+      "frame": 105,
+      "actor": 0,
+      "slot": 10,
+      "beat": 5,
+      "name": "arrive_look",
+      "event": "start"
+    },
+    {
+      "frame": 171,
+      "actor": 0,
+      "slot": 10,
+      "beat": 5,
+      "name": "arrive_look",
+      "event": "end"
+    },
+    {
+      "frame": 312,
+      "actor": 0,
+      "slot": 10,
+      "beat": 8,
+      "name": "stare_down",
+      "event": "start"
+    },
+    {
+      "frame": 353,
+      "actor": 0,
+      "slot": 10,
+      "beat": 8,
+      "name": "stare_down",
+      "event": "interrupt"
+    },
+    {
+      "frame": 1410,
+      "actor": 0,
+      "slot": 10,
+      "beat": 16,
+      "name": "water_bite",
+      "event": "start"
+    },
+    {
+      "frame": 1582,
+      "actor": 0,
+      "slot": 10,
+      "beat": 16,
+      "name": "water_bite",
+      "event": "interrupt"
+    },
+    {
+      "frame": 1872,
+      "actor": 0,
+      "slot": 10,
+      "beat": 17,
+      "name": "water_wait",
+      "event": "start"
+    },
+    {
+      "frame": 1881,
+      "actor": 0,
+      "slot": 10,
+      "beat": 17,
+      "name": "water_wait",
+      "event": "interrupt"
+    }
+  ],
+  "counters": {
+    "started_idle": 1,
+    "started_transition": 0,
+    "started_react": 0,
+    "ended": 0,
+    "interrupted": 1,
+    "icons": 0,
+    "effects": 0,
+    "palette_skips": 0,
+    "icon_skips": 0,
+    "step_skips": 0,
+    "running": [
+      255,
+      255,
+      255,
+      255
+    ],
+    "companion": {
+      "out": 0,
+      "in": 0,
+      "away": {
+        "slots": 0,
+        "follower": 0,
+        "vanished": 0,
+        "interrupted": 0
+      },
+      "denied": {
+        "place": 0,
+        "busy": 0,
+        "slots": 0,
+        "follower": 0,
+        "palette": 0,
+        "tile": 0
+      },
+      "out_failed": 0,
+      "strays": 0,
+      "prepares": 0
+    }
+  },
+  "lost": 0,
+  "screenshots": [
+    ".product/research/ambience/beatlock-menu.png",
+    ".product/research/ambience/beatlock-after-bag.png",
+    ".product/research/ambience/beatlock-story.png"
+  ],
+  "debug": {
+    "frames": 1883,
+    "spawns": 1,
+    "removals": 0,
+    "edgeExits": 0,
+    "warpExits": 0,
+    "arrivals": 0,
+    "rebases": 0,
+    "stripEntries": 0,
+    "replans": 0,
+    "blockedSteps": 0,
+    "searches": 2,
+    "searchFails": 0,
+    "localDwellBeats": 2,
+    "localAdvances": 0,
+    "emotes": 1,
+    "templateMoves": 0,
+    "floorChanges": 0,
+    "heapResets": 6,
+    "restores": 0,
+    "lastSearchNodes": 3,
+    "maxSearchNodes": 3,
+    "lastSearchFrames": 1,
+    "maxSearchFrames": 1,
+    "maxSliceScanlines": 63,
+    "maxSliceNodes": 6,
+    "workspaceBytes": 11308,
+    "currentMap": 32,
+    "followerHidden": 0,
+    "activeActors": 0,
+    "storySuppressed": 1,
+    "worldState": 33634060,
+    "actors": [
+      {
+        "index": 0,
+        "slot": 10,
+        "mode": 3,
+        "phase": 3,
+        "goalKind": 3,
+        "objectId": 2,
+        "template": 1,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 13,
+        "y": 39,
+        "goalX": 30,
+        "goalY": 36,
+        "goalEdge": 316
+      },
+      {
+        "index": 1,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 2,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 3,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      }
+    ],
+    "lastHeartbeatScanlines": 26,
+    "maxHeartbeatScanlines": 26,
+    "maxSpawnScanlines": 23,
+    "maxUpdateScanlines": 77,
+    "backOffs": 0,
+    "handoffs": 1,
+    "visitorsVanished": 0,
+    "culls": 0,
+    "lastContextScanlines": 15,
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 0,
+    "walkOffs": 0,
+    "worldJobs": 0,
+    "maxJobScanlines": 0,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
+  },
+  "pass": true,
+  "emulated_frames": 2325
+}

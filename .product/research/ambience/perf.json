@@ -1,0 +1,638 @@
+{
+  "warps": [
+    {
+      "warp": 1,
+      "frames": 42,
+      "heartbeat_scanlines": 137,
+      "heartbeat_frames": 25,
+      "context_scanlines": 9,
+      "trace": "0000000000000000000000000000010000000000"
+    },
+    {
+      "warp": 2,
+      "frames": 40,
+      "heartbeat_scanlines": 499,
+      "heartbeat_frames": 44,
+      "context_scanlines": 10,
+      "trace": "d0000000d0000100010000000000050000000000"
+    },
+    {
+      "warp": 3,
+      "frames": 42,
+      "heartbeat_scanlines": 1606,
+      "heartbeat_frames": 59,
+      "context_scanlines": 10,
+      "trace": "540400007c020500050001000000010000000000"
+    },
+    {
+      "warp": 4,
+      "frames": 40,
+      "heartbeat_scanlines": 1808,
+      "heartbeat_frames": 142,
+      "context_scanlines": 9,
+      "trace": "6102000055020200070000000000120000000000"
+    },
+    {
+      "warp": 5,
+      "frames": 40,
+      "heartbeat_scanlines": 733,
+      "heartbeat_frames": 42,
+      "context_scanlines": 9,
+      "trace": "6801000052001100170000000000020000000000"
+    },
+    {
+      "warp": 6,
+      "frames": 40,
+      "heartbeat_scanlines": 179,
+      "heartbeat_frames": 28,
+      "context_scanlines": 10,
+      "trace": "0b0000000b000100170000000000010000000000"
+    },
+    {
+      "warp": 7,
+      "frames": 40,
+      "heartbeat_scanlines": 207,
+      "heartbeat_frames": 28,
+      "context_scanlines": 10,
+      "trace": "0000000000000000100000000000030001000000"
+    },
+    {
+      "warp": 8,
+      "frames": 40,
+      "heartbeat_scanlines": 941,
+      "heartbeat_frames": 72,
+      "context_scanlines": 10,
+      "trace": "46020000050203000f0000000000010000000000"
+    },
+    {
+      "warp": 9,
+      "frames": 40,
+      "heartbeat_scanlines": 303,
+      "heartbeat_frames": 33,
+      "context_scanlines": 9,
+      "trace": "00000000000000000f0000000000080000000000"
+    },
+    {
+      "warp": 10,
+      "frames": 40,
+      "heartbeat_scanlines": 677,
+      "heartbeat_frames": 59,
+      "context_scanlines": 10,
+      "trace": "46010000fc000800130000000000020000000000"
+    },
+    {
+      "warp": 11,
+      "frames": 40,
+      "heartbeat_scanlines": 248,
+      "heartbeat_frames": 28,
+      "context_scanlines": 10,
+      "trace": "1f0000001e000200130000000000030000000000"
+    },
+    {
+      "warp": 12,
+      "frames": 40,
+      "heartbeat_scanlines": 188,
+      "heartbeat_frames": 28,
+      "context_scanlines": 10,
+      "trace": "180000000b0003000f0000000000020000000000"
+    },
+    {
+      "warp": 13,
+      "frames": 40,
+      "heartbeat_scanlines": 403,
+      "heartbeat_frames": 33,
+      "context_scanlines": 10,
+      "trace": "880000007f0003000f0000000000040000000000"
+    },
+    {
+      "warp": 14,
+      "frames": 40,
+      "heartbeat_scanlines": 603,
+      "heartbeat_frames": 54,
+      "context_scanlines": 10,
+      "trace": "fc000000a8000500110000000000040000000000"
+    },
+    {
+      "warp": 15,
+      "frames": 40,
+      "heartbeat_scanlines": 895,
+      "heartbeat_frames": 46,
+      "context_scanlines": 10,
+      "trace": "e101000090010500130001000000030000000000"
+    },
+    {
+      "warp": 16,
+      "frames": 40,
+      "heartbeat_scanlines": 1007,
+      "heartbeat_frames": 72,
+      "context_scanlines": 9,
+      "trace": "c10100007f010400130000000000010000000000"
+    },
+    {
+      "warp": 17,
+      "frames": 40,
+      "heartbeat_scanlines": 184,
+      "heartbeat_frames": 29,
+      "context_scanlines": 10,
+      "trace": "0100000001000100130000000000030000000000"
+    },
+    {
+      "warp": 18,
+      "frames": 40,
+      "heartbeat_scanlines": 207,
+      "heartbeat_frames": 28,
+      "context_scanlines": 10,
+      "trace": "0400000002000300140000000000010000000000"
+    },
+    {
+      "warp": 19,
+      "frames": 40,
+      "heartbeat_scanlines": 752,
+      "heartbeat_frames": 43,
+      "context_scanlines": 10,
+      "trace": "9d0100006a010200110000000000020000000000"
+    },
+    {
+      "warp": 20,
+      "frames": 40,
+      "heartbeat_scanlines": 145,
+      "heartbeat_frames": 27,
+      "context_scanlines": 10,
+      "trace": "05000000030002000d0000000000010000000000"
+    },
+    {
+      "warp": 21,
+      "frames": 40,
+      "heartbeat_scanlines": 286,
+      "heartbeat_frames": 31,
+      "context_scanlines": 10,
+      "trace": "100000000c0002000d0000000000060000000000"
+    },
+    {
+      "warp": 22,
+      "frames": 40,
+      "heartbeat_scanlines": 369,
+      "heartbeat_frames": 35,
+      "context_scanlines": 10,
+      "trace": "310000000c0006000d0000000000050000000000"
+    },
+    {
+      "warp": 23,
+      "frames": 40,
+      "heartbeat_scanlines": 1475,
+      "heartbeat_frames": 59,
+      "context_scanlines": 10,
+      "trace": "c20300007d030500100000000000050000000000"
+    },
+    {
+      "warp": 24,
+      "frames": 40,
+      "heartbeat_scanlines": 256,
+      "heartbeat_frames": 30,
+      "context_scanlines": 10,
+      "trace": "140000000e000400120000000000030000000000"
+    },
+    {
+      "warp": 25,
+      "frames": 42,
+      "heartbeat_scanlines": 1334,
+      "heartbeat_frames": 55,
+      "context_scanlines": 10,
+      "trace": "1503000000030300130000000000040001000000"
+    },
+    {
+      "warp": 26,
+      "frames": 40,
+      "heartbeat_scanlines": 566,
+      "heartbeat_frames": 48,
+      "context_scanlines": 10,
+      "trace": "2e01000005010400110000000000020000000000"
+    },
+    {
+      "warp": 27,
+      "frames": 42,
+      "heartbeat_scanlines": 972,
+      "heartbeat_frames": 47,
+      "context_scanlines": 9,
+      "trace": "6a0200004a0202000f0000000000020000000000"
+    },
+    {
+      "warp": 28,
+      "frames": 40,
+      "heartbeat_scanlines": 178,
+      "heartbeat_frames": 29,
+      "context_scanlines": 9,
+      "trace": "120000000a0002000e0000000000020001000000"
+    },
+    {
+      "warp": 29,
+      "frames": 40,
+      "heartbeat_scanlines": 257,
+      "heartbeat_frames": 32,
+      "context_scanlines": 10,
+      "trace": "0c0000000a0002000d0000000000060000000000"
+    },
+    {
+      "warp": 30,
+      "frames": 40,
+      "heartbeat_scanlines": 336,
+      "heartbeat_frames": 39,
+      "context_scanlines": 10,
+      "trace": "6300000034000600110000000000030000000000"
+    },
+    {
+      "warp": 31,
+      "frames": 42,
+      "heartbeat_scanlines": 316,
+      "heartbeat_frames": 30,
+      "context_scanlines": 9,
+      "trace": "610000005c000300120000000000030000000000"
+    },
+    {
+      "warp": 32,
+      "frames": 40,
+      "heartbeat_scanlines": 1220,
+      "heartbeat_frames": 86,
+      "context_scanlines": 9,
+      "trace": "1903000017030300120000000000020000000000"
+    },
+    {
+      "warp": 33,
+      "frames": 42,
+      "heartbeat_scanlines": 248,
+      "heartbeat_frames": 26,
+      "context_scanlines": 10,
+      "trace": "55000000520002000d0000000000010000000000"
+    },
+    {
+      "warp": 34,
+      "frames": 40,
+      "heartbeat_scanlines": 403,
+      "heartbeat_frames": 40,
+      "context_scanlines": 9,
+      "trace": "940000008f0002000b0000000000050000000000"
+    },
+    {
+      "warp": 35,
+      "frames": 42,
+      "heartbeat_scanlines": 247,
+      "heartbeat_frames": 32,
+      "context_scanlines": 10,
+      "trace": "26000000130005000e0000000000050000000000"
+    },
+    {
+      "warp": 36,
+      "frames": 40,
+      "heartbeat_scanlines": 449,
+      "heartbeat_frames": 42,
+      "context_scanlines": 10,
+      "trace": "7500000067000600120000000000060000000000"
+    },
+    {
+      "warp": 37,
+      "frames": 42,
+      "heartbeat_scanlines": 273,
+      "heartbeat_frames": 26,
+      "context_scanlines": 9,
+      "trace": "4f00000033000700140000000000000000000000"
+    },
+    {
+      "warp": 38,
+      "frames": 40,
+      "heartbeat_scanlines": 358,
+      "heartbeat_frames": 37,
+      "context_scanlines": 9,
+      "trace": "85000000850001000f0000000000030000000000"
+    },
+    {
+      "warp": 39,
+      "frames": 40,
+      "heartbeat_scanlines": 321,
+      "heartbeat_frames": 30,
+      "context_scanlines": 9,
+      "trace": "5a0000003c0002000c0000000000030000000000"
+    },
+    {
+      "warp": 40,
+      "frames": 40,
+      "heartbeat_scanlines": 608,
+      "heartbeat_frames": 40,
+      "context_scanlines": 9,
+      "trace": "470000001e0003000d0000000000060000000000"
+    },
+    {
+      "warp": 41,
+      "frames": 42,
+      "heartbeat_scanlines": 372,
+      "heartbeat_frames": 31,
+      "context_scanlines": 10,
+      "trace": "7d0000003e000600120000000000020000000000"
+    },
+    {
+      "warp": 42,
+      "frames": 40,
+      "heartbeat_scanlines": 267,
+      "heartbeat_frames": 35,
+      "context_scanlines": 10,
+      "trace": "3100000024000200110000000000040000000000"
+    },
+    {
+      "warp": 43,
+      "frames": 40,
+      "heartbeat_scanlines": 714,
+      "heartbeat_frames": 44,
+      "context_scanlines": 9,
+      "trace": "7301000030010500130000000000030001000000"
+    },
+    {
+      "warp": 44,
+      "frames": 40,
+      "heartbeat_scanlines": 225,
+      "heartbeat_frames": 31,
+      "context_scanlines": 9,
+      "trace": "170000000b000300130000000000020000000000"
+    },
+    {
+      "warp": 45,
+      "frames": 40,
+      "heartbeat_scanlines": 176,
+      "heartbeat_frames": 28,
+      "context_scanlines": 10,
+      "trace": "0400000003000200120000000000040000000000"
+    },
+    {
+      "warp": 46,
+      "frames": 40,
+      "heartbeat_scanlines": 190,
+      "heartbeat_frames": 28,
+      "context_scanlines": 10,
+      "trace": "27000000110003000f0000000000010000000000"
+    },
+    {
+      "warp": 47,
+      "frames": 40,
+      "heartbeat_scanlines": 1351,
+      "heartbeat_frames": 55,
+      "context_scanlines": 10,
+      "trace": "6c0300006c0301000d0000000000030000000000"
+    },
+    {
+      "warp": 48,
+      "frames": 42,
+      "heartbeat_scanlines": 465,
+      "heartbeat_frames": 36,
+      "context_scanlines": 10,
+      "trace": "0c000000060003000c0000000000060000000000"
+    },
+    {
+      "warp": 49,
+      "frames": 40,
+      "heartbeat_scanlines": 665,
+      "heartbeat_frames": 41,
+      "context_scanlines": 10,
+      "trace": "22010000fc000600100000000000050000000000"
+    },
+    {
+      "warp": 50,
+      "frames": 38,
+      "heartbeat_scanlines": 1420,
+      "heartbeat_frames": 90,
+      "context_scanlines": 10,
+      "trace": "3d030000da020500130000000000030000000000"
+    },
+    {
+      "warp": 51,
+      "frames": 42,
+      "heartbeat_scanlines": 216,
+      "heartbeat_frames": 26,
+      "context_scanlines": 10,
+      "trace": "150000000a0003000f0000000000020000000000"
+    },
+    {
+      "warp": 52,
+      "frames": 40,
+      "heartbeat_scanlines": 361,
+      "heartbeat_frames": 30,
+      "context_scanlines": 9,
+      "trace": "0f0000000c0002000d0000000000030000000000"
+    },
+    {
+      "warp": 53,
+      "frames": 40,
+      "heartbeat_scanlines": 459,
+      "heartbeat_frames": 36,
+      "context_scanlines": 10,
+      "trace": "e1000000d00003000f0000000000030000000000"
+    },
+    {
+      "warp": 54,
+      "frames": 40,
+      "heartbeat_scanlines": 249,
+      "heartbeat_frames": 33,
+      "context_scanlines": 10,
+      "trace": "14000000130002000d0001000000040000000000"
+    },
+    {
+      "warp": 55,
+      "frames": 40,
+      "heartbeat_scanlines": 526,
+      "heartbeat_frames": 39,
+      "context_scanlines": 10,
+      "trace": "7100000034000500100000000000050000000000"
+    },
+    {
+      "warp": 56,
+      "frames": 40,
+      "heartbeat_scanlines": 589,
+      "heartbeat_frames": 45,
+      "context_scanlines": 42,
+      "trace": "f8000000e6000500140000000000020000000000"
+    },
+    {
+      "warp": 57,
+      "frames": 42,
+      "heartbeat_scanlines": 256,
+      "heartbeat_frames": 29,
+      "context_scanlines": 10,
+      "trace": "0e0000000b000200100000000000030000000000"
+    },
+    {
+      "warp": 58,
+      "frames": 40,
+      "heartbeat_scanlines": 1297,
+      "heartbeat_frames": 84,
+      "context_scanlines": 10,
+      "trace": "db020000c6020400100000000000020000000000"
+    },
+    {
+      "warp": 59,
+      "frames": 42,
+      "heartbeat_scanlines": 207,
+      "heartbeat_frames": 27,
+      "context_scanlines": 10,
+      "trace": "1b000000160002000f0000000000030000000000"
+    },
+    {
+      "warp": 60,
+      "frames": 40,
+      "heartbeat_scanlines": 233,
+      "heartbeat_frames": 32,
+      "context_scanlines": 9,
+      "trace": "1e000000130004000f0000000000030000000000"
+    }
+  ],
+  "max_heartbeat_scanlines": 1808,
+  "mean_heartbeat_scanlines": 540.5333333333333,
+  "median_heartbeat_scanlines": 369,
+  "max_heartbeat_frames": 7.93,
+  "over_two_frames": 25,
+  "mean_warp_frames": 40.4,
+  "max_warp_frames": 42,
+  "max_walker_update_scanlines": 12,
+  "world": {
+    "heartbeats": 61,
+    "skippedHeartbeats": 1,
+    "lastHeartbeatMap": 3072,
+    "reseats": 0,
+    "lastHeartbeatFrames": 32,
+    "maxHeartbeatFrames": 142,
+    "maxStepScanlines": 187,
+    "maxFrameScanlines": 187,
+    "maxFinishScanlines": 0,
+    "pendingAtLoad": 0,
+    "forcedFinishes": 0,
+    "workspaceLosses": 0,
+    "pending": 0,
+    "workspaceWaits": 0,
+    "deferredBegins": 0
+  },
+  "debug": {
+    "frames": 2570,
+    "spawns": 0,
+    "removals": 0,
+    "edgeExits": 0,
+    "warpExits": 0,
+    "arrivals": 0,
+    "rebases": 0,
+    "stripEntries": 0,
+    "replans": 0,
+    "blockedSteps": 0,
+    "searches": 0,
+    "searchFails": 0,
+    "localDwellBeats": 0,
+    "localAdvances": 0,
+    "emotes": 0,
+    "templateMoves": 0,
+    "floorChanges": 0,
+    "heapResets": 64,
+    "restores": 0,
+    "lastSearchNodes": 0,
+    "maxSearchNodes": 0,
+    "lastSearchFrames": 0,
+    "maxSearchFrames": 0,
+    "maxSliceScanlines": 0,
+    "maxSliceNodes": 0,
+    "workspaceBytes": 0,
+    "currentMap": 3072,
+    "followerHidden": 0,
+    "activeActors": 0,
+    "storySuppressed": 0,
+    "worldState": 33634076,
+    "actors": [
+      {
+        "index": 0,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 1,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 2,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 3,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      }
+    ],
+    "lastHeartbeatScanlines": 233,
+    "maxHeartbeatScanlines": 1808,
+    "maxSpawnScanlines": 7,
+    "maxUpdateScanlines": 12,
+    "backOffs": 0,
+    "handoffs": 0,
+    "visitorsVanished": 0,
+    "culls": 0,
+    "lastContextScanlines": 9,
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 0,
+    "walkOffs": 0,
+    "worldJobs": 0,
+    "maxJobScanlines": 0,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
+  },
+  "max_step_scanlines": 187,
+  "max_frame_scanlines": 187,
+  "max_finish_scanlines": 0,
+  "frames_per_heartbeat_max": 142,
+  "ceilings": {
+    "frame_scanlines": 200,
+    "warp_frames": 44
+  },
+  "target": {
+    "frame_scanlines": 114,
+    "within_target": false
+  },
+  "pass": true,
+  "emulated_frames": 3701
+}

@@ -1,0 +1,252 @@
+{
+  "spawn_tile": [
+    40,
+    28
+  ],
+  "spawn_distance": 3,
+  "arrival_frames_after_spawn": 219,
+  "walk_track": [
+    [
+      106,
+      [
+        40,
+        29
+      ]
+    ],
+    [
+      262,
+      [
+        40,
+        30
+      ]
+    ],
+    [
+      293,
+      [
+        39,
+        30
+      ]
+    ]
+  ],
+  "step_frames": [
+    156,
+    31
+  ],
+  "arrive_look": {
+    "frame": 324,
+    "actor": 0,
+    "slot": 8,
+    "beat": 5,
+    "name": "arrive_look",
+    "event": "start"
+  },
+  "started": [
+    "look_around",
+    "arrive_look"
+  ],
+  "events": [
+    {
+      "frame": 137,
+      "actor": 0,
+      "slot": 8,
+      "beat": 0,
+      "name": "look_around",
+      "event": "start"
+    },
+    {
+      "frame": 262,
+      "actor": 0,
+      "slot": 8,
+      "beat": 0,
+      "name": "look_around",
+      "event": "end"
+    },
+    {
+      "frame": 324,
+      "actor": 0,
+      "slot": 8,
+      "beat": 5,
+      "name": "arrive_look",
+      "event": "start"
+    },
+    {
+      "frame": 385,
+      "actor": 0,
+      "slot": 8,
+      "beat": 5,
+      "name": "arrive_look",
+      "event": "end"
+    }
+  ],
+  "counters": {
+    "started_idle": 1,
+    "started_transition": 1,
+    "started_react": 0,
+    "ended": 2,
+    "interrupted": 0,
+    "icons": 0,
+    "effects": 0,
+    "palette_skips": 0,
+    "icon_skips": 0,
+    "step_skips": 1,
+    "running": [
+      255,
+      255,
+      255,
+      255
+    ],
+    "companion": {
+      "out": 0,
+      "in": 0,
+      "away": {
+        "slots": 0,
+        "follower": 0,
+        "vanished": 0,
+        "interrupted": 0
+      },
+      "denied": {
+        "place": 0,
+        "busy": 0,
+        "slots": 0,
+        "follower": 0,
+        "palette": 0,
+        "tile": 0
+      },
+      "out_failed": 0,
+      "strays": 0,
+      "prepares": 0
+    }
+  },
+  "player": {
+    "slot": 0,
+    "gfx": 527,
+    "localId": 255,
+    "mapNum": 32,
+    "mapGroup": 0,
+    "x": 34,
+    "y": 33,
+    "invisible": false,
+    "isPlayer": true,
+    "facing": 4
+  },
+  "screenshots": [
+    ".product/research/ambience/arrive-look.png"
+  ],
+  "debug": {
+    "frames": 646,
+    "spawns": 1,
+    "removals": 0,
+    "edgeExits": 0,
+    "warpExits": 0,
+    "arrivals": 1,
+    "rebases": 0,
+    "stripEntries": 0,
+    "replans": 0,
+    "blockedSteps": 0,
+    "searches": 2,
+    "searchFails": 0,
+    "localDwellBeats": 0,
+    "localAdvances": 0,
+    "emotes": 0,
+    "templateMoves": 1,
+    "floorChanges": 0,
+    "heapResets": 5,
+    "restores": 0,
+    "lastSearchNodes": 220,
+    "maxSearchNodes": 220,
+    "lastSearchFrames": 45,
+    "maxSearchFrames": 45,
+    "maxSliceScanlines": 60,
+    "maxSliceNodes": 7,
+    "workspaceBytes": 11308,
+    "currentMap": 32,
+    "followerHidden": 0,
+    "activeActors": 1,
+    "storySuppressed": 0,
+    "worldState": 33634040,
+    "actors": [
+      {
+        "index": 0,
+        "slot": 8,
+        "mode": 1,
+        "phase": 4,
+        "goalKind": 1,
+        "objectId": 3,
+        "template": 3,
+        "atSpot": 1,
+        "blocked": 0,
+        "x": 39,
+        "y": 28,
+        "goalX": 43,
+        "goalY": 20,
+        "goalEdge": 65535
+      },
+      {
+        "index": 1,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 2,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 3,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      }
+    ],
+    "lastHeartbeatScanlines": 26,
+    "maxHeartbeatScanlines": 26,
+    "maxSpawnScanlines": 24,
+    "maxUpdateScanlines": 69,
+    "backOffs": 0,
+    "handoffs": 0,
+    "visitorsVanished": 0,
+    "culls": 0,
+    "lastContextScanlines": 15,
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 3,
+    "walkOffs": 0,
+    "worldJobs": 0,
+    "maxJobScanlines": 0,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
+  },
+  "pass": true,
+  "emulated_frames": 942
+}

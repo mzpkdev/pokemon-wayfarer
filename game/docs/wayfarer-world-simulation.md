@@ -411,11 +411,35 @@ inside one seam frame. The beat scenarios read `sAmbience`'s debug block (beats
 started by class, ended, interrupted, icons, effects, skips, the running beat
 per actor, and a ring of the last 32 start/end/interrupt events with their
 walker frame): `beatspot` (a water beat at Viridian's pond, only beats whose
-context holds), `arrive` (Blue comes out of the Mart door 3 tiles from a
-square spot and plays `arrive_look` the moment he reaches it), `notice` (once per approach, `stare_down` for a stoic
-trainer), `greet` (Brock and Misty greet once), `beatpush` (pressing stops a
-beat within frames and restores the facing, then the back-off) and
-`determinism` (two runs from boot give the same beat log). The companion
+context holds; `water_bite` steps back off the water and ahead again and
+leaves Blue on (13, 39) facing north; the screenshot shows its "!"),
+`arrive` (Blue comes out of the Mart door 3 tiles from a square spot and
+plays `arrive_look` the moment he reaches it), `leave` (Lance, stoic, with
+one heartbeat of dwell left: `leave_turn` starts in the frame his local
+dwell runs out, inside his quiet gap since `arrive_look`, so no idle beat
+could have started then), `notice` (once per approach, over a 1,600-frame
+stay in range, longer than its 1,200-frame cooldown; `stare_down` for a
+stoic trainer), `greet` (Brock and Misty greet once; the map-name banner is
+switched off, `FLAG_HIDE_MAP_NAME_POPUP`, so the screenshot shows them),
+`beatpush` (pressing stops a beat within frames and restores the facing,
+then the back-off), `beatlock` (Lance at the pond: the Start menu mid-
+`stare_down` interrupts it within a few frames, and under the menu his
+object stays frozen on its tile facing its start facing, north, as after;
+the Start menu and the Bag (a heap reset) mid-`water_bite`, a tile off his
+spot: no 0xF9 object, he is back on (13, 39) facing north and beats start
+again in the new block; a map object given his sprite in RAM, standing in
+for a story object, stops his next beat within a spawn period and he walks
+off) and `determinism` (two runs from boot give the same beat log on the
+same frames; the second run starts 60 frames later and has another RNG
+state from the script's start, so a beat that read the RNG would come out
+differently). Pace is gated on tile changes read from the walker's object
+(a read caught partway through a lag frame is dropped): `spot` (the walk to
+the pond after the Bag: 30 to 36 frames a tile, the median of the steps,
+none faster; it measures 31) and `walkoff` (14 to 20; it measures 16).
+Not covered on screen: an already-out companion put away because a map
+object scrolled into view (free slots below 3; `companionslots` covers only
+the room check before it comes out), and a real story scene (the RAM
+stand-in exercises the same check). The companion
 scenarios (results in `.product/research/ambience/`): `companion` (Blue at
 Viridian's pond runs `ace_play`; Umbreon stands beside him facing him, not on
 or ahead of the player, and is gone at the beat's end; the player's follower
