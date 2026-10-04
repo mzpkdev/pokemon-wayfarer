@@ -4,8 +4,9 @@ PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
 Implemented: No
 
 Design status: draft. These tables follow the
-[Kanto and Johto encounter rules](kanto-johto-encounters.md). Every pick is a
-placeholder for playtesting.
+[Kanto and Johto encounter rules](kanto-johto-encounters.md). They are the
+source of truth for Johto's wild-encounter data: every slot below maps one to one
+to a slot in the game's encounter tables. Playtesting may change the picks.
 
 ## Scope
 
@@ -18,21 +19,24 @@ listed. Legendaries and mythicals belong to a later spec.
 ### Reading the tables
 
 - Places are ordered by reach: Road, Wilds, Outlands, then dungeons. Each place
-  names its reach and its Gen I–II band.
-- Each method's slots are grouped into tiers by their weight:
-
-| Method | Common | Uncommon | Rare | Very rare |
-| --- | --- | --- | --- | --- |
-| Land | Slots 1–2 (20% each) | Slots 3–6 (10% each) | Slots 7–10 (4–5% each) | Slots 11–12 (1% each) |
-| Surfing, trees and rocks | Slot 1 (60%) | Slot 2 (30%) | Slots 3–4 (5% and 4%) | Slot 5 (1%) |
-| Fishing | Entries 1–2 | Entries 3–5 | Entries 6–8 | Entries 9–10 |
-
-- Fishing uses the Standard Rod's ten entries, which are weighted differently
-  by rod quality.
-- A line is written from its base to its stage cap, such as Pidgey–Pidgeot. The
-  game picks the stage from the level. A single name is a single-stage species,
-  a baby, or a line capped at that stage.
-- "×2" means the species fills two slots in that tier.
+  names its reach and its Gen I–II band, and each map is named by its map
+  constant.
+- Each table lists every slot in order, with its weight, and the species for
+  day and night.
+  - Land has 12 slots weighted 20, 20, 10, 10, 10, 10, 5, 5, 4, 4, 1 and 1%.
+  - Surfing, and trees and rocks, have 5 slots weighted 60, 30, 5, 4 and 1%.
+  - Fishing has the [Standard Rod](standard-rod-fishing.md)'s 10 entries, with
+    each entry's weight for the Old, Good and Super Rod.
+- **A slot's species is its stage cap,** the last name in the cell. "Caterpie–
+  Metapod" means the slot holds Metapod, and the game steps it down to
+  Caterpie below Metapod's evolution level. A single name is a single-stage
+  species, a baby, or a line capped at its first stage.
+- Names map to species constants in capitals, with spaces and hyphens as
+  underscores and other punctuation dropped: Mr. Mime is `SPECIES_MR_MIME`,
+  Farfetch'd is `SPECIES_FARFETCHD` and Porygon-Z is `SPECIES_PORYGON_Z`. The
+  exceptions are Nidoran♀ (`SPECIES_NIDORAN_F`) and Nidoran♂
+  (`SPECIES_NIDORAN_M`).
+- Slots hold no levels. Levels come from the map's reach, as the PRD defines.
 
 ### Tables
 
@@ -40,187 +44,265 @@ listed. Legendaries and mythicals belong to a later spec.
 
 Road, Johto east.
 
+**`MAP_NEW_BARK_TOWN_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Sentret–Furret, Ledyba–Ledian | Oddish–Gloom, Sentret–Furret |
-| Uncommon | Pidgey–Pidgeot, Hoppip–Jumpluff, Rattata–Raticate, Sunkern | Hoothoot–Noctowl, Rattata–Raticate, Spinarak–Ariados, Marill–Azumarill |
-| Rare | Caterpie–Butterfree, Marill–Azumarill, Pidgey–Pidgeot, Sentret–Furret | Oddish–Gloom, Hoothoot–Noctowl, Chikorita–Meganium, Rattata–Raticate |
-| Very rare | Togepi, Chikorita–Meganium | Togepi, Spinarak–Ariados |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Sentret–Furret | Oddish–Gloom |
+| 2 | 20% | Ledyba–Ledian | Sentret–Furret |
+| 3 | 10% | Pidgey–Pidgeot | Hoothoot–Noctowl |
+| 4 | 10% | Hoppip–Jumpluff | Rattata–Raticate |
+| 5 | 10% | Rattata–Raticate | Spinarak–Ariados |
+| 6 | 10% | Sunkern | Marill–Azumarill |
+| 7 | 5% | Caterpie–Butterfree | Oddish–Gloom |
+| 8 | 5% | Marill–Azumarill | Hoothoot–Noctowl |
+| 9 | 4% | Pidgey–Pidgeot | Chikorita–Meganium |
+| 10 | 4% | Sentret–Furret | Rattata–Raticate |
+| 11 | 1% | Togepi | Togepi |
+| 12 | 1% | Chikorita–Meganium | Spinarak–Ariados |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Tentacool–Tentacruel | Chinchou–Lanturn |
-| Uncommon | Chinchou–Lanturn | Tentacool–Tentacruel |
-| Rare | Shellder, Krabby–Kingler | Staryu, Shellder |
-| Very rare | Remoraid–Octillery | Remoraid–Octillery |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Tentacool–Tentacruel | Chinchou–Lanturn |
+| 2 | 30% | Chinchou–Lanturn | Tentacool–Tentacruel |
+| 3 | 5% | Shellder | Staryu |
+| 4 | 4% | Krabby–Kingler | Shellder |
+| 5 | 1% | Remoraid–Octillery | Remoraid–Octillery |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Chinchou–Lanturn, Tentacool–Tentacruel | Chinchou–Lanturn, Tentacool–Tentacruel |
-| Uncommon | Magikarp–Gyarados, Shellder, Chinchou–Lanturn | Magikarp–Gyarados, Staryu, Chinchou–Lanturn |
-| Rare | Krabby–Kingler, Corsola, Tentacool–Tentacruel | Shellder, Staryu, Krabby–Kingler |
-| Very rare | Qwilfish, Chinchou–Lanturn | Corsola, Qwilfish |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Shellder | Staryu |
+| 5 | 8% | 9% | 10% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 6 | 4% | 7% | 10% | Krabby–Kingler | Shellder |
+| 7 | 3% | 6% | 10% | Corsola | Staryu |
+| 8 | 3% | 5% | 9% | Tentacool–Tentacruel | Krabby–Kingler |
+| 9 | 2% | 4% | 9% | Qwilfish | Corsola |
+| 10 | 2% | 4% | 9% | Chinchou–Lanturn | Qwilfish |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Ledyba–Ledian | Ledyba–Ledian |
-| Uncommon | Caterpie–Butterfree | Spinarak–Ariados |
-| Rare | Pineco–Forretress, Exeggcute | Caterpie–Butterfree, Pineco–Forretress |
-| Very rare | Aipom | Hoothoot–Noctowl |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Ledyba–Ledian | Ledyba–Ledian |
+| 2 | 30% | Caterpie–Butterfree | Spinarak–Ariados |
+| 3 | 5% | Pineco–Forretress | Caterpie–Butterfree |
+| 4 | 4% | Exeggcute | Pineco–Forretress |
+| 5 | 1% | Aipom | Hoothoot–Noctowl |
 
 #### Cherrygrove City
 
 Road, Johto east.
 
+**`MAP_CHERRYGROVE_CITY_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Pidgey–Pidgeot, Spearow–Fearow | Rattata–Raticate, Meowth–Persian |
-| Uncommon | Rattata–Raticate, Ledyba–Ledian, Hoppip–Jumpluff, Sentret–Furret | Hoothoot–Noctowl, Oddish–Gloom, Spinarak–Ariados, Gastly–Haunter |
-| Rare | Sunkern, Caterpie–Butterfree, Spearow–Fearow, Pidgey–Pidgeot | Rattata–Raticate, Oddish–Gloom, Hoothoot–Noctowl, Meowth–Persian |
-| Very rare | Eevee, Sunkern | Eevee, Gastly–Haunter |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Pidgey–Pidgeot | Rattata–Raticate |
+| 2 | 20% | Spearow–Fearow | Meowth–Persian |
+| 3 | 10% | Rattata–Raticate | Hoothoot–Noctowl |
+| 4 | 10% | Ledyba–Ledian | Oddish–Gloom |
+| 5 | 10% | Hoppip–Jumpluff | Spinarak–Ariados |
+| 6 | 10% | Sentret–Furret | Gastly–Haunter |
+| 7 | 5% | Sunkern | Rattata–Raticate |
+| 8 | 5% | Caterpie–Butterfree | Oddish–Gloom |
+| 9 | 4% | Spearow–Fearow | Hoothoot–Noctowl |
+| 10 | 4% | Pidgey–Pidgeot | Meowth–Persian |
+| 11 | 1% | Eevee | Eevee |
+| 12 | 1% | Sunkern | Gastly–Haunter |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| Uncommon | Krabby–Kingler | Krabby–Kingler |
-| Rare | Corsola, Shellder | Staryu, Shellder |
-| Very rare | Qwilfish | Qwilfish |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 2 | 30% | Krabby–Kingler | Krabby–Kingler |
+| 3 | 5% | Corsola | Staryu |
+| 4 | 4% | Shellder | Shellder |
+| 5 | 1% | Qwilfish | Qwilfish |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Krabby–Kingler, Tentacool–Tentacruel | Krabby–Kingler, Tentacool–Tentacruel |
-| Uncommon | Magikarp–Gyarados, Corsola, Krabby–Kingler | Magikarp–Gyarados, Staryu, Krabby–Kingler |
-| Rare | Magikarp–Gyarados, Corsola, Tentacool–Tentacruel | Magikarp–Gyarados, Staryu, Tentacool–Tentacruel |
-| Very rare | Qwilfish, Krabby–Kingler | Staryu, Krabby–Kingler |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Krabby–Kingler | Krabby–Kingler |
+| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Corsola | Staryu |
+| 5 | 8% | 9% | 10% | Krabby–Kingler | Krabby–Kingler |
+| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 7 | 3% | 6% | 10% | Corsola | Staryu |
+| 8 | 3% | 5% | 9% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 9 | 2% | 4% | 9% | Qwilfish | Staryu |
+| 10 | 2% | 4% | 9% | Krabby–Kingler | Krabby–Kingler |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Spearow–Fearow | Spearow–Fearow |
-| Uncommon | Pidgey–Pidgeot | Pidgey–Pidgeot |
-| Rare | Exeggcute, Ledyba–Ledian | Spinarak–Ariados, Exeggcute |
-| Very rare | Aipom | Aipom |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Spearow–Fearow | Spearow–Fearow |
+| 2 | 30% | Pidgey–Pidgeot | Pidgey–Pidgeot |
+| 3 | 5% | Exeggcute | Spinarak–Ariados |
+| 4 | 4% | Ledyba–Ledian | Exeggcute |
+| 5 | 1% | Aipom | Aipom |
 
 #### Violet City
 
 Road, Johto east.
 
+**`MAP_VIOLET_CITY_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Bellsprout–Weepinbell, Ledyba–Ledian | Bellsprout–Weepinbell, Gastly–Haunter |
-| Uncommon | Pidgey–Pidgeot, Rattata–Raticate, Mareep–Ampharos, Hoppip–Jumpluff | Rattata–Raticate, Oddish–Gloom, Spinarak–Ariados, Hoothoot–Noctowl |
-| Rare | Sunkern, Natu–Xatu, Bellsprout–Weepinbell, Ledyba–Ledian | Zubat–Golbat, Gastly–Haunter, Hoothoot–Noctowl, Oddish–Gloom |
-| Very rare | Abra, Sunkern | Abra, Gastly–Haunter |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Bellsprout–Weepinbell | Bellsprout–Weepinbell |
+| 2 | 20% | Ledyba–Ledian | Gastly–Haunter |
+| 3 | 10% | Pidgey–Pidgeot | Rattata–Raticate |
+| 4 | 10% | Rattata–Raticate | Oddish–Gloom |
+| 5 | 10% | Mareep–Ampharos | Spinarak–Ariados |
+| 6 | 10% | Hoppip–Jumpluff | Hoothoot–Noctowl |
+| 7 | 5% | Sunkern | Zubat–Golbat |
+| 8 | 5% | Natu–Xatu | Gastly–Haunter |
+| 9 | 4% | Bellsprout–Weepinbell | Hoothoot–Noctowl |
+| 10 | 4% | Ledyba–Ledian | Oddish–Gloom |
+| 11 | 1% | Abra | Abra |
+| 12 | 1% | Sunkern | Gastly–Haunter |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| Uncommon | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| Rare | Marill–Azumarill, Psyduck–Golduck | Psyduck–Golduck, Wooper–Quagsire |
-| Very rare | Magikarp–Gyarados | Magikarp–Gyarados |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 2 | 30% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 5% | Marill–Azumarill | Psyduck–Golduck |
+| 4 | 4% | Psyduck–Golduck | Wooper–Quagsire |
+| 5 | 1% | Magikarp–Gyarados | Magikarp–Gyarados |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Poliwag–Poliwhirl ×2 | Poliwag–Poliwhirl ×2 |
-| Uncommon | Magikarp–Gyarados ×2, Marill–Azumarill | Magikarp–Gyarados ×2, Wooper–Quagsire |
-| Rare | Poliwag–Poliwhirl, Goldeen–Seaking, Psyduck–Golduck | Wooper–Quagsire, Goldeen–Seaking, Marill–Azumarill |
-| Very rare | Poliwag–Poliwhirl, Wooper–Quagsire | Poliwag–Poliwhirl, Psyduck–Golduck |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 8 | 3% | 5% | 9% | Psyduck–Golduck | Marill–Azumarill |
+| 9 | 2% | 4% | 9% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 10 | 2% | 4% | 9% | Wooper–Quagsire | Psyduck–Golduck |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Ledyba–Ledian | Bellsprout–Weepinbell |
-| Uncommon | Bellsprout–Weepinbell | Ledyba–Ledian |
-| Rare | Exeggcute, Pineco–Forretress | Spinarak–Ariados, Hoothoot–Noctowl |
-| Very rare | Aipom | Aipom |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Ledyba–Ledian | Bellsprout–Weepinbell |
+| 2 | 30% | Bellsprout–Weepinbell | Ledyba–Ledian |
+| 3 | 5% | Exeggcute | Spinarak–Ariados |
+| 4 | 4% | Pineco–Forretress | Hoothoot–Noctowl |
+| 5 | 1% | Aipom | Aipom |
 
 #### Azalea Town
 
 Road, Johto west.
 
+**`MAP_AZALEA_TOWN_HNS`**
+
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Pineco–Forretress | Pineco–Forretress |
-| Uncommon | Aipom | Aipom |
-| Rare | Caterpie–Butterfree, Weedle–Beedrill | Spinarak–Ariados, Hoothoot–Noctowl |
-| Very rare | Exeggcute | Murkrow |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Pineco–Forretress | Pineco–Forretress |
+| 2 | 30% | Aipom | Aipom |
+| 3 | 5% | Caterpie–Butterfree | Spinarak–Ariados |
+| 4 | 4% | Weedle–Beedrill | Hoothoot–Noctowl |
+| 5 | 1% | Exeggcute | Murkrow |
 
 #### Goldenrod City
 
 Road, Johto west.
 
+**`MAP_GOLDENROD_CITY_HNS`**
+
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Ledyba–Ledian | Ledyba–Ledian |
-| Uncommon | Exeggcute | Exeggcute |
-| Rare | Pineco–Forretress, Aipom | Spinarak–Ariados, Pineco–Forretress |
-| Very rare | Caterpie–Butterfree | Murkrow |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Ledyba–Ledian | Ledyba–Ledian |
+| 2 | 30% | Exeggcute | Exeggcute |
+| 3 | 5% | Pineco–Forretress | Spinarak–Ariados |
+| 4 | 4% | Aipom | Pineco–Forretress |
+| 5 | 1% | Caterpie–Butterfree | Murkrow |
 
 #### Ecruteak City
 
 Road, Johto west.
 
+**`MAP_ECRUTEAK_CITY_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Sentret–Furret, Hoppip–Jumpluff | Gastly–Haunter, Sentret–Furret |
-| Uncommon | Vulpix, Pidgey–Pidgeot, Growlithe, Sunkern | Hoothoot–Noctowl, Vulpix, Oddish–Gloom, Spinarak–Ariados |
-| Rare | Ledyba–Ledian, Caterpie–Butterfree, Eevee, Sentret–Furret | Misdreavus, Gastly–Haunter, Eevee, Oddish–Gloom |
-| Very rare | Eevee, Hoppip–Jumpluff | Houndour–Houndoom, Murkrow |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Sentret–Furret | Gastly–Haunter |
+| 2 | 20% | Hoppip–Jumpluff | Sentret–Furret |
+| 3 | 10% | Vulpix | Hoothoot–Noctowl |
+| 4 | 10% | Pidgey–Pidgeot | Vulpix |
+| 5 | 10% | Growlithe | Oddish–Gloom |
+| 6 | 10% | Sunkern | Spinarak–Ariados |
+| 7 | 5% | Ledyba–Ledian | Misdreavus |
+| 8 | 5% | Caterpie–Butterfree | Gastly–Haunter |
+| 9 | 4% | Eevee | Eevee |
+| 10 | 4% | Sentret–Furret | Oddish–Gloom |
+| 11 | 1% | Eevee | Houndour–Houndoom |
+| 12 | 1% | Hoppip–Jumpluff | Murkrow |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Marill–Azumarill | Psyduck–Golduck |
-| Uncommon | Psyduck–Golduck | Marill–Azumarill |
-| Rare | Poliwag–Poliwhirl, Magikarp–Gyarados | Wooper–Quagsire, Poliwag–Poliwhirl |
-| Very rare | Wooper–Quagsire | Magikarp–Gyarados |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Marill–Azumarill | Psyduck–Golduck |
+| 2 | 30% | Psyduck–Golduck | Marill–Azumarill |
+| 3 | 5% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 4 | 4% | Magikarp–Gyarados | Poliwag–Poliwhirl |
+| 5 | 1% | Wooper–Quagsire | Magikarp–Gyarados |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Psyduck–Golduck, Marill–Azumarill | Marill–Azumarill, Psyduck–Golduck |
-| Uncommon | Magikarp–Gyarados, Poliwag–Poliwhirl, Goldeen–Seaking | Magikarp–Gyarados, Wooper–Quagsire, Goldeen–Seaking |
-| Rare | Psyduck–Golduck, Magikarp–Gyarados, Marill–Azumarill | Poliwag–Poliwhirl, Wooper–Quagsire, Magikarp–Gyarados |
-| Very rare | Poliwag–Poliwhirl, Wooper–Quagsire | Marill–Azumarill, Psyduck–Golduck |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Psyduck–Golduck | Marill–Azumarill |
+| 2 | 22% | 18% | 10% | Marill–Azumarill | Psyduck–Golduck |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 6 | 4% | 7% | 10% | Psyduck–Golduck | Poliwag–Poliwhirl |
+| 7 | 3% | 6% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
+| 8 | 3% | 5% | 9% | Marill–Azumarill | Magikarp–Gyarados |
+| 9 | 2% | 4% | 9% | Poliwag–Poliwhirl | Marill–Azumarill |
+| 10 | 2% | 4% | 9% | Wooper–Quagsire | Psyduck–Golduck |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Exeggcute | Exeggcute |
-| Uncommon | Ledyba–Ledian | Ledyba–Ledian |
-| Rare | Pineco–Forretress, Aipom | Spinarak–Ariados, Pineco–Forretress |
-| Very rare | Caterpie–Butterfree | Hoothoot–Noctowl |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Exeggcute | Exeggcute |
+| 2 | 30% | Ledyba–Ledian | Ledyba–Ledian |
+| 3 | 5% | Pineco–Forretress | Spinarak–Ariados |
+| 4 | 4% | Aipom | Pineco–Forretress |
+| 5 | 1% | Caterpie–Butterfree | Hoothoot–Noctowl |
 
 #### Olivine City
 
@@ -230,874 +312,1269 @@ Road, Johto west.
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Meowth–Persian, Hoppip–Jumpluff | Meowth–Persian, Magnemite–Magneton |
-| Uncommon | Magnemite–Magneton, Spearow–Fearow, Sunkern, Rattata–Raticate | Gastly–Haunter, Hoothoot–Noctowl, Grimer–Muk, Oddish–Gloom |
-| Rare | Grimer–Muk, Snubbull–Granbull, Spearow–Fearow, Sunkern | Gastly–Haunter, Meowth–Persian, Hoothoot–Noctowl, Rattata–Raticate |
-| Very rare | Farfetch'd, Magnemite–Magneton | Farfetch'd, Spinarak–Ariados |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Meowth–Persian | Meowth–Persian |
+| 2 | 20% | Hoppip–Jumpluff | Magnemite–Magneton |
+| 3 | 10% | Magnemite–Magneton | Gastly–Haunter |
+| 4 | 10% | Spearow–Fearow | Hoothoot–Noctowl |
+| 5 | 10% | Sunkern | Grimer–Muk |
+| 6 | 10% | Rattata–Raticate | Oddish–Gloom |
+| 7 | 5% | Grimer–Muk | Gastly–Haunter |
+| 8 | 5% | Snubbull–Granbull | Meowth–Persian |
+| 9 | 4% | Spearow–Fearow | Hoothoot–Noctowl |
+| 10 | 4% | Sunkern | Rattata–Raticate |
+| 11 | 1% | Farfetch'd | Farfetch'd |
+| 12 | 1% | Magnemite–Magneton | Spinarak–Ariados |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Remoraid–Octillery | Remoraid–Octillery |
-| Uncommon | Corsola | Corsola |
-| Rare | Tentacool–Tentacruel, Shellder | Staryu, Chinchou–Lanturn |
-| Very rare | Mantyke | Tentacool–Tentacruel |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Remoraid–Octillery | Remoraid–Octillery |
+| 2 | 30% | Corsola | Corsola |
+| 3 | 5% | Tentacool–Tentacruel | Staryu |
+| 4 | 4% | Shellder | Chinchou–Lanturn |
+| 5 | 1% | Mantyke | Tentacool–Tentacruel |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Corsola, Remoraid–Octillery | Remoraid–Octillery, Corsola |
-| Uncommon | Krabby–Kingler, Magikarp–Gyarados, Corsola | Staryu ×2, Krabby–Kingler |
-| Rare | Krabby–Kingler, Shellder, Qwilfish | Magikarp–Gyarados, Chinchou–Lanturn, Staryu |
-| Very rare | Corsola, Tentacool–Tentacruel | Qwilfish, Chinchou–Lanturn |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Corsola | Remoraid–Octillery |
+| 2 | 22% | 18% | 10% | Remoraid–Octillery | Corsola |
+| 3 | 10% | 12% | 11% | Krabby–Kingler | Staryu |
+| 4 | 8% | 10% | 10% | Magikarp–Gyarados | Krabby–Kingler |
+| 5 | 8% | 9% | 10% | Corsola | Staryu |
+| 6 | 4% | 7% | 10% | Krabby–Kingler | Magikarp–Gyarados |
+| 7 | 3% | 6% | 10% | Shellder | Chinchou–Lanturn |
+| 8 | 3% | 5% | 9% | Qwilfish | Staryu |
+| 9 | 2% | 4% | 9% | Corsola | Qwilfish |
+| 10 | 2% | 4% | 9% | Tentacool–Tentacruel | Chinchou–Lanturn |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Exeggcute | Exeggcute |
-| Uncommon | Spearow–Fearow | Spearow–Fearow |
-| Rare | Pineco–Forretress, Ledyba–Ledian | Spinarak–Ariados, Pineco–Forretress |
-| Very rare | Aipom | Hoothoot–Noctowl |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Exeggcute | Exeggcute |
+| 2 | 30% | Spearow–Fearow | Spearow–Fearow |
+| 3 | 5% | Pineco–Forretress | Spinarak–Ariados |
+| 4 | 4% | Ledyba–Ledian | Pineco–Forretress |
+| 5 | 1% | Aipom | Hoothoot–Noctowl |
 
 **`MAP_OLIVINE_CITY_PORT_OUTSIDE_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Hoppip–Jumpluff, Krabby–Kingler | Krabby–Kingler, Meowth–Persian |
-| Uncommon | Pidgey–Pidgeot, Snubbull–Granbull, Sunkern, Meowth–Persian | Hoothoot–Noctowl, Gastly–Haunter, Oddish–Gloom, Snubbull–Granbull |
-| Rare | Grimer–Muk, Spearow–Fearow, Ditto, Krabby–Kingler | Slowpoke–Slowbro, Hoothoot–Noctowl, Ditto, Gastly–Haunter |
-| Very rare | Farfetch'd, Slowpoke–Slowbro | Farfetch'd, Spinarak–Ariados |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Hoppip–Jumpluff | Krabby–Kingler |
+| 2 | 20% | Krabby–Kingler | Meowth–Persian |
+| 3 | 10% | Pidgey–Pidgeot | Hoothoot–Noctowl |
+| 4 | 10% | Snubbull–Granbull | Gastly–Haunter |
+| 5 | 10% | Sunkern | Oddish–Gloom |
+| 6 | 10% | Meowth–Persian | Snubbull–Granbull |
+| 7 | 5% | Grimer–Muk | Slowpoke–Slowbro |
+| 8 | 5% | Spearow–Fearow | Hoothoot–Noctowl |
+| 9 | 4% | Ditto | Ditto |
+| 10 | 4% | Krabby–Kingler | Gastly–Haunter |
+| 11 | 1% | Farfetch'd | Farfetch'd |
+| 12 | 1% | Slowpoke–Slowbro | Spinarak–Ariados |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Tentacool–Tentacruel | Remoraid–Octillery |
-| Uncommon | Remoraid–Octillery | Tentacool–Tentacruel |
-| Rare | Corsola, Chinchou–Lanturn | Chinchou–Lanturn, Staryu |
-| Very rare | Qwilfish | Corsola |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Tentacool–Tentacruel | Remoraid–Octillery |
+| 2 | 30% | Remoraid–Octillery | Tentacool–Tentacruel |
+| 3 | 5% | Corsola | Chinchou–Lanturn |
+| 4 | 4% | Chinchou–Lanturn | Staryu |
+| 5 | 1% | Qwilfish | Corsola |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Remoraid–Octillery, Tentacool–Tentacruel | Remoraid–Octillery, Tentacool–Tentacruel |
-| Uncommon | Corsola, Chinchou–Lanturn, Qwilfish | Chinchou–Lanturn, Corsola, Staryu |
-| Rare | Krabby–Kingler, Shellder, Tentacool–Tentacruel | Chinchou–Lanturn, Staryu, Krabby–Kingler |
-| Very rare | Chinchou–Lanturn, Corsola | Qwilfish, Magikarp–Gyarados |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Remoraid–Octillery | Remoraid–Octillery |
+| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 3 | 10% | 12% | 11% | Corsola | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Chinchou–Lanturn | Corsola |
+| 5 | 8% | 9% | 10% | Qwilfish | Staryu |
+| 6 | 4% | 7% | 10% | Krabby–Kingler | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Shellder | Staryu |
+| 8 | 3% | 5% | 9% | Tentacool–Tentacruel | Krabby–Kingler |
+| 9 | 2% | 4% | 9% | Chinchou–Lanturn | Qwilfish |
+| 10 | 2% | 4% | 9% | Corsola | Magikarp–Gyarados |
 
 #### Cianwood City
 
 Road, Johto west.
 
+**`MAP_CIANWOOD_CITY_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Mankey–Primeape, Hoppip–Jumpluff | Machop–Machoke, Mankey–Primeape |
-| Uncommon | Machop–Machoke, Krabby–Kingler, Sunkern, Spearow–Fearow | Hoothoot–Noctowl, Gastly–Haunter, Oddish–Gloom, Spinarak–Ariados |
-| Rare | Tyrogue ×2, Geodude–Graveler, Mankey–Primeape | Zubat–Golbat, Hoothoot–Noctowl, Tyrogue, Gastly–Haunter |
-| Very rare | Ditto, Machop–Machoke | Ditto, Oddish–Gloom |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Mankey–Primeape | Machop–Machoke |
+| 2 | 20% | Hoppip–Jumpluff | Mankey–Primeape |
+| 3 | 10% | Machop–Machoke | Hoothoot–Noctowl |
+| 4 | 10% | Krabby–Kingler | Gastly–Haunter |
+| 5 | 10% | Sunkern | Oddish–Gloom |
+| 6 | 10% | Spearow–Fearow | Spinarak–Ariados |
+| 7 | 5% | Tyrogue | Zubat–Golbat |
+| 8 | 5% | Geodude–Graveler | Hoothoot–Noctowl |
+| 9 | 4% | Tyrogue | Tyrogue |
+| 10 | 4% | Mankey–Primeape | Gastly–Haunter |
+| 11 | 1% | Ditto | Ditto |
+| 12 | 1% | Machop–Machoke | Oddish–Gloom |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Chinchou–Lanturn | Chinchou–Lanturn |
-| Uncommon | Remoraid–Octillery | Remoraid–Octillery |
-| Rare | Shellder, Staryu | Staryu ×2 |
-| Very rare | Mantyke | Shellder |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 2 | 30% | Remoraid–Octillery | Remoraid–Octillery |
+| 3 | 5% | Shellder | Staryu |
+| 4 | 4% | Staryu | Staryu |
+| 5 | 1% | Mantyke | Shellder |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Chinchou–Lanturn, Remoraid–Octillery | Chinchou–Lanturn, Remoraid–Octillery |
-| Uncommon | Shellder, Corsola, Chinchou–Lanturn | Staryu, Corsola, Chinchou–Lanturn |
-| Rare | Qwilfish, Krabby–Kingler, Tentacool–Tentacruel | Staryu, Shellder, Krabby–Kingler |
-| Very rare | Staryu, Chinchou–Lanturn | Staryu, Qwilfish |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 2 | 22% | 18% | 10% | Remoraid–Octillery | Remoraid–Octillery |
+| 3 | 10% | 12% | 11% | Shellder | Staryu |
+| 4 | 8% | 10% | 10% | Corsola | Corsola |
+| 5 | 8% | 9% | 10% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 6 | 4% | 7% | 10% | Qwilfish | Staryu |
+| 7 | 3% | 6% | 10% | Krabby–Kingler | Shellder |
+| 8 | 3% | 5% | 9% | Tentacool–Tentacruel | Krabby–Kingler |
+| 9 | 2% | 4% | 9% | Staryu | Staryu |
+| 10 | 2% | 4% | 9% | Chinchou–Lanturn | Qwilfish |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Krabby–Kingler | Krabby–Kingler |
-| Uncommon | Mankey–Primeape | Mankey–Primeape |
-| Rare | Geodude–Graveler, Aipom | Spinarak–Ariados, Geodude–Graveler |
-| Very rare | Exeggcute | Aipom |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Krabby–Kingler | Krabby–Kingler |
+| 2 | 30% | Mankey–Primeape | Mankey–Primeape |
+| 3 | 5% | Geodude–Graveler | Spinarak–Ariados |
+| 4 | 4% | Aipom | Geodude–Graveler |
+| 5 | 1% | Exeggcute | Aipom |
 
 #### Mahogany Town
 
 Road, Johto east.
 
+**`MAP_MAHOGANYTOWN_HNS`**
+
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Aipom | Aipom |
-| Uncommon | Pineco–Forretress | Pineco–Forretress |
-| Rare | Ledyba–Ledian, Exeggcute | Spinarak–Ariados, Hoothoot–Noctowl |
-| Very rare | Pidgey–Pidgeot | Murkrow |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Aipom | Aipom |
+| 2 | 30% | Pineco–Forretress | Pineco–Forretress |
+| 3 | 5% | Ledyba–Ledian | Spinarak–Ariados |
+| 4 | 4% | Exeggcute | Hoothoot–Noctowl |
+| 5 | 1% | Pidgey–Pidgeot | Murkrow |
 
 #### Blackthorn City
 
 Road, Johto east.
 
+**`MAP_BLACKTHORN_CITY_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Spearow–Fearow, Phanpy–Donphan | Phanpy–Donphan, Oddish–Gloom |
-| Uncommon | Hoppip–Jumpluff, Geodude–Graveler, Pidgey–Pidgeot, Sunkern | Hoothoot–Noctowl, Gastly–Haunter, Zubat–Golbat, Swinub–Piloswine |
-| Rare | Swinub–Piloswine, Machop–Machoke, Gligar, Spearow–Fearow | Sneasel, Hoothoot–Noctowl, Zubat–Golbat, Gastly–Haunter |
-| Very rare | Gligar, Swinub–Piloswine | Sneasel, Gligar |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Spearow–Fearow | Phanpy–Donphan |
+| 2 | 20% | Phanpy–Donphan | Oddish–Gloom |
+| 3 | 10% | Hoppip–Jumpluff | Hoothoot–Noctowl |
+| 4 | 10% | Geodude–Graveler | Gastly–Haunter |
+| 5 | 10% | Pidgey–Pidgeot | Zubat–Golbat |
+| 6 | 10% | Sunkern | Swinub–Piloswine |
+| 7 | 5% | Swinub–Piloswine | Sneasel |
+| 8 | 5% | Machop–Machoke | Hoothoot–Noctowl |
+| 9 | 4% | Gligar | Zubat–Golbat |
+| 10 | 4% | Spearow–Fearow | Gastly–Haunter |
+| 11 | 1% | Gligar | Sneasel |
+| 12 | 1% | Swinub–Piloswine | Gligar |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Magikarp–Gyarados | Magikarp–Gyarados |
-| Uncommon | Horsea–Seadra | Horsea–Seadra |
-| Rare | Poliwag–Poliwhirl, Marill–Azumarill | Wooper–Quagsire, Poliwag–Poliwhirl |
-| Very rare | Psyduck–Golduck | Marill–Azumarill |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 30% | Horsea–Seadra | Horsea–Seadra |
+| 3 | 5% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 4 | 4% | Marill–Azumarill | Poliwag–Poliwhirl |
+| 5 | 1% | Psyduck–Golduck | Marill–Azumarill |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Poliwag–Poliwhirl, Horsea–Seadra | Poliwag–Poliwhirl, Horsea–Seadra |
-| Uncommon | Magikarp–Gyarados ×2, Poliwag–Poliwhirl | Magikarp–Gyarados, Wooper–Quagsire, Poliwag–Poliwhirl |
-| Rare | Horsea–Seadra, Poliwag–Poliwhirl, Goldeen–Seaking | Horsea–Seadra, Wooper–Quagsire, Magikarp–Gyarados |
-| Very rare | Magikarp–Gyarados, Marill–Azumarill | Goldeen–Seaking, Magikarp–Gyarados |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 2 | 22% | 18% | 10% | Horsea–Seadra | Horsea–Seadra |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Poliwag–Poliwhirl |
+| 6 | 4% | 7% | 10% | Horsea–Seadra | Horsea–Seadra |
+| 7 | 3% | 6% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 8 | 3% | 5% | 9% | Goldeen–Seaking | Magikarp–Gyarados |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Goldeen–Seaking |
+| 10 | 2% | 4% | 9% | Marill–Azumarill | Magikarp–Gyarados |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Spearow–Fearow | Spinarak–Ariados |
-| Uncommon | Spinarak–Ariados | Spearow–Fearow |
-| Rare | Pineco–Forretress, Aipom | Hoothoot–Noctowl, Pineco–Forretress |
-| Very rare | Exeggcute | Aipom |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Spearow–Fearow | Spinarak–Ariados |
+| 2 | 30% | Spinarak–Ariados | Spearow–Fearow |
+| 3 | 5% | Pineco–Forretress | Hoothoot–Noctowl |
+| 4 | 4% | Aipom | Pineco–Forretress |
+| 5 | 1% | Exeggcute | Aipom |
 
 #### Safari Zone Gate
 
 Road, Johto west.
 
+**`MAP_SAFARI_ZONE_GATE_HNS`**
+
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Spearow–Fearow | Exeggcute |
-| Uncommon | Exeggcute | Venonat–Venomoth |
-| Rare | Aipom, Pineco–Forretress | Aipom, Pineco–Forretress |
-| Very rare | Ledyba–Ledian | Murkrow |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Spearow–Fearow | Exeggcute |
+| 2 | 30% | Exeggcute | Venonat–Venomoth |
+| 3 | 5% | Aipom | Aipom |
+| 4 | 4% | Pineco–Forretress | Pineco–Forretress |
+| 5 | 1% | Ledyba–Ledian | Murkrow |
 
 #### Route 29
 
 Road, Johto east.
 
+**`MAP_ROUTE29_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Pidgey–Pidgeot, Sentret–Furret | Hoothoot–Noctowl, Rattata–Raticate |
-| Uncommon | Rattata–Raticate, Hoppip–Jumpluff, Ledyba–Ledian, Spearow–Fearow | Oddish–Gloom, Spinarak–Ariados, Venonat–Venomoth, Hoothoot–Noctowl |
-| Rare | Caterpie–Butterfree, Sunkern, Pidgey–Pidgeot, Sentret–Furret | Gastly–Haunter ×2, Rattata–Raticate, Oddish–Gloom |
-| Very rare | Chikorita–Meganium, Hoppip–Jumpluff | Chikorita–Meganium, Spinarak–Ariados |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Pidgey–Pidgeot | Hoothoot–Noctowl |
+| 2 | 20% | Sentret–Furret | Rattata–Raticate |
+| 3 | 10% | Rattata–Raticate | Oddish–Gloom |
+| 4 | 10% | Hoppip–Jumpluff | Spinarak–Ariados |
+| 5 | 10% | Ledyba–Ledian | Venonat–Venomoth |
+| 6 | 10% | Spearow–Fearow | Hoothoot–Noctowl |
+| 7 | 5% | Caterpie–Butterfree | Gastly–Haunter |
+| 8 | 5% | Sunkern | Rattata–Raticate |
+| 9 | 4% | Pidgey–Pidgeot | Gastly–Haunter |
+| 10 | 4% | Sentret–Furret | Oddish–Gloom |
+| 11 | 1% | Chikorita–Meganium | Chikorita–Meganium |
+| 12 | 1% | Hoppip–Jumpluff | Spinarak–Ariados |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Ledyba–Ledian | Hoothoot–Noctowl |
-| Uncommon | Hoothoot–Noctowl | Ledyba–Ledian |
-| Rare | Pineco–Forretress, Exeggcute | Spinarak–Ariados, Pineco–Forretress |
-| Very rare | Aipom | Aipom |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Ledyba–Ledian | Hoothoot–Noctowl |
+| 2 | 30% | Hoothoot–Noctowl | Ledyba–Ledian |
+| 3 | 5% | Pineco–Forretress | Spinarak–Ariados |
+| 4 | 4% | Exeggcute | Pineco–Forretress |
+| 5 | 1% | Aipom | Aipom |
 
 #### Route 30
 
 Road, Johto east.
 
+**`MAP_ROUTE30_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Ledyba–Ledian, Pidgey–Pidgeot | Hoothoot–Noctowl, Spinarak–Ariados |
-| Uncommon | Caterpie–Butterfree, Weedle–Beedrill, Hoppip–Jumpluff, Rattata–Raticate | Poliwag–Poliwhirl, Oddish–Gloom, Rattata–Raticate, Venonat–Venomoth |
-| Rare | Sunkern, Sentret–Furret, Ledyba–Ledian, Weedle–Beedrill | Spinarak–Ariados, Gastly–Haunter, Hoothoot–Noctowl, Zubat–Golbat |
-| Very rare | Abra, Pidgey–Pidgeot | Abra, Gastly–Haunter |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Ledyba–Ledian | Hoothoot–Noctowl |
+| 2 | 20% | Pidgey–Pidgeot | Spinarak–Ariados |
+| 3 | 10% | Caterpie–Butterfree | Poliwag–Poliwhirl |
+| 4 | 10% | Weedle–Beedrill | Oddish–Gloom |
+| 5 | 10% | Hoppip–Jumpluff | Rattata–Raticate |
+| 6 | 10% | Rattata–Raticate | Venonat–Venomoth |
+| 7 | 5% | Sunkern | Spinarak–Ariados |
+| 8 | 5% | Sentret–Furret | Gastly–Haunter |
+| 9 | 4% | Ledyba–Ledian | Hoothoot–Noctowl |
+| 10 | 4% | Weedle–Beedrill | Zubat–Golbat |
+| 11 | 1% | Abra | Abra |
+| 12 | 1% | Pidgey–Pidgeot | Gastly–Haunter |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| Uncommon | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| Rare | Marill–Azumarill, Magikarp–Gyarados | Wooper–Quagsire, Marill–Azumarill |
-| Very rare | Totodile–Feraligatr | Totodile–Feraligatr |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 2 | 30% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 5% | Marill–Azumarill | Wooper–Quagsire |
+| 4 | 4% | Magikarp–Gyarados | Marill–Azumarill |
+| 5 | 1% | Totodile–Feraligatr | Totodile–Feraligatr |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Poliwag–Poliwhirl ×2 | Poliwag–Poliwhirl ×2 |
-| Uncommon | Magikarp–Gyarados ×2, Goldeen–Seaking | Magikarp–Gyarados ×2, Wooper–Quagsire |
-| Rare | Poliwag–Poliwhirl, Marill–Azumarill, Goldeen–Seaking | Poliwag–Poliwhirl, Wooper–Quagsire, Goldeen–Seaking |
-| Very rare | Psyduck–Golduck, Poliwag–Poliwhirl | Marill–Azumarill, Poliwag–Poliwhirl |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 7 | 3% | 6% | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 8 | 3% | 5% | 9% | Goldeen–Seaking | Goldeen–Seaking |
+| 9 | 2% | 4% | 9% | Psyduck–Golduck | Marill–Azumarill |
+| 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Ledyba–Ledian | Spinarak–Ariados |
-| Uncommon | Spinarak–Ariados | Hoothoot–Noctowl |
-| Rare | Exeggcute, Pineco–Forretress | Ledyba–Ledian, Pineco–Forretress |
-| Very rare | Aipom | Aipom |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Ledyba–Ledian | Spinarak–Ariados |
+| 2 | 30% | Spinarak–Ariados | Hoothoot–Noctowl |
+| 3 | 5% | Exeggcute | Ledyba–Ledian |
+| 4 | 4% | Pineco–Forretress | Pineco–Forretress |
+| 5 | 1% | Aipom | Aipom |
 
 #### Route 31
 
 Road, Johto east.
 
+**`MAP_ROUTE31_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Bellsprout–Weepinbell, Ledyba–Ledian | Spinarak–Ariados, Oddish–Gloom |
-| Uncommon | Caterpie–Butterfree, Weedle–Beedrill, Pidgey–Pidgeot, Mareep–Ampharos | Bellsprout–Weepinbell, Gastly–Haunter, Zubat–Golbat, Hoothoot–Noctowl |
-| Rare | Sunkern, Hoppip–Jumpluff, Bellsprout–Weepinbell, Weedle–Beedrill | Spinarak–Ariados, Poliwag–Poliwhirl, Gastly–Haunter, Hoothoot–Noctowl |
-| Very rare | Pichu, Mareep–Ampharos | Zubat–Golbat, Dunsparce |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Bellsprout–Weepinbell | Spinarak–Ariados |
+| 2 | 20% | Ledyba–Ledian | Oddish–Gloom |
+| 3 | 10% | Caterpie–Butterfree | Bellsprout–Weepinbell |
+| 4 | 10% | Weedle–Beedrill | Gastly–Haunter |
+| 5 | 10% | Pidgey–Pidgeot | Zubat–Golbat |
+| 6 | 10% | Mareep–Ampharos | Hoothoot–Noctowl |
+| 7 | 5% | Sunkern | Spinarak–Ariados |
+| 8 | 5% | Hoppip–Jumpluff | Poliwag–Poliwhirl |
+| 9 | 4% | Bellsprout–Weepinbell | Gastly–Haunter |
+| 10 | 4% | Weedle–Beedrill | Hoothoot–Noctowl |
+| 11 | 1% | Pichu | Zubat–Golbat |
+| 12 | 1% | Mareep–Ampharos | Dunsparce |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| Uncommon | Marill–Azumarill | Marill–Azumarill |
-| Rare | Poliwag–Poliwhirl, Magikarp–Gyarados | Wooper–Quagsire, Poliwag–Poliwhirl |
-| Very rare | Psyduck–Golduck | Magikarp–Gyarados |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 2 | 30% | Marill–Azumarill | Marill–Azumarill |
+| 3 | 5% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 4 | 4% | Magikarp–Gyarados | Poliwag–Poliwhirl |
+| 5 | 1% | Psyduck–Golduck | Magikarp–Gyarados |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Poliwag–Poliwhirl, Marill–Azumarill | Poliwag–Poliwhirl, Marill–Azumarill |
-| Uncommon | Magikarp–Gyarados ×2, Poliwag–Poliwhirl | Magikarp–Gyarados ×2, Wooper–Quagsire |
-| Rare | Goldeen–Seaking, Poliwag–Poliwhirl, Marill–Azumarill | Poliwag–Poliwhirl, Wooper–Quagsire, Goldeen–Seaking |
-| Very rare | Psyduck–Golduck, Poliwag–Poliwhirl | Marill–Azumarill, Poliwag–Poliwhirl |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 2 | 22% | 18% | 10% | Marill–Azumarill | Marill–Azumarill |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 6 | 4% | 7% | 10% | Goldeen–Seaking | Poliwag–Poliwhirl |
+| 7 | 3% | 6% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 8 | 3% | 5% | 9% | Marill–Azumarill | Goldeen–Seaking |
+| 9 | 2% | 4% | 9% | Psyduck–Golduck | Marill–Azumarill |
+| 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Ledyba–Ledian | Spinarak–Ariados |
-| Uncommon | Bellsprout–Weepinbell | Bellsprout–Weepinbell |
-| Rare | Exeggcute, Pineco–Forretress | Hoothoot–Noctowl, Pineco–Forretress |
-| Very rare | Aipom | Aipom |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Ledyba–Ledian | Spinarak–Ariados |
+| 2 | 30% | Bellsprout–Weepinbell | Bellsprout–Weepinbell |
+| 3 | 5% | Exeggcute | Hoothoot–Noctowl |
+| 4 | 4% | Pineco–Forretress | Pineco–Forretress |
+| 5 | 1% | Aipom | Aipom |
 
 #### Route 32
 
 Road, Johto east.
 
+**`MAP_ROUTE32_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Mareep–Ampharos, Wooper–Quagsire | Wooper–Quagsire, Mareep–Ampharos |
-| Uncommon | Ekans–Arbok, Pidgey–Pidgeot, Bellsprout–Weepinbell, Hoppip–Jumpluff | Zubat–Golbat, Gastly–Haunter, Spinarak–Ariados, Oddish–Gloom |
-| Rare | Mareep–Ampharos, Sunkern, Ekans–Arbok, Wooper–Quagsire | Gastly–Haunter, Zubat–Golbat, Hoothoot–Noctowl, Oddish–Gloom |
-| Very rare | Mareep–Ampharos, Hoppip–Jumpluff | Murkrow, Ekans–Arbok |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Mareep–Ampharos | Wooper–Quagsire |
+| 2 | 20% | Wooper–Quagsire | Mareep–Ampharos |
+| 3 | 10% | Ekans–Arbok | Zubat–Golbat |
+| 4 | 10% | Pidgey–Pidgeot | Gastly–Haunter |
+| 5 | 10% | Bellsprout–Weepinbell | Spinarak–Ariados |
+| 6 | 10% | Hoppip–Jumpluff | Oddish–Gloom |
+| 7 | 5% | Mareep–Ampharos | Gastly–Haunter |
+| 8 | 5% | Sunkern | Zubat–Golbat |
+| 9 | 4% | Ekans–Arbok | Hoothoot–Noctowl |
+| 10 | 4% | Wooper–Quagsire | Oddish–Gloom |
+| 11 | 1% | Mareep–Ampharos | Murkrow |
+| 12 | 1% | Hoppip–Jumpluff | Ekans–Arbok |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Wooper–Quagsire | Wooper–Quagsire |
-| Uncommon | Qwilfish | Qwilfish |
-| Rare | Tentacool–Tentacruel, Marill–Azumarill | Chinchou–Lanturn, Tentacool–Tentacruel |
-| Very rare | Tentacool–Tentacruel | Marill–Azumarill |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Wooper–Quagsire | Wooper–Quagsire |
+| 2 | 30% | Qwilfish | Qwilfish |
+| 3 | 5% | Tentacool–Tentacruel | Chinchou–Lanturn |
+| 4 | 4% | Marill–Azumarill | Tentacool–Tentacruel |
+| 5 | 1% | Tentacool–Tentacruel | Marill–Azumarill |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Qwilfish ×2 | Qwilfish ×2 |
-| Uncommon | Magikarp–Gyarados, Tentacool–Tentacruel, Qwilfish | Magikarp–Gyarados, Chinchou–Lanturn, Qwilfish |
-| Rare | Wooper–Quagsire, Magikarp–Gyarados, Tentacool–Tentacruel | Wooper–Quagsire, Chinchou–Lanturn, Tentacool–Tentacruel |
-| Very rare | Qwilfish, Remoraid–Octillery | Qwilfish, Magikarp–Gyarados |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Qwilfish | Qwilfish |
+| 2 | 22% | 18% | 10% | Qwilfish | Qwilfish |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Tentacool–Tentacruel | Chinchou–Lanturn |
+| 5 | 8% | 9% | 10% | Qwilfish | Qwilfish |
+| 6 | 4% | 7% | 10% | Wooper–Quagsire | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Magikarp–Gyarados | Chinchou–Lanturn |
+| 8 | 3% | 5% | 9% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 9 | 2% | 4% | 9% | Qwilfish | Qwilfish |
+| 10 | 2% | 4% | 9% | Remoraid–Octillery | Magikarp–Gyarados |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Ekans–Arbok | Ekans–Arbok |
-| Uncommon | Ekans–Arbok | Ekans–Arbok |
-| Rare | Pineco–Forretress, Exeggcute | Spinarak–Ariados, Pineco–Forretress |
-| Very rare | Aipom | Hoothoot–Noctowl |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Ekans–Arbok | Ekans–Arbok |
+| 2 | 30% | Ekans–Arbok | Ekans–Arbok |
+| 3 | 5% | Pineco–Forretress | Spinarak–Ariados |
+| 4 | 4% | Exeggcute | Pineco–Forretress |
+| 5 | 1% | Aipom | Hoothoot–Noctowl |
 
 #### Route 33
 
 Road, Johto east.
 
+**`MAP_ROUTE33_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Machop–Machoke, Rattata–Raticate | Rattata–Raticate, Machop–Machoke |
-| Uncommon | Ekans–Arbok, Spearow–Fearow, Hoppip–Jumpluff, Geodude–Graveler | Zubat–Golbat, Gastly–Haunter, Hoothoot–Noctowl, Oddish–Gloom |
-| Rare | Wooper–Quagsire, Machop–Machoke, Ekans–Arbok, Rattata–Raticate | Zubat–Golbat, Spinarak–Ariados, Gastly–Haunter, Hoothoot–Noctowl |
-| Very rare | Slowpoke–Slowbro, Hoppip–Jumpluff | Dunsparce, Wooper–Quagsire |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Machop–Machoke | Rattata–Raticate |
+| 2 | 20% | Rattata–Raticate | Machop–Machoke |
+| 3 | 10% | Ekans–Arbok | Zubat–Golbat |
+| 4 | 10% | Spearow–Fearow | Gastly–Haunter |
+| 5 | 10% | Hoppip–Jumpluff | Hoothoot–Noctowl |
+| 6 | 10% | Geodude–Graveler | Oddish–Gloom |
+| 7 | 5% | Wooper–Quagsire | Zubat–Golbat |
+| 8 | 5% | Machop–Machoke | Spinarak–Ariados |
+| 9 | 4% | Ekans–Arbok | Gastly–Haunter |
+| 10 | 4% | Rattata–Raticate | Hoothoot–Noctowl |
+| 11 | 1% | Slowpoke–Slowbro | Dunsparce |
+| 12 | 1% | Hoppip–Jumpluff | Wooper–Quagsire |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Aipom | Aipom |
-| Uncommon | Ekans–Arbok | Ekans–Arbok |
-| Rare | Pineco–Forretress, Exeggcute | Venonat–Venomoth, Pineco–Forretress |
-| Very rare | Spearow–Fearow | Spinarak–Ariados |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Aipom | Aipom |
+| 2 | 30% | Ekans–Arbok | Ekans–Arbok |
+| 3 | 5% | Pineco–Forretress | Venonat–Venomoth |
+| 4 | 4% | Exeggcute | Pineco–Forretress |
+| 5 | 1% | Spearow–Fearow | Spinarak–Ariados |
 
 #### Route 34
 
 Road, Johto west.
 
+**`MAP_ROUTE34_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Snubbull–Granbull, Pidgey–Pidgeot | Drowzee–Hypno, Grimer–Muk |
-| Uncommon | Jigglypuff, Drowzee–Hypno, Sunkern, Hoppip–Jumpluff | Hoothoot–Noctowl, Snubbull–Granbull, Oddish–Gloom, Spinarak–Ariados |
-| Rare | Abra–Kadabra, Ditto, Igglybuff, Snubbull–Granbull | Abra–Kadabra, Ditto, Igglybuff, Gastly–Haunter |
-| Very rare | Ditto, Eevee | Ditto, Hoothoot–Noctowl |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Snubbull–Granbull | Drowzee–Hypno |
+| 2 | 20% | Pidgey–Pidgeot | Grimer–Muk |
+| 3 | 10% | Jigglypuff | Hoothoot–Noctowl |
+| 4 | 10% | Drowzee–Hypno | Snubbull–Granbull |
+| 5 | 10% | Sunkern | Oddish–Gloom |
+| 6 | 10% | Hoppip–Jumpluff | Spinarak–Ariados |
+| 7 | 5% | Abra–Kadabra | Abra–Kadabra |
+| 8 | 5% | Ditto | Ditto |
+| 9 | 4% | Igglybuff | Igglybuff |
+| 10 | 4% | Snubbull–Granbull | Gastly–Haunter |
+| 11 | 1% | Ditto | Ditto |
+| 12 | 1% | Eevee | Hoothoot–Noctowl |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| Uncommon | Corsola | Corsola |
-| Rare | Krabby–Kingler, Chinchou–Lanturn | Staryu, Chinchou–Lanturn |
-| Very rare | Tentacool–Tentacruel | Krabby–Kingler |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 2 | 30% | Corsola | Corsola |
+| 3 | 5% | Krabby–Kingler | Staryu |
+| 4 | 4% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 5 | 1% | Tentacool–Tentacruel | Krabby–Kingler |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Corsola, Tentacool–Tentacruel | Corsola, Tentacool–Tentacruel |
-| Uncommon | Krabby–Kingler, Corsola, Magikarp–Gyarados | Staryu, Krabby–Kingler, Corsola |
-| Rare | Krabby–Kingler, Corsola, Chinchou–Lanturn | Staryu, Chinchou–Lanturn, Krabby–Kingler |
-| Very rare | Qwilfish, Corsola | Corsola, Staryu |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Corsola | Corsola |
+| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 3 | 10% | 12% | 11% | Krabby–Kingler | Staryu |
+| 4 | 8% | 10% | 10% | Corsola | Krabby–Kingler |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Corsola |
+| 6 | 4% | 7% | 10% | Krabby–Kingler | Staryu |
+| 7 | 3% | 6% | 10% | Corsola | Chinchou–Lanturn |
+| 8 | 3% | 5% | 9% | Chinchou–Lanturn | Krabby–Kingler |
+| 9 | 2% | 4% | 9% | Qwilfish | Corsola |
+| 10 | 2% | 4% | 9% | Corsola | Staryu |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Pidgey–Pidgeot | Exeggcute |
-| Uncommon | Exeggcute | Pidgey–Pidgeot |
-| Rare | Ledyba–Ledian, Pineco–Forretress | Spinarak–Ariados, Pineco–Forretress |
-| Very rare | Aipom | Hoothoot–Noctowl |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Pidgey–Pidgeot | Exeggcute |
+| 2 | 30% | Exeggcute | Pidgey–Pidgeot |
+| 3 | 5% | Ledyba–Ledian | Spinarak–Ariados |
+| 4 | 4% | Pineco–Forretress | Pineco–Forretress |
+| 5 | 1% | Aipom | Hoothoot–Noctowl |
 
 #### Route 35
 
 Road, Johto west.
 
+**`MAP_ROUTE35_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Nidoran♀–Nidorina, Snubbull–Granbull | Psyduck–Golduck, Nidoran♂–Nidorino |
-| Uncommon | Pidgey–Pidgeot, Hoppip–Jumpluff, Nidoran♂–Nidorino, Sunkern | Drowzee–Hypno, Hoothoot–Noctowl, Oddish–Gloom, Venonat–Venomoth |
-| Rare | Yanma, Abra–Kadabra, Growlithe, Ditto | Yanma, Abra–Kadabra, Hoothoot–Noctowl, Ditto |
-| Very rare | Yanma, Growlithe | Oddish–Gloom, Psyduck–Golduck |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Nidoran♀–Nidorina | Psyduck–Golduck |
+| 2 | 20% | Snubbull–Granbull | Nidoran♂–Nidorino |
+| 3 | 10% | Pidgey–Pidgeot | Drowzee–Hypno |
+| 4 | 10% | Hoppip–Jumpluff | Hoothoot–Noctowl |
+| 5 | 10% | Nidoran♂–Nidorino | Oddish–Gloom |
+| 6 | 10% | Sunkern | Venonat–Venomoth |
+| 7 | 5% | Yanma | Yanma |
+| 8 | 5% | Abra–Kadabra | Abra–Kadabra |
+| 9 | 4% | Growlithe | Hoothoot–Noctowl |
+| 10 | 4% | Ditto | Ditto |
+| 11 | 1% | Yanma | Oddish–Gloom |
+| 12 | 1% | Growlithe | Psyduck–Golduck |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Psyduck–Golduck | Psyduck–Golduck |
-| Uncommon | Magikarp–Gyarados | Magikarp–Gyarados |
-| Rare | Marill–Azumarill, Wooper–Quagsire | Wooper–Quagsire ×2 |
-| Very rare | Poliwag–Poliwhirl | Marill–Azumarill |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Psyduck–Golduck | Psyduck–Golduck |
+| 2 | 30% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 3 | 5% | Marill–Azumarill | Wooper–Quagsire |
+| 4 | 4% | Wooper–Quagsire | Wooper–Quagsire |
+| 5 | 1% | Poliwag–Poliwhirl | Marill–Azumarill |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Magikarp–Gyarados, Psyduck–Golduck | Magikarp–Gyarados, Psyduck–Golduck |
-| Uncommon | Marill–Azumarill, Magikarp–Gyarados, Wooper–Quagsire | Wooper–Quagsire ×2, Magikarp–Gyarados |
-| Rare | Poliwag–Poliwhirl, Marill–Azumarill, Magikarp–Gyarados | Marill–Azumarill, Wooper–Quagsire, Poliwag–Poliwhirl |
-| Very rare | Psyduck–Golduck, Goldeen–Seaking | Psyduck–Golduck, Magikarp–Gyarados |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Psyduck–Golduck | Psyduck–Golduck |
+| 3 | 10% | 12% | 11% | Marill–Azumarill | Wooper–Quagsire |
+| 4 | 8% | 10% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 5 | 8% | 9% | 10% | Wooper–Quagsire | Wooper–Quagsire |
+| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Marill–Azumarill |
+| 7 | 3% | 6% | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Poliwag–Poliwhirl |
+| 9 | 2% | 4% | 9% | Psyduck–Golduck | Psyduck–Golduck |
+| 10 | 2% | 4% | 9% | Goldeen–Seaking | Magikarp–Gyarados |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Pidgey–Pidgeot | Pidgey–Pidgeot |
-| Uncommon | Caterpie–Butterfree | Spinarak–Ariados |
-| Rare | Ledyba–Ledian, Pineco–Forretress | Hoothoot–Noctowl, Pineco–Forretress |
-| Very rare | Aipom | Aipom |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Pidgey–Pidgeot | Pidgey–Pidgeot |
+| 2 | 30% | Caterpie–Butterfree | Spinarak–Ariados |
+| 3 | 5% | Ledyba–Ledian | Hoothoot–Noctowl |
+| 4 | 4% | Pineco–Forretress | Pineco–Forretress |
+| 5 | 1% | Aipom | Aipom |
 
 #### Route 36
 
 Road, Johto west.
 
+**`MAP_ROUTE36_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Bellsprout–Weepinbell, Growlithe | Hoothoot–Noctowl, Vulpix |
-| Uncommon | Hoppip–Jumpluff, Pidgey–Pidgeot, Vulpix, Sentret–Furret | Gastly–Haunter, Houndour–Houndoom, Oddish–Gloom, Rattata–Raticate |
-| Rare | Sudowoodo, Sunkern, Bonsly, Ledyba–Ledian | Sudowoodo, Houndour–Houndoom, Spinarak–Ariados, Hoothoot–Noctowl |
-| Very rare | Sudowoodo, Nidoran♂–Nidorino | Vulpix, Gastly–Haunter |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Bellsprout–Weepinbell | Hoothoot–Noctowl |
+| 2 | 20% | Growlithe | Vulpix |
+| 3 | 10% | Hoppip–Jumpluff | Gastly–Haunter |
+| 4 | 10% | Pidgey–Pidgeot | Houndour–Houndoom |
+| 5 | 10% | Vulpix | Oddish–Gloom |
+| 6 | 10% | Sentret–Furret | Rattata–Raticate |
+| 7 | 5% | Sudowoodo | Sudowoodo |
+| 8 | 5% | Sunkern | Houndour–Houndoom |
+| 9 | 4% | Bonsly | Spinarak–Ariados |
+| 10 | 4% | Ledyba–Ledian | Hoothoot–Noctowl |
+| 11 | 1% | Sudowoodo | Vulpix |
+| 12 | 1% | Nidoran♂–Nidorino | Gastly–Haunter |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Bellsprout–Weepinbell | Hoothoot–Noctowl |
-| Uncommon | Hoothoot–Noctowl | Bellsprout–Weepinbell |
-| Rare | Exeggcute, Pineco–Forretress | Spinarak–Ariados, Pineco–Forretress |
-| Very rare | Aipom | Aipom |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Bellsprout–Weepinbell | Hoothoot–Noctowl |
+| 2 | 30% | Hoothoot–Noctowl | Bellsprout–Weepinbell |
+| 3 | 5% | Exeggcute | Spinarak–Ariados |
+| 4 | 4% | Pineco–Forretress | Pineco–Forretress |
+| 5 | 1% | Aipom | Aipom |
 
 #### Route 37
 
 Road, Johto west.
 
+**`MAP_ROUTE37_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Ledyba–Ledian, Pidgey–Pidgeot | Hoothoot–Noctowl, Spinarak–Ariados |
-| Uncommon | Hoppip–Jumpluff, Sunkern, Vulpix, Growlithe | Venonat–Venomoth, Vulpix, Gastly–Haunter, Oddish–Gloom |
-| Rare | Sentret–Furret, Ledyba–Ledian, Eevee, Pidgey–Pidgeot | Houndour–Houndoom, Hoothoot–Noctowl ×2, Spinarak–Ariados |
-| Very rare | Vulpix, Growlithe | Misdreavus, Gastly–Haunter |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Ledyba–Ledian | Hoothoot–Noctowl |
+| 2 | 20% | Pidgey–Pidgeot | Spinarak–Ariados |
+| 3 | 10% | Hoppip–Jumpluff | Venonat–Venomoth |
+| 4 | 10% | Sunkern | Vulpix |
+| 5 | 10% | Vulpix | Gastly–Haunter |
+| 6 | 10% | Growlithe | Oddish–Gloom |
+| 7 | 5% | Sentret–Furret | Houndour–Houndoom |
+| 8 | 5% | Ledyba–Ledian | Hoothoot–Noctowl |
+| 9 | 4% | Eevee | Spinarak–Ariados |
+| 10 | 4% | Pidgey–Pidgeot | Hoothoot–Noctowl |
+| 11 | 1% | Vulpix | Misdreavus |
+| 12 | 1% | Growlithe | Gastly–Haunter |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Ledyba–Ledian | Spinarak–Ariados |
-| Uncommon | Pidgey–Pidgeot | Hoothoot–Noctowl |
-| Rare | Exeggcute, Pineco–Forretress | Ledyba–Ledian, Pineco–Forretress |
-| Very rare | Aipom | Aipom |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Ledyba–Ledian | Spinarak–Ariados |
+| 2 | 30% | Pidgey–Pidgeot | Hoothoot–Noctowl |
+| 3 | 5% | Exeggcute | Ledyba–Ledian |
+| 4 | 4% | Pineco–Forretress | Pineco–Forretress |
+| 5 | 1% | Aipom | Aipom |
 
 #### Route 38
 
 Road, Johto west.
 
+**`MAP_ROUTE38_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Rattata–Raticate, Snubbull–Granbull | Hoothoot–Noctowl, Magnemite–Magneton |
-| Uncommon | Magnemite–Magneton, Pidgey–Pidgeot, Sentret–Furret, Meowth–Persian | Meowth–Persian, Rattata–Raticate, Gastly–Haunter, Oddish–Gloom |
-| Rare | Farfetch'd, Sunkern, Magnemite–Magneton, Pidgey–Pidgeot | Hoothoot–Noctowl, Gastly–Haunter ×2, Snubbull–Granbull |
-| Very rare | Farfetch'd, Snubbull–Granbull | Farfetch'd, Venonat–Venomoth |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Rattata–Raticate | Hoothoot–Noctowl |
+| 2 | 20% | Snubbull–Granbull | Magnemite–Magneton |
+| 3 | 10% | Magnemite–Magneton | Meowth–Persian |
+| 4 | 10% | Pidgey–Pidgeot | Rattata–Raticate |
+| 5 | 10% | Sentret–Furret | Gastly–Haunter |
+| 6 | 10% | Meowth–Persian | Oddish–Gloom |
+| 7 | 5% | Farfetch'd | Hoothoot–Noctowl |
+| 8 | 5% | Sunkern | Gastly–Haunter |
+| 9 | 4% | Magnemite–Magneton | Snubbull–Granbull |
+| 10 | 4% | Pidgey–Pidgeot | Gastly–Haunter |
+| 11 | 1% | Farfetch'd | Farfetch'd |
+| 12 | 1% | Snubbull–Granbull | Venonat–Venomoth |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Hoothoot–Noctowl | Hoothoot–Noctowl |
-| Uncommon | Caterpie–Butterfree | Venonat–Venomoth |
-| Rare | Exeggcute, Pineco–Forretress | Spinarak–Ariados, Pineco–Forretress |
-| Very rare | Aipom | Exeggcute |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Hoothoot–Noctowl | Hoothoot–Noctowl |
+| 2 | 30% | Caterpie–Butterfree | Venonat–Venomoth |
+| 3 | 5% | Exeggcute | Spinarak–Ariados |
+| 4 | 4% | Pineco–Forretress | Pineco–Forretress |
+| 5 | 1% | Aipom | Exeggcute |
 
 #### Route 39
 
 Road, Johto west.
 
+**`MAP_ROUTE39_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Ponyta–Rapidash, Snubbull–Granbull | Hoothoot–Noctowl, Magnemite–Magneton |
-| Uncommon | Magnemite–Magneton, Pidgey–Pidgeot, Sentret–Furret, Meowth–Persian | Gastly–Haunter, Meowth–Persian, Rattata–Raticate, Oddish–Gloom |
-| Rare | Magnemite–Magneton, Ponyta–Rapidash, Farfetch'd, Sunkern | Hoothoot–Noctowl, Gastly–Haunter, Spinarak–Ariados, Ponyta–Rapidash |
-| Very rare | Eevee, Magnemite–Magneton | Eevee, Venonat–Venomoth |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Ponyta–Rapidash | Hoothoot–Noctowl |
+| 2 | 20% | Snubbull–Granbull | Magnemite–Magneton |
+| 3 | 10% | Magnemite–Magneton | Gastly–Haunter |
+| 4 | 10% | Pidgey–Pidgeot | Meowth–Persian |
+| 5 | 10% | Sentret–Furret | Rattata–Raticate |
+| 6 | 10% | Meowth–Persian | Oddish–Gloom |
+| 7 | 5% | Magnemite–Magneton | Hoothoot–Noctowl |
+| 8 | 5% | Ponyta–Rapidash | Gastly–Haunter |
+| 9 | 4% | Farfetch'd | Spinarak–Ariados |
+| 10 | 4% | Sunkern | Ponyta–Rapidash |
+| 11 | 1% | Eevee | Eevee |
+| 12 | 1% | Magnemite–Magneton | Venonat–Venomoth |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Hoothoot–Noctowl | Hoothoot–Noctowl |
-| Uncommon | Weedle–Beedrill | Weedle–Beedrill |
-| Rare | Exeggcute, Pineco–Forretress | Spinarak–Ariados, Pineco–Forretress |
-| Very rare | Ledyba–Ledian | Exeggcute |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Hoothoot–Noctowl | Hoothoot–Noctowl |
+| 2 | 30% | Weedle–Beedrill | Weedle–Beedrill |
+| 3 | 5% | Exeggcute | Spinarak–Ariados |
+| 4 | 4% | Pineco–Forretress | Pineco–Forretress |
+| 5 | 1% | Ledyba–Ledian | Exeggcute |
 
 #### Route 40
 
 Road, Johto west.
 
+**`MAP_ROUTE40_HNS`**
+
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| Uncommon | Corsola | Corsola |
-| Rare | Shellder, Staryu | Staryu, Chinchou–Lanturn |
-| Very rare | Qwilfish | Shellder |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 2 | 30% | Corsola | Corsola |
+| 3 | 5% | Shellder | Staryu |
+| 4 | 4% | Staryu | Chinchou–Lanturn |
+| 5 | 1% | Qwilfish | Shellder |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Krabby–Kingler, Corsola | Krabby–Kingler, Corsola |
-| Uncommon | Magikarp–Gyarados, Shellder, Corsola | Staryu ×2, Magikarp–Gyarados |
-| Rare | Krabby–Kingler, Tentacool–Tentacruel, Qwilfish | Shellder, Chinchou–Lanturn, Krabby–Kingler |
-| Very rare | Staryu, Remoraid–Octillery | Tentacool–Tentacruel, Staryu |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Krabby–Kingler | Krabby–Kingler |
+| 2 | 22% | 18% | 10% | Corsola | Corsola |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Staryu |
+| 4 | 8% | 10% | 10% | Shellder | Magikarp–Gyarados |
+| 5 | 8% | 9% | 10% | Corsola | Staryu |
+| 6 | 4% | 7% | 10% | Krabby–Kingler | Shellder |
+| 7 | 3% | 6% | 10% | Tentacool–Tentacruel | Chinchou–Lanturn |
+| 8 | 3% | 5% | 9% | Qwilfish | Krabby–Kingler |
+| 9 | 2% | 4% | 9% | Staryu | Tentacool–Tentacruel |
+| 10 | 2% | 4% | 9% | Remoraid–Octillery | Staryu |
 
 #### Route 41
 
 Road, Johto west.
 
+**`MAP_ROUTE41_HNS`**
+
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| Uncommon | Horsea–Seadra | Horsea–Seadra |
-| Rare | Mantyke, Chinchou–Lanturn | Mantyke, Chinchou–Lanturn |
-| Very rare | Qwilfish | Staryu |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 2 | 30% | Horsea–Seadra | Horsea–Seadra |
+| 3 | 5% | Mantyke | Mantyke |
+| 4 | 4% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 5 | 1% | Qwilfish | Staryu |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Chinchou–Lanturn, Horsea–Seadra | Chinchou–Lanturn, Horsea–Seadra |
-| Uncommon | Qwilfish, Chinchou–Lanturn, Magikarp–Gyarados | Chinchou–Lanturn ×2, Staryu |
-| Rare | Horsea–Seadra, Corsola, Chinchou–Lanturn | Magikarp–Gyarados, Staryu, Horsea–Seadra |
-| Very rare | Krabby–Kingler, Staryu | Qwilfish, Staryu |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 2 | 22% | 18% | 10% | Horsea–Seadra | Horsea–Seadra |
+| 3 | 10% | 12% | 11% | Qwilfish | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Chinchou–Lanturn | Staryu |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Chinchou–Lanturn |
+| 6 | 4% | 7% | 10% | Horsea–Seadra | Magikarp–Gyarados |
+| 7 | 3% | 6% | 10% | Corsola | Staryu |
+| 8 | 3% | 5% | 9% | Chinchou–Lanturn | Horsea–Seadra |
+| 9 | 2% | 4% | 9% | Krabby–Kingler | Qwilfish |
+| 10 | 2% | 4% | 9% | Staryu | Staryu |
 
 #### Route 42
 
 Road, Johto east.
 
+**`MAP_ROUTE42_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Spearow–Fearow, Mankey–Primeape | Marill–Azumarill, Mankey–Primeape |
-| Uncommon | Ekans–Arbok, Rattata–Raticate, Marill–Azumarill, Geodude–Graveler | Zubat–Golbat, Hoothoot–Noctowl, Gastly–Haunter, Spinarak–Ariados |
-| Rare | Machop–Machoke, Ekans–Arbok, Gligar, Mankey–Primeape | Zubat–Golbat, Oddish–Gloom, Gligar, Hoothoot–Noctowl |
-| Very rare | Tyrogue, Spearow–Fearow | Zubat–Golbat, Tyrogue |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Spearow–Fearow | Marill–Azumarill |
+| 2 | 20% | Mankey–Primeape | Mankey–Primeape |
+| 3 | 10% | Ekans–Arbok | Zubat–Golbat |
+| 4 | 10% | Rattata–Raticate | Hoothoot–Noctowl |
+| 5 | 10% | Marill–Azumarill | Gastly–Haunter |
+| 6 | 10% | Geodude–Graveler | Spinarak–Ariados |
+| 7 | 5% | Machop–Machoke | Zubat–Golbat |
+| 8 | 5% | Ekans–Arbok | Oddish–Gloom |
+| 9 | 4% | Gligar | Gligar |
+| 10 | 4% | Mankey–Primeape | Hoothoot–Noctowl |
+| 11 | 1% | Tyrogue | Zubat–Golbat |
+| 12 | 1% | Spearow–Fearow | Tyrogue |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Marill–Azumarill | Marill–Azumarill |
-| Uncommon | Remoraid–Octillery | Remoraid–Octillery |
-| Rare | Goldeen–Seaking, Magikarp–Gyarados | Wooper–Quagsire, Goldeen–Seaking |
-| Very rare | Poliwag–Poliwhirl | Magikarp–Gyarados |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Marill–Azumarill | Marill–Azumarill |
+| 2 | 30% | Remoraid–Octillery | Remoraid–Octillery |
+| 3 | 5% | Goldeen–Seaking | Wooper–Quagsire |
+| 4 | 4% | Magikarp–Gyarados | Goldeen–Seaking |
+| 5 | 1% | Poliwag–Poliwhirl | Magikarp–Gyarados |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Remoraid–Octillery, Marill–Azumarill | Remoraid–Octillery, Marill–Azumarill |
-| Uncommon | Goldeen–Seaking ×2, Magikarp–Gyarados | Goldeen–Seaking, Wooper–Quagsire, Magikarp–Gyarados |
-| Rare | Poliwag–Poliwhirl, Magikarp–Gyarados, Remoraid–Octillery | Wooper–Quagsire, Goldeen–Seaking, Poliwag–Poliwhirl |
-| Very rare | Goldeen–Seaking, Marill–Azumarill | Remoraid–Octillery, Magikarp–Gyarados |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Remoraid–Octillery | Remoraid–Octillery |
+| 2 | 22% | 18% | 10% | Marill–Azumarill | Marill–Azumarill |
+| 3 | 10% | 12% | 11% | Goldeen–Seaking | Goldeen–Seaking |
+| 4 | 8% | 10% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Goldeen–Seaking | Magikarp–Gyarados |
+| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Magikarp–Gyarados | Goldeen–Seaking |
+| 8 | 3% | 5% | 9% | Remoraid–Octillery | Poliwag–Poliwhirl |
+| 9 | 2% | 4% | 9% | Goldeen–Seaking | Remoraid–Octillery |
+| 10 | 2% | 4% | 9% | Marill–Azumarill | Magikarp–Gyarados |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Spearow–Fearow | Aipom |
-| Uncommon | Aipom | Spearow–Fearow |
-| Rare | Pineco–Forretress, Exeggcute | Spinarak–Ariados, Pineco–Forretress |
-| Very rare | Ledyba–Ledian | Hoothoot–Noctowl |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Spearow–Fearow | Aipom |
+| 2 | 30% | Aipom | Spearow–Fearow |
+| 3 | 5% | Pineco–Forretress | Spinarak–Ariados |
+| 4 | 4% | Exeggcute | Pineco–Forretress |
+| 5 | 1% | Ledyba–Ledian | Hoothoot–Noctowl |
 
 #### Route 43
 
 Road, Johto east.
 
+**`MAP_ROUTE43_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Mareep–Ampharos, Sentret–Furret | Venonat–Venomoth, Mareep–Ampharos |
-| Uncommon | Pidgey–Pidgeot ×2, Hoppip–Jumpluff, Rattata–Raticate | Hoothoot–Noctowl, Rattata–Raticate, Oddish–Gloom, Gastly–Haunter |
-| Rare | Farfetch'd, Mareep–Ampharos, Sentret–Furret, Sunkern | Venonat–Venomoth, Hoothoot–Noctowl ×2, Spinarak–Ariados |
-| Very rare | Farfetch'd, Hoppip–Jumpluff | Farfetch'd, Zubat–Golbat |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Mareep–Ampharos | Venonat–Venomoth |
+| 2 | 20% | Sentret–Furret | Mareep–Ampharos |
+| 3 | 10% | Pidgey–Pidgeot | Hoothoot–Noctowl |
+| 4 | 10% | Hoppip–Jumpluff | Rattata–Raticate |
+| 5 | 10% | Rattata–Raticate | Oddish–Gloom |
+| 6 | 10% | Pidgey–Pidgeot | Gastly–Haunter |
+| 7 | 5% | Farfetch'd | Venonat–Venomoth |
+| 8 | 5% | Mareep–Ampharos | Hoothoot–Noctowl |
+| 9 | 4% | Sentret–Furret | Spinarak–Ariados |
+| 10 | 4% | Sunkern | Hoothoot–Noctowl |
+| 11 | 1% | Farfetch'd | Farfetch'd |
+| 12 | 1% | Hoppip–Jumpluff | Zubat–Golbat |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Magikarp–Gyarados | Magikarp–Gyarados |
-| Uncommon | Magikarp–Gyarados | Magikarp–Gyarados |
-| Rare | Poliwag–Poliwhirl, Marill–Azumarill | Wooper–Quagsire, Poliwag–Poliwhirl |
-| Very rare | Psyduck–Golduck | Marill–Azumarill |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 30% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 3 | 5% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 4 | 4% | Marill–Azumarill | Poliwag–Poliwhirl |
+| 5 | 1% | Psyduck–Golduck | Marill–Azumarill |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Magikarp–Gyarados ×2 | Magikarp–Gyarados ×2 |
-| Uncommon | Poliwag–Poliwhirl, Magikarp–Gyarados, Goldeen–Seaking | Poliwag–Poliwhirl, Wooper–Quagsire, Magikarp–Gyarados |
-| Rare | Psyduck–Golduck, Marill–Azumarill, Poliwag–Poliwhirl | Goldeen–Seaking, Wooper–Quagsire, Poliwag–Poliwhirl |
-| Very rare | Wooper–Quagsire, Poliwag–Poliwhirl | Marill–Azumarill, Psyduck–Golduck |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 3 | 10% | 12% | 11% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 4 | 8% | 10% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Goldeen–Seaking | Magikarp–Gyarados |
+| 6 | 4% | 7% | 10% | Psyduck–Golduck | Goldeen–Seaking |
+| 7 | 3% | 6% | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 8 | 3% | 5% | 9% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 9 | 2% | 4% | 9% | Wooper–Quagsire | Marill–Azumarill |
+| 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Psyduck–Golduck |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Exeggcute | Venonat–Venomoth |
-| Uncommon | Venonat–Venomoth | Exeggcute |
-| Rare | Pineco–Forretress, Aipom | Hoothoot–Noctowl, Pineco–Forretress |
-| Very rare | Ledyba–Ledian | Aipom |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Exeggcute | Venonat–Venomoth |
+| 2 | 30% | Venonat–Venomoth | Exeggcute |
+| 3 | 5% | Pineco–Forretress | Hoothoot–Noctowl |
+| 4 | 4% | Aipom | Pineco–Forretress |
+| 5 | 1% | Ledyba–Ledian | Aipom |
 
 #### Route 44
 
 Road, Johto east.
 
+**`MAP_ROUTE44_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Tangela, Bellsprout–Weepinbell | Poliwag–Poliwhirl, Bellsprout–Weepinbell |
-| Uncommon | Lickitung, Pidgey–Pidgeot, Hoppip–Jumpluff, Poliwag–Poliwhirl | Oddish–Gloom, Hoothoot–Noctowl, Lickitung, Venonat–Venomoth |
-| Rare | Sunkern, Tangela, Lickitung, Bellsprout–Weepinbell | Oddish–Gloom, Gastly–Haunter ×2, Hoothoot–Noctowl |
-| Very rare | Elekid, Farfetch'd | Elekid, Tangela |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Tangela | Poliwag–Poliwhirl |
+| 2 | 20% | Bellsprout–Weepinbell | Bellsprout–Weepinbell |
+| 3 | 10% | Lickitung | Oddish–Gloom |
+| 4 | 10% | Pidgey–Pidgeot | Hoothoot–Noctowl |
+| 5 | 10% | Hoppip–Jumpluff | Lickitung |
+| 6 | 10% | Poliwag–Poliwhirl | Venonat–Venomoth |
+| 7 | 5% | Sunkern | Oddish–Gloom |
+| 8 | 5% | Tangela | Gastly–Haunter |
+| 9 | 4% | Lickitung | Hoothoot–Noctowl |
+| 10 | 4% | Bellsprout–Weepinbell | Gastly–Haunter |
+| 11 | 1% | Elekid | Elekid |
+| 12 | 1% | Farfetch'd | Tangela |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| Uncommon | Remoraid–Octillery | Remoraid–Octillery |
-| Rare | Psyduck–Golduck, Magikarp–Gyarados | Wooper–Quagsire, Magikarp–Gyarados |
-| Very rare | Marill–Azumarill | Psyduck–Golduck |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 2 | 30% | Remoraid–Octillery | Remoraid–Octillery |
+| 3 | 5% | Psyduck–Golduck | Wooper–Quagsire |
+| 4 | 4% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 5 | 1% | Marill–Azumarill | Psyduck–Golduck |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Remoraid–Octillery, Poliwag–Poliwhirl | Remoraid–Octillery, Poliwag–Poliwhirl |
-| Uncommon | Magikarp–Gyarados, Goldeen–Seaking, Poliwag–Poliwhirl | Magikarp–Gyarados, Wooper–Quagsire, Poliwag–Poliwhirl |
-| Rare | Magikarp–Gyarados, Psyduck–Golduck, Remoraid–Octillery | Magikarp–Gyarados, Wooper–Quagsire, Goldeen–Seaking |
-| Very rare | Marill–Azumarill, Poliwag–Poliwhirl | Psyduck–Golduck, Poliwag–Poliwhirl |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Remoraid–Octillery | Remoraid–Octillery |
+| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 7 | 3% | 6% | 10% | Psyduck–Golduck | Wooper–Quagsire |
+| 8 | 3% | 5% | 9% | Remoraid–Octillery | Goldeen–Seaking |
+| 9 | 2% | 4% | 9% | Marill–Azumarill | Psyduck–Golduck |
+| 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Bellsprout–Weepinbell | Bellsprout–Weepinbell |
-| Uncommon | Weedle–Beedrill | Weedle–Beedrill |
-| Rare | Pineco–Forretress, Exeggcute | Spinarak–Ariados, Pineco–Forretress |
-| Very rare | Ledyba–Ledian | Hoothoot–Noctowl |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Bellsprout–Weepinbell | Bellsprout–Weepinbell |
+| 2 | 30% | Weedle–Beedrill | Weedle–Beedrill |
+| 3 | 5% | Pineco–Forretress | Spinarak–Ariados |
+| 4 | 4% | Exeggcute | Pineco–Forretress |
+| 5 | 1% | Ledyba–Ledian | Hoothoot–Noctowl |
 
 #### Route 45
 
 Road, Johto east.
 
+**`MAP_ROUTE45_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Geodude–Graveler, Phanpy–Donphan | Teddiursa–Ursaring, Geodude–Graveler |
-| Uncommon | Teddiursa–Ursaring, Spearow–Fearow, Mankey–Primeape, Machop–Machoke | Zubat–Golbat, Hoothoot–Noctowl, Gastly–Haunter, Gligar |
-| Rare | Gligar ×2, Geodude–Graveler, Phanpy–Donphan | Zubat–Golbat ×2, Gastly–Haunter, Hoothoot–Noctowl |
-| Very rare | Dunsparce, Teddiursa–Ursaring | Dunsparce, Gligar |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Geodude–Graveler | Teddiursa–Ursaring |
+| 2 | 20% | Phanpy–Donphan | Geodude–Graveler |
+| 3 | 10% | Teddiursa–Ursaring | Zubat–Golbat |
+| 4 | 10% | Spearow–Fearow | Hoothoot–Noctowl |
+| 5 | 10% | Mankey–Primeape | Gastly–Haunter |
+| 6 | 10% | Machop–Machoke | Gligar |
+| 7 | 5% | Gligar | Zubat–Golbat |
+| 8 | 5% | Geodude–Graveler | Zubat–Golbat |
+| 9 | 4% | Gligar | Gastly–Haunter |
+| 10 | 4% | Phanpy–Donphan | Hoothoot–Noctowl |
+| 11 | 1% | Dunsparce | Dunsparce |
+| 12 | 1% | Teddiursa–Ursaring | Gligar |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Magikarp–Gyarados | Magikarp–Gyarados |
-| Uncommon | Magikarp–Gyarados | Magikarp–Gyarados |
-| Rare | Poliwag–Poliwhirl, Marill–Azumarill | Poliwag–Poliwhirl, Wooper–Quagsire |
-| Very rare | Goldeen–Seaking | Marill–Azumarill |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 30% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 3 | 5% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 4 | 4% | Marill–Azumarill | Wooper–Quagsire |
+| 5 | 1% | Goldeen–Seaking | Marill–Azumarill |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Magikarp–Gyarados ×2 | Magikarp–Gyarados ×2 |
-| Uncommon | Poliwag–Poliwhirl, Goldeen–Seaking, Magikarp–Gyarados | Poliwag–Poliwhirl, Wooper–Quagsire, Magikarp–Gyarados |
-| Rare | Goldeen–Seaking, Poliwag–Poliwhirl, Magikarp–Gyarados | Goldeen–Seaking, Wooper–Quagsire, Magikarp–Gyarados |
-| Very rare | Marill–Azumarill, Goldeen–Seaking | Poliwag–Poliwhirl, Goldeen–Seaking |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 3 | 10% | 12% | 11% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 6 | 4% | 7% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 7 | 3% | 6% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 9 | 2% | 4% | 9% | Marill–Azumarill | Poliwag–Poliwhirl |
+| 10 | 2% | 4% | 9% | Goldeen–Seaking | Goldeen–Seaking |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Geodude–Graveler | Geodude–Graveler |
-| Uncommon | Aipom | Aipom |
-| Rare | Pineco–Forretress, Spearow–Fearow | Hoothoot–Noctowl, Pineco–Forretress |
-| Very rare | Exeggcute | Spinarak–Ariados |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Geodude–Graveler | Geodude–Graveler |
+| 2 | 30% | Aipom | Aipom |
+| 3 | 5% | Pineco–Forretress | Hoothoot–Noctowl |
+| 4 | 4% | Spearow–Fearow | Pineco–Forretress |
+| 5 | 1% | Exeggcute | Spinarak–Ariados |
 
 #### Route 46
 
 Road, Johto east.
 
+**`MAP_ROUTE46_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Geodude–Graveler, Spearow–Fearow | Geodude–Graveler, Phanpy–Donphan |
-| Uncommon | Phanpy–Donphan, Rattata–Raticate, Hoppip–Jumpluff, Pidgey–Pidgeot | Zubat–Golbat, Hoothoot–Noctowl, Gastly–Haunter, Oddish–Gloom |
-| Rare | Machop–Machoke, Spearow–Fearow, Cyndaquil–Typhlosion, Rattata–Raticate | Zubat–Golbat, Cyndaquil–Typhlosion, Hoothoot–Noctowl, Gastly–Haunter |
-| Very rare | Gligar, Phanpy–Donphan | Spinarak–Ariados, Oddish–Gloom |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Geodude–Graveler | Geodude–Graveler |
+| 2 | 20% | Spearow–Fearow | Phanpy–Donphan |
+| 3 | 10% | Phanpy–Donphan | Zubat–Golbat |
+| 4 | 10% | Rattata–Raticate | Hoothoot–Noctowl |
+| 5 | 10% | Hoppip–Jumpluff | Gastly–Haunter |
+| 6 | 10% | Pidgey–Pidgeot | Oddish–Gloom |
+| 7 | 5% | Machop–Machoke | Zubat–Golbat |
+| 8 | 5% | Spearow–Fearow | Cyndaquil–Typhlosion |
+| 9 | 4% | Cyndaquil–Typhlosion | Hoothoot–Noctowl |
+| 10 | 4% | Rattata–Raticate | Gastly–Haunter |
+| 11 | 1% | Gligar | Spinarak–Ariados |
+| 12 | 1% | Phanpy–Donphan | Oddish–Gloom |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Geodude–Graveler | Geodude–Graveler |
-| Uncommon | Spearow–Fearow | Spearow–Fearow |
-| Rare | Aipom, Pineco–Forretress | Spinarak–Ariados, Pineco–Forretress |
-| Very rare | Exeggcute | Aipom |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Geodude–Graveler | Geodude–Graveler |
+| 2 | 30% | Spearow–Fearow | Spearow–Fearow |
+| 3 | 5% | Aipom | Spinarak–Ariados |
+| 4 | 4% | Pineco–Forretress | Pineco–Forretress |
+| 5 | 1% | Exeggcute | Aipom |
 
 #### Route 48
 
 Road, Johto west.
 
+**`MAP_ROUTE48_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Spearow–Fearow, Sunkern | Oddish–Gloom, Vulpix |
-| Uncommon | Oddish–Gloom, Vulpix, Hoppip–Jumpluff, Growlithe | Hoothoot–Noctowl, Gastly–Haunter, Houndour–Houndoom, Venonat–Venomoth |
-| Rare | Farfetch'd ×2, Pidgey–Pidgeot, Nidoran♀–Nidorina | Oddish–Gloom, Farfetch'd, Yanma, Hoothoot–Noctowl |
-| Very rare | Yanma, Sunkern | Houndour–Houndoom, Spinarak–Ariados |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Spearow–Fearow | Oddish–Gloom |
+| 2 | 20% | Sunkern | Vulpix |
+| 3 | 10% | Oddish–Gloom | Hoothoot–Noctowl |
+| 4 | 10% | Vulpix | Gastly–Haunter |
+| 5 | 10% | Hoppip–Jumpluff | Houndour–Houndoom |
+| 6 | 10% | Growlithe | Venonat–Venomoth |
+| 7 | 5% | Farfetch'd | Oddish–Gloom |
+| 8 | 5% | Pidgey–Pidgeot | Farfetch'd |
+| 9 | 4% | Farfetch'd | Yanma |
+| 10 | 4% | Nidoran♀–Nidorina | Hoothoot–Noctowl |
+| 11 | 1% | Yanma | Houndour–Houndoom |
+| 12 | 1% | Sunkern | Spinarak–Ariados |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Spearow–Fearow | Spearow–Fearow |
-| Uncommon | Weedle–Beedrill | Weedle–Beedrill |
-| Rare | Aipom, Pineco–Forretress | Spinarak–Ariados, Pineco–Forretress |
-| Very rare | Ledyba–Ledian | Yanma |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Spearow–Fearow | Spearow–Fearow |
+| 2 | 30% | Weedle–Beedrill | Weedle–Beedrill |
+| 3 | 5% | Aipom | Spinarak–Ariados |
+| 4 | 4% | Pineco–Forretress | Pineco–Forretress |
+| 5 | 1% | Ledyba–Ledian | Yanma |
 
 #### Ilex Forest
 
 Road, Johto west.
 
+**`MAP_ILEX_FOREST_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Caterpie–Metapod, Weedle–Kakuna | Oddish–Gloom, Venonat–Venomoth |
-| Uncommon | Ledyba–Ledian, Paras–Parasect, Oddish–Gloom, Sunkern | Spinarak–Ariados, Hoothoot–Noctowl, Paras–Parasect, Wooper–Quagsire |
-| Rare | Yanma, Chikorita–Meganium, Pichu, Ledyba–Ledian | Spinarak–Ariados, Hoothoot–Noctowl, Pichu, Chikorita–Meganium |
-| Very rare | Chikorita–Meganium, Pichu | Misdreavus, Weedle–Kakuna |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Caterpie–Metapod | Oddish–Gloom |
+| 2 | 20% | Weedle–Kakuna | Venonat–Venomoth |
+| 3 | 10% | Ledyba–Ledian | Spinarak–Ariados |
+| 4 | 10% | Paras–Parasect | Hoothoot–Noctowl |
+| 5 | 10% | Oddish–Gloom | Paras–Parasect |
+| 6 | 10% | Sunkern | Wooper–Quagsire |
+| 7 | 5% | Yanma | Spinarak–Ariados |
+| 8 | 5% | Chikorita–Meganium | Hoothoot–Noctowl |
+| 9 | 4% | Pichu | Pichu |
+| 10 | 4% | Ledyba–Ledian | Chikorita–Meganium |
+| 11 | 1% | Chikorita–Meganium | Misdreavus |
+| 12 | 1% | Pichu | Weedle–Kakuna |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Psyduck–Golduck | Psyduck–Golduck |
-| Uncommon | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| Rare | Marill–Azumarill, Wooper–Quagsire | Wooper–Quagsire ×2 |
-| Very rare | Magikarp–Gyarados | Marill–Azumarill |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Psyduck–Golduck | Psyduck–Golduck |
+| 2 | 30% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 5% | Marill–Azumarill | Wooper–Quagsire |
+| 4 | 4% | Wooper–Quagsire | Wooper–Quagsire |
+| 5 | 1% | Magikarp–Gyarados | Marill–Azumarill |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Poliwag–Poliwhirl, Psyduck–Golduck | Poliwag–Poliwhirl, Psyduck–Golduck |
-| Uncommon | Magikarp–Gyarados ×2, Poliwag–Poliwhirl | Magikarp–Gyarados ×2, Wooper–Quagsire |
-| Rare | Goldeen–Seaking, Marill–Azumarill, Poliwag–Poliwhirl | Wooper–Quagsire, Goldeen–Seaking, Poliwag–Poliwhirl |
-| Very rare | Psyduck–Golduck, Wooper–Quagsire | Psyduck–Golduck, Marill–Azumarill |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 2 | 22% | 18% | 10% | Psyduck–Golduck | Psyduck–Golduck |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 6 | 4% | 7% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Marill–Azumarill | Goldeen–Seaking |
+| 8 | 3% | 5% | 9% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 9 | 2% | 4% | 9% | Psyduck–Golduck | Psyduck–Golduck |
+| 10 | 2% | 4% | 9% | Wooper–Quagsire | Marill–Azumarill |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Weedle–Beedrill | Weedle–Beedrill |
-| Uncommon | Caterpie–Butterfree | Caterpie–Butterfree |
-| Rare | Pineco–Forretress, Exeggcute | Spinarak–Ariados, Pineco–Forretress |
-| Very rare | Aipom | Hoothoot–Noctowl |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Weedle–Beedrill | Weedle–Beedrill |
+| 2 | 30% | Caterpie–Butterfree | Caterpie–Butterfree |
+| 3 | 5% | Pineco–Forretress | Spinarak–Ariados |
+| 4 | 4% | Exeggcute | Pineco–Forretress |
+| 5 | 1% | Aipom | Hoothoot–Noctowl |
 
 #### Route 27
 
 Wilds, Border.
 
+**`MAP_ROUTE27_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Ponyta–Rapidash, Rattata–Raticate | Rattata–Raticate, Ekans–Arbok |
-| Uncommon | Ekans–Arbok, Doduo–Dodrio, Sandshrew–Sandslash, Spearow–Fearow | Hoothoot–Noctowl, Zubat–Golbat, Gastly–Haunter, Venonat–Venomoth |
-| Rare | Miltank, Doduo–Dodrio, Girafarig, Ponyta–Rapidash | Murkrow, Oddish–Gloom, Houndour–Houndoom, Hoothoot–Noctowl |
-| Very rare | Chikorita–Meganium, Tauros | Chikorita–Meganium, Murkrow |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Ponyta–Rapidash | Rattata–Raticate |
+| 2 | 20% | Rattata–Raticate | Ekans–Arbok |
+| 3 | 10% | Ekans–Arbok | Hoothoot–Noctowl |
+| 4 | 10% | Doduo–Dodrio | Zubat–Golbat |
+| 5 | 10% | Sandshrew–Sandslash | Gastly–Haunter |
+| 6 | 10% | Spearow–Fearow | Venonat–Venomoth |
+| 7 | 5% | Miltank | Murkrow |
+| 8 | 5% | Doduo–Dodrio | Oddish–Gloom |
+| 9 | 4% | Girafarig | Houndour–Houndoom |
+| 10 | 4% | Ponyta–Rapidash | Hoothoot–Noctowl |
+| 11 | 1% | Chikorita–Meganium | Chikorita–Meganium |
+| 12 | 1% | Tauros | Murkrow |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| Uncommon | Shellder | Shellder |
-| Rare | Totodile–Feraligatr, Staryu | Chinchou–Lanturn, Totodile–Feraligatr |
-| Very rare | Mantine | Staryu |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 2 | 30% | Shellder | Shellder |
+| 3 | 5% | Totodile–Feraligatr | Chinchou–Lanturn |
+| 4 | 4% | Staryu | Totodile–Feraligatr |
+| 5 | 1% | Mantine | Staryu |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Shellder, Tentacool–Tentacruel | Shellder, Tentacool–Tentacruel |
-| Uncommon | Magikarp–Gyarados, Krabby–Kingler, Shellder | Magikarp–Gyarados, Chinchou–Lanturn, Staryu |
-| Rare | Corsola, Staryu, Tentacool–Tentacruel | Krabby–Kingler, Chinchou–Lanturn, Staryu |
-| Very rare | Krabby–Kingler, Chinchou–Lanturn | Tentacool–Tentacruel, Magikarp–Gyarados |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Shellder | Shellder |
+| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Krabby–Kingler | Chinchou–Lanturn |
+| 5 | 8% | 9% | 10% | Shellder | Staryu |
+| 6 | 4% | 7% | 10% | Corsola | Krabby–Kingler |
+| 7 | 3% | 6% | 10% | Staryu | Chinchou–Lanturn |
+| 8 | 3% | 5% | 9% | Tentacool–Tentacruel | Staryu |
+| 9 | 2% | 4% | 9% | Krabby–Kingler | Tentacool–Tentacruel |
+| 10 | 2% | 4% | 9% | Chinchou–Lanturn | Magikarp–Gyarados |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Ekans–Arbok | Ekans–Arbok |
-| Uncommon | Pineco–Forretress | Pineco–Forretress |
-| Rare | Heracross, Exeggcute | Murkrow, Heracross |
-| Very rare | Aipom | Hoothoot–Noctowl |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Ekans–Arbok | Ekans–Arbok |
+| 2 | 30% | Pineco–Forretress | Pineco–Forretress |
+| 3 | 5% | Heracross | Murkrow |
+| 4 | 4% | Exeggcute | Heracross |
+| 5 | 1% | Aipom | Hoothoot–Noctowl |
 
 #### Route 47
 
 Wilds, Johto west.
 
+**`MAP_ROUTE47_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Spearow–Fearow, Hoppip–Jumpluff | Oddish–Gloom, Venonat–Venomoth |
-| Uncommon | Oddish–Gloom, Rattata–Raticate, Snubbull–Granbull, Pidgey–Pidgeot | Hoothoot–Noctowl, Gastly–Haunter, Rattata–Raticate, Spinarak–Ariados |
-| Rare | Miltank, Farfetch'd, Girafarig, Ditto | Miltank, Ditto, Farfetch'd, Hoothoot–Noctowl |
-| Very rare | Tauros, Skarmory | Happiny, Skarmory |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Spearow–Fearow | Oddish–Gloom |
+| 2 | 20% | Hoppip–Jumpluff | Venonat–Venomoth |
+| 3 | 10% | Oddish–Gloom | Hoothoot–Noctowl |
+| 4 | 10% | Rattata–Raticate | Gastly–Haunter |
+| 5 | 10% | Snubbull–Granbull | Rattata–Raticate |
+| 6 | 10% | Pidgey–Pidgeot | Spinarak–Ariados |
+| 7 | 5% | Miltank | Miltank |
+| 8 | 5% | Farfetch'd | Ditto |
+| 9 | 4% | Girafarig | Farfetch'd |
+| 10 | 4% | Ditto | Hoothoot–Noctowl |
+| 11 | 1% | Tauros | Happiny |
+| 12 | 1% | Skarmory | Skarmory |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Corsola | Seel–Dewgong |
-| Uncommon | Seel–Dewgong | Corsola |
-| Rare | Chinchou–Lanturn, Shellder | Chinchou–Lanturn, Staryu |
-| Very rare | Mantine | Mantine |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Corsola | Seel–Dewgong |
+| 2 | 30% | Seel–Dewgong | Corsola |
+| 3 | 5% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 4 | 4% | Shellder | Staryu |
+| 5 | 1% | Mantine | Mantine |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Corsola, Seel–Dewgong | Corsola, Seel–Dewgong |
-| Uncommon | Chinchou–Lanturn, Shellder, Magikarp–Gyarados | Chinchou–Lanturn ×2, Staryu |
-| Rare | Corsola, Staryu, Shellder | Magikarp–Gyarados, Staryu, Krabby–Kingler |
-| Very rare | Chinchou–Lanturn, Remoraid–Octillery | Corsola, Chinchou–Lanturn |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Corsola | Corsola |
+| 2 | 22% | 18% | 10% | Seel–Dewgong | Seel–Dewgong |
+| 3 | 10% | 12% | 11% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Shellder | Staryu |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Chinchou–Lanturn |
+| 6 | 4% | 7% | 10% | Corsola | Magikarp–Gyarados |
+| 7 | 3% | 6% | 10% | Staryu | Staryu |
+| 8 | 3% | 5% | 9% | Shellder | Krabby–Kingler |
+| 9 | 2% | 4% | 9% | Chinchou–Lanturn | Corsola |
+| 10 | 2% | 4% | 9% | Remoraid–Octillery | Chinchou–Lanturn |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Krabby–Kingler | Krabby–Kingler |
-| Uncommon | Spearow–Fearow | Spearow–Fearow |
-| Rare | Shuckle, Heracross | Hoothoot–Noctowl, Shuckle |
-| Very rare | Geodude–Graveler | Heracross |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Krabby–Kingler | Krabby–Kingler |
+| 2 | 30% | Spearow–Fearow | Spearow–Fearow |
+| 3 | 5% | Shuckle | Hoothoot–Noctowl |
+| 4 | 4% | Heracross | Shuckle |
+| 5 | 1% | Geodude–Graveler | Heracross |
 
 #### Dark Cave
 
@@ -1107,59 +1584,89 @@ Wilds, Johto east.
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Geodude–Graveler, Zubat–Golbat | Zubat–Golbat, Geodude–Graveler |
-| Uncommon | Teddiursa–Ursaring, Machop–Machoke, Onix, Zubat–Golbat | Teddiursa–Ursaring, Machop–Machoke, Onix, Gastly–Haunter |
-| Rare | Dunsparce ×2, Geodude–Graveler, Wobbuffet | Dunsparce ×2, Wobbuffet ×2 |
-| Very rare | Wobbuffet, Teddiursa–Ursaring | Gastly–Haunter, Teddiursa–Ursaring |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Geodude–Graveler | Zubat–Golbat |
+| 2 | 20% | Zubat–Golbat | Geodude–Graveler |
+| 3 | 10% | Teddiursa–Ursaring | Teddiursa–Ursaring |
+| 4 | 10% | Machop–Machoke | Machop–Machoke |
+| 5 | 10% | Onix | Onix |
+| 6 | 10% | Zubat–Golbat | Gastly–Haunter |
+| 7 | 5% | Dunsparce | Dunsparce |
+| 8 | 5% | Geodude–Graveler | Wobbuffet |
+| 9 | 4% | Wobbuffet | Wobbuffet |
+| 10 | 4% | Dunsparce | Dunsparce |
+| 11 | 1% | Wobbuffet | Gastly–Haunter |
+| 12 | 1% | Teddiursa–Ursaring | Teddiursa–Ursaring |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Goldeen–Seaking | Chinchou–Lanturn |
-| Uncommon | Chinchou–Lanturn | Goldeen–Seaking |
-| Rare | Magikarp–Gyarados, Poliwag–Poliwhirl | Magikarp–Gyarados, Poliwag–Poliwhirl |
-| Very rare | Marill–Azumarill | Wooper–Quagsire |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Goldeen–Seaking | Chinchou–Lanturn |
+| 2 | 30% | Chinchou–Lanturn | Goldeen–Seaking |
+| 3 | 5% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 4% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 5 | 1% | Marill–Azumarill | Wooper–Quagsire |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Goldeen–Seaking, Chinchou–Lanturn | Chinchou–Lanturn, Goldeen–Seaking |
-| Uncommon | Magikarp–Gyarados ×2, Goldeen–Seaking | Chinchou–Lanturn, Magikarp–Gyarados, Goldeen–Seaking |
-| Rare | Poliwag–Poliwhirl, Chinchou–Lanturn, Goldeen–Seaking | Chinchou–Lanturn, Magikarp–Gyarados, Poliwag–Poliwhirl |
-| Very rare | Magikarp–Gyarados, Marill–Azumarill | Wooper–Quagsire, Goldeen–Seaking |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Goldeen–Seaking | Chinchou–Lanturn |
+| 2 | 22% | 18% | 10% | Chinchou–Lanturn | Goldeen–Seaking |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Magikarp–Gyarados |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Goldeen–Seaking |
+| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Chinchou–Lanturn | Magikarp–Gyarados |
+| 8 | 3% | 5% | 9% | Goldeen–Seaking | Poliwag–Poliwhirl |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Wooper–Quagsire |
+| 10 | 2% | 4% | 9% | Marill–Azumarill | Goldeen–Seaking |
 
 **`MAP_DARK_CAVE_NORTH_SIDE_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Teddiursa–Ursaring, Onix | Teddiursa–Ursaring, Onix |
-| Uncommon | Geodude–Graveler ×2, Zubat–Golbat, Machop–Machoke | Zubat–Golbat, Machop–Machoke, Geodude–Graveler, Gastly–Haunter |
-| Rare | Wobbuffet ×2, Zubat–Golbat, Geodude–Graveler | Wobbuffet, Gastly–Haunter, Dunsparce, Zubat–Golbat |
-| Very rare | Gligar, Dunsparce | Gligar, Dunsparce |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Teddiursa–Ursaring | Teddiursa–Ursaring |
+| 2 | 20% | Onix | Onix |
+| 3 | 10% | Geodude–Graveler | Zubat–Golbat |
+| 4 | 10% | Zubat–Golbat | Machop–Machoke |
+| 5 | 10% | Machop–Machoke | Geodude–Graveler |
+| 6 | 10% | Geodude–Graveler | Gastly–Haunter |
+| 7 | 5% | Wobbuffet | Wobbuffet |
+| 8 | 5% | Zubat–Golbat | Gastly–Haunter |
+| 9 | 4% | Wobbuffet | Dunsparce |
+| 10 | 4% | Geodude–Graveler | Zubat–Golbat |
+| 11 | 1% | Gligar | Gligar |
+| 12 | 1% | Dunsparce | Dunsparce |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Magikarp–Gyarados | Chinchou–Lanturn |
-| Uncommon | Chinchou–Lanturn | Magikarp–Gyarados |
-| Rare | Goldeen–Seaking, Marill–Azumarill | Wooper–Quagsire, Goldeen–Seaking |
-| Very rare | Poliwag–Poliwhirl | Marill–Azumarill |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Magikarp–Gyarados | Chinchou–Lanturn |
+| 2 | 30% | Chinchou–Lanturn | Magikarp–Gyarados |
+| 3 | 5% | Goldeen–Seaking | Wooper–Quagsire |
+| 4 | 4% | Marill–Azumarill | Goldeen–Seaking |
+| 5 | 1% | Poliwag–Poliwhirl | Marill–Azumarill |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Magikarp–Gyarados, Chinchou–Lanturn | Chinchou–Lanturn, Magikarp–Gyarados |
-| Uncommon | Goldeen–Seaking ×2, Magikarp–Gyarados | Chinchou–Lanturn, Goldeen–Seaking, Magikarp–Gyarados |
-| Rare | Poliwag–Poliwhirl, Chinchou–Lanturn, Magikarp–Gyarados | Wooper–Quagsire, Chinchou–Lanturn, Goldeen–Seaking |
-| Very rare | Marill–Azumarill, Goldeen–Seaking | Poliwag–Poliwhirl, Magikarp–Gyarados |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Chinchou–Lanturn |
+| 2 | 22% | 18% | 10% | Chinchou–Lanturn | Magikarp–Gyarados |
+| 3 | 10% | 12% | 11% | Goldeen–Seaking | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Magikarp–Gyarados | Goldeen–Seaking |
+| 5 | 8% | 9% | 10% | Goldeen–Seaking | Magikarp–Gyarados |
+| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Goldeen–Seaking |
+| 9 | 2% | 4% | 9% | Marill–Azumarill | Poliwag–Poliwhirl |
+| 10 | 2% | 4% | 9% | Goldeen–Seaking | Magikarp–Gyarados |
 
 #### Cliff Edge Cave
 
@@ -1169,63 +1676,90 @@ Wilds, Johto west.
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Wooper–Quagsire | Chinchou–Lanturn |
-| Uncommon | Chinchou–Lanturn | Wooper–Quagsire |
-| Rare | Shellder, Tentacool–Tentacruel | Staryu, Shellder |
-| Very rare | Mantine | Mantine |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Wooper–Quagsire | Chinchou–Lanturn |
+| 2 | 30% | Chinchou–Lanturn | Wooper–Quagsire |
+| 3 | 5% | Shellder | Staryu |
+| 4 | 4% | Tentacool–Tentacruel | Shellder |
+| 5 | 1% | Mantine | Mantine |
 
 **`MAP_CLIFF_EDGE_CAVE_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Krabby–Kingler, Geodude–Graveler | Geodude–Graveler, Krabby–Kingler |
-| Uncommon | Wooper–Quagsire, Corsola, Zubat–Golbat, Onix | Wooper–Quagsire, Corsola, Zubat–Golbat, Gastly–Haunter |
-| Rare | Shuckle, Wooper–Quagsire, Skarmory, Seel–Dewgong | Shuckle, Wooper–Quagsire, Onix, Seel–Dewgong |
-| Very rare | Skarmory, Shuckle | Skarmory, Shuckle |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Krabby–Kingler | Geodude–Graveler |
+| 2 | 20% | Geodude–Graveler | Krabby–Kingler |
+| 3 | 10% | Wooper–Quagsire | Wooper–Quagsire |
+| 4 | 10% | Corsola | Corsola |
+| 5 | 10% | Zubat–Golbat | Zubat–Golbat |
+| 6 | 10% | Onix | Gastly–Haunter |
+| 7 | 5% | Shuckle | Shuckle |
+| 8 | 5% | Wooper–Quagsire | Wooper–Quagsire |
+| 9 | 4% | Skarmory | Onix |
+| 10 | 4% | Seel–Dewgong | Seel–Dewgong |
+| 11 | 1% | Skarmory | Skarmory |
+| 12 | 1% | Shuckle | Shuckle |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Krabby–Kingler | Geodude–Graveler |
-| Uncommon | Geodude–Graveler | Krabby–Kingler |
-| Rare | Shuckle, Krabby–Kingler | Shuckle, Onix |
-| Very rare | Shuckle | Shuckle |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Krabby–Kingler | Geodude–Graveler |
+| 2 | 30% | Geodude–Graveler | Krabby–Kingler |
+| 3 | 5% | Shuckle | Shuckle |
+| 4 | 4% | Krabby–Kingler | Onix |
+| 5 | 1% | Shuckle | Shuckle |
 
 #### Tohjo Falls
 
 Wilds, Border.
 
+**`MAP_TOHJO_FALLS_CAVERN_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Slowpoke–Slowbro, Zubat–Golbat | Zubat–Golbat, Slowpoke–Slowbro |
-| Uncommon | Rattata–Raticate, Geodude–Graveler, Onix, Marill–Azumarill | Rattata–Raticate, Geodude–Graveler, Gastly–Haunter, Marill–Azumarill |
-| Rare | Psyduck–Golduck, Slowpoke–Slowbro, Dunsparce, Rattata–Raticate | Psyduck–Golduck, Onix, Dunsparce, Zubat–Golbat |
-| Very rare | Dunsparce, Onix | Gastly–Haunter, Slowpoke–Slowbro |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Slowpoke–Slowbro | Zubat–Golbat |
+| 2 | 20% | Zubat–Golbat | Slowpoke–Slowbro |
+| 3 | 10% | Rattata–Raticate | Rattata–Raticate |
+| 4 | 10% | Geodude–Graveler | Geodude–Graveler |
+| 5 | 10% | Onix | Gastly–Haunter |
+| 6 | 10% | Marill–Azumarill | Marill–Azumarill |
+| 7 | 5% | Psyduck–Golduck | Psyduck–Golduck |
+| 8 | 5% | Slowpoke–Slowbro | Onix |
+| 9 | 4% | Dunsparce | Dunsparce |
+| 10 | 4% | Rattata–Raticate | Zubat–Golbat |
+| 11 | 1% | Dunsparce | Gastly–Haunter |
+| 12 | 1% | Onix | Slowpoke–Slowbro |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| Uncommon | Goldeen–Seaking | Goldeen–Seaking |
-| Rare | Psyduck–Golduck, Marill–Azumarill | Wooper–Quagsire, Psyduck–Golduck |
-| Very rare | Poliwag–Poliwhirl | Marill–Azumarill |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 2 | 30% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 5% | Psyduck–Golduck | Wooper–Quagsire |
+| 4 | 4% | Marill–Azumarill | Psyduck–Golduck |
+| 5 | 1% | Poliwag–Poliwhirl | Marill–Azumarill |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Goldeen–Seaking, Slowpoke–Slowbro | Goldeen–Seaking, Slowpoke–Slowbro |
-| Uncommon | Magikarp–Gyarados ×2, Goldeen–Seaking | Magikarp–Gyarados ×2, Wooper–Quagsire |
-| Rare | Poliwag–Poliwhirl, Slowpoke–Slowbro, Psyduck–Golduck | Wooper–Quagsire, Slowpoke–Slowbro, Poliwag–Poliwhirl |
-| Very rare | Magikarp–Gyarados, Marill–Azumarill | Psyduck–Golduck, Magikarp–Gyarados |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Goldeen–Seaking | Goldeen–Seaking |
+| 2 | 22% | 18% | 10% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 8 | 3% | 5% | 9% | Psyduck–Golduck | Poliwag–Poliwhirl |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Psyduck–Golduck |
+| 10 | 2% | 4% | 9% | Marill–Azumarill | Magikarp–Gyarados |
 
 #### Ruins of Alph
 
@@ -1235,50 +1769,74 @@ Wilds, Johto east.
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Natu–Xatu, Unown | Wooper–Quagsire, Natu–Xatu |
-| Uncommon | Mareep–Ampharos, Hoppip–Jumpluff, Pidgey–Pidgeot, Sunkern | Gastly–Haunter, Hoothoot–Noctowl, Unown, Oddish–Gloom |
-| Rare | Smeargle ×2, Natu–Xatu, Unown | Misdreavus, Smeargle, Gastly–Haunter, Wooper–Quagsire |
-| Very rare | Abra, Girafarig | Abra, Girafarig |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Natu–Xatu | Wooper–Quagsire |
+| 2 | 20% | Unown | Natu–Xatu |
+| 3 | 10% | Mareep–Ampharos | Gastly–Haunter |
+| 4 | 10% | Hoppip–Jumpluff | Hoothoot–Noctowl |
+| 5 | 10% | Pidgey–Pidgeot | Unown |
+| 6 | 10% | Sunkern | Oddish–Gloom |
+| 7 | 5% | Smeargle | Misdreavus |
+| 8 | 5% | Natu–Xatu | Smeargle |
+| 9 | 4% | Smeargle | Gastly–Haunter |
+| 10 | 4% | Unown | Wooper–Quagsire |
+| 11 | 1% | Abra | Abra |
+| 12 | 1% | Girafarig | Girafarig |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Wooper–Quagsire | Wooper–Quagsire |
-| Uncommon | Wooper–Quagsire | Wooper–Quagsire |
-| Rare | Poliwag–Poliwhirl, Marill–Azumarill | Psyduck–Golduck, Poliwag–Poliwhirl |
-| Very rare | Magikarp–Gyarados | Marill–Azumarill |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Wooper–Quagsire | Wooper–Quagsire |
+| 2 | 30% | Wooper–Quagsire | Wooper–Quagsire |
+| 3 | 5% | Poliwag–Poliwhirl | Psyduck–Golduck |
+| 4 | 4% | Marill–Azumarill | Poliwag–Poliwhirl |
+| 5 | 1% | Magikarp–Gyarados | Marill–Azumarill |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Wooper–Quagsire ×2 | Wooper–Quagsire ×2 |
-| Uncommon | Magikarp–Gyarados ×2, Poliwag–Poliwhirl | Magikarp–Gyarados ×2, Psyduck–Golduck |
-| Rare | Marill–Azumarill, Poliwag–Poliwhirl, Goldeen–Seaking | Poliwag–Poliwhirl, Psyduck–Golduck, Marill–Azumarill |
-| Very rare | Magikarp–Gyarados, Wooper–Quagsire | Goldeen–Seaking, Wooper–Quagsire |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Wooper–Quagsire | Wooper–Quagsire |
+| 2 | 22% | 18% | 10% | Wooper–Quagsire | Wooper–Quagsire |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Poliwag–Poliwhirl | Psyduck–Golduck |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 6 | 4% | 7% | 10% | Marill–Azumarill | Poliwag–Poliwhirl |
+| 7 | 3% | 6% | 10% | Poliwag–Poliwhirl | Psyduck–Golduck |
+| 8 | 3% | 5% | 9% | Goldeen–Seaking | Marill–Azumarill |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Goldeen–Seaking |
+| 10 | 2% | 4% | 9% | Wooper–Quagsire | Wooper–Quagsire |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Natu–Xatu | Natu–Xatu |
-| Uncommon | Natu–Xatu | Natu–Xatu |
-| Rare | Smeargle, Aipom | Spinarak–Ariados, Smeargle |
-| Very rare | Heracross | Heracross |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Natu–Xatu | Natu–Xatu |
+| 2 | 30% | Natu–Xatu | Natu–Xatu |
+| 3 | 5% | Smeargle | Spinarak–Ariados |
+| 4 | 4% | Aipom | Smeargle |
+| 5 | 1% | Heracross | Heracross |
 
 **`MAP_RUINS_OF_ALPH_B1F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Unown ×2 | Unown ×2 |
-| Uncommon | Unown ×4 | Unown ×4 |
-| Rare | Unown ×2, Natu–Xatu ×2 | Misdreavus, Gastly–Haunter, Natu–Xatu, Unown |
-| Very rare | Smeargle, Unown | Smeargle, Unown |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Unown | Unown |
+| 2 | 20% | Unown | Unown |
+| 3 | 10% | Unown | Unown |
+| 4 | 10% | Unown | Unown |
+| 5 | 10% | Unown | Unown |
+| 6 | 10% | Unown | Unown |
+| 7 | 5% | Unown | Misdreavus |
+| 8 | 5% | Unown | Gastly–Haunter |
+| 9 | 4% | Natu–Xatu | Natu–Xatu |
+| 10 | 4% | Natu–Xatu | Unown |
+| 11 | 1% | Smeargle | Smeargle |
+| 12 | 1% | Unown | Unown |
 
 #### National Park
 
@@ -1288,134 +1846,196 @@ Wilds, Johto west.
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Sunkern, Nidoran♀–Nidorina | Spinarak–Ariados, Nidoran♂–Nidorino |
-| Uncommon | Nidoran♂–Nidorino, Caterpie–Butterfree, Weedle–Beedrill, Snubbull–Granbull | Hoothoot–Noctowl, Venonat–Venomoth, Psyduck–Golduck, Murkrow |
-| Rare | Stantler, Scyther, Girafarig, Togepi | Stantler, Scyther, Gastly–Haunter, Togepi |
-| Very rare | Scyther, Pinsir | Scyther, Misdreavus |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Sunkern | Spinarak–Ariados |
+| 2 | 20% | Nidoran♀–Nidorina | Nidoran♂–Nidorino |
+| 3 | 10% | Nidoran♂–Nidorino | Hoothoot–Noctowl |
+| 4 | 10% | Caterpie–Butterfree | Venonat–Venomoth |
+| 5 | 10% | Weedle–Beedrill | Psyduck–Golduck |
+| 6 | 10% | Snubbull–Granbull | Murkrow |
+| 7 | 5% | Stantler | Stantler |
+| 8 | 5% | Scyther | Scyther |
+| 9 | 4% | Girafarig | Gastly–Haunter |
+| 10 | 4% | Togepi | Togepi |
+| 11 | 1% | Scyther | Scyther |
+| 12 | 1% | Pinsir | Misdreavus |
 
 **`MAP_NATIONAL_PARK_BUG_CONTEST_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Caterpie–Butterfree, Weedle–Beedrill | Venonat–Venomoth, Spinarak–Ariados |
-| Uncommon | Ledyba–Ledian, Paras–Parasect, Venonat–Venomoth, Caterpie–Metapod | Paras–Parasect, Pineco–Forretress, Ledyba–Ledian, Weedle–Beedrill |
-| Rare | Scyther, Pinsir, Yanma, Heracross | Scyther, Pinsir, Yanma, Heracross |
-| Very rare | Scyther, Pinsir | Scyther, Spinarak–Ariados |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Caterpie–Butterfree | Venonat–Venomoth |
+| 2 | 20% | Weedle–Beedrill | Spinarak–Ariados |
+| 3 | 10% | Ledyba–Ledian | Paras–Parasect |
+| 4 | 10% | Paras–Parasect | Pineco–Forretress |
+| 5 | 10% | Venonat–Venomoth | Ledyba–Ledian |
+| 6 | 10% | Caterpie–Metapod | Weedle–Beedrill |
+| 7 | 5% | Scyther | Scyther |
+| 8 | 5% | Pinsir | Pinsir |
+| 9 | 4% | Yanma | Yanma |
+| 10 | 4% | Heracross | Heracross |
+| 11 | 1% | Scyther | Scyther |
+| 12 | 1% | Pinsir | Spinarak–Ariados |
 
 #### Lake of Rage
 
 Wilds, Johto east.
 
+**`MAP_LAKE_OF_RAGE_HNS`**
+
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Magikarp–Gyarados | Magikarp–Gyarados |
-| Uncommon | Magikarp–Gyarados | Magikarp–Gyarados |
-| Rare | Totodile–Feraligatr, Marill–Azumarill | Wooper–Quagsire, Totodile–Feraligatr |
-| Very rare | Wooper–Quagsire | Psyduck–Golduck |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 30% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 3 | 5% | Totodile–Feraligatr | Wooper–Quagsire |
+| 4 | 4% | Marill–Azumarill | Totodile–Feraligatr |
+| 5 | 1% | Wooper–Quagsire | Psyduck–Golduck |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Magikarp–Gyarados ×2 | Magikarp–Gyarados ×2 |
-| Uncommon | Poliwag–Poliwhirl, Goldeen–Seaking, Magikarp–Gyarados | Wooper–Quagsire, Poliwag–Poliwhirl, Magikarp–Gyarados |
-| Rare | Wooper–Quagsire, Marill–Azumarill, Magikarp–Gyarados | Wooper–Quagsire, Goldeen–Seaking, Psyduck–Golduck |
-| Very rare | Totodile–Feraligatr, Goldeen–Seaking | Totodile–Feraligatr, Magikarp–Gyarados |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 3 | 10% | 12% | 11% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Poliwag–Poliwhirl |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 6 | 4% | 7% | 10% | Wooper–Quagsire | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Marill–Azumarill | Goldeen–Seaking |
+| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Psyduck–Golduck |
+| 9 | 2% | 4% | 9% | Totodile–Feraligatr | Totodile–Feraligatr |
+| 10 | 2% | 4% | 9% | Goldeen–Seaking | Magikarp–Gyarados |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Exeggcute | Venonat–Venomoth |
-| Uncommon | Pineco–Forretress | Pineco–Forretress |
-| Rare | Heracross, Aipom | Hoothoot–Noctowl, Heracross |
-| Very rare | Venonat–Venomoth | Yanma |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Exeggcute | Venonat–Venomoth |
+| 2 | 30% | Pineco–Forretress | Pineco–Forretress |
+| 3 | 5% | Heracross | Hoothoot–Noctowl |
+| 4 | 4% | Aipom | Heracross |
+| 5 | 1% | Venonat–Venomoth | Yanma |
 
 #### Route 26
 
 Outlands, Border.
 
+**`MAP_ROUTE26_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Doduo–Dodrio, Ekans–Arbok | Rattata–Raticate, Ekans–Arbok |
-| Uncommon | Ponyta–Rapidash, Rattata–Raticate, Sandshrew–Sandslash, Spearow–Fearow | Houndour–Houndoom, Hoothoot–Noctowl, Zubat–Golbat, Sandshrew–Sandslash |
-| Rare | Tauros, Phanpy–Donphan, Miltank, Mankey–Primeape | Murkrow–Honchkrow, Tauros, Venonat–Venomoth, Houndour–Houndoom |
-| Very rare | Larvitar–Tyranitar, Teddiursa–Ursaring | Larvitar–Tyranitar, Gastly–Gengar |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Doduo–Dodrio | Rattata–Raticate |
+| 2 | 20% | Ekans–Arbok | Ekans–Arbok |
+| 3 | 10% | Ponyta–Rapidash | Houndour–Houndoom |
+| 4 | 10% | Rattata–Raticate | Hoothoot–Noctowl |
+| 5 | 10% | Sandshrew–Sandslash | Zubat–Golbat |
+| 6 | 10% | Spearow–Fearow | Sandshrew–Sandslash |
+| 7 | 5% | Tauros | Murkrow–Honchkrow |
+| 8 | 5% | Phanpy–Donphan | Tauros |
+| 9 | 4% | Miltank | Venonat–Venomoth |
+| 10 | 4% | Mankey–Primeape | Houndour–Houndoom |
+| 11 | 1% | Larvitar–Tyranitar | Larvitar–Tyranitar |
+| 12 | 1% | Teddiursa–Ursaring | Gastly–Gengar |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| Uncommon | Shellder–Cloyster | Shellder–Cloyster |
-| Rare | Staryu–Starmie, Lapras | Chinchou–Lanturn, Staryu–Starmie |
-| Very rare | Mantine | Lapras |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 2 | 30% | Shellder–Cloyster | Shellder–Cloyster |
+| 3 | 5% | Staryu–Starmie | Chinchou–Lanturn |
+| 4 | 4% | Lapras | Staryu–Starmie |
+| 5 | 1% | Mantine | Lapras |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Shellder–Cloyster, Tentacool–Tentacruel | Shellder–Cloyster, Tentacool–Tentacruel |
-| Uncommon | Magikarp–Gyarados, Krabby–Kingler, Staryu–Starmie | Chinchou–Lanturn, Staryu–Starmie, Magikarp–Gyarados |
-| Rare | Corsola, Magikarp–Gyarados, Remoraid–Octillery | Chinchou–Lanturn, Staryu–Starmie, Krabby–Kingler |
-| Very rare | Horsea–Kingdra, Chinchou–Lanturn | Horsea–Kingdra, Remoraid–Octillery |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Shellder–Cloyster | Shellder–Cloyster |
+| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Krabby–Kingler | Staryu–Starmie |
+| 5 | 8% | 9% | 10% | Staryu–Starmie | Magikarp–Gyarados |
+| 6 | 4% | 7% | 10% | Corsola | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Magikarp–Gyarados | Staryu–Starmie |
+| 8 | 3% | 5% | 9% | Remoraid–Octillery | Krabby–Kingler |
+| 9 | 2% | 4% | 9% | Horsea–Kingdra | Horsea–Kingdra |
+| 10 | 2% | 4% | 9% | Chinchou–Lanturn | Remoraid–Octillery |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Aipom–Ambipom | Aipom–Ambipom |
-| Uncommon | Pineco–Forretress | Pineco–Forretress |
-| Rare | Heracross, Geodude–Golem | Hoothoot–Noctowl, Heracross |
-| Very rare | Scyther–Scizor | Murkrow–Honchkrow |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Aipom–Ambipom | Aipom–Ambipom |
+| 2 | 30% | Pineco–Forretress | Pineco–Forretress |
+| 3 | 5% | Heracross | Hoothoot–Noctowl |
+| 4 | 4% | Geodude–Golem | Heracross |
+| 5 | 1% | Scyther–Scizor | Murkrow–Honchkrow |
 
 #### Route 28
 
 Outlands, Border.
 
+**`MAP_ROUTE28_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Ponyta–Rapidash, Tangela–Tangrowth | Teddiursa–Ursaring, Poliwag–Poliwrath |
-| Uncommon | Doduo–Dodrio, Teddiursa–Ursaring, Phanpy–Donphan, Ekans–Arbok | Zubat–Crobat, Houndour–Houndoom, Tangela–Tangrowth, Murkrow–Honchkrow |
-| Rare | Skarmory, Larvitar–Tyranitar, Tauros, Girafarig–Farigiraf | Skarmory, Larvitar–Tyranitar, Houndour–Houndoom, Sneasel–Weavile |
-| Very rare | Larvitar–Tyranitar, Snorlax | Larvitar–Tyranitar, Poliwag–Politoed |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Ponyta–Rapidash | Teddiursa–Ursaring |
+| 2 | 20% | Tangela–Tangrowth | Poliwag–Poliwrath |
+| 3 | 10% | Doduo–Dodrio | Zubat–Crobat |
+| 4 | 10% | Teddiursa–Ursaring | Houndour–Houndoom |
+| 5 | 10% | Phanpy–Donphan | Tangela–Tangrowth |
+| 6 | 10% | Ekans–Arbok | Murkrow–Honchkrow |
+| 7 | 5% | Skarmory | Skarmory |
+| 8 | 5% | Larvitar–Tyranitar | Larvitar–Tyranitar |
+| 9 | 4% | Tauros | Houndour–Houndoom |
+| 10 | 4% | Girafarig–Farigiraf | Sneasel–Weavile |
+| 11 | 1% | Larvitar–Tyranitar | Larvitar–Tyranitar |
+| 12 | 1% | Snorlax | Poliwag–Politoed |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Poliwag–Poliwrath | Poliwag–Poliwrath |
-| Uncommon | Poliwag–Poliwrath | Poliwag–Poliwrath |
-| Rare | Goldeen–Seaking, Poliwag–Politoed | Wooper–Quagsire, Goldeen–Seaking |
-| Very rare | Magikarp–Gyarados | Poliwag–Politoed |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Poliwag–Poliwrath | Poliwag–Poliwrath |
+| 2 | 30% | Poliwag–Poliwrath | Poliwag–Poliwrath |
+| 3 | 5% | Goldeen–Seaking | Wooper–Quagsire |
+| 4 | 4% | Poliwag–Politoed | Goldeen–Seaking |
+| 5 | 1% | Magikarp–Gyarados | Poliwag–Politoed |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Poliwag–Poliwrath ×2 | Poliwag–Poliwrath ×2 |
-| Uncommon | Magikarp–Gyarados, Goldeen–Seaking, Poliwag–Poliwrath | Magikarp–Gyarados, Wooper–Quagsire, Poliwag–Poliwrath |
-| Rare | Magikarp–Gyarados, Goldeen–Seaking, Poliwag–Politoed | Wooper–Quagsire, Psyduck–Golduck, Poliwag–Politoed |
-| Very rare | Psyduck–Golduck, Magikarp–Gyarados | Goldeen–Seaking, Magikarp–Gyarados |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Poliwag–Poliwrath | Poliwag–Poliwrath |
+| 2 | 22% | 18% | 10% | Poliwag–Poliwrath | Poliwag–Poliwrath |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Poliwag–Poliwrath | Poliwag–Poliwrath |
+| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Goldeen–Seaking | Psyduck–Golduck |
+| 8 | 3% | 5% | 9% | Poliwag–Politoed | Poliwag–Politoed |
+| 9 | 2% | 4% | 9% | Psyduck–Golduck | Goldeen–Seaking |
+| 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Pineco–Forretress | Teddiursa–Ursaring |
-| Uncommon | Teddiursa–Ursaring | Pineco–Forretress |
-| Rare | Heracross, Scyther–Scizor | Murkrow–Honchkrow, Heracross |
-| Very rare | Aipom–Ambipom | Scyther–Scizor |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Pineco–Forretress | Teddiursa–Ursaring |
+| 2 | 30% | Teddiursa–Ursaring | Pineco–Forretress |
+| 3 | 5% | Heracross | Murkrow–Honchkrow |
+| 4 | 4% | Scyther–Scizor | Heracross |
+| 5 | 1% | Aipom–Ambipom | Scyther–Scizor |
 
 #### Union Cave
 
@@ -1425,88 +2045,133 @@ Dungeon, Johto east.
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Geodude–Graveler, Zubat–Golbat | Zubat–Golbat, Geodude–Graveler |
-| Uncommon | Onix, Sandshrew–Sandslash, Rattata–Raticate, Wooper–Quagsire | Onix, Wooper–Quagsire, Rattata–Raticate, Sandshrew–Sandslash |
-| Rare | Cubone–Marowak, Geodude–Graveler, Dunsparce, Onix | Gastly–Haunter, Cubone–Marowak, Dunsparce, Wooper–Quagsire |
-| Very rare | Dunsparce, Cubone–Marowak | Onix, Dunsparce |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Geodude–Graveler | Zubat–Golbat |
+| 2 | 20% | Zubat–Golbat | Geodude–Graveler |
+| 3 | 10% | Onix | Onix |
+| 4 | 10% | Sandshrew–Sandslash | Wooper–Quagsire |
+| 5 | 10% | Rattata–Raticate | Rattata–Raticate |
+| 6 | 10% | Wooper–Quagsire | Sandshrew–Sandslash |
+| 7 | 5% | Cubone–Marowak | Gastly–Haunter |
+| 8 | 5% | Geodude–Graveler | Cubone–Marowak |
+| 9 | 4% | Dunsparce | Dunsparce |
+| 10 | 4% | Onix | Wooper–Quagsire |
+| 11 | 1% | Dunsparce | Onix |
+| 12 | 1% | Cubone–Marowak | Dunsparce |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Wooper–Quagsire | Wooper–Quagsire |
-| Uncommon | Wooper–Quagsire | Wooper–Quagsire |
-| Rare | Goldeen–Seaking, Poliwag–Poliwhirl | Chinchou–Lanturn, Goldeen–Seaking |
-| Very rare | Psyduck–Golduck | Poliwag–Poliwhirl |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Wooper–Quagsire | Wooper–Quagsire |
+| 2 | 30% | Wooper–Quagsire | Wooper–Quagsire |
+| 3 | 5% | Goldeen–Seaking | Chinchou–Lanturn |
+| 4 | 4% | Poliwag–Poliwhirl | Goldeen–Seaking |
+| 5 | 1% | Psyduck–Golduck | Poliwag–Poliwhirl |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Goldeen–Seaking, Wooper–Quagsire | Goldeen–Seaking, Wooper–Quagsire |
-| Uncommon | Magikarp–Gyarados ×2, Goldeen–Seaking | Magikarp–Gyarados ×2, Chinchou–Lanturn |
-| Rare | Poliwag–Poliwhirl, Goldeen–Seaking, Wooper–Quagsire | Chinchou–Lanturn, Goldeen–Seaking, Wooper–Quagsire |
-| Very rare | Magikarp–Gyarados, Chinchou–Lanturn | Poliwag–Poliwhirl, Magikarp–Gyarados |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Goldeen–Seaking | Goldeen–Seaking |
+| 2 | 22% | 18% | 10% | Wooper–Quagsire | Wooper–Quagsire |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Chinchou–Lanturn |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 8 | 3% | 5% | 9% | Wooper–Quagsire | Wooper–Quagsire |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Poliwag–Poliwhirl |
+| 10 | 2% | 4% | 9% | Chinchou–Lanturn | Magikarp–Gyarados |
 
 **`MAP_UNION_CAVE_B1F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Onix, Marill–Azumarill | Onix, Marill–Azumarill |
-| Uncommon | Geodude–Graveler, Zubat–Golbat, Sandshrew–Sandslash, Rattata–Raticate | Zubat–Golbat, Geodude–Graveler, Wooper–Quagsire, Rattata–Raticate |
-| Rare | Wooper–Quagsire, Cubone–Marowak, Dunsparce, Machop–Machoke | Gastly–Haunter ×2, Cubone–Marowak, Dunsparce |
-| Very rare | Onix–Steelix, Dunsparce | Onix–Steelix, Sandshrew–Sandslash |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Onix | Onix |
+| 2 | 20% | Marill–Azumarill | Marill–Azumarill |
+| 3 | 10% | Geodude–Graveler | Zubat–Golbat |
+| 4 | 10% | Zubat–Golbat | Geodude–Graveler |
+| 5 | 10% | Sandshrew–Sandslash | Wooper–Quagsire |
+| 6 | 10% | Rattata–Raticate | Rattata–Raticate |
+| 7 | 5% | Wooper–Quagsire | Gastly–Haunter |
+| 8 | 5% | Cubone–Marowak | Cubone–Marowak |
+| 9 | 4% | Dunsparce | Dunsparce |
+| 10 | 4% | Machop–Machoke | Gastly–Haunter |
+| 11 | 1% | Onix–Steelix | Onix–Steelix |
+| 12 | 1% | Dunsparce | Sandshrew–Sandslash |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Wooper–Quagsire | Wooper–Quagsire |
-| Uncommon | Marill–Azumarill | Marill–Azumarill |
-| Rare | Goldeen–Seaking, Poliwag–Poliwhirl | Chinchou–Lanturn, Goldeen–Seaking |
-| Very rare | Psyduck–Golduck | Psyduck–Golduck |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Wooper–Quagsire | Wooper–Quagsire |
+| 2 | 30% | Marill–Azumarill | Marill–Azumarill |
+| 3 | 5% | Goldeen–Seaking | Chinchou–Lanturn |
+| 4 | 4% | Poliwag–Poliwhirl | Goldeen–Seaking |
+| 5 | 1% | Psyduck–Golduck | Psyduck–Golduck |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Wooper–Quagsire, Marill–Azumarill | Wooper–Quagsire, Marill–Azumarill |
-| Uncommon | Magikarp–Gyarados ×2, Goldeen–Seaking | Magikarp–Gyarados, Chinchou–Lanturn, Goldeen–Seaking |
-| Rare | Goldeen–Seaking, Poliwag–Poliwhirl, Magikarp–Gyarados | Chinchou–Lanturn, Magikarp–Gyarados, Goldeen–Seaking |
-| Very rare | Chinchou–Lanturn, Wooper–Quagsire | Poliwag–Poliwhirl, Wooper–Quagsire |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Wooper–Quagsire | Wooper–Quagsire |
+| 2 | 22% | 18% | 10% | Marill–Azumarill | Marill–Azumarill |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Chinchou–Lanturn |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Goldeen–Seaking |
+| 6 | 4% | 7% | 10% | Goldeen–Seaking | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Poliwag–Poliwhirl | Magikarp–Gyarados |
+| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Goldeen–Seaking |
+| 9 | 2% | 4% | 9% | Chinchou–Lanturn | Poliwag–Poliwhirl |
+| 10 | 2% | 4% | 9% | Wooper–Quagsire | Wooper–Quagsire |
 
 **`MAP_UNION_CAVE_B2F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Wooper–Quagsire, Onix | Wooper–Quagsire, Onix |
-| Uncommon | Zubat–Golbat, Geodude–Graveler, Rattata–Raticate, Cubone–Marowak | Zubat–Golbat, Geodude–Graveler, Gastly–Haunter, Cubone–Marowak |
-| Rare | Marill–Azumarill, Dunsparce, Onix–Steelix, Machop–Machoke | Marill–Azumarill, Dunsparce, Onix–Steelix, Gastly–Haunter |
-| Very rare | Wobbuffet, Dunsparce | Wobbuffet, Zubat–Crobat |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Wooper–Quagsire | Wooper–Quagsire |
+| 2 | 20% | Onix | Onix |
+| 3 | 10% | Zubat–Golbat | Zubat–Golbat |
+| 4 | 10% | Geodude–Graveler | Geodude–Graveler |
+| 5 | 10% | Rattata–Raticate | Gastly–Haunter |
+| 6 | 10% | Cubone–Marowak | Cubone–Marowak |
+| 7 | 5% | Marill–Azumarill | Marill–Azumarill |
+| 8 | 5% | Dunsparce | Dunsparce |
+| 9 | 4% | Onix–Steelix | Onix–Steelix |
+| 10 | 4% | Machop–Machoke | Gastly–Haunter |
+| 11 | 1% | Wobbuffet | Wobbuffet |
+| 12 | 1% | Dunsparce | Zubat–Crobat |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Wooper–Quagsire | Wooper–Quagsire |
-| Uncommon | Shellder | Shellder |
-| Rare | Lapras, Tentacool–Tentacruel | Chinchou–Lanturn, Lapras |
-| Very rare | Chinchou–Lanturn | Staryu |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Wooper–Quagsire | Wooper–Quagsire |
+| 2 | 30% | Shellder | Shellder |
+| 3 | 5% | Lapras | Chinchou–Lanturn |
+| 4 | 4% | Tentacool–Tentacruel | Lapras |
+| 5 | 1% | Chinchou–Lanturn | Staryu |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Shellder, Wooper–Quagsire | Shellder, Wooper–Quagsire |
-| Uncommon | Chinchou–Lanturn, Tentacool–Tentacruel, Magikarp–Gyarados | Chinchou–Lanturn ×2, Staryu |
-| Rare | Shellder, Tentacool–Tentacruel, Chinchou–Lanturn | Magikarp–Gyarados, Staryu, Tentacool–Tentacruel |
-| Very rare | Krabby–Kingler, Staryu | Staryu, Krabby–Kingler |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Shellder | Shellder |
+| 2 | 22% | 18% | 10% | Wooper–Quagsire | Wooper–Quagsire |
+| 3 | 10% | 12% | 11% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Tentacool–Tentacruel | Staryu |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Chinchou–Lanturn |
+| 6 | 4% | 7% | 10% | Shellder | Magikarp–Gyarados |
+| 7 | 3% | 6% | 10% | Tentacool–Tentacruel | Staryu |
+| 8 | 3% | 5% | 9% | Chinchou–Lanturn | Tentacool–Tentacruel |
+| 9 | 2% | 4% | 9% | Krabby–Kingler | Staryu |
+| 10 | 2% | 4% | 9% | Staryu | Krabby–Kingler |
 
 #### Ice Path
 
@@ -1516,56 +2181,96 @@ Dungeon, Johto east.
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Swinub–Piloswine, Delibird | Sneasel, Delibird |
-| Uncommon | Zubat–Golbat, Geodude–Graveler, Onix, Swinub–Piloswine | Zubat–Golbat, Swinub–Piloswine, Geodude–Graveler, Sneasel |
-| Rare | Sneasel, Zubat–Golbat, Smoochum, Delibird | Onix, Zubat–Golbat, Smoochum, Delibird |
-| Very rare | Jynx, Sneasel | Jynx, Gastly–Haunter |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Swinub–Piloswine | Sneasel |
+| 2 | 20% | Delibird | Delibird |
+| 3 | 10% | Zubat–Golbat | Zubat–Golbat |
+| 4 | 10% | Geodude–Graveler | Swinub–Piloswine |
+| 5 | 10% | Onix | Geodude–Graveler |
+| 6 | 10% | Swinub–Piloswine | Sneasel |
+| 7 | 5% | Sneasel | Onix |
+| 8 | 5% | Zubat–Golbat | Zubat–Golbat |
+| 9 | 4% | Smoochum | Smoochum |
+| 10 | 4% | Delibird | Delibird |
+| 11 | 1% | Jynx | Jynx |
+| 12 | 1% | Sneasel | Gastly–Haunter |
 
 **`MAP_ICE_PATH_B1F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Delibird, Swinub–Piloswine | Sneasel, Delibird |
-| Uncommon | Zubat–Golbat, Sneasel, Seel–Dewgong, Onix | Swinub–Piloswine, Zubat–Golbat, Sneasel, Seel–Dewgong |
-| Rare | Jynx, Zubat–Golbat, Smoochum, Delibird | Jynx, Smoochum, Zubat–Golbat, Onix |
-| Very rare | Swinub–Mamoswine, Jynx | Sneasel–Weavile, Jynx |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Delibird | Sneasel |
+| 2 | 20% | Swinub–Piloswine | Delibird |
+| 3 | 10% | Zubat–Golbat | Swinub–Piloswine |
+| 4 | 10% | Sneasel | Zubat–Golbat |
+| 5 | 10% | Seel–Dewgong | Sneasel |
+| 6 | 10% | Onix | Seel–Dewgong |
+| 7 | 5% | Jynx | Jynx |
+| 8 | 5% | Zubat–Golbat | Smoochum |
+| 9 | 4% | Smoochum | Zubat–Golbat |
+| 10 | 4% | Delibird | Onix |
+| 11 | 1% | Swinub–Mamoswine | Sneasel–Weavile |
+| 12 | 1% | Jynx | Jynx |
 
 **`MAP_ICE_PATH_B2F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Swinub–Piloswine, Delibird | Sneasel, Swinub–Piloswine |
-| Uncommon | Seel–Dewgong, Sneasel, Zubat–Golbat, Geodude–Graveler | Delibird, Sneasel, Seel–Dewgong, Zubat–Golbat |
-| Rare | Jynx ×2, Smoochum, Swinub–Mamoswine | Jynx, Sneasel–Weavile, Smoochum, Swinub–Mamoswine |
-| Very rare | Sneasel–Weavile, Onix–Steelix | Zubat–Crobat, Jynx |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Swinub–Piloswine | Sneasel |
+| 2 | 20% | Delibird | Swinub–Piloswine |
+| 3 | 10% | Seel–Dewgong | Delibird |
+| 4 | 10% | Sneasel | Sneasel |
+| 5 | 10% | Zubat–Golbat | Seel–Dewgong |
+| 6 | 10% | Geodude–Graveler | Zubat–Golbat |
+| 7 | 5% | Jynx | Jynx |
+| 8 | 5% | Smoochum | Sneasel–Weavile |
+| 9 | 4% | Swinub–Mamoswine | Smoochum |
+| 10 | 4% | Jynx | Swinub–Mamoswine |
+| 11 | 1% | Sneasel–Weavile | Zubat–Crobat |
+| 12 | 1% | Onix–Steelix | Jynx |
 
 **`MAP_ICE_PATH_B3F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Swinub–Piloswine, Delibird | Sneasel, Delibird |
-| Uncommon | Jynx, Sneasel, Seel–Dewgong, Swinub–Mamoswine | Jynx, Sneasel–Weavile, Swinub–Piloswine, Seel–Dewgong |
-| Rare | Zubat–Golbat, Smoochum, Jynx, Sneasel–Weavile | Sneasel, Smoochum, Swinub–Mamoswine, Jynx |
-| Very rare | Onix–Steelix, Zubat–Crobat | Zubat–Crobat, Sneasel–Weavile |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Swinub–Piloswine | Sneasel |
+| 2 | 20% | Delibird | Delibird |
+| 3 | 10% | Jynx | Jynx |
+| 4 | 10% | Sneasel | Sneasel–Weavile |
+| 5 | 10% | Seel–Dewgong | Swinub–Piloswine |
+| 6 | 10% | Swinub–Mamoswine | Seel–Dewgong |
+| 7 | 5% | Zubat–Golbat | Sneasel |
+| 8 | 5% | Smoochum | Smoochum |
+| 9 | 4% | Jynx | Swinub–Mamoswine |
+| 10 | 4% | Sneasel–Weavile | Jynx |
+| 11 | 1% | Onix–Steelix | Zubat–Crobat |
+| 12 | 1% | Zubat–Crobat | Sneasel–Weavile |
 
 **`MAP_ICE_PATH_B4F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Delibird, Swinub–Piloswine | Sneasel, Swinub–Piloswine |
-| Uncommon | Jynx, Swinub–Mamoswine, Seel–Dewgong, Sneasel | Sneasel–Weavile, Jynx, Delibird, Swinub–Mamoswine |
-| Rare | Sneasel–Weavile, Jynx, Smoochum, Onix–Steelix | Sneasel, Jynx, Smoochum, Sneasel–Weavile |
-| Very rare | Zubat–Crobat, Jynx | Zubat–Crobat, Seel–Dewgong |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Delibird | Sneasel |
+| 2 | 20% | Swinub–Piloswine | Swinub–Piloswine |
+| 3 | 10% | Jynx | Sneasel–Weavile |
+| 4 | 10% | Swinub–Mamoswine | Jynx |
+| 5 | 10% | Seel–Dewgong | Delibird |
+| 6 | 10% | Sneasel | Swinub–Mamoswine |
+| 7 | 5% | Sneasel–Weavile | Sneasel |
+| 8 | 5% | Jynx | Jynx |
+| 9 | 4% | Smoochum | Smoochum |
+| 10 | 4% | Onix–Steelix | Sneasel–Weavile |
+| 11 | 1% | Zubat–Crobat | Zubat–Crobat |
+| 12 | 1% | Jynx | Seel–Dewgong |
 
 #### Sprout Tower
 
@@ -1575,23 +2280,39 @@ Dungeon, Johto east.
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Rattata–Raticate, Bellsprout–Weepinbell | Gastly–Haunter, Rattata–Raticate |
-| Uncommon | Gastly–Haunter, Rattata–Raticate, Bellsprout–Weepinbell, Zubat–Golbat | Bellsprout–Weepinbell, Gastly–Haunter, Rattata–Raticate, Zubat–Golbat |
-| Rare | Gastly–Haunter, Natu–Xatu, Abra, Misdreavus | Misdreavus ×2, Gastly–Haunter, Hoothoot–Noctowl |
-| Very rare | Abra, Hoothoot–Noctowl | Abra, Bellsprout–Weepinbell |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Rattata–Raticate | Gastly–Haunter |
+| 2 | 20% | Bellsprout–Weepinbell | Rattata–Raticate |
+| 3 | 10% | Gastly–Haunter | Bellsprout–Weepinbell |
+| 4 | 10% | Rattata–Raticate | Gastly–Haunter |
+| 5 | 10% | Bellsprout–Weepinbell | Rattata–Raticate |
+| 6 | 10% | Zubat–Golbat | Zubat–Golbat |
+| 7 | 5% | Gastly–Haunter | Misdreavus |
+| 8 | 5% | Natu–Xatu | Gastly–Haunter |
+| 9 | 4% | Abra | Hoothoot–Noctowl |
+| 10 | 4% | Misdreavus | Misdreavus |
+| 11 | 1% | Abra | Abra |
+| 12 | 1% | Hoothoot–Noctowl | Bellsprout–Weepinbell |
 
 **`MAP_SPROUT_TOWER_3F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Bellsprout–Weepinbell ×2 | Gastly–Haunter, Bellsprout–Weepinbell |
-| Uncommon | Gastly–Haunter, Zubat–Golbat, Natu–Xatu, Rattata–Raticate | Misdreavus, Rattata–Raticate, Zubat–Golbat, Gastly–Haunter |
-| Rare | Misdreavus, Gastly–Haunter, Abra, Natu–Xatu | Misdreavus, Hoothoot–Noctowl, Abra, Gastly–Gengar |
-| Very rare | Bellsprout–Victreebel, Misdreavus | Bellsprout–Victreebel, Misdreavus |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Bellsprout–Weepinbell | Gastly–Haunter |
+| 2 | 20% | Bellsprout–Weepinbell | Bellsprout–Weepinbell |
+| 3 | 10% | Gastly–Haunter | Misdreavus |
+| 4 | 10% | Zubat–Golbat | Rattata–Raticate |
+| 5 | 10% | Natu–Xatu | Zubat–Golbat |
+| 6 | 10% | Rattata–Raticate | Gastly–Haunter |
+| 7 | 5% | Misdreavus | Misdreavus |
+| 8 | 5% | Gastly–Haunter | Hoothoot–Noctowl |
+| 9 | 4% | Abra | Abra |
+| 10 | 4% | Natu–Xatu | Gastly–Gengar |
+| 11 | 1% | Bellsprout–Victreebel | Bellsprout–Victreebel |
+| 12 | 1% | Misdreavus | Misdreavus |
 
 #### Slowpoke Well
 
@@ -1601,59 +2322,89 @@ Dungeon, Johto west.
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Slowpoke–Slowbro ×2 | Slowpoke–Slowbro ×2 |
-| Uncommon | Wooper–Quagsire ×2, Marill–Azumarill, Zubat–Golbat | Zubat–Golbat, Wooper–Quagsire, Gastly–Haunter, Marill–Azumarill |
-| Rare | Koffing–Weezing, Marill–Azumarill, Zubat–Golbat, Rattata–Raticate | Misdreavus, Gastly–Haunter, Wooper–Quagsire, Koffing–Weezing |
-| Very rare | Wobbuffet, Wooper–Quagsire | Wobbuffet, Misdreavus |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 2 | 20% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 3 | 10% | Wooper–Quagsire | Zubat–Golbat |
+| 4 | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 5 | 10% | Zubat–Golbat | Gastly–Haunter |
+| 6 | 10% | Wooper–Quagsire | Marill–Azumarill |
+| 7 | 5% | Koffing–Weezing | Misdreavus |
+| 8 | 5% | Marill–Azumarill | Gastly–Haunter |
+| 9 | 4% | Zubat–Golbat | Wooper–Quagsire |
+| 10 | 4% | Rattata–Raticate | Koffing–Weezing |
+| 11 | 1% | Wobbuffet | Wobbuffet |
+| 12 | 1% | Wooper–Quagsire | Misdreavus |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| Uncommon | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| Rare | Marill–Azumarill, Psyduck–Golduck | Wooper–Quagsire, Marill–Azumarill |
-| Very rare | Wooper–Quagsire | Chinchou–Lanturn |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 2 | 30% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 3 | 5% | Marill–Azumarill | Wooper–Quagsire |
+| 4 | 4% | Psyduck–Golduck | Marill–Azumarill |
+| 5 | 1% | Wooper–Quagsire | Chinchou–Lanturn |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Slowpoke–Slowbro ×2 | Slowpoke–Slowbro ×2 |
-| Uncommon | Marill–Azumarill, Goldeen–Seaking, Wooper–Quagsire | Wooper–Quagsire ×2, Marill–Azumarill |
-| Rare | Magikarp–Gyarados, Marill–Azumarill, Poliwag–Poliwhirl | Goldeen–Seaking, Chinchou–Lanturn, Marill–Azumarill |
-| Very rare | Slowpoke–Slowbro, Wooper–Quagsire | Slowpoke–Slowbro, Chinchou–Lanturn |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 2 | 22% | 18% | 10% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 3 | 10% | 12% | 11% | Marill–Azumarill | Wooper–Quagsire |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Marill–Azumarill |
+| 5 | 8% | 9% | 10% | Wooper–Quagsire | Wooper–Quagsire |
+| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Goldeen–Seaking |
+| 7 | 3% | 6% | 10% | Marill–Azumarill | Chinchou–Lanturn |
+| 8 | 3% | 5% | 9% | Poliwag–Poliwhirl | Marill–Azumarill |
+| 9 | 2% | 4% | 9% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 10 | 2% | 4% | 9% | Wooper–Quagsire | Chinchou–Lanturn |
 
 **`MAP_SLOWPOKE_WELL_B2F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Slowpoke–Slowbro ×2 | Slowpoke–Slowbro ×2 |
-| Uncommon | Wooper–Quagsire, Marill–Azumarill, Zubat–Golbat, Slowpoke–Slowking | Zubat–Golbat, Wooper–Quagsire, Misdreavus, Gastly–Haunter |
-| Rare | Wobbuffet, Wooper–Quagsire, Zubat–Crobat, Marill–Azumarill | Misdreavus, Slowpoke–Slowking, Wobbuffet, Zubat–Crobat |
-| Very rare | Slowpoke–Slowking, Misdreavus | Gastly–Haunter, Slowpoke–Slowking |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 2 | 20% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 3 | 10% | Wooper–Quagsire | Zubat–Golbat |
+| 4 | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 5 | 10% | Zubat–Golbat | Misdreavus |
+| 6 | 10% | Slowpoke–Slowking | Gastly–Haunter |
+| 7 | 5% | Wobbuffet | Misdreavus |
+| 8 | 5% | Wooper–Quagsire | Slowpoke–Slowking |
+| 9 | 4% | Zubat–Crobat | Wobbuffet |
+| 10 | 4% | Marill–Azumarill | Zubat–Crobat |
+| 11 | 1% | Slowpoke–Slowking | Gastly–Haunter |
+| 12 | 1% | Misdreavus | Slowpoke–Slowking |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| Uncommon | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| Rare | Slowpoke–Slowking, Marill–Azumarill | Wooper–Quagsire, Slowpoke–Slowking |
-| Very rare | Wooper–Quagsire | Chinchou–Lanturn |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 2 | 30% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 3 | 5% | Slowpoke–Slowking | Wooper–Quagsire |
+| 4 | 4% | Marill–Azumarill | Slowpoke–Slowking |
+| 5 | 1% | Wooper–Quagsire | Chinchou–Lanturn |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Slowpoke–Slowbro ×2 | Slowpoke–Slowbro ×2 |
-| Uncommon | Marill–Azumarill, Goldeen–Seaking, Slowpoke–Slowking | Wooper–Quagsire, Marill–Azumarill, Slowpoke–Slowking |
-| Rare | Wooper–Quagsire, Marill–Azumarill, Magikarp–Gyarados | Wooper–Quagsire, Chinchou–Lanturn, Marill–Azumarill |
-| Very rare | Slowpoke–Slowbro, Wooper–Quagsire | Slowpoke–Slowbro, Chinchou–Lanturn |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 2 | 22% | 18% | 10% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 3 | 10% | 12% | 11% | Marill–Azumarill | Wooper–Quagsire |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Marill–Azumarill |
+| 5 | 8% | 9% | 10% | Slowpoke–Slowking | Slowpoke–Slowking |
+| 6 | 4% | 7% | 10% | Wooper–Quagsire | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Marill–Azumarill | Chinchou–Lanturn |
+| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Marill–Azumarill |
+| 9 | 2% | 4% | 9% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 10 | 2% | 4% | 9% | Wooper–Quagsire | Chinchou–Lanturn |
 
 #### Burned Tower
 
@@ -1663,36 +2414,62 @@ Dungeon, Johto west.
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Slugma–Magcargo, Rattata–Raticate | Slugma–Magcargo, Rattata–Raticate |
-| Uncommon | Koffing–Weezing, Zubat–Golbat, Rattata–Raticate, Slugma–Magcargo | Gastly–Haunter, Zubat–Golbat, Koffing–Weezing, Houndour–Houndoom |
-| Rare | Houndour–Houndoom ×2, Magby, Koffing–Weezing | Houndour–Houndoom, Magby, Gastly–Haunter, Misdreavus |
-| Very rare | Magby, Vulpix | Magby, Vulpix |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Slugma–Magcargo | Slugma–Magcargo |
+| 2 | 20% | Rattata–Raticate | Rattata–Raticate |
+| 3 | 10% | Koffing–Weezing | Gastly–Haunter |
+| 4 | 10% | Zubat–Golbat | Zubat–Golbat |
+| 5 | 10% | Rattata–Raticate | Koffing–Weezing |
+| 6 | 10% | Slugma–Magcargo | Houndour–Houndoom |
+| 7 | 5% | Houndour–Houndoom | Houndour–Houndoom |
+| 8 | 5% | Magby | Magby |
+| 9 | 4% | Houndour–Houndoom | Gastly–Haunter |
+| 10 | 4% | Koffing–Weezing | Misdreavus |
+| 11 | 1% | Magby | Magby |
+| 12 | 1% | Vulpix | Vulpix |
 
 **`MAP_BURNED_TOWER_B1F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Gastly–Haunter, Slugma–Magcargo | Gastly–Haunter, Slugma–Magcargo |
-| Uncommon | Koffing–Weezing, Misdreavus, Zubat–Golbat, Houndour–Houndoom | Misdreavus, Murkrow, Houndour–Houndoom, Koffing–Weezing |
-| Rare | Magmar, Cyndaquil–Typhlosion, Misdreavus, Magby | Misdreavus, Magmar, Gastly–Gengar, Magby |
-| Very rare | Magmar–Magmortar, Cyndaquil–Typhlosion | Misdreavus–Mismagius, Cyndaquil–Typhlosion |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Gastly–Haunter | Gastly–Haunter |
+| 2 | 20% | Slugma–Magcargo | Slugma–Magcargo |
+| 3 | 10% | Koffing–Weezing | Misdreavus |
+| 4 | 10% | Misdreavus | Murkrow |
+| 5 | 10% | Zubat–Golbat | Houndour–Houndoom |
+| 6 | 10% | Houndour–Houndoom | Koffing–Weezing |
+| 7 | 5% | Magmar | Misdreavus |
+| 8 | 5% | Cyndaquil–Typhlosion | Magmar |
+| 9 | 4% | Misdreavus | Gastly–Gengar |
+| 10 | 4% | Magby | Magby |
+| 11 | 1% | Magmar–Magmortar | Misdreavus–Mismagius |
+| 12 | 1% | Cyndaquil–Typhlosion | Cyndaquil–Typhlosion |
 
 #### Rocket Hideout
 
 Dungeon, Johto east.
 
+**`MAP_ROCKET_HIDEOUT_B1F_HNS`**
+
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Koffing–Weezing, Voltorb–Electrode | Koffing–Weezing, Voltorb–Electrode |
-| Uncommon | Rattata–Raticate, Grimer–Muk, Magnemite–Magneton, Meowth–Persian | Rattata–Raticate, Grimer–Muk, Meowth–Persian, Gastly–Haunter |
-| Rare | Porygon ×2, Geodude–Graveler, Meowth–Persian | Porygon ×2, Magnemite–Magneton, Zubat–Golbat |
-| Very rare | Porygon–Porygon2, Koffing–Weezing | Porygon–Porygon2, Gastly–Haunter |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Koffing–Weezing | Koffing–Weezing |
+| 2 | 20% | Voltorb–Electrode | Voltorb–Electrode |
+| 3 | 10% | Rattata–Raticate | Rattata–Raticate |
+| 4 | 10% | Grimer–Muk | Grimer–Muk |
+| 5 | 10% | Magnemite–Magneton | Meowth–Persian |
+| 6 | 10% | Meowth–Persian | Gastly–Haunter |
+| 7 | 5% | Porygon | Porygon |
+| 8 | 5% | Geodude–Graveler | Magnemite–Magneton |
+| 9 | 4% | Meowth–Persian | Zubat–Golbat |
+| 10 | 4% | Porygon | Porygon |
+| 11 | 1% | Porygon–Porygon2 | Porygon–Porygon2 |
+| 12 | 1% | Koffing–Weezing | Gastly–Haunter |
 
 #### Mt. Mortar
 
@@ -1702,117 +2479,177 @@ Dungeon, Johto east.
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Machop–Machoke, Zubat–Golbat | Zubat–Golbat, Machop–Machoke |
-| Uncommon | Geodude–Graveler, Marill–Azumarill, Rattata–Raticate, Mankey–Primeape | Marill–Azumarill, Geodude–Graveler, Rattata–Raticate, Gastly–Haunter |
-| Rare | Cubone–Marowak, Onix, Tyrogue, Machop–Machoke | Cubone–Marowak, Onix, Tyrogue, Marill–Azumarill |
-| Very rare | Hitmontop, Dunsparce | Hitmontop, Cleffa |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Machop–Machoke | Zubat–Golbat |
+| 2 | 20% | Zubat–Golbat | Machop–Machoke |
+| 3 | 10% | Geodude–Graveler | Marill–Azumarill |
+| 4 | 10% | Marill–Azumarill | Geodude–Graveler |
+| 5 | 10% | Rattata–Raticate | Rattata–Raticate |
+| 6 | 10% | Mankey–Primeape | Gastly–Haunter |
+| 7 | 5% | Cubone–Marowak | Cubone–Marowak |
+| 8 | 5% | Onix | Onix |
+| 9 | 4% | Tyrogue | Tyrogue |
+| 10 | 4% | Machop–Machoke | Marill–Azumarill |
+| 11 | 1% | Hitmontop | Hitmontop |
+| 12 | 1% | Dunsparce | Cleffa |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Marill–Azumarill | Marill–Azumarill |
-| Uncommon | Goldeen–Seaking | Goldeen–Seaking |
-| Rare | Psyduck–Golduck, Poliwag–Poliwhirl | Wooper–Quagsire, Psyduck–Golduck |
-| Very rare | Magikarp–Gyarados | Magikarp–Gyarados |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Marill–Azumarill | Marill–Azumarill |
+| 2 | 30% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 5% | Psyduck–Golduck | Wooper–Quagsire |
+| 4 | 4% | Poliwag–Poliwhirl | Psyduck–Golduck |
+| 5 | 1% | Magikarp–Gyarados | Magikarp–Gyarados |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Goldeen–Seaking, Marill–Azumarill | Goldeen–Seaking, Marill–Azumarill |
-| Uncommon | Magikarp–Gyarados ×2, Goldeen–Seaking | Magikarp–Gyarados ×2, Wooper–Quagsire |
-| Rare | Poliwag–Poliwhirl, Goldeen–Seaking, Psyduck–Golduck | Wooper–Quagsire, Goldeen–Seaking, Poliwag–Poliwhirl |
-| Very rare | Magikarp–Gyarados, Marill–Azumarill | Magikarp–Gyarados, Psyduck–Golduck |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Goldeen–Seaking | Goldeen–Seaking |
+| 2 | 22% | 18% | 10% | Marill–Azumarill | Marill–Azumarill |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 8 | 3% | 5% | 9% | Psyduck–Golduck | Poliwag–Poliwhirl |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 10 | 2% | 4% | 9% | Marill–Azumarill | Psyduck–Golduck |
 
 **`MAP_MT_MORTAR_1F_NORTH_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Geodude–Graveler, Marill–Azumarill | Marill–Azumarill, Geodude–Graveler |
-| Uncommon | Machop–Machoke, Zubat–Golbat, Rattata–Raticate, Cubone–Marowak | Zubat–Golbat, Machop–Machoke, Gastly–Haunter, Cubone–Marowak |
-| Rare | Onix, Tyrogue, Dunsparce, Hitmontop | Onix, Tyrogue, Cleffa, Hitmontop |
-| Very rare | Machop–Machamp, Geodude–Golem | Zubat–Crobat, Dunsparce |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Geodude–Graveler | Marill–Azumarill |
+| 2 | 20% | Marill–Azumarill | Geodude–Graveler |
+| 3 | 10% | Machop–Machoke | Zubat–Golbat |
+| 4 | 10% | Zubat–Golbat | Machop–Machoke |
+| 5 | 10% | Rattata–Raticate | Gastly–Haunter |
+| 6 | 10% | Cubone–Marowak | Cubone–Marowak |
+| 7 | 5% | Onix | Onix |
+| 8 | 5% | Tyrogue | Tyrogue |
+| 9 | 4% | Dunsparce | Cleffa |
+| 10 | 4% | Hitmontop | Hitmontop |
+| 11 | 1% | Machop–Machamp | Zubat–Crobat |
+| 12 | 1% | Geodude–Golem | Dunsparce |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Marill–Azumarill | Wooper–Quagsire |
-| Uncommon | Wooper–Quagsire | Marill–Azumarill |
-| Rare | Psyduck–Golduck, Goldeen–Seaking | Goldeen–Seaking, Psyduck–Golduck |
-| Very rare | Magikarp–Gyarados | Chinchou–Lanturn |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Marill–Azumarill | Wooper–Quagsire |
+| 2 | 30% | Wooper–Quagsire | Marill–Azumarill |
+| 3 | 5% | Psyduck–Golduck | Goldeen–Seaking |
+| 4 | 4% | Goldeen–Seaking | Psyduck–Golduck |
+| 5 | 1% | Magikarp–Gyarados | Chinchou–Lanturn |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Marill–Azumarill, Wooper–Quagsire | Wooper–Quagsire, Marill–Azumarill |
-| Uncommon | Magikarp–Gyarados ×2, Goldeen–Seaking | Magikarp–Gyarados ×2, Chinchou–Lanturn |
-| Rare | Poliwag–Poliwhirl, Psyduck–Golduck, Goldeen–Seaking | Wooper–Quagsire, Goldeen–Seaking, Chinchou–Lanturn |
-| Very rare | Magikarp–Gyarados, Marill–Azumarill | Poliwag–Poliwhirl, Magikarp–Gyarados |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Marill–Azumarill | Wooper–Quagsire |
+| 2 | 22% | 18% | 10% | Wooper–Quagsire | Marill–Azumarill |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Chinchou–Lanturn |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Psyduck–Golduck | Goldeen–Seaking |
+| 8 | 3% | 5% | 9% | Goldeen–Seaking | Chinchou–Lanturn |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Poliwag–Poliwhirl |
+| 10 | 2% | 4% | 9% | Marill–Azumarill | Magikarp–Gyarados |
 
 **`MAP_MT_MORTAR_2F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Machop–Machoke, Mankey–Primeape | Machop–Machoke, Marill–Azumarill |
-| Uncommon | Geodude–Graveler, Zubat–Golbat, Marill–Azumarill, Rattata–Raticate | Zubat–Golbat, Mankey–Primeape, Geodude–Graveler, Gastly–Haunter |
-| Rare | Machop–Machamp, Hitmontop, Tyrogue, Onix | Hitmontop, Machop–Machamp, Tyrogue, Gastly–Haunter |
-| Very rare | Geodude–Golem, Dunsparce | Zubat–Crobat, Cleffa |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Machop–Machoke | Machop–Machoke |
+| 2 | 20% | Mankey–Primeape | Marill–Azumarill |
+| 3 | 10% | Geodude–Graveler | Zubat–Golbat |
+| 4 | 10% | Zubat–Golbat | Mankey–Primeape |
+| 5 | 10% | Marill–Azumarill | Geodude–Graveler |
+| 6 | 10% | Rattata–Raticate | Gastly–Haunter |
+| 7 | 5% | Machop–Machamp | Hitmontop |
+| 8 | 5% | Hitmontop | Machop–Machamp |
+| 9 | 4% | Tyrogue | Tyrogue |
+| 10 | 4% | Onix | Gastly–Haunter |
+| 11 | 1% | Geodude–Golem | Zubat–Crobat |
+| 12 | 1% | Dunsparce | Cleffa |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Marill–Azumarill | Marill–Azumarill |
-| Uncommon | Goldeen–Seaking | Goldeen–Seaking |
-| Rare | Psyduck–Golduck, Poliwag–Poliwhirl | Wooper–Quagsire, Psyduck–Golduck |
-| Very rare | Magikarp–Gyarados | Magikarp–Gyarados |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Marill–Azumarill | Marill–Azumarill |
+| 2 | 30% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 5% | Psyduck–Golduck | Wooper–Quagsire |
+| 4 | 4% | Poliwag–Poliwhirl | Psyduck–Golduck |
+| 5 | 1% | Magikarp–Gyarados | Magikarp–Gyarados |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Goldeen–Seaking, Marill–Azumarill | Goldeen–Seaking, Marill–Azumarill |
-| Uncommon | Magikarp–Gyarados ×2, Goldeen–Seaking | Magikarp–Gyarados ×2, Wooper–Quagsire |
-| Rare | Poliwag–Poliwhirl, Goldeen–Seaking, Psyduck–Golduck | Wooper–Quagsire, Goldeen–Seaking, Poliwag–Poliwhirl |
-| Very rare | Magikarp–Gyarados, Marill–Azumarill | Magikarp–Gyarados, Psyduck–Golduck |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Goldeen–Seaking | Goldeen–Seaking |
+| 2 | 22% | 18% | 10% | Marill–Azumarill | Marill–Azumarill |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 8 | 3% | 5% | 9% | Psyduck–Golduck | Poliwag–Poliwhirl |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 10 | 2% | 4% | 9% | Marill–Azumarill | Psyduck–Golduck |
 
 **`MAP_MT_MORTAR_B1F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Onix, Geodude–Graveler | Geodude–Graveler, Onix |
-| Uncommon | Machop–Machoke, Cubone–Marowak, Zubat–Golbat, Marill–Azumarill | Machop–Machoke, Zubat–Golbat, Marill–Azumarill, Gastly–Haunter |
-| Rare | Hitmontop ×2, Tyrogue, Machop–Machamp | Hitmontop ×2, Tyrogue, Cleffa |
-| Very rare | Geodude–Golem, Zubat–Crobat | Zubat–Crobat, Gastly–Gengar |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Onix | Geodude–Graveler |
+| 2 | 20% | Geodude–Graveler | Onix |
+| 3 | 10% | Machop–Machoke | Machop–Machoke |
+| 4 | 10% | Cubone–Marowak | Zubat–Golbat |
+| 5 | 10% | Zubat–Golbat | Marill–Azumarill |
+| 6 | 10% | Marill–Azumarill | Gastly–Haunter |
+| 7 | 5% | Hitmontop | Hitmontop |
+| 8 | 5% | Tyrogue | Tyrogue |
+| 9 | 4% | Machop–Machamp | Cleffa |
+| 10 | 4% | Hitmontop | Hitmontop |
+| 11 | 1% | Geodude–Golem | Zubat–Crobat |
+| 12 | 1% | Zubat–Crobat | Gastly–Gengar |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Marill–Azumarill | Marill–Azumarill |
-| Uncommon | Goldeen–Seaking | Goldeen–Seaking |
-| Rare | Psyduck–Golduck, Magikarp–Gyarados | Wooper–Quagsire, Psyduck–Golduck |
-| Very rare | Poliwag–Poliwhirl | Magikarp–Gyarados |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Marill–Azumarill | Marill–Azumarill |
+| 2 | 30% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 5% | Psyduck–Golduck | Wooper–Quagsire |
+| 4 | 4% | Magikarp–Gyarados | Psyduck–Golduck |
+| 5 | 1% | Poliwag–Poliwhirl | Magikarp–Gyarados |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Marill–Azumarill, Goldeen–Seaking | Marill–Azumarill, Goldeen–Seaking |
-| Uncommon | Magikarp–Gyarados ×2, Goldeen–Seaking | Magikarp–Gyarados ×2, Wooper–Quagsire |
-| Rare | Poliwag–Poliwhirl, Psyduck–Golduck, Goldeen–Seaking | Wooper–Quagsire, Goldeen–Seaking, Psyduck–Golduck |
-| Very rare | Magikarp–Gyarados, Marill–Azumarill | Poliwag–Poliwhirl, Magikarp–Gyarados |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Marill–Azumarill | Marill–Azumarill |
+| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Psyduck–Golduck | Goldeen–Seaking |
+| 8 | 3% | 5% | 9% | Goldeen–Seaking | Psyduck–Golduck |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Poliwag–Poliwhirl |
+| 10 | 2% | 4% | 9% | Marill–Azumarill | Magikarp–Gyarados |
 
 #### Tin Tower
 
@@ -1822,100 +2659,165 @@ Dungeon, Johto west.
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Aipom, Sentret–Furret | Aipom, Sentret–Furret |
-| Uncommon | Natu–Xatu, Rattata–Raticate, Hoothoot–Noctowl, Gastly–Haunter | Gastly–Haunter, Hoothoot–Noctowl, Misdreavus, Natu–Xatu |
-| Rare | Misdreavus ×2, Sentret–Furret, Houndour–Houndoom | Murkrow, Gastly–Haunter, Misdreavus, Houndour–Houndoom |
-| Very rare | Eevee, Stantler | Eevee, Stantler |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Aipom | Aipom |
+| 2 | 20% | Sentret–Furret | Sentret–Furret |
+| 3 | 10% | Natu–Xatu | Gastly–Haunter |
+| 4 | 10% | Rattata–Raticate | Hoothoot–Noctowl |
+| 5 | 10% | Hoothoot–Noctowl | Misdreavus |
+| 6 | 10% | Gastly–Haunter | Natu–Xatu |
+| 7 | 5% | Misdreavus | Murkrow |
+| 8 | 5% | Sentret–Furret | Gastly–Haunter |
+| 9 | 4% | Houndour–Houndoom | Misdreavus |
+| 10 | 4% | Misdreavus | Houndour–Houndoom |
+| 11 | 1% | Eevee | Eevee |
+| 12 | 1% | Stantler | Stantler |
 
 **`MAP_TIN_TOWER_4F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Natu–Xatu, Aipom | Gastly–Haunter, Natu–Xatu |
-| Uncommon | Sentret–Furret, Hoothoot–Noctowl, Gastly–Haunter, Misdreavus | Hoothoot–Noctowl, Aipom, Misdreavus, Murkrow |
-| Rare | Aipom–Ambipom, Houndour–Houndoom, Natu–Xatu, Misdreavus | Misdreavus–Mismagius, Houndour–Houndoom, Misdreavus, Gastly–Gengar |
-| Very rare | Eevee, Misdreavus–Mismagius | Eevee, Murkrow–Honchkrow |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Natu–Xatu | Gastly–Haunter |
+| 2 | 20% | Aipom | Natu–Xatu |
+| 3 | 10% | Sentret–Furret | Hoothoot–Noctowl |
+| 4 | 10% | Hoothoot–Noctowl | Aipom |
+| 5 | 10% | Gastly–Haunter | Misdreavus |
+| 6 | 10% | Misdreavus | Murkrow |
+| 7 | 5% | Aipom–Ambipom | Misdreavus–Mismagius |
+| 8 | 5% | Houndour–Houndoom | Houndour–Houndoom |
+| 9 | 4% | Natu–Xatu | Misdreavus |
+| 10 | 4% | Misdreavus | Gastly–Gengar |
+| 11 | 1% | Eevee | Eevee |
+| 12 | 1% | Misdreavus–Mismagius | Murkrow–Honchkrow |
 
 **`MAP_TIN_TOWER_5F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Natu–Xatu, Sentret–Furret | Natu–Xatu, Misdreavus |
-| Uncommon | Hoothoot–Noctowl, Aipom, Misdreavus, Gastly–Haunter | Hoothoot–Noctowl, Murkrow, Gastly–Haunter, Aipom |
-| Rare | Aipom–Ambipom, Houndour–Houndoom, Skarmory, Misdreavus–Mismagius | Misdreavus–Mismagius, Murkrow–Honchkrow, Skarmory, Houndour–Houndoom |
-| Very rare | Eevee–Espeon, Stantler | Eevee–Umbreon, Gastly–Gengar |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Natu–Xatu | Natu–Xatu |
+| 2 | 20% | Sentret–Furret | Misdreavus |
+| 3 | 10% | Hoothoot–Noctowl | Hoothoot–Noctowl |
+| 4 | 10% | Aipom | Murkrow |
+| 5 | 10% | Misdreavus | Gastly–Haunter |
+| 6 | 10% | Gastly–Haunter | Aipom |
+| 7 | 5% | Aipom–Ambipom | Misdreavus–Mismagius |
+| 8 | 5% | Houndour–Houndoom | Murkrow–Honchkrow |
+| 9 | 4% | Skarmory | Skarmory |
+| 10 | 4% | Misdreavus–Mismagius | Houndour–Houndoom |
+| 11 | 1% | Eevee–Espeon | Eevee–Umbreon |
+| 12 | 1% | Stantler | Gastly–Gengar |
 
 **`MAP_TIN_TOWER_6F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Sentret–Furret, Natu–Xatu | Gastly–Haunter, Natu–Xatu |
-| Uncommon | Hoothoot–Noctowl, Misdreavus, Aipom–Ambipom, Gastly–Haunter | Misdreavus, Hoothoot–Noctowl, Murkrow, Aipom–Ambipom |
-| Rare | Skarmory, Houndour–Houndoom, Misdreavus–Mismagius, Stantler | Gastly–Gengar, Murkrow–Honchkrow, Misdreavus–Mismagius, Houndour–Houndoom |
-| Very rare | Eevee–Espeon, Skarmory | Eevee–Umbreon, Skarmory |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Sentret–Furret | Gastly–Haunter |
+| 2 | 20% | Natu–Xatu | Natu–Xatu |
+| 3 | 10% | Hoothoot–Noctowl | Misdreavus |
+| 4 | 10% | Misdreavus | Hoothoot–Noctowl |
+| 5 | 10% | Aipom–Ambipom | Murkrow |
+| 6 | 10% | Gastly–Haunter | Aipom–Ambipom |
+| 7 | 5% | Skarmory | Gastly–Gengar |
+| 8 | 5% | Houndour–Houndoom | Murkrow–Honchkrow |
+| 9 | 4% | Misdreavus–Mismagius | Misdreavus–Mismagius |
+| 10 | 4% | Stantler | Houndour–Houndoom |
+| 11 | 1% | Eevee–Espeon | Eevee–Umbreon |
+| 12 | 1% | Skarmory | Skarmory |
 
 **`MAP_TIN_TOWER_7F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Natu–Xatu, Hoothoot–Noctowl | Hoothoot–Noctowl, Natu–Xatu |
-| Uncommon | Sentret–Furret, Aipom–Ambipom, Misdreavus, Gastly–Haunter | Gastly–Haunter, Murkrow, Misdreavus, Aipom–Ambipom |
-| Rare | Skarmory, Misdreavus–Mismagius, Eevee–Espeon, Houndour–Houndoom | Gastly–Gengar, Murkrow–Honchkrow, Misdreavus–Mismagius, Eevee–Umbreon |
-| Very rare | Stantler, Skarmory | Skarmory, Houndour–Houndoom |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Natu–Xatu | Hoothoot–Noctowl |
+| 2 | 20% | Hoothoot–Noctowl | Natu–Xatu |
+| 3 | 10% | Sentret–Furret | Gastly–Haunter |
+| 4 | 10% | Aipom–Ambipom | Murkrow |
+| 5 | 10% | Misdreavus | Misdreavus |
+| 6 | 10% | Gastly–Haunter | Aipom–Ambipom |
+| 7 | 5% | Skarmory | Gastly–Gengar |
+| 8 | 5% | Misdreavus–Mismagius | Murkrow–Honchkrow |
+| 9 | 4% | Eevee–Espeon | Misdreavus–Mismagius |
+| 10 | 4% | Houndour–Houndoom | Eevee–Umbreon |
+| 11 | 1% | Stantler | Skarmory |
+| 12 | 1% | Skarmory | Houndour–Houndoom |
 
 **`MAP_TIN_TOWER_8F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Gastly–Haunter, Natu–Xatu | Gastly–Haunter, Misdreavus |
-| Uncommon | Hoothoot–Noctowl, Aipom–Ambipom, Skarmory, Misdreavus–Mismagius | Natu–Xatu, Murkrow, Misdreavus–Mismagius, Skarmory |
-| Rare | Eevee–Espeon, Houndour–Houndoom, Skarmory, Gastly–Gengar | Murkrow–Honchkrow, Eevee–Umbreon, Gastly–Gengar, Houndour–Houndoom |
-| Very rare | Stantler, Misdreavus | Zubat–Crobat, Eevee–Espeon |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Gastly–Haunter | Gastly–Haunter |
+| 2 | 20% | Natu–Xatu | Misdreavus |
+| 3 | 10% | Hoothoot–Noctowl | Natu–Xatu |
+| 4 | 10% | Aipom–Ambipom | Murkrow |
+| 5 | 10% | Skarmory | Misdreavus–Mismagius |
+| 6 | 10% | Misdreavus–Mismagius | Skarmory |
+| 7 | 5% | Eevee–Espeon | Murkrow–Honchkrow |
+| 8 | 5% | Houndour–Houndoom | Eevee–Umbreon |
+| 9 | 4% | Skarmory | Gastly–Gengar |
+| 10 | 4% | Gastly–Gengar | Houndour–Houndoom |
+| 11 | 1% | Stantler | Zubat–Crobat |
+| 12 | 1% | Misdreavus | Eevee–Espeon |
 
 **`MAP_TIN_TOWER_9F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Hoothoot–Noctowl, Sentret–Furret | Hoothoot–Noctowl, Natu–Xatu |
-| Uncommon | Natu–Xatu, Skarmory, Aipom–Ambipom, Misdreavus–Mismagius | Murkrow–Honchkrow, Skarmory, Misdreavus–Mismagius, Gastly–Haunter |
-| Rare | Eevee–Espeon, Skarmory, Houndour–Houndoom, Gastly–Gengar | Eevee–Umbreon, Skarmory, Gastly–Gengar, Zubat–Crobat |
-| Very rare | Eevee–Espeon, Stantler | Eevee–Umbreon, Houndour–Houndoom |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Hoothoot–Noctowl | Hoothoot–Noctowl |
+| 2 | 20% | Sentret–Furret | Natu–Xatu |
+| 3 | 10% | Natu–Xatu | Murkrow–Honchkrow |
+| 4 | 10% | Skarmory | Skarmory |
+| 5 | 10% | Aipom–Ambipom | Misdreavus–Mismagius |
+| 6 | 10% | Misdreavus–Mismagius | Gastly–Haunter |
+| 7 | 5% | Eevee–Espeon | Eevee–Umbreon |
+| 8 | 5% | Skarmory | Skarmory |
+| 9 | 4% | Houndour–Houndoom | Gastly–Gengar |
+| 10 | 4% | Gastly–Gengar | Zubat–Crobat |
+| 11 | 1% | Eevee–Espeon | Eevee–Umbreon |
+| 12 | 1% | Stantler | Houndour–Houndoom |
 
 #### Dragon's Den
 
 Dungeon, Johto east.
 
+**`MAP_DRAGONS_DEN_CAVERN_HNS`**
+
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Magikarp–Gyarados | Dratini–Dragonite |
-| Uncommon | Horsea–Seadra | Magikarp–Gyarados |
-| Rare | Dratini–Dragonite, Horsea–Kingdra | Horsea–Seadra, Dratini–Dragonite |
-| Very rare | Dratini–Dragonite | Horsea–Kingdra |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Magikarp–Gyarados | Dratini–Dragonite |
+| 2 | 30% | Horsea–Seadra | Magikarp–Gyarados |
+| 3 | 5% | Dratini–Dragonite | Horsea–Seadra |
+| 4 | 4% | Horsea–Kingdra | Dratini–Dragonite |
+| 5 | 1% | Dratini–Dragonite | Horsea–Kingdra |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Magikarp–Gyarados, Horsea–Seadra | Dratini–Dragonite, Magikarp–Gyarados |
-| Uncommon | Magikarp–Gyarados, Horsea–Seadra, Dratini–Dragonite | Dratini–Dragonite ×2, Horsea–Seadra |
-| Rare | Magikarp–Gyarados, Dratini–Dragonite, Horsea–Seadra | Magikarp–Gyarados, Horsea–Seadra, Dratini–Dragonite |
-| Very rare | Horsea–Kingdra, Dratini–Dragonite | Horsea–Kingdra, Dratini–Dragonite |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Dratini–Dragonite |
+| 2 | 22% | 18% | 10% | Horsea–Seadra | Magikarp–Gyarados |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Dratini–Dragonite |
+| 4 | 8% | 10% | 10% | Horsea–Seadra | Horsea–Seadra |
+| 5 | 8% | 9% | 10% | Dratini–Dragonite | Dratini–Dragonite |
+| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 7 | 3% | 6% | 10% | Dratini–Dragonite | Horsea–Seadra |
+| 8 | 3% | 5% | 9% | Horsea–Seadra | Dratini–Dragonite |
+| 9 | 2% | 4% | 9% | Horsea–Kingdra | Horsea–Kingdra |
+| 10 | 2% | 4% | 9% | Dratini–Dragonite | Dratini–Dragonite |
 
 #### Whirl Islands
 
@@ -1925,157 +2827,240 @@ Dungeon, Johto west.
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Seel–Dewgong, Krabby–Kingler | Zubat–Golbat, Seel–Dewgong |
-| Uncommon | Corsola, Wooper–Quagsire, Natu–Xatu, Zubat–Golbat | Corsola, Wooper–Quagsire, Krabby–Kingler, Gastly–Haunter |
-| Rare | Seel–Dewgong, Corsola, Krabby–Kingler, Slowpoke–Slowbro | Seel–Dewgong, Corsola, Natu–Xatu, Gastly–Haunter |
-| Very rare | Skarmory, Natu–Xatu | Skarmory, Slowpoke–Slowbro |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Seel–Dewgong | Zubat–Golbat |
+| 2 | 20% | Krabby–Kingler | Seel–Dewgong |
+| 3 | 10% | Corsola | Corsola |
+| 4 | 10% | Wooper–Quagsire | Wooper–Quagsire |
+| 5 | 10% | Natu–Xatu | Krabby–Kingler |
+| 6 | 10% | Zubat–Golbat | Gastly–Haunter |
+| 7 | 5% | Seel–Dewgong | Seel–Dewgong |
+| 8 | 5% | Corsola | Corsola |
+| 9 | 4% | Krabby–Kingler | Natu–Xatu |
+| 10 | 4% | Slowpoke–Slowbro | Gastly–Haunter |
+| 11 | 1% | Skarmory | Skarmory |
+| 12 | 1% | Natu–Xatu | Slowpoke–Slowbro |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Tentacool–Tentacruel | Corsola |
-| Uncommon | Corsola | Tentacool–Tentacruel |
-| Rare | Mantine, Horsea–Seadra | Chinchou–Lanturn, Mantine |
-| Very rare | Mantyke | Horsea–Seadra |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Tentacool–Tentacruel | Corsola |
+| 2 | 30% | Corsola | Tentacool–Tentacruel |
+| 3 | 5% | Mantine | Chinchou–Lanturn |
+| 4 | 4% | Horsea–Seadra | Mantine |
+| 5 | 1% | Mantyke | Horsea–Seadra |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Corsola, Krabby–Kingler | Krabby–Kingler, Corsola |
-| Uncommon | Qwilfish, Horsea–Seadra, Corsola | Chinchou–Lanturn, Qwilfish, Staryu |
-| Rare | Krabby–Kingler, Staryu, Qwilfish | Corsola, Chinchou–Lanturn, Staryu |
-| Very rare | Chinchou–Lanturn, Horsea–Seadra | Horsea–Seadra, Qwilfish |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Corsola | Krabby–Kingler |
+| 2 | 22% | 18% | 10% | Krabby–Kingler | Corsola |
+| 3 | 10% | 12% | 11% | Qwilfish | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Horsea–Seadra | Qwilfish |
+| 5 | 8% | 9% | 10% | Corsola | Staryu |
+| 6 | 4% | 7% | 10% | Krabby–Kingler | Corsola |
+| 7 | 3% | 6% | 10% | Staryu | Chinchou–Lanturn |
+| 8 | 3% | 5% | 9% | Qwilfish | Staryu |
+| 9 | 2% | 4% | 9% | Chinchou–Lanturn | Horsea–Seadra |
+| 10 | 2% | 4% | 9% | Horsea–Seadra | Qwilfish |
 
 **`MAP_WHIRL_ISLANDS_B1F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Slowpoke–Slowbro, Corsola | Slowpoke–Slowbro, Corsola |
-| Uncommon | Seel–Dewgong, Marill–Azumarill, Wooper–Quagsire, Natu–Xatu | Zubat–Golbat, Seel–Dewgong, Gastly–Haunter, Marill–Azumarill |
-| Rare | Zubat–Golbat, Slowpoke–Slowking, Skarmory, Corsola | Zubat–Crobat, Slowpoke–Slowking, Skarmory, Gastly–Haunter |
-| Very rare | Slowpoke–Slowking, Skarmory | Gastly–Gengar, Natu–Xatu |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 2 | 20% | Corsola | Corsola |
+| 3 | 10% | Seel–Dewgong | Zubat–Golbat |
+| 4 | 10% | Marill–Azumarill | Seel–Dewgong |
+| 5 | 10% | Wooper–Quagsire | Gastly–Haunter |
+| 6 | 10% | Natu–Xatu | Marill–Azumarill |
+| 7 | 5% | Zubat–Golbat | Zubat–Crobat |
+| 8 | 5% | Slowpoke–Slowking | Slowpoke–Slowking |
+| 9 | 4% | Skarmory | Skarmory |
+| 10 | 4% | Corsola | Gastly–Haunter |
+| 11 | 1% | Slowpoke–Slowking | Gastly–Gengar |
+| 12 | 1% | Skarmory | Natu–Xatu |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Horsea–Seadra | Chinchou–Lanturn |
-| Uncommon | Chinchou–Lanturn | Horsea–Seadra |
-| Rare | Mantine, Corsola | Mantine, Horsea–Kingdra |
-| Very rare | Mantyke | Corsola |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Horsea–Seadra | Chinchou–Lanturn |
+| 2 | 30% | Chinchou–Lanturn | Horsea–Seadra |
+| 3 | 5% | Mantine | Mantine |
+| 4 | 4% | Corsola | Horsea–Kingdra |
+| 5 | 1% | Mantyke | Corsola |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Horsea–Seadra, Chinchou–Lanturn | Chinchou–Lanturn, Horsea–Seadra |
-| Uncommon | Corsola, Qwilfish, Horsea–Seadra | Corsola, Staryu, Qwilfish |
-| Rare | Corsola, Staryu, Remoraid–Octillery | Staryu, Chinchou–Lanturn, Remoraid–Octillery |
-| Very rare | Horsea–Kingdra, Chinchou–Lanturn | Horsea–Kingdra, Shellder–Cloyster |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Horsea–Seadra | Chinchou–Lanturn |
+| 2 | 22% | 18% | 10% | Chinchou–Lanturn | Horsea–Seadra |
+| 3 | 10% | 12% | 11% | Corsola | Corsola |
+| 4 | 8% | 10% | 10% | Qwilfish | Staryu |
+| 5 | 8% | 9% | 10% | Horsea–Seadra | Qwilfish |
+| 6 | 4% | 7% | 10% | Corsola | Staryu |
+| 7 | 3% | 6% | 10% | Staryu | Chinchou–Lanturn |
+| 8 | 3% | 5% | 9% | Remoraid–Octillery | Remoraid–Octillery |
+| 9 | 2% | 4% | 9% | Horsea–Kingdra | Horsea–Kingdra |
+| 10 | 2% | 4% | 9% | Chinchou–Lanturn | Shellder–Cloyster |
 
 **`MAP_WHIRL_ISLANDS_B1F_INNER_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Corsola, Seel–Dewgong | Seel–Dewgong, Corsola |
-| Uncommon | Slowpoke–Slowbro, Marill–Azumarill, Wooper–Quagsire, Natu–Xatu | Zubat–Golbat, Slowpoke–Slowbro, Gastly–Haunter, Marill–Azumarill |
-| Rare | Slowpoke–Slowking, Zubat–Golbat, Skarmory, Seel–Dewgong | Zubat–Crobat, Slowpoke–Slowking, Gastly–Gengar, Skarmory |
-| Very rare | Skarmory, Slowpoke–Slowking | Gastly–Haunter, Natu–Xatu |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Corsola | Seel–Dewgong |
+| 2 | 20% | Seel–Dewgong | Corsola |
+| 3 | 10% | Slowpoke–Slowbro | Zubat–Golbat |
+| 4 | 10% | Marill–Azumarill | Slowpoke–Slowbro |
+| 5 | 10% | Wooper–Quagsire | Gastly–Haunter |
+| 6 | 10% | Natu–Xatu | Marill–Azumarill |
+| 7 | 5% | Slowpoke–Slowking | Zubat–Crobat |
+| 8 | 5% | Zubat–Golbat | Slowpoke–Slowking |
+| 9 | 4% | Skarmory | Gastly–Gengar |
+| 10 | 4% | Seel–Dewgong | Skarmory |
+| 11 | 1% | Skarmory | Gastly–Haunter |
+| 12 | 1% | Slowpoke–Slowking | Natu–Xatu |
 
 **`MAP_WHIRL_ISLANDS_B2F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Seel–Dewgong, Slowpoke–Slowbro | Seel–Dewgong, Slowpoke–Slowbro |
-| Uncommon | Corsola, Marill–Azumarill, Wooper–Quagsire, Skarmory | Zubat–Golbat, Corsola, Gastly–Haunter, Skarmory |
-| Rare | Slowpoke–Slowking, Natu–Xatu, Skarmory, Zubat–Crobat | Zubat–Crobat, Gastly–Gengar, Slowpoke–Slowking, Skarmory |
-| Very rare | Natu–Xatu, Slowpoke–Slowking | Wooper–Quagsire, Natu–Xatu |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Seel–Dewgong | Seel–Dewgong |
+| 2 | 20% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 3 | 10% | Corsola | Zubat–Golbat |
+| 4 | 10% | Marill–Azumarill | Corsola |
+| 5 | 10% | Wooper–Quagsire | Gastly–Haunter |
+| 6 | 10% | Skarmory | Skarmory |
+| 7 | 5% | Slowpoke–Slowking | Zubat–Crobat |
+| 8 | 5% | Natu–Xatu | Gastly–Gengar |
+| 9 | 4% | Skarmory | Slowpoke–Slowking |
+| 10 | 4% | Zubat–Crobat | Skarmory |
+| 11 | 1% | Natu–Xatu | Wooper–Quagsire |
+| 12 | 1% | Slowpoke–Slowking | Natu–Xatu |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Horsea–Seadra | Qwilfish |
-| Uncommon | Qwilfish | Horsea–Seadra |
-| Rare | Lapras, Mantine | Chinchou–Lanturn, Lapras |
-| Very rare | Horsea–Kingdra | Horsea–Kingdra |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Horsea–Seadra | Qwilfish |
+| 2 | 30% | Qwilfish | Horsea–Seadra |
+| 3 | 5% | Lapras | Chinchou–Lanturn |
+| 4 | 4% | Mantine | Lapras |
+| 5 | 1% | Horsea–Kingdra | Horsea–Kingdra |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Qwilfish, Horsea–Seadra | Qwilfish, Horsea–Seadra |
-| Uncommon | Corsola, Chinchou–Lanturn, Qwilfish | Chinchou–Lanturn, Corsola, Staryu |
-| Rare | Horsea–Seadra, Horsea–Kingdra, Remoraid–Octillery | Chinchou–Lanturn, Horsea–Kingdra, Staryu |
-| Very rare | Shellder–Cloyster, Staryu | Shellder–Cloyster, Remoraid–Octillery |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Qwilfish | Qwilfish |
+| 2 | 22% | 18% | 10% | Horsea–Seadra | Horsea–Seadra |
+| 3 | 10% | 12% | 11% | Corsola | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Chinchou–Lanturn | Corsola |
+| 5 | 8% | 9% | 10% | Qwilfish | Staryu |
+| 6 | 4% | 7% | 10% | Horsea–Seadra | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Horsea–Kingdra | Horsea–Kingdra |
+| 8 | 3% | 5% | 9% | Remoraid–Octillery | Staryu |
+| 9 | 2% | 4% | 9% | Shellder–Cloyster | Shellder–Cloyster |
+| 10 | 2% | 4% | 9% | Staryu | Remoraid–Octillery |
 
 **`MAP_WHIRL_ISLANDS_B3F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Corsola, Seel–Dewgong | Corsola, Seel–Dewgong |
-| Uncommon | Slowpoke–Slowbro, Skarmory, Wooper–Quagsire, Marill–Azumarill | Slowpoke–Slowbro, Zubat–Golbat, Gastly–Haunter, Skarmory |
-| Rare | Slowpoke–Slowking, Skarmory, Natu–Xatu, Zubat–Crobat | Zubat–Crobat, Gastly–Gengar, Slowpoke–Slowking, Skarmory |
-| Very rare | Natu–Xatu, Skarmory | Wooper–Quagsire, Natu–Xatu |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Corsola | Corsola |
+| 2 | 20% | Seel–Dewgong | Seel–Dewgong |
+| 3 | 10% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 4 | 10% | Skarmory | Zubat–Golbat |
+| 5 | 10% | Wooper–Quagsire | Gastly–Haunter |
+| 6 | 10% | Marill–Azumarill | Skarmory |
+| 7 | 5% | Slowpoke–Slowking | Zubat–Crobat |
+| 8 | 5% | Skarmory | Gastly–Gengar |
+| 9 | 4% | Natu–Xatu | Slowpoke–Slowking |
+| 10 | 4% | Zubat–Crobat | Skarmory |
+| 11 | 1% | Natu–Xatu | Wooper–Quagsire |
+| 12 | 1% | Skarmory | Natu–Xatu |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Qwilfish | Horsea–Seadra |
-| Uncommon | Horsea–Seadra | Qwilfish |
-| Rare | Lapras, Mantine | Chinchou–Lanturn, Lapras |
-| Very rare | Horsea–Kingdra | Horsea–Kingdra |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Qwilfish | Horsea–Seadra |
+| 2 | 30% | Horsea–Seadra | Qwilfish |
+| 3 | 5% | Lapras | Chinchou–Lanturn |
+| 4 | 4% | Mantine | Lapras |
+| 5 | 1% | Horsea–Kingdra | Horsea–Kingdra |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Qwilfish, Horsea–Seadra | Horsea–Seadra, Qwilfish |
-| Uncommon | Corsola, Krabby–Kingler, Horsea–Seadra | Chinchou–Lanturn, Corsola, Staryu |
-| Rare | Qwilfish, Horsea–Kingdra, Staryu | Chinchou–Lanturn, Horsea–Kingdra, Krabby–Kingler |
-| Very rare | Shellder–Cloyster, Chinchou–Lanturn | Shellder–Cloyster, Staryu |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Qwilfish | Horsea–Seadra |
+| 2 | 22% | 18% | 10% | Horsea–Seadra | Qwilfish |
+| 3 | 10% | 12% | 11% | Corsola | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Krabby–Kingler | Corsola |
+| 5 | 8% | 9% | 10% | Horsea–Seadra | Staryu |
+| 6 | 4% | 7% | 10% | Qwilfish | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Horsea–Kingdra | Horsea–Kingdra |
+| 8 | 3% | 5% | 9% | Staryu | Krabby–Kingler |
+| 9 | 2% | 4% | 9% | Shellder–Cloyster | Shellder–Cloyster |
+| 10 | 2% | 4% | 9% | Chinchou–Lanturn | Staryu |
 
 **`MAP_WHIRL_ISLANDS_DESCENT_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Seel–Dewgong, Natu–Xatu | Seel–Dewgong, Natu–Xatu |
-| Uncommon | Corsola, Slowpoke–Slowking, Skarmory, Zubat–Crobat | Corsola, Slowpoke–Slowking, Gastly–Gengar, Skarmory |
-| Rare | Skarmory, Wooper–Quagsire, Slowpoke–Slowking, Natu–Xatu | Zubat–Crobat, Skarmory, Wooper–Quagsire, Gastly–Gengar |
-| Very rare | Marill–Azumarill, Zubat–Crobat | Marill–Azumarill, Slowpoke–Slowking |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Seel–Dewgong | Seel–Dewgong |
+| 2 | 20% | Natu–Xatu | Natu–Xatu |
+| 3 | 10% | Corsola | Corsola |
+| 4 | 10% | Slowpoke–Slowking | Slowpoke–Slowking |
+| 5 | 10% | Skarmory | Gastly–Gengar |
+| 6 | 10% | Zubat–Crobat | Skarmory |
+| 7 | 5% | Skarmory | Zubat–Crobat |
+| 8 | 5% | Wooper–Quagsire | Skarmory |
+| 9 | 4% | Slowpoke–Slowking | Wooper–Quagsire |
+| 10 | 4% | Natu–Xatu | Gastly–Gengar |
+| 11 | 1% | Marill–Azumarill | Marill–Azumarill |
+| 12 | 1% | Zubat–Crobat | Slowpoke–Slowking |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Horsea–Kingdra | Chinchou–Lanturn |
-| Uncommon | Chinchou–Lanturn | Horsea–Kingdra |
-| Rare | Lapras, Mantine | Lapras, Tentacool–Tentacruel |
-| Very rare | Tentacool–Tentacruel | Mantine |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Horsea–Kingdra | Chinchou–Lanturn |
+| 2 | 30% | Chinchou–Lanturn | Horsea–Kingdra |
+| 3 | 5% | Lapras | Lapras |
+| 4 | 4% | Mantine | Tentacool–Tentacruel |
+| 5 | 1% | Tentacool–Tentacruel | Mantine |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Horsea–Kingdra, Chinchou–Lanturn | Chinchou–Lanturn, Horsea–Kingdra |
-| Uncommon | Qwilfish, Shellder–Cloyster, Horsea–Kingdra | Qwilfish, Staryu, Shellder–Cloyster |
-| Rare | Corsola, Staryu, Chinchou–Lanturn | Chinchou–Lanturn, Horsea–Kingdra, Staryu |
-| Very rare | Shellder–Cloyster, Remoraid–Octillery | Corsola, Remoraid–Octillery |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Horsea–Kingdra | Chinchou–Lanturn |
+| 2 | 22% | 18% | 10% | Chinchou–Lanturn | Horsea–Kingdra |
+| 3 | 10% | 12% | 11% | Qwilfish | Qwilfish |
+| 4 | 8% | 10% | 10% | Shellder–Cloyster | Staryu |
+| 5 | 8% | 9% | 10% | Horsea–Kingdra | Shellder–Cloyster |
+| 6 | 4% | 7% | 10% | Corsola | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Staryu | Horsea–Kingdra |
+| 8 | 3% | 5% | 9% | Chinchou–Lanturn | Staryu |
+| 9 | 2% | 4% | 9% | Shellder–Cloyster | Corsola |
+| 10 | 2% | 4% | 9% | Remoraid–Octillery | Remoraid–Octillery |
 
 #### Mt. Silver
 
@@ -2085,215 +3070,323 @@ Dungeon, Border.
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Phanpy–Donphan, Ponyta–Rapidash | Teddiursa–Ursaring, Phanpy–Donphan |
-| Uncommon | Teddiursa–Ursaring, Geodude–Graveler, Spearow–Fearow, Doduo–Dodrio | Zubat–Golbat, Houndour–Houndoom, Wooper–Quagsire, Sneasel |
-| Rare | Skarmory ×2, Tauros, Larvitar–Tyranitar | Misdreavus, Skarmory, Larvitar–Tyranitar, Houndour–Houndoom |
-| Very rare | Snorlax, Larvitar–Tyranitar | Snorlax, Murkrow |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Phanpy–Donphan | Teddiursa–Ursaring |
+| 2 | 20% | Ponyta–Rapidash | Phanpy–Donphan |
+| 3 | 10% | Teddiursa–Ursaring | Zubat–Golbat |
+| 4 | 10% | Geodude–Graveler | Houndour–Houndoom |
+| 5 | 10% | Spearow–Fearow | Wooper–Quagsire |
+| 6 | 10% | Doduo–Dodrio | Sneasel |
+| 7 | 5% | Skarmory | Misdreavus |
+| 8 | 5% | Tauros | Skarmory |
+| 9 | 4% | Larvitar–Tyranitar | Larvitar–Tyranitar |
+| 10 | 4% | Skarmory | Houndour–Houndoom |
+| 11 | 1% | Snorlax | Snorlax |
+| 12 | 1% | Larvitar–Tyranitar | Murkrow |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Psyduck–Golduck | Psyduck–Golduck |
-| Uncommon | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| Rare | Goldeen–Seaking, Lapras | Wooper–Quagsire, Lapras |
-| Very rare | Marill–Azumarill | Goldeen–Seaking |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Psyduck–Golduck | Psyduck–Golduck |
+| 2 | 30% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 3 | 5% | Goldeen–Seaking | Wooper–Quagsire |
+| 4 | 4% | Lapras | Lapras |
+| 5 | 1% | Marill–Azumarill | Goldeen–Seaking |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Poliwag–Poliwhirl, Psyduck–Golduck | Poliwag–Poliwhirl, Psyduck–Golduck |
-| Uncommon | Magikarp–Gyarados, Goldeen–Seaking, Poliwag–Poliwhirl | Magikarp–Gyarados, Wooper–Quagsire, Poliwag–Poliwhirl |
-| Rare | Magikarp–Gyarados, Goldeen–Seaking, Psyduck–Golduck | Wooper–Quagsire, Goldeen–Seaking, Psyduck–Golduck |
-| Very rare | Magikarp–Gyarados, Poliwag–Poliwhirl | Magikarp–Gyarados, Poliwag–Poliwhirl |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 2 | 22% | 18% | 10% | Psyduck–Golduck | Psyduck–Golduck |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 8 | 3% | 5% | 9% | Psyduck–Golduck | Psyduck–Golduck |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Pineco–Forretress | Teddiursa–Ursaring |
-| Uncommon | Teddiursa–Ursaring | Pineco–Forretress |
-| Rare | Heracross, Scyther | Hoothoot–Noctowl, Heracross |
-| Very rare | Aipom | Scyther |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Pineco–Forretress | Teddiursa–Ursaring |
+| 2 | 30% | Teddiursa–Ursaring | Pineco–Forretress |
+| 3 | 5% | Heracross | Hoothoot–Noctowl |
+| 4 | 4% | Scyther | Heracross |
+| 5 | 1% | Aipom | Scyther |
 
 **`MAP_MT_SILVER_1F_WATERFALL_ROOM_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Onix, Teddiursa–Ursaring | Onix, Teddiursa–Ursaring |
-| Uncommon | Zubat–Golbat, Geodude–Graveler, Machop–Machoke, Paras–Parasect | Zubat–Golbat, Geodude–Graveler, Misdreavus, Paras–Parasect |
-| Rare | Psyduck–Golduck, Larvitar–Tyranitar, Electabuzz, Magmar | Psyduck–Golduck, Larvitar–Tyranitar, Magmar, Misdreavus–Mismagius |
-| Very rare | Onix–Steelix, Elekid | Zubat–Crobat, Magby |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Onix | Onix |
+| 2 | 20% | Teddiursa–Ursaring | Teddiursa–Ursaring |
+| 3 | 10% | Zubat–Golbat | Zubat–Golbat |
+| 4 | 10% | Geodude–Graveler | Geodude–Graveler |
+| 5 | 10% | Machop–Machoke | Misdreavus |
+| 6 | 10% | Paras–Parasect | Paras–Parasect |
+| 7 | 5% | Psyduck–Golduck | Psyduck–Golduck |
+| 8 | 5% | Larvitar–Tyranitar | Larvitar–Tyranitar |
+| 9 | 4% | Electabuzz | Magmar |
+| 10 | 4% | Magmar | Misdreavus–Mismagius |
+| 11 | 1% | Onix–Steelix | Zubat–Crobat |
+| 12 | 1% | Elekid | Magby |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Psyduck–Golduck | Slowpoke–Slowbro |
-| Uncommon | Slowpoke–Slowbro | Psyduck–Golduck |
-| Rare | Lapras, Goldeen–Seaking | Lapras, Wooper–Quagsire |
-| Very rare | Magikarp–Gyarados | Poliwag–Politoed |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Psyduck–Golduck | Slowpoke–Slowbro |
+| 2 | 30% | Slowpoke–Slowbro | Psyduck–Golduck |
+| 3 | 5% | Lapras | Lapras |
+| 4 | 4% | Goldeen–Seaking | Wooper–Quagsire |
+| 5 | 1% | Magikarp–Gyarados | Poliwag–Politoed |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Psyduck–Golduck, Slowpoke–Slowbro | Slowpoke–Slowbro, Psyduck–Golduck |
-| Uncommon | Magikarp–Gyarados, Goldeen–Seaking, Psyduck–Golduck | Magikarp–Gyarados, Wooper–Quagsire, Goldeen–Seaking |
-| Rare | Magikarp–Gyarados, Poliwag–Poliwrath, Slowpoke–Slowbro | Wooper–Quagsire, Poliwag–Politoed, Slowpoke–Slowking |
-| Very rare | Magikarp–Gyarados, Goldeen–Seaking | Magikarp–Gyarados, Psyduck–Golduck |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Psyduck–Golduck | Slowpoke–Slowbro |
+| 2 | 22% | 18% | 10% | Slowpoke–Slowbro | Psyduck–Golduck |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Psyduck–Golduck | Goldeen–Seaking |
+| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Poliwag–Poliwrath | Poliwag–Politoed |
+| 8 | 3% | 5% | 9% | Slowpoke–Slowbro | Slowpoke–Slowking |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 10 | 2% | 4% | 9% | Goldeen–Seaking | Psyduck–Golduck |
 
 **`MAP_MT_SILVER_MOUNTAIN_SIDE_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Ponyta–Rapidash, Teddiursa–Ursaring | Teddiursa–Ursaring, Ponyta–Rapidash |
-| Uncommon | Skarmory, Machop–Machamp, Phanpy–Donphan, Geodude–Golem | Houndour–Houndoom, Zubat–Crobat, Misdreavus–Mismagius, Sneasel–Weavile |
-| Rare | Larvitar–Tyranitar, Tauros, Electabuzz, Skarmory | Larvitar–Tyranitar, Houndour–Houndoom, Murkrow–Honchkrow, Gastly–Gengar |
-| Very rare | Electabuzz–Electivire, Larvitar–Tyranitar | Snorlax, Larvitar–Tyranitar |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Ponyta–Rapidash | Teddiursa–Ursaring |
+| 2 | 20% | Teddiursa–Ursaring | Ponyta–Rapidash |
+| 3 | 10% | Skarmory | Houndour–Houndoom |
+| 4 | 10% | Machop–Machamp | Zubat–Crobat |
+| 5 | 10% | Phanpy–Donphan | Misdreavus–Mismagius |
+| 6 | 10% | Geodude–Golem | Sneasel–Weavile |
+| 7 | 5% | Larvitar–Tyranitar | Larvitar–Tyranitar |
+| 8 | 5% | Tauros | Houndour–Houndoom |
+| 9 | 4% | Electabuzz | Murkrow–Honchkrow |
+| 10 | 4% | Skarmory | Gastly–Gengar |
+| 11 | 1% | Electabuzz–Electivire | Snorlax |
+| 12 | 1% | Larvitar–Tyranitar | Larvitar–Tyranitar |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Poliwag–Poliwrath | Poliwag–Poliwrath |
-| Uncommon | Psyduck–Golduck | Psyduck–Golduck |
-| Rare | Lapras, Slowpoke–Slowbro | Wooper–Quagsire, Lapras |
-| Very rare | Magikarp–Gyarados | Poliwag–Politoed |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Poliwag–Poliwrath | Poliwag–Poliwrath |
+| 2 | 30% | Psyduck–Golduck | Psyduck–Golduck |
+| 3 | 5% | Lapras | Wooper–Quagsire |
+| 4 | 4% | Slowpoke–Slowbro | Lapras |
+| 5 | 1% | Magikarp–Gyarados | Poliwag–Politoed |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Poliwag–Poliwrath, Magikarp–Gyarados | Poliwag–Poliwrath, Magikarp–Gyarados |
-| Uncommon | Psyduck–Golduck, Slowpoke–Slowbro, Goldeen–Seaking | Psyduck–Golduck, Wooper–Quagsire, Goldeen–Seaking |
-| Rare | Magikarp–Gyarados, Poliwag–Poliwrath, Psyduck–Golduck | Wooper–Quagsire, Poliwag–Politoed, Slowpoke–Slowking |
-| Very rare | Magikarp–Gyarados, Poliwag–Politoed | Magikarp–Gyarados, Psyduck–Golduck |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Poliwag–Poliwrath | Poliwag–Poliwrath |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 3 | 10% | 12% | 11% | Psyduck–Golduck | Psyduck–Golduck |
+| 4 | 8% | 10% | 10% | Slowpoke–Slowbro | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Poliwag–Poliwrath | Poliwag–Politoed |
+| 8 | 3% | 5% | 9% | Psyduck–Golduck | Slowpoke–Slowking |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 10 | 2% | 4% | 9% | Poliwag–Politoed | Psyduck–Golduck |
 
 *Trees and rocks*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Pineco–Forretress | Teddiursa–Ursaring |
-| Uncommon | Teddiursa–Ursaring | Pineco–Forretress |
-| Rare | Heracross, Scyther–Scizor | Hoothoot–Noctowl, Heracross |
-| Very rare | Aipom–Ambipom | Scyther–Scizor |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Pineco–Forretress | Teddiursa–Ursaring |
+| 2 | 30% | Teddiursa–Ursaring | Pineco–Forretress |
+| 3 | 5% | Heracross | Hoothoot–Noctowl |
+| 4 | 4% | Scyther–Scizor | Heracross |
+| 5 | 1% | Aipom–Ambipom | Scyther–Scizor |
 
 **`MAP_MT_SILVER_1F_ITEM_ROOM_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Geodude–Golem, Machop–Machamp | Geodude–Golem, Machop–Machamp |
-| Uncommon | Teddiursa–Ursaring, Onix–Steelix, Zubat–Crobat, Psyduck–Golduck | Zubat–Crobat, Onix–Steelix, Misdreavus–Mismagius, Teddiursa–Ursaring |
-| Rare | Larvitar–Tyranitar, Electabuzz, Magmar, Elekid | Larvitar–Tyranitar, Magmar, Electabuzz, Gastly–Gengar |
-| Very rare | Larvitar–Tyranitar, Magby | Larvitar–Tyranitar, Magby |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Geodude–Golem | Geodude–Golem |
+| 2 | 20% | Machop–Machamp | Machop–Machamp |
+| 3 | 10% | Teddiursa–Ursaring | Zubat–Crobat |
+| 4 | 10% | Onix–Steelix | Onix–Steelix |
+| 5 | 10% | Zubat–Crobat | Misdreavus–Mismagius |
+| 6 | 10% | Psyduck–Golduck | Teddiursa–Ursaring |
+| 7 | 5% | Larvitar–Tyranitar | Larvitar–Tyranitar |
+| 8 | 5% | Electabuzz | Magmar |
+| 9 | 4% | Magmar | Electabuzz |
+| 10 | 4% | Elekid | Gastly–Gengar |
+| 11 | 1% | Larvitar–Tyranitar | Larvitar–Tyranitar |
+| 12 | 1% | Magby | Magby |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Psyduck–Golduck | Psyduck–Golduck |
-| Uncommon | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| Rare | Lapras, Goldeen–Seaking | Wooper–Quagsire, Lapras |
-| Very rare | Magikarp–Gyarados | Poliwag–Politoed |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Psyduck–Golduck | Psyduck–Golduck |
+| 2 | 30% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 3 | 5% | Lapras | Wooper–Quagsire |
+| 4 | 4% | Goldeen–Seaking | Lapras |
+| 5 | 1% | Magikarp–Gyarados | Poliwag–Politoed |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Psyduck–Golduck, Slowpoke–Slowbro | Psyduck–Golduck, Slowpoke–Slowbro |
-| Uncommon | Magikarp–Gyarados, Goldeen–Seaking, Psyduck–Golduck | Magikarp–Gyarados, Wooper–Quagsire, Goldeen–Seaking |
-| Rare | Magikarp–Gyarados, Slowpoke–Slowking, Poliwag–Poliwrath | Wooper–Quagsire, Slowpoke–Slowking, Poliwag–Politoed |
-| Very rare | Magikarp–Gyarados, Goldeen–Seaking | Magikarp–Gyarados, Psyduck–Golduck |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Psyduck–Golduck | Psyduck–Golduck |
+| 2 | 22% | 18% | 10% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Psyduck–Golduck | Goldeen–Seaking |
+| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Slowpoke–Slowking | Slowpoke–Slowking |
+| 8 | 3% | 5% | 9% | Poliwag–Poliwrath | Poliwag–Politoed |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 10 | 2% | 4% | 9% | Goldeen–Seaking | Psyduck–Golduck |
 
 **`MAP_MT_SILVER_1F_MOLTRES_ROOM_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Paras–Parasect, Machop–Machamp | Paras–Parasect, Machop–Machamp |
-| Uncommon | Onix, Geodude–Golem, Magmar, Electabuzz | Zubat–Crobat, Misdreavus–Mismagius, Magmar, Gastly–Gengar |
-| Rare | Onix–Steelix, Magmar–Magmortar, Larvitar–Tyranitar, Electabuzz–Electivire | Onix–Steelix, Magmar–Magmortar, Larvitar–Tyranitar, Electabuzz |
-| Very rare | Magby, Larvitar–Tyranitar | Magby, Larvitar–Tyranitar |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Paras–Parasect | Paras–Parasect |
+| 2 | 20% | Machop–Machamp | Machop–Machamp |
+| 3 | 10% | Onix | Zubat–Crobat |
+| 4 | 10% | Geodude–Golem | Misdreavus–Mismagius |
+| 5 | 10% | Magmar | Magmar |
+| 6 | 10% | Electabuzz | Gastly–Gengar |
+| 7 | 5% | Onix–Steelix | Onix–Steelix |
+| 8 | 5% | Magmar–Magmortar | Magmar–Magmortar |
+| 9 | 4% | Larvitar–Tyranitar | Larvitar–Tyranitar |
+| 10 | 4% | Electabuzz–Electivire | Electabuzz |
+| 11 | 1% | Magby | Magby |
+| 12 | 1% | Larvitar–Tyranitar | Larvitar–Tyranitar |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Goldeen–Seaking | Goldeen–Seaking |
-| Uncommon | Psyduck–Golduck | Psyduck–Golduck |
-| Rare | Lapras, Magikarp–Gyarados | Wooper–Quagsire, Lapras |
-| Very rare | Poliwag–Poliwrath | Poliwag–Politoed |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Goldeen–Seaking | Goldeen–Seaking |
+| 2 | 30% | Psyduck–Golduck | Psyduck–Golduck |
+| 3 | 5% | Lapras | Wooper–Quagsire |
+| 4 | 4% | Magikarp–Gyarados | Lapras |
+| 5 | 1% | Poliwag–Poliwrath | Poliwag–Politoed |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Goldeen–Seaking, Psyduck–Golduck | Goldeen–Seaking, Psyduck–Golduck |
-| Uncommon | Magikarp–Gyarados, Poliwag–Poliwrath, Goldeen–Seaking | Magikarp–Gyarados, Wooper–Quagsire, Goldeen–Seaking |
-| Rare | Magikarp–Gyarados, Psyduck–Golduck, Poliwag–Politoed | Wooper–Quagsire, Psyduck–Golduck, Poliwag–Politoed |
-| Very rare | Magikarp–Gyarados, Goldeen–Seaking | Magikarp–Gyarados, Goldeen–Seaking |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Goldeen–Seaking | Goldeen–Seaking |
+| 2 | 22% | 18% | 10% | Psyduck–Golduck | Psyduck–Golduck |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Poliwag–Poliwrath | Wooper–Quagsire |
+| 5 | 8% | 9% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Psyduck–Golduck | Psyduck–Golduck |
+| 8 | 3% | 5% | 9% | Poliwag–Politoed | Poliwag–Politoed |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 10 | 2% | 4% | 9% | Goldeen–Seaking | Goldeen–Seaking |
 
 **`MAP_MT_SILVER_2F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Wooper–Quagsire, Machop–Machamp | Wooper–Quagsire, Machop–Machamp |
-| Uncommon | Psyduck–Golduck, Geodude–Golem, Larvitar–Tyranitar, Zubat–Crobat | Zubat–Crobat, Misdreavus–Mismagius, Geodude–Golem, Larvitar–Tyranitar |
-| Rare | Electabuzz, Magmar, Electabuzz–Electivire, Magmar–Magmortar | Gastly–Gengar, Magmar, Electabuzz, Psyduck–Golduck |
-| Very rare | Larvitar–Tyranitar, Paras–Parasect | Larvitar–Tyranitar, Snorlax |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Wooper–Quagsire | Wooper–Quagsire |
+| 2 | 20% | Machop–Machamp | Machop–Machamp |
+| 3 | 10% | Psyduck–Golduck | Zubat–Crobat |
+| 4 | 10% | Geodude–Golem | Misdreavus–Mismagius |
+| 5 | 10% | Larvitar–Tyranitar | Geodude–Golem |
+| 6 | 10% | Zubat–Crobat | Larvitar–Tyranitar |
+| 7 | 5% | Electabuzz | Gastly–Gengar |
+| 8 | 5% | Magmar | Magmar |
+| 9 | 4% | Electabuzz–Electivire | Electabuzz |
+| 10 | 4% | Magmar–Magmortar | Psyduck–Golduck |
+| 11 | 1% | Larvitar–Tyranitar | Larvitar–Tyranitar |
+| 12 | 1% | Paras–Parasect | Snorlax |
 
 *Surfing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Wooper–Quagsire | Wooper–Quagsire |
-| Uncommon | Magikarp–Gyarados | Magikarp–Gyarados |
-| Rare | Lapras, Psyduck–Golduck | Lapras, Poliwag–Politoed |
-| Very rare | Goldeen–Seaking | Goldeen–Seaking |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Wooper–Quagsire | Wooper–Quagsire |
+| 2 | 30% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 3 | 5% | Lapras | Lapras |
+| 4 | 4% | Psyduck–Golduck | Poliwag–Politoed |
+| 5 | 1% | Goldeen–Seaking | Goldeen–Seaking |
 
 *Fishing*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Wooper–Quagsire, Magikarp–Gyarados | Wooper–Quagsire, Magikarp–Gyarados |
-| Uncommon | Psyduck–Golduck, Goldeen–Seaking, Wooper–Quagsire | Psyduck–Golduck, Poliwag–Politoed, Wooper–Quagsire |
-| Rare | Magikarp–Gyarados, Goldeen–Seaking, Psyduck–Golduck | Poliwag–Politoed, Goldeen–Seaking, Psyduck–Golduck |
-| Very rare | Magikarp–Gyarados, Lapras | Magikarp–Gyarados, Lapras |
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Wooper–Quagsire | Wooper–Quagsire |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 3 | 10% | 12% | 11% | Psyduck–Golduck | Psyduck–Golduck |
+| 4 | 8% | 10% | 10% | Goldeen–Seaking | Poliwag–Politoed |
+| 5 | 8% | 9% | 10% | Wooper–Quagsire | Wooper–Quagsire |
+| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Poliwag–Politoed |
+| 7 | 3% | 6% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 8 | 3% | 5% | 9% | Psyduck–Golduck | Psyduck–Golduck |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 10 | 2% | 4% | 9% | Lapras | Lapras |
 
 **`MAP_MT_SILVER_SNOW_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Swinub–Mamoswine, Teddiursa–Ursaring | Sneasel–Weavile, Swinub–Mamoswine |
-| Uncommon | Sneasel–Weavile, Skarmory, Mankey–Annihilape, Ponyta–Rapidash | Houndour–Houndoom, Zubat–Crobat, Misdreavus–Mismagius, Delibird |
-| Rare | Larvitar–Tyranitar, Jynx, Delibird, Skarmory | Gastly–Gengar, Larvitar–Tyranitar, Jynx, Murkrow–Honchkrow |
-| Very rare | Snorlax, Larvitar–Tyranitar | Smoochum, Sneasel–Weavile |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Swinub–Mamoswine | Sneasel–Weavile |
+| 2 | 20% | Teddiursa–Ursaring | Swinub–Mamoswine |
+| 3 | 10% | Sneasel–Weavile | Houndour–Houndoom |
+| 4 | 10% | Skarmory | Zubat–Crobat |
+| 5 | 10% | Mankey–Annihilape | Misdreavus–Mismagius |
+| 6 | 10% | Ponyta–Rapidash | Delibird |
+| 7 | 5% | Larvitar–Tyranitar | Gastly–Gengar |
+| 8 | 5% | Jynx | Larvitar–Tyranitar |
+| 9 | 4% | Delibird | Jynx |
+| 10 | 4% | Skarmory | Murkrow–Honchkrow |
+| 11 | 1% | Snorlax | Smoochum |
+| 12 | 1% | Larvitar–Tyranitar | Sneasel–Weavile |
 
 **`MAP_MT_SILVER_3F_HNS`**
 
 *Land*
 
-| Tier | Day | Night |
-| --- | --- | --- |
-| Common | Teddiursa–Ursaring, Zubat–Crobat | Zubat–Crobat, Teddiursa–Ursaring |
-| Uncommon | Onix–Steelix, Geodude–Golem, Larvitar–Tyranitar, Machop–Machamp | Onix–Steelix, Geodude–Golem, Larvitar–Tyranitar, Misdreavus–Mismagius |
-| Rare | Larvitar–Tyranitar, Skarmory, Electabuzz–Electivire, Magmar–Magmortar | Gastly–Gengar, Larvitar–Tyranitar, Sneasel–Weavile, Houndour–Houndoom |
-| Very rare | Snorlax, Larvitar–Tyranitar | Snorlax, Larvitar–Tyranitar |
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Teddiursa–Ursaring | Zubat–Crobat |
+| 2 | 20% | Zubat–Crobat | Teddiursa–Ursaring |
+| 3 | 10% | Onix–Steelix | Onix–Steelix |
+| 4 | 10% | Geodude–Golem | Geodude–Golem |
+| 5 | 10% | Larvitar–Tyranitar | Larvitar–Tyranitar |
+| 6 | 10% | Machop–Machamp | Misdreavus–Mismagius |
+| 7 | 5% | Larvitar–Tyranitar | Gastly–Gengar |
+| 8 | 5% | Skarmory | Larvitar–Tyranitar |
+| 9 | 4% | Electabuzz–Electivire | Sneasel–Weavile |
+| 10 | 4% | Magmar–Magmortar | Houndour–Houndoom |
+| 11 | 1% | Snorlax | Snorlax |
+| 12 | 1% | Larvitar–Tyranitar | Larvitar–Tyranitar |
 
 
 ### Coverage checklist
