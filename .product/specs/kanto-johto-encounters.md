@@ -103,11 +103,16 @@ HeartGold and SoulSilver are the reference. Anchors include:
 | Region | Anchors |
 | --- | --- |
 | Kanto | Pidgey and Rattata on Route 1, Pikachu in Viridian Forest, Clefairy in Mt. Moon, Onix in Rock Tunnel, Diglett in Diglett's Cave, Magnemite and Voltorb in the Power Plant, Gastly and Cubone in the Pokémon Tower, Grimer and Koffing in the Pokémon Mansion, Seel and Jynx in Seafoam Islands, Ditto in Cerulean Cave |
-| Johto | Sentret on Route 29, Mareep and Wooper on Route 32, Wooper in Union Cave, Lapras in Union Cave's depths, Slowpoke in Slowpoke Well, Natu and Unown at the Ruins of Alph, Stantler on Route 37, Sneasel at night in Ice Path, Dratini in Dragon's Den, Aipom and Heracross in Headbutt trees |
+| Johto | Sentret on Route 29, Mareep and Wooper on Route 32, Wooper in Union Cave, Lapras in Union Cave's depths, Slowpoke in Slowpoke Well, Natu and Unown at the Ruins of Alph, Sneasel at night in Ice Path, Dratini in Dragon's Den, Aipom and Heracross in Headbutt trees |
 
 An anchor holds one of its table's common or uncommon slots, unless it was a
 rarity in the original games, such as Pikachu or Clefairy, where it stays rare
 but present.
+
+Reach rules come first. A fierce or dangerous reward stays off Roads even where
+it lived in the original games, so Stantler, Miltank, Tauros, Girafarig,
+Skarmory, Shuckle and Mantine move from their old Road spots to nearby Wilds,
+Outlands or dungeons.
 
 ### Crossovers
 
@@ -151,6 +156,8 @@ fit what the map has.
 ### Rewards and babies
 
 - Most maps hold one to three reward slots. Deep dungeon floors may hold more.
+  A Road map with only surfing and fishing, such as Cinnabar Island or the sea
+  lanes on Routes 40 and 41, may hold none.
 - Every Generation I reward appears in Kanto, and every Generation II reward
   appears in Johto. A reward may also appear in the other region.
 - Babies appear only as rare slots named directly in a table, never through
@@ -160,7 +167,9 @@ fit what the map has.
 
 - Each map has a mix of its own, not a copy of its neighbour's.
 - No family is one of a table's two most common slots on more than eight maps
-  in a region.
+  in a region, counted per method: land, and trees and rocks, have a limit of
+  eight maps; surfing and fishing together have a limit of twelve, since both
+  regions have many water maps.
 
 ### Day and night
 
