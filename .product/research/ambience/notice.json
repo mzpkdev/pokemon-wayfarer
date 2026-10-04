@@ -82,7 +82,7 @@
       "event": "start"
     },
     {
-      "frame": 2433,
+      "frame": 2431,
       "actor": 0,
       "slot": 8,
       "beat": 16,
@@ -114,7 +114,7 @@
       "event": "start"
     },
     {
-      "frame": 3304,
+      "frame": 3302,
       "actor": 0,
       "slot": 8,
       "beat": 7,
@@ -194,7 +194,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634032,
+    "worldState": 33634036,
     "actors": [
       {
         "index": 0,

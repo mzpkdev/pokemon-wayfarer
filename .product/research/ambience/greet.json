@@ -207,7 +207,7 @@
     "followerHidden": 0,
     "activeActors": 2,
     "storySuppressed": 0,
-    "worldState": 33633992,
+    "worldState": 33634096,
     "actors": [
       {
         "index": 0,
@@ -277,7 +277,7 @@
     "lastHeartbeatScanlines": 26,
     "maxHeartbeatScanlines": 26,
     "maxSpawnScanlines": 44,
-    "maxUpdateScanlines": 174,
+    "maxUpdateScanlines": 182,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,

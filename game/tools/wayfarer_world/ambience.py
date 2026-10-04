@@ -58,6 +58,9 @@ BEAT_KEYS = {"id", "class", "when", "who", "flags", "cooldown", "steps", "note"}
 WHO_KEYS = {"tags_any", "tags_none", "companion"}
 TRAINER_KEYS = {"tags", "preferred", "companion", "note"}
 CHAMPIONS = {"blue", "lance", "wallace", "steven"}
+# The first icon shown with FLDEFF_EMOTE (AMBIENCE_ICON_FIRST_FLDEFF); the ones
+# before it are movement-action emotes held on the walker.
+ICON_FIRST_FLDEFF = ICONS.index("…")
 
 # Wait and parameter bounds: the ROM fields are u8.
 PARAM_MAX = 255
@@ -562,10 +565,14 @@ def parse_beat(row):
                 len(steps) if isinstance(steps, list) else "no", MAX_STEPS))
         b.steps = [parse_step(s) for s in steps]
         ops = [s.op for s in b.steps]
-        if "companion_out" in ops or who.get("companion") is True:
-            b.flags.add("needs_companion")
         if "companion" in who and who["companion"] is not True:
             raise BuildError("who.companion takes true")
+        # Only a beat that brings the companion out reserves it: a beat that
+        # merely needed one would take the map's companion from its owner.
+        if who.get("companion") is True and "companion_out" not in ops:
+            raise BuildError("who.companion needs a companion out step")
+        if "companion_out" in ops:
+            b.flags.add("needs_companion")
         out = False
         for s in b.steps:
             if s.op == "companion_out":
@@ -586,14 +593,21 @@ def parse_beat(row):
         if "companion_room" in terms and b.cls != "idle":
             raise BuildError("companion_room only in an idle beat (the walker works it out only "
                              "where an idle beat can win)")
+        if "companion_room" in terms and "companion_out" not in ops:
+            raise BuildError("companion_room only in a beat that brings the companion out (the room "
+                             "is only worked out where a companion beat can win)")
         if "blocked" in terms and b.cls != "react":
             raise BuildError("blocked only in a react beat (it holds only at the blocked react check)")
         for flag, (fact, term) in LIMIT_TERMS.items():
             if flag in b.flags and fact not in b.all:
                 raise BuildError("a %s beat needs a %s term in its when list (not inside an any)"
                                  % (flag, term))
-        if "keep_walking" in b.flags and any(s.op != "emote" for s in b.steps):
-            raise BuildError("keep_walking beats may only show icons")
+        # The walk goes on under a keep-walking beat, so it may only show
+        # FLDEFF_EMOTE icons: the movement-action icons (! !! ? X heart) are
+        # held movements on the walker itself and would fight its steps.
+        if "keep_walking" in b.flags and any(s.op != "emote" or s.arg < ICON_FIRST_FLDEFF for s in b.steps):
+            raise BuildError("keep_walking beats may only show effect icons (%s)"
+                             % " ".join(ICONS[ICON_FIRST_FLDEFF:]))
         problem = check_tile(b.steps)
         if problem:
             raise BuildError(problem)

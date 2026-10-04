@@ -20,9 +20,21 @@
         "start"
       ],
       [
-        759,
+        728,
         8,
         "water_bite",
+        "end"
+      ],
+      [
+        1148,
+        8,
+        "swagger",
+        "start"
+      ],
+      [
+        1179,
+        8,
+        "swagger",
         "end"
       ],
       [
@@ -38,21 +50,21 @@
         "end"
       ],
       [
-        1814,
+        1768,
         8,
-        "swagger",
+        "water_wait",
         "start"
       ],
       [
-        1857,
+        1903,
         8,
-        "swagger",
+        "water_wait",
         "end"
       ],
       [
-        2332,
+        2392,
         8,
-        "water_bite",
+        "ace_play",
         "start"
       ]
     ],
@@ -62,7 +74,7 @@
     "rng_end": 2901169912,
     "frames": 2510,
     "time_update_counter_at_start": 138,
-    "local_time_at_start": "21:21"
+    "local_time_at_start": "22:15"
   },
   "second": {
     "events": [
@@ -85,9 +97,21 @@
         "start"
       ],
       [
-        759,
+        728,
         8,
         "water_bite",
+        "end"
+      ],
+      [
+        1148,
+        8,
+        "swagger",
+        "start"
+      ],
+      [
+        1179,
+        8,
+        "swagger",
         "end"
       ],
       [
@@ -103,21 +127,21 @@
         "end"
       ],
       [
-        1814,
+        1768,
         8,
-        "swagger",
+        "water_wait",
         "start"
       ],
       [
-        1857,
+        1903,
         8,
-        "swagger",
+        "water_wait",
         "end"
       ],
       [
-        2332,
+        2392,
         8,
-        "water_bite",
+        "ace_play",
         "start"
       ]
     ],
@@ -127,7 +151,7 @@
     "rng_end": 2901169912,
     "frames": 2510,
     "time_update_counter_at_start": 138,
-    "local_time_at_start": "21:21"
+    "local_time_at_start": "22:15"
   },
   "third": {
     "events": [
@@ -150,9 +174,21 @@
         "start"
       ],
       [
-        759,
+        728,
         8,
         "water_bite",
+        "end"
+      ],
+      [
+        1148,
+        8,
+        "swagger",
+        "start"
+      ],
+      [
+        1179,
+        8,
+        "swagger",
         "end"
       ],
       [
@@ -168,21 +204,21 @@
         "end"
       ],
       [
-        1814,
+        1768,
         8,
-        "swagger",
+        "water_wait",
         "start"
       ],
       [
-        1857,
+        1903,
         8,
-        "swagger",
+        "water_wait",
         "end"
       ],
       [
-        2332,
+        2392,
         8,
-        "water_bite",
+        "ace_play",
         "start"
       ]
     ],
@@ -192,7 +228,7 @@
     "rng_end": 409675246,
     "frames": 2510,
     "time_update_counter_at_start": 138,
-    "local_time_at_start": "21:22"
+    "local_time_at_start": "22:15"
   },
   "identical": true,
   "same_beats_with_other_rng": true,

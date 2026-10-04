@@ -3641,10 +3641,14 @@ static void AmbienceFrame(struct WalkerActor *actor, struct ObjectEvent *obj)
         }
         else
         {
-            // The walkers' busy frames start no new step.
+            // The walkers' busy frames start no new step, so only a frame
+            // that can start one ends a run of sat-out frames: a step can
+            // always start within BEAT_LATE_FRAMES + 1 non-busy frames.
             u8 result;
-            sAmbience->lateFrames[index] = 0;
-            result = WalkerBeats_Run(&sAmbience->run[index], obj, IsVisible(obj), IsBusyFrame(), &sAmbience->debug);
+            bool8 busy = IsBusyFrame();
+            if (!busy)
+                sAmbience->lateFrames[index] = 0;
+            result = WalkerBeats_Run(&sAmbience->run[index], obj, IsVisible(obj), busy, &sAmbience->debug);
             if (result != WALKER_BEAT_RUNNING)
                 EndBeat(actor, FALSE, TRUE);
         }

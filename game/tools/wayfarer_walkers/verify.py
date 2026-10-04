@@ -2307,7 +2307,7 @@ def scenario_humwalk(game: Game) -> dict:
     selection state is held in RAM so hum is the only beat and wins at her
     next step boundary; the frame after it starts (her slow step just begun)
     the field controls lock (sLockFieldControls written, as a script would
-    lock them; objects stay unfrozen, so her step goes on) for 20 frames. The
+    lock them; objects stay unfrozen, so her step goes on) for 40 frames. The
     log has hum interrupted; her step isn't cleared: it lands on the next
     tile, she walks on to the pond (arrival and atSpot), and standing there
     her sprite sits exactly on her tile (a step cleared mid-way leaves it up
@@ -2393,6 +2393,12 @@ def close_menus(game: Game) -> None:
         game.emu.press("B")
         game.emu.step(40)
     game.settle()
+
+
+# The story check runs once a spawn period (8 frames) and, on a frame with
+# too few lines left, waits up to 3 more periods (BusyWorkWaits in
+# wayfarer_walkers.c): a story object stops a beat within 32 frames.
+STORY_CHECK_MAX_DELAY = 8 * (1 + 3)
 
 
 def scenario_beatlock(game: Game) -> dict:
@@ -2562,7 +2568,7 @@ def scenario_beatlock(game: Game) -> dict:
         story["screenshot"] = game.shot("beatlock-story")
         game.emu.write(address, struct.pack("<H", npc["gfx"]))
     story["pass"] = bool(current and npc and story.get("running_before") and story["interrupt"]
-                         and story["interrupt"]["beat"] == current["beat"] and story["interrupt_delay"] <= 10
+                         and story["interrupt"]["beat"] == current["beat"] and story["interrupt_delay"] <= STORY_CHECK_MAX_DELAY
                          and story["story_suppressed"] >= 1 and story["handoffs"] >= 1
                          and (story["lance_after"] is None or story["lance_after"]["mode"] == 3))
     result = {"start_facing": start_facing, "menu": menu, "bag": bag, "story": story,
@@ -3340,9 +3346,15 @@ def scenario_lag(game: Game) -> dict:
         with_beats = scene(game, True).result()
         baseline = scene(game, True, quiet=True).result()
         empty = scene(game, False).result()
-        started = with_beats["frames"] and (with_beats["prepares"] or name != "companion")
+        # Each scene must actually run its beats, or a regression that stops
+        # them would pass with nothing to measure.
+        started = with_beats["frames"] and with_beats["beats_started"] > 0
+        if name == "companion":
+            started = started and with_beats["prepares"] > 0
         if name == "greet":
             started = started and any(b.startswith("greet") for b in with_beats["beats"])
+        if name == "notice":
+            started = started and "notice_player" in with_beats["beats"]
         # Like with like: the frames neither run can put down to a prepare
         # (the baseline has none, so no knock-on either).
         unexplained = with_beats["other"] + with_beats["no_beat"]

@@ -45,140 +45,140 @@
   ],
   "walk_track": [
     [
-      406,
+      402,
       [
         30,
         37
       ]
     ],
     [
-      516,
+      510,
       [
         30,
         38
       ]
     ],
     [
-      701,
+      697,
       [
         30,
         39
       ]
     ],
     [
-      732,
+      728,
       [
         29,
         39
       ]
     ],
     [
-      763,
+      759,
       [
         28,
         39
       ]
     ],
     [
-      794,
+      790,
       [
         27,
         39
       ]
     ],
     [
-      825,
+      821,
       [
         26,
         39
       ]
     ],
     [
-      856,
+      852,
       [
         25,
         39
       ]
     ],
     [
-      887,
+      883,
       [
         24,
         39
       ]
     ],
     [
-      918,
+      914,
       [
         23,
         39
       ]
     ],
     [
-      949,
+      945,
       [
         22,
         39
       ]
     ],
     [
-      980,
+      976,
       [
         21,
         39
       ]
     ],
     [
-      1011,
+      1007,
       [
         20,
         39
       ]
     ],
     [
-      1042,
+      1038,
       [
         19,
         39
       ]
     ],
     [
-      1073,
+      1069,
       [
         18,
         39
       ]
     ],
     [
-      1104,
+      1100,
       [
         17,
         39
       ]
     ],
     [
-      1198,
+      1193,
       [
         16,
         39
       ]
     ],
     [
-      1229,
+      1224,
       [
         15,
         39
       ]
     ],
     [
-      1260,
+      1255,
       [
         14,
         39
       ]
     ],
     [
-      1291,
+      1286,
       [
         13,
         39
@@ -186,8 +186,8 @@
     ]
   ],
   "step_frames": [
-    110,
-    185,
+    108,
+    187,
     31,
     31,
     31,
@@ -201,7 +201,7 @@
     31,
     31,
     31,
-    94,
+    93,
     31,
     31,
     31
@@ -239,7 +239,7 @@
     ".product/research/ambience/spot-template.png"
   ],
   "debug": {
-    "frames": 2043,
+    "frames": 2078,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -260,16 +260,16 @@
     "restores": 0,
     "lastSearchNodes": 412,
     "maxSearchNodes": 412,
-    "lastSearchFrames": 146,
-    "maxSearchFrames": 146,
-    "maxSliceScanlines": 63,
+    "lastSearchFrames": 144,
+    "maxSearchFrames": 144,
+    "maxSliceScanlines": 62,
     "maxSliceNodes": 7,
     "workspaceBytes": 11308,
     "currentMap": 32,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634020,
+    "worldState": 33634080,
     "actors": [
       {
         "index": 0,
@@ -339,7 +339,7 @@
     "lastHeartbeatScanlines": 26,
     "maxHeartbeatScanlines": 26,
     "maxSpawnScanlines": 23,
-    "maxUpdateScanlines": 147,
+    "maxUpdateScanlines": 145,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
@@ -354,5 +354,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 2479
+  "emulated_frames": 2518
 }

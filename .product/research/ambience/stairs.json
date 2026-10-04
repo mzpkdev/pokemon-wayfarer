@@ -128,7 +128,7 @@
     ".product/research/ambience/stairs-after.png"
   ],
   "debug": {
-    "frames": 1568,
+    "frames": 1558,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -158,7 +158,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634028,
+    "worldState": 33633996,
     "actors": [
       {
         "index": 0,
@@ -243,5 +243,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 2100
+  "emulated_frames": 2092
 }

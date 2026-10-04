@@ -93,7 +93,7 @@
       "to": "Viridian",
       "map": 32,
       "frames": 160,
-      "heartbeat_scanlines": 169,
+      "heartbeat_scanlines": 168,
       "heartbeat_frames": 5
     },
     {
@@ -205,7 +205,7 @@
       "to": "Viridian",
       "map": 32,
       "frames": 176,
-      "heartbeat_scanlines": 1183,
+      "heartbeat_scanlines": 1182,
       "heartbeat_frames": 29
     },
     {
@@ -244,8 +244,8 @@
   "heartbeats": 31,
   "max_heartbeat_scanlines": 1802,
   "median_heartbeat_scanlines": 347,
-  "mean_heartbeat_scanlines": 595.6333333333333,
-  "max_walker_update_scanlines": 74,
+  "mean_heartbeat_scanlines": 595.5666666666667,
+  "max_walker_update_scanlines": 75,
   "world": {
     "heartbeats": 31,
     "skippedHeartbeats": 1,
@@ -294,7 +294,7 @@
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634016,
+    "worldState": 33634048,
     "actors": [
       {
         "index": 0,
@@ -364,7 +364,7 @@
     "lastHeartbeatScanlines": 347,
     "maxHeartbeatScanlines": 1802,
     "maxSpawnScanlines": 42,
-    "maxUpdateScanlines": 74,
+    "maxUpdateScanlines": 75,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,

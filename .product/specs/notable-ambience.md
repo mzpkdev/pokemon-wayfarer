@@ -57,8 +57,11 @@ standable tile. It returns to the starting tile before it ends.
 
 `WALKER_WALKOFF_FRAMES` goes from 600 to 1,200. The walker's other frame
 timeouts are standing waits, push counters, and scanline budgets rather than
-walking time, so they stay as they are. The search, spawn, and hand-off rules
-don't change.
+walking time, so they stay as they are. What the search, spawn, and hand-off
+rules decide doesn't change; only when their work runs does: so that beats
+add no lag frames, the walkers' search slices, spawn attempts, story checks,
+and follower rule wait for a frame with room (each for a bounded time; see
+the implementation notes).
 
 ### Primitives
 

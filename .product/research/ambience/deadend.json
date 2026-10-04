@@ -54,7 +54,7 @@
     ".product/research/ambience/deadend-player-out.png"
   ],
   "debug": {
-    "frames": 1379,
+    "frames": 1371,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -84,7 +84,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634104,
+    "worldState": 33634012,
     "actors": [
       {
         "index": 0,
@@ -169,5 +169,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 1696
+  "emulated_frames": 1694
 }

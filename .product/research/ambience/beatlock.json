@@ -124,14 +124,14 @@
     },
     "running_before": "water_wait",
     "interrupt": {
-      "frame": 1873,
+      "frame": 1897,
       "actor": 0,
       "slot": 10,
       "beat": 17,
       "name": "water_wait",
       "event": "interrupt"
     },
-    "interrupt_delay": 1,
+    "interrupt_delay": 24,
     "story_suppressed": 1,
     "handoffs": 1,
     "lance_after": {
@@ -211,7 +211,7 @@
       "event": "start"
     },
     {
-      "frame": 1873,
+      "frame": 1897,
       "actor": 0,
       "slot": 10,
       "beat": 17,
@@ -225,7 +225,7 @@
     "started_react": 0,
     "ended": 0,
     "interrupted": 1,
-    "icons": 0,
+    "icons": 1,
     "effects": 0,
     "palette_skips": 0,
     "icon_skips": 0,
@@ -265,7 +265,7 @@
     ".product/research/ambience/beatlock-story.png"
   ],
   "debug": {
-    "frames": 1877,
+    "frames": 1901,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -279,7 +279,7 @@
     "searchFails": 0,
     "localDwellBeats": 2,
     "localAdvances": 0,
-    "emotes": 1,
+    "emotes": 2,
     "templateMoves": 0,
     "floorChanges": 0,
     "heapResets": 6,
@@ -288,14 +288,14 @@
     "maxSearchNodes": 3,
     "lastSearchFrames": 3,
     "maxSearchFrames": 3,
-    "maxSliceScanlines": 47,
+    "maxSliceScanlines": 48,
     "maxSliceNodes": 5,
     "workspaceBytes": 11308,
     "currentMap": 32,
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 1,
-    "worldState": 33634068,
+    "worldState": 33634016,
     "actors": [
       {
         "index": 0,
@@ -365,7 +365,7 @@
     "lastHeartbeatScanlines": 26,
     "maxHeartbeatScanlines": 26,
     "maxSpawnScanlines": 22,
-    "maxUpdateScanlines": 53,
+    "maxUpdateScanlines": 102,
     "backOffs": 0,
     "handoffs": 1,
     "visitorsVanished": 0,
@@ -380,5 +380,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 2316
+  "emulated_frames": 2341
 }

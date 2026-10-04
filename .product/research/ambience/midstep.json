@@ -200,7 +200,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634000,
+    "worldState": 33634012,
     "actors": [
       {
         "index": 0,
@@ -285,5 +285,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 2597
+  "emulated_frames": 2598
 }

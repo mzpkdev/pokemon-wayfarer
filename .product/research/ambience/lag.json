@@ -21,7 +21,7 @@
             "updates_before": [
               null,
               null,
-              12,
+              11,
               9,
               9,
               5
@@ -283,8 +283,8 @@
     "greet": {
       "beats": {
         "frames": 2400,
-        "lag": 3,
-        "prepare": 1,
+        "lag": 4,
+        "prepare": 2,
         "knock_on": 0,
         "no_beat": 0,
         "other": 2,
@@ -312,7 +312,7 @@
           {
             "frame": 92,
             "kind": "other",
-            "update_scanlines": 54,
+            "update_scanlines": 53,
             "near": [],
             "running": [
               "arrive_look"
@@ -323,15 +323,44 @@
               33,
               40,
               56,
-              54
+              53
             ],
             "frames_since_beat_event": 91,
             "phase": 1
           },
           {
-            "frame": 1577,
+            "frame": 713,
             "kind": "prepare",
-            "update_scanlines": 0,
+            "update_scanlines": 100,
+            "near": [
+              [
+                -1,
+                "prepare"
+              ],
+              [
+                1,
+                "companion out"
+              ]
+            ],
+            "running": [
+              "ace_play",
+              "notice_player"
+            ],
+            "updates_before": [
+              14,
+              10,
+              15,
+              9,
+              14,
+              100
+            ],
+            "frames_since_beat_event": 1,
+            "phase": 5
+          },
+          {
+            "frame": 1571,
+            "kind": "prepare",
+            "update_scanlines": 70,
             "near": [
               [
                 -1,
@@ -339,21 +368,22 @@
               ]
             ],
             "running": [
+              "water_bite",
               "ace_play"
             ],
             "updates_before": [
-              13,
+              8,
               7,
+              10,
               14,
-              7,
-              18,
-              0
+              9,
+              70
             ],
             "frames_since_beat_event": 1,
-            "phase": 5
+            "phase": 6
           }
         ],
-        "prepares": 1,
+        "prepares": 2,
         "beats_started": 11,
         "beats": [
           "ace_play",
@@ -362,10 +392,9 @@
           "hum",
           "notice_player",
           "study_ground",
-          "water_bite",
-          "water_wait"
+          "water_bite"
         ],
-        "max_update_scanlines": 130,
+        "max_update_scanlines": 100,
         "max_update_scanlines_without_prepares": 60
       },
       "baseline": {
@@ -485,7 +514,7 @@
             "phase": 3
           },
           {
-            "frame": 1864,
+            "frame": 1862,
             "kind": "prepare",
             "update_scanlines": 81,
             "near": [
@@ -498,15 +527,15 @@
               "ace_play"
             ],
             "updates_before": [
+              7,
+              6,
               12,
               9,
               9,
-              6,
-              13,
               81
             ],
             "frames_since_beat_event": 1,
-            "phase": 5
+            "phase": 3
           },
           {
             "frame": 2973,
@@ -526,28 +555,32 @@
             "phase": 1
           },
           {
-            "frame": 5966,
+            "frame": 5904,
             "kind": "prepare",
-            "update_scanlines": 82,
+            "update_scanlines": 81,
             "near": [
               [
                 -1,
                 "prepare"
+              ],
+              [
+                2,
+                "companion out"
               ]
             ],
             "running": [
               "ace_play"
             ],
             "updates_before": [
-              13,
               7,
-              7,
-              5,
+              6,
               12,
-              82
+              7,
+              9,
+              81
             ],
             "frames_since_beat_event": 1,
-            "phase": 1
+            "phase": 3
           }
         ],
         "prepares": 3,
@@ -559,7 +592,7 @@
           "water_bite",
           "water_wait"
         ],
-        "max_update_scanlines": 82,
+        "max_update_scanlines": 81,
         "max_update_scanlines_without_prepares": 38
       },
       "baseline": {

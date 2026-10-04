@@ -561,6 +561,25 @@ class ValidationTest(unittest.TestCase):
                               beat(d, "ace_play").__setitem__("when", ["companion_room", {"player_within": 3}])),
                    r"'ace_play': a beat with companion out must be idle and have companion_room")
 
+    def test_companion_room_needs_companion_out(self):
+        self.fails(lambda d: beat(d, "doze").__setitem__(
+            "when", ["dwelling", "companion_room", {"activity": ["relax", "train"]}]),
+            r"'doze': companion_room only in a beat that brings the companion out")
+
+    def test_who_companion_needs_companion_out(self):
+        # Needing a companion without bringing it out would take the map's
+        # companion from the walker whose beat brought it out.
+        self.fails(lambda d: beat(d, "doze").__setitem__("who", {"tags_any": ["dreamy"], "companion": True}),
+                   r"'doze': who.companion needs a companion out step")
+
+    def test_keep_walking_only_effect_icons(self):
+        for icon in ("!", "!!", "?", "X", "heart"):
+            with self.subTest(icon=icon):
+                self.fails(self.set_steps("hum", ["emote %s" % icon]),
+                           r"'hum': keep_walking beats may only show effect icons")
+        self.fails(self.set_steps("hum", ["emote music", "wait 2"]),
+                   r"'hum': keep_walking beats may only show effect icons")
+
     def test_companion_steps_need_the_companion_out(self):
         self.fails(self.set_steps("ace_play", ["companion_do jump", "emote happy"]),
                    r"while no companion is out")

@@ -96,7 +96,7 @@
       "y": 23,
       "invisible": false,
       "isPlayer": false,
-      "facing": 4
+      "facing": 2
     },
     {
       "slot": 8,
@@ -104,11 +104,11 @@
       "localId": 8,
       "mapNum": 8,
       "mapGroup": 0,
-      "x": 18,
-      "y": 18,
+      "x": 17,
+      "y": 16,
       "invisible": false,
       "isPlayer": false,
-      "facing": 3
+      "facing": 2
     },
     {
       "slot": 9,
@@ -132,7 +132,7 @@
       "y": 11,
       "invisible": false,
       "isPlayer": false,
-      "facing": 4
+      "facing": 3
     },
     {
       "slot": 11,
@@ -144,7 +144,7 @@
       "y": 11,
       "invisible": false,
       "isPlayer": false,
-      "facing": 3
+      "facing": 1
     },
     {
       "slot": 12,
@@ -177,7 +177,7 @@
     "started_react": 0,
     "ended": 7,
     "interrupted": 0,
-    "icons": 13,
+    "icons": 14,
     "effects": 0,
     "palette_skips": 0,
     "icon_skips": 0,
@@ -210,12 +210,12 @@
       "prepares": 0
     }
   },
-  "max_update_scanlines": 41,
+  "max_update_scanlines": 33,
   "screenshots": [
     ".product/research/ambience/companionslots.png"
   ],
   "debug": {
-    "frames": 5164,
+    "frames": 5165,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -229,7 +229,7 @@
     "searchFails": 0,
     "localDwellBeats": 7,
     "localAdvances": 0,
-    "emotes": 13,
+    "emotes": 14,
     "templateMoves": 0,
     "floorChanges": 0,
     "heapResets": 5,
@@ -245,7 +245,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634084,
+    "worldState": 33634040,
     "actors": [
       {
         "index": 0,
@@ -315,7 +315,7 @@
     "lastHeartbeatScanlines": 71,
     "maxHeartbeatScanlines": 71,
     "maxSpawnScanlines": 35,
-    "maxUpdateScanlines": 41,
+    "maxUpdateScanlines": 33,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
