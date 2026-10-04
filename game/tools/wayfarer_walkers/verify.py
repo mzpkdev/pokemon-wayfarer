@@ -2447,7 +2447,7 @@ def scenario_beatlock(game: Game) -> dict:
         game.emu.step(2)
         game.emu.hold("Start", 0)
         interrupt = None
-        for _ in range(STORY_CHECK_MAX_DELAY + 2):
+        for _ in range(30):
             interrupt = interrupt or next((e for e in watcher.poll() if lance_event("interrupt")(e)), None)
             if interrupt:
                 break
@@ -2554,7 +2554,7 @@ def scenario_beatlock(game: Game) -> dict:
         poked_at = before["frames"]
         game.emu.write(address, struct.pack("<H", lance_gfx))
         interrupt = None
-        for _ in range(30):
+        for _ in range(STORY_CHECK_MAX_DELAY + 2):
             game.emu.step(1)
             interrupt = interrupt or next((e for e in watcher.poll() if lance_event("interrupt")(e)), None)
             if interrupt:
