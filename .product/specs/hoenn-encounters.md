@@ -4,8 +4,9 @@ PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
 Implemented: No
 
 Design status: draft. It sets the rules and targets for Hoenn's encounter
-tables. The tables themselves follow in a Hoenn table spec. Every share and
-count below is a placeholder for playtesting.
+tables. The tables themselves are in the
+[Hoenn table spec](hoenn-encounter-tables.md). Every share and count below is a
+placeholder for playtesting.
 
 ## Scope
 
@@ -168,7 +169,7 @@ each map's type.
 | Ponds and rivers | Fresh water on routes, in towns and in woods | Lotad, Surskit, Barboach, Corphish, Carvanha, Marill, Basculin, Tympole, Ducklett |
 | Coast and sea | Coastal towns and sea routes | Wingull, Wailmer, Carvanha, Luvdisc, Corphish, Frillish, Alomomola, Ducklett, Tynamo |
 | Underwater | The Dive maps on Routes 124 and 126 | Clamperl, Relicanth, Frillish, Alomomola |
-| Cold water | Shoal Cave's icy rooms | Spheal, Wailmer, Carvanha, Frillish |
+| Cold water | Shoal Cave's water rooms | Spheal, Wailmer, Carvanha, Frillish |
 | Cave water | Water inside caves, such as Meteor Falls and the Seafloor Cavern | Barboach, Corphish, Marill, Tympole, Basculin, and sea species in sea caves |
 
 Rewards, babies, anchors and native HM carriers may appear outside their type's
