@@ -189,8 +189,8 @@ map's type.
 | Cave water | Water inside caves, such as Mt. Moon, Union Cave, Cerulean Cave and the Whirl Islands | Magikarp, Zubat, Goldeen, Psyduck, Slowpoke, Poliwag, Marill, Wooper in Johto, and sea species in sea caves such as the Whirl Islands |
 
 Rewards, babies, anchors and native HM carriers may appear outside their type's
-cast where they fit, such as Lapras in Union Cave's depths, Dratini and Seadra
-in Dragon's Den, and the water starters.
+cast where they fit, such as Lapras in Union Cave's depths, Dratini in Dragon's
+Den, and the water starters.
 
 - **Fishing:** entries 1–3, which make up about 70% of Old Rod catches, hold
   the map's most fitting common fish. Magikarp stays common in ponds and lakes

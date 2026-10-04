@@ -79,9 +79,9 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Chinchou–Lanturn | Chinchou–Lanturn |
 | 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| 3 | 10% | 12% | 11% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Shellder | Staryu |
 | 5 | 8% | 9% | 10% | Krabby–Kingler | Chinchou–Lanturn |
 | 6 | 4% | 7% | 10% | Chinchou–Lanturn | Shellder |
@@ -139,8 +139,8 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Krabby–Kingler | Krabby–Kingler |
+| 1 | 38% | 25% | 12% | Krabby–Kingler | Krabby–Kingler |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Krabby–Kingler | Staryu |
 | 4 | 8% | 10% | 10% | Corsola | Krabby–Kingler |
 | 5 | 8% | 9% | 10% | Tentacool–Tentacruel | Corsola |
@@ -199,8 +199,8 @@ Water type: ponds and rivers.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 1 | 38% | 25% | 12% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Marill–Azumarill | Wooper–Quagsire |
 | 4 | 8% | 10% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
 | 5 | 8% | 9% | 10% | Psyduck–Golduck | Marill–Azumarill |
@@ -291,16 +291,16 @@ Water type: ponds and rivers.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Psyduck–Golduck | Psyduck–Golduck |
 | 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
 | 3 | 10% | 12% | 11% | Marill–Azumarill | Wooper–Quagsire |
 | 4 | 8% | 10% | 10% | Marill–Azumarill | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Marill–Azumarill | Marill–Azumarill |
-| 6 | 4% | 7% | 10% | Psyduck–Golduck | Wooper–Quagsire |
+| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
 | 7 | 3% | 6% | 10% | Marill–Azumarill | Goldeen–Seaking |
 | 8 | 3% | 5% | 9% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 | 9 | 2% | 4% | 9% | Magikarp–Gyarados | Marill–Azumarill |
-| 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Psyduck–Golduck |
+| 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Magikarp–Gyarados |
 
 *Trees and rocks*
 
@@ -351,10 +351,10 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Corsola | Corsola |
 | 2 | 22% | 18% | 10% | Krabby–Kingler | Krabby–Kingler |
-| 3 | 10% | 12% | 11% | Corsola | Chinchou–Lanturn |
-| 4 | 8% | 10% | 10% | Corsola | Corsola |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Corsola | Magikarp–Gyarados |
 | 5 | 8% | 9% | 10% | Remoraid–Octillery | Remoraid–Octillery |
 | 6 | 4% | 7% | 10% | Krabby–Kingler | Staryu |
 | 7 | 3% | 6% | 10% | Corsola | Chinchou–Lanturn |
@@ -407,8 +407,8 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 1 | 38% | 25% | 12% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Remoraid–Octillery | Remoraid–Octillery |
 | 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Corsola | Staryu |
@@ -457,9 +457,9 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Chinchou–Lanturn | Chinchou–Lanturn |
 | 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| 3 | 10% | 12% | 11% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Chinchou–Lanturn | Chinchou–Lanturn |
 | 6 | 4% | 7% | 10% | Corsola | Shellder |
@@ -642,8 +642,8 @@ Water type: ponds and rivers.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 1 | 38% | 25% | 12% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Poliwag–Poliwhirl | Wooper–Quagsire |
 | 4 | 8% | 10% | 10% | Goldeen–Seaking | Poliwag–Poliwhirl |
 | 5 | 8% | 9% | 10% | Marill–Azumarill | Goldeen–Seaking |
@@ -702,9 +702,9 @@ Water type: ponds and rivers.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Marill–Azumarill | Marill–Azumarill |
 | 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 3 | 10% | 12% | 11% | Marill–Azumarill | Marill–Azumarill |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
 | 6 | 4% | 7% | 10% | Marill–Azumarill | Wooper–Quagsire |
@@ -762,9 +762,9 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Qwilfish | Qwilfish |
 | 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| 3 | 10% | 12% | 11% | Qwilfish | Qwilfish |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Qwilfish | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Tentacool–Tentacruel | Qwilfish |
 | 6 | 4% | 7% | 10% | Qwilfish | Chinchou–Lanturn |
@@ -855,9 +855,9 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Corsola | Corsola |
 | 2 | 22% | 18% | 10% | Krabby–Kingler | Krabby–Kingler |
-| 3 | 10% | 12% | 11% | Corsola | Corsola |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Qwilfish | Corsola |
 | 6 | 4% | 7% | 10% | Corsola | Staryu |
@@ -915,15 +915,15 @@ Water type: ponds and rivers.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Psyduck–Golduck | Psyduck–Golduck |
 | 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
 | 3 | 10% | 12% | 11% | Marill–Azumarill | Wooper–Quagsire |
-| 4 | 8% | 10% | 10% | Marill–Azumarill | Wooper–Quagsire |
+| 4 | 8% | 10% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Marill–Azumarill | Wooper–Quagsire |
 | 6 | 4% | 7% | 10% | Goldeen–Seaking | Psyduck–Golduck |
 | 7 | 3% | 6% | 10% | Wooper–Quagsire | Marill–Azumarill |
 | 8 | 3% | 5% | 9% | Poliwag–Poliwhirl | Goldeen–Seaking |
-| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Wooper–Quagsire |
+| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 10 | 2% | 4% | 9% | Marill–Azumarill | Poliwag–Poliwhirl |
 
 *Trees and rocks*
@@ -1090,8 +1090,8 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Krabby–Kingler | Krabby–Kingler |
+| 1 | 38% | 25% | 12% | Krabby–Kingler | Krabby–Kingler |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Corsola | Chinchou–Lanturn |
 | 4 | 8% | 10% | 10% | Corsola | Corsola |
 | 5 | 8% | 9% | 10% | Qwilfish | Staryu |
@@ -1123,9 +1123,9 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Chinchou–Lanturn | Chinchou–Lanturn |
 | 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| 3 | 10% | 12% | 11% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Chinchou–Lanturn | Chinchou–Lanturn |
 | 6 | 4% | 7% | 10% | Shellder | Horsea–Seadra |
@@ -1173,9 +1173,9 @@ Water type: ponds and rivers.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Goldeen–Seaking | Goldeen–Seaking |
 | 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 3 | 10% | 12% | 11% | Goldeen–Seaking | Goldeen–Seaking |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Marill–Azumarill | Goldeen–Seaking |
 | 6 | 4% | 7% | 10% | Psyduck–Golduck | Marill–Azumarill |
@@ -1293,8 +1293,8 @@ Water type: ponds and rivers.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 1 | 38% | 25% | 12% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
 | 4 | 8% | 10% | 10% | Psyduck–Golduck | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Goldeen–Seaking | Goldeen–Seaking |
@@ -1479,13 +1479,13 @@ Water type: ponds and rivers.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Psyduck–Golduck | Psyduck–Golduck |
 | 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
 | 3 | 10% | 12% | 11% | Marill–Azumarill | Wooper–Quagsire |
 | 4 | 8% | 10% | 10% | Marill–Azumarill | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Marill–Azumarill | Marill–Azumarill |
-| 6 | 4% | 7% | 10% | Psyduck–Golduck | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Slowpoke–Slowbro | Psyduck–Golduck |
+| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Slowpoke–Slowbro | Magikarp–Gyarados |
 | 8 | 3% | 5% | 9% | Goldeen–Seaking | Slowpoke–Slowbro |
 | 9 | 2% | 4% | 9% | Wooper–Quagsire | Goldeen–Seaking |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Poliwag–Poliwhirl |
@@ -1539,8 +1539,8 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 1 | 38% | 25% | 12% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Shellder | Shellder |
 | 4 | 8% | 10% | 10% | Krabby–Kingler | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Shellder | Staryu |
@@ -1599,14 +1599,14 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Shellder | Shellder |
 | 2 | 22% | 18% | 10% | Krabby–Kingler | Krabby–Kingler |
 | 3 | 10% | 12% | 11% | Corsola | Chinchou–Lanturn |
 | 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Chinchou–Lanturn | Corsola |
 | 6 | 4% | 7% | 10% | Corsola | Chinchou–Lanturn |
 | 7 | 3% | 6% | 10% | Staryu | Staryu |
-| 8 | 3% | 5% | 9% | Shellder | Shellder |
+| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 9 | 2% | 4% | 9% | Remoraid–Octillery | Chinchou–Lanturn |
 | 10 | 2% | 4% | 9% | Corsola | Qwilfish |
 
@@ -1659,8 +1659,8 @@ Water type: cave water.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 1 | 38% | 25% | 12% | Goldeen–Seaking | Goldeen–Seaking |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Goldeen–Seaking | Wooper–Quagsire |
 | 4 | 8% | 10% | 10% | Poliwag–Poliwhirl | Goldeen–Seaking |
 | 5 | 8% | 9% | 10% | Magikarp–Gyarados | Poliwag–Poliwhirl |
@@ -1802,8 +1802,8 @@ Water type: cave water.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 1 | 38% | 25% | 12% | Goldeen–Seaking | Goldeen–Seaking |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 | 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Magikarp–Gyarados | Goldeen–Seaking |
@@ -1852,9 +1852,9 @@ Water type: ponds and rivers.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Wooper–Quagsire | Wooper–Quagsire |
 | 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 3 | 10% | 12% | 11% | Wooper–Quagsire | Wooper–Quagsire |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Wooper–Quagsire | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Marill–Azumarill | Psyduck–Golduck |
 | 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
@@ -2016,8 +2016,8 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 1 | 38% | 25% | 12% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Shellder–Cloyster | Shellder–Cloyster |
 | 4 | 8% | 10% | 10% | Krabby–Kingler | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Staryu–Starmie | Staryu–Starmie |
@@ -2076,8 +2076,8 @@ Water type: ponds and rivers.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Poliwag–Poliwrath | Poliwag–Poliwrath |
+| 1 | 38% | 25% | 12% | Poliwag–Poliwrath | Poliwag–Poliwrath |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Goldeen–Seaking | Goldeen–Seaking |
 | 4 | 8% | 10% | 10% | Psyduck–Golduck | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Poliwag–Poliwrath | Psyduck–Golduck |
@@ -2136,9 +2136,9 @@ Water type: cave water.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Wooper–Quagsire | Wooper–Quagsire |
 | 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 3 | 10% | 12% | 11% | Wooper–Quagsire | Wooper–Quagsire |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Goldeen–Seaking | Zubat–Golbat |
 | 5 | 8% | 9% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
 | 6 | 4% | 7% | 10% | Magikarp–Gyarados | Goldeen–Seaking |
@@ -2182,9 +2182,9 @@ Water type: cave water.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Marill–Azumarill | Marill–Azumarill |
 | 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 3 | 10% | 12% | 11% | Marill–Azumarill | Marill–Azumarill |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Wooper–Quagsire | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Goldeen–Seaking | Zubat–Golbat |
 | 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
@@ -2228,10 +2228,10 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Shellder | Shellder |
 | 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| 3 | 10% | 12% | 11% | Shellder | Chinchou–Lanturn |
-| 4 | 8% | 10% | 10% | Chinchou–Lanturn | Shellder |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Chinchou–Lanturn | Magikarp–Gyarados |
 | 5 | 8% | 9% | 10% | Shellder | Staryu |
 | 6 | 4% | 7% | 10% | Krabby–Kingler | Chinchou–Lanturn |
 | 7 | 3% | 6% | 10% | Chinchou–Lanturn | Staryu |
@@ -2419,15 +2419,15 @@ Water type: cave water.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 | 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
 | 3 | 10% | 12% | 11% | Marill–Azumarill | Wooper–Quagsire |
 | 4 | 8% | 10% | 10% | Marill–Azumarill | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Marill–Azumarill | Wooper–Quagsire |
 | 6 | 4% | 7% | 10% | Wooper–Quagsire | Marill–Azumarill |
-| 7 | 3% | 6% | 10% | Slowpoke–Slowbro | Zubat–Golbat |
+| 7 | 3% | 6% | 10% | Magikarp–Gyarados | Zubat–Golbat |
 | 8 | 3% | 5% | 9% | Poliwag–Poliwhirl | Wooper–Quagsire |
-| 9 | 2% | 4% | 9% | Goldeen–Seaking | Slowpoke–Slowbro |
+| 9 | 2% | 4% | 9% | Goldeen–Seaking | Magikarp–Gyarados |
 | 10 | 2% | 4% | 9% | Marill–Azumarill | Poliwag–Poliwhirl |
 
 **`MAP_SLOWPOKE_WELL_B2F_HNS`**
@@ -2465,15 +2465,15 @@ Water type: cave water.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 | 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
 | 3 | 10% | 12% | 11% | Marill–Azumarill | Wooper–Quagsire |
 | 4 | 8% | 10% | 10% | Slowpoke–Slowking | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Marill–Azumarill | Slowpoke–Slowking |
-| 6 | 4% | 7% | 10% | Slowpoke–Slowbro | Wooper–Quagsire |
+| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
 | 7 | 3% | 6% | 10% | Wooper–Quagsire | Zubat–Golbat |
 | 8 | 3% | 5% | 9% | Psyduck–Golduck | Marill–Azumarill |
-| 9 | 2% | 4% | 9% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 9 | 2% | 4% | 9% | Slowpoke–Slowbro | Magikarp–Gyarados |
 | 10 | 2% | 4% | 9% | Marill–Azumarill | Psyduck–Golduck |
 
 #### Burned Tower
@@ -2580,8 +2580,8 @@ Water type: cave water.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 1 | 38% | 25% | 12% | Goldeen–Seaking | Goldeen–Seaking |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Marill–Azumarill | Marill–Azumarill |
 | 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Poliwag–Poliwhirl | Goldeen–Seaking |
@@ -2626,10 +2626,10 @@ Water type: cave water.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Marill–Azumarill | Marill–Azumarill |
 | 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 3 | 10% | 12% | 11% | Marill–Azumarill | Wooper–Quagsire |
-| 4 | 8% | 10% | 10% | Wooper–Quagsire | Marill–Azumarill |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Wooper–Quagsire |
+| 4 | 8% | 10% | 10% | Wooper–Quagsire | Magikarp–Gyarados |
 | 5 | 8% | 9% | 10% | Psyduck–Golduck | Zubat–Golbat |
 | 6 | 4% | 7% | 10% | Goldeen–Seaking | Wooper–Quagsire |
 | 7 | 3% | 6% | 10% | Poliwag–Poliwhirl | Goldeen–Seaking |
@@ -2672,8 +2672,8 @@ Water type: cave water.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 1 | 38% | 25% | 12% | Goldeen–Seaking | Goldeen–Seaking |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Goldeen–Seaking | Goldeen–Seaking |
 | 4 | 8% | 10% | 10% | Marill–Azumarill | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Psyduck–Golduck | Marill–Azumarill |
@@ -2718,9 +2718,9 @@ Water type: cave water.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Marill–Azumarill | Marill–Azumarill |
 | 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 3 | 10% | 12% | 11% | Marill–Azumarill | Marill–Azumarill |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Slowpoke–Slowbro | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Goldeen–Seaking | Zubat–Golbat |
 | 6 | 4% | 7% | 10% | Psyduck–Golduck | Slowpoke–Slowbro |
@@ -2879,8 +2879,8 @@ Water type: cave water.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Magikarp–Gyarados | Dratini–Dragonite |
-| 2 | 30% | Horsea–Seadra | Magikarp–Gyarados |
-| 3 | 5% | Dratini–Dragonite | Horsea–Seadra |
+| 2 | 30% | Poliwag–Poliwhirl | Magikarp–Gyarados |
+| 3 | 5% | Dratini–Dragonite | Poliwag–Poliwhirl |
 | 4 | 4% | Slowpoke–Slowbro | Dratini–Dragonite |
 | 5 | 1% | Dratini–Dragonite | Psyduck–Golduck |
 
@@ -2888,14 +2888,14 @@ Water type: cave water.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 3 | 10% | 12% | 11% | Horsea–Seadra | Dratini–Dragonite |
-| 4 | 8% | 10% | 10% | Magikarp–Gyarados | Horsea–Seadra |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Dratini–Dragonite |
+| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Magikarp–Gyarados |
+| 3 | 10% | 12% | 11% | Goldeen–Seaking | Poliwag–Poliwhirl |
+| 4 | 8% | 10% | 10% | Magikarp–Gyarados | Goldeen–Seaking |
 | 5 | 8% | 9% | 10% | Dratini–Dragonite | Dratini–Dragonite |
-| 6 | 4% | 7% | 10% | Horsea–Seadra | Magikarp–Gyarados |
+| 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Magikarp–Gyarados |
 | 7 | 3% | 6% | 10% | Psyduck–Golduck | Dratini–Dragonite |
-| 8 | 3% | 5% | 9% | Dratini–Dragonite | Horsea–Seadra |
+| 8 | 3% | 5% | 9% | Dratini–Dragonite | Poliwag–Poliwhirl |
 | 9 | 2% | 4% | 9% | Slowpoke–Slowbro | Psyduck–Golduck |
 | 10 | 2% | 4% | 9% | Goldeen–Seaking | Dratini–Dragonite |
 
@@ -2938,8 +2938,8 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Krabby–Kingler | Krabby–Kingler |
+| 1 | 38% | 25% | 12% | Krabby–Kingler | Krabby–Kingler |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Corsola | Chinchou–Lanturn |
 | 4 | 8% | 10% | 10% | Qwilfish | Corsola |
 | 5 | 8% | 9% | 10% | Qwilfish | Staryu |
@@ -2984,8 +2984,8 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 1 | 38% | 25% | 12% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Corsola | Chinchou–Lanturn |
 | 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Qwilfish | Staryu |
@@ -3049,9 +3049,9 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Qwilfish | Qwilfish |
 | 2 | 22% | 18% | 10% | Krabby–Kingler | Krabby–Kingler |
-| 3 | 10% | 12% | 11% | Qwilfish | Qwilfish |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Corsola | Qwilfish |
 | 6 | 4% | 7% | 10% | Qwilfish | Staryu |
@@ -3095,8 +3095,8 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 1 | 38% | 25% | 12% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Qwilfish | Qwilfish |
 | 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Corsola | Qwilfish |
@@ -3141,9 +3141,9 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Horsea–Kingdra | Horsea–Kingdra |
 | 2 | 22% | 18% | 10% | Krabby–Kingler | Krabby–Kingler |
-| 3 | 10% | 12% | 11% | Horsea–Kingdra | Horsea–Kingdra |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Shellder–Cloyster | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Qwilfish | Staryu–Starmie |
 | 6 | 4% | 7% | 10% | Corsola | Shellder–Cloyster |
@@ -3191,8 +3191,8 @@ Water type: ponds and rivers.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 1 | 38% | 25% | 12% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Psyduck–Golduck | Psyduck–Golduck |
 | 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
@@ -3247,9 +3247,9 @@ Water type: cave water.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Psyduck–Golduck | Psyduck–Golduck |
 | 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 3 | 10% | 12% | 11% | Psyduck–Golduck | Psyduck–Golduck |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Slowpoke–Slowbro | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Poliwag–Poliwrath | Slowpoke–Slowking |
 | 6 | 4% | 7% | 10% | Psyduck–Golduck | Wooper–Quagsire |
@@ -3293,8 +3293,8 @@ Water type: ponds and rivers.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Poliwag–Poliwrath | Poliwag–Poliwrath |
+| 1 | 38% | 25% | 12% | Poliwag–Poliwrath | Poliwag–Poliwrath |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Psyduck–Golduck | Psyduck–Golduck |
 | 4 | 8% | 10% | 10% | Slowpoke–Slowbro | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Goldeen–Seaking | Goldeen–Seaking |
@@ -3349,9 +3349,9 @@ Water type: cave water.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 | 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 3 | 10% | 12% | 11% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Psyduck–Golduck | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Slowpoke–Slowking | Psyduck–Golduck |
 | 6 | 4% | 7% | 10% | Goldeen–Seaking | Wooper–Quagsire |
@@ -3395,8 +3395,8 @@ Water type: cave water.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
+| 1 | 38% | 25% | 12% | Goldeen–Seaking | Goldeen–Seaking |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Psyduck–Golduck | Psyduck–Golduck |
 | 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Poliwag–Poliwrath | Goldeen–Seaking |
@@ -3441,9 +3441,9 @@ Water type: cave water.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Wooper–Quagsire | Wooper–Quagsire |
 | 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 3 | 10% | 12% | 11% | Wooper–Quagsire | Wooper–Quagsire |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Slowpoke–Slowbro | Poliwag–Politoed |
 | 5 | 8% | 9% | 10% | Psyduck–Golduck | Wooper–Quagsire |
 | 6 | 4% | 7% | 10% | Wooper–Quagsire | Slowpoke–Slowbro |
@@ -3566,7 +3566,7 @@ Water type: cave water.
 | Honchkrow | Mt. Silver, Route 26, Route 28, Tin Tower |
 | Hoothoot | Azalea Town, Blackthorn City, Cherrygrove City, Cianwood City and more |
 | Hoppip | Blackthorn City, Cherrygrove City, Cianwood City, Ecruteak City and more |
-| Horsea | Dragon's Den, Route 26, Route 27, Route 41 and more |
+| Horsea | Route 26, Route 27, Route 41, Whirl Islands |
 | Houndoom | Burned Tower, Ecruteak City, Mt. Silver, Route 26 and more |
 | Houndour | Burned Tower, Ecruteak City, Mt. Silver, Route 26 and more |
 | Hypno | Route 34, Route 35 |
@@ -3632,8 +3632,8 @@ Water type: cave water.
 | Pineco | Azalea Town, Blackthorn City, Ecruteak City, Goldenrod City and more |
 | Pinsir | National Park |
 | Politoed | Mt. Silver, Route 28 |
-| Poliwag | Blackthorn City, Dark Cave, Ecruteak City, Ilex Forest and more |
-| Poliwhirl | Blackthorn City, Dark Cave, Ecruteak City, Ilex Forest and more |
+| Poliwag | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
+| Poliwhirl | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
 | Poliwrath | Mt. Silver, Route 28 |
 | Ponyta | Mt. Silver, Route 26, Route 27, Route 28 and more |
 | Porygon | Rocket Hideout |
@@ -3652,7 +3652,7 @@ Water type: cave water.
 | Sandslash | Route 26, Route 27, Union Cave |
 | Scizor | Mt. Silver, Route 26, Route 28 |
 | Scyther | Mt. Silver, National Park, Route 26, Route 28 |
-| Seadra | Dragon's Den, Route 26, Route 27, Route 41 and more |
+| Seadra | Route 26, Route 27, Route 41, Whirl Islands |
 | Seaking | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
 | Seel | Cliff Edge Cave, Ice Path, Whirl Islands |
 | Sentret | Cherrygrove City, Ecruteak City, New Bark Town, Route 29 and more |
