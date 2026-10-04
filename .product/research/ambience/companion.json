@@ -144,7 +144,7 @@
       "prepares": 1
     }
   },
-  "max_update_scanlines": 134,
+  "max_update_scanlines": 82,
   "events": [
     {
       "frame": 77,
@@ -245,7 +245,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33633992,
+    "worldState": 33634016,
     "actors": [
       {
         "index": 0,
@@ -315,7 +315,7 @@
     "lastHeartbeatScanlines": 26,
     "maxHeartbeatScanlines": 26,
     "maxSpawnScanlines": 27,
-    "maxUpdateScanlines": 134,
+    "maxUpdateScanlines": 82,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,

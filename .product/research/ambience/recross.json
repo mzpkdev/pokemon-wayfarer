@@ -102,21 +102,21 @@
       "crossing": 15,
       "to": "Route 2",
       "reached": true,
-      "frames": 88,
+      "frames": 86,
       "pending_before": 1
     },
     {
       "crossing": 16,
       "to": "Viridian",
       "reached": true,
-      "frames": 22,
+      "frames": 94,
       "pending_before": 1
     },
     {
       "crossing": 17,
       "to": "Route 2",
       "reached": true,
-      "frames": 56,
+      "frames": 92,
       "pending_before": 1
     },
     {
@@ -130,119 +130,119 @@
       "crossing": 19,
       "to": "Route 2",
       "reached": true,
-      "frames": 48,
+      "frames": 56,
       "pending_before": 1
     },
     {
       "crossing": 20,
       "to": "Viridian",
       "reached": true,
-      "frames": 24,
+      "frames": 100,
       "pending_before": 1
     },
     {
       "crossing": 21,
       "to": "Route 2",
       "reached": true,
-      "frames": 50,
+      "frames": 52,
       "pending_before": 1
     },
     {
       "crossing": 22,
       "to": "Viridian",
       "reached": true,
-      "frames": 96,
+      "frames": 22,
       "pending_before": 1
     },
     {
       "crossing": 23,
       "to": "Route 2",
       "reached": true,
-      "frames": 54,
+      "frames": 52,
       "pending_before": 1
     },
     {
       "crossing": 24,
       "to": "Viridian",
       "reached": true,
-      "frames": 22,
+      "frames": 84,
       "pending_before": 1
     },
     {
       "crossing": 25,
       "to": "Route 2",
       "reached": true,
-      "frames": 52,
+      "frames": 48,
       "pending_before": 1
     },
     {
       "crossing": 26,
       "to": "Viridian",
       "reached": true,
-      "frames": 22,
+      "frames": 92,
       "pending_before": 1
     },
     {
       "crossing": 27,
       "to": "Route 2",
       "reached": true,
-      "frames": 48,
+      "frames": 92,
       "pending_before": 1
     },
     {
       "crossing": 28,
       "to": "Viridian",
       "reached": true,
-      "frames": 92,
+      "frames": 24,
       "pending_before": 1
     },
     {
       "crossing": 29,
       "to": "Route 2",
       "reached": true,
-      "frames": 54,
+      "frames": 46,
       "pending_before": 1
     },
     {
       "crossing": 30,
       "to": "Viridian",
       "reached": true,
-      "frames": 22,
+      "frames": 24,
       "pending_before": 1
     },
     {
       "crossing": 31,
       "to": "Route 2",
       "reached": true,
-      "frames": 48,
+      "frames": 52,
       "pending_before": 1
     },
     {
       "crossing": 32,
       "to": "Viridian",
       "reached": true,
-      "frames": 22,
+      "frames": 88,
       "pending_before": 1
     },
     {
       "crossing": 33,
       "to": "Route 2",
       "reached": true,
-      "frames": 48,
+      "frames": 52,
       "pending_before": 1
     },
     {
       "crossing": 34,
       "to": "Viridian",
       "reached": true,
-      "frames": 24,
+      "frames": 22,
       "pending_before": 1
     },
     {
       "crossing": 35,
       "to": "Route 2",
       "reached": true,
-      "frames": 92,
+      "frames": 86,
       "pending_before": 1
     },
     {
@@ -270,35 +270,35 @@
       "crossing": 39,
       "to": "Route 2",
       "reached": true,
-      "frames": 46,
+      "frames": 48,
       "pending_before": 1
     },
     {
       "crossing": 40,
       "to": "Viridian",
       "reached": true,
-      "frames": 100,
+      "frames": 22,
       "pending_before": 1
     }
   ],
   "pending_at_load": 20,
   "deferred_begins": 20,
   "heartbeats": 40,
-  "max_finish_scanlines": 321,
+  "max_finish_scanlines": 320,
   "max_frame_scanlines": 150,
   "max_step_scanlines": 150,
-  "max_walker_update_scanlines": 115,
-  "mean_crossing_frames": 44.75,
+  "max_walker_update_scanlines": 54,
+  "mean_crossing_frames": 49.85,
   "world": {
     "heartbeats": 41,
     "skippedHeartbeats": 1,
     "lastHeartbeatMap": 32,
     "reseats": 0,
-    "lastHeartbeatFrames": 49,
-    "maxHeartbeatFrames": 49,
+    "lastHeartbeatFrames": 46,
+    "maxHeartbeatFrames": 46,
     "maxStepScanlines": 150,
     "maxFrameScanlines": 150,
-    "maxFinishScanlines": 321,
+    "maxFinishScanlines": 320,
     "pendingAtLoad": 20,
     "forcedFinishes": 0,
     "workspaceLosses": 0,
@@ -308,8 +308,8 @@
   },
   "debug": {
     "frames": 786,
-    "spawns": 6,
-    "removals": 6,
+    "spawns": 2,
+    "removals": 2,
     "edgeExits": 0,
     "warpExits": 0,
     "arrivals": 0,
@@ -317,7 +317,7 @@
     "stripEntries": 0,
     "replans": 0,
     "blockedSteps": 0,
-    "searches": 6,
+    "searches": 5,
     "searchFails": 0,
     "localDwellBeats": 0,
     "localAdvances": 0,
@@ -330,14 +330,14 @@
     "maxSearchNodes": 0,
     "lastSearchFrames": 0,
     "maxSearchFrames": 0,
-    "maxSliceScanlines": 62,
-    "maxSliceNodes": 7,
+    "maxSliceScanlines": 49,
+    "maxSliceNodes": 5,
     "workspaceBytes": 11308,
     "currentMap": 32,
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634004,
+    "worldState": 33634104,
     "actors": [
       {
         "index": 0,
@@ -404,10 +404,10 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 2238,
-    "maxHeartbeatScanlines": 2238,
-    "maxSpawnScanlines": 65,
-    "maxUpdateScanlines": 115,
+    "lastHeartbeatScanlines": 2322,
+    "maxHeartbeatScanlines": 2322,
+    "maxSpawnScanlines": 40,
+    "maxUpdateScanlines": 54,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
@@ -429,5 +429,5 @@
     "seam_finish_scanlines": 1000
   },
   "pass": true,
-  "emulated_frames": 2208
+  "emulated_frames": 2410
 }

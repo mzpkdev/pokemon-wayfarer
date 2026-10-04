@@ -4,24 +4,24 @@
     28
   ],
   "spawn_distance": 3,
-  "arrival_frames_after_spawn": 219,
+  "arrival_frames_after_spawn": 226,
   "walk_track": [
     [
-      106,
+      107,
       [
         40,
         29
       ]
     ],
     [
-      262,
+      270,
       [
         40,
         30
       ]
     ],
     [
-      293,
+      301,
       [
         39,
         30
@@ -29,11 +29,11 @@
     ]
   ],
   "step_frames": [
-    156,
+    163,
     31
   ],
   "arrive_look": {
-    "frame": 324,
+    "frame": 332,
     "actor": 0,
     "slot": 8,
     "beat": 5,
@@ -46,7 +46,7 @@
   ],
   "events": [
     {
-      "frame": 137,
+      "frame": 138,
       "actor": 0,
       "slot": 8,
       "beat": 0,
@@ -54,7 +54,7 @@
       "event": "start"
     },
     {
-      "frame": 262,
+      "frame": 270,
       "actor": 0,
       "slot": 8,
       "beat": 0,
@@ -62,7 +62,7 @@
       "event": "end"
     },
     {
-      "frame": 324,
+      "frame": 332,
       "actor": 0,
       "slot": 8,
       "beat": 5,
@@ -70,7 +70,7 @@
       "event": "start"
     },
     {
-      "frame": 385,
+      "frame": 394,
       "actor": 0,
       "slot": 8,
       "beat": 5,
@@ -133,7 +133,7 @@
     ".product/research/ambience/arrive-look.png"
   ],
   "debug": {
-    "frames": 646,
+    "frames": 662,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -152,18 +152,18 @@
     "floorChanges": 0,
     "heapResets": 5,
     "restores": 0,
-    "lastSearchNodes": 220,
-    "maxSearchNodes": 220,
-    "lastSearchFrames": 45,
-    "maxSearchFrames": 45,
-    "maxSliceScanlines": 60,
-    "maxSliceNodes": 7,
+    "lastSearchNodes": 222,
+    "maxSearchNodes": 222,
+    "lastSearchFrames": 67,
+    "maxSearchFrames": 67,
+    "maxSliceScanlines": 56,
+    "maxSliceNodes": 6,
     "workspaceBytes": 11308,
     "currentMap": 32,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634040,
+    "worldState": 33634068,
     "actors": [
       {
         "index": 0,
@@ -176,7 +176,7 @@
         "atSpot": 1,
         "blocked": 0,
         "x": 39,
-        "y": 28,
+        "y": 29,
         "goalX": 43,
         "goalY": 20,
         "goalEdge": 65535
@@ -232,8 +232,8 @@
     ],
     "lastHeartbeatScanlines": 26,
     "maxHeartbeatScanlines": 26,
-    "maxSpawnScanlines": 24,
-    "maxUpdateScanlines": 69,
+    "maxSpawnScanlines": 23,
+    "maxUpdateScanlines": 61,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
@@ -248,5 +248,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 942
+  "emulated_frames": 949
 }

@@ -54,7 +54,7 @@
     ".product/research/ambience/deadend-player-out.png"
   ],
   "debug": {
-    "frames": 1165,
+    "frames": 1379,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -75,16 +75,16 @@
     "restores": 0,
     "lastSearchNodes": 5,
     "maxSearchNodes": 343,
-    "lastSearchFrames": 3,
-    "maxSearchFrames": 87,
-    "maxSliceScanlines": 138,
-    "maxSliceNodes": 7,
+    "lastSearchFrames": 5,
+    "maxSearchFrames": 193,
+    "maxSliceScanlines": 41,
+    "maxSliceNodes": 5,
     "workspaceBytes": 11308,
     "currentMap": 12,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634008,
+    "worldState": 33634104,
     "actors": [
       {
         "index": 0,
@@ -151,15 +151,15 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 26,
-    "maxHeartbeatScanlines": 26,
-    "maxSpawnScanlines": 81,
-    "maxUpdateScanlines": 142,
+    "lastHeartbeatScanlines": 25,
+    "maxHeartbeatScanlines": 25,
+    "maxSpawnScanlines": 25,
+    "maxUpdateScanlines": 51,
     "backOffs": 2,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
-    "lastContextScanlines": 16,
+    "lastContextScanlines": 15,
     "lastFailNodes": 0,
     "maxFinishScanlines": 7,
     "walkOffs": 0,
@@ -169,5 +169,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 1538
+  "emulated_frames": 1696
 }

@@ -55,6 +55,8 @@
 #define RUN_SKIP_RETURN  (1 << 2)   // a step was skipped: skip the step that returns it
 #define RUN_RESTORE      (1 << 3)   // stopped mid-movement: turn back once it is over
 #define RUN_RELEASE      (1 << 4)   // stopped under a lock: release the bowing NPC once it is gone
+#define RUN_HELD         (1 << 5)   // heldAction, issued by the runner on the walker, may be under way
+#define RUN_REPREPARED   (1 << 6)   // companion out prepared a second species already
 
 #define SPIN_TURN_FRAMES    4
 #define GRASS_SHAKE_FRAMES  (2 * AMBIENCE_TICK_FRAMES)
@@ -181,6 +183,32 @@ static bool8 HeldDone(struct ObjectEvent *obj)
     return ObjectEventClearHeldMovementIfFinished(obj) != 0;
 }
 
+// Issue and HeldDone for the walker's own object: the runner remembers what
+// it issued, so a stop clears only that (never the walker's own walk under a
+// keep-walking beat, nor a template turn still under way).
+static bool8 IssueOwn(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 action)
+{
+    if (!Issue(obj, action))
+        return FALSE;
+    run->flags |= RUN_HELD;
+    run->heldAction = obj->movementActionId;
+    return TRUE;
+}
+
+static bool8 OwnHeldDone(struct WalkerBeatRun *run, struct ObjectEvent *obj)
+{
+    if (!HeldDone(obj))
+        return FALSE;
+    run->flags &= ~RUN_HELD;
+    return TRUE;
+}
+
+// The walker's held movement is the one the runner issued.
+static bool8 IsOwnHeld(const struct WalkerBeatRun *run, const struct ObjectEvent *obj)
+{
+    return (run->flags & RUN_HELD) && obj->heldMovementActive && obj->movementActionId == run->heldAction;
+}
+
 // A frame for a costly start: TRUE once it has one (see PREPARE_LINES).
 static bool8 WaitForRoom(struct WalkerBeatRun *run, u16 lines, u8 maxWait)
 {
@@ -208,7 +236,10 @@ static struct ObjectEvent *Partner(const struct WalkerBeatRun *run)
     if (run->otherObject >= OBJECT_EVENTS_COUNT)
         return NULL;
     other = &gObjectEvents[run->otherObject];
-    return (other->active && other->localId == run->otherLocalId) ? other : NULL;
+    // Still the partner: the same walker's object, not another walker's
+    // that took its local id since.
+    return (other->active && other->localId == run->otherLocalId
+            && WayfarerWalkers_ObjectSlot(other) == run->otherSlot) ? other : NULL;
 }
 
 static bool8 IsGrassSprite(u8 spriteId)
@@ -238,8 +269,10 @@ static void ReleaseNpc(struct WalkerBeatRun *run)
 }
 
 void WalkerBeats_Start(struct WalkerBeatRun *run, u8 beat, u8 startFacing, u8 target,
-                       struct ObjectEvent *other, u8 parity)
+                       struct ObjectEvent *other, u8 otherSlot, u8 parity)
 {
+    // A bow the last beat left to a script would be lost with the reset.
+    WalkerBeats_ReleaseNpc(run);
     memset(run, 0, sizeof(*run));
     run->beat = beat;
     run->startFacing = startFacing;
@@ -252,6 +285,7 @@ void WalkerBeats_Start(struct WalkerBeatRun *run, u8 beat, u8 startFacing, u8 ta
     {
         run->otherObject = other - gObjectEvents;
         run->otherLocalId = other->localId;
+        run->otherSlot = otherSlot;
     }
     run->parity = parity & 1;
 }
@@ -293,7 +327,7 @@ static u8 FaceTarget(const struct WalkerBeatRun *run, struct ObjectEvent *obj, u
 static bool8 DoFace(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 dir, struct WalkerAmbienceDebug *debug)
 {
     if (run->stage == STAGE_HELD)
-        return HeldDone(obj);
+        return OwnHeldDone(run, obj);
     if (!IsCardinal(dir))
     {
         debug->stepSkips++;
@@ -301,7 +335,7 @@ static bool8 DoFace(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 dir, 
     }
     if (obj->facingDirection == dir)
         return TRUE;
-    if (!Issue(obj, GetFaceDirectionMovementAction(dir)))
+    if (!IssueOwn(run, obj, GetFaceDirectionMovementAction(dir)))
         return FALSE;
     run->stage = STAGE_HELD;
     return FALSE;
@@ -326,7 +360,7 @@ static bool8 DoStep(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 kind,
 
     if (run->stage == STAGE_HELD)
     {
-        if (!HeldDone(obj))
+        if (!OwnHeldDone(run, obj))
             return FALSE;
         run->flags &= ~RUN_MOVING;
         if (run->flags & RUN_LOCKED)
@@ -400,7 +434,7 @@ static bool8 DoStep(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 kind,
     }
     if (back)
         obj->facingDirectionLocked = TRUE;
-    if (!Issue(obj, GetWalkSlowMovementAction(dir)))
+    if (!IssueOwn(run, obj, GetWalkSlowMovementAction(dir)))
     {
         if (back)
             obj->facingDirectionLocked = FALSE;
@@ -421,12 +455,12 @@ static bool8 DoJump(struct WalkerBeatRun *run, struct ObjectEvent *obj)
 {
     if (run->stage == STAGE_HELD)
     {
-        if (!HeldDone(obj))
+        if (!OwnHeldDone(run, obj))
             return FALSE;
         run->flags &= ~RUN_MOVING;
         return TRUE;
     }
-    if (!Issue(obj, GetJumpInPlaceMovementAction(obj->facingDirection)))
+    if (!IssueOwn(run, obj, GetJumpInPlaceMovementAction(obj->facingDirection)))
         return FALSE;
     run->flags |= RUN_MOVING;
     run->stage = STAGE_HELD;
@@ -440,12 +474,12 @@ static bool8 DoSpin(struct WalkerBeatRun *run, struct ObjectEvent *obj)
     case STAGE_START:
         if (run->turns == 0)
             run->turns = 4;
-        if (!Issue(obj, GetFaceDirectionMovementAction(sClockwise[obj->facingDirection <= DIR_EAST ? obj->facingDirection : 0])))
+        if (!IssueOwn(run, obj, GetFaceDirectionMovementAction(sClockwise[obj->facingDirection <= DIR_EAST ? obj->facingDirection : 0])))
             return FALSE;
         run->stage = STAGE_HELD;
         return FALSE;
     case STAGE_HELD:
-        if (!HeldDone(obj))
+        if (!OwnHeldDone(run, obj))
             return FALSE;
         if (--run->turns == 0)
             return TRUE;
@@ -470,7 +504,7 @@ static bool8 DoEmote(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 icon
     switch (run->stage)
     {
     case STAGE_HELD:
-        return HeldDone(obj);
+        return OwnHeldDone(run, obj);
     case STAGE_START:
         if (shared && FieldEffectActiveListContains(FLDEFF_EMOTE))
         {
@@ -498,7 +532,7 @@ static bool8 DoEmote(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 icon
         return FALSE;
     if (icon < AMBIENCE_ICON_FIRST_FLDEFF)
     {
-        if (!Issue(obj, sIconActions[icon]))
+        if (!IssueOwn(run, obj, sIconActions[icon]))
             return FALSE;
         run->stage = STAGE_HELD;
     }
@@ -731,8 +765,18 @@ static bool8 RunStep(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 op, 
         }
         if (!WaitForRoom(run, SPAWN_LINES, SPAWN_WAIT_FRAMES))
             return FALSE;
-        if (!WayfarerWalkers_CompanionOut(obj))
+        switch (WayfarerWalkers_CompanionOut(obj, !(run->flags & RUN_REPREPARED)))
+        {
+        case WALKER_COMPANION_OUT_PREPARE:
+            // Another species fits now: its sheet gets a frame of its own
+            // too (once; a second change ends the beat).
+            run->flags |= RUN_REPREPARED;
+            run->stage = STAGE_START;
+            return FALSE;
+        case WALKER_COMPANION_OUT_FAILED:
             run->step = AMBIENCE_MAX_STEPS;
+            break;
+        }
         return TRUE;
     case AMBIENCE_OP_COMPANION_IN:
         if (WayfarerWalkers_Companion(obj) != NULL && !WaitForRoom(run, COMPANION_IN_LINES, START_WAIT_FRAMES))
@@ -810,10 +854,12 @@ bool8 WalkerBeats_Stop(struct WalkerBeatRun *run, struct ObjectEvent *obj, bool8
     if (locked)
     {
         // No held movement under a lock (ObjectEventSetHeldMovement
-        // unfreezes): end a face or icon action of the beat, then a plain turn.
-        if (obj->heldMovementActive)
+        // unfreezes): end a face or icon action of the beat (only the
+        // beat's own), then a plain turn while nothing else moves it.
+        if (IsOwnHeld(run, obj))
             ObjectEventClearHeldMovement(obj);
-        if (IsCardinal(run->startFacing) && obj->facingDirection != run->startFacing)
+        run->flags &= ~RUN_HELD;
+        if (!obj->heldMovementActive && IsCardinal(run->startFacing) && obj->facingDirection != run->startFacing)
             ObjectEventTurn(obj, run->startFacing);
         return FALSE;
     }

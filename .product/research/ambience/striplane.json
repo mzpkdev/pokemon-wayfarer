@@ -25,7 +25,7 @@
       ]
     ],
     [
-      405,
+      411,
       [
         1,
         78,
@@ -33,7 +33,7 @@
       ]
     ],
     [
-      438,
+      442,
       [
         1,
         79,
@@ -41,7 +41,7 @@
       ]
     ],
     [
-      469,
+      473,
       [
         1,
         80,
@@ -49,7 +49,7 @@
       ]
     ],
     [
-      484,
+      488,
       [
         2,
         80,
@@ -57,7 +57,7 @@
       ]
     ],
     [
-      513,
+      517,
       null
     ]
   ],
@@ -96,7 +96,7 @@
     ".product/research/ambience/striplane-after.png"
   ],
   "debug": {
-    "frames": 213,
+    "frames": 218,
     "spawns": 1,
     "removals": 1,
     "edgeExits": 1,
@@ -117,16 +117,16 @@
     "restores": 0,
     "lastSearchNodes": 7,
     "maxSearchNodes": 7,
-    "lastSearchFrames": 3,
-    "maxSearchFrames": 3,
-    "maxSliceScanlines": 51,
-    "maxSliceNodes": 4,
+    "lastSearchFrames": 8,
+    "maxSearchFrames": 8,
+    "maxSliceScanlines": 81,
+    "maxSliceNodes": 2,
     "workspaceBytes": 11308,
     "currentMap": 7985,
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33633996,
+    "worldState": 33634004,
     "actors": [
       {
         "index": 0,
@@ -193,10 +193,10 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 24,
-    "maxHeartbeatScanlines": 24,
+    "lastHeartbeatScanlines": 25,
+    "maxHeartbeatScanlines": 25,
     "maxSpawnScanlines": 32,
-    "maxUpdateScanlines": 66,
+    "maxUpdateScanlines": 85,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
@@ -206,10 +206,10 @@
     "maxFinishScanlines": 1,
     "walkOffs": 0,
     "worldJobs": 1,
-    "maxJobScanlines": 10,
+    "maxJobScanlines": 9,
     "capacityWaits": 0,
     "stripTimeouts": 1
   },
   "pass": true,
-  "emulated_frames": 513
+  "emulated_frames": 517
 }

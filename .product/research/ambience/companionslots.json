@@ -84,7 +84,7 @@
       "y": 23,
       "invisible": false,
       "isPlayer": false,
-      "facing": 3
+      "facing": 4
     },
     {
       "slot": 7,
@@ -96,7 +96,7 @@
       "y": 23,
       "invisible": false,
       "isPlayer": false,
-      "facing": 2
+      "facing": 4
     },
     {
       "slot": 8,
@@ -104,11 +104,11 @@
       "localId": 8,
       "mapNum": 8,
       "mapGroup": 0,
-      "x": 19,
-      "y": 16,
+      "x": 18,
+      "y": 18,
       "invisible": false,
       "isPlayer": false,
-      "facing": 2
+      "facing": 3
     },
     {
       "slot": 9,
@@ -132,7 +132,7 @@
       "y": 11,
       "invisible": false,
       "isPlayer": false,
-      "facing": 2
+      "facing": 4
     },
     {
       "slot": 11,
@@ -175,15 +175,15 @@
     "started_idle": 7,
     "started_transition": 1,
     "started_react": 0,
-    "ended": 8,
+    "ended": 7,
     "interrupted": 0,
-    "icons": 15,
+    "icons": 13,
     "effects": 0,
     "palette_skips": 0,
     "icon_skips": 0,
     "step_skips": 0,
     "running": [
-      255,
+      21,
       255,
       255,
       255
@@ -210,12 +210,12 @@
       "prepares": 0
     }
   },
-  "max_update_scanlines": 33,
+  "max_update_scanlines": 41,
   "screenshots": [
     ".product/research/ambience/companionslots.png"
   ],
   "debug": {
-    "frames": 5304,
+    "frames": 5164,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -227,9 +227,9 @@
     "blockedSteps": 0,
     "searches": 0,
     "searchFails": 0,
-    "localDwellBeats": 8,
+    "localDwellBeats": 7,
     "localAdvances": 0,
-    "emotes": 15,
+    "emotes": 13,
     "templateMoves": 0,
     "floorChanges": 0,
     "heapResets": 5,
@@ -245,7 +245,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634016,
+    "worldState": 33634084,
     "actors": [
       {
         "index": 0,
@@ -315,7 +315,7 @@
     "lastHeartbeatScanlines": 71,
     "maxHeartbeatScanlines": 71,
     "maxSpawnScanlines": 35,
-    "maxUpdateScanlines": 33,
+    "maxUpdateScanlines": 41,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
@@ -330,5 +330,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 6386
+  "emulated_frames": 6384
 }

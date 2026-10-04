@@ -161,8 +161,9 @@ At a decision point, with no beat running:
 - `player_lingers` fires once per standing-still episode.
 
 All counters live in the walker's RAM and start at 0 when the actor spawns,
-except the quiet gap, which starts as already passed. A heap reset (a warp,
-a menu, a battle) restarts them all the same way.
+except the quiet gap and the steps since the last beat, which start as
+already passed. A heap reset (a warp, a menu, a battle) restarts them all the
+same way.
 Nothing reads the random number generator.
 
 ### Interruptions

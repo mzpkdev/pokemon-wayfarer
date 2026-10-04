@@ -128,7 +128,7 @@
     ".product/research/ambience/stairs-after.png"
   ],
   "debug": {
-    "frames": 1173,
+    "frames": 1568,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -149,16 +149,16 @@
     "restores": 0,
     "lastSearchNodes": 447,
     "maxSearchNodes": 447,
-    "lastSearchFrames": 165,
-    "maxSearchFrames": 165,
-    "maxSliceScanlines": 147,
-    "maxSliceNodes": 7,
+    "lastSearchFrames": 559,
+    "maxSearchFrames": 559,
+    "maxSliceScanlines": 40,
+    "maxSliceNodes": 4,
     "workspaceBytes": 11308,
     "currentMap": 6,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634016,
+    "worldState": 33634028,
     "actors": [
       {
         "index": 0,
@@ -225,10 +225,10 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 25,
-    "maxHeartbeatScanlines": 25,
-    "maxSpawnScanlines": 79,
-    "maxUpdateScanlines": 156,
+    "lastHeartbeatScanlines": 26,
+    "maxHeartbeatScanlines": 26,
+    "maxSpawnScanlines": 37,
+    "maxUpdateScanlines": 49,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
@@ -238,10 +238,10 @@
     "maxFinishScanlines": 6,
     "walkOffs": 0,
     "worldJobs": 1,
-    "maxJobScanlines": 12,
+    "maxJobScanlines": 13,
     "capacityWaits": 0,
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 1674
+  "emulated_frames": 2100
 }

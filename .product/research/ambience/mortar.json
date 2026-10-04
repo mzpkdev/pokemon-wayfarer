@@ -178,7 +178,7 @@
     ".product/research/ambience/mortar-at-spot.png"
   ],
   "debug": {
-    "frames": 5054,
+    "frames": 5289,
     "spawns": 3,
     "removals": 1,
     "edgeExits": 0,
@@ -199,16 +199,16 @@
     "restores": 0,
     "lastSearchNodes": 331,
     "maxSearchNodes": 331,
-    "lastSearchFrames": 63,
-    "maxSearchFrames": 63,
-    "maxSliceScanlines": 94,
-    "maxSliceNodes": 7,
+    "lastSearchFrames": 105,
+    "maxSearchFrames": 112,
+    "maxSliceScanlines": 44,
+    "maxSliceNodes": 4,
     "workspaceBytes": 11308,
     "currentMap": 3073,
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634052,
+    "worldState": 33634068,
     "actors": [
       {
         "index": 0,
@@ -275,10 +275,10 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 46,
-    "maxHeartbeatScanlines": 997,
+    "lastHeartbeatScanlines": 47,
+    "maxHeartbeatScanlines": 991,
     "maxSpawnScanlines": 21,
-    "maxUpdateScanlines": 98,
+    "maxUpdateScanlines": 78,
     "backOffs": 0,
     "handoffs": 1,
     "visitorsVanished": 0,
@@ -288,10 +288,10 @@
     "maxFinishScanlines": 15,
     "walkOffs": 0,
     "worldJobs": 2,
-    "maxJobScanlines": 10,
+    "maxJobScanlines": 11,
     "capacityWaits": 0,
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 5591
+  "emulated_frames": 5821
 }

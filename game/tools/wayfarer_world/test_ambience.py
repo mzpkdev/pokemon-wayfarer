@@ -540,6 +540,27 @@ class ValidationTest(unittest.TestCase):
         self.fails(lambda d: beat(d, "player_lingers").__setitem__("when", ["dwelling"]),
                    r"'player_lingers': a once_per_episode beat needs a player_adjacent_ticks term")
 
+    def test_wait_takes_plain_ascii_ticks(self):
+        for arg in ("010", "08", "\u0663", "0", "256", "+3", "3.0"):
+            with self.subTest(arg=arg):
+                self.fails(self.set_steps("water_wait", ["wait %s" % arg, "emote pensive"]),
+                           r"wait takes 1 to 255 ticks")
+        data = copy.deepcopy(DATA)
+        beat(data, "water_wait")["steps"] = ["wait 12", "emote pensive"]
+        amb = load(data)
+        self.assertEqual(amb.problems, [])
+
+    def test_companion_out_needs_an_idle_beat_with_companion_room(self):
+        self.fails(lambda d: beat(d, "ace_play").__setitem__(
+            "when", ["dwelling", "outdoors", {"activity": ["relax", "fish", "train", "sightsee"]}]),
+            r"'ace_play': a beat with companion out must be idle and have companion_room")
+        self.fails(lambda d: beat(d, "ace_play").__setitem__(
+            "when", ["dwelling", {"any": ["outdoors", "companion_room"]}]),
+            r"'ace_play': a beat with companion out must be idle and have companion_room")
+        self.fails(lambda d: (beat(d, "ace_play").__setitem__("class", "react"),
+                              beat(d, "ace_play").__setitem__("when", ["companion_room", {"player_within": 3}])),
+                   r"'ace_play': a beat with companion out must be idle and have companion_room")
+
     def test_companion_steps_need_the_companion_out(self):
         self.fails(self.set_steps("ace_play", ["companion_do jump", "emote happy"]),
                    r"while no companion is out")

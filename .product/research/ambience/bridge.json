@@ -1,7 +1,7 @@
 {
   "spot": 6060,
   "node": 881,
-  "arrived_after_frames": 6528,
+  "arrived_after_frames": 6712,
   "delta": {
     "searches": 1,
     "searchFails": 0,
@@ -195,15 +195,15 @@
     "reserved": 0,
     "hex": "7113eb1500a00600"
   },
-  "maxSliceScanlines": 138,
+  "maxSliceScanlines": 46,
   "maxSearchNodes": 1567,
   "workspaceBytes": 11308,
-  "maxFinishScanlines": 39,
+  "maxFinishScanlines": 40,
   "screenshots": [
     ".product/research/ambience/bridge-north.png"
   ],
   "debug": {
-    "frames": 6529,
+    "frames": 6815,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -224,10 +224,10 @@
     "restores": 0,
     "lastSearchNodes": 1567,
     "maxSearchNodes": 1567,
-    "lastSearchFrames": 367,
-    "maxSearchFrames": 367,
-    "maxSliceScanlines": 138,
-    "maxSliceNodes": 7,
+    "lastSearchFrames": 676,
+    "maxSearchFrames": 676,
+    "maxSliceScanlines": 46,
+    "maxSliceNodes": 5,
     "workspaceBytes": 11308,
     "currentMap": 7970,
     "followerHidden": 0,
@@ -300,17 +300,17 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 26,
-    "maxHeartbeatScanlines": 26,
+    "lastHeartbeatScanlines": 25,
+    "maxHeartbeatScanlines": 25,
     "maxSpawnScanlines": 25,
-    "maxUpdateScanlines": 150,
+    "maxUpdateScanlines": 122,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
     "lastContextScanlines": 15,
     "lastFailNodes": 0,
-    "maxFinishScanlines": 39,
+    "maxFinishScanlines": 40,
     "walkOffs": 0,
     "worldJobs": 0,
     "maxJobScanlines": 0,
@@ -318,5 +318,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 6932
+  "emulated_frames": 7116
 }

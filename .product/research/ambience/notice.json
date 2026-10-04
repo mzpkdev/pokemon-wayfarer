@@ -34,7 +34,7 @@
       "event": "start"
     },
     {
-      "frame": 297,
+      "frame": 309,
       "actor": 0,
       "slot": 8,
       "beat": 7,
@@ -42,7 +42,7 @@
       "event": "end"
     },
     {
-      "frame": 666,
+      "frame": 892,
       "actor": 0,
       "slot": 8,
       "beat": 32,
@@ -50,7 +50,7 @@
       "event": "start"
     },
     {
-      "frame": 710,
+      "frame": 933,
       "actor": 0,
       "slot": 8,
       "beat": 32,
@@ -58,7 +58,7 @@
       "event": "end"
     },
     {
-      "frame": 1181,
+      "frame": 1402,
       "actor": 0,
       "slot": 8,
       "beat": 33,
@@ -66,7 +66,7 @@
       "event": "start"
     },
     {
-      "frame": 1405,
+      "frame": 1718,
       "actor": 0,
       "slot": 8,
       "beat": 33,
@@ -74,7 +74,7 @@
       "event": "end"
     },
     {
-      "frame": 1874,
+      "frame": 2189,
       "actor": 0,
       "slot": 8,
       "beat": 16,
@@ -82,7 +82,7 @@
       "event": "start"
     },
     {
-      "frame": 2089,
+      "frame": 2433,
       "actor": 0,
       "slot": 8,
       "beat": 16,
@@ -90,39 +90,23 @@
       "event": "end"
     },
     {
-      "frame": 2557,
+      "frame": 2910,
       "actor": 0,
       "slot": 8,
-      "beat": 32,
-      "name": "swagger",
+      "beat": 33,
+      "name": "ace_play",
       "event": "start"
     },
     {
-      "frame": 2597,
+      "frame": 3206,
       "actor": 0,
       "slot": 8,
-      "beat": 32,
-      "name": "swagger",
+      "beat": 33,
+      "name": "ace_play",
       "event": "end"
     },
     {
-      "frame": 3098,
-      "actor": 0,
-      "slot": 8,
-      "beat": 17,
-      "name": "water_wait",
-      "event": "start"
-    },
-    {
-      "frame": 3249,
-      "actor": 0,
-      "slot": 8,
-      "beat": 17,
-      "name": "water_wait",
-      "event": "end"
-    },
-    {
-      "frame": 3278,
+      "frame": 3216,
       "actor": 0,
       "slot": 8,
       "beat": 7,
@@ -130,7 +114,7 @@
       "event": "start"
     },
     {
-      "frame": 3342,
+      "frame": 3304,
       "actor": 0,
       "slot": 8,
       "beat": 7,
@@ -148,7 +132,7 @@
       "event": "start"
     },
     {
-      "frame": 3703,
+      "frame": 3711,
       "actor": 0,
       "slot": 10,
       "beat": 5,
@@ -156,7 +140,7 @@
       "event": "end"
     },
     {
-      "frame": 3757,
+      "frame": 3758,
       "actor": 0,
       "slot": 10,
       "beat": 8,
@@ -164,7 +148,7 @@
       "event": "start"
     },
     {
-      "frame": 3911,
+      "frame": 3945,
       "actor": 0,
       "slot": 10,
       "beat": 8,
@@ -194,7 +178,7 @@
     "searchFails": 0,
     "localDwellBeats": 5,
     "localAdvances": 0,
-    "emotes": 5,
+    "emotes": 4,
     "templateMoves": 0,
     "floorChanges": 0,
     "heapResets": 6,
@@ -210,7 +194,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634036,
+    "worldState": 33634032,
     "actors": [
       {
         "index": 0,

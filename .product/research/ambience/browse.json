@@ -28,7 +28,7 @@
     ".product/research/ambience/browse-next-shelf.png"
   ],
   "debug": {
-    "frames": 1789,
+    "frames": 1806,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -49,16 +49,16 @@
     "restores": 0,
     "lastSearchNodes": 7,
     "maxSearchNodes": 32,
-    "lastSearchFrames": 3,
-    "maxSearchFrames": 10,
-    "maxSliceScanlines": 58,
-    "maxSliceNodes": 6,
+    "lastSearchFrames": 6,
+    "maxSearchFrames": 15,
+    "maxSliceScanlines": 41,
+    "maxSliceNodes": 4,
     "workspaceBytes": 11308,
     "currentMap": 3073,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634092,
+    "worldState": 33634064,
     "actors": [
       {
         "index": 0,
@@ -128,7 +128,7 @@
     "lastHeartbeatScanlines": 27,
     "maxHeartbeatScanlines": 27,
     "maxSpawnScanlines": 18,
-    "maxUpdateScanlines": 64,
+    "maxUpdateScanlines": 46,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
@@ -138,10 +138,10 @@
     "maxFinishScanlines": 3,
     "walkOffs": 0,
     "worldJobs": 2,
-    "maxJobScanlines": 11,
+    "maxJobScanlines": 12,
     "capacityWaits": 0,
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 2074
+  "emulated_frames": 2084
 }

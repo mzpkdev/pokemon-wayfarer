@@ -64,7 +64,7 @@
     ".product/research/ambience/gym-leader-out.png"
   ],
   "debug": {
-    "frames": 513,
+    "frames": 512,
     "spawns": 1,
     "removals": 1,
     "edgeExits": 0,
@@ -161,15 +161,15 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 117,
-    "maxHeartbeatScanlines": 117,
+    "lastHeartbeatScanlines": 163,
+    "maxHeartbeatScanlines": 163,
     "maxSpawnScanlines": 18,
     "maxUpdateScanlines": 37,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
-    "lastContextScanlines": 16,
+    "lastContextScanlines": 62,
     "lastFailNodes": 0,
     "maxFinishScanlines": 0,
     "walkOffs": 0,
@@ -179,5 +179,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 806
+  "emulated_frames": 804
 }

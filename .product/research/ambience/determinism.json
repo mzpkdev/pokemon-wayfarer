@@ -14,27 +14,15 @@
         "end"
       ],
       [
-        490,
+        488,
         8,
         "water_bite",
         "start"
       ],
       [
-        727,
+        759,
         8,
         "water_bite",
-        "end"
-      ],
-      [
-        1150,
-        8,
-        "swagger",
-        "start"
-      ],
-      [
-        1179,
-        8,
-        "swagger",
         "end"
       ],
       [
@@ -50,21 +38,21 @@
         "end"
       ],
       [
-        1770,
+        1814,
         8,
-        "water_wait",
+        "swagger",
         "start"
       ],
       [
-        1890,
+        1857,
         8,
-        "water_wait",
+        "swagger",
         "end"
       ],
       [
-        2334,
+        2332,
         8,
-        "ace_play",
+        "water_bite",
         "start"
       ]
     ],
@@ -72,7 +60,9 @@
     "rng_seen_at_start": 101073694,
     "rng_start": 101073694,
     "rng_end": 2901169912,
-    "frames": 2511
+    "frames": 2510,
+    "time_update_counter_at_start": 138,
+    "local_time_at_start": "21:21"
   },
   "second": {
     "events": [
@@ -89,27 +79,15 @@
         "end"
       ],
       [
-        490,
+        488,
         8,
         "water_bite",
         "start"
       ],
       [
-        727,
+        759,
         8,
         "water_bite",
-        "end"
-      ],
-      [
-        1150,
-        8,
-        "swagger",
-        "start"
-      ],
-      [
-        1179,
-        8,
-        "swagger",
         "end"
       ],
       [
@@ -125,21 +103,86 @@
         "end"
       ],
       [
-        1770,
+        1814,
         8,
-        "water_wait",
+        "swagger",
         "start"
       ],
       [
-        1890,
+        1857,
         8,
-        "water_wait",
+        "swagger",
         "end"
       ],
       [
-        2334,
+        2332,
         8,
-        "ace_play",
+        "water_bite",
+        "start"
+      ]
+    ],
+    "lost": 0,
+    "rng_seen_at_start": 101073694,
+    "rng_start": 101073694,
+    "rng_end": 2901169912,
+    "frames": 2510,
+    "time_update_counter_at_start": 138,
+    "local_time_at_start": "21:21"
+  },
+  "third": {
+    "events": [
+      [
+        -1,
+        8,
+        "arrive_look",
+        "start"
+      ],
+      [
+        65,
+        8,
+        "arrive_look",
+        "end"
+      ],
+      [
+        488,
+        8,
+        "water_bite",
+        "start"
+      ],
+      [
+        759,
+        8,
+        "water_bite",
+        "end"
+      ],
+      [
+        1206,
+        8,
+        "notice_player",
+        "start"
+      ],
+      [
+        1271,
+        8,
+        "notice_player",
+        "end"
+      ],
+      [
+        1814,
+        8,
+        "swagger",
+        "start"
+      ],
+      [
+        1857,
+        8,
+        "swagger",
+        "end"
+      ],
+      [
+        2332,
+        8,
+        "water_bite",
         "start"
       ]
     ],
@@ -147,9 +190,13 @@
     "rng_seen_at_start": 101073694,
     "rng_start": 2745427643,
     "rng_end": 409675246,
-    "frames": 2511
+    "frames": 2510,
+    "time_update_counter_at_start": 138,
+    "local_time_at_start": "21:22"
   },
   "identical": true,
+  "same_beats_with_other_rng": true,
+  "max_frame_offset_with_other_rng": 0,
   "second_run_idle_frames": 60,
   "rng_start_differs": true,
   "rng_end_differs": true,

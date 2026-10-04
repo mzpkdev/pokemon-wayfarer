@@ -4,7 +4,7 @@
       "step": "start",
       "player_map": 3072,
       "heartbeats": 1,
-      "heartbeat_scanlines": 73,
+      "heartbeat_scanlines": 74,
       "lorelei": {
         "node": 116,
         "destKind": 1,
@@ -87,7 +87,7 @@
       "step": "into the Center",
       "player_map": 3072,
       "heartbeats": 3,
-      "heartbeat_scanlines": 784,
+      "heartbeat_scanlines": 781,
       "warp_frames": 75,
       "lorelei": {
         "node": 120,
@@ -129,7 +129,7 @@
       "step": "into the Mart again",
       "player_map": 3073,
       "heartbeats": 4,
-      "heartbeat_scanlines": 1535,
+      "heartbeat_scanlines": 1533,
       "warp_frames": 65,
       "lorelei": {
         "node": 120,
@@ -172,7 +172,7 @@
       "player_map": 3072,
       "heartbeats": 5,
       "heartbeat_scanlines": 981,
-      "warp_frames": 80,
+      "warp_frames": 79,
       "lorelei": {
         "node": 120,
         "destKind": 1,
@@ -255,7 +255,7 @@
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634000,
+    "worldState": 33634116,
     "actors": [
       {
         "index": 0,
@@ -323,7 +323,7 @@
       }
     ],
     "lastHeartbeatScanlines": 981,
-    "maxHeartbeatScanlines": 1535,
+    "maxHeartbeatScanlines": 1533,
     "maxSpawnScanlines": 5,
     "maxUpdateScanlines": 12,
     "backOffs": 0,
@@ -340,5 +340,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 606
+  "emulated_frames": 605
 }

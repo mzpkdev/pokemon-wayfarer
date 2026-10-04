@@ -143,7 +143,13 @@ heartbeat: a watched trainer's routine advance (one spot choice per frame,
 (`WorldSim_NextEdgeBegin`/`Run`, at most about 32 scanlines a frame, in its
 own 9 KB heap workspace while it runs; the cached path answers at once). The
 trip search and the grid search share one 48-line slice a frame, and a frame
-that runs a spot choice skips the grid search. A map load, a save and
+that runs a spot choice skips the grid search. Neither slice runs past the
+lines the frame has left before the walkers' 64-line end margin
+(`WayfarerWalkers_FrameLinesLeft`; the walkers' update starts 110 to 190
+lines into a busy outdoor frame), beyond one unit of progress a frame: a full
+slice there overran the frame, every other frame of a walker's first search
+after a warp (the `lag` greet scene saw 30 lag frames in 90 frames with or
+without beats). A map load, a save and
 the league hook complete the advances first (`WayfarerWalkers_FlushWorldJobs`).
 
 Walkers stroll: every step is `MOVEMENT_ACTION_WALK_SLOW_*` (32 frames a
@@ -173,9 +179,9 @@ leaving, a walk-off or a strip actor), and only between steps:
 
 | Decision | Where |
 | --- | --- |
-| Step | `WalkStep`, before each path step; a beat that stops the walk takes the frame (hum walks on) |
+| Step | `WalkStep`, before each path step; a beat that stops the walk takes the frame (hum walks on). Once per boundary: when that beat ends the walk resumes from the same tile without a second step decision (`stepDecided`), so `s` and the steps since the last beat count steps |
 | Blocked | `WalkStep`'s blocked path when an object, not the player or a wall, is in the way (react beats only) |
-| Arrive | `OnGoalReached` when the stay starts, after `StartTemplate`; the beat's start facing is the spot's facing the walker is turning to |
+| Arrive | `OnGoalReached` when the stay starts, after `StartTemplate`; the beat's start facing is the spot's facing the walker is turning to. A keep-walking beat (hum) still running then ends first, so the arrival is never lost to it; one still running when the walker steps out through a map side ends there too (strip actors run no beats). The walk phase's frame-room wait treats the path's end as an arrival only when the stay starts there (a walk back to the spot, a wander or browse move, a back-off and the exits make no decision) |
 | Leave | `LocalDwellTick` when the dwell runs out, after `Replan`: the plan waits for the beat. If a beat is still running then (`leavePending`), the leaving decision comes once it ends, before the plan |
 | Dwell | each dwell tick in the template phase, before `TemplateTick` (a beat takes the template's turn) |
 | React | `AmbienceFrame`, react beats only, the frame a react input changes (below) |
@@ -215,7 +221,8 @@ have 20 to 40 lines to spare. The rules:
   react row whose cooldown runs out at the coming tick also forces a check.
   At most one walker checks per frame; another's check waits for its next
   turn. A check also needs 12 lines left before the frame's end margin; it
-  waits up to 8 samples (32 frames) for such a frame.
+  waits up to 8 samples (64 frames: a walker samples every 8 frames) for
+  such a frame.
 - The busy frames (`IsBusyFrame`: spawns at the spawn period's first frame,
   story scenes and culls at its third, the follower rule at its fifth, so no
   frame carries two of them; the engine's periodic time-of-day update and the
@@ -225,6 +232,18 @@ have 20 to 40 lines to spare. The rules:
   included: keeping each walker frame small leaves room for them.
 - An idle walker's frame is just a tick count unless it is its react
   sample frame or its ambience tick.
+- A dwell tick that reaches a decision point (its decision and template move
+  take 6 to 12 lines) skips the busy frames; it comes a frame or two later.
+- The walkers' own busy work (a spawn attempt, the story scene check with
+  the slot cull, the follower rule: 10 to 15 lines) waits a spawn period when
+  the frame has fewer than 16 lines left, at most 3 periods in a row
+  (`BusyWorkWaits`, while the ambience block exists). Some frames reach the
+  walkers 40 lines late (the engine's own work before them), and such a
+  frame plus a busy frame's work overruns, the more so with a beat's sprites
+  on screen.
+- A running beat sits out a frame with no lines left (`FrameLinesLeft` 0, a
+  late frame), at most 4 in a row: its movement under way goes on, its next
+  step waits.
 - A decision where an idle beat can win (`Ambience_IdleCanWin`: the whole
   pool, maybe `companion_room`) is the costly kind: it waits for a frame with
   at least 24 lines left before a 64-line end margin (the rest of the field
@@ -233,9 +252,10 @@ have 20 to 40 lines to spare. The rules:
   or the step simply comes a few frames later). The other decisions are
   cheap and never wait. `companion_room` itself is only worked out when a
   companion beat could win (its cooldown over, its when, who and limits
-  holding), its tiles only as far as a candidate needs them, and the follower
-  rule's spawn-candidate count is reused from the last count less than a
-  spawn period old.
+  holding, and at an arrival or a leaving no transition or react row holding
+  off cooldown: that row would win), its tiles only as far as a candidate
+  needs them, and the follower rule's spawn-candidate count is reused from
+  the last count less than a spawn period old.
 - Costly beat starts take a claimed frame too: icons (30 lines), field effects
   (24), `companion in` (20) and the companion's spawn (30: the room check and
   the spawn, about 20), each waiting up to 30 frames (the spawn 120: in its
@@ -311,7 +331,10 @@ companion has a 32×32 sprite).
 `companion out` takes two frames: the planned species' sprite sheet is
 decompressed first, alone, then the room is checked again and the object
 spawns on the chosen tile facing the walker; without room the beat ends
-there, cleanly. A preloaded sheet nothing used is freed.
+there, cleanly. The spawn takes the prepared species while it still fits;
+when only another candidate fits now and its sheet isn't in VRAM, that one
+gets a prepare frame of its own first (once; a second change ends the beat),
+so the spawn frame never decompresses. A preloaded sheet nothing used is freed.
 
 The decompression is the one place a beat may cost a lag frame (a spec
 deviation the user accepted). It is the engine's smol decompression of the
@@ -334,9 +357,13 @@ jumps it in place (each waits for its movement), and `face companion` turns
 the walker to it. It is removed (`RemoveObjectEvent`) by `companion in`, at
 its beat's end and on any interruption.
 
-It is the lowest-priority object. `CompanionFrame` runs every walker frame,
-controls locked or not: it removes any object with id `0xF9` that isn't the
-live companion (a save captured it, a reset left it), and puts the live one
+It is the lowest-priority object. `CompanionFrame` runs every walker frame
+while a companion is out or reserved, controls locked or not (with none out
+it returns at once: a save, a warp and a heap reset already switch any `0xF9`
+object off, and the walkers' update must stay small; an object scan every
+frame was enough to tip the heartbeat frame after a seam crossing into a lag
+frame): it removes any object with id `0xF9` that isn't the live companion,
+and puts the live one
 away at once, interrupting its beat, when its object vanished (culled out of
 view, a script) or fewer than `SPAWN_FREE_SLOTS` slots are free (a map object
 or a walker needs one). `UpdateFollower` (every 8 frames, when the follower
@@ -358,11 +385,12 @@ removed and sheets decompressed (`companionPrepares`: the frames the `lag`
 scenario allows).
 
 **State and RAM.** All beat state is one heap block (`struct WalkerAmbience`,
-680 bytes: a debug block, then per actor the selection state, the runner
+688 bytes: a debug block, then per actor the selection state, the runner
 state, the tick and adjacency counters, then the companion's owner, object,
 graphics, preloaded sheet and per-actor plan, then the frame-cost state:
-`needFacts`, the react keys, the follower rule's cached candidate count and
-the decision waits), allocated while walkers exist (a failed allocation
+`needFacts`, the react keys, the follower rule's cached candidate count, the
+decision waits, the step-decision bits, the late-frame and busy-work
+deferral counts), allocated while walkers exist (a failed allocation
 retries next frame; beats just don't run) and held by the EWRAM pointer
 `sAmbience`. It costs no EWRAM: the actors' bools became bitfields and the
 template emote byte went, which pays for the pointer and the latches byte
@@ -395,8 +423,13 @@ left a tile off its spot walks back. Under the field-controls lock the stop
 issues no held movement (`ObjectEventSetHeldMovement` would unfreeze the
 walker under the script or menu): a face or icon action of the beat is
 cleared and the facing set with a plain `ObjectEventTurn`; a walk or jump
-under way turns back once the lock is gone. A nurse bowing for the beat is
-left to the script and released when the lock is gone (or at a heap reset).
+under way turns back once the lock is gone. The runner only ever clears a
+held movement it issued itself (it remembers the action), never the walker's
+own walk or a template turn. A keep-walking beat (hum) never restores the
+facing: the walker's walk goes on and turns it. A nurse bowing for the beat
+is left to the script and released in the first unlocked frame (whatever
+became of the beat's walker: every run's pending release is checked, and a
+run is never reset with one pending), or at a heap reset.
 
 The yield rule's trigger is pressing into the walker (adjacent, facing it,
 direction held), not just standing there facing it.
@@ -429,10 +462,19 @@ the Start menu and the Bag (a heap reset) mid-`water_bite`, a tile off his
 spot: no 0xF9 object, he is back on (13, 39) facing north and beats start
 again in the new block; a map object given his sprite in RAM, standing in
 for a story object, stops his next beat within a spawn period and he walks
-off) and `determinism` (two runs from boot give the same beat log on the
-same frames; the second run starts 60 frames later and has another RNG
-state from the script's start, so a beat that read the RNG would come out
-differently). Pace is gated on tile changes read from the walker's object
+off) and `determinism` (two runs from boot, the second starting 60 frames
+later, give the same beat log on the same frames; a third run with another
+RNG state from the script's start gives the same beats in the same order, so
+a beat that read the RNG would come out differently there. Its frames may
+differ: the RNG drives the map's wandering NPCs, whose cost moves the
+frames' spare lines, and beat starts wait for room. The time of day is
+pinned to noon after the warp (`sHoursOverride`): the RTC is the session's
+wall clock, and at dawn or dusk the palette re-blend, which can lag a frame,
+would otherwise come on different frames in each session), and `humwalk`
+(Misty's selection state is held in RAM so `hum` wins at her next step; the
+frame after it starts, mid-step, the field controls lock for 40 frames: hum
+is interrupted, her step still lands, and at the pond her sprite sits
+exactly on her tile). Pace is gated on tile changes read from the walker's object
 (a read caught partway through a lag frame is dropped): `spot` (the walk to
 the pond after the Bag: 30 to 36 frames a tile, the median of the steps,
 none faster; it measures 31) and `walkoff` (14 to 20; it measures 16).
@@ -457,19 +499,30 @@ Blue, Brock and Misty greeting, Blue's `ace_play` beside a following
 Pikachu), each against a baseline in the same place with the same input and
 the same walkers but no beats (the verifier holds every beat's cooldown up
 in the ambience block each frame: the selection runs, nothing fires), and
-for the record a run with every trainer parked in the Mart. A lag frame is
-an emulated frame in which the walkers' frame counter didn't move with the
-controls free and no map loading; each one is listed with the beat events
-within 3 frames and the walker update of the frame that overran. It passes
-when the lag frames other than a companion sheet's decompression (within 3
-frames of a `companionPrepares` increment), its knock-on (one idle frame
-later in the scene, see "Frame cost") and frames with no beat near them (no
-beat running in the 4 frames before, no beat event, icon or effect in the
-120 frames before or the 3 after: the beat layer only counted ticks) are no
-more than the baseline's. The baseline runs later in the same emulator
-session, so engine work driven by emulated time (the time-of-day re-blend)
-lines up differently there; frames like these can lag in either run. The
-walkers' own presence can lag a busy map frame now and then (a spawn or
+for the record a run with every trainer parked in the Mart. Each run is
+metered from the warp: the walkers' spawns and arrivals are inside it, the
+baseline's hold is on from the warp's first frame (it must start no beat at
+all), and in the greet scene Misty comes out of the Center door and walks to
+the pond beside Brock, so their greeting starts inside the window. Every run
+starts its meter from the same frame phases: the engine's time-of-day update
+(every 180 field frames: an RTC read and maybe a palette re-blend) and the
+walkers' spawn period line up as the session's history left them, and a time
+update landing on a walker busy frame can lag, so both counters are written
+to fixed values then, and the time of day is pinned to noon. A lag
+frame is an emulated frame in which the walkers' frame counter didn't move
+with the controls free and no map loading; each one is listed with the beat
+events, icons, effects and `companion_room` denials within 3 frames and the
+walker update of the frame that overran. A companion sheet's decompression
+(within 3 frames of a `companionPrepares` increment) and its knock-on (one
+idle frame later in the scene, see "Frame cost") are allowed. The rest are
+listed as "no beat" (no beat running in the 4 frames before, no beat event,
+icon, effect or denial in the 120 frames before or the 3 after, and a walker
+update of at most 8 lines in the frame that overran: a decision that started
+nothing leaves no event, but it costs lines) or "other"; it passes when
+these two together are no more than the baseline's two together. Even
+aligned, the runs drift apart after a prepare lag (the player's input is in
+emulated frames, one of which the field then skipped), which is what the
+knock-on allowance is for. The walkers' own presence can lag a busy map frame now and then (a spawn or
 follower-rule frame); the baseline counts those too. A manual comparison
 with a ROM built with `EnsureAmbience` returning `FALSE` (the beats
 compiled out) gave the same lag frames in every scene but the companion

@@ -110,7 +110,7 @@
         "index": 0,
         "slot": 8,
         "mode": 3,
-        "phase": 2,
+        "phase": 3,
         "goalKind": 2,
         "objectId": 2,
         "template": 1,
@@ -185,79 +185,79 @@
   ],
   "timed_track": [
     [
-      617,
+      624,
       [
         11,
         39
       ]
     ],
     [
-      702,
+      868,
       [
         12,
         39
       ]
     ],
     [
-      718,
+      884,
       [
         13,
         39
       ]
     ],
     [
-      734,
+      900,
       [
         14,
         39
       ]
     ],
     [
-      750,
+      916,
       [
         15,
         39
       ]
     ],
     [
-      766,
+      932,
       [
         16,
         39
       ]
     ],
     [
-      782,
+      948,
       [
         17,
         39
       ]
     ],
     [
-      798,
+      964,
       [
         18,
         39
       ]
     ],
     [
-      814,
+      980,
       [
         19,
         39
       ]
     ],
     [
-      830,
+      996,
       [
         20,
         39
       ]
     ]
   ],
-  "gone_after_frames": 276,
+  "gone_after_frames": 390,
   "step_frames": [
-    85,
+    244,
     16,
     16,
     16,
@@ -268,29 +268,7 @@
     16
   ],
   "pace_normal": true,
-  "torn_reads": [
-    [
-      661,
-      [
-        23,
-        16
-      ]
-    ],
-    [
-      667,
-      [
-        28,
-        20
-      ]
-    ],
-    [
-      687,
-      [
-        8,
-        26
-      ]
-    ]
-  ],
+  "torn_reads": [],
   "delta": {
     "backOffs": 3,
     "handoffs": 1,
@@ -330,7 +308,7 @@
     ".product/research/ambience/walkoff-leaving.png"
   ],
   "debug": {
-    "frames": 847,
+    "frames": 1013,
     "spawns": 1,
     "removals": 1,
     "edgeExits": 0,
@@ -351,16 +329,16 @@
     "restores": 0,
     "lastSearchNodes": 793,
     "maxSearchNodes": 793,
-    "lastSearchFrames": 180,
-    "maxSearchFrames": 180,
-    "maxSliceScanlines": 133,
+    "lastSearchFrames": 296,
+    "maxSearchFrames": 296,
+    "maxSliceScanlines": 57,
     "maxSliceNodes": 7,
     "workspaceBytes": 11308,
     "currentMap": 32,
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33633992,
+    "worldState": 33634000,
     "actors": [
       {
         "index": 0,
@@ -430,7 +408,7 @@
     "lastHeartbeatScanlines": 26,
     "maxHeartbeatScanlines": 26,
     "maxSpawnScanlines": 23,
-    "maxUpdateScanlines": 141,
+    "maxUpdateScanlines": 61,
     "backOffs": 3,
     "handoffs": 1,
     "visitorsVanished": 0,
@@ -445,5 +423,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 1186
+  "emulated_frames": 1300
 }

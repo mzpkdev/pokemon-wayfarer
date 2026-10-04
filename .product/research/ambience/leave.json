@@ -1,7 +1,7 @@
 {
   "events": [
     {
-      "frame": 104,
+      "frame": 105,
       "actor": 0,
       "slot": 10,
       "beat": 5,
@@ -9,7 +9,7 @@
       "event": "start"
     },
     {
-      "frame": 170,
+      "frame": 171,
       "actor": 0,
       "slot": 10,
       "beat": 5,
@@ -17,7 +17,7 @@
       "event": "end"
     },
     {
-      "frame": 704,
+      "frame": 706,
       "actor": 0,
       "slot": 10,
       "beat": 6,
@@ -25,7 +25,7 @@
       "event": "start"
     },
     {
-      "frame": 751,
+      "frame": 766,
       "actor": 0,
       "slot": 10,
       "beat": 6,
@@ -33,9 +33,9 @@
       "event": "end"
     }
   ],
-  "stay_end_frame": 704,
+  "stay_end_frame": 706,
   "leave_turn": {
-    "frame": 704,
+    "frame": 706,
     "actor": 0,
     "slot": 10,
     "beat": 6,
@@ -43,14 +43,14 @@
     "event": "start"
   },
   "last_end_before": {
-    "frame": 170,
+    "frame": 171,
     "actor": 0,
     "slot": 10,
     "beat": 5,
     "name": "arrive_look",
     "event": "end"
   },
-  "frames_since_last_beat": 534,
+  "frames_since_last_beat": 535,
   "gap_ticks_at_leave": 36,
   "stoic_min_gap_ticks": 48,
   "leave_delay": 0,
@@ -77,7 +77,7 @@
     ".product/research/ambience/leave-turn.png"
   ],
   "debug": {
-    "frames": 802,
+    "frames": 805,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -107,7 +107,7 @@
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634060,
+    "worldState": 33634044,
     "actors": [
       {
         "index": 0,
@@ -176,8 +176,8 @@
     ],
     "lastHeartbeatScanlines": 26,
     "maxHeartbeatScanlines": 26,
-    "maxSpawnScanlines": 23,
-    "maxUpdateScanlines": 60,
+    "maxSpawnScanlines": 22,
+    "maxUpdateScanlines": 59,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
@@ -187,10 +187,10 @@
     "maxFinishScanlines": 0,
     "walkOffs": 0,
     "worldJobs": 2,
-    "maxJobScanlines": 54,
+    "maxJobScanlines": 55,
     "capacityWaits": 0,
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 1090
+  "emulated_frames": 1091
 }

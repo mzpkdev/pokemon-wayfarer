@@ -35,7 +35,7 @@
       "event": "end"
     },
     {
-      "frame": 189,
+      "frame": 191,
       "actor": 1,
       "slot": 1,
       "beat": 11,
@@ -43,7 +43,7 @@
       "event": "end"
     },
     {
-      "frame": 505,
+      "frame": 506,
       "actor": 1,
       "slot": 1,
       "beat": 27,
@@ -51,7 +51,7 @@
       "event": "start"
     },
     {
-      "frame": 577,
+      "frame": 578,
       "actor": 0,
       "slot": 0,
       "beat": 33,
@@ -59,7 +59,7 @@
       "event": "start"
     },
     {
-      "frame": 582,
+      "frame": 584,
       "actor": 1,
       "slot": 1,
       "beat": 27,
@@ -67,7 +67,7 @@
       "event": "end"
     },
     {
-      "frame": 921,
+      "frame": 1023,
       "actor": 0,
       "slot": 0,
       "beat": 33,
@@ -75,7 +75,7 @@
       "event": "end"
     },
     {
-      "frame": 1048,
+      "frame": 1049,
       "actor": 1,
       "slot": 1,
       "beat": 16,
@@ -83,7 +83,7 @@
       "event": "start"
     },
     {
-      "frame": 1307,
+      "frame": 1349,
       "actor": 1,
       "slot": 1,
       "beat": 16,
@@ -91,35 +91,27 @@
       "event": "end"
     },
     {
-      "frame": 1402,
+      "frame": 1494,
       "actor": 0,
       "slot": 0,
       "beat": 28,
       "name": "study_ground",
       "event": "start"
-    },
-    {
-      "frame": 1554,
-      "actor": 0,
-      "slot": 0,
-      "beat": 28,
-      "name": "study_ground",
-      "event": "end"
     }
   ],
   "counters": {
     "started_idle": 4,
     "started_transition": 0,
     "started_react": 2,
-    "ended": 6,
+    "ended": 5,
     "interrupted": 0,
-    "icons": 8,
+    "icons": 7,
     "effects": 3,
     "palette_skips": 0,
     "icon_skips": 1,
     "step_skips": 0,
     "running": [
-      255,
+      28,
       255,
       255,
       255
@@ -199,7 +191,7 @@
     "searchFails": 0,
     "localDwellBeats": 4,
     "localAdvances": 0,
-    "emotes": 8,
+    "emotes": 7,
     "templateMoves": 0,
     "floorChanges": 0,
     "heapResets": 5,
@@ -215,7 +207,7 @@
     "followerHidden": 0,
     "activeActors": 2,
     "storySuppressed": 0,
-    "worldState": 33634012,
+    "worldState": 33633992,
     "actors": [
       {
         "index": 0,
@@ -282,10 +274,10 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 25,
-    "maxHeartbeatScanlines": 25,
+    "lastHeartbeatScanlines": 26,
+    "maxHeartbeatScanlines": 26,
     "maxSpawnScanlines": 44,
-    "maxUpdateScanlines": 147,
+    "maxUpdateScanlines": 174,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
@@ -300,5 +292,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 1884
+  "emulated_frames": 1882
 }

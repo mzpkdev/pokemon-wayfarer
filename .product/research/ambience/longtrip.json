@@ -17,11 +17,11 @@
     "hex": "a8d0480300e00600"
   },
   "dest_is_ruins": true,
-  "frames_advance_to_plan": 60,
+  "frames_advance_to_plan": 90,
   "world_jobs": 2,
   "handoffs": 1,
-  "max_job_scanlines": 34,
-  "max_walker_update_scanlines": 127,
+  "max_job_scanlines": 28,
+  "max_walker_update_scanlines": 40,
   "ceilings": {
     "frame_scanlines": 200
   },
@@ -29,7 +29,7 @@
     ".product/research/ambience/longtrip-after.png"
   ],
   "debug": {
-    "frames": 1037,
+    "frames": 1090,
     "spawns": 1,
     "removals": 1,
     "edgeExits": 0,
@@ -50,16 +50,16 @@
     "restores": 0,
     "lastSearchNodes": 17,
     "maxSearchNodes": 17,
-    "lastSearchFrames": 7,
-    "maxSearchFrames": 7,
-    "maxSliceScanlines": 55,
-    "maxSliceNodes": 6,
+    "lastSearchFrames": 11,
+    "maxSearchFrames": 11,
+    "maxSliceScanlines": 22,
+    "maxSliceNodes": 2,
     "workspaceBytes": 11308,
     "currentMap": 64,
     "followerHidden": 0,
     "activeActors": 0,
     "storySuppressed": 0,
-    "worldState": 33634080,
+    "worldState": 33634088,
     "actors": [
       {
         "index": 0,
@@ -128,8 +128,8 @@
     ],
     "lastHeartbeatScanlines": 24,
     "maxHeartbeatScanlines": 24,
-    "maxSpawnScanlines": 69,
-    "maxUpdateScanlines": 127,
+    "maxSpawnScanlines": 25,
+    "maxUpdateScanlines": 40,
     "backOffs": 0,
     "handoffs": 1,
     "visitorsVanished": 0,
@@ -139,10 +139,10 @@
     "maxFinishScanlines": 1,
     "walkOffs": 1,
     "worldJobs": 2,
-    "maxJobScanlines": 34,
+    "maxJobScanlines": 28,
     "capacityWaits": 0,
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 1326
+  "emulated_frames": 1372
 }

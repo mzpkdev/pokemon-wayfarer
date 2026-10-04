@@ -22,7 +22,7 @@
     }
   },
   "debug": {
-    "frames": 2602,
+    "frames": 2606,
     "spawns": 2,
     "removals": 0,
     "edgeExits": 0,
@@ -32,7 +32,7 @@
     "stripEntries": 0,
     "replans": 0,
     "blockedSteps": 0,
-    "searches": 3,
+    "searches": 2,
     "searchFails": 0,
     "localDwellBeats": 0,
     "localAdvances": 0,
@@ -43,16 +43,16 @@
     "restores": 0,
     "lastSearchNodes": 345,
     "maxSearchNodes": 345,
-    "lastSearchFrames": 65,
-    "maxSearchFrames": 65,
-    "maxSliceScanlines": 64,
-    "maxSliceNodes": 7,
+    "lastSearchFrames": 89,
+    "maxSearchFrames": 89,
+    "maxSliceScanlines": 58,
+    "maxSliceNodes": 6,
     "workspaceBytes": 11308,
     "currentMap": 7704,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634012,
+    "worldState": 33634028,
     "actors": [
       {
         "index": 0,
@@ -119,15 +119,15 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 24,
-    "maxHeartbeatScanlines": 25,
-    "maxSpawnScanlines": 19,
-    "maxUpdateScanlines": 72,
+    "lastHeartbeatScanlines": 26,
+    "maxHeartbeatScanlines": 26,
+    "maxSpawnScanlines": 18,
+    "maxUpdateScanlines": 62,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
-    "lastContextScanlines": 15,
+    "lastContextScanlines": 16,
     "lastFailNodes": 0,
     "maxFinishScanlines": 8,
     "walkOffs": 0,
@@ -140,5 +140,5 @@
     ".product/research/ambience/safari-top-mid.png"
   ],
   "pass": true,
-  "emulated_frames": 2950
+  "emulated_frames": 2940
 }

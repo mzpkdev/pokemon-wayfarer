@@ -322,9 +322,11 @@ def parse_step(text):
         return Step("look_back", text=text)
     if head == "wait":
         need(1)
-        if not args[0].isdigit() or not 1 <= int(args[0]) <= PARAM_MAX:
+        # ASCII digits, no leading zero (str.isdigit takes other scripts'
+        # digits, and the argument is emitted into C as written).
+        if not re.fullmatch(r"[1-9][0-9]*", args[0]) or not 1 <= int(args[0]) <= PARAM_MAX:
             raise BuildError("step %r: wait takes 1 to %d ticks" % (text, PARAM_MAX))
-        return Step("wait", int(args[0]), args[0], text)
+        return Step("wait", int(args[0]), str(int(args[0])), text)
     if head == "step":
         need(1)
         if args[0] not in STEPS:
@@ -578,6 +580,9 @@ def parse_beat(row):
                 if not out:
                     raise BuildError("step %r while no companion is out" % s.text)
         terms = b.all | b.any
+        if "companion_out" in ops and (b.cls != "idle" or "companion_room" not in b.all):
+            raise BuildError("a beat with companion out must be idle and have companion_room in its when "
+                             "list (not inside an any): the room is only worked out for such a beat")
         if "companion_room" in terms and b.cls != "idle":
             raise BuildError("companion_room only in an idle beat (the walker works it out only "
                              "where an idle beat can win)")

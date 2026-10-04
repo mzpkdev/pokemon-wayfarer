@@ -170,7 +170,7 @@
     ".product/research/ambience/midstep-after-continue.png"
   ],
   "debug": {
-    "frames": 835,
+    "frames": 922,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -191,16 +191,16 @@
     "restores": 1,
     "lastSearchNodes": 375,
     "maxSearchNodes": 375,
-    "lastSearchFrames": 75,
-    "maxSearchFrames": 75,
-    "maxSliceScanlines": 62,
+    "lastSearchFrames": 115,
+    "maxSearchFrames": 115,
+    "maxSliceScanlines": 61,
     "maxSliceNodes": 7,
     "workspaceBytes": 11308,
     "currentMap": 32,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634016,
+    "worldState": 33634000,
     "actors": [
       {
         "index": 0,
@@ -269,15 +269,15 @@
     ],
     "lastHeartbeatScanlines": 0,
     "maxHeartbeatScanlines": 0,
-    "maxSpawnScanlines": 20,
-    "maxUpdateScanlines": 71,
+    "maxSpawnScanlines": 19,
+    "maxUpdateScanlines": 65,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
     "culls": 0,
     "lastContextScanlines": 0,
     "lastFailNodes": 0,
-    "maxFinishScanlines": 4,
+    "maxFinishScanlines": 5,
     "walkOffs": 0,
     "worldJobs": 0,
     "maxJobScanlines": 0,
@@ -285,5 +285,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 2398
+  "emulated_frames": 2597
 }

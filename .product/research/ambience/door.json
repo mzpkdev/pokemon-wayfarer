@@ -55,7 +55,7 @@
     ".product/research/ambience/door-inside-at-counter.png"
   ],
   "debug": {
-    "frames": 587,
+    "frames": 679,
     "spawns": 2,
     "removals": 1,
     "edgeExits": 0,
@@ -76,16 +76,16 @@
     "restores": 0,
     "lastSearchNodes": 20,
     "maxSearchNodes": 20,
-    "lastSearchFrames": 9,
-    "maxSearchFrames": 9,
-    "maxSliceScanlines": 118,
-    "maxSliceNodes": 5,
+    "lastSearchFrames": 22,
+    "maxSearchFrames": 22,
+    "maxSliceScanlines": 19,
+    "maxSliceNodes": 2,
     "workspaceBytes": 11308,
     "currentMap": 3072,
     "followerHidden": 0,
     "activeActors": 1,
     "storySuppressed": 0,
-    "worldState": 33634088,
+    "worldState": 33634076,
     "actors": [
       {
         "index": 0,
@@ -152,10 +152,10 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 160,
-    "maxHeartbeatScanlines": 160,
+    "lastHeartbeatScanlines": 159,
+    "maxHeartbeatScanlines": 159,
     "maxSpawnScanlines": 25,
-    "maxUpdateScanlines": 129,
+    "maxUpdateScanlines": 27,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
@@ -165,10 +165,10 @@
     "maxFinishScanlines": 1,
     "walkOffs": 0,
     "worldJobs": 1,
-    "maxJobScanlines": 11,
+    "maxJobScanlines": 12,
     "capacityWaits": 0,
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 898
+  "emulated_frames": 990
 }

@@ -11,31 +11,26 @@
         "locked_frames": 0,
         "lag_frames": [
           {
-            "frame": 4,
+            "frame": 5,
             "kind": "other",
             "update_scanlines": 5,
-            "near": [
-              [
-                -3,
-                "start arrive_look"
-              ]
-            ],
+            "near": [],
             "running": [
               "arrive_look"
             ],
             "updates_before": [
               null,
               null,
-              null,
               12,
-              5,
+              9,
+              9,
               5
             ],
-            "frames_since_beat_event": 3,
-            "phase": 6
+            "frames_since_beat_event": 4,
+            "phase": 3
           },
           {
-            "frame": 1764,
+            "frame": 3438,
             "kind": "prepare",
             "update_scanlines": 0,
             "near": [
@@ -48,58 +43,60 @@
               "ace_play"
             ],
             "updates_before": [
-              11,
+              5,
               6,
-              9,
+              14,
+              7,
               6,
-              12,
               0
             ],
             "frames_since_beat_event": 1,
-            "phase": 5
+            "phase": 3
           }
         ],
-        "prepares": 1,
-        "max_update_scanlines": 155,
-        "max_update_scanlines_without_prepares": 32
+        "prepares": 2,
+        "beats_started": 6,
+        "beats": [
+          "ace_play",
+          "arrive_look",
+          "swagger",
+          "water_bite"
+        ],
+        "max_update_scanlines": 123,
+        "max_update_scanlines_without_prepares": 33
       },
       "baseline": {
         "frames": 3600,
         "lag": 1,
         "prepare": 0,
         "knock_on": 0,
-        "no_beat": 0,
-        "other": 1,
+        "no_beat": 1,
+        "other": 0,
         "locked_frames": 0,
         "lag_frames": [
           {
-            "frame": 4,
-            "kind": "other",
-            "update_scanlines": 5,
-            "near": [
-              [
-                -3,
-                "start arrive_look"
-              ]
-            ],
-            "running": [
-              "arrive_look"
-            ],
+            "frame": 5,
+            "kind": "no beat",
+            "update_scanlines": 4,
+            "near": [],
+            "running": [],
             "updates_before": [
               null,
               null,
-              null,
-              13,
-              5,
-              5
+              10,
+              11,
+              8,
+              4
             ],
-            "frames_since_beat_event": 3,
-            "phase": 6
+            "frames_since_beat_event": null,
+            "phase": 3
           }
         ],
         "prepares": 0,
-        "max_update_scanlines": 17,
-        "max_update_scanlines_without_prepares": 17
+        "beats_started": 0,
+        "beats": [],
+        "max_update_scanlines": 18,
+        "max_update_scanlines_without_prepares": 18
       },
       "no_walkers": {
         "frames": 3600,
@@ -111,7 +108,7 @@
         "locked_frames": 0,
         "lag_frames": [
           {
-            "frame": 4,
+            "frame": 5,
             "kind": "other",
             "update_scanlines": 2,
             "near": [],
@@ -119,19 +116,23 @@
             "updates_before": [
               null,
               null,
-              null,
               9,
               2,
+              3,
               2
             ],
             "frames_since_beat_event": null,
-            "phase": 6
+            "phase": 3
           }
         ],
         "prepares": 0,
+        "beats_started": 0,
+        "beats": [],
         "max_update_scanlines": 10,
         "max_update_scanlines_without_prepares": 10
       },
+      "unexplained": 1,
+      "baseline_unexplained": 1,
       "pass": true
     },
     "notice": {
@@ -145,105 +146,102 @@
         "locked_frames": 0,
         "lag_frames": [
           {
-            "frame": 4,
+            "frame": 5,
             "kind": "other",
             "update_scanlines": 5,
-            "near": [
-              [
-                -3,
-                "start arrive_look"
-              ]
-            ],
+            "near": [],
             "running": [
               "arrive_look"
             ],
             "updates_before": [
               null,
               null,
-              null,
-              12,
-              5,
+              11,
+              9,
+              9,
               5
             ],
-            "frames_since_beat_event": 3,
-            "phase": 6
+            "frames_since_beat_event": 4,
+            "phase": 3
           },
           {
             "frame": 1900,
             "kind": "no beat",
-            "update_scanlines": 4,
+            "update_scanlines": 6,
             "near": [],
             "running": [],
             "updates_before": [
               11,
-              5,
-              8,
-              12,
-              11,
-              4
+              4,
+              4,
+              13,
+              4,
+              6
             ],
-            "frames_since_beat_event": 319,
-            "phase": 5
+            "frames_since_beat_event": 283,
+            "phase": 1
           }
         ],
         "prepares": 1,
+        "beats_started": 5,
+        "beats": [
+          "ace_play",
+          "arrive_look",
+          "notice_player",
+          "swagger"
+        ],
         "max_update_scanlines": 77,
-        "max_update_scanlines_without_prepares": 30
+        "max_update_scanlines_without_prepares": 36
       },
       "baseline": {
         "frames": 2299,
         "lag": 2,
         "prepare": 0,
         "knock_on": 0,
-        "no_beat": 1,
-        "other": 1,
+        "no_beat": 2,
+        "other": 0,
         "locked_frames": 0,
         "lag_frames": [
           {
-            "frame": 4,
-            "kind": "other",
-            "update_scanlines": 5,
-            "near": [
-              [
-                -3,
-                "start arrive_look"
-              ]
-            ],
-            "running": [
-              "arrive_look"
-            ],
-            "updates_before": [
-              null,
-              null,
-              null,
-              12,
-              5,
-              5
-            ],
-            "frames_since_beat_event": 3,
-            "phase": 6
-          },
-          {
-            "frame": 1900,
+            "frame": 5,
             "kind": "no beat",
             "update_scanlines": 4,
             "near": [],
             "running": [],
             "updates_before": [
+              null,
+              null,
+              10,
               11,
-              5,
-              15,
-              4,
-              11,
+              8,
               4
             ],
-            "frames_since_beat_event": 1834,
-            "phase": 5
+            "frames_since_beat_event": null,
+            "phase": 3
+          },
+          {
+            "frame": 1900,
+            "kind": "no beat",
+            "update_scanlines": 6,
+            "near": [],
+            "running": [],
+            "updates_before": [
+              11,
+              4,
+              4,
+              4,
+              4,
+              6
+            ],
+            "frames_since_beat_event": null,
+            "phase": 1
           }
         ],
         "prepares": 0,
-        "max_update_scanlines": 16,
-        "max_update_scanlines_without_prepares": 16
+        "beats_started": 0,
+        "beats": [],
+        "max_update_scanlines": 18,
+        "max_update_scanlines_without_prepares": 18
       },
       "no_walkers": {
         "frames": 2299,
@@ -255,7 +253,7 @@
         "locked_frames": 0,
         "lag_frames": [
           {
-            "frame": 4,
+            "frame": 5,
             "kind": "other",
             "update_scanlines": 2,
             "near": [],
@@ -263,26 +261,30 @@
             "updates_before": [
               null,
               null,
-              null,
-              10,
+              9,
               2,
+              3,
               2
             ],
             "frames_since_beat_event": null,
-            "phase": 6
+            "phase": 3
           }
         ],
         "prepares": 0,
+        "beats_started": 0,
+        "beats": [],
         "max_update_scanlines": 10,
         "max_update_scanlines_without_prepares": 10
       },
+      "unexplained": 2,
+      "baseline_unexplained": 2,
       "pass": true
     },
     "greet": {
       "beats": {
         "frames": 2400,
-        "lag": 2,
-        "prepare": 0,
+        "lag": 3,
+        "prepare": 1,
         "knock_on": 0,
         "no_beat": 0,
         "other": 2,
@@ -291,181 +293,43 @@
           {
             "frame": 5,
             "kind": "other",
-            "update_scanlines": 11,
+            "update_scanlines": 52,
             "near": [],
             "running": [
-              "greet_friend",
-              "greet_friend"
+              "arrive_look"
             ],
             "updates_before": [
               null,
               null,
-              13,
-              14,
-              10,
-              11
+              32,
+              45,
+              49,
+              52
             ],
             "frames_since_beat_event": 4,
-            "phase": 6
+            "phase": 3
           },
           {
-            "frame": 7,
+            "frame": 92,
             "kind": "other",
-            "update_scanlines": 9,
+            "update_scanlines": 54,
             "near": [],
             "running": [
-              "greet_friend",
-              "greet_friend"
+              "arrive_look"
             ],
             "updates_before": [
-              13,
-              14,
-              10,
-              11,
-              11,
-              9
+              30,
+              29,
+              33,
+              40,
+              56,
+              54
             ],
-            "frames_since_beat_event": 6,
-            "phase": 7
-          }
-        ],
-        "prepares": 0,
-        "max_update_scanlines": 34,
-        "max_update_scanlines_without_prepares": 34
-      },
-      "baseline": {
-        "frames": 2400,
-        "lag": 3,
-        "prepare": 0,
-        "knock_on": 0,
-        "no_beat": 1,
-        "other": 2,
-        "locked_frames": 0,
-        "lag_frames": [
-          {
-            "frame": 5,
-            "kind": "other",
-            "update_scanlines": 11,
-            "near": [],
-            "running": [
-              "greet_friend",
-              "greet_friend"
-            ],
-            "updates_before": [
-              null,
-              null,
-              11,
-              14,
-              11,
-              11
-            ],
-            "frames_since_beat_event": 4,
-            "phase": 6
+            "frames_since_beat_event": 91,
+            "phase": 1
           },
           {
-            "frame": 7,
-            "kind": "other",
-            "update_scanlines": 10,
-            "near": [],
-            "running": [
-              "greet_friend",
-              "greet_friend"
-            ],
-            "updates_before": [
-              11,
-              14,
-              11,
-              11,
-              11,
-              10
-            ],
-            "frames_since_beat_event": 6,
-            "phase": 7
-          },
-          {
-            "frame": 2259,
-            "kind": "no beat",
-            "update_scanlines": 13,
-            "near": [],
-            "running": [],
-            "updates_before": [
-              6,
-              5,
-              5,
-              12,
-              7,
-              13
-            ],
-            "frames_since_beat_event": 2097,
-            "phase": 2
-          }
-        ],
-        "prepares": 0,
-        "max_update_scanlines": 25,
-        "max_update_scanlines_without_prepares": 25
-      },
-      "no_walkers": {
-        "frames": 2400,
-        "lag": 2,
-        "prepare": 0,
-        "knock_on": 0,
-        "no_beat": 0,
-        "other": 2,
-        "locked_frames": 0,
-        "lag_frames": [
-          {
-            "frame": 5,
-            "kind": "other",
-            "update_scanlines": 2,
-            "near": [],
-            "running": [],
-            "updates_before": [
-              null,
-              null,
-              2,
-              10,
-              2,
-              2
-            ],
-            "frames_since_beat_event": null,
-            "phase": 6
-          },
-          {
-            "frame": 7,
-            "kind": "other",
-            "update_scanlines": 3,
-            "near": [],
-            "running": [],
-            "updates_before": [
-              2,
-              10,
-              2,
-              2,
-              2,
-              3
-            ],
-            "frames_since_beat_event": null,
-            "phase": 7
-          }
-        ],
-        "prepares": 0,
-        "max_update_scanlines": 10,
-        "max_update_scanlines_without_prepares": 10
-      },
-      "pass": true
-    },
-    "companion": {
-      "beats": {
-        "frames": 6000,
-        "lag": 3,
-        "prepare": 3,
-        "knock_on": 0,
-        "no_beat": 0,
-        "other": 0,
-        "locked_frames": 0,
-        "lag_frames": [
-          {
-            "frame": 1755,
+            "frame": 1577,
             "kind": "prepare",
             "update_scanlines": 0,
             "near": [
@@ -478,102 +342,297 @@
               "ace_play"
             ],
             "updates_before": [
-              11,
+              13,
               7,
-              10,
-              5,
-              12,
+              14,
+              7,
+              18,
               0
-            ],
-            "frames_since_beat_event": 1,
-            "phase": 5
-          },
-          {
-            "frame": 3306,
-            "kind": "prepare",
-            "update_scanlines": 81,
-            "near": [
-              [
-                -1,
-                "prepare"
-              ]
-            ],
-            "running": [
-              "ace_play"
-            ],
-            "updates_before": [
-              6,
-              6,
-              11,
-              7,
-              8,
-              81
-            ],
-            "frames_since_beat_event": 1,
-            "phase": 3
-          },
-          {
-            "frame": 5885,
-            "kind": "prepare",
-            "update_scanlines": 81,
-            "near": [
-              [
-                -1,
-                "prepare"
-              ],
-              [
-                1,
-                "companion out"
-              ]
-            ],
-            "running": [
-              "ace_play"
-            ],
-            "updates_before": [
-              11,
-              7,
-              8,
-              5,
-              12,
-              81
             ],
             "frames_since_beat_event": 1,
             "phase": 5
           }
         ],
-        "prepares": 3,
-        "max_update_scanlines": 134,
-        "max_update_scanlines_without_prepares": 32
+        "prepares": 1,
+        "beats_started": 11,
+        "beats": [
+          "ace_play",
+          "arrive_look",
+          "greet_friend",
+          "hum",
+          "notice_player",
+          "study_ground",
+          "water_bite",
+          "water_wait"
+        ],
+        "max_update_scanlines": 130,
+        "max_update_scanlines_without_prepares": 60
       },
       "baseline": {
-        "frames": 6000,
-        "lag": 0,
+        "frames": 2400,
+        "lag": 2,
         "prepare": 0,
         "knock_on": 0,
         "no_beat": 0,
-        "other": 0,
+        "other": 2,
         "locked_frames": 0,
-        "lag_frames": [],
+        "lag_frames": [
+          {
+            "frame": 5,
+            "kind": "other",
+            "update_scanlines": 45,
+            "near": [],
+            "running": [],
+            "updates_before": [
+              null,
+              null,
+              42,
+              45,
+              46,
+              45
+            ],
+            "frames_since_beat_event": null,
+            "phase": 3
+          },
+          {
+            "frame": 92,
+            "kind": "other",
+            "update_scanlines": 53,
+            "near": [],
+            "running": [],
+            "updates_before": [
+              33,
+              35,
+              40,
+              65,
+              60,
+              53
+            ],
+            "frames_since_beat_event": null,
+            "phase": 1
+          }
+        ],
         "prepares": 0,
-        "max_update_scanlines": 17,
-        "max_update_scanlines_without_prepares": 17
+        "beats_started": 0,
+        "beats": [],
+        "max_update_scanlines": 68,
+        "max_update_scanlines_without_prepares": 68
       },
       "no_walkers": {
-        "frames": 6000,
-        "lag": 0,
+        "frames": 2400,
+        "lag": 1,
         "prepare": 0,
         "knock_on": 0,
         "no_beat": 0,
-        "other": 0,
+        "other": 1,
         "locked_frames": 0,
-        "lag_frames": [],
+        "lag_frames": [
+          {
+            "frame": 5,
+            "kind": "other",
+            "update_scanlines": 2,
+            "near": [],
+            "running": [],
+            "updates_before": [
+              null,
+              null,
+              8,
+              2,
+              3,
+              2
+            ],
+            "frames_since_beat_event": null,
+            "phase": 3
+          }
+        ],
         "prepares": 0,
+        "beats_started": 0,
+        "beats": [],
         "max_update_scanlines": 10,
         "max_update_scanlines_without_prepares": 10
       },
+      "unexplained": 2,
+      "baseline_unexplained": 2,
+      "pass": true
+    },
+    "companion": {
+      "beats": {
+        "frames": 6001,
+        "lag": 4,
+        "prepare": 2,
+        "knock_on": 1,
+        "no_beat": 0,
+        "other": 1,
+        "locked_frames": 0,
+        "lag_frames": [
+          {
+            "frame": 5,
+            "kind": "other",
+            "update_scanlines": 5,
+            "near": [],
+            "running": [
+              "arrive_look"
+            ],
+            "updates_before": [
+              null,
+              null,
+              12,
+              8,
+              9,
+              5
+            ],
+            "frames_since_beat_event": 4,
+            "phase": 3
+          },
+          {
+            "frame": 1864,
+            "kind": "prepare",
+            "update_scanlines": 81,
+            "near": [
+              [
+                -1,
+                "prepare"
+              ]
+            ],
+            "running": [
+              "ace_play"
+            ],
+            "updates_before": [
+              12,
+              9,
+              9,
+              6,
+              13,
+              81
+            ],
+            "frames_since_beat_event": 1,
+            "phase": 5
+          },
+          {
+            "frame": 2973,
+            "kind": "knock-on",
+            "update_scanlines": 4,
+            "near": [],
+            "running": [],
+            "updates_before": [
+              4,
+              4,
+              4,
+              7,
+              4,
+              4
+            ],
+            "frames_since_beat_event": 190,
+            "phase": 1
+          },
+          {
+            "frame": 5966,
+            "kind": "prepare",
+            "update_scanlines": 82,
+            "near": [
+              [
+                -1,
+                "prepare"
+              ]
+            ],
+            "running": [
+              "ace_play"
+            ],
+            "updates_before": [
+              13,
+              7,
+              7,
+              5,
+              12,
+              82
+            ],
+            "frames_since_beat_event": 1,
+            "phase": 1
+          }
+        ],
+        "prepares": 3,
+        "beats_started": 10,
+        "beats": [
+          "ace_play",
+          "arrive_look",
+          "swagger",
+          "water_bite",
+          "water_wait"
+        ],
+        "max_update_scanlines": 82,
+        "max_update_scanlines_without_prepares": 38
+      },
+      "baseline": {
+        "frames": 6001,
+        "lag": 1,
+        "prepare": 0,
+        "knock_on": 0,
+        "no_beat": 1,
+        "other": 0,
+        "locked_frames": 0,
+        "lag_frames": [
+          {
+            "frame": 5,
+            "kind": "no beat",
+            "update_scanlines": 4,
+            "near": [],
+            "running": [],
+            "updates_before": [
+              null,
+              null,
+              11,
+              11,
+              8,
+              4
+            ],
+            "frames_since_beat_event": null,
+            "phase": 3
+          }
+        ],
+        "prepares": 0,
+        "beats_started": 0,
+        "beats": [],
+        "max_update_scanlines": 16,
+        "max_update_scanlines_without_prepares": 16
+      },
+      "no_walkers": {
+        "frames": 6001,
+        "lag": 1,
+        "prepare": 0,
+        "knock_on": 0,
+        "no_beat": 0,
+        "other": 1,
+        "locked_frames": 0,
+        "lag_frames": [
+          {
+            "frame": 5,
+            "kind": "other",
+            "update_scanlines": 2,
+            "near": [],
+            "running": [],
+            "updates_before": [
+              null,
+              null,
+              9,
+              2,
+              2,
+              2
+            ],
+            "frames_since_beat_event": null,
+            "phase": 3
+          }
+        ],
+        "prepares": 0,
+        "beats_started": 0,
+        "beats": [],
+        "max_update_scanlines": 10,
+        "max_update_scanlines_without_prepares": 10
+      },
+      "unexplained": 1,
+      "baseline_unexplained": 1,
       "pass": true
     }
   },
   "pass": true,
-  "emulated_frames": 47569
+  "emulated_frames": 47406
 }

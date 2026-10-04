@@ -1,6 +1,6 @@
 {
   "water_beat": {
-    "frame": 595,
+    "frame": 596,
     "actor": 0,
     "slot": 8,
     "beat": 16,
@@ -25,7 +25,7 @@
     "goalEdge": 65535
   },
   "water_bite": {
-    "frame": 595,
+    "frame": 596,
     "actor": 0,
     "slot": 8,
     "beat": 16,
@@ -33,7 +33,7 @@
     "event": "start"
   },
   "water_bite_end": {
-    "frame": 832,
+    "frame": 873,
     "actor": 0,
     "slot": 8,
     "beat": 16,
@@ -54,7 +54,7 @@
       39
     ]
   ],
-  "icon_frame": 716,
+  "icon_frame": 773,
   "actor_after_bite": {
     "index": 0,
     "slot": 8,
@@ -79,7 +79,7 @@
   ],
   "events": [
     {
-      "frame": 104,
+      "frame": 105,
       "actor": 0,
       "slot": 8,
       "beat": 5,
@@ -87,7 +87,7 @@
       "event": "start"
     },
     {
-      "frame": 170,
+      "frame": 171,
       "actor": 0,
       "slot": 8,
       "beat": 5,
@@ -95,7 +95,7 @@
       "event": "end"
     },
     {
-      "frame": 595,
+      "frame": 596,
       "actor": 0,
       "slot": 8,
       "beat": 16,
@@ -103,7 +103,7 @@
       "event": "start"
     },
     {
-      "frame": 832,
+      "frame": 873,
       "actor": 0,
       "slot": 8,
       "beat": 16,
@@ -111,7 +111,7 @@
       "event": "end"
     },
     {
-      "frame": 1255,
+      "frame": 1316,
       "actor": 0,
       "slot": 8,
       "beat": 32,
@@ -119,7 +119,7 @@
       "event": "start"
     },
     {
-      "frame": 1285,
+      "frame": 1359,
       "actor": 0,
       "slot": 8,
       "beat": 32,
@@ -171,7 +171,7 @@
     ".product/research/ambience/beatspot-mid-beat.png"
   ],
   "debug": {
-    "frames": 1736,
+    "frames": 1777,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -268,10 +268,10 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 25,
-    "maxHeartbeatScanlines": 25,
-    "maxSpawnScanlines": 24,
-    "maxUpdateScanlines": 32,
+    "lastHeartbeatScanlines": 26,
+    "maxHeartbeatScanlines": 26,
+    "maxSpawnScanlines": 23,
+    "maxUpdateScanlines": 31,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
@@ -286,5 +286,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 2022
+  "emulated_frames": 2062
 }

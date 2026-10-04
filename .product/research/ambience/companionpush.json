@@ -1,6 +1,6 @@
 {
   "ace": {
-    "frame": 1754,
+    "frame": 1816,
     "actor": 0,
     "slot": 8,
     "beat": 33,
@@ -21,16 +21,16 @@
       "facing": 4
     }
   ],
-  "pressing_from_frame": 1908,
+  "pressing_from_frame": 1995,
   "interrupt": {
-    "frame": 1909,
+    "frame": 1996,
     "actor": 0,
     "slot": 8,
     "beat": 33,
     "name": "ace_play",
     "event": "interrupt"
   },
-  "gone_at_frame": 1909,
+  "gone_at_frame": 1996,
   "interrupt_delay": 1,
   "gone_delay": 1,
   "companions_after": [],
@@ -73,7 +73,7 @@
       "prepares": 1
     }
   },
-  "max_update_scanlines": 78,
+  "max_update_scanlines": 77,
   "events": [
     {
       "frame": 105,
@@ -100,7 +100,7 @@
       "event": "start"
     },
     {
-      "frame": 833,
+      "frame": 873,
       "actor": 0,
       "slot": 8,
       "beat": 16,
@@ -108,7 +108,7 @@
       "event": "end"
     },
     {
-      "frame": 1256,
+      "frame": 1316,
       "actor": 0,
       "slot": 8,
       "beat": 32,
@@ -116,7 +116,7 @@
       "event": "start"
     },
     {
-      "frame": 1285,
+      "frame": 1359,
       "actor": 0,
       "slot": 8,
       "beat": 32,
@@ -124,7 +124,7 @@
       "event": "end"
     },
     {
-      "frame": 1754,
+      "frame": 1816,
       "actor": 0,
       "slot": 8,
       "beat": 33,
@@ -132,7 +132,7 @@
       "event": "start"
     },
     {
-      "frame": 1909,
+      "frame": 1996,
       "actor": 0,
       "slot": 8,
       "beat": 33,
@@ -146,7 +146,7 @@
     ".product/research/ambience/companionpush-after-interrupt.png"
   ],
   "debug": {
-    "frames": 2037,
+    "frames": 2124,
     "spawns": 1,
     "removals": 0,
     "edgeExits": 0,
@@ -243,10 +243,10 @@
         "goalEdge": 0
       }
     ],
-    "lastHeartbeatScanlines": 25,
-    "maxHeartbeatScanlines": 25,
-    "maxSpawnScanlines": 24,
-    "maxUpdateScanlines": 78,
+    "lastHeartbeatScanlines": 26,
+    "maxHeartbeatScanlines": 26,
+    "maxSpawnScanlines": 23,
+    "maxUpdateScanlines": 77,
     "backOffs": 0,
     "handoffs": 0,
     "visitorsVanished": 0,
@@ -261,5 +261,5 @@
     "stripTimeouts": 0
   },
   "pass": true,
-  "emulated_frames": 2322
+  "emulated_frames": 2409
 }
