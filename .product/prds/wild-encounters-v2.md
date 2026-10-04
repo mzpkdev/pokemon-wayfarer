@@ -3,7 +3,8 @@
 Implemented: No
 
 Specifications: [Prowlers](../specs/prowlers.md), [Reach assignments](../specs/reach-assignments.md),
-[Kanto and Johto encounters](../specs/kanto-johto-encounters.md), [Hoenn encounters](../specs/hoenn-encounters.md)
+[Kanto and Johto encounters](../specs/kanto-johto-encounters.md), [Hoenn encounters](../specs/hoenn-encounters.md),
+[Sevii encounters](../specs/sevii-encounters.md)
 
 Design status: sketch. It replaces the retired wild-encounter docs: the
 [Kanto](kanto-wild-encounters.md) and [Johto](johto-wild-encounters.md)
@@ -126,7 +127,7 @@ and regional forms live in their region.
 | III + V | Hoenn, with no Gen I–II wild species. Gen V grows from west to east |
 | IV + the Hisuian part of VIII | Sinjoh |
 | VII | Alola |
-| VIII (Galar) | Sevii |
+| VIII (Galar) | Sevii, with a small blend of other generations where they fit. Sevii becomes the Galar region |
 | VI (Kalos) | Deferred: possibly a Safari Zone reserve |
 | IX | Not included |
 
