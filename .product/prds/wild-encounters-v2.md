@@ -110,9 +110,11 @@ How bonuses change over the course of the game is left to later scaling work.
 - **Nothing is locked by progress.** Every species is available from the start.
 - **Water has types.** Every map with surfing or fishing has one water type:
   ponds and rivers, coast and sea, cold water, or cave water. Each type has its
-  own cast, so a sea route and a pond never look alike. Fishing entry 1 is
-  Magikarp, the classic Old Rod catch, entry 2 is the water type's staple, and
-  entries 3–10 carry the map's own character, which the better rods reveal.
+  own cast, so a sea route and a pond never look alike. A map's first fishing
+  entries, which the Old Rod mostly catches, hold its most fitting common fish,
+  and the later entries carry its own character, which the better rods reveal.
+  At the native HM crossings, the first three entries include a local Surf or
+  Whirlpool carrier.
 - **Babies are rare finds.** The downward rule never steps into a baby, so a
   low-level Pikachu slot stays Pikachu. Instead, a table can name a baby as a
   rare slot of its own, such as Riolu in Sinjoh or Azurill in Hoenn. Like any

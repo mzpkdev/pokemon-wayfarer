@@ -192,10 +192,16 @@ Rewards, babies, anchors and native HM carriers may appear outside their type's
 cast where they fit, such as Lapras in Union Cave's depths, Dratini and Seadra
 in Dragon's Den, and the water starters.
 
-- **Fishing:** entry 1 is Magikarp, the classic Old Rod catch. Entry 2 is the
-  water type's staple: Poliwag in ponds and rivers, Tentacool or Krabby at sea,
-  Shellder in cold water and Goldeen in caves. Entries 3–10 hold at least four
-  different families and carry the map's own character.
+- **Fishing:** entries 1–3, which make up about 70% of Old Rod catches, hold
+  the map's most fitting common fish. Magikarp stays common in ponds and lakes
+  but isn't required anywhere. Entries 3–10 hold at least four different
+  families and carry the map's own character, which the better rods reveal.
+- **Native HM crossings:** where a player on shore must be able to catch a
+  Pokémon that knows Surf or Whirlpool, fishing entries 1–3 include a local
+  carrier by day and by night. In Kanto and Johto that means Vermilion City and
+  its port, Cinnabar Island, Olivine City and its port, Cianwood City and
+  Blackthorn City for Surf, and Dragon's Den for Whirlpool. The catch-window
+  audit still decides whether each carrier knows the move at its level.
 - **Surfing:** no family holds a surfing table's first slot on more than eight
   maps in a region, so sea routes don't all lead with Tentacool.
 - **Night:** at sea, night brings its own species, such as Chinchou, Staryu
