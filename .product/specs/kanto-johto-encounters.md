@@ -121,9 +121,12 @@ Outlands or dungeons.
   put it. Sentret by day and Hoothoot at night on Kanto's Route 1 are examples.
 - **Otherwise it must fit the place thematically,** such as forest bugs in a
   forest.
-- **Signature species stay at home.** A region's signature species, such as
-  Larvitar, Mareep and Hoppip for Johto, or Kanto's Safari Zone species, don't
-  cross over.
+- **Signature species stay at home.** A region's signature species don't cross
+  over: for Johto, for example, Larvitar, Mareep, Hoppip, Stantler, Mantine and
+  Aipom; for Kanto, Safari Zone species such as Kangaskhan and Chansey.
+- **Crossovers stay light.** A crossover family appears on only a few maps of
+  the other region, near the border or where the remakes put it. Wooper's line,
+  for example, appears on at most four Kanto maps.
 
 ### Classic core, more around it
 
