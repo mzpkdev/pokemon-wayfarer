@@ -37,6 +37,24 @@ class SinnohCatalogTests(unittest.TestCase):
         with self.assertRaisesRegex(AUDIT.FoundationError, "duplicated"):
             AUDIT.validate_checked_in(GAME, maps)
 
+    def test_cave_popup_overrides_preserve_donor_flags(self):
+        rows = json.loads(self.maps_path.read_text())["maps"]
+        caves = [row for row in rows if row["map_properties"]["map_type"] == "MAP_TYPE_UNDERGROUND"]
+        self.assertEqual(len(caves), 8)
+        for row in caves:
+            with self.subTest(map=row["target_map"]):
+                self.assertFalse(row["map_properties"]["show_map_name"])
+                self.assertTrue(AUDIT.expected_imported_map(row)["show_map_name"])
+                original = copy.deepcopy(row)
+                del original["map_properties"]["target_show_map_name"]
+                self.assertFalse(AUDIT.expected_imported_map(original)["show_map_name"])
+
+    def test_non_boolean_popup_override_is_rejected(self):
+        row = json.loads(self.maps_path.read_text())["maps"][0]
+        row["map_properties"]["target_show_map_name"] = "false"
+        with self.assertRaisesRegex(AUDIT.FoundationError, "invalid popup flag"):
+            AUDIT.expected_imported_map(row)
+
     def test_topology_uses_repairs_without_duplicate_fixtures(self):
         rows = json.loads(self.maps_path.read_text())["maps"]
         repairs = [repair for row in rows for repair in row.get("topology", {}).get("repairs", [])]
