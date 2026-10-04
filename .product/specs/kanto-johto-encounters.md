@@ -14,6 +14,7 @@ This spec defines how Kanto and Johto tables are built:
 - the table format;
 - how Generations I and II are spread between the two regions;
 - what must be catchable in each region;
+- nostalgia anchors, crossovers, and what every route offers;
 - the rules for habitat, reach, rewards, babies, variety, day and night,
   fishing, and Headbutt trees and Rock Smash rocks.
 
@@ -92,6 +93,44 @@ Other sources count where the PRD says so:
 
 The Kanto and Johto table specs each end with a coverage checklist that shows
 where every family is catchable.
+
+### Nostalgia anchors
+
+Each region keeps its classic highlights in their original spots, so players
+of the original games find them where they remember. FireRed, LeafGreen,
+HeartGold and SoulSilver are the reference. Anchors include:
+
+| Region | Anchors |
+| --- | --- |
+| Kanto | Pidgey and Rattata on Route 1, Pikachu in Viridian Forest, Clefairy in Mt. Moon, Onix in Rock Tunnel, Diglett in Diglett's Cave, Magnemite and Voltorb in the Power Plant, Gastly and Cubone in the Pokémon Tower, Grimer and Koffing in the Pokémon Mansion, Seel and Jynx in Seafoam Islands, Ditto in Cerulean Cave |
+| Johto | Sentret on Route 29, Mareep and Wooper on Route 32, Wooper in Union Cave, Lapras in Union Cave's depths, Slowpoke in Slowpoke Well, Natu and Unown at the Ruins of Alph, Stantler on Route 37, Sneasel at night in Ice Path, Dratini in Dragon's Den, Aipom and Heracross in Headbutt trees |
+
+An anchor holds one of its table's common or uncommon slots, unless it was a
+rarity in the original games, such as Pikachu or Clefairy, where it stays rare
+but present.
+
+### Crossovers
+
+- **A crossover follows the remakes first.** A Generation II species in Kanto,
+  or a Generation I species in Johto, appears where HeartGold and SoulSilver
+  put it. Sentret by day and Hoothoot at night on Kanto's Route 1 are examples.
+- **Otherwise it must fit the place thematically,** such as forest bugs in a
+  forest.
+- **Signature species stay at home.** A region's signature species, such as
+  Larvitar, Mareep and Hoppip for Johto, or Kanto's Safari Zone species, don't
+  cross over.
+
+### Classic core, more around it
+
+Every route is worth a trip on its own in this open world, including the first
+routes:
+
+- A route's common slots keep its classic cast, so Route 1 still feels like
+  Route 1.
+- Around that core, every route offers more than it did in the original games:
+  fitting uncommon species, a real night table and at least one reward slot.
+- The extra species fit the route and follow the crossover rules, so a route
+  gains variety without losing its identity.
 
 ### Habitat
 
