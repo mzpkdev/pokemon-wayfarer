@@ -4,8 +4,9 @@ PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
 Implemented: No
 
 Design status: draft. It sets the rules and targets for Kanto's and Johto's
-encounter tables. The tables themselves follow in a Kanto spec and a Johto
-spec. Every share and count below is a placeholder for playtesting.
+encounter tables. The tables themselves are in the
+[Kanto](kanto-encounter-tables.md) and [Johto](johto-encounter-tables.md)
+table specs. Every share and count below is a placeholder for playtesting.
 
 ## Scope
 
