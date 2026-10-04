@@ -4,12 +4,14 @@ Implemented: No
 
 Specifications: [Prowlers](../specs/prowlers.md), [Reach assignments](../specs/reach-assignments.md)
 
-Design status: sketch. It supersedes the authored-level and frozen-table parts
-of the [Kanto](kanto-wild-encounters.md), [Johto](johto-wild-encounters.md),
-[Trainer Rating scaling](trainer-rating-wild-encounter-scaling.md) and
-[Standard Rod](standard-rod-fishing.md) PRDs once accepted. Terms follow the
-[glossary](player-trainer-rating.md#glossary) plus the terms below. All
-numbers are placeholders for playtesting.
+Design status: sketch. It replaces the retired wild-encounter docs: the
+[Kanto](kanto-wild-encounters.md) and [Johto](johto-wild-encounters.md)
+encounter PRDs and specs, the Sevii encounter spec, the wild-encounter parts of
+[Trainer Rating scaling](trainer-rating-wild-encounter-scaling.md) and its
+spec, and the authored under-level research. [Standard Rod
+fishing](standard-rod-fishing.md) and the native HM docs stay in force. Terms
+follow the [glossary](player-trainer-rating.md#glossary) plus the terms below.
+All numbers are placeholders for playtesting.
 
 ## Intent
 
@@ -93,7 +95,9 @@ How bonuses change over the course of the game is left to later scaling work.
 ### Encounter tables
 
 - Tables hold species, rarity and day/night variants. **They hold no levels.**
-  Every region has day and night encounters.
+  Every region has day and night encounters. Caves and buildings change at
+  night too, but their day and night tables often overlap, so the difference
+  is smaller than outdoors.
 - **Each slot has a stage cap.** The level picks the stage through the
   [downward rule](player-trainer-rating.md#glossary) and the stage mix. A slot
   capped at an early stage keeps young levels.

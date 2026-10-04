@@ -1,5 +1,8 @@
 # Trainer Rating wild encounter scaling
 
+**Retired.** Replaced by [Wild encounters v2](../prds/wild-encounters-v2.md).
+Kept for history only; don't build from it.
+
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes named native-utility carriers and permanent-retention
 assumptions in this document. Its core implementation is complete, while full

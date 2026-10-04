@@ -1,5 +1,8 @@
 # Sevii wild encounters
 
+**Retired.** Replaced by [Wild encounters v2](../prds/wild-encounters-v2.md).
+Kept for history only; don't build from it.
+
 PRD: [Sevii exploration port](../prds/sevii-exploration-port.md)
 Implemented: Yes
 

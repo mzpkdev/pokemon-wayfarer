@@ -1,5 +1,8 @@
 # Kanto wild encounters
 
+**Retired.** Replaced by [Wild encounters v2](../prds/wild-encounters-v2.md).
+Kept for history only; don't build from it.
+
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes this document's permanent named native-HM anchors,
 per-anchor utility-retention tests and named-carrier accessibility shares.

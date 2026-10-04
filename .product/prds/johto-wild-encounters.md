@@ -1,5 +1,8 @@
 # Johto wild encounter ecology
 
+**Retired.** Replaced by [Wild encounters v2](../prds/wild-encounters-v2.md).
+Kept for history only; don't build from it.
+
 Implemented: Outdated
 
 The campaign validation samples now follow +8/+8/+8 League rewards. Existing
