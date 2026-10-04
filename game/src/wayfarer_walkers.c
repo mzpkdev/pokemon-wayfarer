@@ -31,6 +31,7 @@
 #include "malloc.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
+#include "fake_rtc.h"
 #include "script.h"
 #include "sprite.h"
 #include "wayfarer_ambience.h"
@@ -53,6 +54,11 @@
 #define WALKER_UNREACHABLE_WAIT 240     // stand still (or play the template), then retry
 #define WALKER_FAILS_MAX        3       // the retry wait doubles up to this many failures
 #define WALKER_SPAWN_PERIOD     8
+// The spawn period's frames: spawns at 0, story scenes and culls at
+// STORY_PHASE, the follower rule at FOLLOWER_PHASE, so no frame carries two
+// of them (each is about 7 to 10 scanlines); beats keep off all three.
+#define STORY_PHASE             2
+#define FOLLOWER_PHASE          4
 #define WALKER_SPAWN_BACKOFF    64      // frames before retrying a spawn that found no room
 #define WALKER_NEAR_RADIUS      3
 #define WALKER_LANE_SCAN        10
@@ -60,8 +66,9 @@
 #define WALKER_YIELD_BLOCKS     2       // steps blocked by the player before backing off
 #define WALKER_BACKOFFS_MAX     3       // back-offs per visit before handing off
 #define WALKER_BACKOFF_WAIT     180
-#define WALKER_WALKOFF_FRAMES   1200    // a walk-off gives up (vanishes) after this long
-                                        // (doubled with slow walking: the same length in tiles)
+#define WALKER_WALKOFF_FRAMES   1200    // a walk-off gives up (vanishes) after this long (the
+                                        // spec's value, doubled for slow walking although
+                                        // walk-offs walk at normal speed)
 #define WALKER_AWAY_DISTANCE    3
 #define WALKER_STRIP_BLOCKED_FRAMES 30  // a strip actor that can't step on is removed after this long
 #define WALKER_JOB_SCANLINES    32      // a frame's world-job work: a trip search's slice
@@ -135,6 +142,11 @@ struct WalkerActor
     bool8 stripToward:1;    // walking into the player's map
     bool8 actionPending:1;
     bool8 justLeaving:1;
+    // Beats (kept here so a heap reset can't lose them: the ambience block
+    // may already be overwritten when the heap-reset hook runs).
+    bool8 beatActive:1;     // a beat is running (mirrors the block's state)
+    bool8 backingOff:1;     // a back-off or its wait: no beat starts
+    bool8 leavePending:1;   // the stay ended while a beat ran: its leaving decision comes after it
 };
 
 // Shared heap workspace for the one grid search that runs at a time.
@@ -255,6 +267,8 @@ static EWRAM_DATA struct WalkerAdvanceContext sAdvanceContext = {0};
 static EWRAM_DATA struct WalkerEdgeJob sEdgeJob = {0};
 static EWRAM_DATA void *sJobWorkspace = NULL;
 
+#define REACT_KEY_STALE 0   // never a react key (ReactKey): the next frame checks
+
 // Notable ambience (spec: notable-ambience.md): every beat's state lives in
 // one heap block, allocated while walkers exist and dropped (never freed) on
 // heap resets, so the beats cost no EWRAM: the mechanics-test build has
@@ -274,6 +288,18 @@ struct WalkerAmbience
     u16 companionGfx;       // OBJ_EVENT_MON + species: the object must still show it
     u16 companionSheet;     // a sprite sheet tag "companion out" preloaded, TAG_NONE when none
     u16 companionPlan[WALKER_ACTOR_COUNT];  // the graphics the last room check chose, per actor
+    // Frame cost (no beat may add a lag frame).
+    u32 needFacts[AMBIENCE_CLASS_REACT + 1];    // the facts the rows of this class and above read
+    u32 reactKey[WALKER_ACTOR_COUNT];       // the last react check's inputs (ReactKey), per actor
+    u32 pendingFrame;       // when pendingCount was counted (FollowerFreeSlots)
+    u16 pendingNode;        // and for which map
+    u8 pendingCount;
+    u8 pendingLocals;
+    u8 decisionWait[WALKER_ACTOR_COUNT];    // frames a full decision has waited for a frame with room
+    u8 reactWait[WALKER_ACTOR_COUNT];       // react samples a changed key has waited for a frame with room
+    bool8 frameClaimed;     // a full decision or a costly beat start took this frame
+    bool8 reactChecked;     // a react check ran this frame
+    bool8 pendingValid;
 };
 
 static EWRAM_DATA struct WalkerAmbience *sAmbience = NULL;
@@ -284,7 +310,10 @@ STATIC_ASSERT(DIR_NORTHEAST <= 15, WalkerMoveFitsANibble);
 STATIC_ASSERT(WALKER_MAX_TILES < STATE_LAYER, WalkerTileFitsAState);
 // The ambience pointer is paid for by packing the actors (176 bytes before).
 STATIC_ASSERT(sizeof(struct WalkerActor) * WALKER_ACTOR_COUNT + sizeof(struct WalkerAmbience *) <= 176, WalkerActorsNoLarger);
-STATIC_ASSERT(WALKER_ACTOR_COUNT <= 4, AmbienceGreetedBitsPerActor);  // AMBIENCE_LATCH_GREETED_SHIFT: 4 bits
+STATIC_ASSERT(WALKER_ACTOR_COUNT <= 4, AmbienceGreetedBitsPerActor);
+// AmbienceFrame's react samples (ReactPhase: odd frames) never meet a busy one.
+STATIC_ASSERT(WALKER_SPAWN_PERIOD == 2 * WALKER_ACTOR_COUNT && STORY_PHASE % 2 == 0 && FOLLOWER_PHASE % 2 == 0,
+              ReactChecksAvoidBusyFrames);  // AMBIENCE_LATCH_GREETED_SHIFT: 4 bits
 
 // DIR_SOUTH..DIR_EAST are 1..4; the stair diagonals DIR_SOUTHWEST..DIR_NORTHEAST 5..8.
 static const s8 sDx[9] = {0, 0, 0, -1, 1, -1, 1, -1, 1};
@@ -1791,12 +1820,13 @@ static void FaceDirection(struct WalkerActor *actor, struct ObjectEvent *obj, u8
 }
 
 // Walkers stroll (slow, 32 frames a tile) unless they have a reason to
-// hurry: a walk-off, a back-off from the player, a strip actor, or the step
-// out of (or into) the map through a side lane. Spec: notable-ambience.md, "Pace".
+// hurry: a walk-off, a back-off from the player, a Gym visitor just leaving
+// (it must never block the entrance), a strip actor, or the step out of (or
+// into) the map through a side lane. Spec: notable-ambience.md, "Pace".
 static bool8 WalksNormalSpeed(const struct WalkerActor *actor, u8 kind)
 {
     return actor->mode == WALKER_MODE_LEAVING || actor->mode == WALKER_MODE_STRIP
-        || actor->goalKind == WALKER_GOAL_AWAY
+        || actor->goalKind == WALKER_GOAL_AWAY || actor->justLeaving
         || kind == STEP_EXIT_EDGE || kind == STEP_ENTER || kind == STEP_STRIP;
 }
 
@@ -1932,6 +1962,7 @@ static void StartWalkOff(struct WalkerActor *actor, u16 node)
     }
     actor->mode = WALKER_MODE_LEAVING;
     actor->justLeaving = FALSE;
+    actor->leavePending = FALSE;
     actor->atSpot = FALSE;
     actor->blocked = 0;
     actor->pushFrames = 0;
@@ -2027,6 +2058,7 @@ static void StartBackOff(struct WalkerActor *actor)
         return;
     }
     actor->backOffs++;
+    actor->backingOff = TRUE;   // until the next plan (ChooseGoal)
     actor->playerBlocks = 0;
     actor->pushFrames = 0;
     actor->blocked = 0;
@@ -2053,6 +2085,7 @@ static void ChooseGoal(struct WalkerActor *actor, struct ObjectEvent *obj)
     const struct WayfarerWorldSpot *spot = DestSpot(record, actor->slot);
     u16 destNode, edge;
 
+    actor->backingOff = FALSE;  // a back-off's wait is over
     // The routine's next step is still being chosen (a spot choice a frame).
     if (IsAdvancing(actor->slot))
         return;
@@ -2555,6 +2588,9 @@ static void InitAmbienceFor(u8 index)
     sAmbience->adjacentTicks[index] = 0;
     sAmbience->keepWalking[index] = FALSE;
     sAmbience->debug.running[index] = AMBIENCE_BEAT_NONE;
+    sAmbience->reactKey[index] = REACT_KEY_STALE;   // the first frame checks
+    sAmbience->decisionWait[index] = 0;
+    sAmbience->reactWait[index] = 0;
 }
 
 // The block, allocated on demand (retried next frame if the heap is full:
@@ -2570,7 +2606,18 @@ static bool8 EnsureAmbience(void)
     for (i = 0; i < WALKER_ACTOR_COUNT; i++)
         InitAmbienceFor(i);
     sAmbience->companionOwner = NO_ACTOR;
+    sAmbience->companionObject = OBJECT_EVENTS_COUNT;
     sAmbience->companionSheet = TAG_NONE;
+    // The facts each decision's candidate rows read (react checks read only
+    // the react rows', the others add the transition rows', and the idle
+    // rows' once an idle beat can win): the context gathers only those.
+    for (i = 0; i < gWayfarerAmbienceBeatCount; i++)
+    {
+        const struct WayfarerAmbienceBeat *row = &gWayfarerAmbienceBeats[i];
+        u8 cls;
+        for (cls = AMBIENCE_CLASS_IDLE; cls <= row->cls && cls <= AMBIENCE_CLASS_REACT; cls++)
+            sAmbience->needFacts[cls] |= row->all | row->any;
+    }
     return TRUE;
 }
 
@@ -2590,6 +2637,56 @@ static struct ObjectEvent *OwnObject(const struct WalkerActor *actor)
 {
     struct ObjectEvent *obj = ActorObject(actor);
     return (obj->active && obj->localId == WALKER_LOCALID_BASE + ActorIndex(actor)) ? obj : NULL;
+}
+
+// Frame cost. The field frame reaches the walkers 110 to 190 scanlines in
+// (SkyEmu, a busy outdoor map), and the rest of the frame after them takes
+// 16 to 56: most frames have 20 to 40 lines to spare. So costly work (a
+// decision where an idle beat can win, an icon, a field effect, the
+// companion) takes a frame only with room left for it, one per frame, never
+// the walkers' busy frames (IsBusyFrame), and waits a bounded time for one.
+#define FRAME_END_MARGIN        64  // the rest of the field frame: 16 to 56 lines (wayfarer_world.c
+                                    // keeps 40 for its slices; beats are optional, so more here)
+#define DECISION_LINES          24  // a full decision: the whole pool and maybe companion_room
+#define DECISION_WAIT_FRAMES    60  // a dwell tick
+#define REACT_LINES             12  // a react check: the context and the react rows
+#define REACT_WAIT_SAMPLES      8   // react samples (every 4 frames) a check waits for room
+
+// The busy frames: the walkers' own (spawns, story scenes and culls, the
+// follower rule) and the engine's periodic time-of-day update, which
+// re-blends the palettes after this hook (OverworldBasic), and the frame
+// after it (the re-blend's weather work: the heaviest of the two).
+static bool8 IsBusyFrame(void)
+{
+    return sSpawnTimer == 0 || sSpawnTimer == STORY_PHASE || sSpawnTimer == FOLLOWER_PHASE || gTimeUpdateCounter <= 1
+        || gTimeUpdateCounter >= (s16)(SECONDS_PER_MINUTE * 60 / FakeRtc_GetSecondsRatio());
+}
+
+// The next frame is a busy one (a beat start's sprite spills into it).
+bool8 WayfarerWalkers_NextFrameBusy(void)
+{
+    u8 next = sSpawnTimer + 1 >= WALKER_SPAWN_PERIOD ? 0 : sSpawnTimer + 1;
+    return next == 0 || next == STORY_PHASE || next == FOLLOWER_PHASE || gTimeUpdateCounter <= 2;
+}
+
+u16 WayfarerWalkers_FrameLinesLeft(void)
+{
+    u16 line;
+    // Past this frame's VBlank already: none.
+    if (gMain.vblankCounter1 != sLastUpdateVblank)
+        return 0;
+    line = (REG_VCOUNT + 68) % 228;
+    return line + FRAME_END_MARGIN >= 228 ? 0 : 228 - FRAME_END_MARGIN - line;
+}
+
+bool8 WayfarerWalkers_ClaimFrame(u16 lines, bool8 force)
+{
+    if (sAmbience == NULL || sAmbience->frameClaimed || IsBusyFrame())
+        return FALSE;
+    if (!force && WayfarerWalkers_FrameLinesLeft() < lines)
+        return FALSE;
+    sAmbience->frameClaimed = TRUE;
+    return TRUE;
 }
 
 static void LogBeat(const struct WalkerActor *actor, u8 beat, u8 event)
@@ -2648,33 +2745,52 @@ static struct ObjectEvent *CompanionObject(void)
     return obj;
 }
 
+// The map's one companion is taken: reserved by a companion beat as it
+// starts (so a second walker's decision finds it busy), or out.
 static bool8 IsCompanionOut(void)
 {
     return sAmbience != NULL && sAmbience->companionOwner != NO_ACTOR;
 }
 
+// Its object was spawned (it may have vanished since: CompanionObject).
+static bool8 IsCompanionSpawned(void)
+{
+    return IsCompanionOut() && sAmbience->companionObject < OBJECT_EVENTS_COUNT;
+}
+
+static void ReleaseCompanionSheet(void);
+
 // Puts the companion away: removes its object (only while it is still the
-// companion's) and frees the global state. Called with live field sprites.
+// companion's) and frees the global state; a reservation that never spawned
+// just ends. Called with live field sprites.
 static void PutCompanionAway(bool8 early, u8 reason)
 {
     struct ObjectEvent *obj;
     if (!IsCompanionOut())
         return;
-    obj = CompanionObject();
-    if (obj != NULL)
-        RemoveObjectEvent(obj);
-    if (early)
-        sAmbience->debug.companionAway[reason]++;
+    if (IsCompanionSpawned())
+    {
+        obj = CompanionObject();
+        if (obj != NULL)
+            RemoveObjectEvent(obj);
+        if (early)
+            sAmbience->debug.companionAway[reason]++;
+        else
+            sAmbience->debug.companionsIn++;
+    }
     else
-        sAmbience->debug.companionsIn++;
+    {
+        ReleaseCompanionSheet();
+    }
     sAmbience->companionOwner = NO_ACTOR;
+    sAmbience->companionObject = OBJECT_EVENTS_COUNT;
 }
 
-// Puts the companion away before its beat does, and interrupts that beat.
+// Puts the spawned companion away before its beat does, and interrupts that beat.
 static void SendCompanionAway(u8 reason)
 {
     u8 owner;
-    if (!IsCompanionOut())
+    if (!IsCompanionSpawned())
         return;
     owner = sAmbience->companionOwner;
     PutCompanionAway(TRUE, reason);
@@ -2701,6 +2817,7 @@ static void DropCompanionObjects(void)
     if (sAmbience != NULL)
     {
         sAmbience->companionOwner = NO_ACTOR;
+        sAmbience->companionObject = OBJECT_EVENTS_COUNT;
         sAmbience->companionSheet = TAG_NONE;  // the reload frees every sheet
     }
 }
@@ -2756,7 +2873,7 @@ static u8 CompanionRoom(const struct WalkerActor *actor, struct ObjectEvent *obj
     const struct WayfarerWorldSpot *spot;
     struct ObjectEvent *player = Player();
     s16 aheadX = player->currentCoords.x, aheadY = player->currentCoords.y;
-    u8 i, j, tiles = 0, facing = obj->facingDirection;
+    u8 i, j, tiles = 0, tested = 0, facing = obj->facingDirection;
     bool8 outdoors;
 
     if (!actor->atSpot || actor->phase != WALKER_PHASE_TEMPLATE || actor->mode != WALKER_MODE_LOCAL)
@@ -2765,7 +2882,7 @@ static u8 CompanionRoom(const struct WalkerActor *actor, struct ObjectEvent *obj
     if (spot == NULL || spot->kind == WORLD_SPOT_STORE || spot->kind == WORLD_SPOT_GAME_CORNER
      || spot->kind == WORLD_SPOT_CENTER_COUNTER || spot->kind == WORLD_SPOT_CENTER_SIDE)
         return WALKER_COMPANION_DENY_PLACE;
-    if (IsCompanionOut())
+    if (IsCompanionSpawned() || (IsCompanionOut() && sAmbience->companionOwner != ActorIndex(actor)))
         return WALKER_COMPANION_DENY_BUSY;
     // After spawning it the walker rule's free slots must remain.
     if (FreeObjectSlots() < SPAWN_FREE_SLOTS + 1)
@@ -2779,10 +2896,11 @@ static u8 CompanionRoom(const struct WalkerActor *actor, struct ObjectEvent *obj
     if (FreeSpritePalettes() < 1 + COMPANION_SPARE_PALETTES)
         return WALKER_COMPANION_DENY_PALETTE;
 
-    // The free tiles beside the walker it may stand on (bits by order):
-    // standable by the walker's own step rules (elevation included), in the
-    // engine's object view, not the player's tile (current or previous) nor
-    // the tile straight ahead of the player.
+    // The free tiles beside the walker it may stand on (bits by order),
+    // each worked out only when a candidate gets to it: standable by the
+    // walker's own step rules (elevation included), in the engine's object
+    // view, not the player's tile (current or previous) nor the tile
+    // straight ahead of the player.
     if (player->facingDirection >= DIR_SOUTH && player->facingDirection <= DIR_EAST)
     {
         aheadX += sDx[player->facingDirection];
@@ -2790,15 +2908,6 @@ static u8 CompanionRoom(const struct WalkerActor *actor, struct ObjectEvent *obj
     }
     if (facing > DIR_EAST)
         facing = DIR_NONE;
-    for (j = 0; j < 4; j++)
-    {
-        u8 dir = sCompanionDirs[facing][j];
-        s16 x = obj->currentCoords.x + sDx[dir], y = obj->currentCoords.y + sDy[dir];
-        if ((x != aheadX || y != aheadY) && IsInObjectView(x, y) && WayfarerWalkers_BeatCanStep(obj, dir))
-            tiles |= 1 << j;
-    }
-    if (tiles == 0)
-        return WALKER_COMPANION_DENY_TILE;
     outdoors = IsMapTypeOutdoors(gMapHeader.mapType);
     // The first candidate that fits; a big one (outdoors only, as the engine
     // hides 64x64 followers indoors) needs its 2x2 area.
@@ -2812,6 +2921,12 @@ static u8 CompanionRoom(const struct WalkerActor *actor, struct ObjectEvent *obj
         {
             u8 dir = sCompanionDirs[facing][j];
             s16 x = obj->currentCoords.x + sDx[dir], y = obj->currentCoords.y + sDy[dir];
+            if (!(tested & (1 << j)))
+            {
+                tested |= 1 << j;
+                if ((x != aheadX || y != aheadY) && IsInObjectView(x, y) && WayfarerWalkers_BeatCanStep(obj, dir))
+                    tiles |= 1 << j;
+            }
             if (!(tiles & (1 << j)) || (big && !HasBigArea(x, y, dir)))
                 continue;
             *outX = x;
@@ -2841,7 +2956,9 @@ void WayfarerWalkers_CompanionPrepare(struct ObjectEvent *obj)
     const struct ObjectEventGraphicsInfo *info;
     u16 gfx, tag;
 
-    if (!OW_GFX_COMPRESS || actor == NULL || sAmbience == NULL || IsCompanionOut())
+    // Only for its own reservation (another walker's preloaded sheet stays).
+    if (!OW_GFX_COMPRESS || actor == NULL || !IsCompanionOut() || IsCompanionSpawned()
+     || sAmbience->companionOwner != ActorIndex(actor))
         return;
     ReleaseCompanionSheet();
     gfx = sAmbience->companionPlan[ActorIndex(actor)];
@@ -2855,6 +2972,7 @@ void WayfarerWalkers_CompanionPrepare(struct ObjectEvent *obj)
         return;
     if (GetSpriteTileStartByTag(tag) != TAG_NONE)
         return;     // already in VRAM (the player's follower, a map object)
+    sAmbience->debug.companionPrepares++;
     if (LoadSheetGraphicsInfo(info, gfx, NULL) == tag && GetSpriteTileStartByTag(tag) != TAG_NONE)
         sAmbience->companionSheet = tag;
 }
@@ -2867,7 +2985,7 @@ bool8 WayfarerWalkers_CompanionOut(struct ObjectEvent *obj)
     u16 gfx;
     u8 id, elevation;
 
-    if (actor == NULL || sAmbience == NULL)
+    if (actor == NULL || !IsCompanionOut() || IsCompanionSpawned() || sAmbience->companionOwner != ActorIndex(actor))
         return FALSE;
     if (CompanionRoom(actor, obj, &x, &y, &gfx) != WALKER_COMPANION_DENY_COUNT)
     {
@@ -2888,7 +3006,6 @@ bool8 WayfarerWalkers_CompanionOut(struct ObjectEvent *obj)
     }
     companion = &gObjectEvents[id];
     ObjectEventTurn(companion, DirectionTowards(x, y, obj->currentCoords.x, obj->currentCoords.y));
-    sAmbience->companionOwner = ActorIndex(actor);
     sAmbience->companionObject = id;
     sAmbience->companionGfx = gfx;
     sAmbience->debug.companionsOut++;
@@ -2898,7 +3015,7 @@ bool8 WayfarerWalkers_CompanionOut(struct ObjectEvent *obj)
 void WayfarerWalkers_CompanionIn(struct ObjectEvent *obj)
 {
     struct WalkerActor *actor = ActorOfObject(obj);
-    if (actor != NULL && IsCompanionOut() && sAmbience->companionOwner == ActorIndex(actor))
+    if (actor != NULL && IsCompanionSpawned() && sAmbience->companionOwner == ActorIndex(actor))
         PutCompanionAway(FALSE, 0);
 }
 
@@ -2938,6 +3055,8 @@ static void CompanionFrame(void)
     owner = sAmbience->companionOwner;
     if (owner >= WALKER_ACTOR_COUNT || sActors[owner].mode != WALKER_MODE_LOCAL || !BeatRunning(&sActors[owner]))
         PutCompanionAway(TRUE, WALKER_COMPANION_AWAY_INTERRUPTED);  // no beat holds it any more
+    else if (!IsCompanionSpawned())
+        return;     // reserved: its beat is bringing it out
     else if (CompanionObject() == NULL)
         SendCompanionAway(WALKER_COMPANION_AWAY_VANISHED);
     else if (freeSlots < SPAWN_FREE_SLOTS)
@@ -2978,13 +3097,27 @@ static u8 CapDistance(u16 distance)
     return distance >= AMBIENCE_DISTANCE_NONE ? AMBIENCE_DISTANCE_NONE - 1 : distance;
 }
 
-// facts: the decision's own (ARRIVING, LEAVING, BLOCKED).
+#define FACING_FACTS (AMBIENCE_FACT_FACING_WATER | AMBIENCE_FACT_FACING_GRASS | AMBIENCE_FACT_FACING_NPC \
+                    | AMBIENCE_FACT_FACING_COUNTER)
+
+// The facts the candidate rows of a decision read (EnsureAmbience).
+static u32 NeededFacts(u8 decision, bool8 idleCanWin)
+{
+    if (decision == AMBIENCE_DECIDE_REACT)
+        return sAmbience->needFacts[AMBIENCE_CLASS_REACT];
+    return sAmbience->needFacts[idleCanWin ? AMBIENCE_CLASS_IDLE : AMBIENCE_CLASS_TRANSITION];
+}
+
+// facts: the decision's own (ARRIVING, LEAVING, BLOCKED). need: the facts
+// the candidate rows read; the costly ones (what the walker faces) are only
+// gathered when they are among them.
 static void BuildAmbienceContext(const struct WalkerActor *actor, const struct ObjectEvent *obj, u32 facts,
-                                 struct AmbienceContext *ctx)
+                                 struct AmbienceContext *ctx, u32 need)
 {
     const struct WayfarerWorldRecord *record = Record(actor);
     bool8 dwelling = actor->atSpot && actor->phase == WALKER_PHASE_TEMPLATE;
-    u8 index = ActorIndex(actor), i;
+    u8 index = ActorIndex(actor), i, relation;
+    u8 ungreetedDistance[AMBIENCE_RELATION_COLLEAGUE + 1], ungreetedActor[AMBIENCE_RELATION_COLLEAGUE + 1];
 
     if (actor->phase == WALKER_PHASE_WALK && actor->stepKind == STEP_NONE)
         facts |= AMBIENCE_FACT_WALKING;
@@ -2992,8 +3125,10 @@ static void BuildAmbienceContext(const struct WalkerActor *actor, const struct O
         facts |= AMBIENCE_FACT_DWELLING;
     if (IsMapTypeOutdoors(gMapHeader.mapType))
         facts |= AMBIENCE_FACT_OUTDOORS;
+    if (need & FACING_FACTS)
+        facts |= FacingFacts(obj);
     // AMBIENCE_FACT_COMPANION_ROOM: added by DecideBeat where it can matter.
-    ctx->facts = facts | FacingFacts(obj);
+    ctx->facts = facts;
     ctx->spotKind = 0xFF;
     ctx->spotActivities = 0xFF;
     if (dwelling)
@@ -3009,36 +3144,73 @@ static void BuildAmbienceContext(const struct WalkerActor *actor, const struct O
     ctx->playerDistance = IsVisible(obj) ? CapDistance(PlayerDistance(obj->currentCoords.x, obj->currentCoords.y))
                                          : AMBIENCE_DISTANCE_NONE;
     ctx->adjacentTicks = sAmbience->adjacentTicks[index];
+    // The nearest other walker of each relation (NONE: any), preferring
+    // the nearest this walker hasn't greeted yet: a greeting (once per pair)
+    // then goes to the next one of that relation, not to nobody.
     memset(ctx->notableDistance, AMBIENCE_DISTANCE_NONE, sizeof(ctx->notableDistance));
     memset(ctx->notableActor, AMBIENCE_ACTOR_NONE, sizeof(ctx->notableActor));
+    memset(ungreetedDistance, AMBIENCE_DISTANCE_NONE, sizeof(ungreetedDistance));
+    memset(ungreetedActor, AMBIENCE_ACTOR_NONE, sizeof(ungreetedActor));
     for (i = 0; i < WALKER_ACTOR_COUNT; i++)
     {
         const struct WalkerActor *other = &sActors[i];
         const struct ObjectEvent *otherObj;
-        u8 distance, relation;
+        u8 distance, r, slots[2];
+        bool8 greeted;
         if (i == index || other->mode != WALKER_MODE_LOCAL)
             continue;
         otherObj = ActorObject(other);
         distance = CapDistance(Distance(obj->currentCoords.x, obj->currentCoords.y,
                                         otherObj->currentCoords.x, otherObj->currentCoords.y));
-        if (distance < ctx->notableDistance[AMBIENCE_RELATION_NONE])
+        greeted = (actor->ambienceLatches & (1 << (AMBIENCE_LATCH_GREETED_SHIFT + i))) != 0;
+        slots[0] = AMBIENCE_RELATION_NONE;
+        slots[1] = gWayfarerAmbienceRelations[actor->slot][other->slot];
+        for (r = 0; r < 2; r++)
         {
-            ctx->notableDistance[AMBIENCE_RELATION_NONE] = distance;
-            ctx->notableActor[AMBIENCE_RELATION_NONE] = i;
+            relation = slots[r];
+            if (r == 1 && (relation == AMBIENCE_RELATION_NONE || relation > AMBIENCE_RELATION_COLLEAGUE))
+                continue;
+            if (distance < ctx->notableDistance[relation])
+            {
+                ctx->notableDistance[relation] = distance;
+                ctx->notableActor[relation] = i;
+            }
+            if (!greeted && distance < ungreetedDistance[relation])
+            {
+                ungreetedDistance[relation] = distance;
+                ungreetedActor[relation] = i;
+            }
         }
-        relation = gWayfarerAmbienceRelations[actor->slot][other->slot];
-        if (relation != AMBIENCE_RELATION_NONE && relation <= AMBIENCE_RELATION_COLLEAGUE
-         && distance < ctx->notableDistance[relation])
+    }
+    for (relation = 0; relation <= AMBIENCE_RELATION_COLLEAGUE; relation++)
+    {
+        if (ungreetedActor[relation] != AMBIENCE_ACTOR_NONE)
         {
-            ctx->notableDistance[relation] = distance;
-            ctx->notableActor[relation] = i;
+            ctx->notableDistance[relation] = ungreetedDistance[relation];
+            ctx->notableActor[relation] = ungreetedActor[relation];
         }
     }
 }
 
+// The spot's facing while the walker stands at a stand/sit/browse spot (the
+// templates that face it), else DIR_NONE.
+static u8 SpotFacing(const struct WalkerActor *actor)
+{
+    const struct WayfarerWorldSpot *spot;
+    if (!actor->atSpot || (actor->template != WORLD_TEMPLATE_STAND_AND_FACE && actor->template != WORLD_TEMPLATE_SIT_OR_IDLE
+                           && actor->template != WORLD_TEMPLATE_BROWSE))
+        return DIR_NONE;
+    spot = DestSpot(Record(actor), actor->slot);
+    if (spot == NULL || spot->facing < DIR_SOUTH || spot->facing > DIR_EAST)
+        return DIR_NONE;
+    return spot->facing;
+}
+
 static bool8 CanStartBeat(const struct WalkerActor *actor, struct ObjectEvent *obj, u8 decision)
 {
+    // Never during a back-off or the wait after it.
     if (sAmbience == NULL || actor->mode != WALKER_MODE_LOCAL || actor->justLeaving || BeatRunning(actor)
+     || actor->backingOff || actor->goalKind == WALKER_GOAL_AWAY
      || actor->stepKind != STEP_NONE || IsPlayerPressingInto(obj))
         return FALSE;
     // The arrival's face action (StartTemplate) may still be under way: the
@@ -3054,14 +3226,28 @@ static void StartBeat(struct WalkerActor *actor, struct ObjectEvent *obj, u8 bea
     const struct WayfarerWorldRecord *record = Record(actor);
     const struct WayfarerWorldSpot *spot = DestSpot(record, actor->slot);
     struct ObjectEvent *other = NULL;
+    u8 startFacing = obj->facingDirection;
 
     if (select->other < WALKER_ACTOR_COUNT && sActors[select->other].mode != WALKER_MODE_NONE)
         other = OwnObject(&sActors[select->other]);
+    // The arrival's turn to the spot (StartTemplate) may still be queued: the
+    // beat starts from the facing it is turning to, so look_back and an
+    // interruption turn it back to the spot, not away from it.
+    if (actor->actionPending && SpotFacing(actor) != DIR_NONE)
+        startFacing = SpotFacing(actor);
     // Targets are captured now: the spot's facing ("target", "away") and
     // the partner. k was advanced by the pick: its parity at the start.
-    WalkerBeats_Start(&sAmbience->run[index], obj, beat,
+    WalkerBeats_Start(&sAmbience->run[index], beat, startFacing,
                       (spot != NULL && spot->node == record->node) ? spot->facing : DIR_NONE,
                       other, select->beatCounter - 1);
+    actor->beatActive = TRUE;
+    // A companion beat takes the map's companion now: another walker's
+    // decision finds it busy (one prepared sheet, one spawn at a time).
+    if (gWayfarerAmbienceBeats[beat].flags & AMBIENCE_FLAG_NEEDS_COMPANION)
+    {
+        sAmbience->companionOwner = index;
+        sAmbience->companionObject = OBJECT_EVENTS_COUNT;
+    }
     sAmbience->keepWalking[index] = (gWayfarerAmbienceBeats[beat].flags & AMBIENCE_FLAG_KEEP_WALKING) != 0;
     sAmbience->debug.started[gWayfarerAmbienceBeats[beat].cls]++;
     sAmbience->debug.running[index] = beat;
@@ -3077,6 +3263,25 @@ static bool8 DecideWith(struct WalkerActor *actor, struct ObjectEvent *obj, u8 d
     return !sAmbience->keepWalking[ActorIndex(actor)];
 }
 
+// Whether a companion beat could be picked here if companion_room held (its
+// cooldown over, its when, who and limits holding): only then is the room
+// (tiles, slots, palettes, the follower rule) worked out.
+static bool8 CompanionBeatCouldWin(const struct WalkerActor *actor, const struct AmbienceContext *ctx)
+{
+    const struct AmbienceWalker *select = &sAmbience->select[ActorIndex(actor)];
+    struct AmbienceContext withRoom = *ctx;
+    u8 beat;
+
+    withRoom.facts |= AMBIENCE_FACT_COMPANION_ROOM;
+    for (beat = 0; beat < gWayfarerAmbienceBeatCount; beat++)
+    {
+        if ((gWayfarerAmbienceBeats[beat].flags & AMBIENCE_FLAG_NEEDS_COMPANION) && select->cooldown[beat] == 0
+         && Ambience_BeatHolds(beat, actor->slot, &withRoom, actor->ambienceLatches))
+            return TRUE;
+    }
+    return FALSE;
+}
+
 // A decision point. TRUE when a beat that stops the walker started.
 // companion_room is only worked out while dwelling, at a decision where an
 // idle beat can win (the companion beats are idle ones): about once every
@@ -3084,11 +3289,16 @@ static bool8 DecideWith(struct WalkerActor *actor, struct ObjectEvent *obj, u8 d
 static bool8 DecideBeat(struct WalkerActor *actor, struct ObjectEvent *obj, u8 decision, u32 facts)
 {
     struct AmbienceContext ctx;
+    bool8 idle;
     if (!CanStartBeat(actor, obj, decision))
         return FALSE;
-    BuildAmbienceContext(actor, obj, facts, &ctx);
-    if ((ctx.facts & AMBIENCE_FACT_DWELLING)
-     && Ambience_IdleCanWin(&sAmbience->select[ActorIndex(actor)], actor->slot, decision))
+    // Only a decision where an idle beat can win reads the whole pool (and
+    // maybe companion_room): it takes the frame (see DecisionWaits).
+    idle = Ambience_IdleCanWin(&sAmbience->select[ActorIndex(actor)], actor->slot, decision);
+    if (idle)
+        sAmbience->frameClaimed = TRUE;
+    BuildAmbienceContext(actor, obj, facts, &ctx, NeededFacts(decision, idle));
+    if ((ctx.facts & AMBIENCE_FACT_DWELLING) && idle && CompanionBeatCouldWin(actor, &ctx))
     {
         s16 x, y;
         u16 gfx;
@@ -3104,6 +3314,29 @@ static bool8 DecideBeat(struct WalkerActor *actor, struct ObjectEvent *obj, u8 d
     return DecideWith(actor, obj, decision, &ctx);
 }
 
+// Before a decision point where an idle beat can win (the costly kind): TRUE
+// when this frame has no room for it (another took the frame, it is the spawn
+// frame, or too few lines are left); the caller tries again next frame, for
+// at most DECISION_WAIT_FRAMES. The other decisions are cheap and never wait.
+static bool8 DecisionWaits(struct WalkerActor *actor, struct ObjectEvent *obj, u8 decision)
+{
+    u8 index = ActorIndex(actor);
+    if (!CanStartBeat(actor, obj, decision) || !Ambience_IdleCanWin(&sAmbience->select[index], actor->slot, decision))
+    {
+        if (sAmbience != NULL)
+            sAmbience->decisionWait[index] = 0;
+        return FALSE;
+    }
+    if (WayfarerWalkers_ClaimFrame(DECISION_LINES, sAmbience->decisionWait[index] >= DECISION_WAIT_FRAMES))
+    {
+        sAmbience->decisionWait[index] = 0;
+        return FALSE;
+    }
+    if (sAmbience->decisionWait[index] != 0xFF)
+        sAmbience->decisionWait[index]++;
+    return TRUE;
+}
+
 // The running beat ended (interrupted: stopped at once, facing restored).
 // replan: a walker the beat left a tile off its spot walks back to it.
 static void EndBeat(struct WalkerActor *actor, bool8 interrupted, bool8 replan)
@@ -3117,15 +3350,16 @@ static void EndBeat(struct WalkerActor *actor, bool8 interrupted, bool8 replan)
         return;
     beat = sAmbience->select[index].beat;
     obj = OwnObject(actor);
-    pending = WalkerBeats_Stop(&sAmbience->run[index], obj, interrupted);
+    // A script or a menu may hold the field (objects frozen): no held movements then.
+    pending = WalkerBeats_Stop(&sAmbience->run[index], obj, interrupted, ArePlayerFieldControlsLocked());
     WalkerBeats_Displacement(&sAmbience->run[index], &dx, &dy);
     LogBeat(actor, beat, interrupted ? WALKER_BEAT_EVENT_INTERRUPT : WALKER_BEAT_EVENT_END);
     if (interrupted)
         sAmbience->debug.interrupted++;
     else
         sAmbience->debug.ended++;
-    // Its companion goes with it ("companion in" may have put it away), and
-    // a sheet preloaded for it that it never used.
+    // Its companion (or its reservation) goes with it ("companion in" may
+    // have put it away), and a sheet preloaded for it that it never used.
     if (IsCompanionOut() && sAmbience->companionOwner == index)
         PutCompanionAway(interrupted, WALKER_COMPANION_AWAY_INTERRUPTED);
     if (!IsCompanionOut() && (gWayfarerAmbienceBeats[beat].flags & AMBIENCE_FLAG_NEEDS_COMPANION))
@@ -3133,6 +3367,7 @@ static void EndBeat(struct WalkerActor *actor, bool8 interrupted, bool8 replan)
     Ambience_EndBeat(&sAmbience->select[index]);
     sAmbience->keepWalking[index] = FALSE;
     sAmbience->debug.running[index] = AMBIENCE_BEAT_NONE;
+    actor->beatActive = FALSE;
     if (obj == NULL)
         return;
     // A walk or a jump still under way (it can't be cancelled), or the
@@ -3140,7 +3375,18 @@ static void EndBeat(struct WalkerActor *actor, bool8 interrupted, bool8 replan)
     if (pending || obj->heldMovementActive)
         actor->actionPending = TRUE;
     if (replan && (dx != 0 || dy != 0) && actor->mode == WALKER_MODE_LOCAL && actor->atSpot)
+    {
         SetTileGoal(actor, obj, obj->currentCoords.x - MAP_OFFSET - dx, obj->currentCoords.y - MAP_OFFSET - dy);
+    }
+    else if (!interrupted && !actor->actionPending && actor->mode == WALKER_MODE_LOCAL
+          && actor->phase == WALKER_PHASE_TEMPLATE && SpotFacing(actor) != DIR_NONE
+          && obj->facingDirection != SpotFacing(actor))
+    {
+        // A beat that ended facing elsewhere (meditate, study_ground...):
+        // back to the spot's facing for the rest of the stay.
+        ObjectEventClearHeldMovementIfFinished(obj);
+        FaceDirection(actor, obj, SpotFacing(actor));
+    }
 }
 
 static void InterruptBeat(struct WalkerActor *actor)
@@ -3175,18 +3421,77 @@ bool8 WayfarerWalkers_BeatCanStep(struct ObjectEvent *obj, u8 dir)
         && ProbeFromHere(obj, dir) == dir;
 }
 
+// What a react check reads, folded into a key that is cheap to make every
+// frame: the player's and the walkers' tiles (distances, the player in
+// view), the walker's latches, adjacency ticks, walking or dwelling, the
+// activity and whether a beat can start. A key that changed means a react
+// condition may have just come true (spec, "Selection").
+// The frame of the spawn period a walker's react check may run in.
+static u8 ReactPhase(u8 index)
+{
+    return 1 + 2 * index;
+}
+
+static u32 ReactKey(const struct WalkerActor *actor, const struct ObjectEvent *obj, bool8 canStart)
+{
+    const struct ObjectEvent *player = Player();
+    u8 index = ActorIndex(actor), i;
+    u32 key = (u16)player->currentCoords.x | ((u32)(u16)player->currentCoords.y << 16);
+
+    key = key * 33 ^ ((u16)obj->currentCoords.x | ((u32)(u16)obj->currentCoords.y << 16));
+    key = key * 33 ^ ((u16)gSaveBlock1Ptr->pos.x | ((u32)(u16)gSaveBlock1Ptr->pos.y << 16));
+    for (i = 0; i < WALKER_ACTOR_COUNT; i++)
+    {
+        const struct ObjectEvent *other;
+        if (i == index || sActors[i].mode != WALKER_MODE_LOCAL)
+            continue;
+        other = ActorObject(&sActors[i]);
+        key = key * 33 ^ (i | ((u32)(u8)other->currentCoords.x << 8) | ((u32)(u8)other->currentCoords.y << 16));
+    }
+    key = key * 33 ^ (actor->ambienceLatches | (sAmbience->adjacentTicks[index] << 8)
+                      | (Record(actor)->activity << 16)
+                      | ((actor->phase == WALKER_PHASE_WALK && actor->stepKind == STEP_NONE) << 24)
+                      | ((actor->atSpot && actor->phase == WALKER_PHASE_TEMPLATE) << 25)
+                      | (canStart << 26));
+    return key | 1;
+}
+
+// A react row on cooldown that the coming tick frees: the react check must
+// run then even with nothing else changed.
+static bool8 ReactCooldownEnds(const struct AmbienceWalker *select)
+{
+    u8 beat;
+    for (beat = 0; beat < gWayfarerAmbienceBeatCount; beat++)
+    {
+        if (select->cooldown[beat] == 1 && gWayfarerAmbienceBeats[beat].cls == AMBIENCE_CLASS_REACT)
+            return TRUE;
+    }
+    return FALSE;
+}
+
 // Every frame for a local actor: the ambience tick, the running beat, the
-// latches and the react decision point.
+// latches and the react decision point. The react check (the latches and
+// the react rows) only runs when its inputs changed (ReactKey) or a react
+// row's cooldown ran out: within 4 frames of its condition first holding. It
+// is put off while another walker's check or a costly start has the frame.
 static void AmbienceFrame(struct WalkerActor *actor, struct ObjectEvent *obj)
 {
     u8 index = ActorIndex(actor);
     struct AmbienceContext ctx;
+    bool8 canStart;
+    u32 key;
 
-    if (!EnsureAmbience())
+    if (sAmbience == NULL && !EnsureAmbience())
         return;
-    if (++sAmbience->tickFrames[index] >= AMBIENCE_TICK_FRAMES)
+    // Most frames of an idle walker: nothing but the tick count.
+    if (++sAmbience->tickFrames[index] < AMBIENCE_TICK_FRAMES && !actor->beatActive
+     && sSpawnTimer != ReactPhase(index))
+        return;
+    if (sAmbience->tickFrames[index] >= AMBIENCE_TICK_FRAMES)
     {
         sAmbience->tickFrames[index] = 0;
+        if (ReactCooldownEnds(&sAmbience->select[index]))
+            sAmbience->reactKey[index] = REACT_KEY_STALE;
         Ambience_Tick(&sAmbience->select[index]);
         // Standing next to the walker, facing it, without pushing.
         if (IsPlayerPushing(obj) && !IsPlayerPressingInto(obj))
@@ -3208,17 +3513,40 @@ static void AmbienceFrame(struct WalkerActor *actor, struct ObjectEvent *obj)
         }
         else
         {
-            u8 result = WalkerBeats_Run(&sAmbience->run[index], obj, IsVisible(obj), &sAmbience->debug);
+            // The walkers' busy frames start no new step.
+            u8 result = WalkerBeats_Run(&sAmbience->run[index], obj, IsVisible(obj), IsBusyFrame(), &sAmbience->debug);
             if (result != WALKER_BEAT_RUNNING)
                 EndBeat(actor, FALSE, TRUE);
         }
     }
     if (actor->mode != WALKER_MODE_LOCAL || actor->justLeaving)
         return;
-    BuildAmbienceContext(actor, obj, 0, &ctx);
+    // A bow a stop under a lock left to the script ends now.
+    if (!BeatRunning(actor))
+        WalkerBeats_ReleaseNpc(&sAmbience->run[index]);
+    // Each walker looks once a spawn period, in its own odd frame (clear of
+    // the busy ones): about a line a frame saved per walker, for at most 8
+    // frames (133 ms) of delay.
+    if (sSpawnTimer != ReactPhase(index) || sAmbience->reactChecked || sAmbience->frameClaimed || IsBusyFrame())
+        return;     // a later frame sees the change
+    canStart = CanStartBeat(actor, obj, AMBIENCE_DECIDE_REACT);
+    key = ReactKey(actor, obj, canStart);
+    if (key == sAmbience->reactKey[index])
+        return;
+    // A check needs a frame with room for it too (a few samples at most).
+    if (sAmbience->reactWait[index] < REACT_WAIT_SAMPLES && WayfarerWalkers_FrameLinesLeft() < REACT_LINES)
+    {
+        sAmbience->reactWait[index]++;
+        return;
+    }
+    sAmbience->reactWait[index] = 0;
+    sAmbience->reactChecked = TRUE;
+    BuildAmbienceContext(actor, obj, 0, &ctx, sAmbience->needFacts[AMBIENCE_CLASS_REACT]);
     Ambience_UpdateLatches(&actor->ambienceLatches, actor->slot, &ctx);
-    if (CanStartBeat(actor, obj, AMBIENCE_DECIDE_REACT))
+    if (canStart)
         DecideWith(actor, obj, AMBIENCE_DECIDE_REACT, &ctx);
+    // As this check leaves them: the latches it set or cleared, the beat it started.
+    sAmbience->reactKey[index] = ReactKey(actor, obj, canStart && !BeatRunning(actor));
 }
 
 // A stopped beat's walk or jump is over: turn back to its start facing.
@@ -3357,6 +3685,17 @@ static void TemplateTick(struct WalkerActor *actor, struct ObjectEvent *obj)
     }
 }
 
+// Whether the next dwell tick reaches a decision point: a dwell decision
+// (template phase, no beat holding the walker) or the stay's end (leaving).
+// Dwell and leaving decisions count t alike (Ambience_IdleCanWin).
+static bool8 TickDecides(const struct WalkerActor *actor)
+{
+    const struct WayfarerWorldRecord *record = Record(actor);
+    if (actor->phase == WALKER_PHASE_TEMPLATE && !BeatHoldsWalker(actor))
+        return TRUE;
+    return record->state == WORLD_STATE_DWELLING && actor->dwellTicks + 1 >= WORLD_LOCAL_DWELL_TICKS && record->dwell <= 1;
+}
+
 // Dwell also runs down in local time while watched: one heartbeat of dwell
 // per WORLD_LOCAL_DWELL_TICKS dwell ticks; at 0 the routine advances.
 static bool8 LocalDwellTick(struct WalkerActor *actor, struct ObjectEvent *obj)
@@ -3381,8 +3720,12 @@ static bool8 LocalDwellTick(struct WalkerActor *actor, struct ObjectEvent *obj)
     actor->k = actor->t = 0;
     actor->pauseTicks = 0;
     Replan(actor, 0);
-    // The stay ended: the leaving decision point (the plan waits for its beat).
-    DecideBeat(actor, obj, AMBIENCE_DECIDE_LEAVE, AMBIENCE_FACT_LEAVING);
+    // The stay ended: the leaving decision point (the plan waits for its
+    // beat). With a beat still running it comes once that beat ends.
+    if (BeatRunning(actor))
+        actor->leavePending = TRUE;
+    else
+        DecideBeat(actor, obj, AMBIENCE_DECIDE_LEAVE, AMBIENCE_FACT_LEAVING);
     return TRUE;
 }
 
@@ -3480,8 +3823,10 @@ static void UpdateActor(struct WalkerActor *actor)
         actor->pushFrames = 0;
     }
 
-    // Dwell ticks: the template's clock and the local dwell.
-    if (actor->atSpot && ++actor->frames >= WORLD_DWELL_TICK_FRAMES)
+    // Dwell ticks: the template's clock and the local dwell. A tick whose
+    // decision is a costly one waits for a frame with room (a frame or so).
+    if (actor->atSpot && ++actor->frames >= WORLD_DWELL_TICK_FRAMES
+     && (!TickDecides(actor) || !DecisionWaits(actor, obj, AMBIENCE_DECIDE_DWELL)))
     {
         actor->frames = 0;
         actor->t++;
@@ -3493,9 +3838,22 @@ static void UpdateActor(struct WalkerActor *actor)
          && !DecideBeat(actor, obj, AMBIENCE_DECIDE_DWELL, 0))
             TemplateTick(actor, obj);
     }
+    else if (actor->atSpot && actor->frames >= WORLD_DWELL_TICK_FRAMES)
+    {
+        actor->frames = WORLD_DWELL_TICK_FRAMES - 1;    // the tick comes next frame
+    }
     // No template move, step or plan while a beat holds the walker.
     if (BeatHoldsWalker(actor))
         return;
+    // The stay ended while a beat ran: its leaving moment, before the plan.
+    if (actor->leavePending && !BeatRunning(actor))
+    {
+        if (DecisionWaits(actor, obj, AMBIENCE_DECIDE_LEAVE))
+            return;
+        actor->leavePending = FALSE;
+        if (DecideBeat(actor, obj, AMBIENCE_DECIDE_LEAVE, AMBIENCE_FACT_LEAVING))
+            return;
+    }
 
     switch (actor->phase)
     {
@@ -3517,6 +3875,10 @@ static void UpdateActor(struct WalkerActor *actor)
             ChooseGoal(actor, obj);
         break;
     case WALKER_PHASE_WALK:
+        // A step boundary or the arrival: a costly decision waits for a
+        // frame with room.
+        if (DecisionWaits(actor, obj, actor->pathPos >= actor->pathLen ? AMBIENCE_DECIDE_ARRIVE : AMBIENCE_DECIDE_STEP))
+            break;
         WalkStep(actor, obj);
         break;
     }
@@ -3537,10 +3899,31 @@ static s16 FollowerFreeSlots(u8 *wantedOut)
     {
         u8 capacity = WorldSim_MapCapacity(sMapNode), locals = CountActors(WALKER_MODE_LOCAL);
         u8 pending = 0, room = capacity > locals ? capacity - locals : 0;
-        for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT && pending < room; slot++)
+        // The candidates (a pass over every trainer) as the follower rule
+        // counted them less than a spawn period ago, for the same map and
+        // walkers: companion_room checks reuse them (UpdateFollower, every
+        // spawn period, counts again and puts a companion away if needed).
+        if (sAmbience != NULL && sAmbience->pendingValid && sAmbience->pendingNode == sMapNode
+         && sAmbience->pendingLocals == locals
+         && gWayfarerWalkersDebug.frames - sAmbience->pendingFrame < WALKER_SPAWN_PERIOD)
         {
-            if (IsSpawnCandidate(slot))
-                pending++;
+            pending = sAmbience->pendingCount;
+        }
+        else
+        {
+            for (slot = 0; slot < WORLD_SIM_TRAINER_COUNT && pending < room; slot++)
+            {
+                if (IsSpawnCandidate(slot))
+                    pending++;
+            }
+            if (sAmbience != NULL)
+            {
+                sAmbience->pendingValid = TRUE;
+                sAmbience->pendingNode = sMapNode;
+                sAmbience->pendingLocals = locals;
+                sAmbience->pendingCount = pending;
+                sAmbience->pendingFrame = gWayfarerWalkersDebug.frames;
+            }
         }
         wanted += pending;
     }
@@ -3564,7 +3947,7 @@ static void UpdateFollower(void)
 
     // The companion never makes the rule hide the follower: once the rule
     // has no slot to spare for it, it goes.
-    if (IsCompanionOut() && freeSlots - 1 < FOLLOWER_FREE_SLOTS)
+    if (IsCompanionSpawned() && freeSlots - 1 < FOLLOWER_FREE_SLOTS)
         SendCompanionAway(WALKER_COMPANION_AWAY_FOLLOWER);
     hide = wanted != 0 && freeSlots < FOLLOWER_FREE_SLOTS;
     if (hide && !sFollowerFlagOurs && !FlagGet(FLAG_TEMP_HIDE_FOLLOWER))
@@ -3602,7 +3985,7 @@ static void CullForSlots(void)
     s8 i;
     if (FreeObjectSlots() > 1)
         return;
-    if (IsCompanionOut())
+    if (IsCompanionSpawned())
     {
         SendCompanionAway(WALKER_COMPANION_AWAY_SLOTS);
         return;
@@ -3764,6 +4147,8 @@ void WayfarerWalkers_Update(void)
     if (gSaveBlock1Ptr == NULL || gMapHeader.mapLayout == NULL || gMapHeader.events == NULL)
         return;
     start = ScanlineStamp();
+    if (sAmbience != NULL)
+        sAmbience->frameClaimed = sAmbience->reactChecked = FALSE;
     gWayfarerWalkersDebug.frames++;
     map = CurrentMap();
     if (!sActiveMapValid || sActiveMap != map || sTransition != TRANSITION_NONE)
@@ -3774,8 +4159,9 @@ void WayfarerWalkers_Update(void)
     CompanionFrame();
 
     if (++sSpawnTimer >= WALKER_SPAWN_PERIOD)
-    {
         sSpawnTimer = 0;
+    if (sSpawnTimer == STORY_PHASE)
+    {
         // Story objects can appear during a script, with the controls locked.
         CheckStoryScenes();
         CullForSlots();
@@ -3813,8 +4199,9 @@ void WayfarerWalkers_Update(void)
                 if (spawnCost > gWayfarerWalkersDebug.maxSpawnScanlines)
                     gWayfarerWalkersDebug.maxSpawnScanlines = spawnCost;
             }
-            UpdateFollower();
         }
+        if (sSpawnTimer == FOLLOWER_PHASE)
+            UpdateFollower();
     }
     PublishState();
     {
@@ -3950,37 +4337,26 @@ void WayfarerWalkers_Reset(void)
 void WayfarerWalkers_OnHeapReset(void)
 {
     u8 i;
-    // InitHeap overwrites the allocator: never Free this pointer again. Each
-    // actor re-plans from its current tile. A menu, battle or save tears the
-    // field down: a step under way would replay with no collision check when
-    // the sprites come back, so it ends here, on its destination tile.
+    // InitHeap overwrites the allocator: never Free these pointers again,
+    // and never read the ambience block here either: MoveSaveBlocks_ResetHeap
+    // has already copied the save blocks over the heap. Each actor re-plans
+    // from its current tile. A menu, battle or save tears the field down: a
+    // step under way would replay with no collision check when the sprites
+    // come back, so it ends here, on its destination tile.
     sWork = NULL;
     sSearch.actor = NO_ACTOR;
     sJobWorkspace = NULL;   // a trip search under way starts again
-    // The ambience block is still readable here: running beats end with
-    // plain field writes (facing, lock, a bowing nurse); a walker a beat left
-    // off its spot's tile walks back. Latches stay in the actors; the rest
-    // starts again in a new block. The companion's object is switched off
-    // (RemoveObjectEvent isn't safe here: the field's sprites may already be
-    // a menu's or a battle's); nothing respawns it.
-    DropCompanionObjects();
-    if (sAmbience != NULL)
-    {
-        for (i = 0; i < WALKER_ACTOR_COUNT; i++)
-        {
-            struct WalkerActor *actor = &sActors[i];
-            s8 dx, dy;
-            if (actor->mode == WALKER_MODE_NONE || !BeatRunning(actor))
-                continue;
-            WalkerBeats_OnHeapReset(&sAmbience->run[i], OwnObject(actor));
-            WalkerBeats_Displacement(&sAmbience->run[i], &dx, &dy);
-            if ((dx != 0 || dy != 0) && actor->mode == WALKER_MODE_LOCAL && actor->atSpot)
-                Replan(actor, 0);
-        }
-        sAmbience = NULL;
-    }
+    sAmbience = NULL;       // counters and cooldowns start again in a new block
     sEdgeJob.live = FALSE;
     gWayfarerWalkersDebug.heapResets++;
+    // Beats are stopped before any heap reset (the field-controls lock: menus,
+    // scripts, battles; warps and Continue forget the actors). Whatever is
+    // left ends with plain field writes from data outside the heap: the
+    // companion's object is switched off (RemoveObjectEvent isn't safe here:
+    // the field's sprites may already be a menu's or a battle's; nothing
+    // respawns it), a nurse left bowing stands up, facing locks go.
+    DropCompanionObjects();
+    WalkerBeats_OnHeapReset();
     for (i = 0; i < WALKER_ACTOR_COUNT; i++)
     {
         struct WalkerActor *actor = &sActors[i];
@@ -3990,8 +4366,22 @@ void WayfarerWalkers_OnHeapReset(void)
         obj = ActorObject(actor);
         if (obj->active && obj->localId == WALKER_LOCALID_BASE + i)
         {
+            obj->facingDirectionLocked = FALSE;
             SettleHeldMovement(obj);
             actor->actionPending = FALSE;
+        }
+        if (actor->beatActive)
+        {
+            // A beat nothing stopped (its state went with the block): the
+            // walker walks back to its spot (a beat may have left it a tile
+            // off) and faces it again there.
+            actor->beatActive = FALSE;
+            actor->leavePending = FALSE;
+            if (actor->mode == WALKER_MODE_LOCAL && actor->atSpot)
+            {
+                actor->phase = WALKER_PHASE_PLAN;
+                actor->wait = 0;
+            }
         }
         if ((actor->mode == WALKER_MODE_LOCAL || actor->mode == WALKER_MODE_LEAVING)
          && (actor->phase == WALKER_PHASE_QUEUED || actor->phase == WALKER_PHASE_SEARCH || actor->phase == WALKER_PHASE_WALK))

@@ -23,6 +23,13 @@
 // - The companion belongs to the walker layer (it spawns, validates and
 //   removes it); the runner only asks for it, and a beat whose companion
 //   didn't come out, or is gone, ends there.
+// - No beat may add a lag frame: a costly start (an icon or a field effect:
+//   a sprite and maybe a palette load; the companion's sheet and spawn) waits
+//   for a frame the walker layer gives it (WayfarerWalkers_ClaimFrame: one
+//   per frame, with room left before the frame's end, and not just before
+//   one of its busy frames), for a bounded time.
+// - With the field locked (a script, a menu) no held movement is issued: it
+//   would unfreeze the object under the script.
 
 #include "global.h"
 #include "wayfarer_walker_beats.h"
@@ -47,12 +54,34 @@
 #define RUN_MOVING       (1 << 1)   // a walk or a jump under way
 #define RUN_SKIP_RETURN  (1 << 2)   // a step was skipped: skip the step that returns it
 #define RUN_RESTORE      (1 << 3)   // stopped mid-movement: turn back once it is over
+#define RUN_RELEASE      (1 << 4)   // stopped under a lock: release the bowing NPC once it is gone
 
 #define SPIN_TURN_FRAMES    4
 #define GRASS_SHAKE_FRAMES  (2 * AMBIENCE_TICK_FRAMES)
 #define RETURN_WAIT_FRAMES  60      // a blocked return step retries this long
 #define BOW_MAX_FRAMES      120
 #define NURSE_RANGE         3       // the nurse stands behind the counter
+
+// What a start costs, in scanlines (SkyEmu, measured with the e2e profile),
+// and how long it may wait for a frame with that much room. A wait that runs
+// out takes the next frame the walker layer allows (one start a frame, never
+// its busy frames).
+#define ICON_LINES          30      // FLDEFF_EMOTE or a movement-action icon (about 11 here, more
+                                    // later in the frame: the sprite's first frame, a palette)
+#define EFFECT_LINES        24      // ripple, dust, sparkle, shaking grass (about 9, and more later)
+#define COMPANION_IN_LINES  20      // RemoveObjectEvent (about 10)
+#define START_WAIT_FRAMES   (2 * AMBIENCE_TICK_FRAMES)
+// The companion's sheet: smol decompression, 61 to 142 lines by species, one
+// call that can't be split. A frame left with that much is rare outdoors (the
+// field frame reaches the walkers 110 to 190 lines in), so the first half of
+// the wait takes only such a frame, the second half the first frame with as
+// much room as the best one seen; then it goes ahead (a lag frame, the
+// engine's own cost of any follower sprite appearing).
+#define PREPARE_LINES       150
+#define PREPARE_WAIT_FRAMES 120
+#define SPAWN_LINES         30      // the room check again and the spawn (about 20; the new sprite's
+                                    // first frame later in the frame is inside the end margin)
+#define SPAWN_WAIT_FRAMES   (8 * AMBIENCE_TICK_FRAMES)
 
 enum
 {
@@ -68,7 +97,7 @@ STATIC_ASSERT(sizeof(struct WalkerBeatLog) == 8, WalkerBeatLogSize);
 STATIC_ASSERT(offsetof(struct WalkerAmbienceDebug, running) == 20, WalkerAmbienceDebugRunning);
 STATIC_ASSERT(offsetof(struct WalkerAmbienceDebug, log) == 28, WalkerAmbienceDebugLog);
 STATIC_ASSERT(offsetof(struct WalkerAmbienceDebug, companionsOut) == 28 + 8 * WALKER_BEAT_LOG_SIZE, WalkerAmbienceDebugCompanion);
-STATIC_ASSERT(sizeof(struct WalkerAmbienceDebug) == 28 + 8 * WALKER_BEAT_LOG_SIZE + 28, WalkerAmbienceDebugSize);
+STATIC_ASSERT(sizeof(struct WalkerAmbienceDebug) == 28 + 8 * WALKER_BEAT_LOG_SIZE + 32, WalkerAmbienceDebugSize);
 
 static const s8 sDx[5] = {0, 0, 0, -1, 1};
 static const s8 sDy[5] = {0, 1, -1, 0, 0};
@@ -152,6 +181,27 @@ static bool8 HeldDone(struct ObjectEvent *obj)
     return ObjectEventClearHeldMovementIfFinished(obj) != 0;
 }
 
+// A frame for a costly start: TRUE once it has one (see PREPARE_LINES).
+static bool8 WaitForRoom(struct WalkerBeatRun *run, u16 lines, u8 maxWait)
+{
+    u16 left = WayfarerWalkers_FrameLinesLeft();
+    bool8 force = run->roomWait >= maxWait
+               || (run->roomWait >= maxWait / 2 && run->roomBest != 0 && left >= run->roomBest);
+
+    // A start's new sprite (its first animation frame, a palette blend) also
+    // costs the next frame: never just before a busy one, unless forced.
+    if ((force || !WayfarerWalkers_NextFrameBusy()) && WayfarerWalkers_ClaimFrame(lines, force))
+    {
+        run->roomWait = run->roomBest = 0;
+        return TRUE;
+    }
+    if (run->roomWait != 0xFF)
+        run->roomWait++;
+    if (run->roomWait <= maxWait / 2 && left > run->roomBest)
+        run->roomBest = left > 0xFF ? 0xFF : left;
+    return FALSE;
+}
+
 static struct ObjectEvent *Partner(const struct WalkerBeatRun *run)
 {
     struct ObjectEvent *other;
@@ -187,12 +237,12 @@ static void ReleaseNpc(struct WalkerBeatRun *run)
     run->npcObject = OBJECT_EVENTS_COUNT;
 }
 
-void WalkerBeats_Start(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 beat, u8 target,
+void WalkerBeats_Start(struct WalkerBeatRun *run, u8 beat, u8 startFacing, u8 target,
                        struct ObjectEvent *other, u8 parity)
 {
     memset(run, 0, sizeof(*run));
     run->beat = beat;
-    run->startFacing = obj->facingDirection;
+    run->startFacing = startFacing;
     run->target = IsCardinal(target) ? target : DIR_NONE;
     run->lastDir = DIR_NONE;
     run->grassSprite = MAX_SPRITES;
@@ -303,7 +353,7 @@ static bool8 DoStep(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 kind,
         }
         else
         {
-            dir = sOpposite[obj->facingDirection];
+            dir = IsCardinal(obj->facingDirection) ? sOpposite[obj->facingDirection] : DIR_NONE;
         }
         break;
     case AMBIENCE_STEP_LEFT:
@@ -444,6 +494,8 @@ static bool8 DoEmote(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 icon
         debug->paletteSkips++;
         return TRUE;
     }
+    if (!WaitForRoom(run, ICON_LINES, START_WAIT_FRAMES))
+        return FALSE;
     if (icon < AMBIENCE_ICON_FIRST_FLDEFF)
     {
         if (!Issue(obj, sIconActions[icon]))
@@ -463,15 +515,16 @@ static bool8 DoEmote(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 icon
     return run->stage != STAGE_HELD;
 }
 
-static void DoEffect(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 arg, bool8 visible,
-                     struct WalkerAmbienceDebug *debug)
+// TRUE once the effect started or was skipped; FALSE waits for a frame.
+static bool8 DoEffect(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 arg, bool8 visible,
+                      struct WalkerAmbienceDebug *debug)
 {
     u8 kind = arg & AMBIENCE_EFFECT_MASK, where = arg >> AMBIENCE_WHERE_SHIFT;
     s16 x = obj->currentCoords.x, y = obj->currentCoords.y, px, py;
     u8 dir = obj->facingDirection, priority = gSprites[obj->spriteId].oam.priority;
 
     if (kind >= ARRAY_COUNT(sEffectPaletteTags) || !visible)
-        return;
+        return TRUE;
     if (where == AMBIENCE_WHERE_AHEAD && IsCardinal(dir))
     {
         x += sDx[dir];
@@ -480,8 +533,17 @@ static void DoEffect(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 arg,
     if (!HasPalette(sEffectPaletteTags[kind]))
     {
         debug->paletteSkips++;
-        return;
+        return TRUE;
     }
+    if (kind == AMBIENCE_EFFECT_GRASS_SHAKE)
+    {
+        // Only grass shakes; the effect loops until it is stopped.
+        u8 behavior = MapGridGetMetatileBehaviorAt(x, y);
+        if (!MetatileBehavior_IsTallGrass(behavior) && !MetatileBehavior_IsLongGrass(behavior))
+            return TRUE;
+    }
+    if (!WaitForRoom(run, EFFECT_LINES, START_WAIT_FRAMES))
+        return FALSE;
     switch (kind)
     {
     case AMBIENCE_EFFECT_RIPPLE:
@@ -500,11 +562,7 @@ static void DoEffect(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 arg,
         break;
     case AMBIENCE_EFFECT_GRASS_SHAKE:
     {
-        u8 behavior = MapGridGetMetatileBehaviorAt(x, y);
         u32 spriteId;
-        // Only grass shakes; the effect loops until it is stopped.
-        if (!MetatileBehavior_IsTallGrass(behavior) && !MetatileBehavior_IsLongGrass(behavior))
-            return;
         StopGrass(run);
         gFieldEffectArguments[0] = x;
         gFieldEffectArguments[1] = y;
@@ -512,7 +570,7 @@ static void DoEffect(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 arg,
         gFieldEffectArguments[3] = 2;
         spriteId = FieldEffectStart(FLDEFF_SHAKING_GRASS);
         if (spriteId >= MAX_SPRITES)
-            return;
+            return TRUE;
         run->grassSprite = spriteId;
         run->grassFrames = 0;
         break;
@@ -532,6 +590,7 @@ static void DoEffect(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 arg,
         break;
     }
     debug->effects++;
+    return TRUE;
 }
 
 static bool8 IsNurse(u16 gfx)
@@ -655,23 +714,29 @@ static bool8 RunStep(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 op, 
     case AMBIENCE_OP_EMOTE_PARITY:
         return DoEmote(run, obj, run->parity ? (arg >> AMBIENCE_PARITY_SHIFT) : (arg & 0xF), debug);
     case AMBIENCE_OP_EFFECT:
-        DoEffect(run, obj, arg, visible, debug);
-        return TRUE;
+        return DoEffect(run, obj, arg, visible, debug);
     case AMBIENCE_OP_COMPANION_OUT:
-        // Two frames: its sprite sheet is decompressed first, alone (about
-        // 140 scanlines); then the room is checked again (it may have gone
-        // since the decision) and it spawns. Without room the beat ends
+        // Two frames: its sprite sheet is decompressed first, alone (61 to
+        // 142 scanlines), in the frame with the most room the wait finds;
+        // then, in a frame with room, the room is checked again (it may have
+        // gone since the decision) and it spawns. Without room the beat ends
         // here, cleanly.
         if (run->stage == STAGE_START)
         {
+            if (!WaitForRoom(run, PREPARE_LINES, PREPARE_WAIT_FRAMES))
+                return FALSE;
             WayfarerWalkers_CompanionPrepare(obj);
             run->stage = STAGE_COUNT;
             return FALSE;
         }
+        if (!WaitForRoom(run, SPAWN_LINES, SPAWN_WAIT_FRAMES))
+            return FALSE;
         if (!WayfarerWalkers_CompanionOut(obj))
             run->step = AMBIENCE_MAX_STEPS;
         return TRUE;
     case AMBIENCE_OP_COMPANION_IN:
+        if (WayfarerWalkers_Companion(obj) != NULL && !WaitForRoom(run, COMPANION_IN_LINES, START_WAIT_FRAMES))
+            return FALSE;
         WayfarerWalkers_CompanionIn(obj);
         return TRUE;
     case AMBIENCE_OP_COMPANION_DO:
@@ -682,7 +747,7 @@ static bool8 RunStep(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 op, 
     }
 }
 
-u8 WalkerBeats_Run(struct WalkerBeatRun *run, struct ObjectEvent *obj, bool8 visible,
+u8 WalkerBeats_Run(struct WalkerBeatRun *run, struct ObjectEvent *obj, bool8 visible, bool8 quiet,
                    struct WalkerAmbienceDebug *debug)
 {
     const struct WayfarerAmbienceBeat *beat = &gWayfarerAmbienceBeats[run->beat];
@@ -694,6 +759,13 @@ u8 WalkerBeats_Run(struct WalkerBeatRun *run, struct ObjectEvent *obj, bool8 vis
     // right) chain within the frame.
     for (guard = 0; guard <= AMBIENCE_MAX_STEPS && run->step < beat->stepCount; guard++)
     {
+        if (quiet && run->stage == STAGE_START)
+        {
+            // A wait for room (WaitForRoom) counts this frame too.
+            if (run->roomWait != 0 && run->roomWait != 0xFF)
+                run->roomWait++;
+            return WALKER_BEAT_RUNNING;
+        }
         if (!RunStep(run, obj, beat->steps[run->step][0], beat->steps[run->step][1], visible, debug))
             return WALKER_BEAT_RUNNING;
         run->step++;
@@ -705,30 +777,49 @@ u8 WalkerBeats_Run(struct WalkerBeatRun *run, struct ObjectEvent *obj, bool8 vis
     return (run->dx != 0 || run->dy != 0) ? WALKER_BEAT_DONE_DISPLACED : WALKER_BEAT_DONE;
 }
 
-bool8 WalkerBeats_Stop(struct WalkerBeatRun *run, struct ObjectEvent *obj, bool8 restoreFacing)
+bool8 WalkerBeats_Stop(struct WalkerBeatRun *run, struct ObjectEvent *obj, bool8 restoreFacing, bool8 locked)
 {
     StopGrass(run);
-    ReleaseNpc(run);
+    // Under a script's lock the NPC is the script's to move: a bow of ours
+    // still showing is released once the lock is gone.
+    if (locked)
+    {
+        if (run->npcObject < OBJECT_EVENTS_COUNT)
+            run->flags |= RUN_RELEASE;
+    }
+    else
+    {
+        ReleaseNpc(run);
+    }
     if (obj == NULL)
         return FALSE;
     obj->facingDirectionLocked = FALSE;
     run->flags &= ~RUN_LOCKED;
     if ((run->flags & RUN_MOVING) && ObjectEventCheckHeldMovementStatus(obj) == 0)
     {
-        // A walk or a jump can't be cancelled: turn back once it is over.
+        // A walk or a jump can't be cancelled: turn back once it is over
+        // (with the field free again: the walker waits for that).
         run->flags &= ~RUN_MOVING;
         if (restoreFacing)
             run->flags |= RUN_RESTORE;
         return TRUE;
     }
     run->flags &= ~RUN_MOVING;
-    if (restoreFacing)
+    if (!restoreFacing)
+        return FALSE;
+    if (locked)
     {
-        run->flags |= RUN_RESTORE;
-        WalkerBeats_RestoreFacing(run, obj);
-        return (run->flags & RUN_RESTORE) != 0;
+        // No held movement under a lock (ObjectEventSetHeldMovement
+        // unfreezes): end a face or icon action of the beat, then a plain turn.
+        if (obj->heldMovementActive)
+            ObjectEventClearHeldMovement(obj);
+        if (IsCardinal(run->startFacing) && obj->facingDirection != run->startFacing)
+            ObjectEventTurn(obj, run->startFacing);
+        return FALSE;
     }
-    return FALSE;
+    run->flags |= RUN_RESTORE;
+    WalkerBeats_RestoreFacing(run, obj);
+    return (run->flags & RUN_RESTORE) != 0;
 }
 
 void WalkerBeats_RestoreFacing(struct WalkerBeatRun *run, struct ObjectEvent *obj)
@@ -741,30 +832,31 @@ void WalkerBeats_RestoreFacing(struct WalkerBeatRun *run, struct ObjectEvent *ob
         run->flags &= ~RUN_RESTORE;
 }
 
-void WalkerBeats_OnHeapReset(struct WalkerBeatRun *run, struct ObjectEvent *obj)
+void WalkerBeats_ReleaseNpc(struct WalkerBeatRun *run)
 {
-    // The field is being torn down: plain field writes only. The sprites go
-    // with it (the shaking grass too); the objects keep their fields.
-    run->grassSprite = MAX_SPRITES;
-    if (run->npcObject < OBJECT_EVENTS_COUNT)
+    if (run->flags & RUN_RELEASE)
     {
-        struct ObjectEvent *npc = &gObjectEvents[run->npcObject];
-        if (npc->active && npc->movementActionId == MOVEMENT_ACTION_NURSE_JOY_BOW_DOWN)
+        run->flags &= ~RUN_RELEASE;
+        ReleaseNpc(run);
+    }
+}
+
+void WalkerBeats_OnHeapReset(void)
+{
+    u8 i;
+    // The field is being torn down: plain field writes only. A bow left by a
+    // beat stopped under a lock (its release waits for the lock to go) ends
+    // here; a script's own bow can't span a heap reset.
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    {
+        struct ObjectEvent *npc = &gObjectEvents[i];
+        if (npc->active && npc->heldMovementActive && npc->movementActionId == MOVEMENT_ACTION_NURSE_JOY_BOW_DOWN
+         && IsNurse(npc->graphicsId))
         {
             npc->movementActionId = MOVEMENT_ACTION_NONE;
             npc->heldMovementActive = FALSE;
             npc->heldMovementFinished = FALSE;
         }
-        run->npcObject = OBJECT_EVENTS_COUNT;
-    }
-    run->flags = 0;
-    if (obj == NULL)
-        return;
-    obj->facingDirectionLocked = FALSE;
-    if (IsCardinal(run->startFacing))
-    {
-        obj->facingDirection = run->startFacing;
-        obj->movementDirection = run->startFacing;
     }
 }
 

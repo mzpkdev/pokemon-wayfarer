@@ -299,6 +299,11 @@ The first draft has 35 beats. Placeholder `wait` lengths are in ticks of
     or the tile straight ahead of the player.
 - **Placement:** the companion appears on that tile, facing the walker. It
   lasts only for its beat, and is removed when the beat ends or is interrupted.
+- **Cost:** bringing it out decompresses its follower sprite sheet, the
+  engine's normal cost for any follower sprite. That is one call too long for a
+  busy outdoor frame, so the walker waits up to about 2 s for the frame with
+  the most room and then accepts one lag frame per companion out. This is the
+  one exception to the rule that no beat adds lag frames.
 - **Priority:** it is the lowest-priority object. It never hides the player's
   following Pokémon, never blocks a spawn, and is the first object removed when
   slots are short.
@@ -336,7 +341,8 @@ tables, as it does for `routines.json`.
   walker's existing EWRAM.
 - **ROM:** the pool, tag, trainer, and relation tables, about 2.5 KB.
 - **CPU:** filtering about 30 rows at a decision point, well inside the walker's
-  per-frame budget. No beat may add lag frames.
+  per-frame budget. No beat may add lag frames, except the companion's one
+  spawn frame ([companion](#companion), "Cost").
 
 ### Acceptance
 
@@ -354,7 +360,8 @@ tables, as it does for `routines.json`.
 7. Two runs with the same inputs give the same beats on the same frames, and the
    random number generator is never read.
 8. `ambience.json` validation fails the build on each listed error.
-9. No new lag frames in the walker verifier's `perf` and `seam` scenarios.
+9. No new lag frames in the walker verifier's `perf` and `seam` scenarios, and
+   none from beats anywhere else except one per companion out.
 
 ## Open questions
 

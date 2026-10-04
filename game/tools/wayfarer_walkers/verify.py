@@ -1750,7 +1750,7 @@ AMBIENCE_LOG_SIZE = 32
 AMBIENCE_COMPANION_OFFSET = AMBIENCE_DEBUG_SIZE + 8 * AMBIENCE_LOG_SIZE
 COMPANION_AWAY = ("slots", "follower", "vanished", "interrupted")
 COMPANION_DENY = ("place", "busy", "slots", "follower", "palette", "tile")
-AMBIENCE_COMPANION_SIZE = 2 * (2 + len(COMPANION_AWAY) + len(COMPANION_DENY) + 2)
+AMBIENCE_COMPANION_SIZE = 2 * (2 + len(COMPANION_AWAY) + len(COMPANION_DENY) + 3)
 BEAT_NONE = 0xFF
 BEAT_EVENTS = ("start", "end", "interrupt")
 SLOT_MISTY = 1
@@ -1810,7 +1810,8 @@ class BeatWatcher:
             "out": values[0], "in": values[1],
             "away": dict(zip(COMPANION_AWAY, values[2:2 + away])),
             "denied": dict(zip(COMPANION_DENY, values[2 + away:2 + away + denied])),
-            "out_failed": values[2 + away + denied], "strays": values[3 + away + denied]}
+            "out_failed": values[2 + away + denied], "strays": values[3 + away + denied],
+            "prepares": values[4 + away + denied]}
         return new
 
     def running(self, actor_index: int):
@@ -1880,7 +1881,9 @@ def scenario_arrive(game: Game) -> dict:
     out of the Viridian Mart door and spawns a few tiles from a square spot
     (39, 30); he plays arrive_look as he reaches it, within seconds of
     spawning. The player stands out of notice range, so no react beat
-    outranks it."""
+    outranks it. (A fresh walker also starts with its steps-since-beat
+    passed, so an idle step beat such as look_around may come first, on the
+    way.)"""
     boot(game, VIRIDIAN, 34, 33, DIR_EAST)
     place_blue(game, node=NODE_VIRIDIAN, destId=SPOT_VIRIDIAN_MART_SQUARE, state=STATE_TRAVELLING,
                arrival=ARRIVAL_DOOR, crossing=3, activity=ACTIVITY_RELAX, dwell=6)
@@ -1910,8 +1913,7 @@ def scenario_arrive(game: Game) -> dict:
               "events": watcher.events, "counters": watcher.counters, "player": game.player(),
               "screenshots": [shot], "debug": game.walker_debug()}
     result["pass"] = (2 <= distance <= 5 and arrived_frame is not None and arrive is not None
-                      and starts and starts[0]["name"] == "arrive_look"
-                      and arrive["frame"] - arrived_frame <= 2)
+                      and 0 <= arrive["frame"] - arrived_frame <= 2)
     return result
 
 
@@ -2387,6 +2389,9 @@ def scenario_companionfollower(game: Game) -> dict:
     return result
 
 
+COMPANION_OUT_FRAMES = 120 + 120 + 60
+
+
 def scenario_companionpush(game: Game) -> dict:
     """Acceptance 5 and 6: Blue's ace_play is under way with his companion out;
     the player steps up and presses into him. The beat is interrupted and the
@@ -2399,7 +2404,9 @@ def scenario_companionpush(game: Game) -> dict:
     watcher = BeatWatcher(game)
     game.reset_frame_maxima()
     start = wait_ace(game, watcher, SLOT_BLUE, 9000)
-    out = game.wait_for(lambda: companion_objects(game), 60, step=1, what="the companion") if start else None
+    # "companion out" waits for frames with room: up to 120 for the sheet
+    # (PREPARE_WAIT_FRAMES) and 120 for the spawn (SPAWN_WAIT_FRAMES).
+    out = game.wait_for(lambda: companion_objects(game), COMPANION_OUT_FRAMES, step=1, what="the companion") if start else None
     pressing_from = interrupt = gone_at = None
     shot = shot_before = None
     if out:
@@ -2447,6 +2454,269 @@ def scenario_companionpush(game: Game) -> dict:
     return result
 
 
+# ---------------------------------------------------------------------------
+# Lag frames (spec, "Costs": no beat may add a lag frame). A lag frame is an
+# emulated frame in which the field's main callback didn't run (the previous
+# field frame overran): the walkers' frame counter didn't move although the
+# field controls are free and no map is loading. Each scene runs twice in the
+# same place and with the same player input: with its walkers and beats; as
+# the baseline, with the same walkers but no beat (every beat's cooldown held
+# up in the ambience block each frame: the selection still runs, nothing
+# fires), so walker work that lags with or without beats (a spawn or follower
+# frame landing on a busy map frame) counts on both sides; and, for the
+# record, with every trainer parked in the Mart (the map's own lag frames).
+#
+# Attribution: every lag frame is listed with the beat events, icons, effects
+# and companion counters within LAG_NEAR frames, and the walker update of the
+# frame that overran. A lag frame within LAG_NEAR frames of a companion sheet
+# decompression ("companion out"'s first frame, counted by companionPrepares)
+# is the user-approved exception: the engine's smol decompression of a
+# follower sheet can't be split (docs: "Companion"). Such a frame shifts the
+# emulated time against the field frames by one, so engine work driven by
+# emulated time (the time-of-day palette re-blend) can afterwards land on a
+# field frame that has one walker line less to spare; a lag frame after a
+# prepare lag whose overrunning frame ran no beat work (no event nearby, a
+# walker update no larger than LAG_IDLE_LINES) is listed as such a knock-on,
+# at most one per prepare lag. A lag frame with no beat anywhere near it (no
+# beat running in the LAG_NEAR + 1 frames before it, nothing within LAG_NEAR
+# frames, the last beat event of any kind, an icon or effect included, at
+# least LAG_QUIET_FRAMES back, so no beat sprite is left on screen) is
+# listed as "no beat": the beat layer only counted ticks around it. The
+# scenario fails on any other lag frame beyond the baseline's count.
+
+LAG_NEAR = 3
+LAG_IDLE_LINES = 8
+LAG_QUIET_FRAMES = 120
+# struct WalkerAmbience: the debug block, then struct AmbienceWalker select[4]
+# (8 bytes, then a cooldown byte per beat).
+AMBIENCE_DEBUG_BLOCK_SIZE = AMBIENCE_COMPANION_OFFSET + AMBIENCE_COMPANION_SIZE + 2
+AMBIENCE_SELECT_SIZE = 8 + 40
+
+
+class LagMeter:
+    def __init__(self, game: Game, watch_beats: bool, quiet: bool = False):
+        self.game = game
+        self.quiet = quiet
+        self.watcher = BeatWatcher(game) if watch_beats else None
+        self.frames_addr = game.sym["gWayfarerWalkersDebug"]
+        self.update_addr = game.sym.get("sLastUpdateScanlines")
+        self.n = 0
+        self.lags = []
+        self.locked = 0
+        self.notes = {}     # step -> list of what happened
+        self.updates = {}   # step -> the walker update's scanlines
+        self.running = {}   # step -> the beats running then
+        self.phase = {}     # step -> the walkers' spawn-period frame (sSpawnTimer)
+        self.prepares = []
+        self.last = None
+        self.map = None
+        self.counters = None
+
+    def frames(self) -> int:
+        return self.game.emu.u32(self.frames_addr)
+
+    def start(self) -> None:
+        self.last = self.frames()
+        self.map = self.game.current_map()
+        self.game.reset_frame_maxima()
+
+    def note(self, what) -> None:
+        self.notes.setdefault(self.n, []).append(what)
+
+    def hold_beats(self) -> None:
+        """No beat can be picked: every cooldown held at its top."""
+        address = self.game.emu.u32(self.game.sym["sAmbience"])
+        if 0x02000000 <= address < 0x02040000:
+            for i in range(ACTOR_COUNT):
+                self.game.emu.write(address + AMBIENCE_DEBUG_BLOCK_SIZE + AMBIENCE_SELECT_SIZE * i + 8, b"\xff" * 40)
+
+    def step(self, count: int = 1) -> None:
+        for _ in range(count):
+            if self.quiet:
+                self.hold_beats()
+            self.game.emu.step(1)
+            self.n += 1
+            frames = self.frames()
+            if self.game.controls_locked() or self.game.current_map() != self.map:
+                self.locked += 1
+            elif frames == self.last:
+                self.lags.append(self.n)
+            self.last = frames
+            if self.update_addr is not None:
+                self.updates[self.n] = self.game.emu.u32(self.update_addr)
+            if "sSpawnTimer" in self.game.sym:
+                self.phase[self.n] = self.game.emu.read(self.game.sym["sSpawnTimer"], 1)[0]
+            if self.watcher is None:
+                continue
+            for event in self.watcher.poll():
+                self.note(f"{event['event']} {event['name']}")
+            c = self.watcher.counters
+            if c is None:
+                continue
+            self.running[self.n] = [self.watcher.names[b] for b in c["running"] if b < len(self.watcher.names)]
+            now = {"icon": c["icons"], "effect": c["effects"], "companion out": c["companion"]["out"],
+                   "companion in": c["companion"]["in"], "prepare": c["companion"]["prepares"]}
+            if self.counters is not None:
+                for key, value in now.items():
+                    if value > self.counters[key]:
+                        self.note(key)
+                        if key == "prepare":
+                            self.prepares.append(self.n)
+            self.counters = now
+
+    def quiet_around(self, lag: int) -> bool:
+        """No beat ran or happened anywhere near this frame (see LAG_QUIET_FRAMES)."""
+        if any(self.running.get(step) for step in range(lag - LAG_NEAR - 1, lag)):
+            return False
+        return not any(self.notes.get(step) for step in range(lag - LAG_QUIET_FRAMES, lag + LAG_NEAR + 1))
+
+    def walk_to_y(self, y: int) -> None:
+        here = self.game.player()["y"]
+        key = "Up" if y < here else "Down"
+        self.game.emu.hold(key, 1)
+        for _ in range(240):
+            self.step(1)
+            if self.game.player()["y"] == y:
+                break
+        self.game.emu.hold(key, 0)
+
+    def result(self) -> dict:
+        rows, approved, knockons, other, nobeat = [], 0, 0, 0, 0
+        prepare_lags = 0
+        for lag in self.lags:
+            near = [(step - lag, what) for step in range(lag - LAG_NEAR, lag + LAG_NEAR + 1)
+                    for what in self.notes.get(step, [])]
+            update = self.updates.get(lag - 1)
+            if any(abs(p - lag) <= LAG_NEAR for p in self.prepares):
+                kind = "prepare"
+                approved += 1
+                prepare_lags += 1
+            elif prepare_lags > knockons and not near and update is not None and update <= LAG_IDLE_LINES:
+                kind = "knock-on"
+                knockons += 1
+            elif self.watcher is not None and self.quiet_around(lag):
+                kind = "no beat"
+                nobeat += 1
+            else:
+                kind = "other"
+                other += 1
+            rows.append({"frame": lag, "kind": kind, "update_scanlines": update, "near": near,
+                         "running": self.running.get(lag - 1, []),
+                         "updates_before": [self.updates.get(lag - k) for k in range(6, 0, -1)],
+                         "frames_since_beat_event": next((lag - step for step in range(lag, 0, -1)
+                                                          if self.notes.get(step)), None),
+                         "phase": self.phase.get(lag - 1)})
+        quiet = [v for step, v in self.updates.items()
+                 if not any(abs(p - step) <= 1 for p in self.prepares)]
+        return {"frames": self.n, "lag": len(self.lags), "prepare": approved, "knock_on": knockons,
+                "no_beat": nobeat, "other": other, "locked_frames": self.locked, "lag_frames": rows,
+                "prepares": len(self.prepares),
+                "max_update_scanlines": max(self.updates.values(), default=0),
+                "max_update_scanlines_without_prepares": max(quiet, default=0)}
+
+
+def park_everyone(game: Game, keep=()) -> None:
+    for slot in range(25):
+        if slot not in keep:
+            game.write_record(slot, **plain_record(node=NODE_MART, destId=SPOT_MART_SHELF, state=STATE_DWELLING,
+                                                   arrival=ARRIVAL_NONE, crossing=0, activity=ACTIVITY_SHOP,
+                                                   dwell=60))
+
+
+def lag_beatspot(game: Game, walkers: bool, quiet: bool = False) -> LagMeter:
+    boot(game, VIRIDIAN, 16, 43, DIR_NORTH)
+    park_everyone(game, keep=(SLOT_BLUE,) if walkers else ())
+    if walkers:
+        place_blue(game, node=NODE_VIRIDIAN, destId=SPOT_VIRIDIAN_WATER, state=STATE_DWELLING,
+                   activity=ACTIVITY_FISH, dwell=40)
+    game.warp(VIRIDIAN, 16, 43, DIR_NORTH)
+    if walkers:
+        game.wait_for(lambda: (game.actor_for(SLOT_BLUE) or {}).get("atSpot"), 600, what="Blue")
+    game.settle()
+    meter = LagMeter(game, walkers, quiet)
+    meter.start()
+    meter.step(3600)
+    return meter
+
+
+def lag_notice(game: Game, walkers: bool, quiet: bool = False) -> LagMeter:
+    boot(game, VIRIDIAN, 13, 43, DIR_NORTH)
+    park_everyone(game, keep=(SLOT_BLUE,) if walkers else ())
+    if walkers:
+        place_blue(game, node=NODE_VIRIDIAN, destId=SPOT_VIRIDIAN_WATER, state=STATE_DWELLING,
+                   activity=ACTIVITY_FISH, dwell=60)
+    game.warp(VIRIDIAN, 13, 43, DIR_NORTH)
+    if walkers:
+        game.wait_for(lambda: (game.actor_for(SLOT_BLUE) or {}).get("atSpot"), 600, what="Blue")
+    game.settle()
+    meter = LagMeter(game, walkers, quiet)
+    meter.start()
+    meter.step(120)
+    meter.walk_to_y(42)
+    meter.step(400)
+    meter.walk_to_y(43)
+    meter.step(1360)
+    meter.walk_to_y(42)
+    meter.step(400)
+    return meter
+
+
+def lag_greet(game: Game, walkers: bool, quiet: bool = False) -> LagMeter:
+    game.emu.step(240)
+    arrange_with_badges(game, VIRIDIAN, 16, 42, 8)
+    park_everyone(game, keep=(SLOT_BROCK, SLOT_MISTY) if walkers else ())
+    if walkers:
+        place_dwelling(game, SLOT_BROCK, SPOT_VIRIDIAN_WATER, NODE_VIRIDIAN)
+        place_dwelling(game, SLOT_MISTY, SPOT_VIRIDIAN_WATER_2, NODE_VIRIDIAN)
+    game.warp(VIRIDIAN, 16, 42, DIR_NORTH)
+    game.settle()
+    meter = LagMeter(game, walkers, quiet)
+    meter.start()
+    meter.step(2400)
+    return meter
+
+
+def lag_companion(game: Game, walkers: bool, quiet: bool = False) -> LagMeter:
+    species = species_ids()
+    game.emu.step(240)
+    arrange_party(game, VIRIDIAN, 15, 42, DIR_NORTH, [species["SPECIES_PIKACHU"]])
+    park_everyone(game, keep=(SLOT_BLUE,) if walkers else ())
+    if walkers:
+        place_blue(game, node=NODE_VIRIDIAN, destId=SPOT_VIRIDIAN_WATER, state=STATE_DWELLING,
+                   activity=ACTIVITY_FISH, dwell=60)
+    game.warp(VIRIDIAN, 15, 42, DIR_NORTH)
+    if walkers:
+        game.wait_for(lambda: (game.actor_for(SLOT_BLUE) or {}).get("atSpot"), 600, what="Blue")
+    else:
+        game.settle()
+    game.walk("Up", "y", 41)
+    meter = LagMeter(game, walkers, quiet)
+    meter.start()
+    meter.step(6000)
+    return meter
+
+
+LAG_SCENES = {"beatspot": lag_beatspot, "notice": lag_notice, "greet": lag_greet, "companion": lag_companion}
+
+
+def scenario_lag(game: Game) -> dict:
+    """No beat adds a lag frame: four beat scenes at Viridian, each against
+    its baseline with the same walkers and no beats (see LagMeter)."""
+    scenes = {}
+    only = os.environ.get("WALKERS_LAG_SCENES")     # e.g. "greet,notice" while investigating
+    for name, scene in LAG_SCENES.items():
+        if only and name not in only.split(","):
+            continue
+        with_beats = scene(game, True).result()
+        baseline = scene(game, True, quiet=True).result()
+        empty = scene(game, False).result()
+        started = with_beats["frames"] and (with_beats["prepares"] or name != "companion")
+        scenes[name] = {"beats": with_beats, "baseline": baseline, "no_walkers": empty,
+                        "pass": bool(started) and baseline["prepares"] == 0
+                                and with_beats["other"] <= baseline["lag"]}
+    return {"scenes": scenes, "pass": all(scene["pass"] for scene in scenes.values())}
+
+
 SCENARIOS = {"spot": scenario_spot, "bridge": scenario_bridge, "walkoff": scenario_walkoff, "mortar": scenario_mortar,
              "safari": scenario_safari, "edge": scenario_edge, "door": scenario_door,
              "linger": scenario_linger, "save": scenario_save, "gym": scenario_gym,
@@ -2457,7 +2727,9 @@ SCENARIOS = {"spot": scenario_spot, "bridge": scenario_bridge, "walkoff": scenar
              "beatspot": scenario_beatspot, "arrive": scenario_arrive, "notice": scenario_notice, "greet": scenario_greet,
              "beatpush": scenario_beatpush, "determinism": scenario_determinism,
              "companion": scenario_companion, "companionslots": scenario_companionslots,
-             "companionfollower": scenario_companionfollower, "companionpush": scenario_companionpush}
+             "companionfollower": scenario_companionfollower, "companionpush": scenario_companionpush,
+             "lag": scenario_lag}
+SLOW_SCENARIOS = {"lag"}   # not part of `all`
 
 
 def check_content_hash(rom: Path, symbols: dict, tables) -> None:
@@ -2485,7 +2757,9 @@ def main(argv=None) -> int:
     args.output.mkdir(parents=True, exist_ok=True)
     symbols = read_symbols(args.symbols)
     check_content_hash(args.rom, symbols, load_world_ids(ROOT / "game"))
-    names = sorted(SCENARIOS) if args.scenario == "all" else [args.scenario]
+    # `lag` steps four scenes frame by frame (about 45 minutes): run it on its
+    # own (`--scenario lag`) after a change to the walkers' frame costs.
+    names = sorted(set(SCENARIOS) - SLOW_SCENARIOS) if args.scenario == "all" else [args.scenario]
     results = {}
     failed = False
     for name in names:

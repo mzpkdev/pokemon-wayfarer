@@ -78,6 +78,8 @@ struct WalkerAmbienceDebug
     u16 companionDenied[WALKER_COMPANION_DENY_COUNT];   // companion_room false at a decision, by its first failing WALKER_COMPANION_DENY_*
     u16 companionOutFailed; // "companion out" found no room any more (or the spawn failed): the beat ended
     u16 companionStrays;    // objects with the companion's local id that weren't the live companion, removed
+    u16 companionPrepares;  // companion sheets decompressed ("companion out"'s first frame: the one costly frame)
+    u16 padding2;
 };
 
 // A running beat's state (the beats module's own; the walker layer only
@@ -102,6 +104,8 @@ struct WalkerBeatRun
     u8 otherLocalId;
     u8 parity;          // the beat counter's parity at the start (emote even/odd)
     u8 beat;
+    u8 roomWait;        // frames a costly start (icon, effect, companion) has waited for a frame with room
+    u8 roomBest;        // the most lines a frame had left during that wait
     u8 padding;
 };
 
@@ -112,42 +116,59 @@ enum
     WALKER_BEAT_DONE_DISPLACED, // finished off its start tile (a return was blocked)
 };
 
-// Starts a beat: captures the start facing, the spot's facing (target, or
-// DIR_NONE) and the partner's object (or NULL).
-void WalkerBeats_Start(struct WalkerBeatRun *run, struct ObjectEvent *obj, u8 beat, u8 target,
+// Starts a beat: captures the start facing (the facing the walker is turning
+// to, when a turn is still queued), the spot's facing (target, or DIR_NONE)
+// and the partner's object (or NULL).
+void WalkerBeats_Start(struct WalkerBeatRun *run, u8 beat, u8 startFacing, u8 target,
                        struct ObjectEvent *other, u8 parity);
 // One frame of the beat. visible: the walker is in the camera's view
-// (field effects and sounds only play then).
-u8 WalkerBeats_Run(struct WalkerBeatRun *run, struct ObjectEvent *obj, bool8 visible,
+// (field effects and sounds only play then). quiet: no new step starts this
+// frame (steps under way go on).
+u8 WalkerBeats_Run(struct WalkerBeatRun *run, struct ObjectEvent *obj, bool8 visible, bool8 quiet,
                    struct WalkerAmbienceDebug *debug);
 // Stops the beat at once (an interruption, or the cleanup after its end):
 // the shaking grass stops, a bowing NPC is released, the facing is unlocked.
 // obj may be NULL (the object is gone). Returns TRUE when a walk or a jump of
 // the beat is still under way on obj: it can't be cancelled, so the caller
 // waits for it and then calls WalkerBeats_RestoreFacing. Otherwise the facing
-// is restored now (a held face action) unless restoreFacing is FALSE.
-bool8 WalkerBeats_Stop(struct WalkerBeatRun *run, struct ObjectEvent *obj, bool8 restoreFacing);
+// is restored now unless restoreFacing is FALSE. locked: a script or a menu
+// holds the field (objects may be frozen): no held movement is issued (it
+// would unfreeze the walker; the facing is set with a plain turn) and a bowing
+// NPC is left to the script until WalkerBeats_ReleaseNpc.
+bool8 WalkerBeats_Stop(struct WalkerBeatRun *run, struct ObjectEvent *obj, bool8 restoreFacing, bool8 locked);
 // After a stopped beat's last movement: face its start facing again.
 void WalkerBeats_RestoreFacing(struct WalkerBeatRun *run, struct ObjectEvent *obj);
-// InitHeap is about to rewrite the heap and the field is being torn down: end
-// the beat with plain field writes (facing, lock, a bowing NPC's held
-// movement); no sprite calls.
-void WalkerBeats_OnHeapReset(struct WalkerBeatRun *run, struct ObjectEvent *obj);
+// With the field controls free again: releases an NPC a locked stop left bowing.
+void WalkerBeats_ReleaseNpc(struct WalkerBeatRun *run);
+// InitHeap (the heap may already hold other data, so no beat state is read):
+// any nurse still held in a bow ends it, with plain field writes.
+void WalkerBeats_OnHeapReset(void);
 // Whether the beat walks the walker off its tile and where it lands.
 void WalkerBeats_Displacement(const struct WalkerBeatRun *run, s8 *dx, s8 *dy);
 
 // Provided by src/wayfarer_walkers.c: may a beat's step go this way (a free,
 // standable tile, by the walker's own collision rules)?
 bool8 WayfarerWalkers_BeatCanStep(struct ObjectEvent *obj, u8 dir);
-// Provided by src/wayfarer_walkers.c, which owns the companion: for the
-// walker whose object this is, bring its companion out (FALSE: no room any
-// more, or the spawn failed; the beat then ends), put it away, and its live
-// companion object (NULL when none is out).
-bool8 WayfarerWalkers_CompanionOut(struct ObjectEvent *obj);
+// Provided by src/wayfarer_walkers.c: claims this frame for one costly start
+// (an icon, a field effect, the companion) of about this many scanlines.
+// FALSE: another one or a full decision already took the frame, it is the
+// walkers' busy frames (spawns, the follower rule), or (unless force) fewer lines are left before the
+// frame's end margin; the caller tries again next frame. Lines left: the
+// lines this frame still has (for the caller's own choice of frame).
+bool8 WayfarerWalkers_ClaimFrame(u16 lines, bool8 force);
+u16 WayfarerWalkers_FrameLinesLeft(void);
+// The next frame is one of the busy ones (a start's new sprite costs there too).
+bool8 WayfarerWalkers_NextFrameBusy(void);
+// Provided by src/wayfarer_walkers.c, which owns the companion (reserved for
+// the walker when its beat starts): for the walker whose object this is,
+// bring its companion out (FALSE: no room any more, or the spawn failed; the
+// beat then ends), put it away, and its live companion object (NULL when none
+// is out). The runner picks the frames (WayfarerWalkers_ClaimFrame).
 // The frame before "companion out": decompresses the planned companion's
 // sprite sheet into VRAM (the costly part of a spawn), so it doesn't share a
 // frame with the room check and the spawn.
 void WayfarerWalkers_CompanionPrepare(struct ObjectEvent *obj);
+bool8 WayfarerWalkers_CompanionOut(struct ObjectEvent *obj);
 void WayfarerWalkers_CompanionIn(struct ObjectEvent *obj);
 struct ObjectEvent *WayfarerWalkers_Companion(const struct ObjectEvent *obj);
 
