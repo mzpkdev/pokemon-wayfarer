@@ -1,0 +1,151 @@
+{
+  "fuchsia_objects": [
+    {
+      "slot": 1,
+      "gfx": 470,
+      "localId": 1,
+      "mapNum": 4,
+      "mapGroup": 19,
+      "x": 10,
+      "y": 13,
+      "invisible": false,
+      "isPlayer": false,
+      "facing": 1
+    },
+    {
+      "slot": 2,
+      "gfx": 470,
+      "localId": 2,
+      "mapNum": 4,
+      "mapGroup": 19,
+      "x": 14,
+      "y": 8,
+      "invisible": false,
+      "isPlayer": false,
+      "facing": 1
+    },
+    {
+      "slot": 3,
+      "gfx": 470,
+      "localId": 3,
+      "mapNum": 4,
+      "mapGroup": 19,
+      "x": 9,
+      "y": 4,
+      "invisible": false,
+      "isPlayer": false,
+      "facing": 1
+    },
+    {
+      "slot": 4,
+      "gfx": 470,
+      "localId": 4,
+      "mapNum": 4,
+      "mapGroup": 19,
+      "x": 3,
+      "y": 7,
+      "invisible": false,
+      "isPlayer": false,
+      "facing": 1
+    },
+    {
+      "slot": 5,
+      "gfx": 422,
+      "localId": 6,
+      "mapNum": 4,
+      "mapGroup": 19,
+      "x": 5,
+      "y": 19,
+      "invisible": false,
+      "isPlayer": false,
+      "facing": 1
+    }
+  ],
+  "viridian_objects": [
+    {
+      "slot": 1,
+      "gfx": 281,
+      "localId": 1,
+      "mapNum": 1,
+      "mapGroup": 70,
+      "x": 10,
+      "y": 2,
+      "invisible": false,
+      "isPlayer": false,
+      "facing": 1
+    },
+    {
+      "slot": 2,
+      "gfx": 268,
+      "localId": 2,
+      "mapNum": 1,
+      "mapGroup": 70,
+      "x": 12,
+      "y": 10,
+      "invisible": false,
+      "isPlayer": false,
+      "facing": 1
+    },
+    {
+      "slot": 3,
+      "gfx": 260,
+      "localId": 4,
+      "mapNum": 1,
+      "mapGroup": 70,
+      "x": 10,
+      "y": 10,
+      "invisible": false,
+      "isPlayer": false,
+      "facing": 1
+    },
+    {
+      "slot": 4,
+      "gfx": 281,
+      "localId": 6,
+      "mapNum": 1,
+      "mapGroup": 70,
+      "x": 3,
+      "y": 11,
+      "invisible": false,
+      "isPlayer": false,
+      "facing": 3
+    },
+    {
+      "slot": 5,
+      "gfx": 268,
+      "localId": 7,
+      "mapNum": 1,
+      "mapGroup": 70,
+      "x": 6,
+      "y": 8,
+      "invisible": false,
+      "isPlayer": false,
+      "facing": 1
+    },
+    {
+      "slot": 6,
+      "gfx": 268,
+      "localId": 9,
+      "mapNum": 1,
+      "mapGroup": 70,
+      "x": 13,
+      "y": 7,
+      "invisible": false,
+      "isPlayer": false,
+      "facing": 4
+    }
+  ],
+  "screenshots": [
+    ".product/research/ambience/decoys-fuchsia.png",
+    ".product/research/ambience/decoys-viridian-gym.png"
+  ],
+  "decoys_visible": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "giovanni_objects": [],
+  "pass": true,
+  "emulated_frames": 458
+}

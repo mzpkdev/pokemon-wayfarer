@@ -53,12 +53,15 @@ standable tile. It returns to the starting tile before it ends.
 | Movement | Speed |
 | --- | --- |
 | Default walking, wander moves, browse moves, a beat's steps | **slow**: `MOVEMENT_ACTION_WALK_SLOW_*`, 32 frames a tile |
-| Walk-off after a yield or hand-off, a strip actor leaving view, a blocked edge lane | **normal**: `MOVEMENT_ACTION_WALK_NORMAL_*`, 16 frames a tile |
+| Walk-off after a yield or hand-off, a back-off from the player, a Gym visitor just leaving, a strip actor, the step out of or into the map through a side lane | **normal**: `MOVEMENT_ACTION_WALK_NORMAL_*`, 16 frames a tile |
 
-Walker timeouts measured in frames double for slow walking, so they keep the
-same length in tiles. `WALKER_WALKOFF_FRAMES` goes from 600 to 1,200, and the
-walker's other per-trip timeouts scale the same way. The search, spawn, and
-hand-off rules don't change.
+`WALKER_WALKOFF_FRAMES` goes from 600 to 1,200. The walker's other frame
+timeouts are standing waits, push counters, and scanline budgets rather than
+walking time, so they stay as they are. What the search, spawn, and hand-off
+rules decide doesn't change; only when their work runs does: so that beats
+add no lag frames, the walkers' search slices, spawn attempts, story checks,
+and follower rule wait for a frame with room (each for a bounded time; see
+the implementation notes).
 
 ### Primitives
 
@@ -136,7 +139,9 @@ At a decision point, with no beat running:
 1. **Gate.** Skip unless the walker's **quiet gap** has passed since its last
    beat. The gap is `16 + 4 × (c mod 3)` ticks (4 to 6 s), where `c` is the
    trainer's catalog position. For a `stoic` trainer it is three times that.
-   `react` beats ignore the gap.
+   `react` and `transition` beats ignore the gap, so a walker always gets its
+   arrival and leaving moments. A freshly spawned walker starts with its gap
+   already passed.
 2. **Filter.** The pool rows whose `when` and `who` hold, and whose cooldown has
    passed.
 3. **Class.** Keep only the highest class present: `react` beats first, then
@@ -158,7 +163,10 @@ At a decision point, with no beat running:
 - A greeting fires once per pair per map visit.
 - `player_lingers` fires once per standing-still episode.
 
-All counters live in the walker's RAM and start at 0 when the actor spawns.
+All counters live in the walker's RAM and start at 0 when the actor spawns,
+except the quiet gap and the steps since the last beat, which start as
+already passed. A heap reset (a warp, a menu, a battle) restarts them all the
+same way.
 Nothing reads the random number generator.
 
 ### Interruptions
@@ -212,7 +220,7 @@ Erika `doze`, Whitney `hum`, Morty `meditate`, Chuck `push_ups`, Bugsy
 
 ### The pool
 
-The first draft has 30 beats. Placeholder `wait` lengths are in ticks of
+The first draft has 35 beats. Placeholder `wait` lengths are in ticks of
 15 frames.
 
 **Walking and transitions**
@@ -295,6 +303,11 @@ The first draft has 30 beats. Placeholder `wait` lengths are in ticks of
     or the tile straight ahead of the player.
 - **Placement:** the companion appears on that tile, facing the walker. It
   lasts only for its beat, and is removed when the beat ends or is interrupted.
+- **Cost:** bringing it out decompresses its follower sprite sheet, the
+  engine's normal cost for any follower sprite. That is one call too long for a
+  busy outdoor frame, so the walker waits up to about 2 s for the frame with
+  the most room and then accepts one lag frame per companion out. This is the
+  one exception to the rule that no beat adds lag frames.
 - **Priority:** it is the lowest-priority object. It never hides the player's
   following Pokémon, never blocks a spawn, and is the first object removed when
   slots are short.
@@ -324,17 +337,21 @@ tables, as it does for `routines.json`.
 
 - **Save:** nothing.
 - **RAM:** per walker, the running beat, its step index and timer, the beat and
-  decision counters, the quiet-gap timer, and a cooldown slot per beat. That's
-  under 48 bytes per walker in `EWRAM_DATA`, per the
-  [RAM rules](../../AGENTS.md).
-- **ROM:** the pool and tag tables, a few hundred bytes.
+  decision counters, the quiet-gap timer, and a cooldown slot per beat, about
+  75 bytes per walker. It lives in one heap block the walker layer allocates
+  while walkers are active (dropped on heap resets), not in static EWRAM, per
+  the [RAM rules](../../AGENTS.md): the mechanics-test build has almost no
+  EWRAM left. Only the few latches that must survive a menu sit in the
+  walker's existing EWRAM.
+- **ROM:** the pool, tag, trainer, and relation tables, about 2.5 KB.
 - **CPU:** filtering about 30 rows at a decision point, well inside the walker's
-  per-frame budget. No beat may add lag frames.
+  per-frame budget. No beat may add lag frames, except the companion's one
+  spawn frame ([companion](#companion), "Cost").
 
 ### Acceptance
 
-1. Walkers walk at slow speed by default, and at normal speed only for
-   walk-offs, strip exits, and blocked lanes.
+1. Walkers walk at slow speed by default, and at normal speed only for the
+   hurried cases in [Pace](#pace).
 2. A walker at a water's edge runs `water_bite` or `water_wait` while facing
    water, and never a beat whose context doesn't hold.
 3. `notice_player` fires once as the player passes within 3 tiles of a
@@ -347,7 +364,8 @@ tables, as it does for `routines.json`.
 7. Two runs with the same inputs give the same beats on the same frames, and the
    random number generator is never read.
 8. `ambience.json` validation fails the build on each listed error.
-9. No new lag frames in the walker verifier's `perf` and `seam` scenarios.
+9. No new lag frames in the walker verifier's `perf` and `seam` scenarios, and
+   none from beats anywhere else except one per companion out.
 
 ## Open questions
 

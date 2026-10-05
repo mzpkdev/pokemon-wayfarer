@@ -1,0 +1,120 @@
+{
+  "hum": {
+    "frame": 237,
+    "actor": 0,
+    "slot": 1,
+    "beat": 1,
+    "name": "hum",
+    "event": "start"
+  },
+  "catalog_index": 1,
+  "held_at_lock": true,
+  "interrupt": {
+    "frame": 238,
+    "actor": 0,
+    "slot": 1,
+    "beat": 1,
+    "name": "hum",
+    "event": "interrupt"
+  },
+  "step_finished_under_lock": true,
+  "arrived": {
+    "index": 0,
+    "slot": 1,
+    "mode": 1,
+    "phase": 5,
+    "goalKind": 0,
+    "objectId": 2,
+    "template": 1,
+    "atSpot": 1,
+    "blocked": 0,
+    "x": 14,
+    "y": 39,
+    "goalX": 14,
+    "goalY": 39,
+    "goalEdge": 65535
+  },
+  "misty": {
+    "active": true,
+    "held": false,
+    "frozen": false,
+    "facing": 2,
+    "x": 14,
+    "y": 39,
+    "gfx": 472,
+    "localId": 245
+  },
+  "sprite": [
+    88,
+    48
+  ],
+  "player_sprite": [
+    120,
+    112
+  ],
+  "player_tile": [
+    16,
+    43
+  ],
+  "events": [
+    {
+      "frame": 237,
+      "actor": 0,
+      "slot": 1,
+      "beat": 1,
+      "name": "hum",
+      "event": "start"
+    },
+    {
+      "frame": 238,
+      "actor": 0,
+      "slot": 1,
+      "beat": 1,
+      "name": "hum",
+      "event": "interrupt"
+    }
+  ],
+  "counters": {
+    "started_idle": 1,
+    "started_transition": 0,
+    "started_react": 0,
+    "ended": 0,
+    "interrupted": 1,
+    "icons": 0,
+    "effects": 0,
+    "palette_skips": 0,
+    "icon_skips": 0,
+    "step_skips": 0,
+    "running": [
+      255,
+      255,
+      255,
+      255
+    ],
+    "companion": {
+      "out": 0,
+      "in": 0,
+      "away": {
+        "slots": 0,
+        "follower": 0,
+        "vanished": 0,
+        "interrupted": 0
+      },
+      "denied": {
+        "place": 0,
+        "busy": 0,
+        "slots": 0,
+        "follower": 0,
+        "palette": 0,
+        "tile": 0
+      },
+      "out_failed": 0,
+      "strays": 0,
+      "prepares": 0
+    }
+  },
+  "screenshot": ".product/research/ambience/humwalk-at-pond.png",
+  "sprite_on_tile": true,
+  "pass": true,
+  "emulated_frames": 1122
+}

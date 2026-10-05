@@ -18,6 +18,8 @@
 // Runtime objects use dynamic local ids (looked up without a map), clear of
 // map templates (1-64), the link players (0xF0-0xF4) and the followers.
 #define WALKER_LOCALID_BASE     0xF5
+// A walker's ace companion (notable ambience): one per map, while its beat runs.
+#define WALKER_COMPANION_LOCALID (WALKER_LOCALID_BASE + WALKER_ACTOR_COUNT)
 
 enum WalkerMode
 {

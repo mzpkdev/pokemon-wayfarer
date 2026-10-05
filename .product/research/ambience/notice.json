@@ -1,0 +1,283 @@
+{
+  "blue_notice_counts": {
+    "first": 1,
+    "stay_frames": 1602,
+    "first_stay_notices": [
+      232
+    ],
+    "away": 1,
+    "second": 2
+  },
+  "blue_events": [
+    {
+      "frame": 105,
+      "actor": 0,
+      "slot": 8,
+      "beat": 5,
+      "name": "arrive_look",
+      "event": "start"
+    },
+    {
+      "frame": 171,
+      "actor": 0,
+      "slot": 8,
+      "beat": 5,
+      "name": "arrive_look",
+      "event": "end"
+    },
+    {
+      "frame": 232,
+      "actor": 0,
+      "slot": 8,
+      "beat": 7,
+      "name": "notice_player",
+      "event": "start"
+    },
+    {
+      "frame": 309,
+      "actor": 0,
+      "slot": 8,
+      "beat": 7,
+      "name": "notice_player",
+      "event": "end"
+    },
+    {
+      "frame": 892,
+      "actor": 0,
+      "slot": 8,
+      "beat": 32,
+      "name": "swagger",
+      "event": "start"
+    },
+    {
+      "frame": 933,
+      "actor": 0,
+      "slot": 8,
+      "beat": 32,
+      "name": "swagger",
+      "event": "end"
+    },
+    {
+      "frame": 1402,
+      "actor": 0,
+      "slot": 8,
+      "beat": 33,
+      "name": "ace_play",
+      "event": "start"
+    },
+    {
+      "frame": 1718,
+      "actor": 0,
+      "slot": 8,
+      "beat": 33,
+      "name": "ace_play",
+      "event": "end"
+    },
+    {
+      "frame": 2189,
+      "actor": 0,
+      "slot": 8,
+      "beat": 16,
+      "name": "water_bite",
+      "event": "start"
+    },
+    {
+      "frame": 2431,
+      "actor": 0,
+      "slot": 8,
+      "beat": 16,
+      "name": "water_bite",
+      "event": "end"
+    },
+    {
+      "frame": 2910,
+      "actor": 0,
+      "slot": 8,
+      "beat": 33,
+      "name": "ace_play",
+      "event": "start"
+    },
+    {
+      "frame": 3206,
+      "actor": 0,
+      "slot": 8,
+      "beat": 33,
+      "name": "ace_play",
+      "event": "end"
+    },
+    {
+      "frame": 3216,
+      "actor": 0,
+      "slot": 8,
+      "beat": 7,
+      "name": "notice_player",
+      "event": "start"
+    },
+    {
+      "frame": 3302,
+      "actor": 0,
+      "slot": 8,
+      "beat": 7,
+      "name": "notice_player",
+      "event": "end"
+    }
+  ],
+  "lance_events": [
+    {
+      "frame": 3637,
+      "actor": 0,
+      "slot": 10,
+      "beat": 5,
+      "name": "arrive_look",
+      "event": "start"
+    },
+    {
+      "frame": 3711,
+      "actor": 0,
+      "slot": 10,
+      "beat": 5,
+      "name": "arrive_look",
+      "event": "end"
+    },
+    {
+      "frame": 3758,
+      "actor": 0,
+      "slot": 10,
+      "beat": 8,
+      "name": "stare_down",
+      "event": "start"
+    },
+    {
+      "frame": 3945,
+      "actor": 0,
+      "slot": 10,
+      "beat": 8,
+      "name": "stare_down",
+      "event": "end"
+    }
+  ],
+  "lance_stare": 1,
+  "lance_notice": 0,
+  "blue_stare": 0,
+  "screenshots": [
+    ".product/research/ambience/notice-blue.png",
+    ".product/research/ambience/notice-lance-stare.png"
+  ],
+  "debug": {
+    "frames": 4156,
+    "spawns": 2,
+    "removals": 0,
+    "edgeExits": 0,
+    "warpExits": 0,
+    "arrivals": 0,
+    "rebases": 0,
+    "stripEntries": 0,
+    "replans": 0,
+    "blockedSteps": 0,
+    "searches": 0,
+    "searchFails": 0,
+    "localDwellBeats": 5,
+    "localAdvances": 0,
+    "emotes": 4,
+    "templateMoves": 0,
+    "floorChanges": 0,
+    "heapResets": 6,
+    "restores": 0,
+    "lastSearchNodes": 0,
+    "maxSearchNodes": 0,
+    "lastSearchFrames": 0,
+    "maxSearchFrames": 0,
+    "maxSliceScanlines": 0,
+    "maxSliceNodes": 0,
+    "workspaceBytes": 0,
+    "currentMap": 32,
+    "followerHidden": 0,
+    "activeActors": 1,
+    "storySuppressed": 0,
+    "worldState": 33634116,
+    "actors": [
+      {
+        "index": 0,
+        "slot": 10,
+        "mode": 1,
+        "phase": 5,
+        "goalKind": 0,
+        "objectId": 2,
+        "template": 1,
+        "atSpot": 1,
+        "blocked": 0,
+        "x": 13,
+        "y": 39,
+        "goalX": 13,
+        "goalY": 39,
+        "goalEdge": 65535
+      },
+      {
+        "index": 1,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 2,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 3,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      }
+    ],
+    "lastHeartbeatScanlines": 26,
+    "maxHeartbeatScanlines": 26,
+    "maxSpawnScanlines": 23,
+    "maxUpdateScanlines": 78,
+    "backOffs": 0,
+    "handoffs": 0,
+    "visitorsVanished": 0,
+    "culls": 0,
+    "lastContextScanlines": 15,
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 0,
+    "walkOffs": 0,
+    "worldJobs": 0,
+    "maxJobScanlines": 0,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
+  },
+  "pass": true,
+  "emulated_frames": 4462
+}

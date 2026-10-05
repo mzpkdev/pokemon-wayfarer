@@ -1,0 +1,334 @@
+{
+  "ace": {
+    "frame": 1726,
+    "actor": 0,
+    "slot": 8,
+    "beat": 33,
+    "name": "ace_play",
+    "event": "start"
+  },
+  "end": {
+    "frame": 2057,
+    "actor": 0,
+    "slot": 8,
+    "beat": 33,
+    "name": "ace_play",
+    "event": "end"
+  },
+  "companion_first_seen": {
+    "frame": 1880,
+    "companions": [
+      {
+        "slot": 5,
+        "gfx": 16581,
+        "localId": 249,
+        "mapNum": 32,
+        "mapGroup": 0,
+        "x": 12,
+        "y": 39,
+        "invisible": false,
+        "isPlayer": false,
+        "facing": 4
+      }
+    ],
+    "walker": {
+      "slot": 4,
+      "gfx": 463,
+      "localId": 245,
+      "mapNum": 32,
+      "mapGroup": 0,
+      "x": 13,
+      "y": 39,
+      "invisible": false,
+      "isPlayer": false,
+      "facing": 3
+    },
+    "player": [
+      15,
+      41,
+      2
+    ],
+    "running": "ace_play"
+  },
+  "mid_beat": {
+    "frame": 1920,
+    "companions": [
+      {
+        "slot": 5,
+        "gfx": 16581,
+        "localId": 249,
+        "mapNum": 32,
+        "mapGroup": 0,
+        "x": 12,
+        "y": 39,
+        "invisible": false,
+        "isPlayer": false,
+        "facing": 4
+      }
+    ],
+    "walker": {
+      "slot": 4,
+      "gfx": 463,
+      "localId": 245,
+      "mapNum": 32,
+      "mapGroup": 0,
+      "x": 13,
+      "y": 39,
+      "invisible": false,
+      "isPlayer": false,
+      "facing": 3
+    },
+    "player": [
+      15,
+      41,
+      2
+    ],
+    "running": "ace_play",
+    "walker_faces_companion": true
+  },
+  "expected_gfx": 16581,
+  "placement_problems": [],
+  "problems": [],
+  "companions_after_end": [],
+  "gone_later": true,
+  "follower_at_start": {
+    "slot": 3,
+    "gfx": 28697,
+    "localId": 254,
+    "mapNum": 32,
+    "mapGroup": 0,
+    "x": 15,
+    "y": 42,
+    "invisible": false,
+    "isPlayer": false,
+    "facing": 2
+  },
+  "follower_missing_samples": 0,
+  "follower_hidden_flag": 0,
+  "counters": {
+    "started_idle": 3,
+    "started_transition": 1,
+    "started_react": 0,
+    "ended": 4,
+    "interrupted": 0,
+    "icons": 3,
+    "effects": 2,
+    "palette_skips": 0,
+    "icon_skips": 0,
+    "step_skips": 0,
+    "running": [
+      255,
+      255,
+      255,
+      255
+    ],
+    "companion": {
+      "out": 1,
+      "in": 1,
+      "away": {
+        "slots": 0,
+        "follower": 0,
+        "vanished": 0,
+        "interrupted": 0
+      },
+      "denied": {
+        "place": 0,
+        "busy": 0,
+        "slots": 0,
+        "follower": 0,
+        "palette": 0,
+        "tile": 0
+      },
+      "out_failed": 0,
+      "strays": 0,
+      "prepares": 1
+    }
+  },
+  "max_update_scanlines": 82,
+  "events": [
+    {
+      "frame": 77,
+      "actor": 0,
+      "slot": 8,
+      "beat": 5,
+      "name": "arrive_look",
+      "event": "start"
+    },
+    {
+      "frame": 143,
+      "actor": 0,
+      "slot": 8,
+      "beat": 5,
+      "name": "arrive_look",
+      "event": "end"
+    },
+    {
+      "frame": 576,
+      "actor": 0,
+      "slot": 8,
+      "beat": 16,
+      "name": "water_bite",
+      "event": "start"
+    },
+    {
+      "frame": 805,
+      "actor": 0,
+      "slot": 8,
+      "beat": 16,
+      "name": "water_bite",
+      "event": "end"
+    },
+    {
+      "frame": 1246,
+      "actor": 0,
+      "slot": 8,
+      "beat": 32,
+      "name": "swagger",
+      "event": "start"
+    },
+    {
+      "frame": 1285,
+      "actor": 0,
+      "slot": 8,
+      "beat": 32,
+      "name": "swagger",
+      "event": "end"
+    },
+    {
+      "frame": 1726,
+      "actor": 0,
+      "slot": 8,
+      "beat": 33,
+      "name": "ace_play",
+      "event": "start"
+    },
+    {
+      "frame": 2057,
+      "actor": 0,
+      "slot": 8,
+      "beat": 33,
+      "name": "ace_play",
+      "event": "end"
+    }
+  ],
+  "screenshots": [
+    ".product/research/ambience/companion-out.png"
+  ],
+  "debug": {
+    "frames": 2300,
+    "spawns": 1,
+    "removals": 0,
+    "edgeExits": 0,
+    "warpExits": 0,
+    "arrivals": 0,
+    "rebases": 0,
+    "stripEntries": 0,
+    "replans": 0,
+    "blockedSteps": 0,
+    "searches": 0,
+    "searchFails": 0,
+    "localDwellBeats": 3,
+    "localAdvances": 0,
+    "emotes": 3,
+    "templateMoves": 0,
+    "floorChanges": 0,
+    "heapResets": 5,
+    "restores": 0,
+    "lastSearchNodes": 0,
+    "maxSearchNodes": 0,
+    "lastSearchFrames": 0,
+    "maxSearchFrames": 0,
+    "maxSliceScanlines": 0,
+    "maxSliceNodes": 0,
+    "workspaceBytes": 0,
+    "currentMap": 32,
+    "followerHidden": 0,
+    "activeActors": 1,
+    "storySuppressed": 0,
+    "worldState": 33634024,
+    "actors": [
+      {
+        "index": 0,
+        "slot": 8,
+        "mode": 1,
+        "phase": 5,
+        "goalKind": 0,
+        "objectId": 4,
+        "template": 1,
+        "atSpot": 1,
+        "blocked": 0,
+        "x": 13,
+        "y": 39,
+        "goalX": 13,
+        "goalY": 39,
+        "goalEdge": 65535
+      },
+      {
+        "index": 1,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 2,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 3,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      }
+    ],
+    "lastHeartbeatScanlines": 26,
+    "maxHeartbeatScanlines": 26,
+    "maxSpawnScanlines": 27,
+    "maxUpdateScanlines": 82,
+    "backOffs": 0,
+    "handoffs": 0,
+    "visitorsVanished": 0,
+    "culls": 0,
+    "lastContextScanlines": 15,
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 0,
+    "walkOffs": 0,
+    "worldJobs": 0,
+    "maxJobScanlines": 0,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
+  },
+  "pass": true,
+  "emulated_frames": 2586
+}

@@ -1,0 +1,222 @@
+{
+  "max_actors": 3,
+  "max_concurrent_searches": 1,
+  "lorelei_wander_tiles": [
+    [
+      13,
+      30
+    ],
+    [
+      14,
+      30
+    ],
+    [
+      15,
+      30
+    ],
+    [
+      16,
+      30
+    ],
+    [
+      17,
+      30
+    ],
+    [
+      18,
+      29
+    ],
+    [
+      18,
+      30
+    ],
+    [
+      19,
+      29
+    ],
+    [
+      19,
+      30
+    ]
+  ],
+  "template_moves": 2,
+  "spawns": 3,
+  "searches": 4,
+  "maxSliceScanlines": 57,
+  "maxSearchNodes": 965,
+  "maxSearchFrames": 345,
+  "records": {
+    "lorelei": {
+      "node": 93,
+      "destKind": 1,
+      "destId": 1187,
+      "state": 1,
+      "waited": 0,
+      "arrival": 0,
+      "crossing": 0,
+      "step": 0,
+      "activity": 4,
+      "dwell": 1,
+      "lifeEvent": 0,
+      "lifeSteps": 0,
+      "stayBits": 0,
+      "reserved": 0,
+      "hex": "5dd0281100800200"
+    },
+    "lance": {
+      "node": 93,
+      "destKind": 1,
+      "destId": 1180,
+      "state": 1,
+      "waited": 0,
+      "arrival": 0,
+      "crossing": 0,
+      "step": 0,
+      "activity": 5,
+      "dwell": 2,
+      "lifeEvent": 0,
+      "lifeSteps": 0,
+      "stayBits": 0,
+      "reserved": 0,
+      "hex": "5d10271100a00400"
+    },
+    "blue": {
+      "node": 93,
+      "destKind": 1,
+      "destId": 4174,
+      "state": 0,
+      "waited": 0,
+      "arrival": 5,
+      "crossing": 3,
+      "step": 0,
+      "activity": 3,
+      "dwell": 3,
+      "lifeEvent": 0,
+      "lifeSteps": 0,
+      "stayBits": 0,
+      "reserved": 0,
+      "hex": "5d9013041d600600"
+    }
+  },
+  "screenshots": [
+    ".product/research/ambience/budget-three-actors.png",
+    ".product/research/ambience/budget-later.png"
+  ],
+  "debug": {
+    "frames": 1598,
+    "spawns": 3,
+    "removals": 0,
+    "edgeExits": 0,
+    "warpExits": 0,
+    "arrivals": 1,
+    "rebases": 0,
+    "stripEntries": 0,
+    "replans": 0,
+    "blockedSteps": 0,
+    "searches": 4,
+    "searchFails": 0,
+    "localDwellBeats": 3,
+    "localAdvances": 0,
+    "emotes": 2,
+    "templateMoves": 2,
+    "floorChanges": 0,
+    "heapResets": 5,
+    "restores": 0,
+    "lastSearchNodes": 68,
+    "maxSearchNodes": 965,
+    "lastSearchFrames": 30,
+    "maxSearchFrames": 345,
+    "maxSliceScanlines": 57,
+    "maxSliceNodes": 7,
+    "workspaceBytes": 11308,
+    "currentMap": 32,
+    "followerHidden": 0,
+    "activeActors": 3,
+    "storySuppressed": 0,
+    "worldState": 33634060,
+    "actors": [
+      {
+        "index": 0,
+        "slot": 8,
+        "mode": 1,
+        "phase": 4,
+        "goalKind": 2,
+        "objectId": 2,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 26,
+        "y": 14,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 313
+      },
+      {
+        "index": 1,
+        "slot": 9,
+        "mode": 1,
+        "phase": 5,
+        "goalKind": 0,
+        "objectId": 3,
+        "template": 3,
+        "atSpot": 1,
+        "blocked": 0,
+        "x": 13,
+        "y": 30,
+        "goalX": 13,
+        "goalY": 30,
+        "goalEdge": 65535
+      },
+      {
+        "index": 2,
+        "slot": 10,
+        "mode": 1,
+        "phase": 5,
+        "goalKind": 0,
+        "objectId": 4,
+        "template": 1,
+        "atSpot": 1,
+        "blocked": 0,
+        "x": 14,
+        "y": 39,
+        "goalX": 14,
+        "goalY": 39,
+        "goalEdge": 65535
+      },
+      {
+        "index": 3,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      }
+    ],
+    "lastHeartbeatScanlines": 26,
+    "maxHeartbeatScanlines": 26,
+    "maxSpawnScanlines": 59,
+    "maxUpdateScanlines": 87,
+    "backOffs": 0,
+    "handoffs": 0,
+    "visitorsVanished": 0,
+    "culls": 0,
+    "lastContextScanlines": 15,
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 10,
+    "walkOffs": 0,
+    "worldJobs": 1,
+    "maxJobScanlines": 15,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
+  },
+  "pass": true,
+  "emulated_frames": 1890
+}

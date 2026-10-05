@@ -1,0 +1,433 @@
+{
+  "crossings": [
+    {
+      "crossing": 1,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 50,
+      "pending_before": 0
+    },
+    {
+      "crossing": 2,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 22,
+      "pending_before": 1
+    },
+    {
+      "crossing": 3,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 52,
+      "pending_before": 1
+    },
+    {
+      "crossing": 4,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 22,
+      "pending_before": 1
+    },
+    {
+      "crossing": 5,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 94,
+      "pending_before": 1
+    },
+    {
+      "crossing": 6,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 22,
+      "pending_before": 1
+    },
+    {
+      "crossing": 7,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 46,
+      "pending_before": 1
+    },
+    {
+      "crossing": 8,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 22,
+      "pending_before": 1
+    },
+    {
+      "crossing": 9,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 48,
+      "pending_before": 1
+    },
+    {
+      "crossing": 10,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 22,
+      "pending_before": 1
+    },
+    {
+      "crossing": 11,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 48,
+      "pending_before": 1
+    },
+    {
+      "crossing": 12,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 22,
+      "pending_before": 1
+    },
+    {
+      "crossing": 13,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 52,
+      "pending_before": 1
+    },
+    {
+      "crossing": 14,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 22,
+      "pending_before": 1
+    },
+    {
+      "crossing": 15,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 86,
+      "pending_before": 1
+    },
+    {
+      "crossing": 16,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 94,
+      "pending_before": 1
+    },
+    {
+      "crossing": 17,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 92,
+      "pending_before": 1
+    },
+    {
+      "crossing": 18,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 22,
+      "pending_before": 1
+    },
+    {
+      "crossing": 19,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 56,
+      "pending_before": 1
+    },
+    {
+      "crossing": 20,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 100,
+      "pending_before": 1
+    },
+    {
+      "crossing": 21,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 52,
+      "pending_before": 1
+    },
+    {
+      "crossing": 22,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 22,
+      "pending_before": 1
+    },
+    {
+      "crossing": 23,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 52,
+      "pending_before": 1
+    },
+    {
+      "crossing": 24,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 84,
+      "pending_before": 1
+    },
+    {
+      "crossing": 25,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 48,
+      "pending_before": 1
+    },
+    {
+      "crossing": 26,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 92,
+      "pending_before": 1
+    },
+    {
+      "crossing": 27,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 92,
+      "pending_before": 1
+    },
+    {
+      "crossing": 28,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 24,
+      "pending_before": 1
+    },
+    {
+      "crossing": 29,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 46,
+      "pending_before": 1
+    },
+    {
+      "crossing": 30,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 24,
+      "pending_before": 1
+    },
+    {
+      "crossing": 31,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 52,
+      "pending_before": 1
+    },
+    {
+      "crossing": 32,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 88,
+      "pending_before": 1
+    },
+    {
+      "crossing": 33,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 52,
+      "pending_before": 1
+    },
+    {
+      "crossing": 34,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 22,
+      "pending_before": 1
+    },
+    {
+      "crossing": 35,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 86,
+      "pending_before": 1
+    },
+    {
+      "crossing": 36,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 22,
+      "pending_before": 1
+    },
+    {
+      "crossing": 37,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 50,
+      "pending_before": 1
+    },
+    {
+      "crossing": 38,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 22,
+      "pending_before": 1
+    },
+    {
+      "crossing": 39,
+      "to": "Route 2",
+      "reached": true,
+      "frames": 48,
+      "pending_before": 1
+    },
+    {
+      "crossing": 40,
+      "to": "Viridian",
+      "reached": true,
+      "frames": 22,
+      "pending_before": 1
+    }
+  ],
+  "pending_at_load": 20,
+  "deferred_begins": 20,
+  "heartbeats": 40,
+  "max_finish_scanlines": 320,
+  "max_frame_scanlines": 150,
+  "max_step_scanlines": 150,
+  "max_walker_update_scanlines": 54,
+  "mean_crossing_frames": 49.85,
+  "world": {
+    "heartbeats": 41,
+    "skippedHeartbeats": 1,
+    "lastHeartbeatMap": 32,
+    "reseats": 0,
+    "lastHeartbeatFrames": 46,
+    "maxHeartbeatFrames": 46,
+    "maxStepScanlines": 150,
+    "maxFrameScanlines": 150,
+    "maxFinishScanlines": 320,
+    "pendingAtLoad": 20,
+    "forcedFinishes": 0,
+    "workspaceLosses": 0,
+    "pending": 0,
+    "workspaceWaits": 0,
+    "deferredBegins": 20
+  },
+  "debug": {
+    "frames": 786,
+    "spawns": 2,
+    "removals": 2,
+    "edgeExits": 0,
+    "warpExits": 0,
+    "arrivals": 0,
+    "rebases": 22,
+    "stripEntries": 0,
+    "replans": 0,
+    "blockedSteps": 0,
+    "searches": 5,
+    "searchFails": 0,
+    "localDwellBeats": 0,
+    "localAdvances": 0,
+    "emotes": 0,
+    "templateMoves": 0,
+    "floorChanges": 0,
+    "heapResets": 4,
+    "restores": 0,
+    "lastSearchNodes": 0,
+    "maxSearchNodes": 0,
+    "lastSearchFrames": 0,
+    "maxSearchFrames": 0,
+    "maxSliceScanlines": 49,
+    "maxSliceNodes": 5,
+    "workspaceBytes": 11308,
+    "currentMap": 32,
+    "followerHidden": 0,
+    "activeActors": 0,
+    "storySuppressed": 0,
+    "worldState": 33634092,
+    "actors": [
+      {
+        "index": 0,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 1,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 2,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 3,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      }
+    ],
+    "lastHeartbeatScanlines": 2322,
+    "maxHeartbeatScanlines": 2322,
+    "maxSpawnScanlines": 40,
+    "maxUpdateScanlines": 54,
+    "backOffs": 0,
+    "handoffs": 0,
+    "visitorsVanished": 0,
+    "culls": 0,
+    "lastContextScanlines": 0,
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 0,
+    "walkOffs": 0,
+    "worldJobs": 0,
+    "maxJobScanlines": 0,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
+  },
+  "screenshots": [
+    ".product/research/ambience/recross-after.png"
+  ],
+  "ceilings": {
+    "frame_scanlines": 200,
+    "seam_finish_scanlines": 1000
+  },
+  "pass": true,
+  "emulated_frames": 2410
+}

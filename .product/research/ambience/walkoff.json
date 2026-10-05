@@ -1,0 +1,427 @@
+{
+  "rounds": [
+    {
+      "player": {
+        "slot": 0,
+        "gfx": 527,
+        "localId": 255,
+        "mapNum": 32,
+        "mapGroup": 0,
+        "x": 13,
+        "y": 40,
+        "invisible": false,
+        "isPlayer": true,
+        "facing": 2
+      },
+      "blue": {
+        "index": 0,
+        "slot": 8,
+        "mode": 1,
+        "phase": 2,
+        "goalKind": 4,
+        "objectId": 2,
+        "template": 1,
+        "atSpot": 1,
+        "blocked": 0,
+        "x": 13,
+        "y": 39,
+        "goalX": 13,
+        "goalY": 40,
+        "goalEdge": 65535
+      },
+      "pushed": "Up"
+    },
+    {
+      "player": {
+        "slot": 0,
+        "gfx": 527,
+        "localId": 255,
+        "mapNum": 32,
+        "mapGroup": 0,
+        "x": 11,
+        "y": 40,
+        "invisible": false,
+        "isPlayer": true,
+        "facing": 2
+      },
+      "blue": {
+        "index": 0,
+        "slot": 8,
+        "mode": 1,
+        "phase": 2,
+        "goalKind": 4,
+        "objectId": 2,
+        "template": 1,
+        "atSpot": 1,
+        "blocked": 0,
+        "x": 11,
+        "y": 39,
+        "goalX": 11,
+        "goalY": 40,
+        "goalEdge": 65535
+      },
+      "pushed": "Up"
+    },
+    {
+      "player": {
+        "slot": 0,
+        "gfx": 527,
+        "localId": 255,
+        "mapNum": 32,
+        "mapGroup": 0,
+        "x": 9,
+        "y": 40,
+        "invisible": false,
+        "isPlayer": true,
+        "facing": 2
+      },
+      "blue": {
+        "index": 0,
+        "slot": 8,
+        "mode": 1,
+        "phase": 2,
+        "goalKind": 4,
+        "objectId": 2,
+        "template": 1,
+        "atSpot": 1,
+        "blocked": 0,
+        "x": 9,
+        "y": 39,
+        "goalX": 9,
+        "goalY": 40,
+        "goalEdge": 65535
+      },
+      "pushed": "Up"
+    },
+    {
+      "player": {
+        "slot": 0,
+        "gfx": 527,
+        "localId": 255,
+        "mapNum": 32,
+        "mapGroup": 0,
+        "x": 11,
+        "y": 40,
+        "invisible": false,
+        "isPlayer": true,
+        "facing": 2
+      },
+      "blue": {
+        "index": 0,
+        "slot": 8,
+        "mode": 3,
+        "phase": 3,
+        "goalKind": 2,
+        "objectId": 2,
+        "template": 1,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 11,
+        "y": 39,
+        "goalX": 9,
+        "goalY": 40,
+        "goalEdge": 315
+      },
+      "pushed": "Up"
+    }
+  ],
+  "leaving": {
+    "index": 0,
+    "slot": 8,
+    "mode": 3,
+    "phase": 3,
+    "goalKind": 2,
+    "objectId": 2,
+    "template": 1,
+    "atSpot": 0,
+    "blocked": 0,
+    "x": 11,
+    "y": 39,
+    "goalX": 9,
+    "goalY": 40,
+    "goalEdge": 315
+  },
+  "track": [
+    [
+      11,
+      39
+    ],
+    [
+      12,
+      39
+    ],
+    [
+      13,
+      39
+    ],
+    [
+      14,
+      39
+    ],
+    [
+      15,
+      39
+    ],
+    [
+      16,
+      39
+    ],
+    [
+      17,
+      39
+    ],
+    [
+      18,
+      39
+    ],
+    [
+      19,
+      39
+    ],
+    [
+      20,
+      39
+    ]
+  ],
+  "timed_track": [
+    [
+      624,
+      [
+        11,
+        39
+      ]
+    ],
+    [
+      868,
+      [
+        12,
+        39
+      ]
+    ],
+    [
+      884,
+      [
+        13,
+        39
+      ]
+    ],
+    [
+      900,
+      [
+        14,
+        39
+      ]
+    ],
+    [
+      916,
+      [
+        15,
+        39
+      ]
+    ],
+    [
+      932,
+      [
+        16,
+        39
+      ]
+    ],
+    [
+      948,
+      [
+        17,
+        39
+      ]
+    ],
+    [
+      964,
+      [
+        18,
+        39
+      ]
+    ],
+    [
+      980,
+      [
+        19,
+        39
+      ]
+    ],
+    [
+      996,
+      [
+        20,
+        39
+      ]
+    ]
+  ],
+  "gone_after_frames": 390,
+  "step_frames": [
+    244,
+    16,
+    16,
+    16,
+    16,
+    16,
+    16,
+    16,
+    16
+  ],
+  "pace_normal": true,
+  "torn_reads": [],
+  "delta": {
+    "backOffs": 3,
+    "handoffs": 1,
+    "walkOffs": 1,
+    "removals": 1
+  },
+  "player": {
+    "slot": 0,
+    "gfx": 527,
+    "localId": 255,
+    "mapNum": 32,
+    "mapGroup": 0,
+    "x": 11,
+    "y": 40,
+    "invisible": false,
+    "isPlayer": true,
+    "facing": 2
+  },
+  "record": {
+    "node": 93,
+    "destKind": 1,
+    "destId": 1179,
+    "state": 1,
+    "waited": 0,
+    "arrival": 0,
+    "crossing": 0,
+    "step": 0,
+    "activity": 5,
+    "dwell": 6,
+    "lifeEvent": 0,
+    "lifeSteps": 0,
+    "stayBits": 0,
+    "reserved": 0,
+    "hex": "5dd0261100a00c00"
+  },
+  "screenshots": [
+    ".product/research/ambience/walkoff-leaving.png"
+  ],
+  "debug": {
+    "frames": 1013,
+    "spawns": 1,
+    "removals": 1,
+    "edgeExits": 0,
+    "warpExits": 0,
+    "arrivals": 0,
+    "rebases": 0,
+    "stripEntries": 0,
+    "replans": 0,
+    "blockedSteps": 0,
+    "searches": 4,
+    "searchFails": 0,
+    "localDwellBeats": 0,
+    "localAdvances": 0,
+    "emotes": 0,
+    "templateMoves": 0,
+    "floorChanges": 0,
+    "heapResets": 5,
+    "restores": 0,
+    "lastSearchNodes": 793,
+    "maxSearchNodes": 793,
+    "lastSearchFrames": 296,
+    "maxSearchFrames": 296,
+    "maxSliceScanlines": 57,
+    "maxSliceNodes": 7,
+    "workspaceBytes": 11308,
+    "currentMap": 32,
+    "followerHidden": 0,
+    "activeActors": 0,
+    "storySuppressed": 0,
+    "worldState": 33634104,
+    "actors": [
+      {
+        "index": 0,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 1,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 2,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 3,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      }
+    ],
+    "lastHeartbeatScanlines": 26,
+    "maxHeartbeatScanlines": 26,
+    "maxSpawnScanlines": 23,
+    "maxUpdateScanlines": 61,
+    "backOffs": 3,
+    "handoffs": 1,
+    "visitorsVanished": 0,
+    "culls": 0,
+    "lastContextScanlines": 15,
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 10,
+    "walkOffs": 1,
+    "worldJobs": 0,
+    "maxJobScanlines": 0,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
+  },
+  "pass": true,
+  "emulated_frames": 1300
+}

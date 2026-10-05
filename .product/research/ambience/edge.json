@@ -1,0 +1,728 @@
+{
+  "exit_tile_viridian": [
+    26,
+    0
+  ],
+  "record_at_exit": {
+    "node": 120,
+    "destKind": 1,
+    "destId": 4174,
+    "state": 0,
+    "waited": 0,
+    "arrival": 2,
+    "crossing": 10,
+    "step": 0,
+    "activity": 3,
+    "dwell": 3,
+    "lifeEvent": 0,
+    "lifeSteps": 0,
+    "stayBits": 0,
+    "reserved": 0,
+    "hex": "7890130452600600"
+  },
+  "expected_crossing": 10,
+  "heartbeats_during_cross": 1,
+  "blue_object_counts": [
+    1
+  ],
+  "max_tile_jump": 1,
+  "track_route2_coords": [
+    [
+      10,
+      79
+    ],
+    [
+      10,
+      79
+    ],
+    [
+      10,
+      79
+    ],
+    [
+      10,
+      79
+    ],
+    [
+      10,
+      79
+    ],
+    [
+      10,
+      79
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ],
+    [
+      10,
+      78
+    ]
+  ],
+  "actor_after_cross": {
+    "index": 0,
+    "slot": 8,
+    "mode": 1,
+    "phase": 3,
+    "goalKind": 3,
+    "objectId": 1,
+    "template": 0,
+    "atSpot": 0,
+    "blocked": 0,
+    "x": 10,
+    "y": 78,
+    "goalX": 5,
+    "goalY": 51,
+    "goalEdge": 438
+  },
+  "actor_after_90_frames": {
+    "index": 0,
+    "slot": 8,
+    "mode": 1,
+    "phase": 4,
+    "goalKind": 3,
+    "objectId": 1,
+    "template": 0,
+    "atSpot": 0,
+    "blocked": 0,
+    "x": 10,
+    "y": 77,
+    "goalX": 5,
+    "goalY": 51,
+    "goalEdge": 438
+  },
+  "rebases": 1,
+  "samples": [
+    {
+      "frame": 1921,
+      "map": 32,
+      "blue_objects": 1,
+      "blue": [
+        [
+          26,
+          -1
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1923,
+      "map": 32,
+      "blue_objects": 1,
+      "blue": [
+        [
+          26,
+          -1
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1925,
+      "map": 32,
+      "blue_objects": 1,
+      "blue": [
+        [
+          26,
+          -1
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1927,
+      "map": 32,
+      "blue_objects": 1,
+      "blue": [
+        [
+          26,
+          -1
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1929,
+      "map": 32,
+      "blue_objects": 1,
+      "blue": [
+        [
+          26,
+          -1
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1931,
+      "map": 32,
+      "blue_objects": 1,
+      "blue": [
+        [
+          26,
+          -1
+        ]
+      ],
+      "mode": [
+        2
+      ]
+    },
+    {
+      "frame": 1933,
+      "map": 32,
+      "blue_objects": 1,
+      "blue": [
+        [
+          26,
+          -2
+        ]
+      ],
+      "mode": [
+        2
+      ]
+    },
+    {
+      "frame": 1935,
+      "map": 32,
+      "blue_objects": 1,
+      "blue": [
+        [
+          26,
+          -2
+        ]
+      ],
+      "mode": [
+        2
+      ]
+    },
+    {
+      "frame": 1936,
+      "map": 32,
+      "blue_objects": 1,
+      "blue": [
+        [
+          26,
+          -2
+        ]
+      ],
+      "mode": [
+        2
+      ]
+    },
+    {
+      "frame": 1936,
+      "map": 32,
+      "blue_objects": 1,
+      "blue": [
+        [
+          26,
+          -2
+        ]
+      ],
+      "mode": [
+        2
+      ]
+    },
+    {
+      "frame": 1936,
+      "map": 32,
+      "blue_objects": 1,
+      "blue": [
+        [
+          26,
+          -2
+        ]
+      ],
+      "mode": [
+        2
+      ]
+    },
+    {
+      "frame": 1936,
+      "map": 32,
+      "blue_objects": 1,
+      "blue": [
+        [
+          26,
+          -2
+        ]
+      ],
+      "mode": [
+        2
+      ]
+    },
+    {
+      "frame": 1938,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1939,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1941,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1943,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1945,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1947,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1949,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1951,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1952,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1954,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1956,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1958,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1960,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1962,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1964,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1966,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1967,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    },
+    {
+      "frame": 1968,
+      "map": 42,
+      "blue_objects": 1,
+      "blue": [
+        [
+          10,
+          78
+        ]
+      ],
+      "mode": [
+        1
+      ]
+    }
+  ],
+  "screenshots": [
+    ".product/research/ambience/edge-strip-before-cross.png",
+    ".product/research/ambience/edge-route2-after-cross.png",
+    ".product/research/ambience/edge-route2-moving.png"
+  ],
+  "debug": {
+    "frames": 2066,
+    "spawns": 1,
+    "removals": 0,
+    "edgeExits": 1,
+    "warpExits": 0,
+    "arrivals": 0,
+    "rebases": 1,
+    "stripEntries": 0,
+    "replans": 0,
+    "blockedSteps": 0,
+    "searches": 2,
+    "searchFails": 0,
+    "localDwellBeats": 0,
+    "localAdvances": 0,
+    "emotes": 0,
+    "templateMoves": 0,
+    "floorChanges": 0,
+    "heapResets": 5,
+    "restores": 0,
+    "lastSearchNodes": 419,
+    "maxSearchNodes": 1004,
+    "lastSearchFrames": 110,
+    "maxSearchFrames": 334,
+    "maxSliceScanlines": 62,
+    "maxSliceNodes": 7,
+    "workspaceBytes": 11308,
+    "currentMap": 42,
+    "followerHidden": 0,
+    "activeActors": 1,
+    "storySuppressed": 0,
+    "worldState": 33634052,
+    "actors": [
+      {
+        "index": 0,
+        "slot": 8,
+        "mode": 1,
+        "phase": 4,
+        "goalKind": 3,
+        "objectId": 1,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 10,
+        "y": 77,
+        "goalX": 5,
+        "goalY": 51,
+        "goalEdge": 438
+      },
+      {
+        "index": 1,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 2,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      },
+      {
+        "index": 3,
+        "slot": 255,
+        "mode": 0,
+        "phase": 0,
+        "goalKind": 0,
+        "objectId": 0,
+        "template": 0,
+        "atSpot": 0,
+        "blocked": 0,
+        "x": 0,
+        "y": 0,
+        "goalX": 0,
+        "goalY": 0,
+        "goalEdge": 0
+      }
+    ],
+    "lastHeartbeatScanlines": 168,
+    "maxHeartbeatScanlines": 168,
+    "maxSpawnScanlines": 23,
+    "maxUpdateScanlines": 68,
+    "backOffs": 0,
+    "handoffs": 0,
+    "visitorsVanished": 0,
+    "culls": 0,
+    "lastContextScanlines": 16,
+    "lastFailNodes": 0,
+    "maxFinishScanlines": 10,
+    "walkOffs": 0,
+    "worldJobs": 1,
+    "maxJobScanlines": 15,
+    "capacityWaits": 0,
+    "stripTimeouts": 0
+  },
+  "pass": true,
+  "emulated_frames": 2362
+}
