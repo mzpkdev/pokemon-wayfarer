@@ -180,10 +180,10 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Yamper–Boltund | Nickit–Thievul |
-| 2 | 20% | Rolycoly–Coalossal | Rolycoly–Coalossal |
+| 1 | 20% | Rolycoly–Coalossal | Nickit–Thievul |
+| 2 | 20% | Sizzlipede–Centiskorch | Rolycoly–Coalossal |
 | 3 | 10% | Rookidee–Corviknight | Sizzlipede–Centiskorch |
-| 4 | 10% | Sizzlipede–Centiskorch | Koffing–Galarian Weezing |
+| 4 | 10% | Yamper–Boltund | Koffing–Galarian Weezing |
 | 5 | 10% | Chewtle–Drednaw | Galarian Meowth–Perrserker |
 | 6 | 10% | Skwovet–Greedent | Galarian Zigzagoon–Obstagoon |
 | 7 | 5% | Spearow–Fearow | Rattata–Raticate |
@@ -576,7 +576,7 @@ Wilds, Outer islands.
 | 3 | 10% | Rolycoly–Coalossal | Galarian Zigzagoon–Obstagoon |
 | 4 | 10% | Cufant–Copperajah | Cufant–Copperajah |
 | 5 | 10% | Falinks | Galarian Meowth–Perrserker |
-| 6 | 10% | Yamper–Boltund | Impidimp–Grimmsnarl |
+| 6 | 10% | Galarian Zigzagoon–Obstagoon | Impidimp–Grimmsnarl |
 | 7 | 5% | Phanpy–Donphan | Falinks |
 | 8 | 5% | Galarian Mr. Mime–Mr. Rime | Galarian Mr. Mime–Mr. Rime |
 | 9 | 4% | Galarian Stunfisk | Hoothoot–Noctowl |
@@ -1059,7 +1059,7 @@ Dungeon, Outer islands.
 | 8 | 5% | Toxel | Dreepy–Dragapult |
 | 9 | 4% | Impidimp–Grimmsnarl | Sizzlipede–Centiskorch |
 | 10 | 4% | Indeedee | Toxel |
-| 11 | 1% | Yamper–Boltund | Indeedee |
+| 11 | 1% | Rolycoly–Carkol | Indeedee |
 | 12 | 1% | Duraludon | Duraludon |
 
 #### Tanoby Chambers
@@ -1759,7 +1759,7 @@ Dungeon, Outer islands.
 | Basculin | Cape Brink, Ruin Valley |
 | Bellsprout | Berry Forest, Bond Bridge |
 | Blipbug | Berry Forest, Bond Bridge, Cape Brink, Five Isle Meadow and more |
-| Boltund | Altering Cave, Bond Bridge, Cape Brink, Five Isle Meadow and more |
+| Boltund | Bond Bridge, Cape Brink, Five Isle Meadow, Kindle Road and more |
 | Carkol | Altering Cave, Kindle Road, Mt. Ember, Sevault Canyon and more |
 | Centiskorch | Altering Cave, Kindle Road, Mt. Ember, Pattern Bush |
 | Chewtle | Berry Forest, Bond Bridge, Cape Brink, Five Island and more |
@@ -1945,6 +1945,6 @@ Dungeon, Outer islands.
 | Wooper | Ruin Valley |
 | Xatu | Ruin Valley |
 | Galarian Yamask | Lost Cave, Memorial Pillar, Ruin Valley, Tanoby Chambers |
-| Yamper | Altering Cave, Bond Bridge, Cape Brink, Five Isle Meadow and more |
+| Yamper | Bond Bridge, Cape Brink, Five Isle Meadow, Kindle Road and more |
 | Galarian Zigzagoon | Bond Bridge, Cape Brink, Five Isle Meadow, Kindle Road and more |
 | Zubat | Altering Cave, Kindle Road, Lost Cave, Mt. Ember |
