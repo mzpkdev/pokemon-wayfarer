@@ -6,7 +6,7 @@ Specifications: [Prowlers](../specs/prowlers.md), [Reach assignments](../specs/r
 [Kanto and Johto encounters](../specs/kanto-johto-encounters.md), [Hoenn encounters](../specs/hoenn-encounters.md),
 [Sevii encounters](../specs/sevii-encounters.md), [Alola encounters](../specs/alola-encounters.md),
 [Kanto encounter tables](../specs/kanto-encounter-tables.md), [Johto encounter tables](../specs/johto-encounter-tables.md),
-[Hoenn encounter tables](../specs/hoenn-encounter-tables.md)
+[Hoenn encounter tables](../specs/hoenn-encounter-tables.md), [Alola encounter tables](../specs/alola-encounter-tables.md)
 
 Design status: sketch. It replaces the retired wild-encounter docs: the
 [Kanto](kanto-wild-encounters.md) and [Johto](johto-wild-encounters.md)

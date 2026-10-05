@@ -4,8 +4,9 @@ PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
 Implemented: No
 
 Design status: draft. It sets the rules and targets for Alola's encounter
-tables. The tables themselves follow in an Alola table spec. Every share and
-count below is a placeholder for playtesting.
+tables. The tables themselves are in the
+[Alola table spec](alola-encounter-tables.md). Every share and count below is a
+placeholder for playtesting.
 
 ## Scope
 
@@ -52,17 +53,24 @@ island has its own character, as in the original games:
 
 | Place | Feels like | Example species |
 | --- | --- | --- |
-| Melemele Isle | The gentle first island | Pikipek, Yungoos, Alolan Rattata, Grubbin, Cutiefly, Rockruff, Pom-Pom Oricorio, Alolan Meowth |
-| Akala Isle | Lush hills, beaches and a volcano | Fomantis, Morelull, Mudbray, Stufful, Bounsweet, Comfey, Pa'u Oricorio, Wimpod, Sandygast, Alolan Diglett |
-| Akala Forest | A deep forest | Fomantis, Morelull, Bounsweet, Comfey |
-| Akala Cave | A volcanic cave | Salandit, Alolan Geodude |
+| Melemele Isle | The gentle first island | Pikipek, Yungoos, Alolan Rattata, Grubbin, Cutiefly, Crabrawler, Rockruff, Alolan Meowth |
+| Akala Isle | Lush hills, beaches and a volcano | Fomantis, Morelull, Mudbray, Stufful, Bounsweet, Dewpider, Comfey, Pa'u Oricorio, Wimpod, Sandygast, Alolan Diglett, Cubone |
+| Akala Forest | A deep forest | Fomantis, Morelull, Bounsweet, Comfey, Pom-Pom Oricorio, Passimian, Oranguru |
+| Akala Cave | A volcanic cave | Salandit, Alolan Geodude, Alolan Diglett, Turtonator |
 | Ula'ula Isle | Mountains, snow and an old power plant | Komala, Togedemaru, Drampa, Turtonator, Oranguru, Passimian, Baile Oricorio, Minior, Alolan Sandshrew, Alolan Vulpix, Alolan Grimer, Crabrawler |
-| Ula'ula caves | Dark, haunted caves | Mimikyu, Alolan Grimer |
-| Poni Isle | Alola's wildest island | Jangmo-o, Sensu Oricorio, Mudbray, Passimian |
-| Poni Cave | A deep canyon cave | Jangmo-o, Minior |
-| Alola sea | Warm tropical water | Wishiwashi, Mareanie, Dewpider, Pyukumuku, Bruxish, Dhelmise |
+| Ula'ula caves | An icy cave and a haunted one | Alolan Sandshrew, Alolan Vulpix, Crabrawler, Mimikyu, Alolan Grimer |
+| Poni Isle | Alola's wildest island | Jangmo-o, Sensu Oricorio, Mudbray, Alolan Exeggutor, Passimian |
+| Poni Cave | A deep canyon cave | Jangmo-o, Minior, Lycanroc |
+| Alola sea | Warm tropical water | Wishiwashi, Mareanie, Pyukumuku, Bruxish |
 
-Oricorio takes a different style on each island, as in the original games.
+Oricorio takes a different style in each place, as in the original games:
+Pom-Pom in Akala Forest, Pa'u on Akala Isle, Baile on Ula'ula Isle and Sensu on
+Poni Isle. Reach rules come first, so fierce and dangerous species stay off
+Melemele, the only Road:
+
+- Pom-Pom Oricorio, a fierce reward, moves from Melemele to Akala Forest.
+- Dhelmise, a dangerous reward, lives in Ula'ula's and Poni's water and in Poni
+  Cave, not in the Alola sea, which is Wilds.
 
 ### The blend
 
@@ -130,9 +138,35 @@ family is catchable.
 - No family is one of a table's two most common slots on more than four maps,
   since Alola has only ten maps.
 
+### Water
+
+Every map with surfing or fishing has one water type. The Alola table spec
+names each map's type.
+
+| Water type | Where | Cast |
+| --- | --- | --- |
+| Coast and sea | The four islands' coasts and the Alola sea | Wishiwashi, Mareanie, Pyukumuku, Bruxish, Dhelmise, Popplio, and the blend's sea species: Magikarp, Tentacool, Wingull, Chinchou, Staryu, Shellder, Corsola, Luvdisc, Wailmer, Carvanha, Clamperl |
+| Cave water | Poni Cave | Dewpider, Wimpod, Wishiwashi, Bruxish, Dhelmise, and the blend's fresh-water species: Magikarp, Barboach, Psyduck, Basculin, Chinchou, and Zubat on the wing |
+
+- **Fishing:** entries 1 and 2 hold Alola natives, since blend species never
+  lead a table. Entry 3 is usually Magikarp. Entries 3–10 hold at least four
+  different families.
+- **Surfing:** no family holds a surfing table's first slot on more than four
+  maps.
+- **Native HM crossings:** Alola has none. The boat from Route 13 links
+  Melemele to Kanto, so no player is stranded without Surf.
+
 ### Day and night
 
 Alola's tables have no night versions today, so every night table is new.
+
+- **Sun by day, Moon by night.** Outdoors, the species split between Pokémon
+  Sun and Moon follow the clock: Passimian, Turtonator and Alolan Vulpix's line
+  appear by day, and Oranguru, Drampa and Alolan Sandshrew's line by night.
+  Caves may hold both.
+- **Lycanroc follows the clock too.** Rockruff's slots cap at Midday Lycanroc by
+  day and Midnight Lycanroc by night. Own Tempo Rockruff, which becomes Dusk
+  Lycanroc, is a rare find in Akala Cave.
 
 - Every map has its own night table.
 - Outdoors, at least 30% of a night table's slot weight goes to species that
