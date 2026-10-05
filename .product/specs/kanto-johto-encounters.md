@@ -38,7 +38,10 @@ day table and a night table. The methods are:
 - **Fishing:** the [Standard Rod](standard-rod-fishing.md)'s ten entries and
   three qualities.
 - **Trees and rocks:** one shared table for Headbutt trees and Rock Smash
-  rocks. In the HNS maps both use the same encounter.
+  rocks. In the HNS maps both use the same encounter. Only a map that has
+  Headbutt trees or Rock Smash rocks has this table. What it holds follows what
+  the map has: birds and bugs from trees, rock dwellers from rocks, and both
+  where a map has both.
 
 Each slot holds:
 

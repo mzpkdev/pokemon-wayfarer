@@ -58,20 +58,10 @@ Water type: coast and sea.
 | 4 | 8% | 10% | 10% | Horsea–Seadra | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Magikarp | Magikarp |
 | 6 | 4% | 7% | 10% | Krabby–Kingler | Krabby–Kingler |
-| 7 | 3% | 6% | 10% | Staryu | Staryu |
+| 7 | 3% | 6% | 10% | Krabby | Staryu |
 | 8 | 3% | 5% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 9 | 2% | 4% | 9% | Horsea–Seadra | Chinchou–Lanturn |
 | 10 | 2% | 4% | 9% | Squirtle–Blastoise | Squirtle–Blastoise |
-
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Pidgey–Pidgeot | Pidgey–Pidgeot |
-| 2 | 30% | Caterpie–Butterfree | Hoothoot–Noctowl |
-| 3 | 5% | Ledyba–Ledian | Spinarak–Ariados |
-| 4 | 4% | Exeggcute | Exeggcute |
-| 5 | 1% | Pineco | Venonat–Venomoth |
 
 #### Viridian City
 
@@ -130,7 +120,7 @@ Water type: ponds and rivers.
 | 1 | 60% | Weedle–Beedrill | Weedle–Beedrill |
 | 2 | 30% | Spearow–Fearow | Spearow–Fearow |
 | 3 | 5% | Caterpie–Butterfree | Hoothoot–Noctowl |
-| 4 | 4% | Geodude–Graveler | Venonat–Venomoth |
+| 4 | 4% | Caterpie–Metapod | Venonat–Venomoth |
 | 5 | 1% | Exeggcute | Caterpie–Butterfree |
 
 #### Pewter City
@@ -138,16 +128,6 @@ Water type: ponds and rivers.
 Road, Kanto west.
 
 **`MAP_PEWTER_CITY_HNS`**
-
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Geodude–Graveler | Geodude–Graveler |
-| 2 | 30% | Geodude–Graveler | Geodude–Graveler |
-| 3 | 5% | Sandshrew–Sandslash | Spinarak–Ariados |
-| 4 | 4% | Dunsparce | Dunsparce |
-| 5 | 1% | Spearow–Fearow | Sandshrew–Sandslash |
 
 #### Cerulean City
 
@@ -182,16 +162,6 @@ Water type: ponds and rivers.
 | 9 | 2% | 4% | 9% | Psyduck–Golduck | Slowpoke–Slowbro |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Caterpie–Butterfree | Caterpie–Butterfree |
-| 2 | 30% | Weedle–Beedrill | Weedle–Beedrill |
-| 3 | 5% | Pineco | Hoothoot–Noctowl |
-| 4 | 4% | Exeggcute | Venonat–Venomoth |
-| 5 | 1% | Geodude–Graveler | Exeggcute |
-
 #### Vermilion City
 
 Road, Kanto east.
@@ -207,7 +177,7 @@ Water type: coast and sea.
 | 1 | 20% | Meowth–Persian | Meowth–Persian |
 | 2 | 20% | Magnemite–Magneton | Magnemite–Magneton |
 | 3 | 10% | Drowzee–Hypno | Drowzee–Hypno |
-| 4 | 10% | Spearow–Fearow | Zubat–Golbat |
+| 4 | 10% | Spearow–Fearow | Rattata–Raticate |
 | 5 | 10% | Pidgey–Pidgeot | Gastly–Haunter |
 | 6 | 10% | Diglett–Dugtrio | Hoothoot–Noctowl |
 | 7 | 5% | Squirtle–Blastoise | Squirtle–Blastoise |
@@ -224,7 +194,7 @@ Water type: coast and sea.
 | 1 | 60% | Tentacool–Tentacruel | Tentacool–Tentacruel |
 | 2 | 30% | Krabby–Kingler | Chinchou–Lanturn |
 | 3 | 5% | Tentacool–Tentacruel | Krabby–Kingler |
-| 4 | 4% | Staryu | Staryu |
+| 4 | 4% | Shellder | Staryu |
 | 5 | 1% | Remoraid | Chinchou–Lanturn |
 
 *Fishing*
@@ -247,10 +217,10 @@ Water type: coast and sea.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Krabby–Kingler | Krabby–Kingler |
-| 2 | 30% | Krabby–Kingler | Krabby–Kingler |
+| 2 | 30% | Pidgey–Pidgeot | Hoothoot–Noctowl |
 | 3 | 5% | Geodude–Graveler | Geodude–Graveler |
-| 4 | 4% | Pidgey–Pidgeot | Hoothoot–Noctowl |
-| 5 | 1% | Spearow–Fearow | Spearow–Fearow |
+| 4 | 4% | Spearow–Fearow | Spearow–Fearow |
+| 5 | 1% | Caterpie–Butterfree | Caterpie–Butterfree |
 
 **`MAP_VERMILION_CITY_PORT_OUTSIDE_HNS`**
 
@@ -261,15 +231,15 @@ Water type: coast and sea.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Machop–Machoke | Machop–Machoke |
-| 2 | 20% | Voltorb–Electrode | Voltorb–Electrode |
-| 3 | 10% | Spearow–Fearow | Zubat–Golbat |
+| 2 | 20% | Rattata–Raticate | Grimer–Muk |
+| 3 | 10% | Spearow–Fearow | Rattata–Raticate |
 | 4 | 10% | Meowth–Persian | Hoothoot–Noctowl |
 | 5 | 10% | Pidgey–Pidgeot | Gastly–Haunter |
 | 6 | 10% | Drowzee–Hypno | Meowth–Persian |
-| 7 | 5% | Grimer–Muk | Murkrow |
+| 7 | 5% | Voltorb–Electrode | Murkrow |
 | 8 | 5% | Magnemite–Magneton | Magnemite–Magneton |
 | 9 | 4% | Farfetch'd | Farfetch'd |
-| 10 | 4% | Pikachu | Grimer–Muk |
+| 10 | 4% | Pikachu | Voltorb–Electrode |
 | 11 | 1% | Squirtle–Blastoise | Squirtle–Blastoise |
 | 12 | 1% | Elekid | Elekid |
 
@@ -304,16 +274,6 @@ Road, Kanto east.
 
 **`MAP_LAVENDER_TOWN_HNS`**
 
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Pidgey–Pidgeot | Pidgey–Pidgeot |
-| 2 | 30% | Pidgey–Pidgeot | Murkrow |
-| 3 | 5% | Geodude–Graveler | Geodude–Graveler |
-| 4 | 4% | Exeggcute | Gastly–Haunter |
-| 5 | 1% | Caterpie–Butterfree | Exeggcute |
-
 #### Celadon City
 
 Road, Kanto east.
@@ -337,7 +297,7 @@ Water type: ponds and rivers.
 | 9 | 4% | Caterpie–Butterfree | Koffing–Weezing |
 | 10 | 4% | Jigglypuff | Houndour |
 | 11 | 1% | Eevee | Eevee |
-| 12 | 1% | Porygon | Porygon |
+| 12 | 1% | Igglybuff | Igglybuff |
 
 *Surfing*
 
@@ -364,31 +324,11 @@ Water type: ponds and rivers.
 | 9 | 2% | 4% | 9% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Exeggcute | Exeggcute |
-| 2 | 30% | Exeggcute | Exeggcute |
-| 3 | 5% | Caterpie–Butterfree | Venonat–Venomoth |
-| 4 | 4% | Geodude–Graveler | Hoothoot–Noctowl |
-| 5 | 1% | Weedle–Beedrill | Murkrow |
-
 #### Saffron City
 
 Road, Kanto east.
 
 **`MAP_SAFFRON_CITY_HNS`**
-
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Pidgey–Pidgeot | Pidgey–Pidgeot |
-| 2 | 30% | Pidgey–Pidgeot | Hoothoot–Noctowl |
-| 3 | 5% | Abra–Kadabra | Abra–Kadabra |
-| 4 | 4% | Exeggcute | Exeggcute |
-| 5 | 1% | Geodude–Graveler | Murkrow |
 
 #### Fuchsia City
 
@@ -404,7 +344,7 @@ Water type: ponds and rivers.
 | --- | --- | --- | --- |
 | 1 | 20% | Venonat–Venomoth | Venonat–Venomoth |
 | 2 | 20% | Exeggcute | Exeggcute |
-| 3 | 10% | Nidoran♀–Nidorina | Zubat–Golbat |
+| 3 | 10% | Nidoran♀–Nidorina | Murkrow |
 | 4 | 10% | Nidoran♂–Nidorino | Oddish–Gloom |
 | 5 | 10% | Doduo–Dodrio | Nidoran♀–Nidorina |
 | 6 | 10% | Paras–Parasect | Nidoran♂–Nidorino |
@@ -447,7 +387,7 @@ Water type: ponds and rivers.
 | 1 | 60% | Venonat–Venomoth | Venonat–Venomoth |
 | 2 | 30% | Exeggcute | Exeggcute |
 | 3 | 5% | Paras–Parasect | Spinarak–Ariados |
-| 4 | 4% | Geodude–Graveler | Paras–Parasect |
+| 4 | 4% | Weedle–Kakuna | Paras–Parasect |
 | 5 | 1% | Caterpie–Butterfree | Hoothoot–Noctowl |
 
 #### Cinnabar Island
@@ -464,7 +404,7 @@ Water type: coast and sea.
 | --- | --- | --- | --- |
 | 1 | 60% | Tentacool–Tentacruel | Tentacool–Tentacruel |
 | 2 | 30% | Corsola | Staryu |
-| 3 | 5% | Staryu | Corsola |
+| 3 | 5% | Horsea–Seadra | Corsola |
 | 4 | 4% | Shellder | Chinchou–Lanturn |
 | 5 | 1% | Tentacool–Tentacruel | Staryu |
 
@@ -478,7 +418,7 @@ Water type: coast and sea.
 | 4 | 8% | 10% | 10% | Krabby–Kingler | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Magikarp | Magikarp |
 | 6 | 4% | 7% | 10% | Shellder | Shellder |
-| 7 | 3% | 6% | 10% | Staryu | Staryu |
+| 7 | 3% | 6% | 10% | Tentacool–Tentacruel | Staryu |
 | 8 | 3% | 5% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 9 | 2% | 4% | 9% | Corsola | Chinchou–Lanturn |
 | 10 | 2% | 4% | 9% | Horsea–Seadra | Horsea–Seadra |
@@ -501,7 +441,7 @@ Water type: ponds and rivers.
 | 4 | 10% | Pidgey–Pidgeot | Rattata–Raticate |
 | 5 | 10% | Rattata–Raticate | Meowth–Persian |
 | 6 | 10% | Sentret–Furret | Oddish–Gloom |
-| 7 | 5% | Caterpie–Butterfree | Pidgey–Pidgeot |
+| 7 | 5% | Caterpie–Butterfree | Rattata |
 | 8 | 5% | Ledyba–Ledian | Spinarak–Ariados |
 | 9 | 4% | Nidoran♀–Nidorina | Venonat–Venomoth |
 | 10 | 4% | Nidoran♂–Nidorino | Nidoran♂–Nidorino |
@@ -533,16 +473,6 @@ Water type: ponds and rivers.
 | 9 | 2% | 4% | 9% | Marill–Azumarill | Slowpoke–Slowbro |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Pidgey–Pidgeot | Pidgey–Pidgeot |
-| 2 | 30% | Pidgey–Pidgeot | Hoothoot–Noctowl |
-| 3 | 5% | Exeggcute | Exeggcute |
-| 4 | 4% | Caterpie–Butterfree | Venonat–Venomoth |
-| 5 | 1% | Pineco | Spinarak–Ariados |
-
 #### Route 2
 
 Road, Kanto west.
@@ -562,7 +492,7 @@ Water type: ponds and rivers.
 | 5 | 10% | Ledyba–Ledian | Venonat–Venomoth |
 | 6 | 10% | Paras–Parasect | Rattata–Raticate |
 | 7 | 5% | Pikachu | Paras–Parasect |
-| 8 | 5% | Abra–Kadabra | Pidgey–Pidgeot |
+| 8 | 5% | Abra–Kadabra | Hoothoot–Noctowl |
 | 9 | 4% | Yanma | Oddish–Gloom |
 | 10 | 4% | Caterpie–Metapod | Murkrow |
 | 11 | 1% | Abra–Kadabra | Abra–Kadabra |
@@ -592,16 +522,6 @@ Water type: ponds and rivers.
 | 8 | 3% | 5% | 9% | Psyduck–Golduck | Slowpoke–Slowbro |
 | 9 | 2% | 4% | 9% | Goldeen–Seaking | Marill–Azumarill |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
-
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Weedle–Beedrill | Weedle–Beedrill |
-| 2 | 30% | Caterpie–Butterfree | Caterpie–Butterfree |
-| 3 | 5% | Pineco | Hoothoot–Noctowl |
-| 4 | 4% | Exeggcute | Spinarak–Ariados |
-| 5 | 1% | Geodude–Graveler | Exeggcute |
 
 #### Route 3
 
@@ -653,16 +573,6 @@ Water type: ponds and rivers.
 | 9 | 2% | 4% | 9% | Marill–Azumarill | Marill–Azumarill |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Spearow–Fearow | Spearow–Fearow |
-| 2 | 30% | Spearow–Fearow | Spearow–Fearow |
-| 3 | 5% | Geodude–Graveler | Hoothoot–Noctowl |
-| 4 | 4% | Sandshrew–Sandslash | Geodude–Graveler |
-| 5 | 1% | Exeggcute | Spinarak–Ariados |
-
 #### Route 4
 
 Road, Kanto west.
@@ -696,7 +606,7 @@ Water type: coast and sea.
 | 2 | 30% | Remoraid–Octillery | Chinchou–Lanturn |
 | 3 | 5% | Tentacool–Tentacruel | Remoraid–Octillery |
 | 4 | 4% | Shellder | Staryu |
-| 5 | 1% | Staryu | Staryu |
+| 5 | 1% | Krabby–Kingler | Staryu |
 
 *Fishing*
 
@@ -713,16 +623,6 @@ Water type: coast and sea.
 | 9 | 2% | 4% | 9% | Remoraid–Octillery | Remoraid–Octillery |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Sandshrew–Sandslash | Sandshrew–Sandslash |
-| 2 | 30% | Sandshrew–Sandslash | Sandshrew–Sandslash |
-| 3 | 5% | Geodude–Graveler | Hoothoot–Noctowl |
-| 4 | 4% | Dunsparce | Dunsparce |
-| 5 | 1% | Exeggcute | Geodude–Graveler |
-
 #### Route 5
 
 Road, Kanto east.
@@ -736,8 +636,8 @@ Water type: ponds and rivers.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Pidgey–Pidgeot | Meowth–Persian |
-| 2 | 20% | Meowth–Persian | Pidgey–Pidgeot |
-| 3 | 10% | Jigglypuff | Hoothoot–Noctowl |
+| 2 | 20% | Meowth–Persian | Hoothoot–Noctowl |
+| 3 | 10% | Jigglypuff | Oddish–Gloom |
 | 4 | 10% | Abra–Kadabra | Venonat–Venomoth |
 | 5 | 10% | Oddish–Gloom | Jigglypuff |
 | 6 | 10% | Rattata–Raticate | Gastly–Haunter |
@@ -773,16 +673,6 @@ Water type: ponds and rivers.
 | 9 | 2% | 4% | 9% | Psyduck–Golduck | Slowpoke–Slowbro |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Pidgey–Pidgeot | Pidgey–Pidgeot |
-| 2 | 30% | Pidgey–Pidgeot | Hoothoot–Noctowl |
-| 3 | 5% | Exeggcute | Exeggcute |
-| 4 | 4% | Caterpie–Butterfree | Venonat–Venomoth |
-| 5 | 1% | Pineco | Pidgey–Pidgeot |
-
 #### Route 6
 
 Road, Kanto east.
@@ -804,7 +694,7 @@ Water type: ponds and rivers.
 | 7 | 5% | Abra–Kadabra | Abra–Kadabra |
 | 8 | 5% | Snubbull–Granbull | Snubbull–Granbull |
 | 9 | 4% | Farfetch'd | Farfetch'd |
-| 10 | 4% | Jigglypuff | Zubat–Golbat |
+| 10 | 4% | Jigglypuff | Gastly–Haunter |
 | 11 | 1% | Abra–Kadabra | Abra–Kadabra |
 | 12 | 1% | Elekid | Elekid |
 
@@ -840,7 +730,7 @@ Water type: ponds and rivers.
 | 1 | 60% | Caterpie–Butterfree | Caterpie–Butterfree |
 | 2 | 30% | Weedle–Beedrill | Weedle–Beedrill |
 | 3 | 5% | Ledyba–Ledian | Hoothoot–Noctowl |
-| 4 | 4% | Geodude–Graveler | Venonat–Venomoth |
+| 4 | 4% | Caterpie–Metapod | Venonat–Venomoth |
 | 5 | 1% | Exeggcute | Exeggcute |
 
 #### Route 7
@@ -893,16 +783,6 @@ Water type: ponds and rivers.
 | 9 | 2% | 4% | 9% | Psyduck–Golduck | Psyduck–Golduck |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Exeggcute | Exeggcute |
-| 2 | 30% | Exeggcute | Exeggcute |
-| 3 | 5% | Pidgey–Pidgeot | Murkrow |
-| 4 | 4% | Pineco | Venonat–Venomoth |
-| 5 | 1% | Geodude–Graveler | Hoothoot–Noctowl |
-
 #### Route 8
 
 Road, Kanto east.
@@ -953,16 +833,6 @@ Water type: ponds and rivers.
 | 9 | 2% | 4% | 9% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Sandshrew–Sandslash | Sandshrew–Sandslash |
-| 2 | 30% | Sandshrew–Sandslash | Sandshrew–Sandslash |
-| 3 | 5% | Pidgey–Pidgeot | Hoothoot–Noctowl |
-| 4 | 4% | Exeggcute | Exeggcute |
-| 5 | 1% | Geodude–Graveler | Venonat–Venomoth |
-
 #### Route 11
 
 Road, Kanto east.
@@ -980,7 +850,7 @@ Water type: coast and sea.
 | 3 | 10% | Rattata–Raticate | Rattata–Raticate |
 | 4 | 10% | Ekans–Arbok | Hoothoot–Noctowl |
 | 5 | 10% | Sandshrew–Sandslash | Meowth–Persian |
-| 6 | 10% | Diglett | Zubat–Golbat |
+| 6 | 10% | Diglett | Oddish–Gloom |
 | 7 | 5% | Magnemite–Magneton | Gastly–Haunter |
 | 8 | 5% | Drowzee–Hypno | Drowzee–Hypno |
 | 9 | 4% | Farfetch'd | Farfetch'd |
@@ -1019,8 +889,8 @@ Water type: coast and sea.
 | --- | --- | --- | --- |
 | 1 | 60% | Spearow–Fearow | Spearow–Fearow |
 | 2 | 30% | Spearow–Fearow | Spearow–Fearow |
-| 3 | 5% | Geodude–Graveler | Hoothoot–Noctowl |
-| 4 | 4% | Pidgey–Pidgeot | Geodude–Graveler |
+| 3 | 5% | Weedle–Kakuna | Hoothoot–Noctowl |
+| 4 | 4% | Pidgey–Pidgeot | Weedle–Kakuna |
 | 5 | 1% | Exeggcute | Spinarak–Ariados |
 
 #### Route 16
@@ -1040,7 +910,7 @@ Water type: ponds and rivers.
 | 3 | 10% | Rattata–Raticate | Grimer–Muk |
 | 4 | 10% | Grimer | Murkrow |
 | 5 | 10% | Doduo–Dodrio | Rattata–Raticate |
-| 6 | 10% | Ponyta | Zubat–Golbat |
+| 6 | 10% | Ponyta | Slugma–Magcargo |
 | 7 | 5% | Spearow–Fearow | Hoothoot–Noctowl |
 | 8 | 5% | Rattata–Raticate | Houndour |
 | 9 | 4% | Lickitung | Lickitung |
@@ -1089,7 +959,7 @@ Water type: coast and sea.
 | 2 | 20% | Spearow–Fearow | Spearow–Fearow |
 | 3 | 10% | Rattata–Raticate | Grimer–Muk |
 | 4 | 10% | Ponyta | Murkrow |
-| 5 | 10% | Spearow–Fearow | Zubat–Golbat |
+| 5 | 10% | Spearow–Fearow | Slugma–Magcargo |
 | 6 | 10% | Ponyta–Rapidash | Hoothoot–Noctowl |
 | 7 | 5% | Doduo–Dodrio | Houndour |
 | 8 | 5% | Grimer | Hoothoot–Noctowl |
@@ -1139,7 +1009,7 @@ Water type: coast and sea.
 | 2 | 20% | Rattata–Raticate | Rattata–Raticate |
 | 3 | 10% | Doduo–Dodrio | Grimer–Muk |
 | 4 | 10% | Grimer | Murkrow |
-| 5 | 10% | Spearow–Fearow | Zubat–Golbat |
+| 5 | 10% | Spearow–Fearow | Slugma–Magcargo |
 | 6 | 10% | Doduo–Dodrio | Hoothoot–Noctowl |
 | 7 | 5% | Rattata–Raticate | Houndour |
 | 8 | 5% | Lickitung | Lickitung |
@@ -1172,6 +1042,16 @@ Water type: coast and sea.
 | 8 | 3% | 5% | 9% | Shellder | Staryu |
 | 9 | 2% | 4% | 9% | Horsea–Seadra | Chinchou–Lanturn |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
+
+*Trees and rocks*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Spearow–Fearow | Hoothoot–Noctowl |
+| 2 | 30% | Pidgey–Pidgeot | Spearow–Fearow |
+| 3 | 5% | Caterpie–Butterfree | Venonat–Venomoth |
+| 4 | 4% | Weedle–Beedrill | Weedle–Beedrill |
+| 5 | 1% | Exeggcute | Exeggcute |
 
 #### Route 21
 
@@ -1248,10 +1128,10 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Staryu | Staryu |
+| 1 | 60% | Shellder | Staryu |
 | 2 | 30% | Tentacool–Tentacruel | Tentacool–Tentacruel |
 | 3 | 5% | Corsola | Chinchou–Lanturn |
-| 4 | 4% | Shellder | Corsola |
+| 4 | 4% | Horsea–Seadra | Corsola |
 | 5 | 1% | Slowpoke–Slowbro | Chinchou–Lanturn |
 
 *Fishing*
@@ -1265,7 +1145,7 @@ Water type: coast and sea.
 | 5 | 8% | 9% | 10% | Magikarp | Magikarp |
 | 6 | 4% | 7% | 10% | Remoraid–Octillery | Remoraid–Octillery |
 | 7 | 3% | 6% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 8 | 3% | 5% | 9% | Staryu | Staryu |
+| 8 | 3% | 5% | 9% | Shellder | Staryu |
 | 9 | 2% | 4% | 9% | Corsola | Chinchou–Lanturn |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 
@@ -1318,6 +1198,16 @@ Water type: ponds and rivers.
 | 8 | 3% | 5% | 9% | Psyduck–Golduck | Wooper–Quagsire |
 | 9 | 2% | 4% | 9% | Goldeen–Seaking | Goldeen–Seaking |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
+
+*Trees and rocks*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Spearow–Fearow | Hoothoot–Noctowl |
+| 2 | 30% | Ledyba–Ledian | Spinarak–Ariados |
+| 3 | 5% | Pidgey–Pidgeot | Spearow–Fearow |
+| 4 | 4% | Caterpie–Butterfree | Venonat–Venomoth |
+| 5 | 1% | Pineco–Forretress | Pineco–Forretress |
 
 #### Route 24
 
@@ -1411,7 +1301,7 @@ Water type: coast and sea.
 | 5 | 10% | Farfetch'd | Gastly–Haunter |
 | 6 | 10% | Bellsprout–Weepinbell | Drowzee–Hypno |
 | 7 | 5% | Oddish–Gloom | Spinarak–Ariados |
-| 8 | 5% | Nidoran♂–Nidorino | Zubat–Golbat |
+| 8 | 5% | Nidoran♂–Nidorino | Drowzee–Hypno |
 | 9 | 4% | Yanma | Yanma |
 | 10 | 4% | Nidoran♀–Nidorina | Nidoran♂–Nidorino |
 | 11 | 1% | Farfetch'd | Farfetch'd |
@@ -1469,7 +1359,7 @@ Water type: coast and sea.
 | 3 | 10% | Pidgey–Pidgeot | Venonat–Venomoth |
 | 4 | 10% | Venonat–Venomoth | Hoothoot–Noctowl |
 | 5 | 10% | Nidoran♀–Nidorina | Gastly–Haunter |
-| 6 | 10% | Nidoran♂–Nidorino | Zubat–Golbat |
+| 6 | 10% | Nidoran♂–Nidorino | Drowzee–Hypno |
 | 7 | 5% | Ditto | Ditto |
 | 8 | 5% | Ditto | Spinarak–Ariados |
 | 9 | 4% | Farfetch'd | Murkrow |
@@ -1501,16 +1391,6 @@ Water type: coast and sea.
 | 8 | 3% | 5% | 9% | Horsea–Seadra | Chinchou–Lanturn |
 | 9 | 2% | 4% | 9% | Qwilfish | Staryu |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
-
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Pineco | Pineco |
-| 2 | 30% | Pineco | Pineco |
-| 3 | 5% | Exeggcute | Hoothoot–Noctowl |
-| 4 | 4% | Geodude–Graveler | Exeggcute |
-| 5 | 1% | Pidgey–Pidgeot | Venonat–Venomoth |
 
 #### Route 9
 
@@ -1562,16 +1442,6 @@ Water type: ponds and rivers.
 | 9 | 2% | 4% | 9% | Goldeen–Seaking | Goldeen–Seaking |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Geodude–Graveler | Geodude–Graveler |
-| 2 | 30% | Geodude–Graveler | Geodude–Graveler |
-| 3 | 5% | Spearow–Fearow | Hoothoot–Noctowl |
-| 4 | 4% | Pinsir | Pinsir |
-| 5 | 1% | Shuckle | Shuckle |
-
 #### Route 10
 
 Wilds, Kanto east.
@@ -1591,10 +1461,10 @@ Water type: ponds and rivers.
 | 5 | 10% | Magnemite–Magneton | Hoothoot–Noctowl |
 | 6 | 10% | Rhyhorn | Magnemite–Magneton |
 | 7 | 5% | Electabuzz | Electabuzz |
-| 8 | 5% | Tauros | Houndour |
+| 8 | 5% | Cubone–Marowak | Houndour |
 | 9 | 4% | Electabuzz | Electabuzz |
 | 10 | 4% | Pikachu | Pikachu |
-| 11 | 1% | Tauros | Tauros |
+| 11 | 1% | Cubone–Marowak | Cubone–Marowak |
 | 12 | 1% | Elekid | Elekid |
 
 *Surfing*
@@ -1622,16 +1492,6 @@ Water type: ponds and rivers.
 | 9 | 2% | 4% | 9% | Psyduck–Golduck | Slowpoke–Slowbro |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Sandshrew–Sandslash | Sandshrew–Sandslash |
-| 2 | 30% | Sandshrew–Sandslash | Sandshrew–Sandslash |
-| 3 | 5% | Geodude–Graveler | Spinarak–Ariados |
-| 4 | 4% | Shuckle | Shuckle |
-| 5 | 1% | Voltorb–Electrode | Geodude–Graveler |
-
 #### Route 14
 
 Wilds, Kanto east.
@@ -1651,7 +1511,7 @@ Water type: ponds and rivers.
 | 5 | 10% | Nidoran♀–Nidorina | Spinarak–Ariados |
 | 6 | 10% | Nidoran♂–Nidorino | Nidoran♂–Nidorino |
 | 7 | 5% | Ditto | Ditto |
-| 8 | 5% | Tauros | Zubat–Golbat |
+| 8 | 5% | Tauros | Drowzee–Hypno |
 | 9 | 4% | Chansey | Chansey |
 | 10 | 4% | Mr. Mime | Murkrow |
 | 11 | 1% | Ditto | Ditto |
@@ -1700,7 +1560,7 @@ Water type: ponds and rivers.
 | 4 | 10% | Venonat–Venomoth | Hoothoot–Noctowl |
 | 5 | 10% | Nidoran♀–Nidorina | Gastly–Haunter |
 | 6 | 10% | Ditto | Ditto |
-| 7 | 5% | Nidoran♂–Nidorino | Zubat–Golbat |
+| 7 | 5% | Nidoran♂–Nidorino | Drowzee–Hypno |
 | 8 | 5% | Scyther | Spinarak–Ariados |
 | 9 | 4% | Kangaskhan | Kangaskhan |
 | 10 | 4% | Chansey | Chansey |
@@ -1732,6 +1592,16 @@ Water type: ponds and rivers.
 | 9 | 2% | 4% | 9% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 
+*Trees and rocks*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Weedle–Beedrill | Hoothoot–Noctowl |
+| 2 | 30% | Caterpie–Butterfree | Venonat–Venomoth |
+| 3 | 5% | Pidgey–Pidgeot | Weedle–Beedrill |
+| 4 | 4% | Exeggcute | Exeggcute |
+| 5 | 1% | Spearow–Fearow | Spearow–Fearow |
+
 #### Route 19
 
 Wilds, Kanto east.
@@ -1745,7 +1615,7 @@ Water type: coast and sea.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| 2 | 30% | Staryu | Staryu |
+| 2 | 30% | Horsea–Seadra | Staryu |
 | 3 | 5% | Remoraid–Octillery | Chinchou–Lanturn |
 | 4 | 4% | Shellder | Staryu |
 | 5 | 1% | Squirtle–Wartortle | Squirtle–Wartortle |
@@ -1754,7 +1624,7 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Staryu | Staryu |
+| 1 | 38% | 25% | 12% | Krabby–Kingler | Staryu |
 | 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
 | 3 | 10% | 12% | 11% | Horsea–Seadra | Horsea–Seadra |
 | 4 | 8% | 10% | 10% | Shellder | Chinchou–Lanturn |
@@ -1762,7 +1632,7 @@ Water type: coast and sea.
 | 6 | 4% | 7% | 10% | Corsola | Corsola |
 | 7 | 3% | 6% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 8 | 3% | 5% | 9% | Krabby–Kingler | Chinchou–Lanturn |
-| 9 | 2% | 4% | 9% | Staryu | Staryu |
+| 9 | 2% | 4% | 9% | Shellder | Staryu |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 
 #### Mt. Moon
@@ -1865,6 +1735,16 @@ Water type: cave water.
 | 9 | 2% | 4% | 9% | Goldeen–Seaking | Goldeen–Seaking |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 
+*Trees and rocks*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Geodude–Graveler | Geodude–Graveler |
+| 2 | 30% | Geodude | Dunsparce |
+| 3 | 5% | Dunsparce | Geodude |
+| 4 | 4% | Geodude–Graveler | Geodude–Graveler |
+| 5 | 1% | Shuckle | Shuckle |
+
 **`MAP_ROCK_TUNNEL_B1F_HNS`**
 
 Water type: cave water.
@@ -1910,6 +1790,16 @@ Water type: cave water.
 | 8 | 3% | 5% | 9% | Psyduck–Golduck | Zubat–Golbat |
 | 9 | 2% | 4% | 9% | Goldeen–Seaking | Goldeen–Seaking |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
+
+*Trees and rocks*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Geodude–Graveler | Geodude–Graveler |
+| 2 | 30% | Geodude | Dunsparce |
+| 3 | 5% | Geodude–Graveler | Geodude |
+| 4 | 4% | Dunsparce | Geodude–Graveler |
+| 5 | 1% | Shuckle | Shuckle |
 
 #### Diglett's Cave
 
@@ -1990,9 +1880,9 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Staryu | Staryu |
-| 2 | 30% | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| 3 | 5% | Staryu | Chinchou–Lanturn |
+| 1 | 60% | Slowpoke–Slowbro | Staryu |
+| 2 | 30% | Krabby–Kingler | Slowpoke–Slowbro |
+| 3 | 5% | Shellder | Chinchou–Lanturn |
 | 4 | 4% | Tentacool–Tentacruel | Tentacool–Tentacruel |
 | 5 | 1% | Corsola | Chinchou–Lanturn |
 
@@ -2000,16 +1890,26 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Staryu | Staryu |
-| 2 | 22% | 18% | 10% | Krabby | Krabby |
-| 3 | 10% | 12% | 11% | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| 4 | 8% | 10% | 10% | Staryu | Chinchou–Lanturn |
+| 1 | 38% | 25% | 12% | Krabby–Kingler | Staryu |
+| 2 | 22% | 18% | 10% | Slowpoke–Slowbro | Krabby |
+| 3 | 10% | 12% | 11% | Krabby | Slowpoke–Slowbro |
+| 4 | 8% | 10% | 10% | Horsea–Seadra | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Magikarp | Magikarp |
 | 6 | 4% | 7% | 10% | Shellder | Shellder |
 | 7 | 3% | 6% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 8 | 3% | 5% | 9% | Krabby–Kingler | Chinchou–Lanturn |
 | 9 | 2% | 4% | 9% | Corsola | Staryu |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
+
+*Trees and rocks*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Caterpie–Butterfree | Hoothoot–Noctowl |
+| 2 | 30% | Weedle–Beedrill | Venonat–Venomoth |
+| 3 | 5% | Pidgey–Pidgeot | Weedle–Beedrill |
+| 4 | 4% | Exeggcute | Exeggcute |
+| 5 | 1% | Pinsir | Pinsir |
 
 #### Route 20
 
@@ -2093,6 +1993,16 @@ Water type: ponds and rivers.
 | 8 | 3% | 5% | 9% | Poliwag–Politoed | Wooper–Quagsire |
 | 9 | 2% | 4% | 9% | Goldeen–Seaking | Goldeen–Seaking |
 | 10 | 2% | 4% | 9% | Dratini–Dragonair | Dratini–Dragonair |
+
+*Trees and rocks*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Spearow–Fearow | Hoothoot–Noctowl |
+| 2 | 30% | Ledyba–Ledian | Spinarak–Ariados |
+| 3 | 5% | Pidgey–Pidgeot | Spearow–Fearow |
+| 4 | 4% | Pineco–Forretress | Pineco–Forretress |
+| 5 | 1% | Heracross | Heracross |
 
 #### Pokémon Tower
 
@@ -2313,7 +2223,7 @@ Dungeon, Kanto west.
 | 5 | 10% | Seel–Dewgong | Sneasel |
 | 6 | 10% | Swinub | Zubat–Golbat |
 | 7 | 5% | Zubat–Golbat | Swinub |
-| 8 | 5% | Shellder | Shellder |
+| 8 | 5% | Seel–Dewgong | Seel–Dewgong |
 | 9 | 4% | Slowpoke–Slowbro | Sneasel |
 | 10 | 4% | Smoochum | Smoochum |
 | 11 | 1% | Jynx | Jynx |
@@ -2333,10 +2243,10 @@ Dungeon, Kanto west.
 | 6 | 10% | Swinub | Swinub |
 | 7 | 5% | Delibird | Delibird |
 | 8 | 5% | Zubat–Golbat | Zubat–Crobat |
-| 9 | 4% | Shellder | Sneasel |
+| 9 | 4% | Slowpoke–Slowbro | Sneasel |
 | 10 | 4% | Psyduck–Golduck | Zubat–Golbat |
 | 11 | 1% | Smoochum | Smoochum |
-| 12 | 1% | Shellder–Cloyster | Shellder–Cloyster |
+| 12 | 1% | Jynx | Jynx |
 
 **`MAP_SEAFOAM_ISLANDS_B2F`**
 
@@ -2351,11 +2261,11 @@ Dungeon, Kanto west.
 | 5 | 10% | Swinub–Piloswine | Sneasel |
 | 6 | 10% | Delibird | Swinub–Piloswine |
 | 7 | 5% | Psyduck–Golduck | Delibird |
-| 8 | 5% | Shellder | Sneasel |
+| 8 | 5% | Seel–Dewgong | Sneasel |
 | 9 | 4% | Jynx | Jynx |
 | 10 | 4% | Swinub | Sneasel–Weavile |
 | 11 | 1% | Slowpoke–Slowking | Slowpoke–Slowking |
-| 12 | 1% | Shellder–Cloyster | Sneasel–Weavile |
+| 12 | 1% | Smoochum | Sneasel–Weavile |
 
 **`MAP_SEAFOAM_ISLANDS_B3F`**
 
@@ -2368,14 +2278,14 @@ Water type: cold water.
 | 1 | 20% | Seel–Dewgong | Seel–Dewgong |
 | 2 | 20% | Jynx | Jynx |
 | 3 | 10% | Seel–Dewgong | Seel–Dewgong |
-| 4 | 10% | Shellder–Cloyster | Shellder–Cloyster |
+| 4 | 10% | Seel | Seel |
 | 5 | 10% | Swinub–Piloswine | Sneasel |
 | 6 | 10% | Slowpoke–Slowbro | Swinub–Piloswine |
 | 7 | 5% | Delibird | Sneasel–Weavile |
 | 8 | 5% | Psyduck–Golduck | Psyduck–Golduck |
 | 9 | 4% | Zubat–Crobat | Zubat–Crobat |
 | 10 | 4% | Slowpoke–Slowking | Slowpoke–Slowking |
-| 11 | 1% | Lapras | Lapras |
+| 11 | 1% | Smoochum | Smoochum |
 | 12 | 1% | Swinub–Mamoswine | Swinub–Mamoswine |
 
 *Surfing*
@@ -2401,7 +2311,7 @@ Water type: cold water.
 | 7 | 3% | 6% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 8 | 3% | 5% | 9% | Tentacool–Tentacruel | Slowpoke–Slowbro |
 | 9 | 2% | 4% | 9% | Horsea–Kingdra | Horsea–Kingdra |
-| 10 | 2% | 4% | 9% | Dratini–Dragonair | Dratini–Dragonair |
+| 10 | 2% | 4% | 9% | Horsea–Seadra | Horsea–Seadra |
 
 **`MAP_SEAFOAM_ISLANDS_B4F`**
 
@@ -2413,26 +2323,26 @@ Water type: cold water.
 | --- | --- | --- | --- |
 | 1 | 20% | Seel–Dewgong | Seel–Dewgong |
 | 2 | 20% | Jynx | Jynx |
-| 3 | 10% | Shellder–Cloyster | Shellder–Cloyster |
+| 3 | 10% | Seel | Seel |
 | 4 | 10% | Slowpoke–Slowking | Slowpoke–Slowking |
 | 5 | 10% | Swinub–Piloswine | Sneasel |
 | 6 | 10% | Delibird | Sneasel–Weavile |
-| 7 | 5% | Lapras | Lapras |
+| 7 | 5% | Seel–Dewgong | Seel–Dewgong |
 | 8 | 5% | Jynx | Jynx |
 | 9 | 4% | Swinub–Mamoswine | Swinub–Mamoswine |
 | 10 | 4% | Zubat–Crobat | Zubat–Crobat |
-| 11 | 1% | Lapras | Lapras |
+| 11 | 1% | Swinub–Mamoswine | Swinub–Mamoswine |
 | 12 | 1% | Sneasel–Weavile | Sneasel–Weavile |
 
 *Surfing*
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Lapras | Lapras |
-| 2 | 30% | Seel–Dewgong | Seel–Dewgong |
-| 3 | 5% | Shellder–Cloyster | Shellder–Cloyster |
-| 4 | 4% | Seel–Dewgong | Slowpoke–Slowking |
-| 5 | 1% | Horsea–Kingdra | Lapras |
+| 1 | 60% | Seel–Dewgong | Seel–Dewgong |
+| 2 | 30% | Shellder–Cloyster | Shellder–Cloyster |
+| 3 | 5% | Horsea–Seadra | Slowpoke–Slowking |
+| 4 | 4% | Horsea–Kingdra | Horsea–Kingdra |
+| 5 | 1% | Lapras | Lapras |
 
 *Fishing*
 
@@ -2444,9 +2354,9 @@ Water type: cold water.
 | 4 | 8% | 10% | 10% | Krabby–Kingler | Krabby–Kingler |
 | 5 | 8% | 9% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 6 | 4% | 7% | 10% | Shellder–Cloyster | Shellder–Cloyster |
-| 7 | 3% | 6% | 10% | Dratini–Dragonair | Dratini–Dragonair |
+| 7 | 3% | 6% | 10% | Horsea–Seadra | Horsea–Seadra |
 | 8 | 3% | 5% | 9% | Horsea–Kingdra | Horsea–Kingdra |
-| 9 | 2% | 4% | 9% | Dratini–Dragonite | Dratini–Dragonite |
+| 9 | 2% | 4% | 9% | Seel–Dewgong | Seel–Dewgong |
 | 10 | 2% | 4% | 9% | Psyduck–Golduck | Slowpoke–Slowking |
 
 #### Victory Road
@@ -2472,7 +2382,7 @@ Water type: cave water.
 | 9 | 4% | Hitmonlee | Hitmonlee |
 | 10 | 4% | Hitmonchan | Hitmonchan |
 | 11 | 1% | Tyrogue | Tyrogue |
-| 12 | 1% | Skarmory | Misdreavus |
+| 12 | 1% | Gligar | Misdreavus |
 
 *Surfing*
 
@@ -2499,6 +2409,16 @@ Water type: cave water.
 | 9 | 2% | 4% | 9% | Goldeen–Seaking | Goldeen–Seaking |
 | 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 
+*Trees and rocks*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Geodude–Graveler | Geodude–Graveler |
+| 2 | 30% | Sandshrew–Sandslash | Dunsparce |
+| 3 | 5% | Geodude | Sandshrew–Sandslash |
+| 4 | 4% | Shuckle | Shuckle |
+| 5 | 1% | Dunsparce | Geodude |
+
 **`MAP_VICTORY_ROAD_KANTO_B1F_HNS`**
 
 Water type: cave water.
@@ -2514,7 +2434,7 @@ Water type: cave water.
 | 5 | 10% | Rhyhorn–Rhydon | Misdreavus |
 | 6 | 10% | Cubone–Marowak | Cubone–Marowak |
 | 7 | 5% | Onix–Steelix | Zubat–Crobat |
-| 8 | 5% | Skarmory | Skarmory |
+| 8 | 5% | Mankey–Primeape | Mankey–Primeape |
 | 9 | 4% | Hitmontop | Hitmontop |
 | 10 | 4% | Machop–Machamp | Machop–Machamp |
 | 11 | 1% | Aerodactyl | Aerodactyl |
@@ -2558,12 +2478,12 @@ Water type: cave water.
 | 3 | 10% | Geodude–Golem | Geodude–Golem |
 | 4 | 10% | Onix–Steelix | Onix–Steelix |
 | 5 | 10% | Rhyhorn–Rhydon | Zubat–Crobat |
-| 6 | 10% | Skarmory | Skarmory |
+| 6 | 10% | Sandshrew–Sandslash | Sandshrew–Sandslash |
 | 7 | 5% | Gligar–Gliscor | Gligar–Gliscor |
 | 8 | 5% | Rhyhorn–Rhyperior | Misdreavus–Mismagius |
 | 9 | 4% | Aerodactyl | Aerodactyl |
 | 10 | 4% | Snorlax | Snorlax |
-| 11 | 1% | Dratini–Dragonite | Dratini–Dragonite |
+| 11 | 1% | Aerodactyl | Aerodactyl |
 | 12 | 1% | Hitmontop | Hitmontop |
 
 *Surfing*
@@ -2647,7 +2567,7 @@ Water type: cave water.
 | --- | --- | --- | --- |
 | 1 | 60% | Geodude–Graveler | Geodude–Graveler |
 | 2 | 30% | Geodude–Graveler | Geodude–Graveler |
-| 3 | 5% | Sandshrew–Sandslash | Spinarak–Ariados |
+| 3 | 5% | Sandshrew–Sandslash | Dunsparce |
 | 4 | 4% | Geodude–Graveler | Sandshrew–Sandslash |
 | 5 | 1% | Shuckle | Shuckle |
 
@@ -2703,9 +2623,9 @@ Water type: cave water.
 | --- | --- | --- | --- |
 | 1 | 60% | Geodude–Golem | Geodude–Golem |
 | 2 | 30% | Geodude–Graveler | Geodude–Graveler |
-| 3 | 5% | Rhyhorn–Rhydon | Spinarak–Ariados |
+| 3 | 5% | Geodude–Graveler | Dunsparce |
 | 4 | 4% | Shuckle | Shuckle |
-| 5 | 1% | Geodude–Golem | Rhyhorn–Rhydon |
+| 5 | 1% | Geodude–Golem | Geodude–Golem |
 
 **`MAP_CERULEAN_CAVE_B2F_HNS`**
 
@@ -2725,7 +2645,7 @@ Water type: cave water.
 | 8 | 5% | Chansey–Blissey | Chansey–Blissey |
 | 9 | 4% | Snorlax | Snorlax |
 | 10 | 4% | Aerodactyl | Aerodactyl |
-| 11 | 1% | Dratini–Dragonite | Dratini–Dragonite |
+| 11 | 1% | Jigglypuff–Wigglytuff | Jigglypuff–Wigglytuff |
 | 12 | 1% | Mr. Mime | Mr. Mime |
 
 *Surfing*
@@ -2759,9 +2679,9 @@ Water type: cave water.
 | --- | --- | --- | --- |
 | 1 | 60% | Geodude–Golem | Geodude–Golem |
 | 2 | 30% | Geodude–Golem | Geodude–Golem |
-| 3 | 5% | Rhyhorn–Rhyperior | Spinarak–Ariados |
+| 3 | 5% | Geodude–Graveler | Dunsparce |
 | 4 | 4% | Shuckle | Shuckle |
-| 5 | 1% | Onix–Steelix | Rhyhorn–Rhyperior |
+| 5 | 1% | Geodude–Golem | Geodude–Graveler |
 
 
 ### Coverage checklist
@@ -2774,15 +2694,15 @@ Water type: cave water.
 | Annihilape | Route 23 |
 | Arbok | Route 10, Route 11, Route 23, Route 3 and more |
 | Arcanine | Pokémon Mansion |
-| Ariados | Cerulean Cave, Fuchsia City, Pallet Town, Pewter City and more |
+| Ariados | Fuchsia City, Route 1, Route 11, Route 12 and more |
 | Azumarill | Cerulean Cave, Mt. Moon, Route 1, Route 2 and more |
-| Beedrill | Celadon City, Cerulean City, Route 2, Route 24 and more |
+| Beedrill | Route 15, Route 18, Route 2, Route 24 and more |
 | Bellsprout | Celadon City, Route 12, Route 13, Route 14 and more |
 | Blastoise | Cerulean City, Pallet Town, Route 6, Vermilion City |
 | Blissey | Cerulean Cave |
 | Bulbasaur | Route 21, Route 25, Viridian Forest |
-| Butterfree | Celadon City, Cerulean City, Fuchsia City, Lavender Town and more |
-| Caterpie | Celadon City, Cerulean City, Fuchsia City, Lavender Town and more |
+| Butterfree | Celadon City, Fuchsia City, Route 1, Route 15 and more |
+| Caterpie | Celadon City, Fuchsia City, Route 1, Route 15 and more |
 | Chansey | Cerulean Cave, Route 14, Route 15 |
 | Charizard | Pokémon Mansion, Route 3, Route 4 |
 | Charmander | Pokémon Mansion, Route 24, Route 3, Route 4 |
@@ -2793,7 +2713,7 @@ Water type: cave water.
 | Cloyster | Route 20, Seafoam Islands |
 | Corsola | Cinnabar Island, Route 13, Route 19, Route 21 and more |
 | Crobat | Cerulean Cave, Seafoam Islands, Victory Road |
-| Cubone | Cerulean Cave, Pokémon Tower, Rock Tunnel, Route 9 and more |
+| Cubone | Cerulean Cave, Pokémon Tower, Rock Tunnel, Route 10 and more |
 | Delibird | Seafoam Islands |
 | Dewgong | Seafoam Islands |
 | Diglett | Diglett's Cave, Route 11, Vermilion City |
@@ -2801,53 +2721,55 @@ Water type: cave water.
 | Dodrio | Cerulean Cave, Fuchsia City, Route 16, Route 17 and more |
 | Doduo | Cerulean Cave, Fuchsia City, Route 16, Route 17 and more |
 | Donphan | Route 23 |
-| Dragonair | Cerulean Cave, Route 20, Route 23, Seafoam Islands and more |
-| Dragonite | Cerulean Cave, Seafoam Islands, Victory Road |
-| Dratini | Cerulean Cave, Route 20, Route 23, Seafoam Islands and more |
-| Drowzee | Cerulean Cave, Route 11, Route 12, Route 5 and more |
+| Dragonair | Cerulean Cave, Route 20, Route 23, Victory Road |
+| Dragonite | Cerulean Cave, Victory Road |
+| Dratini | Cerulean Cave, Route 20, Route 23, Victory Road |
+| Drowzee | Cerulean Cave, Route 11, Route 12, Route 13 and more |
 | Dugtrio | Diglett's Cave, Vermilion City |
-| Dunsparce | Diglett's Cave, Pewter City, Rock Tunnel, Route 4 |
+| Dunsparce | Cerulean Cave, Diglett's Cave, Rock Tunnel, Victory Road |
 | Eevee | Celadon City, Route 1, Route 16, Route 18 and more |
 | Ekans | Route 10, Route 11, Route 23, Route 3 and more |
 | Electabuzz | Power Plant, Route 10 |
 | Electivire | Power Plant |
 | Electrode | Cerulean Cave, Power Plant, Route 10, Vermilion City |
 | Elekid | Power Plant, Route 10, Route 11, Route 6 and more |
-| Exeggcute | Celadon City, Cerulean City, Fuchsia City, Lavender Town and more |
+| Exeggcute | Celadon City, Fuchsia City, Route 11, Route 12 and more |
 | Farfetch'd | Fuchsia City, Route 11, Route 12, Route 13 and more |
-| Fearow | Pewter City, Route 10, Route 11, Route 16 and more |
+| Fearow | Route 10, Route 11, Route 15, Route 16 and more |
+| Forretress | Route 22, Route 23 |
 | Furret | Route 1, Route 21, Route 22, Viridian City |
-| Gastly | Celadon City, Cerulean Cave, Fuchsia City, Lavender Town and more |
+| Gastly | Celadon City, Cerulean Cave, Fuchsia City, Pokémon Mansion and more |
 | Gengar | Cerulean Cave, Pokémon Mansion, Pokémon Tower |
-| Geodude | Celadon City, Cerulean Cave, Cerulean City, Diglett's Cave and more |
+| Geodude | Cerulean Cave, Diglett's Cave, Mt. Moon, Rock Tunnel and more |
 | Gligar | Route 23, Victory Road |
 | Gliscor | Victory Road |
-| Gloom | Celadon City, Fuchsia City, Route 1, Route 12 and more |
-| Golbat | Cerulean Cave, Diglett's Cave, Fuchsia City, Mt. Moon and more |
+| Gloom | Celadon City, Fuchsia City, Route 1, Route 11 and more |
+| Golbat | Cerulean Cave, Diglett's Cave, Mt. Moon, Rock Tunnel and more |
 | Goldeen | Celadon City, Cerulean Cave, Cerulean City, Diglett's Cave and more |
 | Golduck | Celadon City, Cerulean Cave, Cerulean City, Diglett's Cave and more |
 | Golem | Cerulean Cave, Victory Road |
 | Granbull | Route 5, Route 6, Route 7, Route 8 |
-| Graveler | Celadon City, Cerulean Cave, Cerulean City, Diglett's Cave and more |
+| Graveler | Cerulean Cave, Diglett's Cave, Mt. Moon, Rock Tunnel and more |
 | Grimer | Celadon City, Pokémon Mansion, Route 16, Route 17 and more |
 | Growlithe | Pokémon Mansion, Route 7, Route 8 |
 | Gyarados | Celadon City, Cerulean Cave, Cerulean City, Cinnabar Island and more |
-| Haunter | Celadon City, Cerulean Cave, Fuchsia City, Lavender Town and more |
+| Haunter | Celadon City, Cerulean Cave, Fuchsia City, Pokémon Mansion and more |
+| Heracross | Route 23 |
 | Hitmonchan | Rock Tunnel, Victory Road |
 | Hitmonlee | Rock Tunnel, Victory Road |
 | Hitmontop | Victory Road |
 | Honchkrow | Pokémon Tower |
-| Hoothoot | Celadon City, Cerulean City, Fuchsia City, Pallet Town and more |
+| Hoothoot | Celadon City, Fuchsia City, Route 1, Route 10 and more |
 | Horsea | Cinnabar Island, Pallet Town, Route 11, Route 12 and more |
 | Houndoom | Pokémon Mansion, Route 23 |
 | Houndour | Celadon City, Pokémon Mansion, Route 10, Route 16 and more |
-| Hypno | Cerulean Cave, Route 11, Route 12, Vermilion City |
-| Igglybuff | Route 1, Route 22, Route 3 |
+| Hypno | Cerulean Cave, Route 11, Route 12, Route 13 and more |
+| Igglybuff | Celadon City, Route 1, Route 22, Route 3 |
 | Ivysaur | Route 21, Route 25, Viridian Forest |
 | Jigglypuff | Celadon City, Cerulean Cave, Route 3, Route 4 and more |
 | Jynx | Seafoam Islands |
 | Kadabra | Cerulean Cave, Route 2, Route 24, Route 25 and more |
-| Kakuna | Celadon City, Cerulean City, Route 2, Route 24 and more |
+| Kakuna | Fuchsia City, Route 11, Route 15, Route 18 and more |
 | Kangaskhan | Cerulean Cave, Rock Tunnel, Route 15, Route 9 |
 | Kingdra | Route 20, Seafoam Islands |
 | Kingler | Cinnabar Island, Pallet Town, Route 11, Route 12 and more |
@@ -2855,15 +2777,15 @@ Water type: cave water.
 | Krabby | Cinnabar Island, Pallet Town, Route 11, Route 12 and more |
 | Lanturn | Cinnabar Island, Pallet Town, Route 11, Route 12 and more |
 | Lapras | Route 20, Seafoam Islands |
-| Ledian | Pallet Town, Route 1, Route 2, Route 22 and more |
-| Ledyba | Pallet Town, Route 1, Route 2, Route 22 and more |
+| Ledian | Route 1, Route 2, Route 22, Route 23 and more |
+| Ledyba | Route 1, Route 2, Route 22, Route 23 and more |
 | Lickilicky | Cerulean Cave |
 | Lickitung | Cerulean Cave, Route 16, Route 17, Route 18 |
 | Machamp | Victory Road |
 | Machoke | Rock Tunnel, Vermilion City, Victory Road |
 | Machop | Rock Tunnel, Vermilion City, Victory Road |
 | Magby | Pokémon Mansion |
-| Magcargo | Pokémon Mansion |
+| Magcargo | Pokémon Mansion, Route 16, Route 17, Route 18 |
 | Magikarp | Celadon City, Cerulean Cave, Cerulean City, Cinnabar Island and more |
 | Magmar | Pokémon Mansion |
 | Magmortar | Pokémon Mansion |
@@ -2873,42 +2795,42 @@ Water type: cave water.
 | Mamoswine | Seafoam Islands |
 | Mankey | Rock Tunnel, Route 22, Route 23, Route 3 and more |
 | Marill | Cerulean Cave, Mt. Moon, Route 1, Route 2 and more |
-| Marowak | Cerulean Cave, Pokémon Tower, Rock Tunnel, Route 9 and more |
+| Marowak | Cerulean Cave, Pokémon Tower, Rock Tunnel, Route 10 and more |
 | Meowth | Celadon City, Route 1, Route 11, Route 24 and more |
-| Metapod | Celadon City, Cerulean City, Fuchsia City, Lavender Town and more |
+| Metapod | Celadon City, Fuchsia City, Route 1, Route 15 and more |
 | Mime Jr. | Route 5 |
 | Misdreavus | Cerulean Cave, Pokémon Tower, Rock Tunnel, Victory Road |
 | Mismagius | Pokémon Tower, Victory Road |
 | Mr. Mime | Cerulean Cave, Route 14 |
 | Muk | Celadon City, Pokémon Mansion, Route 16, Route 17 and more |
-| Murkrow | Celadon City, Lavender Town, Pokémon Tower, Route 12 and more |
+| Murkrow | Celadon City, Fuchsia City, Pokémon Tower, Route 12 and more |
 | Nidoran♀ | Fuchsia City, Route 1, Route 12, Route 13 and more |
 | Nidoran♂ | Fuchsia City, Route 1, Route 12, Route 13 and more |
 | Nidorina | Fuchsia City, Route 1, Route 12, Route 13 and more |
 | Nidorino | Fuchsia City, Route 1, Route 12, Route 13 and more |
 | Ninetales | Pokémon Mansion |
-| Noctowl | Celadon City, Cerulean City, Fuchsia City, Pallet Town and more |
+| Noctowl | Celadon City, Fuchsia City, Route 1, Route 10 and more |
 | Octillery | Route 17, Route 18, Route 19, Route 21 and more |
-| Oddish | Celadon City, Fuchsia City, Route 1, Route 12 and more |
-| Onix | Cerulean Cave, Diglett's Cave, Mt. Moon, Rock Tunnel and more |
+| Oddish | Celadon City, Fuchsia City, Route 1, Route 11 and more |
+| Onix | Diglett's Cave, Mt. Moon, Rock Tunnel, Route 9 and more |
 | Paras | Cerulean Cave, Fuchsia City, Mt. Moon, Route 2 and more |
 | Parasect | Cerulean Cave, Fuchsia City, Mt. Moon, Route 2 and more |
 | Persian | Celadon City, Route 1, Route 11, Route 24 and more |
 | Phanpy | Route 23 |
 | Pichu | Route 2, Route 24, Route 7, Viridian City and more |
-| Pidgeot | Celadon City, Lavender Town, Pallet Town, Route 1 and more |
-| Pidgeotto | Celadon City, Lavender Town, Pallet Town, Route 1 and more |
-| Pidgey | Celadon City, Lavender Town, Pallet Town, Route 1 and more |
+| Pidgeot | Celadon City, Route 1, Route 11, Route 12 and more |
+| Pidgeotto | Celadon City, Route 1, Route 11, Route 12 and more |
+| Pidgey | Celadon City, Route 1, Route 11, Route 12 and more |
 | Pikachu | Cerulean Cave, Power Plant, Route 10, Route 2 and more |
 | Piloswine | Seafoam Islands |
-| Pineco | Cerulean City, Pallet Town, Route 1, Route 12 and more |
-| Pinsir | Route 25, Route 9 |
+| Pineco | Route 12, Route 22, Route 23 |
+| Pinsir | Route 25 |
 | Politoed | Cerulean Cave, Route 23, Victory Road |
 | Poliwag | Celadon City, Cerulean Cave, Cerulean City, Diglett's Cave and more |
 | Poliwhirl | Celadon City, Cerulean Cave, Cerulean City, Diglett's Cave and more |
 | Poliwrath | Cerulean Cave, Route 23, Victory Road |
 | Ponyta | Pokémon Mansion, Route 16, Route 17, Route 22 and more |
-| Porygon | Celadon City, Pokémon Mansion, Power Plant |
+| Porygon | Pokémon Mansion, Power Plant |
 | Primeape | Rock Tunnel, Route 22, Route 23, Route 3 and more |
 | Psyduck | Celadon City, Cerulean Cave, Cerulean City, Diglett's Cave and more |
 | Quagsire | Route 22, Route 23, Victory Road |
@@ -2921,50 +2843,50 @@ Water type: cave water.
 | Rhydon | Cerulean Cave, Route 23, Victory Road |
 | Rhyhorn | Cerulean Cave, Fuchsia City, Rock Tunnel, Route 10 and more |
 | Rhyperior | Cerulean Cave, Victory Road |
-| Sandshrew | Cerulean Cave, Diglett's Cave, Mt. Moon, Pewter City and more |
-| Sandslash | Cerulean Cave, Diglett's Cave, Mt. Moon, Pewter City and more |
+| Sandshrew | Cerulean Cave, Diglett's Cave, Mt. Moon, Route 10 and more |
+| Sandslash | Cerulean Cave, Diglett's Cave, Mt. Moon, Route 10 and more |
 | Scyther | Route 15, Route 25 |
 | Seadra | Cinnabar Island, Pallet Town, Route 11, Route 12 and more |
 | Seaking | Celadon City, Cerulean Cave, Cerulean City, Diglett's Cave and more |
 | Seel | Seafoam Islands |
 | Sentret | Route 1, Route 21, Route 22, Viridian City |
 | Shellder | Cinnabar Island, Pallet Town, Route 11, Route 17 and more |
-| Shuckle | Cerulean Cave, Route 10, Route 9 |
-| Skarmory | Route 23, Victory Road |
+| Shuckle | Cerulean Cave, Rock Tunnel, Victory Road |
+| Skarmory | Route 23 |
 | Slowbro | Celadon City, Cerulean Cave, Cerulean City, Diglett's Cave and more |
 | Slowking | Cerulean Cave, Seafoam Islands, Victory Road |
 | Slowpoke | Celadon City, Cerulean Cave, Cerulean City, Diglett's Cave and more |
-| Slugma | Pokémon Mansion |
+| Slugma | Pokémon Mansion, Route 16, Route 17, Route 18 |
 | Smoochum | Seafoam Islands |
 | Sneasel | Route 23, Seafoam Islands |
 | Snorlax | Cerulean Cave, Route 23, Victory Road |
 | Snubbull | Route 5, Route 6, Route 7, Route 8 |
-| Spearow | Pewter City, Route 10, Route 11, Route 16 and more |
-| Spinarak | Cerulean Cave, Fuchsia City, Pallet Town, Pewter City and more |
+| Spearow | Route 10, Route 11, Route 15, Route 16 and more |
+| Spinarak | Fuchsia City, Route 1, Route 11, Route 12 and more |
 | Squirtle | Cerulean City, Pallet Town, Route 19, Route 6 and more |
 | Starmie | Route 20 |
 | Staryu | Cinnabar Island, Pallet Town, Route 11, Route 12 and more |
-| Steelix | Cerulean Cave, Victory Road |
+| Steelix | Victory Road |
 | Sunkern | Route 21, Route 24, Route 3 |
 | Swinub | Seafoam Islands |
 | Tangela | Celadon City, Fuchsia City, Route 21 |
-| Tauros | Route 10, Route 14, Route 23 |
+| Tauros | Route 14, Route 23 |
 | Teddiursa | Route 23 |
 | Tentacool | Cinnabar Island, Pallet Town, Route 11, Route 12 and more |
 | Tentacruel | Cinnabar Island, Pallet Town, Route 11, Route 12 and more |
 | Tyrogue | Rock Tunnel, Victory Road |
 | Ursaring | Route 23 |
-| Venomoth | Celadon City, Cerulean Cave, Cerulean City, Fuchsia City and more |
-| Venonat | Celadon City, Cerulean Cave, Cerulean City, Fuchsia City and more |
+| Venomoth | Celadon City, Cerulean Cave, Fuchsia City, Route 1 and more |
+| Venonat | Celadon City, Cerulean Cave, Fuchsia City, Route 1 and more |
 | Voltorb | Cerulean Cave, Power Plant, Route 10, Vermilion City |
 | Vulpix | Pokémon Mansion, Route 7, Route 8 |
 | Wartortle | Cerulean City, Pallet Town, Route 19, Route 6 and more |
 | Weavile | Seafoam Islands |
-| Weedle | Celadon City, Cerulean City, Route 2, Route 24 and more |
+| Weedle | Fuchsia City, Route 11, Route 15, Route 18 and more |
 | Weepinbell | Celadon City, Route 12, Route 13, Route 14 and more |
 | Weezing | Celadon City, Fuchsia City, Pokémon Mansion |
 | Wigglytuff | Cerulean Cave |
 | Wobbuffet | Cerulean Cave |
 | Wooper | Route 22, Route 23, Victory Road |
 | Yanma | Route 12, Route 2, Route 21 |
-| Zubat | Cerulean Cave, Diglett's Cave, Fuchsia City, Mt. Moon and more |
+| Zubat | Cerulean Cave, Diglett's Cave, Mt. Moon, Rock Tunnel and more |
