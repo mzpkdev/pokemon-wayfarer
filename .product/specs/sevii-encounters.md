@@ -4,8 +4,9 @@ PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
 Implemented: No
 
 Design status: draft. It sets the rules and targets for the Sevii Islands'
-encounter tables. The tables themselves follow in a Sevii table spec. Every
-share and count below is a placeholder for playtesting.
+encounter tables. The tables themselves are in the
+[Sevii table spec](sevii-encounter-tables.md). Every share and count below is a
+placeholder for playtesting.
 
 ## Scope
 
@@ -52,12 +53,19 @@ species live near home, and rare, strong ones further out.
 | Islands | Places | Feels like | Example species |
 | --- | --- | --- | --- |
 | One, Two and Three | One Island, Treasure Beach, Cape Brink, Three Isle Port, Bond Bridge | Galar's countryside: farms, hedgerows, beaches | Wooloo, Skwovet, Rookidee, Blipbug, Nickit, Gossifleur, Yamper, Chewtle, Galarian Zigzagoon, Galarian Meowth |
-| One | Kindle Road, Mt. Ember | Coal country and volcano | Rolycoly, Sizzlipede, Galarian Darumaka |
-| Three | Berry Forest | The fairy forest | Applin, Milcery, Impidimp, Hatenna, Galarian Ponyta |
-| Four | Four Island, Icefall Cave | The Crown Tundra's snow | Snom, Eiscue, Cufant |
-| Five | Five Island, Five Isle Meadow, Memorial Pillar, Resort Gorgeous, Water Labyrinth, Lost Cave | Haunted Galar, with a meadow and a resort | Sinistea, Dreepy, Galarian Corsola, Galarian Yamask |
-| Six | Water Path, Ruin Valley, Green Path, Pattern Bush, Outcast Island, Altering Cave | Ancient sites and the Isle of Armor's wilds | Stonjourner, Galarian Farfetch'd, Galarian Slowpoke, Falinks |
-| Seven | Sevault Canyon and its entrance, Tanoby Ruins and its chambers, Trainer Tower grounds | The far, rugged edge | Duraludon, Falinks, Galarian Mr. Mime, Galarian Stunfisk |
+| One | Kindle Road, Mt. Ember | Coal country and volcano | Rolycoly, Sizzlipede, Cufant, Koffing as Galarian Weezing, Scorbunny |
+| Three | Berry Forest | The fairy forest | Applin, Milcery, Impidimp, Hatenna, Galarian Ponyta, Indeedee, Grookey |
+| Four | Four Island, Icefall Cave | The Crown Tundra's snow | Snom, Eiscue, Cufant, Galarian Darumaka, Galarian Mr. Mime |
+| Five | Five Island, Five Isle Meadow, Memorial Pillar, Resort Gorgeous, Water Labyrinth, Lost Cave | Haunted Galar, with a meadow and a resort | Sinistea, Dreepy, Galarian Corsola, Galarian Yamask, Impidimp, Hatenna |
+| Six | Water Path, Ruin Valley, Green Path, Pattern Bush, Outcast Island, Altering Cave | Ancient sites and the Isle of Armor's wilds | Stonjourner, Galarian Farfetch'd, Galarian Slowpoke, Falinks, Silicobra, Morpeko |
+| Seven | Sevault Canyon and its entrance, Tanoby Ruins and its chambers, Trainer Tower grounds | The far, rugged edge | Duraludon, Falinks, Galarian Mr. Mime, Galarian Stunfisk, Galarian Yamask in the chambers |
+
+Galarian Darumaka is an Ice type, so it lives in Four Island's snow rather than
+Mt. Ember.
+
+Galar has few Ice species of its own, and most of them are rewards. Icefall
+Cave is therefore the one dungeon where rewards such as Snom, Eiscue,
+Galarian Darumaka and Galarian Mr. Mime hold common slots.
 
 ### The blend
 
@@ -70,6 +78,10 @@ Galar:
   waters from nearby Kanto; Unown in the Tanoby Ruins; Johto's bugs in Pattern
   Bush; and Koffing in Mt. Ember's coal country, where it evolves into Galarian
   Weezing.
+- **Kanto's drift reaches only the near islands.** Magikarp appears only on
+  One, Two and Three Islands. On the outer islands the blend is mostly Unown in
+  the Tanoby Chambers, Johto's bugs in Pattern Bush, a few ghosts in Lost Cave,
+  and a few snow species in Icefall Cave.
 - **They stay a minority:** at most ~20% of slot weight on the near islands and
   ~10% on the outer islands, measured per island group across day and night.
   The Kanto drift at sea fades from the near islands outward.
@@ -133,6 +145,24 @@ family is catchable.
   families for Sevii's surfing and fishing tables. For those tables the limit
   is twelve maps. Sea maps differ through their mix, their rarities and the
   blend.
+
+### Water
+
+Every map with surfing or fishing has one water type. The Sevii table spec names
+each map's type.
+
+| Water type | Where | Cast |
+| --- | --- | --- |
+| Ponds and rivers | Cape Brink, Berry Forest, Ruin Valley | Chewtle, Arrokuda, Galarian Stunfisk, Sobble, and the blend's fresh-water species: Magikarp, Psyduck, Poliwag, Goldeen, Basculin, Marill, Wooper, Lotad, Dewpider |
+| Coast and sea | Every other island coast and sea route | Chewtle, Arrokuda, Pincurchin, Clobbopus, Cramorant, Galarian Corsola, Galarian Slowpoke, Sobble, and the blend's sea species: Magikarp, Tentacool, Horsea, Krabby, Shellder, Staryu, Chinchou, Wingull, Wailmer, Remoraid, Qwilfish, Luvdisc, Frillish, Mareanie, Pyukumuku |
+| Cold water | Four Island and Icefall Cave | Eiscue, Arrokuda, Clobbopus, and the blend's cold species: Seel, Shellder, Spheal, Horsea, Tentacool |
+
+- **Fishing:** entries 1 and 2 hold Galar natives, since blend species never
+  lead a table. Entries 3–10 hold at least four different families.
+- **Surfing:** no family holds a surfing table's first slot on more than
+  twelve maps.
+- **Night:** at sea, night brings Chinchou near home and Cursola, Galarian
+  Corsola's ghostly evolution, further out.
 
 ### Day and night
 
