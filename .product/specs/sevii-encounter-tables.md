@@ -1103,18 +1103,18 @@ Dungeon, Outer islands.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Morpeko | Cufant–Copperajah |
-| 2 | 20% | Cufant–Copperajah | Morpeko |
+| 1 | 20% | Rolycoly–Coalossal | Cufant–Copperajah |
+| 2 | 20% | Cufant–Copperajah | Rolycoly–Coalossal |
 | 3 | 10% | Zubat–Golbat | Nickit–Thievul |
-| 4 | 10% | Rolycoly–Coalossal | Zubat–Golbat |
-| 5 | 10% | Sizzlipede–Centiskorch | Rolycoly–Coalossal |
+| 4 | 10% | Sizzlipede–Centiskorch | Zubat–Golbat |
+| 5 | 10% | Rolycoly–Carkol | Rolycoly–Carkol |
 | 6 | 10% | Nickit–Thievul | Misdreavus |
 | 7 | 5% | Dreepy–Dragapult | Impidimp–Grimmsnarl |
-| 8 | 5% | Rolycoly–Carkol | Dreepy–Dragapult |
-| 9 | 4% | Impidimp–Grimmsnarl | Sizzlipede–Centiskorch |
-| 10 | 4% | Sizzlipede–Centiskorch | Rolycoly–Carkol |
-| 11 | 1% | Toxel | Toxel |
-| 12 | 1% | Duraludon | Duraludon |
+| 8 | 5% | Impidimp–Grimmsnarl | Dreepy–Dragapult |
+| 9 | 4% | Sizzlipede–Centiskorch | Sizzlipede–Centiskorch |
+| 10 | 4% | Rolycoly–Carkol | Rolycoly–Carkol |
+| 11 | 1% | Morpeko | Morpeko |
+| 12 | 1% | Toxel | Toxel |
 
 #### Tanoby Chambers
 
@@ -1388,10 +1388,10 @@ Dungeon, Near islands.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Rolycoly–Coalossal | Sizzlipede–Centiskorch |
-| 2 | 20% | Sizzlipede–Centiskorch | Rolycoly–Coalossal |
-| 3 | 10% | Koffing–Galarian Weezing | Salandit–Salazzle |
-| 4 | 10% | Slugma–Magcargo | Koffing–Galarian Weezing |
+| 1 | 20% | Koffing–Galarian Weezing | Sizzlipede–Centiskorch |
+| 2 | 20% | Sizzlipede–Centiskorch | Koffing–Galarian Weezing |
+| 3 | 10% | Rolycoly–Coalossal | Salandit–Salazzle |
+| 4 | 10% | Slugma–Magcargo | Rolycoly–Coalossal |
 | 5 | 10% | Cufant–Copperajah | Slugma–Magcargo |
 | 6 | 10% | Salandit–Salazzle | Cufant–Copperajah |
 | 7 | 5% | Geodude–Golem | Zubat–Golbat |
@@ -1844,7 +1844,7 @@ Dungeon, Outer islands.
 | Drizzile | Berry Forest, Cape Brink, One Island, Resort Gorgeous and more |
 | Drowzee | Berry Forest |
 | Dubwool | Bond Bridge, Cape Brink, Five Isle Meadow, Three Isle Port |
-| Duraludon | Altering Cave, Icefall Cave, Ruin Valley, Sevault Canyon |
+| Duraludon | Icefall Cave, Ruin Valley, Sevault Canyon |
 | Eiscue | Icefall Cave |
 | Eldegoss | Berry Forest, Bond Bridge, Cape Brink, Five Isle Meadow and more |
 | Exeggcute | Berry Forest |
