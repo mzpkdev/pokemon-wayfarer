@@ -48,57 +48,40 @@ Road, Johto east.
 
 Water type: coast and sea.
 
-*Land*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 20% | Sentret–Furret | Oddish–Gloom |
-| 2 | 20% | Ledyba–Ledian | Sentret–Furret |
-| 3 | 10% | Pidgey–Pidgeot | Hoothoot–Noctowl |
-| 4 | 10% | Hoppip–Jumpluff | Rattata–Raticate |
-| 5 | 10% | Rattata–Raticate | Spinarak–Ariados |
-| 6 | 10% | Sunkern | Marill–Azumarill |
-| 7 | 5% | Caterpie–Butterfree | Oddish–Gloom |
-| 8 | 5% | Marill–Azumarill | Hoothoot–Noctowl |
-| 9 | 4% | Pidgey–Pidgeot | Chikorita–Meganium |
-| 10 | 4% | Sentret–Furret | Rattata–Raticate |
-| 11 | 1% | Togepi | Togepi |
-| 12 | 1% | Chikorita–Meganium | Spinarak–Ariados |
-
 *Surfing*
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Chinchou–Lanturn | Chinchou–Lanturn |
-| 2 | 30% | Tentacool–Tentacruel | Tentacool–Tentacruel |
-| 3 | 5% | Shellder | Staryu |
-| 4 | 4% | Krabby–Kingler | Qwilfish |
+| 1 | 60% | Tentacool–Tentacruel | Chinchou–Lanturn |
+| 2 | 30% | Shellder | Tentacool–Tentacruel |
+| 3 | 5% | Krabby–Kingler | Staryu |
+| 4 | 4% | Qwilfish | Qwilfish |
 | 5 | 1% | Corsola | Shellder |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Chinchou–Lanturn | Chinchou–Lanturn |
-| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 1 | 38% | 25% | 12% | Tentacool–Tentacruel | Chinchou–Lanturn |
+| 2 | 22% | 18% | 10% | Krabby–Kingler | Tentacool–Tentacruel |
 | 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Shellder | Staryu |
-| 5 | 8% | 9% | 10% | Krabby–Kingler | Chinchou–Lanturn |
-| 6 | 4% | 7% | 10% | Chinchou–Lanturn | Shellder |
-| 7 | 3% | 6% | 10% | Corsola | Staryu |
-| 8 | 3% | 5% | 9% | Shellder | Qwilfish |
+| 5 | 8% | 9% | 10% | Qwilfish | Chinchou–Lanturn |
+| 6 | 4% | 7% | 10% | Corsola | Shellder |
+| 7 | 3% | 6% | 10% | Shellder | Staryu |
+| 8 | 3% | 5% | 9% | Krabby–Kingler | Qwilfish |
 | 9 | 2% | 4% | 9% | Qwilfish | Krabby–Kingler |
-| 10 | 2% | 4% | 9% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 10 | 2% | 4% | 9% | Remoraid–Octillery | Chinchou–Lanturn |
 
 *Trees and rocks*
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Ledyba–Ledian | Ledyba–Ledian |
-| 2 | 30% | Caterpie–Butterfree | Spinarak–Ariados |
-| 3 | 5% | Pineco–Forretress | Caterpie–Butterfree |
+| 1 | 60% | Ledyba–Ledian | Spinarak–Ariados |
+| 2 | 30% | Caterpie–Butterfree | Venonat–Venomoth |
+| 3 | 5% | Pineco–Forretress | Hoothoot–Noctowl |
 | 4 | 4% | Exeggcute | Pineco–Forretress |
-| 5 | 1% | Aipom | Hoothoot–Noctowl |
+| 5 | 1% | Aipom | Ledyba–Ledian |
 
 #### Cherrygrove City
 
@@ -107,23 +90,6 @@ Road, Johto east.
 **`MAP_CHERRYGROVE_CITY_HNS`**
 
 Water type: coast and sea.
-
-*Land*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 20% | Pidgey–Pidgeot | Rattata–Raticate |
-| 2 | 20% | Spearow–Fearow | Meowth–Persian |
-| 3 | 10% | Rattata–Raticate | Hoothoot–Noctowl |
-| 4 | 10% | Ledyba–Ledian | Oddish–Gloom |
-| 5 | 10% | Hoppip–Jumpluff | Spinarak–Ariados |
-| 6 | 10% | Sentret–Furret | Gastly–Haunter |
-| 7 | 5% | Sunkern | Rattata–Raticate |
-| 8 | 5% | Caterpie–Butterfree | Oddish–Gloom |
-| 9 | 4% | Spearow–Fearow | Hoothoot–Noctowl |
-| 10 | 4% | Pidgey–Pidgeot | Meowth–Persian |
-| 11 | 1% | Eevee | Eevee |
-| 12 | 1% | Sunkern | Gastly–Haunter |
 
 *Surfing*
 
@@ -154,11 +120,11 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Spearow–Fearow | Spearow–Fearow |
-| 2 | 30% | Pidgey–Pidgeot | Pidgey–Pidgeot |
-| 3 | 5% | Exeggcute | Spinarak–Ariados |
+| 1 | 60% | Spearow–Fearow | Spinarak–Ariados |
+| 2 | 30% | Pidgey–Pidgeot | Murkrow |
+| 3 | 5% | Exeggcute | Spearow–Fearow |
 | 4 | 4% | Ledyba–Ledian | Exeggcute |
-| 5 | 1% | Aipom | Aipom |
+| 5 | 1% | Aipom | Hoothoot–Noctowl |
 
 #### Violet City
 
@@ -226,6 +192,23 @@ Road, Johto west.
 
 **`MAP_AZALEA_TOWN_HNS`**
 
+*Land*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 2 | 20% | Ledyba–Ledian | Spinarak–Ariados |
+| 3 | 10% | Caterpie–Butterfree | Hoothoot–Noctowl |
+| 4 | 10% | Pidgey–Pidgeot | Oddish–Gloom |
+| 5 | 10% | Weedle–Beedrill | Venonat–Venomoth |
+| 6 | 10% | Hoppip–Jumpluff | Paras–Parasect |
+| 7 | 5% | Pineco–Forretress | Gastly–Haunter |
+| 8 | 5% | Sunkern | Murkrow |
+| 9 | 4% | Paras–Parasect | Pineco–Forretress |
+| 10 | 4% | Sentret–Furret | Hoothoot–Noctowl |
+| 11 | 1% | Igglybuff | Igglybuff |
+| 12 | 1% | Pichu | Pichu |
+
 *Trees and rocks*
 
 | Slot | Weight | Day | Night |
@@ -242,15 +225,42 @@ Road, Johto west.
 
 **`MAP_GOLDENROD_CITY_HNS`**
 
+Water type: coast and sea.
+
+*Surfing*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Corsola | Chinchou–Lanturn |
+| 2 | 30% | Tentacool–Tentacruel | Corsola |
+| 3 | 5% | Qwilfish | Qwilfish |
+| 4 | 4% | Remoraid–Octillery | Tentacool–Tentacruel |
+| 5 | 1% | Krabby–Kingler | Remoraid–Octillery |
+
+*Fishing*
+
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Corsola | Corsola |
+| 2 | 22% | 18% | 10% | Remoraid–Octillery | Chinchou–Lanturn |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Qwilfish | Qwilfish |
+| 5 | 8% | 9% | 10% | Krabby–Kingler | Remoraid–Octillery |
+| 6 | 4% | 7% | 10% | Corsola | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Remoraid–Octillery | Corsola |
+| 8 | 3% | 5% | 9% | Tentacool–Tentacruel | Staryu |
+| 9 | 2% | 4% | 9% | Qwilfish | Qwilfish |
+| 10 | 2% | 4% | 9% | Horsea–Seadra | Krabby–Kingler |
+
 *Trees and rocks*
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Ledyba–Ledian | Ledyba–Ledian |
-| 2 | 30% | Exeggcute | Exeggcute |
-| 3 | 5% | Pineco–Forretress | Spinarak–Ariados |
+| 1 | 60% | Ledyba–Ledian | Spinarak–Ariados |
+| 2 | 30% | Exeggcute | Murkrow |
+| 3 | 5% | Pineco–Forretress | Exeggcute |
 | 4 | 4% | Aipom | Pineco–Forretress |
-| 5 | 1% | Caterpie–Butterfree | Murkrow |
+| 5 | 1% | Caterpie–Butterfree | Hoothoot–Noctowl |
 
 #### Ecruteak City
 
@@ -259,23 +269,6 @@ Road, Johto west.
 **`MAP_ECRUTEAK_CITY_HNS`**
 
 Water type: ponds and rivers.
-
-*Land*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 20% | Sentret–Furret | Gastly–Haunter |
-| 2 | 20% | Hoppip–Jumpluff | Sentret–Furret |
-| 3 | 10% | Vulpix | Hoothoot–Noctowl |
-| 4 | 10% | Pidgey–Pidgeot | Vulpix |
-| 5 | 10% | Growlithe | Oddish–Gloom |
-| 6 | 10% | Sunkern | Spinarak–Ariados |
-| 7 | 5% | Ledyba–Ledian | Misdreavus |
-| 8 | 5% | Caterpie–Butterfree | Gastly–Haunter |
-| 9 | 4% | Eevee | Eevee |
-| 10 | 4% | Sentret–Furret | Oddish–Gloom |
-| 11 | 1% | Eevee | Houndour–Houndoom |
-| 12 | 1% | Hoppip–Jumpluff | Murkrow |
 
 *Surfing*
 
@@ -302,16 +295,6 @@ Water type: ponds and rivers.
 | 9 | 2% | 4% | 9% | Magikarp–Gyarados | Marill–Azumarill |
 | 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Magikarp–Gyarados |
 
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Exeggcute | Exeggcute |
-| 2 | 30% | Ledyba–Ledian | Ledyba–Ledian |
-| 3 | 5% | Pineco–Forretress | Spinarak–Ariados |
-| 4 | 4% | Aipom | Pineco–Forretress |
-| 5 | 1% | Caterpie–Butterfree | Hoothoot–Noctowl |
-
 #### Olivine City
 
 Road, Johto west.
@@ -324,14 +307,14 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Meowth–Persian | Meowth–Persian |
+| 1 | 20% | Magnemite–Magneton | Meowth–Persian |
 | 2 | 20% | Hoppip–Jumpluff | Magnemite–Magneton |
-| 3 | 10% | Magnemite–Magneton | Gastly–Haunter |
-| 4 | 10% | Spearow–Fearow | Hoothoot–Noctowl |
+| 3 | 10% | Spearow–Fearow | Gastly–Haunter |
+| 4 | 10% | Rattata–Raticate | Hoothoot–Noctowl |
 | 5 | 10% | Sunkern | Grimer–Muk |
-| 6 | 10% | Rattata–Raticate | Oddish–Gloom |
+| 6 | 10% | Snubbull–Granbull | Oddish–Gloom |
 | 7 | 5% | Grimer–Muk | Gastly–Haunter |
-| 8 | 5% | Snubbull–Granbull | Meowth–Persian |
+| 8 | 5% | Pidgey–Pidgeot | Meowth–Persian |
 | 9 | 4% | Spearow–Fearow | Hoothoot–Noctowl |
 | 10 | 4% | Sunkern | Rattata–Raticate |
 | 11 | 1% | Farfetch'd | Farfetch'd |
@@ -376,23 +359,6 @@ Water type: coast and sea.
 
 Water type: coast and sea.
 
-*Land*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 20% | Hoppip–Jumpluff | Krabby–Kingler |
-| 2 | 20% | Krabby–Kingler | Meowth–Persian |
-| 3 | 10% | Pidgey–Pidgeot | Hoothoot–Noctowl |
-| 4 | 10% | Snubbull–Granbull | Gastly–Haunter |
-| 5 | 10% | Sunkern | Oddish–Gloom |
-| 6 | 10% | Meowth–Persian | Snubbull–Granbull |
-| 7 | 5% | Grimer–Muk | Slowpoke–Slowbro |
-| 8 | 5% | Spearow–Fearow | Hoothoot–Noctowl |
-| 9 | 4% | Ditto | Ditto |
-| 10 | 4% | Krabby–Kingler | Gastly–Haunter |
-| 11 | 1% | Farfetch'd | Farfetch'd |
-| 12 | 1% | Slowpoke–Slowbro | Spinarak–Ariados |
-
 *Surfing*
 
 | Slot | Weight | Day | Night |
@@ -426,46 +392,29 @@ Road, Johto west.
 
 Water type: coast and sea.
 
-*Land*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 20% | Mankey–Primeape | Machop–Machoke |
-| 2 | 20% | Hoppip–Jumpluff | Mankey–Primeape |
-| 3 | 10% | Machop–Machoke | Hoothoot–Noctowl |
-| 4 | 10% | Krabby–Kingler | Gastly–Haunter |
-| 5 | 10% | Sunkern | Oddish–Gloom |
-| 6 | 10% | Spearow–Fearow | Spinarak–Ariados |
-| 7 | 5% | Tyrogue | Zubat–Golbat |
-| 8 | 5% | Geodude–Graveler | Hoothoot–Noctowl |
-| 9 | 4% | Tyrogue | Tyrogue |
-| 10 | 4% | Mankey–Primeape | Gastly–Haunter |
-| 11 | 1% | Ditto | Ditto |
-| 12 | 1% | Machop–Machoke | Oddish–Gloom |
-
 *Surfing*
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Tentacool–Tentacruel | Chinchou–Lanturn |
-| 2 | 30% | Chinchou–Lanturn | Tentacool–Tentacruel |
-| 3 | 5% | Shellder | Staryu |
-| 4 | 4% | Staryu | Staryu |
+| 2 | 30% | Shellder | Tentacool–Tentacruel |
+| 3 | 5% | Krabby–Kingler | Staryu |
+| 4 | 4% | Remoraid–Octillery | Staryu |
 | 5 | 1% | Mantyke | Qwilfish |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Chinchou–Lanturn | Chinchou–Lanturn |
-| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 1 | 38% | 25% | 12% | Tentacool–Tentacruel | Chinchou–Lanturn |
+| 2 | 22% | 18% | 10% | Krabby–Kingler | Tentacool–Tentacruel |
 | 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
-| 5 | 8% | 9% | 10% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 5 | 8% | 9% | 10% | Shellder | Chinchou–Lanturn |
 | 6 | 4% | 7% | 10% | Corsola | Shellder |
-| 7 | 3% | 6% | 10% | Shellder | Staryu |
-| 8 | 3% | 5% | 9% | Remoraid–Octillery | Qwilfish |
-| 9 | 2% | 4% | 9% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Remoraid–Octillery | Staryu |
+| 8 | 3% | 5% | 9% | Qwilfish | Qwilfish |
+| 9 | 2% | 4% | 9% | Shellder | Chinchou–Lanturn |
 | 10 | 2% | 4% | 9% | Krabby–Kingler | Staryu |
 
 *Trees and rocks*
@@ -502,23 +451,6 @@ Road, Johto east.
 
 Water type: ponds and rivers.
 
-*Land*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 20% | Spearow–Fearow | Phanpy–Donphan |
-| 2 | 20% | Phanpy–Donphan | Oddish–Gloom |
-| 3 | 10% | Hoppip–Jumpluff | Hoothoot–Noctowl |
-| 4 | 10% | Geodude–Graveler | Gastly–Haunter |
-| 5 | 10% | Pidgey–Pidgeot | Zubat–Golbat |
-| 6 | 10% | Sunkern | Swinub–Piloswine |
-| 7 | 5% | Swinub–Piloswine | Sneasel |
-| 8 | 5% | Machop–Machoke | Hoothoot–Noctowl |
-| 9 | 4% | Gligar | Zubat–Golbat |
-| 10 | 4% | Spearow–Fearow | Gastly–Haunter |
-| 11 | 1% | Gligar | Sneasel |
-| 12 | 1% | Swinub–Piloswine | Gligar |
-
 *Surfing*
 
 | Slot | Weight | Day | Night |
@@ -543,16 +475,6 @@ Water type: ponds and rivers.
 | 8 | 3% | 5% | 9% | Psyduck–Golduck | Marill–Azumarill |
 | 9 | 2% | 4% | 9% | Magikarp–Gyarados | Psyduck–Golduck |
 | 10 | 2% | 4% | 9% | Goldeen–Seaking | Magikarp–Gyarados |
-
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Spearow–Fearow | Spinarak–Ariados |
-| 2 | 30% | Spinarak–Ariados | Spearow–Fearow |
-| 3 | 5% | Pineco–Forretress | Hoothoot–Noctowl |
-| 4 | 4% | Aipom | Pineco–Forretress |
-| 5 | 1% | Exeggcute | Aipom |
 
 #### Safari Zone Gate
 
@@ -658,7 +580,7 @@ Water type: ponds and rivers.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Ledyba–Ledian | Spinarak–Ariados |
-| 2 | 30% | Spinarak–Ariados | Hoothoot–Noctowl |
+| 2 | 30% | Caterpie–Butterfree | Hoothoot–Noctowl |
 | 3 | 5% | Exeggcute | Ledyba–Ledian |
 | 4 | 4% | Pineco–Forretress | Pineco–Forretress |
 | 5 | 1% | Aipom | Aipom |
@@ -789,6 +711,8 @@ Road, Johto east.
 
 **`MAP_ROUTE33_HNS`**
 
+Water type: ponds and rivers.
+
 *Land*
 
 | Slot | Weight | Day | Night |
@@ -805,6 +729,31 @@ Road, Johto east.
 | 10 | 4% | Rattata–Raticate | Hoothoot–Noctowl |
 | 11 | 1% | Slowpoke–Slowbro | Dunsparce |
 | 12 | 1% | Hoppip–Jumpluff | Wooper–Quagsire |
+
+*Surfing*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Wooper–Quagsire | Poliwag–Poliwhirl |
+| 2 | 30% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 3 | 5% | Psyduck–Golduck | Psyduck–Golduck |
+| 4 | 4% | Marill–Azumarill | Marill–Azumarill |
+| 5 | 1% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+
+*Fishing*
+
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 2 | 22% | 18% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Wooper–Quagsire | Goldeen–Seaking |
+| 5 | 8% | 9% | 10% | Marill–Azumarill | Psyduck–Golduck |
+| 6 | 4% | 7% | 10% | Psyduck–Golduck | Wooper–Quagsire |
+| 7 | 3% | 6% | 10% | Goldeen–Seaking | Marill–Azumarill |
+| 8 | 3% | 5% | 9% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
+| 9 | 2% | 4% | 9% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 
 *Trees and rocks*
 
@@ -829,7 +778,7 @@ Water type: coast and sea.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Snubbull–Granbull | Drowzee–Hypno |
-| 2 | 20% | Pidgey–Pidgeot | Grimer–Muk |
+| 2 | 20% | Pidgey–Pidgeot | Meowth–Persian |
 | 3 | 10% | Jigglypuff | Hoothoot–Noctowl |
 | 4 | 10% | Drowzee–Hypno | Snubbull–Granbull |
 | 5 | 10% | Sunkern | Oddish–Gloom |
@@ -930,9 +879,9 @@ Water type: ponds and rivers.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Pidgey–Pidgeot | Pidgey–Pidgeot |
+| 1 | 60% | Pidgey–Pidgeot | Hoothoot–Noctowl |
 | 2 | 30% | Caterpie–Butterfree | Spinarak–Ariados |
-| 3 | 5% | Ledyba–Ledian | Hoothoot–Noctowl |
+| 3 | 5% | Ledyba–Ledian | Pidgey–Pidgeot |
 | 4 | 4% | Pineco–Forretress | Pineco–Forretress |
 | 5 | 1% | Aipom | Aipom |
 
@@ -952,11 +901,11 @@ Road, Johto west.
 | 4 | 10% | Pidgey–Pidgeot | Houndour–Houndoom |
 | 5 | 10% | Vulpix | Oddish–Gloom |
 | 6 | 10% | Sentret–Furret | Rattata–Raticate |
-| 7 | 5% | Sudowoodo | Sudowoodo |
+| 7 | 5% | Nidoran♀–Nidorina | Bonsly |
 | 8 | 5% | Sunkern | Houndour–Houndoom |
 | 9 | 4% | Bonsly | Spinarak–Ariados |
 | 10 | 4% | Ledyba–Ledian | Hoothoot–Noctowl |
-| 11 | 1% | Sudowoodo | Vulpix |
+| 11 | 1% | Growlithe | Vulpix |
 | 12 | 1% | Nidoran♂–Nidorino | Gastly–Haunter |
 
 *Trees and rocks*
@@ -992,21 +941,13 @@ Road, Johto west.
 | 11 | 1% | Vulpix | Misdreavus |
 | 12 | 1% | Growlithe | Gastly–Haunter |
 
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Ledyba–Ledian | Spinarak–Ariados |
-| 2 | 30% | Pidgey–Pidgeot | Hoothoot–Noctowl |
-| 3 | 5% | Exeggcute | Ledyba–Ledian |
-| 4 | 4% | Pineco–Forretress | Pineco–Forretress |
-| 5 | 1% | Aipom | Aipom |
-
 #### Route 38
 
 Road, Johto west.
 
 **`MAP_ROUTE38_HNS`**
+
+Water type: ponds and rivers.
 
 *Land*
 
@@ -1025,6 +966,31 @@ Road, Johto west.
 | 11 | 1% | Farfetch'd | Farfetch'd |
 | 12 | 1% | Snubbull–Granbull | Venonat–Venomoth |
 
+*Surfing*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Marill–Azumarill | Wooper–Quagsire |
+| 2 | 30% | Psyduck–Golduck | Marill–Azumarill |
+| 3 | 5% | Wooper–Quagsire | Poliwag–Poliwhirl |
+| 4 | 4% | Poliwag–Poliwhirl | Psyduck–Golduck |
+| 5 | 1% | Goldeen–Seaking | Goldeen–Seaking |
+
+*Fishing*
+
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Marill–Azumarill | Wooper–Quagsire |
+| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Marill–Azumarill |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Wooper–Quagsire | Poliwag–Poliwhirl |
+| 5 | 8% | 9% | 10% | Goldeen–Seaking | Wooper–Quagsire |
+| 6 | 4% | 7% | 10% | Marill–Azumarill | Goldeen–Seaking |
+| 7 | 3% | 6% | 10% | Psyduck–Golduck | Marill–Azumarill |
+| 8 | 3% | 5% | 9% | Wooper–Quagsire | Psyduck–Golduck |
+| 9 | 2% | 4% | 9% | Poliwag–Poliwhirl | Wooper–Quagsire |
+| 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
+
 *Trees and rocks*
 
 | Slot | Weight | Day | Night |
@@ -1040,6 +1006,8 @@ Road, Johto west.
 Road, Johto west.
 
 **`MAP_ROUTE39_HNS`**
+
+Water type: ponds and rivers.
 
 *Land*
 
@@ -1057,6 +1025,31 @@ Road, Johto west.
 | 10 | 4% | Sunkern | Ponyta–Rapidash |
 | 11 | 1% | Eevee | Eevee |
 | 12 | 1% | Magnemite–Magneton | Venonat–Venomoth |
+
+*Surfing*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Marill–Azumarill | Wooper–Quagsire |
+| 2 | 30% | Poliwag–Poliwhirl | Marill–Azumarill |
+| 3 | 5% | Psyduck–Golduck | Psyduck–Golduck |
+| 4 | 4% | Wooper–Quagsire | Poliwag–Poliwhirl |
+| 5 | 1% | Goldeen–Seaking | Goldeen–Seaking |
+
+*Fishing*
+
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Goldeen–Seaking | Wooper–Quagsire |
+| 2 | 22% | 18% | 10% | Marill–Azumarill | Marill–Azumarill |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Poliwag–Poliwhirl | Goldeen–Seaking |
+| 5 | 8% | 9% | 10% | Wooper–Quagsire | Wooper–Quagsire |
+| 6 | 4% | 7% | 10% | Marill–Azumarill | Poliwag–Poliwhirl |
+| 7 | 3% | 6% | 10% | Psyduck–Golduck | Psyduck–Golduck |
+| 8 | 3% | 5% | 9% | Goldeen–Seaking | Marill–Azumarill |
+| 9 | 2% | 4% | 9% | Wooper–Quagsire | Wooper–Quagsire |
+| 10 | 2% | 4% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 
 *Trees and rocks*
 
@@ -1083,7 +1076,7 @@ Water type: coast and sea.
 | 1 | 60% | Corsola | Corsola |
 | 2 | 30% | Tentacool–Tentacruel | Tentacool–Tentacruel |
 | 3 | 5% | Shellder | Staryu |
-| 4 | 4% | Staryu | Chinchou–Lanturn |
+| 4 | 4% | Remoraid–Octillery | Chinchou–Lanturn |
 | 5 | 1% | Qwilfish | Shellder |
 
 *Fishing*
@@ -1096,10 +1089,20 @@ Water type: coast and sea.
 | 4 | 8% | 10% | 10% | Corsola | Corsola |
 | 5 | 8% | 9% | 10% | Qwilfish | Staryu |
 | 6 | 4% | 7% | 10% | Corsola | Shellder |
-| 7 | 3% | 6% | 10% | Staryu | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Horsea–Seadra | Chinchou–Lanturn |
 | 8 | 3% | 5% | 9% | Tentacool–Tentacruel | Krabby–Kingler |
 | 9 | 2% | 4% | 9% | Qwilfish | Qwilfish |
 | 10 | 2% | 4% | 9% | Remoraid–Octillery | Staryu |
+
+*Trees and rocks*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Krabby–Kingler | Krabby–Kingler |
+| 2 | 30% | Pidgey–Pidgeot | Murkrow |
+| 3 | 5% | Geodude–Graveler | Geodude–Graveler |
+| 4 | 4% | Spearow–Fearow | Spearow–Fearow |
+| 5 | 1% | Ledyba–Ledian | Hoothoot–Noctowl |
 
 #### Route 41
 
@@ -1116,22 +1119,22 @@ Water type: coast and sea.
 | 1 | 60% | Tentacool–Tentacruel | Tentacool–Tentacruel |
 | 2 | 30% | Horsea–Seadra | Horsea–Seadra |
 | 3 | 5% | Mantyke | Mantyke |
-| 4 | 4% | Chinchou–Lanturn | Chinchou–Lanturn |
+| 4 | 4% | Shellder | Chinchou–Lanturn |
 | 5 | 1% | Qwilfish | Staryu |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Chinchou–Lanturn | Chinchou–Lanturn |
-| 2 | 22% | 18% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 1 | 38% | 25% | 12% | Tentacool–Tentacruel | Chinchou–Lanturn |
+| 2 | 22% | 18% | 10% | Horsea–Seadra | Tentacool–Tentacruel |
 | 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
-| 5 | 8% | 9% | 10% | Chinchou–Lanturn | Chinchou–Lanturn |
-| 6 | 4% | 7% | 10% | Shellder | Horsea–Seadra |
+| 5 | 8% | 9% | 10% | Shellder | Chinchou–Lanturn |
+| 6 | 4% | 7% | 10% | Qwilfish | Horsea–Seadra |
 | 7 | 3% | 6% | 10% | Horsea–Seadra | Staryu |
 | 8 | 3% | 5% | 9% | Corsola | Chinchou–Lanturn |
-| 9 | 2% | 4% | 9% | Chinchou–Lanturn | Shellder |
+| 9 | 2% | 4% | 9% | Shellder | Shellder |
 | 10 | 2% | 4% | 9% | Qwilfish | Staryu |
 
 #### Route 42
@@ -1397,21 +1400,13 @@ Road, Johto east.
 | 11 | 1% | Gligar | Spinarak–Ariados |
 | 12 | 1% | Phanpy–Donphan | Oddish–Gloom |
 
-*Trees and rocks*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Geodude–Graveler | Geodude–Graveler |
-| 2 | 30% | Spearow–Fearow | Spearow–Fearow |
-| 3 | 5% | Aipom | Spinarak–Ariados |
-| 4 | 4% | Pineco–Forretress | Pineco–Forretress |
-| 5 | 1% | Exeggcute | Aipom |
-
 #### Route 48
 
 Road, Johto west.
 
 **`MAP_ROUTE48_HNS`**
+
+Water type: coast and sea.
 
 *Land*
 
@@ -1419,7 +1414,7 @@ Road, Johto west.
 | --- | --- | --- | --- |
 | 1 | 20% | Spearow–Fearow | Oddish–Gloom |
 | 2 | 20% | Sunkern | Vulpix |
-| 3 | 10% | Oddish–Gloom | Hoothoot–Noctowl |
+| 3 | 10% | Bellsprout–Weepinbell | Hoothoot–Noctowl |
 | 4 | 10% | Vulpix | Gastly–Haunter |
 | 5 | 10% | Hoppip–Jumpluff | Houndour–Houndoom |
 | 6 | 10% | Growlithe | Venonat–Venomoth |
@@ -1430,13 +1425,38 @@ Road, Johto west.
 | 11 | 1% | Yanma | Houndour–Houndoom |
 | 12 | 1% | Sunkern | Spinarak–Ariados |
 
+*Surfing*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Qwilfish | Chinchou–Lanturn |
+| 2 | 30% | Tentacool–Tentacruel | Qwilfish |
+| 3 | 5% | Corsola | Corsola |
+| 4 | 4% | Shellder | Staryu |
+| 5 | 1% | Remoraid–Octillery | Tentacool–Tentacruel |
+
+*Fishing*
+
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Qwilfish | Qwilfish |
+| 2 | 22% | 18% | 10% | Krabby–Kingler | Chinchou–Lanturn |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Corsola | Corsola |
+| 5 | 8% | 9% | 10% | Remoraid–Octillery | Remoraid–Octillery |
+| 6 | 4% | 7% | 10% | Shellder | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Qwilfish | Staryu |
+| 8 | 3% | 5% | 9% | Corsola | Qwilfish |
+| 9 | 2% | 4% | 9% | Horsea–Seadra | Corsola |
+| 10 | 2% | 4% | 9% | Remoraid–Octillery | Krabby–Kingler |
+
 *Trees and rocks*
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Spearow–Fearow | Spearow–Fearow |
-| 2 | 30% | Weedle–Beedrill | Weedle–Beedrill |
-| 3 | 5% | Aipom | Spinarak–Ariados |
+| 1 | 60% | Spearow–Fearow | Spinarak–Ariados |
+| 2 | 30% | Weedle–Beedrill | Spearow–Fearow |
+| 3 | 5% | Aipom | Hoothoot–Noctowl |
 | 4 | 4% | Pineco–Forretress | Pineco–Forretress |
 | 5 | 1% | Ledyba–Ledian | Yanma |
 
@@ -1532,7 +1552,7 @@ Water type: coast and sea.
 | 1 | 60% | Tentacool–Tentacruel | Tentacool–Tentacruel |
 | 2 | 30% | Shellder | Shellder |
 | 3 | 5% | Totodile–Feraligatr | Chinchou–Lanturn |
-| 4 | 4% | Staryu | Totodile–Feraligatr |
+| 4 | 4% | Shellder | Totodile–Feraligatr |
 | 5 | 1% | Mantine | Staryu |
 
 *Fishing*
@@ -1545,7 +1565,7 @@ Water type: coast and sea.
 | 4 | 8% | 10% | 10% | Krabby–Kingler | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Shellder | Staryu |
 | 6 | 4% | 7% | 10% | Corsola | Krabby–Kingler |
-| 7 | 3% | 6% | 10% | Staryu | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Horsea–Seadra | Chinchou–Lanturn |
 | 8 | 3% | 5% | 9% | Slowpoke–Slowbro | Staryu |
 | 9 | 2% | 4% | 9% | Krabby–Kingler | Qwilfish |
 | 10 | 2% | 4% | 9% | Horsea–Seadra | Horsea–Seadra |
@@ -1574,7 +1594,7 @@ Water type: coast and sea.
 | --- | --- | --- | --- |
 | 1 | 20% | Spearow–Fearow | Oddish–Gloom |
 | 2 | 20% | Hoppip–Jumpluff | Venonat–Venomoth |
-| 3 | 10% | Oddish–Gloom | Hoothoot–Noctowl |
+| 3 | 10% | Bellsprout–Weepinbell | Hoothoot–Noctowl |
 | 4 | 10% | Rattata–Raticate | Gastly–Haunter |
 | 5 | 10% | Snubbull–Granbull | Rattata–Raticate |
 | 6 | 10% | Pidgey–Pidgeot | Spinarak–Ariados |
@@ -1591,7 +1611,7 @@ Water type: coast and sea.
 | --- | --- | --- | --- |
 | 1 | 60% | Corsola | Corsola |
 | 2 | 30% | Shellder | Staryu |
-| 3 | 5% | Staryu | Shellder |
+| 3 | 5% | Horsea–Seadra | Shellder |
 | 4 | 4% | Slowpoke–Slowbro | Chinchou–Lanturn |
 | 5 | 1% | Mantine | Mantine |
 
@@ -1605,7 +1625,7 @@ Water type: coast and sea.
 | 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Chinchou–Lanturn | Corsola |
 | 6 | 4% | 7% | 10% | Corsola | Chinchou–Lanturn |
-| 7 | 3% | 6% | 10% | Staryu | Staryu |
+| 7 | 3% | 6% | 10% | Horsea–Seadra | Staryu |
 | 8 | 3% | 5% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 9 | 2% | 4% | 9% | Remoraid–Octillery | Chinchou–Lanturn |
 | 10 | 2% | 4% | 9% | Corsola | Qwilfish |
@@ -1670,6 +1690,16 @@ Water type: cave water.
 | 9 | 2% | 4% | 9% | Poliwag–Poliwhirl | Marill–Azumarill |
 | 10 | 2% | 4% | 9% | Wooper–Quagsire | Magikarp–Gyarados |
 
+*Trees and rocks*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Geodude–Graveler | Dunsparce |
+| 2 | 30% | Dunsparce | Geodude–Graveler |
+| 3 | 5% | Geodude | Geodude |
+| 4 | 4% | Shuckle | Shuckle |
+| 5 | 1% | Geodude–Graveler | Geodude–Graveler |
+
 **`MAP_DARK_CAVE_NORTH_SIDE_HNS`**
 
 Water type: cave water.
@@ -1716,6 +1746,16 @@ Water type: cave water.
 | 9 | 2% | 4% | 9% | Goldeen–Seaking | Marill–Azumarill |
 | 10 | 2% | 4% | 9% | Poliwag–Poliwhirl | Goldeen–Seaking |
 
+*Trees and rocks*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Geodude–Graveler | Geodude–Graveler |
+| 2 | 30% | Geodude | Dunsparce |
+| 3 | 5% | Dunsparce | Geodude |
+| 4 | 4% | Geodude–Graveler | Geodude–Graveler |
+| 5 | 1% | Shuckle | Shuckle |
+
 #### Cliff Edge Cave
 
 Wilds, Johto west.
@@ -1723,6 +1763,23 @@ Wilds, Johto west.
 **`MAP_CLIFF_EDGE_GATE_HNS`**
 
 Water type: coast and sea.
+
+*Land*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Krabby–Kingler | Krabby–Kingler |
+| 2 | 20% | Wobbuffet | Wobbuffet |
+| 3 | 10% | Geodude–Graveler | Geodude–Graveler |
+| 4 | 10% | Dunsparce | Misdreavus |
+| 5 | 10% | Zubat–Golbat | Zubat–Golbat |
+| 6 | 10% | Slowpoke–Slowbro | Dunsparce |
+| 7 | 5% | Shuckle | Shuckle |
+| 8 | 5% | Onix | Slowpoke–Slowbro |
+| 9 | 4% | Dunsparce | Misdreavus |
+| 10 | 4% | Wobbuffet | Onix |
+| 11 | 1% | Shuckle | Seel–Dewgong |
+| 12 | 1% | Seel–Dewgong | Shuckle |
 
 *Surfing*
 
@@ -1734,6 +1791,21 @@ Water type: coast and sea.
 | 4 | 4% | Tentacool–Tentacruel | Staryu |
 | 5 | 1% | Mantine | Mantine |
 
+*Fishing*
+
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 2 | 22% | 18% | 10% | Shellder | Shellder |
+| 3 | 10% | 12% | 11% | Krabby–Kingler | Chinchou–Lanturn |
+| 4 | 8% | 10% | 10% | Corsola | Krabby–Kingler |
+| 5 | 8% | 9% | 10% | Tentacool–Tentacruel | Corsola |
+| 6 | 4% | 7% | 10% | Magikarp–Gyarados | Staryu |
+| 7 | 3% | 6% | 10% | Horsea–Seadra | Tentacool–Tentacruel |
+| 8 | 3% | 5% | 9% | Qwilfish | Chinchou–Lanturn |
+| 9 | 2% | 4% | 9% | Shellder | Qwilfish |
+| 10 | 2% | 4% | 9% | Corsola | Horsea–Seadra |
+
 **`MAP_CLIFF_EDGE_CAVE_HNS`**
 
 *Land*
@@ -1742,15 +1814,15 @@ Water type: coast and sea.
 | --- | --- | --- | --- |
 | 1 | 20% | Krabby–Kingler | Geodude–Graveler |
 | 2 | 20% | Geodude–Graveler | Krabby–Kingler |
-| 3 | 10% | Wooper–Quagsire | Wooper–Quagsire |
-| 4 | 10% | Corsola | Corsola |
+| 3 | 10% | Dunsparce | Misdreavus |
+| 4 | 10% | Wobbuffet | Wobbuffet |
 | 5 | 10% | Zubat–Golbat | Zubat–Golbat |
-| 6 | 10% | Onix | Gastly–Haunter |
+| 6 | 10% | Onix | Dunsparce |
 | 7 | 5% | Shuckle | Shuckle |
-| 8 | 5% | Wooper–Quagsire | Wooper–Quagsire |
-| 9 | 4% | Skarmory | Onix |
-| 10 | 4% | Seel–Dewgong | Seel–Dewgong |
-| 11 | 1% | Skarmory | Skarmory |
+| 8 | 5% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 9 | 4% | Dunsparce | Onix |
+| 10 | 4% | Seel–Dewgong | Misdreavus |
+| 11 | 1% | Wobbuffet | Seel–Dewgong |
 | 12 | 1% | Shuckle | Shuckle |
 
 *Trees and rocks*
@@ -1826,15 +1898,15 @@ Water type: ponds and rivers.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Natu–Xatu | Wooper–Quagsire |
-| 2 | 20% | Unown | Natu–Xatu |
+| 2 | 20% | Smeargle | Natu–Xatu |
 | 3 | 10% | Mareep–Ampharos | Gastly–Haunter |
 | 4 | 10% | Hoppip–Jumpluff | Hoothoot–Noctowl |
-| 5 | 10% | Pidgey–Pidgeot | Unown |
+| 5 | 10% | Pidgey–Pidgeot | Spinarak–Ariados |
 | 6 | 10% | Sunkern | Oddish–Gloom |
-| 7 | 5% | Smeargle | Misdreavus |
+| 7 | 5% | Sentret–Furret | Misdreavus |
 | 8 | 5% | Natu–Xatu | Smeargle |
 | 9 | 4% | Smeargle | Gastly–Haunter |
-| 10 | 4% | Unown | Wooper–Quagsire |
+| 10 | 4% | Natu | Wooper–Quagsire |
 | 11 | 1% | Abra | Abra |
 | 12 | 1% | Girafarig | Girafarig |
 
@@ -1869,8 +1941,8 @@ Water type: ponds and rivers.
 | --- | --- | --- | --- |
 | 1 | 60% | Natu–Xatu | Natu–Xatu |
 | 2 | 30% | Natu–Xatu | Natu–Xatu |
-| 3 | 5% | Smeargle | Spinarak–Ariados |
-| 4 | 4% | Aipom | Smeargle |
+| 3 | 5% | Pineco–Forretress | Spinarak–Ariados |
+| 4 | 4% | Aipom | Pineco–Forretress |
 | 5 | 1% | Heracross | Heracross |
 
 **`MAP_RUINS_OF_ALPH_B1F_HNS`**
@@ -1925,7 +1997,7 @@ Wilds, Johto west.
 | 2 | 20% | Weedle–Beedrill | Spinarak–Ariados |
 | 3 | 10% | Ledyba–Ledian | Paras–Parasect |
 | 4 | 10% | Paras–Parasect | Pineco–Forretress |
-| 5 | 10% | Venonat–Venomoth | Ledyba–Ledian |
+| 5 | 10% | Venonat–Venomoth | Venonat–Venomoth |
 | 6 | 10% | Caterpie–Metapod | Weedle–Beedrill |
 | 7 | 5% | Scyther | Scyther |
 | 8 | 5% | Pinsir | Pinsir |
@@ -2008,7 +2080,7 @@ Water type: coast and sea.
 | --- | --- | --- | --- |
 | 1 | 60% | Tentacool–Tentacruel | Tentacool–Tentacruel |
 | 2 | 30% | Shellder–Cloyster | Shellder–Cloyster |
-| 3 | 5% | Staryu–Starmie | Chinchou–Lanturn |
+| 3 | 5% | Horsea–Seadra | Chinchou–Lanturn |
 | 4 | 4% | Lapras | Staryu–Starmie |
 | 5 | 1% | Mantine | Lapras |
 
@@ -2020,7 +2092,7 @@ Water type: coast and sea.
 | 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Shellder–Cloyster | Shellder–Cloyster |
 | 4 | 8% | 10% | 10% | Krabby–Kingler | Chinchou–Lanturn |
-| 5 | 8% | 9% | 10% | Staryu–Starmie | Staryu–Starmie |
+| 5 | 8% | 9% | 10% | Remoraid–Octillery | Staryu–Starmie |
 | 6 | 4% | 7% | 10% | Corsola | Chinchou–Lanturn |
 | 7 | 3% | 6% | 10% | Remoraid–Octillery | Staryu–Starmie |
 | 8 | 3% | 5% | 9% | Horsea–Kingdra | Horsea–Kingdra |
@@ -2236,7 +2308,7 @@ Water type: coast and sea.
 | 6 | 4% | 7% | 10% | Krabby–Kingler | Chinchou–Lanturn |
 | 7 | 3% | 6% | 10% | Chinchou–Lanturn | Staryu |
 | 8 | 3% | 5% | 9% | Tentacool–Tentacruel | Krabby–Kingler |
-| 9 | 2% | 4% | 9% | Staryu | Chinchou–Lanturn |
+| 9 | 2% | 4% | 9% | Remoraid–Octillery | Chinchou–Lanturn |
 | 10 | 2% | 4% | 9% | Slowpoke–Slowbro | Slowpoke–Slowbro |
 
 #### Ice Path
@@ -2272,8 +2344,8 @@ Dungeon, Johto east.
 | 2 | 20% | Swinub–Piloswine | Delibird |
 | 3 | 10% | Zubat–Golbat | Swinub–Piloswine |
 | 4 | 10% | Sneasel | Zubat–Golbat |
-| 5 | 10% | Seel–Dewgong | Sneasel |
-| 6 | 10% | Onix | Seel–Dewgong |
+| 5 | 10% | Swinub–Piloswine | Sneasel |
+| 6 | 10% | Onix | Swinub–Piloswine |
 | 7 | 5% | Jynx | Jynx |
 | 8 | 5% | Zubat–Golbat | Smoochum |
 | 9 | 4% | Smoochum | Zubat–Golbat |
@@ -2289,9 +2361,9 @@ Dungeon, Johto east.
 | --- | --- | --- | --- |
 | 1 | 20% | Swinub–Piloswine | Sneasel |
 | 2 | 20% | Delibird | Swinub–Piloswine |
-| 3 | 10% | Seel–Dewgong | Delibird |
+| 3 | 10% | Delibird | Delibird |
 | 4 | 10% | Sneasel | Sneasel |
-| 5 | 10% | Zubat–Golbat | Seel–Dewgong |
+| 5 | 10% | Zubat–Golbat | Swinub–Piloswine |
 | 6 | 10% | Geodude–Graveler | Zubat–Golbat |
 | 7 | 5% | Jynx | Jynx |
 | 8 | 5% | Smoochum | Sneasel–Weavile |
@@ -2310,8 +2382,8 @@ Dungeon, Johto east.
 | 2 | 20% | Delibird | Delibird |
 | 3 | 10% | Jynx | Jynx |
 | 4 | 10% | Sneasel | Sneasel–Weavile |
-| 5 | 10% | Seel–Dewgong | Swinub–Piloswine |
-| 6 | 10% | Swinub–Mamoswine | Seel–Dewgong |
+| 5 | 10% | Delibird | Swinub–Piloswine |
+| 6 | 10% | Swinub–Mamoswine | Delibird |
 | 7 | 5% | Zubat–Golbat | Sneasel |
 | 8 | 5% | Smoochum | Smoochum |
 | 9 | 4% | Jynx | Swinub–Mamoswine |
@@ -2329,14 +2401,24 @@ Dungeon, Johto east.
 | 2 | 20% | Swinub–Piloswine | Swinub–Piloswine |
 | 3 | 10% | Jynx | Sneasel–Weavile |
 | 4 | 10% | Swinub–Mamoswine | Jynx |
-| 5 | 10% | Seel–Dewgong | Delibird |
+| 5 | 10% | Swinub–Piloswine | Delibird |
 | 6 | 10% | Sneasel | Swinub–Mamoswine |
 | 7 | 5% | Sneasel–Weavile | Sneasel |
 | 8 | 5% | Jynx | Jynx |
 | 9 | 4% | Smoochum | Smoochum |
 | 10 | 4% | Onix–Steelix | Sneasel–Weavile |
 | 11 | 1% | Zubat–Crobat | Zubat–Crobat |
-| 12 | 1% | Jynx | Seel–Dewgong |
+| 12 | 1% | Jynx | Delibird |
+
+*Trees and rocks*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Geodude–Graveler | Geodude–Golem |
+| 2 | 30% | Geodude–Golem | Geodude–Graveler |
+| 3 | 5% | Shuckle | Shuckle |
+| 4 | 4% | Geodude–Graveler | Dunsparce |
+| 5 | 1% | Dunsparce | Geodude–Graveler |
 
 #### Sprout Tower
 
@@ -2486,16 +2568,16 @@ Dungeon, Johto west.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Slugma–Magcargo | Slugma–Magcargo |
-| 2 | 20% | Rattata–Raticate | Rattata–Raticate |
+| 1 | 20% | Rattata–Raticate | Houndour–Houndoom |
+| 2 | 20% | Houndour–Houndoom | Rattata–Raticate |
 | 3 | 10% | Koffing–Weezing | Gastly–Haunter |
 | 4 | 10% | Zubat–Golbat | Zubat–Golbat |
-| 5 | 10% | Rattata–Raticate | Koffing–Weezing |
-| 6 | 10% | Slugma–Magcargo | Houndour–Houndoom |
-| 7 | 5% | Houndour–Houndoom | Houndour–Houndoom |
-| 8 | 5% | Magby | Magby |
-| 9 | 4% | Houndour–Houndoom | Gastly–Haunter |
-| 10 | 4% | Koffing–Weezing | Misdreavus |
+| 5 | 10% | Houndour–Houndoom | Koffing–Weezing |
+| 6 | 10% | Rattata–Raticate | Houndour–Houndoom |
+| 7 | 5% | Magby | Misdreavus |
+| 8 | 5% | Koffing–Weezing | Magby |
+| 9 | 4% | Slugma–Magcargo | Gastly–Haunter |
+| 10 | 4% | Misdreavus | Slugma–Magcargo |
 | 11 | 1% | Magby | Magby |
 | 12 | 1% | Vulpix | Vulpix |
 
@@ -2506,15 +2588,15 @@ Dungeon, Johto west.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Gastly–Haunter | Gastly–Haunter |
-| 2 | 20% | Slugma–Magcargo | Slugma–Magcargo |
+| 2 | 20% | Houndour–Houndoom | Houndour–Houndoom |
 | 3 | 10% | Koffing–Weezing | Misdreavus |
 | 4 | 10% | Misdreavus | Murkrow |
-| 5 | 10% | Zubat–Golbat | Houndour–Houndoom |
-| 6 | 10% | Houndour–Houndoom | Koffing–Weezing |
+| 5 | 10% | Zubat–Golbat | Rattata–Raticate |
+| 6 | 10% | Rattata–Raticate | Koffing–Weezing |
 | 7 | 5% | Magmar | Misdreavus |
 | 8 | 5% | Cyndaquil–Typhlosion | Magmar |
 | 9 | 4% | Misdreavus | Gastly–Gengar |
-| 10 | 4% | Magby | Magby |
+| 10 | 4% | Slugma–Magcargo | Slugma–Magcargo |
 | 11 | 1% | Magmar–Magmortar | Misdreavus–Mismagius |
 | 12 | 1% | Cyndaquil–Typhlosion | Cyndaquil–Typhlosion |
 
@@ -2535,7 +2617,7 @@ Dungeon, Johto east.
 | 5 | 10% | Magnemite–Magneton | Meowth–Persian |
 | 6 | 10% | Meowth–Persian | Gastly–Haunter |
 | 7 | 5% | Porygon | Porygon |
-| 8 | 5% | Geodude–Graveler | Magnemite–Magneton |
+| 8 | 5% | Voltorb | Magnemite–Magneton |
 | 9 | 4% | Meowth–Persian | Zubat–Golbat |
 | 10 | 4% | Porygon | Porygon |
 | 11 | 1% | Porygon–Porygon2 | Porygon–Porygon2 |
@@ -2740,17 +2822,17 @@ Dungeon, Johto west.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Aipom | Aipom |
-| 2 | 20% | Sentret–Furret | Sentret–Furret |
-| 3 | 10% | Natu–Xatu | Gastly–Haunter |
+| 2 | 20% | Natu–Xatu | Murkrow |
+| 3 | 10% | Misdreavus | Gastly–Haunter |
 | 4 | 10% | Rattata–Raticate | Hoothoot–Noctowl |
-| 5 | 10% | Hoothoot–Noctowl | Misdreavus |
-| 6 | 10% | Gastly–Haunter | Natu–Xatu |
+| 5 | 10% | Houndour–Houndoom | Misdreavus |
+| 6 | 10% | Natu–Xatu | Natu–Xatu |
 | 7 | 5% | Misdreavus | Murkrow |
-| 8 | 5% | Sentret–Furret | Gastly–Haunter |
+| 8 | 5% | Aipom | Gastly–Haunter |
 | 9 | 4% | Houndour–Houndoom | Misdreavus |
-| 10 | 4% | Misdreavus | Houndour–Houndoom |
+| 10 | 4% | Gastly–Haunter | Houndour–Houndoom |
 | 11 | 1% | Eevee | Eevee |
-| 12 | 1% | Stantler | Stantler |
+| 12 | 1% | Misdreavus | Misdreavus |
 
 **`MAP_TIN_TOWER_4F_HNS`**
 
@@ -2760,14 +2842,14 @@ Dungeon, Johto west.
 | --- | --- | --- | --- |
 | 1 | 20% | Natu–Xatu | Gastly–Haunter |
 | 2 | 20% | Aipom | Natu–Xatu |
-| 3 | 10% | Sentret–Furret | Hoothoot–Noctowl |
-| 4 | 10% | Hoothoot–Noctowl | Aipom |
-| 5 | 10% | Gastly–Haunter | Misdreavus |
-| 6 | 10% | Misdreavus | Murkrow |
-| 7 | 5% | Aipom–Ambipom | Misdreavus–Mismagius |
-| 8 | 5% | Houndour–Houndoom | Houndour–Houndoom |
-| 9 | 4% | Natu–Xatu | Misdreavus |
-| 10 | 4% | Misdreavus | Gastly–Gengar |
+| 3 | 10% | Misdreavus | Hoothoot–Noctowl |
+| 4 | 10% | Houndour–Houndoom | Aipom |
+| 5 | 10% | Aipom–Ambipom | Misdreavus |
+| 6 | 10% | Rattata–Raticate | Murkrow |
+| 7 | 5% | Natu–Xatu | Misdreavus–Mismagius |
+| 8 | 5% | Gastly–Haunter | Houndour–Houndoom |
+| 9 | 4% | Misdreavus | Misdreavus |
+| 10 | 4% | Aipom | Gastly–Gengar |
 | 11 | 1% | Eevee | Eevee |
 | 12 | 1% | Misdreavus–Mismagius | Murkrow–Honchkrow |
 
@@ -2778,17 +2860,17 @@ Dungeon, Johto west.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Natu–Xatu | Natu–Xatu |
-| 2 | 20% | Sentret–Furret | Misdreavus |
-| 3 | 10% | Hoothoot–Noctowl | Hoothoot–Noctowl |
-| 4 | 10% | Aipom | Murkrow |
-| 5 | 10% | Misdreavus | Gastly–Haunter |
-| 6 | 10% | Gastly–Haunter | Aipom |
-| 7 | 5% | Aipom–Ambipom | Misdreavus–Mismagius |
-| 8 | 5% | Houndour–Houndoom | Murkrow–Honchkrow |
-| 9 | 4% | Skarmory | Skarmory |
+| 2 | 20% | Misdreavus | Misdreavus |
+| 3 | 10% | Aipom | Hoothoot–Noctowl |
+| 4 | 10% | Houndour–Houndoom | Murkrow |
+| 5 | 10% | Aipom–Ambipom | Gastly–Haunter |
+| 6 | 10% | Rattata–Raticate | Aipom |
+| 7 | 5% | Natu–Xatu | Misdreavus–Mismagius |
+| 8 | 5% | Gastly–Haunter | Murkrow–Honchkrow |
+| 9 | 4% | Misdreavus | Murkrow |
 | 10 | 4% | Misdreavus–Mismagius | Houndour–Houndoom |
 | 11 | 1% | Eevee–Espeon | Eevee–Umbreon |
-| 12 | 1% | Stantler | Gastly–Gengar |
+| 12 | 1% | Aipom | Gastly–Gengar |
 
 **`MAP_TIN_TOWER_6F_HNS`**
 
@@ -2796,18 +2878,18 @@ Dungeon, Johto west.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Sentret–Furret | Gastly–Haunter |
-| 2 | 20% | Natu–Xatu | Natu–Xatu |
-| 3 | 10% | Hoothoot–Noctowl | Misdreavus |
-| 4 | 10% | Misdreavus | Hoothoot–Noctowl |
-| 5 | 10% | Aipom–Ambipom | Murkrow |
-| 6 | 10% | Gastly–Haunter | Aipom–Ambipom |
-| 7 | 5% | Skarmory | Gastly–Gengar |
-| 8 | 5% | Houndour–Houndoom | Murkrow–Honchkrow |
-| 9 | 4% | Misdreavus–Mismagius | Misdreavus–Mismagius |
-| 10 | 4% | Stantler | Houndour–Houndoom |
+| 1 | 20% | Natu–Xatu | Gastly–Haunter |
+| 2 | 20% | Aipom–Ambipom | Natu–Xatu |
+| 3 | 10% | Misdreavus | Misdreavus |
+| 4 | 10% | Houndour–Houndoom | Hoothoot–Noctowl |
+| 5 | 10% | Gastly–Haunter | Murkrow |
+| 6 | 10% | Natu–Xatu | Aipom–Ambipom |
+| 7 | 5% | Misdreavus–Mismagius | Gastly–Gengar |
+| 8 | 5% | Rattata–Raticate | Murkrow–Honchkrow |
+| 9 | 4% | Misdreavus | Misdreavus–Mismagius |
+| 10 | 4% | Aipom | Houndour–Houndoom |
 | 11 | 1% | Eevee–Espeon | Eevee–Umbreon |
-| 12 | 1% | Skarmory | Skarmory |
+| 12 | 1% | Eevee | Murkrow |
 
 **`MAP_TIN_TOWER_7F_HNS`**
 
@@ -2816,17 +2898,17 @@ Dungeon, Johto west.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Natu–Xatu | Hoothoot–Noctowl |
-| 2 | 20% | Hoothoot–Noctowl | Natu–Xatu |
-| 3 | 10% | Sentret–Furret | Gastly–Haunter |
-| 4 | 10% | Aipom–Ambipom | Murkrow |
-| 5 | 10% | Misdreavus | Misdreavus |
-| 6 | 10% | Gastly–Haunter | Aipom–Ambipom |
-| 7 | 5% | Skarmory | Gastly–Gengar |
-| 8 | 5% | Misdreavus–Mismagius | Murkrow–Honchkrow |
+| 2 | 20% | Aipom–Ambipom | Natu–Xatu |
+| 3 | 10% | Misdreavus | Gastly–Haunter |
+| 4 | 10% | Houndour–Houndoom | Murkrow |
+| 5 | 10% | Natu–Xatu | Misdreavus |
+| 6 | 10% | Rattata–Raticate | Aipom–Ambipom |
+| 7 | 5% | Misdreavus–Mismagius | Gastly–Gengar |
+| 8 | 5% | Gastly–Haunter | Murkrow–Honchkrow |
 | 9 | 4% | Eevee–Espeon | Misdreavus–Mismagius |
-| 10 | 4% | Houndour–Houndoom | Eevee–Umbreon |
-| 11 | 1% | Stantler | Skarmory |
-| 12 | 1% | Skarmory | Houndour–Houndoom |
+| 10 | 4% | Misdreavus | Eevee–Umbreon |
+| 11 | 1% | Eevee | Murkrow |
+| 12 | 1% | Misdreavus–Mismagius | Houndour–Houndoom |
 
 **`MAP_TIN_TOWER_8F_HNS`**
 
@@ -2834,17 +2916,17 @@ Dungeon, Johto west.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Gastly–Haunter | Gastly–Haunter |
-| 2 | 20% | Natu–Xatu | Misdreavus |
-| 3 | 10% | Hoothoot–Noctowl | Natu–Xatu |
-| 4 | 10% | Aipom–Ambipom | Murkrow |
-| 5 | 10% | Skarmory | Misdreavus–Mismagius |
-| 6 | 10% | Misdreavus–Mismagius | Skarmory |
+| 1 | 20% | Natu–Xatu | Gastly–Haunter |
+| 2 | 20% | Misdreavus–Mismagius | Misdreavus |
+| 3 | 10% | Aipom–Ambipom | Natu–Xatu |
+| 4 | 10% | Houndour–Houndoom | Murkrow |
+| 5 | 10% | Natu–Xatu | Misdreavus–Mismagius |
+| 6 | 10% | Misdreavus | Hoothoot–Noctowl |
 | 7 | 5% | Eevee–Espeon | Murkrow–Honchkrow |
-| 8 | 5% | Houndour–Houndoom | Eevee–Umbreon |
-| 9 | 4% | Skarmory | Gastly–Gengar |
+| 8 | 5% | Rattata–Raticate | Eevee–Umbreon |
+| 9 | 4% | Gastly–Haunter | Gastly–Gengar |
 | 10 | 4% | Gastly–Gengar | Houndour–Houndoom |
-| 11 | 1% | Stantler | Zubat–Crobat |
+| 11 | 1% | Eevee | Zubat–Crobat |
 | 12 | 1% | Misdreavus | Eevee–Espeon |
 
 **`MAP_TIN_TOWER_9F_HNS`**
@@ -2853,18 +2935,18 @@ Dungeon, Johto west.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Hoothoot–Noctowl | Hoothoot–Noctowl |
-| 2 | 20% | Sentret–Furret | Natu–Xatu |
-| 3 | 10% | Natu–Xatu | Murkrow–Honchkrow |
-| 4 | 10% | Skarmory | Skarmory |
-| 5 | 10% | Aipom–Ambipom | Misdreavus–Mismagius |
-| 6 | 10% | Misdreavus–Mismagius | Gastly–Haunter |
+| 1 | 20% | Natu–Xatu | Hoothoot–Noctowl |
+| 2 | 20% | Aipom–Ambipom | Natu–Xatu |
+| 3 | 10% | Misdreavus–Mismagius | Murkrow–Honchkrow |
+| 4 | 10% | Houndour–Houndoom | Murkrow |
+| 5 | 10% | Misdreavus | Misdreavus–Mismagius |
+| 6 | 10% | Natu–Xatu | Gastly–Haunter |
 | 7 | 5% | Eevee–Espeon | Eevee–Umbreon |
-| 8 | 5% | Skarmory | Skarmory |
+| 8 | 5% | Gastly–Haunter | Misdreavus |
 | 9 | 4% | Houndour–Houndoom | Gastly–Gengar |
 | 10 | 4% | Gastly–Gengar | Zubat–Crobat |
 | 11 | 1% | Eevee–Espeon | Eevee–Umbreon |
-| 12 | 1% | Stantler | Houndour–Houndoom |
+| 12 | 1% | Eevee | Houndour–Houndoom |
 
 #### Dragon's Den
 
@@ -2911,18 +2993,18 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Seel–Dewgong | Zubat–Golbat |
-| 2 | 20% | Krabby–Kingler | Seel–Dewgong |
-| 3 | 10% | Corsola | Corsola |
-| 4 | 10% | Wooper–Quagsire | Wooper–Quagsire |
-| 5 | 10% | Natu–Xatu | Krabby–Kingler |
-| 6 | 10% | Zubat–Golbat | Gastly–Haunter |
-| 7 | 5% | Seel–Dewgong | Seel–Dewgong |
-| 8 | 5% | Corsola | Corsola |
-| 9 | 4% | Krabby–Kingler | Natu–Xatu |
-| 10 | 4% | Slowpoke–Slowbro | Gastly–Haunter |
-| 11 | 1% | Skarmory | Skarmory |
-| 12 | 1% | Natu–Xatu | Slowpoke–Slowbro |
+| 1 | 20% | Krabby–Kingler | Krabby–Kingler |
+| 2 | 20% | Seel–Dewgong | Seel–Dewgong |
+| 3 | 10% | Zubat–Golbat | Misdreavus |
+| 4 | 10% | Wobbuffet | Zubat–Golbat |
+| 5 | 10% | Dunsparce | Wobbuffet |
+| 6 | 10% | Slowpoke–Slowbro | Dunsparce |
+| 7 | 5% | Wobbuffet | Slowpoke–Slowbro |
+| 8 | 5% | Shuckle | Misdreavus |
+| 9 | 4% | Seel–Dewgong | Shuckle |
+| 10 | 4% | Dunsparce | Zubat–Golbat |
+| 11 | 1% | Shuckle | Seel–Dewgong |
+| 12 | 1% | Krabby–Kingler | Dunsparce |
 
 *Surfing*
 
@@ -2944,7 +3026,7 @@ Water type: coast and sea.
 | 4 | 8% | 10% | 10% | Qwilfish | Corsola |
 | 5 | 8% | 9% | 10% | Qwilfish | Staryu |
 | 6 | 4% | 7% | 10% | Corsola | Qwilfish |
-| 7 | 3% | 6% | 10% | Staryu | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Horsea–Seadra | Chinchou–Lanturn |
 | 8 | 3% | 5% | 9% | Krabby–Kingler | Staryu |
 | 9 | 2% | 4% | 9% | Chinchou–Lanturn | Horsea–Seadra |
 | 10 | 2% | 4% | 9% | Horsea–Seadra | Corsola |
@@ -2958,24 +3040,24 @@ Water type: coast and sea.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| 2 | 20% | Corsola | Corsola |
-| 3 | 10% | Seel–Dewgong | Zubat–Golbat |
-| 4 | 10% | Marill–Azumarill | Seel–Dewgong |
-| 5 | 10% | Wooper–Quagsire | Gastly–Haunter |
-| 6 | 10% | Natu–Xatu | Marill–Azumarill |
-| 7 | 5% | Zubat–Golbat | Zubat–Crobat |
-| 8 | 5% | Slowpoke–Slowking | Slowpoke–Slowking |
-| 9 | 4% | Skarmory | Skarmory |
-| 10 | 4% | Corsola | Gastly–Haunter |
+| 2 | 20% | Krabby–Kingler | Misdreavus |
+| 3 | 10% | Dunsparce | Wobbuffet |
+| 4 | 10% | Wobbuffet | Zubat–Golbat |
+| 5 | 10% | Seel–Dewgong | Krabby–Kingler |
+| 6 | 10% | Zubat–Golbat | Dunsparce |
+| 7 | 5% | Slowpoke–Slowking | Zubat–Crobat |
+| 8 | 5% | Shuckle | Slowpoke–Slowking |
+| 9 | 4% | Wobbuffet | Misdreavus |
+| 10 | 4% | Dunsparce | Seel–Dewgong |
 | 11 | 1% | Slowpoke–Slowking | Gastly–Gengar |
-| 12 | 1% | Skarmory | Natu–Xatu |
+| 12 | 1% | Shuckle | Shuckle |
 
 *Surfing*
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Horsea–Seadra | Chinchou–Lanturn |
-| 2 | 30% | Chinchou–Lanturn | Horsea–Seadra |
+| 2 | 30% | Tentacool–Tentacruel | Horsea–Seadra |
 | 3 | 5% | Mantine | Staryu |
 | 4 | 4% | Corsola | Mantine |
 | 5 | 1% | Mantyke | Corsola |
@@ -2990,29 +3072,56 @@ Water type: coast and sea.
 | 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Qwilfish | Staryu |
 | 6 | 4% | 7% | 10% | Horsea–Seadra | Qwilfish |
-| 7 | 3% | 6% | 10% | Staryu | Staryu |
+| 7 | 3% | 6% | 10% | Shellder | Staryu |
 | 8 | 3% | 5% | 9% | Remoraid–Octillery | Remoraid–Octillery |
 | 9 | 2% | 4% | 9% | Horsea–Kingdra | Horsea–Kingdra |
 | 10 | 2% | 4% | 9% | Chinchou–Lanturn | Shellder–Cloyster |
 
 **`MAP_WHIRL_ISLANDS_B1F_INNER_HNS`**
 
+Water type: coast and sea.
+
 *Land*
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Corsola | Seel–Dewgong |
-| 2 | 20% | Seel–Dewgong | Corsola |
-| 3 | 10% | Slowpoke–Slowbro | Zubat–Golbat |
-| 4 | 10% | Marill–Azumarill | Slowpoke–Slowbro |
-| 5 | 10% | Wooper–Quagsire | Gastly–Haunter |
-| 6 | 10% | Natu–Xatu | Marill–Azumarill |
+| 1 | 20% | Seel–Dewgong | Seel–Dewgong |
+| 2 | 20% | Krabby–Kingler | Misdreavus |
+| 3 | 10% | Wobbuffet | Wobbuffet |
+| 4 | 10% | Dunsparce | Zubat–Golbat |
+| 5 | 10% | Slowpoke–Slowbro | Dunsparce |
+| 6 | 10% | Zubat–Golbat | Slowpoke–Slowbro |
 | 7 | 5% | Slowpoke–Slowking | Zubat–Crobat |
-| 8 | 5% | Zubat–Golbat | Slowpoke–Slowking |
-| 9 | 4% | Skarmory | Gastly–Gengar |
-| 10 | 4% | Seel–Dewgong | Skarmory |
-| 11 | 1% | Skarmory | Gastly–Haunter |
-| 12 | 1% | Slowpoke–Slowking | Natu–Xatu |
+| 8 | 5% | Shuckle | Slowpoke–Slowking |
+| 9 | 4% | Wobbuffet | Misdreavus |
+| 10 | 4% | Zubat–Crobat | Krabby–Kingler |
+| 11 | 1% | Slowpoke–Slowking | Gastly–Gengar |
+| 12 | 1% | Shuckle | Shuckle |
+
+*Surfing*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Horsea–Seadra | Chinchou–Lanturn |
+| 2 | 30% | Tentacool–Tentacruel | Horsea–Seadra |
+| 3 | 5% | Corsola | Staryu |
+| 4 | 4% | Mantine | Corsola |
+| 5 | 1% | Horsea–Kingdra | Horsea–Kingdra |
+
+*Fishing*
+
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 2 | 22% | 18% | 10% | Qwilfish | Qwilfish |
+| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
+| 5 | 8% | 9% | 10% | Horsea–Seadra | Horsea–Seadra |
+| 6 | 4% | 7% | 10% | Remoraid–Octillery | Staryu |
+| 7 | 3% | 6% | 10% | Krabby–Kingler | Chinchou–Lanturn |
+| 8 | 3% | 5% | 9% | Corsola | Remoraid–Octillery |
+| 9 | 2% | 4% | 9% | Horsea–Kingdra | Horsea–Kingdra |
+| 10 | 2% | 4% | 9% | Qwilfish | Corsola |
 
 **`MAP_WHIRL_ISLANDS_B2F_HNS`**
 
@@ -3023,17 +3132,17 @@ Water type: coast and sea.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Seel–Dewgong | Seel–Dewgong |
-| 2 | 20% | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| 3 | 10% | Corsola | Zubat–Golbat |
-| 4 | 10% | Marill–Azumarill | Corsola |
-| 5 | 10% | Wooper–Quagsire | Gastly–Haunter |
-| 6 | 10% | Skarmory | Skarmory |
-| 7 | 5% | Slowpoke–Slowking | Zubat–Crobat |
-| 8 | 5% | Natu–Xatu | Gastly–Gengar |
-| 9 | 4% | Skarmory | Slowpoke–Slowking |
-| 10 | 4% | Zubat–Crobat | Skarmory |
-| 11 | 1% | Natu–Xatu | Wooper–Quagsire |
-| 12 | 1% | Slowpoke–Slowking | Natu–Xatu |
+| 2 | 20% | Krabby–Kingler | Misdreavus |
+| 3 | 10% | Wobbuffet | Zubat–Golbat |
+| 4 | 10% | Dunsparce | Wobbuffet |
+| 5 | 10% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 6 | 10% | Zubat–Golbat | Dunsparce |
+| 7 | 5% | Slowpoke–Slowking | Misdreavus–Mismagius |
+| 8 | 5% | Shuckle | Shuckle |
+| 9 | 4% | Zubat–Crobat | Zubat–Crobat |
+| 10 | 4% | Wobbuffet | Misdreavus |
+| 11 | 1% | Shuckle | Slowpoke–Slowking |
+| 12 | 1% | Slowpoke–Slowking | Shuckle |
 
 *Surfing*
 
@@ -3068,18 +3177,18 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Corsola | Corsola |
-| 2 | 20% | Seel–Dewgong | Seel–Dewgong |
-| 3 | 10% | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| 4 | 10% | Skarmory | Zubat–Golbat |
-| 5 | 10% | Wooper–Quagsire | Gastly–Haunter |
-| 6 | 10% | Marill–Azumarill | Skarmory |
-| 7 | 5% | Slowpoke–Slowking | Zubat–Crobat |
-| 8 | 5% | Skarmory | Gastly–Gengar |
-| 9 | 4% | Natu–Xatu | Slowpoke–Slowking |
-| 10 | 4% | Zubat–Crobat | Skarmory |
-| 11 | 1% | Natu–Xatu | Wooper–Quagsire |
-| 12 | 1% | Skarmory | Natu–Xatu |
+| 1 | 20% | Seel–Dewgong | Seel–Dewgong |
+| 2 | 20% | Slowpoke–Slowbro | Misdreavus |
+| 3 | 10% | Wobbuffet | Zubat–Crobat |
+| 4 | 10% | Shuckle | Wobbuffet |
+| 5 | 10% | Dunsparce | Slowpoke–Slowbro |
+| 6 | 10% | Zubat–Crobat | Shuckle |
+| 7 | 5% | Slowpoke–Slowking | Misdreavus–Mismagius |
+| 8 | 5% | Krabby–Kingler | Slowpoke–Slowking |
+| 9 | 4% | Wobbuffet | Dunsparce |
+| 10 | 4% | Shuckle | Gastly–Gengar |
+| 11 | 1% | Slowpoke–Slowking | Misdreavus |
+| 12 | 1% | Zubat–Crobat | Shuckle |
 
 *Surfing*
 
@@ -3101,7 +3210,7 @@ Water type: coast and sea.
 | 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Corsola | Qwilfish |
 | 6 | 4% | 7% | 10% | Horsea–Kingdra | Staryu |
-| 7 | 3% | 6% | 10% | Staryu | Horsea–Kingdra |
+| 7 | 3% | 6% | 10% | Horsea–Seadra | Horsea–Kingdra |
 | 8 | 3% | 5% | 9% | Shellder–Cloyster | Chinchou–Lanturn |
 | 9 | 2% | 4% | 9% | Slowpoke–Slowking | Shellder–Cloyster |
 | 10 | 2% | 4% | 9% | Chinchou–Lanturn | Staryu |
@@ -3115,17 +3224,17 @@ Water type: coast and sea.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Seel–Dewgong | Seel–Dewgong |
-| 2 | 20% | Natu–Xatu | Natu–Xatu |
-| 3 | 10% | Corsola | Corsola |
-| 4 | 10% | Slowpoke–Slowking | Slowpoke–Slowking |
-| 5 | 10% | Skarmory | Gastly–Gengar |
-| 6 | 10% | Zubat–Crobat | Skarmory |
-| 7 | 5% | Skarmory | Zubat–Crobat |
-| 8 | 5% | Wooper–Quagsire | Skarmory |
-| 9 | 4% | Slowpoke–Slowking | Wooper–Quagsire |
-| 10 | 4% | Natu–Xatu | Gastly–Gengar |
-| 11 | 1% | Marill–Azumarill | Marill–Azumarill |
-| 12 | 1% | Zubat–Crobat | Slowpoke–Slowking |
+| 2 | 20% | Slowpoke–Slowking | Misdreavus–Mismagius |
+| 3 | 10% | Wobbuffet | Slowpoke–Slowking |
+| 4 | 10% | Shuckle | Zubat–Crobat |
+| 5 | 10% | Zubat–Crobat | Wobbuffet |
+| 6 | 10% | Krabby–Kingler | Shuckle |
+| 7 | 5% | Dunsparce | Misdreavus |
+| 8 | 5% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 9 | 4% | Slowpoke–Slowking | Gastly–Gengar |
+| 10 | 4% | Wobbuffet | Dunsparce |
+| 11 | 1% | Shuckle | Shuckle |
+| 12 | 1% | Zubat–Crobat | Misdreavus–Mismagius |
 
 *Surfing*
 
@@ -3147,7 +3256,7 @@ Water type: coast and sea.
 | 4 | 8% | 10% | 10% | Shellder–Cloyster | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Qwilfish | Staryu–Starmie |
 | 6 | 4% | 7% | 10% | Corsola | Shellder–Cloyster |
-| 7 | 3% | 6% | 10% | Staryu–Starmie | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Horsea–Seadra | Chinchou–Lanturn |
 | 8 | 3% | 5% | 9% | Slowpoke–Slowking | Qwilfish |
 | 9 | 2% | 4% | 9% | Horsea–Kingdra | Staryu–Starmie |
 | 10 | 2% | 4% | 9% | Remoraid–Octillery | Horsea–Kingdra |
@@ -3184,7 +3293,7 @@ Water type: ponds and rivers.
 | 1 | 60% | Psyduck–Golduck | Psyduck–Golduck |
 | 2 | 30% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
 | 3 | 5% | Goldeen–Seaking | Wooper–Quagsire |
-| 4 | 4% | Lapras | Lapras |
+| 4 | 4% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 5 | 1% | Marill–Azumarill | Goldeen–Seaking |
 
 *Fishing*
@@ -3228,10 +3337,10 @@ Water type: cave water.
 | 6 | 10% | Paras–Parasect | Paras–Parasect |
 | 7 | 5% | Psyduck–Golduck | Psyduck–Golduck |
 | 8 | 5% | Larvitar–Tyranitar | Larvitar–Tyranitar |
-| 9 | 4% | Electabuzz | Magmar |
+| 9 | 4% | Sneasel | Magmar |
 | 10 | 4% | Magmar | Misdreavus–Mismagius |
 | 11 | 1% | Onix–Steelix | Zubat–Crobat |
-| 12 | 1% | Elekid | Magby |
+| 12 | 1% | Smoochum | Magby |
 
 *Surfing*
 
@@ -3239,7 +3348,7 @@ Water type: cave water.
 | --- | --- | --- | --- |
 | 1 | 60% | Psyduck–Golduck | Psyduck–Golduck |
 | 2 | 30% | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| 3 | 5% | Lapras | Lapras |
+| 3 | 5% | Poliwag–Poliwhirl | Slowpoke–Slowking |
 | 4 | 4% | Goldeen–Seaking | Wooper–Quagsire |
 | 5 | 1% | Magikarp–Gyarados | Poliwag–Politoed |
 
@@ -3274,35 +3383,10 @@ Water type: ponds and rivers.
 | 6 | 10% | Geodude–Golem | Sneasel–Weavile |
 | 7 | 5% | Larvitar–Tyranitar | Larvitar–Tyranitar |
 | 8 | 5% | Tauros | Houndour–Houndoom |
-| 9 | 4% | Electabuzz | Murkrow–Honchkrow |
+| 9 | 4% | Mankey–Annihilape | Murkrow–Honchkrow |
 | 10 | 4% | Skarmory | Gastly–Gengar |
-| 11 | 1% | Electabuzz–Electivire | Snorlax |
+| 11 | 1% | Sneasel–Weavile | Snorlax |
 | 12 | 1% | Larvitar–Tyranitar | Larvitar–Tyranitar |
-
-*Surfing*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Poliwag–Poliwrath | Poliwag–Poliwrath |
-| 2 | 30% | Psyduck–Golduck | Psyduck–Golduck |
-| 3 | 5% | Lapras | Wooper–Quagsire |
-| 4 | 4% | Slowpoke–Slowbro | Lapras |
-| 5 | 1% | Magikarp–Gyarados | Poliwag–Politoed |
-
-*Fishing*
-
-| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
-| --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Poliwag–Poliwrath | Poliwag–Poliwrath |
-| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 3 | 10% | 12% | 11% | Psyduck–Golduck | Psyduck–Golduck |
-| 4 | 8% | 10% | 10% | Slowpoke–Slowbro | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 6 | 4% | 7% | 10% | Psyduck–Golduck | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Poliwag–Poliwrath | Poliwag–Politoed |
-| 8 | 3% | 5% | 9% | Slowpoke–Slowking | Slowpoke–Slowking |
-| 9 | 2% | 4% | 9% | Magikarp–Gyarados | Psyduck–Golduck |
-| 10 | 2% | 4% | 9% | Poliwag–Politoed | Slowpoke–Slowbro |
 
 *Trees and rocks*
 
@@ -3329,36 +3413,11 @@ Water type: cave water.
 | 5 | 10% | Zubat–Crobat | Misdreavus–Mismagius |
 | 6 | 10% | Psyduck–Golduck | Teddiursa–Ursaring |
 | 7 | 5% | Larvitar–Tyranitar | Larvitar–Tyranitar |
-| 8 | 5% | Electabuzz | Magmar |
-| 9 | 4% | Magmar | Electabuzz |
-| 10 | 4% | Elekid | Gastly–Gengar |
+| 8 | 5% | Sneasel | Magmar |
+| 9 | 4% | Magmar | Sneasel–Weavile |
+| 10 | 4% | Smoochum | Gastly–Gengar |
 | 11 | 1% | Larvitar–Tyranitar | Larvitar–Tyranitar |
 | 12 | 1% | Magby | Magby |
-
-*Surfing*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| 2 | 30% | Psyduck–Golduck | Psyduck–Golduck |
-| 3 | 5% | Lapras | Wooper–Quagsire |
-| 4 | 4% | Goldeen–Seaking | Lapras |
-| 5 | 1% | Poliwag–Poliwrath | Zubat–Crobat |
-
-*Fishing*
-
-| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
-| --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| 2 | 22% | 18% | 10% | Goldeen–Seaking | Goldeen–Seaking |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Psyduck–Golduck | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Slowpoke–Slowking | Psyduck–Golduck |
-| 6 | 4% | 7% | 10% | Goldeen–Seaking | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Poliwag–Poliwrath | Slowpoke–Slowking |
-| 8 | 3% | 5% | 9% | Psyduck–Golduck | Zubat–Crobat |
-| 9 | 2% | 4% | 9% | Marill–Azumarill | Poliwag–Politoed |
-| 10 | 2% | 4% | 9% | Magikarp–Gyarados | Goldeen–Seaking |
 
 **`MAP_MT_SILVER_1F_MOLTRES_ROOM_HNS`**
 
@@ -3373,38 +3432,13 @@ Water type: cave water.
 | 3 | 10% | Onix | Zubat–Crobat |
 | 4 | 10% | Geodude–Golem | Misdreavus–Mismagius |
 | 5 | 10% | Magmar | Magmar |
-| 6 | 10% | Electabuzz | Gastly–Gengar |
+| 6 | 10% | Houndour–Houndoom | Gastly–Gengar |
 | 7 | 5% | Onix–Steelix | Onix–Steelix |
 | 8 | 5% | Magmar–Magmortar | Magmar–Magmortar |
 | 9 | 4% | Larvitar–Tyranitar | Larvitar–Tyranitar |
-| 10 | 4% | Electabuzz–Electivire | Electabuzz |
+| 10 | 4% | Sneasel–Weavile | Houndour–Houndoom |
 | 11 | 1% | Magby | Magby |
 | 12 | 1% | Larvitar–Tyranitar | Larvitar–Tyranitar |
-
-*Surfing*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 60% | Goldeen–Seaking | Goldeen–Seaking |
-| 2 | 30% | Psyduck–Golduck | Psyduck–Golduck |
-| 3 | 5% | Lapras | Wooper–Quagsire |
-| 4 | 4% | Magikarp–Gyarados | Lapras |
-| 5 | 1% | Poliwag–Poliwrath | Zubat–Crobat |
-
-*Fishing*
-
-| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
-| --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Goldeen–Seaking | Goldeen–Seaking |
-| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 3 | 10% | 12% | 11% | Psyduck–Golduck | Psyduck–Golduck |
-| 4 | 8% | 10% | 10% | Goldeen–Seaking | Wooper–Quagsire |
-| 5 | 8% | 9% | 10% | Poliwag–Poliwrath | Goldeen–Seaking |
-| 6 | 4% | 7% | 10% | Psyduck–Golduck | Wooper–Quagsire |
-| 7 | 3% | 6% | 10% | Slowpoke–Slowbro | Poliwag–Politoed |
-| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Zubat–Crobat |
-| 9 | 2% | 4% | 9% | Marill–Azumarill | Slowpoke–Slowking |
-| 10 | 2% | 4% | 9% | Goldeen–Seaking | Psyduck–Golduck |
 
 **`MAP_MT_SILVER_2F_HNS`**
 
@@ -3420,9 +3454,9 @@ Water type: cave water.
 | 4 | 10% | Geodude–Golem | Misdreavus–Mismagius |
 | 5 | 10% | Larvitar–Tyranitar | Geodude–Golem |
 | 6 | 10% | Zubat–Crobat | Larvitar–Tyranitar |
-| 7 | 5% | Electabuzz | Gastly–Gengar |
+| 7 | 5% | Sneasel | Gastly–Gengar |
 | 8 | 5% | Magmar | Magmar |
-| 9 | 4% | Electabuzz–Electivire | Electabuzz |
+| 9 | 4% | Sneasel–Weavile | Sneasel–Weavile |
 | 10 | 4% | Magmar–Magmortar | Psyduck–Golduck |
 | 11 | 1% | Larvitar–Tyranitar | Larvitar–Tyranitar |
 | 12 | 1% | Paras–Parasect | Snorlax |
@@ -3433,7 +3467,7 @@ Water type: cave water.
 | --- | --- | --- | --- |
 | 1 | 60% | Wooper–Quagsire | Wooper–Quagsire |
 | 2 | 30% | Slowpoke–Slowbro | Slowpoke–Slowbro |
-| 3 | 5% | Lapras | Lapras |
+| 3 | 5% | Poliwag–Poliwhirl | Slowpoke–Slowking |
 | 4 | 4% | Psyduck–Golduck | Poliwag–Politoed |
 | 5 | 1% | Goldeen–Seaking | Zubat–Golbat |
 
@@ -3448,9 +3482,19 @@ Water type: cave water.
 | 5 | 8% | 9% | 10% | Psyduck–Golduck | Wooper–Quagsire |
 | 6 | 4% | 7% | 10% | Wooper–Quagsire | Slowpoke–Slowbro |
 | 7 | 3% | 6% | 10% | Goldeen–Seaking | Zubat–Golbat |
-| 8 | 3% | 5% | 9% | Lapras | Psyduck–Golduck |
-| 9 | 2% | 4% | 9% | Slowpoke–Slowking | Lapras |
+| 8 | 3% | 5% | 9% | Poliwag–Poliwhirl | Psyduck–Golduck |
+| 9 | 2% | 4% | 9% | Slowpoke–Slowking | Slowpoke–Slowking |
 | 10 | 2% | 4% | 9% | Psyduck–Golduck | Poliwag–Politoed |
+
+*Trees and rocks*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Geodude–Golem | Dunsparce |
+| 2 | 30% | Geodude–Graveler | Geodude–Golem |
+| 3 | 5% | Shuckle | Geodude–Graveler |
+| 4 | 4% | Dunsparce | Shuckle |
+| 5 | 1% | Geodude–Golem | Geodude–Golem |
 
 **`MAP_MT_SILVER_SNOW_HNS`**
 
@@ -3462,8 +3506,8 @@ Water type: cave water.
 | 2 | 20% | Teddiursa–Ursaring | Swinub–Mamoswine |
 | 3 | 10% | Sneasel–Weavile | Houndour–Houndoom |
 | 4 | 10% | Skarmory | Zubat–Crobat |
-| 5 | 10% | Mankey–Annihilape | Misdreavus–Mismagius |
-| 6 | 10% | Ponyta–Rapidash | Delibird |
+| 5 | 10% | Delibird | Misdreavus–Mismagius |
+| 6 | 10% | Swinub–Piloswine | Delibird |
 | 7 | 5% | Larvitar–Tyranitar | Gastly–Gengar |
 | 8 | 5% | Jynx | Larvitar–Tyranitar |
 | 9 | 4% | Delibird | Jynx |
@@ -3484,8 +3528,8 @@ Water type: cave water.
 | 5 | 10% | Larvitar–Tyranitar | Larvitar–Tyranitar |
 | 6 | 10% | Machop–Machamp | Misdreavus–Mismagius |
 | 7 | 5% | Larvitar–Tyranitar | Gastly–Gengar |
-| 8 | 5% | Skarmory | Larvitar–Tyranitar |
-| 9 | 4% | Electabuzz–Electivire | Sneasel–Weavile |
+| 8 | 5% | Phanpy–Donphan | Larvitar–Tyranitar |
+| 9 | 4% | Sneasel–Weavile | Sneasel–Weavile |
 | 10 | 4% | Magmar–Magmortar | Houndour–Houndoom |
 | 11 | 1% | Snorlax | Snorlax |
 | 12 | 1% | Larvitar–Tyranitar | Larvitar–Tyranitar |
@@ -3496,102 +3540,100 @@ Water type: cave water.
 | Species | Catchable at |
 | --- | --- |
 | Abra | Route 30, Route 34, Route 35, Ruins of Alph and more |
-| Aipom | Azalea Town, Blackthorn City, Cherrygrove City, Cianwood City and more |
+| Aipom | Azalea Town, Cherrygrove City, Cianwood City, Goldenrod City and more |
 | Ambipom | Mt. Silver, Route 26, Route 28, Tin Tower |
 | Ampharos | Route 31, Route 32, Route 43, Ruins of Alph and more |
 | Annihilape | Mt. Silver |
 | Arbok | Route 26, Route 27, Route 28, Route 32 and more |
-| Ariados | Azalea Town, Blackthorn City, Cherrygrove City, Cianwood City and more |
+| Ariados | Azalea Town, Cherrygrove City, Cianwood City, Goldenrod City and more |
 | Azumarill | Blackthorn City, Dark Cave, Ecruteak City, Ilex Forest and more |
-| Bayleef | Ilex Forest, New Bark Town, Route 27, Route 29 |
+| Bayleef | Ilex Forest, Route 27, Route 29 |
 | Beedrill | Azalea Town, Ilex Forest, National Park, Route 30 and more |
 | Bellsprout | Route 31, Route 32, Route 36, Route 44 and more |
 | Bonsly | Route 36 |
-| Butterfree | Azalea Town, Cherrygrove City, Ecruteak City, Goldenrod City and more |
-| Caterpie | Azalea Town, Cherrygrove City, Ecruteak City, Goldenrod City and more |
-| Chikorita | Ilex Forest, New Bark Town, Route 27, Route 29 |
-| Chinchou | Cianwood City, Cliff Edge Cave, New Bark Town, Olivine City and more |
+| Butterfree | Azalea Town, Goldenrod City, Ilex Forest, National Park and more |
+| Caterpie | Azalea Town, Goldenrod City, Ilex Forest, National Park and more |
+| Chikorita | Ilex Forest, Route 27, Route 29 |
+| Chinchou | Cianwood City, Cliff Edge Cave, Goldenrod City, New Bark Town and more |
 | Cleffa | Mt. Mortar |
 | Cloyster | Route 26, Whirl Islands |
-| Corsola | Cherrygrove City, Cianwood City, Cliff Edge Cave, New Bark Town and more |
+| Corsola | Cherrygrove City, Cianwood City, Cliff Edge Cave, Goldenrod City and more |
 | Crobat | Ice Path, Mt. Mortar, Mt. Silver, Route 28 and more |
 | Croconaw | Lake of Rage, Route 27, Route 30 |
 | Cubone | Mt. Mortar, Union Cave |
 | Cyndaquil | Burned Tower, Route 46 |
 | Delibird | Ice Path, Mt. Silver |
-| Dewgong | Cliff Edge Cave, Ice Path, Whirl Islands |
-| Ditto | Cianwood City, Olivine City, Route 34, Route 35 and more |
+| Dewgong | Cliff Edge Cave, Whirl Islands |
+| Ditto | Route 34, Route 35, Route 47 |
 | Dodrio | Mt. Silver, Route 26, Route 27, Route 28 |
 | Doduo | Mt. Silver, Route 26, Route 27, Route 28 |
-| Donphan | Blackthorn City, Mt. Silver, Route 26, Route 28 and more |
+| Donphan | Mt. Silver, Route 26, Route 28, Route 45 and more |
 | Dragonair | Dragon's Den |
 | Dragonite | Dragon's Den |
 | Dratini | Dragon's Den |
 | Drowzee | Route 34, Route 35 |
-| Dunsparce | Dark Cave, Mt. Mortar, Route 31, Route 33 and more |
-| Eevee | Cherrygrove City, Ecruteak City, Route 34, Route 37 and more |
+| Dunsparce | Cliff Edge Cave, Dark Cave, Ice Path, Mt. Mortar and more |
+| Eevee | Route 34, Route 37, Route 39, Tin Tower |
 | Ekans | Route 26, Route 27, Route 28, Route 32 and more |
-| Electabuzz | Mt. Silver |
-| Electivire | Mt. Silver |
 | Electrode | Rocket Hideout |
-| Elekid | Mt. Silver, Route 44 |
+| Elekid | Route 44 |
 | Espeon | Tin Tower |
-| Exeggcute | Azalea Town, Blackthorn City, Cherrygrove City, Cianwood City and more |
+| Exeggcute | Azalea Town, Cherrygrove City, Cianwood City, Goldenrod City and more |
 | Farfetch'd | Olivine City, Route 38, Route 39, Route 43 and more |
 | Farigiraf | Route 28 |
-| Fearow | Blackthorn City, Cherrygrove City, Cianwood City, Mt. Silver and more |
+| Fearow | Cherrygrove City, Mt. Silver, Olivine City, Route 26 and more |
 | Feraligatr | Lake of Rage, Route 27, Route 30 |
 | Flaaffy | Route 31, Route 32, Route 43, Ruins of Alph and more |
-| Forretress | Azalea Town, Blackthorn City, Ecruteak City, Goldenrod City and more |
-| Furret | Cherrygrove City, Ecruteak City, New Bark Town, Route 29 and more |
-| Gastly | Blackthorn City, Burned Tower, Cherrygrove City, Cianwood City and more |
+| Forretress | Azalea Town, Goldenrod City, Ilex Forest, Lake of Rage and more |
+| Furret | Azalea Town, Route 29, Route 30, Route 36 and more |
+| Gastly | Azalea Town, Burned Tower, Dark Cave, Ice Path and more |
 | Gengar | Burned Tower, Mt. Mortar, Mt. Silver, Route 26 and more |
-| Geodude | Blackthorn City, Cianwood City, Cliff Edge Cave, Dark Cave and more |
+| Geodude | Cianwood City, Cliff Edge Cave, Dark Cave, Ice Path and more |
 | Girafarig | National Park, Route 27, Route 28, Route 47 and more |
-| Gligar | Blackthorn City, Dark Cave, Route 42, Route 45 and more |
-| Gloom | Blackthorn City, Cherrygrove City, Cianwood City, Ecruteak City and more |
-| Golbat | Blackthorn City, Burned Tower, Cianwood City, Cliff Edge Cave and more |
+| Gligar | Dark Cave, Route 42, Route 45, Route 46 |
+| Gloom | Azalea Town, Ilex Forest, Olivine City, Route 27 and more |
+| Golbat | Burned Tower, Cliff Edge Cave, Dark Cave, Ice Path and more |
 | Goldeen | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
 | Golduck | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
-| Golem | Mt. Mortar, Mt. Silver, Route 26 |
+| Golem | Ice Path, Mt. Mortar, Mt. Silver, Route 26 |
 | Granbull | National Park, Olivine City, Route 34, Route 35 and more |
-| Graveler | Blackthorn City, Cianwood City, Cliff Edge Cave, Dark Cave and more |
-| Grimer | Olivine City, Rocket Hideout, Route 34 |
-| Growlithe | Ecruteak City, Route 35, Route 36, Route 37 and more |
-| Gyarados | Blackthorn City, Cherrygrove City, Cianwood City, Dark Cave and more |
+| Graveler | Cianwood City, Cliff Edge Cave, Dark Cave, Ice Path and more |
+| Grimer | Olivine City, Rocket Hideout |
+| Growlithe | Route 35, Route 36, Route 37, Route 48 |
+| Gyarados | Blackthorn City, Cherrygrove City, Cianwood City, Cliff Edge Cave and more |
 | Happiny | Route 47 |
-| Haunter | Blackthorn City, Burned Tower, Cherrygrove City, Cianwood City and more |
+| Haunter | Azalea Town, Burned Tower, Dark Cave, Ice Path and more |
 | Heracross | Lake of Rage, Mt. Silver, National Park, Route 26 and more |
 | Hitmontop | Mt. Mortar |
 | Honchkrow | Mt. Silver, Route 26, Route 28, Tin Tower |
-| Hoothoot | Azalea Town, Blackthorn City, Cherrygrove City, Cianwood City and more |
-| Hoppip | Blackthorn City, Cherrygrove City, Cianwood City, Ecruteak City and more |
-| Horsea | Route 26, Route 27, Route 41, Whirl Islands |
-| Houndoom | Burned Tower, Ecruteak City, Mt. Silver, Route 26 and more |
-| Houndour | Burned Tower, Ecruteak City, Mt. Silver, Route 26 and more |
+| Hoothoot | Azalea Town, Cherrygrove City, Goldenrod City, Ilex Forest and more |
+| Hoppip | Azalea Town, Olivine City, Route 29, Route 30 and more |
+| Horsea | Cliff Edge Cave, Goldenrod City, Route 26, Route 27 and more |
+| Houndoom | Burned Tower, Mt. Silver, Route 26, Route 27 and more |
+| Houndour | Burned Tower, Mt. Silver, Route 26, Route 27 and more |
 | Hypno | Route 34, Route 35 |
-| Igglybuff | Route 34 |
+| Igglybuff | Azalea Town, Route 34 |
 | Jigglypuff | Route 34 |
-| Jumpluff | Blackthorn City, Cherrygrove City, Cianwood City, Ecruteak City and more |
+| Jumpluff | Azalea Town, Olivine City, Route 29, Route 30 and more |
 | Jynx | Ice Path, Mt. Silver |
 | Kadabra | Route 34, Route 35 |
 | Kakuna | Azalea Town, Ilex Forest, National Park, Route 30 and more |
 | Kingdra | Route 26, Whirl Islands |
-| Kingler | Cherrygrove City, Cianwood City, Cliff Edge Cave, New Bark Town and more |
+| Kingler | Cherrygrove City, Cianwood City, Cliff Edge Cave, Goldenrod City and more |
 | Koffing | Burned Tower, Rocket Hideout, Slowpoke Well |
-| Krabby | Cherrygrove City, Cianwood City, Cliff Edge Cave, New Bark Town and more |
-| Lanturn | Cianwood City, Cliff Edge Cave, New Bark Town, Olivine City and more |
-| Lapras | Mt. Silver, Route 26, Union Cave, Whirl Islands |
+| Krabby | Cherrygrove City, Cianwood City, Cliff Edge Cave, Goldenrod City and more |
+| Lanturn | Cianwood City, Cliff Edge Cave, Goldenrod City, New Bark Town and more |
+| Lapras | Route 26, Union Cave, Whirl Islands |
 | Larvitar | Mt. Silver, Route 26, Route 28 |
-| Ledian | Cherrygrove City, Ecruteak City, Goldenrod City, Ilex Forest and more |
-| Ledyba | Cherrygrove City, Ecruteak City, Goldenrod City, Ilex Forest and more |
+| Ledian | Azalea Town, Cherrygrove City, Goldenrod City, Ilex Forest and more |
+| Ledyba | Azalea Town, Cherrygrove City, Goldenrod City, Ilex Forest and more |
 | Lickitung | Route 44 |
 | Machamp | Mt. Mortar, Mt. Silver |
-| Machoke | Blackthorn City, Cianwood City, Dark Cave, Mt. Mortar and more |
-| Machop | Blackthorn City, Cianwood City, Dark Cave, Mt. Mortar and more |
+| Machoke | Dark Cave, Mt. Mortar, Mt. Silver, Route 33 and more |
+| Machop | Dark Cave, Mt. Mortar, Mt. Silver, Route 33 and more |
 | Magby | Burned Tower, Mt. Silver |
 | Magcargo | Burned Tower |
-| Magikarp | Blackthorn City, Cherrygrove City, Cianwood City, Dark Cave and more |
+| Magikarp | Blackthorn City, Cherrygrove City, Cianwood City, Cliff Edge Cave and more |
 | Magmar | Burned Tower, Mt. Silver |
 | Magmortar | Burned Tower, Mt. Silver |
 | Magnemite | Olivine City, Rocket Hideout, Route 38, Route 39 |
@@ -3603,33 +3645,33 @@ Water type: cave water.
 | Mareep | Route 31, Route 32, Route 43, Ruins of Alph and more |
 | Marill | Blackthorn City, Dark Cave, Ecruteak City, Ilex Forest and more |
 | Marowak | Mt. Mortar, Union Cave |
-| Meganium | Ilex Forest, New Bark Town, Route 27, Route 29 |
-| Meowth | Cherrygrove City, Olivine City, Rocket Hideout, Route 38 and more |
-| Metapod | Azalea Town, Cherrygrove City, Ecruteak City, Goldenrod City and more |
+| Meganium | Ilex Forest, Route 27, Route 29 |
+| Meowth | Olivine City, Rocket Hideout, Route 34, Route 38 and more |
+| Metapod | Azalea Town, Goldenrod City, Ilex Forest, National Park and more |
 | Miltank | Route 26, Route 27, Route 47 |
-| Misdreavus | Burned Tower, Ecruteak City, Ilex Forest, Mt. Silver and more |
-| Mismagius | Burned Tower, Mt. Silver, Tin Tower |
-| Muk | Olivine City, Rocket Hideout, Route 34 |
-| Murkrow | Azalea Town, Burned Tower, Ecruteak City, Goldenrod City and more |
-| Natu | Ruins of Alph, Sprout Tower, Tin Tower, Violet City and more |
-| Nidoran♀ | National Park, Route 35, Route 48 |
+| Misdreavus | Burned Tower, Cliff Edge Cave, Ilex Forest, Mt. Silver and more |
+| Mismagius | Burned Tower, Mt. Silver, Tin Tower, Whirl Islands |
+| Muk | Olivine City, Rocket Hideout |
+| Murkrow | Azalea Town, Burned Tower, Cherrygrove City, Goldenrod City and more |
+| Natu | Ruins of Alph, Sprout Tower, Tin Tower, Violet City |
+| Nidoran♀ | National Park, Route 35, Route 36, Route 48 |
 | Nidoran♂ | National Park, Route 35, Route 36 |
-| Nidorina | National Park, Route 35, Route 48 |
+| Nidorina | National Park, Route 35, Route 36, Route 48 |
 | Nidorino | National Park, Route 35, Route 36 |
-| Noctowl | Azalea Town, Blackthorn City, Cherrygrove City, Cianwood City and more |
-| Octillery | Cianwood City, Olivine City, Route 26, Route 32 and more |
-| Oddish | Blackthorn City, Cherrygrove City, Cianwood City, Ecruteak City and more |
+| Noctowl | Azalea Town, Cherrygrove City, Goldenrod City, Ilex Forest and more |
+| Octillery | Cianwood City, Goldenrod City, New Bark Town, Olivine City and more |
+| Oddish | Azalea Town, Ilex Forest, Olivine City, Route 27 and more |
 | Onix | Cliff Edge Cave, Dark Cave, Ice Path, Mt. Mortar and more |
-| Paras | Ilex Forest, Mt. Silver, National Park |
-| Parasect | Ilex Forest, Mt. Silver, National Park |
-| Persian | Cherrygrove City, Olivine City, Rocket Hideout, Route 38 and more |
-| Phanpy | Blackthorn City, Mt. Silver, Route 26, Route 28 and more |
-| Pichu | Ilex Forest, Route 31 |
-| Pidgeot | Blackthorn City, Cherrygrove City, Ecruteak City, Mahogany Town and more |
-| Pidgeotto | Blackthorn City, Cherrygrove City, Ecruteak City, Mahogany Town and more |
-| Pidgey | Blackthorn City, Cherrygrove City, Ecruteak City, Mahogany Town and more |
-| Piloswine | Blackthorn City, Ice Path, Mt. Silver |
-| Pineco | Azalea Town, Blackthorn City, Ecruteak City, Goldenrod City and more |
+| Paras | Azalea Town, Ilex Forest, Mt. Silver, National Park |
+| Parasect | Azalea Town, Ilex Forest, Mt. Silver, National Park |
+| Persian | Olivine City, Rocket Hideout, Route 34, Route 38 and more |
+| Phanpy | Mt. Silver, Route 26, Route 28, Route 45 and more |
+| Pichu | Azalea Town, Ilex Forest, Route 31 |
+| Pidgeot | Azalea Town, Cherrygrove City, Mahogany Town, Olivine City and more |
+| Pidgeotto | Azalea Town, Cherrygrove City, Mahogany Town, Olivine City and more |
+| Pidgey | Azalea Town, Cherrygrove City, Mahogany Town, Olivine City and more |
+| Piloswine | Ice Path, Mt. Silver |
+| Pineco | Azalea Town, Goldenrod City, Ilex Forest, Lake of Rage and more |
 | Pinsir | National Park |
 | Politoed | Mt. Silver, Route 28 |
 | Poliwag | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
@@ -3641,68 +3683,67 @@ Water type: cave water.
 | Primeape | Cianwood City, Mt. Mortar, Mt. Silver, Route 26 and more |
 | Psyduck | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
 | Pupitar | Mt. Silver, Route 26, Route 28 |
-| Quagsire | Blackthorn City, Cliff Edge Cave, Dark Cave, Ecruteak City and more |
+| Quagsire | Blackthorn City, Dark Cave, Ecruteak City, Ilex Forest and more |
 | Quilava | Burned Tower, Route 46 |
-| Qwilfish | Cherrygrove City, Cianwood City, New Bark Town, Olivine City and more |
+| Qwilfish | Cherrygrove City, Cianwood City, Cliff Edge Cave, Goldenrod City and more |
 | Rapidash | Mt. Silver, Route 26, Route 27, Route 28 and more |
-| Raticate | Burned Tower, Cherrygrove City, Mt. Mortar, New Bark Town and more |
-| Rattata | Burned Tower, Cherrygrove City, Mt. Mortar, New Bark Town and more |
-| Remoraid | Cianwood City, Olivine City, Route 26, Route 32 and more |
+| Raticate | Burned Tower, Mt. Mortar, Olivine City, Rocket Hideout and more |
+| Rattata | Burned Tower, Mt. Mortar, Olivine City, Rocket Hideout and more |
+| Remoraid | Cianwood City, Goldenrod City, New Bark Town, Olivine City and more |
 | Sandshrew | Route 26, Route 27, Union Cave |
 | Sandslash | Route 26, Route 27, Union Cave |
 | Scizor | Mt. Silver, Route 26, Route 28 |
 | Scyther | Mt. Silver, National Park, Route 26, Route 28 |
-| Seadra | Route 26, Route 27, Route 41, Whirl Islands |
+| Seadra | Cliff Edge Cave, Goldenrod City, Route 26, Route 27 and more |
 | Seaking | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
-| Seel | Cliff Edge Cave, Ice Path, Whirl Islands |
-| Sentret | Cherrygrove City, Ecruteak City, New Bark Town, Route 29 and more |
+| Seel | Cliff Edge Cave, Whirl Islands |
+| Sentret | Azalea Town, Route 29, Route 30, Route 36 and more |
 | Shellder | Cherrygrove City, Cianwood City, Cliff Edge Cave, New Bark Town and more |
-| Shuckle | Cliff Edge Cave, Route 47 |
-| Skarmory | Cliff Edge Cave, Mt. Silver, Route 28, Route 47 and more |
-| Skiploom | Blackthorn City, Cherrygrove City, Cianwood City, Ecruteak City and more |
-| Slowbro | Cliff Edge Cave, Dragon's Den, Ecruteak City, Ilex Forest and more |
+| Shuckle | Cliff Edge Cave, Dark Cave, Ice Path, Mt. Silver and more |
+| Skarmory | Mt. Silver, Route 28, Route 47 |
+| Skiploom | Azalea Town, Olivine City, Route 29, Route 30 and more |
+| Slowbro | Azalea Town, Cliff Edge Cave, Dragon's Den, Ecruteak City and more |
 | Slowking | Mt. Silver, Route 28, Slowpoke Well, Whirl Islands |
-| Slowpoke | Cliff Edge Cave, Dragon's Den, Ecruteak City, Ilex Forest and more |
+| Slowpoke | Azalea Town, Cliff Edge Cave, Dragon's Den, Ecruteak City and more |
 | Slugma | Burned Tower |
 | Smeargle | Ruins of Alph |
 | Smoochum | Ice Path, Mt. Silver |
-| Sneasel | Blackthorn City, Ice Path, Mt. Silver, Route 28 |
+| Sneasel | Ice Path, Mt. Silver, Route 28 |
 | Snorlax | Mt. Silver, Route 28 |
 | Snubbull | National Park, Olivine City, Route 34, Route 35 and more |
-| Spearow | Blackthorn City, Cherrygrove City, Cianwood City, Mt. Silver and more |
-| Spinarak | Azalea Town, Blackthorn City, Cherrygrove City, Cianwood City and more |
-| Stantler | National Park, Tin Tower |
+| Spearow | Cherrygrove City, Mt. Silver, Olivine City, Route 26 and more |
+| Spinarak | Azalea Town, Cherrygrove City, Cianwood City, Goldenrod City and more |
+| Stantler | National Park |
 | Starmie | Route 26, Whirl Islands |
-| Staryu | Cherrygrove City, Cianwood City, Cliff Edge Cave, New Bark Town and more |
+| Staryu | Cherrygrove City, Cianwood City, Cliff Edge Cave, Goldenrod City and more |
 | Steelix | Ice Path, Mt. Silver, Union Cave |
-| Sudowoodo | Route 36 |
-| Sunkern | Blackthorn City, Cherrygrove City, Cianwood City, Ecruteak City and more |
-| Swinub | Blackthorn City, Ice Path, Mt. Silver |
+| Sunkern | Azalea Town, Ilex Forest, National Park, Olivine City and more |
+| Swinub | Ice Path, Mt. Silver |
 | Tangela | Route 28, Route 44 |
 | Tangrowth | Route 28 |
 | Tauros | Mt. Silver, Route 26, Route 27, Route 28 and more |
 | Teddiursa | Dark Cave, Mt. Silver, Route 26, Route 28 and more |
-| Tentacool | Cherrygrove City, Cianwood City, Cliff Edge Cave, New Bark Town and more |
-| Tentacruel | Cherrygrove City, Cianwood City, Cliff Edge Cave, New Bark Town and more |
-| Togepi | National Park, New Bark Town |
+| Tentacool | Cherrygrove City, Cianwood City, Cliff Edge Cave, Goldenrod City and more |
+| Tentacruel | Cherrygrove City, Cianwood City, Cliff Edge Cave, Goldenrod City and more |
+| Togepi | National Park |
 | Totodile | Lake of Rage, Route 27, Route 30 |
 | Typhlosion | Burned Tower, Route 46 |
 | Tyranitar | Mt. Silver, Route 26, Route 28 |
-| Tyrogue | Cianwood City, Mt. Mortar, Route 42 |
+| Tyrogue | Mt. Mortar, Route 42 |
 | Umbreon | Tin Tower |
 | Unown | Ruins of Alph |
 | Ursaring | Dark Cave, Mt. Silver, Route 26, Route 28 and more |
-| Venomoth | Ilex Forest, Lake of Rage, National Park, Route 26 and more |
-| Venonat | Ilex Forest, Lake of Rage, National Park, Route 26 and more |
+| Venomoth | Azalea Town, Ilex Forest, Lake of Rage, National Park and more |
+| Venonat | Azalea Town, Ilex Forest, Lake of Rage, National Park and more |
 | Victreebel | Sprout Tower |
 | Voltorb | Rocket Hideout |
-| Vulpix | Burned Tower, Ecruteak City, Route 36, Route 37 and more |
+| Vulpix | Burned Tower, Route 36, Route 37, Route 48 |
 | Weavile | Ice Path, Mt. Silver, Route 28 |
 | Weedle | Azalea Town, Ilex Forest, National Park, Route 30 and more |
 | Weepinbell | Route 31, Route 32, Route 36, Route 44 and more |
 | Weezing | Burned Tower, Rocket Hideout, Slowpoke Well |
-| Wobbuffet | Dark Cave, Slowpoke Well, Union Cave |
-| Wooper | Blackthorn City, Cliff Edge Cave, Dark Cave, Ecruteak City and more |
-| Xatu | Ruins of Alph, Sprout Tower, Tin Tower, Violet City and more |
+| Wobbuffet | Cliff Edge Cave, Dark Cave, Slowpoke Well, Union Cave and more |
+| Wooper | Blackthorn City, Dark Cave, Ecruteak City, Ilex Forest and more |
+| Xatu | Ruins of Alph, Sprout Tower, Tin Tower, Violet City |
 | Yanma | Ilex Forest, Lake of Rage, National Park, Route 35 and more |
-| Zubat | Blackthorn City, Burned Tower, Cianwood City, Cliff Edge Cave and more |
+| Zubat | Burned Tower, Cliff Edge Cave, Dark Cave, Ice Path and more |

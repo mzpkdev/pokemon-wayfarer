@@ -103,6 +103,14 @@ How bonuses change over the course of the game is left to later scaling work.
   Every region has day and night encounters. Caves and buildings change at
   night too, but their day and night tables often overlap, so the difference
   is smaller than outdoors.
+- **Tables follow the map.** A map has a land, surfing, fishing, or Headbutt
+  and Rock Smash table only where it has grass, cave floor, water, Headbutt
+  trees or breakable rocks to trigger it. A few places deliberately have none:
+  - patches of grass or water under 10 tiles;
+  - rocks that only clear a path or solve a puzzle;
+  - places the original games kept free of encounters, such as Emerald's rocky
+    outcrops and log walkways, Dragon's Den's shrine floor and the Abandoned
+    Ship's indoor floors.
 - **Each slot has a stage cap.** The level picks the stage through the
   [downward rule](player-trainer-rating.md#glossary) and the stage mix. A slot
   capped at an early stage keeps young levels.

@@ -151,6 +151,8 @@ Road, Near islands.
 
 **`MAP_THREE_ISLAND_PORT`**
 
+Water type: coast and sea.
+
 *Land*
 
 | Slot | Weight | Day | Night |
@@ -167,6 +169,31 @@ Road, Near islands.
 | 10 | 4% | Blipbug–Orbeetle | Skwovet–Greedent |
 | 11 | 1% | Milcery | Milcery |
 | 12 | 1% | Toxel | Toxel |
+
+*Surfing*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Chewtle–Drednaw | Pincurchin |
+| 2 | 30% | Pincurchin | Chewtle–Drednaw |
+| 3 | 5% | Clobbopus | Clobbopus |
+| 4 | 4% | Arrokuda–Barraskewda | Arrokuda–Barraskewda |
+| 5 | 1% | Sobble–Inteleon | Chinchou–Lanturn |
+
+*Fishing*
+
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Chewtle–Drednaw | Pincurchin |
+| 2 | 22% | 18% | 10% | Pincurchin | Chewtle–Drednaw |
+| 3 | 10% | 12% | 11% | Magikarp | Magikarp |
+| 4 | 8% | 10% | 10% | Clobbopus | Clobbopus |
+| 5 | 8% | 9% | 10% | Arrokuda–Barraskewda | Arrokuda–Barraskewda |
+| 6 | 4% | 7% | 10% | Chewtle–Drednaw | Chinchou–Lanturn |
+| 7 | 3% | 6% | 10% | Pincurchin | Pincurchin |
+| 8 | 3% | 5% | 9% | Krabby–Kingler | Chewtle–Drednaw |
+| 9 | 2% | 4% | 9% | Clobbopus | Krabby–Kingler |
+| 10 | 2% | 4% | 9% | Sobble–Inteleon | Sobble–Inteleon |
 
 #### Kindle Road
 
@@ -845,6 +872,8 @@ Outlands, Outer islands.
 
 **`MAP_SEVEN_ISLAND_SEVAULT_CANYON`**
 
+Water type: ponds and rivers.
+
 *Land*
 
 | Slot | Weight | Day | Night |
@@ -861,6 +890,31 @@ Outlands, Outer islands.
 | 10 | 4% | Cubone–Marowak | Stonjourner |
 | 11 | 1% | Galarian Stunfisk | Hatenna–Hatterene |
 | 12 | 1% | Galarian Farfetch'd–Sirfetch'd | Falinks |
+
+*Surfing*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Chewtle–Drednaw | Chewtle–Drednaw |
+| 2 | 30% | Arrokuda–Barraskewda | Galarian Stunfisk |
+| 3 | 5% | Galarian Stunfisk | Arrokuda–Barraskewda |
+| 4 | 4% | Sobble–Inteleon | Galarian Slowpoke |
+| 5 | 1% | Galarian Slowpoke | Sobble–Inteleon |
+
+*Fishing*
+
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Chewtle–Drednaw | Arrokuda–Barraskewda |
+| 2 | 22% | 18% | 10% | Arrokuda–Barraskewda | Chewtle–Drednaw |
+| 3 | 10% | 12% | 11% | Chewtle–Drednaw | Galarian Stunfisk |
+| 4 | 8% | 10% | 10% | Galarian Stunfisk | Chewtle–Drednaw |
+| 5 | 8% | 9% | 10% | Arrokuda–Barraskewda | Arrokuda–Barraskewda |
+| 6 | 4% | 7% | 10% | Galarian Slowpoke | Galarian Stunfisk |
+| 7 | 3% | 6% | 10% | Chewtle–Drednaw | Galarian Slowpoke |
+| 8 | 3% | 5% | 9% | Arrokuda–Barraskewda | Chewtle–Drednaw |
+| 9 | 2% | 4% | 9% | Galarian Stunfisk | Basculin |
+| 10 | 2% | 4% | 9% | Sobble–Inteleon | Sobble–Inteleon |
 
 *Rock Smash rocks*
 
@@ -1756,7 +1810,7 @@ Dungeon, Outer islands.
 | Arrokuda | Berry Forest, Bond Bridge, Cape Brink, Five Island and more |
 | Azumarill | Berry Forest, Ruin Valley |
 | Barraskewda | Berry Forest, Bond Bridge, Cape Brink, Five Island and more |
-| Basculin | Cape Brink, Ruin Valley |
+| Basculin | Cape Brink, Ruin Valley, Sevault Canyon |
 | Bellsprout | Berry Forest, Bond Bridge |
 | Blipbug | Berry Forest, Bond Bridge, Cape Brink, Five Isle Meadow and more |
 | Boltund | Bond Bridge, Cape Brink, Five Isle Meadow, Kindle Road and more |
@@ -1829,9 +1883,9 @@ Dungeon, Outer islands.
 | Inteleon | Berry Forest, Cape Brink, One Island, Resort Gorgeous and more |
 | Jumpluff | Five Isle Meadow, Memorial Pillar |
 | Kingdra | Icefall Cave |
-| Kingler | Bond Bridge, Kindle Road, One Island, Treasure Beach |
+| Kingler | Bond Bridge, Kindle Road, One Island, Three Isle Port and more |
 | Koffing | Kindle Road, Mt. Ember |
-| Krabby | Bond Bridge, Kindle Road, One Island, Treasure Beach |
+| Krabby | Bond Bridge, Kindle Road, One Island, Three Isle Port and more |
 | Lanturn | Bond Bridge, Five Island, Kindle Road, One Island and more |
 | Ledian | Pattern Bush |
 | Ledyba | Pattern Bush |
@@ -1909,7 +1963,7 @@ Dungeon, Outer islands.
 | Galarian Slowbro | Green Path |
 | Galarian Slowking | Green Path |
 | Slowpoke | Treasure Beach |
-| Galarian Slowpoke | Green Path, Water Path |
+| Galarian Slowpoke | Green Path, Sevault Canyon, Water Path |
 | Slugma | Mt. Ember |
 | Snom | Icefall Cave, Pattern Bush |
 | Snorunt | Icefall Cave |

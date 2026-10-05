@@ -327,6 +327,8 @@ Dungeon, Ula'ula.
 
 **`MAP_ULA_ULA_CAVE_HNS`**
 
+Water type: cave water.
+
 *Land*
 
 | Slot | Weight | Day | Night |
@@ -344,11 +346,38 @@ Dungeon, Ula'ula.
 | 11 | 1% | Alolan Vulpix–Alolan Ninetales | Alolan Sandshrew–Alolan Sandslash |
 | 12 | 1% | Jangmo-o–Kommo-o | Jangmo-o–Kommo-o |
 
+*Surfing*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Dewpider–Araquanid | Wimpod–Golisopod |
+| 2 | 30% | Wimpod–Golisopod | Dewpider–Araquanid |
+| 3 | 5% | Wishiwashi | Wishiwashi |
+| 4 | 4% | Dewpider–Araquanid | Dhelmise |
+| 5 | 1% | Bruxish | Bruxish |
+
+*Fishing*
+
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Wishiwashi | Dewpider–Araquanid |
+| 2 | 22% | 18% | 10% | Dewpider–Araquanid | Wishiwashi |
+| 3 | 10% | 12% | 11% | Wimpod–Golisopod | Wimpod–Golisopod |
+| 4 | 8% | 10% | 10% | Wishiwashi | Dhelmise |
+| 5 | 8% | 9% | 10% | Dewpider–Araquanid | Dewpider–Araquanid |
+| 6 | 4% | 7% | 10% | Bruxish | Wishiwashi |
+| 7 | 3% | 6% | 10% | Wimpod–Golisopod | Wimpod–Golisopod |
+| 8 | 3% | 5% | 9% | Wishiwashi | Bruxish |
+| 9 | 2% | 4% | 9% | Dewpider–Araquanid | Dewpider–Araquanid |
+| 10 | 2% | 4% | 9% | Dhelmise | Dhelmise |
+
 #### Ula'ula Cave 2
 
 Dungeon, Ula'ula.
 
 **`MAP_ULA_ULA_CAVE_2_HNS`**
+
+Water type: cave water.
 
 *Land*
 
@@ -366,6 +395,31 @@ Dungeon, Ula'ula.
 | 10 | 4% | Togedemaru | Togedemaru |
 | 11 | 1% | Alolan Grimer–Alolan Muk | Mimikyu |
 | 12 | 1% | Drampa | Drampa |
+
+*Surfing*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Wimpod–Golisopod | Dewpider–Araquanid |
+| 2 | 30% | Dewpider–Araquanid | Wimpod–Golisopod |
+| 3 | 5% | Wishiwashi | Wishiwashi |
+| 4 | 4% | Dewpider–Araquanid | Dhelmise |
+| 5 | 1% | Dhelmise | Dhelmise |
+
+*Fishing*
+
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Dewpider–Araquanid | Wishiwashi |
+| 2 | 22% | 18% | 10% | Wishiwashi | Dewpider–Araquanid |
+| 3 | 10% | 12% | 11% | Wimpod–Golisopod | Dhelmise |
+| 4 | 8% | 10% | 10% | Dewpider–Araquanid | Wimpod–Golisopod |
+| 5 | 8% | 9% | 10% | Wishiwashi | Wishiwashi |
+| 6 | 4% | 7% | 10% | Bruxish | Dewpider–Araquanid |
+| 7 | 3% | 6% | 10% | Wimpod–Golisopod | Dhelmise |
+| 8 | 3% | 5% | 9% | Dewpider–Araquanid | Wimpod–Golisopod |
+| 9 | 2% | 4% | 9% | Wishiwashi | Bruxish |
+| 10 | 2% | 4% | 9% | Dhelmise | Wishiwashi |
 
 #### Poni Cave
 
@@ -422,7 +476,7 @@ Water type: cave water.
 
 | Species | Catchable at |
 | --- | --- |
-| Araquanid | Akala Forest, Akala Isle, Poni Cave |
+| Araquanid | Akala Forest, Akala Isle, Poni Cave, Ula'ula Cave and more |
 | Ariados | Melemele Isle |
 | Barboach | Poni Cave |
 | Basculin | Poni Cave |
@@ -445,8 +499,8 @@ Water type: cave water.
 | Cutiefly | Akala Forest, Melemele Isle |
 | Dartrix | Akala Forest, Melemele Isle |
 | Decidueye | Akala Forest, Melemele Isle |
-| Dewpider | Akala Forest, Akala Isle, Poni Cave |
-| Dhelmise | Poni Cave, Poni Isle, Ula'ula Isle |
+| Dewpider | Akala Forest, Akala Isle, Poni Cave, Ula'ula Cave and more |
+| Dhelmise | Poni Cave, Poni Isle, Ula'ula Cave, Ula'ula Cave 2 and more |
 | Alolan Diglett | Akala Cave, Akala Isle, Poni Cave |
 | Drampa | Ula'ula Cave, Ula'ula Cave 2, Ula'ula Isle |
 | Drowzee | Poni Isle |
@@ -461,7 +515,7 @@ Water type: cave water.
 | Golbat | Akala Cave, Poni Cave, Ula'ula Cave, Ula'ula Cave 2 |
 | Golduck | Poni Cave |
 | Alolan Golem | Akala Cave, Poni Cave |
-| Golisopod | Akala Isle, Poni Cave, Poni Isle |
+| Golisopod | Akala Isle, Poni Cave, Poni Isle, Ula'ula Cave and more |
 | Alolan Graveler | Akala Cave, Poni Cave, Ula'ula Cave |
 | Alolan Grimer | Melemele Isle, Ula'ula Cave 2, Ula'ula Isle |
 | Grubbin | Akala Forest, Melemele Isle, Poni Cave, Poni Isle and more |
@@ -556,7 +610,7 @@ Water type: cave water.
 | Alolan Vulpix | Ula'ula Cave, Ula'ula Isle |
 | Wailmer | Alola sea, Poni Isle, Ula'ula Isle |
 | Whiscash | Poni Cave |
-| Wimpod | Akala Isle, Poni Cave, Poni Isle |
+| Wimpod | Akala Isle, Poni Cave, Poni Isle, Ula'ula Cave and more |
 | Wingull | Akala Isle, Melemele Isle, Poni Isle, Ula'ula Isle |
 | Wishiwashi | Akala Isle, Alola sea, Poni Cave, Poni Isle and more |
 | Woobat | Akala Cave |

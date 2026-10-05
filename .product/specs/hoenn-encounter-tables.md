@@ -2590,6 +2590,8 @@ Dungeon, East.
 
 **`MAP_MT_PYRE_SUMMIT`**
 
+Water type: ponds and rivers.
+
 *Land*
 
 | Slot | Weight | Day | Night |
@@ -2606,6 +2608,31 @@ Dungeon, East.
 | 10 | 4% | Absol | Yamask–Cofagrigus |
 | 11 | 1% | Chingling | Chingling |
 | 12 | 1% | Rufflet–Braviary | Litwick–Chandelure |
+
+*Surfing*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Barboach–Whiscash | Tympole–Seismitoad |
+| 2 | 30% | Lotad–Ludicolo | Barboach–Whiscash |
+| 3 | 5% | Ducklett–Swanna | Lotad–Ludicolo |
+| 4 | 4% | Surskit–Masquerain | Basculin |
+| 5 | 1% | Marill–Azumarill | Marill–Azumarill |
+
+*Fishing*
+
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Barboach–Whiscash | Tympole–Seismitoad |
+| 2 | 22% | 18% | 10% | Lotad–Ludicolo | Barboach–Whiscash |
+| 3 | 10% | 12% | 11% | Corphish–Crawdaunt | Corphish–Crawdaunt |
+| 4 | 8% | 10% | 10% | Basculin | Basculin |
+| 5 | 8% | 9% | 10% | Tympole–Seismitoad | Tympole–Seismitoad |
+| 6 | 4% | 7% | 10% | Barboach–Whiscash | Barboach–Whiscash |
+| 7 | 3% | 6% | 10% | Marill–Azumarill | Lotad–Ludicolo |
+| 8 | 3% | 5% | 9% | Corphish–Crawdaunt | Corphish–Crawdaunt |
+| 9 | 2% | 4% | 9% | Basculin | Marill–Azumarill |
+| 10 | 2% | 4% | 9% | Carvanha–Sharpedo | Carvanha–Sharpedo |
 
 #### Shoal Cave
 
@@ -2768,6 +2795,23 @@ Dungeon, Far east.
 
 Water type: cave water.
 
+*Land*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Corphish–Crawdaunt | Corphish–Crawdaunt |
+| 2 | 20% | Tympole–Seismitoad | Tympole–Seismitoad |
+| 3 | 10% | Sableye | Poochyena–Mightyena |
+| 4 | 10% | Woobat | Sableye |
+| 5 | 10% | Roggenrola–Boldore | Woobat |
+| 6 | 10% | Dwebble–Crustle | Dwebble–Crustle |
+| 7 | 5% | Mawile | Mawile |
+| 8 | 5% | Corphish–Crawdaunt | Roggenrola–Boldore |
+| 9 | 4% | Tympole–Seismitoad | Poochyena–Mightyena |
+| 10 | 4% | Woobat | Woobat |
+| 11 | 1% | Oshawott–Samurott | Oshawott–Samurott |
+| 12 | 1% | Sableye | Sableye |
+
 *Surfing*
 
 | Slot | Weight | Day | Night |
@@ -2871,6 +2915,8 @@ Water type: cave water.
 
 **`MAP_SEAFLOOR_CAVERN_ROOM5`**
 
+Water type: cave water.
+
 *Land*
 
 | Slot | Weight | Day | Night |
@@ -2887,6 +2933,31 @@ Water type: cave water.
 | 10 | 4% | Durant | Dwebble–Crustle |
 | 11 | 1% | Druddigon | Druddigon |
 | 12 | 1% | Golett–Golurk | Poochyena–Mightyena |
+
+*Surfing*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Corphish–Crawdaunt | Frillish–Jellicent |
+| 2 | 30% | Frillish–Jellicent | Corphish–Crawdaunt |
+| 3 | 5% | Wailmer–Wailord | Tynamo–Eelektrik |
+| 4 | 4% | Tynamo–Eelektrik | Carvanha–Sharpedo |
+| 5 | 1% | Alomomola | Tynamo–Eelektross |
+
+*Fishing*
+
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Corphish–Crawdaunt | Carvanha–Sharpedo |
+| 2 | 22% | 18% | 10% | Carvanha–Sharpedo | Frillish–Jellicent |
+| 3 | 10% | 12% | 11% | Frillish–Jellicent | Tynamo–Eelektrik |
+| 4 | 8% | 10% | 10% | Wailmer–Wailord | Corphish–Crawdaunt |
+| 5 | 8% | 9% | 10% | Tynamo–Eelektrik | Tynamo–Eelektross |
+| 6 | 4% | 7% | 10% | Corphish–Crawdaunt | Frillish–Jellicent |
+| 7 | 3% | 6% | 10% | Luvdisc | Corphish–Crawdaunt |
+| 8 | 3% | 5% | 9% | Carvanha–Sharpedo | Luvdisc |
+| 9 | 2% | 4% | 9% | Alomomola | Alomomola |
+| 10 | 2% | 4% | 9% | Relicanth | Relicanth |
 
 **`MAP_SEAFLOOR_CAVERN_ROOM6`**
 
@@ -3312,13 +3383,13 @@ Water type: cave water.
 | Aron | Artisan Cave, Granite Cave, Meteor Falls, Rusturf Tunnel and more |
 | Audino | Route 110, Route 115, Route 116, Route 117 and more |
 | Axew | Meteor Falls, Victory Road |
-| Azumarill | Meteor Falls, Petalburg City, Route 102, Route 104 and more |
+| Azumarill | Meteor Falls, Mt. Pyre, Petalburg City, Route 102 and more |
 | Azurill | Petalburg City, Route 102, Route 104, Route 111 and more |
 | Bagon | Meteor Falls, Sky Pillar |
 | Baltoy | Artisan Cave, Mirage Tower, Route 111, Sky Pillar |
 | Banette | Cave of Origin, Mt. Pyre, Route 121, Route 123 and more |
-| Barboach | Meteor Falls, Petalburg City, Route 102, Route 111 and more |
-| Basculin | Meteor Falls, Petalburg City, Route 102, Route 111 and more |
+| Barboach | Meteor Falls, Mt. Pyre, Petalburg City, Route 102 and more |
+| Basculin | Meteor Falls, Mt. Pyre, Petalburg City, Route 102 and more |
 | Beartic | Shoal Cave |
 | Beheeyem | Altering Cave, Artisan Cave, Cave of Origin, Meteor Falls and more |
 | Beldum | Artisan Cave, Granite Cave, Meteor Falls, Sky Pillar and more |
@@ -3358,7 +3429,7 @@ Water type: cave water.
 | Dewott | Route 103, Route 109, Seafloor Cavern, Slateport City |
 | Drilbur | Artisan Cave, Cave of Origin, Desert Underpass, Granite Cave and more |
 | Druddigon | Artisan Cave, Meteor Falls, Seafloor Cavern, Sky Pillar and more |
-| Ducklett | Ever Grande City, Lilycove City, Mossdeep City, Pacifidlog Town and more |
+| Ducklett | Ever Grande City, Lilycove City, Mossdeep City, Mt. Pyre and more |
 | Duosion | Altering Cave, Route 116, Route 123, Route 130 |
 | Durant | Artisan Cave, Cave of Origin, Desert Underpass, Magma Hideout and more |
 | Dusclops | Cave of Origin, Mt. Pyre, Route 113, Route 123 and more |
@@ -3420,18 +3491,19 @@ Water type: cave water.
 | Lillipup | Route 101, Route 115, Route 116, Route 117 and more |
 | Linoone | Route 101, Route 102, Route 103, Route 104 and more |
 | Litwick | Cave of Origin, Mt. Pyre, Route 121, Route 123 and more |
-| Lombre | Petalburg City, Route 102, Route 111, Route 114 and more |
-| Lotad | Petalburg City, Route 102, Route 111, Route 114 and more |
+| Lombre | Mt. Pyre, Petalburg City, Route 102, Route 111 and more |
+| Lotad | Mt. Pyre, Petalburg City, Route 102, Route 111 and more |
 | Loudred | Altering Cave, Desert Underpass, Granite Cave, Route 116 and more |
+| Ludicolo | Mt. Pyre |
 | Lunatone | Meteor Falls |
 | Luvdisc | Abandoned Ship, Dewford Town, Ever Grande City, Lilycove City and more |
 | Makuhita | Granite Cave, Rusturf Tunnel, Victory Road |
 | Mandibuzz | Mirage Tower, Mt. Pyre, Route 111, Route 113 and more |
 | Manectric | New Mauville, Route 110, Route 118 |
 | Maractus | Mirage Tower |
-| Marill | Meteor Falls, Petalburg City, Route 102, Route 104 and more |
+| Marill | Meteor Falls, Mt. Pyre, Petalburg City, Route 102 and more |
 | Marshtomp | Route 102, Route 104, Route 115, Route 119 and more |
-| Masquerain | Petalburg City, Route 102, Route 111, Route 114 and more |
+| Masquerain | Mt. Pyre, Petalburg City, Route 102, Route 111 and more |
 | Mawile | Artisan Cave, Cave of Origin, Granite Cave, Meteor Falls and more |
 | Medicham | Jagged Pass, Meteor Falls, Mt. Pyre, Victory Road |
 | Meditite | Jagged Pass, Meteor Falls, Mt. Pyre, Victory Road |
@@ -3451,7 +3523,7 @@ Water type: cave water.
 | Numel | Fiery Path, Jagged Pass, Magma Hideout, Route 112 and more |
 | Nuzleaf | Petalburg Woods, Route 101, Route 102, Route 103 and more |
 | Oshawott | Route 103, Route 109, Seafloor Cavern, Slateport City |
-| Palpitoad | Meteor Falls, Petalburg City, Route 102, Route 111 and more |
+| Palpitoad | Meteor Falls, Mt. Pyre, Petalburg City, Route 102 and more |
 | Panpour | Route 114 |
 | Pansage | Route 102, Route 119 |
 | Pansear | Fiery Path, Jagged Pass, Magma Hideout, Route 112 |
@@ -3483,7 +3555,7 @@ Water type: cave water.
 | Scraggy | Route 111 |
 | Sealeo | Shoal Cave |
 | Seedot | Petalburg Woods, Route 101, Route 102, Route 103 and more |
-| Seismitoad | Meteor Falls, Petalburg City, Route 102, Route 111 and more |
+| Seismitoad | Meteor Falls, Mt. Pyre, Petalburg City, Route 102 and more |
 | Serperior | Route 116, Route 119, Route 123 |
 | Servine | Route 116, Route 119, Route 123 |
 | Seviper | Route 114 |
@@ -3508,12 +3580,12 @@ Water type: cave water.
 | Spoink | Altering Cave, Fiery Path, Jagged Pass, Route 112 |
 | Stoutland | Route 101, Route 115, Route 116, Route 117 and more |
 | Stunfisk | Meteor Falls, New Mauville, Route 114, Route 120 and more |
-| Surskit | Petalburg City, Route 102, Route 111, Route 114 and more |
+| Surskit | Mt. Pyre, Petalburg City, Route 102, Route 111 and more |
 | Swablu | Meteor Falls, Mt. Pyre, Route 114, Route 115 and more |
 | Swadloon | Petalburg Woods, Route 102, Route 119, Route 120 |
 | Swalot | Fiery Path, Magma Hideout, Route 110 |
 | Swampert | Route 102, Route 104, Route 115, Route 119 and more |
-| Swanna | Ever Grande City, Lilycove City, Mossdeep City, Pacifidlog Town and more |
+| Swanna | Ever Grande City, Lilycove City, Mossdeep City, Mt. Pyre and more |
 | Swellow | Petalburg Woods, Route 101, Route 102, Route 103 and more |
 | Swoobat | Altering Cave, Artisan Cave, Cave of Origin, Granite Cave and more |
 | Taillow | Petalburg Woods, Route 101, Route 102, Route 103 and more |
@@ -3527,7 +3599,7 @@ Water type: cave water.
 | Treecko | Petalburg Woods, Route 101, Route 120 |
 | Tropius | Mt. Pyre, Route 120 |
 | Trubbish | Fiery Path, New Mauville, Route 110, Route 113 |
-| Tympole | Meteor Falls, Petalburg City, Route 102, Route 111 and more |
+| Tympole | Meteor Falls, Mt. Pyre, Petalburg City, Route 102 and more |
 | Tynamo | Abandoned Ship, Dewford Town, Ever Grande City, Lilycove City and more |
 | Unfezant | Route 104, Route 115, Route 117, Route 118 and more |
 | Vanillish | Shoal Cave |
@@ -3544,7 +3616,7 @@ Water type: cave water.
 | Walrein | Shoal Cave |
 | Watchog | Route 101, Route 103, Route 110, Route 116 and more |
 | Whirlipede | Petalburg Woods, Route 119, Route 120 |
-| Whiscash | Meteor Falls, Petalburg City, Route 102, Route 111 and more |
+| Whiscash | Meteor Falls, Mt. Pyre, Petalburg City, Route 102 and more |
 | Whismur | Altering Cave, Desert Underpass, Granite Cave, Route 116 and more |
 | Wingull | Dewford Town, Ever Grande City, Lilycove City, Mossdeep City and more |
 | Wobbuffet | Route 130 |

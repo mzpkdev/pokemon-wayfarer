@@ -171,6 +171,8 @@ fit what the map has.
   appears in Johto. A reward may also appear in the other region.
 - Babies appear only as rare slots named directly in a table, never through
   the downward rule. They keep young levels.
+- Sudowoodo is Route 36's lone tree, not a grass encounter. Bonsly is its rare
+  wild find.
 
 ### Variety
 
