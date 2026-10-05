@@ -13,8 +13,8 @@ groups dungeon maps into named dungeons with their floors in order.
 
 It doesn't cover:
 
-- final reach bonus and dungeon values. It only gives placeholders for
-  playtesting;
+- reach and dungeon levels, which belong to
+  [Wild level scaling](wild-level-scaling.md);
 - which species live on each map, or which prowlers appear where;
 - maps without wild encounters, which need no reach.
 
@@ -47,23 +47,14 @@ It doesn't cover:
    approach to a region's edge becomes Outlands.
 8. A map belongs to exactly one reach.
 
-### Dungeon difficulty placeholders
+### Dungeon intents
 
-Each dungeon's notes give its intended difficulty. Until playtesting sets real
-values, an intent sets the dungeon's start and end bonuses, in levels above the
-wild level curve:
-
-| Intent | Start | End | Floor |
-| --- | --- | --- | --- |
-| Mild | +3 | +6 | None |
-| Mild to moderate | +3 | +9 | None |
-| Moderate | +6 | +9 | None |
-| Moderate to hard | +6 | +12 | None |
-| Hard | +10 | +15 | None |
-| Brutal | +12 | +20 | Level 50 |
-
-A single-floor or flat dungeon uses the middle of its range, rounded down, on
-every floor. The outdoor reaches use Road +0, Wilds +5 and Outlands +10.
+Each dungeon's notes give its intent, one of Mild, Mild to moderate,
+Moderate, Moderate to hard, Hard or Brutal. The intent sets the levels of its
+first and deepest floors, and Brutal adds a level-50 floor; the
+[wild level scaling spec](wild-level-scaling.md#dungeon-levels) gives the
+values. A single-floor dungeon, or one whose notes call it flat, uses the
+middle of its range on every map.
 
 ### Kanto
 

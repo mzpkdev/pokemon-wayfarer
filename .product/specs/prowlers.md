@@ -67,8 +67,9 @@ What each reach feels like:
 - **Dungeons:** temperaments follow depth. Harmless and fierce near the
   entrance, dangerous on the deepest floors.
 
-Each prowler has a **minimum level**. It appears at the higher of the area's
-wild level and its minimum level. Early in the game that makes a fierce or
+Each prowler has a **minimum level**, set by its temperament and base stat
+total in [Wild level scaling](wild-level-scaling.md#prowler-minimum-levels).
+It appears at the higher of the area's wild level and its minimum level. Early in the game that makes a fierce or
 dangerous prowler a threat and a tricky catch. Later the area's level passes
 its minimum, and it is simply a rare find.
 
@@ -503,10 +504,6 @@ level is a prowler. The change itself belongs to the implementation.
 
 ## Open questions
 
-- **Minimum levels:** how to set them, and the value for each prowler.
-- **Rarity:** how rare a reward slot is.
-- **Battle behavior:** whether escaping a fierce prowler in Wilds is easier
-  than normal, and how Repel treats prowlers.
 - **Mantine:** it carries Whirlpool for native HM catch windows, so its minimum
   level must fit those windows. The catch-window audit is re-run once the
   other wild-encounter specs are finished.

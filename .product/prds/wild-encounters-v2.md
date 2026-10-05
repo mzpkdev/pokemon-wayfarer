@@ -9,7 +9,7 @@ Specifications: [Prowlers](../specs/prowlers.md), [Reach assignments](../specs/r
 [Hoenn encounter tables](../specs/hoenn-encounter-tables.md), [Alola encounter tables](../specs/alola-encounter-tables.md),
 [Sevii encounter tables](../specs/sevii-encounter-tables.md), [Safari Zones](../specs/safari-zones.md),
 [Safari encounter tables](../specs/safari-encounter-tables.md), [Sinjoh encounters](../specs/sinjoh-encounters.md),
-[Sinjoh encounter tables](../specs/sinjoh-encounter-tables.md)
+[Sinjoh encounter tables](../specs/sinjoh-encounter-tables.md), [Wild level scaling](../specs/wild-level-scaling.md)
 
 Design status: sketch. It replaces the retired wild-encounter docs: the
 [Kanto](kanto-wild-encounters.md) and [Johto](johto-wild-encounters.md)
@@ -36,10 +36,11 @@ different Pokémon.
 
 - **Reach:** the kind of place a map is, which sets how dangerous its wild
   Pokémon are. One of Road, Wilds, Outlands or Dungeon.
-- **Reach bonus:** levels an outdoor reach adds on top of the wild level curve.
+- **Reach bonus:** levels Wilds or Outlands add on top of the Road level. It
+  grows with your Trainer Rating.
 - **Dungeon:** a named group of maps you go into to explore, such as a cave,
   tower or mansion. It sets its own difficulty.
-- **Start / end:** the level bonus on a dungeon's first and deepest floors.
+- **Start / end:** the level of a dungeon's first and deepest floors.
 - **Floor:** an optional minimum wild level for a dungeon, regardless of TR.
 - **Stage cap:** the highest evolution stage a table slot allows.
 - **Stage mix:** the rolled mix of evolution stages near an evolution level, so
@@ -73,9 +74,12 @@ somewhere.
 Other routes take the reach that fits their character, so the long, rugged or
 remote way around is the risky choice.
 
-Road, Wilds and Outlands each have a fixed reach bonus, with no per-map numbers.
-The starting placeholders are Road +0, Wilds +5 and Outlands +10 levels.
-Each also has one distinct mechanic:
+Road, Wilds and Outlands each set one level for the whole reach, with no
+per-map numbers. Roads fall further behind your level cap as you earn badges;
+Wilds sit a step above them, and Outlands meet you at the cap all game, so
+remote places stay dangerous while roads get easier. The
+[wild level scaling spec](../specs/wild-level-scaling.md) sets the values.
+Each reach also has one distinct mechanic:
 
 - **Road: fewer encounters.** A lower encounter rate keeps travel quick.
 - **Wilds: fierce prowlers.** Off the road, rare finds can be stronger than
@@ -86,10 +90,11 @@ Each also has one distinct mechanic:
 
 Each dungeon instead sets its own difficulty:
 
-- **Start and end:** the bonus on its first and deepest floors, for example
-  "Seafoam Islands: +5 → +12". Floors in between climb evenly. Dungeons differ
-  freely: a tower in a town stays mild and a cave at the edge of the world
-  starts high and ends brutal. Start equal to end gives a flat dungeon.
+- **Start and end:** the level of its first and deepest floors, set by the
+  dungeon's intent from the reach levels, for example "Hard: halfway between
+  Wilds and Outlands, rising to just above Outlands". Floors in between climb
+  evenly. Dungeons differ freely: a tower in a town stays mild and a cave at
+  the edge of the world starts high and ends brutal.
 - **Floor:** optional, for endgame dungeons, so they are clearly too dangerous
   early on.
 
@@ -97,7 +102,9 @@ A dungeon includes its outdoor parts where they belong to the same place, such
 as Mt. Silver's slopes. Caves are never Road: a cave you only pass through is
 Wilds, and one with floors beyond the path is a dungeon.
 
-How bonuses change over the course of the game is left to later scaling work.
+Remote places may go above your level cap: Outlands' strongest rolls, the
+harder dungeons and early prowlers. A Pokémon caught there keeps its level and
+may disobey until your cap catches up, which is the price of a strong catch.
 
 ### Encounter tables
 
@@ -199,8 +206,9 @@ mythical.
 
 ## Open questions
 
-- Final values for each reach bonus and dungeon, and the shape of the stage
-  mix. The current numbers are placeholders for playtesting.
+- Final values for the reach levels, dungeon intents, level spread, stage
+  mix and prowler minimum levels. The current numbers are placeholders for
+  playtesting.
 
 ## References
 

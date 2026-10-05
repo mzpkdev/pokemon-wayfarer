@@ -97,17 +97,20 @@ badges):
 | Scaler | Form | Anchors (TR → Lv) | Owner |
 | --- | --- | --- | --- |
 | Level cap | interpolated | (0,15) (40,28) (80,50) (120,75) (160,100) | [Party progression](trainer-rating-party-progression.md#v0-level-cap-curve) |
-| Wild level curve | interpolated | (0,6) (40,24) (80,40) (120,58) (160,78) | [Wild encounter scaling](trainer-rating-wild-encounter-scaling.md#v0-wild-level-curve) |
+| Road level | interpolated | (0,5) (40,20) (80,38) (120,56) (160,74) | [Wild level scaling](wild-level-scaling.md#reach-levels) |
+| Wilds bonus | interpolated | (0,4) (80,6) (160,11) | [Wild level scaling](wild-level-scaling.md#reach-levels) |
+| Outlands bonus | interpolated | (0,8) (40,8) (80,12) (160,24) | [Wild level scaling](wild-level-scaling.md#reach-levels) |
 | Regular trainer level curve | interpolated | (0,9) (40,27) (80,44) (120,62) (160,82) | [Trainer party scaling](trainer-party-scaling.md#v0-regular-trainer-level-curve) |
 | Poké Mart essentials tier | step | tiers 0–5 at TR 0, 10, 40, 70, 80, 120 | [Global TR Poké Marts](global-tr-pokemarts.md#v0-thresholds) |
 
 Intent:
 
 - **Early danger.** Around 4 badges the world presses up against the level
-  cap: wild Pokémon sit about 4 levels below it and regular trainers about 1
-  below.
-- **Late comfort.** At 24 badges routes are no threat: wild Pokémon sit about
-  22 levels below the level cap and regular trainers about 18 below.
+  cap: Outlands meet it, Wilds sit about 3 levels below it, Roads about 8 and
+  regular trainers about 1.
+- **Late comfort.** At 24 badges routes are no threat: Roads sit 26 levels
+  below the level cap and regular trainers about 18 below. Outlands still sit
+  about 2 below, so remote places stay dangerous.
 - **Challenge from notable trainers.** The late challenge comes from Gyms,
   leagues, and every other battle with
   [notable trainers](notable-trainers.md#trainer-scalers), whose team level
@@ -169,7 +172,7 @@ result is a baby form.
 | --- | --- |
 | [Notable trainers](notable-trainers.md#rosters) | Roster slots, authored at final stages, stepped down by member level |
 | [Regular trainers and Gym members](trainer-party-scaling.md#species-moves-and-per-pokémon-fields) | Authored species at the effective level |
-| [Wild encounters](trainer-rating-wild-encounter-scaling.md#v0-evolution-stages) | Ordinary non-randomized encounters at the projected level |
+| [Wild encounters](wild-level-scaling.md#stage-mix) | Ordinary non-randomized encounters at their encounter level, with the stage mix |
 
 Today, regular trainers and wild encounters step down numeric level evolutions
 only, and non-level evolutions have no reverse; the table is v0.
@@ -182,7 +185,7 @@ reads a notable trainer's TR:
 | Consumer | Owner |
 | --- | --- |
 | Level cap, experience reduction, obedience | [Party progression](trainer-rating-party-progression.md) ([PRD](../prds/trainer-rating-wild-encounter-scaling.md)) |
-| Wild and static encounter levels | [Wild encounter scaling](trainer-rating-wild-encounter-scaling.md) |
+| Wild encounter levels | [Wild level scaling](wild-level-scaling.md) |
 | Regular trainers and Gym members (battle snapshot) | [Trainer party scaling](trainer-party-scaling.md) |
 | Poké Mart stock (counter-open snapshot) | [Global TR Poké Marts](global-tr-pokemarts.md) |
 | World progress: each notable trainer's TR (battle snapshot, or the event lineup when accepting or declining a league invitation) | [Notable trainers](notable-trainers.md#growth-with-world-progress) |
@@ -221,7 +224,7 @@ above. Standalone builds are unchanged.
 - [Notable trainers](notable-trainers.md)
 - [Leagues](leagues.md)
 - [Party progression](trainer-rating-party-progression.md)
-- [Wild encounter scaling](trainer-rating-wild-encounter-scaling.md)
+- [Wild level scaling](wild-level-scaling.md)
 - [Trainer party scaling](trainer-party-scaling.md)
 - [Global TR Poké Marts](global-tr-pokemarts.md)
 - [Interregional League circuit](wayfarer-interregional-league-circuit.md)
