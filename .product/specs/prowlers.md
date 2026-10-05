@@ -4,8 +4,8 @@ PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
 Implemented: No
 
 Design status: draft. It holds only the agreed rules. The reward lists cover
-every included generation: Generations I to V, VII and VIII, with their
-regional forms.
+every included generation: Generations I, II, III, V, VI, VII and VIII, with
+their regional forms. Generation IV's list waits for a future Sinnoh.
 
 ## Scope
 
@@ -91,15 +91,15 @@ A caught prowler keeps its level, and the existing obedience rules apply.
 | Porygon | Rarity, prestige | Harmless | 395 | A Game Corner prize in the originals |
 | Dratini line | Prestige | Dangerous | — | Pseudo-legendary, up to Dragonite |
 | Wigglytuff | Evolution | — | 435 | Moon Stone |
-| Chansey | Power, rarity | Fierce | 450 | A Safari Zone rarity |
+| Chansey | Power, rarity | Fierce | 450 | A Safari Zone rarity in the originals |
 | Hitmonlee | Power, rarity | Fierce | 455 | A single gift in the originals |
 | Hitmonchan | Power, rarity | Fierce | 455 | A single gift in the originals |
 | Jynx | Power, rarity | Fierce | 455 | |
 | Mr. Mime | Power, rarity | Fierce | 460 | Trade-only in FireRed and LeafGreen |
 | Clefable | Evolution | — | 483 | Moon Stone |
 | Raichu | Evolution | — | 485 | Thunder Stone |
-| Kangaskhan | Power, rarity | Fierce | 490 | A Safari Zone rarity |
-| Tauros | Power, rarity | Fierce | 490 | A Safari Zone rarity |
+| Kangaskhan | Power, rarity | Fierce | 490 | A Safari Zone rarity in the originals |
+| Tauros | Power, rarity | Fierce | 490 | A Safari Zone rarity in the originals |
 | Electabuzz | Power | Fierce | 490 | |
 | Vileplume | Evolution | — | 490 | Leaf Stone |
 | Victreebel | Evolution | — | 490 | Leaf Stone |
@@ -299,27 +299,30 @@ Generation IV species that extend a Generation I–III line are marked
 
 ### Generation VI rewards
 
-Generation VI (Kalos) lives in the Safari Zones' reserve. Safari mode has no
-battles to lose, so temperament doesn't limit where these appear in a Safari
-Zone. It still applies anywhere else.
+Generation VI (Kalos) lives in the Safari Zones' reserve. There these species
+are residents rather than prowlers: they have no minimum level, never lead a
+table, and take at most 10% of any one table, as the
+[Safari Zones spec](safari-zones.md) defines. Safari mode has no battles to
+lose, so temperament doesn't limit where they appear in a Safari Zone. It still
+applies anywhere else.
 
 | Species | Why | Temperament | Base stat total | Notes |
 | --- | --- | --- | --- | --- |
 | Fennekin line | Prestige | Harmless | 307 | Starter |
 | Chespin line | Prestige | Harmless | 313 | Starter |
 | Froakie line | Prestige | Harmless | 314 | Starter |
-| Honedge | Prestige | Fierce | 325 | The Aegislash line |
+| Honedge | Prestige | Harmless | 325 | The Aegislash line |
 | Dedenne | Rarity | Harmless | 431 | |
-| Klefki | Rarity | Harmless | 470 | |
-| Furfrou | Rarity | Harmless | 472 | |
+| Klefki | Power, rarity | Fierce | 470 | |
+| Furfrou | Power, rarity | Fierce | 472 | |
 | Hawlucha | Power, rarity | Fierce | 500 | |
-| Carbink | Rarity | Harmless | 500 | A rare cave find |
+| Carbink | Power, rarity | Fierce | 500 | Lives in the Kanto Safari's cave |
 | Noibat line | Power | Fierce | — | Up to Noivern |
 | Goomy line | Prestige | Dangerous | — | Pseudo-legendary, up to Goodra |
-| Heliolisk | Evolution | — | 481 | Sun Stone |
 | Aromatisse | Evolution | — | 462 | Shiny Stone |
-| Slurpuff | Evolution | — | 480 | Moon Stone |
 | Trevenant | Evolution | — | 474 | Trade |
+| Slurpuff | Evolution | — | 480 | Moon Stone |
+| Heliolisk | Evolution | — | 481 | Sun Stone |
 | Gourgeist | Evolution | — | 494 | Trade |
 | Aegislash | Evolution | — | 500 | Dusk Stone |
 | Florges | Evolution | — | 552 | Shiny Stone |

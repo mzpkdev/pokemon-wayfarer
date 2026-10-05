@@ -153,8 +153,9 @@ and regional forms live in their region.
 | IV (Sinnoh) | Reserved for a future Sinnoh region. Its babies and its evolutions of older lines still come with those lines |
 | IX (Paldea) | Not included, and switched off to free space. Its evolutions of older lines, such as Annihilape, stay only if the engine keeps them without Gen IX |
 
-**The Kalos reserve.** Kalos lives only in the three Safari Zones, and each
-Safari Zone holds a third of it, so completing Kalos means visiting all three.
+**The Kalos reserve.** Kalos lives only in the three Safari Zones, apart from
+three Vivillon patterns found in the Bug-Catching Contest. Each Safari Zone
+holds a third of Kalos, so completing it means visiting all three.
 The Bug-Catching Contest rotates bugs from every included generation by
 contest day. See the [Safari Zones spec](../specs/safari-zones.md).
 

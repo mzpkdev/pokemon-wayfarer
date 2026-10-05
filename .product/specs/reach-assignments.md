@@ -371,8 +371,6 @@ so they are Outlands. Each is also a legendary's lair.
 
 ## Open questions
 
-- **Safari Zones:** each is Wilds. What lives there belongs to the
-  [Safari Zones spec](safari-zones.md).
 - **Alola's single-map islands:** each island takes one reach for both its
   village and its wild ground. Giving Alola real Road, Wilds and Outlands areas
   needs the islands split into smaller maps, which waits for Porymap work.

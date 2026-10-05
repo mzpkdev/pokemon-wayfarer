@@ -84,8 +84,9 @@ Zubat's line counts as Gen I even where it reaches Crobat.
 - **Generation II species from Generation I lines need that line in Johto.**
   Crobat, Bellossom, Politoed, Slowking, Steelix, Scizor, Kingdra, Porygon2,
   Blissey, Espeon and Umbreon each need their line's base catchable in Johto.
-- A baby slot also covers the stage it evolves into. Chansey stays in Kanto as a
-  Safari species, so Happiny in Johto covers Blissey's line there.
+- A baby slot also covers the stage it evolves into. Chansey stays in Kanto, on
+  its routes and in Cerulean Cave, so Happiny in Johto covers Blissey's line
+  there.
 - A later stage reached by level, stone, trade or friendship counts as
   catchable when its base form is.
 - A species may also live in the other region. The guarantee only says where
@@ -130,7 +131,7 @@ Outlands or dungeons.
   forest.
 - **Signature species stay at home.** A region's signature species don't cross
   over: for Johto, for example, Larvitar, Mareep, Hoppip, Stantler, Mantine and
-  Aipom; for Kanto, Safari Zone species such as Kangaskhan and Chansey.
+  Aipom; for Kanto, its old Safari Zone species such as Kangaskhan and Chansey.
 - **Crossovers stay light.** A crossover family appears on only a few maps of
   the other region, near the border or where the remakes put it. Wooper's line,
   for example, appears on at most four Kanto maps.
