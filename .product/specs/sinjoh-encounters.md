@@ -108,9 +108,11 @@ blend.
   Misdreavus, Gastly and Duskull.
 - Caves, the Hot Springs and the chambers change more lightly.
 
-## Open questions
+### Evolution items and Unown
 
-- Where the Black Augurite and the Peat Block come from, since Kleavor and
-  Ursaluna need them.
-- Whether the Regi rooms' Unown should spell anything, as the old tables'
-  letters did.
+- **Kleavor's Black Augurite and Ursaluna's Peat Block** come from Mahogany
+  Town's evolution-item shop, which also sells the Razor Claw that Sneasler
+  needs. Any one-off finds of these items in Sinjoh belong to the
+  obtainability spec.
+- **Unown letters are random.** A wild Unown takes any of its 28 letters, as
+  the engine does everywhere, so the chambers don't spell words.
