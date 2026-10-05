@@ -222,7 +222,9 @@ own static and gift sources.
 
 Generation IV is reserved for a future Sinnoh region, so its rows wait for it.
 Sinjoh's natives are the Hisuian part of Generation VIII and the Hisuian forms
-of older species, and they use the Hisuian rows. Sinjoh's maps count as the
+of older species, and they use the Hisuian rows. At home in Sinjoh, its
+Hisuian natives are residents: they hold common slots and have no minimum
+level there, as the [Sinjoh encounters spec](sinjoh-encounters.md) defines. Sinjoh's maps count as the
 Hisui region, so evolutions that need Hisui work there.
 
 Generation IV species that extend a Generation I–III line are marked

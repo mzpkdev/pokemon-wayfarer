@@ -8,7 +8,8 @@ Specifications: [Prowlers](../specs/prowlers.md), [Reach assignments](../specs/r
 [Kanto encounter tables](../specs/kanto-encounter-tables.md), [Johto encounter tables](../specs/johto-encounter-tables.md),
 [Hoenn encounter tables](../specs/hoenn-encounter-tables.md), [Alola encounter tables](../specs/alola-encounter-tables.md),
 [Sevii encounter tables](../specs/sevii-encounter-tables.md), [Safari Zones](../specs/safari-zones.md),
-[Safari encounter tables](../specs/safari-encounter-tables.md)
+[Safari encounter tables](../specs/safari-encounter-tables.md), [Sinjoh encounters](../specs/sinjoh-encounters.md),
+[Sinjoh encounter tables](../specs/sinjoh-encounter-tables.md)
 
 Design status: sketch. It replaces the retired wild-encounter docs: the
 [Kanto](kanto-wild-encounters.md) and [Johto](johto-wild-encounters.md)
@@ -138,20 +139,21 @@ How bonuses change over the course of the game is left to later scaling work.
 
 ### Natives
 
-Each included generation is complete. Later evolutions and babies come with
-the lines they extend. A family belongs to the region of any of its members,
+Each included generation is complete. Later evolutions and babies from any
+generation, Gen IX included, come with the lines they extend, such as
+Annihilape with Primeape or Kingambit with Bisharp. A family belongs to the region of any of its members,
 and regional forms live in their region.
 
 | Generations | Home |
 | --- | --- |
 | I + II | Kanto and Johto |
 | III + V | Hoenn, with no Gen I–II wild species. Gen V grows from west to east |
-| The Hisuian part of VIII | Sinjoh, which counts as the Hisui region |
+| The Hisuian part of VIII | Sinjoh, which counts as the Hisui region, with a large blend of Hisui species from other generations. Hisuian forms made by evolving come only from evolving there |
 | VII | Alola, with a small blend of other generations where they fit |
 | VIII (Galar) | Sevii, with a small blend of other generations where they fit. Sevii becomes the Galar region |
 | VI (Kalos) | The Safari Zones' reserve, split across the Kanto, Johto and Hoenn Safari Zones |
-| IV (Sinnoh) | Reserved for a future Sinnoh region. Its babies and its evolutions of older lines still come with those lines |
-| IX (Paldea) | Not included, and switched off to free space. Its evolutions of older lines, such as Annihilape, stay only if the engine keeps them without Gen IX |
+| IV (Sinnoh) | Reserved for a future Sinnoh region, so it needn't be complete yet. Its babies and its evolutions of older lines come with those lines, and a few species that fit Sinjoh join Sinjoh's blend |
+| IX (Paldea) | Not included, and switched off to free space. Its evolutions of older lines, such as Annihilape, Farigiraf, Kingambit and Dudunsparce, stay through the engine's cross-generation switch |
 
 **The Kalos reserve.** Kalos lives only in the three Safari Zones, apart from
 three Vivillon patterns found in the Bug-Catching Contest. Each Safari Zone
