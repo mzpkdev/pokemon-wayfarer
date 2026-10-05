@@ -81,10 +81,10 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Wingull–Pelipper | Wingull–Pelipper |
-| 2 | 30% | Wailmer–Wailord | Wailmer–Wailord |
-| 3 | 5% | Corphish–Crawdaunt | Carvanha–Sharpedo |
-| 4 | 4% | Luvdisc | Corphish–Crawdaunt |
+| 1 | 60% | Wingull–Pelipper | Wailmer–Wailord |
+| 2 | 30% | Wailmer–Wailord | Carvanha–Sharpedo |
+| 3 | 5% | Corphish–Crawdaunt | Corphish–Crawdaunt |
+| 4 | 4% | Luvdisc | Wingull–Pelipper |
 | 5 | 1% | Frillish | Tynamo–Eelektrik |
 
 *Fishing*
@@ -114,10 +114,10 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Wingull–Pelipper | Wingull–Pelipper |
-| 2 | 30% | Wailmer–Wailord | Wailmer–Wailord |
+| 1 | 60% | Wingull–Pelipper | Wailmer–Wailord |
+| 2 | 30% | Wailmer–Wailord | Corphish–Crawdaunt |
 | 3 | 5% | Corphish–Crawdaunt | Tynamo–Eelektrik |
-| 4 | 4% | Luvdisc | Corphish–Crawdaunt |
+| 4 | 4% | Luvdisc | Wingull–Pelipper |
 | 5 | 1% | Oshawott–Samurott | Oshawott–Samurott |
 
 *Fishing*
@@ -147,11 +147,11 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Wingull–Pelipper | Wingull–Pelipper |
-| 2 | 30% | Frillish | Frillish |
+| 1 | 60% | Wingull–Pelipper | Frillish |
+| 2 | 30% | Frillish | Carvanha–Sharpedo |
 | 3 | 5% | Wailmer–Wailord | Tynamo–Eelektrik |
 | 4 | 4% | Ducklett–Swanna | Wailmer–Wailord |
-| 5 | 1% | Luvdisc | Carvanha–Sharpedo |
+| 5 | 1% | Luvdisc | Wingull–Pelipper |
 
 *Fishing*
 
@@ -159,7 +159,7 @@ Water type: coast and sea.
 | --- | --- | --- | --- | --- | --- |
 | 1 | 38% | 25% | 12% | Frillish | Carvanha–Sharpedo |
 | 2 | 22% | 18% | 10% | Carvanha–Sharpedo | Frillish |
-| 3 | 10% | 12% | 11% | Wingull–Pelipper | Wingull–Pelipper |
+| 3 | 10% | 12% | 11% | Wailmer–Wailord | Wailmer–Wailord |
 | 4 | 8% | 10% | 10% | Frillish | Tynamo–Eelektrik |
 | 5 | 8% | 9% | 10% | Wailmer–Wailord | Frillish |
 | 6 | 4% | 7% | 10% | Luvdisc | Carvanha–Sharpedo |
@@ -180,11 +180,11 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Wingull–Pelipper | Wingull–Pelipper |
+| 1 | 60% | Wingull–Pelipper | Tynamo–Eelektrik |
 | 2 | 30% | Frillish | Frillish |
-| 3 | 5% | Ducklett–Swanna | Tynamo–Eelektrik |
-| 4 | 4% | Wailmer–Wailord | Ducklett–Swanna |
-| 5 | 1% | Tynamo–Eelektrik | Wailmer–Wailord |
+| 3 | 5% | Ducklett–Swanna | Wailmer–Wailord |
+| 4 | 4% | Wailmer–Wailord | Carvanha–Sharpedo |
+| 5 | 1% | Tynamo–Eelektrik | Wingull–Pelipper |
 
 *Fishing*
 
@@ -388,7 +388,7 @@ Water type: coast and sea.
 | 1 | 20% | Wingull–Pelipper | Poochyena–Mightyena |
 | 2 | 20% | Zigzagoon–Linoone | Zigzagoon–Linoone |
 | 3 | 10% | Zigzagoon–Linoone | Poochyena–Mightyena |
-| 4 | 10% | Wingull–Pelipper | Wingull–Pelipper |
+| 4 | 10% | Wingull–Pelipper | Munna |
 | 5 | 10% | Taillow–Swellow | Seedot–Nuzleaf |
 | 6 | 10% | Skitty | Zigzagoon–Linoone |
 | 7 | 5% | Wurmple | Purrloin–Liepard |
@@ -402,10 +402,10 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Wingull–Pelipper | Wingull–Pelipper |
-| 2 | 30% | Wailmer–Wailord | Carvanha–Sharpedo |
-| 3 | 5% | Corphish–Crawdaunt | Wailmer–Wailord |
-| 4 | 4% | Ducklett–Swanna | Tynamo–Eelektrik |
+| 1 | 60% | Wingull–Pelipper | Carvanha–Sharpedo |
+| 2 | 30% | Wailmer–Wailord | Wailmer–Wailord |
+| 3 | 5% | Corphish–Crawdaunt | Tynamo–Eelektrik |
+| 4 | 4% | Ducklett–Swanna | Wingull–Pelipper |
 | 5 | 1% | Oshawott–Samurott | Oshawott–Samurott |
 
 *Fishing*
@@ -439,7 +439,7 @@ Water type: coast and sea.
 | 2 | 20% | Wurmple | Marill–Azumarill |
 | 3 | 10% | Wingull–Pelipper | Poochyena–Mightyena |
 | 4 | 10% | Marill–Azumarill | Seedot–Nuzleaf |
-| 5 | 10% | Zigzagoon–Linoone | Wingull–Pelipper |
+| 5 | 10% | Zigzagoon–Linoone | Munna |
 | 6 | 10% | Taillow–Swellow | Seedot–Nuzleaf |
 | 7 | 5% | Skitty | Volbeat |
 | 8 | 5% | Cottonee | Purrloin–Liepard |
@@ -452,11 +452,11 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Wingull–Pelipper | Wingull–Pelipper |
-| 2 | 30% | Wailmer–Wailord | Carvanha–Sharpedo |
-| 3 | 5% | Ducklett–Swanna | Wailmer–Wailord |
-| 4 | 4% | Luvdisc | Frillish |
-| 5 | 1% | Corphish–Crawdaunt | Ducklett–Swanna |
+| 1 | 60% | Wingull–Pelipper | Carvanha–Sharpedo |
+| 2 | 30% | Wailmer–Wailord | Wailmer–Wailord |
+| 3 | 5% | Ducklett–Swanna | Frillish |
+| 4 | 4% | Luvdisc | Wingull–Pelipper |
+| 5 | 1% | Corphish–Crawdaunt | Tynamo–Eelektrik |
 
 *Fishing*
 
@@ -644,7 +644,7 @@ Water type: ponds and rivers.
 | 8 | 5% | Dwebble–Crustle | Purrloin–Liepard |
 | 9 | 4% | Cacnea–Cacturne | Darumaka |
 | 10 | 4% | Sandile–Krookodile | Baltoy–Claydol |
-| 11 | 1% | Vullaby–Mandibuzz | Vullaby–Mandibuzz |
+| 11 | 1% | Vullaby–Mandibuzz | Zorua–Zoroark |
 | 12 | 1% | Tepig–Emboar | Darumaka–Darmanitan |
 
 *Surfing*
@@ -679,8 +679,8 @@ Water type: ponds and rivers.
 | 1 | 60% | Dwebble–Crustle | Roggenrola–Boldore |
 | 2 | 30% | Roggenrola–Boldore | Dwebble–Crustle |
 | 3 | 5% | Nosepass | Drilbur–Excadrill |
-| 4 | 4% | Sandile–Krookodile | Nosepass |
-| 5 | 1% | Trapinch–Flygon | Baltoy–Claydol |
+| 4 | 4% | Drilbur–Excadrill | Nosepass |
+| 5 | 1% | Roggenrola–Boldore | Aron–Lairon |
 
 #### Route 112
 
@@ -716,17 +716,17 @@ Road, Centre.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Spinda | Spinda |
-| 2 | 20% | Pawniard–Bisharp | Purrloin–Liepard |
+| 2 | 20% | Numel–Camerupt | Purrloin–Liepard |
 | 3 | 10% | Spinda | Duskull–Dusclops |
-| 4 | 10% | Numel–Camerupt | Spinda |
+| 4 | 10% | Pawniard–Bisharp | Spinda |
 | 5 | 10% | Trapinch–Flygon | Pawniard–Bisharp |
 | 6 | 10% | Cacnea–Cacturne | Numel–Camerupt |
-| 7 | 5% | Sandile–Krookodile | Woobat |
+| 7 | 5% | Sandile–Krookodile | Duskull–Dusclops |
 | 8 | 5% | Cottonee | Purrloin–Liepard |
-| 9 | 4% | Rufflet–Braviary | Vullaby–Mandibuzz |
-| 10 | 4% | Trubbish–Garbodor | Cacnea–Cacturne |
+| 9 | 4% | Rufflet–Braviary | Yamask–Cofagrigus |
+| 10 | 4% | Numel–Camerupt | Cacnea–Cacturne |
 | 11 | 1% | Vullaby–Mandibuzz | Zorua–Zoroark |
-| 12 | 1% | Spinda | Rufflet–Braviary |
+| 12 | 1% | Spinda | Zorua–Zoroark |
 
 #### Route 115
 
@@ -741,11 +741,11 @@ Water type: coast and sea.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Swablu–Altaria | Munna |
-| 2 | 20% | Taillow–Swellow | Swablu–Altaria |
+| 2 | 20% | Taillow–Swellow | Illumise |
 | 3 | 10% | Swablu–Altaria | Woobat |
-| 4 | 10% | Pidove–Unfezant | Wingull–Pelipper |
+| 4 | 10% | Pidove–Unfezant | Poochyena–Mightyena |
 | 5 | 10% | Wingull–Pelipper | Poochyena–Mightyena |
-| 6 | 10% | Minccino | Swablu–Altaria |
+| 6 | 10% | Minccino | Volbeat |
 | 7 | 5% | Taillow–Swellow | Purrloin–Liepard |
 | 8 | 5% | Cottonee | Minccino |
 | 9 | 4% | Lillipup–Stoutland | Munna |
@@ -757,11 +757,11 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Wingull–Pelipper | Ducklett–Swanna |
-| 2 | 30% | Ducklett–Swanna | Wingull–Pelipper |
-| 3 | 5% | Wailmer–Wailord | Wailmer–Wailord |
-| 4 | 4% | Luvdisc | Frillish |
-| 5 | 1% | Corphish–Crawdaunt | Tynamo–Eelektrik |
+| 1 | 60% | Wingull–Pelipper | Carvanha–Sharpedo |
+| 2 | 30% | Ducklett–Swanna | Wailmer–Wailord |
+| 3 | 5% | Wailmer–Wailord | Frillish |
+| 4 | 4% | Luvdisc | Tynamo–Eelektrik |
+| 5 | 1% | Corphish–Crawdaunt | Wingull–Pelipper |
 
 *Fishing*
 
@@ -868,11 +868,11 @@ Water type: coast and sea.
 | 3 | 10% | Wingull–Pelipper | Poochyena–Mightyena |
 | 4 | 10% | Blitzle–Zebstrika | Zigzagoon–Linoone |
 | 5 | 10% | Zigzagoon–Linoone | Blitzle–Zebstrika |
-| 6 | 10% | Pidove–Unfezant | Woobat |
+| 6 | 10% | Pidove–Unfezant | Illumise |
 | 7 | 5% | Patrat–Watchog | Munna |
 | 8 | 5% | Deerling | Kecleon |
 | 9 | 4% | Lillipup–Stoutland | Purrloin–Liepard |
-| 10 | 4% | Electrike–Manectric | Wingull–Pelipper |
+| 10 | 4% | Electrike–Manectric | Volbeat |
 | 11 | 1% | Kecleon | Zorua–Zoroark |
 | 12 | 1% | Kecleon | Kecleon |
 
@@ -966,7 +966,7 @@ Water type: coast and sea.
 | 1 | 20% | Wingull–Pelipper | Shuppet–Banette |
 | 2 | 20% | Pidove–Unfezant | Purrloin–Liepard |
 | 3 | 10% | Lillipup–Stoutland | Poochyena–Mightyena |
-| 4 | 10% | Petilil | Wingull–Pelipper |
+| 4 | 10% | Petilil | Duskull–Dusclops |
 | 5 | 10% | Kecleon | Shuppet–Banette |
 | 6 | 10% | Patrat–Watchog | Lillipup–Stoutland |
 | 7 | 5% | Cottonee | Munna |
@@ -980,11 +980,11 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Wingull–Pelipper | Ducklett–Swanna |
-| 2 | 30% | Ducklett–Swanna | Wingull–Pelipper |
-| 3 | 5% | Wailmer–Wailord | Frillish |
-| 4 | 4% | Frillish | Tynamo–Eelektrik |
-| 5 | 1% | Luvdisc | Wailmer–Wailord |
+| 1 | 60% | Wingull–Pelipper | Tynamo–Eelektrik |
+| 2 | 30% | Ducklett–Swanna | Frillish |
+| 3 | 5% | Wailmer–Wailord | Wailmer–Wailord |
+| 4 | 4% | Frillish | Carvanha–Sharpedo |
+| 5 | 1% | Luvdisc | Wingull–Pelipper |
 
 *Fishing*
 
@@ -1052,7 +1052,7 @@ Water type: coast and sea.
 | 4 | 10% | Wingull–Pelipper | Poochyena–Mightyena |
 | 5 | 10% | Patrat–Watchog | Lillipup–Stoutland |
 | 6 | 10% | Kecleon | Munna |
-| 7 | 5% | Minccino | Wingull–Pelipper |
+| 7 | 5% | Minccino | Illumise |
 | 8 | 5% | Pidove–Unfezant | Litwick–Lampent |
 | 9 | 4% | Roselia | Solosis–Reuniclus |
 | 10 | 4% | Solosis–Reuniclus | Kecleon |
@@ -1063,11 +1063,11 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Wingull–Pelipper | Wingull–Pelipper |
+| 1 | 60% | Wingull–Pelipper | Carvanha–Sharpedo |
 | 2 | 30% | Ducklett–Swanna | Frillish |
 | 3 | 5% | Frillish | Tynamo–Eelektrik |
-| 4 | 4% | Wailmer–Wailord | Ducklett–Swanna |
-| 5 | 1% | Luvdisc | Wailmer–Wailord |
+| 4 | 4% | Wailmer–Wailord | Wailmer–Wailord |
+| 5 | 1% | Luvdisc | Wingull–Pelipper |
 
 *Fishing*
 
@@ -1251,7 +1251,7 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Wingull–Pelipper | Wingull–Pelipper |
+| 1 | 60% | Wingull–Pelipper | Carvanha–Sharpedo |
 | 2 | 30% | Frillish | Frillish |
 | 3 | 5% | Wailmer–Wailord | Wailmer–Wailord |
 | 4 | 4% | Alomomola | Tynamo–Eelektrik |
@@ -1291,7 +1291,7 @@ Water type: ponds and rivers.
 | 5 | 10% | Seedot–Nuzleaf | Woobat |
 | 6 | 10% | Panpour | Elgyem–Beheeyem |
 | 7 | 5% | Deerling | Poochyena–Mightyena |
-| 8 | 5% | Tympole–Seismitoad | Swablu–Altaria |
+| 8 | 5% | Tympole–Seismitoad | Illumise |
 | 9 | 4% | Elgyem–Beheeyem | Purrloin–Liepard |
 | 10 | 4% | Seviper | Zangoose |
 | 11 | 1% | Zangoose | Seviper |
@@ -1394,10 +1394,10 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Ducklett–Swanna | Ducklett–Swanna |
-| 2 | 30% | Wingull–Pelipper | Frillish |
+| 1 | 60% | Tynamo–Eelektrik | Frillish |
+| 2 | 30% | Wingull–Pelipper | Tynamo–Eelektrik |
 | 3 | 5% | Wailmer–Wailord | Wailmer–Wailord |
-| 4 | 4% | Alomomola | Tynamo–Eelektrik |
+| 4 | 4% | Alomomola | Carvanha–Sharpedo |
 | 5 | 1% | Ducklett–Swanna | Alomomola |
 
 *Fishing*
@@ -1460,9 +1460,9 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Ducklett–Swanna | Ducklett–Swanna |
-| 2 | 30% | Wailmer–Wailord | Frillish |
-| 3 | 5% | Wingull–Pelipper | Tynamo–Eelektrik |
+| 1 | 60% | Tynamo–Eelektrik | Carvanha–Sharpedo |
+| 2 | 30% | Wingull–Pelipper | Frillish |
+| 3 | 5% | Wailmer–Wailord | Tynamo–Eelektrik |
 | 4 | 4% | Alomomola | Wailmer–Wailord |
 | 5 | 1% | Ducklett–Swanna | Alomomola |
 
@@ -1471,7 +1471,7 @@ Water type: coast and sea.
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
 | 1 | 38% | 25% | 12% | Carvanha–Sharpedo | Frillish |
-| 2 | 22% | 18% | 10% | Ducklett–Swanna | Carvanha–Sharpedo |
+| 2 | 22% | 18% | 10% | Wailmer–Wailord | Carvanha–Sharpedo |
 | 3 | 10% | 12% | 11% | Frillish | Tynamo–Eelektrik |
 | 4 | 8% | 10% | 10% | Wailmer–Wailord | Frillish |
 | 5 | 8% | 9% | 10% | Carvanha–Sharpedo | Ducklett–Swanna |
@@ -1542,8 +1542,8 @@ Wilds, Centre.
 | 3 | 10% | Numel–Camerupt | Numel–Camerupt |
 | 4 | 10% | Torkoal | Woobat |
 | 5 | 10% | Gulpin–Swalot | Timburr–Gurdurr |
-| 6 | 10% | Trubbish–Garbodor | Gulpin–Swalot |
-| 7 | 5% | Pansear | Trubbish–Garbodor |
+| 6 | 10% | Roggenrola–Boldore | Gulpin–Swalot |
+| 7 | 5% | Pansear | Roggenrola–Boldore |
 | 8 | 5% | Darumaka | Heatmor |
 | 9 | 4% | Torkoal | Darumaka |
 | 10 | 4% | Heatmor | Pansear |
@@ -1565,7 +1565,7 @@ Water type: coast and sea.
 | 1 | 60% | Frillish–Jellicent | Frillish–Jellicent |
 | 2 | 30% | Wailmer–Wailord | Tynamo–Eelektrik |
 | 3 | 5% | Alomomola | Wailmer–Wailord |
-| 4 | 4% | Relicanth | Alomomola |
+| 4 | 4% | Carvanha–Sharpedo | Alomomola |
 | 5 | 1% | Wailmer–Wailord | Tynamo–Eelektross |
 
 *Fishing*
@@ -1649,7 +1649,7 @@ Water type: coast and sea.
 | 2 | 30% | Wingull–Pelipper | Tynamo–Eelektrik |
 | 3 | 5% | Alomomola | Alomomola |
 | 4 | 4% | Wailmer–Wailord | Wailmer–Wailord |
-| 5 | 1% | Relicanth | Relicanth |
+| 5 | 1% | Carvanha–Sharpedo | Carvanha–Sharpedo |
 
 *Fishing*
 
@@ -1715,7 +1715,7 @@ Water type: coast and sea.
 | 2 | 30% | Carvanha–Sharpedo | Carvanha–Sharpedo |
 | 3 | 5% | Wailmer–Wailord | Tynamo–Eelektrik |
 | 4 | 4% | Alomomola | Wailmer–Wailord |
-| 5 | 1% | Relicanth | Alomomola |
+| 5 | 1% | Tynamo–Eelektrik | Alomomola |
 
 *Fishing*
 
@@ -1868,18 +1868,18 @@ Dungeon, West.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Woobat | Woobat |
-| 2 | 20% | Nosepass | Gothita–Gothitelle |
-| 3 | 10% | Gothita–Gothitelle | Sableye |
-| 4 | 10% | Solosis–Reuniclus | Solosis–Reuniclus |
-| 5 | 10% | Whismur–Exploud | Munna |
-| 6 | 10% | Roggenrola–Boldore | Whismur–Exploud |
-| 7 | 5% | Elgyem–Beheeyem | Elgyem–Beheeyem |
-| 8 | 5% | Sableye | Nosepass |
-| 9 | 4% | Kecleon | Zorua–Zoroark |
-| 10 | 4% | Spoink–Grumpig | Kecleon |
-| 11 | 1% | Zorua–Zoroark | Woobat–Swoobat |
-| 12 | 1% | Chingling | Chingling |
+| 1 | 20% | Whismur–Exploud | Woobat |
+| 2 | 20% | Nosepass | Whismur–Exploud |
+| 3 | 10% | Aron–Lairon | Sableye |
+| 4 | 10% | Makuhita–Hariyama | Aron–Lairon |
+| 5 | 10% | Woobat | Munna |
+| 6 | 10% | Sableye | Makuhita–Hariyama |
+| 7 | 5% | Roggenrola–Boldore | Roggenrola–Boldore |
+| 8 | 5% | Mawile | Nosepass |
+| 9 | 4% | Nosepass–Probopass | Zorua–Zoroark |
+| 10 | 4% | Zorua–Zoroark | Mawile |
+| 11 | 1% | Chingling | Woobat–Swoobat |
+| 12 | 1% | Sableye | Chingling |
 
 #### Abandoned Ship
 
@@ -2147,7 +2147,7 @@ Water type: cave water.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Solrock | Lunatone |
-| 2 | 20% | Swablu–Altaria | Swablu–Altaria |
+| 2 | 20% | Mawile | Mawile |
 | 3 | 10% | Roggenrola–Boldore | Woobat–Swoobat |
 | 4 | 10% | Lunatone | Solrock |
 | 5 | 10% | Meditite–Medicham | Meditite–Medicham |
@@ -2195,8 +2195,8 @@ Water type: cave water.
 | 1 | 20% | Lunatone | Lunatone |
 | 2 | 20% | Solrock | Solrock |
 | 3 | 10% | Roggenrola–Boldore | Woobat–Swoobat |
-| 4 | 10% | Swablu–Altaria | Roggenrola–Boldore |
-| 5 | 10% | Woobat–Swoobat | Swablu–Altaria |
+| 4 | 10% | Drilbur–Excadrill | Roggenrola–Boldore |
+| 5 | 10% | Woobat–Swoobat | Drilbur–Excadrill |
 | 6 | 10% | Meditite–Medicham | Elgyem–Beheeyem |
 | 7 | 5% | Elgyem–Beheeyem | Meditite–Medicham |
 | 8 | 5% | Aron–Aggron | Sableye |
@@ -2213,7 +2213,7 @@ Water type: cave water.
 | 2 | 30% | Barboach–Whiscash | Barboach–Whiscash |
 | 3 | 5% | Basculin | Corphish–Crawdaunt |
 | 4 | 4% | Tympole–Seismitoad | Tympole–Seismitoad |
-| 5 | 1% | Lunatone | Solrock |
+| 5 | 1% | Solrock | Lunatone |
 
 *Fishing*
 
@@ -2242,7 +2242,7 @@ Water type: cave water.
 | 2 | 20% | Lunatone | Solrock |
 | 3 | 10% | Bagon–Salamence | Bagon–Salamence |
 | 4 | 10% | Roggenrola–Boldore | Woobat–Swoobat |
-| 5 | 10% | Swablu–Altaria | Swablu–Altaria |
+| 5 | 10% | Drilbur–Excadrill | Drilbur–Excadrill |
 | 6 | 10% | Woobat–Swoobat | Roggenrola–Boldore |
 | 7 | 5% | Elgyem–Beheeyem | Sableye |
 | 8 | 5% | Bagon–Salamence | Bagon–Salamence |
@@ -2288,8 +2288,8 @@ Water type: cave water.
 | 4 | 10% | Elgyem–Beheeyem | Roggenrola–Gigalith |
 | 5 | 10% | Bagon–Salamence | Bagon–Salamence |
 | 6 | 10% | Beldum–Metagross | Beldum–Metagross |
-| 7 | 5% | Swablu–Altaria | Woobat–Swoobat |
-| 8 | 5% | Drilbur–Excadrill | Swablu–Altaria |
+| 7 | 5% | Mawile | Woobat–Swoobat |
+| 8 | 5% | Drilbur–Excadrill | Mawile |
 | 9 | 4% | Druddigon | Druddigon |
 | 10 | 4% | Axew–Haxorus | Axew–Haxorus |
 | 11 | 1% | Beldum–Metagross | Beldum–Metagross |
@@ -2580,7 +2580,7 @@ Dungeon, East.
 | 3 | 10% | Wingull–Pelipper | Zorua–Zoroark |
 | 4 | 10% | Meditite–Medicham | Litwick–Lampent |
 | 5 | 10% | Golett–Golurk | Yamask–Cofagrigus |
-| 6 | 10% | Tropius | Vullaby–Mandibuzz |
+| 6 | 10% | Tropius | Duskull–Dusknoir |
 | 7 | 5% | Vullaby–Mandibuzz | Golett–Golurk |
 | 8 | 5% | Golett–Golurk | Shuppet–Banette |
 | 9 | 4% | Absol | Absol |
@@ -2650,7 +2650,7 @@ Water type: cold water.
 | 2 | 20% | Dwebble–Crustle | Woobat |
 | 3 | 10% | Spheal | Spheal |
 | 4 | 10% | Vanillite | Dwebble–Crustle |
-| 5 | 10% | Wingull–Pelipper | Woobat |
+| 5 | 10% | Spheal | Woobat |
 | 6 | 10% | Woobat | Vanillite |
 | 7 | 5% | Cubchoo | Cubchoo |
 | 8 | 5% | Corphish–Crawdaunt | Snorunt |
@@ -2800,14 +2800,14 @@ Water type: cave water.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Corphish–Crawdaunt | Corphish–Crawdaunt |
-| 2 | 20% | Tympole–Seismitoad | Tympole–Seismitoad |
+| 2 | 20% | Dwebble–Crustle | Dwebble–Crustle |
 | 3 | 10% | Sableye | Poochyena–Mightyena |
 | 4 | 10% | Woobat | Sableye |
 | 5 | 10% | Roggenrola–Boldore | Woobat |
-| 6 | 10% | Dwebble–Crustle | Dwebble–Crustle |
+| 6 | 10% | Dwebble–Crustle | Roggenrola–Boldore |
 | 7 | 5% | Mawile | Mawile |
-| 8 | 5% | Corphish–Crawdaunt | Roggenrola–Boldore |
-| 9 | 4% | Tympole–Seismitoad | Poochyena–Mightyena |
+| 8 | 5% | Corphish–Crawdaunt | Stunfisk |
+| 9 | 4% | Stunfisk | Poochyena–Mightyena |
 | 10 | 4% | Woobat | Woobat |
 | 11 | 1% | Oshawott–Samurott | Oshawott–Samurott |
 | 12 | 1% | Sableye | Sableye |
@@ -2843,15 +2843,15 @@ Water type: cave water.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Corphish–Crawdaunt | Sableye |
-| 2 | 20% | Sableye | Corphish–Crawdaunt |
-| 3 | 10% | Tympole–Seismitoad | Poochyena–Mightyena |
-| 4 | 10% | Dwebble–Crustle | Tympole–Seismitoad |
+| 1 | 20% | Corphish–Crawdaunt | Corphish–Crawdaunt |
+| 2 | 20% | Dwebble–Crustle | Dwebble–Crustle |
+| 3 | 10% | Corphish–Crawdaunt | Sableye |
+| 4 | 10% | Dwebble–Crustle | Poochyena–Mightyena |
 | 5 | 10% | Woobat | Woobat |
 | 6 | 10% | Corphish–Crawdaunt | Dwebble–Crustle |
 | 7 | 5% | Mawile | Poochyena–Mightyena |
 | 8 | 5% | Roggenrola–Boldore | Mawile |
-| 9 | 4% | Tympole–Seismitoad | Roggenrola–Boldore |
+| 9 | 4% | Stunfisk | Roggenrola–Boldore |
 | 10 | 4% | Drilbur–Excadrill | Woobat–Swoobat |
 | 11 | 1% | Mudkip–Swampert | Mudkip–Swampert |
 | 12 | 1% | Sableye | Drilbur–Excadrill |
@@ -2868,7 +2868,7 @@ Water type: cave water.
 | 4 | 10% | Aron–Aggron | Poochyena–Mightyena |
 | 5 | 10% | Drilbur–Excadrill | Aron–Aggron |
 | 6 | 10% | Roggenrola–Boldore | Woobat–Swoobat |
-| 7 | 5% | Tympole–Seismitoad | Sableye |
+| 7 | 5% | Stunfisk | Sableye |
 | 8 | 5% | Sableye | Drilbur–Excadrill |
 | 9 | 4% | Roggenrola–Gigalith | Roggenrola–Gigalith |
 | 10 | 4% | Durant | Durant |
@@ -2888,8 +2888,8 @@ Water type: cave water.
 | 5 | 10% | Sableye | Poochyena–Mightyena |
 | 6 | 10% | Dwebble–Crustle | Sableye |
 | 7 | 5% | Woobat–Swoobat | Drilbur–Excadrill |
-| 8 | 5% | Golett–Golurk | Dwebble–Crustle |
-| 9 | 4% | Durant | Golett–Golurk |
+| 8 | 5% | Durant | Dwebble–Crustle |
+| 9 | 4% | Durant | Durant |
 | 10 | 4% | Roggenrola–Gigalith | Durant |
 | 11 | 1% | Durant | Poochyena–Mightyena |
 | 12 | 1% | Aron–Aggron | Durant |
@@ -2900,16 +2900,16 @@ Water type: cave water.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Tympole–Seismitoad | Tynamo–Eelektrik |
-| 2 | 20% | Tynamo–Eelektrik | Tympole–Seismitoad |
-| 3 | 10% | Corphish–Crawdaunt | Woobat–Swoobat |
-| 4 | 10% | Woobat–Swoobat | Corphish–Crawdaunt |
-| 5 | 10% | Tympole–Seismitoad | Tynamo–Eelektrik |
-| 6 | 10% | Tynamo–Eelektrik | Poochyena–Mightyena |
-| 7 | 5% | Sableye | Sableye |
-| 8 | 5% | Dwebble–Crustle | Tynamo–Eelektross |
-| 9 | 4% | Mawile | Dwebble–Crustle |
-| 10 | 4% | Tynamo–Eelektross | Mawile |
+| 1 | 20% | Corphish–Crawdaunt | Dwebble–Crustle |
+| 2 | 20% | Dwebble–Crustle | Corphish–Crawdaunt |
+| 3 | 10% | Sableye | Woobat–Swoobat |
+| 4 | 10% | Woobat–Swoobat | Sableye |
+| 5 | 10% | Roggenrola–Boldore | Poochyena–Mightyena |
+| 6 | 10% | Dwebble–Crustle | Roggenrola–Boldore |
+| 7 | 5% | Stunfisk | Sableye |
+| 8 | 5% | Mawile | Stunfisk |
+| 9 | 4% | Drilbur–Excadrill | Mawile |
+| 10 | 4% | Corphish–Crawdaunt | Drilbur–Excadrill |
 | 11 | 1% | Mudkip–Swampert | Mudkip–Swampert |
 | 12 | 1% | Deino–Hydreigon | Deino–Hydreigon |
 
@@ -2932,7 +2932,7 @@ Water type: cave water.
 | 9 | 4% | Dwebble–Crustle | Roggenrola–Gigalith |
 | 10 | 4% | Durant | Dwebble–Crustle |
 | 11 | 1% | Druddigon | Druddigon |
-| 12 | 1% | Golett–Golurk | Poochyena–Mightyena |
+| 12 | 1% | Durant | Poochyena–Mightyena |
 
 *Surfing*
 
@@ -2967,11 +2967,11 @@ Water type: cave water.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Dwebble–Crustle | Tympole–Seismitoad |
-| 2 | 20% | Tympole–Seismitoad | Dwebble–Crustle |
+| 1 | 20% | Dwebble–Crustle | Corphish–Crawdaunt |
+| 2 | 20% | Sableye | Dwebble–Crustle |
 | 3 | 10% | Corphish–Crawdaunt | Woobat–Swoobat |
 | 4 | 10% | Sableye | Sableye |
-| 5 | 10% | Tympole–Seismitoad | Corphish–Crawdaunt |
+| 5 | 10% | Dwebble–Crustle | Corphish–Crawdaunt |
 | 6 | 10% | Mawile | Poochyena–Mightyena |
 | 7 | 5% | Roggenrola–Boldore | Mawile |
 | 8 | 5% | Aron–Aggron | Roggenrola–Boldore |
@@ -3014,7 +3014,7 @@ Water type: cave water.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Sableye | Sableye |
-| 2 | 20% | Golett–Golurk | Golett–Golurk |
+| 2 | 20% | Roggenrola–Gigalith | Roggenrola–Gigalith |
 | 3 | 10% | Mawile | Woobat–Swoobat |
 | 4 | 10% | Aron–Aggron | Mawile |
 | 5 | 10% | Roggenrola–Gigalith | Poochyena–Mightyena |
@@ -3022,7 +3022,7 @@ Water type: cave water.
 | 7 | 5% | Drilbur–Excadrill | Roggenrola–Gigalith |
 | 8 | 5% | Woobat–Swoobat | Dwebble–Crustle |
 | 9 | 4% | Deino–Hydreigon | Deino–Hydreigon |
-| 10 | 4% | Golett–Golurk | Drilbur–Excadrill |
+| 10 | 4% | Durant | Drilbur–Excadrill |
 | 11 | 1% | Druddigon | Druddigon |
 | 12 | 1% | Deino–Hydreigon | Deino–Hydreigon |
 
@@ -3058,9 +3058,9 @@ Water type: cave water.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Mawile | Mawile |
-| 2 | 20% | Elgyem–Beheeyem | Elgyem–Beheeyem |
-| 3 | 10% | Golett–Golurk | Sableye |
-| 4 | 10% | Sableye | Golett–Golurk |
+| 2 | 20% | Drilbur–Excadrill | Drilbur–Excadrill |
+| 3 | 10% | Roggenrola–Boldore | Sableye |
+| 4 | 10% | Sableye | Roggenrola–Boldore |
 | 5 | 10% | Roggenrola–Gigalith | Woobat–Swoobat |
 | 6 | 10% | Aron–Aggron | Poochyena–Mightyena |
 | 7 | 5% | Woobat–Swoobat | Roggenrola–Gigalith |
@@ -3068,7 +3068,7 @@ Water type: cave water.
 | 9 | 4% | Deino–Hydreigon | Deino–Hydreigon |
 | 10 | 4% | Druddigon | Druddigon |
 | 11 | 1% | Deino–Hydreigon | Deino–Hydreigon |
-| 12 | 1% | Golett–Golurk | Drilbur–Excadrill |
+| 12 | 1% | Durant | Drilbur–Excadrill |
 
 #### Artisan Cave
 
@@ -3080,8 +3080,8 @@ Dungeon, Far east.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Golett–Golurk | Klink–Klang |
-| 2 | 20% | Klink–Klang | Golett–Golurk |
+| 1 | 20% | Drilbur–Excadrill | Klink–Klang |
+| 2 | 20% | Klink–Klang | Drilbur–Excadrill |
 | 3 | 10% | Roggenrola–Boldore | Baltoy–Claydol |
 | 4 | 10% | Baltoy–Claydol | Roggenrola–Boldore |
 | 5 | 10% | Nosepass | Sableye |
@@ -3089,7 +3089,7 @@ Dungeon, Far east.
 | 7 | 5% | Aron–Aggron | Drilbur–Excadrill |
 | 8 | 5% | Durant | Woobat |
 | 9 | 4% | Mawile | Durant |
-| 10 | 4% | Sigilyph | Sigilyph |
+| 10 | 4% | Nosepass | Nosepass |
 | 11 | 1% | Druddigon | Druddigon |
 | 12 | 1% | Klink–Klinklang | Mawile |
 
@@ -3099,15 +3099,15 @@ Dungeon, Far east.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Golett–Golurk | Klink–Klinklang |
-| 2 | 20% | Klink–Klinklang | Golett–Golurk |
+| 1 | 20% | Drilbur–Excadrill | Klink–Klinklang |
+| 2 | 20% | Klink–Klinklang | Drilbur–Excadrill |
 | 3 | 10% | Baltoy–Claydol | Sableye |
 | 4 | 10% | Roggenrola–Gigalith | Baltoy–Claydol |
 | 5 | 10% | Nosepass–Probopass | Roggenrola–Gigalith |
 | 6 | 10% | Drilbur–Excadrill | Drilbur–Excadrill |
 | 7 | 5% | Aron–Aggron | Nosepass–Probopass |
 | 8 | 5% | Durant | Woobat–Swoobat |
-| 9 | 4% | Sigilyph | Durant |
+| 9 | 4% | Nosepass | Durant |
 | 10 | 4% | Klink–Klinklang | Beldum–Metagross |
 | 11 | 1% | Beldum–Metagross | Druddigon |
 | 12 | 1% | Druddigon | Elgyem–Beheeyem |
@@ -3190,8 +3190,8 @@ Dungeon, Far east.
 | 5 | 10% | Golett–Golurk | Shuppet–Banette |
 | 6 | 10% | Shuppet–Banette | Roggenrola–Boldore |
 | 7 | 5% | Drilbur–Excadrill | Golett–Golurk |
-| 8 | 5% | Elgyem–Beheeyem | Drilbur–Excadrill |
-| 9 | 4% | Duskull–Dusclops | Elgyem–Beheeyem |
+| 8 | 5% | Duskull–Dusclops | Drilbur–Excadrill |
+| 9 | 4% | Duskull–Dusclops | Duskull–Dusclops |
 | 10 | 4% | Durant | Duskull–Dusclops |
 | 11 | 1% | Golett–Golurk | Durant |
 | 12 | 1% | Durant | Durant |
@@ -3208,9 +3208,9 @@ Dungeon, Far east.
 | 4 | 10% | Mawile | Litwick–Lampent |
 | 5 | 10% | Golett–Golurk | Golett–Golurk |
 | 6 | 10% | Shuppet–Banette | Mawile |
-| 7 | 5% | Elgyem–Beheeyem | Shuppet–Banette |
+| 7 | 5% | Duskull–Dusclops | Shuppet–Banette |
 | 8 | 5% | Drilbur–Excadrill | Roggenrola–Gigalith |
-| 9 | 4% | Duskull–Dusclops | Elgyem–Beheeyem |
+| 9 | 4% | Duskull–Dusclops | Duskull–Dusclops |
 | 10 | 4% | Litwick–Lampent | Drilbur–Excadrill |
 | 11 | 1% | Litwick–Chandelure | Litwick–Chandelure |
 | 12 | 1% | Durant | Durant |
@@ -3223,12 +3223,12 @@ Dungeon, Far east.
 | --- | --- | --- | --- |
 | 1 | 20% | Mawile | Mawile |
 | 2 | 20% | Roggenrola–Gigalith | Roggenrola–Gigalith |
-| 3 | 10% | Woobat–Swoobat | Duskull–Dusclops |
+| 3 | 10% | Woobat–Swoobat | Litwick–Lampent |
 | 4 | 10% | Shuppet–Banette | Woobat–Swoobat |
 | 5 | 10% | Sableye | Shuppet–Banette |
 | 6 | 10% | Golett–Golurk | Sableye |
-| 7 | 5% | Elgyem–Beheeyem | Golett–Golurk |
-| 8 | 5% | Duskull–Dusclops | Elgyem–Beheeyem |
+| 7 | 5% | Duskull–Dusclops | Golett–Golurk |
+| 8 | 5% | Duskull–Dusclops | Duskull–Dusclops |
 | 9 | 4% | Drilbur–Excadrill | Duskull–Dusknoir |
 | 10 | 4% | Durant | Drilbur–Excadrill |
 | 11 | 1% | Deino–Hydreigon | Deino–Hydreigon |
@@ -3240,14 +3240,14 @@ Dungeon, Far east.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Elgyem–Beheeyem | Elgyem–Beheeyem |
+| 1 | 20% | Litwick–Lampent | Litwick–Lampent |
 | 2 | 20% | Sableye | Litwick–Lampent |
 | 3 | 10% | Roggenrola–Gigalith | Sableye |
 | 4 | 10% | Litwick–Lampent | Duskull–Dusclops |
 | 5 | 10% | Mawile | Roggenrola–Gigalith |
 | 6 | 10% | Duskull–Dusclops | Shuppet–Banette |
 | 7 | 5% | Woobat–Swoobat | Litwick–Chandelure |
-| 8 | 5% | Litwick–Chandelure | Woobat–Swoobat |
+| 8 | 5% | Litwick–Chandelure | Drilbur–Excadrill |
 | 9 | 4% | Golett–Golurk | Mawile |
 | 10 | 4% | Deino–Hydreigon | Duskull–Dusknoir |
 | 11 | 1% | Duskull–Dusknoir | Deino–Hydreigon |
@@ -3260,7 +3260,7 @@ Dungeon, Far east.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Roggenrola–Gigalith | Litwick–Chandelure |
-| 2 | 20% | Elgyem–Beheeyem | Elgyem–Beheeyem |
+| 2 | 20% | Litwick–Lampent | Litwick–Lampent |
 | 3 | 10% | Sableye | Duskull–Dusknoir |
 | 4 | 10% | Litwick–Chandelure | Sableye |
 | 5 | 10% | Mawile | Roggenrola–Gigalith |
@@ -3380,7 +3380,7 @@ Water type: cave water.
 | Alomomola | Abandoned Ship, Route 107, Route 108, Route 125 and more |
 | Altaria | Meteor Falls, Mt. Pyre, Route 114, Route 115 and more |
 | Amoonguss | Petalburg Woods, Route 120 |
-| Aron | Artisan Cave, Granite Cave, Meteor Falls, Rusturf Tunnel and more |
+| Aron | Altering Cave, Artisan Cave, Granite Cave, Meteor Falls and more |
 | Audino | Route 110, Route 115, Route 116, Route 117 and more |
 | Axew | Meteor Falls, Victory Road |
 | Azumarill | Meteor Falls, Mt. Pyre, Petalburg City, Route 102 and more |
@@ -3391,12 +3391,12 @@ Water type: cave water.
 | Barboach | Meteor Falls, Mt. Pyre, Petalburg City, Route 102 and more |
 | Basculin | Meteor Falls, Mt. Pyre, Petalburg City, Route 102 and more |
 | Beartic | Shoal Cave |
-| Beheeyem | Altering Cave, Artisan Cave, Cave of Origin, Meteor Falls and more |
+| Beheeyem | Artisan Cave, Meteor Falls, Route 114, Route 130 and more |
 | Beldum | Artisan Cave, Granite Cave, Meteor Falls, Sky Pillar and more |
 | Bisharp | Route 113 |
 | Blaziken | Fiery Path, Magma Hideout, Route 112 |
 | Blitzle | Route 110, Route 118 |
-| Boldore | Altering Cave, Artisan Cave, Cave of Origin, Granite Cave and more |
+| Boldore | Altering Cave, Artisan Cave, Cave of Origin, Fiery Path and more |
 | Bouffalant | Route 120 |
 | Braviary | Mt. Pyre, Route 112, Route 113, Sky Pillar |
 | Breloom | Petalburg Woods |
@@ -3412,7 +3412,7 @@ Water type: cave water.
 | Chingling | Altering Cave, Mt. Pyre |
 | Clamperl | Underwater Route 124, Underwater Route 126 |
 | Claydol | Artisan Cave, Mirage Tower, Route 111, Sky Pillar |
-| Cofagrigus | Desert Underpass, Mirage Tower, Mt. Pyre, Route 111 |
+| Cofagrigus | Desert Underpass, Mirage Tower, Mt. Pyre, Route 111 and more |
 | Combusken | Fiery Path, Magma Hideout, Route 112 |
 | Conkeldurr | Magma Hideout, Victory Road |
 | Corphish | Abandoned Ship, Dewford Town, Ever Grande City, Lilycove City and more |
@@ -3430,16 +3430,16 @@ Water type: cave water.
 | Drilbur | Artisan Cave, Cave of Origin, Desert Underpass, Granite Cave and more |
 | Druddigon | Artisan Cave, Meteor Falls, Seafloor Cavern, Sky Pillar and more |
 | Ducklett | Ever Grande City, Lilycove City, Mossdeep City, Mt. Pyre and more |
-| Duosion | Altering Cave, Route 116, Route 123, Route 130 |
+| Duosion | Route 116, Route 123, Route 130 |
 | Durant | Artisan Cave, Cave of Origin, Desert Underpass, Magma Hideout and more |
-| Dusclops | Cave of Origin, Mt. Pyre, Route 113, Route 123 and more |
+| Dusclops | Cave of Origin, Mt. Pyre, Route 113, Route 121 and more |
 | Dusknoir | Cave of Origin, Mt. Pyre, Sky Pillar |
-| Duskull | Cave of Origin, Mt. Pyre, Route 113, Route 123 and more |
+| Duskull | Cave of Origin, Mt. Pyre, Route 113, Route 121 and more |
 | Dwebble | Desert Underpass, Granite Cave, Mirage Tower, Route 111 and more |
 | Eelektrik | Abandoned Ship, Dewford Town, Ever Grande City, Lilycove City and more |
 | Eelektross | Abandoned Ship, New Mauville, Route 126, Route 129 and more |
 | Electrike | New Mauville, Route 110, Route 118 |
-| Elgyem | Altering Cave, Artisan Cave, Cave of Origin, Meteor Falls and more |
+| Elgyem | Artisan Cave, Meteor Falls, Route 114, Route 130 and more |
 | Emboar | Jagged Pass, Magma Hideout, Route 111 |
 | Emolga | New Mauville, Route 110, Route 119 |
 | Excadrill | Artisan Cave, Cave of Origin, Desert Underpass, Granite Cave and more |
@@ -3453,38 +3453,38 @@ Water type: cave water.
 | Frillish | Abandoned Ship, Dewford Town, Ever Grande City, Lilycove City and more |
 | Froslass | Shoal Cave |
 | Galvantula | New Mauville, Route 119 |
-| Garbodor | Fiery Path, New Mauville, Route 110, Route 113 |
+| Garbodor | New Mauville, Route 110 |
 | Gardevoir | Route 102 |
 | Gigalith | Artisan Cave, Cave of Origin, Granite Cave, Magma Hideout and more |
 | Glalie | Shoal Cave |
-| Golett | Artisan Cave, Cave of Origin, Mirage Tower, Mt. Pyre and more |
-| Golurk | Artisan Cave, Cave of Origin, Mirage Tower, Mt. Pyre and more |
+| Golett | Cave of Origin, Mirage Tower, Mt. Pyre, Sky Pillar |
+| Golurk | Cave of Origin, Mirage Tower, Mt. Pyre, Sky Pillar |
 | Gorebyss | Underwater Route 124, Underwater Route 126 |
-| Gothita | Altering Cave, Route 121, Route 130 |
-| Gothitelle | Altering Cave, Route 121, Route 130 |
-| Gothorita | Altering Cave, Route 121, Route 130 |
+| Gothita | Route 121, Route 130 |
+| Gothitelle | Route 121, Route 130 |
+| Gothorita | Route 121, Route 130 |
 | Grovyle | Petalburg Woods, Route 101, Route 120 |
-| Grumpig | Altering Cave, Fiery Path, Jagged Pass, Route 112 |
+| Grumpig | Fiery Path, Jagged Pass, Route 112 |
 | Gulpin | Fiery Path, Magma Hideout, Route 110 |
 | Gurdurr | Fiery Path, Jagged Pass, Magma Hideout, Route 112 and more |
-| Hariyama | Granite Cave, Rusturf Tunnel, Victory Road |
+| Hariyama | Altering Cave, Granite Cave, Rusturf Tunnel, Victory Road |
 | Haxorus | Meteor Falls, Victory Road |
 | Heatmor | Fiery Path, Magma Hideout |
 | Herdier | Route 101, Route 115, Route 116, Route 117 and more |
 | Huntail | Underwater Route 124, Underwater Route 126 |
 | Hydreigon | Cave of Origin, Seafloor Cavern, Sky Pillar, Victory Road |
-| Illumise | Route 102, Route 104, Route 110, Route 117 |
+| Illumise | Route 102, Route 104, Route 110, Route 114 and more |
 | Jellicent | Abandoned Ship, Ever Grande City, Route 122, Route 123 and more |
 | Joltik | New Mauville, Route 119 |
 | Karrablast | Route 119, Route 120 |
-| Kecleon | Altering Cave, Route 118, Route 119, Route 120 and more |
+| Kecleon | Route 118, Route 119, Route 120, Route 121 and more |
 | Kirlia | Route 102 |
 | Klang | Artisan Cave, New Mauville |
 | Klink | Artisan Cave, New Mauville |
 | Klinklang | Artisan Cave |
 | Krokorok | Desert Underpass, Mirage Tower, Route 111, Route 113 |
 | Krookodile | Desert Underpass, Mirage Tower, Route 111, Route 113 |
-| Lairon | Artisan Cave, Granite Cave, Meteor Falls, Rusturf Tunnel and more |
+| Lairon | Altering Cave, Artisan Cave, Granite Cave, Meteor Falls and more |
 | Lampent | Cave of Origin, Mt. Pyre, Route 121, Route 123 and more |
 | Larvesta | Magma Hideout |
 | Liepard | Jagged Pass, Route 101, Route 102, Route 103 and more |
@@ -3497,14 +3497,14 @@ Water type: cave water.
 | Ludicolo | Mt. Pyre |
 | Lunatone | Meteor Falls |
 | Luvdisc | Abandoned Ship, Dewford Town, Ever Grande City, Lilycove City and more |
-| Makuhita | Granite Cave, Rusturf Tunnel, Victory Road |
+| Makuhita | Altering Cave, Granite Cave, Rusturf Tunnel, Victory Road |
 | Mandibuzz | Mirage Tower, Mt. Pyre, Route 111, Route 113 and more |
 | Manectric | New Mauville, Route 110, Route 118 |
 | Maractus | Mirage Tower |
 | Marill | Meteor Falls, Mt. Pyre, Petalburg City, Route 102 and more |
 | Marshtomp | Route 102, Route 104, Route 115, Route 119 and more |
 | Masquerain | Mt. Pyre, Petalburg City, Route 102, Route 111 and more |
-| Mawile | Artisan Cave, Cave of Origin, Granite Cave, Meteor Falls and more |
+| Mawile | Altering Cave, Artisan Cave, Cave of Origin, Granite Cave and more |
 | Medicham | Jagged Pass, Meteor Falls, Mt. Pyre, Victory Road |
 | Meditite | Jagged Pass, Meteor Falls, Mt. Pyre, Victory Road |
 | Metagross | Artisan Cave, Granite Cave, Meteor Falls, Sky Pillar and more |
@@ -3535,12 +3535,12 @@ Water type: cave water.
 | Pignite | Jagged Pass, Magma Hideout, Route 111 |
 | Plusle | New Mauville, Route 110 |
 | Poochyena | Jagged Pass, Magma Hideout, Petalburg Woods, Route 101 and more |
-| Probopass | Artisan Cave, Granite Cave, Victory Road |
+| Probopass | Altering Cave, Artisan Cave, Granite Cave, Victory Road |
 | Purrloin | Jagged Pass, Route 101, Route 102, Route 103 and more |
 | Ralts | Route 102 |
 | Relicanth | Route 126, Route 130, Route 131, Route 133 and more |
-| Reuniclus | Altering Cave, Route 116, Route 123, Route 130 |
-| Roggenrola | Altering Cave, Artisan Cave, Cave of Origin, Granite Cave and more |
+| Reuniclus | Route 116, Route 123, Route 130 |
+| Roggenrola | Altering Cave, Artisan Cave, Cave of Origin, Fiery Path and more |
 | Roselia | Route 117, Route 123 |
 | Rufflet | Mt. Pyre, Route 112, Route 113, Sky Pillar |
 | Sableye | Altering Cave, Artisan Cave, Cave of Origin, Granite Cave and more |
@@ -3565,7 +3565,7 @@ Water type: cave water.
 | Shelmet | Route 114, Route 119, Route 120 |
 | Shroomish | Petalburg Woods |
 | Shuppet | Cave of Origin, Mt. Pyre, Route 121, Route 123 and more |
-| Sigilyph | Artisan Cave, Mirage Tower, Route 130, Sky Pillar |
+| Sigilyph | Mirage Tower, Route 130, Sky Pillar |
 | Silcoon | Petalburg Woods |
 | Simisear | Magma Hideout |
 | Skitty | Route 101, Route 103, Route 104, Route 116 |
@@ -3573,11 +3573,11 @@ Water type: cave water.
 | Slakoth | Petalburg Woods |
 | Snivy | Route 116, Route 119, Route 123 |
 | Snorunt | Shoal Cave |
-| Solosis | Altering Cave, Route 116, Route 123, Route 130 |
+| Solosis | Route 116, Route 123, Route 130 |
 | Solrock | Meteor Falls |
 | Spheal | Shoal Cave |
 | Spinda | Route 113 |
-| Spoink | Altering Cave, Fiery Path, Jagged Pass, Route 112 |
+| Spoink | Fiery Path, Jagged Pass, Route 112 |
 | Stoutland | Route 101, Route 115, Route 116, Route 117 and more |
 | Stunfisk | Meteor Falls, New Mauville, Route 114, Route 120 and more |
 | Surskit | Mt. Pyre, Petalburg City, Route 102, Route 111 and more |
@@ -3598,7 +3598,7 @@ Water type: cave water.
 | Trapinch | Desert Underpass, Mirage Tower, Route 111, Route 113 |
 | Treecko | Petalburg Woods, Route 101, Route 120 |
 | Tropius | Mt. Pyre, Route 120 |
-| Trubbish | Fiery Path, New Mauville, Route 110, Route 113 |
+| Trubbish | New Mauville, Route 110 |
 | Tympole | Meteor Falls, Mt. Pyre, Petalburg City, Route 102 and more |
 | Tynamo | Abandoned Ship, Dewford Town, Ever Grande City, Lilycove City and more |
 | Unfezant | Route 104, Route 115, Route 117, Route 118 and more |
@@ -3608,7 +3608,7 @@ Water type: cave water.
 | Venipede | Petalburg Woods, Route 119, Route 120 |
 | Vibrava | Desert Underpass, Mirage Tower, Route 111, Route 113 |
 | Vigoroth | Petalburg Woods |
-| Volbeat | Route 102, Route 104, Route 110, Route 117 |
+| Volbeat | Route 102, Route 104, Route 110, Route 115 and more |
 | Volcarona | Magma Hideout |
 | Vullaby | Mirage Tower, Mt. Pyre, Route 111, Route 113 and more |
 | Wailmer | Abandoned Ship, Dewford Town, Ever Grande City, Lilycove City and more |
@@ -3623,7 +3623,7 @@ Water type: cave water.
 | Woobat | Altering Cave, Artisan Cave, Cave of Origin, Desert Underpass and more |
 | Wurmple | Petalburg Woods, Route 101, Route 102, Route 103 and more |
 | Wynaut | Route 130 |
-| Yamask | Desert Underpass, Mirage Tower, Mt. Pyre, Route 111 |
+| Yamask | Desert Underpass, Mirage Tower, Mt. Pyre, Route 111 and more |
 | Zangoose | Route 114 |
 | Zebstrika | Route 110, Route 118 |
 | Zigzagoon | Route 101, Route 102, Route 103, Route 104 and more |

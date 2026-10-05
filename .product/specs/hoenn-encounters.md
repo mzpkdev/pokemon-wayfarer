@@ -174,6 +174,9 @@ each map's type.
 
 Rewards, babies, anchors and native HM carriers may appear outside their type's
 cast where they fit, such as Feebas on Route 119 and the water starters.
+Relicanth walks the seafloor, so it appears only underwater and on the Super
+Rod, never while surfing above water. Tympole is a fresh-water species, so it
+stays out of sea caves such as the Seafloor Cavern.
 
 - **Fishing:** entries 1–3, which make up about 70% of Old Rod catches, hold
   the map's most fitting common fish. Entries 3–10 hold at least four different
@@ -206,6 +209,12 @@ Hoenn's tables have no night versions today, so every night table is new.
   much more common then.
 - Fishing and Rock Smash have night tables too, with the same light difference
   as caves.
+- **Day birds sleep at night.** Outdoors, Taillow, Pidove, Swablu, Wingull,
+  Ducklett, Vullaby and Rufflet appear only by day. Night brings Volbeat and
+  Illumise, ghosts and night prowlers instead.
+- **Night surfing has its own leaders:** Wailmer and Carvanha in the west, and
+  Frillish and Tynamo further east. Wingull and Ducklett stay in the lesser
+  slots.
 
 ### Native HM sources
 
