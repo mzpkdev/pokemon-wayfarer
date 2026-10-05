@@ -22,7 +22,7 @@ This spec defines how Hoenn tables are built:
 It doesn't cover:
 
 - the per-map tables, which belong to the Hoenn table spec;
-- the Safari Zone, which is deferred;
+- the Safari Zone, which belongs to the [Safari Zones spec](safari-zones.md);
 - legendaries and mythicals, which belong to a later spec;
 - reach values, which belong to [Reach assignments](reach-assignments.md).
 

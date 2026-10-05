@@ -7,7 +7,8 @@ Specifications: [Prowlers](../specs/prowlers.md), [Reach assignments](../specs/r
 [Sevii encounters](../specs/sevii-encounters.md), [Alola encounters](../specs/alola-encounters.md),
 [Kanto encounter tables](../specs/kanto-encounter-tables.md), [Johto encounter tables](../specs/johto-encounter-tables.md),
 [Hoenn encounter tables](../specs/hoenn-encounter-tables.md), [Alola encounter tables](../specs/alola-encounter-tables.md),
-[Sevii encounter tables](../specs/sevii-encounter-tables.md)
+[Sevii encounter tables](../specs/sevii-encounter-tables.md), [Safari Zones](../specs/safari-zones.md),
+[Safari encounter tables](../specs/safari-encounter-tables.md)
 
 Design status: sketch. It replaces the retired wild-encounter docs: the
 [Kanto](kanto-wild-encounters.md) and [Johto](johto-wild-encounters.md)
@@ -127,11 +128,13 @@ How bonuses change over the course of the game is left to later scaling work.
   Whirlpool carrier.
 - **Babies are rare finds.** The downward rule never steps into a baby, so a
   low-level Pikachu slot stays Pikachu. Instead, a table can name a baby as a
-  rare slot of its own, such as Riolu in Sinjoh or Azurill in Hoenn. Like any
+  rare slot of its own, such as Azurill in Hoenn or Toxel in Sevii. Like any
   slot capped at an early stage, it keeps young levels.
 - **Prowlers** appear in every reach, sorted by temperament: harmless ones
   anywhere, including Roads; fierce ones from Wilds outward; dangerous ones
   only in Outlands and dungeons. See the [prowlers spec](../specs/prowlers.md).
+  Safari Zones run in Safari mode, with no battles to lose, so any temperament
+  may appear there.
 
 ### Natives
 
@@ -143,11 +146,17 @@ and regional forms live in their region.
 | --- | --- |
 | I + II | Kanto and Johto |
 | III + V | Hoenn, with no Gen I–II wild species. Gen V grows from west to east |
-| IV + the Hisuian part of VIII | Sinjoh |
+| The Hisuian part of VIII | Sinjoh, which counts as the Hisui region |
 | VII | Alola, with a small blend of other generations where they fit |
 | VIII (Galar) | Sevii, with a small blend of other generations where they fit. Sevii becomes the Galar region |
-| VI (Kalos) | Deferred: possibly a Safari Zone reserve |
-| IX | Not included |
+| VI (Kalos) | The Safari Zones' reserve, split across the Kanto, Johto and Hoenn Safari Zones |
+| IV (Sinnoh) | Reserved for a future Sinnoh region. Its babies and its evolutions of older lines still come with those lines |
+| IX (Paldea) | Not included, and switched off to free space. Its evolutions of older lines, such as Annihilape, stay only if the engine keeps them without Gen IX |
+
+**The Kalos reserve.** Kalos lives only in the three Safari Zones, and each
+Safari Zone holds a third of it, so completing Kalos means visiting all three.
+The Bug-Catching Contest rotates bugs from every included generation by
+contest day. See the [Safari Zones spec](../specs/safari-zones.md).
 
 **Hoenn's west-to-east gradient.** Gen III is Hoenn's identity, and Gen V's
 share of encounter slots rises the further east you travel. Gen V replaces the
@@ -158,7 +167,7 @@ behaviour, not its generation. The bands below are placeholders:
 | --- | --- | --- |
 | West | Littleroot to Rustboro, Dewford, Slateport, Routes 101–109, Petalburg Woods, Granite Cave | ~10–20% |
 | Centre | Mauville, Verdanturf, Fallarbor, Lavaridge, Routes 110–118, the desert, Mt. Chimney, Fiery Path, Meteor Falls, Rusturf Tunnel | ~30–40% |
-| East | Fortree, Lilycove, Routes 119–123, Mt. Pyre, the Safari Zone | ~40–50% |
+| East | Fortree, Lilycove, Routes 119–123, Mt. Pyre | ~40–50% |
 | Far east | Mossdeep, Sootopolis, Pacifidlog, Ever Grande, Routes 124–134, Shoal Cave, Seafloor Cavern, Sky Pillar, Cave of Origin, Victory Road | ~50–60% |
 
 Gen III never disappears. Its sea natives still belong in the far east, so it
@@ -187,8 +196,6 @@ mythical.
 
 ## Open questions
 
-- Whether Sinjoh hosts Gen IV, or keeps only its Hisuian species if a Sinnoh
-  region arrives later.
 - Final values for each reach bonus and dungeon, and the shape of the stage
   mix. The current numbers are placeholders for playtesting.
 

@@ -22,7 +22,8 @@ This spec defines how Kanto and Johto tables are built:
 It doesn't cover:
 
 - the per-map tables, which belong to the Kanto and Johto table specs;
-- the Safari Zones, which are deferred;
+- the Safari Zones and the Bug-Catching Contest, which belong to the
+  [Safari Zones spec](safari-zones.md);
 - legendaries and mythicals, which belong to a later spec;
 - reach values, which belong to [Reach assignments](reach-assignments.md).
 

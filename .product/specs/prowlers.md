@@ -220,9 +220,10 @@ own static and gift sources.
 
 ### Generation IV and Hisuian rewards
 
-Sinjoh's natives are Generation IV, the Hisuian part of Generation VIII and the
-Hisuian forms of older species. Sinjoh's maps count as the Hisui region, so
-evolutions that need Hisui work there.
+Generation IV is reserved for a future Sinnoh region, so its rows wait for it.
+Sinjoh's natives are the Hisuian part of Generation VIII and the Hisuian forms
+of older species, and they use the Hisuian rows. Sinjoh's maps count as the
+Hisui region, so evolutions that need Hisui work there.
 
 Generation IV species that extend a Generation I–III line are marked
 **Extension**. They appear with their line in its home region, not in Sinjoh.
@@ -260,7 +261,7 @@ Generation IV species that extend a Generation I–III line are marked
 | Lickilicky | Evolution | — | 515 | Levels up knowing Rollout. Extension of Lickitung |
 | Roserade | Evolution | — | 515 | Shiny Stone. Extension of Roselia |
 | Gallade | Evolution | — | 518 | Dawn Stone. Extension of Kirlia |
-| Lucario | Evolution | — | 525 | Friendship, by day, from Riolu, which appears as a rare baby find in Sinjoh |
+| Lucario | Evolution | — | 525 | Friendship, by day, from Riolu, a rare baby find once Sinnoh arrives |
 | Wyrdeer | Evolution | — | 525 | Use Psyshield Bash 20 times |
 | Leafeon | Evolution | — | 525 | Leaf Stone, or levels up in Ilex Forest. Extension of Eevee |
 | Glaceon | Evolution | — | 525 | Ice Stone, or levels up in Ice Path. Extension of Eevee |
@@ -293,8 +294,42 @@ Generation IV species that extend a Generation I–III line are marked
 - Budew, Chingling, Bonsly, Mime Jr., Happiny, Munchlax and Mantyke, which are
   babies. Babies appear as rare finds named directly in tables, not as reward
   Pokémon.
-- Hisuian Sliggoo, Goodra and Avalugg, which need Generation VI. They wait for
-  Kalos.
+- Hisuian Sliggoo, Goodra and Avalugg, which evolve from Kalos's Goomy,
+  Sliggoo and Bergmite when they evolve in Sinjoh.
+
+### Generation VI rewards
+
+Generation VI (Kalos) lives in the Safari Zones' reserve. Safari mode has no
+battles to lose, so temperament doesn't limit where these appear in a Safari
+Zone. It still applies anywhere else.
+
+| Species | Why | Temperament | Base stat total | Notes |
+| --- | --- | --- | --- | --- |
+| Fennekin line | Prestige | Harmless | 307 | Starter |
+| Chespin line | Prestige | Harmless | 313 | Starter |
+| Froakie line | Prestige | Harmless | 314 | Starter |
+| Honedge | Prestige | Fierce | 325 | The Aegislash line |
+| Dedenne | Rarity | Harmless | 431 | |
+| Klefki | Rarity | Harmless | 470 | |
+| Furfrou | Rarity | Harmless | 472 | |
+| Hawlucha | Power, rarity | Fierce | 500 | |
+| Carbink | Rarity | Harmless | 500 | A rare cave find |
+| Noibat line | Power | Fierce | — | Up to Noivern |
+| Goomy line | Prestige | Dangerous | — | Pseudo-legendary, up to Goodra |
+| Heliolisk | Evolution | — | 481 | Sun Stone |
+| Aromatisse | Evolution | — | 462 | Shiny Stone |
+| Slurpuff | Evolution | — | 480 | Moon Stone |
+| Trevenant | Evolution | — | 474 | Trade |
+| Gourgeist | Evolution | — | 494 | Trade |
+| Aegislash | Evolution | — | 500 | Dusk Stone |
+| Florges | Evolution | — | 552 | Shiny Stone |
+
+**Considered and excluded:**
+
+- Xerneas, Yveltal, Zygarde, Diancie, Hoopa and Volcanion, which are legendary
+  or mythical.
+- Tyrunt and Amaura, which come from fossils.
+- Sylveon, which evolves from Eevee in Eevee's home regions.
 
 ### Generation V rewards
 

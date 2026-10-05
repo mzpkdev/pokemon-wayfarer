@@ -11,8 +11,9 @@ game's encounter tables. Playtesting may change the picks.
 ## Scope
 
 This spec lists Hoenn's wild-encounter tables: 110 maps, each with a day and a
-night table for every method it has. The Safari Zone is deferred and not
-listed. Legendaries and mythicals belong to a later spec.
+night table for every method it has. The Safari Zone belongs to the
+[Safari table spec](safari-encounter-tables.md). Legendaries and mythicals
+belong to a later spec.
 
 ## Behavior
 

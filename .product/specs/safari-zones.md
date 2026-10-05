@@ -1,0 +1,146 @@
+# Safari Zones and the Bug-Catching Contest
+
+PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
+Implemented: No
+
+Design status: draft. It sets the rules for the three Safari Zones and the
+Bug-Catching Contest. The tables themselves are in the
+[Safari table spec](safari-encounter-tables.md). Every count below is a
+placeholder for playtesting.
+
+## Scope
+
+This spec defines:
+
+- the Kalos reserve, and how Kalos splits across the Kanto, Johto and Hoenn
+  Safari Zones;
+- which Vivillon pattern, Flabébé colour and Pumpkaboo size lives where;
+- the rules Safari tables follow on temperament, stages, water and night;
+- the Bug-Catching Contest's three contest days.
+
+It doesn't cover:
+
+- the per-map tables, which belong to the Safari table spec;
+- the Safari Zones' story events, such as the Kanto Safari's Surf and Strength
+  quests;
+- Kalos's legendaries, mythicals and fossils (Tyrunt and Amaura), which belong
+  to later specs;
+- Safari mode itself: entry fees, step limits, bait and rocks stay as they are.
+
+## Behavior
+
+### The Kalos reserve
+
+Generation VI (Kalos) has no region of its own. It lives only in the three
+Safari Zones, and each Safari Zone holds its own third of it. Completing
+Kalos means visiting all three, which gives players a reason to travel between
+regions.
+
+- **Each Safari Zone has its own land species and its own Kalos starter.**
+  These appear in no other Safari Zone.
+- **A few species are shared** so every Safari Zone feels Kalosian: Fletchling,
+  Bunnelby and Scatterbug on land, and the water quartet in every Safari
+  Zone's water.
+- **The forms are regional collectibles.** Each Safari area holds its own
+  Vivillon pattern, and Flabébé's colours and Pumpkaboo's sizes each live in
+  one Safari Zone.
+
+| Safari Zone | Feels like | Its own species | Starter |
+| --- | --- | --- | --- |
+| Kanto (Beach, Brush, Cave, Mountain) | Coast and fields, with a cave and a cold mountain | Litleo, Pancham, Skiddo, Furfrou, Carbink, Noibat, Bergmite | Froakie |
+| Johto (six areas) | Meadows, sweets and a haunted forest | Flabébé (all five colours), Spritzee, Swirlix, Dedenne, Phantump, Espurr | Chespin |
+| Hoenn (six areas) | Sun-baked plains, wetlands and rocks | Helioptile, Hawlucha, Honedge, Klefki, Pumpkaboo (all four sizes), Goomy | Fennekin |
+| All three | | Fletchling, Bunnelby, Scatterbug; Binacle, Clauncher, Skrelp and Inkay in the water | |
+
+### Forms
+
+**Vivillon patterns.** Each outdoor Safari area holds one pattern, and each
+contest day holds another. Together they cover all 18 of Vivillon's regular
+patterns. The two event patterns, Fancy and Poké Ball, stay out.
+
+| Place | Areas and patterns |
+| --- | --- |
+| Kanto Safari | Beach: Marine. Brush: Meadow. Mountain: Icy Snow. The Cave has none |
+| Johto Safari | Low left: Sandstorm. Low middle: High Plains. Low right: River. Top left: Savanna. Top middle: Elegant. Top right: Ocean |
+| Hoenn Safari | South: Garden. Southwest: Monsoon. North: Continental. Northwest: Jungle. Southeast: Archipelago. Northeast: Sun |
+| Bug-Catching Contest | Tuesday: Modern. Thursday: Polar. Saturday: Tundra |
+
+**Flabébé colours** live in the Johto Safari, one per area: red in the top
+left, yellow in the low middle, blue in the low right, white in the top middle
+and orange in the top right.
+
+**Pumpkaboo sizes** live in the Hoenn Safari at night: small in the southwest,
+northwest and north, average in the north, southeast and northeast, and large in
+the south and northeast. Super size is a 1% find in the south, northwest,
+southeast and northeast.
+
+**Meowstic** comes from Espurr, which the tables cap at Espurr, so its gender
+decides which Meowstic it becomes.
+
+### Temperament and stages
+
+- **Any temperament may appear in a Safari Zone.** Safari mode has no battles to
+  lose, so Goomy, Noibat and Hawlucha can live there although the Safari Zones
+  are Wilds.
+- **Stages follow the Wilds rules.** A slot is capped before any stage reached
+  by item, trade or friendship, so Florges, Aromatisse, Slurpuff, Trevenant,
+  Gourgeist, Aegislash and Heliolisk come from evolving.
+- Levels follow the Wilds reach, as the PRD defines.
+
+### Water
+
+Kalos has only four water families, so the Safari Zones share them: Binacle,
+Clauncher, Skrelp and Inkay. Each area's water mixes them in its own order,
+and Inkay rises at night. Froakie, the Kanto Safari's starter, takes the rare
+slot in its coast and mountain water, and Bergmite floats on the Kanto Safari's
+cold and cave water.
+
+### Trees and rocks
+
+The Johto Safari's Headbutt trees hold Fletchling, Spewpa in the area's pattern,
+Dedenne and Phantump, with Chespin as a rare find. The Hoenn Safari's Rock Smash rocks hide Honedge,
+Helioptile, Klefki, Bunnelby and Hawlucha.
+
+### Day and night
+
+- Every Safari area has its own night table.
+- Outdoors, at least 30% of a night table's slot weight goes to species that
+  don't appear in that map's day table: Noibat, Inkay, Phantump, Espurr,
+  Pumpkaboo and Honedge.
+- The Kanto Safari's Cave changes more lightly, like any cave.
+
+### The Bug-Catching Contest
+
+The contest in National Park rotates its bugs by contest day, as in the
+original games' Tuesday, Thursday and Saturday contests. Each day shows a
+different set of generations:
+
+| Contest day | Generations | Bugs |
+| --- | --- | --- |
+| Tuesday | I and II | Caterpie, Weedle, Paras, Venonat, Ledyba, Spinarak, Yanma, Pineco, Scyther, Pinsir, Heracross |
+| Thursday | III and V | Wurmple, Nincada, Surskit, Volbeat, Illumise, Sewaddle, Venipede, Dwebble, Karrablast, Shelmet, Joltik |
+| Saturday | VII and VIII | Grubbin, Cutiefly, Dewpider, Blipbug, Sizzlipede, Snom |
+
+Each day also has its own Vivillon pattern, as listed under Forms.
+
+- **The contest is exempt from Johto's natives.** It is a showcase, so its bugs
+  come from every included generation.
+- **It isn't anyone's only source.** Every contest species is also catchable
+  in the wild in its own region.
+- **Temperament and stages follow the Wilds rules,** since the contest has
+  battles.
+
+### Implementation notes
+
+- **The Safari tables replace the current Safari Zone tables.** The old
+  FireRed and LeafGreen Safari Zone maps aren't reachable in Wayfarer, so they
+  get no tables.
+- **The contest needs three day tables.** The engine has one table for the
+  contest map today. The implementation must choose the table by contest day.
+
+## Open questions
+
+- Whether the three Safari Zones should acknowledge the shared Kalos goal, for
+  example through a conservation programme in the story.
+- How rare a reward slot is in a Safari Zone, where flee rates already make
+  catches hard.

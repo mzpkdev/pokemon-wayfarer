@@ -10,9 +10,10 @@ to a slot in the game's encounter tables. Playtesting may change the picks.
 
 ## Scope
 
-This spec lists Johto's wild-encounter tables: 87 maps, each with a day and a
-night table for every method it has. The Safari Zone is deferred and not
-listed. Legendaries and mythicals belong to a later spec.
+This spec lists Johto's wild-encounter tables: 86 maps, each with a day and a
+night table for every method it has. The Safari Zone and the Bug-Catching
+Contest belong to the [Safari table spec](safari-encounter-tables.md).
+Legendaries and mythicals belong to a later spec.
 
 ## Behavior
 
@@ -1987,25 +1988,6 @@ Wilds, Johto west.
 | 11 | 1% | Scyther | Scyther |
 | 12 | 1% | Pinsir | Misdreavus |
 
-**`MAP_NATIONAL_PARK_BUG_CONTEST_HNS`**
-
-*Land*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 20% | Caterpie–Butterfree | Venonat–Venomoth |
-| 2 | 20% | Weedle–Beedrill | Spinarak–Ariados |
-| 3 | 10% | Ledyba–Ledian | Paras–Parasect |
-| 4 | 10% | Paras–Parasect | Pineco–Forretress |
-| 5 | 10% | Venonat–Venomoth | Venonat–Venomoth |
-| 6 | 10% | Caterpie–Metapod | Weedle–Beedrill |
-| 7 | 5% | Scyther | Scyther |
-| 8 | 5% | Pinsir | Pinsir |
-| 9 | 4% | Yanma | Yanma |
-| 10 | 4% | Heracross | Heracross |
-| 11 | 1% | Scyther | Scyther |
-| 12 | 1% | Pinsir | Spinarak–Ariados |
-
 #### Lake of Rage
 
 Wilds, Johto east.
@@ -3603,7 +3585,7 @@ Water type: cave water.
 | Gyarados | Blackthorn City, Cherrygrove City, Cianwood City, Cliff Edge Cave and more |
 | Happiny | Route 47 |
 | Haunter | Azalea Town, Burned Tower, Dark Cave, Ice Path and more |
-| Heracross | Lake of Rage, Mt. Silver, National Park, Route 26 and more |
+| Heracross | Lake of Rage, Mt. Silver, Route 26, Route 27 and more |
 | Hitmontop | Mt. Mortar |
 | Honchkrow | Mt. Silver, Route 26, Route 28, Tin Tower |
 | Hoothoot | Azalea Town, Cherrygrove City, Goldenrod City, Ilex Forest and more |
@@ -3662,8 +3644,8 @@ Water type: cave water.
 | Octillery | Cianwood City, Goldenrod City, New Bark Town, Olivine City and more |
 | Oddish | Azalea Town, Ilex Forest, Olivine City, Route 27 and more |
 | Onix | Cliff Edge Cave, Dark Cave, Ice Path, Mt. Mortar and more |
-| Paras | Azalea Town, Ilex Forest, Mt. Silver, National Park |
-| Parasect | Azalea Town, Ilex Forest, Mt. Silver, National Park |
+| Paras | Azalea Town, Ilex Forest, Mt. Silver |
+| Parasect | Azalea Town, Ilex Forest, Mt. Silver |
 | Persian | Olivine City, Rocket Hideout, Route 34, Route 38 and more |
 | Phanpy | Mt. Silver, Route 26, Route 28, Route 45 and more |
 | Pichu | Azalea Town, Ilex Forest, Route 31 |
@@ -3745,5 +3727,5 @@ Water type: cave water.
 | Wobbuffet | Cliff Edge Cave, Dark Cave, Slowpoke Well, Union Cave and more |
 | Wooper | Blackthorn City, Dark Cave, Ecruteak City, Ilex Forest and more |
 | Xatu | Ruins of Alph, Sprout Tower, Tin Tower, Violet City |
-| Yanma | Ilex Forest, Lake of Rage, National Park, Route 35 and more |
+| Yanma | Ilex Forest, Lake of Rage, Route 35, Route 48 |
 | Zubat | Burned Tower, Cliff Edge Cave, Dark Cave, Ice Path and more |
