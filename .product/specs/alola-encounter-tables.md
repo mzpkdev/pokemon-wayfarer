@@ -61,8 +61,8 @@ Water type: coast and sea.
 | 5 | 10% | Crabrawler | Spinarak–Ariados |
 | 6 | 10% | Pikachu | Crabrawler |
 | 7 | 5% | Rockruff–Lycanroc (Midday) | Rockruff–Lycanroc (Midnight) |
-| 8 | 5% | Wingull–Pelipper | Pikipek–Toucannon |
-| 9 | 4% | Alolan Grimer–Alolan Muk | Cutiefly–Ribombee |
+| 8 | 5% | Wingull–Pelipper | Alolan Rattata–Alolan Raticate |
+| 9 | 4% | Alolan Grimer–Alolan Muk | Alolan Grimer–Alolan Muk |
 | 10 | 4% | Bounsweet–Steenee | Pikachu |
 | 11 | 1% | Rowlet–Decidueye | Rowlet–Decidueye |
 | 12 | 1% | Pichu | Pichu |
@@ -85,7 +85,7 @@ Water type: coast and sea.
 | 2 | 22% | 18% | 10% | Pyukumuku | Mareanie–Toxapex |
 | 3 | 10% | 12% | 11% | Magikarp | Magikarp |
 | 4 | 8% | 10% | 10% | Staryu | Chinchou |
-| 5 | 8% | 9% | 10% | Mareanie–Toxapex | Mareanie–Toxapex |
+| 5 | 8% | 9% | 10% | Wishiwashi | Wishiwashi |
 | 6 | 4% | 7% | 10% | Luvdisc | Staryu |
 | 7 | 3% | 6% | 10% | Pyukumuku | Pyukumuku |
 | 8 | 3% | 5% | 9% | Corsola | Mareanie–Toxapex |
@@ -107,10 +107,10 @@ Water type: coast and sea.
 | 1 | 20% | Mudbray–Mudsdale | Morelull–Shiinotic |
 | 2 | 20% | Fomantis–Lurantis | Mudbray–Mudsdale |
 | 3 | 10% | Bounsweet–Steenee | Alolan Rattata–Alolan Raticate |
-| 4 | 10% | Alolan Diglett–Alolan Dugtrio | Salandit–Salazzle |
+| 4 | 10% | Alolan Diglett–Alolan Dugtrio | Fomantis–Lurantis |
 | 5 | 10% | Sandygast–Palossand | Cubone–Alolan Marowak |
 | 6 | 10% | Dewpider–Araquanid | Sandygast–Palossand |
-| 7 | 5% | Stufful–Bewear | Fomantis–Lurantis |
+| 7 | 5% | Stufful–Bewear | Salandit–Salazzle |
 | 8 | 5% | Cubone–Alolan Marowak | Wimpod–Golisopod |
 | 9 | 4% | Oricorio (Pa'u) | Dewpider–Araquanid |
 | 10 | 4% | Wimpod–Golisopod | Oricorio (Pa'u) |
@@ -139,7 +139,7 @@ Water type: coast and sea.
 | 6 | 4% | 7% | 10% | Wishiwashi | Wishiwashi |
 | 7 | 3% | 6% | 10% | Clamperl | Clamperl |
 | 8 | 3% | 5% | 9% | Corsola | Corsola |
-| 9 | 2% | 4% | 9% | Staryu | Luvdisc |
+| 9 | 2% | 4% | 9% | Luvdisc | Staryu |
 | 10 | 2% | 4% | 9% | Bruxish | Bruxish |
 
 #### Alola sea
@@ -155,7 +155,7 @@ Water type: coast and sea.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Wishiwashi | Wishiwashi |
-| 2 | 30% | Pyukumuku | Mareanie–Toxapex |
+| 2 | 30% | Mareanie–Toxapex | Mareanie–Toxapex |
 | 3 | 5% | Wailmer | Chinchou–Lanturn |
 | 4 | 4% | Tentacool–Tentacruel | Tentacool–Tentacruel |
 | 5 | 1% | Bruxish | Bruxish |
@@ -165,12 +165,12 @@ Water type: coast and sea.
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
 | 1 | 38% | 25% | 12% | Wishiwashi | Wishiwashi |
-| 2 | 22% | 18% | 10% | Pyukumuku | Mareanie–Toxapex |
+| 2 | 22% | 18% | 10% | Mareanie–Toxapex | Mareanie–Toxapex |
 | 3 | 10% | 12% | 11% | Magikarp | Magikarp |
 | 4 | 8% | 10% | 10% | Mareanie–Toxapex | Chinchou |
-| 5 | 8% | 9% | 10% | Wishiwashi | Pyukumuku |
-| 6 | 4% | 7% | 10% | Staryu | Wishiwashi |
-| 7 | 3% | 6% | 10% | Mareanie–Toxapex | Carvanha |
+| 5 | 8% | 9% | 10% | Wishiwashi | Mareanie–Toxapex |
+| 6 | 4% | 7% | 10% | Carvanha | Wishiwashi |
+| 7 | 3% | 6% | 10% | Mareanie–Toxapex | Staryu |
 | 8 | 3% | 5% | 9% | Clamperl | Mareanie–Toxapex |
 | 9 | 2% | 4% | 9% | Wailmer | Wailmer |
 | 10 | 2% | 4% | 9% | Bruxish | Bruxish |
@@ -187,7 +187,7 @@ Wilds, Akala.
 | --- | --- | --- | --- |
 | 1 | 20% | Bounsweet–Steenee | Morelull–Shiinotic |
 | 2 | 20% | Fomantis–Lurantis | Fomantis–Lurantis |
-| 3 | 10% | Cutiefly–Ribombee | Dewpider–Araquanid |
+| 3 | 10% | Cutiefly–Ribombee | Spinarak–Ariados |
 | 4 | 10% | Grubbin–Charjabug | Alolan Rattata–Alolan Raticate |
 | 5 | 10% | Pikipek–Toucannon | Venonat–Venomoth |
 | 6 | 10% | Paras–Parasect | Grubbin–Charjabug |
@@ -215,13 +215,13 @@ Water type: coast and sea.
 | 3 | 10% | Alolan Grimer–Alolan Muk | Alolan Meowth–Alolan Persian |
 | 4 | 10% | Pikipek–Toucannon | Crabrawler–Crabominable |
 | 5 | 10% | Stufful–Bewear | Alolan Rattata–Alolan Raticate |
-| 6 | 10% | Minior | Morelull–Shiinotic |
+| 6 | 10% | Yungoos–Gumshoos | Morelull–Shiinotic |
 | 7 | 5% | Alolan Vulpix–Alolan Ninetales | Alolan Sandshrew–Alolan Sandslash |
 | 8 | 5% | Turtonator | Drampa |
-| 9 | 4% | Passimian | Oranguru |
+| 9 | 4% | Minior | Oranguru |
 | 10 | 4% | Oricorio (Baile) | Oricorio (Baile) |
 | 11 | 1% | Komala | Komala |
-| 12 | 1% | Grubbin–Vikavolt | Minior |
+| 12 | 1% | Passimian | Minior |
 
 *Surfing*
 
@@ -263,7 +263,7 @@ Water type: coast and sea.
 | 1 | 20% | Mudbray–Mudsdale | Mudbray–Mudsdale |
 | 2 | 20% | Exeggcute–Alolan Exeggutor | Exeggcute–Alolan Exeggutor |
 | 3 | 10% | Wimpod–Golisopod | Morelull–Shiinotic |
-| 4 | 10% | Sandygast–Palossand | Drowzee–Hypno |
+| 4 | 10% | Sandygast–Palossand | Alolan Rattata–Alolan Raticate |
 | 5 | 10% | Yungoos–Gumshoos | Alolan Meowth–Alolan Persian |
 | 6 | 10% | Fomantis–Lurantis | Wimpod–Golisopod |
 | 7 | 5% | Jangmo-o–Kommo-o | Jangmo-o–Kommo-o |
@@ -342,7 +342,7 @@ Water type: cave water.
 | 7 | 5% | Mimikyu | Drampa |
 | 8 | 5% | Alolan Geodude–Alolan Graveler | Zubat–Golbat |
 | 9 | 4% | Zubat–Golbat | Alolan Geodude–Alolan Graveler |
-| 10 | 4% | Komala | Misdreavus |
+| 10 | 4% | Drampa | Misdreavus |
 | 11 | 1% | Alolan Vulpix–Alolan Ninetales | Alolan Sandshrew–Alolan Sandslash |
 | 12 | 1% | Jangmo-o–Kommo-o | Jangmo-o–Kommo-o |
 
@@ -350,26 +350,26 @@ Water type: cave water.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Dewpider–Araquanid | Wimpod–Golisopod |
-| 2 | 30% | Wimpod–Golisopod | Dewpider–Araquanid |
-| 3 | 5% | Wishiwashi | Wishiwashi |
-| 4 | 4% | Dewpider–Araquanid | Dhelmise |
-| 5 | 1% | Bruxish | Bruxish |
+| 1 | 60% | Dewpider–Araquanid | Dewpider–Araquanid |
+| 2 | 30% | Wishiwashi | Wishiwashi |
+| 3 | 5% | Magikarp | Barboach–Whiscash |
+| 4 | 4% | Barboach–Whiscash | Zubat–Golbat |
+| 5 | 1% | Dewpider–Araquanid | Basculin |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Wishiwashi | Dewpider–Araquanid |
-| 2 | 22% | 18% | 10% | Dewpider–Araquanid | Wishiwashi |
-| 3 | 10% | 12% | 11% | Wimpod–Golisopod | Wimpod–Golisopod |
-| 4 | 8% | 10% | 10% | Wishiwashi | Dhelmise |
-| 5 | 8% | 9% | 10% | Dewpider–Araquanid | Dewpider–Araquanid |
-| 6 | 4% | 7% | 10% | Bruxish | Wishiwashi |
-| 7 | 3% | 6% | 10% | Wimpod–Golisopod | Wimpod–Golisopod |
-| 8 | 3% | 5% | 9% | Wishiwashi | Bruxish |
-| 9 | 2% | 4% | 9% | Dewpider–Araquanid | Dewpider–Araquanid |
-| 10 | 2% | 4% | 9% | Dhelmise | Dhelmise |
+| 1 | 38% | 25% | 12% | Dewpider–Araquanid | Wishiwashi |
+| 2 | 22% | 18% | 10% | Wishiwashi | Dewpider–Araquanid |
+| 3 | 10% | 12% | 11% | Magikarp | Magikarp |
+| 4 | 8% | 10% | 10% | Barboach–Whiscash | Barboach–Whiscash |
+| 5 | 8% | 9% | 10% | Dewpider–Araquanid | Basculin |
+| 6 | 4% | 7% | 10% | Wishiwashi | Wishiwashi |
+| 7 | 3% | 6% | 10% | Psyduck–Golduck | Psyduck–Golduck |
+| 8 | 3% | 5% | 9% | Dewpider–Araquanid | Dewpider–Araquanid |
+| 9 | 2% | 4% | 9% | Wishiwashi | Barboach–Whiscash |
+| 10 | 2% | 4% | 9% | Dewpider–Araquanid | Basculin |
 
 #### Ula'ula Cave 2
 
@@ -384,42 +384,42 @@ Water type: cave water.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Alolan Grimer–Alolan Muk | Alolan Grimer–Alolan Muk |
-| 2 | 20% | Alolan Rattata–Alolan Raticate | Mimikyu |
-| 3 | 10% | Mimikyu | Alolan Rattata–Alolan Raticate |
+| 2 | 20% | Alolan Rattata–Alolan Raticate | Alolan Rattata–Alolan Raticate |
+| 3 | 10% | Mimikyu | Mimikyu |
 | 4 | 10% | Zubat–Golbat | Gastly–Haunter |
 | 5 | 10% | Gastly–Haunter | Zubat–Golbat |
-| 6 | 10% | Alolan Meowth–Alolan Persian | Alolan Meowth–Alolan Persian |
-| 7 | 5% | Salandit–Salazzle | Salandit–Salazzle |
-| 8 | 5% | Yungoos–Gumshoos | Misdreavus |
+| 6 | 10% | Cubone–Alolan Marowak | Cubone–Alolan Marowak |
+| 7 | 5% | Alolan Geodude–Alolan Golem | Alolan Geodude–Alolan Golem |
+| 8 | 5% | Alolan Geodude–Alolan Graveler | Misdreavus |
 | 9 | 4% | Grubbin–Vikavolt | Grubbin–Vikavolt |
-| 10 | 4% | Togedemaru | Togedemaru |
+| 10 | 4% | Grubbin–Charjabug | Grubbin–Charjabug |
 | 11 | 1% | Alolan Grimer–Alolan Muk | Mimikyu |
-| 12 | 1% | Drampa | Drampa |
+| 12 | 1% | Mimikyu | Cubone–Alolan Marowak |
 
 *Surfing*
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Wimpod–Golisopod | Dewpider–Araquanid |
-| 2 | 30% | Dewpider–Araquanid | Wimpod–Golisopod |
-| 3 | 5% | Wishiwashi | Wishiwashi |
-| 4 | 4% | Dewpider–Araquanid | Dhelmise |
-| 5 | 1% | Dhelmise | Dhelmise |
+| 1 | 60% | Dewpider–Araquanid | Dewpider–Araquanid |
+| 2 | 30% | Wishiwashi | Wishiwashi |
+| 3 | 5% | Psyduck–Golduck | Zubat–Golbat |
+| 4 | 4% | Barboach–Whiscash | Barboach–Whiscash |
+| 5 | 1% | Dewpider–Araquanid | Basculin |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Dewpider–Araquanid | Wishiwashi |
-| 2 | 22% | 18% | 10% | Wishiwashi | Dewpider–Araquanid |
-| 3 | 10% | 12% | 11% | Wimpod–Golisopod | Dhelmise |
-| 4 | 8% | 10% | 10% | Dewpider–Araquanid | Wimpod–Golisopod |
-| 5 | 8% | 9% | 10% | Wishiwashi | Wishiwashi |
-| 6 | 4% | 7% | 10% | Bruxish | Dewpider–Araquanid |
-| 7 | 3% | 6% | 10% | Wimpod–Golisopod | Dhelmise |
-| 8 | 3% | 5% | 9% | Dewpider–Araquanid | Wimpod–Golisopod |
-| 9 | 2% | 4% | 9% | Wishiwashi | Bruxish |
-| 10 | 2% | 4% | 9% | Dhelmise | Wishiwashi |
+| 1 | 38% | 25% | 12% | Wishiwashi | Dewpider–Araquanid |
+| 2 | 22% | 18% | 10% | Dewpider–Araquanid | Wishiwashi |
+| 3 | 10% | 12% | 11% | Magikarp | Magikarp |
+| 4 | 8% | 10% | 10% | Psyduck–Golduck | Barboach–Whiscash |
+| 5 | 8% | 9% | 10% | Wishiwashi | Basculin |
+| 6 | 4% | 7% | 10% | Dewpider–Araquanid | Dewpider–Araquanid |
+| 7 | 3% | 6% | 10% | Wishiwashi | Wishiwashi |
+| 8 | 3% | 5% | 9% | Dewpider–Araquanid | Dewpider–Araquanid |
+| 9 | 2% | 4% | 9% | Wishiwashi | Basculin |
+| 10 | 2% | 4% | 9% | Dewpider–Araquanid | Wishiwashi |
 
 #### Poni Cave
 
@@ -436,25 +436,25 @@ Water type: cave water.
 | 1 | 20% | Alolan Geodude–Alolan Golem | Alolan Geodude–Alolan Golem |
 | 2 | 20% | Rockruff–Lycanroc (Midday) | Rockruff–Lycanroc (Midnight) |
 | 3 | 10% | Jangmo-o–Kommo-o | Jangmo-o–Kommo-o |
-| 4 | 10% | Minior | Mimikyu |
+| 4 | 10% | Grubbin–Vikavolt | Mimikyu |
 | 5 | 10% | Zubat–Golbat | Zubat–Golbat |
 | 6 | 10% | Alolan Diglett–Alolan Dugtrio | Alolan Diglett–Alolan Dugtrio |
 | 7 | 5% | Roggenrola–Gigalith | Roggenrola–Gigalith |
-| 8 | 5% | Salandit–Salazzle | Salandit–Salazzle |
+| 8 | 5% | Alolan Geodude–Alolan Graveler | Alolan Geodude–Alolan Graveler |
 | 9 | 4% | Cubone–Alolan Marowak | Cubone–Alolan Marowak |
-| 10 | 4% | Grubbin–Vikavolt | Sableye |
+| 10 | 4% | Alolan Geodude–Alolan Graveler | Sableye |
 | 11 | 1% | Jangmo-o–Kommo-o | Jangmo-o–Kommo-o |
-| 12 | 1% | Mimikyu | Minior |
+| 12 | 1% | Mimikyu | Alolan Diglett–Alolan Dugtrio |
 
 *Surfing*
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Dewpider–Araquanid | Wimpod–Golisopod |
-| 2 | 30% | Wimpod–Golisopod | Dewpider–Araquanid |
+| 1 | 60% | Dewpider–Araquanid | Dewpider–Araquanid |
+| 2 | 30% | Wishiwashi | Wishiwashi |
 | 3 | 5% | Barboach–Whiscash | Barboach–Whiscash |
 | 4 | 4% | Psyduck–Golduck | Zubat–Golbat |
-| 5 | 1% | Bruxish | Bruxish |
+| 5 | 1% | Dewpider–Araquanid | Basculin |
 
 *Fishing*
 
@@ -464,71 +464,69 @@ Water type: cave water.
 | 2 | 22% | 18% | 10% | Dewpider–Araquanid | Wishiwashi |
 | 3 | 10% | 12% | 11% | Magikarp | Magikarp |
 | 4 | 8% | 10% | 10% | Barboach–Whiscash | Barboach–Whiscash |
-| 5 | 8% | 9% | 10% | Basculin | Chinchou–Lanturn |
-| 6 | 4% | 7% | 10% | Psyduck–Golduck | Basculin |
-| 7 | 3% | 6% | 10% | Wishiwashi | Psyduck–Golduck |
-| 8 | 3% | 5% | 9% | Wimpod–Golisopod | Wishiwashi |
-| 9 | 2% | 4% | 9% | Bruxish | Bruxish |
-| 10 | 2% | 4% | 9% | Dhelmise | Dhelmise |
+| 5 | 8% | 9% | 10% | Psyduck–Golduck | Basculin |
+| 6 | 4% | 7% | 10% | Dewpider–Araquanid | Psyduck–Golduck |
+| 7 | 3% | 6% | 10% | Wishiwashi | Wishiwashi |
+| 8 | 3% | 5% | 9% | Barboach–Whiscash | Dewpider–Araquanid |
+| 9 | 2% | 4% | 9% | Dewpider–Araquanid | Basculin |
+| 10 | 2% | 4% | 9% | Wishiwashi | Wishiwashi |
 
 
 ### Coverage checklist
 
 | Species | Catchable at |
 | --- | --- |
-| Araquanid | Akala Forest, Akala Isle, Poni Cave, Ula'ula Cave and more |
-| Ariados | Melemele Isle |
-| Barboach | Poni Cave |
-| Basculin | Poni Cave |
+| Araquanid | Akala Isle, Poni Cave, Ula'ula Cave, Ula'ula Cave 2 |
+| Ariados | Akala Forest, Melemele Isle |
+| Barboach | Poni Cave, Ula'ula Cave, Ula'ula Cave 2 |
+| Basculin | Poni Cave, Ula'ula Cave, Ula'ula Cave 2 |
 | Bewear | Akala Isle, Ula'ula Isle |
 | Boldore | Poni Cave |
 | Bounsweet | Akala Forest, Akala Isle, Melemele Isle, Poni Isle |
 | Brionne | Melemele Isle |
-| Bruxish | Akala Isle, Alola sea, Poni Cave, Poni Isle and more |
+| Bruxish | Akala Isle, Alola sea, Poni Isle, Ula'ula Isle |
 | Camerupt | Akala Cave |
 | Carvanha | Alola sea, Poni Isle |
 | Charjabug | Akala Forest, Melemele Isle, Poni Cave, Poni Isle and more |
-| Chinchou | Akala Isle, Alola sea, Melemele Isle, Poni Cave and more |
+| Chinchou | Akala Isle, Alola sea, Melemele Isle, Poni Isle and more |
 | Clamperl | Akala Isle, Alola sea, Poni Isle, Ula'ula Isle |
 | Cloyster | Ula'ula Isle |
 | Comfey | Akala Forest, Akala Isle |
 | Corsola | Akala Isle, Melemele Isle, Poni Isle, Ula'ula Isle |
 | Crabominable | Ula'ula Cave, Ula'ula Isle |
 | Crabrawler | Melemele Isle, Ula'ula Cave, Ula'ula Isle |
-| Cubone | Akala Cave, Akala Isle, Poni Cave |
+| Cubone | Akala Cave, Akala Isle, Poni Cave, Ula'ula Cave 2 |
 | Cutiefly | Akala Forest, Melemele Isle |
 | Dartrix | Akala Forest, Melemele Isle |
 | Decidueye | Akala Forest, Melemele Isle |
-| Dewpider | Akala Forest, Akala Isle, Poni Cave, Ula'ula Cave and more |
-| Dhelmise | Poni Cave, Poni Isle, Ula'ula Cave, Ula'ula Cave 2 and more |
+| Dewpider | Akala Isle, Poni Cave, Ula'ula Cave, Ula'ula Cave 2 |
+| Dhelmise | Poni Isle, Ula'ula Isle |
 | Alolan Diglett | Akala Cave, Akala Isle, Poni Cave |
-| Drampa | Ula'ula Cave, Ula'ula Cave 2, Ula'ula Isle |
-| Drowzee | Poni Isle |
+| Drampa | Ula'ula Cave, Ula'ula Isle |
 | Alolan Dugtrio | Akala Cave, Akala Isle, Poni Cave |
 | Exeggcute | Akala Forest, Poni Isle |
 | Alolan Exeggutor | Poni Isle |
 | Fomantis | Akala Forest, Akala Isle, Poni Isle |
 | Gastly | Ula'ula Cave 2 |
-| Alolan Geodude | Akala Cave, Poni Cave, Ula'ula Cave |
+| Alolan Geodude | Akala Cave, Poni Cave, Ula'ula Cave, Ula'ula Cave 2 |
 | Gigalith | Poni Cave |
 | Glalie | Ula'ula Cave |
 | Golbat | Akala Cave, Poni Cave, Ula'ula Cave, Ula'ula Cave 2 |
-| Golduck | Poni Cave |
-| Alolan Golem | Akala Cave, Poni Cave |
-| Golisopod | Akala Isle, Poni Cave, Poni Isle, Ula'ula Cave and more |
-| Alolan Graveler | Akala Cave, Poni Cave, Ula'ula Cave |
+| Golduck | Poni Cave, Ula'ula Cave, Ula'ula Cave 2 |
+| Alolan Golem | Akala Cave, Poni Cave, Ula'ula Cave 2 |
+| Golisopod | Akala Isle, Poni Isle |
+| Alolan Graveler | Akala Cave, Poni Cave, Ula'ula Cave, Ula'ula Cave 2 |
 | Alolan Grimer | Melemele Isle, Ula'ula Cave 2, Ula'ula Isle |
 | Grubbin | Akala Forest, Melemele Isle, Poni Cave, Poni Isle and more |
-| Gumshoos | Melemele Isle, Poni Isle, Ula'ula Cave 2 |
+| Gumshoos | Melemele Isle, Poni Isle, Ula'ula Isle |
 | Hakamo-o | Poni Cave, Poni Isle, Ula'ula Cave |
 | Haunter | Ula'ula Cave 2 |
 | Hoothoot | Akala Forest |
-| Hypno | Poni Isle |
 | Incineroar | Akala Cave, Akala Isle |
 | Jangmo-o | Poni Cave, Poni Isle, Ula'ula Cave |
-| Komala | Ula'ula Cave, Ula'ula Isle |
+| Komala | Ula'ula Isle |
 | Kommo-o | Poni Cave, Poni Isle, Ula'ula Cave |
-| Lanturn | Akala Isle, Alola sea, Melemele Isle, Poni Cave and more |
+| Lanturn | Akala Isle, Alola sea, Melemele Isle, Poni Isle and more |
 | Litten | Akala Cave, Akala Isle |
 | Lurantis | Akala Forest, Akala Isle, Poni Isle |
 | Luvdisc | Akala Isle, Melemele Isle, Ula'ula Isle |
@@ -538,10 +536,10 @@ Water type: cave water.
 | Magcargo | Akala Cave |
 | Magikarp | Akala Isle, Alola sea, Melemele Isle, Poni Cave and more |
 | Mareanie | Akala Isle, Alola sea, Melemele Isle, Poni Isle and more |
-| Alolan Marowak | Akala Cave, Akala Isle, Poni Cave |
-| Alolan Meowth | Melemele Isle, Poni Isle, Ula'ula Cave 2, Ula'ula Isle |
+| Alolan Marowak | Akala Cave, Akala Isle, Poni Cave, Ula'ula Cave 2 |
+| Alolan Meowth | Melemele Isle, Poni Isle, Ula'ula Isle |
 | Mimikyu | Poni Cave, Ula'ula Cave, Ula'ula Cave 2 |
-| Minior | Poni Cave, Ula'ula Isle |
+| Minior | Ula'ula Isle |
 | Misdreavus | Akala Cave, Ula'ula Cave, Ula'ula Cave 2 |
 | Morelull | Akala Forest, Akala Isle, Poni Isle, Ula'ula Isle |
 | Mudbray | Akala Isle, Poni Isle |
@@ -560,25 +558,25 @@ Water type: cave water.
 | Parasect | Akala Forest |
 | Passimian | Akala Forest, Poni Isle, Ula'ula Isle |
 | Pelipper | Akala Isle, Melemele Isle, Poni Isle, Ula'ula Isle |
-| Alolan Persian | Poni Isle, Ula'ula Cave 2, Ula'ula Isle |
+| Alolan Persian | Poni Isle, Ula'ula Isle |
 | Pichu | Melemele Isle |
 | Pikachu | Melemele Isle, Poni Isle |
 | Pikipek | Akala Forest, Melemele Isle, Ula'ula Isle |
 | Popplio | Melemele Isle |
 | Primarina | Melemele Isle |
-| Psyduck | Poni Cave |
-| Pyukumuku | Akala Isle, Alola sea, Melemele Isle, Poni Isle and more |
+| Psyduck | Poni Cave, Ula'ula Cave, Ula'ula Cave 2 |
+| Pyukumuku | Akala Isle, Melemele Isle, Poni Isle, Ula'ula Isle |
 | Alolan Raichu | Poni Isle |
-| Alolan Raticate | Akala Forest, Akala Isle, Melemele Isle, Ula'ula Cave 2 and more |
-| Alolan Rattata | Akala Forest, Akala Isle, Melemele Isle, Ula'ula Cave 2 and more |
+| Alolan Raticate | Akala Forest, Akala Isle, Melemele Isle, Poni Isle and more |
+| Alolan Rattata | Akala Forest, Akala Isle, Melemele Isle, Poni Isle and more |
 | Ribombee | Akala Forest, Melemele Isle |
 | Rockruff | Melemele Isle, Poni Cave, Poni Isle |
 | Rockruff (Own Tempo) | Akala Cave |
 | Roggenrola | Poni Cave |
 | Rowlet | Akala Forest, Melemele Isle |
 | Sableye | Poni Cave |
-| Salandit | Akala Cave, Akala Isle, Poni Cave, Poni Isle and more |
-| Salazzle | Akala Cave, Akala Isle, Poni Cave, Poni Isle and more |
+| Salandit | Akala Cave, Akala Isle, Poni Isle |
+| Salazzle | Akala Cave, Akala Isle, Poni Isle |
 | Alolan Sandshrew | Ula'ula Cave, Ula'ula Isle |
 | Alolan Sandslash | Ula'ula Cave, Ula'ula Isle |
 | Sandygast | Akala Isle, Poni Isle |
@@ -587,14 +585,14 @@ Water type: cave water.
 | Shiinotic | Akala Forest, Akala Isle, Poni Isle, Ula'ula Isle |
 | Slugma | Akala Cave |
 | Snorunt | Ula'ula Cave |
-| Spinarak | Melemele Isle |
+| Spinarak | Akala Forest, Melemele Isle |
 | Staryu | Akala Isle, Alola sea, Melemele Isle, Poni Isle |
 | Steenee | Akala Forest, Akala Isle, Melemele Isle, Poni Isle |
 | Stufful | Akala Isle, Ula'ula Isle |
 | Swoobat | Akala Cave |
 | Tentacool | Alola sea, Melemele Isle |
 | Tentacruel | Alola sea, Melemele Isle |
-| Togedemaru | Ula'ula Cave 2, Ula'ula Isle |
+| Togedemaru | Ula'ula Isle |
 | Torracat | Akala Cave, Akala Isle |
 | Toucannon | Akala Forest, Melemele Isle, Ula'ula Isle |
 | Toxapex | Akala Isle, Alola sea, Melemele Isle, Poni Isle and more |
@@ -606,13 +604,13 @@ Water type: cave water.
 | Vanilluxe | Ula'ula Cave |
 | Venomoth | Akala Forest |
 | Venonat | Akala Forest |
-| Vikavolt | Poni Cave, Poni Isle, Ula'ula Cave 2, Ula'ula Isle |
+| Vikavolt | Poni Cave, Poni Isle, Ula'ula Cave 2 |
 | Alolan Vulpix | Ula'ula Cave, Ula'ula Isle |
 | Wailmer | Alola sea, Poni Isle, Ula'ula Isle |
-| Whiscash | Poni Cave |
-| Wimpod | Akala Isle, Poni Cave, Poni Isle, Ula'ula Cave and more |
+| Whiscash | Poni Cave, Ula'ula Cave, Ula'ula Cave 2 |
+| Wimpod | Akala Isle, Poni Isle |
 | Wingull | Akala Isle, Melemele Isle, Poni Isle, Ula'ula Isle |
-| Wishiwashi | Akala Isle, Alola sea, Poni Cave, Poni Isle and more |
+| Wishiwashi | Akala Isle, Alola sea, Melemele Isle, Poni Cave and more |
 | Woobat | Akala Cave |
-| Yungoos | Melemele Isle, Poni Isle, Ula'ula Cave 2 |
+| Yungoos | Melemele Isle, Poni Isle, Ula'ula Isle |
 | Zubat | Akala Cave, Poni Cave, Ula'ula Cave, Ula'ula Cave 2 |

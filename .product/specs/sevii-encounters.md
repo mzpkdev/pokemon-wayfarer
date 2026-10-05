@@ -58,7 +58,7 @@ species live near home, and rare, strong ones further out.
 | Four | Four Island, Icefall Cave | The Crown Tundra's snow | Snom, Eiscue, Cufant, Galarian Darumaka, Galarian Mr. Mime |
 | Five | Five Island, Five Isle Meadow, Memorial Pillar, Resort Gorgeous, Water Labyrinth, Lost Cave | Haunted Galar, with a meadow and a resort | Sinistea, Dreepy, Galarian Corsola, Galarian Yamask, Impidimp, Hatenna |
 | Six | Water Path, Ruin Valley, Green Path, Pattern Bush, Outcast Island, Altering Cave | Ancient sites and the Isle of Armor's wilds | Stonjourner, Galarian Farfetch'd, Galarian Slowpoke, Falinks, Silicobra, Morpeko |
-| Seven | Sevault Canyon and its entrance, Tanoby Ruins and its chambers, Trainer Tower grounds | The far, rugged edge | Duraludon, Falinks, Galarian Mr. Mime, Galarian Stunfisk, Galarian Yamask in the chambers |
+| Seven | Sevault Canyon and its entrance, Tanoby Ruins and its chambers, Trainer Tower grounds | The far, rugged edge | Duraludon, Falinks, Silicobra, Galarian Yamask, Galarian Stunfisk by the canyon's water |
 
 Galarian Darumaka is an Ice type, so it lives in Four Island's snow rather than
 Mt. Ember.
@@ -91,6 +91,9 @@ Galar:
   finds, never fierce or dangerous rewards.
 - **They don't replace a home.** Every blend species is already catchable in its
   own region.
+- **A slot capped at a Galarian form is native.** Koffing–Galarian Weezing
+  produces the Galarian form, so it may lead a table and doesn't count toward
+  the blend cap.
 
 ### Sevii's region
 
@@ -142,9 +145,9 @@ family is catchable.
 - Each map has a mix of its own, not a copy of its neighbour's.
 - No family is one of a table's two most common slots on more than eight maps.
 - Open water repeats more, since Galar has few water species: about six water
-  families for Sevii's surfing and fishing tables. For those tables the limit
-  is twelve maps. Sea maps differ through their mix, their rarities and the
-  blend.
+  families for Sevii's surfing and fishing tables. Water follows the surfing
+  limit under Water instead. Sea maps differ through their mix, their rarities
+  and the blend.
 
 ### Water
 
@@ -153,7 +156,7 @@ each map's type.
 
 | Water type | Where | Cast |
 | --- | --- | --- |
-| Ponds and rivers | Cape Brink, Berry Forest, Ruin Valley | Chewtle, Arrokuda, Galarian Stunfisk, Sobble, and the blend's fresh-water species: Magikarp, Psyduck, Poliwag, Goldeen, Basculin, Marill, Wooper, Lotad, Dewpider |
+| Ponds and rivers | Cape Brink, Berry Forest, Ruin Valley | Chewtle, Arrokuda, Galarian Stunfisk, Galarian Slowpoke, Sobble, and the blend's fresh-water species: Magikarp, Psyduck, Poliwag, Goldeen, Basculin, Marill, Wooper, Lotad, Dewpider |
 | Coast and sea | Every other island coast and sea route | Chewtle, Arrokuda, Pincurchin, Clobbopus, Cramorant, Galarian Corsola, Galarian Slowpoke, Sobble, and the blend's sea species: Magikarp, Tentacool, Horsea, Krabby, Shellder, Staryu, Chinchou, Wingull, Wailmer, Remoraid, Qwilfish, Luvdisc, Frillish, Mareanie, Pyukumuku |
 | Cold water | Four Island and Icefall Cave | Eiscue, Arrokuda, Clobbopus, and the blend's cold species: Seel, Shellder, Spheal, Horsea, Tentacool |
 
@@ -163,6 +166,19 @@ each map's type.
   twelve maps.
 - **Night:** at sea, night brings Chinchou near home and Cursola, Galarian
   Corsola's ghostly evolution, further out.
+
+### Dungeons
+
+- **Mt. Ember:** Rolycoly, Sizzlipede, Cufant and Koffing's Galarian Weezing
+  fill the tunnels, and its Rock Smash rocks hide Rolycoly and Sizzlipede.
+  Stonjourner, which watches the sunset from open ground, appears only on the
+  outer slopes.
+- **Lost Cave:** graded through its 14 rooms. Impidimp, Nickit and Galarian
+  Corsola lead near the entrance, Sinistea and Galarian Yamask rise through the
+  middle rooms, and Dreepy's line leads every deep room.
+- **Tanoby Chambers:** a stone, ghost and ancient core. Runerigus guards every
+  chamber with Silicobra or Sinistea, Unown drifts in from the ruins, and each
+  chamber has one accent of its own.
 
 ### Day and night
 

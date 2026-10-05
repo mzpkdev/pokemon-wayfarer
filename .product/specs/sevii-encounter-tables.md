@@ -216,7 +216,7 @@ Water type: coast and sea.
 | 7 | 5% | Spearow–Fearow | Rattata–Raticate |
 | 8 | 5% | Ponyta–Rapidash | Yamper–Boltund |
 | 9 | 4% | Koffing–Galarian Weezing | Chewtle–Drednaw |
-| 10 | 4% | Galarian Meowth–Perrserker | Zubat–Golbat |
+| 10 | 4% | Galarian Meowth–Perrserker | Hoothoot–Noctowl |
 | 11 | 1% | Scorbunny–Cinderace | Scorbunny–Cinderace |
 | 12 | 1% | Toxel | Toxel |
 
@@ -249,11 +249,11 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Rolycoly–Coalossal | Chewtle–Drednaw |
-| 2 | 30% | Chewtle–Drednaw | Rolycoly–Coalossal |
+| 1 | 60% | Pincurchin | Clobbopus |
+| 2 | 30% | Clobbopus | Pincurchin |
 | 3 | 5% | Geodude–Graveler | Geodude–Graveler |
-| 4 | 4% | Sizzlipede–Centiskorch | Sizzlipede–Centiskorch |
-| 5 | 1% | Pincurchin | Pincurchin |
+| 4 | 4% | Rolycoly–Coalossal | Rolycoly–Coalossal |
+| 5 | 1% | Chewtle–Drednaw | Chewtle–Drednaw |
 
 #### Bond Bridge
 
@@ -318,9 +318,9 @@ Water type: coast and sea.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Chewtle–Drednaw | Chewtle–Drednaw |
-| 2 | 20% | Yamper–Boltund | Clobbopus |
+| 2 | 20% | Clobbopus | Clobbopus |
 | 3 | 10% | Silicobra–Sandaconda | Nickit–Thievul |
-| 4 | 10% | Clobbopus | Galarian Zigzagoon–Obstagoon |
+| 4 | 10% | Yamper–Boltund | Galarian Zigzagoon–Obstagoon |
 | 5 | 10% | Skwovet–Greedent | Silicobra–Sandaconda |
 | 6 | 10% | Slowpoke–Slowbro | Staryu |
 | 7 | 5% | Krabby–Kingler | Krabby–Kingler |
@@ -372,7 +372,7 @@ Water type: ponds and rivers.
 | 3 | 10% | Rookidee–Corviknight | Galarian Zigzagoon–Obstagoon |
 | 4 | 10% | Yamper–Boltund | Hoothoot–Noctowl |
 | 5 | 10% | Skwovet–Greedent | Psyduck–Golduck |
-| 6 | 10% | Blipbug–Orbeetle | Rookidee–Corviknight |
+| 6 | 10% | Blipbug–Orbeetle | Galarian Meowth–Perrserker |
 | 7 | 5% | Psyduck–Golduck | Impidimp–Grimmsnarl |
 | 8 | 5% | Spearow–Fearow | Galarian Meowth–Perrserker |
 | 9 | 4% | Morpeko | Blipbug–Orbeetle |
@@ -468,13 +468,13 @@ Water type: coast and sea.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Gossifleur–Eldegoss | Nickit–Thievul |
-| 2 | 20% | Wooloo–Dubwool | Gossifleur–Eldegoss |
+| 2 | 20% | Wooloo–Dubwool | Wooloo–Dubwool |
 | 3 | 10% | Morpeko | Galarian Zigzagoon–Obstagoon |
 | 4 | 10% | Yamper–Boltund | Impidimp–Grimmsnarl |
-| 5 | 10% | Blipbug–Orbeetle | Wooloo–Dubwool |
+| 5 | 10% | Blipbug–Orbeetle | Morpeko |
 | 6 | 10% | Skwovet–Greedent | Hatenna–Hatterene |
 | 7 | 5% | Hoppip–Jumpluff | Hoothoot–Noctowl |
-| 8 | 5% | Galarian Ponyta–Galarian Rapidash | Morpeko |
+| 8 | 5% | Galarian Ponyta–Galarian Rapidash | Gossifleur–Eldegoss |
 | 9 | 4% | Falinks | Blipbug–Orbeetle |
 | 10 | 4% | Scorbunny–Cinderace | Falinks |
 | 11 | 1% | Cramorant | Sinistea |
@@ -502,7 +502,7 @@ Water type: coast and sea.
 | 6 | 4% | 7% | 10% | Galarian Corsola | Galarian Corsola–Cursola |
 | 7 | 3% | 6% | 10% | Chewtle–Drednaw | Galarian Corsola |
 | 8 | 3% | 5% | 9% | Wailmer | Galarian Corsola–Cursola |
-| 9 | 2% | 4% | 9% | Staryu | Staryu |
+| 9 | 2% | 4% | 9% | Pyukumuku | Pyukumuku |
 | 10 | 2% | 4% | 9% | Clobbopus | Chewtle–Drednaw |
 
 #### Resort Gorgeous
@@ -550,16 +550,16 @@ Water type: coast and sea.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Rookidee–Corviknight | Rookidee–Corviknight |
+| 1 | 20% | Rookidee–Corviknight | Nickit–Thievul |
 | 2 | 20% | Clobbopus | Clobbopus |
-| 3 | 10% | Galarian Slowpoke | Nickit–Thievul |
+| 3 | 10% | Galarian Slowpoke | Impidimp–Grimmsnarl |
 | 4 | 10% | Galarian Farfetch'd | Galarian Zigzagoon–Obstagoon |
 | 5 | 10% | Skwovet–Greedent | Galarian Slowpoke |
 | 6 | 10% | Chewtle–Drednaw | Galarian Meowth–Perrserker |
-| 7 | 5% | Falinks | Impidimp–Grimmsnarl |
+| 7 | 5% | Falinks | Rookidee–Corviknight |
 | 8 | 5% | Pyukumuku | Galarian Farfetch'd |
 | 9 | 4% | Yamper–Boltund | Falinks |
-| 10 | 4% | Silicobra–Sandaconda | Mareanie–Toxapex |
+| 10 | 4% | Silicobra–Sandaconda | Chewtle–Drednaw |
 | 11 | 1% | Stonjourner | Stonjourner |
 | 12 | 1% | Cramorant | Hatenna–Hatterene |
 
@@ -605,9 +605,9 @@ Wilds, Outer islands.
 | 5 | 10% | Falinks | Galarian Meowth–Perrserker |
 | 6 | 10% | Galarian Zigzagoon–Obstagoon | Impidimp–Grimmsnarl |
 | 7 | 5% | Phanpy–Donphan | Falinks |
-| 8 | 5% | Galarian Mr. Mime–Mr. Rime | Galarian Mr. Mime–Mr. Rime |
-| 9 | 4% | Galarian Stunfisk | Hoothoot–Noctowl |
-| 10 | 4% | Galarian Meowth–Perrserker | Galarian Stunfisk |
+| 8 | 5% | Galarian Farfetch'd | Galarian Farfetch'd |
+| 9 | 4% | Galarian Yamask | Hoothoot–Noctowl |
+| 10 | 4% | Galarian Meowth–Perrserker | Galarian Yamask |
 | 11 | 1% | Scorbunny–Cinderace | Hatenna–Hatterene |
 | 12 | 1% | Toxel | Toxel |
 
@@ -641,8 +641,8 @@ Water type: coast and sea.
 | 6 | 4% | 7% | 10% | Wailmer | Galarian Corsola–Cursola |
 | 7 | 3% | 6% | 10% | Galarian Corsola | Galarian Corsola–Cursola |
 | 8 | 3% | 5% | 9% | Chewtle–Drednaw | Wailmer |
-| 9 | 2% | 4% | 9% | Qwilfish | Staryu |
-| 10 | 2% | 4% | 9% | Staryu | Chewtle–Drednaw |
+| 9 | 2% | 4% | 9% | Qwilfish | Pyukumuku |
+| 10 | 2% | 4% | 9% | Pyukumuku | Chewtle–Drednaw |
 
 #### Memorial Pillar
 
@@ -657,10 +657,10 @@ Water type: coast and sea.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Gossifleur–Eldegoss | Galarian Yamask–Runerigus |
-| 2 | 20% | Galarian Yamask–Runerigus | Impidimp–Grimmsnarl |
+| 2 | 20% | Galarian Yamask–Runerigus | Galarian Corsola–Cursola |
 | 3 | 10% | Sinistea | Sinistea |
 | 4 | 10% | Rookidee–Corviknight | Nickit–Thievul |
-| 5 | 10% | Galarian Corsola–Cursola | Galarian Corsola–Cursola |
+| 5 | 10% | Galarian Corsola–Cursola | Impidimp–Grimmsnarl |
 | 6 | 10% | Skwovet–Greedent | Dreepy–Dragapult |
 | 7 | 5% | Dreepy–Dragapult | Gastly–Haunter |
 | 8 | 5% | Hatenna–Hatterene | Hatenna–Hatterene |
@@ -750,7 +750,7 @@ Water type: ponds and rivers.
 | 9 | 4% | Rookidee–Corviknight | Sinistea |
 | 10 | 4% | Falinks | Natu–Xatu |
 | 11 | 1% | Duraludon | Dreepy–Dragapult |
-| 12 | 1% | Galarian Mr. Mime–Mr. Rime | Indeedee |
+| 12 | 1% | Galarian Yamask–Runerigus | Indeedee |
 
 *Surfing*
 
@@ -826,12 +826,12 @@ Outlands, Outer islands.
 | 4 | 10% | Sizzlipede–Centiskorch | Nickit–Thievul |
 | 5 | 10% | Ledyba–Ledian | Impidimp–Grimmsnarl |
 | 6 | 10% | Applin–Flapple | Falinks |
-| 7 | 5% | Pineco–Forretress | Snom–Frosmoth |
+| 7 | 5% | Pineco–Forretress | Hatenna–Hatterene |
 | 8 | 5% | Skwovet–Greedent | Pineco–Forretress |
 | 9 | 4% | Venipede–Scolipede | Venonat–Venomoth |
 | 10 | 4% | Cutiefly–Ribombee | Applin–Flapple |
 | 11 | 1% | Applin–Appletun | Morelull–Shiinotic |
-| 12 | 1% | Snom | Applin–Appletun |
+| 12 | 1% | Galarian Ponyta–Galarian Rapidash | Applin–Appletun |
 
 #### Outcast Island
 
@@ -848,7 +848,7 @@ Water type: coast and sea.
 | 1 | 60% | Clobbopus–Grapploct | Arrokuda–Barraskewda |
 | 2 | 30% | Arrokuda–Barraskewda | Clobbopus–Grapploct |
 | 3 | 5% | Cramorant | Galarian Corsola–Cursola |
-| 4 | 4% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 4 | 4% | Wailmer | Wailmer |
 | 5 | 1% | Galarian Corsola–Cursola | Cramorant |
 
 *Fishing*
@@ -882,10 +882,10 @@ Water type: ponds and rivers.
 | 2 | 20% | Rookidee–Corviknight | Silicobra–Sandaconda |
 | 3 | 10% | Silicobra–Sandaconda | Galarian Zigzagoon–Obstagoon |
 | 4 | 10% | Falinks | Impidimp–Grimmsnarl |
-| 5 | 10% | Rolycoly–Coalossal | Rookidee–Corviknight |
+| 5 | 10% | Rolycoly–Coalossal | Galarian Meowth–Perrserker |
 | 6 | 10% | Phanpy–Donphan | Dreepy–Dragapult |
 | 7 | 5% | Duraludon | Duraludon |
-| 8 | 5% | Galarian Mr. Mime–Mr. Rime | Galarian Mr. Mime–Mr. Rime |
+| 8 | 5% | Galarian Farfetch'd | Galarian Farfetch'd |
 | 9 | 4% | Stonjourner | Cubone–Marowak |
 | 10 | 4% | Cubone–Marowak | Stonjourner |
 | 11 | 1% | Galarian Stunfisk | Hatenna–Hatterene |
@@ -920,11 +920,11 @@ Water type: ponds and rivers.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Cufant–Copperajah | Rolycoly–Coalossal |
-| 2 | 30% | Rolycoly–Coalossal | Cufant–Copperajah |
+| 1 | 60% | Silicobra–Sandaconda | Galarian Yamask–Runerigus |
+| 2 | 30% | Galarian Yamask–Runerigus | Silicobra–Sandaconda |
 | 3 | 5% | Stonjourner | Stonjourner |
-| 4 | 4% | Duraludon | Duraludon |
-| 5 | 1% | Geodude–Golem | Geodude–Golem |
+| 4 | 4% | Geodude–Golem | Geodude–Golem |
+| 5 | 1% | Duraludon | Duraludon |
 
 #### Tanoby Ruins
 
@@ -956,7 +956,7 @@ Water type: coast and sea.
 | 6 | 4% | 7% | 10% | Galarian Corsola | Chinchou–Lanturn |
 | 7 | 3% | 6% | 10% | Wailmer | Galarian Corsola–Cursola |
 | 8 | 3% | 5% | 9% | Pincurchin | Wailmer |
-| 9 | 2% | 4% | 9% | Staryu | Staryu |
+| 9 | 2% | 4% | 9% | Pyukumuku | Pyukumuku |
 | 10 | 2% | 4% | 9% | Galarian Corsola–Cursola | Galarian Corsola |
 
 #### Icefall Cave
@@ -1110,10 +1110,10 @@ Dungeon, Outer islands.
 | 5 | 10% | Sizzlipede–Centiskorch | Rolycoly–Coalossal |
 | 6 | 10% | Nickit–Thievul | Misdreavus |
 | 7 | 5% | Dreepy–Dragapult | Impidimp–Grimmsnarl |
-| 8 | 5% | Toxel | Dreepy–Dragapult |
+| 8 | 5% | Rolycoly–Carkol | Dreepy–Dragapult |
 | 9 | 4% | Impidimp–Grimmsnarl | Sizzlipede–Centiskorch |
-| 10 | 4% | Indeedee | Toxel |
-| 11 | 1% | Rolycoly–Carkol | Indeedee |
+| 10 | 4% | Sizzlipede–Centiskorch | Rolycoly–Carkol |
+| 11 | 1% | Toxel | Toxel |
 | 12 | 1% | Duraludon | Duraludon |
 
 #### Tanoby Chambers
@@ -1126,18 +1126,18 @@ Dungeon, Outer islands.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Galarian Yamask–Runerigus | Hatenna–Hatterene |
-| 2 | 20% | Hatenna–Hatterene | Galarian Yamask–Runerigus |
+| 1 | 20% | Galarian Yamask–Runerigus | Silicobra–Sandaconda |
+| 2 | 20% | Silicobra–Sandaconda | Galarian Yamask–Runerigus |
 | 3 | 10% | Unown | Unown |
-| 4 | 10% | Blipbug–Orbeetle | Silicobra–Sandaconda |
-| 5 | 10% | Silicobra–Sandaconda | Blipbug–Orbeetle |
-| 6 | 10% | Cufant–Copperajah | Dreepy–Dragapult |
-| 7 | 5% | Stonjourner | Sinistea |
-| 8 | 5% | Sinistea | Stonjourner |
-| 9 | 4% | Galarian Mr. Mime–Mr. Rime | Indeedee |
-| 10 | 4% | Galarian Yamask–Runerigus | Cufant–Copperajah |
-| 11 | 1% | Duraludon | Unown |
-| 12 | 1% | Unown | Duraludon |
+| 4 | 10% | Sinistea | Impidimp–Grimmsnarl |
+| 5 | 10% | Galarian Corsola–Cursola | Dreepy–Dragapult |
+| 6 | 10% | Silicobra–Sandaconda | Galarian Corsola–Cursola |
+| 7 | 5% | Galarian Yamask | Sinistea |
+| 8 | 5% | Stonjourner | Galarian Yamask |
+| 9 | 4% | Galarian Corsola–Cursola | Stonjourner |
+| 10 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 11 | 1% | Unown | Unown |
+| 12 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
 
 **`MAP_SEVEN_ISLAND_TANOBY_RUINS_LIPTOO_CHAMBER`**
 
@@ -1145,18 +1145,18 @@ Dungeon, Outer islands.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Galarian Yamask–Runerigus | Blipbug–Orbeetle |
-| 2 | 20% | Blipbug–Orbeetle | Galarian Yamask–Runerigus |
+| 1 | 20% | Galarian Yamask–Runerigus | Sinistea |
+| 2 | 20% | Sinistea | Galarian Yamask–Runerigus |
 | 3 | 10% | Unown | Unown |
-| 4 | 10% | Silicobra–Sandaconda | Cufant–Copperajah |
-| 5 | 10% | Cufant–Copperajah | Silicobra–Sandaconda |
-| 6 | 10% | Impidimp–Grimmsnarl | Dreepy–Dragapult |
-| 7 | 5% | Sinistea | Galarian Mr. Mime–Mr. Rime |
-| 8 | 5% | Galarian Mr. Mime–Mr. Rime | Sinistea |
-| 9 | 4% | Indeedee | Stonjourner |
-| 10 | 4% | Galarian Yamask–Runerigus | Impidimp–Grimmsnarl |
-| 11 | 1% | Duraludon | Unown |
-| 12 | 1% | Unown | Duraludon |
+| 4 | 10% | Silicobra–Sandaconda | Impidimp–Grimmsnarl |
+| 5 | 10% | Rolycoly–Coalossal | Dreepy–Dragapult |
+| 6 | 10% | Sinistea | Rolycoly–Coalossal |
+| 7 | 5% | Galarian Yamask | Silicobra–Sandaconda |
+| 8 | 5% | Stonjourner | Galarian Yamask |
+| 9 | 4% | Rolycoly–Coalossal | Stonjourner |
+| 10 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 11 | 1% | Unown | Unown |
+| 12 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
 
 **`MAP_SEVEN_ISLAND_TANOBY_RUINS_WEEPTH_CHAMBER`**
 
@@ -1167,15 +1167,15 @@ Dungeon, Outer islands.
 | 1 | 20% | Galarian Yamask–Runerigus | Silicobra–Sandaconda |
 | 2 | 20% | Silicobra–Sandaconda | Galarian Yamask–Runerigus |
 | 3 | 10% | Unown | Unown |
-| 4 | 10% | Cufant–Copperajah | Impidimp–Grimmsnarl |
-| 5 | 10% | Impidimp–Grimmsnarl | Cufant–Copperajah |
-| 6 | 10% | Hatenna–Hatterene | Dreepy–Dragapult |
-| 7 | 5% | Galarian Mr. Mime–Mr. Rime | Indeedee |
-| 8 | 5% | Indeedee | Galarian Mr. Mime–Mr. Rime |
-| 9 | 4% | Stonjourner | Sinistea |
-| 10 | 4% | Galarian Yamask–Runerigus | Hatenna–Hatterene |
-| 11 | 1% | Duraludon | Unown |
-| 12 | 1% | Unown | Duraludon |
+| 4 | 10% | Sinistea | Impidimp–Grimmsnarl |
+| 5 | 10% | Nickit–Thievul | Dreepy–Dragapult |
+| 6 | 10% | Silicobra–Sandaconda | Nickit–Thievul |
+| 7 | 5% | Galarian Yamask | Sinistea |
+| 8 | 5% | Stonjourner | Galarian Yamask |
+| 9 | 4% | Nickit–Thievul | Stonjourner |
+| 10 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 11 | 1% | Unown | Unown |
+| 12 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
 
 **`MAP_SEVEN_ISLAND_TANOBY_RUINS_DILFORD_CHAMBER`**
 
@@ -1183,39 +1183,20 @@ Dungeon, Outer islands.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Galarian Yamask–Runerigus | Hatenna–Hatterene |
-| 2 | 20% | Hatenna–Hatterene | Galarian Yamask–Runerigus |
+| 1 | 20% | Galarian Yamask–Runerigus | Sinistea |
+| 2 | 20% | Sinistea | Galarian Yamask–Runerigus |
 | 3 | 10% | Unown | Unown |
-| 4 | 10% | Cufant–Copperajah | Impidimp–Grimmsnarl |
-| 5 | 10% | Impidimp–Grimmsnarl | Cufant–Copperajah |
-| 6 | 10% | Blipbug–Orbeetle | Dreepy–Dragapult |
-| 7 | 5% | Indeedee | Stonjourner |
-| 8 | 5% | Stonjourner | Indeedee |
-| 9 | 4% | Sinistea | Galarian Mr. Mime–Mr. Rime |
-| 10 | 4% | Galarian Yamask–Runerigus | Blipbug–Orbeetle |
-| 11 | 1% | Duraludon | Unown |
-| 12 | 1% | Unown | Duraludon |
+| 4 | 10% | Silicobra–Sandaconda | Impidimp–Grimmsnarl |
+| 5 | 10% | Galarian Corsola | Dreepy–Dragapult |
+| 6 | 10% | Sinistea | Galarian Corsola |
+| 7 | 5% | Galarian Yamask | Silicobra–Sandaconda |
+| 8 | 5% | Stonjourner | Galarian Yamask |
+| 9 | 4% | Galarian Corsola | Stonjourner |
+| 10 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 11 | 1% | Unown | Unown |
+| 12 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
 
 **`MAP_SEVEN_ISLAND_TANOBY_RUINS_SCUFIB_CHAMBER`**
-
-*Land*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 20% | Galarian Yamask–Runerigus | Blipbug–Orbeetle |
-| 2 | 20% | Blipbug–Orbeetle | Galarian Yamask–Runerigus |
-| 3 | 10% | Unown | Unown |
-| 4 | 10% | Impidimp–Grimmsnarl | Hatenna–Hatterene |
-| 5 | 10% | Hatenna–Hatterene | Impidimp–Grimmsnarl |
-| 6 | 10% | Silicobra–Sandaconda | Dreepy–Dragapult |
-| 7 | 5% | Stonjourner | Sinistea |
-| 8 | 5% | Sinistea | Stonjourner |
-| 9 | 4% | Galarian Mr. Mime–Mr. Rime | Indeedee |
-| 10 | 4% | Galarian Yamask–Runerigus | Silicobra–Sandaconda |
-| 11 | 1% | Duraludon | Unown |
-| 12 | 1% | Unown | Duraludon |
-
-**`MAP_SEVEN_ISLAND_TANOBY_RUINS_RIXY_CHAMBER`**
 
 *Land*
 
@@ -1224,15 +1205,34 @@ Dungeon, Outer islands.
 | 1 | 20% | Galarian Yamask–Runerigus | Silicobra–Sandaconda |
 | 2 | 20% | Silicobra–Sandaconda | Galarian Yamask–Runerigus |
 | 3 | 10% | Unown | Unown |
-| 4 | 10% | Hatenna–Hatterene | Blipbug–Orbeetle |
-| 5 | 10% | Blipbug–Orbeetle | Hatenna–Hatterene |
-| 6 | 10% | Cufant–Copperajah | Dreepy–Dragapult |
-| 7 | 5% | Sinistea | Galarian Mr. Mime–Mr. Rime |
-| 8 | 5% | Galarian Mr. Mime–Mr. Rime | Sinistea |
-| 9 | 4% | Indeedee | Stonjourner |
-| 10 | 4% | Galarian Yamask–Runerigus | Cufant–Copperajah |
-| 11 | 1% | Duraludon | Unown |
-| 12 | 1% | Unown | Duraludon |
+| 4 | 10% | Sinistea | Nickit–Thievul |
+| 5 | 10% | Impidimp–Grimmsnarl | Dreepy–Dragapult |
+| 6 | 10% | Silicobra–Sandaconda | Impidimp–Grimmsnarl |
+| 7 | 5% | Galarian Yamask | Sinistea |
+| 8 | 5% | Stonjourner | Galarian Yamask |
+| 9 | 4% | Impidimp–Grimmsnarl | Stonjourner |
+| 10 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 11 | 1% | Unown | Unown |
+| 12 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
+
+**`MAP_SEVEN_ISLAND_TANOBY_RUINS_RIXY_CHAMBER`**
+
+*Land*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Galarian Yamask–Runerigus | Sinistea |
+| 2 | 20% | Sinistea | Galarian Yamask–Runerigus |
+| 3 | 10% | Unown | Unown |
+| 4 | 10% | Silicobra–Sandaconda | Impidimp–Grimmsnarl |
+| 5 | 10% | Rolycoly–Carkol | Dreepy–Dragapult |
+| 6 | 10% | Sinistea | Rolycoly–Carkol |
+| 7 | 5% | Galarian Yamask | Silicobra–Sandaconda |
+| 8 | 5% | Stonjourner | Galarian Yamask |
+| 9 | 4% | Rolycoly–Carkol | Stonjourner |
+| 10 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 11 | 1% | Unown | Unown |
+| 12 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
 
 **`MAP_SEVEN_ISLAND_TANOBY_RUINS_VIAPOIS_CHAMBER`**
 
@@ -1240,18 +1240,18 @@ Dungeon, Outer islands.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Galarian Yamask–Runerigus | Hatenna–Hatterene |
-| 2 | 20% | Hatenna–Hatterene | Galarian Yamask–Runerigus |
+| 1 | 20% | Galarian Yamask–Runerigus | Silicobra–Sandaconda |
+| 2 | 20% | Silicobra–Sandaconda | Galarian Yamask–Runerigus |
 | 3 | 10% | Unown | Unown |
-| 4 | 10% | Blipbug–Orbeetle | Silicobra–Sandaconda |
-| 5 | 10% | Silicobra–Sandaconda | Blipbug–Orbeetle |
-| 6 | 10% | Cufant–Copperajah | Dreepy–Dragapult |
-| 7 | 5% | Galarian Mr. Mime–Mr. Rime | Indeedee |
-| 8 | 5% | Indeedee | Galarian Mr. Mime–Mr. Rime |
-| 9 | 4% | Stonjourner | Sinistea |
-| 10 | 4% | Galarian Yamask–Runerigus | Cufant–Copperajah |
-| 11 | 1% | Duraludon | Unown |
-| 12 | 1% | Unown | Duraludon |
+| 4 | 10% | Sinistea | Impidimp–Grimmsnarl |
+| 5 | 10% | Galarian Meowth–Perrserker | Dreepy–Dragapult |
+| 6 | 10% | Silicobra–Sandaconda | Galarian Meowth–Perrserker |
+| 7 | 5% | Galarian Yamask | Sinistea |
+| 8 | 5% | Stonjourner | Galarian Yamask |
+| 9 | 4% | Galarian Meowth–Perrserker | Stonjourner |
+| 10 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 11 | 1% | Unown | Unown |
+| 12 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
 
 #### Mt. Ember
 
@@ -1274,7 +1274,7 @@ Dungeon, Near islands.
 | 9 | 4% | Scorbunny–Cinderace | Hoothoot–Noctowl |
 | 10 | 4% | Salandit–Salazzle | Misdreavus |
 | 11 | 1% | Toxel | Toxel |
-| 12 | 1% | Rolycoly–Carkol | Scorbunny–Cinderace |
+| 12 | 1% | Stonjourner | Scorbunny–Cinderace |
 
 *Rock Smash rocks*
 
@@ -1284,7 +1284,7 @@ Dungeon, Near islands.
 | 2 | 30% | Sizzlipede–Centiskorch | Rolycoly–Coalossal |
 | 3 | 5% | Geodude–Graveler | Geodude–Graveler |
 | 4 | 4% | Slugma–Magcargo | Slugma–Magcargo |
-| 5 | 1% | Cufant–Copperajah | Cufant–Copperajah |
+| 5 | 1% | Stonjourner | Stonjourner |
 
 **`MAP_MT_EMBER_SUMMIT_PATH_1F`**
 
@@ -1301,7 +1301,7 @@ Dungeon, Near islands.
 | 7 | 5% | Salandit–Salazzle | Slugma–Magcargo |
 | 8 | 5% | Rolycoly–Carkol | Cufant–Copperajah |
 | 9 | 4% | Zubat–Golbat | Rolycoly–Carkol |
-| 10 | 4% | Ponyta–Rapidash | Misdreavus |
+| 10 | 4% | Salandit–Salazzle | Misdreavus |
 | 11 | 1% | Toxel | Toxel |
 | 12 | 1% | Scorbunny–Cinderace | Scorbunny–Cinderace |
 
@@ -1320,19 +1320,19 @@ Dungeon, Near islands.
 | 7 | 5% | Salandit–Salazzle | Salandit–Salazzle |
 | 8 | 5% | Rolycoly–Carkol | Misdreavus |
 | 9 | 4% | Zubat–Golbat | Slugma–Magcargo |
-| 10 | 4% | Ponyta–Rapidash | Rolycoly–Carkol |
-| 11 | 1% | Stonjourner | Toxel |
-| 12 | 1% | Toxel | Stonjourner |
+| 10 | 4% | Salandit–Salazzle | Rolycoly–Carkol |
+| 11 | 1% | Rolycoly–Carkol | Toxel |
+| 12 | 1% | Toxel | Rolycoly–Carkol |
 
 *Rock Smash rocks*
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Sizzlipede–Centiskorch | Rolycoly–Coalossal |
-| 2 | 30% | Rolycoly–Coalossal | Sizzlipede–Centiskorch |
+| 1 | 60% | Rolycoly–Coalossal | Sizzlipede–Centiskorch |
+| 2 | 30% | Sizzlipede–Centiskorch | Rolycoly–Coalossal |
 | 3 | 5% | Geodude–Golem | Geodude–Golem |
 | 4 | 4% | Slugma–Magcargo | Slugma–Magcargo |
-| 5 | 1% | Stonjourner | Stonjourner |
+| 5 | 1% | Rolycoly–Carkol | Rolycoly–Carkol |
 
 **`MAP_MT_EMBER_SUMMIT_PATH_3F`**
 
@@ -1346,11 +1346,11 @@ Dungeon, Near islands.
 | 4 | 10% | Sizzlipede–Centiskorch | Rolycoly–Coalossal |
 | 5 | 10% | Rolycoly–Carkol | Zubat–Golbat |
 | 6 | 10% | Geodude–Golem | Geodude–Golem |
-| 7 | 5% | Rookidee–Corviknight | Salandit–Salazzle |
-| 8 | 5% | Salandit–Salazzle | Hoothoot–Noctowl |
-| 9 | 4% | Slugma–Magcargo | Slugma–Magcargo |
-| 10 | 4% | Rookidee–Corviknight | Rookidee–Corviknight |
-| 11 | 1% | Stonjourner | Stonjourner |
+| 7 | 5% | Slugma–Magcargo | Salandit–Salazzle |
+| 8 | 5% | Salandit–Salazzle | Misdreavus |
+| 9 | 4% | Rolycoly–Carkol | Slugma–Magcargo |
+| 10 | 4% | Geodude–Graveler | Rolycoly–Carkol |
+| 11 | 1% | Toxel | Toxel |
 | 12 | 1% | Scorbunny–Cinderace | Scorbunny–Cinderace |
 
 **`MAP_MT_EMBER_RUBY_PATH_1F`**
@@ -1370,17 +1370,17 @@ Dungeon, Near islands.
 | 9 | 4% | Zubat–Golbat | Misdreavus |
 | 10 | 4% | Sizzlipede–Centiskorch | Rolycoly–Carkol |
 | 11 | 1% | Toxel | Toxel |
-| 12 | 1% | Stonjourner | Stonjourner |
+| 12 | 1% | Rolycoly–Carkol | Rolycoly–Carkol |
 
 *Rock Smash rocks*
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Rolycoly–Coalossal | Cufant–Copperajah |
-| 2 | 30% | Cufant–Copperajah | Rolycoly–Coalossal |
-| 3 | 5% | Slugma–Magcargo | Slugma–Magcargo |
-| 4 | 4% | Geodude–Golem | Geodude–Golem |
-| 5 | 1% | Cufant–Copperajah | Sizzlipede–Centiskorch |
+| 1 | 60% | Rolycoly–Coalossal | Sizzlipede–Centiskorch |
+| 2 | 30% | Sizzlipede–Centiskorch | Rolycoly–Coalossal |
+| 3 | 5% | Geodude–Graveler | Geodude–Graveler |
+| 4 | 4% | Slugma–Magcargo | Slugma–Magcargo |
+| 5 | 1% | Cufant–Copperajah | Cufant–Copperajah |
 
 **`MAP_MT_EMBER_RUBY_PATH_B1F`**
 
@@ -1398,7 +1398,7 @@ Dungeon, Near islands.
 | 8 | 5% | Rolycoly–Carkol | Geodude–Golem |
 | 9 | 4% | Sizzlipede–Centiskorch | Misdreavus |
 | 10 | 4% | Zubat–Golbat | Rolycoly–Carkol |
-| 11 | 1% | Stonjourner | Stonjourner |
+| 11 | 1% | Rolycoly–Carkol | Rolycoly–Carkol |
 | 12 | 1% | Toxel | Toxel |
 
 *Rock Smash rocks*
@@ -1407,9 +1407,9 @@ Dungeon, Near islands.
 | --- | --- | --- | --- |
 | 1 | 60% | Rolycoly–Coalossal | Sizzlipede–Centiskorch |
 | 2 | 30% | Sizzlipede–Centiskorch | Rolycoly–Coalossal |
-| 3 | 5% | Slugma–Magcargo | Slugma–Magcargo |
-| 4 | 4% | Geodude–Golem | Geodude–Golem |
-| 5 | 1% | Stonjourner | Stonjourner |
+| 3 | 5% | Geodude–Golem | Geodude–Golem |
+| 4 | 4% | Slugma–Magcargo | Slugma–Magcargo |
+| 5 | 1% | Toxel | Toxel |
 
 **`MAP_MT_EMBER_RUBY_PATH_B1F_STAIRS`**
 
@@ -1426,7 +1426,7 @@ Dungeon, Near islands.
 | 7 | 5% | Salandit–Salazzle | Zubat–Golbat |
 | 8 | 5% | Geodude–Golem | Sizzlipede–Centiskorch |
 | 9 | 4% | Rolycoly–Carkol | Geodude–Golem |
-| 10 | 4% | Stonjourner | Stonjourner |
+| 10 | 4% | Rolycoly–Carkol | Rolycoly–Carkol |
 | 11 | 1% | Toxel | Toxel |
 | 12 | 1% | Scorbunny–Cinderace | Scorbunny–Cinderace |
 
@@ -1434,11 +1434,11 @@ Dungeon, Near islands.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Cufant–Copperajah | Sizzlipede–Centiskorch |
-| 2 | 30% | Sizzlipede–Centiskorch | Cufant–Copperajah |
-| 3 | 5% | Slugma–Magcargo | Slugma–Magcargo |
-| 4 | 4% | Cufant–Copperajah | Cufant–Copperajah |
-| 5 | 1% | Stonjourner | Stonjourner |
+| 1 | 60% | Rolycoly–Coalossal | Sizzlipede–Centiskorch |
+| 2 | 30% | Sizzlipede–Centiskorch | Rolycoly–Coalossal |
+| 3 | 5% | Geodude–Golem | Geodude–Golem |
+| 4 | 4% | Slugma–Magcargo | Slugma–Magcargo |
+| 5 | 1% | Cufant–Copperajah | Cufant–Copperajah |
 
 **`MAP_MT_EMBER_RUBY_PATH_B2F`**
 
@@ -1454,7 +1454,7 @@ Dungeon, Near islands.
 | 6 | 10% | Slugma–Magcargo | Zubat–Golbat |
 | 7 | 5% | Sizzlipede–Centiskorch | Slugma–Magcargo |
 | 8 | 5% | Geodude–Golem | Misdreavus |
-| 9 | 4% | Stonjourner | Stonjourner |
+| 9 | 4% | Rolycoly–Carkol | Rolycoly–Carkol |
 | 10 | 4% | Rolycoly–Carkol | Sizzlipede–Centiskorch |
 | 11 | 1% | Scorbunny–Cinderace | Scorbunny–Cinderace |
 | 12 | 1% | Toxel | Toxel |
@@ -1463,11 +1463,11 @@ Dungeon, Near islands.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Rolycoly–Coalossal | Cufant–Copperajah |
-| 2 | 30% | Cufant–Copperajah | Rolycoly–Coalossal |
-| 3 | 5% | Cufant–Copperajah | Cufant–Copperajah |
+| 1 | 60% | Rolycoly–Coalossal | Sizzlipede–Centiskorch |
+| 2 | 30% | Sizzlipede–Centiskorch | Rolycoly–Coalossal |
+| 3 | 5% | Geodude–Golem | Geodude–Golem |
 | 4 | 4% | Slugma–Magcargo | Slugma–Magcargo |
-| 5 | 1% | Stonjourner | Sizzlipede–Centiskorch |
+| 5 | 1% | Rolycoly–Carkol | Rolycoly–Carkol |
 
 **`MAP_MT_EMBER_RUBY_PATH_B2F_STAIRS`**
 
@@ -1482,7 +1482,7 @@ Dungeon, Near islands.
 | 5 | 10% | Koffing–Galarian Weezing | Zubat–Golbat |
 | 6 | 10% | Sizzlipede–Centiskorch | Koffing–Galarian Weezing |
 | 7 | 5% | Slugma–Magcargo | Sizzlipede–Centiskorch |
-| 8 | 5% | Stonjourner | Stonjourner |
+| 8 | 5% | Rolycoly–Carkol | Rolycoly–Carkol |
 | 9 | 4% | Geodude–Golem | Misdreavus |
 | 10 | 4% | Rolycoly–Carkol | Slugma–Magcargo |
 | 11 | 1% | Scorbunny–Cinderace | Scorbunny–Cinderace |
@@ -1492,11 +1492,11 @@ Dungeon, Near islands.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Sizzlipede–Centiskorch | Cufant–Copperajah |
-| 2 | 30% | Cufant–Copperajah | Sizzlipede–Centiskorch |
-| 3 | 5% | Cufant–Copperajah | Cufant–Copperajah |
-| 4 | 4% | Stonjourner | Stonjourner |
-| 5 | 1% | Slugma–Magcargo | Rolycoly–Coalossal |
+| 1 | 60% | Rolycoly–Coalossal | Sizzlipede–Centiskorch |
+| 2 | 30% | Sizzlipede–Centiskorch | Rolycoly–Coalossal |
+| 3 | 5% | Geodude–Golem | Geodude–Golem |
+| 4 | 4% | Slugma–Magcargo | Slugma–Magcargo |
+| 5 | 1% | Toxel | Toxel |
 
 **`MAP_MT_EMBER_RUBY_PATH_B3F`**
 
@@ -1508,8 +1508,8 @@ Dungeon, Near islands.
 | 2 | 20% | Cufant–Copperajah | Rolycoly–Coalossal |
 | 3 | 10% | Sizzlipede–Centiskorch | Sizzlipede–Centiskorch |
 | 4 | 10% | Salandit–Salazzle | Salandit–Salazzle |
-| 5 | 10% | Sizzlipede–Centiskorch | Stonjourner |
-| 6 | 10% | Stonjourner | Zubat–Golbat |
+| 5 | 10% | Sizzlipede–Centiskorch | Koffing–Galarian Weezing |
+| 6 | 10% | Koffing–Galarian Weezing | Zubat–Golbat |
 | 7 | 5% | Koffing–Galarian Weezing | Sizzlipede–Centiskorch |
 | 8 | 5% | Slugma–Magcargo | Koffing–Galarian Weezing |
 | 9 | 4% | Geodude–Golem | Misdreavus |
@@ -1523,9 +1523,9 @@ Dungeon, Near islands.
 | --- | --- | --- | --- |
 | 1 | 60% | Rolycoly–Coalossal | Sizzlipede–Centiskorch |
 | 2 | 30% | Sizzlipede–Centiskorch | Rolycoly–Coalossal |
-| 3 | 5% | Stonjourner | Stonjourner |
-| 4 | 4% | Cufant–Copperajah | Cufant–Copperajah |
-| 5 | 1% | Slugma–Magcargo | Slugma–Magcargo |
+| 3 | 5% | Geodude–Golem | Geodude–Golem |
+| 4 | 4% | Slugma–Magcargo | Slugma–Magcargo |
+| 5 | 1% | Cufant–Copperajah | Cufant–Copperajah |
 
 #### Lost Cave
 
@@ -1540,15 +1540,15 @@ Dungeon, Outer islands.
 | 1 | 20% | Galarian Corsola–Cursola | Impidimp–Grimmsnarl |
 | 2 | 20% | Impidimp–Grimmsnarl | Galarian Corsola–Cursola |
 | 3 | 10% | Galarian Yamask | Galarian Yamask |
-| 4 | 10% | Sinistea | Nickit–Thievul |
-| 5 | 10% | Hatenna–Hatterene | Sinistea |
-| 6 | 10% | Nickit–Thievul | Hatenna–Hatterene |
-| 7 | 5% | Galarian Yamask | Dreepy–Dragapult |
-| 8 | 5% | Dreepy–Dragapult | Galarian Yamask |
-| 9 | 4% | Gastly–Haunter | Misdreavus |
-| 10 | 4% | Galarian Corsola–Cursola | Impidimp–Grimmsnarl |
-| 11 | 1% | Indeedee | Dreepy–Dragapult |
-| 12 | 1% | Dreepy–Dragapult | Sinistea |
+| 4 | 10% | Nickit–Thievul | Sinistea |
+| 5 | 10% | Sinistea | Nickit–Thievul |
+| 6 | 10% | Galarian Corsola–Cursola | Misdreavus |
+| 7 | 5% | Zubat–Golbat | Gastly–Haunter |
+| 8 | 5% | Nickit–Thievul | Nickit–Thievul |
+| 9 | 4% | Galarian Yamask | Galarian Yamask |
+| 10 | 4% | Impidimp–Grimmsnarl | Impidimp–Grimmsnarl |
+| 11 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
+| 12 | 1% | Sinistea | Sinistea |
 
 **`MAP_FIVE_ISLAND_LOST_CAVE_ROOM2`**
 
@@ -1556,18 +1556,18 @@ Dungeon, Outer islands.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Impidimp–Grimmsnarl | Hatenna–Hatterene |
-| 2 | 20% | Hatenna–Hatterene | Impidimp–Grimmsnarl |
+| 1 | 20% | Impidimp–Grimmsnarl | Nickit–Thievul |
+| 2 | 20% | Nickit–Thievul | Impidimp–Grimmsnarl |
 | 3 | 10% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
-| 4 | 10% | Sinistea | Dreepy–Dragapult |
-| 5 | 10% | Nickit–Thievul | Sinistea |
-| 6 | 10% | Dreepy–Dragapult | Nickit–Thievul |
-| 7 | 5% | Galarian Yamask–Runerigus | Galarian Corsola–Cursola |
-| 8 | 5% | Galarian Corsola–Cursola | Galarian Yamask–Runerigus |
-| 9 | 4% | Zubat–Golbat | Misdreavus |
-| 10 | 4% | Impidimp–Grimmsnarl | Hatenna–Hatterene |
-| 11 | 1% | Indeedee | Dreepy–Dragapult |
-| 12 | 1% | Dreepy–Dragapult | Sinistea |
+| 4 | 10% | Sinistea | Galarian Corsola–Cursola |
+| 5 | 10% | Galarian Corsola–Cursola | Sinistea |
+| 6 | 10% | Impidimp–Grimmsnarl | Misdreavus |
+| 7 | 5% | Gastly–Haunter | Gastly–Haunter |
+| 8 | 5% | Sinistea | Sinistea |
+| 9 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 10 | 4% | Nickit–Thievul | Nickit–Thievul |
+| 11 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
+| 12 | 1% | Galarian Corsola–Cursola | Galarian Corsola–Cursola |
 
 **`MAP_FIVE_ISLAND_LOST_CAVE_ROOM3`**
 
@@ -1575,18 +1575,18 @@ Dungeon, Outer islands.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Galarian Corsola–Cursola | Nickit–Thievul |
-| 2 | 20% | Nickit–Thievul | Galarian Corsola–Cursola |
+| 1 | 20% | Galarian Corsola–Cursola | Impidimp–Grimmsnarl |
+| 2 | 20% | Impidimp–Grimmsnarl | Galarian Corsola–Cursola |
 | 3 | 10% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
-| 4 | 10% | Sinistea | Impidimp–Grimmsnarl |
-| 5 | 10% | Dreepy–Dragapult | Sinistea |
-| 6 | 10% | Impidimp–Grimmsnarl | Dreepy–Dragapult |
-| 7 | 5% | Galarian Yamask–Runerigus | Hatenna–Hatterene |
-| 8 | 5% | Hatenna–Hatterene | Galarian Yamask–Runerigus |
-| 9 | 4% | Gastly–Haunter | Misdreavus |
-| 10 | 4% | Galarian Corsola–Cursola | Nickit–Thievul |
-| 11 | 1% | Indeedee | Dreepy–Dragapult |
-| 12 | 1% | Dreepy–Dragapult | Sinistea |
+| 4 | 10% | Nickit–Thievul | Sinistea |
+| 5 | 10% | Sinistea | Nickit–Thievul |
+| 6 | 10% | Galarian Corsola–Cursola | Misdreavus |
+| 7 | 5% | Zubat–Golbat | Gastly–Haunter |
+| 8 | 5% | Nickit–Thievul | Nickit–Thievul |
+| 9 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 10 | 4% | Impidimp–Grimmsnarl | Impidimp–Grimmsnarl |
+| 11 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
+| 12 | 1% | Sinistea | Sinistea |
 
 **`MAP_FIVE_ISLAND_LOST_CAVE_ROOM4`**
 
@@ -1594,18 +1594,18 @@ Dungeon, Outer islands.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Hatenna–Hatterene | Galarian Corsola–Cursola |
-| 2 | 20% | Galarian Corsola–Cursola | Hatenna–Hatterene |
+| 1 | 20% | Galarian Corsola–Cursola | Impidimp–Grimmsnarl |
+| 2 | 20% | Impidimp–Grimmsnarl | Galarian Corsola–Cursola |
 | 3 | 10% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
-| 4 | 10% | Sinistea | Impidimp–Grimmsnarl |
-| 5 | 10% | Dreepy–Dragapult | Sinistea |
-| 6 | 10% | Impidimp–Grimmsnarl | Dreepy–Dragapult |
-| 7 | 5% | Galarian Yamask–Runerigus | Nickit–Thievul |
-| 8 | 5% | Nickit–Thievul | Galarian Yamask–Runerigus |
-| 9 | 4% | Zubat–Golbat | Misdreavus |
-| 10 | 4% | Hatenna–Hatterene | Galarian Corsola–Cursola |
-| 11 | 1% | Indeedee | Dreepy–Dragapult |
-| 12 | 1% | Dreepy–Dragapult | Sinistea |
+| 4 | 10% | Nickit–Thievul | Sinistea |
+| 5 | 10% | Sinistea | Nickit–Thievul |
+| 6 | 10% | Galarian Corsola–Cursola | Misdreavus |
+| 7 | 5% | Gastly–Haunter | Gastly–Haunter |
+| 8 | 5% | Nickit–Thievul | Nickit–Thievul |
+| 9 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 10 | 4% | Impidimp–Grimmsnarl | Impidimp–Grimmsnarl |
+| 11 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
+| 12 | 1% | Sinistea | Sinistea |
 
 **`MAP_FIVE_ISLAND_LOST_CAVE_ROOM5`**
 
@@ -1613,18 +1613,18 @@ Dungeon, Outer islands.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Dreepy–Dragapult | Impidimp–Grimmsnarl |
-| 2 | 20% | Impidimp–Grimmsnarl | Dreepy–Dragapult |
+| 1 | 20% | Sinistea | Galarian Corsola–Cursola |
+| 2 | 20% | Galarian Corsola–Cursola | Sinistea |
 | 3 | 10% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
-| 4 | 10% | Sinistea | Hatenna–Hatterene |
-| 5 | 10% | Galarian Corsola–Cursola | Sinistea |
-| 6 | 10% | Hatenna–Hatterene | Galarian Corsola–Cursola |
-| 7 | 5% | Galarian Yamask–Runerigus | Nickit–Thievul |
-| 8 | 5% | Nickit–Thievul | Galarian Yamask–Runerigus |
-| 9 | 4% | Gastly–Haunter | Misdreavus |
-| 10 | 4% | Dreepy–Dragapult | Impidimp–Grimmsnarl |
-| 11 | 1% | Indeedee | Indeedee |
-| 12 | 1% | Sinistea | Sinistea |
+| 4 | 10% | Galarian Yamask–Runerigus | Impidimp–Grimmsnarl |
+| 5 | 10% | Impidimp–Grimmsnarl | Galarian Yamask–Runerigus |
+| 6 | 10% | Nickit–Thievul | Misdreavus |
+| 7 | 5% | Dreepy–Dragapult | Nickit–Thievul |
+| 8 | 5% | Gastly–Haunter | Dreepy–Dragapult |
+| 9 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 10 | 4% | Impidimp–Grimmsnarl | Gastly–Haunter |
+| 11 | 1% | Sinistea | Sinistea |
+| 12 | 1% | Nickit–Thievul | Impidimp–Grimmsnarl |
 
 **`MAP_FIVE_ISLAND_LOST_CAVE_ROOM6`**
 
@@ -1632,18 +1632,18 @@ Dungeon, Outer islands.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Galarian Corsola–Cursola | Dreepy–Dragapult |
-| 2 | 20% | Dreepy–Dragapult | Galarian Corsola–Cursola |
+| 1 | 20% | Sinistea | Impidimp–Grimmsnarl |
+| 2 | 20% | Impidimp–Grimmsnarl | Sinistea |
 | 3 | 10% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
-| 4 | 10% | Sinistea | Hatenna–Hatterene |
-| 5 | 10% | Impidimp–Grimmsnarl | Sinistea |
-| 6 | 10% | Hatenna–Hatterene | Impidimp–Grimmsnarl |
-| 7 | 5% | Galarian Yamask–Runerigus | Nickit–Thievul |
-| 8 | 5% | Nickit–Thievul | Galarian Yamask–Runerigus |
-| 9 | 4% | Zubat–Golbat | Misdreavus |
-| 10 | 4% | Galarian Corsola–Cursola | Dreepy–Dragapult |
-| 11 | 1% | Indeedee | Indeedee |
-| 12 | 1% | Sinistea | Sinistea |
+| 4 | 10% | Galarian Yamask–Runerigus | Galarian Corsola–Cursola |
+| 5 | 10% | Galarian Corsola–Cursola | Galarian Yamask–Runerigus |
+| 6 | 10% | Nickit–Thievul | Misdreavus |
+| 7 | 5% | Dreepy–Dragapult | Nickit–Thievul |
+| 8 | 5% | Zubat–Golbat | Dreepy–Dragapult |
+| 9 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 10 | 4% | Galarian Corsola–Cursola | Gastly–Haunter |
+| 11 | 1% | Sinistea | Sinistea |
+| 12 | 1% | Nickit–Thievul | Galarian Corsola–Cursola |
 
 **`MAP_FIVE_ISLAND_LOST_CAVE_ROOM7`**
 
@@ -1651,18 +1651,18 @@ Dungeon, Outer islands.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Impidimp–Grimmsnarl | Hatenna–Hatterene |
-| 2 | 20% | Hatenna–Hatterene | Impidimp–Grimmsnarl |
+| 1 | 20% | Dreepy–Dragapult | Sinistea |
+| 2 | 20% | Sinistea | Dreepy–Dragapult |
 | 3 | 10% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
-| 4 | 10% | Sinistea | Dreepy–Dragapult |
-| 5 | 10% | Nickit–Thievul | Sinistea |
-| 6 | 10% | Dreepy–Dragapult | Nickit–Thievul |
-| 7 | 5% | Galarian Yamask–Runerigus | Galarian Corsola–Cursola |
-| 8 | 5% | Galarian Corsola–Cursola | Galarian Yamask–Runerigus |
-| 9 | 4% | Gastly–Haunter | Misdreavus |
-| 10 | 4% | Impidimp–Grimmsnarl | Hatenna–Hatterene |
-| 11 | 1% | Indeedee | Indeedee |
-| 12 | 1% | Sinistea | Sinistea |
+| 4 | 10% | Galarian Yamask–Runerigus | Galarian Corsola–Cursola |
+| 5 | 10% | Galarian Corsola–Cursola | Galarian Yamask–Runerigus |
+| 6 | 10% | Impidimp–Grimmsnarl | Misdreavus |
+| 7 | 5% | Nickit–Thievul | Impidimp–Grimmsnarl |
+| 8 | 5% | Gastly–Haunter | Nickit–Thievul |
+| 9 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 10 | 4% | Galarian Corsola–Cursola | Gastly–Haunter |
+| 11 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
+| 12 | 1% | Impidimp–Grimmsnarl | Galarian Corsola–Cursola |
 
 **`MAP_FIVE_ISLAND_LOST_CAVE_ROOM8`**
 
@@ -1673,15 +1673,15 @@ Dungeon, Outer islands.
 | 1 | 20% | Dreepy–Dragapult | Galarian Corsola–Cursola |
 | 2 | 20% | Galarian Corsola–Cursola | Dreepy–Dragapult |
 | 3 | 10% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
-| 4 | 10% | Sinistea | Impidimp–Grimmsnarl |
-| 5 | 10% | Nickit–Thievul | Sinistea |
-| 6 | 10% | Impidimp–Grimmsnarl | Nickit–Thievul |
-| 7 | 5% | Galarian Yamask–Runerigus | Hatenna–Hatterene |
-| 8 | 5% | Hatenna–Hatterene | Galarian Yamask–Runerigus |
-| 9 | 4% | Zubat–Golbat | Misdreavus |
-| 10 | 4% | Dreepy–Dragapult | Galarian Corsola–Cursola |
-| 11 | 1% | Indeedee | Indeedee |
-| 12 | 1% | Sinistea | Sinistea |
+| 4 | 10% | Galarian Yamask–Runerigus | Sinistea |
+| 5 | 10% | Sinistea | Galarian Yamask–Runerigus |
+| 6 | 10% | Impidimp–Grimmsnarl | Misdreavus |
+| 7 | 5% | Nickit–Thievul | Impidimp–Grimmsnarl |
+| 8 | 5% | Zubat–Golbat | Nickit–Thievul |
+| 9 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 10 | 4% | Sinistea | Gastly–Haunter |
+| 11 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
+| 12 | 1% | Impidimp–Grimmsnarl | Sinistea |
 
 **`MAP_FIVE_ISLAND_LOST_CAVE_ROOM9`**
 
@@ -1689,20 +1689,39 @@ Dungeon, Outer islands.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Hatenna–Hatterene | Dreepy–Dragapult |
-| 2 | 20% | Dreepy–Dragapult | Hatenna–Hatterene |
+| 1 | 20% | Dreepy–Dragapult | Sinistea |
+| 2 | 20% | Sinistea | Dreepy–Dragapult |
 | 3 | 10% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
-| 4 | 10% | Sinistea | Impidimp–Grimmsnarl |
-| 5 | 10% | Galarian Corsola–Cursola | Sinistea |
-| 6 | 10% | Impidimp–Grimmsnarl | Galarian Corsola–Cursola |
-| 7 | 5% | Galarian Yamask–Runerigus | Nickit–Thievul |
-| 8 | 5% | Nickit–Thievul | Galarian Yamask–Runerigus |
-| 9 | 4% | Gastly–Haunter | Misdreavus |
-| 10 | 4% | Hatenna–Hatterene | Dreepy–Dragapult |
-| 11 | 1% | Indeedee | Indeedee |
-| 12 | 1% | Sinistea | Sinistea |
+| 4 | 10% | Galarian Yamask–Runerigus | Galarian Corsola–Cursola |
+| 5 | 10% | Galarian Corsola–Cursola | Galarian Yamask–Runerigus |
+| 6 | 10% | Impidimp–Grimmsnarl | Misdreavus |
+| 7 | 5% | Nickit–Thievul | Impidimp–Grimmsnarl |
+| 8 | 5% | Gastly–Haunter | Nickit–Thievul |
+| 9 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 10 | 4% | Galarian Corsola–Cursola | Gastly–Haunter |
+| 11 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
+| 12 | 1% | Impidimp–Grimmsnarl | Galarian Corsola–Cursola |
 
 **`MAP_FIVE_ISLAND_LOST_CAVE_ROOM10`**
+
+*Land*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Dreepy–Dragapult | Galarian Corsola–Cursola |
+| 2 | 20% | Galarian Corsola–Cursola | Dreepy–Dragapult |
+| 3 | 10% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 4 | 10% | Galarian Yamask–Runerigus | Sinistea |
+| 5 | 10% | Sinistea | Galarian Yamask–Runerigus |
+| 6 | 10% | Impidimp–Grimmsnarl | Misdreavus |
+| 7 | 5% | Nickit–Thievul | Impidimp–Grimmsnarl |
+| 8 | 5% | Zubat–Golbat | Nickit–Thievul |
+| 9 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 10 | 4% | Sinistea | Gastly–Haunter |
+| 11 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
+| 12 | 1% | Impidimp–Grimmsnarl | Sinistea |
+
+**`MAP_FIVE_ISLAND_LOST_CAVE_ROOM11`**
 
 *Land*
 
@@ -1711,34 +1730,15 @@ Dungeon, Outer islands.
 | 1 | 20% | Dreepy–Dragapult | Impidimp–Grimmsnarl |
 | 2 | 20% | Impidimp–Grimmsnarl | Dreepy–Dragapult |
 | 3 | 10% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
-| 4 | 10% | Sinistea | Hatenna–Hatterene |
-| 5 | 10% | Galarian Corsola–Cursola | Sinistea |
-| 6 | 10% | Hatenna–Hatterene | Galarian Corsola–Cursola |
-| 7 | 5% | Galarian Yamask–Runerigus | Nickit–Thievul |
-| 8 | 5% | Nickit–Thievul | Galarian Yamask–Runerigus |
-| 9 | 4% | Zubat–Golbat | Misdreavus |
-| 10 | 4% | Dreepy–Dragapult | Impidimp–Grimmsnarl |
-| 11 | 1% | Indeedee | Indeedee |
-| 12 | 1% | Sinistea | Sinistea |
-
-**`MAP_FIVE_ISLAND_LOST_CAVE_ROOM11`**
-
-*Land*
-
-| Slot | Weight | Day | Night |
-| --- | --- | --- | --- |
-| 1 | 20% | Galarian Corsola–Cursola | Dreepy–Dragapult |
-| 2 | 20% | Dreepy–Dragapult | Galarian Corsola–Cursola |
-| 3 | 10% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
-| 4 | 10% | Sinistea | Hatenna–Hatterene |
-| 5 | 10% | Impidimp–Grimmsnarl | Sinistea |
-| 6 | 10% | Hatenna–Hatterene | Impidimp–Grimmsnarl |
-| 7 | 5% | Galarian Yamask–Runerigus | Nickit–Thievul |
-| 8 | 5% | Nickit–Thievul | Galarian Yamask–Runerigus |
-| 9 | 4% | Gastly–Haunter | Misdreavus |
-| 10 | 4% | Galarian Corsola–Cursola | Dreepy–Dragapult |
-| 11 | 1% | Indeedee | Indeedee |
-| 12 | 1% | Sinistea | Sinistea |
+| 4 | 10% | Galarian Yamask–Runerigus | Sinistea |
+| 5 | 10% | Sinistea | Galarian Yamask–Runerigus |
+| 6 | 10% | Galarian Corsola–Cursola | Misdreavus |
+| 7 | 5% | Nickit–Thievul | Galarian Corsola–Cursola |
+| 8 | 5% | Gastly–Haunter | Nickit–Thievul |
+| 9 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 10 | 4% | Sinistea | Gastly–Haunter |
+| 11 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
+| 12 | 1% | Galarian Corsola–Cursola | Sinistea |
 
 **`MAP_FIVE_ISLAND_LOST_CAVE_ROOM12`**
 
@@ -1746,18 +1746,18 @@ Dungeon, Outer islands.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Impidimp–Grimmsnarl | Nickit–Thievul |
-| 2 | 20% | Nickit–Thievul | Impidimp–Grimmsnarl |
+| 1 | 20% | Dreepy–Dragapult | Sinistea |
+| 2 | 20% | Sinistea | Dreepy–Dragapult |
 | 3 | 10% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
-| 4 | 10% | Sinistea | Dreepy–Dragapult |
-| 5 | 10% | Hatenna–Hatterene | Sinistea |
-| 6 | 10% | Dreepy–Dragapult | Hatenna–Hatterene |
-| 7 | 5% | Galarian Yamask–Runerigus | Galarian Corsola–Cursola |
-| 8 | 5% | Galarian Corsola–Cursola | Galarian Yamask–Runerigus |
-| 9 | 4% | Zubat–Golbat | Misdreavus |
-| 10 | 4% | Impidimp–Grimmsnarl | Nickit–Thievul |
-| 11 | 1% | Indeedee | Indeedee |
-| 12 | 1% | Sinistea | Sinistea |
+| 4 | 10% | Galarian Yamask–Runerigus | Galarian Corsola–Cursola |
+| 5 | 10% | Galarian Corsola–Cursola | Galarian Yamask–Runerigus |
+| 6 | 10% | Impidimp–Grimmsnarl | Misdreavus |
+| 7 | 5% | Nickit–Thievul | Impidimp–Grimmsnarl |
+| 8 | 5% | Zubat–Golbat | Nickit–Thievul |
+| 9 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 10 | 4% | Galarian Corsola–Cursola | Gastly–Haunter |
+| 11 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
+| 12 | 1% | Impidimp–Grimmsnarl | Galarian Corsola–Cursola |
 
 **`MAP_FIVE_ISLAND_LOST_CAVE_ROOM13`**
 
@@ -1768,15 +1768,15 @@ Dungeon, Outer islands.
 | 1 | 20% | Dreepy–Dragapult | Galarian Corsola–Cursola |
 | 2 | 20% | Galarian Corsola–Cursola | Dreepy–Dragapult |
 | 3 | 10% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
-| 4 | 10% | Sinistea | Impidimp–Grimmsnarl |
-| 5 | 10% | Nickit–Thievul | Sinistea |
-| 6 | 10% | Impidimp–Grimmsnarl | Nickit–Thievul |
-| 7 | 5% | Galarian Yamask–Runerigus | Hatenna–Hatterene |
-| 8 | 5% | Hatenna–Hatterene | Galarian Yamask–Runerigus |
-| 9 | 4% | Gastly–Haunter | Misdreavus |
-| 10 | 4% | Dreepy–Dragapult | Galarian Corsola–Cursola |
-| 11 | 1% | Indeedee | Indeedee |
-| 12 | 1% | Sinistea | Sinistea |
+| 4 | 10% | Galarian Yamask–Runerigus | Sinistea |
+| 5 | 10% | Sinistea | Galarian Yamask–Runerigus |
+| 6 | 10% | Impidimp–Grimmsnarl | Misdreavus |
+| 7 | 5% | Nickit–Thievul | Impidimp–Grimmsnarl |
+| 8 | 5% | Gastly–Haunter | Nickit–Thievul |
+| 9 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 10 | 4% | Sinistea | Gastly–Haunter |
+| 11 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
+| 12 | 1% | Impidimp–Grimmsnarl | Sinistea |
 
 **`MAP_FIVE_ISLAND_LOST_CAVE_ROOM14`**
 
@@ -1784,18 +1784,18 @@ Dungeon, Outer islands.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Dreepy–Dragapult | Galarian Corsola–Cursola |
-| 2 | 20% | Galarian Corsola–Cursola | Dreepy–Dragapult |
+| 1 | 20% | Dreepy–Dragapult | Impidimp–Grimmsnarl |
+| 2 | 20% | Impidimp–Grimmsnarl | Dreepy–Dragapult |
 | 3 | 10% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
-| 4 | 10% | Sinistea | Hatenna–Hatterene |
-| 5 | 10% | Impidimp–Grimmsnarl | Sinistea |
-| 6 | 10% | Hatenna–Hatterene | Impidimp–Grimmsnarl |
-| 7 | 5% | Galarian Yamask–Runerigus | Nickit–Thievul |
-| 8 | 5% | Nickit–Thievul | Galarian Yamask–Runerigus |
-| 9 | 4% | Zubat–Golbat | Misdreavus |
-| 10 | 4% | Dreepy–Dragapult | Galarian Corsola–Cursola |
-| 11 | 1% | Indeedee | Indeedee |
-| 12 | 1% | Sinistea | Sinistea |
+| 4 | 10% | Galarian Yamask–Runerigus | Sinistea |
+| 5 | 10% | Sinistea | Galarian Yamask–Runerigus |
+| 6 | 10% | Galarian Corsola–Cursola | Misdreavus |
+| 7 | 5% | Nickit–Thievul | Galarian Corsola–Cursola |
+| 8 | 5% | Zubat–Golbat | Nickit–Thievul |
+| 9 | 4% | Galarian Yamask–Runerigus | Galarian Yamask–Runerigus |
+| 10 | 4% | Sinistea | Gastly–Haunter |
+| 11 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
+| 12 | 1% | Galarian Corsola–Cursola | Sinistea |
 
 
 ### Coverage checklist
@@ -1844,22 +1844,22 @@ Dungeon, Outer islands.
 | Drizzile | Berry Forest, Cape Brink, One Island, Resort Gorgeous and more |
 | Drowzee | Berry Forest |
 | Dubwool | Bond Bridge, Cape Brink, Five Isle Meadow, Three Isle Port |
-| Duraludon | Altering Cave, Icefall Cave, Ruin Valley, Sevault Canyon and more |
+| Duraludon | Altering Cave, Icefall Cave, Ruin Valley, Sevault Canyon |
 | Eiscue | Icefall Cave |
 | Eldegoss | Berry Forest, Bond Bridge, Cape Brink, Five Isle Meadow and more |
 | Exeggcute | Berry Forest |
 | Falinks | Five Isle Meadow, Memorial Pillar, Pattern Bush, Ruin Valley and more |
-| Galarian Farfetch'd | Sevault Canyon, Water Path |
+| Galarian Farfetch'd | Sevault Canyon, Sevault Canyon Entrance, Water Path |
 | Fearow | Cape Brink, Kindle Road, Treasure Beach |
 | Flapple | Pattern Bush |
 | Forretress | Pattern Bush |
 | Frillish | Memorial Pillar |
-| Frosmoth | Icefall Cave, Pattern Bush |
+| Frosmoth | Icefall Cave |
 | Gastly | Lost Cave, Memorial Pillar |
 | Geodude | Kindle Road, Mt. Ember, Sevault Canyon |
 | Glalie | Icefall Cave |
 | Gloom | Berry Forest, Bond Bridge |
-| Golbat | Altering Cave, Kindle Road, Lost Cave, Mt. Ember |
+| Golbat | Altering Cave, Lost Cave, Mt. Ember |
 | Goldeen | Cape Brink, Ruin Valley |
 | Golduck | Cape Brink |
 | Golem | Mt. Ember, Sevault Canyon |
@@ -1870,16 +1870,16 @@ Dungeon, Outer islands.
 | Grimmsnarl | Altering Cave, Berry Forest, Bond Bridge, Cape Brink and more |
 | Grookey | Berry Forest |
 | Gyarados | Berry Forest, Bond Bridge |
-| Hatenna | Berry Forest, Five Isle Meadow, Lost Cave, Memorial Pillar and more |
-| Hatterene | Berry Forest, Five Isle Meadow, Lost Cave, Memorial Pillar and more |
-| Hattrem | Berry Forest, Five Isle Meadow, Lost Cave, Memorial Pillar and more |
+| Hatenna | Berry Forest, Five Isle Meadow, Memorial Pillar, Pattern Bush and more |
+| Hatterene | Berry Forest, Five Isle Meadow, Memorial Pillar, Pattern Bush and more |
+| Hattrem | Berry Forest, Five Isle Meadow, Memorial Pillar, Pattern Bush and more |
 | Haunter | Lost Cave, Memorial Pillar |
-| Hoothoot | Bond Bridge, Cape Brink, Five Isle Meadow, Mt. Ember and more |
+| Hoothoot | Bond Bridge, Cape Brink, Five Isle Meadow, Kindle Road and more |
 | Hoppip | Five Isle Meadow, Memorial Pillar |
 | Horsea | Bond Bridge, Icefall Cave, Kindle Road, One Island and more |
 | Hypno | Berry Forest |
 | Impidimp | Altering Cave, Berry Forest, Bond Bridge, Cape Brink and more |
-| Indeedee | Altering Cave, Berry Forest, Lost Cave, Ruin Valley and more |
+| Indeedee | Berry Forest, Ruin Valley |
 | Inteleon | Berry Forest, Cape Brink, One Island, Resort Gorgeous and more |
 | Jumpluff | Five Isle Meadow, Memorial Pillar |
 | Kingdra | Icefall Cave |
@@ -1898,23 +1898,23 @@ Dungeon, Outer islands.
 | Mareanie | Green Path, Water Path |
 | Marill | Berry Forest, Ruin Valley |
 | Marowak | Sevault Canyon |
-| Galarian Meowth | Bond Bridge, Cape Brink, Kindle Road, Sevault Canyon Entrance and more |
+| Galarian Meowth | Bond Bridge, Cape Brink, Kindle Road, Sevault Canyon and more |
 | Milcery | Berry Forest, Bond Bridge, Five Isle Meadow, Memorial Pillar and more |
 | Misdreavus | Altering Cave, Lost Cave, Memorial Pillar, Mt. Ember |
 | Morelull | Berry Forest, Pattern Bush |
 | Morgrem | Altering Cave, Berry Forest, Bond Bridge, Cape Brink and more |
 | Morpeko | Altering Cave, Cape Brink, Five Isle Meadow, Ruin Valley and more |
-| Galarian Mr. Mime | Icefall Cave, Ruin Valley, Sevault Canyon, Sevault Canyon Entrance and more |
-| Mr. Rime | Icefall Cave, Ruin Valley, Sevault Canyon, Sevault Canyon Entrance and more |
+| Galarian Mr. Mime | Icefall Cave |
+| Mr. Rime | Icefall Cave |
 | Natu | Ruin Valley |
 | Nickit | Altering Cave, Bond Bridge, Cape Brink, Five Isle Meadow and more |
 | Alolan Ninetales | Icefall Cave |
-| Noctowl | Bond Bridge, Cape Brink, Five Isle Meadow, Mt. Ember and more |
+| Noctowl | Bond Bridge, Cape Brink, Five Isle Meadow, Kindle Road and more |
 | Obstagoon | Bond Bridge, Cape Brink, Five Isle Meadow, Kindle Road and more |
 | Oddish | Berry Forest, Bond Bridge |
 | Orbeetle | Berry Forest, Bond Bridge, Cape Brink, Five Isle Meadow and more |
 | Pelipper | Bond Bridge, Five Island, Five Isle Meadow, One Island and more |
-| Perrserker | Bond Bridge, Cape Brink, Kindle Road, Sevault Canyon Entrance and more |
+| Perrserker | Bond Bridge, Cape Brink, Kindle Road, Sevault Canyon and more |
 | Phanpy | Sevault Canyon, Sevault Canyon Entrance |
 | Pidgeotto | Three Isle Port |
 | Pidgey | Three Isle Port |
@@ -1923,15 +1923,15 @@ Dungeon, Outer islands.
 | Pineco | Pattern Bush |
 | Poliwag | Berry Forest, Cape Brink, Ruin Valley |
 | Poliwhirl | Berry Forest, Cape Brink, Ruin Valley |
-| Ponyta | Kindle Road, Mt. Ember |
-| Galarian Ponyta | Berry Forest, Five Isle Meadow |
+| Ponyta | Kindle Road |
+| Galarian Ponyta | Berry Forest, Five Isle Meadow, Pattern Bush |
 | Psyduck | Cape Brink |
-| Pyukumuku | Water Path |
+| Pyukumuku | Five Isle Meadow, Tanoby Ruins, Trainer Tower grounds, Water Path |
 | Quagsire | Ruin Valley |
 | Qwilfish | Five Island, Trainer Tower grounds |
 | Raboot | Five Isle Meadow, Kindle Road, Mt. Ember, Sevault Canyon Entrance |
-| Rapidash | Kindle Road, Mt. Ember |
-| Galarian Rapidash | Berry Forest, Five Isle Meadow |
+| Rapidash | Kindle Road |
+| Galarian Rapidash | Berry Forest, Five Isle Meadow, Pattern Bush |
 | Raticate | Kindle Road, Three Isle Port |
 | Rattata | Kindle Road, Three Isle Port |
 | Remoraid | Bond Bridge |
@@ -1939,7 +1939,7 @@ Dungeon, Outer islands.
 | Rillaboom | Berry Forest |
 | Rolycoly | Altering Cave, Kindle Road, Mt. Ember, Sevault Canyon and more |
 | Rookidee | Bond Bridge, Cape Brink, Kindle Road, Memorial Pillar and more |
-| Runerigus | Lost Cave, Memorial Pillar, Ruin Valley, Tanoby Chambers |
+| Runerigus | Lost Cave, Memorial Pillar, Ruin Valley, Sevault Canyon and more |
 | Salandit | Mt. Ember |
 | Salazzle | Mt. Ember |
 | Sandaconda | Ruin Valley, Sevault Canyon, Sevault Canyon Entrance, Tanoby Chambers and more |
@@ -1965,18 +1965,18 @@ Dungeon, Outer islands.
 | Slowpoke | Treasure Beach |
 | Galarian Slowpoke | Green Path, Sevault Canyon, Water Path |
 | Slugma | Mt. Ember |
-| Snom | Icefall Cave, Pattern Bush |
+| Snom | Icefall Cave |
 | Snorunt | Icefall Cave |
 | Sobble | Berry Forest, Cape Brink, One Island, Resort Gorgeous and more |
 | Spearow | Cape Brink, Kindle Road, Treasure Beach |
 | Spheal | Four Island, Icefall Cave |
 | Spinarak | Pattern Bush |
-| Staryu | Bond Bridge, Five Isle Meadow, Kindle Road, Tanoby Ruins and more |
+| Staryu | Bond Bridge, Kindle Road, Treasure Beach |
 | Stonjourner | Mt. Ember, Ruin Valley, Sevault Canyon, Tanoby Chambers and more |
-| Galarian Stunfisk | Cape Brink, Ruin Valley, Sevault Canyon, Sevault Canyon Entrance |
+| Galarian Stunfisk | Cape Brink, Ruin Valley, Sevault Canyon |
 | Swinub | Icefall Cave |
 | Tentacool | Bond Bridge, Four Island, Kindle Road, One Island and more |
-| Tentacruel | Bond Bridge, Kindle Road, One Island, Outcast Island and more |
+| Tentacruel | Bond Bridge, Kindle Road, One Island, Treasure Beach |
 | Thievul | Altering Cave, Bond Bridge, Cape Brink, Five Isle Meadow and more |
 | Thwackey | Berry Forest |
 | Toxapex | Green Path, Water Path |
@@ -1998,7 +1998,7 @@ Dungeon, Outer islands.
 | Wooloo | Bond Bridge, Cape Brink, Five Isle Meadow, Three Isle Port |
 | Wooper | Ruin Valley |
 | Xatu | Ruin Valley |
-| Galarian Yamask | Lost Cave, Memorial Pillar, Ruin Valley, Tanoby Chambers |
+| Galarian Yamask | Lost Cave, Memorial Pillar, Ruin Valley, Sevault Canyon and more |
 | Yamper | Bond Bridge, Cape Brink, Five Isle Meadow, Kindle Road and more |
 | Galarian Zigzagoon | Bond Bridge, Cape Brink, Five Isle Meadow, Kindle Road and more |
-| Zubat | Altering Cave, Kindle Road, Lost Cave, Mt. Ember |
+| Zubat | Altering Cave, Lost Cave, Mt. Ember |

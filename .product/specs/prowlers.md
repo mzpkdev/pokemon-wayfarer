@@ -360,7 +360,6 @@ Alola's natives are Generation VII and the Alolan forms of older species.
 
 | Species | Why | Temperament | Base stat total | Notes |
 | --- | --- | --- | --- | --- |
-| Wishiwashi | Rarity, prestige | Fierce | 175 | Gathers into a strong school in battle, so it is not harmless |
 | Rockruff | Prestige | Harmless | 280 | The Lycanroc line |
 | Vulpix (Alolan) | Prestige, rarity | Harmless | 299 | A version exclusive in the originals |
 | Sandshrew (Alolan) | Rarity | Harmless | 300 | A version exclusive in the originals |
@@ -396,6 +395,8 @@ Alola's natives are Generation VII and the Alolan forms of older species.
 - Level-evolved final stages such as Golisopod, Toxapex, Bewear, Lycanroc,
   Salazzle and Alolan Muk, which arrive through ordinary lines.
 - Togedemaru, Pyukumuku and Mudbray, which are neither strong nor rare enough.
+- Wishiwashi, Alola's commonest fish, as in the original games. Its strong
+  school form appears only in battle.
 
 ### Generation VIII (Galar) and Galarian form rewards
 

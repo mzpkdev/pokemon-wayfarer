@@ -60,7 +60,7 @@ island has its own character, as in the original games:
 | Ula'ula Isle | Mountains, snow and an old power plant | Komala, Togedemaru, Drampa, Turtonator, Oranguru, Passimian, Baile Oricorio, Minior, Alolan Sandshrew, Alolan Vulpix, Alolan Grimer, Crabrawler |
 | Ula'ula caves | An icy cave and a haunted one | Alolan Sandshrew, Alolan Vulpix, Crabrawler, Mimikyu, Alolan Grimer |
 | Poni Isle | Alola's wildest island | Jangmo-o, Sensu Oricorio, Mudbray, Alolan Exeggutor, Passimian |
-| Poni Cave | A deep canyon cave | Jangmo-o, Minior, Lycanroc |
+| Poni Cave | A deep canyon cave | Jangmo-o, Lycanroc, Grubbin |
 | Alola sea | Warm tropical water | Wishiwashi, Mareanie, Pyukumuku, Bruxish |
 
 Oricorio takes a different style in each place, as in the original games:
@@ -69,8 +69,8 @@ Poni Isle. Reach rules come first, so fierce and dangerous species stay off
 Melemele, the only Road:
 
 - Pom-Pom Oricorio, a fierce reward, moves from Melemele to Akala Forest.
-- Dhelmise, a dangerous reward, lives in Ula'ula's and Poni's water and in Poni
-  Cave, not in the Alola sea, which is Wilds.
+- Dhelmise, a dangerous reward, lives in Ula'ula's and Poni's coastal water,
+  not in the Alola sea, which is Wilds.
 
 ### The blend
 
@@ -90,6 +90,9 @@ original Pokédex mixed in many older species, so a light blend suits it:
   or harmless finds, never fierce or dangerous rewards.
 - **They don't replace a home.** Every blend species is already catchable in its
   own region.
+- **A slot capped at an Alolan form is native.** Exeggcute–Alolan Exeggutor or
+  Cubone–Alolan Marowak produces the Alolan form, so it may lead a table and
+  doesn't count toward the blend cap. Pikachu capped at Pikachu stays blend.
 
 ### Region-only evolutions
 
@@ -146,7 +149,7 @@ names each map's type.
 | Water type | Where | Cast |
 | --- | --- | --- |
 | Coast and sea | The four islands' coasts and the Alola sea | Wishiwashi, Mareanie, Pyukumuku, Bruxish, Dhelmise, Popplio, and the blend's sea species: Magikarp, Tentacool, Wingull, Chinchou, Staryu, Shellder, Corsola, Luvdisc, Wailmer, Carvanha, Clamperl |
-| Cave water | Poni Cave | Dewpider, Wimpod, Wishiwashi, Bruxish, Dhelmise, and the blend's fresh-water species: Magikarp, Barboach, Psyduck, Basculin, Chinchou, and Zubat on the wing |
+| Cave water | Poni Cave and both Ula'ula caves: fresh water | Dewpider, Wishiwashi, and the blend's fresh-water species: Magikarp, Barboach, Psyduck, Basculin, and Zubat on the wing |
 
 - **Fishing:** entries 1 and 2 hold Alola natives, since blend species never
   lead a table. Entry 3 is usually Magikarp. Entries 3–10 hold at least four
