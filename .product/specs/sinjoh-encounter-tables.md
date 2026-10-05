@@ -52,49 +52,49 @@ Wilds, Sinjoh.
 
 **`MAP_ROUTE49_HNS`**
 
-Water type: coast and sea.
+Water type: ponds and rivers.
 
 *Land*
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Hisuian Growlithe | Hisuian Sneasel |
-| 2 | 20% | Hisuian Sneasel | Hisuian Zorua–Hisuian Zoroark |
-| 3 | 10% | Stantler | Hisuian Voltorb |
-| 4 | 10% | Hisuian Voltorb | Teddiursa–Ursaring |
-| 5 | 10% | Teddiursa–Ursaring | Hisuian Zorua–Hisuian Zoroark |
-| 6 | 10% | Ponyta–Rapidash | Stantler |
-| 7 | 5% | Hisuian Growlithe | Drifloon–Drifblim |
-| 8 | 5% | Scyther | Hisuian Growlithe |
-| 9 | 4% | Abra–Kadabra | Abra–Kadabra |
-| 10 | 4% | Yanma | Teddiursa–Ursaring |
-| 11 | 1% | Hisuian Sneasel | Hisuian Sneasel |
-| 12 | 1% | Stantler | Drifloon–Drifblim |
+| 1 | 20% | Hisuian Sneasel | Hisuian Sneasel |
+| 2 | 20% | Hisuian Growlithe | Hisuian Voltorb |
+| 3 | 10% | Stantler | Hisuian Zorua–Hisuian Zoroark |
+| 4 | 10% | Swinub–Piloswine | Duskull–Dusclops |
+| 5 | 10% | Hisuian Voltorb | Hisuian Zorua–Hisuian Zoroark |
+| 6 | 10% | Snover–Abomasnow | Swinub–Piloswine |
+| 7 | 5% | Stantler | Drifloon–Drifblim |
+| 8 | 5% | Scyther | Stantler |
+| 9 | 4% | Teddiursa–Ursaring | Snover–Abomasnow |
+| 10 | 4% | Abra–Kadabra | Teddiursa–Ursaring |
+| 11 | 1% | Hisuian Sneasel | Abra–Kadabra |
+| 12 | 1% | Hisuian Growlithe | Teddiursa–Ursaring |
 
 *Surfing*
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Hisuian Qwilfish | Hisuian Qwilfish |
-| 2 | 30% | Basculin (White-Striped) | Basculin (White-Striped) |
-| 3 | 5% | Buizel–Floatzel | Finneon–Lumineon |
-| 4 | 4% | Shellos West–Gastrodon | Shellos West–Gastrodon |
-| 5 | 1% | Tentacool–Tentacruel | Buizel–Floatzel |
+| 1 | 60% | Basculin (White-Striped) | Basculin (White-Striped) |
+| 2 | 30% | Hisuian Qwilfish | Hisuian Qwilfish |
+| 3 | 5% | Psyduck–Golduck | Finneon–Lumineon |
+| 4 | 4% | Buizel–Floatzel | Barboach–Whiscash |
+| 5 | 1% | Barboach–Whiscash | Shellos West–Gastrodon |
 
 *Fishing*
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Hisuian Qwilfish | Basculin (White-Striped) |
-| 2 | 22% | 18% | 10% | Basculin (White-Striped) | Hisuian Qwilfish |
-| 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
-| 4 | 8% | 10% | 10% | Hisuian Qwilfish | Finneon–Lumineon |
-| 5 | 8% | 9% | 10% | Remoraid–Octillery | Hisuian Qwilfish |
-| 6 | 4% | 7% | 10% | Buizel–Floatzel | Remoraid–Octillery |
-| 7 | 3% | 6% | 10% | Shellos West–Gastrodon | Finneon–Lumineon |
-| 8 | 3% | 5% | 9% | Basculin (White-Striped) | Shellos West–Gastrodon |
-| 9 | 2% | 4% | 9% | Tentacool–Tentacruel | Basculin (White-Striped) |
-| 10 | 2% | 4% | 9% | Magikarp–Gyarados | Buizel–Floatzel |
+| 1 | 38% | 25% | 12% | Basculin (White-Striped) | Basculin (White-Striped) |
+| 2 | 22% | 18% | 10% | Hisuian Qwilfish | Hisuian Qwilfish |
+| 3 | 10% | 12% | 11% | Magikarp | Magikarp |
+| 4 | 8% | 10% | 10% | Barboach–Whiscash | Barboach–Whiscash |
+| 5 | 8% | 9% | 10% | Basculin (White-Striped) | Finneon–Lumineon |
+| 6 | 4% | 7% | 10% | Psyduck–Golduck | Remoraid–Octillery |
+| 7 | 3% | 6% | 10% | Remoraid–Octillery | Basculin (White-Striped) |
+| 8 | 3% | 5% | 9% | Buizel–Floatzel | Shellos West–Gastrodon |
+| 9 | 2% | 4% | 9% | Hisuian Qwilfish | Hisuian Qwilfish |
+| 10 | 2% | 4% | 9% | Barboach–Whiscash | Finneon–Lumineon |
 
 #### Snowswept Cavern
 
@@ -109,13 +109,13 @@ Wilds, Sinjoh.
 | 1 | 20% | Hisuian Sneasel | Hisuian Zorua–Hisuian Zoroark |
 | 2 | 20% | Hisuian Zorua–Hisuian Zoroark | Hisuian Sneasel |
 | 3 | 10% | Swinub–Piloswine | Zubat–Golbat |
-| 4 | 10% | Snorunt–Glalie | Swinub–Piloswine |
-| 5 | 10% | Snover–Abomasnow | Snorunt–Glalie |
-| 6 | 10% | Zubat–Golbat | Snover–Abomasnow |
-| 7 | 5% | Geodude–Graveler | Hisuian Zorua–Hisuian Zoroark |
-| 8 | 5% | Spheal–Walrein | Geodude–Graveler |
+| 4 | 10% | Snover–Abomasnow | Swinub–Piloswine |
+| 5 | 10% | Zubat–Golbat | Snover–Abomasnow |
+| 6 | 10% | Geodude–Graveler | Geodude–Graveler |
+| 7 | 5% | Snorunt–Glalie | Misdreavus |
+| 8 | 5% | Spheal | Snorunt–Glalie |
 | 9 | 4% | Onix | Onix |
-| 10 | 4% | Hisuian Sneasel | Misdreavus |
+| 10 | 4% | Hisuian Sneasel | Spheal |
 | 11 | 1% | Riolu | Riolu |
 | 12 | 1% | Hisuian Zorua–Hisuian Zoroark | Hisuian Zorua–Hisuian Zoroark |
 
@@ -139,18 +139,18 @@ Wilds, Sinjoh.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Hisuian Voltorb | Hisuian Zorua–Hisuian Zoroark |
-| 2 | 20% | Hisuian Growlithe | Hisuian Voltorb |
-| 3 | 10% | Bronzor–Bronzong | Misdreavus |
-| 4 | 10% | Chimecho | Gastly–Haunter |
-| 5 | 10% | Nosepass | Duskull–Dusclops |
-| 6 | 10% | Clefairy | Bronzor–Bronzong |
-| 7 | 5% | Hisuian Voltorb | Drifloon–Drifblim |
-| 8 | 5% | Stantler | Hisuian Zorua–Hisuian Zoroark |
-| 9 | 4% | Bronzor–Bronzong | Chimecho |
-| 10 | 4% | Hisuian Growlithe | Misdreavus |
+| 1 | 20% | Hisuian Voltorb | Hisuian Voltorb |
+| 2 | 20% | Hisuian Growlithe | Hisuian Growlithe |
+| 3 | 10% | Bronzor–Bronzong | Hisuian Zorua–Hisuian Zoroark |
+| 4 | 10% | Nosepass | Gastly–Haunter |
+| 5 | 10% | Bronzor–Bronzong | Duskull–Dusclops |
+| 6 | 10% | Stantler | Bronzor–Bronzong |
+| 7 | 5% | Hisuian Voltorb | Misdreavus |
+| 8 | 5% | Geodude–Graveler | Drifloon–Drifblim |
+| 9 | 4% | Nosepass | Clefairy |
+| 10 | 4% | Hisuian Growlithe | Hisuian Zorua–Hisuian Zoroark |
 | 11 | 1% | Chingling | Chingling |
-| 12 | 1% | Clefairy | Clefairy |
+| 12 | 1% | Stantler | Clefairy |
 
 #### Route 50
 
@@ -162,14 +162,14 @@ Outlands, Sinjoh.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Hisuian Sneasel | Hisuian Zorua–Hisuian Zoroark |
-| 2 | 20% | Hisuian Growlithe | Hisuian Sneasel |
-| 3 | 10% | Snover–Abomasnow | Teddiursa–Ursaring |
-| 4 | 10% | Stantler | Hisuian Zorua–Hisuian Zoroark |
-| 5 | 10% | Teddiursa–Ursaring | Snover–Abomasnow |
-| 6 | 10% | Swinub–Piloswine | Swinub–Piloswine |
+| 1 | 20% | Hisuian Sneasel | Hisuian Sneasel |
+| 2 | 20% | Hisuian Growlithe | Hisuian Growlithe |
+| 3 | 10% | Snover–Abomasnow | Hisuian Zorua–Hisuian Zoroark |
+| 4 | 10% | Stantler | Duskull–Dusclops |
+| 5 | 10% | Teddiursa–Ursaring | Hisuian Zorua–Hisuian Zoroark |
+| 6 | 10% | Swinub–Piloswine | Snover–Abomasnow |
 | 7 | 5% | Scyther | Drifloon–Drifblim |
-| 8 | 5% | Machop–Machoke | Stantler |
+| 8 | 5% | Machop–Machoke | Swinub–Piloswine |
 | 9 | 4% | Stantler–Wyrdeer | Snorunt–Glalie |
 | 10 | 4% | Scyther–Kleavor | Stantler–Wyrdeer |
 | 11 | 1% | Hisuian Sneasel–Sneasler | Hisuian Sneasel–Sneasler |
@@ -181,9 +181,9 @@ Outlands, Sinjoh.
 | --- | --- | --- | --- |
 | 1 | 60% | Hisuian Voltorb | Hisuian Sneasel |
 | 2 | 30% | Hisuian Sneasel | Hisuian Voltorb |
-| 3 | 5% | Teddiursa–Ursaring | Teddiursa–Ursaring |
-| 4 | 4% | Scyther | Drifloon–Drifblim |
-| 5 | 1% | Drifloon–Drifblim | Scyther |
+| 3 | 5% | Teddiursa–Ursaring | Murkrow |
+| 4 | 4% | Scyther | Teddiursa–Ursaring |
+| 5 | 1% | Drifloon–Drifblim | Drifloon–Drifblim |
 
 #### New Sinjoh Hot Springs
 
@@ -196,17 +196,17 @@ Dungeon, Sinjoh.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 20% | Hisuian Growlithe | Hisuian Growlithe |
-| 2 | 20% | Hisuian Growlithe–Hisuian Arcanine | Hisuian Growlithe–Hisuian Arcanine |
-| 3 | 10% | Magmar | Croagunk–Toxicroak |
-| 4 | 10% | Ponyta–Rapidash | Magmar |
+| 2 | 20% | Hisuian Growlithe | Hisuian Growlithe |
+| 3 | 10% | Croagunk–Toxicroak | Croagunk–Toxicroak |
+| 4 | 10% | Ponyta–Rapidash | Hisuian Zorua–Hisuian Zoroark |
 | 5 | 10% | Rhyhorn–Rhydon | Rhyhorn–Rhydon |
-| 6 | 10% | Croagunk–Toxicroak | Hisuian Zorua–Hisuian Zoroark |
+| 6 | 10% | Swinub–Piloswine | Swinub–Piloswine |
 | 7 | 5% | Geodude–Graveler | Geodude–Graveler |
-| 8 | 5% | Magby | Magby |
+| 8 | 5% | Magmar | Magmar |
 | 9 | 4% | Psyduck–Golduck | Psyduck–Golduck |
 | 10 | 4% | Teddiursa–Ursaluna | Teddiursa–Ursaluna |
-| 11 | 1% | Croagunk–Toxicroak | Ponyta–Rapidash |
-| 12 | 1% | Teddiursa–Ursaluna | Teddiursa–Ursaluna |
+| 11 | 1% | Hisuian Growlithe–Hisuian Arcanine | Ponyta–Rapidash |
+| 12 | 1% | Magby | Magby |
 
 #### Sinjoh Ruins chambers
 
@@ -218,14 +218,14 @@ Dungeon, Sinjoh.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Hisuian Zorua–Hisuian Zoroark | Hisuian Zorua–Hisuian Zoroark |
-| 2 | 20% | Hisuian Voltorb | Hisuian Voltorb |
+| 1 | 20% | Hisuian Voltorb | Hisuian Zorua–Hisuian Zoroark |
+| 2 | 20% | Hisuian Zorua–Hisuian Zoroark | Hisuian Voltorb |
 | 3 | 10% | Unown | Unown |
 | 4 | 10% | Bronzor–Bronzong | Gastly–Haunter |
-| 5 | 10% | Baltoy–Claydol | Misdreavus |
+| 5 | 10% | Nosepass | Duskull–Dusclops |
 | 6 | 10% | Unown | Unown |
 | 7 | 5% | Hisuian Voltorb–Hisuian Electrode | Bronzor–Bronzong |
-| 8 | 5% | Chimecho | Baltoy–Claydol |
+| 8 | 5% | Chimecho | Misdreavus |
 | 9 | 4% | Unown | Unown |
 | 10 | 4% | Bronzor–Bronzong | Hisuian Voltorb–Hisuian Electrode |
 | 11 | 1% | Unown | Unown |
@@ -237,18 +237,18 @@ Dungeon, Sinjoh.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 20% | Hisuian Zorua–Hisuian Zoroark | Hisuian Sneasel |
-| 2 | 20% | Hisuian Sneasel | Hisuian Zorua–Hisuian Zoroark |
+| 1 | 20% | Hisuian Sneasel | Hisuian Zorua–Hisuian Zoroark |
+| 2 | 20% | Hisuian Zorua–Hisuian Zoroark | Hisuian Sneasel |
 | 3 | 10% | Unown | Unown |
-| 4 | 10% | Snorunt–Glalie | Misdreavus |
+| 4 | 10% | Snover–Abomasnow | Snover–Abomasnow |
 | 5 | 10% | Unown | Unown |
-| 6 | 10% | Bronzor–Bronzong | Snorunt–Glalie |
-| 7 | 5% | Unown | Unown |
-| 8 | 5% | Hisuian Sneasel–Sneasler | Bronzor–Bronzong |
-| 9 | 4% | Unown | Unown |
-| 10 | 4% | Snover–Abomasnow | Snover–Abomasnow |
-| 11 | 1% | Unown | Unown |
-| 12 | 1% | Hisuian Zorua–Hisuian Zoroark | Hisuian Sneasel–Sneasler |
+| 6 | 10% | Bronzor–Bronzong | Bronzor–Bronzong |
+| 7 | 5% | Snorunt–Glalie | Misdreavus |
+| 8 | 5% | Unown | Snorunt–Glalie |
+| 9 | 4% | Spheal | Unown |
+| 10 | 4% | Unown | Spheal |
+| 11 | 1% | Hisuian Sneasel–Sneasler | Hisuian Sneasel–Sneasler |
+| 12 | 1% | Unown | Unown |
 
 **`MAP_SINJOH_RUINS_REGIROCK_ROOM_HNS`**
 
@@ -259,50 +259,48 @@ Dungeon, Sinjoh.
 | 1 | 20% | Hisuian Voltorb | Hisuian Zorua–Hisuian Zoroark |
 | 2 | 20% | Hisuian Zorua–Hisuian Zoroark | Hisuian Voltorb |
 | 3 | 10% | Unown | Unown |
-| 4 | 10% | Baltoy–Claydol | Gastly–Haunter |
+| 4 | 10% | Nosepass | Gastly–Haunter |
 | 5 | 10% | Unown | Unown |
-| 6 | 10% | Nosepass | Baltoy–Claydol |
+| 6 | 10% | Geodude–Graveler | Nosepass |
 | 7 | 5% | Unown | Unown |
-| 8 | 5% | Bronzor–Bronzong | Nosepass |
+| 8 | 5% | Bronzor–Bronzong | Duskull–Dusclops |
 | 9 | 4% | Unown | Unown |
-| 10 | 4% | Geodude–Graveler | Bronzor–Bronzong |
-| 11 | 1% | Unown | Unown |
-| 12 | 1% | Hisuian Voltorb–Hisuian Electrode | Hisuian Voltorb–Hisuian Electrode |
+| 10 | 4% | Onix | Geodude–Graveler |
+| 11 | 1% | Hisuian Voltorb–Hisuian Electrode | Hisuian Voltorb–Hisuian Electrode |
+| 12 | 1% | Unown | Bronzor–Bronzong |
 
 
 ### Coverage checklist
 
 | Species | Catchable at |
 | --- | --- |
-| Abomasnow | Route 50, Sinjoh Ruins chambers, Snowswept Cavern |
+| Abomasnow | Route 49, Route 50, Sinjoh Ruins chambers, Snowswept Cavern |
 | Abra | Route 49 |
 | Hisuian Arcanine | New Sinjoh Hot Springs, Route 50 |
-| Baltoy | Sinjoh Ruins chambers |
+| Barboach | Route 49 |
 | Basculin (White-Striped) | Route 49 |
 | Bronzong | Sinjoh Ruins, Sinjoh Ruins chambers |
 | Bronzor | Sinjoh Ruins, Sinjoh Ruins chambers |
 | Buizel | Route 49 |
-| Chimecho | Sinjoh Ruins, Sinjoh Ruins chambers |
+| Chimecho | Sinjoh Ruins chambers |
 | Chingling | Sinjoh Ruins, Sinjoh Ruins chambers |
-| Claydol | Sinjoh Ruins chambers |
 | Clefairy | Sinjoh Ruins |
 | Croagunk | New Sinjoh Hot Springs |
 | Drifblim | Route 49, Route 50, Sinjoh Ruins |
 | Drifloon | Route 49, Route 50, Sinjoh Ruins |
-| Dusclops | Sinjoh Ruins |
-| Duskull | Sinjoh Ruins |
+| Dusclops | Route 49, Route 50, Sinjoh Ruins, Sinjoh Ruins chambers |
+| Duskull | Route 49, Route 50, Sinjoh Ruins, Sinjoh Ruins chambers |
 | Hisuian Electrode | Sinjoh Ruins chambers |
 | Finneon | Route 49 |
 | Floatzel | Route 49 |
 | Gastly | Sinjoh Ruins, Sinjoh Ruins chambers |
 | Gastrodon | Route 49 |
-| Geodude | New Sinjoh Hot Springs, Sinjoh Ruins chambers, Snowswept Cavern |
+| Geodude | New Sinjoh Hot Springs, Sinjoh Ruins, Sinjoh Ruins chambers, Snowswept Cavern |
 | Glalie | Route 50, Sinjoh Ruins chambers, Snowswept Cavern |
 | Golbat | Snowswept Cavern |
-| Golduck | New Sinjoh Hot Springs |
-| Graveler | New Sinjoh Hot Springs, Sinjoh Ruins chambers, Snowswept Cavern |
+| Golduck | New Sinjoh Hot Springs, Route 49 |
+| Graveler | New Sinjoh Hot Springs, Sinjoh Ruins, Sinjoh Ruins chambers, Snowswept Cavern |
 | Hisuian Growlithe | New Sinjoh Hot Springs, Route 49, Route 50, Sinjoh Ruins |
-| Gyarados | Route 49 |
 | Haunter | Sinjoh Ruins, Sinjoh Ruins chambers |
 | Kadabra | Route 49 |
 | Kleavor | Route 50 |
@@ -313,39 +311,36 @@ Dungeon, Sinjoh.
 | Magikarp | Route 49 |
 | Magmar | New Sinjoh Hot Springs |
 | Misdreavus | Sinjoh Ruins, Sinjoh Ruins chambers, Snowswept Cavern |
+| Murkrow | Route 50 |
 | Nosepass | Sinjoh Ruins, Sinjoh Ruins chambers, Snowswept Cavern |
 | Octillery | Route 49 |
-| Onix | Snowswept Cavern |
-| Piloswine | Route 50, Snowswept Cavern |
-| Ponyta | New Sinjoh Hot Springs, Route 49 |
-| Psyduck | New Sinjoh Hot Springs |
+| Onix | Sinjoh Ruins chambers, Snowswept Cavern |
+| Piloswine | New Sinjoh Hot Springs, Route 49, Route 50, Snowswept Cavern |
+| Ponyta | New Sinjoh Hot Springs |
+| Psyduck | New Sinjoh Hot Springs, Route 49 |
 | Hisuian Qwilfish | Route 49 |
-| Rapidash | New Sinjoh Hot Springs, Route 49 |
+| Rapidash | New Sinjoh Hot Springs |
 | Remoraid | Route 49 |
 | Rhydon | New Sinjoh Hot Springs |
 | Rhyhorn | New Sinjoh Hot Springs |
 | Riolu | Route 50, Snowswept Cavern |
 | Scyther | Route 49, Route 50 |
-| Sealeo | Snowswept Cavern |
 | Shellos West | Route 49 |
 | Hisuian Sneasel | Route 49, Route 50, Sinjoh Ruins chambers, Snowswept Cavern |
 | Sneasler | Route 50, Sinjoh Ruins chambers |
 | Snorunt | Route 50, Sinjoh Ruins chambers, Snowswept Cavern |
-| Snover | Route 50, Sinjoh Ruins chambers, Snowswept Cavern |
-| Spheal | Snowswept Cavern |
+| Snover | Route 49, Route 50, Sinjoh Ruins chambers, Snowswept Cavern |
+| Spheal | Sinjoh Ruins chambers, Snowswept Cavern |
 | Stantler | Route 49, Route 50, Sinjoh Ruins |
-| Swinub | Route 50, Snowswept Cavern |
+| Swinub | New Sinjoh Hot Springs, Route 49, Route 50, Snowswept Cavern |
 | Teddiursa | New Sinjoh Hot Springs, Route 49, Route 50 |
-| Tentacool | Route 49 |
-| Tentacruel | Route 49 |
 | Toxicroak | New Sinjoh Hot Springs |
 | Unown | Sinjoh Ruins chambers |
 | Ursaluna | New Sinjoh Hot Springs |
 | Ursaring | New Sinjoh Hot Springs, Route 49, Route 50 |
 | Hisuian Voltorb | Route 49, Route 50, Sinjoh Ruins, Sinjoh Ruins chambers |
-| Walrein | Snowswept Cavern |
+| Whiscash | Route 49 |
 | Wyrdeer | Route 50 |
-| Yanma | Route 49 |
 | Hisuian Zoroark | New Sinjoh Hot Springs, Route 49, Route 50, Sinjoh Ruins and more |
 | Hisuian Zorua | New Sinjoh Hot Springs, Route 49, Route 50, Sinjoh Ruins and more |
 | Zubat | Snowswept Cavern |

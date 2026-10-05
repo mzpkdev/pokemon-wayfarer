@@ -276,7 +276,7 @@ have no wild encounters at all, so they need no reach.
 | Sinjoh Ruins | Wilds | `MAP_SINJOH_RUINS_HNS` | An ancient site, not a settlement, despite its house |
 | Route 50 | Outlands | `MAP_ROUTE50_HNS` | The snowy approach to the Ruins at Sinjoh's edge |
 | New Sinjoh Hot Springs | Dungeon | `MAP_NEWSINJOH_HOTSPRINGS_HNS` | Single floor. Moderate. A hot-spring cave beside New Sinjoh |
-| Sinjoh Ruins chambers | Dungeon | `MAP_SINJOH_RUINS_TEMPLE_HNS`, `MAP_SINJOH_RUINS_REGICE_ROOM_HNS`, `MAP_SINJOH_RUINS_REGIROCK_ROOM_HNS` | Separate one-room chambers off the Ruins: the temple and two Regi rooms. Flat and moderate |
+| Sinjoh Ruins chambers | Dungeon | `MAP_SINJOH_RUINS_TEMPLE_HNS`, `MAP_SINJOH_RUINS_REGICE_ROOM_HNS`, `MAP_SINJOH_RUINS_REGIROCK_ROOM_HNS` | Separate one-room chambers off the Ruins: the temple and two Regi rooms. Flat and moderate. The Regi rooms open only after collecting plates, so nothing found only there may be placed in them |
 
 ### Hoenn
 

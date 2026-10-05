@@ -44,17 +44,31 @@ Its Hisuian content falls into three groups:
 - **Plain forms stay out.** Ordinary Growlithe, Voltorb, Sneasel, Qwilfish,
   Zorua and red- or blue-striped Basculin don't appear in Sinjoh, so its
   Hisuian forms stay distinct.
-- **The natives are residents at home.** They hold Sinjoh's common slots and
-  have no prowler minimum level there, though the prowlers spec lists them as
-  rewards.
+- **Some forms finish evolving elsewhere.** Goomy becomes Hisuian Sliggoo at
+  level 40 in Sinjoh, but Hisuian Sliggoo needs rain or fog to become
+  Hisuian Goodra, and Sinjoh's weather is snow. It finishes evolving outside.
+- **Ursaring's Peat Block depends on place and time.** At night in Sinjoh, or
+  at Mt. Moon, it gives Bloodmoon Ursaluna. At night anywhere else, it gives
+  Ursaluna. Wild Ursaluna in the Hot Springs is the ordinary form.
+
+### Residents and rewards
+
+- **Residents hold the common slots.** Sinjoh's natives, plus Stantler and
+  Scyther, the bases of Wyrdeer and Kleavor, are residents at home: they may
+  lead or fill common slots and have no prowler minimum level there, though
+  the prowlers spec lists them as rewards.
+- **Other rewards are rare.** Any other reward species takes only rare slots
+  and at most 5% of a table, and a map holds at most three of them. In the
+  blend that means Snorunt, Misdreavus, Drifloon, Chimecho, Clefairy, Magmar
+  and Murkrow.
 
 ### Rare showpieces
 
 Hisui's new species appear wild only where their stages are allowed:
 
-- On Route 50, which is Outlands: Wyrdeer, Kleavor and Sneasler at 1–4%, and
+- On Route 50, which is Outlands: Wyrdeer and Kleavor at 4%, Sneasler and
   Hisuian Arcanine at 1%.
-- In the Hot Springs dungeon: Ursaluna at 1–4%, and Hisuian Arcanine.
+- In the Hot Springs dungeon: Ursaluna at 4% and Hisuian Arcanine at 1%.
 - In the Ruins chambers: Hisuian Electrode and Sneasler.
 - Overqwil and Basculegion come only from evolving: Sinjoh's only water is on
   Route 49, which is Wilds.
@@ -62,8 +76,9 @@ Hisui's new species appear wild only where their stages are allowed:
 ### The blend
 
 Hisui's own lines can't fill eight maps, so Sinjoh's blend is larger than
-Alola's or Sevii's: about 30–55% of the region's slot weight. Its species come
-from Legends: Arceus's Hisui and fit Sinjoh's places.
+Alola's or Sevii's: about 30–55% of the region's slot weight, measured across
+all of Sinjoh's tables. Its species come from Legends: Arceus's Hisui and fit
+Sinjoh's places.
 
 - **They never lead a table.**
 - **They come from included generations** (I, II, III and V), each already
@@ -72,41 +87,48 @@ from Legends: Arceus's Hisui and fit Sinjoh's places.
   Finneon. Generation IV is otherwise reserved for Sinnoh, and Sinnoh's
   signatures, such as its starters, Gible, Shinx and Rotom, stay out.
 - **Fierce rewards may appear where the reach allows,** unlike in Alola's and
-  Sevii's light blends. Stantler and Scyther, the bases of Wyrdeer and Kleavor,
-  are fierce rewards.
+  Sevii's light blends.
 - **Kalos stays in the Safari Zones,** so Goomy and Bergmite never appear here.
 
 | Place | Natives | Blend |
 | --- | --- | --- |
-| Route 49, the way in | Hisuian Growlithe, Voltorb and Sneasel; Hisuian Zorua at night | Stantler, Teddiursa, Scyther, Ponyta, Abra, Yanma; Drifloon at night |
-| Route 49's water | Hisuian Qwilfish, white-striped Basculin | Buizel, Shellos, Finneon at night, Remoraid, Tentacool, Magikarp |
-| Snowswept Cavern | Hisuian Sneasel and Zorua | Swinub, Snorunt, Snover, Spheal, Zubat, Geodude, Onix, Riolu; Misdreavus at night |
-| Sinjoh Ruins | Hisuian Voltorb, Growlithe and Zorua | Bronzor, Chimecho, Chingling, Nosepass, Clefairy, Stantler; Misdreavus, Gastly, Duskull and Drifloon at night |
-| Route 50, the snowy edge | Hisuian Sneasel, Growlithe and Zorua; Hisuian Voltorb in the trees | Snover, Stantler, Ursaring, Swinub, Scyther, Machop, Riolu; Snorunt and Drifloon at night |
-| The Hot Springs | Hisuian Growlithe | Magmar and Magby, Ponyta, Rhyhorn, Croagunk, Geodude, Psyduck |
-| The Ruins chambers | Hisuian Zorua and Voltorb; Hisuian Sneasel in the ice room | Unown, Baltoy, Bronzor, Chimecho, Chingling, Nosepass, Geodude, Snorunt, Snover; Gastly and Misdreavus at night |
+| Route 49, the way in | Hisuian Sneasel, Growlithe and Voltorb; Hisuian Zorua at night | Stantler, Swinub, Snover, Scyther, Teddiursa, Abra; Duskull and Drifloon at night |
+| Route 49's lake | White-striped Basculin, Hisuian Qwilfish | Buizel, Psyduck, Barboach, Remoraid, Magikarp; Shellos and Finneon at night |
+| Snowswept Cavern | Hisuian Sneasel and Zorua | Swinub, Snover, Snorunt, Spheal, Zubat, Geodude, Onix, Riolu; Misdreavus at night |
+| Sinjoh Ruins | Hisuian Voltorb and Growlithe; Hisuian Zorua at night | Bronzor, Nosepass, Geodude, Stantler, Chingling; Gastly, Duskull, Misdreavus, Drifloon and Clefairy at night |
+| Route 50, the snowy edge | Hisuian Sneasel, Growlithe and Zorua; Hisuian Voltorb in the trees | Snover, Stantler, Teddiursa, Swinub, Scyther, Machop, Riolu; Duskull, Drifloon, Snorunt and Murkrow at night |
+| The Hot Springs | Hisuian Growlithe; Hisuian Zorua at night | Croagunk, Ponyta, Rhyhorn, Swinub, Geodude, Psyduck, Magmar, Magby; Teddiursa as Ursaluna |
+| The Ruins chambers | Hisuian Zorua and Voltorb; Hisuian Sneasel in the ice room | Unown, Bronzor, Nosepass, Geodude, Onix, Snover, Snorunt, Spheal, Chimecho, Chingling; Gastly, Duskull and Misdreavus at night |
 
 ### Trees and rocks
 
 Route 50's Headbutt trees drop Hisuian Voltorb, which looks like an old
-Apricorn ball, and Hisuian Sneasel, with Teddiursa, Scyther and Drifloon.
-Snowswept Cavern's Rock Smash rocks hide Hisuian Zorua and Sneasel, with
-Geodude, Nosepass and Onix. The Sinjoh Ruins have no breakable rocks, so they
-have no table.
+Apricorn ball, and Hisuian Sneasel, with Teddiursa, Scyther and Drifloon, and
+Murkrow at night. Snowswept Cavern's Rock Smash rocks hide Hisuian Zorua and
+Sneasel, with Geodude, Nosepass and Onix. The Sinjoh Ruins have no breakable
+rocks, so they have no table.
 
 ### Water
 
-Route 49 is Sinjoh's only water, a cold coast. Hisuian Qwilfish and
-white-striped Basculin lead it, with Buizel, Shellos and Finneon from the
-blend.
+Route 49's water is a lake fed by a stream and waterfalls, so it is ponds and
+rivers. White-striped Basculin, a river fish, leads it. Hisuian Qwilfish, a sea
+species, lives there too as a recorded exception, since it has no other water
+in Sinjoh, and so do Shellos and Finneon at night.
 
 ### Day and night
 
 - Every map has its own night table.
-- Outdoors, at least 30% of a night table's slot weight goes to species that
-  don't appear in that map's day table, such as Hisuian Zorua, Drifloon,
-  Misdreavus, Gastly and Duskull.
-- Caves, the Hot Springs and the chambers change more lightly.
+- Outdoors, at least 30% of a land table's night weight goes to species that
+  don't appear in that map's day table, such as Hisuian Zorua, Duskull,
+  Drifloon, Misdreavus and Gastly.
+- Caves, the Hot Springs and the chambers change more lightly, and so do
+  surfing, fishing, trees and rocks: each night table there has at least one
+  species that appears only at night or is much more common then.
+
+### Variety
+
+No family is one of a table's two most common land slots on more than five of
+Sinjoh's eight maps. Hisuian Zorua leads only the caves and chambers at night.
 
 ### Evolution items and Unown
 

@@ -148,7 +148,7 @@ and regional forms live in their region.
 | --- | --- |
 | I + II | Kanto and Johto |
 | III + V | Hoenn, with no Gen I–II wild species. Gen V grows from west to east |
-| The Hisuian part of VIII | Sinjoh, which counts as the Hisui region, with a large blend of Hisui species from other generations. Hisuian forms made by evolving come only from evolving there |
+| The Hisuian part of VIII | Sinjoh, which counts as the Hisui region, with a large blend of Hisui species from other generations. Hisuian forms of other regions' lines, such as Hisuian Typhlosion, come only from evolving there |
 | VII | Alola, with a small blend of other generations where they fit |
 | VIII (Galar) | Sevii, with a small blend of other generations where they fit. Sevii becomes the Galar region |
 | VI (Kalos) | The Safari Zones' reserve, split across the Kanto, Johto and Hoenn Safari Zones |

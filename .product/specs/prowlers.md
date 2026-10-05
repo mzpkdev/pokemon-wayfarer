@@ -5,7 +5,8 @@ Implemented: No
 
 Design status: draft. It holds only the agreed rules. The reward lists cover
 every included generation: Generations I, II, III, V, VI, VII and VIII, with
-their regional forms. Generation IV's list waits for a future Sinnoh.
+their regional forms. Generation IV's list waits for a future Sinnoh, apart
+from the rows Sinjoh uses.
 
 ## Scope
 
@@ -229,6 +230,9 @@ Hisui region, so evolutions that need Hisui work there.
 
 Generation IV species that extend a Generation I–III line are marked
 **Extension**. They appear with their line in its home region, not in Sinjoh.
+Sinjoh's blend holds nine Generation IV species of its own: Snover, Riolu,
+Bronzor, Drifloon, Chingling, Croagunk, Buizel, Shellos and Finneon. Their rows
+apply there.
 
 | Species | Why | Temperament | Base stat total | Notes |
 | --- | --- | --- | --- | --- |
@@ -246,7 +250,7 @@ Generation IV species that extend a Generation I–III line are marked
 | Carnivine | Power, rarity | Fierce | 454 | |
 | Basculin (White-Striped) | Power, rarity | Fierce | 460 | The Basculegion line |
 | Lopunny | Evolution | — | 480 | Friendship |
-| Lilligant (Hisuian) | Evolution | — | 480 | Sun Stone |
+| Lilligant (Hisuian) | Evolution | — | 480 | Sun Stone, in Sinjoh |
 | Froslass | Evolution | — | 480 | Dawn Stone. Extension of Snorunt |
 | Ambipom | Evolution | — | 482 | Levels up knowing Double Hit. Extension of Aipom |
 | Spiritomb | Power, prestige | Fierce | 485 | |
@@ -263,7 +267,7 @@ Generation IV species that extend a Generation I–III line are marked
 | Lickilicky | Evolution | — | 515 | Levels up knowing Rollout. Extension of Lickitung |
 | Roserade | Evolution | — | 515 | Shiny Stone. Extension of Roselia |
 | Gallade | Evolution | — | 518 | Dawn Stone. Extension of Kirlia |
-| Lucario | Evolution | — | 525 | Friendship, by day, from Riolu, a rare baby find once Sinnoh arrives |
+| Lucario | Evolution | — | 525 | Friendship, by day, from Riolu, a rare baby find in Sinjoh |
 | Wyrdeer | Evolution | — | 525 | Use Psyshield Bash 20 times |
 | Leafeon | Evolution | — | 525 | Leaf Stone, or levels up in Ilex Forest. Extension of Eevee |
 | Glaceon | Evolution | — | 525 | Ice Stone, or levels up in Ice Path. Extension of Eevee |
@@ -281,7 +285,7 @@ Generation IV species that extend a Generation I–III line are marked
 | Electivire | Evolution | — | 540 | Trade. Extension of Electabuzz |
 | Magmortar | Evolution | — | 540 | Trade. Extension of Magmar |
 | Togekiss | Evolution | — | 545 | Shiny Stone. Extension of Togetic |
-| Ursaluna | Evolution | — | 550 | Peat Block |
+| Ursaluna | Evolution | — | 550 | Peat Block, at night. In Sinjoh or at Mt. Moon it gives Bloodmoon Ursaluna |
 | Arcanine (Hisuian) | Evolution | — | 555 | Fire Stone |
 
 **Considered and excluded:**
