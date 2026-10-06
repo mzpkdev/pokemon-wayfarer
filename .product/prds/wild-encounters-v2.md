@@ -45,8 +45,9 @@ different Pokémon.
 - **Stage cap:** the highest evolution stage a table slot allows.
 - **Stage mix:** the rolled mix of evolution stages near an evolution level, so
   young and grown Pokémon appear together.
-- **Prowler:** a rare reward species, a special find. It never appears below
-  its own minimum level, so early on it can be fiercer than its surroundings.
+- **Prowler:** a rare reward species, a special find in a rare slot. It never
+  appears below its own minimum level, so early on it can be fiercer than its
+  surroundings. A reward in a common slot is a resident and has no minimum.
 - **Temperament:** how threatening a prowler is: harmless, fierce or
   dangerous. It decides which reaches the prowler can appear in.
 - **Natives:** the generations a region is home to.
@@ -125,9 +126,9 @@ may disobey until your cap catches up, which is the price of a strong catch.
 - **Each slot has a stage cap.** The level picks the stage through the
   [downward rule](player-trainer-rating.md#glossary) and the stage mix. A slot
   capped at an early stage keeps young levels.
-- **Item, trade, friendship and choice evolutions** are capped at the stage
-  before, except in Outlands and on a dungeon's deeper floors, where tables may
-  allow them. Iconic early stages are capped deliberately.
+- **Non-level evolutions** (item, trade, friendship, move or location) are
+  capped at the stage before, except in Outlands and on a dungeon's deeper
+  floors (every floor after the entrance), where tables may allow them. Iconic early stages are capped deliberately.
 - **Nothing is locked by progress.** Every species is available from the start.
 - **Water has types.** Every map with surfing or fishing has one water type:
   ponds and rivers, coast and sea, cold water, or cave water. Each type has its
@@ -208,8 +209,8 @@ mythical.
 
 ## Open questions
 
-- Final values for the reach levels, dungeon intents, level spread, stage
-  mix and prowler minimum levels. The current numbers are placeholders for
+- Final values for the reach levels, the Road encounter rate, dungeon
+  intents, level spread, stage mix and prowler minimum levels. The current numbers are placeholders for
   playtesting.
 
 ## References

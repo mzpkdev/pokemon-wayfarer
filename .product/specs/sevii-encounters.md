@@ -129,8 +129,9 @@ family is catchable.
 
 - Rewards follow their temperament: harmless anywhere, fierce from Wilds
   outward, dangerous only in Outlands and dungeons.
-- Stages reached by item, trade or friendship appear only in Outlands and on a
-  dungeon's deeper floors.
+- Stages reached by a non-level evolution (item, trade, friendship, move or
+  location) appear only in Outlands and on a dungeon's
+  [deeper floors](reach-assignments.md#dungeon-floors).
 - Deeper dungeon floors hold rarer species than their entrances.
 
 ### Rewards and babies

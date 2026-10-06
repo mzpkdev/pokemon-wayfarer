@@ -21,7 +21,8 @@ It doesn't cover:
 - the per-map tables, which belong to the Sinjoh table spec;
 - Enamorus, the Regi rooms' legendaries and Arceus's events, which belong to
   the legendaries spec;
-- how items such as the Black Augurite and the Peat Block are obtained;
+- one-off finds of items such as the Black Augurite and the Peat Block, which
+  belong to the obtainability spec;
 - reach values, which belong to [Reach assignments](reach-assignments.md).
 
 ## Behavior
@@ -55,11 +56,14 @@ Its Hisuian content falls into three groups:
 
 - **Residents hold the common slots.** Sinjoh's natives, plus Stantler and
   Scyther, the bases of Wyrdeer and Kleavor, are residents at home: they may
-  lead or fill common slots and have no prowler minimum level there, though
-  the prowlers spec lists them as rewards.
+  fill common slots and have no prowler minimum level there, though the
+  prowlers spec lists them as rewards. Stantler and Scyther are also blend
+  species, so they never lead a table.
 - **Other rewards are rare.** Any other reward species takes only rare slots
-  and at most 5% of a table, and a map holds at most three of them. In the
-  blend that means Snorunt, Misdreavus, Drifloon, Chimecho, Clefairy, Magmar
+  and at most 5% of a table, and a map holds at most three of them. Evolved
+  stages of resident lines, such as Wyrdeer, Kleavor, Sneasler and Hisuian
+  Arcanine, count as residents and not toward that limit. In the blend the
+  rewards are Snorunt, Misdreavus, Drifloon, Chimecho, Clefairy, Magmar
   and Murkrow.
 
 ### Rare showpieces

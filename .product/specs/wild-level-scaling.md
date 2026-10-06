@@ -13,7 +13,7 @@ nothing to guess.
 This spec defines:
 
 - the level of each reach, as [scalers](player-trainer-rating.md#scalers)
-  over your TR;
+  over your TR, and the Road's lower encounter rate;
 - the level of each dungeon floor, from its intent;
 - the level spread of a single encounter;
 - the stage mix, and the level limit of slots capped at an early stage;
@@ -68,10 +68,19 @@ What this means at a glance:
   26 under it, so travel gets easier the further you go.
 - **Wilds stay a step up.** They sit between the Road and the cap all game.
 - **Outlands meet you at the cap.** From about two badges on, an Outlands
-  place sits within 3 levels of your level cap, and its top rolls go over it.
+  place sits within 3 levels of your level cap, and its top rolls can reach or
+  pass it.
 - **The danger ladder holds all game.** A place's danger compared with your
   team stays about the same from the first badge to the last; only Roads get
   easier.
+
+### Road encounter rate
+
+Road maps keep travel quick with a lower encounter rate. Every method that
+rolls its table's encounter rate uses 60% of it on a Road map (a placeholder),
+rounded to the nearest whole value. Wilds, Outlands and dungeons use the
+table's rate as it is. The rate changes how often an encounter happens, never
+what it holds or its level.
 
 ### Dungeon levels
 
@@ -189,7 +198,8 @@ Early in the game that puts fierce and dangerous prowlers well above their
 surroundings. Wilds reach level 25 at four badges and Outlands pass 30 between
 four and five, after which prowlers are simply rare finds. Kalos's rewards in
 the Safari Zones and Sinjoh's residents at home have no minimum, as their
-specs say.
+specs say. Neither does any reward that holds a common slot, which is a
+resident there, as the [prowlers spec](prowlers.md#prowlers) defines.
 
 ### Running and Repel
 
@@ -210,10 +220,12 @@ specs say.
   takes its floor's level instead, with no spread. Other scripted and static
   encounters keep their own levels.
 - **Each map needs its reach, and each dungeon map its floor index, floor
-  count and intent,** generated from [Reach assignments](reach-assignments.md).
+  count, intent and whether the dungeon is flat,** generated from
+  [Reach assignments](reach-assignments.md#dungeon-floors). Flat is
+  per-dungeon data, since nothing else tells the generator.
 - **Prowler minimum levels are generated from the prowlers spec's lists.**
-  A species' minimum applies wherever it appears as a prowler, at any stage
-  of its line.
+  A species' minimum applies wherever it appears as a prowler, in a rare slot,
+  at any stage of its line. In a common slot it is a resident and has none.
 - **Randomized encounters** keep the place's level and spread but skip the
   stage mix, young levels and prowler minimums, as the randomizer does today.
 - **DexNav, the Pokédex area screen and other readers of the wild population**

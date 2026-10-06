@@ -45,9 +45,9 @@ lived where.
 ### Natives and the west-to-east gradient
 
 Hoenn's natives are Generations III and V. No Generation I or II species
-appears in Hoenn's wild tables, except as part of a family that counts as
-Generation III, such as Marill's line through Azurill and Wobbuffet's line
-through Wynaut.
+appears in Hoenn's wild tables, except as part of a family with a Generation III
+stage, such as Marill's line through Azurill and Wobbuffet's line through
+Wynaut.
 
 Gen III is Hoenn's identity. Gen V's share of encounter slots rises the
 further east you travel:
@@ -60,7 +60,9 @@ further east you travel:
 | Far east | Mossdeep, Sootopolis, Pacifidlog, Ever Grande, Routes 124–134, underwater Routes 124 and 126, Shoal Cave, Seafloor Cavern, Sky Pillar, Cave of Origin, Victory Road, Artisan Cave | ~50–60% |
 
 A share is measured across all of a band's tables, day and night together, by
-slot weight. A family counts as the generation of its base form.
+slot weight. A family counts as the generation of its earliest stage that isn't
+a baby, so Roselia's line counts as Gen III despite Budew. A baby slot counts as
+its own generation.
 
 Gen III never disappears. Its sea natives, such as Wingull, Wailmer,
 Clamperl, Relicanth and Luvdisc, still belong in the far east, so Gen III stays
@@ -138,7 +140,8 @@ Species live where they belong. Some examples:
 | Caves | Whismur, Aron, Makuhita, Nosepass, Sableye, Mawile | Woobat, Roggenrola, Drilbur, Durant |
 | Volcano and ash | Numel, Torkoal, Spinda | Larvesta, Heatmor |
 | Forest | Wurmple, Shroomish, Seedot | Sewaddle, Venipede, Cottonee, Petilil |
-| Sea | Wingull, Wailmer, Carvanha, Clamperl, Relicanth | Frillish, Alomomola, Basculin, Ducklett, Tynamo |
+| Sea | Wingull, Wailmer, Carvanha, Clamperl, Relicanth | Frillish, Alomomola, Ducklett, Tynamo |
+| Fresh water | Lotad, Surskit, Barboach | Basculin, Tympole |
 | Ice | Snorunt, Spheal | Vanillite, Cubchoo, Cryogonal |
 | Towers and ruins | Shuppet, Duskull, Baltoy | Litwick, Golett, Sigilyph |
 
@@ -146,8 +149,10 @@ Species live where they belong. Some examples:
 
 - Rewards follow their temperament: harmless anywhere, fierce from Wilds
   outward, dangerous only in Outlands and dungeons.
-- Stages reached by item, trade or friendship appear only in Outlands and on a
-  dungeon's deeper floors. This includes Generation IV extensions of Hoenn
+- Stages reached by a non-level evolution (item, trade, friendship, move or
+  location) appear only in Outlands and on a dungeon's
+  [deeper floors](reach-assignments.md#dungeon-floors).
+  This includes Generation IV extensions of Hoenn
   lines, such as Gallade, Froslass, Probopass, Dusknoir and Roserade, and
   Kingambit.
 - Deeper dungeon floors hold rarer species than their entrances.
@@ -177,13 +182,14 @@ each map's type.
 
 Rewards, babies, anchors and native HM carriers may appear outside their type's
 cast where they fit, such as Feebas on Route 119 and the water starters.
-Relicanth walks the seafloor, so it appears only underwater and on the Super
-Rod, never while surfing above water. Tympole is a fresh-water species, so it
-stays out of sea caves such as the Seafloor Cavern.
+Relicanth walks the seafloor, so it appears only underwater and, when fishing,
+in a late entry, never while surfing above water. Tympole is a fresh-water
+species, so it stays out of sea caves such as the Seafloor Cavern.
 
 - **Fishing:** entries 1–3, which make up about 70% of Old Rod catches, hold
-  the map's most fitting common fish. Entries 3–10 hold at least four different
-  families and carry the map's own character, which the better rods reveal.
+  the map's most fitting common fish. Entries 3–10, entry 3 included, hold at
+  least four different families and carry the map's own character, which the
+  better rods reveal.
   Feebas stays a rare secret of Route 119 and never leads a table.
 - **Native HM crossings:** fishing entries 1–3 include a local Surf carrier by
   day and by night on Route 118 and at Lilycove, Mossdeep and Pacifidlog. The

@@ -99,7 +99,7 @@ Gen VI's reward species are the reserve's residents, not prowlers:
   lose, so Goomy, a dangerous species, can live there although the Safari Zones
   are Wilds.
 - **Stages follow the Wilds rules.** A slot is capped before any stage reached
-  by item, trade or friendship, so Florges, Aromatisse, Slurpuff, Trevenant,
+  by a non-level evolution, so Florges, Aromatisse, Slurpuff, Trevenant,
   Gourgeist, Aegislash and Heliolisk come from evolving.
 - Levels follow the Wilds reach, as the PRD defines.
 

@@ -35,15 +35,17 @@ these reasons:
 | **Rarity** | Rare in its original games |
 | **Prestige** | A starter, a pseudo-legendary line, or a fan favourite with a special status |
 | **Utility** | Valued for what it does rather than its stats |
-| **Evolution** | A final stage reached by item, trade or friendship, which stage caps keep to Outlands |
+| **Evolution** | A final stage reached by a non-level evolution (item, trade, friendship, move or location), which stage caps keep to Outlands and deeper floors |
 
 Evolution rewards appear as later stages wherever stage caps allow them, in
-Outlands and on deeper dungeon floors. Every other reward is a prowler.
+Outlands and on a dungeon's [deeper floors](reach-assignments.md#dungeon-floors). Every other reward is a
+prowler.
 
 ### Prowlers
 
-A prowler is a reward Pokémon met in the wild as a rare find. Each prowler has
-a **temperament**, and each reach allows certain temperaments:
+A prowler is a reward Pokémon met in the wild as a rare find, in one of its
+table's rare slots. Each prowler has a **temperament**, and each reach allows
+certain temperaments:
 
 | Temperament | What it is | Allowed in |
 | --- | --- | --- |
@@ -72,6 +74,14 @@ total in [Wild level scaling](wild-level-scaling.md#prowler-minimum-levels).
 It appears at the higher of the area's wild level and its minimum level. Early in the game that makes a fierce or
 dangerous prowler a threat and a tricky catch. Later the area's level passes
 its minimum, and it is simply a rare find.
+
+**Residents.** A reward that holds a common slot, one of the first six land or
+fishing slots or the first two surfing or Rock Smash slots, is a resident
+there, not a prowler. It has no minimum level and appears at the area's wild
+level, as Sinjoh's natives and Kalos's rewards in the Safari Zones do. Meteor
+Falls' Lunatone and Solrock, Fiery Path's Torkoal, Icefall Cave's Eiscue and
+Clamperl at Sootopolis are residents. A resident's temperament still decides
+which reaches it can appear in.
 
 A prowler looks like any other wild encounter. There is no special intro,
 cry or effect, so players only notice it by what appears and how strong it is.
@@ -222,7 +232,10 @@ own static and gift sources.
 
 ### Generation IV and Hisuian rewards
 
-Generation IV is reserved for a future Sinnoh region, so its rows wait for it.
+Generation IV is reserved for a future Sinnoh region, so its Sinnoh-only rows
+(the three starters, Rotom, the Gible line, Carnivine and Spiritomb) are
+reserved: they record temperaments for Sinnoh and generate no minimum levels
+until it exists.
 Sinjoh's natives are the Hisuian part of Generation VIII and the Hisuian forms
 of older species, and they use the Hisuian rows. At home in Sinjoh, its
 Hisuian natives are residents: they hold common slots and have no minimum
@@ -233,7 +246,7 @@ Generation IV species that extend a Generation I–III line are marked
 **Extension**. They appear with their line in its home region, not in Sinjoh.
 Sinjoh's blend holds nine Generation IV species of its own: Snover, Riolu,
 Bronzor, Drifloon, Chingling, Croagunk, Buizel, Shellos and Finneon. Their rows
-apply there.
+and the Extension rows apply today.
 
 | Species | Why | Temperament | Base stat total | Notes |
 | --- | --- | --- | --- | --- |
@@ -301,8 +314,9 @@ apply there.
 - Budew, Chingling, Bonsly, Mime Jr., Happiny, Munchlax and Mantyke, which are
   babies. Babies appear as rare finds named directly in tables, not as reward
   Pokémon.
-- Hisuian Sliggoo, Goodra and Avalugg, which evolve from Kalos's Goomy,
-  Sliggoo and Bergmite when they evolve in Sinjoh.
+- Hisuian Sliggoo and Avalugg, which evolve from Kalos's Goomy and Bergmite
+  when they evolve in Sinjoh, and Hisuian Goodra, which follows from Hisuian
+  Sliggoo outside Sinjoh.
 
 ### Generation VI rewards
 
@@ -500,5 +514,6 @@ listed separately.
 
 This roster replaces the minimum-level list in
 `game/src/data/wild_encounter_species.json`, so every species with a minimum
-level is a prowler. The change itself belongs to the implementation.
+level is a reward, and takes it only where it is a prowler. The change itself
+belongs to the implementation.
 

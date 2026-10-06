@@ -70,8 +70,10 @@ share of encounter slots falls the further east you travel:
 | Kanto east | Cerulean, Saffron, Celadon, Vermilion, Lavender, Fuchsia, Routes 5–19 and 24–25, Rock Tunnel, Power Plant, Pokémon Tower, Cerulean Cave | ~10–15% |
 
 A share is measured across all of a band's tables, day and night together,
-by slot weight. A family counts as the generation of its own base form, so
-Zubat's line counts as Gen I even where it reaches Crobat.
+by slot weight. A family counts as the generation of its earliest stage that
+isn't a baby, so Zubat's line counts as Gen I even where it reaches Crobat, and
+Pikachu's and Snorlax's lines count as Gen I despite Pichu and Munchlax. A baby
+slot counts as its own generation.
 
 ### What must be catchable
 
@@ -159,8 +161,10 @@ fit what the map has.
 
 - Rewards follow their temperament: harmless anywhere, fierce from Wilds
   outward, dangerous only in Outlands and dungeons.
-- Stages reached by item, trade or friendship appear only in Outlands and on
-  a dungeon's deeper floors. This includes later-generation extensions such as
+- Stages reached by a non-level evolution (item, trade, friendship, move or
+  location) appear only in Outlands and on a dungeon's
+  [deeper floors](reach-assignments.md#dungeon-floors).
+  This includes later-generation extensions such as
   Electivire, Magmortar, Weavile and Togekiss.
 - Deeper dungeon floors hold rarer species than their entrances.
 
@@ -201,8 +205,9 @@ Den, and the water starters.
 
 - **Fishing:** entries 1–3, which make up about 70% of Old Rod catches, hold
   the map's most fitting common fish. Magikarp stays common in ponds and lakes
-  but isn't required anywhere. Entries 3–10 hold at least four different
-  families and carry the map's own character, which the better rods reveal.
+  but isn't required anywhere. Entries 3–10, entry 3 included, hold at least
+  four different families and carry the map's own character, which the better
+  rods reveal.
 - **Native HM crossings:** where a player on shore must be able to catch a
   Pokémon that knows Surf or Whirlpool, fishing entries 1–3 include a local
   carrier by day and by night. In Kanto and Johto that means Vermilion City and

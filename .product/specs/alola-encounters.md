@@ -37,8 +37,8 @@ Alola uses the same format as [Kanto and Johto](kanto-johto-encounters.md):
 - Each slot holds a species line, written as its stage cap, and a rarity
   weight. Slots hold no levels.
 
-Each island is a single map that holds its village and its wild ground, so one
-island has one land table for day and one for night. Island tables are
+Each island is a single map that holds its wild ground, and Melemele also holds
+the arrival village, so one island has one land table for day and one for night. Island tables are
 therefore fuller than a typical route's: about ten different species each. If
 the islands are later split into smaller maps, their species spread across the
 new maps.
@@ -80,7 +80,7 @@ original Pokédex mixed in many older species, so a light blend suits it:
 
 - **They must fit the place.** For example: Pikachu, Exeggcute and Cubone,
   which evolve into Alolan Raichu, Exeggutor and Marowak there; tropical sea
-  species such as Wingull, Corsola, Luvdisc and Lapras; and Magikarp in the
+  species such as Wingull, Corsola and Luvdisc; and Magikarp in the
   islands' waters.
 - **They stay a minority:** at most ~20% of slot weight on each island,
   measured across day and night.
@@ -126,8 +126,9 @@ family is catchable.
 - Rewards follow their temperament: harmless anywhere, fierce from Wilds
   outward, dangerous only in Outlands and dungeons. Melemele, the only Road
   island, holds only harmless rewards.
-- Stages reached by item, trade or friendship appear only in Outlands and on a
-  dungeon's deeper floors.
+- Stages reached by a non-level evolution (item, trade, friendship, move or
+  location) appear only in Outlands and on a dungeon's
+  [deeper floors](reach-assignments.md#dungeon-floors).
 
 ### Rewards
 

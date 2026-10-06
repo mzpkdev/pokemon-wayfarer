@@ -56,6 +56,21 @@ first and deepest floors, and Brutal adds a level-50 floor; the
 values. A single-floor dungeon, or one whose notes call it flat, uses the
 middle of its range on every map.
 
+### Dungeon floors
+
+A dungeon's notes give its floor order: its steps from the entrance to the
+deepest or highest floor, written with arrows. Every map of the dungeon takes
+one step, and maps named together at one step share a floor, such as Mt.
+Silver's mountainside, item room and Moltres room. A dungeon with no arrows
+is a single floor, and one whose notes call it flat is one floor on every map.
+The generator needs each map's step, the step count and whether the dungeon is
+flat, so *flat* is per-dungeon data, not something it works out.
+
+**Deeper floors** are every step after the first. A single-floor or flat
+dungeon has no entrance floor, so it counts as deeper on every map. Item,
+trade, friendship and other non-level evolution stages appear in Outlands and
+on deeper floors only.
+
 ### Kanto
 
 Kanto has 67 maps with wild encounters in Wayfarer, in 46 rows. The safe
@@ -217,14 +232,15 @@ The same conventions apply.
 | Icefall Cave | Dungeon | `MAP_FOUR_ISLAND_ICEFALL_CAVE_ENTRANCE`, `MAP_FOUR_ISLAND_ICEFALL_CAVE_1F`, `MAP_FOUR_ISLAND_ICEFALL_CAVE_B1F`, `MAP_FOUR_ISLAND_ICEFALL_CAVE_BACK` | Floors entrance → 1F → B1F → back. Moderate |
 | Altering Cave | Dungeon | `MAP_SIX_ISLAND_ALTERING_CAVE` | Single floor. Moderate |
 | Tanoby Chambers | Dungeon | `MAP_SEVEN_ISLAND_TANOBY_RUINS_MONEAN_CHAMBER`, `MAP_SEVEN_ISLAND_TANOBY_RUINS_LIPTOO_CHAMBER`, `MAP_SEVEN_ISLAND_TANOBY_RUINS_WEEPTH_CHAMBER`, `MAP_SEVEN_ISLAND_TANOBY_RUINS_DILFORD_CHAMBER`, `MAP_SEVEN_ISLAND_TANOBY_RUINS_SCUFIB_CHAMBER`, `MAP_SEVEN_ISLAND_TANOBY_RUINS_RIXY_CHAMBER`, `MAP_SEVEN_ISLAND_TANOBY_RUINS_VIAPOIS_CHAMBER` | Seven small chambers off the ruins, each one floor. Flat and moderate |
-| Mt. Ember | Dungeon | `MAP_MT_EMBER_EXTERIOR`, `MAP_MT_EMBER_SUMMIT_PATH_1F`, `MAP_MT_EMBER_SUMMIT_PATH_2F`, `MAP_MT_EMBER_SUMMIT_PATH_3F`, `MAP_MT_EMBER_RUBY_PATH_1F`, `MAP_MT_EMBER_RUBY_PATH_B1F`, `MAP_MT_EMBER_RUBY_PATH_B1F_STAIRS`, `MAP_MT_EMBER_RUBY_PATH_B2F`, `MAP_MT_EMBER_RUBY_PATH_B2F_STAIRS`, `MAP_MT_EMBER_RUBY_PATH_B3F` | Floors: exterior → summit path 1F–3F → ruby path 1F → B3F. Moderate to hard. Includes its outdoor slopes |
+| Mt. Ember | Dungeon | `MAP_MT_EMBER_EXTERIOR`, `MAP_MT_EMBER_SUMMIT_PATH_1F`, `MAP_MT_EMBER_SUMMIT_PATH_2F`, `MAP_MT_EMBER_SUMMIT_PATH_3F`, `MAP_MT_EMBER_RUBY_PATH_1F`, `MAP_MT_EMBER_RUBY_PATH_B1F`, `MAP_MT_EMBER_RUBY_PATH_B1F_STAIRS`, `MAP_MT_EMBER_RUBY_PATH_B2F`, `MAP_MT_EMBER_RUBY_PATH_B2F_STAIRS`, `MAP_MT_EMBER_RUBY_PATH_B3F` | Floors: exterior → summit path 1F → 2F → 3F → ruby path 1F → B1F, with its stairs map → B2F, with its stairs map → B3F. Moderate to hard. Includes its outdoor slopes |
 | Lost Cave | Dungeon | `MAP_FIVE_ISLAND_LOST_CAVE_ROOM1`, `MAP_FIVE_ISLAND_LOST_CAVE_ROOM2`, `MAP_FIVE_ISLAND_LOST_CAVE_ROOM3`, `MAP_FIVE_ISLAND_LOST_CAVE_ROOM4`, `MAP_FIVE_ISLAND_LOST_CAVE_ROOM5`, `MAP_FIVE_ISLAND_LOST_CAVE_ROOM6`, `MAP_FIVE_ISLAND_LOST_CAVE_ROOM7`, `MAP_FIVE_ISLAND_LOST_CAVE_ROOM8`, `MAP_FIVE_ISLAND_LOST_CAVE_ROOM9`, `MAP_FIVE_ISLAND_LOST_CAVE_ROOM10`, `MAP_FIVE_ISLAND_LOST_CAVE_ROOM11`, `MAP_FIVE_ISLAND_LOST_CAVE_ROOM12`, `MAP_FIVE_ISLAND_LOST_CAVE_ROOM13`, `MAP_FIVE_ISLAND_LOST_CAVE_ROOM14` | Rooms 1 → 14, a maze. Hard |
 
 ### Alola
 
 Alola has 10 maps with wild encounters in Wayfarer, in 10 rows. Each island is
-a single map that holds both its village and its wild ground, so the whole
-island takes one reach.
+a single map that holds its wild ground, so the whole island takes one reach.
+Melemele also holds the arrival village; the other islands have at most a lone
+house, which doesn't make a settlement.
 
 - **Melemele Isle** is the only settlement. Its arrival village makes it Road,
   and its safe road is the boat from Route 13 in Kanto.
@@ -339,14 +355,14 @@ map graph: every Hoenn town keeps a path of Road maps.
 | New Mauville | Dungeon | `MAP_NEW_MAUVILLE_ENTRANCE`, `MAP_NEW_MAUVILLE_INSIDE` | Floors entrance → inside. Moderate |
 | Desert Underpass | Dungeon | `MAP_DESERT_UNDERPASS` | Single floor. Moderate |
 | Mirage Tower | Dungeon | `MAP_MIRAGE_TOWER_1F`, `MAP_MIRAGE_TOWER_2F`, `MAP_MIRAGE_TOWER_3F`, `MAP_MIRAGE_TOWER_4F` | Floors 1F → 4F. Moderate |
-| Meteor Falls | Dungeon | `MAP_METEOR_FALLS_1F_1R`, `MAP_METEOR_FALLS_1F_2R`, `MAP_METEOR_FALLS_B1F_1R`, `MAP_METEOR_FALLS_B1F_2R`, `MAP_METEOR_FALLS_STEVENS_CAVE` | Floors 1F → B1F → Steven's cave. Moderate to hard. A path between Routes 114 and 115, with deep floors beyond it |
-| Magma Hideout | Dungeon | `MAP_MAGMA_HIDEOUT_1F`, `MAP_MAGMA_HIDEOUT_2F_1R`, `MAP_MAGMA_HIDEOUT_2F_2R`, `MAP_MAGMA_HIDEOUT_2F_3R`, `MAP_MAGMA_HIDEOUT_3F_1R`, `MAP_MAGMA_HIDEOUT_3F_2R`, `MAP_MAGMA_HIDEOUT_3F_3R`, `MAP_MAGMA_HIDEOUT_4F` | Floors 1F → 4F. Moderate to hard |
+| Meteor Falls | Dungeon | `MAP_METEOR_FALLS_1F_1R`, `MAP_METEOR_FALLS_1F_2R`, `MAP_METEOR_FALLS_B1F_1R`, `MAP_METEOR_FALLS_B1F_2R`, `MAP_METEOR_FALLS_STEVENS_CAVE` | Floors 1F room 1 → 1F room 2 → B1F room 1 → B1F room 2 → Steven's cave, one step each. Moderate to hard. A path between Routes 114 and 115, with deep floors beyond it |
+| Magma Hideout | Dungeon | `MAP_MAGMA_HIDEOUT_1F`, `MAP_MAGMA_HIDEOUT_2F_1R`, `MAP_MAGMA_HIDEOUT_2F_2R`, `MAP_MAGMA_HIDEOUT_2F_3R`, `MAP_MAGMA_HIDEOUT_3F_1R`, `MAP_MAGMA_HIDEOUT_3F_2R`, `MAP_MAGMA_HIDEOUT_3F_3R`, `MAP_MAGMA_HIDEOUT_4F` | Floors 1F → 2F rooms 1–3 → 3F rooms 1–3 → 4F, one step per map. Moderate to hard |
 | Mt. Pyre | Dungeon | `MAP_MT_PYRE_1F`, `MAP_MT_PYRE_2F`, `MAP_MT_PYRE_3F`, `MAP_MT_PYRE_4F`, `MAP_MT_PYRE_5F`, `MAP_MT_PYRE_6F`, `MAP_MT_PYRE_EXTERIOR`, `MAP_MT_PYRE_SUMMIT` | Floors 1F → 6F → exterior → summit. Moderate to hard. Includes its outdoor slopes |
 | Shoal Cave | Dungeon | `MAP_SHOAL_CAVE_LOW_TIDE_ENTRANCE_ROOM`, `MAP_SHOAL_CAVE_LOW_TIDE_INNER_ROOM`, `MAP_SHOAL_CAVE_LOW_TIDE_STAIRS_ROOM`, `MAP_SHOAL_CAVE_LOW_TIDE_LOWER_ROOM`, `MAP_SHOAL_CAVE_LOW_TIDE_ICE_ROOM` | Floors entrance → inner → stairs → lower → ice room. Hard |
 | Seafloor Cavern | Dungeon | `MAP_SEAFLOOR_CAVERN_ENTRANCE`, `MAP_SEAFLOOR_CAVERN_ROOM1`, `MAP_SEAFLOOR_CAVERN_ROOM2`, `MAP_SEAFLOOR_CAVERN_ROOM3`, `MAP_SEAFLOOR_CAVERN_ROOM4`, `MAP_SEAFLOOR_CAVERN_ROOM5`, `MAP_SEAFLOOR_CAVERN_ROOM6`, `MAP_SEAFLOOR_CAVERN_ROOM7`, `MAP_SEAFLOOR_CAVERN_ROOM8` | Floors entrance → rooms 1–8. Hard |
 | Artisan Cave | Dungeon | `MAP_ARTISAN_CAVE_1F`, `MAP_ARTISAN_CAVE_B1F` | Floors 1F → B1F. Hard. On the Battle Frontier island |
 | Sky Pillar | Dungeon | `MAP_SKY_PILLAR_1F`, `MAP_SKY_PILLAR_3F`, `MAP_SKY_PILLAR_5F` | Floors 1F → 3F → 5F. Hard, climbing to Rayquaza |
-| Cave of Origin | Dungeon | `MAP_CAVE_OF_ORIGIN_ENTRANCE`, `MAP_CAVE_OF_ORIGIN_1F`, `MAP_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP1`, `MAP_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP2`, `MAP_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP3` | Floors entrance → 1F. Hard. The three unused Ruby/Sapphire maps are probably unreachable |
+| Cave of Origin | Dungeon | `MAP_CAVE_OF_ORIGIN_ENTRANCE`, `MAP_CAVE_OF_ORIGIN_1F`, `MAP_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP1`, `MAP_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP2`, `MAP_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP3` | Floors entrance → 1F, with the three unused Ruby/Sapphire maps sharing 1F's step. Hard. They are probably unreachable |
 | Victory Road | Dungeon | `MAP_VICTORY_ROAD_1F`, `MAP_VICTORY_ROAD_B1F`, `MAP_VICTORY_ROAD_B2F` | Floors 1F → B1F → B2F. Hard. The gauntlet before the League |
 
 ### Remote islands
