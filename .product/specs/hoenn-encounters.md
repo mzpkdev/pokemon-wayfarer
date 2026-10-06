@@ -223,8 +223,7 @@ Hoenn's tables have no night versions today, so every night table is new.
   Ducklett, Vullaby and Rufflet appear only by day. Night brings Volbeat and
   Illumise, ghosts and night prowlers instead.
 - **Night surfing has its own leaders:** Wailmer and Carvanha in the west, and
-  Frillish and Tynamo further east. Wingull and Ducklett stay in the lesser
-  slots.
+  Frillish and Tynamo further east.
 
 ### Native HM sources
 

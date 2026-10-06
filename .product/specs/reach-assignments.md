@@ -374,7 +374,8 @@ from Underwater Route 126.
 
 Two HNS islands are reached by boat from the Olivine and Vermilion ports, with
 an event item. Their wild encounters are ordinary, and each is a remote island,
-so they are Outlands. Each is also a legendary's lair.
+so they are Outlands. Each is also a legendary's lair. Their tables are in the
+[Johto encounter tables](johto-encounter-tables.md).
 
 | Place | Reach | Maps | Notes |
 | --- | --- | --- | --- |

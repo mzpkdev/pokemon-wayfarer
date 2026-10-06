@@ -116,7 +116,8 @@ water.
 The Johto Safari's Headbutt trees hold Fletchling, Spewpa in the area's pattern,
 Dedenne and Phantump, with Chespin as a rare find. The Hoenn Safari's Rock Smash
 rocks hide Helioptile and Bunnelby, with Honedge, Klefki and Hawlucha as rarer
-finds.
+finds. At night, when the day-only species rest, Espurr and Swirlix take the
+trees' Spewpa and Fletchling slots, and Pumpkaboo takes the rocks'.
 
 ### Day and night
 

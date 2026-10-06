@@ -120,7 +120,9 @@ may disobey until your cap catches up, which is the price of a strong catch.
   is smaller than outdoors.
 - **Tables follow the map.** A map has a land, surfing, fishing, or Headbutt
   and Rock Smash table only where it has grass, cave floor, water, Headbutt
-  trees or breakable rocks to trigger it. A few places deliberately have none:
+  trees or breakable rocks to trigger it. This covers the maps with wild
+  encounters today; maps without them stay that way. A few places
+  deliberately have none:
   - patches of grass or water under 10 tiles;
   - rocks that only clear a path or solve a puzzle;
   - places the original games kept free of encounters, such as Emerald's rocky
