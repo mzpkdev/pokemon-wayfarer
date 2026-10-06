@@ -50,11 +50,13 @@ range, so extra TR still means something.
 
 ### How the world answers
 
-- **Early on, the world is dangerous.** With a handful of badges, wild Pokémon
-  and regular trainers sit just under your level cap. Every fight on the road
-  matters.
+- **Early on, the world is dangerous.** With a handful of badges, regular
+  trainers and wild Pokémon off the road sit just under your level cap. Every
+  fight matters.
 - **Late on, routes are no threat.** With many badges, your level cap climbs
-  far ahead of the wild and of regular trainers. You travel freely.
+  far ahead of the roads and of regular trainers. You travel freely, while
+  remote places still meet you near your cap
+  ([Wild encounters v2](wild-encounters-v2.md#reach)).
 - **The challenge comes from people you know.** Gym Leaders, league lineups,
   and the other notable trainers bring the late-game fights, at their own
   strength ([Notable trainers](notable-trainers.md)).
@@ -68,8 +70,8 @@ range, so extra TR still means something.
 - **Your level cap, experience, and obedience.** A higher TR raises your level
   cap. The cap is soft: Pokémon past it earn less experience and may disobey
   ([wild encounter and party progression](trainer-rating-wild-encounter-scaling.md)).
-- **Wild and static encounters**
-  ([wild encounter scaling](trainer-rating-wild-encounter-scaling.md)).
+- **Wild encounters**
+  ([Wild encounters v2](wild-encounters-v2.md)).
 - **Regular trainers and Gym members**
   ([regular trainer and Gym member scaling](trainer-party-scaling.md)).
 - **Poké Mart stock**, unlocking at the same badge counts as today
@@ -112,8 +114,9 @@ changes yours.
 - **Level cap:** the level your Pokémon can reach before they earn less
   experience and may disobey.
 - **World scaling:** wild Pokémon and regular trainers following your TR.
-- **Wild level curve / regular trainer level curve:** how wild Pokémon and
-  regular trainers' levels follow your TR.
+- **Road level / regular trainer level curve:** how wild Pokémon on the road
+  and regular trainers' levels follow your TR. Wilds and Outlands add a bonus
+  on top of the Road level.
 - **Team level:** the level a notable trainer's team is built around, a
   scaler over their own TR; from TR 40 up it matches the level cap at the
   same TR ([trainer scalers](../specs/notable-trainers.md#trainer-scalers)).

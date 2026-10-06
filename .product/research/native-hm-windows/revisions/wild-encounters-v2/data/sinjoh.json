@@ -1,0 +1,333 @@
+{
+ "MAP_ROUTE49_HNS": {
+  "water_type": "pond",
+  "land": {
+   "day": [
+    "SNEASEL_HISUI",
+    "GROWLITHE_HISUI",
+    "STANTLER",
+    "PILOSWINE",
+    "VOLTORB_HISUI",
+    "ABOMASNOW",
+    "STANTLER",
+    "SCYTHER",
+    "URSARING",
+    "KADABRA",
+    "SNEASEL_HISUI",
+    "GROWLITHE_HISUI"
+   ],
+   "night": [
+    "SNEASEL_HISUI",
+    "VOLTORB_HISUI",
+    "ZOROARK_HISUI",
+    "DUSCLOPS",
+    "ZOROARK_HISUI",
+    "URSARING",
+    "DRIFBLIM",
+    "STANTLER",
+    "ABOMASNOW",
+    "URSARING",
+    "KADABRA",
+    "URSARING"
+   ]
+  },
+  "surf": {
+   "day": [
+    "BASCULIN_WHITE_STRIPED",
+    "QWILFISH_HISUI",
+    "GOLDUCK",
+    "FLOATZEL",
+    "WHISCASH"
+   ],
+   "night": [
+    "BASCULIN_WHITE_STRIPED",
+    "QWILFISH_HISUI",
+    "LUMINEON",
+    "WHISCASH",
+    "GASTRODON"
+   ]
+  },
+  "fish": {
+   "day": [
+    "BASCULIN_WHITE_STRIPED",
+    "QWILFISH_HISUI",
+    "MAGIKARP",
+    "WHISCASH",
+    "BASCULIN_WHITE_STRIPED",
+    "GOLDUCK",
+    "OCTILLERY",
+    "FLOATZEL",
+    "QWILFISH_HISUI",
+    "WHISCASH"
+   ],
+   "night": [
+    "BASCULIN_WHITE_STRIPED",
+    "QWILFISH_HISUI",
+    "MAGIKARP",
+    "WHISCASH",
+    "LUMINEON",
+    "OCTILLERY",
+    "BASCULIN_WHITE_STRIPED",
+    "GASTRODON",
+    "QWILFISH_HISUI",
+    "LUMINEON"
+   ]
+  }
+ },
+ "MAP_SNOWSWEPT_CAVERN_HNS": {
+  "land": {
+   "day": [
+    "SNEASEL_HISUI",
+    "ZOROARK_HISUI",
+    "PILOSWINE",
+    "ABOMASNOW",
+    "GOLBAT",
+    "GRAVELER",
+    "GLALIE",
+    "SPHEAL",
+    "ONIX",
+    "SNEASEL_HISUI",
+    "RIOLU",
+    "ZOROARK_HISUI"
+   ],
+   "night": [
+    "ZOROARK_HISUI",
+    "SNEASEL_HISUI",
+    "GRAVELER",
+    "PILOSWINE",
+    "ABOMASNOW",
+    "GRAVELER",
+    "MISDREAVUS",
+    "GLALIE",
+    "ONIX",
+    "SPHEAL",
+    "RIOLU",
+    "ZOROARK_HISUI"
+   ]
+  },
+  "rock": {
+   "day": [
+    "ZOROARK_HISUI",
+    "SNEASEL_HISUI",
+    "GRAVELER",
+    "NOSEPASS",
+    "ONIX"
+   ],
+   "night": [
+    "SNEASEL_HISUI",
+    "ZOROARK_HISUI",
+    "GRAVELER",
+    "NOSEPASS",
+    "ONIX"
+   ]
+  }
+ },
+ "MAP_SINJOH_RUINS_HNS": {
+  "land": {
+   "day": [
+    "VOLTORB_HISUI",
+    "GROWLITHE_HISUI",
+    "BRONZONG",
+    "NOSEPASS",
+    "BRONZONG",
+    "STANTLER",
+    "VOLTORB_HISUI",
+    "GRAVELER",
+    "NOSEPASS",
+    "GROWLITHE_HISUI",
+    "CHINGLING",
+    "STANTLER"
+   ],
+   "night": [
+    "VOLTORB_HISUI",
+    "GROWLITHE_HISUI",
+    "ZOROARK_HISUI",
+    "HAUNTER",
+    "DUSCLOPS",
+    "BRONZONG",
+    "MISDREAVUS",
+    "DRIFBLIM",
+    "CLEFAIRY",
+    "ZOROARK_HISUI",
+    "CHINGLING",
+    "CLEFAIRY"
+   ]
+  }
+ },
+ "MAP_ROUTE50_HNS": {
+  "land": {
+   "day": [
+    "SNEASEL_HISUI",
+    "GROWLITHE_HISUI",
+    "ABOMASNOW",
+    "STANTLER",
+    "URSARING",
+    "PILOSWINE",
+    "SCYTHER",
+    "MACHOKE",
+    "WYRDEER",
+    "KLEAVOR",
+    "SNEASLER",
+    "ARCANINE_HISUI"
+   ],
+   "night": [
+    "SNEASEL_HISUI",
+    "GROWLITHE_HISUI",
+    "ZOROARK_HISUI",
+    "DUSCLOPS",
+    "ZOROARK_HISUI",
+    "ABOMASNOW",
+    "DRIFBLIM",
+    "PILOSWINE",
+    "GLALIE",
+    "WYRDEER",
+    "SNEASLER",
+    "RIOLU"
+   ]
+  },
+  "rock": {
+   "day": [
+    "VOLTORB_HISUI",
+    "SNEASEL_HISUI",
+    "URSARING",
+    "SCYTHER",
+    "DRIFBLIM"
+   ],
+   "night": [
+    "SNEASEL_HISUI",
+    "VOLTORB_HISUI",
+    "MURKROW",
+    "URSARING",
+    "DRIFBLIM"
+   ]
+  }
+ },
+ "MAP_NEWSINJOH_HOTSPRINGS_HNS": {
+  "land": {
+   "day": [
+    "GROWLITHE_HISUI",
+    "GROWLITHE_HISUI",
+    "TOXICROAK",
+    "RAPIDASH",
+    "RHYDON",
+    "PILOSWINE",
+    "GRAVELER",
+    "MAGMAR",
+    "GOLDUCK",
+    "URSALUNA",
+    "ARCANINE_HISUI",
+    "MAGBY"
+   ],
+   "night": [
+    "GROWLITHE_HISUI",
+    "GROWLITHE_HISUI",
+    "TOXICROAK",
+    "ZOROARK_HISUI",
+    "RHYDON",
+    "PILOSWINE",
+    "GRAVELER",
+    "MAGMAR",
+    "GOLDUCK",
+    "URSALUNA",
+    "RAPIDASH",
+    "MAGBY"
+   ]
+  }
+ },
+ "MAP_SINJOH_RUINS_TEMPLE_HNS": {
+  "land": {
+   "day": [
+    "VOLTORB_HISUI",
+    "ZOROARK_HISUI",
+    "UNOWN",
+    "BRONZONG",
+    "NOSEPASS",
+    "UNOWN",
+    "ELECTRODE_HISUI",
+    "CHIMECHO",
+    "UNOWN",
+    "BRONZONG",
+    "UNOWN",
+    "CHINGLING"
+   ],
+   "night": [
+    "ZOROARK_HISUI",
+    "VOLTORB_HISUI",
+    "UNOWN",
+    "HAUNTER",
+    "DUSCLOPS",
+    "UNOWN",
+    "BRONZONG",
+    "MISDREAVUS",
+    "UNOWN",
+    "ELECTRODE_HISUI",
+    "UNOWN",
+    "CHINGLING"
+   ]
+  }
+ },
+ "MAP_SINJOH_RUINS_REGICE_ROOM_HNS": {
+  "land": {
+   "day": [
+    "SNEASEL_HISUI",
+    "ZOROARK_HISUI",
+    "UNOWN",
+    "ABOMASNOW",
+    "UNOWN",
+    "BRONZONG",
+    "GLALIE",
+    "UNOWN",
+    "SPHEAL",
+    "UNOWN",
+    "SNEASLER",
+    "UNOWN"
+   ],
+   "night": [
+    "ZOROARK_HISUI",
+    "SNEASEL_HISUI",
+    "UNOWN",
+    "ABOMASNOW",
+    "UNOWN",
+    "BRONZONG",
+    "MISDREAVUS",
+    "GLALIE",
+    "UNOWN",
+    "SPHEAL",
+    "SNEASLER",
+    "UNOWN"
+   ]
+  }
+ },
+ "MAP_SINJOH_RUINS_REGIROCK_ROOM_HNS": {
+  "land": {
+   "day": [
+    "VOLTORB_HISUI",
+    "ZOROARK_HISUI",
+    "UNOWN",
+    "NOSEPASS",
+    "UNOWN",
+    "GRAVELER",
+    "UNOWN",
+    "BRONZONG",
+    "UNOWN",
+    "ONIX",
+    "ELECTRODE_HISUI",
+    "UNOWN"
+   ],
+   "night": [
+    "ZOROARK_HISUI",
+    "VOLTORB_HISUI",
+    "UNOWN",
+    "HAUNTER",
+    "UNOWN",
+    "NOSEPASS",
+    "UNOWN",
+    "DUSCLOPS",
+    "UNOWN",
+    "GRAVELER",
+    "ELECTRODE_HISUI",
+    "BRONZONG"
+   ]
+  }
+ }
+}

@@ -1,5 +1,9 @@
 # Trainer Rating wild encounter and party progression
 
+**Partly retired.** Its wild-encounter parts are replaced by
+[Wild encounters v2](wild-encounters-v2.md). Its party progression, level cap
+and obedience rules still apply.
+
 Implemented: Partial
 
 Today's [circuit producer](../../game/src/league_circuit.c) implements

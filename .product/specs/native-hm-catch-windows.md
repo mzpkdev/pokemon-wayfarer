@@ -5,6 +5,7 @@ Status: Core implementation complete; full route acceptance pending.
 Implemented: Core data and production tests; full route acceptance pending.
 Implementation: [Production changes and acceptance evidence](../research/native-hm-windows/revisions/implementation/README.md)
 Current revision: [Nearby-access design and evidence](../research/native-hm-windows/revisions/nearby-access/README.md)
+Next revision: [Wild encounters v2](../research/native-hm-windows/revisions/wild-encounters-v2/README.md), design only; it takes over when the v2 tables ship
 Historical attachments: [Original distribution, evidence and reproduction tools](../research/native-hm-windows/attachments.md)
 
 ## Scope
@@ -25,6 +26,57 @@ and acceptance. The selected nearby-access proposal defines the species, moves,
 levels and enumerated encounter replacements. Exploratory optimizer outputs
 and historical alternative patches are evidence, not instructions to replace
 the selected proposal automatically. Whirl Islands are out of scope.
+
+## Wild encounters v2 revision
+
+[Wild encounters v2](../prds/wild-encounters-v2.md) replaces every encounter
+table and the way wild levels are set, so the encounter coverage below changes
+when it ships. The
+[v2 revision](../research/native-hm-windows/revisions/wild-encounters-v2/README.md)
+then replaces the nearby-access evidence:
+
+- **Levels** come from [wild level scaling](wild-level-scaling.md): the place's
+  level ±2, prowler minimums, young levels and the stage mix. TR projection,
+  slot eligibility, species floors and profile offsets go. Fishing uses the
+  place's level with every rod.
+- **The guarantee grows to the Sevii Islands, Alola and Sinjoh.** The Safari
+  Zones and the Bug-Catching Contest stay outside it.
+- **TR runs from 0 to 160** on the [v0 scale](player-trainer-rating.md#formula-v0).
+  Regional coverage holds across that range for the field moves each region's
+  maps need: all eight in Johto, Kanto and Hoenn; Surf, Cut, Rock Smash,
+  Strength and Waterfall in the Sevii Islands; Surf in Alola; Rock Smash in
+  Sinjoh, whose water, waterfalls and Strength boulders open nothing.
+- **The 8% crossing floor holds from TR 20, two badges, to TR 160.** Before
+  that, crossings rely on the Surf HM: no Kanto or Johto species knows Surf
+  below level 7, and Roads are level 5 before the first badge. TR 20 is the
+  first TR at which every scenario passes. Hoenn's Lilycove and Pacifidlog (at night),
+  Mossdeep and Route 118 east crossings, the Den's Whirlpool and
+  Sootopolis's Dive all still fall short at TR 19.
+- **Seventeen arrival scenarios join the eleven crossings:** one for each Sevii
+  island and each Alola island, Dewford Town for Surf, Sootopolis City for Surf
+  and Dive, since it is left only by Dive, Ever Grande City for Surf, and Rock
+  Smash on each side of Snowswept Cavern's rocks, Sinjoh's only way in and
+  out. Their
+  sources are the land tables and shore fishing a player reaches on foot from
+  the ferry, the boat, the Tapu sign or the Pokémon Center, with no field
+  move.
+- **The roster changes fourteen entries.** Luvdisc, Frillish, Jellicent,
+  Arrokuda, Barraskewda, Drednaw, Mareanie, Wishiwashi and Toxapex add Surf,
+  Chewtle adds Waterfall, Carvanha adds Dive, Graveler adds Rock Smash, and
+  Quagsire's Surf and Weepinbell's Cut move earlier. The learnset rules below
+  apply to them unchanged. The
+  [`roster_v2.json`](../research/native-hm-windows/revisions/wild-encounters-v2/roster_v2.json)
+  export is the v2 roster: the nearby-access roster with these changes, **130
+  species and 166 roles** (the 121 species and 154 roles below, plus nine new
+  species and twelve new roles). A v2 implementation validates its learnsets
+  against it wherever the sections below name `roster.json`.
+- **`encounter_replacements` retire.** The v2 tables hold the crossing
+  carriers directly; the revision lists the 33 edits it made to them.
+- **Cinnabar's scenario uses `MAP_CINNABAR_ISLAND`,** the map Wayfarer uses.
+  The other scenarios, maps, methods and ranks stay.
+
+Until the v2 tables ship, the sections below describe the implemented
+nearby-access revision.
 
 ## Approved data and provenance
 
@@ -195,12 +247,9 @@ separately. Do not substitute a daytime witness for a night gap or require the
 player to wait. Hoenn's static encounter profile is evaluated in both clock
 cases rather than inventing a separate night population.
 
-TR 0-80 throughout this specification is today's scale. v0: TR
-0-160 (0 to 24 badges) on the [v0 TR scale](player-trainer-rating.md#formula-v0).
-The coverage results here, including the TR 35 Super Rod cells (≈ 7 badges,
-v0 TR 72), were computed on today's curve and need data
-re-verification against the [v0 wild level curve](trainer-rating-wild-encounter-scaling.md#v0-wild-level-curve);
-this specification does not yet claim them on the v0 scale.
+TR 0-80 throughout this specification is today's scale. The
+[wild encounters v2 revision](#wild-encounters-v2-revision) re-verifies the
+coverage on the v0 scale against the v2 tables.
 Water encounters cannot certify acquisition before Surf. The inventory must
 also verify rod and capture preparation assumptions; it does not promise
 recovery after a player deliberately loses their last usable Surf carrier.

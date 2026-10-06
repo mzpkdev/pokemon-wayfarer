@@ -1,0 +1,2694 @@
+{
+ "MAP_ONE_ISLAND": {
+  "water_type": "sea",
+  "surf": {
+   "day": [
+    "BARRASKEWDA",
+    "DREDNAW",
+    "TENTACRUEL",
+    "PELIPPER",
+    "INTELEON"
+   ],
+   "night": [
+    "DREDNAW",
+    "BARRASKEWDA",
+    "TENTACRUEL",
+    "LANTURN",
+    "INTELEON"
+   ]
+  },
+  "fish": {
+   "day": [
+    "BARRASKEWDA",
+    "DREDNAW",
+    "MAGIKARP",
+    "SEADRA",
+    "PINCURCHIN",
+    "KINGLER",
+    "BARRASKEWDA",
+    "SHELLDER",
+    "CLOBBOPUS",
+    "INTELEON"
+   ],
+   "night": [
+    "DREDNAW",
+    "BARRASKEWDA",
+    "MAGIKARP",
+    "PINCURCHIN",
+    "SEADRA",
+    "LANTURN",
+    "CLOBBOPUS",
+    "KINGLER",
+    "SHELLDER",
+    "INTELEON"
+   ]
+  }
+ },
+ "MAP_ONE_ISLAND_KINDLE_ROAD": {
+  "water_type": "sea",
+  "land": {
+   "day": [
+    "COALOSSAL",
+    "CENTISKORCH",
+    "CORVIKNIGHT",
+    "BOLTUND",
+    "DREDNAW",
+    "GREEDENT",
+    "FEAROW",
+    "RAPIDASH",
+    "WEEZING_GALAR",
+    "PERRSERKER",
+    "CINDERACE",
+    "TOXEL"
+   ],
+   "night": [
+    "THIEVUL",
+    "COALOSSAL",
+    "CENTISKORCH",
+    "WEEZING_GALAR",
+    "PERRSERKER",
+    "OBSTAGOON",
+    "RATICATE",
+    "BOLTUND",
+    "DREDNAW",
+    "NOCTOWL",
+    "CINDERACE",
+    "TOXEL"
+   ]
+  },
+  "surf": {
+   "day": [
+    "DREDNAW",
+    "BARRASKEWDA",
+    "TENTACRUEL",
+    "SEADRA",
+    "PINCURCHIN"
+   ],
+   "night": [
+    "BARRASKEWDA",
+    "DREDNAW",
+    "TENTACRUEL",
+    "LANTURN",
+    "PINCURCHIN"
+   ]
+  },
+  "fish": {
+   "day": [
+    "DREDNAW",
+    "BARRASKEWDA",
+    "MAGIKARP",
+    "KINGLER",
+    "PINCURCHIN",
+    "SEADRA",
+    "CLOBBOPUS",
+    "SHELLDER",
+    "BARRASKEWDA",
+    "STARYU"
+   ],
+   "night": [
+    "BARRASKEWDA",
+    "DREDNAW",
+    "MAGIKARP",
+    "PINCURCHIN",
+    "KINGLER",
+    "LANTURN",
+    "CLOBBOPUS",
+    "SEADRA",
+    "SHELLDER",
+    "STARYU"
+   ]
+  },
+  "rock": {
+   "day": [
+    "PINCURCHIN",
+    "CLOBBOPUS",
+    "GRAVELER",
+    "COALOSSAL",
+    "DREDNAW"
+   ],
+   "night": [
+    "CLOBBOPUS",
+    "PINCURCHIN",
+    "GRAVELER",
+    "COALOSSAL",
+    "DREDNAW"
+   ]
+  }
+ },
+ "MAP_ONE_ISLAND_TREASURE_BEACH": {
+  "water_type": "sea",
+  "land": {
+   "day": [
+    "DREDNAW",
+    "CLOBBOPUS",
+    "SANDACONDA",
+    "BOLTUND",
+    "GREEDENT",
+    "SLOWBRO",
+    "KINGLER",
+    "CRAMORANT",
+    "PINCURCHIN",
+    "PELIPPER",
+    "INTELEON",
+    "FEAROW"
+   ],
+   "night": [
+    "DREDNAW",
+    "CLOBBOPUS",
+    "THIEVUL",
+    "OBSTAGOON",
+    "SANDACONDA",
+    "STARYU",
+    "KINGLER",
+    "SLOWBRO",
+    "PINCURCHIN",
+    "CURSOLA",
+    "INTELEON",
+    "CRAMORANT"
+   ]
+  },
+  "surf": {
+   "day": [
+    "DREDNAW",
+    "CLOBBOPUS",
+    "TENTACRUEL",
+    "PELIPPER",
+    "CRAMORANT"
+   ],
+   "night": [
+    "CLOBBOPUS",
+    "DREDNAW",
+    "TENTACRUEL",
+    "STARYU",
+    "CRAMORANT"
+   ]
+  },
+  "fish": {
+   "day": [
+    "DREDNAW",
+    "CLOBBOPUS",
+    "MAGIKARP",
+    "BARRASKEWDA",
+    "KINGLER",
+    "PINCURCHIN",
+    "SEADRA",
+    "SHELLDER",
+    "STARYU",
+    "CORSOLA_GALAR"
+   ],
+   "night": [
+    "CLOBBOPUS",
+    "DREDNAW",
+    "MAGIKARP",
+    "BARRASKEWDA",
+    "PINCURCHIN",
+    "LANTURN",
+    "KINGLER",
+    "SEADRA",
+    "STARYU",
+    "CORSOLA_GALAR"
+   ]
+  }
+ },
+ "MAP_TWO_ISLAND_CAPE_BRINK": {
+  "water_type": "pond",
+  "land": {
+   "day": [
+    "DUBWOOL",
+    "ELDEGOSS",
+    "CORVIKNIGHT",
+    "BOLTUND",
+    "GREEDENT",
+    "ORBEETLE",
+    "GOLDUCK",
+    "FEAROW",
+    "MORPEKO",
+    "PERRSERKER",
+    "INTELEON",
+    "TOXEL"
+   ],
+   "night": [
+    "THIEVUL",
+    "DUBWOOL",
+    "OBSTAGOON",
+    "NOCTOWL",
+    "GOLDUCK",
+    "PERRSERKER",
+    "GRIMMSNARL",
+    "PERRSERKER",
+    "ORBEETLE",
+    "MORPEKO",
+    "INTELEON",
+    "TOXEL"
+   ]
+  },
+  "surf": {
+   "day": [
+    "DREDNAW",
+    "BARRASKEWDA",
+    "GOLDUCK",
+    "POLIWHIRL",
+    "STUNFISK_GALAR"
+   ],
+   "night": [
+    "DREDNAW",
+    "BARRASKEWDA",
+    "GOLDUCK",
+    "BASCULIN",
+    "STUNFISK_GALAR"
+   ]
+  },
+  "fish": {
+   "day": [
+    "DREDNAW",
+    "BARRASKEWDA",
+    "MAGIKARP",
+    "SEAKING",
+    "POLIWHIRL",
+    "GOLDUCK",
+    "BARRASKEWDA",
+    "DREDNAW",
+    "STUNFISK_GALAR",
+    "INTELEON"
+   ],
+   "night": [
+    "BARRASKEWDA",
+    "DREDNAW",
+    "MAGIKARP",
+    "POLIWHIRL",
+    "SEAKING",
+    "GOLDUCK",
+    "DREDNAW",
+    "BASCULIN",
+    "STUNFISK_GALAR",
+    "INTELEON"
+   ]
+  }
+ },
+ "MAP_THREE_ISLAND_PORT": {
+  "land": {
+   "day": [
+    "DUBWOOL",
+    "CORVIKNIGHT",
+    "BOLTUND",
+    "GREEDENT",
+    "PERRSERKER",
+    "MORPEKO",
+    "ELDEGOSS",
+    "PELIPPER",
+    "PIDGEOTTO",
+    "ORBEETLE",
+    "MILCERY",
+    "TOXEL"
+   ],
+   "night": [
+    "THIEVUL",
+    "OBSTAGOON",
+    "PERRSERKER",
+    "MORPEKO",
+    "DUBWOOL",
+    "RATICATE",
+    "GRIMMSNARL",
+    "NOCTOWL",
+    "BOLTUND",
+    "GREEDENT",
+    "MILCERY",
+    "TOXEL"
+   ]
+  },
+  "water_type": "sea",
+  "surf": {
+   "day": [
+    "DREDNAW",
+    "PINCURCHIN",
+    "CLOBBOPUS",
+    "BARRASKEWDA",
+    "INTELEON"
+   ],
+   "night": [
+    "PINCURCHIN",
+    "DREDNAW",
+    "CLOBBOPUS",
+    "BARRASKEWDA",
+    "LANTURN"
+   ]
+  },
+  "fish": {
+   "day": [
+    "DREDNAW",
+    "PINCURCHIN",
+    "MAGIKARP",
+    "CLOBBOPUS",
+    "BARRASKEWDA",
+    "DREDNAW",
+    "PINCURCHIN",
+    "KINGLER",
+    "CLOBBOPUS",
+    "INTELEON"
+   ],
+   "night": [
+    "PINCURCHIN",
+    "DREDNAW",
+    "MAGIKARP",
+    "CLOBBOPUS",
+    "BARRASKEWDA",
+    "LANTURN",
+    "PINCURCHIN",
+    "DREDNAW",
+    "KINGLER",
+    "INTELEON"
+   ]
+  }
+ },
+ "MAP_THREE_ISLAND_BOND_BRIDGE": {
+  "water_type": "sea",
+  "land": {
+   "day": [
+    "ELDEGOSS",
+    "ORBEETLE",
+    "GREEDENT",
+    "CORVIKNIGHT",
+    "DUBWOOL",
+    "BOLTUND",
+    "WEEPINBELL",
+    "PERRSERKER",
+    "OBSTAGOON",
+    "BOLTUND",
+    "APPLIN",
+    "MILCERY"
+   ],
+   "night": [
+    "THIEVUL",
+    "ORBEETLE",
+    "VENOMOTH",
+    "OBSTAGOON",
+    "GLOOM",
+    "GREEDENT",
+    "GRIMMSNARL",
+    "ELDEGOSS",
+    "NOCTOWL",
+    "PERRSERKER",
+    "APPLIN",
+    "MILCERY"
+   ]
+  },
+  "surf": {
+   "day": [
+    "BARRASKEWDA",
+    "PINCURCHIN",
+    "TENTACRUEL",
+    "PELIPPER",
+    "STARYU"
+   ],
+   "night": [
+    "PINCURCHIN",
+    "BARRASKEWDA",
+    "TENTACRUEL",
+    "LANTURN",
+    "STARYU"
+   ]
+  },
+  "fish": {
+   "day": [
+    "BARRASKEWDA",
+    "PINCURCHIN",
+    "MAGIKARP",
+    "CLOBBOPUS",
+    "KINGLER",
+    "DREDNAW",
+    "TENTACRUEL",
+    "SEADRA",
+    "GYARADOS",
+    "STARYU"
+   ],
+   "night": [
+    "PINCURCHIN",
+    "BARRASKEWDA",
+    "MAGIKARP",
+    "CLOBBOPUS",
+    "LANTURN",
+    "DREDNAW",
+    "KINGLER",
+    "SEADRA",
+    "REMORAID",
+    "STARYU"
+   ]
+  }
+ },
+ "MAP_THREE_ISLAND_BERRY_FOREST": {
+  "water_type": "pond",
+  "land": {
+   "day": [
+    "GREEDENT",
+    "HATTERENE",
+    "RAPIDASH_GALAR",
+    "ORBEETLE",
+    "ELDEGOSS",
+    "EXEGGCUTE",
+    "APPLIN",
+    "WEEPINBELL",
+    "MILCERY",
+    "HYPNO",
+    "RILLABOOM",
+    "INDEEDEE"
+   ],
+   "night": [
+    "GRIMMSNARL",
+    "HATTERENE",
+    "VENOMOTH",
+    "GLOOM",
+    "GREEDENT",
+    "RAPIDASH_GALAR",
+    "SHIINOTIC",
+    "HYPNO",
+    "APPLIN",
+    "INDEEDEE",
+    "RILLABOOM",
+    "MILCERY"
+   ]
+  },
+  "surf": {
+   "day": [
+    "DREDNAW",
+    "BARRASKEWDA",
+    "AZUMARILL",
+    "LOMBRE",
+    "INTELEON"
+   ],
+   "night": [
+    "BARRASKEWDA",
+    "DREDNAW",
+    "AZUMARILL",
+    "ARAQUANID",
+    "INTELEON"
+   ]
+  },
+  "fish": {
+   "day": [
+    "DREDNAW",
+    "BARRASKEWDA",
+    "MAGIKARP",
+    "AZUMARILL",
+    "LOMBRE",
+    "DREDNAW",
+    "POLIWHIRL",
+    "BARRASKEWDA",
+    "GYARADOS",
+    "INTELEON"
+   ],
+   "night": [
+    "BARRASKEWDA",
+    "DREDNAW",
+    "MAGIKARP",
+    "AZUMARILL",
+    "LOMBRE",
+    "ARAQUANID",
+    "POLIWHIRL",
+    "DREDNAW",
+    "GYARADOS",
+    "INTELEON"
+   ]
+  }
+ },
+ "MAP_MT_EMBER_EXTERIOR": {
+  "land": {
+   "day": [
+    "COALOSSAL",
+    "CENTISKORCH",
+    "CORVIKNIGHT",
+    "CARKOL",
+    "WEEZING_GALAR",
+    "GRAVELER",
+    "COPPERAJAH",
+    "MAGCARGO",
+    "CINDERACE",
+    "SALAZZLE",
+    "TOXEL",
+    "STONJOURNER"
+   ],
+   "night": [
+    "CENTISKORCH",
+    "COALOSSAL",
+    "WEEZING_GALAR",
+    "THIEVUL",
+    "GOLBAT",
+    "SALAZZLE",
+    "GRIMMSNARL",
+    "MAGCARGO",
+    "NOCTOWL",
+    "MISDREAVUS",
+    "TOXEL",
+    "CINDERACE"
+   ]
+  },
+  "rock": {
+   "day": [
+    "COALOSSAL",
+    "CENTISKORCH",
+    "GRAVELER",
+    "MAGCARGO",
+    "STONJOURNER"
+   ],
+   "night": [
+    "CENTISKORCH",
+    "COALOSSAL",
+    "GRAVELER",
+    "MAGCARGO",
+    "STONJOURNER"
+   ]
+  }
+ },
+ "MAP_MT_EMBER_SUMMIT_PATH_1F": {
+  "land": {
+   "day": [
+    "COALOSSAL",
+    "WEEZING_GALAR",
+    "CENTISKORCH",
+    "GRAVELER",
+    "COPPERAJAH",
+    "MAGCARGO",
+    "SALAZZLE",
+    "CARKOL",
+    "GOLBAT",
+    "SALAZZLE",
+    "TOXEL",
+    "CINDERACE"
+   ],
+   "night": [
+    "WEEZING_GALAR",
+    "COALOSSAL",
+    "GOLBAT",
+    "CENTISKORCH",
+    "GRAVELER",
+    "SALAZZLE",
+    "MAGCARGO",
+    "COPPERAJAH",
+    "CARKOL",
+    "MISDREAVUS",
+    "TOXEL",
+    "CINDERACE"
+   ]
+  }
+ },
+ "MAP_MT_EMBER_SUMMIT_PATH_2F": {
+  "land": {
+   "day": [
+    "CENTISKORCH",
+    "WEEZING_GALAR",
+    "COALOSSAL",
+    "COPPERAJAH",
+    "GOLEM",
+    "MAGCARGO",
+    "SALAZZLE",
+    "CARKOL",
+    "GOLBAT",
+    "SALAZZLE",
+    "CARKOL",
+    "TOXEL"
+   ],
+   "night": [
+    "WEEZING_GALAR",
+    "CENTISKORCH",
+    "COALOSSAL",
+    "GOLBAT",
+    "COPPERAJAH",
+    "GOLEM",
+    "SALAZZLE",
+    "MISDREAVUS",
+    "MAGCARGO",
+    "CARKOL",
+    "TOXEL",
+    "CARKOL"
+   ]
+  },
+  "rock": {
+   "day": [
+    "COALOSSAL",
+    "CENTISKORCH",
+    "GOLEM",
+    "MAGCARGO",
+    "CARKOL"
+   ],
+   "night": [
+    "CENTISKORCH",
+    "COALOSSAL",
+    "GOLEM",
+    "MAGCARGO",
+    "CARKOL"
+   ]
+  }
+ },
+ "MAP_MT_EMBER_SUMMIT_PATH_3F": {
+  "land": {
+   "day": [
+    "WEEZING_GALAR",
+    "COPPERAJAH",
+    "COALOSSAL",
+    "CENTISKORCH",
+    "CARKOL",
+    "GOLEM",
+    "MAGCARGO",
+    "SALAZZLE",
+    "CARKOL",
+    "GRAVELER",
+    "TOXEL",
+    "CINDERACE"
+   ],
+   "night": [
+    "COPPERAJAH",
+    "WEEZING_GALAR",
+    "CENTISKORCH",
+    "COALOSSAL",
+    "GOLBAT",
+    "GOLEM",
+    "SALAZZLE",
+    "MISDREAVUS",
+    "MAGCARGO",
+    "CARKOL",
+    "TOXEL",
+    "CINDERACE"
+   ]
+  }
+ },
+ "MAP_MT_EMBER_RUBY_PATH_1F": {
+  "land": {
+   "day": [
+    "COALOSSAL",
+    "CENTISKORCH",
+    "COPPERAJAH",
+    "WEEZING_GALAR",
+    "MAGCARGO",
+    "GOLEM",
+    "CARKOL",
+    "SALAZZLE",
+    "GOLBAT",
+    "CENTISKORCH",
+    "TOXEL",
+    "CARKOL"
+   ],
+   "night": [
+    "CENTISKORCH",
+    "COALOSSAL",
+    "WEEZING_GALAR",
+    "COPPERAJAH",
+    "GOLBAT",
+    "MAGCARGO",
+    "GOLEM",
+    "SALAZZLE",
+    "MISDREAVUS",
+    "CARKOL",
+    "TOXEL",
+    "CARKOL"
+   ]
+  },
+  "rock": {
+   "day": [
+    "COALOSSAL",
+    "CENTISKORCH",
+    "GRAVELER",
+    "MAGCARGO",
+    "COPPERAJAH"
+   ],
+   "night": [
+    "CENTISKORCH",
+    "COALOSSAL",
+    "GRAVELER",
+    "MAGCARGO",
+    "COPPERAJAH"
+   ]
+  }
+ },
+ "MAP_MT_EMBER_RUBY_PATH_B1F": {
+  "land": {
+   "day": [
+    "WEEZING_GALAR",
+    "CENTISKORCH",
+    "COALOSSAL",
+    "MAGCARGO",
+    "COPPERAJAH",
+    "SALAZZLE",
+    "GOLEM",
+    "CARKOL",
+    "CENTISKORCH",
+    "GOLBAT",
+    "CARKOL",
+    "TOXEL"
+   ],
+   "night": [
+    "CENTISKORCH",
+    "WEEZING_GALAR",
+    "SALAZZLE",
+    "COALOSSAL",
+    "MAGCARGO",
+    "COPPERAJAH",
+    "GOLBAT",
+    "GOLEM",
+    "MISDREAVUS",
+    "CARKOL",
+    "CARKOL",
+    "TOXEL"
+   ]
+  },
+  "rock": {
+   "day": [
+    "COALOSSAL",
+    "CENTISKORCH",
+    "GOLEM",
+    "MAGCARGO",
+    "TOXEL"
+   ],
+   "night": [
+    "CENTISKORCH",
+    "COALOSSAL",
+    "GOLEM",
+    "MAGCARGO",
+    "TOXEL"
+   ]
+  }
+ },
+ "MAP_MT_EMBER_RUBY_PATH_B1F_STAIRS": {
+  "land": {
+   "day": [
+    "CENTISKORCH",
+    "COPPERAJAH",
+    "COALOSSAL",
+    "MAGCARGO",
+    "WEEZING_GALAR",
+    "CENTISKORCH",
+    "SALAZZLE",
+    "GOLEM",
+    "CARKOL",
+    "CARKOL",
+    "TOXEL",
+    "CINDERACE"
+   ],
+   "night": [
+    "COPPERAJAH",
+    "CENTISKORCH",
+    "COALOSSAL",
+    "WEEZING_GALAR",
+    "MAGCARGO",
+    "SALAZZLE",
+    "GOLBAT",
+    "CENTISKORCH",
+    "GOLEM",
+    "CARKOL",
+    "TOXEL",
+    "CINDERACE"
+   ]
+  },
+  "rock": {
+   "day": [
+    "COALOSSAL",
+    "CENTISKORCH",
+    "GOLEM",
+    "MAGCARGO",
+    "COPPERAJAH"
+   ],
+   "night": [
+    "CENTISKORCH",
+    "COALOSSAL",
+    "GOLEM",
+    "MAGCARGO",
+    "COPPERAJAH"
+   ]
+  }
+ },
+ "MAP_MT_EMBER_RUBY_PATH_B2F": {
+  "land": {
+   "day": [
+    "COALOSSAL",
+    "WEEZING_GALAR",
+    "CENTISKORCH",
+    "COPPERAJAH",
+    "SALAZZLE",
+    "MAGCARGO",
+    "CENTISKORCH",
+    "GOLEM",
+    "CARKOL",
+    "CARKOL",
+    "CINDERACE",
+    "TOXEL"
+   ],
+   "night": [
+    "WEEZING_GALAR",
+    "COALOSSAL",
+    "SALAZZLE",
+    "CENTISKORCH",
+    "COPPERAJAH",
+    "GOLBAT",
+    "MAGCARGO",
+    "MISDREAVUS",
+    "CARKOL",
+    "CENTISKORCH",
+    "CINDERACE",
+    "TOXEL"
+   ]
+  },
+  "rock": {
+   "day": [
+    "COALOSSAL",
+    "CENTISKORCH",
+    "GOLEM",
+    "MAGCARGO",
+    "CARKOL"
+   ],
+   "night": [
+    "CENTISKORCH",
+    "COALOSSAL",
+    "GOLEM",
+    "MAGCARGO",
+    "CARKOL"
+   ]
+  }
+ },
+ "MAP_MT_EMBER_RUBY_PATH_B2F_STAIRS": {
+  "land": {
+   "day": [
+    "CENTISKORCH",
+    "COALOSSAL",
+    "SALAZZLE",
+    "COPPERAJAH",
+    "WEEZING_GALAR",
+    "CENTISKORCH",
+    "MAGCARGO",
+    "CARKOL",
+    "GOLEM",
+    "CARKOL",
+    "CINDERACE",
+    "TOXEL"
+   ],
+   "night": [
+    "COALOSSAL",
+    "CENTISKORCH",
+    "SALAZZLE",
+    "COPPERAJAH",
+    "GOLBAT",
+    "WEEZING_GALAR",
+    "CENTISKORCH",
+    "CARKOL",
+    "MISDREAVUS",
+    "MAGCARGO",
+    "CINDERACE",
+    "TOXEL"
+   ]
+  },
+  "rock": {
+   "day": [
+    "COALOSSAL",
+    "CENTISKORCH",
+    "GOLEM",
+    "MAGCARGO",
+    "TOXEL"
+   ],
+   "night": [
+    "CENTISKORCH",
+    "COALOSSAL",
+    "GOLEM",
+    "MAGCARGO",
+    "TOXEL"
+   ]
+  }
+ },
+ "MAP_MT_EMBER_RUBY_PATH_B3F": {
+  "land": {
+   "day": [
+    "COALOSSAL",
+    "COPPERAJAH",
+    "CENTISKORCH",
+    "SALAZZLE",
+    "CENTISKORCH",
+    "WEEZING_GALAR",
+    "WEEZING_GALAR",
+    "MAGCARGO",
+    "GOLEM",
+    "CINDERACE",
+    "TOXEL",
+    "CARKOL"
+   ],
+   "night": [
+    "COPPERAJAH",
+    "COALOSSAL",
+    "CENTISKORCH",
+    "SALAZZLE",
+    "WEEZING_GALAR",
+    "GOLBAT",
+    "CENTISKORCH",
+    "WEEZING_GALAR",
+    "MISDREAVUS",
+    "MAGCARGO",
+    "TOXEL",
+    "CINDERACE"
+   ]
+  },
+  "rock": {
+   "day": [
+    "COALOSSAL",
+    "CENTISKORCH",
+    "GOLEM",
+    "MAGCARGO",
+    "COPPERAJAH"
+   ],
+   "night": [
+    "CENTISKORCH",
+    "COALOSSAL",
+    "GOLEM",
+    "MAGCARGO",
+    "COPPERAJAH"
+   ]
+  }
+ },
+ "MAP_FOUR_ISLAND": {
+  "water_type": "cold",
+  "surf": {
+   "day": [
+    "BARRASKEWDA",
+    "CLOBBOPUS",
+    "DEWGONG",
+    "BARRASKEWDA",
+    "SHELLDER"
+   ],
+   "night": [
+    "CLOBBOPUS",
+    "BARRASKEWDA",
+    "DEWGONG",
+    "CLOBBOPUS",
+    "SHELLDER"
+   ]
+  },
+  "fish": {
+   "day": [
+    "BARRASKEWDA",
+    "CLOBBOPUS",
+    "CLOBBOPUS",
+    "WALREIN",
+    "BARRASKEWDA",
+    "SHELLDER",
+    "BARRASKEWDA",
+    "CLOBBOPUS",
+    "CLOBBOPUS",
+    "WALREIN"
+   ],
+   "night": [
+    "BARRASKEWDA",
+    "BARRASKEWDA",
+    "BARRASKEWDA",
+    "SHELLDER",
+    "CLOBBOPUS",
+    "DEWGONG",
+    "CLOBBOPUS",
+    "BARRASKEWDA",
+    "TENTACOOL",
+    "BARRASKEWDA"
+   ]
+  }
+ },
+ "MAP_FOUR_ISLAND_ICEFALL_CAVE_ENTRANCE": {
+  "water_type": "cold",
+  "land": {
+   "day": [
+    "COPPERAJAH",
+    "SNOM",
+    "DARUMAKA_GALAR",
+    "EISCUE",
+    "COPPERAJAH",
+    "MR_RIME",
+    "PILOSWINE",
+    "SNOM",
+    "GLALIE",
+    "DARUMAKA_GALAR",
+    "SANDSHREW_ALOLA",
+    "EISCUE"
+   ],
+   "night": [
+    "SNOM",
+    "COPPERAJAH",
+    "MR_RIME",
+    "DARUMAKA_GALAR",
+    "VULPIX_ALOLA",
+    "COPPERAJAH",
+    "EISCUE",
+    "PILOSWINE",
+    "SNOM",
+    "GLALIE",
+    "MR_RIME",
+    "EISCUE"
+   ]
+  },
+  "surf": {
+   "day": [
+    "BARRASKEWDA",
+    "CLOBBOPUS",
+    "EISCUE",
+    "DEWGONG",
+    "CLOBBOPUS"
+   ],
+   "night": [
+    "CLOBBOPUS",
+    "BARRASKEWDA",
+    "EISCUE",
+    "DEWGONG",
+    "SPHEAL"
+   ]
+  },
+  "fish": {
+   "day": [
+    "BARRASKEWDA",
+    "CLOBBOPUS",
+    "CLOBBOPUS",
+    "BARRASKEWDA",
+    "SHELLDER",
+    "EISCUE",
+    "CLOBBOPUS",
+    "BARRASKEWDA",
+    "DEWGONG",
+    "EISCUE"
+   ],
+   "night": [
+    "CLOBBOPUS",
+    "BARRASKEWDA",
+    "BARRASKEWDA",
+    "CLOBBOPUS",
+    "EISCUE",
+    "SHELLDER",
+    "BARRASKEWDA",
+    "CLOBBOPUS",
+    "SPHEAL",
+    "EISCUE"
+   ]
+  }
+ },
+ "MAP_FOUR_ISLAND_ICEFALL_CAVE_1F": {
+  "land": {
+   "day": [
+    "COPPERAJAH",
+    "MR_RIME",
+    "SNOM",
+    "DARUMAKA_GALAR",
+    "EISCUE",
+    "COPPERAJAH",
+    "PILOSWINE",
+    "FROSMOTH",
+    "MR_RIME",
+    "SNOM",
+    "DARMANITAN_GALAR",
+    "VANILLUXE"
+   ],
+   "night": [
+    "MR_RIME",
+    "COPPERAJAH",
+    "SNOM",
+    "EISCUE",
+    "DARUMAKA_GALAR",
+    "NINETALES_ALOLA",
+    "COPPERAJAH",
+    "FROSMOTH",
+    "PILOSWINE",
+    "SNOM",
+    "DARMANITAN_GALAR",
+    "MR_RIME"
+   ]
+  }
+ },
+ "MAP_FOUR_ISLAND_ICEFALL_CAVE_B1F": {
+  "land": {
+   "day": [
+    "SNOM",
+    "EISCUE",
+    "COPPERAJAH",
+    "MR_RIME",
+    "DARUMAKA_GALAR",
+    "FROSMOTH",
+    "GLALIE",
+    "SNOM",
+    "COPPERAJAH",
+    "SANDSLASH_ALOLA",
+    "DARMANITAN_GALAR",
+    "DURALUDON"
+   ],
+   "night": [
+    "EISCUE",
+    "SNOM",
+    "MR_RIME",
+    "COPPERAJAH",
+    "DARUMAKA_GALAR",
+    "FROSMOTH",
+    "NINETALES_ALOLA",
+    "SNOM",
+    "DARMANITAN_GALAR",
+    "GLALIE",
+    "DURALUDON",
+    "MR_RIME"
+   ]
+  }
+ },
+ "MAP_FOUR_ISLAND_ICEFALL_CAVE_BACK": {
+  "water_type": "cold",
+  "land": {
+   "day": [
+    "EISCUE",
+    "MR_RIME",
+    "FROSMOTH",
+    "DARMANITAN_GALAR",
+    "COPPERAJAH",
+    "SNOM",
+    "DARUMAKA_GALAR",
+    "WALREIN",
+    "COPPERAJAH",
+    "SANDSLASH_ALOLA",
+    "FROSMOTH",
+    "DURALUDON"
+   ],
+   "night": [
+    "MR_RIME",
+    "EISCUE",
+    "FROSMOTH",
+    "DARMANITAN_GALAR",
+    "COPPERAJAH",
+    "NINETALES_ALOLA",
+    "SNOM",
+    "DARUMAKA_GALAR",
+    "COPPERAJAH",
+    "WALREIN",
+    "DURALUDON",
+    "FROSMOTH"
+   ]
+  },
+  "surf": {
+   "day": [
+    "EISCUE",
+    "BARRASKEWDA",
+    "GRAPPLOCT",
+    "WALREIN",
+    "EISCUE"
+   ],
+   "night": [
+    "BARRASKEWDA",
+    "EISCUE",
+    "GRAPPLOCT",
+    "WALREIN",
+    "BARRASKEWDA"
+   ]
+  },
+  "fish": {
+   "day": [
+    "BARRASKEWDA",
+    "GRAPPLOCT",
+    "EISCUE",
+    "GRAPPLOCT",
+    "CLOYSTER",
+    "BARRASKEWDA",
+    "EISCUE",
+    "GRAPPLOCT",
+    "BARRASKEWDA",
+    "KINGDRA"
+   ],
+   "night": [
+    "GRAPPLOCT",
+    "BARRASKEWDA",
+    "EISCUE",
+    "BARRASKEWDA",
+    "GRAPPLOCT",
+    "CLOYSTER",
+    "EISCUE",
+    "BARRASKEWDA",
+    "SPHEAL",
+    "KINGDRA"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND": {
+  "water_type": "sea",
+  "surf": {
+   "day": [
+    "PINCURCHIN",
+    "BARRASKEWDA",
+    "PELIPPER",
+    "CURSOLA",
+    "DREDNAW"
+   ],
+   "night": [
+    "BARRASKEWDA",
+    "PINCURCHIN",
+    "CURSOLA",
+    "CURSOLA",
+    "DREDNAW"
+   ]
+  },
+  "fish": {
+   "day": [
+    "PINCURCHIN",
+    "BARRASKEWDA",
+    "PINCURCHIN",
+    "CLOBBOPUS",
+    "CORSOLA_GALAR",
+    "DREDNAW",
+    "PINCURCHIN",
+    "QWILFISH",
+    "BARRASKEWDA",
+    "CURSOLA"
+   ],
+   "night": [
+    "BARRASKEWDA",
+    "PINCURCHIN",
+    "PINCURCHIN",
+    "CURSOLA",
+    "CLOBBOPUS",
+    "LANTURN",
+    "DREDNAW",
+    "QWILFISH",
+    "PINCURCHIN",
+    "CORSOLA_GALAR"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND_MEADOW": {
+  "water_type": "sea",
+  "land": {
+   "day": [
+    "ELDEGOSS",
+    "DUBWOOL",
+    "MORPEKO",
+    "BOLTUND",
+    "ORBEETLE",
+    "GREEDENT",
+    "JUMPLUFF",
+    "RAPIDASH_GALAR",
+    "FALINKS",
+    "CINDERACE",
+    "CRAMORANT",
+    "MILCERY"
+   ],
+   "night": [
+    "THIEVUL",
+    "DUBWOOL",
+    "OBSTAGOON",
+    "GRIMMSNARL",
+    "MORPEKO",
+    "HATTERENE",
+    "NOCTOWL",
+    "ELDEGOSS",
+    "ORBEETLE",
+    "FALINKS",
+    "SINISTEA",
+    "CRAMORANT"
+   ]
+  },
+  "surf": {
+   "day": [
+    "DREDNAW",
+    "CLOBBOPUS",
+    "PELIPPER",
+    "CRAMORANT",
+    "CURSOLA"
+   ],
+   "night": [
+    "CLOBBOPUS",
+    "DREDNAW",
+    "PELIPPER",
+    "CURSOLA",
+    "CRAMORANT"
+   ]
+  },
+  "fish": {
+   "day": [
+    "DREDNAW",
+    "CLOBBOPUS",
+    "PINCURCHIN",
+    "BARRASKEWDA",
+    "PINCURCHIN",
+    "CORSOLA_GALAR",
+    "DREDNAW",
+    "WAILMER",
+    "PYUKUMUKU",
+    "CLOBBOPUS"
+   ],
+   "night": [
+    "CLOBBOPUS",
+    "DREDNAW",
+    "PINCURCHIN",
+    "PINCURCHIN",
+    "BARRASKEWDA",
+    "CURSOLA",
+    "CORSOLA_GALAR",
+    "CURSOLA",
+    "PYUKUMUKU",
+    "DREDNAW"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND_RESORT_GORGEOUS": {
+  "water_type": "sea",
+  "surf": {
+   "day": [
+    "BARRASKEWDA",
+    "PINCURCHIN",
+    "LUVDISC",
+    "CRAMORANT",
+    "CORSOLA_GALAR"
+   ],
+   "night": [
+    "PINCURCHIN",
+    "BARRASKEWDA",
+    "LUVDISC",
+    "CURSOLA",
+    "CRAMORANT"
+   ]
+  },
+  "fish": {
+   "day": [
+    "BARRASKEWDA",
+    "PINCURCHIN",
+    "PINCURCHIN",
+    "LUVDISC",
+    "CORSOLA_GALAR",
+    "WAILMER",
+    "CLOBBOPUS",
+    "DREDNAW",
+    "LUVDISC",
+    "INTELEON"
+   ],
+   "night": [
+    "PINCURCHIN",
+    "BARRASKEWDA",
+    "PINCURCHIN",
+    "LUVDISC",
+    "CURSOLA",
+    "WAILMER",
+    "LANTURN",
+    "CLOBBOPUS",
+    "DREDNAW",
+    "INTELEON"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND_MEMORIAL_PILLAR": {
+  "water_type": "sea",
+  "land": {
+   "day": [
+    "ELDEGOSS",
+    "RUNERIGUS",
+    "SINISTEA",
+    "CORVIKNIGHT",
+    "CURSOLA",
+    "GREEDENT",
+    "DRAGAPULT",
+    "HATTERENE",
+    "ALCREMIE",
+    "FALINKS",
+    "JUMPLUFF",
+    "MILCERY"
+   ],
+   "night": [
+    "RUNERIGUS",
+    "CURSOLA",
+    "SINISTEA",
+    "THIEVUL",
+    "GRIMMSNARL",
+    "DRAGAPULT",
+    "HAUNTER",
+    "HATTERENE",
+    "MISDREAVUS",
+    "ELDEGOSS",
+    "OBSTAGOON",
+    "ALCREMIE"
+   ]
+  },
+  "surf": {
+   "day": [
+    "PINCURCHIN",
+    "BARRASKEWDA",
+    "CURSOLA",
+    "GRAPPLOCT",
+    "CRAMORANT"
+   ],
+   "night": [
+    "BARRASKEWDA",
+    "PINCURCHIN",
+    "CURSOLA",
+    "GRAPPLOCT",
+    "CRAMORANT"
+   ]
+  },
+  "fish": {
+   "day": [
+    "BARRASKEWDA",
+    "PINCURCHIN",
+    "PINCURCHIN",
+    "CORSOLA_GALAR",
+    "GRAPPLOCT",
+    "DREDNAW",
+    "CURSOLA",
+    "BARRASKEWDA",
+    "PINCURCHIN",
+    "GRAPPLOCT"
+   ],
+   "night": [
+    "PINCURCHIN",
+    "BARRASKEWDA",
+    "PINCURCHIN",
+    "CURSOLA",
+    "FRILLISH",
+    "GRAPPLOCT",
+    "CORSOLA_GALAR",
+    "DREDNAW",
+    "CURSOLA",
+    "PINCURCHIN"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND_WATER_LABYRINTH": {
+  "water_type": "sea",
+  "surf": {
+   "day": [
+    "GRAPPLOCT",
+    "DREDNAW",
+    "CRAMORANT",
+    "PELIPPER",
+    "CURSOLA"
+   ],
+   "night": [
+    "DREDNAW",
+    "GRAPPLOCT",
+    "CURSOLA",
+    "PELIPPER",
+    "CRAMORANT"
+   ]
+  },
+  "fish": {
+   "day": [
+    "GRAPPLOCT",
+    "DREDNAW",
+    "PINCURCHIN",
+    "BARRASKEWDA",
+    "PINCURCHIN",
+    "CORSOLA_GALAR",
+    "GRAPPLOCT",
+    "WAILMER",
+    "DREDNAW",
+    "CURSOLA"
+   ],
+   "night": [
+    "DREDNAW",
+    "GRAPPLOCT",
+    "PINCURCHIN",
+    "PINCURCHIN",
+    "BARRASKEWDA",
+    "LANTURN",
+    "CURSOLA",
+    "WAILMER",
+    "GRAPPLOCT",
+    "CORSOLA_GALAR"
+   ]
+  }
+ },
+ "MAP_SIX_ISLAND_WATER_PATH": {
+  "water_type": "sea",
+  "land": {
+   "day": [
+    "CORVIKNIGHT",
+    "CLOBBOPUS",
+    "SLOWPOKE_GALAR",
+    "FARFETCHD_GALAR",
+    "GREEDENT",
+    "DREDNAW",
+    "FALINKS",
+    "PYUKUMUKU",
+    "BOLTUND",
+    "SANDACONDA",
+    "STONJOURNER",
+    "CRAMORANT"
+   ],
+   "night": [
+    "THIEVUL",
+    "CLOBBOPUS",
+    "GRIMMSNARL",
+    "OBSTAGOON",
+    "SLOWPOKE_GALAR",
+    "PERRSERKER",
+    "CORVIKNIGHT",
+    "FARFETCHD_GALAR",
+    "FALINKS",
+    "DREDNAW",
+    "STONJOURNER",
+    "HATTERENE"
+   ]
+  },
+  "surf": {
+   "day": [
+    "DREDNAW",
+    "BARRASKEWDA",
+    "PYUKUMUKU",
+    "CRAMORANT",
+    "SLOWPOKE_GALAR"
+   ],
+   "night": [
+    "BARRASKEWDA",
+    "DREDNAW",
+    "TOXAPEX",
+    "CRAMORANT",
+    "SLOWPOKE_GALAR"
+   ]
+  },
+  "fish": {
+   "day": [
+    "CLOBBOPUS",
+    "BARRASKEWDA",
+    "BARRASKEWDA",
+    "SLOWPOKE_GALAR",
+    "PINCURCHIN",
+    "DREDNAW",
+    "TOXAPEX",
+    "CLOBBOPUS",
+    "BARRASKEWDA",
+    "PYUKUMUKU"
+   ],
+   "night": [
+    "BARRASKEWDA",
+    "CLOBBOPUS",
+    "CLOBBOPUS",
+    "PINCURCHIN",
+    "SLOWPOKE_GALAR",
+    "CURSOLA",
+    "DREDNAW",
+    "TOXAPEX",
+    "BARRASKEWDA",
+    "PYUKUMUKU"
+   ]
+  }
+ },
+ "MAP_SIX_ISLAND_RUIN_VALLEY": {
+  "water_type": "pond",
+  "land": {
+   "day": [
+    "SANDACONDA",
+    "ORBEETLE",
+    "STONJOURNER",
+    "RUNERIGUS",
+    "HATTERENE",
+    "COPPERAJAH",
+    "XATU",
+    "INDEEDEE",
+    "CORVIKNIGHT",
+    "FALINKS",
+    "DURALUDON",
+    "RUNERIGUS"
+   ],
+   "night": [
+    "ORBEETLE",
+    "SANDACONDA",
+    "GRIMMSNARL",
+    "THIEVUL",
+    "RUNERIGUS",
+    "MORPEKO",
+    "STONJOURNER",
+    "OBSTAGOON",
+    "SINISTEA",
+    "XATU",
+    "DRAGAPULT",
+    "INDEEDEE"
+   ]
+  },
+  "surf": {
+   "day": [
+    "DREDNAW",
+    "BARRASKEWDA",
+    "STUNFISK_GALAR",
+    "QUAGSIRE",
+    "AZUMARILL"
+   ],
+   "night": [
+    "DREDNAW",
+    "BARRASKEWDA",
+    "QUAGSIRE",
+    "STUNFISK_GALAR",
+    "BASCULIN"
+   ]
+  },
+  "fish": {
+   "day": [
+    "DREDNAW",
+    "BARRASKEWDA",
+    "BARRASKEWDA",
+    "SEAKING",
+    "STUNFISK_GALAR",
+    "POLIWHIRL",
+    "BARRASKEWDA",
+    "DREDNAW",
+    "QUAGSIRE",
+    "STUNFISK_GALAR"
+   ],
+   "night": [
+    "BARRASKEWDA",
+    "DREDNAW",
+    "DREDNAW",
+    "STUNFISK_GALAR",
+    "POLIWHIRL",
+    "BASCULIN",
+    "SEAKING",
+    "DREDNAW",
+    "QUAGSIRE",
+    "BARRASKEWDA"
+   ]
+  }
+ },
+ "MAP_SIX_ISLAND_GREEN_PATH": {
+  "water_type": "sea",
+  "surf": {
+   "day": [
+    "GRAPPLOCT",
+    "PINCURCHIN",
+    "SLOWBRO_GALAR",
+    "CRAMORANT",
+    "SLOWKING_GALAR"
+   ],
+   "night": [
+    "PINCURCHIN",
+    "GRAPPLOCT",
+    "SLOWPOKE_GALAR",
+    "CRAMORANT",
+    "SLOWKING_GALAR"
+   ]
+  },
+  "fish": {
+   "day": [
+    "PINCURCHIN",
+    "GRAPPLOCT",
+    "PINCURCHIN",
+    "SLOWPOKE_GALAR",
+    "BARRASKEWDA",
+    "DREDNAW",
+    "SLOWBRO_GALAR",
+    "TOXAPEX",
+    "PINCURCHIN",
+    "SLOWKING_GALAR"
+   ],
+   "night": [
+    "GRAPPLOCT",
+    "PINCURCHIN",
+    "PINCURCHIN",
+    "SLOWPOKE_GALAR",
+    "CURSOLA",
+    "BARRASKEWDA",
+    "DREDNAW",
+    "SLOWBRO_GALAR",
+    "TOXAPEX",
+    "SLOWKING_GALAR"
+   ]
+  }
+ },
+ "MAP_SIX_ISLAND_PATTERN_BUSH": {
+  "land": {
+   "day": [
+    "ORBEETLE",
+    "ELDEGOSS",
+    "FALINKS",
+    "CENTISKORCH",
+    "LEDIAN",
+    "FLAPPLE",
+    "FORRETRESS",
+    "GREEDENT",
+    "SCOLIPEDE",
+    "RIBOMBEE",
+    "APPLETUN",
+    "RAPIDASH_GALAR"
+   ],
+   "night": [
+    "ORBEETLE",
+    "CENTISKORCH",
+    "ARIADOS",
+    "THIEVUL",
+    "GRIMMSNARL",
+    "FALINKS",
+    "HATTERENE",
+    "FORRETRESS",
+    "VENOMOTH",
+    "FLAPPLE",
+    "SHIINOTIC",
+    "APPLETUN"
+   ]
+  }
+ },
+ "MAP_SIX_ISLAND_OUTCAST_ISLAND": {
+  "water_type": "sea",
+  "surf": {
+   "day": [
+    "GRAPPLOCT",
+    "BARRASKEWDA",
+    "CRAMORANT",
+    "WAILMER",
+    "CURSOLA"
+   ],
+   "night": [
+    "BARRASKEWDA",
+    "GRAPPLOCT",
+    "CURSOLA",
+    "WAILMER",
+    "CRAMORANT"
+   ]
+  },
+  "fish": {
+   "day": [
+    "GRAPPLOCT",
+    "BARRASKEWDA",
+    "PINCURCHIN",
+    "DREDNAW",
+    "PINCURCHIN",
+    "WAILMER",
+    "BARRASKEWDA",
+    "CORSOLA_GALAR",
+    "GRAPPLOCT",
+    "DREDNAW"
+   ],
+   "night": [
+    "BARRASKEWDA",
+    "GRAPPLOCT",
+    "PINCURCHIN",
+    "PINCURCHIN",
+    "DREDNAW",
+    "CURSOLA",
+    "WAILMER",
+    "CURSOLA",
+    "GRAPPLOCT",
+    "BARRASKEWDA"
+   ]
+  }
+ },
+ "MAP_SIX_ISLAND_ALTERING_CAVE": {
+  "land": {
+   "day": [
+    "COALOSSAL",
+    "COPPERAJAH",
+    "GOLBAT",
+    "CENTISKORCH",
+    "CARKOL",
+    "THIEVUL",
+    "DRAGAPULT",
+    "GRIMMSNARL",
+    "CENTISKORCH",
+    "CARKOL",
+    "MORPEKO",
+    "TOXEL"
+   ],
+   "night": [
+    "COPPERAJAH",
+    "COALOSSAL",
+    "THIEVUL",
+    "GOLBAT",
+    "CARKOL",
+    "MISDREAVUS",
+    "GRIMMSNARL",
+    "DRAGAPULT",
+    "CENTISKORCH",
+    "CARKOL",
+    "MORPEKO",
+    "TOXEL"
+   ]
+  }
+ },
+ "MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE": {
+  "land": {
+   "day": [
+    "SANDACONDA",
+    "CORVIKNIGHT",
+    "COALOSSAL",
+    "COPPERAJAH",
+    "FALINKS",
+    "OBSTAGOON",
+    "DONPHAN",
+    "FARFETCHD_GALAR",
+    "YAMASK_GALAR",
+    "PERRSERKER",
+    "CINDERACE",
+    "TOXEL"
+   ],
+   "night": [
+    "THIEVUL",
+    "SANDACONDA",
+    "OBSTAGOON",
+    "COPPERAJAH",
+    "PERRSERKER",
+    "GRIMMSNARL",
+    "FALINKS",
+    "FARFETCHD_GALAR",
+    "NOCTOWL",
+    "YAMASK_GALAR",
+    "HATTERENE",
+    "TOXEL"
+   ]
+  }
+ },
+ "MAP_SEVEN_ISLAND_TRAINER_TOWER": {
+  "water_type": "sea",
+  "surf": {
+   "day": [
+    "DREDNAW",
+    "PINCURCHIN",
+    "WAILMER",
+    "CRAMORANT",
+    "CLOBBOPUS"
+   ],
+   "night": [
+    "PINCURCHIN",
+    "DREDNAW",
+    "CURSOLA",
+    "CRAMORANT",
+    "CLOBBOPUS"
+   ]
+  },
+  "fish": {
+   "day": [
+    "DREDNAW",
+    "PINCURCHIN",
+    "PINCURCHIN",
+    "BARRASKEWDA",
+    "CLOBBOPUS",
+    "WAILMER",
+    "CORSOLA_GALAR",
+    "DREDNAW",
+    "QWILFISH",
+    "PYUKUMUKU"
+   ],
+   "night": [
+    "PINCURCHIN",
+    "DREDNAW",
+    "PINCURCHIN",
+    "BARRASKEWDA",
+    "CLOBBOPUS",
+    "CURSOLA",
+    "CURSOLA",
+    "WAILMER",
+    "PYUKUMUKU",
+    "DREDNAW"
+   ]
+  }
+ },
+ "MAP_SEVEN_ISLAND_SEVAULT_CANYON": {
+  "land": {
+   "day": [
+    "COPPERAJAH",
+    "CORVIKNIGHT",
+    "SANDACONDA",
+    "FALINKS",
+    "COALOSSAL",
+    "DONPHAN",
+    "DURALUDON",
+    "FARFETCHD_GALAR",
+    "STONJOURNER",
+    "MAROWAK",
+    "STUNFISK_GALAR",
+    "SIRFETCHD"
+   ],
+   "night": [
+    "COPPERAJAH",
+    "SANDACONDA",
+    "OBSTAGOON",
+    "GRIMMSNARL",
+    "PERRSERKER",
+    "DRAGAPULT",
+    "DURALUDON",
+    "FARFETCHD_GALAR",
+    "MAROWAK",
+    "STONJOURNER",
+    "HATTERENE",
+    "FALINKS"
+   ]
+  },
+  "rock": {
+   "day": [
+    "SANDACONDA",
+    "RUNERIGUS",
+    "STONJOURNER",
+    "GOLEM",
+    "DURALUDON"
+   ],
+   "night": [
+    "RUNERIGUS",
+    "SANDACONDA",
+    "STONJOURNER",
+    "GOLEM",
+    "DURALUDON"
+   ]
+  },
+  "water_type": "pond",
+  "surf": {
+   "day": [
+    "DREDNAW",
+    "BARRASKEWDA",
+    "STUNFISK_GALAR",
+    "INTELEON",
+    "SLOWPOKE_GALAR"
+   ],
+   "night": [
+    "DREDNAW",
+    "STUNFISK_GALAR",
+    "BARRASKEWDA",
+    "SLOWPOKE_GALAR",
+    "INTELEON"
+   ]
+  },
+  "fish": {
+   "day": [
+    "DREDNAW",
+    "BARRASKEWDA",
+    "DREDNAW",
+    "STUNFISK_GALAR",
+    "BARRASKEWDA",
+    "SLOWPOKE_GALAR",
+    "DREDNAW",
+    "BARRASKEWDA",
+    "STUNFISK_GALAR",
+    "INTELEON"
+   ],
+   "night": [
+    "BARRASKEWDA",
+    "DREDNAW",
+    "STUNFISK_GALAR",
+    "DREDNAW",
+    "BARRASKEWDA",
+    "STUNFISK_GALAR",
+    "SLOWPOKE_GALAR",
+    "DREDNAW",
+    "BASCULIN",
+    "INTELEON"
+   ]
+  }
+ },
+ "MAP_SEVEN_ISLAND_TANOBY_RUINS": {
+  "water_type": "sea",
+  "surf": {
+   "day": [
+    "PINCURCHIN",
+    "GRAPPLOCT",
+    "CRAMORANT",
+    "WAILMER",
+    "CURSOLA"
+   ],
+   "night": [
+    "GRAPPLOCT",
+    "PINCURCHIN",
+    "CURSOLA",
+    "CURSOLA",
+    "CRAMORANT"
+   ]
+  },
+  "fish": {
+   "day": [
+    "PINCURCHIN",
+    "GRAPPLOCT",
+    "PINCURCHIN",
+    "BARRASKEWDA",
+    "DREDNAW",
+    "CORSOLA_GALAR",
+    "WAILMER",
+    "PINCURCHIN",
+    "PYUKUMUKU",
+    "CURSOLA"
+   ],
+   "night": [
+    "GRAPPLOCT",
+    "PINCURCHIN",
+    "PINCURCHIN",
+    "DREDNAW",
+    "BARRASKEWDA",
+    "LANTURN",
+    "CURSOLA",
+    "WAILMER",
+    "PYUKUMUKU",
+    "CORSOLA_GALAR"
+   ]
+  }
+ },
+ "MAP_SEVEN_ISLAND_TANOBY_RUINS_MONEAN_CHAMBER": {
+  "land": {
+   "day": [
+    "RUNERIGUS",
+    "SANDACONDA",
+    "UNOWN",
+    "SINISTEA",
+    "CURSOLA",
+    "SANDACONDA",
+    "YAMASK_GALAR",
+    "STONJOURNER",
+    "CURSOLA",
+    "RUNERIGUS",
+    "UNOWN",
+    "DRAGAPULT"
+   ],
+   "night": [
+    "SANDACONDA",
+    "RUNERIGUS",
+    "UNOWN",
+    "GRIMMSNARL",
+    "DRAGAPULT",
+    "CURSOLA",
+    "SINISTEA",
+    "YAMASK_GALAR",
+    "STONJOURNER",
+    "RUNERIGUS",
+    "UNOWN",
+    "DRAGAPULT"
+   ]
+  }
+ },
+ "MAP_SEVEN_ISLAND_TANOBY_RUINS_LIPTOO_CHAMBER": {
+  "land": {
+   "day": [
+    "RUNERIGUS",
+    "SINISTEA",
+    "UNOWN",
+    "SANDACONDA",
+    "COALOSSAL",
+    "SINISTEA",
+    "YAMASK_GALAR",
+    "STONJOURNER",
+    "COALOSSAL",
+    "RUNERIGUS",
+    "UNOWN",
+    "DRAGAPULT"
+   ],
+   "night": [
+    "SINISTEA",
+    "RUNERIGUS",
+    "UNOWN",
+    "GRIMMSNARL",
+    "DRAGAPULT",
+    "COALOSSAL",
+    "SANDACONDA",
+    "YAMASK_GALAR",
+    "STONJOURNER",
+    "RUNERIGUS",
+    "UNOWN",
+    "DRAGAPULT"
+   ]
+  }
+ },
+ "MAP_SEVEN_ISLAND_TANOBY_RUINS_WEEPTH_CHAMBER": {
+  "land": {
+   "day": [
+    "RUNERIGUS",
+    "SANDACONDA",
+    "UNOWN",
+    "SINISTEA",
+    "THIEVUL",
+    "SANDACONDA",
+    "YAMASK_GALAR",
+    "STONJOURNER",
+    "THIEVUL",
+    "RUNERIGUS",
+    "UNOWN",
+    "DRAGAPULT"
+   ],
+   "night": [
+    "SANDACONDA",
+    "RUNERIGUS",
+    "UNOWN",
+    "GRIMMSNARL",
+    "DRAGAPULT",
+    "THIEVUL",
+    "SINISTEA",
+    "YAMASK_GALAR",
+    "STONJOURNER",
+    "RUNERIGUS",
+    "UNOWN",
+    "DRAGAPULT"
+   ]
+  }
+ },
+ "MAP_SEVEN_ISLAND_TANOBY_RUINS_DILFORD_CHAMBER": {
+  "land": {
+   "day": [
+    "RUNERIGUS",
+    "SINISTEA",
+    "UNOWN",
+    "SANDACONDA",
+    "CORSOLA_GALAR",
+    "SINISTEA",
+    "YAMASK_GALAR",
+    "STONJOURNER",
+    "CORSOLA_GALAR",
+    "RUNERIGUS",
+    "UNOWN",
+    "DRAGAPULT"
+   ],
+   "night": [
+    "SINISTEA",
+    "RUNERIGUS",
+    "UNOWN",
+    "GRIMMSNARL",
+    "DRAGAPULT",
+    "CORSOLA_GALAR",
+    "SANDACONDA",
+    "YAMASK_GALAR",
+    "STONJOURNER",
+    "RUNERIGUS",
+    "UNOWN",
+    "DRAGAPULT"
+   ]
+  }
+ },
+ "MAP_SEVEN_ISLAND_TANOBY_RUINS_SCUFIB_CHAMBER": {
+  "land": {
+   "day": [
+    "RUNERIGUS",
+    "SANDACONDA",
+    "UNOWN",
+    "SINISTEA",
+    "GRIMMSNARL",
+    "SANDACONDA",
+    "YAMASK_GALAR",
+    "STONJOURNER",
+    "GRIMMSNARL",
+    "RUNERIGUS",
+    "UNOWN",
+    "DRAGAPULT"
+   ],
+   "night": [
+    "SANDACONDA",
+    "RUNERIGUS",
+    "UNOWN",
+    "THIEVUL",
+    "DRAGAPULT",
+    "GRIMMSNARL",
+    "SINISTEA",
+    "YAMASK_GALAR",
+    "STONJOURNER",
+    "RUNERIGUS",
+    "UNOWN",
+    "DRAGAPULT"
+   ]
+  }
+ },
+ "MAP_SEVEN_ISLAND_TANOBY_RUINS_RIXY_CHAMBER": {
+  "land": {
+   "day": [
+    "RUNERIGUS",
+    "SINISTEA",
+    "UNOWN",
+    "SANDACONDA",
+    "CARKOL",
+    "SINISTEA",
+    "YAMASK_GALAR",
+    "STONJOURNER",
+    "CARKOL",
+    "RUNERIGUS",
+    "UNOWN",
+    "DRAGAPULT"
+   ],
+   "night": [
+    "SINISTEA",
+    "RUNERIGUS",
+    "UNOWN",
+    "GRIMMSNARL",
+    "DRAGAPULT",
+    "CARKOL",
+    "SANDACONDA",
+    "YAMASK_GALAR",
+    "STONJOURNER",
+    "RUNERIGUS",
+    "UNOWN",
+    "DRAGAPULT"
+   ]
+  }
+ },
+ "MAP_SEVEN_ISLAND_TANOBY_RUINS_VIAPOIS_CHAMBER": {
+  "land": {
+   "day": [
+    "RUNERIGUS",
+    "SANDACONDA",
+    "UNOWN",
+    "SINISTEA",
+    "PERRSERKER",
+    "SANDACONDA",
+    "YAMASK_GALAR",
+    "STONJOURNER",
+    "PERRSERKER",
+    "RUNERIGUS",
+    "UNOWN",
+    "DRAGAPULT"
+   ],
+   "night": [
+    "SANDACONDA",
+    "RUNERIGUS",
+    "UNOWN",
+    "GRIMMSNARL",
+    "DRAGAPULT",
+    "PERRSERKER",
+    "SINISTEA",
+    "YAMASK_GALAR",
+    "STONJOURNER",
+    "RUNERIGUS",
+    "UNOWN",
+    "DRAGAPULT"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM1": {
+  "land": {
+   "day": [
+    "CURSOLA",
+    "GRIMMSNARL",
+    "YAMASK_GALAR",
+    "THIEVUL",
+    "SINISTEA",
+    "CURSOLA",
+    "GOLBAT",
+    "THIEVUL",
+    "YAMASK_GALAR",
+    "GRIMMSNARL",
+    "GOLBAT",
+    "SINISTEA"
+   ],
+   "night": [
+    "GRIMMSNARL",
+    "CURSOLA",
+    "YAMASK_GALAR",
+    "SINISTEA",
+    "THIEVUL",
+    "MISDREAVUS",
+    "HAUNTER",
+    "THIEVUL",
+    "YAMASK_GALAR",
+    "GRIMMSNARL",
+    "HAUNTER",
+    "SINISTEA"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM2": {
+  "land": {
+   "day": [
+    "GRIMMSNARL",
+    "THIEVUL",
+    "RUNERIGUS",
+    "SINISTEA",
+    "CURSOLA",
+    "GRIMMSNARL",
+    "HAUNTER",
+    "SINISTEA",
+    "RUNERIGUS",
+    "THIEVUL",
+    "DRAGAPULT",
+    "CURSOLA"
+   ],
+   "night": [
+    "THIEVUL",
+    "GRIMMSNARL",
+    "RUNERIGUS",
+    "CURSOLA",
+    "SINISTEA",
+    "MISDREAVUS",
+    "HAUNTER",
+    "SINISTEA",
+    "RUNERIGUS",
+    "THIEVUL",
+    "DRAGAPULT",
+    "CURSOLA"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM3": {
+  "land": {
+   "day": [
+    "CURSOLA",
+    "GRIMMSNARL",
+    "RUNERIGUS",
+    "THIEVUL",
+    "SINISTEA",
+    "CURSOLA",
+    "GOLBAT",
+    "THIEVUL",
+    "RUNERIGUS",
+    "GRIMMSNARL",
+    "DRAGAPULT",
+    "SINISTEA"
+   ],
+   "night": [
+    "GRIMMSNARL",
+    "CURSOLA",
+    "RUNERIGUS",
+    "SINISTEA",
+    "THIEVUL",
+    "MISDREAVUS",
+    "HAUNTER",
+    "THIEVUL",
+    "RUNERIGUS",
+    "GRIMMSNARL",
+    "DRAGAPULT",
+    "SINISTEA"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM4": {
+  "land": {
+   "day": [
+    "CURSOLA",
+    "GRIMMSNARL",
+    "RUNERIGUS",
+    "THIEVUL",
+    "SINISTEA",
+    "CURSOLA",
+    "HAUNTER",
+    "THIEVUL",
+    "RUNERIGUS",
+    "GRIMMSNARL",
+    "DRAGAPULT",
+    "SINISTEA"
+   ],
+   "night": [
+    "GRIMMSNARL",
+    "CURSOLA",
+    "RUNERIGUS",
+    "SINISTEA",
+    "THIEVUL",
+    "MISDREAVUS",
+    "HAUNTER",
+    "THIEVUL",
+    "RUNERIGUS",
+    "GRIMMSNARL",
+    "DRAGAPULT",
+    "SINISTEA"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM5": {
+  "land": {
+   "day": [
+    "SINISTEA",
+    "CURSOLA",
+    "RUNERIGUS",
+    "RUNERIGUS",
+    "GRIMMSNARL",
+    "THIEVUL",
+    "DRAGAPULT",
+    "HAUNTER",
+    "RUNERIGUS",
+    "GRIMMSNARL",
+    "SINISTEA",
+    "THIEVUL"
+   ],
+   "night": [
+    "CURSOLA",
+    "SINISTEA",
+    "RUNERIGUS",
+    "GRIMMSNARL",
+    "RUNERIGUS",
+    "MISDREAVUS",
+    "THIEVUL",
+    "DRAGAPULT",
+    "RUNERIGUS",
+    "HAUNTER",
+    "SINISTEA",
+    "GRIMMSNARL"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM6": {
+  "land": {
+   "day": [
+    "SINISTEA",
+    "GRIMMSNARL",
+    "RUNERIGUS",
+    "RUNERIGUS",
+    "CURSOLA",
+    "THIEVUL",
+    "DRAGAPULT",
+    "GOLBAT",
+    "RUNERIGUS",
+    "CURSOLA",
+    "SINISTEA",
+    "THIEVUL"
+   ],
+   "night": [
+    "GRIMMSNARL",
+    "SINISTEA",
+    "RUNERIGUS",
+    "CURSOLA",
+    "RUNERIGUS",
+    "MISDREAVUS",
+    "THIEVUL",
+    "DRAGAPULT",
+    "RUNERIGUS",
+    "HAUNTER",
+    "SINISTEA",
+    "CURSOLA"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM7": {
+  "land": {
+   "day": [
+    "DRAGAPULT",
+    "SINISTEA",
+    "RUNERIGUS",
+    "RUNERIGUS",
+    "CURSOLA",
+    "GRIMMSNARL",
+    "THIEVUL",
+    "HAUNTER",
+    "RUNERIGUS",
+    "CURSOLA",
+    "DRAGAPULT",
+    "GRIMMSNARL"
+   ],
+   "night": [
+    "SINISTEA",
+    "DRAGAPULT",
+    "RUNERIGUS",
+    "CURSOLA",
+    "RUNERIGUS",
+    "MISDREAVUS",
+    "GRIMMSNARL",
+    "THIEVUL",
+    "RUNERIGUS",
+    "HAUNTER",
+    "DRAGAPULT",
+    "CURSOLA"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM8": {
+  "land": {
+   "day": [
+    "DRAGAPULT",
+    "CURSOLA",
+    "RUNERIGUS",
+    "RUNERIGUS",
+    "SINISTEA",
+    "GRIMMSNARL",
+    "THIEVUL",
+    "GOLBAT",
+    "RUNERIGUS",
+    "SINISTEA",
+    "DRAGAPULT",
+    "GRIMMSNARL"
+   ],
+   "night": [
+    "CURSOLA",
+    "DRAGAPULT",
+    "RUNERIGUS",
+    "SINISTEA",
+    "RUNERIGUS",
+    "MISDREAVUS",
+    "GRIMMSNARL",
+    "THIEVUL",
+    "RUNERIGUS",
+    "HAUNTER",
+    "DRAGAPULT",
+    "SINISTEA"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM9": {
+  "land": {
+   "day": [
+    "DRAGAPULT",
+    "SINISTEA",
+    "RUNERIGUS",
+    "RUNERIGUS",
+    "CURSOLA",
+    "GRIMMSNARL",
+    "THIEVUL",
+    "HAUNTER",
+    "RUNERIGUS",
+    "CURSOLA",
+    "DRAGAPULT",
+    "GRIMMSNARL"
+   ],
+   "night": [
+    "SINISTEA",
+    "DRAGAPULT",
+    "RUNERIGUS",
+    "CURSOLA",
+    "RUNERIGUS",
+    "MISDREAVUS",
+    "GRIMMSNARL",
+    "THIEVUL",
+    "RUNERIGUS",
+    "HAUNTER",
+    "DRAGAPULT",
+    "CURSOLA"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM10": {
+  "land": {
+   "day": [
+    "DRAGAPULT",
+    "CURSOLA",
+    "RUNERIGUS",
+    "RUNERIGUS",
+    "SINISTEA",
+    "GRIMMSNARL",
+    "THIEVUL",
+    "GOLBAT",
+    "RUNERIGUS",
+    "SINISTEA",
+    "DRAGAPULT",
+    "GRIMMSNARL"
+   ],
+   "night": [
+    "CURSOLA",
+    "DRAGAPULT",
+    "RUNERIGUS",
+    "SINISTEA",
+    "RUNERIGUS",
+    "MISDREAVUS",
+    "GRIMMSNARL",
+    "THIEVUL",
+    "RUNERIGUS",
+    "HAUNTER",
+    "DRAGAPULT",
+    "SINISTEA"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM11": {
+  "land": {
+   "day": [
+    "DRAGAPULT",
+    "GRIMMSNARL",
+    "RUNERIGUS",
+    "RUNERIGUS",
+    "SINISTEA",
+    "CURSOLA",
+    "THIEVUL",
+    "HAUNTER",
+    "RUNERIGUS",
+    "SINISTEA",
+    "DRAGAPULT",
+    "CURSOLA"
+   ],
+   "night": [
+    "GRIMMSNARL",
+    "DRAGAPULT",
+    "RUNERIGUS",
+    "SINISTEA",
+    "RUNERIGUS",
+    "MISDREAVUS",
+    "CURSOLA",
+    "THIEVUL",
+    "RUNERIGUS",
+    "HAUNTER",
+    "DRAGAPULT",
+    "SINISTEA"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM12": {
+  "land": {
+   "day": [
+    "DRAGAPULT",
+    "SINISTEA",
+    "RUNERIGUS",
+    "RUNERIGUS",
+    "CURSOLA",
+    "GRIMMSNARL",
+    "THIEVUL",
+    "GOLBAT",
+    "RUNERIGUS",
+    "CURSOLA",
+    "DRAGAPULT",
+    "GRIMMSNARL"
+   ],
+   "night": [
+    "SINISTEA",
+    "DRAGAPULT",
+    "RUNERIGUS",
+    "CURSOLA",
+    "RUNERIGUS",
+    "MISDREAVUS",
+    "GRIMMSNARL",
+    "THIEVUL",
+    "RUNERIGUS",
+    "HAUNTER",
+    "DRAGAPULT",
+    "CURSOLA"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM13": {
+  "land": {
+   "day": [
+    "DRAGAPULT",
+    "CURSOLA",
+    "RUNERIGUS",
+    "RUNERIGUS",
+    "SINISTEA",
+    "GRIMMSNARL",
+    "THIEVUL",
+    "HAUNTER",
+    "RUNERIGUS",
+    "SINISTEA",
+    "DRAGAPULT",
+    "GRIMMSNARL"
+   ],
+   "night": [
+    "CURSOLA",
+    "DRAGAPULT",
+    "RUNERIGUS",
+    "SINISTEA",
+    "RUNERIGUS",
+    "MISDREAVUS",
+    "GRIMMSNARL",
+    "THIEVUL",
+    "RUNERIGUS",
+    "HAUNTER",
+    "DRAGAPULT",
+    "SINISTEA"
+   ]
+  }
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM14": {
+  "land": {
+   "day": [
+    "DRAGAPULT",
+    "GRIMMSNARL",
+    "RUNERIGUS",
+    "RUNERIGUS",
+    "SINISTEA",
+    "CURSOLA",
+    "THIEVUL",
+    "GOLBAT",
+    "RUNERIGUS",
+    "SINISTEA",
+    "DRAGAPULT",
+    "CURSOLA"
+   ],
+   "night": [
+    "GRIMMSNARL",
+    "DRAGAPULT",
+    "RUNERIGUS",
+    "SINISTEA",
+    "RUNERIGUS",
+    "MISDREAVUS",
+    "CURSOLA",
+    "THIEVUL",
+    "RUNERIGUS",
+    "HAUNTER",
+    "DRAGAPULT",
+    "SINISTEA"
+   ]
+  }
+ }
+}

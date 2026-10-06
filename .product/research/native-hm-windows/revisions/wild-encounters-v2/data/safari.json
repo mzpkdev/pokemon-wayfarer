@@ -1,0 +1,1109 @@
+{
+ "MAP_FUCHSIA_CITY_SAFARI_ZONE_BEACH_HNS": {
+  "water_type": "sea",
+  "land": {
+   "day": [
+    "BARBARACLE",
+    "VIVILLON_MARINE",
+    "DIGGERSBY",
+    "TALONFLAME",
+    "PYROAR",
+    "GOGOAT",
+    "BARBARACLE",
+    "VIVILLON_MARINE",
+    "FURFROU",
+    "DIGGERSBY",
+    "GRENINJA",
+    "VIVILLON_MEADOW"
+   ],
+   "night": [
+    "MALAMAR",
+    "BARBARACLE",
+    "PANGORO",
+    "DIGGERSBY",
+    "NOIVERN",
+    "MALAMAR",
+    "PANGORO",
+    "BARBARACLE",
+    "PYROAR",
+    "FURFROU",
+    "GRENINJA",
+    "PANGORO"
+   ]
+  },
+  "surf": {
+   "day": [
+    "CLAWITZER",
+    "BARBARACLE",
+    "DRAGALGE",
+    "CLAWITZER",
+    "MALAMAR"
+   ],
+   "night": [
+    "MALAMAR",
+    "CLAWITZER",
+    "DRAGALGE",
+    "CLAWITZER",
+    "MALAMAR"
+   ]
+  },
+  "fish": {
+   "day": [
+    "CLAWITZER",
+    "BARBARACLE",
+    "DRAGALGE",
+    "CLAWITZER",
+    "CLAWITZER",
+    "BARBARACLE",
+    "DRAGALGE",
+    "CLAWITZER",
+    "CLAWITZER",
+    "MALAMAR"
+   ],
+   "night": [
+    "MALAMAR",
+    "CLAWITZER",
+    "DRAGALGE",
+    "MALAMAR",
+    "CLAWITZER",
+    "BARBARACLE",
+    "DRAGALGE",
+    "MALAMAR",
+    "CLAWITZER",
+    "MALAMAR"
+   ]
+  }
+ },
+ "MAP_FUCHSIA_CITY_SAFARI_ZONE_BRUSH_HNS": {
+  "land": {
+   "day": [
+    "PYROAR",
+    "VIVILLON_MEADOW",
+    "DIGGERSBY",
+    "GOGOAT",
+    "TALONFLAME",
+    "PYROAR",
+    "FURFROU",
+    "VIVILLON_MEADOW",
+    "DIGGERSBY",
+    "GOGOAT",
+    "VIVILLON_MARINE",
+    "FURFROU"
+   ],
+   "night": [
+    "PANGORO",
+    "PYROAR",
+    "PANGORO",
+    "DIGGERSBY",
+    "NOIVERN",
+    "GOGOAT",
+    "PYROAR",
+    "PANGORO",
+    "DIGGERSBY",
+    "FURFROU",
+    "PANGORO",
+    "GOGOAT"
+   ]
+  }
+ },
+ "MAP_FUCHSIA_CITY_SAFARI_ZONE_CAVE_HNS": {
+  "water_type": "cave",
+  "land": {
+   "day": [
+    "AVALUGG",
+    "DIGGERSBY",
+    "BARBARACLE",
+    "AVALUGG",
+    "CARBINK",
+    "DIGGERSBY",
+    "NOIVERN",
+    "AVALUGG",
+    "BARBARACLE",
+    "DIGGERSBY",
+    "NOIVERN",
+    "BERGMITE"
+   ],
+   "night": [
+    "AVALUGG",
+    "MALAMAR",
+    "DIGGERSBY",
+    "AVALUGG",
+    "NOIVERN",
+    "BARBARACLE",
+    "MALAMAR",
+    "CARBINK",
+    "AVALUGG",
+    "DIGGERSBY",
+    "CARBINK",
+    "BERGMITE"
+   ]
+  },
+  "surf": {
+   "day": [
+    "BARBARACLE",
+    "CLAWITZER",
+    "DRAGALGE",
+    "BARBARACLE",
+    "AVALUGG"
+   ],
+   "night": [
+    "MALAMAR",
+    "BARBARACLE",
+    "DRAGALGE",
+    "BARBARACLE",
+    "AVALUGG"
+   ]
+  },
+  "fish": {
+   "day": [
+    "BARBARACLE",
+    "CLAWITZER",
+    "DRAGALGE",
+    "BARBARACLE",
+    "BARBARACLE",
+    "CLAWITZER",
+    "DRAGALGE",
+    "BARBARACLE",
+    "BARBARACLE",
+    "AVALUGG"
+   ],
+   "night": [
+    "MALAMAR",
+    "BARBARACLE",
+    "DRAGALGE",
+    "MALAMAR",
+    "BARBARACLE",
+    "CLAWITZER",
+    "DRAGALGE",
+    "MALAMAR",
+    "BARBARACLE",
+    "AVALUGG"
+   ]
+  }
+ },
+ "MAP_FUCHSIA_CITY_SAFARI_ZONE_MOUNTAIN_HNS": {
+  "water_type": "pond",
+  "land": {
+   "day": [
+    "GOGOAT",
+    "VIVILLON_ICY_SNOW",
+    "TALONFLAME",
+    "PYROAR",
+    "DIGGERSBY",
+    "GOGOAT",
+    "CARBINK",
+    "VIVILLON_ICY_SNOW",
+    "PYROAR",
+    "FURFROU",
+    "VIVILLON_MEADOW",
+    "CARBINK"
+   ],
+   "night": [
+    "GOGOAT",
+    "PANGORO",
+    "NOIVERN",
+    "PYROAR",
+    "PANGORO",
+    "DIGGERSBY",
+    "GOGOAT",
+    "PANGORO",
+    "CARBINK",
+    "PYROAR",
+    "PANGORO",
+    "GOGOAT"
+   ]
+  },
+  "surf": {
+   "day": [
+    "CLAWITZER",
+    "BARBARACLE",
+    "DRAGALGE",
+    "CLAWITZER",
+    "GRENINJA"
+   ],
+   "night": [
+    "MALAMAR",
+    "CLAWITZER",
+    "DRAGALGE",
+    "CLAWITZER",
+    "GRENINJA"
+   ]
+  },
+  "fish": {
+   "day": [
+    "CLAWITZER",
+    "BARBARACLE",
+    "DRAGALGE",
+    "CLAWITZER",
+    "CLAWITZER",
+    "BARBARACLE",
+    "DRAGALGE",
+    "CLAWITZER",
+    "CLAWITZER",
+    "GRENINJA"
+   ],
+   "night": [
+    "MALAMAR",
+    "CLAWITZER",
+    "DRAGALGE",
+    "MALAMAR",
+    "CLAWITZER",
+    "BARBARACLE",
+    "DRAGALGE",
+    "MALAMAR",
+    "CLAWITZER",
+    "GRENINJA"
+   ]
+  }
+ },
+ "MAP_SAFARI_ZONE_LOW_LEFT_HNS": {
+  "land": {
+   "day": [
+    "VIVILLON_SANDSTORM",
+    "DIGGERSBY",
+    "TALONFLAME",
+    "DIGGERSBY",
+    "DEDENNE",
+    "VIVILLON_SANDSTORM",
+    "TALONFLAME",
+    "SPRITZEE",
+    "DIGGERSBY",
+    "VIVILLON_SANDSTORM",
+    "CHESNAUGHT",
+    "FLOETTE_YELLOW"
+   ],
+   "night": [
+    "ESPURR",
+    "DIGGERSBY",
+    "ESPURR",
+    "PHANTUMP",
+    "DIGGERSBY",
+    "ESPURR",
+    "DEDENNE",
+    "ESPURR",
+    "SPRITZEE",
+    "DIGGERSBY",
+    "CHESNAUGHT",
+    "ESPURR"
+   ]
+  },
+  "rock": {
+   "day": [
+    "TALONFLAME",
+    "SPEWPA_SANDSTORM",
+    "DEDENNE",
+    "PHANTUMP",
+    "CHESNAUGHT"
+   ],
+   "night": [
+    "PHANTUMP",
+    "ESPURR",
+    "DEDENNE",
+    "SWIRLIX",
+    "CHESNAUGHT"
+   ]
+  }
+ },
+ "MAP_SAFARI_ZONE_LOW_MID_HNS": {
+  "water_type": "pond",
+  "land": {
+   "day": [
+    "FLOETTE_YELLOW",
+    "VIVILLON_HIGH_PLAINS",
+    "DIGGERSBY",
+    "SPRITZEE",
+    "TALONFLAME",
+    "FLOETTE_YELLOW",
+    "SPRITZEE",
+    "VIVILLON_HIGH_PLAINS",
+    "SWIRLIX",
+    "DIGGERSBY",
+    "CHESNAUGHT",
+    "FLOETTE_BLUE"
+   ],
+   "night": [
+    "ESPURR",
+    "FLOETTE_YELLOW",
+    "ESPURR",
+    "SPRITZEE",
+    "DIGGERSBY",
+    "ESPURR",
+    "SWIRLIX",
+    "SWIRLIX",
+    "ESPURR",
+    "FLOETTE_YELLOW",
+    "CHESNAUGHT",
+    "ESPURR"
+   ]
+  },
+  "surf": {
+   "day": [
+    "CLAWITZER",
+    "DRAGALGE",
+    "BARBARACLE",
+    "CLAWITZER",
+    "MALAMAR"
+   ],
+   "night": [
+    "MALAMAR",
+    "CLAWITZER",
+    "BARBARACLE",
+    "CLAWITZER",
+    "MALAMAR"
+   ]
+  },
+  "fish": {
+   "day": [
+    "CLAWITZER",
+    "DRAGALGE",
+    "BARBARACLE",
+    "CLAWITZER",
+    "CLAWITZER",
+    "DRAGALGE",
+    "BARBARACLE",
+    "CLAWITZER",
+    "CLAWITZER",
+    "MALAMAR"
+   ],
+   "night": [
+    "MALAMAR",
+    "CLAWITZER",
+    "BARBARACLE",
+    "MALAMAR",
+    "CLAWITZER",
+    "DRAGALGE",
+    "BARBARACLE",
+    "MALAMAR",
+    "CLAWITZER",
+    "MALAMAR"
+   ]
+  }
+ },
+ "MAP_SAFARI_ZONE_LOW_RIGHT_HNS": {
+  "water_type": "pond",
+  "land": {
+   "day": [
+    "FLOETTE_BLUE",
+    "VIVILLON_RIVER",
+    "DIGGERSBY",
+    "SPRITZEE",
+    "TALONFLAME",
+    "SWIRLIX",
+    "FLOETTE_BLUE",
+    "DEDENNE",
+    "VIVILLON_RIVER",
+    "DIGGERSBY",
+    "CHESNAUGHT",
+    "FLOETTE_YELLOW"
+   ],
+   "night": [
+    "PHANTUMP",
+    "FLOETTE_BLUE",
+    "ESPURR",
+    "PHANTUMP",
+    "SPRITZEE",
+    "ESPURR",
+    "SWIRLIX",
+    "DEDENNE",
+    "PHANTUMP",
+    "ESPURR",
+    "CHESNAUGHT",
+    "FLOETTE_BLUE"
+   ]
+  },
+  "rock": {
+   "day": [
+    "TALONFLAME",
+    "SPEWPA_RIVER",
+    "DEDENNE",
+    "PHANTUMP",
+    "CHESNAUGHT"
+   ],
+   "night": [
+    "PHANTUMP",
+    "ESPURR",
+    "DEDENNE",
+    "SWIRLIX",
+    "CHESNAUGHT"
+   ]
+  },
+  "surf": {
+   "day": [
+    "DRAGALGE",
+    "CLAWITZER",
+    "BARBARACLE",
+    "DRAGALGE",
+    "MALAMAR"
+   ],
+   "night": [
+    "MALAMAR",
+    "DRAGALGE",
+    "BARBARACLE",
+    "DRAGALGE",
+    "MALAMAR"
+   ]
+  },
+  "fish": {
+   "day": [
+    "DRAGALGE",
+    "CLAWITZER",
+    "BARBARACLE",
+    "DRAGALGE",
+    "DRAGALGE",
+    "CLAWITZER",
+    "BARBARACLE",
+    "DRAGALGE",
+    "DRAGALGE",
+    "MALAMAR"
+   ],
+   "night": [
+    "MALAMAR",
+    "DRAGALGE",
+    "BARBARACLE",
+    "MALAMAR",
+    "DRAGALGE",
+    "CLAWITZER",
+    "BARBARACLE",
+    "MALAMAR",
+    "DRAGALGE",
+    "MALAMAR"
+   ]
+  }
+ },
+ "MAP_SAFARI_ZONE_TOP_LEFT_HNS": {
+  "land": {
+   "day": [
+    "FLOETTE_RED",
+    "VIVILLON_SAVANNA",
+    "TALONFLAME",
+    "SWIRLIX",
+    "SPRITZEE",
+    "DIGGERSBY",
+    "FLOETTE_RED",
+    "DEDENNE",
+    "VIVILLON_SAVANNA",
+    "SWIRLIX",
+    "CHESNAUGHT",
+    "FLOETTE_WHITE"
+   ],
+   "night": [
+    "FLOETTE_RED",
+    "PHANTUMP",
+    "ESPURR",
+    "SWIRLIX",
+    "PHANTUMP",
+    "SPRITZEE",
+    "ESPURR",
+    "DEDENNE",
+    "PHANTUMP",
+    "ESPURR",
+    "CHESNAUGHT",
+    "FLOETTE_RED"
+   ]
+  },
+  "rock": {
+   "day": [
+    "SPEWPA_SAVANNA",
+    "TALONFLAME",
+    "DEDENNE",
+    "PHANTUMP",
+    "CHESNAUGHT"
+   ],
+   "night": [
+    "PHANTUMP",
+    "ESPURR",
+    "DEDENNE",
+    "SWIRLIX",
+    "CHESNAUGHT"
+   ]
+  }
+ },
+ "MAP_SAFARI_ZONE_TOP_MID_HNS": {
+  "land": {
+   "day": [
+    "PHANTUMP",
+    "VIVILLON_ELEGANT",
+    "FLOETTE_WHITE",
+    "SWIRLIX",
+    "SPRITZEE",
+    "PHANTUMP",
+    "SPRITZEE",
+    "FLOETTE_WHITE",
+    "VIVILLON_ELEGANT",
+    "SWIRLIX",
+    "CHESNAUGHT",
+    "FLOETTE_ORANGE"
+   ],
+   "night": [
+    "PHANTUMP",
+    "ESPURR",
+    "PHANTUMP",
+    "FLOETTE_WHITE",
+    "ESPURR",
+    "SWIRLIX",
+    "PHANTUMP",
+    "ESPURR",
+    "SWIRLIX",
+    "ESPURR",
+    "CHESNAUGHT",
+    "PHANTUMP"
+   ]
+  },
+  "rock": {
+   "day": [
+    "PHANTUMP",
+    "SPEWPA_ELEGANT",
+    "DEDENNE",
+    "TALONFLAME",
+    "CHESNAUGHT"
+   ],
+   "night": [
+    "ESPURR",
+    "PHANTUMP",
+    "DEDENNE",
+    "SWIRLIX",
+    "CHESNAUGHT"
+   ]
+  }
+ },
+ "MAP_SAFARI_ZONE_TOP_RIGHT_HNS": {
+  "water_type": "sea",
+  "land": {
+   "day": [
+    "FLOETTE_ORANGE",
+    "VIVILLON_OCEAN",
+    "BARBARACLE",
+    "TALONFLAME",
+    "SPRITZEE",
+    "DIGGERSBY",
+    "FLOETTE_ORANGE",
+    "DEDENNE",
+    "VIVILLON_OCEAN",
+    "BARBARACLE",
+    "CHESNAUGHT",
+    "FLOETTE_RED"
+   ],
+   "night": [
+    "MALAMAR",
+    "FLOETTE_ORANGE",
+    "ESPURR",
+    "BARBARACLE",
+    "MALAMAR",
+    "PHANTUMP",
+    "ESPURR",
+    "DEDENNE",
+    "SPRITZEE",
+    "MALAMAR",
+    "CHESNAUGHT",
+    "ESPURR"
+   ]
+  },
+  "rock": {
+   "day": [
+    "TALONFLAME",
+    "SPEWPA_OCEAN",
+    "DEDENNE",
+    "PHANTUMP",
+    "CHESNAUGHT"
+   ],
+   "night": [
+    "PHANTUMP",
+    "ESPURR",
+    "DEDENNE",
+    "SWIRLIX",
+    "CHESNAUGHT"
+   ]
+  },
+  "surf": {
+   "day": [
+    "BARBARACLE",
+    "DRAGALGE",
+    "CLAWITZER",
+    "BARBARACLE",
+    "MALAMAR"
+   ],
+   "night": [
+    "MALAMAR",
+    "BARBARACLE",
+    "CLAWITZER",
+    "BARBARACLE",
+    "MALAMAR"
+   ]
+  },
+  "fish": {
+   "day": [
+    "BARBARACLE",
+    "DRAGALGE",
+    "CLAWITZER",
+    "BARBARACLE",
+    "BARBARACLE",
+    "DRAGALGE",
+    "CLAWITZER",
+    "BARBARACLE",
+    "BARBARACLE",
+    "MALAMAR"
+   ],
+   "night": [
+    "MALAMAR",
+    "BARBARACLE",
+    "CLAWITZER",
+    "MALAMAR",
+    "BARBARACLE",
+    "DRAGALGE",
+    "CLAWITZER",
+    "MALAMAR",
+    "BARBARACLE",
+    "MALAMAR"
+   ]
+  }
+ },
+ "MAP_SAFARI_ZONE_SOUTH": {
+  "land": {
+   "day": [
+    "HELIOPTILE",
+    "VIVILLON_GARDEN",
+    "DIGGERSBY",
+    "TALONFLAME",
+    "HELIOPTILE",
+    "HAWLUCHA",
+    "VIVILLON_GARDEN",
+    "DIGGERSBY",
+    "TALONFLAME",
+    "KLEFKI",
+    "DELPHOX",
+    "VIVILLON_MONSOON"
+   ],
+   "night": [
+    "PUMPKABOO_LARGE",
+    "DIGGERSBY",
+    "PUMPKABOO_LARGE",
+    "DOUBLADE",
+    "DIGGERSBY",
+    "PUMPKABOO_LARGE",
+    "KLEFKI",
+    "PUMPKABOO_LARGE",
+    "DIGGERSBY",
+    "KLEFKI",
+    "DELPHOX",
+    "PUMPKABOO_SUPER"
+   ]
+  }
+ },
+ "MAP_SAFARI_ZONE_SOUTHWEST": {
+  "water_type": "pond",
+  "land": {
+   "day": [
+    "VIVILLON_MONSOON",
+    "DIGGERSBY",
+    "TALONFLAME",
+    "VIVILLON_MONSOON",
+    "GOODRA",
+    "DIGGERSBY",
+    "TALONFLAME",
+    "VIVILLON_MONSOON",
+    "KLEFKI",
+    "DIGGERSBY",
+    "DELPHOX",
+    "VIVILLON_JUNGLE"
+   ],
+   "night": [
+    "PUMPKABOO_SMALL",
+    "DIGGERSBY",
+    "PUMPKABOO_SMALL",
+    "GOODRA",
+    "DOUBLADE",
+    "DIGGERSBY",
+    "PUMPKABOO_SMALL",
+    "KLEFKI",
+    "DIGGERSBY",
+    "PUMPKABOO_SMALL",
+    "DELPHOX",
+    "PUMPKABOO_SMALL"
+   ]
+  },
+  "surf": {
+   "day": [
+    "DRAGALGE",
+    "BARBARACLE",
+    "CLAWITZER",
+    "DRAGALGE",
+    "MALAMAR"
+   ],
+   "night": [
+    "MALAMAR",
+    "DRAGALGE",
+    "CLAWITZER",
+    "DRAGALGE",
+    "MALAMAR"
+   ]
+  },
+  "fish": {
+   "day": [
+    "DRAGALGE",
+    "BARBARACLE",
+    "CLAWITZER",
+    "DRAGALGE",
+    "DRAGALGE",
+    "BARBARACLE",
+    "CLAWITZER",
+    "DRAGALGE",
+    "DRAGALGE",
+    "MALAMAR"
+   ],
+   "night": [
+    "MALAMAR",
+    "DRAGALGE",
+    "CLAWITZER",
+    "MALAMAR",
+    "DRAGALGE",
+    "BARBARACLE",
+    "CLAWITZER",
+    "MALAMAR",
+    "DRAGALGE",
+    "MALAMAR"
+   ]
+  }
+ },
+ "MAP_SAFARI_ZONE_NORTH": {
+  "land": {
+   "day": [
+    "HELIOPTILE",
+    "VIVILLON_CONTINENTAL",
+    "DIGGERSBY",
+    "HELIOPTILE",
+    "TALONFLAME",
+    "HAWLUCHA",
+    "VIVILLON_CONTINENTAL",
+    "DIGGERSBY",
+    "DOUBLADE",
+    "HELIOPTILE",
+    "KLEFKI",
+    "VIVILLON_SUN"
+   ],
+   "night": [
+    "PUMPKABOO_AVERAGE",
+    "DIGGERSBY",
+    "PUMPKABOO_SMALL",
+    "DOUBLADE",
+    "DIGGERSBY",
+    "PUMPKABOO_AVERAGE",
+    "KLEFKI",
+    "PUMPKABOO_AVERAGE",
+    "DIGGERSBY",
+    "PUMPKABOO_SMALL",
+    "DELPHOX",
+    "PUMPKABOO_AVERAGE"
+   ]
+  },
+  "rock": {
+   "day": [
+    "HELIOPTILE",
+    "DIGGERSBY",
+    "DOUBLADE",
+    "KLEFKI",
+    "HAWLUCHA"
+   ],
+   "night": [
+    "DIGGERSBY",
+    "PUMPKABOO_AVERAGE",
+    "DOUBLADE",
+    "KLEFKI",
+    "PUMPKABOO_SMALL"
+   ]
+  }
+ },
+ "MAP_SAFARI_ZONE_NORTHWEST": {
+  "water_type": "pond",
+  "land": {
+   "day": [
+    "VIVILLON_JUNGLE",
+    "DIGGERSBY",
+    "TALONFLAME",
+    "VIVILLON_JUNGLE",
+    "HAWLUCHA",
+    "TALONFLAME",
+    "DIGGERSBY",
+    "VIVILLON_JUNGLE",
+    "GOODRA",
+    "DIGGERSBY",
+    "DELPHOX",
+    "VIVILLON_MONSOON"
+   ],
+   "night": [
+    "PUMPKABOO_SMALL",
+    "DIGGERSBY",
+    "PUMPKABOO_SMALL",
+    "DOUBLADE",
+    "DIGGERSBY",
+    "PUMPKABOO_SMALL",
+    "GOODRA",
+    "PUMPKABOO_SMALL",
+    "KLEFKI",
+    "DIGGERSBY",
+    "DELPHOX",
+    "PUMPKABOO_SUPER"
+   ]
+  },
+  "surf": {
+   "day": [
+    "CLAWITZER",
+    "DRAGALGE",
+    "BARBARACLE",
+    "CLAWITZER",
+    "MALAMAR"
+   ],
+   "night": [
+    "MALAMAR",
+    "CLAWITZER",
+    "BARBARACLE",
+    "CLAWITZER",
+    "MALAMAR"
+   ]
+  },
+  "fish": {
+   "day": [
+    "CLAWITZER",
+    "DRAGALGE",
+    "BARBARACLE",
+    "CLAWITZER",
+    "CLAWITZER",
+    "DRAGALGE",
+    "BARBARACLE",
+    "CLAWITZER",
+    "CLAWITZER",
+    "MALAMAR"
+   ],
+   "night": [
+    "MALAMAR",
+    "CLAWITZER",
+    "BARBARACLE",
+    "MALAMAR",
+    "CLAWITZER",
+    "DRAGALGE",
+    "BARBARACLE",
+    "MALAMAR",
+    "CLAWITZER",
+    "MALAMAR"
+   ]
+  }
+ },
+ "MAP_SAFARI_ZONE_SOUTHEAST": {
+  "water_type": "sea",
+  "land": {
+   "day": [
+    "VIVILLON_ARCHIPELAGO",
+    "BARBARACLE",
+    "HELIOPTILE",
+    "TALONFLAME",
+    "DIGGERSBY",
+    "HELIOPTILE",
+    "BARBARACLE",
+    "VIVILLON_ARCHIPELAGO",
+    "HAWLUCHA",
+    "GOODRA",
+    "DELPHOX",
+    "VIVILLON_GARDEN"
+   ],
+   "night": [
+    "MALAMAR",
+    "PUMPKABOO_AVERAGE",
+    "BARBARACLE",
+    "MALAMAR",
+    "DOUBLADE",
+    "PUMPKABOO_AVERAGE",
+    "DIGGERSBY",
+    "KLEFKI",
+    "PUMPKABOO_AVERAGE",
+    "DIGGERSBY",
+    "DELPHOX",
+    "PUMPKABOO_SUPER"
+   ]
+  },
+  "surf": {
+   "day": [
+    "BARBARACLE",
+    "CLAWITZER",
+    "DRAGALGE",
+    "BARBARACLE",
+    "MALAMAR"
+   ],
+   "night": [
+    "MALAMAR",
+    "BARBARACLE",
+    "DRAGALGE",
+    "BARBARACLE",
+    "MALAMAR"
+   ]
+  },
+  "fish": {
+   "day": [
+    "BARBARACLE",
+    "CLAWITZER",
+    "DRAGALGE",
+    "BARBARACLE",
+    "BARBARACLE",
+    "CLAWITZER",
+    "DRAGALGE",
+    "BARBARACLE",
+    "BARBARACLE",
+    "MALAMAR"
+   ],
+   "night": [
+    "MALAMAR",
+    "BARBARACLE",
+    "DRAGALGE",
+    "MALAMAR",
+    "BARBARACLE",
+    "CLAWITZER",
+    "DRAGALGE",
+    "MALAMAR",
+    "BARBARACLE",
+    "MALAMAR"
+   ]
+  }
+ },
+ "MAP_SAFARI_ZONE_NORTHEAST": {
+  "land": {
+   "day": [
+    "HELIOPTILE",
+    "VIVILLON_SUN",
+    "DIGGERSBY",
+    "TALONFLAME",
+    "HELIOPTILE",
+    "KLEFKI",
+    "VIVILLON_SUN",
+    "DIGGERSBY",
+    "DOUBLADE",
+    "TALONFLAME",
+    "DELPHOX",
+    "VIVILLON_CONTINENTAL"
+   ],
+   "night": [
+    "PUMPKABOO_AVERAGE",
+    "DIGGERSBY",
+    "PUMPKABOO_LARGE",
+    "DOUBLADE",
+    "PUMPKABOO_AVERAGE",
+    "DIGGERSBY",
+    "KLEFKI",
+    "PUMPKABOO_LARGE",
+    "DIGGERSBY",
+    "PUMPKABOO_AVERAGE",
+    "DELPHOX",
+    "PUMPKABOO_SUPER"
+   ]
+  },
+  "rock": {
+   "day": [
+    "HELIOPTILE",
+    "DIGGERSBY",
+    "KLEFKI",
+    "DOUBLADE",
+    "HAWLUCHA"
+   ],
+   "night": [
+    "DIGGERSBY",
+    "PUMPKABOO_AVERAGE",
+    "DOUBLADE",
+    "KLEFKI",
+    "PUMPKABOO_LARGE"
+   ]
+  }
+ },
+ "MAP_NATIONAL_PARK_BUG_CONTEST_HNS:TUESDAY": {
+  "land": {
+   "day": [
+    "BUTTERFREE",
+    "BEEDRILL",
+    "LEDIAN",
+    "PARASECT",
+    "YANMA",
+    "VIVILLON_MODERN",
+    "SCYTHER",
+    "VIVILLON_MODERN",
+    "BUTTERFREE",
+    "HERACROSS",
+    "SCYTHER",
+    "PINSIR"
+   ],
+   "night": [
+    "VENOMOTH",
+    "ARIADOS",
+    "PARASECT",
+    "FORRETRESS",
+    "VENOMOTH",
+    "ARIADOS",
+    "SCYTHER",
+    "PINSIR",
+    "FORRETRESS",
+    "HERACROSS",
+    "SCYTHER",
+    "PINSIR"
+   ]
+  }
+ },
+ "MAP_NATIONAL_PARK_BUG_CONTEST_HNS:THURSDAY": {
+  "land": {
+   "day": [
+    "BEAUTIFLY",
+    "NINJASK",
+    "MASQUERAIN",
+    "SWADLOON",
+    "CRUSTLE",
+    "VIVILLON_POLAR",
+    "SCOLIPEDE",
+    "VIVILLON_POLAR",
+    "BEAUTIFLY",
+    "DURANT",
+    "SWADLOON",
+    "KARRABLAST"
+   ],
+   "night": [
+    "VOLBEAT",
+    "ILLUMISE",
+    "DUSTOX",
+    "GALVANTULA",
+    "SHELMET",
+    "SCOLIPEDE",
+    "VOLBEAT",
+    "ILLUMISE",
+    "GALVANTULA",
+    "SHELMET",
+    "NINJASK",
+    "KARRABLAST"
+   ]
+  }
+ },
+ "MAP_NATIONAL_PARK_BUG_CONTEST_HNS:SATURDAY": {
+  "land": {
+   "day": [
+    "RIBOMBEE",
+    "ORBEETLE",
+    "CHARJABUG",
+    "VIVILLON_TUNDRA",
+    "RIBOMBEE",
+    "ORBEETLE",
+    "CHARJABUG",
+    "VIVILLON_TUNDRA",
+    "RIBOMBEE",
+    "CHARJABUG",
+    "SPEWPA_TUNDRA",
+    "ORBEETLE"
+   ],
+   "night": [
+    "ARAQUANID",
+    "CENTISKORCH",
+    "SNOM",
+    "ORBEETLE",
+    "ARAQUANID",
+    "CENTISKORCH",
+    "CHARJABUG",
+    "SNOM",
+    "ARAQUANID",
+    "CENTISKORCH",
+    "SNOM",
+    "CHARJABUG"
+   ]
+  }
+ }
+}

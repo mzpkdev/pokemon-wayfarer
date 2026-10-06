@@ -1,0 +1,5016 @@
+{
+ "MAP_PETALBURG_CITY": {
+  "surf": {
+   "day": [
+    "AZUMARILL",
+    "LOMBRE",
+    "MASQUERAIN",
+    "SWANNA",
+    "AZURILL"
+   ],
+   "night": [
+    "AZUMARILL",
+    "CRAWDAUNT",
+    "LOMBRE",
+    "WHISCASH",
+    "AZURILL"
+   ]
+  },
+  "fish": {
+   "day": [
+    "CRAWDAUNT",
+    "LOMBRE",
+    "AZUMARILL",
+    "CRAWDAUNT",
+    "MASQUERAIN",
+    "WHISCASH",
+    "LOMBRE",
+    "SEISMITOAD",
+    "AZUMARILL",
+    "BASCULIN"
+   ],
+   "night": [
+    "CRAWDAUNT",
+    "WHISCASH",
+    "AZUMARILL",
+    "CRAWDAUNT",
+    "WHISCASH",
+    "SEISMITOAD",
+    "LOMBRE",
+    "MASQUERAIN",
+    "SEISMITOAD",
+    "BASCULIN"
+   ]
+  },
+  "water_type": "pond"
+ },
+ "MAP_DEWFORD_TOWN": {
+  "surf": {
+   "day": [
+    "PELIPPER",
+    "WAILORD",
+    "CRAWDAUNT",
+    "LUVDISC",
+    "FRILLISH"
+   ],
+   "night": [
+    "WAILORD",
+    "SHARPEDO",
+    "CRAWDAUNT",
+    "LUVDISC",
+    "EELEKTRIK"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WAILORD",
+    "SHARPEDO",
+    "WAILORD",
+    "CRAWDAUNT",
+    "LUVDISC",
+    "SHARPEDO",
+    "CRAWDAUNT",
+    "WAILORD",
+    "LUVDISC",
+    "FRILLISH"
+   ],
+   "night": [
+    "SHARPEDO",
+    "WAILORD",
+    "SHARPEDO",
+    "CRAWDAUNT",
+    "EELEKTRIK",
+    "WAILORD",
+    "LUVDISC",
+    "CRAWDAUNT",
+    "EELEKTRIK",
+    "FRILLISH"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_SLATEPORT_CITY": {
+  "surf": {
+   "day": [
+    "PELIPPER",
+    "WAILORD",
+    "CRAWDAUNT",
+    "LUVDISC",
+    "SAMUROTT"
+   ],
+   "night": [
+    "WAILORD",
+    "CRAWDAUNT",
+    "EELEKTRIK",
+    "LUVDISC",
+    "SAMUROTT"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WAILORD",
+    "CRAWDAUNT",
+    "WAILORD",
+    "LUVDISC",
+    "SHARPEDO",
+    "CRAWDAUNT",
+    "LUVDISC",
+    "SWANNA",
+    "WAILORD",
+    "FRILLISH"
+   ],
+   "night": [
+    "WAILORD",
+    "SHARPEDO",
+    "CRAWDAUNT",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "LUVDISC",
+    "CRAWDAUNT",
+    "EELEKTRIK",
+    "FRILLISH",
+    "WAILORD"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE101": {
+  "land": {
+   "day": [
+    "LINOONE",
+    "WURMPLE",
+    "LINOONE",
+    "WURMPLE",
+    "SWELLOW",
+    "SKITTY",
+    "SWELLOW",
+    "SKITTY",
+    "WATCHOG",
+    "STOUTLAND",
+    "SCEPTILE",
+    "SCEPTILE"
+   ],
+   "night": [
+    "MIGHTYENA",
+    "LINOONE",
+    "MIGHTYENA",
+    "LINOONE",
+    "NUZLEAF",
+    "WURMPLE",
+    "LIEPARD",
+    "NUZLEAF",
+    "SKITTY",
+    "LIEPARD",
+    "SCEPTILE",
+    "MUNNA"
+   ]
+  }
+ },
+ "MAP_ROUTE102": {
+  "land": {
+   "day": [
+    "LINOONE",
+    "WURMPLE",
+    "LOMBRE",
+    "LINOONE",
+    "WURMPLE",
+    "NUZLEAF",
+    "SWELLOW",
+    "MASQUERAIN",
+    "SWADLOON",
+    "PANSAGE",
+    "GARDEVOIR",
+    "GARDEVOIR"
+   ],
+   "night": [
+    "MIGHTYENA",
+    "LOMBRE",
+    "MIGHTYENA",
+    "NUZLEAF",
+    "LINOONE",
+    "VOLBEAT",
+    "ILLUMISE",
+    "NUZLEAF",
+    "LIEPARD",
+    "WURMPLE",
+    "GARDEVOIR",
+    "MUNNA"
+   ]
+  },
+  "surf": {
+   "day": [
+    "AZUMARILL",
+    "LOMBRE",
+    "MASQUERAIN",
+    "AZURILL",
+    "SWAMPERT"
+   ],
+   "night": [
+    "LOMBRE",
+    "AZUMARILL",
+    "CRAWDAUNT",
+    "SEISMITOAD",
+    "SWAMPERT"
+   ]
+  },
+  "fish": {
+   "day": [
+    "LOMBRE",
+    "CRAWDAUNT",
+    "LOMBRE",
+    "AZUMARILL",
+    "WHISCASH",
+    "MASQUERAIN",
+    "CRAWDAUNT",
+    "BASCULIN",
+    "SEISMITOAD",
+    "MASQUERAIN"
+   ],
+   "night": [
+    "CRAWDAUNT",
+    "LOMBRE",
+    "WHISCASH",
+    "CRAWDAUNT",
+    "SEISMITOAD",
+    "WHISCASH",
+    "AZUMARILL",
+    "SEISMITOAD",
+    "BASCULIN",
+    "LOMBRE"
+   ]
+  },
+  "water_type": "pond"
+ },
+ "MAP_ROUTE103": {
+  "land": {
+   "day": [
+    "PELIPPER",
+    "LINOONE",
+    "LINOONE",
+    "PELIPPER",
+    "SWELLOW",
+    "SKITTY",
+    "WURMPLE",
+    "SWANNA",
+    "SWELLOW",
+    "WATCHOG",
+    "SAMUROTT",
+    "SAMUROTT"
+   ],
+   "night": [
+    "MIGHTYENA",
+    "LINOONE",
+    "MIGHTYENA",
+    "MUNNA",
+    "NUZLEAF",
+    "LINOONE",
+    "LIEPARD",
+    "NUZLEAF",
+    "WOOBAT",
+    "LIEPARD",
+    "SAMUROTT",
+    "MUNNA"
+   ]
+  },
+  "surf": {
+   "day": [
+    "PELIPPER",
+    "WAILORD",
+    "CRAWDAUNT",
+    "SWANNA",
+    "SAMUROTT"
+   ],
+   "night": [
+    "SHARPEDO",
+    "WAILORD",
+    "EELEKTRIK",
+    "CRAWDAUNT",
+    "SAMUROTT"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WAILORD",
+    "SHARPEDO",
+    "WAILORD",
+    "CRAWDAUNT",
+    "LUVDISC",
+    "SHARPEDO",
+    "WAILORD",
+    "FRILLISH",
+    "CRAWDAUNT",
+    "LUVDISC"
+   ],
+   "night": [
+    "SHARPEDO",
+    "WAILORD",
+    "SHARPEDO",
+    "FRILLISH",
+    "CRAWDAUNT",
+    "EELEKTRIK",
+    "WAILORD",
+    "SHARPEDO",
+    "FRILLISH",
+    "LUVDISC"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE104": {
+  "land": {
+   "day": [
+    "SWELLOW",
+    "WURMPLE",
+    "PELIPPER",
+    "AZUMARILL",
+    "LINOONE",
+    "SWELLOW",
+    "SKITTY",
+    "COTTONEE",
+    "UNFEZANT",
+    "PELIPPER",
+    "SWAMPERT",
+    "AZURILL"
+   ],
+   "night": [
+    "MIGHTYENA",
+    "AZUMARILL",
+    "MIGHTYENA",
+    "NUZLEAF",
+    "MUNNA",
+    "NUZLEAF",
+    "VOLBEAT",
+    "LIEPARD",
+    "ILLUMISE",
+    "WOOBAT",
+    "SWAMPERT",
+    "AZURILL"
+   ]
+  },
+  "surf": {
+   "day": [
+    "PELIPPER",
+    "WAILORD",
+    "SWANNA",
+    "LUVDISC",
+    "CRAWDAUNT"
+   ],
+   "night": [
+    "SHARPEDO",
+    "WAILORD",
+    "FRILLISH",
+    "CRAWDAUNT",
+    "EELEKTRIK"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WAILORD",
+    "LUVDISC",
+    "SHARPEDO",
+    "WAILORD",
+    "CRAWDAUNT",
+    "LUVDISC",
+    "FRILLISH",
+    "WAILORD",
+    "CRAWDAUNT",
+    "SWANNA"
+   ],
+   "night": [
+    "SHARPEDO",
+    "WAILORD",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "CRAWDAUNT",
+    "WAILORD",
+    "FRILLISH",
+    "EELEKTRIK",
+    "LUVDISC",
+    "CRAWDAUNT"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE105": {
+  "surf": {
+   "day": [
+    "WAILORD",
+    "PELIPPER",
+    "LUVDISC",
+    "CRAWDAUNT",
+    "FRILLISH"
+   ],
+   "night": [
+    "WAILORD",
+    "SHARPEDO",
+    "FRILLISH",
+    "EELEKTRIK",
+    "LUVDISC"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WAILORD",
+    "LUVDISC",
+    "WAILORD",
+    "SHARPEDO",
+    "LUVDISC",
+    "CRAWDAUNT",
+    "WAILORD",
+    "FRILLISH",
+    "SHARPEDO",
+    "EELEKTRIK"
+   ],
+   "night": [
+    "WAILORD",
+    "SHARPEDO",
+    "LUVDISC",
+    "FRILLISH",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "WAILORD",
+    "CRAWDAUNT",
+    "FRILLISH",
+    "LUVDISC"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE106": {
+  "surf": {
+   "day": [
+    "CRAWDAUNT",
+    "PELIPPER",
+    "WAILORD",
+    "LUVDISC",
+    "SWANNA"
+   ],
+   "night": [
+    "CRAWDAUNT",
+    "WAILORD",
+    "SHARPEDO",
+    "WAILORD",
+    "EELEKTRIK"
+   ]
+  },
+  "fish": {
+   "day": [
+    "CRAWDAUNT",
+    "WAILORD",
+    "CRAWDAUNT",
+    "LUVDISC",
+    "SHARPEDO",
+    "WAILORD",
+    "CRAWDAUNT",
+    "FRILLISH",
+    "LUVDISC",
+    "SWANNA"
+   ],
+   "night": [
+    "CRAWDAUNT",
+    "SHARPEDO",
+    "CRAWDAUNT",
+    "EELEKTRIK",
+    "WAILORD",
+    "SHARPEDO",
+    "FRILLISH",
+    "LUVDISC",
+    "EELEKTRIK",
+    "CRAWDAUNT"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE109": {
+  "surf": {
+   "day": [
+    "WAILORD",
+    "PELIPPER",
+    "SWANNA",
+    "LUVDISC",
+    "SAMUROTT"
+   ],
+   "night": [
+    "WAILORD",
+    "SHARPEDO",
+    "CRAWDAUNT",
+    "LUVDISC",
+    "SAMUROTT"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WAILORD",
+    "LUVDISC",
+    "CRAWDAUNT",
+    "WAILORD",
+    "LUVDISC",
+    "SHARPEDO",
+    "CRAWDAUNT",
+    "SWANNA",
+    "FRILLISH",
+    "WAILORD"
+   ],
+   "night": [
+    "SHARPEDO",
+    "WAILORD",
+    "CRAWDAUNT",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "LUVDISC",
+    "WAILORD",
+    "FRILLISH",
+    "EELEKTRIK",
+    "CRAWDAUNT"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE107": {
+  "surf": {
+   "day": [
+    "WAILORD",
+    "PELIPPER",
+    "FRILLISH",
+    "ALOMOMOLA",
+    "LUVDISC"
+   ],
+   "night": [
+    "WAILORD",
+    "FRILLISH",
+    "CRAWDAUNT",
+    "EELEKTRIK",
+    "ALOMOMOLA"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WAILORD",
+    "SHARPEDO",
+    "WAILORD",
+    "LUVDISC",
+    "FRILLISH",
+    "CRAWDAUNT",
+    "SHARPEDO",
+    "WAILORD",
+    "ALOMOMOLA",
+    "LUVDISC"
+   ],
+   "night": [
+    "SHARPEDO",
+    "WAILORD",
+    "FRILLISH",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "WAILORD",
+    "FRILLISH",
+    "CRAWDAUNT",
+    "ALOMOMOLA",
+    "EELEKTRIK"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE108": {
+  "surf": {
+   "day": [
+    "PELIPPER",
+    "FRILLISH",
+    "WAILORD",
+    "ALOMOMOLA",
+    "LUVDISC"
+   ],
+   "night": [
+    "SHARPEDO",
+    "FRILLISH",
+    "WAILORD",
+    "EELEKTRIK",
+    "ALOMOMOLA"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WAILORD",
+    "FRILLISH",
+    "SHARPEDO",
+    "WAILORD",
+    "LUVDISC",
+    "FRILLISH",
+    "CRAWDAUNT",
+    "SHARPEDO",
+    "ALOMOMOLA",
+    "LUVDISC"
+   ],
+   "night": [
+    "FRILLISH",
+    "SHARPEDO",
+    "FRILLISH",
+    "EELEKTRIK",
+    "WAILORD",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "CRAWDAUNT",
+    "ALOMOMOLA",
+    "LUVDISC"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_PETALBURG_WOODS": {
+  "land": {
+   "day": [
+    "WURMPLE",
+    "BRELOOM",
+    "SILCOON",
+    "CASCOON",
+    "SWELLOW",
+    "BRELOOM",
+    "SWADLOON",
+    "SLAKING",
+    "AMOONGUSS",
+    "SWADLOON",
+    "SCEPTILE",
+    "SLAKING"
+   ],
+   "night": [
+    "MIGHTYENA",
+    "BRELOOM",
+    "NUZLEAF",
+    "CASCOON",
+    "SCOLIPEDE",
+    "NUZLEAF",
+    "SLAKING",
+    "AMOONGUSS",
+    "MIGHTYENA",
+    "SCOLIPEDE",
+    "BUDEW",
+    "SCEPTILE"
+   ]
+  }
+ },
+ "MAP_GRANITE_CAVE_1F": {
+  "land": {
+   "day": [
+    "HARIYAMA",
+    "EXPLOUD",
+    "HARIYAMA",
+    "WOOBAT",
+    "NOSEPASS",
+    "AGGRON",
+    "BOLDORE",
+    "SABLEYE",
+    "MAWILE",
+    "EXCADRILL",
+    "THROH",
+    "WOOBAT"
+   ],
+   "night": [
+    "WOOBAT",
+    "HARIYAMA",
+    "EXPLOUD",
+    "SABLEYE",
+    "HARIYAMA",
+    "WOOBAT",
+    "AGGRON",
+    "BOLDORE",
+    "SABLEYE",
+    "MAWILE",
+    "THROH",
+    "EXCADRILL"
+   ]
+  }
+ },
+ "MAP_GRANITE_CAVE_B1F": {
+  "land": {
+   "day": [
+    "AGGRON",
+    "MAWILE",
+    "AGGRON",
+    "HARIYAMA",
+    "BOLDORE",
+    "SABLEYE",
+    "WOOBAT",
+    "NOSEPASS",
+    "EXCADRILL",
+    "EXPLOUD",
+    "SAWK",
+    "THROH"
+   ],
+   "night": [
+    "AGGRON",
+    "SABLEYE",
+    "WOOBAT",
+    "AGGRON",
+    "MAWILE",
+    "HARIYAMA",
+    "SABLEYE",
+    "BOLDORE",
+    "WOOBAT",
+    "NOSEPASS",
+    "SAWK",
+    "THROH"
+   ]
+  }
+ },
+ "MAP_GRANITE_CAVE_B2F": {
+  "land": {
+   "day": [
+    "AGGRON",
+    "SABLEYE",
+    "MAWILE",
+    "NOSEPASS",
+    "HARIYAMA",
+    "BOLDORE",
+    "WOOBAT",
+    "EXCADRILL",
+    "NOSEPASS",
+    "MAWILE",
+    "SAWK",
+    "PROBOPASS"
+   ],
+   "night": [
+    "SABLEYE",
+    "AGGRON",
+    "MAWILE",
+    "SABLEYE",
+    "WOOBAT",
+    "NOSEPASS",
+    "HARIYAMA",
+    "BOLDORE",
+    "WOOBAT",
+    "EXCADRILL",
+    "SAWK",
+    "PROBOPASS"
+   ]
+  },
+  "rock": {
+   "day": [
+    "NOSEPASS",
+    "BOLDORE",
+    "CRUSTLE",
+    "AGGRON",
+    "EXCADRILL"
+   ],
+   "night": [
+    "NOSEPASS",
+    "BOLDORE",
+    "SABLEYE",
+    "CRUSTLE",
+    "AGGRON"
+   ]
+  }
+ },
+ "MAP_GRANITE_CAVE_STEVENS_ROOM": {
+  "land": {
+   "day": [
+    "MAWILE",
+    "AGGRON",
+    "HARIYAMA",
+    "SABLEYE",
+    "NOSEPASS",
+    "BOLDORE",
+    "MAWILE",
+    "EXCADRILL",
+    "PROBOPASS",
+    "GIGALITH",
+    "THROH",
+    "METAGROSS"
+   ],
+   "night": [
+    "MAWILE",
+    "AGGRON",
+    "SABLEYE",
+    "HARIYAMA",
+    "SABLEYE",
+    "WOOBAT",
+    "NOSEPASS",
+    "BOLDORE",
+    "SWOOBAT",
+    "PROBOPASS",
+    "SAWK",
+    "METAGROSS"
+   ]
+  }
+ },
+ "MAP_ALTERING_CAVE": {
+  "land": {
+   "day": [
+    "EXPLOUD",
+    "NOSEPASS",
+    "LAIRON",
+    "HARIYAMA",
+    "WOOBAT",
+    "SABLEYE",
+    "BOLDORE",
+    "MAWILE",
+    "PROBOPASS",
+    "ZOROARK",
+    "CHINGLING",
+    "SABLEYE"
+   ],
+   "night": [
+    "WOOBAT",
+    "EXPLOUD",
+    "SABLEYE",
+    "LAIRON",
+    "MUNNA",
+    "HARIYAMA",
+    "BOLDORE",
+    "NOSEPASS",
+    "ZOROARK",
+    "MAWILE",
+    "SWOOBAT",
+    "CHINGLING"
+   ]
+  }
+ },
+ "MAP_ABANDONED_SHIP_ROOMS_B1F": {
+  "surf": {
+   "day": [
+    "SHARPEDO",
+    "FRILLISH",
+    "CRAWDAUNT",
+    "WAILORD",
+    "LUVDISC"
+   ],
+   "night": [
+    "SHARPEDO",
+    "FRILLISH",
+    "EELEKTRIK",
+    "CRAWDAUNT",
+    "FRILLISH"
+   ]
+  },
+  "fish": {
+   "day": [
+    "CRAWDAUNT",
+    "SHARPEDO",
+    "WAILORD",
+    "CRAWDAUNT",
+    "FRILLISH",
+    "LUVDISC",
+    "SHARPEDO",
+    "FRILLISH",
+    "WAILORD",
+    "ALOMOMOLA"
+   ],
+   "night": [
+    "SHARPEDO",
+    "CRAWDAUNT",
+    "FRILLISH",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "CRAWDAUNT",
+    "FRILLISH",
+    "WAILORD",
+    "ALOMOMOLA",
+    "LUVDISC"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ABANDONED_SHIP_HIDDEN_FLOOR_CORRIDORS": {
+  "surf": {
+   "day": [
+    "JELLICENT",
+    "SHARPEDO",
+    "CRAWDAUNT",
+    "ALOMOMOLA",
+    "WAILORD"
+   ],
+   "night": [
+    "JELLICENT",
+    "EELEKTRIK",
+    "SHARPEDO",
+    "ALOMOMOLA",
+    "EELEKTROSS"
+   ]
+  },
+  "fish": {
+   "day": [
+    "CRAWDAUNT",
+    "JELLICENT",
+    "SHARPEDO",
+    "WAILORD",
+    "CRAWDAUNT",
+    "LUVDISC",
+    "JELLICENT",
+    "SHARPEDO",
+    "ALOMOMOLA",
+    "LUVDISC"
+   ],
+   "night": [
+    "JELLICENT",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "CRAWDAUNT",
+    "JELLICENT",
+    "EELEKTROSS",
+    "SHARPEDO",
+    "WAILORD",
+    "ALOMOMOLA",
+    "LUVDISC"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE110": {
+  "land": {
+   "day": [
+    "MANECTRIC",
+    "SWALOT",
+    "MANECTRIC",
+    "PLUSLE",
+    "MINUN",
+    "ZEBSTRIKA",
+    "SWELLOW",
+    "PELIPPER",
+    "GARBODOR",
+    "WATCHOG",
+    "EMOLGA",
+    "AUDINO"
+   ],
+   "night": [
+    "MIGHTYENA",
+    "MANECTRIC",
+    "LIEPARD",
+    "SWALOT",
+    "PLUSLE",
+    "MINUN",
+    "GARBODOR",
+    "WOOBAT",
+    "ILLUMISE",
+    "VOLBEAT",
+    "EMOLGA",
+    "AUDINO"
+   ]
+  },
+  "surf": {
+   "day": [
+    "EELEKTRIK",
+    "PELIPPER",
+    "WAILORD",
+    "SWANNA",
+    "LUVDISC"
+   ],
+   "night": [
+    "EELEKTRIK",
+    "WAILORD",
+    "CRAWDAUNT",
+    "SHARPEDO",
+    "FRILLISH"
+   ]
+  },
+  "fish": {
+   "day": [
+    "EELEKTRIK",
+    "WAILORD",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "LUVDISC",
+    "CRAWDAUNT",
+    "WAILORD",
+    "FRILLISH",
+    "EELEKTRIK",
+    "CRAWDAUNT"
+   ],
+   "night": [
+    "EELEKTRIK",
+    "SHARPEDO",
+    "WAILORD",
+    "FRILLISH",
+    "EELEKTRIK",
+    "SHARPEDO",
+    "FRILLISH",
+    "CRAWDAUNT",
+    "LUVDISC",
+    "EELEKTRIK"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE111": {
+  "land": {
+   "day": [
+    "FLYGON",
+    "CACTURNE",
+    "KROOKODILE",
+    "CLAYDOL",
+    "FLYGON",
+    "DARUMAKA",
+    "SCRAFTY",
+    "CRUSTLE",
+    "CACTURNE",
+    "KROOKODILE",
+    "MANDIBUZZ",
+    "EMBOAR"
+   ],
+   "night": [
+    "CACTURNE",
+    "COFAGRIGUS",
+    "CLAYDOL",
+    "KROOKODILE",
+    "COFAGRIGUS",
+    "FLYGON",
+    "WOOBAT",
+    "LIEPARD",
+    "DARUMAKA",
+    "CLAYDOL",
+    "ZOROARK",
+    "DARMANITAN"
+   ]
+  },
+  "surf": {
+   "day": [
+    "WHISCASH",
+    "MASQUERAIN",
+    "AZUMARILL",
+    "BASCULIN",
+    "AZURILL"
+   ],
+   "night": [
+    "WHISCASH",
+    "BASCULIN",
+    "SEISMITOAD",
+    "MASQUERAIN",
+    "AZURILL"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WHISCASH",
+    "BASCULIN",
+    "WHISCASH",
+    "MASQUERAIN",
+    "CRAWDAUNT",
+    "BASCULIN",
+    "SEISMITOAD",
+    "AZUMARILL",
+    "WHISCASH",
+    "LOMBRE"
+   ],
+   "night": [
+    "WHISCASH",
+    "BASCULIN",
+    "SEISMITOAD",
+    "WHISCASH",
+    "SEISMITOAD",
+    "CRAWDAUNT",
+    "BASCULIN",
+    "AZUMARILL",
+    "MASQUERAIN",
+    "LOMBRE"
+   ]
+  },
+  "rock": {
+   "day": [
+    "CRUSTLE",
+    "BOLDORE",
+    "NOSEPASS",
+    "EXCADRILL",
+    "BOLDORE"
+   ],
+   "night": [
+    "BOLDORE",
+    "CRUSTLE",
+    "EXCADRILL",
+    "NOSEPASS",
+    "LAIRON"
+   ]
+  },
+  "water_type": "pond"
+ },
+ "MAP_ROUTE112": {
+  "land": {
+   "day": [
+    "CAMERUPT",
+    "GRUMPIG",
+    "CAMERUPT",
+    "GURDURR",
+    "AZUMARILL",
+    "LINOONE",
+    "MIENSHAO",
+    "PANSEAR",
+    "SWELLOW",
+    "GURDURR",
+    "BRAVIARY",
+    "BLAZIKEN"
+   ],
+   "night": [
+    "LIEPARD",
+    "CAMERUPT",
+    "MIGHTYENA",
+    "AZUMARILL",
+    "CAMERUPT",
+    "WOOBAT",
+    "GURDURR",
+    "GRUMPIG",
+    "PANSEAR",
+    "WOOBAT",
+    "BLAZIKEN",
+    "AZURILL"
+   ]
+  }
+ },
+ "MAP_ROUTE113": {
+  "land": {
+   "day": [
+    "SPINDA",
+    "CAMERUPT",
+    "SPINDA",
+    "BISHARP",
+    "FLYGON",
+    "CACTURNE",
+    "KROOKODILE",
+    "COTTONEE",
+    "BRAVIARY",
+    "CAMERUPT",
+    "MANDIBUZZ",
+    "SPINDA"
+   ],
+   "night": [
+    "SPINDA",
+    "LIEPARD",
+    "DUSCLOPS",
+    "SPINDA",
+    "BISHARP",
+    "CAMERUPT",
+    "DUSCLOPS",
+    "LIEPARD",
+    "COFAGRIGUS",
+    "CACTURNE",
+    "ZOROARK",
+    "ZOROARK"
+   ]
+  }
+ },
+ "MAP_ROUTE114": {
+  "land": {
+   "day": [
+    "ALTARIA",
+    "LOMBRE",
+    "LOMBRE",
+    "ALTARIA",
+    "NUZLEAF",
+    "PANPOUR",
+    "DEERLING",
+    "SEISMITOAD",
+    "BEHEEYEM",
+    "SEVIPER",
+    "ZANGOOSE",
+    "SEVIPER"
+   ],
+   "night": [
+    "LOMBRE",
+    "MUNNA",
+    "LOMBRE",
+    "NUZLEAF",
+    "WOOBAT",
+    "BEHEEYEM",
+    "MIGHTYENA",
+    "ILLUMISE",
+    "LIEPARD",
+    "ZANGOOSE",
+    "SEVIPER",
+    "SHELMET"
+   ]
+  },
+  "surf": {
+   "day": [
+    "LOMBRE",
+    "AZUMARILL",
+    "WHISCASH",
+    "SEISMITOAD",
+    "BASCULIN"
+   ],
+   "night": [
+    "LOMBRE",
+    "WHISCASH",
+    "SEISMITOAD",
+    "BASCULIN",
+    "STUNFISK"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WHISCASH",
+    "LOMBRE",
+    "BASCULIN",
+    "WHISCASH",
+    "CRAWDAUNT",
+    "SEISMITOAD",
+    "AZUMARILL",
+    "BASCULIN",
+    "MASQUERAIN",
+    "STUNFISK"
+   ],
+   "night": [
+    "WHISCASH",
+    "BASCULIN",
+    "WHISCASH",
+    "SEISMITOAD",
+    "LOMBRE",
+    "SEISMITOAD",
+    "CRAWDAUNT",
+    "STUNFISK",
+    "AZUMARILL",
+    "BASCULIN"
+   ]
+  },
+  "rock": {
+   "day": [
+    "BOLDORE",
+    "NOSEPASS",
+    "CRUSTLE",
+    "EXCADRILL",
+    "DURANT"
+   ],
+   "night": [
+    "BOLDORE",
+    "EXCADRILL",
+    "NOSEPASS",
+    "CRUSTLE",
+    "DURANT"
+   ]
+  },
+  "water_type": "pond"
+ },
+ "MAP_ROUTE115": {
+  "land": {
+   "day": [
+    "ALTARIA",
+    "SWELLOW",
+    "ALTARIA",
+    "UNFEZANT",
+    "PELIPPER",
+    "MINCCINO",
+    "SWELLOW",
+    "COTTONEE",
+    "STOUTLAND",
+    "UNFEZANT",
+    "AUDINO",
+    "SWAMPERT"
+   ],
+   "night": [
+    "MUNNA",
+    "ILLUMISE",
+    "WOOBAT",
+    "MIGHTYENA",
+    "MIGHTYENA",
+    "VOLBEAT",
+    "LIEPARD",
+    "MINCCINO",
+    "MUNNA",
+    "WOOBAT",
+    "AUDINO",
+    "SWAMPERT"
+   ]
+  },
+  "surf": {
+   "day": [
+    "PELIPPER",
+    "SWANNA",
+    "WAILORD",
+    "LUVDISC",
+    "CRAWDAUNT"
+   ],
+   "night": [
+    "SHARPEDO",
+    "WAILORD",
+    "FRILLISH",
+    "EELEKTRIK",
+    "CRAWDAUNT"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WAILORD",
+    "LUVDISC",
+    "WAILORD",
+    "SHARPEDO",
+    "CRAWDAUNT",
+    "LUVDISC",
+    "FRILLISH",
+    "CRAWDAUNT",
+    "WAILORD",
+    "EELEKTRIK"
+   ],
+   "night": [
+    "WAILORD",
+    "SHARPEDO",
+    "FRILLISH",
+    "WAILORD",
+    "EELEKTRIK",
+    "SHARPEDO",
+    "LUVDISC",
+    "FRILLISH",
+    "CRAWDAUNT",
+    "EELEKTRIK"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE116": {
+  "land": {
+   "day": [
+    "EXPLOUD",
+    "SWELLOW",
+    "NINJASK",
+    "STOUTLAND",
+    "SKITTY",
+    "WATCHOG",
+    "LINOONE",
+    "GURDURR",
+    "REUNICLUS",
+    "MINCCINO",
+    "AUDINO",
+    "SERPERIOR"
+   ],
+   "night": [
+    "MIGHTYENA",
+    "EXPLOUD",
+    "NINJASK",
+    "LIEPARD",
+    "SKITTY",
+    "WOOBAT",
+    "MUNNA",
+    "STOUTLAND",
+    "MIGHTYENA",
+    "REUNICLUS",
+    "AUDINO",
+    "NINJASK"
+   ]
+  }
+ },
+ "MAP_ROUTE117": {
+  "land": {
+   "day": [
+    "ROSELIA",
+    "AZUMARILL",
+    "PETILIL",
+    "ROSELIA",
+    "NUZLEAF",
+    "COTTONEE",
+    "STOUTLAND",
+    "SWELLOW",
+    "WATCHOG",
+    "UNFEZANT",
+    "AUDINO",
+    "BUDEW"
+   ],
+   "night": [
+    "VOLBEAT",
+    "ILLUMISE",
+    "MIGHTYENA",
+    "AZUMARILL",
+    "ROSELIA",
+    "MUNNA",
+    "LIEPARD",
+    "NUZLEAF",
+    "VOLBEAT",
+    "ILLUMISE",
+    "AUDINO",
+    "BUDEW"
+   ]
+  },
+  "surf": {
+   "day": [
+    "AZUMARILL",
+    "MASQUERAIN",
+    "LOMBRE",
+    "SWANNA",
+    "AZURILL"
+   ],
+   "night": [
+    "AZUMARILL",
+    "MASQUERAIN",
+    "CRAWDAUNT",
+    "SEISMITOAD",
+    "AZURILL"
+   ]
+  },
+  "fish": {
+   "day": [
+    "CRAWDAUNT",
+    "AZUMARILL",
+    "MASQUERAIN",
+    "CRAWDAUNT",
+    "WHISCASH",
+    "BASCULIN",
+    "LOMBRE",
+    "SEISMITOAD",
+    "AZUMARILL",
+    "SWANNA"
+   ],
+   "night": [
+    "CRAWDAUNT",
+    "WHISCASH",
+    "SEISMITOAD",
+    "CRAWDAUNT",
+    "WHISCASH",
+    "AZUMARILL",
+    "SEISMITOAD",
+    "BASCULIN",
+    "LOMBRE",
+    "MASQUERAIN"
+   ]
+  },
+  "water_type": "pond"
+ },
+ "MAP_ROUTE118": {
+  "land": {
+   "day": [
+    "LINOONE",
+    "MANECTRIC",
+    "PELIPPER",
+    "ZEBSTRIKA",
+    "LINOONE",
+    "UNFEZANT",
+    "WATCHOG",
+    "DEERLING",
+    "STOUTLAND",
+    "MANECTRIC",
+    "KECLEON",
+    "KECLEON"
+   ],
+   "night": [
+    "LIEPARD",
+    "MANECTRIC",
+    "MIGHTYENA",
+    "LINOONE",
+    "ZEBSTRIKA",
+    "ILLUMISE",
+    "MUNNA",
+    "KECLEON",
+    "LIEPARD",
+    "VOLBEAT",
+    "ZOROARK",
+    "KECLEON"
+   ]
+  },
+  "surf": {
+   "day": [
+    "SHARPEDO",
+    "PELIPPER",
+    "WAILORD",
+    "LUVDISC",
+    "EELEKTRIK"
+   ],
+   "night": [
+    "SHARPEDO",
+    "WAILORD",
+    "CRAWDAUNT",
+    "FRILLISH",
+    "SHARPEDO"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SHARPEDO",
+    "WAILORD",
+    "SHARPEDO",
+    "JELLICENT",
+    "CRAWDAUNT",
+    "WAILORD",
+    "EELEKTRIK",
+    "SHARPEDO",
+    "FRILLISH",
+    "CRAWDAUNT"
+   ],
+   "night": [
+    "SHARPEDO",
+    "WAILORD",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "FRILLISH",
+    "EELEKTRIK",
+    "CRAWDAUNT",
+    "WAILORD",
+    "LUVDISC",
+    "FRILLISH"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_JAGGED_PASS": {
+  "land": {
+   "day": [
+    "GRUMPIG",
+    "CAMERUPT",
+    "GURDURR",
+    "CAMERUPT",
+    "GRUMPIG",
+    "TORKOAL",
+    "MIENSHAO",
+    "PANSEAR",
+    "MEDICHAM",
+    "EMBOAR",
+    "SAWK",
+    "EMBOAR"
+   ],
+   "night": [
+    "CAMERUPT",
+    "GRUMPIG",
+    "WOOBAT",
+    "MIGHTYENA",
+    "TORKOAL",
+    "LIEPARD",
+    "MEDICHAM",
+    "GURDURR",
+    "WOOBAT",
+    "GRUMPIG",
+    "THROH",
+    "EMBOAR"
+   ]
+  }
+ },
+ "MAP_RUSTURF_TUNNEL": {
+  "land": {
+   "day": [
+    "EXPLOUD",
+    "AGGRON",
+    "GURDURR",
+    "EXPLOUD",
+    "NOSEPASS",
+    "BOLDORE",
+    "WOOBAT",
+    "EXCADRILL",
+    "HARIYAMA",
+    "AGGRON",
+    "DURANT",
+    "MAWILE"
+   ],
+   "night": [
+    "EXPLOUD",
+    "GURDURR",
+    "WOOBAT",
+    "AGGRON",
+    "WOOBAT",
+    "BOLDORE",
+    "NOSEPASS",
+    "EXCADRILL",
+    "EXPLOUD",
+    "SABLEYE",
+    "DURANT",
+    "MAWILE"
+   ]
+  }
+ },
+ "MAP_FIERY_PATH": {
+  "land": {
+   "day": [
+    "CAMERUPT",
+    "GURDURR",
+    "CAMERUPT",
+    "TORKOAL",
+    "SWALOT",
+    "BOLDORE",
+    "PANSEAR",
+    "DARUMAKA",
+    "TORKOAL",
+    "HEATMOR",
+    "BLAZIKEN",
+    "GRUMPIG"
+   ],
+   "night": [
+    "CAMERUPT",
+    "TORKOAL",
+    "CAMERUPT",
+    "WOOBAT",
+    "GURDURR",
+    "SWALOT",
+    "BOLDORE",
+    "HEATMOR",
+    "DARUMAKA",
+    "PANSEAR",
+    "HEATMOR",
+    "BLAZIKEN"
+   ]
+  }
+ },
+ "MAP_NEW_MAUVILLE_ENTRANCE": {
+  "land": {
+   "day": [
+    "MANECTRIC",
+    "PLUSLE",
+    "MINUN",
+    "KLINK",
+    "JOLTIK",
+    "MANECTRIC",
+    "KLINK",
+    "EELEKTRIK",
+    "GARBODOR",
+    "FERROSEED",
+    "STUNFISK",
+    "EMOLGA"
+   ],
+   "night": [
+    "KLINK",
+    "JOLTIK",
+    "MANECTRIC",
+    "JOLTIK",
+    "PLUSLE",
+    "MINUN",
+    "EELEKTRIK",
+    "GARBODOR",
+    "WOOBAT",
+    "FERROSEED",
+    "STUNFISK",
+    "EMOLGA"
+   ]
+  }
+ },
+ "MAP_NEW_MAUVILLE_INSIDE": {
+  "land": {
+   "day": [
+    "KLANG",
+    "MANECTRIC",
+    "GALVANTULA",
+    "PLUSLE",
+    "MINUN",
+    "EELEKTRIK",
+    "MANECTRIC",
+    "FERROTHORN",
+    "GARBODOR",
+    "KLINK",
+    "STUNFISK",
+    "EELEKTROSS"
+   ],
+   "night": [
+    "GALVANTULA",
+    "KLANG",
+    "MANECTRIC",
+    "EELEKTRIK",
+    "PLUSLE",
+    "MINUN",
+    "FERROTHORN",
+    "WOOBAT",
+    "MANECTRIC",
+    "JOLTIK",
+    "STUNFISK",
+    "EELEKTROSS"
+   ]
+  }
+ },
+ "MAP_DESERT_UNDERPASS": {
+  "land": {
+   "day": [
+    "EXPLOUD",
+    "KROOKODILE",
+    "FLYGON",
+    "EXPLOUD",
+    "CACTURNE",
+    "EXCADRILL",
+    "CRUSTLE",
+    "COFAGRIGUS",
+    "NOSEPASS",
+    "KROOKODILE",
+    "ZOROARK",
+    "DURANT"
+   ],
+   "night": [
+    "EXPLOUD",
+    "COFAGRIGUS",
+    "KROOKODILE",
+    "FLYGON",
+    "EXPLOUD",
+    "WOOBAT",
+    "EXCADRILL",
+    "CACTURNE",
+    "COFAGRIGUS",
+    "CRUSTLE",
+    "ZOROARK",
+    "DURANT"
+   ]
+  }
+ },
+ "MAP_MIRAGE_TOWER_1F": {
+  "land": {
+   "day": [
+    "FLYGON",
+    "CLAYDOL",
+    "FLYGON",
+    "KROOKODILE",
+    "CACTURNE",
+    "CLAYDOL",
+    "KROOKODILE",
+    "DARUMAKA",
+    "CACTURNE",
+    "COFAGRIGUS",
+    "MANDIBUZZ",
+    "MARACTUS"
+   ],
+   "night": [
+    "CACTURNE",
+    "COFAGRIGUS",
+    "FLYGON",
+    "CLAYDOL",
+    "KROOKODILE",
+    "COFAGRIGUS",
+    "CACTURNE",
+    "CLAYDOL",
+    "GOLURK",
+    "WOOBAT",
+    "MANDIBUZZ",
+    "MARACTUS"
+   ]
+  }
+ },
+ "MAP_MIRAGE_TOWER_2F": {
+  "land": {
+   "day": [
+    "CLAYDOL",
+    "FLYGON",
+    "CACTURNE",
+    "KROOKODILE",
+    "CLAYDOL",
+    "FLYGON",
+    "COFAGRIGUS",
+    "DARUMAKA",
+    "CRUSTLE",
+    "GOLURK",
+    "MARACTUS",
+    "SIGILYPH"
+   ],
+   "night": [
+    "COFAGRIGUS",
+    "CLAYDOL",
+    "CACTURNE",
+    "GOLURK",
+    "FLYGON",
+    "KROOKODILE",
+    "COFAGRIGUS",
+    "WOOBAT",
+    "CACTURNE",
+    "DARUMAKA",
+    "SIGILYPH",
+    "MARACTUS"
+   ]
+  }
+ },
+ "MAP_MIRAGE_TOWER_3F": {
+  "land": {
+   "day": [
+    "CLAYDOL",
+    "CACTURNE",
+    "GOLURK",
+    "FLYGON",
+    "KROOKODILE",
+    "CLAYDOL",
+    "COFAGRIGUS",
+    "DARUMAKA",
+    "SIGILYPH",
+    "MARACTUS",
+    "MANDIBUZZ",
+    "SIGILYPH"
+   ],
+   "night": [
+    "GOLURK",
+    "CLAYDOL",
+    "COFAGRIGUS",
+    "CACTURNE",
+    "FLYGON",
+    "CLAYDOL",
+    "SWOOBAT",
+    "DARUMAKA",
+    "SIGILYPH",
+    "MARACTUS",
+    "MANDIBUZZ",
+    "SIGILYPH"
+   ]
+  }
+ },
+ "MAP_MIRAGE_TOWER_4F": {
+  "land": {
+   "day": [
+    "FLYGON",
+    "CLAYDOL",
+    "CACTURNE",
+    "GOLURK",
+    "SIGILYPH",
+    "FLYGON",
+    "DARMANITAN",
+    "KROOKODILE",
+    "MARACTUS",
+    "SIGILYPH",
+    "MANDIBUZZ",
+    "DARMANITAN"
+   ],
+   "night": [
+    "CLAYDOL",
+    "FLYGON",
+    "COFAGRIGUS",
+    "CACTURNE",
+    "SIGILYPH",
+    "GOLURK",
+    "SWOOBAT",
+    "KROOKODILE",
+    "SIGILYPH",
+    "MARACTUS",
+    "ZOROARK",
+    "DARMANITAN"
+   ]
+  }
+ },
+ "MAP_METEOR_FALLS_1F_1R": {
+  "land": {
+   "day": [
+    "SOLROCK",
+    "WOOBAT",
+    "SOLROCK",
+    "BOLDORE",
+    "MEDICHAM",
+    "AGGRON",
+    "BEHEEYEM",
+    "LUNATONE",
+    "MAWILE",
+    "EXCADRILL",
+    "ALTARIA",
+    "DRUDDIGON"
+   ],
+   "night": [
+    "LUNATONE",
+    "WOOBAT",
+    "LUNATONE",
+    "BOLDORE",
+    "MEDICHAM",
+    "BEHEEYEM",
+    "AGGRON",
+    "SOLROCK",
+    "MAWILE",
+    "EXCADRILL",
+    "ALTARIA",
+    "DRUDDIGON"
+   ]
+  },
+  "surf": {
+   "day": [
+    "WHISCASH",
+    "BASCULIN",
+    "SEISMITOAD",
+    "AZUMARILL",
+    "SOLROCK"
+   ],
+   "night": [
+    "WHISCASH",
+    "SEISMITOAD",
+    "BASCULIN",
+    "CRAWDAUNT",
+    "LUNATONE"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WHISCASH",
+    "BASCULIN",
+    "WHISCASH",
+    "SEISMITOAD",
+    "CRAWDAUNT",
+    "BASCULIN",
+    "AZUMARILL",
+    "WHISCASH",
+    "SEISMITOAD",
+    "WHISCASH"
+   ],
+   "night": [
+    "WHISCASH",
+    "SEISMITOAD",
+    "WHISCASH",
+    "BASCULIN",
+    "SEISMITOAD",
+    "CRAWDAUNT",
+    "WHISCASH",
+    "AZUMARILL",
+    "SEISMITOAD",
+    "BASCULIN"
+   ]
+  },
+  "water_type": "cave"
+ },
+ "MAP_METEOR_FALLS_1F_2R": {
+  "land": {
+   "day": [
+    "SOLROCK",
+    "MAWILE",
+    "BOLDORE",
+    "LUNATONE",
+    "MEDICHAM",
+    "SWOOBAT",
+    "BEHEEYEM",
+    "AGGRON",
+    "MAWILE",
+    "EXCADRILL",
+    "DRUDDIGON",
+    "MAWILE"
+   ],
+   "night": [
+    "LUNATONE",
+    "MAWILE",
+    "SWOOBAT",
+    "SOLROCK",
+    "MEDICHAM",
+    "BOLDORE",
+    "BEHEEYEM",
+    "MAWILE",
+    "AGGRON",
+    "EXCADRILL",
+    "DRUDDIGON",
+    "SABLEYE"
+   ]
+  },
+  "surf": {
+   "day": [
+    "WHISCASH",
+    "SEISMITOAD",
+    "AZUMARILL",
+    "BASCULIN",
+    "SOLROCK"
+   ],
+   "night": [
+    "WHISCASH",
+    "SEISMITOAD",
+    "BASCULIN",
+    "CRAWDAUNT",
+    "LUNATONE"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WHISCASH",
+    "AZUMARILL",
+    "BASCULIN",
+    "WHISCASH",
+    "CRAWDAUNT",
+    "SEISMITOAD",
+    "AZUMARILL",
+    "WHISCASH",
+    "BASCULIN",
+    "STUNFISK"
+   ],
+   "night": [
+    "WHISCASH",
+    "CRAWDAUNT",
+    "SEISMITOAD",
+    "WHISCASH",
+    "BASCULIN",
+    "CRAWDAUNT",
+    "SEISMITOAD",
+    "AZUMARILL",
+    "STUNFISK",
+    "WHISCASH"
+   ]
+  },
+  "water_type": "cave"
+ },
+ "MAP_METEOR_FALLS_B1F_1R": {
+  "land": {
+   "day": [
+    "LUNATONE",
+    "SOLROCK",
+    "BOLDORE",
+    "EXCADRILL",
+    "SWOOBAT",
+    "MEDICHAM",
+    "BEHEEYEM",
+    "AGGRON",
+    "EXCADRILL",
+    "DRUDDIGON",
+    "SALAMENCE",
+    "FRAXURE"
+   ],
+   "night": [
+    "LUNATONE",
+    "SOLROCK",
+    "SWOOBAT",
+    "BOLDORE",
+    "EXCADRILL",
+    "BEHEEYEM",
+    "MEDICHAM",
+    "SABLEYE",
+    "GIGALITH",
+    "DRUDDIGON",
+    "SALAMENCE",
+    "HAXORUS"
+   ]
+  },
+  "surf": {
+   "day": [
+    "AZUMARILL",
+    "WHISCASH",
+    "BASCULIN",
+    "SEISMITOAD",
+    "SOLROCK"
+   ],
+   "night": [
+    "AZUMARILL",
+    "WHISCASH",
+    "CRAWDAUNT",
+    "SEISMITOAD",
+    "LUNATONE"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WHISCASH",
+    "BASCULIN",
+    "SEISMITOAD",
+    "WHISCASH",
+    "AZUMARILL",
+    "CRAWDAUNT",
+    "BASCULIN",
+    "SEISMITOAD",
+    "WHISCASH",
+    "STUNFISK"
+   ],
+   "night": [
+    "WHISCASH",
+    "SEISMITOAD",
+    "BASCULIN",
+    "SEISMITOAD",
+    "CRAWDAUNT",
+    "WHISCASH",
+    "CRAWDAUNT",
+    "BASCULIN",
+    "STUNFISK",
+    "AZUMARILL"
+   ]
+  },
+  "water_type": "cave"
+ },
+ "MAP_METEOR_FALLS_B1F_2R": {
+  "land": {
+   "day": [
+    "SOLROCK",
+    "LUNATONE",
+    "SALAMENCE",
+    "BOLDORE",
+    "EXCADRILL",
+    "SWOOBAT",
+    "BEHEEYEM",
+    "SALAMENCE",
+    "DRUDDIGON",
+    "GIGALITH",
+    "HAXORUS",
+    "AGGRON"
+   ],
+   "night": [
+    "LUNATONE",
+    "SOLROCK",
+    "SALAMENCE",
+    "SWOOBAT",
+    "EXCADRILL",
+    "BOLDORE",
+    "SABLEYE",
+    "SALAMENCE",
+    "DRUDDIGON",
+    "BEHEEYEM",
+    "HAXORUS",
+    "GIGALITH"
+   ]
+  },
+  "surf": {
+   "day": [
+    "WHISCASH",
+    "SEISMITOAD",
+    "BASCULIN",
+    "AZUMARILL",
+    "SOLROCK"
+   ],
+   "night": [
+    "WHISCASH",
+    "BASCULIN",
+    "SEISMITOAD",
+    "CRAWDAUNT",
+    "LUNATONE"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WHISCASH",
+    "SEISMITOAD",
+    "BASCULIN",
+    "WHISCASH",
+    "AZUMARILL",
+    "SEISMITOAD",
+    "BASCULIN",
+    "WHISCASH",
+    "STUNFISK",
+    "SEISMITOAD"
+   ],
+   "night": [
+    "WHISCASH",
+    "CRAWDAUNT",
+    "SEISMITOAD",
+    "BASCULIN",
+    "CRAWDAUNT",
+    "SEISMITOAD",
+    "WHISCASH",
+    "AZUMARILL",
+    "STUNFISK",
+    "BASCULIN"
+   ]
+  },
+  "water_type": "cave"
+ },
+ "MAP_METEOR_FALLS_STEVENS_CAVE": {
+  "land": {
+   "day": [
+    "SOLROCK",
+    "LUNATONE",
+    "GIGALITH",
+    "BEHEEYEM",
+    "SALAMENCE",
+    "METAGROSS",
+    "MAWILE",
+    "EXCADRILL",
+    "DRUDDIGON",
+    "HAXORUS",
+    "METAGROSS",
+    "AGGRON"
+   ],
+   "night": [
+    "LUNATONE",
+    "SOLROCK",
+    "BEHEEYEM",
+    "GIGALITH",
+    "SALAMENCE",
+    "METAGROSS",
+    "SWOOBAT",
+    "MAWILE",
+    "DRUDDIGON",
+    "HAXORUS",
+    "METAGROSS",
+    "SABLEYE"
+   ]
+  }
+ },
+ "MAP_MAGMA_HIDEOUT_1F": {
+  "land": {
+   "day": [
+    "CAMERUPT",
+    "BOLDORE",
+    "CAMERUPT",
+    "TORKOAL",
+    "MIGHTYENA",
+    "SWALOT",
+    "DARUMAKA",
+    "GURDURR",
+    "TORKOAL",
+    "MIGHTYENA",
+    "HEATMOR",
+    "BLAZIKEN"
+   ],
+   "night": [
+    "CAMERUPT",
+    "BOLDORE",
+    "MIGHTYENA",
+    "TORKOAL",
+    "CAMERUPT",
+    "MIGHTYENA",
+    "WOOBAT",
+    "DARUMAKA",
+    "GURDURR",
+    "TORKOAL",
+    "HEATMOR",
+    "BLAZIKEN"
+   ]
+  }
+ },
+ "MAP_MAGMA_HIDEOUT_2F_1R": {
+  "land": {
+   "day": [
+    "BOLDORE",
+    "TORKOAL",
+    "CAMERUPT",
+    "MIGHTYENA",
+    "DARUMAKA",
+    "CAMERUPT",
+    "GURDURR",
+    "HEATMOR",
+    "TORKOAL",
+    "SWALOT",
+    "DURANT",
+    "TORKOAL"
+   ],
+   "night": [
+    "BOLDORE",
+    "TORKOAL",
+    "MIGHTYENA",
+    "CAMERUPT",
+    "DARUMAKA",
+    "MIGHTYENA",
+    "WOOBAT",
+    "HEATMOR",
+    "CAMERUPT",
+    "GURDURR",
+    "DURANT",
+    "TORKOAL"
+   ]
+  }
+ },
+ "MAP_MAGMA_HIDEOUT_2F_2R": {
+  "land": {
+   "day": [
+    "CAMERUPT",
+    "TORKOAL",
+    "MIGHTYENA",
+    "BOLDORE",
+    "CAMERUPT",
+    "DARUMAKA",
+    "HEATMOR",
+    "GURDURR",
+    "TORKOAL",
+    "DURANT",
+    "SIMISEAR",
+    "GIGALITH"
+   ],
+   "night": [
+    "CAMERUPT",
+    "TORKOAL",
+    "MIGHTYENA",
+    "MIGHTYENA",
+    "BOLDORE",
+    "HEATMOR",
+    "WOOBAT",
+    "DARUMAKA",
+    "TORKOAL",
+    "GURDURR",
+    "DURANT",
+    "GIGALITH"
+   ]
+  }
+ },
+ "MAP_MAGMA_HIDEOUT_2F_3R": {
+  "land": {
+   "day": [
+    "DARUMAKA",
+    "TORKOAL",
+    "CAMERUPT",
+    "HEATMOR",
+    "MIGHTYENA",
+    "SWALOT",
+    "CAMERUPT",
+    "DURANT",
+    "TORKOAL",
+    "CONKELDURR",
+    "SIMISEAR",
+    "VOLCARONA"
+   ],
+   "night": [
+    "TORKOAL",
+    "DARUMAKA",
+    "MIGHTYENA",
+    "CAMERUPT",
+    "HEATMOR",
+    "WOOBAT",
+    "MIGHTYENA",
+    "DURANT",
+    "CAMERUPT",
+    "CONKELDURR",
+    "SIMISEAR",
+    "VOLCARONA"
+   ]
+  }
+ },
+ "MAP_MAGMA_HIDEOUT_3F_1R": {
+  "land": {
+   "day": [
+    "CAMERUPT",
+    "BOLDORE",
+    "TORKOAL",
+    "MIGHTYENA",
+    "HEATMOR",
+    "CAMERUPT",
+    "DURANT",
+    "GIGALITH",
+    "TORKOAL",
+    "DARMANITAN",
+    "VOLCARONA",
+    "SIMISEAR"
+   ],
+   "night": [
+    "CAMERUPT",
+    "BOLDORE",
+    "MIGHTYENA",
+    "TORKOAL",
+    "MIGHTYENA",
+    "HEATMOR",
+    "WOOBAT",
+    "GIGALITH",
+    "DURANT",
+    "DARMANITAN",
+    "VOLCARONA",
+    "CONKELDURR"
+   ]
+  }
+ },
+ "MAP_MAGMA_HIDEOUT_3F_2R": {
+  "land": {
+   "day": [
+    "TORKOAL",
+    "HEATMOR",
+    "CAMERUPT",
+    "MIGHTYENA",
+    "DURANT",
+    "GIGALITH",
+    "CAMERUPT",
+    "TORKOAL",
+    "DARMANITAN",
+    "CONKELDURR",
+    "VOLCARONA",
+    "EMBOAR"
+   ],
+   "night": [
+    "TORKOAL",
+    "HEATMOR",
+    "MIGHTYENA",
+    "CAMERUPT",
+    "DURANT",
+    "MIGHTYENA",
+    "SWOOBAT",
+    "GIGALITH",
+    "DARMANITAN",
+    "CONKELDURR",
+    "VOLCARONA",
+    "EMBOAR"
+   ]
+  }
+ },
+ "MAP_MAGMA_HIDEOUT_3F_3R": {
+  "land": {
+   "day": [
+    "HEATMOR",
+    "TORKOAL",
+    "CAMERUPT",
+    "CAMERUPT",
+    "MIGHTYENA",
+    "DURANT",
+    "MIGHTYENA",
+    "TORKOAL",
+    "VOLCARONA",
+    "DARMANITAN",
+    "VOLCARONA",
+    "SIMISEAR"
+   ],
+   "night": [
+    "HEATMOR",
+    "TORKOAL",
+    "MIGHTYENA",
+    "CAMERUPT",
+    "DARMANITAN",
+    "SWOOBAT",
+    "DURANT",
+    "GIGALITH",
+    "VOLCARONA",
+    "CONKELDURR",
+    "VOLCARONA",
+    "MIGHTYENA"
+   ]
+  }
+ },
+ "MAP_MAGMA_HIDEOUT_4F": {
+  "land": {
+   "day": [
+    "CAMERUPT",
+    "TORKOAL",
+    "HEATMOR",
+    "MIGHTYENA",
+    "GIGALITH",
+    "CAMERUPT",
+    "VOLCARONA",
+    "DARMANITAN",
+    "DURANT",
+    "VOLCARONA",
+    "CONKELDURR",
+    "BLAZIKEN"
+   ],
+   "night": [
+    "CAMERUPT",
+    "TORKOAL",
+    "MIGHTYENA",
+    "HEATMOR",
+    "CAMERUPT",
+    "MIGHTYENA",
+    "VOLCARONA",
+    "SWOOBAT",
+    "DARMANITAN",
+    "VOLCARONA",
+    "DURANT",
+    "BLAZIKEN"
+   ]
+  }
+ },
+ "MAP_ROUTE119": {
+  "land": {
+   "day": [
+    "LINOONE",
+    "SWADLOON",
+    "LINOONE",
+    "PANSAGE",
+    "PETILIL",
+    "KECLEON",
+    "DEERLING",
+    "EMOLGA",
+    "SWADLOON",
+    "KECLEON",
+    "CASTFORM",
+    "SERPERIOR"
+   ],
+   "night": [
+    "SCOLIPEDE",
+    "LINOONE",
+    "KARRABLAST",
+    "KECLEON",
+    "NUZLEAF",
+    "GALVANTULA",
+    "SWADLOON",
+    "LIEPARD",
+    "KECLEON",
+    "SHELMET",
+    "CASTFORM",
+    "SERPERIOR"
+   ]
+  },
+  "surf": {
+   "day": [
+    "BASCULIN",
+    "SHARPEDO",
+    "WHISCASH",
+    "SWANNA",
+    "SWAMPERT"
+   ],
+   "night": [
+    "SHARPEDO",
+    "BASCULIN",
+    "SEISMITOAD",
+    "WHISCASH",
+    "SWAMPERT"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SHARPEDO",
+    "BASCULIN",
+    "WHISCASH",
+    "BASCULIN",
+    "SEISMITOAD",
+    "AZUMARILL",
+    "WHISCASH",
+    "SWANNA",
+    "SEISMITOAD",
+    "FEEBAS"
+   ],
+   "night": [
+    "BASCULIN",
+    "SHARPEDO",
+    "SEISMITOAD",
+    "WHISCASH",
+    "BASCULIN",
+    "SEISMITOAD",
+    "SHARPEDO",
+    "CRAWDAUNT",
+    "WHISCASH",
+    "FEEBAS"
+   ]
+  },
+  "water_type": "pond"
+ },
+ "MAP_ROUTE120": {
+  "land": {
+   "day": [
+    "NUZLEAF",
+    "DEERLING",
+    "KECLEON",
+    "AZUMARILL",
+    "SWADLOON",
+    "AMOONGUSS",
+    "ABSOL",
+    "TROPIUS",
+    "PETILIL",
+    "KARRABLAST",
+    "BOUFFALANT",
+    "SCEPTILE"
+   ],
+   "night": [
+    "MIGHTYENA",
+    "NUZLEAF",
+    "SCOLIPEDE",
+    "KECLEON",
+    "ZOROARK",
+    "ABSOL",
+    "AZUMARILL",
+    "AMOONGUSS",
+    "LIEPARD",
+    "SHELMET",
+    "BOUFFALANT",
+    "TROPIUS"
+   ]
+  },
+  "surf": {
+   "day": [
+    "AZUMARILL",
+    "SEISMITOAD",
+    "LOMBRE",
+    "SWANNA",
+    "SWAMPERT"
+   ],
+   "night": [
+    "AZUMARILL",
+    "BASCULIN",
+    "SEISMITOAD",
+    "STUNFISK",
+    "SWAMPERT"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WHISCASH",
+    "BASCULIN",
+    "SEISMITOAD",
+    "BASCULIN",
+    "AZUMARILL",
+    "WHISCASH",
+    "CRAWDAUNT",
+    "STUNFISK",
+    "SEISMITOAD",
+    "MASQUERAIN"
+   ],
+   "night": [
+    "SEISMITOAD",
+    "WHISCASH",
+    "BASCULIN",
+    "SEISMITOAD",
+    "STUNFISK",
+    "BASCULIN",
+    "CRAWDAUNT",
+    "WHISCASH",
+    "AZUMARILL",
+    "LOMBRE"
+   ]
+  },
+  "water_type": "pond"
+ },
+ "MAP_ROUTE121": {
+  "land": {
+   "day": [
+    "PELIPPER",
+    "UNFEZANT",
+    "STOUTLAND",
+    "PETILIL",
+    "KECLEON",
+    "WATCHOG",
+    "COTTONEE",
+    "MINCCINO",
+    "DEERLING",
+    "GOTHITELLE",
+    "KECLEON",
+    "SAWSBUCK"
+   ],
+   "night": [
+    "BANETTE",
+    "LIEPARD",
+    "MIGHTYENA",
+    "DUSCLOPS",
+    "BANETTE",
+    "STOUTLAND",
+    "MUNNA",
+    "KECLEON",
+    "LAMPENT",
+    "GOTHITELLE",
+    "LAMPENT",
+    "KECLEON"
+   ]
+  },
+  "surf": {
+   "day": [
+    "PELIPPER",
+    "SWANNA",
+    "WAILORD",
+    "FRILLISH",
+    "LUVDISC"
+   ],
+   "night": [
+    "EELEKTRIK",
+    "FRILLISH",
+    "WAILORD",
+    "SHARPEDO",
+    "LUVDISC"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WAILORD",
+    "FRILLISH",
+    "WAILORD",
+    "CRAWDAUNT",
+    "LUVDISC",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "FRILLISH",
+    "WAILORD",
+    "SWANNA"
+   ],
+   "night": [
+    "FRILLISH",
+    "WAILORD",
+    "EELEKTRIK",
+    "FRILLISH",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "CRAWDAUNT",
+    "WAILORD",
+    "LUVDISC",
+    "SHARPEDO"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE122": {
+  "surf": {
+   "day": [
+    "FRILLISH",
+    "WAILORD",
+    "PELIPPER",
+    "LUVDISC",
+    "EELEKTRIK"
+   ],
+   "night": [
+    "FRILLISH",
+    "EELEKTRIK",
+    "WAILORD",
+    "LUVDISC",
+    "JELLICENT"
+   ]
+  },
+  "fish": {
+   "day": [
+    "FRILLISH",
+    "SHARPEDO",
+    "WAILORD",
+    "FRILLISH",
+    "EELEKTRIK",
+    "LUVDISC",
+    "SHARPEDO",
+    "CRAWDAUNT",
+    "WAILORD",
+    "FRILLISH"
+   ],
+   "night": [
+    "FRILLISH",
+    "EELEKTRIK",
+    "FRILLISH",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "WAILORD",
+    "SHARPEDO",
+    "LUVDISC",
+    "CRAWDAUNT",
+    "JELLICENT"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE123": {
+  "land": {
+   "day": [
+    "STOUTLAND",
+    "COTTONEE",
+    "PETILIL",
+    "PELIPPER",
+    "WATCHOG",
+    "KECLEON",
+    "MINCCINO",
+    "UNFEZANT",
+    "ROSELIA",
+    "REUNICLUS",
+    "AUDINO",
+    "SERPERIOR"
+   ],
+   "night": [
+    "DUSCLOPS",
+    "LIEPARD",
+    "BANETTE",
+    "MIGHTYENA",
+    "STOUTLAND",
+    "MUNNA",
+    "ILLUMISE",
+    "LAMPENT",
+    "REUNICLUS",
+    "KECLEON",
+    "LAMPENT",
+    "AUDINO"
+   ]
+  },
+  "surf": {
+   "day": [
+    "PELIPPER",
+    "SWANNA",
+    "FRILLISH",
+    "WAILORD",
+    "LUVDISC"
+   ],
+   "night": [
+    "SHARPEDO",
+    "FRILLISH",
+    "EELEKTRIK",
+    "WAILORD",
+    "LUVDISC"
+   ]
+  },
+  "fish": {
+   "day": [
+    "FRILLISH",
+    "SHARPEDO",
+    "WAILORD",
+    "FRILLISH",
+    "LUVDISC",
+    "SWANNA",
+    "CRAWDAUNT",
+    "EELEKTRIK",
+    "SHARPEDO",
+    "LUVDISC"
+   ],
+   "night": [
+    "SHARPEDO",
+    "FRILLISH",
+    "EELEKTRIK",
+    "FRILLISH",
+    "WAILORD",
+    "EELEKTRIK",
+    "CRAWDAUNT",
+    "SHARPEDO",
+    "JELLICENT",
+    "LUVDISC"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_LILYCOVE_CITY": {
+  "surf": {
+   "day": [
+    "PELIPPER",
+    "FRILLISH",
+    "WAILORD",
+    "SWANNA",
+    "LUVDISC"
+   ],
+   "night": [
+    "FRILLISH",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "WAILORD",
+    "LUVDISC"
+   ]
+  },
+  "fish": {
+   "day": [
+    "FRILLISH",
+    "SHARPEDO",
+    "WAILORD",
+    "FRILLISH",
+    "WAILORD",
+    "LUVDISC",
+    "SWANNA",
+    "CRAWDAUNT",
+    "EELEKTRIK",
+    "WAILORD"
+   ],
+   "night": [
+    "SHARPEDO",
+    "FRILLISH",
+    "WAILORD",
+    "EELEKTRIK",
+    "FRILLISH",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "CRAWDAUNT",
+    "LUVDISC",
+    "WAILORD"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_MT_PYRE_1F": {
+  "land": {
+   "day": [
+    "BANETTE",
+    "COFAGRIGUS",
+    "BANETTE",
+    "GOLURK",
+    "DUSCLOPS",
+    "COFAGRIGUS",
+    "LAMPENT",
+    "BANETTE",
+    "GOLURK",
+    "SABLEYE",
+    "LAMPENT",
+    "SABLEYE"
+   ],
+   "night": [
+    "BANETTE",
+    "DUSCLOPS",
+    "BANETTE",
+    "COFAGRIGUS",
+    "DUSCLOPS",
+    "GOLURK",
+    "LAMPENT",
+    "DUSCLOPS",
+    "COFAGRIGUS",
+    "SABLEYE",
+    "LAMPENT",
+    "GOLURK"
+   ]
+  }
+ },
+ "MAP_MT_PYRE_2F": {
+  "land": {
+   "day": [
+    "BANETTE",
+    "GOLURK",
+    "COFAGRIGUS",
+    "BANETTE",
+    "DUSCLOPS",
+    "GOLURK",
+    "SABLEYE",
+    "LAMPENT",
+    "COFAGRIGUS",
+    "GOLURK",
+    "LAMPENT",
+    "CHANDELURE"
+   ],
+   "night": [
+    "BANETTE",
+    "COFAGRIGUS",
+    "DUSCLOPS",
+    "GOLURK",
+    "DUSCLOPS",
+    "BANETTE",
+    "LAMPENT",
+    "SABLEYE",
+    "COFAGRIGUS",
+    "LAMPENT",
+    "GOLURK",
+    "CHANDELURE"
+   ]
+  }
+ },
+ "MAP_MT_PYRE_3F": {
+  "land": {
+   "day": [
+    "GOLURK",
+    "BANETTE",
+    "COFAGRIGUS",
+    "DUSCLOPS",
+    "BANETTE",
+    "GOLURK",
+    "SABLEYE",
+    "LAMPENT",
+    "MANDIBUZZ",
+    "COFAGRIGUS",
+    "CHANDELURE",
+    "LAMPENT"
+   ],
+   "night": [
+    "DUSCLOPS",
+    "GOLURK",
+    "BANETTE",
+    "DUSCLOPS",
+    "COFAGRIGUS",
+    "LAMPENT",
+    "SABLEYE",
+    "GOLURK",
+    "MANDIBUZZ",
+    "LAMPENT",
+    "CHANDELURE",
+    "BANETTE"
+   ]
+  }
+ },
+ "MAP_MT_PYRE_4F": {
+  "land": {
+   "day": [
+    "DUSCLOPS",
+    "BANETTE",
+    "GOLURK",
+    "COFAGRIGUS",
+    "DUSCLOPS",
+    "SABLEYE",
+    "LAMPENT",
+    "COFAGRIGUS",
+    "BANETTE",
+    "CHANDELURE",
+    "DUSKNOIR",
+    "LAMPENT"
+   ],
+   "night": [
+    "DUSCLOPS",
+    "BANETTE",
+    "DUSCLOPS",
+    "LAMPENT",
+    "COFAGRIGUS",
+    "GOLURK",
+    "LAMPENT",
+    "SABLEYE",
+    "COFAGRIGUS",
+    "CHANDELURE",
+    "DUSKNOIR",
+    "LAMPENT"
+   ]
+  }
+ },
+ "MAP_MT_PYRE_5F": {
+  "land": {
+   "day": [
+    "GOLURK",
+    "DUSCLOPS",
+    "BANETTE",
+    "COFAGRIGUS",
+    "DUSCLOPS",
+    "SABLEYE",
+    "LAMPENT",
+    "MANDIBUZZ",
+    "GOLURK",
+    "CHANDELURE",
+    "DUSKNOIR",
+    "BANETTE"
+   ],
+   "night": [
+    "DUSCLOPS",
+    "GOLURK",
+    "LAMPENT",
+    "BANETTE",
+    "DUSCLOPS",
+    "LAMPENT",
+    "COFAGRIGUS",
+    "SABLEYE",
+    "MANDIBUZZ",
+    "CHANDELURE",
+    "DUSKNOIR",
+    "LAMPENT"
+   ]
+  }
+ },
+ "MAP_MT_PYRE_6F": {
+  "land": {
+   "day": [
+    "DUSCLOPS",
+    "BANETTE",
+    "GOLURK",
+    "COFAGRIGUS",
+    "LAMPENT",
+    "DUSCLOPS",
+    "SABLEYE",
+    "CHANDELURE",
+    "GOLURK",
+    "DUSKNOIR",
+    "LAMPENT",
+    "CHANDELURE"
+   ],
+   "night": [
+    "BANETTE",
+    "DUSCLOPS",
+    "LAMPENT",
+    "DUSCLOPS",
+    "LAMPENT",
+    "COFAGRIGUS",
+    "GOLURK",
+    "CHANDELURE",
+    "ZOROARK",
+    "DUSKNOIR",
+    "CHANDELURE",
+    "GOLURK"
+   ]
+  }
+ },
+ "MAP_MT_PYRE_EXTERIOR": {
+  "land": {
+   "day": [
+    "MANDIBUZZ",
+    "ALTARIA",
+    "PELIPPER",
+    "MEDICHAM",
+    "GOLURK",
+    "TROPIUS",
+    "MANDIBUZZ",
+    "GOLURK",
+    "ABSOL",
+    "TROPIUS",
+    "BRAVIARY",
+    "ABSOL"
+   ],
+   "night": [
+    "BANETTE",
+    "DUSCLOPS",
+    "ZOROARK",
+    "LAMPENT",
+    "COFAGRIGUS",
+    "DUSKNOIR",
+    "GOLURK",
+    "BANETTE",
+    "ABSOL",
+    "DUSCLOPS",
+    "CHANDELURE",
+    "TROPIUS"
+   ]
+  }
+ },
+ "MAP_MT_PYRE_SUMMIT": {
+  "land": {
+   "day": [
+    "MANDIBUZZ",
+    "ALTARIA",
+    "MEDICHAM",
+    "GOLURK",
+    "CHIMECHO",
+    "TROPIUS",
+    "ABSOL",
+    "GOLURK",
+    "CHIMECHO",
+    "ABSOL",
+    "CHINGLING",
+    "BRAVIARY"
+   ],
+   "night": [
+    "BANETTE",
+    "DUSCLOPS",
+    "LAMPENT",
+    "BANETTE",
+    "DUSCLOPS",
+    "CHIMECHO",
+    "LAMPENT",
+    "BANETTE",
+    "DUSCLOPS",
+    "COFAGRIGUS",
+    "CHINGLING",
+    "CHANDELURE"
+   ]
+  },
+  "water_type": "pond",
+  "surf": {
+   "day": [
+    "WHISCASH",
+    "LUDICOLO",
+    "SWANNA",
+    "MASQUERAIN",
+    "AZUMARILL"
+   ],
+   "night": [
+    "SEISMITOAD",
+    "WHISCASH",
+    "LUDICOLO",
+    "BASCULIN",
+    "AZUMARILL"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WHISCASH",
+    "LUDICOLO",
+    "CRAWDAUNT",
+    "BASCULIN",
+    "SEISMITOAD",
+    "WHISCASH",
+    "AZUMARILL",
+    "CRAWDAUNT",
+    "BASCULIN",
+    "SHARPEDO"
+   ],
+   "night": [
+    "SEISMITOAD",
+    "WHISCASH",
+    "CRAWDAUNT",
+    "BASCULIN",
+    "SEISMITOAD",
+    "WHISCASH",
+    "LUDICOLO",
+    "CRAWDAUNT",
+    "AZUMARILL",
+    "SHARPEDO"
+   ]
+  }
+ },
+ "MAP_MOSSDEEP_CITY": {
+  "surf": {
+   "day": [
+    "PELIPPER",
+    "FRILLISH",
+    "SWANNA",
+    "WAILORD",
+    "EELEKTRIK"
+   ],
+   "night": [
+    "EELEKTRIK",
+    "FRILLISH",
+    "WAILORD",
+    "SHARPEDO",
+    "LUVDISC"
+   ]
+  },
+  "fish": {
+   "day": [
+    "FRILLISH",
+    "SHARPEDO",
+    "WAILORD",
+    "EELEKTRIK",
+    "SHARPEDO",
+    "LUVDISC",
+    "FRILLISH",
+    "CRAWDAUNT",
+    "WAILORD",
+    "SWANNA"
+   ],
+   "night": [
+    "FRILLISH",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "FRILLISH",
+    "WAILORD",
+    "EELEKTRIK",
+    "SHARPEDO",
+    "LUVDISC",
+    "CRAWDAUNT",
+    "EELEKTRIK"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_SOOTOPOLIS_CITY": {
+  "surf": {
+   "day": [
+    "WAILORD",
+    "LUVDISC",
+    "FRILLISH",
+    "SWANNA",
+    "WAILORD"
+   ],
+   "night": [
+    "WAILORD",
+    "FRILLISH",
+    "EELEKTRIK",
+    "LUVDISC",
+    "JELLICENT"
+   ]
+  },
+  "fish": {
+   "day": [
+    "LUVDISC",
+    "CLAMPERL",
+    "FRILLISH",
+    "SHARPEDO",
+    "SWANNA",
+    "WAILORD",
+    "CRAWDAUNT",
+    "FRILLISH",
+    "SHARPEDO",
+    "SWANNA"
+   ],
+   "night": [
+    "FRILLISH",
+    "LUVDISC",
+    "CLAMPERL",
+    "SHARPEDO",
+    "WAILORD",
+    "EELEKTRIK",
+    "SHARPEDO",
+    "LUVDISC",
+    "CRAWDAUNT",
+    "JELLICENT"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_PACIFIDLOG_TOWN": {
+  "surf": {
+   "day": [
+    "EELEKTRIK",
+    "PELIPPER",
+    "WAILORD",
+    "FRILLISH",
+    "LUVDISC"
+   ],
+   "night": [
+    "EELEKTRIK",
+    "FRILLISH",
+    "LUVDISC",
+    "SHARPEDO",
+    "WAILORD"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SHARPEDO",
+    "EELEKTRIK",
+    "FRILLISH",
+    "SHARPEDO",
+    "LUVDISC",
+    "WAILORD",
+    "EELEKTRIK",
+    "SWANNA",
+    "FRILLISH",
+    "LUVDISC"
+   ],
+   "night": [
+    "EELEKTRIK",
+    "SHARPEDO",
+    "FRILLISH",
+    "SHARPEDO",
+    "FRILLISH",
+    "SHARPEDO",
+    "WAILORD",
+    "CRAWDAUNT",
+    "LUVDISC",
+    "EELEKTRIK"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_EVER_GRANDE_CITY": {
+  "surf": {
+   "day": [
+    "LUVDISC",
+    "SWANNA",
+    "FRILLISH",
+    "PELIPPER",
+    "WAILORD"
+   ],
+   "night": [
+    "LUVDISC",
+    "FRILLISH",
+    "EELEKTRIK",
+    "JELLICENT",
+    "WAILORD"
+   ]
+  },
+  "fish": {
+   "day": [
+    "LUVDISC",
+    "FRILLISH",
+    "LUVDISC",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "SWANNA",
+    "SHARPEDO",
+    "LUVDISC",
+    "WAILORD",
+    "FRILLISH"
+   ],
+   "night": [
+    "LUVDISC",
+    "FRILLISH",
+    "EELEKTRIK",
+    "SHARPEDO",
+    "LUVDISC",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "WAILORD",
+    "CRAWDAUNT",
+    "JELLICENT"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE124": {
+  "surf": {
+   "day": [
+    "EELEKTRIK",
+    "PELIPPER",
+    "WAILORD",
+    "SWANNA",
+    "FRILLISH"
+   ],
+   "night": [
+    "EELEKTRIK",
+    "FRILLISH",
+    "WAILORD",
+    "SHARPEDO",
+    "LUVDISC"
+   ]
+  },
+  "fish": {
+   "day": [
+    "EELEKTRIK",
+    "SHARPEDO",
+    "FRILLISH",
+    "WAILORD",
+    "EELEKTRIK",
+    "LUVDISC",
+    "SHARPEDO",
+    "FRILLISH",
+    "WAILORD",
+    "SWANNA"
+   ],
+   "night": [
+    "EELEKTRIK",
+    "FRILLISH",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "FRILLISH",
+    "WAILORD",
+    "SHARPEDO",
+    "LUVDISC",
+    "CRAWDAUNT",
+    "JELLICENT"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE125": {
+  "surf": {
+   "day": [
+    "EELEKTRIK",
+    "PELIPPER",
+    "WAILORD",
+    "ALOMOMOLA",
+    "SWANNA"
+   ],
+   "night": [
+    "FRILLISH",
+    "EELEKTRIK",
+    "WAILORD",
+    "SHARPEDO",
+    "ALOMOMOLA"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WAILORD",
+    "FRILLISH",
+    "SHARPEDO",
+    "WAILORD",
+    "SWANNA",
+    "LUVDISC",
+    "FRILLISH",
+    "EELEKTRIK",
+    "ALOMOMOLA",
+    "CRAWDAUNT"
+   ],
+   "night": [
+    "FRILLISH",
+    "WAILORD",
+    "EELEKTRIK",
+    "FRILLISH",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "WAILORD",
+    "ALOMOMOLA",
+    "LUVDISC",
+    "JELLICENT"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE126": {
+  "surf": {
+   "day": [
+    "JELLICENT",
+    "WAILORD",
+    "ALOMOMOLA",
+    "SHARPEDO",
+    "WAILORD"
+   ],
+   "night": [
+    "JELLICENT",
+    "EELEKTRIK",
+    "WAILORD",
+    "ALOMOMOLA",
+    "EELEKTROSS"
+   ]
+  },
+  "fish": {
+   "day": [
+    "JELLICENT",
+    "SHARPEDO",
+    "WAILORD",
+    "JELLICENT",
+    "ALOMOMOLA",
+    "EELEKTRIK",
+    "LUVDISC",
+    "SHARPEDO",
+    "RELICANTH",
+    "WAILORD"
+   ],
+   "night": [
+    "JELLICENT",
+    "EELEKTRIK",
+    "JELLICENT",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "ALOMOMOLA",
+    "WAILORD",
+    "EELEKTROSS",
+    "RELICANTH",
+    "LUVDISC"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE127": {
+  "surf": {
+   "day": [
+    "WAILORD",
+    "SWANNA",
+    "FRILLISH",
+    "PELIPPER",
+    "LUVDISC"
+   ],
+   "night": [
+    "WAILORD",
+    "FRILLISH",
+    "EELEKTRIK",
+    "LUVDISC",
+    "SHARPEDO"
+   ]
+  },
+  "fish": {
+   "day": [
+    "FRILLISH",
+    "WAILORD",
+    "SWANNA",
+    "FRILLISH",
+    "EELEKTRIK",
+    "LUVDISC",
+    "WAILORD",
+    "SHARPEDO",
+    "CRAWDAUNT",
+    "FRILLISH"
+   ],
+   "night": [
+    "FRILLISH",
+    "EELEKTRIK",
+    "WAILORD",
+    "FRILLISH",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "WAILORD",
+    "LUVDISC",
+    "JELLICENT",
+    "CRAWDAUNT"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE128": {
+  "surf": {
+   "day": [
+    "LUVDISC",
+    "FRILLISH",
+    "SWANNA",
+    "WAILORD",
+    "PELIPPER"
+   ],
+   "night": [
+    "LUVDISC",
+    "FRILLISH",
+    "EELEKTRIK",
+    "WAILORD",
+    "SHARPEDO"
+   ]
+  },
+  "fish": {
+   "day": [
+    "LUVDISC",
+    "FRILLISH",
+    "LUVDISC",
+    "EELEKTRIK",
+    "WAILORD",
+    "LUVDISC",
+    "CRAWDAUNT",
+    "SHARPEDO",
+    "FRILLISH",
+    "SWANNA"
+   ],
+   "night": [
+    "LUVDISC",
+    "EELEKTRIK",
+    "FRILLISH",
+    "LUVDISC",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "FRILLISH",
+    "CRAWDAUNT",
+    "WAILORD",
+    "JELLICENT"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE129": {
+  "surf": {
+   "day": [
+    "WAILORD",
+    "FRILLISH",
+    "WAILORD",
+    "ALOMOMOLA",
+    "SWANNA"
+   ],
+   "night": [
+    "WAILORD",
+    "FRILLISH",
+    "EELEKTRIK",
+    "JELLICENT",
+    "ALOMOMOLA"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WAILORD",
+    "FRILLISH",
+    "SHARPEDO",
+    "WAILORD",
+    "ALOMOMOLA",
+    "EELEKTRIK",
+    "FRILLISH",
+    "LUVDISC",
+    "JELLICENT",
+    "WAILORD"
+   ],
+   "night": [
+    "FRILLISH",
+    "WAILORD",
+    "EELEKTRIK",
+    "SHARPEDO",
+    "FRILLISH",
+    "ALOMOMOLA",
+    "EELEKTROSS",
+    "WAILORD",
+    "JELLICENT",
+    "LUVDISC"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE130": {
+  "land": {
+   "day": [
+    "GOTHITELLE",
+    "REUNICLUS",
+    "WOBBUFFET",
+    "KECLEON",
+    "CASTFORM",
+    "BEHEEYEM",
+    "WYNAUT",
+    "SIGILYPH",
+    "WYNAUT",
+    "GOTHITELLE",
+    "REUNICLUS",
+    "WYNAUT"
+   ],
+   "night": [
+    "ZOROARK",
+    "MUSHARNA",
+    "WOBBUFFET",
+    "REUNICLUS",
+    "ZOROARK",
+    "MUSHARNA",
+    "WYNAUT",
+    "LAMPENT",
+    "WYNAUT",
+    "BEHEEYEM",
+    "CHANDELURE",
+    "WYNAUT"
+   ]
+  },
+  "surf": {
+   "day": [
+    "JELLICENT",
+    "PELIPPER",
+    "ALOMOMOLA",
+    "WAILORD",
+    "SHARPEDO"
+   ],
+   "night": [
+    "JELLICENT",
+    "EELEKTRIK",
+    "ALOMOMOLA",
+    "WAILORD",
+    "SHARPEDO"
+   ]
+  },
+  "fish": {
+   "day": [
+    "JELLICENT",
+    "WAILORD",
+    "SHARPEDO",
+    "JELLICENT",
+    "ALOMOMOLA",
+    "LUVDISC",
+    "EELEKTRIK",
+    "SHARPEDO",
+    "RELICANTH",
+    "CRAWDAUNT"
+   ],
+   "night": [
+    "JELLICENT",
+    "EELEKTRIK",
+    "SHARPEDO",
+    "JELLICENT",
+    "EELEKTROSS",
+    "ALOMOMOLA",
+    "WAILORD",
+    "EELEKTRIK",
+    "RELICANTH",
+    "LUVDISC"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE131": {
+  "surf": {
+   "day": [
+    "EELEKTRIK",
+    "WAILORD",
+    "JELLICENT",
+    "ALOMOMOLA",
+    "PELIPPER"
+   ],
+   "night": [
+    "EELEKTRIK",
+    "JELLICENT",
+    "SHARPEDO",
+    "ALOMOMOLA",
+    "EELEKTROSS"
+   ]
+  },
+  "fish": {
+   "day": [
+    "EELEKTRIK",
+    "JELLICENT",
+    "WAILORD",
+    "EELEKTRIK",
+    "SHARPEDO",
+    "ALOMOMOLA",
+    "JELLICENT",
+    "LUVDISC",
+    "RELICANTH",
+    "EELEKTROSS"
+   ],
+   "night": [
+    "EELEKTRIK",
+    "JELLICENT",
+    "EELEKTRIK",
+    "SHARPEDO",
+    "JELLICENT",
+    "EELEKTROSS",
+    "ALOMOMOLA",
+    "WAILORD",
+    "RELICANTH",
+    "CRAWDAUNT"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE132": {
+  "surf": {
+   "day": [
+    "SHARPEDO",
+    "SWANNA",
+    "WAILORD",
+    "ALOMOMOLA",
+    "PELIPPER"
+   ],
+   "night": [
+    "SHARPEDO",
+    "FRILLISH",
+    "EELEKTRIK",
+    "ALOMOMOLA",
+    "WAILORD"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SHARPEDO",
+    "FRILLISH",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "SWANNA",
+    "WAILORD",
+    "ALOMOMOLA",
+    "LUVDISC",
+    "FRILLISH",
+    "CRAWDAUNT"
+   ],
+   "night": [
+    "SHARPEDO",
+    "EELEKTRIK",
+    "FRILLISH",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "ALOMOMOLA",
+    "FRILLISH",
+    "WAILORD",
+    "JELLICENT",
+    "CRAWDAUNT"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE133": {
+  "surf": {
+   "day": [
+    "JELLICENT",
+    "SHARPEDO",
+    "WAILORD",
+    "ALOMOMOLA",
+    "EELEKTRIK"
+   ],
+   "night": [
+    "JELLICENT",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "WAILORD",
+    "ALOMOMOLA"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SHARPEDO",
+    "JELLICENT",
+    "SHARPEDO",
+    "WAILORD",
+    "ALOMOMOLA",
+    "EELEKTRIK",
+    "JELLICENT",
+    "LUVDISC",
+    "RELICANTH",
+    "SHARPEDO"
+   ],
+   "night": [
+    "JELLICENT",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "JELLICENT",
+    "SHARPEDO",
+    "ALOMOMOLA",
+    "EELEKTROSS",
+    "WAILORD",
+    "RELICANTH",
+    "CRAWDAUNT"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE134": {
+  "surf": {
+   "day": [
+    "EELEKTRIK",
+    "PELIPPER",
+    "WAILORD",
+    "ALOMOMOLA",
+    "SWANNA"
+   ],
+   "night": [
+    "SHARPEDO",
+    "FRILLISH",
+    "EELEKTRIK",
+    "WAILORD",
+    "ALOMOMOLA"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SHARPEDO",
+    "WAILORD",
+    "FRILLISH",
+    "WAILORD",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "LUVDISC",
+    "ALOMOMOLA",
+    "CRAWDAUNT",
+    "LUVDISC"
+   ],
+   "night": [
+    "FRILLISH",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "FRILLISH",
+    "LUVDISC",
+    "EELEKTRIK",
+    "SHARPEDO",
+    "ALOMOMOLA",
+    "CRAWDAUNT",
+    "WAILORD"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_UNDERWATER_ROUTE124": {
+  "surf": {
+   "day": [
+    "CLAMPERL",
+    "FRILLISH",
+    "RELICANTH",
+    "ALOMOMOLA",
+    "HUNTAIL"
+   ],
+   "night": [
+    "FRILLISH",
+    "CLAMPERL",
+    "ALOMOMOLA",
+    "RELICANTH",
+    "GOREBYSS"
+   ]
+  },
+  "water_type": "underwater"
+ },
+ "MAP_UNDERWATER_ROUTE126": {
+  "surf": {
+   "day": [
+    "JELLICENT",
+    "CLAMPERL",
+    "ALOMOMOLA",
+    "RELICANTH",
+    "GOREBYSS"
+   ],
+   "night": [
+    "JELLICENT",
+    "RELICANTH",
+    "CLAMPERL",
+    "ALOMOMOLA",
+    "HUNTAIL"
+   ]
+  },
+  "water_type": "underwater"
+ },
+ "MAP_SHOAL_CAVE_LOW_TIDE_ENTRANCE_ROOM": {
+  "land": {
+   "day": [
+    "SPHEAL",
+    "CRUSTLE",
+    "SPHEAL",
+    "VANILLITE",
+    "SPHEAL",
+    "WOOBAT",
+    "CUBCHOO",
+    "CRAWDAUNT",
+    "SNORUNT",
+    "VANILLITE",
+    "SNORUNT",
+    "WOOBAT"
+   ],
+   "night": [
+    "SPHEAL",
+    "WOOBAT",
+    "SPHEAL",
+    "CRUSTLE",
+    "WOOBAT",
+    "VANILLITE",
+    "CUBCHOO",
+    "SNORUNT",
+    "CRAWDAUNT",
+    "CUBCHOO",
+    "SNORUNT",
+    "SPHEAL"
+   ]
+  },
+  "surf": {
+   "day": [
+    "SPHEAL",
+    "WAILORD",
+    "FRILLISH",
+    "SHARPEDO",
+    "SPHEAL"
+   ],
+   "night": [
+    "SPHEAL",
+    "FRILLISH",
+    "WAILORD",
+    "SHARPEDO",
+    "SPHEAL"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WAILORD",
+    "SPHEAL",
+    "SHARPEDO",
+    "WAILORD",
+    "FRILLISH",
+    "SPHEAL",
+    "SHARPEDO",
+    "FRILLISH",
+    "WAILORD",
+    "SPHEAL"
+   ],
+   "night": [
+    "SHARPEDO",
+    "SPHEAL",
+    "FRILLISH",
+    "SHARPEDO",
+    "WAILORD",
+    "FRILLISH",
+    "SPHEAL",
+    "WAILORD",
+    "FRILLISH",
+    "SHARPEDO"
+   ]
+  },
+  "water_type": "cold"
+ },
+ "MAP_SHOAL_CAVE_LOW_TIDE_INNER_ROOM": {
+  "land": {
+   "day": [
+    "SEALEO",
+    "VANILLISH",
+    "CUBCHOO",
+    "SEALEO",
+    "CRUSTLE",
+    "SNORUNT",
+    "SWOOBAT",
+    "VANILLISH",
+    "BEARTIC",
+    "GLALIE",
+    "CRYOGONAL",
+    "SNORUNT"
+   ],
+   "night": [
+    "SEALEO",
+    "CUBCHOO",
+    "SWOOBAT",
+    "VANILLISH",
+    "SEALEO",
+    "SNORUNT",
+    "SWOOBAT",
+    "CRUSTLE",
+    "BEARTIC",
+    "GLALIE",
+    "CRYOGONAL",
+    "FROSLASS"
+   ]
+  },
+  "surf": {
+   "day": [
+    "WALREIN",
+    "FRILLISH",
+    "WAILORD",
+    "JELLICENT",
+    "SHARPEDO"
+   ],
+   "night": [
+    "WALREIN",
+    "JELLICENT",
+    "FRILLISH",
+    "SHARPEDO",
+    "WAILORD"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WALREIN",
+    "WAILORD",
+    "SHARPEDO",
+    "WALREIN",
+    "WAILORD",
+    "SHARPEDO",
+    "WALREIN",
+    "SHARPEDO",
+    "JELLICENT",
+    "WAILORD"
+   ],
+   "night": [
+    "JELLICENT",
+    "WALREIN",
+    "SHARPEDO",
+    "JELLICENT",
+    "WAILORD",
+    "WALREIN",
+    "SHARPEDO",
+    "WAILORD",
+    "JELLICENT",
+    "WALREIN"
+   ]
+  },
+  "water_type": "cold"
+ },
+ "MAP_SHOAL_CAVE_LOW_TIDE_STAIRS_ROOM": {
+  "land": {
+   "day": [
+    "CUBCHOO",
+    "SEALEO",
+    "VANILLISH",
+    "SNORUNT",
+    "SWOOBAT",
+    "CRUSTLE",
+    "BEARTIC",
+    "GLALIE",
+    "WALREIN",
+    "VANILLUXE",
+    "CRYOGONAL",
+    "FROSLASS"
+   ],
+   "night": [
+    "SNORUNT",
+    "CUBCHOO",
+    "SWOOBAT",
+    "SEALEO",
+    "SWOOBAT",
+    "VANILLISH",
+    "GLALIE",
+    "BEARTIC",
+    "FROSLASS",
+    "WALREIN",
+    "CRYOGONAL",
+    "VANILLUXE"
+   ]
+  }
+ },
+ "MAP_SHOAL_CAVE_LOW_TIDE_LOWER_ROOM": {
+  "land": {
+   "day": [
+    "VANILLUXE",
+    "SNORUNT",
+    "WALREIN",
+    "BEARTIC",
+    "SWOOBAT",
+    "GLALIE",
+    "CRUSTLE",
+    "CRYOGONAL",
+    "FROSLASS",
+    "VANILLUXE",
+    "CRYOGONAL",
+    "WALREIN"
+   ],
+   "night": [
+    "SNORUNT",
+    "VANILLUXE",
+    "SWOOBAT",
+    "WALREIN",
+    "SWOOBAT",
+    "GLALIE",
+    "FROSLASS",
+    "CRYOGONAL",
+    "BEARTIC",
+    "CRUSTLE",
+    "CRYOGONAL",
+    "FROSLASS"
+   ]
+  }
+ },
+ "MAP_SHOAL_CAVE_LOW_TIDE_ICE_ROOM": {
+  "land": {
+   "day": [
+    "GLALIE",
+    "SNORUNT",
+    "VANILLUXE",
+    "CRYOGONAL",
+    "BEARTIC",
+    "WALREIN",
+    "FROSLASS",
+    "CRYOGONAL",
+    "GLALIE",
+    "VANILLUXE",
+    "FROSLASS",
+    "CRYOGONAL"
+   ],
+   "night": [
+    "FROSLASS",
+    "GLALIE",
+    "SNORUNT",
+    "CRYOGONAL",
+    "VANILLUXE",
+    "BEARTIC",
+    "SWOOBAT",
+    "CRYOGONAL",
+    "WALREIN",
+    "FROSLASS",
+    "CRYOGONAL",
+    "BEARTIC"
+   ]
+  }
+ },
+ "MAP_SEAFLOOR_CAVERN_ENTRANCE": {
+  "surf": {
+   "day": [
+    "WAILORD",
+    "FRILLISH",
+    "EELEKTRIK",
+    "CRAWDAUNT",
+    "ALOMOMOLA"
+   ],
+   "night": [
+    "WAILORD",
+    "EELEKTRIK",
+    "FRILLISH",
+    "SHARPEDO",
+    "ALOMOMOLA"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SHARPEDO",
+    "WAILORD",
+    "FRILLISH",
+    "CRAWDAUNT",
+    "EELEKTRIK",
+    "SHARPEDO",
+    "LUVDISC",
+    "FRILLISH",
+    "ALOMOMOLA",
+    "RELICANTH"
+   ],
+   "night": [
+    "SHARPEDO",
+    "EELEKTRIK",
+    "FRILLISH",
+    "EELEKTRIK",
+    "WAILORD",
+    "CRAWDAUNT",
+    "SHARPEDO",
+    "FRILLISH",
+    "ALOMOMOLA",
+    "RELICANTH"
+   ]
+  },
+  "water_type": "cave",
+  "land": {
+   "day": [
+    "CRAWDAUNT",
+    "CRUSTLE",
+    "SABLEYE",
+    "WOOBAT",
+    "BOLDORE",
+    "CRUSTLE",
+    "MAWILE",
+    "CRAWDAUNT",
+    "STUNFISK",
+    "WOOBAT",
+    "SAMUROTT",
+    "SABLEYE"
+   ],
+   "night": [
+    "CRAWDAUNT",
+    "CRUSTLE",
+    "MIGHTYENA",
+    "SABLEYE",
+    "WOOBAT",
+    "BOLDORE",
+    "MAWILE",
+    "STUNFISK",
+    "MIGHTYENA",
+    "WOOBAT",
+    "SAMUROTT",
+    "SABLEYE"
+   ]
+  }
+ },
+ "MAP_SEAFLOOR_CAVERN_ROOM1": {
+  "land": {
+   "day": [
+    "CRAWDAUNT",
+    "CRUSTLE",
+    "CRAWDAUNT",
+    "CRUSTLE",
+    "WOOBAT",
+    "CRAWDAUNT",
+    "MAWILE",
+    "BOLDORE",
+    "STUNFISK",
+    "EXCADRILL",
+    "SWAMPERT",
+    "SABLEYE"
+   ],
+   "night": [
+    "CRAWDAUNT",
+    "CRUSTLE",
+    "SABLEYE",
+    "MIGHTYENA",
+    "WOOBAT",
+    "CRUSTLE",
+    "MIGHTYENA",
+    "MAWILE",
+    "BOLDORE",
+    "SWOOBAT",
+    "SWAMPERT",
+    "EXCADRILL"
+   ]
+  }
+ },
+ "MAP_SEAFLOOR_CAVERN_ROOM2": {
+  "land": {
+   "day": [
+    "BOLDORE",
+    "CRUSTLE",
+    "CRAWDAUNT",
+    "AGGRON",
+    "EXCADRILL",
+    "BOLDORE",
+    "STUNFISK",
+    "SABLEYE",
+    "GIGALITH",
+    "DURANT",
+    "SAMUROTT",
+    "CRAWDAUNT"
+   ],
+   "night": [
+    "BOLDORE",
+    "CRUSTLE",
+    "CRAWDAUNT",
+    "MIGHTYENA",
+    "AGGRON",
+    "SWOOBAT",
+    "SABLEYE",
+    "EXCADRILL",
+    "GIGALITH",
+    "DURANT",
+    "SAMUROTT",
+    "MIGHTYENA"
+   ]
+  }
+ },
+ "MAP_SEAFLOOR_CAVERN_ROOM3": {
+  "land": {
+   "day": [
+    "AGGRON",
+    "MAWILE",
+    "GIGALITH",
+    "EXCADRILL",
+    "SABLEYE",
+    "CRUSTLE",
+    "SWOOBAT",
+    "DURANT",
+    "DURANT",
+    "GIGALITH",
+    "DURANT",
+    "AGGRON"
+   ],
+   "night": [
+    "AGGRON",
+    "MAWILE",
+    "SWOOBAT",
+    "GIGALITH",
+    "MIGHTYENA",
+    "SABLEYE",
+    "EXCADRILL",
+    "CRUSTLE",
+    "DURANT",
+    "DURANT",
+    "MIGHTYENA",
+    "DURANT"
+   ]
+  }
+ },
+ "MAP_SEAFLOOR_CAVERN_ROOM4": {
+  "land": {
+   "day": [
+    "CRAWDAUNT",
+    "CRUSTLE",
+    "SABLEYE",
+    "SWOOBAT",
+    "BOLDORE",
+    "CRUSTLE",
+    "STUNFISK",
+    "MAWILE",
+    "EXCADRILL",
+    "CRAWDAUNT",
+    "SWAMPERT",
+    "HYDREIGON"
+   ],
+   "night": [
+    "CRUSTLE",
+    "CRAWDAUNT",
+    "SWOOBAT",
+    "SABLEYE",
+    "MIGHTYENA",
+    "BOLDORE",
+    "SABLEYE",
+    "STUNFISK",
+    "MAWILE",
+    "EXCADRILL",
+    "SWAMPERT",
+    "HYDREIGON"
+   ]
+  }
+ },
+ "MAP_SEAFLOOR_CAVERN_ROOM5": {
+  "land": {
+   "day": [
+    "EXCADRILL",
+    "GIGALITH",
+    "AGGRON",
+    "DURANT",
+    "SABLEYE",
+    "EXCADRILL",
+    "MAWILE",
+    "GIGALITH",
+    "CRUSTLE",
+    "DURANT",
+    "DRUDDIGON",
+    "DURANT"
+   ],
+   "night": [
+    "EXCADRILL",
+    "GIGALITH",
+    "SWOOBAT",
+    "AGGRON",
+    "DURANT",
+    "MIGHTYENA",
+    "SABLEYE",
+    "MAWILE",
+    "GIGALITH",
+    "CRUSTLE",
+    "DRUDDIGON",
+    "MIGHTYENA"
+   ]
+  },
+  "water_type": "cave",
+  "surf": {
+   "day": [
+    "CRAWDAUNT",
+    "JELLICENT",
+    "WAILORD",
+    "EELEKTRIK",
+    "ALOMOMOLA"
+   ],
+   "night": [
+    "JELLICENT",
+    "CRAWDAUNT",
+    "EELEKTRIK",
+    "SHARPEDO",
+    "EELEKTROSS"
+   ]
+  },
+  "fish": {
+   "day": [
+    "CRAWDAUNT",
+    "SHARPEDO",
+    "JELLICENT",
+    "WAILORD",
+    "EELEKTRIK",
+    "CRAWDAUNT",
+    "LUVDISC",
+    "SHARPEDO",
+    "ALOMOMOLA",
+    "RELICANTH"
+   ],
+   "night": [
+    "SHARPEDO",
+    "JELLICENT",
+    "EELEKTRIK",
+    "CRAWDAUNT",
+    "EELEKTROSS",
+    "JELLICENT",
+    "CRAWDAUNT",
+    "LUVDISC",
+    "ALOMOMOLA",
+    "RELICANTH"
+   ]
+  }
+ },
+ "MAP_SEAFLOOR_CAVERN_ROOM6": {
+  "land": {
+   "day": [
+    "CRUSTLE",
+    "SABLEYE",
+    "CRAWDAUNT",
+    "SABLEYE",
+    "CRUSTLE",
+    "MAWILE",
+    "BOLDORE",
+    "AGGRON",
+    "CRUSTLE",
+    "EXCADRILL",
+    "SAMUROTT",
+    "SAMUROTT"
+   ],
+   "night": [
+    "CRAWDAUNT",
+    "CRUSTLE",
+    "SWOOBAT",
+    "SABLEYE",
+    "CRAWDAUNT",
+    "MIGHTYENA",
+    "MAWILE",
+    "BOLDORE",
+    "AGGRON",
+    "EXCADRILL",
+    "SAMUROTT",
+    "SAMUROTT"
+   ]
+  },
+  "surf": {
+   "day": [
+    "FRILLISH",
+    "WAILORD",
+    "CRAWDAUNT",
+    "EELEKTRIK",
+    "ALOMOMOLA"
+   ],
+   "night": [
+    "FRILLISH",
+    "EELEKTRIK",
+    "WAILORD",
+    "SHARPEDO",
+    "EELEKTROSS"
+   ]
+  },
+  "fish": {
+   "day": [
+    "CRAWDAUNT",
+    "JELLICENT",
+    "WAILORD",
+    "SHARPEDO",
+    "EELEKTRIK",
+    "CRAWDAUNT",
+    "LUVDISC",
+    "JELLICENT",
+    "ALOMOMOLA",
+    "RELICANTH"
+   ],
+   "night": [
+    "JELLICENT",
+    "CRAWDAUNT",
+    "EELEKTRIK",
+    "SHARPEDO",
+    "JELLICENT",
+    "EELEKTROSS",
+    "CRAWDAUNT",
+    "WAILORD",
+    "ALOMOMOLA",
+    "RELICANTH"
+   ]
+  },
+  "water_type": "cave"
+ },
+ "MAP_SEAFLOOR_CAVERN_ROOM7": {
+  "land": {
+   "day": [
+    "SABLEYE",
+    "GIGALITH",
+    "MAWILE",
+    "AGGRON",
+    "GIGALITH",
+    "CRUSTLE",
+    "EXCADRILL",
+    "SWOOBAT",
+    "HYDREIGON",
+    "DURANT",
+    "DRUDDIGON",
+    "HYDREIGON"
+   ],
+   "night": [
+    "SABLEYE",
+    "GIGALITH",
+    "SWOOBAT",
+    "MAWILE",
+    "MIGHTYENA",
+    "AGGRON",
+    "GIGALITH",
+    "CRUSTLE",
+    "HYDREIGON",
+    "EXCADRILL",
+    "DRUDDIGON",
+    "HYDREIGON"
+   ]
+  },
+  "surf": {
+   "day": [
+    "CRAWDAUNT",
+    "WAILORD",
+    "JELLICENT",
+    "EELEKTROSS",
+    "ALOMOMOLA"
+   ],
+   "night": [
+    "CRAWDAUNT",
+    "JELLICENT",
+    "EELEKTROSS",
+    "SHARPEDO",
+    "ALOMOMOLA"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WAILORD",
+    "CRAWDAUNT",
+    "SHARPEDO",
+    "JELLICENT",
+    "LUVDISC",
+    "EELEKTROSS",
+    "CRAWDAUNT",
+    "ALOMOMOLA",
+    "RELICANTH",
+    "WAILORD"
+   ],
+   "night": [
+    "SHARPEDO",
+    "JELLICENT",
+    "EELEKTROSS",
+    "CRAWDAUNT",
+    "JELLICENT",
+    "EELEKTROSS",
+    "WAILORD",
+    "ALOMOMOLA",
+    "RELICANTH",
+    "LUVDISC"
+   ]
+  },
+  "water_type": "cave"
+ },
+ "MAP_SEAFLOOR_CAVERN_ROOM8": {
+  "land": {
+   "day": [
+    "MAWILE",
+    "EXCADRILL",
+    "BOLDORE",
+    "SABLEYE",
+    "GIGALITH",
+    "AGGRON",
+    "SWOOBAT",
+    "EXCADRILL",
+    "HYDREIGON",
+    "DRUDDIGON",
+    "HYDREIGON",
+    "DURANT"
+   ],
+   "night": [
+    "MAWILE",
+    "EXCADRILL",
+    "SABLEYE",
+    "BOLDORE",
+    "SWOOBAT",
+    "MIGHTYENA",
+    "GIGALITH",
+    "AGGRON",
+    "HYDREIGON",
+    "DRUDDIGON",
+    "HYDREIGON",
+    "EXCADRILL"
+   ]
+  }
+ },
+ "MAP_SKY_PILLAR_1F": {
+  "land": {
+   "day": [
+    "CLAYDOL",
+    "SABLEYE",
+    "GOLURK",
+    "BANETTE",
+    "WOOBAT",
+    "SIGILYPH",
+    "BEHEEYEM",
+    "LAMPENT",
+    "ALTARIA",
+    "SIGILYPH",
+    "DRUDDIGON",
+    "BRAVIARY"
+   ],
+   "night": [
+    "SABLEYE",
+    "CLAYDOL",
+    "BANETTE",
+    "GOLURK",
+    "LAMPENT",
+    "WOOBAT",
+    "SIGILYPH",
+    "BEHEEYEM",
+    "DUSCLOPS",
+    "ALTARIA",
+    "DRUDDIGON",
+    "BRAVIARY"
+   ]
+  }
+ },
+ "MAP_SKY_PILLAR_3F": {
+  "land": {
+   "day": [
+    "SIGILYPH",
+    "CLAYDOL",
+    "GOLURK",
+    "SABLEYE",
+    "BANETTE",
+    "ALTARIA",
+    "SWOOBAT",
+    "BEHEEYEM",
+    "BRAVIARY",
+    "DRUDDIGON",
+    "METAGROSS",
+    "CHANDELURE"
+   ],
+   "night": [
+    "SIGILYPH",
+    "CLAYDOL",
+    "BANETTE",
+    "SABLEYE",
+    "LAMPENT",
+    "GOLURK",
+    "DUSCLOPS",
+    "SWOOBAT",
+    "MANDIBUZZ",
+    "DRUDDIGON",
+    "METAGROSS",
+    "CHANDELURE"
+   ]
+  }
+ },
+ "MAP_SKY_PILLAR_5F": {
+  "land": {
+   "day": [
+    "ALTARIA",
+    "SIGILYPH",
+    "CLAYDOL",
+    "GOLURK",
+    "BANETTE",
+    "SABLEYE",
+    "BRAVIARY",
+    "METAGROSS",
+    "SALAMENCE",
+    "DRUDDIGON",
+    "METAGROSS",
+    "HYDREIGON"
+   ],
+   "night": [
+    "SIGILYPH",
+    "ALTARIA",
+    "BANETTE",
+    "CLAYDOL",
+    "DUSKNOIR",
+    "SABLEYE",
+    "CHANDELURE",
+    "MANDIBUZZ",
+    "METAGROSS",
+    "DRUDDIGON",
+    "SALAMENCE",
+    "HYDREIGON"
+   ]
+  }
+ },
+ "MAP_CAVE_OF_ORIGIN_ENTRANCE": {
+  "land": {
+   "day": [
+    "WOOBAT",
+    "MAWILE",
+    "SABLEYE",
+    "BOLDORE",
+    "GOLURK",
+    "BANETTE",
+    "EXCADRILL",
+    "DUSCLOPS",
+    "DUSCLOPS",
+    "DURANT",
+    "GOLURK",
+    "DURANT"
+   ],
+   "night": [
+    "WOOBAT",
+    "MAWILE",
+    "SABLEYE",
+    "DUSCLOPS",
+    "BANETTE",
+    "BOLDORE",
+    "GOLURK",
+    "EXCADRILL",
+    "DUSCLOPS",
+    "DUSCLOPS",
+    "DURANT",
+    "DURANT"
+   ]
+  }
+ },
+ "MAP_CAVE_OF_ORIGIN_1F": {
+  "land": {
+   "day": [
+    "SABLEYE",
+    "SWOOBAT",
+    "GIGALITH",
+    "MAWILE",
+    "GOLURK",
+    "BANETTE",
+    "DUSCLOPS",
+    "EXCADRILL",
+    "DUSCLOPS",
+    "LAMPENT",
+    "CHANDELURE",
+    "DURANT"
+   ],
+   "night": [
+    "SABLEYE",
+    "SWOOBAT",
+    "DUSCLOPS",
+    "LAMPENT",
+    "GOLURK",
+    "MAWILE",
+    "BANETTE",
+    "GIGALITH",
+    "DUSCLOPS",
+    "EXCADRILL",
+    "CHANDELURE",
+    "DURANT"
+   ]
+  }
+ },
+ "MAP_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP1": {
+  "land": {
+   "day": [
+    "MAWILE",
+    "GIGALITH",
+    "SWOOBAT",
+    "BANETTE",
+    "SABLEYE",
+    "GOLURK",
+    "DUSCLOPS",
+    "DUSCLOPS",
+    "EXCADRILL",
+    "DURANT",
+    "HYDREIGON",
+    "DUSKNOIR"
+   ],
+   "night": [
+    "MAWILE",
+    "GIGALITH",
+    "LAMPENT",
+    "SWOOBAT",
+    "BANETTE",
+    "SABLEYE",
+    "GOLURK",
+    "DUSCLOPS",
+    "DUSKNOIR",
+    "EXCADRILL",
+    "HYDREIGON",
+    "DURANT"
+   ]
+  }
+ },
+ "MAP_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP2": {
+  "land": {
+   "day": [
+    "LAMPENT",
+    "SABLEYE",
+    "GIGALITH",
+    "LAMPENT",
+    "MAWILE",
+    "DUSCLOPS",
+    "SWOOBAT",
+    "CHANDELURE",
+    "GOLURK",
+    "HYDREIGON",
+    "DUSKNOIR",
+    "HYDREIGON"
+   ],
+   "night": [
+    "LAMPENT",
+    "LAMPENT",
+    "SABLEYE",
+    "DUSCLOPS",
+    "GIGALITH",
+    "BANETTE",
+    "CHANDELURE",
+    "EXCADRILL",
+    "MAWILE",
+    "DUSKNOIR",
+    "HYDREIGON",
+    "HYDREIGON"
+   ]
+  }
+ },
+ "MAP_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP3": {
+  "land": {
+   "day": [
+    "GIGALITH",
+    "LAMPENT",
+    "SABLEYE",
+    "CHANDELURE",
+    "MAWILE",
+    "DUSKNOIR",
+    "HYDREIGON",
+    "GOLURK",
+    "EXCADRILL",
+    "SWOOBAT",
+    "HYDREIGON",
+    "DUSKNOIR"
+   ],
+   "night": [
+    "CHANDELURE",
+    "LAMPENT",
+    "DUSKNOIR",
+    "SABLEYE",
+    "GIGALITH",
+    "HYDREIGON",
+    "BANETTE",
+    "GOLURK",
+    "MAWILE",
+    "SWOOBAT",
+    "HYDREIGON",
+    "BANETTE"
+   ]
+  }
+ },
+ "MAP_VICTORY_ROAD_1F": {
+  "land": {
+   "day": [
+    "HARIYAMA",
+    "AGGRON",
+    "MEDICHAM",
+    "EXPLOUD",
+    "WOOBAT",
+    "BOLDORE",
+    "GURDURR",
+    "MIENSHAO",
+    "EXCADRILL",
+    "THROH",
+    "SAWK",
+    "DRUDDIGON"
+   ],
+   "night": [
+    "AGGRON",
+    "WOOBAT",
+    "HARIYAMA",
+    "MEDICHAM",
+    "EXPLOUD",
+    "BOLDORE",
+    "SABLEYE",
+    "GURDURR",
+    "MIENSHAO",
+    "EXCADRILL",
+    "SAWK",
+    "THROH"
+   ]
+  }
+ },
+ "MAP_VICTORY_ROAD_B1F": {
+  "land": {
+   "day": [
+    "AGGRON",
+    "MEDICHAM",
+    "HARIYAMA",
+    "MAWILE",
+    "BOLDORE",
+    "CONKELDURR",
+    "SWOOBAT",
+    "MIENSHAO",
+    "THROH",
+    "SAWK",
+    "HAXORUS",
+    "METAGROSS"
+   ],
+   "night": [
+    "MEDICHAM",
+    "AGGRON",
+    "SWOOBAT",
+    "MAWILE",
+    "HARIYAMA",
+    "SABLEYE",
+    "CONKELDURR",
+    "MIENSHAO",
+    "SAWK",
+    "THROH",
+    "HAXORUS",
+    "METAGROSS"
+   ]
+  },
+  "rock": {
+   "day": [
+    "GIGALITH",
+    "CRUSTLE",
+    "PROBOPASS",
+    "EXCADRILL",
+    "DURANT"
+   ],
+   "night": [
+    "GIGALITH",
+    "CRUSTLE",
+    "SABLEYE",
+    "PROBOPASS",
+    "DURANT"
+   ]
+  }
+ },
+ "MAP_VICTORY_ROAD_B2F": {
+  "land": {
+   "day": [
+    "SABLEYE",
+    "MAWILE",
+    "AGGRON",
+    "HARIYAMA",
+    "MEDICHAM",
+    "SWOOBAT",
+    "CONKELDURR",
+    "HAXORUS",
+    "DRUDDIGON",
+    "HYDREIGON",
+    "MIENSHAO",
+    "HAXORUS"
+   ],
+   "night": [
+    "MAWILE",
+    "SABLEYE",
+    "SWOOBAT",
+    "AGGRON",
+    "HARIYAMA",
+    "SWOOBAT",
+    "MEDICHAM",
+    "HAXORUS",
+    "DRUDDIGON",
+    "HYDREIGON",
+    "CONKELDURR",
+    "HYDREIGON"
+   ]
+  },
+  "surf": {
+   "day": [
+    "WHISCASH",
+    "SEISMITOAD",
+    "BASCULIN",
+    "CRAWDAUNT",
+    "AZUMARILL"
+   ],
+   "night": [
+    "SEISMITOAD",
+    "WHISCASH",
+    "BASCULIN",
+    "CRAWDAUNT",
+    "SEISMITOAD"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WHISCASH",
+    "BASCULIN",
+    "SEISMITOAD",
+    "WHISCASH",
+    "CRAWDAUNT",
+    "BASCULIN",
+    "AZUMARILL",
+    "SEISMITOAD",
+    "WHISCASH",
+    "STUNFISK"
+   ],
+   "night": [
+    "SEISMITOAD",
+    "WHISCASH",
+    "SEISMITOAD",
+    "BASCULIN",
+    "CRAWDAUNT",
+    "SEISMITOAD",
+    "WHISCASH",
+    "AZUMARILL",
+    "STUNFISK",
+    "BASCULIN"
+   ]
+  },
+  "water_type": "cave"
+ },
+ "MAP_ARTISAN_CAVE_1F": {
+  "land": {
+   "day": [
+    "EXCADRILL",
+    "KLANG",
+    "BOLDORE",
+    "CLAYDOL",
+    "NOSEPASS",
+    "EXCADRILL",
+    "AGGRON",
+    "DURANT",
+    "MAWILE",
+    "NOSEPASS",
+    "DRUDDIGON",
+    "KLINKLANG"
+   ],
+   "night": [
+    "KLANG",
+    "EXCADRILL",
+    "CLAYDOL",
+    "BOLDORE",
+    "SABLEYE",
+    "NOSEPASS",
+    "EXCADRILL",
+    "WOOBAT",
+    "DURANT",
+    "NOSEPASS",
+    "DRUDDIGON",
+    "MAWILE"
+   ]
+  }
+ },
+ "MAP_ARTISAN_CAVE_B1F": {
+  "land": {
+   "day": [
+    "EXCADRILL",
+    "KLINKLANG",
+    "CLAYDOL",
+    "GIGALITH",
+    "PROBOPASS",
+    "EXCADRILL",
+    "AGGRON",
+    "DURANT",
+    "NOSEPASS",
+    "KLINKLANG",
+    "METAGROSS",
+    "DRUDDIGON"
+   ],
+   "night": [
+    "KLINKLANG",
+    "EXCADRILL",
+    "SABLEYE",
+    "CLAYDOL",
+    "GIGALITH",
+    "EXCADRILL",
+    "PROBOPASS",
+    "SWOOBAT",
+    "DURANT",
+    "METAGROSS",
+    "DRUDDIGON",
+    "BEHEEYEM"
+   ]
+  }
+ }
+}

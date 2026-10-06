@@ -1,0 +1,172 @@
+{
+ "MAP_FUCHSIA_CITY_SAFARI_ZONE_BEACH_HNS": {
+  "layouts": [
+   "LAYOUT_FUCHSIA_CITY_SAFARI_ZONE_BEACH_HNS"
+  ],
+  "ver": "hns",
+  "land": 190,
+  "water": 414,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FUCHSIA_CITY_SAFARI_ZONE_BRUSH_HNS": {
+  "layouts": [
+   "LAYOUT_FUCHSIA_CITY_SAFARI_ZONE_BRUSH_HNS"
+  ],
+  "ver": "hns",
+  "land": 378,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FUCHSIA_CITY_SAFARI_ZONE_CAVE_HNS": {
+  "layouts": [
+   "LAYOUT_FUCHSIA_CITY_SAFARI_ZONE_CAVE_HNS"
+  ],
+  "ver": "hns",
+  "land": 710,
+  "water": 172,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FUCHSIA_CITY_SAFARI_ZONE_MOUNTAIN_HNS": {
+  "layouts": [
+   "LAYOUT_FUCHSIA_CITY_SAFARI_ZONE_MOUNTAIN_HNS"
+  ],
+  "ver": "hns",
+  "land": 722,
+  "water": 56,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_LOW_LEFT_HNS": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_LOW_LEFT_HNS"
+  ],
+  "ver": "hns",
+  "land": 144,
+  "water": 0,
+  "trees": 1,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_LOW_MID_HNS": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_LOW_MID_HNS"
+  ],
+  "ver": "hns",
+  "land": 93,
+  "water": 65,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_LOW_RIGHT_HNS": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_LOW_RIGHT_HNS"
+  ],
+  "ver": "hns",
+  "land": 307,
+  "water": 249,
+  "trees": 7,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_TOP_LEFT_HNS": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_TOP_LEFT_HNS"
+  ],
+  "ver": "hns",
+  "land": 110,
+  "water": 0,
+  "trees": 5,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_TOP_MID_HNS": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_TOP_MID_HNS"
+  ],
+  "ver": "hns",
+  "land": 134,
+  "water": 0,
+  "trees": 12,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_TOP_RIGHT_HNS": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_TOP_RIGHT_HNS"
+  ],
+  "ver": "hns",
+  "land": 65,
+  "water": 309,
+  "trees": 3,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_SOUTH": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_SOUTH"
+  ],
+  "ver": "emerald",
+  "land": 149,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_SOUTHWEST": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_SOUTHWEST"
+  ],
+  "ver": "emerald",
+  "land": 97,
+  "water": 111,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_NORTH": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_NORTH"
+  ],
+  "ver": "emerald",
+  "land": 338,
+  "water": 0,
+  "trees": 0,
+  "rocks": 6
+ },
+ "MAP_SAFARI_ZONE_NORTHWEST": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_NORTHWEST"
+  ],
+  "ver": "emerald",
+  "land": 248,
+  "water": 84,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_SOUTHEAST": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_SOUTHEAST"
+  ],
+  "ver": "emerald",
+  "land": 164,
+  "water": 195,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_NORTHEAST": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_NORTHEAST"
+  ],
+  "ver": "emerald",
+  "land": 356,
+  "water": 0,
+  "trees": 0,
+  "rocks": 5
+ },
+ "MAP_NATIONAL_PARK_BUG_CONTEST_HNS": {
+  "layouts": [
+   "LAYOUT_NATIONAL_PARK_BUG_CONTEST_HNS"
+  ],
+  "ver": "hns",
+  "land": 436,
+  "water": 1,
+  "trees": 0,
+  "rocks": 0
+ }
+}

@@ -1,5 +1,11 @@
 # Trainer Rating wild encounter scaling
 
+**Partly retired.** Its wild-encounter parts, from Eligible profiles through
+Consumers of the effective population, are replaced by
+[Wild encounters v2](../prds/wild-encounters-v2.md); they still describe today's
+game until v2 ships. Its Trainer Rating lifecycle and progression targets
+still apply.
+
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes named native-utility carriers and permanent-retention
 assumptions in this document. Its core implementation is complete, while full

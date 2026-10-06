@@ -1,0 +1,636 @@
+{
+ "MAP_MELEMELE_ISLE_HNS": {
+  "water_type": "sea",
+  "land": {
+   "day": [
+    "TOUCANNON",
+    "GUMSHOOS",
+    "CHARJABUG",
+    "RIBOMBEE",
+    "CRABRAWLER",
+    "PIKACHU",
+    "LYCANROC_MIDDAY",
+    "PELIPPER",
+    "MUK_ALOLA",
+    "STEENEE",
+    "DECIDUEYE",
+    "PICHU"
+   ],
+   "night": [
+    "RATICATE_ALOLA",
+    "MEOWTH_ALOLA",
+    "CHARJABUG",
+    "MUK_ALOLA",
+    "ARIADOS",
+    "CRABRAWLER",
+    "LYCANROC_MIDNIGHT",
+    "RATICATE_ALOLA",
+    "MUK_ALOLA",
+    "PIKACHU",
+    "DECIDUEYE",
+    "PICHU"
+   ]
+  },
+  "surf": {
+   "day": [
+    "TOXAPEX",
+    "PYUKUMUKU",
+    "TENTACRUEL",
+    "PELIPPER",
+    "PRIMARINA"
+   ],
+   "night": [
+    "PYUKUMUKU",
+    "TOXAPEX",
+    "TENTACRUEL",
+    "LANTURN",
+    "PRIMARINA"
+   ]
+  },
+  "fish": {
+   "day": [
+    "TOXAPEX",
+    "PYUKUMUKU",
+    "MAGIKARP",
+    "WISHIWASHI",
+    "WISHIWASHI",
+    "LUVDISC",
+    "PYUKUMUKU",
+    "CORSOLA",
+    "TOXAPEX",
+    "PRIMARINA"
+   ],
+   "night": [
+    "PYUKUMUKU",
+    "TOXAPEX",
+    "MAGIKARP",
+    "CHINCHOU",
+    "WISHIWASHI",
+    "STARYU",
+    "PYUKUMUKU",
+    "TOXAPEX",
+    "CORSOLA",
+    "PRIMARINA"
+   ]
+  }
+ },
+ "MAP_AKALA_ISLE_HNS": {
+  "water_type": "sea",
+  "land": {
+   "day": [
+    "MUDSDALE",
+    "LURANTIS",
+    "STEENEE",
+    "DUGTRIO_ALOLA",
+    "PALOSSAND",
+    "ARAQUANID",
+    "BEWEAR",
+    "MAROWAK_ALOLA",
+    "ORICORIO_PAU",
+    "GOLISOPOD",
+    "COMFEY",
+    "INCINEROAR"
+   ],
+   "night": [
+    "SHIINOTIC",
+    "MUDSDALE",
+    "RATICATE_ALOLA",
+    "LURANTIS",
+    "MAROWAK_ALOLA",
+    "PALOSSAND",
+    "SALAZZLE",
+    "GOLISOPOD",
+    "ARAQUANID",
+    "ORICORIO_PAU",
+    "INCINEROAR",
+    "COMFEY"
+   ]
+  },
+  "surf": {
+   "day": [
+    "WISHIWASHI",
+    "TOXAPEX",
+    "PELIPPER",
+    "PYUKUMUKU",
+    "BRUXISH"
+   ],
+   "night": [
+    "TOXAPEX",
+    "WISHIWASHI",
+    "LANTURN",
+    "PYUKUMUKU",
+    "BRUXISH"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WISHIWASHI",
+    "TOXAPEX",
+    "MAGIKARP",
+    "PYUKUMUKU",
+    "TOXAPEX",
+    "WISHIWASHI",
+    "CLAMPERL",
+    "CORSOLA",
+    "LUVDISC",
+    "BRUXISH"
+   ],
+   "night": [
+    "TOXAPEX",
+    "WISHIWASHI",
+    "MAGIKARP",
+    "CHINCHOU",
+    "PYUKUMUKU",
+    "WISHIWASHI",
+    "CLAMPERL",
+    "CORSOLA",
+    "STARYU",
+    "BRUXISH"
+   ]
+  }
+ },
+ "MAP_ALOLA_WATER_HNS": {
+  "water_type": "sea",
+  "surf": {
+   "day": [
+    "WISHIWASHI",
+    "TOXAPEX",
+    "WAILMER",
+    "TENTACRUEL",
+    "BRUXISH"
+   ],
+   "night": [
+    "WISHIWASHI",
+    "TOXAPEX",
+    "LANTURN",
+    "TENTACRUEL",
+    "BRUXISH"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WISHIWASHI",
+    "TOXAPEX",
+    "MAGIKARP",
+    "TOXAPEX",
+    "WISHIWASHI",
+    "CARVANHA",
+    "TOXAPEX",
+    "CLAMPERL",
+    "WAILMER",
+    "BRUXISH"
+   ],
+   "night": [
+    "WISHIWASHI",
+    "TOXAPEX",
+    "MAGIKARP",
+    "CHINCHOU",
+    "TOXAPEX",
+    "WISHIWASHI",
+    "STARYU",
+    "TOXAPEX",
+    "WAILMER",
+    "BRUXISH"
+   ]
+  }
+ },
+ "MAP_AKALA_FOREST_HNS": {
+  "land": {
+   "day": [
+    "STEENEE",
+    "LURANTIS",
+    "RIBOMBEE",
+    "CHARJABUG",
+    "TOUCANNON",
+    "PARASECT",
+    "SHIINOTIC",
+    "EXEGGCUTE",
+    "PASSIMIAN",
+    "ORICORIO_POM_POM",
+    "COMFEY",
+    "DECIDUEYE"
+   ],
+   "night": [
+    "SHIINOTIC",
+    "LURANTIS",
+    "ARIADOS",
+    "RATICATE_ALOLA",
+    "VENOMOTH",
+    "CHARJABUG",
+    "STEENEE",
+    "NOCTOWL",
+    "ORANGURU",
+    "ORICORIO_POM_POM",
+    "DECIDUEYE",
+    "COMFEY"
+   ]
+  }
+ },
+ "MAP_AKALA_CAVE_HNS": {
+  "land": {
+   "day": [
+    "SALAZZLE",
+    "GRAVELER_ALOLA",
+    "DUGTRIO_ALOLA",
+    "MAROWAK_ALOLA",
+    "GOLBAT",
+    "MAGCARGO",
+    "GOLEM_ALOLA",
+    "SWOOBAT",
+    "TURTONATOR",
+    "CAMERUPT",
+    "INCINEROAR",
+    "LYCANROC_DUSK"
+   ],
+   "night": [
+    "SALAZZLE",
+    "GRAVELER_ALOLA",
+    "GOLBAT",
+    "MAROWAK_ALOLA",
+    "DUGTRIO_ALOLA",
+    "MAGCARGO",
+    "SWOOBAT",
+    "GOLEM_ALOLA",
+    "CAMERUPT",
+    "MISDREAVUS",
+    "INCINEROAR",
+    "LYCANROC_DUSK"
+   ]
+  }
+ },
+ "MAP_ULAULA_ISLE_HNS": {
+  "water_type": "sea",
+  "land": {
+   "day": [
+    "TOGEDEMARU",
+    "CRABOMINABLE",
+    "MUK_ALOLA",
+    "TOUCANNON",
+    "BEWEAR",
+    "GUMSHOOS",
+    "NINETALES_ALOLA",
+    "TURTONATOR",
+    "MINIOR",
+    "ORICORIO_BAILE",
+    "KOMALA",
+    "PASSIMIAN"
+   ],
+   "night": [
+    "TOGEDEMARU",
+    "MUK_ALOLA",
+    "PERSIAN_ALOLA",
+    "CRABOMINABLE",
+    "RATICATE_ALOLA",
+    "SHIINOTIC",
+    "SANDSLASH_ALOLA",
+    "DRAMPA",
+    "ORANGURU",
+    "ORICORIO_BAILE",
+    "KOMALA",
+    "MINIOR"
+   ]
+  },
+  "surf": {
+   "day": [
+    "WISHIWASHI",
+    "PYUKUMUKU",
+    "PELIPPER",
+    "CLOYSTER",
+    "BRUXISH"
+   ],
+   "night": [
+    "TOXAPEX",
+    "WISHIWASHI",
+    "LANTURN",
+    "PELIPPER",
+    "DHELMISE"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WISHIWASHI",
+    "TOXAPEX",
+    "PYUKUMUKU",
+    "MAGIKARP",
+    "TOXAPEX",
+    "LUVDISC",
+    "WAILMER",
+    "CORSOLA",
+    "BRUXISH",
+    "DHELMISE"
+   ],
+   "night": [
+    "TOXAPEX",
+    "WISHIWASHI",
+    "PYUKUMUKU",
+    "CHINCHOU",
+    "MAGIKARP",
+    "SHELLDER",
+    "CLAMPERL",
+    "WAILMER",
+    "BRUXISH",
+    "DHELMISE"
+   ]
+  }
+ },
+ "MAP_ULA_ULA_CAVE_HNS": {
+  "land": {
+   "day": [
+    "CRABOMINABLE",
+    "NINETALES_ALOLA",
+    "SANDSLASH_ALOLA",
+    "GLALIE",
+    "VANILLUXE",
+    "DRAMPA",
+    "MIMIKYU",
+    "GRAVELER_ALOLA",
+    "GOLBAT",
+    "DRAMPA",
+    "NINETALES_ALOLA",
+    "KOMMO_O"
+   ],
+   "night": [
+    "CRABOMINABLE",
+    "SANDSLASH_ALOLA",
+    "NINETALES_ALOLA",
+    "GLALIE",
+    "VANILLUXE",
+    "MIMIKYU",
+    "DRAMPA",
+    "GOLBAT",
+    "GRAVELER_ALOLA",
+    "MISDREAVUS",
+    "SANDSLASH_ALOLA",
+    "KOMMO_O"
+   ]
+  },
+  "water_type": "cave",
+  "surf": {
+   "day": [
+    "ARAQUANID",
+    "WISHIWASHI",
+    "MAGIKARP",
+    "WHISCASH",
+    "ARAQUANID"
+   ],
+   "night": [
+    "ARAQUANID",
+    "WISHIWASHI",
+    "WHISCASH",
+    "GOLBAT",
+    "BASCULIN"
+   ]
+  },
+  "fish": {
+   "day": [
+    "ARAQUANID",
+    "WISHIWASHI",
+    "MAGIKARP",
+    "WHISCASH",
+    "ARAQUANID",
+    "WISHIWASHI",
+    "GOLDUCK",
+    "ARAQUANID",
+    "WISHIWASHI",
+    "ARAQUANID"
+   ],
+   "night": [
+    "WISHIWASHI",
+    "ARAQUANID",
+    "MAGIKARP",
+    "WHISCASH",
+    "BASCULIN",
+    "WISHIWASHI",
+    "GOLDUCK",
+    "ARAQUANID",
+    "WHISCASH",
+    "BASCULIN"
+   ]
+  }
+ },
+ "MAP_ULA_ULA_CAVE_2_HNS": {
+  "land": {
+   "day": [
+    "MUK_ALOLA",
+    "RATICATE_ALOLA",
+    "MIMIKYU",
+    "GOLBAT",
+    "HAUNTER",
+    "MAROWAK_ALOLA",
+    "GOLEM_ALOLA",
+    "GRAVELER_ALOLA",
+    "VIKAVOLT",
+    "CHARJABUG",
+    "MUK_ALOLA",
+    "MIMIKYU"
+   ],
+   "night": [
+    "MUK_ALOLA",
+    "RATICATE_ALOLA",
+    "MIMIKYU",
+    "HAUNTER",
+    "GOLBAT",
+    "MAROWAK_ALOLA",
+    "GOLEM_ALOLA",
+    "MISDREAVUS",
+    "VIKAVOLT",
+    "CHARJABUG",
+    "MIMIKYU",
+    "MAROWAK_ALOLA"
+   ]
+  },
+  "water_type": "cave",
+  "surf": {
+   "day": [
+    "ARAQUANID",
+    "WISHIWASHI",
+    "GOLDUCK",
+    "WHISCASH",
+    "ARAQUANID"
+   ],
+   "night": [
+    "ARAQUANID",
+    "WISHIWASHI",
+    "GOLBAT",
+    "WHISCASH",
+    "BASCULIN"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WISHIWASHI",
+    "ARAQUANID",
+    "MAGIKARP",
+    "GOLDUCK",
+    "WISHIWASHI",
+    "ARAQUANID",
+    "WISHIWASHI",
+    "ARAQUANID",
+    "WISHIWASHI",
+    "ARAQUANID"
+   ],
+   "night": [
+    "ARAQUANID",
+    "WISHIWASHI",
+    "MAGIKARP",
+    "WHISCASH",
+    "BASCULIN",
+    "ARAQUANID",
+    "WISHIWASHI",
+    "ARAQUANID",
+    "BASCULIN",
+    "WISHIWASHI"
+   ]
+  }
+ },
+ "MAP_PONI_ISLE_HNS": {
+  "water_type": "sea",
+  "land": {
+   "day": [
+    "MUDSDALE",
+    "EXEGGUTOR_ALOLA",
+    "GOLISOPOD",
+    "PALOSSAND",
+    "GUMSHOOS",
+    "LURANTIS",
+    "KOMMO_O",
+    "ORICORIO_SENSU",
+    "PASSIMIAN",
+    "TSAREENA",
+    "VIKAVOLT",
+    "RAICHU_ALOLA"
+   ],
+   "night": [
+    "MUDSDALE",
+    "EXEGGUTOR_ALOLA",
+    "SHIINOTIC",
+    "RATICATE_ALOLA",
+    "PERSIAN_ALOLA",
+    "GOLISOPOD",
+    "KOMMO_O",
+    "ORICORIO_SENSU",
+    "ORANGURU",
+    "LYCANROC_MIDNIGHT",
+    "SALAZZLE",
+    "PALOSSAND"
+   ]
+  },
+  "surf": {
+   "day": [
+    "TOXAPEX",
+    "WISHIWASHI",
+    "PELIPPER",
+    "WAILMER",
+    "DHELMISE"
+   ],
+   "night": [
+    "WISHIWASHI",
+    "PYUKUMUKU",
+    "LANTURN",
+    "SHARPEDO",
+    "DHELMISE"
+   ]
+  },
+  "fish": {
+   "day": [
+    "TOXAPEX",
+    "WISHIWASHI",
+    "PYUKUMUKU",
+    "MAGIKARP",
+    "CORSOLA",
+    "CARVANHA",
+    "STARYU",
+    "CLAMPERL",
+    "BRUXISH",
+    "DHELMISE"
+   ],
+   "night": [
+    "WISHIWASHI",
+    "TOXAPEX",
+    "PYUKUMUKU",
+    "CHINCHOU",
+    "MAGIKARP",
+    "CARVANHA",
+    "CORSOLA",
+    "STARYU",
+    "BRUXISH",
+    "DHELMISE"
+   ]
+  }
+ },
+ "MAP_PONI_CAVE_HNS": {
+  "water_type": "cave",
+  "land": {
+   "day": [
+    "GOLEM_ALOLA",
+    "LYCANROC_MIDDAY",
+    "KOMMO_O",
+    "VIKAVOLT",
+    "GOLBAT",
+    "DUGTRIO_ALOLA",
+    "GIGALITH",
+    "GRAVELER_ALOLA",
+    "MAROWAK_ALOLA",
+    "GRAVELER_ALOLA",
+    "KOMMO_O",
+    "MIMIKYU"
+   ],
+   "night": [
+    "GOLEM_ALOLA",
+    "LYCANROC_MIDNIGHT",
+    "KOMMO_O",
+    "MIMIKYU",
+    "GOLBAT",
+    "DUGTRIO_ALOLA",
+    "GIGALITH",
+    "GRAVELER_ALOLA",
+    "MAROWAK_ALOLA",
+    "SABLEYE",
+    "KOMMO_O",
+    "DUGTRIO_ALOLA"
+   ]
+  },
+  "surf": {
+   "day": [
+    "ARAQUANID",
+    "WISHIWASHI",
+    "WHISCASH",
+    "GOLDUCK",
+    "ARAQUANID"
+   ],
+   "night": [
+    "ARAQUANID",
+    "WISHIWASHI",
+    "WHISCASH",
+    "GOLBAT",
+    "BASCULIN"
+   ]
+  },
+  "fish": {
+   "day": [
+    "WISHIWASHI",
+    "ARAQUANID",
+    "MAGIKARP",
+    "WHISCASH",
+    "GOLDUCK",
+    "ARAQUANID",
+    "WISHIWASHI",
+    "WHISCASH",
+    "ARAQUANID",
+    "WISHIWASHI"
+   ],
+   "night": [
+    "ARAQUANID",
+    "WISHIWASHI",
+    "MAGIKARP",
+    "WHISCASH",
+    "BASCULIN",
+    "GOLDUCK",
+    "WISHIWASHI",
+    "ARAQUANID",
+    "BASCULIN",
+    "WISHIWASHI"
+   ]
+  }
+ }
+}

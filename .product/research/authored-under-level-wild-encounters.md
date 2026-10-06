@@ -1,5 +1,8 @@
 # Authored under-level ordinary wild encounters
 
+**Retired.** Replaced by [Wild encounters v2](../prds/wild-encounters-v2.md).
+It still describes today's game until v2 ships; don't build new work from it.
+
 Related PRD: [Trainer Rating wild encounter scaling](../prds/trainer-rating-wild-encounter-scaling.md)
 
 Related spec: [Trainer Rating wild encounter scaling](../specs/trainer-rating-wild-encounter-scaling.md)

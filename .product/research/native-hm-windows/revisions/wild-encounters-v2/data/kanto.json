@@ -1,0 +1,3256 @@
+{
+ "MAP_PALLET_TOWN_HNS": {
+  "fish": {
+   "day": [
+    "TENTACRUEL",
+    "KINGLER",
+    "SHELLDER",
+    "SEADRA",
+    "MAGIKARP",
+    "KINGLER",
+    "KRABBY",
+    "GYARADOS",
+    "SEADRA",
+    "BLASTOISE"
+   ],
+   "night": [
+    "TENTACRUEL",
+    "KINGLER",
+    "SHELLDER",
+    "LANTURN",
+    "MAGIKARP",
+    "KINGLER",
+    "STARYU",
+    "GYARADOS",
+    "LANTURN",
+    "BLASTOISE"
+   ]
+  },
+  "water_type": "sea",
+  "surf": {
+   "day": [
+    "KINGLER",
+    "TENTACRUEL",
+    "SHELLDER",
+    "SEADRA",
+    "BLASTOISE"
+   ],
+   "night": [
+    "KINGLER",
+    "TENTACRUEL",
+    "LANTURN",
+    "SEADRA",
+    "BLASTOISE"
+   ]
+  }
+ },
+ "MAP_VIRIDIAN_CITY_HNS": {
+  "surf": {
+   "day": [
+    "POLIWHIRL",
+    "GOLDUCK",
+    "AZUMARILL",
+    "SEAKING",
+    "SLOWBRO"
+   ],
+   "night": [
+    "POLIWHIRL",
+    "SLOWBRO",
+    "GOLDUCK",
+    "AZUMARILL",
+    "SLOWBRO"
+   ]
+  },
+  "fish": {
+   "day": [
+    "POLIWHIRL",
+    "SEAKING",
+    "MAGIKARP",
+    "POLIWHIRL",
+    "SEAKING",
+    "AZUMARILL",
+    "GOLDUCK",
+    "GYARADOS",
+    "SEAKING",
+    "GYARADOS"
+   ],
+   "night": [
+    "POLIWHIRL",
+    "SEAKING",
+    "MAGIKARP",
+    "POLIWHIRL",
+    "SLOWBRO",
+    "AZUMARILL",
+    "GOLDUCK",
+    "GYARADOS",
+    "SLOWBRO",
+    "GYARADOS"
+   ]
+  },
+  "rock": {
+   "day": [
+    "BEEDRILL",
+    "FEAROW",
+    "BUTTERFREE",
+    "METAPOD",
+    "EXEGGCUTE"
+   ],
+   "night": [
+    "BEEDRILL",
+    "FEAROW",
+    "NOCTOWL",
+    "VENOMOTH",
+    "BUTTERFREE"
+   ]
+  },
+  "water_type": "pond"
+ },
+ "MAP_PEWTER_CITY_HNS": {},
+ "MAP_CINNABAR_ISLAND": {
+  "surf": {
+   "day": [
+    "TENTACRUEL",
+    "CORSOLA",
+    "SEADRA",
+    "SHELLDER",
+    "TENTACRUEL"
+   ],
+   "night": [
+    "TENTACRUEL",
+    "STARYU",
+    "CORSOLA",
+    "LANTURN",
+    "STARYU"
+   ]
+  },
+  "fish": {
+   "day": [
+    "TENTACRUEL",
+    "SEADRA",
+    "SEADRA",
+    "KINGLER",
+    "MAGIKARP",
+    "SHELLDER",
+    "TENTACRUEL",
+    "GYARADOS",
+    "CORSOLA",
+    "SEADRA"
+   ],
+   "night": [
+    "KINGLER",
+    "SEADRA",
+    "TENTACRUEL",
+    "LANTURN",
+    "MAGIKARP",
+    "SHELLDER",
+    "STARYU",
+    "GYARADOS",
+    "LANTURN",
+    "SEADRA"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE1_HNS": {
+  "land": {
+   "day": [
+    "PIDGEOT",
+    "RATICATE",
+    "FURRET",
+    "PIDGEOT",
+    "RATICATE",
+    "FURRET",
+    "BUTTERFREE",
+    "LEDIAN",
+    "NIDORINA",
+    "NIDORINO",
+    "EEVEE",
+    "IGGLYBUFF"
+   ],
+   "night": [
+    "RATICATE",
+    "NOCTOWL",
+    "NOCTOWL",
+    "RATICATE",
+    "PERSIAN",
+    "GLOOM",
+    "RATTATA",
+    "ARIADOS",
+    "VENOMOTH",
+    "NIDORINO",
+    "EEVEE",
+    "IGGLYBUFF"
+   ]
+  }
+ },
+ "MAP_ROUTE2_HNS": {
+  "land": {
+   "day": [
+    "BUTTERFREE",
+    "BEEDRILL",
+    "PIDGEOT",
+    "RATICATE",
+    "LEDIAN",
+    "PARASECT",
+    "PIKACHU",
+    "KADABRA",
+    "YANMA",
+    "METAPOD",
+    "KADABRA",
+    "PICHU"
+   ],
+   "night": [
+    "BUTTERFREE",
+    "BEEDRILL",
+    "NOCTOWL",
+    "ARIADOS",
+    "VENOMOTH",
+    "RATICATE",
+    "PARASECT",
+    "NOCTOWL",
+    "GLOOM",
+    "MURKROW",
+    "KADABRA",
+    "PICHU"
+   ]
+  },
+  "surf": {
+   "day": [
+    "POLIWHIRL",
+    "SLOWBRO",
+    "SEAKING",
+    "GOLDUCK",
+    "AZUMARILL"
+   ],
+   "night": [
+    "POLIWHIRL",
+    "SLOWBRO",
+    "AZUMARILL",
+    "AZUMARILL",
+    "GOLDUCK"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SEAKING",
+    "POLIWHIRL",
+    "MAGIKARP",
+    "SEAKING",
+    "SLOWBRO",
+    "POLIWHIRL",
+    "GYARADOS",
+    "GOLDUCK",
+    "SEAKING",
+    "GYARADOS"
+   ],
+   "night": [
+    "SEAKING",
+    "POLIWHIRL",
+    "MAGIKARP",
+    "SEAKING",
+    "AZUMARILL",
+    "POLIWHIRL",
+    "GYARADOS",
+    "SLOWBRO",
+    "AZUMARILL",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "pond"
+ },
+ "MAP_ROUTE3_HNS": {
+  "land": {
+   "day": [
+    "FEAROW",
+    "JIGGLYPUFF",
+    "NIDORINA",
+    "NIDORINO",
+    "PRIMEAPE",
+    "SANDSLASH",
+    "ARBOK",
+    "SUNKERN",
+    "RATICATE",
+    "JIGGLYPUFF",
+    "CHARIZARD",
+    "IGGLYBUFF"
+   ],
+   "night": [
+    "FEAROW",
+    "JIGGLYPUFF",
+    "GOLBAT",
+    "PERSIAN",
+    "NIDORINA",
+    "GLOOM",
+    "CLEFAIRY",
+    "NIDORINO",
+    "ARBOK",
+    "SANDSLASH",
+    "CHARIZARD",
+    "IGGLYBUFF"
+   ]
+  }
+ },
+ "MAP_ROUTE4_HNS": {
+  "land": {
+   "day": [
+    "ARBOK",
+    "SANDSLASH",
+    "RATICATE",
+    "FEAROW",
+    "PRIMEAPE",
+    "JIGGLYPUFF",
+    "PIDGEOT",
+    "GRAVELER",
+    "CHARIZARD",
+    "NIDORINO",
+    "KADABRA",
+    "CLEFAIRY"
+   ],
+   "night": [
+    "ARBOK",
+    "SANDSLASH",
+    "GOLBAT",
+    "NOCTOWL",
+    "PERSIAN",
+    "RATICATE",
+    "GLOOM",
+    "PRIMEAPE",
+    "CHARIZARD",
+    "JIGGLYPUFF",
+    "CLEFAIRY",
+    "KADABRA"
+   ]
+  },
+  "surf": {
+   "day": [
+    "TENTACRUEL",
+    "OCTILLERY",
+    "TENTACRUEL",
+    "SHELLDER",
+    "KINGLER"
+   ],
+   "night": [
+    "TENTACRUEL",
+    "LANTURN",
+    "OCTILLERY",
+    "STARYU",
+    "STARYU"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SEADRA",
+    "TENTACRUEL",
+    "OCTILLERY",
+    "SEADRA",
+    "MAGIKARP",
+    "KINGLER",
+    "GYARADOS",
+    "SHELLDER",
+    "OCTILLERY",
+    "GYARADOS"
+   ],
+   "night": [
+    "SEADRA",
+    "TENTACRUEL",
+    "OCTILLERY",
+    "LANTURN",
+    "MAGIKARP",
+    "KINGLER",
+    "GYARADOS",
+    "LANTURN",
+    "OCTILLERY",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE21_NORTH": {
+  "land": {
+   "day": [
+    "TANGELA",
+    "TANGELA",
+    "PIDGEOT",
+    "EXEGGCUTE",
+    "RATICATE",
+    "SUNKERN",
+    "YANMA",
+    "PARASECT",
+    "TANGELA",
+    "FURRET",
+    "IVYSAUR",
+    "TANGELA"
+   ],
+   "night": [
+    "TANGELA",
+    "TANGELA",
+    "NOCTOWL",
+    "GLOOM",
+    "VENOMOTH",
+    "EXEGGCUTE",
+    "ARIADOS",
+    "PARASECT",
+    "TANGELA",
+    "GLOOM",
+    "IVYSAUR",
+    "TANGELA"
+   ]
+  },
+  "surf": {
+   "day": [
+    "TENTACRUEL",
+    "SHELLDER",
+    "TENTACRUEL",
+    "CORSOLA",
+    "SEADRA"
+   ],
+   "night": [
+    "TENTACRUEL",
+    "STARYU",
+    "SHELLDER",
+    "LANTURN",
+    "STARYU"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SHELLDER",
+    "TENTACRUEL",
+    "SHELLDER",
+    "QWILFISH",
+    "MAGIKARP",
+    "SEADRA",
+    "GYARADOS",
+    "KINGLER",
+    "CORSOLA",
+    "GYARADOS"
+   ],
+   "night": [
+    "SHELLDER",
+    "TENTACRUEL",
+    "SHELLDER",
+    "QWILFISH",
+    "MAGIKARP",
+    "SEADRA",
+    "GYARADOS",
+    "LANTURN",
+    "STARYU",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE21_SOUTH": {
+  "surf": {
+   "day": [
+    "SHELLDER",
+    "TENTACRUEL",
+    "CORSOLA",
+    "SEADRA",
+    "SLOWBRO"
+   ],
+   "night": [
+    "STARYU",
+    "TENTACRUEL",
+    "LANTURN",
+    "CORSOLA",
+    "LANTURN"
+   ]
+  },
+  "fish": {
+   "day": [
+    "KINGLER",
+    "CORSOLA",
+    "SHELLDER",
+    "SEADRA",
+    "MAGIKARP",
+    "OCTILLERY",
+    "GYARADOS",
+    "SHELLDER",
+    "CORSOLA",
+    "GYARADOS"
+   ],
+   "night": [
+    "KINGLER",
+    "CORSOLA",
+    "SHELLDER",
+    "LANTURN",
+    "MAGIKARP",
+    "OCTILLERY",
+    "GYARADOS",
+    "STARYU",
+    "LANTURN",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_VIRIDIAN_FOREST_HNS": {
+  "land": {
+   "day": [
+    "METAPOD",
+    "KAKUNA",
+    "METAPOD",
+    "KAKUNA",
+    "PARASECT",
+    "PIDGEOTTO",
+    "PIKACHU",
+    "LEDYBA",
+    "PIKACHU",
+    "IVYSAUR",
+    "IVYSAUR",
+    "PICHU"
+   ],
+   "night": [
+    "METAPOD",
+    "KAKUNA",
+    "SPINARAK",
+    "VENONAT",
+    "PARASECT",
+    "HOOTHOOT",
+    "PIKACHU",
+    "GLOOM",
+    "PIKACHU",
+    "IVYSAUR",
+    "IVYSAUR",
+    "PICHU"
+   ]
+  }
+ },
+ "MAP_MT_MOON_CAVE_HNS": {
+  "land": {
+   "day": [
+    "GOLBAT",
+    "GRAVELER",
+    "GOLBAT",
+    "PARASECT",
+    "GRAVELER",
+    "SANDSLASH",
+    "PARASECT",
+    "ONIX",
+    "CLEFAIRY",
+    "AZUMARILL",
+    "CLEFAIRY",
+    "CLEFFA"
+   ],
+   "night": [
+    "GOLBAT",
+    "GRAVELER",
+    "GOLBAT",
+    "SANDSLASH",
+    "PARASECT",
+    "GRAVELER",
+    "ONIX",
+    "ONIX",
+    "CLEFAIRY",
+    "AZUMARILL",
+    "CLEFFA",
+    "CLEFFA"
+   ]
+  }
+ },
+ "MAP_DIGLETTS_CAVE_TUNNEL_HNS": {
+  "land": {
+   "day": [
+    "DUGTRIO",
+    "DUGTRIO",
+    "DIGLETT",
+    "GRAVELER",
+    "DIGLETT",
+    "SANDSLASH",
+    "DUGTRIO",
+    "ONIX",
+    "DIGLETT",
+    "DUNSPARCE",
+    "DUGTRIO",
+    "DUNSPARCE"
+   ],
+   "night": [
+    "DUGTRIO",
+    "DUGTRIO",
+    "DIGLETT",
+    "GOLBAT",
+    "DIGLETT",
+    "GRAVELER",
+    "GOLBAT",
+    "ONIX",
+    "DIGLETT",
+    "DUNSPARCE",
+    "DUNSPARCE",
+    "DUNSPARCE"
+   ]
+  }
+ },
+ "MAP_ROUTE20": {
+  "surf": {
+   "day": [
+    "TENTACRUEL",
+    "STARMIE",
+    "TENTACRUEL",
+    "CLOYSTER",
+    "LAPRAS"
+   ],
+   "night": [
+    "TENTACRUEL",
+    "STARMIE",
+    "LANTURN",
+    "LANTURN",
+    "LAPRAS"
+   ]
+  },
+  "fish": {
+   "day": [
+    "CLOYSTER",
+    "TENTACRUEL",
+    "KINGDRA",
+    "KINGLER",
+    "GYARADOS",
+    "STARMIE",
+    "DRAGONAIR",
+    "CLOYSTER",
+    "KINGDRA",
+    "DRAGONAIR"
+   ],
+   "night": [
+    "CLOYSTER",
+    "TENTACRUEL",
+    "KINGDRA",
+    "LANTURN",
+    "GYARADOS",
+    "STARMIE",
+    "DRAGONAIR",
+    "LANTURN",
+    "KINGDRA",
+    "DRAGONAIR"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_POKEMON_MANSION_1F": {
+  "land": {
+   "day": [
+    "MUK",
+    "WEEZING",
+    "RATICATE",
+    "GROWLITHE",
+    "VULPIX",
+    "MAGCARGO",
+    "PONYTA",
+    "KOFFING",
+    "CHARMELEON",
+    "RATICATE",
+    "MAGBY",
+    "CHARMELEON"
+   ],
+   "night": [
+    "MUK",
+    "WEEZING",
+    "RATICATE",
+    "GROWLITHE",
+    "VULPIX",
+    "HAUNTER",
+    "HOUNDOUR",
+    "MAGCARGO",
+    "CHARMELEON",
+    "HOUNDOUR",
+    "MAGBY",
+    "CHARMELEON"
+   ]
+  }
+ },
+ "MAP_POKEMON_MANSION_2F": {
+  "land": {
+   "day": [
+    "GROWLITHE",
+    "VULPIX",
+    "MUK",
+    "WEEZING",
+    "MAGCARGO",
+    "RAPIDASH",
+    "RATICATE",
+    "PONYTA",
+    "CHARMELEON",
+    "MAGMAR",
+    "MAGBY",
+    "DITTO"
+   ],
+   "night": [
+    "GROWLITHE",
+    "VULPIX",
+    "MUK",
+    "WEEZING",
+    "HAUNTER",
+    "HOUNDOUR",
+    "MAGCARGO",
+    "RAPIDASH",
+    "CHARMELEON",
+    "MAGMAR",
+    "MAGBY",
+    "DITTO"
+   ]
+  }
+ },
+ "MAP_POKEMON_MANSION_3F": {
+  "land": {
+   "day": [
+    "WEEZING",
+    "MUK",
+    "ARCANINE",
+    "NINETALES",
+    "MAGCARGO",
+    "RAPIDASH",
+    "MAGMAR",
+    "RATICATE",
+    "CHARMELEON",
+    "DITTO",
+    "DITTO",
+    "MAGBY"
+   ],
+   "night": [
+    "WEEZING",
+    "MUK",
+    "ARCANINE",
+    "NINETALES",
+    "HAUNTER",
+    "HOUNDOOM",
+    "MAGMAR",
+    "MAGCARGO",
+    "CHARMELEON",
+    "DITTO",
+    "DITTO",
+    "MAGBY"
+   ]
+  }
+ },
+ "MAP_POKEMON_MANSION_B1F": {
+  "land": {
+   "day": [
+    "DITTO",
+    "MUK",
+    "WEEZING",
+    "DITTO",
+    "ARCANINE",
+    "NINETALES",
+    "MAGMAR",
+    "RAPIDASH",
+    "CHARIZARD",
+    "PORYGON",
+    "AERODACTYL",
+    "MAGMORTAR"
+   ],
+   "night": [
+    "DITTO",
+    "MUK",
+    "WEEZING",
+    "DITTO",
+    "ARCANINE",
+    "GENGAR",
+    "MAGMAR",
+    "HOUNDOOM",
+    "CHARIZARD",
+    "PORYGON",
+    "AERODACTYL",
+    "MAGMORTAR"
+   ]
+  }
+ },
+ "MAP_SEAFOAM_ISLANDS_1F": {
+  "land": {
+   "day": [
+    "DEWGONG",
+    "GOLDUCK",
+    "GOLBAT",
+    "SLOWBRO",
+    "DEWGONG",
+    "SWINUB",
+    "GOLBAT",
+    "DEWGONG",
+    "SLOWBRO",
+    "SMOOCHUM",
+    "JYNX",
+    "SMOOCHUM"
+   ],
+   "night": [
+    "DEWGONG",
+    "GOLDUCK",
+    "GOLBAT",
+    "SLOWBRO",
+    "SNEASEL",
+    "GOLBAT",
+    "SWINUB",
+    "DEWGONG",
+    "SNEASEL",
+    "SMOOCHUM",
+    "JYNX",
+    "SMOOCHUM"
+   ]
+  }
+ },
+ "MAP_SEAFOAM_ISLANDS_B1F": {
+  "land": {
+   "day": [
+    "DEWGONG",
+    "SLOWBRO",
+    "GOLDUCK",
+    "JYNX",
+    "DEWGONG",
+    "SWINUB",
+    "DELIBIRD",
+    "GOLBAT",
+    "SLOWBRO",
+    "GOLDUCK",
+    "SMOOCHUM",
+    "JYNX"
+   ],
+   "night": [
+    "DEWGONG",
+    "SLOWBRO",
+    "GOLDUCK",
+    "JYNX",
+    "SNEASEL",
+    "SWINUB",
+    "DELIBIRD",
+    "CROBAT",
+    "SNEASEL",
+    "GOLBAT",
+    "SMOOCHUM",
+    "JYNX"
+   ]
+  }
+ },
+ "MAP_SEAFOAM_ISLANDS_B2F": {
+  "land": {
+   "day": [
+    "DEWGONG",
+    "CROBAT",
+    "SLOWBRO",
+    "JYNX",
+    "PILOSWINE",
+    "DELIBIRD",
+    "GOLDUCK",
+    "DEWGONG",
+    "JYNX",
+    "SWINUB",
+    "SLOWKING",
+    "SMOOCHUM"
+   ],
+   "night": [
+    "DEWGONG",
+    "CROBAT",
+    "SLOWBRO",
+    "JYNX",
+    "SNEASEL",
+    "PILOSWINE",
+    "DELIBIRD",
+    "SNEASEL",
+    "JYNX",
+    "WEAVILE",
+    "SLOWKING",
+    "WEAVILE"
+   ]
+  }
+ },
+ "MAP_SEAFOAM_ISLANDS_B3F": {
+  "land": {
+   "day": [
+    "DEWGONG",
+    "JYNX",
+    "DEWGONG",
+    "SEEL",
+    "PILOSWINE",
+    "SLOWBRO",
+    "DELIBIRD",
+    "GOLDUCK",
+    "CROBAT",
+    "SLOWKING",
+    "SMOOCHUM",
+    "MAMOSWINE"
+   ],
+   "night": [
+    "DEWGONG",
+    "JYNX",
+    "DEWGONG",
+    "SEEL",
+    "SNEASEL",
+    "PILOSWINE",
+    "WEAVILE",
+    "GOLDUCK",
+    "CROBAT",
+    "SLOWKING",
+    "SMOOCHUM",
+    "MAMOSWINE"
+   ]
+  },
+  "surf": {
+   "day": [
+    "DEWGONG",
+    "DEWGONG",
+    "SLOWBRO",
+    "CLOYSTER",
+    "LAPRAS"
+   ],
+   "night": [
+    "DEWGONG",
+    "CLOYSTER",
+    "DEWGONG",
+    "SEADRA",
+    "LAPRAS"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SHELLDER",
+    "SEADRA",
+    "KINGLER",
+    "DEWGONG",
+    "MAGIKARP",
+    "SHELLDER",
+    "GYARADOS",
+    "TENTACRUEL",
+    "KINGDRA",
+    "SEADRA"
+   ],
+   "night": [
+    "SHELLDER",
+    "SEADRA",
+    "KINGLER",
+    "SLOWBRO",
+    "MAGIKARP",
+    "SHELLDER",
+    "GYARADOS",
+    "SLOWBRO",
+    "KINGDRA",
+    "SEADRA"
+   ]
+  },
+  "water_type": "cold"
+ },
+ "MAP_SEAFOAM_ISLANDS_B4F": {
+  "land": {
+   "day": [
+    "DEWGONG",
+    "JYNX",
+    "SEEL",
+    "SLOWKING",
+    "PILOSWINE",
+    "DELIBIRD",
+    "DEWGONG",
+    "JYNX",
+    "MAMOSWINE",
+    "CROBAT",
+    "MAMOSWINE",
+    "WEAVILE"
+   ],
+   "night": [
+    "DEWGONG",
+    "JYNX",
+    "SEEL",
+    "SLOWKING",
+    "SNEASEL",
+    "WEAVILE",
+    "DEWGONG",
+    "JYNX",
+    "MAMOSWINE",
+    "CROBAT",
+    "MAMOSWINE",
+    "WEAVILE"
+   ]
+  },
+  "surf": {
+   "day": [
+    "DEWGONG",
+    "CLOYSTER",
+    "SEADRA",
+    "KINGDRA",
+    "LAPRAS"
+   ],
+   "night": [
+    "DEWGONG",
+    "CLOYSTER",
+    "SLOWKING",
+    "KINGDRA",
+    "LAPRAS"
+   ]
+  },
+  "fish": {
+   "day": [
+    "DEWGONG",
+    "CLOYSTER",
+    "SEADRA",
+    "KINGLER",
+    "GYARADOS",
+    "CLOYSTER",
+    "SEADRA",
+    "KINGDRA",
+    "DEWGONG",
+    "GOLDUCK"
+   ],
+   "night": [
+    "DEWGONG",
+    "CLOYSTER",
+    "SEADRA",
+    "KINGLER",
+    "GYARADOS",
+    "CLOYSTER",
+    "SEADRA",
+    "KINGDRA",
+    "DEWGONG",
+    "SLOWKING"
+   ]
+  },
+  "water_type": "cold"
+ },
+ "MAP_ROUTE22_HNS": {
+  "land": {
+   "day": [
+    "RATICATE",
+    "PRIMEAPE",
+    "FEAROW",
+    "PONYTA",
+    "NIDORINA",
+    "NIDORINO",
+    "DODUO",
+    "FURRET",
+    "LEDIAN",
+    "PONYTA",
+    "EEVEE",
+    "IGGLYBUFF"
+   ],
+   "night": [
+    "RATICATE",
+    "PRIMEAPE",
+    "NOCTOWL",
+    "MURKROW",
+    "HOUNDOUR",
+    "NIDORINO",
+    "GOLBAT",
+    "ARIADOS",
+    "NOCTOWL",
+    "HOUNDOUR",
+    "EEVEE",
+    "MURKROW"
+   ]
+  },
+  "surf": {
+   "day": [
+    "POLIWHIRL",
+    "AZUMARILL",
+    "POLIWHIRL",
+    "GOLDUCK",
+    "QUAGSIRE"
+   ],
+   "night": [
+    "POLIWHIRL",
+    "QUAGSIRE",
+    "QUAGSIRE",
+    "AZUMARILL",
+    "GOLDUCK"
+   ]
+  },
+  "fish": {
+   "day": [
+    "POLIWHIRL",
+    "AZUMARILL",
+    "MAGIKARP",
+    "POLIWHIRL",
+    "SEAKING",
+    "AZUMARILL",
+    "GYARADOS",
+    "GOLDUCK",
+    "SEAKING",
+    "GYARADOS"
+   ],
+   "night": [
+    "POLIWHIRL",
+    "AZUMARILL",
+    "MAGIKARP",
+    "POLIWHIRL",
+    "QUAGSIRE",
+    "AZUMARILL",
+    "GYARADOS",
+    "QUAGSIRE",
+    "SEAKING",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "pond",
+  "rock": {
+   "day": [
+    "FEAROW",
+    "LEDIAN",
+    "PIDGEOT",
+    "BUTTERFREE",
+    "FORRETRESS"
+   ],
+   "night": [
+    "NOCTOWL",
+    "ARIADOS",
+    "FEAROW",
+    "VENOMOTH",
+    "FORRETRESS"
+   ]
+  }
+ },
+ "MAP_ROUTE23_HNS": {
+  "land": {
+   "day": [
+    "FEAROW",
+    "PRIMEAPE",
+    "ARBOK",
+    "SANDSLASH",
+    "GLIGAR",
+    "DONPHAN",
+    "RHYDON",
+    "SKARMORY",
+    "TAUROS",
+    "URSARING",
+    "SNORLAX",
+    "ANNIHILAPE"
+   ],
+   "night": [
+    "FEAROW",
+    "PRIMEAPE",
+    "GOLBAT",
+    "HOUNDOOM",
+    "URSARING",
+    "GLIGAR",
+    "MURKROW",
+    "SNEASEL",
+    "SANDSLASH",
+    "SKARMORY",
+    "SNORLAX",
+    "ANNIHILAPE"
+   ]
+  },
+  "surf": {
+   "day": [
+    "SEAKING",
+    "POLIWHIRL",
+    "QUAGSIRE",
+    "AZUMARILL",
+    "POLITOED"
+   ],
+   "night": [
+    "SEAKING",
+    "QUAGSIRE",
+    "QUAGSIRE",
+    "POLIWHIRL",
+    "POLITOED"
+   ]
+  },
+  "fish": {
+   "day": [
+    "POLIWRATH",
+    "SEAKING",
+    "MAGIKARP",
+    "SEAKING",
+    "AZUMARILL",
+    "POLIWHIRL",
+    "GYARADOS",
+    "POLITOED",
+    "SEAKING",
+    "DRAGONAIR"
+   ],
+   "night": [
+    "POLIWRATH",
+    "SEAKING",
+    "MAGIKARP",
+    "SEAKING",
+    "QUAGSIRE",
+    "POLIWHIRL",
+    "GYARADOS",
+    "QUAGSIRE",
+    "SEAKING",
+    "DRAGONAIR"
+   ]
+  },
+  "water_type": "pond",
+  "rock": {
+   "day": [
+    "FEAROW",
+    "LEDIAN",
+    "PIDGEOT",
+    "FORRETRESS",
+    "HERACROSS"
+   ],
+   "night": [
+    "NOCTOWL",
+    "ARIADOS",
+    "FEAROW",
+    "FORRETRESS",
+    "HERACROSS"
+   ]
+  }
+ },
+ "MAP_VICTORY_ROAD_KANTO_1F_HNS": {
+  "land": {
+   "day": [
+    "MACHOKE",
+    "GRAVELER",
+    "ONIX",
+    "GOLBAT",
+    "MAROWAK",
+    "GLIGAR",
+    "SANDSLASH",
+    "MACHOKE",
+    "HITMONLEE",
+    "HITMONCHAN",
+    "TYROGUE",
+    "GLIGAR"
+   ],
+   "night": [
+    "MACHOKE",
+    "GRAVELER",
+    "ONIX",
+    "GOLBAT",
+    "MISDREAVUS",
+    "GLIGAR",
+    "SANDSLASH",
+    "MISDREAVUS",
+    "HITMONLEE",
+    "HITMONCHAN",
+    "TYROGUE",
+    "MISDREAVUS"
+   ]
+  },
+  "rock": {
+   "day": [
+    "GRAVELER",
+    "SANDSLASH",
+    "GEODUDE",
+    "SHUCKLE",
+    "DUNSPARCE"
+   ],
+   "night": [
+    "GRAVELER",
+    "DUNSPARCE",
+    "SANDSLASH",
+    "SHUCKLE",
+    "GEODUDE"
+   ]
+  }
+ },
+ "MAP_VICTORY_ROAD_KANTO_B1F_HNS": {
+  "land": {
+   "day": [
+    "ONIX",
+    "GOLBAT",
+    "GRAVELER",
+    "MACHOKE",
+    "RHYDON",
+    "MAROWAK",
+    "STEELIX",
+    "PRIMEAPE",
+    "HITMONTOP",
+    "MACHAMP",
+    "AERODACTYL",
+    "HITMONLEE"
+   ],
+   "night": [
+    "ONIX",
+    "GOLBAT",
+    "GRAVELER",
+    "MACHOKE",
+    "MISDREAVUS",
+    "MAROWAK",
+    "CROBAT",
+    "PRIMEAPE",
+    "HITMONTOP",
+    "MACHAMP",
+    "AERODACTYL",
+    "HITMONCHAN"
+   ]
+  },
+  "surf": {
+   "day": [
+    "SLOWBRO",
+    "GOLDUCK",
+    "SLOWBRO",
+    "POLIWHIRL",
+    "SLOWKING"
+   ],
+   "night": [
+    "SLOWBRO",
+    "CROBAT",
+    "GOLDUCK",
+    "CROBAT",
+    "SLOWKING"
+   ]
+  },
+  "fish": {
+   "day": [
+    "POLIWHIRL",
+    "SEAKING",
+    "GOLDUCK",
+    "MAGIKARP",
+    "SLOWBRO",
+    "POLIWRATH",
+    "GYARADOS",
+    "SEAKING",
+    "POLITOED",
+    "DRAGONAIR"
+   ],
+   "night": [
+    "POLIWHIRL",
+    "SEAKING",
+    "GOLDUCK",
+    "MAGIKARP",
+    "CROBAT",
+    "POLIWRATH",
+    "GYARADOS",
+    "CROBAT",
+    "POLITOED",
+    "DRAGONAIR"
+   ]
+  },
+  "water_type": "cave"
+ },
+ "MAP_VICTORY_ROAD_KANTO_B2F_HNS": {
+  "land": {
+   "day": [
+    "MACHAMP",
+    "MAROWAK",
+    "GOLEM",
+    "STEELIX",
+    "RHYDON",
+    "SANDSLASH",
+    "GLISCOR",
+    "RHYPERIOR",
+    "AERODACTYL",
+    "SNORLAX",
+    "AERODACTYL",
+    "HITMONTOP"
+   ],
+   "night": [
+    "MACHAMP",
+    "MAROWAK",
+    "GOLEM",
+    "STEELIX",
+    "CROBAT",
+    "SANDSLASH",
+    "GLISCOR",
+    "MISMAGIUS",
+    "AERODACTYL",
+    "SNORLAX",
+    "AERODACTYL",
+    "HITMONTOP"
+   ]
+  }
+ },
+ "MAP_CERULEAN_CITY_HNS": {
+  "surf": {
+   "day": [
+    "SEAKING",
+    "GOLDUCK",
+    "SEAKING",
+    "POLIWHIRL",
+    "BLASTOISE"
+   ],
+   "night": [
+    "SEAKING",
+    "GOLDUCK",
+    "SLOWBRO",
+    "SLOWBRO",
+    "BLASTOISE"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SEAKING",
+    "POLIWHIRL",
+    "MAGIKARP",
+    "SEAKING",
+    "GOLDUCK",
+    "SEAKING",
+    "GYARADOS",
+    "POLIWHIRL",
+    "GOLDUCK",
+    "GYARADOS"
+   ],
+   "night": [
+    "SEAKING",
+    "POLIWHIRL",
+    "MAGIKARP",
+    "SEAKING",
+    "SLOWBRO",
+    "SEAKING",
+    "GYARADOS",
+    "POLIWHIRL",
+    "SLOWBRO",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "pond"
+ },
+ "MAP_VERMILION_CITY_HNS": {
+  "surf": {
+   "day": [
+    "TENTACRUEL",
+    "KINGLER",
+    "TENTACRUEL",
+    "SHELLDER",
+    "REMORAID"
+   ],
+   "night": [
+    "TENTACRUEL",
+    "LANTURN",
+    "KINGLER",
+    "STARYU",
+    "LANTURN"
+   ]
+  },
+  "fish": {
+   "day": [
+    "KINGLER",
+    "LANTURN",
+    "SEADRA",
+    "KINGLER",
+    "MAGIKARP",
+    "SHELLDER",
+    "GYARADOS",
+    "OCTILLERY",
+    "SEADRA",
+    "GYARADOS"
+   ],
+   "night": [
+    "KINGLER",
+    "LANTURN",
+    "SEADRA",
+    "LANTURN",
+    "MAGIKARP",
+    "SHELLDER",
+    "GYARADOS",
+    "LANTURN",
+    "STARYU",
+    "GYARADOS"
+   ]
+  },
+  "rock": {
+   "day": [
+    "KINGLER",
+    "PIDGEOT",
+    "GRAVELER",
+    "FEAROW",
+    "BUTTERFREE"
+   ],
+   "night": [
+    "KINGLER",
+    "NOCTOWL",
+    "GRAVELER",
+    "FEAROW",
+    "BUTTERFREE"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_VERMILION_CITY_PORT_OUTSIDE_HNS": {
+  "surf": {
+   "day": [
+    "TENTACRUEL",
+    "OCTILLERY",
+    "KINGLER",
+    "OCTILLERY",
+    "STARYU"
+   ],
+   "night": [
+    "TENTACRUEL",
+    "LANTURN",
+    "LANTURN",
+    "KINGLER",
+    "STARYU"
+   ]
+  },
+  "fish": {
+   "day": [
+    "OCTILLERY",
+    "KINGLER",
+    "TENTACRUEL",
+    "SEADRA",
+    "MAGIKARP",
+    "OCTILLERY",
+    "GYARADOS",
+    "SHELLDER",
+    "LANTURN",
+    "GYARADOS"
+   ],
+   "night": [
+    "OCTILLERY",
+    "KINGLER",
+    "TENTACRUEL",
+    "LANTURN",
+    "MAGIKARP",
+    "LANTURN",
+    "GYARADOS",
+    "SHELLDER",
+    "STARYU",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_LAVENDER_TOWN_HNS": {},
+ "MAP_CELADON_CITY_HNS": {
+  "surf": {
+   "day": [
+    "SLOWBRO",
+    "SLOWBRO",
+    "GOLDUCK",
+    "POLIWHIRL",
+    "SEAKING"
+   ],
+   "night": [
+    "SLOWBRO",
+    "GOLDUCK",
+    "SLOWBRO",
+    "SEAKING",
+    "SEAKING"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SLOWBRO",
+    "POLIWHIRL",
+    "MAGIKARP",
+    "GOLDUCK",
+    "SLOWBRO",
+    "POLIWHIRL",
+    "GYARADOS",
+    "GOLDUCK",
+    "SLOWBRO",
+    "GYARADOS"
+   ],
+   "night": [
+    "SLOWBRO",
+    "POLIWHIRL",
+    "MAGIKARP",
+    "GOLDUCK",
+    "SEAKING",
+    "POLIWHIRL",
+    "GYARADOS",
+    "SEAKING",
+    "SLOWBRO",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "pond"
+ },
+ "MAP_SAFFRON_CITY_HNS": {},
+ "MAP_FUCHSIA_CITY_HNS": {
+  "surf": {
+   "day": [
+    "SEAKING",
+    "SEAKING",
+    "SLOWBRO",
+    "GOLDUCK",
+    "POLIWHIRL"
+   ],
+   "night": [
+    "SEAKING",
+    "GOLDUCK",
+    "SLOWBRO",
+    "GOLDUCK",
+    "GOLDUCK"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SEAKING",
+    "POLIWHIRL",
+    "MAGIKARP",
+    "SEAKING",
+    "SLOWBRO",
+    "SEAKING",
+    "GYARADOS",
+    "POLIWHIRL",
+    "SLOWBRO",
+    "GYARADOS"
+   ],
+   "night": [
+    "SEAKING",
+    "POLIWHIRL",
+    "MAGIKARP",
+    "SEAKING",
+    "GOLDUCK",
+    "SEAKING",
+    "GYARADOS",
+    "GOLDUCK",
+    "SLOWBRO",
+    "GYARADOS"
+   ]
+  },
+  "rock": {
+   "day": [
+    "VENOMOTH",
+    "EXEGGCUTE",
+    "PARASECT",
+    "KAKUNA",
+    "BUTTERFREE"
+   ],
+   "night": [
+    "VENOMOTH",
+    "EXEGGCUTE",
+    "ARIADOS",
+    "PARASECT",
+    "NOCTOWL"
+   ]
+  },
+  "water_type": "pond"
+ },
+ "MAP_ROUTE5_HNS": {
+  "land": {
+   "day": [
+    "PIDGEOT",
+    "PERSIAN",
+    "JIGGLYPUFF",
+    "KADABRA",
+    "GLOOM",
+    "RATICATE",
+    "GRANBULL",
+    "KADABRA",
+    "PIDGEOT",
+    "JIGGLYPUFF",
+    "MIME_JR",
+    "EEVEE"
+   ],
+   "night": [
+    "PERSIAN",
+    "NOCTOWL",
+    "GLOOM",
+    "VENOMOTH",
+    "JIGGLYPUFF",
+    "HAUNTER",
+    "KADABRA",
+    "GRANBULL",
+    "DROWZEE",
+    "GLOOM",
+    "MIME_JR",
+    "CLEFAIRY"
+   ]
+  }
+ },
+ "MAP_ROUTE6_HNS": {
+  "land": {
+   "day": [
+    "GLOOM",
+    "MAGNETON",
+    "PIDGEOT",
+    "PERSIAN",
+    "WEEPINBELL",
+    "RATICATE",
+    "KADABRA",
+    "GRANBULL",
+    "FARFETCHD",
+    "JIGGLYPUFF",
+    "KADABRA",
+    "ELEKID"
+   ],
+   "night": [
+    "GLOOM",
+    "MAGNETON",
+    "PERSIAN",
+    "VENOMOTH",
+    "DROWZEE",
+    "NOCTOWL",
+    "KADABRA",
+    "GRANBULL",
+    "FARFETCHD",
+    "HAUNTER",
+    "KADABRA",
+    "ELEKID"
+   ]
+  },
+  "surf": {
+   "day": [
+    "GOLDUCK",
+    "GOLDUCK",
+    "SLOWBRO",
+    "POLIWHIRL",
+    "BLASTOISE"
+   ],
+   "night": [
+    "GOLDUCK",
+    "SLOWBRO",
+    "SEAKING",
+    "SEAKING",
+    "BLASTOISE"
+   ]
+  },
+  "fish": {
+   "day": [
+    "GOLDUCK",
+    "POLIWHIRL",
+    "QUAGSIRE",
+    "GOLDUCK",
+    "SLOWBRO",
+    "POLIWHIRL",
+    "GYARADOS",
+    "GOLDUCK",
+    "POLIWHIRL",
+    "GYARADOS"
+   ],
+   "night": [
+    "GOLDUCK",
+    "POLIWHIRL",
+    "QUAGSIRE",
+    "GOLDUCK",
+    "SEAKING",
+    "POLIWHIRL",
+    "GYARADOS",
+    "SEAKING",
+    "SEAKING",
+    "GYARADOS"
+   ]
+  },
+  "rock": {
+   "day": [
+    "BUTTERFREE",
+    "BEEDRILL",
+    "LEDIAN",
+    "METAPOD",
+    "EXEGGCUTE"
+   ],
+   "night": [
+    "BUTTERFREE",
+    "BEEDRILL",
+    "NOCTOWL",
+    "VENOMOTH",
+    "EXEGGCUTE"
+   ]
+  },
+  "water_type": "pond"
+ },
+ "MAP_ROUTE7_HNS": {
+  "land": {
+   "day": [
+    "PERSIAN",
+    "VULPIX",
+    "GROWLITHE",
+    "PIDGEOT",
+    "JIGGLYPUFF",
+    "GLOOM",
+    "GRANBULL",
+    "RATICATE",
+    "KADABRA",
+    "EEVEE",
+    "EEVEE",
+    "PICHU"
+   ],
+   "night": [
+    "PERSIAN",
+    "VULPIX",
+    "MURKROW",
+    "HOUNDOUR",
+    "HAUNTER",
+    "GROWLITHE",
+    "MURKROW",
+    "NOCTOWL",
+    "KADABRA",
+    "HOUNDOUR",
+    "EEVEE",
+    "PICHU"
+   ]
+  }
+ },
+ "MAP_ROUTE8_HNS": {
+  "land": {
+   "day": [
+    "GROWLITHE",
+    "ARBOK",
+    "VULPIX",
+    "SANDSLASH",
+    "PIDGEOT",
+    "PERSIAN",
+    "KADABRA",
+    "GRANBULL",
+    "KADABRA",
+    "PONYTA",
+    "GROWLITHE",
+    "PONYTA"
+   ],
+   "night": [
+    "GROWLITHE",
+    "ARBOK",
+    "HAUNTER",
+    "HAUNTER",
+    "NOCTOWL",
+    "HOUNDOUR",
+    "PERSIAN",
+    "GRANBULL",
+    "KADABRA",
+    "HOUNDOUR",
+    "VULPIX",
+    "GASTLY"
+   ]
+  },
+  "surf": {
+   "day": [
+    "SEAKING",
+    "SEAKING",
+    "POLIWHIRL",
+    "SLOWBRO",
+    "GOLDUCK"
+   ],
+   "night": [
+    "SEAKING",
+    "GOLDUCK",
+    "GOLDUCK",
+    "SLOWBRO",
+    "POLIWHIRL"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SEAKING",
+    "POLIWHIRL",
+    "MAGIKARP",
+    "SEAKING",
+    "SLOWBRO",
+    "POLIWHIRL",
+    "GYARADOS",
+    "SEAKING",
+    "SLOWBRO",
+    "GYARADOS"
+   ],
+   "night": [
+    "SEAKING",
+    "POLIWHIRL",
+    "MAGIKARP",
+    "SEAKING",
+    "GOLDUCK",
+    "POLIWHIRL",
+    "GYARADOS",
+    "GOLDUCK",
+    "SLOWBRO",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "pond"
+ },
+ "MAP_ROUTE11_HNS": {
+  "land": {
+   "day": [
+    "DROWZEE",
+    "FEAROW",
+    "RATICATE",
+    "ARBOK",
+    "SANDSLASH",
+    "DIGLETT",
+    "MAGNETON",
+    "HYPNO",
+    "FARFETCHD",
+    "MAGNETON",
+    "FARFETCHD",
+    "ELEKID"
+   ],
+   "night": [
+    "DROWZEE",
+    "FEAROW",
+    "RATICATE",
+    "NOCTOWL",
+    "PERSIAN",
+    "GLOOM",
+    "HAUNTER",
+    "HYPNO",
+    "FARFETCHD",
+    "VENOMOTH",
+    "FARFETCHD",
+    "ELEKID"
+   ]
+  },
+  "rock": {
+   "day": [
+    "FEAROW",
+    "FEAROW",
+    "KAKUNA",
+    "PIDGEOT",
+    "EXEGGCUTE"
+   ],
+   "night": [
+    "FEAROW",
+    "FEAROW",
+    "NOCTOWL",
+    "KAKUNA",
+    "ARIADOS"
+   ]
+  }
+ },
+ "MAP_ROUTE12_HNS": {
+  "surf": {
+   "day": [
+    "TENTACRUEL",
+    "QWILFISH",
+    "TENTACRUEL",
+    "SLOWBRO",
+    "KINGLER"
+   ],
+   "night": [
+    "TENTACRUEL",
+    "QWILFISH",
+    "LANTURN",
+    "SLOWBRO",
+    "LANTURN"
+   ]
+  },
+  "fish": {
+   "day": [
+    "TENTACRUEL",
+    "QWILFISH",
+    "QWILFISH",
+    "KINGLER",
+    "MAGIKARP",
+    "SEADRA",
+    "GYARADOS",
+    "SLOWBRO",
+    "QWILFISH",
+    "GYARADOS"
+   ],
+   "night": [
+    "TENTACRUEL",
+    "QWILFISH",
+    "QWILFISH",
+    "LANTURN",
+    "MAGIKARP",
+    "SEADRA",
+    "GYARADOS",
+    "LANTURN",
+    "STARYU",
+    "GYARADOS"
+   ]
+  },
+  "rock": {
+   "day": [
+    "VENOMOTH",
+    "VENOMOTH",
+    "EXEGGCUTE",
+    "PIDGEOT",
+    "PINECO"
+   ],
+   "night": [
+    "VENOMOTH",
+    "VENOMOTH",
+    "NOCTOWL",
+    "EXEGGCUTE",
+    "MURKROW"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE13_HNS": {
+  "land": {
+   "day": [
+    "WEEPINBELL",
+    "GLOOM",
+    "PIDGEOT",
+    "VENOMOTH",
+    "NIDORINA",
+    "NIDORINO",
+    "DITTO",
+    "DITTO",
+    "FARFETCHD",
+    "GLOOM",
+    "DITTO",
+    "PIDGEOT"
+   ],
+   "night": [
+    "WEEPINBELL",
+    "GLOOM",
+    "VENOMOTH",
+    "NOCTOWL",
+    "HAUNTER",
+    "HYPNO",
+    "DITTO",
+    "ARIADOS",
+    "MURKROW",
+    "DITTO",
+    "DITTO",
+    "NIDORINO"
+   ]
+  },
+  "surf": {
+   "day": [
+    "QWILFISH",
+    "TENTACRUEL",
+    "QWILFISH",
+    "SEADRA",
+    "SLOWBRO"
+   ],
+   "night": [
+    "QWILFISH",
+    "TENTACRUEL",
+    "LANTURN",
+    "SEADRA",
+    "STARYU"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SEADRA",
+    "TENTACRUEL",
+    "QWILFISH",
+    "CORSOLA",
+    "MAGIKARP",
+    "KINGLER",
+    "GYARADOS",
+    "SEADRA",
+    "QWILFISH",
+    "GYARADOS"
+   ],
+   "night": [
+    "SEADRA",
+    "TENTACRUEL",
+    "QWILFISH",
+    "LANTURN",
+    "MAGIKARP",
+    "KINGLER",
+    "GYARADOS",
+    "LANTURN",
+    "STARYU",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE16_HNS": {
+  "land": {
+   "day": [
+    "FEAROW",
+    "DODRIO",
+    "RATICATE",
+    "GRIMER",
+    "DODRIO",
+    "PONYTA",
+    "FEAROW",
+    "RATICATE",
+    "LICKITUNG",
+    "RAPIDASH",
+    "LICKITUNG",
+    "EEVEE"
+   ],
+   "night": [
+    "FEAROW",
+    "DODRIO",
+    "MUK",
+    "MURKROW",
+    "RATICATE",
+    "MAGCARGO",
+    "NOCTOWL",
+    "HOUNDOUR",
+    "LICKITUNG",
+    "MURKROW",
+    "LICKITUNG",
+    "EEVEE"
+   ]
+  },
+  "surf": {
+   "day": [
+    "POLIWHIRL",
+    "SLOWBRO",
+    "POLIWHIRL",
+    "GOLDUCK",
+    "SEAKING"
+   ],
+   "night": [
+    "POLIWHIRL",
+    "SLOWBRO",
+    "SEAKING",
+    "SEAKING",
+    "GOLDUCK"
+   ]
+  },
+  "fish": {
+   "day": [
+    "MAGIKARP",
+    "POLIWHIRL",
+    "POLIWHIRL",
+    "SLOWBRO",
+    "GOLDUCK",
+    "POLIWHIRL",
+    "GYARADOS",
+    "SLOWBRO",
+    "GOLDUCK",
+    "GYARADOS"
+   ],
+   "night": [
+    "MAGIKARP",
+    "POLIWHIRL",
+    "POLIWHIRL",
+    "SLOWBRO",
+    "SEAKING",
+    "POLIWHIRL",
+    "GYARADOS",
+    "SEAKING",
+    "GOLDUCK",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "pond"
+ },
+ "MAP_ROUTE17_HNS": {
+  "land": {
+   "day": [
+    "DODRIO",
+    "FEAROW",
+    "RATICATE",
+    "PONYTA",
+    "FEAROW",
+    "RAPIDASH",
+    "DODRIO",
+    "GRIMER",
+    "RATICATE",
+    "PONYTA",
+    "LICKITUNG",
+    "FARFETCHD"
+   ],
+   "night": [
+    "DODRIO",
+    "FEAROW",
+    "MUK",
+    "MURKROW",
+    "MAGCARGO",
+    "NOCTOWL",
+    "HOUNDOUR",
+    "NOCTOWL",
+    "MUK",
+    "GRIMER",
+    "LICKITUNG",
+    "FARFETCHD"
+   ]
+  },
+  "surf": {
+   "day": [
+    "OCTILLERY",
+    "TENTACRUEL",
+    "OCTILLERY",
+    "SHELLDER",
+    "KINGLER"
+   ],
+   "night": [
+    "OCTILLERY",
+    "TENTACRUEL",
+    "LANTURN",
+    "STARYU",
+    "SHELLDER"
+   ]
+  },
+  "fish": {
+   "day": [
+    "OCTILLERY",
+    "KINGLER",
+    "OCTILLERY",
+    "SHELLDER",
+    "MAGIKARP",
+    "SEADRA",
+    "GYARADOS",
+    "KINGLER",
+    "OCTILLERY",
+    "GYARADOS"
+   ],
+   "night": [
+    "OCTILLERY",
+    "KINGLER",
+    "OCTILLERY",
+    "LANTURN",
+    "MAGIKARP",
+    "SEADRA",
+    "GYARADOS",
+    "LANTURN",
+    "STARYU",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE18_HNS": {
+  "land": {
+   "day": [
+    "FEAROW",
+    "RATICATE",
+    "DODRIO",
+    "GRIMER",
+    "FEAROW",
+    "DODRIO",
+    "RATICATE",
+    "LICKITUNG",
+    "GRIMER",
+    "MUK",
+    "LICKITUNG",
+    "EEVEE"
+   ],
+   "night": [
+    "FEAROW",
+    "RATICATE",
+    "MUK",
+    "MURKROW",
+    "MAGCARGO",
+    "NOCTOWL",
+    "HOUNDOUR",
+    "LICKITUNG",
+    "NOCTOWL",
+    "GRIMER",
+    "LICKITUNG",
+    "EEVEE"
+   ]
+  },
+  "surf": {
+   "day": [
+    "SEADRA",
+    "OCTILLERY",
+    "SEADRA",
+    "KINGLER",
+    "TENTACRUEL"
+   ],
+   "night": [
+    "SEADRA",
+    "TENTACRUEL",
+    "LANTURN",
+    "STARYU",
+    "KINGLER"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SEADRA",
+    "TENTACRUEL",
+    "KINGLER",
+    "SEADRA",
+    "MAGIKARP",
+    "OCTILLERY",
+    "GYARADOS",
+    "SHELLDER",
+    "SEADRA",
+    "GYARADOS"
+   ],
+   "night": [
+    "SEADRA",
+    "TENTACRUEL",
+    "KINGLER",
+    "LANTURN",
+    "MAGIKARP",
+    "OCTILLERY",
+    "GYARADOS",
+    "STARYU",
+    "LANTURN",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "sea",
+  "rock": {
+   "day": [
+    "FEAROW",
+    "PIDGEOT",
+    "BUTTERFREE",
+    "BEEDRILL",
+    "EXEGGCUTE"
+   ],
+   "night": [
+    "NOCTOWL",
+    "FEAROW",
+    "VENOMOTH",
+    "BEEDRILL",
+    "EXEGGCUTE"
+   ]
+  }
+ },
+ "MAP_ROUTE24_HNS": {
+  "land": {
+   "day": [
+    "WEEPINBELL",
+    "BUTTERFREE",
+    "KADABRA",
+    "GLOOM",
+    "PIDGEOT",
+    "BEEDRILL",
+    "KADABRA",
+    "METAPOD",
+    "SUNKERN",
+    "LEDIAN",
+    "CHARMELEON",
+    "PICHU"
+   ],
+   "night": [
+    "WEEPINBELL",
+    "GLOOM",
+    "VENOMOTH",
+    "NOCTOWL",
+    "KADABRA",
+    "PARASECT",
+    "KADABRA",
+    "ARIADOS",
+    "BUTTERFREE",
+    "PERSIAN",
+    "CHARMELEON",
+    "PICHU"
+   ]
+  },
+  "surf": {
+   "day": [
+    "GOLDUCK",
+    "SEAKING",
+    "GOLDUCK",
+    "SLOWBRO",
+    "POLIWHIRL"
+   ],
+   "night": [
+    "GOLDUCK",
+    "SEAKING",
+    "SLOWBRO",
+    "SLOWBRO",
+    "POLIWHIRL"
+   ]
+  },
+  "fish": {
+   "day": [
+    "GOLDUCK",
+    "POLIWHIRL",
+    "MAGIKARP",
+    "SEAKING",
+    "GOLDUCK",
+    "POLIWHIRL",
+    "GYARADOS",
+    "SEAKING",
+    "GOLDUCK",
+    "GYARADOS"
+   ],
+   "night": [
+    "GOLDUCK",
+    "POLIWHIRL",
+    "MAGIKARP",
+    "SEAKING",
+    "SLOWBRO",
+    "POLIWHIRL",
+    "GYARADOS",
+    "SLOWBRO",
+    "GOLDUCK",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "pond"
+ },
+ "MAP_ROUTE9_HNS": {
+  "land": {
+   "day": [
+    "RATICATE",
+    "ARBOK",
+    "FEAROW",
+    "SANDSLASH",
+    "RHYHORN",
+    "RATICATE",
+    "PRIMEAPE",
+    "KANGASKHAN",
+    "ONIX",
+    "SANDSLASH",
+    "KANGASKHAN",
+    "MAROWAK"
+   ],
+   "night": [
+    "RATICATE",
+    "ARBOK",
+    "VENOMOTH",
+    "NOCTOWL",
+    "RHYHORN",
+    "GOLBAT",
+    "HAUNTER",
+    "KANGASKHAN",
+    "ONIX",
+    "MAROWAK",
+    "KANGASKHAN",
+    "MURKROW"
+   ]
+  }
+ },
+ "MAP_ROUTE10_HNS": {
+  "land": {
+   "day": [
+    "ELECTRODE",
+    "SANDSLASH",
+    "FEAROW",
+    "ARBOK",
+    "MAGNETON",
+    "RHYHORN",
+    "ELECTABUZZ",
+    "MAROWAK",
+    "ELECTABUZZ",
+    "PIKACHU",
+    "MAROWAK",
+    "ELEKID"
+   ],
+   "night": [
+    "ELECTRODE",
+    "SANDSLASH",
+    "HAUNTER",
+    "GOLBAT",
+    "NOCTOWL",
+    "MAGNETON",
+    "ELECTABUZZ",
+    "HOUNDOUR",
+    "ELECTABUZZ",
+    "PIKACHU",
+    "MAROWAK",
+    "ELEKID"
+   ]
+  },
+  "surf": {
+   "day": [
+    "POLIWHIRL",
+    "SEAKING",
+    "GOLDUCK",
+    "SEAKING",
+    "POLIWHIRL"
+   ],
+   "night": [
+    "POLIWHIRL",
+    "SEAKING",
+    "SLOWBRO",
+    "SLOWBRO",
+    "GOLDUCK"
+   ]
+  },
+  "fish": {
+   "day": [
+    "POLIWHIRL",
+    "SEAKING",
+    "MAGIKARP",
+    "POLIWHIRL",
+    "GOLDUCK",
+    "SEAKING",
+    "GYARADOS",
+    "POLIWHIRL",
+    "GOLDUCK",
+    "GYARADOS"
+   ],
+   "night": [
+    "POLIWHIRL",
+    "SEAKING",
+    "MAGIKARP",
+    "POLIWHIRL",
+    "SLOWBRO",
+    "SEAKING",
+    "GYARADOS",
+    "POLIWHIRL",
+    "SLOWBRO",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "pond"
+ },
+ "MAP_ROUTE14_HNS": {
+  "land": {
+   "day": [
+    "GLOOM",
+    "VENOMOTH",
+    "WEEPINBELL",
+    "PIDGEOT",
+    "NIDORINA",
+    "NIDORINO",
+    "DITTO",
+    "TAUROS",
+    "CHANSEY",
+    "MR_MIME",
+    "DITTO",
+    "CHANSEY"
+   ],
+   "night": [
+    "GLOOM",
+    "VENOMOTH",
+    "NOCTOWL",
+    "HAUNTER",
+    "ARIADOS",
+    "NIDORINO",
+    "DITTO",
+    "HYPNO",
+    "CHANSEY",
+    "MURKROW",
+    "DITTO",
+    "CHANSEY"
+   ]
+  },
+  "surf": {
+   "day": [
+    "SLOWBRO",
+    "SEAKING",
+    "SLOWBRO",
+    "POLIWHIRL",
+    "GOLDUCK"
+   ],
+   "night": [
+    "SLOWBRO",
+    "SEAKING",
+    "GOLDUCK",
+    "GOLDUCK",
+    "POLIWHIRL"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SLOWBRO",
+    "POLIWHIRL",
+    "MAGIKARP",
+    "SEAKING",
+    "SLOWBRO",
+    "POLIWHIRL",
+    "GYARADOS",
+    "SEAKING",
+    "SLOWBRO",
+    "GYARADOS"
+   ],
+   "night": [
+    "SLOWBRO",
+    "POLIWHIRL",
+    "MAGIKARP",
+    "SEAKING",
+    "GOLDUCK",
+    "POLIWHIRL",
+    "GYARADOS",
+    "GOLDUCK",
+    "SLOWBRO",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "pond"
+ },
+ "MAP_ROUTE15_HNS": {
+  "land": {
+   "day": [
+    "WEEPINBELL",
+    "GLOOM",
+    "PIDGEOT",
+    "VENOMOTH",
+    "NIDORINA",
+    "DITTO",
+    "NIDORINO",
+    "SCYTHER",
+    "KANGASKHAN",
+    "CHANSEY",
+    "DITTO",
+    "SCYTHER"
+   ],
+   "night": [
+    "WEEPINBELL",
+    "GLOOM",
+    "VENOMOTH",
+    "NOCTOWL",
+    "HAUNTER",
+    "DITTO",
+    "HYPNO",
+    "ARIADOS",
+    "KANGASKHAN",
+    "CHANSEY",
+    "DITTO",
+    "MURKROW"
+   ]
+  },
+  "surf": {
+   "day": [
+    "SEAKING",
+    "POLIWHIRL",
+    "SEAKING",
+    "SLOWBRO",
+    "POLIWHIRL"
+   ],
+   "night": [
+    "SEAKING",
+    "POLIWHIRL",
+    "GOLDUCK",
+    "GOLDUCK",
+    "SLOWBRO"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SEAKING",
+    "POLIWHIRL",
+    "MAGIKARP",
+    "POLIWHIRL",
+    "SEAKING",
+    "SLOWBRO",
+    "GYARADOS",
+    "SEAKING",
+    "POLIWHIRL",
+    "GYARADOS"
+   ],
+   "night": [
+    "SEAKING",
+    "POLIWHIRL",
+    "MAGIKARP",
+    "POLIWHIRL",
+    "GOLDUCK",
+    "SLOWBRO",
+    "GYARADOS",
+    "GOLDUCK",
+    "POLIWHIRL",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "pond",
+  "rock": {
+   "day": [
+    "BEEDRILL",
+    "BUTTERFREE",
+    "PIDGEOT",
+    "EXEGGCUTE",
+    "FEAROW"
+   ],
+   "night": [
+    "NOCTOWL",
+    "VENOMOTH",
+    "BEEDRILL",
+    "EXEGGCUTE",
+    "FEAROW"
+   ]
+  }
+ },
+ "MAP_ROUTE19": {
+  "surf": {
+   "day": [
+    "TENTACRUEL",
+    "SEADRA",
+    "OCTILLERY",
+    "SHELLDER",
+    "WARTORTLE"
+   ],
+   "night": [
+    "TENTACRUEL",
+    "STARYU",
+    "LANTURN",
+    "STARYU",
+    "WARTORTLE"
+   ]
+  },
+  "fish": {
+   "day": [
+    "KINGLER",
+    "TENTACRUEL",
+    "SEADRA",
+    "SHELLDER",
+    "MAGIKARP",
+    "CORSOLA",
+    "GYARADOS",
+    "KINGLER",
+    "SHELLDER",
+    "GYARADOS"
+   ],
+   "night": [
+    "STARYU",
+    "TENTACRUEL",
+    "SEADRA",
+    "LANTURN",
+    "MAGIKARP",
+    "CORSOLA",
+    "GYARADOS",
+    "LANTURN",
+    "STARYU",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "sea"
+ },
+ "MAP_ROUTE25_HNS": {
+  "land": {
+   "day": [
+    "KADABRA",
+    "BEEDRILL",
+    "GLOOM",
+    "WEEPINBELL",
+    "PIDGEOT",
+    "BUTTERFREE",
+    "KADABRA",
+    "SCYTHER",
+    "PINSIR",
+    "IVYSAUR",
+    "IVYSAUR",
+    "SCYTHER"
+   ],
+   "night": [
+    "KADABRA",
+    "BEEDRILL",
+    "VENOMOTH",
+    "NOCTOWL",
+    "GLOOM",
+    "HAUNTER",
+    "KADABRA",
+    "ARIADOS",
+    "PINSIR",
+    "IVYSAUR",
+    "IVYSAUR",
+    "SCYTHER"
+   ]
+  },
+  "surf": {
+   "day": [
+    "SLOWBRO",
+    "KINGLER",
+    "SHELLDER",
+    "TENTACRUEL",
+    "CORSOLA"
+   ],
+   "night": [
+    "STARYU",
+    "SLOWBRO",
+    "LANTURN",
+    "TENTACRUEL",
+    "LANTURN"
+   ]
+  },
+  "fish": {
+   "day": [
+    "KINGLER",
+    "SLOWBRO",
+    "KRABBY",
+    "SEADRA",
+    "MAGIKARP",
+    "SHELLDER",
+    "GYARADOS",
+    "KINGLER",
+    "CORSOLA",
+    "GYARADOS"
+   ],
+   "night": [
+    "STARYU",
+    "KRABBY",
+    "SLOWBRO",
+    "LANTURN",
+    "MAGIKARP",
+    "SHELLDER",
+    "GYARADOS",
+    "LANTURN",
+    "STARYU",
+    "GYARADOS"
+   ]
+  },
+  "water_type": "sea",
+  "rock": {
+   "day": [
+    "BUTTERFREE",
+    "BEEDRILL",
+    "PIDGEOT",
+    "EXEGGCUTE",
+    "PINSIR"
+   ],
+   "night": [
+    "NOCTOWL",
+    "VENOMOTH",
+    "BEEDRILL",
+    "EXEGGCUTE",
+    "PINSIR"
+   ]
+  }
+ },
+ "MAP_ROCK_TUNNEL_1F_HNS": {
+  "land": {
+   "day": [
+    "GOLBAT",
+    "GRAVELER",
+    "MACHOKE",
+    "ONIX",
+    "GOLBAT",
+    "PRIMEAPE",
+    "ONIX",
+    "GRAVELER",
+    "HITMONCHAN",
+    "DUNSPARCE",
+    "HITMONLEE",
+    "TYROGUE"
+   ],
+   "night": [
+    "GOLBAT",
+    "GRAVELER",
+    "MACHOKE",
+    "ONIX",
+    "GOLBAT",
+    "HAUNTER",
+    "ONIX",
+    "DUNSPARCE",
+    "HITMONCHAN",
+    "DUNSPARCE",
+    "HITMONLEE",
+    "TYROGUE"
+   ]
+  },
+  "rock": {
+   "day": [
+    "GRAVELER",
+    "GEODUDE",
+    "DUNSPARCE",
+    "GRAVELER",
+    "SHUCKLE"
+   ],
+   "night": [
+    "GRAVELER",
+    "DUNSPARCE",
+    "GEODUDE",
+    "GRAVELER",
+    "SHUCKLE"
+   ]
+  }
+ },
+ "MAP_ROCK_TUNNEL_B1F_HNS": {
+  "land": {
+   "day": [
+    "ONIX",
+    "MACHOKE",
+    "GRAVELER",
+    "GOLBAT",
+    "ONIX",
+    "MAROWAK",
+    "GRAVELER",
+    "RHYHORN",
+    "HITMONLEE",
+    "KANGASKHAN",
+    "HITMONCHAN",
+    "TYROGUE"
+   ],
+   "night": [
+    "ONIX",
+    "MACHOKE",
+    "GRAVELER",
+    "GOLBAT",
+    "HAUNTER",
+    "MAROWAK",
+    "MISDREAVUS",
+    "RHYHORN",
+    "HITMONLEE",
+    "MISDREAVUS",
+    "HITMONCHAN",
+    "TYROGUE"
+   ]
+  },
+  "rock": {
+   "day": [
+    "GRAVELER",
+    "GEODUDE",
+    "GRAVELER",
+    "DUNSPARCE",
+    "SHUCKLE"
+   ],
+   "night": [
+    "GRAVELER",
+    "DUNSPARCE",
+    "GEODUDE",
+    "GRAVELER",
+    "SHUCKLE"
+   ]
+  }
+ },
+ "MAP_POKEMON_TOWER_3F": {
+  "land": {
+   "day": [
+    "HAUNTER",
+    "HAUNTER",
+    "MAROWAK",
+    "HAUNTER",
+    "MAROWAK",
+    "HAUNTER",
+    "MISDREAVUS",
+    "HAUNTER",
+    "MAROWAK",
+    "MISDREAVUS",
+    "HAUNTER",
+    "MISDREAVUS"
+   ],
+   "night": [
+    "HAUNTER",
+    "HAUNTER",
+    "MAROWAK",
+    "MISDREAVUS",
+    "MAROWAK",
+    "HAUNTER",
+    "MISDREAVUS",
+    "MURKROW",
+    "MAROWAK",
+    "MISDREAVUS",
+    "HAUNTER",
+    "MISDREAVUS"
+   ]
+  }
+ },
+ "MAP_POKEMON_TOWER_4F": {
+  "land": {
+   "day": [
+    "HAUNTER",
+    "MAROWAK",
+    "HAUNTER",
+    "MAROWAK",
+    "HAUNTER",
+    "MISDREAVUS",
+    "HAUNTER",
+    "MAROWAK",
+    "MISDREAVUS",
+    "HAUNTER",
+    "MISDREAVUS",
+    "GENGAR"
+   ],
+   "night": [
+    "HAUNTER",
+    "MAROWAK",
+    "HAUNTER",
+    "MISDREAVUS",
+    "MISDREAVUS",
+    "HAUNTER",
+    "MURKROW",
+    "MAROWAK",
+    "MISDREAVUS",
+    "GENGAR",
+    "GENGAR",
+    "MISMAGIUS"
+   ]
+  }
+ },
+ "MAP_POKEMON_TOWER_5F": {
+  "land": {
+   "day": [
+    "HAUNTER",
+    "HAUNTER",
+    "MAROWAK",
+    "HAUNTER",
+    "MAROWAK",
+    "MISDREAVUS",
+    "GENGAR",
+    "MAROWAK",
+    "MISDREAVUS",
+    "GENGAR",
+    "MISMAGIUS",
+    "GENGAR"
+   ],
+   "night": [
+    "HAUNTER",
+    "HAUNTER",
+    "MAROWAK",
+    "MISDREAVUS",
+    "MISDREAVUS",
+    "HAUNTER",
+    "GENGAR",
+    "MURKROW",
+    "MISMAGIUS",
+    "GENGAR",
+    "MISMAGIUS",
+    "GENGAR"
+   ]
+  }
+ },
+ "MAP_POKEMON_TOWER_6F": {
+  "land": {
+   "day": [
+    "HAUNTER",
+    "MAROWAK",
+    "HAUNTER",
+    "MAROWAK",
+    "GENGAR",
+    "MISDREAVUS",
+    "GENGAR",
+    "MAROWAK",
+    "MISDREAVUS",
+    "GENGAR",
+    "MISMAGIUS",
+    "GENGAR"
+   ],
+   "night": [
+    "HAUNTER",
+    "MAROWAK",
+    "HAUNTER",
+    "MISDREAVUS",
+    "GENGAR",
+    "MISDREAVUS",
+    "MURKROW",
+    "MAROWAK",
+    "MISMAGIUS",
+    "GENGAR",
+    "HONCHKROW",
+    "MISMAGIUS"
+   ]
+  }
+ },
+ "MAP_POKEMON_TOWER_7F": {
+  "land": {
+   "day": [
+    "GENGAR",
+    "MAROWAK",
+    "HAUNTER",
+    "MAROWAK",
+    "GENGAR",
+    "MISDREAVUS",
+    "HAUNTER",
+    "MISMAGIUS",
+    "MAROWAK",
+    "GENGAR",
+    "MISMAGIUS",
+    "GENGAR"
+   ],
+   "night": [
+    "GENGAR",
+    "MAROWAK",
+    "HAUNTER",
+    "MISDREAVUS",
+    "GENGAR",
+    "MISMAGIUS",
+    "HONCHKROW",
+    "MISMAGIUS",
+    "MAROWAK",
+    "GENGAR",
+    "HONCHKROW",
+    "GENGAR"
+   ]
+  }
+ },
+ "MAP_POWER_PLANT": {
+  "land": {
+   "day": [
+    "MAGNETON",
+    "VOLTORB",
+    "MAGNETON",
+    "ELECTRODE",
+    "PIKACHU",
+    "ELECTABUZZ",
+    "PIKACHU",
+    "MAGNEZONE",
+    "ELECTABUZZ",
+    "PORYGON",
+    "RAICHU",
+    "ELECTIVIRE"
+   ],
+   "night": [
+    "MAGNETON",
+    "VOLTORB",
+    "MAGNETON",
+    "ELECTRODE",
+    "PIKACHU",
+    "ELECTABUZZ",
+    "PIKACHU",
+    "MAGNEZONE",
+    "ELEKID",
+    "PORYGON",
+    "RAICHU",
+    "ELECTIVIRE"
+   ]
+  }
+ },
+ "MAP_CERULEAN_CAVE_1F_HNS": {
+  "land": {
+   "day": [
+    "HYPNO",
+    "MAGNETON",
+    "GOLBAT",
+    "VENOMOTH",
+    "DODRIO",
+    "PARASECT",
+    "KADABRA",
+    "SANDSLASH",
+    "DITTO",
+    "WOBBUFFET",
+    "MR_MIME",
+    "PIKACHU"
+   ],
+   "night": [
+    "HYPNO",
+    "MAGNETON",
+    "GOLBAT",
+    "VENOMOTH",
+    "WOBBUFFET",
+    "PARASECT",
+    "KADABRA",
+    "HAUNTER",
+    "DITTO",
+    "WOBBUFFET",
+    "MR_MIME",
+    "MISDREAVUS"
+   ]
+  },
+  "surf": {
+   "day": [
+    "GOLDUCK",
+    "SLOWBRO",
+    "GOLDUCK",
+    "SEAKING",
+    "POLIWHIRL"
+   ],
+   "night": [
+    "GOLDUCK",
+    "GOLBAT",
+    "SLOWBRO",
+    "GOLBAT",
+    "SEAKING"
+   ]
+  },
+  "fish": {
+   "day": [
+    "GOLDUCK",
+    "SEAKING",
+    "POLIWHIRL",
+    "GYARADOS",
+    "SEAKING",
+    "SLOWBRO",
+    "GYARADOS",
+    "GOLDUCK",
+    "POLIWHIRL",
+    "GYARADOS"
+   ],
+   "night": [
+    "GOLDUCK",
+    "SEAKING",
+    "POLIWHIRL",
+    "GYARADOS",
+    "GOLBAT",
+    "SLOWBRO",
+    "GYARADOS",
+    "GOLBAT",
+    "POLIWHIRL",
+    "GYARADOS"
+   ]
+  },
+  "rock": {
+   "day": [
+    "GRAVELER",
+    "GRAVELER",
+    "SANDSLASH",
+    "GRAVELER",
+    "SHUCKLE"
+   ],
+   "night": [
+    "GRAVELER",
+    "GRAVELER",
+    "DUNSPARCE",
+    "SANDSLASH",
+    "SHUCKLE"
+   ]
+  },
+  "water_type": "cave"
+ },
+ "MAP_CERULEAN_CAVE_B1F_HNS": {
+  "land": {
+   "day": [
+    "RHYDON",
+    "GOLBAT",
+    "MAGNETON",
+    "ELECTRODE",
+    "MAROWAK",
+    "DITTO",
+    "CHANSEY",
+    "WIGGLYTUFF",
+    "ALAKAZAM",
+    "DITTO",
+    "KANGASKHAN",
+    "BLISSEY"
+   ],
+   "night": [
+    "RHYDON",
+    "GOLBAT",
+    "MAGNETON",
+    "ELECTRODE",
+    "CROBAT",
+    "DITTO",
+    "CHANSEY",
+    "WOBBUFFET",
+    "ALAKAZAM",
+    "DITTO",
+    "KANGASKHAN",
+    "BLISSEY"
+   ]
+  },
+  "rock": {
+   "day": [
+    "GOLEM",
+    "GRAVELER",
+    "GRAVELER",
+    "SHUCKLE",
+    "GOLEM"
+   ],
+   "night": [
+    "GOLEM",
+    "GRAVELER",
+    "DUNSPARCE",
+    "SHUCKLE",
+    "GOLEM"
+   ]
+  }
+ },
+ "MAP_CERULEAN_CAVE_B2F_HNS": {
+  "land": {
+   "day": [
+    "DITTO",
+    "ALAKAZAM",
+    "MAGNEZONE",
+    "RHYPERIOR",
+    "LICKILICKY",
+    "ELECTRODE",
+    "CHANSEY",
+    "BLISSEY",
+    "SNORLAX",
+    "AERODACTYL",
+    "WIGGLYTUFF",
+    "MR_MIME"
+   ],
+   "night": [
+    "DITTO",
+    "ALAKAZAM",
+    "MAGNEZONE",
+    "RHYPERIOR",
+    "CROBAT",
+    "GENGAR",
+    "CHANSEY",
+    "BLISSEY",
+    "SNORLAX",
+    "AERODACTYL",
+    "WIGGLYTUFF",
+    "MR_MIME"
+   ]
+  },
+  "surf": {
+   "day": [
+    "SLOWKING",
+    "GOLDUCK",
+    "SLOWKING",
+    "POLITOED",
+    "AZUMARILL"
+   ],
+   "night": [
+    "SLOWKING",
+    "CROBAT",
+    "GOLDUCK",
+    "CROBAT",
+    "POLITOED"
+   ]
+  },
+  "fish": {
+   "day": [
+    "SLOWKING",
+    "SEAKING",
+    "POLIWRATH",
+    "GYARADOS",
+    "GOLDUCK",
+    "POLITOED",
+    "GYARADOS",
+    "SEAKING",
+    "DRAGONAIR",
+    "DRAGONITE"
+   ],
+   "night": [
+    "SLOWKING",
+    "SEAKING",
+    "POLIWRATH",
+    "GYARADOS",
+    "CROBAT",
+    "POLITOED",
+    "GYARADOS",
+    "CROBAT",
+    "DRAGONAIR",
+    "DRAGONITE"
+   ]
+  },
+  "rock": {
+   "day": [
+    "GOLEM",
+    "GOLEM",
+    "GRAVELER",
+    "SHUCKLE",
+    "GOLEM"
+   ],
+   "night": [
+    "GOLEM",
+    "GOLEM",
+    "DUNSPARCE",
+    "SHUCKLE",
+    "GRAVELER"
+   ]
+  },
+  "water_type": "cave"
+ }
+}
