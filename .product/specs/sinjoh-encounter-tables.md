@@ -63,7 +63,7 @@ Water type: ponds and rivers.
 | 3 | 10% | Stantler | Hisuian Zorua–Hisuian Zoroark |
 | 4 | 10% | Swinub–Piloswine | Duskull–Dusclops |
 | 5 | 10% | Hisuian Voltorb | Hisuian Zorua–Hisuian Zoroark |
-| 6 | 10% | Snover–Abomasnow | Swinub–Piloswine |
+| 6 | 10% | Snover–Abomasnow | Teddiursa–Ursaring |
 | 7 | 5% | Stantler | Drifloon–Drifblim |
 | 8 | 5% | Scyther | Stantler |
 | 9 | 4% | Teddiursa–Ursaring | Snover–Abomasnow |
@@ -108,7 +108,7 @@ Wilds, Sinjoh.
 | --- | --- | --- | --- |
 | 1 | 20% | Hisuian Sneasel | Hisuian Zorua–Hisuian Zoroark |
 | 2 | 20% | Hisuian Zorua–Hisuian Zoroark | Hisuian Sneasel |
-| 3 | 10% | Swinub–Piloswine | Zubat–Golbat |
+| 3 | 10% | Swinub–Piloswine | Geodude–Graveler |
 | 4 | 10% | Snover–Abomasnow | Swinub–Piloswine |
 | 5 | 10% | Zubat–Golbat | Snover–Abomasnow |
 | 6 | 10% | Geodude–Graveler | Geodude–Graveler |

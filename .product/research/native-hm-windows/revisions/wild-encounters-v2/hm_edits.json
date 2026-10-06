@@ -246,5 +246,21 @@
   "index": 4,
   "from": "EELEKTRIK",
   "to": "SWANNA"
+ },
+ {
+  "map": "MAP_SNOWSWEPT_CAVERN_HNS",
+  "method": "land",
+  "time": "night",
+  "index": 2,
+  "from": "GOLBAT",
+  "to": "GRAVELER"
+ },
+ {
+  "map": "MAP_ROUTE49_HNS",
+  "method": "land",
+  "time": "night",
+  "index": 5,
+  "from": "PILOSWINE",
+  "to": "URSARING"
  }
 ]

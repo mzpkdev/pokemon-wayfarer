@@ -85,11 +85,12 @@ PRED, EVOLV, MISSING_EDGES = {}, {}, set()
 for s, info in SPECIES.items():
     for e in info['evolves_to']:
         t = e['target']
-        if e['method'] == 'LEVEL' or (e['method'].startswith('LEVEL') and e['param'].isdigit() and e['method'] in ('LEVEL', 'LEVEL_MALE', 'LEVEL_FEMALE', 'LEVEL_DAY', 'LEVEL_NIGHT', 'LEVEL_RAIN', 'LEVEL_ATK_GT_DEF', 'LEVEL_ATK_EQ_DEF', 'LEVEL_ATK_LT_DEF', 'LEVEL_SILCOON', 'LEVEL_CASCOON', 'LEVEL_NINJASK', 'LEVEL_FOG', 'LEVEL_DUSK', 'LEVEL_NATURE_AMPED', 'LEVEL_NATURE_LOW_KEY', 'LEVEL_FAMILY_OF_FOUR', 'LEVEL_FAMILY_OF_THREE')):
-            lv = int(e['param']) if str(e['param']).isdigit() else None
+        p = str(e['param'])
+        # Conditional evolutions (friendship, a known move, a held item...) are stored as
+        # LEVEL 0 with conditions; like other non-level edges they use the shared table.
+        if e['method'].startswith('LEVEL') and p.isdigit() and int(p) > 0:
+            lv = int(p)
         else:
-            lv = NONLEVEL.get((s, t))
-        if lv is None:
             lv = NONLEVEL.get((s, t))
         EVOLV.setdefault(s, []).append((t, lv, e['method']))
         PRED.setdefault(t, []).append((s, lv, e['method']))
@@ -288,6 +289,8 @@ ROSTER_V2 = [  # (species, move, level, action)
     ('TOXAPEX', 'SURF', 38, 'add'),
     # Hoenn: leaving Sootopolis
     ('CARVANHA', 'DIVE', 12, 'add'),
+    # Sinjoh: the Snowswept Cavern rocks
+    ('GRAVELER', 'ROCK_SMASH', 26, 'add'),
 ]
 
 if os.environ.get('EXTRA_ROSTER'):

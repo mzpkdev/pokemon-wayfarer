@@ -19,7 +19,7 @@ for sc in S:
     for m in sc['maps']:
         m['map'] = m['map'].replace('MAP_CINNABAR_ISLAND_HNS', 'MAP_CINNABAR_ISLAND')
 
-FILES = {'Kanto': 'kanto.json', 'Johto': 'johto.json', 'Hoenn': 'hoenn.json', 'Sevii': 'sevii.json', 'Alola': 'alola.json'}
+FILES = {'Kanto': 'kanto.json', 'Johto': 'johto.json', 'Hoenn': 'hoenn.json', 'Sevii': 'sevii.json', 'Alola': 'alola.json', 'Sinjoh': 'sinjoh.json'}
 DATA = {r: json.load(open(h.HERE + '/' + f)) for r, f in FILES.items()}
 def table(mp):
     return DATA[h.META[mp]['region']][mp]
@@ -38,7 +38,7 @@ POOLS = {
     ('Alola', 'sea'): ['TOXAPEX', 'WISHIWASHI', 'LUVDISC', 'SHELLDER', 'SHARPEDO'],
     ('Alola', 'cave'): ['WISHIWASHI', 'GOLDUCK'],
 }
-LAND_POOLS = {'MAP_MELEMELE_ISLE_HNS': ['PELIPPER'], 'MAP_AKALA_ISLE_HNS': ['PELIPPER'], 'MAP_ULAULA_ISLE_HNS': ['PELIPPER'], 'MAP_PONI_ISLE_HNS': ['PELIPPER'], 'MAP_ROUTE121': ['PELIPPER'], 'MAP_ROUTE118': ['PELIPPER'], 'MAP_ROUTE117': ['AZUMARILL', 'LOMBRE'],
+LAND_POOLS = {'MAP_SNOWSWEPT_CAVERN_HNS': ['GRAVELER', 'URSARING'], 'MAP_ROUTE49_HNS': ['URSARING', 'GRAVELER'], 'MAP_ROUTE50_HNS': ['URSARING', 'GRAVELER'], 'MAP_SINJOH_RUINS_HNS': ['GRAVELER'], 'MAP_NEWSINJOH_HOTSPRINGS_HNS': ['GRAVELER', 'URSARING'], 'MAP_MELEMELE_ISLE_HNS': ['PELIPPER'], 'MAP_AKALA_ISLE_HNS': ['PELIPPER'], 'MAP_ULAULA_ISLE_HNS': ['PELIPPER'], 'MAP_PONI_ISLE_HNS': ['PELIPPER'], 'MAP_ROUTE121': ['PELIPPER'], 'MAP_ROUTE118': ['PELIPPER'], 'MAP_ROUTE117': ['AZUMARILL', 'LOMBRE'],
               'MAP_ROUTE119': ['PELIPPER', 'LOMBRE'], 'MAP_CLIFF_EDGE_CAVE_HNS': ['KINGLER', 'SLOWBRO']}
 LAND_W = h.WEIGHTS['land']; OLD_W = h.RODS['old']
 

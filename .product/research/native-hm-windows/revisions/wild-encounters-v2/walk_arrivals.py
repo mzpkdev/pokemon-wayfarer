@@ -20,10 +20,13 @@ ARRIVALS = {
     'akala': ('MAP_AKALA_ISLE_HNS', 9, 11), 'ulaula': ('MAP_ULA_ULA_FOREST_HNS', 16, 5),
     'poni': ('MAP_PONI_ISLE_HNS', 13, 8),
     'dewford': ('MAP_DEWFORD_TOWN', 13, 10),  # Mr. Briney's boat
+    'into_sinjoh': ('MAP_SNOWSWEPT_CAVERN_HNS', 50, 68),  # from Mt. Silver's waterfall room
 }
 for m in ('MAP_SOOTOPOLIS_CITY', 'MAP_EVER_GRANDE_CITY'):
     door = [(e['x'], e['y']) for e in W.MAPS[m]['warp_events'] if 'POKEMON_CENTER' in e['dest_map']][0]
     ARRIVALS[m[4:].lower()] = (m, door[0], door[1])
+door = [(e['x'], e['y']) for e in W.MAPS['MAP_NEW_SINJOH_HNS']['warp_events'] if 'POKEMON_CENTER' in e['dest_map']][0]
+ARRIVALS['out_of_sinjoh'] = ('MAP_NEW_SINJOH_HNS', door[0], door[1])
 for name, start in ARRIVALS.items():
     src = W.sources(W.walk([start]))
     print(name, {m: sorted(v) for m, v in sorted(src.items()) if m in META})

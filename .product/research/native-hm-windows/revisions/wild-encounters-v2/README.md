@@ -10,23 +10,22 @@ set. The [nearby-access revision](../nearby-access/README.md) was proven
 against the old tables, the old Trainer Rating (TR) projection and TR 0–80, so
 its evidence no longer holds. This revision re-audits the native HM roster
 against the v2 tables and extends the guarantee from Johto, Kanto and Hoenn
-to the Sevii Islands and Alola, and adds the Hoenn places reached by boat or
-left only with a field move. It changes thirteen roster entries and adds the
-carriers the crossings need directly to the v2 tables.
+to the Sevii Islands, Alola and Sinjoh, and adds the Hoenn places reached by
+boat or left only with a field move. It changes fourteen roster entries and
+adds the carriers the crossings need directly to the v2 tables.
 
 The Safari Zones and the Bug-Catching Contest stay outside the guarantee.
-Sinjoh is next.
 
 ## What changes in the contract
 
 | | Nearby-access revision | This revision |
 | --- | --- | --- |
-| Regions | Johto, Kanto and Hoenn | Johto, Kanto, Hoenn, the Sevii Islands and Alola |
+| Regions | Johto, Kanto and Hoenn | Johto, Kanto, Hoenn, the Sevii Islands, Alola and Sinjoh |
 | TR scale | Today's 0–80 | v0 0–160 (0 to 24 badges) |
 | Wild levels | Authored levels projected through TR, with species floors | The place's level ±2, the stage mix, young levels and prowler minimums, from wild level scaling |
 | Fishing level | The rod's authored entry, projected | The place's level, whatever the rod |
 | Regional coverage | All eight utilities, TR 0–80 | The utilities each region's maps need, TR 0–160 |
-| Crossing floor | 11 scenarios, 8% at one reachable source, TR 0–80 | 26 scenarios, 8% at one reachable source, **TR 20–160**, from two badges on |
+| Crossing floor | 11 scenarios, 8% at one reachable source, TR 0–80 | 28 scenarios, 8% at one reachable source, **TR 20–160**, from two badges on |
 | Encounter edits | 17 `encounter_replacements` on the old tables | Retired; the carriers are authored into the v2 tables (below) |
 | Cinnabar | `MAP_CINNABAR_ISLAND_HNS` | `MAP_CINNABAR_ISLAND`, the map Wayfarer uses; the HNS map is retired |
 
@@ -35,7 +34,9 @@ Sinjoh is next.
   Strength and Waterfall: their maps hold water, Cut trees, breakable rocks,
   Strength boulders and waterfalls, but no dark caves, dive spots or
   whirlpools. Alola needs only Surf: its maps hold water and no other field
-  obstacle.
+  obstacle. Sinjoh needs only Rock Smash: Snowswept Cavern's rocks are its only
+  way in and out, while Route 49's lake and waterfalls and the cavern's two
+  Strength boulders open nothing the walker can't reach on foot.
 - **The crossing guarantee starts at two badges.** No Kanto or Johto species
   knows Surf below level 7, and Roads are level 5 before the first badge.
   Until two badges, players cross with the Surf HM, as in the original games.
@@ -59,8 +60,14 @@ island gets a Surf scenario. Hoenn adds three places:
   surfer is pushed down a waterfall without the move, so it is left by Surf
   alone. It gets a Surf scenario.
 - **The Battle Frontier** needs none: the ferry runs both ways and no
-  encounter lies within walking distance of its dock. Its sources are the land tables and shore fishing a
-player reaches on foot from the arrival point, with no field move.
+  encounter lies within walking distance of its dock.
+
+Sinjoh adds two Rock Smash scenarios, one on each side of Snowswept Cavern's
+rocks, since smashed rocks return when you re-enter: the way in from Mt.
+Silver's waterfall room, and the way out from New Sinjoh.
+
+Each scenario's sources are the land tables and shore fishing a player reaches
+on foot from the arrival point, with no field move.
 [`walker.py`](walker.py) walks the source layouts as the engine does, and
 [`walk_arrivals.py`](walk_arrivals.py) lists the sources it finds:
 
@@ -80,6 +87,8 @@ player reaches on foot from the arrival point, with no field move.
 | Dewford | Mr. Briney's boat | Dewford, Route 106 and Route 107 fishing; Granite Cave land |
 | Sootopolis (Surf and Dive) | Pokémon Center | Sootopolis fishing |
 | Ever Grande | Pokémon Center | Ever Grande fishing; Victory Road 1F and B1F land |
+| Into Sinjoh (Rock Smash) | Mt. Silver's waterfall room | That room's land and fishing; Snowswept Cavern's mouth |
+| Out of Sinjoh (Rock Smash) | New Sinjoh | Route 49 land and fishing; Route 50, the Hot Springs, the Sinjoh Ruins and its temple, and the cavern's far side |
 
 Starting from any shore of an Alola island instead of its sign reaches the
 same sources. The scenarios are in
@@ -88,7 +97,7 @@ rank 0.
 
 ## Roster changes
 
-Thirteen entries change. Each keeps a family within two utility types and uses
+Fourteen entries change. Each keeps a family within two utility types and uses
 existing compatibility (`all_learnables.json`).
 
 | Species | Change | Window | Why |
@@ -106,6 +115,7 @@ existing compatibility (`all_learnables.json`).
 | Wishiwashi | Adds Surf at 22 | Surf 22–37 | Bridges Mareanie and Toxapex. Wishiwashi already has Dive; both forms share its learnset |
 | Toxapex | Adds Surf at 38 | Surf 38–100 | Carries Alola's Surf to its high levels |
 | Carvanha | Adds Dive at 12 | Dive 12–21 | Sootopolis had no Dive carrier below Clamperl's 20, and Hoenn none at TR 0–3 |
+| Graveler | Adds Rock Smash at 26 | Rock Smash 26–43 | Sinjoh had no Rock Smash carrier above Nosepass's 36. A Graveler slot stays below Golem's 38, so it keeps the move at any TR |
 
 The chains these build:
 
@@ -118,6 +128,8 @@ The chains these build:
   Luvdisc and Pelipper from the blend.
 - **Sootopolis's Dive:** Carvanha 12–21, Clamperl 20–41, then Wailmer and
   Wailord from 41.
+- **Sinjoh's Rock Smash:** Hisuian Sneasel 6–24, Teddiursa 14–28, Nosepass
+  25–36 and Graveler 26–37, the highest a Graveler slot reaches.
 
 ## Table changes
 
@@ -158,6 +170,8 @@ zero-based index.
 | Sootopolis City | Day | 5 | Tynamo–Eelektrik | Ducklett–Swanna |
 | Sootopolis City | Night | 3 | Tynamo–Eelektrik | Clamperl |
 | Sootopolis City | Night | 4 | Frillish | Carvanha–Sharpedo |
+| Snowswept Cavern | Night | 3 | Zubat–Golbat | Geodude–Graveler |
+| Route 49 | Night | 6 | Swinub–Piloswine | Teddiursa–Ursaring |
 | Ever Grande City | Day | 4 | Wailmer–Wailord | Carvanha–Sharpedo |
 | Ever Grande City | Night | 4 | Frillish | Carvanha–Sharpedo |
 
@@ -173,7 +187,7 @@ distinct. Every table still passes the encounter rules checker with no errors.
 
 ### Crossings and arrivals
 
-All 26 scenarios meet the 8% floor at every TR from 20 to 160, day and night.
+All 28 scenarios meet the 8% floor at every TR from 20 to 160, day and night.
 The weakest point of each:
 
 | Scenario | Lowest chance | Where |
@@ -204,6 +218,8 @@ The weakest point of each:
 | Sootopolis Surf | 10.0% | Day, TR 48, Sootopolis Old Rod |
 | Sootopolis Dive | 8.0% | Day, TR 20, Sootopolis Old Rod |
 | Ever Grande Surf | 11.0% | Day, TR 48, Ever Grande Old Rod |
+| Into Sinjoh, Rock Smash | 10.0% | Day, TR 42, Mt. Silver's waterfall room land |
+| Out of Sinjoh, Rock Smash | 9.0% | Night, TR 46, Route 49 land |
 
 Several margins are thin. Any later change to these maps' first fishing
 entries must re-run the audit.
@@ -216,10 +232,10 @@ entries must re-run the audit.
 - **The Sevii Islands:** Surf, Cut, Rock Smash, Strength and Waterfall at every
   TR from 0 to 160.
 - **Alola:** Surf at every TR from 0 to 160.
+- **Sinjoh:** Rock Smash at every TR from 0 to 160.
 - **Outside the guarantee,** for reference: Sevii has no Flash carrier from
-  TR 36, and Alola lacks several moves its maps don't use. Sinjoh and the
-  Safari Zones have larger gaps, such as no Cut in Sinjoh and no water
-  utilities in the Safari Zones.
+  TR 36, and Alola and Sinjoh lack several moves their maps don't use. The
+  Safari Zones have no water utilities.
 
 ## What the audit found
 
@@ -236,6 +252,11 @@ entries must re-run the audit.
 - **The rod level shift was dropped.** Wild level scaling first gave the Old
   Rod −4 levels and the Good Rod −2. That pushed early Old Rod catches below
   every carrier's window, so fishing now uses the place's level.
+- **Conditional evolutions were misread at first.** Friendship, held-item and
+  known-move evolutions are stored as level 0 with conditions. The model first
+  read them as level-0 evolutions, which pinned slots such as Golbat, Sneasel
+  and Nosepass to level 1. Using the shared evolution-level table for them
+  changed no crossing result, but it made Sinjoh's Rock Smash gap visible.
 - **Prowler minimums shape the Den.** The Dratini line is a dangerous prowler
   with a minimum of 30, so the Den's Dragonite slots never yield a Dratini
   young enough to know Whirlpool. The Den relies on Gyarados (22–32) and
@@ -248,6 +269,8 @@ entries must re-run the audit.
   levels, the downward rule with the shared evolution-level table, and the
   stage mix. It sums exact fractions within one source and never across
   sources.
+- Conditional evolutions, such as friendship or a held item at night, use the
+  shared evolution-level table like any other non-level evolution.
 - Movesets use the production initial-moveset algorithm over
   `gen_7.h` with `IS_WAYFARER`. Before the roster changes, it reproduced the
   nearby-access roster's windows for all 121 species with no mismatch.
@@ -268,11 +291,11 @@ entries must re-run the audit.
 | File | Purpose |
 | --- | --- |
 | [hm_model.py](hm_model.py) | Learnsets, movesets, wild level scaling and the roster changes |
-| [hm_audit.py](hm_audit.py) | Regional coverage and all 26 scenarios |
+| [hm_audit.py](hm_audit.py) | Regional coverage and all 28 scenarios |
 | [hm_opt.py](hm_opt.py) | The greedy search that chose the table changes |
 | [walker.py](walker.py) | On-foot reachability over the source layouts |
 | [walk_arrivals.py](walk_arrivals.py) | The sources reached from each Sevii, Alola and Hoenn arrival |
-| [scenarios_regions.json](scenarios_regions.json) | The 15 Sevii, Alola and Hoenn arrival scenarios |
+| [scenarios_regions.json](scenarios_regions.json) | The 17 Sevii, Alola, Hoenn and Sinjoh arrival scenarios |
 | [hm_edits.json](hm_edits.json) | The table changes, by zero-based entry |
 | [audit_regional.json](audit_regional.json) | Regional gaps and sample witnesses per region and utility |
 | [audit_scenarios.json](audit_scenarios.json) | Best source per scenario, TR and time, with Good and Super Rod odds |

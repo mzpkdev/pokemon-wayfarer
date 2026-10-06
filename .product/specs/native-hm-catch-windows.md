@@ -39,27 +39,30 @@ then replaces the nearby-access evidence:
   level ±2, prowler minimums, young levels and the stage mix. TR projection,
   slot eligibility, species floors and profile offsets go. Fishing uses the
   place's level with every rod.
-- **The guarantee grows to the Sevii Islands and Alola.** The Safari Zones and
-  the Bug-Catching Contest stay outside it, and Sinjoh isn't covered yet.
+- **The guarantee grows to the Sevii Islands, Alola and Sinjoh.** The Safari
+  Zones and the Bug-Catching Contest stay outside it.
 - **TR runs from 0 to 160** on the [v0 scale](player-trainer-rating.md#formula-v0).
   Regional coverage holds across that range for the field moves each region's
   maps need: all eight in Johto, Kanto and Hoenn; Surf, Cut, Rock Smash,
-  Strength and Waterfall in the Sevii Islands; Surf in Alola.
+  Strength and Waterfall in the Sevii Islands; Surf in Alola; Rock Smash in
+  Sinjoh, whose water, waterfalls and Strength boulders open nothing.
 - **The 8% crossing floor holds from TR 20, two badges, to TR 160.** Before
   that, crossings rely on the Surf HM: no Kanto or Johto species knows Surf
   below level 7, and Roads are level 5 before the first badge.
-- **Fifteen arrival scenarios join the eleven crossings:** one for each Sevii
+- **Seventeen arrival scenarios join the eleven crossings:** one for each Sevii
   island and each Alola island, Dewford Town for Surf, Sootopolis City for Surf
-  and Dive, since it is left only by Dive, and Ever Grande City for Surf. Their
+  and Dive, since it is left only by Dive, Ever Grande City for Surf, and Rock
+  Smash on each side of Snowswept Cavern's rocks, Sinjoh's only way in and
+  out. Their
   sources are the land tables and shore fishing a player reaches on foot from
   the ferry, the boat, the Tapu sign or the Pokémon Center, with no field
   move.
-- **The roster changes thirteen entries.** Luvdisc, Frillish, Jellicent,
+- **The roster changes fourteen entries.** Luvdisc, Frillish, Jellicent,
   Arrokuda, Barraskewda, Drednaw, Mareanie, Wishiwashi and Toxapex add Surf,
-  Chewtle adds Waterfall, Carvanha adds Dive, and Quagsire's Surf and
-  Weepinbell's Cut move earlier. The learnset rules below apply to them unchanged.
+  Chewtle adds Waterfall, Carvanha adds Dive, Graveler adds Rock Smash, and
+  Quagsire's Surf and Weepinbell's Cut move earlier. The learnset rules below apply to them unchanged.
 - **`encounter_replacements` retire.** The v2 tables hold the crossing
-  carriers directly; the revision lists the 31 edits it made to them.
+  carriers directly; the revision lists the 33 edits it made to them.
 - **Cinnabar's scenario uses `MAP_CINNABAR_ISLAND`,** the map Wayfarer uses.
   The other scenarios, maps, methods and ranks stay.
 

@@ -130,6 +130,22 @@ in Sinjoh, and so do Shellos and Finneon at night.
 No family is one of a table's two most common land slots on more than five of
 Sinjoh's eight maps. Hisuian Zorua leads only the caves and chambers at night.
 
+### Native HM sources
+
+Sinjoh needs one field move: Rock Smash. Snowswept Cavern's rocks are the only
+way in from Mt. Silver and the only way back, and smashed rocks return when you
+re-enter. Route 49's lake and waterfalls and the cavern's two Strength boulders
+open nothing new, so Surf, Strength and Waterfall stay outside Sinjoh's native
+HM guarantee.
+
+The [catch-window audit's v2 revision](../research/native-hm-windows/revisions/wild-encounters-v2/README.md)
+checks Rock Smash across Sinjoh, and on both sides of the rocks: in Mt. Silver's
+waterfall room and the cavern's mouth, and in Sinjoh beyond them. Graveler,
+which learns Rock Smash at 26 in that revision, carries it: a Graveler slot
+stays below Golem's level, so it keeps the move. Hisuian Sneasel and
+Teddiursa carry it at lower levels. Any change to those slots must re-run the
+audit.
+
 ### Evolution items and Unown
 
 - **Kleavor's Black Augurite and Ursaluna's Peat Block** come from Mahogany
