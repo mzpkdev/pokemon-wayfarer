@@ -1,5 +1,5 @@
 {
- "notes": "Sevii and Alola arrival scenarios: sources reachable on foot from each island arrival (walker.py), no field moves.",
+ "notes": "Sevii, Alola and Hoenn arrival scenarios: sources reachable on foot from each arrival (walker.py), no field moves. Sootopolis is left only by Dive; Ever Grande only by Surf (surfing down the waterfall).",
  "scenarios": [
   {
    "id": "one_island_surf",
@@ -284,6 +284,134 @@
      "methods": [
       "land_mons",
       "fishing_mons"
+     ],
+     "rank": 0
+    }
+   ]
+  },
+  {
+   "id": "dewford_surf",
+   "move": "SURF",
+   "times": [
+    "DAY",
+    "NIGHT"
+   ],
+   "minimum_chance": 0.08,
+   "maps": [
+    {
+     "map": "MAP_DEWFORD_TOWN",
+     "methods": [
+      "fishing_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_ROUTE106",
+     "methods": [
+      "fishing_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_ROUTE107",
+     "methods": [
+      "fishing_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_GRANITE_CAVE_1F",
+     "methods": [
+      "land_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_GRANITE_CAVE_B1F",
+     "methods": [
+      "land_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_GRANITE_CAVE_B2F",
+     "methods": [
+      "land_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_GRANITE_CAVE_STEVENS_ROOM",
+     "methods": [
+      "land_mons"
+     ],
+     "rank": 0
+    }
+   ]
+  },
+  {
+   "id": "sootopolis_surf",
+   "move": "SURF",
+   "times": [
+    "DAY",
+    "NIGHT"
+   ],
+   "minimum_chance": 0.08,
+   "maps": [
+    {
+     "map": "MAP_SOOTOPOLIS_CITY",
+     "methods": [
+      "fishing_mons"
+     ],
+     "rank": 0
+    }
+   ]
+  },
+  {
+   "id": "sootopolis_dive",
+   "move": "DIVE",
+   "times": [
+    "DAY",
+    "NIGHT"
+   ],
+   "minimum_chance": 0.08,
+   "maps": [
+    {
+     "map": "MAP_SOOTOPOLIS_CITY",
+     "methods": [
+      "fishing_mons"
+     ],
+     "rank": 0
+    }
+   ]
+  },
+  {
+   "id": "ever_grande_surf",
+   "move": "SURF",
+   "times": [
+    "DAY",
+    "NIGHT"
+   ],
+   "minimum_chance": 0.08,
+   "maps": [
+    {
+     "map": "MAP_EVER_GRANDE_CITY",
+     "methods": [
+      "fishing_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_VICTORY_ROAD_1F",
+     "methods": [
+      "land_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_VICTORY_ROAD_B1F",
+     "methods": [
+      "land_mons"
      ],
      "rank": 0
     }

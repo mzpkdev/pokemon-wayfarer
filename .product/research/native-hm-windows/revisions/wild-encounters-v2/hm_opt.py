@@ -30,7 +30,7 @@ POOLS = {
     ('Kanto', 'pond'): ['GOLDUCK', 'AZUMARILL', 'POLIWHIRL', 'QUAGSIRE', 'SLOWBRO', 'GYARADOS'],
     ('Johto', 'pond'): ['GOLDUCK', 'AZUMARILL', 'POLIWHIRL', 'QUAGSIRE', 'SLOWBRO', 'GYARADOS'],
     ('Johto', 'cave'): ['GOLDUCK', 'POLIWHIRL', 'QUAGSIRE', 'SLOWBRO', 'GYARADOS', 'AZUMARILL'],
-    ('Hoenn', 'sea'): ['SHARPEDO', 'LUVDISC', 'JELLICENT', 'FRILLISH'],
+    ('Hoenn', 'sea'): ['SHARPEDO', 'LUVDISC', 'JELLICENT', 'FRILLISH', 'CLAMPERL', 'WAILORD'],
     ('Hoenn', 'pond'): ['AZUMARILL', 'LOMBRE'],
     ('Sevii', 'sea'): ['DREDNAW', 'BARRASKEWDA', 'KINGLER', 'TENTACRUEL', 'SEADRA', 'SHELLDER'],
     ('Sevii', 'pond'): ['DREDNAW', 'BARRASKEWDA', 'GOLDUCK', 'AZUMARILL', 'POLIWHIRL', 'QUAGSIRE'],

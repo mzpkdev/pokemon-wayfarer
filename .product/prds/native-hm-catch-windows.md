@@ -119,9 +119,11 @@ re-checks it and extends the guarantee to the Sevii Islands and Alola, each
 for the field moves its maps need. The Safari Zones and the Bug-Catching
 Contest stay outside it, and Sinjoh comes later. Regional coverage holds across
 TR 0-160, and the 8% floor holds from two badges (TR 20) at the original
-crossings and on arrival at every Sevii and Alola island. Before two badges,
+crossings, on arrival at every Sevii and Alola island, and at Dewford,
+Sootopolis and Ever Grande, which are reached by boat or left only with a
+field move. Before two badges,
 crossings rely on the Surf HM, since no Kanto or Johto species knows Surf
-below level 7. It also changes twelve roster entries and replaces the
+below level 7. It also changes thirteen roster entries and replaces the
 encounter replacements with carriers authored into the v2 tables.
 
 Dragon's Den requires local Whirlpool acquisition before the shrine obstacle,

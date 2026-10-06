@@ -2,8 +2,8 @@
 
 Tiles come from source layouts (collision, elevation, metatile behaviour);
 movement follows the engine's rules closely enough for route evidence:
-- a tile is passable when its collision bits are 0, it isn't surfable water or
-  a waterfall, and no obstacle object (Cut tree, Rock Smash rock, Strength
+- a tile is passable when its collision bits are 0 and it isn't surfable water
+  (unless surfing) or a waterfall climbed upward (a surfer is pushed down one), and no obstacle object (Cut tree, Rock Smash rock, Strength
   boulder, whirlpool) stands on it, unless the field move is allowed;
 - elevation: a move is blocked when the walker's elevation and the tile's are
   both set (not 0 or 15) and differ; the walker takes the tile's elevation
@@ -134,7 +134,9 @@ def walk(starts, allowed=(), surf=False, region_maps=None):
             if region_maps is None or dm in region_maps:
                 _, _, dc = grid(dm); de = dc[dy_ * grid(dm)[0] + dx_][1]
                 q.append((dm, dx_, dy_, 0 if de == 15 else de, True))
+        on_fall = grid(m)[2][y * grid(m)[0] + x][2] == WATERFALL
         for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            if on_fall and (dx, dy) != (0, 1): continue  # a waterfall pushes a surfer south
             nb = neighbour(m, x, y, dx, dy)
             if not nb: continue
             nm, nx, ny = nb
@@ -156,7 +158,7 @@ def walk(starts, allowed=(), surf=False, region_maps=None):
             if (nx, ny) in obst[nm]: continue
             if not is_warp:
                 if coll != 0: continue
-                if beh == WATERFALL: continue
+                if beh == WATERFALL and not (surf and dy >= 0): continue  # climbing needs Waterfall; surfing down doesn't
                 if water and not surf: continue
                 if beh in JUMP: continue
             if e not in (0, 15) and te not in (0, 15) and te != e and not water: continue

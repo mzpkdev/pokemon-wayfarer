@@ -10,7 +10,8 @@ set. The [nearby-access revision](../nearby-access/README.md) was proven
 against the old tables, the old Trainer Rating (TR) projection and TR 0–80, so
 its evidence no longer holds. This revision re-audits the native HM roster
 against the v2 tables and extends the guarantee from Johto, Kanto and Hoenn
-to the Sevii Islands and Alola. It changes twelve roster entries and adds the
+to the Sevii Islands and Alola, and adds the Hoenn places reached by boat or
+left only with a field move. It changes thirteen roster entries and adds the
 carriers the crossings need directly to the v2 tables.
 
 The Safari Zones and the Bug-Catching Contest stay outside the guarantee.
@@ -25,7 +26,7 @@ Sinjoh is next.
 | Wild levels | Authored levels projected through TR, with species floors | The place's level ±2, the stage mix, young levels and prowler minimums, from wild level scaling |
 | Fishing level | The rod's authored entry, projected | The place's level, whatever the rod |
 | Regional coverage | All eight utilities, TR 0–80 | The utilities each region's maps need, TR 0–160 |
-| Crossing floor | 11 scenarios, 8% at one reachable source, TR 0–80 | 22 scenarios, 8% at one reachable source, **TR 20–160**, from two badges on |
+| Crossing floor | 11 scenarios, 8% at one reachable source, TR 0–80 | 26 scenarios, 8% at one reachable source, **TR 20–160**, from two badges on |
 | Encounter edits | 17 `encounter_replacements` on the old tables | Retired; the carriers are authored into the v2 tables (below) |
 | Cinnabar | `MAP_CINNABAR_ISLAND_HNS` | `MAP_CINNABAR_ISLAND`, the map Wayfarer uses; the HNS map is retired |
 
@@ -44,12 +45,21 @@ Sinjoh is next.
 - **Only land and Old Rod sources count toward the floor,** as before. Good and
   Super Rod odds are reported, not required.
 
-### Sevii and Alola arrivals
+### Arrivals
 
 A player reaches each Sevii island by the Seagallop ferry and Alola's first
 island by the boat from Route 13. Alola's islands are linked only by Surf until
 the Tapu signs open fast travel, which needs all four Tapu battles. So every
-island gets a Surf scenario. Its sources are the land tables and shore fishing a
+island gets a Surf scenario. Hoenn adds three places:
+
+- **Dewford Town,** reached by Mr. Briney's boat, gets a Surf scenario.
+- **Sootopolis City** sits in a crater with no map connections, so it is left
+  only by Dive. It gets a Surf and a Dive scenario, from its own shore.
+- **Ever Grande City** is reached by climbing Route 128's waterfall, but a
+  surfer is pushed down a waterfall without the move, so it is left by Surf
+  alone. It gets a Surf scenario.
+- **The Battle Frontier** needs none: the ferry runs both ways and no
+  encounter lies within walking distance of its dock. Its sources are the land tables and shore fishing a
 player reaches on foot from the arrival point, with no field move.
 [`walker.py`](walker.py) walks the source layouts as the engine does, and
 [`walk_arrivals.py`](walk_arrivals.py) lists the sources it finds:
@@ -67,6 +77,9 @@ player reaches on foot from the arrival point, with no field move.
 | Akala | Tapu sign | Akala land and fishing; Akala Forest and Akala Cave land |
 | Ula'ula | Tapu sign | Ula'ula land and fishing; both Ula'ula caves |
 | Poni | Tapu sign | Poni land and fishing; Poni Cave |
+| Dewford | Mr. Briney's boat | Dewford, Route 106 and Route 107 fishing; Granite Cave land |
+| Sootopolis (Surf and Dive) | Pokémon Center | Sootopolis fishing |
+| Ever Grande | Pokémon Center | Ever Grande fishing; Victory Road 1F and B1F land |
 
 Starting from any shore of an Alola island instead of its sign reaches the
 same sources. The scenarios are in
@@ -75,7 +88,7 @@ rank 0.
 
 ## Roster changes
 
-Twelve entries change. Each keeps a family within two utility types and uses
+Thirteen entries change. Each keeps a family within two utility types and uses
 existing compatibility (`all_learnables.json`).
 
 | Species | Change | Window | Why |
@@ -92,6 +105,7 @@ existing compatibility (`all_learnables.json`).
 | Mareanie | Adds Surf at 11 | Surf 11–24 | Alola's sea natives had no Surf carrier |
 | Wishiwashi | Adds Surf at 22 | Surf 22–37 | Bridges Mareanie and Toxapex. Wishiwashi already has Dive; both forms share its learnset |
 | Toxapex | Adds Surf at 38 | Surf 38–100 | Carries Alola's Surf to its high levels |
+| Carvanha | Adds Dive at 12 | Dive 12–21 | Sootopolis had no Dive carrier below Clamperl's 20, and Hoenn none at TR 0–3 |
 
 The chains these build:
 
@@ -102,6 +116,8 @@ The chains these build:
 - **Sevii's sea:** Arrokuda 11–29, Drednaw 22–56 and Barraskewda from 34.
 - **Alola's sea:** Mareanie 11–24, Wishiwashi 22–37 and Toxapex from 38, with
   Luvdisc and Pelipper from the blend.
+- **Sootopolis's Dive:** Carvanha 12–21, Clamperl 20–41, then Wailmer and
+  Wailord from 41.
 
 ## Table changes
 
@@ -137,17 +153,27 @@ zero-based index.
 | Melemele | Day | 4 | Staryu | Wishiwashi |
 | Akala | Day | 5 | Luvdisc | Mareanie–Toxapex |
 | Ula'ula | Day | 5 | Shellder | Mareanie–Toxapex |
+| Sootopolis City | Day | 2 | Wailmer–Wailord | Clamperl |
+| Sootopolis City | Day | 4 | Luvdisc | Carvanha–Sharpedo |
+| Sootopolis City | Day | 5 | Tynamo–Eelektrik | Ducklett–Swanna |
+| Sootopolis City | Night | 3 | Tynamo–Eelektrik | Clamperl |
+| Sootopolis City | Night | 4 | Frillish | Carvanha–Sharpedo |
+| Ever Grande City | Day | 4 | Wailmer–Wailord | Carvanha–Sharpedo |
+| Ever Grande City | Night | 4 | Frillish | Carvanha–Sharpedo |
 
 All edits are fishing entries. The Den's night Quagsire keeps its night table
 distinct from the day one. Alola's three edits replace blend species with
-natives, so each island stays within its 20% blend share. Every table still
-passes the encounter rules checker with no errors.
+natives, so each island stays within its 20% blend share. Clamperl is a
+harmless reward, which normally takes only rare slots; it holds a common
+Sootopolis slot as the city's resident Dive carrier, as the Hoenn rules record.
+Sootopolis's day Swanna leaves Eelektrik to the night, so the night table stays
+distinct. Every table still passes the encounter rules checker with no errors.
 
 ## Results
 
 ### Crossings and arrivals
 
-All 22 scenarios meet the 8% floor at every TR from 20 to 160, day and night.
+All 26 scenarios meet the 8% floor at every TR from 20 to 160, day and night.
 The weakest point of each:
 
 | Scenario | Lowest chance | Where |
@@ -174,6 +200,10 @@ The weakest point of each:
 | Akala Surf | 9.0% | Day, TR 70, Akala Old Rod |
 | Ula'ula Surf | 9.0% | Day, TR 62, Ula'ula Old Rod |
 | Poni Surf | 11.4% | Day, TR 62, Poni Old Rod |
+| Dewford Surf | 8.0% | Day, TR 62, Route 107 Old Rod |
+| Sootopolis Surf | 10.0% | Day, TR 48, Sootopolis Old Rod |
+| Sootopolis Dive | 8.0% | Day, TR 20, Sootopolis Old Rod |
+| Ever Grande Surf | 11.0% | Day, TR 48, Ever Grande Old Rod |
 
 Several margins are thin. Any later change to these maps' first fishing
 entries must re-run the audit.
@@ -181,9 +211,8 @@ entries must re-run the audit.
 ### Regional coverage
 
 - **Johto and Kanto:** every utility at every TR from 0 to 160.
-- **Hoenn:** every utility at every TR except Dive at TR 0–3, where no Hoenn
-  place is high enough for a Dive carrier. Dive also needs Steven's grant, so
-  the gap can't be felt in play.
+- **Hoenn:** every utility at every TR from 0 to 160. Carvanha's Dive closes
+  the old gap at TR 0–3.
 - **The Sevii Islands:** Surf, Cut, Rock Smash, Strength and Waterfall at every
   TR from 0 to 160.
 - **Alola:** Surf at every TR from 0 to 160.
@@ -224,7 +253,8 @@ entries must re-run the audit.
   nearby-access roster's windows for all 121 species with no mismatch.
 - The walker follows collision, elevation, ledges, map connections and warps,
   and treats Cut trees, breakable rocks, Strength boulders and whirlpools as
-  blocking. It treats other people as passable, so a story blocker that stands
+  blocking. A surfer moves only down a waterfall, as the engine's forced
+  movement pushes it south. It treats other people as passable, so a story blocker that stands
   in a path would need a manual check.
 - It is static evidence, like the nearby-access revision, not production
   acceptance. The implementation must replay these cells through the
@@ -238,11 +268,11 @@ entries must re-run the audit.
 | File | Purpose |
 | --- | --- |
 | [hm_model.py](hm_model.py) | Learnsets, movesets, wild level scaling and the roster changes |
-| [hm_audit.py](hm_audit.py) | Regional coverage and all 22 scenarios |
+| [hm_audit.py](hm_audit.py) | Regional coverage and all 26 scenarios |
 | [hm_opt.py](hm_opt.py) | The greedy search that chose the table changes |
 | [walker.py](walker.py) | On-foot reachability over the source layouts |
-| [walk_arrivals.py](walk_arrivals.py) | The sources reached from each Sevii and Alola arrival |
-| [scenarios_regions.json](scenarios_regions.json) | The 11 Sevii and Alola arrival scenarios |
+| [walk_arrivals.py](walk_arrivals.py) | The sources reached from each Sevii, Alola and Hoenn arrival |
+| [scenarios_regions.json](scenarios_regions.json) | The 15 Sevii, Alola and Hoenn arrival scenarios |
 | [hm_edits.json](hm_edits.json) | The table changes, by zero-based entry |
 | [audit_regional.json](audit_regional.json) | Regional gaps and sample witnesses per region and utility |
 | [audit_scenarios.json](audit_scenarios.json) | Best source per scenario, TR and time, with Good and Super Rod odds |

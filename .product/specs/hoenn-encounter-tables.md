@@ -225,10 +225,10 @@ Water type: coast and sea.
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
 | 1 | 38% | 25% | 12% | Luvdisc | Frillish |
-| 2 | 22% | 18% | 10% | Wailmer–Wailord | Luvdisc |
-| 3 | 10% | 12% | 11% | Frillish | Tynamo–Eelektrik |
-| 4 | 8% | 10% | 10% | Luvdisc | Frillish |
-| 5 | 8% | 9% | 10% | Tynamo–Eelektrik | Wailmer–Wailord |
+| 2 | 22% | 18% | 10% | Clamperl | Luvdisc |
+| 3 | 10% | 12% | 11% | Frillish | Clamperl |
+| 4 | 8% | 10% | 10% | Carvanha–Sharpedo | Carvanha–Sharpedo |
+| 5 | 8% | 9% | 10% | Ducklett–Swanna | Wailmer–Wailord |
 | 6 | 4% | 7% | 10% | Wailmer–Wailord | Tynamo–Eelektrik |
 | 7 | 3% | 6% | 10% | Corphish–Crawdaunt | Carvanha–Sharpedo |
 | 8 | 3% | 5% | 9% | Frillish | Luvdisc |
@@ -293,7 +293,7 @@ Water type: coast and sea.
 | 1 | 38% | 25% | 12% | Luvdisc | Luvdisc |
 | 2 | 22% | 18% | 10% | Frillish | Frillish |
 | 3 | 10% | 12% | 11% | Luvdisc | Tynamo–Eelektrik |
-| 4 | 8% | 10% | 10% | Wailmer–Wailord | Frillish |
+| 4 | 8% | 10% | 10% | Carvanha–Sharpedo | Carvanha–Sharpedo |
 | 5 | 8% | 9% | 10% | Tynamo–Eelektrik | Luvdisc |
 | 6 | 4% | 7% | 10% | Ducklett–Swanna | Carvanha–Sharpedo |
 | 7 | 3% | 6% | 10% | Carvanha–Sharpedo | Tynamo–Eelektrik |
@@ -3411,7 +3411,7 @@ Water type: cave water.
 | Chandelure | Cave of Origin, Mt. Pyre, Route 130, Sky Pillar |
 | Chimecho | Mt. Pyre |
 | Chingling | Altering Cave, Mt. Pyre |
-| Clamperl | Underwater Route 124, Underwater Route 126 |
+| Clamperl | Sootopolis City, Underwater Route 124, Underwater Route 126 |
 | Claydol | Artisan Cave, Mirage Tower, Route 111, Sky Pillar |
 | Cofagrigus | Desert Underpass, Mirage Tower, Mt. Pyre, Route 111 and more |
 | Combusken | Fiery Path, Magma Hideout, Route 112 |

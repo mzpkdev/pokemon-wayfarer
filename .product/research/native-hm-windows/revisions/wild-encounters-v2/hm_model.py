@@ -286,7 +286,13 @@ ROSTER_V2 = [  # (species, move, level, action)
     ('MAREANIE', 'SURF', 11, 'add'),
     ('WISHIWASHI', 'SURF', 22, 'add'),
     ('TOXAPEX', 'SURF', 38, 'add'),
+    # Hoenn: leaving Sootopolis
+    ('CARVANHA', 'DIVE', 12, 'add'),
 ]
+
+if os.environ.get('EXTRA_ROSTER'):
+    for _e in os.environ['EXTRA_ROSTER'].split(';'):
+        _sp, _mv, _lv, _act = _e.split(':'); ROSTER_V2.append((_sp, _mv, int(_lv), _act))
 
 def apply_roster_v2():
     for sp, mv, lv, action in ROSTER_V2:

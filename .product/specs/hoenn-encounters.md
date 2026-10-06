@@ -158,6 +158,9 @@ Species live where they belong. Some examples:
 - Every Generation III and Generation V reward appears somewhere in Hoenn.
 - Babies appear only as rare slots named directly in a table, never through
   the downward rule. They keep young levels.
+- **Clamperl is Sootopolis's resident.** The crater's deep water is the only way
+  out of the city, by Dive, so Clamperl, a harmless reward, holds a common
+  fishing slot there as the city's Dive carrier.
 
 ### Water
 
@@ -222,7 +225,12 @@ Hoenn's old Surf carriers Tentacool and Kingler are Generation I species and
 left its tables. The [catch-window audit's v2 revision](../research/native-hm-windows/revisions/wild-encounters-v2/README.md) replaces them:
 Luvdisc, Carvanha–Sharpedo and Frillish–Jellicent carry Surf at sea, and
 Marill–Azumarill, Lotad–Lombre and Wingull–Pelipper on land. Luvdisc, Frillish
-and Jellicent gain Surf in that revision. Any change to a crossing's first
+and Jellicent gain Surf in that revision, and Carvanha gains Dive.
+
+The audit also covers the places a player can only leave with a field move or
+reaches by boat: Dewford Town, Sootopolis City, which is left only by Dive, and
+Ever Grande City, left by surfing down its waterfall. Sootopolis's Dive comes
+from Carvanha, Clamperl and Wailmer–Wailord. Any change to a crossing's first
 fishing entries must re-run the audit.
 
 ## Open questions

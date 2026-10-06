@@ -190,5 +190,61 @@
   "index": 4,
   "from": "LUVDISC",
   "to": "TOXAPEX"
+ },
+ {
+  "map": "MAP_SOOTOPOLIS_CITY",
+  "method": "fish",
+  "time": "night",
+  "index": 2,
+  "from": "EELEKTRIK",
+  "to": "CLAMPERL"
+ },
+ {
+  "map": "MAP_SOOTOPOLIS_CITY",
+  "method": "fish",
+  "time": "day",
+  "index": 1,
+  "from": "WAILORD",
+  "to": "CLAMPERL"
+ },
+ {
+  "map": "MAP_SOOTOPOLIS_CITY",
+  "method": "fish",
+  "time": "day",
+  "index": 3,
+  "from": "LUVDISC",
+  "to": "SHARPEDO"
+ },
+ {
+  "map": "MAP_SOOTOPOLIS_CITY",
+  "method": "fish",
+  "time": "night",
+  "index": 3,
+  "from": "FRILLISH",
+  "to": "SHARPEDO"
+ },
+ {
+  "map": "MAP_EVER_GRANDE_CITY",
+  "method": "fish",
+  "time": "day",
+  "index": 3,
+  "from": "WAILORD",
+  "to": "SHARPEDO"
+ },
+ {
+  "map": "MAP_EVER_GRANDE_CITY",
+  "method": "fish",
+  "time": "night",
+  "index": 3,
+  "from": "FRILLISH",
+  "to": "SHARPEDO"
+ },
+ {
+  "map": "MAP_SOOTOPOLIS_CITY",
+  "method": "fish",
+  "time": "day",
+  "index": 4,
+  "from": "EELEKTRIK",
+  "to": "SWANNA"
  }
 ]
