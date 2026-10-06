@@ -277,11 +277,20 @@ ROSTER_V2 = [  # (species, move, level, action)
     ('FRILLISH', 'SURF', 27, 'add'),
     ('JELLICENT', 'SURF', 45, 'add'),
     ('QUAGSIRE', 'SURF', 28, 'move'),
+    # Sevii (Galar) and Alola
+    ('ARROKUDA', 'SURF', 11, 'add'),
+    ('BARRASKEWDA', 'SURF', 34, 'add'),
+    ('DREDNAW', 'SURF', 22, 'add'),
+    ('CHEWTLE', 'WATERFALL', 5, 'add'),
+    ('WEEPINBELL', 'CUT', 20, 'move'),
+    ('MAREANIE', 'SURF', 11, 'add'),
+    ('WISHIWASHI', 'SURF', 22, 'add'),
+    ('TOXAPEX', 'SURF', 38, 'add'),
 ]
 
 def apply_roster_v2():
     for sp, mv, lv, action in ROSTER_V2:
-        name = SPECIES_LS[sp]
+        name = SPECIES_LS.get(sp) or 's' + ''.join(x.capitalize() for x in sp.split('_')) + 'LevelUpLearnset'
         ls = [e for e in LEARNSETS[name] if not (action == 'move' and e[1] == mv)]
         if action == 'add' and any(m == mv for _, m in ls):
             raise SystemExit(f'{sp} already knows {mv}')

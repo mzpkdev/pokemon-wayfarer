@@ -84,7 +84,7 @@ Water type: coast and sea.
 | 1 | 38% | 25% | 12% | Mareanie–Toxapex | Pyukumuku |
 | 2 | 22% | 18% | 10% | Pyukumuku | Mareanie–Toxapex |
 | 3 | 10% | 12% | 11% | Magikarp | Magikarp |
-| 4 | 8% | 10% | 10% | Staryu | Chinchou |
+| 4 | 8% | 10% | 10% | Wishiwashi | Chinchou |
 | 5 | 8% | 9% | 10% | Wishiwashi | Wishiwashi |
 | 6 | 4% | 7% | 10% | Luvdisc | Staryu |
 | 7 | 3% | 6% | 10% | Pyukumuku | Pyukumuku |
@@ -135,7 +135,7 @@ Water type: coast and sea.
 | 2 | 22% | 18% | 10% | Mareanie–Toxapex | Wishiwashi |
 | 3 | 10% | 12% | 11% | Magikarp | Magikarp |
 | 4 | 8% | 10% | 10% | Pyukumuku | Chinchou |
-| 5 | 8% | 9% | 10% | Luvdisc | Pyukumuku |
+| 5 | 8% | 9% | 10% | Mareanie–Toxapex | Pyukumuku |
 | 6 | 4% | 7% | 10% | Wishiwashi | Wishiwashi |
 | 7 | 3% | 6% | 10% | Clamperl | Clamperl |
 | 8 | 3% | 5% | 9% | Corsola | Corsola |
@@ -241,7 +241,7 @@ Water type: coast and sea.
 | 2 | 22% | 18% | 10% | Mareanie–Toxapex | Wishiwashi |
 | 3 | 10% | 12% | 11% | Pyukumuku | Pyukumuku |
 | 4 | 8% | 10% | 10% | Magikarp | Chinchou |
-| 5 | 8% | 9% | 10% | Shellder | Magikarp |
+| 5 | 8% | 9% | 10% | Mareanie–Toxapex | Magikarp |
 | 6 | 4% | 7% | 10% | Luvdisc | Shellder |
 | 7 | 3% | 6% | 10% | Wailmer | Clamperl |
 | 8 | 3% | 5% | 9% | Corsola | Wailmer |

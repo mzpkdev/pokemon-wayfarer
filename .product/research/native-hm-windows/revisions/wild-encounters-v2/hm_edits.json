@@ -150,5 +150,45 @@
   "index": 8,
   "from": "GOLDUCK",
   "to": "QUAGSIRE"
+ },
+ {
+  "map": "MAP_MELEMELE_ISLE_HNS",
+  "method": "fish",
+  "time": "day",
+  "index": 3,
+  "from": "STARYU",
+  "to": "WISHIWASHI"
+ },
+ {
+  "map": "MAP_FOUR_ISLAND",
+  "method": "fish",
+  "time": "night",
+  "index": 0,
+  "from": "CLOBBOPUS",
+  "to": "BARRASKEWDA"
+ },
+ {
+  "map": "MAP_FOUR_ISLAND",
+  "method": "fish",
+  "time": "day",
+  "index": 3,
+  "from": "DEWGONG",
+  "to": "WALREIN"
+ },
+ {
+  "map": "MAP_ULAULA_ISLE_HNS",
+  "method": "fish",
+  "time": "day",
+  "index": 4,
+  "from": "SHELLDER",
+  "to": "TOXAPEX"
+ },
+ {
+  "map": "MAP_AKALA_ISLE_HNS",
+  "method": "fish",
+  "time": "day",
+  "index": 4,
+  "from": "LUVDISC",
+  "to": "TOXAPEX"
  }
 ]

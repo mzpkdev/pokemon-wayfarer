@@ -197,10 +197,12 @@ is new.
 
 ### Native HM sources
 
-The native HM guarantee covers Johto, Kanto and Hoenn only. The
-[catch-window audit's v2 revision](../research/native-hm-windows/revisions/wild-encounters-v2/README.md) checked Sevii for reference: it has
-no native Cut carrier at TR 36–45, no Flash carrier from TR 36 and no
-Waterfall carrier at TR 0–6, so those come from the HMs.
+The native HM guarantee covers Sevii's field moves: Surf, Cut, Rock Smash,
+Strength and Waterfall, the ones its maps need. The
+[catch-window audit's v2 revision](../research/native-hm-windows/revisions/wild-encounters-v2/README.md) checks them across TR 0–160, and checks
+that every island offers a Surf carrier within walking distance of its harbor
+from two badges on. Galar's Arrokuda–Barraskewda and Chewtle–Drednaw carry
+Surf, Chewtle carries Waterfall, and Weepinbell carries Cut.
 
 ## Open questions
 

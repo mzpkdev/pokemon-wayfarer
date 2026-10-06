@@ -1,0 +1,293 @@
+{
+ "notes": "Sevii and Alola arrival scenarios: sources reachable on foot from each island arrival (walker.py), no field moves.",
+ "scenarios": [
+  {
+   "id": "one_island_surf",
+   "move": "SURF",
+   "times": [
+    "DAY",
+    "NIGHT"
+   ],
+   "minimum_chance": 0.08,
+   "maps": [
+    {
+     "map": "MAP_ONE_ISLAND",
+     "methods": [
+      "fishing_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_ONE_ISLAND_KINDLE_ROAD",
+     "methods": [
+      "fishing_mons"
+     ],
+     "rank": 0
+    }
+   ]
+  },
+  {
+   "id": "two_island_surf",
+   "move": "SURF",
+   "times": [
+    "DAY",
+    "NIGHT"
+   ],
+   "minimum_chance": 0.08,
+   "maps": [
+    {
+     "map": "MAP_TWO_ISLAND_CAPE_BRINK",
+     "methods": [
+      "land_mons",
+      "fishing_mons"
+     ],
+     "rank": 0
+    }
+   ]
+  },
+  {
+   "id": "three_island_surf",
+   "move": "SURF",
+   "times": [
+    "DAY",
+    "NIGHT"
+   ],
+   "minimum_chance": 0.08,
+   "maps": [
+    {
+     "map": "MAP_THREE_ISLAND_BOND_BRIDGE",
+     "methods": [
+      "land_mons",
+      "fishing_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_THREE_ISLAND_BERRY_FOREST",
+     "methods": [
+      "land_mons",
+      "fishing_mons"
+     ],
+     "rank": 0
+    }
+   ]
+  },
+  {
+   "id": "four_island_surf",
+   "move": "SURF",
+   "times": [
+    "DAY",
+    "NIGHT"
+   ],
+   "minimum_chance": 0.08,
+   "maps": [
+    {
+     "map": "MAP_FOUR_ISLAND",
+     "methods": [
+      "land_mons",
+      "fishing_mons"
+     ],
+     "rank": 0
+    }
+   ]
+  },
+  {
+   "id": "five_island_surf",
+   "move": "SURF",
+   "times": [
+    "DAY",
+    "NIGHT"
+   ],
+   "minimum_chance": 0.08,
+   "maps": [
+    {
+     "map": "MAP_FIVE_ISLAND",
+     "methods": [
+      "fishing_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_FIVE_ISLAND_MEADOW",
+     "methods": [
+      "land_mons",
+      "fishing_mons"
+     ],
+     "rank": 0
+    }
+   ]
+  },
+  {
+   "id": "six_island_surf",
+   "move": "SURF",
+   "times": [
+    "DAY",
+    "NIGHT"
+   ],
+   "minimum_chance": 0.08,
+   "maps": [
+    {
+     "map": "MAP_SIX_ISLAND_WATER_PATH",
+     "methods": [
+      "land_mons",
+      "fishing_mons"
+     ],
+     "rank": 0
+    }
+   ]
+  },
+  {
+   "id": "seven_island_surf",
+   "move": "SURF",
+   "times": [
+    "DAY",
+    "NIGHT"
+   ],
+   "minimum_chance": 0.08,
+   "maps": [
+    {
+     "map": "MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE",
+     "methods": [
+      "land_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_SEVEN_ISLAND_SEVAULT_CANYON",
+     "methods": [
+      "land_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_SEVEN_ISLAND_TRAINER_TOWER",
+     "methods": [
+      "fishing_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_SEVEN_ISLAND_TANOBY_RUINS",
+     "methods": [
+      "fishing_mons"
+     ],
+     "rank": 0
+    }
+   ]
+  },
+  {
+   "id": "melemele_surf",
+   "move": "SURF",
+   "times": [
+    "DAY",
+    "NIGHT"
+   ],
+   "minimum_chance": 0.08,
+   "maps": [
+    {
+     "map": "MAP_MELEMELE_ISLE_HNS",
+     "methods": [
+      "land_mons",
+      "fishing_mons"
+     ],
+     "rank": 0
+    }
+   ]
+  },
+  {
+   "id": "akala_surf",
+   "move": "SURF",
+   "times": [
+    "DAY",
+    "NIGHT"
+   ],
+   "minimum_chance": 0.08,
+   "maps": [
+    {
+     "map": "MAP_AKALA_ISLE_HNS",
+     "methods": [
+      "land_mons",
+      "fishing_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_AKALA_FOREST_HNS",
+     "methods": [
+      "land_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_AKALA_CAVE_HNS",
+     "methods": [
+      "land_mons"
+     ],
+     "rank": 0
+    }
+   ]
+  },
+  {
+   "id": "ulaula_surf",
+   "move": "SURF",
+   "times": [
+    "DAY",
+    "NIGHT"
+   ],
+   "minimum_chance": 0.08,
+   "maps": [
+    {
+     "map": "MAP_ULAULA_ISLE_HNS",
+     "methods": [
+      "land_mons",
+      "fishing_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_ULA_ULA_CAVE_HNS",
+     "methods": [
+      "land_mons",
+      "fishing_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_ULA_ULA_CAVE_2_HNS",
+     "methods": [
+      "land_mons",
+      "fishing_mons"
+     ],
+     "rank": 0
+    }
+   ]
+  },
+  {
+   "id": "poni_surf",
+   "move": "SURF",
+   "times": [
+    "DAY",
+    "NIGHT"
+   ],
+   "minimum_chance": 0.08,
+   "maps": [
+    {
+     "map": "MAP_PONI_ISLE_HNS",
+     "methods": [
+      "land_mons",
+      "fishing_mons"
+     ],
+     "rank": 0
+    },
+    {
+     "map": "MAP_PONI_CAVE_HNS",
+     "methods": [
+      "land_mons",
+      "fishing_mons"
+     ],
+     "rank": 0
+    }
+   ]
+  }
+ ]
+}

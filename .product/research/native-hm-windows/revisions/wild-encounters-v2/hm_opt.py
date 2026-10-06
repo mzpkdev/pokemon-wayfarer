@@ -2,7 +2,7 @@
 
 Floor: one rank-allowed source (land, or Old Rod fishing) with an 8% chance of a
 catch knowing the move, at every TR 20-160, day and night separately.
-Writes hm_edits.json: [{map, method, time, index, from, to}].
+Writes hm_edits_new.json: [{map, method, time, index, from, to}].
 """
 import json, functools, copy, os
 import hm_model as h
@@ -14,11 +14,12 @@ TRS = range(20, 161)
 TIMES = ('day', 'night')
 REPO = h.REPO
 S = json.load(open(REPO + '.product/research/native-hm-windows/revisions/nearby-access/scenarios.json'))['scenarios']
+S += json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'scenarios_regions.json')))['scenarios']
 for sc in S:
     for m in sc['maps']:
         m['map'] = m['map'].replace('MAP_CINNABAR_ISLAND_HNS', 'MAP_CINNABAR_ISLAND')
 
-FILES = {'Kanto': 'kanto.json', 'Johto': 'johto.json', 'Hoenn': 'hoenn.json'}
+FILES = {'Kanto': 'kanto.json', 'Johto': 'johto.json', 'Hoenn': 'hoenn.json', 'Sevii': 'sevii.json', 'Alola': 'alola.json'}
 DATA = {r: json.load(open(h.HERE + '/' + f)) for r, f in FILES.items()}
 def table(mp):
     return DATA[h.META[mp]['region']][mp]
@@ -31,8 +32,13 @@ POOLS = {
     ('Johto', 'cave'): ['GOLDUCK', 'POLIWHIRL', 'QUAGSIRE', 'SLOWBRO', 'GYARADOS', 'AZUMARILL'],
     ('Hoenn', 'sea'): ['SHARPEDO', 'LUVDISC', 'JELLICENT', 'FRILLISH'],
     ('Hoenn', 'pond'): ['AZUMARILL', 'LOMBRE'],
+    ('Sevii', 'sea'): ['DREDNAW', 'BARRASKEWDA', 'KINGLER', 'TENTACRUEL', 'SEADRA', 'SHELLDER'],
+    ('Sevii', 'pond'): ['DREDNAW', 'BARRASKEWDA', 'GOLDUCK', 'AZUMARILL', 'POLIWHIRL', 'QUAGSIRE'],
+    ('Sevii', 'cold'): ['BARRASKEWDA', 'SHELLDER', 'WALREIN'],
+    ('Alola', 'sea'): ['TOXAPEX', 'WISHIWASHI', 'LUVDISC', 'SHELLDER', 'SHARPEDO'],
+    ('Alola', 'cave'): ['WISHIWASHI', 'GOLDUCK'],
 }
-LAND_POOLS = {'MAP_ROUTE121': ['PELIPPER'], 'MAP_ROUTE118': ['PELIPPER'], 'MAP_ROUTE117': ['AZUMARILL', 'LOMBRE'],
+LAND_POOLS = {'MAP_MELEMELE_ISLE_HNS': ['PELIPPER'], 'MAP_AKALA_ISLE_HNS': ['PELIPPER'], 'MAP_ULAULA_ISLE_HNS': ['PELIPPER'], 'MAP_PONI_ISLE_HNS': ['PELIPPER'], 'MAP_ROUTE121': ['PELIPPER'], 'MAP_ROUTE118': ['PELIPPER'], 'MAP_ROUTE117': ['AZUMARILL', 'LOMBRE'],
               'MAP_ROUTE119': ['PELIPPER', 'LOMBRE'], 'MAP_CLIFF_EDGE_CAVE_HNS': ['KINGLER', 'SLOWBRO']}
 LAND_W = h.WEIGHTS['land']; OLD_W = h.RODS['old']
 
@@ -84,29 +90,35 @@ def candidates():
                         if key in seen or t[k][tm][i] == r: continue
                         seen.add(key); yield key
 
-edits = []
-fails = failures()
-print('initial failures', len(fails))
-while fails:
-    best = None
-    for mp, k, tm, i, r in candidates():
-        t = table(mp); old = t[k][tm][i]
+def main():
+    global fails
+    edits = []
+    fails = failures()
+    print('initial failures', len(fails))
+    while fails:
+        best = None
+        for mp, k, tm, i, r in candidates():
+            t = table(mp); old = t[k][tm][i]
+            t[k][tm][i] = r
+            f2 = failures()
+            t[k][tm][i] = old
+            gain = len(fails) - len(f2)
+            if gain > 0 and (best is None or gain > best[0] or (gain == best[0] and i > best[1][3])):
+                best = (gain, (mp, k, tm, i, r), f2)
+        if not best:
+            print('stuck with', len(fails), 'failures'); break
+        gain, (mp, k, tm, i, r), fails = best
+        t = table(mp)
+        edits.append({'map': mp, 'method': k, 'time': tm, 'index': i, 'from': t[k][tm][i], 'to': r})
         t[k][tm][i] = r
-        f2 = failures()
-        t[k][tm][i] = old
-        gain = len(fails) - len(f2)
-        if gain > 0 and (best is None or gain > best[0] or (gain == best[0] and i > best[1][3])):
-            best = (gain, (mp, k, tm, i, r), f2)
-    if not best:
-        print('stuck with', len(fails), 'failures'); break
-    gain, (mp, k, tm, i, r), fails = best
-    t = table(mp)
-    edits.append({'map': mp, 'method': k, 'time': tm, 'index': i, 'from': t[k][tm][i], 'to': r})
-    t[k][tm][i] = r
-    print(f'edit {mp} {k} {tm} [{i}] {edits[-1]["from"]} -> {r}  (+{gain}, left {len(fails)})', flush=True)
+        print(f'edit {mp} {k} {tm} [{i}] {edits[-1]["from"]} -> {r}  (+{gain}, left {len(fails)})', flush=True)
 
-json.dump(edits, open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'hm_edits.json'), 'w'), indent=1)
-by = {}
-for sc, tm, tr in sorted(fails):
-    by.setdefault((sc, tm), []).append(tr)
-for k, v in by.items(): print('UNRESOLVED', k, v[0], '-', v[-1], len(v))
+    json.dump(edits, open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'hm_edits_new.json'), 'w'), indent=1)
+    by = {}
+    for sc, tm, tr in sorted(fails):
+        by.setdefault((sc, tm), []).append(tr)
+    for k, v in by.items(): print('UNRESOLVED', k, v[0], '-', v[-1], len(v))
+
+
+if __name__ == '__main__':
+    main()

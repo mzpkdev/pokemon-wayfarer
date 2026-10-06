@@ -64,6 +64,7 @@ if mode in ('all', 'regional'):
 
 if mode in ('all', 'scenarios'):
     S = json.load(open(h.REPO + '.product/research/native-hm-windows/revisions/nearby-access/scenarios.json'))['scenarios']
+    S += json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'scenarios_regions.json')))['scenarios']
     sc_out = {}
     for sc in S:
         move = sc['move']

@@ -101,10 +101,10 @@ Water type: cold water.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Arrokuda–Barraskewda | Clobbopus |
+| 1 | 38% | 25% | 12% | Arrokuda–Barraskewda | Arrokuda–Barraskewda |
 | 2 | 22% | 18% | 10% | Clobbopus | Arrokuda–Barraskewda |
 | 3 | 10% | 12% | 11% | Clobbopus | Arrokuda–Barraskewda |
-| 4 | 8% | 10% | 10% | Seel–Dewgong | Shellder |
+| 4 | 8% | 10% | 10% | Spheal–Walrein | Shellder |
 | 5 | 8% | 9% | 10% | Arrokuda–Barraskewda | Clobbopus |
 | 6 | 4% | 7% | 10% | Shellder | Seel–Dewgong |
 | 7 | 3% | 6% | 10% | Arrokuda–Barraskewda | Clobbopus |

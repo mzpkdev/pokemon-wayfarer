@@ -156,8 +156,12 @@ names each map's type.
   different families.
 - **Surfing:** no family holds a surfing table's first slot on more than four
   maps.
-- **Native HM crossings:** Alola has none. The boat from Route 13 links
-  Melemele to Kanto, so no player is stranded without Surf.
+- **Native HM crossings:** every island. The boat from Route 13 lands on
+  Melemele, and the islands are linked only by Surf until the Tapu signs open
+  fast travel. So each island's own shore and grass must offer a Surf carrier
+  from two badges on, as the
+  [catch-window audit's v2 revision](../research/native-hm-windows/revisions/wild-encounters-v2/README.md) checks. Mareanie–Toxapex and
+  Wishiwashi carry it at sea, with Luvdisc and Pelipper.
 
 ### Day and night
 

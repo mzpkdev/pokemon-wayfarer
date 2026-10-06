@@ -39,17 +39,26 @@ then replaces the nearby-access evidence:
   level ±2, prowler minimums, young levels and the stage mix. TR projection,
   slot eligibility, species floors and profile offsets go. Fishing uses the
   place's level with every rod.
+- **The guarantee grows to the Sevii Islands and Alola.** The Safari Zones and
+  the Bug-Catching Contest stay outside it, and Sinjoh isn't covered yet.
 - **TR runs from 0 to 160** on the [v0 scale](player-trainer-rating.md#formula-v0).
-  Regional coverage holds for Johto, Kanto and Hoenn across that range, with
-  one recorded gap: Hoenn Dive at TR 0–3, which Steven's grant blocks anyway.
+  Regional coverage holds across that range for the field moves each region's
+  maps need: all eight in Johto, Kanto and Hoenn; Surf, Cut, Rock Smash,
+  Strength and Waterfall in the Sevii Islands; Surf in Alola. One gap is
+  recorded: Hoenn Dive at TR 0–3, which Steven's grant blocks anyway.
 - **The 8% crossing floor holds from TR 20, two badges, to TR 160.** Before
   that, crossings rely on the Surf HM: no Kanto or Johto species knows Surf
   below level 7, and Roads are level 5 before the first badge.
-- **The roster changes four entries:** Luvdisc adds Surf at 11, Frillish at
-  27 and Jellicent at 45, and Quagsire's Surf moves from 40 to 28. The
-  learnset rules below apply to them unchanged.
+- **Eleven arrival scenarios join the eleven crossings:** one for each Sevii
+  island and each Alola island. Their sources are the land tables and shore
+  fishing a player reaches on foot from the ferry, the boat or the Tapu sign,
+  with no field move.
+- **The roster changes twelve entries.** Luvdisc, Frillish, Jellicent,
+  Arrokuda, Barraskewda, Drednaw, Mareanie, Wishiwashi and Toxapex add Surf,
+  Chewtle adds Waterfall, and Quagsire's Surf and Weepinbell's Cut move
+  earlier. The learnset rules below apply to them unchanged.
 - **`encounter_replacements` retire.** The v2 tables hold the crossing
-  carriers directly; the revision lists the 19 edits it made to them.
+  carriers directly; the revision lists the 24 edits it made to them.
 - **Cinnabar's scenario uses `MAP_CINNABAR_ISLAND`,** the map Wayfarer uses.
   The other scenarios, maps, methods and ranks stay.
 
