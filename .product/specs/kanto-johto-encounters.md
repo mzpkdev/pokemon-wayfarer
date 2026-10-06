@@ -3,7 +3,7 @@
 PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
 Implemented: No
 
-Design status: draft. It sets the rules and targets for Kanto's and Johto's
+Design status: v0 approved. It sets the rules and targets for Kanto's and Johto's
 encounter tables. The tables themselves are in the
 [Kanto](kanto-encounter-tables.md) and [Johto](johto-encounter-tables.md)
 table specs. Every share and count below is a placeholder for playtesting.

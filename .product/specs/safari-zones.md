@@ -3,7 +3,7 @@
 PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
 Implemented: No
 
-Design status: draft. It sets the rules for the three Safari Zones and the
+Design status: v0 approved. It sets the rules for the three Safari Zones and the
 Bug-Catching Contest. The tables themselves are in the
 [Safari table spec](safari-encounter-tables.md). Every count below is a
 placeholder for playtesting.

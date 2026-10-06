@@ -3,7 +3,7 @@
 PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
 Implemented: No
 
-Design status: draft. It sets the rules and targets for Alola's encounter
+Design status: v0 approved. It sets the rules and targets for Alola's encounter
 tables. The tables themselves are in the
 [Alola table spec](alola-encounter-tables.md). Every share and count below is a
 placeholder for playtesting.

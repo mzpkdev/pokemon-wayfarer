@@ -3,7 +3,7 @@
 PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
 Implemented: No
 
-Design status: draft. It holds only the agreed rules. The reward lists cover
+Design status: v0 approved. It holds only the agreed rules. The reward lists cover
 every included generation: Generations I, II, III, V, VI, VII and VIII, with
 their regional forms. Generation IV's list waits for a future Sinnoh, apart
 from the rows Sinjoh uses.

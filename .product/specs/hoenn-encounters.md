@@ -3,7 +3,7 @@
 PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
 Implemented: No
 
-Design status: draft. It sets the rules and targets for Hoenn's encounter
+Design status: v0 approved. It sets the rules and targets for Hoenn's encounter
 tables. The tables themselves are in the
 [Hoenn table spec](hoenn-encounter-tables.md). Every share and count below is a
 placeholder for playtesting.

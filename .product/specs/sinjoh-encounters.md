@@ -3,7 +3,7 @@
 PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
 Implemented: No
 
-Design status: draft. It sets the rules for Sinjoh's encounter tables. The
+Design status: v0 approved. It sets the rules for Sinjoh's encounter tables. The
 tables themselves are in the [Sinjoh table spec](sinjoh-encounter-tables.md).
 Every share below is a placeholder for playtesting.
 

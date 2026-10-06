@@ -3,7 +3,7 @@
 PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
 Implemented: No
 
-Design status: draft. These tables follow the
+Design status: v0 approved. These tables follow the
 [Hoenn encounter rules](hoenn-encounters.md). They are the source of truth for
 Hoenn's wild-encounter data: every slot below maps one to one to a slot in the
 game's encounter tables. Playtesting may change the picks.

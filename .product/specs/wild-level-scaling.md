@@ -3,7 +3,7 @@
 PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
 Implemented: No
 
-Design status: draft. It sets how a wild Pokémon's level and stage come from
+Design status: v0 approved. It sets how a wild Pokémon's level and stage come from
 your Trainer Rating (TR) and the place you meet it. Every number below is a
 placeholder for playtesting, but each one is exact, so the implementation has
 nothing to guess.

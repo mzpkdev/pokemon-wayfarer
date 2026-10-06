@@ -3,7 +3,7 @@
 PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
 Implemented: No
 
-Design status: draft. It sets the rules and targets for the Sevii Islands'
+Design status: v0 approved. It sets the rules and targets for the Sevii Islands'
 encounter tables. The tables themselves are in the
 [Sevii table spec](sevii-encounter-tables.md). Every share and count below is a
 placeholder for playtesting.
