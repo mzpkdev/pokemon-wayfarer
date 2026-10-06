@@ -163,9 +163,10 @@ Species live where they belong. Some examples:
 - Every Generation III and Generation V reward appears somewhere in Hoenn.
 - Babies appear only as rare slots named directly in a table, never through
   the downward rule. They keep young levels.
-- **Clamperl is Sootopolis's resident.** The crater's deep water is the only way
-  out of the city, by Dive, so Clamperl, a harmless reward, holds a common
-  fishing slot there as the city's Dive carrier.
+- **Clamperl holds a common fishing slot at Sootopolis.** The crater's deep
+  water is the only way out of the city, by Dive, so Clamperl, a harmless
+  reward, leads there as the city's Dive carrier. It is still a prowler and
+  takes its minimum level.
 
 ### Water
 

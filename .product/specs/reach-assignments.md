@@ -40,7 +40,9 @@ It doesn't cover:
    to it, listed from the entrance to the deepest or highest floor. A dungeon
    includes its outdoor parts where they belong to the same place.
 7. **One safe road:** every town and city is reachable by at least one path of
-   Road maps, except in Sinjoh, which lies beyond Mt. Silver. Boats and trains
+   Road maps, except in Sinjoh, which lies beyond Mt. Silver, and in Hoenn's
+   Pacifidlog, a floating town in the far sea, and Sootopolis, a crater entered
+   only by diving (Underwater Route 126). Boats and trains
    count as part of that path, and so do Surf crossings. A route that isn't
    needed for that path takes the reach that fits its character: long, rugged
    or roundabout routes become Wilds, and open sea far from shore or the
@@ -290,10 +292,13 @@ have no wild encounters at all, so they need no reach.
 Hoenn has 116 maps with wild encounters in Wayfarer, in 64 rows. Littleroot,
 Oldale, Rustboro, Mauville, Verdanturf, Fallarbor, Lavaridge and Fortree have
 no wild encounters in town. The safe roads were checked against the walkable
-map graph: every Hoenn town keeps a path of Road maps.
+map graph: every Hoenn town keeps a path of Road maps except Pacifidlog and
+Sootopolis, which are exempt from the one-safe-road rule. Pacifidlog is a
+floating town in the far sea, and Sootopolis a crater entered only by diving
+from Underwater Route 126.
 
-- The western sea lanes to Dewford and the eastern lanes through Mossdeep,
-  Sootopolis, Ever Grande and Pacifidlog are Road. Lilycove also has its ferry.
+- The western sea lanes to Dewford and the eastern lanes through Mossdeep to
+  Ever Grande are Road. Lilycove also has its ferry.
 - The far sea beyond those lanes is Outlands. Far-sea maps directly next to a
   town are Wilds, as on Sevii's outer islands.
 - Route 111 is one map that holds the desert, so the whole route is Road.
@@ -328,8 +333,8 @@ map graph: every Hoenn town keeps a path of Road maps.
 | Route 122 | Road | `MAP_ROUTE122` | The way to Mt. Pyre |
 | Route 123 | Road | `MAP_ROUTE123` | |
 | Route 124 | Road | `MAP_ROUTE124` | Sea lane: the safe way to Mossdeep |
-| Route 127 | Road | `MAP_ROUTE127` | Sea lane: Mossdeep to Sootopolis and Route 128 |
-| Route 128 | Road | `MAP_ROUTE128` | Sea lane: the safe way to Ever Grande and Pacifidlog |
+| Route 127 | Road | `MAP_ROUTE127` | Sea lane: Mossdeep to Route 128 and Ever Grande |
+| Route 128 | Road | `MAP_ROUTE128` | Sea lane: the safe way to Ever Grande |
 | Petalburg Woods | Road | `MAP_PETALBURG_WOODS` | Passage |
 | Route 107 | Wilds | `MAP_ROUTE107` | Open sea between Dewford and Slateport |
 | Route 108 | Wilds | `MAP_ROUTE108` | Open sea around the Abandoned Ship |

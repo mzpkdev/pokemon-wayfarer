@@ -43,15 +43,17 @@ prowler.
 
 ### Prowlers
 
-A prowler is a reward Pokémon met in the wild as a rare find, in one of its
-table's rare slots. Each prowler has a **temperament**, and each reach allows
+A prowler is a reward Pokémon met in the wild. Prowlers are usually rare finds
+in a table's rare slots, but some lead or hold common slots, such as Dratini at
+Dragon's Den, Lunatone and Solrock at Meteor Falls, Torkoal on Fiery Path and
+Clamperl at Sootopolis. Each prowler has a **temperament**, and each reach allows
 certain temperaments:
 
 | Temperament | What it is | Allowed in |
 | --- | --- | --- |
 | **Harmless** | Rare, but no threat | Every reach, including Roads |
 | **Fierce** | Strong, and above the area's level early on | Wilds, Outlands and dungeons |
-| **Dangerous** | The top tier | Outlands and dungeons |
+| **Dangerous** | The top tier | Outlands and a dungeon's deeper floors |
 
 A reward's temperament follows from why it is a reward:
 
@@ -67,21 +69,16 @@ What each reach feels like:
 - **Wilds:** where prowlers turn fierce.
 - **Outlands:** the most dangerous finds.
 - **Dungeons:** temperaments follow depth. Harmless and fierce near the
-  entrance, dangerous on the deepest floors.
+  entrance. Dangerous prowlers appear only in Outlands and on a dungeon's
+  [deeper floors](reach-assignments.md#dungeon-floors): every step after the
+  first, with single-floor and flat dungeons counting as deeper.
 
 Each prowler has a **minimum level**, set by its temperament and base stat
 total in [Wild level scaling](wild-level-scaling.md#prowler-minimum-levels).
-It appears at the higher of the area's wild level and its minimum level. Early in the game that makes a fierce or
+It appears at the higher of the area's wild level and its minimum level, in
+any slot, common or rare. Early in the game that makes a fierce or
 dangerous prowler a threat and a tricky catch. Later the area's level passes
 its minimum, and it is simply a rare find.
-
-**Residents.** A reward that holds a common slot, one of the first six land or
-fishing slots or the first two surfing or Rock Smash slots, is a resident
-there, not a prowler. It has no minimum level and appears at the area's wild
-level, as Sinjoh's natives and Kalos's rewards in the Safari Zones do. Meteor
-Falls' Lunatone and Solrock, Fiery Path's Torkoal, Icefall Cave's Eiscue and
-Clamperl at Sootopolis are residents. A resident's temperament still decides
-which reaches it can appear in.
 
 A prowler looks like any other wild encounter. There is no special intro,
 cry or effect, so players only notice it by what appears and how strong it is.

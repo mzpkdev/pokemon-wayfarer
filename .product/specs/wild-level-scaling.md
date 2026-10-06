@@ -198,8 +198,8 @@ Early in the game that puts fierce and dangerous prowlers well above their
 surroundings. Wilds reach level 25 at four badges and Outlands pass 30 between
 four and five, after which prowlers are simply rare finds. Kalos's rewards in
 the Safari Zones and Sinjoh's residents at home have no minimum, as their
-specs say. Neither does any reward that holds a common slot, which is a
-resident there, as the [prowlers spec](prowlers.md#prowlers) defines.
+specs say. Every other prowler takes its minimum in any slot, common or rare,
+as the [prowlers spec](prowlers.md#prowlers) defines.
 
 ### Running and Repel
 
@@ -224,8 +224,8 @@ resident there, as the [prowlers spec](prowlers.md#prowlers) defines.
   [Reach assignments](reach-assignments.md#dungeon-floors). Flat is
   per-dungeon data, since nothing else tells the generator.
 - **Prowler minimum levels are generated from the prowlers spec's lists.**
-  A species' minimum applies wherever it appears as a prowler, in a rare slot,
-  at any stage of its line. In a common slot it is a resident and has none.
+  A species' minimum applies wherever it appears as a prowler, in any slot,
+  at any stage of its line.
 - **Randomized encounters** keep the place's level and spread but skip the
   stage mix, young levels and prowler minimums, as the randomizer does today.
 - **DexNav, the Pokédex area screen and other readers of the wild population**

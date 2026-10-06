@@ -45,9 +45,10 @@ different Pokémon.
 - **Stage cap:** the highest evolution stage a table slot allows.
 - **Stage mix:** the rolled mix of evolution stages near an evolution level, so
   young and grown Pokémon appear together.
-- **Prowler:** a rare reward species, a special find in a rare slot. It never
-  appears below its own minimum level, so early on it can be fiercer than its
-  surroundings. A reward in a common slot is a resident and has no minimum.
+- **Prowler:** a reward species, usually a rare find. A few lead or hold
+  common slots, such as Dratini at Dragon's Den. It never appears below its own
+  minimum level, in any slot, so early on it can be fiercer than its
+  surroundings.
 - **Temperament:** how threatening a prowler is: harmless, fierce or
   dangerous. It decides which reaches the prowler can appear in.
 - **Natives:** the generations a region is home to.
@@ -71,7 +72,9 @@ somewhere.
 
 **Settlement rule:** any map with a town is Road.
 
-**One safe road:** every town is reachable by at least one path of Road maps.
+**One safe road:** every town is reachable by at least one path of Road maps,
+except Sinjoh, beyond Mt. Silver, and Hoenn's Pacifidlog and Sootopolis, which
+sit far out at sea or behind a dive.
 Other routes take the reach that fits their character, so the long, rugged or
 remote way around is the risky choice.
 
@@ -152,7 +155,9 @@ may disobey until your cap catches up, which is the price of a strong catch.
 Each included generation is complete. Later evolutions and babies from any
 generation, Gen IX included, come with the lines they extend, such as
 Annihilape with Primeape or Kingambit with Bisharp. A family belongs to the region of any of its members,
-and regional forms live in their region.
+and regional forms live in their region, with one exception: Sevii's Icefall
+Cave holds Alolan Sandshrew and Vulpix lines, as Galar's Crown Tundra does in
+the source games.
 
 | Generations | Home |
 | --- | --- |

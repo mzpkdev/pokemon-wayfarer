@@ -65,7 +65,8 @@ Mt. Ember.
 
 Galar has few Ice species of its own, and most of them are rewards. Icefall
 Cave is therefore the one dungeon where rewards such as Snom, Eiscue,
-Galarian Darumaka and Galarian Mr. Mime hold common slots.
+Galarian Darumaka and Galarian Mr. Mime may hold common slots. They are
+prowlers and take their minimum levels there.
 
 ### The blend
 
@@ -94,6 +95,11 @@ Galar:
 - **A slot capped at a Galarian form is native.** Koffing–Galarian Weezing
   produces the Galarian form, so it may lead a table and doesn't count toward
   the blend cap.
+
+**Icefall Cave's Alolan forms.** Icefall Cave also holds Alolan Sandshrew,
+Sandslash, Vulpix and Ninetales as part of its snow blend. This is an exception
+to "regional forms live in their region": Galar's Crown Tundra hosts Alolan
+Vulpix and Sandshrew in the source games.
 
 ### Sevii's region
 
