@@ -1,7 +1,7 @@
 # Johto wild encounter ecology
 
 **Retired.** Replaced by [Wild encounters v2](../prds/wild-encounters-v2.md).
-Kept for history only; don't build from it.
+It still describes today's game until v2 ships; don't build new work from it.
 
 Implemented: Outdated
 

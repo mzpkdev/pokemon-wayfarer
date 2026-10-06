@@ -99,8 +99,8 @@ TR projects ordinary encounters above their authored levels. The authored additi
 
 The TR 0 to 80 ranges above are on today's scale. v0: TR 0 to
 160 (0 to 24 badges) on the [v0 TR scale](player-trainer-rating.md#formula-v0).
-The Chinchou ranges need data re-verification against the
-[v0 wild level curve](trainer-rating-wild-encounter-scaling.md#v0-wild-level-curve)
+The Chinchou ranges need data re-verification against
+[wild level scaling](wild-level-scaling.md#reach-levels)
 before this specification claims them there.
 
 ### Anchor schedules

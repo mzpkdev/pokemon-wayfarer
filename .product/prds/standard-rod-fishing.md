@@ -1,5 +1,13 @@
 # Standard Rod fishing progression
 
+For Wayfarer, [Wild encounters v2](wild-encounters-v2.md) replaces this document's level
+and eligibility rules once its tables ship. Every rod rolls the place's level
+as [wild level scaling](../specs/wild-level-scaling.md#encounter-level) defines;
+TR eligibility, level projection, predecessor resolution and the encounter
+replacements below go, and the v2 encounter tables hold each map's fishing
+entries. The quality profiles, bite chances, rod progression and givers stay
+in force.
+
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision replaces named-carrier accessibility assertions with eligible catches
 that actually know the required utility at each TR and time. Its selected

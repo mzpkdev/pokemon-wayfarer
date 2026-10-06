@@ -118,8 +118,8 @@ Intent:
 
 The Mart tiers keep today's badge milestones: each current threshold maps to
 the v0 TR at the same badge count. Obedience, the half-experience rule that
-makes the level cap soft, Exp. Candy and Rare Candy rules, and species floors
-are unchanged, because they are relative to the level cap or authored.
+makes the level cap soft, and Exp. Candy and Rare Candy rules are unchanged,
+because they are relative to the level cap.
 
 ## Evolution stages
 

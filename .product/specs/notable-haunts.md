@@ -2599,7 +2599,7 @@ Every haunt has capacity 1.
 | 14 | Saffron Fighting Dojo | `SaffronCity_FightingDojo_hns` | Fighting | – | Saffron | train | public | One on one |
 | 15 | Dojo back room | `SaffronCity_FightingDojoVIP_hns` | Psychic | TR 80 | Saffron | study | remote | Quiz |
 | 16 | Diglett's Cave | `DiglettsCave_EntranceNorth_hns`, `DiglettsCave_Tunnel_hns`, `DiglettsCave_EntranceSouth_hns` | Ground | – | – | train, lie low | remote | Walk with me: from the Route 2 entrance to the Vermilion exit |
-| 17 | Safari Zone | `FuchsiaCity_SafariZoneEntrance_hns` and its Beach, Brush, Cave, and Mountain areas | Normal, Poison | – | Fuchsia | sightsee | public | Catch me one: Kangaskhan |
+| 17 | Safari Zone | `FuchsiaCity_SafariZoneEntrance_hns` and its Beach, Brush, Cave, and Mountain areas | Normal, Poison | – | Fuchsia | sightsee | public | Catch me one: Furfrou |
 | 18 | Seafoam Islands | `SeafoamIslands_1F_Frlg` | Ice, Water | – | – | train | remote | One on one |
 | 19 | Cinnabar shore | `CinnabarIsland_Frlg` | Fire | – | Cinnabar | relax | public | Quiz |
 | 20 | Victory Road | `VictoryRoadKanto_1F_hns`, `VictoryRoadKanto_B1F_hns`, `VictoryRoadKanto_B2F_hns` | Rock, Fighting, Dragon | TR 80 | – | train | remote | Walk with me: from the Route 23 entrance to the Reception Gate exit |
@@ -2623,8 +2623,11 @@ Notes:
 - **Catch species** come from each haunt's current wild table
   (`game/src/data/wild_encounters.json`): Krabby (Pallet's water), Pikachu,
   Voltorb (the old generating hall), Chinchou, Kangaskhan, and Ditto.
-  Recheck them against [Kanto wild encounters](kanto-wild-encounters.md)
-  before content lands.
+  Under [wild encounters v2](../prds/wild-encounters-v2.md) the Kanto Safari
+  Zone holds a third of Kalos, so its catch is Furfrou from the
+  [Safari tables](safari-encounter-tables.md); the other five are in the
+  [Kanto tables](kanto-encounter-tables.md). Recheck them against those
+  tables before content lands.
 - **Retired cameos.** The cameos at Diglett's Cave (Brock), Route 25
   (Misty), Route 10 (Lt. Surge), Celadon City (Erika), the Reception Gate
   (Janine), and Cinnabar (Blaine) fall inside or next to these haunts.

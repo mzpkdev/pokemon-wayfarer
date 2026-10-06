@@ -114,8 +114,9 @@ changes yours.
 - **Level cap:** the level your Pokémon can reach before they earn less
   experience and may disobey.
 - **World scaling:** wild Pokémon and regular trainers following your TR.
-- **Wild level curve / regular trainer level curve:** how wild Pokémon and
-  regular trainers' levels follow your TR.
+- **Road level / regular trainer level curve:** how wild Pokémon on the road
+  and regular trainers' levels follow your TR. Wilds and Outlands add a bonus
+  on top of the Road level.
 - **Team level:** the level a notable trainer's team is built around, a
   scaler over their own TR; from TR 40 up it matches the level cap at the
   same TR ([trainer scalers](../specs/notable-trainers.md#trainer-scalers)).
