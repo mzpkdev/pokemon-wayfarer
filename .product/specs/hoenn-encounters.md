@@ -236,4 +236,3 @@ fishing entries must re-run the audit.
 ## Open questions
 
 - The values for the Gen V shares, the repetition caps and the night share.
-- How rare a reward slot or a baby slot is.

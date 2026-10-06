@@ -187,4 +187,3 @@ Alola's tables have no night versions today, so every night table is new.
 ## Open questions
 
 - The values for the blend cap, the repetition cap and the night share.
-- How rare a reward slot is.

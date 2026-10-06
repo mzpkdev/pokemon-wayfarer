@@ -207,4 +207,3 @@ Surf, Chewtle carries Waterfall, and Weepinbell carries Cut.
 ## Open questions
 
 - The values for the blend caps, the repetition caps and the night share.
-- How rare a reward slot or a baby slot is.

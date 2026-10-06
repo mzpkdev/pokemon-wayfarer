@@ -241,4 +241,3 @@ audit.
 
 - The values for the Gen II shares, the family repetition cap and the night
   share.
-- How rare a reward slot or a baby slot is.
