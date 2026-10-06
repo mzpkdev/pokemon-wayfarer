@@ -17,7 +17,7 @@ This spec defines:
 - the level of each dungeon floor, from its intent;
 - the level spread of a single encounter, including fishing rods;
 - the stage mix, and the level limit of slots capped at an early stage;
-- prowler minimum levels, and how running and Repel treat prowlers.
+- prowler minimum levels, and how Repel treats prowlers.
 
 It doesn't cover:
 
@@ -192,9 +192,9 @@ specs say.
 
 ### Running and Repel
 
-- **Running from a prowler in Wilds always works,** so a fierce prowler is a
-  danger you can still get away from. Elsewhere, running follows the reach:
-  the normal rules on Roads and in dungeons, and no running in Outlands.
+- **Running follows the game's normal rules** everywhere, for prowlers too. A
+  fast prowler early in the game can be hard to run from, which is part of
+  its danger.
 - **Repel treats prowlers like any wild Pokémon,** comparing its level with
   your lead's.
 
@@ -233,7 +233,5 @@ specs say.
 
 ## Open questions
 
-- Whether running from a fierce prowler in Wilds should merely be easier rather
-  than certain.
 - Mantine's minimum level. The rule gives it 25, but it carries Whirlpool, so
   the native HM catch-window audit may lower it when it is re-run.

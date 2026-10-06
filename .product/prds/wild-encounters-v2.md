@@ -83,10 +83,12 @@ Each reach also has one distinct mechanic:
 
 - **Road: fewer encounters.** A lower encounter rate keeps travel quick.
 - **Wilds: fierce prowlers.** Off the road, rare finds can be stronger than
-  their surroundings, but you can still get away.
-- **Outlands: no running.** You can't run from wild battles. Escape items
-  still work, so preparing for the trip matters. Losing after wandering in
-  unprepared is an expected outcome.
+  their surroundings.
+- **Outlands: dangerous prowlers.** The top-tier finds live out here, among
+  wild Pokémon at your level cap. Losing after wandering in unprepared is an
+  expected outcome.
+
+Running from wild battles follows the game's normal rules in every reach.
 
 Each dungeon instead sets its own difficulty:
 

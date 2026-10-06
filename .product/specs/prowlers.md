@@ -62,8 +62,8 @@ A reward's temperament follows from why it is a reward:
 What each reach feels like:
 
 - **Road:** you might spot something rare, but nothing that can hurt you.
-- **Wilds:** where prowlers turn fierce, but you can still get away.
-- **Outlands:** the most dangerous finds, where you can't run.
+- **Wilds:** where prowlers turn fierce.
+- **Outlands:** the most dangerous finds.
 - **Dungeons:** temperaments follow depth. Harmless and fierce near the
   entrance, dangerous on the deepest floors.
 
