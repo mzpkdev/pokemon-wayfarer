@@ -152,8 +152,9 @@ def norm(n):
     return n.upper().replace(' ', '_').replace('.', '').replace("'", '').replace('-', '_').replace('♀', '_F').replace('♂', '_M')
 
 def root(s):
+    """The first stage of a line that is not a baby: a prowler's minimum holds at any stage of its line."""
     while True:
-        p = PRED.get(s)
+        p = [x for x in PRED.get(s, []) if x[0] not in BABIES]
         if not p: return s
         s = p[0][0]
 
@@ -205,8 +206,6 @@ def parse_intents():
     return out
 INTENTS = parse_intents()
 META = json.load(open(HERE + '/meta.json'))
-FLOOR_FIX = {'MAP_MT_SILVER_MOUNTAIN_SIDE_HNS': 2, 'MAP_MT_SILVER_1F_ITEM_ROOM_HNS': 2, 'MAP_MT_SILVER_1F_MOLTRES_ROOM_HNS': 2,
-             'MAP_MT_SILVER_2F_HNS': 3, 'MAP_MT_SILVER_SNOW_HNS': 4, 'MAP_MT_SILVER_3F_HNS': 5}
 
 def place_level(mp, tr):
     m = META[mp]; R, W, O = reach_levels(tr)
@@ -220,7 +219,6 @@ def place_level(mp, tr):
         'Moderate': (W, h(W, O), None), 'Moderate to hard': (W, O, None),
         'Hard': (h(W, O), O + 3, None), 'Brutal': (O, O + 6, 50)}[it]
     i, n = m['floor'], m['floors']
-    if mp in FLOOR_FIX: i, n = FLOOR_FIX[mp], 6
     if flat or not n or n == 1:
         lv = (first + last) // 2
     else:

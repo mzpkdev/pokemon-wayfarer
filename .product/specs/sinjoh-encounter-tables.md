@@ -14,6 +14,10 @@ This spec lists Sinjoh's wild-encounter tables: 8 maps, each with a day and a
 night table for every method it has. Enamorus, the Regi rooms' legendaries and
 Arceus's events belong to a later spec.
 
+New Sinjoh has no tables. Its grass is two patches of five tiles, under the
+10-tile minimum, and its 18 Headbutt trees form the map's border, with no
+walkable tile beside them.
+
 The Sinjoh Ruins lose their current Rock Smash table, since the map has no
 breakable rocks, and Route 50's becomes a Headbutt-tree table, since its
 trees are what trigger it.

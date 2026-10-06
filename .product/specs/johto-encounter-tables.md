@@ -10,10 +10,13 @@ to a slot in the game's encounter tables. Playtesting may change the picks.
 
 ## Scope
 
-This spec lists Johto's wild-encounter tables: 86 maps, each with a day and a
+This spec lists Johto's wild-encounter tables: 88 maps, each with a day and a
 night table for every method it has. The Safari Zone and the Bug-Catching
 Contest belong to the [Safari table spec](safari-encounter-tables.md).
 Legendaries and mythicals belong to a later spec.
+
+The list includes Faraway Island and Southern Island, the two remote islands
+described [below](#remote-islands).
 
 ## Behavior
 
@@ -38,6 +41,24 @@ Legendaries and mythicals belong to a later spec.
   exceptions are Nidoran♀ (`SPECIES_NIDORAN_F`) and Nidoran♂
   (`SPECIES_NIDORAN_M`).
 - Slots hold no levels. Levels come from the map's reach, as the PRD defines.
+
+### Remote islands
+
+Faraway Island and Southern Island are Outlands, reached by boat from the
+Olivine and Vermilion ports, so their tables hold Kanto and Johto species in
+the Border band. Both are a legendary's lair, and their ordinary tables are
+Gen I–II natives that fit the island, with dangerous prowlers allowed as in any
+Outlands.
+
+- **Faraway Island** (Mew's lair) is a jungle of grass and ancient or mimicking
+  species such as Tangela, Exeggutor, Ditto and Aerodactyl, with a night shift
+  to Venomoth, Noctowl and Ariados. Its tall grass lies in many small patches,
+  but the map holds 43 grass tiles, so it gets a land table. Its sea has
+  surfing and fishing tables.
+- **Southern Island** (Latias and Latios's lair) is a bare rock in the open
+  sea. Its rocky outcrops are Emerald's mountain-top terrain, which never had
+  encounters, so it has surfing and fishing tables only, of psychic and
+  draconic sea species.
 
 ### Tables
 
@@ -2151,6 +2172,89 @@ Water type: ponds and rivers.
 | 4 | 4% | Scyther–Scizor | Heracross |
 | 5 | 1% | Aipom–Ambipom | Scyther–Scizor |
 
+#### Faraway Island
+
+Outlands, Border.
+
+**`MAP_FARAWAY_ISLAND_ENTRANCE_HNS`**
+
+Water type: coast and sea.
+
+*Land*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 20% | Tangela | Venonat–Venomoth |
+| 2 | 20% | Exeggcute–Exeggutor | Tangela |
+| 3 | 10% | Bellsprout–Victreebel | Hoothoot–Noctowl |
+| 4 | 10% | Oddish–Bellossom | Spinarak–Ariados |
+| 5 | 10% | Pineco–Forretress | Exeggcute–Exeggutor |
+| 6 | 10% | Hoppip–Jumpluff | Oddish–Vileplume |
+| 7 | 5% | Ditto | Murkrow |
+| 8 | 5% | Smeargle | Ditto |
+| 9 | 4% | Scyther | Misdreavus |
+| 10 | 4% | Pinsir | Houndour–Houndoom |
+| 11 | 1% | Aerodactyl | Aerodactyl |
+| 12 | 1% | Cleffa | Cleffa |
+
+*Surfing*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Staryu–Starmie | Chinchou–Lanturn |
+| 2 | 30% | Tentacool–Tentacruel | Staryu–Starmie |
+| 3 | 5% | Corsola | Tentacool–Tentacruel |
+| 4 | 4% | Mantine | Qwilfish |
+| 5 | 1% | Lapras | Lapras |
+
+*Fishing*
+
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 2 | 22% | 18% | 10% | Qwilfish | Chinchou–Lanturn |
+| 3 | 10% | 12% | 11% | Corsola | Qwilfish |
+| 4 | 8% | 10% | 10% | Krabby–Kingler | Chinchou–Lanturn |
+| 5 | 8% | 9% | 10% | Horsea–Seadra | Horsea–Seadra |
+| 6 | 4% | 7% | 10% | Staryu–Starmie | Staryu–Starmie |
+| 7 | 3% | 6% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 8 | 3% | 5% | 9% | Shellder–Cloyster | Shellder–Cloyster |
+| 9 | 2% | 4% | 9% | Horsea–Kingdra | Horsea–Kingdra |
+| 10 | 2% | 4% | 9% | Dratini–Dragonair | Dratini–Dragonair |
+
+#### Southern Island
+
+Outlands, Border.
+
+**`MAP_SOUTHERN_ISLAND_EXTERIOR_HNS`**
+
+Water type: coast and sea.
+
+*Surfing*
+
+| Slot | Weight | Day | Night |
+| --- | --- | --- | --- |
+| 1 | 60% | Slowpoke–Slowbro | Slowpoke–Slowbro |
+| 2 | 30% | Staryu–Starmie | Chinchou–Lanturn |
+| 3 | 5% | Horsea–Seadra | Staryu–Starmie |
+| 4 | 4% | Dratini–Dragonair | Horsea–Kingdra |
+| 5 | 1% | Lapras | Lapras |
+
+*Fishing*
+
+| Entry | Old Rod | Good Rod | Super Rod | Day | Night |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38% | 25% | 12% | Corsola | Corsola |
+| 2 | 22% | 18% | 10% | Slowpoke–Slowbro | Chinchou–Lanturn |
+| 3 | 10% | 12% | 11% | Staryu–Starmie | Staryu–Starmie |
+| 4 | 8% | 10% | 10% | Horsea–Seadra | Horsea–Seadra |
+| 5 | 8% | 9% | 10% | Mantine | Chinchou–Lanturn |
+| 6 | 4% | 7% | 10% | Tentacool–Tentacruel | Tentacool–Tentacruel |
+| 7 | 3% | 6% | 10% | Horsea–Kingdra | Horsea–Kingdra |
+| 8 | 3% | 5% | 9% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 9 | 2% | 4% | 9% | Dratini–Dragonair | Dratini–Dragonair |
+| 10 | 2% | 4% | 9% | Lapras | Lapras |
+
 #### Union Cave
 
 Dungeon, Johto east.
@@ -3263,10 +3367,10 @@ Water type: ponds and rivers.
 | 6 | 10% | Doduo–Dodrio | Sneasel |
 | 7 | 5% | Skarmory | Misdreavus |
 | 8 | 5% | Tauros | Skarmory |
-| 9 | 4% | Larvitar–Tyranitar | Larvitar–Tyranitar |
+| 9 | 4% | Rhyhorn–Rhydon | Geodude–Graveler |
 | 10 | 4% | Skarmory | Houndour–Houndoom |
-| 11 | 1% | Snorlax | Snorlax |
-| 12 | 1% | Larvitar–Tyranitar | Murkrow |
+| 11 | 1% | Miltank | Wobbuffet |
+| 12 | 1% | Machop–Machoke | Murkrow |
 
 *Surfing*
 
@@ -3522,37 +3626,39 @@ Water type: cave water.
 | Species | Catchable at |
 | --- | --- |
 | Abra | Route 30, Route 34, Route 35, Ruins of Alph and more |
+| Aerodactyl | Faraway Island |
 | Aipom | Azalea Town, Cherrygrove City, Cianwood City, Goldenrod City and more |
 | Ambipom | Mt. Silver, Route 26, Route 28, Tin Tower |
 | Ampharos | Route 31, Route 32, Route 43, Ruins of Alph and more |
 | Annihilape | Mt. Silver |
 | Arbok | Route 26, Route 27, Route 28, Route 32 and more |
-| Ariados | Azalea Town, Cherrygrove City, Cianwood City, Goldenrod City and more |
+| Ariados | Azalea Town, Cherrygrove City, Cianwood City, Faraway Island and more |
 | Azumarill | Blackthorn City, Dark Cave, Ecruteak City, Ilex Forest and more |
 | Bayleef | Ilex Forest, Route 27, Route 29 |
 | Beedrill | Azalea Town, Ilex Forest, National Park, Route 30 and more |
-| Bellsprout | Route 31, Route 32, Route 36, Route 44 and more |
+| Bellossom | Faraway Island |
+| Bellsprout | Faraway Island, Route 31, Route 32, Route 36 and more |
 | Bonsly | Route 36 |
 | Butterfree | Azalea Town, Goldenrod City, Ilex Forest, National Park and more |
 | Caterpie | Azalea Town, Goldenrod City, Ilex Forest, National Park and more |
 | Chikorita | Ilex Forest, Route 27, Route 29 |
-| Chinchou | Cianwood City, Cliff Edge Cave, Goldenrod City, New Bark Town and more |
-| Cleffa | Mt. Mortar |
-| Cloyster | Route 26, Whirl Islands |
-| Corsola | Cherrygrove City, Cianwood City, Cliff Edge Cave, Goldenrod City and more |
+| Chinchou | Cianwood City, Cliff Edge Cave, Faraway Island, Goldenrod City and more |
+| Cleffa | Faraway Island, Mt. Mortar |
+| Cloyster | Faraway Island, Route 26, Whirl Islands |
+| Corsola | Cherrygrove City, Cianwood City, Cliff Edge Cave, Faraway Island and more |
 | Crobat | Ice Path, Mt. Mortar, Mt. Silver, Route 28 and more |
 | Croconaw | Lake of Rage, Route 27, Route 30 |
 | Cubone | Mt. Mortar, Union Cave |
 | Cyndaquil | Burned Tower, Route 46 |
 | Delibird | Ice Path, Mt. Silver |
 | Dewgong | Cliff Edge Cave, Whirl Islands |
-| Ditto | Route 34, Route 35, Route 47 |
+| Ditto | Faraway Island, Route 34, Route 35, Route 47 |
 | Dodrio | Mt. Silver, Route 26, Route 27, Route 28 |
 | Doduo | Mt. Silver, Route 26, Route 27, Route 28 |
 | Donphan | Mt. Silver, Route 26, Route 28, Route 45 and more |
-| Dragonair | Dragon's Den |
+| Dragonair | Dragon's Den, Faraway Island, Southern Island |
 | Dragonite | Dragon's Den |
-| Dratini | Dragon's Den |
+| Dratini | Dragon's Den, Faraway Island, Southern Island |
 | Drowzee | Route 34, Route 35 |
 | Dunsparce | Cliff Edge Cave, Dark Cave, Ice Path, Mt. Mortar and more |
 | Eevee | Route 34, Route 37, Route 39, Tin Tower |
@@ -3560,20 +3666,21 @@ Water type: cave water.
 | Electrode | Rocket Hideout |
 | Elekid | Route 44 |
 | Espeon | Tin Tower |
-| Exeggcute | Azalea Town, Cherrygrove City, Cianwood City, Goldenrod City and more |
+| Exeggcute | Azalea Town, Cherrygrove City, Cianwood City, Faraway Island and more |
+| Exeggutor | Faraway Island |
 | Farfetch'd | Olivine City, Route 38, Route 39, Route 43 and more |
 | Farigiraf | Route 28 |
 | Fearow | Cherrygrove City, Mt. Silver, Olivine City, Route 26 and more |
 | Feraligatr | Lake of Rage, Route 27, Route 30 |
 | Flaaffy | Route 31, Route 32, Route 43, Ruins of Alph and more |
-| Forretress | Azalea Town, Goldenrod City, Ilex Forest, Lake of Rage and more |
+| Forretress | Azalea Town, Faraway Island, Goldenrod City, Ilex Forest and more |
 | Furret | Azalea Town, Route 29, Route 30, Route 36 and more |
 | Gastly | Azalea Town, Burned Tower, Dark Cave, Ice Path and more |
 | Gengar | Burned Tower, Mt. Mortar, Mt. Silver, Route 26 and more |
 | Geodude | Cianwood City, Cliff Edge Cave, Dark Cave, Ice Path and more |
 | Girafarig | National Park, Route 27, Route 28, Route 47 and more |
 | Gligar | Dark Cave, Route 42, Route 45, Route 46 |
-| Gloom | Azalea Town, Ilex Forest, Olivine City, Route 27 and more |
+| Gloom | Azalea Town, Faraway Island, Ilex Forest, Olivine City and more |
 | Golbat | Burned Tower, Cliff Edge Cave, Dark Cave, Ice Path and more |
 | Goldeen | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
 | Golduck | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
@@ -3588,24 +3695,24 @@ Water type: cave water.
 | Heracross | Lake of Rage, Mt. Silver, Route 26, Route 27 and more |
 | Hitmontop | Mt. Mortar |
 | Honchkrow | Mt. Silver, Route 26, Route 28, Tin Tower |
-| Hoothoot | Azalea Town, Cherrygrove City, Goldenrod City, Ilex Forest and more |
-| Hoppip | Azalea Town, Olivine City, Route 29, Route 30 and more |
-| Horsea | Cianwood City, Cliff Edge Cave, Goldenrod City, Olivine City and more |
-| Houndoom | Burned Tower, Mt. Silver, Route 26, Route 27 and more |
-| Houndour | Burned Tower, Mt. Silver, Route 26, Route 27 and more |
+| Hoothoot | Azalea Town, Cherrygrove City, Faraway Island, Goldenrod City and more |
+| Hoppip | Azalea Town, Faraway Island, Olivine City, Route 29 and more |
+| Horsea | Cianwood City, Cliff Edge Cave, Faraway Island, Goldenrod City and more |
+| Houndoom | Burned Tower, Faraway Island, Mt. Silver, Route 26 and more |
+| Houndour | Burned Tower, Faraway Island, Mt. Silver, Route 26 and more |
 | Hypno | Route 34, Route 35 |
 | Igglybuff | Azalea Town, Route 34 |
 | Jigglypuff | Route 34 |
-| Jumpluff | Azalea Town, Olivine City, Route 29, Route 30 and more |
+| Jumpluff | Azalea Town, Faraway Island, Olivine City, Route 29 and more |
 | Jynx | Ice Path, Mt. Silver |
 | Kadabra | Route 34, Route 35 |
 | Kakuna | Azalea Town, Ilex Forest, National Park, Route 30 and more |
-| Kingdra | Route 26, Whirl Islands |
-| Kingler | Cherrygrove City, Cianwood City, Cliff Edge Cave, Goldenrod City and more |
+| Kingdra | Faraway Island, Route 26, Southern Island, Whirl Islands |
+| Kingler | Cherrygrove City, Cianwood City, Cliff Edge Cave, Faraway Island and more |
 | Koffing | Burned Tower, Rocket Hideout, Slowpoke Well |
-| Krabby | Cherrygrove City, Cianwood City, Cliff Edge Cave, Goldenrod City and more |
-| Lanturn | Cianwood City, Cliff Edge Cave, Goldenrod City, New Bark Town and more |
-| Lapras | Route 26, Union Cave, Whirl Islands |
+| Krabby | Cherrygrove City, Cianwood City, Cliff Edge Cave, Faraway Island and more |
+| Lanturn | Cianwood City, Cliff Edge Cave, Faraway Island, Goldenrod City and more |
+| Lapras | Faraway Island, Route 26, Southern Island, Union Cave and more |
 | Larvitar | Mt. Silver, Route 26, Route 28 |
 | Ledian | Azalea Town, Cherrygrove City, Goldenrod City, Ilex Forest and more |
 | Ledyba | Azalea Town, Cherrygrove City, Goldenrod City, Ilex Forest and more |
@@ -3622,7 +3729,7 @@ Water type: cave water.
 | Magneton | Olivine City, Rocket Hideout, Route 38, Route 39 |
 | Mamoswine | Ice Path, Mt. Silver |
 | Mankey | Cianwood City, Mt. Mortar, Mt. Silver, Route 26 and more |
-| Mantine | Cliff Edge Cave, Route 26, Route 27, Route 47 and more |
+| Mantine | Cliff Edge Cave, Faraway Island, Route 26, Route 27 and more |
 | Mantyke | Cianwood City, Olivine City, Route 41, Whirl Islands |
 | Mareep | Route 31, Route 32, Route 43, Ruins of Alph and more |
 | Marill | Blackthorn City, Dark Cave, Ecruteak City, Ilex Forest and more |
@@ -3630,19 +3737,19 @@ Water type: cave water.
 | Meganium | Ilex Forest, Route 27, Route 29 |
 | Meowth | Olivine City, Rocket Hideout, Route 34, Route 38 and more |
 | Metapod | Azalea Town, Goldenrod City, Ilex Forest, National Park and more |
-| Miltank | Route 26, Route 27, Route 47 |
-| Misdreavus | Burned Tower, Cliff Edge Cave, Ilex Forest, Mt. Silver and more |
+| Miltank | Mt. Silver, Route 26, Route 27, Route 47 |
+| Misdreavus | Burned Tower, Cliff Edge Cave, Faraway Island, Ilex Forest and more |
 | Mismagius | Burned Tower, Mt. Silver, Tin Tower, Whirl Islands |
 | Muk | Olivine City, Rocket Hideout |
-| Murkrow | Azalea Town, Burned Tower, Cherrygrove City, Goldenrod City and more |
+| Murkrow | Azalea Town, Burned Tower, Cherrygrove City, Faraway Island and more |
 | Natu | Ruins of Alph, Sprout Tower, Tin Tower, Violet City |
 | Nidoran♀ | National Park, Route 35, Route 36, Route 48 |
 | Nidoran♂ | National Park, Route 35, Route 36 |
 | Nidorina | National Park, Route 35, Route 36, Route 48 |
 | Nidorino | National Park, Route 35, Route 36 |
-| Noctowl | Azalea Town, Cherrygrove City, Goldenrod City, Ilex Forest and more |
+| Noctowl | Azalea Town, Cherrygrove City, Faraway Island, Goldenrod City and more |
 | Octillery | Cianwood City, Goldenrod City, New Bark Town, Olivine City and more |
-| Oddish | Azalea Town, Ilex Forest, Olivine City, Route 27 and more |
+| Oddish | Azalea Town, Faraway Island, Ilex Forest, Olivine City and more |
 | Onix | Cliff Edge Cave, Dark Cave, Ice Path, Mt. Mortar and more |
 | Paras | Azalea Town, Ilex Forest, Mt. Silver |
 | Parasect | Azalea Town, Ilex Forest, Mt. Silver |
@@ -3653,8 +3760,8 @@ Water type: cave water.
 | Pidgeotto | Azalea Town, Cherrygrove City, Mahogany Town, Olivine City and more |
 | Pidgey | Azalea Town, Cherrygrove City, Mahogany Town, Olivine City and more |
 | Piloswine | Ice Path, Mt. Silver |
-| Pineco | Azalea Town, Goldenrod City, Ilex Forest, Lake of Rage and more |
-| Pinsir | National Park |
+| Pineco | Azalea Town, Faraway Island, Goldenrod City, Ilex Forest and more |
+| Pinsir | Faraway Island, National Park |
 | Politoed | Mt. Silver, Route 28 |
 | Poliwag | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
 | Poliwhirl | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
@@ -3667,46 +3774,48 @@ Water type: cave water.
 | Pupitar | Mt. Silver, Route 26, Route 28 |
 | Quagsire | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
 | Quilava | Burned Tower, Route 46 |
-| Qwilfish | Cherrygrove City, Cianwood City, Cliff Edge Cave, Goldenrod City and more |
+| Qwilfish | Cherrygrove City, Cianwood City, Cliff Edge Cave, Faraway Island and more |
 | Rapidash | Mt. Silver, Route 26, Route 27, Route 28 and more |
 | Raticate | Burned Tower, Mt. Mortar, Olivine City, Rocket Hideout and more |
 | Rattata | Burned Tower, Mt. Mortar, Olivine City, Rocket Hideout and more |
 | Remoraid | Cianwood City, Goldenrod City, New Bark Town, Olivine City and more |
+| Rhydon | Mt. Silver |
+| Rhyhorn | Mt. Silver |
 | Sandshrew | Route 26, Route 27, Union Cave |
 | Sandslash | Route 26, Route 27, Union Cave |
 | Scizor | Mt. Silver, Route 26, Route 28 |
-| Scyther | Mt. Silver, National Park, Route 26, Route 28 |
-| Seadra | Cianwood City, Cliff Edge Cave, Goldenrod City, Olivine City and more |
+| Scyther | Faraway Island, Mt. Silver, National Park, Route 26 and more |
+| Seadra | Cianwood City, Cliff Edge Cave, Faraway Island, Goldenrod City and more |
 | Seaking | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
 | Seel | Cliff Edge Cave, Whirl Islands |
 | Sentret | Azalea Town, Route 29, Route 30, Route 36 and more |
-| Shellder | Cherrygrove City, Cianwood City, Cliff Edge Cave, New Bark Town and more |
+| Shellder | Cherrygrove City, Cianwood City, Cliff Edge Cave, Faraway Island and more |
 | Shuckle | Cliff Edge Cave, Dark Cave, Ice Path, Mt. Silver and more |
 | Skarmory | Mt. Silver, Route 28, Route 47 |
-| Skiploom | Azalea Town, Olivine City, Route 29, Route 30 and more |
+| Skiploom | Azalea Town, Faraway Island, Olivine City, Route 29 and more |
 | Slowbro | Azalea Town, Blackthorn City, Cliff Edge Cave, Dragon's Den and more |
 | Slowking | Mt. Silver, Route 28, Slowpoke Well, Whirl Islands |
 | Slowpoke | Azalea Town, Blackthorn City, Cliff Edge Cave, Dragon's Den and more |
 | Slugma | Burned Tower |
-| Smeargle | Ruins of Alph |
+| Smeargle | Faraway Island, Ruins of Alph |
 | Smoochum | Ice Path, Mt. Silver |
 | Sneasel | Ice Path, Mt. Silver, Route 28 |
 | Snorlax | Mt. Silver, Route 28 |
 | Snubbull | National Park, Olivine City, Route 34, Route 35 and more |
 | Spearow | Cherrygrove City, Mt. Silver, Olivine City, Route 26 and more |
-| Spinarak | Azalea Town, Cherrygrove City, Cianwood City, Goldenrod City and more |
+| Spinarak | Azalea Town, Cherrygrove City, Cianwood City, Faraway Island and more |
 | Stantler | National Park |
-| Starmie | Route 26, Whirl Islands |
-| Staryu | Cherrygrove City, Cianwood City, Cliff Edge Cave, Goldenrod City and more |
+| Starmie | Faraway Island, Route 26, Southern Island, Whirl Islands |
+| Staryu | Cherrygrove City, Cianwood City, Cliff Edge Cave, Faraway Island and more |
 | Steelix | Ice Path, Mt. Silver, Union Cave |
 | Sunkern | Azalea Town, Ilex Forest, National Park, Olivine City and more |
 | Swinub | Ice Path, Mt. Silver |
-| Tangela | Route 28, Route 44 |
+| Tangela | Faraway Island, Route 28, Route 44 |
 | Tangrowth | Route 28 |
 | Tauros | Mt. Silver, Route 26, Route 27, Route 28 and more |
 | Teddiursa | Dark Cave, Mt. Silver, Route 26, Route 28 and more |
-| Tentacool | Cherrygrove City, Cianwood City, Cliff Edge Cave, Goldenrod City and more |
-| Tentacruel | Cherrygrove City, Cianwood City, Cliff Edge Cave, Goldenrod City and more |
+| Tentacool | Cherrygrove City, Cianwood City, Cliff Edge Cave, Faraway Island and more |
+| Tentacruel | Cherrygrove City, Cianwood City, Cliff Edge Cave, Faraway Island and more |
 | Togepi | National Park |
 | Totodile | Lake of Rage, Route 27, Route 30 |
 | Typhlosion | Burned Tower, Route 46 |
@@ -3715,16 +3824,17 @@ Water type: cave water.
 | Umbreon | Tin Tower |
 | Unown | Ruins of Alph |
 | Ursaring | Dark Cave, Mt. Silver, Route 26, Route 28 and more |
-| Venomoth | Azalea Town, Ilex Forest, Lake of Rage, National Park and more |
-| Venonat | Azalea Town, Ilex Forest, Lake of Rage, National Park and more |
-| Victreebel | Sprout Tower |
+| Venomoth | Azalea Town, Faraway Island, Ilex Forest, Lake of Rage and more |
+| Venonat | Azalea Town, Faraway Island, Ilex Forest, Lake of Rage and more |
+| Victreebel | Faraway Island, Sprout Tower |
+| Vileplume | Faraway Island |
 | Voltorb | Rocket Hideout |
 | Vulpix | Burned Tower, Route 36, Route 37, Route 48 |
 | Weavile | Ice Path, Mt. Silver, Route 28 |
 | Weedle | Azalea Town, Ilex Forest, National Park, Route 30 and more |
-| Weepinbell | Route 31, Route 32, Route 36, Route 44 and more |
+| Weepinbell | Faraway Island, Route 31, Route 32, Route 36 and more |
 | Weezing | Burned Tower, Rocket Hideout, Slowpoke Well |
-| Wobbuffet | Cliff Edge Cave, Dark Cave, Slowpoke Well, Union Cave and more |
+| Wobbuffet | Cliff Edge Cave, Dark Cave, Mt. Silver, Slowpoke Well and more |
 | Wooper | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
 | Xatu | Ruins of Alph, Sprout Tower, Tin Tower, Violet City |
 | Yanma | Ilex Forest, Lake of Rage, Route 35, Route 48 |

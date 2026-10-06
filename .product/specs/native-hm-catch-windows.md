@@ -48,7 +48,10 @@ then replaces the nearby-access evidence:
   Sinjoh, whose water, waterfalls and Strength boulders open nothing.
 - **The 8% crossing floor holds from TR 20, two badges, to TR 160.** Before
   that, crossings rely on the Surf HM: no Kanto or Johto species knows Surf
-  below level 7, and Roads are level 5 before the first badge.
+  below level 7, and Roads are level 5 before the first badge. TR 20 is the
+  first TR at which every scenario passes. Hoenn's Lilycove (at night),
+  Mossdeep, Pacifidlog and Route 118 east crossings, the Den's Whirlpool and
+  Sootopolis's Dive all still fall short at TR 19.
 - **Seventeen arrival scenarios join the eleven crossings:** one for each Sevii
   island and each Alola island, Dewford Town for Surf, Sootopolis City for Surf
   and Dive, since it is left only by Dive, Ever Grande City for Surf, and Rock
@@ -60,7 +63,13 @@ then replaces the nearby-access evidence:
 - **The roster changes fourteen entries.** Luvdisc, Frillish, Jellicent,
   Arrokuda, Barraskewda, Drednaw, Mareanie, Wishiwashi and Toxapex add Surf,
   Chewtle adds Waterfall, Carvanha adds Dive, Graveler adds Rock Smash, and
-  Quagsire's Surf and Weepinbell's Cut move earlier. The learnset rules below apply to them unchanged.
+  Quagsire's Surf and Weepinbell's Cut move earlier. The learnset rules below
+  apply to them unchanged. The
+  [`roster_v2.json`](../research/native-hm-windows/revisions/wild-encounters-v2/roster_v2.json)
+  export is the v2 roster: the nearby-access roster with these changes, **130
+  species and 166 roles** (the 121 species and 154 roles below, plus nine new
+  species and twelve new roles). A v2 implementation validates its learnsets
+  against it wherever the sections below name `roster.json`.
 - **`encounter_replacements` retire.** The v2 tables hold the crossing
   carriers directly; the revision lists the 33 edits it made to them.
 - **Cinnabar's scenario uses `MAP_CINNABAR_ISLAND`,** the map Wayfarer uses.

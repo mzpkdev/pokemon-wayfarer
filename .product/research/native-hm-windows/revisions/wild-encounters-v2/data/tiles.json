@@ -1,0 +1,3554 @@
+{
+ "MAP_ABANDONED_SHIP_HIDDEN_FLOOR_CORRIDORS": {
+  "layouts": [
+   "LAYOUT_ABANDONED_SHIP_HIDDEN_FLOOR_CORRIDORS"
+  ],
+  "ver": "emerald",
+  "land": 79,
+  "water": 8,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ABANDONED_SHIP_ROOMS_B1F": {
+  "layouts": [
+   "LAYOUT_ABANDONED_SHIP_ROOMS_B1F"
+  ],
+  "ver": "emerald",
+  "land": 105,
+  "water": 15,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_AKALA_CAVE_HNS": {
+  "layouts": [
+   "LAYOUT_AKALA_CAVE_HNS"
+  ],
+  "ver": "hns",
+  "land": 648,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_AKALA_FOREST_HNS": {
+  "layouts": [
+   "LAYOUT_AKALA_FOREST_HNS"
+  ],
+  "ver": "hns",
+  "land": 93,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_AKALA_ISLE_HNS": {
+  "layouts": [
+   "LAYOUT_AKALA_ISLE_HNS"
+  ],
+  "ver": "hns",
+  "land": 109,
+  "water": 2567,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ALOLA_WATER_HNS": {
+  "layouts": [
+   "LAYOUT_ALOLA_WATER_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 904,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ALTERING_CAVE": {
+  "layouts": [
+   "LAYOUT_ALTERING_CAVE"
+  ],
+  "ver": "emerald",
+  "land": 637,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ARTISAN_CAVE_1F": {
+  "layouts": [
+   "LAYOUT_ARTISAN_CAVE_1F"
+  ],
+  "ver": "emerald",
+  "land": 262,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ARTISAN_CAVE_B1F": {
+  "layouts": [
+   "LAYOUT_ARTISAN_CAVE_B1F"
+  ],
+  "ver": "emerald",
+  "land": 1210,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_AZALEA_TOWN_HNS": {
+  "layouts": [
+   "LAYOUT_AZALEA_TOWN_HNS"
+  ],
+  "ver": "hns",
+  "land": 16,
+  "water": 4,
+  "trees": 10,
+  "rocks": 0
+ },
+ "MAP_BLACKTHORN_CITY_HNS": {
+  "layouts": [
+   "LAYOUT_BLACKTHORN_CITY_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 228,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_BURNED_TOWER_1F_HNS": {
+  "layouts": [
+   "LAYOUT_BURNED_TOWER_1F_HNS"
+  ],
+  "ver": "hns",
+  "land": 227,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_BURNED_TOWER_B1F_HNS": {
+  "layouts": [
+   "LAYOUT_BURNED_TOWER_B1F_HNS"
+  ],
+  "ver": "hns",
+  "land": 137,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_CAVE_OF_ORIGIN_1F": {
+  "layouts": [
+   "LAYOUT_CAVE_OF_ORIGIN_1F"
+  ],
+  "ver": "emerald",
+  "land": 241,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_CAVE_OF_ORIGIN_ENTRANCE": {
+  "layouts": [
+   "LAYOUT_CAVE_OF_ORIGIN_ENTRANCE"
+  ],
+  "ver": "emerald",
+  "land": 242,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP1": {
+  "layouts": [
+   "LAYOUT_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP1"
+  ],
+  "ver": "emerald",
+  "land": 246,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP2": {
+  "layouts": [
+   "LAYOUT_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP2"
+  ],
+  "ver": "emerald",
+  "land": 80,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP3": {
+  "layouts": [
+   "LAYOUT_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP3"
+  ],
+  "ver": "emerald",
+  "land": 147,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_CELADON_CITY_HNS": {
+  "layouts": [
+   "LAYOUT_CELADON_CITY_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 18,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_CERULEAN_CAVE_1F_HNS": {
+  "layouts": [
+   "LAYOUT_CERULEAN_CAVE_1F_HNS"
+  ],
+  "ver": "hns",
+  "land": 608,
+  "water": 150,
+  "trees": 0,
+  "rocks": 9
+ },
+ "MAP_CERULEAN_CAVE_B1F_HNS": {
+  "layouts": [
+   "LAYOUT_CERULEAN_CAVE_B1F_HNS"
+  ],
+  "ver": "hns",
+  "land": 520,
+  "water": 0,
+  "trees": 0,
+  "rocks": 10
+ },
+ "MAP_CERULEAN_CAVE_B2F_HNS": {
+  "layouts": [
+   "LAYOUT_CERULEAN_CAVE_B2F_HNS"
+  ],
+  "ver": "hns",
+  "land": 466,
+  "water": 107,
+  "trees": 0,
+  "rocks": 5
+ },
+ "MAP_CERULEAN_CITY_HNS": {
+  "layouts": [
+   "LAYOUT_CERULEAN_CITY_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 190,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_CHERRYGROVE_CITY_HNS": {
+  "layouts": [
+   "LAYOUT_CHERRYGROVE_CITY_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 859,
+  "trees": 5,
+  "rocks": 0
+ },
+ "MAP_CIANWOOD_CITY_HNS": {
+  "layouts": [
+   "LAYOUT_CIANWOOD_CITY_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 543,
+  "trees": 0,
+  "rocks": 6
+ },
+ "MAP_CINNABAR_ISLAND": {
+  "layouts": [
+   "LAYOUT_CINNABAR_ISLAND"
+  ],
+  "ver": "frlg",
+  "land": 0,
+  "water": 224,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_CLIFF_EDGE_CAVE_HNS": {
+  "layouts": [
+   "LAYOUT_CLIFF_EDGE_CAVE_HNS"
+  ],
+  "ver": "hns",
+  "land": 978,
+  "water": 0,
+  "trees": 0,
+  "rocks": 10
+ },
+ "MAP_CLIFF_EDGE_GATE_HNS": {
+  "layouts": [
+   "LAYOUT_CLIFF_EDGE_GATE_HNS"
+  ],
+  "ver": "hns",
+  "land": 247,
+  "water": 115,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_DARK_CAVE_NORTH_SIDE_HNS": {
+  "layouts": [
+   "LAYOUT_DARK_CAVE_NORTH_SIDE_HNS"
+  ],
+  "ver": "hns",
+  "land": 1579,
+  "water": 202,
+  "trees": 0,
+  "rocks": 2
+ },
+ "MAP_DARK_CAVE_SOUTH_SIDE_HNS": {
+  "layouts": [
+   "LAYOUT_DARK_CAVE_SOUTH_SIDE_HNS"
+  ],
+  "ver": "hns",
+  "land": 2898,
+  "water": 108,
+  "trees": 0,
+  "rocks": 4
+ },
+ "MAP_DESERT_UNDERPASS": {
+  "layouts": [
+   "LAYOUT_DESERT_UNDERPASS"
+  ],
+  "ver": "emerald",
+  "land": 1637,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_DEWFORD_TOWN": {
+  "layouts": [
+   "LAYOUT_DEWFORD_TOWN"
+  ],
+  "ver": "emerald",
+  "land": 0,
+  "water": 38,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_DIGLETTS_CAVE_TUNNEL_HNS": {
+  "layouts": [
+   "LAYOUT_DIGLETTS_CAVE_TUNNEL_HNS"
+  ],
+  "ver": "hns",
+  "land": 5304,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_DRAGONS_DEN_CAVERN_HNS": {
+  "layouts": [
+   "LAYOUT_DRAGONS_DEN_CAVERN_HNS"
+  ],
+  "ver": "hns",
+  "land": 1195,
+  "water": 905,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ECRUTEAK_CITY_HNS": {
+  "layouts": [
+   "LAYOUT_ECRUTEAK_CITY_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 150,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_EVER_GRANDE_CITY": {
+  "layouts": [
+   "LAYOUT_EVER_GRANDE_CITY"
+  ],
+  "ver": "emerald",
+  "land": 256,
+  "water": 385,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FARAWAY_ISLAND_ENTRANCE_HNS": {
+  "layouts": [
+   "LAYOUT_FARAWAY_ISLAND_ENTRANCE_HNS"
+  ],
+  "ver": "emerald",
+  "land": 43,
+  "water": 433,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIERY_PATH": {
+  "layouts": [
+   "LAYOUT_FIERY_PATH"
+  ],
+  "ver": "emerald",
+  "land": 1267,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND"
+  ],
+  "ver": "frlg",
+  "land": 0,
+  "water": 288,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM1": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND_LOST_CAVE_ROOM1"
+  ],
+  "ver": "frlg",
+  "land": 45,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM10": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND_LOST_CAVE_ROOM10"
+  ],
+  "ver": "frlg",
+  "land": 49,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM11": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND_LOST_CAVE_ROOM11"
+  ],
+  "ver": "frlg",
+  "land": 56,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM12": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND_LOST_CAVE_ROOM12"
+  ],
+  "ver": "frlg",
+  "land": 50,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM13": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND_LOST_CAVE_ROOM13"
+  ],
+  "ver": "frlg",
+  "land": 53,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM14": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND_LOST_CAVE_ROOM14"
+  ],
+  "ver": "frlg",
+  "land": 53,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM2": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND_LOST_CAVE_ROOM2"
+  ],
+  "ver": "frlg",
+  "land": 37,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM3": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND_LOST_CAVE_ROOM3"
+  ],
+  "ver": "frlg",
+  "land": 43,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM4": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND_LOST_CAVE_ROOM4"
+  ],
+  "ver": "frlg",
+  "land": 43,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM5": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND_LOST_CAVE_ROOM5"
+  ],
+  "ver": "frlg",
+  "land": 46,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM6": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND_LOST_CAVE_ROOM6"
+  ],
+  "ver": "frlg",
+  "land": 40,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM7": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND_LOST_CAVE_ROOM7"
+  ],
+  "ver": "frlg",
+  "land": 43,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM8": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND_LOST_CAVE_ROOM8"
+  ],
+  "ver": "frlg",
+  "land": 46,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND_LOST_CAVE_ROOM9": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND_LOST_CAVE_ROOM9"
+  ],
+  "ver": "frlg",
+  "land": 37,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND_MEADOW": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND_MEADOW"
+  ],
+  "ver": "frlg",
+  "land": 101,
+  "water": 397,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND_MEMORIAL_PILLAR": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND_MEMORIAL_PILLAR"
+  ],
+  "ver": "frlg",
+  "land": 61,
+  "water": 966,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND_RESORT_GORGEOUS": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND_RESORT_GORGEOUS"
+  ],
+  "ver": "frlg",
+  "land": 0,
+  "water": 1096,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FIVE_ISLAND_WATER_LABYRINTH": {
+  "layouts": [
+   "LAYOUT_FIVE_ISLAND_WATER_LABYRINTH"
+  ],
+  "ver": "frlg",
+  "land": 0,
+  "water": 1374,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FOUR_ISLAND": {
+  "layouts": [
+   "LAYOUT_FOUR_ISLAND"
+  ],
+  "ver": "frlg",
+  "land": 9,
+  "water": 96,
+  "trees": 0,
+  "rocks": 1
+ },
+ "MAP_FOUR_ISLAND_ICEFALL_CAVE_1F": {
+  "layouts": [
+   "LAYOUT_FOUR_ISLAND_ICEFALL_CAVE_1F"
+  ],
+  "ver": "frlg",
+  "land": 136,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FOUR_ISLAND_ICEFALL_CAVE_B1F": {
+  "layouts": [
+   "LAYOUT_FOUR_ISLAND_ICEFALL_CAVE_B1F"
+  ],
+  "ver": "frlg",
+  "land": 209,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FOUR_ISLAND_ICEFALL_CAVE_BACK": {
+  "layouts": [
+   "LAYOUT_FOUR_ISLAND_ICEFALL_CAVE_BACK"
+  ],
+  "ver": "frlg",
+  "land": 321,
+  "water": 198,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FOUR_ISLAND_ICEFALL_CAVE_ENTRANCE": {
+  "layouts": [
+   "LAYOUT_FOUR_ISLAND_ICEFALL_CAVE_ENTRANCE"
+  ],
+  "ver": "frlg",
+  "land": 436,
+  "water": 138,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FUCHSIA_CITY_HNS": {
+  "layouts": [
+   "LAYOUT_FUCHSIA_CITY_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 75,
+  "trees": 22,
+  "rocks": 0
+ },
+ "MAP_FUCHSIA_CITY_SAFARI_ZONE_BEACH_HNS": {
+  "layouts": [
+   "LAYOUT_FUCHSIA_CITY_SAFARI_ZONE_BEACH_HNS"
+  ],
+  "ver": "hns",
+  "land": 190,
+  "water": 414,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FUCHSIA_CITY_SAFARI_ZONE_BRUSH_HNS": {
+  "layouts": [
+   "LAYOUT_FUCHSIA_CITY_SAFARI_ZONE_BRUSH_HNS"
+  ],
+  "ver": "hns",
+  "land": 378,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FUCHSIA_CITY_SAFARI_ZONE_CAVE_HNS": {
+  "layouts": [
+   "LAYOUT_FUCHSIA_CITY_SAFARI_ZONE_CAVE_HNS"
+  ],
+  "ver": "hns",
+  "land": 710,
+  "water": 172,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_FUCHSIA_CITY_SAFARI_ZONE_MOUNTAIN_HNS": {
+  "layouts": [
+   "LAYOUT_FUCHSIA_CITY_SAFARI_ZONE_MOUNTAIN_HNS"
+  ],
+  "ver": "hns",
+  "land": 722,
+  "water": 56,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_GOLDENROD_CITY_HNS": {
+  "layouts": [
+   "LAYOUT_GOLDENROD_CITY_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 425,
+  "trees": 4,
+  "rocks": 0
+ },
+ "MAP_GRANITE_CAVE_1F": {
+  "layouts": [
+   "LAYOUT_GRANITE_CAVE_1F"
+  ],
+  "ver": "emerald",
+  "land": 341,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_GRANITE_CAVE_B1F": {
+  "layouts": [
+   "LAYOUT_GRANITE_CAVE_B1F"
+  ],
+  "ver": "emerald",
+  "land": 386,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_GRANITE_CAVE_B2F": {
+  "layouts": [
+   "LAYOUT_GRANITE_CAVE_B2F"
+  ],
+  "ver": "emerald",
+  "land": 447,
+  "water": 0,
+  "trees": 0,
+  "rocks": 7
+ },
+ "MAP_GRANITE_CAVE_STEVENS_ROOM": {
+  "layouts": [
+   "LAYOUT_GRANITE_CAVE_STEVENS_ROOM"
+  ],
+  "ver": "emerald",
+  "land": 117,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ICE_PATH_1F_HNS": {
+  "layouts": [
+   "LAYOUT_ICE_PATH_1F_HNS"
+  ],
+  "ver": "hns",
+  "land": 993,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ICE_PATH_B1F_HNS": {
+  "layouts": [
+   "LAYOUT_ICE_PATH_B1F_HNS"
+  ],
+  "ver": "hns",
+  "land": 662,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ICE_PATH_B2F_HNS": {
+  "layouts": [
+   "LAYOUT_ICE_PATH_B2F_HNS"
+  ],
+  "ver": "hns",
+  "land": 306,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ICE_PATH_B3F_HNS": {
+  "layouts": [
+   "LAYOUT_ICE_PATH_B3F_HNS"
+  ],
+  "ver": "hns",
+  "land": 270,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ICE_PATH_B4F_HNS": {
+  "layouts": [
+   "LAYOUT_ICE_PATH_B4F_HNS"
+  ],
+  "ver": "hns",
+  "land": 417,
+  "water": 0,
+  "trees": 0,
+  "rocks": 10
+ },
+ "MAP_ILEX_FOREST_HNS": {
+  "layouts": [
+   "LAYOUT_ILEX_FOREST_HNS"
+  ],
+  "ver": "hns",
+  "land": 753,
+  "water": 102,
+  "trees": 210,
+  "rocks": 0
+ },
+ "MAP_JAGGED_PASS": {
+  "layouts": [
+   "LAYOUT_JAGGED_PASS"
+  ],
+  "ver": "emerald",
+  "land": 635,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_LAKE_OF_RAGE_HNS": {
+  "layouts": [
+   "LAYOUT_LAKE_OF_RAGE_HNS",
+   "LAYOUT_LAKE_OF_RAGE_LOW_TIDE_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 937,
+  "trees": 74,
+  "rocks": 0
+ },
+ "MAP_LAVENDER_TOWN_HNS": {
+  "layouts": [
+   "LAYOUT_LAVENDER_TOWN_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_LILYCOVE_CITY": {
+  "layouts": [
+   "LAYOUT_LILYCOVE_CITY"
+  ],
+  "ver": "emerald",
+  "land": 9,
+  "water": 679,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MAGMA_HIDEOUT_1F": {
+  "layouts": [
+   "LAYOUT_MAGMA_HIDEOUT_1F"
+  ],
+  "ver": "emerald",
+  "land": 1318,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MAGMA_HIDEOUT_2F_1R": {
+  "layouts": [
+   "LAYOUT_MAGMA_HIDEOUT_2F_1R"
+  ],
+  "ver": "emerald",
+  "land": 1223,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MAGMA_HIDEOUT_2F_2R": {
+  "layouts": [
+   "LAYOUT_MAGMA_HIDEOUT_2F_2R"
+  ],
+  "ver": "emerald",
+  "land": 1233,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MAGMA_HIDEOUT_2F_3R": {
+  "layouts": [
+   "LAYOUT_MAGMA_HIDEOUT_2F_3R"
+  ],
+  "ver": "emerald",
+  "land": 1017,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MAGMA_HIDEOUT_3F_1R": {
+  "layouts": [
+   "LAYOUT_MAGMA_HIDEOUT_3F_1R"
+  ],
+  "ver": "emerald",
+  "land": 497,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MAGMA_HIDEOUT_3F_2R": {
+  "layouts": [
+   "LAYOUT_MAGMA_HIDEOUT_3F_2R"
+  ],
+  "ver": "emerald",
+  "land": 277,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MAGMA_HIDEOUT_3F_3R": {
+  "layouts": [
+   "LAYOUT_MAGMA_HIDEOUT_3F_3R"
+  ],
+  "ver": "emerald",
+  "land": 691,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MAGMA_HIDEOUT_4F": {
+  "layouts": [
+   "LAYOUT_MAGMA_HIDEOUT_4F"
+  ],
+  "ver": "emerald",
+  "land": 1338,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MAHOGANYTOWN_HNS": {
+  "layouts": [
+   "LAYOUT_MAHOGANYTOWN_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 2,
+  "trees": 7,
+  "rocks": 0
+ },
+ "MAP_MELEMELE_ISLE_HNS": {
+  "layouts": [
+   "LAYOUT_MELEMELE_ISLE_HNS"
+  ],
+  "ver": "hns",
+  "land": 84,
+  "water": 699,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_METEOR_FALLS_1F_1R": {
+  "layouts": [
+   "LAYOUT_METEOR_FALLS_1F_1R"
+  ],
+  "ver": "emerald",
+  "land": 463,
+  "water": 175,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_METEOR_FALLS_1F_2R": {
+  "layouts": [
+   "LAYOUT_METEOR_FALLS_1F_2R"
+  ],
+  "ver": "emerald",
+  "land": 442,
+  "water": 65,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_METEOR_FALLS_B1F_1R": {
+  "layouts": [
+   "LAYOUT_METEOR_FALLS_B1F_1R"
+  ],
+  "ver": "emerald",
+  "land": 514,
+  "water": 217,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_METEOR_FALLS_B1F_2R": {
+  "layouts": [
+   "LAYOUT_METEOR_FALLS_B1F_2R"
+  ],
+  "ver": "emerald",
+  "land": 64,
+  "water": 45,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_METEOR_FALLS_STEVENS_CAVE": {
+  "layouts": [
+   "LAYOUT_METEOR_FALLS_STEVENS_CAVE"
+  ],
+  "ver": "emerald",
+  "land": 339,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MIRAGE_TOWER_1F": {
+  "layouts": [
+   "LAYOUT_MIRAGE_TOWER_1F"
+  ],
+  "ver": "emerald",
+  "land": 150,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MIRAGE_TOWER_2F": {
+  "layouts": [
+   "LAYOUT_MIRAGE_TOWER_2F"
+  ],
+  "ver": "emerald",
+  "land": 135,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MIRAGE_TOWER_3F": {
+  "layouts": [
+   "LAYOUT_MIRAGE_TOWER_3F"
+  ],
+  "ver": "emerald",
+  "land": 146,
+  "water": 0,
+  "trees": 0,
+  "rocks": 2
+ },
+ "MAP_MIRAGE_TOWER_4F": {
+  "layouts": [
+   "LAYOUT_MIRAGE_TOWER_4F"
+  ],
+  "ver": "emerald",
+  "land": 59,
+  "water": 0,
+  "trees": 0,
+  "rocks": 1
+ },
+ "MAP_MOSSDEEP_CITY": {
+  "layouts": [
+   "LAYOUT_MOSSDEEP_CITY"
+  ],
+  "ver": "emerald",
+  "land": 103,
+  "water": 878,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_EMBER_EXTERIOR": {
+  "layouts": [
+   "LAYOUT_MT_EMBER_EXTERIOR"
+  ],
+  "ver": "frlg",
+  "land": 389,
+  "water": 0,
+  "trees": 0,
+  "rocks": 6
+ },
+ "MAP_MT_EMBER_RUBY_PATH_1F": {
+  "layouts": [
+   "LAYOUT_MT_EMBER_RUBY_PATH_1F"
+  ],
+  "ver": "frlg",
+  "land": 388,
+  "water": 0,
+  "trees": 0,
+  "rocks": 5
+ },
+ "MAP_MT_EMBER_RUBY_PATH_B1F": {
+  "layouts": [
+   "LAYOUT_MT_EMBER_RUBY_PATH_B1F"
+  ],
+  "ver": "frlg",
+  "land": 169,
+  "water": 0,
+  "trees": 0,
+  "rocks": 4
+ },
+ "MAP_MT_EMBER_RUBY_PATH_B1F_STAIRS": {
+  "layouts": [
+   "LAYOUT_MT_EMBER_RUBY_PATH_B1F_STAIRS"
+  ],
+  "ver": "frlg",
+  "land": 13,
+  "water": 0,
+  "trees": 0,
+  "rocks": 1
+ },
+ "MAP_MT_EMBER_RUBY_PATH_B2F": {
+  "layouts": [
+   "LAYOUT_MT_EMBER_RUBY_PATH_B2F"
+  ],
+  "ver": "frlg",
+  "land": 103,
+  "water": 0,
+  "trees": 0,
+  "rocks": 4
+ },
+ "MAP_MT_EMBER_RUBY_PATH_B2F_STAIRS": {
+  "layouts": [
+   "LAYOUT_MT_EMBER_RUBY_PATH_B2F_STAIRS"
+  ],
+  "ver": "frlg",
+  "land": 18,
+  "water": 0,
+  "trees": 0,
+  "rocks": 2
+ },
+ "MAP_MT_EMBER_RUBY_PATH_B3F": {
+  "layouts": [
+   "LAYOUT_MT_EMBER_RUBY_PATH_B3F"
+  ],
+  "ver": "frlg",
+  "land": 437,
+  "water": 0,
+  "trees": 0,
+  "rocks": 6
+ },
+ "MAP_MT_EMBER_SUMMIT_PATH_1F": {
+  "layouts": [
+   "LAYOUT_MT_EMBER_SUMMIT_PATH_1F"
+  ],
+  "ver": "frlg",
+  "land": 143,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_EMBER_SUMMIT_PATH_2F": {
+  "layouts": [
+   "LAYOUT_MT_EMBER_SUMMIT_PATH_2F"
+  ],
+  "ver": "frlg",
+  "land": 133,
+  "water": 0,
+  "trees": 0,
+  "rocks": 9
+ },
+ "MAP_MT_EMBER_SUMMIT_PATH_3F": {
+  "layouts": [
+   "LAYOUT_MT_EMBER_SUMMIT_PATH_3F"
+  ],
+  "ver": "frlg",
+  "land": 67,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_MOON_CAVE_HNS": {
+  "layouts": [
+   "LAYOUT_MT_MOON_CAVE_HNS"
+  ],
+  "ver": "hns",
+  "land": 898,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_MORTAR_1F_NORTH_HNS": {
+  "layouts": [
+   "LAYOUT_MT_MORTAR_1F_NORTH_HNS"
+  ],
+  "ver": "hns",
+  "land": 3779,
+  "water": 39,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_MORTAR_1F_SOUTH_HNS": {
+  "layouts": [
+   "LAYOUT_MT_MORTAR_1F_SOUTH_HNS"
+  ],
+  "ver": "hns",
+  "land": 3263,
+  "water": 773,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_MORTAR_2F_HNS": {
+  "layouts": [
+   "LAYOUT_MT_MORTAR_2F_HNS"
+  ],
+  "ver": "hns",
+  "land": 1530,
+  "water": 281,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_MORTAR_B1F_HNS": {
+  "layouts": [
+   "LAYOUT_MT_MORTAR_B1F_HNS"
+  ],
+  "ver": "hns",
+  "land": 2434,
+  "water": 436,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_PYRE_1F": {
+  "layouts": [
+   "LAYOUT_MT_PYRE_1F"
+  ],
+  "ver": "emerald",
+  "land": 115,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_PYRE_2F": {
+  "layouts": [
+   "LAYOUT_MT_PYRE_2F"
+  ],
+  "ver": "emerald",
+  "land": 91,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_PYRE_3F": {
+  "layouts": [
+   "LAYOUT_MT_PYRE_3F"
+  ],
+  "ver": "emerald",
+  "land": 83,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_PYRE_4F": {
+  "layouts": [
+   "LAYOUT_MT_PYRE_4F"
+  ],
+  "ver": "emerald",
+  "land": 57,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_PYRE_5F": {
+  "layouts": [
+   "LAYOUT_MT_PYRE_5F"
+  ],
+  "ver": "emerald",
+  "land": 67,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_PYRE_6F": {
+  "layouts": [
+   "LAYOUT_MT_PYRE_6F"
+  ],
+  "ver": "emerald",
+  "land": 87,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_PYRE_EXTERIOR": {
+  "layouts": [
+   "LAYOUT_MT_PYRE_EXTERIOR"
+  ],
+  "ver": "emerald",
+  "land": 343,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_PYRE_SUMMIT": {
+  "layouts": [
+   "LAYOUT_MT_PYRE_SUMMIT"
+  ],
+  "ver": "emerald",
+  "land": 240,
+  "water": 168,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_SILVER_1F_ITEM_ROOM_HNS": {
+  "layouts": [
+   "LAYOUT_MT_SILVER_1F_ITEM_ROOM_HNS"
+  ],
+  "ver": "hns",
+  "land": 226,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_SILVER_1F_MOLTRES_ROOM_HNS": {
+  "layouts": [
+   "LAYOUT_MT_SILVER_1F_MOLTRES_ROOM_HNS"
+  ],
+  "ver": "hns",
+  "land": 425,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_SILVER_1F_WATERFALL_ROOM_HNS": {
+  "layouts": [
+   "LAYOUT_MT_SILVER_1F_WATERFALL_ROOM_HNS"
+  ],
+  "ver": "hns",
+  "land": 603,
+  "water": 395,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_SILVER_2F_HNS": {
+  "layouts": [
+   "LAYOUT_MT_SILVER_2F_HNS"
+  ],
+  "ver": "hns",
+  "land": 1054,
+  "water": 114,
+  "trees": 0,
+  "rocks": 5
+ },
+ "MAP_MT_SILVER_3F_HNS": {
+  "layouts": [
+   "LAYOUT_MT_SILVER_3F_HNS"
+  ],
+  "ver": "hns",
+  "land": 619,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_MT_SILVER_MOUNTAIN_SIDE_HNS": {
+  "layouts": [
+   "LAYOUT_MT_SILVER_MOUNTAIN_SIDE_HNS"
+  ],
+  "ver": "hns",
+  "land": 230,
+  "water": 0,
+  "trees": 58,
+  "rocks": 0
+ },
+ "MAP_MT_SILVER_OUTSIDE_HNS": {
+  "layouts": [
+   "LAYOUT_MT_SILVER_OUTSIDE_HNS"
+  ],
+  "ver": "hns",
+  "land": 163,
+  "water": 60,
+  "trees": 20,
+  "rocks": 0
+ },
+ "MAP_MT_SILVER_SNOW_HNS": {
+  "layouts": [
+   "LAYOUT_MT_SILVER_SNOW_HNS"
+  ],
+  "ver": "hns",
+  "land": 165,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_NATIONAL_PARK_BUG_CONTEST_HNS": {
+  "layouts": [
+   "LAYOUT_NATIONAL_PARK_BUG_CONTEST_HNS"
+  ],
+  "ver": "hns",
+  "land": 436,
+  "water": 1,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_NATIONAL_PARK_NORMAL_HNS": {
+  "layouts": [
+   "LAYOUT_NATIONAL_PARK_NORMAL_HNS"
+  ],
+  "ver": "hns",
+  "land": 436,
+  "water": 1,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_NEWSINJOH_HOTSPRINGS_HNS": {
+  "layouts": [
+   "LAYOUT_NEWSINJOH_HOTSPRINGS_HNS"
+  ],
+  "ver": "hns",
+  "land": 611,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_NEW_BARK_TOWN_HNS": {
+  "layouts": [
+   "LAYOUT_NEW_BARK_TOWN_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 20,
+  "trees": 22,
+  "rocks": 0
+ },
+ "MAP_NEW_MAUVILLE_ENTRANCE": {
+  "layouts": [
+   "LAYOUT_NEW_MAUVILLE_ENTRANCE"
+  ],
+  "ver": "emerald",
+  "land": 35,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_NEW_MAUVILLE_INSIDE": {
+  "layouts": [
+   "LAYOUT_NEW_MAUVILLE_INSIDE"
+  ],
+  "ver": "emerald",
+  "land": 803,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_OLIVINE_CITY_HNS": {
+  "layouts": [
+   "LAYOUT_OLIVINE_CITY_HNS"
+  ],
+  "ver": "hns",
+  "land": 36,
+  "water": 1061,
+  "trees": 59,
+  "rocks": 0
+ },
+ "MAP_OLIVINE_CITY_PORT_OUTSIDE_HNS": {
+  "layouts": [
+   "LAYOUT_OLIVINE_CITY_PORT_OUTSIDE_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 638,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ONE_ISLAND": {
+  "layouts": [
+   "LAYOUT_ONE_ISLAND"
+  ],
+  "ver": "frlg",
+  "land": 0,
+  "water": 73,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ONE_ISLAND_KINDLE_ROAD": {
+  "layouts": [
+   "LAYOUT_ONE_ISLAND_KINDLE_ROAD"
+  ],
+  "ver": "frlg",
+  "land": 200,
+  "water": 1393,
+  "trees": 0,
+  "rocks": 13
+ },
+ "MAP_ONE_ISLAND_TREASURE_BEACH": {
+  "layouts": [
+   "LAYOUT_ONE_ISLAND_TREASURE_BEACH"
+  ],
+  "ver": "frlg",
+  "land": 44,
+  "water": 513,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_PACIFIDLOG_TOWN": {
+  "layouts": [
+   "LAYOUT_PACIFIDLOG_TOWN"
+  ],
+  "ver": "emerald",
+  "land": 263,
+  "water": 294,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_PALLET_TOWN_HNS": {
+  "layouts": [
+   "LAYOUT_PALLET_TOWN_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 12,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_PETALBURG_CITY": {
+  "layouts": [
+   "LAYOUT_PETALBURG_CITY"
+  ],
+  "ver": "emerald",
+  "land": 0,
+  "water": 141,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_PETALBURG_WOODS": {
+  "layouts": [
+   "LAYOUT_PETALBURG_WOODS"
+  ],
+  "ver": "emerald",
+  "land": 325,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_PEWTER_CITY_HNS": {
+  "layouts": [
+   "LAYOUT_PEWTER_CITY_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_POKEMON_MANSION_1F": {
+  "layouts": [
+   "LAYOUT_POKEMON_MANSION_1F"
+  ],
+  "ver": "frlg",
+  "land": 840,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_POKEMON_MANSION_2F": {
+  "layouts": [
+   "LAYOUT_POKEMON_MANSION_2F"
+  ],
+  "ver": "frlg",
+  "land": 660,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_POKEMON_MANSION_3F": {
+  "layouts": [
+   "LAYOUT_POKEMON_MANSION_3F"
+  ],
+  "ver": "frlg",
+  "land": 479,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_POKEMON_MANSION_B1F": {
+  "layouts": [
+   "LAYOUT_POKEMON_MANSION_B1F"
+  ],
+  "ver": "frlg",
+  "land": 751,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_POKEMON_TOWER_3F": {
+  "layouts": [
+   "LAYOUT_POKEMON_TOWER_3F"
+  ],
+  "ver": "frlg",
+  "land": 162,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_POKEMON_TOWER_4F": {
+  "layouts": [
+   "LAYOUT_POKEMON_TOWER_4F"
+  ],
+  "ver": "frlg",
+  "land": 160,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_POKEMON_TOWER_5F": {
+  "layouts": [
+   "LAYOUT_POKEMON_TOWER_5F"
+  ],
+  "ver": "frlg",
+  "land": 155,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_POKEMON_TOWER_6F": {
+  "layouts": [
+   "LAYOUT_POKEMON_TOWER_6F"
+  ],
+  "ver": "frlg",
+  "land": 144,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_POKEMON_TOWER_7F": {
+  "layouts": [
+   "LAYOUT_POKEMON_TOWER_7F"
+  ],
+  "ver": "frlg",
+  "land": 78,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_PONI_CAVE_HNS": {
+  "layouts": [
+   "LAYOUT_PONI_CAVE_HNS"
+  ],
+  "ver": "hns",
+  "land": 312,
+  "water": 62,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_PONI_ISLE_HNS": {
+  "layouts": [
+   "LAYOUT_PONI_ISLE_HNS"
+  ],
+  "ver": "hns",
+  "land": 71,
+  "water": 1144,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_POWER_PLANT": {
+  "layouts": [
+   "LAYOUT_POWER_PLANT"
+  ],
+  "ver": "frlg",
+  "land": 1933,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROCKET_HIDEOUT_B1F_HNS": {
+  "layouts": [
+   "LAYOUT_ROCKET_HIDEOUT_B1F_HNS"
+  ],
+  "ver": "hns",
+  "land": 35,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROCK_TUNNEL_1F_HNS": {
+  "layouts": [
+   "LAYOUT_ROCK_TUNNEL_1F_HNS"
+  ],
+  "ver": "hns",
+  "land": 1536,
+  "water": 0,
+  "trees": 0,
+  "rocks": 9
+ },
+ "MAP_ROCK_TUNNEL_B1F_HNS": {
+  "layouts": [
+   "LAYOUT_ROCK_TUNNEL_B1F_HNS"
+  ],
+  "ver": "hns",
+  "land": 1668,
+  "water": 0,
+  "trees": 0,
+  "rocks": 7
+ },
+ "MAP_ROUTE101": {
+  "layouts": [
+   "LAYOUT_ROUTE101"
+  ],
+  "ver": "emerald",
+  "land": 91,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE102": {
+  "layouts": [
+   "LAYOUT_ROUTE102"
+  ],
+  "ver": "emerald",
+  "land": 143,
+  "water": 26,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE103": {
+  "layouts": [
+   "LAYOUT_ROUTE103"
+  ],
+  "ver": "emerald",
+  "land": 162,
+  "water": 343,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE104": {
+  "layouts": [
+   "LAYOUT_ROUTE104"
+  ],
+  "ver": "emerald",
+  "land": 130,
+  "water": 778,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE105": {
+  "layouts": [
+   "LAYOUT_ROUTE105"
+  ],
+  "ver": "emerald",
+  "land": 41,
+  "water": 2317,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE106": {
+  "layouts": [
+   "LAYOUT_ROUTE106"
+  ],
+  "ver": "emerald",
+  "land": 101,
+  "water": 1043,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE107": {
+  "layouts": [
+   "LAYOUT_ROUTE107"
+  ],
+  "ver": "emerald",
+  "land": 15,
+  "water": 817,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE108": {
+  "layouts": [
+   "LAYOUT_ROUTE108"
+  ],
+  "ver": "emerald",
+  "land": 0,
+  "water": 843,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE109": {
+  "layouts": [
+   "LAYOUT_ROUTE109"
+  ],
+  "ver": "emerald",
+  "land": 20,
+  "water": 1550,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE10_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE10_HNS"
+  ],
+  "ver": "hns",
+  "land": 140,
+  "water": 277,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE110": {
+  "layouts": [
+   "LAYOUT_ROUTE110"
+  ],
+  "ver": "emerald",
+  "land": 240,
+  "water": 1242,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE111": {
+  "layouts": [
+   "LAYOUT_ROUTE111",
+   "LAYOUT_ROUTE111_NO_MIRAGE_TOWER"
+  ],
+  "ver": "emerald",
+  "land": 1986,
+  "water": 92,
+  "trees": 0,
+  "rocks": 2
+ },
+ "MAP_ROUTE112": {
+  "layouts": [
+   "LAYOUT_ROUTE112"
+  ],
+  "ver": "emerald",
+  "land": 1152,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE113": {
+  "layouts": [
+   "LAYOUT_ROUTE113"
+  ],
+  "ver": "emerald",
+  "land": 480,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE114": {
+  "layouts": [
+   "LAYOUT_ROUTE114"
+  ],
+  "ver": "emerald",
+  "land": 1288,
+  "water": 376,
+  "trees": 0,
+  "rocks": 5
+ },
+ "MAP_ROUTE115": {
+  "layouts": [
+   "LAYOUT_ROUTE115"
+  ],
+  "ver": "emerald",
+  "land": 773,
+  "water": 506,
+  "trees": 0,
+  "rocks": 1
+ },
+ "MAP_ROUTE116": {
+  "layouts": [
+   "LAYOUT_ROUTE116"
+  ],
+  "ver": "emerald",
+  "land": 622,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE117": {
+  "layouts": [
+   "LAYOUT_ROUTE117"
+  ],
+  "ver": "emerald",
+  "land": 70,
+  "water": 97,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE118": {
+  "layouts": [
+   "LAYOUT_ROUTE118"
+  ],
+  "ver": "emerald",
+  "land": 179,
+  "water": 282,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE119": {
+  "layouts": [
+   "LAYOUT_ROUTE119"
+  ],
+  "ver": "emerald",
+  "land": 1016,
+  "water": 447,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE11_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE11_HNS"
+  ],
+  "ver": "hns",
+  "land": 302,
+  "water": 0,
+  "trees": 14,
+  "rocks": 0
+ },
+ "MAP_ROUTE120": {
+  "layouts": [
+   "LAYOUT_ROUTE120"
+  ],
+  "ver": "emerald",
+  "land": 452,
+  "water": 388,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE121": {
+  "layouts": [
+   "LAYOUT_ROUTE121"
+  ],
+  "ver": "emerald",
+  "land": 149,
+  "water": 249,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE122": {
+  "layouts": [
+   "LAYOUT_ROUTE122"
+  ],
+  "ver": "emerald",
+  "land": 196,
+  "water": 803,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE123": {
+  "layouts": [
+   "LAYOUT_ROUTE123"
+  ],
+  "ver": "emerald",
+  "land": 197,
+  "water": 366,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE124": {
+  "layouts": [
+   "LAYOUT_ROUTE124"
+  ],
+  "ver": "emerald",
+  "land": 444,
+  "water": 4586,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE125": {
+  "layouts": [
+   "LAYOUT_ROUTE125"
+  ],
+  "ver": "emerald",
+  "land": 237,
+  "water": 2181,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE126": {
+  "layouts": [
+   "LAYOUT_ROUTE126"
+  ],
+  "ver": "emerald",
+  "land": 188,
+  "water": 4373,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE127": {
+  "layouts": [
+   "LAYOUT_ROUTE127"
+  ],
+  "ver": "emerald",
+  "land": 420,
+  "water": 4154,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE128": {
+  "layouts": [
+   "LAYOUT_ROUTE128"
+  ],
+  "ver": "emerald",
+  "land": 190,
+  "water": 3744,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE129": {
+  "layouts": [
+   "LAYOUT_ROUTE129"
+  ],
+  "ver": "emerald",
+  "land": 137,
+  "water": 2668,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE12_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE12_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 1858,
+  "trees": 2,
+  "rocks": 0
+ },
+ "MAP_ROUTE130": {
+  "layouts": [
+   "LAYOUT_ROUTE130",
+   "LAYOUT_ROUTE130_MIRAGE_ISLAND"
+  ],
+  "ver": "emerald",
+  "land": 225,
+  "water": 2485,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE131": {
+  "layouts": [
+   "LAYOUT_ROUTE131",
+   "LAYOUT_ROUTE131_SKY_PILLAR"
+  ],
+  "ver": "emerald",
+  "land": 212,
+  "water": 1690,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE132": {
+  "layouts": [
+   "LAYOUT_ROUTE132"
+  ],
+  "ver": "emerald",
+  "land": 88,
+  "water": 835,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE133": {
+  "layouts": [
+   "LAYOUT_ROUTE133"
+  ],
+  "ver": "emerald",
+  "land": 114,
+  "water": 543,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE134": {
+  "layouts": [
+   "LAYOUT_ROUTE134"
+  ],
+  "ver": "emerald",
+  "land": 31,
+  "water": 980,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE13_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE13_HNS"
+  ],
+  "ver": "hns",
+  "land": 30,
+  "water": 628,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE14_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE14_HNS"
+  ],
+  "ver": "hns",
+  "land": 30,
+  "water": 66,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE15_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE15_HNS"
+  ],
+  "ver": "hns",
+  "land": 119,
+  "water": 3,
+  "trees": 3,
+  "rocks": 0
+ },
+ "MAP_ROUTE16_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE16_HNS"
+  ],
+  "ver": "hns",
+  "land": 25,
+  "water": 48,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE17_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE17_HNS"
+  ],
+  "ver": "hns",
+  "land": 34,
+  "water": 2512,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE18_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE18_HNS"
+  ],
+  "ver": "hns",
+  "land": 50,
+  "water": 508,
+  "trees": 24,
+  "rocks": 0
+ },
+ "MAP_ROUTE19": {
+  "layouts": [
+   "LAYOUT_ROUTE19"
+  ],
+  "ver": "frlg",
+  "land": 0,
+  "water": 1188,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE1_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE1_HNS"
+  ],
+  "ver": "hns",
+  "land": 206,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE20": {
+  "layouts": [
+   "LAYOUT_ROUTE20"
+  ],
+  "ver": "frlg",
+  "land": 0,
+  "water": 2068,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE21_NORTH": {
+  "layouts": [
+   "LAYOUT_ROUTE21_NORTH"
+  ],
+  "ver": "frlg",
+  "land": 36,
+  "water": 877,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE21_SOUTH": {
+  "layouts": [
+   "LAYOUT_ROUTE21_SOUTH"
+  ],
+  "ver": "frlg",
+  "land": 0,
+  "water": 1081,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE22_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE22_HNS"
+  ],
+  "ver": "hns",
+  "land": 65,
+  "water": 24,
+  "trees": 6,
+  "rocks": 0
+ },
+ "MAP_ROUTE23_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE23_HNS"
+  ],
+  "ver": "hns",
+  "land": 70,
+  "water": 396,
+  "trees": 5,
+  "rocks": 0
+ },
+ "MAP_ROUTE24_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE24_HNS"
+  ],
+  "ver": "hns",
+  "land": 43,
+  "water": 156,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE25_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE25_HNS"
+  ],
+  "ver": "hns",
+  "land": 41,
+  "water": 286,
+  "trees": 2,
+  "rocks": 0
+ },
+ "MAP_ROUTE26_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE26_HNS"
+  ],
+  "ver": "hns",
+  "land": 211,
+  "water": 706,
+  "trees": 7,
+  "rocks": 0
+ },
+ "MAP_ROUTE27_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE27_HNS"
+  ],
+  "ver": "hns",
+  "land": 93,
+  "water": 2573,
+  "trees": 22,
+  "rocks": 0
+ },
+ "MAP_ROUTE28_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE28_HNS"
+  ],
+  "ver": "hns",
+  "land": 218,
+  "water": 36,
+  "trees": 15,
+  "rocks": 0
+ },
+ "MAP_ROUTE29_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE29_HNS"
+  ],
+  "ver": "hns",
+  "land": 295,
+  "water": 0,
+  "trees": 27,
+  "rocks": 0
+ },
+ "MAP_ROUTE2_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE2_HNS"
+  ],
+  "ver": "hns",
+  "land": 84,
+  "water": 4,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE30_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE30_HNS"
+  ],
+  "ver": "hns",
+  "land": 192,
+  "water": 80,
+  "trees": 86,
+  "rocks": 0
+ },
+ "MAP_ROUTE31_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE31_HNS"
+  ],
+  "ver": "hns",
+  "land": 130,
+  "water": 43,
+  "trees": 36,
+  "rocks": 0
+ },
+ "MAP_ROUTE32_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE32_HNS"
+  ],
+  "ver": "hns",
+  "land": 235,
+  "water": 624,
+  "trees": 32,
+  "rocks": 1
+ },
+ "MAP_ROUTE33_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE33_HNS"
+  ],
+  "ver": "hns",
+  "land": 56,
+  "water": 258,
+  "trees": 1,
+  "rocks": 0
+ },
+ "MAP_ROUTE34_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE34_HNS"
+  ],
+  "ver": "hns",
+  "land": 446,
+  "water": 1286,
+  "trees": 9,
+  "rocks": 0
+ },
+ "MAP_ROUTE35_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE35_HNS"
+  ],
+  "ver": "hns",
+  "land": 116,
+  "water": 88,
+  "trees": 69,
+  "rocks": 0
+ },
+ "MAP_ROUTE36_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE36_HNS"
+  ],
+  "ver": "hns",
+  "land": 90,
+  "water": 3,
+  "trees": 93,
+  "rocks": 0
+ },
+ "MAP_ROUTE37_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE37_HNS"
+  ],
+  "ver": "hns",
+  "land": 190,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE38_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE38_HNS"
+  ],
+  "ver": "hns",
+  "land": 397,
+  "water": 319,
+  "trees": 18,
+  "rocks": 0
+ },
+ "MAP_ROUTE39_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE39_HNS"
+  ],
+  "ver": "hns",
+  "land": 365,
+  "water": 62,
+  "trees": 17,
+  "rocks": 0
+ },
+ "MAP_ROUTE3_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE3_HNS"
+  ],
+  "ver": "hns",
+  "land": 116,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE40_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE40_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 1642,
+  "trees": 14,
+  "rocks": 4
+ },
+ "MAP_ROUTE41_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE41_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 4228,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE42_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE42_HNS"
+  ],
+  "ver": "hns",
+  "land": 35,
+  "water": 223,
+  "trees": 28,
+  "rocks": 0
+ },
+ "MAP_ROUTE43_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE43_HNS"
+  ],
+  "ver": "hns",
+  "land": 209,
+  "water": 68,
+  "trees": 45,
+  "rocks": 0
+ },
+ "MAP_ROUTE44_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE44_HNS"
+  ],
+  "ver": "hns",
+  "land": 64,
+  "water": 213,
+  "trees": 15,
+  "rocks": 0
+ },
+ "MAP_ROUTE45_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE45_HNS"
+  ],
+  "ver": "hns",
+  "land": 357,
+  "water": 276,
+  "trees": 16,
+  "rocks": 0
+ },
+ "MAP_ROUTE46_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE46_HNS"
+  ],
+  "ver": "hns",
+  "land": 98,
+  "water": 2,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE47_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE47_HNS"
+  ],
+  "ver": "hns",
+  "land": 110,
+  "water": 1917,
+  "trees": 4,
+  "rocks": 0
+ },
+ "MAP_ROUTE48_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE48_HNS"
+  ],
+  "ver": "hns",
+  "land": 317,
+  "water": 204,
+  "trees": 11,
+  "rocks": 0
+ },
+ "MAP_ROUTE49_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE49_HNS"
+  ],
+  "ver": "hns",
+  "land": 435,
+  "water": 243,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE4_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE4_HNS"
+  ],
+  "ver": "hns",
+  "land": 84,
+  "water": 24,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE50_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE50_HNS"
+  ],
+  "ver": "hns",
+  "land": 574,
+  "water": 0,
+  "trees": 116,
+  "rocks": 0
+ },
+ "MAP_ROUTE5_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE5_HNS"
+  ],
+  "ver": "hns",
+  "land": 66,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE6_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE6_HNS"
+  ],
+  "ver": "hns",
+  "land": 194,
+  "water": 64,
+  "trees": 1,
+  "rocks": 0
+ },
+ "MAP_ROUTE7_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE7_HNS"
+  ],
+  "ver": "hns",
+  "land": 36,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE8_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE8_HNS"
+  ],
+  "ver": "hns",
+  "land": 56,
+  "water": 1,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE9_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE9_HNS"
+  ],
+  "ver": "hns",
+  "land": 59,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_RUINS_OF_ALPH_B1F_HNS": {
+  "layouts": [
+   "LAYOUT_RUINS_OF_ALPH_B1F_HNS"
+  ],
+  "ver": "hns",
+  "land": 723,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_RUINS_OF_ALPH_OUTSIDE_HNS": {
+  "layouts": [
+   "LAYOUT_RUINS_OF_ALPH_OUTSIDE_HNS"
+  ],
+  "ver": "hns",
+  "land": 61,
+  "water": 140,
+  "trees": 22,
+  "rocks": 0
+ },
+ "MAP_RUSTURF_TUNNEL": {
+  "layouts": [
+   "LAYOUT_RUSTURF_TUNNEL"
+  ],
+  "ver": "emerald",
+  "land": 502,
+  "water": 0,
+  "trees": 0,
+  "rocks": 2
+ },
+ "MAP_SAFARI_ZONE_GATE_HNS": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_GATE_HNS"
+  ],
+  "ver": "hns",
+  "land": 4,
+  "water": 1,
+  "trees": 5,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_LOW_LEFT_HNS": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_LOW_LEFT_HNS"
+  ],
+  "ver": "hns",
+  "land": 144,
+  "water": 0,
+  "trees": 1,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_LOW_MID_HNS": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_LOW_MID_HNS"
+  ],
+  "ver": "hns",
+  "land": 93,
+  "water": 65,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_LOW_RIGHT_HNS": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_LOW_RIGHT_HNS"
+  ],
+  "ver": "hns",
+  "land": 307,
+  "water": 249,
+  "trees": 7,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_NORTH": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_NORTH"
+  ],
+  "ver": "emerald",
+  "land": 338,
+  "water": 0,
+  "trees": 0,
+  "rocks": 6
+ },
+ "MAP_SAFARI_ZONE_NORTHEAST": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_NORTHEAST"
+  ],
+  "ver": "emerald",
+  "land": 356,
+  "water": 0,
+  "trees": 0,
+  "rocks": 5
+ },
+ "MAP_SAFARI_ZONE_NORTHWEST": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_NORTHWEST"
+  ],
+  "ver": "emerald",
+  "land": 248,
+  "water": 84,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_SOUTH": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_SOUTH"
+  ],
+  "ver": "emerald",
+  "land": 149,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_SOUTHEAST": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_SOUTHEAST"
+  ],
+  "ver": "emerald",
+  "land": 164,
+  "water": 195,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_SOUTHWEST": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_SOUTHWEST"
+  ],
+  "ver": "emerald",
+  "land": 97,
+  "water": 111,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_TOP_LEFT_HNS": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_TOP_LEFT_HNS"
+  ],
+  "ver": "hns",
+  "land": 110,
+  "water": 0,
+  "trees": 5,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_TOP_MID_HNS": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_TOP_MID_HNS"
+  ],
+  "ver": "hns",
+  "land": 134,
+  "water": 0,
+  "trees": 12,
+  "rocks": 0
+ },
+ "MAP_SAFARI_ZONE_TOP_RIGHT_HNS": {
+  "layouts": [
+   "LAYOUT_SAFARI_ZONE_TOP_RIGHT_HNS"
+  ],
+  "ver": "hns",
+  "land": 65,
+  "water": 309,
+  "trees": 3,
+  "rocks": 0
+ },
+ "MAP_SAFFRON_CITY_HNS": {
+  "layouts": [
+   "LAYOUT_SAFFRON_CITY_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 1,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEAFLOOR_CAVERN_ENTRANCE": {
+  "layouts": [
+   "LAYOUT_SEAFLOOR_CAVERN_ENTRANCE"
+  ],
+  "ver": "emerald",
+  "land": 90,
+  "water": 75,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEAFLOOR_CAVERN_ROOM1": {
+  "layouts": [
+   "LAYOUT_SEAFLOOR_CAVERN_ROOM1"
+  ],
+  "ver": "emerald",
+  "land": 257,
+  "water": 0,
+  "trees": 0,
+  "rocks": 1
+ },
+ "MAP_SEAFLOOR_CAVERN_ROOM2": {
+  "layouts": [
+   "LAYOUT_SEAFLOOR_CAVERN_ROOM2"
+  ],
+  "ver": "emerald",
+  "land": 107,
+  "water": 0,
+  "trees": 0,
+  "rocks": 2
+ },
+ "MAP_SEAFLOOR_CAVERN_ROOM3": {
+  "layouts": [
+   "LAYOUT_SEAFLOOR_CAVERN_ROOM3"
+  ],
+  "ver": "emerald",
+  "land": 149,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEAFLOOR_CAVERN_ROOM4": {
+  "layouts": [
+   "LAYOUT_SEAFLOOR_CAVERN_ROOM4"
+  ],
+  "ver": "emerald",
+  "land": 181,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEAFLOOR_CAVERN_ROOM5": {
+  "layouts": [
+   "LAYOUT_SEAFLOOR_CAVERN_ROOM5"
+  ],
+  "ver": "emerald",
+  "land": 190,
+  "water": 52,
+  "trees": 0,
+  "rocks": 2
+ },
+ "MAP_SEAFLOOR_CAVERN_ROOM6": {
+  "layouts": [
+   "LAYOUT_SEAFLOOR_CAVERN_ROOM6"
+  ],
+  "ver": "emerald",
+  "land": 78,
+  "water": 214,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEAFLOOR_CAVERN_ROOM7": {
+  "layouts": [
+   "LAYOUT_SEAFLOOR_CAVERN_ROOM7"
+  ],
+  "ver": "emerald",
+  "land": 74,
+  "water": 243,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEAFLOOR_CAVERN_ROOM8": {
+  "layouts": [
+   "LAYOUT_SEAFLOOR_CAVERN_ROOM8"
+  ],
+  "ver": "emerald",
+  "land": 87,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEAFOAM_ISLANDS_1F": {
+  "layouts": [
+   "LAYOUT_SEAFOAM_ISLANDS_1F"
+  ],
+  "ver": "frlg",
+  "land": 603,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEAFOAM_ISLANDS_B1F": {
+  "layouts": [
+   "LAYOUT_SEAFOAM_ISLANDS_B1F"
+  ],
+  "ver": "frlg",
+  "land": 537,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEAFOAM_ISLANDS_B2F": {
+  "layouts": [
+   "LAYOUT_SEAFOAM_ISLANDS_B2F"
+  ],
+  "ver": "frlg",
+  "land": 569,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEAFOAM_ISLANDS_B3F": {
+  "layouts": [
+   "LAYOUT_SEAFOAM_ISLANDS_B3F",
+   "LAYOUT_SEAFOAM_ISLANDS_B3F_CURRENT_STOPPED"
+  ],
+  "ver": "frlg",
+  "land": 377,
+  "water": 32,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEAFOAM_ISLANDS_B4F": {
+  "layouts": [
+   "LAYOUT_SEAFOAM_ISLANDS_B4F",
+   "LAYOUT_SEAFOAM_ISLANDS_B4F_CURRENT_STOPPED"
+  ],
+  "ver": "frlg",
+  "land": 335,
+  "water": 307,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEVEN_ISLAND_SEVAULT_CANYON": {
+  "layouts": [
+   "LAYOUT_SEVEN_ISLAND_SEVAULT_CANYON"
+  ],
+  "ver": "frlg",
+  "land": 417,
+  "water": 73,
+  "trees": 0,
+  "rocks": 6
+ },
+ "MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE": {
+  "layouts": [
+   "LAYOUT_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE"
+  ],
+  "ver": "frlg",
+  "land": 133,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEVEN_ISLAND_TANOBY_RUINS": {
+  "layouts": [
+   "LAYOUT_SEVEN_ISLAND_TANOBY_RUINS"
+  ],
+  "ver": "frlg",
+  "land": 12,
+  "water": 2356,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEVEN_ISLAND_TANOBY_RUINS_DILFORD_CHAMBER": {
+  "layouts": [
+   "LAYOUT_SEVEN_ISLAND_TANOBY_RUINS_DILFORD_CHAMBER"
+  ],
+  "ver": "frlg",
+  "land": 342,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEVEN_ISLAND_TANOBY_RUINS_LIPTOO_CHAMBER": {
+  "layouts": [
+   "LAYOUT_SEVEN_ISLAND_TANOBY_RUINS_LIPTOO_CHAMBER"
+  ],
+  "ver": "frlg",
+  "land": 343,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEVEN_ISLAND_TANOBY_RUINS_MONEAN_CHAMBER": {
+  "layouts": [
+   "LAYOUT_SEVEN_ISLAND_TANOBY_RUINS_MONEAN_CHAMBER"
+  ],
+  "ver": "frlg",
+  "land": 346,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEVEN_ISLAND_TANOBY_RUINS_RIXY_CHAMBER": {
+  "layouts": [
+   "LAYOUT_SEVEN_ISLAND_TANOBY_RUINS_RIXY_CHAMBER"
+  ],
+  "ver": "frlg",
+  "land": 329,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEVEN_ISLAND_TANOBY_RUINS_SCUFIB_CHAMBER": {
+  "layouts": [
+   "LAYOUT_SEVEN_ISLAND_TANOBY_RUINS_SCUFIB_CHAMBER"
+  ],
+  "ver": "frlg",
+  "land": 337,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEVEN_ISLAND_TANOBY_RUINS_VIAPOIS_CHAMBER": {
+  "layouts": [
+   "LAYOUT_SEVEN_ISLAND_TANOBY_RUINS_VIAPOIS_CHAMBER"
+  ],
+  "ver": "frlg",
+  "land": 324,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEVEN_ISLAND_TANOBY_RUINS_WEEPTH_CHAMBER": {
+  "layouts": [
+   "LAYOUT_SEVEN_ISLAND_TANOBY_RUINS_WEEPTH_CHAMBER"
+  ],
+  "ver": "frlg",
+  "land": 336,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SEVEN_ISLAND_TRAINER_TOWER": {
+  "layouts": [
+   "LAYOUT_SEVEN_ISLAND_TRAINER_TOWER"
+  ],
+  "ver": "frlg",
+  "land": 0,
+  "water": 4033,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SHOAL_CAVE_LOW_TIDE_ENTRANCE_ROOM": {
+  "layouts": [
+   "LAYOUT_SHOAL_CAVE_LOW_TIDE_ENTRANCE_ROOM",
+   "LAYOUT_SHOAL_CAVE_HIGH_TIDE_ENTRANCE_ROOM"
+  ],
+  "ver": "emerald",
+  "land": 551,
+  "water": 287,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SHOAL_CAVE_LOW_TIDE_ICE_ROOM": {
+  "layouts": [
+   "LAYOUT_SHOAL_CAVE_LOW_TIDE_ICE_ROOM"
+  ],
+  "ver": "emerald",
+  "land": 224,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SHOAL_CAVE_LOW_TIDE_INNER_ROOM": {
+  "layouts": [
+   "LAYOUT_SHOAL_CAVE_LOW_TIDE_INNER_ROOM",
+   "LAYOUT_SHOAL_CAVE_HIGH_TIDE_INNER_ROOM"
+  ],
+  "ver": "emerald",
+  "land": 834,
+  "water": 411,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SHOAL_CAVE_LOW_TIDE_LOWER_ROOM": {
+  "layouts": [
+   "LAYOUT_SHOAL_CAVE_LOW_TIDE_LOWER_ROOM"
+  ],
+  "ver": "emerald",
+  "land": 233,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SHOAL_CAVE_LOW_TIDE_STAIRS_ROOM": {
+  "layouts": [
+   "LAYOUT_SHOAL_CAVE_LOW_TIDE_STAIRS_ROOM"
+  ],
+  "ver": "emerald",
+  "land": 114,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SINJOH_RUINS_HNS": {
+  "layouts": [
+   "LAYOUT_SINJOH_RUINS_HNS"
+  ],
+  "ver": "hns",
+  "land": 60,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SINJOH_RUINS_REGICE_ROOM_HNS": {
+  "layouts": [
+   "LAYOUT_SINJOH_RUINS_REGICE_ROOM_HNS"
+  ],
+  "ver": "hns",
+  "land": 34,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SINJOH_RUINS_REGIROCK_ROOM_HNS": {
+  "layouts": [
+   "LAYOUT_SINJOH_RUINS_REGIROCK_ROOM_HNS"
+  ],
+  "ver": "hns",
+  "land": 32,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SINJOH_RUINS_TEMPLE_HNS": {
+  "layouts": [
+   "LAYOUT_SINJOH_RUINS_TEMPLE_HNS"
+  ],
+  "ver": "hns",
+  "land": 290,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SIX_ISLAND_ALTERING_CAVE": {
+  "layouts": [
+   "LAYOUT_SIX_ISLAND_ALTERING_CAVE"
+  ],
+  "ver": "frlg",
+  "land": 590,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SIX_ISLAND_GREEN_PATH": {
+  "layouts": [
+   "LAYOUT_SIX_ISLAND_GREEN_PATH"
+  ],
+  "ver": "frlg",
+  "land": 0,
+  "water": 918,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SIX_ISLAND_OUTCAST_ISLAND": {
+  "layouts": [
+   "LAYOUT_SIX_ISLAND_OUTCAST_ISLAND"
+  ],
+  "ver": "frlg",
+  "land": 0,
+  "water": 1664,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SIX_ISLAND_PATTERN_BUSH": {
+  "layouts": [
+   "LAYOUT_SIX_ISLAND_PATTERN_BUSH"
+  ],
+  "ver": "frlg",
+  "land": 737,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SIX_ISLAND_RUIN_VALLEY": {
+  "layouts": [
+   "LAYOUT_SIX_ISLAND_RUIN_VALLEY"
+  ],
+  "ver": "frlg",
+  "land": 441,
+  "water": 43,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SIX_ISLAND_WATER_PATH": {
+  "layouts": [
+   "LAYOUT_SIX_ISLAND_WATER_PATH"
+  ],
+  "ver": "frlg",
+  "land": 126,
+  "water": 1103,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SKY_PILLAR_1F": {
+  "layouts": [
+   "LAYOUT_SKY_PILLAR_1F",
+   "LAYOUT_SKY_PILLAR_1F_CLEAN"
+  ],
+  "ver": "emerald",
+  "land": 130,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SKY_PILLAR_3F": {
+  "layouts": [
+   "LAYOUT_SKY_PILLAR_3F",
+   "LAYOUT_SKY_PILLAR_3F_CLEAN"
+  ],
+  "ver": "emerald",
+  "land": 126,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SKY_PILLAR_5F": {
+  "layouts": [
+   "LAYOUT_SKY_PILLAR_5F",
+   "LAYOUT_SKY_PILLAR_5F_CLEAN"
+  ],
+  "ver": "emerald",
+  "land": 102,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SLATEPORT_CITY": {
+  "layouts": [
+   "LAYOUT_SLATEPORT_CITY"
+  ],
+  "ver": "emerald",
+  "land": 0,
+  "water": 372,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SLOWPOKE_WELL_B1F_HNS": {
+  "layouts": [
+   "LAYOUT_SLOWPOKE_WELL_B1F_HNS"
+  ],
+  "ver": "hns",
+  "land": 408,
+  "water": 118,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SLOWPOKE_WELL_B2F_HNS": {
+  "layouts": [
+   "LAYOUT_SLOWPOKE_WELL_B2F_HNS"
+  ],
+  "ver": "hns",
+  "land": 713,
+  "water": 122,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SNOWSWEPT_CAVERN_HNS": {
+  "layouts": [
+   "LAYOUT_SNOWSWEPT_CAVERN_HNS"
+  ],
+  "ver": "hns",
+  "land": 2020,
+  "water": 0,
+  "trees": 0,
+  "rocks": 13
+ },
+ "MAP_SOOTOPOLIS_CITY": {
+  "layouts": [
+   "LAYOUT_SOOTOPOLIS_CITY",
+   "LAYOUT_SOOTOPOLIS_CITY_LEGENDS_BATTLE"
+  ],
+  "ver": "emerald",
+  "land": 175,
+  "water": 621,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SOUTHERN_ISLAND_EXTERIOR_HNS": {
+  "layouts": [
+   "LAYOUT_SOUTHERN_ISLAND_EXTERIOR_HNS"
+  ],
+  "ver": "emerald",
+  "land": 30,
+  "water": 359,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SPROUT_TOWER_2F_HNS": {
+  "layouts": [
+   "LAYOUT_SPROUT_TOWER_2F_HNS"
+  ],
+  "ver": "hns",
+  "land": 199,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SPROUT_TOWER_3F_HNS": {
+  "layouts": [
+   "LAYOUT_SPROUT_TOWER_3F_HNS"
+  ],
+  "ver": "hns",
+  "land": 165,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_THREE_ISLAND_BERRY_FOREST": {
+  "layouts": [
+   "LAYOUT_THREE_ISLAND_BERRY_FOREST"
+  ],
+  "ver": "frlg",
+  "land": 248,
+  "water": 93,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_THREE_ISLAND_BOND_BRIDGE": {
+  "layouts": [
+   "LAYOUT_THREE_ISLAND_BOND_BRIDGE"
+  ],
+  "ver": "frlg",
+  "land": 78,
+  "water": 366,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_THREE_ISLAND_PORT": {
+  "layouts": [
+   "LAYOUT_THREE_ISLAND_PORT"
+  ],
+  "ver": "frlg",
+  "land": 16,
+  "water": 20,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_TIN_TOWER_3F_HNS": {
+  "layouts": [
+   "LAYOUT_TIN_TOWER_3F_HNS"
+  ],
+  "ver": "hns",
+  "land": 120,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_TIN_TOWER_4F_HNS": {
+  "layouts": [
+   "LAYOUT_TIN_TOWER_4F_HNS"
+  ],
+  "ver": "hns",
+  "land": 87,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_TIN_TOWER_5F_HNS": {
+  "layouts": [
+   "LAYOUT_TIN_TOWER_5F_HNS"
+  ],
+  "ver": "hns",
+  "land": 83,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_TIN_TOWER_6F_HNS": {
+  "layouts": [
+   "LAYOUT_TIN_TOWER_6F_HNS"
+  ],
+  "ver": "hns",
+  "land": 73,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_TIN_TOWER_7F_HNS": {
+  "layouts": [
+   "LAYOUT_TIN_TOWER_7F_HNS"
+  ],
+  "ver": "hns",
+  "land": 100,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_TIN_TOWER_8F_HNS": {
+  "layouts": [
+   "LAYOUT_TIN_TOWER_8F_HNS"
+  ],
+  "ver": "hns",
+  "land": 86,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_TIN_TOWER_9F_HNS": {
+  "layouts": [
+   "LAYOUT_TIN_TOWER_9F_HNS"
+  ],
+  "ver": "hns",
+  "land": 101,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_TOHJO_FALLS_CAVERN_HNS": {
+  "layouts": [
+   "LAYOUT_TOHJO_FALLS_CAVERN_HNS"
+  ],
+  "ver": "hns",
+  "land": 1118,
+  "water": 292,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_TWO_ISLAND_CAPE_BRINK": {
+  "layouts": [
+   "LAYOUT_TWO_ISLAND_CAPE_BRINK"
+  ],
+  "ver": "frlg",
+  "land": 70,
+  "water": 80,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ULAULA_ISLE_HNS": {
+  "layouts": [
+   "LAYOUT_ULAULA_ISLE_HNS"
+  ],
+  "ver": "hns",
+  "land": 50,
+  "water": 2553,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ULA_ULA_CAVE_2_HNS": {
+  "layouts": [
+   "LAYOUT_ULA_ULA_CAVE_2_HNS"
+  ],
+  "ver": "hns",
+  "land": 345,
+  "water": 49,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ULA_ULA_CAVE_HNS": {
+  "layouts": [
+   "LAYOUT_ULA_ULA_CAVE_HNS"
+  ],
+  "ver": "hns",
+  "land": 582,
+  "water": 41,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_UNDERWATER_ROUTE124": {
+  "layouts": [
+   "LAYOUT_UNDERWATER_ROUTE124"
+  ],
+  "ver": "emerald",
+  "land": 0,
+  "water": 406,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_UNDERWATER_ROUTE126": {
+  "layouts": [
+   "LAYOUT_UNDERWATER_ROUTE126"
+  ],
+  "ver": "emerald",
+  "land": 0,
+  "water": 635,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_UNION_CAVE_1F_HNS": {
+  "layouts": [
+   "LAYOUT_UNION_CAVE_1F_HNS"
+  ],
+  "ver": "hns",
+  "land": 2065,
+  "water": 178,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_UNION_CAVE_B1F_HNS": {
+  "layouts": [
+   "LAYOUT_UNION_CAVE_B1F_HNS"
+  ],
+  "ver": "hns",
+  "land": 1735,
+  "water": 112,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_UNION_CAVE_B2F_HNS": {
+  "layouts": [
+   "LAYOUT_UNION_CAVE_B2F_HNS"
+  ],
+  "ver": "hns",
+  "land": 1124,
+  "water": 376,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_VERMILION_CITY_HNS": {
+  "layouts": [
+   "LAYOUT_VERMILION_CITY_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 2125,
+  "trees": 14,
+  "rocks": 9
+ },
+ "MAP_VERMILION_CITY_PORT_OUTSIDE_HNS": {
+  "layouts": [
+   "LAYOUT_VERMILION_CITY_PORT_OUTSIDE_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 1064,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_VICTORY_ROAD_1F": {
+  "layouts": [
+   "LAYOUT_VICTORY_ROAD_1F"
+  ],
+  "ver": "emerald",
+  "land": 1146,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_VICTORY_ROAD_B1F": {
+  "layouts": [
+   "LAYOUT_VICTORY_ROAD_B1F"
+  ],
+  "ver": "emerald",
+  "land": 685,
+  "water": 0,
+  "trees": 0,
+  "rocks": 6
+ },
+ "MAP_VICTORY_ROAD_B2F": {
+  "layouts": [
+   "LAYOUT_VICTORY_ROAD_B2F"
+  ],
+  "ver": "emerald",
+  "land": 530,
+  "water": 238,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_VICTORY_ROAD_KANTO_1F_HNS": {
+  "layouts": [
+   "LAYOUT_VICTORY_ROAD_KANTO_1F_HNS"
+  ],
+  "ver": "hns",
+  "land": 969,
+  "water": 0,
+  "trees": 0,
+  "rocks": 5
+ },
+ "MAP_VICTORY_ROAD_KANTO_B1F_HNS": {
+  "layouts": [
+   "LAYOUT_VICTORY_ROAD_KANTO_B1F_HNS"
+  ],
+  "ver": "hns",
+  "land": 788,
+  "water": 132,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_VICTORY_ROAD_KANTO_B2F_HNS": {
+  "layouts": [
+   "LAYOUT_VICTORY_ROAD_KANTO_B2F_HNS"
+  ],
+  "ver": "hns",
+  "land": 1098,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_VIOLET_CITY_HNS": {
+  "layouts": [
+   "LAYOUT_VIOLET_CITY_HNS"
+  ],
+  "ver": "hns",
+  "land": 2,
+  "water": 268,
+  "trees": 58,
+  "rocks": 0
+ },
+ "MAP_VIRIDIAN_CITY_HNS": {
+  "layouts": [
+   "LAYOUT_VIRIDIAN_CITY_HNS"
+  ],
+  "ver": "hns",
+  "land": 0,
+  "water": 39,
+  "trees": 8,
+  "rocks": 0
+ },
+ "MAP_VIRIDIAN_FOREST_HNS": {
+  "layouts": [
+   "LAYOUT_VIRIDIAN_FOREST_HNS"
+  ],
+  "ver": "hns",
+  "land": 590,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_WHIRL_ISLANDS_1F_HNS": {
+  "layouts": [
+   "LAYOUT_WHIRL_ISLANDS_1F_HNS"
+  ],
+  "ver": "hns",
+  "land": 2496,
+  "water": 116,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_WHIRL_ISLANDS_B1F_HNS": {
+  "layouts": [
+   "LAYOUT_WHIRL_ISLANDS_B1F_HNS"
+  ],
+  "ver": "hns",
+  "land": 2031,
+  "water": 1979,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_WHIRL_ISLANDS_B1F_INNER_HNS": {
+  "layouts": [
+   "LAYOUT_WHIRL_ISLANDS_B1F_INNER_HNS"
+  ],
+  "ver": "hns",
+  "land": 40,
+  "water": 659,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_WHIRL_ISLANDS_B2F_HNS": {
+  "layouts": [
+   "LAYOUT_WHIRL_ISLANDS_B2F_HNS"
+  ],
+  "ver": "hns",
+  "land": 782,
+  "water": 328,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_WHIRL_ISLANDS_B3F_HNS": {
+  "layouts": [
+   "LAYOUT_WHIRL_ISLANDS_B3F_HNS"
+  ],
+  "ver": "hns",
+  "land": 374,
+  "water": 497,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_WHIRL_ISLANDS_DESCENT_HNS": {
+  "layouts": [
+   "LAYOUT_WHIRL_ISLANDS_DESCENT_HNS"
+  ],
+  "ver": "hns",
+  "land": 637,
+  "water": 1238,
+  "trees": 0,
+  "rocks": 0
+ }
+}

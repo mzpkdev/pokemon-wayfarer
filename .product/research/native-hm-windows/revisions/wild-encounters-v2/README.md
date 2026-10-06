@@ -40,6 +40,10 @@ The Safari Zones and the Bug-Catching Contest stay outside the guarantee.
 - **The crossing guarantee starts at two badges.** No Kanto or Johto species
   knows Surf below level 7, and Roads are level 5 before the first badge.
   Until two badges, players cross with the Surf HM, as in the original games.
+  TR 20 is also the first TR at which every scenario passes: Hoenn's Lilycove
+  (at night), Mossdeep, Pacifidlog and Route 118 east crossings, the Den's
+  Whirlpool and Sootopolis's Dive all still fall short at TR 19, whatever their
+  carriers.
 - **The original 11 scenarios keep their maps, methods and ranks.** Blackthorn's
   Surf and the Den's Whirlpool still count only their local sources (rank 0),
   without the Ice Path detour.
@@ -175,13 +179,31 @@ zero-based index.
 | Ever Grande City | Day | 4 | Wailmer–Wailord | Carvanha–Sharpedo |
 | Ever Grande City | Night | 4 | Frillish | Carvanha–Sharpedo |
 
-All edits are fishing entries. The Den's night Quagsire keeps its night table
-distinct from the day one. Alola's three edits replace blend species with
+Two of the 33 edits are land entries, Snowswept Cavern's and Route 49's night
+tables; the rest are fishing entries. The Den's night Quagsire keeps its night
+table distinct from the day one. Alola's three edits replace blend species with
 natives, so each island stays within its 20% blend share. Clamperl is a
 harmless reward, which normally takes only rare slots; it holds a common
 Sootopolis slot as the city's resident Dive carrier, as the Hoenn rules record.
 Sootopolis's day Swanna leaves Eelektrik to the night, so the night table stays
-distinct. Every table still passes the encounter rules checker with no errors.
+distinct. Every table still passes the committed [`check.py`](check.py) with no
+errors.
+
+Four of the 33 edits were picked by hand, since they lie outside
+[`hm_opt.py`](hm_opt.py)'s search space, which tries only fishing entries 1–4
+(and land entries 1–6 on a few maps), from the species pools in the script: the
+Den's night entry 9 (Golduck to Quagsire), Akala's and Ula'ula's day entry 5
+(both to Toxapex) and Sootopolis's day entry 5 (Eelektrik to Swanna, which no
+pool holds). The other 29 came from the search. Re-running it from the pre-edit
+tables didn't produce a single edit in about 25 minutes, so the search isn't
+practically reproducible; treat the edit list as the record.
+
+The table review that followed the audit changed other table slots, none of
+them a crossing carrier: it moved dangerous prowlers off the first floor of
+Mt. Silver and Lost Cave, replaced night Pelipper, Swanna and the Safari
+Zones' day-only species, and added the Faraway Island and Southern Island
+tables. The audit and its results above include them; no scenario result
+changed.
 
 ## Results
 
@@ -282,9 +304,63 @@ entries must re-run the audit.
 - It is static evidence, like the nearby-access revision, not production
   acceptance. The implementation must replay these cells through the
   production code once v2 is built.
-- The shared evolution-level table lacks some v2 form lines, such as Pumpkaboo's
-  sizes and Floette's colours. None of them carries a utility, so the gaps
-  don't affect these results.
+- The shared evolution-level table lacks some v2 evolution edges: Alcremie's
+  decorations, Pumpkaboo's sizes and Floette's colours, Sinistea, Phantump,
+  Doublade, Galarian Darumaka and Alolan Graveler, White-Striped Basculin to
+  Basculegion, and Dunsparce to Dudunsparce. The model skips an edge with no
+  level. All of these species carry no utility but one: **Dunsparce carries
+  Rock Smash at 20.** Its Dudunsparce edge has no level, but its two segment
+  edges are at 35, so Dunsparce's young limit is still 34 and no result
+  changes.
+- Every reward takes its prowler minimum in any slot, common or rare, at any
+  stage of its line (babies skipped when looking for the line's first stage).
+  Only Sinjoh's Hisuian natives at home and Kalos in the Safari Zones are
+  exempt.
+- A dungeon's floor and floor count come from the `floor` and `floors` of
+  `data/meta.json`, which follow the steps in
+  [reach-assignments](../../../../specs/reach-assignments.md#dungeon-floors).
+  The model also parses `specs/prowlers.md` and `specs/reach-assignments.md`
+  when it runs, so a later edit to either one changes its results and must
+  be followed by a re-run.
+
+## Editing the tables
+
+`data/*.json` is the source of truth for the v2 encounter tables, not the
+specs. The table specs' tables are rendered from it. To change a table:
+
+1. **Edit** the region's `data/<region>.json` (`kanto`, `johto`, `hoenn`,
+   `alola`, `sevii`, `safari` or `sinjoh`). A slot is a species constant
+   written as the slot's stage cap. A new map also needs an entry in
+   `data/meta.json` (region, place, reach, band, map type, floor, methods) and
+   its terrain counts in `data/tiles.json`, `data/safari_tiles.json` or
+   `data/sinjoh_tiles.json`, which `python3 scan_tiles.py maps.json out.json`
+   produces from a JSON list of map constants.
+2. **Render** it into the spec: `python3 render.py [region ...]` rewrites
+   everything after "### Tables" in `specs/<region>-encounter-tables.md` and
+   keeps the hand-written preamble above it. `python3 render.py --check`
+   reports a spec that differs from its data without writing.
+3. **Check** the rules: `python3 check.py` checks every region and exits with
+   an error if any rule breaks. It enforces the slot counts and weights,
+   native generations, reach and temperament (including no dangerous prowler
+   on a dungeon's first floor step), night rules, water casts, crossing
+   carriers, terrain coverage and the generation shares, and it prints notes
+   that need a human look, such as a band outside its target. It reads
+   `specs/prowlers.md` for the reward table.
+4. **Audit** the native HM guarantee: `python3 hm_audit.py scenarios` and
+   `python3 hm_audit.py regional`. Both write the `audit_*.json` files. Every
+   scenario must still pass from TR 20 to 160, and regional coverage must not
+   regress. If a change breaks a crossing, fix the carrier in the data and
+   run the loop again.
+
+If the roster changes, edit `ROSTER_V2` in `hm_model.py` and run
+`python3 export_roster.py` to rebuild `roster_v2.json`, which is the v2
+roster's machine-readable form: 130 species and 166 roles, the nearby-access
+roster plus fourteen changes.
+
+The scripts that first generated these tables (the per-region `gen_*.py` and
+`*_fix.py` authoring scripts) are **not included**. They were scratch work, and
+the data files they produced are the record. Nothing here rebuilds the data
+from the specs or from game files; edit the data and render.
 
 ## Files
 
@@ -292,14 +368,19 @@ entries must re-run the audit.
 | --- | --- |
 | [hm_model.py](hm_model.py) | Learnsets, movesets, wild level scaling and the roster changes |
 | [hm_audit.py](hm_audit.py) | Regional coverage and all 28 scenarios |
-| [hm_opt.py](hm_opt.py) | The greedy search that chose the table changes |
+| [hm_opt.py](hm_opt.py) | Greedy search for crossing-carrier edits; chose 29 of the 33 edits (see Table changes) |
+| [check.py](check.py) | The encounter rules checker |
+| [render.py](render.py) | Renders `data/*.json` into the table specs |
+| [scan_tiles.py](scan_tiles.py) | Counts encounter terrain on a list of maps, from the source layouts |
+| [export_roster.py](export_roster.py) | Exports the v2 roster |
+| [roster_v2.json](roster_v2.json) | The v2 native HM roster: 130 species, 166 roles |
 | [walker.py](walker.py) | On-foot reachability over the source layouts |
 | [walk_arrivals.py](walk_arrivals.py) | The sources reached from each Sevii, Alola and Hoenn arrival |
 | [scenarios_regions.json](scenarios_regions.json) | The 17 Sevii, Alola, Hoenn and Sinjoh arrival scenarios |
-| [hm_edits.json](hm_edits.json) | The table changes, by zero-based entry |
+| [hm_edits.json](hm_edits.json) | The 33 crossing edits, by zero-based entry |
 | [audit_regional.json](audit_regional.json) | Regional gaps and sample witnesses per region and utility |
 | [audit_scenarios.json](audit_scenarios.json) | Best source per scenario, TR and time, with Good and Super Rod odds |
-| [data/](data/) | The v2 tables with the changes applied, map metadata and species facts, as the tools read them |
+| [data/](data/) | The source of truth: the v2 tables, map metadata, terrain counts and species facts, as the tools read them |
 
-Run `python3 hm_audit.py regional` and `python3 hm_audit.py scenarios` from
-this folder. `hm_opt.py` finds no further edits on the included tables.
+Run every script from this folder. `hm_opt.py` finds no further edits on the
+included tables.

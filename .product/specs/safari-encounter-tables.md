@@ -245,9 +245,9 @@ Wilds, Johto Safari.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Fletchling–Talonflame | Phantump |
-| 2 | 30% | Scatterbug (Sandstorm)–Spewpa (Sandstorm) | Scatterbug (Sandstorm)–Spewpa (Sandstorm) |
+| 2 | 30% | Scatterbug (Sandstorm)–Spewpa (Sandstorm) | Espurr |
 | 3 | 5% | Dedenne | Dedenne |
-| 4 | 4% | Phantump | Fletchling–Talonflame |
+| 4 | 4% | Phantump | Swirlix |
 | 5 | 1% | Chespin–Chesnaught | Chespin–Chesnaught |
 
 #### Johto Safari: Low middle
@@ -355,9 +355,9 @@ Water type: ponds and rivers.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Fletchling–Talonflame | Phantump |
-| 2 | 30% | Scatterbug (River)–Spewpa (River) | Scatterbug (River)–Spewpa (River) |
+| 2 | 30% | Scatterbug (River)–Spewpa (River) | Espurr |
 | 3 | 5% | Dedenne | Dedenne |
-| 4 | 4% | Phantump | Fletchling–Talonflame |
+| 4 | 4% | Phantump | Swirlix |
 | 5 | 1% | Chespin–Chesnaught | Chespin–Chesnaught |
 
 #### Johto Safari: Top left
@@ -388,9 +388,9 @@ Wilds, Johto Safari.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Scatterbug (Savanna)–Spewpa (Savanna) | Phantump |
-| 2 | 30% | Fletchling–Talonflame | Scatterbug (Savanna)–Spewpa (Savanna) |
+| 2 | 30% | Fletchling–Talonflame | Espurr |
 | 3 | 5% | Dedenne | Dedenne |
-| 4 | 4% | Phantump | Fletchling–Talonflame |
+| 4 | 4% | Phantump | Swirlix |
 | 5 | 1% | Chespin–Chesnaught | Chespin–Chesnaught |
 
 #### Johto Safari: Top middle
@@ -420,10 +420,10 @@ Wilds, Johto Safari.
 
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
-| 1 | 60% | Phantump | Scatterbug (Elegant)–Spewpa (Elegant) |
+| 1 | 60% | Phantump | Espurr |
 | 2 | 30% | Scatterbug (Elegant)–Spewpa (Elegant) | Phantump |
 | 3 | 5% | Dedenne | Dedenne |
-| 4 | 4% | Fletchling–Talonflame | Fletchling–Talonflame |
+| 4 | 4% | Fletchling–Talonflame | Swirlix |
 | 5 | 1% | Chespin–Chesnaught | Chespin–Chesnaught |
 
 #### Johto Safari: Top right
@@ -481,9 +481,9 @@ Water type: coast and sea.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Fletchling–Talonflame | Phantump |
-| 2 | 30% | Scatterbug (Ocean)–Spewpa (Ocean) | Scatterbug (Ocean)–Spewpa (Ocean) |
+| 2 | 30% | Scatterbug (Ocean)–Spewpa (Ocean) | Espurr |
 | 3 | 5% | Dedenne | Dedenne |
-| 4 | 4% | Phantump | Fletchling–Talonflame |
+| 4 | 4% | Phantump | Swirlix |
 | 5 | 1% | Chespin–Chesnaught | Chespin–Chesnaught |
 
 #### Hoenn Safari: South
@@ -587,10 +587,10 @@ Wilds, Hoenn Safari.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Helioptile | Bunnelby–Diggersby |
-| 2 | 30% | Bunnelby–Diggersby | Helioptile |
+| 2 | 30% | Bunnelby–Diggersby | Pumpkaboo (Average) |
 | 3 | 5% | Honedge–Doublade | Honedge–Doublade |
 | 4 | 4% | Klefki | Klefki |
-| 5 | 1% | Hawlucha | Hawlucha |
+| 5 | 1% | Hawlucha | Pumpkaboo (Small) |
 
 #### Hoenn Safari: Northwest
 
@@ -720,10 +720,10 @@ Wilds, Hoenn Safari.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Helioptile | Bunnelby–Diggersby |
-| 2 | 30% | Bunnelby–Diggersby | Helioptile |
+| 2 | 30% | Bunnelby–Diggersby | Pumpkaboo (Average) |
 | 3 | 5% | Klefki | Honedge–Doublade |
 | 4 | 4% | Honedge–Doublade | Klefki |
-| 5 | 1% | Hawlucha | Hawlucha |
+| 5 | 1% | Hawlucha | Pumpkaboo (Large) |
 
 #### Bug-Catching Contest: Tuesday
 
@@ -941,7 +941,7 @@ Wilds, Bug-Catching Contest.
 | Spritzee | Johto Safari: Low left, Johto Safari: Low middle, Johto Safari: Low right, Johto Safari: Top left and more |
 | Surskit | Bug-Catching Contest: Thursday |
 | Swadloon | Bug-Catching Contest: Thursday |
-| Swirlix | Johto Safari: Low middle, Johto Safari: Low right, Johto Safari: Top left, Johto Safari: Top middle |
+| Swirlix | Johto Safari: Low left, Johto Safari: Low middle, Johto Safari: Low right, Johto Safari: Top left and more |
 | Talonflame | Hoenn Safari: North, Hoenn Safari: Northeast, Hoenn Safari: Northwest, Hoenn Safari: South and more |
 | Venipede | Bug-Catching Contest: Thursday |
 | Venomoth | Bug-Catching Contest: Tuesday |

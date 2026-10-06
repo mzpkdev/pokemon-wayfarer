@@ -57,7 +57,7 @@
     "WAILORD",
     "SHARPEDO",
     "CRAWDAUNT",
-    "PELIPPER",
+    "LUVDISC",
     "EELEKTRIK"
    ]
   },
@@ -102,7 +102,7 @@
     "WAILORD",
     "CRAWDAUNT",
     "EELEKTRIK",
-    "PELIPPER",
+    "LUVDISC",
     "SAMUROTT"
    ]
   },
@@ -284,7 +284,7 @@
     "SHARPEDO",
     "WAILORD",
     "EELEKTRIK",
-    "PELIPPER",
+    "CRAWDAUNT",
     "SAMUROTT"
    ]
   },
@@ -359,7 +359,7 @@
     "SHARPEDO",
     "WAILORD",
     "FRILLISH",
-    "PELIPPER",
+    "CRAWDAUNT",
     "EELEKTRIK"
    ]
   },
@@ -402,7 +402,7 @@
    ],
    "night": [
     "WAILORD",
-    "PELIPPER",
+    "SHARPEDO",
     "FRILLISH",
     "EELEKTRIK",
     "LUVDISC"
@@ -447,7 +447,7 @@
    ],
    "night": [
     "CRAWDAUNT",
-    "PELIPPER",
+    "WAILORD",
     "SHARPEDO",
     "WAILORD",
     "EELEKTRIK"
@@ -492,9 +492,9 @@
    ],
    "night": [
     "WAILORD",
-    "PELIPPER",
-    "CRAWDAUNT",
     "SHARPEDO",
+    "CRAWDAUNT",
+    "LUVDISC",
     "SAMUROTT"
    ]
   },
@@ -538,7 +538,7 @@
    "night": [
     "WAILORD",
     "FRILLISH",
-    "PELIPPER",
+    "CRAWDAUNT",
     "EELEKTRIK",
     "ALOMOMOLA"
    ]
@@ -956,7 +956,7 @@
    "night": [
     "EELEKTRIK",
     "WAILORD",
-    "PELIPPER",
+    "CRAWDAUNT",
     "SHARPEDO",
     "FRILLISH"
    ]
@@ -1279,7 +1279,7 @@
     "WAILORD",
     "FRILLISH",
     "EELEKTRIK",
-    "PELIPPER"
+    "CRAWDAUNT"
    ]
   },
   "fish": {
@@ -1458,8 +1458,8 @@
    ],
    "night": [
     "SHARPEDO",
-    "PELIPPER",
     "WAILORD",
+    "CRAWDAUNT",
     "FRILLISH",
     "SHARPEDO"
    ]
@@ -2594,7 +2594,7 @@
     "FRILLISH",
     "WAILORD",
     "SHARPEDO",
-    "PELIPPER"
+    "LUVDISC"
    ]
   },
   "fish": {
@@ -2638,7 +2638,7 @@
     "FRILLISH",
     "EELEKTRIK",
     "WAILORD",
-    "PELIPPER",
+    "LUVDISC",
     "JELLICENT"
    ]
   },
@@ -2714,7 +2714,7 @@
     "FRILLISH",
     "EELEKTRIK",
     "WAILORD",
-    "PELIPPER"
+    "LUVDISC"
    ]
   },
   "fish": {
@@ -2759,7 +2759,7 @@
     "SHARPEDO",
     "EELEKTRIK",
     "WAILORD",
-    "PELIPPER"
+    "LUVDISC"
    ]
   },
   "fish": {
@@ -3103,7 +3103,7 @@
     "FRILLISH",
     "WAILORD",
     "SHARPEDO",
-    "PELIPPER"
+    "LUVDISC"
    ]
   },
   "fish": {
@@ -3191,7 +3191,7 @@
    "night": [
     "EELEKTRIK",
     "FRILLISH",
-    "PELIPPER",
+    "LUVDISC",
     "SHARPEDO",
     "WAILORD"
    ]
@@ -3237,7 +3237,7 @@
     "LUVDISC",
     "FRILLISH",
     "EELEKTRIK",
-    "SWANNA",
+    "JELLICENT",
     "WAILORD"
    ]
   },
@@ -3283,7 +3283,7 @@
     "FRILLISH",
     "WAILORD",
     "SHARPEDO",
-    "SWANNA"
+    "LUVDISC"
    ]
   },
   "fish": {
@@ -3417,7 +3417,7 @@
     "WAILORD",
     "FRILLISH",
     "EELEKTRIK",
-    "SWANNA",
+    "LUVDISC",
     "SHARPEDO"
    ]
   },
@@ -3784,7 +3784,7 @@
     "SHARPEDO",
     "EELEKTRIK",
     "FRILLISH",
-    "SWANNA",
+    "LUVDISC",
     "EELEKTRIK",
     "SHARPEDO",
     "ALOMOMOLA",

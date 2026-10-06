@@ -1,0 +1,82 @@
+{
+ "MAP_SNOWSWEPT_CAVERN_HNS": {
+  "layouts": [
+   "LAYOUT_SNOWSWEPT_CAVERN_HNS"
+  ],
+  "ver": "hns",
+  "land": 2020,
+  "water": 0,
+  "trees": 0,
+  "rocks": 13
+ },
+ "MAP_ROUTE49_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE49_HNS"
+  ],
+  "ver": "hns",
+  "land": 435,
+  "water": 243,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SINJOH_RUINS_HNS": {
+  "layouts": [
+   "LAYOUT_SINJOH_RUINS_HNS"
+  ],
+  "ver": "hns",
+  "land": 60,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_ROUTE50_HNS": {
+  "layouts": [
+   "LAYOUT_ROUTE50_HNS"
+  ],
+  "ver": "hns",
+  "land": 574,
+  "water": 0,
+  "trees": 116,
+  "rocks": 0
+ },
+ "MAP_NEWSINJOH_HOTSPRINGS_HNS": {
+  "layouts": [
+   "LAYOUT_NEWSINJOH_HOTSPRINGS_HNS"
+  ],
+  "ver": "hns",
+  "land": 611,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SINJOH_RUINS_TEMPLE_HNS": {
+  "layouts": [
+   "LAYOUT_SINJOH_RUINS_TEMPLE_HNS"
+  ],
+  "ver": "hns",
+  "land": 290,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SINJOH_RUINS_REGICE_ROOM_HNS": {
+  "layouts": [
+   "LAYOUT_SINJOH_RUINS_REGICE_ROOM_HNS"
+  ],
+  "ver": "hns",
+  "land": 34,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ },
+ "MAP_SINJOH_RUINS_REGIROCK_ROOM_HNS": {
+  "layouts": [
+   "LAYOUT_SINJOH_RUINS_REGIROCK_ROOM_HNS"
+  ],
+  "ver": "hns",
+  "land": 32,
+  "water": 0,
+  "trees": 0,
+  "rocks": 0
+ }
+}

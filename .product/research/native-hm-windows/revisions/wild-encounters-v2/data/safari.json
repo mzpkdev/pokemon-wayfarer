@@ -297,9 +297,9 @@
    ],
    "night": [
     "PHANTUMP",
-    "SPEWPA_SANDSTORM",
+    "ESPURR",
     "DEDENNE",
-    "TALONFLAME",
+    "SWIRLIX",
     "CHESNAUGHT"
    ]
   }
@@ -421,9 +421,9 @@
    ],
    "night": [
     "PHANTUMP",
-    "SPEWPA_RIVER",
+    "ESPURR",
     "DEDENNE",
-    "TALONFLAME",
+    "SWIRLIX",
     "CHESNAUGHT"
    ]
   },
@@ -511,9 +511,9 @@
    ],
    "night": [
     "PHANTUMP",
-    "SPEWPA_SAVANNA",
+    "ESPURR",
     "DEDENNE",
-    "TALONFLAME",
+    "SWIRLIX",
     "CHESNAUGHT"
    ]
   }
@@ -558,10 +558,10 @@
     "CHESNAUGHT"
    ],
    "night": [
-    "SPEWPA_ELEGANT",
+    "ESPURR",
     "PHANTUMP",
     "DEDENNE",
-    "TALONFLAME",
+    "SWIRLIX",
     "CHESNAUGHT"
    ]
   }
@@ -608,9 +608,9 @@
    ],
    "night": [
     "PHANTUMP",
-    "SPEWPA_OCEAN",
+    "ESPURR",
     "DEDENNE",
-    "TALONFLAME",
+    "SWIRLIX",
     "CHESNAUGHT"
    ]
   },
@@ -805,10 +805,10 @@
    ],
    "night": [
     "DIGGERSBY",
-    "HELIOPTILE",
+    "PUMPKABOO_AVERAGE",
     "DOUBLADE",
     "KLEFKI",
-    "HAWLUCHA"
+    "PUMPKABOO_SMALL"
    ]
   }
  },
@@ -1003,10 +1003,10 @@
    ],
    "night": [
     "DIGGERSBY",
-    "HELIOPTILE",
+    "PUMPKABOO_AVERAGE",
     "DOUBLADE",
     "KLEFKI",
-    "HAWLUCHA"
+    "PUMPKABOO_LARGE"
    ]
   }
  },

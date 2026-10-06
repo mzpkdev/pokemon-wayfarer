@@ -1097,7 +1097,7 @@ Water type: coast and sea.
 | 2 | 30% | Venonat–Venomoth | Venonat–Venomoth |
 | 3 | 5% | Exeggcute | Hoothoot–Noctowl |
 | 4 | 4% | Pidgey–Pidgeot | Exeggcute |
-| 5 | 1% | Pineco | Spinarak–Ariados |
+| 5 | 1% | Pineco | Murkrow |
 
 #### Route 13
 
@@ -1378,10 +1378,10 @@ Wilds, Kanto west.
 | 1 | 20% | Zubat–Golbat | Zubat–Golbat |
 | 2 | 20% | Geodude–Graveler | Geodude–Graveler |
 | 3 | 10% | Zubat–Golbat | Zubat–Golbat |
-| 4 | 10% | Paras–Parasect | Clefairy |
+| 4 | 10% | Paras–Parasect | Sandshrew–Sandslash |
 | 5 | 10% | Geodude–Graveler | Paras–Parasect |
 | 6 | 10% | Sandshrew–Sandslash | Geodude–Graveler |
-| 7 | 5% | Paras–Parasect | Clefairy |
+| 7 | 5% | Paras–Parasect | Onix |
 | 8 | 5% | Onix | Onix |
 | 9 | 4% | Clefairy | Clefairy |
 | 10 | 4% | Marill–Azumarill | Marill–Azumarill |
@@ -2235,7 +2235,7 @@ Water type: cave water.
 | Annihilape | Route 23 |
 | Arbok | Route 10, Route 11, Route 23, Route 3 and more |
 | Arcanine | Pokémon Mansion |
-| Ariados | Fuchsia City, Route 1, Route 11, Route 12 and more |
+| Ariados | Fuchsia City, Route 1, Route 11, Route 13 and more |
 | Azumarill | Cerulean Cave, Mt. Moon, Route 2, Route 22 and more |
 | Beedrill | Route 15, Route 18, Route 2, Route 24 and more |
 | Bellsprout | Route 13, Route 14, Route 15, Route 24 and more |
@@ -2344,7 +2344,7 @@ Water type: cave water.
 | Mismagius | Pokémon Tower, Victory Road |
 | Mr. Mime | Cerulean Cave, Route 14 |
 | Muk | Pokémon Mansion, Route 16, Route 17, Route 18 |
-| Murkrow | Pokémon Tower, Route 13, Route 14, Route 15 and more |
+| Murkrow | Pokémon Tower, Route 12, Route 13, Route 14 and more |
 | Nidoran♀ | Route 1, Route 13, Route 14, Route 15 and more |
 | Nidoran♂ | Route 1, Route 13, Route 14, Route 15 and more |
 | Nidorina | Route 1, Route 13, Route 14, Route 15 and more |
@@ -2403,7 +2403,7 @@ Water type: cave water.
 | Snorlax | Cerulean Cave, Route 23, Victory Road |
 | Snubbull | Route 5, Route 6, Route 7, Route 8 |
 | Spearow | Route 10, Route 11, Route 15, Route 16 and more |
-| Spinarak | Fuchsia City, Route 1, Route 11, Route 12 and more |
+| Spinarak | Fuchsia City, Route 1, Route 11, Route 13 and more |
 | Squirtle | Cerulean City, Pallet Town, Route 19, Route 6 |
 | Starmie | Route 20 |
 | Staryu | Cinnabar Island, Pallet Town, Route 12, Route 13 and more |

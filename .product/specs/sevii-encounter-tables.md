@@ -14,6 +14,9 @@ This spec lists the Sevii Islands' wild-encounter tables: 58 maps, each with a
 day and a night table for every method it has. Legendaries and mythicals belong
 to a later spec.
 
+Two Island, Six Island and Seven Island have no tables: the 20 water tiles on
+each town map can't be reached from land.
+
 Each map's tables replace all of its current tables: the separate FireRed and
 LeafGreen versions, and Altering Cave's eight event variants, become the one
 table set listed here.
@@ -1547,7 +1550,7 @@ Dungeon, Outer islands.
 | 8 | 5% | Nickit–Thievul | Nickit–Thievul |
 | 9 | 4% | Galarian Yamask | Galarian Yamask |
 | 10 | 4% | Impidimp–Grimmsnarl | Impidimp–Grimmsnarl |
-| 11 | 1% | Dreepy–Dragapult | Dreepy–Dragapult |
+| 11 | 1% | Zubat–Golbat | Gastly–Haunter |
 | 12 | 1% | Sinistea | Sinistea |
 
 **`MAP_FIVE_ISLAND_LOST_CAVE_ROOM2`**

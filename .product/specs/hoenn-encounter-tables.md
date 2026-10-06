@@ -15,6 +15,11 @@ night table for every method it has. The Safari Zone belongs to the
 [Safari table spec](safari-encounter-tables.md). Legendaries and mythicals
 belong to a later spec.
 
+Two Hoenn maps with encounter terrain have no tables. Rustboro City's 142
+water tiles can't be reached from its land. The Battle Frontier's sea, which
+the original game kept free of encounters, borders land only along the ferry
+pier.
+
 ## Behavior
 
 ### Reading the tables
@@ -85,7 +90,7 @@ Water type: coast and sea.
 | 1 | 60% | Wingull–Pelipper | Wailmer–Wailord |
 | 2 | 30% | Wailmer–Wailord | Carvanha–Sharpedo |
 | 3 | 5% | Corphish–Crawdaunt | Corphish–Crawdaunt |
-| 4 | 4% | Luvdisc | Wingull–Pelipper |
+| 4 | 4% | Luvdisc | Luvdisc |
 | 5 | 1% | Frillish | Tynamo–Eelektrik |
 
 *Fishing*
@@ -118,7 +123,7 @@ Water type: coast and sea.
 | 1 | 60% | Wingull–Pelipper | Wailmer–Wailord |
 | 2 | 30% | Wailmer–Wailord | Corphish–Crawdaunt |
 | 3 | 5% | Corphish–Crawdaunt | Tynamo–Eelektrik |
-| 4 | 4% | Luvdisc | Wingull–Pelipper |
+| 4 | 4% | Luvdisc | Luvdisc |
 | 5 | 1% | Oshawott–Samurott | Oshawott–Samurott |
 
 *Fishing*
@@ -152,7 +157,7 @@ Water type: coast and sea.
 | 2 | 30% | Frillish | Carvanha–Sharpedo |
 | 3 | 5% | Wailmer–Wailord | Tynamo–Eelektrik |
 | 4 | 4% | Ducklett–Swanna | Wailmer–Wailord |
-| 5 | 1% | Luvdisc | Wingull–Pelipper |
+| 5 | 1% | Luvdisc | Luvdisc |
 
 *Fishing*
 
@@ -185,7 +190,7 @@ Water type: coast and sea.
 | 2 | 30% | Frillish | Frillish |
 | 3 | 5% | Ducklett–Swanna | Wailmer–Wailord |
 | 4 | 4% | Wailmer–Wailord | Carvanha–Sharpedo |
-| 5 | 1% | Tynamo–Eelektrik | Wingull–Pelipper |
+| 5 | 1% | Tynamo–Eelektrik | Luvdisc |
 
 *Fishing*
 
@@ -249,7 +254,7 @@ Water type: coast and sea.
 | --- | --- | --- | --- |
 | 1 | 60% | Tynamo–Eelektrik | Tynamo–Eelektrik |
 | 2 | 30% | Wingull–Pelipper | Frillish |
-| 3 | 5% | Wailmer–Wailord | Wingull–Pelipper |
+| 3 | 5% | Wailmer–Wailord | Luvdisc |
 | 4 | 4% | Frillish | Carvanha–Sharpedo |
 | 5 | 1% | Luvdisc | Wailmer–Wailord |
 
@@ -283,7 +288,7 @@ Water type: coast and sea.
 | 1 | 60% | Luvdisc | Luvdisc |
 | 2 | 30% | Ducklett–Swanna | Frillish |
 | 3 | 5% | Frillish | Tynamo–Eelektrik |
-| 4 | 4% | Wingull–Pelipper | Ducklett–Swanna |
+| 4 | 4% | Wingull–Pelipper | Frillish–Jellicent |
 | 5 | 1% | Wailmer–Wailord | Wailmer–Wailord |
 
 *Fishing*
@@ -406,7 +411,7 @@ Water type: coast and sea.
 | 1 | 60% | Wingull–Pelipper | Carvanha–Sharpedo |
 | 2 | 30% | Wailmer–Wailord | Wailmer–Wailord |
 | 3 | 5% | Corphish–Crawdaunt | Tynamo–Eelektrik |
-| 4 | 4% | Ducklett–Swanna | Wingull–Pelipper |
+| 4 | 4% | Ducklett–Swanna | Corphish–Crawdaunt |
 | 5 | 1% | Oshawott–Samurott | Oshawott–Samurott |
 
 *Fishing*
@@ -456,7 +461,7 @@ Water type: coast and sea.
 | 1 | 60% | Wingull–Pelipper | Carvanha–Sharpedo |
 | 2 | 30% | Wailmer–Wailord | Wailmer–Wailord |
 | 3 | 5% | Ducklett–Swanna | Frillish |
-| 4 | 4% | Luvdisc | Wingull–Pelipper |
+| 4 | 4% | Luvdisc | Corphish–Crawdaunt |
 | 5 | 1% | Corphish–Crawdaunt | Tynamo–Eelektrik |
 
 *Fishing*
@@ -487,7 +492,7 @@ Water type: coast and sea.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Wailmer–Wailord | Wailmer–Wailord |
-| 2 | 30% | Wingull–Pelipper | Wingull–Pelipper |
+| 2 | 30% | Wingull–Pelipper | Carvanha–Sharpedo |
 | 3 | 5% | Luvdisc | Frillish |
 | 4 | 4% | Corphish–Crawdaunt | Tynamo–Eelektrik |
 | 5 | 1% | Frillish | Luvdisc |
@@ -520,7 +525,7 @@ Water type: coast and sea.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Corphish–Crawdaunt | Corphish–Crawdaunt |
-| 2 | 30% | Wingull–Pelipper | Wingull–Pelipper |
+| 2 | 30% | Wingull–Pelipper | Wailmer–Wailord |
 | 3 | 5% | Wailmer–Wailord | Carvanha–Sharpedo |
 | 4 | 4% | Luvdisc | Wailmer–Wailord |
 | 5 | 1% | Ducklett–Swanna | Tynamo–Eelektrik |
@@ -553,9 +558,9 @@ Water type: coast and sea.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Wailmer–Wailord | Wailmer–Wailord |
-| 2 | 30% | Wingull–Pelipper | Wingull–Pelipper |
+| 2 | 30% | Wingull–Pelipper | Carvanha–Sharpedo |
 | 3 | 5% | Ducklett–Swanna | Corphish–Crawdaunt |
-| 4 | 4% | Luvdisc | Carvanha–Sharpedo |
+| 4 | 4% | Luvdisc | Luvdisc |
 | 5 | 1% | Oshawott–Samurott | Oshawott–Samurott |
 
 *Fishing*
@@ -604,7 +609,7 @@ Water type: coast and sea.
 | --- | --- | --- | --- |
 | 1 | 60% | Tynamo–Eelektrik | Tynamo–Eelektrik |
 | 2 | 30% | Wingull–Pelipper | Wailmer–Wailord |
-| 3 | 5% | Wailmer–Wailord | Wingull–Pelipper |
+| 3 | 5% | Wailmer–Wailord | Corphish–Crawdaunt |
 | 4 | 4% | Ducklett–Swanna | Carvanha–Sharpedo |
 | 5 | 1% | Luvdisc | Frillish |
 
@@ -762,7 +767,7 @@ Water type: coast and sea.
 | 2 | 30% | Ducklett–Swanna | Wailmer–Wailord |
 | 3 | 5% | Wailmer–Wailord | Frillish |
 | 4 | 4% | Luvdisc | Tynamo–Eelektrik |
-| 5 | 1% | Corphish–Crawdaunt | Wingull–Pelipper |
+| 5 | 1% | Corphish–Crawdaunt | Corphish–Crawdaunt |
 
 *Fishing*
 
@@ -882,8 +887,8 @@ Water type: coast and sea.
 | Slot | Weight | Day | Night |
 | --- | --- | --- | --- |
 | 1 | 60% | Carvanha–Sharpedo | Carvanha–Sharpedo |
-| 2 | 30% | Wingull–Pelipper | Wingull–Pelipper |
-| 3 | 5% | Wailmer–Wailord | Wailmer–Wailord |
+| 2 | 30% | Wingull–Pelipper | Wailmer–Wailord |
+| 3 | 5% | Wailmer–Wailord | Corphish–Crawdaunt |
 | 4 | 4% | Luvdisc | Frillish |
 | 5 | 1% | Tynamo–Eelektrik | Carvanha–Sharpedo |
 
@@ -985,7 +990,7 @@ Water type: coast and sea.
 | 2 | 30% | Ducklett–Swanna | Frillish |
 | 3 | 5% | Wailmer–Wailord | Wailmer–Wailord |
 | 4 | 4% | Frillish | Carvanha–Sharpedo |
-| 5 | 1% | Luvdisc | Wingull–Pelipper |
+| 5 | 1% | Luvdisc | Luvdisc |
 
 *Fishing*
 
@@ -1017,7 +1022,7 @@ Water type: coast and sea.
 | 1 | 60% | Frillish | Frillish |
 | 2 | 30% | Wailmer–Wailord | Tynamo–Eelektrik |
 | 3 | 5% | Wingull–Pelipper | Wailmer–Wailord |
-| 4 | 4% | Luvdisc | Wingull–Pelipper |
+| 4 | 4% | Luvdisc | Luvdisc |
 | 5 | 1% | Tynamo–Eelektrik | Frillish–Jellicent |
 
 *Fishing*
@@ -1068,7 +1073,7 @@ Water type: coast and sea.
 | 2 | 30% | Ducklett–Swanna | Frillish |
 | 3 | 5% | Frillish | Tynamo–Eelektrik |
 | 4 | 4% | Wailmer–Wailord | Wailmer–Wailord |
-| 5 | 1% | Luvdisc | Wingull–Pelipper |
+| 5 | 1% | Luvdisc | Luvdisc |
 
 *Fishing*
 
@@ -1101,7 +1106,7 @@ Water type: coast and sea.
 | 2 | 30% | Wingull–Pelipper | Frillish |
 | 3 | 5% | Wailmer–Wailord | Wailmer–Wailord |
 | 4 | 4% | Ducklett–Swanna | Carvanha–Sharpedo |
-| 5 | 1% | Frillish | Ducklett–Swanna |
+| 5 | 1% | Frillish | Luvdisc |
 
 *Fishing*
 
@@ -1133,7 +1138,7 @@ Water type: coast and sea.
 | 1 | 60% | Wailmer–Wailord | Wailmer–Wailord |
 | 2 | 30% | Ducklett–Swanna | Frillish |
 | 3 | 5% | Frillish | Tynamo–Eelektrik |
-| 4 | 4% | Wingull–Pelipper | Ducklett–Swanna |
+| 4 | 4% | Wingull–Pelipper | Luvdisc |
 | 5 | 1% | Luvdisc | Carvanha–Sharpedo |
 
 *Fishing*
@@ -1221,7 +1226,7 @@ Water type: coast and sea.
 | --- | --- | --- | --- |
 | 1 | 60% | Wailmer–Wailord | Wailmer–Wailord |
 | 2 | 30% | Wingull–Pelipper | Frillish |
-| 3 | 5% | Frillish | Wingull–Pelipper |
+| 3 | 5% | Frillish | Corphish–Crawdaunt |
 | 4 | 4% | Alomomola | Tynamo–Eelektrik |
 | 5 | 1% | Luvdisc | Alomomola |
 
@@ -1475,7 +1480,7 @@ Water type: coast and sea.
 | 2 | 22% | 18% | 10% | Wailmer–Wailord | Carvanha–Sharpedo |
 | 3 | 10% | 12% | 11% | Frillish | Tynamo–Eelektrik |
 | 4 | 8% | 10% | 10% | Wailmer–Wailord | Frillish |
-| 5 | 8% | 9% | 10% | Carvanha–Sharpedo | Ducklett–Swanna |
+| 5 | 8% | 9% | 10% | Carvanha–Sharpedo | Luvdisc |
 | 6 | 4% | 7% | 10% | Tynamo–Eelektrik | Tynamo–Eelektrik |
 | 7 | 3% | 6% | 10% | Luvdisc | Carvanha–Sharpedo |
 | 8 | 3% | 5% | 9% | Alomomola | Alomomola |

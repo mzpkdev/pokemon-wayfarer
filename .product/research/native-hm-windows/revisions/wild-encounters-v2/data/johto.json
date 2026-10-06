@@ -4885,10 +4885,10 @@
     "DODRIO",
     "SKARMORY",
     "TAUROS",
-    "TYRANITAR",
+    "RHYDON",
     "SKARMORY",
-    "SNORLAX",
-    "TYRANITAR"
+    "MILTANK",
+    "MACHOKE"
    ],
    "night": [
     "URSARING",
@@ -4899,9 +4899,9 @@
     "SNEASEL",
     "MISDREAVUS",
     "SKARMORY",
-    "TYRANITAR",
+    "GRAVELER",
     "HOUNDOOM",
-    "SNORLAX",
+    "WOBBUFFET",
     "MURKROW"
    ]
   },
@@ -5307,6 +5307,126 @@
     "HOUNDOOM",
     "SNORLAX",
     "TYRANITAR"
+   ]
+  }
+ },
+ "MAP_FARAWAY_ISLAND_ENTRANCE_HNS": {
+  "water_type": "sea",
+  "land": {
+   "day": [
+    "TANGELA",
+    "EXEGGUTOR",
+    "VICTREEBEL",
+    "BELLOSSOM",
+    "FORRETRESS",
+    "JUMPLUFF",
+    "DITTO",
+    "SMEARGLE",
+    "SCYTHER",
+    "PINSIR",
+    "AERODACTYL",
+    "CLEFFA"
+   ],
+   "night": [
+    "VENOMOTH",
+    "TANGELA",
+    "NOCTOWL",
+    "ARIADOS",
+    "EXEGGUTOR",
+    "VILEPLUME",
+    "MURKROW",
+    "DITTO",
+    "MISDREAVUS",
+    "HOUNDOOM",
+    "AERODACTYL",
+    "CLEFFA"
+   ]
+  },
+  "surf": {
+   "day": [
+    "STARMIE",
+    "TENTACRUEL",
+    "CORSOLA",
+    "MANTINE",
+    "LAPRAS"
+   ],
+   "night": [
+    "LANTURN",
+    "STARMIE",
+    "TENTACRUEL",
+    "QWILFISH",
+    "LAPRAS"
+   ]
+  },
+  "fish": {
+   "day": [
+    "TENTACRUEL",
+    "QWILFISH",
+    "CORSOLA",
+    "KINGLER",
+    "SEADRA",
+    "STARMIE",
+    "GYARADOS",
+    "CLOYSTER",
+    "KINGDRA",
+    "DRAGONAIR"
+   ],
+   "night": [
+    "TENTACRUEL",
+    "LANTURN",
+    "QWILFISH",
+    "LANTURN",
+    "SEADRA",
+    "STARMIE",
+    "GYARADOS",
+    "CLOYSTER",
+    "KINGDRA",
+    "DRAGONAIR"
+   ]
+  }
+ },
+ "MAP_SOUTHERN_ISLAND_EXTERIOR_HNS": {
+  "water_type": "sea",
+  "surf": {
+   "day": [
+    "SLOWBRO",
+    "STARMIE",
+    "SEADRA",
+    "DRAGONAIR",
+    "LAPRAS"
+   ],
+   "night": [
+    "SLOWBRO",
+    "LANTURN",
+    "STARMIE",
+    "KINGDRA",
+    "LAPRAS"
+   ]
+  },
+  "fish": {
+   "day": [
+    "CORSOLA",
+    "SLOWBRO",
+    "STARMIE",
+    "SEADRA",
+    "MANTINE",
+    "TENTACRUEL",
+    "KINGDRA",
+    "GYARADOS",
+    "DRAGONAIR",
+    "LAPRAS"
+   ],
+   "night": [
+    "CORSOLA",
+    "LANTURN",
+    "STARMIE",
+    "SEADRA",
+    "LANTURN",
+    "TENTACRUEL",
+    "KINGDRA",
+    "GYARADOS",
+    "DRAGONAIR",
+    "LAPRAS"
    ]
   }
  }
