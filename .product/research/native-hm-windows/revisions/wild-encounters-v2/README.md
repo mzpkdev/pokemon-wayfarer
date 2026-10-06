@@ -304,14 +304,15 @@ entries must re-run the audit.
 - It is static evidence, like the nearby-access revision, not production
   acceptance. The implementation must replay these cells through the
   production code once v2 is built.
-- The shared evolution-level table lacks some v2 evolution edges: Alcremie's
-  decorations, Pumpkaboo's sizes and Floette's colours, Sinistea, Phantump,
-  Doublade, Galarian Darumaka and Alolan Graveler, White-Striped Basculin to
-  Basculegion, and Dunsparce to Dudunsparce. The model skips an edge with no
-  level. All of these species carry no utility but one: **Dunsparce carries
-  Rock Smash at 20.** Its Dudunsparce edge has no level, but its two segment
-  edges are at 35, so Dunsparce's young limit is still 34 and no result
-  changes.
+- The model resolves species aliases on both sides of an evolution edge, since
+  the shared evolution-level table files some edges under form constants
+  (`FLORGES_RED`, `AEGISLASH_SHIELD`, `DUDUNSPARCE_TWO_SEGMENT` and others).
+  It also adds the six trade edges that
+  [wild level scaling](../../../../specs/wild-level-scaling.md#implementation-notes)
+  says the table lacks: Alolan Graveler → Alolan Golem at 38, and Phantump →
+  Trevenant and the four Pumpkaboo → Gourgeist sizes at 42. With them every
+  v2 edge has a level, and no result changes. Dunsparce, which carries Rock
+  Smash at 20, keeps a young limit of 34 from its edge at 35.
 - Every reward takes its prowler minimum in any slot, common or rare, at any
   stage of its line (babies skipped when looking for the line's first stage).
   Only Sinjoh's residents at home (its Hisuian natives, Stantler and Scyther)

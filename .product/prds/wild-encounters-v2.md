@@ -11,7 +11,7 @@ Specifications: [Prowlers](../specs/prowlers.md), [Reach assignments](../specs/r
 [Safari encounter tables](../specs/safari-encounter-tables.md), [Sinjoh encounters](../specs/sinjoh-encounters.md),
 [Sinjoh encounter tables](../specs/sinjoh-encounter-tables.md), [Wild level scaling](../specs/wild-level-scaling.md)
 
-Design status: sketch. It replaces the retired wild-encounter docs: the
+Design status: draft. It replaces the retired wild-encounter docs: the
 [Kanto](kanto-wild-encounters.md) and [Johto](johto-wild-encounters.md)
 encounter PRDs and specs, the Sevii encounter spec, the wild-encounter parts of
 [Trainer Rating scaling](trainer-rating-wild-encounter-scaling.md) and its

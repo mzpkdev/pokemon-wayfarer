@@ -75,12 +75,25 @@ SP = json.load(open(HERE + '/species.json'))
 SPECIES = SP['species']
 EVO = json.load(open(G + 'tools/notable_trainers/evolution.json'))
 BABIES = set(SP['babies']) | {b.upper().replace(' ', '_').replace('.', '').replace("'", '').replace('-', '_') for b in EVO['babies']}
-NONLEVEL = {(e['predecessor'][8:], e['successor'][8:]): e['level'] for e in EVO['nonLevelEdges']}
+# Base names such as FLORGES or AEGISLASH are aliases of the form constants the table files
+# its edges under (FLORGES_RED, AEGISLASH_SHIELD), so both sides resolve aliases first.
+_ALIAS = dict(re.findall(r'#define\s+SPECIES_(\w+)\s+SPECIES_(\w+)', open(G + 'include/constants/species.h').read()))
+def _res(n):
+    for _ in range(10):
+        if n not in _ALIAS: break
+        n = _ALIAS[n]
+    return n
+NONLEVEL = {(_res(e['predecessor'][8:]), _res(e['successor'][8:])): e['level'] for e in EVO['nonLevelEdges']}
 def _n(x):
     return {'Nidoran♀': 'NIDORAN_F', 'Nidoran♂': 'NIDORAN_M'}.get(x, x.upper().replace(' ', '_').replace('.', '').replace("'", '').replace('-', '_'))
 for _chain in EVO['chains'].values():
     for _i in range(0, len(_chain) - 2, 2):
-        NONLEVEL.setdefault((_n(_chain[_i]), _n(_chain[_i + 2])), _chain[_i + 1])
+        NONLEVEL.setdefault((_res(_n(_chain[_i])), _res(_n(_chain[_i + 2]))), _chain[_i + 1])
+# The rows wild level scaling adds to the shared table for v2 (see its implementation notes).
+for _p, _s, _lv in [('GRAVELER_ALOLA', 'GOLEM_ALOLA', 38), ('PHANTUMP', 'TREVENANT', 42),
+                    ('PUMPKABOO_AVERAGE', 'GOURGEIST_AVERAGE', 42), ('PUMPKABOO_SMALL', 'GOURGEIST_SMALL', 42),
+                    ('PUMPKABOO_LARGE', 'GOURGEIST_LARGE', 42), ('PUMPKABOO_SUPER', 'GOURGEIST_SUPER', 42)]:
+    NONLEVEL.setdefault((_res(_p), _res(_s)), _lv)
 PRED, EVOLV, MISSING_EDGES = {}, {}, set()
 for s, info in SPECIES.items():
     for e in info['evolves_to']:
@@ -91,7 +104,7 @@ for s, info in SPECIES.items():
         if e['method'].startswith('LEVEL') and p.isdigit() and int(p) > 0:
             lv = int(p)
         else:
-            lv = NONLEVEL.get((s, t))
+            lv = NONLEVEL.get((_res(s), _res(t)))
         EVOLV.setdefault(s, []).append((t, lv, e['method']))
         PRED.setdefault(t, []).append((s, lv, e['method']))
 

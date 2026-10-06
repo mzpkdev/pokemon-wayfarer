@@ -231,10 +231,35 @@ as the [prowlers spec](prowlers.md#prowlers) defines.
 - **DexNav, the Pokédex area screen and other readers of the wild population**
   use the same rules, so what they show matches what appears.
 - **The shared evolution-level table must cover every non-level evolution of a
-  species in the encounter tables.** Today it lacks Galarian Darumaka,
-  Alolan Graveler, Floette's colours, Doublade, Phantump, Pumpkaboo's sizes,
-  Sinistea and Milcery, so their young levels and stage mix have no level to
-  use.
+  species in the encounter tables.** Today it lacks six trade edges, which
+  the implementation adds to `game/tools/notable_trainers/evolution.json`:
+
+  | Evolution | Evolution level |
+  | --- | ---: |
+  | Alolan Graveler → Alolan Golem | 38, as Graveler → Golem |
+  | Phantump → Trevenant | 42, as other trade evolutions |
+  | Pumpkaboo → Gourgeist, for each of the four sizes | 42 |
+
+  Every other edge is already there, but some are filed under form constants:
+  Floette's colours under `FLORGES_RED` and the other colours, Doublade under
+  `AEGISLASH_SHIELD`, Galarian Darumaka under `DARMANITAN_GALAR_STANDARD`,
+  Sinistea under `SINISTEA_PHONY`, Milcery under each Alcremie flavour and
+  decoration, White-Striped Basculin under `BASCULEGION_M` and `BASCULEGION_F`,
+  and Dunsparce under its two Dudunsparce segment forms. The game's evolution
+  data names the base constants, which are aliases of those forms, so lookups
+  must resolve species aliases on both sides of an edge.
+- **Generation IX is switched off** with `P_GEN_9_POKEMON` set to `FALSE` in
+  `game/include/config/species_enabled.h`. `P_GEN_9_CROSS_EVOS` stays on, so
+  Generation IX evolutions of older lines, such as Annihilape,
+  Farigiraf, Kingambit and Dudunsparce, remain. No v2 table uses a Paldean
+  form, and today's trainer data uses no Generation IX species outside those
+  evolutions. The build and the mechanics tests must pass with the switch off.
+- **The tables fit the ROM budget.** The v2 tables hold 13,176 slots in 1,464
+  method and time-of-day tables across 356 table keys. Stored in today's
+  structs, with a level pair per slot and four times of day per header, they
+  take about 92 KiB, about 22 KiB more than today's 70 KiB of encounter data,
+  against 874 KiB of headroom before the protected reserve. Dropping the
+  per-slot levels, which v2 no longer uses, brings them to about 66 KiB.
 
 ## Validation
 
