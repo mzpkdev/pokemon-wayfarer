@@ -146,7 +146,8 @@ may disobey until your cap catches up, which is the price of a strong catch.
   slot capped at an early stage, it keeps young levels.
 - **Prowlers** appear in every reach, sorted by temperament: harmless ones
   anywhere, including Roads; fierce ones from Wilds outward; dangerous ones
-  only in Outlands and dungeons. See the [prowlers spec](../specs/prowlers.md).
+  only in Outlands and past a dungeon's first floor. See the
+  [prowlers spec](../specs/prowlers.md).
   Safari Zones run in Safari mode, with no battles to lose, so any temperament
   may appear there.
 
