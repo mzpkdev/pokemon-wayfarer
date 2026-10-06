@@ -21,6 +21,14 @@ Use its [proposal](revisions/nearby-access/proposal.json),
 reports and reproduction tools. Original files below remain historical evidence.
 Whirl Islands are outside the revised access audit.
 
+## Wild encounters v2 revision
+
+The [wild encounters v2 revision](revisions/wild-encounters-v2/README.md)
+re-audits the roster against the v2 encounter tables and wild level scaling.
+It changes four roster entries, authors the crossing carriers into the v2
+tables, and holds the 8% floor from two badges on. It takes over when the v2
+tables ship; until then the nearby-access revision stays current.
+
 ## Original approved snapshot and authority
 
 The user approved the single-entry design and initial 117-species, 148-role

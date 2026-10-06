@@ -231,8 +231,11 @@ Den, and the water starters.
 
 ### Native HM sources
 
-The native HM catch-window carriers stay available where those docs place
-them until the catch-window audit is re-run.
+The [catch-window audit's v2 revision](../research/native-hm-windows/revisions/wild-encounters-v2/README.md) checked these tables and placed
+the carriers each crossing needs, such as Horsea–Seadra at Cianwood and
+Olivine and Wooper–Quagsire at Blackthorn; Quagsire's Surf moves to level 28
+there. Any change to a crossing's first fishing entries must re-run the
+audit.
 
 ## Open questions
 

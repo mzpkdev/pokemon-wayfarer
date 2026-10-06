@@ -197,8 +197,10 @@ is new.
 
 ### Native HM sources
 
-The catch-window audit must check Sevii's native HM carriers when it is
-re-run, since Sevii's species change completely.
+The native HM guarantee covers Johto, Kanto and Hoenn only. The
+[catch-window audit's v2 revision](../research/native-hm-windows/revisions/wild-encounters-v2/README.md) checked Sevii for reference: it has
+no native Cut carrier at TR 36–45, no Flash carrier from TR 36 and no
+Waterfall carrier at TR 0–6, so those come from the HMs.
 
 ## Open questions
 

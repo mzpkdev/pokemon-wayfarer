@@ -502,8 +502,3 @@ This roster replaces the minimum-level list in
 `game/src/data/wild_encounter_species.json`, so every species with a minimum
 level is a prowler. The change itself belongs to the implementation.
 
-## Open questions
-
-- **Mantine:** it carries Whirlpool for native HM catch windows, so its minimum
-  level must fit those windows. The catch-window audit is re-run once the
-  other wild-encounter specs are finished.

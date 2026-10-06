@@ -215,6 +215,6 @@ mythical.
 ## References
 
 - [Player Trainer Rating](player-trainer-rating.md)
-- [Native HM catch windows](native-hm-catch-windows.md), which must be
-  re-audited for new tables
+- [Native HM catch windows](native-hm-catch-windows.md), re-audited for these
+  tables in its [v2 revision](../research/native-hm-windows/revisions/wild-encounters-v2/README.md)
 - [Authored under-level wild encounters](../research/authored-under-level-wild-encounters.md)

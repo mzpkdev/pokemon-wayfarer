@@ -336,7 +336,7 @@ Water type: coast and sea.
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
 | 1 | 38% | 25% | 12% | Corsola | Corsola |
-| 2 | 22% | 18% | 10% | Krabby–Kingler | Krabby–Kingler |
+| 2 | 22% | 18% | 10% | Horsea–Seadra | Horsea–Seadra |
 | 3 | 10% | 12% | 11% | Magikarp–Gyarados | Chinchou–Lanturn |
 | 4 | 8% | 10% | 10% | Corsola | Magikarp–Gyarados |
 | 5 | 8% | 9% | 10% | Remoraid–Octillery | Remoraid–Octillery |
@@ -408,7 +408,7 @@ Water type: coast and sea.
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
 | 1 | 38% | 25% | 12% | Tentacool–Tentacruel | Chinchou–Lanturn |
-| 2 | 22% | 18% | 10% | Krabby–Kingler | Tentacool–Tentacruel |
+| 2 | 22% | 18% | 10% | Horsea–Seadra | Horsea–Seadra |
 | 3 | 10% | 12% | 11% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 4 | 8% | 10% | 10% | Corsola | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Shellder | Chinchou–Lanturn |
@@ -466,10 +466,10 @@ Water type: ponds and rivers.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Wooper–Quagsire | Magikarp–Gyarados |
 | 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 3 | 10% | 12% | 11% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 4 | 8% | 10% | 10% | Magikarp–Gyarados | Wooper–Quagsire |
+| 3 | 10% | 12% | 11% | Poliwag–Poliwhirl | Slowpoke–Slowbro |
+| 4 | 8% | 10% | 10% | Slowpoke–Slowbro | Wooper–Quagsire |
 | 5 | 8% | 9% | 10% | Goldeen–Seaking | Goldeen–Seaking |
 | 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Wooper–Quagsire |
 | 7 | 3% | 6% | 10% | Marill–Azumarill | Poliwag–Poliwhirl |
@@ -2952,15 +2952,15 @@ Water type: cave water.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Dratini–Dragonite |
-| 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Magikarp–Gyarados |
+| 1 | 38% | 25% | 12% | Magikarp–Gyarados | Magikarp–Gyarados |
+| 2 | 22% | 18% | 10% | Magikarp–Gyarados | Magikarp–Gyarados |
 | 3 | 10% | 12% | 11% | Goldeen–Seaking | Poliwag–Poliwhirl |
-| 4 | 8% | 10% | 10% | Magikarp–Gyarados | Goldeen–Seaking |
+| 4 | 8% | 10% | 10% | Poliwag–Poliwhirl | Goldeen–Seaking |
 | 5 | 8% | 9% | 10% | Dratini–Dragonite | Dratini–Dragonite |
 | 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Magikarp–Gyarados |
 | 7 | 3% | 6% | 10% | Psyduck–Golduck | Dratini–Dragonite |
 | 8 | 3% | 5% | 9% | Dratini–Dragonite | Poliwag–Poliwhirl |
-| 9 | 2% | 4% | 9% | Slowpoke–Slowbro | Psyduck–Golduck |
+| 9 | 2% | 4% | 9% | Slowpoke–Slowbro | Wooper–Quagsire |
 | 10 | 2% | 4% | 9% | Goldeen–Seaking | Dratini–Dragonite |
 
 #### Whirl Islands
@@ -3590,7 +3590,7 @@ Water type: cave water.
 | Honchkrow | Mt. Silver, Route 26, Route 28, Tin Tower |
 | Hoothoot | Azalea Town, Cherrygrove City, Goldenrod City, Ilex Forest and more |
 | Hoppip | Azalea Town, Olivine City, Route 29, Route 30 and more |
-| Horsea | Cliff Edge Cave, Goldenrod City, Route 26, Route 27 and more |
+| Horsea | Cianwood City, Cliff Edge Cave, Goldenrod City, Olivine City and more |
 | Houndoom | Burned Tower, Mt. Silver, Route 26, Route 27 and more |
 | Houndour | Burned Tower, Mt. Silver, Route 26, Route 27 and more |
 | Hypno | Route 34, Route 35 |
@@ -3665,7 +3665,7 @@ Water type: cave water.
 | Primeape | Cianwood City, Mt. Mortar, Mt. Silver, Route 26 and more |
 | Psyduck | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
 | Pupitar | Mt. Silver, Route 26, Route 28 |
-| Quagsire | Blackthorn City, Dark Cave, Ecruteak City, Ilex Forest and more |
+| Quagsire | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
 | Quilava | Burned Tower, Route 46 |
 | Qwilfish | Cherrygrove City, Cianwood City, Cliff Edge Cave, Goldenrod City and more |
 | Rapidash | Mt. Silver, Route 26, Route 27, Route 28 and more |
@@ -3676,7 +3676,7 @@ Water type: cave water.
 | Sandslash | Route 26, Route 27, Union Cave |
 | Scizor | Mt. Silver, Route 26, Route 28 |
 | Scyther | Mt. Silver, National Park, Route 26, Route 28 |
-| Seadra | Cliff Edge Cave, Goldenrod City, Route 26, Route 27 and more |
+| Seadra | Cianwood City, Cliff Edge Cave, Goldenrod City, Olivine City and more |
 | Seaking | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
 | Seel | Cliff Edge Cave, Whirl Islands |
 | Sentret | Azalea Town, Route 29, Route 30, Route 36 and more |
@@ -3684,9 +3684,9 @@ Water type: cave water.
 | Shuckle | Cliff Edge Cave, Dark Cave, Ice Path, Mt. Silver and more |
 | Skarmory | Mt. Silver, Route 28, Route 47 |
 | Skiploom | Azalea Town, Olivine City, Route 29, Route 30 and more |
-| Slowbro | Azalea Town, Cliff Edge Cave, Dragon's Den, Ecruteak City and more |
+| Slowbro | Azalea Town, Blackthorn City, Cliff Edge Cave, Dragon's Den and more |
 | Slowking | Mt. Silver, Route 28, Slowpoke Well, Whirl Islands |
-| Slowpoke | Azalea Town, Cliff Edge Cave, Dragon's Den, Ecruteak City and more |
+| Slowpoke | Azalea Town, Blackthorn City, Cliff Edge Cave, Dragon's Den and more |
 | Slugma | Burned Tower |
 | Smeargle | Ruins of Alph |
 | Smoochum | Ice Path, Mt. Silver |
@@ -3725,7 +3725,7 @@ Water type: cave water.
 | Weepinbell | Route 31, Route 32, Route 36, Route 44 and more |
 | Weezing | Burned Tower, Rocket Hideout, Slowpoke Well |
 | Wobbuffet | Cliff Edge Cave, Dark Cave, Slowpoke Well, Union Cave and more |
-| Wooper | Blackthorn City, Dark Cave, Ecruteak City, Ilex Forest and more |
+| Wooper | Blackthorn City, Dark Cave, Dragon's Den, Ecruteak City and more |
 | Xatu | Ruins of Alph, Sprout Tower, Tin Tower, Violet City |
 | Yanma | Ilex Forest, Lake of Rage, Route 35, Route 48 |
 | Zubat | Burned Tower, Cliff Edge Cave, Dark Cave, Ice Path and more |

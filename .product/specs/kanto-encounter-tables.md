@@ -338,9 +338,9 @@ Water type: coast and sea.
 
 | Entry | Old Rod | Good Rod | Super Rod | Day | Night |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 38% | 25% | 12% | Krabby–Kingler | Krabby–Kingler |
-| 2 | 22% | 18% | 10% | Corsola | Corsola |
-| 3 | 10% | 12% | 11% | Horsea–Seadra | Horsea–Seadra |
+| 1 | 38% | 25% | 12% | Tentacool–Tentacruel | Krabby–Kingler |
+| 2 | 22% | 18% | 10% | Horsea–Seadra | Horsea–Seadra |
+| 3 | 10% | 12% | 11% | Horsea–Seadra | Tentacool–Tentacruel |
 | 4 | 8% | 10% | 10% | Krabby–Kingler | Chinchou–Lanturn |
 | 5 | 8% | 9% | 10% | Magikarp | Magikarp |
 | 6 | 4% | 7% | 10% | Shellder | Shellder |
@@ -559,7 +559,7 @@ Water type: ponds and rivers.
 | --- | --- | --- | --- | --- | --- |
 | 1 | 38% | 25% | 12% | Psyduck–Golduck | Psyduck–Golduck |
 | 2 | 22% | 18% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
-| 3 | 10% | 12% | 11% | Magikarp | Magikarp |
+| 3 | 10% | 12% | 11% | Wooper–Quagsire | Wooper–Quagsire |
 | 4 | 8% | 10% | 10% | Psyduck–Golduck | Psyduck–Golduck |
 | 5 | 8% | 9% | 10% | Slowpoke–Slowbro | Goldeen–Seaking |
 | 6 | 4% | 7% | 10% | Poliwag–Poliwhirl | Poliwag–Poliwhirl |
@@ -2374,7 +2374,7 @@ Water type: cave water.
 | Porygon | Pokémon Mansion, Power Plant |
 | Primeape | Rock Tunnel, Route 22, Route 23, Route 3 and more |
 | Psyduck | Celadon City, Cerulean Cave, Cerulean City, Fuchsia City and more |
-| Quagsire | Route 22, Route 23 |
+| Quagsire | Route 22, Route 23, Route 6 |
 | Qwilfish | Route 12, Route 13, Route 21 |
 | Raichu | Power Plant |
 | Rapidash | Pokémon Mansion, Route 16, Route 17 |
@@ -2428,6 +2428,6 @@ Water type: cave water.
 | Weezing | Pokémon Mansion |
 | Wigglytuff | Cerulean Cave |
 | Wobbuffet | Cerulean Cave |
-| Wooper | Route 22, Route 23 |
+| Wooper | Route 22, Route 23, Route 6 |
 | Yanma | Route 2, Route 21 |
 | Zubat | Cerulean Cave, Diglett's Cave, Mt. Moon, Rock Tunnel and more |

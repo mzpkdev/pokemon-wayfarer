@@ -15,7 +15,7 @@ This spec defines:
 - the level of each reach, as [scalers](player-trainer-rating.md#scalers)
   over your TR;
 - the level of each dungeon floor, from its intent;
-- the level spread of a single encounter, including fishing rods;
+- the level spread of a single encounter;
 - the stage mix, and the level limit of slots capped at an early stage;
 - prowler minimum levels, and how Repel treats prowlers.
 
@@ -125,15 +125,14 @@ somewhere dangerous. Roads and Wilds stay under the cap, apart from prowlers.
 
 A single encounter's level comes from its place's level:
 
-1. **Spread.** Land, surfing, and trees and rocks roll the place's level −2 to
-   +2, each equally likely.
-2. **Rods.** Fishing shifts the place's level before the spread: the Old Rod
-   by −4, the Good Rod by −2 and the Super Rod by 0.
-3. **Prowler minimum.** A prowler takes the higher of the rolled level and its
+1. **Spread.** Every method, fishing with any rod included, rolls the place's
+   level −2 to +2, each equally likely. Rods differ only in which entries they
+   favour.
+2. **Prowler minimum.** A prowler takes the higher of the rolled level and its
    minimum level.
-4. **Young levels.** A slot capped at an early stage keeps its level below the
+3. **Young levels.** A slot capped at an early stage keeps its level below the
    next evolution, as described under [Young levels](#young-levels).
-5. **Limits.** The result is at least 1 and at most 100.
+4. **Limits.** The result is at least 1 and at most 100.
 
 Abilities that favour higher wild levels, such as Pressure, Hustle and Vital
 Spirit, treat the top of the spread as the top of a slot's level range, as the
@@ -184,6 +183,8 @@ A prowler's minimum level follows its temperament and base stat total, as the
 | Fierce, base stat total 485 or more | 25 |
 | Dangerous | 30 |
 
+A fierce line listed without a base stat total, such as Noibat's, takes 20.
+
 Early in the game that puts fierce and dangerous prowlers well above their
 surroundings. Wilds reach level 25 at four badges and Outlands pass 30 between
 four and five, after which prowlers are simply rare finds. Kalos's rewards in
@@ -217,6 +218,11 @@ specs say.
   stage mix, young levels and prowler minimums, as the randomizer does today.
 - **DexNav, the Pokédex area screen and other readers of the wild population**
   use the same rules, so what they show matches what appears.
+- **The shared evolution-level table must cover every non-level evolution of a
+  species in the encounter tables.** Today it lacks Galarian Darumaka,
+  Alolan Graveler, Floette's colours, Doublade, Phantump, Pumpkaboo's sizes,
+  Sinistea and Milcery, so their young levels and stage mix have no level to
+  use.
 
 ## Validation
 
@@ -231,7 +237,3 @@ specs say.
 - A young-level slot never appears at or above its next evolution level,
   apart from prowlers at their minimum.
 
-## Open questions
-
-- Mantine's minimum level. The rule gives it 25, but it carries Whirlpool, so
-  the native HM catch-window audit may lower it when it is re-run.

@@ -1,0 +1,154 @@
+[
+ {
+  "map": "MAP_BLACKTHORN_CITY_HNS",
+  "method": "fish",
+  "time": "day",
+  "index": 0,
+  "from": "GYARADOS",
+  "to": "QUAGSIRE"
+ },
+ {
+  "map": "MAP_ROUTE118",
+  "method": "fish",
+  "time": "day",
+  "index": 3,
+  "from": "LUVDISC",
+  "to": "JELLICENT"
+ },
+ {
+  "map": "MAP_OLIVINE_CITY_HNS",
+  "method": "fish",
+  "time": "day",
+  "index": 1,
+  "from": "KINGLER",
+  "to": "SEADRA"
+ },
+ {
+  "map": "MAP_OLIVINE_CITY_HNS",
+  "method": "fish",
+  "time": "night",
+  "index": 1,
+  "from": "KINGLER",
+  "to": "SEADRA"
+ },
+ {
+  "map": "MAP_BLACKTHORN_CITY_HNS",
+  "method": "fish",
+  "time": "night",
+  "index": 2,
+  "from": "POLIWHIRL",
+  "to": "SLOWBRO"
+ },
+ {
+  "map": "MAP_ROUTE6_HNS",
+  "method": "fish",
+  "time": "night",
+  "index": 2,
+  "from": "MAGIKARP",
+  "to": "QUAGSIRE"
+ },
+ {
+  "map": "MAP_ROUTE6_HNS",
+  "method": "fish",
+  "time": "day",
+  "index": 2,
+  "from": "MAGIKARP",
+  "to": "QUAGSIRE"
+ },
+ {
+  "map": "MAP_CINNABAR_ISLAND",
+  "method": "fish",
+  "time": "day",
+  "index": 1,
+  "from": "CORSOLA",
+  "to": "SEADRA"
+ },
+ {
+  "map": "MAP_CINNABAR_ISLAND",
+  "method": "fish",
+  "time": "night",
+  "index": 1,
+  "from": "CORSOLA",
+  "to": "SEADRA"
+ },
+ {
+  "map": "MAP_BLACKTHORN_CITY_HNS",
+  "method": "fish",
+  "time": "day",
+  "index": 3,
+  "from": "GYARADOS",
+  "to": "SLOWBRO"
+ },
+ {
+  "map": "MAP_CIANWOOD_CITY_HNS",
+  "method": "fish",
+  "time": "day",
+  "index": 1,
+  "from": "KINGLER",
+  "to": "SEADRA"
+ },
+ {
+  "map": "MAP_CIANWOOD_CITY_HNS",
+  "method": "fish",
+  "time": "night",
+  "index": 1,
+  "from": "TENTACRUEL",
+  "to": "SEADRA"
+ },
+ {
+  "map": "MAP_DRAGONS_DEN_CAVERN_HNS",
+  "method": "fish",
+  "time": "night",
+  "index": 0,
+  "from": "DRAGONITE",
+  "to": "GYARADOS"
+ },
+ {
+  "map": "MAP_CINNABAR_ISLAND",
+  "method": "fish",
+  "time": "day",
+  "index": 0,
+  "from": "KINGLER",
+  "to": "TENTACRUEL"
+ },
+ {
+  "map": "MAP_PACIFIDLOG_TOWN",
+  "method": "fish",
+  "time": "night",
+  "index": 3,
+  "from": "EELEKTRIK",
+  "to": "SHARPEDO"
+ },
+ {
+  "map": "MAP_CINNABAR_ISLAND",
+  "method": "fish",
+  "time": "night",
+  "index": 2,
+  "from": "SEADRA",
+  "to": "TENTACRUEL"
+ },
+ {
+  "map": "MAP_DRAGONS_DEN_CAVERN_HNS",
+  "method": "fish",
+  "time": "day",
+  "index": 1,
+  "from": "POLIWHIRL",
+  "to": "GYARADOS"
+ },
+ {
+  "map": "MAP_DRAGONS_DEN_CAVERN_HNS",
+  "method": "fish",
+  "time": "day",
+  "index": 3,
+  "from": "GYARADOS",
+  "to": "POLIWHIRL"
+ },
+ {
+  "map": "MAP_DRAGONS_DEN_CAVERN_HNS",
+  "method": "fish",
+  "time": "night",
+  "index": 8,
+  "from": "GOLDUCK",
+  "to": "QUAGSIRE"
+ }
+]

@@ -260,7 +260,7 @@ Water type: coast and sea.
 | 1 | 38% | 25% | 12% | Carvanha–Sharpedo | Tynamo–Eelektrik |
 | 2 | 22% | 18% | 10% | Tynamo–Eelektrik | Carvanha–Sharpedo |
 | 3 | 10% | 12% | 11% | Frillish | Frillish |
-| 4 | 8% | 10% | 10% | Carvanha–Sharpedo | Tynamo–Eelektrik |
+| 4 | 8% | 10% | 10% | Carvanha–Sharpedo | Carvanha–Sharpedo |
 | 5 | 8% | 9% | 10% | Luvdisc | Frillish |
 | 6 | 4% | 7% | 10% | Wailmer–Wailord | Carvanha–Sharpedo |
 | 7 | 3% | 6% | 10% | Tynamo–Eelektrik | Wailmer–Wailord |
@@ -894,7 +894,7 @@ Water type: coast and sea.
 | 1 | 38% | 25% | 12% | Carvanha–Sharpedo | Carvanha–Sharpedo |
 | 2 | 22% | 18% | 10% | Wailmer–Wailord | Wailmer–Wailord |
 | 3 | 10% | 12% | 11% | Carvanha–Sharpedo | Carvanha–Sharpedo |
-| 4 | 8% | 10% | 10% | Luvdisc | Tynamo–Eelektrik |
+| 4 | 8% | 10% | 10% | Frillish–Jellicent | Tynamo–Eelektrik |
 | 5 | 8% | 9% | 10% | Corphish–Crawdaunt | Frillish |
 | 6 | 4% | 7% | 10% | Wailmer–Wailord | Tynamo–Eelektrik |
 | 7 | 3% | 6% | 10% | Tynamo–Eelektrik | Corphish–Crawdaunt |
@@ -3475,7 +3475,7 @@ Water type: cave water.
 | Huntail | Underwater Route 124, Underwater Route 126 |
 | Hydreigon | Cave of Origin, Seafloor Cavern, Sky Pillar, Victory Road |
 | Illumise | Route 102, Route 104, Route 110, Route 114 and more |
-| Jellicent | Abandoned Ship, Ever Grande City, Route 122, Route 123 and more |
+| Jellicent | Abandoned Ship, Ever Grande City, Route 118, Route 122 and more |
 | Joltik | New Mauville, Route 119 |
 | Karrablast | Route 119, Route 120 |
 | Kecleon | Route 118, Route 119, Route 120, Route 121 and more |

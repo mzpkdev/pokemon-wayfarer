@@ -218,11 +218,12 @@ Hoenn's tables have no night versions today, so every night table is new.
 
 ### Native HM sources
 
-Some of Hoenn's native HM carriers are Generation I or II species, such as
-Tentacool, Geodude and Chinchou. They leave Hoenn's tables, so the catch-window
-audit must choose Generation III or V carriers when it is re-run. Until then,
-the crossings use the Generation III Surf carriers already on the roster, such
-as Carvanha, Wingull, Lotad and Marill.
+Hoenn's old Surf carriers Tentacool and Kingler are Generation I species and
+left its tables. The [catch-window audit's v2 revision](../research/native-hm-windows/revisions/wild-encounters-v2/README.md) replaces them:
+Luvdisc, Carvanha–Sharpedo and Frillish–Jellicent carry Surf at sea, and
+Marill–Azumarill, Lotad–Lombre and Wingull–Pelipper on land. Luvdisc, Frillish
+and Jellicent gain Surf in that revision. Any change to a crossing's first
+fishing entries must re-run the audit.
 
 ## Open questions
 
