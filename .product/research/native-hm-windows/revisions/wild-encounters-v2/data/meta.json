@@ -12007,7 +12007,7 @@
     ]
    }
   },
-  "notes": "Sea lane: Mossdeep to Sootopolis and Route 128"
+  "notes": "Sea lane: Mossdeep to Route 128 and Ever Grande"
  },
  "MAP_ROUTE128": {
   "region": "Hoenn",
@@ -12046,7 +12046,7 @@
     ]
    }
   },
-  "notes": "Sea lane: the safe way to Ever Grande and Pacifidlog"
+  "notes": "Sea lane: the safe way to Ever Grande"
  },
  "MAP_PETALBURG_WOODS": {
   "region": "Hoenn",
@@ -13263,7 +13263,7 @@
     ]
    }
   },
-  "notes": "Floors 1F \u2192 B1F \u2192 Steven's cave. Moderate to hard. A path between Routes 114 and 115, with deep floors beyond it"
+  "notes": "Floors 1F room 1 \u2192 1F room 2 \u2192 B1F room 1 \u2192 B1F room 2 \u2192 Steven's cave, one step each. Moderate to hard. A path between Routes 114 and 115, with deep floors beyond it"
  },
  "MAP_METEOR_FALLS_1F_2R": {
   "region": "Hoenn",
@@ -13319,7 +13319,7 @@
     ]
    }
   },
-  "notes": "Floors 1F \u2192 B1F \u2192 Steven's cave. Moderate to hard. A path between Routes 114 and 115, with deep floors beyond it"
+  "notes": "Floors 1F room 1 \u2192 1F room 2 \u2192 B1F room 1 \u2192 B1F room 2 \u2192 Steven's cave, one step each. Moderate to hard. A path between Routes 114 and 115, with deep floors beyond it"
  },
  "MAP_METEOR_FALLS_B1F_1R": {
   "region": "Hoenn",
@@ -13375,7 +13375,7 @@
     ]
    }
   },
-  "notes": "Floors 1F \u2192 B1F \u2192 Steven's cave. Moderate to hard. A path between Routes 114 and 115, with deep floors beyond it"
+  "notes": "Floors 1F room 1 \u2192 1F room 2 \u2192 B1F room 1 \u2192 B1F room 2 \u2192 Steven's cave, one step each. Moderate to hard. A path between Routes 114 and 115, with deep floors beyond it"
  },
  "MAP_METEOR_FALLS_B1F_2R": {
   "region": "Hoenn",
@@ -13431,7 +13431,7 @@
     ]
    }
   },
-  "notes": "Floors 1F \u2192 B1F \u2192 Steven's cave. Moderate to hard. A path between Routes 114 and 115, with deep floors beyond it"
+  "notes": "Floors 1F room 1 \u2192 1F room 2 \u2192 B1F room 1 \u2192 B1F room 2 \u2192 Steven's cave, one step each. Moderate to hard. A path between Routes 114 and 115, with deep floors beyond it"
  },
  "MAP_METEOR_FALLS_STEVENS_CAVE": {
   "region": "Hoenn",
@@ -13462,7 +13462,7 @@
     ]
    }
   },
-  "notes": "Floors 1F \u2192 B1F \u2192 Steven's cave. Moderate to hard. A path between Routes 114 and 115, with deep floors beyond it"
+  "notes": "Floors 1F room 1 \u2192 1F room 2 \u2192 B1F room 1 \u2192 B1F room 2 \u2192 Steven's cave, one step each. Moderate to hard. A path between Routes 114 and 115, with deep floors beyond it"
  },
  "MAP_MAGMA_HIDEOUT_1F": {
   "region": "Hoenn",
@@ -13493,7 +13493,7 @@
     ]
    }
   },
-  "notes": "Floors 1F \u2192 4F. Moderate to hard"
+  "notes": "Floors 1F \u2192 2F rooms 1\u20133 \u2192 3F rooms 1\u20133 \u2192 4F, one step per map. Moderate to hard"
  },
  "MAP_MAGMA_HIDEOUT_2F_1R": {
   "region": "Hoenn",
@@ -13524,7 +13524,7 @@
     ]
    }
   },
-  "notes": "Floors 1F \u2192 4F. Moderate to hard"
+  "notes": "Floors 1F \u2192 2F rooms 1\u20133 \u2192 3F rooms 1\u20133 \u2192 4F, one step per map. Moderate to hard"
  },
  "MAP_MAGMA_HIDEOUT_2F_2R": {
   "region": "Hoenn",
@@ -13555,7 +13555,7 @@
     ]
    }
   },
-  "notes": "Floors 1F \u2192 4F. Moderate to hard"
+  "notes": "Floors 1F \u2192 2F rooms 1\u20133 \u2192 3F rooms 1\u20133 \u2192 4F, one step per map. Moderate to hard"
  },
  "MAP_MAGMA_HIDEOUT_2F_3R": {
   "region": "Hoenn",
@@ -13586,7 +13586,7 @@
     ]
    }
   },
-  "notes": "Floors 1F \u2192 4F. Moderate to hard"
+  "notes": "Floors 1F \u2192 2F rooms 1\u20133 \u2192 3F rooms 1\u20133 \u2192 4F, one step per map. Moderate to hard"
  },
  "MAP_MAGMA_HIDEOUT_3F_1R": {
   "region": "Hoenn",
@@ -13617,7 +13617,7 @@
     ]
    }
   },
-  "notes": "Floors 1F \u2192 4F. Moderate to hard"
+  "notes": "Floors 1F \u2192 2F rooms 1\u20133 \u2192 3F rooms 1\u20133 \u2192 4F, one step per map. Moderate to hard"
  },
  "MAP_MAGMA_HIDEOUT_3F_2R": {
   "region": "Hoenn",
@@ -13648,7 +13648,7 @@
     ]
    }
   },
-  "notes": "Floors 1F \u2192 4F. Moderate to hard"
+  "notes": "Floors 1F \u2192 2F rooms 1\u20133 \u2192 3F rooms 1\u20133 \u2192 4F, one step per map. Moderate to hard"
  },
  "MAP_MAGMA_HIDEOUT_3F_3R": {
   "region": "Hoenn",
@@ -13679,7 +13679,7 @@
     ]
    }
   },
-  "notes": "Floors 1F \u2192 4F. Moderate to hard"
+  "notes": "Floors 1F \u2192 2F rooms 1\u20133 \u2192 3F rooms 1\u20133 \u2192 4F, one step per map. Moderate to hard"
  },
  "MAP_MAGMA_HIDEOUT_4F": {
   "region": "Hoenn",
@@ -13710,7 +13710,7 @@
     ]
    }
   },
-  "notes": "Floors 1F \u2192 4F. Moderate to hard"
+  "notes": "Floors 1F \u2192 2F rooms 1\u20133 \u2192 3F rooms 1\u20133 \u2192 4F, one step per map. Moderate to hard"
  },
  "MAP_MT_PYRE_1F": {
   "region": "Hoenn",
@@ -14691,7 +14691,7 @@
     ]
    }
   },
-  "notes": "Floors entrance \u2192 1F. Hard. The three unused Ruby/Sapphire maps are probably unreachable"
+  "notes": "Floors entrance \u2192 1F, with the three unused Ruby/Sapphire maps sharing 1F's step. Hard. They are probably unreachable"
  },
  "MAP_CAVE_OF_ORIGIN_1F": {
   "region": "Hoenn",
@@ -14722,7 +14722,7 @@
     ]
    }
   },
-  "notes": "Floors entrance \u2192 1F. Hard. The three unused Ruby/Sapphire maps are probably unreachable"
+  "notes": "Floors entrance \u2192 1F, with the three unused Ruby/Sapphire maps sharing 1F's step. Hard. They are probably unreachable"
  },
  "MAP_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP1": {
   "region": "Hoenn",
@@ -14753,7 +14753,7 @@
     ]
    }
   },
-  "notes": "Floors entrance \u2192 1F. Hard. The three unused Ruby/Sapphire maps are probably unreachable"
+  "notes": "Floors entrance \u2192 1F, with the three unused Ruby/Sapphire maps sharing 1F's step. Hard. They are probably unreachable"
  },
  "MAP_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP2": {
   "region": "Hoenn",
@@ -14784,7 +14784,7 @@
     ]
    }
   },
-  "notes": "Floors entrance \u2192 1F. Hard. The three unused Ruby/Sapphire maps are probably unreachable"
+  "notes": "Floors entrance \u2192 1F, with the three unused Ruby/Sapphire maps sharing 1F's step. Hard. They are probably unreachable"
  },
  "MAP_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP3": {
   "region": "Hoenn",
@@ -14815,7 +14815,7 @@
     ]
    }
   },
-  "notes": "Floors entrance \u2192 1F. Hard. The three unused Ruby/Sapphire maps are probably unreachable"
+  "notes": "Floors entrance \u2192 1F, with the three unused Ruby/Sapphire maps sharing 1F's step. Hard. They are probably unreachable"
  },
  "MAP_VICTORY_ROAD_1F": {
   "region": "Hoenn",
@@ -14959,7 +14959,7 @@
    "surf"
   ],
   "old": {},
-  "notes": "Settlement"
+  "notes": "Settlement: the arrival village, reached by boat from Route 13"
  },
  "MAP_AKALA_ISLE_HNS": {
   "region": "Alola",
@@ -14990,7 +14990,7 @@
    "surf"
   ],
   "old": {},
-  "notes": "The sea between the islands"
+  "notes": "Next to Melemele: the sea between the islands"
  },
  "MAP_AKALA_FOREST_HNS": {
   "region": "Alola",
@@ -15020,7 +15020,7 @@
    "surf"
   ],
   "old": {},
-  "notes": "Far end of the chain"
+  "notes": "Beyond Akala, the far end of the chain"
  },
  "MAP_PONI_ISLE_HNS": {
   "region": "Alola",
@@ -15036,7 +15036,7 @@
    "surf"
   ],
   "old": {},
-  "notes": "Exception"
+  "notes": "Exception: next to Melemele, but kept as Alola's wildest island"
  },
  "MAP_AKALA_CAVE_HNS": {
   "region": "Alola",
@@ -15626,7 +15626,7 @@
    "rock"
   ],
   "old": {},
-  "notes": "Floors: exterior \u2192 summit path 1F\u20133F \u2192 ruby path 1F \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
+  "notes": "Floors: exterior \u2192 summit path 1F \u2192 2F \u2192 3F \u2192 ruby path 1F \u2192 B1F, with its stairs map \u2192 B2F, with its stairs map \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
  },
  "MAP_MT_EMBER_SUMMIT_PATH_1F": {
   "region": "Sevii",
@@ -15640,7 +15640,7 @@
    "land"
   ],
   "old": {},
-  "notes": "Floors: exterior \u2192 summit path 1F\u20133F \u2192 ruby path 1F \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
+  "notes": "Floors: exterior \u2192 summit path 1F \u2192 2F \u2192 3F \u2192 ruby path 1F \u2192 B1F, with its stairs map \u2192 B2F, with its stairs map \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
  },
  "MAP_MT_EMBER_SUMMIT_PATH_2F": {
   "region": "Sevii",
@@ -15655,7 +15655,7 @@
    "rock"
   ],
   "old": {},
-  "notes": "Floors: exterior \u2192 summit path 1F\u20133F \u2192 ruby path 1F \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
+  "notes": "Floors: exterior \u2192 summit path 1F \u2192 2F \u2192 3F \u2192 ruby path 1F \u2192 B1F, with its stairs map \u2192 B2F, with its stairs map \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
  },
  "MAP_MT_EMBER_SUMMIT_PATH_3F": {
   "region": "Sevii",
@@ -15669,7 +15669,7 @@
    "land"
   ],
   "old": {},
-  "notes": "Floors: exterior \u2192 summit path 1F\u20133F \u2192 ruby path 1F \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
+  "notes": "Floors: exterior \u2192 summit path 1F \u2192 2F \u2192 3F \u2192 ruby path 1F \u2192 B1F, with its stairs map \u2192 B2F, with its stairs map \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
  },
  "MAP_MT_EMBER_RUBY_PATH_1F": {
   "region": "Sevii",
@@ -15684,7 +15684,7 @@
    "rock"
   ],
   "old": {},
-  "notes": "Floors: exterior \u2192 summit path 1F\u20133F \u2192 ruby path 1F \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
+  "notes": "Floors: exterior \u2192 summit path 1F \u2192 2F \u2192 3F \u2192 ruby path 1F \u2192 B1F, with its stairs map \u2192 B2F, with its stairs map \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
  },
  "MAP_MT_EMBER_RUBY_PATH_B1F": {
   "region": "Sevii",
@@ -15699,7 +15699,7 @@
    "rock"
   ],
   "old": {},
-  "notes": "Floors: exterior \u2192 summit path 1F\u20133F \u2192 ruby path 1F \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
+  "notes": "Floors: exterior \u2192 summit path 1F \u2192 2F \u2192 3F \u2192 ruby path 1F \u2192 B1F, with its stairs map \u2192 B2F, with its stairs map \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
  },
  "MAP_MT_EMBER_RUBY_PATH_B1F_STAIRS": {
   "region": "Sevii",
@@ -15714,7 +15714,7 @@
    "rock"
   ],
   "old": {},
-  "notes": "Floors: exterior \u2192 summit path 1F\u20133F \u2192 ruby path 1F \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
+  "notes": "Floors: exterior \u2192 summit path 1F \u2192 2F \u2192 3F \u2192 ruby path 1F \u2192 B1F, with its stairs map \u2192 B2F, with its stairs map \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
  },
  "MAP_MT_EMBER_RUBY_PATH_B2F": {
   "region": "Sevii",
@@ -15729,7 +15729,7 @@
    "rock"
   ],
   "old": {},
-  "notes": "Floors: exterior \u2192 summit path 1F\u20133F \u2192 ruby path 1F \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
+  "notes": "Floors: exterior \u2192 summit path 1F \u2192 2F \u2192 3F \u2192 ruby path 1F \u2192 B1F, with its stairs map \u2192 B2F, with its stairs map \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
  },
  "MAP_MT_EMBER_RUBY_PATH_B2F_STAIRS": {
   "region": "Sevii",
@@ -15744,7 +15744,7 @@
    "rock"
   ],
   "old": {},
-  "notes": "Floors: exterior \u2192 summit path 1F\u20133F \u2192 ruby path 1F \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
+  "notes": "Floors: exterior \u2192 summit path 1F \u2192 2F \u2192 3F \u2192 ruby path 1F \u2192 B1F, with its stairs map \u2192 B2F, with its stairs map \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
  },
  "MAP_MT_EMBER_RUBY_PATH_B3F": {
   "region": "Sevii",
@@ -15759,7 +15759,7 @@
    "rock"
   ],
   "old": {},
-  "notes": "Floors: exterior \u2192 summit path 1F\u20133F \u2192 ruby path 1F \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
+  "notes": "Floors: exterior \u2192 summit path 1F \u2192 2F \u2192 3F \u2192 ruby path 1F \u2192 B1F, with its stairs map \u2192 B2F, with its stairs map \u2192 B3F. Moderate to hard. Includes its outdoor slopes"
  },
  "MAP_FIVE_ISLAND_LOST_CAVE_ROOM1": {
   "region": "Sevii",
@@ -15971,7 +15971,7 @@
    "surf"
   ],
   "old": {},
-  "notes": "Safari mode"
+  "notes": "Preserve: Beach, Brush, Cave, Mountain"
  },
  "MAP_FUCHSIA_CITY_SAFARI_ZONE_BRUSH_HNS": {
   "region": "Safari",
@@ -15985,7 +15985,7 @@
    "land"
   ],
   "old": {},
-  "notes": "Safari mode"
+  "notes": "Preserve: Beach, Brush, Cave, Mountain"
  },
  "MAP_FUCHSIA_CITY_SAFARI_ZONE_CAVE_HNS": {
   "region": "Safari",
@@ -16001,7 +16001,7 @@
    "surf"
   ],
   "old": {},
-  "notes": "Safari mode"
+  "notes": "Preserve: Beach, Brush, Cave, Mountain"
  },
  "MAP_FUCHSIA_CITY_SAFARI_ZONE_MOUNTAIN_HNS": {
   "region": "Safari",
@@ -16017,7 +16017,7 @@
    "surf"
   ],
   "old": {},
-  "notes": "Safari mode"
+  "notes": "Preserve: Beach, Brush, Cave, Mountain"
  },
  "MAP_SAFARI_ZONE_LOW_LEFT_HNS": {
   "region": "Safari",
@@ -16032,7 +16032,7 @@
    "rock"
   ],
   "old": {},
-  "notes": "Safari mode"
+  "notes": "Preserve"
  },
  "MAP_SAFARI_ZONE_LOW_MID_HNS": {
   "region": "Safari",
@@ -16048,7 +16048,7 @@
    "surf"
   ],
   "old": {},
-  "notes": "Safari mode"
+  "notes": "Preserve"
  },
  "MAP_SAFARI_ZONE_LOW_RIGHT_HNS": {
   "region": "Safari",
@@ -16065,7 +16065,7 @@
    "surf"
   ],
   "old": {},
-  "notes": "Safari mode"
+  "notes": "Preserve"
  },
  "MAP_SAFARI_ZONE_TOP_LEFT_HNS": {
   "region": "Safari",
@@ -16080,7 +16080,7 @@
    "rock"
   ],
   "old": {},
-  "notes": "Safari mode"
+  "notes": "Preserve"
  },
  "MAP_SAFARI_ZONE_TOP_MID_HNS": {
   "region": "Safari",
@@ -16095,7 +16095,7 @@
    "rock"
   ],
   "old": {},
-  "notes": "Safari mode"
+  "notes": "Preserve"
  },
  "MAP_SAFARI_ZONE_TOP_RIGHT_HNS": {
   "region": "Safari",
@@ -16112,7 +16112,7 @@
    "surf"
   ],
   "old": {},
-  "notes": "Safari mode"
+  "notes": "Preserve"
  },
  "MAP_SAFARI_ZONE_SOUTH": {
   "region": "Safari",
@@ -16126,7 +16126,7 @@
    "land"
   ],
   "old": {},
-  "notes": "Safari mode"
+  "notes": "Preserve"
  },
  "MAP_SAFARI_ZONE_SOUTHWEST": {
   "region": "Safari",
@@ -16142,7 +16142,7 @@
    "surf"
   ],
   "old": {},
-  "notes": "Safari mode"
+  "notes": "Preserve"
  },
  "MAP_SAFARI_ZONE_NORTH": {
   "region": "Safari",
@@ -16157,7 +16157,7 @@
    "rock"
   ],
   "old": {},
-  "notes": "Safari mode"
+  "notes": "Preserve"
  },
  "MAP_SAFARI_ZONE_NORTHWEST": {
   "region": "Safari",
@@ -16173,7 +16173,7 @@
    "surf"
   ],
   "old": {},
-  "notes": "Safari mode"
+  "notes": "Preserve"
  },
  "MAP_SAFARI_ZONE_SOUTHEAST": {
   "region": "Safari",
@@ -16189,7 +16189,7 @@
    "surf"
   ],
   "old": {},
-  "notes": "Safari mode"
+  "notes": "Preserve"
  },
  "MAP_SAFARI_ZONE_NORTHEAST": {
   "region": "Safari",
@@ -16204,7 +16204,7 @@
    "rock"
   ],
   "old": {},
-  "notes": "Safari mode"
+  "notes": "Preserve"
  },
  "MAP_NATIONAL_PARK_BUG_CONTEST_HNS:TUESDAY": {
   "region": "Safari",
@@ -16235,7 +16235,7 @@
     ]
    }
   },
-  "notes": "Contest"
+  "notes": "A park off the road, including the Bug-Catching Contest version"
  },
  "MAP_NATIONAL_PARK_BUG_CONTEST_HNS:THURSDAY": {
   "region": "Safari",
@@ -16266,7 +16266,7 @@
     ]
    }
   },
-  "notes": "Contest"
+  "notes": "A park off the road, including the Bug-Catching Contest version"
  },
  "MAP_NATIONAL_PARK_BUG_CONTEST_HNS:SATURDAY": {
   "region": "Safari",
@@ -16297,7 +16297,7 @@
     ]
    }
   },
-  "notes": "Contest"
+  "notes": "A park off the road, including the Bug-Catching Contest version"
  },
  "MAP_ROUTE49_HNS": {
   "region": "Sinjoh",
@@ -16313,7 +16313,7 @@
    "surf"
   ],
   "old": {},
-  "notes": ""
+  "notes": "The way in, next to New Sinjoh"
  },
  "MAP_SNOWSWEPT_CAVERN_HNS": {
   "region": "Sinjoh",
@@ -16328,7 +16328,7 @@
    "rock"
   ],
   "old": {},
-  "notes": ""
+  "notes": "A cave you pass through, from Mt. Silver's first floor to Route 49"
  },
  "MAP_SINJOH_RUINS_HNS": {
   "region": "Sinjoh",
@@ -16342,7 +16342,7 @@
    "land"
   ],
   "old": {},
-  "notes": ""
+  "notes": "An ancient site, not a settlement, despite its house"
  },
  "MAP_ROUTE50_HNS": {
   "region": "Sinjoh",
@@ -16357,7 +16357,7 @@
    "rock"
   ],
   "old": {},
-  "notes": ""
+  "notes": "The snowy approach to the Ruins at Sinjoh's edge"
  },
  "MAP_NEWSINJOH_HOTSPRINGS_HNS": {
   "region": "Sinjoh",
@@ -16371,7 +16371,7 @@
    "land"
   ],
   "old": {},
-  "notes": ""
+  "notes": "Single floor. Moderate. A hot-spring cave beside New Sinjoh"
  },
  "MAP_SINJOH_RUINS_TEMPLE_HNS": {
   "region": "Sinjoh",
@@ -16385,7 +16385,7 @@
    "land"
   ],
   "old": {},
-  "notes": ""
+  "notes": "Separate one-room chambers off the Ruins: the temple and two Regi rooms. Flat and moderate. The Regi rooms open only after collecting plates, so nothing found only there may be placed in them"
  },
  "MAP_SINJOH_RUINS_REGICE_ROOM_HNS": {
   "region": "Sinjoh",
@@ -16399,7 +16399,7 @@
    "land"
   ],
   "old": {},
-  "notes": ""
+  "notes": "Separate one-room chambers off the Ruins: the temple and two Regi rooms. Flat and moderate. The Regi rooms open only after collecting plates, so nothing found only there may be placed in them"
  },
  "MAP_SINJOH_RUINS_REGIROCK_ROOM_HNS": {
   "region": "Sinjoh",
@@ -16413,6 +16413,6 @@
    "land"
   ],
   "old": {},
-  "notes": ""
+  "notes": "Separate one-room chambers off the Ruins: the temple and two Regi rooms. Flat and moderate. The Regi rooms open only after collecting plates, so nothing found only there may be placed in them"
  }
 }

@@ -133,10 +133,12 @@ may disobey until your cap catches up, which is the price of a strong catch.
   capped at an early stage keeps young levels.
 - **Non-level evolutions** (item, trade, friendship, move or location) are
   capped at the stage before, except in Outlands and on a dungeon's deeper
-  floors (every floor after the entrance), where tables may allow them. Iconic early stages are capped deliberately.
+  floors, where tables may allow them: every floor after the entrance, and
+  every floor of a single-floor or flat dungeon. Iconic early stages are capped deliberately.
 - **Nothing is locked by progress.** Every species is available from the start.
 - **Water has types.** Every map with surfing or fishing has one water type:
-  ponds and rivers, coast and sea, cold water, or cave water. Each type has its
+  ponds and rivers, coast and sea, cold water, cave water, or underwater for
+  Dive. Each type has its
   own cast, so a sea route and a pond never look alike. A map's first fishing
   entries, which the Old Rod mostly catches, hold its most fitting common fish,
   and the later entries carry its own character, which the better rods reveal.
@@ -148,7 +150,7 @@ may disobey until your cap catches up, which is the price of a strong catch.
   slot capped at an early stage, it keeps young levels.
 - **Prowlers** appear in every reach, sorted by temperament: harmless ones
   anywhere, including Roads; fierce ones from Wilds outward; dangerous ones
-  only in Outlands and past a dungeon's first floor. See the
+  only in Outlands and on a dungeon's deeper floors. See the
   [prowlers spec](../specs/prowlers.md).
   Safari Zones run in Safari mode, with no battles to lose, so any temperament
   may appear there.

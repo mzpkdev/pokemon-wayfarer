@@ -124,7 +124,8 @@ family is catchable.
 ### Reach
 
 - Rewards follow their temperament: harmless anywhere, fierce from Wilds
-  outward, dangerous only in Outlands and dungeons. Melemele, the only Road
+  outward, dangerous only in Outlands and on a dungeon's
+  [deeper floors](reach-assignments.md#dungeon-floors). Melemele, the only Road
   island, holds only harmless rewards.
 - Stages reached by a non-level evolution (item, trade, friendship, move or
   location) appear only in Outlands and on a dungeon's
@@ -177,10 +178,10 @@ Alola's tables have no night versions today, so every night table is new.
   Lycanroc, is a rare find in Akala Cave.
 
 - Every map has its own night table.
-- Outdoors, at least 30% of a night table's slot weight goes to species that
+- Outdoors, at least 30% of a land table's night weight goes to species that
   don't appear in that map's day table, such as Alolan Rattata, Morelull,
   Mimikyu and Alolan Meowth.
-- Caves change more lightly. Their day and night tables may overlap, but each
+- Caves and surfing change more lightly. Their day and night tables may overlap, but each
   has at least one species that appears only at night or is much more common
   then.
 - Fishing has night tables too, with the same light difference as caves.

@@ -160,7 +160,8 @@ fit what the map has.
 ### Reach
 
 - Rewards follow their temperament: harmless anywhere, fierce from Wilds
-  outward, dangerous only in Outlands and dungeons.
+  outward, dangerous only in Outlands and on a dungeon's
+  [deeper floors](reach-assignments.md#dungeon-floors).
 - Stages reached by a non-level evolution (item, trade, friendship, move or
   location) appear only in Outlands and on a dungeon's
   [deeper floors](reach-assignments.md#dungeon-floors).
@@ -225,10 +226,10 @@ Den, and the water starters.
 ### Day and night
 
 - Every map has its own night table.
-- Outdoors, at least 30% of a night table's slot weight goes to species that
+- Outdoors, at least 30% of a land table's night weight goes to species that
   don't appear in that map's day table, such as Hoothoot, Gastly, Murkrow,
   Houndour and Oddish.
-- Caves and buildings change more lightly. Their day and night tables may
+- Caves, buildings and surfing change more lightly. Their day and night tables may
   overlap, but each has at least one species that appears only at night or is
   much more common then.
 - Fishing and trees and rocks have night tables too, with the same light

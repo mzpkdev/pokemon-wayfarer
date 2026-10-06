@@ -164,3 +164,6 @@ Thumbs.db
 
 # Generated developer-tool catalogs
 /build/
+
+# Python
+__pycache__/

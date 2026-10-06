@@ -49,8 +49,8 @@ then replaces the nearby-access evidence:
 - **The 8% crossing floor holds from TR 20, two badges, to TR 160.** Before
   that, crossings rely on the Surf HM: no Kanto or Johto species knows Surf
   below level 7, and Roads are level 5 before the first badge. TR 20 is the
-  first TR at which every scenario passes. Hoenn's Lilycove (at night),
-  Mossdeep, Pacifidlog and Route 118 east crossings, the Den's Whirlpool and
+  first TR at which every scenario passes. Hoenn's Lilycove and Pacifidlog (at night),
+  Mossdeep and Route 118 east crossings, the Den's Whirlpool and
   Sootopolis's Dive all still fall short at TR 19.
 - **Seventeen arrival scenarios join the eleven crossings:** one for each Sevii
   island and each Alola island, Dewford Town for Surf, Sootopolis City for Surf

@@ -41,7 +41,7 @@ The Safari Zones and the Bug-Catching Contest stay outside the guarantee.
   knows Surf below level 7, and Roads are level 5 before the first badge.
   Until two badges, players cross with the Surf HM, as in the original games.
   TR 20 is also the first TR at which every scenario passes: Hoenn's Lilycove
-  (at night), Mossdeep, Pacifidlog and Route 118 east crossings, the Den's
+  and Pacifidlog (at night), Mossdeep and Route 118 east crossings, the Den's
   Whirlpool and Sootopolis's Dive all still fall short at TR 19, whatever their
   carriers.
 - **The original 11 scenarios keep their maps, methods and ranks.** Blackthorn's
@@ -314,8 +314,8 @@ entries must re-run the audit.
   changes.
 - Every reward takes its prowler minimum in any slot, common or rare, at any
   stage of its line (babies skipped when looking for the line's first stage).
-  Only Sinjoh's Hisuian natives at home and Kalos in the Safari Zones are
-  exempt.
+  Only Sinjoh's residents at home (its Hisuian natives, Stantler and Scyther)
+  and Kalos in the Safari Zones are exempt.
 - A dungeon's floor and floor count come from the `floor` and `floors` of
   `data/meta.json`, which follow the steps in
   [reach-assignments](../../../../specs/reach-assignments.md#dungeon-floors).
@@ -342,9 +342,9 @@ specs. The table specs' tables are rendered from it. To change a table:
 3. **Check** the rules: `python3 check.py` checks every region and exits with
    an error if any rule breaks. It enforces the slot counts and weights,
    native generations, reach and temperament (including no dangerous prowler
-   on a dungeon's first floor step), night rules, water casts, crossing
-   carriers, terrain coverage and the generation shares, and it prints notes
-   that need a human look, such as a band outside its target. It reads
+   on a dungeon's first floor step), night rules, crossing carriers, terrain
+   coverage and the generation-share bands, and it prints notes that need a
+   human look, such as a species outside its water type's cast. It reads
    `specs/prowlers.md` for the reward table.
 4. **Audit** the native HM guarantee: `python3 hm_audit.py scenarios` and
    `python3 hm_audit.py regional`. Both write the `audit_*.json` files. Every

@@ -148,7 +148,8 @@ Species live where they belong. Some examples:
 ### Reach
 
 - Rewards follow their temperament: harmless anywhere, fierce from Wilds
-  outward, dangerous only in Outlands and dungeons.
+  outward, dangerous only in Outlands and on a dungeon's
+  [deeper floors](reach-assignments.md#dungeon-floors).
 - Stages reached by a non-level evolution (item, trade, friendship, move or
   location) appear only in Outlands and on a dungeon's
   [deeper floors](reach-assignments.md#dungeon-floors).
@@ -211,10 +212,10 @@ species, so it stays out of sea caves such as the Seafloor Cavern.
 Hoenn's tables have no night versions today, so every night table is new.
 
 - Every map has its own night table.
-- Outdoors, at least 30% of a night table's slot weight goes to species that
+- Outdoors, at least 30% of a land table's night weight goes to species that
   don't appear in that map's day table, such as Poochyena, Duskull, Shuppet,
   Purrloin, Woobat, Munna and Litwick.
-- Caves and buildings change more lightly. Their day and night tables may
+- Caves, buildings and surfing change more lightly. Their day and night tables may
   overlap, but each has at least one species that appears only at night or is
   much more common then.
 - Fishing and Rock Smash have night tables too, with the same light difference

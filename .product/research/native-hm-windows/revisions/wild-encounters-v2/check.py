@@ -25,8 +25,8 @@ SLOTS = {'land': 12, 'surf': 5, 'rock': 5, 'fish': 10}
 WEIGHTS = {'land': [20, 20, 10, 10, 10, 10, 5, 5, 4, 4, 1, 1], 'surf': [60, 30, 5, 4, 1], 'rock': [60, 30, 5, 4, 1],
            'fish': [25, 16.7, 11, 9.3, 9, 7, 6.3, 5.7, 5, 5]}  # fishing: average of the Standard Rod's three qualities
 RARE_FROM = {'land': 6, 'surf': 2, 'rock': 2, 'fish': 6}
-_HM = json.load(open(REPO + 'research/native-hm-windows/revisions/nearby-access/proposal.json'))['moves']
-CARRIERS = {mv: set(_HM[mv]) for mv in ('SURF', 'WHIRLPOOL')}
+_ROSTER = json.load(open(os.path.join(HERE, '..', 'roster_v2.json')))['roster']  # the v2 native HM roster
+CARRIERS = {mv: {e['species'].removeprefix('SPECIES_') for e in _ROSTER if 'MOVE_' + mv in e['roles']} for mv in ('SURF', 'WHIRLPOOL')}
 
 KANTO_CASTS = {
     'pond': {'MAGIKARP', 'POLIWAG', 'PSYDUCK', 'GOLDEEN', 'SLOWPOKE', 'MARILL', 'WOOPER'},

@@ -122,12 +122,13 @@ trees' Spewpa and Fletchling slots, and Pumpkaboo takes the rocks'.
 ### Day and night
 
 - Every Safari area has its own night table.
-- Outdoors, at least 30% of a night table's slot weight goes to species that
+- Outdoors, at least 30% of a land table's night weight goes to species that
   don't appear in that map's day table, such as Noibat, Inkay, Pancham, Espurr,
   Pumpkaboo and Honedge wherever they are absent by day.
 - Day species rest at night: Fletchling, Helioptile and Hawlucha appear only by
   day outdoors, and Scatterbug's patterns only by day.
-- The Kanto Safari's Cave changes more lightly, like any cave.
+- Surfing, Headbutt trees, Rock Smash rocks and the Kanto Safari's Cave
+  change more lightly, as caves do.
 
 ### The Bug-Catching Contest
 
