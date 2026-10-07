@@ -15,9 +15,10 @@ have cleared is empty for good. Late in the game, routes are a row of fixed
 fights you can't lose, and revisiting them gives you nothing.
 
 Daily world slots turn each regular trainer spot and each item spot into a
-slot that changes from day to day. You meet the original trainer or item first.
-After that, each day the slot holds a different item or nothing, or one of the
-trainers of its kind you have already met in that region, or nothing.
+slot that changes from day to day. Trainers and prize items, such as TMs,
+are met first where they were placed. After that, and from the first day for
+ordinary items, each day a spot holds a random find or nothing, or one of the
+trainers of its kind you have already beaten in that region, or nobody.
 
 Trainers stay people, not spawns. Each one is in at most one place a day, keeps
 their phone number and rematches wherever they turn up, and tells you on the
@@ -29,11 +30,14 @@ and travel stays light because some spots are empty.
 - **Slot:** a regular trainer spot or an item spot on a map, keeping its
   position, facing and sight range.
 - **Authored occupant:** the trainer or item placed in the slot today.
-- **Rotating slot:** a slot whose authored occupant is used up: the trainer is
-  defeated or the item is picked up.
+- **Rotating slot:** a pool spot, or a slot whose authored occupant is used
+  up: the trainer is defeated or the prize is picked up.
 - **Draw:** what a rotating slot holds on a given day: one candidate from its
   pool, or nothing.
 - **Pool:** the candidates a rotating slot draws from.
+- **Prize spot:** an item spot holding a fixed, authored item that you find
+  once.
+- **Pool spot:** an item spot that draws a random consumable every day.
 - **Class family:** a trainer class with its per-source copies merged, for
   example Hiker, Hiker (HNS) and Hiker (FRLG).
 - **Trainer group:** the regular trainers of one class family in one region,
@@ -58,12 +62,13 @@ changes the day, as it does for every other daily event.
 
 ### Authored first
 
-Every slot starts with its authored occupant and keeps it until it is used up.
-Unique items, such as TMs, evolution stones, held items and key items, are
-therefore never lost to a draw: each one is found exactly once, where it was
+Every trainer slot and every prize spot (see [Item slots](#item-slots)) starts
+with its authored occupant and keeps it until it is used up. Prizes are
+therefore never lost to a draw: each one is found exactly once, where it is
 placed.
 
-After that, the slot becomes a rotating slot from the next day.
+After that, the slot becomes a rotating slot from the next day. Pool spots
+skip this step and rotate from the first day.
 
 ### Clearing a slot
 
@@ -172,11 +177,30 @@ design, which reuses their Vs. Seeker teams.
 
 ### Item slots
 
-Item balls and hidden items both rotate. Finds should be exciting: a
-rotating slot draws from one broad pool of consumables, so any spot can turn up
-almost anything, from a Potion to a Max Revive or a Rare Candy. Finds don't
-improve with Trainer Rating. A Road spot found on day one and on day three
-hundred has the same odds.
+Item spots come in two kinds:
+
+- **Prize spots** hold one fixed, authored item: a TM, a held item, an
+  evolution stone or item, a key item, or a consumable promoted to a prize,
+  such as a Master Ball. You find each prize exactly once. After that, the spot
+  rotates like a pool spot from the next day.
+- **Pool spots** hold a random find from the very first day. Their authored
+  consumable, such as a Potion on Route 29, is dropped.
+
+Every authored item that isn't a consumable becomes a prize, along with a
+short reviewed list of promoted consumables. Every other spot becomes a pool
+spot. A prize that repeats a reusable item you already own, such as a second
+Escape Rope, becomes a pool spot instead.
+
+**Prizes follow danger.** Strong prizes sit in Wilds, Outlands or dungeons. A
+reviewed list names the strong ones, such as Leftovers or a top TM, and any of
+them placed on a Road spot moves to a fitting spot in a riskier place, trading
+places with a pool spot. Today 26 prizes sit on Road maps, mostly modest TMs,
+and 67 are already in dungeons.
+
+**Pool finds should be exciting.** A pool spot draws from one broad pool of
+consumables, so any spot can turn up almost anything, from a Potion to a Max
+Revive or a Rare Candy. Finds don't improve with Trainer Rating. A Road spot
+found on day one and on day three hundred has the same odds.
 
 The reach only tilts the odds. Road leans toward everyday supplies, Wilds a
 step up, and Outlands and deep dungeon floors lean toward the best
@@ -187,21 +211,23 @@ A dungeon's entrance floor counts as Wilds and its deeper floors as Outlands.
 A map with no reach of its own, such as a building, uses its surroundings: the
 dungeon it belongs to, or Road otherwise.
 
-Rotating pools never contain unique items. A hidden item stays hidden.
-The Itemfinder finds rotating hidden items the same way it finds authored ones.
+The pool never contains prizes. A hidden item stays hidden, and the Itemfinder
+finds hidden pool items the same way it finds authored ones.
 
 ## Boundaries
 
 - Story content, Gyms, notable trainers and Leagues don't rotate. The
   repeatable challenge in the late game stays with
   [notable trainers](notable-trainers.md) and [Leagues](leagues.md).
-- Authored placement, parties, dialogue and items stay as they are. This
-  feature only adds what happens after the authored occupant is used up.
+- Authored trainer placement, parties and dialogue stay as they are. Items
+  change only as [Item slots](#item-slots) describes: pool spots drop their
+  consumables, and strong prizes on Road spots move somewhere riskier.
 - No new trainer spots or item spots are added, and none are moved.
 - Berry trees, gift NPCs, Pickup and other existing daily item sources are
   unchanged.
-- Trainer levels and party building are unchanged. A separate design may
-  later move trainer strength onto reaches.
+- Trainer levels and party building belong to
+  [regular trainer scaling](trainer-party-scaling.md), which sets them by
+  reach.
 
 ## Balance
 
@@ -228,8 +254,9 @@ generated objects excluded:
   split.
 - **Item slots:** 762 in total: 485 item balls and 277 hidden items. 167 hold
   unique items: 58 TMs, 49 held items, 26 key items, 25 evolution stones,
-  8 held evolution items and 1 HM. Hoenn and the FRLG Kanto ports keep every
-  authored item.
+  8 held evolution items and 1 HM. These become the prize spots, apart from
+  repeated reusable items such as the 12 Escape Ropes. Hoenn and the FRLG Kanto
+  ports keep every authored item.
 - **Sevii items (prerequisite):** Sevii's 97 FRLG items (39 item balls and 58
   hidden items) were left out by the
   [exploration port](sevii-exploration-port.md) and never restored. They are
