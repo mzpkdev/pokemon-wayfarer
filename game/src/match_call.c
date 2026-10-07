@@ -2057,30 +2057,25 @@ static bool8 GetTrainerLocationWildSpecies(u16 headerId, enum WildPokemonArea ar
         .fishingRod = WILD_ENCOUNTER_FISHING_ROD_NONE,
     };
     struct WildEncounterProfileView view;
-    const struct WildPokemon *entry;
-    struct WildEncounterSpeciesOutcome outcome;
     u16 eligibleWeight;
     u8 slot;
-    u8 authoredLevel;
+    u16 likelySpecies;
 
     if (species == NULL || !GetWildEncounterProfileView(&context, &view))
         return FALSE;
 
-    eligibleWeight = GetCurrentWildEncounterProfileEligibleWeight(&view);
+    eligibleWeight = GetWildEncounterProfileEligibleWeight(&view);
     if (eligibleWeight == 0
-     || !SelectCurrentWildEncounterProfileSlot(&view, Random() % eligibleWeight, &slot)
-     || !GetWildEncounterProfileEntry(&view, slot, &entry))
+     || !SelectWildEncounterProfileSlot(&view, Random() % eligibleWeight, &slot))
         return FALSE;
 
-    // Match Call has always chosen only a slot. Use its lowest authored level
-    // as a stable representative to resolve the effective species without
-    // adding a level-roll side effect.
-    authoredLevel = min(entry->minLevel, entry->maxLevel);
-    if (!GetCurrentWildEncounterSpeciesOutcome(&view, slot, authoredLevel, &outcome)
-     || outcome.species == SPECIES_NONE)
+    // Match Call has always chosen only a slot. Name the species that slot
+    // most often produces, without adding a level-roll side effect.
+    likelySpecies = GetCurrentWildEncounterSlotLikelySpecies(&view, slot);
+    if (likelySpecies == SPECIES_NONE)
         return FALSE;
 
-    *species = outcome.species;
+    *species = likelySpecies;
     return TRUE;
 }
 

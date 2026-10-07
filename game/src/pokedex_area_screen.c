@@ -105,8 +105,6 @@ struct
     /*0x620*/ mapsec_u16_t specialAreaRegionMapSectionIds[MAX_AREA_MARKERS];
     /*0x660*/ struct Sprite *areaMarkerSprites[MAX_AREA_MARKERS];
     /*0x6E0*/ u16 numAreaMarkerSprites;
-    /*0x6E2*/ u16 alteringCaveCounter;
-    /*0x6E4*/ u16 alteringCaveId;
     /*0x6E8*/ u8 *screenSwitchState;
     /*0x6EC*/ struct RegionMap regionMap;
     /*0xF70*/ u8 charBuffer[64];
@@ -123,7 +121,7 @@ static void BuildAreaGlowTilemap(void);
 static void SetAreaHasMon(u16, u16);
 static void SetSpecialMapHasMon(u16, u16);
 static mapsec_u16_t GetRegionMapSectionId(u8, u8);
-static bool8 MapHasSpecies(u16, u32, u16);
+static bool8 MapHasSpecies(u16, u16);
 static bool8 ProfileHasSpecies(u16, enum WildPokemonArea, enum WildEncounterFishingRod, u16);
 static bool8 ProfileViewHasSpecies(const struct WildEncounterProfileView *, u16);
 static void DoAreaGlow(void);
@@ -299,11 +297,6 @@ static void FindMapsWithMon(u16 species)
     u16 i;
     struct Roamer *roamer;
 
-    sPokedexAreaScreen->alteringCaveCounter = 0;
-    sPokedexAreaScreen->alteringCaveId = VarGet(VAR_ALTERING_CAVE_WILD_SET);
-    if (sPokedexAreaScreen->alteringCaveId >= NUM_ALTERING_CAVE_TABLES)
-        sPokedexAreaScreen->alteringCaveId = 0;
-
     sPokedexAreaScreen->numOverworldAreas = 0;
     sPokedexAreaScreen->numSpecialAreas = 0;
 
@@ -357,7 +350,7 @@ static void FindMapsWithMon(u16 species)
             continue;
 #endif
 
-        if (MapHasSpecies(i, headerSectionId, species))
+        if (MapHasSpecies(i, species))
         {
             switch (gWildMonHeaders[i].mapGroup)
             {
@@ -449,16 +442,8 @@ static mapsec_u16_t GetRegionMapSectionId(u8 mapGroup, u8 mapNum)
     return Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum)->regionMapSectionId;
 }
 
-static bool8 MapHasSpecies(u16 headerId, u32 headerSectionId, u16 species)
+static bool8 MapHasSpecies(u16 headerId, u16 species)
 {
-    // If this is a header for Altering Cave, skip it if it's not the current Altering Cave encounter set
-    if (headerSectionId == MAPSEC_ALTERING_CAVE)
-    {
-        sPokedexAreaScreen->alteringCaveCounter++;
-        if (sPokedexAreaScreen->alteringCaveCounter != sPokedexAreaScreen->alteringCaveId + 1)
-            return FALSE;
-    }
-
     if (ProfileHasSpecies(headerId, WILD_AREA_LAND, WILD_ENCOUNTER_FISHING_ROD_NONE, species))
         return TRUE;
     if (ProfileHasSpecies(headerId, WILD_AREA_WATER, WILD_ENCOUNTER_FISHING_ROD_NONE, species))
@@ -490,27 +475,17 @@ static bool8 ProfileViewHasSpecies(const struct WildEncounterProfileView *view, 
 {
     u8 slot;
 
-    // Area lookup is display-only. Iterate the authored level range to expose
-    // every effective species a profile can produce without consuming RNG.
+    // Area lookup is display-only. Walk each slot's outcome distribution to
+    // expose every species a profile can produce without consuming RNG.
     for (slot = view->entryStart; slot < view->entryStart + view->entryCount; slot++)
     {
-        const struct WildPokemon *entry;
-        u16 authoredLevel;
-        u8 minimumLevel;
-        u8 maximumLevel;
+        struct WildEncounterSlotOutcome outcomes[WILD_ENCOUNTER_MAX_SLOT_OUTCOMES];
+        u32 count = GetCurrentWildEncounterSlotOutcomes(view, slot, outcomes);
+        u32 i;
 
-        if (!IsCurrentWildEncounterProfileSlotEligible(view, slot)
-         || !GetWildEncounterProfileEntry(view, slot, &entry))
-            continue;
-
-        minimumLevel = min(entry->minLevel, entry->maxLevel);
-        maximumLevel = max(entry->minLevel, entry->maxLevel);
-        for (authoredLevel = minimumLevel; authoredLevel <= maximumLevel; authoredLevel++)
+        for (i = 0; i < count; i++)
         {
-            struct WildEncounterSpeciesOutcome outcome;
-
-            if (GetCurrentWildEncounterSpeciesOutcome(view, slot, authoredLevel, &outcome)
-             && outcome.species == species)
+            if (outcomes[i].species == species)
                 return TRUE;
         }
     }
@@ -765,8 +740,11 @@ void DisplayPokedexAreaScreen(u16 species, u8 *screenSwitchState, enum TimeOfDay
     sPokedexAreaScreen->screenSwitchState = screenSwitchState;
     sPokedexAreaScreen->areaState = areaState;
     gAreaTimeOfDay = timeOfDay;
-    if (gAreaTimeOfDay == TIME_MORNING || gAreaTimeOfDay == TIME_EVENING)
+    // Morning shows the day tables and evening the night tables.
+    if (gAreaTimeOfDay == TIME_MORNING)
         gAreaTimeOfDay = TIME_DAY;
+    else if (gAreaTimeOfDay == TIME_EVENING)
+        gAreaTimeOfDay = TIME_NIGHT;
     screenSwitchState[0] = 0;
 
     if (sPokedexAreaScreen->areaState == DEX_UPDATE_AREA_SCREEN)

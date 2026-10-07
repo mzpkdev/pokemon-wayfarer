@@ -87,12 +87,15 @@ bool32 OnStep_DexNavSearch(void);
 // Deterministic seams for mechanics coverage. They are omitted from release
 // builds and let tests inspect only the normal-profile boundary: hidden
 // DexNav data remains a separate raw source.
-bool8 DexNavGetEffectiveProfileOutcomeForTesting(const struct WildEncounterProfileView *view, u8 slot, u8 authoredLevel, struct WildEncounterSpeciesOutcome *outcome);
 u16 DexNavGetHiddenProfileSpeciesForTesting(const struct WildPokemonInfo *info, u8 slot);
 // Models only the ordinary detector fallback's weighted slot then optional
 // lure mirror, with supplied rolls. It never applies to raw hidden entries.
 bool8 DexNavSelectProfileFallbackSlotWithRollsForTesting(const struct WildEncounterProfileView *view, u16 selectionRoll, bool8 lureActive, u8 lureRoll, u8 *slot);
-bool8 DexNavSelectProfileOutcomeWithRollsForTesting(const struct WildEncounterProfileView *view, u16 species, u32 proposalRoll, u32 acceptanceRoll, bool8 *accepted, struct WildEncounterSpeciesOutcome *outcome);
+// A species search draws from the profile's exact outcome distribution
+// restricted to that species. Returns the species' total mass (every outcome's
+// slot weight times its own weight), and sets the outcome that a roll within
+// 0..mass-1 selects. Returns 0 without an outcome when the roll is out of range.
+u32 DexNavSelectProfileOutcomeWithRollForTesting(const struct WildEncounterProfileView *view, u16 species, u32 roll, struct WildEncounterSpeciesOutcome *outcome);
 #endif
 
 extern u16 gDexNavSpecies;

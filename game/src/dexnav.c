@@ -132,15 +132,6 @@ struct DexNavGUI
     u8 starSpriteIds[3];
 };
 
-struct DexNavProfileSpeciesCandidate
-{
-    u8 slot;
-    u8 minimumLevel;
-    u8 maximumLevel;
-    u8 fullRange;
-    u8 matchingLevelCount;
-};
-
 // RAM
 
 EWRAM_DATA static struct DexNavSearch *sDexNavSearchDataPtr = NULL;
@@ -163,7 +154,6 @@ static u8 DexNavTryGenerateMonLevel(u16 species, enum EncounterType environment)
 static u8 DexNavApplyChainLevelBonus(u8 levelBase);
 static u8 GetEncounterLevelFromMapData(u16 species, enum EncounterType environment);
 static bool8 TryResolveDexNavProfile(u16 headerId, enum WildPokemonArea area, struct WildEncounterProfileView *view);
-static bool8 IsDexNavWildEncounterRandomized(void);
 static bool8 TryApplyDexNavProfileFallbackLure(const struct WildEncounterProfileView *view, bool8 lureActive, u8 lureRoll, u8 *slot);
 #if TESTING
 static bool8 TrySelectDexNavProfileFallbackSlot(const struct WildEncounterProfileView *view, u16 selectionRoll, bool8 lureActive, u8 lureRoll, u8 *slot);
@@ -171,8 +161,7 @@ static bool8 TrySelectDexNavProfileFallbackSlot(const struct WildEncounterProfil
 static bool8 TrySelectDexNavProfileOutcome(const struct WildEncounterProfileView *view, struct WildEncounterSpeciesOutcome *outcome);
 static bool8 TrySelectDexNavProfileOutcomeForSpecies(const struct WildEncounterProfileView *view, u16 species, struct WildEncounterSpeciesOutcome *outcome);
 static bool8 TrySelectDexNavStandardSearchOutcome(u16 species, enum EncounterType environment, struct WildEncounterSpeciesOutcome *outcome);
-static bool8 BuildDexNavProfileSpeciesCandidates(const struct WildEncounterProfileView *view, u16 species, struct DexNavProfileSpeciesCandidate *candidates, u16 *candidateCount, u8 *minimumRange, u32 *proposalWeight);
-static bool8 ResolveDexNavProfileSpeciesProposal(const struct WildEncounterProfileView *view, const struct DexNavProfileSpeciesCandidate *candidates, u16 candidateCount, u16 species, u32 proposalRoll, u16 *candidateIndex, struct WildEncounterSpeciesOutcome *outcome);
+static u32 WalkDexNavSpeciesMass(const struct WildEncounterProfileView *view, u16 species, u32 roll, struct WildEncounterSpeciesOutcome *outcome);
 static void CreateDexNavWildMon(u16 species, u8 potential, u8 level, u8 abilityNum, enum Item item, enum Move *moves);
 static u8 GetPlayerDistance(s16 x, s16 y);
 static u8 DexNavPickTile(enum EncounterType environment, u8 xSize, u8 ySize, bool8 smallScan);
@@ -1536,43 +1525,6 @@ static u8 GetEncounterLevelFromMapData(u16 species, enum EncounterType environme
 
     switch (environment)
     {
-    case ENCOUNTER_TYPE_LAND:    // grass
-    case ENCOUNTER_TYPE_WATER:    //water
-        {
-            enum WildPokemonArea area = environment == ENCOUNTER_TYPE_LAND ? WILD_AREA_LAND : WILD_AREA_WATER;
-            struct WildEncounterProfileView view;
-            u8 slot;
-
-            if (!TryResolveDexNavProfile(headerId, area, &view))
-                return MON_LEVEL_NONEXISTENT; // Hidden Pokémon should only appear on walkable tiles or surf tiles.
-
-            for (slot = view.entryStart; slot < view.entryStart + view.entryCount; slot++)
-            {
-                const struct WildPokemon *entry;
-                u16 authoredLevel;
-                u8 minimumLevel;
-                u8 maximumLevel;
-
-                if (!IsCurrentWildEncounterProfileSlotEligible(&view, slot)
-                 || !GetWildEncounterProfileEntry(&view, slot, &entry))
-                    continue;
-
-                minimumLevel = min(entry->minLevel, entry->maxLevel);
-                maximumLevel = max(entry->minLevel, entry->maxLevel);
-                for (authoredLevel = minimumLevel; authoredLevel <= maximumLevel; authoredLevel++)
-                {
-                    struct WildEncounterSpeciesOutcome outcome;
-
-                    if (GetCurrentWildEncounterSpeciesOutcome(&view, slot, authoredLevel, &outcome)
-                     && outcome.species == species)
-                    {
-                        min = min(min, outcome.level);
-                        max = max(max, outcome.level);
-                    }
-                }
-            }
-            break;
-        }
     case ENCOUNTER_TYPE_HIDDEN:
         {
         enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
@@ -1622,15 +1574,6 @@ static bool8 TryResolveDexNavProfile(u16 headerId, enum WildPokemonArea area, st
     return GetWildEncounterProfileView(&context, view);
 }
 
-static bool8 IsDexNavWildEncounterRandomized(void)
-{
-#if RANDOMIZER_AVAILABLE
-    return RandomizerFeatureEnabled(RANDOMIZE_WILD_MON);
-#else
-    return FALSE;
-#endif
-}
-
 static bool8 TryApplyDexNavProfileFallbackLure(const struct WildEncounterProfileView *view, bool8 lureActive, u8 lureRoll, u8 *slot)
 {
     if (view == NULL || slot == NULL)
@@ -1640,7 +1583,7 @@ static bool8 TryApplyDexNavProfileFallbackLure(const struct WildEncounterProfile
     // weighted eligible slot, then reverse that eligible sequence 20% of the
     // time. Hidden DexNav entries never use this normal-profile path.
     if (lureActive && lureRoll < 2)
-        return GetWildEncounterProfileMirroredEligibleSlot(view, GetTrainerRating(), IsDexNavWildEncounterRandomized(), *slot, slot);
+        return GetWildEncounterProfileMirroredEligibleSlot(view, *slot, slot);
 
     return TRUE;
 }
@@ -1653,9 +1596,9 @@ static bool8 TrySelectDexNavProfileFallbackSlot(const struct WildEncounterProfil
     if (view == NULL || slot == NULL)
         return FALSE;
 
-    eligibleWeight = GetCurrentWildEncounterProfileEligibleWeight(view);
+    eligibleWeight = GetWildEncounterProfileEligibleWeight(view);
     if (selectionRoll >= eligibleWeight
-     || !SelectCurrentWildEncounterProfileSlot(view, selectionRoll, slot))
+     || !SelectWildEncounterProfileSlot(view, selectionRoll, slot))
         return FALSE;
 
     return TryApplyDexNavProfileFallbackLure(view, lureActive, lureRoll, slot);
@@ -1664,168 +1607,82 @@ static bool8 TrySelectDexNavProfileFallbackSlot(const struct WildEncounterProfil
 
 static bool8 TrySelectDexNavProfileOutcome(const struct WildEncounterProfileView *view, struct WildEncounterSpeciesOutcome *outcome)
 {
-    const struct WildPokemon *entry;
     u16 eligibleWeight;
     u8 slot;
-    u8 minimumLevel;
-    u8 maximumLevel;
-    u8 authoredLevel;
 
     if (view == NULL || outcome == NULL)
         return FALSE;
 
-    eligibleWeight = GetCurrentWildEncounterProfileEligibleWeight(view);
+    eligibleWeight = GetWildEncounterProfileEligibleWeight(view);
     if (eligibleWeight == 0
-     || !SelectCurrentWildEncounterProfileSlot(view, Random() % eligibleWeight, &slot)
+     || !SelectWildEncounterProfileSlot(view, Random() % eligibleWeight, &slot)
      || (LURE_STEP_COUNT != 0
-      && !TryApplyDexNavProfileFallbackLure(view, TRUE, Random() % 10, &slot))
-     || !GetWildEncounterProfileEntry(view, slot, &entry))
+      && !TryApplyDexNavProfileFallbackLure(view, TRUE, Random() % 10, &slot)))
         return FALSE;
 
-    minimumLevel = min(entry->minLevel, entry->maxLevel);
-    maximumLevel = max(entry->minLevel, entry->maxLevel);
-    authoredLevel = RandomUniform(RNG_DEXNAV_ENCOUNTER_LEVEL, minimumLevel, maximumLevel);
-    return GetCurrentWildEncounterSpeciesOutcome(view, slot, authoredLevel, outcome);
+    return RollWildEncounterSlot(view, slot, outcome);
 }
 
+// A DexNav search names a species, and one species can be produced by several
+// slots, levels and stages. The outcome is drawn from the profile's exact
+// distribution restricted to that species: every outcome of the species has a
+// mass of its slot's weight times its own weight, and one roll over the total
+// picks among them.
 static bool8 TrySelectDexNavProfileOutcomeForSpecies(const struct WildEncounterProfileView *view, u16 species, struct WildEncounterSpeciesOutcome *outcome)
 {
-    struct DexNavProfileSpeciesCandidate candidates[LAND_WILD_COUNT];
-    u32 proposalWeight;
-    u16 candidateCount;
-    u8 minimumRange;
+    u32 total = WalkDexNavSpeciesMass(view, species, 0, NULL);
 
-    while (TRUE)
-    {
-        struct WildEncounterSpeciesOutcome candidate;
-        u16 candidateIndex;
-
-        if (!BuildDexNavProfileSpeciesCandidates(view, species, candidates, &candidateCount, &minimumRange, &proposalWeight)
-         || !ResolveDexNavProfileSpeciesProposal(view, candidates, candidateCount,
-                                                  species,
-                                                  RandomUniform(RNG_DEXNAV_ENCOUNTER_LEVEL, 0, proposalWeight - 1),
-                                                  &candidateIndex, &candidate))
-            return FALSE;
-
-        // This acceptance factor makes every accepted raw level's mass equal
-        // to its ordinary source weight divided by its full source range.
-        if (RandomUniform(RNG_DEXNAV_ENCOUNTER_LEVEL, 0, candidates[candidateIndex].fullRange - 1) < minimumRange)
-        {
-            *outcome = candidate;
-            return TRUE;
-        }
-    }
+    if (total == 0)
+        return FALSE;
+    return WalkDexNavSpeciesMass(view, species, RandomUniform(RNG_DEXNAV_ENCOUNTER_LEVEL, 0, total - 1), outcome) != 0;
 }
 
-static bool8 BuildDexNavProfileSpeciesCandidates(const struct WildEncounterProfileView *view, u16 species, struct DexNavProfileSpeciesCandidate *candidates, u16 *candidateCount, u8 *minimumRange, u32 *proposalWeight)
+// Returns the total mass of the species in the profile. With an outcome, also
+// sets it to the entry the roll falls on within that mass.
+static u32 WalkDexNavSpeciesMass(const struct WildEncounterProfileView *view, u16 species, u32 roll, struct WildEncounterSpeciesOutcome *outcome)
 {
-    struct WildEncounterSpeciesOutcome outcome;
-    u16 count = 0;
-    u32 weight = 0;
-    u8 smallestRange = MAX_LEVEL;
+    u32 total = 0;
     u8 slot;
+    bool8 found = FALSE;
 
-    if (view == NULL || candidates == NULL || candidateCount == NULL
-     || minimumRange == NULL || proposalWeight == NULL
-     || view->entryCount > LAND_WILD_COUNT)
-        return FALSE;
+    if (view == NULL || view->entryCount > LAND_WILD_COUNT)
+        return 0;
 
-    // A DexNav selection names an effective species, whereas one effective
-    // species can now be produced by several raw slots and level ranges.
     for (slot = view->entryStart; slot < view->entryStart + view->entryCount; slot++)
     {
-        const struct WildPokemon *entry;
-        struct DexNavProfileSpeciesCandidate *entryCandidate;
-        u16 authoredLevel;
+        struct WildEncounterSlotOutcome outcomes[WILD_ENCOUNTER_MAX_SLOT_OUTCOMES];
+        u32 slotWeight = GetWildEncounterProfileEffectiveWeight(view, slot);
+        u32 count;
+        u32 i;
 
-        if (!IsCurrentWildEncounterProfileSlotEligible(view, slot)
-         || !GetWildEncounterProfileEntry(view, slot, &entry))
+        if (slotWeight == 0)
             continue;
 
-        entryCandidate = &candidates[count];
-        entryCandidate->slot = slot;
-        entryCandidate->minimumLevel = min(entry->minLevel, entry->maxLevel);
-        entryCandidate->maximumLevel = max(entry->minLevel, entry->maxLevel);
-        entryCandidate->fullRange = entryCandidate->maximumLevel - entryCandidate->minimumLevel + 1;
-        entryCandidate->matchingLevelCount = 0;
-
-        for (authoredLevel = entryCandidate->minimumLevel; authoredLevel <= entryCandidate->maximumLevel; authoredLevel++)
+        count = GetCurrentWildEncounterSlotOutcomes(view, slot, outcomes);
+        for (i = 0; i < count; i++)
         {
-            if (GetCurrentWildEncounterSpeciesOutcome(view, slot, authoredLevel, &outcome)
-             && outcome.species == species)
-                entryCandidate->matchingLevelCount++;
+            u32 mass;
+
+            if (outcomes[i].species != species)
+                continue;
+
+            mass = slotWeight * outcomes[i].weight;
+            if (outcome != NULL && !found && roll < total + mass)
+            {
+                outcome->species = outcomes[i].species;
+                outcome->level = outcomes[i].level;
+                found = TRUE;
+            }
+            total += mass;
         }
-
-        if (entryCandidate->matchingLevelCount == 0)
-            continue;
-
-        weight += GetCurrentWildEncounterProfileEffectiveWeight(view, slot) * entryCandidate->matchingLevelCount;
-        smallestRange = min(smallestRange, entryCandidate->fullRange);
-        count++;
     }
 
-    if (weight == 0)
-        return FALSE;
-
-    *candidateCount = count;
-    *minimumRange = smallestRange;
-    *proposalWeight = weight;
-    return TRUE;
-}
-
-static bool8 ResolveDexNavProfileSpeciesProposal(const struct WildEncounterProfileView *view, const struct DexNavProfileSpeciesCandidate *candidates, u16 candidateCount, u16 species, u32 proposalRoll, u16 *candidateIndex, struct WildEncounterSpeciesOutcome *outcome)
-{
-    u16 index;
-    u32 matchingLevelIndex = 0;
-
-    if (view == NULL || candidates == NULL || candidateIndex == NULL || outcome == NULL)
-        return FALSE;
-
-    for (index = 0; index < candidateCount; index++)
-    {
-        u32 entryWeight = GetCurrentWildEncounterProfileEffectiveWeight(view, candidates[index].slot);
-        u32 candidateWeight = entryWeight * candidates[index].matchingLevelCount;
-
-        if (proposalRoll < candidateWeight)
-        {
-            matchingLevelIndex = proposalRoll / entryWeight;
-            break;
-        }
-        proposalRoll -= candidateWeight;
-    }
-
-    if (index == candidateCount)
-        return FALSE;
-
-    for (u16 authoredLevel = candidates[index].minimumLevel;
-         authoredLevel <= candidates[index].maximumLevel;
-         authoredLevel++)
-    {
-        if (!GetCurrentWildEncounterSpeciesOutcome(view, candidates[index].slot, authoredLevel, outcome))
-            return FALSE;
-
-        if (outcome->species != species)
-            continue;
-
-        if (matchingLevelIndex != 0)
-        {
-            matchingLevelIndex--;
-            continue;
-        }
-
-        *candidateIndex = index;
-        return TRUE;
-    }
-
-    return FALSE;
+    if (outcome != NULL && !found)
+        return 0;
+    return total;
 }
 
 #if TESTING
-bool8 DexNavGetEffectiveProfileOutcomeForTesting(const struct WildEncounterProfileView *view, u8 slot, u8 authoredLevel, struct WildEncounterSpeciesOutcome *outcome)
-{
-    return GetCurrentWildEncounterSpeciesOutcome(view, slot, authoredLevel, outcome);
-}
-
 u16 DexNavGetHiddenProfileSpeciesForTesting(const struct WildPokemonInfo *info, u8 slot)
 {
     if (info == NULL || info->wildPokemon == NULL || slot >= HIDDEN_WILD_COUNT)
@@ -1840,26 +1697,15 @@ bool8 DexNavSelectProfileFallbackSlotWithRollsForTesting(const struct WildEncoun
     return TrySelectDexNavProfileFallbackSlot(view, selectionRoll, lureActive, lureRoll, slot);
 }
 
-bool8 DexNavSelectProfileOutcomeWithRollsForTesting(const struct WildEncounterProfileView *view, u16 species, u32 proposalRoll, u32 acceptanceRoll, bool8 *accepted, struct WildEncounterSpeciesOutcome *outcome)
+// Total mass of the species over the profile (out of 50 times the slot weight total)
+// and the outcome that the roll, within 0..mass-1, selects.
+u32 DexNavSelectProfileOutcomeWithRollForTesting(const struct WildEncounterProfileView *view, u16 species, u32 roll, struct WildEncounterSpeciesOutcome *outcome)
 {
-    struct DexNavProfileSpeciesCandidate candidates[LAND_WILD_COUNT];
-    struct WildEncounterSpeciesOutcome candidate;
-    u32 proposalWeight;
-    u16 candidateCount;
-    u16 candidateIndex;
-    u8 minimumRange;
+    u32 total = WalkDexNavSpeciesMass(view, species, 0, NULL);
 
-    if (accepted == NULL || outcome == NULL
-     || !BuildDexNavProfileSpeciesCandidates(view, species, candidates, &candidateCount, &minimumRange, &proposalWeight)
-     || proposalRoll >= proposalWeight
-     || !ResolveDexNavProfileSpeciesProposal(view, candidates, candidateCount, species, proposalRoll, &candidateIndex, &candidate)
-     || acceptanceRoll >= candidates[candidateIndex].fullRange)
-        return FALSE;
-
-    *accepted = acceptanceRoll < minimumRange;
-    if (*accepted)
-        *outcome = candidate;
-    return TRUE;
+    if (outcome != NULL && (roll >= total || WalkDexNavSpeciesMass(view, species, roll, outcome) == 0))
+        return 0;
+    return total;
 }
 #endif
 
@@ -2042,27 +1888,17 @@ static bool8 CapturedAllLandMons(u32 headerId)
     {
         for (slot = view.entryStart; slot < view.entryStart + view.entryCount; slot++)
         {
-            const struct WildPokemon *entry;
-            u16 authoredLevel;
-            u8 minimumLevel;
-            u8 maximumLevel;
+            struct WildEncounterSlotOutcome outcomes[WILD_ENCOUNTER_MAX_SLOT_OUTCOMES];
+            u32 count = GetCurrentWildEncounterSlotOutcomes(&view, slot, outcomes);
+            u32 i;
 
-            if (!IsCurrentWildEncounterProfileSlotEligible(&view, slot)
-             || !GetWildEncounterProfileEntry(&view, slot, &entry))
-                continue;
-
-            minimumLevel = min(entry->minLevel, entry->maxLevel);
-            maximumLevel = max(entry->minLevel, entry->maxLevel);
-            for (authoredLevel = minimumLevel; authoredLevel <= maximumLevel; authoredLevel++)
+            for (i = 0; i < count; i++)
             {
-                struct WildEncounterSpeciesOutcome outcome;
-
-                if (!GetCurrentWildEncounterSpeciesOutcome(&view, slot, authoredLevel, &outcome)
-                 || outcome.species == SPECIES_NONE)
+                if (outcomes[i].species == SPECIES_NONE)
                     continue;
 
                 hasSpecies = TRUE;
-                if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(outcome.species), FLAG_GET_CAUGHT))
+                if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(outcomes[i].species), FLAG_GET_CAUGHT))
                     return FALSE;
             }
         }
@@ -2084,27 +1920,17 @@ static bool8 CapturedAllWaterMons(u32 headerId)
     {
         for (slot = view.entryStart; slot < view.entryStart + view.entryCount; slot++)
         {
-            const struct WildPokemon *entry;
-            u16 authoredLevel;
-            u8 minimumLevel;
-            u8 maximumLevel;
+            struct WildEncounterSlotOutcome outcomes[WILD_ENCOUNTER_MAX_SLOT_OUTCOMES];
+            u32 count = GetCurrentWildEncounterSlotOutcomes(&view, slot, outcomes);
+            u32 i;
 
-            if (!IsCurrentWildEncounterProfileSlotEligible(&view, slot)
-             || !GetWildEncounterProfileEntry(&view, slot, &entry))
-                continue;
-
-            minimumLevel = min(entry->minLevel, entry->maxLevel);
-            maximumLevel = max(entry->minLevel, entry->maxLevel);
-            for (authoredLevel = minimumLevel; authoredLevel <= maximumLevel; authoredLevel++)
+            for (i = 0; i < count; i++)
             {
-                struct WildEncounterSpeciesOutcome outcome;
-
-                if (!GetCurrentWildEncounterSpeciesOutcome(&view, slot, authoredLevel, &outcome)
-                 || outcome.species == SPECIES_NONE)
+                if (outcomes[i].species == SPECIES_NONE)
                     continue;
 
                 hasSpecies = TRUE;
-                if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(outcome.species), FLAG_GET_CAUGHT))
+                if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(outcomes[i].species), FLAG_GET_CAUGHT))
                     return FALSE;
             }
         }
@@ -2289,25 +2115,13 @@ static void DexNavLoadEncounterData(void)
     {
         for (i = landView.entryStart; i < landView.entryStart + landView.entryCount; i++)
         {
-            const struct WildPokemon *entry;
-            u16 authoredLevel;
-            u8 minimumLevel;
-            u8 maximumLevel;
+            struct WildEncounterSlotOutcome outcomes[WILD_ENCOUNTER_MAX_SLOT_OUTCOMES];
+            u32 count = GetCurrentWildEncounterSlotOutcomes(&landView, i, outcomes);
+            u32 k;
 
-            if (!IsCurrentWildEncounterProfileSlotEligible(&landView, i)
-             || !GetWildEncounterProfileEntry(&landView, i, &entry))
-                continue;
-
-            minimumLevel = min(entry->minLevel, entry->maxLevel);
-            maximumLevel = max(entry->minLevel, entry->maxLevel);
-            for (authoredLevel = minimumLevel; authoredLevel <= maximumLevel; authoredLevel++)
+            for (k = 0; k < count; k++)
             {
-                struct WildEncounterSpeciesOutcome outcome;
-
-                if (!GetCurrentWildEncounterSpeciesOutcome(&landView, i, authoredLevel, &outcome))
-                    continue;
-
-                species = outcome.species;
+                species = outcomes[k].species;
                 if (species != SPECIES_NONE
                  && !SpeciesInArray(species, 0)
                  && grassIndex < ARRAY_COUNT(sDexNavUiDataPtr->landSpecies))
@@ -2321,25 +2135,13 @@ static void DexNavLoadEncounterData(void)
     {
         for (i = waterView.entryStart; i < waterView.entryStart + waterView.entryCount; i++)
         {
-            const struct WildPokemon *entry;
-            u16 authoredLevel;
-            u8 minimumLevel;
-            u8 maximumLevel;
+            struct WildEncounterSlotOutcome outcomes[WILD_ENCOUNTER_MAX_SLOT_OUTCOMES];
+            u32 count = GetCurrentWildEncounterSlotOutcomes(&waterView, i, outcomes);
+            u32 k;
 
-            if (!IsCurrentWildEncounterProfileSlotEligible(&waterView, i)
-             || !GetWildEncounterProfileEntry(&waterView, i, &entry))
-                continue;
-
-            minimumLevel = min(entry->minLevel, entry->maxLevel);
-            maximumLevel = max(entry->minLevel, entry->maxLevel);
-            for (authoredLevel = minimumLevel; authoredLevel <= maximumLevel; authoredLevel++)
+            for (k = 0; k < count; k++)
             {
-                struct WildEncounterSpeciesOutcome outcome;
-
-                if (!GetCurrentWildEncounterSpeciesOutcome(&waterView, i, authoredLevel, &outcome))
-                    continue;
-
-                species = outcome.species;
+                species = outcomes[k].species;
                 if (species != SPECIES_NONE
                  && !SpeciesInArray(species, 1)
                  && waterIndex < ARRAY_COUNT(sDexNavUiDataPtr->waterSpecies))
