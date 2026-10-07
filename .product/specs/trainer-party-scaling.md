@@ -166,17 +166,13 @@ encounters. Every other map that hosts a covered Trainer resolves its reach at
 generation time, in this order:
 
 1. The map is listed in reach assignments: use that reach or dungeon floor.
-2. The map is part of a dungeon (a building, ship or tower floor without wild
-   encounters, such as an S.S. Anne cabin): use that dungeon. The dungeon and
-   floor are an authored entry in a trainer reach table kept beside the scaling
-   manifest, with the same floor order rules as reach assignments.
-3. Otherwise use Road. This covers towns, houses and other interiors on the
-   safe path.
+2. Otherwise use the
+   [places without wild encounters](reach-assignments.md#places-without-wild-encounters)
+   rules: extra dungeon floors, story-site dungeons such as Silph Co. or the
+   S.S. Anne, ferries as Road, and interiors taking the map they open onto.
 
 Generation emits a compact map-to-reach table for every map that hosts a
-covered Trainer, plus a report of which rule resolved each map. A map listed
-under rule 2 that is missing from its dungeon's floor order fails generation.
-A covered Trainer on a map with no resolvable entry fails generation; it never
+covered Trainer, plus a report of which rule resolved each map. A covered Trainer on a map with no resolvable entry fails generation; it never
 falls back silently at runtime.
 
 ### Gym members
