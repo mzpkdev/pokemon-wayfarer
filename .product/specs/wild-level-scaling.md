@@ -211,6 +211,15 @@ as the [prowlers spec](prowlers.md#prowlers) defines.
 
 ## Implementation notes
 
+- **Wayfarer only.** V2 tables and level rules apply to the Wayfarer build
+  (`BUILD=wayfarer`). The standalone Emerald, FireRed, LeafGreen and HNS builds
+  don't matter for v2: nothing adds guards, dual code paths or extra
+  validation just to keep them working, and a change that breaks only them is
+  noted and left.
+- **Time of day.** The engine has four times of day; v2 tables have two.
+  Morning and day use a map's day table, and evening and night use its night
+  table. Every method follows the same rule, and every reader of the wild
+  population uses it too.
 - **This replaces today's projection.** The v0 wild level curve, authored
   levels, the retention shape, the cumulative maximum, the per-table level
   offsets and the old species floors all go. A wild level is the place's
