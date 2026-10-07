@@ -1,6 +1,6 @@
 # Native HM catch windows: wild encounters v2 revision
 
-Status: design revision. The tables, the model and the checker now live in the game
+Status: implemented for Wayfarer. The tables, the model and the checker now live in the game
 (see [Where things moved](#where-things-moved)); this folder keeps the research record and
 the authoring scripts. It applies with the
 [wild encounters v2](../../../../prds/wild-encounters-v2.md) tables and
@@ -303,9 +303,10 @@ entries must re-run the audit.
   blocking. A surfer moves only down a waterfall, as the engine's forced
   movement pushes it south. It treats other people as passable, so a story blocker that stands
   in a path would need a manual check.
-- It is static evidence, like the nearby-access revision, not production
-  acceptance. The implementation must replay these cells through the
-  production code once v2 is built.
+- It is static evidence, like the nearby-access revision. Production
+  acceptance is `game/test/native_hm_catch_coverage.c`, which replays every
+  scenario cell and the required regional coverage through the production
+  level code and real movesets, and must equal this model exactly.
 - The model resolves species aliases on both sides of an evolution edge, since
   the shared evolution-level table files some edges under form constants
   (`FLORGES_RED`, `AEGISLASH_SHIELD`, `DUDUNSPARCE_TWO_SEGMENT` and others).

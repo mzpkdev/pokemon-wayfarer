@@ -1,7 +1,7 @@
 # Prowlers
 
 PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
-Implemented: No
+Implemented: Yes (Wayfarer)
 
 Design status: v0 approved. It holds only the agreed rules. The reward lists cover
 every included generation: Generations I, II, III, V, VI, VII and VIII, with

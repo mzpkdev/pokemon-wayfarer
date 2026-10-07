@@ -1,7 +1,7 @@
 # Standard Rod fishing progression
 
 For Wayfarer, [Wild encounters v2](../prds/wild-encounters-v2.md) replaces this document's level
-and eligibility rules once its tables ship. Every rod rolls the place's level
+and eligibility rules. Every rod rolls the place's level
 as [wild level scaling](wild-level-scaling.md#encounter-level) defines;
 TR eligibility, level projection, predecessor resolution and the encounter
 replacements below go, and the v2 encounter tables hold each map's fishing

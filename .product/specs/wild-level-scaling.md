@@ -1,7 +1,7 @@
 # Wild level scaling
 
 PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
-Implemented: No
+Implemented: Yes (Wayfarer)
 
 Design status: v0 approved. It sets how a wild Pokémon's level and stage come from
 your Trainer Rating (TR) and the place you meet it. Every number below is a

@@ -1,7 +1,7 @@
 # Reach assignments
 
 PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
-Implemented: No
+Implemented: Yes (Wayfarer)
 
 Design status: v0 approved. It covers every Wayfarer map with wild encounters:
 Kanto, Johto, the Sevii Islands, Alola, Sinjoh, Hoenn and two remote islands.

@@ -1,7 +1,7 @@
 # Hoenn encounters
 
 PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
-Implemented: No
+Implemented: Yes (Wayfarer)
 
 Design status: v0 approved. It sets the rules and targets for Hoenn's encounter
 tables. The tables themselves are in the

@@ -1,6 +1,6 @@
 # Wild encounters v2
 
-Implemented: No
+Implemented: Yes (Wayfarer)
 
 Specifications: [Prowlers](../specs/prowlers.md), [Reach assignments](../specs/reach-assignments.md),
 [Kanto and Johto encounters](../specs/kanto-johto-encounters.md), [Hoenn encounters](../specs/hoenn-encounters.md),

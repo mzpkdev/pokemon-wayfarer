@@ -1,7 +1,7 @@
 # Safari encounter tables
 
 PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
-Implemented: No
+Implemented: Yes (Wayfarer)
 
 Design status: v0 approved. These tables follow the
 [Safari Zones rules](safari-zones.md). They are the source of truth for the

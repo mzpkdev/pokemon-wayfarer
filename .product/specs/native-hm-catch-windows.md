@@ -4,8 +4,8 @@ PRD: [Native HM catch windows](../prds/native-hm-catch-windows.md)
 Status: Core implementation complete; full route acceptance pending.
 Implemented: Core data and production tests; full route acceptance pending.
 Implementation: [Production changes and acceptance evidence](../research/native-hm-windows/revisions/implementation/README.md)
-Current revision: [Nearby-access design and evidence](../research/native-hm-windows/revisions/nearby-access/README.md)
-Next revision: [Wild encounters v2](../research/native-hm-windows/revisions/wild-encounters-v2/README.md), design only; it takes over when the v2 tables ship
+Current revision: [Wild encounters v2](../research/native-hm-windows/revisions/wild-encounters-v2/README.md), implemented for Wayfarer
+Previous revision: [Nearby-access design and evidence](../research/native-hm-windows/revisions/nearby-access/README.md)
 Historical attachments: [Original distribution, evidence and reproduction tools](../research/native-hm-windows/attachments.md)
 
 ## Scope
@@ -75,8 +75,8 @@ then replaces the nearby-access evidence:
 - **Cinnabar's scenario uses `MAP_CINNABAR_ISLAND`,** the map Wayfarer uses.
   The other scenarios, maps, methods and ranks stay.
 
-Until the v2 tables ship, the sections below describe the implemented
-nearby-access revision.
+The sections below describe the nearby-access revision. Where they differ
+from the v2 revision above, the v2 revision applies.
 
 ## Approved data and provenance
 
