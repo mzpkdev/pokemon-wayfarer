@@ -1,5 +1,9 @@
 <script lang="ts">
-  import type { EncounterRosterMethodType, ResolvedEncounterPopulation } from "./encounters.js"
+  import {
+    placeLabel,
+    type EncounterRosterMethodType,
+    type ResolvedEncounterPopulation,
+  } from "./encounters.js"
   import { mapImageUrl } from "./urls.js"
 
   type Props = {
@@ -29,15 +33,14 @@
     return minimum === maximum ? `Lv. ${minimum}` : `Lv. ${minimum}-${maximum}`
   }
 
-  const selectionWeightLabel = (weight: number | null): string => {
-    return weight === null ? "Unavailable" : `${(weight * 100).toFixed(1).replace(/\.0$/, "")}%`
+  const percentage = (weight: number): string => {
+    return `${(weight * 100).toFixed(1).replace(/\.0$/, "")}%`
   }
 
   const runtimeUseLabel = (
     use: ResolvedEncounterPopulation["sources"][number]["activations"][number],
   ): string => {
-    const resolution = use.resolution === "direct" ? "direct" : "Day fallback"
-    return `${timeLabels[use.timeOfDay]}: ${resolution}`
+    return timeLabels[use.timeOfDay]
   }
 </script>
 
@@ -111,7 +114,8 @@
                 {source.set.baseLabel}
               </h3>
               <p class="mb-0 mt-1 text-xs text-cartographer-muted">
-                Source time: {source.set.runtimeTime}
+                {placeLabel(source.set.place)} · place level {source.placeLevel} (rolls ±2) · {source
+                  .set.runtimeTime} table
               </p>
               {#if source.activations.length > 0}
                 <ul class="mb-0 mt-2 flex list-none flex-wrap gap-1 p-0" aria-label="Runtime use">
@@ -125,29 +129,16 @@
                 </ul>
               {:else}
                 <p class="mb-0 mt-2 text-xs text-cartographer-muted">
-                  No runtime activation metadata is recorded. The authored source time is shown.
+                  The game picks this table itself rather than by time of day.
                 </p>
               {/if}
             </header>
 
-            {#if source.lockedSlotCount > 0}
-              <p
-                class="m-0 border-b border-cartographer-border px-3 py-2 text-xs leading-5 text-cartographer-muted"
-              >
-                {source.lockedSlotCount === source.slots.length
-                  ? "This source group is locked"
-                  : `${source.lockedSlotCount} authored ${source.lockedSlotCount === 1 ? "slot is" : "slots are"} locked`}
-                at Trainer Rating {trainerRating}. Locked slots stay visible but are removed before
-                selection weights are renormalized.
-              </p>
-            {/if}
-
             <ol class="m-0 grid list-none divide-y divide-cartographer-border p-0">
               {#each source.slots as slot (`${slot.source.slotIndex}-${slot.source.speciesId}`)}
                 <li
-                  class:opacity-65={!slot.eligible}
                   class="grid gap-2 px-3 py-3 sm:grid-cols-[1fr_auto]"
-                  aria-label={`Authored slot ${slot.source.slotIndex + 1} ${slot.source.speciesLabel ?? slot.source.speciesId}`}
+                  aria-label={`Table slot ${slot.source.slotIndex + 1} ${slot.source.speciesLabel ?? slot.source.speciesId}`}
                 >
                   <div class="min-w-0">
                     <div class="flex min-w-0 items-center gap-2">
@@ -168,8 +159,7 @@
                         <p
                           class="mb-0 mt-0.5 font-cartographer-mono text-[0.64rem] text-cartographer-muted"
                         >
-                          Authored {levelLabel(slot.source.minLevel, slot.source.maxLevel)} · source weight
-                          {slot.source.slotRate}
+                          table weight {slot.rawWeight}
                         </p>
                       </div>
                     </div>
@@ -178,7 +168,7 @@
                       <ul
                         class="mb-0 mt-2 grid list-none gap-1 border-l border-cartographer-border pl-3"
                       >
-                        {#each slot.outcomes as outcome (`${outcome.speciesId}-${outcome.authoredMinimumLevel}-${outcome.authoredMaximumLevel}`)}
+                        {#each slot.outcomes as outcome (`${outcome.speciesId}-${outcome.projectedMinimumLevel}`)}
                           <li class="flex min-w-0 items-center gap-2">
                             {#if outcome.sprite}
                               <img
@@ -194,13 +184,10 @@
                               <span
                                 class="block font-cartographer-mono text-[0.64rem] text-cartographer-muted"
                               >
-                                Projected {levelLabel(
+                                {levelLabel(
                                   outcome.projectedMinimumLevel,
                                   outcome.projectedMaximumLevel,
-                                )}
-                                {#if !outcome.eligible}
-                                  · requires ordinary wild level {outcome.minimumOrdinaryWildLevel}
-                                {/if}
+                                )} · {percentage(outcome.chance)}
                               </span>
                             </span>
                           </li>
@@ -208,16 +195,13 @@
                       </ul>
                     {:else}
                       <p class="mb-0 mt-2 text-xs text-cartographer-muted">
-                        Projection unavailable for this authored slot.
+                        Projection unavailable for this slot.
                       </p>
                     {/if}
                   </div>
-                  <p
-                    class="m-0 font-cartographer-mono text-xs sm:text-right"
-                    class:text-cartographer-muted={!slot.eligible}
-                  >
+                  <p class="m-0 font-cartographer-mono text-xs sm:text-right">
                     <span class="block text-[0.6rem] uppercase tracking-[0.08em]">Selection</span>
-                    {selectionWeightLabel(slot.selectionWeight)}
+                    {percentage(slot.selectionWeight)}
                   </p>
                 </li>
               {/each}

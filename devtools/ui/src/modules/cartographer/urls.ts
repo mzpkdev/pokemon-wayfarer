@@ -27,7 +27,7 @@ export type CartographerUrlState = {
 }
 
 export const MIN_TRAINER_RATING = 0
-export const MAX_TRAINER_RATING = 80
+export const MAX_TRAINER_RATING = 160
 
 export const clampTrainerRating = (value: number | null): number => {
   if (value === null) return MIN_TRAINER_RATING

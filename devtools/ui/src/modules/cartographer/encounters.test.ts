@@ -1,751 +1,319 @@
 import { describe, expect, it } from "vitest"
 
+import type {
+  CatalogMap,
+  CatalogWildEncounterMethod,
+  CatalogWildEncounterProjection,
+  CatalogWildEncounterSet,
+} from "./catalog.js"
 import {
   effectiveRosterFor,
   fishingProfiles,
-  fishingRarityBandIds,
-  rarityBandLabel,
+  placeLabel,
+  placeLevelAt,
   resolveEncounterPopulation,
+  resolveMapEncounters,
   resolveMethodSlots,
   rodLabel,
   type ResolvedMapEncounters,
-  visibleEncounterSlots,
 } from "./encounters.js"
-import type { CatalogWildEncounterMethod, CatalogWildEncounterProjection } from "./catalog.js"
 
-const source = { path: "src/data/wild_encounters.json", pointer: "/wild_encounter_groups/0" }
+const source = { path: "src/data/wild_encounters_v2/kanto.json", pointer: "/MAP_ROUTE1_HNS" }
+
+const slot = (slotIndex: number, speciesId: string, speciesLabel: string) => ({
+  slotIndex,
+  speciesId,
+  speciesLabel,
+  sprite: null,
+  source: { ...source, pointer: `${source.pointer}/land/day/${slotIndex}` },
+})
+
+const land: CatalogWildEncounterMethod = {
+  type: "land_mons",
+  encounterRate: 20,
+  source,
+  slots: [slot(0, "SPECIES_PIDGEY", "Pidgey"), slot(1, "SPECIES_RATTATA", "Rattata")],
+  profiles: [{ profileKey: "land", fishingRod: "NONE", weights: [60, 30, 10] }],
+}
 
 const fishing: CatalogWildEncounterMethod = {
   type: "fishing_mons",
-  encounterRate: 20,
+  encounterRate: 30,
   source,
-  slots: [
-    {
-      slotIndex: 0,
-      slotRate: 70,
-      slotRateSource: source,
-      groups: [{ id: "old_rod", source }],
-      minLevel: 5,
-      maxLevel: 5,
-      runtimeMinLevel: 5,
-      runtimeMaxLevel: 5,
-      speciesId: "SPECIES_MAGIKARP",
-      speciesLabel: "Magikarp",
-      sprite: null,
-      source,
-    },
-    {
-      slotIndex: 1,
-      slotRate: 0,
-      slotRateSource: source,
-      groups: [{ id: "old_rod", source }],
-      minLevel: 10,
-      maxLevel: 10,
-      runtimeMinLevel: 10,
-      runtimeMaxLevel: 10,
-      speciesId: "SPECIES_NONE",
-      speciesLabel: "None",
-      sprite: null,
-      source,
-    },
-    {
-      slotIndex: 2,
-      slotRate: 30,
-      slotRateSource: source,
-      groups: [{ id: "good_rod", source }],
-      minLevel: 15,
-      maxLevel: 20,
-      runtimeMinLevel: 15,
-      runtimeMaxLevel: 20,
-      speciesId: "SPECIES_GOLDEEN",
-      speciesLabel: "Goldeen",
-      sprite: null,
-      source,
-    },
-  ],
+  slots: [slot(0, "SPECIES_MAGIKARP", "Magikarp"), slot(1, "SPECIES_GOLDEEN", "Goldeen")],
   profiles: [
-    { profileKey: "old", fishingRod: "OLD_ROD", levelOffset: 0 },
-    { profileKey: "good", fishingRod: "GOOD_ROD", levelOffset: 0 },
-    { profileKey: "super", fishingRod: "SUPER_ROD", levelOffset: 0 },
+    { profileKey: "old", fishingRod: "OLD_ROD", weights: [80, 20] },
+    { profileKey: "good", fishingRod: "GOOD_ROD", weights: [50, 50] },
+    { profileKey: "super", fishingRod: "SUPER_ROD", weights: [20, 80] },
   ],
 }
 
-describe("encounter presentation", () => {
-  it("retains fishing slots even when legacy rates are zero or the species is NONE", () => {
-    expect(visibleEncounterSlots(fishing).map((slot) => slot.speciesLabel)).toEqual([
-      "Magikarp",
-      "None",
-      "Goldeen",
-    ])
+const set = (
+  baseLabel: string,
+  runtimeTime: "day" | "night",
+  methods: CatalogWildEncounterMethod[],
+  overrides: Partial<CatalogWildEncounterSet["place"]> = {},
+): CatalogWildEncounterSet => ({
+  mapId: "MAP_ROUTE1_HNS",
+  mapName: "Route1_hns",
+  baseLabel,
+  product: "POKEMON_WAYFARER",
+  runtimeTime,
+  variant: null,
+  place: {
+    name: "Route 1",
+    region: "Kanto",
+    regionClass: "Other",
+    reach: "Road",
+    dungeon: null,
+    floor: null,
+    floors: null,
+    placeLevels: [5, 6, 20],
+    ...overrides,
+  },
+  source,
+  methods,
+})
+
+// Species: 0 Pidgey, 1 Pidgeotto, 2 Rattata, 3 Magikarp, 4 Goldeen.
+const projection: CatalogWildEncounterProjection = {
+  schemaVersion: 3,
+  trainerRating: { minimum: 0, maximum: 2 },
+  outcomeDenominator: 50,
+  products: [{ id: "POKEMON_WAYFARER", displayName: "Pokémon Wayfarer" }],
+  species: [
+    { speciesId: "SPECIES_PIDGEY", speciesLabel: "Pidgey", sprite: null },
+    { speciesId: "SPECIES_PIDGEOTTO", speciesLabel: "Pidgeotto", sprite: null },
+    { speciesId: "SPECIES_RATTATA", speciesLabel: "Rattata", sprite: null },
+    { speciesId: "SPECIES_MAGIKARP", speciesLabel: "Magikarp", sprite: null },
+    { speciesId: "SPECIES_GOLDEEN", speciesLabel: "Goldeen", sprite: null },
+  ],
+  distributions: [
+    {
+      speciesId: "SPECIES_PIDGEY",
+      regionClass: "Other",
+      byPlaceLevel: {
+        "5": [
+          [0, 3, 10],
+          [0, 4, 10],
+          [0, 5, 10],
+          [0, 6, 10],
+          [0, 7, 10],
+        ],
+        "6": [[0, 4, 50]],
+        // Past the evolution level the roll splits between the stages.
+        "20": [
+          [0, 17, 25],
+          [1, 17, 25],
+        ],
+      },
+    },
+    {
+      speciesId: "SPECIES_RATTATA",
+      regionClass: "Other",
+      byPlaceLevel: { "5": [[2, 5, 50]], "6": [[2, 6, 50]], "20": [[2, 20, 50]] },
+    },
+    {
+      speciesId: "SPECIES_MAGIKARP",
+      regionClass: "Other",
+      byPlaceLevel: { "5": [[3, 5, 50]], "6": [[3, 6, 50]], "20": [[3, 20, 50]] },
+    },
+    {
+      speciesId: "SPECIES_GOLDEEN",
+      regionClass: "Other",
+      byPlaceLevel: { "5": [[4, 5, 50]], "6": [[4, 6, 50]], "20": [[4, 20, 50]] },
+    },
+  ],
+}
+
+const day = set("gWildV2_Route1_Hns_Day", "day", [land, fishing])
+const night = set("gWildV2_Route1_Hns_Night", "night", [land])
+
+const resolved = (
+  sets: CatalogWildEncounterSet[],
+  runtimeTimes: ResolvedMapEncounters["runtimeTimes"] = [],
+): ResolvedMapEncounters => ({
+  availableProducts: projection.products,
+  product: "POKEMON_WAYFARER",
+  sets,
+  runtimeTimes,
+})
+
+describe("place levels", () => {
+  it("reads the place level at a Trainer Rating and clamps outside the table", () => {
+    expect(placeLevelAt(projection, day, 0)).toBe(5)
+    expect(placeLevelAt(projection, day, 2)).toBe(20)
+    expect(placeLevelAt(projection, day, 99)).toBe(20)
+    expect(placeLevelAt(projection, day, -3)).toBe(5)
   })
 
-  it("uses source groups only as rarity-band labels", () => {
-    expect(fishingRarityBandIds(fishing)).toEqual(["old_rod", "good_rod"])
-    expect(fishing.slots.map(rarityBandLabel)).toEqual(["Common", "Common", "Less common"])
+  it("labels roads and dungeons by reach, intent and floor", () => {
+    expect(placeLabel(day.place)).toBe("Road")
+    expect(
+      placeLabel({
+        ...day.place,
+        reach: "Dungeon",
+        dungeon: { intent: "Moderate to hard", flat: false },
+        floor: 1,
+        floors: 7,
+      }),
+    ).toBe("Dungeon (moderate to hard) · floor 2 of 7")
+    expect(
+      placeLabel({
+        ...day.place,
+        reach: "Dungeon",
+        dungeon: { intent: "Hard", flat: true },
+        floor: 0,
+        floors: 1,
+      }),
+    ).toBe("Dungeon (hard, flat)")
+  })
+})
+
+describe("encounter presentation", () => {
+  it("lists the three rods of a fishing method and none for other methods", () => {
     expect(fishingProfiles(fishing).map((profile) => rodLabel(profile.fishingRod))).toEqual([
       "Old Rod",
       "Good Rod",
       "Super Rod",
     ])
+    expect(fishingProfiles(land)).toEqual([])
   })
 
-  const identity = Array.from({ length: 100 }, (_, index) => index + 1)
-  const lowRating = Array.from({ length: 100 }, (_, index) =>
-    Math.max(1, Math.ceil((index + 1) / 2)),
-  )
-  const zeroRating = Array.from({ length: 100 }, (_, index) =>
-    Math.max(1, Math.ceil((index + 1) / 4)),
-  )
-  const ratings = (levelsForRating: (rating: number) => number[]) =>
-    Array.from({ length: 81 }, (_, rating) => ({
-      rating,
-      projectedLevels: levelsForRating(rating),
-    }))
-  const projection: CatalogWildEncounterProjection = {
-    schemaVersion: 2,
-    trainerRating: { minimum: 0, maximum: 80 },
-    authoredLevel: { minimum: 1, maximum: 100 },
-    products: [{ id: "hns", displayName: "HeartGold and SoulSilver" }],
-    levelProjections: [
-      { levelOffset: 0, ratings: ratings(() => identity) },
-      {
-        levelOffset: 1,
-        ratings: ratings((rating) =>
-          rating === 0 ? zeroRating : rating < 30 ? lowRating : identity,
-        ),
-      },
-    ],
-    species: [
-      {
-        authoredSpecies: "SPECIES_SKARMORY",
-        authoredSpeciesId: 1,
-        speciesLabel: "Skarmory",
-        sprite: null,
-        outcomesByProjectedLevel: [
-          {
-            minimumProjectedLevel: 1,
-            maximumProjectedLevel: 14,
-            effectiveSpecies: "SPECIES_SKARMORY",
-            eligible: false,
-            minimumOrdinaryWildLevel: 15,
-          },
-          {
-            minimumProjectedLevel: 15,
-            maximumProjectedLevel: 100,
-            effectiveSpecies: "SPECIES_SKARMORY",
-            eligible: true,
-            minimumOrdinaryWildLevel: 15,
-          },
-        ],
-      },
-      {
-        authoredSpecies: "SPECIES_RATTATA",
-        authoredSpeciesId: 2,
-        speciesLabel: "Rattata",
-        sprite: null,
-        outcomesByProjectedLevel: [
-          {
-            minimumProjectedLevel: 1,
-            maximumProjectedLevel: 100,
-            effectiveSpecies: "SPECIES_RATTATA",
-            eligible: true,
-            minimumOrdinaryWildLevel: 1,
-          },
-        ],
-      },
-      {
-        authoredSpecies: "SPECIES_GOLDEEN",
-        authoredSpeciesId: 3,
-        speciesLabel: "Goldeen",
-        sprite: null,
-        outcomesByProjectedLevel: [
-          {
-            minimumProjectedLevel: 1,
-            maximumProjectedLevel: 100,
-            effectiveSpecies: "SPECIES_GOLDEEN",
-            eligible: true,
-            minimumOrdinaryWildLevel: 1,
-          },
-        ],
-      },
-      {
-        authoredSpecies: "SPECIES_MAGIKARP",
-        authoredSpeciesId: 4,
-        speciesLabel: "Magikarp",
-        sprite: null,
-        outcomesByProjectedLevel: [
-          {
-            minimumProjectedLevel: 1,
-            maximumProjectedLevel: 100,
-            effectiveSpecies: "SPECIES_MAGIKARP",
-            eligible: true,
-            minimumOrdinaryWildLevel: 1,
-          },
-        ],
-      },
-      {
-        authoredSpecies: "SPECIES_GYARADOS",
-        authoredSpeciesId: 5,
-        speciesLabel: "Gyarados",
-        sprite: null,
-        outcomesByProjectedLevel: [
-          {
-            minimumProjectedLevel: 1,
-            maximumProjectedLevel: 19,
-            effectiveSpecies: "SPECIES_MAGIKARP",
-            eligible: true,
-            minimumOrdinaryWildLevel: 1,
-          },
-          {
-            minimumProjectedLevel: 20,
-            maximumProjectedLevel: 100,
-            effectiveSpecies: "SPECIES_GYARADOS",
-            eligible: true,
-            minimumOrdinaryWildLevel: 1,
-          },
-        ],
-      },
-    ],
-    profiles: [
-      {
-        profileKey: "old",
-        product: "hns",
-        map: "MAP_ALPHA",
-        baseLabel: "alpha",
-        header: "headers",
-        headerId: 0,
-        runtimeTime: "TIME_DAY",
-        method: "fishing_mons",
-        runtimeArea: "WILD_AREA_FISHING",
-        fishingRod: "OLD_ROD",
-        runtimeFishingRod: "WILD_ENCOUNTER_FISHING_ROD_OLD",
-        levelOffset: 0,
-        encounterRate: 20,
-        authoredSlotCount: 10,
-        runtimeSlotCount: 10,
-        weights: [38, 22, 10, 8, 8, 4, 3, 3, 2, 2],
-      },
-      {
-        profileKey: "good",
-        product: "hns",
-        map: "MAP_ALPHA",
-        baseLabel: "alpha",
-        header: "headers",
-        headerId: 0,
-        runtimeTime: "TIME_DAY",
-        method: "fishing_mons",
-        runtimeArea: "WILD_AREA_FISHING",
-        fishingRod: "GOOD_ROD",
-        runtimeFishingRod: "WILD_ENCOUNTER_FISHING_ROD_GOOD",
-        levelOffset: 0,
-        encounterRate: 20,
-        authoredSlotCount: 10,
-        runtimeSlotCount: 10,
-        weights: [25, 18, 12, 10, 9, 7, 6, 5, 4, 4],
-      },
-      {
-        profileKey: "super",
-        product: "hns",
-        map: "MAP_ALPHA",
-        baseLabel: "alpha",
-        header: "headers",
-        headerId: 0,
-        runtimeTime: "TIME_DAY",
-        method: "fishing_mons",
-        runtimeArea: "WILD_AREA_FISHING",
-        fishingRod: "SUPER_ROD",
-        runtimeFishingRod: "WILD_ENCOUNTER_FISHING_ROD_SUPER",
-        levelOffset: 0,
-        encounterRate: 20,
-        authoredSlotCount: 10,
-        runtimeSlotCount: 10,
-        weights: [12, 10, 11, 10, 10, 10, 10, 9, 9, 9],
-      },
-    ],
-    headerCounts: {},
-  }
+  it("picks the requested product and falls back to the first one present", () => {
+    const map = { wildEncounters: { sets: [day], runtimeTimes: [] } } as unknown as CatalogMap
 
-  it("locks a whole authored slot when any projected level is below its species floor", () => {
-    const method: CatalogWildEncounterMethod = {
-      type: "land_mons",
-      encounterRate: 20,
-      source,
-      profiles: [{ profileKey: "land", fishingRod: "NONE", levelOffset: 0 }],
-      slots: [
-        {
-          slotIndex: 0,
-          slotRate: 20,
-          slotRateSource: source,
-          groups: [],
-          minLevel: 15,
-          maxLevel: 14,
-          runtimeMinLevel: 14,
-          runtimeMaxLevel: 15,
-          speciesId: "SPECIES_SKARMORY",
-          speciesLabel: "Skarmory",
-          sprite: null,
-          source,
-        },
-        {
-          slotIndex: 1,
-          slotRate: 80,
-          slotRateSource: source,
-          groups: [],
-          minLevel: 5,
-          maxLevel: 5,
-          runtimeMinLevel: 5,
-          runtimeMaxLevel: 5,
-          speciesId: "SPECIES_RATTATA",
-          speciesLabel: "Rattata",
-          sprite: null,
-          source,
-        },
-      ],
-    }
-
-    const slots = resolveMethodSlots(projection, method, 10)
-    expect(slots[0]).toMatchObject({ eligible: false, selectionWeight: null })
-    expect(slots[0]?.outcomes).toHaveLength(2)
-    expect(slots[1]).toMatchObject({ eligible: true, selectionWeight: 1 })
-  })
-
-  it("renormalizes a quality profile after excluding SPECIES_NONE", () => {
-    const slots = resolveMethodSlots(projection, fishing, 10, "GOOD_ROD")
-    expect(slots).toHaveLength(3)
-    expect(slots[0]).toMatchObject({ rawWeight: 25, selectionWeight: 25 / 37 })
-    expect(slots[1]).toMatchObject({ eligible: false, rawWeight: 18, selectionWeight: null })
-    expect(slots[2]).toMatchObject({ rawWeight: 12, selectionWeight: 12 / 37 })
-  })
-
-  it("keeps all ten slots in every quality and includes every rarity band", () => {
-    const tenSlots: CatalogWildEncounterMethod = {
-      ...fishing,
-      slots: Array.from({ length: 10 }, (_, slotIndex) => ({
-        slotIndex,
-        slotRate: slotIndex === 0 ? 100 : 0,
-        slotRateSource: source,
-        groups: [
-          {
-            id: slotIndex < 2 ? "old_rod" : slotIndex < 5 ? "good_rod" : "super_rod",
-            source,
-          },
-        ],
-        minLevel: 5,
-        maxLevel: 5,
-        runtimeMinLevel: 5,
-        runtimeMaxLevel: 5,
-        speciesId: "SPECIES_MAGIKARP",
-        speciesLabel: "Magikarp",
-        sprite: null,
-        source,
-      })),
-    }
-
-    expect(
-      fishingProfiles(tenSlots).map((profile) =>
-        resolveMethodSlots(projection, tenSlots, 10, profile.fishingRod).map(
-          (slot) => slot.selectionWeight,
-        ),
-      ),
-    ).toEqual([
-      [0.38, 0.22, 0.1, 0.08, 0.08, 0.04, 0.03, 0.03, 0.02, 0.02],
-      [0.25, 0.18, 0.12, 0.1, 0.09, 0.07, 0.06, 0.05, 0.04, 0.04],
-      [0.12, 0.1, 0.11, 0.1, 0.1, 0.1, 0.1, 0.09, 0.09, 0.09],
-    ])
-    expect(new Set(tenSlots.slots.map(rarityBandLabel))).toEqual(
-      new Set(["Common", "Less common", "Rare"]),
+    expect(resolveMapEncounters(map, "POKEMON_WAYFARER", projection.products).product).toBe(
+      "POKEMON_WAYFARER",
+    )
+    expect(resolveMapEncounters(map, "EMERALD", projection.products).product).toBe(
+      "POKEMON_WAYFARER",
     )
   })
 
-  it("renormalizes generated weights across Trainer Rating eligible slots", () => {
-    const filtered: CatalogWildEncounterMethod = {
-      ...fishing,
-      slots: Array.from({ length: 10 }, (_, slotIndex) => ({
-        slotIndex,
-        slotRate: 0,
-        slotRateSource: source,
-        groups: [
-          {
-            id: slotIndex < 2 ? "old_rod" : slotIndex < 5 ? "good_rod" : "super_rod",
-            source,
-          },
-        ],
-        minLevel: 5,
-        maxLevel: 5,
-        runtimeMinLevel: 5,
-        runtimeMaxLevel: 5,
-        speciesId: slotIndex === 0 ? "SPECIES_SKARMORY" : "SPECIES_MAGIKARP",
-        speciesLabel: slotIndex === 0 ? "Skarmory" : "Magikarp",
-        sprite: null,
-        source,
-      })),
-    }
+  it("merges a slot's consecutive levels into one range with its chance", () => {
+    const [pidgey] = resolveMethodSlots(projection, day, land, 0)
 
-    const slots = resolveMethodSlots(projection, filtered, 10, "OLD_ROD")
-    expect(slots[0]).toMatchObject({ eligible: false, rawWeight: 38, selectionWeight: null })
-    expect(slots[1]?.selectionWeight).toBeCloseTo(22 / 62)
-    expect(slots[9]?.selectionWeight).toBeCloseTo(2 / 62)
-  })
-
-  it("returns a safe zero-data view when every fishing entry is SPECIES_NONE", () => {
-    const zeroData: CatalogWildEncounterMethod = {
-      ...fishing,
-      slots: Array.from({ length: 10 }, (_, slotIndex) => ({
-        slotIndex,
-        slotRate: 0,
-        slotRateSource: source,
-        groups: [
-          {
-            id: slotIndex < 2 ? "old_rod" : slotIndex < 5 ? "good_rod" : "super_rod",
-            source,
-          },
-        ],
-        minLevel: 1,
-        maxLevel: 1,
-        runtimeMinLevel: 1,
-        runtimeMaxLevel: 1,
-        speciesId: "SPECIES_NONE",
-        speciesLabel: "None",
-        sprite: null,
-        source,
-      })),
-    }
-
-    const slots = resolveMethodSlots(projection, zeroData, 10, "SUPER_ROD")
-    expect(slots).toHaveLength(10)
-    expect(slots.every((slot) => !slot.eligible && slot.selectionWeight === null)).toBe(true)
-  })
-
-  it("changes the effective map roster across an evolution-reversal threshold", () => {
-    const method: CatalogWildEncounterMethod = {
-      type: "water_mons",
-      encounterRate: 20,
-      source,
-      profiles: [{ profileKey: "water", fishingRod: "NONE", levelOffset: 1 }],
-      slots: [
-        {
-          slotIndex: 0,
-          slotRate: 100,
-          slotRateSource: source,
-          groups: [],
-          minLevel: 20,
-          maxLevel: 20,
-          runtimeMinLevel: 20,
-          runtimeMaxLevel: 20,
-          speciesId: "SPECIES_GYARADOS",
-          speciesLabel: "Gyarados",
-          sprite: null,
-          source,
-        },
-      ],
-    }
-    const encounters: ResolvedMapEncounters = {
-      availableProducts: [{ id: "POKEMON_HNS", displayName: "HNS" }],
-      product: "POKEMON_HNS",
-      runtimeTimes: [],
-      sets: [
-        {
-          mapId: "MAP_LAKE_OF_RAGE_HNS",
-          mapName: "LakeOfRage_hns",
-          baseLabel: "gLakeOfRage_hns_Day",
-          product: "POKEMON_HNS",
-          runtimeTime: "day",
-          header: { groupLabel: "gWildMonHeaders", groupIndex: 0, headerIndex: 0 },
-          source,
-          methods: [method],
-        },
-      ],
-    }
-
-    expect(effectiveRosterFor(projection, encounters, "water_mons", 0)).toMatchObject([
-      { speciesId: "SPECIES_MAGIKARP", projectedMinimumLevel: 5 },
-    ])
-    expect(effectiveRosterFor(projection, encounters, "water_mons", 10)).toMatchObject([
-      { speciesId: "SPECIES_MAGIKARP", projectedMinimumLevel: 10 },
-    ])
-    expect(effectiveRosterFor(projection, encounters, "water_mons", 30)).toMatchObject([
-      { speciesId: "SPECIES_GYARADOS", projectedMinimumLevel: 20 },
+    expect(pidgey?.outcomes).toEqual([
+      expect.objectContaining({
+        speciesLabel: "Pidgey",
+        projectedMinimumLevel: 3,
+        projectedMaximumLevel: 7,
+        chance: 1,
+      }),
     ])
   })
 
-  it("groups the complete resolved roster by source set and runtime time use", () => {
-    const slot = (
-      slotIndex: number,
-      slotRate: number,
-      runtimeLevel: number,
-      speciesId: string,
-      speciesLabel: string,
-    ) => ({
-      slotIndex,
-      slotRate,
-      slotRateSource: source,
-      groups: [],
-      minLevel: runtimeLevel,
-      maxLevel: runtimeLevel,
-      runtimeMinLevel: runtimeLevel,
-      runtimeMaxLevel: runtimeLevel,
-      speciesId,
-      speciesLabel,
-      sprite: null,
-      source,
-    })
-    const method = (
-      type: "land_mons" | "water_mons",
-      slots: CatalogWildEncounterMethod["slots"],
-    ): CatalogWildEncounterMethod => ({
-      type,
-      encounterRate: 20,
-      source,
-      profiles: [{ profileKey: `${type}/scaled`, fishingRod: "NONE", levelOffset: 1 }],
-      slots,
-    })
-    const dayLand = method("land_mons", [
-      slot(0, 50, 20, "SPECIES_GYARADOS", "Gyarados"),
-      slot(1, 25, 8, "SPECIES_RATTATA", "Rattata"),
-      slot(2, 25, 14, "SPECIES_SKARMORY", "Skarmory"),
+  it("shows each stage of a stage mix with its own level and chance", () => {
+    const [pidgey] = resolveMethodSlots(projection, day, land, 2)
+
+    expect(
+      pidgey?.outcomes.map((outcome) => [
+        outcome.speciesLabel,
+        outcome.projectedMinimumLevel,
+        outcome.chance,
+      ]),
+    ).toEqual([
+      ["Pidgey", 17, 0.5],
+      ["Pidgeotto", 17, 0.5],
     ])
-    const nightLand = method("land_mons", [slot(0, 100, 12, "SPECIES_RATTATA", "Rattata")])
-    const unusedWater = method("water_mons", [slot(0, 100, 20, "SPECIES_GYARADOS", "Gyarados")])
-    const daySource = { ...source, pointer: "/wild_encounter_groups/0/encounters/0" }
-    const nightSource = { ...source, pointer: "/wild_encounter_groups/0/encounters/1" }
-    const encounters: ResolvedMapEncounters = {
-      availableProducts: [{ id: "POKEMON_HNS", displayName: "HNS" }],
-      product: "POKEMON_HNS",
-      sets: [
+  })
+
+  it("weighs slots by their share of the method's table weights", () => {
+    const slots = resolveMethodSlots(projection, day, land, 1)
+
+    expect(slots.map((entry) => [entry.rawWeight, entry.selectionWeight])).toEqual([
+      [60, 60 / 90],
+      [30, 30 / 90],
+    ])
+  })
+
+  it("weighs fishing slots per rod", () => {
+    expect(
+      resolveMethodSlots(projection, day, fishing, 0, "OLD_ROD").map((entry) => entry.rawWeight),
+    ).toEqual([80, 20])
+    expect(
+      resolveMethodSlots(projection, day, fishing, 0, "SUPER_ROD").map((entry) => entry.rawWeight),
+    ).toEqual([20, 80])
+    expect(resolveMethodSlots(projection, day, fishing, 0, "SUPER_ROD")[0]?.fishingRod).toBe(
+      "SUPER_ROD",
+    )
+  })
+
+  it("returns no outcomes for a slot whose species is missing at the place level", () => {
+    const missing = { ...land, slots: [slot(0, "SPECIES_UNKNOWN", "Unknown")] }
+
+    expect(resolveMethodSlots(projection, day, missing, 0)[0]?.outcomes).toEqual([])
+  })
+
+  it("lists the species a map can roll across its methods and rods, once each", () => {
+    expect(
+      effectiveRosterFor(projection, resolved([day, night]), "land_mons", 0).map(
+        (outcome) => outcome.speciesLabel,
+      ),
+    ).toEqual(["Pidgey", "Rattata"])
+    expect(
+      effectiveRosterFor(projection, resolved([day]), "fishing_mons", 0).map(
+        (outcome) => outcome.speciesLabel,
+      ),
+    ).toEqual(["Magikarp", "Goldeen"])
+    expect(
+      effectiveRosterFor(projection, resolved([day]), "land_mons", 2).map(
+        (outcome) => outcome.speciesLabel,
+      ),
+    ).toEqual(["Pidgey", "Pidgeotto", "Rattata"])
+  })
+
+  it("groups the population by table with its place level and runtime time use", () => {
+    const encounters = resolved(
+      [day, night],
+      [
         {
-          mapId: "MAP_ROUTE_32_HNS",
-          mapName: "Route32_hns",
-          baseLabel: "gRoute32_hns_Day",
-          product: "POKEMON_HNS",
-          runtimeTime: "day",
-          header: { groupLabel: "gWildMonHeaders", groupIndex: 0, headerIndex: 0 },
-          source: daySource,
-          methods: [dayLand, unusedWater],
-        },
-        {
-          mapId: "MAP_ROUTE_32_HNS",
-          mapName: "Route32_hns",
-          baseLabel: "gRoute32_hns_Night",
-          product: "POKEMON_HNS",
-          runtimeTime: "night",
-          header: { groupLabel: "gWildMonHeaders", groupIndex: 0, headerIndex: 1 },
-          source: nightSource,
-          methods: [nightLand],
-        },
-      ],
-      runtimeTimes: [
-        {
-          product: "POKEMON_HNS",
+          product: "POKEMON_WAYFARER",
           timeOfDay: "morning",
           methods: [
             {
               type: "land_mons",
-              resolution: "fallback",
-              sets: [{ baseLabel: "gRoute32_hns_Day", source: daySource }],
-            },
-          ],
-        },
-        {
-          product: "POKEMON_HNS",
-          timeOfDay: "day",
-          methods: [
-            {
-              type: "land_mons",
               resolution: "direct",
-              sets: [{ baseLabel: "gRoute32_hns_Day", source: daySource }],
+              sets: [{ baseLabel: day.baseLabel, source: day.source }],
             },
           ],
         },
         {
-          product: "POKEMON_HNS",
+          product: "POKEMON_WAYFARER",
           timeOfDay: "evening",
           methods: [
             {
               type: "land_mons",
-              resolution: "fallback",
-              sets: [{ baseLabel: "gRoute32_hns_Day", source: daySource }],
-            },
-          ],
-        },
-        {
-          product: "POKEMON_HNS",
-          timeOfDay: "night",
-          methods: [
-            {
-              type: "land_mons",
               resolution: "direct",
-              sets: [{ baseLabel: "gRoute32_hns_Night", source: nightSource }],
+              sets: [{ baseLabel: night.baseLabel, source: night.source }],
             },
           ],
         },
+        {
+          product: "POKEMON_WAYFARER",
+          timeOfDay: "night",
+          methods: [{ type: "water_mons", resolution: "unavailable", sets: [] }],
+        },
       ],
-    }
+    )
 
-    const population = resolveEncounterPopulation(projection, encounters, "land_mons", 10)
-    const groups = population.sources
+    const population = resolveEncounterPopulation(projection, encounters, "land_mons", 1)
 
-    expect(population.method).toBe("land_mons")
-    expect(population.unavailableTimes).toEqual([])
-    expect(groups).toHaveLength(2)
-    expect(groups[0]).toMatchObject({
-      set: { baseLabel: "gRoute32_hns_Day", runtimeTime: "day" },
-      activations: [
-        { timeOfDay: "morning", resolution: "fallback" },
-        { timeOfDay: "day", resolution: "direct" },
-        { timeOfDay: "evening", resolution: "fallback" },
-      ],
-      lockedSlotCount: 1,
-    })
-    expect(groups[0]?.slots).toHaveLength(3)
-    expect(groups[0]?.effectiveSlots).toMatchObject([
-      {
-        source: { speciesId: "SPECIES_GYARADOS" },
-        outcomes: [{ speciesId: "SPECIES_MAGIKARP", projectedMinimumLevel: 10 }],
-        selectionWeight: 2 / 3,
-      },
-      {
-        source: { speciesId: "SPECIES_RATTATA" },
-        outcomes: [{ speciesId: "SPECIES_RATTATA", projectedMinimumLevel: 4 }],
-        selectionWeight: 1 / 3,
-      },
-    ])
     expect(
-      groups[0]?.effectiveSlots.some(
-        (candidate) => candidate.source.speciesId === "SPECIES_SKARMORY",
-      ),
-    ).toBe(false)
-    expect(groups[1]).toMatchObject({
-      set: { baseLabel: "gRoute32_hns_Night", runtimeTime: "night" },
-      activations: [{ timeOfDay: "night", resolution: "direct" }],
-      lockedSlotCount: 0,
-      effectiveSlots: [
-        {
-          source: { speciesId: "SPECIES_RATTATA" },
-          outcomes: [{ projectedMinimumLevel: 6 }],
-          selectionWeight: 1,
-        },
-      ],
-    })
-  })
-
-  it("keeps source time provenance when runtime resolution metadata is absent", () => {
-    const water: CatalogWildEncounterMethod = {
-      type: "water_mons",
-      encounterRate: 20,
-      source,
-      profiles: [{ profileKey: "water", fishingRod: "NONE", levelOffset: 1 }],
-      slots: [
-        {
-          slotIndex: 0,
-          slotRate: 100,
-          slotRateSource: source,
-          groups: [],
-          minLevel: 20,
-          maxLevel: 20,
-          runtimeMinLevel: 20,
-          runtimeMaxLevel: 20,
-          speciesId: "SPECIES_GYARADOS",
-          speciesLabel: "Gyarados",
-          sprite: null,
-          source,
-        },
-      ],
-    }
-    const encounters: ResolvedMapEncounters = {
-      availableProducts: [{ id: "EMERALD", displayName: "Emerald" }],
-      product: "EMERALD",
-      runtimeTimes: [],
-      sets: [
-        {
-          mapId: "MAP_ALTERING_CAVE",
-          mapName: "AlteringCave",
-          baseLabel: "gAlteringCave1",
-          product: "EMERALD",
-          runtimeTime: "day",
-          header: { groupLabel: "gWildMonHeaders", groupIndex: 0, headerIndex: 0 },
-          source,
-          methods: [water],
-        },
-      ],
-    }
-
-    expect(resolveEncounterPopulation(projection, encounters, "water_mons", 10)).toMatchObject({
-      method: "water_mons",
-      unavailableTimes: [],
-      sources: [
-        {
-          set: { baseLabel: "gAlteringCave1", runtimeTime: "day" },
-          activations: [],
-          lockedSlotCount: 0,
-          effectiveSlots: [
-            {
-              outcomes: [{ speciesId: "SPECIES_MAGIKARP", projectedMinimumLevel: 10 }],
-              selectionWeight: 1,
-            },
-          ],
-        },
-      ],
-    })
-  })
-
-  it("retains a fully locked source and method-wide unavailable runtime times", () => {
-    const land: CatalogWildEncounterMethod = {
-      type: "land_mons",
-      encounterRate: 20,
-      source,
-      profiles: [{ profileKey: "land", fishingRod: "NONE", levelOffset: 1 }],
-      slots: [
-        {
-          slotIndex: 0,
-          slotRate: 100,
-          slotRateSource: source,
-          groups: [],
-          minLevel: 14,
-          maxLevel: 14,
-          runtimeMinLevel: 14,
-          runtimeMaxLevel: 14,
-          speciesId: "SPECIES_SKARMORY",
-          speciesLabel: "Skarmory",
-          sprite: null,
-          source,
-        },
-      ],
-    }
-    const encounters: ResolvedMapEncounters = {
-      availableProducts: [{ id: "POKEMON_HNS", displayName: "HNS" }],
-      product: "POKEMON_HNS",
-      sets: [
-        {
-          mapId: "MAP_ROUTE_45_HNS",
-          mapName: "Route45_hns",
-          baseLabel: "gRoute45_hns_Day",
-          product: "POKEMON_HNS",
-          runtimeTime: "day",
-          header: { groupLabel: "gWildMonHeaders", groupIndex: 0, headerIndex: 0 },
-          source,
-          methods: [land],
-        },
-      ],
-      runtimeTimes: [
-        {
-          product: "POKEMON_HNS",
-          timeOfDay: "morning",
-          methods: [{ type: "land_mons", resolution: "unavailable", sets: [] }],
-        },
-      ],
-    }
-
-    const population = resolveEncounterPopulation(projection, encounters, "land_mons", 10)
-
-    expect(population.unavailableTimes).toEqual(["morning"])
-    expect(population.sources).toMatchObject([
-      {
-        set: { baseLabel: "gRoute45_hns_Day" },
-        activations: [],
-        slots: [{ eligible: false, selectionWeight: null }],
-        effectiveSlots: [],
-        lockedSlotCount: 1,
-      },
+      population.sources.map((entry) => [
+        entry.set.baseLabel,
+        entry.placeLevel,
+        entry.activations.map((use) => use.timeOfDay),
+        entry.slots.length,
+      ]),
+    ).toEqual([
+      ["gWildV2_Route1_Hns_Day", 6, ["morning"], 2],
+      ["gWildV2_Route1_Hns_Night", 6, ["evening"], 2],
     ])
+    expect(population.unavailableTimes).toEqual([])
+    expect(
+      resolveEncounterPopulation(projection, encounters, "water_mons", 1).unavailableTimes,
+    ).toEqual(["night"])
   })
 })

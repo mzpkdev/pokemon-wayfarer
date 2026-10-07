@@ -7,6 +7,8 @@
   } from "./catalog.js"
   import {
     fishingProfiles,
+    placeLabel,
+    placeLevelAt,
     resolveMethodSlots,
     rodLabel,
     type ResolvedMapEncounters,
@@ -50,9 +52,8 @@
   } as const
 
   const resolutionLabels = {
-    direct: "Direct source table",
-    fallback: "Falls back to Day",
-    unavailable: "No source table",
+    direct: "Table",
+    unavailable: "No table",
   } as const
 </script>
 
@@ -64,12 +65,12 @@
       <p
         class="m-0 font-cartographer-mono text-[0.68rem] font-bold tracking-[0.15em] text-cartographer-signal"
       >
-        Rendered exterior-map encounters
+        Wayfarer wild encounters
       </p>
       <h2 class="mb-3 mt-3 text-xl font-semibold">Select a map</h2>
       <p class="m-0 leading-6 text-cartographer-muted">
         Choose a rendered exterior map from the region index or search to inspect the encounter sets
-        recorded in the source.
+        in the Wayfarer wild tables.
       </p>
     </div>
   {:else}
@@ -79,21 +80,20 @@
         <p
           class="m-0 font-cartographer-mono text-[0.68rem] font-bold tracking-[0.15em] text-cartographer-signal"
         >
-          Rendered exterior-map encounters
+          Wayfarer wild encounters
         </p>
         <h2 class="mb-0 mt-2 text-2xl font-semibold tracking-[-0.025em]">{selectedMap.name}</h2>
       </div>
       <p class="mb-0 mt-2 font-cartographer-mono text-xs text-cartographer-muted sm:text-right">
-        {encounters?.sets.length ?? 0} source {(encounters?.sets.length ?? 0) === 1
-          ? "set"
-          : "sets"}
+        {encounters?.sets.length ?? 0}
+        {(encounters?.sets.length ?? 0) === 1 ? "table" : "tables"}
       </p>
     </header>
 
     <TrainerEvents mapName={selectedMap.name} {trainers} {selectedObject} {onSelectTrainer} />
 
     <p class="m-0 border-b border-cartographer-border px-5 py-3 text-sm text-cartographer-muted">
-      Normal non-randomized ordinary encounters · Trainer Rating {trainerRating}
+      Normal non-randomized ordinary encounters · levels at Trainer Rating {trainerRating}
       {#if encounters?.product}
         · {encounters.availableProducts.find((product) => product.id === encounters?.product)
           ?.displayName ?? encounters.product}{/if}
@@ -101,9 +101,9 @@
 
     {#if !encounters || encounters.sets.length === 0}
       <div class="p-6">
-        <h3 class="m-0 text-base font-semibold">No source encounter sets</h3>
+        <h3 class="m-0 text-base font-semibold">No wild encounter tables</h3>
         <p class="mb-0 mt-2 leading-6 text-cartographer-muted">
-          This exterior map has no wild encounter set recorded in the source catalog.
+          This exterior map has no table in the Wayfarer wild encounter data.
         </p>
       </div>
     {:else}
@@ -114,8 +114,8 @@
             count={encounters.runtimeTimes.length}
           >
             <p class="m-0 px-4 py-3 text-sm text-cartographer-muted">
-              Time-labelled source tables are selected per encounter method. Missing tables use the
-              source-configured Day fallback when it provides that method.
+              Every map holds a day and a night table per method. Morning and Day use the day table;
+              Evening and Night use the night table.
             </p>
             <ul class="m-0 grid list-none divide-y divide-cartographer-border p-0">
               {#each encounters.runtimeTimes as time (`${time.product}-${time.timeOfDay}`)}
@@ -148,12 +148,17 @@
           {@const listedMethods = new Set(encounterSet.methods.map((method) => method.type))}
           {@const missingMethods = methodTypes.filter((type) => !listedMethods.has(type))}
           <CollapsibleSection
-            title="Source set"
+            title={`${encounterSet.place.name} · ${encounterSet.runtimeTime} table`}
             meta={encounterSet.baseLabel}
-            label={`Source set ${encounterSet.baseLabel}`}
+            label={`Encounter table ${encounterSet.baseLabel}`}
           >
+            <p class="m-0 px-4 pt-4 text-sm">
+              {placeLabel(encounterSet.place)} · place level
+              <strong>{placeLevelAt(projection, encounterSet, trainerRating)}</strong>
+              at Trainer Rating {trainerRating} (wild levels roll ±2 around it)
+            </p>
             <p
-              class="m-0 break-all p-4 font-cartographer-mono text-[0.68rem] text-cartographer-muted"
+              class="m-0 break-all p-4 pt-2 font-cartographer-mono text-[0.68rem] text-cartographer-muted"
             >
               {encounterSet.source.path}{encounterSet.source.pointer}
             </p>
@@ -162,27 +167,31 @@
               <p
                 class="m-0 border-b border-cartographer-border px-4 py-2 text-sm text-cartographer-muted"
               >
-                Not recorded in this source set: {missingMethods.join(", ")}
+                Not in this table: {missingMethods.join(", ")}
               </p>
             {/if}
 
             <div class="grid divide-y divide-cartographer-border">
               {#each encounterSet.methods as method (method.type)}
-                {@const resolvedSlots = resolveMethodSlots(projection, method, trainerRating)}
+                {@const resolvedSlots = resolveMethodSlots(
+                  projection,
+                  encounterSet,
+                  method,
+                  trainerRating,
+                )}
                 <CollapsibleSection
                   title={methodLabels[method.type]}
-                  meta={`Source rate ${method.encounterRate}`}
+                  meta={`Encounter rate ${method.encounterRate}`}
                   label={`${methodLabels[method.type]} encounter method`}
                 >
                   <p
                     class="mb-3 mt-0 px-4 pt-3 font-cartographer-mono text-[0.68rem] text-cartographer-muted"
                   >
-                    Selection weight is renormalized within this encounter method after unavailable
-                    slots are removed.
+                    Selection weight is the slot's share of this method's table weights.
                   </p>
                   {#if resolvedSlots.length === 0 && method.type !== "fishing_mons"}
                     <p class="m-0 px-4 pb-4 text-sm text-cartographer-muted">
-                      No non-zero source slots are recorded for this method.
+                      This method has no slots.
                     </p>
                   {:else if method.type === "fishing_mons"}
                     {@const profiles = fishingProfiles(method)}
@@ -206,6 +215,7 @@
                           <EncounterSlotsTable
                             slots={resolveMethodSlots(
                               projection,
+                              encounterSet,
                               method,
                               trainerRating,
                               profile.fishingRod,

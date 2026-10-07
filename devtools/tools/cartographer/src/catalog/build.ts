@@ -189,14 +189,14 @@ export const renderCatalog = (root: string, output: string): RenderCatalogResult
         groups.get(name) ?? "gMapGroup_Unassigned",
         namesById,
         objectTables,
-        wildEncountersByMap.get(name) ?? { sets: [], runtimeTimes: [], diagnostics: [] },
+        wildEncountersByMap.get(name) ?? { sets: [], runtimeTimes: [] },
         wayfarerSevii,
       ),
     )
   }
 
   const catalog: MapCatalog = {
-    schemaVersion: 10,
+    schemaVersion: 11,
     format: "pokemon-wayfarer-exterior-map-catalog",
     pixelsPerMetatile: 16,
     source: sourceState(root),
