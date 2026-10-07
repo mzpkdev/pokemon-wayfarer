@@ -219,8 +219,9 @@ mythical.
 
 ## Open questions
 
-- Final values for the reach levels, the Road encounter rate, dungeon
-  intents, level spread, stage mix and prowler minimum levels. The current numbers are placeholders for
+- Final values for the reach levels, the encounter rates of each method and
+  terrain, the Road encounter rate, dungeon intents, level spread, stage mix
+  and prowler minimum levels. The current numbers are placeholders for
   playtesting.
 
 ## References

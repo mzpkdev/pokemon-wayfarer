@@ -13,7 +13,9 @@ nothing to guess.
 This spec defines:
 
 - the level of each reach, as [scalers](player-trainer-rating.md#scalers)
-  over your TR, and the Road's lower encounter rate;
+  over your TR;
+- the encounter rate of each method and terrain, and the Road's lower rate;
+- what a Lure changes;
 - the level of each dungeon floor, from its intent;
 - the level spread of a single encounter;
 - the stage mix, and the level limit of slots capped at an early stage;
@@ -74,13 +76,38 @@ What this means at a glance:
   team stays about the same from the first badge to the last; only Roads get
   easier.
 
+### Encounter rates
+
+A table's encounter rate comes from its method and terrain, not from the map.
+The same rate holds by day and by night. All values are placeholders:
+
+| Method and terrain | Rate |
+| --- | ---: |
+| Walking in outdoor grass | 20 |
+| Walking on cave or building floors (indoor and underground maps) | 10 |
+| Surfing | 4 |
+| Diving through underwater seaweed | 4 |
+| Fishing | 30 |
+| Rock Smash and Headbutt | 60 |
+
 ### Road encounter rate
 
-Road maps keep travel quick with a lower encounter rate. Every method that
-rolls its table's encounter rate uses 60% of it on a Road map (a placeholder),
-rounded to the nearest whole value. Wilds, Outlands and dungeons use the
-table's rate as it is. The rate changes how often an encounter happens, never
-what it holds or its level.
+Road maps keep travel quick with a lower encounter rate. Walking and surfing,
+including underwater, use 60% of the rate on a Road map (a placeholder),
+rounded to the nearest whole value. Fishing, Rock Smash and Headbutt keep the
+full rate everywhere, since the player chose to act. Wilds, Outlands and
+dungeons use the full rate for every method. The rate changes how often an
+encounter happens, never what it holds or its level.
+
+### Lures
+
+A Lure doubles the encounter rate. While it lasts, each encounter also has the
+existing 20% chance to mirror its slot, for walking, surfing, Rock Smash and
+fishing; fishing mirrors across its eligible entries as
+[Standard Rod fishing](standard-rod-fishing.md) defines. That brings rare
+slots and prowlers about five times as often. A Lure never changes the level:
+the encounter rolls the place's ordinary spread, with Pressure, Hustle and
+Vital Spirit as usual.
 
 ### Dungeon levels
 
@@ -282,4 +309,9 @@ as the [prowlers spec](prowlers.md#prowlers) defines.
   or below a prowler's minimum.
 - A young-level slot never appears at or above its next evolution level,
   apart from prowlers at their minimum.
-
+- Every table's encounter rate equals its method and terrain's rate, by day
+  and by night.
+- On a Road map, walking and surfing roll 60% of the rate, rounded to the
+  nearest whole value; fishing, Rock Smash and Headbutt roll the full rate.
+- A Lure doubles the rate and leaves every encounter's level distribution
+  unchanged.
