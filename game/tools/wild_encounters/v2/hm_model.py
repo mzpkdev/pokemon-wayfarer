@@ -103,10 +103,17 @@ for s, info in SPECIES.items():
         EVOLV.setdefault(s, []).append((t, lv, e['method']))
         PRED.setdefault(t, []).append((s, lv, e['method']))
 
+# Base names the tables use (ALCREMIE) are aliases of the form constants the edges are
+# filed under (ALCREMIE_STRAWBERRY_VANILLA_CREAM); the game sees one species.
+for _alias in _ALIAS:
+    for _table in (PRED, EVOLV):
+        if _alias not in _table and _res(_alias) in _table:
+            _table[_alias] = _table[_res(_alias)]
+
 def evo_level(pred, succ):
     # A species can reach the same successor by trade and by level (Wayfarer gives trade
-    # evolutions a level route too); the level route wins.
-    edges = [(lv, m) for t, lv, m in EVOLV.get(pred, []) if t == succ]
+    # evolutions a level route too); the level route wins. Forms of a successor are one species.
+    edges = [(lv, m) for t, lv, m in EVOLV.get(pred, []) if _res(t) == _res(succ)]
     for lv, m in edges:
         if lv is not None: return lv
     for lv, m in edges[:1]:
