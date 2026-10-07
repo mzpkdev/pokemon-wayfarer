@@ -16,10 +16,13 @@ fights you can't lose, and revisiting them gives you nothing.
 
 Daily world slots turn each regular trainer spot and each item spot into a
 slot that changes from day to day. You meet the original trainer or item first.
-After that, each day the slot shows a different trainer of the same kind from
-the same region, a different item, or nothing at all. Routes keep feeling
-lived in, revisiting pays off, and travel stays light because some spots are
-empty.
+After that, each day the slot holds a different item or nothing, or one of the
+trainers of its kind you have already met in that region, or nothing.
+
+Trainers stay people, not spawns. Each one is in at most one place a day, keeps
+their phone number and rematches wherever they turn up, and tells you on the
+phone where to find them. Routes keep feeling lived in, revisiting pays off,
+and travel stays light because some spots are empty.
 
 ## Terms
 
@@ -33,6 +36,13 @@ empty.
 - **Pool:** the candidates a rotating slot draws from.
 - **Class family:** a trainer class with its per-source copies merged, for
   example Hiker, Hiker (HNS) and Hiker (FRLG).
+- **Trainer group:** the regular trainers of one class family in one region,
+  together with their home slots.
+- **Home slot:** the slot a trainer was authored in.
+- **Wandering trainer:** a regular trainer you have beaten. Their home slot
+  rotates, and they appear in their group's rotating slots.
+- **Rematch team:** one of a trainer's stronger authored teams for later
+  battles, up to five in total.
 
 ## Design
 
@@ -76,27 +86,81 @@ Only regular trainer slots rotate. These stay fixed under today's rules:
   notable trainers.
 - Story trainers: villain grunts in story places, trainers gated by story
   flags, path blockers, and trainers whose script does more than battle.
-- Trainers who give an item or register a phone number.
+  Offering a phone number or giving a one-time item doesn't count.
 - Battle facility trainers, including the Battle Pyramid, Trainer Hill and
   Trainer Tower.
 
 The classification reuses the regular-trainer classification that
 [trainer party scaling](trainer-party-scaling.md#coverage-and-exclusions)
-requires, and it must be inspectable in the same report.
+requires, and it must be inspectable in the same report. Phone numbers and
+one-time gifts move with the trainer (see
+[Phone numbers and rematches](#phone-numbers-and-rematches)).
 
-A rotating trainer slot's pool is every regular authored trainer of the same
-class family from the same region. Each candidate brings its own name, sprite,
-party and dialogue. The slot keeps its own position, facing and sight range.
+#### Trainers are people
 
+A trainer you haven't beaten waits at their home slot. Once you beat them,
+they become a wandering trainer and their home slot starts rotating the next
+day.
+
+Each day, every trainer group shuffles its wandering trainers into its rotating
+slots. As a result:
+
+- **One place a day.** A trainer appears in at most one slot a day, anywhere in
+  the world. Some days they appear nowhere.
+- **Variety grows as you explore.** A group's rotating slots only draw from
+  trainers you have beaten in that group. Early on a group may have one
+  wandering trainer, who keeps returning to their own spot. Once you have
+  cleared a region, every spot of that kind can hold any of its trainers.
+- **Empty spots.** Each rotating slot is empty with the flat empty chance. A
+  trainer left without a slot is away for the day.
+- **Each candidate brings their own** name, sprite, party, dialogue, phone
+  number and gifts. The slot keeps its own position, facing and sight range.
 - **Pairs rotate as pairs.** Two-trainer slots, such as Twins or a Young
-  Couple, draw only pairs from their class family. Single slots draw only
-  single trainers.
-- **No doubles on one map.** The same trainer never appears twice on one map
-  on the same day. On another map, on the same day, they may.
-- **Strength and rewards** follow the existing regular trainer rules: the
-  [regular trainer scaling](trainer-party-scaling.md) from the player's
-  Trainer Rating, normal prize money, and normal experience. Beating a
-  rotating trainer adds no Trainer Rating.
+  Couple, form their own group and draw only pairs.
+
+A wandering trainer in a rotating slot battles you again on any day you meet
+them. Clearing them clears that slot for the day.
+
+**Strength and rewards** follow the existing regular trainer rules: the
+[regular trainer scaling](trainer-party-scaling.md) from the player's
+Trainer Rating, normal prize money and normal experience. Beating a wandering
+trainer adds no Trainer Rating.
+
+#### Phone numbers and rematches
+
+Phone numbers and rematches belong to the trainer, not the spot:
+
+- **Asking for a number.** After you beat a trainer who has a phone number,
+  they offer it. If you decline, they offer it again the next time you beat
+  them, at home or wandering. Today HNS registers the number automatically
+  after the first win, without asking.
+- **Rematch teams.** A trainer with rematch teams always uses their latest
+  unlocked one. A phone trainer unlocks their next team the way HNS phone
+  trainers do today: they call you wanting a rematch, and you beat them. A
+  trainer without a number unlocks their next team as your Trainer Rating
+  reaches the step that team was authored for, matching Emerald's badge
+  steps.
+- **Readiness travels with you.** Today an HNS phone trainer becomes ready for
+  a rematch after you walk 255 steps on their home map. Under rotation they
+  have no fixed map, so readiness builds up as you walk anywhere in their
+  region.
+- **Calls name today's place.** When a registered trainer calls, they say where
+  they are today. HNS's call texts never name a place today, so every
+  battle-request call gains that line. A trainer whose rematch is ready is
+  always given a slot that day, so the call never sends you to an empty spot.
+  If their group has no rotating slot free that day, the call waits for the
+  next day.
+- **Hoenn's trainers** join the phone through the separate
+  [Hoenn phone rematches](hoenn-phone-rematches.md) design.
+
+#### Vs. Seeker
+
+The Vs. Seeker retires. Rotation already brings every beaten trainer back on
+later days, and rematch teams unlock by phone or by Trainer Rating, so the
+Vs. Seeker would only add same-day repeat battles, which the "wait a day" rule
+rules out. Vermilion's Pokémon Center stops handing it out. Sevii's 64 and
+the Kanto coast's 9 rematch families have no phone numbers, so they unlock
+their teams by Trainer Rating like every other trainer without a number.
 
 ### Item slots
 
@@ -140,9 +204,10 @@ The Itemfinder finds rotating hidden items the same way it finds authored ones.
 - **Rare Candy, vitamins and PP Ups** are rare in every reach, rarest on the
   Road. Each is a renewable source of permanent power, so their weights need
   the closest tuning.
-- **Region size shapes variety.** With pools by class family and region, the
-  median rotating trainer slot has about 7 candidates, and about 14 slots have
-  none other than their authored trainer (2026-10-07 inventory).
+- **Region size shapes variety.** Once a region is cleared, the median trainer
+  group has about 7 trainers, and about 14 slots are alone in their group
+  (2026-10-07 inventory). Before that, a group's variety is the number of its
+  trainers you have beaten.
 
 ## Content
 
@@ -167,7 +232,8 @@ generated objects excluded:
   that name a place, landmark or local event get neutral wording, or the
   trainer leaves the pool.
 - **Rematches:** about 200 regular trainers have rematch scripts, through three
-  separate systems:
+  separate systems. This design puts all of them on the rules in
+  [Phone numbers and rematches](#phone-numbers-and-rematches):
   - 31 Johto and Kanto trainers from HNS give a phone number and call for
     tiered rematches.
   - 68 Hoenn trainers register for Emerald's Match Call. Wayfarer compiles the
@@ -216,9 +282,8 @@ generated objects excluded:
 
 ## Open questions
 
-- Rematches: do phone trainers stay fixed, do Hoenn's inert Match Call
-  trainers rotate, and does the Vs. Seeker stay once rotation exists? See
-  [Content](#content).
+- Does a group with very few wandering trainers feel repetitive early on, and
+  should the empty chance be higher in small groups?
 
 ## References
 
