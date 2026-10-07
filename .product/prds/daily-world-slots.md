@@ -30,14 +30,14 @@ and travel stays light because some spots are empty.
 - **Slot:** a regular trainer spot or an item spot on a map, keeping its
   position, facing and sight range.
 - **Authored occupant:** the trainer or item placed in the slot today.
-- **Rotating slot:** a pool spot, or a slot whose authored occupant is used
+- **Rotating slot:** a dynamic spot, or a slot whose authored occupant is used
   up: the trainer is defeated or the prize is picked up.
 - **Draw:** what a rotating slot holds on a given day: one candidate from its
   pool, or nothing.
 - **Pool:** the candidates a rotating slot draws from.
-- **Prize spot:** an item spot holding a fixed, authored item that you find
+- **Static prize:** an item spot holding a fixed, authored item that you find
   once.
-- **Pool spot:** an item spot that draws a random consumable every day.
+- **Dynamic spot:** an item spot that draws a random find every day.
 - **Class family:** a trainer class with its per-source copies merged, for
   example Hiker, Hiker (HNS) and Hiker (FRLG).
 - **Trainer group:** the regular trainers of one class family in one region,
@@ -62,12 +62,12 @@ changes the day, as it does for every other daily event.
 
 ### Authored first
 
-Every trainer slot and every prize spot (see [Item slots](#item-slots)) starts
+Every trainer slot and every static prize (see [Item slots](#item-slots)) starts
 with its authored occupant and keeps it until it is used up. Prizes are
 therefore never lost to a draw: each one is found exactly once, where it is
 placed.
 
-After that, the slot becomes a rotating slot from the next day. Pool spots
+After that, the slot becomes a rotating slot from the next day. Dynamic spots
 skip this step and rotate from the first day.
 
 ### Clearing a slot
@@ -177,42 +177,67 @@ design, which reuses their Vs. Seeker teams.
 
 ### Item slots
 
-Item spots come in two kinds:
+Item spots come in two kinds with two different jobs:
 
-- **Prize spots** hold one fixed, authored item: a TM, a held item, an
-  evolution stone or item, a key item, or a consumable promoted to a prize,
-  such as a Master Ball. You find each prize exactly once. After that, the spot
-  rotates like a pool spot from the next day.
-- **Pool spots** hold a random find from the very first day. Their authored
-  consumable, such as a Potion on Route 29, is dropped.
+- **Static prizes** give players something to remember and talk about. Each
+  one is found exactly once, and together they should be worth wikis and
+  forum threads arguing which trail to take first for a given goal.
+- **Dynamic spots** make the world worth re-exploring. They respawn daily, are
+  sometimes empty, and mix everyday supplies with better and special finds.
 
-Every authored item that isn't a consumable becomes a prize, along with a
-short reviewed list of promoted consumables. Every other spot becomes a pool
-spot. A prize that repeats a reusable item you already own, such as a second
-Escape Rope, becomes a pool spot instead.
+#### Static prizes
 
-**Prizes follow danger.** Strong prizes sit in Wilds, Outlands or dungeons. A
-reviewed list names the strong ones, such as Leftovers or a top TM, and any of
-them placed on a Road spot moves to a fitting spot in a riskier place, trading
-places with a pool spot. Today 26 prizes sit on Road maps, mostly modest TMs,
-and 67 are already in dungeons.
+- **Earned, never handed out.** Every static prize sits in Wilds, Outlands or
+  a dungeon, or is hidden somewhere non-obvious: a dead end, behind an
+  obstacle, a puzzle corner. A visible ball on an open road is never a prize.
+- **Danger sets the prize.** *Finds* (Wilds, dungeon entrances, hidden road
+  spots) hold solid TMs, type-boosting and utility held items, and evolution
+  items. *Treasures* (Outlands, deep dungeon floors, hard-to-reach Wilds) hold
+  strong TMs and top held items such as Leftovers, Life Orb or Choice items.
+  Each region has two to four *Legends*: signature rewards in its most remote
+  or best-hidden places.
+- **Trails.** Each region's prizes form a few named trails: geographic chains
+  that grow more dangerous and build toward a playstyle, such as a special
+  attacker, a bulky wall or a weather team. Trails start in different
+  directions, so first journeys differ and players can debate the best one
+  for their goal.
+- **Worth the trip.** No filler. Weak or redundant authored items, such as
+  duplicate stones or minor TMs, become dynamic spots unless a better prize
+  replaces them.
+- **Existing spots only.** A prize stays in its authored spot or moves to
+  another existing item spot, ball or hidden, and the spot it leaves becomes
+  dynamic. Key items, HMs and anything a script depends on never move.
+- **After pickup**, a prize's spot becomes a dynamic spot from the next day.
 
-**Pool finds should be exciting.** A pool spot draws from one broad pool of
-consumables, so any spot can turn up almost anything, from a Potion to a Max
-Revive or a Rare Candy. Finds don't improve with Trainer Rating. A Road spot
-found on day one and on day three hundred has the same odds.
+The [world items spec](../specs/world-items.md) lists every region's prizes
+and trails, Sevii included.
 
-The reach only tilts the odds. Road leans toward everyday supplies, Wilds a
-step up, and Outlands and deep dungeon floors lean toward the best
-consumables, with rare finds noticeably more likely. Rare finds stay possible
-everywhere, just less likely on the Road.
+#### Dynamic spots
+
+A dynamic spot draws from one broad pool from the first day. Its authored
+consumable, such as a Potion on Route 29, is dropped. Each find rolls a tier,
+then an item within the tier:
+
+- **Regular:** everyday healing, Poké Balls, status cures, Repels, Escape
+  Ropes.
+- **Better:** stronger healing, Revives, Ultra Balls, PP restores, battle
+  items, useful berries.
+- **Special:** Rare Candy, PP Ups, vitamins, valuables such as Nuggets and
+  Star Pieces, evolution stones, Heart Scales, Max Revives, and occasionally a
+  TM.
+
+Stones and TMs can therefore be both static prizes and rare dynamic finds.
+
+The reach tilts the tier odds: Road leans Regular, Wilds a step up, and
+Outlands and deep dungeon floors lean Better and Special. Special finds stay
+possible everywhere. Finds don't improve with Trainer Rating: a Road spot on
+day one and on day three hundred has the same odds. A region may lean its pool
+toward local flavour, such as Apricorns in Johto or Shards in Hoenn.
 
 A dungeon's entrance floor counts as Wilds and its deeper floors as Outlands.
 A map with no reach of its own, such as a building, uses its surroundings: the
-dungeon it belongs to, or Road otherwise.
-
-The pool never contains prizes. A hidden item stays hidden, and the Itemfinder
-finds hidden pool items the same way it finds authored ones.
+dungeon it belongs to, or Road otherwise. A hidden spot stays hidden, and the
+Itemfinder finds hidden dynamic items the same way it finds authored ones.
 
 ## Boundaries
 
@@ -220,8 +245,9 @@ finds hidden pool items the same way it finds authored ones.
   repeatable challenge in the late game stays with
   [notable trainers](notable-trainers.md) and [Leagues](leagues.md).
 - Authored trainer placement, parties and dialogue stay as they are. Items
-  change only as [Item slots](#item-slots) describes: pool spots drop their
-  consumables, and strong prizes on Road spots move somewhere riskier.
+  change only as [Item slots](#item-slots) describes: dynamic spots drop their
+  consumables, and static prizes are curated and may move between existing
+  spots.
 - No new trainer spots or item spots are added, and none are moved.
 - Berry trees, gift NPCs, Pickup and other existing daily item sources are
   unchanged.
@@ -252,11 +278,11 @@ generated objects excluded:
   look like story trainers. Regular slots by region: Hoenn 377, Johto 141,
   Kanto 97, Sevii 85, Alola 19. The classification report settles the final
   split.
-- **Item slots:** 762 in total: 485 item balls and 277 hidden items. 167 hold
-  unique items: 58 TMs, 49 held items, 26 key items, 25 evolution stones,
-  8 held evolution items and 1 HM. These become the prize spots, apart from
-  repeated reusable items such as the 12 Escape Ropes. Hoenn and the FRLG Kanto
-  ports keep every authored item.
+- **Item slots:** 762 in total: 485 item balls and 277 hidden items. About
+  155 hold non-consumable items (TMs, held items, key items, evolution stones
+  and items, one HM), the raw material for the curated static prizes. Escape
+  Ropes are consumables in Wayfarer and become dynamic. Hoenn and the FRLG
+  Kanto ports keep every authored item.
 - **Sevii items (prerequisite):** Sevii's 97 FRLG items (39 item balls and 58
   hidden items) were left out by the
   [exploration port](sevii-exploration-port.md) and never restored. They are
