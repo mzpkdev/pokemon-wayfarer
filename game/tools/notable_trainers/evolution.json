@@ -1457,46 +1457,6 @@
       "level": 30
     },
     {
-      "predecessor": "SPECIES_PAWMO",
-      "successor": "SPECIES_PAWMOT",
-      "level": 35
-    },
-    {
-      "predecessor": "SPECIES_CHARCADET",
-      "successor": "SPECIES_ARMAROUGE",
-      "level": 35
-    },
-    {
-      "predecessor": "SPECIES_CHARCADET",
-      "successor": "SPECIES_CERULEDGE",
-      "level": 35
-    },
-    {
-      "predecessor": "SPECIES_TADBULB",
-      "successor": "SPECIES_BELLIBOLT",
-      "level": 35
-    },
-    {
-      "predecessor": "SPECIES_BRAMBLIN",
-      "successor": "SPECIES_BRAMBLEGHAST",
-      "level": 35
-    },
-    {
-      "predecessor": "SPECIES_CAPSAKID",
-      "successor": "SPECIES_SCOVILLAIN",
-      "level": 35
-    },
-    {
-      "predecessor": "SPECIES_RELLOR",
-      "successor": "SPECIES_RABSCA",
-      "level": 35
-    },
-    {
-      "predecessor": "SPECIES_CETODDLE",
-      "successor": "SPECIES_CETITAN",
-      "level": 35
-    },
-    {
       "predecessor": "SPECIES_PRIMEAPE",
       "successor": "SPECIES_ANNIHILAPE",
       "level": 38
@@ -1522,23 +1482,8 @@
       "level": 62
     },
     {
-      "predecessor": "SPECIES_GIMMIGHOUL_CHEST",
-      "successor": "SPECIES_GHOLDENGO",
-      "level": 35
-    },
-    {
       "predecessor": "SPECIES_APPLIN",
       "successor": "SPECIES_DIPPLIN",
-      "level": 35
-    },
-    {
-      "predecessor": "SPECIES_POLTCHAGEIST_COUNTERFEIT",
-      "successor": "SPECIES_SINISTCHA_UNREMARKABLE",
-      "level": 35
-    },
-    {
-      "predecessor": "SPECIES_POLTCHAGEIST_ARTISAN",
-      "successor": "SPECIES_SINISTCHA_MASTERPIECE",
       "level": 35
     },
     {
