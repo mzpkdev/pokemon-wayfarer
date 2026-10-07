@@ -91,7 +91,9 @@ steps on their home map. Battle requests then name the home map.
     flags and must move to a larger free flag range.
   - The saved rematch progress array holds 100 entries.
   - The Pokégear contact list holds 99 rows, special contacts included, with no
-    bounds check.
+    bounds check. With HNS's trainers, these 64 and the 41 from
+    [Sevii and Kanto coast phone rematches](sevii-coast-phone-rematches.md),
+    it must hold about 140 ordinary contacts plus the special ones.
 - **Save layout:** Wayfarer has no released saves, so moving these blocks
   needs no migration (see `AGENTS.md`). Cost: one byte and one flag per new
   trainer, under 100 bytes in total.
@@ -112,5 +114,6 @@ steps on their home map. Battle requests then name the home map.
 ## References
 
 - [Daily world slots](daily-world-slots.md)
+- [Sevii and Kanto coast phone rematches](sevii-coast-phone-rematches.md)
 - [Regular trainer scaling](trainer-party-scaling.md)
 - [Notable trainers](notable-trainers.md)

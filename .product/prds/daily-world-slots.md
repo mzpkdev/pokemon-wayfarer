@@ -151,7 +151,9 @@ Phone numbers and rematches belong to the trainer, not the spot:
   If their group has no rotating slot free that day, the call waits for the
   next day.
 - **Hoenn's trainers** join the phone through the separate
-  [Hoenn phone rematches](hoenn-phone-rematches.md) design.
+  [Hoenn phone rematches](hoenn-phone-rematches.md) design, and the FRLG
+  trainers on Sevii and the Kanto coast through
+  [Sevii and Kanto coast phone rematches](sevii-coast-phone-rematches.md).
 
 #### Vs. Seeker
 
@@ -164,8 +166,9 @@ therefore unreachable, so retiring it takes nothing away from players.
 Rotation already brings every beaten trainer back on later days, and rematch
 teams unlock by phone or by Trainer Rating, so a Vs. Seeker would only add
 same-day repeat battles, which the "wait a day" rule rules out. The Sevii and
-coast families have no phone numbers, so they unlock their teams by Trainer
-Rating like every other trainer without a number.
+coast families with stronger teams get phone numbers through the separate
+[Sevii and Kanto coast phone rematches](sevii-coast-phone-rematches.md)
+design, which reuses their Vs. Seeker teams.
 
 ### Item slots
 
