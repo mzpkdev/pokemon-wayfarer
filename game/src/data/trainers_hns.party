@@ -9,7 +9,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Basic Trainer
 
-Geodude
+Golem
 Level: 21
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -22,7 +22,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Koffing
+Weezing
 Level: 28
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -52,11 +52,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Magnemite
+Magnezone
 Level: 28
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Porygon
+Porygon Z
 Level: 28
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -82,7 +82,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Porygon
+Porygon Z
 Level: 40
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -95,7 +95,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Rattata
+Raticate
 Level: 4
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -108,11 +108,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Hoothoot
+Noctowl
 Level: 2
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Sentret
+Furret
 Level: 4
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -125,11 +125,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Sentret
+Furret
 Level: 7
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Zubat
+Crobat
 Level: 7
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -142,7 +142,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Wooper
+Quagsire
 Level: 10
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -155,15 +155,15 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Teddiursa
+Ursaring
 Level: 12
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Sandshrew
+Sandslash
 Level: 10
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Spearow
+Fearow
 Level: 12
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -176,11 +176,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Mankey
+Annihilape
 Level: 12
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Diglett
+Dugtrio
 Level: 14
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -461,11 +461,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Pidgey
+Pidgeot
 Level: 7
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Natu
+Xatu
 Level: 7
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -478,7 +478,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Spearow
+Fearow
 Level: 9
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -495,11 +495,11 @@ Pidgey
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Pidgeotto
+Pidgeot
 Level: 18
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Spearow
+Fearow
 Level: 18
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -512,7 +512,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Murkrow
+Honchkrow
 Level: 23
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -529,7 +529,7 @@ Doduo
 Level: 22
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Doduo
+Dodrio
 Level: 22
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -542,7 +542,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Pidgeotto
+Pidgeot
 Level: 24
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -563,7 +563,7 @@ Pidgeot
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Murkrow
+Honchkrow
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -584,7 +584,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Murkrow
+Honchkrow
 Level: 59
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -618,11 +618,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Yanma
+Yanmega
 Level: 60
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Murkrow
+Honchkrow
 Level: 58
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -677,11 +677,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Spearow
+Fearow
 Level: 8
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Natu
+Xatu
 Level: 8
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -737,11 +737,11 @@ Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
-Aipom
+Ambipom
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Munchlax
+Snorlax
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -775,11 +775,11 @@ Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
-Skiploom
+Jumpluff
 Level: 17
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Cubone
+Marowak
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -792,11 +792,11 @@ Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
-Ponyta
+Rapidash
 Level: 21
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Weepinbell
+Victreebel
 Level: 22
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -855,7 +855,7 @@ Parasect
 Level: 56
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Tangela
+Tangrowth
 Level: 55
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -893,11 +893,11 @@ Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
-Flaaffy
+Ampharos
 Level: 19
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Psyduck
+Golduck
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -927,15 +927,15 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Charmander
+Charizard
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Squirtle
+Blastoise
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Bulbasaur
+Venusaur
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -948,15 +948,15 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Ivysaur
+Venusaur
 Level: 27
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Charmeleon
+Charizard
 Level: 27
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Wartortle
+Blastoise
 Level: 27
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -981,7 +981,7 @@ Dragonair
 Level: 40
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Dragonair
+Dragonite
 Level: 40
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -994,7 +994,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Seadra
+Kingdra
 Level: 42
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1006,7 +1006,7 @@ Golduck
 Level: 43
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Dragonair
+Dragonite
 Level: 42
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1023,7 +1023,7 @@ Gyarados
 Level: 42
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Dragonair
+Dragonite
 Level: 43
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1056,7 +1056,7 @@ Donphan
 Level: 50
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Dragonair
+Dragonite
 Level: 50
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1073,11 +1073,11 @@ Pidgeot
 Level: 37
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Electabuzz
+Electivire
 Level: 37
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magmar
+Magmortar
 Level: 37
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1119,7 +1119,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Magneton
+Magnezone
 Level: 43
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1131,7 +1131,7 @@ Exeggutor
 Level: 43
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Piloswine
+Mamoswine
 Level: 44
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1152,7 +1152,7 @@ Scizor
 Level: 44
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Sneasel
+Weavile
 Level: 45
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1169,15 +1169,15 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Bulbasaur
+Venusaur
 Level: 10
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Charmander
+Charizard
 Level: 10
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Squirtle
+Blastoise
 Level: 10
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1190,15 +1190,15 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Bulbasaur
+Venusaur
 Level: 10
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Charmander
+Charizard
 Level: 10
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Squirtle
+Blastoise
 Level: 10
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1211,15 +1211,15 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Bulbasaur
+Venusaur
 Level: 10
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Charmander
+Charizard
 Level: 10
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Squirtle
+Blastoise
 Level: 10
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1236,7 +1236,7 @@ Flareon
 Level: 60
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Tangela
+Tangrowth
 Level: 60
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1253,7 +1253,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Rhyhorn
+Rhyperior
 Level: 58
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1278,15 +1278,15 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Bulbasaur
+Venusaur
 Level: 14
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Charmander
+Charizard
 Level: 14
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Squirtle
+Blastoise
 Level: 14
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1299,11 +1299,11 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Charmeleon
+Charizard
 Level: 35
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Electabuzz
+Electivire
 Level: 37
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1328,7 +1328,7 @@ Dragonair
 Level: 42
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Dragonair
+Dragonite
 Level: 42
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1366,7 +1366,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Skiploom
+Jumpluff
 Level: 28
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1383,7 +1383,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Seadra
+Kingdra
 Level: 41
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1391,7 +1391,7 @@ Gyarados
 Level: 41
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Dragonair
+Dragonite
 Level: 41
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1416,7 +1416,7 @@ Lanturn
 Level: 41
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Dragonair
+Dragonite
 Level: 42
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1463,7 +1463,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Togetic
+Togekiss
 Level: 37
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1471,7 +1471,7 @@ Ampharos
 Level: 37
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Tangela
+Tangrowth
 Level: 37
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1500,7 +1500,7 @@ Tauros
 Level: 45
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Rhydon
+Rhyperior
 Level: 45
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1575,7 +1575,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Tangela
+Tangrowth
 Level: 44
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1621,7 +1621,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Ivysaur
+Venusaur
 Level: 58
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1638,7 +1638,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Poliwhirl
+Politoed
 Level: 28
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1693,7 +1693,7 @@ Seadra
 Level: 40
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Seadra
+Kingdra
 Level: 41
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1710,7 +1710,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Teddiursa
+Ursaring
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1727,7 +1727,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Meowth
+Persian
 Level: 18
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1740,7 +1740,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Sentret
+Furret
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1753,7 +1753,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Sentret
+Furret
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1800,11 +1800,11 @@ Marill
 Level: 30
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Seel
+Dewgong
 Level: 32
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Marill
+Azumarill
 Level: 30
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1817,7 +1817,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Sentret
+Furret
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1830,7 +1830,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Sentret
+Furret
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1843,7 +1843,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Sentret
+Furret
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1856,7 +1856,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Sentret
+Furret
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1869,7 +1869,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Sentret
+Furret
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1882,7 +1882,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Sentret
+Furret
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1916,7 +1916,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Sentret
+Furret
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1929,7 +1929,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Skiploom
+Jumpluff
 Level: 22
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -1959,7 +1959,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Larvitar
+Tyranitar
 Level: 10
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2023,7 +2023,7 @@ Slowbro
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Wartortle
+Blastoise
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2036,11 +2036,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Lickitung
+Lickilicky
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Ivysaur
+Venusaur
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2057,7 +2057,7 @@ Nidoking
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Charmeleon
+Charizard
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2070,11 +2070,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Haunter
+Gengar
 Level: 61
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Rhydon
+Rhyperior
 Level: 61
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2087,7 +2087,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Lickitung
+Lickilicky
 Level: 14
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2104,7 +2104,7 @@ Slowpoke
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Slowpoke
+Slowbro
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2117,11 +2117,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Rhydon
+Rhyperior
 Level: 40
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Pupitar
+Tyranitar
 Level: 37
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2155,15 +2155,15 @@ Music: Rocket
 Double Battle: No
 AI: Check Bad Move
 
-Koffing
+Weezing
 Level: 12
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Slowpoke
+Slowbro
 Level: 13
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Houndour
+Houndoom
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2218,11 +2218,11 @@ Aipom
 Level: 34
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Koffing
+Weezing
 Level: 34
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Aipom
+Ambipom
 Level: 34
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2235,7 +2235,7 @@ Music: Rocket
 Double Battle: No
 AI: Check Bad Move
 
-Gligar
+Gliscor
 Level: 34
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2252,11 +2252,11 @@ Music: Rocket
 Double Battle: No
 AI: Check Bad Move
 
-Aipom
+Ambipom
 Level: 34
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Murkrow
+Honchkrow
 Level: 34
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2315,7 +2315,7 @@ Electrode
 Level: 35
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Electabuzz
+Electivire
 Level: 35
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2328,7 +2328,7 @@ Music: Rocket
 Double Battle: No
 AI: Check Bad Move
 
-Golbat
+Crobat
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2345,7 +2345,7 @@ Music: Rocket
 Double Battle: No
 AI: Check Bad Move
 
-Golbat
+Crobat
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2366,7 +2366,7 @@ Weezing
 Level: 35
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Gligar
+Gliscor
 Level: 37
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2396,7 +2396,7 @@ Music: Rocket
 Double Battle: No
 AI: Check Bad Move
 
-Golbat
+Crobat
 Level: 29
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2413,11 +2413,11 @@ Raticate
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Grimer
+Muk
 Level: 27
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Golbat
+Crobat
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2443,11 +2443,11 @@ Music: Rocket
 Double Battle: No
 AI: Check Bad Move
 
-Drowzee
+Hypno
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Gligar
+Gliscor
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2460,7 +2460,7 @@ Music: Rocket
 Double Battle: No
 AI: Check Bad Move
 
-Golbat
+Crobat
 Level: 27
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2494,7 +2494,7 @@ Music: Rocket
 Double Battle: No
 AI: Check Bad Move
 
-Golbat
+Crobat
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2515,7 +2515,7 @@ Rattata
 Level: 9
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Rattata
+Raticate
 Level: 11
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2528,11 +2528,11 @@ Music: Rocket
 Double Battle: No
 AI: Check Bad Move
 
-Rattata
+Raticate
 Level: 9
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Zubat
+Crobat
 Level: 9
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2549,7 +2549,7 @@ Golbat
 Level: 25
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Golbat
+Crobat
 Level: 25
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2595,11 +2595,11 @@ Music: Rocket
 Double Battle: No
 AI: Check Bad Move
 
-Zubat
+Crobat
 Level: 9
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Ekans
+Arbok
 Level: 11
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2616,7 +2616,7 @@ Arbok
 Level: 35
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Gloom
+Vileplume
 Level: 35
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2641,7 +2641,7 @@ Arbok
 Level: 35
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Murkrow
+Honchkrow
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2683,7 +2683,7 @@ Arbok
 Level: 28
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Sneasel
+Weavile
 Level: 28
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2697,7 +2697,7 @@ Double Battle: No
 AI: Basic Trainer
 Items: Full Restore / Full Restore
 
-Golbat
+Crobat
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2711,7 +2711,7 @@ Double Battle: No
 AI: Basic Trainer
 Items: Full Restore / Full Restore
 
-Koffing
+Weezing
 Level: 30
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2725,7 +2725,7 @@ Double Battle: No
 AI: Basic Trainer
 Items: Full Restore / Full Restore
 
-Zubat
+Crobat
 Level: 22
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2739,7 +2739,7 @@ Double Battle: No
 AI: Basic Trainer
 Items: Full Restore / Full Restore
 
-Koffing
+Weezing
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2777,15 +2777,15 @@ Jynx
 Level: 28
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Poliwhirl
+Politoed
 Level: 28
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magmar
+Magmortar
 Level: 28
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Electabuzz
+Electivire
 Level: 28
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2802,7 +2802,7 @@ Poliwrath
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magmar
+Magmortar
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2810,11 +2810,11 @@ Jynx
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Electabuzz
+Electivire
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Rhydon
+Rhyperior
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2827,11 +2827,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Growlithe
+Arcanine
 Level: 22
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Vulpix
+Ninetales
 Level: 22
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2857,7 +2857,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Pikachu
+Raichu
 Level: 57
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2874,7 +2874,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Ponyta
+Rapidash
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2926,7 +2926,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Clefairy
+Clefable
 Level: 60
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2939,11 +2939,11 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Aipom
+Ambipom
 Level: 61
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Cubone
+Marowak
 Level: 61
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -2973,11 +2973,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Ledyba
+Ledian
 Level: 3
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Spinarak
+Ariados
 Level: 3
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3028,11 +3028,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Weedle
+Beedrill
 Level: 4
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Pineco
+Forretress
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3079,7 +3079,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Yanma
+Yanmega
 Level: 12
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3092,11 +3092,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Yanma
+Yanmega
 Level: 18
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Venonat
+Venomoth
 Level: 18
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3139,11 +3139,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Paras
+Parasect
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Oddish
+Vileplume
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3156,7 +3156,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Tentacool
+Tentacruel
 Level: 7
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3169,7 +3169,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Goldeen
+Seaking
 Level: 8
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3205,7 +3205,7 @@ Seaking
 Level: 58
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Poliwhirl
+Politoed
 Level: 58
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3222,11 +3222,11 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Marill
+Azumarill
 Level: 7
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Poliwag
+Politoed
 Level: 7
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3473,7 +3473,7 @@ Tentacool
 Level: 25
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Tentacool
+Tentacruel
 Level: 25
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3486,11 +3486,11 @@ Music: Hg Boy 2
 Double Battle: No
 AI: Check Bad Move
 
-Shellder
+Cloyster
 Level: 25
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Wartortle
+Blastoise
 Level: 25
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3520,15 +3520,15 @@ Music: Hg Boy 2
 Double Battle: No
 AI: Check Bad Move
 
-Tentacool
+Tentacruel
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Remoraid
+Octillery
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Staryu
+Starmie
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3571,7 +3571,7 @@ Music: Hg Boy 2
 Double Battle: No
 AI: Check Bad Move
 
-Krabby
+Kingler
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3613,7 +3613,7 @@ Piloswine
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Piloswine
+Mamoswine
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3651,11 +3651,11 @@ Horsea
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Horsea
+Seadra
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Seadra
+Kingdra
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3676,7 +3676,7 @@ Starmie
 Level: 18
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Horsea
+Kingdra
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3737,7 +3737,7 @@ Starmie
 Level: 18
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Horsea
+Kingdra
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3794,7 +3794,7 @@ Starmie
 Level: 18
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Horsea
+Kingdra
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3815,7 +3815,7 @@ Starmie
 Level: 18
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Horsea
+Kingdra
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3836,7 +3836,7 @@ Gyarados
 Level: 57
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Seadra
+Kingdra
 Level: 57
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3862,11 +3862,11 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Staryu
+Starmie
 Level: 25
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Shellder
+Cloyster
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3900,7 +3900,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Psyduck
+Golduck
 Level: 27
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3930,7 +3930,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Horsea
+Kingdra
 Level: 25
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -3951,7 +3951,7 @@ Horsea
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Seadra
+Kingdra
 Level: 27
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4158,7 +4158,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Poliwhirl
+Politoed
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4175,11 +4175,11 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Poliwhirl
+Politoed
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Machop
+Machamp
 Level: 22
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4192,7 +4192,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Poliwhirl
+Politoed
 Level: 24
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4205,11 +4205,11 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Shellder
+Cloyster
 Level: 23
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Chinchou
+Lanturn
 Level: 23
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4222,11 +4222,11 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Machop
+Machamp
 Level: 22
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Poliwhirl
+Politoed
 Level: 24
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4302,7 +4302,7 @@ Qwilfish
 Level: 53
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Machoke
+Machamp
 Level: 53
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4332,7 +4332,7 @@ Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
-Grimer
+Muk
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4345,11 +4345,11 @@ Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
-Grimer
+Muk
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Cubone
+Marowak
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4366,11 +4366,11 @@ Magnemite
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magnemite
+Magneton
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magnemite
+Magnezone
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4387,7 +4387,7 @@ Koffing
 Level: 22
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Koffing
+Weezing
 Level: 22
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4413,7 +4413,7 @@ Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
-Porygon2
+Porygon Z
 Level: 62
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4430,7 +4430,7 @@ Magnemite
 Level: 56
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magnemite
+Magnezone
 Level: 56
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4451,11 +4451,11 @@ Porygon
 Level: 56
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magneton
+Magnezone
 Level: 56
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Porygon2
+Porygon Z
 Level: 56
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4476,7 +4476,7 @@ Muk
 Level: 58
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magneton
+Magnezone
 Level: 59
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4489,15 +4489,15 @@ Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
-Voltorb
+Electrode
 Level: 14
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magnemite
+Magnezone
 Level: 14
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Porygon
+Porygon Z
 Level: 14
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4514,11 +4514,11 @@ Magnemite
 Level: 27
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magnemite
+Magneton
 Level: 27
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magnemite
+Magnezone
 Level: 27
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4531,7 +4531,7 @@ Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
-Porygon
+Porygon Z
 Level: 30
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4544,7 +4544,7 @@ Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
-Seadra
+Kingdra
 Level: 39
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4557,7 +4557,7 @@ Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
-Slowpoke
+Slowbro
 Level: 19
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4570,7 +4570,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Electabuzz
+Electivire
 Level: 61
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4591,7 +4591,7 @@ Electrode
 Level: 55
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magneton
+Magnezone
 Level: 57
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4608,11 +4608,11 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Geodude
+Golem
 Level: 11
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Machop
+Machamp
 Level: 11
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4625,11 +4625,11 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Geodude
+Golem
 Level: 9
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Cubone
+Marowak
 Level: 8
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4646,11 +4646,11 @@ Geodude
 Level: 23
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Geodude
+Graveler
 Level: 23
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Graveler
+Golem
 Level: 23
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4663,11 +4663,11 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Geodude
+Golem
 Level: 23
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Machop
+Machamp
 Level: 25
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4680,7 +4680,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Graveler
+Golem
 Level: 24
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4697,7 +4697,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Machoke
+Machamp
 Level: 37
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4718,7 +4718,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Rhyhorn
+Rhyperior
 Level: 38
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4739,7 +4739,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Piloswine
+Mamoswine
 Level: 45
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4764,11 +4764,11 @@ Dugtrio
 Level: 38
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Gligar
+Gliscor
 Level: 39
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Graveler
+Golem
 Level: 38
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4928,7 +4928,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Onix
+Steelix
 Level: 11
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4949,7 +4949,7 @@ Koffing
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Koffing
+Weezing
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -4974,7 +4974,7 @@ Koffing
 Level: 59
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Koffing
+Weezing
 Level: 60
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5051,11 +5051,11 @@ Music: Hg Boy 2
 Double Battle: No
 AI: Check Bad Move
 
-Magmar
+Magmortar
 Level: 58
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Electabuzz
+Electivire
 Level: 58
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5072,7 +5072,7 @@ Koffing
 Level: 57
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magmar
+Magmortar
 Level: 55
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5093,7 +5093,7 @@ Delibird
 Level: 35
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magmar
+Magmortar
 Level: 35
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5123,11 +5123,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Koffing
+Weezing
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Growlithe
+Arcanine
 Level: 19
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5140,7 +5140,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Charmeleon
+Charizard
 Level: 21
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5157,7 +5157,7 @@ Koffing
 Level: 55
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magmar
+Magmortar
 Level: 58
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5165,7 +5165,7 @@ Koffing
 Level: 55
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Koffing
+Weezing
 Level: 60
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5186,7 +5186,7 @@ Weezing
 Level: 60
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magmar
+Magmortar
 Level: 58
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5199,7 +5199,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Charmeleon
+Charizard
 Level: 17
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5216,11 +5216,11 @@ Koffing
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Growlithe
+Arcanine
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Koffing
+Weezing
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5250,7 +5250,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Growlithe
+Arcanine
 Level: 11
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5267,7 +5267,7 @@ Magmar
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magmar
+Magmortar
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5280,7 +5280,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Vulpix
+Ninetales
 Level: 9
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5318,11 +5318,11 @@ Voltorb
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Pineco
+Forretress
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Voltorb
+Electrode
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5339,11 +5339,11 @@ Mr Mime
 Level: 54
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magmar
+Magmortar
 Level: 54
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Machoke
+Machamp
 Level: 56
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5436,7 +5436,7 @@ Machop
 Level: 27
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Machoke
+Machamp
 Level: 27
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5470,11 +5470,11 @@ Mankey
 Level: 27
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Machoke
+Machamp
 Level: 27
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Primeape
+Annihilape
 Level: 27
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5508,7 +5508,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Girafarig
+Farigiraf
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5585,7 +5585,7 @@ Slowpoke
 Level: 22
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Slowpoke
+Slowking
 Level: 23
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5602,11 +5602,11 @@ Abra
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Abra
+Kadabra
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Kadabra
+Alakazam
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5623,11 +5623,11 @@ Xatu
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Kadabra
+Alakazam
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Girafarig
+Farigiraf
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5669,7 +5669,7 @@ Exeggutor
 Level: 44
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Girafarig
+Farigiraf
 Level: 44
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5720,7 +5720,7 @@ Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
-Nidoran F
+Nidoqueen
 Level: 9
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5733,11 +5733,11 @@ Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
-Skiploom
+Jumpluff
 Level: 14
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Bulbasaur
+Venusaur
 Level: 14
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5750,7 +5750,7 @@ Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
-Pikachu
+Raichu
 Level: 18
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5763,7 +5763,7 @@ Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
-Vulpix
+Ninetales
 Level: 18
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5865,7 +5865,7 @@ Jumpluff
 Level: 56
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Seadra
+Kingdra
 Level: 58
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5895,7 +5895,7 @@ Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
-Clefairy
+Clefable
 Level: 21
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5933,7 +5933,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Nidoran M
+Nidoking
 Level: 9
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5959,11 +5959,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Eevee
+Leafeon
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Diglett
+Dugtrio
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -5976,11 +5976,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Sandshrew
+Sandslash
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Marill
+Azumarill
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6044,7 +6044,7 @@ Dugtrio
 Level: 56
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Primeape
+Annihilape
 Level: 55
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6061,7 +6061,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Nidorino
+Nidoking
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6074,7 +6074,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Nidorino
+Nidoking
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6091,7 +6091,7 @@ Ursaring
 Level: 40
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Primeape
+Annihilape
 Level: 40
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6112,11 +6112,11 @@ Graveler
 Level: 33
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Graveler
+Golem
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Golbat
+Crobat
 Level: 40
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6137,11 +6137,11 @@ Graveler
 Level: 33
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Graveler
+Golem
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Golbat
+Crobat
 Level: 40
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6162,11 +6162,11 @@ Graveler
 Level: 33
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Graveler
+Golem
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Golbat
+Crobat
 Level: 40
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6187,11 +6187,11 @@ Graveler
 Level: 33
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Graveler
+Golem
 Level: 36
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Golbat
+Crobat
 Level: 40
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6229,11 +6229,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Skiploom
+Jumpluff
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Marill
+Azumarill
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6250,7 +6250,7 @@ Sandslash
 Level: 25
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Golbat
+Crobat
 Level: 25
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6267,7 +6267,7 @@ Fearow
 Level: 38
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Primeape
+Annihilape
 Level: 38
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6292,11 +6292,11 @@ Bellsprout
 Level: 3
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Sunkern
+Sunflora
 Level: 3
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Bellsprout
+Victreebel
 Level: 3
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6313,11 +6313,11 @@ Bellsprout
 Level: 3
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Hoppip
+Jumpluff
 Level: 4
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Bellsprout
+Victreebel
 Level: 3
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6330,7 +6330,7 @@ Music: Hg Sage
 Double Battle: No
 AI: Check Bad Move
 
-Bellsprout
+Victreebel
 Level: 6
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6343,11 +6343,11 @@ Music: Hg Sage
 Double Battle: No
 AI: Check Bad Move
 
-Hoppip
+Jumpluff
 Level: 7
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Bellsprout
+Victreebel
 Level: 7
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6364,11 +6364,11 @@ Gastly
 Level: 21
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Haunter
+Gengar
 Level: 21
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Murkrow
+Honchkrow
 Level: 21
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6381,7 +6381,7 @@ Music: Hg Sage
 Double Battle: No
 AI: Check Bad Move
 
-Misdreavus
+Mismagius
 Level: 22
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6398,11 +6398,11 @@ Bellsprout
 Level: 3
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Bellsprout
+Weepinbell
 Level: 3
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Bellsprout
+Victreebel
 Level: 3
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6415,7 +6415,7 @@ Music: Hg Sage
 Double Battle: No
 AI: Check Bad Move
 
-Bellsprout
+Victreebel
 Level: 6
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6428,15 +6428,15 @@ Music: Hg Sage
 Double Battle: No
 AI: Check Bad Move
 
-Oddish
+Vileplume
 Level: 7
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Sunkern
+Sunflora
 Level: 8
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Bellsprout
+Victreebel
 Level: 9
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6512,11 +6512,11 @@ Music: Hg Sage
 Double Battle: No
 AI: Check Bad Move
 
-Haunter
+Gengar
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Houndour
+Houndoom
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6529,11 +6529,11 @@ Music: Hg Sage
 Double Battle: No
 AI: Check Bad Move
 
-Haunter
+Gengar
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Murkrow
+Honchkrow
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6546,7 +6546,7 @@ Music: Hg Sage
 Double Battle: No
 AI: Check Bad Move
 
-Haunter
+Gengar
 Level: 25
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6559,7 +6559,7 @@ Music: Hg Sage
 Double Battle: No
 AI: Check Bad Move
 
-Haunter
+Gengar
 Level: 25
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6572,7 +6572,7 @@ Music: Hg Sage
 Double Battle: No
 AI: Check Bad Move
 
-Haunter
+Gengar
 Level: 25
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6644,11 +6644,11 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Swinub
+Mamoswine
 Level: 30
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Sneasel
+Weavile
 Level: 30
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6665,7 +6665,7 @@ Shellder
 Level: 28
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Seel
+Dewgong
 Level: 28
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6695,11 +6695,11 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Pikachu
+Raichu
 Level: 22
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Ponyta
+Rapidash
 Level: 22
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6733,7 +6733,7 @@ Pikachu
 Level: 60
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Pikachu
+Raichu
 Level: 60
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6746,15 +6746,15 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Chikorita
+Meganium
 Level: 65
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Cyndaquil
+Typhlosion
 Level: 65
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Totodile
+Feraligatr
 Level: 65
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -6780,7 +6780,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Snubbull
+Granbull
 Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -7057,7 +7057,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Snubbull
+Granbull
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -7070,7 +7070,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Pikachu
+Raichu
 Level: 23
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -7125,7 +7125,7 @@ Music: Hg Boy 2
 Double Battle: No
 AI: Check Bad Move
 
-Growlithe
+Arcanine
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -7138,11 +7138,11 @@ Music: Hg Boy 2
 Double Battle: No
 AI: Check Bad Move
 
-Growlithe
+Arcanine
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Houndour
+Houndoom
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -7155,11 +7155,11 @@ Music: Hg Girl 1
 Double Battle: Yes
 AI: Check Bad Move
 
-Electabuzz
+Electivire
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-Magmar
+Magmortar
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -7172,7 +7172,7 @@ Music: Hg Girl 1
 Double Battle: Yes
 AI: Check Bad Move
 
-Onix
+Steelix
 Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
@@ -11329,7 +11329,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Rattata @ Silk Scarf
+Raticate @ Silk Scarf
 Level: 27
 - Quick Attack
 - Hyper Fang
@@ -11345,7 +11345,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Rattata @ Silk Scarf
+Raticate @ Silk Scarf
 Level: 30
 - Super Fang
 - Hyper Fang
@@ -11361,7 +11361,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Rattata @ Silk Scarf
+Raticate @ Silk Scarf
 Level: 40
 - Body Slam
 - Thunderbolt
@@ -11377,7 +11377,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Rattata @ Silk Scarf
+Raticate @ Silk Scarf
 Level: 65
 - Body Slam
 - Thunderbolt
@@ -11396,7 +11396,7 @@ AI: Check Bad Move / Try To Faint / Check Viability
 Beedrill
 Level: 20
 
-Pineco
+Forretress
 Level: 20
 
 === TRAINER_WADE_3_HNS ===
@@ -11414,7 +11414,7 @@ Level: 25
 Beedrill
 Level: 25
 
-Pineco
+Forretress
 Level: 25
 
 === TRAINER_WADE_4_HNS ===
@@ -11471,7 +11471,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Goldeen
+Seaking
 Level: 24
 
 === TRAINER_RALPH_3_HNS ===
@@ -11558,10 +11558,10 @@ Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Weepinbell
+Victreebel
 Level: 24
 
-Nidorina
+Nidoqueen
 Level: 25
 
 === TRAINER_LIZ_3_HNS ===
@@ -11573,10 +11573,10 @@ Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Weepinbell
+Victreebel
 Level: 29
 
-Nidorino
+Nidoking
 Level: 29
 
 Nidoqueen
@@ -11639,10 +11639,10 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Geodude
+Golem
 Level: 11
 
-Machop
+Machamp
 Level: 11
 
 === TRAINER_ANTHONY_3_HNS ===
@@ -11657,10 +11657,10 @@ AI: Check Bad Move / Try To Faint / Check Viability
 Graveler
 Level: 35
 
-Machoke
+Machamp
 Level: 34
 
-Graveler
+Golem
 Level: 35
 
 === TRAINER_ANTHONY_4_HNS ===
@@ -11723,10 +11723,10 @@ AI: Check Bad Move / Try To Faint / Check Viability
 Azumarill
 Level: 25
 
-Geodude
+Golem
 Level: 22
 
-Psyduck
+Golduck
 Level: 24
 
 === TRAINER_TODD_3_HNS ===
@@ -11741,7 +11741,7 @@ AI: Check Bad Move / Try To Faint / Check Viability
 Azumarill
 Level: 36
 
-Graveler
+Golem
 Level: 35
 
 Golduck
@@ -11801,10 +11801,10 @@ AI: Check Bad Move / Try To Faint / Check Viability
 Skiploom
 Level: 25
 
-Skiploom
+Jumpluff
 Level: 25
 
-Ivysaur
+Venusaur
 Level: 27
 
 === TRAINER_GINA_3_HNS ===
@@ -11822,7 +11822,7 @@ Level: 36
 Jumpluff
 Level: 36
 
-Ivysaur
+Venusaur
 Level: 35
 
 === TRAINER_GINA_4_HNS ===
@@ -11837,7 +11837,7 @@ AI: Check Bad Move / Try To Faint / Check Viability
 Skiploom
 Level: 45
 
-Skiploom
+Jumpluff
 Level: 45
 
 Venusaur
@@ -11885,10 +11885,10 @@ AI: Check Bad Move / Try To Faint / Check Viability
 Voltorb
 Level: 25
 
-Pineco
+Forretress
 Level: 25
 
-Voltorb
+Electrode
 Level: 27
 
 
@@ -11970,10 +11970,10 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Yanma
+Yanmega
 Level: 28
 
-Venonat
+Venomoth
 Level: 28
 
 === TRAINER_ARNIE_3_HNS ===
@@ -11988,10 +11988,10 @@ AI: Check Bad Move / Try To Faint / Check Viability
 Venomoth
 Level: 38
 
-Yanma
+Yanmega
 Level: 37
 
-Scyther
+Scizor
 Level: 38
 
 === TRAINER_ARNIE_4_HNS ===
@@ -12006,7 +12006,7 @@ AI: Check Bad Move / Try To Faint / Check Viability
 Venomoth
 Level: 48
 
-Yanma
+Yanmega
 Level: 47
 
 Scizor
@@ -12027,7 +12027,7 @@ AI: Check Bad Move / Try To Faint / Check Viability
 Venomoth
 Level: 58
 
-Yanma
+Yanmega
 Level: 56
 
 Scizor
@@ -12123,14 +12123,14 @@ Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Flaaffy
+Ampharos
 Level: 25
 - Tackle
 - Growl
 - Thunder Shock
 - Thunder Wave
 
-Psyduck
+Golduck
 Level: 25
 - Scratch
 - Tail Whip
@@ -12283,10 +12283,10 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Pikachu
+Raichu
 Level: 25
 
-Ponyta
+Rapidash
 Level: 27
 
 
@@ -12299,10 +12299,10 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Pikachu
+Raichu
 Level: 36
 
-Ponyta
+Rapidash
 Level: 35
 
 
@@ -12315,7 +12315,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Pikachu
+Raichu
 Level: 45
 
 Rapidash
@@ -12331,7 +12331,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Pikachu @ Light Ball
+Raichu @ Light Ball
 Level: 55
 - Thunderbolt
 - Iron Tail
@@ -12415,7 +12415,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Porygon
+Porygon Z
 Level: 46
 - Recover
 - Psychic
@@ -12431,7 +12431,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Chansey
+Blissey
 Level: 53
 - Rollout
 - Attract
@@ -12447,7 +12447,7 @@ Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Clefairy
+Clefable
 Level: 37
 - Encore
 - Double Slap
@@ -12505,7 +12505,7 @@ AI: Check Bad Move / Try To Faint / Check Viability
 Pidgeot
 Level: 46
 
-Murkrow
+Honchkrow
 Level: 48
 
 Xatu
@@ -12526,7 +12526,7 @@ AI: Check Bad Move / Try To Faint / Check Viability
 Pidgeot
 Level: 55
 
-Murkrow
+Honchkrow
 Level: 56
 
 Xatu
@@ -12617,7 +12617,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Piloswine
+Mamoswine
 Level: 50
 - Earthquake
 - Blizzard
@@ -12647,7 +12647,7 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Piloswine
+Mamoswine
 Level: 38
 
 Dugtrio
@@ -12801,7 +12801,7 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
-Snubbull
+Granbull
 Level: 27
 
 
@@ -12860,7 +12860,7 @@ AI: Check Bad Move / Try To Faint / Check Viability
 Poliwhirl
 Level: 28
 
-Poliwhirl
+Politoed
 Level: 28
 
 === TRAINER_HUEY_3_HNS ===
@@ -12975,14 +12975,14 @@ Level: 45
 - Bite
 - Flamethrower
 
-Dragonair
+Dragonite
 Level: 45
 - Dragon Breath
 - Surf
 - Wrap
 - Dragon Rage
 
-Porygon2
+Porygon Z
 Level: 44
 - Tri Attack
 - Ice Beam
@@ -13276,7 +13276,7 @@ AI: Check Bad Move
 Scizor
 Level: 65
 
-Aipom
+Ambipom
 Level: 40
 
 === TRAINER_TREVOR_3_HNS ===
@@ -13309,7 +13309,7 @@ Level: 60
 Qwilfish
 Level: 59
 
-Poliwhirl
+Politoed
 Level: 60
 
 Seaking
@@ -13330,7 +13330,7 @@ Level: 63
 Seaking
 Level: 62
 
-Poliwhirl
+Politoed
 Level: 62
 
 Seaking
@@ -13345,13 +13345,13 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Bulbasaur
+Venusaur
 Level: 65
 
-Squirtle
+Blastoise
 Level: 65
 
-Charmander
+Charizard
 Level: 65
 
 === TRAINER_CARTER_3_HNS ===
@@ -13363,13 +13363,13 @@ Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
-Treecko
+Sceptile
 Level: 65
 
-Torchic
+Blaziken
 Level: 65
 
-Mudkip
+Swampert
 Level: 65
 
 === TRAINER_HILLARY_2_HNS ===
@@ -13381,13 +13381,13 @@ Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Sunkern
+Sunflora
 Level: 40
 
-Aipom
+Ambipom
 Level: 63
 
-Cubone
+Marowak
 Level: 62
 
 === TRAINER_HILLARY_3_HNS ===
@@ -13402,10 +13402,10 @@ AI: Check Bad Move
 Sunflora
 Level: 65
 
-Aipom
+Ambipom
 Level: 63
 
-Cubone
+Marowak
 Level: 62
 
 === TRAINER_ROB_2_HNS ===
@@ -13581,19 +13581,19 @@ Music: Hg Boy 2
 Double Battle: No
 AI: Check Bad Move
 
-Magmar
+Magmortar
 Level: 60
 
-Electabuzz
+Electivire
 Level: 60
 
-Tangela
+Tangrowth
 Level: 60
 
-Togetic
+Togekiss
 Level: 60
 
-Roselia
+Roserade
 Level: 60
 
 === TRAINER_JOEL_3_HNS ===
@@ -14210,7 +14210,7 @@ Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
-Mankey @ Flying Gem  
+Annihilape @ Flying Gem  
 Ability: Vital Spirit  
 Level: 63   
 - Acrobatics  
@@ -14245,8 +14245,7 @@ Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Primeape  
-Ability: Anger Point  
+Annihilape  
 Level: 61  
 - Cross Chop  
 - Curse  
@@ -14261,7 +14260,7 @@ Level: 61
 - Bulk Up  
 - Knock Off  
 
-Machoke  
+Machamp  
 Ability: No Guard  
 Level: 61  
 - Dynamic Punch  
@@ -14393,7 +14392,7 @@ Level: 62
 - Stealth Rock  
 - Psychic Fangs  
 
-Magmar @ Sitrus Berry  
+Magmortar @ Sitrus Berry  
 Ability: Flame Body  
 Level: 63   
 - Fire Punch  
@@ -14430,8 +14429,7 @@ Level: 61
 - Drill Peck  
 - Rock Slide  
 
-Primeape  
-Ability: Anger Point  
+Annihilape  
 Level: 64  
 Happiness: 0  
 - Frustration  

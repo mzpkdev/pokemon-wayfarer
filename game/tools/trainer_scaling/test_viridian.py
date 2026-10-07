@@ -10,6 +10,17 @@ import unittest
 from pathlib import Path
 
 import generate as trainer_inventory
+import final_stage
+
+_MODEL = []
+
+
+def stage_blind(text):
+    # Selected copies are final-staged; donors keep their authored stages.
+    if not _MODEL:
+        _MODEL.append(final_stage.load_model())
+    return final_stage.stage_blind(text, _MODEL[0])
+
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCES = {
@@ -54,8 +65,8 @@ class ViridianSourceContracts(unittest.TestCase):
         for original, name in SOURCES.items():
             runtime_id = f'TRAINER_VIRIDIAN_GYM_{name}_HNS'
             selected_ids.append(ids[runtime_id])
-            self.assertEqual(party_block(selected, runtime_id),
-                             party_block(donor, f'TRAINER_{original}'))
+            self.assertEqual(stage_blind(party_block(selected, runtime_id)),
+                             stage_blind(party_block(donor, f'TRAINER_{original}')))
             self.assertEqual(records[runtime_id]['policy'],
                              'GYM_LEADER' if name == 'GIOVANNI' else 'GYM_MEMBER')
         self.assertEqual(sorted(selected_ids), list(range(1800, 1809)))

@@ -7,7 +7,7 @@
         "policy": "ORDINARY",
         "slot": 0,
         "source": "TRAINER_YOUNGSTER_TYLER",
-        "source_hash": "13f14953eb98f69b08d6114cd0b5f6158787c3c6a25280871e0ddae7eae0082b"
+        "source_hash": "fddec9b924a689d16d7e8150bebb9059ef60c6048f270465219902d11cdd8683"
       },
       {
         "id": "TRAINER_WAYFARER_SS_ANNE_LASS_ANN",
@@ -15,7 +15,7 @@
         "policy": "ORDINARY",
         "slot": 1,
         "source": "TRAINER_LASS_ANN",
-        "source_hash": "8dfe478f97c3dccbe0ddff9be399d10a0dc613c32c8f9ada45af3a630221062f"
+        "source_hash": "fd6488beca16eb3174c32032e08a0b4397363167ee64dbd320a695e8c55781e0"
       },
       {
         "id": "TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_ARTHUR",
@@ -23,7 +23,7 @@
         "policy": "ORDINARY",
         "slot": 2,
         "source": "TRAINER_GENTLEMAN_ARTHUR",
-        "source_hash": "40111681129785e33c53ae940cbfc215160eb7276eed1c65a1d9c97b86b4ab89"
+        "source_hash": "6945f7fc0f7de4c844974f3af19de7821f364dbf49c0e4329616cdcfd97889da"
       },
       {
         "id": "TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_THOMAS",
@@ -31,7 +31,7 @@
         "policy": "ORDINARY",
         "slot": 3,
         "source": "TRAINER_GENTLEMAN_THOMAS",
-        "source_hash": "9901ad2b9be52d8635bd3f8dc775da45a92e455f9a41642ed7e6500e76e040b0"
+        "source_hash": "0904e7324ec8fec9629073d6e46a41e6378fb25aeb3397f7adee589dfe82857a"
       },
       {
         "id": "TRAINER_WAYFARER_SS_ANNE_FISHERMAN_DALE",
@@ -39,7 +39,7 @@
         "policy": "ORDINARY",
         "slot": 4,
         "source": "TRAINER_FISHERMAN_DALE",
-        "source_hash": "f7bc45c827bf7d32325e092f28543db43224ca45f66a583c10c61bc30abbf0d9"
+        "source_hash": "946692b1b7c68502bd72abe27b236614c7bae537ec81e2ef60c465732a9a9872"
       },
       {
         "id": "TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_BROOKS",
@@ -47,7 +47,7 @@
         "policy": "ORDINARY",
         "slot": 5,
         "source": "TRAINER_GENTLEMAN_BROOKS",
-        "source_hash": "75964eaa9ab5b5487f3252484bcc93f3e70e3fbe9fa913da5f94fde173bd7eba"
+        "source_hash": "a2b1cc95368fb6c735fa1249f462439e1879af9eb8d49ea05f0a341ab873d5e8"
       },
       {
         "id": "TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_LAMAR",
@@ -55,7 +55,7 @@
         "policy": "ORDINARY",
         "slot": 6,
         "source": "TRAINER_GENTLEMAN_LAMAR",
-        "source_hash": "59d28242bd341f9be0ba427cdf0451f46bf2d662270ce2beca3dbef8c1d2644f"
+        "source_hash": "5493e6c1c9ae9479bdb40e688a85659fafcc6062653b33f9c7587ac59251db5c"
       },
       {
         "id": "TRAINER_WAYFARER_SS_ANNE_LASS_DAWN",
@@ -63,7 +63,7 @@
         "policy": "ORDINARY",
         "slot": 7,
         "source": "TRAINER_LASS_DAWN",
-        "source_hash": "bb0f31ad3ec0dde8779f9eb0eee4c0e7ae461beeabb4daf2e0d5ce4eaf4f76b6"
+        "source_hash": "cc65f43dd244fdfa53b855f8f5bb5a83f75b40c05baf65bf79174f2653a42b2e"
       },
       {
         "id": "TRAINER_WAYFARER_SS_ANNE_FISHERMAN_BARNY",
@@ -71,7 +71,7 @@
         "policy": "ORDINARY",
         "slot": 8,
         "source": "TRAINER_FISHERMAN_BARNY",
-        "source_hash": "d8dc9edaefd5d4cf675dad9b6191a79eae4d96e03451398fd64ac9faf060e8b7"
+        "source_hash": "a2b190de13a237d7b6c9da145b43e7c1bdc34477f9bace5b4cfc2375234e7dd8"
       },
       {
         "id": "TRAINER_WAYFARER_SS_ANNE_SAILOR_PHILLIP",
@@ -79,7 +79,7 @@
         "policy": "ORDINARY",
         "slot": 9,
         "source": "TRAINER_SAILOR_PHILLIP",
-        "source_hash": "6502b020bb5939d7b8435fa46f38aae56e35c8a62b55f55c2d66bce6064e179f"
+        "source_hash": "2ff35ea58e4f931e0ba4ec5041c37218e381bae71d727f1ed929867d9c5ccd42"
       },
       {
         "id": "TRAINER_WAYFARER_SS_ANNE_SAILOR_HUEY",
@@ -87,7 +87,7 @@
         "policy": "ORDINARY",
         "slot": 10,
         "source": "TRAINER_SAILOR_HUEY",
-        "source_hash": "51be7ef6896921d81977b61f51a39738325ed33e8755e3ff5504ac63e2f7f132"
+        "source_hash": "b8aecd8be0a8c33a23aca09a41688ee67c17bd27262e62db9cb95fab5b4b8289"
       },
       {
         "id": "TRAINER_WAYFARER_SS_ANNE_SAILOR_DYLAN",
@@ -95,7 +95,7 @@
         "policy": "ORDINARY",
         "slot": 11,
         "source": "TRAINER_SAILOR_DYLAN",
-        "source_hash": "b08d7d79a855700271e01f28f4bb314df3401b23f760f29ed5e4fa21bb32b9db"
+        "source_hash": "07a4a9ad83722e3793043e09b32774efbdeecd0214ad0e1a3628b28aef68671e"
       },
       {
         "id": "TRAINER_WAYFARER_SS_ANNE_SAILOR_LEONARD",
@@ -103,7 +103,7 @@
         "policy": "ORDINARY",
         "slot": 12,
         "source": "TRAINER_SAILOR_LEONARD",
-        "source_hash": "aa9ebdb850516549c42dd4b20818d96734f92b04e1c4bb79b4a5549933f26c57"
+        "source_hash": "bd65b9514194350f0417a5879c63861abb6b61f512db67c016974eb8af2a982e"
       },
       {
         "id": "TRAINER_WAYFARER_SS_ANNE_SAILOR_DUNCAN",
@@ -111,7 +111,7 @@
         "policy": "ORDINARY",
         "slot": 13,
         "source": "TRAINER_SAILOR_DUNCAN",
-        "source_hash": "d729213dd0c29d9bb600ac7fc1cb980551da391276ff2f43a517a3dafe79832a"
+        "source_hash": "329090107dbe217c2c86199bfc7e18224346a430c1407c059fb98c636720a858"
       },
       {
         "id": "TRAINER_WAYFARER_SS_ANNE_SAILOR_EDMOND",
@@ -119,7 +119,7 @@
         "policy": "ORDINARY",
         "slot": 14,
         "source": "TRAINER_SAILOR_EDMOND",
-        "source_hash": "8bb4d13a7a8525d274d1a4971182caf2a60212f7b2c85935cbb433de4953d796"
+        "source_hash": "7eef94f92ad238916bb2248ed7bb98d6f213139a924cd5deeb3734de28a26832"
       },
       {
         "id": "TRAINER_WAYFARER_SS_ANNE_SAILOR_TREVOR",
@@ -127,7 +127,7 @@
         "policy": "ORDINARY",
         "slot": 15,
         "source": "TRAINER_SAILOR_TREVOR",
-        "source_hash": "3d14802c8c6e85598744ea5d32e65096ff022e693b20b2e4177e2ad975a2424c"
+        "source_hash": "2d1fdfad6325ef434a8255ac2f1c5480aa57ed1a9de55bc198d367b79eab6a35"
       }
     ],
     "base": 1707,
