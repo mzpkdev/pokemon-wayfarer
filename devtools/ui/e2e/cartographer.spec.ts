@@ -22,14 +22,40 @@ test("previews scaled encounters without remounting the map", async ({ page }) =
   await regionalMap.click({ position: { x: mapBounds.width / 2, y: mapBounds.height / 2 } })
   const rosterPopup = page.getByRole("dialog", { name: /LakeOfRage_hns.*Water/ })
   await expect(rosterPopup).toBeVisible()
-  const authoredGyarados = rosterPopup.locator('[aria-label="Authored slot 5 GYARADOS"]')
-  await expect(authoredGyarados.getByText("MAGIKARP", { exact: true })).toBeVisible()
-  await expect(authoredGyarados.getByText("Projected Lv. 7-8", { exact: true })).toBeVisible()
-  const sourceSet = page.locator('details[aria-label="Source set gLakeOfRage_hns_Day"]')
-  await sourceSet.locator(":scope > summary").click()
-  const water = sourceSet.locator('details[aria-label="Water encounter method"]')
+  // Lake of Rage is a Wilds place: at Trainer Rating 0 its place level is 9, so the Gyarados
+  // slot steps down to Magikarp (level 7-11, one in five each).
+  const popupDaySet = rosterPopup.locator(
+    '[aria-label="Source encounter set gWildV2_Lake_Of_Rage_Hns_Day"]',
+  )
+  const gyaradosSlot = popupDaySet.getByLabel(/^Table slot 1 gyarados$/i)
+  await expect(gyaradosSlot.getByText(/^Magikarp$/i)).toBeVisible()
+  await expect(gyaradosSlot).toContainText("Lv. 7-11 · 100%")
+  await expect(popupDaySet).toContainText("Wilds · place level 9 (rolls ±2) · day table")
+  await expect(
+    rosterPopup.locator('[aria-label="Source encounter set gWildV2_Lake_Of_Rage_Hns_Night"]'),
+  ).toContainText("Wilds · place level 9 (rolls ±2) · night table")
+  const dayTable = page.locator(
+    'details[aria-label="Encounter table gWildV2_Lake_Of_Rage_Hns_Day"]',
+  )
+  const nightTable = page.locator(
+    'details[aria-label="Encounter table gWildV2_Lake_Of_Rage_Hns_Night"]',
+  )
+  await dayTable.locator(":scope > summary").click()
+  await nightTable.locator(":scope > summary").click()
+  await expect(dayTable).toContainText("Wilds · place level 9 at Trainer Rating 0")
+  const water = dayTable.locator('details[aria-label="Water encounter method"]')
+  await expect(water.locator(":scope > summary")).toContainText("Encounter rate 4")
   await water.locator(":scope > summary").click()
-  const scalingRow = water.locator("tbody tr").nth(4)
+  const nightWater = nightTable.locator('details[aria-label="Water encounter method"]')
+  await nightWater.locator(":scope > summary").click()
+  // The day and night tables differ in their third slot (the young stage rolls at level 9).
+  const dayThird = water.locator("tbody tr").nth(2)
+  const nightThird = nightWater.locator("tbody tr").nth(2)
+  await expect(dayThird.getByText(/^Feraligatr$/i)).toHaveCount(1)
+  await expect(dayThird.getByText(/^Totodile$/i)).toHaveCount(1)
+  await expect(nightThird.getByText(/^Quagsire$/i)).toHaveCount(1)
+  await expect(nightThird.getByText(/^Wooper$/i)).toHaveCount(1)
+  const scalingRow = water.locator("tbody tr").nth(0)
   await expect(scalingRow.getByText(/^Gyarados$/i)).toHaveCount(1)
   await expect(scalingRow.getByText(/^Magikarp$/i)).toHaveCount(1)
 
@@ -41,12 +67,15 @@ test("previews scaled encounters without remounting the map", async ({ page }) =
   await expect(page).toHaveURL(/rating=30/)
   await expect(viewport).toHaveAttribute("data-scaling-e2e", "mounted")
   await expect(mapRoster).toContainText(/Gyarados/i)
+  // Place level 21 at Rating 30: Gyarados now joins its Magikarp stage.
+  await expect(dayTable).toContainText("Wilds · place level 21 at Trainer Rating 30")
   await expect(scalingRow.getByText(/^Gyarados$/i)).toHaveCount(2)
-  await expect(scalingRow.getByText(/^Magikarp$/i)).toHaveCount(0)
+  await expect(scalingRow.getByText(/^Magikarp$/i)).toHaveCount(1)
   await expect(rosterPopup).toBeVisible()
   await expect(rosterPopup).toContainText("Trainer Rating 30")
-  await expect(authoredGyarados.getByText("GYARADOS", { exact: true })).toBeVisible()
-  await expect(authoredGyarados.getByText("Projected Lv. 23-25", { exact: true })).toBeVisible()
+  await expect(popupDaySet).toContainText("place level 21 (rolls ±2)")
+  await expect(gyaradosSlot.getByText(/^Gyarados$/i)).toBeVisible()
+  await expect(gyaradosSlot.getByText(/^Magikarp$/i)).toBeVisible()
   await page.keyboard.press("Escape")
   await expect(rosterPopup).toHaveCount(0)
   const populationControls = page.getByRole("navigation", {
@@ -62,35 +91,11 @@ test("previews scaled encounters without remounting the map", async ({ page }) =
   await page.getByRole("combobox", { name: "Game build" }).selectOption("firered")
   await mapSearch.fill("CeruleanCity_Frlg")
   await page.getByRole("option", { name: /CeruleanCity_Frlg/ }).click()
-  const version = page.getByRole("combobox", { name: "Game version" })
-  await expect(version).toBeVisible()
-  await version.selectOption("FIRERED")
-  await expect(page.locator('details[aria-label="Source set sCeruleanCity_FireRed"]')).toHaveCount(
-    1,
-  )
-  await expect(
-    page.locator('details[aria-label="Source set sCeruleanCity_LeafGreen"]'),
-  ).toHaveCount(0)
-  await populationControls.getByRole("button", { name: "Water" }).click()
-  const ceruleanPopup = page.getByRole("dialog", { name: /CeruleanCity_Frlg.*Water/ })
-  await expect(
-    ceruleanPopup.locator('[aria-label="Source encounter set sCeruleanCity_FireRed"]'),
-  ).toHaveCount(1)
-  await version.selectOption("LEAFGREEN")
-  await expect(page).toHaveURL(/product=LEAFGREEN/)
-  await expect(page.locator('details[aria-label="Source set sCeruleanCity_FireRed"]')).toHaveCount(
-    0,
-  )
-  await expect(
-    page.locator('details[aria-label="Source set sCeruleanCity_LeafGreen"]'),
-  ).toHaveCount(1)
-  await expect(ceruleanPopup).toBeVisible()
-  await expect(
-    ceruleanPopup.locator('[aria-label="Source encounter set sCeruleanCity_FireRed"]'),
-  ).toHaveCount(0)
-  await expect(
-    ceruleanPopup.locator('[aria-label="Source encounter set sCeruleanCity_LeafGreen"]'),
-  ).toHaveCount(1)
+  // Wild encounters v2 are a Wayfarer-only table: a standalone FireRed map has none, and with a
+  // single table source there is no game version to pick.
+  await expect(page.getByRole("combobox", { name: "Game version" })).toHaveCount(0)
+  await expect(page.getByText("No wild encounter tables", { exact: true })).toBeVisible()
+  await expect(page.locator('details[aria-label^="Encounter table "]')).toHaveCount(0)
 })
 
 test("shows the cartographer", async ({ page }) => {
@@ -237,10 +242,25 @@ test("shows the cartographer", async ({ page }) => {
   await runtimeTimes.locator("summary").click()
   await expect(runtimeTimes).toBeVisible()
   await expect(runtimeTimes.getByText("Night", { exact: true })).toBeVisible()
-  await expect(runtimeTimes.getByText("gRoute32_hns_Night", { exact: true })).toHaveCount(4)
-  await expect(runtimeTimes.getByText("Falls back to Day", { exact: true })).toHaveCount(8)
-  const route32Set = page.locator('details[aria-label="Source set gRoute32_hns_Day"]')
+  // Morning and Day use the day table, Evening and Night the night table: four methods each.
+  await expect(runtimeTimes.getByText("gWildV2_Route32_Hns_Day", { exact: true })).toHaveCount(8)
+  await expect(runtimeTimes.getByText("gWildV2_Route32_Hns_Night", { exact: true })).toHaveCount(8)
+  await expect(runtimeTimes.getByText("Falls back", { exact: false })).toHaveCount(0)
+  const route32Set = page.locator('details[aria-label="Encounter table gWildV2_Route32_Hns_Day"]')
   await route32Set.locator(":scope > summary").click()
+  // Route 32 is a Road: the place level is 5 at Rating 0, and walking and surfing roll 60% of
+  // the table rate (land 20 -> 12, surf 4 -> 2) while Rock Smash and fishing keep theirs.
+  await expect(route32Set).toContainText("Road · place level 5 at Trainer Rating 0")
+  for (const [method, rate] of [
+    ["Land", 12],
+    ["Water", 2],
+    ["Rock Smash", 60],
+    ["Fishing", 30],
+  ] as const) {
+    await expect(
+      route32Set.locator(`details[aria-label="${method} encounter method"] > summary`),
+    ).toContainText(`Encounter rate ${rate}`)
+  }
   const fishing = route32Set.locator('details[aria-label="Fishing encounter method"]')
   await fishing.locator(":scope > summary").click()
   await route32Set.locator('details[aria-label="Land encounter method"] > summary').click()
@@ -254,10 +274,7 @@ test("shows the cartographer", async ({ page }) => {
   await expect(route32Set.getByLabel("Old Rod fishing")).toBeVisible()
   await expect(route32Set.getByLabel("Good Rod fishing")).toBeVisible()
   await expect(route32Set.getByLabel("Super Rod fishing")).toBeVisible()
-  await expect(route32Set.getByText("Common band", { exact: false }).first()).toBeVisible()
-  await expect(route32Set.getByText("Less common band", { exact: false }).first()).toBeVisible()
-  await expect(route32Set.getByText("Rare band", { exact: false }).first()).toBeVisible()
-  await expect(route32Set.getByText(/^Magikarp$/i).first()).toBeVisible()
+  await expect(route32Set.getByText(/^Qwilfish$/i).first()).toBeVisible()
   const encounterSprite = fishing.locator('img[src*="pokemon-icons/"]').first()
   await expect(encounterSprite).toBeVisible()
   await expect
