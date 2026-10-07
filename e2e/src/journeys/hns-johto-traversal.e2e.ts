@@ -12,13 +12,19 @@ type LaneCase = {
   state: number
 }
 
-const finishFieldScript = async (game: GameSession, description: string): Promise<void> => {
+// B advances text like A but never talks to the object in front of the player, so a press
+// that lands after the script ends can't start the interaction again.
+const finishFieldScript = async (
+  game: GameSession,
+  description: string,
+  advance: "a" | "b" = "a",
+): Promise<void> => {
   for (let attempt = 0; attempt < 240; attempt++) {
     const state = await game.state.read()
     if (!state.battle.active && state.ready && !state.dialogueOpen && !state.scriptActive) return
     if (state.dialogueOpen || state.battle.ui === "text" || state.scriptActive) {
       await game.wait.frames(30)
-      await game.controls.press("a")
+      await game.controls.press(advance)
     } else await game.wait.frames(12)
   }
   throw new Error(
@@ -121,7 +127,7 @@ const runFromBattle = async (game: GameSession): Promise<void> => {
   for (let attempt = 0; attempt < 360; attempt++) {
     const state = await game.state.read()
     if (!state.battle.active) {
-      await finishFieldScript(game, "Sudowoodo run-away script")
+      await finishFieldScript(game, "Sudowoodo run-away script", "b")
       return
     }
     if (state.battle.ui === "text") await game.controls.press("a")
