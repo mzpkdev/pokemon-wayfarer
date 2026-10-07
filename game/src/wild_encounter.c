@@ -1977,8 +1977,10 @@ static bool8 TryGenerateWildMonFromProfile(u32 headerId, enum TimeOfDay timeOfDa
     species = outcome.species;
     #if RANDOMIZER_AVAILABLE == TRUE
     // The randomizer still receives the authored species and raw slot index in
-    // its original position after all selection and level checks.
-    species = RandomizeAuthoredWildEncounter(entry, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, area, slot);
+    // its original position after all selection and level checks. Without it the
+    // rolled stage stands.
+    if (IsCurrentWildEncounterRandomized())
+        species = RandomizeAuthoredWildEncounter(entry, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, area, slot);
     #endif
     CreateWildMon(species, outcome.level);
     return TRUE;
@@ -2007,7 +2009,8 @@ static u16 GenerateFishingWildMonFromProfile(u32 headerId, enum TimeOfDay timeOf
 
     species = outcome.species;
     #if RANDOMIZER_AVAILABLE == TRUE
-    species = RandomizeAuthoredWildEncounter(entry, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, WILD_AREA_FISHING, slot);
+    if (IsCurrentWildEncounterRandomized())
+        species = RandomizeAuthoredWildEncounter(entry, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, WILD_AREA_FISHING, slot);
     #endif
 
     UpdateChainFishingStreak();
