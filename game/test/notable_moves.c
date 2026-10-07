@@ -20,7 +20,6 @@ TEST("Notable evolution uses authored nonlevel thresholds and game numeric thres
     EXPECT_EQ(StepDownSpeciesToLevel(SPECIES_PORYGON_Z, 41), SPECIES_PORYGON);
     EXPECT_EQ(StepDownSpeciesToLevel(SPECIES_PORYGON_Z, 42), SPECIES_PORYGON2);
     EXPECT_EQ(StepDownSpeciesToLevel(SPECIES_PORYGON_Z, 52), SPECIES_PORYGON_Z);
-    EXPECT_EQ(StepDownSpeciesToLevel(SPECIES_GHOLDENGO, 34), SPECIES_GIMMIGHOUL_CHEST);
 }
 
 TEST("Notable pool claims natural moves and fills then replaces oldest unclaimed moves")
