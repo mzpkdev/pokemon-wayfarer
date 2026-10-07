@@ -152,6 +152,19 @@ const walkIntoGhostTrigger = async (game: GameSession, description: string): Pro
   throw new Error(`${description} did not show the ghost: ${JSON.stringify(await game.state.read())}`)
 }
 
+// Species the v2 wild tables (game/src/data/wild_encounters_v2/kanto.json) can
+// produce on each floor, over both the day and night tables, including the
+// earlier stages the stage mix can step down to (Gastly, Cubone, Misdreavus,
+// Murkrow). The test does not fix the time of day, so both tables count.
+const ghostLine = ["gastly", "haunter", "cubone", "marowak", "misdreavus", "murkrow"]
+const towerSpecies: Partial<Record<GameMap, readonly string[]>> = {
+  "pokemon-tower-3f": ghostLine,
+  "pokemon-tower-4f": [...ghostLine, "gengar", "mismagius"],
+  "pokemon-tower-5f": [...ghostLine, "gengar", "mismagius"],
+  "pokemon-tower-6f": [...ghostLine, "gengar", "mismagius", "honchkrow"],
+  "pokemon-tower-7f": [...ghostLine, "gengar", "mismagius", "honchkrow"],
+}
+
 const naturalTowerEncounter = async (
   game: GameSession,
   floor: GameMap,
@@ -184,7 +197,7 @@ const naturalTowerEncounter = async (
   await waitForBattle(game, `natural ${floor} wild encounter`)
   const enemy = (await game.state.read()).battle.enemy
   expect(enemy).not.toBeNull()
-  expect(["gastly", "haunter", "cubone"]).toContain(enemy!.species)
+  expect(towerSpecies[floor]).toContain(enemy!.species)
   expect(enemy!.level).toBeGreaterThan(0)
   await game.battle.win()
   await settleField(game, `natural ${floor} battle finish`)

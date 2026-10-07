@@ -627,7 +627,21 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
     expect(movedSteps).toBeGreaterThan(0)
     await game.wait.until((state) => state.battle.active, "Power Plant wild encounter", 300)
     await waitForBattle(game, "Power Plant wild encounter")
-    expect(["voltorb", "magnemite", "pikachu", "magneton", "electabuzz"]).toContain(
+    // MAP_POWER_PLANT in the v2 tables (day and night), plus the earlier stages
+    // the stage mix can step down to. Elekid is a baby slot at night.
+    expect([
+      "voltorb",
+      "electrode",
+      "magnemite",
+      "magneton",
+      "magnezone",
+      "pikachu",
+      "raichu",
+      "electabuzz",
+      "electivire",
+      "elekid",
+      "porygon",
+    ]).toContain(
       (await game.state.read()).battle.enemy?.species,
     )
     await game.battle.win()
