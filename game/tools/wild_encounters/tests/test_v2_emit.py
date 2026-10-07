@@ -85,7 +85,8 @@ class V2EmitTests(unittest.TestCase):
         for key, block in zip(self.keys, self.header_blocks):
             for method in v2_emit.slot_lists(key, self.tables):
                 if method == "land":
-                    expected = 10 if self.meta[key]["map_type"] in ("INDOOR", "UNDERGROUND") else 20
+                    indoor = self.meta[key]["map_type"] in ("INDOOR", "UNDERGROUND", "NONE")
+                    expected = 20 if key == "MAP_FARAWAY_ISLAND_ENTRANCE_HNS" else 10 if indoor else 20
                 else:
                     expected = {"surf": 4, "fish": 30, "rock": 60}[method]
                 for time in ("day", "night"):
@@ -104,6 +105,12 @@ class V2EmitTests(unittest.TestCase):
             ("MAP_UNDERWATER_ROUTE124", "surf"): 4,
             ("MAP_ROUTE124", "fish"): 30,
             ("MAP_SNOWSWEPT_CAVERN_HNS", "rock"): 60,
+            # map_type NONE: the Sinjoh ruin chambers rate as indoor.
+            ("MAP_SINJOH_RUINS_TEMPLE_HNS", "land"): 10,
+            ("MAP_SINJOH_RUINS_REGICE_ROOM_HNS", "land"): 10,
+            ("MAP_SINJOH_RUINS_REGIROCK_ROOM_HNS", "land"): 10,
+            # map_type INDOOR, but open ground: the one outdoor exception.
+            ("MAP_FARAWAY_ISLAND_ENTRANCE_HNS", "land"): 20,
         }
         for (key, method), expected in named.items():
             for time in ("day", "night"):

@@ -29,14 +29,17 @@ METHODS = {
 }
 # Encounter rate of a table (WildPokemonInfo.encounterRate), the same for day and night and for every map.
 # The rate follows the method and the terrain, not the map:
-#   land      20 outdoors, 10 on cave and building floors (meta.json map_type INDOOR or UNDERGROUND)
+#   land      20 outdoors, 10 on cave and building floors (meta.json map_type INDOOR, UNDERGROUND or NONE;
+#             NONE is the Sinjoh ruin chambers). Faraway Island's entrance is the one exception: its
+#             map_type is INDOOR but it is open ground, so it rates as outdoors.
 #   surf       4 on water; the underwater seaweed table (Dive maps, map_type UNDERWATER) is the same
 #   fish      30
 #   rock      60 (Rock Smash and Headbutt)
 # Road maps then roll 60% of the land and surf rates in the engine (GetWildEncounterRateForHeader).
 LAND_RATE_OUTDOORS = 20
 LAND_RATE_INDOORS = 10
-INDOOR_MAP_TYPES = ("INDOOR", "UNDERGROUND")
+INDOOR_MAP_TYPES = ("INDOOR", "UNDERGROUND", "NONE")
+OUTDOOR_LAND_EXCEPTIONS = ("MAP_FARAWAY_ISLAND_ENTRANCE_HNS",)
 METHOD_RATES = {"surf": 4, "fish": 30, "rock": 60}
 
 # The v2 tables hold a day and a night table per method. Morning and day use the day table,
@@ -194,6 +197,8 @@ def map_constant(key):
 def table_rate(key, method, meta):
     """The encounter rate of a method's table on a header key's map: one rule for day and night (see METHOD_RATES)."""
     if method == "land":
+        if map_constant(key) in OUTDOOR_LAND_EXCEPTIONS:
+            return LAND_RATE_OUTDOORS
         return LAND_RATE_INDOORS if meta[key]["map_type"] in INDOOR_MAP_TYPES else LAND_RATE_OUTDOORS
     return METHOD_RATES[method]
 
