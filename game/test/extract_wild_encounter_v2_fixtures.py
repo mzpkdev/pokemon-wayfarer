@@ -69,7 +69,7 @@ class Model:
         import wild_encounters_to_header as generator
 
         self.h = h
-        self.keys, self.tables, self.meta, _, _ = v2_emit.load()
+        self.keys, self.tables, self.meta = v2_emit.load()
         self.map_constant = v2_emit.map_constant
         self.ids = generator.species_ids(GAME / "include/constants/species.h")
         self.cache = {}
