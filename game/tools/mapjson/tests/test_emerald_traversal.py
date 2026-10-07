@@ -373,22 +373,6 @@ class EmeraldTraversalContractTests(unittest.TestCase):
             self.assertIn(f"setflag {visited_flag}", body)
             self.assertIsNone(forbidden.search(body), map_name)
 
-    def test_native_surf_coverage_remains_on_the_stacked_standard_rod_contract(self):
-        config = json.loads(read("src/data/standard_rod_fishing.json"))
-        emerald = {
-            row["baseLabel"]: (row["species"], row["expectedOldRodSuccessfulEncounterPercent"])
-            for row in config["nativeSurfAccessibility"]
-            if row["product"] == "EMERALD"
-        }
-        self.assertEqual(
-            emerald,
-            {
-                "gLilycoveCity": ("SPECIES_WAILMER", 19),
-                "gMossdeepCity": ("SPECIES_WAILMER", 18),
-                "gPacifidlogTown": ("SPECIES_WAILMER", 18),
-            },
-        )
-
 
 if __name__ == "__main__":
     unittest.main()

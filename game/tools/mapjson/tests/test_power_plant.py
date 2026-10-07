@@ -247,30 +247,16 @@ class PowerPlantSourceTest(unittest.TestCase):
         self.assertIn(".species = SPECIES_MAGNETON", magneton_trade)
         self.assertIn(".requestedSpecies = SPECIES_DUGTRIO", magneton_trade)
 
+        # Wayfarer's Power Plant tables are the v2 tables (day and night); the Wayfarer rows
+        # of wild_encounters.json are retired.
+        v2 = read_json("src/data/wild_encounters_v2/kanto.json")["MAP_POWER_PLANT"]
+        self.assertEqual(len(v2["land"]["day"]), 12)
+        self.assertEqual(len(v2["land"]["night"]), 12)
+        rates = read_json("src/data/wild_encounters_v2/encounter_rates.json")["rates"]
+        self.assertEqual(rates["MAP_POWER_PLANT"]["land"], [7, 7])
         groups = read_json("src/data/wild_encounters.json")["wild_encounter_groups"]
-        map_group = next(group for group in groups if group["label"] == "gWildMonHeaders")
-        self.assertTrue(map_group["for_maps"])
-        profiles = [entry for entry in map_group["encounters"]
-                    if entry.get("map") == "MAP_POWER_PLANT"
-                    and entry.get("base_label", "").startswith("sPowerPlant_Wayfarer_")]
-        self.assertEqual({entry["base_label"] for entry in profiles},
-                         {"sPowerPlant_Wayfarer_Day", "sPowerPlant_Wayfarer_Night"})
-        encounter_generator = read_text(
-            "tools/wild_encounters/wild_encounters_to_header.py")
-        self.assertIn('WAYFARER_REPLACED_FRLG_WILD_MAPS = {\n    "MAP_POWER_PLANT",',
-                      encounter_generator)
-        self.assertIn("map_name in WAYFARER_REPLACED_FRLG_WILD_MAPS",
-                      encounter_generator)
-        for profile in profiles:
-            self.assertEqual(profile["land_mons"]["encounter_rate"], 7)
-            self.assertEqual(len(profile["land_mons"]["mons"]), 12)
-            self.assertIn("SPECIES_ELECTABUZZ",
-                          {mon["species"] for mon in profile["land_mons"]["mons"]})
-        self.assertFalse(any(
-            entry.get("base_label", "").startswith("sPowerPlant_Wayfarer_")
-            for group in groups if not group["for_maps"]
-            for entry in group["encounters"]
-        ))
+        self.assertFalse(any("_Wayfarer_" in entry.get("base_label", "")
+                             for group in groups for entry in group["encounters"]))
 
 
 if __name__ == "__main__":

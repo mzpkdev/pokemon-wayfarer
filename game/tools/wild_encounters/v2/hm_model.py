@@ -7,9 +7,9 @@ with IS_WAYFARER enabled.
 import json, re, os, glob
 from fractions import Fraction as F
 
-REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../../../..')) + '/'
+REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../../..')) + '/'
 G = REPO + 'game/'
-HERE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+HERE = G + 'src/data/wild_encounters_v2'  # the committed v2 table data (game build input)
 UTILS = ['CUT', 'FLASH', 'STRENGTH', 'ROCK_SMASH', 'SURF', 'WATERFALL', 'WHIRLPOOL', 'DIVE']
 
 # ---------- learnsets ----------
@@ -306,6 +306,8 @@ def apply_roster_v2():
     for sp, mv, lv, action in ROSTER_V2:
         name = SPECIES_LS.get(sp) or 's' + ''.join(x.capitalize() for x in sp.split('_')) + 'LevelUpLearnset'
         ls = [e for e in LEARNSETS[name] if not (action == 'move' and e[1] == mv)]
+        if (lv, mv) in ls:
+            continue  # already in gen_7.h: the roster changes ship in the learnsets
         if action == 'add' and any(m == mv for _, m in ls):
             raise SystemExit(f'{sp} already knows {mv}')
         i = 0

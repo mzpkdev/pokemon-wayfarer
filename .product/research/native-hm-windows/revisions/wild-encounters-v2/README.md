@@ -1,8 +1,10 @@
 # Native HM catch windows: wild encounters v2 revision
 
-Status: design revision. Not implemented. It applies once the
+Status: design revision. The tables, the model and the checker now live in the game
+(see [Where things moved](#where-things-moved)); this folder keeps the research record and
+the authoring scripts. It applies with the
 [wild encounters v2](../../../../prds/wild-encounters-v2.md) tables and
-[wild level scaling](../../../../specs/wild-level-scaling.md) ship.
+[wild level scaling](../../../../specs/wild-level-scaling.md).
 Base commit: `522afc588d7bb7f3e8c23ca5cf282b4a102ecd11`.
 
 Wild encounters v2 replaces every encounter table and the way wild levels are
@@ -186,7 +188,7 @@ natives, so each island stays within its 20% blend share. Clamperl is a
 harmless reward, which normally takes only rare slots; it holds a common
 Sootopolis slot as the city's resident Dive carrier, as the Hoenn rules record.
 Sootopolis's day Swanna leaves Eelektrik to the night, so the night table stays
-distinct. Every table still passes the committed [`check.py`](check.py) with no
+distinct. Every table still passes the committed `check.py` with no
 errors.
 
 Four of the 33 edits were picked by hand, since they lie outside
@@ -316,42 +318,59 @@ entries must re-run the audit.
   Only Sinjoh's residents at home (its Hisuian natives, Stantler and Scyther)
   and Kalos in the Safari Zones are exempt.
 - A dungeon's floor and floor count come from the `floor` and `floors` of
-  `data/meta.json`, which follow the steps in
+  `meta.json`, which follow the steps in
   [reach-assignments](../../../../specs/reach-assignments.md#dungeon-floors).
   The model also parses `specs/prowlers.md` and `specs/reach-assignments.md`
   when it runs, so a later edit to either one changes its results and must
   be followed by a re-run.
 
+## Where things moved
+
+The v2 tables are build input for the game, so the data and the build-time checks moved out of this folder:
+
+| Was here | Now |
+| --- | --- |
+| `data/*.json` (tables, `meta.json`, `species.json`, tile files) | `game/src/data/wild_encounters_v2/` (plus `encounter_rates.json`, the per-map encounter rates extracted once from the pre-v2 Wayfarer table) |
+| `check.py` | `game/tools/wild_encounters/v2/check.py`, run by `make wild-encounters-v2-check` (before the header is generated, and part of `make check`) |
+| `hm_model.py`, `hm_audit.py` | `game/tools/wild_encounters/v2/`; `make wild-encounters-v2-hm-audit` runs the audit (about a minute) |
+
+The generator (`game/tools/wild_encounters/wild_encounters_to_header.py`, `v2/v2_emit.py`) builds
+`gWildMonHeaders`, `gWildEncounterPlaces` and `gWildProwlerMinimums` from that data;
+`game/tools/wild_encounters/tests/test_v2_emit.py` cross-checks them against `hm_model.py`.
+`render.py`, `hm_opt.py`, `export_roster.py` and `walk_arrivals.py` stay here and import the moved modules.
+`roster_v2.json`, the scenarios and the `audit_*.json` outputs stay here. The 14 roster changes now ship in
+`gen_7.h`, so `hm_model.apply_roster_v2()` skips entries already there.
+
 ## Editing the tables
 
-`data/*.json` is the source of truth for the v2 encounter tables, not the
+`game/src/data/wild_encounters_v2/*.json` is the source of truth for the v2 encounter tables, not the
 specs. The table specs' tables are rendered from it. To change a table:
 
-1. **Edit** the region's `data/<region>.json` (`kanto`, `johto`, `hoenn`,
+1. **Edit** the region's `<region>.json` in that folder (`kanto`, `johto`, `hoenn`,
    `alola`, `sevii`, `safari` or `sinjoh`). A slot is a species constant
    written as the slot's stage cap. A new map also needs an entry in
-   `data/meta.json` (region, place, reach, band, map type, floor, methods) and
-   its terrain counts in `data/tiles.json`, `data/safari_tiles.json` or
-   `data/sinjoh_tiles.json`, which `python3 scan_tiles.py maps.json out.json`
+   `meta.json` (region, place, reach, band, map type, floor, methods) and
+   its terrain counts in `tiles.json`, `safari_tiles.json` or
+   `sinjoh_tiles.json`, which `python3 scan_tiles.py maps.json out.json`
    produces from a JSON list of map constants.
 2. **Render** it into the spec: `python3 render.py [region ...]` rewrites
    everything after "### Tables" in `specs/<region>-encounter-tables.md` and
    keeps the hand-written preamble above it. `python3 render.py --check`
    reports a spec that differs from its data without writing.
-3. **Check** the rules: `python3 check.py` checks every region and exits with
+3. **Check** the rules: `python3 game/tools/wild_encounters/v2/check.py` (or `make wild-encounters-v2-check` in `game/`) checks every region and exits with
    an error if any rule breaks. It enforces the slot counts and weights,
    native generations, reach and temperament (including no dangerous prowler
    on a dungeon's first floor step), night rules, crossing carriers, terrain
    coverage and the generation-share bands, and it prints notes that need a
    human look, such as a species outside its water type's cast. It reads
    `specs/prowlers.md` for the reward table.
-4. **Audit** the native HM guarantee: `python3 hm_audit.py scenarios` and
-   `python3 hm_audit.py regional`. Both write the `audit_*.json` files. Every
+4. **Audit** the native HM guarantee: `make wild-encounters-v2-hm-audit` in `game/`, or
+   `python3 game/tools/wild_encounters/v2/hm_audit.py scenarios` and `... regional`. Both write the `audit_*.json` files. Every
    scenario must still pass from TR 20 to 160, and regional coverage must not
    regress. If a change breaks a crossing, fix the carrier in the data and
    run the loop again.
 
-If the roster changes, edit `ROSTER_V2` in `hm_model.py` and run
+If the roster changes, edit `ROSTER_V2` in `game/tools/wild_encounters/v2/hm_model.py` and run
 `python3 export_roster.py` to rebuild `roster_v2.json`, which is the v2
 roster's machine-readable form: 130 species and 166 roles, the nearby-access
 roster plus fourteen changes.
@@ -365,11 +384,11 @@ from the specs or from game files; edit the data and render.
 
 | File | Purpose |
 | --- | --- |
-| [hm_model.py](hm_model.py) | Learnsets, movesets, wild level scaling and the roster changes |
-| [hm_audit.py](hm_audit.py) | Regional coverage and all 28 scenarios |
+| `hm_model.py` (moved to `game/tools/wild_encounters/v2/`) | Learnsets, movesets, wild level scaling and the roster changes |
+| `hm_audit.py` (moved to `game/tools/wild_encounters/v2/`) | Regional coverage and all 28 scenarios |
 | [hm_opt.py](hm_opt.py) | Greedy search for crossing-carrier edits; chose 29 of the 33 edits (see Table changes) |
-| [check.py](check.py) | The encounter rules checker |
-| [render.py](render.py) | Renders `data/*.json` into the table specs |
+| `check.py` (moved to `game/tools/wild_encounters/v2/`) | The encounter rules checker |
+| [render.py](render.py) | Renders the v2 table data into the table specs |
 | [scan_tiles.py](scan_tiles.py) | Counts encounter terrain on a list of maps, from the source layouts |
 | [export_roster.py](export_roster.py) | Exports the v2 roster |
 | [roster_v2.json](roster_v2.json) | The v2 native HM roster: 130 species, 166 roles |
@@ -379,7 +398,7 @@ from the specs or from game files; edit the data and render.
 | [hm_edits.json](hm_edits.json) | The 33 crossing edits, by zero-based entry |
 | [audit_regional.json](audit_regional.json) | Regional gaps and sample witnesses per region and utility |
 | [audit_scenarios.json](audit_scenarios.json) | Best source per scenario, TR and time, with Good and Super Rod odds |
-| [data/](data/) | The source of truth: the v2 tables, map metadata, terrain counts and species facts, as the tools read them |
+| `data/` (moved to `game/src/data/wild_encounters_v2/`) | The source of truth: the v2 tables, map metadata, terrain counts and species facts, as the tools read them |
 
 Run every script from this folder. `hm_opt.py` finds no further edits on the
 included tables.

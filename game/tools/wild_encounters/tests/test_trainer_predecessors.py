@@ -16,9 +16,6 @@ class TrainerPredecessorTests(unittest.TestCase):
     def setUp(self):
         self.document = {
             "schemaVersion": 1,
-            "minimumOrdinaryWildLevels": [
-                {"species": "SPECIES_A", "minimumOrdinaryWildLevel": 90},
-            ],
             "predecessorResolutions": [],
         }
         self.known = {

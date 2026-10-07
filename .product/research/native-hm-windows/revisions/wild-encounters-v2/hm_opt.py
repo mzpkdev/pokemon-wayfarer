@@ -4,7 +4,8 @@ Floor: one rank-allowed source (land, or Old Rod fishing) with an 8% chance of a
 catch knowing the move, at every TR 20-160, day and night separately.
 Writes hm_edits_new.json: [{map, method, time, index, from, to}].
 """
-import json, functools, copy, os
+import json, functools, copy, os, sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../../../../game/tools/wild_encounters/v2'))  # check.py and hm_model.py moved there
 import hm_model as h
 h.apply_roster_v2()
 h.ROD_SHIFT = {'old': 0, 'good': 0, 'super': 0}

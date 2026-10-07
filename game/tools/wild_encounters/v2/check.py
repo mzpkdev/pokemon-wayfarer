@@ -1,8 +1,9 @@
 """Check encounter tables against the wild-encounters-v2 specs.
 
-Usage: python3 check.py                      (checks every region in data/)
-       python3 check.py data/kanto.json ...  (the region comes from the file name)
-Reads data/*.json (tables, meta.json, species.json, tiles) and specs/prowlers.md, specs/reach-assignments.md.
+Build-time check of the v2 wild encounter tables (game/src/data/wild_encounters_v2/), run by `make wild-encounters-v2-check`.
+Usage: python3 check.py                      (checks every region in game/src/data/wild_encounters_v2/)
+       python3 check.py <dir>/kanto.json ... (the region comes from the file name)
+Reads the tables, meta.json, species.json and tile files there, .product/specs/prowlers.md and the roster_v2.json research export.
 
 Table data format, one file per region:
   { "MAP_ROUTE1_HNS": { "water_type": "pond",
@@ -15,8 +16,10 @@ A baby (PICHU, AZURILL, ...) is a rare baby slot of its own.
 import json, os, re, sys
 from collections import defaultdict
 
-HERE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')  # the committed table data
-REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../../../..')) + '/.product/'
+ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../../..'))
+HERE = os.path.join(ROOT, 'game/src/data/wild_encounters_v2')  # the committed table data (game build input)
+REPO = ROOT + '/.product/'
+RESEARCH = REPO + 'research/native-hm-windows/revisions/wild-encounters-v2/'
 DATA = json.load(open(os.path.join(HERE, 'species.json')))
 SP, BABIES = DATA['species'], set(DATA['babies'])
 META = json.load(open(os.path.join(HERE, 'meta.json')))
@@ -25,7 +28,7 @@ SLOTS = {'land': 12, 'surf': 5, 'rock': 5, 'fish': 10}
 WEIGHTS = {'land': [20, 20, 10, 10, 10, 10, 5, 5, 4, 4, 1, 1], 'surf': [60, 30, 5, 4, 1], 'rock': [60, 30, 5, 4, 1],
            'fish': [25, 16.7, 11, 9.3, 9, 7, 6.3, 5.7, 5, 5]}  # fishing: average of the Standard Rod's three qualities
 RARE_FROM = {'land': 6, 'surf': 2, 'rock': 2, 'fish': 6}
-_ROSTER = json.load(open(os.path.join(HERE, '..', 'roster_v2.json')))['roster']  # the v2 native HM roster
+_ROSTER = json.load(open(RESEARCH + 'roster_v2.json'))['roster']  # the v2 native HM roster
 CARRIERS = {mv: {e['species'].removeprefix('SPECIES_') for e in _ROSTER if 'MOVE_' + mv in e['roles']} for mv in ('SURF', 'WHIRLPOOL')}
 
 KANTO_CASTS = {

@@ -1,12 +1,12 @@
 """Render a region's table data into its spec's tables.
 
 Usage: python3 render.py [region ...]        (default: every region)
-Rewrites everything after the "### Tables" heading of specs/<region>-encounter-tables.md from data/<region>.json,
+Rewrites everything after the "### Tables" heading of specs/<region>-encounter-tables.md from game/src/data/wild_encounters_v2/<region>.json,
 keeping the hand-written preamble above it. Add --check to compare without writing."""
 import json, os, sys
 from collections import defaultdict
 HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, HERE)
+sys.path.insert(0, os.path.join(HERE, '../../../../../game/tools/wild_encounters/v2'))  # check.py moved there
 import check
 SPECS = os.path.join(check.REPO, 'specs')
 chain, BABIES, META, WEIGHTS = check.chain, check.BABIES, check.META, check.WEIGHTS

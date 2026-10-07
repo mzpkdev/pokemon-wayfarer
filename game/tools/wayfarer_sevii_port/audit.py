@@ -97,65 +97,6 @@ def normalized_bytes(path: Path) -> bytes:
     return path.read_bytes().replace(b"\r\n", b"\n")
 
 
-def restored_coast_wild_source(path: Path) -> bytes:
-    """Remove reviewed mainland encounter appends for the frozen Sevii check."""
-    source = load_json(path)
-    groups = source.get("wild_encounter_groups", [])
-    group = next((row for row in groups if row.get("label") == "gWildMonHeaders"), None)
-    if group is None:
-        raise AuditError("coast wild source has no gWildMonHeaders group")
-    encounters = group.get("encounters", [])
-    power_plant_expected = (
-        ("MAP_POWER_PLANT", "sPowerPlant_Wayfarer_Day"),
-        ("MAP_POWER_PLANT", "sPowerPlant_Wayfarer_Night"),
-    )
-    power_plant_rows = [
-        index for index, row in enumerate(encounters)
-        if row.get("base_label", "").startswith("sPowerPlant_Wayfarer_")
-        or (row.get("map") == "MAP_POWER_PLANT" and "_Wayfarer_" in row.get("base_label", ""))
-    ]
-    if (power_plant_rows != list(range(len(encounters) - len(power_plant_expected), len(encounters)))
-            or tuple((row.get("map"), row.get("base_label")) for row in encounters[-2:]) != power_plant_expected):
-        raise AuditError("Power Plant wild source append is incomplete or reordered")
-    del encounters[-len(power_plant_expected):]
-    tower_maps = {f"MAP_POKEMON_TOWER_{floor}F" for floor in range(3, 8)}
-    tower_expected = {(name, time) for name in tower_maps for time in ("Day", "Night")}
-    if encounters and encounters[-1].get("map") in tower_maps:
-        tower_tail = encounters[-len(tower_expected):]
-        tower_actual = {
-            (row.get("map"), row.get("base_label", "").rsplit("_Wayfarer_", 1)[-1])
-            for row in tower_tail
-        }
-        if len(tower_tail) != len(tower_expected) or tower_actual != tower_expected:
-            raise AuditError("Tower wild source append is incomplete or reordered")
-        del encounters[-len(tower_expected):]
-    coast_maps = {
-        "MAP_CINNABAR_ISLAND", "MAP_ROUTE19", "MAP_ROUTE20",
-        "MAP_ROUTE21_NORTH", "MAP_ROUTE21_SOUTH",
-        "MAP_SEAFOAM_ISLANDS_1F", "MAP_SEAFOAM_ISLANDS_B1F",
-        "MAP_SEAFOAM_ISLANDS_B2F", "MAP_SEAFOAM_ISLANDS_B3F",
-        "MAP_SEAFOAM_ISLANDS_B4F", "MAP_POKEMON_MANSION_1F",
-        "MAP_POKEMON_MANSION_2F", "MAP_POKEMON_MANSION_3F",
-        "MAP_POKEMON_MANSION_B1F",
-    }
-    # Seafoam 1F/B1F use the authored HNS day row at night through DAY_ALIAS.
-    # The remaining coast profiles have materialized day and night rows.
-    expected = {(name, "Day") for name in coast_maps}
-    expected.update((name, "Night") for name in coast_maps if name not in {
-        "MAP_SEAFOAM_ISLANDS_1F", "MAP_SEAFOAM_ISLANDS_B1F",
-    })
-    tail = encounters[-len(expected):]
-    actual = {
-        (row.get("map"), row.get("base_label", "").rsplit("_Wayfarer_", 1)[-1])
-        for row in tail
-        if "_Wayfarer_" in row.get("base_label", "")
-    }
-    if len(tail) != len(expected) or len(actual) != len(expected) or actual != expected:
-        raise AuditError("coast wild source append is incomplete or reordered")
-    del encounters[-len(expected):]
-    return (json.dumps(source, indent=2, ensure_ascii=False) + "\n").encode()
-
-
 def manifest_records(manifest: dict[str, Any]) -> list[dict[str, Any]]:
     if manifest.get("schema_version") not in (1, 2):
         raise AuditError("manifest schema_version must be 1 or 2")
@@ -400,10 +341,7 @@ def validate_event_island_baseline(root: Path, baseline_path: Path) -> dict[str,
                     raise AuditError(f"event-island ferry hook disappeared: {record['path']}:{label}")
                 validate_ferry_hook_change(blocks[label], hook)
         elif actual_sha != record["sha256"]:
-            if record["path"] == "game/src/data/wild_encounters.json":
-                restored = restored_coast_wild_source(path).decode()
-            else:
-                restored = path.read_text(encoding="utf-8").replace("\r\n", "\n")
+            restored = path.read_text(encoding="utf-8").replace("\r\n", "\n")
             for insertion in insertions_by_path.get(record["path"], []):
                 expected = insertion["after"] + insertion["insertion"]
                 if restored.count(expected) != 1:

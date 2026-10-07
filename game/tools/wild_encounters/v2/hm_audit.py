@@ -1,6 +1,7 @@
 import json, functools, sys
 from fractions import Fraction as F
 import hm_model as h, os
+RESEARCH = h.REPO + '.product/research/native-hm-windows/revisions/wild-encounters-v2/'  # scenarios in, audit_*.json out
 h.ROD_SHIFT = {'old': 0, 'good': 0, 'super': 0}  # wild level scaling: rods use the place level
 if not os.environ.get('OLD_ROSTER'): h.apply_roster_v2()
 
@@ -64,7 +65,7 @@ if mode in ('all', 'regional'):
 
 if mode in ('all', 'scenarios'):
     S = json.load(open(h.REPO + '.product/research/native-hm-windows/revisions/nearby-access/scenarios.json'))['scenarios']
-    S += json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'scenarios_regions.json')))['scenarios']
+    S += json.load(open(RESEARCH + 'scenarios_regions.json'))['scenarios']
     sc_out = {}
     for sc in S:
         move = sc['move']
@@ -95,4 +96,4 @@ if mode in ('all', 'scenarios'):
     report['scenarios'] = sc_out
 
 print('missing evolution levels:', sorted(h.MISSING_EDGES))
-json.dump(report, open(os.path.join(os.path.dirname(os.path.abspath(__file__)), f'audit_{mode}.json'), 'w'), default=str)
+json.dump(report, open(RESEARCH + f'audit_{mode}.json', 'w'), default=str)
