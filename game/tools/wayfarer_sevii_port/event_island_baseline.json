@@ -629,7 +629,7 @@
     },
     {
       "path": "game/src/data/trainers.party",
-      "sha256": "72fbe2095555f5973155bbf11ecd865e027009acdec8e4e0b79ab817f2ef271f"
+      "sha256": "9ab0b8ac3224be41408fd5a5ac2df6df9932c65145e1f529c24d39244a452aff"
     }
   ],
   "allowed_global_insertions": [
