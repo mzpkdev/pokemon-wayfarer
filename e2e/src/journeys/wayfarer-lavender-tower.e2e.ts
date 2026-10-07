@@ -17,7 +17,9 @@ const settleField = async (game: GameSession, description: string): Promise<void
     await game.controls.press("a")
     await game.wait.frames(12)
   }
-  throw new Error(`${description} did not release the field: ${JSON.stringify(await game.state.read())}`)
+  throw new Error(
+    `${description} did not release the field: ${JSON.stringify(await game.state.read())}`,
+  )
 }
 
 const waitForBattle = async (game: GameSession, description: string): Promise<void> => {
@@ -28,7 +30,9 @@ const waitForBattle = async (game: GameSession, description: string): Promise<vo
       await game.controls.press("a")
     await game.wait.frames(12)
   }
-  throw new Error(`${description} did not start a battle: ${JSON.stringify(await game.state.read())}`)
+  throw new Error(
+    `${description} did not start a battle: ${JSON.stringify(await game.state.read())}`,
+  )
 }
 
 const arrangeAt = async (
@@ -76,7 +80,9 @@ const guardChoice = async (game: GameSession, enter: boolean): Promise<void> => 
     await game.controls.press("a")
     await game.wait.frames(12)
   }
-  throw new Error(`Guard did not offer the memorial floors: ${JSON.stringify(await game.state.read())}`)
+  throw new Error(
+    `Guard did not offer the memorial floors: ${JSON.stringify(await game.state.read())}`,
+  )
 }
 
 const stair = async (
@@ -112,7 +118,9 @@ const walkToMap = async (
       return
     }
   }
-  throw new Error(`${description} did not reach ${destination}: ${JSON.stringify(await game.state.read())}`)
+  throw new Error(
+    `${description} did not reach ${destination}: ${JSON.stringify(await game.state.read())}`,
+  )
 }
 
 const walkOneTile = async (
@@ -132,9 +140,16 @@ const walkOneTile = async (
     await game.player.move(direction)
     await game.wait.frames(24)
     const state = await game.state.read()
-    if (state.phase === "battle" || state.battle.active || (state.player.x === x && state.player.y === y)) return
+    if (
+      state.phase === "battle" ||
+      state.battle.active ||
+      (state.player.x === x && state.player.y === y)
+    )
+      return
   }
-  throw new Error(`${description} could not reach ${x}:${y}: ${JSON.stringify(await game.state.read())}`)
+  throw new Error(
+    `${description} could not reach ${x}:${y}: ${JSON.stringify(await game.state.read())}`,
+  )
 }
 
 const walkIntoGhostTrigger = async (game: GameSession, description: string): Promise<void> => {
@@ -149,7 +164,9 @@ const walkIntoGhostTrigger = async (game: GameSession, description: string): Pro
     await game.wait.frames(24)
     if ((await game.state.read()).dialogue.sequence > before) return
   }
-  throw new Error(`${description} did not show the ghost: ${JSON.stringify(await game.state.read())}`)
+  throw new Error(
+    `${description} did not show the ghost: ${JSON.stringify(await game.state.read())}`,
+  )
 }
 
 // Species the v2 wild tables (game/src/data/wild_encounters_v2/kanto.json) can
@@ -264,8 +281,7 @@ describe.sequential("Wayfarer Lavender Pokemon Tower", () => {
       ["pokemon-tower-6f", 11, 15, "down", "pokemon-tower-7f"],
       ["pokemon-tower-7f", 11, 15, "down", "pokemon-tower-6f"],
     ] as const
-    for (const [from, x, y, direction, to] of edges)
-      await stair(game, from, x, y, direction, to)
+    for (const [from, x, y, direction, to] of edges) await stair(game, from, x, y, direction, to)
 
     await game.saveAndReload()
     await stair(game, "pokemon-tower-2f", 18, 11, "up", lobby)
@@ -360,7 +376,10 @@ describe.sequential("Wayfarer Lavender Pokemon Tower", () => {
       checkpoint: "new-bark-after-intro",
       player: { position: { map: "pokemon-tower-5f", x: 9, y: 8 }, facing: "right" },
       story: { flags: { disableEncounters: true } },
-      party: [{ species: "pidgey", fainted: true }, { species: "lapras", level: 100 }],
+      party: [
+        { species: "pidgey", fainted: true },
+        { species: "lapras", level: 100 },
+      ],
       determinism: { textSpeed: "instant" },
     })
     expect((await game.state.read()).party[0]?.fainted).toBe(true)
@@ -435,7 +454,11 @@ describe.sequential("Wayfarer Lavender Pokemon Tower", () => {
       await game.player.interact()
       await game.wait.frames(30)
       const state = await game.state.read()
-      if (state.scriptActive || state.dialogue.sequence > beforeDialogue || state.map.name === house) {
+      if (
+        state.scriptActive ||
+        state.dialogue.sequence > beforeDialogue ||
+        state.map.name === house
+      ) {
         reachedFuji = true
         break
       }

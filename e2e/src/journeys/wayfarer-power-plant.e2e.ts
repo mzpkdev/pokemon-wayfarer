@@ -641,9 +641,7 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
       "electivire",
       "elekid",
       "porygon",
-    ]).toContain(
-      (await game.state.read()).battle.enemy?.species,
-    )
+    ]).toContain((await game.state.read()).battle.enemy?.species)
     await game.battle.win()
     await settleField(game, "Power Plant wild encounter victory")
   })
