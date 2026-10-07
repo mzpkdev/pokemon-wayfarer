@@ -691,17 +691,28 @@ TEST("Wild level scaling: no place ever exceeds level 100")
             EXPECT_EQ(GetWildEncounterPlaceLevel(header, 160), MAX_LEVEL);
 }
 
-TEST("Wild level scaling: Road maps roll 60 percent of the table encounter rate, rounded to the nearest value")
+TEST("Wild level scaling: Road maps roll 60 percent of the walking and surfing encounter rate, rounded to the nearest value; fishing, Rock Smash and Headbutt keep the full rate")
 {
     static const u8 sRoadRates[] = { 0, 1, 1, 2, 2, 3, 4, 4, 5, 5, 6, 7, 7, 8, 8, 9, 10, 10, 11, 11, 12 };
-    u32 header, count = CountHeaders(), rate;
+    u32 header, count = CountHeaders(), rate, area;
     u32 road = FindPlace(WILD_REACH_ROAD, WILD_PLACE_REGION_OTHER);
     u32 seen[4] = { 0 };
 
     EXPECT_NE(road, HEADER_NONE);
     for (rate = 0; rate < ARRAY_COUNT(sRoadRates); rate++)
-        EXPECT_EQ(GetWildEncounterRateForHeader(road, rate), sRoadRates[rate]);
-    EXPECT_EQ(GetWildEncounterRateForHeader(road, 255), 153);
+    {
+        EXPECT_EQ(GetWildEncounterRateForHeader(road, WILD_AREA_LAND, rate), sRoadRates[rate]);
+        EXPECT_EQ(GetWildEncounterRateForHeader(road, WILD_AREA_WATER, rate), sRoadRates[rate]);
+        EXPECT_EQ(GetWildEncounterRateForHeader(road, WILD_AREA_ROCKS, rate), rate);
+        EXPECT_EQ(GetWildEncounterRateForHeader(road, WILD_AREA_FISHING, rate), rate);
+    }
+    EXPECT_EQ(GetWildEncounterRateForHeader(road, WILD_AREA_LAND, 255), 153);
+    EXPECT_EQ(GetWildEncounterRateForHeader(road, WILD_AREA_ROCKS, 255), 255);
+    // The table rates the generator emits: walking 20, surfing 4, Rock Smash 60, fishing 30.
+    EXPECT_EQ(GetWildEncounterRateForHeader(road, WILD_AREA_LAND, 20), 12);
+    EXPECT_EQ(GetWildEncounterRateForHeader(road, WILD_AREA_WATER, 4), 2);
+    EXPECT_EQ(GetWildEncounterRateForHeader(road, WILD_AREA_ROCKS, 60), 60);
+    EXPECT_EQ(GetWildEncounterRateForHeader(road, WILD_AREA_FISHING, 30), 30);
     // Wilds, Outlands and dungeons use the table's rate as it is, and so does an unknown header.
     for (header = 0; header < count; header++)
     {
@@ -709,12 +720,13 @@ TEST("Wild level scaling: Road maps roll 60 percent of the table encounter rate,
 
         seen[reach]++;
         if (reach == WILD_REACH_ROAD)
-            EXPECT_EQ(GetWildEncounterRateForHeader(header, 20), 12);
+            EXPECT_EQ(GetWildEncounterRateForHeader(header, WILD_AREA_LAND, 20), 12);
         else
             for (rate = 0; rate <= 40; rate++)
-                EXPECT_EQ(GetWildEncounterRateForHeader(header, rate), rate);
+                for (area = WILD_AREA_LAND; area <= WILD_AREA_FISHING; area++)
+                    EXPECT_EQ(GetWildEncounterRateForHeader(header, area, rate), rate);
     }
-    EXPECT_EQ(GetWildEncounterRateForHeader(HEADER_NONE, 20), 20);
+    EXPECT_EQ(GetWildEncounterRateForHeader(HEADER_NONE, WILD_AREA_LAND, 20), 20);
     EXPECT_GT(seen[WILD_REACH_ROAD], 0);
     EXPECT_GT(seen[WILD_REACH_WILDS], 0);
     EXPECT_GT(seen[WILD_REACH_OUTLANDS], 0);
@@ -1380,10 +1392,10 @@ TEST("Wild encounters: an unknown header is rejected before any place data is re
     EXPECT_EQ(SlotOutcomes(SPECIES_TAUROS, gWildMonHeaderCount, 80, outcomes), 0);
     EXPECT_EQ(SlotOutcomes(SPECIES_TAUROS, gWildMonHeaderCount + 1000, 80, outcomes), 0);
     EXPECT_EQ(GetWildEncounterPlaceLevel(gWildMonHeaderCount, 80), 0);
-    EXPECT_EQ(GetWildEncounterRateForHeader(HEADER_NONE, 30), 30);
-    EXPECT_EQ(GetWildEncounterRateForHeader(gWildMonHeaderCount, 30), 30);
-    EXPECT_EQ(GetWildEncounterRateForHeader(gWildMonHeaderCount + 1000, 30), 30);
-    EXPECT_EQ(GetWildEncounterRateForHeader(road, 30), 18);
+    EXPECT_EQ(GetWildEncounterRateForHeader(HEADER_NONE, WILD_AREA_LAND, 30), 30);
+    EXPECT_EQ(GetWildEncounterRateForHeader(gWildMonHeaderCount, WILD_AREA_LAND, 30), 30);
+    EXPECT_EQ(GetWildEncounterRateForHeader(gWildMonHeaderCount + 1000, WILD_AREA_LAND, 30), 30);
+    EXPECT_EQ(GetWildEncounterRateForHeader(road, WILD_AREA_LAND, 30), 18);
     // An unknown header clamps like an ordinary place.
     EXPECT_EQ(GetWildEncounterClampedLevel(SPECIES_CATERPIE, gWildMonHeaderCount, 40), 6);
 }

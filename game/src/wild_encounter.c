@@ -317,7 +317,8 @@ static const struct TrainerScalerAnchor sWildOutlandsBonus[] =
 };
 
 #define WILD_SPREAD 2
-// A Road map keeps travel quick: 60% of the table's encounter rate.
+// A Road map keeps travel quick: walking and surfing roll 60% of the table's encounter rate.
+// Fishing and Rock Smash/Headbutt keep the full rate (fishing rolls bite rates, not the table rate).
 #define WILD_ROAD_RATE_PERCENT 60
 // A slot's stage mix keeps the stage with weight 1..10 out of 10, rising a level at a time.
 #define WILD_STAGE_KEEP_DENOMINATOR 10
@@ -394,9 +395,10 @@ u32 GetWildEncounterPlaceLevel(u32 headerId, u32 trainerRating)
     return min(max(level, floorLevel), MAX_LEVEL);
 }
 
-u32 GetWildEncounterRateForHeader(u32 headerId, u32 encounterRate)
+u32 GetWildEncounterRateForHeader(u32 headerId, enum WildPokemonArea area, u32 encounterRate)
 {
-    if (headerId < gWildMonHeaderCount && gWildEncounterPlaces[headerId].reach == WILD_REACH_ROAD)
+    if ((area == WILD_AREA_LAND || area == WILD_AREA_WATER)
+     && headerId < gWildMonHeaderCount && gWildEncounterPlaces[headerId].reach == WILD_REACH_ROAD)
         return (encounterRate * WILD_ROAD_RATE_PERCENT + 50) / 100;
     return encounterRate;
 }
@@ -1239,7 +1241,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
                 return FALSE;
             else if (prevMetatileBehavior != curMetatileBehavior && !AllowWildCheckOnNewMetatile())
                 return FALSE;
-            else if (WildEncounterCheck(GetWildEncounterRateForHeader(headerId, gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo->encounterRate), FALSE) != TRUE)
+            else if (WildEncounterCheck(GetWildEncounterRateForHeader(headerId, WILD_AREA_LAND, gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo->encounterRate), FALSE) != TRUE)
                 return FALSE;
 
             if (!TrainerOnlyCanEnterWildEncounter() && TryStartRoamerEncounter())
@@ -1290,7 +1292,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
                 return FALSE;
             else if (prevMetatileBehavior != curMetatileBehavior && !AllowWildCheckOnNewMetatile())
                 return FALSE;
-            else if (WildEncounterCheck(GetWildEncounterRateForHeader(headerId, gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo->encounterRate), FALSE) != TRUE)
+            else if (WildEncounterCheck(GetWildEncounterRateForHeader(headerId, WILD_AREA_WATER, gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo->encounterRate), FALSE) != TRUE)
                 return FALSE;
 
             if (!TrainerOnlyCanEnterWildEncounter() && TryStartRoamerEncounter())
@@ -1344,7 +1346,7 @@ void RockSmashWildEncounter(void)
         {
             gSpecialVar_Result = FALSE;
         }
-        else if (WildEncounterCheck(GetWildEncounterRateForHeader(headerId, wildPokemonInfo->encounterRate), TRUE) == TRUE
+        else if (WildEncounterCheck(GetWildEncounterRateForHeader(headerId, WILD_AREA_ROCKS, wildPokemonInfo->encounterRate), TRUE) == TRUE
          && TryGenerateWildMonFromProfile(headerId, timeOfDay, WILD_AREA_ROCKS, WILD_ENCOUNTER_FISHING_ROD_NONE, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
         {
             if (TryDoDoubleWildBattle())

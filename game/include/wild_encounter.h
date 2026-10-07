@@ -202,8 +202,10 @@ bool8 DoesWildEncounterProfileHaveAvailableEntries(const struct WildEncounterPro
 // The level of a place (a header) at a Trainer Rating: the reach scalers, or the
 // dungeon's intent and floor. Never above MAX_LEVEL. Returns 0 for an unknown header.
 u32 GetWildEncounterPlaceLevel(u32 headerId, u32 trainerRating);
-// Road maps roll their table's encounter rate at 60%, rounded to the nearest value.
-u32 GetWildEncounterRateForHeader(u32 headerId, u32 encounterRate);
+// The rate a method rolls: Road maps roll 60% of the table's encounter rate for walking and
+// surfing (WILD_AREA_LAND, WILD_AREA_WATER), rounded to the nearest value. Rock Smash,
+// Headbutt and fishing keep the full rate.
+u32 GetWildEncounterRateForHeader(u32 headerId, enum WildPokemonArea area, u32 encounterRate);
 // A level for `species` in a place: the species' prowler minimum (none in an
 // exempt region), then its young limit (below its lowest evolution level, babies
 // 10; the prowler minimum wins again), then 1..MAX_LEVEL. Equal to the clamp every

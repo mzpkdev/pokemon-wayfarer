@@ -164,8 +164,12 @@ class V2EmitTests(unittest.TestCase):
 
     def test_cartographer_shows_the_rate_the_game_rolls(self):
         rolled = cartographer_projection.rolled_rate
-        self.assertEqual([rolled("Road", rate) for rate in (1, 7, 20, 25, 30, 255)], [1, 4, 12, 15, 18, 153])
-        self.assertEqual([rolled(reach, 30) for reach in ("Wilds", "Outlands", "Dungeon")], [30, 30, 30])
+        for method in ("land", "surf"):
+            self.assertEqual([rolled("Road", method, rate) for rate in (1, 7, 20, 25, 30, 255)], [1, 4, 12, 15, 18, 153])
+        for method in ("rock", "fish"):
+            self.assertEqual([rolled("Road", method, rate) for rate in (1, 7, 20, 25, 30, 60, 255)], [1, 7, 20, 25, 30, 60, 255])
+        for method in ("land", "surf", "rock", "fish"):
+            self.assertEqual([rolled(reach, method, 30) for reach in ("Wilds", "Outlands", "Dungeon")], [30, 30, 30])
 
     def test_every_map_constant_exists(self):
         ids = set()
