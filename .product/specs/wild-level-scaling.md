@@ -84,24 +84,31 @@ The same rate holds by day and by night. All values are placeholders:
 | Method and terrain | Rate |
 | --- | ---: |
 | Walking in outdoor grass | 20 |
-| Walking on cave or building floors (indoor and underground maps) | 10 |
+| Walking on cave or building floors (indoor and underground maps, and ruin chambers with no map type) | 10 |
 | Surfing | 4 |
 | Diving through underwater seaweed | 4 |
 | Fishing | 30 |
 | Rock Smash and Headbutt | 60 |
 
+Faraway Island's entrance is an indoor map in the game data but an outdoor
+island, so it walks at the outdoor rate. Fishing's rate only marks the table as
+available: how often a fish bites comes from each rod's bite chance in
+[Standard Rod fishing](standard-rod-fishing.md).
+
 ### Road encounter rate
 
 Road maps keep travel quick with a lower encounter rate. Walking and surfing,
 including underwater, use 60% of the rate on a Road map (a placeholder),
-rounded to the nearest whole value. Fishing, Rock Smash and Headbutt keep the
-full rate everywhere, since the player chose to act. Wilds, Outlands and
+rounded to the nearest whole value. Rock Smash and Headbutt keep the full
+rate everywhere, since the player chose to act, and fishing bites don't change
+by reach. Wilds, Outlands and
 dungeons use the full rate for every method. The rate changes how often an
 encounter happens, never what it holds or its level.
 
 ### Lures
 
-A Lure doubles the encounter rate. While it lasts, each encounter also has the
+A Lure doubles the encounter rate for walking, surfing, Rock Smash and
+Headbutt; fishing bites keep their rod's chance. While it lasts, each encounter also has the
 existing 20% chance to mirror its slot, for walking, surfing, Rock Smash and
 fishing; fishing mirrors across its eligible entries as
 [Standard Rod fishing](standard-rod-fishing.md) defines. That brings rare
@@ -312,6 +319,7 @@ as the [prowlers spec](prowlers.md#prowlers) defines.
 - Every table's encounter rate equals its method and terrain's rate, by day
   and by night.
 - On a Road map, walking and surfing roll 60% of the rate, rounded to the
-  nearest whole value; fishing, Rock Smash and Headbutt roll the full rate.
+  nearest whole value; Rock Smash and Headbutt roll the full rate, and fishing
+bites keep their rod's chance.
 - A Lure doubles the rate and leaves every encounter's level distribution
   unchanged.
