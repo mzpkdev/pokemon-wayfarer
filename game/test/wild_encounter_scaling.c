@@ -1300,6 +1300,180 @@ TEST("Wild encounters: Repel compares the lead's level with the encounter's fina
 
 // ---- Time of day, the Bug-Catching Contest and the ghost Marowak ----
 
+// Whether any slot of the profile can give this species at this level.
+static bool32 ProfileAllowsOutcome(const struct WildEncounterProfileView *view, u32 tr, u16 species, u32 level)
+{
+    struct WildEncounterSlotOutcome outcomes[WILD_ENCOUNTER_MAX_SLOT_OUTCOMES];
+    u32 slot, count;
+
+    for (slot = view->entryStart; slot < (u32)view->entryStart + view->entryCount; slot++)
+    {
+        count = GetWildEncounterSlotOutcomes(view, slot, tr, outcomes);
+        if (OutcomeWeight(outcomes, count, species, level) != 0)
+            return TRUE;
+    }
+    return FALSE;
+}
+
+static u32 ProfileSpeciesWeight(const struct WildEncounterProfileView *view, u32 tr, u16 species)
+{
+    struct WildEncounterSlotOutcome outcomes[WILD_ENCOUNTER_MAX_SLOT_OUTCOMES];
+    u32 slot, count, weight = 0;
+
+    for (slot = view->entryStart; slot < (u32)view->entryStart + view->entryCount; slot++)
+    {
+        count = GetWildEncounterSlotOutcomes(view, slot, tr, outcomes);
+        weight += OutcomeSpeciesWeight(outcomes, count, species);
+    }
+    return weight;
+}
+
+// With the randomizer feature off, the live land and fishing paths must create the
+// rolled v2 outcome (downward rule and stage mix), never the slot's authored cap.
+static void SetWildRandomizer(bool8 on)
+{
+#if RANDOMIZER_AVAILABLE
+    gSaveBlock3Ptr->challengeSettings.tx_Random_WildPokemon = on;
+    gSaveBlock3Ptr->challengeSettings.tx_Random_MapBased = TRUE;
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Chaos = FALSE;
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Similar = FALSE;
+    gSaveBlock3Ptr->challengeSettings.tx_Random_IncludeLegendaries = FALSE;
+#endif
+}
+
+TEST("Wild encounters: the live land path keeps the rolled stage when the randomizer is off")
+{
+    struct EncounterHarness *harness = Alloc(sizeof(*harness));
+    struct WildEncounterProfileContext context;
+    struct WildEncounterProfileView view;
+    u32 header = GetWildMonHeaderIdForMap(MAP_GROUP(MAP_POKEMON_TOWER_3F), MAP_NUM(MAP_POKEMON_TOWER_3F));
+    u32 attempts, starts = 0, gastly = 0, haunter = 0;
+    bool8 savedRandomizer = gSaveBlock3Ptr->challengeSettings.tx_Random_WildPokemon;
+
+    EXPECT(harness != NULL);
+    EXPECT_NE(header, HEADER_NONE);
+    EnterRoute(harness, MAP_POKEMON_TOWER_3F);
+    SetWildRandomizer(FALSE);
+    SetTrainerRating(0);
+    VarSet(VAR_REPEL_STEP_COUNT, 0);
+    SetLeadMon(SPECIES_PIKACHU, 5);
+
+    context.headerId = header;
+    context.timeOfDay = GetTimeOfDayForEncounters(header, WILD_AREA_LAND);
+    context.area = WILD_AREA_LAND;
+    context.fishingRod = WILD_ENCOUNTER_FISHING_ROD_NONE;
+    EXPECT(GetWildEncounterProfileView(&context, &view));
+    // At Rating 0 the Haunter slots step down to Gastly: Haunter is not an outcome at all.
+    EXPECT_EQ(ProfileSpeciesWeight(&view, 0, SPECIES_HAUNTER), 0);
+    EXPECT_GT(ProfileSpeciesWeight(&view, 0, SPECIES_GASTLY), 0);
+
+    SeedRng(31);
+    for (attempts = 0; attempts < 6000; attempts++)
+    {
+        if (StandardWildEncounter(MB_TALL_GRASS, MB_TALL_GRASS))
+        {
+            u16 species = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
+            u32 level = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
+
+            starts++;
+            EXPECT(ProfileAllowsOutcome(&view, 0, species, level));
+            if (species == SPECIES_GASTLY)
+                gastly++;
+            if (species == SPECIES_HAUNTER)
+                haunter++;
+        }
+    }
+    EXPECT_GT(starts, 50);
+    EXPECT_GT(gastly, 0);
+    EXPECT_EQ(haunter, 0);
+    gSaveBlock3Ptr->challengeSettings.tx_Random_WildPokemon = savedRandomizer;
+    LeaveRoute(harness);
+    Free(harness);
+}
+
+TEST("Wild encounters: the live fishing path keeps the rolled stage when the randomizer is off")
+{
+    struct EncounterHarness *harness = Alloc(sizeof(*harness));
+    struct WildEncounterProfileContext context;
+    struct WildEncounterProfileView view;
+    u32 header = GetWildMonHeaderIdForMap(MAP_GROUP(MAP_PALLET_TOWN_HNS), MAP_NUM(MAP_PALLET_TOWN_HNS));
+    u32 attempts, catches = 0, magikarp = 0, gyarados = 0;
+    bool8 savedRandomizer = gSaveBlock3Ptr->challengeSettings.tx_Random_WildPokemon;
+
+    EXPECT(harness != NULL);
+    EXPECT_NE(header, HEADER_NONE);
+    EnterRoute(harness, MAP_PALLET_TOWN_HNS);
+    SetWildRandomizer(FALSE);
+    SetTrainerRating(0);
+    VarSet(VAR_REPEL_STEP_COUNT, 0);
+    SetLeadMon(SPECIES_PIKACHU, 5);
+
+    context.headerId = header;
+    context.timeOfDay = GetTimeOfDayForEncounters(header, WILD_AREA_FISHING);
+    context.area = WILD_AREA_FISHING;
+    context.fishingRod = WILD_ENCOUNTER_FISHING_ROD_OLD;
+    EXPECT(GetWildEncounterProfileView(&context, &view));
+    // The Gyarados slots hold a Gyarados cap, which at Rating 0 steps down to Magikarp.
+    EXPECT_EQ(ProfileSpeciesWeight(&view, 0, SPECIES_GYARADOS), 0);
+    EXPECT_GT(ProfileSpeciesWeight(&view, 0, SPECIES_MAGIKARP), 0);
+
+    SeedRng(32);
+    for (attempts = 0; attempts < 4000; attempts++)
+    {
+        u16 species;
+        u32 level;
+
+        ZeroEnemyPartyMons();
+        FishingWildEncounter(OLD_ROD);
+        species = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
+        if (species == SPECIES_NONE)
+            continue;
+        level = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
+        catches++;
+        EXPECT(ProfileAllowsOutcome(&view, 0, species, level));
+        if (species == SPECIES_MAGIKARP)
+            magikarp++;
+        if (species == SPECIES_GYARADOS)
+            gyarados++;
+    }
+    EXPECT_GT(catches, 1000);
+    EXPECT_GT(magikarp, 0);
+    EXPECT_EQ(gyarados, 0);
+
+#if RANDOMIZER_AVAILABLE
+    // With the randomizer on, the authored species still reaches it: every catch is the
+    // randomizer's answer for some slot's authored species.
+    SetWildRandomizer(TRUE);
+    SeedRng(33);
+    catches = 0;
+    for (attempts = 0; attempts < 300; attempts++)
+    {
+        const struct WildPokemon *entry;
+        u16 species;
+        u8 slot;
+        bool32 matched = FALSE;
+
+        ZeroEnemyPartyMons();
+        FishingWildEncounter(OLD_ROD);
+        species = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
+        if (species == SPECIES_NONE)
+            continue;
+        catches++;
+        for (slot = view.entryStart; slot < view.entryStart + view.entryCount; slot++)
+        {
+            EXPECT(GetWildEncounterProfileEntry(&view, slot, &entry));
+            if (species == RandomizeWildEncounter(entry->species, MAP_NUM(MAP_PALLET_TOWN_HNS), MAP_GROUP(MAP_PALLET_TOWN_HNS), WILD_AREA_FISHING, slot))
+                matched = TRUE;
+        }
+        EXPECT(matched);
+    }
+    EXPECT_GT(catches, 50);
+#endif
+    gSaveBlock3Ptr->challengeSettings.tx_Random_WildPokemon = savedRandomizer;
+    LeaveRoute(harness);
+    Free(harness);
+}
+
 TEST("Wild encounters: morning and day use a map's day table, evening and night its night table")
 {
     u32 header, count = CountHeaders(), method;
