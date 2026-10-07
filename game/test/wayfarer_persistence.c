@@ -307,6 +307,95 @@ TEST("Wayfarer HNS side regions retain their explicit runtime identity")
     EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_KANTO);
 }
 
+static void SetTestLocation(u16 map)
+{
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(map);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(map);
+}
+
+TEST("Wayfarer Sevii maps are Galar while saved region context stays Kanto")
+{
+    static const u16 sSeviiMaps[] = {
+        MAP_ONE_ISLAND,
+        MAP_FOUR_ISLAND_POKEMON_DAY_CARE,
+        MAP_FOUR_ISLAND_ICEFALL_CAVE_1F,
+        MAP_SIX_ISLAND_DOTTED_HOLE_B4F,
+        MAP_SEVEN_ISLAND,
+    };
+    u32 i;
+
+    WayfarerInitPersistentState();
+    WayfarerSetSavedCurrentRegion(REGION_KANTO);
+
+    for (i = 0; i < ARRAY_COUNT(sSeviiMaps); i++)
+    {
+        SetTestLocation(sSeviiMaps[i]);
+        EXPECT_EQ(GetCurrentRegion(), REGION_GALAR);
+        EXPECT_EQ(WayfarerGetCurrentRegionForScript(), REGION_GALAR);
+        // Galar is not a league region: leagues, badges and the saved context
+        // keep reading Kanto.
+        WayfarerUpdateHnsRegionContextForMap(MAP_GROUP(sSeviiMaps[i]), MAP_NUM(sSeviiMaps[i]));
+        EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_KANTO);
+    }
+}
+
+TEST("Wayfarer Sevii keeps the Kanto battle themes under Galar")
+{
+    u32 previousBattleTypeFlags = gBattleTypeFlags;
+
+    WayfarerInitPersistentState();
+    gBattleTypeFlags = 0;
+    SetTestLocation(MAP_ONE_ISLAND);
+    EXPECT_EQ(GetCurrentRegion(), REGION_GALAR);
+    EXPECT_EQ(GetBattleBGM(), MUS_HG_VS_WILD_KANTO);
+    gBattleTypeFlags = previousBattleTypeFlags;
+}
+
+TEST("Wayfarer Sinjoh maps are Hisui")
+{
+    static const u16 sSinjohMaps[] = {
+        MAP_NEW_SINJOH_HNS,
+        MAP_ROUTE49_HNS,
+        MAP_SNOWSWEPT_CAVERN_HNS,
+        MAP_SINJOH_RUINS_HNS,
+    };
+    u32 i;
+
+    WayfarerInitPersistentState();
+    for (i = 0; i < ARRAY_COUNT(sSinjohMaps); i++)
+    {
+        SetTestLocation(sSinjohMaps[i]);
+        EXPECT_EQ(GetCurrentRegion(), REGION_HISUI);
+    }
+}
+
+TEST("Wayfarer region-conditioned evolutions follow the map region")
+{
+    struct Pokemon mon;
+
+    WayfarerInitPersistentState();
+
+    // Galar-only: Koffing becomes Galarian Weezing in Sevii, Weezing elsewhere.
+    CreateMon(&mon, SPECIES_KOFFING, 35, 32, OTID_STRUCT_PRESET(0));
+    SetTestLocation(MAP_ONE_ISLAND);
+    EXPECT_EQ(GetEvolutionTargetSpecies(&mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, NULL, 0),
+              SPECIES_WEEZING_GALAR);
+    SetTestLocation(MAP_NEW_SINJOH_HNS);
+    EXPECT_EQ(GetEvolutionTargetSpecies(&mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, NULL, 0),
+              SPECIES_WEEZING);
+
+    // Hisui-only: Hisuian Qwilfish with Barb Barrage becomes Overqwil in
+    // Sinjoh only.
+    CreateMon(&mon, SPECIES_QWILFISH_HISUI, 30, 32, OTID_STRUCT_PRESET(0));
+    SetMonMoveSlot(&mon, MOVE_BARB_BARRAGE, 0);
+    SetTestLocation(MAP_NEW_SINJOH_HNS);
+    EXPECT_EQ(GetEvolutionTargetSpecies(&mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, NULL, 0),
+              SPECIES_OVERQWIL);
+    SetTestLocation(MAP_ONE_ISLAND);
+    EXPECT_EQ(GetEvolutionTargetSpecies(&mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, NULL, 0),
+              SPECIES_NONE);
+}
+
 TEST("Wayfarer inert Sinnoh maps do not update saved region state")
 {
     WayfarerInitPersistentState();
