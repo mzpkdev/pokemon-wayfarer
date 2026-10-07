@@ -5,6 +5,8 @@ Gate_NationalPark_EventScript_Attendant::
 	lockall
 	faceplayer
 	goto_if_set FLAG_DAILY_BUG_CONTEST_COMPLETED, Gate_NationalPark_EventScript_AttendantAlreadyPlayed
+	callnative BugContest_CheckHeldToday
+	goto_if_eq VAR_RESULT, FALSE, Gate_NationalPark_EventScript_AttendantNotToday
 	msgbox Route35NationalParkGate_Text_OfficerAskToParticipate, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, TRUE, Gate_NationalPark_EventScript_AttendantStart
 	msgbox Route35NationalParkGate_Text_TakePartInFuture, MSGBOX_DEFAULT
@@ -90,6 +92,12 @@ Gate_NationalPark_EventScript_AttendantAlreadyPlayed::
 	release
 	end
 
+Gate_NationalPark_EventScript_AttendantNotToday::
+	msgbox Route35NationalParkGate_Text_ContestNotToday, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
 Gate_NationalPark_Movement_Player_EnterParkTop:
 	walk_down
 	walk_right
@@ -112,6 +120,8 @@ Gate_NationalPark_EventScript_BAttendant::
 	lockall
 	faceplayer
 	goto_if_set FLAG_DAILY_BUG_CONTEST_COMPLETED, Gate_NationalPark_EventScript_AttendantAlreadyPlayed
+	callnative BugContest_CheckHeldToday
+	goto_if_eq VAR_RESULT, FALSE, Gate_NationalPark_EventScript_AttendantNotToday
 	msgbox Route35NationalParkGate_Text_OfficerAskToParticipate, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, TRUE, Gate_NationalPark_EventScript_BAttendantStart
 	msgbox Route35NationalParkGate_Text_TakePartInFuture, MSGBOX_DEFAULT
@@ -272,6 +282,12 @@ Route35NationalParkGate_Text_EggAsFirstMon:
 	.string "POKéMON in your party.\p"
 	.string "Please switch it with the POKéMON\n"
 	.string "you want to use, then come see me.$"
+
+Route35NationalParkGate_Text_ContestNotToday:
+	.string "The Bug-Catching Contest isn't held\n"
+	.string "today.\p"
+	.string "We hold it on Tuesday, Thursday and\n"
+	.string "Saturday. Please come back then.$"
 
 Route35NationalParkGate_Text_ContestIsOver:
 	.string "Today's Contest is over. We hope you\n"
