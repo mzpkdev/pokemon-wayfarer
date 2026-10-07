@@ -880,6 +880,7 @@ native-hm-windows-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WILD_ENCOUNTERS_TOOL_DIR)/tests -p 'test_*.py' -q
 	PYTHONDONTWRITEBYTECODE=1 python3 test/data/generate_native_hm_catch_windows.py --check
 	PYTHONDONTWRITEBYTECODE=1 python3 test/extract_native_hm_coverage_fixtures.py --check
+	PYTHONDONTWRITEBYTECODE=1 python3 test/extract_wild_encounter_v2_fixtures.py --check
 
 .PHONY: trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit
 trainer-party-scaling-generate:
