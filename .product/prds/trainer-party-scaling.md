@@ -108,7 +108,9 @@ Cover regular opposing trainers throughout the content compiled into Wayfarer,
 including Gym members, regular villain grunts, and regular trainer rematches.
 Select the existing rematch roster first, then scale it normally. Defeated
 Trainers remain defeated under existing rules; this feature adds no rematch
-availability or repeatable farming system.
+availability or repeatable farming system. [Daily world
+slots](daily-world-slots.md) separately lets regular trainer spots rotate
+daily, and its trainers scale under this design.
 
 Gym Leaders remain outside this automatic system. Their enrolled initial badge
 battles follow the separate
