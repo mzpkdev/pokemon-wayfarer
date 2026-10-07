@@ -331,7 +331,7 @@ The v2 tables are build input for the game, so the data and the build-time check
 
 | Was here | Now |
 | --- | --- |
-| `data/*.json` (tables, `meta.json`, `species.json`, tile files) | `game/src/data/wild_encounters_v2/` (plus `encounter_rates.json`, the per-map encounter rates extracted once from the pre-v2 Wayfarer table) |
+| `data/*.json` (tables, `meta.json`, `species.json`, tile files) | `game/src/data/wild_encounters_v2/` (encounter rates are not data: `v2_emit.py` sets them by method and terrain) |
 | `check.py` | `game/tools/wild_encounters/v2/check.py`, run by `make wild-encounters-v2-check` (before the header is generated, and part of `make check`) |
 | `hm_model.py`, `hm_audit.py` | `game/tools/wild_encounters/v2/`; `make wild-encounters-v2-hm-audit` runs the audit (about a minute) |
 

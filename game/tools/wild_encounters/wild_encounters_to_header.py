@@ -771,8 +771,7 @@ def main():
         summary = generate(args.encounters, args.standard_rod_fishing, args.output, args.config, args.rtc_constants, args.species, args.v2_data)
     except ValidationError as error:
         raise SystemExit(f"wild encounter generation failed: {error}") from error
-    print(f"wild encounters v2: {summary['headers']} headers, {summary['prowlers']} prowler species, "
-          f"{len(summary['defaulted'])} method tables on a default encounter rate")
+    print(f"wild encounters v2: {summary['headers']} headers, {summary['prowlers']} prowler species")
 
 
 if __name__ == "__main__":

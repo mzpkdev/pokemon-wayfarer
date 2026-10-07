@@ -15,7 +15,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]  # game/
 REPO = ROOT.parent
 DATA_DIR = ROOT / "src/data/wild_encounters_v2"
-RATES = DATA_DIR / "encounter_rates.json"
 PROWLERS_SPEC = REPO / ".product/specs/prowlers.md"
 REACH_SPEC = REPO / ".product/specs/reach-assignments.md"
 EVOLUTION = ROOT / "tools/notable_trainers/evolution.json"
@@ -28,6 +27,18 @@ METHODS = {
     "rock": ("rockSmashMonsInfo", 5, "RockSmashMons"),
     "fish": ("fishingMonsInfo", 10, "FishingMons"),
 }
+# Encounter rate of a table (WildPokemonInfo.encounterRate), the same for day and night and for every map.
+# The rate follows the method and the terrain, not the map:
+#   land      20 outdoors, 10 on cave and building floors (meta.json map_type INDOOR or UNDERGROUND)
+#   surf       4 on water; the underwater seaweed table (Dive maps, map_type UNDERWATER) is the same
+#   fish      30
+#   rock      60 (Rock Smash and Headbutt)
+# Road maps then roll 60% of the land and surf rates in the engine (GetWildEncounterRateForHeader).
+LAND_RATE_OUTDOORS = 20
+LAND_RATE_INDOORS = 10
+INDOOR_MAP_TYPES = ("INDOOR", "UNDERGROUND")
+METHOD_RATES = {"surf": 4, "fish": 30, "rock": 60}
+
 # The v2 tables hold a day and a night table per method. Morning and day use the day table,
 # evening and night the night table.
 TIME_TO_TABLE = {"TIME_MORNING": "day", "TIME_DAY": "day", "TIME_EVENING": "night", "TIME_NIGHT": "night"}
@@ -163,7 +174,7 @@ def parse_intents(path=REACH_SPEC):
 
 # ---------- tables ----------
 def load(data_dir=DATA_DIR):
-    """(ordered keys, tables, meta, rates, default rates). Order is meta.json's, which keeps the
+    """(ordered keys, tables, meta). Order is meta.json's, which keeps the
     three Bug Contest days (Tuesday, Thursday, Saturday) consecutive."""
     data_dir = Path(data_dir)
     meta = _json(data_dir / "meta.json")
@@ -172,8 +183,7 @@ def load(data_dir=DATA_DIR):
         tables.update(_json(data_dir / f"{region}.json"))
     if set(tables) != set(meta):
         raise V2Error("v2 tables and meta.json list different maps")
-    rates = _json(data_dir / "encounter_rates.json")
-    return list(meta), tables, meta, rates["rates"], rates["defaults"]
+    return list(meta), tables, meta
 
 
 def map_constant(key):
@@ -181,12 +191,11 @@ def map_constant(key):
     return key.split(":")[0]
 
 
-def table_rate(key, method, rates, defaults):
-    """(day rate, night rate, whether the default was used)."""
-    found = rates.get(map_constant(key), {}).get(method)
-    if found is None:
-        return defaults[method], defaults[method], True
-    return found[0], found[1], False
+def table_rate(key, method, meta):
+    """The encounter rate of a method's table on a header key's map: one rule for day and night (see METHOD_RATES)."""
+    if method == "land":
+        return LAND_RATE_INDOORS if meta[key]["map_type"] in INDOOR_MAP_TYPES else LAND_RATE_OUTDOORS
+    return METHOD_RATES[method]
 
 
 def label_for(key):
@@ -233,23 +242,21 @@ def render(species_ids, line_minimums=None, data_dir=DATA_DIR):
     headers: the gWildMonHeaders[] entries, in header order, to splice inside the array.
     trailer: gWildEncounterPlaces[], gWildProwlerMinimums[] and its count, under #if IS_WAYFARER.
     """
-    keys, tables, meta, rates, defaults = load(data_dir)
+    keys, tables, meta = load(data_dir)
     intents = parse_intents()
     species_doc = _json(Path(data_dir) / "species.json")
     lines = Lines(species_doc)
     line_minimums = parse_prowler_minimums() if line_minimums is None else line_minimums
     arrays, headers, places = [], [], []
-    defaulted, total_arrays, slot_total = [], 0, 0
+    total_arrays, slot_total = 0, 0
 
     for key in keys:
         stem, by_method = label_for(key), slot_lists(key, tables)
         infos = {"day": {}, "night": {}}
         for method, table in by_method.items():
             member, _, suffix = METHODS[method]
-            day_rate, night_rate, used_default = table_rate(key, method, rates, defaults)
-            if used_default:
-                defaulted.append((key, method))
-            for time, rate in (("day", day_rate), ("night", night_rate)):
+            rate = table_rate(key, method, meta)
+            for time in ("day", "night"):
                 name = f"{stem}_{time.capitalize()}_{suffix}"
                 for species in table[time]:
                     if "SPECIES_" + species not in species_ids:
@@ -295,5 +302,5 @@ def render(species_ids, line_minimums=None, data_dir=DATA_DIR):
                    f"// sets every wild level, so each slot carries the placeholder level {PLACEHOLDER_LEVEL}.\n"
                    + "\n".join(arrays))
     summary = {"headers": len(keys), "arrays": total_arrays, "slots": slot_total,
-               "defaulted": defaulted, "prowlers": len(minimums)}
+               "prowlers": len(minimums)}
     return arrays_text, "\n".join(headers) + "\n", trailer, summary

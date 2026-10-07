@@ -252,8 +252,6 @@ class PowerPlantSourceTest(unittest.TestCase):
         v2 = read_json("src/data/wild_encounters_v2/kanto.json")["MAP_POWER_PLANT"]
         self.assertEqual(len(v2["land"]["day"]), 12)
         self.assertEqual(len(v2["land"]["night"]), 12)
-        rates = read_json("src/data/wild_encounters_v2/encounter_rates.json")["rates"]
-        self.assertEqual(rates["MAP_POWER_PLANT"]["land"], [7, 7])
         groups = read_json("src/data/wild_encounters.json")["wild_encounter_groups"]
         self.assertFalse(any("_Wayfarer_" in entry.get("base_label", "")
                              for group in groups for entry in group["encounters"]))

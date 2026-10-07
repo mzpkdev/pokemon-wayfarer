@@ -33,7 +33,7 @@ class V2EmitTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.species, cls.arrays, cls.headers, cls.trailer, cls.summary = build()
-        cls.keys, cls.tables, cls.meta, cls.rates, cls.defaults = v2_emit.load()
+        cls.keys, cls.tables, cls.meta = v2_emit.load()
         cls.header_blocks = cls.headers.split("    { // ")[1:]
         place_text = cls.trailer.split("gWildEncounterPlaces[] =")[1].split("gWildProwlerMinimums[]")[0]
         cls.places = re.findall(
@@ -78,14 +78,25 @@ class V2EmitTests(unittest.TestCase):
                     self.assertEqual(got, self.tables[key][method][time], name)
                     self.assertEqual(len(got), SLOTS[method])
                     rate = re.search(rf"{name}Info = \{{ (\d+),", self.arrays).group(1)
-                    day_rate, night_rate, _ = v2_emit.table_rate(key, method, self.rates, self.defaults)
-                    self.assertEqual(int(rate), day_rate if time == "day" else night_rate)
+                    self.assertEqual(int(rate), v2_emit.table_rate(key, method, self.meta))
 
-    def test_methods_without_a_current_rate_use_the_documented_default(self):
-        self.assertEqual(self.defaults, {"land": 20, "surf": 7, "rock": 60, "fish": 30})
-        self.assertEqual(len(self.summary["defaulted"]), 62)  # a change here is a deliberate rate decision
-        for key, method in self.summary["defaulted"]:
-            self.assertNotIn(method, self.rates.get(v2_emit.map_constant(key), {}))
+    def test_rates_follow_the_method_and_the_terrain_for_every_table(self):
+        found = {}
+        for key, block in zip(self.keys, self.header_blocks):
+            for method in v2_emit.slot_lists(key, self.tables):
+                if method == "land":
+                    expected = 10 if self.meta[key]["map_type"] in ("INDOOR", "UNDERGROUND") else 20
+                else:
+                    expected = {"surf": 4, "fish": 30, "rock": 60}[method]
+                for time in ("day", "night"):
+                    name = f"{v2_emit.label_for(key)}_{time.capitalize()}_{v2_emit.METHODS[method][2]}"
+                    rate = int(re.search(rf"{name}Info = \{{ (\d+),", self.arrays).group(1))
+                    self.assertEqual(rate, expected, name)
+                found.setdefault(method, set()).add(expected)
+        self.assertEqual(found, {"land": {10, 20}, "surf": {4}, "fish": {30}, "rock": {60}})
+        for key in self.keys:
+            if self.meta[key]["map_type"] == "UNDERWATER":
+                self.assertEqual(v2_emit.table_rate(key, "surf", self.meta), 4, key)
 
     def test_place_records_equal_the_reference_model_for_every_map(self):
         self.assertEqual(len(self.places), len(self.keys))
@@ -156,17 +167,12 @@ class V2EmitTests(unittest.TestCase):
         self.assertEqual([rolled("Road", rate) for rate in (1, 7, 20, 25, 30, 255)], [1, 4, 12, 15, 18, 153])
         self.assertEqual([rolled(reach, 30) for reach in ("Wilds", "Outlands", "Dungeon")], [30, 30, 30])
 
-    def test_every_map_constant_exists_and_rates_cover_extracted_methods(self):
+    def test_every_map_constant_exists(self):
         ids = set()
         for path in (ROOT / "data/maps").glob("*/map.json"):
             ids.add(json.loads(path.read_text(encoding="utf-8")).get("id"))
         for key in self.keys:
             self.assertIn(v2_emit.map_constant(key), ids, key)
-        for map_name, methods in self.rates.items():
-            self.assertTrue(any(v2_emit.map_constant(key) == map_name for key in self.keys), map_name)
-            for method, pair in methods.items():
-                self.assertIn(method, v2_emit.METHODS)
-                self.assertTrue(all(isinstance(rate, int) and 1 <= rate <= 255 for rate in pair), (map_name, method))
 
     def test_generated_header_has_the_contract_symbols_and_no_retired_ones(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -52,7 +52,7 @@ def distribution(species, place_level, region):
 
 
 def build():
-    keys, tables, meta, rates, defaults = v2_emit.load()
+    keys, tables, meta = v2_emit.load()
     low, high = TRAINER_RATING
     sets, needed = [], {}
     for key in keys:
@@ -65,9 +65,10 @@ def build():
         levels = [hm_model.place_level(key, rating) for rating in range(low, high + 1)]
         methods = {}
         for method, table in v2_emit.slot_lists(key, tables).items():
-            day_rate, night_rate, defaulted = v2_emit.table_rate(key, method, rates, defaults)
-            methods[method] = {"rate": {"day": rolled_rate(reach, day_rate), "night": rolled_rate(reach, night_rate)},
-                               "tableRate": {"day": day_rate, "night": night_rate}, "defaultRate": defaulted,
+            table_rate = v2_emit.table_rate(key, method, meta)
+            rolled = rolled_rate(reach, table_rate)
+            methods[method] = {"rate": {"day": rolled, "night": rolled},
+                               "tableRate": {"day": table_rate, "night": table_rate},
                                "day": table["day"], "night": table["night"]}
             for species in table["day"] + table["night"]:
                 if species != "NONE":
