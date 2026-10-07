@@ -12,19 +12,17 @@ type LaneCase = {
   state: number
 }
 
-// B advances text like A but never talks to the object in front of the player, so a press
-// that lands after the script ends can't start the interaction again.
-const finishFieldScript = async (
-  game: GameSession,
-  description: string,
-  advance: "a" | "b" = "a",
-): Promise<void> => {
+// The script can end during the wait before a press. A stale A would then talk to the
+// object in front of the player, so the state is read again right before each press.
+const finishFieldScript = async (game: GameSession, description: string): Promise<void> => {
+  const isFinishing = (state: Awaited<ReturnType<GameSession["state"]["read"]>>): boolean =>
+    state.dialogueOpen || state.battle.ui === "text" || state.scriptActive
   for (let attempt = 0; attempt < 240; attempt++) {
     const state = await game.state.read()
     if (!state.battle.active && state.ready && !state.dialogueOpen && !state.scriptActive) return
-    if (state.dialogueOpen || state.battle.ui === "text" || state.scriptActive) {
+    if (isFinishing(state)) {
       await game.wait.frames(30)
-      await game.controls.press(advance)
+      if (isFinishing(await game.state.read())) await game.controls.press("a")
     } else await game.wait.frames(12)
   }
   throw new Error(
@@ -127,7 +125,7 @@ const runFromBattle = async (game: GameSession): Promise<void> => {
   for (let attempt = 0; attempt < 360; attempt++) {
     const state = await game.state.read()
     if (!state.battle.active) {
-      await finishFieldScript(game, "Sudowoodo run-away script", "b")
+      await finishFieldScript(game, "Sudowoodo run-away script")
       return
     }
     if (state.battle.ui === "text") await game.controls.press("a")
