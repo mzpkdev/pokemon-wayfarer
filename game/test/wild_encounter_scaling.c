@@ -1052,7 +1052,7 @@ static void SetLeadMon(u16 species, u8 level)
     gPlayerPartyCount = 1;
 }
 
-TEST("Wild encounter level: Pressure, Hustle and Vital Spirit favour the top of the spread, Lures take one level above it")
+TEST("Wild encounter level: Pressure, Hustle and Vital Spirit favour the top of the spread, and a Lure leaves the spread alone")
 {
     static const u16 sLeads[] = { SPECIES_ZAPDOS, SPECIES_CORSOLA, SPECIES_MANKEY };
     static const enum Ability sAbilities[] = { ABILITY_PRESSURE, ABILITY_HUSTLE, ABILITY_VITAL_SPIRIT };
@@ -1102,14 +1102,32 @@ TEST("Wild encounter level: Pressure, Hustle and Vital Spirit favour the top of 
         EXPECT_LT(bottom, 140);
     }
 
-    // A Lure takes one level above the spread.
-    SetLeadMon(SPECIES_PIDGEY, 5);
+    // A Lure does not change the level: the same spread, the same ability preference.
     VarSet(VAR_REPEL_STEP_COUNT, REPEL_LURE_MASK | 50);
-    for (i = 0; i < 20; i++)
+    SetLeadMon(SPECIES_PIDGEY, 5);
+    top = bottom = 0;
+    for (i = 0; i < 500; i++)
     {
         EXPECT(RollWildEncounterSlot(&view, 0, &outcome));
-        EXPECT_EQ(outcome.level, 47);
+        EXPECT_EQ(outcome.species, SPECIES_TAUROS);
+        EXPECT_GE(outcome.level, 42);
+        EXPECT_LE(outcome.level, 46);
+        top += outcome.level == 46;
+        bottom += outcome.level == 42;
     }
+    EXPECT_LT(top, 160);
+    EXPECT_GT(top, 40);
+    EXPECT_LT(bottom, 160);
+    EXPECT_GT(bottom, 40);
+    SetLeadMon(SPECIES_ZAPDOS, 5);
+    top = 0;
+    for (i = 0; i < 500; i++)
+    {
+        EXPECT(RollWildEncounterSlot(&view, 0, &outcome));
+        EXPECT_LE(outcome.level, 46);
+        top += outcome.level == 46;
+    }
+    EXPECT_GT(top, 200);
     VarSet(VAR_REPEL_STEP_COUNT, steps);
 }
 
@@ -1158,6 +1176,73 @@ static void LeaveRoute(const struct EncounterHarness *harness)
     VarSet(VAR_REPEL_STEP_COUNT, harness->repelSteps);
     gPlayerPartyCount = harness->playerPartyCount;
     gEnemyPartyCount = harness->enemyPartyCount;
+}
+
+TEST("Wild encounters: a Lure doubles the encounter rate and keeps the place's level distribution")
+{
+    struct EncounterHarness *harness = Alloc(sizeof(*harness));
+    u32 attempts, lure, starts[2] = { 0, 0 }, levelCounts[2][101] = { { 0 }, { 0 } };
+    u32 level;
+
+    EXPECT(harness != NULL);
+    EnterRoute(harness, MAP_ROUTE1_HNS);
+    SetTrainerRating(80);
+    SetLeadMon(SPECIES_PIKACHU, 38);
+    for (lure = 0; lure <= 1; lure++)
+    {
+        VarSet(VAR_REPEL_STEP_COUNT, lure ? (REPEL_LURE_MASK | 200) : 0);
+        SeedRng(11);
+        for (attempts = 0; attempts < 6000; attempts++)
+        {
+            if (StandardWildEncounter(MB_TALL_GRASS, MB_TALL_GRASS))
+            {
+                starts[lure]++;
+                levelCounts[lure][GetMonData(&gEnemyParty[0], MON_DATA_LEVEL)]++;
+            }
+        }
+    }
+    EXPECT_GT(starts[0], 100);
+    // Twice the rate, with room for sampling noise.
+    EXPECT_GT(starts[1] * 10, starts[0] * 16);
+    EXPECT_LT(starts[1] * 10, starts[0] * 24);
+    // No level appears under a Lure that the ordinary roll cannot give, and the top of
+    // the place's spread (38 + 2 = 40) is no more common than without it.
+    for (level = 1; level <= 100; level++)
+        if (levelCounts[1][level] != 0)
+            EXPECT_GT(levelCounts[0][level], 0);
+    EXPECT_LT(levelCounts[1][40] * 10, starts[1] * 3);
+    EXPECT_GT(levelCounts[1][40], 0);
+    LeaveRoute(harness);
+    Free(harness);
+}
+
+TEST("Wild encounters: a Lure mirrors fishing slots 20 percent of the time")
+{
+    struct EncounterHarness *harness = Alloc(sizeof(*harness));
+    u32 attempts, lure, blastoise[2] = { 0, 0 };
+
+    EXPECT(harness != NULL);
+    // Pallet Town fishing: Tentacruel holds the first slot (38 of 100 on the Old Rod), Blastoise the last (2 of 100).
+    EnterRoute(harness, MAP_PALLET_TOWN_HNS);
+    SetTrainerRating(160);
+    SetLeadMon(SPECIES_PIDGEY, 5);
+    for (lure = 0; lure <= 1; lure++)
+    {
+        VarSet(VAR_REPEL_STEP_COUNT, lure ? (REPEL_LURE_MASK | 200) : 0);
+        SeedRng(21);
+        for (attempts = 0; attempts < 2000; attempts++)
+        {
+            ZeroEnemyPartyMons();
+            FishingWildEncounter(OLD_ROD);
+            if (GetMonData(&gEnemyParty[0], MON_DATA_SPECIES) == SPECIES_BLASTOISE)
+                blastoise[lure]++;
+        }
+    }
+    // About 2% without a Lure, 0.8 * 2% + 0.2 * 38% = 9.2% with one.
+    EXPECT_LT(blastoise[0], 90);
+    EXPECT_GT(blastoise[1], 120);
+    LeaveRoute(harness);
+    Free(harness);
 }
 
 TEST("Wild encounters: Repel compares the lead's level with the encounter's final level, not the place's level")
