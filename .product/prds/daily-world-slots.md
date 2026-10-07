@@ -100,18 +100,20 @@ party and dialogue. The slot keeps its own position, facing and sight range.
 
 ### Item slots
 
-Item balls and hidden items both rotate. A rotating item slot draws from its
-reach's consumable pool:
+Item balls and hidden items both rotate. Finds should be exciting: a
+rotating slot draws from one broad pool of consumables, so any spot can turn up
+almost anything, from a Potion to a Max Revive or a Rare Candy. Finds don't
+improve with Trainer Rating. A Road spot found on day one and on day three
+hundred has the same odds.
 
-- **Road:** everyday supplies, such as basic healing, status cures and Poké
-  Balls.
-- **Wilds:** a step up, such as stronger healing, Revives and Great Balls.
-- **Outlands and deep dungeon floors:** the best consumables, such as Max
-  Revives, Full Restores and Ultra Balls, with a small chance of rarer finds.
+The reach only tilts the odds. Road leans toward everyday supplies, Wilds a
+step up, and Outlands and deep dungeon floors lean toward the best
+consumables, with rare finds noticeably more likely. Rare finds stay possible
+everywhere, just less likely on the Road.
 
-A dungeon's entrance floor uses the Wilds pool. Its deeper floors use the
-Outlands pool. A map with no reach of its own, such as a building, uses its
-surroundings: the dungeon it belongs to, or Road otherwise.
+A dungeon's entrance floor counts as Wilds and its deeper floors as Outlands.
+A map with no reach of its own, such as a building, uses its surroundings: the
+dungeon it belongs to, or Road otherwise.
 
 Rotating pools never contain unique items. A hidden item stays hidden.
 The Itemfinder finds rotating hidden items the same way it finds authored ones.
@@ -135,8 +137,9 @@ The Itemfinder finds rotating hidden items the same way it finds authored ones.
 - **Experience and money are renewable on purpose.** Waiting a day is the
   limit. The level cap keeps renewable experience in check. Prize money needs
   a check against Poké Mart prices once pools are tuned.
-- **Rare Candy, vitamins and PP Ups** appear only in the Outlands and deep
-  dungeon pools, at low weight. Each is a renewable source of permanent power.
+- **Rare Candy, vitamins and PP Ups** are rare in every reach, rarest on the
+  Road. Each is a renewable source of permanent power, so their weights need
+  the closest tuning.
 - **Region size shapes variety.** With pools by class family and region, the
   median rotating trainer slot has about 7 candidates, and about 14 slots have
   none other than their authored trainer (2026-10-07 inventory).
@@ -152,12 +155,25 @@ generated objects excluded:
   split.
 - **Item slots:** 762 in total: 485 item balls and 277 hidden items. 167 hold
   unique items: 58 TMs, 49 held items, 26 key items, 25 evolution stones,
-  8 held evolution items and 1 HM.
-- **Dialogue:** a trainer's intro and post-battle lines move with them. Lines
-  that name their original place need an audit. They either get neutral
-  wording or the trainer leaves the pool.
-- **Rematches:** about 200 regular trainers have rematch scripts. Rotating
-  slots replace rematches for those trainers.
+  8 held evolution items and 1 HM. Hoenn and the FRLG Kanto ports keep every
+  authored item.
+- **Sevii items (prerequisite):** Sevii's 97 FRLG items (39 item balls and 58
+  hidden items) were left out by the
+  [exploration port](sevii-exploration-port.md) and never restored. They are
+  restored first, so Sevii's spots start with their authored items like every
+  other region.
+- **Dialogue audit (required):** a trainer's intro and post-battle lines move
+  with them. Every candidate's lines are audited before it can rotate. Lines
+  that name a place, landmark or local event get neutral wording, or the
+  trainer leaves the pool.
+- **Rematches:** about 200 regular trainers have rematch scripts, through three
+  separate systems:
+  - 31 Johto and Kanto trainers from HNS give a phone number and call for
+    tiered rematches.
+  - 68 Hoenn trainers register for Emerald's Match Call. Wayfarer compiles the
+    HNS rematch table, which has no Hoenn entries, so these rematches appear
+    to be inert today.
+  - 103 FRLG Kanto and Sevii trainers support Vs. Seeker rematches.
 
 ## Interactions
 
@@ -200,14 +216,9 @@ generated objects excluded:
 
 ## Open questions
 
-- Should item pools also improve with Trainer Rating, the way Poké Mart stock
-  does?
-- Sevii has no item slots. The [exploration port](sevii-exploration-port.md)
-  left items out, and the later Sevii work restored trainers and stories but
-  not items. Should Sevii's FRLG items be restored before or with this
-  feature?
-- Should trainer rematch scripts be removed from rotating trainers or just
-  left unused?
+- Rematches: do phone trainers stay fixed, do Hoenn's inert Match Call
+  trainers rotate, and does the Vs. Seeker stay once rotation exists? See
+  [Content](#content).
 
 ## References
 
