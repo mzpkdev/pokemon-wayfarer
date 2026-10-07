@@ -155,12 +155,17 @@ Phone numbers and rematches belong to the trainer, not the spot:
 
 #### Vs. Seeker
 
-The Vs. Seeker retires. Rotation already brings every beaten trainer back on
-later days, and rematch teams unlock by phone or by Trainer Rating, so the
-Vs. Seeker would only add same-day repeat battles, which the "wait a day" rule
-rules out. Vermilion's Pokémon Center stops handing it out. Sevii's 64 and
-the Kanto coast's 9 rematch families have no phone numbers, so they unlock
-their teams by Trainer Rating like every other trainer without a number.
+The Vs. Seeker retires. Wayfarer wired it up for the FRLG trainers it ported,
+on Sevii (64 rematch families) and the Kanto coast, Routes 19–21 (9 families).
+However, the item can't be obtained today: its only giver is FRLG's Vermilion
+Pokémon Center, and Wayfarer uses HNS's Vermilion. Those rematches are
+therefore unreachable, so retiring it takes nothing away from players.
+
+Rotation already brings every beaten trainer back on later days, and rematch
+teams unlock by phone or by Trainer Rating, so a Vs. Seeker would only add
+same-day repeat battles, which the "wait a day" rule rules out. The Sevii and
+coast families have no phone numbers, so they unlock their teams by Trainer
+Rating like every other trainer without a number.
 
 ### Item slots
 
@@ -239,7 +244,8 @@ generated objects excluded:
   - 68 Hoenn trainers register for Emerald's Match Call. Wayfarer compiles the
     HNS rematch table, which has no Hoenn entries, so these rematches appear
     to be inert today.
-  - 103 FRLG Kanto and Sevii trainers support Vs. Seeker rematches.
+  - 103 FRLG trainers, 71 on Sevii and 32 on Kanto's Routes 19–21, support
+    Vs. Seeker rematches, but the Vs. Seeker can't be obtained in Wayfarer.
 
 ## Interactions
 
