@@ -47,12 +47,15 @@ const arrangeAt = async (
     calmed?: boolean
     fullBag?: boolean
     encounters?: boolean
+    trainerRating?: number
   } = {},
 ): Promise<void> => {
   await game.arrange({
     checkpoint: "new-bark-after-intro",
     player: { position: { map, x, y }, facing },
     story: {
+      vars:
+        options.trainerRating === undefined ? undefined : { trainerRating: options.trainerRating },
       flags: {
         disableEncounters: !options.encounters,
         towerFujiRescued: options.rescued ?? false,
@@ -169,18 +172,17 @@ const walkIntoGhostTrigger = async (game: GameSession, description: string): Pro
   )
 }
 
-// Species the v2 wild tables (game/src/data/wild_encounters_v2/kanto.json) can
-// produce on each floor, over both the day and night tables, including the
-// earlier stages the stage mix can step down to (Gastly, Cubone, Misdreavus,
-// Murkrow). The test does not fix the time of day, so both tables count.
-const ghostLine = ["gastly", "haunter", "cubone", "marowak", "misdreavus", "murkrow"]
-const towerSpecies: Partial<Record<GameMap, readonly string[]>> = {
-  "pokemon-tower-3f": ghostLine,
-  "pokemon-tower-4f": [...ghostLine, "gengar", "mismagius"],
-  "pokemon-tower-5f": [...ghostLine, "gengar", "mismagius"],
-  "pokemon-tower-6f": [...ghostLine, "gengar", "mismagius", "honchkrow"],
-  "pokemon-tower-7f": [...ghostLine, "gengar", "mismagius", "honchkrow"],
-}
+// Species the v2 rules produce on each floor at the pinned trainerRating 0:
+// game/tools/wild_encounters/v2/hm_model.py slot_dist over each floor's day and
+// night land tables (place level 7 on 3F, 8 on 4F and 5F, 9 on 6F and 7F).
+// Every evolved slot steps down to its early stage at those levels. Time of day
+// is not pinned, so both tables count: Murkrow is a night slot.
+const towerSpecies: Partial<Record<GameMap, readonly string[]>> = Object.fromEntries(
+  ["3f", "4f", "5f", "6f", "7f"].map((floor) => [
+    `pokemon-tower-${floor}`,
+    ["gastly", "cubone", "misdreavus", "murkrow"],
+  ]),
+)
 
 const naturalTowerEncounter = async (
   game: GameSession,
@@ -189,7 +191,11 @@ const naturalTowerEncounter = async (
   y: number,
   maxSteps: number,
 ): Promise<void> => {
-  await arrangeAt(game, floor, leftX, y, "right", { encounters: true, scope: true })
+  await arrangeAt(game, floor, leftX, y, "right", {
+    encounters: true,
+    scope: true,
+    trainerRating: 0,
+  })
   expect(await game.inventory.contains("silphScope")).toBe(true)
   const rightX = leftX + 1
   for (let step = 0; step < maxSteps; step++) {
