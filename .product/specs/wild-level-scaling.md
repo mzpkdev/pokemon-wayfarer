@@ -231,23 +231,18 @@ as the [prowlers spec](prowlers.md#prowlers) defines.
 - **DexNav, the Pokédex area screen and other readers of the wild population**
   use the same rules, so what they show matches what appears.
 - **The shared evolution-level table must cover every non-level evolution of a
-  species in the encounter tables.** Today it lacks six trade edges, which
-  the implementation adds to `game/tools/notable_trainers/evolution.json`:
-
-  | Evolution | Evolution level |
-  | --- | ---: |
-  | Alolan Graveler → Alolan Golem | 38, as Graveler → Golem |
-  | Phantump → Trevenant | 42, as other trade evolutions |
-  | Pumpkaboo → Gourgeist, for each of the four sizes | 42 |
-
-  Every other edge is already there, but some are filed under form constants:
+  species in the encounter tables.** It already does. Alolan Graveler,
+  Phantump and each Pumpkaboo size evolve by trade and also by level at 38 in
+  the game data, so they use that level and need no table row: where a
+  species reaches the same successor by trade and by level, the level wins.
+  Some table rows are filed under form constants:
   Floette's colours under `FLORGES_RED` and the other colours, Doublade under
   `AEGISLASH_SHIELD`, Galarian Darumaka under `DARMANITAN_GALAR_STANDARD`,
   Sinistea under `SINISTEA_PHONY`, Milcery under each Alcremie flavour and
   decoration, White-Striped Basculin under `BASCULEGION_M` and `BASCULEGION_F`,
-  and Dunsparce under its two Dudunsparce segment forms. The game's evolution
-  data names the base constants, which are aliases of those forms, so lookups
-  must resolve species aliases on both sides of an edge.
+  and Dunsparce under its two Dudunsparce segment forms. Base names such as
+  `FLORGES` are aliases of those forms, so the game sees one species; only
+  tools that compare constants by name need to resolve the aliases.
 - **Generation IX is switched off** with `P_GEN_9_POKEMON` set to `FALSE` in
   `game/include/config/species_enabled.h`. `P_GEN_9_CROSS_EVOS` stays on, so
   Generation IX evolutions of older lines, such as Annihilape,

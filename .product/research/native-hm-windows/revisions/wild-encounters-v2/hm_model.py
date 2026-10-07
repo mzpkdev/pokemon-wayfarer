@@ -89,11 +89,6 @@ def _n(x):
 for _chain in EVO['chains'].values():
     for _i in range(0, len(_chain) - 2, 2):
         NONLEVEL.setdefault((_res(_n(_chain[_i])), _res(_n(_chain[_i + 2]))), _chain[_i + 1])
-# The rows wild level scaling adds to the shared table for v2 (see its implementation notes).
-for _p, _s, _lv in [('GRAVELER_ALOLA', 'GOLEM_ALOLA', 38), ('PHANTUMP', 'TREVENANT', 42),
-                    ('PUMPKABOO_AVERAGE', 'GOURGEIST_AVERAGE', 42), ('PUMPKABOO_SMALL', 'GOURGEIST_SMALL', 42),
-                    ('PUMPKABOO_LARGE', 'GOURGEIST_LARGE', 42), ('PUMPKABOO_SUPER', 'GOURGEIST_SUPER', 42)]:
-    NONLEVEL.setdefault((_res(_p), _res(_s)), _lv)
 PRED, EVOLV, MISSING_EDGES = {}, {}, set()
 for s, info in SPECIES.items():
     for e in info['evolves_to']:
@@ -109,10 +104,13 @@ for s, info in SPECIES.items():
         PRED.setdefault(t, []).append((s, lv, e['method']))
 
 def evo_level(pred, succ):
-    for t, lv, m in EVOLV.get(pred, []):
-        if t == succ:
-            if lv is None: MISSING_EDGES.add((pred, succ, m))
-            return lv
+    # A species can reach the same successor by trade and by level (Wayfarer gives trade
+    # evolutions a level route too); the level route wins.
+    edges = [(lv, m) for t, lv, m in EVOLV.get(pred, []) if t == succ]
+    for lv, m in edges:
+        if lv is not None: return lv
+    for lv, m in edges[:1]:
+        MISSING_EDGES.add((pred, succ, m))
     return None
 
 def predecessor(s):
@@ -122,11 +120,7 @@ def predecessor(s):
 
 def young_limit(cap):
     if cap in BABIES: return 10
-    lvls = []
-    for t, lv, m in EVOLV.get(cap, []):
-        if lv is None:
-            MISSING_EDGES.add((cap, t, m)); continue
-        lvls.append(lv)
+    lvls = [lv for lv in (evo_level(cap, t) for t in dict.fromkeys(t for t, _, _ in EVOLV.get(cap, []))) if lv is not None]
     return min(lvls) - 1 if lvls else None
 
 def stage_outcomes(cap, L):

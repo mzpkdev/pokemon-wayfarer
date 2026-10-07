@@ -307,11 +307,9 @@ entries must re-run the audit.
 - The model resolves species aliases on both sides of an evolution edge, since
   the shared evolution-level table files some edges under form constants
   (`FLORGES_RED`, `AEGISLASH_SHIELD`, `DUDUNSPARCE_TWO_SEGMENT` and others).
-  It also adds the six trade edges that
-  [wild level scaling](../../../../specs/wild-level-scaling.md#implementation-notes)
-  says the table lacks: Alolan Graveler → Alolan Golem at 38, and Phantump →
-  Trevenant and the four Pumpkaboo → Gourgeist sizes at 42. With them every
-  v2 edge has a level, and no result changes. Dunsparce, which carries Rock
+  Where a species reaches the same successor by trade and by level, as
+  Alolan Graveler, Phantump and Pumpkaboo's sizes do at 38, the model uses the
+  level. With that, every v2 edge has a level, and no result changes. Dunsparce, which carries Rock
   Smash at 20, keeps a young limit of 34 from its edge at 35.
 - Every reward takes its prowler minimum in any slot, common or rare, at any
   stage of its line (babies skipped when looking for the line's first stage).

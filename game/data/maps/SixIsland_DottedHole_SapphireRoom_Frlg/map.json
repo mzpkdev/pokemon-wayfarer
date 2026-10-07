@@ -4,7 +4,7 @@
   "game_version": "frlg",
   "layout": "LAYOUT_SIX_ISLAND_DOTTED_HOLE_SAPPHIRE_ROOM",
   "music": "MUS_RG_SEVII_DUNGEON",
-  "region": "REGION_KANTO",
+  "region": "REGION_GALAR",
   "region_map_section": "MAPSEC_DOTTED_HOLE",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
