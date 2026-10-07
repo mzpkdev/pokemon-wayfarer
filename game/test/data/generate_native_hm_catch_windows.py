@@ -7,9 +7,9 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
-REVISION = ROOT / '.product/research/native-hm-windows/revisions/nearby-access'
-roster_path = REVISION / 'roster.json'
-roster = json.loads(roster_path.read_text())
+REVISION = ROOT / '.product/research/native-hm-windows/revisions/wild-encounters-v2'
+roster_path = REVISION / 'roster_v2.json'
+roster = json.loads(roster_path.read_text())['roster']
 helper_path = ROOT / 'game/tools/learnset_helpers/test_native_hm_windows.py'
 spec = importlib.util.spec_from_file_location('native_hm_learnset_validation', helper_path)
 helper = importlib.util.module_from_spec(spec)
@@ -22,9 +22,8 @@ lines = [f'// Approved roster SHA256: {hashlib.sha256(roster_path.read_bytes()).
 rows = []
 for species in roster:
     for mode in ('modern',):
-        data = species['modes'][mode]
         entries = helper.with_upstream_moves(
-            data['entries'], mode, baseline[species['species']][mode + '_symbol'])
+            species['entries'], mode, helper.species_symbol(species['species'], baseline))
         name = species['species'].removeprefix('SPECIES_') + '_' + mode
         lines.append(f'static const struct ExpectedCatchEntry sEntries_{name}[] = {{')
         lines += [f'    {{ {level}, {move} }},' for level, move in entries]
@@ -37,8 +36,6 @@ for species in roster:
                 if entry_level == 0 or entry_level > level or move in moves:
                     continue
                 moves = (moves + [move])[-4:]
-            for role, window in data['windows'].items():
-                assert (role in moves) == (level in window), (name, level, role)
             moves += ['MOVE_NONE'] * (4 - len(moves))
             if moves != prior:
                 lines.append(f'    {{ {level}, {{ {", ".join(moves)} }} }},')

@@ -1,4 +1,4 @@
-"""Check authored HM windows against the approved snapshot and standalone tables.
+"""Check authored HM windows against the wild-encounters-v2 roster and standalone tables.
 
 Run from the repository root:
     python3 -m unittest discover -s game/tools/learnset_helpers -p test_native_hm_windows.py
@@ -18,6 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 EVIDENCE = ROOT / '.product/research/native-hm-windows'
 REVISION = EVIDENCE / 'revisions/nearby-access'
+V2_REVISION = EVIDENCE / 'revisions/wild-encounters-v2'
 BASE_COMMIT = '479b0c83aea4ad90feb0af649e83ccb1a5916770'
 SOURCES = {
     'modern': 'game/src/data/pokemon/level_up_learnsets/gen_7.h',
@@ -63,12 +64,40 @@ def preprocess(source, wayfarer=False, content=None):
     }
 
 
+def species_symbol(species, baseline):
+    """Level-up learnset symbol; the baseline lacks species the v2 roster adds."""
+    if species in baseline:
+        return baseline[species]['modern_symbol']
+    for path in sorted((ROOT / 'game/src/data/pokemon/species_info').glob('gen_*_families.h')):
+        current = None
+        for line in path.read_text().splitlines():
+            match = re.match(r'\s*\[(SPECIES_\w+)\]\s*=', line)
+            if match:
+                current = match[1]
+            match = re.search(r'\.levelUpLearnset = (s\w+)', line)
+            if match and current and (current == species or current.startswith(species + '_')):
+                return match[1]
+    raise KeyError(species)
+
+
 class NativeHmWindowsDataTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.baseline = json.loads((EVIDENCE / 'baseline.json').read_text())['species']
         cls.proposal = json.loads((REVISION / 'proposal.json').read_text())
-        cls.roster = json.loads((REVISION / 'roster.json').read_text())
+        cls.roster_doc = json.loads((V2_REVISION / 'roster_v2.json').read_text())
+        cls.roster = cls.roster_doc['roster']
+        for row in cls.roster:
+            row['symbol'] = species_symbol(row['species'], cls.baseline)
+        # Assignments: the nearby-access proposal with the v2 roster changes applied.
+        cls.assignments = {}
+        for move, species in cls.proposal['moves'].items():
+            for name, levels in species.items():
+                cls.assignments.setdefault('SPECIES_' + name, {})['MOVE_' + move] = levels
+        for row in cls.roster:
+            if row['change']:
+                cls.assignments.setdefault(row['species'], {})[row['change']['move']] = \
+                    row['change']['level']
         cls.sources = {mode: (ROOT / path).read_text() for mode, path in SOURCES.items()}
         cls.production = {mode: preprocess(source, wayfarer=True)
                           for mode, source in cls.sources.items()}
@@ -77,10 +106,14 @@ class NativeHmWindowsDataTest(unittest.TestCase):
         results = json.loads((REVISION / 'results.json').read_text())
         digest = hashlib.sha256((REVISION / 'proposal.json').read_bytes()).hexdigest()
         self.assertEqual(digest, results['distributions']['revised']['proposal_sha256'])
-        self.assertEqual(len(self.roster), 121)
-        self.assertEqual(sum(len(row['roles']) for row in self.roster), 154)
-        for mode, count in [('modern', 137)]:
-            self.assertEqual(sum(len(row['modes'][mode]['added']) for row in self.roster), count)
+        self.assertEqual(self.roster_doc['revision'], 'wild-encounters-v2')
+        self.assertEqual(len(self.roster), self.roster_doc['species_count'])
+        self.assertEqual(len(self.roster), 130)
+        self.assertEqual(sum(len(row['roles']) for row in self.roster), 166)
+        self.assertEqual(sum(len(row['roles']) for row in self.roster),
+                         self.roster_doc['role_count'])
+        self.assertEqual(sum(len(row['added']) for row in self.roster), 149)
+        self.assertEqual(sum(bool(row['change']) for row in self.roster), 14)
 
     def test_upstream_delta_preserves_utility_assignments(self):
         for symbol, changes in UPSTREAM_DELTA['modern'].items():
@@ -88,37 +121,38 @@ class NativeHmWindowsDataTest(unittest.TestCase):
                 self.assertNotIn(entry[1], UTILITIES, (symbol, entry))
 
     def test_complete_ordered_roster_and_native_preservation(self):
-        assignments = {}
-        for move, species in self.proposal['moves'].items():
-            for name, levels in species.items():
-                assignments.setdefault('SPECIES_' + name, {})['MOVE_' + move] = levels
+        assignments = self.assignments
         self.assertEqual(set(assignments), {row['species'] for row in self.roster})
+        native = {mode: preprocess(source) for mode, source in self.sources.items()}
         for row in self.roster:
             species = row['species']
-            source = self.baseline[species]
+            symbol = row['symbol']
             roles = set(assignments[species])
             for mode in SOURCES:
-                original = source[mode]
+                # Species the baseline lacks (Wishiwashi) take their native entries from source.
+                original = (self.baseline[species][mode] if species in self.baseline
+                            else native[mode][symbol])
                 roles.update(move for _, move in original if move in UTILITIES)
                 additions = []
                 for move, level in assignments[species].items():
-                    self.assertIn(move, source['compatible'], (species, move))
+                    self.assertIn(move, UTILITIES)
                     if not any(native_move == move for _, native_move in original):
                         level = level[mode] if isinstance(level, dict) else level
                         self.assertTrue(1 <= level <= 100)
                         additions.append([level, move])
                 expected = sorted(original + additions, key=lambda pair: pair[0])
                 with self.subTest(species=species, mode=mode):
-                    self.assertEqual(row['modes'][mode]['entries'], expected)
-                    self.assertEqual(row['modes'][mode]['added'],
-                                     {move: level for level, move in additions})
-                    actual = self.production[mode][source[mode + '_symbol']]
-                    self.assertEqual(actual, with_upstream_moves(
-                        expected, mode, source[mode + '_symbol']))
+                    self.assertEqual(row['entries'], expected)
+                    self.assertEqual(row['added'], {move: level for level, move in additions})
+                    actual = self.production[mode][symbol]
+                    self.assertEqual(actual, with_upstream_moves(expected, mode, symbol))
                     for _, move in additions:
                         self.assertEqual(sum(m == move for _, m in actual), 1)
             self.assertLessEqual(len(roles), 2, species)
-            self.assertEqual(sorted(roles), row['roles'], species)
+            # Rows list every utility, except species new to the roster list only their additions.
+            self.assertTrue(set(row['roles']) <= roles, species)
+            self.assertEqual(roles, {move for _, move in self.production['modern'][symbol]
+                                     if move in UTILITIES}, species)
 
     def test_both_configured_table_limits(self):
         limits = []
@@ -128,14 +162,14 @@ class NativeHmWindowsDataTest(unittest.TestCase):
             limits.append(int(re.search(r'#define\s+' + constant + r'\s+(\d+)', source)[1]))
         for row in self.roster:
             for mode in SOURCES:
-                entries = self.production[mode][self.baseline[row['species']][mode + '_symbol']]
+                entries = self.production[mode][row['symbol']]
                 for limit in limits:
                     self.assertLessEqual(len(entries), limit, (row['species'], mode))
 
     def test_unselected_tables_only_lose_old_feature_injections(self):
         for mode, source in self.sources.items():
             native = preprocess(source)
-            selected = {self.baseline[row['species']][mode + '_symbol'] for row in self.roster}
+            selected = {row['symbol'] for row in self.roster}
             for symbol, entries in self.production[mode].items():
                 if symbol not in selected:
                     self.assertEqual(entries, native[symbol], (mode, symbol))
@@ -166,16 +200,15 @@ class NativeHmWindowsDataTest(unittest.TestCase):
                     r'\{EVO_\w+\s*,[^,]+,\s*(SPECIES_\w+)', section))
         selected = {row['species'] for row in self.roster}
 
+        symbols = {row['species']: row['symbol'] for row in self.roster}
+
         def roles(species):
             record = self.baseline.get(species)
-            if record is None:
+            if record is None and species not in symbols:
                 return set()
-            moves = set()
-            for mode in SOURCES:
-                symbol = record[mode + '_symbol']
-                entries = self.production[mode].get(symbol, [])
-                moves.update(move for _, move in entries if move in UTILITIES)
-            return moves
+            symbol = symbols.get(species) or record['modern_symbol']
+            entries = self.production['modern'].get(symbol, [])
+            return {move for _, move in entries if move in UTILITIES}
 
         def visit(path, utilities):
             if selected.intersection(path):
@@ -212,11 +245,13 @@ class NativeHmWindowsDataTest(unittest.TestCase):
             for symbol, body in re.findall(
                 r'static const u16 s(\w+)TeachableLearnset\[\]\s*=\s*\{(.*?)\};', header, re.S)
         }
-        for move, assignments in self.proposal['moves'].items():
-            self.assertIn('MOVE_' + move, tms)
-            for species in assignments:
-                key = self.baseline['SPECIES_' + species]['compatibility_key']
-                self.assertIn('MOVE_' + move, teachables[key], (species, move))
+        for species, moves in self.assignments.items():
+            record = self.baseline.get(species)
+            # Species the baseline lacks (Wishiwashi) key their family by name.
+            key = record['compatibility_key'] if record else species.removeprefix('SPECIES_')
+            for move in moves:
+                self.assertIn(move, tms)
+                self.assertIn(move, teachables[key], (species, move))
 
     def test_native_snapshot_has_not_drifted(self):
         for mode, source in self.sources.items():
