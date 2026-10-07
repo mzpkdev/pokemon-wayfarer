@@ -12206,7 +12206,7 @@
     }
   ],
   "baseline": {
-    "projection_sha256": "4c4444b40b78ed37b7d6923d1c86c5103ec87175143520ddb645fc3248208a0c",
+    "projection_sha256": "b69f70194849d5d609bf935ca181c6fb11e4d48ea8f7e22ee7eb785d7971ba99",
     "wild_encounters_sha256": "a2264a3346ae5ac0a37cdc22169a1455b2a51a9b7b626f3090504d84eaabb0b7",
     "event_island_baseline_sha256": "842a00d963e353211de9d3a814aeb87c53274e4e8f34d80162fabafc738d8e9d"
   },
@@ -15556,7 +15556,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/BirthIsland_Exterior_Frlg/map.json",
-            "sha256": "c5f3d90c691f72ba8158a6f4ce7a6ea08863df3e3e7c28db83e047af308a2f4c"
+            "sha256": "a0da0b0ddee1f59f30f406fcbe5232cee13775bb9214f0ba93e7dbb3efbfac91"
           }
         }
       ]
@@ -15571,7 +15571,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/BirthIsland_Harbor_Frlg/map.json",
-            "sha256": "8e0aed374cca9f320488d86e43f633ee8622ec8186dd6cc03cbe295e937d9324"
+            "sha256": "84453301a4f12b51558cb49168cf00e53a27f875f2ae7e3fd85a019ffadf8448"
           }
         }
       ]
@@ -15586,7 +15586,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_1F_Frlg/map.json",
-            "sha256": "45c0aef2c58a29af93aa1d9914ba0365b3e5f897f55c148d25b46230d6c0d28d"
+            "sha256": "43d75b1422dfbb76e27d9ad29c73ba888a3fb6572e01c56c48738dc53246c408"
           }
         }
       ]
@@ -15601,7 +15601,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_B1F_Frlg/map.json",
-            "sha256": "62090c3c9eb4e70e02e38b6c04b595a3f59d3970df2e4b9c72208189db379ed2"
+            "sha256": "706833bf9d1f1de066e1316c09333467900ed92d5d6c5219201ddbb9957bb84b"
           }
         }
       ]
@@ -15616,7 +15616,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_BasePath_B10F_Frlg/map.json",
-            "sha256": "c84901d1ad0e1867c67b5324c8ef96bc689677d2f8b43f909adf492e4f565ea6"
+            "sha256": "7a2a457875a810569c7342e5e790066328bf966e5c3ade565f3491e1f758a75c"
           }
         }
       ]
@@ -15631,7 +15631,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_BasePath_B11F_Frlg/map.json",
-            "sha256": "82b64c04b01aef224ab91f841886994100734c3e3784bacb632a2f49fec23c46"
+            "sha256": "47ea9f58e702430f2dd63f84d443f024513c3dc5849ec0ce9dd6149bc46ed515"
           }
         }
       ]
@@ -15646,7 +15646,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_BasePath_B1F_Frlg/map.json",
-            "sha256": "d7dde41eb16ab6c8c941f82d0f454a054adebefbc3bfa83612b9b178e65055c9"
+            "sha256": "6dd833fa877f9abc781b04be440496735e7ffc38d985705a03d1d6f805eaa01b"
           }
         }
       ]
@@ -15661,7 +15661,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_BasePath_B2F_Frlg/map.json",
-            "sha256": "975e19473562033f7bb9245d31e000e74dcbe3f3b8306779c019b1a43d998d95"
+            "sha256": "f970fe7a03001839ff6ca933dd43c82e8673d56a49d3e1a032444e3e7ce256d6"
           }
         }
       ]
@@ -15676,7 +15676,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_BasePath_B3F_Frlg/map.json",
-            "sha256": "0b3b01eb751d41e4b2d994c9921003a5c1b07a1c53d246d75737a2ec372cd824"
+            "sha256": "15b8898cc59aa67953775210a02e2428b91dba8c0db98fe4ac1df436d1cbcdd2"
           }
         }
       ]
@@ -15691,7 +15691,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_BasePath_B4F_Frlg/map.json",
-            "sha256": "b065d0c867067fb5a34a788ede2e29efb261e3c24fa01d050b539cad2b13c8ba"
+            "sha256": "1127b3f624df1bd0452ee2c00064d40c7487acd9c8b7ffe2768d9ef1e92c322b"
           }
         }
       ]
@@ -15706,7 +15706,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_BasePath_B5F_Frlg/map.json",
-            "sha256": "ab05e96f2c7f425dec217c9d78ef1f654e66e4b497697ea8e0fe95610ed63f37"
+            "sha256": "f4e1be844aeb8e39c2847af87c55d289a8f25b7b9c5a747b264eeb006e7cf68a"
           }
         }
       ]
@@ -15721,7 +15721,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_BasePath_B6F_Frlg/map.json",
-            "sha256": "b3dcfa80f9055ecd7ef83850a47d2012ca66d7afa5243036be5c64e2dc5503ba"
+            "sha256": "c7de3c8d93ce5bff9334028c97d317b96295f723167607de42c3d817e96c91dc"
           }
         }
       ]
@@ -15736,7 +15736,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_BasePath_B7F_Frlg/map.json",
-            "sha256": "a04abc3d06797dba31828e772413510b8638e13ea5a6452af19802fa06fec709"
+            "sha256": "a9cb3fcb08ed491df5faef2185a2762c8f6e43c9463a21548b01932b1433e869"
           }
         }
       ]
@@ -15751,7 +15751,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_BasePath_B8F_Frlg/map.json",
-            "sha256": "8eef46141ed20a8f6808e101d6a5fa37dfb9a6ef89ed784e2687aa6b978af5c7"
+            "sha256": "7e6c11c4b756338bcaad0272f41ffd4523fa80cf80c6f5ba87be70afa0e12b96"
           }
         }
       ]
@@ -15766,7 +15766,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_BasePath_B9F_Frlg/map.json",
-            "sha256": "c550a92bd3a5bf0abb2c5c9e454845baf0763a48f3097bf25c5b4a6408640252"
+            "sha256": "7e76bc0e4a37924319aa1b7e08ff4499bed6a8159bc5539a546089dacf6d40c5"
           }
         }
       ]
@@ -15781,7 +15781,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_Base_Frlg/map.json",
-            "sha256": "2ff03f8b4e130f7e8f8a5fbe8474d471ad5809c134733016b50900d2ccc8312e"
+            "sha256": "a1c540ecaeec34d0ab9b98512dded3b3fa1e98aa664f937488a08d0aa72f268c"
           }
         }
       ]
@@ -15796,7 +15796,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_Exterior_Frlg/map.json",
-            "sha256": "57218234f46815c2ea1a81b94eb7fb8aec03f16ed0f99ace24613e21799e060d"
+            "sha256": "2d3fb40dec074f5424d5feca59f119d3ebea28657a024e35d3781106ff25cde8"
           }
         }
       ]
@@ -15811,7 +15811,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_Fork_Frlg/map.json",
-            "sha256": "5ba229cf68b4c93b95852266630cc2aad8eab07600da0d3b1f7d1805de1d2f4f"
+            "sha256": "d26c1358970c1b69b8b230daec4679d5e0a809023d5f718ced04869685eed147"
           }
         }
       ]
@@ -15826,7 +15826,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_Harbor_Frlg/map.json",
-            "sha256": "1a022f400ad3e908dbc0d5c0137c85210ec07babec917d29c330d5de8ae09f96"
+            "sha256": "92aef468c03ab8beb161db2ff81e4fc0db3b43bb1d812bcf6547369497824e3a"
           }
         }
       ]
@@ -15841,7 +15841,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_SummitPath_2F_Frlg/map.json",
-            "sha256": "7e1face63bcc07b84171138d3013f9cc783aa1b790a95f5ad23a89f86100ec82"
+            "sha256": "29227cb997c87f6158dc727915b8934a774ed4eb895ad28138cb4ca1f8735e4c"
           }
         }
       ]
@@ -15856,7 +15856,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_SummitPath_3F_Frlg/map.json",
-            "sha256": "e0aea6b34c1c61024c70d5c92f68e20f4b0aee549db2fa456c334c9028daa8ac"
+            "sha256": "fb1ac1ced11e5fb3a002d9a8287442f79367097aca5f85043e4a88ccf143ae43"
           }
         }
       ]
@@ -15871,7 +15871,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_SummitPath_4F_Frlg/map.json",
-            "sha256": "0533b4f68aa3f9ca75e9acd4af00a5f4ccaa5208c97bb51bd9e666e8990bf76d"
+            "sha256": "2c9ea3624d70d131474744a91e44134e066924128d3b880dbb1bb73a7e0e8a83"
           }
         }
       ]
@@ -15886,7 +15886,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_SummitPath_5F_Frlg/map.json",
-            "sha256": "8d3521a29fbc60a67575a4368ea870477edd0c9ec9d8873bf13344022e194e81"
+            "sha256": "95783f3a6a5a92739bf617a2ce49e3aff965310e37936b3d38fc8c4a2a13aea5"
           }
         }
       ]
@@ -15901,7 +15901,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/NavelRock_Summit_Frlg/map.json",
-            "sha256": "dbfeb12224148269e1c139072ed2bfb2c6dae3927b96004033818288b8dba480"
+            "sha256": "e1fd15381832f19af786c3e03e7e8f53097ae604c92618259de4bcce12b41aa1"
           }
         }
       ]
@@ -15916,7 +15916,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/SevenIsland_UnusedHouse/map.json",
-            "sha256": "a19d43410d0c3a8826e6ba92f77c1beb5c3bf22b12902840ff946126807cd4e4"
+            "sha256": "6456cd456d6833a8f9d27d0c4a607abb9c2cf8fc00bcb39fd4549fc818eaa415"
           }
         }
       ]
@@ -16004,7 +16004,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/SevenIsland_PokemonCenter_2F_Frlg/map.json",
-            "sha256": "f0b3efb3439fe9fa1e4e14784d6f2c1f12fdebfaebd2e3bc0acd6a6a48418a37"
+            "sha256": "009c2593861f16c79a55f85a7852735d202204a3276a9a8e89ec3539ac4399c8"
           }
         }
       ]
@@ -16020,7 +16020,7 @@
           "index": 0,
           "source": {
             "path": "data/maps/SevenIsland_PokemonCenter_2F_Frlg/map.json",
-            "sha256": "f0b3efb3439fe9fa1e4e14784d6f2c1f12fdebfaebd2e3bc0acd6a6a48418a37"
+            "sha256": "009c2593861f16c79a55f85a7852735d202204a3276a9a8e89ec3539ac4399c8"
           }
         }
       ]
