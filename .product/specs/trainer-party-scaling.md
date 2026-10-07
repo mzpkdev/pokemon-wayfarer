@@ -230,14 +230,18 @@ natures, party size and order don't change.
    theme are chosen by trainer ID. A gender-specific evolution sets the slot's
    gender.
 4. **One evolved copy per line.** Within one team, only the highest-level copy
-   of a line reaches its final stage (ties go to the later slot). In a
-   three-stage line, the next copy may reach the middle stage. Every other copy
-   keeps its authored species. Six Magikarp become one Gyarados and five
-   Magikarp, not six Gyarados.
+   of a line reaches its final stage (ties go to the later slot). A copy
+   already authored at the final stage uses up that one evolved copy. When a
+   team has three or more copies of a three-stage line, the next copy may
+   reach the middle stage. Every other copy keeps its authored species. Six
+   Magikarp become one Gyarados and five Magikarp, two Zubat become one Crobat
+   and one Zubat, and five Geodude become one Golem, one Graveler and three
+   Geodude.
 5. **Identity exceptions.** A slot keeps its authored species when it holds an
-   Everstone, belongs to a child class such as a Tuber, belongs to a team made
-   only of babies, or is a legendary, mythical or special line such as Cosmog
-   or Type: Null.
+   Everstone or Eviolite, belongs to a child class (Tuber, School Kid, Twins,
+   Sis and Bro, Preschooler), belongs to a team made only of babies, or is a
+   legendary, mythical or special line such as Cosmog or Type: Null.
+   Youngsters aren't a child class: a Youngster's Rattata evolves.
 
 **Step-back.** The scaler lowers each slot through the shared
 [downward rule](player-trainer-rating.md#evolution-stages) until the effective
