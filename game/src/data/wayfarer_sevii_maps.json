@@ -12208,7 +12208,7 @@
   "baseline": {
     "projection_sha256": "b69f70194849d5d609bf935ca181c6fb11e4d48ea8f7e22ee7eb785d7971ba99",
     "wild_encounters_sha256": "a2264a3346ae5ac0a37cdc22169a1455b2a51a9b7b626f3090504d84eaabb0b7",
-    "event_island_baseline_sha256": "c0b48f82b72f45957bb1525bd19932145aa53f6900f2c5f795d392f7ca8a938b"
+    "event_island_baseline_sha256": "75086dcd44b31f457405a6b9f0d6598832ead0532b8437ea0fdf4752768f0a9f"
   },
   "content_domains": {
     "exploration": {
