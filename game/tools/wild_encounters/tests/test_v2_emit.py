@@ -94,9 +94,22 @@ class V2EmitTests(unittest.TestCase):
                     self.assertEqual(rate, expected, name)
                 found.setdefault(method, set()).add(expected)
         self.assertEqual(found, {"land": {10, 20}, "surf": {4}, "fish": {30}, "rock": {60}})
-        for key in self.keys:
-            if self.meta[key]["map_type"] == "UNDERWATER":
-                self.assertEqual(v2_emit.table_rate(key, "surf", self.meta), 4, key)
+
+    def test_named_maps_have_their_authored_rates(self):
+        # Written out by hand so the check does not follow the emitter's own rule.
+        named = {
+            ("MAP_ROUTE1_HNS", "land"): 20,
+            ("MAP_POWER_PLANT", "land"): 10,
+            ("MAP_MT_MOON_CAVE_HNS", "land"): 10,
+            ("MAP_UNDERWATER_ROUTE124", "surf"): 4,
+            ("MAP_ROUTE124", "fish"): 30,
+            ("MAP_SNOWSWEPT_CAVERN_HNS", "rock"): 60,
+        }
+        for (key, method), expected in named.items():
+            for time in ("day", "night"):
+                name = f"{v2_emit.label_for(key)}_{time.capitalize()}_{v2_emit.METHODS[method][2]}"
+                rate = int(re.search(rf"{name}Info = \{{ (\d+),", self.arrays).group(1))
+                self.assertEqual(rate, expected, name)
 
     def test_place_records_equal_the_reference_model_for_every_map(self):
         self.assertEqual(len(self.places), len(self.keys))
