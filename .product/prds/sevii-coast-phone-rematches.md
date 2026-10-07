@@ -33,8 +33,9 @@ stronger team:
 That's 41 phone contacts. A family can be a pair, such as Twins, who share one
 number and battle together.
 
-The other 32 Sevii families have only their base team: the Vs. Seeker
-registry simply repeats it. They get no number. They still wander and battle
+The other 32 Sevii families have only their base team, as in FireRed and
+LeafGreen, whose trainer data has no rematch team for any of them. The Vs.
+Seeker registry simply repeats their base team. They get no number. They still wander and battle
 you again under daily world slots, and regular trainer scaling still makes
 them stronger as your Trainer Rating grows.
 
@@ -92,11 +93,6 @@ the same set an HNS phone trainer has: three chats and one battle request.
 
 - Do the new texts read as the same trainers you fought?
 - With about 140 route trainers able to call, does the phone ring too often?
-
-## Open questions
-
-- Should the 32 Sevii families without a stronger team also get numbers, just
-  to chat and call for a battle with their scaled base team?
 
 ## References
 
