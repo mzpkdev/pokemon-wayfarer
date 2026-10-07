@@ -100,7 +100,7 @@ badges):
 | Road level | interpolated | (0,5) (40,20) (80,38) (120,56) (160,74) | [Wild level scaling](wild-level-scaling.md#reach-levels) |
 | Wilds bonus | interpolated | (0,4) (80,6) (160,11) | [Wild level scaling](wild-level-scaling.md#reach-levels) |
 | Outlands bonus | interpolated | (0,8) (40,8) (80,12) (160,24) | [Wild level scaling](wild-level-scaling.md#reach-levels) |
-| Regular trainer level curve | interpolated | (0,9) (40,27) (80,44) (120,62) (160,82) | [Trainer party scaling](trainer-party-scaling.md#v0-regular-trainer-level-curve) |
+| Gym member level curve (regular trainers use reach levels) | interpolated | (0,9) (40,27) (80,44) (120,62) (160,82) | [Trainer party scaling](trainer-party-scaling.md#v0-levels) |
 | Poké Mart essentials tier | step | tiers 0–5 at TR 0, 10, 40, 70, 80, 120 | [Global TR Poké Marts](global-tr-pokemarts.md#v0-thresholds) |
 
 Intent:

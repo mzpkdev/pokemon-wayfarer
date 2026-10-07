@@ -9,9 +9,9 @@ TR saved when entering a league, so League levels scale from that saved TR. See
 [the circuit producer](../../game/src/league_circuit.c). The v0 TR design
 (rescaled formula, uncapped TR, scalers, and notable trainers' separate TR) is
 in [Player Trainer Rating](player-trainer-rating.md); this document owns the
-v0 regular trainer level curve in
-[v0 regular trainer level curve](#v0-regular-trainer-level-curve). Everything
-else here is Today.
+v0 levels in [v0 levels](#v0-levels) and the v0 rosters in
+[v0 final-stage rosters](#v0-final-stage-rosters). Everything else here is
+Today.
 
 ## Scope and authority
 
@@ -128,14 +128,62 @@ paired with a regular trainer remains unscaled while the regular trainer scales.
 Reuse the snapshot if setup reconstructs a party; discard it after the battle.
 Retry after a loss starts a new snapshot.
 
-## v0 regular trainer level curve
+## v0 levels
 
-On the [v0 TR scale](player-trainer-rating.md#formula-v0) the regular
-trainer level curve uses these placeholder anchors instead of the table above,
-interpolated as a [scaler](player-trainer-rating.md#scalers) and flat past
-TR 160:
+On the [v0 TR scale](player-trainer-rating.md#formula-v0), `ORDINARY` and
+`GYM_MEMBER` slots no longer use the Today curve above. All values are
+placeholders for playtesting.
 
-| Badges | v0 TR | Regular trainer level | Level cap | Gap to cap |
+### Reach levels for ORDINARY
+
+An `ORDINARY` slot's level comes from the reach of the map where the battle
+starts, the same reach and dungeon levels wild Pokémon use:
+
+```text
+placeLevel = reachLevel(battleMap, Rating)
+effectiveLevel = clamp(placeLevel + TRAINER_REACH_BONUS, 1, 100)
+TRAINER_REACH_BONUS = 3
+```
+
+`reachLevel` is the [wild level scaling](wild-level-scaling.md#reach-levels)
+level for a Road, Wilds or Outlands map, or the
+[dungeon level](wild-level-scaling.md#dungeon-levels) of the map's floor,
+floor minimum included. Take the level before any wild-only adjustment: no
+stage mix, encounter roll, prowler minimum or random jitter. Every slot of a
+party gets the same `effectiveLevel`. The authored level no longer adjusts it
+(`identityAdjustment` is dropped), so party order is the only remaining
+difference between slots.
+
+The battle map is `gSaveBlock1Ptr->location` at battle construction. A
+wandering trainer from [daily world slots](../prds/daily-world-slots.md)
+therefore takes the level of the spot they stand on that day, and both
+opponents of a two-Trainer battle share one place level.
+
+### Maps without a reach of their own
+
+[Reach assignments](reach-assignments.md) only cover maps with wild
+encounters. Every other map that hosts a covered Trainer resolves its reach at
+generation time, in this order:
+
+1. The map is listed in reach assignments: use that reach or dungeon floor.
+2. The map is part of a dungeon (a building, ship or tower floor without wild
+   encounters, such as an S.S. Anne cabin): use that dungeon. The dungeon and
+   floor are an authored entry in a trainer reach table kept beside the scaling
+   manifest, with the same floor order rules as reach assignments.
+3. Otherwise use Road. This covers towns, houses and other interiors on the
+   safe path.
+
+Generation emits a compact map-to-reach table for every map that hosts a
+covered Trainer, plus a report of which rule resolved each map. A map listed
+under rule 2 that is missing from its dungeon's floor order fails generation.
+A covered Trainer on a map with no resolvable entry fails generation; it never
+falls back silently at runtime.
+
+### Gym members
+
+`GYM_MEMBER` slots keep a TR curve, because Gyms aren't on the danger map:
+
+| Badges | v0 TR | Gym member base level | Level cap | Gap to cap |
 | ---: | ---: | ---: | ---: | ---: |
 | 0 | 0 | 9 | 15 | −6 |
 | 4 | 40 | 27 | 28 | −1 |
@@ -143,10 +191,66 @@ TR 160:
 | 16 | 120 | 62 | 75 | −13 |
 | 24 | 160 | 82 | 100 | −18 |
 
-Regular trainers press close to the level cap early and fall behind late; the
-late challenge comes from [notable trainers](notable-trainers.md). The authored
-level bonus, the Gym-member +2, the 1–100 clamp, and the battle-start snapshot
-are unchanged and apply on top of this curve.
+The curve interpolates as a [scaler](player-trainer-rating.md#scalers) and stays
+flat past TR 160. The Gym-member +2 and the 1–100 clamp apply on top. The
+authored level adjustment is dropped here too.
+
+### Unchanged
+
+The battle-start TR snapshot, retry behavior, two-opponent rules and the
+level-100 clamp work as above. No enemy level is clamped to the player's level
+cap.
+
+## v0 final-stage rosters
+
+In v0, regular trainers' Pokémon evolve as their level rises. This replaces
+"Do not forward-evolve base species" and the Later item below.
+
+**Authoring.** Every `ORDINARY` and `GYM_MEMBER` roster, rematch teams and the
+ordinary Sevii, Kanto coast and S.S. Anne rosters included, names each slot at
+the highest stage it may reach. A reproducible authoring tool proposes the
+source edits from these rules, and authors review its report. Levels, IVs,
+natures, party size and order don't change.
+
+1. **Final stage.** A slot names the final stage of its line, as compiled for
+   Wayfarer. Later-generation extensions count, such as Magnezone, Togekiss,
+   Annihilape or Kingambit, matching the
+   [natives rule](../prds/wild-encounters-v2.md#natives) that later evolutions
+   come with the lines they extend.
+2. **Regional forms stay home.** A regional form, or an evolution that only
+   happens in one region, is chosen only for a trainer in that region: Alolan
+   forms in Alola, Galarian forms on Sevii, Hisuian forms and evolutions in
+   Sinjoh. Elsewhere the standard form is used, and a line whose only further
+   step is region-locked stops before it.
+3. **Branches follow the trainer.** A branching line takes one final form per
+   slot, chosen deterministically from the trainer's class, theme and gender:
+   for example Poliwrath for fighting classes and Politoed otherwise, Bellossom
+   for Aroma Ladies and Beauties, Gallade for male fighters, Froslass for female
+   trainers, and Eevee's form by the trainer's type theme. Branches with no
+   theme are chosen by trainer ID. A gender-specific evolution sets the slot's
+   gender.
+4. **One evolved copy per line.** Within one team, only the highest-level copy
+   of a line reaches its final stage (ties go to the later slot). In a
+   three-stage line, the next copy may reach the middle stage. Every other copy
+   keeps its authored species. Six Magikarp become one Gyarados and five
+   Magikarp, not six Gyarados.
+5. **Identity exceptions.** A slot keeps its authored species when it holds an
+   Everstone, belongs to a child class such as a Tuber, belongs to a team made
+   only of babies, or is a legendary, mythical or special line such as Cosmog
+   or Type: Null.
+
+**Step-back.** The scaler lowers each slot through the shared
+[downward rule](player-trainer-rating.md#evolution-stages) until the effective
+level supports its stage, for every evolution method. Level evolutions step
+back at their evolution level, and stone, trade, friendship and other
+evolutions through one shared authored level. Reuse the notable trainers'
+evolution-stage table rather than a second copy. An authored early stage is a
+ceiling: the scaler never evolves a slot past what its roster names.
+
+**Report.** The authoring report lists every slot's before and after species,
+the rule that applied, branch choices, duplicate caps and exceptions. The
+scaling audit adds representative parties at low, middle and high TR showing
+non-level step-back.
 
 ## Species, moves, and per-Pokémon fields
 
@@ -158,7 +262,9 @@ the existing ordinary-wild species inventory is not sufficient by assumption.
 Resolve ambiguous ancestry explicitly and reject cycles during generation.
 
 Do not apply wild species floors or remove a party slot. Non-level evolutions
-have no inferred reverse relationship. Do not forward-evolve base species.
+have no inferred reverse relationship. Do not forward-evolve base species. In
+v0 rosters are authored at their final stages instead; see
+[v0 final-stage rosters](#v0-final-stage-rosters).
 Preserve exact forms unless a validated predecessor edge specifies otherwise.
 Report powerful species with no numeric predecessor for balance review.
 
@@ -300,11 +406,6 @@ passes. Keep one build-time feature switch that restores authored construction
 for rollback; it must bypass level, species, and move transformation together.
 No save migration is required. Formula changes must regenerate the report and
 repeat affected balance checks.
-
-## Later
-
-- Forward evolution for regular trainers: late routes currently show
-  high-level unevolved species.
 
 ## References
 

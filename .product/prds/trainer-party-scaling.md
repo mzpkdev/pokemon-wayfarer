@@ -109,7 +109,7 @@ are hard.
 - **Gym members** stand inside Gyms, which have no place on the danger map.
   They keep the v0 regular level curve with their two-level bonus. The exact
   anchors are in the
-  [technical specification](../specs/trainer-party-scaling.md#v0-regular-trainer-level-curve).
+  [technical specification](../specs/trainer-party-scaling.md#gym-members).
 - **Wandering trainers** under [daily world slots](daily-world-slots.md) take
   the level of the spot they stand in that day.
 
