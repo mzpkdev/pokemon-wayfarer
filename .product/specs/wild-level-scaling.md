@@ -148,6 +148,11 @@ Spirit, treat the top of the spread as the top of a slot's level range, as the
 engine already does. Safari Zones, the Bug-Catching Contest and Feebas's
 fishing tiles use their place's level like any other table.
 
+**Mass outbreaks** from the TV take their map's place level with the same
+spread. The outbreak keeps its species, with no stage mix, and the young-level
+limit and prowler minimum apply to that species. Repel compares that level. A
+DexNav chain's level bonus is held to the same limits.
+
 ### Stage mix
 
 The stage comes from the encounter level and the slot's stage cap:

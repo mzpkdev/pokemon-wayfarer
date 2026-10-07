@@ -88,6 +88,8 @@ bool32 OnStep_DexNavSearch(void);
 // builds and let tests inspect only the normal-profile boundary: hidden
 // DexNav data remains a separate raw source.
 u16 DexNavGetHiddenProfileSpeciesForTesting(const struct WildPokemonInfo *info, u8 slot);
+// The chain level bonus on a rolled outcome (consumes RNG), as a search applies it.
+u8 DexNavApplyChainLevelBonusToOutcomeForTesting(u16 species, u32 headerId, u8 level);
 // Models only the ordinary detector fallback's weighted slot then optional
 // lure mirror, with supplied rolls. It never applies to raw hidden entries.
 bool8 DexNavSelectProfileFallbackSlotWithRollsForTesting(const struct WildEncounterProfileView *view, u16 selectionRoll, bool8 lureActive, u8 lureRoll, u8 *slot);

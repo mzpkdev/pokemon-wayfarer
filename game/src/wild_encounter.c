@@ -128,16 +128,6 @@ static const u8 sWildEncounterRockWeights[ROCK_WILD_COUNT] =
     60, 30, 5, 4, 1,
 };
 
-static u16 GetWildMonHeaderCount(void)
-{
-    u16 count;
-
-    for (count = 0; gWildMonHeaders[count].mapGroup != MAP_GROUP(MAP_UNDEFINED); count++)
-    {
-    }
-    return count;
-}
-
 u32 GetWildMonHeaderIdForMap(u8 mapGroup, u8 mapNum)
 {
     u32 i;
@@ -187,7 +177,7 @@ bool8 GetWildEncounterProfileView(const struct WildEncounterProfileContext *cont
 
     if (context == NULL || view == NULL
      || context->headerId == HEADER_NONE
-     || context->headerId >= GetWildMonHeaderCount()
+     || context->headerId >= gWildMonHeaderCount
      || (s32)context->timeOfDay < 0
      || context->timeOfDay >= TIMES_OF_DAY_COUNT)
         return FALSE;
@@ -340,7 +330,7 @@ u32 GetWildEncounterPlaceLevel(u32 headerId, u32 trainerRating)
     u32 road, wilds, outlands, first, last, level;
     u32 floorLevel = 0;
 
-    if (headerId == HEADER_NONE || headerId >= GetWildMonHeaderCount())
+    if (headerId == HEADER_NONE || headerId >= gWildMonHeaderCount)
         return 0;
 
     place = &gWildEncounterPlaces[headerId];
@@ -406,7 +396,7 @@ u32 GetWildEncounterPlaceLevel(u32 headerId, u32 trainerRating)
 
 u32 GetWildEncounterRateForHeader(u32 headerId, u32 encounterRate)
 {
-    if (headerId != HEADER_NONE && gWildEncounterPlaces[headerId].reach == WILD_REACH_ROAD)
+    if (headerId < gWildMonHeaderCount && gWildEncounterPlaces[headerId].reach == WILD_REACH_ROAD)
         return (encounterRate * WILD_ROAD_RATE_PERCENT + 50) / 100;
     return encounterRate;
 }
@@ -497,20 +487,26 @@ static void ResolveWildStage(u16 cap, u32 level, struct WildStage *stage)
     }
 }
 
-static u32 GetWildEncounterLevelFromSpread(u16 cap, u32 placeLevel, u32 region, s32 spread)
+u32 GetWildEncounterClampedLevel(u16 species, u32 headerId, s32 level)
 {
-    return ApplyWildLevelRules((s32)placeLevel + spread, GetWildProwlerMinimumLevel(cap, region), GetWildYoungLevelLimit(cap));
+    u32 region = headerId < gWildMonHeaderCount ? gWildEncounterPlaces[headerId].region : WILD_PLACE_REGION_OTHER;
+
+    return ApplyWildLevelRules(level, GetWildProwlerMinimumLevel(species, region), GetWildYoungLevelLimit(species));
 }
 
 static u32 BuildWildSlotOutcomes(u16 cap, u32 headerId, u32 trainerRating, bool8 isWildRandomized, struct WildEncounterSlotOutcome *outcomes)
 {
-    u32 placeLevel = GetWildEncounterPlaceLevel(headerId, trainerRating);
-    u32 region = gWildEncounterPlaces[headerId].region;
+    u32 placeLevel = GetWildEncounterPlaceLevel(headerId, trainerRating); // 0 for an unknown header
+    u32 prowlerMinimum;
     u32 count = 0;
+    s32 youngLimit;
     s32 spread;
 
     if (placeLevel == 0 || cap == SPECIES_NONE)
         return 0;
+    // Only the cap decides these, so they are the same for every spread step.
+    prowlerMinimum = GetWildProwlerMinimumLevel(cap, gWildEncounterPlaces[headerId].region);
+    youngLimit = GetWildYoungLevelLimit(cap);
 
     for (spread = -WILD_SPREAD; spread <= WILD_SPREAD; spread++)
     {
@@ -529,7 +525,7 @@ static u32 BuildWildSlotOutcomes(u16 cap, u32 headerId, u32 trainerRating, bool8
             continue;
         }
 
-        level = GetWildEncounterLevelFromSpread(cap, placeLevel, region, spread);
+        level = ApplyWildLevelRules((s32)placeLevel + spread, prowlerMinimum, youngLimit);
         ResolveWildStage(cap, level, &stage);
         outcomes[count].species = stage.species;
         outcomes[count].level = level;
@@ -564,43 +560,44 @@ u32 GetCurrentWildEncounterSlotOutcomes(const struct WildEncounterProfileView *v
     return BuildWildSlotOutcomes(entry->species, view->headerId, GetTrainerRating(), IsCurrentWildEncounterRandomized(), outcomes);
 }
 
-// Rolls one encounter of a species capped at `cap` in a place. The spread is uniform
-// over -2..+2. Pressure, Hustle and Vital Spirit favour the top of it, and a Lure
-// takes one level above it. The stage roll then keeps the stage with its weight.
+// The spread of one encounter, -2..+2 (+3 under a Lure). Pressure, Hustle and
+// Vital Spirit favour the top of it. Consumes RNG.
+static s32 RollWildSpread(void)
+{
+    u32 rand;
+
+    if (LURE_STEP_COUNT != 0)
+        return WILD_SPREAD + 1;
+
+    rand = Random() % (2 * WILD_SPREAD + 1);
+    if (!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
+    {
+        enum Ability ability = GetMonAbility(&gPlayerParty[0]);
+
+        if (ability == ABILITY_HUSTLE || ability == ABILITY_VITAL_SPIRIT || ability == ABILITY_PRESSURE)
+        {
+            if (Random() % 2 == 0)
+                rand = 2 * WILD_SPREAD;
+            else if (rand != 0)
+                rand--;
+        }
+    }
+    return (s32)rand - WILD_SPREAD;
+}
+
+// Rolls one encounter of a species capped at `cap` in a place: the spread, then
+// the stage roll keeps the stage with its weight.
 static bool8 RollWildSpecies(u16 cap, u32 headerId, struct WildEncounterSpeciesOutcome *outcome)
 {
     u32 placeLevel = GetWildEncounterPlaceLevel(headerId, GetTrainerRating());
-    u32 region;
     s32 spread;
     u32 level;
     struct WildStage stage;
 
     if (placeLevel == 0 || cap == SPECIES_NONE)
         return FALSE;
-    region = gWildEncounterPlaces[headerId].region;
 
-    if (LURE_STEP_COUNT != 0)
-    {
-        spread = WILD_SPREAD + 1;
-    }
-    else
-    {
-        u32 rand = Random() % (2 * WILD_SPREAD + 1);
-
-        if (!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
-        {
-            enum Ability ability = GetMonAbility(&gPlayerParty[0]);
-
-            if (ability == ABILITY_HUSTLE || ability == ABILITY_VITAL_SPIRIT || ability == ABILITY_PRESSURE)
-            {
-                if (Random() % 2 == 0)
-                    rand = 2 * WILD_SPREAD;
-                else if (rand != 0)
-                    rand--;
-            }
-        }
-        spread = (s32)rand - WILD_SPREAD;
-    }
+    spread = RollWildSpread();
 
     if (IsCurrentWildEncounterRandomized())
     {
@@ -609,7 +606,7 @@ static bool8 RollWildSpecies(u16 cap, u32 headerId, struct WildEncounterSpeciesO
         return TRUE;
     }
 
-    level = GetWildEncounterLevelFromSpread(cap, placeLevel, region, spread);
+    level = GetWildEncounterClampedLevel(cap, headerId, (s32)placeLevel + spread);
     ResolveWildStage(cap, level, &stage);
     outcome->species = stage.species;
     if (stage.lower != SPECIES_NONE && Random() % WILD_STAGE_KEEP_DENOMINATOR >= stage.keepWeight)
@@ -1077,14 +1074,28 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum 
     return TRUE;
 }
 
+// An outbreak keeps its species (no stage mix) but takes the current place's level
+// with the ordinary spread and the same young limit and prowler minimum. A map
+// without a header keeps the authored level.
+u8 GetMassOutbreakLevel(void)
+{
+    u32 headerId = GetCurrentMapWildMonHeaderId();
+    u32 placeLevel = GetWildEncounterPlaceLevel(headerId, GetTrainerRating());
+
+    if (placeLevel == 0)
+        return gSaveBlock1Ptr->outbreakPokemonLevel;
+    return GetWildEncounterClampedLevel(gSaveBlock1Ptr->outbreakPokemonSpecies, headerId, (s32)placeLevel + RollWildSpread());
+}
+
 static bool8 SetUpMassOutbreakEncounter(u8 flags)
 {
     u16 i;
+    u8 level = GetMassOutbreakLevel();
 
-    if (flags & WILD_CHECK_REPEL && !IsWildLevelAllowedByRepel(gSaveBlock1Ptr->outbreakPokemonLevel))
+    if (flags & WILD_CHECK_REPEL && !IsWildLevelAllowedByRepel(level))
         return FALSE;
 
-    CreateWildMon(gSaveBlock1Ptr->outbreakPokemonSpecies, gSaveBlock1Ptr->outbreakPokemonLevel);
+    CreateWildMon(gSaveBlock1Ptr->outbreakPokemonSpecies, level);
     for (i = 0; i < MAX_MON_MOVES; i++)
         SetMonMoveSlot(&gEnemyParty[0], gSaveBlock1Ptr->outbreakPokemonMoves[i], i);
 

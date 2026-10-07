@@ -87,7 +87,7 @@ describe("generated v2 encounter projection", () => {
     })
     expect(day.methods.map((method) => method.type)).toEqual(["land_mons"])
     const land = day.methods[0]!
-    expect(land.encounterRate).toBe(20)
+    expect(land.encounterRate).toBe(12) // Route 1 is a Road: 60% of its table rate of 20
     expect(land.slots).toHaveLength(12)
     expect(land.slots[0]).toMatchObject({ slotIndex: 0, speciesId: "SPECIES_PIDGEOT" })
     expect(land.profiles).toEqual([

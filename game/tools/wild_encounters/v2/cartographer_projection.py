@@ -2,8 +2,8 @@
 
 Writes one JSON document describing the Wayfarer wild tables as the v2 model plays them: for
 every header key (a map, or a Bug Contest day) its place (reach, dungeon intent and floor), the
-rate and the day and night species per method, the place level at every Trainer Rating, and the
-exact outcome distribution of every slot species at every place level it can reach.
+rate the game rolls (60% of the table rate on Road maps; the table rate stays as tableRate) and the
+day and night species per method, the place level at every Trainer Rating, and the exact outcome distribution of every slot species at every place level it can reach.
 
 Everything is computed by hm_model.py (the reference level model: place_level, slot_dist), so the
 catalog shows what the game rolls. Nothing here touches the header emission.
@@ -23,12 +23,18 @@ SCHEMA_VERSION = 3
 TRAINER_RATING = (0, 160)  # the level scalers are flat past 160
 METHODS = ("land", "surf", "rock", "fish")
 FISHING_RODS = ("old", "good", "super")
+ROAD_RATE_PERCENT = 60
 OUTCOME_DENOMINATOR = 50  # slot_dist probabilities are multiples of 1/50
 
 
 def region_class(region):
     """The only regions that change an outcome: prowler minimums are lifted in Safari and Sinjoh places."""
     return region if region in ("Safari", "Sinjoh") else "Other"
+
+
+def rolled_rate(reach, table_rate):
+    """The rate the game rolls: Road maps roll 60% of the table's rate, rounded half up (GetWildEncounterRateForHeader)."""
+    return (table_rate * ROAD_RATE_PERCENT + 50) // 100 if reach == "Road" else table_rate
 
 
 def distribution(species, place_level, region):
@@ -60,7 +66,8 @@ def build():
         methods = {}
         for method, table in v2_emit.slot_lists(key, tables).items():
             day_rate, night_rate, defaulted = v2_emit.table_rate(key, method, rates, defaults)
-            methods[method] = {"rate": {"day": day_rate, "night": night_rate}, "defaultRate": defaulted,
+            methods[method] = {"rate": {"day": rolled_rate(reach, day_rate), "night": rolled_rate(reach, night_rate)},
+                               "tableRate": {"day": day_rate, "night": night_rate}, "defaultRate": defaulted,
                                "day": table["day"], "night": table["night"]}
             for species in table["day"] + table["night"]:
                 if species != "NONE":

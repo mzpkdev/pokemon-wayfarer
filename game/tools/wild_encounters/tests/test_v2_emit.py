@@ -13,6 +13,7 @@ sys.path.insert(0, str(TOOLS / "v2"))
 import wild_encounters_to_header as generator  # noqa: E402
 import v2_emit  # noqa: E402
 import hm_model  # noqa: E402
+import cartographer_projection  # noqa: E402
 
 TIMES = ("TIME_MORNING", "TIME_DAY", "TIME_EVENING", "TIME_NIGHT")
 INFO_MEMBERS = {"land": "landMonsInfo", "surf": "waterMonsInfo", "rock": "rockSmashMonsInfo", "fish": "fishingMonsInfo"}
@@ -133,6 +134,28 @@ class V2EmitTests(unittest.TestCase):
                 self.assertEqual(emitted(name, region), hm_model.prowler_min(name, region), f"{name} in {region}")
         self.assertEqual(sorted({minimum for minimum, _, _ in by_id.values()}), [20, 25, 30])
 
+    def test_a_prowler_row_covers_every_non_regional_form_but_no_regional_form(self):
+        by_id = {self.species[name]: minimum for name, minimum, _, _ in self.prowlers}
+
+        def emitted(name):
+            return by_id.get(self.species["SPECIES_" + name])
+
+        for name in ("ORICORIO_PAU", "ORICORIO_POM_POM", "ORICORIO_SENSU", "ORICORIO_BAILE", "FURFROU_HEART",
+                     "MIMIKYU_BUSTED", "CRAMORANT_GULPING", "INDEEDEE_F", "EISCUE_NOICE"):
+            self.assertEqual(emitted(name), 20, name)
+            self.assertEqual(hm_model.prowler_min(name, "Other"), 20, name)
+        for name in ("VULPIX_ALOLA", "TAUROS_PALDEA_AQUA", "BASCULIN_RED_STRIPED"):
+            self.assertIsNone(emitted(name), name)
+            self.assertIsNone(hm_model.prowler_min(name, "Other"), name)
+        # Kalos rewards keep their Safari exemption on every form.
+        row = next(r for r in self.prowlers if r[0] == "SPECIES_FURFROU_HEART")
+        self.assertEqual(row[2], 1)
+
+    def test_cartographer_shows_the_rate_the_game_rolls(self):
+        rolled = cartographer_projection.rolled_rate
+        self.assertEqual([rolled("Road", rate) for rate in (1, 7, 20, 25, 30, 255)], [1, 4, 12, 15, 18, 153])
+        self.assertEqual([rolled(reach, 30) for reach in ("Wilds", "Outlands", "Dungeon")], [30, 30, 30])
+
     def test_every_map_constant_exists_and_rates_cover_extracted_methods(self):
         ids = set()
         for path in (ROOT / "data/maps").glob("*/map.json"):
@@ -151,7 +174,7 @@ class V2EmitTests(unittest.TestCase):
             generator.generate(output_path=output)
             text = output.read_text(encoding="utf-8")
         for symbol in ("gWildMonHeaders[]", "gBattlePikeWildMonHeaders[]", "gBattlePyramidWildMonHeaders[]", "gWildEncounterPlaces[]",
-                       "gWildProwlerMinimums[]", "gWildProwlerMinimumCount", "gStandardRodFishingWeights", "ENCOUNTER_CHANCE_LAND_MONS_TOTAL"):
+                       "gWildProwlerMinimums[]", "gWildProwlerMinimumCount", "gWildMonHeaderCount", "gStandardRodFishingWeights", "ENCOUNTER_CHANCE_LAND_MONS_TOTAL"):
             self.assertIn(symbol, text)
         for symbol in ("gWildEncounterScaling", "gWildEncounterProfileOffsets", "gWildEncounterSpeciesMetadata"):
             self.assertNotIn(symbol, text)

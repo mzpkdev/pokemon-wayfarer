@@ -152,6 +152,7 @@ static u8 DexNavGetAbilityNum(u16 species, u8 searchLevel);
 static u8 DexNavGeneratePotential(u8 searchLevel);
 static u8 DexNavTryGenerateMonLevel(u16 species, enum EncounterType environment);
 static u8 DexNavApplyChainLevelBonus(u8 levelBase);
+static u8 DexNavApplyChainLevelBonusToOutcome(u16 species, u32 headerId, u8 level);
 static u8 GetEncounterLevelFromMapData(u16 species, enum EncounterType environment);
 static bool8 TryResolveDexNavProfile(u16 headerId, enum WildPokemonArea area, struct WildEncounterProfileView *view);
 static bool8 TryApplyDexNavProfileFallbackLure(const struct WildEncounterProfileView *view, bool8 lureActive, u8 lureRoll, u8 *slot);
@@ -874,7 +875,7 @@ static bool8 InitDexNavSearch(u32 species, u32 environment)
     else if (TrySelectDexNavStandardSearchOutcome(species, environment, &outcome))
     {
         sDexNavSearchDataPtr->species = outcome.species;
-        sDexNavSearchDataPtr->monLevel = DexNavApplyChainLevelBonus(outcome.level);
+        sDexNavSearchDataPtr->monLevel = DexNavApplyChainLevelBonusToOutcome(outcome.species, GetCurrentMapWildMonHeaderId(), outcome.level);
     }
     else
     {
@@ -1268,6 +1269,17 @@ static u8 DexNavApplyChainLevelBonus(u8 levelBase)
         return MAX_LEVEL;
     else
         return levelBase + levelBonus;
+}
+
+// The chain bonus on a rolled wild outcome keeps the engine's level rules: a species that
+// can still evolve stays below its evolution level (babies at 10), unless its prowler
+// minimum is higher. An outcome already above that (a lower stage kept by the stage mix)
+// keeps its own level.
+static u8 DexNavApplyChainLevelBonusToOutcome(u16 species, u32 headerId, u8 level)
+{
+    u32 bonused = GetWildEncounterClampedLevel(species, headerId, DexNavApplyChainLevelBonus(level));
+
+    return max(bonused, level);
 }
 
 static void DexNavGenerateMoveset(u16 species, u8 searchLevel, u8 encounterLevel, u16 *moveDst)
@@ -1683,6 +1695,11 @@ static u32 WalkDexNavSpeciesMass(const struct WildEncounterProfileView *view, u1
 }
 
 #if TESTING
+u8 DexNavApplyChainLevelBonusToOutcomeForTesting(u16 species, u32 headerId, u8 level)
+{
+    return DexNavApplyChainLevelBonusToOutcome(species, headerId, level);
+}
+
 u16 DexNavGetHiddenProfileSpeciesForTesting(const struct WildPokemonInfo *info, u8 slot)
 {
     if (info == NULL || info->wildPokemon == NULL || slot >= HIDDEN_WILD_COUNT)
@@ -2738,7 +2755,7 @@ bool32 TryFindHiddenPokemon(void)
                     return FALSE;
 
                 species = outcome.species;
-                monLevel = DexNavApplyChainLevelBonus(outcome.level);
+                monLevel = DexNavApplyChainLevelBonusToOutcome(outcome.species, headerId, outcome.level);
                 environment = ENCOUNTER_TYPE_LAND;
             }
             break;
@@ -2764,7 +2781,7 @@ bool32 TryFindHiddenPokemon(void)
                         return FALSE;
 
                     species = outcome.species;
-                    monLevel = DexNavApplyChainLevelBonus(outcome.level);
+                    monLevel = DexNavApplyChainLevelBonusToOutcome(outcome.species, headerId, outcome.level);
                     environment = ENCOUNTER_TYPE_WATER;
                 }
             }

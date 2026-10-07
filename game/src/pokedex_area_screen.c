@@ -22,6 +22,7 @@
 #include "text_window.h"
 #include "trig.h"
 #include "pokedex_area_region_map.h"
+#include "notable_moves.h"
 #include "wild_encounter.h"
 #include "window.h"
 #include "constants/region_map_sections.h"
@@ -124,6 +125,7 @@ static mapsec_u16_t GetRegionMapSectionId(u8, u8);
 static bool8 MapHasSpecies(u16, u16);
 static bool8 ProfileHasSpecies(u16, enum WildPokemonArea, enum WildEncounterFishingRod, u16);
 static bool8 ProfileViewHasSpecies(const struct WildEncounterProfileView *, u16);
+static enum TimeOfDay GetAreaTableTimeOfDay(enum TimeOfDay);
 static void DoAreaGlow(void);
 static void Task_ShowPokedexAreaScreen(u8 taskId);
 static void Task_UpdatePokedexAreaScreen(u8 taskId);
@@ -471,18 +473,37 @@ static bool8 ProfileHasSpecies(u16 headerId, enum WildPokemonArea area, enum Wil
     return ProfileViewHasSpecies(&view, species);
 }
 
+// A slot yields its cap or a stage the downward rule and stage mix step it down to.
+static bool8 IsSpeciesInSlotChain(u16 cap, u16 species)
+{
+    u8 evolutionLevel;
+    u32 depth;
+
+    for (depth = 0; depth < 8 && cap != SPECIES_NONE; depth++)
+    {
+        if (cap == species)
+            return TRUE;
+        cap = GetSpeciesStepDownPredecessor(cap, &evolutionLevel);
+    }
+    return FALSE;
+}
+
 static bool8 ProfileViewHasSpecies(const struct WildEncounterProfileView *view, u16 species)
 {
     u8 slot;
 
     // Area lookup is display-only. Walk each slot's outcome distribution to
-    // expose every species a profile can produce without consuming RNG.
+    // expose every species a profile can produce without consuming RNG, skipping
+    // the slots whose cap and step-down chain cannot hold the species.
     for (slot = view->entryStart; slot < view->entryStart + view->entryCount; slot++)
     {
         struct WildEncounterSlotOutcome outcomes[WILD_ENCOUNTER_MAX_SLOT_OUTCOMES];
-        u32 count = GetCurrentWildEncounterSlotOutcomes(view, slot, outcomes);
-        u32 i;
+        const struct WildPokemon *entry;
+        u32 count, i;
 
+        if (!GetWildEncounterProfileEntry(view, slot, &entry) || !IsSpeciesInSlotChain(entry->species, species))
+            continue;
+        count = GetCurrentWildEncounterSlotOutcomes(view, slot, outcomes);
         for (i = 0; i < count; i++)
         {
             if (outcomes[i].species == species)
@@ -729,6 +750,46 @@ bool32 ShouldShowAreaUnknownLabel(void)
     return !sPokedexAreaScreen->numOverworldAreas && !sPokedexAreaScreen->numSpecialAreas;
 }
 
+// Morning shows the day tables and evening the night tables.
+static enum TimeOfDay GetAreaTableTimeOfDay(enum TimeOfDay timeOfDay)
+{
+    if (timeOfDay == TIME_MORNING)
+        return TIME_DAY;
+    if (timeOfDay == TIME_EVENING)
+        return TIME_NIGHT;
+    return timeOfDay;
+}
+
+#if TESTING
+enum TimeOfDay PokedexArea_GetTableTimeOfDayForTesting(enum TimeOfDay timeOfDay)
+{
+    return GetAreaTableTimeOfDay(timeOfDay);
+}
+
+// Whether the Pokedex area search for a species marks the map. The current map's region type is
+// the map's own, as when the screen opens there.
+bool8 PokedexArea_SpeciesShownOnMapForTesting(u16 species, u8 mapGroup, u8 mapNum, enum TimeOfDay timeOfDay)
+{
+    u32 sectionId = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum)->regionMapSectionId;
+    u32 savedSection = gMapHeader.regionMapSectionId;
+    u32 i;
+    bool8 shown = FALSE;
+
+    sPokedexAreaScreen = AllocZeroed(sizeof(*sPokedexAreaScreen));
+    gMapHeader.regionMapSectionId = sectionId;
+    gAreaTimeOfDay = GetAreaTableTimeOfDay(timeOfDay);
+    FindMapsWithMon(species);
+    for (i = 0; i < sPokedexAreaScreen->numOverworldAreas; i++)
+        shown |= sPokedexAreaScreen->overworldAreasWithMons[i].mapGroup == mapGroup && sPokedexAreaScreen->overworldAreasWithMons[i].mapNum == mapNum;
+    for (i = 0; i < sPokedexAreaScreen->numSpecialAreas; i++)
+        shown |= sPokedexAreaScreen->specialAreaRegionMapSectionIds[i] == sectionId;
+    gMapHeader.regionMapSectionId = savedSection;
+    Free(sPokedexAreaScreen);
+    sPokedexAreaScreen = NULL;
+    return shown;
+}
+#endif
+
 #define tState data[0]
 
 void DisplayPokedexAreaScreen(u16 species, u8 *screenSwitchState, enum TimeOfDay timeOfDay, enum PokedexAreaScreenState areaState)
@@ -740,11 +801,7 @@ void DisplayPokedexAreaScreen(u16 species, u8 *screenSwitchState, enum TimeOfDay
     sPokedexAreaScreen->screenSwitchState = screenSwitchState;
     sPokedexAreaScreen->areaState = areaState;
     gAreaTimeOfDay = timeOfDay;
-    // Morning shows the day tables and evening the night tables.
-    if (gAreaTimeOfDay == TIME_MORNING)
-        gAreaTimeOfDay = TIME_DAY;
-    else if (gAreaTimeOfDay == TIME_EVENING)
-        gAreaTimeOfDay = TIME_NIGHT;
+    gAreaTimeOfDay = GetAreaTableTimeOfDay(timeOfDay);
     screenSwitchState[0] = 0;
 
     if (sPokedexAreaScreen->areaState == DEX_UPDATE_AREA_SCREEN)

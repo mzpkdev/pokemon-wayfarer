@@ -183,13 +183,27 @@ for name, mn in PROWLER_ROWS.items():
 
 _PROWLER_MIN_RES = {_res(k): v for k, v in PROWLER_MIN.items()}
 
+# Regional forms are listed separately in prowlers.md ("(Alolan)", "(Galarian)", ...): a plain row never reaches them.
+REGIONAL_TOKENS = ('ALOLA', 'GALAR', 'HISUI', 'PALDEA', 'WHITE_STRIPED')
+
+def form_key(name):
+    """The prowler row of the species a non-regional form constant belongs to (ORICORIO_PAU -> ORICORIO), or None."""
+    for k, mn in PROWLER_MIN.items():
+        if mn is not None and name.startswith(k + '_') and not name[len(k) + 1:].startswith(REGIONAL_TOKENS):
+            return k
+    return None
+
 def prowler_min(cap, region):
     # Kalos rewards in the Safari Zones and Sinjoh's residents have no minimum.
     # Base names such as ORICORIO are aliases of a form constant (ORICORIO_BAILE), so the
-    # spec's rows match a slot through either name.
+    # spec's rows match a slot through either name. A row also covers every non-regional
+    # form constant of its species (ORICORIO_PAU, FURFROU_HEART).
     r = root(cap)
     mn = next((m for k in (cap, r) for m in (PROWLER_MIN.get(k), _PROWLER_MIN_RES.get(_res(k))) if m is not None), None)
-    if mn is None: return None
+    if mn is None:
+        fk = form_key(cap) or form_key(r)
+        if fk is None: return None
+        mn, r = PROWLER_MIN[fk], fk
     nat = next((SPECIES[n]['nat'] for n in SPECIES if _res(n) == _res(r) and SPECIES[n].get('nat')), 0)
     if region == 'Safari' and 650 <= nat <= 721: return None
     if region == 'Sinjoh' and (cap.endswith('_HISUI') or r in ('STANTLER', 'SCYTHER', 'BASCULIN_WHITE_STRIPED') or r.endswith('_HISUI')): return None

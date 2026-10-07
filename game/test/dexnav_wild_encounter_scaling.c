@@ -3,6 +3,7 @@
 #include "test/test.h"
 #include "trainer_rating.h"
 #include "wild_encounter.h"
+#include "constants/maps.h"
 
 static const struct WildPokemon sDexNavNormalMons[] =
 {
@@ -133,5 +134,38 @@ TEST("DexNav species search follows the slot outcome distribution at the current
             EXPECT_EQ(DexNavSelectProfileOutcomeWithRollForTesting(&view, sSpecies[s], mass, &(struct WildEncounterSpeciesOutcome){0}), 0);
         }
     }
+}
+#endif
+
+#if IS_WAYFARER
+TEST("DexNav chain level bonus keeps the engine's young limit and prowler minimum")
+{
+    u32 header = GetWildMonHeaderIdForMap(MAP_GROUP(MAP_ROUTE1_HNS), MAP_NUM(MAP_ROUTE1_HNS));
+    u32 chain, i;
+
+    EXPECT_NE(header, HEADER_NONE);
+    for (chain = 0; chain <= 100; chain += 25)
+    {
+        gSaveBlock3Ptr->dexNavChain = chain;
+        for (i = 0; i < 200; i++)
+        {
+            // A Caterpie slot stays under its evolution level, a baby at 10 or under.
+            EXPECT_EQ(DexNavApplyChainLevelBonusToOutcomeForTesting(SPECIES_CATERPIE, header, 6), 6);
+            EXPECT_LE(DexNavApplyChainLevelBonusToOutcomeForTesting(SPECIES_PICHU, header, 5), 10);
+            // The prowler minimum wins over the young limit; Dratini evolves at 30.
+            EXPECT_EQ(DexNavApplyChainLevelBonusToOutcomeForTesting(SPECIES_DRATINI, header, 30), 30);
+        }
+    }
+    // A line that cannot evolve takes the whole bonus, capped at 100. A stage the stage mix kept
+    // above its limit keeps its own level.
+    gSaveBlock3Ptr->dexNavChain = 100;
+    for (i = 0; i < 100; i++)
+    {
+        u32 level = DexNavApplyChainLevelBonusToOutcomeForTesting(SPECIES_TAUROS, header, 50);
+
+        EXPECT(level >= 70 && level <= 80);
+        EXPECT_EQ(DexNavApplyChainLevelBonusToOutcomeForTesting(SPECIES_METAPOD, header, 12), 12);
+    }
+    gSaveBlock3Ptr->dexNavChain = 0;
 }
 #endif

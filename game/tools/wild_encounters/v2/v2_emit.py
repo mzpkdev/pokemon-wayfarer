@@ -103,6 +103,18 @@ class Lines:
             name = parents[0]
 
 
+# Regional forms are listed separately in prowlers.md ("(Alolan)", ...): a plain row never reaches them.
+REGIONAL_TOKENS = ("ALOLA", "GALAR", "HISUI", "PALDEA", "WHITE_STRIPED")
+
+
+def form_key(name, line_minimums):
+    """The prowler row of the species a non-regional form constant belongs to (ORICORIO_PAU -> ORICORIO), or None."""
+    for key, minimum in line_minimums.items():
+        if minimum is not None and name.startswith(key + "_") and not name[len(key) + 1:].startswith(REGIONAL_TOKENS):
+            return key
+    return None
+
+
 def prowler_minimums(species_ids, lines, line_minimums):
     """Sorted [(species id, constant, minimum, exempt in Safari, exempt in Sinjoh)] over every species of a prowler line."""
     out = {}
@@ -110,7 +122,11 @@ def prowler_minimums(species_ids, lines, line_minimums):
         root = lines.root(name)
         minimum = line_minimums.get(name, line_minimums.get(root))
         if minimum is None:
-            continue
+            # A row also covers every non-regional form constant of its species.
+            root = form_key(name, line_minimums) or form_key(root, line_minimums)
+            if root is None:
+                continue
+            minimum = line_minimums[root]
         nat = lines.species.get(root, {}).get("nat", 0)
         safari = bool(nat) and 650 <= nat <= 721  # Kalos rewards have no minimum in the Safari Zones
         sinjoh = name.endswith("_HISUI") or root in ("STANTLER", "SCYTHER", "BASCULIN_WHITE_STRIPED") or root.endswith("_HISUI")
@@ -268,7 +284,9 @@ def render(species_ids, line_minimums=None, data_dir=DATA_DIR):
     trailer = (
         "#if IS_WAYFARER\n"
         "// Parallel to gWildMonHeaders: index = header id. Dungeon fields come from reach-assignments.md and meta.json.\n"
-        f"const struct WildEncounterPlace gWildEncounterPlaces[] =\n{{\n{place_rows}}};\n\n"
+        f"const struct WildEncounterPlace gWildEncounterPlaces[] =\n{{\n{place_rows}}};\n"
+        "// The headers before the terminator, so no reader scans for it.\n"
+        "const u16 gWildMonHeaderCount = ARRAY_COUNT(gWildMonHeaders) - 1;\n\n"
         "// Every species of a prowler line (spec: prowlers.md), sorted by species id for binary search.\n"
         f"const struct WildProwlerMinimum gWildProwlerMinimums[] =\n{{\n{prowler_rows}}};\n"
         "const u16 gWildProwlerMinimumCount = ARRAY_COUNT(gWildProwlerMinimums);\n"

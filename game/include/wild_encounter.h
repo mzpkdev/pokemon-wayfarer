@@ -151,6 +151,7 @@ extern const struct WildPokemonHeader gWildMonHeaders[];
 extern const struct WildEncounterPlace gWildEncounterPlaces[]; // parallel to gWildMonHeaders
 extern const struct WildProwlerMinimum gWildProwlerMinimums[];   // sorted by species
 extern const u16 gWildProwlerMinimumCount;
+extern const u16 gWildMonHeaderCount;
 extern const u8 gStandardRodFishingWeights[WILD_ENCOUNTER_FISHING_ROD_NONE][FISH_WILD_COUNT];
 extern bool8 gIsFishingEncounter;
 extern bool8 gIsSurfingEncounter;
@@ -203,6 +204,15 @@ bool8 DoesWildEncounterProfileHaveAvailableEntries(const struct WildEncounterPro
 u32 GetWildEncounterPlaceLevel(u32 headerId, u32 trainerRating);
 // Road maps roll their table's encounter rate at 60%, rounded to the nearest value.
 u32 GetWildEncounterRateForHeader(u32 headerId, u32 encounterRate);
+// A level for `species` in a place: the species' prowler minimum (none in an
+// exempt region), then its young limit (below its lowest evolution level, babies
+// 10; the prowler minimum wins again), then 1..MAX_LEVEL. Equal to the clamp every
+// wild roll applies. An unknown header counts as an ordinary region.
+u32 GetWildEncounterClampedLevel(u16 species, u32 headerId, s32 level);
+// The level of a TV mass outbreak Pokémon here: the current place's level with the
+// ordinary spread (Lure, Pressure, Hustle, Vital Spirit included), clamped like
+// any wild level. The authored level on a map without a header. Consumes RNG.
+u8 GetMassOutbreakLevel(void);
 // The exact outcome distribution of one slot at a Trainer Rating: the place
 // level and its -2..+2 spread, the prowler minimum, the young limit, the
 // downward rule and the stage mix. RNG-free; fills up to

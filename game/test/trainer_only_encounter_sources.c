@@ -10,6 +10,7 @@
 #include "random.h"
 #include "test/test.h"
 #include "trainer_only_encounter.h"
+#include "trainer_rating.h"
 #include "wild_encounter.h"
 #include "constants/items.h"
 #include "constants/metatile_behaviors.h"
@@ -186,7 +187,11 @@ TEST("Trainer-only native encounter sources generate and initialize with an empt
     if (source == SOURCE_OUTBREAK)
     {
         passed &= GetMonData(&gEnemyParty[0], MON_DATA_SPECIES) == SPECIES_DITTO;
-        passed &= GetMonData(&gEnemyParty[0], MON_DATA_LEVEL) == 7;
+        // An outbreak takes the place's level with the ordinary spread.
+        u32 placeLevel = GetWildEncounterPlaceLevel(GetCurrentMapWildMonHeaderId(), GetTrainerRating());
+        u32 level = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
+
+        passed &= level + 2 >= placeLevel && level <= placeLevel + 2;
         passed &= GetMonData(&gEnemyParty[0], MON_DATA_MOVE1) == MOVE_TRANSFORM;
     }
     if (source == SOURCE_FISHING)

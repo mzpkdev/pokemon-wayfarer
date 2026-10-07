@@ -27,14 +27,18 @@ bool32 GetBugContestFlag(void)
 }
 
 // The contest is held on Tuesday, Thursday and Saturday, each with its own wild
-// table, in that order. Any other day maps to the Tuesday table.
+// table, in that order. A day without a contest keeps the table of the most recent
+// contest day, so a contest running past midnight does not change its table.
 u32 GetBugContestTableIndex(void)
 {
     switch (GetDayOfWeek())
     {
     case WEEKDAY_THU:
+    case WEEKDAY_FRI:
         return 1;
     case WEEKDAY_SAT:
+    case WEEKDAY_SUN:
+    case WEEKDAY_MON:
         return 2;
     default:
         return 0;

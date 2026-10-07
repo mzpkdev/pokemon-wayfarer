@@ -1312,8 +1312,9 @@ TEST("Bug-Catching Contest: Tuesday, Thursday and Saturday each choose their own
             held++;
             break;
         default:
-            // The gate attendant says it isn't on.
+            // The gate attendant says it isn't on, and the table is the most recent contest day's.
             EXPECT(!IsBugContestHeldToday());
+            EXPECT_EQ(GetBugContestTableIndex(), sDays[i] == WEEKDAY_WED ? 0 : sDays[i] == WEEKDAY_FRI ? 1 : 2);
             break;
         }
         gSpecialVar_Result = 0xFFFF;
@@ -1365,6 +1366,121 @@ TEST("Wild encounters: Route 119's Feebas takes its place's level like any table
             found |= outcomes[i].species == SPECIES_FEEBAS && outcomes[i].level == GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
         EXPECT(found);
     }
+}
+
+// ---- Header guards, clamped levels, outbreaks ----
+
+TEST("Wild encounters: an unknown header is rejected before any place data is read")
+{
+    struct WildEncounterSlotOutcome outcomes[WILD_ENCOUNTER_MAX_SLOT_OUTCOMES];
+    u32 road = FindPlace(WILD_REACH_ROAD, WILD_PLACE_REGION_OTHER);
+
+    EXPECT_EQ(gWildMonHeaderCount, CountHeaders());
+    EXPECT_EQ(SlotOutcomes(SPECIES_TAUROS, HEADER_NONE, 80, outcomes), 0);
+    EXPECT_EQ(SlotOutcomes(SPECIES_TAUROS, gWildMonHeaderCount, 80, outcomes), 0);
+    EXPECT_EQ(SlotOutcomes(SPECIES_TAUROS, gWildMonHeaderCount + 1000, 80, outcomes), 0);
+    EXPECT_EQ(GetWildEncounterPlaceLevel(gWildMonHeaderCount, 80), 0);
+    EXPECT_EQ(GetWildEncounterRateForHeader(HEADER_NONE, 30), 30);
+    EXPECT_EQ(GetWildEncounterRateForHeader(gWildMonHeaderCount, 30), 30);
+    EXPECT_EQ(GetWildEncounterRateForHeader(gWildMonHeaderCount + 1000, 30), 30);
+    EXPECT_EQ(GetWildEncounterRateForHeader(road, 30), 18);
+    // An unknown header clamps like an ordinary place.
+    EXPECT_EQ(GetWildEncounterClampedLevel(SPECIES_CATERPIE, gWildMonHeaderCount, 40), 6);
+}
+
+TEST("Wild prowlers: every non-regional form of a prowler species has the species' minimum, regional forms only their own row")
+{
+    u32 other = FindPlace(WILD_REACH_ROAD, WILD_PLACE_REGION_OTHER);
+
+    EXPECT_EQ(GetWildEncounterClampedLevel(SPECIES_ORICORIO_BAILE, other, 5), 20);
+    EXPECT_EQ(GetWildEncounterClampedLevel(SPECIES_ORICORIO_PAU, other, 5), 20);
+    EXPECT_EQ(GetWildEncounterClampedLevel(SPECIES_ORICORIO_POM_POM, other, 5), 20);
+    EXPECT_EQ(GetWildEncounterClampedLevel(SPECIES_ORICORIO_SENSU, other, 5), 20);
+    EXPECT_EQ(GetWildEncounterClampedLevel(SPECIES_VULPIX_ALOLA, other, 5), 5);
+    EXPECT_EQ(GetWildEncounterClampedLevel(SPECIES_TAUROS, other, 5), 25);
+}
+
+TEST("Wild young levels: a bonused level is clamped like any wild level")
+{
+    u32 road = FindPlace(WILD_REACH_ROAD, WILD_PLACE_REGION_OTHER);
+
+    // Caterpie evolves at 7, a baby stays at 10 or under, and a line that cannot evolve keeps the level.
+    EXPECT_EQ(GetWildEncounterClampedLevel(SPECIES_CATERPIE, road, 26), 6);
+    EXPECT_EQ(GetWildEncounterClampedLevel(SPECIES_PICHU, road, 40), 10);
+    EXPECT_EQ(GetWildEncounterClampedLevel(SPECIES_TAUROS, road, 120), MAX_LEVEL);
+    EXPECT_EQ(GetWildEncounterClampedLevel(SPECIES_TAUROS, road, 60), 60);
+    // A prowler minimum above the young limit wins; Dratini evolves at 30.
+    EXPECT_EQ(GetWildEncounterClampedLevel(SPECIES_DRATINI, road, 50), 30);
+    EXPECT_EQ(GetWildEncounterClampedLevel(SPECIES_DRATINI, road, 3), 30);
+}
+
+TEST("Wild outbreaks: a TV outbreak takes the place's level with the ordinary spread, clamped, and keeps its authored level on a map without a header")
+{
+    struct EncounterHarness *harness = Alloc(sizeof(*harness));
+    u32 i, seen = 0;
+
+    EXPECT(harness != NULL);
+    EnterRoute(harness, MAP_ROUTE1_HNS);
+    SetTrainerRating(80); // Route 1 is a Road: level 38
+    EXPECT_EQ(GetWildEncounterPlaceLevel(GetCurrentMapWildMonHeaderId(), 80), 38);
+    SetLeadMon(SPECIES_PIKACHU, 5);
+    gSaveBlock1Ptr->outbreakPokemonLevel = 12;
+    gSaveBlock1Ptr->outbreakPokemonSpecies = SPECIES_TAUROS;
+    SeedRng(3);
+    for (i = 0; i < 400; i++)
+    {
+        u32 level = GetMassOutbreakLevel();
+
+        EXPECT(level >= 36 && level <= 40);
+        seen |= 1 << (level - 36);
+    }
+    EXPECT_EQ(seen, 0x1F);
+
+    // A young species is held under its evolution level, a prowler at its minimum.
+    gSaveBlock1Ptr->outbreakPokemonSpecies = SPECIES_CATERPIE;
+    for (i = 0; i < 50; i++)
+        EXPECT_EQ(GetMassOutbreakLevel(), 6);
+    gSaveBlock1Ptr->outbreakPokemonSpecies = SPECIES_DRATINI;
+    for (i = 0; i < 50; i++)
+        EXPECT_EQ(GetMassOutbreakLevel(), 30);
+
+    // The outbreak species and the final level reach the battle; Repel compares that level.
+    gSaveBlock1Ptr->outbreakPokemonSpecies = SPECIES_CATERPIE;
+    gSaveBlock1Ptr->outbreakLocationMapGroup = gSaveBlock1Ptr->location.mapGroup;
+    gSaveBlock1Ptr->outbreakLocationMapNum = gSaveBlock1Ptr->location.mapNum;
+    gSaveBlock1Ptr->outbreakPokemonProbability = 100;
+    SeedRng(5);
+    VarSet(VAR_REPEL_STEP_COUNT, 0);
+    for (i = 0; i < 6000; i++)
+    {
+        if (StandardWildEncounter(MB_TALL_GRASS, MB_TALL_GRASS))
+        {
+            EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_SPECIES), SPECIES_CATERPIE);
+            EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), 6);
+            break;
+        }
+    }
+    EXPECT_LT(i, 6000);
+    VarSet(VAR_REPEL_STEP_COUNT, 200);
+    SetLeadMon(SPECIES_PIKACHU, 38);
+    // The outbreak's level 6 is under the lead's 38, so Repel skips it and only an ordinary encounter at 38 or over starts.
+    for (i = 0; i < 6000; i++)
+    {
+        if (StandardWildEncounter(MB_TALL_GRASS, MB_TALL_GRASS))
+            EXPECT_GE(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), 38);
+    }
+    VarSet(VAR_REPEL_STEP_COUNT, 0);
+    gSaveBlock1Ptr->outbreakPokemonProbability = 0;
+
+    // No header: the authored level.
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F);
+    EXPECT_EQ(GetCurrentMapWildMonHeaderId(), HEADER_NONE);
+    gSaveBlock1Ptr->outbreakPokemonSpecies = SPECIES_TAUROS;
+    EXPECT_EQ(GetMassOutbreakLevel(), 12);
+    gSaveBlock1Ptr->outbreakPokemonSpecies = SPECIES_NONE;
+    LeaveRoute(harness);
+    Free(harness);
 }
 
 #endif // IS_WAYFARER
