@@ -174,12 +174,17 @@ for name, mn in PROWLER_ROWS.items():
     else:
         PROWLER_MIN[norm(name)] = mn
 
+_PROWLER_MIN_RES = {_res(k): v for k, v in PROWLER_MIN.items()}
+
 def prowler_min(cap, region):
     # Kalos rewards in the Safari Zones and Sinjoh's residents have no minimum.
+    # Base names such as ORICORIO are aliases of a form constant (ORICORIO_BAILE), so the
+    # spec's rows match a slot through either name.
     r = root(cap)
-    mn = PROWLER_MIN.get(cap, PROWLER_MIN.get(r))
+    mn = next((m for k in (cap, r) for m in (PROWLER_MIN.get(k), _PROWLER_MIN_RES.get(_res(k))) if m is not None), None)
     if mn is None: return None
-    if region == 'Safari' and SPECIES.get(r, {}).get('nat', 0) and 650 <= SPECIES[r]['nat'] <= 721: return None
+    nat = next((SPECIES[n]['nat'] for n in SPECIES if _res(n) == _res(r) and SPECIES[n].get('nat')), 0)
+    if region == 'Safari' and 650 <= nat <= 721: return None
     if region == 'Sinjoh' and (cap.endswith('_HISUI') or r in ('STANTLER', 'SCYTHER', 'BASCULIN_WHITE_STRIPED') or r.endswith('_HISUI')): return None
     return mn
 

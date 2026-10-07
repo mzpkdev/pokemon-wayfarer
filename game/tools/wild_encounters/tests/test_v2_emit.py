@@ -126,20 +126,11 @@ class V2EmitTests(unittest.TestCase):
             minimum, safari, sinjoh = row
             return None if (region == "Safari" and safari) or (region == "Sinjoh" and sinjoh) else minimum
 
-        # hm_model looks minimums up by constant name, so an alias constant of a prowler (ORICORIO_BAILE for ORICORIO)
-        # gets none there. The runtime looks up the species id, so the prowler's minimum applies: the spec's intent.
-        divergent = {frozenset(group) for group in names_by_id.values() if len(group) > 1
-                     and len({hm_model.prowler_min(n, "Other") for n in group}) > 1}
-        self.assertEqual(divergent, {frozenset(group) for group in (
-            ("FURFROU", "FURFROU_NATURAL"), ("ORICORIO", "ORICORIO_BAILE"), ("MIMIKYU", "MIMIKYU_DISGUISED"),
-            ("EISCUE", "EISCUE_ICE"), ("INDEEDEE", "INDEEDEE_M"))})
+        # Alias constants of one species (FURFROU and FURFROU_NATURAL) share its id, and the model
+        # resolves aliases, so every name of a species gets the emitted minimum.
         for region in ("Other", "Safari", "Sinjoh"):
             for name in hm_model.SPECIES:
-                if len(names_by_id[self.species["SPECIES_" + name]]) == 1:
-                    self.assertEqual(emitted(name, region), hm_model.prowler_min(name, region), f"{name} in {region}")
-                else:  # an alias constant (FURFROU_NATURAL for FURFROU) shares its species id: one alias must agree
-                    group = names_by_id[self.species["SPECIES_" + name]]
-                    self.assertIn(emitted(name, region), {hm_model.prowler_min(n, region) for n in group}, f"{name} in {region}")
+                self.assertEqual(emitted(name, region), hm_model.prowler_min(name, region), f"{name} in {region}")
         self.assertEqual(sorted({minimum for minimum, _, _ in by_id.values()}), [20, 25, 30])
 
     def test_every_map_constant_exists_and_rates_cover_extracted_methods(self):
