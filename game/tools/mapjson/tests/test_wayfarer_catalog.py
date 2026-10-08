@@ -1055,6 +1055,82 @@ class MapjsonWayfarerTest(unittest.TestCase):
             self.assertIn("bg_hidden_item_event ", wayfarer_events)
             self.assertNotIn("bg_hidden_item_event_hoenn ", wayfarer_events)
 
+    def test_wayfarer_sevii_restores_pickups_with_sevii_flags_and_field_move_helpers(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        object_template = {
+            "type": "object", "elevation": 3, "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+            "movement_range_x": 1, "movement_range_y": 1, "trainer_type": "TRAINER_TYPE_NONE",
+            "trainer_sight_or_berry_tree_id": "0",
+        }
+        item_ball = dict(object_template, graphics_id="OBJ_EVENT_GFX_ITEM_BALL", x=3, y=4,
+                         script="OneIsland_EventScript_ItemPotion", flag="FLAG_HIDE_ONE_ISLAND_POTION")
+        rock = dict(object_template, graphics_id="OBJ_EVENT_GFX_BREAKABLE_ROCK_FRLG", x=5, y=6,
+                    script="EventScript_RockSmash", flag="FLAG_TEMP_12")
+        tree = dict(object_template, graphics_id="OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG", x=7, y=8,
+                    script="EventScript_CutTree", flag="FLAG_TEMP_13")
+        hidden = {"type": "hidden_item", "x": 2, "y": 9, "elevation": 3, "item": "ITEM_POTION",
+                  "flag": "FLAG_HIDDEN_ITEM_ONE_ISLAND_POTION", "quantity": 1, "underfoot": False}
+        source = {
+            "id": "MAP_SEVII", "name": "OneIsland_Frlg", "game_version": "frlg", "layout": "LAYOUT_SEVII",
+            "music": "MUS_NONE", "region_map_section": "MAPSEC_NONE", "requires_flash": False,
+            "weather": "WEATHER_NONE", "map_type": "MAP_TYPE_TOWN", "allow_cycling": True,
+            "allow_escaping": False, "allow_running": True, "show_map_name": True,
+            "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+            "object_events": [item_ball, rock, tree], "warp_events": [], "coord_events": [],
+            "bg_events": [hidden], "connections": [],
+        }
+        map_dir = root / "data/maps/OneIsland_Frlg"
+        map_dir.mkdir()
+        map_file = map_dir / "map.json"
+        map_file.write_text(json.dumps(source))
+        border = root / "data/layouts/OneIsland_Frlg.border.bin"
+        blockdata = root / "data/layouts/OneIsland_Frlg.map.bin"
+        border.touch()
+        blockdata.write_bytes(b"\0\0")
+        layouts_file = root / "data/layouts/layouts.json"
+        layouts_file.write_text(json.dumps({"layouts": [{
+            "id": "LAYOUT_SEVII", "name": "gMapLayout_OneIsland_Frlg", "game_version": "frlg",
+            "layout_version": "frlg", "width": 1, "height": 1,
+            "border_filepath": str(border.relative_to(root)),
+            "blockdata_filepath": str(blockdata.relative_to(root)),
+            "primary_tileset": "gTileset_General", "secondary_tileset": "gTileset_Petalburg",
+            "border_width": 2, "border_height": 2,
+        }]}))
+        (root / "include/constants/map_groups.h").write_text("enum { MAP_SEVII = (0 | (0 << 8)), };\n")
+        manifest = self.write_sevii_manifest(root, [{
+            "source_map": "OneIsland_Frlg", "map_id": "MAP_SEVII", "layout": "LAYOUT_SEVII", "enabled": True,
+            "retained_events": {
+                "object_events": [
+                    {"index": 0, "source": item_ball, "wayfarer_script": "WayfarerSevii_OneIsland_ItemPotion",
+                     "overrides": {"flag": "FLAG_WAYFARER_SEVII_ITEM_ONE_ISLAND_POTION"}},
+                    {"index": 1, "source": rock, "wayfarer_script": "EventScript_RockSmash"},
+                    {"index": 2, "source": tree, "wayfarer_script": "EventScript_CutTree"},
+                ],
+                "coord_events": [],
+                "bg_events": [
+                    {"index": 0, "source": hidden, "overrides": {"flag": "FLAG_WAYFARER_SEVII_HIDDEN_ONE_ISLAND_0"}},
+                ],
+            },
+        }], release_link_enabled=True)
+
+        result = self.run_map(root, "wayfarer", map_file, layouts_file, manifest)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        events = map_dir.joinpath("events.inc").read_text()
+        self.assertIn(
+            "\tobject_event 1, OBJ_EVENT_GFX_ITEM_BALL, 3, 4, 3, MOVEMENT_TYPE_FACE_DOWN, 1, 1, "
+            "TRAINER_TYPE_NONE, 0, WayfarerSevii_OneIsland_ItemPotion, FLAG_WAYFARER_SEVII_ITEM_ONE_ISLAND_POTION\n",
+            events,
+        )
+        self.assertIn("EventScript_RockSmash, FLAG_TEMP_12\n", events)
+        self.assertIn("EventScript_CutTree, FLAG_TEMP_13\n", events)
+        self.assertIn(
+            "\tbg_hidden_item_event_sevii 2, 9, 3, ITEM_POTION, FLAG_WAYFARER_SEVII_HIDDEN_ONE_ISLAND_0, 1, FALSE\n",
+            events,
+        )
+        self.assertNotIn("FLAG_HIDE_ONE_ISLAND_POTION", events)
+        self.assertNotIn("FLAG_HIDDEN_ITEM_ONE_ISLAND_POTION", events)
+
     def test_wayfarer_sevii_rejects_retained_trainer_identity(self):
         fixture, root = self.make_fixture()
         self.addCleanup(fixture.cleanup)

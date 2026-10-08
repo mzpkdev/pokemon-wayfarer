@@ -46,6 +46,25 @@ class WayfarerSeviiScriptGenerationTest(unittest.TestCase):
             definitions = re.findall(rf"(?m)^{re.escape(label)}::?$", rendered)
             self.assertEqual(definitions, [f"{label}::"])
 
+    def test_exploration_restoration_modules_are_linked_with_their_text(self):
+        manifest = json.loads((GAME_ROOT / "src/data/wayfarer_sevii_maps.json").read_text())
+        rendered = GENERATOR.render(GAME_ROOT, GAME_ROOT / "src/data/wayfarer_sevii_maps.json")
+        selected = GENERATOR.selected_module_names(manifest)
+        for name in ("items", "signs", "spa", "dolls"):
+            self.assertIn(name, selected)
+            self.assertEqual(manifest["script_modules"][name]["owner"], "exploration")
+            self.assertIn(f'\t.include "data/scripts/wayfarer_sevii/{name}.inc"', rendered)
+        self.assertEqual(manifest["script_modules"]["items"]["allowed_commands"], ["end", "finditem"])
+        # The Pokemon Journal text lives in an FRLG-only file that Wayfarer
+        # does not link, so its pinned labels are copied like map text.
+        journal = (GAME_ROOT / "data/text/fame_checker_frlg.inc").read_text()
+        for label in ("PokemonJournal_Text_SpecialFeatureBlaine", "PokemonJournal_Text_SpecialFeatureDaisyOak"):
+            self.assertEqual(re.findall(rf"(?m)^{label}::$", rendered), [f"{label}::"])
+            block = re.search(rf"(?ms)^{label}::\n(.*?)\n\n", journal).group(1)
+            self.assertIn(block, rendered)
+        dependencies = GENERATOR.recursive_dependencies(GAME_ROOT, GAME_ROOT / "src/data/wayfarer_sevii_maps.json")
+        self.assertIn("data/text/fame_checker_frlg.inc", dependencies)
+
     def test_recursive_dependencies_include_special_table(self):
         dependencies = GENERATOR.recursive_dependencies(GAME_ROOT, GAME_ROOT / "src/data/wayfarer_sevii_maps.json")
         self.assertIn("data/specials.inc", dependencies)

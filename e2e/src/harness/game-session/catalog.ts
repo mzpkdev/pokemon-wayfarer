@@ -552,6 +552,8 @@ export const storyFlags = {
   towerEscapeRopeClaimed: 0x8eb,
   towerBlueMet: 0xe076,
   towerHouse1FujiHidden: 0xe077,
+  seviiItemMtEmberExteriorUltraBall: 0xc03d,
+  seviiHiddenMtEmberExteriorFireStone: 0xc064,
   silph11FDoor: 0x94e,
   silph10FDoor: 0x94d,
   silph9FDoor4: 0x94c,
