@@ -7,6 +7,22 @@ import re
 import urllib.request
 
 ROOT_DOCS = {"AGENTS.md", "README.md", "CONTRIBUTING.md", "CHANGELOG.md"}
+# Product docs that game tooling reads, hashes or names as an input. Editing
+# one can stale a generated fixture or change generated data, so it runs full
+# CI. test_ci_changes.py keeps this list in sync with the references in game/.
+BUILD_INPUT_DOCS = frozenset({
+    ".product/prds/wayfarer-hoenn-integration.md",
+    ".product/research/notable-named-spots.md",
+    ".product/research/notable-trainer-routines.md",
+    ".product/specs/notable-ambience.md",
+    ".product/specs/notable-spots.md",
+    ".product/specs/notable-world-simulation.md",
+    ".product/specs/prowlers.md",
+    ".product/specs/reach-assignments.md",
+    ".product/specs/wayfarer-hoenn-content-port.md",
+    ".product/specs/wayfarer-regional-start-choice.md",
+})
+BUILD_INPUT_DOC_DIRS = (".product/research/native-hm-windows/",)
 STATUSES = {"added", "removed", "modified", "renamed", "copied", "changed", "unchanged"}
 
 
@@ -14,6 +30,8 @@ def documentation_path(path):
     if not isinstance(path, str) or not path or any(
         part in {"", ".", ".."} for part in path.split("/")
     ):
+        return False
+    if path in BUILD_INPUT_DOCS or path.startswith(BUILD_INPUT_DOC_DIRS):
         return False
     return path in ROOT_DOCS or (
         path.startswith((".product/", "docs/")) and path.endswith(".md")

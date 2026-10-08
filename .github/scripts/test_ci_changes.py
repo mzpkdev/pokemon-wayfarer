@@ -1,8 +1,13 @@
 import copy
+from pathlib import Path
+import re
 import unittest
 from unittest.mock import Mock
 
-from ci_changes import classify, documentation_path
+from ci_changes import BUILD_INPUT_DOCS, classify, documentation_path
+
+REPO = Path(__file__).resolve().parents[2]
+SCANNED_SUFFIXES = {".py", ".mk", ".json", ".c", ".h", ".ts"}
 
 
 class ClassificationTests(unittest.TestCase):
@@ -98,6 +103,24 @@ class ClassificationTests(unittest.TestCase):
             api = Mock()
             self.assertFalse(classify(event_name, self.event, api))
             api.assert_not_called()
+
+
+
+class BuildInputDocTests(unittest.TestCase):
+    def test_build_input_docs_run_full_ci(self):
+        for path in sorted(BUILD_INPUT_DOCS) + [".product/research/native-hm-windows/locations.md"]:
+            with self.subTest(path=path):
+                self.assertFalse(documentation_path(path))
+
+    def test_every_doc_the_game_tooling_names_is_a_build_input(self):
+        referenced = set()
+        for path in (REPO / "game").rglob("*"):
+            if not path.is_file() or not (path.suffix in SCANNED_SUFFIXES or path.name == "Makefile"):
+                continue
+            text = path.read_text(encoding="utf-8", errors="ignore")
+            referenced.update(re.findall(r"\.product/[\w./-]*?\.md\b", text))
+        missing = sorted(doc for doc in referenced if (REPO / doc).is_file() and documentation_path(doc))
+        self.assertEqual(missing, [], "add these to BUILD_INPUT_DOCS in ci_changes.py")
 
 
 if __name__ == "__main__":
