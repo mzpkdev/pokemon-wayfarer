@@ -44,9 +44,13 @@ Pairs share one contact and battle together.
     `trainerRematches`.
   - `GetRematchTrainerIdVSSeeker` (`vs_seeker.c`): returns the normal
     rematch level path (its Sevii and coast branches are retired).
-  - The loops over `REMATCH_SPECIAL_TRAINER_START` in `battle_setup.c`
-    (`UpdateRandomTrainerRematches`) and `match_call.c` (the candidate and
-    count loops) also cover the appended range.
+  - The loops over `REMATCH_SPECIAL_TRAINER_START` also cover the appended
+    range: `UpdateRandomTrainerRematches` (`battle_setup.c`), and in
+    `match_call.c` the random-call candidate loop with its
+    `candidates[REMATCH_SPECIAL_TRAINER_START]` array (resized to the loop's
+    new bound), `GetNumRegisteredTrainers` and `GetActiveMatchCallTrainerId`.
+    The `GetNumRematchTrainersFought` loop is under `#if !IS_HNS` and isn't
+    compiled in Wayfarer, so it needs no change.
   `gym_leader_rematch.c` iterates only the special-to-Elite-Four rows and
   stays as is.
 - **Sevii and coast families** stay in their own registries. Their stage and
@@ -59,15 +63,26 @@ Pairs share one contact and battle together.
   flags beyond `0x495` are taken, so the 28 appended indexes (90–117) use
   `0x8BE`–`0x8D9` (`SYS_FLAGS + 0x5E` to `+ 0x79`). No Wayfarer flag uses that
   window; it sits between the Battle Frontier symbols (`0x8BD`) and the Tower
-  flags (`0x8E5`), and `0x8DA`–`0x8E4` stay spare. The registered-flag helper
-  maps an index to `0x310 + index` below 90 and `0x8BE + (index - 90)` from 90.
+  flags (`0x8E5`), and `0x8DA`–`0x8E4` stay spare. One helper maps an index to
+  `0x310 + index` below 90 and `0x8BE + (index - 90)` from 90, and every
+  registered-flag access goes through it. These sites add the base to the
+  index directly today and switch to it: `IsRematchEntryRegistered`
+  (`pokenav_match_call_list.c`), `TrainerIsMatchCallRegistered` (which
+  already wraps the access in `battle_setup.c`, so it calls the helper),
+  `GetTrainerMatchCallFlag` (`battle_setup.c`), `IsTrainerRegistered`
+  (`field_specials.c`), `GetNumRegisteredTrainers` and
+  `GetActiveMatchCallTrainerId` (`match_call.c`) and
+  `SetMatchCallRegisteredFlag` (`pokenav_match_call_data.c`). A grep for
+  `TRAINER_REGISTERED_FLAGS_START +` finds no other site.
+  The gym leader, Elite Four, Wally and Steven rows have their own
+  `FLAG_REGISTERED_*` flags and are unaffected.
   Sevii and coast contacts use 41 new Sevii bank flags, in slots 61 upward
   beside the 97 restored item flags (138 of the 195 free slots).
 - **Rematch progress.** `trainerRematches` grows from 100 (`MAX_REMATCH_ENTRIES`)
-  to 118, the table size. This adds 18 bytes to SaveBlock1, on top of the 90
-  bytes of `homeBeatenToday` from
-  [daily world slots](daily-world-slots.md#save-state): 108 bytes against 112
-  free, leaving 4. It changes the SaveBlock1 layout; Wayfarer has no released
+  to 118, the table size. This adds 18 bytes to SaveBlock1, which has 112
+  free, leaving 94. The day-start sets and the other daily slot state live in
+  `PokemonStorage`, not here ([daily world slots](daily-world-slots.md#save-state)).
+  It changes the SaveBlock1 layout; Wayfarer has no released
   saves, so no migration is needed (`AGENTS.md`).
 - **Contact list.** `matchCallEntries` grows from 99 to cover every contact plus
   the special headers, with a bounds check. The list also reads the Sevii and
@@ -120,7 +135,8 @@ automatic registration in `RegisterTrainerInMatchCall` for Wayfarer. A trainer w
   who becomes ready during the day is placed from the next day. Winning
   against a ready trainer clears readiness, but today's arrangement stays. If
   their group has no rotating spot, they are not called until a day when it
-  has one.
+  has one. A contact whose slot is fixed (excluded from rotation) is placed at
+  home for ready and gift calls.
 
 ## Calls
 
@@ -181,6 +197,11 @@ rematches; the item itself is left unobtainable.
   40, 80, 120 and 160.
 - Every gift hand-off still works from a rotating slot, including `NoRoom`.
 - No flag overlaps, and the contact list never overflows.
+- Registering an appended contact (index 90 or above) sets a flag in
+  `0x8BE`–`0x8D9` and leaves `0x36A` onward (`HNS_EXTENDED_CONTENT_START`, the
+  decoration flags) unchanged.
+- A contact whose slot is fixed still gets Battle and FoundItem calls, naming
+  its home map.
 - Every Battle and FoundItem text contains `{STR_VAR_2}`, and every text fits the text box.
 
 ## Hoenn call texts

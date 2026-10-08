@@ -51,7 +51,8 @@ gifts don't exclude a trainer; they move with it.
 
 The generator proposes each slot's status from script analysis, and authors
 review it in the report. A slot can be forced fixed by a reviewed exclusion
-with a reason. A rotating candidate must also pass the
+with a reason. A fixed contact stays at home and still gets Battle and
+FoundItem calls. A rotating candidate must also pass the
 [dialogue audit](#dialogue-audit).
 
 ## The day
@@ -78,21 +79,23 @@ and coming back on the same day changes nothing.
 
 ## Save state
 
-Two Wayfarer blocks. SaveBlock3 holds the day stamp, the cleared bits and the
-day-start phone sets:
+The daily state is one struct in `PokemonStorage`, beside `wayfarerWorld`
+(`IS_WAYFARER` block of `pokemon_storage_system.h`), in the room freed by the
+13-box decision in
+[Notable world simulation](notable-world-simulation.md#where-it-lives).
+SaveBlock3 gets nothing: its free bytes are already claimed by the haunt,
+friendship and follower state.
 
 ```text
 u16 stampDay                          // day the bits below belong to
 bitset clearedToday[slotCount]        // every trainer slot and item spot
+bitset homeBeatenToday[trainerSlotCount]
 bitset readyAtDayStart[contactCount]  // contacts ready for a rematch when the day began
 bitset giftAtDayStart[contactCount]   // contacts holding a gift when the day began
 ```
 
-SaveBlock1 holds the home-beaten bits, next to `trainerRematches`:
-
-```text
-bitset homeBeatenToday[trainerSlotCount]
-```
+SaveBlock1 only grows by [`trainerRematches`](phone-rematches.md#rematch-table-and-save-state),
+100 to 118 bytes.
 
 On map load, if `stampDay != day`, clear `clearedToday` and `homeBeatenToday`,
 take the two snapshots and set `stampDay`. The snapshots are the
@@ -107,18 +110,28 @@ call before the next map load uses the previous day's arrangement.
 
 Budget (about 720 trainer slots and 860 item spots, Sevii included):
 
-| Block | Used now | Capacity | Added | Left after |
-| --- | ---: | ---: | --- | ---: |
-| SaveBlock3 | 1,348 | 1,624 | 240 (2 `stampDay`, 198 `clearedToday`, 20 + 20 snapshots) | 36 |
-| SaveBlock1 | 15,760 | 15,872 | 108 (90 `homeBeatenToday`, 18 for [`trainerRematches`](phone-rematches.md#rematch-table-and-save-state) growing 100 to 118) | 4 |
+| Part | Bytes |
+| --- | ---: |
+| `stampDay` | 2 |
+| `clearedToday` (1,580 bits) | 198 |
+| `homeBeatenToday` (720 bits) | 90 |
+| `readyAtDayStart`, `giftAtDayStart` (160 bits each) | 40 |
+| Total in `PokemonStorage` | 330 |
 
-The figures come from the built ELF's `gSaveblock3` (0x544 bytes), `gSaveblock1`
-(0x3E10, less the 128-byte `SAVEBLOCK_MOVE_RANGE` pad in `load_save.h`) and the
-limits in `src/save.c`: the 1,624-byte SaveBlock3 assert and four SaveBlock1
-sectors of 3,968 bytes. SaveBlock2 is not used. SaveBlock1 fits with only 4
-bytes spare, so a count above 32 more trainer slots needs the home-beaten bits
-narrowed first (index only the rotating candidates, not every trainer object).
-Add static asserts for both blocks. Follow the RAM rules in `AGENTS.md`; the
+| Block | Free before | Added | Left after |
+| --- | ---: | --- | ---: |
+| `PokemonStorage` (13 boxes, PR #139 merged) | 2,520 | 330 | 86 |
+| SaveBlock1 | 112 | 18 (`trainerRematches` 100 to 118) | 94 |
+
+The `PokemonStorage` figure is Notable world simulation's: of its 2,520
+bytes, the world state, the haunts' traded slots and the Masters growth plan
+2,008 (about 416 left with the 96 bytes of face-only trainers), and the daily
+state takes 330 of that margin. Capacity figures come from the built ELF and
+the limits in `src/save.c`: nine storage sectors hold 35,712 bytes, and four
+SaveBlock1 sectors of 3,968 bytes hold 15,872 against 15,760 used (`gSaveblock1`
+is 0x3E10, less the 128-byte `SAVEBLOCK_MOVE_RANGE` pad in `load_save.h`).
+Add static asserts on the size of the daily struct and on both blocks, and
+keep `PokemonStorageFreeSpace`. Follow the RAM rules in `AGENTS.md`; the
 per-map resolved occupants live in EWRAM for the map's lifetime only.
 
 ## Trainers
@@ -153,7 +166,10 @@ For each trainer group, on map load, resolve all of the group's slots at once:
 
 Only the current map's groups need resolving, but the result is the same
 wherever it's computed. A lookup `WhereIsTrainerToday(trainerId)` resolves the
-trainer's group and returns the map and slot, or none. It also returns none
+trainer's group and returns the map and slot, or none. For a contact whose slot
+is fixed (excluded from rotation) it returns the home map and slot (it has no
+daily battle, so `clearedToday` doesn't apply), and such a contact is placed at
+home for ready and gift calls. It returns none
 for a trainer whose slot is cleared today, so a call never names a trainer who
 has already had today's battle. Phone calls use it to name today's place.
 
@@ -168,6 +184,17 @@ rotating slot's template:
   the slot. The occupant is remembered per local id for the map's lifetime.
 - **Empty:** nothing is rewritten; the [spawn check](#flags-and-visibility)
   keeps the template from spawning.
+
+**On Continue.** `CB2_ContinueSavedGame` (`overworld.c`) loads the templates
+from the save, then `LoadSaveblockObjEventScripts` resets every template's
+script to the authored one, and the EWRAM occupant table is empty. So the hook
+also runs on Continue, right after `LoadSaveblockObjEventScripts`, following
+`WayfarerWorld_OnContinue` and `WayfarerWalkers_OnContinue` and the Battle
+Pyramid's `LoadBattlePyramidFloorObjectEventScripts`. It re-resolves the
+current map from the stamped day and rewrites scripts, graphics, `flagId`s and
+occupants again, which also rebuilds the per-map occupant table the
+[sight branch](#battles) reads. Continue applies no day change; a new day is
+still applied only by the map-load rule in [The day](#the-day).
 
 The [notable walkers' hook](../../game/src/event_object_movement.c) uses the
 same seam. Walkers never spawn on a trainer slot's tile, and slot rewriting
@@ -289,8 +316,12 @@ Debug and E2E builds can override `day` and `saveSeed`, so any draw can be
 reproduced. Tests cover:
 
 - the same draw across reload, save and reset, and a new draw on a new day;
+- Continue: save on a map with a rotating occupant and a dynamic ball, reset
+  and Continue, then talk to the trainer (the occupant's battle, not the
+  authored one), pick up the ball, and take camera steps (it stays gone);
 - the home-beaten-today freeze, and the wanderer starting the next day;
 - one place per trainer per day, pairs, and placement of ready and gift trainers, including readiness or a gift flag changing mid-day, and Battle text only for a ready-at-day-start contact and FoundItem text only for a gift-at-day-start one;
+- a fixed (non-rotating) contact receiving Battle and FoundItem calls that name its home map;
 - wanderers approaching by sight until cleared, and not after;
 - dynamic and taken-prize spots staying visible after a reload on the same day, and refilling the next day, with no permanent flag set;
 - a picked-up ball (dynamic or taken prize) not respawning on later camera steps, a reload or leaving and re-entering the map the same day, and an empty slot's template never spawning;
