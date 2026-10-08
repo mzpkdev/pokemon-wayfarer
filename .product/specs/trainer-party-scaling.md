@@ -2,6 +2,8 @@
 
 PRD: [Regular trainer and Gym member scaling](../prds/trainer-party-scaling.md)
 Implemented: Partial; runtime policies exist, campaign balance acceptance remains pending.
+[v0 final-stage rosters](#v0-final-stage-rosters) are implemented (#157);
+[v0 levels](#v0-levels) are not yet.
 
 Today's routing includes [League scaling](league-scaling.md) with the player's
 TR saved when entering a league, so League levels scale from that saved TR. See
@@ -199,8 +201,12 @@ cap.
 
 ## v0 final-stage rosters
 
+Implemented: Yes (#157). Rosters are authored by
+`game/tools/trainer_scaling/final_stage.py`; its report is
+`game/src/data/trainer_scaling/final_stage_report.md`.
+
 In v0, regular trainers' Pokémon evolve as their level rises. This replaces
-"Do not forward-evolve base species" and the Later item below.
+"Do not forward-evolve base species".
 
 **Authoring.** Every `ORDINARY` and `GYM_MEMBER` roster, rematch teams and the
 ordinary Sevii, Kanto coast and S.S. Anne rosters included, names each slot at

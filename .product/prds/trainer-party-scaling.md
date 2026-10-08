@@ -1,6 +1,7 @@
 # Regular trainer and Gym member scaling
 
 Implemented: Partial; runtime policies exist, campaign balance acceptance remains pending.
+Final-stage rosters are implemented (#157); reach levels are not yet.
 
 Today's routing includes [League scaling](league-scaling.md) with the player's
 TR saved when entering a league, so League levels scale from that saved TR. See
