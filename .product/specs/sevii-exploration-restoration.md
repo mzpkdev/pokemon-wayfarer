@@ -2,7 +2,7 @@
 
 PRD: [Daily world slots](../prds/daily-world-slots.md) (prerequisite) and
 [Sevii exploration port](../prds/sevii-exploration-port.md)
-Implemented: No
+Implemented: Yes (Wayfarer)
 
 ## Scope
 
@@ -16,7 +16,7 @@ the port meant to keep, exactly as authored in the FRLG source maps:
 | Item balls | 39 | [Items](#items) |
 | Hidden items | 58 | [Items](#items) |
 | Rock Smash rocks | 57 | Kindle Road, Mt. Ember, its Summit Path and Ruby Path, Four Island, Sevault Canyon |
-| Cut trees | 17 | Berry Forest, Two, Three and Five Island, Five Isle Meadow, Bond Bridge |
+| Cut trees | 17 | Berry Forest, Two, Three and Five Island, Five Isle Meadow, Bond Bridge. Five Island's is a clone of the Meadow's border tree |
 | Strength boulders | 26 | Mt. Ember, its summit and Ruby Path, Ruin Valley, Sevault Canyon. Tanoby Key's 7 are already kept |
 | Signs | 85 | Town, route and landmark signs and Tanoby's Braille texts; 19 are already kept |
 | Ember Spa heal | 1 | The coord trigger that heals the party in the hot spring |
@@ -28,7 +28,7 @@ and which are dynamic.
 
 Still out of scope:
 
-- 24 story coord triggers (the Three Island bikers, the Mt. Ember password,
+- 23 story coord triggers (the Three Island bikers, the Mt. Ember password,
   Lorelei's poacher scene, the Warehouse admin, and Bill's One Island
   departure check). The [Sevii story port](../prds/sevii-independent-story-beats.md)
   owns those scenes with its own scripts.
@@ -80,6 +80,13 @@ every `FLAG_HIDE_*` item flag is 0, which never persists a pickup, and every
 Allocate the 97 slots together, record them where the Sevii state contracts
 expect, and check that none overlaps another Sevii or Wayfarer flag.
 
+As built, item balls take slots 61–99 and hidden items 100–157, declared in
+`include/constants/flags.h` beside the other exploration slots. The manifest's
+state contracts only cover story, Trainer and Tower owners, so exploration
+pickups aren't listed there; tests check that no slot overlaps another Sevii
+flag or contract state. The hidden-item marker is `0x1F00`, the top page of the
+Hoenn-marked range, which no Emerald flag reaches.
+
 #### Scripts
 
 The 39 FRLG item-ball scripts compile in Wayfarer, but the Sevii audit only
@@ -110,6 +117,22 @@ wrapper that shows the original text, in a new `signs.inc` exploration script
 module that allows only message commands. Braille signs keep their Braille
 text. A sign whose text points to story that the Wayfarer story port changed is
 reworded to stay accurate, or left out with a reason.
+
+As built:
+
+- The 22 Rocket Warehouse pen signs are story rows. Their FRLG text switches
+  from locked to fled on the Warehouse clearance, which the story port owns, so
+  the wrapper reads `SEVII_WAREHOUSE_CLEARED` in the story module instead of
+  making an exploration sign read story state.
+- The Five Isle Meadow Warehouse door shows FRLG's "already open" text, since
+  Wayfarer always opens that door.
+- The Ruin Valley Dotted Hole door keeps FRLG's Braille hint in the
+  environment module and checks the exploration-owned door flag that Cut sets.
+- The two Pokémon Journals show their FRLG text without the Fame Checker
+  update, which Wayfarer doesn't have.
+- The Joyful Game Corner's two record boards are left out. They open the
+  Pokémon Jump and Dodrio Berry Picking link-minigame records, like the other
+  link features the port drops.
 
 ### Ember Spa
 

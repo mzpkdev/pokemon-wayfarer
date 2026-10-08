@@ -132,6 +132,24 @@
 	bg_event \x, \y, \elevation, BG_EVENT_HIDDEN_ITEM, \item | ((WAYFARER_HOENN_HIDDEN_ITEM_MARKER | (\flag & WAYFARER_PERSISTENCE_VALUE_MASK)) << 11) | (\quantity << 24) | (\underfoot << 31)
 	.endm
 
+	@ Sevii hidden items store a Sevii bank slot behind their own marker,
+	@ because a SaveBlock3 flag cannot be an offset from FLAG_HIDDEN_ITEMS_START.
+	.macro bg_hidden_item_event_sevii x:req, y:req, elevation:req, item:req, flag:req, quantity=1, underfoot=FALSE
+	.if (\flag & WAYFARER_PERSISTENCE_NAMESPACE_MASK) != WAYFARER_SEVII_FLAG_NAMESPACE
+	.error "Sevii Hidden Item flag \flag is not in the Sevii namespace."
+	.endif
+	.if (\flag & WAYFARER_PERSISTENCE_VALUE_MASK) > WAYFARER_SEVII_HIDDEN_ITEM_SLOT_MASK
+	.error "Sevii Hidden Item flag \flag does not fit the hidden-item slot field."
+	.endif
+	.if \item >= (1 << 11)
+	.error "item \item too large"
+	.endif
+	.if \quantity >= (1 << 7)
+	.error "quantity \quantity too large"
+	.endif
+	bg_event \x, \y, \elevation, BG_EVENT_HIDDEN_ITEM, \item | ((WAYFARER_SEVII_HIDDEN_ITEM_MARKER | (\flag & WAYFARER_SEVII_HIDDEN_ITEM_SLOT_MASK)) << 11) | (\quantity << 24) | (\underfoot << 31)
+	.endm
+
 	@ Defines a background secret base event for map data
 	.macro bg_secret_base_event x:req, y:req, elevation:req, secret_base_id:req
 	bg_event \x, \y, \elevation, BG_EVENT_SECRET_BASE, \secret_base_id

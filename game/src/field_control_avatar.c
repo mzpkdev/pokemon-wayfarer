@@ -98,6 +98,8 @@ u16 GetHiddenItemFlagId(const struct BgEvent *bgEvent)
     u16 hiddenItemId = bgEvent->bgUnion.hiddenItem.hiddenItemId;
 
 #if IS_WAYFARER
+    if ((hiddenItemId & WAYFARER_SEVII_HIDDEN_ITEM_MARKER_MASK) == WAYFARER_SEVII_HIDDEN_ITEM_MARKER)
+        return WAYFARER_SEVII_FLAG_ID(hiddenItemId & WAYFARER_SEVII_HIDDEN_ITEM_SLOT_MASK);
     if (hiddenItemId & WAYFARER_HOENN_HIDDEN_ITEM_MARKER)
         return HOENN_FLAG_ID(hiddenItemId & WAYFARER_PERSISTENCE_VALUE_MASK);
 #endif

@@ -685,3 +685,17 @@ WayfarerSevii_Text_MoltresResolved:
 	.string "Only warm volcanic air remains.$"
 WayfarerSevii_Text_MoltresCry:
 	.string "Gyaoo!$"
+
+@ The Warehouse pens keep FRLG's text. The source flag that FRLG checks is a
+@ stub in Wayfarer, so the unlocked text follows the story's clearance flag.
+WayfarerSevii_RocketWarehouse_Cage::
+	lockall
+	goto_if_set FLAG_WAYFARER_SEVII_WAREHOUSE_CLEARED, WayfarerSevii_RocketWarehouse_CageUnlocked
+	msgbox FiveIsland_RocketWarehouse_Text_ManyMonsLockedInPen
+	releaseall
+	end
+
+WayfarerSevii_RocketWarehouse_CageUnlocked::
+	msgbox FiveIsland_RocketWarehouse_Text_PenUnlockedMonsFled
+	releaseall
+	end

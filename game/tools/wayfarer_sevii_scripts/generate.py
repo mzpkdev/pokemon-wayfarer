@@ -38,6 +38,11 @@ class GenerationError(ValueError):
     pass
 
 
+# FRLG text files that Wayfarer does not link. Their pinned labels are copied
+# like source-map text.
+FRLG_ONLY_TEXT_SOURCES = frozenset(("data/text/fame_checker_frlg.inc",))
+
+
 SOURCE_LABEL = re.compile(
     r"(?m)^([A-Za-z_][A-Za-z0-9_]*):{1,2}\s*(?:@.*)?$"
 )
@@ -113,7 +118,7 @@ def _source_label_block(root: Path, relative: str, label: str) -> str:
 
 
 def source_data_blocks(root: Path, modules: dict, selected_modules: set[str]) -> list[str]:
-    """Copy only pinned text data from source-map scripts.
+    """Copy only pinned text data from source-map scripts and unlinked FRLG text.
 
     Wayfarer never links the FRLG source map scripts themselves. Selected
     story handlers may reuse reviewed dialogue, so those individual label
@@ -125,7 +130,8 @@ def source_data_blocks(root: Path, modules: dict, selected_modules: set[str]) ->
         for row in modules[module_name].get("allowed_externals", []):
             relative = row.get("path", "")
             label = row.get("label", "")
-            if row.get("kind") != "script_symbol" or not relative.startswith("data/maps/"):
+            if row.get("kind") != "script_symbol" or not (
+                    relative.startswith("data/maps/") or relative in FRLG_ONLY_TEXT_SOURCES):
                 continue
             block = _source_label_block(root, relative, label)
             directives = []

@@ -18,7 +18,7 @@ from typing import Any
 
 SCRIPT_ROOT = "data/scripts/wayfarer_sevii/"
 OWNERS = {"exploration", "ordinary_trainer", "story", "trainer_tower", "masters"}
-SHARED_EXPLORATION_EVENT_LABELS = {"EventScript_StrengthBoulder"}
+SHARED_EXPLORATION_EVENT_LABELS = {"EventScript_CutTree", "EventScript_RockSmash", "EventScript_StrengthBoulder"}
 LABEL = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 LABEL_DEF = re.compile(r"(?m)^([A-Za-z_][A-Za-z0-9_]*):{1,2}\s*(?:@.*)?$")
 INCLUDE = re.compile(r'^\s*\.include\s+"([^"]+)"\s*(?:@.*)?$')
@@ -137,8 +137,8 @@ def module_for_export(manifest: dict[str, Any], label: str, owner: str) -> str |
     """Resolve one owner module for an event entrypoint.
 
     A selected event cannot rely on a module merely because some unrelated
-    map-script handler happens to select it.  The one historical shared field
-    helper remains an explicit exploration-only exception.
+    map-script handler happens to select it.  The shared field-move
+    helpers remain explicit exploration-only exceptions.
     """
     if owner not in OWNERS:
         raise ClosureError(f"event entrypoint {label} has invalid owner {owner}")

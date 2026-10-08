@@ -5,8 +5,12 @@
 @
 
 	.include "data/scripts/wayfarer_sevii/common.inc"
+	.include "data/scripts/wayfarer_sevii/dolls.inc"
 	.include "data/scripts/wayfarer_sevii/environment.inc"
+	.include "data/scripts/wayfarer_sevii/items.inc"
 	.include "data/scripts/wayfarer_sevii/masters/masters.inc"
+	.include "data/scripts/wayfarer_sevii/signs.inc"
+	.include "data/scripts/wayfarer_sevii/spa.inc"
 	.include "data/scripts/wayfarer_sevii/story/celio_network.inc"
 	.include "data/scripts/wayfarer_sevii/story/local_adventures.inc"
 	.include "data/scripts/wayfarer_sevii/story/local_services.inc"
@@ -69,6 +73,10 @@ FiveIsland_Meadow_Text_Rocket3PostBattle::
 	.string "You won't be able to get in without\n"
 	.string "the passwords anyway.$"
 
+FiveIsland_Meadow_Text_WarehouseDoorAlreadyOpen::
+	.string "The WAREHOUSE's door is already\n"
+	.string "open.$"
+
 FiveIsland_MemorialPillar_Text_BeGoodToYourMonsToo::
 	.string "Please be good to your POKéMON,\n"
 	.string "too.$"
@@ -127,11 +135,34 @@ FiveIsland_PokemonCenter_1F_Text_YoureOnQuestToCatchEveryMon::
 	.string "…How incredible. Please tell me if\n"
 	.string "you catch a strong one!$"
 
+FiveIsland_ResortGorgeous_Text_SelphysHouse::
+	.string "SELPHY'S HOUSE$"
+
+FiveIsland_RocketWarehouse_Text_ManyMonsLockedInPen::
+	.string "There are many POKéMON locked\n"
+	.string "away in the pen…$"
+
+FiveIsland_RocketWarehouse_Text_PenUnlockedMonsFled::
+	.string "The pen door is unlocked.\n"
+	.string "The POKéMON appear to have fled.$"
+
+FiveIsland_RocketWarehouse_Text_ReportWithGraphsAndText::
+	.string "A report with graphs and text is on\n"
+	.string "the PC monitor.\p"
+	.string "“The Influence of Magnetic Waves\n"
+	.string "on POKéMON Evolution”…\p"
+	.string "… … … … … …\p"
+	.string "It's too difficult to understand…$"
+
 FiveIsland_Text_BeenGettingBusierAroundHere::
 	.string "It's been getting busier around\n"
 	.string "these parts lately.\p"
 	.string "I haven't been catching many good\n"
 	.string "fish lately, either.$"
+
+FiveIsland_Text_IslandSign::
+	.string "FIVE ISLAND\n"
+	.string "Chrono Island: Where Time Goes$"
 
 FiveIsland_Text_WeirdBuildingInMeadow::
 	.string "Oh, this stinks. I wanted to play in\n"
@@ -179,6 +210,9 @@ FourIsland_House1_Text_YoureAwfullyHeavy::
 	.string "There! Boing!\n"
 	.string "You're awfully heavy!$"
 
+FourIsland_LoreleisHouse_Text_StuffedMonDollsGalore::
+	.string "Stuffed POKéMON dolls galore!$"
+
 FourIsland_Mart_Text_IcefallCaveIsFrigid::
 	.string "The SEVII ISLANDS are in a warm\n"
 	.string "region overall.\p"
@@ -214,6 +248,10 @@ FourIsland_PokemonCenter_1F_Text_RareIceMonsInCave::
 	.string "We get a lot of visitors hoping to\n"
 	.string "see that POKéMON.$"
 
+FourIsland_Text_IslandSign::
+	.string "FOUR ISLAND\n"
+	.string "The Warm, Blue, Floe Island$"
+
 FourIsland_Text_LoreleiHasLotsOfStuffedDolls::
 	.string "Oh, you found me!\n"
 	.string "Please don't tell LORELEI.\p"
@@ -235,6 +273,9 @@ FourIsland_Text_LoreleiMetLaprasAsChild::
 	.string "that she caught it.\p"
 	.string "Perhaps that POKéMON has been with\n"
 	.string "her ever since.$"
+
+FourIsland_Text_LoreleisHouse::
+	.string "LORELEI'S HOUSE$"
 
 FourIsland_Text_MadeSlushieUsingIcefallCaveIce::
 	.string "Ooh, chilly!\p"
@@ -295,6 +336,12 @@ OneIsland_KindleRoad_EmberSpa_Text_UsedThisToMakeEmberSpa::
 	.string "I was using this at the time.\n"
 	.string "I suppose I can part with it.$"
 
+OneIsland_KindleRoad_EmberSpa_Text_WaterExquisiteFullyRefreshed::
+	.string "The water is perfectly warm.\n"
+	.string "It feels exquisite…\p"
+	.string "{PLAYER} and the POKéMON were\n"
+	.string "fully refreshed!$"
+
 OneIsland_KindleRoad_EmberSpa_Text_WaterWarmsMeToCore::
 	.string "Hm!\n"
 	.string "Haaaaaaaaaaah!\p"
@@ -303,6 +350,14 @@ OneIsland_KindleRoad_EmberSpa_Text_WaterWarmsMeToCore::
 	.string "You should jump in, too.\p"
 	.string "Go to the middle, relax, and get\n"
 	.string "good and warm!$"
+
+OneIsland_KindleRoad_Text_EmberSpaSign::
+	.string "Light the Fire in Your Heart!\n"
+	.string "EMBER SPA$"
+
+OneIsland_KindleRoad_Text_RouteSign::
+	.string "This is KINDLE ROAD.\p"
+	.string "Go straight for MT. EMBER.$"
 
 OneIsland_PokemonCenter_1F_Text_CameFromPalletDontKnowIt::
 	.string "Oh, you're a stranger here!\n"
@@ -320,6 +375,10 @@ OneIsland_PokemonCenter_1F_Text_WishICouldTradeWithBoyfriend::
 	.string "I wish I could trade POKéMON with\n"
 	.string "my boyfriend who lives far away…$"
 
+OneIsland_Text_IslandSign::
+	.string "ONE ISLAND\n"
+	.string "Friends Gather at Knot Island$"
+
 OneIsland_Text_IsntWarmClimateHereGreat::
 	.string "Hi, sight-seeing, are you?\n"
 	.string "Isn't the warm climate here great?$"
@@ -336,11 +395,34 @@ OneIsland_Text_LuckyToHaveCelioHere::
 	.string "I'm not sure what that means, but\n"
 	.string "CELIO is quite the man!$"
 
+OneIsland_Text_PokemonNetCenterSign::
+	.string "Expanding the POKéMON World!\n"
+	.string "POKéMON NET CENTER$"
+
+@ Unused
+
 OneIsland_TreasureBeach_Text_GoodThingsWashUpOnBeach::
 	.string "Good things get washed up by the\n"
 	.string "ocean current onto this beach.\p"
 	.string "That's why I often come here for\n"
 	.string "some beachcombing.$"
+
+PokemonJournal_Text_SpecialFeatureBlaine::
+	.string "POKéMON JOURNAL\p"
+	.string "Special Feature: CINNABAR GYM\n"
+	.string "LEADER BLAINE!\p"
+	.string "BLAINE is said to remove his dark\n"
+	.string "shades only when he is thinking up\l"
+	.string "new quiz questions.$"
+
+PokemonJournal_Text_SpecialFeatureDaisyOak::
+	.string "This is a POKéMON JOURNAL from\n"
+	.string "years ago…\p"
+	.string "POKéMON JOURNAL\n"
+	.string "CONTEST Special!\p"
+	.string "The Spring POKéMON CONTEST's\n"
+	.string "Grand Champion is DAISY OAK of\l"
+	.string "PALLET TOWN!$"
 
 SevenIsland_House_Room1_Text_OnlyEnjoymentWatchingBattles::
 	.string "I may not look like much now,\n"
@@ -380,6 +462,11 @@ SevenIsland_PokemonCenter_1F_Text_DidYouRideSeagallopHere::
 	.string "I don't know where they all go,\n"
 	.string "though.$"
 
+SevenIsland_SevaultCanyon_Entrance_Text_RouteSign::
+	.string "SEVAULT CANYON ENTRANCE\p"
+	.string "TRAINERS are asked to refrain from\n"
+	.string "damaging plants in the CANYON.$"
+
 SevenIsland_SevaultCanyon_House_Text_Chansey::
 	.string "CHANSEY: Chansi! Chansi!$"
 
@@ -412,6 +499,10 @@ SevenIsland_SevaultCanyon_Text_BrunoTrainedWithBrawly::
 	.string "He trained with a fellow by the\l"
 	.string "name of BRAWLY before.$"
 
+SevenIsland_SevaultCanyon_Text_RouteSign::
+	.string "SEVAULT CANYON\n"
+	.string "TANOBY RUINS AHEAD$"
+
 SevenIsland_Text_IslandSign::
 	.string "SEVEN ISLAND\n"
 	.string "Quest Island of Infinity$"
@@ -430,6 +521,21 @@ SevenIsland_Text_IslandsMadeInSevenDays::
 	.string "The truth is, these islands are so\n"
 	.string "named because they are said to\l"
 	.string "have been made in seven days.$"
+
+SevenIsland_TrainerTower_Text_TrainerTowerAhead::
+	.string "TRAINER TOWER AHEAD$"
+
+SevenIsland_TrainerTower_Text_TrainerTowerSign::
+	.string "TRAINER TOWER ENTRANCE\n"
+	.string "Rise to the Challenge, TRAINERS!$"
+
+SixIsland_GreenPath_Text_LeftRouteSign::
+	.string "GREEN PATH\n"
+	.string "PATTERN BUSH AHEAD$"
+
+SixIsland_GreenPath_Text_RightRouteSign::
+	.string "GREEN PATH\n"
+	.string "Think Green, Keep Nature Clean!$"
 
 SixIsland_House_Text_GoodPlaceForNatureAndHistory::
 	.string "There's nothing that young people'd\n"
@@ -482,10 +588,28 @@ SixIsland_RuinValley_Text_CantFigureOutHowToGetInside::
 	.string "I can't figure out how I'm supposed\n"
 	.string "to get inside.$"
 
+SixIsland_RuinValley_Text_CheckDoorMoreThoroughly::
+	.string "The door doesn't budge at all.\n"
+	.string "Check it more thoroughly?$"
+
+SixIsland_RuinValley_Text_DoorIsOpen::
+	.string "The door is open.$"
+
 SixIsland_RuinValley_Text_IFoundThisPlace::
 	.string "Let me tell you, I found this\n"
 	.string "place.\p"
 	.string "Don't look so envious, will you?$"
+
+SixIsland_RuinValley_Text_LeftDoorAlone::
+	.string "{PLAYER} left the door alone.$"
+
+SixIsland_RuinValley_Text_SeveralDotsOnTheDoor::
+	.string "On closer inspection, there are\n"
+	.string "several dots on the door…$"
+
+SixIsland_Text_IslandSign::
+	.string "SIX ISLAND\n"
+	.string "Fortune Island of Aged Wisdom$"
 
 SixIsland_Text_SkyAtNightIsFantastic::
 	.string "When you're this far away from the\n"
@@ -549,6 +673,14 @@ SixIsland_WaterPath_House2_Text_MyNeighborMeasuredMe::
 	.string "button.\p"
 	.string "I know it is this precisely because\n"
 	.string "my neighbor measured me.$"
+
+SixIsland_WaterPath_Text_RouteSign::
+	.string "WATER PATH\n"
+	.string "Leads to RUIN VALLEY$"
+
+SixIsland_WaterPath_Text_WantedUltimateHorn::
+	.string "Wanted!\n"
+	.string "The Ultimate Horn!$"
 
 Text_AllowMeToTeachMonUltimateMove::
 	.string "Oh! This is the one!\n"
@@ -666,6 +798,23 @@ Text_YouRejectIt::
 	.string "Gaah! You reject it?\n"
 	.string "No, I won't be dissuaded!$"
 
+ThreeIsland_BerryForest_Text_BewareWildBerryLovingMons::
+	.string "Beware of wild, BERRY-loving\n"
+	.string "POKéMON!$"
+
+ThreeIsland_BerryForest_Text_WelcomeToBerryForest::
+	.string "Welcome to the BERRY FOREST\p"
+	.string "Be friendly and share BERRIES with\n"
+	.string "others and POKéMON.$"
+
+ThreeIsland_BondBridge_Text_BerryForestAhead::
+	.string "BERRY FOREST AHEAD$"
+
+ThreeIsland_BondBridge_Text_BondBridgeSign::
+	.string "BOND BRIDGE\n"
+	.string "Please be quiet when crossing.\p"
+	.string "BERRY FOREST AHEAD$"
+
 ThreeIsland_DunsparceTunnel_Text_StruckGoldThisIsForYou::
 	.string "Hey, there! How's it going?\n"
 	.string "Did you hear? I've struck gold!\p"
@@ -684,6 +833,9 @@ ThreeIsland_DunsparceTunnel_Text_ThatsANugget::
 ThreeIsland_DunsparceTunnel_Text_WhoopsBagCrammedFull::
 	.string "Whoops, your BAG is crammed full!\n"
 	.string "I'll give this to you later.$"
+
+ThreeIsland_House1_Text_RareRocksGemsDisplayed::
+	.string "Rare rocks and gems are displayed.$"
 
 ThreeIsland_House2_Text_CantMakeThisSpoonBend::
 	.string "Urrrrrrrrgggghhhh…\n"
@@ -781,6 +933,10 @@ ThreeIsland_Port_Text_WereKantoRiderFederation::
 
 ThreeIsland_Text_Doduo::
 	.string "DODUO: Gigiih!$"
+
+ThreeIsland_Text_IslandSign::
+	.string "THREE ISLAND\n"
+	.string "Kin Island of Family Bonding$"
 
 ThreeIsland_Text_WhenDodouEvolvesGoingToPlayGame::
 	.string "I'm going to train my DODUO in the\n"
@@ -887,6 +1043,10 @@ TwoIsland_Text_BuyRareItemsHere::
 	.string "The discerning TRAINER knows to\n"
 	.string "buy rare items here!$"
 
+TwoIsland_Text_DangerFastCurrent::
+	.string "DANGER! FAST CURRENT!\n"
+	.string "Fishing and surfing prohibited!$"
+
 TwoIsland_Text_FellowMovedFromCeladonCity::
 	.string "That fellow there, he moved here\n"
 	.string "from CELADON CITY.\p"
@@ -904,6 +1064,14 @@ TwoIsland_Text_HaveYouTriedJumpingGame::
 	.string "And some go boooooooing!\p"
 	.string "Did you know that?\n"
 	.string "Boing!$"
+
+TwoIsland_Text_IslandSign::
+	.string "TWO ISLAND\n"
+	.string "Boon Island for Two$"
+
+TwoIsland_Text_JoyfulGameCornerSign::
+	.string "Skip & Chomp!\n"
+	.string "Joyful GAME CORNER$"
 
 TwoIsland_Text_OldWomanLivesOutOnCape::
 	.string "There's an old woman who lives in\n"

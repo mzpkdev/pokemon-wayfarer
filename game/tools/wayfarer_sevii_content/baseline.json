@@ -2,7 +2,7 @@
   "schema_version": 1,
   "source_commit": "7aeb01c62108f005981297d5d83d0a8826981c10",
   "manifest_baseline": {
-    "projection_sha256": "b69f70194849d5d609bf935ca181c6fb11e4d48ea8f7e22ee7eb785d7971ba99",
+    "projection_sha256": "1d1b3203ec0d942aa6292964ee02c1b359d856844b93268c151a7240f6a86ada",
     "wild_encounters_sha256": "a2264a3346ae5ac0a37cdc22169a1455b2a51a9b7b626f3090504d84eaabb0b7",
     "event_island_baseline_sha256": "75086dcd44b31f457405a6b9f0d6598832ead0532b8437ea0fdf4752768f0a9f"
   },

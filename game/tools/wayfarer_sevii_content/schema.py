@@ -35,7 +35,7 @@ SHA256 = re.compile(r"^[0-9a-f]{64}$")
 CONTENT_ID = re.compile(r"^[a-z][a-z0-9_.-]*$")
 STATE_CONTRACT = re.compile(r"^SEVII_[A-Z0-9_]+$")
 WAYFARER_OVERRIDE = re.compile(r"^(?:FLAG|VAR)_WAYFARER_SEVII_[A-Z0-9_]+$")
-APPROVED_EXPLORATION_HELPERS = {"EventScript_StrengthBoulder"}
+APPROVED_EXPLORATION_HELPERS = {"EventScript_CutTree", "EventScript_RockSmash", "EventScript_StrengthBoulder"}
 EVENT_ROW_KEYS = frozenset((
     "index", "local_id", "source", "wayfarer_script", "owner", "content_id", "reason", "overrides",
     "state_reads", "state_writes", "visibility", "trainer", "battle", "transaction",

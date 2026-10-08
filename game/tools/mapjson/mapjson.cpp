@@ -605,6 +605,11 @@ bool wayfarer_sevii_owner_is_enabled(const Json &rule) {
     return it->second;
 }
 
+// Shared field-move helpers that exploration rows may keep as authored.
+const set<string> wayfarer_sevii_exploration_helpers = {
+    "EventScript_CutTree", "EventScript_RockSmash", "EventScript_StrengthBoulder",
+};
+
 bool wayfarer_sevii_valid_state_name(const string &state) {
     return state.rfind("SEVII_", 0) == 0;
 }
@@ -653,7 +658,8 @@ void validate_wayfarer_sevii_event_rule(const Json &event, const Json &rule,
     }
     const string replacement_script = json_to_string(rule, "wayfarer_script", true);
     if (!replacement_script.empty() && replacement_script.rfind("WayfarerSevii_", 0) != 0
-     && !(json_to_string(rule, "owner", true) == "exploration" && replacement_script == "EventScript_StrengthBoulder"))
+     && !(json_to_string(rule, "owner", true) == "exploration"
+          && wayfarer_sevii_exploration_helpers.count(replacement_script)))
         FATAL_ERROR("Wayfarer Sevii %s %s[%u] must use a Wayfarer-owned replacement script.\n",
                     map_name.c_str(), event_kind.c_str(), index);
     if (owner != "exploration") {
@@ -1447,14 +1453,18 @@ string generate_map_events_text(Json map_data) {
                 }
                 // Wayfarer only changes registered FRLG Sevii maps.  Existing
                 // Emerald/HNS/event-island maps retain their legacy event
-                // encoding and flag namespaces byte-for-byte.
-                bool use_hoenn_namespace = false;
-                text << (use_hoenn_namespace ? "\tbg_hidden_item_event_hoenn " : "\tbg_hidden_item_event ")
+                // encoding and flag namespaces byte-for-byte.  A Sevii row
+                // whose manifest override names a Sevii bank flag uses the
+                // Sevii marker encoding instead of a FLAG_HIDDEN_ITEMS offset.
+                const string flag = get_wayfarer_override(bg_event, "flag");
+                const bool use_sevii_namespace = version == "wayfarer"
+                    && flag.rfind("FLAG_WAYFARER_SEVII_", 0) == 0;
+                text << (use_sevii_namespace ? "\tbg_hidden_item_event_sevii " : "\tbg_hidden_item_event ")
                      << json_to_string(bg_event, "x") << ", "
                      << json_to_string(bg_event, "y") << ", "
                      << json_to_string(bg_event, "elevation") << ", "
                      << json_to_string(bg_event, "item") << ", "
-                     << get_wayfarer_override(bg_event, "flag") << ", "
+                     << flag << ", "
                      << quantity << ", "
                      << underfoot << "\n";
             }
