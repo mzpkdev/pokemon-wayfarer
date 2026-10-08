@@ -103,7 +103,7 @@ struct clears itself like its neighbours do: a new-game init, called from
 zeroes it and sets `stampDay` to `0xFFFF`, a sentinel no real day equals. The
 first map load then starts a fresh day.
 
-On map load, if `stampDay != day`, clear `clearedToday` and `homeBeatenToday`,
+On map load, if `stampDay != (u16)day` (the day count is `u32`; compare its low 16 bits), clear `clearedToday` and `homeBeatenToday`,
 take the two snapshots and set `stampDay`. The snapshots are the
 [phone contacts](phone-rematches.md) that are ready for a rematch, and those
 that hold a gift, at that moment (the contact index covers the rematch table
@@ -328,8 +328,9 @@ reproduced. Tests cover:
 - Continue: save on a map with a rotating occupant and a dynamic ball, reset
   and Continue, then talk to the trainer (the occupant's battle, not the
   authored one), pick up the ball, and take camera steps (it stays gone);
-- New Game on the same day as an existing save: every dynamic spot spawns and
-  no snapshot carries over;
+- New Game on the same day as an existing save: no item spot or trainer slot
+  stays cleared from the old save (every non-empty dynamic spot spawns), and no
+  snapshot carries over;
 - the home-beaten-today freeze, and the wanderer starting the next day;
 - one place per trainer per day, pairs, and placement of ready and gift trainers, including readiness or a gift flag changing mid-day, and Battle text only for a ready-at-day-start contact and FoundItem text only for a gift-at-day-start one;
 - a fixed (non-rotating) contact receiving Battle and FoundItem calls that name its home map, and only General calls after that day's rematch or gift;
