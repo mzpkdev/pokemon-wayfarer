@@ -533,7 +533,7 @@ check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-po
 check: wayfarer-sinnoh-port-audit
 check: league-circuit-test
 check: native-hm-windows-test wild-encounters-v2-check
-check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit league-circuit-test trainer-party-scaling-audit
+check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit league-circuit-test trainer-party-scaling-audit trainer-party-scaling-test
 endif
 	@cp $(TESTELF) $(HEADLESSELF)
 	$(PATCHELF) $(HEADLESSELF) gTestRunnerHeadless '\x01' gTestRunnerSkipIsFail "$(TEST_SKIP_IS_FAIL)"
@@ -894,6 +894,7 @@ trainer-party-scaling-test:
 trainer-party-scaling-audit:
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/generate.py --check
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/league.py --check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/final_stage.py --check
 
 frlg-traversal-static-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/traversal/tests -p 'test_frlg_*.py' -q
