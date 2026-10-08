@@ -63,11 +63,11 @@ The audit evaluated 270,621 slot and Rating combinations using the modern level-
 
 ## Species and retained-field observations
 
-- Custom authored moves replaced: 1920 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
+- Custom authored moves replaced: 1923 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
 - Authored ability requires fallback: 25 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
 - Authored gender requires adjustment: 0 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
 - Incompatible gimmick suppressed: 0 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
-- Held item retained after species reversal: 258 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
+- Held item retained after species reversal: 252 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
 - Opponent above player soft cap: 748 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
 - High-stat species without numeric predecessor: 248 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
 

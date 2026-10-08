@@ -161,6 +161,14 @@ class FinalStageTests(unittest.TestCase):
             _, mons = team('HIKER', 'Kanto', (species, 20))
             self.assertTrue(MODEL.reaches_back(mons[0].after, f'SPECIES_{species}'), species)
 
+    def test_r5_species_booster_keeps_the_stage_it_works_on(self):
+        after, mons = team('HIKER', 'Kanto', ('PIKACHU', 20, 'ITEM_LIGHT_BALL'), ('CHANSEY', 20, 'ITEM_LUCKY_PUNCH'),
+                           ('CLAMPERL', 20, 'ITEM_DEEP_SEA_TOOTH'), ('CUBONE', 20, 'ITEM_THICK_CLUB'))
+        self.assertEqual(after, ['PIKACHU', 'CHANSEY', 'CLAMPERL', 'MAROWAK'])
+        self.assertEqual(mons[0].exception, 'species booster')
+        after, _ = team('HIKER', 'Kanto', ('PIKACHU', 20), ('CHANSEY', 20))
+        self.assertEqual(after, ['RAICHU', 'BLISSEY'])
+
     def test_party_header_parsing_and_editing(self):
         parsed = fs.parse_header('Nick (Luvdisc) (F) @ Big Root  ')
         self.assertEqual((parsed['nickname'], parsed['species'], parsed['gender'], parsed['item']), ('Nick', 'Luvdisc', 'F', 'Big Root'))

@@ -13,7 +13,8 @@ tool applies that authoring pass reproducibly:
   R4  duplicate cap: per team and per line only one copy reaches the final stage
       (the highest authored level, ties to the later slot); with three or more
       copies of a line the next one reaches the middle stage
-  R5  identity exceptions keep the authored species
+  R5  identity exceptions keep the authored species (including holders of
+      species-specific boosters such as Light Ball on Pikachu)
   R6  an authored ability the new species cannot have is dropped
 
 A slot is only promoted to a species the runtime step-down can walk back to the
@@ -65,6 +66,19 @@ SPECIAL_LINES = frozenset(f'SPECIES_{n}' for n in (
     'COSMOG', 'COSMOEM', 'SOLGALEO', 'LUNALA', 'TYPE_NULL', 'SILVALLY', 'KUBFU',
     'URSHIFU_SINGLE_STRIKE', 'URSHIFU_RAPID_STRIKE', 'POIPOLE', 'NAGANADEL',
     'MELTAN', 'MELMETAL', 'SHEDINJA'))
+
+# Species-specific boosters that stop working once the holder evolves, mapped
+# to the stage they work on.  Thick Club (Cubone / Marowak), Leek / Stick
+# (Farfetch'd, Sirfetch'd) and Metal / Quick Powder (Ditto) still work on the
+# final stage, so they need no entry.
+BOOSTER_STAGES = {
+    'ITEM_LIGHT_BALL': frozenset({'SPECIES_PIKACHU'}),
+    'ITEM_LUCKY_PUNCH': frozenset({'SPECIES_CHANSEY'}),
+    'ITEM_DEEP_SEA_TOOTH': frozenset({'SPECIES_CLAMPERL'}),
+    'ITEM_DEEPSEATOOTH': frozenset({'SPECIES_CLAMPERL'}),
+    'ITEM_DEEP_SEA_SCALE': frozenset({'SPECIES_CLAMPERL'}),
+    'ITEM_DEEPSEASCALE': frozenset({'SPECIES_CLAMPERL'}),
+}
 
 # Classes whose Pokemon keep their kid identity.
 CHILD_CLASSES = ('TUBER', 'PRESCHOOLER', 'SCHOOL_KID', 'TWINS', 'SIS_AND_BRO')
@@ -389,6 +403,8 @@ def plan_team(model, ctx, mons):
             mon.exception = mon.exception or 'Everstone'
         elif mon.item == 'ITEM_EVIOLITE':
             mon.exception = mon.exception or 'Eviolite'
+        elif mon.species in BOOSTER_STAGES.get(mon.item, ()):
+            mon.exception = mon.exception or 'species booster'
         base = model.base(mon.species)
         if mon.species in SPECIAL_LINES or base in SPECIAL_LINES:
             mon.exception = mon.exception or 'legendary/special line'
@@ -897,7 +913,8 @@ def build_report(plans, model):
             '- Trainer gender for Gallade / Froslass / Wormadam / Mothim / Meowstic comes from the class (female or male classes) and falls back to the party `Gender:` field, which is wrong on several HNS rosters (female classes marked Male).',
             '- Class themes for R3 (fighting, pretty, psychic, cool, Eevee themes) are the lists at the top of `final_stage.py`; borderline classes (Picnicker as pretty, Triathlete / Ranger / Dragon Tamer as cool, Hiker / Pokefan / Breeder as grass for Eevee) are judgment calls.',
             '- Annihilape, Farigiraf, Kingambit, Dudunsparce and Magnezone-style cross-generation finals appear because the compiled evolution graph keeps them.',
-            '- Held items are untouched: Light Ball stays on Raichu, Black Belt on Machamp, Nugget / berries on evolved slots.',
+            '- Species-specific boosters (R5, judgment call) keep their holder at the stage the item works on: Light Ball on Pikachu, Lucky Punch on Chansey, DeepSeaTooth / DeepSeaScale on Clamperl. Thick Club, Leek and Metal / Quick Powder still work on the final stage, so they promote normally.',
+            '- Other held items are untouched: Black Belt stays on Machamp, Nugget / berries on evolved slots.',
             '- Hisui rules (Kleavor, Ursaluna, Wyrdeer, Overqwil, Sneasler, Basculegion) are implemented and unit tested, but no covered Trainer is in Sinjoh, so none is exercised by the shipped rosters; Ursaring and Stantler stop at their standard stage everywhere.',
             '- Pokemon Tower (`trainers_wayfarer_tower.h`) has no party source, so its 16 rosters are edited in the selected header directly.',
             '- The Sevii, coast, S.S. Anne and Celadon Hideout rosters are edited in `trainers_frlg.party` (their donor), which also changes those FRLG-only donor trainers for standalone FRLG builds.',
