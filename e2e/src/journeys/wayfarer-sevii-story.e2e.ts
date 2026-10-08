@@ -74,6 +74,42 @@ describe.sequential("Wayfarer Sevii independent story journeys", () => {
     return () => game.close()
   })
 
+  it("shows Blue on Four Island as soon as the post-League rival scene ends", async () => {
+    // Arrive through the Pokémon Center door: the scene runs on Four Island's
+    // first frame, which would otherwise hold the arrange mailbox open.
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: {
+        facing: "down",
+        position: { map: "sevii-four-island-pokemon-center-1-f", x: 7, y: 7 },
+      },
+      story: { flags: { seviiRivalSceneSeen: false, seviiHideRivals: true } },
+      circuit: { clears: { indigo: true, masters: false, hoenn: false } },
+      determinism: { textSpeed: "instant" },
+    })
+    // Step onto the exit mat, then south off it to leave.
+    for (let step = 0; step < 10; step++) {
+      if ((await game.state.read()).map.name === "sevii-four-island") break
+      await game.player.move("down")
+      await game.wait.frames(20)
+    }
+    await advanceUntil(
+      game,
+      (state) =>
+        state.map.name === "sevii-four-island" &&
+        state.ready &&
+        !state.dialogueOpen &&
+        !state.scriptActive,
+      "Four Island rival scene",
+    )
+    expect(await game.story.flag("seviiRivalSceneSeen")).toBe(true)
+    expect(await game.story.flag("seviiHideRivals")).toBe(false)
+    // Blue stands at (8, 25), out of view from the door at (18, 20), so only
+    // the scene's addobject can have spawned him already.
+    const { objects } = await game.state.read()
+    expect(objects).toContainEqual(expect.objectContaining({ x: 8, y: 25, visible: true }))
+  })
+
   it("keeps Bill's Meteorite pending when Key Items are full, then commits it across reload", async () => {
     const bill = {
       map: "sevii-one-island-pokemon-center-1-f",

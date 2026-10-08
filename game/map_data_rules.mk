@@ -106,8 +106,8 @@ $(MAP_LAYOUT_OUTPUTS) &: $(LAYOUTS_DIR)/layouts.json $(MAP_LAYOUT_BIN_INPUTS) $(
 
 # Generate constants for map events, which depend on data that's distributed across the map.json files.
 # There's a lot of map.json files, so we print an abbreviated output with echo.
-$(INCLUDECONSTS_OUTDIR)/map_event_ids.h: $(MAP_JSONS) $(MAP_VERSION_STAMP) $(MAPJSON)
-	@$(MAPJSON) event_constants $(MAP_DETAIL_VERSION) $(filter-out $(MAP_VERSION_STAMP) $(MAPJSON),$^) $(INCLUDECONSTS_OUTDIR)/map_event_ids.h
+$(INCLUDECONSTS_OUTDIR)/map_event_ids.h: $(MAP_JSONS) $(MAP_VERSION_STAMP) $(MAPJSON) $(WAYFARER_SEVII_MANIFEST) $(WAYFARER_SINNOH_MANIFEST_DEP)
+	@$(MAPJSON) event_constants $(MAP_DETAIL_VERSION) $(filter-out $(MAP_VERSION_STAMP) $(MAPJSON) $(WAYFARER_SEVII_MANIFEST) $(WAYFARER_SINNOH_MANIFEST),$^) $(INCLUDECONSTS_OUTDIR)/map_event_ids.h $(WAYFARER_SEVII_MANIFEST_ARG) $(WAYFARER_SINNOH_MANIFEST_ARG)
 	@echo "$(MAPJSON) event_constants $(MAP_DETAIL_VERSION) <MAP_JSONS> $(INCLUDECONSTS_OUTDIR)/map_event_ids.h"
 	@touch $@
 

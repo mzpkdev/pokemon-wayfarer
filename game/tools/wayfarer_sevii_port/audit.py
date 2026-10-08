@@ -56,6 +56,8 @@ PROHIBITED_STATE_TOKENS = (
     "LOSTELLE", "METEORITE", "ROCKET_PASSWORD", "ITEM_RUBY", "ITEM_SAPPHIRE",
 )
 COMMON_SHARED_HELPERS = {
+    "EventScript_CutTree": "data/scripts/field_move_scripts_hns.inc",
+    "EventScript_RockSmash": "data/scripts/field_move_scripts_hns.inc",
     "EventScript_StrengthBoulder": "data/scripts/field_move_scripts_hns.inc",
 }
 

@@ -72,6 +72,28 @@ WayfarerSevii_RuinValley_OpenDottedHoleDoor::
 	setmetatile 24, 24, METATILE_SeviiIslands67_DottedHoleDoor_Open, 0
 	return
 
+@ The door's Braille hint keeps FRLG's text and checks the same exploration
+@ flag that Cut sets when it opens the door.
+WayfarerSevii_RuinValley_DottedHoleDoor::
+	lockall
+	goto_if_set FLAG_WAYFARER_SEVII_DOTTED_HOLE_OPEN, WayfarerSevii_RuinValley_DottedHoleDoorOpen
+	msgbox SixIsland_RuinValley_Text_CheckDoorMoreThoroughly, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, WayfarerSevii_RuinValley_IgnoreDottedHoleDoor
+	msgbox SixIsland_RuinValley_Text_SeveralDotsOnTheDoor
+	braillemsgbox Braille_Text_Cut
+	releaseall
+	end
+
+WayfarerSevii_RuinValley_DottedHoleDoorOpen::
+	msgbox SixIsland_RuinValley_Text_DoorIsOpen
+	releaseall
+	end
+
+WayfarerSevii_RuinValley_IgnoreDottedHoleDoor::
+	msgbox SixIsland_RuinValley_Text_LeftDoorAlone
+	releaseall
+	end
+
 @ Rocket Warehouse: the Meadow load hook opens the exterior entrance without
 @ passwords. The interior hook keeps the source floor-arrow geometry usable
 @ for re-entry and exit, with no people or scene state.

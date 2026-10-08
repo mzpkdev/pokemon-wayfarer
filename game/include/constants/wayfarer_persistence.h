@@ -18,6 +18,11 @@
 // Hidden-item events have a 13-bit flag field. Its top bit identifies a
 // source Hoenn flag while the lower bits retain the Emerald flag id.
 #define WAYFARER_HOENN_HIDDEN_ITEM_MARKER 0x1000
+// Sevii hidden items use the top Hoenn-marked page, which no Emerald flag id
+// reaches (they end below 0x960); the low byte is the Sevii bank slot.
+#define WAYFARER_SEVII_HIDDEN_ITEM_MARKER      0x1F00
+#define WAYFARER_SEVII_HIDDEN_ITEM_MARKER_MASK 0x1F00
+#define WAYFARER_SEVII_HIDDEN_ITEM_SLOT_MASK   0x00FF
 
 #define HOENN_FLAG_ID(sourceId) (WAYFARER_HOENN_FLAG_NAMESPACE | (sourceId))
 #define HOENN_VAR_ID(sourceId)  (WAYFARER_HOENN_VAR_NAMESPACE | ((sourceId) - 0x4000))
