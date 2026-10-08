@@ -147,7 +147,7 @@ Static prizes are items found exactly once per save. Each one is placed in an ex
 - **Treasures and Finds may repeat across regions** (so each region can offer, say, a Choice item) but never twice within one region.
 - **No static prize is a TM that a mart sells.** The mart-sold list is: Avalanche, Blizzard, Brine, Captivate, Dark Pulse, Double Team, Dream Eater, Endure, Fire Blast, Flamethrower, Focus Blast, Frustration, Giga Impact, Gyro Ball, Hyper Beam, Ice Beam, Light Screen, Natural Gift, Protect, Psychic, Reflect, Rest, Return, Safeguard, Solar Beam, Stealth Rock, Thunder, Thunderbolt.
 - A spot that loses its authored item becomes a dynamic spot (daily pool). A prize may be moved to any existing spot in its region, and a dynamic spot may be promoted to a prize spot.
-- Sevii spots assume the [Sevii exploration restoration](sevii-exploration-restoration.md) is done (the current Wayfarer build drops those balls and hidden items). A Sevii spot is identified by its exploration row id (`exploration.<map>.object.N` for a ball, `exploration.<map>.bg.N` for a hidden item), where N is the FRLG source index, or by coordinates. The "local id" in the Sevii tables is that FRLG source index; the generator maps it to the compiled local id after the restoration.
+- Sevii spots assume the [Sevii exploration restoration](sevii-exploration-restoration.md) is done (the current Wayfarer build drops those balls and hidden items). A Sevii spot is identified by its exploration row id (`exploration.<map>.object.N` for a ball, `exploration.<map>.bg.N` for a hidden item), where N is the 0-based FRLG source index (the "local id" in the Sevii tables is N + 1), or by coordinates. The generator maps it to the compiled local id after the restoration.
 
 - The S.S. Tidal and the Battle Frontier open on the global game-clear flag,
   which Wayfarer sets on the first Indigo League win, not Hoenn's. Their
@@ -302,7 +302,7 @@ Prizes outside any trail.
 
 ### Sevii
 
-Sevii spots are identified by their exploration row id (`exploration.<map>.object.N` or `exploration.<map>.bg.N`, N being the FRLG source index) or by coordinates. The "local id" below is that FRLG source index. The generator maps each spot to the compiled local id after the [restoration](sevii-exploration-restoration.md), and fails on one it can't find.
+Sevii spots are identified by their exploration row id (`exploration.<map>.object.N` or `exploration.<map>.bg.N`, N being the 0-based FRLG source index) or by coordinates. The "local id" below is N + 1. The generator maps each spot to the compiled local id after the [restoration](sevii-exploration-restoration.md), and fails on one it can't find.
 
 #### Ember and Orchard
 
