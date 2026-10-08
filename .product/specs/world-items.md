@@ -20,9 +20,10 @@ NPCs, Poké Marts and Pickup are unchanged.
 
 A spot uses its map's reach from [reach assignments](reach-assignments.md). A
 dungeon's entrance floor counts as Wilds and every deeper floor as Outlands. A
-map without a reach of its own takes the dungeon it belongs to, or Road
-otherwise, the same resolution as
-[trainer reach levels](trainer-party-scaling.md#maps-without-a-reach-of-their-own).
+map without a reach of its own resolves one with the
+[places without wild encounters](reach-assignments.md#places-without-wild-encounters)
+rules, the same resolution trainers use
+([trainer reach levels](trainer-party-scaling.md#maps-without-a-reach-of-their-own)).
 
 ## Dynamic pools
 
@@ -146,7 +147,7 @@ Static prizes are items found exactly once per save. Each one is placed in an ex
 - **Treasures and Finds may repeat across regions** (so each region can offer, say, a Choice item) but never twice within one region.
 - **No static prize is a TM that a mart sells.** The mart-sold list is: Avalanche, Blizzard, Brine, Captivate, Dark Pulse, Double Team, Dream Eater, Endure, Fire Blast, Flamethrower, Focus Blast, Frustration, Giga Impact, Gyro Ball, Hyper Beam, Ice Beam, Light Screen, Natural Gift, Protect, Psychic, Reflect, Rest, Return, Safeguard, Solar Beam, Stealth Rock, Thunder, Thunderbolt.
 - A spot that loses its authored item becomes a dynamic spot (daily pool). A prize may be moved to any existing spot in its region, and a dynamic spot may be promoted to a prize spot.
-- Sevii spots use FRLG object indexes and assume the Sevii item port is done (the current Wayfarer build drops those balls and hidden items).
+- Sevii spots assume the [Sevii exploration restoration](sevii-exploration-restoration.md) is done (the current Wayfarer build drops those balls and hidden items). A Sevii spot is identified by its exploration row id (`exploration.<map>.object.N` for a ball, `exploration.<map>.bg.N` for a hidden item), where N is the FRLG source index, or by coordinates. The "local id" in the Sevii tables is that FRLG source index; the generator maps it to the compiled local id after the restoration.
 
 - The S.S. Tidal and the Battle Frontier open on the global game-clear flag,
   which Wayfarer sets on the first Indigo League win, not Hoenn's. Their
@@ -286,8 +287,8 @@ A chain of hidden finds on the southern routes ending at the south tip of Cyclin
 |---|---|---|---|---|---|---|---|
 | 1 | Route14_hns | hidden 21,22 | Hidden | Wilds | `ITEM_LUCKY_PUNCH` | Find | Authored hidden Lucky Punch on a wild route. |
 | 2 | Route15_hns | hidden 77,8 | Hidden | Wilds | `ITEM_SHELL_BELL` | Find | Far east end of Route 15 (replaces Rose Incense). |
-| 3 | Route17_hns | hidden 16,156 | Hidden | Road | `ITEM_BIG_ROOT` | Find | Draining sustain at the dead end of Cycling Road (Amulet Coin is now a Sevii Legend). |
-| 4 | Route17_hns | hidden 22,157 | Hidden | Road | `ITEM_METRONOME` | Find | Rewards a team that commits to one move; same dead end (Lucky Egg is now a Sevii Legend). |
+| 3 | Route17_hns | hidden 16,156 | Hidden | Road | `ITEM_BIG_ROOT` | Find | Draining sustain at the dead end of Cycling Road (replaces a Max Ether). |
+| 4 | Route17_hns | hidden 22,157 | Hidden | Road | `ITEM_METRONOME` | Find | Rewards a team that commits to one move; same dead end (replaces a Max Elixir). |
 
 #### Standalone prizes
 
@@ -301,6 +302,8 @@ Prizes outside any trail.
 
 ### Sevii
 
+Sevii spots are identified by their exploration row id (`exploration.<map>.object.N` or `exploration.<map>.bg.N`, N being the FRLG source index) or by coordinates. The "local id" below is that FRLG source index. The generator maps each spot to the compiled local id after the [restoration](sevii-exploration-restoration.md), and fails on one it can't find.
+
 #### Ember and Orchard
 
 **Build identity:** Sustain / utility. **Start:** One Island (arrival by Seagallop ferry).
@@ -312,7 +315,7 @@ A north-isles chain through One, Two and Three Island: Shell Bell on Treasure Be
 | 1 | OneIsland_TreasureBeach_Frlg | hidden 15,29 | Hidden | Wilds | `ITEM_SHELL_BELL` | Find | Treasure Beach is the first dig on arrival (replaces Star Piece). |
 | 2 | MtEmber_Exterior_Frlg | local id 19 (38,10) | Visible | Dungeon: Mt. Ember, floor 1 of 10: exterior | `ITEM_TM_OVERHEAT` | Find | Replaces a Fire Stone (sold in Goldenrod). Mt. |
 | 3 | TwoIsland_CapeBrink_Frlg | hidden 16,28 | Hidden | Wilds | `ITEM_PP_MAX` | Treasure | Authored; hidden at the end of Two Island's cape. |
-| 4 | ThreeIsland_DunsparceTunnel_Frlg | hidden 21,3 | Hidden | Dungeon-like, no reach row (Dunsparce Tunnel, single room) | `ITEM_TM_SUBSTITUTE` | Find | Replaces a Nugget. Hidden in the tunnel. |
+| 4 | ThreeIsland_DunsparceTunnel_Frlg | hidden 21,3 | Hidden | Road (Dunsparce Tunnel has no wild encounters; it takes the map it opens onto) | `ITEM_TM_SUBSTITUTE` | Find | Replaces a Nugget. Hidden in the tunnel. |
 | 5 | ThreeIsland_BerryForest_Frlg | hidden 8,5 | Hidden | Wilds | `ITEM_LUM_BERRY` | Find | Authored hidden Lum Berry. |
 | 6 | ThreeIsland_BerryForest_Frlg | hidden 47,5 | Hidden | Wilds | `ITEM_BIG_ROOT` | Find | Forest sustain (replaces a Chesto Berry). |
 
@@ -333,7 +336,7 @@ Four and Five Island: Icefall's Never-Melt Ice and Ice Stone, a Prism Scale in t
 | 7 | FiveIsland_LostCave_Room11_Frlg | local id 1 (5,5) | Visible | Dungeon: Lost Cave, room 11 of 14 | `ITEM_ROCKY_HELMET` | Treasure | Replaces Lax Incense. |
 | 8 | FiveIsland_LostCave_Room12_Frlg | local id 1 (5,5) | Visible | Dungeon: Lost Cave, room 12 of 14 | `ITEM_WEAKNESS_POLICY` | Treasure | Replaces Sea Incense. |
 | 9 | FiveIsland_LostCave_Room13_Frlg | local id 1 (5,5) | Visible | Dungeon: Lost Cave, room 13 of 14 | `ITEM_PROTECTOR` | Treasure | Replaces Max Revive. Rhydon evolution item. |
-| 10 | FiveIsland_LostCave_Room14_Frlg | local id 1 (5,5) | Visible | Dungeon: Lost Cave, room 14 of 14 | `ITEM_LUCKY_EGG` | Legend | End of the 14-room maze; Sevii's Legend (replaces the Master Ball). |
+| 10 | FiveIsland_LostCave_Room14_Frlg | local id 1 (5,5) | Visible | Dungeon: Lost Cave, room 14 of 14 | `ITEM_LUCKY_EGG` | Legend | End of the 14-room maze; Sevii's Legend (replaces a Rare Candy). |
 
 #### Dragon and Sun
 
@@ -348,7 +351,7 @@ Six Island's outer routes: a Dragon Scale at the end of Water Path, Dragon Pulse
 | 3 | SixIsland_RuinValley_Frlg | local id 17 (43,32) | Visible | Outlands | `ITEM_SUN_STONE` | Treasure | Authored. |
 | 4 | SixIsland_RuinValley_Frlg | local id 16 (19,11) | Visible | Outlands | `ITEM_TM_DRAGON_CLAW` | Treasure | Replaces a Full Restore. |
 | 5 | SixIsland_RuinValley_Frlg | local id 15 (5,33) | Visible | Outlands | `ITEM_DRAGON_FANG` | Find | Replaces HP Up. |
-| 6 | SixIsland_OutcastIsland_Frlg | hidden 6,24 | Hidden | Outlands | `ITEM_AMULET_COIN` | Legend | The most remote island; Sevii's second Legend (replaces the Ability Capsule). |
+| 6 | SixIsland_OutcastIsland_Frlg | hidden 6,24 | Hidden | Outlands | `ITEM_AMULET_COIN` | Legend | The most remote island; Sevii's second Legend (replaces a Net Ball). |
 
 #### Seven Island Training Grounds
 
@@ -367,7 +370,7 @@ All six Power items are scattered over Seven Island (bracer in the canyon entran
 | 7 | SevenIsland_SevaultCanyon_Frlg | local id 17 (18,45) | Visible | Outlands | `ITEM_KINGS_ROCK` | Treasure | Authored. |
 | 8 | SevenIsland_TanobyRuins_Frlg | hidden 33,10 | Hidden | Outlands | `ITEM_DEEP_SEA_TOOTH` | Treasure | Replaces a Heart Scale. |
 | 9 | SevenIsland_TanobyRuins_Frlg | hidden 86,9 | Hidden | Outlands | `ITEM_DEEP_SEA_SCALE` | Treasure | Replaces a Heart Scale. |
-| 10 | SevenIsland_TanobyRuins_Frlg | hidden 125,5 | Hidden | Outlands | `ITEM_LIFE_ORB` | Treasure | Far end of the ruins; a mixed attacker's capstone (was the Gold Bottle Cap). |
+| 10 | SevenIsland_TanobyRuins_Frlg | hidden 125,5 | Hidden | Outlands | `ITEM_LIFE_ORB` | Treasure | Far end of the ruins; a mixed attacker's capstone (replaces a Heart Scale). |
 
 ### Johto
 
@@ -403,7 +406,7 @@ Johto's sea road. The loot is weather rocks (Damp, Smooth, Heat), Wave Incense, 
 | 6 | WhirlIslands_1F_hns | local id 10 (8,41) | Visible | Dungeon: Whirl Islands 1F (1 of 6) | `ITEM_SAFETY_GOGGLES` | Find | Replaces a Full Restore (sold at TR 55). Weather-immunity utility for a weather team. |
 | 7 | WhirlIslands_B1F_hns | local id 2 (29,16) | Visible | Dungeon: Whirl Islands B1F (2 of 6) | `ITEM_HEAT_ROCK` | Find | Replaces a Full Restore. Completes the weather rocks. |
 | 8 | WhirlIslands_B1F_hns | local id 1 (65,62) | Visible | Dungeon: Whirl Islands B1F (2 of 6) | `ITEM_LIGHT_CLAY` | Treasure | Replaces a Big Nugget. Far corner of a Hard dungeon floor. |
-| 9 | WhirlIslands_B2F_hns | hidden 34,18 | Hidden | Dungeon: Whirl Islands B2F (4 of 6) | `ITEM_CATCHING_CHARM` | Legend | Deepest spot before Lugia; a Legend that replaces the Master Ball. |
+| 9 | WhirlIslands_B2F_hns | hidden 34,18 | Hidden | Dungeon: Whirl Islands B2F (4 of 6) | `ITEM_CATCHING_CHARM` | Legend | Deepest spot before Lugia; a Legend that replaces a Revive. |
 
 #### Goldenrod Circuit
 
@@ -466,9 +469,9 @@ The long finish. Dragon's Den is the first test (Dragon Fang, PP Max, and an Exp
 |---|---|---|---|---|---|---|---|
 | 1 | DragonsDen_Cavern_hns | local id 8 (54,28) | Visible | Dungeon: Dragon's Den (single, Hard) | `ITEM_DRAGON_FANG` | Treasure | Authored Dragon Fang kept (not sold anywhere). |
 | 2 | DragonsDen_Cavern_hns | local id 6 (54,50) | Visible | Dungeon: Dragon's Den (single, Hard) | `ITEM_PP_MAX` | Treasure | Authored PP Max kept. |
-| 3 | DragonsDen_Cavern_hns | hidden 15,16 | Hidden | Dungeon: Dragon's Den (single, Hard) | `ITEM_EXP_CHARM` | Legend | Hidden far from the water path; a Legend that replaces the Ability Capsule. |
+| 3 | DragonsDen_Cavern_hns | hidden 15,16 | Hidden | Dungeon: Dragon's Den (single, Hard) | `ITEM_EXP_CHARM` | Legend | Hidden far from the water path; a Legend that replaces a Max Elixir. |
 | 4 | Route27_hns | local id 19 (133,17) | Visible | Wilds | `ITEM_TM_DRAGON_CLAW` | Treasure | Authored Dragon Claw kept at the far east end of the route. |
-| 5 | Route28_hns | local id 16 (41,10) | Visible | Outlands | `ITEM_TM_SWORDS_DANCE` | Treasure | Replaces TM Earthquake (now Hoenn's Legend). Setup for the endgame physical breaker. |
+| 5 | Route28_hns | local id 16 (41,10) | Visible | Outlands | `ITEM_TM_SWORDS_DANCE` | Treasure | Replaces TM Flamethrower (sold in marts). Setup for the endgame physical breaker. |
 | 6 | MtSilver_Outside_hns | hidden 16,22 | Hidden | Dungeon: Mt. Silver Outside (1) | `ITEM_WEAKNESS_POLICY` | Treasure | Replaces a Full Restore. Punishes breakers. |
 | 7 | MtSilver_1F_WaterfallRoom_hns | hidden 28,28 | Hidden | Dungeon: Mt. Silver Waterfall Room (2) | `ITEM_EXPERT_BELT` | Treasure | Authored Expert Belt kept. |
 | 8 | MtSilver_MountainSide_hns | local id 23 (31,29) | Visible | Dungeon: Mt. Silver Mountain Side (3) | `ITEM_TM_STONE_EDGE` | Treasure | Upgraded from TM Stealth Rock (sold in department stores). |
@@ -482,7 +485,7 @@ Prizes outside any trail.
 | # | Map | Spot | Shown | Reach | Item | Tier | Why |
 |---|---|---|---|---|---|---|---|
 | 1 | UnionCave_B1F_hns | local id 3 (14,3); moved from IlexForest_hns local id 37 (71,42) | Visible | Dungeon: Union Cave B1F (2 of 3) | `ITEM_TM_FALSE_SWIPE` | Find | Moved from Ilex Forest (a visible Road ball). |
-| 2 | Route26_hns | hidden 3,53 | Hidden | Outlands | `ITEM_EVIOLITE` | Treasure | Replaces Amulet Coin (now a Sevii Legend). A far Outlands hidden spot earns a Treasure. |
+| 2 | Route26_hns | hidden 3,53 | Hidden | Outlands | `ITEM_EVIOLITE` | Treasure | Replaces a Tiny Mushroom. A far Outlands hidden spot earns a Treasure. |
 | 3 | Route27_hns | local id 7 (69,14) | Visible | Wilds | `ITEM_MOON_STONE` | Find | Authored Moon Stone kept (not in the Mahogany shop or Goldenrod counter). |
 | 4 | Route27_hns | local id 20 (93,14) | Visible | Wilds | `ITEM_DESTINY_KNOT` | Treasure | Authored Destiny Knot kept; breeders will talk about it. |
 | 5 | TohjoFalls_Cavern_hns | local id 1 (15,11) | Visible | Wilds | `ITEM_WIDE_LENS` | Find | Replaces a Heart Scale. |
@@ -521,7 +524,7 @@ The remote half. Ula'ula Isle, its forest and cave hold a Rock Slide TM, a Bottl
 | 2 | UlaUla_Forest_hns | hidden 19,3 | Hidden | Outlands (no wild encounters of its own) | `ITEM_BOTTLE_CAP` | Treasure | Replaces a Max Revive. Hidden in the forest. |
 | 3 | UlaUla_Cave_hns | local id 3 (25,27) | Visible | Dungeon: Ula'ula Cave (single, Hard) | `ITEM_BLACK_SLUDGE` | Treasure | Replaces an Ice Stone (sold). Alolan Muk and Grimer live here. |
 | 4 | Poni_Cave_hns | local id 2 (8,6) | Visible | Dungeon: Poni Cave (single, Hard) | `ITEM_LEAF_STONE` | Find | Authored Leaf Stone kept (not in the Mahogany shop or Goldenrod counter). |
-| 5 | Poni_Cave_hns | local id 3 (13,10) | Visible | Dungeon: Poni Cave (single, Hard) | `ITEM_CHOICE_SCARF` | Treasure | Deepest ball in Poni Cave; replaces the Ability Patch (a Kanto Legend). |
+| 5 | Poni_Cave_hns | local id 3 (13,10) | Visible | Dungeon: Poni Cave (single, Hard) | `ITEM_CHOICE_SCARF` | Treasure | Deepest ball in Poni Cave; replaces a Thunder Stone. |
 | 6 | PoniIsle_hns | local id 11 (24,17) | Visible | Outlands | `ITEM_LEFTOVERS` | Treasure | The wildest island holds the classic sustain item. |
 
 ### Sinjoh
@@ -539,7 +542,7 @@ Sinjoh lies beyond Mt. Silver, so the prizes only get reached by players who fin
 | 3 | Route49_hns | local id 23 (26,58) | Visible | Wilds | `ITEM_TM_X_SCISSOR` | Find | Upgraded from TM Rock Climb. |
 | 4 | Route50_hns | local id 7 (33,37) | Visible | Outlands | `ITEM_LIFE_ORB` | Treasure | Replaces a Big Nugget. |
 | 5 | NewSinjoh_HotSprings_hns | local id 6 (4,39) | Visible | Dungeon: New Sinjoh Hot Springs (single, Moderate) | `ITEM_ASSAULT_VEST` | Treasure | Replaces a Lava Cookie. The far end of the springs. |
-| 6 | Route50_hns | hidden 68,54 | Hidden | Outlands | `ITEM_ADAMANT_ORB` | Legend | Far corner of the Outlands approach to the Ruins; replaces the Ability Capsule. |
+| 6 | Route50_hns | hidden 68,54 | Hidden | Outlands | `ITEM_ADAMANT_ORB` | Legend | Far corner of the Outlands approach to the Ruins; replaces an Enigma Berry. |
 | 7 | Route50_hns | hidden 9,37 | Hidden | Outlands | `ITEM_LUSTROUS_ORB` | Legend | Western edge of Route 50; promoted from a dynamic spot (Ice Stone). Sinjoh Ruins lore. |
 | 8 | NewSinjoh_HotSprings_hns | hidden 28,37 | Hidden | Dungeon: New Sinjoh Hot Springs (single, Moderate) | `ITEM_GRISEOUS_ORB` | Legend | Buried in the springs; replaces a Dawn Stone. Sinjoh Ruins lore. |
 
@@ -583,8 +586,8 @@ Hoenn is the weather region, and this trail is the full set: Sandstorm, Sun, Rai
 | 2 | Route113 | hidden 22,5 | Hidden | Road (ash route) | `ITEM_HEAT_ROCK` | Find | Lengthens Sun on the volcanic ash route; hidden deep in the grass. |
 | 3 | JaggedPass | local id 3 (23,24); moved from Route111 local id 18 (33,104) | Visible | Wilds | `ITEM_TM_SANDSTORM` | Find | The Sandstorm TM moves off the open desert to a rugged Wilds trail so it is actually earned. |
 | 4 | ScorchedSlab | local id 1 (7,5) | Visible | Wilds (end of the Route 120 branch) | `ITEM_TM_SUNNY_DAY` | Find | Dead-end of the jungle branch; the fitting home for the Sun TM. |
-| 5 | AbandonedShip_HiddenFloorRooms | local id 1 (41,4) | Visible | Dungeon: Abandoned Ship, floor 2 of 2 (hidden floor) | `ITEM_DAMP_ROCK` | Find | Lengthens Rain, paired with the ship's Rain TM. |
-| 6 | AbandonedShip_HiddenFloorRooms | local id 3 (5,11) | Visible | Dungeon: Abandoned Ship, floor 2 of 2 (hidden floor) | `ITEM_TM_RAIN_DANCE` | Find | Behind the key-room puzzle on the hidden floor. |
+| 5 | AbandonedShip_HiddenFloorRooms | local id 1 (41,4) | Visible | Dungeon: Abandoned Ship, floor 3 of 3 (hidden floor) | `ITEM_DAMP_ROCK` | Find | Lengthens Rain, paired with the ship's Rain TM. |
+| 6 | AbandonedShip_HiddenFloorRooms | local id 3 (5,11) | Visible | Dungeon: Abandoned Ship, floor 3 of 3 (hidden floor) | `ITEM_TM_RAIN_DANCE` | Find | Behind the key-room puzzle on the hidden floor. |
 | 7 | ShoalCave_LowTideIceRoom | local id 1 (12,8) | Visible | Dungeon: Shoal Cave, floor 5 of 5 (ice room) | `ITEM_TM_HAIL` | Treasure | Deepest Shoal Cave room, tide-gated; the Hail TM finishes the set. |
 | 8 | ShoalCave_LowTideIceRoom | local id 2 (12,21) | Visible | Dungeon: Shoal Cave, floor 5 of 5 (ice room) | `ITEM_ICY_ROCK` | Treasure | Lengthens Hail; replaces the weaker type-boost at the same spot. |
 
@@ -612,7 +615,7 @@ Trade power for control. Fiery Path and Jagged Pass hide the Hoenn status set: T
 | 2 | FieryPath | local id 8 (7,32) | Visible | Wilds | `ITEM_FIRE_STONE` | Find | Evolution stone in the cave's south dead end. |
 | 3 | JaggedPass | hidden 8,10 | Hidden | Wilds | `ITEM_TOXIC_ORB` | Find | Poison Heal fuel for Breloom; hidden on the mountain trail. |
 | 4 | JaggedPass | hidden 7,29 | Hidden | Wilds | `ITEM_FLAME_ORB` | Find | Guts fuel for Swellow-style attackers; a second hidden item on the same trail. |
-| 5 | MagmaHideout_3F_1R | local id 3 (9,16) | Visible | Dungeon: Magma Hideout, floor 5 of 8 | `ITEM_BLACK_SLUDGE` | Treasure | Replaces the Ability Capsule (a Kanto Legend). Poison sustain for a status team. |
+| 5 | MagmaHideout_3F_1R | local id 3 (9,16) | Visible | Dungeon: Magma Hideout, floor 5 of 8 | `ITEM_BLACK_SLUDGE` | Treasure | Replaces a Nugget. Poison sustain for a status team. |
 | 6 | MagmaHideout_3F_2R | local id 2 (5,9) | Visible | Dungeon: Magma Hideout, floor 6 of 8 | `ITEM_PP_MAX` | Treasure | Authored in place and still earns its spot on the way down. |
 | 7 | MagmaHideout_4F | local id 8 (3,7) | Visible | Dungeon: Magma Hideout, floor 8 of 8 | `ITEM_CHOICE_SCARF` | Treasure | The final floor of the hideout; speed control is the trail's payoff. |
 
@@ -637,14 +640,14 @@ Prizes outside any trail.
 
 | # | Map | Spot | Shown | Reach | Item | Tier | Why |
 |---|---|---|---|---|---|---|---|
-| 1 | AquaHideout_B1F | local id 5 (15,9) | Visible | Dungeon-like hideout (no wild encounters; assumed Dungeon-adjacent) | `ITEM_MASTER_BALL` | Legend | The one Master Ball in Hoenn, at the end of a warp-pad puzzle room. |
-| 2 | SeafloorCavern_Room9 | local id 6 (14,5) | Visible | Dungeon: Seafloor Cavern, deepest hidden room (not listed in the reach spec) | `ITEM_TM_EARTHQUAKE` | Legend | The best Ground TM, in the last hidden room of the deepest cave. |
-| 3 | SSTidalLowerDeck | hidden 0,2 | Hidden | Ship (no encounters) | `ITEM_LEFTOVERS` | Treasure | The classic hidden Leftovers, behind a ferry ride. |
-| 4 | ArtisanCave_B1F | hidden 7,5 | Hidden | Dungeon: Artisan Cave, floor 2 of 2 | `ITEM_WEAKNESS_POLICY` | Treasure | Replaces the Ability Patch (a Kanto Legend). Hidden in a post-game cave. |
+| 1 | AquaHideout_B1F | local id 5 (15,9) | Visible | Dungeon: Aqua Hideout, floor 2 of 3 | `ITEM_MASTER_BALL` | Legend | The one Master Ball in Hoenn, at the end of a warp-pad puzzle room. |
+| 2 | SeafloorCavern_Room9 | local id 6 (14,5) | Visible | Dungeon: Seafloor Cavern, floor 10 of 10 (room 9) | `ITEM_TM_EARTHQUAKE` | Legend | The best Ground TM, in the last hidden room of the deepest cave. |
+| 3 | SSTidalLowerDeck | hidden 0,2 | Hidden | Road (ferry) | `ITEM_LEFTOVERS` | Treasure | The classic hidden Leftovers, behind a ferry ride. |
+| 4 | ArtisanCave_B1F | hidden 7,5 | Hidden | Dungeon: Artisan Cave, floor 2 of 2 | `ITEM_WEAKNESS_POLICY` | Treasure | Replaces a Protein. Hidden in a post-game cave. |
 | 5 | VictoryRoad_B1F | local id 18 (42,8) | Visible | Dungeon: Victory Road, floor 2 of 3 | `ITEM_ASSAULT_VEST` | Treasure | TM Psychic is bought at the Mauville Game Corner. |
 | 6 | VictoryRoad_B2F | hidden 37,1 | Hidden | Dungeon: Victory Road, floor 3 of 3 | `ITEM_LIFE_ORB` | Treasure | The far hidden corner of the deepest floor. |
 | 7 | MeteorFalls_1F_1R | local id 2 (2,14) | Visible | Dungeon: Meteor Falls, floor 1 of 5 | `ITEM_MOON_STONE` | Find | Evolution stone kept at its Emerald location. |
-| 8 | AbandonedShip_HiddenFloorRooms | local id 4 (31,11) | Visible | Dungeon: Abandoned Ship, floor 2 of 2 (hidden floor) | `ITEM_WATER_STONE` | Find | Evolution stone on the ship's hidden floor (Lombre line). |
+| 8 | AbandonedShip_HiddenFloorRooms | local id 4 (31,11) | Visible | Dungeon: Abandoned Ship, floor 3 of 3 (hidden floor) | `ITEM_WATER_STONE` | Find | Evolution stone on the ship's hidden floor (Lombre line). |
 | 9 | NewMauville_Inside | local id 3 (39,4) | Visible | Dungeon: New Mauville, floor 2 of 2 | `ITEM_THUNDER_STONE` | Find | Evolution stone in the power plant's inner hall. |
 | 10 | Route120 | hidden 0,86; moved from Route119 local id 20 (25,76) | Hidden | Wilds | `ITEM_LEAF_STONE` | Find | A visible ball on a Road route is not a prize. |
 | 11 | SafariZone_Northwest | local id 2 (33,7) | Visible | Wilds (Safari preserve) | `ITEM_TM_ENERGY_BALL` | Find | Replaces TM Solar Beam (sold in marts). Special Grass coverage inside the preserve. |
@@ -654,7 +657,7 @@ Prizes outside any trail.
 
 These are not prizes and are never moved or replaced.
 
-- **Kanto:** Old Sea Map (VermilionCity_hns local id 22); Gold Teeth (FuchsiaCity_SafariZoneBeach_hns local id 9); Silph Scope and Lift Key (RocketHideout_B4F_Frlg local ids 2 and 4); Silph Card Key (SilphCo_5F_Frlg local id 8); Secret Key (PokemonMansion_B1F_Frlg local id 6); starter Poke Balls (PalletTown_Lab_hns local ids 6 to 8); Electrode decoys in PowerPlant_Frlg. NPC rewards are untouched: the Silph President's Master Ball, Poke Flute, the Nugget Bridge Nugget, the Safari HMs and the Viridian Gym TM Earthquake (this one is a story reward, not a spot; it duplicates the Hoenn Legend and is flagged for the orchestrator).
+- **Kanto:** Old Sea Map (VermilionCity_hns local id 22); Gold Teeth (FuchsiaCity_SafariZoneBeach_hns local id 9); Silph Scope and Lift Key (RocketHideout_B4F_Frlg local ids 2 and 4); Silph Card Key (SilphCo_5F_Frlg local id 8); Secret Key (PokemonMansion_B1F_Frlg local id 6); starter Poke Balls (PalletTown_Lab_hns local ids 6 to 8); Electrode decoys in PowerPlant_Frlg. NPC rewards are untouched: the Silph President's Master Ball, Poke Flute, the Nugget Bridge Nugget, the Safari HMs and the Viridian Gym TM Earthquake (a story reward, not a spot; it duplicates the Hoenn Legend and is left as it is).
 - **Sevii:** HM07 (FourIsland_IcefallCave_1F_Frlg local id 2). Other rewards are given by NPCs.
 - **Johto:** Coin Case (GoldenrodCity_UndergroundTunnel_hns local id 8); GS Ball (RuinsOfAlph_B1F_hns local id 15); HM Waterfall (IcePath_1F_hns local id 2); Azure Flute (MtSilver_2F_hns local id 18).
 - **Alola:** UlaUla_Cave_2_hns local id 1 has no script or flag and is left alone.
@@ -674,7 +677,7 @@ Every authored item spot that is not listed above becomes a dynamic spot in the 
 | Sinjoh | about 13 | Ultra Ball, Lure, Star Dust, King's Rock, Snowball, Nugget, Dawn Stone, Max Revive and similar; a Route 50 hidden spot (Ice Stone) and the Hot Springs hidden Dawn Stone were promoted to Legends instead |
 | Hoenn | about 280 | Vitamins, Rare Candies, PP Ups; Heart Scales, shards and Nuggets; marts' Balls (Luxury, Dive, Nest, Net) and Escape Ropes; TMs Focus Punch, Skill Swap and Ice Beam; Sea and Lax Incense; mail and Revival Herb; the second Everstone; Battle Frontier and Pyramid items are out of scope |
 
-New dynamic spots created by reconciliation: none beyond the Kanto Victory Road spots above (Max Ether, Rare Candy, two Max Revives, HP Up, Potion) and the spots already vacated by moved prizes. Lucky Egg and Amulet Coin finds in Kanto and Johto, and the other Master Ball, Ability Capsule, Ability Patch, Gold Bottle Cap and TM Earthquake copies, were replaced with other prizes at the same spots rather than demoted.
+New dynamic spots created by reconciliation: none beyond the Kanto Victory Road spots above (Max Ether, Rare Candy, two Max Revives, HP Up, Potion) and the spots already vacated by moved prizes. The authored Lucky Egg (Route 47 hidden) and TM Earthquake (Kanto Victory Road B2F) spots were given other prizes (Water Pulse and Rocky Helmet) rather than demoted. The Amulet Coin in the Goldenrod Department Store basement becomes a dynamic spot. The Ability Capsule, Ability Patch, Gold Bottle Cap, Exp. Charm, Catching Charm and the Sevii and Sinjoh Legends are placed at spots that held other items, so no authored copy of them exists to replace.
 
 ## Validation
 
