@@ -2,6 +2,8 @@
 
 Implemented: No
 
+Specification: [Phone rematches](../specs/phone-rematches.md)
+
 Design status: draft. Terms follow the [glossary](player-trainer-rating.md#glossary)
 and [daily world slots](daily-world-slots.md#terms).
 

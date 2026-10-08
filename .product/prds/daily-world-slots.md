@@ -2,6 +2,11 @@
 
 Implemented: No
 
+Specifications: [Daily world slots](../specs/daily-world-slots.md),
+[World items](../specs/world-items.md),
+[Sevii item restoration](../specs/sevii-item-restoration.md),
+[Phone rematches](../specs/phone-rematches.md)
+
 Design status: draft. All numbers are placeholders for playtesting. Terms
 follow the [glossary](player-trainer-rating.md#glossary) and the
 [wild encounters v2 terms](wild-encounters-v2.md#terms), plus the terms below.
@@ -58,7 +63,7 @@ daily events use. A new day only reaches a map the next time that map loads.
 A slot's draw is fixed for the whole day. It depends on the save, the day, the
 map and the slot. Reloading the map, saving and resetting, or leaving and
 coming back on the same day gives the same draw. Changing the game clock
-changes the day, as it does for every other daily event.
+changes the day, as it does for every other daily event. Wayfarer will later move to an in-game clock; the day then follows that clock.
 
 ### Authored first
 
