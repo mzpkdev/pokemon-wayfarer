@@ -146,7 +146,10 @@ describe.sequential("Wayfarer Nugget Bridge", () => {
   })
 
   it("keeps a lost challenger current and later challengers unavailable", async () => {
-    await arrange(game, { party: [{ species: "lapras", level: 1 }] })
+    // A usable move keeps the first action menu reachable; a moveless L1 Lapras
+    // auto-Struggles a turn first and can be KO'd before the menu, which made
+    // this depend on the battle RNG stream.
+    await arrange(game, { party: [{ species: "lapras", level: 1, moves: ["tackle"] }] })
     await startBattle(game)
     await game.battle.lose()
     await settle(game)

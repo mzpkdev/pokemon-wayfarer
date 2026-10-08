@@ -16,7 +16,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_SPEAROW,
+            .species = SPECIES_FEAROW,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 9,
@@ -41,7 +41,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_IVYSAUR,
+            .species = SPECIES_VENUSAUR,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 58,
@@ -189,7 +189,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_GEODUDE,
+            .species = SPECIES_GOLEM,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 21,

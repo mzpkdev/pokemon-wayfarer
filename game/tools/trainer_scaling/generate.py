@@ -446,15 +446,6 @@ def generate(check=False, proposal=None, no_audit=False):
     exceptions += ''.join(f'    {{{row["owner"]}, {row["slot"]}}},\n' for row in sorted(manifest['move_exceptions'], key=lambda row: (row['owner'], row['slot'])))
     exceptions += '    {TRAINERS_COUNT, 0},\n};\n'
     write_output(OUTPUT / 'move_exceptions.h', exceptions, check)
-    import sys
-    sys.path.insert(0, str(ROOT / 'tools/wild_encounters'))
-    import wild_encounters_to_header as wild
-    # Gym Leaders have their own authored six-slot curve.  They intentionally
-    # do not feed the ordinary predecessor table (or the ordinary audit).
-    eligible = {row['id'] for row in rows if row['policy'] in ('ORDINARY', 'GYM_MEMBER')}
-    species = {slot['species'] for trainer in eligible for slot in records[trainer]['slots']}
-    metadata = wild.load_trainer_species_metadata(wild.DEFAULT_SPECIES_METADATA, wild.DEFAULT_SPECIES_INFO, wild.species_ids(wild.DEFAULT_SPECIES), species)
-    write_output(OUTPUT / 'predecessors.h', wild.render_trainer_predecessor_header(metadata), check)
     report = {'counts': dict(Counter(row['policy'] for row in rows)), 'region_counts': dict(Counter(row['region'] for row in rows)), 'populated_ids': len(rows), 'unresolved_classification_candidates': [], 'structural_failures': [], 'move_exceptions': manifest['move_exceptions'], 'excluded': [{'id': row['id'], 'reason': row['reason']} for row in rows if row['policy'] == 'EXCLUDED'], 'records': raw, 'roster_inventory': 'Trainerproc source records appear once in the one-layer inventory. Balance slots name resolved owners.', 'context_exclusions': ['Frontier', 'Trainer Hill', 'e-Reader', 'Secret Base', 'rental', 'link', 'recorded', 'external', 'partner', 'player', 'raw Trainer pointer/debug'], 'reward_policy': 'Battle XP reads effective species and levels; prize money retains authored party levels and class multiplier.'}
     if not no_audit:
         from audit import build_audit

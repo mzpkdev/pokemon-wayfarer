@@ -33,8 +33,8 @@ class ProjectionAuditTests(unittest.TestCase):
         data = {"SPECIES_TEST": {"abilities": ["ABILITY_ONE"], "gender": "MON_GENDERLESS", "base_exp": 10, "bst": 500}}
         schedules = {("SPECIES_TEST", "modern"): []}
         records = {"TRAINER_TEST": {"partySize": 1, "poolSize": 2, "slots": [{"species": "SPECIES_TEST", "lvl": 5}, {"species": "SPECIES_TEST", "lvl": 50, "ability": "ABILITY_BAD", "gender": "TRAINER_MON_MALE"}]}}
-        metadata = [{"species": "SPECIES_TEST", "predecessor": "SPECIES_NONE", "predecessor_level": 0}]
-        with patch.object(audit, "load_data", return_value=(data, schedules, {"MOVE_HIT": 10})), patch.object(audit.wild, "load_trainer_species_metadata", return_value=metadata):
+        table = {}
+        with patch.object(audit, "load_data", return_value=(data, schedules, {"MOVE_HIT": 10})), patch.object(audit, "stage_table", return_value=table):
             report = audit.build_audit(records, {"records": [{"id": "TRAINER_TEST", "policy": "ORDINARY"}], "move_exceptions": []})
         self.assertEqual(report["evaluated_slot_ratings"], 162)
         self.assertEqual(len(report["structural_failures"]), 162)
@@ -42,6 +42,15 @@ class ProjectionAuditTests(unittest.TestCase):
         self.assertTrue(outcome["ability_fallback"])
         self.assertTrue(outcome["gender_adjustment"])
         self.assertTrue(outcome["high_bst_no_predecessor"])
+
+    def test_non_level_evolutions_step_down_like_runtime(self):
+        table = audit.stage_table()
+        step = lambda species, level: audit.evolution.step_down(species, level, table)
+        self.assertEqual(step("SPECIES_VILEPLUME", 17), "SPECIES_ODDISH")
+        self.assertEqual(step("SPECIES_VILEPLUME", 30), "SPECIES_GLOOM")
+        self.assertEqual(step("SPECIES_GENGAR", 20), "SPECIES_GASTLY")
+        self.assertEqual(step("SPECIES_STEELIX", 20), "SPECIES_ONIX")
+        self.assertEqual(step("SPECIES_RAICHU_ALOLA", 5), "SPECIES_PIKACHU")
 
     def test_active_data_covers_modern_learnset(self):
         species, schedules, moves = audit.load_data()
@@ -55,9 +64,9 @@ class ProjectionAuditTests(unittest.TestCase):
         data = {name: {"abilities": ["ABILITY_ONE"], "gender": "MON_MALE", "base_exp": 10, "bst": 100} for name in ("SPECIES_BASE", "SPECIES_EVOLVED")}
         schedules = {(name, "modern"): [(1, "MOVE_HIT"), (10, "MOVE_LATER")] for name in data}
         records = {"TRAINER_ALIAS": {"owner": "TRAINER_OWNER", "partySize": 1, "slots": [{"species": "SPECIES_EVOLVED", "lvl": 5, "moves": ["MOVE_LATER"]}]}}
-        metadata = [{"species": "SPECIES_BASE", "predecessor": "SPECIES_NONE", "predecessor_level": 0}, {"species": "SPECIES_EVOLVED", "predecessor": "SPECIES_BASE", "predecessor_level": 10}]
+        table = {"SPECIES_EVOLVED": ("SPECIES_BASE", 10)}
         manifest = {"records": [{"id": "TRAINER_ALIAS", "policy": "ORDINARY"}], "move_exceptions": [{"owner": "TRAINER_OWNER", "slot": 0, "reason": "fixture"}]}
-        with patch.object(audit, "load_data", return_value=(data, schedules, {"MOVE_HIT": 10, "MOVE_LATER": 10})), patch.object(audit.wild, "load_trainer_species_metadata", return_value=metadata):
+        with patch.object(audit, "load_data", return_value=(data, schedules, {"MOVE_HIT": 10, "MOVE_LATER": 10})), patch.object(audit, "stage_table", return_value=table):
             report = audit.build_audit(records, manifest)
         projection = report["projections"][0]
         at = lambda rating: next(report["outcomes"][row["outcome"]] for row in projection["modern"] if row["rating_start"] <= rating <= row["rating_end"])

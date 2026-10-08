@@ -11,6 +11,9 @@ ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location("wild_metadata", ROOT / "tools/wild_encounters/wild_encounters_to_header.py")
 wild = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(wild)
+espec = importlib.util.spec_from_file_location("notable_evolution", ROOT / "tools/notable_trainers/evolution.py")
+evolution = importlib.util.module_from_spec(espec)
+espec.loader.exec_module(evolution)
 ANCHORS = ((0, 7), (4, 8), (8, 10), (16, 15), (30, 22), (40, 34), (55, 52), (65, 72), (80, 92))
 CAPS = ((0, 15), (4, 16), (8, 18), (16, 23), (30, 30), (40, 42), (55, 60), (65, 80), (80, 100))
 MILESTONES = (0, 4, 8, 16, 30, 40, 55, 63, 65, 68, 76, 80)
@@ -130,12 +133,15 @@ def initial_moves(schedule, level):
     return moves
 
 
+def stage_table():
+    return evolution.stage_table()
+
+
 def build_audit(records, manifest):
     species_data, schedules, move_pp = load_data()
     policies = {row["id"]: row["policy"] for row in manifest["records"]}
-    eligible_species = {slot["species"] for trainer, roster in records.items() if policies.get(trainer) in ("ORDINARY", "GYM_MEMBER") for slot in roster["slots"]}
-    metadata = wild.load_trainer_species_metadata(wild.DEFAULT_SPECIES_METADATA, wild.DEFAULT_SPECIES_INFO, wild.species_ids(wild.DEFAULT_SPECIES), eligible_species)
-    graph = {row["species"]: row for row in metadata}
+    # The ROM steps down through the shared evolution-stage table.
+    table = stage_table()
     exceptions = {(row["owner"], row["slot"]): row for row in manifest.get("move_exceptions", [])}
     failures, slots, parties = [], [], []
     total = 0
@@ -153,7 +159,7 @@ def build_audit(records, manifest):
                 intervals = []
                 for rating in range(81):
                     level = project(rating, slot["lvl"], policy)
-                    species, _ = wild.effective_species(authored, level, graph)
+                    species = evolution.step_down(authored, level, table)
                     data = species_data[species]
                     schedule = schedules[species, mode]
                     moves = initial_moves(schedule, level)
@@ -180,7 +186,7 @@ def build_audit(records, manifest):
                               "authored_moves_retained": retained, "custom_moves_replaced": bool(original_moves) and not retained,
                               "above_soft_cap": level > interpolate(rating, CAPS), "base_exp": data["base_exp"],
                               "utility_only_moves": not any(move in move_pp["__damaging__"] for move in moves) if "__damaging__" in move_pp else None,
-                              "high_bst_no_predecessor": data["bst"] >= 480 and graph[species]["predecessor"] == "SPECIES_NONE"}
+                              "high_bst_no_predecessor": data["bst"] >= 480 and species not in table}
                     if not abilities or not any(move_pp.get(move, 0) > 0 for move in moves):
                         failure = {"id": trainer, "slot": index, "mode": mode, "rating": rating, "species": species, "level": level, "reason": "no legal ability" if not abilities else "empty usable moves"}
                         failures.append(failure)

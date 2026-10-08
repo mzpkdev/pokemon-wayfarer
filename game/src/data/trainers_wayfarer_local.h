@@ -30,7 +30,7 @@
         {
             {
 #line 10
-            .species = SPECIES_CUBONE,
+            .species = SPECIES_MAROWAK,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 12
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -42,7 +42,7 @@
             },
             {
 #line 14
-            .species = SPECIES_ZUBAT,
+            .species = SPECIES_CROBAT,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 16
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -126,7 +126,7 @@
             },
             {
 #line 43
-            .species = SPECIES_ZUBAT,
+            .species = SPECIES_CROBAT,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 45
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -222,7 +222,7 @@
         {
             {
 #line 77
-            .species = SPECIES_MACHOP,
+            .species = SPECIES_MACHAMP,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 79
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -234,7 +234,7 @@
             },
             {
 #line 81
-            .species = SPECIES_DROWZEE,
+            .species = SPECIES_HYPNO,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 83
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -270,7 +270,7 @@
         {
             {
 #line 94
-            .species = SPECIES_EKANS,
+            .species = SPECIES_ARBOK,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 96
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -282,7 +282,7 @@
             },
             {
 #line 98
-            .species = SPECIES_ZUBAT,
+            .species = SPECIES_CROBAT,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 100
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -294,7 +294,7 @@
             },
             {
 #line 102
-            .species = SPECIES_CUBONE,
+            .species = SPECIES_MAROWAK,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 104
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -414,7 +414,7 @@
             },
             {
 #line 145
-            .species = SPECIES_MACHOKE,
+            .species = SPECIES_MACHAMP,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 147
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -462,7 +462,7 @@
             },
             {
 #line 162
-            .species = SPECIES_ZUBAT,
+            .species = SPECIES_GOLBAT,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 164
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -474,7 +474,7 @@
             },
             {
 #line 166
-            .species = SPECIES_GOLBAT,
+            .species = SPECIES_CROBAT,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 168
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -548,7 +548,7 @@
             },
             {
 #line 195
-            .species = SPECIES_KOFFING,
+            .species = SPECIES_WEEZING,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 197
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -567,7 +567,7 @@
             },
             {
 #line 203
-            .species = SPECIES_GOLBAT,
+            .species = SPECIES_CROBAT,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 205
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -622,7 +622,7 @@
             },
             {
 #line 224
-            .species = SPECIES_CUBONE,
+            .species = SPECIES_MAROWAK,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 226
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -730,7 +730,7 @@
             },
             {
 #line 262
-            .species = SPECIES_GOLBAT,
+            .species = SPECIES_CROBAT,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 264
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -790,7 +790,7 @@
             },
             {
 #line 283
-            .species = SPECIES_GOLBAT,
+            .species = SPECIES_CROBAT,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 285
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -838,7 +838,7 @@
         {
             {
 #line 300
-            .species = SPECIES_DROWZEE,
+            .species = SPECIES_HYPNO,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 302
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -850,7 +850,7 @@
             },
             {
 #line 304
-            .species = SPECIES_GRIMER,
+            .species = SPECIES_MUK,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 306
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -862,7 +862,7 @@
             },
             {
 #line 308
-            .species = SPECIES_MACHOP,
+            .species = SPECIES_MACHAMP,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 310
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -898,7 +898,7 @@
         {
             {
 #line 321
-            .species = SPECIES_GOLBAT,
+            .species = SPECIES_CROBAT,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 323
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -958,7 +958,7 @@
         {
             {
 #line 342
-            .species = SPECIES_MACHOKE,
+            .species = SPECIES_MACHAMP,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 344
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1018,7 +1018,7 @@
             },
             {
 #line 363
-            .species = SPECIES_ZUBAT,
+            .species = SPECIES_CROBAT,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 365
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1030,7 +1030,7 @@
             },
             {
 #line 367
-            .species = SPECIES_RATTATA,
+            .species = SPECIES_RATICATE,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 369
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1042,7 +1042,7 @@
             },
             {
 #line 371
-            .species = SPECIES_EKANS,
+            .species = SPECIES_ARBOK,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 373
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1090,7 +1090,7 @@
             },
             {
 #line 388
-            .species = SPECIES_DROWZEE,
+            .species = SPECIES_HYPNO,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 390
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1195,7 +1195,7 @@
             },
             {
 #line 429
-            .species = SPECIES_MAGNEMITE,
+            .species = SPECIES_MAGNEZONE,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 431
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1238,7 +1238,7 @@
         {
             {
 #line 446
-            .species = SPECIES_GRIMER,
+            .species = SPECIES_MUK,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 448
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1338,7 +1338,7 @@
         {
             {
 #line 487
-            .species = SPECIES_VOLTORB,
+            .species = SPECIES_ELECTRODE,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 489
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1357,7 +1357,7 @@
             },
             {
 #line 495
-            .species = SPECIES_KOFFING,
+            .species = SPECIES_WEEZING,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 497
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1376,7 +1376,7 @@
             },
             {
 #line 503
-            .species = SPECIES_MAGNETON,
+            .species = SPECIES_MAGNEZONE,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 505
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1431,7 +1431,7 @@
             },
             {
 #line 524
-            .species = SPECIES_VOLTORB,
+            .species = SPECIES_ELECTRODE,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 526
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1443,7 +1443,7 @@
             },
             {
 #line 528
-            .species = SPECIES_MAGNETON,
+            .species = SPECIES_MAGNEZONE,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 530
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1589,7 +1589,7 @@
         {
             {
 #line 583
-            .species = SPECIES_GRIMER,
+            .species = SPECIES_MUK,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 585
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1673,7 +1673,7 @@
         {
             {
 #line 613
-            .species = SPECIES_VOLTORB,
+            .species = SPECIES_ELECTRODE,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 615
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1730,7 +1730,7 @@
             },
             {
 #line 637
-            .species = SPECIES_MAGNEMITE,
+            .species = SPECIES_MAGNEZONE,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 639
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1749,7 +1749,7 @@
             },
             {
 #line 645
-            .species = SPECIES_KOFFING,
+            .species = SPECIES_WEEZING,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 647
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1792,7 +1792,7 @@
         {
             {
 #line 662
-            .species = SPECIES_MAGNEMITE,
+            .species = SPECIES_MAGNEZONE,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 664
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1804,7 +1804,7 @@
             },
             {
 #line 666
-            .species = SPECIES_KOFFING,
+            .species = SPECIES_WEEZING,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 668
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1840,7 +1840,7 @@
         {
             {
 #line 679
-            .species = SPECIES_KADABRA,
+            .species = SPECIES_ALAKAZAM,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 681
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1960,7 +1960,7 @@
         {
             {
 #line 721
-            .species = SPECIES_RATTATA,
+            .species = SPECIES_RATICATE,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 723
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -1972,7 +1972,7 @@
             },
             {
 #line 725
-            .species = SPECIES_ZUBAT,
+            .species = SPECIES_CROBAT,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 727
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2008,7 +2008,7 @@
         {
             {
 #line 738
-            .species = SPECIES_SANDSHREW,
+            .species = SPECIES_SANDSLASH,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 740
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2020,7 +2020,7 @@
             },
             {
 #line 742
-            .species = SPECIES_RATTATA,
+            .species = SPECIES_RATICATE,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 744
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2032,7 +2032,7 @@
             },
             {
 #line 746
-            .species = SPECIES_ZUBAT,
+            .species = SPECIES_CROBAT,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 748
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2068,7 +2068,7 @@
         {
             {
 #line 759
-            .species = SPECIES_ZUBAT,
+            .species = SPECIES_CROBAT,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 761
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2080,7 +2080,7 @@
             },
             {
 #line 763
-            .species = SPECIES_EKANS,
+            .species = SPECIES_ARBOK,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 765
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2116,7 +2116,7 @@
         {
             {
 #line 776
-            .species = SPECIES_RATTATA,
+            .species = SPECIES_RATICATE,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 778
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2128,7 +2128,7 @@
             },
             {
 #line 780
-            .species = SPECIES_SANDSHREW,
+            .species = SPECIES_SANDSLASH,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 782
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2164,7 +2164,7 @@
         {
             {
 #line 793
-            .species = SPECIES_GRIMER,
+            .species = SPECIES_MUK,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 795
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2176,7 +2176,7 @@
             },
             {
 #line 797
-            .species = SPECIES_VOLTORB,
+            .species = SPECIES_ELECTRODE,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 799
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2188,7 +2188,7 @@
             },
             {
 #line 801
-            .species = SPECIES_KOFFING,
+            .species = SPECIES_WEEZING,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 803
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2248,7 +2248,7 @@
             },
             {
 #line 822
-            .species = SPECIES_METAPOD,
+            .species = SPECIES_BUTTERFREE,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 824
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2260,7 +2260,7 @@
             },
             {
 #line 826
-            .species = SPECIES_KAKUNA,
+            .species = SPECIES_BEEDRILL,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 828
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2296,7 +2296,7 @@
         {
             {
 #line 839
-            .species = SPECIES_PIDGEY,
+            .species = SPECIES_PIDGEOT,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 841
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2308,7 +2308,7 @@
             },
             {
 #line 843
-            .species = SPECIES_ODDISH,
+            .species = SPECIES_BELLOSSOM,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 845
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2320,7 +2320,7 @@
             },
             {
 #line 847
-            .species = SPECIES_BELLSPROUT,
+            .species = SPECIES_VICTREEBEL,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 849
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2356,7 +2356,7 @@
         {
             {
 #line 860
-            .species = SPECIES_SANDSHREW,
+            .species = SPECIES_SANDSLASH,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 862
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2368,7 +2368,7 @@
             },
             {
 #line 864
-            .species = SPECIES_EKANS,
+            .species = SPECIES_ARBOK,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 866
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2404,7 +2404,7 @@
         {
             {
 #line 877
-            .species = SPECIES_NIDORAN_M,
+            .species = SPECIES_NIDOKING,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 879
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2416,7 +2416,7 @@
             },
             {
 #line 881
-            .species = SPECIES_NIDORAN_F,
+            .species = SPECIES_NIDOQUEEN,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 883
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2452,7 +2452,7 @@
         {
             {
 #line 894
-            .species = SPECIES_MANKEY,
+            .species = SPECIES_ANNIHILAPE,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 896
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2488,7 +2488,7 @@
         {
             {
 #line 907
-            .species = SPECIES_EKANS,
+            .species = SPECIES_ARBOK,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 909
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2500,7 +2500,7 @@
             },
             {
 #line 911
-            .species = SPECIES_ZUBAT,
+            .species = SPECIES_CROBAT,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 913
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2536,7 +2536,7 @@
         {
             {
 #line 925
-            .species = SPECIES_RHYHORN,
+            .species = SPECIES_RHYPERIOR,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 927
             .iv = TRAINER_PARTY_IVS(4, 4, 4, 4, 4, 4),
@@ -2634,7 +2634,7 @@
             },
             {
 #line 959
-            .species = SPECIES_MACHOKE,
+            .species = SPECIES_MACHAMP,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 959
             .heldItem = ITEM_BLACK_BELT,
@@ -2672,7 +2672,7 @@
         {
             {
 #line 972
-            .species = SPECIES_MACHOKE,
+            .species = SPECIES_MACHAMP,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 972
             .heldItem = ITEM_BLACK_BELT,
@@ -2738,7 +2738,7 @@
             },
             {
 #line 993
-            .species = SPECIES_MACHOKE,
+            .species = SPECIES_MACHAMP,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 993
             .heldItem = ITEM_BLACK_BELT,
@@ -2816,7 +2816,7 @@
             },
             {
 #line 1023
-            .species = SPECIES_RHYHORN,
+            .species = SPECIES_RHYPERIOR,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 1025
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
@@ -2937,7 +2937,7 @@
             },
             {
 #line 1073
-            .species = SPECIES_ONIX,
+            .species = SPECIES_STEELIX,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 1075
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
@@ -2956,7 +2956,7 @@
             },
             {
 #line 1081
-            .species = SPECIES_GRAVELER,
+            .species = SPECIES_GOLEM,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 1083
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
@@ -3058,7 +3058,7 @@
             },
             {
 #line 1123
-            .species = SPECIES_RHYHORN,
+            .species = SPECIES_RHYPERIOR,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 1125
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),

@@ -148,6 +148,33 @@ def rows():
     return ordered
 
 
+def stage_table():
+    """Return {successor: (predecessor, level)} with engine EVO_LEVEL values resolved.
+
+    This is the exact edge set and threshold the ROM's StepDownSpeciesToLevel
+    uses, so Python projections match runtime.
+    """
+    evolutions = game_evolutions()
+    table = {}
+    for successor, predecessor, level in rows():
+        if not level:
+            level = next(int(e["parameter"]) for e in evolutions[predecessor]
+                         if e["target"] == successor and e["method"] in ("EVO_LEVEL", "EVO_LEVEL_BATTLE_ONLY")
+                         and e["parameter"].isdecimal() and int(e["parameter"]) > 0)
+        table[successor] = (predecessor, level)
+    return table
+
+
+def step_down(species, level, table):
+    """Python twin of StepDownSpeciesToLevel."""
+    for _ in range(8):
+        edge = table.get(species)
+        if edge is None or level >= edge[1]:
+            break
+        species = edge[0]
+    return species
+
+
 def baby_rows():
     """Keep baby ancestry available for egg moves, separately from party scaling."""
     data = json.loads(CATALOG.read_text())

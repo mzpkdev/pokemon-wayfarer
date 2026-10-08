@@ -10,6 +10,20 @@ import unittest
 from pathlib import Path
 
 import generate as trainer_inventory
+import final_stage
+
+_MODEL = []
+
+
+def staged_donor(donor, selected, runtime_id, policy, block):
+    """The donor block with the final-stage authoring rules applied (covered policies only)."""
+    if policy not in ('ORDINARY', 'GYM_MEMBER'):
+        return block
+    if not _MODEL:
+        _MODEL.append(final_stage.load_model())
+    return final_stage.plan_block_text(_MODEL[0], block, runtime_id, 'Kanto',
+                                       final_stage.collect_spellings([donor, selected]))
+
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCES = {
@@ -55,7 +69,7 @@ class ViridianSourceContracts(unittest.TestCase):
             runtime_id = f'TRAINER_VIRIDIAN_GYM_{name}_HNS'
             selected_ids.append(ids[runtime_id])
             self.assertEqual(party_block(selected, runtime_id),
-                             party_block(donor, f'TRAINER_{original}'))
+                             staged_donor(donor, selected, runtime_id, records[runtime_id]['policy'], party_block(donor, f'TRAINER_{original}')))
             self.assertEqual(records[runtime_id]['policy'],
                              'GYM_LEADER' if name == 'GIOVANNI' else 'GYM_MEMBER')
         self.assertEqual(sorted(selected_ids), list(range(1800, 1809)))

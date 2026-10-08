@@ -264,12 +264,12 @@ TEST("Trainer scaling reverses numeric chains without wild floors or forward evo
     EXPECT_EQ(ResolveTrainerScalingSpecies(SPECIES_CHARIZARD, 36), SPECIES_CHARIZARD);
     EXPECT_EQ(ResolveTrainerScalingSpecies(SPECIES_CHARMANDER, 100), SPECIES_CHARMANDER);
     EXPECT_EQ(ResolveTrainerScalingSpecies(SPECIES_SCYTHER, 7), SPECIES_SCYTHER);
-#if WAYFARER_V0_TRAINERS
+    // Stone, trade, and friendship evolutions step down too.
     EXPECT_EQ(ResolveTrainerScalingSpecies(SPECIES_RAICHU, 7), SPECIES_PIKACHU);
-#else
-    EXPECT_EQ(ResolveTrainerScalingSpecies(SPECIES_RAICHU, 7), SPECIES_RAICHU);
-    EXPECT_EQ(ResolveTrainerScalingSpecies(SPECIES_RAICHU_ALOLA, 7), SPECIES_RAICHU_ALOLA);
-#endif
+    EXPECT_EQ(ResolveTrainerScalingSpecies(SPECIES_RAICHU_ALOLA, 7), SPECIES_PIKACHU);
+    EXPECT_EQ(ResolveTrainerScalingSpecies(SPECIES_VILEPLUME, 5), SPECIES_ODDISH);
+    EXPECT_EQ(ResolveTrainerScalingSpecies(SPECIES_GENGAR, 5), SPECIES_GASTLY);
+    EXPECT_EQ(ResolveTrainerScalingSpecies(SPECIES_GENGAR, 100), SPECIES_GENGAR);
 }
 
 TEST("Trainer scaling legal abilities use the final species")

@@ -6,10 +6,8 @@
 #include "trainer_rating.h"
 #include "trainer_party_scaling.h"
 #include "trainer_scaler.h"
-#if WAYFARER_V0_TRAINERS
 #include "battle_main.h"
 #include "notable_moves.h"
-#endif
 #include "league_circuit.h"
 #include "constants/abilities.h"
 #include "constants/battle.h"
@@ -17,13 +15,6 @@
 #include "constants/opponents.h"
 #include "constants/pokeball.h"
 #include "constants/regions.h"
-
-struct TrainerScalingPredecessor
-{
-    u16 species;
-    u16 predecessor;
-    u8 level;
-};
 
 struct TrainerScalingMoveException
 {
@@ -34,9 +25,6 @@ struct TrainerScalingMoveException
 #if IS_WAYFARER
 #include "data/trainer_scaling/move_exceptions.h"
 #include "data/trainer_scaling/policies.h"
-#if !WAYFARER_V0_TRAINERS
-#include "data/trainer_scaling/predecessors.h"
-#endif
 #include "data/trainer_scaling/league.h"
 #if B_GYM_LEADER_SCALING
 #include "data/trainer_scaling/gym_leaders.h"
@@ -287,32 +275,9 @@ u32 GetTrainerScalingPolicy(u32 trainerId)
 
 u16 ResolveTrainerScalingSpecies(u16 species, u8 level)
 {
-#if WAYFARER_V0_TRAINERS
+    // Every evolution method steps down through the shared stage table that
+    // notable trainers use; babies and regional forms follow its edges.
     return StepDownSpeciesToLevel(species, level);
-#else
-#if IS_WAYFARER
-    u32 depth;
-    for (depth = 0; depth < ARRAY_COUNT(sTrainerScalingPredecessors); depth++)
-    {
-        u32 low = 0, high = ARRAY_COUNT(sTrainerScalingPredecessors);
-        while (low < high)
-        {
-            u32 mid = low + (high - low) / 2;
-            if (sTrainerScalingPredecessors[mid].species < species)
-                low = mid + 1;
-            else
-                high = mid;
-        }
-        if (low == ARRAY_COUNT(sTrainerScalingPredecessors)
-         || sTrainerScalingPredecessors[low].species != species
-         || sTrainerScalingPredecessors[low].predecessor == SPECIES_NONE
-         || level >= sTrainerScalingPredecessors[low].level)
-            break;
-        species = sTrainerScalingPredecessors[low].predecessor;
-    }
-#endif
-    return species;
-#endif
 }
 
 bool32 IsTrainerScalingBattleContext(u32 flags)

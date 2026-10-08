@@ -99,7 +99,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_BELLSPROUT,
+            .species = SPECIES_VICTREEBEL,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
             .lvl = 38,
@@ -117,7 +117,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_GLOOM,
+            .species = SPECIES_VILEPLUME,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
             .lvl = 38,
@@ -142,7 +142,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_CHANSEY,
+            .species = SPECIES_BLISSEY,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(3, 3, 3, 3, 3, 3),
             .lvl = 50,
@@ -253,7 +253,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_YANMA,
+            .species = SPECIES_YANMEGA,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 46,
@@ -425,7 +425,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_SKIPLOOM,
+            .species = SPECIES_JUMPLUFF,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 48,
@@ -450,7 +450,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_SNUBBULL,
+            .species = SPECIES_GRANBULL,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 49,
@@ -561,7 +561,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_ONIX,
+            .species = SPECIES_STEELIX,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 48,
@@ -595,7 +595,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_ONIX,
+            .species = SPECIES_STEELIX,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 47,
@@ -604,7 +604,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_GRAVELER,
+            .species = SPECIES_GOLEM,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 48,
@@ -690,7 +690,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_SEADRA,
+            .species = SPECIES_KINGDRA,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 37,
@@ -826,7 +826,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_WARTORTLE,
+            .species = SPECIES_BLASTOISE,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 38,
@@ -922,7 +922,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_PRIMEAPE,
+            .species = SPECIES_ANNIHILAPE,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .heldItem = ITEM_BLACK_BELT,
             .iv = TRAINER_PARTY_IVS(6, 6, 6, 6, 6, 6),
@@ -958,7 +958,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_PRIMEAPE,
+            .species = SPECIES_ANNIHILAPE,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .heldItem = ITEM_BLACK_BELT,
             .iv = TRAINER_PARTY_IVS(15, 15, 15, 15, 15, 15),
@@ -994,7 +994,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_PRIMEAPE,
+            .species = SPECIES_ANNIHILAPE,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .heldItem = ITEM_BLACK_BELT,
             .iv = TRAINER_PARTY_IVS(20, 20, 20, 20, 20, 20),
@@ -1138,7 +1138,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_MACHOKE,
+            .species = SPECIES_MACHAMP,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .heldItem = ITEM_BLACK_BELT,
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
@@ -1174,7 +1174,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_MACHOKE,
+            .species = SPECIES_MACHAMP,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .heldItem = ITEM_BLACK_BELT,
             .iv = TRAINER_PARTY_IVS(21, 21, 21, 21, 21, 21),
@@ -1246,7 +1246,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_MACHOKE,
+            .species = SPECIES_MACHAMP,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .heldItem = ITEM_BLACK_BELT,
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
@@ -1282,7 +1282,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_MACHOKE,
+            .species = SPECIES_MACHAMP,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .heldItem = ITEM_BLACK_BELT,
             .iv = TRAINER_PARTY_IVS(21, 21, 21, 21, 21, 21),
@@ -1344,7 +1344,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_NIDORINO,
+            .species = SPECIES_NIDOKING,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 36,
@@ -1396,7 +1396,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_MEOWTH,
+            .species = SPECIES_PERSIAN,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 35,
@@ -1405,7 +1405,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_PIKACHU,
+            .species = SPECIES_RAICHU,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 35,
@@ -1414,7 +1414,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_CLEFAIRY,
+            .species = SPECIES_CLEFABLE,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 35,
@@ -1439,7 +1439,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_MACHOKE,
+            .species = SPECIES_MACHAMP,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .heldItem = ITEM_BLACK_BELT,
             .iv = TRAINER_PARTY_IVS(6, 6, 6, 6, 6, 6),
@@ -1449,7 +1449,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_PRIMEAPE,
+            .species = SPECIES_ANNIHILAPE,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .heldItem = ITEM_BLACK_BELT,
             .iv = TRAINER_PARTY_IVS(6, 6, 6, 6, 6, 6),
@@ -1475,7 +1475,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_MACHOKE,
+            .species = SPECIES_MACHAMP,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .heldItem = ITEM_BLACK_BELT,
             .iv = TRAINER_PARTY_IVS(15, 15, 15, 15, 15, 15),
@@ -1485,7 +1485,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_PRIMEAPE,
+            .species = SPECIES_ANNIHILAPE,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .heldItem = ITEM_BLACK_BELT,
             .iv = TRAINER_PARTY_IVS(15, 15, 15, 15, 15, 15),
@@ -1521,7 +1521,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_PRIMEAPE,
+            .species = SPECIES_ANNIHILAPE,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .heldItem = ITEM_BLACK_BELT,
             .iv = TRAINER_PARTY_IVS(20, 20, 20, 20, 20, 20),
@@ -1599,7 +1599,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_WEEPINBELL,
+            .species = SPECIES_VICTREEBEL,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 37,
@@ -1642,7 +1642,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_IVYSAUR,
+            .species = SPECIES_VENUSAUR,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 36,
@@ -2033,7 +2033,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_SKIPLOOM,
+            .species = SPECIES_JUMPLUFF,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .heldItem = ITEM_STARDUST,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2070,7 +2070,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_MAREEP,
+            .species = SPECIES_FLAAFFY,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .heldItem = ITEM_STARDUST,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2080,7 +2080,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_FLAAFFY,
+            .species = SPECIES_AMPHAROS,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .heldItem = ITEM_NUGGET,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -2115,7 +2115,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_PIDGEOTTO,
+            .species = SPECIES_PIDGEOT,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 48,
@@ -2174,7 +2174,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_POLIWHIRL,
+            .species = SPECIES_POLITOED,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 48,
@@ -2217,7 +2217,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_PIKACHU,
+            .species = SPECIES_RAICHU,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(3, 3, 3, 3, 3, 3),
             .lvl = 48,
@@ -2226,7 +2226,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_CLEFAIRY,
+            .species = SPECIES_CLEFABLE,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(3, 3, 3, 3, 3, 3),
             .lvl = 48,
@@ -2235,7 +2235,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_MARILL,
+            .species = SPECIES_AZUMARILL,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(3, 3, 3, 3, 3, 3),
             .lvl = 48,
@@ -2260,7 +2260,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_PIKACHU,
+            .species = SPECIES_RAICHU,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(18, 18, 18, 18, 18, 18),
             .lvl = 53,
@@ -2269,7 +2269,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_CLEFAIRY,
+            .species = SPECIES_CLEFABLE,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(18, 18, 18, 18, 18, 18),
             .lvl = 53,
@@ -2278,7 +2278,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_MARILL,
+            .species = SPECIES_AZUMARILL,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(18, 18, 18, 18, 18, 18),
             .lvl = 53,
@@ -2312,7 +2312,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_PIDGEOTTO,
+            .species = SPECIES_PIDGEOT,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 49,
@@ -2550,7 +2550,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_WARTORTLE,
+            .species = SPECIES_BLASTOISE,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 49,
@@ -2575,7 +2575,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_MARILL,
+            .species = SPECIES_AZUMARILL,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 50,
@@ -2600,7 +2600,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_MARILL,
+            .species = SPECIES_AZUMARILL,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(14, 14, 14, 14, 14, 14),
             .lvl = 54,
@@ -2659,7 +2659,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_NATU,
+            .species = SPECIES_XATU,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
             .lvl = 48,
@@ -2689,7 +2689,7 @@
             },
             },
             {
-            .species = SPECIES_KADABRA,
+            .species = SPECIES_ALAKAZAM,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
             .lvl = 49,
@@ -2720,7 +2720,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_NATU,
+            .species = SPECIES_XATU,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(26, 26, 26, 26, 26, 26),
             .lvl = 52,
@@ -2750,7 +2750,7 @@
             },
             },
             {
-            .species = SPECIES_KADABRA,
+            .species = SPECIES_ALAKAZAM,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(26, 26, 26, 26, 26, 26),
             .lvl = 54,
@@ -3009,7 +3009,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_ONIX,
+            .species = SPECIES_STEELIX,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 49,
@@ -3018,7 +3018,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_MACHOKE,
+            .species = SPECIES_MACHAMP,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 49,
@@ -3043,7 +3043,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_ONIX,
+            .species = SPECIES_STEELIX,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(14, 14, 14, 14, 14, 14),
             .lvl = 54,
@@ -3086,7 +3086,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_ONIX,
+            .species = SPECIES_STEELIX,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 48,
@@ -3095,7 +3095,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_GRAVELER,
+            .species = SPECIES_GOLEM,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 48,
@@ -3154,7 +3154,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_MACHOKE,
+            .species = SPECIES_MACHAMP,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 49,
@@ -3188,7 +3188,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_MACHOKE,
+            .species = SPECIES_MACHAMP,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(14, 14, 14, 14, 14, 14),
             .lvl = 54,
@@ -3238,7 +3238,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_RHYHORN,
+            .species = SPECIES_RHYPERIOR,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(3, 3, 3, 3, 3, 3),
             .lvl = 49,
@@ -3272,7 +3272,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_RHYDON,
+            .species = SPECIES_RHYPERIOR,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(18, 18, 18, 18, 18, 18),
             .lvl = 55,
@@ -3306,7 +3306,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_GIRAFARIG,
+            .species = SPECIES_FARIGIRAF,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
             .lvl = 52,
@@ -3337,7 +3337,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_GIRAFARIG,
+            .species = SPECIES_FARIGIRAF,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(26, 26, 26, 26, 26, 26),
             .lvl = 56,
@@ -3368,7 +3368,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_NATU,
+            .species = SPECIES_XATU,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
             .lvl = 48,
@@ -3429,7 +3429,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_NATU,
+            .species = SPECIES_XATU,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(26, 26, 26, 26, 26, 26),
             .lvl = 53,
@@ -3776,7 +3776,7 @@
             },
             },
             {
-            .species = SPECIES_VOLTORB,
+            .species = SPECIES_ELECTRODE,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 47,
@@ -3791,7 +3791,7 @@
             },
             },
             {
-            .species = SPECIES_PINECO,
+            .species = SPECIES_FORRETRESS,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 47,
@@ -3849,7 +3849,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_PINECO,
+            .species = SPECIES_FORRETRESS,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(14, 14, 14, 14, 14, 14),
             .lvl = 52,
@@ -3874,7 +3874,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_PRIMEAPE,
+            .species = SPECIES_ANNIHILAPE,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .heldItem = ITEM_BLACK_BELT,
             .iv = TRAINER_PARTY_IVS(6, 6, 6, 6, 6, 6),
@@ -3894,7 +3894,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_MACHOKE,
+            .species = SPECIES_MACHAMP,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .heldItem = ITEM_BLACK_BELT,
             .iv = TRAINER_PARTY_IVS(6, 6, 6, 6, 6, 6),
@@ -3920,7 +3920,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_PRIMEAPE,
+            .species = SPECIES_ANNIHILAPE,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .heldItem = ITEM_BLACK_BELT,
             .iv = TRAINER_PARTY_IVS(20, 20, 20, 20, 20, 20),
@@ -3975,7 +3975,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_LICKITUNG,
+            .species = SPECIES_LICKILICKY,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(4, 4, 4, 4, 4, 4),
             .lvl = 48,
@@ -4018,7 +4018,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_LICKITUNG,
+            .species = SPECIES_LICKILICKY,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(19, 19, 19, 19, 19, 19),
             .lvl = 52,
@@ -4053,7 +4053,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_TANGELA,
+            .species = SPECIES_TANGROWTH,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
             .lvl = 49,
@@ -4115,7 +4115,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_TANGELA,
+            .species = SPECIES_TANGROWTH,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(26, 26, 26, 26, 26, 26),
             .lvl = 53,
@@ -4177,7 +4177,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_CHANSEY,
+            .species = SPECIES_BLISSEY,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
             .lvl = 52,
@@ -4209,7 +4209,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_CHANSEY,
+            .species = SPECIES_BLISSEY,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(26, 26, 26, 26, 26, 26),
             .lvl = 56,
@@ -4241,7 +4241,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_RHYDON,
+            .species = SPECIES_RHYPERIOR,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
             .lvl = 47,
@@ -4286,7 +4286,7 @@
             },
             },
             {
-            .species = SPECIES_MACHOKE,
+            .species = SPECIES_MACHAMP,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
             .lvl = 48,
@@ -4333,7 +4333,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_RHYDON,
+            .species = SPECIES_RHYPERIOR,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(26, 26, 26, 26, 26, 26),
             .lvl = 52,
@@ -4485,7 +4485,7 @@
             },
             },
             {
-            .species = SPECIES_GIRAFARIG,
+            .species = SPECIES_FARIGIRAF,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
             .lvl = 50,
@@ -4577,7 +4577,7 @@
             },
             },
             {
-            .species = SPECIES_GIRAFARIG,
+            .species = SPECIES_FARIGIRAF,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(26, 26, 26, 26, 26, 26),
             .lvl = 56,
@@ -4702,7 +4702,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_ONIX,
+            .species = SPECIES_STEELIX,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 50,
@@ -4757,7 +4757,7 @@
             },
             },
             {
-            .species = SPECIES_GRAVELER,
+            .species = SPECIES_GOLEM,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 48,
@@ -5127,7 +5127,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_GOLBAT,
+            .species = SPECIES_CROBAT,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 48,
@@ -5161,7 +5161,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_RATTATA,
+            .species = SPECIES_RATICATE,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
             .lvl = 48,
@@ -5250,7 +5250,7 @@
         .party = (const struct TrainerMon[])
         {
             {
-            .species = SPECIES_EKANS,
+            .species = SPECIES_ARBOK,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(6, 6, 6, 6, 6, 6),
             .lvl = 48,
@@ -5268,7 +5268,7 @@
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             },
             {
-            .species = SPECIES_GLOOM,
+            .species = SPECIES_VILEPLUME,
             .gender = TRAINER_MON_RANDOM_GENDER,
             .iv = TRAINER_PARTY_IVS(6, 6, 6, 6, 6, 6),
             .lvl = 48,
