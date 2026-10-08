@@ -156,8 +156,9 @@ Phone numbers and rematches belong to the trainer, not the spot:
   have no fixed map, so readiness builds up as you walk anywhere in their
   region.
 - **Calls name today's place.** When a registered trainer calls, they say where
-  they are today. HNS's call texts never name a place today, so every
-  battle-request call gains that line, and so does every gift call. The set
+  they are today. HNS battle requests never name a place and its gift calls
+  name the home route, so every battle-request call gains a line naming
+  today's place, and every gift call names it instead of the home route. The set
   of ready trainers (and trainers holding a gift) is fixed when the day
   starts. Each of them is always given a slot that day, so a call never sends
   you to an empty spot. A trainer who becomes ready during the day is placed

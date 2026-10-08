@@ -31,8 +31,24 @@ Pairs share one contact and battle together.
   Hoenn trainers get new entries and never reuse an HNS index. Indexes 28–63
   are empty and take the first 36; the table grows past its 90 entries for the
   other 28. Entries are appended, never inserted, so existing indexes keep
-  their meaning. `REMATCH_SPECIAL_TRAINER_START` moves past the new rows, and
-  every loop keyed on it is checked.
+  their meaning.
+- **Appended range.** The 28 appended indexes 90–117 are normal trainers. The
+  special rows (from `REMATCH_WALLY_VR`) and the Elite Four rows (from
+  `REMATCH_ELITE_FOUR_ENTRIES`, `REMATCH_SIDNEY` = 85) and rows 76–89 keep
+  their constants and meaning. Several checks treat every index at or above
+  `REMATCH_ELITE_FOUR_ENTRIES` as Elite Four, so a new
+  `REMATCH_APPENDED_START` (90) to `REMATCH_TABLE_ENTRIES` range is defined and
+  each of these treats it as normal:
+  - `IsRematchForbidden` (`battle_setup.c`): not forbidden.
+  - `MatchCall_IsRematchable_Trainer` (`pokenav_match_call_data.c`): reads
+    `trainerRematches`.
+  - `GetRematchTrainerIdVSSeeker` (`vs_seeker.c`): returns the normal
+    rematch level path (its Sevii and coast branches are retired).
+  - The loops over `REMATCH_SPECIAL_TRAINER_START` in `battle_setup.c`
+    (`UpdateRandomTrainerRematches`) and `match_call.c` (the candidate and
+    count loops) also cover the appended range.
+  `gym_leader_rematch.c` iterates only the special-to-Elite-Four rows and
+  stays as is.
 - **Sevii and coast families** stay in their own registries. Their stage and
   ready bits already live in Wayfarer's Sevii and coast save state, not in the
   shared rematch array.
@@ -47,9 +63,12 @@ Pairs share one contact and battle together.
   maps an index to `0x310 + index` below 90 and `0x8BE + (index - 90)` from 90.
   Sevii and coast contacts use 41 new Sevii bank flags, in slots 61 upward
   beside the 97 restored item flags (138 of the 195 free slots).
-- **Rematch progress.** `trainerRematches` grows from 100 to the table size.
-  This changes the SaveBlock1 layout; Wayfarer has no released saves, so no
-  migration is needed (`AGENTS.md`).
+- **Rematch progress.** `trainerRematches` grows from 100 (`MAX_REMATCH_ENTRIES`)
+  to 118, the table size. This adds 18 bytes to SaveBlock1, on top of the 90
+  bytes of `homeBeatenToday` from
+  [daily world slots](daily-world-slots.md#save-state): 108 bytes against 112
+  free, leaving 4. It changes the SaveBlock1 layout; Wayfarer has no released
+  saves, so no migration is needed (`AGENTS.md`).
 - **Contact list.** `matchCallEntries` grows from 99 to cover every contact plus
   the special headers, with a bounds check. The list also reads the Sevii and
   coast registries.
@@ -71,10 +90,11 @@ automatic registration in `RegisterTrainerInMatchCall` for Wayfarer. A trainer w
   [daily world slots](daily-world-slots.md#deterministic-draws)). There is no
   call at that moment: the trainer is placed and calls from the next day (see
   [Placement](#readiness-and-teams)).
-- **Teams, registered contacts.** A ready trainer's next battle uses their
-  next team: the next unbeaten tier in the rematch table, or the next stage in
-  the Sevii or coast registry. After the last, they keep it. Winning clears
-  readiness. Levels come from [regular trainer scaling](trainer-party-scaling.md);
+- **Teams, registered contacts.** A ready trainer's next battle uses the tier
+  after the higher of the highest tier you have fought and the highest tier
+  unlocked by Trainer Rating (below), in the rematch table or the Sevii or coast
+  registry. After the last, they keep it. Registering later never lowers it.
+  Winning clears readiness. Levels come from [regular trainer scaling](trainer-party-scaling.md);
   the HNS badge-level ceiling no longer applies in Wayfarer.
 - **Teams, trainers without a registered number.** A trainer with no number,
   or whose number you declined, doesn't use readiness. Their rematch teams
@@ -90,11 +110,12 @@ automatic registration in `RegisterTrainerInMatchCall` for Wayfarer. A trainer w
 
   The team is derived from the current Trainer Rating when the battle starts,
   so it needs no save state. Registering later keeps every team already
-  unlocked: the stored stage starts at the Trainer Rating stage.
-- **Placement.** The set of ready trainers is fixed when the day starts and is
-  stamped with the day (`placedToday` in
-  [daily world slots](daily-world-slots.md#save-state)). A ready trainer in
-  that set always has a spot that day
+  unlocked: a registered contact's next team follows the higher of its fought
+  and Trainer Rating tiers, as above.
+- **Placement.** The sets of ready trainers and of trainers holding a gift are
+  fixed when the day starts and stamped with the day (`readyAtDayStart` and
+  `giftAtDayStart` in [daily world slots](daily-world-slots.md#save-state),
+  one bit per contact each). A trainer in either set always has a spot that day
   ([daily world slots](daily-world-slots.md#who-stands-where-today)). A trainer
   who becomes ready during the day is placed from the next day. Winning
   against a ready trainer clears readiness, but today's arrangement stays. If
@@ -130,7 +151,7 @@ trainer hands it over from their home map script. Under rotation that script no
 longer runs once the home slot rotates, so:
 
 - **Placement.** A contact whose gift flag is set when the day starts is in
-  `placedToday`, like a ready rematch, and is placed that day.
+  `giftAtDayStart` and is placed that day, like a ready rematch.
 - **Hand-off.** The shared rotating-trainer script runs the hand-off whenever
   the player talks to, or is spotted by, an occupant whose gift flag is set:
   the `HasItem` text, `giveitem`, clearing the flag and the `GaveItem` or

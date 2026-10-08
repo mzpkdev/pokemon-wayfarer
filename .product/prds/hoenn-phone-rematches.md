@@ -89,8 +89,9 @@ steps on their home map. Battle requests then name the home map.
   are empty today and can take 36 of them. The other 28 need the table to grow
   past its 90 entries.
 - **Growing the table** hits three limits, all of which must be raised:
-  - The phone registration flags sit right before the HNS extended content
-    flags and must move to a larger free flag range.
+  - The phone registration flags (`0x310`–`0x369`) end flush against the HNS
+    extended content flags and can't grow. They stay for indexes 0–89, and the
+    28 appended indexes use a free flag window at `0x8BE`–`0x8D9`.
   - The saved rematch progress array holds 100 entries.
   - The Pokégear contact list holds 99 rows, special contacts included, with no
     bounds check. With HNS's trainers, these 64 and the 41 from

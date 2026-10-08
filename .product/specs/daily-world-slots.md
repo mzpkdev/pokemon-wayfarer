@@ -78,28 +78,48 @@ and coming back on the same day changes nothing.
 
 ## Save state
 
-One Wayfarer block in SaveBlock3:
+Two Wayfarer blocks. SaveBlock3 holds the day stamp, the cleared bits and the
+day-start phone sets:
 
 ```text
-u16 stampDay                       // day the bits below belong to
-bitset clearedToday[slotCount]     // every trainer slot and item spot
-bitset homeBeatenToday[trainerSlotCount]
-bitset placedToday[contactCount]   // phone contacts guaranteed a place today
+u16 stampDay                          // day the bits below belong to
+bitset clearedToday[slotCount]        // every trainer slot and item spot
+bitset readyAtDayStart[contactCount]  // contacts ready for a rematch when the day began
+bitset giftAtDayStart[contactCount]   // contacts holding a gift when the day began
 ```
 
-On map load, if `stampDay != day`, clear the first two bitsets, take the
-`placedToday` snapshot and set `stampDay`. The snapshot is the set of
-[phone contacts](phone-rematches.md) that are ready for a rematch or hold a
-gift at that moment (the contact index covers the rematch table plus the Sevii
-and coast families, about 160 bits). It is fixed for the day: a trainer who
-becomes ready, or whose gift flag is set, later in the day is placed and
-calls from the next day. The phone reads the stamped day, never the clock, so
-a call before the next map load uses the previous day's arrangement.
+SaveBlock1 holds the home-beaten bits, next to `trainerRematches`:
 
-Budget: about 720 trainer slots and 860 item spots, Sevii included, which is
-about 310 bytes (290 for the first two bitsets and `stampDay`, 20 for
-`placedToday`). Follow the RAM rules in `AGENTS.md`; the per-map resolved
-occupants live in EWRAM for the map's lifetime only.
+```text
+bitset homeBeatenToday[trainerSlotCount]
+```
+
+On map load, if `stampDay != day`, clear `clearedToday` and `homeBeatenToday`,
+take the two snapshots and set `stampDay`. The snapshots are the
+[phone contacts](phone-rematches.md) that are ready for a rematch, and those
+that hold a gift, at that moment (the contact index covers the rematch table
+plus the Sevii and coast families, at most 160 bits each). They are fixed for
+the day: a trainer who becomes ready, or whose gift flag is set, later in the
+day is placed and calls from the next day. Battle text uses only
+`readyAtDayStart` and FoundItem text only `giftAtDayStart`; a contact in
+either set is placed. The phone reads the stamped day, never the clock, so a
+call before the next map load uses the previous day's arrangement.
+
+Budget (about 720 trainer slots and 860 item spots, Sevii included):
+
+| Block | Used now | Capacity | Added | Left after |
+| --- | ---: | ---: | --- | ---: |
+| SaveBlock3 | 1,348 | 1,624 | 240 (2 `stampDay`, 198 `clearedToday`, 20 + 20 snapshots) | 36 |
+| SaveBlock1 | 15,760 | 15,872 | 108 (90 `homeBeatenToday`, 18 for [`trainerRematches`](phone-rematches.md#rematch-table-and-save-state) growing 100 to 118) | 4 |
+
+The figures come from the built ELF's `gSaveblock3` (0x544 bytes), `gSaveblock1`
+(0x3E10, less the 128-byte `SAVEBLOCK_MOVE_RANGE` pad in `load_save.h`) and the
+limits in `src/save.c`: the 1,624-byte SaveBlock3 assert and four SaveBlock1
+sectors of 3,968 bytes. SaveBlock2 is not used. SaveBlock1 fits with only 4
+bytes spare, so a count above 32 more trainer slots needs the home-beaten bits
+narrowed first (index only the rotating candidates, not every trainer object).
+Add static asserts for both blocks. Follow the RAM rules in `AGENTS.md`; the
+per-map resolved occupants live in EWRAM for the map's lifetime only.
 
 ## Trainers
 
@@ -122,11 +142,11 @@ For each trainer group, on map load, resolve all of the group's slots at once:
 5. **Empty spots.** Each rotating slot is empty when
    `roll(EMPTY, slotIndex, 0) % 100 < 25`. A wanderer assigned to an empty
    slot is away today.
-6. **Guaranteed places.** A wanderer in `placedToday` (ready for a rematch or
-   holding a gift when the day started; see
+6. **Guaranteed places.** A wanderer in `readyAtDayStart` or `giftAtDayStart`
+   (ready for a rematch or holding a gift when the day started; see
    [Phone rematches](phone-rematches.md)) is always placed. If it was assigned
-   to an empty slot, it swaps with the first placed wanderer that isn't in
-   `placedToday`. If none can swap, the first empty slot in group order
+   to an empty slot, it swaps with the first placed wanderer that is in
+   neither set. If none can swap, the first empty slot in group order
    becomes occupied for it. Readiness itself is never read here, so a win that
    clears readiness, or a trainer who becomes ready mid-day, changes nothing
    until the next day.
@@ -146,7 +166,8 @@ rotating slot's template:
 - **Occupied:** set the graphics to the occupant's trainer sprite, the script
   to the shared rotating-trainer script, and the trainer type and sight from
   the slot. The occupant is remembered per local id for the map's lifetime.
-- **Empty:** hide the template.
+- **Empty:** nothing is rewritten; the [spawn check](#flags-and-visibility)
+  keeps the template from spawning.
 
 The [notable walkers' hook](../../game/src/event_object_movement.c) uses the
 same seam. Walkers never spawn on a trainer slot's tile, and slot rewriting
@@ -191,18 +212,36 @@ A prize spot shows its prize while the prize's flag is unset. Picking it up
 sets that flag and the spot's `clearedToday` bit. From the next day the spot
 draws like a dynamic spot.
 
+The generator sets each prize spot's item at build time, because a prize often
+replaces or moves into a spot whose authored script or hidden item gives
+another item. An item ball runs a generated prize script that gives the prize
+item and keeps the spot's permanent flag. A hidden prize spot gets the prize
+item in its generated hidden-item data. The authored item is never given.
+
 ### Flags and visibility
 
 The game gates items by flag in three places: the object spawn skips a template
 whose `flagId` is set, `finditem`'s `removeobject` sets that flag, and hidden
 items are gated by `GetHiddenItemFlagId`. A permanent flag would therefore
-hide a dynamic spot for good. So the hook handles flags per spot kind:
+hide a dynamic spot for good. Clearing the `flagId` instead would not work on
+its own: `TrySpawnObjectEvents` (`event_object_movement.c`) runs on every
+camera step through `UpdateObjectEventsForCameraUpdate`, and a template with
+no flag is respawned at once after `removeobject`, because flag 0 is never
+set. So the hook handles flags per spot kind and adds a spawn check:
 
 - **Untaken prize:** keeps its authored template and permanent flag. Its own
   pickup path runs and sets the flag and `clearedToday`.
 - **Dynamic spot and taken prize:** the hook substitutes the template's
-  `flagId` with none, so visibility is driven only by the spot's `clearedToday`
-  bit and the day's draw. The dynamic pickup script sets only `clearedToday`.
+  `flagId` with none. The dynamic pickup script sets only `clearedToday`,
+  then runs `removeobject`.
+- **Spawn check.** In `TrySpawnObjectEvents`, next to the existing
+  `WayfarerWalkers_HideTemplate` call, a template that belongs to a rotating
+  trainer slot or to a dynamic or taken-prize item spot spawns only if the slot
+  is occupied today. An item spot must also have its `clearedToday` bit unset,
+  so a picked-up ball stays gone on every camera step and reload until the next
+  day. A cleared trainer slot still spawns: its occupant stays and speaks. The
+  same check hides the template of an empty slot, so the hook needs no separate
+  hide.
 - **Hidden items:** for these spots the facing-tile check, the pickup script and
   the Itemfinder read the resolved item and `clearedToday` instead of
   `GetHiddenItemFlagId`. An untaken prize keeps its flag.
@@ -217,9 +256,8 @@ unless its `clearedToday` bit is set:
    `roll(ITEM_TIER, spotIndex, 0)`, then the item by weight with
    `roll(ITEM_PICK, spotIndex, tier)`.
 3. Item balls: rewrite the template's script to the shared dynamic-item
-   script for the resolved item and clear its `flagId` (see
-   [Flags and visibility](#flags-and-visibility)), or hide it when empty or
-   cleared. Hidden items: the hidden-item lookup returns the resolved item, or
+   script for the resolved item and clear its `flagId`; the
+   [spawn check](#flags-and-visibility) hides it when empty or cleared. Hidden items: the hidden-item lookup returns the resolved item, or
    nothing.
 4. Picking it up sets the spot's `clearedToday` bit. Dynamic items use no
    permanent flags.
@@ -252,9 +290,11 @@ reproduced. Tests cover:
 
 - the same draw across reload, save and reset, and a new draw on a new day;
 - the home-beaten-today freeze, and the wanderer starting the next day;
-- one place per trainer per day, pairs, and placement of ready and gift trainers, including readiness or a gift flag changing mid-day;
+- one place per trainer per day, pairs, and placement of ready and gift trainers, including readiness or a gift flag changing mid-day, and Battle text only for a ready-at-day-start contact and FoundItem text only for a gift-at-day-start one;
 - wanderers approaching by sight until cleared, and not after;
 - dynamic and taken-prize spots staying visible after a reload on the same day, and refilling the next day, with no permanent flag set;
+- a picked-up ball (dynamic or taken prize) not respawning on later camera steps, a reload or leaving and re-entering the map the same day, and an empty slot's template never spawning;
+- a prize spot giving the prize item, never its authored item, for both balls and hidden spots;
 - empty odds and tier odds over many days within tolerance;
 - prize pickup becoming dynamic the next day;
 - the template hook with walkers present and the 16-sprite budget on the

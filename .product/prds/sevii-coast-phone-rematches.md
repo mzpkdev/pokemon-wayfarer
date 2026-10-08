@@ -81,8 +81,8 @@ the same set an HNS phone trainer has: three chats and one battle request.
 - **Wayfarer only.**
 - **Save:** each family already keeps its rematch stage and a "ready" bit in
   Wayfarer's own Sevii and coast save data, outside the shared rematch array.
-  The phone reuses those, and the "ready" bit now comes from a call instead of
-  the Vs. Seeker. Phone registration adds one flag per contact, 41 in total.
+  The phone reuses those, and the "ready" bit now comes from the region step count (no call
+  sets it) instead of the Vs. Seeker. Phone registration adds one flag per contact, 41 in total.
 - **Contact list:** the Pokégear lists ordinary contacts by scanning the HNS
   rematch table. It must also list these registries' contacts.
 - **Shared capacity:** with HNS's Johto and Kanto trainers, the
