@@ -7,9 +7,9 @@ Implemented: No
 
 ## Scope
 
-One phone system for every route trainer with a number: HNS's Johto and Kanto
-trainers as today, Emerald's 64 Hoenn rematch trainers, and 41 FRLG families
-on Sevii and the Kanto coast. It covers registration, the contact list, calls,
+One phone system for every route trainer with a number: HNS's 39 Johto and
+Kanto trainers as today (Nicole is compiled out of Wayfarer), Emerald's 64
+Hoenn rematch trainers, and 41 FRLG families on Sevii and the Kanto coast. It covers registration, the contact list, calls,
 readiness, rematch teams, the save state and every new or converted call
 text. `IS_WAYFARER` only.
 
@@ -17,7 +17,7 @@ text. `IS_WAYFARER` only.
 
 | Group | Trainers | Rematch teams | Source of call texts |
 | --- | ---: | --- | --- |
-| HNS (Johto, Kanto) | as today | HNS rematch table | `game/data/text/match_call_hns.inc`, unchanged apart from the Battle text rule below |
+| HNS (Johto, Kanto) | 39 | HNS rematch table | `game/data/text/match_call_hns.inc`, unchanged apart from the Battle and gift text rules [below](#hns-battle-and-gift-texts) |
 | Hoenn | 64 | Emerald's rematch table rows | Converted Emerald Match Call texts, [below](#hoenn-call-texts) |
 | Sevii | 32 families | Sevii rematch registry | New, [below](#sevii-and-coast-call-texts) |
 | Kanto coast | 9 families | Coast rematch registry | New, [below](#sevii-and-coast-call-texts) |
@@ -37,10 +37,16 @@ Pairs share one contact and battle together.
   ready bits already live in Wayfarer's Sevii and coast save state, not in the
   shared rematch array.
 - **Registration flags.** One per contact. HNS and Hoenn contacts use the
-  registered-flag block, which moves from `0x310` to a free range large enough
-  for the grown table, because the current block ends flush against
-  `HNS_EXTENDED_CONTENT_START`. Sevii and coast contacts use 41 new Sevii bank
-  flags.
+  registered-flag block at `0x310`–`0x369` for table indexes 0–89 (Hoenn takes
+  the empty indexes 28–63 inside it, so nothing moves). The block can't grow,
+  because it ends flush against `HNS_EXTENDED_CONTENT_START` (`0x36A`) and the
+  flags beyond `0x495` are taken, so the 28 appended indexes (90–117) use
+  `0x8BE`–`0x8D9` (`SYS_FLAGS + 0x5E` to `+ 0x79`). No Wayfarer flag uses that
+  window; it sits between the Battle Frontier symbols (`0x8BD`) and the Tower
+  flags (`0x8E5`), and `0x8DA`–`0x8E4` stay spare. The registered-flag helper
+  maps an index to `0x310 + index` below 90 and `0x8BE + (index - 90)` from 90.
+  Sevii and coast contacts use 41 new Sevii bank flags, in slots 61 upward
+  beside the 97 restored item flags (138 of the 195 free slots).
 - **Rematch progress.** `trainerRematches` grows from 100 to the table size.
   This changes the SaveBlock1 layout; Wayfarer has no released saves, so no
   migration is needed (`AGENTS.md`).
@@ -54,7 +60,7 @@ After you win against a trainer who has a number and isn't registered, they
 offer it with a yes/no prompt. Yes registers them and shows the "Registered …
 in the POKéGEAR" message. No leaves them unregistered, and they ask again
 after your next win against them, home or wandering. This replaces the
-automatic registration in `RegisterTrainerInMatchCall` for Wayfarer.
+automatic registration in `RegisterTrainerInMatchCall` for Wayfarer. A trainer who isn't registered, because they have no number or you said no, unlocks rematch teams by Trainer Rating instead (see [Readiness and teams](#readiness-and-teams)).
 
 ## Readiness and teams
 
@@ -62,29 +68,79 @@ automatic registration in `RegisterTrainerInMatchCall` for Wayfarer.
   Wayfarer counts steps anywhere in the trainer's region instead: every 255
   steps in a region, one registered, already-fought trainer of that region
   who isn't ready becomes ready (chosen by `roll`, as in
-  [daily world slots](daily-world-slots.md#deterministic-draws)), and calls.
-- **Teams.** A ready trainer's next battle uses their next team: the next
-  unbeaten tier in the rematch table, or the next stage in the Sevii or coast
-  registry. After the last, they keep it. Winning clears readiness. Levels
-  come from [regular trainer scaling](trainer-party-scaling.md); the HNS
-  badge-level ceiling no longer applies in Wayfarer.
-- **Placement.** A ready trainer always has a spot that day
-  ([daily world slots](daily-world-slots.md#who-stands-where-today)). If their
-  group has no rotating spot, the call waits for the next day.
+  [daily world slots](daily-world-slots.md#deterministic-draws)). There is no
+  call at that moment: the trainer is placed and calls from the next day (see
+  [Placement](#readiness-and-teams)).
+- **Teams, registered contacts.** A ready trainer's next battle uses their
+  next team: the next unbeaten tier in the rematch table, or the next stage in
+  the Sevii or coast registry. After the last, they keep it. Winning clears
+  readiness. Levels come from [regular trainer scaling](trainer-party-scaling.md);
+  the HNS badge-level ceiling no longer applies in Wayfarer.
+- **Teams, trainers without a registered number.** A trainer with no number,
+  or whose number you declined, doesn't use readiness. Their rematch teams
+  unlock with Trainer Rating, counted in authored order so a trainer with
+  fewer teams uses the lowest steps (placeholders):
+
+  | Rematch team | Unlocks at Trainer Rating |
+  | ---: | ---: |
+  | 2 | 40 |
+  | 3 | 80 |
+  | 4 | 120 |
+  | 5 | 160 |
+
+  The team is derived from the current Trainer Rating when the battle starts,
+  so it needs no save state. Registering later keeps every team already
+  unlocked: the stored stage starts at the Trainer Rating stage.
+- **Placement.** The set of ready trainers is fixed when the day starts and is
+  stamped with the day (`placedToday` in
+  [daily world slots](daily-world-slots.md#save-state)). A ready trainer in
+  that set always has a spot that day
+  ([daily world slots](daily-world-slots.md#who-stands-where-today)). A trainer
+  who becomes ready during the day is placed from the next day. Winning
+  against a ready trainer clears readiness, but today's arrangement stays. If
+  their group has no rotating spot, they are not called until a day when it
+  has one.
 
 ## Calls
 
 - **Rate.** The total call rate stays HNS's: the random-call timer and chance
   are unchanged, and the caller is chosen among registered contacts. More
   contacts means each one calls less often.
-- **Text selection.** A ready trainer's call uses their Battle text; otherwise
-  a random General text, as in HNS.
+- **Text selection.** A contact in today's day-start ready set uses their
+  Battle text. A contact in the day-start gift set uses their FoundItem text.
+  Any other call uses a random General text, as in HNS. A contact who became
+  ready or got a gift later in the day, whose slot is cleared today, or who
+  `WhereIsTrainerToday` can't place, makes a General call: calls never name a
+  trainer who isn't standing somewhere unbeaten today.
 - **Today's place.** Before a call, `{STR_VAR_2}` is set to the map name from
-  `WhereIsTrainerToday`. Every Battle text names it; HNS's existing Battle
-  texts gain a line that does.
+  `WhereIsTrainerToday`. Every Battle and FoundItem text names it; HNS's
+  existing Battle texts gain a line that does, and its FoundItem texts are
+  rewritten.
 - **Text format.** Every contact has `General1`–`General3` and `Battle`, in
-  the `sHnsMatchCallTrainers` shape. A contact without texts fails the build
-  rather than showing an empty box.
+  the `sHnsMatchCallTrainers` shape. Twelve HNS contacts have only
+  `General1` and `General2`. Gift contacts also have a `FoundItem` text. A
+  contact without texts fails the build rather than showing an empty box.
+
+## Gifts
+
+Nine HNS contacts hand out an item: Wade, Alan, Dana, Derek, Tully, Wilton,
+Kenji, Beverly and Jose (`HNS_MC_ITEM*` in `game/src/match_call.c`). HNS rolls
+a gift on a call, sets the contact's `HAS_ITEM` flag and item variable, and the
+trainer hands it over from their home map script. Under rotation that script no
+longer runs once the home slot rotates, so:
+
+- **Placement.** A contact whose gift flag is set when the day starts is in
+  `placedToday`, like a ready rematch, and is placed that day.
+- **Hand-off.** The shared rotating-trainer script runs the hand-off whenever
+  the player talks to, or is spotted by, an occupant whose gift flag is set:
+  the `HasItem` text, `giveitem`, clearing the flag and the `GaveItem` or
+  `NoRoom` text, exactly as the home script does. The hand-off comes before
+  the battle.
+- **Text.** The FoundItem call names today's place with `{STR_VAR_2}` instead
+  of the home route (the new texts are [below](#hns-battle-and-gift-texts)).
+- **Roll.** The gift roll keeps HNS's 1-in-5 chance. It sets the flag when the
+  contact is picked by the step event, and the call announcing it comes from
+  the next day, like readiness.
 
 ## Vs. Seeker
 
@@ -97,8 +153,14 @@ rematches; the item itself is left unobtainable.
 - Every Hoenn, Sevii and coast contact registers, appears in the list, calls
   with each of its texts, and rematches through every team in order.
 - Existing HNS contacts keep their indexes, texts, gifts and team order.
+- A trainer who becomes ready, or whose gift flag is set, mid-day is placed
+  and calls only from the next day; a win against a ready trainer leaves
+  today's arrangement unchanged.
+- Trainers without a registered number unlock team 2 to 5 at Trainer Rating
+  40, 80, 120 and 160.
+- Every gift hand-off still works from a rotating slot, including `NoRoom`.
 - No flag overlaps, and the contact list never overflows.
-- Every Battle text contains `{STR_VAR_2}`, and every text fits the text box.
+- Every Battle and FoundItem text contains `{STR_VAR_2}`, and every text fits the text box.
 
 ## Hoenn call texts
 
@@ -4014,11 +4076,11 @@ MatchCall_COAST_Melissa_Battle::
 	.string "No cheating this time.$"
 ```
 
-## HNS Battle texts
+## HNS Battle and gift texts
 
-Every existing `MatchCall_HNS_*_Battle` text is replaced as below so it names today's place. General and gift texts are unchanged.
+Every existing `MatchCall_HNS_*_Battle` text is replaced as below so it names today's place, and so is each gift contact's `FoundItem` text, which named the home route. The General texts are unchanged.
 
-40 labels rewritten (labels unchanged).
+39 Battle labels and 9 FoundItem labels rewritten (labels unchanged). Nicole's Battle text is dropped with her entry, which Wayfarer doesn't compile.
 
 ```asm
 @ Joey - Youngster, Route 30
@@ -4298,14 +4360,6 @@ MatchCall_HNS_Rob_Battle::
 	.string "Come to {STR_VAR_2} for a\n"
 	.string "rematch!$"
 
-@ Nicole - Swimmer, Route 20
-MatchCall_HNS_Nicole_Battle::
-	.string "Hi, {PLAYER}!\n"
-	.string "It's NICOLE!\p"
-	.string "My water POKéMON are\n"
-	.string "raring to battle!\p"
-	.string "Come to {STR_VAR_2}!$"
-
 @ Billy - School Kid, Route 15
 MatchCall_HNS_Billy_Battle::
 	.string "Hey, {PLAYER}!\n"
@@ -4336,4 +4390,100 @@ MatchCall_HNS_Charles_Battle::
 	.string "The highway stars want\n"
 	.string "revenge! Come to\l"
 	.string "{STR_VAR_2}!$"
+```
+
+### Gift texts
+
+```asm
+@ Wade - Bug Catcher, Route 31
+MatchCall_HNS_Wade_FoundItem::
+	.string "{PLAYER}, howdy!\p"
+	.string "I found all kinds of\n"
+	.string "BERRIES.\p"
+	.string "If you want, I'll share\n"
+	.string "some with you.\p"
+	.string "I'll be waiting at\n"
+	.string "{STR_VAR_2} today.$"
+
+@ Alan - Schoolboy, Route 36
+MatchCall_HNS_Alan_FoundItem::
+	.string "Hi, {PLAYER}!\n"
+	.string "It's ALAN!\p"
+	.string "Hehehe, I picked up\n"
+	.string "something nice!\p"
+	.string "You can have it!\p"
+	.string "I'm at {STR_VAR_2}.\n"
+	.string "Come pick it up!$"
+
+@ Dana - Lass, Route 38
+MatchCall_HNS_Dana_FoundItem::
+	.string "Hi, {PLAYER}!\n"
+	.string "It's DANA!\p"
+	.string "You know what?\n"
+	.string "I got a good gift!\p"
+	.string "As I promised, it's yours!\n"
+	.string "I'm sure you'd like it.\p"
+	.string "Come get it! I'm waiting\n"
+	.string "at {STR_VAR_2} today!$"
+
+@ Derek - Pokefan M, Route 39
+MatchCall_HNS_Derek_FoundItem::
+	.string "Hey, {PLAYER}!\n"
+	.string "It's DEREK!\p"
+	.string "I'd like you to have a\n"
+	.string "NUGGET.\p"
+	.string "I'm at {STR_VAR_2}.\n"
+	.string "Come pick it up!$"
+
+@ Tully - Fisher, Route 42
+MatchCall_HNS_Tully_FoundItem::
+	.string "Hey, {PLAYER}!\n"
+	.string "It's TULLY!\p"
+	.string "I picked up a good little\n"
+	.string "thing at the water's edge.\p"
+	.string "Like I promised, it's\n"
+	.string "yours.\p"
+	.string "I'll be waiting at\n"
+	.string "{STR_VAR_2} today.$"
+
+@ Wilton - Fisher, Route 44
+MatchCall_HNS_Wilton_FoundItem::
+	.string "Hey, {PLAYER}!\n"
+	.string "It's WILTON!\p"
+	.string "I snagged an item while\n"
+	.string "fishing.\p"
+	.string "Come pick it up at\n"
+	.string "{STR_VAR_2} today.$"
+
+@ Kenji - Blackbelt, Route 45
+MatchCall_HNS_Kenji_FoundItem::
+	.string "Hey, {PLAYER}!\n"
+	.string "This is KENJI!\p"
+	.string "I'm taking a break from\n"
+	.string "training.\p"
+	.string "I found something good.\p"
+	.string "Come get it at\n"
+	.string "{STR_VAR_2} if you want!$"
+
+@ Beverly - Pokefan F, National Park
+MatchCall_HNS_Beverly_FoundItem::
+	.string "Hello, {PLAYER}!\n"
+	.string "It's BEVERLY!\p"
+	.string "My husband got some\n"
+	.string "NUGGETS.\p"
+	.string "If you'd like, you could\n"
+	.string "have one as thanks for\p"
+	.string "helping me out. I'll be at\n"
+	.string "{STR_VAR_2}. Come see me!$"
+
+@ Jose - Bird Keeper, Route 27
+MatchCall_HNS_Jose_FoundItem::
+	.string "Hey, {PLAYER}!\n"
+	.string "It's JOSE!\p"
+	.string "My FARFETCH'D had\n"
+	.string "something pretty in its\p"
+	.string "beak. Like I promised, you\n"
+	.string "can have it.\p"
+	.string "Catch up to me at\n"
+	.string "{STR_VAR_2} today.$"
 ```
