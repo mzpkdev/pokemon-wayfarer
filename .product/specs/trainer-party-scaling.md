@@ -234,10 +234,15 @@ natures, party size and order don't change.
    and one Zubat, and five Geodude become one Golem, one Graveler and three
    Geodude.
 5. **Identity exceptions.** A slot keeps its authored species when it holds an
-   Everstone or Eviolite, belongs to a child class (Tuber, School Kid, Twins,
-   Sis and Bro, Preschooler), belongs to a team made only of babies, or is a
-   legendary, mythical or special line such as Cosmog or Type: Null.
-   Youngsters aren't a child class: a Youngster's Rattata evolves.
+   Everstone or Eviolite, holds a booster that only works on its current stage
+   (Light Ball on Pikachu, Lucky Punch on Chansey, Deep Sea Tooth or Scale on
+   Clamperl), belongs to a child class (Tuber, School Kid, Twins, Sis and Bro,
+   Preschooler), belongs to a team made only of babies, or is a legendary,
+   mythical or special line such as Cosmog or Type: Null. Youngsters aren't a
+   child class: a Youngster's Rattata evolves.
+6. **Never past a step-back.** A slot never goes past a stage the step-back
+   rule can't lower again to its authored species. Babies therefore keep their
+   species: the step-back has no edge from Snorlax to Munchlax.
 
 **Step-back.** The scaler lowers each slot through the shared
 [downward rule](player-trainer-rating.md#evolution-stages) until the effective
