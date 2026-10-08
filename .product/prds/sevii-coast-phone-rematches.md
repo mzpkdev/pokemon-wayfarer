@@ -30,7 +30,7 @@ stronger team:
 | Registry | Families | With a stronger team | Teams |
 | --- | ---: | ---: | --- |
 | Sevii | 64 | 32 | 27 with two teams, 5 with three |
-| Kanto coast, Routes 19–21 | 9 | 9 | Two teams each |
+| Kanto coast, Routes 19–21 | 9 | 9 | 7 with two teams, 2 with three (Missy, Lil & Ian) |
 
 That's 41 phone contacts. A family can be a pair, such as Twins, who share one
 number and battle together.

@@ -97,8 +97,9 @@ are hard.
   the same Road, Wilds, Outlands and dungeon floor levels as
   [wild level scaling](../specs/wild-level-scaling.md#reach-levels), plus a
   small trainer bonus (placeholder: 3 levels). A map with no reach of its own,
-  such as a building, uses its surroundings: the dungeon it belongs to, or Road
-  otherwise.
+  such as a building, resolves one with the
+  [places without wild encounters](../specs/reach-assignments.md#places-without-wild-encounters)
+  rules.
 - **What that means.** Road trainers start close to your level and fall behind
   as you earn badges, so routes stop being a threat and the late challenge
   comes from [notable trainers](notable-trainers.md). Wilds trainers stay a

@@ -147,19 +147,26 @@ Phone numbers and rematches belong to the trainer, not the spot:
 - **Rematch teams.** A trainer with rematch teams always uses their latest
   unlocked one. A phone trainer unlocks their next team the way HNS phone
   trainers do today: they call you wanting a rematch, and you beat them. A
-  trainer without a number unlocks their next team as your Trainer Rating
-  reaches the step that team was authored for, matching Emerald's badge
-  steps.
+  trainer without a registered number (no number, or you declined) unlocks
+  their next team as your Trainer Rating reaches a step: team 2 at 40, team 3
+  at 80, team 4 at 120 and team 5 at 160 (placeholders; a trainer with fewer
+  teams uses the lowest steps). A registered contact keeps the phone path.
 - **Readiness travels with you.** Today an HNS phone trainer becomes ready for
   a rematch after you walk 255 steps on their home map. Under rotation they
   have no fixed map, so readiness builds up as you walk anywhere in their
   region.
 - **Calls name today's place.** When a registered trainer calls, they say where
   they are today. HNS's call texts never name a place today, so every
-  battle-request call gains that line. A trainer whose rematch is ready is
-  always given a slot that day, so the call never sends you to an empty spot.
-  If their group has no rotating slot free that day, the call waits for the
-  next day.
+  battle-request call gains that line, and so does every gift call. The set
+  of ready trainers (and trainers holding a gift) is fixed when the day
+  starts. Each of them is always given a slot that day, so a call never sends
+  you to an empty spot. A trainer who becomes ready during the day is placed
+  and calls from the next day, and beating a ready trainer clears their
+  readiness without moving anyone that day. If their group has no rotating
+  slot free that day, the call waits for the next day.
+- **Gifts.** The nine HNS contacts who hand out items keep doing so from
+  wherever they stand: their gift call names today's place, and the item is
+  handed over at the rotating slot, not only in their home map.
 - **Hoenn's trainers** join the phone through the separate
   [Hoenn phone rematches](hoenn-phone-rematches.md) design, and the FRLG
   trainers on Sevii and the Kanto coast through
@@ -199,8 +206,8 @@ Item spots come in two kinds with two different jobs:
   spots) hold solid TMs, type-boosting and utility held items, and evolution
   items. *Treasures* (Outlands, deep dungeon floors, hard-to-reach Wilds) hold
   strong TMs and top held items such as Leftovers, Life Orb or Choice items.
-  Each region has two to four *Legends*: signature rewards in its most remote
-  or best-hidden places.
+  Each region has up to four *Legends*: signature rewards in its most remote
+  or best-hidden places. A small region such as Alola may have none.
 - **Trails.** Each region's prizes form a few named trails: geographic chains
   that grow more dangerous and build toward a playstyle, such as a special
   attacker, a bulky wall or a weather team. Trails start in different
@@ -240,8 +247,9 @@ day one and on day three hundred has the same odds. A region may lean its pool
 toward local flavour, such as Apricorns in Johto or Shards in Hoenn.
 
 A dungeon's entrance floor counts as Wilds and its deeper floors as Outlands.
-A map with no reach of its own, such as a building, uses its surroundings: the
-dungeon it belongs to, or Road otherwise. A hidden spot stays hidden, and the
+A map with no reach of its own, such as a building, resolves one with the
+[places without wild encounters](../specs/reach-assignments.md#places-without-wild-encounters)
+rules. A hidden spot stays hidden, and the
 Itemfinder finds hidden dynamic items the same way it finds authored ones.
 
 ## Boundaries
@@ -290,22 +298,23 @@ generated objects excluded:
   Kanto ports keep every authored item.
 - **Sevii items (prerequisite):** Sevii's 97 FRLG items (39 item balls and 58
   hidden items) were left out by the
-  [exploration port](sevii-exploration-port.md) and never restored. They are
-  restored first, so Sevii's spots start with their authored items like every
-  other region.
+  [exploration port](sevii-exploration-port.md) and never restored. The
+  [Sevii exploration restoration](../specs/sevii-exploration-restoration.md)
+  brings them back first, with the rest of what the port meant to keep, so
+  Sevii's spots start with their authored items like every other region.
 - **Dialogue audit (required):** a trainer's intro and post-battle lines move
   with them. Every candidate's lines are audited before it can rotate. Lines
   that name a place, landmark or local event get neutral wording, or the
   trainer leaves the pool.
-- **Rematches:** about 200 regular trainers have rematch scripts, through three
-  separate systems. This design puts all of them on the rules in
-  [Phone numbers and rematches](#phone-numbers-and-rematches):
-  - 31 Johto and Kanto trainers from HNS give a phone number and call for
-    tiered rematches.
-  - 68 Hoenn trainers register for Emerald's Match Call. Wayfarer compiles the
+- **Rematches:** 176 rematch families (a pair counts once) have rematch
+  scripts, through three separate systems. This design puts all of them on the
+  rules in [Phone numbers and rematches](#phone-numbers-and-rematches):
+  - 39 Johto and Kanto trainers from HNS give a phone number and call for
+    tiered rematches (Nicole is not compiled in Wayfarer).
+  - 64 Hoenn trainers register for Emerald's Match Call. Wayfarer compiles the
     HNS rematch table, which has no Hoenn entries, so these rematches appear
     to be inert today.
-  - 103 FRLG trainers, 71 on Sevii and 32 on Kanto's Routes 19–21, support
+  - 73 FRLG families, 64 on Sevii and 9 on Kanto's Routes 19–21, support
     Vs. Seeker rematches, but the Vs. Seeker can't be obtained in Wayfarer.
 
 ## Interactions
