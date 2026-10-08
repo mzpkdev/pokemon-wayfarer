@@ -4,7 +4,7 @@ Implemented: No
 
 Specifications: [Daily world slots](../specs/daily-world-slots.md),
 [World items](../specs/world-items.md),
-[Sevii item restoration](../specs/sevii-item-restoration.md),
+[Sevii exploration restoration](../specs/sevii-exploration-restoration.md),
 [Phone rematches](../specs/phone-rematches.md)
 
 Design status: draft. All numbers are placeholders for playtesting. Terms
