@@ -16,10 +16,22 @@ tool applies that authoring pass reproducibly:
   R5  identity exceptions keep the authored species
   R6  an authored ability the new species cannot have is dropped
 
+A slot is only promoted to a species the runtime step-down can walk back to the
+authored one, so babies (the stage table omits baby -> parent edges) keep their
+species.
+
 Usage:
-  final_stage.py --report        write final_stage_report.md (no source edits)
+  final_stage.py --report        rewrite final_stage_report.md (no source edits)
   final_stage.py --apply         edit the source .party files / selected rosters
   final_stage.py --check         fail when --apply would change anything
+
+The report compares the authored species with the new ones, so it can only be
+built from sources that still hold the authored species.  Once the sources are
+final-staged it would be an empty "0 changed" report, so --report refuses to
+write then and the committed report stays the record of the authoring pass.  To
+rebuild it after changing the rules, restore the party sources and generated
+trainer headers from before the authoring commit, then run --apply, which
+rewrites the sources and the report together.
 """
 from __future__ import annotations
 
@@ -113,8 +125,10 @@ def stable_hash(*parts):
 class Model:
     """Evolution graph plus the species facts the rules need."""
 
-    def __init__(self, evolutions, babies, aliases, gender_ratio, abilities, numbers):
+    def __init__(self, evolutions, babies, aliases, gender_ratio, abilities, numbers, step_back=None):
         self.babies = set(babies)
+        # Runtime step-back edges {successor: predecessor}; None skips the check.
+        self.step_back = step_back
         self.aliases = dict(aliases)
         self.ratio = gender_ratio
         self.abilities = abilities
@@ -157,6 +171,22 @@ class Model:
             depth += 1
         return depth
 
+    def reaches_back(self, species, authored):
+        """True when the runtime step-down can walk from `species` to `authored`.
+
+        The stage table omits baby -> parent edges, so a promoted species must
+        never sit beyond one the table cannot step back from.
+        """
+        if self.step_back is None:
+            return True
+        for _ in range(8):
+            if species == authored:
+                return True
+            species = self.step_back.get(species)
+            if species is None:
+                return False
+        return False
+
     def gender_only(self, species):
         """'M' or 'F' when the species can only be that gender, else None."""
         ratio = self.ratio.get(species, '')
@@ -195,7 +225,8 @@ def load_model():
     species_data, _, _ = audit.load_data()
     ratio = {name: data['gender'] for name, data in species_data.items()}
     abilities = {name: [a for a in data['abilities'] if a != 'ABILITY_NONE'] for name, data in species_data.items()}
-    return Model(evolutions, babies, aliases, ratio, abilities, values)
+    step_back = {successor: predecessor for successor, (predecessor, _) in evolution.stage_table().items()}
+    return Model(evolutions, babies, aliases, ratio, abilities, values, step_back)
 
 
 # --------------------------------------------------------------------------
@@ -298,7 +329,10 @@ def choose(model, ctx, species, pokemon_gender, candidates=None):
 
 
 def final_path(model, ctx, species, pokemon_gender):
-    """Walk forward to the final stage.
+    """Walk forward to the last stage the runtime can step back from.
+
+    Normally that is the final stage of the line; a baby (no stage-table edge to
+    its parent) therefore keeps its species.
 
     Returns (path, tags, gender) where path starts with `species`, gender is the
     gender the Pokemon must be set to ('M'/'F'/None), tags name the rules used.
@@ -308,7 +342,7 @@ def final_path(model, ctx, species, pokemon_gender):
     for _ in range(8):
         target, step_tags = choose(model, ctx, current, forced or pokemon_gender)
         tags |= step_tags
-        if target is None:
+        if target is None or not model.reaches_back(target, species):
             break
         only = model.gender_only(target)
         # A free gender choice that becomes single-gender must be set explicitly.
@@ -611,19 +645,37 @@ def mon_from_record(slot, entry, exceptions, owner):
     return Mon(slot, entry['species'], entry['lvl'], item, gender, ability, exception)
 
 
-def stage_blind(text, model):
-    """A party block with every species replaced by its line's base species.
+def plan_block_text(model, text, trainer_id, region, spellings=None):
+    """Apply the authoring rules to one party block (without its `=== ID ===` line).
 
     Selected copies of donor parties are final-staged while the donor stays as
-    authored, so contract tests compare the two stage-blind.
+    authored, so contract tests compare the selected block with this planned
+    donor block.  `trainer_id` is the runtime id of the selected copy because
+    branch choices are hashed from it.
     """
-    lines = ['=== TRAINER_STAGE_BLIND ==='] + text.split('\n')
-    block = PartyBlock('TRAINER_STAGE_BLIND', lines)
-    for mon in block.mons:
-        constant = model.base(model.canonical(normalise_token(mon['species'], mon['gender'])))
-        start, end = mon['span']
-        lines[mon['line']] = lines[mon['line']][:start] + constant + lines[mon['line']][end:]
-    return '\n'.join(lines[1:])
+    lines = [f'=== {trainer_id} ==='] + text.split('\n')
+    block = PartyBlock(trainer_id, lines)
+    trainer_class = next(l.split(':', 1)[1] for l in lines[1:] if l.startswith('Class:'))
+    ctx = Context(trainer_id, 'TRAINER_CLASS_' + trainer_class.strip().upper().replace(' ', '_'), block.gender, region)
+    mons = []
+    for index, mon in enumerate(block.mons):
+        fields = {}
+        for line in lines[mon['line'] + 1:]:
+            if not line.strip():
+                break
+            if ':' in line:
+                key, value = line.split(':', 1)
+                fields[key] = value.strip()
+        ability = fields.get('Ability')
+        ability = 'ABILITY_' + re.sub(r'[^A-Z0-9]+', '_', ability.upper()) if ability else None
+        gender = mon['gender'][0].upper() if mon['gender'] else None
+        mons.append(Mon(index, normalise_token(mon['species'], mon['gender']), int(fields['Level']),
+                        'ITEM_' + re.sub(r'[^A-Z0-9]+', '_', mon['item'].upper()) if mon['item'] else None, gender, ability))
+    plan_team(model, ctx, mons)
+    for mon in mons:
+        mon.drop_ability = ability_drop(model, mon)
+    apply_edits(lines, block, mons, spellings or {})
+    return '\n'.join(l for l in lines[1:] if l is not None)
 
 
 # --------------------------------------------------------------------------
@@ -840,6 +892,7 @@ def build_report(plans, model):
             + '. The brief named Tuber and Preschooler; SCHOOL_KID, TWINS and SIS_AND_BRO were added as kid identities. Edit `CHILD_CLASSES` in `final_stage.py` to narrow or widen it.',
             '- Middle stage (R4): the second copy of a three-stage line reaches the middle stage only when the team holds three or more copies of that line. This satisfies both brief examples (5 Geodude -> Golem + Graveler + 3 Geodude, 2 Zubat -> Crobat + Zubat).',
             '- A copy already authored at the final stage consumes the final quota, so [Magikarp 30, Gyarados 20] stays as authored instead of becoming two Gyarados.',
+            '- Babies keep their species: the shared stage table has no baby -> parent edge, so promoting one (Munchlax -> Snorlax) would field the evolved species at every level.',
             '- Eviolite holders (R5, judgment call) keep their authored stage because the item only works on not-fully-evolved Pokemon.',
             '- Trainer gender for Gallade / Froslass / Wormadam / Mothim / Meowstic comes from the class (female or male classes) and falls back to the party `Gender:` field, which is wrong on several HNS rosters (female classes marked Male).',
             '- Class themes for R3 (fighting, pretty, psychic, cool, Eevee themes) are the lists at the top of `final_stage.py`; borderline classes (Picnicker as pretty, Triathlete / Ranger / Dragon Tamer as cool, Hiker / Pokefan / Breeder as grass for Eevee) are judgment calls.',
@@ -886,7 +939,11 @@ def main():
     if args.apply:
         for name, text in edits.items():
             (DATA / name).write_text(text)
-    if args.report or any(m.after != m.species for p in plans.values() for m in p['mons']):
+    changed = any(m.after != m.species for p in plans.values() for m in p['mons'])
+    if args.report and not changed:
+        raise SystemExit('nothing to report: the sources are already final-staged, so the committed '
+                         'report is kept (restore the pre-authoring sources and run --apply to rebuild it)')
+    if changed:
         REPORT.write_text(build_report(plans, model))
 
 

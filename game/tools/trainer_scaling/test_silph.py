@@ -8,11 +8,14 @@ import final_stage
 _MODEL = []
 
 
-def stage_blind(text):
-    # Selected copies are final-staged; donors keep their authored stages.
+def staged_donor(donor, selected, runtime_id, policy, block):
+    """The donor block with the final-stage authoring rules applied (covered policies only)."""
+    if policy not in ('ORDINARY', 'GYM_MEMBER'):
+        return block
     if not _MODEL:
         _MODEL.append(final_stage.load_model())
-    return final_stage.stage_blind(text, _MODEL[0])
+    return final_stage.plan_block_text(_MODEL[0], block, runtime_id, 'Kanto',
+                                       final_stage.collect_spellings([donor, selected]))
 
 
 TRAINERS = {'TRAINER_TEAM_ROCKET_GRUNT_23': 'TRAINER_SILPH_GRUNT_23_HNS', 'TRAINER_TEAM_ROCKET_GRUNT_24': 'TRAINER_SILPH_GRUNT_24_HNS', 'TRAINER_TEAM_ROCKET_GRUNT_25': 'TRAINER_SILPH_GRUNT_25_HNS', 'TRAINER_TEAM_ROCKET_GRUNT_26': 'TRAINER_SILPH_GRUNT_26_HNS', 'TRAINER_TEAM_ROCKET_GRUNT_27': 'TRAINER_SILPH_GRUNT_27_HNS', 'TRAINER_TEAM_ROCKET_GRUNT_28': 'TRAINER_SILPH_GRUNT_28_HNS', 'TRAINER_TEAM_ROCKET_GRUNT_29': 'TRAINER_SILPH_GRUNT_29_HNS', 'TRAINER_TEAM_ROCKET_GRUNT_30': 'TRAINER_SILPH_GRUNT_30_HNS', 'TRAINER_TEAM_ROCKET_GRUNT_31': 'TRAINER_SILPH_GRUNT_31_HNS', 'TRAINER_TEAM_ROCKET_GRUNT_32': 'TRAINER_SILPH_GRUNT_32_HNS', 'TRAINER_TEAM_ROCKET_GRUNT_33': 'TRAINER_SILPH_GRUNT_33_HNS', 'TRAINER_TEAM_ROCKET_GRUNT_34': 'TRAINER_SILPH_GRUNT_34_HNS', 'TRAINER_TEAM_ROCKET_GRUNT_35': 'TRAINER_SILPH_GRUNT_35_HNS', 'TRAINER_TEAM_ROCKET_GRUNT_36': 'TRAINER_SILPH_GRUNT_36_HNS', 'TRAINER_TEAM_ROCKET_GRUNT_37': 'TRAINER_SILPH_GRUNT_37_HNS', 'TRAINER_TEAM_ROCKET_GRUNT_38': 'TRAINER_SILPH_GRUNT_38_HNS', 'TRAINER_TEAM_ROCKET_GRUNT_39': 'TRAINER_SILPH_GRUNT_39_HNS', 'TRAINER_TEAM_ROCKET_GRUNT_40': 'TRAINER_SILPH_GRUNT_40_HNS', 'TRAINER_TEAM_ROCKET_GRUNT_41': 'TRAINER_SILPH_GRUNT_41_HNS', 'TRAINER_SCIENTIST_BEAU': 'TRAINER_SILPH_SCIENTIST_BEAU_HNS', 'TRAINER_SCIENTIST_CONNOR': 'TRAINER_SILPH_SCIENTIST_CONNOR_HNS', 'TRAINER_SCIENTIST_ED': 'TRAINER_SILPH_SCIENTIST_ED_HNS', 'TRAINER_SCIENTIST_JERRY': 'TRAINER_SILPH_SCIENTIST_JERRY_HNS', 'TRAINER_SCIENTIST_JOSE': 'TRAINER_SILPH_SCIENTIST_JOSE_HNS', 'TRAINER_SCIENTIST_JOSHUA': 'TRAINER_SILPH_SCIENTIST_JOSHUA_HNS', 'TRAINER_SCIENTIST_PARKER': 'TRAINER_SILPH_SCIENTIST_PARKER_HNS', 'TRAINER_SCIENTIST_RODNEY': 'TRAINER_SILPH_SCIENTIST_RODNEY_HNS', 'TRAINER_SCIENTIST_TAYLOR': 'TRAINER_SILPH_SCIENTIST_TAYLOR_HNS', 'TRAINER_SCIENTIST_TRAVIS': 'TRAINER_SILPH_SCIENTIST_TRAVIS_HNS', 'TRAINER_JUGGLER_DALTON': 'TRAINER_SILPH_DALTON_HNS', 'TRAINER_BOSS_GIOVANNI_2': 'TRAINER_SILPH_GIOVANNI_HNS'}
@@ -26,8 +29,8 @@ class SilphContracts(unittest.TestCase):
         runtime_ids = [ids[name] for name in TRAINERS.values()]
         self.assertEqual(runtime_ids, list(range(runtime_ids[0], runtime_ids[0] + len(TRAINERS))))
         for old, new in TRAINERS.items():
-            self.assertEqual(stage_blind(authored.split('=== ' + new + ' ===')[1].split('===')[0].strip()),
-                             stage_blind(source.split('=== ' + old + ' ===')[1].split('===')[0].strip()))
+            self.assertEqual(authored.split('=== ' + new + ' ===')[1].split('===')[0].strip(),
+                             staged_donor(source, authored, new, rows[new]['policy'], source.split('=== ' + old + ' ===')[1].split('===')[0].strip()))
             self.assertEqual(rows[new]['policy'], 'EXCLUDED' if 'GIOVANNI' in new else 'ORDINARY')
 
     def test_active_references_exclude_unlinked_source_and_blue(self):

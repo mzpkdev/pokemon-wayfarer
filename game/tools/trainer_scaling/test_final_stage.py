@@ -132,8 +132,7 @@ class FinalStageTests(unittest.TestCase):
         self.assertEqual(fallback, [team('GENTLEMAN', 'Johto', ('EEVEE', 20), trainer_id=f'TRAINER_G{n}')[0][0] for n in range(40)])
 
     def test_r3_random_branches_are_deterministic_by_id_and_nincada_skips_shedinja(self):
-        for species, options in (('TYROGUE', {'HITMONCHAN', 'HITMONLEE', 'HITMONTOP'}),
-                                 ('CLAMPERL', {'HUNTAIL', 'GOREBYSS'}),
+        for species, options in (('CLAMPERL', {'HUNTAIL', 'GOREBYSS'}),
                                  ('WURMPLE', {'BEAUTIFLY', 'DUSTOX'})):
             picks = {team('HIKER', 'Hoenn', (species, 20), ('GEODUDE', 20), trainer_id=f'TRAINER_X{n}')[0][0] for n in range(40)}
             self.assertEqual(picks, options)
@@ -147,6 +146,20 @@ class FinalStageTests(unittest.TestCase):
         self.assertTrue(fs.ability_drop(MODEL, mons[0]))
         mons[0].ability = 'ABILITY_STURDY'
         self.assertFalse(fs.ability_drop(MODEL, mons[0]))
+
+    def test_babies_keep_their_species_when_the_stage_table_cannot_step_back(self):
+        # The stage table has no baby -> parent edges, so promoting a baby would
+        # field the evolved species at every level.
+        after, _ = team('LASS', 'Johto', ('AIPOM', 16), ('MUNCHLAX', 16))
+        self.assertEqual(after, ['AMBIPOM', 'MUNCHLAX'])
+        after, _ = team('HIKER', 'Kanto', ('PICHU', 10), ('MACHOP', 10), ('ELEKID', 10))
+        self.assertEqual(after, ['PICHU', 'MACHAMP', 'ELEKID'])
+        self.assertEqual(team('HIKER', 'Kanto', ('TYROGUE', 20))[0], ['TYROGUE'])
+
+    def test_every_promotion_can_be_stepped_back_to_the_authored_species(self):
+        for species in ('MACHOP', 'CATERPIE', 'EEVEE', 'SLOWPOKE', 'POLIWAG', 'TOGEPI', 'MUNCHLAX'):
+            _, mons = team('HIKER', 'Kanto', (species, 20))
+            self.assertTrue(MODEL.reaches_back(mons[0].after, f'SPECIES_{species}'), species)
 
     def test_party_header_parsing_and_editing(self):
         parsed = fs.parse_header('Nick (Luvdisc) (F) @ Big Root  ')

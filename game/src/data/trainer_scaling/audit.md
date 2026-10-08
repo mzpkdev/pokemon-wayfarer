@@ -69,7 +69,7 @@ The audit evaluated 270,621 slot and Rating combinations using the modern level-
 - Incompatible gimmick suppressed: 0 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
 - Held item retained after species reversal: 258 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
 - Opponent above player soft cap: 748 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
-- High-stat species without numeric predecessor: 261 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
+- High-stat species without numeric predecessor: 248 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
 
 ## Representative parties
 

@@ -15,11 +15,14 @@ import final_stage
 _MODEL = []
 
 
-def stage_blind(text):
-    # Selected copies are final-staged; donors keep their authored stages.
+def staged_donor(donor, selected, runtime_id, policy, block):
+    """The donor block with the final-stage authoring rules applied (covered policies only)."""
+    if policy not in ('ORDINARY', 'GYM_MEMBER'):
+        return block
     if not _MODEL:
         _MODEL.append(final_stage.load_model())
-    return final_stage.stage_blind(text, _MODEL[0])
+    return final_stage.plan_block_text(_MODEL[0], block, runtime_id, 'Kanto',
+                                       final_stage.collect_spellings([donor, selected]))
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -65,8 +68,8 @@ class ViridianSourceContracts(unittest.TestCase):
         for original, name in SOURCES.items():
             runtime_id = f'TRAINER_VIRIDIAN_GYM_{name}_HNS'
             selected_ids.append(ids[runtime_id])
-            self.assertEqual(stage_blind(party_block(selected, runtime_id)),
-                             stage_blind(party_block(donor, f'TRAINER_{original}')))
+            self.assertEqual(party_block(selected, runtime_id),
+                             staged_donor(donor, selected, runtime_id, records[runtime_id]['policy'], party_block(donor, f'TRAINER_{original}')))
             self.assertEqual(records[runtime_id]['policy'],
                              'GYM_LEADER' if name == 'GIOVANNI' else 'GYM_MEMBER')
         self.assertEqual(sorted(selected_ids), list(range(1800, 1809)))
