@@ -7,9 +7,9 @@ with IS_WAYFARER enabled.
 import json, re, os, glob
 from fractions import Fraction as F
 
-REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../../../..')) + '/'
+REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../../..')) + '/'
 G = REPO + 'game/'
-HERE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+HERE = G + 'src/data/wild_encounters_v2'  # the committed v2 table data (game build input)
 UTILS = ['CUT', 'FLASH', 'STRENGTH', 'ROCK_SMASH', 'SURF', 'WATERFALL', 'WHIRLPOOL', 'DIVE']
 
 # ---------- learnsets ----------
@@ -103,10 +103,17 @@ for s, info in SPECIES.items():
         EVOLV.setdefault(s, []).append((t, lv, e['method']))
         PRED.setdefault(t, []).append((s, lv, e['method']))
 
+# Base names the tables use (ALCREMIE) are aliases of the form constants the edges are
+# filed under (ALCREMIE_STRAWBERRY_VANILLA_CREAM); the game sees one species.
+for _alias in _ALIAS:
+    for _table in (PRED, EVOLV):
+        if _alias not in _table and _res(_alias) in _table:
+            _table[_alias] = _table[_res(_alias)]
+
 def evo_level(pred, succ):
     # A species can reach the same successor by trade and by level (Wayfarer gives trade
-    # evolutions a level route too); the level route wins.
-    edges = [(lv, m) for t, lv, m in EVOLV.get(pred, []) if t == succ]
+    # evolutions a level route too); the level route wins. Forms of a successor are one species.
+    edges = [(lv, m) for t, lv, m in EVOLV.get(pred, []) if _res(t) == _res(succ)]
     for lv, m in edges:
         if lv is not None: return lv
     for lv, m in edges[:1]:
@@ -174,12 +181,31 @@ for name, mn in PROWLER_ROWS.items():
     else:
         PROWLER_MIN[norm(name)] = mn
 
+_PROWLER_MIN_RES = {_res(k): v for k, v in PROWLER_MIN.items()}
+
+# Regional forms are listed separately in prowlers.md ("(Alolan)", "(Galarian)", ...): a plain row never reaches them.
+REGIONAL_TOKENS = ('ALOLA', 'GALAR', 'HISUI', 'PALDEA', 'WHITE_STRIPED')
+
+def form_key(name):
+    """The prowler row of the species a non-regional form constant belongs to (ORICORIO_PAU -> ORICORIO), or None."""
+    for k, mn in PROWLER_MIN.items():
+        if mn is not None and name.startswith(k + '_') and not name[len(k) + 1:].startswith(REGIONAL_TOKENS):
+            return k
+    return None
+
 def prowler_min(cap, region):
     # Kalos rewards in the Safari Zones and Sinjoh's residents have no minimum.
+    # Base names such as ORICORIO are aliases of a form constant (ORICORIO_BAILE), so the
+    # spec's rows match a slot through either name. A row also covers every non-regional
+    # form constant of its species (ORICORIO_PAU, FURFROU_HEART).
     r = root(cap)
-    mn = PROWLER_MIN.get(cap, PROWLER_MIN.get(r))
-    if mn is None: return None
-    if region == 'Safari' and SPECIES.get(r, {}).get('nat', 0) and 650 <= SPECIES[r]['nat'] <= 721: return None
+    mn = next((m for k in (cap, r) for m in (PROWLER_MIN.get(k), _PROWLER_MIN_RES.get(_res(k))) if m is not None), None)
+    if mn is None:
+        fk = form_key(cap) or form_key(r)
+        if fk is None: return None
+        mn, r = PROWLER_MIN[fk], fk
+    nat = next((SPECIES[n]['nat'] for n in SPECIES if _res(n) == _res(r) and SPECIES[n].get('nat')), 0)
+    if region == 'Safari' and 650 <= nat <= 721: return None
     if region == 'Sinjoh' and (cap.endswith('_HISUI') or r in ('STANTLER', 'SCYTHER', 'BASCULIN_WHITE_STRIPED') or r.endswith('_HISUI')): return None
     return mn
 
@@ -306,6 +332,8 @@ def apply_roster_v2():
     for sp, mv, lv, action in ROSTER_V2:
         name = SPECIES_LS.get(sp) or 's' + ''.join(x.capitalize() for x in sp.split('_')) + 'LevelUpLearnset'
         ls = [e for e in LEARNSETS[name] if not (action == 'move' and e[1] == mv)]
+        if (lv, mv) in ls:
+            continue  # already in gen_7.h: the roster changes ship in the learnsets
         if action == 'add' and any(m == mv for _, m in ls):
             raise SystemExit(f'{sp} already knows {mv}')
         i = 0

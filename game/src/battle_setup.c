@@ -661,7 +661,11 @@ void StartMarowakBattle(void)
         u8 level = 30;
 
 #if IS_WAYFARER
-        level = ProjectWildEncounterLevelWithOffset(30, GetTrainerRating(), 0);
+        // The ghost takes its floor's place level, with no spread.
+        u32 placeLevel = GetWildEncounterPlaceLevel(GetWildMonHeaderIdForMap(MAP_GROUP(MAP_POKEMON_TOWER_6F), MAP_NUM(MAP_POKEMON_TOWER_6F)), GetTrainerRating());
+
+        if (placeLevel != 0)
+            level = placeLevel;
 #endif
 
         CreateMonWithIVsPersonality(&gEnemyParty[0], SPECIES_MAROWAK, level, 31, personality);

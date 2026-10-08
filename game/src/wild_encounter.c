@@ -35,10 +35,9 @@
 #include "sound.h"
 #include "trainer_rating.h"
 #include "trainer_scaler.h"
-#include "config/notable_trainers.h"
-#if WAYFARER_V0_TRAINERS
 #include "notable_moves.h"
-#endif
+#include "bug_contest.h"
+#include "constants/maps.h"
 #include "trainer_only_encounter.h"
 
 #if TESTING
@@ -91,7 +90,6 @@ static void FeebasSeedRng(u16 seed);
 static bool8 IsWildLevelAllowedByRepel(u8 level);
 static void ApplyFluteEncounterRateMod(u32 *encRate);
 static void ApplyCleanseTagEncounterRateMod(u32 *encRate);
-static u8 GetMaxLevelOfSpeciesInWildTable(const struct WildPokemon *wildMon, u16 species, enum WildPokemonArea area);
 #ifdef BUGFIX
 static bool8 TryGetAbilityInfluencedWildMonIndex(const struct WildPokemon *wildMon, enum Type type, enum Ability ability, u8 *monIndex, u32 size);
 #else
@@ -129,14 +127,16 @@ static const u8 sWildEncounterRockWeights[ROCK_WILD_COUNT] =
     60, 30, 5, 4, 1,
 };
 
-static u16 GetWildMonHeaderCount(void)
+u32 GetWildMonHeaderIdForMap(u8 mapGroup, u8 mapNum)
 {
-    u16 count;
+    u32 i;
 
-    for (count = 0; gWildMonHeaders[count].mapGroup != MAP_GROUP(MAP_UNDEFINED); count++)
+    for (i = 0; gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED); i++)
     {
+        if (gWildMonHeaders[i].mapGroup == mapGroup && gWildMonHeaders[i].mapNum == mapNum)
+            return i;
     }
-    return count;
+    return HEADER_NONE;
 }
 
 static bool8 IsWildEncounterProfileSlotInRange(const struct WildEncounterProfileView *view, u8 slot)
@@ -152,56 +152,6 @@ static bool8 IsWildEncounterProfileSlotInRange(const struct WildEncounterProfile
         return FALSE;
 
     return slot >= view->entryStart && slot < view->entryStart + view->entryCount;
-}
-
-static s32 RoundWildEncounterDivision(s32 numerator, u16 denominator)
-{
-    if (denominator == 0)
-        return 0;
-    if (numerator >= 0)
-        return (numerator + denominator / 2) / denominator;
-    return -((-numerator + denominator / 2) / denominator);
-}
-
-static s8 GetWildEncounterProfileOffset(const struct WildEncounterProfileView *view)
-{
-    u16 i;
-
-    if (view == NULL)
-        return 0;
-
-    for (i = 0; i < gWildEncounterProfileOffsetCount; i++)
-    {
-        const struct WildEncounterProfileOffset *offset = &gWildEncounterProfileOffsets[i];
-
-        if (offset->headerId == view->headerId
-         && offset->timeOfDay == view->timeOfDay
-         && offset->area == view->area
-         && offset->fishingRod == view->fishingRod)
-            return offset->levelOffset;
-    }
-    return 0;
-}
-
-static u8 ClampWildEncounterLevel(s32 level)
-{
-    if (level < 1)
-        return 1;
-    if (level > MAX_LEVEL)
-        return MAX_LEVEL;
-    return level;
-}
-
-static const struct WildEncounterSpeciesMetadata *GetWildEncounterSpeciesMetadata(u16 species)
-{
-    u16 i;
-
-    for (i = 0; i < gWildEncounterSpeciesMetadataCount; i++)
-    {
-        if (gWildEncounterSpeciesMetadata[i].species == species)
-            return &gWildEncounterSpeciesMetadata[i];
-    }
-    return NULL;
 }
 
 static bool8 IsCurrentWildEncounterRandomized(void)
@@ -220,36 +170,13 @@ static u16 RandomizeAuthoredWildEncounter(const struct WildPokemon *entry, u8 ma
 }
 #endif
 
-static u16 ResolveWildEncounterSpecies(u16 species, u8 projectedLevel, bool8 isWildRandomized)
-{
-    // Randomized species are selected after this core resolves a slot. Applying
-    // authored evolution metadata here would change that mapping's order.
-    if (isWildRandomized)
-        return species;
-
-#if WAYFARER_V0_TRAINERS
-    return StepDownSpeciesToLevel(species, projectedLevel);
-#else
-    const struct WildEncounterSpeciesMetadata *metadata;
-
-    while ((metadata = GetWildEncounterSpeciesMetadata(species)) != NULL)
-    {
-        if (metadata->predecessorSpecies == SPECIES_NONE
-         || projectedLevel >= metadata->predecessorLevel)
-            break;
-        species = metadata->predecessorSpecies;
-    }
-    return species;
-#endif
-}
-
 bool8 GetWildEncounterProfileView(const struct WildEncounterProfileContext *context, struct WildEncounterProfileView *view)
 {
     const struct WildPokemonInfo *wildMonsInfo;
 
     if (context == NULL || view == NULL
      || context->headerId == HEADER_NONE
-     || context->headerId >= GetWildMonHeaderCount()
+     || context->headerId >= gWildMonHeaderCount
      || (s32)context->timeOfDay < 0
      || context->timeOfDay >= TIMES_OF_DAY_COUNT)
         return FALSE;
@@ -321,112 +248,21 @@ bool8 GetWildEncounterProfileEntry(const struct WildEncounterProfileView *view, 
     return TRUE;
 }
 
-u8 ProjectWildEncounterLevelWithOffset(u8 authoredLevel, u32 trainerRating, s8 levelOffset)
-{
-#if WAYFARER_V0_TRAINERS
-    static const struct TrainerScalerAnchor sWildLevelsV0[] =
-    {
-        { 0, 6 }, { 40, 24 }, { 80, 40 }, { 120, 58 }, { 160, 78 },
-    };
-    s32 highWater = -0x7FFFFFFF;
-    u32 rating;
-
-    // The authored retention shape is indexed by fractional progress through
-    // its old 0–80 range. V0 spreads that shape across its 0–160 curve.
-    // The cumulative maximum remains in place for every authored level.
-    for (rating = 0; rating <= min(trainerRating, 160); rating++)
-    {
-        const struct WildEncounterScalingPoint *point = &gWildEncounterScalingPoints[min(rating / 2, gWildEncounterScalingPointCount - 1)];
-        s32 baseline = EvaluateTrainerScaler(sWildLevelsV0, ARRAY_COUNT(sWildLevelsV0), rating, FALSE);
-        s32 rawLevel = baseline + RoundWildEncounterDivision((authoredLevel - 6) * point->retentionNumerator, point->retentionDenominator);
-
-        if (rawLevel > highWater)
-            highWater = rawLevel;
-    }
-    return ClampWildEncounterLevel(highWater + levelOffset);
-#else
-    s32 highWater = -0x7FFFFFFF;
-    u16 rating;
-    u16 maximumRating;
-    u8 baseLevel;
-
-    if (gWildEncounterScalingPointCount == 0)
-        return ClampWildEncounterLevel(authoredLevel + levelOffset);
-
-    maximumRating = gWildEncounterScalingConfig.projectionCap;
-    if (maximumRating >= gWildEncounterScalingPointCount)
-        maximumRating = gWildEncounterScalingPointCount - 1;
-    if (trainerRating > maximumRating)
-        trainerRating = maximumRating;
-
-    baseLevel = gWildEncounterScalingPoints[0].anchorLevel;
-    for (rating = 0; rating <= trainerRating; rating++)
-    {
-        const struct WildEncounterScalingPoint *point = &gWildEncounterScalingPoints[rating];
-        s32 rawLevel = point->anchorLevel + RoundWildEncounterDivision((authoredLevel - baseLevel) * point->retentionNumerator, point->retentionDenominator);
-
-        if (rawLevel > highWater)
-            highWater = rawLevel;
-    }
-
-    return ClampWildEncounterLevel(highWater + levelOffset);
-#endif
-}
-
-u8 ProjectWildEncounterLevel(const struct WildEncounterProfileView *view, u8 authoredLevel, u32 trainerRating)
-{
-    return ProjectWildEncounterLevelWithOffset(authoredLevel, trainerRating, GetWildEncounterProfileOffset(view));
-}
-
-bool8 GetWildEncounterSpeciesOutcome(const struct WildEncounterProfileView *view, u8 slot, u8 authoredLevel, u32 trainerRating, bool8 isWildRandomized, struct WildEncounterSpeciesOutcome *outcome)
+bool8 IsWildEncounterProfileSlotEligible(const struct WildEncounterProfileView *view, u8 slot)
 {
     const struct WildPokemon *entry;
 
-    if (outcome == NULL || authoredLevel == 0 || !GetWildEncounterProfileEntry(view, slot, &entry))
-        return FALSE;
-
-    outcome->level = ProjectWildEncounterLevel(view, authoredLevel, trainerRating);
-    outcome->species = ResolveWildEncounterSpecies(entry->species, outcome->level, isWildRandomized);
-    return TRUE;
+    return GetWildEncounterProfileEntry(view, slot, &entry) && entry->species != SPECIES_NONE;
 }
 
-bool8 GetCurrentWildEncounterSpeciesOutcome(const struct WildEncounterProfileView *view, u8 slot, u8 authoredLevel, struct WildEncounterSpeciesOutcome *outcome)
+u16 GetWildEncounterProfileEffectiveWeight(const struct WildEncounterProfileView *view, u8 slot)
 {
-    return GetWildEncounterSpeciesOutcome(view, slot, authoredLevel, GetTrainerRating(), IsCurrentWildEncounterRandomized(), outcome);
+    if (!IsWildEncounterProfileSlotEligible(view, slot))
+        return 0;
+    return view->weights[slot];
 }
 
-bool8 IsWildEncounterProfileSlotEligible(const struct WildEncounterProfileView *view, u8 slot, u32 trainerRating, bool8 isWildRandomized)
-{
-    const struct WildPokemon *entry;
-
-    if (!GetWildEncounterProfileEntry(view, slot, &entry))
-        return FALSE;
-
-    if (entry->species == SPECIES_NONE)
-        return FALSE;
-
-    if (isWildRandomized)
-        return TRUE;
-
-    u16 level;
-    u8 minimumLevel = min(entry->minLevel, entry->maxLevel);
-    u8 maximumLevel = max(entry->minLevel, entry->maxLevel);
-
-    for (level = minimumLevel; level <= maximumLevel; level++)
-    {
-        const struct WildEncounterSpeciesMetadata *metadata;
-        struct WildEncounterSpeciesOutcome outcome;
-
-        if (!GetWildEncounterSpeciesOutcome(view, slot, (u8)level, trainerRating, FALSE, &outcome))
-            return FALSE;
-        metadata = GetWildEncounterSpeciesMetadata(outcome.species);
-        if (metadata != NULL && outcome.level < metadata->minimumLevel)
-            return FALSE;
-    }
-    return TRUE;
-}
-
-u16 GetWildEncounterProfileEligibleWeight(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized)
+u16 GetWildEncounterProfileEligibleWeight(const struct WildEncounterProfileView *view)
 {
     u8 slot;
     u16 total = 0;
@@ -435,28 +271,21 @@ u16 GetWildEncounterProfileEligibleWeight(const struct WildEncounterProfileView 
         return 0;
 
     for (slot = view->entryStart; slot < view->entryStart + view->entryCount; slot++)
-        total += GetWildEncounterProfileEffectiveWeight(view, slot, trainerRating, isWildRandomized);
+        total += GetWildEncounterProfileEffectiveWeight(view, slot);
     return total;
 }
 
-u16 GetWildEncounterProfileEffectiveWeight(const struct WildEncounterProfileView *view, u8 slot, u32 trainerRating, bool8 isWildRandomized)
-{
-    if (!IsWildEncounterProfileSlotInRange(view, slot) || !IsWildEncounterProfileSlotEligible(view, slot, trainerRating, isWildRandomized))
-        return 0;
-    return view->weights[slot];
-}
-
-bool8 SelectWildEncounterProfileSlot(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized, u16 roll, u8 *slot)
+bool8 SelectWildEncounterProfileSlot(const struct WildEncounterProfileView *view, u16 roll, u8 *slot)
 {
     u8 candidate;
-    u16 total = GetWildEncounterProfileEligibleWeight(view, trainerRating, isWildRandomized);
+    u16 total = GetWildEncounterProfileEligibleWeight(view);
 
     if (slot == NULL || total == 0 || roll >= total)
         return FALSE;
 
     for (candidate = view->entryStart; candidate < view->entryStart + view->entryCount; candidate++)
     {
-        u16 weight = GetWildEncounterProfileEffectiveWeight(view, candidate, trainerRating, isWildRandomized);
+        u16 weight = GetWildEncounterProfileEffectiveWeight(view, candidate);
 
         if (roll < weight)
         {
@@ -469,27 +298,359 @@ bool8 SelectWildEncounterProfileSlot(const struct WildEncounterProfileView *view
     return FALSE;
 }
 
-bool8 IsCurrentWildEncounterProfileSlotEligible(const struct WildEncounterProfileView *view, u8 slot)
+// ---- Wild level scaling v2 (specs/wild-level-scaling.md) ----
+
+static const struct TrainerScalerAnchor sWildRoadLevel[] =
 {
-    return IsWildEncounterProfileSlotEligible(view, slot, GetTrainerRating(), IsCurrentWildEncounterRandomized());
+    { 0, 5 }, { 40, 20 }, { 80, 38 }, { 120, 56 }, { 160, 74 },
+};
+
+static const struct TrainerScalerAnchor sWildWildsBonus[] =
+{
+    { 0, 4 }, { 80, 6 }, { 160, 11 },
+};
+
+static const struct TrainerScalerAnchor sWildOutlandsBonus[] =
+{
+    { 0, 8 }, { 40, 8 }, { 80, 12 }, { 160, 24 },
+};
+
+#define WILD_SPREAD 2
+// A Road map keeps travel quick: walking and surfing roll 60% of the table's encounter rate.
+// Fishing and Rock Smash/Headbutt keep the full rate (fishing rolls bite rates, not the table rate).
+#define WILD_ROAD_RATE_PERCENT 60
+// A slot's stage mix keeps the stage with weight 1..10 out of 10, rising a level at a time.
+#define WILD_STAGE_KEEP_DENOMINATOR 10
+#define WILD_BABY_LEVEL_LIMIT 10
+#define WILD_DUNGEON_BRUTAL_FLOOR 50
+
+u32 GetWildEncounterPlaceLevel(u32 headerId, u32 trainerRating)
+{
+    const struct WildEncounterPlace *place;
+    u32 road, wilds, outlands, first, last, level;
+    u32 floorLevel = 0;
+
+    if (headerId == HEADER_NONE || headerId >= gWildMonHeaderCount)
+        return 0;
+
+    place = &gWildEncounterPlaces[headerId];
+    road = EvaluateTrainerScaler(sWildRoadLevel, ARRAY_COUNT(sWildRoadLevel), trainerRating, FALSE);
+    wilds = road + EvaluateTrainerScaler(sWildWildsBonus, ARRAY_COUNT(sWildWildsBonus), trainerRating, FALSE);
+    outlands = road + EvaluateTrainerScaler(sWildOutlandsBonus, ARRAY_COUNT(sWildOutlandsBonus), trainerRating, FALSE);
+
+    switch (place->reach)
+    {
+    case WILD_REACH_ROAD:
+        return min(road, MAX_LEVEL);
+    case WILD_REACH_WILDS:
+        return min(wilds, MAX_LEVEL);
+    case WILD_REACH_OUTLANDS:
+        return min(outlands, MAX_LEVEL);
+    default:
+        break;
+    }
+
+    switch (place->intent)
+    {
+    case WILD_DUNGEON_MILD:
+        first = (road + wilds) / 2;
+        last = wilds;
+        break;
+    case WILD_DUNGEON_MILD_TO_MODERATE:
+        first = (road + wilds) / 2;
+        last = (wilds + outlands) / 2;
+        break;
+    case WILD_DUNGEON_MODERATE:
+        first = wilds;
+        last = (wilds + outlands) / 2;
+        break;
+    case WILD_DUNGEON_MODERATE_TO_HARD:
+        first = wilds;
+        last = outlands;
+        break;
+    case WILD_DUNGEON_HARD:
+        first = (wilds + outlands) / 2;
+        last = outlands + 3;
+        break;
+    default: // WILD_DUNGEON_BRUTAL
+        first = outlands;
+        last = outlands + 6;
+        floorLevel = WILD_DUNGEON_BRUTAL_FLOOR;
+        break;
+    }
+
+    if (place->flat || place->floorCount <= 1)
+    {
+        level = (first + last) / 2;
+    }
+    else
+    {
+        // Floors climb evenly from the first to the deepest, halves rounding up.
+        u32 steps = place->floorCount - 1;
+
+        level = first + (2 * (last - first) * place->floor + steps) / (2 * steps);
+    }
+
+    return min(max(level, floorLevel), MAX_LEVEL);
 }
 
-u16 GetCurrentWildEncounterProfileEligibleWeight(const struct WildEncounterProfileView *view)
+u32 GetWildEncounterRateForHeader(u32 headerId, enum WildPokemonArea area, u32 encounterRate)
 {
-    return GetWildEncounterProfileEligibleWeight(view, GetTrainerRating(), IsCurrentWildEncounterRandomized());
+    if ((area == WILD_AREA_LAND || area == WILD_AREA_WATER)
+     && headerId < gWildMonHeaderCount && gWildEncounterPlaces[headerId].reach == WILD_REACH_ROAD)
+        return (encounterRate * WILD_ROAD_RATE_PERCENT + 50) / 100;
+    return encounterRate;
 }
 
-u16 GetCurrentWildEncounterProfileEffectiveWeight(const struct WildEncounterProfileView *view, u8 slot)
+// 0 when the species is not a prowler, or is exempt in the place's region.
+static u32 GetWildProwlerMinimumLevel(u16 species, u32 region)
 {
-    return GetWildEncounterProfileEffectiveWeight(view, slot, GetTrainerRating(), IsCurrentWildEncounterRandomized());
+    u32 low = 0, high = gWildProwlerMinimumCount;
+
+    while (low < high)
+    {
+        u32 mid = low + (high - low) / 2;
+
+        if (gWildProwlerMinimums[mid].species < species)
+            low = mid + 1;
+        else
+            high = mid;
+    }
+    if (low >= gWildProwlerMinimumCount || gWildProwlerMinimums[low].species != species)
+        return 0;
+    if ((region == WILD_PLACE_REGION_SAFARI && gWildProwlerMinimums[low].exemptInSafari)
+     || (region == WILD_PLACE_REGION_SINJOH && gWildProwlerMinimums[low].exemptInSinjoh))
+        return 0;
+    return gWildProwlerMinimums[low].minimumLevel;
 }
 
-bool8 SelectCurrentWildEncounterProfileSlot(const struct WildEncounterProfileView *view, u16 roll, u8 *slot)
+// A slot capped at a stage that can still evolve stays one level below its lowest
+// evolution level; babies stay at or under 10. -1 means no limit.
+static s32 GetWildYoungLevelLimit(u16 cap)
 {
-    return SelectWildEncounterProfileSlot(view, GetTrainerRating(), IsCurrentWildEncounterRandomized(), roll, slot);
+    u32 evolutionLevel;
+
+    if (IsBabySpecies(cap))
+        return WILD_BABY_LEVEL_LIMIT;
+    evolutionLevel = GetSpeciesLowestEvolutionLevel(cap);
+    return evolutionLevel != 0 ? (s32)evolutionLevel - 1 : -1;
 }
 
-static const struct WildPokemon sWildFeebas = {20, 25, SPECIES_FEEBAS};
+static u32 ApplyWildLevelRules(s32 level, u32 prowlerMinimum, s32 youngLimit)
+{
+    if (prowlerMinimum != 0)
+        level = max(level, (s32)prowlerMinimum);
+    if (youngLimit >= 0)
+    {
+        level = min(level, youngLimit);
+        if (prowlerMinimum != 0)
+            level = max(level, (s32)prowlerMinimum);
+    }
+    return min(max(level, 1), MAX_LEVEL);
+}
+
+// The downward rule finds the highest stage up to the cap whose evolution level
+// the encounter has reached. If it could step down once more, the stage is kept
+// with weight (level - evolutionLevel + 1) out of 10, else the encounter is one
+// stage lower.
+struct WildStage
+{
+    u16 species;
+    u16 lower;
+    u8 keepWeight;
+};
+
+static void ResolveWildStage(u16 cap, u32 level, struct WildStage *stage)
+{
+    u16 species = cap;
+    u16 predecessor;
+    u8 evolutionLevel;
+    u32 depth;
+
+    for (depth = 0; depth < 8; depth++)
+    {
+        predecessor = GetSpeciesStepDownPredecessor(species, &evolutionLevel);
+        if (predecessor == SPECIES_NONE || evolutionLevel == 0 || level >= evolutionLevel)
+            break;
+        species = predecessor;
+    }
+
+    stage->species = species;
+    stage->lower = SPECIES_NONE;
+    stage->keepWeight = WILD_STAGE_KEEP_DENOMINATOR;
+
+    predecessor = GetSpeciesStepDownPredecessor(species, &evolutionLevel);
+    if (predecessor != SPECIES_NONE && evolutionLevel != 0 && level >= evolutionLevel
+     && level - evolutionLevel + 1 < WILD_STAGE_KEEP_DENOMINATOR)
+    {
+        stage->lower = predecessor;
+        stage->keepWeight = level - evolutionLevel + 1;
+    }
+}
+
+u32 GetWildEncounterClampedLevel(u16 species, u32 headerId, s32 level)
+{
+    u32 region = headerId < gWildMonHeaderCount ? gWildEncounterPlaces[headerId].region : WILD_PLACE_REGION_OTHER;
+
+    return ApplyWildLevelRules(level, GetWildProwlerMinimumLevel(species, region), GetWildYoungLevelLimit(species));
+}
+
+static u32 BuildWildSlotOutcomes(u16 cap, u32 headerId, u32 trainerRating, bool8 isWildRandomized, struct WildEncounterSlotOutcome *outcomes)
+{
+    u32 placeLevel = GetWildEncounterPlaceLevel(headerId, trainerRating); // 0 for an unknown header
+    u32 prowlerMinimum;
+    u32 count = 0;
+    s32 youngLimit;
+    s32 spread;
+
+    if (placeLevel == 0 || cap == SPECIES_NONE)
+        return 0;
+    // Only the cap decides these, so they are the same for every spread step.
+    prowlerMinimum = GetWildProwlerMinimumLevel(cap, gWildEncounterPlaces[headerId].region);
+    youngLimit = GetWildYoungLevelLimit(cap);
+
+    for (spread = -WILD_SPREAD; spread <= WILD_SPREAD; spread++)
+    {
+        const u32 spreadWeight = WILD_ENCOUNTER_OUTCOME_DENOMINATOR / (2 * WILD_SPREAD + 1);
+        struct WildStage stage;
+        u32 level;
+
+        if (isWildRandomized)
+        {
+            // Randomized encounters keep the place level and spread only; the
+            // randomizer chooses the species afterwards.
+            outcomes[count].species = cap;
+            outcomes[count].level = min(max((s32)placeLevel + spread, 1), MAX_LEVEL);
+            outcomes[count].weight = spreadWeight;
+            count++;
+            continue;
+        }
+
+        level = ApplyWildLevelRules((s32)placeLevel + spread, prowlerMinimum, youngLimit);
+        ResolveWildStage(cap, level, &stage);
+        outcomes[count].species = stage.species;
+        outcomes[count].level = level;
+        outcomes[count].weight = stage.keepWeight;
+        count++;
+        if (stage.lower != SPECIES_NONE)
+        {
+            outcomes[count].species = stage.lower;
+            outcomes[count].level = level;
+            outcomes[count].weight = spreadWeight - stage.keepWeight;
+            count++;
+        }
+    }
+    return count;
+}
+
+u32 GetWildEncounterSlotOutcomes(const struct WildEncounterProfileView *view, u8 slot, u32 trainerRating, struct WildEncounterSlotOutcome *outcomes)
+{
+    const struct WildPokemon *entry;
+
+    if (outcomes == NULL || !GetWildEncounterProfileEntry(view, slot, &entry))
+        return 0;
+    return BuildWildSlotOutcomes(entry->species, view->headerId, trainerRating, FALSE, outcomes);
+}
+
+u32 GetCurrentWildEncounterSlotOutcomes(const struct WildEncounterProfileView *view, u8 slot, struct WildEncounterSlotOutcome *outcomes)
+{
+    const struct WildPokemon *entry;
+
+    if (outcomes == NULL || !GetWildEncounterProfileEntry(view, slot, &entry))
+        return 0;
+    return BuildWildSlotOutcomes(entry->species, view->headerId, GetTrainerRating(), IsCurrentWildEncounterRandomized(), outcomes);
+}
+
+// The spread of one encounter, -2..+2. Pressure, Hustle and Vital Spirit favour the
+// top of it. A Lure does not change it: it only doubles the rate and mirrors slots.
+// Consumes RNG.
+static s32 RollWildSpread(void)
+{
+    u32 rand;
+
+    rand = Random() % (2 * WILD_SPREAD + 1);
+    if (!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
+    {
+        enum Ability ability = GetMonAbility(&gPlayerParty[0]);
+
+        if (ability == ABILITY_HUSTLE || ability == ABILITY_VITAL_SPIRIT || ability == ABILITY_PRESSURE)
+        {
+            if (Random() % 2 == 0)
+                rand = 2 * WILD_SPREAD;
+            else if (rand != 0)
+                rand--;
+        }
+    }
+    return (s32)rand - WILD_SPREAD;
+}
+
+// Rolls one encounter of a species capped at `cap` in a place: the spread, then
+// the stage roll keeps the stage with its weight.
+static bool8 RollWildSpecies(u16 cap, u32 headerId, struct WildEncounterSpeciesOutcome *outcome)
+{
+    u32 placeLevel = GetWildEncounterPlaceLevel(headerId, GetTrainerRating());
+    s32 spread;
+    u32 level;
+    struct WildStage stage;
+
+    if (placeLevel == 0 || cap == SPECIES_NONE)
+        return FALSE;
+
+    spread = RollWildSpread();
+
+    if (IsCurrentWildEncounterRandomized())
+    {
+        outcome->species = cap;
+        outcome->level = min(max((s32)placeLevel + spread, 1), MAX_LEVEL);
+        return TRUE;
+    }
+
+    level = GetWildEncounterClampedLevel(cap, headerId, (s32)placeLevel + spread);
+    ResolveWildStage(cap, level, &stage);
+    outcome->species = stage.species;
+    if (stage.lower != SPECIES_NONE && Random() % WILD_STAGE_KEEP_DENOMINATOR >= stage.keepWeight)
+        outcome->species = stage.lower;
+    outcome->level = level;
+    return TRUE;
+}
+
+bool8 RollWildEncounterSlot(const struct WildEncounterProfileView *view, u8 slot, struct WildEncounterSpeciesOutcome *outcome)
+{
+    const struct WildPokemon *entry;
+
+    if (outcome == NULL || !GetWildEncounterProfileEntry(view, slot, &entry))
+        return FALSE;
+    return RollWildSpecies(entry->species, view->headerId, outcome);
+}
+
+// The species a slot most often produces, for readers that name a local wild
+// Pokémon without rolling a level. The first of equally likely outcomes wins.
+u16 GetCurrentWildEncounterSlotLikelySpecies(const struct WildEncounterProfileView *view, u8 slot)
+{
+    struct WildEncounterSlotOutcome outcomes[WILD_ENCOUNTER_MAX_SLOT_OUTCOMES];
+    u32 count = GetCurrentWildEncounterSlotOutcomes(view, slot, outcomes);
+    u32 weights[WILD_ENCOUNTER_MAX_SLOT_OUTCOMES];
+    u32 i, j;
+    u16 best = SPECIES_NONE;
+    u32 bestWeight = 0;
+
+    // A species' weight is summed over its levels.
+    for (i = 0; i < count; i++)
+    {
+        weights[i] = 0;
+        for (j = 0; j < count; j++)
+            if (outcomes[j].species == outcomes[i].species)
+                weights[i] += outcomes[j].weight;
+        if (weights[i] > bestWeight)
+        {
+            bestWeight = weights[i];
+            best = outcomes[i].species;
+        }
+    }
+    return best;
+}
+
+
 
 static const u16 sRoute119WaterTileData[] =
 {
@@ -698,83 +859,58 @@ u32 ChooseWildMonIndex_Rocks(void)
     return wildMonIndex;
 }
 
-static u8 ChooseWildMonLevel(const struct WildPokemon *wildPokemon, u8 wildMonIndex, enum WildPokemonArea area)
+static u8 ChooseWildMonLevel(const struct WildPokemon *wildPokemon, u8 wildMonIndex)
 {
     u8 min;
     u8 max;
     u8 range;
     u8 rand;
 
-    if (LURE_STEP_COUNT == 0)
+    // Make sure minimum level is less than maximum level
+    if (wildPokemon[wildMonIndex].maxLevel >= wildPokemon[wildMonIndex].minLevel)
     {
-        // Make sure minimum level is less than maximum level
-        if (wildPokemon[wildMonIndex].maxLevel >= wildPokemon[wildMonIndex].minLevel)
-        {
-            min = wildPokemon[wildMonIndex].minLevel;
-            max = wildPokemon[wildMonIndex].maxLevel;
-        }
-        else
-        {
-            min = wildPokemon[wildMonIndex].maxLevel;
-            max = wildPokemon[wildMonIndex].minLevel;
-        }
-        range = max - min + 1;
-        rand = Random() % range;
-
-        // check ability for max level mon
-        if (!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
-        {
-            enum Ability ability = GetMonAbility(&gPlayerParty[0]);
-            if (ability == ABILITY_HUSTLE || ability == ABILITY_VITAL_SPIRIT || ability == ABILITY_PRESSURE)
-            {
-                if (Random() % 2 == 0)
-                    return max;
-
-                if (rand != 0)
-                    rand--;
-            }
-        }
-        return min + rand;
+        min = wildPokemon[wildMonIndex].minLevel;
+        max = wildPokemon[wildMonIndex].maxLevel;
     }
     else
     {
-        // Looks for the max level of all slots that share the same species as the selected slot.
-        max = GetMaxLevelOfSpeciesInWildTable(wildPokemon, wildPokemon[wildMonIndex].species, area);
-        if (max > 0)
-            return max + 1;
-        else // Failsafe
-            return wildPokemon[wildMonIndex].maxLevel + 1;
+        min = wildPokemon[wildMonIndex].maxLevel;
+        max = wildPokemon[wildMonIndex].minLevel;
     }
+    range = max - min + 1;
+    rand = Random() % range;
+
+    // check ability for max level mon
+    if (!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
+    {
+        enum Ability ability = GetMonAbility(&gPlayerParty[0]);
+        if (ability == ABILITY_HUSTLE || ability == ABILITY_VITAL_SPIRIT || ability == ABILITY_PRESSURE)
+        {
+            if (Random() % 2 == 0)
+                return max;
+
+            if (rand != 0)
+                rand--;
+        }
+    }
+    return min + rand;
 }
 
 u16 GetCurrentMapWildMonHeaderId(void)
 {
-    u16 i;
+    u32 i = GetWildMonHeaderIdForMap(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum);
 
-    for (i = 0; ; i++)
+    if (i == HEADER_NONE)
+        return HEADER_NONE;
+
+    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_NATIONAL_PARK_BUG_CONTEST_HNS)
+     && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_NATIONAL_PARK_BUG_CONTEST_HNS))
     {
-        const struct WildPokemonHeader *wildHeader = &gWildMonHeaders[i];
-        if (wildHeader->mapGroup == MAP_GROUP(MAP_UNDEFINED))
-            break;
-
-        if (gWildMonHeaders[i].mapGroup == gSaveBlock1Ptr->location.mapGroup &&
-            gWildMonHeaders[i].mapNum == gSaveBlock1Ptr->location.mapNum)
-        {
-            if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_ALTERING_CAVE) &&
-                gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_ALTERING_CAVE))
-            {
-                u16 alteringCaveId = VarGet(VAR_ALTERING_CAVE_WILD_SET);
-                if (alteringCaveId >= NUM_ALTERING_CAVE_TABLES)
-                    alteringCaveId = 0;
-
-                i += alteringCaveId;
-            }
-
-            return i;
-        }
+        // The Bug-Catching Contest has a table for each of its days, in order.
+        i += GetBugContestTableIndex();
     }
 
-    return HEADER_NONE;
+    return i;
 }
 
 enum TimeOfDay GetTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea area)
@@ -909,7 +1045,7 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum 
         break;
     }
 
-    level = ChooseWildMonLevel(wildMonInfo->wildPokemon, wildMonIndex, area);
+    level = ChooseWildMonLevel(wildMonInfo->wildPokemon, wildMonIndex);
     if (flags & WILD_CHECK_REPEL && !IsWildLevelAllowedByRepel(level))
         return FALSE;
     if ((gMapHeader.mapLayoutId != LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && gMapHeader.mapLayoutId != LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS_HNS) && flags & WILD_CHECK_KEEN_EYE && !IsAbilityAllowingEncounter(level))
@@ -925,14 +1061,28 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum 
     return TRUE;
 }
 
+// An outbreak keeps its species (no stage mix) but takes the current place's level
+// with the ordinary spread and the same young limit and prowler minimum. A map
+// without a header keeps the authored level.
+u8 GetMassOutbreakLevel(void)
+{
+    u32 headerId = GetCurrentMapWildMonHeaderId();
+    u32 placeLevel = GetWildEncounterPlaceLevel(headerId, GetTrainerRating());
+
+    if (placeLevel == 0)
+        return gSaveBlock1Ptr->outbreakPokemonLevel;
+    return GetWildEncounterClampedLevel(gSaveBlock1Ptr->outbreakPokemonSpecies, headerId, (s32)placeLevel + RollWildSpread());
+}
+
 static bool8 SetUpMassOutbreakEncounter(u8 flags)
 {
     u16 i;
+    u8 level = GetMassOutbreakLevel();
 
-    if (flags & WILD_CHECK_REPEL && !IsWildLevelAllowedByRepel(gSaveBlock1Ptr->outbreakPokemonLevel))
+    if (flags & WILD_CHECK_REPEL && !IsWildLevelAllowedByRepel(level))
         return FALSE;
 
-    CreateWildMon(gSaveBlock1Ptr->outbreakPokemonSpecies, gSaveBlock1Ptr->outbreakPokemonLevel);
+    CreateWildMon(gSaveBlock1Ptr->outbreakPokemonSpecies, level);
     for (i = 0; i < MAX_MON_MOVES; i++)
         SetMonMoveSlot(&gEnemyParty[0], gSaveBlock1Ptr->outbreakPokemonMoves[i], i);
 
@@ -1076,7 +1226,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
                 return FALSE;
             else if (prevMetatileBehavior != curMetatileBehavior && !AllowWildCheckOnNewMetatile())
                 return FALSE;
-            else if (WildEncounterCheck(gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo->encounterRate, FALSE) != TRUE)
+            else if (WildEncounterCheck(GetWildEncounterRateForHeader(headerId, WILD_AREA_LAND, gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo->encounterRate), FALSE) != TRUE)
                 return FALSE;
 
             if (!TrainerOnlyCanEnterWildEncounter() && TryStartRoamerEncounter())
@@ -1127,7 +1277,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
                 return FALSE;
             else if (prevMetatileBehavior != curMetatileBehavior && !AllowWildCheckOnNewMetatile())
                 return FALSE;
-            else if (WildEncounterCheck(gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo->encounterRate, FALSE) != TRUE)
+            else if (WildEncounterCheck(GetWildEncounterRateForHeader(headerId, WILD_AREA_WATER, gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo->encounterRate), FALSE) != TRUE)
                 return FALSE;
 
             if (!TrainerOnlyCanEnterWildEncounter() && TryStartRoamerEncounter())
@@ -1181,7 +1331,7 @@ void RockSmashWildEncounter(void)
         {
             gSpecialVar_Result = FALSE;
         }
-        else if (WildEncounterCheck(wildPokemonInfo->encounterRate, TRUE) == TRUE
+        else if (WildEncounterCheck(GetWildEncounterRateForHeader(headerId, WILD_AREA_ROCKS, wildPokemonInfo->encounterRate), TRUE) == TRUE
          && TryGenerateWildMonFromProfile(headerId, timeOfDay, WILD_AREA_ROCKS, WILD_ENCOUNTER_FISHING_ROD_NONE, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
         {
             if (TryDoDoubleWildBattle())
@@ -1311,7 +1461,7 @@ bool8 DoesCurrentMapHaveFishingMons(u8 rod)
     };
     if (!GetWildEncounterProfileView(&context, &view))
         return FALSE;
-    return DoesWildEncounterProfileHaveAvailableEntries(&view, GetTrainerRating(), IsCurrentWildEncounterRandomized());
+    return DoesWildEncounterProfileHaveAvailableEntries(&view);
 }
 
 void FishingWildEncounter(u8 rod)
@@ -1348,10 +1498,14 @@ static u16 GenerateFishingWildMon(u32 headerId, enum TimeOfDay timeOfDay, u8 rod
 {
     if (useFeebasOverride)
     {
-        u8 level = ChooseWildMonLevel(&sWildFeebas, 0, WILD_AREA_FISHING);
+        // Route 119's place level, like any table of that place.
+        struct WildEncounterSpeciesOutcome outcome;
 
-        CreateWildMon(sWildFeebas.species, level);
-        return sWildFeebas.species;
+        if (!RollWildSpecies(SPECIES_FEEBAS, GetWildMonHeaderIdForMap(MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119)), &outcome))
+            return SPECIES_NONE;
+
+        CreateWildMon(outcome.species, outcome.level);
+        return outcome.species;
     }
     return GenerateFishingWildMonFromProfile(headerId, timeOfDay, rod);
 }
@@ -1560,36 +1714,6 @@ static bool8 TryGetHoennSoundWildMonIndex(const struct WildPokemon *wildMon, u8 
 
 #include "data.h"
 
-static u8 GetMaxLevelOfSpeciesInWildTable(const struct WildPokemon *wildMon, u16 species, enum WildPokemonArea area)
-{
-    u8 i, maxLevel = 0, numMon = 0;
-
-    switch (area)
-    {
-    case WILD_AREA_LAND:
-        numMon = LAND_WILD_COUNT;
-        break;
-    case WILD_AREA_WATER:
-        numMon = WATER_WILD_COUNT;
-        break;
-    case WILD_AREA_ROCKS:
-        numMon = ROCK_WILD_COUNT;
-        break;
-    default:
-    case WILD_AREA_FISHING:
-    case WILD_AREA_HIDDEN:
-        break;
-    }
-
-    for (i = 0; i < numMon; i++)
-    {
-        if (wildMon[i].species == species && wildMon[i].maxLevel > maxLevel)
-            maxLevel = wildMon[i].maxLevel;
-    }
-
-    return maxLevel;
-}
-
 #ifdef BUGFIX
 static bool8 TryGetAbilityInfluencedWildMonIndex(const struct WildPokemon *wildMon, enum Type type, enum Ability ability, u8 *monIndex, u32 size)
 #else
@@ -1613,7 +1737,7 @@ static bool8 TryGetAbilityInfluencedWildMonIndex(const struct WildPokemon *wildM
 // The ordinary path selects from the profile's eligible slots, but retains the
 // raw game's modifier order. In particular, type-attraction and Hoenn Sound
 // use a uniform matching-slot choice rather than weighted encounter odds.
-static bool8 GetWildEncounterProfileTypeSlots(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized, u8 type, u8 *matchingSlots, u8 *eligibleCount, u8 *matchingCount)
+static bool8 GetWildEncounterProfileTypeSlots(const struct WildEncounterProfileView *view, u8 type, u8 *matchingSlots, u8 *eligibleCount, u8 *matchingCount)
 {
     u8 candidate;
 
@@ -1628,7 +1752,7 @@ static bool8 GetWildEncounterProfileTypeSlots(const struct WildEncounterProfileV
     {
         const struct WildPokemon *entry;
 
-        if (!IsWildEncounterProfileSlotEligible(view, candidate, trainerRating, isWildRandomized))
+        if (!IsWildEncounterProfileSlotEligible(view, candidate))
             continue;
 
         (*eligibleCount)++;
@@ -1641,14 +1765,14 @@ static bool8 GetWildEncounterProfileTypeSlots(const struct WildEncounterProfileV
     return TRUE;
 }
 
-bool8 SelectWildEncounterProfileTypeSlot(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized, u8 type, u8 roll, u8 *slot)
+bool8 SelectWildEncounterProfileTypeSlot(const struct WildEncounterProfileView *view, u8 type, u8 roll, u8 *slot)
 {
     u8 matchingSlots[LAND_WILD_COUNT];
     u8 eligibleCount;
     u8 matchingCount;
 
     if (slot == NULL
-     || !GetWildEncounterProfileTypeSlots(view, trainerRating, isWildRandomized, type, matchingSlots, &eligibleCount, &matchingCount)
+     || !GetWildEncounterProfileTypeSlots(view, type, matchingSlots, &eligibleCount, &matchingCount)
      || matchingCount == 0
      || matchingCount == eligibleCount
      || roll >= matchingCount)
@@ -1658,13 +1782,13 @@ bool8 SelectWildEncounterProfileTypeSlot(const struct WildEncounterProfileView *
     return TRUE;
 }
 
-static bool8 TryGetRandomWildEncounterProfileSlotByType(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized, enum Type type, u8 *slot)
+static bool8 TryGetRandomWildEncounterProfileSlotByType(const struct WildEncounterProfileView *view, enum Type type, u8 *slot)
 {
     u8 matchingSlots[LAND_WILD_COUNT];
     u8 eligibleCount;
     u8 matchingCount;
 
-    if (!GetWildEncounterProfileTypeSlots(view, trainerRating, isWildRandomized, type, matchingSlots, &eligibleCount, &matchingCount)
+    if (!GetWildEncounterProfileTypeSlots(view, type, matchingSlots, &eligibleCount, &matchingCount)
      || matchingCount == 0
      || matchingCount == eligibleCount)
         return FALSE;
@@ -1673,7 +1797,7 @@ static bool8 TryGetRandomWildEncounterProfileSlotByType(const struct WildEncount
     return TRUE;
 }
 
-static bool8 TryGetAbilityInfluencedWildEncounterProfileSlot(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized, enum Type type, enum Ability ability, u8 *slot)
+static bool8 TryGetAbilityInfluencedWildEncounterProfileSlot(const struct WildEncounterProfileView *view, enum Type type, enum Ability ability, u8 *slot)
 {
     if (GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
         return FALSE;
@@ -1682,11 +1806,11 @@ static bool8 TryGetAbilityInfluencedWildEncounterProfileSlot(const struct WildEn
     else if (Random() % 2 != 0)
         return FALSE;
 
-    return TryGetRandomWildEncounterProfileSlotByType(view, trainerRating, isWildRandomized, type, slot);
+    return TryGetRandomWildEncounterProfileSlotByType(view, type, slot);
 }
 
 #if IS_HNS
-static bool8 TrySelectHoennSoundWildEncounterProfileSlot(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized, bool8 useSuppliedRoll, u8 suppliedRoll, u8 *slot)
+static bool8 TrySelectHoennSoundWildEncounterProfileSlot(const struct WildEncounterProfileView *view, bool8 useSuppliedRoll, u8 suppliedRoll, u8 *slot)
 {
     u8 matchingSlots[LAND_WILD_COUNT];
     u8 candidate;
@@ -1697,7 +1821,7 @@ static bool8 TrySelectHoennSoundWildEncounterProfileSlot(const struct WildEncoun
     {
         const struct WildPokemon *entry;
 
-        if (!IsWildEncounterProfileSlotEligible(view, candidate, trainerRating, isWildRandomized))
+        if (!IsWildEncounterProfileSlotEligible(view, candidate))
             continue;
 
         eligibleCount++;
@@ -1714,18 +1838,18 @@ static bool8 TrySelectHoennSoundWildEncounterProfileSlot(const struct WildEncoun
     return TRUE;
 }
 
-static bool8 TryGetHoennSoundWildEncounterProfileSlot(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized, u8 *slot)
+static bool8 TryGetHoennSoundWildEncounterProfileSlot(const struct WildEncounterProfileView *view, u8 *slot)
 {
     if (!IsHoennSoundPlaying())
         return FALSE;
     if (Random() % 10 != 0)
         return FALSE;
 
-    return TrySelectHoennSoundWildEncounterProfileSlot(view, trainerRating, isWildRandomized, FALSE, 0, slot);
+    return TrySelectHoennSoundWildEncounterProfileSlot(view, FALSE, 0, slot);
 }
 #endif
 
-bool8 GetWildEncounterProfileMirroredEligibleSlot(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized, u8 slot, u8 *mirroredSlot)
+bool8 GetWildEncounterProfileMirroredEligibleSlot(const struct WildEncounterProfileView *view, u8 slot, u8 *mirroredSlot)
 {
     u8 eligibleSlots[LAND_WILD_COUNT];
     u8 candidate;
@@ -1737,7 +1861,7 @@ bool8 GetWildEncounterProfileMirroredEligibleSlot(const struct WildEncounterProf
 
     for (candidate = view->entryStart; candidate < view->entryStart + view->entryCount; candidate++)
     {
-        if (IsWildEncounterProfileSlotEligible(view, candidate, trainerRating, isWildRandomized))
+        if (IsWildEncounterProfileSlotEligible(view, candidate))
             eligibleSlots[eligibleCount++] = candidate;
     }
 
@@ -1753,67 +1877,67 @@ bool8 GetWildEncounterProfileMirroredEligibleSlot(const struct WildEncounterProf
     return FALSE;
 }
 
-bool8 DoesWildEncounterProfileHaveAvailableEntries(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized)
+bool8 DoesWildEncounterProfileHaveAvailableEntries(const struct WildEncounterProfileView *view)
 {
     return view != NULL
         && view->wildMonsInfo != NULL
         && view->wildMonsInfo->encounterRate != 0
-        && GetWildEncounterProfileEligibleWeight(view, trainerRating, isWildRandomized) != 0;
+        && GetWildEncounterProfileEligibleWeight(view) != 0;
 }
 
-static bool8 TrySelectWildEncounterProfileBaseSlot(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized, u8 *slot)
+static bool8 TrySelectWildEncounterProfileBaseSlot(const struct WildEncounterProfileView *view, u8 *slot)
 {
-    u16 eligibleWeight = GetWildEncounterProfileEligibleWeight(view, trainerRating, isWildRandomized);
+    u16 eligibleWeight = GetWildEncounterProfileEligibleWeight(view);
 
-    if (eligibleWeight == 0 || !SelectWildEncounterProfileSlot(view, trainerRating, isWildRandomized, Random() % eligibleWeight, slot))
+    if (eligibleWeight == 0 || !SelectWildEncounterProfileSlot(view, Random() % eligibleWeight, slot))
         return FALSE;
 
     // In an unfiltered profile this is exactly the legacy index reversal. If
     // scaling locks a slot, reverse only across the eligible sequence so a
     // lure cannot revive a locked encounter.
     if (LURE_STEP_COUNT != 0 && Random() % 10 < 2)
-        return GetWildEncounterProfileMirroredEligibleSlot(view, trainerRating, isWildRandomized, *slot, slot);
+        return GetWildEncounterProfileMirroredEligibleSlot(view, *slot, slot);
 
     return TRUE;
 }
 
-static bool8 TrySelectWildEncounterProfileSlotWithModifiers(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized, u8 *slot)
+static bool8 TrySelectWildEncounterProfileSlotWithModifiers(const struct WildEncounterProfileView *view, u8 *slot)
 {
     switch (view->area)
     {
     case WILD_AREA_LAND:
-        if (TryGetAbilityInfluencedWildEncounterProfileSlot(view, trainerRating, isWildRandomized, TYPE_STEEL, ABILITY_MAGNET_PULL, slot))
+        if (TryGetAbilityInfluencedWildEncounterProfileSlot(view, TYPE_STEEL, ABILITY_MAGNET_PULL, slot))
             return TRUE;
-        if (TryGetAbilityInfluencedWildEncounterProfileSlot(view, trainerRating, isWildRandomized, TYPE_ELECTRIC, ABILITY_STATIC, slot))
+        if (TryGetAbilityInfluencedWildEncounterProfileSlot(view, TYPE_ELECTRIC, ABILITY_STATIC, slot))
             return TRUE;
-        if (OW_LIGHTNING_ROD >= GEN_8 && TryGetAbilityInfluencedWildEncounterProfileSlot(view, trainerRating, isWildRandomized, TYPE_ELECTRIC, ABILITY_LIGHTNING_ROD, slot))
+        if (OW_LIGHTNING_ROD >= GEN_8 && TryGetAbilityInfluencedWildEncounterProfileSlot(view, TYPE_ELECTRIC, ABILITY_LIGHTNING_ROD, slot))
             return TRUE;
-        if (OW_FLASH_FIRE >= GEN_8 && TryGetAbilityInfluencedWildEncounterProfileSlot(view, trainerRating, isWildRandomized, TYPE_FIRE, ABILITY_FLASH_FIRE, slot))
+        if (OW_FLASH_FIRE >= GEN_8 && TryGetAbilityInfluencedWildEncounterProfileSlot(view, TYPE_FIRE, ABILITY_FLASH_FIRE, slot))
             return TRUE;
-        if (OW_HARVEST >= GEN_8 && TryGetAbilityInfluencedWildEncounterProfileSlot(view, trainerRating, isWildRandomized, TYPE_GRASS, ABILITY_HARVEST, slot))
+        if (OW_HARVEST >= GEN_8 && TryGetAbilityInfluencedWildEncounterProfileSlot(view, TYPE_GRASS, ABILITY_HARVEST, slot))
             return TRUE;
-        if (OW_STORM_DRAIN >= GEN_8 && TryGetAbilityInfluencedWildEncounterProfileSlot(view, trainerRating, isWildRandomized, TYPE_WATER, ABILITY_STORM_DRAIN, slot))
+        if (OW_STORM_DRAIN >= GEN_8 && TryGetAbilityInfluencedWildEncounterProfileSlot(view, TYPE_WATER, ABILITY_STORM_DRAIN, slot))
             return TRUE;
     #if IS_HNS
-        if (TryGetHoennSoundWildEncounterProfileSlot(view, trainerRating, isWildRandomized, slot))
+        if (TryGetHoennSoundWildEncounterProfileSlot(view, slot))
             return TRUE;
     #endif
         break;
     case WILD_AREA_WATER:
-        if (TryGetAbilityInfluencedWildEncounterProfileSlot(view, trainerRating, isWildRandomized, TYPE_STEEL, ABILITY_MAGNET_PULL, slot))
+        if (TryGetAbilityInfluencedWildEncounterProfileSlot(view, TYPE_STEEL, ABILITY_MAGNET_PULL, slot))
             return TRUE;
-        if (TryGetAbilityInfluencedWildEncounterProfileSlot(view, trainerRating, isWildRandomized, TYPE_ELECTRIC, ABILITY_STATIC, slot))
+        if (TryGetAbilityInfluencedWildEncounterProfileSlot(view, TYPE_ELECTRIC, ABILITY_STATIC, slot))
             return TRUE;
-        if (OW_LIGHTNING_ROD >= GEN_8 && TryGetAbilityInfluencedWildEncounterProfileSlot(view, trainerRating, isWildRandomized, TYPE_ELECTRIC, ABILITY_LIGHTNING_ROD, slot))
+        if (OW_LIGHTNING_ROD >= GEN_8 && TryGetAbilityInfluencedWildEncounterProfileSlot(view, TYPE_ELECTRIC, ABILITY_LIGHTNING_ROD, slot))
             return TRUE;
-        if (OW_FLASH_FIRE >= GEN_8 && TryGetAbilityInfluencedWildEncounterProfileSlot(view, trainerRating, isWildRandomized, TYPE_FIRE, ABILITY_FLASH_FIRE, slot))
+        if (OW_FLASH_FIRE >= GEN_8 && TryGetAbilityInfluencedWildEncounterProfileSlot(view, TYPE_FIRE, ABILITY_FLASH_FIRE, slot))
             return TRUE;
-        if (OW_HARVEST >= GEN_8 && TryGetAbilityInfluencedWildEncounterProfileSlot(view, trainerRating, isWildRandomized, TYPE_GRASS, ABILITY_HARVEST, slot))
+        if (OW_HARVEST >= GEN_8 && TryGetAbilityInfluencedWildEncounterProfileSlot(view, TYPE_GRASS, ABILITY_HARVEST, slot))
             return TRUE;
-        if (OW_STORM_DRAIN >= GEN_8 && TryGetAbilityInfluencedWildEncounterProfileSlot(view, trainerRating, isWildRandomized, TYPE_WATER, ABILITY_STORM_DRAIN, slot))
+        if (OW_STORM_DRAIN >= GEN_8 && TryGetAbilityInfluencedWildEncounterProfileSlot(view, TYPE_WATER, ABILITY_STORM_DRAIN, slot))
             return TRUE;
     #if IS_HNS
-        if (TryGetHoennSoundWildEncounterProfileSlot(view, trainerRating, isWildRandomized, slot))
+        if (TryGetHoennSoundWildEncounterProfileSlot(view, slot))
             return TRUE;
     #endif
         break;
@@ -1821,7 +1945,7 @@ static bool8 TrySelectWildEncounterProfileSlotWithModifiers(const struct WildEnc
         break;
     }
 
-    return TrySelectWildEncounterProfileBaseSlot(view, trainerRating, isWildRandomized, slot);
+    return TrySelectWildEncounterProfileBaseSlot(view, slot);
 }
 
 static bool8 TryGenerateWildMonFromProfile(u32 headerId, enum TimeOfDay timeOfDay, enum WildPokemonArea area, enum WildEncounterFishingRod fishingRod, u8 flags)
@@ -1836,21 +1960,13 @@ static bool8 TryGenerateWildMonFromProfile(u32 headerId, enum TimeOfDay timeOfDa
     struct WildEncounterProfileView view;
     const struct WildPokemon *entry;
     struct WildEncounterSpeciesOutcome outcome;
-    u32 trainerRating = GetTrainerRating();
-    bool8 isWildRandomized = IsCurrentWildEncounterRandomized();
     u8 slot;
-    u8 authoredLevel;
     u16 species;
 
     if (!GetWildEncounterProfileView(&context, &view)
-     || !TrySelectWildEncounterProfileSlotWithModifiers(&view, trainerRating, isWildRandomized, &slot)
-     || !GetWildEncounterProfileEntry(&view, slot, &entry))
-        return FALSE;
-
-    // Roll the authored range first. This retains Pressure / Vital Spirit and
-    // lure-level behavior before the rating projection changes the result.
-    authoredLevel = ChooseWildMonLevel(view.wildMonsInfo->wildPokemon, slot, area);
-    if (!GetWildEncounterSpeciesOutcome(&view, slot, authoredLevel, trainerRating, isWildRandomized, &outcome))
+     || !TrySelectWildEncounterProfileSlotWithModifiers(&view, &slot)
+     || !GetWildEncounterProfileEntry(&view, slot, &entry)
+     || !RollWildEncounterSlot(&view, slot, &outcome))
         return FALSE;
 
     if (flags & WILD_CHECK_REPEL && !IsWildLevelAllowedByRepel(outcome.level))
@@ -1861,8 +1977,10 @@ static bool8 TryGenerateWildMonFromProfile(u32 headerId, enum TimeOfDay timeOfDa
     species = outcome.species;
     #if RANDOMIZER_AVAILABLE == TRUE
     // The randomizer still receives the authored species and raw slot index in
-    // its original position after all selection and level checks.
-    species = RandomizeAuthoredWildEncounter(entry, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, area, slot);
+    // its original position after all selection and level checks. Without it the
+    // rolled stage stands.
+    if (IsCurrentWildEncounterRandomized())
+        species = RandomizeAuthoredWildEncounter(entry, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, area, slot);
     #endif
     CreateWildMon(species, outcome.level);
     return TRUE;
@@ -1880,24 +1998,19 @@ static u16 GenerateFishingWildMonFromProfile(u32 headerId, enum TimeOfDay timeOf
     struct WildEncounterProfileView view;
     const struct WildPokemon *entry;
     struct WildEncounterSpeciesOutcome outcome;
-    u32 trainerRating = GetTrainerRating();
-    bool8 isWildRandomized = IsCurrentWildEncounterRandomized();
     u8 slot;
-    u8 authoredLevel;
     u16 species;
 
     if (!GetWildEncounterProfileView(&context, &view)
-     || !TrySelectWildEncounterProfileSlotWithModifiers(&view, trainerRating, isWildRandomized, &slot)
-     || !GetWildEncounterProfileEntry(&view, slot, &entry))
-        return SPECIES_NONE;
-
-    authoredLevel = ChooseWildMonLevel(view.wildMonsInfo->wildPokemon, slot, WILD_AREA_FISHING);
-    if (!GetWildEncounterSpeciesOutcome(&view, slot, authoredLevel, trainerRating, isWildRandomized, &outcome))
+     || !TrySelectWildEncounterProfileSlotWithModifiers(&view, &slot)
+     || !GetWildEncounterProfileEntry(&view, slot, &entry)
+     || !RollWildEncounterSlot(&view, slot, &outcome))
         return SPECIES_NONE;
 
     species = outcome.species;
     #if RANDOMIZER_AVAILABLE == TRUE
-    species = RandomizeAuthoredWildEncounter(entry, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, WILD_AREA_FISHING, slot);
+    if (IsCurrentWildEncounterRandomized())
+        species = RandomizeAuthoredWildEncounter(entry, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, WILD_AREA_FISHING, slot);
     #endif
 
     UpdateChainFishingStreak();
@@ -1912,14 +2025,14 @@ u16 GenerateFeebasFishingWildMonForTesting(u8 rod)
 }
 
 #if IS_HNS
-bool8 SelectWildEncounterProfileSlotWithHoennSoundForTesting(const struct WildEncounterProfileView *view, u32 trainerRating, bool8 isWildRandomized, bool8 isHoennSoundPlaying, u8 activationRoll, u8 selectionRoll, u16 baseRoll, u8 *slot)
+bool8 SelectWildEncounterProfileSlotWithHoennSoundForTesting(const struct WildEncounterProfileView *view, bool8 isHoennSoundPlaying, u8 activationRoll, u8 selectionRoll, u16 baseRoll, u8 *slot)
 {
     if (isHoennSoundPlaying
      && activationRoll % 10 == 0
-     && TrySelectHoennSoundWildEncounterProfileSlot(view, trainerRating, isWildRandomized, TRUE, selectionRoll, slot))
+     && TrySelectHoennSoundWildEncounterProfileSlot(view, TRUE, selectionRoll, slot))
         return TRUE;
 
-    return SelectWildEncounterProfileSlot(view, trainerRating, isWildRandomized, baseRoll, slot);
+    return SelectWildEncounterProfileSlot(view, baseRoll, slot);
 }
 #endif
 
@@ -1937,21 +2050,14 @@ u16 RandomizeWildEncounterProfileEntryForTesting(const struct WildEncounterProfi
 
 static u16 GetLocalWildEncounterProfileSpecies(const struct WildEncounterProfileView *view)
 {
-    const struct WildPokemon *entry;
-    struct WildEncounterSpeciesOutcome outcome;
-    u32 trainerRating = GetTrainerRating();
-    bool8 isWildRandomized = IsCurrentWildEncounterRandomized();
     u8 slot;
 
-    // These readers have historically owned only their slot-selection RNG.
-    // Use the low end of that slot's authored range to resolve an effective
-    // species without adding a level-roll side effect.
-    if (!TrySelectWildEncounterProfileBaseSlot(view, trainerRating, isWildRandomized, &slot)
-     || !GetWildEncounterProfileEntry(view, slot, &entry)
-     || !GetWildEncounterSpeciesOutcome(view, slot, min(entry->minLevel, entry->maxLevel), trainerRating, isWildRandomized, &outcome))
+    // These readers have historically owned only their slot-selection RNG, so
+    // name the species the chosen slot most often produces rather than rolling.
+    if (!TrySelectWildEncounterProfileBaseSlot(view, &slot))
         return SPECIES_NONE;
 
-    return outcome.species;
+    return GetCurrentWildEncounterSlotLikelySpecies(view, slot);
 }
 
 static void ApplyFluteEncounterRateMod(u32 *encRate)

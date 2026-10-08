@@ -1,7 +1,7 @@
 # Wild level scaling
 
 PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
-Implemented: No
+Implemented: Yes (Wayfarer)
 
 Design status: v0 approved. It sets how a wild Pokémon's level and stage come from
 your Trainer Rating (TR) and the place you meet it. Every number below is a
@@ -13,7 +13,9 @@ nothing to guess.
 This spec defines:
 
 - the level of each reach, as [scalers](player-trainer-rating.md#scalers)
-  over your TR, and the Road's lower encounter rate;
+  over your TR;
+- the encounter rate of each method and terrain, and the Road's lower rate;
+- what a Lure changes;
 - the level of each dungeon floor, from its intent;
 - the level spread of a single encounter;
 - the stage mix, and the level limit of slots capped at an early stage;
@@ -74,13 +76,45 @@ What this means at a glance:
   team stays about the same from the first badge to the last; only Roads get
   easier.
 
+### Encounter rates
+
+A table's encounter rate comes from its method and terrain, not from the map.
+The same rate holds by day and by night. All values are placeholders:
+
+| Method and terrain | Rate |
+| --- | ---: |
+| Walking in outdoor grass | 20 |
+| Walking on cave or building floors (indoor and underground maps, and ruin chambers with no map type) | 10 |
+| Surfing | 4 |
+| Diving through underwater seaweed | 4 |
+| Fishing | 30 |
+| Rock Smash and Headbutt | 60 |
+
+Faraway Island's entrance is an indoor map in the game data but an outdoor
+island, so it walks at the outdoor rate. Fishing's rate only marks the table as
+available: how often a fish bites comes from each rod's bite chance in
+[Standard Rod fishing](standard-rod-fishing.md).
+
 ### Road encounter rate
 
-Road maps keep travel quick with a lower encounter rate. Every method that
-rolls its table's encounter rate uses 60% of it on a Road map (a placeholder),
-rounded to the nearest whole value. Wilds, Outlands and dungeons use the
-table's rate as it is. The rate changes how often an encounter happens, never
-what it holds or its level.
+Road maps keep travel quick with a lower encounter rate. Walking and surfing,
+including underwater, use 60% of the rate on a Road map (a placeholder),
+rounded to the nearest whole value. Rock Smash and Headbutt keep the full
+rate everywhere, since the player chose to act, and fishing bites don't change
+by reach. Wilds, Outlands and
+dungeons use the full rate for every method. The rate changes how often an
+encounter happens, never what it holds or its level.
+
+### Lures
+
+A Lure doubles the encounter rate for walking, surfing, Rock Smash and
+Headbutt; fishing bites keep their rod's chance. While it lasts, each encounter also has the
+existing 20% chance to mirror its slot, for walking, surfing, Rock Smash and
+fishing; fishing mirrors across its eligible entries as
+[Standard Rod fishing](standard-rod-fishing.md) defines. That brings rare
+slots and prowlers about five times as often. A Lure never changes the level:
+the encounter rolls the place's ordinary spread, with Pressure, Hustle and
+Vital Spirit as usual.
 
 ### Dungeon levels
 
@@ -148,6 +182,11 @@ Spirit, treat the top of the spread as the top of a slot's level range, as the
 engine already does. Safari Zones, the Bug-Catching Contest and Feebas's
 fishing tiles use their place's level like any other table.
 
+**Mass outbreaks** from the TV take their map's place level with the same
+spread. The outbreak keeps its species, with no stage mix, and the young-level
+limit and prowler minimum apply to that species. Repel compares that level. A
+DexNav chain's level bonus is held to the same limits.
+
 ### Stage mix
 
 The stage comes from the encounter level and the slot's stage cap:
@@ -211,6 +250,15 @@ as the [prowlers spec](prowlers.md#prowlers) defines.
 
 ## Implementation notes
 
+- **Wayfarer only.** V2 tables and level rules apply to the Wayfarer build
+  (`BUILD=wayfarer`). The standalone Emerald, FireRed, LeafGreen and HNS builds
+  don't matter for v2: nothing adds guards, dual code paths or extra
+  validation just to keep them working, and a change that breaks only them is
+  noted and left.
+- **Time of day.** The engine has four times of day; v2 tables have two.
+  Morning and day use a map's day table, and evening and night use its night
+  table. Every method follows the same rule, and every reader of the wild
+  population uses it too.
 - **This replaces today's projection.** The v0 wild level curve, authored
   levels, the retention shape, the cumulative maximum, the per-table level
   offsets and the old species floors all go. A wild level is the place's
@@ -268,4 +316,10 @@ as the [prowlers spec](prowlers.md#prowlers) defines.
   or below a prowler's minimum.
 - A young-level slot never appears at or above its next evolution level,
   apart from prowlers at their minimum.
-
+- Every table's encounter rate equals its method and terrain's rate, by day
+  and by night.
+- On a Road map, walking and surfing roll 60% of the rate, rounded to the
+  nearest whole value; Rock Smash and Headbutt roll the full rate, and fishing
+bites keep their rod's chance.
+- A Lure doubles the rate and leaves every encounter's level distribution
+  unchanged.

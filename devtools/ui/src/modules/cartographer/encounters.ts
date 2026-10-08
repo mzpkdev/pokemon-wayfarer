@@ -15,25 +15,24 @@ export type ResolvedMapEncounters = {
   runtimeTimes: CatalogWildEncounterRuntimeTime[]
 }
 
+/** One species a slot can roll, over a run of consecutive levels. */
 export type ProjectedEncounterOutcome = {
-  authoredMinimumLevel: number
-  authoredMaximumLevel: number
   projectedMinimumLevel: number
   projectedMaximumLevel: number
   speciesId: string
   speciesLabel: string
   sprite: CatalogEncounterSprite | null
-  eligible: boolean
-  minimumOrdinaryWildLevel: number
+  /** Chance within the slot, from 0 (exclusive) through 1. */
+  chance: number
 }
 
 export type ResolvedEncounterSlot = {
   source: CatalogWildEncounterSlot
   outcomes: ProjectedEncounterOutcome[]
-  eligible: boolean
   rawWeight: number
   fishingRod: string | null
-  selectionWeight: number | null
+  /** Chance that the method picks this slot. */
+  selectionWeight: number
 }
 
 export type EncounterRosterMethodType = Extract<
@@ -43,15 +42,7 @@ export type EncounterRosterMethodType = Extract<
 
 export type EncounterRosterActivation = {
   timeOfDay: CatalogWildEncounterRuntimeTime["timeOfDay"]
-  resolution: Extract<
-    CatalogWildEncounterRuntimeTime["methods"][number]["resolution"],
-    "direct" | "fallback"
-  >
-}
-
-export type EncounterRosterSlot = ResolvedEncounterSlot & {
-  eligible: true
-  selectionWeight: number
+  resolution: Extract<CatalogWildEncounterRuntimeTime["methods"][number]["resolution"], "direct">
 }
 
 export type EncounterRosterSource = {
@@ -59,9 +50,8 @@ export type EncounterRosterSource = {
   set: CatalogWildEncounterSet
   method: CatalogWildEncounterMethod
   activations: EncounterRosterActivation[]
+  placeLevel: number
   slots: ResolvedEncounterSlot[]
-  effectiveSlots: EncounterRosterSlot[]
-  lockedSlotCount: number
 }
 
 export type ResolvedEncounterPopulation = {
@@ -71,9 +61,8 @@ export type ResolvedEncounterPopulation = {
 }
 
 type ProjectionIndex = {
-  speciesById: Map<string, CatalogWildEncounterProjection["species"][number]>
-  levelsByOffsetAndRating: Map<string, readonly number[]>
-  profilesByKey: Map<string, CatalogWildEncounterProjection["profiles"][number]>
+  speciesByIndex: CatalogWildEncounterProjection["species"]
+  distributions: Map<string, CatalogWildEncounterProjection["distributions"][number]>
 }
 
 const projectionIndexes = new WeakMap<CatalogWildEncounterProjection, ProjectionIndex>()
@@ -82,31 +71,35 @@ const projectionIndex = (projection: CatalogWildEncounterProjection): Projection
   const existing = projectionIndexes.get(projection)
   if (existing) return existing
   const index = {
-    speciesById: new Map(projection.species.map((species) => [species.authoredSpecies, species])),
-    levelsByOffsetAndRating: new Map(
-      projection.levelProjections.flatMap((table) =>
-        table.ratings.map((row) => [`${table.levelOffset}/${row.rating}`, row.projectedLevels]),
-      ),
+    speciesByIndex: projection.species,
+    distributions: new Map(
+      projection.distributions.map((entry) => [`${entry.speciesId}/${entry.regionClass}`, entry]),
     ),
-    profilesByKey: new Map(projection.profiles.map((profile) => [profile.profileKey, profile])),
   }
   projectionIndexes.set(projection, index)
   return index
 }
 
-export const visibleEncounterSlots = (
-  method: CatalogWildEncounterMethod,
-): CatalogWildEncounterSlot[] => {
-  if (method.type === "fishing_mons") return method.slots
-  return method.slots.filter((slot) => slot.speciesId !== "SPECIES_NONE" && slot.slotRate > 0)
+/** The place level of a set at a Trainer Rating; ratings past the table use its last entry. */
+export const placeLevelAt = (
+  projection: CatalogWildEncounterProjection,
+  set: CatalogWildEncounterSet,
+  rating: number,
+): number => {
+  const levels = set.place.placeLevels
+  const index = Math.min(
+    levels.length - 1,
+    Math.max(0, Math.round(rating) - projection.trainerRating.minimum),
+  )
+  return levels[index]!
 }
 
-export const fishingRarityBandIds = (method: CatalogWildEncounterMethod): string[] => {
-  return [
-    ...new Set(
-      visibleEncounterSlots(method).flatMap((slot) => slot.groups.map((group) => group.id)),
-    ),
-  ]
+/** "Road", "Wilds", "Outlands" or the dungeon's intent and floor, as a short label. */
+export const placeLabel = (place: CatalogWildEncounterSet["place"]): string => {
+  if (place.reach !== "Dungeon") return place.reach
+  const floor =
+    place.floors && place.floors > 1 ? ` · floor ${(place.floor ?? 0) + 1} of ${place.floors}` : ""
+  return `Dungeon (${place.dungeon?.intent.toLowerCase() ?? "unknown"}${place.dungeon?.flat ? ", flat" : ""})${floor}`
 }
 
 export const rodLabel = (groupId: string): string => {
@@ -115,19 +108,6 @@ export const rodLabel = (groupId: string): string => {
     .split("_")
     .map((word) => `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`)
     .join(" ")
-}
-
-const rarityBandLabels: Readonly<Record<string, string>> = {
-  old_rod: "Common",
-  good_rod: "Less common",
-  super_rod: "Rare",
-}
-
-export const rarityBandLabel = (slot: CatalogWildEncounterSlot): string => {
-  const labels = slot.groups
-    .map((group) => rarityBandLabels[group.id])
-    .filter((label): label is string => label !== undefined)
-  return [...new Set(labels)].join(", ") || "Unbanded"
 }
 
 export const fishingProfiles = (
@@ -160,16 +140,6 @@ export const resolveMapEncounters = (
   }
 }
 
-const projectionFor = (
-  projection: CatalogWildEncounterProjection,
-  levelOffset: number,
-  rating: number,
-  authoredLevel: number,
-): number | null => {
-  const levels = projectionIndex(projection).levelsByOffsetAndRating.get(`${levelOffset}/${rating}`)
-  return levels?.[authoredLevel - projection.authoredLevel.minimum] ?? null
-}
-
 const profileFor = (
   method: CatalogWildEncounterMethod,
   fishingRod: string | null,
@@ -180,106 +150,66 @@ const profileFor = (
 
 const slotOutcomes = (
   projection: CatalogWildEncounterProjection,
-  method: CatalogWildEncounterMethod,
+  set: CatalogWildEncounterSet,
   slot: CatalogWildEncounterSlot,
   rating: number,
-  fishingRod: string | null,
 ): ProjectedEncounterOutcome[] => {
-  const profile = profileFor(method, fishingRod)
-  const speciesById = projectionIndex(projection).speciesById
-  const authoredSpecies = speciesById.get(slot.speciesId)
-  if (!profile || !authoredSpecies) return []
+  const { speciesByIndex, distributions } = projectionIndex(projection)
+  const rolled = distributions.get(`${slot.speciesId}/${set.place.regionClass}`)?.byPlaceLevel[
+    String(placeLevelAt(projection, set, rating))
+  ]
+  if (!rolled) return []
 
-  const rows: Array<ProjectedEncounterOutcome & { authoredLevel: number }> = []
-  for (
-    let authoredLevel = slot.runtimeMinLevel;
-    authoredLevel <= slot.runtimeMaxLevel;
-    authoredLevel += 1
-  ) {
-    const projectedLevel = projectionFor(projection, profile.levelOffset, rating, authoredLevel)
-    if (projectedLevel === null) continue
-    const outcome = authoredSpecies.outcomesByProjectedLevel.find(
-      (candidate) =>
-        projectedLevel >= candidate.minimumProjectedLevel &&
-        projectedLevel <= candidate.maximumProjectedLevel,
-    )
-    if (!outcome) continue
-    const effectiveSpecies = speciesById.get(outcome.effectiveSpecies)
-    rows.push({
-      authoredLevel,
-      authoredMinimumLevel: authoredLevel,
-      authoredMaximumLevel: authoredLevel,
-      projectedMinimumLevel: projectedLevel,
-      projectedMaximumLevel: projectedLevel,
-      speciesId: outcome.effectiveSpecies,
-      speciesLabel: effectiveSpecies?.speciesLabel ?? outcome.effectiveSpecies,
-      sprite: effectiveSpecies?.sprite ?? null,
-      eligible: outcome.eligible,
-      minimumOrdinaryWildLevel: outcome.minimumOrdinaryWildLevel,
-    })
+  const bySpecies = new Map<number, Map<number, number>>()
+  for (const [species, level, weight] of rolled) {
+    const levels = bySpecies.get(species) ?? new Map<number, number>()
+    levels.set(level, (levels.get(level) ?? 0) + weight)
+    bySpecies.set(species, levels)
   }
-
-  const ranges: ProjectedEncounterOutcome[] = []
-  for (const row of rows) {
-    const previous = ranges.at(-1)
-    if (
-      previous &&
-      previous.speciesId === row.speciesId &&
-      previous.eligible === row.eligible &&
-      previous.minimumOrdinaryWildLevel === row.minimumOrdinaryWildLevel &&
-      previous.authoredMaximumLevel + 1 === row.authoredLevel &&
-      row.projectedMinimumLevel >= previous.projectedMaximumLevel
-    ) {
-      previous.authoredMaximumLevel = row.authoredLevel
-      previous.projectedMinimumLevel = Math.min(
-        previous.projectedMinimumLevel,
-        row.projectedMinimumLevel,
-      )
-      previous.projectedMaximumLevel = Math.max(
-        previous.projectedMaximumLevel,
-        row.projectedMaximumLevel,
-      )
-    } else {
-      const { authoredLevel: _authoredLevel, ...range } = row
-      ranges.push(range)
+  const outcomes: ProjectedEncounterOutcome[] = []
+  for (const [species, levels] of bySpecies) {
+    const metadata = speciesByIndex[species]
+    if (!metadata) continue
+    let previous: ProjectedEncounterOutcome | undefined
+    for (const [level, weight] of [...levels].sort(([left], [right]) => left - right)) {
+      const chance = weight / projection.outcomeDenominator
+      if (previous && previous.projectedMaximumLevel + 1 === level) {
+        previous.projectedMaximumLevel = level
+        previous.chance += chance
+      } else {
+        previous = {
+          projectedMinimumLevel: level,
+          projectedMaximumLevel: level,
+          speciesId: metadata.speciesId,
+          speciesLabel: metadata.speciesLabel,
+          sprite: metadata.sprite,
+          chance,
+        }
+        outcomes.push(previous)
+      }
     }
   }
-  return ranges
+  return outcomes
 }
 
 export const resolveMethodSlots = (
   projection: CatalogWildEncounterProjection,
+  set: CatalogWildEncounterSet,
   method: CatalogWildEncounterMethod,
   rating: number,
   fishingRod: string | null = null,
 ): ResolvedEncounterSlot[] => {
-  const slots = visibleEncounterSlots(method)
-  const profileReference = profileFor(method, fishingRod)
-  const profile = profileReference
-    ? projectionIndex(projection).profilesByKey.get(profileReference.profileKey)
-    : undefined
-  const projected = slots.map((source) => {
-    const outcomes = slotOutcomes(projection, method, source, rating, fishingRod)
-    const rawWeight =
-      method.type === "fishing_mons" ? (profile?.weights?.[source.slotIndex] ?? 0) : source.slotRate
-    return {
-      source,
-      outcomes,
-      rawWeight,
-      fishingRod: method.type === "fishing_mons" ? fishingRod : null,
-      eligible:
-        source.speciesId !== "SPECIES_NONE" &&
-        rawWeight > 0 &&
-        outcomes.length > 0 &&
-        outcomes.every((row) => row.eligible),
-    }
-  })
-  const denominator = projected
-    .filter((slot) => slot.eligible)
-    .reduce((sum, slot) => sum + slot.rawWeight, 0)
+  const profile = profileFor(method, fishingRod)
+  const projected = method.slots.map((source) => ({
+    source,
+    outcomes: slotOutcomes(projection, set, source, rating),
+    rawWeight: profile?.weights[source.slotIndex] ?? 0,
+    fishingRod: method.type === "fishing_mons" ? fishingRod : null,
+  }))
+  const denominator = projected.reduce((sum, slot) => sum + slot.rawWeight, 0)
   return projected.map((slot) => ({
     ...slot,
-    selectionWeight: slot.eligible && denominator > 0 ? slot.rawWeight / denominator : null,
+    selectionWeight: denominator > 0 ? slot.rawWeight / denominator : 0,
   }))
 }
 
@@ -298,8 +228,8 @@ export const effectiveRosterFor = (
             ? fishingProfiles(method).map((profile) => profile.fishingRod)
             : [null]
         return profileRods.flatMap((fishingRod) =>
-          resolveMethodSlots(projection, method, rating, fishingRod).flatMap((slot) =>
-            slot.eligible ? slot.outcomes : [],
+          resolveMethodSlots(projection, set, method, rating, fishingRod).flatMap(
+            (slot) => slot.outcomes,
           ),
         )
       }),
@@ -343,19 +273,15 @@ export const resolveEncounterPopulation = (
   const sources = encounterSet.sets.flatMap((sourceSet) =>
     sourceSet.methods.flatMap((method, methodIndex) => {
       if (method.type !== methodType) return []
-      const slots = resolveMethodSlots(projection, method, rating)
-      const effectiveSlots = slots.filter(
-        (slot): slot is EncounterRosterSlot => slot.eligible && slot.selectionWeight !== null,
-      )
+      const slots = resolveMethodSlots(projection, sourceSet, method, rating)
       return [
         {
           key: `${sourceSet.product}/${sourceSet.baseLabel}/${sourceSet.source.path}${sourceSet.source.pointer}/${method.type}/${methodIndex}`,
           set: sourceSet,
           method,
           activations: activationsFor(encounterSet, sourceSet, methodType),
+          placeLevel: placeLevelAt(projection, sourceSet, rating),
           slots,
-          effectiveSlots,
-          lockedSlotCount: slots.length - effectiveSlots.length,
         },
       ]
     }),

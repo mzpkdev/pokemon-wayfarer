@@ -9,9 +9,12 @@ scenarios_regions.json is built from this output.
 """
 import json, os
 import walker as W
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../../../../game/tools/wild_encounters/v2'))
+import hm_model
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-META = json.load(open(os.path.join(HERE, 'data', 'meta.json')))
+META = json.load(open(os.path.join(hm_model.HERE, 'meta.json')))  # game/src/data/wild_encounters_v2/
 ARRIVALS = {
     'one_island': ('MAP_ONE_ISLAND_HARBOR', 8, 5), 'two_island': ('MAP_TWO_ISLAND_HARBOR', 8, 5),
     'three_island': ('MAP_THREE_ISLAND_HARBOR', 8, 5), 'four_island': ('MAP_FOUR_ISLAND_HARBOR', 8, 5),

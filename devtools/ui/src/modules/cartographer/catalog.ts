@@ -113,18 +113,8 @@ export type CatalogSourcePointer = {
 
 export type CatalogWildEncounterSlot = {
   slotIndex: number
-  slotRate: number
-  slotRateSource: CatalogSourcePointer
-  groups: Array<{
-    id: string
-    source: CatalogSourcePointer
-  }>
-  minLevel: number
-  maxLevel: number
-  runtimeMinLevel: number
-  runtimeMaxLevel: number
   speciesId: string
-  speciesLabel?: string
+  speciesLabel: string
   sprite: CatalogEncounterSprite | null
   source: CatalogSourcePointer
 }
@@ -137,15 +127,28 @@ export type CatalogEncounterSprite = {
   source: string
 }
 
+export type CatalogWildEncounterPlace = {
+  name: string
+  region: string
+  regionClass: "Other" | "Safari" | "Sinjoh"
+  reach: "Road" | "Wilds" | "Outlands" | "Dungeon"
+  dungeon: { intent: string; flat: boolean } | null
+  floor: number | null
+  floors: number | null
+  /** Place level at each Trainer Rating, from the projection's minimum rating upward. */
+  placeLevels: number[]
+}
+
 export type CatalogWildEncounterMethod = {
   type: "land_mons" | "water_mons" | "rock_smash_mons" | "fishing_mons"
   encounterRate: number
   source: CatalogSourcePointer
   slots: CatalogWildEncounterSlot[]
+  /** Slot weights: one profile for the table methods (rod NONE), one per rod for fishing. */
   profiles: Array<{
     profileKey: string
     fishingRod: string
-    levelOffset: number
+    weights: number[]
   }>
 }
 
@@ -154,16 +157,11 @@ export type CatalogWildEncounterSet = {
   mapName: string
   baseLabel: string
   product: string
-  runtimeTime: string
-  projectionAlias?: {
-    baseLabel: string
-    runtimeTime: "TIME_NIGHT"
-  }
-  header: {
-    groupLabel: string
-    groupIndex: number
-    headerIndex: number
-  }
+  /** The v2 table this set holds: Morning and Day use "day", Evening and Night use "night". */
+  runtimeTime: "day" | "night"
+  /** The Bug Contest weekday of a contest table, otherwise null. */
+  variant: string | null
+  place: CatalogWildEncounterPlace
   source: CatalogSourcePointer
   methods: CatalogWildEncounterMethod[]
 }
@@ -173,7 +171,7 @@ export type CatalogWildEncounterRuntimeTime = {
   timeOfDay: "morning" | "day" | "evening" | "night"
   methods: Array<{
     type: CatalogWildEncounterMethod["type"]
-    resolution: "direct" | "fallback" | "unavailable"
+    resolution: "direct" | "unavailable"
     sets: Array<{
       baseLabel: string
       source: CatalogSourcePointer
@@ -181,86 +179,30 @@ export type CatalogWildEncounterRuntimeTime = {
   }>
 }
 
+/** One rolled outcome of a slot: index into the projection's species list, level, weight out of outcomeDenominator. */
+export type CatalogWildEncounterOutcome = [species: number, level: number, weight: number]
+
 export type CatalogWildEncounterProjection = {
-  schemaVersion: 2
+  schemaVersion: 3
   trainerRating: { minimum: number; maximum: number }
-  authoredLevel: { minimum: number; maximum: number }
+  outcomeDenominator: number
   products: Array<{ id: string; displayName: string }>
-  levelProjections: Array<{
-    levelOffset: number
-    ratings: Array<{ rating: number; projectedLevels: number[] }>
-  }>
   species: Array<{
-    authoredSpecies: string
-    authoredSpeciesId: number
+    speciesId: string
     speciesLabel: string
     sprite: CatalogEncounterSprite | null
-    outcomesByProjectedLevel: Array<{
-      minimumProjectedLevel: number
-      maximumProjectedLevel: number
-      effectiveSpecies: string
-      eligible: boolean
-      minimumOrdinaryWildLevel: number
-    }>
   }>
-  profiles: Array<{
-    profileKey: string
-    product: string
-    map: string
-    baseLabel: string
-    header: string
-    headerId: number
-    runtimeTime: string
-    method: CatalogWildEncounterMethod["type"]
-    runtimeArea: string
-    fishingRod: string
-    runtimeFishingRod: string
-    levelOffset: number
-    encounterRate: number
-    authoredSlotCount: number
-    runtimeSlotCount: number
-    weights?: number[]
+  /** Exact outcomes of a slot species at each place level it can reach. */
+  distributions: Array<{
+    speciesId: string
+    regionClass: CatalogWildEncounterPlace["regionClass"]
+    byPlaceLevel: Record<string, CatalogWildEncounterOutcome[]>
   }>
-  headerCounts: Record<string, number>
 }
 
 export type CatalogWildEncounters = {
   sets: CatalogWildEncounterSet[]
   runtimeTimes: CatalogWildEncounterRuntimeTime[]
-  diagnostics: Array<
-    | {
-        code: "excluded_source_slot"
-        reason: "species_none" | "zero_slot_rate"
-        setBaseLabel: string
-        methodType: CatalogWildEncounterMethod["type"]
-        slotIndex: number
-        speciesId: string
-        slotRate: number
-        source: CatalogSourcePointer
-      }
-    | {
-        code: "unaddressable_source_slot"
-        reason: "outside_method_slot_table"
-        setBaseLabel: string
-        methodType: CatalogWildEncounterMethod["type"]
-        slotIndex: number
-        speciesId: string
-        minLevel: number
-        maxLevel: number
-        source: CatalogSourcePointer
-      }
-    | {
-        code: "invalid_source_slot"
-        reason: "invalid_level_range"
-        setBaseLabel: string
-        methodType: CatalogWildEncounterMethod["type"]
-        slotIndex: number
-        speciesId: string
-        minLevel: number
-        maxLevel: number
-        source: CatalogSourcePointer
-      }
-  >
 }
 
 export type CatalogEncounterHabitatRectangle = {
@@ -408,37 +350,10 @@ const hasSourcePointer = (value: unknown): value is CatalogSourcePointer => {
 }
 
 const wildEncounterTypes = ["land_mons", "water_mons", "rock_smash_mons", "fishing_mons"] as const
-const fishingRods = ["OLD_ROD", "GOOD_ROD", "SUPER_ROD"] as const
-
 const hasWildEncounterType = (value: unknown): value is CatalogWildEncounterMethod["type"] => {
   return (
     typeof value === "string" &&
     wildEncounterTypes.includes(value as CatalogWildEncounterMethod["type"])
-  )
-}
-
-const hasWildEncounterSlot = (value: unknown): value is CatalogWildEncounterSlot => {
-  const slot = asRecord(value)
-  return (
-    !!slot &&
-    hasInteger(slot.slotIndex) &&
-    hasNumber(slot.slotRate) &&
-    hasSourcePointer(slot.slotRateSource) &&
-    Array.isArray(slot.groups) &&
-    slot.groups.every((group) => {
-      const record = asRecord(group)
-      return !!record && hasString(record.id) && hasSourcePointer(record.source)
-    }) &&
-    hasInteger(slot.minLevel) &&
-    hasInteger(slot.maxLevel) &&
-    hasInteger(slot.runtimeMinLevel) &&
-    hasInteger(slot.runtimeMaxLevel) &&
-    slot.runtimeMinLevel === Math.min(slot.minLevel as number, slot.maxLevel as number) &&
-    slot.runtimeMaxLevel === Math.max(slot.minLevel as number, slot.maxLevel as number) &&
-    hasString(slot.speciesId) &&
-    (slot.speciesLabel === undefined || hasString(slot.speciesLabel)) &&
-    (slot.sprite === null || hasEncounterSprite(slot.sprite)) &&
-    hasSourcePointer(slot.source)
   )
 }
 
@@ -451,6 +366,40 @@ const hasEncounterSprite = (value: unknown): value is CatalogEncounterSprite => 
     hasInteger(sprite.widthPixels) &&
     hasInteger(sprite.heightPixels) &&
     hasString(sprite.source)
+  )
+}
+
+const hasWildEncounterSlot = (value: unknown): value is CatalogWildEncounterSlot => {
+  const slot = asRecord(value)
+  return (
+    !!slot &&
+    hasInteger(slot.slotIndex) &&
+    hasString(slot.speciesId) &&
+    hasString(slot.speciesLabel) &&
+    (slot.sprite === null || hasEncounterSprite(slot.sprite)) &&
+    hasSourcePointer(slot.source)
+  )
+}
+
+const wildEncounterReaches = ["Road", "Wilds", "Outlands", "Dungeon"]
+const wildEncounterRegionClasses = ["Other", "Safari", "Sinjoh"]
+
+const hasWildEncounterPlace = (value: unknown): value is CatalogWildEncounterPlace => {
+  const place = asRecord(value)
+  const dungeon = asRecord(place?.dungeon)
+  return (
+    !!place &&
+    hasString(place.name) &&
+    hasString(place.region) &&
+    wildEncounterRegionClasses.includes(place.regionClass as string) &&
+    wildEncounterReaches.includes(place.reach as string) &&
+    (place.reach === "Dungeon"
+      ? !!dungeon && hasString(dungeon.intent) && typeof dungeon.flat === "boolean"
+      : place.dungeon === null) &&
+    (place.floor === null || hasInteger(place.floor)) &&
+    (place.floors === null || hasInteger(place.floors)) &&
+    Array.isArray(place.placeLevels) &&
+    place.placeLevels.every((level) => hasInteger(level) && level >= 1 && level <= 100)
   )
 }
 
@@ -470,7 +419,8 @@ const hasWildEncounterMethod = (value: unknown): value is CatalogWildEncounterMe
         !!record &&
         hasString(record.profileKey) &&
         hasString(record.fishingRod) &&
-        hasInteger(record.levelOffset)
+        Array.isArray(record.weights) &&
+        record.weights.every((weight) => hasInteger(weight) && weight > 0)
       )
     })
   )
@@ -478,48 +428,18 @@ const hasWildEncounterMethod = (value: unknown): value is CatalogWildEncounterMe
 
 const hasWildEncounterSet = (value: unknown): value is CatalogWildEncounterSet => {
   const set = asRecord(value)
-  const projectionAlias = asRecord(set?.projectionAlias)
   return (
     !!set &&
     hasString(set.mapId) &&
     hasString(set.mapName) &&
     hasString(set.baseLabel) &&
     hasString(set.product) &&
-    hasString(set.runtimeTime) &&
-    (set.projectionAlias === undefined ||
-      (!!projectionAlias &&
-        hasString(projectionAlias.baseLabel) &&
-        projectionAlias.runtimeTime === "TIME_NIGHT")) &&
-    !!asRecord(set.header) &&
-    hasString(asRecord(set.header)?.groupLabel) &&
-    hasInteger(asRecord(set.header)?.groupIndex) &&
-    hasInteger(asRecord(set.header)?.headerIndex) &&
+    (set.runtimeTime === "day" || set.runtimeTime === "night") &&
+    (set.variant === null || hasString(set.variant)) &&
+    hasWildEncounterPlace(set.place) &&
     hasSourcePointer(set.source) &&
     Array.isArray(set.methods) &&
     set.methods.every(hasWildEncounterMethod)
-  )
-}
-
-const isWayfarerNightProjectionAlias = (
-  set: CatalogWildEncounterSet,
-  method: CatalogWildEncounterMethod,
-  reference: CatalogWildEncounterMethod["profiles"][number],
-  profile: CatalogWildEncounterProjection["profiles"][number],
-): boolean => {
-  const alias = set.projectionAlias
-  return (
-    set.product === "POKEMON_WAYFARER" &&
-    set.runtimeTime === "night" &&
-    set.baseLabel.endsWith("_Wayfarer_Night") &&
-    alias?.runtimeTime === "TIME_NIGHT" &&
-    alias.baseLabel === set.baseLabel.replace(/_Night$/, "_Day") &&
-    profile.product === set.product &&
-    profile.map === set.mapId &&
-    profile.baseLabel === alias.baseLabel &&
-    profile.runtimeTime === "TIME_DAY" &&
-    profile.method === method.type &&
-    profile.fishingRod === reference.fishingRod &&
-    profile.levelOffset === reference.levelOffset
   )
 }
 
@@ -538,9 +458,7 @@ const hasWildEncounterRuntimeTime = (value: unknown): value is CatalogWildEncoun
       return (
         !!record &&
         hasWildEncounterType(record.type) &&
-        (record.resolution === "direct" ||
-          record.resolution === "fallback" ||
-          record.resolution === "unavailable") &&
+        (record.resolution === "direct" || record.resolution === "unavailable") &&
         Array.isArray(record.sets) &&
         record.sets.every((set) => {
           const setRecord = asRecord(set)
@@ -554,14 +472,19 @@ const hasWildEncounterRuntimeTime = (value: unknown): value is CatalogWildEncoun
 
 const wildEncounterProjectionIssue = (value: unknown): string | null => {
   const projection = asRecord(value)
-  if (!projection || projection.schemaVersion !== 2) return "must use projection schemaVersion 2"
-  const trainerRating = asRecord(projection?.trainerRating)
-  const authoredLevel = asRecord(projection?.authoredLevel)
-  if (trainerRating?.minimum !== 0 || trainerRating.maximum !== 80) {
-    return "trainerRating must cover 0 through 80"
+  if (!projection || projection.schemaVersion !== 3) return "must use projection schemaVersion 3"
+  const trainerRating = asRecord(projection.trainerRating)
+  if (
+    !trainerRating ||
+    !hasInteger(trainerRating.minimum) ||
+    !hasInteger(trainerRating.maximum) ||
+    trainerRating.minimum !== 0 ||
+    trainerRating.maximum < trainerRating.minimum
+  ) {
+    return "trainerRating must start at 0"
   }
-  if (authoredLevel?.minimum !== 1 || authoredLevel.maximum !== 100) {
-    return "authoredLevel must cover 1 through 100"
+  if (!hasInteger(projection.outcomeDenominator) || projection.outcomeDenominator < 1) {
+    return "outcomeDenominator must be a positive integer"
   }
   if (!Array.isArray(projection.products) || projection.products.length === 0) {
     return "products must be a non-empty array"
@@ -576,38 +499,6 @@ const wildEncounterProjectionIssue = (value: unknown): string | null => {
     productIds.add(record.id)
   }
 
-  if (!Array.isArray(projection.levelProjections) || projection.levelProjections.length === 0) {
-    return "levelProjections must be a non-empty array"
-  }
-  const offsets = new Set<number>()
-  for (const tableValue of projection.levelProjections) {
-    const table = asRecord(tableValue)
-    if (!table || !hasInteger(table.levelOffset) || !Array.isArray(table.ratings)) {
-      return "levelProjections contains an invalid offset table"
-    }
-    if (offsets.has(table.levelOffset))
-      return `contains duplicate level offset ${table.levelOffset}`
-    offsets.add(table.levelOffset)
-    if (table.ratings.length !== 81)
-      return `level offset ${table.levelOffset} must contain 81 ratings`
-    for (const [ratingIndex, ratingValue] of table.ratings.entries()) {
-      const row = asRecord(ratingValue)
-      const expectedRating = ratingIndex
-      if (
-        !row ||
-        row.rating !== expectedRating ||
-        !Array.isArray(row.projectedLevels) ||
-        row.projectedLevels.length !== 100 ||
-        !row.projectedLevels.every(
-          (level) => hasInteger(level) && (level as number) >= 1 && (level as number) <= 100,
-        )
-      ) {
-        return `level offset ${table.levelOffset} has an invalid rating ${expectedRating} row`
-      }
-    }
-  }
-  if (!offsets.has(0)) return "levelProjections must contain offset 0"
-
   if (!Array.isArray(projection.species) || projection.species.length === 0) {
     return "species must be a non-empty array"
   }
@@ -616,128 +507,59 @@ const wildEncounterProjectionIssue = (value: unknown): string | null => {
     const species = asRecord(speciesValue)
     if (
       !species ||
-      !hasString(species.authoredSpecies) ||
-      !hasInteger(species.authoredSpeciesId) ||
+      !hasString(species.speciesId) ||
       !hasString(species.speciesLabel) ||
-      (species.sprite !== null && !hasEncounterSprite(species.sprite)) ||
-      !Array.isArray(species.outcomesByProjectedLevel) ||
-      species.outcomesByProjectedLevel.length === 0
+      (species.sprite !== null && !hasEncounterSprite(species.sprite))
     ) {
       return "species contains an invalid metadata row"
     }
-    if (speciesIds.has(species.authoredSpecies)) {
-      return `contains duplicate species ${species.authoredSpecies}`
-    }
-    speciesIds.add(species.authoredSpecies)
-  }
-  for (const speciesValue of projection.species) {
-    const species = asRecord(speciesValue)!
-    let expectedMinimum = 1
-    for (const outcomeValue of species.outcomesByProjectedLevel as unknown[]) {
-      const outcome = asRecord(outcomeValue)
-      if (
-        !outcome ||
-        outcome.minimumProjectedLevel !== expectedMinimum ||
-        !hasInteger(outcome.maximumProjectedLevel) ||
-        outcome.maximumProjectedLevel < expectedMinimum ||
-        outcome.maximumProjectedLevel > 100 ||
-        !hasString(outcome.effectiveSpecies) ||
-        !speciesIds.has(outcome.effectiveSpecies) ||
-        typeof outcome.eligible !== "boolean" ||
-        !hasInteger(outcome.minimumOrdinaryWildLevel) ||
-        outcome.minimumOrdinaryWildLevel < 1 ||
-        outcome.minimumOrdinaryWildLevel > 100
-      ) {
-        return `${String(species.authoredSpecies)} has invalid or incomplete outcome intervals`
-      }
-      expectedMinimum = outcome.maximumProjectedLevel + 1
-    }
-    if (expectedMinimum !== 101) {
-      return `${String(species.authoredSpecies)} outcomes must cover levels 1 through 100`
-    }
+    if (speciesIds.has(species.speciesId)) return `contains duplicate species ${species.speciesId}`
+    speciesIds.add(species.speciesId)
   }
 
-  if (!Array.isArray(projection.profiles) || projection.profiles.length === 0) {
-    return "profiles must be a non-empty array"
+  if (!Array.isArray(projection.distributions) || projection.distributions.length === 0) {
+    return "distributions must be a non-empty array"
   }
-  const profileKeys = new Set<string>()
-  for (const profileValue of projection.profiles) {
-    const profile = asRecord(profileValue)
+  const distributionKeys = new Set<string>()
+  for (const distributionValue of projection.distributions) {
+    const distribution = asRecord(distributionValue)
+    const byPlaceLevel = asRecord(distribution?.byPlaceLevel)
     if (
-      !profile ||
-      !hasString(profile.profileKey) ||
-      !hasString(profile.product) ||
-      !productIds.has(profile.product) ||
-      !hasString(profile.map) ||
-      !hasString(profile.baseLabel) ||
-      !hasString(profile.header) ||
-      !hasInteger(profile.headerId) ||
-      !hasString(profile.runtimeTime) ||
-      !hasWildEncounterType(profile.method) ||
-      !hasString(profile.runtimeArea) ||
-      !hasString(profile.fishingRod) ||
-      !hasString(profile.runtimeFishingRod) ||
-      !hasInteger(profile.levelOffset) ||
-      !offsets.has(profile.levelOffset) ||
-      !hasInteger(profile.encounterRate) ||
-      !hasInteger(profile.authoredSlotCount) ||
-      !hasInteger(profile.runtimeSlotCount) ||
-      profile.profileKey !==
-        `${profile.product}/${profile.baseLabel}/${profile.method}/${profile.fishingRod}`
+      !distribution ||
+      !byPlaceLevel ||
+      !hasString(distribution.speciesId) ||
+      !speciesIds.has(distribution.speciesId) ||
+      !wildEncounterRegionClasses.includes(distribution.regionClass as string)
     ) {
-      return "profiles contains an invalid runtime profile"
+      return "distributions contains an invalid row"
     }
-    if (profile.method === "fishing_mons") {
-      if (
-        !fishingRods.includes(profile.fishingRod as (typeof fishingRods)[number]) ||
-        profile.runtimeSlotCount !== 10 ||
-        !Array.isArray(profile.weights) ||
-        profile.weights.length !== 10 ||
-        !profile.weights.every((weight) => hasInteger(weight) && weight > 0) ||
-        profile.weights.reduce((sum, weight) => sum + (weight as number), 0) !== 100
-      ) {
-        return `${profile.profileKey} must contain 10 positive integer weights totaling 100`
+    const key = `${distribution.speciesId}/${distribution.regionClass}`
+    if (distributionKeys.has(key)) return `contains duplicate distribution ${key}`
+    distributionKeys.add(key)
+    for (const [level, outcomes] of Object.entries(byPlaceLevel)) {
+      const weight = Array.isArray(outcomes)
+        ? outcomes.reduce<number>(
+            (sum, outcome) =>
+              Array.isArray(outcome) &&
+              hasInteger(outcome[0]) &&
+              outcome[0] >= 0 &&
+              outcome[0] < (projection.species as unknown[]).length &&
+              hasInteger(outcome[1]) &&
+              outcome[1] >= 1 &&
+              outcome[1] <= 100 &&
+              hasInteger(outcome[2]) &&
+              outcome[2] > 0
+                ? sum + outcome[2]
+                : Number.NaN,
+            0,
+          )
+        : Number.NaN
+      if (!/^\d+$/.test(level) || weight !== projection.outcomeDenominator) {
+        return `${key} has an invalid outcome list at place level ${level}`
       }
-    } else if (profile.fishingRod !== "NONE" || "weights" in profile) {
-      return `${profile.profileKey} must use NONE and must not contain fishing weights`
     }
-    if (profileKeys.has(profile.profileKey))
-      return `contains duplicate profile ${profile.profileKey}`
-    profileKeys.add(profile.profileKey)
-  }
-  const headerCounts = asRecord(projection.headerCounts)
-  if (!headerCounts || [...productIds].some((product) => !hasInteger(headerCounts[product]))) {
-    return "headerCounts must cover every product"
   }
   return null
-}
-
-const hasWildEncounterDiagnostics = (value: unknown): boolean => {
-  return (
-    Array.isArray(value) &&
-    value.every((diagnostic) => {
-      const record = asRecord(diagnostic)
-      const hasCommonSourceSlotFields =
-        !!record &&
-        hasString(record.setBaseLabel) &&
-        hasWildEncounterType(record.methodType) &&
-        hasInteger(record.slotIndex) &&
-        hasString(record.speciesId) &&
-        hasSourcePointer(record.source)
-      return (
-        (record?.code === "excluded_source_slot" &&
-          (record.reason === "species_none" || record.reason === "zero_slot_rate") &&
-          hasNumber(record.slotRate) &&
-          hasCommonSourceSlotFields) ||
-        ((record?.code === "unaddressable_source_slot" || record?.code === "invalid_source_slot") &&
-          (record.reason === "outside_method_slot_table" ||
-            record.reason === "invalid_level_range") &&
-          hasInteger(record.minLevel) &&
-          hasInteger(record.maxLevel) &&
-          hasCommonSourceSlotFields)
-      )
-    })
-  )
 }
 
 const hasWildEncounters = (value: unknown): value is CatalogWildEncounters => {
@@ -747,8 +569,7 @@ const hasWildEncounters = (value: unknown): value is CatalogWildEncounters => {
     Array.isArray(encounters.sets) &&
     encounters.sets.every(hasWildEncounterSet) &&
     Array.isArray(encounters.runtimeTimes) &&
-    encounters.runtimeTimes.every(hasWildEncounterRuntimeTime) &&
-    hasWildEncounterDiagnostics(encounters.diagnostics)
+    encounters.runtimeTimes.every(hasWildEncounterRuntimeTime)
   )
 }
 
@@ -858,9 +679,9 @@ export const validateCatalog = (value: unknown): MapCatalog => {
   if (!root) {
     throw new CatalogValidationError(["catalog must be an object."], "The map catalog is invalid.")
   }
-  if (root.schemaVersion !== 10) {
+  if (root.schemaVersion !== 11) {
     details.push(
-      "schemaVersion must be 10. Regenerate the catalog with pnpm run cartographer:catalog.",
+      "schemaVersion must be 11. Regenerate the catalog with pnpm run cartographer:catalog.",
     )
   }
   const projectionIssue = wildEncounterProjectionIssue(root.wildEncounterProjection)
@@ -916,12 +737,16 @@ export const validateCatalog = (value: unknown): MapCatalog => {
   const projectionProducts = new Set(
     catalog.wildEncounterProjection.products.map((product) => product.id),
   )
-  const projectionSpecies = new Set(
-    catalog.wildEncounterProjection.species.map((species) => species.authoredSpecies),
+  const projectionDistributions = new Map(
+    catalog.wildEncounterProjection.distributions.map((distribution) => [
+      `${distribution.speciesId}/${distribution.regionClass}`,
+      distribution,
+    ]),
   )
-  const projectionProfiles = new Map(
-    catalog.wildEncounterProjection.profiles.map((profile) => [profile.profileKey, profile]),
-  )
+  const ratingCount =
+    catalog.wildEncounterProjection.trainerRating.maximum -
+    catalog.wildEncounterProjection.trainerRating.minimum +
+    1
   for (const map of catalog.maps) {
     if (!hasString(map.name) || !hasString(map.id) || !hasString(map.region)) {
       details.push("every map needs a name, id, and region.")
@@ -980,54 +805,39 @@ export const validateCatalog = (value: unknown): MapCatalog => {
             `${map.name} wildEncounters[${setIndex}] uses unknown product ${set.product}.`,
           )
         }
+        if (set.place.placeLevels.length !== ratingCount) {
+          details.push(`${set.baseLabel} place levels must cover the Trainer Rating range.`)
+        }
         for (const method of set.methods) {
-          if (method.profiles.length === 0) {
-            details.push(`${set.baseLabel} ${method.type} has no projection profiles.`)
+          const expectedRods =
+            method.type === "fishing_mons" ? ["GOOD_ROD", "OLD_ROD", "SUPER_ROD"] : ["NONE"]
+          const rods = method.profiles.map((profile) => profile.fishingRod).sort()
+          if (
+            rods.length !== expectedRods.length ||
+            rods.some((rod, index) => rod !== expectedRods[index])
+          ) {
+            details.push(
+              `${set.baseLabel} ${method.type} must have ${method.type === "fishing_mons" ? "Old, Good, and Super Rod weights" : "one weight list"}.`,
+            )
           }
-          if (method.type === "fishing_mons") {
-            const rods = method.profiles.map((profile) => profile.fishingRod).sort()
-            const expectedRods = ["GOOD_ROD", "OLD_ROD", "SUPER_ROD"]
-            if (
-              rods.length !== expectedRods.length ||
-              rods.some((rod, index) => rod !== expectedRods[index])
-            ) {
-              details.push(
-                `${set.baseLabel} fishing_mons must reference Old, Good, and Super Rod profiles.`,
-              )
-            }
-            const slotIndices = method.slots.map((slot) => slot.slotIndex).sort((a, b) => a - b)
-            if (
-              slotIndices.length !== 10 ||
-              slotIndices.some((slotIndex, index) => slotIndex !== index)
-            ) {
-              details.push(`${set.baseLabel} fishing_mons must retain slots 0 through 9.`)
-            }
-          }
-          for (const reference of method.profiles) {
-            const profile = projectionProfiles.get(reference.profileKey)
-            const expectedRuntimeTime = `TIME_${set.runtimeTime.toUpperCase()}`
-            const exactProfile =
-              !!profile &&
-              profile.product === set.product &&
-              profile.map === set.mapId &&
-              profile.baseLabel === set.baseLabel &&
-              profile.runtimeTime === expectedRuntimeTime &&
-              profile.method === method.type &&
-              profile.fishingRod === reference.fishingRod &&
-              profile.levelOffset === reference.levelOffset
-            if (
-              !exactProfile &&
-              (!profile || !isWayfarerNightProjectionAlias(set, method, reference, profile))
-            ) {
-              details.push(
-                `${set.baseLabel} ${method.type} has invalid projection profile ${reference.profileKey}.`,
-              )
+          for (const profile of method.profiles) {
+            if (method.slots.some((slot) => slot.slotIndex >= profile.weights.length)) {
+              details.push(`${set.baseLabel} ${method.type} has a slot without a weight.`)
             }
           }
           for (const slot of method.slots) {
-            if (!projectionSpecies.has(slot.speciesId)) {
+            const distribution = projectionDistributions.get(
+              `${slot.speciesId}/${set.place.regionClass}`,
+            )
+            if (!distribution) {
               details.push(
-                `${set.baseLabel} ${method.type} slot ${slot.slotIndex} has no species projection for ${slot.speciesId}.`,
+                `${set.baseLabel} ${method.type} slot ${slot.slotIndex} has no outcome distribution for ${slot.speciesId}.`,
+              )
+            } else if (
+              set.place.placeLevels.some((level) => !(String(level) in distribution.byPlaceLevel))
+            ) {
+              details.push(
+                `${set.baseLabel} ${method.type} slot ${slot.slotIndex} lacks outcomes at a place level of ${slot.speciesId}.`,
               )
             }
           }

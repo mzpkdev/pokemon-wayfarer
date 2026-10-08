@@ -9,6 +9,7 @@
 #include "constants/maps.h"
 #include "pokemon_storage_system.h"
 #include "random.h"
+#include "rtc.h"
 #include "pokemon.h"
 #include "item.h"
 #include "battle.h"
@@ -23,6 +24,39 @@ static bool8 sBugContestTimerActive;
 bool32 GetBugContestFlag(void)
 {
     return FlagGet(FLAG_SYS_BUG_CONTEST_MODE);
+}
+
+// The contest is held on Tuesday, Thursday and Saturday, each with its own wild
+// table, in that order. A day without a contest keeps the table of the most recent
+// contest day, so a contest running past midnight does not change its table.
+u32 GetBugContestTableIndex(void)
+{
+    switch (GetDayOfWeek())
+    {
+    case WEEKDAY_THU:
+    case WEEKDAY_FRI:
+        return 1;
+    case WEEKDAY_SAT:
+    case WEEKDAY_SUN:
+    case WEEKDAY_MON:
+        return 2;
+    default:
+        return 0;
+    }
+}
+
+// TRUE when the contest is held today.
+bool8 IsBugContestHeldToday(void)
+{
+    enum Weekday day = GetDayOfWeek();
+
+    return day == WEEKDAY_TUE || day == WEEKDAY_THU || day == WEEKDAY_SAT;
+}
+
+// Script callnative: VAR_RESULT is TRUE when the contest is held today.
+void BugContest_CheckHeldToday(struct ScriptContext *ctx)
+{
+    gSpecialVar_Result = IsBugContestHeldToday();
 }
 
 void BugContestRetirePrompt(void)
@@ -228,6 +262,9 @@ bool8 JudgeBugContestMon(void) { return FALSE; }
 bool8 RemoveSportBalls(void) { return FALSE; }
 bool8 ShowBugContestChosenMon(void) { return FALSE; }
 bool32 GetBugContestFlag(void) { return FALSE; }
+u32 GetBugContestTableIndex(void) { return 0; }
+bool8 IsBugContestHeldToday(void) { return FALSE; }
+void BugContest_CheckHeldToday(struct ScriptContext *ctx) { gSpecialVar_Result = FALSE; }
 void CB2_EndBugContestBattle(void) {}
 bool8 BugContestCheckTimeLimit(void) { return FALSE; }
 const u8 BugContest_EventScript_WhiteOut[] = {0};

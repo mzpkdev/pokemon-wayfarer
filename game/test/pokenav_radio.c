@@ -3,52 +3,42 @@
 #include "test/test.h"
 #include "trainer_rating.h"
 #include "wild_encounter.h"
+#include "constants/maps.h"
 
 #if IS_HNS
 bool8 PickOakPokemonTalkSpeciesForTesting(u16 headerId, enum TimeOfDay timeOfDay, u8 firstSlot, u16 *species);
 
-static bool8 FindWildHeaderForMap(u16 map, u16 *headerId)
+TEST("Oak's Pokemon Talk names the likeliest species of its slot from the day or night distribution")
 {
-    u16 candidate;
+    static const u16 sRatings[] = { 0, 40, 80, 160 };
+    static const enum TimeOfDay sTimes[] = { TIME_MORNING, TIME_DAY, TIME_EVENING, TIME_NIGHT };
+    u32 header = GetWildMonHeaderIdForMap(MAP_GROUP(MAP_ROUTE30_HNS), MAP_NUM(MAP_ROUTE30_HNS));
+    u32 r, t, slot, i;
 
-    for (candidate = 0; gWildMonHeaders[candidate].mapGroup != MAP_GROUP(MAP_UNDEFINED); candidate++)
+    EXPECT_NE(header, HEADER_NONE);
+    for (r = 0; r < ARRAY_COUNT(sRatings); r++)
     {
-        u16 headerMap = (gWildMonHeaders[candidate].mapGroup << 8) | gWildMonHeaders[candidate].mapNum;
-
-        if (headerMap == map)
+        SetTrainerRating(sRatings[r]);
+        for (t = 0; t < ARRAY_COUNT(sTimes); t++)
         {
-            *headerId = candidate;
-            return TRUE;
+            struct WildEncounterProfileContext context = { header, sTimes[t], WILD_AREA_LAND, WILD_ENCOUNTER_FISHING_ROD_NONE };
+            struct WildEncounterProfileView view;
+
+            EXPECT(GetWildEncounterProfileView(&context, &view));
+            for (slot = 2; slot <= 4; slot++)
+            {
+                struct WildEncounterSlotOutcome outcomes[WILD_ENCOUNTER_MAX_SLOT_OUTCOMES];
+                u32 count = GetCurrentWildEncounterSlotOutcomes(&view, slot, outcomes);
+                u16 species = SPECIES_NONE;
+                bool32 inDistribution = FALSE;
+
+                EXPECT(PickOakPokemonTalkSpeciesForTesting(header, sTimes[t], slot, &species));
+                for (i = 0; i < count; i++)
+                    inDistribution |= outcomes[i].species == species;
+                EXPECT(inDistribution);
+                EXPECT_EQ(species, GetCurrentWildEncounterSlotLikelySpecies(&view, slot));
+            }
         }
     }
-
-    return FALSE;
-}
-
-TEST("Oak's Pokemon Talk announces an eligible effective species from a rebalanced Johto slot")
-{
-    struct WildEncounterProfileContext context;
-    struct WildEncounterProfileView view;
-    const struct WildPokemon *entry;
-    u16 headerId = HEADER_NONE;
-    u16 species = SPECIES_NONE;
-    u8 trainerRating;
-
-    SetTrainerRating(TRAINER_RATING_MIN);
-    trainerRating = GetTrainerRating();
-    ASSUME(trainerRating == ClampTrainerRating(TRAINER_RATING_MIN));
-    ASSUME(FindWildHeaderForMap(MAP_ROUTE30_HNS, &headerId));
-
-    context.headerId = headerId;
-    context.timeOfDay = TIME_DAY;
-    context.area = WILD_AREA_LAND;
-    context.fishingRod = WILD_ENCOUNTER_FISHING_ROD_NONE;
-    ASSUME(GetWildEncounterProfileView(&context, &view));
-    ASSUME(GetWildEncounterProfileEntry(&view, 2, &entry));
-
-    EXPECT_EQ(entry->species, SPECIES_LEDYBA);
-    EXPECT(IsWildEncounterProfileSlotEligible(&view, 2, trainerRating, FALSE));
-    EXPECT(PickOakPokemonTalkSpeciesForTesting(headerId, TIME_DAY, 2, &species));
-    EXPECT_EQ(species, SPECIES_LEDYBA);
 }
 #endif

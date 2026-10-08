@@ -603,6 +603,7 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
   it("selects ordinary Power Plant encounters while traversing live floor tiles", async () => {
     await arrangeAt(game, { map: hall, x: 3, y: 11 }, "right", {
       encounters: true,
+      vars: { trainerRating: 0 },
       flags: { powerPlantZapdosHidden: true, powerPlantZapdosResolved: true },
     })
     const directions = ["right", "down", "left", "up"] as const
@@ -627,7 +628,11 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
     expect(movedSteps).toBeGreaterThan(0)
     await game.wait.until((state) => state.battle.active, "Power Plant wild encounter", 300)
     await waitForBattle(game, "Power Plant wild encounter")
-    expect(["voltorb", "magnemite", "pikachu", "magneton", "electabuzz"]).toContain(
+    // At the pinned trainerRating 0 the place level is 10, so the v2 rules
+    // (game/tools/wild_encounters/v2/hm_model.py slot_dist over MAP_POWER_PLANT's
+    // day and night land tables) produce only these species. Time of day is not
+    // pinned, so both tables count; Elekid is the night baby slot.
+    expect(["voltorb", "magnemite", "pikachu", "electabuzz", "elekid", "porygon"]).toContain(
       (await game.state.read()).battle.enemy?.species,
     )
     await game.battle.win()

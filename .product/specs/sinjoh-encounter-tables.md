@@ -1,7 +1,7 @@
 # Sinjoh encounter tables
 
 PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
-Implemented: No
+Implemented: Yes (Wayfarer)
 
 Design status: v0 approved. These tables follow the
 [Sinjoh encounter rules](sinjoh-encounters.md). They are the source of truth for

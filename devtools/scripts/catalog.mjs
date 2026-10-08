@@ -49,8 +49,7 @@ export const generateCatalog = () => {
   childProcess.execFileSync(
     "python3",
     [
-      path.join(gameRoot, "tools/wild_encounters/wild_encounters_to_header.py"),
-      "--cartographer-projection",
+      path.join(gameRoot, "tools/wild_encounters/v2/cartographer_projection.py"),
       wildEncounterProjection,
     ],
     { cwd: gameRoot, stdio: "inherit" },

@@ -895,6 +895,14 @@ export const species = {
   nidoking: 34,
   zapdos: 145,
   moltres: 146,
+  misdreavus: 200,
+  murkrow: 198,
+  honchkrow: 430,
+  raichu: 26,
+  elekid: 239,
+  electivire: 466,
+  magnezone: 462,
+  porygon: 137,
 } as const
 
 export const moves = {

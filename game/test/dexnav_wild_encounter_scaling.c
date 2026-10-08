@@ -1,13 +1,9 @@
 #include "global.h"
 #include "dexnav.h"
-#include "event_data.h"
 #include "test/test.h"
 #include "trainer_rating.h"
-#include "league_circuit.h"
-#include "wayfarer_persistence.h"
-#include "config/notable_trainers.h"
-#include "constants/regions.h"
 #include "wild_encounter.h"
+#include "constants/maps.h"
 
 static const struct WildPokemon sDexNavNormalMons[] =
 {
@@ -49,60 +45,8 @@ static struct WildEncounterProfileView MakeDexNavNormalProfile(void)
     };
 }
 
-static u32 ResetDexNavTrainerRating(void)
+TEST("DexNav leaves hidden data raw")
 {
-#if WAYFARER_V0_TRAINERS
-    for (u32 index = 0; index < 24; index++)
-        SetBadgeStateForRegion(REGION_KANTO + index / 8, index % 8, FALSE);
-#endif
-    FlagClear(FLAG_BADGE01_GET);
-    FlagClear(FLAG_BADGE02_GET);
-    FlagClear(FLAG_BADGE03_GET);
-    FlagClear(FLAG_BADGE04_GET);
-    FlagClear(FLAG_BADGE05_GET);
-    FlagClear(FLAG_BADGE06_GET);
-    FlagClear(FLAG_BADGE07_GET);
-    FlagClear(FLAG_BADGE08_GET);
-
-#if IS_HNS
-    FlagClear(FLAG_BADGE09_GET);
-    FlagClear(FLAG_BADGE10_GET);
-    FlagClear(FLAG_BADGE11_GET);
-    FlagClear(FLAG_BADGE12_GET);
-    FlagClear(FLAG_BADGE13_GET);
-    FlagClear(FLAG_BADGE14_GET);
-    FlagClear(FLAG_BADGE15_GET);
-    FlagClear(FLAG_BADGE16_GET);
-    FlagClear(FLAG_IS_KANTO_CHAMPION);
-#endif
-
-#if IS_FRLG
-    FlagClear(FLAG_SYS_GAME_CLEAR);
-    FlagClear(FLAG_RECOVERED_SAPPHIRE);
-#else
-    FlagClear(FLAG_IS_CHAMPION);
-#endif
-    SetTrainerRating(TRAINER_RATING_MIN);
-    return GetTrainerRating();
-}
-
-TEST("DexNav leaves hidden data raw while ordinary profiles use effective species")
-{
-    struct WildEncounterProfileView profile = MakeDexNavNormalProfile();
-    struct WildEncounterSpeciesOutcome outcome;
-    u32 trainerRating;
-
-    trainerRating = ResetDexNavTrainerRating();
-    EXPECT_EQ(GetTrainerRating(), trainerRating);
-
-    // The normal UI list and ordinary detector fallback both resolve entries
-    // through this effective profile boundary. The authored-under-threshold
-    // Gyarados reverses to Magikarp at the minimum Trainer Rating.
-    EXPECT(DexNavGetEffectiveProfileOutcomeForTesting(&profile, 0, 10, &outcome));
-    EXPECT_EQ(outcome.species, SPECIES_MAGIKARP);
-
-    // Hidden DexNav has no ordinary-profile projection and continues to read
-    // its authored source directly.
     EXPECT_EQ(DexNavGetHiddenProfileSpeciesForTesting(&sDexNavHiddenInfo, 0), SPECIES_VENUSAUR);
     EXPECT_EQ(DexNavGetHiddenProfileSpeciesForTesting(&sDexNavHiddenInfo, HIDDEN_WILD_COUNT), SPECIES_NONE);
 }
@@ -111,46 +55,117 @@ TEST("DexNav ordinary detector fallback mirrors the eligible profile only for lu
 {
     struct WildEncounterProfileView profile = MakeDexNavNormalProfile();
     u8 slot;
-    u32 trainerRating;
 
-    trainerRating = ResetDexNavTrainerRating();
-    EXPECT_EQ(GetTrainerRating(), trainerRating);
-
-    // The ordinary fallback first does its normal weighted pick (slot 0 for
-    // roll 0), then a 0 or 1 lure roll reverses its eligible slot sequence.
     EXPECT(DexNavSelectProfileFallbackSlotWithRollsForTesting(&profile, 0, TRUE, 1, &slot));
     EXPECT_EQ(slot, 1);
-
-    // A non-triggering lure roll preserves that weighted selection, while a
-    // different weighted result mirrors in the opposite direction.
     EXPECT(DexNavSelectProfileFallbackSlotWithRollsForTesting(&profile, 0, TRUE, 2, &slot));
     EXPECT_EQ(slot, 0);
     EXPECT(DexNavSelectProfileFallbackSlotWithRollsForTesting(&profile, 70, TRUE, 0, &slot));
     EXPECT_EQ(slot, 0);
 }
 
-TEST("DexNav selected species preserve conditional raw source and level weights")
+#if IS_WAYFARER
+// DexNav's species search draws from the same exact distribution the encounter rolls: every
+// (level) of a species has the mass slot weight times outcome weight, as the slot outcomes give.
+TEST("DexNav species search follows the slot outcome distribution at the current Trainer Rating")
 {
-    struct WildEncounterProfileView profile = MakeDexNavNormalProfile();
-    struct WildEncounterSpeciesOutcome outcome;
-    bool8 accepted;
-    u32 trainerRating;
+    static const u16 sRatings[] = { 0, 40, 60, 160 };
+    static const u8 weights[] = { 70, 30 };
+    struct WildPokemon mons[2] = { { 1, 1, SPECIES_PIDGEOTTO }, { 1, 1, SPECIES_PIDGEY } };
+    struct WildPokemonInfo info = { 1, mons };
+    struct WildEncounterProfileView view = MakeDexNavNormalProfile();
+    u32 road = HEADER_NONE, header, r;
+    static const u16 sSpecies[] = { SPECIES_PIDGEY, SPECIES_PIDGEOTTO };
 
-    trainerRating = ResetDexNavTrainerRating();
-    EXPECT_EQ(GetTrainerRating(), trainerRating);
+    for (header = 0; gWildMonHeaders[header].mapGroup != MAP_GROUP(MAP_UNDEFINED); header++)
+        if (gWildEncounterPlaces[header].reach == WILD_REACH_ROAD) { road = header; break; }
+    EXPECT_NE(road, HEADER_NONE);
+    view.wildMonsInfo = &info;
+    view.weights = weights;
+    view.headerId = road;
+    for (r = 0; r < ARRAY_COUNT(sRatings); r++)
+    {
+        u32 s;
 
-    // Both raw sources yield Magikarp. Their proposal mass is 70 * 1 for the
-    // one-level source and 30 * 2 for the two-level source. The correction
-    // accepts the latter with probability 1 / 2, giving each accepted raw
-    // level its ordinary source weight divided by its full authored range.
-    EXPECT(DexNavSelectProfileOutcomeWithRollsForTesting(&profile, SPECIES_MAGIKARP, 0, 0, &accepted, &outcome));
-    EXPECT(accepted);
-    EXPECT_EQ(outcome.level, ProjectWildEncounterLevel(&profile, 10, trainerRating));
+        SetTrainerRating(sRatings[r]);
+        for (s = 0; s < ARRAY_COUNT(sSpecies); s++)
+        {
+            u32 mass = 0, slot, i, roll, total;
 
-    EXPECT(DexNavSelectProfileOutcomeWithRollsForTesting(&profile, SPECIES_MAGIKARP, 70, 1, &accepted, &outcome));
-    EXPECT(!accepted);
+            for (slot = 0; slot < 2; slot++)
+            {
+                struct WildEncounterSlotOutcome outcomes[WILD_ENCOUNTER_MAX_SLOT_OUTCOMES];
+                u32 count = GetCurrentWildEncounterSlotOutcomes(&view, slot, outcomes);
 
-    EXPECT(DexNavSelectProfileOutcomeWithRollsForTesting(&profile, SPECIES_MAGIKARP, 100, 0, &accepted, &outcome));
-    EXPECT(accepted);
-    EXPECT_EQ(outcome.level, ProjectWildEncounterLevel(&profile, 11, trainerRating));
+                for (i = 0; i < count; i++)
+                    if (outcomes[i].species == sSpecies[s])
+                    {
+                        mass += weights[slot] * outcomes[i].weight;
+                    }
+            }
+            total = DexNavSelectProfileOutcomeWithRollForTesting(&view, sSpecies[s], 0, NULL);
+            EXPECT_EQ(total, mass);
+            if (mass == 0)
+                continue;
+            // Walk the slots and outcomes in order: each entry owns a run of rolls; its first and last
+            // roll must select exactly that species and level.
+            roll = 0;
+            for (slot = 0; slot < 2; slot++)
+            {
+                struct WildEncounterSlotOutcome outcomes[WILD_ENCOUNTER_MAX_SLOT_OUTCOMES];
+                u32 count = GetCurrentWildEncounterSlotOutcomes(&view, slot, outcomes);
+
+                for (i = 0; i < count; i++)
+                {
+                    struct WildEncounterSpeciesOutcome outcome;
+                    u32 entryMass = weights[slot] * outcomes[i].weight;
+
+                    if (outcomes[i].species != sSpecies[s] || entryMass == 0)
+                        continue;
+                    EXPECT_EQ(DexNavSelectProfileOutcomeWithRollForTesting(&view, sSpecies[s], roll, &outcome), mass);
+                    EXPECT_EQ(outcome.species, sSpecies[s]);
+                    EXPECT_EQ(outcome.level, outcomes[i].level);
+                    EXPECT_EQ(DexNavSelectProfileOutcomeWithRollForTesting(&view, sSpecies[s], roll + entryMass - 1, &outcome), mass);
+                    EXPECT_EQ(outcome.level, outcomes[i].level);
+                    roll += entryMass;
+                }
+            }
+            EXPECT_EQ(roll, mass);
+            EXPECT_EQ(DexNavSelectProfileOutcomeWithRollForTesting(&view, sSpecies[s], mass, &(struct WildEncounterSpeciesOutcome){0}), 0);
+        }
+    }
 }
+#endif
+
+#if IS_WAYFARER
+TEST("DexNav chain level bonus keeps the engine's young limit and prowler minimum")
+{
+    u32 header = GetWildMonHeaderIdForMap(MAP_GROUP(MAP_ROUTE1_HNS), MAP_NUM(MAP_ROUTE1_HNS));
+    u32 chain, i;
+
+    EXPECT_NE(header, HEADER_NONE);
+    for (chain = 0; chain <= 100; chain += 25)
+    {
+        gSaveBlock3Ptr->dexNavChain = chain;
+        for (i = 0; i < 200; i++)
+        {
+            // A Caterpie slot stays under its evolution level, a baby at 10 or under.
+            EXPECT_EQ(DexNavApplyChainLevelBonusToOutcomeForTesting(SPECIES_CATERPIE, header, 6), 6);
+            EXPECT_LE(DexNavApplyChainLevelBonusToOutcomeForTesting(SPECIES_PICHU, header, 5), 10);
+            // The prowler minimum wins over the young limit; Dratini evolves at 30.
+            EXPECT_EQ(DexNavApplyChainLevelBonusToOutcomeForTesting(SPECIES_DRATINI, header, 30), 30);
+        }
+    }
+    // A line that cannot evolve takes the whole bonus, capped at 100. A stage the stage mix kept
+    // above its limit keeps its own level.
+    gSaveBlock3Ptr->dexNavChain = 100;
+    for (i = 0; i < 100; i++)
+    {
+        u32 level = DexNavApplyChainLevelBonusToOutcomeForTesting(SPECIES_TAUROS, header, 50);
+
+        EXPECT(level >= 70 && level <= 80);
+        EXPECT_EQ(DexNavApplyChainLevelBonusToOutcomeForTesting(SPECIES_METAPOD, header, 12), 12);
+    }
+    gSaveBlock3Ptr->dexNavChain = 0;
+}
+#endif

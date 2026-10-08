@@ -3,56 +3,24 @@ import { describe, expect, it } from "vitest"
 import { CatalogValidationError, mapsForBuild, validateCatalog } from "./catalog.js"
 
 const projection = (): Record<string, unknown> => ({
-  schemaVersion: 2,
-  trainerRating: { minimum: 0, maximum: 80 },
-  authoredLevel: { minimum: 1, maximum: 100 },
+  schemaVersion: 3,
+  trainerRating: { minimum: 0, maximum: 2 },
+  outcomeDenominator: 50,
   products: [{ id: "emerald", displayName: "Emerald" }],
-  levelProjections: [
+  species: [{ speciesId: "SPECIES_ESPEON", speciesLabel: "Espeon", sprite: null }],
+  distributions: [
     {
-      levelOffset: 0,
-      ratings: Array.from({ length: 81 }, (_, ratingIndex) => ({
-        rating: ratingIndex,
-        projectedLevels: Array.from({ length: 100 }, (_, levelIndex) => levelIndex + 1),
-      })),
+      speciesId: "SPECIES_ESPEON",
+      regionClass: "Other",
+      byPlaceLevel: {
+        "5": [[0, 5, 50]],
+        "6": [
+          [0, 5, 25],
+          [0, 6, 25],
+        ],
+      },
     },
   ],
-  species: [
-    {
-      authoredSpecies: "SPECIES_ESPEON",
-      authoredSpeciesId: 196,
-      speciesLabel: "Espeon",
-      sprite: null,
-      outcomesByProjectedLevel: [
-        {
-          minimumProjectedLevel: 1,
-          maximumProjectedLevel: 100,
-          effectiveSpecies: "SPECIES_ESPEON",
-          eligible: true,
-          minimumOrdinaryWildLevel: 1,
-        },
-      ],
-    },
-  ],
-  profiles: [
-    {
-      profileKey: "emerald/gRoute101/land_mons/NONE",
-      product: "emerald",
-      map: "MAP_ROUTE101",
-      baseLabel: "gRoute101",
-      header: "gWildMonHeaders",
-      headerId: 0,
-      runtimeTime: "TIME_DAY",
-      method: "land_mons",
-      runtimeArea: "WILD_AREA_LAND",
-      fishingRod: "NONE",
-      runtimeFishingRod: "WILD_ENCOUNTER_FISHING_ROD_NONE",
-      levelOffset: 0,
-      encounterRate: 20,
-      authoredSlotCount: 1,
-      runtimeSlotCount: 1,
-    },
-  ],
-  headerCounts: { emerald: 1 },
 })
 
 const catalog = (overrides: Record<string, unknown> = {}): Record<string, unknown> => {
@@ -84,7 +52,7 @@ const catalog = (overrides: Record<string, unknown> = {}): Record<string, unknow
         },
       ]
   return {
-    schemaVersion: 10,
+    schemaVersion: 11,
     pixelsPerMetatile: 16,
     wildEncounterProjection: projection(),
     builds,
@@ -112,54 +80,46 @@ const mapWithWildEncounters = (
 }
 
 const wildEncounters = (): Record<string, unknown> => {
+  const source = { path: "src/data/wild_encounters_v2/hoenn.json", pointer: "/MAP_ROUTE101" }
   return {
     sets: [
       {
         mapId: "MAP_ROUTE101",
         mapName: "Route101",
-        baseLabel: "gRoute101",
+        baseLabel: "gWildV2_Route101_Day",
         product: "emerald",
         runtimeTime: "day",
-        header: { groupLabel: "gWildMonHeaders", groupIndex: 0, headerIndex: 0 },
-        source: {
-          path: "src/data/wild_encounters.json",
-          pointer: "/wild_encounter_groups/0/encounters/0",
+        variant: null,
+        place: {
+          name: "Route 101",
+          region: "Hoenn",
+          regionClass: "Other",
+          reach: "Road",
+          dungeon: null,
+          floor: null,
+          floors: null,
+          placeLevels: [5, 5, 6],
         },
+        source,
         methods: [
           {
             type: "land_mons",
             encounterRate: 20,
-            source: {
-              path: "src/data/wild_encounters.json",
-              pointer: "/wild_encounter_groups/0/encounters/0/land_mons",
-            },
+            source: { ...source, pointer: "/MAP_ROUTE101/land/day" },
             slots: [
               {
                 slotIndex: 0,
-                slotRate: 20,
-                slotRateSource: {
-                  path: "src/data/wild_encounters.json",
-                  pointer: "/wild_encounter_groups/0/fields/0/encounter_rates/0",
-                },
-                groups: [],
-                minLevel: 2,
-                maxLevel: 3,
-                runtimeMinLevel: 2,
-                runtimeMaxLevel: 3,
                 speciesId: "SPECIES_ESPEON",
                 speciesLabel: "Espeon",
                 sprite: null,
-                source: {
-                  path: "src/data/wild_encounters.json",
-                  pointer: "/wild_encounter_groups/0/encounters/0/land_mons/mons/0",
-                },
+                source: { ...source, pointer: "/MAP_ROUTE101/land/day/0" },
               },
             ],
             profiles: [
               {
-                profileKey: "emerald/gRoute101/land_mons/NONE",
+                profileKey: "gWildV2_Route101/day/land_mons/NONE",
                 fishingRod: "NONE",
-                levelOffset: 0,
+                weights: [20, 20, 10, 10, 10, 10, 5, 5, 4, 4, 1, 1],
               },
             ],
           },
@@ -174,222 +134,123 @@ const wildEncounters = (): Record<string, unknown> => {
           {
             type: "land_mons",
             resolution: "direct",
-            sets: [
-              {
-                baseLabel: "gRoute101",
-                source: {
-                  path: "src/data/wild_encounters.json",
-                  pointer: "/wild_encounter_groups/0/encounters/0",
-                },
-              },
-            ],
+            sets: [{ baseLabel: "gWildV2_Route101_Day", source }],
           },
         ],
       },
       {
         product: "emerald",
         timeOfDay: "night",
-        methods: [
-          {
-            type: "land_mons",
-            resolution: "fallback",
-            sets: [
-              {
-                baseLabel: "gRoute101",
-                source: {
-                  path: "src/data/wild_encounters.json",
-                  pointer: "/wild_encounter_groups/0/encounters/0",
-                },
-              },
-            ],
-          },
-        ],
-      },
-    ],
-    diagnostics: [
-      {
-        code: "unaddressable_source_slot",
-        reason: "outside_method_slot_table",
-        setBaseLabel: "gRoute101",
-        methodType: "fishing_mons",
-        slotIndex: 10,
-        speciesId: "SPECIES_MAGIKARP",
-        minLevel: 3,
-        maxLevel: 5,
-        source: {
-          path: "src/data/wild_encounters.json",
-          pointer: "/wild_encounter_groups/0/encounters/0/fishing_mons/mons/10",
-        },
+        methods: [{ type: "land_mons", resolution: "unavailable", sets: [] }],
       },
     ],
   }
 }
 
+const mapSet = (encounters: Record<string, unknown>): Record<string, unknown> =>
+  (encounters.sets as Array<Record<string, unknown>>)[0]!
+
+const catalogWith = (encounters: Record<string, unknown>, overrides = {}) =>
+  catalog({
+    regions: [{ id: "routes", label: "Routes", mapCount: 1, maps: ["Route101"] }],
+    maps: [mapWithWildEncounters(encounters)],
+    ...overrides,
+  })
+
 describe("validateCatalog", () => {
   it("rejects stale catalog schemas before the viewport can interpret their topology", () => {
     expect(() => validateCatalog(catalog({ schemaVersion: 1 }))).toThrow(CatalogValidationError)
-    expect(() => validateCatalog(catalog({ schemaVersion: 1 }))).toThrow("schemaVersion must be 10")
+    expect(() => validateCatalog(catalog({ schemaVersion: 1 }))).toThrow("schemaVersion must be 11")
   })
 
-  it("rejects empty and dimensionally incomplete projection lookup tables", () => {
+  it("rejects an empty or stale level projection", () => {
     expect(() =>
-      validateCatalog(
-        catalog({ wildEncounterProjection: { ...projection(), levelProjections: [] } }),
-      ),
-    ).toThrow("levelProjections must be a non-empty array")
+      validateCatalog(catalog({ wildEncounterProjection: { ...projection(), distributions: [] } })),
+    ).toThrow("distributions must be a non-empty array")
 
     const model = projection()
-    const tables = model.levelProjections as Array<Record<string, unknown>>
-    tables[0]!.ratings = (tables[0]!.ratings as unknown[]).slice(0, 80)
+    model.schemaVersion = 2
     expect(() => validateCatalog(catalog({ wildEncounterProjection: model }))).toThrow(
-      "must contain 81 ratings",
+      "must use projection schemaVersion 3",
     )
   })
 
-  it("rejects pre-weight fishing projection schemas", () => {
+  it("rejects outcome lists that do not add up to one roll", () => {
     const model = projection()
-    model.schemaVersion = 1
+    const distributions = model.distributions as Array<Record<string, unknown>>
+    ;(distributions[0]!.byPlaceLevel as Record<string, unknown>)["5"] = [[0, 5, 49]]
 
     expect(() => validateCatalog(catalog({ wildEncounterProjection: model }))).toThrow(
-      "must use projection schemaVersion 2",
+      "has an invalid outcome list at place level 5",
     )
   })
 
-  it("rejects projection species intervals with missing coverage or references", () => {
+  it("rejects outcomes that name an unknown species", () => {
     const model = projection()
-    const species = model.species as Array<Record<string, unknown>>
-    species[0]!.outcomesByProjectedLevel = [
-      {
-        minimumProjectedLevel: 1,
-        maximumProjectedLevel: 99,
-        effectiveSpecies: "SPECIES_MISSING",
-        eligible: true,
-        minimumOrdinaryWildLevel: 1,
-      },
-    ]
+    const distributions = model.distributions as Array<Record<string, unknown>>
+    ;(distributions[0]!.byPlaceLevel as Record<string, unknown>)["5"] = [[3, 5, 50]]
 
     expect(() => validateCatalog(catalog({ wildEncounterProjection: model }))).toThrow(
-      "invalid or incomplete outcome intervals",
+      "has an invalid outcome list",
     )
   })
 
-  it("validates fishing profile weights without changing non-fishing rows", () => {
-    const model = projection()
-    const profiles = model.profiles as Array<Record<string, unknown>>
-    expect(profiles[0]).not.toHaveProperty("weights")
-
-    profiles[0] = {
-      profileKey: "emerald/gRoute101/fishing_mons/OLD_ROD",
-      product: "emerald",
-      map: "MAP_ROUTE101",
-      baseLabel: "gRoute101",
-      header: "gWildMonHeaders",
-      headerId: 0,
-      runtimeTime: "TIME_DAY",
-      method: "fishing_mons",
-      runtimeArea: "WILD_AREA_FISHING",
-      fishingRod: "OLD_ROD",
-      runtimeFishingRod: "WILD_ENCOUNTER_FISHING_ROD_OLD",
-      levelOffset: 0,
-      encounterRate: 20,
-      authoredSlotCount: 10,
-      runtimeSlotCount: 10,
-      weights: [38, 22, 10, 8, 8, 4, 3, 3, 2, 2],
-    }
-    expect(validateCatalog(catalog({ wildEncounterProjection: model }))).toBeDefined()
-
-    ;(profiles[0]!.weights as number[])[9] = 1
-    expect(() => validateCatalog(catalog({ wildEncounterProjection: model }))).toThrow(
-      "must contain 10 positive integer weights totaling 100",
-    )
-
-    profiles[0]!.weights = [38, 22, 10, 8, 8, 4, 3, 3, 2, 2]
-    profiles[0]!.runtimeSlotCount = 9
-    expect(() => validateCatalog(catalog({ wildEncounterProjection: model }))).toThrow(
-      "must contain 10 positive integer weights totaling 100",
-    )
-  })
-
-  it("rejects fishing weights on a non-fishing profile", () => {
-    const model = projection()
-    const profiles = model.profiles as Array<Record<string, unknown>>
-    profiles[0]!.weights = [38, 22, 10, 8, 8, 4, 3, 3, 2, 2]
-
-    expect(() => validateCatalog(catalog({ wildEncounterProjection: model }))).toThrow(
-      "must use NONE and must not contain fishing weights",
-    )
-  })
-
-  it("rejects source slots and methods without exact projection lookups", () => {
+  it("requires every fishing method to weigh its slots for each rod", () => {
     const encounters = wildEncounters()
-    const sets = encounters.sets as Array<Record<string, unknown>>
-    const methods = sets[0]!.methods as Array<Record<string, unknown>>
-    methods[0]!.profiles = [{ profileKey: "missing", fishingRod: "NONE", levelOffset: 0 }]
-    const slots = methods[0]!.slots as Array<Record<string, unknown>>
+    const method = (mapSet(encounters).methods as Array<Record<string, unknown>>)[0]!
+    method.type = "fishing_mons"
+
+    expect(() => validateCatalog(catalogWith(encounters))).toThrow(
+      "fishing_mons must have Old, Good, and Super Rod weights",
+    )
+
+    method.profiles = ["OLD_ROD", "GOOD_ROD", "SUPER_ROD"].map((fishingRod) => ({
+      profileKey: fishingRod,
+      fishingRod,
+      weights: [100],
+    }))
+    expect(validateCatalog(catalogWith(encounters))).toBeDefined()
+  })
+
+  it("rejects slots without an outcome distribution at every place level", () => {
+    const encounters = wildEncounters()
+    const method = (mapSet(encounters).methods as Array<Record<string, unknown>>)[0]!
+    const slots = method.slots as Array<Record<string, unknown>>
     slots[0]!.speciesId = "SPECIES_MISSING"
-    const value = catalog({
-      regions: [{ id: "routes", label: "Routes", mapCount: 1, maps: ["Route101"] }],
-      maps: [mapWithWildEncounters(encounters)],
-    })
+    expect(() => validateCatalog(catalogWith(encounters))).toThrow(
+      "has no outcome distribution for SPECIES_MISSING",
+    )
 
-    expect(() => validateCatalog(value)).toThrow("invalid projection profile missing")
-    expect(() => validateCatalog(value)).toThrow("has no species projection for SPECIES_MISSING")
+    slots[0]!.speciesId = "SPECIES_ESPEON"
+    ;(mapSet(encounters).place as Record<string, unknown>).placeLevels = [5, 5, 7]
+    expect(() => validateCatalog(catalogWith(encounters))).toThrow(
+      "lacks outcomes at a place level",
+    )
   })
 
-  it("accepts only an explicit Wayfarer night alias for its matching day profile", () => {
+  it("rejects places that do not cover the Trainer Rating range", () => {
     const encounters = wildEncounters()
-    const sets = encounters.sets as Array<Record<string, unknown>>
-    const set = sets[0]!
-    const methods = set.methods as Array<Record<string, unknown>>
-    const method = methods[0]!
-    const references = method.profiles as Array<Record<string, unknown>>
-    const model = projection()
-    const profiles = model.profiles as Array<Record<string, unknown>>
-    const profile = profiles[0]!
+    ;(mapSet(encounters).place as Record<string, unknown>).placeLevels = [5, 5]
 
-    model.products = [{ id: "POKEMON_WAYFARER", displayName: "Pokémon Wayfarer" }]
-    model.headerCounts = { POKEMON_WAYFARER: 1 }
-    Object.assign(profile, {
-      profileKey: "POKEMON_WAYFARER/sFiveIsland_Wayfarer_Day/land_mons/NONE",
-      product: "POKEMON_WAYFARER",
-      map: "MAP_FIVE_ISLAND",
-      baseLabel: "sFiveIsland_Wayfarer_Day",
-      runtimeTime: "TIME_DAY",
+    expect(() => validateCatalog(catalogWith(encounters))).toThrow(
+      "place levels must cover the Trainer Rating range",
+    )
+  })
+
+  it("requires an intent for dungeon places only", () => {
+    const encounters = wildEncounters()
+    ;(mapSet(encounters).place as Record<string, unknown>).reach = "Dungeon"
+
+    expect(() => validateCatalog(catalogWith(encounters))).toThrow(
+      "wildEncounters must contain valid source encounter data",
+    )
+
+    Object.assign(mapSet(encounters).place as Record<string, unknown>, {
+      dungeon: { intent: "Mild", flat: false },
+      floor: 0,
+      floors: 2,
     })
-    Object.assign(set, {
-      mapId: "MAP_FIVE_ISLAND",
-      mapName: "FiveIsland_Frlg",
-      baseLabel: "sFiveIsland_Wayfarer_Night",
-      product: "POKEMON_WAYFARER",
-      runtimeTime: "night",
-      projectionAlias: { baseLabel: "sFiveIsland_Wayfarer_Day", runtimeTime: "TIME_NIGHT" },
-    })
-    references[0]!.profileKey = profile.profileKey
-
-    const value = catalog({
-      wildEncounterProjection: model,
-      regions: [{ id: "sevii", label: "Sevii", mapCount: 1, maps: ["FiveIsland_Frlg"] }],
-      maps: [
-        {
-          ...mapWithWildEncounters(encounters),
-          name: "FiveIsland_Frlg",
-          id: "MAP_FIVE_ISLAND",
-          region: "sevii",
-        },
-      ],
-    })
-
-    expect(validateCatalog(value)).toBeDefined()
-
-    delete set.projectionAlias
-    expect(() => validateCatalog(value)).toThrow("invalid projection profile")
-
-    set.projectionAlias = {
-      baseLabel: "sFiveIsland_Wayfarer_Day",
-      runtimeTime: "TIME_NIGHT",
-    }
-    profile.map = "MAP_FOUR_ISLAND"
-    expect(() => validateCatalog(value)).toThrow("invalid projection profile")
+    expect(validateCatalog(catalogWith(encounters))).toBeDefined()
   })
 
   it("rejects unsupported topology diagnostic codes", () => {
@@ -404,8 +265,8 @@ describe("validateCatalog", () => {
     ).toThrow("unsupported code")
   })
 
-  it("accepts the current empty diagnostic contract", () => {
-    expect(validateCatalog(catalog()).schemaVersion).toBe(10)
+  it("accepts the current catalog schema", () => {
+    expect(validateCatalog(catalog()).schemaVersion).toBe(11)
   })
 
   it("rejects malformed or inconsistent build membership metadata", () => {
@@ -433,44 +294,12 @@ describe("validateCatalog", () => {
     )
   })
 
-  it("accepts source-backed wild encounter sets and runtime time-of-day resolution", () => {
-    const value = catalog({
-      regions: [{ id: "routes", label: "Routes", mapCount: 1, maps: ["Route101"] }],
-      maps: [mapWithWildEncounters(wildEncounters())],
-    })
+  it("accepts wild encounter sets and runtime time-of-day resolution", () => {
+    const value = catalogWith(wildEncounters())
 
     expect(
       validateCatalog(value).maps[0]?.wildEncounters.runtimeTimes[1]?.methods[0]?.resolution,
-    ).toBe("fallback")
-  })
-
-  it("accepts invalid source-slot diagnostics retained by the generated catalog", () => {
-    const encounters = wildEncounters()
-    encounters.diagnostics = [
-      {
-        code: "invalid_source_slot",
-        reason: "invalid_level_range",
-        setBaseLabel: "gRoute101",
-        methodType: "land_mons",
-        slotIndex: 0,
-        speciesId: "SPECIES_ESPEON",
-        minLevel: 5,
-        maxLevel: 3,
-        source: {
-          path: "src/data/wild_encounters.json",
-          pointer: "/wild_encounter_groups/0/encounters/0/land_mons/mons/0",
-        },
-      },
-    ]
-    const value = catalog({
-      regions: [{ id: "routes", label: "Routes", mapCount: 1, maps: ["Route101"] }],
-      maps: [mapWithWildEncounters(encounters)],
-    })
-
-    expect(validateCatalog(value).maps[0]?.wildEncounters.diagnostics[0]).toMatchObject({
-      code: "invalid_source_slot",
-      reason: "invalid_level_range",
-    })
+    ).toBe("unavailable")
   })
 
   it("rejects incomplete source encounter data", () => {
@@ -478,12 +307,8 @@ describe("validateCatalog", () => {
     encounters.runtimeTimes = [
       { product: "emerald", timeOfDay: "day", methods: [{ type: "land_mons" }] },
     ]
-    const value = catalog({
-      regions: [{ id: "routes", label: "Routes", mapCount: 1, maps: ["Route101"] }],
-      maps: [mapWithWildEncounters(encounters)],
-    })
 
-    expect(() => validateCatalog(value)).toThrow(
+    expect(() => validateCatalog(catalogWith(encounters))).toThrow(
       "wildEncounters must contain valid source encounter data",
     )
   })

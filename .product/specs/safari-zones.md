@@ -1,7 +1,7 @@
 # Safari Zones and the Bug-Catching Contest
 
 PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
-Implemented: No
+Implemented: Yes (Wayfarer)
 
 Design status: v0 approved. It sets the rules for the three Safari Zones and the
 Bug-Catching Contest. The tables themselves are in the

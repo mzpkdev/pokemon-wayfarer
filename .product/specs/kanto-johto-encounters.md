@@ -1,7 +1,7 @@
 # Kanto and Johto encounters
 
 PRD: [Wild encounters v2](../prds/wild-encounters-v2.md)
-Implemented: No
+Implemented: Yes (Wayfarer)
 
 Design status: v0 approved. It sets the rules and targets for Kanto's and Johto's
 encounter tables. The tables themselves are in the

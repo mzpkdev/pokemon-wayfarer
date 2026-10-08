@@ -438,22 +438,18 @@ static bool8 PickWildSpeciesFromProfileStartingAtSlot(u16 headerId, enum TimeOfD
 
     for (offset = 0; offset < 3; offset++)
     {
-        const struct WildPokemon *entry;
-        struct WildEncounterSpeciesOutcome outcome;
         u8 slot = 2 + ((firstSlot - 2 + offset) % 3);
-        u8 authoredLevel;
+        u16 likelySpecies;
 
-        if (!IsCurrentWildEncounterProfileSlotEligible(&view, slot)
-         || !GetWildEncounterProfileEntry(&view, slot, &entry))
+        if (!IsWildEncounterProfileSlotEligible(&view, slot))
             continue;
 
-        // Station copy displays a species only, so a fixed endpoint gives it
-        // an effective species without consuming a new level RNG value.
-        authoredLevel = min(entry->minLevel, entry->maxLevel);
-        if (GetCurrentWildEncounterSpeciesOutcome(&view, slot, authoredLevel, &outcome)
-         && outcome.species != SPECIES_NONE)
+        // Station copy displays a species only, so the slot's most likely
+        // species is used without consuming any level RNG.
+        likelySpecies = GetCurrentWildEncounterSlotLikelySpecies(&view, slot);
+        if (likelySpecies != SPECIES_NONE)
         {
-            *species = outcome.species;
+            *species = likelySpecies;
             return TRUE;
         }
     }

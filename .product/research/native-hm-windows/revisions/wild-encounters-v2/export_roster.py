@@ -6,7 +6,8 @@ takes its entries from the learnset hm_model parses (gen_7.h with IS_WAYFARER).
 
 Usage: python3 export_roster.py     (rewrites roster_v2.json)
 """
-import json, os
+import json, os, sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../../../../game/tools/wild_encounters/v2'))  # check.py and hm_model.py moved there
 import hm_model as h
 
 HERE = os.path.dirname(os.path.abspath(__file__))

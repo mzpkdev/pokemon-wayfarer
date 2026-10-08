@@ -76,6 +76,70 @@ u16 StepDownSpeciesToLevel(u16 species, u8 level)
     return species;
 }
 
+// The party step-down edge into a species: its non-baby predecessor and the
+// level that edge evolves at. The level is 0 when the shared table knows none.
+u16 GetSpeciesStepDownPredecessor(u16 species, u8 *evolutionLevel)
+{
+    const struct NotablePredecessor *edge;
+
+    *evolutionLevel = 0;
+    if (species == SPECIES_NONE || species >= NUM_SPECIES)
+        return SPECIES_NONE;
+    edge = FindPredecessor(species);
+    if (edge == NULL)
+        return SPECIES_NONE;
+    *evolutionLevel = GetEvolutionLevel(edge);
+    return edge->predecessor;
+}
+
+bool32 IsBabySpecies(u16 species)
+{
+    u32 i;
+
+    for (i = 0; i < ARRAY_COUNT(sNotableBabyPredecessors); i++)
+        if (sNotableBabyPredecessors[i].predecessor == species)
+            return TRUE;
+    return FALSE;
+}
+
+// The level of the edge from a species into one of its evolutions, 0 if unknown.
+// Where a species reaches the same successor by level and otherwise, the level wins.
+static u8 GetEvolutionEdgeLevel(u16 species, u16 successor)
+{
+    const struct Evolution *evolutions = GetSpeciesEvolutions(species);
+    const struct NotablePredecessor *edge;
+    u32 i;
+
+    for (i = 0; evolutions != NULL && evolutions[i].method != EVOLUTIONS_END; i++)
+        if (evolutions[i].targetSpecies == successor
+         && (evolutions[i].method == EVO_LEVEL || evolutions[i].method == EVO_LEVEL_BATTLE_ONLY)
+         && evolutions[i].param != 0)
+            return evolutions[i].param;
+    edge = FindPredecessor(successor);
+    if (edge != NULL && edge->predecessor == species)
+        return edge->authoredLevel;
+    return 0;
+}
+
+u8 GetSpeciesLowestEvolutionLevel(u16 species)
+{
+    const struct Evolution *evolutions;
+    u8 lowest = 0;
+    u32 i;
+
+    if (species == SPECIES_NONE || species >= NUM_SPECIES)
+        return 0;
+    evolutions = GetSpeciesEvolutions(species);
+    for (i = 0; evolutions != NULL && evolutions[i].method != EVOLUTIONS_END; i++)
+    {
+        u8 level = GetEvolutionEdgeLevel(species, evolutions[i].targetSpecies);
+
+        if (level != 0 && (lowest == 0 || level < lowest))
+            lowest = level;
+    }
+    return lowest;
+}
+
 static u16 GetLineBase(u16 species)
 {
     u32 depth;
