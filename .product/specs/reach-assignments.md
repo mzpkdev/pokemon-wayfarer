@@ -16,7 +16,8 @@ It doesn't cover:
 - reach and dungeon levels, which belong to
   [Wild level scaling](wild-level-scaling.md);
 - which species live on each map, or which prowlers appear where;
-- maps without wild encounters, which need no reach.
+- maps without wild encounters, except where trainers or item spots need a
+  reach, in [Places without wild encounters](#places-without-wild-encounters).
 
 ## Behavior
 
@@ -381,6 +382,65 @@ so they are Outlands. Each is also a legendary's lair. Their tables are in the
 | --- | --- | --- | --- |
 | Faraway Island | Outlands | `MAP_FARAWAY_ISLAND_ENTRANCE_HNS` | Reached with the Old Sea Map. Mew's lair |
 | Southern Island | Outlands | `MAP_SOUTHERN_ISLAND_EXTERIOR_HNS` | Reached with the Eon Ticket. Latias and Latios's lair |
+
+### Places without wild encounters
+
+Trainers and item spots also stand on maps with no wild encounters. Their
+level and item odds still need a reach, so every such map that hosts a covered
+Trainer or an item spot resolves one with these rules. Their dungeon levels
+only drive trainers and items, since nothing spawns there.
+
+1. **Gyms and battle facilities have no reach.** Gym members use their own
+   curve, and facility trainers and items belong to the facility. An item
+   spot inside a Gym counts as Road.
+2. **Ferries are Road.** The S.S. Aqua and the S.S. Tidal are part of the safe
+   path, like the routes they connect.
+3. **Interiors take the map they open onto.** Labs, houses, shops, contest
+   halls, gatehouses, the Trick House and the Seashore House use the reach of
+   their outside map, which is Road in a town.
+4. **Extra floors join their dungeon** at their place in the floor order, as
+   listed below.
+5. **Story sites become dungeons.** A hideout, office tower or ship you go
+   into to explore is a dungeon with its own intent, as listed below.
+
+#### Joining an existing place
+
+| Map(s) | Joins | Notes |
+| --- | --- | --- |
+| `MAP_SPROUT_TOWER_1F_HNS` | Sprout Tower | New first floor: 1F → 2F → 3F |
+| `MAP_ROCKET_HIDEOUT_B2F_HNS`, `MAP_ROCKET_HIDEOUT_B3F_HNS` | Rocket Hideout (Johto) | Floors B1F → B2F → B3F. Its intent rises to Mild to moderate |
+| `MAP_ABANDONED_SHIP_CORRIDORS_1F`, `MAP_ABANDONED_SHIP_ROOMS_1F`, `MAP_ABANDONED_SHIP_ROOMS2_1F`, `MAP_ABANDONED_SHIP_CAPTAINS_OFFICE` | Abandoned Ship | New first step, before the B1F rooms |
+| `MAP_ABANDONED_SHIP_CORRIDORS_B1F`, `MAP_ABANDONED_SHIP_ROOM_B1F`, `MAP_ABANDONED_SHIP_ROOMS2_B1F` | Abandoned Ship | Share the B1F step |
+| `MAP_ABANDONED_SHIP_HIDDEN_FLOOR_ROOMS` | Abandoned Ship | Shares the hidden-floor step |
+| `MAP_SEAFLOOR_CAVERN_ROOM9` | Seafloor Cavern | New last step after room 8 |
+| `MAP_RUINS_OF_ALPH_PUZZLE_AND_REWARD_CHAMBERS_HNS` | Ruins of Alph | Wilds |
+| `MAP_MT_MOON_OUTSIDE_HNS` | Mt. Moon | Wilds |
+| `MAP_ROUTE26NORTH_HNS` | Route 26 | Outlands |
+| `MAP_ULA_ULA_FOREST_HNS` | Ula'ula Isle | Outlands |
+| `MAP_BELLCHIME_TRAIL_HNS` | Ecruteak City | Road |
+| `MAP_MT_CHIMNEY` | Jagged Pass | Wilds: the summit above the trail |
+| `MAP_UNDERWATER_ROUTE127`, `MAP_UNDERWATER_ROUTE128` | Underwater Route 126 | Outlands: deep water |
+| `MAP_SOUTHERN_ISLAND_INTERIOR_HNS` | Southern Island | Outlands |
+| `MAP_NAVEL_ROCK_TOP` | Remote islands | Outlands |
+
+#### New dungeons
+
+| Place | Region | Maps | Floors and intent |
+| --- | --- | --- | --- |
+| Rocket Hideout (Celadon) | Kanto | `MAP_ROCKET_HIDEOUT_B1F`, `MAP_ROCKET_HIDEOUT_B2F`, `MAP_ROCKET_HIDEOUT_B3F`, `MAP_ROCKET_HIDEOUT_B4F` | B1F → B4F. Moderate |
+| Silph Co. | Kanto | `MAP_SILPH_CO_2F` to `MAP_SILPH_CO_11F` | 2F → 11F, one step per floor. Moderate to hard |
+| S.S. Anne | Kanto | Deck and 1F rooms; 2F rooms; B1F corridor, B1F rooms and kitchen | Deck and 1F → 2F → B1F. Mild |
+| Radio Tower | Johto | `MAP_GOLDENROD_CITY_RADIO_TOWER_2F_HNS` to `MAP_GOLDENROD_CITY_RADIO_TOWER_5F_HNS` | 2F → 5F. Moderate to hard |
+| Goldenrod Underground | Johto | Underground tunnel, Department Store basement, underground storage, underground switches | Tunnel → basement → storage → switches. Mild to moderate |
+| Olivine Lighthouse | Johto | `MAP_OLIVINE_CITY_LIGHTHOUSE_HNS` | Single floor. Mild |
+| Rocket Warehouse | Sevii | `MAP_FIVE_ISLAND_ROCKET_WAREHOUSE` | Single floor. Moderate to hard |
+| Aqua Hideout | Hoenn | `MAP_AQUA_HIDEOUT_1F`, `MAP_AQUA_HIDEOUT_B1F`, `MAP_AQUA_HIDEOUT_B2F` | 1F → B1F → B2F. Moderate to hard |
+| Weather Institute | Hoenn | `MAP_ROUTE119_WEATHER_INSTITUTE_1F`, `MAP_ROUTE119_WEATHER_INSTITUTE_2F` | 1F → 2F. Mild |
+| Space Center | Hoenn | `MAP_MOSSDEEP_CITY_SPACE_CENTER_1F`, `MAP_MOSSDEEP_CITY_SPACE_CENTER_2F` | 1F → 2F. Moderate to hard |
+| Scorched Slab | Hoenn | `MAP_SCORCHED_SLAB` | Single floor. Moderate |
+
+Map constants are written as they appear in the generated map table; the
+generator confirms each one and fails on a name it can't find.
 
 ## Open questions
 

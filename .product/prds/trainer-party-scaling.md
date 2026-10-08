@@ -88,19 +88,48 @@ species, moves, and held items must be considered when testing those fights.
 
 ### v0
 
-On the v0 TR scale, regular trainers follow their own v0 level curve. With a few
-badges they sit right under your level cap, about one level below it at four
-badges, so early routes are real fights. Later they fall behind: with all 24
-badges they sit about 18 levels under the cap, and routes are no threat. The
-late challenge comes from [notable trainers](notable-trainers.md)
-instead. Authored levels still nudge each Pokémon, and Gym members still get
-their two-level bonus on top. The exact anchors are in the
-[technical specification](../specs/trainer-party-scaling.md#v0-regular-trainer-level-curve).
+On the v0 TR scale, regular trainers take their strength from the place they
+stand, the same way [wild Pokémon](wild-encounters-v2.md#reach) do. Danger
+reads the same for trainers and wild Pokémon: roads are easy, remote places
+are hard.
 
-Evolved species also step back through trade, stone, and friendship
-evolutions in v0, each through one shared authored level
-([evolution stages](../specs/player-trainer-rating.md#evolution-stages));
-today only level evolutions step back. Base species still never evolve.
+- **Reach level.** A regular trainer fights at their map's reach level, using
+  the same Road, Wilds, Outlands and dungeon floor levels as
+  [wild level scaling](../specs/wild-level-scaling.md#reach-levels), plus a
+  small trainer bonus (placeholder: 3 levels). A map with no reach of its own,
+  such as a building, resolves one with the
+  [places without wild encounters](../specs/reach-assignments.md#places-without-wild-encounters)
+  rules.
+- **What that means.** Road trainers start close to your level and fall behind
+  as you earn badges, so routes stop being a threat and the late challenge
+  comes from [notable trainers](notable-trainers.md). Wilds trainers stay a
+  step up, Outlands trainers meet you near your level cap all game, and
+  dungeon trainers follow their floor.
+- **Authored levels** no longer nudge a Pokémon's level. The place replaces
+  that role.
+- **Gym members** stand inside Gyms, which have no place on the danger map.
+  They keep the v0 regular level curve with their two-level bonus. The exact
+  anchors are in the
+  [technical specification](../specs/trainer-party-scaling.md#gym-members).
+- **Wandering trainers** under [daily world slots](daily-world-slots.md) take
+  the level of the spot they stand in that day.
+
+#### Final-stage rosters
+
+Regular trainers' Pokémon evolve as their level rises. Every covered regular
+roster, rematch teams included, lists each Pokémon at the final stage of its
+line. A branching line, such as Poliwag's, names one final form per trainer.
+The step-back rule then picks the stage the trainer's level supports: level
+evolutions step back at their evolution level, and trade, stone and friendship
+evolutions each step back through one shared authored level
+([evolution stages](../specs/player-trainer-rating.md#evolution-stages)).
+
+A Youngster's Rattata on an early road becomes a Raticate on a late one. This
+replaces today's rule that base species never evolve.
+
+A short reviewed list keeps an earlier stage as the highest stage for trainers
+whose identity is that stage, such as a Tuber's baby Pokémon. Their Pokémon
+step back as usual but never go past that stage.
 
 ## Coverage and exclusions
 
@@ -108,7 +137,9 @@ Cover regular opposing trainers throughout the content compiled into Wayfarer,
 including Gym members, regular villain grunts, and regular trainer rematches.
 Select the existing rematch roster first, then scale it normally. Defeated
 Trainers remain defeated under existing rules; this feature adds no rematch
-availability or repeatable farming system.
+availability or repeatable farming system. [Daily world
+slots](daily-world-slots.md) separately lets regular trainer spots rotate
+daily, and its trainers scale under this design.
 
 Gym Leaders remain outside this automatic system. Their enrolled initial badge
 battles follow the separate
@@ -172,11 +203,6 @@ solely because every Trainer gains levels.
 
 The first implementation must deliver an inventory and balance report as well
 as runtime code. Passing formulas alone does not establish playable balance.
-
-## Later
-
-- Forward evolution for regular trainers: late routes currently show
-  high-level unevolved species.
 
 ## References
 
