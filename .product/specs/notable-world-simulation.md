@@ -768,6 +768,7 @@ saved league teams (`LeagueSavedTeams`, 1,456 bytes, 288 per team) to
 | Traded-slot records (16 × 40) | Haunts | 640 | `PokemonStorage` |
 | Masters lineup: 8 opponents and the partner, at PR #139's 288 bytes a team | Sevii Masters | about 1,150 more than PR #139's five | `PokemonStorage` |
 | Follower NPC state, if enabled for walks | Haunts | 24 | SaveBlock3 |
+| Daily world slots (day stamp, cleared and home-beaten bits, day-start phone sets) | [Daily world slots](daily-world-slots.md#save-state) | 330 | `PokemonStorage` |
 
 **Where it fits.**
 
@@ -813,7 +814,9 @@ and each of those specs points here.
   partner at 288 bytes a team, 2,592 plus PR #139's 16-byte header, against
   PR #139's 1,456, so about 1,152 more. That is 2,008 bytes, leaving a
   margin of about **512 bytes**. Adding the twelve face-only trainers later
-  (96 bytes, 312 in all) leaves about **416**. Without PR #139 (main
+  (96 bytes, 312 in all) leaves about **416**, and the 330-byte
+  [daily world slots](daily-world-slots.md#save-state) state then leaves about
+  **86**. Without PR #139 (main
   today) 3,976 bytes would be free.
 - **Depends on PR #139.** Saved leagues
   ([#139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)) add
