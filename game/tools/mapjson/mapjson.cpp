@@ -1544,21 +1544,27 @@ void process_event_constants(const vector<string> &map_filepaths, string output_
             FATAL_ERROR("Failed to read '%s' while generating map event constants: %s\n", filepath.c_str(), err.c_str());
 
         string map_id = json_to_string(map_data, "id");
+        // Number events exactly as process_map emits them, so a local or warp
+        // id names the projected event even when a Wayfarer projection (such as
+        // the Sevii manifest) drops source events before it.
+        Json event_data = filter_local_adventure_events(resolve_wayfarer_coast_map_events(map_data));
 
         // Get IDs from the object/clone events.
         ostringstream map_ids_text;
-        auto obj_events = filter_local_adventure_events(map_data)["object_events"].array_items();
+        auto obj_events = event_data["object_events"].array_items();
         unsigned int generated_object_index = 0;
         for (unsigned int i = 0; i < obj_events.size(); i++) {
             auto obj_event = obj_events[i];
             if (!event_matches_version(obj_event))
                 continue;
             generated_object_index++;
-            if (obj_event.object_items().find("local_id") != obj_event.object_items().end())
+            // A projected actor may carry a numeric local id; only named ids
+            // become constants.
+            if (obj_event["local_id"].is_string())
                 map_ids_text << "#define " << json_to_string(obj_event, "local_id") << " " << generated_object_index << "\n";
         }
         // Get IDs from the warp events.
-        auto warp_events = filter_local_adventure_events(map_data)["warp_events"].array_items();
+        auto warp_events = event_data["warp_events"].array_items();
         unsigned int generated_warp_index = 0;
         for (unsigned int i = 0; i < warp_events.size(); i++) {
             auto warp_event = warp_events[i];

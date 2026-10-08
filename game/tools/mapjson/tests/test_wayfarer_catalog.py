@@ -1131,6 +1131,51 @@ class MapjsonWayfarerTest(unittest.TestCase):
         self.assertNotIn("FLAG_HIDE_ONE_ISLAND_POTION", events)
         self.assertNotIn("FLAG_HIDDEN_ITEM_ONE_ISLAND_POTION", events)
 
+    def test_wayfarer_sevii_local_ids_follow_the_projected_object_order(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+
+        def actor(local_id, x):
+            return {
+                "local_id": local_id, "type": "object", "graphics_id": "OBJ_EVENT_GFX_BLUE", "x": x, "y": 1,
+                "elevation": 3, "movement_type": "MOVEMENT_TYPE_FACE_DOWN", "movement_range_x": 1,
+                "movement_range_y": 1, "trainer_type": "TRAINER_TYPE_NONE",
+                "trainer_sight_or_berry_tree_id": "0", "script": "0x0", "flag": "0",
+            }
+
+        dropped, kept = actor("LOCALID_SEVII_DROPPED", 1), actor("LOCALID_SEVII_KEPT", 2)
+        map_dir = root / "data/maps/OneIsland_Frlg"
+        map_dir.mkdir()
+        map_file = map_dir / "map.json"
+        map_file.write_text(json.dumps({
+            "id": "MAP_SEVII", "name": "OneIsland_Frlg", "game_version": "frlg", "layout": "LAYOUT_SEVII",
+            "object_events": [dropped, kept], "warp_events": [], "coord_events": [], "bg_events": [],
+            "connections": [],
+        }))
+        manifest = self.write_sevii_manifest(root, [{
+            "source_map": "OneIsland_Frlg", "map_id": "MAP_SEVII", "layout": "LAYOUT_SEVII", "enabled": True,
+            "retained_events": {"object_events": [{"index": 1, "source": kept}], "coord_events": [], "bg_events": []},
+        }], release_link_enabled=True)
+        output = root / "include/constants/map_event_ids.h"
+
+        def event_constants(version, *options):
+            result = subprocess.run(
+                [str(self.mapjson), "event_constants", version, str(map_file.relative_to(root)),
+                 str(output.relative_to(root)), *options],
+                cwd=root, text=True, capture_output=True,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            return output.read_text()
+
+        # Wayfarer numbers the object as the generated map does, after the
+        # manifest drops the first source object.
+        wayfarer = event_constants("wayfarer", "--wayfarer-sevii-manifest", str(manifest.relative_to(root)))
+        self.assertIn("#define LOCALID_SEVII_KEPT 1\n", wayfarer)
+        self.assertNotIn("LOCALID_SEVII_DROPPED", wayfarer)
+        standalone = event_constants("emerald")
+        self.assertIn("#define LOCALID_SEVII_DROPPED 1\n", standalone)
+        self.assertIn("#define LOCALID_SEVII_KEPT 2\n", standalone)
+
     def test_wayfarer_sevii_rejects_retained_trainer_identity(self):
         fixture, root = self.make_fixture()
         self.addCleanup(fixture.cleanup)

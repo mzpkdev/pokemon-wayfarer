@@ -78,6 +78,7 @@
       "flag": "FLAG_HIDE_FIVE_ISLAND_ROCKETS"
     },
     {
+      "local_id": "LOCALID_WAREHOUSE_GRUNT1",
       "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ROCKET_F",
       "x": 6,

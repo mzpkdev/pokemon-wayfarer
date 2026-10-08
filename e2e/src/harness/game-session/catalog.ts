@@ -805,6 +805,7 @@ export const storyFlags = {
   seviiMeteoriteReceived: 0xc011,
   seviiCelioGemsStarted: 0xc01e,
   seviiRivalSceneSeen: 0xc029,
+  seviiHideRivals: 0xc03b,
   seviiMoltresResolved: 0xc02a,
   powerPlantMaxPotionClaimed: 0xe035,
   powerPlantTmProtectClaimed: 0xe036,

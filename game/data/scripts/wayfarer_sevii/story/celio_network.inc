@@ -223,7 +223,7 @@ WayfarerSevii_Sapphire_CommitTheft:
 	msgbox WayfarerSevii_Text_SapphireScientistRevealsPassword
 	setflag FLAG_WAYFARER_SEVII_PASSWORD_TWO_LEARNED
 	call WayfarerSevii_Story_UpdateWarehouseReadiness
-	removeobject 2 @ Dotted Hole Sapphire Room source object index 1.
+	removeobject LOCALID_DOTTED_HOLE_THIEF
 	release
 	end
 
@@ -368,12 +368,11 @@ WayfarerSevii_Warehouse_GideonVictory:
 	setflag FLAG_WAYFARER_SEVII_WAREHOUSE_CLEARED
 	setflag FLAG_WAYFARER_SEVII_HIDE_LOCAL_ROCKETS
 	setflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_COMBATANTS
-	@ Rocket Warehouse source object indices 0..4 have local IDs 1..5.
-	removeobject 1
-	removeobject 2
-	removeobject 3
-	removeobject 4
-	removeobject 5
+	removeobject LOCALID_WAREHOUSE_GRUNT2
+	removeobject LOCALID_WAREHOUSE_GRUNT3
+	removeobject LOCALID_WAREHOUSE_ADMIN1
+	removeobject LOCALID_WAREHOUSE_ADMIN2
+	removeobject LOCALID_WAREHOUSE_GRUNT1
 	msgbox WayfarerSevii_Text_WarehouseGideonPostBattle
 	goto WayfarerSevii_Warehouse_TryGiveSapphire
 
@@ -420,7 +419,7 @@ WayfarerSevii_FourIsland_RivalTryScene::
 	msgbox WayfarerSevii_Text_FourIslandRivalScene
 	setflag FLAG_WAYFARER_SEVII_RIVAL_SCENE_SEEN
 	clearflag FLAG_WAYFARER_SEVII_HIDE_RIVALS
-	addobject 10 @ Four Island source object index 9.
+	addobject LOCALID_FOUR_ISLAND_RIVAL
 	fadedefaultbgm
 	releaseall
 WayfarerSevii_Rival_NoScene:
@@ -436,7 +435,7 @@ WayfarerSevii_SixIsland_RivalTryScene::
 	msgbox WayfarerSevii_Text_SixIslandRivalScene
 	setflag FLAG_WAYFARER_SEVII_RIVAL_SCENE_SEEN
 	clearflag FLAG_WAYFARER_SEVII_HIDE_RIVALS
-	addobject 2 @ Six Island Pokémon Center source object index 1.
+	addobject LOCALID_SIX_ISLAND_RIVAL
 	fadedefaultbgm
 	releaseall
 	return

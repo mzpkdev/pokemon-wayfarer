@@ -65,6 +65,17 @@ class WayfarerSeviiScriptGenerationTest(unittest.TestCase):
         dependencies = GENERATOR.recursive_dependencies(GAME_ROOT, GAME_ROOT / "src/data/wayfarer_sevii_maps.json")
         self.assertIn("data/text/fame_checker_frlg.inc", dependencies)
 
+    def test_owned_scripts_name_objects_by_local_id_constant(self):
+        # Sevii maps drop source objects, so a numeric local id counted from
+        # the source map can name the wrong object. LOCALID_* constants are
+        # generated from the projected order.
+        object_command = re.compile(
+            r"(?m)^\s*(?:addobject|removeobject|showobjectat|hideobjectat|setobjectxy|setobjectxyperm|"
+            r"turnobject|setobjectmovementtype|applymovement)\s+[0-9]+\b"
+        )
+        for path in sorted((GAME_ROOT / "data/scripts/wayfarer_sevii").rglob("*.inc")):
+            self.assertIsNone(object_command.search(path.read_text()), path)
+
     def test_recursive_dependencies_include_special_table(self):
         dependencies = GENERATOR.recursive_dependencies(GAME_ROOT, GAME_ROOT / "src/data/wayfarer_sevii_maps.json")
         self.assertIn("data/specials.inc", dependencies)
