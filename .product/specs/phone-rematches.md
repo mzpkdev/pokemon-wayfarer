@@ -148,7 +148,10 @@ automatic registration in `RegisterTrainerInMatchCall` for Wayfarer. A trainer w
   Any other call uses a random General text, as in HNS. A contact who became
   ready or got a gift later in the day, whose slot is cleared today, or who
   `WhereIsTrainerToday` can't place, makes a General call: calls never name a
-  trainer who isn't standing somewhere unbeaten today.
+  trainer who isn't standing somewhere unbeaten today. A contact whose slot is
+  fixed battles and hands over gifts through its home script, so its Battle
+  text also needs live readiness and its FoundItem text the live gift flag;
+  after its rematch or gift today it makes General calls.
 - **Today's place.** Before a call, `{STR_VAR_2}` is set to the map name from
   `WhereIsTrainerToday`. Every Battle and FoundItem text names it; HNS's
   existing Battle texts gain a line that does, and its FoundItem texts are
@@ -201,7 +204,7 @@ rematches; the item itself is left unobtainable.
   `0x8BE`–`0x8D9` and leaves `0x36A` onward (`HNS_EXTENDED_CONTENT_START`, the
   decoration flags) unchanged.
 - A contact whose slot is fixed still gets Battle and FoundItem calls, naming
-  its home map.
+  its home map, and makes only General calls after that day's rematch or gift.
 - Every Battle and FoundItem text contains `{STR_VAR_2}`, and every text fits the text box.
 
 ## Hoenn call texts

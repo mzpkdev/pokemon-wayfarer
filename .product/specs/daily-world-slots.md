@@ -97,6 +97,12 @@ bitset giftAtDayStart[contactCount]   // contacts holding a gift when the day be
 SaveBlock1 only grows by [`trainerRematches`](phone-rematches.md#rematch-table-and-save-state),
 100 to 118 bytes.
 
+**New Game.** New Game doesn't clear `PokemonStorage` beyond the boxes, so the
+struct clears itself like its neighbours do: a new-game init, called from
+`NewGameInitData` beside `WayfarerWorld_InitNewGame` (`src/new_game.c`),
+zeroes it and sets `stampDay` to `0xFFFF`, a sentinel no real day equals. The
+first map load then starts a fresh day.
+
 On map load, if `stampDay != day`, clear `clearedToday` and `homeBeatenToday`,
 take the two snapshots and set `stampDay`. The snapshots are the
 [phone contacts](phone-rematches.md) that are ready for a rematch, and those
@@ -120,7 +126,7 @@ Budget (about 720 trainer slots and 860 item spots, Sevii included):
 
 | Block | Free before | Added | Left after |
 | --- | ---: | --- | ---: |
-| `PokemonStorage` (13 boxes, PR #139 merged) | 2,520 | 330 | 86 |
+| `PokemonStorage` (13 boxes, PR #139 merged, after the 2,104 bytes other specs plan) | 416 | 330 | 86 |
 | SaveBlock1 | 112 | 18 (`trainerRematches` 100 to 118) | 94 |
 
 The `PokemonStorage` figure is Notable world simulation's: of its 2,520
@@ -169,7 +175,9 @@ wherever it's computed. A lookup `WhereIsTrainerToday(trainerId)` resolves the
 trainer's group and returns the map and slot, or none. For a contact whose slot
 is fixed (excluded from rotation) it returns the home map and slot (it has no
 daily battle, so `clearedToday` doesn't apply), and such a contact is placed at
-home for ready and gift calls. It returns none
+home for ready and gift calls. Its home script still checks live readiness
+and the live gift flag, so its Battle and FoundItem calls also need those to
+hold (see [Calls](phone-rematches.md#calls)). It returns none
 for a trainer whose slot is cleared today, so a call never names a trainer who
 has already had today's battle. Phone calls use it to name today's place.
 
@@ -188,9 +196,10 @@ rotating slot's template:
 **On Continue.** `CB2_ContinueSavedGame` (`overworld.c`) loads the templates
 from the save, then `LoadSaveblockObjEventScripts` resets every template's
 script to the authored one, and the EWRAM occupant table is empty. So the hook
-also runs on Continue, right after `LoadSaveblockObjEventScripts`, following
-`WayfarerWorld_OnContinue` and `WayfarerWalkers_OnContinue` and the Battle
-Pyramid's `LoadBattlePyramidFloorObjectEventScripts`. It re-resolves the
+also runs on Continue, right after `LoadSaveblockObjEventScripts` and before
+`RunOnLoadMapScript` and `WayfarerWorld_OnContinue` (which restores the
+walkers), the way the Battle Pyramid's `LoadBattlePyramidFloorObjectEventScripts`
+does. Hidden items re-resolve with the map. It re-resolves the
 current map from the stamped day and rewrites scripts, graphics, `flagId`s and
 occupants again, which also rebuilds the per-map occupant table the
 [sight branch](#battles) reads. Continue applies no day change; a new day is
@@ -319,9 +328,11 @@ reproduced. Tests cover:
 - Continue: save on a map with a rotating occupant and a dynamic ball, reset
   and Continue, then talk to the trainer (the occupant's battle, not the
   authored one), pick up the ball, and take camera steps (it stays gone);
+- New Game on the same day as an existing save: every dynamic spot spawns and
+  no snapshot carries over;
 - the home-beaten-today freeze, and the wanderer starting the next day;
 - one place per trainer per day, pairs, and placement of ready and gift trainers, including readiness or a gift flag changing mid-day, and Battle text only for a ready-at-day-start contact and FoundItem text only for a gift-at-day-start one;
-- a fixed (non-rotating) contact receiving Battle and FoundItem calls that name its home map;
+- a fixed (non-rotating) contact receiving Battle and FoundItem calls that name its home map, and only General calls after that day's rematch or gift;
 - wanderers approaching by sight until cleared, and not after;
 - dynamic and taken-prize spots staying visible after a reload on the same day, and refilling the next day, with no permanent flag set;
 - a picked-up ball (dynamic or taken prize) not respawning on later camera steps, a reload or leaving and re-entering the map the same day, and an empty slot's template never spawning;
