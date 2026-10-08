@@ -15,12 +15,12 @@ the port meant to keep, exactly as authored in the FRLG source maps:
 | --- | ---: | --- |
 | Item balls | 39 | [Items](#items) |
 | Hidden items | 58 | [Items](#items) |
-| Rock Smash rocks | 58 | Kindle Road, Mt. Ember and its Ruby Path, Four Island, Sevault Canyon, Ember Spa |
-| Cut trees | 16 | Berry Forest, Two, Three and Five Island, Bond Bridge |
+| Rock Smash rocks | 57 | Kindle Road, Mt. Ember, its Summit Path and Ruby Path, Four Island, Sevault Canyon |
+| Cut trees | 17 | Berry Forest, Two, Three and Five Island, Five Isle Meadow, Bond Bridge |
 | Strength boulders | 26 | Mt. Ember, its summit and Ruby Path, Ruin Valley, Sevault Canyon. Tanoby Key's 7 are already kept |
 | Signs | 85 | Town, route and landmark signs and Tanoby's Braille texts; 19 are already kept |
 | Ember Spa heal | 1 | The coord trigger that heals the party in the hot spring |
-| Lorelei's dolls | 5 | Seel, Pikachu, Slowpoke, Jigglypuff and Lapras dolls in Lorelei's house |
+| Lorelei's dolls | 14 | Wigglytuff, Seel, Pikachu, Slowpoke, Slowbro, Psyduck, Meowth, Chansey, Jigglypuff, Nidoran♀, Nidoran♂, Pidgeot, Fearow and Lapras dolls in Lorelei's house |
 
 It works on its own, before [daily world slots](daily-world-slots.md) lands.
 [World items](world-items.md#sevii) then decides which item spots are prizes
@@ -66,9 +66,9 @@ every `FLAG_HIDE_*` item flag is 0, which never persists a pickup, and every
 `FLAG_HIDDEN_ITEM_*` aliases one shared flag.
 
 - **Item balls (39):** each row overrides its object flag with a new Sevii bank
-  flag, `FLAG_WAYFARER_SEVII_ITEM_<MAP>_<ITEM>`, in free Sevii slots (2–9 and
-  61 upward are free; the bank has 256 slots and is already sized in
-  SaveBlock3). Picking the item up runs `removeobject`, which sets the flag.
+  flag, `FLAG_WAYFARER_SEVII_ITEM_<MAP>_<ITEM>`, in free Sevii slots (slots 1–9 are
+  the cracked-ice tiles and 0 and 10–60 are used, so slots 61 upward are free;
+  the bank has 256 slots and is already sized in SaveBlock3). Picking the item up runs `removeobject`, which sets the flag.
 - **Hidden items (58):** a hidden item event stores its flag as a 13-bit offset
   from `FLAG_HIDDEN_ITEMS_START`, so a Sevii bank flag doesn't fit. Add a
   Sevii hidden-item marker, following Hoenn's
@@ -118,8 +118,12 @@ party as FRLG does, in the exploration module, which allows the heal command.
 
 ### Lorelei's dolls
 
-Retain the five dolls in Lorelei's house with a shared `WayfarerSevii_*`
-wrapper showing FRLG's doll text. They need no flags.
+Retain all 14 dolls in Lorelei's house (objects 2–15 of the FRLG map) with a
+shared `WayfarerSevii_*` wrapper showing FRLG's doll text. FRLG hides eight of
+them behind `FLAG_HIDE_*` flags (Meowth, Chansey, Jigglypuff, Nidoran♀,
+Nidoran♂, Pidgeot, Fearow and Lapras) that are zero stubs in Wayfarer. The
+restoration drops those gates, so every doll is always shown. They need no
+flags.
 
 ### Pins and audits
 
