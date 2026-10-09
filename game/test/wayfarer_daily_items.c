@@ -13,6 +13,7 @@
 #include "task.h"
 #include "wayfarer_appearance.h"
 #include "wayfarer_daily_slots.h"
+#include "wayfarer_persistence.h"
 #include "wayfarer_origin.h"
 #include "test/test.h"
 #include "constants/event_bg.h"
@@ -351,8 +352,9 @@ TEST("Daily slots: an untaken prize hidden item gives the prize, never the autho
         EXPECT(DailyItems_ResolveHidden(spot->mapGroup, spot->mapNum, bgEvent, &item, &flagId, &found));
         EXPECT_EQ(item, spot->prize);
         EXPECT_EQ(found, index);
-        // The authored flag stays: picking it up sets it for good.
-        EXPECT_EQ(flagId, GetHiddenItemFlagId(bgEvent));
+        // The spot's own flag stays: picking it up sets it for good.
+        EXPECT_EQ(flagId, spot->flag);
+        EXPECT_NE(flagId, 0);
         replaced += bgEvent->bgUnion.hiddenItem.item != spot->prize;
         checked++;
     }
@@ -550,8 +552,9 @@ TEST("Daily slots: a dynamic hidden item resolves, is picked up once a day and s
     EXPECT_EQ(flagId, 0);
     EXPECT_EQ(spotIndex, index);
 
-    DailyItems_SetPendingHidden(spotIndex, item);
+    DailyItems_SetPendingHidden(spotIndex, item, flagId);
     gSpecialVar_0x8004 = flagId;
+    gSpecialVar_0x8005 = item;
     DailyItems_PickedUpHidden();
     EXPECT(DailyItems_IsCleared(index));
     EXPECT(!DailyItems_ResolveHidden(spot->mapGroup, spot->mapNum, HiddenEvent(index), &item, &flagId, NULL));
@@ -588,7 +591,9 @@ TEST("Daily slots: a taken prize hidden item draws like a dynamic spot")
     EXPECT_EQ(item, spot->prize);
     // Pick it up: the flag and today's bit.
     FlagSet(flagId);
-    DailyItems_SetPendingHidden(found, item);
+    DailyItems_SetPendingHidden(found, item, flagId);
+    gSpecialVar_0x8004 = flagId;
+    gSpecialVar_0x8005 = item;
     DailyItems_PickedUpHidden();
     EXPECT(!DailyItems_ResolveHidden(spot->mapGroup, spot->mapNum, bgEvent, &item, &flagId, NULL));
     for (day = 1201; day < 1260 && !present; day++)
@@ -600,6 +605,74 @@ TEST("Daily slots: a taken prize hidden item draws like a dynamic spot")
     EXPECT(present);
     EXPECT_EQ(flagId, 0);
     EXPECT_NE(item, spot->prize);
+    RestoreSnapshot(snapshot);
+}
+
+TEST("Daily slots: a Hoenn hidden prize keeps a Hoenn flag that no story flag aliases")
+{
+    struct Snapshot *snapshot = TakeSnapshot();
+    u16 index;
+    u32 checked = 0;
+
+    PinDraws(3100, 9);
+    DailySlots_InitNewGame();
+    DailySlots_OnMapLoad();
+    for (index = FindSpot(TRUE, TRUE, 0); index != NO_ITEM_SPOT; index = FindSpot(TRUE, TRUE, index + 1))
+    {
+        const struct WorldItemSpot *spot = DailyItems_GetSpot(index);
+        const struct BgEvent *bgEvent = HiddenEvent(index);
+        u16 item, flagId, flagBefore;
+
+        if (WORLD_ITEM_ATTR_REGION(spot->attrs) != WORLD_ITEM_REGION_HOENN)
+            continue;
+        EnterSpotMap(index);
+        // The Hoenn flag namespace; the packed bg event decodes to a different, aliased story flag instead.
+        EXPECT(IS_HOENN_FLAG_ID(spot->flag));
+        EXPECT_NE(GetHiddenItemFlagId(bgEvent), spot->flag);
+        // Setting the aliased story flag must not hide the prize.
+        flagBefore = FlagGet(GetHiddenItemFlagId(bgEvent));
+        FlagSet(GetHiddenItemFlagId(bgEvent));
+        EXPECT(DailyItems_ResolveHidden(spot->mapGroup, spot->mapNum, bgEvent, &item, &flagId, NULL));
+        EXPECT_EQ(item, spot->prize);
+        EXPECT_EQ(flagId, spot->flag);
+        if (!flagBefore)
+            FlagClear(GetHiddenItemFlagId(bgEvent));
+        // Its own flag does.
+        FlagSet(spot->flag);
+        EXPECT(!DailyItems_ResolveHidden(spot->mapGroup, spot->mapNum, bgEvent, &item, &flagId, NULL) || item != spot->prize);
+        FlagClear(spot->flag);
+        checked++;
+    }
+    EXPECT_GT(checked, 10);
+    RestoreSnapshot(snapshot);
+}
+
+TEST("Daily slots: a stale pending hidden pickup marks nothing")
+{
+    struct Snapshot *snapshot = TakeSnapshot();
+    u16 index = FindSpot(TRUE, FALSE, 0);
+
+    PinDraws(3200, 9);
+    DailySlots_InitNewGame();
+    DailySlots_OnMapLoad();
+    // The full-bag path clears the pending pickup.
+    DailyItems_SetPendingHidden(index, ITEM_POTION, 0);
+    DailyItems_ClearPendingHidden();
+    gSpecialVar_0x8004 = 0;
+    DailyItems_PickedUpHidden();
+    EXPECT(!DailyItems_IsCleared(index));
+    // A special call for something else (Silph's Card Key doors) does not match the pending flag.
+    DailyItems_SetPendingHidden(index, ITEM_POTION, 0);
+    gSpecialVar_0x8004 = 0x123;
+    DailyItems_PickedUpHidden();
+    EXPECT(!DailyItems_IsCleared(index));
+    // The pending value is gone after that call, so the real pickup needs its own facing check.
+    gSpecialVar_0x8004 = 0;
+    DailyItems_PickedUpHidden();
+    EXPECT(!DailyItems_IsCleared(index));
+    DailyItems_SetPendingHidden(index, ITEM_POTION, 0);
+    DailyItems_PickedUpHidden();
+    EXPECT(DailyItems_IsCleared(index));
     RestoreSnapshot(snapshot);
 }
 
@@ -648,7 +721,7 @@ TEST("Daily slots: the Itemfinder sees only the resolved hidden items")
             seen++;
             DailyItems_SetCleared(index);
             if (WORLD_ITEM_ATTR_PRIZE(spot->attrs))
-                FlagSet(GetHiddenItemFlagId(bgEvent));
+                FlagSet(spot->flag);
             passed &= !ItemfinderFindsItemUnderfoot(gMapHeader.events, taskId);
         }
         hidden++;

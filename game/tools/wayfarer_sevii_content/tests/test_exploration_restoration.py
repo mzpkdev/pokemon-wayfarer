@@ -66,7 +66,11 @@ class SeviiExplorationRestorationTests(unittest.TestCase):
             self.assertEqual(row["source"], event)
             self.assertNotIn("wayfarer_script", row)
             map_id = self.sources[source_map]["id"].removeprefix("MAP_")
-            self.assertEqual(row["overrides"], {"flag": f"FLAG_WAYFARER_SEVII_HIDDEN_{map_id}_{index}"})
+            expected = {"flag": f"FLAG_WAYFARER_SEVII_HIDDEN_{map_id}_{index}"}
+            if event["underfoot"]:
+                # Daily world slots: nothing picks up an underfoot hidden item, so Wayfarer clears it.
+                expected["underfoot"] = False
+            self.assertEqual(row["overrides"], expected)
 
     def test_pickup_flags_use_unique_free_sevii_bank_slots(self):
         declared = SEVII_FLAG.findall(FLAGS.read_text(encoding="utf-8"))

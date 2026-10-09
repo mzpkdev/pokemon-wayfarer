@@ -26,6 +26,7 @@ from collections import Counter, defaultdict
 import json
 from pathlib import Path
 import re
+import subprocess
 import sys
 
 TOOL = Path(__file__).resolve().parent
@@ -40,13 +41,11 @@ DATA = TOOL / 'data.json'
 FIXED = TOOL / 'fixed.json'
 ITEMS_HEADER = ROOT / 'src/data/items.h'
 TMS_HEADER = ROOT / 'include/constants/tms_hms.h'
-POOL_REGIONS = ('Kanto', 'Sevii', 'Johto', 'Alola', 'Sinjoh', 'Hoenn', 'Other')
+POOL_REGIONS = ('Kanto', 'Sevii', 'Johto', 'Alola', 'Sinjoh', 'Hoenn')
 TIER_NAMES = ('Road', 'Wilds', 'Outlands')
 POOL_TIERS = ('Regular', 'Better', 'Special')
 GROUP_STONE, GROUP_TM = 'STONE', 'TM'
 KEY_OR_HM_POCKETS = ('POCKET_KEY_ITEMS',)
-# Key-pocket items that Wayfarer treats as consumables, so their balls become dynamic (daily world slots PRD, Content).
-CONSUMABLE_KEY_POCKET = ('ITEM_ESCAPE_ROPE',)
 # Regional flavour (world-items.md, Regional flavour): additions and moves on top of the shared tables.
 APRICORN_WEIGHT = 2
 SHARD_WEIGHT = 2
@@ -70,14 +69,25 @@ class GenerateError(ValueError):
 
 # ---------- item data ----------
 def item_symbols():
-    """{ITEM_*: pocket} for every item name the Wayfarer build defines: item data, aliases and TM/HM names."""
-    text = ITEMS_HEADER.read_text()
-    marks = list(re.finditer(r'^\s*\[(ITEM_\w+)\]\s*=', text, re.M))
+    """{ITEM_*: pocket} for every item name the Wayfarer build defines: item data (with its `#if`s resolved
+    by the C preprocessor under the build's config headers), aliases and TM/HM names."""
+    configs = sorted(path.name for path in (ROOT / 'include/config').glob('*.h') if path.name != 'general.h')
+    command = ['cpp', '-P', '-DPOKEMON_WAYFARER', '-DPOKEMON_HNS', '-DIS_WAYFARER=1', '-DIS_HNS=1', '-DTESTING=0', '-I', str(ROOT / 'include'),
+               '-include', 'config/general.h']
+    for name in configs:
+        command += ['-include', f'config/{name}']
+    done = subprocess.run(command + [str(ITEMS_HEADER)], capture_output=True, text=True)
+    if done.returncode:
+        raise GenerateError(f'cpp failed on the item data: {done.stderr[:400]}')
+    text = done.stdout
+    marks = list(re.finditer(r'\[(ITEM_\w+)\]\s*=', text))
     pockets = {}
     for i, mark in enumerate(marks):
         end = marks[i + 1].start() if i + 1 < len(marks) else len(text)
-        pocket = re.search(r'\.pocket\s*=\s*(\w+)', text[mark.end():end])
-        pockets[mark.group(1)] = pocket.group(1) if pocket else None
+        found = re.findall(r'\.pocket\s*=\s*(\w+)', text[mark.end():end])
+        if len(found) != 1:
+            raise GenerateError(f'{mark.group(1)} has {len(found)} pockets after preprocessing')
+        pockets[mark.group(1)] = found[0]
     constants = (ROOT / 'include/constants/items.h').read_text()
     for name, target in re.findall(r'^\s*(ITEM_\w+)\s*=\s*(ITEM_\w+)\s*,', constants, re.M):
         if target in pockets:
@@ -89,6 +99,29 @@ def item_symbols():
     for name in macro_names('HM'):
         pockets.setdefault('ITEM_HM_' + name, 'POCKET_TM_HM')
     return pockets
+
+
+def source_constants():
+    """{source: {flag symbol: value}} from the generated source-constant files the assembler includes before a
+    Hoenn (emerald) map and before a FRLG or Sinnoh map. HNS maps use the plain headers, which the C code shares."""
+    tables = {}
+    for source, name in (('emerald', 'wayfarer_hoenn_source_constants.inc'), ('engine', 'wayfarer_engine_source_constants.inc')):
+        text = (ROOT / 'data' / name).read_text()
+        tables[source] = {symbol: int(value, 0) for symbol, value in re.findall(r'^#define (FLAG_\w+) (0x[0-9A-Fa-f]+|\d+)\s*$', text, re.M)}
+    return tables
+
+
+def flag_expression(spot, tables, root):
+    """The flag a prize spot keeps, as the assembler sees it: a number from the active source-constants table,
+    else the C symbol (HNS maps). A Hoenn hidden item cannot be decoded from its packed bg event (the
+    macro overflows its 13-bit flag field), so the table always carries the true value."""
+    version = C.game_version(spot.map_name, root)
+    table = tables['emerald'] if version == 'emerald' else tables['engine'] if version in ('frlg', 'sinnoh') else {}
+    if spot.flag in table:
+        return f'0x{table[spot.flag]:04X}'
+    if version == 'emerald':
+        return None
+    return spot.flag
 
 
 def macro_names(name):
@@ -120,6 +153,9 @@ def classify(spots, fixed, pockets, errors):
             for row in prefixes:
                 if spot.map_name.startswith(row['prefix']):
                     reason = row['reason']
+        if not reason and spot.kind == 'hidden' and spot.underfoot:
+            # Nothing in this build can pick up an underfoot hidden item (GetInteractedBackgroundEventScript skips it).
+            reason = 'underfoot hidden item: nothing can pick it up'
         if reason:
             spot.status, spot.reason = 'fixed', reason
         elif spot.status == 'unrecognised':
@@ -128,7 +164,7 @@ def classify(spots, fixed, pockets, errors):
             spot.reason = 'hidden item row with no item'
         elif spot.authored not in pockets:
             errors.append(f'{spot.label}: authored item {spot.authored} is not an item of the Wayfarer build')
-        elif (pockets[spot.authored] in KEY_OR_HM_POCKETS and spot.authored not in CONSUMABLE_KEY_POCKET) or spot.authored.startswith('ITEM_HM'):
+        elif pockets[spot.authored] in KEY_OR_HM_POCKETS or spot.authored.startswith('ITEM_HM'):
             spot.status, spot.reason = 'fixed', f'key item or HM ({spot.authored}) keeps its authored spot'
     for key in explicit:
         if key not in seen:
@@ -149,6 +185,8 @@ def region_and_reach(spots, errors, maps, root):
         for prefix, region in OVERRIDES.items():
             if spot.map_name.startswith(prefix):
                 spot.region = region
+        if spot.region not in POOL_REGIONS:
+            errors.append(f'{spot.label}: region {spot.region} has no item pools (add a region override to fixed.json)')
         if spot.map_const not in reach_cache:
             reach_cache[spot.map_const] = resolve_reach(resolver, spot.map_const, maps, errors)
         spot.tier, spot.reach_rule, spot.reach_detail = reach_cache[spot.map_const] or (None, None, None)
@@ -220,7 +258,8 @@ def no_flag(flag):
     return flag in C.NO_FLAG
 
 
-def apply_prizes(spots, data, pockets, sevii, errors):
+def apply_prizes(spots, data, pockets, sevii, errors, tables=None):
+    tables = tables if tables is not None else source_constants()
     tms = {'ITEM_TM_' + name for name in macro_names('TM')}
     mart_tms = set(data['mart_tms'])
     by_region_item = defaultdict(list)
@@ -265,6 +304,9 @@ def apply_prizes(spots, data, pockets, sevii, errors):
         by_region_item[(spot.region, item)].append(where)
         if spot.region != prize['region']:
             errors.append(f"{where}: {spot.label} is in region {spot.region}, not {prize['region']}")
+        spot.flag_c = flag_expression(spot, tables, ROOT)
+        if spot.flag_c is None:
+            errors.append(f'{where}: {spot.label} flag {spot.flag} is not in the Hoenn source constants')
         spot.status, spot.prize, spot.prize_tier = 'prize', item, prize['tier']
         spot.reason = f"{prize['trail']} #{prize['n']} ({prize['tier']})"
     for item, places in legends.items():
@@ -391,7 +433,7 @@ def render_spots(rows):
         kind = 'WORLD_ITEM_SPOT_PRIZE' if spot.status == 'prize' else 'WORLD_ITEM_SPOT_DYNAMIC'
         shape = 'WORLD_ITEM_SPOT_HIDDEN' if spot.kind == 'hidden' else 'WORLD_ITEM_SPOT_BALL'
         lines.append(f'    {{ MAP_GROUP({spot.map_const}), MAP_NUM({spot.map_const}), {spot.id}, '
-                     f'WORLD_ITEM_ATTRS({shape}, {kind}, {c_tier(spot.tier)}, {c_region(spot.region)}), {spot.prize or "ITEM_NONE"} }},'
+                     f'WORLD_ITEM_ATTRS({shape}, {kind}, {c_tier(spot.tier)}, {c_region(spot.region)}), {spot.prize or "ITEM_NONE"}, {spot.flag_c or 0} }},'
                      f' // {spot.map_name} {spot.kind} {spot.x},{spot.y}')
     lines += ['};', '']
     return '\n'.join(lines)
@@ -449,9 +491,8 @@ def render_report(rows, all_spots, data, pools, stones, dynamic_tms, disagreemen
              'world slots specs.', '']
     kept = [s for s in all_spots if s.status in ('prize', 'item')]
     lines += ['## Totals by region', '',
-              '| Region | Balls | Hidden | Prizes (Find / Treasure / Legend) | Dynamic | Fixed (excluded) | Spec prizes | Spec dynamic |',
-              '| --- | ---: | ---: | --- | ---: | ---: | ---: | --- |']
-    spec_dynamic = {'Kanto': '128', 'Sevii': '64', 'Johto': 'about 81', 'Alola': 'about 6', 'Sinjoh': 'about 13', 'Hoenn': 'about 280'}
+              '| Region | Balls | Hidden | Prizes (Find / Treasure / Legend) | Dynamic | Fixed (excluded) | Spec prizes |',
+              '| --- | ---: | ---: | --- | ---: | ---: | ---: |']
     for region in POOL_REGIONS:
         mine = [s for s in all_spots if (s.region == region if s.status in ('prize', 'item') else False)]
         prizes = [s for s in mine if s.status == 'prize']
@@ -462,9 +503,9 @@ def render_report(rows, all_spots, data, pools, stones, dynamic_tms, disagreemen
             continue
         spec_total = data['spec_totals'].get(region, {}).get('total', '-')
         lines.append(f"| {region} | {sum(1 for s in mine if s.kind == 'ball')} | {sum(1 for s in mine if s.kind == 'hidden')} | "
-                     f"{len(prizes)} ({tiers['Find']} / {tiers['Treasure']} / {tiers['Legend']}) | {len(dyn)} | {len(fixed_here)} | {spec_total} | {spec_dynamic.get(region, '-')} |")
+                     f"{len(prizes)} ({tiers['Find']} / {tiers['Treasure']} / {tiers['Legend']}) | {len(dyn)} | {len(fixed_here)} | {spec_total} |")
     lines += [f'| total | {sum(1 for s in kept if s.kind == "ball")} | {sum(1 for s in kept if s.kind == "hidden")} | '
-              f"{sum(1 for s in kept if s.status == 'prize')} | {sum(1 for s in kept if s.status == 'item')} | {len(fixed_rows)} | {data['spec_overall']} | |", '']
+              f"{sum(1 for s in kept if s.status == 'prize')} | {sum(1 for s in kept if s.status == 'item')} | {len(fixed_rows)} | {data['spec_overall']} |", '']
     other_fixed = [s for s in all_spots if s.status in ('fixed', 'empty') and s not in fixed_rows]
     lines += [f'{len(kept)} kept spots (the save\'s slot indices), {len(fixed_rows)} fixed story balls, {len(other_fixed)} other excluded rows '
               '(Battle Pyramid, contest halls and empty hidden rows).', '']

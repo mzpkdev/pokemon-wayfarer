@@ -10638,7 +10638,8 @@
             "content_id": "exploration.twoisland-capebrink-frlg.bg.0",
             "reason": "Restores the authored FRLG hidden item; its Sevii bank flag is encoded with the Sevii hidden-item marker because the FRLG flag aliases a shared stub in Wayfarer.",
             "overrides": {
-              "flag": "FLAG_WAYFARER_SEVII_HIDDEN_TWO_ISLAND_CAPE_BRINK_0"
+              "flag": "FLAG_WAYFARER_SEVII_HIDDEN_TWO_ISLAND_CAPE_BRINK_0",
+              "underfoot": false
             }
           },
           {
@@ -18140,7 +18141,7 @@
     }
   ],
   "baseline": {
-    "projection_sha256": "1d1b3203ec0d942aa6292964ee02c1b359d856844b93268c151a7240f6a86ada",
+    "projection_sha256": "a688092bbf444c9a5b085b139fb820e5106d39b7011d3dd1a63c5062b352812c",
     "wild_encounters_sha256": "a2264a3346ae5ac0a37cdc22169a1455b2a51a9b7b626f3090504d84eaabb0b7",
     "event_island_baseline_sha256": "75086dcd44b31f457405a6b9f0d6598832ead0532b8437ea0fdf4752768f0a9f"
   },
@@ -19189,7 +19190,7 @@
           "label": "UpdateFollowingPokemon",
           "kind": "native",
           "path": "src/event_object_movement.c",
-          "sha256": "24016f7168fb955fb2d71790a96438dbe0f82712053fbf21af3010b306c95841"
+          "sha256": "766f6b5587623496a7fe844a5818a98b59932949f2acbad8cb8369b3c222696c"
         },
         {
           "label": "gText_HowMayIServeYou",
@@ -19795,7 +19796,7 @@
           "label": "EventScript_RestorePrevTextColor",
           "kind": "script_symbol",
           "path": "data/scripts/obtain_item.inc",
-          "sha256": "5eda60704c11d8171865b16139f3a9d0f473c5dfb0113bfa4d76f5caab1bb0ad"
+          "sha256": "ba2df32483a69e8c472d7cb175b2724588be87f392402be778f0a52ddd51e760"
         },
         {
           "label": "FiveIsland_House1_Text_HusbandWentOffFishing",

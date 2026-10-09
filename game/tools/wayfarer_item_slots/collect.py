@@ -25,7 +25,7 @@ NO_FLAG = {'', '0', '0x0', 'FLAG_NONE', 'FLAG_0'}
 class Spot:
     __slots__ = ('map_const', 'map_name', 'map_value', 'kind', 'id', 'x', 'y', 'authored', 'flag', 'script',
                  'region', 'tier', 'reach_rule', 'reach_detail', 'status', 'reason', 'prize', 'prize_tier', 'index',
-                 'sevii_row', 'gfx')
+                 'sevii_row', 'gfx', 'underfoot', 'flag_c')
 
     def __init__(self, **fields):
         for slot in self.__slots__:
@@ -83,6 +83,10 @@ def sevii_rows(root=ROOT):
     return result
 
 
+def game_version(name, root=ROOT):
+    return json.loads((root / 'data/maps' / name / 'map.json').read_text()).get('game_version', 'emerald')
+
+
 def region_of(name, root=ROOT):
     path = root / 'data/maps' / name / 'map.json'
     data = json.loads(path.read_text())
@@ -110,7 +114,7 @@ def collect(maps, labels, root=ROOT):
             spots.append(spot)
         for index, row in hidden_events(events_text):
             spot = Spot(map_const=const, map_name=info.name, map_value=info.value, kind='hidden', id=index, x=row['x'], y=row['y'],
-                        authored=row['item'], flag=row['flag'], script='', gfx='')
+                        authored=row['item'], flag=row['flag'], script='', gfx='', underfoot=row['underfoot'] not in ('FALSE', '0'))
             spot.status = 'item' if row['item'] not in ('ITEM_NONE', '0') else 'empty'
             spots.append(spot)
     return spots

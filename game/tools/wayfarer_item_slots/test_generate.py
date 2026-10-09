@@ -11,7 +11,7 @@ HAVE_MAPS = (G.ROOT / 'data/maps/groups.inc').is_file() and (G.ROOT / 'include/c
 REQUIRE_MAPS = os.environ.get('WORLD_ITEMS_REQUIRE_MAPS') == '1'
 POCKETS = {'ITEM_POTION': 'POCKET_ITEMS', 'ITEM_LEFTOVERS': 'POCKET_ITEMS', 'ITEM_MASTER_BALL': 'POCKET_POKE_BALLS',
            'ITEM_TM_TOXIC': 'POCKET_TM_HM', 'ITEM_TM_REST': 'POCKET_TM_HM', 'ITEM_TM_EARTHQUAKE': 'POCKET_TM_HM',
-           'ITEM_OLD_SEA_MAP': 'POCKET_KEY_ITEMS', 'ITEM_ESCAPE_ROPE': 'POCKET_KEY_ITEMS', 'ITEM_HM_CUT': 'POCKET_TM_HM',
+           'ITEM_OLD_SEA_MAP': 'POCKET_KEY_ITEMS', 'ITEM_ESCAPE_ROPE': 'POCKET_ITEMS', 'ITEM_HM_CUT': 'POCKET_TM_HM',
            'ITEM_CHOICE_BAND': 'POCKET_ITEMS'}
 
 
@@ -27,11 +27,16 @@ def prize(item='ITEM_LEFTOVERS', tier='Find', region='Kanto', **kw):
     return row
 
 
-def run_prizes(prizes, spots, mart=('ITEM_TM_REST',)):
+def run_prizes(prizes, spots, mart=('ITEM_TM_REST',), version='hns'):
     data = {'prizes': prizes, 'mart_tms': list(mart), 'spec_totals': {}, 'spec_overall': len(prizes)}
     errors = []
     G.NOTES.clear()
-    G.apply_prizes(spots, data, POCKETS, {}, errors)
+    original = C.game_version
+    C.game_version = lambda name, root=None: version  # the synthetic maps have no map.json
+    try:
+        G.apply_prizes(spots, data, POCKETS, {}, errors)
+    finally:
+        C.game_version = original
     return errors
 
 
@@ -100,7 +105,12 @@ class PrizeValidation(unittest.TestCase):
     def test_totals_must_match_the_spec(self):
         data = {'prizes': [prize()], 'mart_tms': [], 'spec_totals': {'Kanto': {'total': 2}}, 'spec_overall': 1}
         errors = []
-        G.apply_prizes([spot()], data, POCKETS, {}, errors)
+        original = C.game_version
+        C.game_version = lambda name, root=None: 'hns'
+        try:
+            G.apply_prizes([spot()], data, POCKETS, {}, errors)
+        finally:
+            C.game_version = original
         self.assertTrue(any('spec totals say 2' in e for e in errors))
 
 
@@ -122,7 +132,7 @@ class Classification(unittest.TestCase):
         self.assertEqual(self.run_classify(spots), [])
         self.assertEqual([s.status for s in spots], ['fixed', 'fixed'])
 
-    def test_key_items_and_hms_are_fixed_but_escape_rope_is_not(self):
+    def test_key_items_and_hms_are_fixed_but_escape_rope_is_not(self):  # the pocket comes from the preprocessed item data
         spots = [spot(ident=7), spot(ident=8, authored='ITEM_OLD_SEA_MAP'), spot(ident=9, authored='ITEM_HM_CUT'), spot(ident=10, authored='ITEM_ESCAPE_ROPE')]
         self.run_classify(spots)
         self.assertEqual([s.status for s in spots], ['fixed', 'fixed', 'fixed', 'item'])
@@ -133,10 +143,49 @@ class Classification(unittest.TestCase):
     def test_unknown_authored_item_fails(self):
         self.assertTrue(any('not an item of the Wayfarer build' in e for e in self.run_classify([spot(ident=7), spot(ident=1, authored='ITEM_GEN_NINE')])))
 
+    def test_underfoot_hidden_rows_are_excluded_and_cannot_be_prizes(self):
+        underfoot = spot(kind='hidden', ident=3, x=9, y=9)
+        underfoot.underfoot = True
+        errors = self.run_classify([underfoot, spot(ident=7)])
+        self.assertEqual(underfoot.status, 'fixed')
+        self.assertIn('underfoot', underfoot.reason)
+        data = {'prizes': [prize(shown='Hidden', kind='hidden', x=9, y=9)], 'mart_tms': [], 'spec_totals': {}, 'spec_overall': 1}
+        data['prizes'][0].pop('local_id')
+        problems = []
+        original = C.game_version
+        C.game_version = lambda name, root=None: 'hns'
+        try:
+            G.apply_prizes([underfoot], data, POCKETS, {}, problems, tables={'emerald': {}, 'engine': {}})
+        finally:
+            C.game_version = original
+        self.assertTrue(any('fixed story spot' in e for e in problems))
+
     def test_pyramid_prefix_is_excluded(self):
         pyramid = spot(ident=1, map_name='BattlePyramidSquare01', authored=None, status='unrecognised')
         self.assertEqual(self.run_classify([pyramid], {'map_prefixes': self.fixed['map_prefixes'], 'spots': []}), [])
         self.assertEqual(pyramid.status, 'fixed')
+
+
+class PrizeFlags(unittest.TestCase):
+    def test_hoenn_prize_flags_come_from_the_hoenn_constants_not_the_packed_event(self):
+        tables = {'emerald': {'FLAG_HIDDEN_ITEM_X': 0x623A}, 'engine': {'FLAG_HIDDEN_ITEM_X': 0xEA}}
+        original = C.game_version
+        try:
+            C.game_version = lambda name, root=None: 'emerald'
+            hoenn = spot(kind='hidden', flag='FLAG_HIDDEN_ITEM_X')
+            self.assertEqual(G.flag_expression(hoenn, tables, G.ROOT), '0x623A')
+            C.game_version = lambda name, root=None: 'frlg'
+            self.assertEqual(G.flag_expression(hoenn, tables, G.ROOT), '0x00EA')
+            C.game_version = lambda name, root=None: 'hns'
+            self.assertEqual(G.flag_expression(hoenn, tables, G.ROOT), 'FLAG_HIDDEN_ITEM_X')
+            C.game_version = lambda name, root=None: 'emerald'
+            self.assertIsNone(G.flag_expression(spot(kind='hidden', flag='FLAG_UNKNOWN'), tables, G.ROOT))
+        finally:
+            C.game_version = original
+
+    def test_a_hoenn_prize_without_a_constant_fails(self):
+        errors = run_prizes([prize(shown='Hidden', kind='hidden')], [spot(kind='hidden', flag='FLAG_NOT_THERE')], version='emerald')
+        self.assertTrue(any('not in the Hoenn source constants' in e for e in errors))
 
 
 class Pools(unittest.TestCase):
@@ -233,6 +282,20 @@ class GeneratedOutput(unittest.TestCase):
             if s.status == 'prize':
                 self.assertFalse(C.NO_FLAG & {s.flag}, s.label)
                 self.assertFalse(s.kind == 'ball' and s.tier == 'Road', s.label)
+
+    def test_no_spot_lands_in_a_region_without_pools(self):
+        for s in self.state['rows']:
+            self.assertIn(s.region, G.POOL_REGIONS, s.label)
+
+    def test_every_prize_flag_is_numeric_for_hoenn_and_trick_house_is_fixed(self):
+        for s in self.state['rows']:
+            if s.status == 'prize' and C.game_version(s.map_name) == 'emerald':
+                self.assertRegex(s.flag_c, r'^0x6[0-9A-F]{3}$', s.label)
+        fixed = [s for s in self.state['spots'] if s.status == 'fixed' and s.map_name == 'Route110_TrickHouseEnd']
+        self.assertEqual(len(fixed), 1)
+
+    def test_no_kept_spot_is_underfoot(self):
+        self.assertFalse([s.label for s in self.state['rows'] if s.kind == 'hidden' and s.underfoot])
 
     def test_gym_spots_count_as_road(self):
         gyms = [s for s in self.state['rows'] if C.R.GYM_RE.search(s.map_name)]

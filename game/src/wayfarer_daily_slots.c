@@ -31,12 +31,15 @@ EWRAM_DATA u32 gDailySlotsDebugSeed = 0;
 EWRAM_DATA u8 gDailySlotsDebugFlags = 0;
 EWRAM_DATA u16 gDailySlotsDebugFoundItem = 0;
 EWRAM_DATA u16 gDailySlotsDebugFoundCount = 0;
-static EWRAM_DATA u16 sPendingHiddenItem = 0;
 #endif
 
-// The spot (plus one; zero is none) of the hidden item the player is picking up.
-// Only lives from the facing check to the pickup script.
+// The hidden item the player is picking up: its spot (plus one; zero is none), item
+// and flag as the facing check resolved them. Only lives from the facing check to
+// the pickup script; SetHiddenItemFlag marks the spot only when the script's
+// variables still describe this pickup (Silph's Card Key doors share that special).
 static EWRAM_DATA u16 sPendingHiddenPlusOne = 0;
+static EWRAM_DATA u16 sPendingHiddenItem = 0;
+static EWRAM_DATA u16 sPendingHiddenFlag = 0;
 
 // ---------- the day and the draws ----------
 static u32 RotateRight(u32 value, u32 bits)
@@ -116,6 +119,7 @@ void DailySlots_OnMapLoad(void)
     u16 day = (u16)DailySlots_GetDay();
     struct WayfarerDailySlots *daily = Daily();
 
+    sPendingHiddenPlusOne = 0;
     if (daily->stampDay != day)
     {
         memset(daily->clearedToday, 0, sizeof(daily->clearedToday));
@@ -222,11 +226,6 @@ u16 DailyItems_ResolveSpotTier(u16 index, u8 *poolTierOut)
     return item;
 }
 
-static const struct ObjectEventTemplate *RomBallTemplate(u8 localId)
-{
-    return &gMapHeader.events->objectEvents[localId - 1];
-}
-
 static bool8 IsPrize(const struct WorldItemSpot *spot)
 {
     return WORLD_ITEM_ATTR_PRIZE(spot->attrs);
@@ -255,16 +254,15 @@ void DailyItems_RewriteTemplates(void)
     {
         const struct WorldItemSpot *spot = &sWorldItemSpots[index];
         struct ObjectEventTemplate *template;
-        u16 romFlag;
 
         if (spot->mapGroup != gSaveBlock1Ptr->location.mapGroup || spot->mapNum != gSaveBlock1Ptr->location.mapNum)
             break;
         if (IsHidden(spot) || spot->id > gMapHeader.events->objectEventCount)
             continue;
         template = &gSaveBlock1Ptr->objectEventTemplates[spot->id - 1];
-        romFlag = RomBallTemplate(spot->id)->flagId;
         template->script = DailyItems_EventScript_Ball;
-        template->flagId = (IsPrize(spot) && !FlagGet(romFlag)) ? romFlag : 0;
+        // The generated flag is the one the map assembled; an untaken prize keeps it, any other spot has none.
+        template->flagId = (IsPrize(spot) && !FlagGet(spot->flag)) ? spot->flag : 0;
     }
 }
 
@@ -288,7 +286,7 @@ static u16 BallItem(u16 index, u8 localId)
 {
     const struct WorldItemSpot *spot = &sWorldItemSpots[index];
 
-    if (IsPrize(spot) && !FlagGet(RomBallTemplate(localId)->flagId))
+    if (IsPrize(spot) && !FlagGet(spot->flag))
         return spot->prize;
     return DailyItems_ResolveSpot(index);
 }
@@ -302,19 +300,23 @@ bool8 DailyItems_ResolveHidden(u8 mapGroup, u8 mapNum, const struct BgEvent *bgE
         ? &gMapHeader : Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum);
     u16 index;
     const struct WorldItemSpot *spot;
-    u16 authoredFlag = GetHiddenItemFlagId(bgEvent);
 
     if (spotIndex != NULL)
         *spotIndex = NO_ITEM_SPOT;
     *item = bgEvent->bgUnion.hiddenItem.item;
-    *flagId = authoredFlag;
     index = DailyItems_FindSpot(mapGroup, mapNum, TRUE, bgEvent - header->events->bgEvents);
     if (index == NO_ITEM_SPOT)
-        return !FlagGet(authoredFlag);
+    {
+        // A fixed spot stays on its authored path.
+        *flagId = GetHiddenItemFlagId(bgEvent);
+        return !FlagGet(*flagId);
+    }
     spot = &sWorldItemSpots[index];
     if (spotIndex != NULL)
         *spotIndex = index;
-    if (IsPrize(spot) && !FlagGet(authoredFlag))
+    // A prize's flag comes from the generated table: the packed bg event cannot carry a Hoenn flag.
+    *flagId = spot->flag;
+    if (IsPrize(spot) && !FlagGet(spot->flag))
     {
         *item = spot->prize;
         return TRUE;
@@ -324,19 +326,30 @@ bool8 DailyItems_ResolveHidden(u8 mapGroup, u8 mapNum, const struct BgEvent *bgE
     return *item != ITEM_NONE && !DailyItems_IsCleared(index);
 }
 
-void DailyItems_SetPendingHidden(u16 spotIndex, u16 item)
+void DailyItems_SetPendingHidden(u16 spotIndex, u16 item, u16 flagId)
 {
     sPendingHiddenPlusOne = spotIndex == NO_ITEM_SPOT ? 0 : spotIndex + 1;
-    (void)item;
-#if TESTING || defined(E2E_TESTING)
     sPendingHiddenItem = item;
-#endif
+    sPendingHiddenFlag = flagId;
 }
 
-// SetHiddenItemFlag runs after the item went into the bag.
+// The full-bag path of the hidden item script: nothing was picked up.
+void DailyItems_ClearPendingHidden(void)
+{
+    sPendingHiddenPlusOne = 0;
+}
+
+void DailyItems_ClearPendingHidden_NativeCall(struct ScriptContext *ctx)
+{
+    DailyItems_ClearPendingHidden();
+}
+
+// SetHiddenItemFlag runs after the item went into the bag. Silph's Card Key doors
+// call it too, so only a pickup whose flag is still the pending one counts (the item can
+// change under the randomizer, the flag cannot).
 void DailyItems_PickedUpHidden(void)
 {
-    if (sPendingHiddenPlusOne != 0)
+    if (sPendingHiddenPlusOne != 0 && gSpecialVar_0x8004 == sPendingHiddenFlag)
     {
         DailyItems_SetCleared(sPendingHiddenPlusOne - 1);
 #if TESTING || defined(E2E_TESTING)

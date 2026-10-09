@@ -318,6 +318,14 @@ The Itemfinder sees resolved hidden items only.
 - **Slot index.** Item spots are the first rows of the shared `clearedToday`
   bitset, in the order of `src/data/item_slots/spots.h` (map, ball before
   hidden, id). Trainer slots will follow them.
+- **Prize flags.** The generator writes each prize spot's permanent flag into the
+  spot table as the map assembles it, and the runtime uses that flag, never the
+  one decoded from a hidden item's packed bg event (Hoenn's flags overflow that
+  field). A hidden prize on an underfoot row would be unreachable, so the generator
+  fails on one and excludes underfoot dynamic rows; the two prize rows that were
+  underfoot (Pokemon Tower 7F and Cape Brink) have the flag cleared for Wayfarer.
+- **Spawn check.** It runs in `TrySpawnObjectEvents` only. No script `addobject`s an
+  item ball, so the one-off spawn path needs no check.
 - **Debug override.** `gDailySlotsDebugFlags`, `gDailySlotsDebugDay` and
   `gDailySlotsDebugSeed` pin the day and seed in the mechanics-test and E2E
   builds.

@@ -56,7 +56,6 @@ enum WorldItemRegion
     WORLD_ITEM_REGION_ALOLA,
     WORLD_ITEM_REGION_SINJOH,
     WORLD_ITEM_REGION_HOENN,
-    WORLD_ITEM_REGION_OTHER,
     WORLD_ITEM_REGION_COUNT,
 };
 
@@ -78,6 +77,7 @@ struct WorldItemSpot
     u8 id;      // local id of a ball, index among the map's bg events for a hidden item
     u8 attrs;
     u16 prize;  // the prize item, ITEM_NONE for a dynamic spot
+    u16 flag;   // a prize's permanent flag exactly as the map assembles it, 0 for a dynamic spot
 };
 
 struct WorldItemPoolEntry
@@ -113,11 +113,13 @@ void DailyItems_SetCleared(u16 index);
 void DailyItems_RewriteTemplates(void);
 bool8 DailyItems_HideTemplate(const struct ObjectEventTemplate *template);
 bool8 DailyItems_ResolveHidden(u8 mapGroup, u8 mapNum, const struct BgEvent *bgEvent, u16 *item, u16 *flagId, u16 *spotIndex);
-void DailyItems_SetPendingHidden(u16 spotIndex, u16 item);
+void DailyItems_SetPendingHidden(u16 spotIndex, u16 item, u16 flagId);
+void DailyItems_ClearPendingHidden(void);
 void DailyItems_PickedUpHidden(void);
 // Natives of the shared ball script (item_ball_scripts_wayfarer.inc).
 void DailyItems_ResolveBall(struct ScriptContext *ctx);
 void DailyItems_MarkBallCleared(struct ScriptContext *ctx);
+void DailyItems_ClearPendingHidden_NativeCall(struct ScriptContext *ctx);
 
 #if TESTING || defined(E2E_TESTING)
 #define DAILY_DEBUG_DAY     (1 << 0)

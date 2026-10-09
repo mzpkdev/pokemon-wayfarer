@@ -591,82 +591,6 @@ static const struct WorldItemPoolEntry sWorldItemPool_Hoenn_Special[] =
     { WORLD_ITEM_GROUP_TM, 3 },
 };
 
-static const struct WorldItemPoolEntry sWorldItemPool_Other_Regular[] =
-{
-    { ITEM_POTION, 10 },
-    { ITEM_SUPER_POTION, 12 },
-    { ITEM_POKE_BALL, 10 },
-    { ITEM_GREAT_BALL, 10 },
-    { ITEM_ANTIDOTE, 5 },
-    { ITEM_PARALYZE_HEAL, 5 },
-    { ITEM_AWAKENING, 4 },
-    { ITEM_BURN_HEAL, 4 },
-    { ITEM_ICE_HEAL, 4 },
-    { ITEM_REPEL, 6 },
-    { ITEM_SUPER_REPEL, 5 },
-    { ITEM_ESCAPE_ROPE, 5 },
-    { ITEM_ORAN_BERRY, 6 },
-    { ITEM_FRESH_WATER, 5 },
-    { ITEM_SODA_POP, 4 },
-    { ITEM_TINY_MUSHROOM, 3 },
-    { ITEM_EXP_CANDY_S, 2 },
-};
-
-static const struct WorldItemPoolEntry sWorldItemPool_Other_Better[] =
-{
-    { ITEM_HYPER_POTION, 12 },
-    { ITEM_MAX_POTION, 6 },
-    { ITEM_FULL_HEAL, 8 },
-    { ITEM_REVIVE, 10 },
-    { ITEM_ULTRA_BALL, 10 },
-    { ITEM_ETHER, 6 },
-    { ITEM_ELIXIR, 4 },
-    { ITEM_MAX_REPEL, 5 },
-    { ITEM_SITRUS_BERRY, 6 },
-    { ITEM_LUM_BERRY, 4 },
-    { ITEM_LEPPA_BERRY, 3 },
-    { ITEM_MOOMOO_MILK, 4 },
-    { ITEM_X_ATTACK, 2 },
-    { ITEM_X_DEFENSE, 2 },
-    { ITEM_X_SPEED, 2 },
-    { ITEM_X_SP_ATK, 2 },
-    { ITEM_DIVE_BALL, 2 },
-    { ITEM_NET_BALL, 2 },
-    { ITEM_QUICK_BALL, 2 },
-    { ITEM_DUSK_BALL, 2 },
-    { ITEM_TIMER_BALL, 2 },
-    { ITEM_BIG_MUSHROOM, 2 },
-    { ITEM_PEARL, 3 },
-    { ITEM_STARDUST, 3 },
-    { ITEM_EXP_CANDY_M, 3 },
-};
-
-static const struct WorldItemPoolEntry sWorldItemPool_Other_Special[] =
-{
-    { ITEM_RARE_CANDY, 6 },
-    { ITEM_PP_UP, 5 },
-    { ITEM_PP_MAX, 1 },
-    { ITEM_HP_UP, 2 },
-    { ITEM_PROTEIN, 2 },
-    { ITEM_IRON, 2 },
-    { ITEM_CALCIUM, 2 },
-    { ITEM_ZINC, 2 },
-    { ITEM_CARBOS, 2 },
-    { ITEM_FULL_RESTORE, 5 },
-    { ITEM_MAX_REVIVE, 5 },
-    { ITEM_MAX_ELIXIR, 3 },
-    { ITEM_NUGGET, 6 },
-    { ITEM_BIG_NUGGET, 1 },
-    { ITEM_STAR_PIECE, 3 },
-    { ITEM_BIG_PEARL, 3 },
-    { ITEM_COMET_SHARD, 1 },
-    { ITEM_HEART_SCALE, 4 },
-    { ITEM_BOTTLE_CAP, 1 },
-    { ITEM_EXP_CANDY_L, 2 },
-    { WORLD_ITEM_GROUP_STONE, 6 },
-    { WORLD_ITEM_GROUP_TM, 3 },
-};
-
 static const struct WorldItemPool sWorldItemPools[WORLD_ITEM_REGION_COUNT][3] =
 {
     [WORLD_ITEM_REGION_KANTO] =
@@ -704,11 +628,5 @@ static const struct WorldItemPool sWorldItemPools[WORLD_ITEM_REGION_COUNT][3] =
         { sWorldItemPool_Hoenn_Regular, ARRAY_COUNT(sWorldItemPool_Hoenn_Regular), 100 },
         { sWorldItemPool_Hoenn_Better, ARRAY_COUNT(sWorldItemPool_Hoenn_Better), 118 },
         { sWorldItemPool_Hoenn_Special, ARRAY_COUNT(sWorldItemPool_Hoenn_Special), 63 },
-    },
-    [WORLD_ITEM_REGION_OTHER] =
-    {
-        { sWorldItemPool_Other_Regular, ARRAY_COUNT(sWorldItemPool_Other_Regular), 100 },
-        { sWorldItemPool_Other_Better, ARRAY_COUNT(sWorldItemPool_Other_Better), 107 },
-        { sWorldItemPool_Other_Special, ARRAY_COUNT(sWorldItemPool_Other_Special), 67 },
     },
 };

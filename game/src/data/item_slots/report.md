@@ -6,18 +6,17 @@ world slots specs.
 
 ## Totals by region
 
-| Region | Balls | Hidden | Prizes (Find / Treasure / Legend) | Dynamic | Fixed (excluded) | Spec prizes | Spec dynamic |
-| --- | ---: | ---: | --- | ---: | ---: | ---: | --- |
-| Kanto | 105 | 77 | 54 (33 / 19 / 2) | 128 | 11 | 54 | 128 |
-| Sevii | 38 | 58 | 32 (13 / 17 / 2) | 64 | 1 | 32 | 64 |
-| Johto | 187 | 71 | 62 (40 / 19 / 3) | 196 | 7 | 62 | about 81 |
-| Alola | 11 | 5 | 10 (5 / 5 / 0) | 6 | 1 | 10 | about 6 |
-| Sinjoh | 10 | 11 | 8 (3 / 2 / 3) | 13 | 1 | 8 | about 13 |
-| Hoenn | 160 | 107 | 44 (22 / 19 / 3) | 223 | 18 | 44 | about 280 |
-| Other | 0 | 1 | 0 (0 / 0 / 0) | 1 | 0 | - | - |
-| total | 511 | 330 | 210 | 631 | 39 | 210 | |
+| Region | Balls | Hidden | Prizes (Find / Treasure / Legend) | Dynamic | Fixed (excluded) | Spec prizes |
+| --- | ---: | ---: | --- | ---: | ---: | ---: |
+| Kanto | 105 | 77 | 54 (33 / 19 / 2) | 128 | 11 | 54 |
+| Sevii | 38 | 58 | 32 (13 / 17 / 2) | 64 | 1 | 32 |
+| Johto | 187 | 71 | 62 (40 / 19 / 3) | 196 | 7 | 62 |
+| Alola | 11 | 5 | 10 (5 / 5 / 0) | 6 | 1 | 10 |
+| Sinjoh | 10 | 11 | 8 (3 / 2 / 3) | 13 | 1 | 8 |
+| Hoenn | 160 | 107 | 44 (22 / 19 / 3) | 223 | 19 | 44 |
+| total | 511 | 329 | 210 | 630 | 40 | 210 |
 
-841 kept spots (the save's slot indices), 39 fixed story balls, 120 other excluded rows (Battle Pyramid, contest halls and empty hidden rows).
+840 kept spots (the save's slot indices), 40 fixed story balls, 120 other excluded rows (Battle Pyramid, contest halls and empty hidden rows).
 
 ## Reach tiers
 
@@ -28,8 +27,7 @@ world slots specs.
 | Johto | 69 | 85 | 104 |
 | Alola | 1 | 5 | 10 |
 | Sinjoh | 0 | 9 | 12 |
-| Hoenn | 138 | 50 | 79 |
-| Other | 0 | 0 | 1 |
+| Hoenn | 137 | 50 | 80 |
 
 ## Prize reach notes
 
@@ -148,22 +146,6 @@ Chance of a find per spot by reach (empty days included):
 | Wilds | 25.00% | 37.50% | 28.50% | 9.00% |
 | Outlands | 25.00% | 22.50% | 33.75% | 18.75% |
 
-### Other pool weights
-
-**Regular** (total weight 100): POTION 10, SUPER_POTION 12, POKE_BALL 10, GREAT_BALL 10, ANTIDOTE 5, PARALYZE_HEAL 5, AWAKENING 4, BURN_HEAL 4, ICE_HEAL 4, REPEL 6, SUPER_REPEL 5, ESCAPE_ROPE 5, ORAN_BERRY 6, FRESH_WATER 5, SODA_POP 4, TINY_MUSHROOM 3, EXP_CANDY_S 2
-
-**Better** (total weight 107): HYPER_POTION 12, MAX_POTION 6, FULL_HEAL 8, REVIVE 10, ULTRA_BALL 10, ETHER 6, ELIXIR 4, MAX_REPEL 5, SITRUS_BERRY 6, LUM_BERRY 4, LEPPA_BERRY 3, MOOMOO_MILK 4, X_ATTACK 2, X_DEFENSE 2, X_SPEED 2, X_SP_ATK 2, DIVE_BALL 2, NET_BALL 2, QUICK_BALL 2, DUSK_BALL 2, TIMER_BALL 2, BIG_MUSHROOM 2, PEARL 3, STARDUST 3, EXP_CANDY_M 3
-
-**Special** (total weight 67): RARE_CANDY 6, PP_UP 5, PP_MAX 1, HP_UP 2, PROTEIN 2, IRON 2, CALCIUM 2, ZINC 2, CARBOS 2, FULL_RESTORE 5, MAX_REVIVE 5, MAX_ELIXIR 3, NUGGET 6, BIG_NUGGET 1, STAR_PIECE 3, BIG_PEARL 3, COMET_SHARD 1, HEART_SCALE 4, BOTTLE_CAP 1, EXP_CANDY_L 2, Evolution stone 6, TM 3
-
-Chance of a find per spot by reach (empty days included):
-
-| Reach | Empty | Regular | Better | Special |
-| --- | ---: | ---: | ---: | ---: |
-| Road | 25.00% | 52.50% | 18.75% | 3.75% |
-| Wilds | 25.00% | 37.50% | 28.50% | 9.00% |
-| Outlands | 25.00% | 22.50% | 33.75% | 18.75% |
-
 ## Spots
 
 Every item spot by region. Status is prize (kept flag, gives its prize once), dynamic (daily pool) or fixed (never touched).
@@ -258,102 +240,102 @@ Every item spot by region. Status is prize (kept flag, gives its prize once), dy
 | 318 | CeruleanCave_B2F_hns hidden 31,16 | ITEM_DUSK_STONE | prize | Outlands -> ITEM_DUSK_STONE | The Cerulean Cave Gauntlet #6 (Treasure) |
 | 319 | CeruleanCave_B2F_hns hidden 39,7 | ITEM_ELECTIRIZER | prize | Outlands -> ITEM_ELECTIRIZER | The Cerulean Cave Gauntlet #7 (Treasure) |
 | 320 | CeruleanCave_B2F_hns hidden 19,17 | ITEM_BLACK_SLUDGE | prize | Outlands -> ITEM_ABILITY_PATCH | The Cerulean Cave Gauntlet #9 (Legend) |
-| 649 | SSAnne_B1F_Corridor_Frlg hidden 21,5 | ITEM_HYPER_POTION | dynamic | Outlands | S.S. Anne step 3 of 3; deeper floor |
-| 650 | SSAnne_Kitchen_Frlg local id 8 (1,10) | ITEM_GREAT_BALL | dynamic | Outlands | S.S. Anne step 3 of 3; deeper floor |
-| 651 | SSAnne_Kitchen_Frlg hidden 14,8 | ITEM_CHESTO_BERRY | dynamic | Outlands | S.S. Anne step 3 of 3; deeper floor |
-| 652 | SSAnne_Kitchen_Frlg hidden 14,4 | ITEM_PECHA_BERRY | dynamic | Outlands | S.S. Anne step 3 of 3; deeper floor |
-| 653 | SSAnne_Kitchen_Frlg hidden 14,6 | ITEM_CHERI_BERRY | dynamic | Outlands | S.S. Anne step 3 of 3; deeper floor |
-| 654 | SSAnne_1F_Room2_Frlg local id 4 (5,7) | ITEM_TM31 | prize | Wilds -> ITEM_TM_BRICK_BREAK | Standalone prizes #1 (Find) |
-| 655 | SSAnne_2F_Room2_Frlg local id 3 (3,3) | ITEM_STARDUST | dynamic | Outlands | S.S. Anne step 2 of 3; deeper floor |
-| 656 | SSAnne_2F_Room4_Frlg local id 3 (2,4) | ITEM_X_ATTACK | dynamic | Outlands | S.S. Anne step 2 of 3; deeper floor |
-| 657 | SSAnne_B1F_Room2_Frlg local id 2 (3,2) | ITEM_TM44 | prize | Outlands -> ITEM_TM_SUBSTITUTE | Standalone prizes #2 (Find) |
-| 658 | SSAnne_B1F_Room3_Frlg local id 2 (1,5) | ITEM_ETHER | dynamic | Outlands | S.S. Anne step 3 of 3; deeper floor |
-| 659 | SSAnne_B1F_Room5_Frlg local id 3 (2,2) | ITEM_SUPER_POTION | dynamic | Outlands | S.S. Anne step 3 of 3; deeper floor |
-| 660 | RocketHideout_B1F_Frlg local id 6 (5,16) | ITEM_ESCAPE_ROPE | dynamic | Wilds | Rocket Hideout (Celadon) step 1 of 4; entrance floor |
-| 661 | RocketHideout_B1F_Frlg local id 7 (1,22) | ITEM_HYPER_POTION | dynamic | Wilds | Rocket Hideout (Celadon) step 1 of 4; entrance floor |
-| 662 | RocketHideout_B1F_Frlg hidden 16,17 | ITEM_PP_UP | dynamic | Wilds | Rocket Hideout (Celadon) step 1 of 4; entrance floor |
-| 663 | RocketHideout_B2F_Frlg local id 2 (15,3) | ITEM_X_SPEED | dynamic | Outlands | Rocket Hideout (Celadon) step 2 of 4; deeper floor |
-| 664 | RocketHideout_B2F_Frlg local id 3 (2,5) | ITEM_MOON_STONE | dynamic | Outlands | Rocket Hideout (Celadon) step 2 of 4; deeper floor |
-| 665 | RocketHideout_B2F_Frlg local id 4 (5,7) | ITEM_TM12 | prize | Outlands -> ITEM_TM_TAUNT | The Celadon Underground #1 (Find) |
-| 666 | RocketHideout_B2F_Frlg local id 5 (0,14) | ITEM_SUPER_POTION | dynamic | Outlands | Rocket Hideout (Celadon) step 2 of 4; deeper floor |
-| 667 | RocketHideout_B3F_Frlg local id 3 (12,12) | ITEM_RARE_CANDY | dynamic | Outlands | Rocket Hideout (Celadon) step 3 of 4; deeper floor |
-| 668 | RocketHideout_B3F_Frlg local id 4 (19,14) | ITEM_TM21 | dynamic | Outlands | Rocket Hideout (Celadon) step 3 of 4; deeper floor |
-| 669 | RocketHideout_B3F_Frlg local id 5 (14,24) | ITEM_BLACK_GLASSES | prize | Outlands -> ITEM_BLACK_GLASSES | The Celadon Underground #2 (Find) |
-| 670 | RocketHideout_B3F_Frlg hidden 1,3 | ITEM_NUGGET | dynamic | Outlands | Rocket Hideout (Celadon) step 3 of 4; deeper floor |
-| 671 | RocketHideout_B4F_Frlg local id 7 (1,6) | ITEM_TM49 | prize | Outlands -> ITEM_RAZOR_CLAW | The Celadon Underground #3 (Treasure) |
-| 672 | RocketHideout_B4F_Frlg local id 8 (4,14) | ITEM_MAX_ETHER | dynamic | Outlands | Rocket Hideout (Celadon) step 4 of 4; deeper floor |
-| 673 | RocketHideout_B4F_Frlg local id 9 (6,23) | ITEM_CALCIUM | dynamic | Outlands | Rocket Hideout (Celadon) step 4 of 4; deeper floor |
-| 674 | RocketHideout_B4F_Frlg hidden 22,6 | ITEM_NEST_BALL | dynamic | Outlands | Rocket Hideout (Celadon) step 4 of 4; deeper floor |
-| 675 | RocketHideout_B4F_Frlg hidden 16,6 | ITEM_NET_BALL | dynamic | Outlands | Rocket Hideout (Celadon) step 4 of 4; deeper floor |
-| 676 | SilphCo_2F_Frlg hidden 11,21 | ITEM_ULTRA_BALL | dynamic | Wilds | Silph Co. step 1 of 10; entrance floor |
-| 677 | SilphCo_3F_Frlg local id 4 (8,10) | ITEM_HYPER_POTION | dynamic | Outlands | Silph Co. step 2 of 10; deeper floor |
-| 678 | SilphCo_3F_Frlg hidden 34,18 | ITEM_PROTEIN | dynamic | Outlands | Silph Co. step 2 of 10; deeper floor |
-| 679 | SilphCo_4F_Frlg local id 5 (3,11) | ITEM_MAX_REVIVE | dynamic | Outlands | Silph Co. step 3 of 10; deeper floor |
-| 680 | SilphCo_4F_Frlg local id 6 (4,12) | ITEM_ESCAPE_ROPE | dynamic | Outlands | Silph Co. step 3 of 10; deeper floor |
-| 681 | SilphCo_4F_Frlg local id 7 (2,13) | ITEM_FULL_HEAL | dynamic | Outlands | Silph Co. step 3 of 10; deeper floor |
-| 682 | SilphCo_4F_Frlg local id 8 (30,18) | ITEM_TM_TORMENT | prize | Outlands -> ITEM_TM_TRICK_ROOM | The Celadon Underground #4 (Treasure) |
-| 683 | SilphCo_4F_Frlg hidden 35,20 | ITEM_IRON | dynamic | Outlands | Silph Co. step 3 of 10; deeper floor |
-| 684 | SilphCo_5F_Frlg local id 6 (4,9) | ITEM_PROTEIN | dynamic | Outlands | Silph Co. step 4 of 10; deeper floor |
-| 685 | SilphCo_5F_Frlg local id 7 (1,18) | ITEM_TM_FOCUS_PUNCH | dynamic | Outlands | Silph Co. step 4 of 10; deeper floor |
-| 686 | SilphCo_5F_Frlg hidden 13,16 | ITEM_ELIXIR | dynamic | Outlands | Silph Co. step 4 of 10; deeper floor |
-| 687 | SilphCo_5F_Frlg hidden 32,9 | ITEM_PP_UP | dynamic | Outlands | Silph Co. step 4 of 10; deeper floor |
-| 688 | SilphCo_6F_Frlg local id 8 (2,14) | ITEM_HP_UP | dynamic | Outlands | Silph Co. step 5 of 10; deeper floor |
-| 689 | SilphCo_6F_Frlg local id 9 (1,17) | ITEM_X_SPECIAL | dynamic | Outlands | Silph Co. step 5 of 10; deeper floor |
-| 690 | SilphCo_6F_Frlg hidden 1,8 | ITEM_CARBOS | dynamic | Outlands | Silph Co. step 5 of 10; deeper floor |
-| 691 | SilphCo_7F_Frlg local id 9 (0,12) | ITEM_CALCIUM | dynamic | Outlands | Silph Co. step 6 of 10; deeper floor |
-| 692 | SilphCo_7F_Frlg local id 10 (30,11) | ITEM_TM_BULK_UP | dynamic | Outlands | Silph Co. step 6 of 10; deeper floor |
-| 693 | SilphCo_7F_Frlg hidden 22,11 | ITEM_ZINC | dynamic | Outlands | Silph Co. step 6 of 10; deeper floor |
-| 694 | SilphCo_8F_Frlg local id 5 (24,8) | ITEM_IRON | dynamic | Outlands | Silph Co. step 7 of 10; deeper floor |
-| 695 | SilphCo_8F_Frlg hidden 29,10 | ITEM_NUGGET | prize | Outlands -> ITEM_DUBIOUS_DISC | The Celadon Underground #5 (Treasure) |
-| 696 | SilphCo_9F_Frlg hidden 11,14 | ITEM_MAX_POTION | dynamic | Outlands | Silph Co. step 8 of 10; deeper floor |
-| 697 | SilphCo_9F_Frlg hidden 5,8 | ITEM_CALCIUM | dynamic | Outlands | Silph Co. step 8 of 10; deeper floor |
-| 698 | SilphCo_10F_Frlg local id 4 (5,15) | ITEM_CARBOS | dynamic | Outlands | Silph Co. step 9 of 10; deeper floor |
-| 699 | SilphCo_10F_Frlg local id 5 (2,15) | ITEM_ULTRA_BALL | dynamic | Outlands | Silph Co. step 9 of 10; deeper floor |
-| 700 | SilphCo_10F_Frlg local id 6 (3,17) | ITEM_RARE_CANDY | dynamic | Outlands | Silph Co. step 9 of 10; deeper floor |
-| 701 | SilphCo_10F_Frlg hidden 9,9 | ITEM_HP_UP | dynamic | Outlands | Silph Co. step 9 of 10; deeper floor |
-| 702 | SilphCo_11F_Frlg local id 5 (16,18) | ITEM_ZINC | dynamic | Outlands | Silph Co. step 10 of 10; deeper floor |
-| 703 | SilphCo_11F_Frlg hidden 10,18 | ITEM_REVIVE | dynamic | Outlands | Silph Co. step 10 of 10; deeper floor |
-| 704 | PokemonMansion_1F_Frlg local id 2 (29,32) | ITEM_CARBOS | dynamic | Wilds | Pokémon Mansion (Dungeon); entrance floor |
-| 705 | PokemonMansion_1F_Frlg local id 3 (22,6) | ITEM_ESCAPE_ROPE | dynamic | Wilds | Pokémon Mansion (Dungeon); entrance floor |
-| 706 | PokemonMansion_1F_Frlg local id 4 (27,15) | ITEM_PROTEIN | dynamic | Wilds | Pokémon Mansion (Dungeon); entrance floor |
-| 707 | PokemonMansion_1F_Frlg hidden 2,21 | ITEM_MOON_STONE | prize | Wilds -> ITEM_MAGMARIZER | The Weather Run #2 (Find) |
-| 708 | PokemonMansion_2F_Frlg local id 2 (36,8) | ITEM_CALCIUM | dynamic | Outlands | Pokémon Mansion (Dungeon); deeper floor |
-| 709 | PokemonMansion_2F_Frlg local id 3 (18,23) | ITEM_ZINC | dynamic | Outlands | Pokémon Mansion (Dungeon); deeper floor |
-| 710 | PokemonMansion_2F_Frlg local id 4 (35,17) | ITEM_HP_UP | dynamic | Outlands | Pokémon Mansion (Dungeon); deeper floor |
-| 711 | PokemonMansion_3F_Frlg local id 3 (9,19) | ITEM_MAX_POTION | dynamic | Outlands | Pokémon Mansion (Dungeon); deeper floor |
-| 712 | PokemonMansion_3F_Frlg local id 4 (32,6) | ITEM_IRON | dynamic | Outlands | Pokémon Mansion (Dungeon); deeper floor |
-| 713 | PokemonMansion_3F_Frlg hidden 36,13 | ITEM_RARE_CANDY | prize | Outlands -> ITEM_SMOOTH_ROCK | The Weather Run #3 (Find) |
-| 714 | PokemonMansion_B1F_Frlg local id 1 (6,21) | ITEM_TM22 | prize | Outlands -> ITEM_HEAT_ROCK | The Weather Run #4 (Find) |
-| 715 | PokemonMansion_B1F_Frlg local id 4 (23,4) | ITEM_TM14 | dynamic | Outlands | Pokémon Mansion (Dungeon); deeper floor |
-| 716 | PokemonMansion_B1F_Frlg local id 5 (2,29) | ITEM_FULL_RESTORE | dynamic | Outlands | Pokémon Mansion (Dungeon); deeper floor |
-| 717 | PokemonMansion_B1F_Frlg hidden 35,5 | ITEM_ELIXIR | prize | Outlands -> ITEM_BLACK_SLUDGE | The Weather Run #5 (Treasure) |
-| 718 | SeafoamIslands_1F_Frlg local id 3 (11,8) | ITEM_ICE_HEAL | dynamic | Wilds | Seafoam Islands (Dungeon); entrance floor |
-| 719 | SeafoamIslands_B1F_Frlg local id 3 (19,18) | ITEM_WATER_STONE | prize | Outlands -> ITEM_ICY_ROCK | The Weather Run #7 (Find) |
-| 720 | SeafoamIslands_B1F_Frlg local id 4 (24,14) | ITEM_REVIVE | dynamic | Outlands | Seafoam Islands (Dungeon); deeper floor |
-| 721 | SeafoamIslands_B2F_Frlg local id 3 (18,15) | ITEM_BIG_PEARL | prize | Outlands -> ITEM_LIGHT_CLAY | The Weather Run #8 (Find) |
-| 722 | SeafoamIslands_B3F_Frlg hidden 5,12 | ITEM_NUGGET | prize | Outlands -> ITEM_EVIOLITE | The Weather Run #9 (Treasure) |
-| 723 | SeafoamIslands_B4F_Frlg local id 4 (22,19) | ITEM_ULTRA_BALL | prize | Outlands -> ITEM_ABILITY_CAPSULE | The Weather Run #11 (Legend) |
-| 724 | SeafoamIslands_B4F_Frlg hidden 13,8 | ITEM_WATER_STONE | prize | Outlands -> ITEM_LEFTOVERS | The Weather Run #10 (Treasure) |
-| 725 | PokemonTower_3F_Frlg local id 4 (13,2) | ITEM_ESCAPE_ROPE | dynamic | Wilds | Pokémon Tower (Dungeon); entrance floor |
-| 726 | PokemonTower_4F_Frlg local id 4 (12,11) | ITEM_ELIXIR | dynamic | Outlands | Pokémon Tower (Dungeon); deeper floor |
-| 727 | PokemonTower_4F_Frlg local id 5 (8,11) | ITEM_AWAKENING | dynamic | Outlands | Pokémon Tower (Dungeon); deeper floor |
-| 728 | PokemonTower_4F_Frlg local id 6 (11,16) | ITEM_GREAT_BALL | dynamic | Outlands | Pokémon Tower (Dungeon); deeper floor |
-| 729 | PokemonTower_5F_Frlg local id 6 (6,16) | ITEM_NUGGET | dynamic | Outlands | Pokémon Tower (Dungeon); deeper floor |
-| 730 | PokemonTower_5F_Frlg local id 7 (11,9) | ITEM_CLEANSE_TAG | dynamic | Outlands | Pokémon Tower (Dungeon); deeper floor |
-| 731 | PokemonTower_5F_Frlg hidden 7,3 | ITEM_BIG_MUSHROOM | prize | Outlands -> ITEM_TOXIC_ORB | Moon to Lavender #7 (Find) |
-| 732 | PokemonTower_6F_Frlg local id 4 (5,15) | ITEM_RARE_CANDY | prize | Outlands -> ITEM_TM_WILL_O_WISP | Moon to Lavender #8 (Find) |
-| 733 | PokemonTower_6F_Frlg local id 5 (15,15) | ITEM_X_ACCURACY | dynamic | Outlands | Pokémon Tower (Dungeon); deeper floor |
-| 734 | PokemonTower_7F_Frlg hidden 11,4 | ITEM_SOOTHE_BELL | prize | Outlands -> ITEM_REAPER_CLOTH | Moon to Lavender #9 (Treasure) |
-| 735 | PowerPlant_Frlg local id 1 (7,27) | ITEM_MAX_POTION | dynamic | Outlands | Power Plant (Dungeon); deeper floor |
-| 736 | PowerPlant_Frlg local id 2 (40,22) | ITEM_TM_PROTECT | dynamic | Outlands | Power Plant (Dungeon); deeper floor |
-| 737 | PowerPlant_Frlg local id 3 (46,37) | ITEM_TM_THUNDER | prize | Outlands -> ITEM_TM_THUNDER_WAVE | Thunder Road #5 (Find) |
-| 738 | PowerPlant_Frlg local id 4 (45,4) | ITEM_THUNDER_STONE | prize | Outlands -> ITEM_CHOICE_SCARF | Thunder Road #7 (Treasure) |
-| 739 | PowerPlant_Frlg local id 5 (26,22) | ITEM_ELIXIR | dynamic | Outlands | Power Plant (Dungeon); deeper floor |
-| 740 | PowerPlant_Frlg hidden 29,16 | ITEM_MAX_ELIXIR | prize | Outlands -> ITEM_CHOICE_SPECS | Thunder Road #6 (Treasure) |
-| 741 | PowerPlant_Frlg hidden 8,12 | ITEM_THUNDER_STONE | dynamic | Outlands | Power Plant (Dungeon); deeper floor |
-| 786 | Route20_Frlg hidden 23,6 | ITEM_STARDUST | prize | Outlands -> ITEM_ASSAULT_VEST | The Weather Run #6 (Treasure) |
-| 787 | Route21_North_Frlg hidden 17,42 | ITEM_PEARL | prize | Road -> ITEM_DAMP_ROCK | The Weather Run #1 (Find) |
-| 839 | ViridianCity_Gym_Frlg hidden 2,2 | ITEM_MACHO_BRACE | dynamic | Road | item spots inside Gyms count as Road |
+| 648 | SSAnne_B1F_Corridor_Frlg hidden 21,5 | ITEM_HYPER_POTION | dynamic | Outlands | S.S. Anne step 3 of 3; deeper floor |
+| 649 | SSAnne_Kitchen_Frlg local id 8 (1,10) | ITEM_GREAT_BALL | dynamic | Outlands | S.S. Anne step 3 of 3; deeper floor |
+| 650 | SSAnne_Kitchen_Frlg hidden 14,8 | ITEM_CHESTO_BERRY | dynamic | Outlands | S.S. Anne step 3 of 3; deeper floor |
+| 651 | SSAnne_Kitchen_Frlg hidden 14,4 | ITEM_PECHA_BERRY | dynamic | Outlands | S.S. Anne step 3 of 3; deeper floor |
+| 652 | SSAnne_Kitchen_Frlg hidden 14,6 | ITEM_CHERI_BERRY | dynamic | Outlands | S.S. Anne step 3 of 3; deeper floor |
+| 653 | SSAnne_1F_Room2_Frlg local id 4 (5,7) | ITEM_TM31 | prize | Wilds -> ITEM_TM_BRICK_BREAK | Standalone prizes #1 (Find) |
+| 654 | SSAnne_2F_Room2_Frlg local id 3 (3,3) | ITEM_STARDUST | dynamic | Outlands | S.S. Anne step 2 of 3; deeper floor |
+| 655 | SSAnne_2F_Room4_Frlg local id 3 (2,4) | ITEM_X_ATTACK | dynamic | Outlands | S.S. Anne step 2 of 3; deeper floor |
+| 656 | SSAnne_B1F_Room2_Frlg local id 2 (3,2) | ITEM_TM44 | prize | Outlands -> ITEM_TM_SUBSTITUTE | Standalone prizes #2 (Find) |
+| 657 | SSAnne_B1F_Room3_Frlg local id 2 (1,5) | ITEM_ETHER | dynamic | Outlands | S.S. Anne step 3 of 3; deeper floor |
+| 658 | SSAnne_B1F_Room5_Frlg local id 3 (2,2) | ITEM_SUPER_POTION | dynamic | Outlands | S.S. Anne step 3 of 3; deeper floor |
+| 659 | RocketHideout_B1F_Frlg local id 6 (5,16) | ITEM_ESCAPE_ROPE | dynamic | Wilds | Rocket Hideout (Celadon) step 1 of 4; entrance floor |
+| 660 | RocketHideout_B1F_Frlg local id 7 (1,22) | ITEM_HYPER_POTION | dynamic | Wilds | Rocket Hideout (Celadon) step 1 of 4; entrance floor |
+| 661 | RocketHideout_B1F_Frlg hidden 16,17 | ITEM_PP_UP | dynamic | Wilds | Rocket Hideout (Celadon) step 1 of 4; entrance floor |
+| 662 | RocketHideout_B2F_Frlg local id 2 (15,3) | ITEM_X_SPEED | dynamic | Outlands | Rocket Hideout (Celadon) step 2 of 4; deeper floor |
+| 663 | RocketHideout_B2F_Frlg local id 3 (2,5) | ITEM_MOON_STONE | dynamic | Outlands | Rocket Hideout (Celadon) step 2 of 4; deeper floor |
+| 664 | RocketHideout_B2F_Frlg local id 4 (5,7) | ITEM_TM12 | prize | Outlands -> ITEM_TM_TAUNT | The Celadon Underground #1 (Find) |
+| 665 | RocketHideout_B2F_Frlg local id 5 (0,14) | ITEM_SUPER_POTION | dynamic | Outlands | Rocket Hideout (Celadon) step 2 of 4; deeper floor |
+| 666 | RocketHideout_B3F_Frlg local id 3 (12,12) | ITEM_RARE_CANDY | dynamic | Outlands | Rocket Hideout (Celadon) step 3 of 4; deeper floor |
+| 667 | RocketHideout_B3F_Frlg local id 4 (19,14) | ITEM_TM21 | dynamic | Outlands | Rocket Hideout (Celadon) step 3 of 4; deeper floor |
+| 668 | RocketHideout_B3F_Frlg local id 5 (14,24) | ITEM_BLACK_GLASSES | prize | Outlands -> ITEM_BLACK_GLASSES | The Celadon Underground #2 (Find) |
+| 669 | RocketHideout_B3F_Frlg hidden 1,3 | ITEM_NUGGET | dynamic | Outlands | Rocket Hideout (Celadon) step 3 of 4; deeper floor |
+| 670 | RocketHideout_B4F_Frlg local id 7 (1,6) | ITEM_TM49 | prize | Outlands -> ITEM_RAZOR_CLAW | The Celadon Underground #3 (Treasure) |
+| 671 | RocketHideout_B4F_Frlg local id 8 (4,14) | ITEM_MAX_ETHER | dynamic | Outlands | Rocket Hideout (Celadon) step 4 of 4; deeper floor |
+| 672 | RocketHideout_B4F_Frlg local id 9 (6,23) | ITEM_CALCIUM | dynamic | Outlands | Rocket Hideout (Celadon) step 4 of 4; deeper floor |
+| 673 | RocketHideout_B4F_Frlg hidden 22,6 | ITEM_NEST_BALL | dynamic | Outlands | Rocket Hideout (Celadon) step 4 of 4; deeper floor |
+| 674 | RocketHideout_B4F_Frlg hidden 16,6 | ITEM_NET_BALL | dynamic | Outlands | Rocket Hideout (Celadon) step 4 of 4; deeper floor |
+| 675 | SilphCo_2F_Frlg hidden 11,21 | ITEM_ULTRA_BALL | dynamic | Wilds | Silph Co. step 1 of 10; entrance floor |
+| 676 | SilphCo_3F_Frlg local id 4 (8,10) | ITEM_HYPER_POTION | dynamic | Outlands | Silph Co. step 2 of 10; deeper floor |
+| 677 | SilphCo_3F_Frlg hidden 34,18 | ITEM_PROTEIN | dynamic | Outlands | Silph Co. step 2 of 10; deeper floor |
+| 678 | SilphCo_4F_Frlg local id 5 (3,11) | ITEM_MAX_REVIVE | dynamic | Outlands | Silph Co. step 3 of 10; deeper floor |
+| 679 | SilphCo_4F_Frlg local id 6 (4,12) | ITEM_ESCAPE_ROPE | dynamic | Outlands | Silph Co. step 3 of 10; deeper floor |
+| 680 | SilphCo_4F_Frlg local id 7 (2,13) | ITEM_FULL_HEAL | dynamic | Outlands | Silph Co. step 3 of 10; deeper floor |
+| 681 | SilphCo_4F_Frlg local id 8 (30,18) | ITEM_TM_TORMENT | prize | Outlands -> ITEM_TM_TRICK_ROOM | The Celadon Underground #4 (Treasure) |
+| 682 | SilphCo_4F_Frlg hidden 35,20 | ITEM_IRON | dynamic | Outlands | Silph Co. step 3 of 10; deeper floor |
+| 683 | SilphCo_5F_Frlg local id 6 (4,9) | ITEM_PROTEIN | dynamic | Outlands | Silph Co. step 4 of 10; deeper floor |
+| 684 | SilphCo_5F_Frlg local id 7 (1,18) | ITEM_TM_FOCUS_PUNCH | dynamic | Outlands | Silph Co. step 4 of 10; deeper floor |
+| 685 | SilphCo_5F_Frlg hidden 13,16 | ITEM_ELIXIR | dynamic | Outlands | Silph Co. step 4 of 10; deeper floor |
+| 686 | SilphCo_5F_Frlg hidden 32,9 | ITEM_PP_UP | dynamic | Outlands | Silph Co. step 4 of 10; deeper floor |
+| 687 | SilphCo_6F_Frlg local id 8 (2,14) | ITEM_HP_UP | dynamic | Outlands | Silph Co. step 5 of 10; deeper floor |
+| 688 | SilphCo_6F_Frlg local id 9 (1,17) | ITEM_X_SPECIAL | dynamic | Outlands | Silph Co. step 5 of 10; deeper floor |
+| 689 | SilphCo_6F_Frlg hidden 1,8 | ITEM_CARBOS | dynamic | Outlands | Silph Co. step 5 of 10; deeper floor |
+| 690 | SilphCo_7F_Frlg local id 9 (0,12) | ITEM_CALCIUM | dynamic | Outlands | Silph Co. step 6 of 10; deeper floor |
+| 691 | SilphCo_7F_Frlg local id 10 (30,11) | ITEM_TM_BULK_UP | dynamic | Outlands | Silph Co. step 6 of 10; deeper floor |
+| 692 | SilphCo_7F_Frlg hidden 22,11 | ITEM_ZINC | dynamic | Outlands | Silph Co. step 6 of 10; deeper floor |
+| 693 | SilphCo_8F_Frlg local id 5 (24,8) | ITEM_IRON | dynamic | Outlands | Silph Co. step 7 of 10; deeper floor |
+| 694 | SilphCo_8F_Frlg hidden 29,10 | ITEM_NUGGET | prize | Outlands -> ITEM_DUBIOUS_DISC | The Celadon Underground #5 (Treasure) |
+| 695 | SilphCo_9F_Frlg hidden 11,14 | ITEM_MAX_POTION | dynamic | Outlands | Silph Co. step 8 of 10; deeper floor |
+| 696 | SilphCo_9F_Frlg hidden 5,8 | ITEM_CALCIUM | dynamic | Outlands | Silph Co. step 8 of 10; deeper floor |
+| 697 | SilphCo_10F_Frlg local id 4 (5,15) | ITEM_CARBOS | dynamic | Outlands | Silph Co. step 9 of 10; deeper floor |
+| 698 | SilphCo_10F_Frlg local id 5 (2,15) | ITEM_ULTRA_BALL | dynamic | Outlands | Silph Co. step 9 of 10; deeper floor |
+| 699 | SilphCo_10F_Frlg local id 6 (3,17) | ITEM_RARE_CANDY | dynamic | Outlands | Silph Co. step 9 of 10; deeper floor |
+| 700 | SilphCo_10F_Frlg hidden 9,9 | ITEM_HP_UP | dynamic | Outlands | Silph Co. step 9 of 10; deeper floor |
+| 701 | SilphCo_11F_Frlg local id 5 (16,18) | ITEM_ZINC | dynamic | Outlands | Silph Co. step 10 of 10; deeper floor |
+| 702 | SilphCo_11F_Frlg hidden 10,18 | ITEM_REVIVE | dynamic | Outlands | Silph Co. step 10 of 10; deeper floor |
+| 703 | PokemonMansion_1F_Frlg local id 2 (29,32) | ITEM_CARBOS | dynamic | Wilds | Pokémon Mansion (Dungeon); entrance floor |
+| 704 | PokemonMansion_1F_Frlg local id 3 (22,6) | ITEM_ESCAPE_ROPE | dynamic | Wilds | Pokémon Mansion (Dungeon); entrance floor |
+| 705 | PokemonMansion_1F_Frlg local id 4 (27,15) | ITEM_PROTEIN | dynamic | Wilds | Pokémon Mansion (Dungeon); entrance floor |
+| 706 | PokemonMansion_1F_Frlg hidden 2,21 | ITEM_MOON_STONE | prize | Wilds -> ITEM_MAGMARIZER | The Weather Run #2 (Find) |
+| 707 | PokemonMansion_2F_Frlg local id 2 (36,8) | ITEM_CALCIUM | dynamic | Outlands | Pokémon Mansion (Dungeon); deeper floor |
+| 708 | PokemonMansion_2F_Frlg local id 3 (18,23) | ITEM_ZINC | dynamic | Outlands | Pokémon Mansion (Dungeon); deeper floor |
+| 709 | PokemonMansion_2F_Frlg local id 4 (35,17) | ITEM_HP_UP | dynamic | Outlands | Pokémon Mansion (Dungeon); deeper floor |
+| 710 | PokemonMansion_3F_Frlg local id 3 (9,19) | ITEM_MAX_POTION | dynamic | Outlands | Pokémon Mansion (Dungeon); deeper floor |
+| 711 | PokemonMansion_3F_Frlg local id 4 (32,6) | ITEM_IRON | dynamic | Outlands | Pokémon Mansion (Dungeon); deeper floor |
+| 712 | PokemonMansion_3F_Frlg hidden 36,13 | ITEM_RARE_CANDY | prize | Outlands -> ITEM_SMOOTH_ROCK | The Weather Run #3 (Find) |
+| 713 | PokemonMansion_B1F_Frlg local id 1 (6,21) | ITEM_TM22 | prize | Outlands -> ITEM_HEAT_ROCK | The Weather Run #4 (Find) |
+| 714 | PokemonMansion_B1F_Frlg local id 4 (23,4) | ITEM_TM14 | dynamic | Outlands | Pokémon Mansion (Dungeon); deeper floor |
+| 715 | PokemonMansion_B1F_Frlg local id 5 (2,29) | ITEM_FULL_RESTORE | dynamic | Outlands | Pokémon Mansion (Dungeon); deeper floor |
+| 716 | PokemonMansion_B1F_Frlg hidden 35,5 | ITEM_ELIXIR | prize | Outlands -> ITEM_BLACK_SLUDGE | The Weather Run #5 (Treasure) |
+| 717 | SeafoamIslands_1F_Frlg local id 3 (11,8) | ITEM_ICE_HEAL | dynamic | Wilds | Seafoam Islands (Dungeon); entrance floor |
+| 718 | SeafoamIslands_B1F_Frlg local id 3 (19,18) | ITEM_WATER_STONE | prize | Outlands -> ITEM_ICY_ROCK | The Weather Run #7 (Find) |
+| 719 | SeafoamIslands_B1F_Frlg local id 4 (24,14) | ITEM_REVIVE | dynamic | Outlands | Seafoam Islands (Dungeon); deeper floor |
+| 720 | SeafoamIslands_B2F_Frlg local id 3 (18,15) | ITEM_BIG_PEARL | prize | Outlands -> ITEM_LIGHT_CLAY | The Weather Run #8 (Find) |
+| 721 | SeafoamIslands_B3F_Frlg hidden 5,12 | ITEM_NUGGET | prize | Outlands -> ITEM_EVIOLITE | The Weather Run #9 (Treasure) |
+| 722 | SeafoamIslands_B4F_Frlg local id 4 (22,19) | ITEM_ULTRA_BALL | prize | Outlands -> ITEM_ABILITY_CAPSULE | The Weather Run #11 (Legend) |
+| 723 | SeafoamIslands_B4F_Frlg hidden 13,8 | ITEM_WATER_STONE | prize | Outlands -> ITEM_LEFTOVERS | The Weather Run #10 (Treasure) |
+| 724 | PokemonTower_3F_Frlg local id 4 (13,2) | ITEM_ESCAPE_ROPE | dynamic | Wilds | Pokémon Tower (Dungeon); entrance floor |
+| 725 | PokemonTower_4F_Frlg local id 4 (12,11) | ITEM_ELIXIR | dynamic | Outlands | Pokémon Tower (Dungeon); deeper floor |
+| 726 | PokemonTower_4F_Frlg local id 5 (8,11) | ITEM_AWAKENING | dynamic | Outlands | Pokémon Tower (Dungeon); deeper floor |
+| 727 | PokemonTower_4F_Frlg local id 6 (11,16) | ITEM_GREAT_BALL | dynamic | Outlands | Pokémon Tower (Dungeon); deeper floor |
+| 728 | PokemonTower_5F_Frlg local id 6 (6,16) | ITEM_NUGGET | dynamic | Outlands | Pokémon Tower (Dungeon); deeper floor |
+| 729 | PokemonTower_5F_Frlg local id 7 (11,9) | ITEM_CLEANSE_TAG | dynamic | Outlands | Pokémon Tower (Dungeon); deeper floor |
+| 730 | PokemonTower_5F_Frlg hidden 7,3 | ITEM_BIG_MUSHROOM | prize | Outlands -> ITEM_TOXIC_ORB | Moon to Lavender #7 (Find) |
+| 731 | PokemonTower_6F_Frlg local id 4 (5,15) | ITEM_RARE_CANDY | prize | Outlands -> ITEM_TM_WILL_O_WISP | Moon to Lavender #8 (Find) |
+| 732 | PokemonTower_6F_Frlg local id 5 (15,15) | ITEM_X_ACCURACY | dynamic | Outlands | Pokémon Tower (Dungeon); deeper floor |
+| 733 | PokemonTower_7F_Frlg hidden 11,4 | ITEM_SOOTHE_BELL | prize | Outlands -> ITEM_REAPER_CLOTH | Moon to Lavender #9 (Treasure) |
+| 734 | PowerPlant_Frlg local id 1 (7,27) | ITEM_MAX_POTION | dynamic | Outlands | Power Plant (Dungeon); deeper floor |
+| 735 | PowerPlant_Frlg local id 2 (40,22) | ITEM_TM_PROTECT | dynamic | Outlands | Power Plant (Dungeon); deeper floor |
+| 736 | PowerPlant_Frlg local id 3 (46,37) | ITEM_TM_THUNDER | prize | Outlands -> ITEM_TM_THUNDER_WAVE | Thunder Road #5 (Find) |
+| 737 | PowerPlant_Frlg local id 4 (45,4) | ITEM_THUNDER_STONE | prize | Outlands -> ITEM_CHOICE_SCARF | Thunder Road #7 (Treasure) |
+| 738 | PowerPlant_Frlg local id 5 (26,22) | ITEM_ELIXIR | dynamic | Outlands | Power Plant (Dungeon); deeper floor |
+| 739 | PowerPlant_Frlg hidden 29,16 | ITEM_MAX_ELIXIR | prize | Outlands -> ITEM_CHOICE_SPECS | Thunder Road #6 (Treasure) |
+| 740 | PowerPlant_Frlg hidden 8,12 | ITEM_THUNDER_STONE | dynamic | Outlands | Power Plant (Dungeon); deeper floor |
+| 785 | Route20_Frlg hidden 23,6 | ITEM_STARDUST | prize | Outlands -> ITEM_ASSAULT_VEST | The Weather Run #6 (Treasure) |
+| 786 | Route21_North_Frlg hidden 17,42 | ITEM_PEARL | prize | Road -> ITEM_DAMP_ROCK | The Weather Run #1 (Find) |
+| 838 | ViridianCity_Gym_Frlg hidden 2,2 | ITEM_MACHO_BRACE | dynamic | Road | item spots inside Gyms count as Road |
 | - | VermilionCity_hns local id 22 (61,46) | ITEM_OLD_SEA_MAP | fixed | - | Old Sea Map (fixed story item) |
 | - | PalletTown_Lab_hns local id 6 (15,12) | - | fixed | - | starter Poke Balls (Pokemon gift) |
 | - | PalletTown_Lab_hns local id 7 (16,12) | - | fixed | - | starter Poke Balls (Pokemon gift) |
@@ -370,102 +352,102 @@ Every item spot by region. Status is prize (kept flag, gives its prize once), dy
 
 | # | Spot | Authored item | Status | Reach | Reason |
 | ---: | --- | --- | --- | --- | --- |
-| 742 | MtEmber_Exterior_Frlg local id 18 (13,6) | ITEM_ULTRA_BALL | dynamic | Wilds | Mt. Ember (Dungeon); entrance floor |
-| 743 | MtEmber_Exterior_Frlg local id 19 (38,10) | ITEM_FIRE_STONE | prize | Wilds -> ITEM_TM_OVERHEAT | Ember and Orchard #2 (Find) |
-| 744 | MtEmber_Exterior_Frlg local id 20 (48,20) | ITEM_DIRE_HIT | dynamic | Wilds | Mt. Ember (Dungeon); entrance floor |
-| 745 | MtEmber_Exterior_Frlg hidden 18,17 | ITEM_FIRE_STONE | dynamic | Wilds | Mt. Ember (Dungeon); entrance floor |
-| 746 | MtEmber_Exterior_Frlg hidden 8,30 | ITEM_ULTRA_BALL | dynamic | Wilds | Mt. Ember (Dungeon); entrance floor |
-| 747 | ThreeIsland_BerryForest_Frlg local id 12 (12,5) | ITEM_MAX_ETHER | dynamic | Wilds | Berry Forest (Wilds) |
-| 748 | ThreeIsland_BerryForest_Frlg local id 13 (27,11) | ITEM_FULL_HEAL | dynamic | Wilds | Berry Forest (Wilds) |
-| 749 | ThreeIsland_BerryForest_Frlg local id 14 (12,43) | ITEM_MAX_ELIXIR | dynamic | Wilds | Berry Forest (Wilds) |
-| 750 | ThreeIsland_BerryForest_Frlg hidden 31,25 | ITEM_RAZZ_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
-| 751 | ThreeIsland_BerryForest_Frlg hidden 15,15 | ITEM_BLUK_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
-| 752 | ThreeIsland_BerryForest_Frlg hidden 25,24 | ITEM_NANAB_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
-| 753 | ThreeIsland_BerryForest_Frlg hidden 11,24 | ITEM_WEPEAR_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
-| 754 | ThreeIsland_BerryForest_Frlg hidden 37,18 | ITEM_ORAN_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
-| 755 | ThreeIsland_BerryForest_Frlg hidden 14,23 | ITEM_CHERI_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
-| 756 | ThreeIsland_BerryForest_Frlg hidden 47,5 | ITEM_CHESTO_BERRY | prize | Wilds -> ITEM_BIG_ROOT | Ember and Orchard #6 (Find) |
-| 757 | ThreeIsland_BerryForest_Frlg hidden 7,30 | ITEM_PECHA_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
-| 758 | ThreeIsland_BerryForest_Frlg hidden 16,5 | ITEM_RAWST_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
-| 759 | ThreeIsland_BerryForest_Frlg hidden 25,6 | ITEM_ASPEAR_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
-| 760 | ThreeIsland_BerryForest_Frlg hidden 46,32 | ITEM_PERSIM_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
-| 761 | ThreeIsland_BerryForest_Frlg hidden 43,16 | ITEM_PINAP_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
-| 762 | ThreeIsland_BerryForest_Frlg hidden 8,5 | ITEM_LUM_BERRY | prize | Wilds -> ITEM_LUM_BERRY | Ember and Orchard #5 (Find) |
-| 763 | FourIsland_IcefallCave_1F_Frlg local id 1 (11,7) | ITEM_ULTRA_BALL | dynamic | Outlands | Icefall Cave (Dungeon); deeper floor |
-| 764 | FourIsland_IcefallCave_B1F_Frlg local id 1 (10,14) | ITEM_FULL_RESTORE | prize | Outlands -> ITEM_ICE_STONE | The Frozen Frontier #2 (Treasure) |
-| 765 | FourIsland_IcefallCave_B1F_Frlg local id 2 (21,7) | ITEM_NEVER_MELT_ICE | prize | Outlands -> ITEM_NEVER_MELT_ICE | The Frozen Frontier #1 (Find) |
-| 766 | FiveIsland_RocketWarehouse_Frlg local id 7 (8,25) | ITEM_BIG_PEARL | dynamic | Outlands | Rocket Warehouse step 1 of 1; deeper floor |
-| 767 | FiveIsland_RocketWarehouse_Frlg local id 8 (17,3) | ITEM_TM36 | prize | Outlands -> ITEM_TM_SLUDGE_BOMB | The Frozen Frontier #4 (Find) |
-| 768 | FiveIsland_RocketWarehouse_Frlg local id 9 (1,16) | ITEM_PEARL | dynamic | Outlands | Rocket Warehouse step 1 of 1; deeper floor |
-| 769 | FiveIsland_RocketWarehouse_Frlg local id 10 (4,5) | ITEM_UP_GRADE | prize | Outlands -> ITEM_UP_GRADE | The Frozen Frontier #5 (Treasure) |
-| 770 | FiveIsland_RocketWarehouse_Frlg hidden 27,2 | ITEM_NEST_BALL | dynamic | Outlands | Rocket Warehouse step 1 of 1; deeper floor |
-| 771 | FiveIsland_RocketWarehouse_Frlg hidden 7,16 | ITEM_NET_BALL | dynamic | Outlands | Rocket Warehouse step 1 of 1; deeper floor |
-| 772 | FiveIsland_LostCave_Room10_Frlg local id 2 (5,2) | ITEM_SILK_SCARF | dynamic | Outlands | Lost Cave (Dungeon); deeper floor |
-| 773 | FiveIsland_LostCave_Room11_Frlg local id 1 (5,5) | ITEM_LAX_INCENSE | prize | Outlands -> ITEM_ROCKY_HELMET | The Frozen Frontier #7 (Treasure) |
-| 774 | FiveIsland_LostCave_Room12_Frlg local id 1 (5,5) | ITEM_SEA_INCENSE | prize | Outlands -> ITEM_WEAKNESS_POLICY | The Frozen Frontier #8 (Treasure) |
-| 775 | FiveIsland_LostCave_Room13_Frlg local id 1 (5,5) | ITEM_MAX_REVIVE | prize | Outlands -> ITEM_PROTECTOR | The Frozen Frontier #9 (Treasure) |
-| 776 | FiveIsland_LostCave_Room14_Frlg local id 1 (5,5) | ITEM_RARE_CANDY | prize | Outlands -> ITEM_LUCKY_EGG | The Frozen Frontier #10 (Legend) |
-| 777 | ThreeIsland_DunsparceTunnel_Frlg hidden 21,3 | ITEM_NUGGET | prize | Road -> ITEM_TM_SUBSTITUTE | Ember and Orchard #4 (Find) |
-| 778 | TwoIsland_Frlg local id 7 (39,16) | ITEM_REVIVE | dynamic | Road | a town or city is Road (reach assignments, Settlement rule) |
-| 779 | ThreeIsland_Frlg local id 10 (18,17) | ITEM_ZINC | dynamic | Road | a town or city is Road (reach assignments, Settlement rule) |
-| 780 | ThreeIsland_Frlg hidden 5,13 | ITEM_PP_UP | dynamic | Road | a town or city is Road (reach assignments, Settlement rule) |
-| 781 | FourIsland_Frlg local id 3 (5,6) | ITEM_STAR_PIECE | dynamic | Road | Four Island (Road) |
-| 782 | FourIsland_Frlg local id 4 (32,19) | ITEM_STARDUST | dynamic | Road | Four Island (Road) |
-| 783 | FourIsland_Frlg hidden 22,34 | ITEM_PEARL | dynamic | Road | Four Island (Road) |
-| 784 | FourIsland_Frlg hidden 6,21 | ITEM_ULTRA_BALL | dynamic | Road | Four Island (Road) |
-| 785 | SixIsland_Frlg hidden 9,7 | ITEM_LEPPA_BERRY | dynamic | Road | a town or city is Road (reach assignments, Settlement rule) |
-| 788 | OneIsland_KindleRoad_Frlg local id 27 (15,70) | ITEM_ETHER | dynamic | Road | Kindle Road (Road) |
-| 789 | OneIsland_KindleRoad_Frlg local id 28 (17,103) | ITEM_MAX_REPEL | dynamic | Road | Kindle Road (Road) |
-| 790 | OneIsland_KindleRoad_Frlg local id 29 (18,114) | ITEM_CARBOS | dynamic | Road | Kindle Road (Road) |
-| 791 | OneIsland_TreasureBeach_Frlg hidden 8,20 | ITEM_STARDUST | dynamic | Wilds | Treasure Beach (Wilds) |
-| 792 | OneIsland_TreasureBeach_Frlg hidden 13,27 | ITEM_STARDUST | dynamic | Wilds | Treasure Beach (Wilds) |
-| 793 | OneIsland_TreasureBeach_Frlg hidden 11,31 | ITEM_PEARL | dynamic | Wilds | Treasure Beach (Wilds) |
-| 794 | OneIsland_TreasureBeach_Frlg hidden 9,34 | ITEM_PEARL | dynamic | Wilds | Treasure Beach (Wilds) |
-| 795 | OneIsland_TreasureBeach_Frlg hidden 15,22 | ITEM_ULTRA_BALL | dynamic | Wilds | Treasure Beach (Wilds) |
-| 796 | OneIsland_TreasureBeach_Frlg hidden 16,33 | ITEM_ULTRA_BALL | dynamic | Wilds | Treasure Beach (Wilds) |
-| 797 | OneIsland_TreasureBeach_Frlg hidden 15,29 | ITEM_STAR_PIECE | prize | Wilds -> ITEM_SHELL_BELL | Ember and Orchard #1 (Find) |
-| 798 | OneIsland_TreasureBeach_Frlg hidden 8,27 | ITEM_BIG_PEARL | dynamic | Wilds | Treasure Beach (Wilds) |
-| 799 | TwoIsland_CapeBrink_Frlg hidden 16,28 | ITEM_PP_MAX | prize | Wilds -> ITEM_PP_MAX | Ember and Orchard #3 (Treasure) |
-| 800 | TwoIsland_CapeBrink_Frlg hidden 15,13 | ITEM_RARE_CANDY | dynamic | Wilds | Cape Brink (Wilds) |
-| 801 | ThreeIsland_BondBridge_Frlg hidden 61,5 | ITEM_MAX_REPEL | dynamic | Road | Bond Bridge (Road) |
-| 802 | ThreeIsland_BondBridge_Frlg hidden 44,12 | ITEM_PEARL | dynamic | Road | Bond Bridge (Road) |
-| 803 | ThreeIsland_BondBridge_Frlg hidden 33,7 | ITEM_STARDUST | dynamic | Road | Bond Bridge (Road) |
-| 804 | FiveIsland_ResortGorgeous_Frlg hidden 10,7 | ITEM_NEST_BALL | dynamic | Wilds | Resort Gorgeous (Wilds) |
-| 805 | FiveIsland_ResortGorgeous_Frlg hidden 27,11 | ITEM_STARDUST | dynamic | Wilds | Resort Gorgeous (Wilds) |
-| 806 | FiveIsland_ResortGorgeous_Frlg hidden 40,12 | ITEM_STAR_PIECE | prize | Wilds -> ITEM_PRISM_SCALE | The Frozen Frontier #3 (Find) |
-| 807 | FiveIsland_ResortGorgeous_Frlg hidden 27,5 | ITEM_STARDUST | dynamic | Wilds | Resort Gorgeous (Wilds) |
-| 808 | FiveIsland_Meadow_Frlg local id 6 (12,11) | ITEM_MAX_POTION | dynamic | Wilds | Five Isle Meadow (Wilds) |
-| 809 | FiveIsland_Meadow_Frlg local id 7 (3,22) | ITEM_PP_UP | dynamic | Wilds | Five Isle Meadow (Wilds) |
-| 810 | FiveIsland_MemorialPillar_Frlg local id 5 (4,47) | ITEM_METAL_COAT | prize | Outlands -> ITEM_METAL_COAT | The Frozen Frontier #6 (Treasure) |
-| 811 | FiveIsland_MemorialPillar_Frlg hidden 8,52 | ITEM_BIG_PEARL | dynamic | Outlands | Memorial Pillar (Outlands) |
-| 812 | FiveIsland_MemorialPillar_Frlg hidden 15,7 | ITEM_RAZZ_BERRY | dynamic | Outlands | Memorial Pillar (Outlands) |
-| 813 | FiveIsland_MemorialPillar_Frlg hidden 17,22 | ITEM_SITRUS_BERRY | dynamic | Outlands | Memorial Pillar (Outlands) |
-| 814 | FiveIsland_MemorialPillar_Frlg hidden 14,25 | ITEM_BLUK_BERRY | dynamic | Outlands | Memorial Pillar (Outlands) |
-| 815 | SixIsland_OutcastIsland_Frlg local id 7 (11,16) | ITEM_PP_UP | dynamic | Outlands | Outcast Island (Outlands) |
-| 816 | SixIsland_OutcastIsland_Frlg hidden 16,23 | ITEM_STAR_PIECE | dynamic | Outlands | Outcast Island (Outlands) |
-| 817 | SixIsland_OutcastIsland_Frlg hidden 6,24 | ITEM_NET_BALL | prize | Outlands -> ITEM_AMULET_COIN | Dragon and Sun #6 (Legend) |
-| 818 | SixIsland_GreenPath_Frlg hidden 12,9 | ITEM_ULTRA_BALL | prize | Outlands -> ITEM_TM_DRAGON_PULSE | Dragon and Sun #2 (Treasure) |
-| 819 | SixIsland_WaterPath_Frlg local id 8 (17,19) | ITEM_ELIXIR | dynamic | Wilds | Water Path (Wilds) |
-| 820 | SixIsland_WaterPath_Frlg local id 9 (17,87) | ITEM_DRAGON_SCALE | prize | Wilds -> ITEM_DRAGON_SCALE | Dragon and Sun #1 (Treasure) |
-| 821 | SixIsland_WaterPath_Frlg hidden 15,76 | ITEM_ASPEAR_BERRY | dynamic | Wilds | Water Path (Wilds) |
-| 822 | SixIsland_WaterPath_Frlg hidden 3,8 | ITEM_ORAN_BERRY | dynamic | Wilds | Water Path (Wilds) |
-| 823 | SixIsland_WaterPath_Frlg hidden 13,63 | ITEM_PINAP_BERRY | dynamic | Wilds | Water Path (Wilds) |
-| 824 | SixIsland_RuinValley_Frlg local id 15 (5,33) | ITEM_HP_UP | prize | Outlands -> ITEM_DRAGON_FANG | Dragon and Sun #5 (Find) |
-| 825 | SixIsland_RuinValley_Frlg local id 16 (19,11) | ITEM_FULL_RESTORE | prize | Outlands -> ITEM_TM_DRAGON_CLAW | Dragon and Sun #4 (Treasure) |
-| 826 | SixIsland_RuinValley_Frlg local id 17 (43,32) | ITEM_SUN_STONE | prize | Outlands -> ITEM_SUN_STONE | Dragon and Sun #3 (Treasure) |
-| 827 | SevenIsland_TrainerTower_Frlg hidden 49,27 | ITEM_BIG_PEARL | prize | Wilds -> ITEM_POWER_LENS | Seven Island Training Grounds #2 (Find) |
-| 828 | SevenIsland_TrainerTower_Frlg hidden 47,30 | ITEM_PEARL | prize | Wilds -> ITEM_POWER_BAND | Seven Island Training Grounds #3 (Find) |
-| 829 | SevenIsland_TrainerTower_Frlg hidden 59,32 | ITEM_NANAB_BERRY | prize | Wilds -> ITEM_POWER_ANKLET | Seven Island Training Grounds #4 (Find) |
-| 830 | SevenIsland_SevaultCanyon_Entrance_Frlg hidden 8,29 | ITEM_RAWST_BERRY | prize | Wilds -> ITEM_POWER_BRACER | Seven Island Training Grounds #1 (Find) |
-| 831 | SevenIsland_SevaultCanyon_Frlg local id 17 (18,45) | ITEM_KINGS_ROCK | prize | Outlands -> ITEM_KINGS_ROCK | Seven Island Training Grounds #7 (Treasure) |
-| 832 | SevenIsland_SevaultCanyon_Frlg local id 18 (7,38) | ITEM_MAX_ELIXIR | prize | Outlands -> ITEM_POWER_BELT | Seven Island Training Grounds #5 (Treasure) |
-| 833 | SevenIsland_SevaultCanyon_Frlg local id 19 (17,23) | ITEM_NUGGET | prize | Outlands -> ITEM_POWER_WEIGHT | Seven Island Training Grounds #6 (Treasure) |
-| 834 | SevenIsland_SevaultCanyon_Frlg hidden 15,66 | ITEM_CHERI_BERRY | dynamic | Outlands | Sevault Canyon (Outlands) |
-| 835 | SevenIsland_TanobyRuins_Frlg hidden 33,10 | ITEM_HEART_SCALE | prize | Outlands -> ITEM_DEEP_SEA_TOOTH | Seven Island Training Grounds #8 (Treasure) |
-| 836 | SevenIsland_TanobyRuins_Frlg hidden 86,9 | ITEM_HEART_SCALE | prize | Outlands -> ITEM_DEEP_SEA_SCALE | Seven Island Training Grounds #9 (Treasure) |
-| 837 | SevenIsland_TanobyRuins_Frlg hidden 125,5 | ITEM_HEART_SCALE | prize | Outlands -> ITEM_LIFE_ORB | Seven Island Training Grounds #10 (Treasure) |
-| 838 | SevenIsland_TanobyRuins_Frlg hidden 8,2 | ITEM_HEART_SCALE | dynamic | Outlands | Tanoby Ruins (Outlands) |
-| 840 | SevenIsland_SevaultCanyon_House_Frlg local id 3 (6,4) | ITEM_LUCKY_PUNCH | dynamic | Outlands | opens onto SevenIsland_SevaultCanyon_Frlg |
+| 741 | MtEmber_Exterior_Frlg local id 18 (13,6) | ITEM_ULTRA_BALL | dynamic | Wilds | Mt. Ember (Dungeon); entrance floor |
+| 742 | MtEmber_Exterior_Frlg local id 19 (38,10) | ITEM_FIRE_STONE | prize | Wilds -> ITEM_TM_OVERHEAT | Ember and Orchard #2 (Find) |
+| 743 | MtEmber_Exterior_Frlg local id 20 (48,20) | ITEM_DIRE_HIT | dynamic | Wilds | Mt. Ember (Dungeon); entrance floor |
+| 744 | MtEmber_Exterior_Frlg hidden 18,17 | ITEM_FIRE_STONE | dynamic | Wilds | Mt. Ember (Dungeon); entrance floor |
+| 745 | MtEmber_Exterior_Frlg hidden 8,30 | ITEM_ULTRA_BALL | dynamic | Wilds | Mt. Ember (Dungeon); entrance floor |
+| 746 | ThreeIsland_BerryForest_Frlg local id 12 (12,5) | ITEM_MAX_ETHER | dynamic | Wilds | Berry Forest (Wilds) |
+| 747 | ThreeIsland_BerryForest_Frlg local id 13 (27,11) | ITEM_FULL_HEAL | dynamic | Wilds | Berry Forest (Wilds) |
+| 748 | ThreeIsland_BerryForest_Frlg local id 14 (12,43) | ITEM_MAX_ELIXIR | dynamic | Wilds | Berry Forest (Wilds) |
+| 749 | ThreeIsland_BerryForest_Frlg hidden 31,25 | ITEM_RAZZ_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
+| 750 | ThreeIsland_BerryForest_Frlg hidden 15,15 | ITEM_BLUK_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
+| 751 | ThreeIsland_BerryForest_Frlg hidden 25,24 | ITEM_NANAB_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
+| 752 | ThreeIsland_BerryForest_Frlg hidden 11,24 | ITEM_WEPEAR_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
+| 753 | ThreeIsland_BerryForest_Frlg hidden 37,18 | ITEM_ORAN_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
+| 754 | ThreeIsland_BerryForest_Frlg hidden 14,23 | ITEM_CHERI_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
+| 755 | ThreeIsland_BerryForest_Frlg hidden 47,5 | ITEM_CHESTO_BERRY | prize | Wilds -> ITEM_BIG_ROOT | Ember and Orchard #6 (Find) |
+| 756 | ThreeIsland_BerryForest_Frlg hidden 7,30 | ITEM_PECHA_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
+| 757 | ThreeIsland_BerryForest_Frlg hidden 16,5 | ITEM_RAWST_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
+| 758 | ThreeIsland_BerryForest_Frlg hidden 25,6 | ITEM_ASPEAR_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
+| 759 | ThreeIsland_BerryForest_Frlg hidden 46,32 | ITEM_PERSIM_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
+| 760 | ThreeIsland_BerryForest_Frlg hidden 43,16 | ITEM_PINAP_BERRY | dynamic | Wilds | Berry Forest (Wilds) |
+| 761 | ThreeIsland_BerryForest_Frlg hidden 8,5 | ITEM_LUM_BERRY | prize | Wilds -> ITEM_LUM_BERRY | Ember and Orchard #5 (Find) |
+| 762 | FourIsland_IcefallCave_1F_Frlg local id 1 (11,7) | ITEM_ULTRA_BALL | dynamic | Outlands | Icefall Cave (Dungeon); deeper floor |
+| 763 | FourIsland_IcefallCave_B1F_Frlg local id 1 (10,14) | ITEM_FULL_RESTORE | prize | Outlands -> ITEM_ICE_STONE | The Frozen Frontier #2 (Treasure) |
+| 764 | FourIsland_IcefallCave_B1F_Frlg local id 2 (21,7) | ITEM_NEVER_MELT_ICE | prize | Outlands -> ITEM_NEVER_MELT_ICE | The Frozen Frontier #1 (Find) |
+| 765 | FiveIsland_RocketWarehouse_Frlg local id 7 (8,25) | ITEM_BIG_PEARL | dynamic | Outlands | Rocket Warehouse step 1 of 1; deeper floor |
+| 766 | FiveIsland_RocketWarehouse_Frlg local id 8 (17,3) | ITEM_TM36 | prize | Outlands -> ITEM_TM_SLUDGE_BOMB | The Frozen Frontier #4 (Find) |
+| 767 | FiveIsland_RocketWarehouse_Frlg local id 9 (1,16) | ITEM_PEARL | dynamic | Outlands | Rocket Warehouse step 1 of 1; deeper floor |
+| 768 | FiveIsland_RocketWarehouse_Frlg local id 10 (4,5) | ITEM_UP_GRADE | prize | Outlands -> ITEM_UP_GRADE | The Frozen Frontier #5 (Treasure) |
+| 769 | FiveIsland_RocketWarehouse_Frlg hidden 27,2 | ITEM_NEST_BALL | dynamic | Outlands | Rocket Warehouse step 1 of 1; deeper floor |
+| 770 | FiveIsland_RocketWarehouse_Frlg hidden 7,16 | ITEM_NET_BALL | dynamic | Outlands | Rocket Warehouse step 1 of 1; deeper floor |
+| 771 | FiveIsland_LostCave_Room10_Frlg local id 2 (5,2) | ITEM_SILK_SCARF | dynamic | Outlands | Lost Cave (Dungeon); deeper floor |
+| 772 | FiveIsland_LostCave_Room11_Frlg local id 1 (5,5) | ITEM_LAX_INCENSE | prize | Outlands -> ITEM_ROCKY_HELMET | The Frozen Frontier #7 (Treasure) |
+| 773 | FiveIsland_LostCave_Room12_Frlg local id 1 (5,5) | ITEM_SEA_INCENSE | prize | Outlands -> ITEM_WEAKNESS_POLICY | The Frozen Frontier #8 (Treasure) |
+| 774 | FiveIsland_LostCave_Room13_Frlg local id 1 (5,5) | ITEM_MAX_REVIVE | prize | Outlands -> ITEM_PROTECTOR | The Frozen Frontier #9 (Treasure) |
+| 775 | FiveIsland_LostCave_Room14_Frlg local id 1 (5,5) | ITEM_RARE_CANDY | prize | Outlands -> ITEM_LUCKY_EGG | The Frozen Frontier #10 (Legend) |
+| 776 | ThreeIsland_DunsparceTunnel_Frlg hidden 21,3 | ITEM_NUGGET | prize | Road -> ITEM_TM_SUBSTITUTE | Ember and Orchard #4 (Find) |
+| 777 | TwoIsland_Frlg local id 7 (39,16) | ITEM_REVIVE | dynamic | Road | a town or city is Road (reach assignments, Settlement rule) |
+| 778 | ThreeIsland_Frlg local id 10 (18,17) | ITEM_ZINC | dynamic | Road | a town or city is Road (reach assignments, Settlement rule) |
+| 779 | ThreeIsland_Frlg hidden 5,13 | ITEM_PP_UP | dynamic | Road | a town or city is Road (reach assignments, Settlement rule) |
+| 780 | FourIsland_Frlg local id 3 (5,6) | ITEM_STAR_PIECE | dynamic | Road | Four Island (Road) |
+| 781 | FourIsland_Frlg local id 4 (32,19) | ITEM_STARDUST | dynamic | Road | Four Island (Road) |
+| 782 | FourIsland_Frlg hidden 22,34 | ITEM_PEARL | dynamic | Road | Four Island (Road) |
+| 783 | FourIsland_Frlg hidden 6,21 | ITEM_ULTRA_BALL | dynamic | Road | Four Island (Road) |
+| 784 | SixIsland_Frlg hidden 9,7 | ITEM_LEPPA_BERRY | dynamic | Road | a town or city is Road (reach assignments, Settlement rule) |
+| 787 | OneIsland_KindleRoad_Frlg local id 27 (15,70) | ITEM_ETHER | dynamic | Road | Kindle Road (Road) |
+| 788 | OneIsland_KindleRoad_Frlg local id 28 (17,103) | ITEM_MAX_REPEL | dynamic | Road | Kindle Road (Road) |
+| 789 | OneIsland_KindleRoad_Frlg local id 29 (18,114) | ITEM_CARBOS | dynamic | Road | Kindle Road (Road) |
+| 790 | OneIsland_TreasureBeach_Frlg hidden 8,20 | ITEM_STARDUST | dynamic | Wilds | Treasure Beach (Wilds) |
+| 791 | OneIsland_TreasureBeach_Frlg hidden 13,27 | ITEM_STARDUST | dynamic | Wilds | Treasure Beach (Wilds) |
+| 792 | OneIsland_TreasureBeach_Frlg hidden 11,31 | ITEM_PEARL | dynamic | Wilds | Treasure Beach (Wilds) |
+| 793 | OneIsland_TreasureBeach_Frlg hidden 9,34 | ITEM_PEARL | dynamic | Wilds | Treasure Beach (Wilds) |
+| 794 | OneIsland_TreasureBeach_Frlg hidden 15,22 | ITEM_ULTRA_BALL | dynamic | Wilds | Treasure Beach (Wilds) |
+| 795 | OneIsland_TreasureBeach_Frlg hidden 16,33 | ITEM_ULTRA_BALL | dynamic | Wilds | Treasure Beach (Wilds) |
+| 796 | OneIsland_TreasureBeach_Frlg hidden 15,29 | ITEM_STAR_PIECE | prize | Wilds -> ITEM_SHELL_BELL | Ember and Orchard #1 (Find) |
+| 797 | OneIsland_TreasureBeach_Frlg hidden 8,27 | ITEM_BIG_PEARL | dynamic | Wilds | Treasure Beach (Wilds) |
+| 798 | TwoIsland_CapeBrink_Frlg hidden 16,28 | ITEM_PP_MAX | prize | Wilds -> ITEM_PP_MAX | Ember and Orchard #3 (Treasure) |
+| 799 | TwoIsland_CapeBrink_Frlg hidden 15,13 | ITEM_RARE_CANDY | dynamic | Wilds | Cape Brink (Wilds) |
+| 800 | ThreeIsland_BondBridge_Frlg hidden 61,5 | ITEM_MAX_REPEL | dynamic | Road | Bond Bridge (Road) |
+| 801 | ThreeIsland_BondBridge_Frlg hidden 44,12 | ITEM_PEARL | dynamic | Road | Bond Bridge (Road) |
+| 802 | ThreeIsland_BondBridge_Frlg hidden 33,7 | ITEM_STARDUST | dynamic | Road | Bond Bridge (Road) |
+| 803 | FiveIsland_ResortGorgeous_Frlg hidden 10,7 | ITEM_NEST_BALL | dynamic | Wilds | Resort Gorgeous (Wilds) |
+| 804 | FiveIsland_ResortGorgeous_Frlg hidden 27,11 | ITEM_STARDUST | dynamic | Wilds | Resort Gorgeous (Wilds) |
+| 805 | FiveIsland_ResortGorgeous_Frlg hidden 40,12 | ITEM_STAR_PIECE | prize | Wilds -> ITEM_PRISM_SCALE | The Frozen Frontier #3 (Find) |
+| 806 | FiveIsland_ResortGorgeous_Frlg hidden 27,5 | ITEM_STARDUST | dynamic | Wilds | Resort Gorgeous (Wilds) |
+| 807 | FiveIsland_Meadow_Frlg local id 6 (12,11) | ITEM_MAX_POTION | dynamic | Wilds | Five Isle Meadow (Wilds) |
+| 808 | FiveIsland_Meadow_Frlg local id 7 (3,22) | ITEM_PP_UP | dynamic | Wilds | Five Isle Meadow (Wilds) |
+| 809 | FiveIsland_MemorialPillar_Frlg local id 5 (4,47) | ITEM_METAL_COAT | prize | Outlands -> ITEM_METAL_COAT | The Frozen Frontier #6 (Treasure) |
+| 810 | FiveIsland_MemorialPillar_Frlg hidden 8,52 | ITEM_BIG_PEARL | dynamic | Outlands | Memorial Pillar (Outlands) |
+| 811 | FiveIsland_MemorialPillar_Frlg hidden 15,7 | ITEM_RAZZ_BERRY | dynamic | Outlands | Memorial Pillar (Outlands) |
+| 812 | FiveIsland_MemorialPillar_Frlg hidden 17,22 | ITEM_SITRUS_BERRY | dynamic | Outlands | Memorial Pillar (Outlands) |
+| 813 | FiveIsland_MemorialPillar_Frlg hidden 14,25 | ITEM_BLUK_BERRY | dynamic | Outlands | Memorial Pillar (Outlands) |
+| 814 | SixIsland_OutcastIsland_Frlg local id 7 (11,16) | ITEM_PP_UP | dynamic | Outlands | Outcast Island (Outlands) |
+| 815 | SixIsland_OutcastIsland_Frlg hidden 16,23 | ITEM_STAR_PIECE | dynamic | Outlands | Outcast Island (Outlands) |
+| 816 | SixIsland_OutcastIsland_Frlg hidden 6,24 | ITEM_NET_BALL | prize | Outlands -> ITEM_AMULET_COIN | Dragon and Sun #6 (Legend) |
+| 817 | SixIsland_GreenPath_Frlg hidden 12,9 | ITEM_ULTRA_BALL | prize | Outlands -> ITEM_TM_DRAGON_PULSE | Dragon and Sun #2 (Treasure) |
+| 818 | SixIsland_WaterPath_Frlg local id 8 (17,19) | ITEM_ELIXIR | dynamic | Wilds | Water Path (Wilds) |
+| 819 | SixIsland_WaterPath_Frlg local id 9 (17,87) | ITEM_DRAGON_SCALE | prize | Wilds -> ITEM_DRAGON_SCALE | Dragon and Sun #1 (Treasure) |
+| 820 | SixIsland_WaterPath_Frlg hidden 15,76 | ITEM_ASPEAR_BERRY | dynamic | Wilds | Water Path (Wilds) |
+| 821 | SixIsland_WaterPath_Frlg hidden 3,8 | ITEM_ORAN_BERRY | dynamic | Wilds | Water Path (Wilds) |
+| 822 | SixIsland_WaterPath_Frlg hidden 13,63 | ITEM_PINAP_BERRY | dynamic | Wilds | Water Path (Wilds) |
+| 823 | SixIsland_RuinValley_Frlg local id 15 (5,33) | ITEM_HP_UP | prize | Outlands -> ITEM_DRAGON_FANG | Dragon and Sun #5 (Find) |
+| 824 | SixIsland_RuinValley_Frlg local id 16 (19,11) | ITEM_FULL_RESTORE | prize | Outlands -> ITEM_TM_DRAGON_CLAW | Dragon and Sun #4 (Treasure) |
+| 825 | SixIsland_RuinValley_Frlg local id 17 (43,32) | ITEM_SUN_STONE | prize | Outlands -> ITEM_SUN_STONE | Dragon and Sun #3 (Treasure) |
+| 826 | SevenIsland_TrainerTower_Frlg hidden 49,27 | ITEM_BIG_PEARL | prize | Wilds -> ITEM_POWER_LENS | Seven Island Training Grounds #2 (Find) |
+| 827 | SevenIsland_TrainerTower_Frlg hidden 47,30 | ITEM_PEARL | prize | Wilds -> ITEM_POWER_BAND | Seven Island Training Grounds #3 (Find) |
+| 828 | SevenIsland_TrainerTower_Frlg hidden 59,32 | ITEM_NANAB_BERRY | prize | Wilds -> ITEM_POWER_ANKLET | Seven Island Training Grounds #4 (Find) |
+| 829 | SevenIsland_SevaultCanyon_Entrance_Frlg hidden 8,29 | ITEM_RAWST_BERRY | prize | Wilds -> ITEM_POWER_BRACER | Seven Island Training Grounds #1 (Find) |
+| 830 | SevenIsland_SevaultCanyon_Frlg local id 17 (18,45) | ITEM_KINGS_ROCK | prize | Outlands -> ITEM_KINGS_ROCK | Seven Island Training Grounds #7 (Treasure) |
+| 831 | SevenIsland_SevaultCanyon_Frlg local id 18 (7,38) | ITEM_MAX_ELIXIR | prize | Outlands -> ITEM_POWER_BELT | Seven Island Training Grounds #5 (Treasure) |
+| 832 | SevenIsland_SevaultCanyon_Frlg local id 19 (17,23) | ITEM_NUGGET | prize | Outlands -> ITEM_POWER_WEIGHT | Seven Island Training Grounds #6 (Treasure) |
+| 833 | SevenIsland_SevaultCanyon_Frlg hidden 15,66 | ITEM_CHERI_BERRY | dynamic | Outlands | Sevault Canyon (Outlands) |
+| 834 | SevenIsland_TanobyRuins_Frlg hidden 33,10 | ITEM_HEART_SCALE | prize | Outlands -> ITEM_DEEP_SEA_TOOTH | Seven Island Training Grounds #8 (Treasure) |
+| 835 | SevenIsland_TanobyRuins_Frlg hidden 86,9 | ITEM_HEART_SCALE | prize | Outlands -> ITEM_DEEP_SEA_SCALE | Seven Island Training Grounds #9 (Treasure) |
+| 836 | SevenIsland_TanobyRuins_Frlg hidden 125,5 | ITEM_HEART_SCALE | prize | Outlands -> ITEM_LIFE_ORB | Seven Island Training Grounds #10 (Treasure) |
+| 837 | SevenIsland_TanobyRuins_Frlg hidden 8,2 | ITEM_HEART_SCALE | dynamic | Outlands | Tanoby Ruins (Outlands) |
+| 839 | SevenIsland_SevaultCanyon_House_Frlg local id 3 (6,4) | ITEM_LUCKY_PUNCH | dynamic | Outlands | opens onto SevenIsland_SevaultCanyon_Frlg |
 | - | FourIsland_IcefallCave_1F_Frlg local id 2 (12,16) | ITEM_HM07 | fixed | - | HM07 (fixed story item) |
 
 ### Johto
@@ -791,6 +773,7 @@ Every item spot by region. Status is prize (kept flag, gives its prize once), dy
 
 | # | Spot | Authored item | Status | Reach | Reason |
 | ---: | --- | --- | --- | --- | --- |
+| 381 | SouthernIsland_Interior_hns hidden 13,11 | ITEM_SOUL_DEW | dynamic | Outlands | Outlands by the joining table |
 | 382 | PetalburgCity local id 6 (19,2) | ITEM_MAX_REVIVE | dynamic | Road | Petalburg City (Road) |
 | 383 | PetalburgCity local id 7 (3,28) | ITEM_ETHER | dynamic | Road | Petalburg City (Road) |
 | 384 | PetalburgCity hidden 11,29 | ITEM_RARE_CANDY | dynamic | Road | Petalburg City (Road) |
@@ -1048,16 +1031,15 @@ Every item spot by region. Status is prize (kept flag, gives its prize once), dy
 | 636 | SafariZone_Southeast local id 4 (31,15) | ITEM_BIG_PEARL | dynamic | Wilds | Hoenn Safari: Southeast (Wilds) |
 | 637 | SafariZone_Southeast hidden 19,36 | ITEM_PP_UP | dynamic | Wilds | Hoenn Safari: Southeast (Wilds) |
 | 638 | SafariZone_Southeast hidden 32,33 | ITEM_FULL_RESTORE | dynamic | Wilds | Hoenn Safari: Southeast (Wilds) |
-| 639 | Route110_TrickHouseEnd hidden 4,5 | ITEM_NUGGET | dynamic | Road | opens onto Route110 |
-| 640 | Route110_TrickHousePuzzle1 local id 13 (9,4) | ITEM_ORANGE_MAIL | dynamic | Road | opens onto Route110 |
-| 641 | Route110_TrickHousePuzzle2 local id 4 (8,17) | ITEM_WAVE_MAIL | dynamic | Road | opens onto Route110 |
-| 642 | Route110_TrickHousePuzzle2 local id 5 (3,13) | ITEM_HARBOR_MAIL | dynamic | Road | opens onto Route110 |
-| 643 | Route110_TrickHousePuzzle3 local id 4 (1,2) | ITEM_WOOD_MAIL | dynamic | Road | opens onto Route110 |
-| 644 | Route110_TrickHousePuzzle3 local id 5 (4,2) | ITEM_SHADOW_MAIL | dynamic | Road | opens onto Route110 |
-| 645 | Route110_TrickHousePuzzle4 local id 4 (2,5) | ITEM_MECH_MAIL | dynamic | Road | opens onto Route110 |
-| 646 | Route110_TrickHousePuzzle6 local id 4 (11,21) | ITEM_GLITTER_MAIL | dynamic | Road | opens onto Route110 |
-| 647 | Route110_TrickHousePuzzle7 local id 4 (5,12) | ITEM_TROPIC_MAIL | dynamic | Road | opens onto Route110 |
-| 648 | Route110_TrickHousePuzzle8 local id 4 (2,2) | ITEM_BEAD_MAIL | dynamic | Road | opens onto Route110 |
+| 639 | Route110_TrickHousePuzzle1 local id 13 (9,4) | ITEM_ORANGE_MAIL | dynamic | Road | opens onto Route110 |
+| 640 | Route110_TrickHousePuzzle2 local id 4 (8,17) | ITEM_WAVE_MAIL | dynamic | Road | opens onto Route110 |
+| 641 | Route110_TrickHousePuzzle2 local id 5 (3,13) | ITEM_HARBOR_MAIL | dynamic | Road | opens onto Route110 |
+| 642 | Route110_TrickHousePuzzle3 local id 4 (1,2) | ITEM_WOOD_MAIL | dynamic | Road | opens onto Route110 |
+| 643 | Route110_TrickHousePuzzle3 local id 5 (4,2) | ITEM_SHADOW_MAIL | dynamic | Road | opens onto Route110 |
+| 644 | Route110_TrickHousePuzzle4 local id 4 (2,5) | ITEM_MECH_MAIL | dynamic | Road | opens onto Route110 |
+| 645 | Route110_TrickHousePuzzle6 local id 4 (11,21) | ITEM_GLITTER_MAIL | dynamic | Road | opens onto Route110 |
+| 646 | Route110_TrickHousePuzzle7 local id 4 (5,12) | ITEM_TROPIC_MAIL | dynamic | Road | opens onto Route110 |
+| 647 | Route110_TrickHousePuzzle8 local id 4 (2,2) | ITEM_BEAD_MAIL | dynamic | Road | opens onto Route110 |
 | - | LittlerootTown_BrendansHouse_2F local id 15 (3,4) | - | fixed | - | rival's Poke Ball (script-driven) |
 | - | LittlerootTown_MaysHouse_2F local id 16 (5,4) | - | fixed | - | rival's Poke Ball (script-driven) |
 | - | LittlerootTown_ProfessorBirchsLab local id 4 (6,8) | - | fixed | - | starter Poke Balls (Pokemon gift) |
@@ -1076,12 +1058,7 @@ Every item spot by region. Status is prize (kept flag, gives its prize once), dy
 | - | AbandonedShip_HiddenFloorRooms hidden 1,12 | ITEM_KEY_TO_ROOM_4 | fixed | - | key item or HM (ITEM_KEY_TO_ROOM_4) keeps its authored spot |
 | - | AbandonedShip_HiddenFloorRooms hidden 1,2 | ITEM_KEY_TO_ROOM_6 | fixed | - | key item or HM (ITEM_KEY_TO_ROOM_6) keeps its authored spot |
 | - | NavelRock_Top hidden 12,9 | ITEM_SACRED_ASH | fixed | - | Sacred Ash (fixed story item) |
-
-### Other
-
-| # | Spot | Authored item | Status | Reach | Reason |
-| ---: | --- | --- | --- | --- | --- |
-| 381 | SouthernIsland_Interior_hns hidden 13,11 | ITEM_SOUL_DEW | dynamic | Outlands | Outlands by the joining table |
+| - | Route110_TrickHouseEnd hidden 4,5 | ITEM_NUGGET | fixed | - | Trick House Nugget (script-dependent: SetTrickHouseNuggetFlag) |
 
 ## Other excluded rows
 

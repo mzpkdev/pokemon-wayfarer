@@ -1794,11 +1794,7 @@ u8 Unref_TryInitLocalObjectEvent(u8 localId)
         for (i = 0; i < objectEventCount; i++)
         {
             template = &gSaveBlock1Ptr->objectEventTemplates[i];
-            if (template->localId == localId && !FlagGet(template->flagId)
-#if IS_WAYFARER
-             && !DailyItems_HideTemplate(template)
-#endif
-             )
+            if (template->localId == localId && !FlagGet(template->flagId))
                 return InitObjectEventStateFromTemplate(template, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
         }
     }

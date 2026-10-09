@@ -205,9 +205,21 @@
    ],
    "reason": "Sacred Ash (fixed story item)",
    "ids": []
+  },
+  {
+   "map": "Route110_TrickHouseEnd",
+   "ids": [],
+   "hidden": [
+    [
+     4,
+     5
+    ]
+   ],
+   "reason": "Trick House Nugget (script-dependent: SetTrickHouseNuggetFlag)"
   }
  ],
  "region_overrides": {
-  "VictoryRoadKanto_": "Kanto"
+  "VictoryRoadKanto_": "Kanto",
+  "SouthernIsland_Interior_hns": "Hoenn"
  }
 }

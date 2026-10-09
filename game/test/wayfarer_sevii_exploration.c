@@ -249,6 +249,8 @@ TEST("Wayfarer Itemfinder finds every resolved Sevii hidden item until it is pic
                 continue;
             spotIndex = DailyItems_FindSpot(MAP_GROUP(mapId), MAP_NUM(mapId), TRUE, i);
             passed &= spotIndex != NO_ITEM_SPOT;
+            if (spotIndex == NO_ITEM_SPOT)
+                continue;
             expected = WORLD_ITEM_ATTR_PRIZE(DailyItems_GetSpot(spotIndex)->attrs) || DailyItems_ResolveSpot(spotIndex) != ITEM_NONE;
             gObjectEvents[0].currentCoords.x = bgEvent->x + MAP_OFFSET;
             gObjectEvents[0].currentCoords.y = bgEvent->y + MAP_OFFSET;
@@ -257,7 +259,7 @@ TEST("Wayfarer Itemfinder finds every resolved Sevii hidden item until it is pic
             {
                 // A prize stays in its Sevii bank flag; any pickup also clears the spot for the day.
                 if (WORLD_ITEM_ATTR_PRIZE(DailyItems_GetSpot(spotIndex)->attrs))
-                    FlagSet(GetHiddenItemFlagId(bgEvent));
+                    FlagSet(DailyItems_GetSpot(spotIndex)->flag);
                 DailyItems_SetCleared(spotIndex);
                 passed &= !ItemfinderFindsItemUnderfoot(events, taskId);
             }
