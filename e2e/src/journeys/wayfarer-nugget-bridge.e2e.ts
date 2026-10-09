@@ -51,8 +51,10 @@ const startBattle = async (game: GameSession): Promise<void> => {
   await game.player.interact()
   await game.dialogue.waitForOpen()
   for (let attempt = 0; attempt < 180; attempt++) {
-    if ((await game.state.read()).battle.ui === "action-menu") return
-    await game.controls.press("a")
+    const state = await game.state.read()
+    if (state.battle.ui === "action-menu") return
+    // Inside the battle, B advances its text but can't pick a move if it lands on the action menu.
+    await game.controls.press(state.battle.active ? "b" : "a")
     await game.wait.frames(12)
   }
   throw new Error(`Nugget Bridge battle did not start: ${JSON.stringify(await game.state.read())}`)
