@@ -67,7 +67,12 @@ u8 GetLeagueScalingLevel(u32 rating, s8 encounterOffset, s8 slotOffset);
 const struct LeagueScalingRoster *GetLeagueScalingRoster(u16 trainerId, u16 ownerId);
 bool32 IsLeagueScalingRosterValid(const struct LeagueScalingRoster *roster, const struct TrainerMon *party, u32 count);
 
+// v0 (Wayfarer): an ORDINARY slot takes its battle map's place level plus TRAINER_REACH_BONUS, a GYM_MEMBER
+// slot the Gym-member curve plus TRAINER_GYM_MEMBER_BONUS; the authored level adjusts neither. Other builds
+// project the authored level onto the regular curve.
 u8 GetTrainerScalingLevel(u32 rating, u32 authoredLevel, u32 policy);
+// The place level (the wild reach or dungeon floor level, without any bonus) a battle on this map uses.
+u32 GetTrainerPlaceLevel(u32 mapGroup, u32 mapNum, u32 rating);
 u32 GetTrainerScalingPolicy(u32 trainerId);
 u16 ResolveTrainerScalingSpecies(u16 species, u8 level);
 bool32 IsTrainerScalingBattleContext(u32 battleTypeFlags);

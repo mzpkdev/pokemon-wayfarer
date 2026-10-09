@@ -883,18 +883,32 @@ native-hm-windows-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 test/extract_wild_encounter_v2_fixtures.py --check
 
 .PHONY: trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit
+# tools/trainer_scaling/reach.py resolves the map of every ORDINARY Trainer from the Wayfarer map version's mapjson
+# outputs and scripts, so it only runs (and its tests only look at real maps) on that version.
+ifeq ($(MAP_VERSION),wayfarer)
+TRAINER_REACH_INPUTS := $(MAPS_DIR)/groups.inc $(INCLUDECONSTS_OUTDIR)/map_groups.h $(MAP_EVENTS) $(MAP_HEADERS) $(MAP_VERSION_STAMP)
+trainer-party-scaling-generate trainer-party-scaling-audit trainer-party-scaling-test: $(TRAINER_REACH_INPUTS)
+trainer-party-scaling-test: TRAINER_REACH_REQUIRE_MAPS := 1
+endif
+
 trainer-party-scaling-generate:
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/generate.py
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/league.py
+ifeq ($(MAP_VERSION),wayfarer)
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/reach.py
+endif
 
 trainer-party-scaling-test:
-	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/trainer_scaling -p 'test_*.py' -q
+	TRAINER_REACH_REQUIRE_MAPS=$(TRAINER_REACH_REQUIRE_MAPS) PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/trainer_scaling -p 'test_*.py' -q
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/trainer_scaling/tests -p 'test_*.py' -q
 
 trainer-party-scaling-audit:
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/generate.py --check
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/league.py --check
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/final_stage.py --check
+ifeq ($(MAP_VERSION),wayfarer)
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/reach.py --check
+endif
 
 frlg-traversal-static-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/traversal/tests -p 'test_frlg_*.py' -q

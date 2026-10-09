@@ -202,6 +202,8 @@ bool8 DoesWildEncounterProfileHaveAvailableEntries(const struct WildEncounterPro
 // The level of a place (a header) at a Trainer Rating: the reach scalers, or the
 // dungeon's intent and floor. Never above MAX_LEVEL. Returns 0 for an unknown header.
 u32 GetWildEncounterPlaceLevel(u32 headerId, u32 trainerRating);
+// The same level for a place record that is not a wild header (a Trainer's map).
+u32 GetWildEncounterPlaceLevelForPlace(const struct WildEncounterPlace *place, u32 trainerRating);
 // The rate a method rolls: Road maps roll 60% of the table's encounter rate for walking and
 // surfing (WILD_AREA_LAND, WILD_AREA_WATER), rounded to the nearest value. Rock Smash,
 // Headbutt and fishing keep the full rate.

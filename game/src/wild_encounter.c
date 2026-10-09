@@ -326,14 +326,18 @@ static const struct TrainerScalerAnchor sWildOutlandsBonus[] =
 
 u32 GetWildEncounterPlaceLevel(u32 headerId, u32 trainerRating)
 {
-    const struct WildEncounterPlace *place;
-    u32 road, wilds, outlands, first, last, level;
-    u32 floorLevel = 0;
-
     if (headerId == HEADER_NONE || headerId >= gWildMonHeaderCount)
         return 0;
 
-    place = &gWildEncounterPlaces[headerId];
+    return GetWildEncounterPlaceLevelForPlace(&gWildEncounterPlaces[headerId], trainerRating);
+}
+
+// Shared with the trainers' place levels (trainer_party_scaling.c): one curve for a place record.
+u32 GetWildEncounterPlaceLevelForPlace(const struct WildEncounterPlace *place, u32 trainerRating)
+{
+    u32 road, wilds, outlands, first, last, level;
+    u32 floorLevel = 0;
+
     road = EvaluateTrainerScaler(sWildRoadLevel, ARRAY_COUNT(sWildRoadLevel), trainerRating, FALSE);
     wilds = road + EvaluateTrainerScaler(sWildWildsBonus, ARRAY_COUNT(sWildWildsBonus), trainerRating, FALSE);
     outlands = road + EvaluateTrainerScaler(sWildOutlandsBonus, ARRAY_COUNT(sWildOutlandsBonus), trainerRating, FALSE);

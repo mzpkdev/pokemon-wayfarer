@@ -6,6 +6,7 @@
 #include "trainer_rating.h"
 #include "trainer_party_scaling.h"
 #include "trainer_scaler.h"
+#include "wild_encounter.h"
 #include "battle_main.h"
 #include "notable_moves.h"
 #include "league_circuit.h"
@@ -22,10 +23,23 @@ struct TrainerScalingMoveException
     u8 slot;
 };
 
+#if WAYFARER_V0_TRAINERS
+// A map that hosts an ORDINARY Trainer and the place its battles take their level from.
+struct TrainerMapPlace
+{
+    u8 mapGroup;
+    u8 mapNum;
+    struct WildEncounterPlace place;
+};
+#endif
+
 #if IS_WAYFARER
 #include "data/trainer_scaling/move_exceptions.h"
 #include "data/trainer_scaling/policies.h"
 #include "data/trainer_scaling/league.h"
+#if WAYFARER_V0_TRAINERS
+#include "data/trainer_scaling/trainer_places.h"
+#endif
 #if B_GYM_LEADER_SCALING
 #include "data/trainer_scaling/gym_leaders.h"
 #endif
@@ -96,24 +110,51 @@ bool32 IsLeagueScalingRosterValid(const struct LeagueScalingRoster *roster, cons
     return TRUE;
 }
 
+#if WAYFARER_V0_TRAINERS
+// Maps without an entry (none that hosts an ORDINARY Trainer: generation fails first) count as Road.
+static const struct WildEncounterPlace sTrainerFallbackPlace = { .reach = WILD_REACH_ROAD };
+
+u32 GetTrainerPlaceLevel(u32 mapGroup, u32 mapNum, u32 rating)
+{
+    const struct WildEncounterPlace *place = &sTrainerFallbackPlace;
+    u32 i;
+
+    for (i = 0; i < ARRAY_COUNT(sTrainerMapPlaces); i++)
+    {
+        if (sTrainerMapPlaces[i].mapGroup == mapGroup && sTrainerMapPlaces[i].mapNum == mapNum)
+        {
+            place = &sTrainerMapPlaces[i].place;
+            break;
+        }
+    }
+    return GetWildEncounterPlaceLevelForPlace(place, rating);
+}
+#endif
+
 u8 GetTrainerScalingLevel(u32 rating, u32 authoredLevel, u32 policy)
 {
-#if !WAYFARER_V0_TRAINERS
+#if WAYFARER_V0_TRAINERS
+    // v0: an ORDINARY slot takes the level of the place the battle starts in; a Gym member keeps a
+    // Rating curve. Neither reads the authored level.
+    s32 level;
+
+    (void)authoredLevel;
+    if (policy == TRAINER_SCALING_ORDINARY)
+        level = GetTrainerPlaceLevel(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, rating) + TRAINER_REACH_BONUS;
+    else
+        level = EvaluateTrainerScaler(sRegularTrainerLevelsV0, ARRAY_COUNT(sRegularTrainerLevelsV0), rating, FALSE)
+              + (policy == TRAINER_SCALING_GYM_MEMBER ? TRAINER_GYM_MEMBER_BONUS : 0);
+    return min(max(level, 1), MAX_LEVEL);
+#else
     static const u8 anchors[][2] = {{0, 7}, {4, 8}, {8, 10}, {16, 15}, {30, 22}, {40, 34}, {55, 52}, {65, 72}, {80, 92}};
     u32 i;
-#endif
-    s32 adjustment, level;
-#if !WAYFARER_V0_TRAINERS
+    s32 adjustment, level = 92;
+
     rating = min(rating, 80);
-#endif
     authoredLevel = min(max(authoredLevel, 1), 100);
     adjustment = (s32)authoredLevel - 5;
     adjustment = adjustment < 0 ? -((-adjustment + 2) / 5) : (adjustment + 2) / 5;
     adjustment = min(max(adjustment, -1), 8);
-    level = 92;
-#if WAYFARER_V0_TRAINERS
-    level = EvaluateTrainerScaler(sRegularTrainerLevelsV0, ARRAY_COUNT(sRegularTrainerLevelsV0), rating, FALSE);
-#else
     for (i = 1; i < ARRAY_COUNT(anchors); i++)
     {
         if (rating <= anchors[i][0])
@@ -124,8 +165,8 @@ u8 GetTrainerScalingLevel(u32 rating, u32 authoredLevel, u32 policy)
             break;
         }
     }
-#endif
     return min(max(level + adjustment + (policy == TRAINER_SCALING_GYM_MEMBER ? 2 : 0), 1), 100);
+#endif
 }
 
 u8 GetGymLeaderScalingPartySize(u32 rating)

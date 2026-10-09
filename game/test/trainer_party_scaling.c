@@ -29,26 +29,6 @@ static const u8 sBaselineOracle[] = {
     45, 46, 47, 48, 50, 51, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70,
     72, 73, 75, 76, 77, 79, 80, 81, 83, 84, 85, 87, 88, 89, 91, 92,
 };
-#endif
-
-static u32 BaselineOracle(u32 rating)
-{
-#if WAYFARER_V0_TRAINERS
-    static const u32 anchors[][2] = {{0, 9}, {40, 27}, {80, 44}, {120, 62}, {160, 82}};
-    for (u32 i = 1; i < ARRAY_COUNT(anchors); i++)
-    {
-        if (rating < anchors[i][0])
-        {
-            u32 span = anchors[i][0] - anchors[i - 1][0];
-            u32 rise = (rating - anchors[i - 1][0]) * (anchors[i][1] - anchors[i - 1][1]);
-            return anchors[i - 1][1] + (2 * rise + span) / (2 * span);
-        }
-    }
-    return 82;
-#else
-    return sBaselineOracle[min(rating, 80)];
-#endif
-}
 
 static u32 ScalingLevelOracle(u32 rating, s32 level, bool32 gym)
 {
@@ -64,8 +44,96 @@ static u32 ScalingLevelOracle(u32 rating, s32 level, bool32 gym)
             distance = error;
         }
     }
-    return min(100, BaselineOracle(rating) + nearest + 2 * gym);
+    return min(100, sBaselineOracle[min(rating, 80)] + nearest + 2 * gym);
 }
+#else
+// v0 levels: independent integer oracles for the Gym-member curve and the wild place levels that ORDINARY
+// slots take (specs/trainer-party-scaling.md "v0 levels", specs/wild-level-scaling.md).
+struct OracleAnchor
+{
+    u16 tr;
+    u16 value;
+};
+
+static const struct OracleAnchor sOracleGymMember[] = {{0, 9}, {40, 27}, {80, 44}, {120, 62}, {160, 82}};
+static const struct OracleAnchor sOracleRoad[] = {{0, 5}, {40, 20}, {80, 38}, {120, 56}, {160, 74}};
+static const struct OracleAnchor sOracleWildsBonus[] = {{0, 4}, {80, 6}, {160, 11}};
+static const struct OracleAnchor sOracleOutlandsBonus[] = {{0, 8}, {40, 8}, {80, 12}, {160, 24}};
+
+// Linear between anchors, exact halves rounding up, flat past the last anchor.
+static u32 OracleScaler(const struct OracleAnchor *anchors, u32 count, u32 tr)
+{
+    for (u32 i = 1; i < count; i++)
+    {
+        if (tr <= anchors[i].tr)
+        {
+            u32 span = anchors[i].tr - anchors[i - 1].tr;
+            u32 rise = (tr - anchors[i - 1].tr) * (anchors[i].value - anchors[i - 1].value);
+            return anchors[i - 1].value + (2 * rise + span) / (2 * span);
+        }
+    }
+    return anchors[count - 1].value;
+}
+
+static u32 OracleRoad(u32 tr)
+{
+    return OracleScaler(sOracleRoad, ARRAY_COUNT(sOracleRoad), tr);
+}
+
+static u32 OracleWilds(u32 tr)
+{
+    return OracleRoad(tr) + OracleScaler(sOracleWildsBonus, ARRAY_COUNT(sOracleWildsBonus), tr);
+}
+
+static u32 OracleOutlands(u32 tr)
+{
+    return OracleRoad(tr) + OracleScaler(sOracleOutlandsBonus, ARRAY_COUNT(sOracleOutlandsBonus), tr);
+}
+
+// A dungeon floor: the intent sets the first and deepest floor, floors climb evenly, halves round up.
+static u32 OracleDungeon(u32 tr, enum WildDungeonIntent intent, bool32 flat, u32 floor, u32 floors)
+{
+    u32 road = OracleRoad(tr), wilds = OracleWilds(tr), outlands = OracleOutlands(tr);
+    u32 first = 0, last = 0, steps;
+
+    switch (intent)
+    {
+    case WILD_DUNGEON_MILD:
+        first = (road + wilds) / 2, last = wilds;
+        break;
+    case WILD_DUNGEON_MILD_TO_MODERATE:
+        first = (road + wilds) / 2, last = (wilds + outlands) / 2;
+        break;
+    case WILD_DUNGEON_MODERATE:
+        first = wilds, last = (wilds + outlands) / 2;
+        break;
+    case WILD_DUNGEON_MODERATE_TO_HARD:
+        first = wilds, last = outlands;
+        break;
+    case WILD_DUNGEON_HARD:
+        first = (wilds + outlands) / 2, last = outlands + 3;
+        break;
+    default:
+        break;
+    }
+    if (flat || floors <= 1)
+        return min((first + last) / 2, 100);
+    steps = floors - 1;
+    return min(first + (2 * (last - first) * floor + steps) / (2 * steps), 100);
+}
+
+#define TEST_MAP_ROAD MAP_ROUTE30_HNS
+#define TEST_MAP_WILDS MAP_ROUTE27_HNS
+#define TEST_MAP_OUTLANDS MAP_ROUTE26_HNS
+
+static void SetScalingTestLocation(u32 mapGroup, u32 mapNum)
+{
+    gSaveBlock1Ptr->location.mapGroup = mapGroup;
+    gSaveBlock1Ptr->location.mapNum = mapNum;
+}
+
+#define SET_SCALING_TEST_MAP(map) SetScalingTestLocation(MAP_GROUP(map), MAP_NUM(map))
+#endif
 
 #if !WAYFARER_V0_TRAINERS
 static const struct TrainerMon sGymLeaderPlanTestParty[PARTY_SIZE] = {
@@ -219,6 +287,7 @@ TEST("Gym Leader plans reject malformed metadata before construction")
 }
 #endif // !WAYFARER_V0_TRAINERS
 
+#if !WAYFARER_V0_TRAINERS
 TEST("Trainer scaling matches an independent oracle for every Rating and authored level")
 {
     u32 level, rating, policy;
@@ -227,13 +296,7 @@ TEST("Trainer scaling matches an independent oracle for every Rating and authore
         for (level = 1; level <= 100; level++)
         {
             u32 previous = 0;
-            for (rating = 0; rating <=
-#if WAYFARER_V0_TRAINERS
-                 160;
-#else
-                 80;
-#endif
-                 rating++)
+            for (rating = 0; rating <= 80; rating++)
             {
                 u32 actual = GetTrainerScalingLevel(rating, level, policy);
                 EXPECT_EQ(actual, ScalingLevelOracle(rating, level, policy == TRAINER_SCALING_GYM_MEMBER));
@@ -246,6 +309,148 @@ TEST("Trainer scaling matches an independent oracle for every Rating and authore
         }
     }
 }
+#else
+TEST("Trainer place levels follow the reach curves at every Rating on Road Wilds and Outlands maps")
+{
+    static const struct { u16 tr; u8 road; u8 wilds; u8 outlands; } anchors[] = {
+        {0, 5, 9, 13}, {40, 20, 25, 28}, {80, 38, 44, 50}, {120, 56, 0, 0}, {160, 74, 85, 98},
+    };
+    u32 previousRoad = 0, previousWilds = 0, previousOutlands = 0;
+
+    for (u32 i = 0; i < ARRAY_COUNT(anchors); i++)
+    {
+        EXPECT_EQ(GetTrainerPlaceLevel(MAP_GROUP(TEST_MAP_ROAD), MAP_NUM(TEST_MAP_ROAD), anchors[i].tr), anchors[i].road);
+        if (anchors[i].wilds != 0)
+        {
+            EXPECT_EQ(GetTrainerPlaceLevel(MAP_GROUP(TEST_MAP_WILDS), MAP_NUM(TEST_MAP_WILDS), anchors[i].tr), anchors[i].wilds);
+            EXPECT_EQ(GetTrainerPlaceLevel(MAP_GROUP(TEST_MAP_OUTLANDS), MAP_NUM(TEST_MAP_OUTLANDS), anchors[i].tr), anchors[i].outlands);
+        }
+    }
+    for (u32 tr = 0; tr <= 200; tr++)
+    {
+        u32 road = GetTrainerPlaceLevel(MAP_GROUP(TEST_MAP_ROAD), MAP_NUM(TEST_MAP_ROAD), tr);
+        u32 wilds = GetTrainerPlaceLevel(MAP_GROUP(TEST_MAP_WILDS), MAP_NUM(TEST_MAP_WILDS), tr);
+        u32 outlands = GetTrainerPlaceLevel(MAP_GROUP(TEST_MAP_OUTLANDS), MAP_NUM(TEST_MAP_OUTLANDS), tr);
+        EXPECT_EQ(road, OracleRoad(tr));
+        EXPECT_EQ(wilds, OracleWilds(tr));
+        EXPECT_EQ(outlands, OracleOutlands(tr));
+        EXPECT_GE(road, previousRoad);
+        EXPECT_GE(wilds, previousWilds);
+        EXPECT_GE(outlands, previousOutlands);
+        previousRoad = road, previousWilds = wilds, previousOutlands = outlands;
+    }
+    EXPECT_EQ(GetTrainerPlaceLevel(MAP_GROUP(TEST_MAP_ROAD), MAP_NUM(TEST_MAP_ROAD), 65535), 74);
+    EXPECT_EQ(GetTrainerPlaceLevel(MAP_GROUP(TEST_MAP_WILDS), MAP_NUM(TEST_MAP_WILDS), 65535), 85);
+    EXPECT_EQ(GetTrainerPlaceLevel(MAP_GROUP(TEST_MAP_OUTLANDS), MAP_NUM(TEST_MAP_OUTLANDS), 65535), 98);
+}
+
+TEST("Trainer place levels use dungeon floors, joined floors, and the places maps without wild encounters resolve to")
+{
+    static const struct {
+        u8 group;
+        u8 num;
+        enum WildDungeonIntent intent;
+        bool8 flat;
+        u8 floor;
+        u8 floors;
+    } dungeons[] = {
+        // Listed dungeon floor (Mt. Mortar 2F: step 3 of 4).
+        {MAP_GROUP(MAP_MT_MORTAR_2F_HNS), MAP_NUM(MAP_MT_MORTAR_2F_HNS), WILD_DUNGEON_MODERATE, FALSE, 2, 4},
+        // Listed single-floor dungeon uses the middle of its range.
+        {MAP_GROUP(MAP_DRAGONS_DEN_CAVERN_HNS), MAP_NUM(MAP_DRAGONS_DEN_CAVERN_HNS), WILD_DUNGEON_HARD, TRUE, 0, 1},
+        // A joined dungeon is one floor order: the new 1F and the listed 3F of Sprout Tower.
+        {MAP_GROUP(MAP_SPROUT_TOWER_1F_HNS), MAP_NUM(MAP_SPROUT_TOWER_1F_HNS), WILD_DUNGEON_MILD, FALSE, 0, 3},
+        {MAP_GROUP(MAP_SPROUT_TOWER_3F_HNS), MAP_NUM(MAP_SPROUT_TOWER_3F_HNS), WILD_DUNGEON_MILD, FALSE, 2, 3},
+        // Story-site dungeons: Silph Co. (ten floors) and the single-floor Olivine Lighthouse.
+        {MAP_GROUP(MAP_SILPH_CO_2F), MAP_NUM(MAP_SILPH_CO_2F), WILD_DUNGEON_MODERATE_TO_HARD, FALSE, 0, 10},
+        {MAP_GROUP(MAP_SILPH_CO_11F), MAP_NUM(MAP_SILPH_CO_11F), WILD_DUNGEON_MODERATE_TO_HARD, FALSE, 9, 10},
+        {MAP_GROUP(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), MAP_NUM(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), WILD_DUNGEON_MILD, TRUE, 0, 1},
+        {MAP_GROUP(MAP_SSANNE_B1F_ROOM1), MAP_NUM(MAP_SSANNE_B1F_ROOM1), WILD_DUNGEON_MILD, FALSE, 2, 3},
+    };
+
+    for (u32 i = 0; i < ARRAY_COUNT(dungeons); i++)
+        for (u32 tr = 0; tr <= 200; tr += 5)
+            EXPECT_EQ(GetTrainerPlaceLevel(dungeons[i].group, dungeons[i].num, tr),
+                      OracleDungeon(tr, dungeons[i].intent, dungeons[i].flat, dungeons[i].floor, dungeons[i].floors));
+    // Maps without a reach of their own take the reach of the place they resolve to.
+    for (u32 tr = 0; tr <= 200; tr += 5)
+    {
+        EXPECT_EQ(GetTrainerPlaceLevel(MAP_GROUP(MAP_ROUTE110_TRICK_HOUSE_PUZZLE1), MAP_NUM(MAP_ROUTE110_TRICK_HOUSE_PUZZLE1), tr), OracleRoad(tr)); // interior of a Road
+        EXPECT_EQ(GetTrainerPlaceLevel(MAP_GROUP(MAP_SSAQUA_B1F_HNS), MAP_NUM(MAP_SSAQUA_B1F_HNS), tr), OracleRoad(tr)); // ferry
+        EXPECT_EQ(GetTrainerPlaceLevel(MAP_GROUP(MAP_ROUTE26NORTH_HNS), MAP_NUM(MAP_ROUTE26NORTH_HNS), tr), OracleOutlands(tr)); // joins Route 26
+        EXPECT_EQ(GetTrainerPlaceLevel(MAP_GROUP(MAP_MT_CHIMNEY), MAP_NUM(MAP_MT_CHIMNEY), tr), OracleWilds(tr)); // joins Jagged Pass
+    }
+    // A map the table lacks counts as Road: generation fails first for any map that hosts a covered Trainer.
+    EXPECT_EQ(GetTrainerPlaceLevel(MAP_GROUP(MAP_PETALBURG_CITY), MAP_NUM(MAP_PETALBURG_CITY), 80), OracleRoad(80));
+}
+
+TEST("Trainer scaling gives an ORDINARY slot its battle map's place level plus the reach bonus whatever it authored")
+{
+    static const u32 maps[][2] = {
+        {MAP_GROUP(TEST_MAP_ROAD), MAP_NUM(TEST_MAP_ROAD)},
+        {MAP_GROUP(TEST_MAP_WILDS), MAP_NUM(TEST_MAP_WILDS)},
+        {MAP_GROUP(TEST_MAP_OUTLANDS), MAP_NUM(TEST_MAP_OUTLANDS)},
+        {MAP_GROUP(MAP_MT_MORTAR_2F_HNS), MAP_NUM(MAP_MT_MORTAR_2F_HNS)},
+        {MAP_GROUP(MAP_SILPH_CO_11F), MAP_NUM(MAP_SILPH_CO_11F)},
+        {MAP_GROUP(MAP_ROUTE110_TRICK_HOUSE_PUZZLE1), MAP_NUM(MAP_ROUTE110_TRICK_HOUSE_PUZZLE1)},
+    };
+
+    EXPECT_EQ(TRAINER_REACH_BONUS, 3);
+    for (u32 m = 0; m < ARRAY_COUNT(maps); m++)
+    {
+        SetScalingTestLocation(maps[m][0], maps[m][1]);
+        for (u32 tr = 0; tr <= 200; tr++)
+        {
+            u32 expected = min(GetTrainerPlaceLevel(maps[m][0], maps[m][1], tr) + 3, 100);
+            u32 previous = tr == 0 ? 0 : GetTrainerScalingLevel(tr - 1, 1, TRAINER_SCALING_ORDINARY);
+            u32 actual = GetTrainerScalingLevel(tr, 1, TRAINER_SCALING_ORDINARY);
+
+            EXPECT_EQ(actual, expected);
+            EXPECT_GE(actual, previous);
+            // Every slot of a party shares one level: the authored level changes nothing.
+            for (u32 authored = 1; authored <= 100; authored += 9)
+                EXPECT_EQ(GetTrainerScalingLevel(tr, authored, TRAINER_SCALING_ORDINARY), expected);
+        }
+        EXPECT_LE(GetTrainerScalingLevel(65535, 100, TRAINER_SCALING_ORDINARY), 100);
+    }
+    // The Road bonus at the anchors: 5 + 3, 20 + 3, 38 + 3.
+    SET_SCALING_TEST_MAP(TEST_MAP_ROAD);
+    EXPECT_EQ(GetTrainerScalingLevel(0, 60, TRAINER_SCALING_ORDINARY), 8);
+    EXPECT_EQ(GetTrainerScalingLevel(40, 3, TRAINER_SCALING_ORDINARY), 23);
+    EXPECT_EQ(GetTrainerScalingLevel(80, 99, TRAINER_SCALING_ORDINARY), 41);
+    // Outlands Rating 160 is 98: the level-100 clamp bites at 101.
+    SET_SCALING_TEST_MAP(TEST_MAP_OUTLANDS);
+    EXPECT_EQ(GetTrainerScalingLevel(160, 10, TRAINER_SCALING_ORDINARY), 100);
+}
+
+TEST("Trainer scaling gives a GYM_MEMBER slot the Gym-member curve plus two and drops the authored level")
+{
+    static const struct { u16 tr; u8 level; } anchors[] = {{0, 11}, {40, 29}, {80, 46}, {120, 64}, {160, 84}};
+
+    // Gyms are not on the danger map: neither the location nor the authored level moves the result.
+    for (u32 m = 0; m < 2; m++)
+    {
+        if (m == 0)
+            SET_SCALING_TEST_MAP(TEST_MAP_ROAD);
+        else
+            SET_SCALING_TEST_MAP(TEST_MAP_OUTLANDS);
+        for (u32 i = 0; i < ARRAY_COUNT(anchors); i++)
+            EXPECT_EQ(GetTrainerScalingLevel(anchors[i].tr, 1, TRAINER_SCALING_GYM_MEMBER), anchors[i].level);
+        for (u32 tr = 0; tr <= 200; tr++)
+        {
+            u32 expected = min(OracleScaler(sOracleGymMember, ARRAY_COUNT(sOracleGymMember), tr) + 2, 100);
+            u32 previous = tr == 0 ? 0 : GetTrainerScalingLevel(tr - 1, 1, TRAINER_SCALING_GYM_MEMBER);
+            u32 actual = GetTrainerScalingLevel(tr, 1, TRAINER_SCALING_GYM_MEMBER);
+
+            EXPECT_EQ(actual, expected);
+            EXPECT_GE(actual, previous);
+            for (u32 authored = 1; authored <= 100; authored += 9)
+                EXPECT_EQ(GetTrainerScalingLevel(tr, authored, TRAINER_SCALING_GYM_MEMBER), expected);
+        }
+        EXPECT_EQ(GetTrainerScalingLevel(65535, 50, TRAINER_SCALING_GYM_MEMBER), 84); // flat past Rating 160
+    }
+}
+#endif
 
 TEST("Trainer scaling projection and predecessors consume no random draws")
 {
@@ -372,6 +577,9 @@ TEST("Trainer scaling move exceptions require the whole tuple at its active lear
 
 static void PrepareScalingPartyTest(u32 rating)
 {
+#if WAYFARER_V0_TRAINERS
+    SET_SCALING_TEST_MAP(TEST_MAP_ROAD);
+#endif
     SetTrainerRating(rating);
     gIsDebugBattle = FALSE;
     ResetTrainerScalingSnapshot();
@@ -407,11 +615,11 @@ TEST("Trainer scaling constructs reversed parties with legal moves and retained 
     PrepareScalingPartyTest(0);
     struct Pokemon *party = AllocZeroed(PARTY_SIZE * sizeof(*party));
     EXPECT_EQ(CreateNPCTrainerPartyForOpponent(party, TRAINER_JOEY_2_HNS, TRUE, BATTLE_TYPE_TRAINER), 3);
-#if WAYFARER_V0_TRAINERS
-    EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPECIES), SPECIES_CHARMELEON);
-    EXPECT_EQ(GetMonData(&party[0], MON_DATA_LEVEL), 17);
-#else
+    // Rating 0 on a Road map: place level 5 plus the reach bonus, the same for every slot.
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPECIES), SPECIES_CHARMANDER);
+#if WAYFARER_V0_TRAINERS
+    EXPECT_EQ(GetMonData(&party[0], MON_DATA_LEVEL), 8);
+#else
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_LEVEL), 15);
 #endif
     EXPECT_EQ(GetMonAbility(&party[0]), ABILITY_BLAZE);
@@ -425,15 +633,11 @@ TEST("Trainer scaling constructs reversed parties with legal moves and retained 
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPDEF_IV), 26);
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_HP_EV), 20);
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPEED_EV), 32);
-#if WAYFARER_V0_TRAINERS
-    EXPECT_EQ(GetMonData(&party[1], MON_DATA_SPECIES), SPECIES_CHARMELEON);
-#else
     EXPECT_EQ(GetMonData(&party[1], MON_DATA_SPECIES), SPECIES_CHARMANDER);
-#endif
     EXPECT_EQ(GetMonData(&party[2], MON_DATA_SPECIES), SPECIES_SCYTHER);
     EXPECT_EQ(GetMonData(&party[2], MON_DATA_LEVEL),
 #if WAYFARER_V0_TRAINERS
-              9);
+              8);
 #else
               7);
 #endif
@@ -450,25 +654,18 @@ TEST("Trainer scaling resolves aliases and pools before projecting selected slot
     PrepareScalingPartyTest(0);
     struct Pokemon *party = AllocZeroed(PARTY_SIZE * sizeof(*party));
     EXPECT_EQ(CreateNPCTrainerPartyForOpponent(party, TRAINER_JOEY_3_HNS, TRUE, BATTLE_TYPE_TRAINER), 3);
-    EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPECIES),
-#if WAYFARER_V0_TRAINERS
-              SPECIES_CHARMELEON);
-#else
-              SPECIES_CHARMANDER);
-#endif
+    EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPECIES), SPECIES_CHARMANDER);
     EXPECT_EQ(CreateNPCTrainerPartyForOpponent(party, TRAINER_JOEY_4_HNS, TRUE, BATTLE_TYPE_TRAINER), 2);
-    EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPECIES),
+    EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPECIES), SPECIES_CHARMANDER);
 #if WAYFARER_V0_TRAINERS
-              SPECIES_CHARMELEON);
-    EXPECT_EQ(GetMonData(&party[0], MON_DATA_LEVEL), 17);
+    EXPECT_EQ(GetMonData(&party[0], MON_DATA_LEVEL), 8);
 #else
-              SPECIES_CHARMANDER);
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_LEVEL), 15);
 #endif
     EXPECT_EQ(GetMonData(&party[1], MON_DATA_SPECIES), SPECIES_SCYTHER);
     EXPECT_EQ(GetMonData(&party[1], MON_DATA_LEVEL),
 #if WAYFARER_V0_TRAINERS
-              16);
+              8);
 #else
               14);
 #endif
@@ -476,7 +673,7 @@ TEST("Trainer scaling resolves aliases and pools before projecting selected slot
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPECIES), SPECIES_RATTATA);
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_LEVEL),
 #if WAYFARER_V0_TRAINERS
-              9);
+              8);
 #else
               7);
 #endif
@@ -528,13 +725,13 @@ TEST("Trainer scaling keeps mixed opponents independent and shares the battle Ra
 #endif
     EXPECT_EQ(GetMonData(&gEnemyParty[3], MON_DATA_LEVEL),
 #if WAYFARER_V0_TRAINERS
-              17);
+              8);
 #else
               15);
 #endif
     EXPECT_EQ(GetMonData(&gEnemyParty[5], MON_DATA_LEVEL),
 #if WAYFARER_V0_TRAINERS
-              9);
+              8);
 #else
               7);
 #endif
@@ -559,6 +756,32 @@ TEST("Trainer scaling keeps mixed opponents independent and shares the battle Ra
 #endif
     FreeBattleResources();
 }
+
+#if WAYFARER_V0_TRAINERS
+TEST("Trainer scaling gives both opponents of a two-Trainer battle one place level")
+{
+    u32 flags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS;
+    u32 expected = OracleDungeon(40, WILD_DUNGEON_MODERATE_TO_HARD, FALSE, 9, 10) + TRAINER_REACH_BONUS;
+
+    ASSUME(B_TRAINER_PARTY_SCALING);
+    PrepareScalingPartyTest(40);
+    SET_SCALING_TEST_MAP(MAP_SILPH_CO_11F);
+    gBattleTypeFlags = flags;
+    AllocateBattleResources();
+    EXPECT_EQ(CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_JOEY_2_HNS, TRUE, flags), 3);
+    EXPECT_EQ(CreateNPCTrainerPartyForOpponent(&gEnemyParty[3], TRAINER_JOEY_4_HNS, FALSE, flags), 2);
+    for (u32 i = 0; i < 3; i++)
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_LEVEL), expected);
+    for (u32 i = 3; i < 5; i++)
+        EXPECT_EQ(GetMonData(&gEnemyParty[i], MON_DATA_LEVEL), expected);
+    // Walking to another map between battles gives the next battle that map's level.
+    ResetTrainerScalingSnapshot();
+    SET_SCALING_TEST_MAP(TEST_MAP_ROAD);
+    CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_JOEY_2_HNS, TRUE, flags);
+    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), OracleRoad(40) + TRAINER_REACH_BONUS);
+    FreeBattleResources();
+}
+#endif
 
 TEST("Trainer scaling leaves raw player partner debug and recorded construction authored")
 {
@@ -614,7 +837,7 @@ TEST("Trainer scaling randomization retains the authored mapping inputs and scal
     {
         EXPECT_EQ(GetMonData(&party[i], MON_DATA_SPECIES), expected[i]);
 #if WAYFARER_V0_TRAINERS
-        EXPECT_EQ(GetMonData(&party[i], MON_DATA_LEVEL), i == 2 ? 9 : 17);
+        EXPECT_EQ(GetMonData(&party[i], MON_DATA_LEVEL), 8);
 #else
         EXPECT_EQ(GetMonData(&party[i], MON_DATA_LEVEL), i == 2 ? 7 : 15);
 #endif
@@ -641,7 +864,7 @@ TEST("Trainer scaling preserves defeat flags and ignores player party levels")
     CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_JOEY_2_HNS, TRUE, BATTLE_TYPE_TRAINER);
     EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL),
 #if WAYFARER_V0_TRAINERS
-              35);
+              23);
 #else
               42);
 #endif
@@ -650,7 +873,7 @@ TEST("Trainer scaling preserves defeat flags and ignores player party levels")
     CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_JOEY_2_HNS, TRUE, BATTLE_TYPE_TRAINER);
     EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL),
 #if WAYFARER_V0_TRAINERS
-              35);
+              23);
 #else
               42);
 #endif
@@ -668,7 +891,7 @@ TEST("Trainer scaling challenge IV and EV options do not replace Rating levels")
     CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_JOEY_2_HNS, TRUE, BATTLE_TYPE_TRAINER);
     EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL),
 #if WAYFARER_V0_TRAINERS
-              52);
+              41);
 #else
               100);
 #endif
