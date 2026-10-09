@@ -18,9 +18,11 @@ battles its Trainers, collects its items, meets Blue, helps the captain, and
 receives Cut.
 
 The ship remains available after the captain's reward so optional rooms and
-missed rewards cannot be lost. This persistence is a recovery guarantee, not a
-repeatable activity. The Anne never becomes transport, a service hub, or a
-source of renewable content.
+missed rewards cannot be lost. Its ordinary item spots join
+[daily world slots](daily-world-slots.md) like every other region's, so the
+ship holds daily finds; see [Daily world slots on board](#daily-world-slots-on-board).
+The Anne doesn't become transport or a service hub here; a later change makes it
+a ferry the player can board whenever it is in port.
 
 ## Port boundary
 
@@ -102,6 +104,18 @@ without reset or loss of unfinished content.
 
 The implementation must extend the existing exact-menu audit rather than
 weakening it. Standalone HNS keeps its current menu and eligibility behavior.
+
+### Daily world slots on board
+
+The ship's item spots follow [World items](world-items.md): the TM31 and TM44
+spots are one-time static prizes, and its other nine spots (Stardust, X Attack,
+Ether, Super Potion, Great Ball and the hidden Hyper Potion, Chesto, Pecha and
+Cheri Berries) are dynamic daily spots. Dynamic spots never set their
+`FLAG_WAYFARER_SS_ANNE_ITEM_*` flags, so completion counts only one-time
+content: the sixteen Trainers, the two prize spots, Blue's scene and the
+captain's reward. Once those are done the sailor gives the "visiting hours are
+over" refusal, as before. This section supersedes the no-renewable-items rules
+below for daily world slots only.
 
 ### One adventure, permanently recoverable
 
@@ -234,7 +248,8 @@ demonstrate all of the following:
    promises that the Anne will depart or provide travel.
 6. Leaving at multiple points and revisiting preserves unfinished content;
    revisiting after completion exposes only unclaimed one-time content and
-   stable dialogue. Nothing resets or becomes renewable.
+   stable dialogue. Nothing resets or becomes renewable apart from the daily
+   item spots.
 7. The ship never offers transport or a recurring service, and neither Anne
    entry nor completion alters Aqua, Seagallop, Hoenn-entry, Bill, badge,
    origin, or unrelated story state.
