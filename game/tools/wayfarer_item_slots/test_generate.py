@@ -211,7 +211,7 @@ class GeneratedOutput(unittest.TestCase):
 
     def test_committed_output_is_current(self):
         for name, content in G.outputs(self.state).items():
-            self.assertEqual((G.OUTPUT / name).read_text(), content, name)
+            self.assertEqual((G.COUNT_HEADER if name == '@count' else G.OUTPUT / name).read_text(), content, name)
 
     def test_totals(self):
         rows = self.state['rows']

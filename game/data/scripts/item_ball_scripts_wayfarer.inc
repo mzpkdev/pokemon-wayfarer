@@ -65,3 +65,19 @@ PowerPlant_EventScript_ItemThunderStone::
 PowerPlant_EventScript_ItemElixir::
 	finditem ITEM_ELIXIR
 	end
+
+@ The shared item ball script of the daily world slots (src/wayfarer_daily_slots.c).
+@ Every item ball spot runs it. The native puts the ball's item in VAR_0x8000: the
+@ prize while it is untaken, otherwise today's find. Std_FindItem leaves
+@ VAR_0x8007 TRUE when the item went into the bag, and only then does the spot
+@ count as picked up today. An untaken prize also sets its permanent flag (the
+@ template keeps it); any other spot's template has none.
+DailyItems_EventScript_Ball::
+	callnative DailyItems_ResolveBall
+	finditem VAR_0x8000, 1
+	goto_if_eq VAR_0x8007, TRUE, DailyItems_EventScript_BallTaken
+	end
+
+DailyItems_EventScript_BallTaken::
+	callnative DailyItems_MarkBallCleared
+	end

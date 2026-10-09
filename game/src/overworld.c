@@ -1,6 +1,7 @@
 #include "global.h"
 #include "wayfarer_world.h"
 #include "wayfarer_walkers.h"
+#include "wayfarer_daily_slots.h"
 #include "trainer_only_encounter.h"
 #include "league_circuit.h"
 #include "overworld.h"
@@ -604,6 +605,12 @@ void LoadObjEventTemplatesFromHeader(void)
             gSaveBlock1Ptr->objectEventTemplates[i] = gMapHeader.events->objectEvents[i];
         }
     }
+#if IS_WAYFARER
+    // Daily world slots: a new day takes effect here, then the item balls take
+    // today's state before anything spawns.
+    DailySlots_OnMapLoad();
+    DailyItems_RewriteTemplates();
+#endif
 }
 
 void LoadSaveblockObjEventScripts(void)
@@ -2395,6 +2402,11 @@ void CB2_ContinueSavedGame(void)
         LoadTrainerHillFloorObjectEventScripts();
     else
         LoadSaveblockObjEventScripts();
+#if IS_WAYFARER
+    // The saved templates keep their old scripts and flags: rebuild today's item balls
+    // from the stamped day (Continue applies no day change).
+    DailyItems_RewriteTemplates();
+#endif
 
     UnfreezeObjectEvents();
     DoTimeBasedEvents();
