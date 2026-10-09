@@ -344,7 +344,8 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
       await waitForTrainerBattle(rematchGame, "first Sharon rematch", false)
       const firstRematch = await rematchGame.state.read()
       expect(firstRematch.dialogue.text).toContain("help me out with my")
-      expect(firstRematch.battle.enemy!.level).toBeGreaterThan(base.battle.enemy!.level)
+      // Every stage fights at Kindle Road's place level; a rematch is stronger by its team, not its level.
+      expect(firstRematch.battle.enemy!.level).toBe(base.battle.enemy!.level)
       const firstRematchOpponentId = await readTrainerOpponentId(rematchGame)
       expect(firstRematchOpponentId).toBe(1539)
       expect(firstRematchOpponentId).not.toBe(baseOpponentId)
