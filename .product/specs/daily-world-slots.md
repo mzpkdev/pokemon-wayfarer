@@ -319,9 +319,10 @@ The Itemfinder sees resolved hidden items only.
   bitset, in the order of `src/data/item_slots/spots.h` (map, ball before
   hidden, id). Trainer slots will follow them.
 - **Prize flags.** The generator writes each prize spot's permanent flag into the
-  spot table as the map assembles it, and the runtime uses that flag, never the
-  one decoded from a hidden item's packed bg event (Hoenn's flags overflow that
-  field). A hidden prize on an underfoot row would be unreachable, so the generator
+  spot table as the map assembles it, and the runtime reads a prize's flag from
+  there, for balls and hidden items alike. For a hidden prize it is the same flag
+  the bg event decodes to (Hoenn rows carry the Hoenn hidden-item marker); a
+  mechanics test checks this for every Hoenn hidden prize. A hidden prize on an underfoot row would be unreachable, so the generator
   fails on one and excludes underfoot dynamic rows; the two prize rows that were
   underfoot (Pokemon Tower 7F and Cape Brink) have the flag cleared for Wayfarer, and
   Cape Brink's row also gets elevation 0 so it can be faced from the water around it.

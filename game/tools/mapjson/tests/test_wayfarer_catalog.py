@@ -1003,6 +1003,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
             ("OneIsland_Frlg", "MAP_SEVII", "frlg", "FrlgStoryEvent", "FLAG_SEVII_ITEM"),
             ("SafariZone_Southeast", "MAP_SAFARI", "emerald", "SafariLegacyEvent", "FLAG_SAFARI_ITEM"),
             ("NavelRock_Top", "MAP_NAVEL", "emerald", "NavelLegacyEvent", "FLAG_NAVEL_ITEM"),
+            ("Route29", "MAP_ROUTE29", "hns", "HnsLegacyEvent", "FLAG_HNS_ITEM"),
         ):
             map_dir = root / "data/maps" / name
             map_dir.mkdir()
@@ -1026,7 +1027,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
         layouts_file.write_text(json.dumps({"layouts": layouts}))
         (root / "include/constants/map_groups.h").write_text(
             "enum { MAP_SEVII = (0 | (0 << 8)), MAP_SAFARI = (1 | (0 << 8)), "
-            "MAP_NAVEL = (2 | (0 << 8)), };\n"
+            "MAP_NAVEL = (2 | (0 << 8)), MAP_ROUTE29 = (3 | (0 << 8)), };\n"
         )
         manifest = self.write_sevii_manifest(root, [{
             "source_map": "OneIsland_Frlg", "map_id": "MAP_SEVII", "layout": "LAYOUT_SEVII",
@@ -1049,11 +1050,23 @@ class MapjsonWayfarerTest(unittest.TestCase):
             result = self.run_map(root, "emerald", map_files[legacy_name], layouts_file)
             self.assertEqual(result.returncode, 0, result.stderr)
             emerald_events = map_files[legacy_name].parent.joinpath("events.inc").read_text()
-            self.assertEqual(wayfarer_events, emerald_events)
+            self.assertIn("\tbg_hidden_item_event 2, 2, 0, ITEM_POTION, ", emerald_events)
+            # Wayfarer assembles these maps against the Hoenn flag bank, so only
+            # their hidden items switch to the Hoenn marker encoding.
+            self.assertEqual(
+                wayfarer_events,
+                emerald_events.replace("\tbg_hidden_item_event ", "\tbg_hidden_item_event_hoenn "),
+            )
             self.assertIn(legacy_script, wayfarer_events)
-            self.assertIn(legacy_flag, wayfarer_events)
-            self.assertIn("bg_hidden_item_event ", wayfarer_events)
-            self.assertNotIn("bg_hidden_item_event_hoenn ", wayfarer_events)
+            self.assertIn(f"\tbg_hidden_item_event_hoenn 2, 2, 0, ITEM_POTION, {legacy_flag}, 1, FALSE\n",
+                          wayfarer_events)
+
+        # HNS maps keep the legacy FLAG_HIDDEN_ITEMS offset encoding.
+        result = self.run_map(root, "wayfarer", map_files["Route29"], layouts_file, manifest)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        hns_events = map_files["Route29"].parent.joinpath("events.inc").read_text()
+        self.assertIn("HnsLegacyEvent", hns_events)
+        self.assertIn("\tbg_hidden_item_event 2, 2, 0, ITEM_POTION, FLAG_HNS_ITEM, 1, FALSE\n", hns_events)
 
     def test_wayfarer_sevii_restores_pickups_with_sevii_flags_and_field_move_helpers(self):
         fixture, root = self.make_fixture()
