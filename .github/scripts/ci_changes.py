@@ -14,6 +14,7 @@ BUILD_INPUT_DOCS = frozenset({
     ".product/prds/wayfarer-hoenn-integration.md",
     ".product/research/notable-named-spots.md",
     ".product/research/notable-trainer-routines.md",
+    ".product/specs/daily-world-slots.md",
     ".product/specs/notable-ambience.md",
     ".product/specs/notable-spots.md",
     ".product/specs/notable-world-simulation.md",
@@ -21,6 +22,7 @@ BUILD_INPUT_DOCS = frozenset({
     ".product/specs/reach-assignments.md",
     ".product/specs/wayfarer-hoenn-content-port.md",
     ".product/specs/wayfarer-regional-start-choice.md",
+    ".product/specs/world-items.md",
 })
 BUILD_INPUT_DOC_DIRS = (".product/research/native-hm-windows/",)
 STATUSES = {"added", "removed", "modified", "renamed", "copied", "changed", "unchanged"}
