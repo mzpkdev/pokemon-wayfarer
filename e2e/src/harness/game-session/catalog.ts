@@ -964,6 +964,7 @@ export const items = {
   zinc: 69,
   carbos: 70,
   ppUp: 71,
+  ppMax: 72,
   rareCandy: 102,
   xSpecial: 123,
   upGrade: 228,

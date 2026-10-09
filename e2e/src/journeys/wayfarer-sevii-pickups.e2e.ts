@@ -129,4 +129,21 @@ describe.sequential("Wayfarer Sevii restored pickups", () => {
     }
     throw new Error(`no find landed in a full pocket on ${maxDaysTried} consecutive days`)
   })
+
+  it("finds Cape Brink's PP Max prize from the water", async () => {
+    // The lone tile at (16, 28) is walled in on two sides and open water on the others, so the
+    // hidden item has elevation 0 and is found while surfing from (15, 28), facing east.
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { facing: "right", position: { map: "sevii-two-island-cape-brink", x: 15, y: 28 } },
+      story: { flags: { disableEncounters: true } },
+      determinism: { textSpeed: "instant", rngSeed: 1 },
+    })
+    await game.wait.forReady()
+    expect((await game.state.read()).player.surfing).toBe(true)
+    expect(await game.inventory.contains("ppMax")).toBe(false)
+    await game.player.interact()
+    await settleField(game, "Cape Brink PP Max")
+    expect(await game.inventory.contains("ppMax")).toBe(true)
+  })
 })

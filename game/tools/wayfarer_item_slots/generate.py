@@ -32,6 +32,7 @@ import sys
 TOOL = Path(__file__).resolve().parent
 sys.path.insert(0, str(TOOL))
 import collect as C  # noqa: E402
+import reachable  # noqa: E402
 
 R = C.R
 ROOT = C.ROOT
@@ -45,6 +46,7 @@ POOL_REGIONS = ('Kanto', 'Sevii', 'Johto', 'Alola', 'Sinjoh', 'Hoenn')
 TIER_NAMES = ('Road', 'Wilds', 'Outlands')
 POOL_TIERS = ('Regular', 'Better', 'Special')
 GROUP_STONE, GROUP_TM = 'STONE', 'TM'
+KNOWN_POCKETS = ('POCKET_MEDICINE', 'POCKET_POKE_BALLS', 'POCKET_BERRIES', 'POCKET_ITEMS', 'POCKET_TM_HM', 'POCKET_KEY_ITEMS')
 KEY_OR_HM_POCKETS = ('POCKET_KEY_ITEMS',)
 # Regional flavour (world-items.md, Regional flavour): additions and moves on top of the shared tables.
 APRICORN_WEIGHT = 2
@@ -76,6 +78,7 @@ def item_symbols():
                '-include', 'config/general.h']
     for name in configs:
         command += ['-include', f'config/{name}']
+    command += ['-include', 'constants/item.h']  # POCKET_TREASURES and POCKET_BATTLE_ITEMS alias the combined pockets
     done = subprocess.run(command + [str(ITEMS_HEADER)], capture_output=True, text=True)
     if done.returncode:
         raise GenerateError(f'cpp failed on the item data: {done.stderr[:400]}')
@@ -101,27 +104,45 @@ def item_symbols():
     return pockets
 
 
-def source_constants():
-    """{source: {flag symbol: value}} from the generated source-constant files the assembler includes before a
-    Hoenn (emerald) map and before a FRLG or Sinnoh map. HNS maps use the plain headers, which the C code shares."""
-    tables = {}
-    for source, name in (('emerald', 'wayfarer_hoenn_source_constants.inc'), ('engine', 'wayfarer_engine_source_constants.inc')):
-        text = (ROOT / 'data' / name).read_text()
-        tables[source] = {symbol: int(value, 0) for symbol, value in re.findall(r'^#define (FLAG_\w+) (0x[0-9A-Fa-f]+|\d+)\s*$', text, re.M)}
-    return tables
+SOURCE_INCLUDE = re.compile(r'\.include "data/(wayfarer_(hoenn|engine)_source_constants\.inc)"')
+MAP_EVENTS = re.compile(r'data/maps/(\w+)/events\.inc')
 
 
-def flag_expression(spot, tables, root):
-    """The flag a prize spot keeps, as the assembler sees it: a number from the active source-constants table,
-    else the C symbol (HNS maps). A Hoenn hidden item cannot be decoded from its packed bg event (the
-    macro overflows its 13-bit flag field), so the table always carries the true value."""
-    version = C.game_version(spot.map_name, root)
-    table = tables['emerald'] if version == 'emerald' else tables['engine'] if version in ('frlg', 'sinnoh') else {}
-    if spot.flag in table:
-        return f'0x{table[spot.flag]:04X}'
-    if version == 'emerald':
-        return None
-    return spot.flag
+def source_states(names, root=ROOT):
+    """{map: (active source, {flag symbol: value})}: what the assembler has defined when it reaches each map's
+    events in data/maps/events.inc. The generated source-constant files are included between maps and each
+    #undef/#define pair applies from there on, so the position in that file decides a flag's value, not the
+    map's game version. The active source is 'emerald' (Hoenn), 'engine' (FRLG, Sinnoh) or None (HNS)."""
+    wanted = set(names)
+    files, state, active, result = {}, {}, None, {}
+    for line in (root / 'data/maps/events.inc').read_text().splitlines():
+        include = SOURCE_INCLUDE.search(line)
+        if include:
+            if include.group(1) not in files:
+                text = (root / 'data' / include.group(1)).read_text()
+                files[include.group(1)] = re.findall(r'^#(undef|define) (\w+)(?: (\S+))?', text, re.M)
+            for op, symbol, value in files[include.group(1)]:
+                if op == 'undef':
+                    state.pop(symbol, None)
+                else:
+                    state[symbol] = value
+            active = 'emerald' if include.group(2) == 'hoenn' else 'engine'
+            continue
+        events = MAP_EVENTS.search(line)
+        if events and events.group(1) in wanted:
+            result[events.group(1)] = (active, dict(state))
+    return result
+
+
+def flag_expression(spot, states):
+    """The flag a prize spot keeps, as the assembler sees it: a number when the active source constants define
+    it, else the C symbol (HNS maps). A Hoenn hidden item cannot be decoded from its packed bg event (the
+    macro overflows its 13-bit flag field), so a Hoenn flag must always come out as a number."""
+    active, state = states[spot.map_name]
+    value = state.get(spot.flag)
+    if value is not None:
+        return f'0x{int(value, 0):04X}'
+    return None if active == 'emerald' else spot.flag
 
 
 def macro_names(name):
@@ -258,8 +279,9 @@ def no_flag(flag):
     return flag in C.NO_FLAG
 
 
-def apply_prizes(spots, data, pockets, sevii, errors, tables=None):
-    tables = tables if tables is not None else source_constants()
+def apply_prizes(spots, data, pockets, sevii, errors, states=None):
+    if states is None:
+        states = source_states({p['map'] for p in data['prizes']})
     tms = {'ITEM_TM_' + name for name in macro_names('TM')}
     mart_tms = set(data['mart_tms'])
     by_region_item = defaultdict(list)
@@ -304,7 +326,7 @@ def apply_prizes(spots, data, pockets, sevii, errors, tables=None):
         by_region_item[(spot.region, item)].append(where)
         if spot.region != prize['region']:
             errors.append(f"{where}: {spot.label} is in region {spot.region}, not {prize['region']}")
-        spot.flag_c = flag_expression(spot, tables, ROOT)
+        spot.flag_c = flag_expression(spot, states)
         if spot.flag_c is None:
             errors.append(f'{where}: {spot.label} flag {spot.flag} is not in the Hoenn source constants')
         spot.status, spot.prize, spot.prize_tier = 'prize', item, prize['tier']
@@ -583,6 +605,11 @@ def build(root=ROOT):
     # Fixed story balls get a region for the report; Battle Pyramid and contest hall balls stay out of it.
     region_and_reach(spots, errors, maps, root)
     legends = apply_prizes(spots, data, pockets, C.sevii_rows(root), errors)
+    exceptions = {(row['map'], x, y) for row in fixed.get('reachability_exceptions', []) for x, y in row['hidden']}
+    kept = [s for s in spots if s.status in ('prize', 'item')]
+    for spot, why in reachable.unreachable(kept, root):
+        if (spot.map_name, spot.x, spot.y) not in exceptions:
+            errors.append(f'{spot.label}: a kept hidden item with no way to face it ({why}); fix the map or exclude it in fixed.json')
     for spot in spots:
         if spot.status == 'fixed' and spot.region is None and not any(spot.map_name.startswith(r['prefix']) for r in fixed['map_prefixes']):
             spot.region = C.region_of(spot.map_name, root)

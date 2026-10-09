@@ -70,6 +70,8 @@ class SeviiExplorationRestorationTests(unittest.TestCase):
             if event["underfoot"]:
                 # Daily world slots: nothing picks up an underfoot hidden item, so Wayfarer clears it.
                 expected["underfoot"] = False
+                # Cape Brink's PP Max also sits on a lone elevation-3 tile that can only be faced from water.
+                expected["elevation"] = 0
             self.assertEqual(row["overrides"], expected)
 
     def test_pickup_flags_use_unique_free_sevii_bank_slots(self):

@@ -216,10 +216,33 @@
     ]
    ],
    "reason": "Trick House Nugget (script-dependent: SetTrickHouseNuggetFlag)"
+  },
+  {
+   "map": "ViridianForest_hns",
+   "ids": [],
+   "hidden": [
+    [
+     76,
+     29
+    ]
+   ],
+   "reason": "outside the 74-wide layout: nothing can reach it and the Itemfinder must not ping it"
   }
  ],
  "region_overrides": {
   "VictoryRoadKanto_": "Kanto",
   "SouthernIsland_Interior_hns": "Hoenn"
- }
+ },
+ "reachability_exceptions": [
+  {
+   "map": "ThreeIsland_DunsparceTunnel_Frlg",
+   "hidden": [
+    [
+     21,
+     3
+    ]
+   ],
+   "reason": "the map's on-load script digs the tunnel (SetLayoutDugOut), which the static layout does not show"
+  }
+ ]
 }

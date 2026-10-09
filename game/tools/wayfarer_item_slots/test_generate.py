@@ -4,6 +4,7 @@ import os
 import unittest
 
 import generate as G
+import reachable as RA
 import spec_tables as S
 
 C = G.C
@@ -27,16 +28,13 @@ def prize(item='ITEM_LEFTOVERS', tier='Find', region='Kanto', **kw):
     return row
 
 
-def run_prizes(prizes, spots, mart=('ITEM_TM_REST',), version='hns'):
+def run_prizes(prizes, spots, mart=('ITEM_TM_REST',), source=None, state=None):
     data = {'prizes': prizes, 'mart_tms': list(mart), 'spec_totals': {}, 'spec_overall': len(prizes)}
     errors = []
     G.NOTES.clear()
-    original = C.game_version
-    C.game_version = lambda name, root=None: version  # the synthetic maps have no map.json
-    try:
-        G.apply_prizes(spots, data, POCKETS, {}, errors)
-    finally:
-        C.game_version = original
+    # The synthetic maps are not in events.inc: give each the assembler state the test names.
+    states = {s.map_name: (source, state or {}) for s in spots}
+    G.apply_prizes(spots, data, POCKETS, {}, errors, states=states)
     return errors
 
 
@@ -105,12 +103,7 @@ class PrizeValidation(unittest.TestCase):
     def test_totals_must_match_the_spec(self):
         data = {'prizes': [prize()], 'mart_tms': [], 'spec_totals': {'Kanto': {'total': 2}}, 'spec_overall': 1}
         errors = []
-        original = C.game_version
-        C.game_version = lambda name, root=None: 'hns'
-        try:
-            G.apply_prizes([spot()], data, POCKETS, {}, errors)
-        finally:
-            C.game_version = original
+        G.apply_prizes([spot()], data, POCKETS, {}, errors, states={'MapA': (None, {})})
         self.assertTrue(any('spec totals say 2' in e for e in errors))
 
 
@@ -152,12 +145,7 @@ class Classification(unittest.TestCase):
         data = {'prizes': [prize(shown='Hidden', kind='hidden', x=9, y=9)], 'mart_tms': [], 'spec_totals': {}, 'spec_overall': 1}
         data['prizes'][0].pop('local_id')
         problems = []
-        original = C.game_version
-        C.game_version = lambda name, root=None: 'hns'
-        try:
-            G.apply_prizes([underfoot], data, POCKETS, {}, problems, tables={'emerald': {}, 'engine': {}})
-        finally:
-            C.game_version = original
+        G.apply_prizes([underfoot], data, POCKETS, {}, problems, states={'MapA': (None, {})})
         self.assertTrue(any('fixed story spot' in e for e in problems))
 
     def test_pyramid_prefix_is_excluded(self):
@@ -166,29 +154,7 @@ class Classification(unittest.TestCase):
         self.assertEqual(pyramid.status, 'fixed')
 
 
-class PrizeFlags(unittest.TestCase):
-    def test_hoenn_prize_flags_come_from_the_hoenn_constants_not_the_packed_event(self):
-        tables = {'emerald': {'FLAG_HIDDEN_ITEM_X': 0x623A}, 'engine': {'FLAG_HIDDEN_ITEM_X': 0xEA}}
-        original = C.game_version
-        try:
-            C.game_version = lambda name, root=None: 'emerald'
-            hoenn = spot(kind='hidden', flag='FLAG_HIDDEN_ITEM_X')
-            self.assertEqual(G.flag_expression(hoenn, tables, G.ROOT), '0x623A')
-            C.game_version = lambda name, root=None: 'frlg'
-            self.assertEqual(G.flag_expression(hoenn, tables, G.ROOT), '0x00EA')
-            C.game_version = lambda name, root=None: 'hns'
-            self.assertEqual(G.flag_expression(hoenn, tables, G.ROOT), 'FLAG_HIDDEN_ITEM_X')
-            C.game_version = lambda name, root=None: 'emerald'
-            self.assertIsNone(G.flag_expression(spot(kind='hidden', flag='FLAG_UNKNOWN'), tables, G.ROOT))
-        finally:
-            C.game_version = original
 
-    def test_a_hoenn_prize_without_a_constant_fails(self):
-        errors = run_prizes([prize(shown='Hidden', kind='hidden')], [spot(kind='hidden', flag='FLAG_NOT_THERE')], version='emerald')
-        self.assertTrue(any('not in the Hoenn source constants' in e for e in errors))
-
-
-class Pools(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.data = json.loads(G.DATA.read_text())
@@ -269,7 +235,8 @@ class GeneratedOutput(unittest.TestCase):
         for s in rows:
             if s.status == 'item':
                 counts[s.region] = counts.get(s.region, 0) + 1
-        self.assertEqual((counts['Kanto'], counts['Sevii']), (128, 64))
+        # The spec's Kanto 128 includes a Viridian Forest hidden row that lies outside its layout (excluded).
+        self.assertEqual((counts['Kanto'], counts['Sevii']), (127, 64))
 
     def test_slot_indices_are_dense_and_sorted(self):
         rows = self.state['rows']
@@ -291,8 +258,33 @@ class GeneratedOutput(unittest.TestCase):
         for s in self.state['rows']:
             if s.status == 'prize' and C.game_version(s.map_name) == 'emerald':
                 self.assertRegex(s.flag_c, r'^0x6[0-9A-F]{3}$', s.label)
+                # The map's position in events.inc agrees with its game version.
+                self.assertEqual(G.source_states({s.map_name})[s.map_name][0], 'emerald', s.label)
         fixed = [s for s in self.state['spots'] if s.status == 'fixed' and s.map_name == 'Route110_TrickHouseEnd']
         self.assertEqual(len(fixed), 1)
+
+    def test_every_kept_hidden_item_can_be_faced(self):
+        exceptions = {(r['map'], x, y) for r in G.json.loads(G.FIXED.read_text())['reachability_exceptions'] for x, y in r['hidden']}
+        problems = [(s.label, why) for s, why in RA.unreachable(self.state['rows']) if (s.map_name, s.x, s.y) not in exceptions]
+        self.assertEqual(problems, [])
+        cape = next(s for s in self.state['rows'] if s.map_name == 'TwoIsland_CapeBrink_Frlg' and s.kind == 'hidden' and (s.x, s.y) == (16, 28))
+        self.assertEqual(cape.elevation, 0)
+
+    def test_ss_anne_receipts_are_prize_flags_and_no_daily_spot_flag_is_a_receipt(self):
+        source = (G.ROOT / 'src/wayfarer_ss_anne.c').read_text()
+        block = source[source.index('sWayfarerSSAnneReceipts[]'):]
+        receipts = set(G.re.findall(r'FLAG_WAYFARER_SS_ANNE_ITEM_\w+', block[:block.index('};')]))
+        self.assertTrue(receipts)
+        ship = [s for s in self.state['rows'] if s.flag.startswith('FLAG_WAYFARER_SS_ANNE_ITEM_')]
+        prizes = {s.flag for s in ship if s.status == 'prize'}
+        daily = {s.flag for s in ship if s.status == 'item'}
+        self.assertEqual(receipts - prizes, set())
+        self.assertEqual(receipts & daily, set())
+
+    def test_pocket_aliases_classify(self):
+        pockets = G.item_symbols()
+        self.assertNotIn(None, pockets.values())
+        self.assertTrue(all(p in G.KNOWN_POCKETS for p in pockets.values()), {p for p in pockets.values() if p not in G.KNOWN_POCKETS})
 
     def test_no_kept_spot_is_underfoot(self):
         self.assertFalse([s.label for s in self.state['rows'] if s.kind == 'hidden' and s.underfoot])

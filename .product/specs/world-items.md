@@ -672,11 +672,11 @@ These are not prizes and are never moved or replaced.
 
 ### Demoted to dynamic
 
-Every authored item spot that is not listed above becomes a dynamic spot in the daily pool. Counts are spots per region. Kanto and Sevii counts were exact in the region authors' tables; the generator report (`src/data/item_slots/report.md`) now gives every region's count from the compiled maps, and the others below are its figures.
+Every authored item spot that is not listed above becomes a dynamic spot in the daily pool. Counts are spots per region. Kanto and Sevii counts were exact in the region authors' tables; the generator report (`src/data/item_slots/report.md`) now gives every region's count from the compiled maps, and the others below are its figures. Kanto is 127: the spec's 128 counted a Viridian Forest hidden row at (76,29), outside the 74-wide layout, which the generator excludes.
 
 | Region | Dynamic spots | Notable demoted items |
 |---|---|---|
-| Kanto | 128 | Nuggets, Pearls, Big Pearls and Heart Scales (sell items); Escape Ropes; vitamins and Rare Candies; Revives and Max Revives; Ultra Balls; TMs Recycle, Silver Wind, Psych Up, Grass Knot, Frustration, Protect, Blizzard; the Pewter and Celadon-house spots vacated by Wise Glasses and Leftovers; the second and third Moon Stones and the Goldenrod-sold Thunder, Water and Fire Stones |
+| Kanto | 127 | Nuggets, Pearls, Big Pearls and Heart Scales (sell items); Escape Ropes; vitamins and Rare Candies; Revives and Max Revives; Ultra Balls; TMs Recycle, Silver Wind, Psych Up, Grass Knot, Frustration, Protect, Blizzard; the Pewter and Celadon-house spots vacated by Wise Glasses and Leftovers; the second and third Moon Stones and the Goldenrod-sold Thunder, Water and Fire Stones |
 | Sevii | 64 | Ultra, Net and Heart Scale items; Fire Stones, Pearls, Star Pieces; berries; Lax and Sea Incense; the Sevault Canyon House Lucky Punch |
 | Johto | 196 | Restoratives and X items; vitamins and Rare Candies; sell items (Heart Scale, Nugget, Pearl, Star Piece); flutes; Mahogany-shop items (King's Rock, Dragon Scale, Protector, Never-Melt Ice, Reaper Cloth, Dubious Disc, Dawn Stone, Ice Stone); weak TMs (Bullet Seed, Rock Tomb, Secret Power, Dig, Charge Beam, Embargo, Thief, Pluck, Rock Climb) and the mart-sold Flamethrower and Stealth Rock; Mint |
 | Alola | 6 | Restoratives, a Rare Candy and sell items |
