@@ -46,7 +46,7 @@ def read(path):
 
 # ---------- the compiled Wayfarer maps ----------
 class MapInfo:
-    __slots__ = ('name', 'const', 'value', 'group', 'num', 'map_type', 'events', 'scripts_owner', 'warps')
+    __slots__ = ('name', 'const', 'value', 'group', 'num', 'map_type', 'events', 'scripts_owner', 'warps', 'events_owner')
 
 
 def load_maps(root=ROOT):
@@ -71,6 +71,7 @@ def load_maps(root=ROOT):
         info.map_type = header['map_type']
         owner = header['events_label'].rsplit('_MapEvents', 1)[0]
         info.events = world.parse_events(read(root / 'data/maps' / owner / 'events.inc'))
+        info.events_owner = owner
         info.scripts_owner = header['scripts_label'].rsplit('_MapScripts', 1)[0]
         info.warps = sorted({warp['dest_map'] for warp in info.events['warps'] if warp['dest_map'].startswith('MAP_')})
         maps[const] = info
