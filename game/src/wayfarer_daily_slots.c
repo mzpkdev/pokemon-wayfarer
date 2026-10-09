@@ -123,7 +123,7 @@ void DailySlots_OnMapLoad(void)
 // ---------- item spots ----------
 static u32 SpotKey(const struct WorldItemSpot *spot)
 {
-    return (spot->mapGroup << 17) | (spot->mapNum << 9) | ((spot->attrs & 1) << 8) | spot->id;
+    return (spot->mapGroup << 17) | (spot->mapNum << 9) | (WORLD_ITEM_ATTR_HIDDEN(spot->attrs) << 8) | spot->id;
 }
 
 static u32 MakeKey(u8 mapGroup, u8 mapNum, bool8 hidden, u8 id)
@@ -177,19 +177,29 @@ void DailyItems_SetCleared(u16 index)
 // empty day, otherwise a tier from the spot's reach, then an item by weight.
 u16 DailyItems_ResolveSpot(u16 index)
 {
+    u8 poolTier;
+
+    return DailyItems_ResolveSpotTier(index, &poolTier);
+}
+
+// The same, also reporting the pool tier rolled (0 Regular, 1 Better, 2 Special; 0xFF on an empty day).
+u16 DailyItems_ResolveSpotTier(u16 index, u8 *poolTierOut)
+{
     const struct WorldItemSpot *spot = &sWorldItemSpots[index];
-    u32 tier = (spot->attrs >> 2) & 3;
-    u32 region = (spot->attrs >> 4) & 7;
+    u32 tier = WORLD_ITEM_ATTR_TIER(spot->attrs);
+    u32 region = WORLD_ITEM_ATTR_REGION(spot->attrs);
     const u8 *odds = sWorldItemTierOdds[tier];
     u32 roll, poolTier, weight;
     const struct WorldItemPool *pool;
     u32 i;
     u16 item;
 
+    *poolTierOut = 0xFF;
     if (DailySlots_Roll(DAILY_ROLL_ITEM_EMPTY, index, 0) % 100 < WORLD_ITEM_EMPTY_PERCENT)
         return ITEM_NONE;
     roll = DailySlots_Roll(DAILY_ROLL_ITEM_TIER, index, 0) % 100;
     poolTier = roll < odds[0] ? 0 : roll < odds[1] ? 1 : 2;
+    *poolTierOut = poolTier;
     pool = &sWorldItemPools[region][poolTier];
     weight = DailySlots_Roll(DAILY_ROLL_ITEM_PICK, index, poolTier) % pool->totalWeight;
     for (i = 0; i < pool->count; i++)
@@ -213,12 +223,12 @@ static const struct ObjectEventTemplate *RomBallTemplate(u8 localId)
 
 static bool8 IsPrize(const struct WorldItemSpot *spot)
 {
-    return (spot->attrs >> 1) & 1;
+    return WORLD_ITEM_ATTR_PRIZE(spot->attrs);
 }
 
 static bool8 IsHidden(const struct WorldItemSpot *spot)
 {
-    return spot->attrs & 1;
+    return WORLD_ITEM_ATTR_HIDDEN(spot->attrs);
 }
 
 // The ball spot of the current map for a template's local id.

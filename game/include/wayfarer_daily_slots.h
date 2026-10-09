@@ -14,6 +14,7 @@
 
 struct ObjectEventTemplate;
 struct BgEvent;
+struct ScriptContext;
 
 #define DAILY_SLOT_COUNT        WORLD_ITEM_SPOT_COUNT   // item spots now; trainer slots follow them later
 #define DAILY_STAMP_NONE        0xFFFF                  // a day no real stamp equals: the first map load starts a fresh day
@@ -61,6 +62,10 @@ enum WorldItemRegion
 
 // attrs: bit 0 hidden, bit 1 prize, bits 2-3 reach tier, bits 4-6 region.
 #define WORLD_ITEM_ATTRS(hidden, prize, tier, region) ((hidden) | ((prize) << 1) | ((tier) << 2) | ((region) << 4))
+#define WORLD_ITEM_ATTR_HIDDEN(attrs)   ((attrs) & 1)
+#define WORLD_ITEM_ATTR_PRIZE(attrs)    (((attrs) >> 1) & 1)
+#define WORLD_ITEM_ATTR_TIER(attrs)     (((attrs) >> 2) & 3)
+#define WORLD_ITEM_ATTR_REGION(attrs)   (((attrs) >> 4) & 7)
 
 // Pool entries that stand for a whole group, picked among equally.
 #define WORLD_ITEM_GROUP_STONE  0xFFFE
@@ -102,6 +107,7 @@ void DailySlots_OnMapLoad(void);
 u16 DailyItems_FindSpot(u8 mapGroup, u8 mapNum, bool8 hidden, u8 id);
 const struct WorldItemSpot *DailyItems_GetSpot(u16 index);
 u16 DailyItems_ResolveSpot(u16 index);
+u16 DailyItems_ResolveSpotTier(u16 index, u8 *poolTier);
 bool8 DailyItems_IsCleared(u16 index);
 void DailyItems_SetCleared(u16 index);
 void DailyItems_RewriteTemplates(void);
@@ -109,6 +115,9 @@ bool8 DailyItems_HideTemplate(const struct ObjectEventTemplate *template);
 bool8 DailyItems_ResolveHidden(u8 mapGroup, u8 mapNum, const struct BgEvent *bgEvent, u16 *item, u16 *flagId, u16 *spotIndex);
 void DailyItems_SetPendingHidden(u16 spotIndex);
 void DailyItems_PickedUpHidden(void);
+// Natives of the shared ball script (item_ball_scripts_wayfarer.inc).
+void DailyItems_ResolveBall(struct ScriptContext *ctx);
+void DailyItems_MarkBallCleared(struct ScriptContext *ctx);
 
 #if TESTING || defined(E2E_TESTING)
 #define DAILY_DEBUG_DAY     (1 << 0)
