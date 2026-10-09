@@ -22,6 +22,14 @@
 #define EMERALD_FLAG_HIDDEN_ITEMS_END   0x263
 #define HOENN_HIDDEN_ITEM_COUNT         112
 
+void SetTrickHouseNuggetFlag(void);
+void ResetTrickHouseNuggetFlag(void);
+bool8 FoundAbandonedShipRoom1Key(void);
+bool8 FoundAbandonedShipRoom2Key(void);
+bool8 FoundAbandonedShipRoom4Key(void);
+bool8 FoundAbandonedShipRoom6Key(void);
+bool8 FoundBlackGlasses(void);
+
 struct HoennHiddenItemSpot
 {
     u16 mapId;
@@ -152,6 +160,55 @@ TEST("Wayfarer fixed Hoenn hidden items resolve to their own Hoenn flag")
     gMapHeader = mapHeader;
 }
 
+struct HoennHiddenItemCheck
+{
+    u16 mapId;
+    u16 item;
+    bool8 (*found)(void);
+};
+
+static const struct HoennHiddenItemCheck sHoennHiddenItemChecks[] =
+{
+    { MAP_ABANDONED_SHIP_HIDDEN_FLOOR_ROOMS, ITEM_KEY_TO_ROOM_1, FoundAbandonedShipRoom1Key },
+    { MAP_ABANDONED_SHIP_HIDDEN_FLOOR_ROOMS, ITEM_KEY_TO_ROOM_2, FoundAbandonedShipRoom2Key },
+    { MAP_ABANDONED_SHIP_HIDDEN_FLOOR_ROOMS, ITEM_KEY_TO_ROOM_4, FoundAbandonedShipRoom4Key },
+    { MAP_ABANDONED_SHIP_HIDDEN_FLOOR_ROOMS, ITEM_KEY_TO_ROOM_6, FoundAbandonedShipRoom6Key },
+    { MAP_ROUTE116, ITEM_BLACK_GLASSES, FoundBlackGlasses },
+};
+
+static u16 HiddenItemFlag(u16 mapId, u16 item)
+{
+    struct HoennHiddenItemSpot spot = { mapId, 0, 0, item, 0 };
+    const struct BgEvent *bgEvent = FindHiddenItem(&spot);
+
+    return bgEvent != NULL ? GetHiddenItemFlagId(bgEvent) : 0;
+}
+
+TEST("Wayfarer Hoenn hidden-item specials read the flag their item sets")
+{
+    u16 nuggetFlag = HiddenItemFlag(MAP_ROUTE110_TRICK_HOUSE_END, ITEM_NUGGET);
+
+    ASSUME(IS_HOENN_FLAG_ID(nuggetFlag));
+    FlagClear(nuggetFlag);
+    SetTrickHouseNuggetFlag();
+    EXPECT_EQ(gSpecialVar_0x8004, nuggetFlag);
+    EXPECT(FlagGet(nuggetFlag));
+    ResetTrickHouseNuggetFlag();
+    EXPECT(!FlagGet(nuggetFlag));
+
+    for (u32 i = 0; i < ARRAY_COUNT(sHoennHiddenItemChecks); i++)
+    {
+        u16 flagId = HiddenItemFlag(sHoennHiddenItemChecks[i].mapId, sHoennHiddenItemChecks[i].item);
+
+        ASSUME(IS_HOENN_FLAG_ID(flagId));
+        FlagClear(flagId);
+        EXPECT(!sHoennHiddenItemChecks[i].found());
+        FlagSet(flagId);
+        EXPECT(sHoennHiddenItemChecks[i].found());
+        FlagClear(flagId);
+    }
+}
+
 static bool32 ItemfinderFindsItemUnderfoot(const struct MapEvents *events, u8 taskId)
 {
     gTasks[taskId].data[0] = 0;
@@ -199,6 +256,7 @@ TEST("Wayfarer Itemfinder tracks each fixed Hoenn hidden item by its own Hoenn f
                     continue;
                 }
                 flagId = GetHiddenItemFlagId(bgEvent);
+                passed &= IS_HOENN_FLAG_ID(flagId);
                 gObjectEvents[0].currentCoords.x = bgEvent->x + MAP_OFFSET;
                 gObjectEvents[0].currentCoords.y = bgEvent->y + MAP_OFFSET;
                 FlagClear(flagId);
