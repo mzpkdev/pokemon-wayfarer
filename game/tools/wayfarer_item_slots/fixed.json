@@ -21,14 +21,16 @@
    "ids": [
     22
    ],
-   "reason": "Old Sea Map (fixed story item)"
+   "reason": "Old Sea Map (fixed story item)",
+   "hidden": []
   },
   {
    "map": "FuchsiaCity_SafariZoneBeach_hns",
    "ids": [
     9
    ],
-   "reason": "Gold Teeth (fixed story item)"
+   "reason": "Gold Teeth (fixed story item)",
+   "hidden": []
   },
   {
    "map": "RocketHideout_B4F_Frlg",
@@ -36,21 +38,24 @@
     2,
     4
    ],
-   "reason": "Silph Scope and Lift Key (fixed story items)"
+   "reason": "Silph Scope and Lift Key (fixed story items)",
+   "hidden": []
   },
   {
    "map": "SilphCo_5F_Frlg",
    "ids": [
     8
    ],
-   "reason": "Silph Card Key (fixed story item)"
+   "reason": "Silph Card Key (fixed story item)",
+   "hidden": []
   },
   {
    "map": "PokemonMansion_B1F_Frlg",
    "ids": [
     6
    ],
-   "reason": "Secret Key (fixed story item)"
+   "reason": "Secret Key (fixed story item)",
+   "hidden": []
   },
   {
    "map": "PalletTown_Lab_hns",
@@ -59,7 +64,8 @@
     7,
     8
    ],
-   "reason": "starter Poke Balls (Pokemon gift)"
+   "reason": "starter Poke Balls (Pokemon gift)",
+   "hidden": []
   },
   {
    "map": "PowerPlant_Frlg",
@@ -67,42 +73,48 @@
     7,
     8
    ],
-   "reason": "Electrode decoys (wild battle)"
+   "reason": "Electrode decoys (wild battle)",
+   "hidden": []
   },
   {
    "map": "FourIsland_IcefallCave_1F_Frlg",
    "ids": [
     2
    ],
-   "reason": "HM07 (fixed story item)"
+   "reason": "HM07 (fixed story item)",
+   "hidden": []
   },
   {
    "map": "GoldenrodCity_UndergroundTunnel_hns",
    "ids": [
     8
    ],
-   "reason": "Coin Case (fixed story item)"
+   "reason": "Coin Case (fixed story item)",
+   "hidden": []
   },
   {
    "map": "RuinsOfAlph_B1F_hns",
    "ids": [
     15
    ],
-   "reason": "GS Ball (fixed story item)"
+   "reason": "GS Ball (fixed story item)",
+   "hidden": []
   },
   {
    "map": "IcePath_1F_hns",
    "ids": [
     2
    ],
-   "reason": "HM Waterfall (fixed story item)"
+   "reason": "HM Waterfall (fixed story item)",
+   "hidden": []
   },
   {
    "map": "MtSilver_2F_hns",
    "ids": [
     18
    ],
-   "reason": "Azure Flute (fixed story item)"
+   "reason": "Azure Flute (fixed story item)",
+   "hidden": []
   },
   {
    "map": "NewBarkTown_Lab_hns",
@@ -111,21 +123,24 @@
     5,
     6
    ],
-   "reason": "starter Poke Balls (Pokemon gift; not named in the spec's Johto list)"
+   "reason": "starter Poke Balls (Pokemon gift; not named in the spec's Johto list)",
+   "hidden": []
   },
   {
    "map": "UlaUla_Cave_2_hns",
    "ids": [
     1
    ],
-   "reason": "no script or flag; left alone"
+   "reason": "no script or flag; left alone",
+   "hidden": []
   },
   {
    "map": "SinjohRuins_House1_hns",
    "ids": [
     7
    ],
-   "reason": "Growlithe Poke Ball (script-driven Pokemon gift)"
+   "reason": "Growlithe Poke Ball (script-driven Pokemon gift)",
+   "hidden": []
   },
   {
    "map": "LittlerootTown_ProfessorBirchsLab",
@@ -134,28 +149,32 @@
     5,
     6
    ],
-   "reason": "starter Poke Balls (Pokemon gift)"
+   "reason": "starter Poke Balls (Pokemon gift)",
+   "hidden": []
   },
   {
    "map": "LittlerootTown_BrendansHouse_2F",
    "ids": [
     15
    ],
-   "reason": "rival's Poke Ball (script-driven)"
+   "reason": "rival's Poke Ball (script-driven)",
+   "hidden": []
   },
   {
    "map": "LittlerootTown_MaysHouse_2F",
    "ids": [
     16
    ],
-   "reason": "rival's Poke Ball (script-driven)"
+   "reason": "rival's Poke Ball (script-driven)",
+   "hidden": []
   },
   {
    "map": "MossdeepCity_StevensHouse",
    "ids": [
     2
    ],
-   "reason": "Beldum Poke Ball (Pokemon gift)"
+   "reason": "Beldum Poke Ball (Pokemon gift)",
+   "hidden": []
   },
   {
    "map": "AquaHideout_B1F",
@@ -163,7 +182,8 @@
     6,
     8
    ],
-   "reason": "Electrode battle balls (wild battle)"
+   "reason": "Electrode battle balls (wild battle)",
+   "hidden": []
   },
   {
    "map": "NewMauville_Inside",
@@ -172,7 +192,22 @@
     7,
     8
    ],
-   "reason": "Voltorb battle balls (wild battle)"
+   "reason": "Voltorb battle balls (wild battle)",
+   "hidden": []
+  },
+  {
+   "map": "NavelRock_Top",
+   "hidden": [
+    [
+     12,
+     9
+    ]
+   ],
+   "reason": "Sacred Ash (fixed story item)",
+   "ids": []
   }
- ]
+ ],
+ "region_overrides": {
+  "VictoryRoadKanto_": "Kanto"
+ }
 }

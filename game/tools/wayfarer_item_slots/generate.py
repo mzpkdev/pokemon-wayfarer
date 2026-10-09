@@ -44,6 +44,8 @@ TIER_NAMES = ('Road', 'Wilds', 'Outlands')
 POOL_TIERS = ('Regular', 'Better', 'Special')
 GROUP_STONE, GROUP_TM = 'STONE', 'TM'
 KEY_OR_HM_POCKETS = ('POCKET_KEY_ITEMS',)
+# Key-pocket items that Wayfarer treats as consumables, so their balls become dynamic (daily world slots PRD, Content).
+CONSUMABLE_KEY_POCKET = ('ITEM_ESCAPE_ROPE',)
 # Regional flavour (world-items.md, Regional flavour): additions and moves on top of the shared tables.
 APRICORN_WEIGHT = 2
 SHARD_WEIGHT = 2
@@ -55,13 +57,19 @@ FLAVOUR_MOVES = {
 SEVII_PEARL_BONUS = 3
 
 
+OVERRIDES = json.loads(FIXED.read_text()).get('region_overrides', {})
+
+
+NOTES = []  # spec-vs-data observations the report lists
+
+
 class GenerateError(ValueError):
     pass
 
 
 # ---------- item data ----------
 def item_symbols():
-    """{ITEM_*: pocket} from the Wayfarer item data."""
+    """{ITEM_*: pocket} for every item name the Wayfarer build defines: item data, aliases and TM/HM names."""
     text = ITEMS_HEADER.read_text()
     marks = list(re.finditer(r'^\s*\[(ITEM_\w+)\]\s*=', text, re.M))
     pockets = {}
@@ -69,6 +77,16 @@ def item_symbols():
         end = marks[i + 1].start() if i + 1 < len(marks) else len(text)
         pocket = re.search(r'\.pocket\s*=\s*(\w+)', text[mark.end():end])
         pockets[mark.group(1)] = pocket.group(1) if pocket else None
+    constants = (ROOT / 'include/constants/items.h').read_text()
+    for name, target in re.findall(r'^\s*(ITEM_\w+)\s*=\s*(ITEM_\w+)\s*,', constants, re.M):
+        if target in pockets:
+            pockets.setdefault(name, pockets[target])
+    for name in re.findall(r'^\s*(ITEM_(?:TM|HM)\d+)\s*=', constants, re.M):
+        pockets.setdefault(name, 'POCKET_TM_HM')
+    for name in macro_names('TM'):
+        pockets.setdefault('ITEM_TM_' + name, 'POCKET_TM_HM')
+    for name in macro_names('HM'):
+        pockets.setdefault('ITEM_HM_' + name, 'POCKET_TM_HM')
     return pockets
 
 
@@ -87,13 +105,16 @@ def classify(spots, fixed, pockets, errors):
     for row in fixed['spots']:
         for ident in row['ids']:
             explicit[(row['map'], ident)] = row['reason']
+        for x, y in row['hidden']:
+            explicit[(row['map'], 'hidden', x, y)] = row['reason']
     seen = set()
     prefixes = fixed['map_prefixes']
     for spot in spots:
         reason = None
-        if spot.kind == 'ball' and (spot.map_name, spot.id) in explicit:
-            reason = explicit[(spot.map_name, spot.id)]
-            seen.add((spot.map_name, spot.id))
+        mark = (spot.map_name, spot.id) if spot.kind == 'ball' else (spot.map_name, 'hidden', spot.x, spot.y)
+        if mark in explicit:
+            reason = explicit[mark]
+            seen.add(mark)
         else:
             for row in prefixes:
                 if spot.map_name.startswith(row['prefix']):
@@ -106,11 +127,11 @@ def classify(spots, fixed, pockets, errors):
             spot.reason = 'hidden item row with no item'
         elif spot.authored not in pockets:
             errors.append(f'{spot.label}: authored item {spot.authored} is not an item of the Wayfarer build')
-        elif pockets[spot.authored] in KEY_OR_HM_POCKETS or spot.authored.startswith('ITEM_HM_'):
+        elif (pockets[spot.authored] in KEY_OR_HM_POCKETS and spot.authored not in CONSUMABLE_KEY_POCKET) or spot.authored.startswith('ITEM_HM'):
             spot.status, spot.reason = 'fixed', f'key item or HM ({spot.authored}) keeps its authored spot'
     for key in explicit:
         if key not in seen:
-            errors.append(f'fixed.json names {key[0]} local id {key[1]}, which is not an item ball of a compiled map')
+            errors.append(f'fixed.json names {key[0]} {key[1:]}, which is not an item spot of a compiled map')
 
 
 def region_and_reach(spots, errors, maps, root):
@@ -124,6 +145,9 @@ def region_and_reach(spots, errors, maps, root):
         if spot.map_name not in region_cache:
             region_cache[spot.map_name] = C.region_of(spot.map_name, root)
         spot.region = region_cache[spot.map_name]
+        for prefix, region in OVERRIDES.items():
+            if spot.map_name.startswith(prefix):
+                spot.region = region
         if spot.map_const not in reach_cache:
             reach_cache[spot.map_const] = resolve_reach(resolver, spot.map_const, maps, errors)
         spot.tier, spot.reach_rule, spot.reach_detail = reach_cache[spot.map_const] or (None, None, None)
@@ -139,12 +163,15 @@ def resolve_reach(resolver, const, maps, errors):
     if found is None:
         if R.GYM_RE.search(name):
             return 'Road', 'gym', 'item spots inside Gyms count as Road'
+        if maps[const].map_type in ('MAP_TYPE_TOWN', 'MAP_TYPE_CITY'):
+            return 'Road', 'settlement', 'a town or city is Road (reach assignments, Settlement rule)'
         errors.append(f'{name}: no rule resolves its reach (add it to reach_places.json)')
         return None
     place, rule, detail = found
     reach = place['reach']
     if reach == 'WILD_REACH_DUNGEON':
-        entrance = place['floor'] == 0
+        # A single-floor or flat dungeon has no entrance floor: it counts as deeper on every map (reach assignments).
+        entrance = place['floor'] == 0 and not place['flat'] and place['floorCount'] > 1
         return ('Wilds' if entrance else 'Outlands'), rule, f"{detail}; {'entrance floor' if entrance else 'deeper floor'}"
     return reach.removeprefix('WILD_REACH_').capitalize(), rule, detail
 
@@ -161,13 +188,19 @@ def locate(spec, spots, sevii, errors, where):
         ident = spec['local_id']
         if name in sevii:
             row = sevii[name].get(ident - 1)
-            if row is None:
-                errors.append(f'{where}: no Sevii exploration row object.{ident - 1} in {name}')
-                return None
-            ident = row[0]
-            if (row[1], row[2]) != (spec['x'], spec['y']):
-                errors.append(f"{where}: Sevii exploration row object.{spec['local_id'] - 1} sits at {row[1]},{row[2]}, not {spec['x']},{spec['y']}")
-                return None
+            compiled = [s for s in candidates if s.kind == 'ball' and row is not None and s.id == row[0]]
+            if row is not None and (row[1], row[2]) == (spec['x'], spec['y']) and compiled and (compiled[0].x, compiled[0].y) == (spec['x'], spec['y']):
+                ident = row[0]
+            else:
+                # The spec's local id (N + 1) disagrees with the exploration row at these coordinates: coordinates win.
+                found = [s for s in candidates if s.kind == 'ball' and (s.x, s.y) == (spec['x'], spec['y'])]
+                if len(found) == 1:
+                    if found[0].id != spec['local_id']:
+                        NOTES.append(f"{where}: {name} local id {spec['local_id']} is not the ball at {spec['x']},{spec['y']}; resolved by coordinates to local id {found[0].id}")
+                    ident = found[0].id
+                else:
+                    errors.append(f'{where}: no Sevii ball at {spec["x"]},{spec["y"]} in {name}')
+                    return None
         match = [s for s in candidates if s.kind == 'ball' and s.id == ident]
     else:
         match = [s for s in candidates if s.kind == 'hidden' and (s.x, s.y) == (spec['x'], spec['y'])]
@@ -213,11 +246,11 @@ def apply_prizes(spots, data, pockets, sevii, errors):
         if spot.status == 'fixed':
             errors.append(f'{where}: {spot.label} is a fixed story spot ({spot.reason})')
             continue
-        if spot.status != 'item':
-            errors.append(f'{where}: {spot.label} is not an item spot')
-            continue
         if spot in taken:
             errors.append(f'{where}: {spot.label} is also the prize of {taken[spot]}')
+            continue
+        if spot.status != 'item':
+            errors.append(f'{where}: {spot.label} is not an item spot')
             continue
         taken[spot] = where
         if (prize['shown'] == 'Hidden') != (spot.kind == 'hidden'):
@@ -448,6 +481,9 @@ def render_report(rows, all_spots, data, pools, stones, dynamic_tms, disagreemen
         for spot, text, said in disagreements:
             lines.append(f'| {spot.label} ({spot.prize}) | {text} | {spot.tier} | {spot.reach_detail} |')
         lines += ['']
+    if NOTES:
+        lines += ['## Spec notes', '', 'Places where the world items spec and the compiled maps disagree; the compiled map wins.', '']
+        lines += [f'- {note}' for note in sorted(set(NOTES))] + ['']
     lines += ['## Dynamic pools', '',
               f"A dynamic find is empty {data['empty_percent']}% of days; otherwise it rolls a tier from the spot's reach, then an item by weight.",
               '', '| Reach | Regular | Better | Special |', '| --- | ---: | ---: | ---: |']
