@@ -323,7 +323,8 @@ The Itemfinder sees resolved hidden items only.
   one decoded from a hidden item's packed bg event (Hoenn's flags overflow that
   field). A hidden prize on an underfoot row would be unreachable, so the generator
   fails on one and excludes underfoot dynamic rows; the two prize rows that were
-  underfoot (Pokemon Tower 7F and Cape Brink) have the flag cleared for Wayfarer.
+  underfoot (Pokemon Tower 7F and Cape Brink) have the flag cleared for Wayfarer, and
+  Cape Brink's row also gets elevation 0 so it can be faced from the water around it.
 - **Spawn check.** It runs in `TrySpawnObjectEvents` only. No script `addobject`s an
   item ball, so the one-off spawn path needs no check.
 - **Debug override.** `gDailySlotsDebugFlags`, `gDailySlotsDebugDay` and

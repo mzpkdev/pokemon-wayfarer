@@ -226,7 +226,18 @@
      29
     ]
    ],
-   "reason": "outside the 74-wide layout: nothing can reach it and the Itemfinder must not ping it"
+   "reason": "outside the 74-wide layout: nothing can reach it"
+  },
+  {
+   "map": "Route8_hns",
+   "ids": [],
+   "hidden": [
+    [
+     0,
+     0
+    ]
+   ],
+   "reason": "sealed strip in the north-west corner: no walkable path, warp or connection reaches it"
   }
  ],
  "region_overrides": {

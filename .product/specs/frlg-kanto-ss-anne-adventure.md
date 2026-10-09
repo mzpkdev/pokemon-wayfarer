@@ -187,7 +187,8 @@ Import the seven interior item balls and four interior hidden items:
 - the B1F Hyper Potion; and
 - the Kitchen's Chesto, Pecha, and Cheri Berries.
 
-TM31 and TM44 are one-time static prizes. The other nine spots are daily world
+The TM31 and TM44 spots are one-time static prizes (their prize items are set
+in [World items](world-items.md)). The other nine spots are daily world
 slots ([Daily world slots on board](#daily-world-slots-on-board)). Give each
 spot a distinct nonzero Wayfarer-owned saved flag; only the two prizes set
 theirs. Do not allocate

@@ -529,7 +529,7 @@ def render_report(rows, all_spots, data, pools, stones, dynamic_tms, disagreemen
     lines += [f'| total | {sum(1 for s in kept if s.kind == "ball")} | {sum(1 for s in kept if s.kind == "hidden")} | '
               f"{sum(1 for s in kept if s.status == 'prize')} | {sum(1 for s in kept if s.status == 'item')} | {len(fixed_rows)} | {data['spec_overall']} |", '']
     other_fixed = [s for s in all_spots if s.status in ('fixed', 'empty') and s not in fixed_rows]
-    lines += [f'{len(kept)} kept spots (the save\'s slot indices), {len(fixed_rows)} fixed story balls, {len(other_fixed)} other excluded rows '
+    lines += [f'{len(kept)} kept spots (the save\'s slot indices), {len(fixed_rows)} fixed rows (story items and unreachable spots), {len(other_fixed)} other excluded rows '
               '(Battle Pyramid, contest halls and empty hidden rows).', '']
     lines += ['## Reach tiers', '', '| Region | Road | Wilds | Outlands |', '| --- | ---: | ---: | ---: |']
     for region in POOL_REGIONS:
