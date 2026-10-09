@@ -1,7 +1,9 @@
 import { type Direction, type GameMap, type Item, type StoryFlag } from "../harness/game-session"
 
 type Approach = { x: number; y: number; facing: Direction }
-type Pickup = { floor: GameMap; kind: "visible" | "hidden"; item: Item; flag: StoryFlag; approach: Approach; target: { x: number; y: number } }
+// A prize gives `item` once and sets `flag`; any other pickup is a dynamic daily spot (the daily world
+// slots), which sets no permanent flag and gives whatever its day holds.
+type Pickup = { floor: GameMap; kind: "visible" | "hidden"; item: Item; prize?: true; flag: StoryFlag; approach: Approach; target: { x: number; y: number } }
 type Door = { floor: GameMap; flag: StoryFlag; approach: Approach; target: { x: number; y: number } }
 type Panel = { floor: GameMap; index: number; approach: Approach; destination: GameMap; target: { x: number; y: number } }
 
@@ -12,11 +14,11 @@ export const silphPickups = [
   {"floor": "silph-4f", "kind": "visible", "item": "maxRevive", "flag": "silph4FMaxReviveReceived", "approach": {"x": 3, "y": 12, "facing": "up"}, "target": {"x": 3, "y": 11}},
   {"floor": "silph-4f", "kind": "visible", "item": "escapeRope", "flag": "silph4FEscapeRopeReceived", "approach": {"x": 4, "y": 13, "facing": "up"}, "target": {"x": 4, "y": 12}},
   {"floor": "silph-4f", "kind": "visible", "item": "fullHeal", "flag": "silph4FFullHealReceived", "approach": {"x": 2, "y": 14, "facing": "up"}, "target": {"x": 2, "y": 13}},
-  {"floor": "silph-4f", "kind": "visible", "item": "tmTorment", "flag": "silph4FTm41Received", "approach": {"x": 30, "y": 19, "facing": "up"}, "target": {"x": 30, "y": 18}},
+  {"floor": "silph-4f", "kind": "visible", "item": "tmTrickRoom", "prize": true, "flag": "silph4FTm41Received", "approach": {"x": 30, "y": 19, "facing": "up"}, "target": {"x": 30, "y": 18}},
   {"floor": "silph-4f", "kind": "hidden", "item": "iron", "flag": "silph4FIronHiddenReceived", "approach": {"x": 35, "y": 21, "facing": "up"}, "target": {"x": 35, "y": 20}},
   {"floor": "silph-5f", "kind": "visible", "item": "protein", "flag": "silph5FProteinReceived", "approach": {"x": 4, "y": 10, "facing": "up"}, "target": {"x": 4, "y": 9}},
   {"floor": "silph-5f", "kind": "visible", "item": "tmFocusPunch", "flag": "silph5FTm01Received", "approach": {"x": 1, "y": 19, "facing": "up"}, "target": {"x": 1, "y": 18}},
-  {"floor": "silph-5f", "kind": "visible", "item": "silphCardKey", "flag": "silphCardKeyReceived", "approach": {"x": 23, "y": 21, "facing": "left"}, "target": {"x": 22, "y": 21}},
+  {"floor": "silph-5f", "kind": "visible", "item": "silphCardKey", "prize": true, "flag": "silphCardKeyReceived", "approach": {"x": 23, "y": 21, "facing": "left"}, "target": {"x": 22, "y": 21}},
   {"floor": "silph-5f", "kind": "hidden", "item": "elixir", "flag": "silph5FElixirHiddenReceived", "approach": {"x": 13, "y": 17, "facing": "up"}, "target": {"x": 13, "y": 16}},
   {"floor": "silph-5f", "kind": "hidden", "item": "ppUp", "flag": "silph5FPpUpHiddenReceived", "approach": {"x": 32, "y": 10, "facing": "up"}, "target": {"x": 32, "y": 9}},
   {"floor": "silph-6f", "kind": "visible", "item": "hpUp", "flag": "silph6FHpUpReceived", "approach": {"x": 3, "y": 14, "facing": "left"}, "target": {"x": 2, "y": 14}},
@@ -26,7 +28,7 @@ export const silphPickups = [
   {"floor": "silph-7f", "kind": "visible", "item": "tmBulkUp", "flag": "silph7FTm08Received", "approach": {"x": 30, "y": 12, "facing": "up"}, "target": {"x": 30, "y": 11}},
   {"floor": "silph-7f", "kind": "hidden", "item": "zinc", "flag": "silph7FZincHiddenReceived", "approach": {"x": 22, "y": 12, "facing": "up"}, "target": {"x": 22, "y": 11}},
   {"floor": "silph-8f", "kind": "visible", "item": "iron", "flag": "silph8FIronReceived", "approach": {"x": 24, "y": 9, "facing": "up"}, "target": {"x": 24, "y": 8}},
-  {"floor": "silph-8f", "kind": "hidden", "item": "nugget", "flag": "silph8FNuggetHiddenReceived", "approach": {"x": 29, "y": 11, "facing": "up"}, "target": {"x": 29, "y": 10}},
+  {"floor": "silph-8f", "kind": "hidden", "item": "dubiousDisc", "prize": true, "flag": "silph8FNuggetHiddenReceived", "approach": {"x": 29, "y": 11, "facing": "up"}, "target": {"x": 29, "y": 10}},
   {"floor": "silph-9f", "kind": "hidden", "item": "maxPotion", "flag": "silph9FMaxPotionHiddenReceived", "approach": {"x": 11, "y": 15, "facing": "up"}, "target": {"x": 11, "y": 14}},
   {"floor": "silph-9f", "kind": "hidden", "item": "calcium", "flag": "silph9FCalciumHiddenReceived", "approach": {"x": 5, "y": 9, "facing": "up"}, "target": {"x": 5, "y": 8}},
   {"floor": "silph-10f", "kind": "visible", "item": "carbos", "flag": "silph10FCarbosReceived", "approach": {"x": 6, "y": 15, "facing": "left"}, "target": {"x": 5, "y": 15}},

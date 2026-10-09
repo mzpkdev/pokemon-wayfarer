@@ -59,18 +59,37 @@ describe.sequential("Wayfarer Silph doors, panels and pickups", () => {
 
     it(`delivers every visible and hidden pickup on ${floor} once`, async () => {
       for (const pickup of silphPickups.filter((entry) => entry.floor === floor)) {
+        // Day and seed pinned and no empty days, so every dynamic spot holds a find.
+        await game.dailySlots.pin({ day: 20000, seed: 1, noEmpty: true })
         await arrangeSilph(game, {
           player: { position: { map: floor, ...pickup.approach }, facing: pickup.approach.facing },
           story: { flags: { silphLiberated: true, ...silphFloorFlags(floor) } },
         })
         expect(await game.story.flag(pickup.flag)).toBe(false)
+        const prize = "prize" in pickup
+        const before = (await game.dailySlots.found()).count
         await talkSilph(game)
-        expect(await game.inventory.count(pickup.item)).toBe(1)
-        if (pickup.item === "silphCardKey") expect(await game.inventory.count("goldenrodCardKey")).toBe(0)
-        expect(await game.story.flag(pickup.flag)).toBe(true)
+        if (prize) {
+          expect(await game.inventory.count(pickup.item)).toBe(1)
+          if (pickup.item === "silphCardKey") expect(await game.inventory.count("goldenrodCardKey")).toBe(0)
+          expect(await game.story.flag(pickup.flag)).toBe(true)
+        } else {
+          // A dynamic spot gives its day's find and sets no permanent flag.
+          expect((await game.dailySlots.found()).count).toBe(before + 1)
+          expect(await game.story.flag(pickup.flag)).toBe(false)
+        }
         await game.saveAndReload()
-        expect(await game.inventory.count(pickup.item)).toBe(1)
-        expect(await game.story.flag(pickup.flag)).toBe(true)
+        if (prize) {
+          expect(await game.inventory.count(pickup.item)).toBe(1)
+          expect(await game.story.flag(pickup.flag)).toBe(true)
+        } else {
+          expect(await game.story.flag(pickup.flag)).toBe(false)
+        }
+        // Either way nothing is left to pick up on this tile.
+        const sequence = (await game.state.read()).dialogue.sequence
+        await game.player.interact()
+        await game.wait.frames(30)
+        expect((await game.state.read()).dialogue.sequence).toBe(sequence)
       }
     })
   }
@@ -87,7 +106,7 @@ describe.sequential("Wayfarer Silph doors, panels and pickups", () => {
     expect(await game.inventory.count("goldenrodCardKey")).toBe(1)
   })
 
-  for (const [item, pocket] of [["silphCardKey", "keyItems"], ["tmTorment", "tmHm"], ["nugget", "items"]] as const) {
+  for (const [item, pocket] of [["silphCardKey", "keyItems"], ["tmTrickRoom", "tmHm"], ["dubiousDisc", "items"]] as const) {
     it(`keeps ${item} pending across a full ${pocket} pocket and reload`, async () => {
       const pickup = silphPickups.find((entry) => entry.item === item)!
       await arrangeSilph(game, {

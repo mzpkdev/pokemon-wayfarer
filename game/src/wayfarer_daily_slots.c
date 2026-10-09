@@ -29,6 +29,9 @@ extern const u8 DailyItems_EventScript_Ball[];
 EWRAM_DATA u32 gDailySlotsDebugDay = 0;
 EWRAM_DATA u32 gDailySlotsDebugSeed = 0;
 EWRAM_DATA u8 gDailySlotsDebugFlags = 0;
+EWRAM_DATA u16 gDailySlotsDebugFoundItem = 0;
+EWRAM_DATA u16 gDailySlotsDebugFoundCount = 0;
+static EWRAM_DATA u16 sPendingHiddenItem = 0;
 #endif
 
 // The spot (plus one; zero is none) of the hidden item the player is picking up.
@@ -195,6 +198,9 @@ u16 DailyItems_ResolveSpotTier(u16 index, u8 *poolTierOut)
     u16 item;
 
     *poolTierOut = 0xFF;
+#if TESTING || defined(E2E_TESTING)
+    if (!(gDailySlotsDebugFlags & DAILY_DEBUG_NO_EMPTY))
+#endif
     if (DailySlots_Roll(DAILY_ROLL_ITEM_EMPTY, index, 0) % 100 < WORLD_ITEM_EMPTY_PERCENT)
         return ITEM_NONE;
     roll = DailySlots_Roll(DAILY_ROLL_ITEM_TIER, index, 0) % 100;
@@ -318,16 +324,26 @@ bool8 DailyItems_ResolveHidden(u8 mapGroup, u8 mapNum, const struct BgEvent *bgE
     return *item != ITEM_NONE && !DailyItems_IsCleared(index);
 }
 
-void DailyItems_SetPendingHidden(u16 spotIndex)
+void DailyItems_SetPendingHidden(u16 spotIndex, u16 item)
 {
     sPendingHiddenPlusOne = spotIndex == NO_ITEM_SPOT ? 0 : spotIndex + 1;
+    (void)item;
+#if TESTING || defined(E2E_TESTING)
+    sPendingHiddenItem = item;
+#endif
 }
 
 // SetHiddenItemFlag runs after the item went into the bag.
 void DailyItems_PickedUpHidden(void)
 {
     if (sPendingHiddenPlusOne != 0)
+    {
         DailyItems_SetCleared(sPendingHiddenPlusOne - 1);
+#if TESTING || defined(E2E_TESTING)
+        gDailySlotsDebugFoundItem = sPendingHiddenItem;
+        gDailySlotsDebugFoundCount++;
+#endif
+    }
     sPendingHiddenPlusOne = 0;
 }
 
@@ -345,7 +361,13 @@ void DailyItems_MarkBallCleared(struct ScriptContext *ctx)
     u16 index = CurrentMapBallSpot(gSpecialVar_LastTalked);
 
     if (index != NO_ITEM_SPOT)
+    {
         DailyItems_SetCleared(index);
+#if TESTING || defined(E2E_TESTING)
+        gDailySlotsDebugFoundItem = gSpecialVar_0x8000;
+        gDailySlotsDebugFoundCount++;
+#endif
+    }
 }
 
 #endif // IS_WAYFARER

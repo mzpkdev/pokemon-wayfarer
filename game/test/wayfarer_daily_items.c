@@ -11,7 +11,9 @@
 #include "pokemon_storage_system.h"
 #include "script.h"
 #include "task.h"
+#include "wayfarer_appearance.h"
 #include "wayfarer_daily_slots.h"
+#include "wayfarer_origin.h"
 #include "test/test.h"
 #include "constants/event_bg.h"
 #include "constants/items.h"
@@ -201,11 +203,15 @@ TEST("Daily slots: New Game on the same day inherits no cleared spot")
 
     // A New Game on the same day: the init clears the bits and its warp into the first map restarts the day.
     memset(gPokemonStoragePtr->dailySlots.clearedToday, 0xFF, sizeof(gPokemonStoragePtr->dailySlots.clearedToday));
+    EXPECT(WayfarerConfirmPendingOrigin(ORIGIN_NEW_BARK));
+    EXPECT(WayfarerConfirmPendingAppearance(APPEARANCE_GOLD));
     NewGameInitData();
-    EXPECT_EQ(gPokemonStoragePtr->dailySlots.stampDay, day);
+    EXPECT_EQ(gPokemonStoragePtr->dailySlots.stampDay, DAILY_STAMP_NONE);
     EXPECT(!DailyItems_IsCleared(index));
     PinDraws(day, 5);
+    // The first map load starts the day and the ball spawns as on any fresh day.
     EnterSpotMap(index);
+    EXPECT_EQ(gPokemonStoragePtr->dailySlots.stampDay, day);
     EXPECT(!DailyItems_IsCleared(index));
     EXPECT(!DailyItems_HideTemplate(BallTemplate(index)));
 
@@ -544,7 +550,7 @@ TEST("Daily slots: a dynamic hidden item resolves, is picked up once a day and s
     EXPECT_EQ(flagId, 0);
     EXPECT_EQ(spotIndex, index);
 
-    DailyItems_SetPendingHidden(spotIndex);
+    DailyItems_SetPendingHidden(spotIndex, item);
     gSpecialVar_0x8004 = flagId;
     DailyItems_PickedUpHidden();
     EXPECT(DailyItems_IsCleared(index));
@@ -582,7 +588,7 @@ TEST("Daily slots: a taken prize hidden item draws like a dynamic spot")
     EXPECT_EQ(item, spot->prize);
     // Pick it up: the flag and today's bit.
     FlagSet(flagId);
-    DailyItems_SetPendingHidden(found);
+    DailyItems_SetPendingHidden(found, item);
     DailyItems_PickedUpHidden();
     EXPECT(!DailyItems_ResolveHidden(spot->mapGroup, spot->mapNum, bgEvent, &item, &flagId, NULL));
     for (day = 1201; day < 1260 && !present; day++)

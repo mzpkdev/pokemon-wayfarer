@@ -113,7 +113,7 @@ void DailyItems_SetCleared(u16 index);
 void DailyItems_RewriteTemplates(void);
 bool8 DailyItems_HideTemplate(const struct ObjectEventTemplate *template);
 bool8 DailyItems_ResolveHidden(u8 mapGroup, u8 mapNum, const struct BgEvent *bgEvent, u16 *item, u16 *flagId, u16 *spotIndex);
-void DailyItems_SetPendingHidden(u16 spotIndex);
+void DailyItems_SetPendingHidden(u16 spotIndex, u16 item);
 void DailyItems_PickedUpHidden(void);
 // Natives of the shared ball script (item_ball_scripts_wayfarer.inc).
 void DailyItems_ResolveBall(struct ScriptContext *ctx);
@@ -122,10 +122,14 @@ void DailyItems_MarkBallCleared(struct ScriptContext *ctx);
 #if TESTING || defined(E2E_TESTING)
 #define DAILY_DEBUG_DAY     (1 << 0)
 #define DAILY_DEBUG_SEED    (1 << 1)
+#define DAILY_DEBUG_NO_EMPTY (1 << 2)   // no spot has an empty day: a journey needs the find to be there
 // Debug and E2E builds can pin the day and the save seed so any draw is reproducible.
 extern u32 gDailySlotsDebugDay;
 extern u32 gDailySlotsDebugSeed;
 extern u8 gDailySlotsDebugFlags;
+// What the last managed pickup gave and how many there were since boot, for journeys to observe.
+extern u16 gDailySlotsDebugFoundItem;
+extern u16 gDailySlotsDebugFoundCount;
 #endif
 
 #endif // GUARD_WAYFARER_DAILY_SLOTS_H

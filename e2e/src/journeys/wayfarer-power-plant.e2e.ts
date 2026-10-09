@@ -639,7 +639,10 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
     await settleField(game, "Power Plant wild encounter victory")
   })
 
-  it("persists all five visible items and retries a full TM/HM-pocket pickup", async () => {
+  it("persists the visible prizes and daily finds, and retries a full TM/HM-pocket prize pickup", async () => {
+    // Daily world slots: the Thunder Wave TM and the Choice Scarf are prizes (their authored flags stay);
+    // the other three balls are daily spots that give the day's find and set no permanent flag.
+    await game.dailySlots.pin({ day: 20000, seed: 1, noEmpty: true })
     await arrangeAt(game, { map: hall, x: 40, y: 23 }, "up", {
       fullPocket: "tmHm",
       flags: {
@@ -650,80 +653,88 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
         powerPlantElixirClaimed: false,
       },
     })
-    await pickup(game, { x: 40, y: 23, facing: "up" }, "full-pocket TM Protect")
-    expect(await game.story.flag("powerPlantTmProtectClaimed")).toBe(false)
-    expect(await game.inventory.contains("tmProtect")).toBe(false)
-    await game.saveAndReload()
-    await game.inventory.freeSlot("tmHm")
-    await pickup(game, { x: 40, y: 23, facing: "up" }, "TM Protect retry")
-    expect(await game.story.flag("powerPlantTmProtectClaimed")).toBe(true)
-    expect(await game.inventory.contains("tmProtect")).toBe(true)
-
-    for (const entry of [
-      [{ x: 7, y: 28, facing: "up" }, "powerPlantMaxPotionClaimed", "maxPotion"],
-      [{ x: 45, y: 5, facing: "up" }, "powerPlantThunderStoneClaimed", "thunderStone"],
-      [{ x: 26, y: 23, facing: "up" }, "powerPlantElixirClaimed", "elixir"],
-    ] as const) {
-      const [location, flag, item] = entry
-      await pickup(game, location, item)
-      expect(await game.story.flag(flag), `${item} object flag`).toBe(true)
-      expect(await game.inventory.contains(item), `${item} inventory`).toBe(true)
-    }
     // Change maps before jumping to the remote southeast pickup so its
     // object template is instantiated in the destination camera viewport.
-    await game.inventory.freeSlot("tmHm")
-    await game.player.warp(lobby, 4, 20, "down")
-    await game.wait.forReady()
-    for (const location of [
-      { x: 46, y: 36, facing: "down" },
-      { x: 46, y: 38, facing: "up" },
-      { x: 45, y: 37, facing: "right" },
-      { x: 47, y: 37, facing: "left" },
-    ] as const) {
-      await game.player.warp(hall, location.x, location.y, location.facing)
+    const claimTmThunderWave = async (): Promise<void> => {
+      await game.player.warp(lobby, 4, 20, "down")
       await game.wait.forReady()
-      const sequence = (await game.state.read()).dialogue.sequence
-      await game.player.interact()
-      await game.wait.frames(60)
-      if ((await game.state.read()).dialogue.sequence > sequence)
-        await settleField(game, "TM Thunder")
-      if (await game.story.flag("powerPlantTmThunderClaimed")) break
+      for (const location of [
+        { x: 46, y: 36, facing: "down" },
+        { x: 46, y: 38, facing: "up" },
+        { x: 45, y: 37, facing: "right" },
+        { x: 47, y: 37, facing: "left" },
+      ] as const) {
+        await game.player.warp(hall, location.x, location.y, location.facing)
+        await game.wait.forReady()
+        const sequence = (await game.state.read()).dialogue.sequence
+        await game.player.interact()
+        await game.wait.frames(60)
+        if ((await game.state.read()).dialogue.sequence > sequence)
+          await settleField(game, "TM Thunder Wave")
+        if (await game.story.flag("powerPlantTmThunderClaimed")) break
+      }
     }
-    expect(await game.story.flag("powerPlantTmThunderClaimed")).toBe(true)
-    expect(await game.inventory.contains("tmThunder")).toBe(true)
-    expect(await game.story.flag("powerPlantTmProtectClaimed")).toBe(true)
+    await claimTmThunderWave()
+    expect(await game.story.flag("powerPlantTmThunderClaimed")).toBe(false)
+    expect(await game.inventory.contains("tmThunderWave")).toBe(false)
     await game.saveAndReload()
-    for (const flag of [
-      "powerPlantMaxPotionClaimed",
-      "powerPlantTmProtectClaimed",
-      "powerPlantTmThunderClaimed",
-      "powerPlantThunderStoneClaimed",
-      "powerPlantElixirClaimed",
-    ] as const)
-      expect(await game.story.flag(flag)).toBe(true)
+    await game.inventory.freeSlot("tmHm")
+    await claimTmThunderWave()
+    expect(await game.story.flag("powerPlantTmThunderClaimed")).toBe(true)
+    expect(await game.inventory.contains("tmThunderWave")).toBe(true)
+
+    // The Choice Scarf prize keeps its authored flag.
+    await pickup(game, { x: 45, y: 5, facing: "up" }, "Choice Scarf")
+    expect(await game.story.flag("powerPlantThunderStoneClaimed")).toBe(true)
+    expect(await game.inventory.contains("choiceScarf")).toBe(true)
+
+    // The daily spots give the day's find and set no permanent flag.
+    for (const entry of [
+      [{ x: 40, y: 23, facing: "up" }, "powerPlantTmProtectClaimed"],
+      [{ x: 7, y: 28, facing: "up" }, "powerPlantMaxPotionClaimed"],
+      [{ x: 26, y: 23, facing: "up" }, "powerPlantElixirClaimed"],
+    ] as const) {
+      const [location, flag] = entry
+      const found = (await game.dailySlots.found()).count
+      await pickup(game, location, flag)
+      expect((await game.dailySlots.found()).count, `${flag} find`).toBe(found + 1)
+      expect(await game.story.flag(flag), `${flag} object flag`).toBe(false)
+    }
+    await game.saveAndReload()
+    expect(await game.story.flag("powerPlantTmThunderClaimed")).toBe(true)
+    expect(await game.story.flag("powerPlantThunderStoneClaimed")).toBe(true)
+    for (const flag of ["powerPlantMaxPotionClaimed", "powerPlantTmProtectClaimed", "powerPlantElixirClaimed"] as const)
+      expect(await game.story.flag(flag)).toBe(false)
   })
 
-  it("persists both hidden items and both Electrode decoys", async () => {
+  it("persists both hidden spots and both Electrode decoys", async () => {
+    // The Thunder Stone spot is a daily spot (the day's find, no permanent flag); the Max Elixir spot now
+    // holds the Choice Specs prize, which keeps its authored flag.
+    await game.dailySlots.pin({ day: 20000, seed: 1, noEmpty: true })
     await arrangeAt(game, { map: hall, x: 8, y: 13 }, "up", {
+      flags: { powerPlantHiddenThunderStoneClaimed: false },
+    })
+    const found = (await game.dailySlots.found()).count
+    await pickup(game, { x: 8, y: 13, facing: "up" }, "hidden daily find")
+    expect((await game.dailySlots.found()).count).toBe(found + 1)
+    expect(await game.story.flag("powerPlantHiddenThunderStoneClaimed")).toBe(false)
+
+    await arrangeAt(game, { map: hall, x: 29, y: 17 }, "up", {
       fullPocket: "items",
       flags: {
         powerPlantElectrode1Resolved: false,
         powerPlantElectrode2Resolved: false,
         powerPlantHiddenMaxElixirClaimed: false,
-        powerPlantHiddenThunderStoneClaimed: false,
       },
     })
-    await pickup(game, { x: 8, y: 13, facing: "up" }, "full-pocket hidden Thunder Stone")
-    expect(await game.story.flag("powerPlantHiddenThunderStoneClaimed")).toBe(false)
-    expect(await game.inventory.contains("thunderStone")).toBe(false)
+    await pickup(game, { x: 29, y: 17, facing: "up" }, "full-pocket hidden Choice Specs")
+    expect(await game.story.flag("powerPlantHiddenMaxElixirClaimed")).toBe(false)
+    expect(await game.inventory.contains("choiceSpecs")).toBe(false)
     await game.saveAndReload()
     await game.inventory.freeSlot("items")
-    await pickup(game, { x: 8, y: 13, facing: "up" }, "hidden Thunder Stone retry")
-    expect(await game.story.flag("powerPlantHiddenThunderStoneClaimed")).toBe(true)
-    expect(await game.inventory.contains("thunderStone")).toBe(true)
-    await pickup(game, { x: 29, y: 17, facing: "up" }, "hidden Max Elixir")
+    await pickup(game, { x: 29, y: 17, facing: "up" }, "hidden Choice Specs retry")
     expect(await game.story.flag("powerPlantHiddenMaxElixirClaimed")).toBe(true)
-    expect(await game.inventory.contains("maxElixir")).toBe(true)
+    expect(await game.inventory.contains("choiceSpecs")).toBe(true)
 
     for (const [location, flag] of [
       [{ x: 36, y: 6, facing: "up" }, "powerPlantElectrode2Resolved"],
@@ -743,9 +754,7 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
     }
     await game.saveAndReload()
     expect(await game.story.flag("powerPlantHiddenMaxElixirClaimed")).toBe(true)
-    expect(await game.story.flag("powerPlantHiddenThunderStoneClaimed")).toBe(true)
-    expect(await game.inventory.contains("maxElixir")).toBe(true)
-    expect(await game.inventory.contains("thunderStone")).toBe(true)
+    expect(await game.inventory.contains("choiceSpecs")).toBe(true)
     expect(await game.story.flag("powerPlantElectrode1Resolved")).toBe(true)
     expect(await game.story.flag("powerPlantElectrode2Resolved")).toBe(true)
     await reenterHall(game)

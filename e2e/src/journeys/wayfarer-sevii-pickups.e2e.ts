@@ -19,10 +19,12 @@ const arrangeAt = async (
   x: number,
   y: number,
   facing: Direction,
+  bag?: NonNullable<Parameters<GameSession["arrange"]>[0]["bag"]>,
 ): Promise<void> => {
   await game.arrange({
     checkpoint: "new-bark-after-intro",
     player: { facing, position: { map: mtEmber, x, y } },
+    bag,
     story: {
       flags: {
         disableEncounters: true,
@@ -102,5 +104,29 @@ describe.sequential("Wayfarer Sevii restored pickups", () => {
     await game.player.interact()
     await game.wait.frames(30)
     expect((await game.state.read()).dialogue.sequence).toBe(sequence)
+  })
+
+  it("leaves a dynamic ball in place when the bag is full, then gives it once there is room", async () => {
+    const pockets = ["balls", "items", "tmHm", "keyItems"] as const
+    // The find's pocket depends on the day, and two pockets cannot be filled by the harness: try days
+    // until one lands in a full pocket.
+    for (let day = 20000; day < 20000 + maxDaysTried; day++) {
+      await game.dailySlots.pin({ day, noEmpty: true })
+      await arrangeAt(game, 13, 7, "up", { fullPockets: [...pockets] })
+      const before = (await game.dailySlots.found()).count
+      await game.player.interact()
+      await game.wait.frames(30)
+      await settleField(game, "full-bag pickup")
+      if ((await game.dailySlots.found()).count !== before) continue
+      // No room: the ball stays, and nothing is marked picked up.
+      await game.saveAndReload()
+      for (const pocket of pockets) await game.inventory.freeSlot(pocket)
+      await game.player.interact()
+      await game.wait.frames(30)
+      await settleField(game, "pickup with room")
+      expect((await game.dailySlots.found()).count).toBe(1)
+      return
+    }
+    throw new Error(`no find landed in a full pocket on ${maxDaysTried} consecutive days`)
   })
 })

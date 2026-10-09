@@ -524,7 +524,7 @@ static const u8 *GetInteractedBackgroundEventScript(struct MapPosition *position
             gSpecialVar_0x8004 = flagId;
             gSpecialVar_0x8005 = item;
             gSpecialVar_0x8009 = spotIndex == NO_ITEM_SPOT ? bgEvent->bgUnion.hiddenItem.quantity : 1;
-            DailyItems_SetPendingHidden(spotIndex);
+            DailyItems_SetPendingHidden(spotIndex, item);
             return EventScript_HiddenItemScript;
         }
 #else
