@@ -7,6 +7,7 @@
 #include "overworld.h"
 #include "task.h"
 #include "test/test.h"
+#include "wayfarer_daily_slots.h"
 #include "wayfarer_persistence.h"
 #include "constants/event_bg.h"
 #include "constants/items.h"
@@ -30,6 +31,7 @@ struct HoennHiddenItemSpot
 };
 
 // Hidden items whose flags once decoded into unrelated low HnS story flags.
+// All but Route 120's (a daily spot) stay fixed under the daily world slots.
 static const struct HoennHiddenItemSpot sHoennHiddenItemSpots[] =
 {
     // FLAG_HIDDEN_ITEM_ROUTE_120_RARE_CANDY_1
@@ -120,6 +122,36 @@ TEST("Wayfarer Hoenn hidden items keep their authored Emerald flags")
     }
 }
 
+TEST("Wayfarer fixed Hoenn hidden items resolve to their own Hoenn flag")
+{
+    struct WarpData location = gSaveBlock1Ptr->location;
+    struct MapHeader mapHeader = gMapHeader;
+
+    for (u32 i = 1; i < ARRAY_COUNT(sHoennHiddenItemSpots); i++)
+    {
+        const struct HoennHiddenItemSpot *spot = &sHoennHiddenItemSpots[i];
+        const struct BgEvent *bgEvent = FindHiddenItem(spot);
+        const struct MapEvents *events = Overworld_GetMapHeaderByGroupAndId(MAP_GROUP(spot->mapId), MAP_NUM(spot->mapId))->events;
+        u16 item, flagId, spotIndex;
+
+        ASSUME(bgEvent != NULL);
+        gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(spot->mapId);
+        gSaveBlock1Ptr->location.mapNum = MAP_NUM(spot->mapId);
+        gMapHeader = *Overworld_GetMapHeaderByGroupAndId(MAP_GROUP(spot->mapId), MAP_NUM(spot->mapId));
+        ASSUME(DailyItems_FindSpot(MAP_GROUP(spot->mapId), MAP_NUM(spot->mapId), TRUE, bgEvent - events->bgEvents) == NO_ITEM_SPOT);
+        FlagClear(HOENN_FLAG_ID(spot->sourceFlag));
+        EXPECT(DailyItems_ResolveHidden(MAP_GROUP(spot->mapId), MAP_NUM(spot->mapId), bgEvent, &item, &flagId, &spotIndex));
+        EXPECT_EQ(item, spot->item);
+        EXPECT_EQ(flagId, HOENN_FLAG_ID(spot->sourceFlag));
+        EXPECT_EQ(spotIndex, NO_ITEM_SPOT);
+        FlagSet(HOENN_FLAG_ID(spot->sourceFlag));
+        EXPECT(!DailyItems_ResolveHidden(MAP_GROUP(spot->mapId), MAP_NUM(spot->mapId), bgEvent, &item, &flagId, &spotIndex));
+        FlagClear(HOENN_FLAG_ID(spot->sourceFlag));
+    }
+    gSaveBlock1Ptr->location = location;
+    gMapHeader = mapHeader;
+}
+
 static bool32 ItemfinderFindsItemUnderfoot(const struct MapEvents *events, u8 taskId)
 {
     gTasks[taskId].data[0] = 0;
@@ -130,13 +162,14 @@ static bool32 ItemfinderFindsItemUnderfoot(const struct MapEvents *events, u8 ta
         && gTasks[taskId].data[1] == 0;
 }
 
-TEST("Wayfarer Itemfinder tracks each Hoenn hidden item by its own Hoenn flag")
+TEST("Wayfarer Itemfinder tracks each fixed Hoenn hidden item by its own Hoenn flag")
 {
     struct MapHeader mapHeader = gMapHeader;
     struct PlayerAvatar playerAvatar = gPlayerAvatar;
     struct ObjectEvent playerObject = gObjectEvents[0];
+    struct WarpData location = gSaveBlock1Ptr->location;
     u8 taskId = CreateTask(TaskDummy, 0);
-    u32 checked = 0;
+    u32 checked = 0, daily = 0;
     bool32 passed = TRUE;
 
     gPlayerAvatar.objectEventId = 0;
@@ -148,6 +181,8 @@ TEST("Wayfarer Itemfinder tracks each Hoenn hidden item by its own Hoenn flag")
 
             if (!IsHoennSourceMap(group, num))
                 continue;
+            gSaveBlock1Ptr->location.mapGroup = group;
+            gSaveBlock1Ptr->location.mapNum = num;
             gMapHeader = *Overworld_GetMapHeaderByGroupAndId(group, num);
             events = gMapHeader.events;
             for (u32 i = 0; i < events->bgEventCount; i++)
@@ -157,6 +192,12 @@ TEST("Wayfarer Itemfinder tracks each Hoenn hidden item by its own Hoenn flag")
 
                 if (bgEvent->kind != BG_EVENT_HIDDEN_ITEM)
                     continue;
+                // Daily world slots resolve their own spots (see wayfarer_daily_items.c).
+                if (DailyItems_FindSpot(group, num, TRUE, i) != NO_ITEM_SPOT)
+                {
+                    daily++;
+                    continue;
+                }
                 flagId = GetHiddenItemFlagId(bgEvent);
                 gObjectEvents[0].currentCoords.x = bgEvent->x + MAP_OFFSET;
                 gObjectEvents[0].currentCoords.y = bgEvent->y + MAP_OFFSET;
@@ -171,11 +212,13 @@ TEST("Wayfarer Itemfinder tracks each Hoenn hidden item by its own Hoenn flag")
     }
 
     DestroyTask(taskId);
+    gSaveBlock1Ptr->location = location;
     gMapHeader = mapHeader;
     gPlayerAvatar = playerAvatar;
     gObjectEvents[0] = playerObject;
     EXPECT(passed);
-    EXPECT_EQ(checked, HOENN_HIDDEN_ITEM_COUNT);
+    EXPECT_GT(checked, 0);
+    EXPECT_EQ(checked + daily, HOENN_HIDDEN_ITEM_COUNT);
 }
 
 #endif // IS_WAYFARER

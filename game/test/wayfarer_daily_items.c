@@ -608,7 +608,7 @@ TEST("Daily slots: a taken prize hidden item draws like a dynamic spot")
     RestoreSnapshot(snapshot);
 }
 
-TEST("Daily slots: a Hoenn hidden prize keeps a Hoenn flag that no story flag aliases")
+TEST("Daily slots: a Hoenn hidden prize keeps the Hoenn flag its bg event decodes to")
 {
     struct Snapshot *snapshot = TakeSnapshot();
     u16 index;
@@ -621,23 +621,18 @@ TEST("Daily slots: a Hoenn hidden prize keeps a Hoenn flag that no story flag al
     {
         const struct WorldItemSpot *spot = DailyItems_GetSpot(index);
         const struct BgEvent *bgEvent = HiddenEvent(index);
-        u16 item, flagId, flagBefore;
+        u16 item, flagId;
 
         if (WORLD_ITEM_ATTR_REGION(spot->attrs) != WORLD_ITEM_REGION_HOENN)
             continue;
         EnterSpotMap(index);
-        // The Hoenn flag namespace; the packed bg event decodes to a different, aliased story flag instead.
+        // The generated flag is the Hoenn flag the packed bg event carries.
         EXPECT(IS_HOENN_FLAG_ID(spot->flag));
-        EXPECT_NE(GetHiddenItemFlagId(bgEvent), spot->flag);
-        // Setting the aliased story flag must not hide the prize.
-        flagBefore = FlagGet(GetHiddenItemFlagId(bgEvent));
-        FlagSet(GetHiddenItemFlagId(bgEvent));
+        EXPECT_EQ(GetHiddenItemFlagId(bgEvent), spot->flag);
         EXPECT(DailyItems_ResolveHidden(spot->mapGroup, spot->mapNum, bgEvent, &item, &flagId, NULL));
         EXPECT_EQ(item, spot->prize);
         EXPECT_EQ(flagId, spot->flag);
-        if (!flagBefore)
-            FlagClear(GetHiddenItemFlagId(bgEvent));
-        // Its own flag does.
+        // Its own flag hides the prize.
         FlagSet(spot->flag);
         EXPECT(!DailyItems_ResolveHidden(spot->mapGroup, spot->mapNum, bgEvent, &item, &flagId, NULL) || item != spot->prize);
         FlagClear(spot->flag);

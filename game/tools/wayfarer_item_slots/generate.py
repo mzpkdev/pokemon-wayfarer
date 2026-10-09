@@ -136,8 +136,8 @@ def source_states(names, root=ROOT):
 
 def flag_expression(spot, states):
     """The flag a prize spot keeps, as the assembler sees it: a number when the active source constants define
-    it, else the C symbol (HNS maps). A Hoenn hidden item cannot be decoded from its packed bg event (the
-    macro overflows its 13-bit flag field), so a Hoenn flag must always come out as a number."""
+    it, else the C symbol (HNS maps). The C table is compiled against the HnS flag constants, where a Hoenn
+    flag's symbol names a different flag, so a Hoenn flag must always come out as a number."""
     active, state = states[spot.map_name]
     value = state.get(spot.flag)
     if value is not None:
