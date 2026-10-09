@@ -1,0 +1,297 @@
+{
+ "version": 1,
+ "_comment": "Reviewed rules for maps without a reach of their own. Source: .product/specs/reach-assignments.md, 'Places without wild encounters' (tables 'Joining an existing place' and 'New dungeons'). reach.py fails on any map constant named here that the Wayfarer build lacks.",
+ "reach_maps": {
+  "MAP_RUINS_OF_ALPH_PUZZLE_AND_REWARD_CHAMBERS_HNS": "Wilds",
+  "MAP_MT_MOON_OUTSIDE_HNS": "Wilds",
+  "MAP_ROUTE26NORTH_HNS": "Outlands",
+  "MAP_ULA_ULA_FOREST_HNS": "Outlands",
+  "MAP_BELLCHIME_TRAIL_HNS": "Road",
+  "MAP_MT_CHIMNEY": "Wilds",
+  "MAP_UNDERWATER_ROUTE127": "Outlands",
+  "MAP_UNDERWATER_ROUTE128": "Outlands",
+  "MAP_SOUTHERN_ISLAND_INTERIOR_HNS": "Outlands",
+  "MAP_NAVEL_ROCK_TOP": "Outlands"
+ },
+ "dungeons": [
+  {
+   "name": "Sprout Tower",
+   "steps": [
+    [
+     "MAP_SPROUT_TOWER_1F_HNS"
+    ],
+    [
+     "MAP_SPROUT_TOWER_2F_HNS"
+    ],
+    [
+     "MAP_SPROUT_TOWER_3F_HNS"
+    ]
+   ]
+  },
+  {
+   "name": "Rocket Hideout (Johto)",
+   "intent": "Mild to moderate",
+   "steps": [
+    [
+     "MAP_ROCKET_HIDEOUT_B1F_HNS"
+    ],
+    [
+     "MAP_ROCKET_HIDEOUT_B2F_HNS"
+    ],
+    [
+     "MAP_ROCKET_HIDEOUT_B3F_HNS"
+    ]
+   ]
+  },
+  {
+   "name": "Abandoned Ship",
+   "steps": [
+    [
+     "MAP_ABANDONED_SHIP_CORRIDORS_1F",
+     "MAP_ABANDONED_SHIP_ROOMS_1F",
+     "MAP_ABANDONED_SHIP_ROOMS2_1F",
+     "MAP_ABANDONED_SHIP_CAPTAINS_OFFICE"
+    ],
+    [
+     "MAP_ABANDONED_SHIP_ROOMS_B1F",
+     "MAP_ABANDONED_SHIP_CORRIDORS_B1F",
+     "MAP_ABANDONED_SHIP_ROOM_B1F",
+     "MAP_ABANDONED_SHIP_ROOMS2_B1F"
+    ],
+    [
+     "MAP_ABANDONED_SHIP_HIDDEN_FLOOR_CORRIDORS",
+     "MAP_ABANDONED_SHIP_HIDDEN_FLOOR_ROOMS"
+    ]
+   ]
+  },
+  {
+   "name": "Seafloor Cavern",
+   "steps": [
+    [
+     "MAP_SEAFLOOR_CAVERN_ENTRANCE"
+    ],
+    [
+     "MAP_SEAFLOOR_CAVERN_ROOM1"
+    ],
+    [
+     "MAP_SEAFLOOR_CAVERN_ROOM2"
+    ],
+    [
+     "MAP_SEAFLOOR_CAVERN_ROOM3"
+    ],
+    [
+     "MAP_SEAFLOOR_CAVERN_ROOM4"
+    ],
+    [
+     "MAP_SEAFLOOR_CAVERN_ROOM5"
+    ],
+    [
+     "MAP_SEAFLOOR_CAVERN_ROOM6"
+    ],
+    [
+     "MAP_SEAFLOOR_CAVERN_ROOM7"
+    ],
+    [
+     "MAP_SEAFLOOR_CAVERN_ROOM8"
+    ],
+    [
+     "MAP_SEAFLOOR_CAVERN_ROOM9"
+    ]
+   ]
+  }
+ ],
+ "new_dungeons": [
+  {
+   "name": "Rocket Hideout (Celadon)",
+   "intent": "Moderate",
+   "steps": [
+    [
+     "MAP_ROCKET_HIDEOUT_B1F"
+    ],
+    [
+     "MAP_ROCKET_HIDEOUT_B2F"
+    ],
+    [
+     "MAP_ROCKET_HIDEOUT_B3F"
+    ],
+    [
+     "MAP_ROCKET_HIDEOUT_B4F"
+    ]
+   ]
+  },
+  {
+   "name": "Silph Co.",
+   "intent": "Moderate to hard",
+   "steps": [
+    [
+     "MAP_SILPH_CO_2F"
+    ],
+    [
+     "MAP_SILPH_CO_3F"
+    ],
+    [
+     "MAP_SILPH_CO_4F"
+    ],
+    [
+     "MAP_SILPH_CO_5F"
+    ],
+    [
+     "MAP_SILPH_CO_6F"
+    ],
+    [
+     "MAP_SILPH_CO_7F"
+    ],
+    [
+     "MAP_SILPH_CO_8F"
+    ],
+    [
+     "MAP_SILPH_CO_9F"
+    ],
+    [
+     "MAP_SILPH_CO_10F"
+    ],
+    [
+     "MAP_SILPH_CO_11F"
+    ]
+   ]
+  },
+  {
+   "name": "S.S. Anne",
+   "intent": "Mild",
+   "steps": [
+    [
+     "MAP_SSANNE_DECK",
+     "MAP_SSANNE_1F_CORRIDOR",
+     "MAP_SSANNE_1F_ROOM1",
+     "MAP_SSANNE_1F_ROOM2",
+     "MAP_SSANNE_1F_ROOM3",
+     "MAP_SSANNE_1F_ROOM4",
+     "MAP_SSANNE_1F_ROOM5",
+     "MAP_SSANNE_1F_ROOM6",
+     "MAP_SSANNE_1F_ROOM7"
+    ],
+    [
+     "MAP_SSANNE_2F_CORRIDOR",
+     "MAP_SSANNE_2F_ROOM1",
+     "MAP_SSANNE_2F_ROOM2",
+     "MAP_SSANNE_2F_ROOM3",
+     "MAP_SSANNE_2F_ROOM4",
+     "MAP_SSANNE_2F_ROOM5",
+     "MAP_SSANNE_2F_ROOM6"
+    ],
+    [
+     "MAP_SSANNE_B1F_CORRIDOR",
+     "MAP_SSANNE_KITCHEN",
+     "MAP_SSANNE_B1F_ROOM1",
+     "MAP_SSANNE_B1F_ROOM2",
+     "MAP_SSANNE_B1F_ROOM3",
+     "MAP_SSANNE_B1F_ROOM4",
+     "MAP_SSANNE_B1F_ROOM5"
+    ]
+   ]
+  },
+  {
+   "name": "Radio Tower",
+   "intent": "Moderate to hard",
+   "steps": [
+    [
+     "MAP_GOLDENROD_CITY_RADIO_TOWER_2F_HNS"
+    ],
+    [
+     "MAP_GOLDENROD_CITY_RADIO_TOWER_3F_HNS"
+    ],
+    [
+     "MAP_GOLDENROD_CITY_RADIO_TOWER_4F_HNS"
+    ],
+    [
+     "MAP_GOLDENROD_CITY_RADIO_TOWER_5F_HNS"
+    ]
+   ]
+  },
+  {
+   "name": "Goldenrod Underground",
+   "intent": "Mild to moderate",
+   "steps": [
+    [
+     "MAP_GOLDENROD_CITY_UNDERGROUND_TUNNEL_HNS"
+    ],
+    [
+     "MAP_GOLDENROD_CITY_DEPARTMENT_STORE_BASEMENT_HNS"
+    ],
+    [
+     "MAP_GOLDENROD_CITY_UNDERGROUND_STORAGE_HNS"
+    ],
+    [
+     "MAP_GOLDENROD_CITY_UNDERGROUND_SWITCHES_HNS"
+    ]
+   ]
+  },
+  {
+   "name": "Olivine Lighthouse",
+   "intent": "Mild",
+   "steps": [
+    [
+     "MAP_OLIVINE_CITY_LIGHTHOUSE_HNS"
+    ]
+   ]
+  },
+  {
+   "name": "Rocket Warehouse",
+   "intent": "Moderate to hard",
+   "steps": [
+    [
+     "MAP_FIVE_ISLAND_ROCKET_WAREHOUSE"
+    ]
+   ]
+  },
+  {
+   "name": "Aqua Hideout",
+   "intent": "Moderate to hard",
+   "steps": [
+    [
+     "MAP_AQUA_HIDEOUT_1F"
+    ],
+    [
+     "MAP_AQUA_HIDEOUT_B1F"
+    ],
+    [
+     "MAP_AQUA_HIDEOUT_B2F"
+    ]
+   ]
+  },
+  {
+   "name": "Weather Institute",
+   "intent": "Mild",
+   "steps": [
+    [
+     "MAP_ROUTE119_WEATHER_INSTITUTE_1F"
+    ],
+    [
+     "MAP_ROUTE119_WEATHER_INSTITUTE_2F"
+    ]
+   ]
+  },
+  {
+   "name": "Space Center",
+   "intent": "Moderate to hard",
+   "steps": [
+    [
+     "MAP_MOSSDEEP_CITY_SPACE_CENTER_1F"
+    ],
+    [
+     "MAP_MOSSDEEP_CITY_SPACE_CENTER_2F"
+    ]
+   ]
+  },
+  {
+   "name": "Scorched Slab",
+   "intent": "Moderate",
+   "steps": [
+    [
+     "MAP_SCORCHED_SLAB"
+    ]
+   ]
+  }
+ ],
+ "interior_overrides": {}
+}

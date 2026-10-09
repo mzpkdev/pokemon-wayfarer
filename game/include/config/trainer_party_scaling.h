@@ -18,4 +18,9 @@
 #define B_LEAGUE_SCALING TRUE
 #endif
 
+// v0 levels (Wayfarer): an ORDINARY slot is its battle map's place level plus TRAINER_REACH_BONUS; a
+// GYM_MEMBER slot is the Gym-member curve plus TRAINER_GYM_MEMBER_BONUS. Placeholders for playtesting.
+#define TRAINER_REACH_BONUS 3
+#define TRAINER_GYM_MEMBER_BONUS 2
+
 #endif

@@ -17,6 +17,11 @@
 static void SeedScalingBattle(u32 rating)
 {
     gIsDebugBattle = FALSE;
+#if WAYFARER_V0_TRAINERS
+    // An ORDINARY Trainer's level is its battle map's place level plus 3: stand on a Road (5 + 3 at Rating 0).
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_ROUTE30_HNS);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_ROUTE30_HNS);
+#endif
     SetTrainerRating(rating);
     ResetTrainerScalingSnapshot();
     gSaveBlock3Ptr->challengeSettings.tx_Random_Trainer = FALSE;
@@ -54,7 +59,7 @@ SINGLE_BATTLE_TEST("Trainer scaling generated moves execute at early middle and 
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, moveSlot: 0); }
     } THEN {
 #if WAYFARER_V0_TRAINERS
-        EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), rating == 0 ? 9 : rating == 40 ? 27 : 44);
+        EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), rating == 0 ? 8 : rating == 40 ? 23 : 41);
 #else
         EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), rating == 0 ? 7 : rating == 40 ? 34 : 92);
 #endif
@@ -66,9 +71,9 @@ AI_SINGLE_BATTLE_TEST("Trainer scaling battle XP uses effective levels and money
 {
     u32 rating = 0, level = 7, playerLevel = 10;
 #if WAYFARER_V0_TRAINERS
-    PARAMETRIZE { rating = 0; level = 9; playerLevel = 10; }
-    PARAMETRIZE { rating = 40; level = 27; playerLevel = 25; }
-    PARAMETRIZE { rating = 80; level = 44; playerLevel = 45; }
+    PARAMETRIZE { rating = 0; level = 8; playerLevel = 10; }
+    PARAMETRIZE { rating = 40; level = 23; playerLevel = 25; }
+    PARAMETRIZE { rating = 80; level = 41; playerLevel = 45; }
 #else
     PARAMETRIZE { rating = 0; level = 7; playerLevel = 10; }
     PARAMETRIZE { rating = 40; level = 34; playerLevel = 40; }

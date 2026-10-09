@@ -1,7 +1,9 @@
 # Regular trainer and Gym member scaling
 
 Implemented: Partial; runtime policies exist, campaign balance acceptance remains pending.
-Final-stage rosters are implemented (#157); reach levels are not yet.
+Final-stage rosters are implemented (#157), and so are the v0 reach levels (the generated
+[map table](../../game/src/data/trainer_scaling/trainer_places.h) and its
+[report](../../game/src/data/trainer_scaling/reach_report.md)).
 
 Today's routing includes [League scaling](league-scaling.md) with the player's
 TR saved when entering a league, so League levels scale from that saved TR. See
@@ -100,7 +102,8 @@ are hard.
   small trainer bonus (placeholder: 3 levels). A map with no reach of its own,
   such as a building, resolves one with the
   [places without wild encounters](../specs/reach-assignments.md#places-without-wild-encounters)
-  rules.
+  rules, resolved when the game is built: every map that hosts a regular
+  trainer has an entry, and a trainer on a map with none stops the build.
 - **What that means.** Road trainers start close to your level and fall behind
   as you earn badges, so routes stop being a threat and the late challenge
   comes from [notable trainers](notable-trainers.md). Wilds trainers stay a
