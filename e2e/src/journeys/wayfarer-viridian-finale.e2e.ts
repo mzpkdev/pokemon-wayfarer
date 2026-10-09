@@ -484,15 +484,19 @@ describe.sequential("Wayfarer Viridian Giovanni finale", () => {
     expect(await game.story.flag("viridianGiovanniDeparted")).toBe(true)
     expect(await game.inventory.count("tmEarthquake")).toBe(1)
     await game.player.warp(gym, 2, 3, "up")
+    // Giovanni's hidden spot is a daily spot now: the day's find, no permanent flag. The pin applies
+    // from the next map load, so enter the gym again before looking.
+    await game.dailySlots.pin({ day: 20000, seed: 1, noEmpty: true })
+    await game.player.warp(gym, 16, 21, "up")
+    await game.player.warp(gym, 2, 3, "up")
+    expect(await game.story.flag("viridianMachoBraceClaimed")).toBe(false)
+    const found = (await game.dailySlots.found()).count
+    await interact(game, "Giovanni's hidden find")
+    expect((await game.dailySlots.found()).count).toBe(found + 1)
     expect(await game.story.flag("viridianMachoBraceClaimed")).toBe(false)
     expect(await game.story.flag("sproutTowerEscapeRopeClaimed")).toBe(false)
-    await interact(game, "Giovanni's hidden Macho Brace")
-    expect(await game.inventory.count("machoBrace")).toBe(1)
-    expect(await game.story.flag("viridianMachoBraceClaimed")).toBe(true)
-    expect(await game.story.flag("sproutTowerEscapeRopeClaimed")).toBe(false)
     await game.saveAndReload()
-    expect(await game.inventory.count("machoBrace")).toBe(1)
-    expect(await game.story.flag("viridianMachoBraceClaimed")).toBe(true)
+    expect(await game.story.flag("viridianMachoBraceClaimed")).toBe(false)
   })
 
   it("holds Giovanni in place after a full TM pocket until a reload-safe claim succeeds", async () => {

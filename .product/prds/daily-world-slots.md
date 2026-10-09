@@ -1,6 +1,7 @@
 # Daily world slots
 
-Implemented: No
+Implemented: Partial. The item slots ([Item slots](#item-slots)) are implemented;
+trainer slots, trainer groups, phone rematches and the dialogue audit are not.
 
 Specifications: [Daily world slots](../specs/daily-world-slots.md),
 [World items](../specs/world-items.md),

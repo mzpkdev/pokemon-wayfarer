@@ -1,4 +1,7 @@
 #include "global.h"
+#if IS_WAYFARER
+#include "wayfarer_daily_slots.h"
+#endif
 #include "battle_setup.h"
 #include "bike.h"
 #include "bug_contest.h"
@@ -511,12 +514,27 @@ static const u8 *GetInteractedBackgroundEventScript(struct MapPosition *position
     case BG_EVENT_HIDDEN_ITEM:
         if (bgEvent->bgUnion.hiddenItem.underfoot == TRUE)
             return NULL;
+#if IS_WAYFARER
+        {
+            // Daily world slots: the resolved item and, for a dynamic or taken-prize spot, no permanent flag.
+            u16 item, flagId, spotIndex;
+
+            if (!DailyItems_ResolveHidden(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, bgEvent, &item, &flagId, &spotIndex))
+                return NULL;
+            gSpecialVar_0x8004 = flagId;
+            gSpecialVar_0x8005 = item;
+            gSpecialVar_0x8009 = spotIndex == NO_ITEM_SPOT ? bgEvent->bgUnion.hiddenItem.quantity : 1;
+            DailyItems_SetPendingHidden(spotIndex, item, flagId);
+            return EventScript_HiddenItemScript;
+        }
+#else
         gSpecialVar_0x8004 = GetHiddenItemFlagId(bgEvent);
         gSpecialVar_0x8005 = bgEvent->bgUnion.hiddenItem.item;
         gSpecialVar_0x8009 = bgEvent->bgUnion.hiddenItem.quantity;
         if (FlagGet(gSpecialVar_0x8004) == TRUE)
             return NULL;
         return EventScript_HiddenItemScript;
+#endif
     case BG_EVENT_SECRET_BASE:
         if (direction == DIR_NORTH)
         {

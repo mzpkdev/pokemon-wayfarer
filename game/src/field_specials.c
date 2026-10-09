@@ -1,4 +1,7 @@
 #include "global.h"
+#if IS_WAYFARER
+#include "wayfarer_daily_slots.h"
+#endif
 #include "debug.h"
 #include "malloc.h"
 #include "battle.h"
@@ -999,6 +1002,9 @@ void CableCarWarp(void)
 void SetHiddenItemFlag(void)
 {
     FlagSet(gSpecialVar_0x8004);
+#if IS_WAYFARER
+    DailyItems_PickedUpHidden();
+#endif
 }
 
 u16 GetWeekCount(void)

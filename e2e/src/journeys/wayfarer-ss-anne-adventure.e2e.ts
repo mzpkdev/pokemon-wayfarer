@@ -9,11 +9,10 @@ const billPosition = { map: "route25-bills-house", x: 5, y: 6, facing: "left" } 
 // This is deliberately a named state fixture rather than an inferred map or
 // Trainer ID. It models the only terminal Anne state: every independently
 // saved receipt, scene, and Trainer victory has already been claimed.
+// One-time content only: the ship's other item spots are daily world slots and never set their flags.
 const allAnneContentFlags = [
-  "ssAnneItemTm31", "ssAnneItemStardust", "ssAnneItemXAttack", "ssAnneItemTm44",
-  "ssAnneItemEther", "ssAnneItemSuperPotion", "ssAnneItemGreatBall", "ssAnneCaptainRewarded",
-  "ssAnneItemHyperPotion", "ssAnneItemChestoBerry", "ssAnneItemPechaBerry",
-  "ssAnneItemCheriBerry", "ssAnneBlueMet", "ssAnneTrainerTyler", "ssAnneTrainerAnn",
+  "ssAnneItemTm31", "ssAnneItemTm44", "ssAnneCaptainRewarded",
+  "ssAnneBlueMet", "ssAnneTrainerTyler", "ssAnneTrainerAnn",
   "ssAnneTrainerArthur", "ssAnneTrainerThomas", "ssAnneTrainerDale", "ssAnneTrainerBrooks",
   "ssAnneTrainerLamar", "ssAnneTrainerDawn", "ssAnneTrainerBarny", "ssAnneTrainerPhillip",
   "ssAnneTrainerHuey", "ssAnneTrainerDylan", "ssAnneTrainerLeonard", "ssAnneTrainerDuncan",

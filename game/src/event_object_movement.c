@@ -1,5 +1,6 @@
 #include "global.h"
 #include "wayfarer_walkers.h"
+#include "wayfarer_daily_slots.h"
 #include "malloc.h"
 #include "battle_anim.h"
 #include "battle_pyramid.h"
@@ -3168,6 +3169,9 @@ void TrySpawnObjectEvents(s16 cameraX, s16 cameraY)
 #if IS_WAYFARER
                 // A Gym Leader's own object while the leader is out.
                 if (WayfarerWalkers_HideTemplate(template))
+                    continue;
+                // A dynamic or taken-prize item ball spawns only while today's find is there.
+                if (DailyItems_HideTemplate(template))
                     continue;
 #endif
                 if (IsLightSpriteGfxId(template->graphicsId))

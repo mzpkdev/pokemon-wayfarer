@@ -9,6 +9,7 @@
 
 #if IS_WAYFARER
 #include "wayfarer_world_data.h"
+#include "wayfarer_daily_slots.h"
 #endif
 
 // Wayfarer gives up the 14th box to make room in PokemonStorage for the saved
@@ -44,6 +45,7 @@ struct PokemonStorage
 #if IS_WAYFARER
     struct LeagueSavedTeams leagueEventTeams;
     struct WayfarerWorldState wayfarerWorld;
+    struct WayfarerDailySlots dailySlots;
 #endif
 };
 

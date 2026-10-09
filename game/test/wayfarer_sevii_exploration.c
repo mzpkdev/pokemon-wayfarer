@@ -10,6 +10,8 @@
 #include "save.h"
 #include "task.h"
 #include "test/test.h"
+#include "pokemon_storage_system.h"
+#include "wayfarer_daily_slots.h"
 #include "wayfarer_persistence.h"
 #include "wild_encounter.h"
 #include "constants/event_bg.h"
@@ -206,17 +208,27 @@ static bool32 ItemfinderFindsItemUnderfoot(const struct MapEvents *events, u8 ta
         && gTasks[taskId].data[1] == 0;
 }
 
-TEST("Wayfarer Itemfinder finds every Sevii hidden item until it is picked up")
+// With daily world slots a Sevii hidden item is a prize (always there until taken) or a dynamic
+// spot (there when today's find is). The Itemfinder follows the resolved state.
+TEST("Wayfarer Itemfinder finds every resolved Sevii hidden item until it is picked up")
 {
     struct MapHeader mapHeader = gMapHeader;
     struct PlayerAvatar playerAvatar = gPlayerAvatar;
     struct ObjectEvent playerObject = gObjectEvents[0];
     struct WarpData location = gSaveBlock1Ptr->location;
+    struct WayfarerDailySlots daily = gPokemonStoragePtr->dailySlots;
+    u32 debugDay = gDailySlotsDebugDay, debugSeed = gDailySlotsDebugSeed;
+    u8 debugFlags = gDailySlotsDebugFlags;
     u8 taskId = CreateTask(TaskDummy, 0);
     u32 checked = 0;
     bool32 passed = TRUE;
 
     WayfarerSeviiInitPersistentState();
+    gDailySlotsDebugFlags = DAILY_DEBUG_DAY | DAILY_DEBUG_SEED;
+    gDailySlotsDebugDay = 4242;
+    gDailySlotsDebugSeed = 0x5E71115E;
+    DailySlots_InitNewGame();
+    DailySlots_OnMapLoad();
     gPlayerAvatar.objectEventId = 0;
     for (u32 m = 0; m < ARRAY_COUNT(sSeviiPickupMaps); m++)
     {
@@ -230,19 +242,37 @@ TEST("Wayfarer Itemfinder finds every Sevii hidden item until it is picked up")
         for (u32 i = 0; i < events->bgEventCount; i++)
         {
             const struct BgEvent *bgEvent = &events->bgEvents[i];
+            u16 spotIndex;
+            bool32 expected;
+
             if (bgEvent->kind != BG_EVENT_HIDDEN_ITEM)
                 continue;
+            spotIndex = DailyItems_FindSpot(MAP_GROUP(mapId), MAP_NUM(mapId), TRUE, i);
+            passed &= spotIndex != NO_ITEM_SPOT;
+            if (spotIndex == NO_ITEM_SPOT)
+                continue;
+            expected = WORLD_ITEM_ATTR_PRIZE(DailyItems_GetSpot(spotIndex)->attrs) || DailyItems_ResolveSpot(spotIndex) != ITEM_NONE;
             gObjectEvents[0].currentCoords.x = bgEvent->x + MAP_OFFSET;
             gObjectEvents[0].currentCoords.y = bgEvent->y + MAP_OFFSET;
-            passed &= ItemfinderFindsItemUnderfoot(events, taskId);
-            FlagSet(GetHiddenItemFlagId(bgEvent));
-            passed &= !ItemfinderFindsItemUnderfoot(events, taskId);
+            passed &= ItemfinderFindsItemUnderfoot(events, taskId) == expected;
+            if (expected)
+            {
+                // A prize stays in its Sevii bank flag; any pickup also clears the spot for the day.
+                if (WORLD_ITEM_ATTR_PRIZE(DailyItems_GetSpot(spotIndex)->attrs))
+                    FlagSet(DailyItems_GetSpot(spotIndex)->flag);
+                DailyItems_SetCleared(spotIndex);
+                passed &= !ItemfinderFindsItemUnderfoot(events, taskId);
+            }
             checked++;
         }
     }
 
     DestroyTask(taskId);
     WayfarerSeviiInitPersistentState();
+    gPokemonStoragePtr->dailySlots = daily;
+    gDailySlotsDebugDay = debugDay;
+    gDailySlotsDebugSeed = debugSeed;
+    gDailySlotsDebugFlags = debugFlags;
     gMapHeader = mapHeader;
     gPlayerAvatar = playerAvatar;
     gObjectEvents[0] = playerObject;

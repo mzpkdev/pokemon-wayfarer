@@ -633,7 +633,7 @@ void validate_wayfarer_sevii_event_rule(const Json &event, const Json &rule,
         ? set<string>{"script", "flag"}
         : event_kind == "coord_events"
             ? set<string>{"script", "var", "var_value"}
-            : set<string>{"script", "flag"};
+            : set<string>{"script", "flag", "underfoot", "elevation"};
     for (const auto &override : overrides.object_items()) {
         if (allowed.find(override.first) == allowed.end())
             FATAL_ERROR("Wayfarer Sevii %s %s[%u] has forbidden override %s.\n",
@@ -651,6 +651,16 @@ void validate_wayfarer_sevii_event_rule(const Json &event, const Json &rule,
                 FATAL_ERROR("Wayfarer Sevii %s %s[%u] override %s must use the Sevii namespace.\n",
                             map_name.c_str(), event_kind.c_str(), index, override.first.c_str());
         }
+        if (override.first == "underfoot"
+         && (event_kind != "bg_events" || json_to_string(event, "type", true) != "hidden_item"
+             || override.second.type() != Json::Type::BOOL || override.second.bool_value()))
+            FATAL_ERROR("Wayfarer Sevii %s %s[%u] may only clear underfoot on a hidden item.\n",
+                        map_name.c_str(), event_kind.c_str(), index);
+        if (override.first == "elevation"
+         && (event_kind != "bg_events" || json_to_string(event, "type", true) != "hidden_item"
+             || override.second.type() != Json::Type::NUMBER || override.second.int_value() != 0))
+            FATAL_ERROR("Wayfarer Sevii %s %s[%u] may only set a hidden item to elevation 0 (any).\n",
+                        map_name.c_str(), event_kind.c_str(), index);
         if (override.first == "flag" && event_kind == "bg_events"
          && json_to_string(event, "type", true) != "hidden_item")
             FATAL_ERROR("Wayfarer Sevii %s bg_events[%u] may override a flag only for a hidden item.\n",

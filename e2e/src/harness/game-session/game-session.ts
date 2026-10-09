@@ -5,6 +5,7 @@ import { requireRomPath, requireSymbolsPath } from "../skyemu/utils"
 import { createArrangeApi, type ArrangeApi } from "./features/arrange"
 import { createBattleApi, type BattleApi } from "./features/battle"
 import { createControlsApi, type ControlsApi } from "./features/controls"
+import { createDailySlotsApi, type DailySlotsApi } from "./features/daily-slots"
 import { createDialogueApi, type DialogueApi } from "./features/dialogue"
 import { createInventoryApi, type InventoryApi } from "./features/inventory"
 import { createPlayerApi, type PlayerApi } from "./features/player"
@@ -28,6 +29,7 @@ export class GameSession {
   readonly checkpoint: ArrangeApi["checkpoint"]
   readonly battle: BattleApi
   readonly controls: ControlsApi
+  readonly dailySlots: DailySlotsApi
   readonly dialogue: DialogueApi
   readonly inventory: InventoryApi
   readonly player: PlayerApi
@@ -55,6 +57,7 @@ export class GameSession {
     this.checkpoint = arrange.checkpoint
     this.battle = createBattleApi(runtime, mailbox)
     this.controls = createControlsApi(runtime)
+    this.dailySlots = createDailySlotsApi(runtime)
     this.dialogue = createDialogueApi(state, wait)
     this.inventory = createInventoryApi(runtime)
     this.player = createPlayerApi(runtime, mailbox)
@@ -74,6 +77,9 @@ export class GameSession {
       }
       if (saveStatus !== 1)
         throw new Error(`ROM did not read a valid flash save within 600 frames (status=${saveStatus})`)
+
+      // A reset cleared EWRAM, pins included: write them back before Continue loads the map.
+      await this.dailySlots.reapply()
 
       // A valid save puts Continue first on the main menu. Use isolated presses
       // so no input leaks into the restored overworld.

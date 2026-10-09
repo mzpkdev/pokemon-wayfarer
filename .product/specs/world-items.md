@@ -1,7 +1,9 @@
 # World items
 
 PRD: [Daily world slots](../prds/daily-world-slots.md#item-slots)
-Implemented: No
+Implemented: Yes. The item spot generator (`game/tools/wayfarer_item_slots`)
+reads these tables and builds the spots, prizes and pools; the weights and odds
+stay placeholders for playtesting.
 
 Design status: draft. Every weight and odds value is a placeholder for
 playtesting.
@@ -19,7 +21,10 @@ NPCs, Poké Marts and Pickup are unchanged.
 ## Reach of an item spot
 
 A spot uses its map's reach from [reach assignments](reach-assignments.md). A
-dungeon's entrance floor counts as Wilds and every deeper floor as Outlands. A
+dungeon's entrance floor counts as Wilds and every deeper floor as Outlands; a
+single-floor or flat dungeon has no entrance floor, so it is Outlands on every
+map ([deeper floors](reach-assignments.md#dungeon-floors)). A town or city map
+with no entry of its own is Road (the settlement rule). A
 map without a reach of its own resolves one with the
 [places without wild encounters](reach-assignments.md#places-without-wild-encounters)
 rules, the same resolution trainers use
@@ -667,16 +672,16 @@ These are not prizes and are never moved or replaced.
 
 ### Demoted to dynamic
 
-Every authored item spot that is not listed above becomes a dynamic spot in the daily pool. Counts are spots per region; Kanto and Sevii counts are exact (from the region authors' tables), the others are approximate (spots in the compiled map set minus prizes and fixed items).
+Every authored item spot that is not listed above becomes a dynamic spot in the daily pool. Counts are spots per region. Kanto and Sevii counts were exact in the region authors' tables; the generator report (`src/data/item_slots/report.md`) now gives every region's count from the compiled maps, and the others below are its figures. Kanto is 126: the spec's 128 counted two hidden rows nothing can reach, Viridian Forest (76,29), outside the 74-wide layout, and Route 8 (0,0), in a sealed corner strip; the generator excludes both.
 
 | Region | Dynamic spots | Notable demoted items |
 |---|---|---|
-| Kanto | 128 | Nuggets, Pearls, Big Pearls and Heart Scales (sell items); Escape Ropes; vitamins and Rare Candies; Revives and Max Revives; Ultra Balls; TMs Recycle, Silver Wind, Psych Up, Grass Knot, Frustration, Protect, Blizzard; the Pewter and Celadon-house spots vacated by Wise Glasses and Leftovers; the second and third Moon Stones and the Goldenrod-sold Thunder, Water and Fire Stones |
+| Kanto | 126 | Nuggets, Pearls, Big Pearls and Heart Scales (sell items); Escape Ropes; vitamins and Rare Candies; Revives and Max Revives; Ultra Balls; TMs Recycle, Silver Wind, Psych Up, Grass Knot, Frustration, Protect, Blizzard; the Pewter and Celadon-house spots vacated by Wise Glasses and Leftovers; the second and third Moon Stones and the Goldenrod-sold Thunder, Water and Fire Stones |
 | Sevii | 64 | Ultra, Net and Heart Scale items; Fire Stones, Pearls, Star Pieces; berries; Lax and Sea Incense; the Sevault Canyon House Lucky Punch |
-| Johto | about 81 | Restoratives and X items; vitamins and Rare Candies; sell items (Heart Scale, Nugget, Pearl, Star Piece); flutes; Mahogany-shop items (King's Rock, Dragon Scale, Protector, Never-Melt Ice, Reaper Cloth, Dubious Disc, Dawn Stone, Ice Stone); weak TMs (Bullet Seed, Rock Tomb, Secret Power, Dig, Charge Beam, Embargo, Thief, Pluck, Rock Climb) and the mart-sold Flamethrower and Stealth Rock; Mint |
-| Alola | about 6 | Restoratives, a Rare Candy and sell items |
-| Sinjoh | about 13 | Ultra Ball, Lure, Star Dust, King's Rock, Snowball, Nugget, Dawn Stone, Max Revive and similar; a Route 50 hidden spot (Ice Stone) and the Hot Springs hidden Dawn Stone were promoted to Legends instead |
-| Hoenn | about 280 | Vitamins, Rare Candies, PP Ups; Heart Scales, shards and Nuggets; marts' Balls (Luxury, Dive, Nest, Net) and Escape Ropes; TMs Focus Punch, Skill Swap and Ice Beam; Sea and Lax Incense; mail and Revival Herb; the second Everstone; Battle Frontier and Pyramid items are out of scope |
+| Johto | 196 | Restoratives and X items; vitamins and Rare Candies; sell items (Heart Scale, Nugget, Pearl, Star Piece); flutes; Mahogany-shop items (King's Rock, Dragon Scale, Protector, Never-Melt Ice, Reaper Cloth, Dubious Disc, Dawn Stone, Ice Stone); weak TMs (Bullet Seed, Rock Tomb, Secret Power, Dig, Charge Beam, Embargo, Thief, Pluck, Rock Climb) and the mart-sold Flamethrower and Stealth Rock; Mint |
+| Alola | 6 | Restoratives, a Rare Candy and sell items |
+| Sinjoh | 13 | Ultra Ball, Lure, Star Dust, King's Rock, Snowball, Nugget, Dawn Stone, Max Revive and similar; a Route 50 hidden spot (Ice Stone) and the Hot Springs hidden Dawn Stone were promoted to Legends instead |
+| Hoenn | 223 | Vitamins, Rare Candies, PP Ups; Heart Scales, shards and Nuggets; marts' Balls (Luxury, Dive, Nest, Net) and Escape Ropes; TMs Focus Punch, Skill Swap and Ice Beam; Sea and Lax Incense; mail and Revival Herb; the second Everstone; Battle Frontier and Pyramid items are out of scope |
 
 New dynamic spots created by reconciliation: none beyond the Kanto Victory Road spots above (Max Ether, Rare Candy, two Max Revives, HP Up, Potion) and the spots already vacated by moved prizes. The authored Lucky Egg (Route 47 hidden) and TM Earthquake (Kanto Victory Road B2F) spots were given other prizes (Water Pulse and Rocky Helmet) rather than demoted. The Amulet Coin in the Goldenrod Department Store basement becomes a dynamic spot. The Ability Capsule, Ability Patch, Gold Bottle Cap, Exp. Charm, Catching Charm and the Sevii and Sinjoh Legends are placed at spots that held other items, so no authored copy of them exists to replace.
 

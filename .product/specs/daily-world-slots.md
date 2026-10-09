@@ -1,7 +1,11 @@
 # Daily world slots
 
 PRD: [Daily world slots](../prds/daily-world-slots.md)
-Implemented: No
+Implemented: Partial. The item half is implemented: the day, deterministic draws, the
+saved daily state with `clearedToday`, the item spot generator and tables, the
+map-load and Continue hooks for item balls, the spawn check, hidden items and the
+Itemfinder, and the debug and E2E day and seed override. Trainer slots, trainer
+groups, the dialogue audit and the phone snapshots are not.
 
 Design status: draft. Numbers are placeholders for playtesting. Item pools and
 static prizes are in [World items](world-items.md); trainer levels are in
@@ -299,6 +303,33 @@ unless its `clearedToday` bit is set:
    permanent flags.
 
 The Itemfinder sees resolved hidden items only.
+
+### Implementation notes
+
+- **One ball script.** Instead of one generated prize script per prize, the hook
+  points every item ball spot at one shared script
+  (`DailyItems_EventScript_Ball`). It asks the generated tables for the ball's
+  item: the prize while the prize's flag is unset, otherwise today's find. The
+  behavior is the one above; the authored item is never given.
+- **Stateless resolution.** A spot's find is a function of the save seed, the
+  stamped day and the slot index, so the per-map state in EWRAM is only the
+  pending hidden-item pickup. The spawn check, the facing check and the
+  Itemfinder (including connected maps) all recompute it.
+- **Slot index.** Item spots are the first rows of the shared `clearedToday`
+  bitset, in the order of `src/data/item_slots/spots.h` (map, ball before
+  hidden, id). Trainer slots will follow them.
+- **Prize flags.** The generator writes each prize spot's permanent flag into the
+  spot table as the map assembles it, and the runtime uses that flag, never the
+  one decoded from a hidden item's packed bg event (Hoenn's flags overflow that
+  field). A hidden prize on an underfoot row would be unreachable, so the generator
+  fails on one and excludes underfoot dynamic rows; the two prize rows that were
+  underfoot (Pokemon Tower 7F and Cape Brink) have the flag cleared for Wayfarer, and
+  Cape Brink's row also gets elevation 0 so it can be faced from the water around it.
+- **Spawn check.** It runs in `TrySpawnObjectEvents` only. No script `addobject`s an
+  item ball, so the one-off spawn path needs no check.
+- **Debug override.** `gDailySlotsDebugFlags`, `gDailySlotsDebugDay` and
+  `gDailySlotsDebugSeed` pin the day and seed in the mechanics-test and E2E
+  builds.
 
 ## Dialogue audit
 

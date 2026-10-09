@@ -29,7 +29,7 @@ OWNER_DOMAINS = {owner: domain for domain, owner in DOMAIN_OWNERS.items()}
 ALLOWED_OVERRIDES = {
     "object_events": frozenset(("script", "flag")),
     "coord_events": frozenset(("script", "var", "var_value")),
-    "bg_events": frozenset(("script", "flag")),
+    "bg_events": frozenset(("script", "flag", "underfoot", "elevation")),
 }
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 CONTENT_ID = re.compile(r"^[a-z][a-z0-9_.-]*$")
@@ -259,6 +259,16 @@ def _validate_event_row(root: Path, map_record: dict, event_kind: str, row: obje
             if (not always_visible_object and not is_tower_transient_override
                     and WAYFARER_OVERRIDE.fullmatch(value) is None):
                 _fail(f"{context}[{index}].overrides.{field}", "must use the Wayfarer Sevii namespace")
+    if "underfoot" in overrides:
+        # Daily world slots: only a hidden item may be made pickable, never hidden further.
+        if event_kind != "bg_events" or source.get("type") != "hidden_item" or overrides["underfoot"] is not False:
+            _fail(f"{context}[{index}].overrides.underfoot", "may only clear underfoot on a hidden item")
+    if "elevation" in overrides:
+        # Daily world slots: elevation 0 matches any player elevation, for a lone tile only reachable from water.
+        value = overrides["elevation"]
+        if (event_kind != "bg_events" or source.get("type") != "hidden_item"
+                or isinstance(value, bool) or value != 0):
+            _fail(f"{context}[{index}].overrides.elevation", "may only set a hidden item to elevation 0")
     if "flag" in overrides and event_kind == "bg_events" and source.get("type") != "hidden_item":
         _fail(f"{context}[{index}].overrides.flag", "is only valid for a hidden item")
     if wayfarer_script is not None and not wayfarer_script.startswith("WayfarerSevii_"):

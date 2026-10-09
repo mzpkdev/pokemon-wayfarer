@@ -1,5 +1,8 @@
 #include "global.h"
 #include "item_use.h"
+#if IS_WAYFARER
+#include "wayfarer_daily_slots.h"
+#endif
 #include "region_map.h"
 #include "battle.h"
 #include "battle_anim.h"
@@ -443,6 +446,8 @@ static void Task_CloseItemfinderMessage(u8 taskId)
     DestroyTask(taskId);
 }
 
+static bool8 IsHiddenItemPresent(u8 mapGroup, u8 mapNum, const struct BgEvent *bgEvent);
+
 bool8 ItemfinderCheckForHiddenItems(const struct MapEvents *events, u8 taskId)
 {
     int itemX, itemY;
@@ -458,7 +463,7 @@ bool8 ItemfinderCheckForHiddenItems(const struct MapEvents *events, u8 taskId)
         // Check if there are any hidden items on the current map that haven't been picked up
         if (events->bgEvents[i].kind == BG_EVENT_HIDDEN_ITEM
             && (!IS_HNS || events->bgEvents[i].bgUnion.hiddenItem.hiddenItemId != 0)
-            && !FlagGet(GetHiddenItemFlagId(&events->bgEvents[i])))
+            && IsHiddenItemPresent(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, &events->bgEvents[i]))
         {
             itemX = (u16)events->bgEvents[i].x + MAP_OFFSET;
             distanceX = itemX - playerX;
@@ -482,7 +487,20 @@ bool8 ItemfinderCheckForHiddenItems(const struct MapEvents *events, u8 taskId)
         return (gTasks[taskId].tItemFound == TRUE);
 }
 
-static bool8 IsHiddenItemPresentAtCoords(const struct MapEvents *events, s16 x, s16 y)
+// Whether a hidden item is still there today. Wayfarer's daily world slots resolve dynamic
+// spots by the stamped day, so the Itemfinder only sees the resolved find.
+static bool8 IsHiddenItemPresent(u8 mapGroup, u8 mapNum, const struct BgEvent *bgEvent)
+{
+#if IS_WAYFARER
+    u16 item, flagId;
+
+    return DailyItems_ResolveHidden(mapGroup, mapNum, bgEvent, &item, &flagId, NULL);
+#else
+    return !FlagGet(GetHiddenItemFlagId(bgEvent));
+#endif
+}
+
+static bool8 IsHiddenItemPresentAtCoords(u8 mapGroup, u8 mapNum, const struct MapEvents *events, s16 x, s16 y)
 {
     u8 bgEventCount = events->bgEventCount;
     const struct BgEvent *bgEvent = events->bgEvents;
@@ -494,10 +512,7 @@ static bool8 IsHiddenItemPresentAtCoords(const struct MapEvents *events, s16 x, 
         {
             if (IS_HNS && bgEvent[i].bgUnion.hiddenItem.hiddenItemId == 0)
                 return FALSE;
-            if (!FlagGet(GetHiddenItemFlagId(&bgEvent[i])))
-                return TRUE;
-            else
-                return FALSE;
+            return IsHiddenItemPresent(mapGroup, mapNum, &bgEvent[i]);
         }
     }
     return FALSE;
@@ -536,7 +551,7 @@ static bool8 IsHiddenItemPresentInConnection(const struct MapConnection *connect
     default:
         return FALSE;
     }
-    return IsHiddenItemPresentAtCoords(connectionHeader->events, connectionX, connectionY);
+    return IsHiddenItemPresentAtCoords(connection->mapGroup, connection->mapNum, connectionHeader->events, connectionX, connectionY);
 }
 
 #undef localX

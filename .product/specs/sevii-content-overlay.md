@@ -101,7 +101,9 @@ Allow only these Wayfarer overrides in the first content port:
 
 - object event: `script` and visibility `flag`;
 - coordinate event: `script`, `var`, and `var_value`; and
-- background event: `script`, plus `flag` for a hidden item.
+- background event: `script`, plus `flag` for a hidden item, and for a hidden
+  item `underfoot: false` and `elevation: 0`, which [daily world slots](daily-world-slots.md)
+  use so a prize can be picked up (Cape Brink's PP Max).
 
 The later `masters` domain adds one narrow map-level override: Room 1 may
 select between its existing closed-box and open-box source layouts from the

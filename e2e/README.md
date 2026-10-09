@@ -231,6 +231,17 @@ Action animations, callback round trips, regional travel, and live link renderin
 also require the spec's separate acceptance checks. Build ROM targets serially:
 their generated maps share files.
 
+### Daily world slots
+
+Most item balls and hidden items are daily spots: they give a find drawn from the
+save's seed and the day, and set no permanent flag. Prizes (see the world items spec)
+still give a fixed item once and keep their flag. `game.dailySlots.pin({ day, seed?, noEmpty? })`
+pins the draws in the E2E ROM (`noEmpty` removes the 25% empty days, so a dynamic spot
+always holds a find) and `game.dailySlots.found()` reports the count and item of the last
+managed pickup. Pin before `arrange()`: the pin applies from the next map load, lives in
+EWRAM, and is lost by a reset. The saved day stamp keeps a pinned day across
+`saveAndReload()`.
+
 ## Layout
 
 `src/harness/` owns the emulator, ROM, process mechanics, and the public

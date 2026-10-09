@@ -106,7 +106,8 @@
       "item": "ITEM_SOOTHE_BELL",
       "flag": "FLAG_WAYFARER_TOWER_HIDE_7F_SOOTHE_BELL",
       "quantity": 1,
-      "underfoot": true
+      "underfoot": true,
+      "wayfarer_underfoot": false
     }
   ]
 }

@@ -18,9 +18,11 @@ battles its Trainers, collects its items, meets Blue, helps the captain, and
 receives Cut.
 
 The ship remains available after the captain's reward so optional rooms and
-missed rewards cannot be lost. This persistence is a recovery guarantee, not a
-repeatable activity. The Anne never becomes transport, a service hub, or a
-source of renewable content.
+missed rewards cannot be lost. Its ordinary item spots join
+[daily world slots](daily-world-slots.md) like every other region's, so the
+ship holds daily finds; see [Daily world slots on board](#daily-world-slots-on-board).
+The Anne doesn't become transport or a service hub here; a later change makes it
+a ferry the player can board whenever it is in port.
 
 ## Port boundary
 
@@ -103,6 +105,21 @@ without reset or loss of unfinished content.
 The implementation must extend the existing exact-menu audit rather than
 weakening it. Standalone HNS keeps its current menu and eligibility behavior.
 
+### Daily world slots on board
+
+The ship's item spots follow [World items](world-items.md): the TM31 and TM44
+spots are one-time static prizes, and its other nine spots (Stardust, X Attack,
+Ether, Super Potion, Great Ball and the hidden Hyper Potion, Chesto, Pecha and
+Cheri Berries) are dynamic daily spots. Dynamic spots never set their
+`FLAG_WAYFARER_SS_ANNE_ITEM_*` flags, so completion counts only one-time
+content: the sixteen Trainers, the two prize spots, Blue's scene and the
+captain's reward. Once those are done the sailor gives the "visiting hours are
+over" refusal, as before, so the ship's daily finds are out of reach after
+completion until the ferry change replaces that refusal.
+
+This section supersedes, for daily world slots only, the rules below that keep
+the nine dynamic items one-time or forbid renewable items.
+
 ### One adventure, permanently recoverable
 
 The captain's reward marks the adventure's principal objective complete, but
@@ -112,7 +129,9 @@ one-time content. Save and reload must preserve each completed encounter and
 reward independently.
 
 Revisiting never resets the ship. In particular, it does not restore defeated
-Trainers, collected items, Blue's scene, or the captain's reward. Completed
+Trainers, the two prize items, Blue's scene, or the captain's reward. The
+daily item spots refill each day, as in
+[Daily world slots on board](#daily-world-slots-on-board). Completed
 NPCs use stable post-event dialogue.
 
 Adapt the captain, deck, and any other source dialogue that promises imminent
@@ -125,12 +144,12 @@ The port must not add any of the following:
 - destinations, voyages, schedules, fares, or arrival ports;
 - healing, shopping, storage, trade, daycare, or other repeat services;
 - Trainer rematches, repeat battles, daily events, renewable items, or
-  recurring rewards;
+  recurring rewards, apart from the daily item spots;
 - random or wild encounters introduced to create a repeatable activity;
 - a second completion reward or a reason to farm the completed ship.
 
-S.S. Aqua and Seagallop remain Wayfarer's travel ships. No future Anne travel
-design is implied by this specification.
+S.S. Aqua and Seagallop remain Wayfarer's travel ships. This specification adds
+no Anne travel; a later change turns the Anne into a ferry.
 
 ## Adventure content
 
@@ -162,14 +181,17 @@ this port and must preserve captain access and the one-time visitor state.
 
 ### Items
 
-Preserve the seven interior item balls and four interior hidden items as
-one-time rewards:
+Import the seven interior item balls and four interior hidden items:
 
 - TM31, Stardust, X Attack, TM44, Ether, Super Potion, and Great Ball;
 - the B1F Hyper Potion; and
 - the Kitchen's Chesto, Pecha, and Cheri Berries.
 
-Give each reward a distinct nonzero Wayfarer-owned saved flag. Do not allocate
+The TM31 and TM44 spots are one-time static prizes (their prize items are set
+in [World items](world-items.md)). The other nine spots are daily world
+slots ([Daily world slots on board](#daily-world-slots-on-board)). Give each
+spot a distinct nonzero Wayfarer-owned saved flag; only the two prizes set
+theirs. Do not allocate
 a flag or substitute reward for the excluded exterior Lava Cookie. A failed
 Bag-capacity check leaves the reward available.
 
@@ -226,15 +248,17 @@ demonstrate all of the following:
    accepts any S.S. Ticket independently of Aqua eligibility. Refusal,
    cancellation, boarding, and return change no other transport state.
 4. All 16 Trainers have unique parties and persistent one-time defeat state.
-   All eleven interior items have unique saved flags and remain claimable after
-   capacity failure.
+   All eleven interior item spots have unique saved flags and remain claimable
+   after capacity failure; the two prizes are one-time and the other nine are
+   daily spots.
 5. Blue's visitor scene plays once without a battle or blocking the captain.
    The captain handles normal award, full-pocket retry, prior ownership, save
    and reload, and repeat interaction without duplicate Cut. No dialogue
    promises that the Anne will depart or provide travel.
 6. Leaving at multiple points and revisiting preserves unfinished content;
    revisiting after completion exposes only unclaimed one-time content and
-   stable dialogue. Nothing resets or becomes renewable.
+   stable dialogue. Nothing resets or becomes renewable apart from the daily
+   item spots.
 7. The ship never offers transport or a recurring service, and neither Anne
    entry nor completion alters Aqua, Seagallop, Hoenn-entry, Bill, badge,
    origin, or unrelated story state.

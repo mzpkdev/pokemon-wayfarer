@@ -442,27 +442,27 @@ describe.sequential("Wayfarer Celadon Rocket Hideout", () => {
     }
   })
 
-  it("keeps an ordinary item available after a full pocket, then saves its claim", async () => {
+  it("gives an ordinary dynamic find once for the day and sets no permanent flag", async () => {
+    // The Escape Rope ball is a daily spot now: the day's find replaces the authored item.
+    await game.dailySlots.pin({ day: 20000, seed: 1, noEmpty: true })
     await game.arrange({
       checkpoint: "new-bark-after-intro",
       player: { position: { map: "celadon-hideout-b1f", x: 5, y: 17 }, facing: "up" },
-      bag: { fullPockets: ["items"] },
       determinism: { textSpeed: "instant" },
     })
+    const before = (await game.dailySlots.found()).count
     await game.player.interact()
     await game.dialogue.waitForOpen()
     await finishInteraction(game, "celadon-hideout-b1f")
-    expect(await game.inventory.contains("escapeRope")).toBe(false)
+    expect((await game.dailySlots.found()).count).toBe(before + 1)
     expect(await game.story.flag("celadonHideoutItemEscapeRope")).toBe(false)
     await game.saveAndReload()
-    await game.inventory.freeSlot("items")
+    expect(await game.story.flag("celadonHideoutItemEscapeRope")).toBe(false)
+    // Gone for the day: nothing opens when facing the tile again.
+    const sequence = (await game.state.read()).dialogue.sequence
     await game.player.interact()
-    await game.dialogue.waitForOpen()
-    await finishInteraction(game, "celadon-hideout-b1f")
-    expect(await game.inventory.contains("escapeRope")).toBe(true)
-    expect(await game.story.flag("celadonHideoutItemEscapeRope")).toBe(true)
-    await game.saveAndReload()
-    expect(await game.story.flag("celadonHideoutItemEscapeRope")).toBe(true)
+    await game.wait.frames(30)
+    expect((await game.state.read()).dialogue.sequence).toBe(sequence)
   })
 
   it("preserves Celadon Game Corner machines, roulette, clerks and nearby NPCs after opening", async () => {

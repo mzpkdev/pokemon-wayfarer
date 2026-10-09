@@ -62,6 +62,7 @@
 #include "league_circuit.h"
 #include "config/league_circuit.h"
 #include "wayfarer_world.h"
+#include "wayfarer_daily_slots.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
 #if IS_FRLG
@@ -350,6 +351,7 @@ void NewGameInitData(void)
     WayfarerInitializeOrigin(startingOriginId);
     WarpIntoMap();
     WayfarerWorld_InitNewGame();
+    DailySlots_InitNewGame();
 #endif
 }
 

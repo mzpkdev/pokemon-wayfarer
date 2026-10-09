@@ -1,0 +1,259 @@
+{
+ "version": 1,
+ "comment": "Item balls the daily item slots never touch. Reviewed against the Fixed story items list of world-items.md. A ball is also fixed when its item is a key item or an HM (see generate.py).",
+ "map_prefixes": [
+  {
+   "prefix": "BattlePyramid",
+   "reason": "Battle Frontier and Pyramid items are out of scope (world-items.md, Demoted to dynamic)"
+  },
+  {
+   "prefix": "ContestHall",
+   "reason": "scriptless contest hall decoration ball"
+  },
+  {
+   "prefix": "UnusedContestHall",
+   "reason": "scriptless contest hall decoration ball"
+  }
+ ],
+ "spots": [
+  {
+   "map": "VermilionCity_hns",
+   "ids": [
+    22
+   ],
+   "reason": "Old Sea Map (fixed story item)",
+   "hidden": []
+  },
+  {
+   "map": "FuchsiaCity_SafariZoneBeach_hns",
+   "ids": [
+    9
+   ],
+   "reason": "Gold Teeth (fixed story item)",
+   "hidden": []
+  },
+  {
+   "map": "RocketHideout_B4F_Frlg",
+   "ids": [
+    2,
+    4
+   ],
+   "reason": "Silph Scope and Lift Key (fixed story items)",
+   "hidden": []
+  },
+  {
+   "map": "SilphCo_5F_Frlg",
+   "ids": [
+    8
+   ],
+   "reason": "Silph Card Key (fixed story item)",
+   "hidden": []
+  },
+  {
+   "map": "PokemonMansion_B1F_Frlg",
+   "ids": [
+    6
+   ],
+   "reason": "Secret Key (fixed story item)",
+   "hidden": []
+  },
+  {
+   "map": "PalletTown_Lab_hns",
+   "ids": [
+    6,
+    7,
+    8
+   ],
+   "reason": "starter Poke Balls (Pokemon gift)",
+   "hidden": []
+  },
+  {
+   "map": "PowerPlant_Frlg",
+   "ids": [
+    7,
+    8
+   ],
+   "reason": "Electrode decoys (wild battle)",
+   "hidden": []
+  },
+  {
+   "map": "FourIsland_IcefallCave_1F_Frlg",
+   "ids": [
+    2
+   ],
+   "reason": "HM07 (fixed story item)",
+   "hidden": []
+  },
+  {
+   "map": "GoldenrodCity_UndergroundTunnel_hns",
+   "ids": [
+    8
+   ],
+   "reason": "Coin Case (fixed story item)",
+   "hidden": []
+  },
+  {
+   "map": "RuinsOfAlph_B1F_hns",
+   "ids": [
+    15
+   ],
+   "reason": "GS Ball (fixed story item)",
+   "hidden": []
+  },
+  {
+   "map": "IcePath_1F_hns",
+   "ids": [
+    2
+   ],
+   "reason": "HM Waterfall (fixed story item)",
+   "hidden": []
+  },
+  {
+   "map": "MtSilver_2F_hns",
+   "ids": [
+    18
+   ],
+   "reason": "Azure Flute (fixed story item)",
+   "hidden": []
+  },
+  {
+   "map": "NewBarkTown_Lab_hns",
+   "ids": [
+    4,
+    5,
+    6
+   ],
+   "reason": "starter Poke Balls (Pokemon gift; not named in the spec's Johto list)",
+   "hidden": []
+  },
+  {
+   "map": "UlaUla_Cave_2_hns",
+   "ids": [
+    1
+   ],
+   "reason": "no script or flag; left alone",
+   "hidden": []
+  },
+  {
+   "map": "SinjohRuins_House1_hns",
+   "ids": [
+    7
+   ],
+   "reason": "Growlithe Poke Ball (script-driven Pokemon gift)",
+   "hidden": []
+  },
+  {
+   "map": "LittlerootTown_ProfessorBirchsLab",
+   "ids": [
+    4,
+    5,
+    6
+   ],
+   "reason": "starter Poke Balls (Pokemon gift)",
+   "hidden": []
+  },
+  {
+   "map": "LittlerootTown_BrendansHouse_2F",
+   "ids": [
+    15
+   ],
+   "reason": "rival's Poke Ball (script-driven)",
+   "hidden": []
+  },
+  {
+   "map": "LittlerootTown_MaysHouse_2F",
+   "ids": [
+    16
+   ],
+   "reason": "rival's Poke Ball (script-driven)",
+   "hidden": []
+  },
+  {
+   "map": "MossdeepCity_StevensHouse",
+   "ids": [
+    2
+   ],
+   "reason": "Beldum Poke Ball (Pokemon gift)",
+   "hidden": []
+  },
+  {
+   "map": "AquaHideout_B1F",
+   "ids": [
+    6,
+    8
+   ],
+   "reason": "Electrode battle balls (wild battle)",
+   "hidden": []
+  },
+  {
+   "map": "NewMauville_Inside",
+   "ids": [
+    6,
+    7,
+    8
+   ],
+   "reason": "Voltorb battle balls (wild battle)",
+   "hidden": []
+  },
+  {
+   "map": "NavelRock_Top",
+   "hidden": [
+    [
+     12,
+     9
+    ]
+   ],
+   "reason": "Sacred Ash (fixed story item)",
+   "ids": []
+  },
+  {
+   "map": "Route110_TrickHouseEnd",
+   "ids": [],
+   "hidden": [
+    [
+     4,
+     5
+    ]
+   ],
+   "reason": "Trick House Nugget (script-dependent: SetTrickHouseNuggetFlag)"
+  },
+  {
+   "map": "ViridianForest_hns",
+   "ids": [],
+   "hidden": [
+    [
+     76,
+     29
+    ]
+   ],
+   "reason": "outside the 74-wide layout: nothing can reach it"
+  },
+  {
+   "map": "Route8_hns",
+   "ids": [],
+   "hidden": [
+    [
+     0,
+     0
+    ]
+   ],
+   "reason": "sealed strip in the north-west corner: no walkable path, warp or connection reaches it"
+  }
+ ],
+ "region_overrides": {
+  "VictoryRoadKanto_": "Kanto",
+  "SouthernIsland_Interior_hns": "Hoenn"
+ },
+ "reachability_exceptions": [
+  {
+   "map": "ThreeIsland_DunsparceTunnel_Frlg",
+   "hidden": [
+    [
+     21,
+     3
+    ]
+   ],
+   "reason": "the map's on-load script digs the tunnel (SetLayoutDugOut), which the static layout does not show"
+  }
+ ]
+}

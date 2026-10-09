@@ -336,11 +336,15 @@ describe.sequential("Wayfarer Lavender Pokemon Tower", () => {
   })
 
   it("keeps an ordinary Tower item and Channeler victory after reload", async () => {
+    // The Escape Rope ball is a daily spot now: the day's find, no permanent flag.
+    await game.dailySlots.pin({ day: 20000, seed: 1, noEmpty: true })
     await arrangeAt(game, "pokemon-tower-3f", 13, 3, "up")
+    const found = (await game.dailySlots.found()).count
     await game.player.interact()
     await game.dialogue.waitForOpen()
-    await settleField(game, "3F Escape Rope pickup")
-    expect(await game.story.flag("towerEscapeRopeClaimed")).toBe(true)
+    await settleField(game, "3F ordinary item pickup")
+    expect((await game.dailySlots.found()).count).toBe(found + 1)
+    expect(await game.story.flag("towerEscapeRopeClaimed")).toBe(false)
 
     await game.player.warp("pokemon-tower-3f", 9, 14, "right")
     await game.player.interact()
@@ -348,33 +352,10 @@ describe.sequential("Wayfarer Lavender Pokemon Tower", () => {
     await game.battle.win()
     await settleField(game, "3F Channeler victory")
     await game.saveAndReload()
-    expect(await game.story.flag("towerEscapeRopeClaimed")).toBe(true)
+    expect(await game.story.flag("towerEscapeRopeClaimed")).toBe(false)
     await game.player.interact()
     await settleField(game, "3F Channeler revisit")
     await expect(game.state.read()).resolves.toMatchObject({ battle: { active: false } })
-  })
-
-  it("keeps a 3F item claimable after a full Items pocket and reload", async () => {
-    await game.arrange({
-      checkpoint: "new-bark-after-intro",
-      player: { position: { map: "pokemon-tower-3f", x: 13, y: 3 }, facing: "up" },
-      story: { flags: { disableEncounters: true } },
-      bag: { fullPockets: ["items"] },
-      determinism: { textSpeed: "instant" },
-    })
-    await game.player.interact()
-    await game.dialogue.waitForOpen()
-    await settleField(game, "full Items pocket")
-    expect(await game.story.flag("towerEscapeRopeClaimed")).toBe(false)
-    expect(await game.inventory.contains("escapeRope")).toBe(false)
-
-    await game.saveAndReload()
-    await game.inventory.freeSlot("items")
-    await game.player.interact()
-    await game.dialogue.waitForOpen()
-    await settleField(game, "Escape Rope retry")
-    expect(await game.story.flag("towerEscapeRopeClaimed")).toBe(true)
-    expect(await game.inventory.contains("escapeRope")).toBe(true)
   })
 
   it("heals a fainted party member in the 5F purified zone", async () => {
