@@ -123,6 +123,9 @@
 	.if (\flag & WAYFARER_PERSISTENCE_NAMESPACE_MASK) != WAYFARER_HOENN_FLAG_NAMESPACE
 	.error "Hoenn Hidden Item flag \flag is not in the Hoenn namespace."
 	.endif
+	.if ((WAYFARER_HOENN_HIDDEN_ITEM_MARKER | (\flag & WAYFARER_PERSISTENCE_VALUE_MASK)) & WAYFARER_SEVII_HIDDEN_ITEM_MARKER_MASK) == WAYFARER_SEVII_HIDDEN_ITEM_MARKER
+	.error "Hoenn Hidden Item flag \flag collides with the Sevii hidden-item marker."
+	.endif
 	.if \item >= (1 << 11)
 	.error "item \item too large"
 	.endif
