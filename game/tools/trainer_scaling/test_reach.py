@@ -244,6 +244,11 @@ class ScriptReadingTests(unittest.TestCase):
         text = '\n'.join(['.if 0 == 1', 'a', '.elseif 1 == 1', 'b', '.else', 'c', '.endif'])
         self.assertEqual(reach.apply_conditionals(text).split(), ['b'])
 
+    def test_branches_after_an_unknown_condition_stay_live(self):
+        text = '\n'.join(['.if SOME_SYMBOL', 'a', '.elseif 0', 'b', '.else', 'c', '.endif',
+                          '.if SOME_SYMBOL', 'd', '.elseif 1', 'e', '.else', 'f', '.endif'])
+        self.assertEqual(reach.apply_conditionals(text).split(), ['a', 'c', 'd', 'e'])
+
     def test_a_script_runs_on_into_the_next_label_unless_it_ends(self):
         self.assertTrue(reach.ends_script('\n msgbox Text\n end\n'))
         self.assertTrue(reach.ends_script('\n goto Elsewhere\n'))
@@ -276,7 +281,9 @@ class GeneratedOutputTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         require = os.environ.get('TRAINER_REACH_REQUIRE_MAPS')
-        present = (reach.ROOT / 'data/maps/groups.inc').is_file() and (reach.ROOT / 'include/constants/map_groups.h').is_file()
+        present = ((reach.ROOT / 'data/maps/groups.inc').is_file()
+                   and (reach.ROOT / 'include/constants/map_groups.h').is_file()
+                   and (reach.ROOT / '.map_version.wayfarer').is_file())
         if not present:
             if require:
                 raise AssertionError('the Wayfarer mapjson outputs are missing; run `make BUILD=wayfarer generated`')

@@ -187,8 +187,9 @@ How `reach.py` applies this:
 
 - **Hosting.** A map hosts a Trainer when a script reachable from its events or
   its map script table battles that ID (`trainerbattle*`, following gotos,
-  calls and fall-through). Every stage of a rematch family stands on the map of
-  its first stage, or on the rematch table's map when no script places it. IDs
+  calls and fall-through). Every stage of a rematch family stands on every map
+  that places any of its stages, or on the rematch table's map when no script
+  places it. IDs
   no compiled Wayfarer map runs, such as the Hoenn rematch stages the ROM does not
   compile and retired source Trainers, are listed in the report and need no entry.
 - **Listed maps** use the wild generator's data

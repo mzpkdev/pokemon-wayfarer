@@ -133,7 +133,8 @@ def apply_conditionals(text):
 
     A condition naming assembler symbols stays unknown: every branch is kept.
     """
-    out, stack, active = [], [], True  # frame: [enclosing activity, state, a branch already taken]
+    # frame: [enclosing activity, a branch is surely taken, an earlier branch may have been taken]
+    out, stack, active = [], [], True
     for line in text.splitlines():
         directive = line.strip()
         head = re.match(r'\.(if|ifdef|ifndef|elseif|else|endif)\b\s*(.*)$', directive)
@@ -144,16 +145,21 @@ def apply_conditionals(text):
         kind, argument = head.groups()
         if kind in ('if', 'ifdef', 'ifndef'):
             state = condition_value(argument) if kind == 'if' else None
-            stack.append([active, state, state is not False])
+            stack.append([active, state is True, state is None])
             active = active and state is not False
         elif kind in ('elseif', 'else') and stack:
             frame = stack[-1]
-            if kind == 'else':
-                state = None if frame[1] is None else (not frame[2])
+            if frame[1]:
+                state = False
+            elif kind == 'else':
+                state = None if frame[2] else True
             else:
-                state = False if frame[2] and frame[1] is not None else condition_value(argument)
-            frame[1] = state
-            frame[2] = frame[2] or state is not False
+                # A true condition ends the block, but an unknown earlier branch may still be the one taken.
+                value = condition_value(argument)
+                frame[1] = value is True
+                state = None if frame[2] and value is True else value
+            frame[1] = frame[1] or state is True
+            frame[2] = frame[2] or state is None
             active = frame[0] and state is not False
         elif kind == 'endif' and stack:
             active = stack.pop()[0]
