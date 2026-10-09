@@ -18,25 +18,37 @@ export type DailySlotsApi = {
    */
   pin: (pins: { day: number; seed?: number; noEmpty?: boolean }) => Promise<void>
   unpin: () => Promise<void>
+  /** Writes the last pin again. A reset clears EWRAM, so a reload calls this before Continue loads the map. */
+  reapply: () => Promise<void>
   /** What the last managed pickup gave and how many there were since boot. */
   found: () => Promise<{ count: number; item: number }>
 }
 
-export const createDailySlotsApi = (runtime: SessionRuntime): DailySlotsApi => ({
-  pin: async ({ day, seed, noEmpty }) => {
-    await runtime.writeBytes(runtime.address("gDailySlotsDebugDay"), uint32Bytes(day))
-    if (seed !== undefined)
-      await runtime.writeBytes(runtime.address("gDailySlotsDebugSeed"), uint32Bytes(seed))
-    await runtime.writeBytes(
-      runtime.address("gDailySlotsDebugFlags"),
-      new Uint8Array([pinDay | (seed === undefined ? 0 : pinSeed) | (noEmpty ? noEmptyDays : 0)]),
-    )
-  },
-  unpin: async () => {
-    await runtime.writeBytes(runtime.address("gDailySlotsDebugFlags"), new Uint8Array([0]))
-  },
-  found: async () => ({
-    count: await runtime.readUint16(runtime.address("gDailySlotsDebugFoundCount")),
-    item: await runtime.readUint16(runtime.address("gDailySlotsDebugFoundItem")),
-  }),
-})
+export const createDailySlotsApi = (runtime: SessionRuntime): DailySlotsApi => {
+  let lastPin: { day: number; seed?: number; noEmpty?: boolean } | undefined
+  const api: DailySlotsApi = {
+    pin: async (pins) => {
+      lastPin = pins
+      const { day, seed, noEmpty } = pins
+      await runtime.writeBytes(runtime.address("gDailySlotsDebugDay"), uint32Bytes(day))
+      if (seed !== undefined)
+        await runtime.writeBytes(runtime.address("gDailySlotsDebugSeed"), uint32Bytes(seed))
+      await runtime.writeBytes(
+        runtime.address("gDailySlotsDebugFlags"),
+        new Uint8Array([pinDay | (seed === undefined ? 0 : pinSeed) | (noEmpty ? noEmptyDays : 0)]),
+      )
+    },
+    unpin: async () => {
+      lastPin = undefined
+      await runtime.writeBytes(runtime.address("gDailySlotsDebugFlags"), new Uint8Array([0]))
+    },
+    reapply: async () => {
+      if (lastPin) await api.pin(lastPin)
+    },
+    found: async () => ({
+      count: await runtime.readUint16(runtime.address("gDailySlotsDebugFoundCount")),
+      item: await runtime.readUint16(runtime.address("gDailySlotsDebugFoundItem")),
+    }),
+  }
+  return api
+}

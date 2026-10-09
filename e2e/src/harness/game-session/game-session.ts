@@ -78,6 +78,9 @@ export class GameSession {
       if (saveStatus !== 1)
         throw new Error(`ROM did not read a valid flash save within 600 frames (status=${saveStatus})`)
 
+      // A reset cleared EWRAM, pins included: write them back before Continue loads the map.
+      await this.dailySlots.reapply()
+
       // A valid save puts Continue first on the main menu. Use isolated presses
       // so no input leaks into the restored overworld.
       for (let attempt = 0; attempt < 40; attempt++) {
