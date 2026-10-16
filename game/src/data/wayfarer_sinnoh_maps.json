@@ -4331,7 +4331,8 @@
         "source_map_section": "MAPSEC_OREBURGH_GATE",
         "target_map_section": "MAPSEC_SINNOH_OREBURGH_GATE",
         "target_map_section_label": "Oreburgh Gate",
-        "region": "sinnoh"
+        "region": "sinnoh",
+        "target_show_map_name": true
       },
       "warps": [
         {
@@ -4392,7 +4393,8 @@
         "source_map_section": "MAPSEC_OREBURGH_MINE",
         "target_map_section": "MAPSEC_SINNOH_OREBURGH_MINE",
         "target_map_section_label": "Oreburgh Mine",
-        "region": "sinnoh"
+        "region": "sinnoh",
+        "target_show_map_name": true
       },
       "warps": [
         {
@@ -4489,7 +4491,8 @@
         "source_map_section": "MAPSEC_OREBURGH_MINE",
         "target_map_section": "MAPSEC_SINNOH_OREBURGH_MINE",
         "target_map_section_label": "Oreburgh Mine",
-        "region": "sinnoh"
+        "region": "sinnoh",
+        "target_show_map_name": true
       },
       "warps": [],
       "connections": [],
@@ -4535,7 +4538,8 @@
         "source_map_section": "MAPSEC_RAVAGED_PATH",
         "target_map_section": "MAPSEC_SINNOH_RAVAGED_PATH",
         "target_map_section_label": "Ravaged Path",
-        "region": "sinnoh"
+        "region": "sinnoh",
+        "target_show_map_name": true
       },
       "warps": [
         {
@@ -4596,7 +4600,8 @@
         "source_map_section": "MAPSEC_MT_CORONET",
         "target_map_section": "MAPSEC_SINNOH_MT_CORONET",
         "target_map_section_label": "Mt Coronet",
-        "region": "sinnoh"
+        "region": "sinnoh",
+        "target_show_map_name": true
       },
       "warps": [
         {
@@ -4657,7 +4662,8 @@
         "source_map_section": "MAPSEC_MT_CORONET",
         "target_map_section": "MAPSEC_SINNOH_MT_CORONET",
         "target_map_section_label": "Mt Coronet",
-        "region": "sinnoh"
+        "region": "sinnoh",
+        "target_show_map_name": true
       },
       "warps": [
         {
@@ -4718,7 +4724,8 @@
         "source_map_section": "MAPSEC_MT_CORONET",
         "target_map_section": "MAPSEC_SINNOH_MT_CORONET",
         "target_map_section_label": "Mt Coronet",
-        "region": "sinnoh"
+        "region": "sinnoh",
+        "target_show_map_name": true
       },
       "warps": [
         {
@@ -4786,7 +4793,8 @@
         "source_map_section": "MAPSEC_MT_CORONET",
         "target_map_section": "MAPSEC_SINNOH_MT_CORONET",
         "target_map_section_label": "Mt Coronet",
-        "region": "sinnoh"
+        "region": "sinnoh",
+        "target_show_map_name": true
       },
       "warps": [
         {
