@@ -1461,15 +1461,19 @@ string generate_map_events_text(Json map_data) {
                 if (underfoot.empty()) {
                     underfoot = "FALSE";
                 }
-                // Wayfarer only changes registered FRLG Sevii maps.  Existing
-                // Emerald/HNS/event-island maps retain their legacy event
-                // encoding and flag namespaces byte-for-byte.  A Sevii row
-                // whose manifest override names a Sevii bank flag uses the
-                // Sevii marker encoding instead of a FLAG_HIDDEN_ITEMS offset.
+                // Wayfarer assembles Emerald-source maps against the Hoenn
+                // flag bank (0x6xxx), which no FLAG_HIDDEN_ITEMS offset can
+                // hold, so their hidden items carry the Hoenn marker instead.
+                // A Sevii row whose manifest override names a Sevii bank flag
+                // uses the Sevii marker encoding.  HNS maps keep the legacy
+                // FLAG_HIDDEN_ITEMS offset.
                 const string flag = get_wayfarer_override(bg_event, "flag");
-                const bool use_sevii_namespace = version == "wayfarer"
-                    && flag.rfind("FLAG_WAYFARER_SEVII_", 0) == 0;
-                text << (use_sevii_namespace ? "\tbg_hidden_item_event_sevii " : "\tbg_hidden_item_event ")
+                const char *macro = "\tbg_hidden_item_event ";
+                if (version == "wayfarer" && flag.rfind("FLAG_WAYFARER_SEVII_", 0) == 0)
+                    macro = "\tbg_hidden_item_event_sevii ";
+                else if (version == "wayfarer" && get_source_version(map_data) == "emerald")
+                    macro = "\tbg_hidden_item_event_hoenn ";
+                text << macro
                      << json_to_string(bg_event, "x") << ", "
                      << json_to_string(bg_event, "y") << ", "
                      << json_to_string(bg_event, "elevation") << ", "

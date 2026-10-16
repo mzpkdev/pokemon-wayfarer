@@ -1314,10 +1314,29 @@ void EndLotteryCornerComputerEffect(void)
 #undef tTimer
 #undef tIsScreenOn
 
+// Specials paired with Hoenn hidden items. Wayfarer compiles C against the HnS
+// flag table, where every Emerald FLAG_HIDDEN_ITEM_* name aliases one HnS flag,
+// so name the Hoenn flag each item's bg event decodes to.
+#if IS_WAYFARER
+#define TRICK_HOUSE_NUGGET_FLAG         HOENN_FLAG_ID(0x1F5) // FLAG_HIDDEN_ITEM_TRICK_HOUSE_NUGGET
+#define ABANDONED_SHIP_RM_1_KEY_FLAG    HOENN_FLAG_ID(0x213) // FLAG_HIDDEN_ITEM_ABANDONED_SHIP_RM_1_KEY
+#define ABANDONED_SHIP_RM_2_KEY_FLAG    HOENN_FLAG_ID(0x214) // FLAG_HIDDEN_ITEM_ABANDONED_SHIP_RM_2_KEY
+#define ABANDONED_SHIP_RM_4_KEY_FLAG    HOENN_FLAG_ID(0x215) // FLAG_HIDDEN_ITEM_ABANDONED_SHIP_RM_4_KEY
+#define ABANDONED_SHIP_RM_6_KEY_FLAG    HOENN_FLAG_ID(0x216) // FLAG_HIDDEN_ITEM_ABANDONED_SHIP_RM_6_KEY
+#define ROUTE_116_BLACK_GLASSES_FLAG    HOENN_FLAG_ID(0x254) // FLAG_HIDDEN_ITEM_ROUTE_116_BLACK_GLASSES
+#else
+#define TRICK_HOUSE_NUGGET_FLAG         FLAG_HIDDEN_ITEM_TRICK_HOUSE_NUGGET
+#define ABANDONED_SHIP_RM_1_KEY_FLAG    FLAG_HIDDEN_ITEM_ABANDONED_SHIP_RM_1_KEY
+#define ABANDONED_SHIP_RM_2_KEY_FLAG    FLAG_HIDDEN_ITEM_ABANDONED_SHIP_RM_2_KEY
+#define ABANDONED_SHIP_RM_4_KEY_FLAG    FLAG_HIDDEN_ITEM_ABANDONED_SHIP_RM_4_KEY
+#define ABANDONED_SHIP_RM_6_KEY_FLAG    FLAG_HIDDEN_ITEM_ABANDONED_SHIP_RM_6_KEY
+#define ROUTE_116_BLACK_GLASSES_FLAG    FLAG_HIDDEN_ITEM_ROUTE_116_BLACK_GLASSES
+#endif
+
 void SetTrickHouseNuggetFlag(void)
 {
     u16 *specVar = &gSpecialVar_0x8004;
-    u16 flag = FLAG_HIDDEN_ITEM_TRICK_HOUSE_NUGGET;
+    u16 flag = TRICK_HOUSE_NUGGET_FLAG;
     *specVar = flag;
     FlagSet(flag);
 }
@@ -1325,7 +1344,7 @@ void SetTrickHouseNuggetFlag(void)
 void ResetTrickHouseNuggetFlag(void)
 {
     u16 *specVar = &gSpecialVar_0x8004;
-    u16 flag = FLAG_HIDDEN_ITEM_TRICK_HOUSE_NUGGET;
+    u16 flag = TRICK_HOUSE_NUGGET_FLAG;
     *specVar = flag;
     FlagClear(flag);
 }
@@ -1471,7 +1490,7 @@ u16 GetSlotMachineId(void)
 bool8 FoundAbandonedShipRoom1Key(void)
 {
     u16 *specVar = &gSpecialVar_0x8004;
-    u16 flag = FLAG_HIDDEN_ITEM_ABANDONED_SHIP_RM_1_KEY;
+    u16 flag = ABANDONED_SHIP_RM_1_KEY_FLAG;
     *specVar = flag;
     if (!FlagGet(flag))
         return FALSE;
@@ -1482,7 +1501,7 @@ bool8 FoundAbandonedShipRoom1Key(void)
 bool8 FoundAbandonedShipRoom2Key(void)
 {
     u16 *specVar = &gSpecialVar_0x8004;
-    u16 flag = FLAG_HIDDEN_ITEM_ABANDONED_SHIP_RM_2_KEY;
+    u16 flag = ABANDONED_SHIP_RM_2_KEY_FLAG;
     *specVar = flag;
     if (!FlagGet(flag))
         return FALSE;
@@ -1493,7 +1512,7 @@ bool8 FoundAbandonedShipRoom2Key(void)
 bool8 FoundAbandonedShipRoom4Key(void)
 {
     u16 *specVar = &gSpecialVar_0x8004;
-    u16 flag = FLAG_HIDDEN_ITEM_ABANDONED_SHIP_RM_4_KEY;
+    u16 flag = ABANDONED_SHIP_RM_4_KEY_FLAG;
     *specVar = flag;
     if (!FlagGet(flag))
         return FALSE;
@@ -1504,7 +1523,7 @@ bool8 FoundAbandonedShipRoom4Key(void)
 bool8 FoundAbandonedShipRoom6Key(void)
 {
     u16 *specVar = &gSpecialVar_0x8004;
-    u16 flag = FLAG_HIDDEN_ITEM_ABANDONED_SHIP_RM_6_KEY;
+    u16 flag = ABANDONED_SHIP_RM_6_KEY_FLAG;
     *specVar = flag;
     if (!FlagGet(flag))
         return FALSE;
@@ -1656,7 +1675,7 @@ static void StopCameraShake(u8 taskId)
 
 bool8 FoundBlackGlasses(void)
 {
-    return FlagGet(FLAG_HIDDEN_ITEM_ROUTE_116_BLACK_GLASSES);
+    return FlagGet(ROUTE_116_BLACK_GLASSES_FLAG);
 }
 
 void SetRoute119Weather(void)

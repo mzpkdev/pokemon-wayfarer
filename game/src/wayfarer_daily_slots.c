@@ -314,7 +314,7 @@ bool8 DailyItems_ResolveHidden(u8 mapGroup, u8 mapNum, const struct BgEvent *bgE
     spot = &sWorldItemSpots[index];
     if (spotIndex != NULL)
         *spotIndex = index;
-    // A prize's flag comes from the generated table: the packed bg event cannot carry a Hoenn flag.
+    // A prize's flag comes from the generated table; for a hidden prize it matches the bg event's.
     *flagId = spot->flag;
     if (IsPrize(spot) && !FlagGet(spot->flag))
     {
