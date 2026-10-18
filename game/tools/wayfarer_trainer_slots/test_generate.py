@@ -196,6 +196,12 @@ class Audit(unittest.TestCase):
         self.assertNotEqual(self.flags('The POKéMON LEAGUE is right over there.'), [])
         self.assertNotEqual(self.flags('I am at the GYM now.'), [])
 
+    def test_a_home_resolution_keeps_the_trainer_rotating_in_a_group_of_its_own(self):
+        unit, flagged, errors = self.run_audit([{'trainer': 'TRAINER_A', 'resolution': 'home', 'reason': 'about ROUTE 118'}])
+        self.assertEqual(errors, [])
+        self.assertEqual((unit.status, unit.home_only, unit.reason), ('rotating', True, 'about ROUTE 118'))
+        self.assertEqual(G.group_label(unit), '!A')
+
     def test_a_place_resolution_must_cover_every_flagged_phrase(self):
         row = {'trainer': 'TRAINER_A', 'resolution': 'place', 'place': 'cave', 'phrases': ['this cave'], 'reason': 'x'}
         unit, flagged, errors = self.run_audit([row], text='It is hot in this cave.')
@@ -243,7 +249,7 @@ class Audit(unittest.TestCase):
         _, _, errors = self.run_audit([{'trainer': 'TRAINER_GONE', 'resolution': 'exclude', 'reason': 'x'}], text='Hello.')
         self.assertTrue(any('TRAINER_GONE' in e for e in errors), errors)
         _, _, errors = self.run_audit([{'trainer': 'TRAINER_A', 'resolution': 'keep', 'reason': 'x'}], text='Hello.')
-        self.assertTrue(any('needs resolution exclude, reword or place' in e for e in errors), errors)
+        self.assertTrue(any('needs resolution exclude, home, reword or place' in e for e in errors), errors)
         _, _, errors = self.run_audit([{'trainer': 'TRAINER_A', 'resolution': 'exclude', 'reason': ''}])
         self.assertTrue(any('needs resolution' in e for e in errors), errors)
 
@@ -422,6 +428,19 @@ class Repository(unittest.TestCase):
             indexes = [u.index for u in sorted(group, key=lambda u: u.index)]
             self.assertEqual(indexes, sorted(indexes))
         self.assertLessEqual(max(len(m) for m in self.state['members'].values()), self.state['group_max'])
+
+    def test_home_only_trainers_are_groups_of_one_and_the_route_25_sequence_stays_fixed(self):
+        homes = [u for u in self.state['rotating'] if u.home_only]
+        self.assertTrue(homes)
+        for unit in homes:
+            self.assertEqual(len(self.state['members'][unit.group]), 1, unit.label)
+            self.assertEqual(self.state['resolutions'][unit.home]['resolution'], 'home')
+        by_home = {u.home: u for u in self.state['units']}
+        for name in ('DUDLEY', 'JOE', 'LAURA', 'LLOYD', 'ELLEN', 'SHANNON'):
+            unit = by_home[f'TRAINER_{name}_HNS']
+            self.assertEqual((unit.status, unit.home_only), ('fixed', None), name)
+        self.assertEqual(sum(1 for r in self.state['resolutions'].values() if r['resolution'] == 'exclude'), 6)
+        self.assertLessEqual(len(self.state['keys']), 255)
 
     def test_every_flagged_trainer_has_a_resolution_and_no_exclusion_is_stale(self):
         resolutions = self.state['resolutions']

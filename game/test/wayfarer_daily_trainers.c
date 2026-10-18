@@ -986,25 +986,101 @@ TEST("Daily trainers: WhereIsTrainerToday names today's place and none for a tra
     RestoreSnapshot(snapshot);
 }
 
-TEST("Daily trainers: a fixed contact stands at its home and a later rematch family stage resolves to the first")
+TEST("Daily trainers: a fixed contact stands at its home and a trainer bound to its place rotates in a group of one")
 {
     struct Snapshot *snapshot = TakeSnapshot();
     u8 map, num, local;
 
     DailySlots_InitNewGame();
     StartDay(11000);
-    // Anthony (Route 33) is a contact whose line is about the place: it stays fixed at home.
-    EXPECT(DailyTrainers_FindSlot(MAP_GROUP(MAP_ROUTE33_HNS), MAP_NUM(MAP_ROUTE33_HNS), 1) == NO_TRAINER_SLOT);
-    EXPECT(DailyTrainers_WhereIsTrainerToday(TRAINER_ANTHONY_HNS, &map, &num, &local));
-    EXPECT_EQ(map, MAP_GROUP(MAP_ROUTE33_HNS));
-    EXPECT_EQ(num, MAP_NUM(MAP_ROUTE33_HNS));
-    EXPECT_EQ(local, 1);
-    // A battle at home does not clear anything (it has no daily battle): still placed at home.
-    SetTrainerFlag(TRAINER_ANTHONY_HNS);
+    // Joey (Route 30) is hidden by a story flag, so he is fixed at home: no slot, a home row.
+    EXPECT(DailyTrainers_FindSlot(MAP_GROUP(MAP_ROUTE30_HNS), MAP_NUM(MAP_ROUTE30_HNS), 2) == NO_TRAINER_SLOT);
+    EXPECT(DailyTrainers_WhereIsTrainerToday(TRAINER_JOEY_HNS, &map, &num, &local));
+    EXPECT_EQ(map, MAP_GROUP(MAP_ROUTE30_HNS));
+    EXPECT_EQ(num, MAP_NUM(MAP_ROUTE30_HNS));
+    EXPECT_EQ(local, 2);
+    SetTrainerFlag(TRAINER_JOEY_HNS);
     StartDay(11001);
-    EXPECT(DailyTrainers_WhereIsTrainerToday(TRAINER_ANTHONY_HNS, &map, &num, &local));
+    EXPECT(DailyTrainers_WhereIsTrainerToday(TRAINER_JOEY_HNS, &map, &num, &local));
+    // Anthony (Route 33) talks about the tunnel he came through, so he is bound to his place: he has a slot of his own
+    // and rotates in a group of one.
+    EXPECT(DailyTrainers_FindSlot(MAP_GROUP(MAP_ROUTE33_HNS), MAP_NUM(MAP_ROUTE33_HNS), 1) != NO_TRAINER_SLOT);
     // A trainer that is no slot and no fixed contact is nowhere.
     EXPECT(!DailyTrainers_WhereIsTrainerToday(TRAINER_FALKNER_1_HNS, &map, &num, &local));
+
+    RestoreSnapshot(snapshot);
+}
+
+TEST("Daily trainers: a place-bound trainer is at home or away each day, battled once a day, and a ready one is always home")
+{
+    struct Snapshot *snapshot = TakeSnapshot();
+    u16 slot = DailyTrainers_FindSlot(MAP_GROUP(MAP_ROUTE33_HNS), MAP_NUM(MAP_ROUTE33_HNS), 1);
+    const struct WorldTrainerSlot *row;
+    u16 out[WORLD_TRAINER_GROUP_SLOTS_MAX], day, home = 0, away = 0;
+    u8 map, num, local, contact;
+
+    ASSUME(slot != NO_TRAINER_SLOT);
+    row = DailyTrainers_GetSlot(slot);
+    EXPECT_EQ(DailyTrainers_GroupSize(DailyTrainers_GroupOf(slot)), 1);
+    DailySlots_InitNewGame();
+    StartDay(12000);
+    // Undefeated: waiting at home as ever.
+    DailyTrainers_ResolveGroup(DailyTrainers_GroupOf(slot), out);
+    EXPECT_EQ(out[0], DAILY_OCCUPANT_HOME);
+    // Beaten for the first time today: still at home today (frozen), battled, cleared.
+    EnterSlotMap(slot);
+    gSpecialVar_LastTalked = row->localId[0];
+    EXPECT_EQ(DailyTrainers_NoteBattle(0, row->localId[0], row->trainerId), row->trainerId);
+    SetTrainerFlag(row->trainerId);
+    DailyTrainers_OnTrainersWon();
+    EXPECT(DailyTrainers_IsCleared(slot));
+    DailyTrainers_ResolveGroup(DailyTrainers_GroupOf(slot), out);
+    EXPECT_EQ(out[0], DAILY_OCCUPANT_HOME);
+    // From the next day it is present (as its own occupant) or away by the 25 percent roll, and open to one battle a day.
+    for (day = 12001; day < 12301; day++)
+    {
+        StartDay(day);
+        DailyTrainers_ResolveGroup(DailyTrainers_GroupOf(slot), out);
+        EXPECT(out[0] == slot || out[0] == DAILY_OCCUPANT_AWAY);
+        EXPECT(!DailyTrainers_IsCleared(slot));
+        if (out[0] == slot)
+        {
+            home++;
+            EnterSlotMap(slot);
+            EXPECT(!DailyTrainers_HideTemplate(LiveTemplate(slot, 0)));
+            EXPECT(LiveTemplate(slot, 0)->script == row->script[0]);
+        }
+        else
+            away++;
+    }
+    EXPECT_GT(away * 100, (u32)(home + away) * 17);
+    EXPECT_LT(away * 100, (u32)(home + away) * 33);
+    // Ready or holding a gift as the day started: placed every day, in its own empty slot when the roll says empty.
+    contact = DailyContacts_IndexOf(row->trainerId);
+    ASSUME(contact != DAILY_NO_CONTACT);
+    for (day = 12301; day < 12501; day++)
+    {
+        StartDay(day);
+        gPokemonStoragePtr->dailySlots.readyAtDayStart[contact / 8] |= 1 << (contact % 8);
+        DailyTrainers_ResolveGroup(DailyTrainers_GroupOf(slot), out);
+        EXPECT_EQ(out[0], slot);
+        EXPECT(DailyTrainers_WhereIsTrainerToday(row->trainerId, &map, &num, &local));
+        EXPECT_EQ(local, row->localId[0]);
+    }
+    // A win in its slot on a day it stands there clears it for that day only.
+    StartDay(12501);
+    DailyTrainers_ResolveGroup(DailyTrainers_GroupOf(slot), out);
+    if (out[0] == slot)
+    {
+        EnterSlotMap(slot);
+        EXPECT_EQ(DailyTrainers_NoteBattle(0, row->localId[0], row->trainerId), DailyTrainers_LatestTeam(row->trainerId));
+        EXPECT(DailyTrainers_NotedRotating(0));
+        DailyTrainers_OnTrainersWon();
+        EXPECT(DailyTrainers_IsCleared(slot));
+        EXPECT(!DailyTrainers_WhereIsTrainerToday(row->trainerId, &map, &num, &local));
+    }
+    StartDay(12502);
+    EXPECT(!DailyTrainers_IsCleared(slot));
 
     RestoreSnapshot(snapshot);
 }

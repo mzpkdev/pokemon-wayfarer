@@ -2,6 +2,7 @@
 // One row per rotating trainer slot, ordered by map, then local id: the row number is the slot's dense index.
 
 extern const u8 AbandonedShip_Corridors_1F_EventScript_Charlie[];
+extern const u8 AbandonedShip_Corridors_B1F_EventScript_Duncan[];
 extern const u8 AbandonedShip_Rooms2_1F_EventScript_Dan[];
 extern const u8 AbandonedShip_Rooms2_1F_EventScript_Garrison[];
 extern const u8 AbandonedShip_Rooms2_1F_EventScript_Jani[];
@@ -14,19 +15,32 @@ extern const u8 Alola_AkalaCave_TrainerBattlePicnicker[];
 extern const u8 Alola_AkalaForest_TrainerBattleBugCatcher1[];
 extern const u8 Alola_AkalaForest_TrainerBattleBugCatcher2[];
 extern const u8 Alola_Akala_TrainerBattleCamper[];
+extern const u8 Alola_Akala_TrainerBattleHiker[];
+extern const u8 Alola_Akala_TrainerBattlePicnicker[];
+extern const u8 Alola_Akala_TrainerBattleSwimmerLand[];
+extern const u8 Alola_Akala_TrainerBattleSwimmerWater[];
 extern const u8 Alola_Akala_TrainerBattleSwimmerWaterM[];
 extern const u8 Alola_MelemeleSea_TrainerBattleSwimmer[];
 extern const u8 Alola_Melemele_TrainerBattleSwimmer[];
 extern const u8 Alola_Poni_TrainerBattleSwimmer1[];
 extern const u8 Alola_Poni_TrainerBattleSwimmer2[];
+extern const u8 Alola_Ulaula_TrainerBattleCooltrainer[];
+extern const u8 Alola_Ulaula_TrainerBattleHiker[];
 extern const u8 Alola_Ulaula_TrainerBattlePicnicker[];
+extern const u8 Alola_Ulaula_TrainerBattleYoungster[];
+extern const u8 BurnedTower_1F_EventScript_Nard[];
+extern const u8 BurnedTower_1F_EventScript_Richardo[];
 extern const u8 DragonsDen_Cavern_EventScript_Cara[];
+extern const u8 DragonsDen_Cavern_EventScript_Darin[];
 extern const u8 DragonsDen_Cavern_EventScript_TwinLea[];
 extern const u8 DragonsDen_Cavern_EventScript_TwinPia[];
 extern const u8 GoldenrodCity_UndergroundSwitches_EventScript_Duncan[];
 extern const u8 GoldenrodCity_UndergroundSwitches_EventScript_Eddie[];
 extern const u8 IlexForest_EventScript_BugcatcherWayne[];
 extern const u8 JaggedPass_EventScript_Autumn[];
+extern const u8 JaggedPass_EventScript_Diana[];
+extern const u8 JaggedPass_EventScript_Eric[];
+extern const u8 JaggedPass_EventScript_Ethan[];
 extern const u8 JaggedPass_EventScript_Julio[];
 extern const u8 LakeOfRage_EventScript_Aaron[];
 extern const u8 LakeOfRage_EventScript_Andre[];
@@ -53,10 +67,15 @@ extern const u8 NationalPark_Normal_EventScript_Beverly[];
 extern const u8 NationalPark_Normal_EventScript_Jack[];
 extern const u8 NationalPark_Normal_EventScript_Krise[];
 extern const u8 NationalPark_Normal_EventScript_William[];
+extern const u8 OlivineLighthouse_EventScript_BirdKeeperDenis[];
 extern const u8 OlivineLighthouse_EventScript_BirdKeeperTheo[];
+extern const u8 OlivineLighthouse_EventScript_GentlemanAlfred[];
 extern const u8 OlivineLighthouse_EventScript_GentlemanPreston[];
 extern const u8 OlivineLighthouse_EventScript_Huey[];
+extern const u8 OlivineLighthouse_EventScript_LassConnie[];
 extern const u8 OlivineLighthouse_EventScript_SailorErnest[];
+extern const u8 OlivineLighthouse_EventScript_SailorKent[];
+extern const u8 OlivineLighthouse_EventScript_SailorTerrell[];
 extern const u8 PetalburgWoods_EventScript_James[];
 extern const u8 PetalburgWoods_EventScript_Lyle[];
 extern const u8 PokemonMansion_1F_EventScript_Johnson[];
@@ -89,6 +108,7 @@ extern const u8 Route104_EventScript_Mia[];
 extern const u8 Route104_EventScript_Winston[];
 extern const u8 Route105_EventScript_Andres[];
 extern const u8 Route105_EventScript_Beverly[];
+extern const u8 Route105_EventScript_Dominik[];
 extern const u8 Route105_EventScript_Foster[];
 extern const u8 Route105_EventScript_Imani[];
 extern const u8 Route105_EventScript_Josue[];
@@ -100,12 +120,14 @@ extern const u8 Route106_EventScript_Ned[];
 extern const u8 Route107_EventScript_Beth[];
 extern const u8 Route107_EventScript_Camron[];
 extern const u8 Route107_EventScript_Darrin[];
+extern const u8 Route107_EventScript_Denise[];
 extern const u8 Route107_EventScript_Lisa[];
 extern const u8 Route107_EventScript_Ray[];
 extern const u8 Route107_EventScript_Tony[];
 extern const u8 Route108_EventScript_Carolina[];
 extern const u8 Route108_EventScript_Cory[];
 extern const u8 Route108_EventScript_Jerome[];
+extern const u8 Route108_EventScript_Matthew[];
 extern const u8 Route108_EventScript_Missy[];
 extern const u8 Route108_EventScript_Tara[];
 extern const u8 Route109_EventScript_Alice[];
@@ -114,11 +136,14 @@ extern const u8 Route109_EventScript_Carter[];
 extern const u8 Route109_EventScript_Chandler[];
 extern const u8 Route109_EventScript_David[];
 extern const u8 Route109_EventScript_Edmond[];
+extern const u8 Route109_EventScript_Elijah[];
 extern const u8 Route109_EventScript_Gwen[];
 extern const u8 Route109_EventScript_Hailey[];
+extern const u8 Route109_EventScript_Huey[];
 extern const u8 Route109_EventScript_Lola[];
 extern const u8 Route109_EventScript_Mel[];
 extern const u8 Route109_EventScript_Paul[];
+extern const u8 Route109_EventScript_Ricky[];
 extern const u8 Route10_EventScript_Jim[];
 extern const u8 Route10_EventScript_Robert[];
 extern const u8 Route110_EventScript_Abigail[];
@@ -137,6 +162,7 @@ extern const u8 Route110_EventScript_Kaleb[];
 extern const u8 Route110_EventScript_Timmy[];
 extern const u8 Route111_EventScript_Beau[];
 extern const u8 Route111_EventScript_Becky[];
+extern const u8 Route111_EventScript_Bianca[];
 extern const u8 Route111_EventScript_Branden[];
 extern const u8 Route111_EventScript_Brooke[];
 extern const u8 Route111_EventScript_Bryan[];
@@ -147,15 +173,19 @@ extern const u8 Route111_EventScript_Drew[];
 extern const u8 Route111_EventScript_Dusty[];
 extern const u8 Route111_EventScript_Hayden[];
 extern const u8 Route111_EventScript_Heidi[];
+extern const u8 Route111_EventScript_Irene[];
 extern const u8 Route111_EventScript_Travis[];
 extern const u8 Route111_EventScript_Tyron[];
 extern const u8 Route111_EventScript_Wilton[];
 extern const u8 Route112_EventScript_Brice[];
+extern const u8 Route112_EventScript_Bryant[];
 extern const u8 Route112_EventScript_Carol[];
 extern const u8 Route112_EventScript_Larry[];
 extern const u8 Route112_EventScript_Shayla[];
+extern const u8 Route112_EventScript_Trent[];
 extern const u8 Route113_EventScript_Coby[];
 extern const u8 Route113_EventScript_Dillon[];
+extern const u8 Route113_EventScript_Jaylen[];
 extern const u8 Route113_EventScript_Lawrence[];
 extern const u8 Route113_EventScript_Madeline[];
 extern const u8 Route113_EventScript_Sophie[];
@@ -165,6 +195,7 @@ extern const u8 Route113_EventScript_Wyatt[];
 extern const u8 Route114_EventScript_Angelina[];
 extern const u8 Route114_EventScript_Bernie[];
 extern const u8 Route114_EventScript_Charlotte[];
+extern const u8 Route114_EventScript_Claude[];
 extern const u8 Route114_EventScript_Ivy[];
 extern const u8 Route114_EventScript_Kai[];
 extern const u8 Route114_EventScript_Lenny[];
@@ -184,9 +215,11 @@ extern const u8 Route115_EventScript_Kyra[];
 extern const u8 Route115_EventScript_Marlene[];
 extern const u8 Route115_EventScript_Nob[];
 extern const u8 Route115_EventScript_Timothy[];
+extern const u8 Route116_EventScript_Clark[];
 extern const u8 Route116_EventScript_Dawson[];
 extern const u8 Route116_EventScript_Devan[];
 extern const u8 Route116_EventScript_Janice[];
+extern const u8 Route116_EventScript_Jerry[];
 extern const u8 Route116_EventScript_Joey[];
 extern const u8 Route116_EventScript_Johnson[];
 extern const u8 Route116_EventScript_Jose[];
@@ -243,6 +276,7 @@ extern const u8 Route120_EventScript_Leonel[];
 extern const u8 Route120_EventScript_Lorenzo[];
 extern const u8 Route120_EventScript_Riley[];
 extern const u8 Route120_EventScript_Robert[];
+extern const u8 Route121_EventScript_Cale[];
 extern const u8 Route121_EventScript_Cristin[];
 extern const u8 Route121_EventScript_Jessica[];
 extern const u8 Route121_EventScript_Joy[];
@@ -250,9 +284,12 @@ extern const u8 Route121_EventScript_Kate[];
 extern const u8 Route121_EventScript_Marcel[];
 extern const u8 Route121_EventScript_Myles[];
 extern const u8 Route121_EventScript_Pat[];
+extern const u8 Route121_EventScript_Tammy[];
+extern const u8 Route121_EventScript_Vanessa[];
 extern const u8 Route121_EventScript_Walter[];
 extern const u8 Route123_EventScript_Alberto[];
 extern const u8 Route123_EventScript_Braxton[];
+extern const u8 Route123_EventScript_Cameron[];
 extern const u8 Route123_EventScript_Davis[];
 extern const u8 Route123_EventScript_Ed[];
 extern const u8 Route123_EventScript_Fernando[];
@@ -261,24 +298,32 @@ extern const u8 Route123_EventScript_Jacki[];
 extern const u8 Route123_EventScript_Jazmyn[];
 extern const u8 Route123_EventScript_Jonas[];
 extern const u8 Route123_EventScript_Kayley[];
+extern const u8 Route123_EventScript_Kindra[];
 extern const u8 Route123_EventScript_Miu[];
 extern const u8 Route123_EventScript_Violet[];
 extern const u8 Route123_EventScript_Wendy[];
 extern const u8 Route123_EventScript_Yuki[];
+extern const u8 Route124_EventScript_Chad[];
 extern const u8 Route124_EventScript_Declan[];
 extern const u8 Route124_EventScript_Grace[];
 extern const u8 Route124_EventScript_Isabella[];
+extern const u8 Route124_EventScript_Jenny[];
 extern const u8 Route124_EventScript_Lila[];
 extern const u8 Route124_EventScript_Roland[];
 extern const u8 Route124_EventScript_Roy[];
 extern const u8 Route124_EventScript_Spencer[];
 extern const u8 Route125_EventScript_Auron[];
+extern const u8 Route125_EventScript_Ernest[];
+extern const u8 Route125_EventScript_Iris[];
+extern const u8 Route125_EventScript_Kim[];
 extern const u8 Route125_EventScript_Nolen[];
 extern const u8 Route125_EventScript_Presley[];
 extern const u8 Route125_EventScript_Sharon[];
 extern const u8 Route125_EventScript_Stan[];
+extern const u8 Route125_EventScript_Tanya[];
 extern const u8 Route126_EventScript_Barry[];
 extern const u8 Route126_EventScript_Brenda[];
+extern const u8 Route126_EventScript_Dean[];
 extern const u8 Route126_EventScript_Isobel[];
 extern const u8 Route126_EventScript_Leonardo[];
 extern const u8 Route126_EventScript_Nikki[];
@@ -295,12 +340,16 @@ extern const u8 Route127_EventScript_Roger[];
 extern const u8 Route128_EventScript_Alexa[];
 extern const u8 Route128_EventScript_Carlee[];
 extern const u8 Route128_EventScript_Harrison[];
+extern const u8 Route128_EventScript_Isaiah[];
+extern const u8 Route128_EventScript_Katelyn[];
 extern const u8 Route128_EventScript_Ruben[];
+extern const u8 Route128_EventScript_Wayne[];
 extern const u8 Route129_EventScript_Allison[];
 extern const u8 Route129_EventScript_Chase[];
 extern const u8 Route129_EventScript_Clarence[];
 extern const u8 Route129_EventScript_Reed[];
 extern const u8 Route129_EventScript_Tisha[];
+extern const u8 Route12_EventScript_Barney[];
 extern const u8 Route12_EventScript_Kyle[];
 extern const u8 Route12_EventScript_Martin[];
 extern const u8 Route12_EventScript_Stephen[];
@@ -308,7 +357,10 @@ extern const u8 Route130_EventScript_Katie[];
 extern const u8 Route130_EventScript_Rodney[];
 extern const u8 Route130_EventScript_Santiago[];
 extern const u8 Route131_EventScript_Herman[];
+extern const u8 Route131_EventScript_Ian[];
 extern const u8 Route131_EventScript_Kara[];
+extern const u8 Route131_EventScript_Kevin[];
+extern const u8 Route131_EventScript_Reli[];
 extern const u8 Route131_EventScript_Richard[];
 extern const u8 Route131_EventScript_Susie[];
 extern const u8 Route131_EventScript_Talia[];
@@ -320,12 +372,14 @@ extern const u8 Route132_EventScript_Kiyo[];
 extern const u8 Route132_EventScript_Makayla[];
 extern const u8 Route132_EventScript_Paxton[];
 extern const u8 Route132_EventScript_Ronald[];
+extern const u8 Route133_EventScript_Beck[];
 extern const u8 Route133_EventScript_Conor[];
 extern const u8 Route133_EventScript_Debra[];
 extern const u8 Route133_EventScript_Franklin[];
 extern const u8 Route133_EventScript_Linda[];
 extern const u8 Route133_EventScript_Mollie[];
 extern const u8 Route133_EventScript_Warren[];
+extern const u8 Route134_EventScript_Aaron[];
 extern const u8 Route134_EventScript_Alex[];
 extern const u8 Route134_EventScript_Hitoshi[];
 extern const u8 Route134_EventScript_Hudson[];
@@ -337,6 +391,7 @@ extern const u8 Route134_EventScript_Reyna[];
 extern const u8 Route13_EventScript_Alex[];
 extern const u8 Route13_EventScript_Bret[];
 extern const u8 Route13_EventScript_Joshua[];
+extern const u8 Route13_EventScript_Kenny[];
 extern const u8 Route13_EventScript_Perry[];
 extern const u8 Route14_EventScript_Carter[];
 extern const u8 Route14_EventScript_Roy[];
@@ -344,13 +399,17 @@ extern const u8 Route14_EventScript_Trevor[];
 extern const u8 Route15_EventScript_Billy[];
 extern const u8 Route15_EventScript_Colette[];
 extern const u8 Route15_EventScript_Hillary[];
+extern const u8 Route15_EventScript_Johnny[];
 extern const u8 Route15_EventScript_Kipp[];
 extern const u8 Route15_EventScript_Tommy[];
 extern const u8 Route17_EventScript_Charles[];
 extern const u8 Route17_EventScript_Glenn[];
 extern const u8 Route17_EventScript_Joel[];
 extern const u8 Route17_EventScript_Riley[];
+extern const u8 Route18_EventScript_Bob[];
 extern const u8 Route18_EventScript_Boris[];
+extern const u8 Route19_EventScript_Alice[];
+extern const u8 Route19_EventScript_Anya[];
 extern const u8 Route19_EventScript_Axle[];
 extern const u8 Route19_EventScript_Connie[];
 extern const u8 Route19_EventScript_David[];
@@ -364,8 +423,12 @@ extern const u8 Route19_EventScript_Tony[];
 extern const u8 Route20_EventScript_Barry[];
 extern const u8 Route20_EventScript_Darrin[];
 extern const u8 Route20_EventScript_Dean[];
+extern const u8 Route20_EventScript_Irene[];
+extern const u8 Route20_EventScript_Melissa[];
+extern const u8 Route20_EventScript_Missy[];
 extern const u8 Route20_EventScript_Nora[];
 extern const u8 Route20_EventScript_Roger[];
+extern const u8 Route20_EventScript_Shirley[];
 extern const u8 Route20_EventScript_Tiffany[];
 extern const u8 Route21_North_EventScript_Ian[];
 extern const u8 Route21_North_EventScript_Lil[];
@@ -379,18 +442,22 @@ extern const u8 Route21_South_EventScript_Nolan[];
 extern const u8 Route21_South_EventScript_Roland[];
 extern const u8 Route25_EventScript_Pat[];
 extern const u8 Route26_EventScript_Beth[];
+extern const u8 Route26_EventScript_Gaven[];
 extern const u8 Route26_EventScript_Richard[];
 extern const u8 Route27_EventScript_Blake[];
 extern const u8 Route27_EventScript_Brian[];
 extern const u8 Route27_EventScript_Gilbert[];
+extern const u8 Route27_EventScript_Jose[];
 extern const u8 Route27_EventScript_Megan[];
 extern const u8 Route27_EventScript_Reena[];
 extern const u8 Route27_EventScript_Scott[];
 extern const u8 Route2_EventScript_Doug[];
 extern const u8 Route2_EventScript_Ed[];
+extern const u8 Route2_EventScript_Rob[];
 extern const u8 Route30_EventScript_Bugcatcher_Don[];
 extern const u8 Route30_EventScript_Youngster_Mikey[];
 extern const u8 Route31_EventScript_Bugcatcher_Wade[];
+extern const u8 Route32_EventScript_BirdkeeperPeter[];
 extern const u8 Route32_EventScript_CamperRoland[];
 extern const u8 Route32_EventScript_FisherHenry[];
 extern const u8 Route32_EventScript_FisherJustin[];
@@ -398,7 +465,9 @@ extern const u8 Route32_EventScript_FisherRalph[];
 extern const u8 Route32_EventScript_PicnickerLiz[];
 extern const u8 Route32_EventScript_YoungsterAlbert[];
 extern const u8 Route32_EventScript_YoungsterGordon[];
+extern const u8 Route33_EventScript_HikerAnthony[];
 extern const u8 Route34_EventScript_CamperTodd[];
+extern const u8 Route34_EventScript_Irene[];
 extern const u8 Route34_EventScript_Jenn[];
 extern const u8 Route34_EventScript_Kate[];
 extern const u8 Route34_EventScript_PicnickerGina[];
@@ -406,6 +475,7 @@ extern const u8 Route34_EventScript_PokefanMBrandon[];
 extern const u8 Route34_EventScript_YoungsterIan[];
 extern const u8 Route34_EventScript_YoungsterSamuel[];
 extern const u8 Route35_EventScript_BirdKeeperBryan[];
+extern const u8 Route35_EventScript_BugCatcherArnie[];
 extern const u8 Route35_EventScript_CamperElliot[];
 extern const u8 Route35_EventScript_CamperIvan[];
 extern const u8 Route35_EventScript_FirebreatherWalt[];
@@ -421,18 +491,28 @@ extern const u8 Route38_EventScript_Chad[];
 extern const u8 Route38_EventScript_Dana[];
 extern const u8 Route38_EventScript_Harry[];
 extern const u8 Route38_EventScript_Olivia[];
+extern const u8 Route38_EventScript_Toby[];
 extern const u8 Route38_EventScript_Valerie[];
 extern const u8 Route39_EventScript_Derek[];
+extern const u8 Route39_EventScript_Eugene[];
 extern const u8 Route39_EventScript_Norman[];
 extern const u8 Route39_EventScript_Ruth[];
 extern const u8 Route3_EventScript_Burt[];
 extern const u8 Route3_EventScript_Jimmy[];
 extern const u8 Route3_EventScript_Otis[];
 extern const u8 Route3_EventScript_Warren[];
+extern const u8 Route40_EventScript_Elaine[];
 extern const u8 Route40_EventScript_Paula[];
 extern const u8 Route40_EventScript_Randall[];
+extern const u8 Route40_EventScript_Simon[];
+extern const u8 Route41_EventScript_Berke[];
 extern const u8 Route41_EventScript_Charlie[];
 extern const u8 Route41_EventScript_Denise[];
+extern const u8 Route41_EventScript_George[];
+extern const u8 Route41_EventScript_Kara[];
+extern const u8 Route41_EventScript_Kaylee[];
+extern const u8 Route41_EventScript_Kirk[];
+extern const u8 Route41_EventScript_Mathew[];
 extern const u8 Route41_EventScript_Susie[];
 extern const u8 Route41_EventScript_Wendy[];
 extern const u8 Route42_EventScript_Ben[];
@@ -441,19 +521,25 @@ extern const u8 Route43_EventScript_Ben[];
 extern const u8 Route43_EventScript_Brent[];
 extern const u8 Route43_EventScript_Marvin[];
 extern const u8 Route43_EventScript_Ron[];
+extern const u8 Route43_EventScript_Spencer[];
+extern const u8 Route43_EventScript_Tiffany[];
+extern const u8 Route44_EventScript_Allen[];
 extern const u8 Route44_EventScript_Cybil[];
 extern const u8 Route44_EventScript_Edgar[];
 extern const u8 Route44_EventScript_Phil[];
 extern const u8 Route44_EventScript_Vance[];
 extern const u8 Route44_EventScript_Wilton[];
 extern const u8 Route44_EventScript_Zach[];
+extern const u8 Route45_EventScript_Erik[];
 extern const u8 Route45_EventScript_Kelly[];
 extern const u8 Route45_EventScript_Kenji[];
 extern const u8 Route45_EventScript_Michael[];
 extern const u8 Route45_EventScript_Parry[];
+extern const u8 Route45_EventScript_Quentin[];
 extern const u8 Route45_EventScript_Ryan[];
 extern const u8 Route45_EventScript_Timothy[];
 extern const u8 Route46_EventScript_Bailey[];
+extern const u8 Route46_EventScript_Erin[];
 extern const u8 Route46_EventScript_Ted[];
 extern const u8 Route47_EventScript_Camper[];
 extern const u8 Route47_EventScript_Duff[];
@@ -467,23 +553,29 @@ extern const u8 Route4_EventScript_Sharon[];
 extern const u8 Route6_EventScript_Allan[];
 extern const u8 Route6_EventScript_Rex[];
 extern const u8 Route8_EventScript_Dwayne[];
+extern const u8 Route8_EventScript_Harris[];
 extern const u8 Route8_EventScript_Sam[];
 extern const u8 Route8_EventScript_Tom[];
 extern const u8 Route8_EventScript_Zeke[];
+extern const u8 Route9_EventScript_Dean[];
 extern const u8 Route9_EventScript_Edna[];
 extern const u8 Route9_EventScript_Heidi[];
 extern const u8 Route9_EventScript_Sid[];
+extern const u8 Route9_EventScript_Sidney[];
 extern const u8 Route9_EventScript_Tim[];
 extern const u8 RuinsOfAlph_Outside_EventScript_Nathan[];
+extern const u8 RuinsOfAlph_Outside_EventScript_Stan[];
 extern const u8 RusturfTunnel_EventScript_Mike[];
 extern const u8 SproutTower_1F_EventScript_SageChow[];
 extern const u8 SproutTower_2F_EventScript_SageEdmond[];
+extern const u8 SproutTower_2F_EventScript_SageNico[];
 extern const u8 SproutTower_3F_EventScript_SageJin[];
 extern const u8 SproutTower_3F_EventScript_SageNeal[];
 extern const u8 SproutTower_3F_EventScript_SageTroy[];
 extern const u8 UnionCave_1F_EventScript_FirebreatherBill[];
 extern const u8 UnionCave_1F_EventScript_FirebreatherRay[];
 extern const u8 UnionCave_1F_EventScript_HikerDaniel[];
+extern const u8 UnionCave_1F_EventScript_HikerRussell[];
 extern const u8 UnionCave_1F_EventScript_PokemaniacLarry[];
 extern const u8 UnionCave_B1F_EventScript_HikerLeonard[];
 extern const u8 UnionCave_B1F_EventScript_HikerPhillip[];
@@ -496,14 +588,23 @@ extern const u8 VictoryRoad_1F_EventScript_Albert[];
 extern const u8 VictoryRoad_1F_EventScript_Edgar[];
 extern const u8 VictoryRoad_1F_EventScript_Hope[];
 extern const u8 VictoryRoad_1F_EventScript_Katelynn[];
+extern const u8 VictoryRoad_1F_EventScript_Quincy[];
+extern const u8 VictoryRoad_B1F_EventScript_Halle[];
+extern const u8 VictoryRoad_B1F_EventScript_Michelle[];
 extern const u8 VictoryRoad_B1F_EventScript_Mitchell[];
+extern const u8 VictoryRoad_B1F_EventScript_Samuel[];
 extern const u8 VictoryRoad_B1F_EventScript_Shannon[];
+extern const u8 VictoryRoad_B2F_EventScript_Caroline[];
 extern const u8 VictoryRoad_B2F_EventScript_Dianne[];
+extern const u8 VictoryRoad_B2F_EventScript_Felix[];
 extern const u8 VictoryRoad_B2F_EventScript_Julie[];
+extern const u8 VictoryRoad_B2F_EventScript_Owen[];
 extern const u8 VictoryRoad_B2F_EventScript_Vito[];
 extern const u8 WayfarerSevii_Trainer_FiveIsland_LostCave_Room1_EventScript_Lawson[];
+extern const u8 WayfarerSevii_Trainer_FiveIsland_LostCave_Room4_EventScript_Laura[];
 extern const u8 WayfarerSevii_Trainer_FiveIsland_MemorialPillar_EventScript_Chaz[];
 extern const u8 WayfarerSevii_Trainer_FiveIsland_MemorialPillar_EventScript_Harold[];
+extern const u8 WayfarerSevii_Trainer_FiveIsland_MemorialPillar_EventScript_Milo[];
 extern const u8 WayfarerSevii_Trainer_FiveIsland_ResortGorgeous_EventScript_Celina[];
 extern const u8 WayfarerSevii_Trainer_FiveIsland_ResortGorgeous_EventScript_Daisy[];
 extern const u8 WayfarerSevii_Trainer_FiveIsland_ResortGorgeous_EventScript_Destin[];
@@ -518,12 +619,14 @@ extern const u8 WayfarerSevii_Trainer_MtEmber_Exterior_EventScript_Logan[];
 extern const u8 WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Abigail[];
 extern const u8 WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Bryce[];
 extern const u8 WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Claire[];
+extern const u8 WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Finn[];
 extern const u8 WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Garrett[];
 extern const u8 WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Hugh[];
 extern const u8 WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Kia[];
 extern const u8 WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Maria[];
 extern const u8 WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Mik[];
 extern const u8 WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Sharon[];
+extern const u8 WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Shea[];
 extern const u8 WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Tanya[];
 extern const u8 WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Tommy[];
 extern const u8 WayfarerSevii_Trainer_OneIsland_TreasureBeach_EventScript_Amara[];
@@ -532,6 +635,8 @@ extern const u8 WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Entrance_EventSc
 extern const u8 WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Entrance_EventScript_Madeline[];
 extern const u8 WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Entrance_EventScript_Mason[];
 extern const u8 WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Entrance_EventScript_Miah[];
+extern const u8 WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Entrance_EventScript_Nicolas[];
+extern const u8 WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Cyndy[];
 extern const u8 WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Evan[];
 extern const u8 WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Jackson[];
 extern const u8 WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Katelyn[];
@@ -540,30 +645,40 @@ extern const u8 WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Lex[
 extern const u8 WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Michelle[];
 extern const u8 WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Nya[];
 extern const u8 WayfarerSevii_Trainer_SevenIsland_TanobyRuins_EventScript_Benjamin[];
+extern const u8 WayfarerSevii_Trainer_SevenIsland_TanobyRuins_EventScript_Brandon[];
 extern const u8 WayfarerSevii_Trainer_SevenIsland_TanobyRuins_EventScript_Clifford[];
 extern const u8 WayfarerSevii_Trainer_SevenIsland_TanobyRuins_EventScript_Edna[];
 extern const u8 WayfarerSevii_Trainer_SevenIsland_TrainerTower_EventScript_Dario[];
+extern const u8 WayfarerSevii_Trainer_SevenIsland_TrainerTower_EventScript_Rodette[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_GreenPath_EventScript_Jaclyn[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_OutcastIsland_EventScript_Ava[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_OutcastIsland_EventScript_Geb[];
+extern const u8 WayfarerSevii_Trainer_SixIsland_OutcastIsland_EventScript_Mymo[];
+extern const u8 WayfarerSevii_Trainer_SixIsland_OutcastIsland_EventScript_Nicole[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_OutcastIsland_EventScript_Tylor[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Allison[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Bethany[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Cordell[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Dalia[];
+extern const u8 WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Garret[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Joana[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Jonah[];
+extern const u8 WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Layton[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Marcy[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Nash[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Riley[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Vance[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_RuinValley_EventScript_Daryl[];
+extern const u8 WayfarerSevii_Trainer_SixIsland_RuinValley_EventScript_Foster[];
+extern const u8 WayfarerSevii_Trainer_SixIsland_RuinValley_EventScript_Hector[];
+extern const u8 WayfarerSevii_Trainer_SixIsland_RuinValley_EventScript_Larry[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_RuinValley_EventScript_Stanly[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Denise[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Earl[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Edward[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Mia[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Miu[];
+extern const u8 WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Rose[];
 extern const u8 WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Samir[];
 extern const u8 WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Alexis[];
 extern const u8 WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Amira[];
@@ -571,792 +686,995 @@ extern const u8 WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Joy[];
 extern const u8 WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Meg[];
 extern const u8 WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Nikki[];
 extern const u8 WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Tisha[];
+extern const u8 WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Violet[];
 
 static const struct WorldTrainerSlot sWorldTrainerSlots[WORLD_TRAINER_SLOT_COUNT] =
 {
-    { TRAINER_DON_HNS, MAP_GROUP(MAP_ROUTE30_HNS), MAP_NUM(MAP_ROUTE30_HNS), { 4, 0 }, 59, 0, { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { Route30_EventScript_Bugcatcher_Don, NULL } }, // Route30_hns BUG_CATCHER
-    { TRAINER_MIKEY_HNS, MAP_GROUP(MAP_ROUTE30_HNS), MAP_NUM(MAP_ROUTE30_HNS), { 7, 0 }, 81, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route30_EventScript_Youngster_Mikey, NULL } }, // Route30_hns YOUNGSTER
-    { TRAINER_WADE_HNS, MAP_GROUP(MAP_ROUTE31_HNS), MAP_NUM(MAP_ROUTE31_HNS), { 1, 0 }, 59, 0, { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { Route31_EventScript_Bugcatcher_Wade, NULL } }, // Route31_hns BUG_CATCHER
-    { TRAINER_ALBERT_HNS, MAP_GROUP(MAP_ROUTE32_HNS), MAP_NUM(MAP_ROUTE32_HNS), { 6, 0 }, 81, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route32_EventScript_YoungsterAlbert, NULL } }, // Route32_hns YOUNGSTER
-    { TRAINER_LIZ_HNS, MAP_GROUP(MAP_ROUTE32_HNS), MAP_NUM(MAP_ROUTE32_HNS), { 7, 0 }, 70, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route32_EventScript_PicnickerLiz, NULL } }, // Route32_hns PICNICKER
-    { TRAINER_ROLAND_HNS, MAP_GROUP(MAP_ROUTE32_HNS), MAP_NUM(MAP_ROUTE32_HNS), { 9, 0 }, 61, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route32_EventScript_CamperRoland, NULL } }, // Route32_hns CAMPER
-    { TRAINER_RALPH_HNS, MAP_GROUP(MAP_ROUTE32_HNS), MAP_NUM(MAP_ROUTE32_HNS), { 10, 0 }, 64, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route32_EventScript_FisherRalph, NULL } }, // Route32_hns FISHERMAN
-    { TRAINER_HENRY_HNS, MAP_GROUP(MAP_ROUTE32_HNS), MAP_NUM(MAP_ROUTE32_HNS), { 11, 0 }, 64, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route32_EventScript_FisherHenry, NULL } }, // Route32_hns FISHERMAN
-    { TRAINER_JUSTIN_HNS, MAP_GROUP(MAP_ROUTE32_HNS), MAP_NUM(MAP_ROUTE32_HNS), { 12, 0 }, 64, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route32_EventScript_FisherJustin, NULL } }, // Route32_hns FISHERMAN
-    { TRAINER_GORDON_HNS, MAP_GROUP(MAP_ROUTE32_HNS), MAP_NUM(MAP_ROUTE32_HNS), { 13, 0 }, 81, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route32_EventScript_YoungsterGordon, NULL } }, // Route32_hns YOUNGSTER
-    { TRAINER_SAMUEL_HNS, MAP_GROUP(MAP_ROUTE34_HNS), MAP_NUM(MAP_ROUTE34_HNS), { 1, 0 }, 81, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route34_EventScript_YoungsterSamuel, NULL } }, // Route34_hns YOUNGSTER
-    { TRAINER_BRANDON_HNS, MAP_GROUP(MAP_ROUTE34_HNS), MAP_NUM(MAP_ROUTE34_HNS), { 2, 0 }, 71, 0, { OBJ_EVENT_GFX_BALDING_MAN_HNS, 0 }, { Route34_EventScript_PokefanMBrandon, NULL } }, // Route34_hns POKEFAN
-    { TRAINER_TODD_HNS, MAP_GROUP(MAP_ROUTE34_HNS), MAP_NUM(MAP_ROUTE34_HNS), { 3, 0 }, 61, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route34_EventScript_CamperTodd, NULL } }, // Route34_hns CAMPER
-    { TRAINER_IAN_HNS, MAP_GROUP(MAP_ROUTE34_HNS), MAP_NUM(MAP_ROUTE34_HNS), { 4, 0 }, 81, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route34_EventScript_YoungsterIan, NULL } }, // Route34_hns YOUNGSTER
-    { TRAINER_JENN_HNS, MAP_GROUP(MAP_ROUTE34_HNS), MAP_NUM(MAP_ROUTE34_HNS), { 5, 0 }, 62, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { Route34_EventScript_Jenn, NULL } }, // Route34_hns COOLTRAINER
-    { TRAINER_KATE_HNS, MAP_GROUP(MAP_ROUTE34_HNS), MAP_NUM(MAP_ROUTE34_HNS), { 7, 0 }, 62, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { Route34_EventScript_Kate, NULL } }, // Route34_hns COOLTRAINER
-    { TRAINER_GINA_HNS, MAP_GROUP(MAP_ROUTE34_HNS), MAP_NUM(MAP_ROUTE34_HNS), { 11, 0 }, 70, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route34_EventScript_PicnickerGina, NULL } }, // Route34_hns PICNICKER
-    { TRAINER_KIM_HNS, MAP_GROUP(MAP_ROUTE35_HNS), MAP_NUM(MAP_ROUTE35_HNS), { 1, 0 }, 70, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route35_EventScript_PicnickerKim, NULL } }, // Route35_hns PICNICKER
-    { TRAINER_BRYAN_HNS, MAP_GROUP(MAP_ROUTE35_HNS), MAP_NUM(MAP_ROUTE35_HNS), { 2, 0 }, 57, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { Route35_EventScript_BirdKeeperBryan, NULL } }, // Route35_hns BIRD_KEEPER
-    { TRAINER_BROOKE_HNS, MAP_GROUP(MAP_ROUTE35_HNS), MAP_NUM(MAP_ROUTE35_HNS), { 3, 0 }, 70, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route35_EventScript_PicnickerBrooke, NULL } }, // Route35_hns PICNICKER
-    { TRAINER_ELLIOT_HNS, MAP_GROUP(MAP_ROUTE35_HNS), MAP_NUM(MAP_ROUTE35_HNS), { 4, 0 }, 61, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route35_EventScript_CamperElliot, NULL } }, // Route35_hns CAMPER
-    { TRAINER_IVAN_HNS, MAP_GROUP(MAP_ROUTE35_HNS), MAP_NUM(MAP_ROUTE35_HNS), { 5, 0 }, 61, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route35_EventScript_CamperIvan, NULL } }, // Route35_hns CAMPER
-    { TRAINER_WALT_HNS, MAP_GROUP(MAP_ROUTE35_HNS), MAP_NUM(MAP_ROUTE35_HNS), { 6, 0 }, 63, 0, { OBJ_EVENT_GFX_FIREBREATHER_HNS, 0 }, { Route35_EventScript_FirebreatherWalt, NULL } }, // Route35_hns FIREBREATHER
-    { TRAINER_IRWIN_HNS, MAP_GROUP(MAP_ROUTE35_HNS), MAP_NUM(MAP_ROUTE35_HNS), { 7, 0 }, 67, 0, { OBJ_EVENT_GFX_JUGGLER_HNS, 0 }, { Route35_EventScript_JugglerIrwin, NULL } }, // Route35_hns JUGGLER
-    { TRAINER_MARK_HNS, MAP_GROUP(MAP_ROUTE36_HNS), MAP_NUM(MAP_ROUTE36_HNS), { 4, 0 }, 73, 0, { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { Route36_EventScript_Mark, NULL } }, // Route36_hns PSYCHIC_M
-    { TRAINER_ALAN_HNS, MAP_GROUP(MAP_ROUTE36_HNS), MAP_NUM(MAP_ROUTE36_HNS), { 5, 0 }, 76, 0, { OBJ_EVENT_GFX_LITTLE_BOY_HNS, 0 }, { Route36_EventScript_Schoolboy, NULL } }, // Route36_hns SCHOOL_KID
-    { TRAINER_ANN_AND_ANNE_HNS, MAP_GROUP(MAP_ROUTE37_HNS), MAP_NUM(MAP_ROUTE37_HNS), { 1, 2 }, 80, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_TWIN_HNS, OBJ_EVENT_GFX_TWIN_HNS }, { Route37_EventScript_TwinAnn, Route37_EventScript_TwinAnne } }, // Route37_hns TWINS
-    { TRAINER_GREG_HNS, MAP_GROUP(MAP_ROUTE37_HNS), MAP_NUM(MAP_ROUTE37_HNS), { 3, 0 }, 73, 0, { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { Route37_EventScript_Greg, NULL } }, // Route37_hns PSYCHIC_M
-    { TRAINER_HARRY_HNS, MAP_GROUP(MAP_ROUTE38_HNS), MAP_NUM(MAP_ROUTE38_HNS), { 1, 0 }, 75, 0, { OBJ_EVENT_GFX_SAILOR_HNS, 0 }, { Route38_EventScript_Harry, NULL } }, // Route38_hns SAILOR
-    { TRAINER_DANA_HNS, MAP_GROUP(MAP_ROUTE38_HNS), MAP_NUM(MAP_ROUTE38_HNS), { 2, 0 }, 68, 0, { OBJ_EVENT_GFX_LASS_HNS, 0 }, { Route38_EventScript_Dana, NULL } }, // Route38_hns LASS
-    { TRAINER_OLIVIA_HNS, MAP_GROUP(MAP_ROUTE38_HNS), MAP_NUM(MAP_ROUTE38_HNS), { 3, 0 }, 56, 0, { OBJ_EVENT_GFX_WOMAN_2_HNS, 0 }, { Route38_EventScript_Olivia, NULL } }, // Route38_hns BEAUTY
-    { TRAINER_CHAD_HNS, MAP_GROUP(MAP_ROUTE38_HNS), MAP_NUM(MAP_ROUTE38_HNS), { 5, 0 }, 76, 0, { OBJ_EVENT_GFX_LITTLE_BOY_HNS, 0 }, { Route38_EventScript_Chad, NULL } }, // Route38_hns SCHOOL_KID
-    { TRAINER_VALERIE_HNS, MAP_GROUP(MAP_ROUTE38_HNS), MAP_NUM(MAP_ROUTE38_HNS), { 6, 0 }, 56, 0, { OBJ_EVENT_GFX_BEAUTY_HNS, 0 }, { Route38_EventScript_Valerie, NULL } }, // Route38_hns BEAUTY
-    { TRAINER_NORMAN_HNS, MAP_GROUP(MAP_ROUTE39_HNS), MAP_NUM(MAP_ROUTE39_HNS), { 1, 0 }, 73, 0, { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { Route39_EventScript_Norman, NULL } }, // Route39_hns PSYCHIC_M
-    { TRAINER_RUTH_HNS, MAP_GROUP(MAP_ROUTE39_HNS), MAP_NUM(MAP_ROUTE39_HNS), { 3, 0 }, 69, 0, { OBJ_EVENT_GFX_WOMAN_1_HNS, 0 }, { Route39_EventScript_Ruth, NULL } }, // Route39_hns PARASOL_LADY
-    { TRAINER_DEREK_HNS, MAP_GROUP(MAP_ROUTE39_HNS), MAP_NUM(MAP_ROUTE39_HNS), { 4, 0 }, 71, 0, { OBJ_EVENT_GFX_BALDING_MAN_HNS, 0 }, { Route39_EventScript_Derek, NULL } }, // Route39_hns POKEFAN
-    { TRAINER_PAULA_HNS, MAP_GROUP(MAP_ROUTE40_HNS), MAP_NUM(MAP_ROUTE40_HNS), { 9, 0 }, 78, 0, { OBJ_EVENT_GFX_SWIMMER_F_HNS, 0 }, { Route40_EventScript_Paula, NULL } }, // Route40_hns SWIMMER_F
-    { TRAINER_RANDALL_HNS, MAP_GROUP(MAP_ROUTE40_HNS), MAP_NUM(MAP_ROUTE40_HNS), { 10, 0 }, 79, 0, { OBJ_EVENT_GFX_SWIMMER_M_HNS, 0 }, { Route40_EventScript_Randall, NULL } }, // Route40_hns SWIMMER_M
-    { TRAINER_CHARLIE_HNS, MAP_GROUP(MAP_ROUTE41_HNS), MAP_NUM(MAP_ROUTE41_HNS), { 2, 0 }, 79, 0, { OBJ_EVENT_GFX_SWIMMER_M_HNS, 0 }, { Route41_EventScript_Charlie, NULL } }, // Route41_hns SWIMMER_M
-    { TRAINER_DENISE_HNS, MAP_GROUP(MAP_ROUTE41_HNS), MAP_NUM(MAP_ROUTE41_HNS), { 3, 0 }, 78, 0, { OBJ_EVENT_GFX_SWIMMER_F_HNS, 0 }, { Route41_EventScript_Denise, NULL } }, // Route41_hns SWIMMER_F
-    { TRAINER_SUSIE_HNS, MAP_GROUP(MAP_ROUTE41_HNS), MAP_NUM(MAP_ROUTE41_HNS), { 8, 0 }, 78, 0, { OBJ_EVENT_GFX_SWIMMER_F_HNS, 0 }, { Route41_EventScript_Susie, NULL } }, // Route41_hns SWIMMER_F
-    { TRAINER_WENDY_HNS, MAP_GROUP(MAP_ROUTE41_HNS), MAP_NUM(MAP_ROUTE41_HNS), { 10, 0 }, 78, 0, { OBJ_EVENT_GFX_SWIMMER_F_HNS, 0 }, { Route41_EventScript_Wendy, NULL } }, // Route41_hns SWIMMER_F
-    { TRAINER_SHANE_HNS, MAP_GROUP(MAP_ROUTE42_HNS), MAP_NUM(MAP_ROUTE42_HNS), { 5, 0 }, 72, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { Route42_EventScript_Shane, NULL } }, // Route42_hns POKEMANIAC
-    { TRAINER_BENJAMIN_HNS, MAP_GROUP(MAP_ROUTE42_HNS), MAP_NUM(MAP_ROUTE42_HNS), { 6, 0 }, 66, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route42_EventScript_Ben, NULL } }, // Route42_hns HIKER
-    { TRAINER_BEN_HNS, MAP_GROUP(MAP_ROUTE43_HNS), MAP_NUM(MAP_ROUTE43_HNS), { 3, 0 }, 72, 0, { OBJ_EVENT_GFX_FAT_MAN_HNS, 0 }, { Route43_EventScript_Ben, NULL } }, // Route43_hns POKEMANIAC
-    { TRAINER_MARVIN_HNS, MAP_GROUP(MAP_ROUTE43_HNS), MAP_NUM(MAP_ROUTE43_HNS), { 4, 0 }, 64, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route43_EventScript_Marvin, NULL } }, // Route43_hns FISHERMAN
-    { TRAINER_RON_HNS, MAP_GROUP(MAP_ROUTE43_HNS), MAP_NUM(MAP_ROUTE43_HNS), { 17, 0 }, 72, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { Route43_EventScript_Ron, NULL } }, // Route43_hns POKEMANIAC
-    { TRAINER_BRENT_HNS, MAP_GROUP(MAP_ROUTE43_HNS), MAP_NUM(MAP_ROUTE43_HNS), { 18, 0 }, 72, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { Route43_EventScript_Brent, NULL } }, // Route43_hns POKEMANIAC
-    { TRAINER_PHIL_HNS, MAP_GROUP(MAP_ROUTE44_HNS), MAP_NUM(MAP_ROUTE44_HNS), { 1, 0 }, 73, 0, { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { Route44_EventScript_Phil, NULL } }, // Route44_hns PSYCHIC_M
-    { TRAINER_EDGAR_HNS, MAP_GROUP(MAP_ROUTE44_HNS), MAP_NUM(MAP_ROUTE44_HNS), { 2, 0 }, 64, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route44_EventScript_Edgar, NULL } }, // Route44_hns FISHERMAN
-    { TRAINER_WILTON_HNS, MAP_GROUP(MAP_ROUTE44_HNS), MAP_NUM(MAP_ROUTE44_HNS), { 3, 0 }, 64, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route44_EventScript_Wilton, NULL } }, // Route44_hns FISHERMAN
-    { TRAINER_ZACH_HNS, MAP_GROUP(MAP_ROUTE44_HNS), MAP_NUM(MAP_ROUTE44_HNS), { 4, 0 }, 72, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { Route44_EventScript_Zach, NULL } }, // Route44_hns POKEMANIAC
-    { TRAINER_CYBIL_HNS, MAP_GROUP(MAP_ROUTE44_HNS), MAP_NUM(MAP_ROUTE44_HNS), { 6, 0 }, 62, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { Route44_EventScript_Cybil, NULL } }, // Route44_hns COOLTRAINER
-    { TRAINER_VANCE_HNS, MAP_GROUP(MAP_ROUTE44_HNS), MAP_NUM(MAP_ROUTE44_HNS), { 27, 0 }, 57, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { Route44_EventScript_Vance, NULL } }, // Route44_hns BIRD_KEEPER
-    { TRAINER_RYAN_HNS, MAP_GROUP(MAP_ROUTE45_HNS), MAP_NUM(MAP_ROUTE45_HNS), { 2, 0 }, 62, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { Route45_EventScript_Ryan, NULL } }, // Route45_hns COOLTRAINER
-    { TRAINER_MICHAEL_HNS, MAP_GROUP(MAP_ROUTE45_HNS), MAP_NUM(MAP_ROUTE45_HNS), { 4, 0 }, 66, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route45_EventScript_Michael, NULL } }, // Route45_hns HIKER
-    { TRAINER_KELLY_HNS, MAP_GROUP(MAP_ROUTE45_HNS), MAP_NUM(MAP_ROUTE45_HNS), { 6, 0 }, 62, 0, { OBJ_EVENT_GFX_BATTLE_GIRL_HNS, 0 }, { Route45_EventScript_Kelly, NULL } }, // Route45_hns COOLTRAINER
-    { TRAINER_KENJI_HNS, MAP_GROUP(MAP_ROUTE45_HNS), MAP_NUM(MAP_ROUTE45_HNS), { 7, 0 }, 58, 0, { OBJ_EVENT_GFX_BLACK_BELT_HNS, 0 }, { Route45_EventScript_Kenji, NULL } }, // Route45_hns BLACK_BELT
-    { TRAINER_TIMOTHY_HNS, MAP_GROUP(MAP_ROUTE45_HNS), MAP_NUM(MAP_ROUTE45_HNS), { 9, 0 }, 66, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route45_EventScript_Timothy, NULL } }, // Route45_hns HIKER
-    { TRAINER_PARRY_HNS, MAP_GROUP(MAP_ROUTE45_HNS), MAP_NUM(MAP_ROUTE45_HNS), { 11, 0 }, 66, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route45_EventScript_Parry, NULL } }, // Route45_hns HIKER
-    { TRAINER_TED_HNS, MAP_GROUP(MAP_ROUTE46_HNS), MAP_NUM(MAP_ROUTE46_HNS), { 5, 0 }, 61, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route46_EventScript_Ted, NULL } }, // Route46_hns CAMPER
-    { TRAINER_BAILEY_HNS, MAP_GROUP(MAP_ROUTE46_HNS), MAP_NUM(MAP_ROUTE46_HNS), { 7, 0 }, 66, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route46_EventScript_Bailey, NULL } }, // Route46_hns HIKER
-    { TRAINER_DEVIN_HNS, MAP_GROUP(MAP_ROUTE47_HNS), MAP_NUM(MAP_ROUTE47_HNS), { 1, 0 }, 66, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route47_EventScript_Hiker, NULL } }, // Route47_hns HIKER
-    { TRAINER_GRANT_HNS, MAP_GROUP(MAP_ROUTE47_HNS), MAP_NUM(MAP_ROUTE47_HNS), { 2, 0 }, 61, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route47_EventScript_Camper, NULL } }, // Route47_hns CAMPER
-    { TRAINER_THOM_AND_KAE_HNS, MAP_GROUP(MAP_ROUTE47_HNS), MAP_NUM(MAP_ROUTE47_HNS), { 4, 5 }, 82, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, OBJ_EVENT_GFX_COOLTRAINER_M_HNS }, { Route47_EventScript_Kae, Route47_EventScript_Thom } }, // Route47_hns YOUNG_COUPLE
-    { TRAINER_DUFF_AND_EDA_HNS, MAP_GROUP(MAP_ROUTE47_HNS), MAP_NUM(MAP_ROUTE47_HNS), { 8, 9 }, 82, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_WORKER_M_HNS, OBJ_EVENT_GFX_WORKER_F_HNS }, { Route47_EventScript_Duff, Route47_EventScript_Eda } }, // Route47_hns YOUNG_COUPLE
-    { TRAINER_JIMMY_HNS, MAP_GROUP(MAP_ROUTE3_HNS), MAP_NUM(MAP_ROUTE3_HNS), { 1, 0 }, 23, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route3_EventScript_Jimmy, NULL } }, // Route3_hns YOUNGSTER
-    { TRAINER_WARREN_HNS, MAP_GROUP(MAP_ROUTE3_HNS), MAP_NUM(MAP_ROUTE3_HNS), { 2, 0 }, 23, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route3_EventScript_Warren, NULL } }, // Route3_hns YOUNGSTER
-    { TRAINER_OTIS_HNS, MAP_GROUP(MAP_ROUTE3_HNS), MAP_NUM(MAP_ROUTE3_HNS), { 3, 0 }, 9, 0, { OBJ_EVENT_GFX_FIREBREATHER_HNS, 0 }, { Route3_EventScript_Otis, NULL } }, // Route3_hns FIREBREATHER
-    { TRAINER_BURT_HNS, MAP_GROUP(MAP_ROUTE3_HNS), MAP_NUM(MAP_ROUTE3_HNS), { 4, 0 }, 9, 0, { OBJ_EVENT_GFX_FIREBREATHER_HNS, 0 }, { Route3_EventScript_Burt, NULL } }, // Route3_hns FIREBREATHER
-    { TRAINER_HOPE_HNS, MAP_GROUP(MAP_ROUTE4_HNS), MAP_NUM(MAP_ROUTE4_HNS), { 2, 0 }, 14, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route4_EventScript_Hope, NULL } }, // Route4_hns PICNICKER
-    { TRAINER_HANK_HNS, MAP_GROUP(MAP_ROUTE4_HNS), MAP_NUM(MAP_ROUTE4_HNS), { 3, 0 }, 4, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { Route4_EventScript_Hank, NULL } }, // Route4_hns BIRD_KEEPER
-    { TRAINER_SHARON_HNS, MAP_GROUP(MAP_ROUTE4_HNS), MAP_NUM(MAP_ROUTE4_HNS), { 4, 0 }, 14, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route4_EventScript_Sharon, NULL } }, // Route4_hns PICNICKER
-    { TRAINER_ALLAN_HNS, MAP_GROUP(MAP_ROUTE6_HNS), MAP_NUM(MAP_ROUTE6_HNS), { 1, 0 }, 7, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route6_EventScript_Allan, NULL } }, // Route6_hns CAMPER
-    { TRAINER_REX_HNS, MAP_GROUP(MAP_ROUTE6_HNS), MAP_NUM(MAP_ROUTE6_HNS), { 2, 0 }, 15, 0, { OBJ_EVENT_GFX_BALDING_MAN_HNS, 0 }, { Route6_EventScript_Rex, NULL } }, // Route6_hns POKEFAN
-    { TRAINER_SAM_HNS, MAP_GROUP(MAP_ROUTE8_HNS), MAP_NUM(MAP_ROUTE8_HNS), { 1, 0 }, 20, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { Route8_EventScript_Sam, NULL } }, // Route8_hns SUPER_NERD
-    { TRAINER_TOM_HNS, MAP_GROUP(MAP_ROUTE8_HNS), MAP_NUM(MAP_ROUTE8_HNS), { 2, 0 }, 20, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { Route8_EventScript_Tom, NULL } }, // Route8_hns SUPER_NERD
-    { TRAINER_DWAYNE_HNS, MAP_GROUP(MAP_ROUTE8_HNS), MAP_NUM(MAP_ROUTE8_HNS), { 6, 0 }, 3, 0, { OBJ_EVENT_GFX_BIKER_HNS, 0 }, { Route8_EventScript_Dwayne, NULL } }, // Route8_hns BIKER
-    { TRAINER_ZEKE_HNS, MAP_GROUP(MAP_ROUTE8_HNS), MAP_NUM(MAP_ROUTE8_HNS), { 7, 0 }, 3, 0, { OBJ_EVENT_GFX_BIKER_HNS, 0 }, { Route8_EventScript_Zeke, NULL } }, // Route8_hns BIKER
-    { TRAINER_SID_HNS, MAP_GROUP(MAP_ROUTE9_HNS), MAP_NUM(MAP_ROUTE9_HNS), { 1, 0 }, 7, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route9_EventScript_Sid, NULL } }, // Route9_hns CAMPER
-    { TRAINER_EDNA_HNS, MAP_GROUP(MAP_ROUTE9_HNS), MAP_NUM(MAP_ROUTE9_HNS), { 2, 0 }, 14, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route9_EventScript_Edna, NULL } }, // Route9_hns PICNICKER
-    { TRAINER_HEIDI_HNS, MAP_GROUP(MAP_ROUTE9_HNS), MAP_NUM(MAP_ROUTE9_HNS), { 3, 0 }, 14, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route9_EventScript_Heidi, NULL } }, // Route9_hns PICNICKER
-    { TRAINER_TIM_HNS, MAP_GROUP(MAP_ROUTE9_HNS), MAP_NUM(MAP_ROUTE9_HNS), { 5, 0 }, 11, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route9_EventScript_Tim, NULL } }, // Route9_hns HIKER
-    { TRAINER_JIM_HNS, MAP_GROUP(MAP_ROUTE10_HNS), MAP_NUM(MAP_ROUTE10_HNS), { 2, 0 }, 11, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route10_EventScript_Jim, NULL } }, // Route10_hns HIKER
-    { TRAINER_ROBERT_HNS, MAP_GROUP(MAP_ROUTE10_HNS), MAP_NUM(MAP_ROUTE10_HNS), { 3, 0 }, 15, 0, { OBJ_EVENT_GFX_BALDING_MAN_HNS, 0 }, { Route10_EventScript_Robert, NULL } }, // Route10_hns POKEFAN
-    { TRAINER_FIDEL_HNS, MAP_GROUP(MAP_ROUTE11_HNS), MAP_NUM(MAP_ROUTE11_HNS), { 1, 0 }, 16, 0, { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { Route11_EventScript_Fidel, NULL } }, // Route11_hns PSYCHIC_M
-    { TRAINER_OWEN_HNS, MAP_GROUP(MAP_ROUTE11_HNS), MAP_NUM(MAP_ROUTE11_HNS), { 2, 0 }, 23, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route11_EventScript_Owen, NULL } }, // Route11_hns YOUNGSTER
-    { TRAINER_JASON_HNS, MAP_GROUP(MAP_ROUTE11_HNS), MAP_NUM(MAP_ROUTE11_HNS), { 3, 0 }, 23, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route11_EventScript_Jason, NULL } }, // Route11_hns YOUNGSTER
-    { TRAINER_HERMAN_HNS, MAP_GROUP(MAP_ROUTE11_HNS), MAP_NUM(MAP_ROUTE11_HNS), { 5, 0 }, 16, 0, { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { Route11_EventScript_Herman, NULL } }, // Route11_hns PSYCHIC_M
-    { TRAINER_MARTIN_HNS, MAP_GROUP(MAP_ROUTE12_HNS), MAP_NUM(MAP_ROUTE12_HNS), { 1, 0 }, 10, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route12_EventScript_Martin, NULL } }, // Route12_hns FISHERMAN
-    { TRAINER_STEPHEN_HNS, MAP_GROUP(MAP_ROUTE12_HNS), MAP_NUM(MAP_ROUTE12_HNS), { 3, 0 }, 10, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route12_EventScript_Stephen, NULL } }, // Route12_hns FISHERMAN
-    { TRAINER_KYLE_HNS, MAP_GROUP(MAP_ROUTE12_HNS), MAP_NUM(MAP_ROUTE12_HNS), { 5, 0 }, 10, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route12_EventScript_Kyle, NULL } }, // Route12_hns FISHERMAN
-    { TRAINER_BRET_HNS, MAP_GROUP(MAP_ROUTE13_HNS), MAP_NUM(MAP_ROUTE13_HNS), { 2, 0 }, 12, 0, { OBJ_EVENT_GFX_JUGGLER_HNS, 0 }, { Route13_EventScript_Bret, NULL } }, // Route13_hns JUGGLER
-    { TRAINER_PERRY_HNS, MAP_GROUP(MAP_ROUTE13_HNS), MAP_NUM(MAP_ROUTE13_HNS), { 3, 0 }, 4, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { Route13_EventScript_Perry, NULL } }, // Route13_hns BIRD_KEEPER
-    { TRAINER_JOSHUA_HNS, MAP_GROUP(MAP_ROUTE13_HNS), MAP_NUM(MAP_ROUTE13_HNS), { 4, 0 }, 15, 0, { OBJ_EVENT_GFX_BALDING_MAN_HNS, 0 }, { Route13_EventScript_Joshua, NULL } }, // Route13_hns POKEFAN
-    { TRAINER_ALEX_HNS, MAP_GROUP(MAP_ROUTE13_HNS), MAP_NUM(MAP_ROUTE13_HNS), { 5, 0 }, 2, 0, { OBJ_EVENT_GFX_BATTLE_GIRL_HNS, 0 }, { Route13_EventScript_Alex, NULL } }, // Route13_hns BATTLE_GIRL
-    { TRAINER_CARTER_HNS, MAP_GROUP(MAP_ROUTE14_HNS), MAP_NUM(MAP_ROUTE14_HNS), { 2, 0 }, 15, 0, { OBJ_EVENT_GFX_BALDING_MAN_HNS, 0 }, { Route14_EventScript_Carter, NULL } }, // Route14_hns POKEFAN
-    { TRAINER_ROY_HNS, MAP_GROUP(MAP_ROUTE14_HNS), MAP_NUM(MAP_ROUTE14_HNS), { 4, 0 }, 3, 0, { OBJ_EVENT_GFX_BIKER_HNS, 0 }, { Route14_EventScript_Roy, NULL } }, // Route14_hns BIKER
-    { TRAINER_TREVOR_HNS, MAP_GROUP(MAP_ROUTE14_HNS), MAP_NUM(MAP_ROUTE14_HNS), { 8, 0 }, 12, 0, { OBJ_EVENT_GFX_JUGGLER_HNS, 0 }, { Route14_EventScript_Trevor, NULL } }, // Route14_hns JUGGLER
-    { TRAINER_TOMMY_HNS, MAP_GROUP(MAP_ROUTE15_HNS), MAP_NUM(MAP_ROUTE15_HNS), { 2, 0 }, 17, 0, { OBJ_EVENT_GFX_LITTLE_BOY_HNS, 0 }, { Route15_EventScript_Tommy, NULL } }, // Route15_hns SCHOOL_KID
-    { TRAINER_HILLARY_HNS, MAP_GROUP(MAP_ROUTE15_HNS), MAP_NUM(MAP_ROUTE15_HNS), { 4, 0 }, 13, 0, { OBJ_EVENT_GFX_WOMAN_1_HNS, 0 }, { Route15_EventScript_Hillary, NULL } }, // Route15_hns LASS
-    { TRAINER_KIPP_HNS, MAP_GROUP(MAP_ROUTE15_HNS), MAP_NUM(MAP_ROUTE15_HNS), { 5, 0 }, 17, 0, { OBJ_EVENT_GFX_LITTLE_BOY_HNS, 0 }, { Route15_EventScript_Kipp, NULL } }, // Route15_hns SCHOOL_KID
-    { TRAINER_COLETTE_HNS, MAP_GROUP(MAP_ROUTE15_HNS), MAP_NUM(MAP_ROUTE15_HNS), { 6, 0 }, 8, 0, { OBJ_EVENT_GFX_WOMAN_2_HNS, 0 }, { Route15_EventScript_Colette, NULL } }, // Route15_hns EXPERT
-    { TRAINER_BILLY_HNS, MAP_GROUP(MAP_ROUTE15_HNS), MAP_NUM(MAP_ROUTE15_HNS), { 7, 0 }, 17, 0, { OBJ_EVENT_GFX_LITTLE_BOY_HNS, 0 }, { Route15_EventScript_Billy, NULL } }, // Route15_hns SCHOOL_KID
-    { TRAINER_RILEY_HNS, MAP_GROUP(MAP_ROUTE17_HNS), MAP_NUM(MAP_ROUTE17_HNS), { 1, 0 }, 3, 0, { OBJ_EVENT_GFX_BIKER_HNS, 0 }, { Route17_EventScript_Riley, NULL } }, // Route17_hns BIKER
-    { TRAINER_JOEL_HNS, MAP_GROUP(MAP_ROUTE17_HNS), MAP_NUM(MAP_ROUTE17_HNS), { 2, 0 }, 3, 0, { OBJ_EVENT_GFX_BIKER_HNS, 0 }, { Route17_EventScript_Joel, NULL } }, // Route17_hns BIKER
-    { TRAINER_GLENN_HNS, MAP_GROUP(MAP_ROUTE17_HNS), MAP_NUM(MAP_ROUTE17_HNS), { 3, 0 }, 3, 0, { OBJ_EVENT_GFX_BIKER_HNS, 0 }, { Route17_EventScript_Glenn, NULL } }, // Route17_hns BIKER
-    { TRAINER_CHARLES_HNS, MAP_GROUP(MAP_ROUTE17_HNS), MAP_NUM(MAP_ROUTE17_HNS), { 4, 0 }, 3, 0, { OBJ_EVENT_GFX_BIKER_HNS, 0 }, { Route17_EventScript_Charles, NULL } }, // Route17_hns BIKER
-    { TRAINER_BORIS_HNS, MAP_GROUP(MAP_ROUTE18_HNS), MAP_NUM(MAP_ROUTE18_HNS), { 1, 0 }, 4, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { Route18_EventScript_Boris, NULL } }, // Route18_hns BIRD_KEEPER
-    { TRAINER_PAT_HNS, MAP_GROUP(MAP_ROUTE25_HNS), MAP_NUM(MAP_ROUTE25_HNS), { 7, 0 }, 20, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { Route25_EventScript_Pat, NULL } }, // Route25_hns SUPER_NERD
-    { TRAINER_RICHARD_HNS, MAP_GROUP(MAP_ROUTE26_HNS), MAP_NUM(MAP_ROUTE26_HNS), { 1, 0 }, 73, 0, { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { Route26_EventScript_Richard, NULL } }, // Route26_hns PSYCHIC_M
-    { TRAINER_BETH_HNS, MAP_GROUP(MAP_ROUTE26NORTH_HNS), MAP_NUM(MAP_ROUTE26NORTH_HNS), { 1, 0 }, 62, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { Route26_EventScript_Beth, NULL } }, // Route26North_hns COOLTRAINER
-    { TRAINER_MEGAN_HNS, MAP_GROUP(MAP_ROUTE27_HNS), MAP_NUM(MAP_ROUTE27_HNS), { 2, 0 }, 62, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { Route27_EventScript_Megan, NULL } }, // Route27_hns COOLTRAINER
-    { TRAINER_BRIAN_HNS, MAP_GROUP(MAP_ROUTE27_HNS), MAP_NUM(MAP_ROUTE27_HNS), { 3, 0 }, 62, 0, { OBJ_EVENT_GFX_COOLTRAINER_M_HNS, 0 }, { Route27_EventScript_Brian, NULL } }, // Route27_hns COOLTRAINER
-    { TRAINER_BLAKE_HNS, MAP_GROUP(MAP_ROUTE27_HNS), MAP_NUM(MAP_ROUTE27_HNS), { 5, 0 }, 62, 0, { OBJ_EVENT_GFX_COOLTRAINER_M_HNS, 0 }, { Route27_EventScript_Blake, NULL } }, // Route27_hns COOLTRAINER
-    { TRAINER_GILBERT_HNS, MAP_GROUP(MAP_ROUTE27_HNS), MAP_NUM(MAP_ROUTE27_HNS), { 8, 0 }, 73, 0, { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { Route27_EventScript_Gilbert, NULL } }, // Route27_hns PSYCHIC_M
-    { TRAINER_REENA_HNS, MAP_GROUP(MAP_ROUTE27_HNS), MAP_NUM(MAP_ROUTE27_HNS), { 9, 0 }, 62, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { Route27_EventScript_Reena, NULL } }, // Route27_hns COOLTRAINER
-    { TRAINER_SCOTT_HNS, MAP_GROUP(MAP_ROUTE27_HNS), MAP_NUM(MAP_ROUTE27_HNS), { 10, 0 }, 64, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route27_EventScript_Scott, NULL } }, // Route27_hns FISHERMAN
-    { TRAINER_DUNCAN_HNS, MAP_GROUP(MAP_GOLDENROD_CITY_UNDERGROUND_SWITCHES_HNS), MAP_NUM(MAP_GOLDENROD_CITY_UNDERGROUND_SWITCHES_HNS), { 4, 0 }, 60, 0, { OBJ_EVENT_GFX_BURGLAR_HNS, 0 }, { GoldenrodCity_UndergroundSwitches_EventScript_Duncan, NULL } }, // GoldenrodCity_UndergroundSwitches_hns BURGLAR
-    { TRAINER_EDDIE_HNS, MAP_GROUP(MAP_GOLDENROD_CITY_UNDERGROUND_SWITCHES_HNS), MAP_NUM(MAP_GOLDENROD_CITY_UNDERGROUND_SWITCHES_HNS), { 5, 0 }, 60, 0, { OBJ_EVENT_GFX_BURGLAR_HNS, 0 }, { GoldenrodCity_UndergroundSwitches_EventScript_Eddie, NULL } }, // GoldenrodCity_UndergroundSwitches_hns BURGLAR
-    { TRAINER_HUEY_HNS, MAP_GROUP(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), MAP_NUM(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), { 3, 0 }, 75, 0, { OBJ_EVENT_GFX_SAILOR_HNS, 0 }, { OlivineLighthouse_EventScript_Huey, NULL } }, // OlivineCity_Lighthouse_hns SAILOR
-    { TRAINER_THEO_HNS, MAP_GROUP(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), MAP_NUM(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), { 6, 0 }, 57, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { OlivineLighthouse_EventScript_BirdKeeperTheo, NULL } }, // OlivineCity_Lighthouse_hns BIRD_KEEPER
-    { TRAINER_PRESTON_HNS, MAP_GROUP(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), MAP_NUM(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), { 7, 0 }, 65, 0, { OBJ_EVENT_GFX_GENTLEMAN_HNS, 0 }, { OlivineLighthouse_EventScript_GentlemanPreston, NULL } }, // OlivineCity_Lighthouse_hns GENTLEMAN
-    { TRAINER_ERNEST_HNS, MAP_GROUP(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), MAP_NUM(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), { 11, 0 }, 75, 0, { OBJ_EVENT_GFX_SAILOR_HNS, 0 }, { OlivineLighthouse_EventScript_SailorErnest, NULL } }, // OlivineCity_Lighthouse_hns SAILOR
-    { TRAINER_CHOW_HNS, MAP_GROUP(MAP_SPROUT_TOWER_1F_HNS), MAP_NUM(MAP_SPROUT_TOWER_1F_HNS), { 4, 0 }, 55, 0, { OBJ_EVENT_GFX_SAGE_HNS, 0 }, { SproutTower_1F_EventScript_SageChow, NULL } }, // SproutTower_1F_hns @tower
-    { TRAINER_EDMOND_HNS, MAP_GROUP(MAP_SPROUT_TOWER_2F_HNS), MAP_NUM(MAP_SPROUT_TOWER_2F_HNS), { 1, 0 }, 74, 0, { OBJ_EVENT_GFX_SAGE_HNS, 0 }, { SproutTower_2F_EventScript_SageEdmond, NULL } }, // SproutTower_2F_hns SAGE
-    { TRAINER_NEAL_HNS, MAP_GROUP(MAP_SPROUT_TOWER_3F_HNS), MAP_NUM(MAP_SPROUT_TOWER_3F_HNS), { 1, 0 }, 74, 0, { OBJ_EVENT_GFX_SAGE_HNS, 0 }, { SproutTower_3F_EventScript_SageNeal, NULL } }, // SproutTower_3F_hns SAGE
-    { TRAINER_JIN_HNS, MAP_GROUP(MAP_SPROUT_TOWER_3F_HNS), MAP_NUM(MAP_SPROUT_TOWER_3F_HNS), { 2, 0 }, 74, 0, { OBJ_EVENT_GFX_SAGE_HNS, 0 }, { SproutTower_3F_EventScript_SageJin, NULL } }, // SproutTower_3F_hns SAGE
-    { TRAINER_TROY_HNS, MAP_GROUP(MAP_SPROUT_TOWER_3F_HNS), MAP_NUM(MAP_SPROUT_TOWER_3F_HNS), { 3, 0 }, 74, 0, { OBJ_EVENT_GFX_SAGE_HNS, 0 }, { SproutTower_3F_EventScript_SageTroy, NULL } }, // SproutTower_3F_hns SAGE
-    { TRAINER_NATHAN_HNS, MAP_GROUP(MAP_RUINS_OF_ALPH_OUTSIDE_HNS), MAP_NUM(MAP_RUINS_OF_ALPH_OUTSIDE_HNS), { 1, 0 }, 73, 0, { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { RuinsOfAlph_Outside_EventScript_Nathan, NULL } }, // RuinsOfAlph_Outside_hns PSYCHIC_M
-    { TRAINER_DANIEL_HNS, MAP_GROUP(MAP_UNION_CAVE_1F_HNS), MAP_NUM(MAP_UNION_CAVE_1F_HNS), { 2, 0 }, 66, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { UnionCave_1F_EventScript_HikerDaniel, NULL } }, // UnionCave_1F_hns HIKER
-    { TRAINER_BILL_HNS, MAP_GROUP(MAP_UNION_CAVE_1F_HNS), MAP_NUM(MAP_UNION_CAVE_1F_HNS), { 5, 0 }, 54, 0, { OBJ_EVENT_GFX_FIREBREATHER_HNS, 0 }, { UnionCave_1F_EventScript_FirebreatherBill, NULL } }, // UnionCave_1F_hns @cave
-    { TRAINER_LARRY_HNS, MAP_GROUP(MAP_UNION_CAVE_1F_HNS), MAP_NUM(MAP_UNION_CAVE_1F_HNS), { 7, 0 }, 54, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { UnionCave_1F_EventScript_PokemaniacLarry, NULL } }, // UnionCave_1F_hns @cave
-    { TRAINER_RAY_HNS, MAP_GROUP(MAP_UNION_CAVE_1F_HNS), MAP_NUM(MAP_UNION_CAVE_1F_HNS), { 8, 0 }, 54, 0, { OBJ_EVENT_GFX_FIREBREATHER_HNS, 0 }, { UnionCave_1F_EventScript_FirebreatherRay, NULL } }, // UnionCave_1F_hns @cave
-    { TRAINER_PHILLIP_HNS, MAP_GROUP(MAP_UNION_CAVE_B1F_HNS), MAP_NUM(MAP_UNION_CAVE_B1F_HNS), { 1, 0 }, 66, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { UnionCave_B1F_EventScript_HikerPhillip, NULL } }, // UnionCave_B1F_hns HIKER
-    { TRAINER_LEONARD_HNS, MAP_GROUP(MAP_UNION_CAVE_B1F_HNS), MAP_NUM(MAP_UNION_CAVE_B1F_HNS), { 2, 0 }, 54, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { UnionCave_B1F_EventScript_HikerLeonard, NULL } }, // UnionCave_B1F_hns @cave
-    { TRAINER_CALVIN_HNS, MAP_GROUP(MAP_UNION_CAVE_B1F_HNS), MAP_NUM(MAP_UNION_CAVE_B1F_HNS), { 6, 0 }, 72, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { UnionCave_B1F_EventScript_PokemaniacCalvin, NULL } }, // UnionCave_B1F_hns POKEMANIAC
-    { TRAINER_ANDREW_HNS, MAP_GROUP(MAP_UNION_CAVE_B1F_HNS), MAP_NUM(MAP_UNION_CAVE_B1F_HNS), { 7, 0 }, 72, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { UnionCave_B1F_EventScript_PokemaniacAndrew, NULL } }, // UnionCave_B1F_hns POKEMANIAC
-    { TRAINER_NICK_HNS, MAP_GROUP(MAP_UNION_CAVE_B2F_HNS), MAP_NUM(MAP_UNION_CAVE_B2F_HNS), { 2, 0 }, 62, 0, { OBJ_EVENT_GFX_COOLTRAINER_M_HNS, 0 }, { UnionCave_B2F_EventScript_CooltrainerNick, NULL } }, // UnionCave_B2F_hns COOLTRAINER
-    { TRAINER_GWEN_HNS, MAP_GROUP(MAP_UNION_CAVE_B2F_HNS), MAP_NUM(MAP_UNION_CAVE_B2F_HNS), { 4, 0 }, 62, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { UnionCave_B2F_EventScript_CooltrainerfGwen, NULL } }, // UnionCave_B2F_hns COOLTRAINER
-    { TRAINER_EMMA_HNS, MAP_GROUP(MAP_UNION_CAVE_B2F_HNS), MAP_NUM(MAP_UNION_CAVE_B2F_HNS), { 5, 0 }, 62, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { UnionCave_B2F_EventScript_CooltrainerfEmma, NULL } }, // UnionCave_B2F_hns COOLTRAINER
-    { TRAINER_WAYNE_HNS, MAP_GROUP(MAP_ILEX_FOREST_HNS), MAP_NUM(MAP_ILEX_FOREST_HNS), { 7, 0 }, 59, 0, { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { IlexForest_EventScript_BugcatcherWayne, NULL } }, // IlexForest_hns BUG_CATCHER
-    { TRAINER_BEVERLY_HNS, MAP_GROUP(MAP_NATIONAL_PARK_NORMAL_HNS), MAP_NUM(MAP_NATIONAL_PARK_NORMAL_HNS), { 6, 0 }, 69, 0, { OBJ_EVENT_GFX_BEAUTY_HNS, 0 }, { NationalPark_Normal_EventScript_Beverly, NULL } }, // NationalPark_Normal_hns PARASOL_LADY
-    { TRAINER_JACK_HNS, MAP_GROUP(MAP_NATIONAL_PARK_NORMAL_HNS), MAP_NUM(MAP_NATIONAL_PARK_NORMAL_HNS), { 7, 0 }, 76, 0, { OBJ_EVENT_GFX_LITTLE_BOY_HNS, 0 }, { NationalPark_Normal_EventScript_Jack, NULL } }, // NationalPark_Normal_hns SCHOOL_KID
-    { TRAINER_KRISE_HNS, MAP_GROUP(MAP_NATIONAL_PARK_NORMAL_HNS), MAP_NUM(MAP_NATIONAL_PARK_NORMAL_HNS), { 8, 0 }, 68, 0, { OBJ_EVENT_GFX_LASS_HNS, 0 }, { NationalPark_Normal_EventScript_Krise, NULL } }, // NationalPark_Normal_hns LASS
-    { TRAINER_WILLIAM_HNS, MAP_GROUP(MAP_NATIONAL_PARK_NORMAL_HNS), MAP_NUM(MAP_NATIONAL_PARK_NORMAL_HNS), { 9, 0 }, 71, 0, { OBJ_EVENT_GFX_BALDING_MAN_HNS, 0 }, { NationalPark_Normal_EventScript_William, NULL } }, // NationalPark_Normal_hns POKEFAN
-    { TRAINER_MARKUS_HNS, MAP_GROUP(MAP_MT_MORTAR_1F_NORTH_HNS), MAP_NUM(MAP_MT_MORTAR_1F_NORTH_HNS), { 8, 0 }, 77, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { MtMortar_1F_North_EventScript_Markus, NULL } }, // MtMortar_1F_North_hns SUPER_NERD
-    { TRAINER_MILLER_HNS, MAP_GROUP(MAP_MT_MORTAR_1F_NORTH_HNS), MAP_NUM(MAP_MT_MORTAR_1F_NORTH_HNS), { 9, 0 }, 72, 0, { OBJ_EVENT_GFX_FAT_MAN_HNS, 0 }, { MtMortar_1F_North_EventScript_Miller, NULL } }, // MtMortar_1F_North_hns POKEMANIAC
-    { TRAINER_HUGH_HNS, MAP_GROUP(MAP_MT_MORTAR_2F_HNS), MAP_NUM(MAP_MT_MORTAR_2F_HNS), { 7, 0 }, 77, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { MtMortar_2F_EventScript_Nerd, NULL } }, // MtMortar_2F_hns SUPER_NERD
-    { TRAINER_ANDRE_HNS, MAP_GROUP(MAP_LAKE_OF_RAGE_HNS), MAP_NUM(MAP_LAKE_OF_RAGE_HNS), { 2, 0 }, 64, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { LakeOfRage_EventScript_Andre, NULL } }, // LakeOfRage_hns FISHERMAN
-    { TRAINER_RAYMOND_HNS, MAP_GROUP(MAP_LAKE_OF_RAGE_HNS), MAP_NUM(MAP_LAKE_OF_RAGE_HNS), { 5, 0 }, 64, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { LakeOfRage_EventScript_Raymond, NULL } }, // LakeOfRage_hns FISHERMAN
-    { TRAINER_AARON_HNS, MAP_GROUP(MAP_LAKE_OF_RAGE_HNS), MAP_NUM(MAP_LAKE_OF_RAGE_HNS), { 9, 0 }, 62, 0, { OBJ_EVENT_GFX_COOLTRAINER_M_HNS, 0 }, { LakeOfRage_EventScript_Aaron, NULL } }, // LakeOfRage_hns COOLTRAINER
-    { TRAINER_LEA_AND_PIA_HNS, MAP_GROUP(MAP_DRAGONS_DEN_CAVERN_HNS), MAP_NUM(MAP_DRAGONS_DEN_CAVERN_HNS), { 2, 3 }, 80, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_TWIN_HNS, OBJ_EVENT_GFX_TWIN_HNS }, { DragonsDen_Cavern_EventScript_TwinPia, DragonsDen_Cavern_EventScript_TwinLea } }, // DragonsDen_Cavern_hns TWINS
-    { TRAINER_CARA_HNS, MAP_GROUP(MAP_DRAGONS_DEN_CAVERN_HNS), MAP_NUM(MAP_DRAGONS_DEN_CAVERN_HNS), { 4, 0 }, 62, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { DragonsDen_Cavern_EventScript_Cara, NULL } }, // DragonsDen_Cavern_hns COOLTRAINER
-    { TRAINER_DOUG_HNS, MAP_GROUP(MAP_VIRIDIAN_FOREST_HNS), MAP_NUM(MAP_VIRIDIAN_FOREST_HNS), { 1, 0 }, 5, 0, { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { Route2_EventScript_Doug, NULL } }, // ViridianForest_hns BUG_CATCHER
-    { TRAINER_ED_HNS, MAP_GROUP(MAP_VIRIDIAN_FOREST_HNS), MAP_NUM(MAP_VIRIDIAN_FOREST_HNS), { 2, 0 }, 5, 0, { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { Route2_EventScript_Ed, NULL } }, // ViridianForest_hns BUG_CATCHER
-    { TRAINER_PONI_SWIMMER_2_HNS, MAP_GROUP(MAP_PONI_ISLE_HNS), MAP_NUM(MAP_PONI_ISLE_HNS), { 4, 0 }, 90, 0, { OBJ_EVENT_GFX_TUBER_M_SWIMMING_HNS, 0 }, { Alola_Poni_TrainerBattleSwimmer2, NULL } }, // PoniIsle_hns TUBER_M
-    { TRAINER_PONI_SWIMMER_1_HNS, MAP_GROUP(MAP_PONI_ISLE_HNS), MAP_NUM(MAP_PONI_ISLE_HNS), { 5, 0 }, 88, 0, { OBJ_EVENT_GFX_SWIMMER_F_HNS, 0 }, { Alola_Poni_TrainerBattleSwimmer1, NULL } }, // PoniIsle_hns SWIMMER_F
-    { TRAINER_AKALA_CAMPER_HNS, MAP_GROUP(MAP_AKALA_ISLE_HNS), MAP_NUM(MAP_AKALA_ISLE_HNS), { 10, 0 }, 85, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Alola_Akala_TrainerBattleCamper, NULL } }, // AkalaIsle_hns CAMPER
-    { TRAINER_AKALA_SWIMMER_3_HNS, MAP_GROUP(MAP_AKALA_ISLE_HNS), MAP_NUM(MAP_AKALA_ISLE_HNS), { 11, 0 }, 89, 0, { OBJ_EVENT_GFX_SWIMMER_M_HNS, 0 }, { Alola_Akala_TrainerBattleSwimmerWaterM, NULL } }, // AkalaIsle_hns SWIMMER_M
-    { TRAINER_MELEMELE_SWIMMER_1_HNS, MAP_GROUP(MAP_MELEMELE_ISLE_HNS), MAP_NUM(MAP_MELEMELE_ISLE_HNS), { 10, 0 }, 88, 0, { OBJ_EVENT_GFX_SWIMMER_F_HNS, 0 }, { Alola_Melemele_TrainerBattleSwimmer, NULL } }, // MelemeleIsle_hns SWIMMER_F
-    { TRAINER_MELEMELE_SWIMMER_2_HNS, MAP_GROUP(MAP_ALOLA_WATER_HNS), MAP_NUM(MAP_ALOLA_WATER_HNS), { 1, 0 }, 89, 0, { OBJ_EVENT_GFX_SWIMMER_M_HNS, 0 }, { Alola_MelemeleSea_TrainerBattleSwimmer, NULL } }, // AlolaWater_hns SWIMMER_M
-    { TRAINER_ULAULA_PICNICKER_HNS, MAP_GROUP(MAP_ULAULA_ISLE_HNS), MAP_NUM(MAP_ULAULA_ISLE_HNS), { 5, 0 }, 87, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Alola_Ulaula_TrainerBattlePicnicker, NULL } }, // UlaulaIsle_hns PICNICKER
-    { TRAINER_AKALA_FOREST_BUGCATCHER_1_HNS, MAP_GROUP(MAP_AKALA_FOREST_HNS), MAP_NUM(MAP_AKALA_FOREST_HNS), { 1, 0 }, 84, 0, { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { Alola_AkalaForest_TrainerBattleBugCatcher1, NULL } }, // Akala_Forest_hns BUG_CATCHER
-    { TRAINER_AKALA_FOREST_BUGCATCHER_2_HNS, MAP_GROUP(MAP_AKALA_FOREST_HNS), MAP_NUM(MAP_AKALA_FOREST_HNS), { 2, 0 }, 84, 0, { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { Alola_AkalaForest_TrainerBattleBugCatcher2, NULL } }, // Akala_Forest_hns BUG_CATCHER
-    { TRAINER_AKALA_CAVE_CAMPER_HNS, MAP_GROUP(MAP_AKALA_CAVE_HNS), MAP_NUM(MAP_AKALA_CAVE_HNS), { 5, 0 }, 85, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Alola_AkalaCave_TrainerBattleCamper, NULL } }, // Akala_Cave_hns CAMPER
-    { TRAINER_AKALA_CAVE_PICNICKER_HNS, MAP_GROUP(MAP_AKALA_CAVE_HNS), MAP_NUM(MAP_AKALA_CAVE_HNS), { 6, 0 }, 83, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Alola_AkalaCave_TrainerBattlePicnicker, NULL } }, // Akala_Cave_hns @cave
-    { TRAINER_AKALA_CAVE_HIKER_HNS, MAP_GROUP(MAP_AKALA_CAVE_HNS), MAP_NUM(MAP_AKALA_CAVE_HNS), { 7, 0 }, 86, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Alola_AkalaCave_TrainerBattleHiker, NULL } }, // Akala_Cave_hns HIKER
-    { TRAINER_CALVIN_1, MAP_GROUP(MAP_ROUTE102), MAP_NUM(MAP_ROUTE102), { 2, 0 }, 137, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route102_EventScript_Calvin, NULL } }, // Route102 YOUNGSTER
-    { TRAINER_RICK, MAP_GROUP(MAP_ROUTE102), MAP_NUM(MAP_ROUTE102), { 3, 0 }, 101, 0, { OBJ_EVENT_GFX_BUG_CATCHER, 0 }, { Route102_EventScript_Rick, NULL } }, // Route102 BUG_CATCHER
-    { TRAINER_TIANA, MAP_GROUP(MAP_ROUTE102), MAP_NUM(MAP_ROUTE102), { 4, 0 }, 115, 0, { OBJ_EVENT_GFX_LASS, 0 }, { Route102_EventScript_Tiana, NULL } }, // Route102 LASS
-    { TRAINER_ALLEN, MAP_GROUP(MAP_ROUTE102), MAP_NUM(MAP_ROUTE102), { 9, 0 }, 137, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route102_EventScript_Allen, NULL } }, // Route102 YOUNGSTER
-    { TRAINER_DAISY, MAP_GROUP(MAP_ROUTE103), MAP_NUM(MAP_ROUTE103), { 3, 0 }, 96, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route103_EventScript_Daisy, NULL } }, // Route103 AROMA_LADY
-    { TRAINER_AMY_AND_LIV_1, MAP_GROUP(MAP_ROUTE103), MAP_NUM(MAP_ROUTE103), { 4, 5 }, 136, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_TWIN, OBJ_EVENT_GFX_TWIN }, { Route103_EventScript_Liv, Route103_EventScript_Amy } }, // Route103 TWINS
-    { TRAINER_ANDREW, MAP_GROUP(MAP_ROUTE103), MAP_NUM(MAP_ROUTE103), { 6, 0 }, 108, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route103_EventScript_Andrew, NULL } }, // Route103 FISHERMAN
-    { TRAINER_MIGUEL_1, MAP_GROUP(MAP_ROUTE103), MAP_NUM(MAP_ROUTE103), { 12, 0 }, 122, 0, { OBJ_EVENT_GFX_POKEFAN_M, 0 }, { Route103_EventScript_Miguel, NULL } }, // Route103 POKEFAN
-    { TRAINER_RHETT, MAP_GROUP(MAP_ROUTE103), MAP_NUM(MAP_ROUTE103), { 16, 0 }, 100, 0, { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { Route103_EventScript_Rhett, NULL } }, // Route103 BLACK_BELT
-    { TRAINER_MARCOS, MAP_GROUP(MAP_ROUTE103), MAP_NUM(MAP_ROUTE103), { 17, 0 }, 110, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route103_EventScript_Marcos, NULL } }, // Route103 GUITARIST
-    { TRAINER_ISABELLE, MAP_GROUP(MAP_ROUTE103), MAP_NUM(MAP_ROUTE103), { 18, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route103_EventScript_Isabelle, NULL } }, // Route103 SWIMMER_F
-    { TRAINER_PETE, MAP_GROUP(MAP_ROUTE103), MAP_NUM(MAP_ROUTE103), { 19, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route103_EventScript_Pete, NULL } }, // Route103 SWIMMER_M
-    { TRAINER_HALEY_1, MAP_GROUP(MAP_ROUTE104), MAP_NUM(MAP_ROUTE104), { 3, 0 }, 115, 0, { OBJ_EVENT_GFX_LASS, 0 }, { Route104_EventScript_Haley, NULL } }, // Route104 LASS
-    { TRAINER_IVAN, MAP_GROUP(MAP_ROUTE104), MAP_NUM(MAP_ROUTE104), { 10, 0 }, 108, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route104_EventScript_Ivan, NULL } }, // Route104 FISHERMAN
-    { TRAINER_GINA_AND_MIA_1, MAP_GROUP(MAP_ROUTE104), MAP_NUM(MAP_ROUTE104), { 24, 25 }, 136, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_TWIN, OBJ_EVENT_GFX_TWIN }, { Route104_EventScript_Gina, Route104_EventScript_Mia } }, // Route104 TWINS
-    { TRAINER_WINSTON_1, MAP_GROUP(MAP_ROUTE104), MAP_NUM(MAP_ROUTE104), { 26, 0 }, 125, 0, { OBJ_EVENT_GFX_RICH_BOY, 0 }, { Route104_EventScript_Winston, NULL } }, // Route104 RICH_BOY
-    { TRAINER_CINDY_1, MAP_GROUP(MAP_ROUTE104), MAP_NUM(MAP_ROUTE104), { 27, 0 }, 114, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route104_EventScript_Cindy, NULL } }, // Route104 LADY
-    { TRAINER_BILLY, MAP_GROUP(MAP_ROUTE104), MAP_NUM(MAP_ROUTE104), { 29, 0 }, 137, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route104_EventScript_Billy, NULL } }, // Route104 YOUNGSTER
-    { TRAINER_DARIAN, MAP_GROUP(MAP_ROUTE104), MAP_NUM(MAP_ROUTE104), { 34, 0 }, 108, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route104_EventScript_Darian, NULL } }, // Route104 FISHERMAN
-    { TRAINER_LUIS, MAP_GROUP(MAP_ROUTE105), MAP_NUM(MAP_ROUTE105), { 1, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route105_EventScript_Luis, NULL } }, // Route105 SWIMMER_M
-    { TRAINER_BEVERLY, MAP_GROUP(MAP_ROUTE105), MAP_NUM(MAP_ROUTE105), { 3, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route105_EventScript_Beverly, NULL } }, // Route105 SWIMMER_F
-    { TRAINER_IMANI, MAP_GROUP(MAP_ROUTE105), MAP_NUM(MAP_ROUTE105), { 4, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route105_EventScript_Imani, NULL } }, // Route105 SWIMMER_F
-    { TRAINER_FOSTER, MAP_GROUP(MAP_ROUTE105), MAP_NUM(MAP_ROUTE105), { 6, 0 }, 126, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route105_EventScript_Foster, NULL } }, // Route105 RUIN_MANIAC
-    { TRAINER_JOSUE, MAP_GROUP(MAP_ROUTE105), MAP_NUM(MAP_ROUTE105), { 7, 0 }, 99, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route105_EventScript_Josue, NULL } }, // Route105 BIRD_KEEPER
-    { TRAINER_ANDRES_1, MAP_GROUP(MAP_ROUTE105), MAP_NUM(MAP_ROUTE105), { 8, 0 }, 126, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route105_EventScript_Andres, NULL } }, // Route105 RUIN_MANIAC
-    { TRAINER_DOUGLAS, MAP_GROUP(MAP_ROUTE106), MAP_NUM(MAP_ROUTE106), { 1, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route106_EventScript_Douglas, NULL } }, // Route106 SWIMMER_M
-    { TRAINER_KYLA, MAP_GROUP(MAP_ROUTE106), MAP_NUM(MAP_ROUTE106), { 2, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route106_EventScript_Kyla, NULL } }, // Route106 SWIMMER_F
-    { TRAINER_ELLIOT_1, MAP_GROUP(MAP_ROUTE106), MAP_NUM(MAP_ROUTE106), { 3, 0 }, 108, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route106_EventScript_Elliot, NULL } }, // Route106 FISHERMAN
-    { TRAINER_NED, MAP_GROUP(MAP_ROUTE106), MAP_NUM(MAP_ROUTE106), { 4, 0 }, 108, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route106_EventScript_Ned, NULL } }, // Route106 FISHERMAN
-    { TRAINER_DARRIN, MAP_GROUP(MAP_ROUTE107), MAP_NUM(MAP_ROUTE107), { 1, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route107_EventScript_Darrin, NULL } }, // Route107 SWIMMER_M
-    { TRAINER_TONY_1, MAP_GROUP(MAP_ROUTE107), MAP_NUM(MAP_ROUTE107), { 2, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route107_EventScript_Tony, NULL } }, // Route107 SWIMMER_M
-    { TRAINER_BETH, MAP_GROUP(MAP_ROUTE107), MAP_NUM(MAP_ROUTE107), { 4, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route107_EventScript_Beth, NULL } }, // Route107 SWIMMER_F
-    { TRAINER_LISA_AND_RAY, MAP_GROUP(MAP_ROUTE107), MAP_NUM(MAP_ROUTE107), { 5, 6 }, 129, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_SWIMMER_F, OBJ_EVENT_GFX_TUBER_M_SWIMMING }, { Route107_EventScript_Lisa, Route107_EventScript_Ray } }, // Route107 SIS_AND_BRO
-    { TRAINER_CAMRON, MAP_GROUP(MAP_ROUTE107), MAP_NUM(MAP_ROUTE107), { 7, 0 }, 133, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route107_EventScript_Camron, NULL } }, // Route107 TRIATHLETE
-    { TRAINER_JEROME, MAP_GROUP(MAP_ROUTE108), MAP_NUM(MAP_ROUTE108), { 1, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route108_EventScript_Jerome, NULL } }, // Route108 SWIMMER_M
-    { TRAINER_TARA, MAP_GROUP(MAP_ROUTE108), MAP_NUM(MAP_ROUTE108), { 2, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route108_EventScript_Tara, NULL } }, // Route108 SWIMMER_F
-    { TRAINER_MISSY, MAP_GROUP(MAP_ROUTE108), MAP_NUM(MAP_ROUTE108), { 4, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route108_EventScript_Missy, NULL } }, // Route108 SWIMMER_F
-    { TRAINER_CAROLINA, MAP_GROUP(MAP_ROUTE108), MAP_NUM(MAP_ROUTE108), { 5, 0 }, 105, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route108_EventScript_Carolina, NULL } }, // Route108 COOLTRAINER
-    { TRAINER_CORY_1, MAP_GROUP(MAP_ROUTE108), MAP_NUM(MAP_ROUTE108), { 6, 0 }, 127, 0, { OBJ_EVENT_GFX_SAILOR, 0 }, { Route108_EventScript_Cory, NULL } }, // Route108 SAILOR
-    { TRAINER_DAVID, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 4, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route109_EventScript_David, NULL } }, // Route109 SWIMMER_M
-    { TRAINER_ALICE, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 5, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route109_EventScript_Alice, NULL } }, // Route109 SWIMMER_F
-    { TRAINER_EDMOND, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 7, 0 }, 127, 0, { OBJ_EVENT_GFX_SAILOR, 0 }, { Route109_EventScript_Edmond, NULL } }, // Route109 SAILOR
-    { TRAINER_LOLA_1, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 9, 0 }, 134, 0, { OBJ_EVENT_GFX_TUBER_F, 0 }, { Route109_EventScript_Lola, NULL } }, // Route109 TUBER_F
-    { TRAINER_GWEN, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 12, 0 }, 134, 0, { OBJ_EVENT_GFX_TUBER_F, 0 }, { Route109_EventScript_Gwen, NULL } }, // Route109 TUBER_F
-    { TRAINER_AUSTINA, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 13, 0 }, 134, 0, { OBJ_EVENT_GFX_TUBER_F, 0 }, { Route109_EventScript_Austina, NULL } }, // Route109 TUBER_F
-    { TRAINER_CARTER, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 14, 0 }, 108, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route109_EventScript_Carter, NULL } }, // Route109 FISHERMAN
-    { TRAINER_MEL_AND_PAUL, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 18, 19 }, 138, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_WOMAN_4, OBJ_EVENT_GFX_MAN_4 }, { Route109_EventScript_Mel, Route109_EventScript_Paul } }, // Route109 YOUNG_COUPLE
-    { TRAINER_HAILEY, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 22, 0 }, 134, 0, { OBJ_EVENT_GFX_TUBER_F, 0 }, { Route109_EventScript_Hailey, NULL } }, // Route109 TUBER_F
-    { TRAINER_CHANDLER, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 23, 0 }, 135, 0, { OBJ_EVENT_GFX_TUBER_M, 0 }, { Route109_EventScript_Chandler, NULL } }, // Route109 TUBER_M
-    { TRAINER_JASMINE, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 8, 0 }, 133, 0, { OBJ_EVENT_GFX_CYCLING_TRIATHLETE_F, 0 }, { Route110_EventScript_Jasmine, NULL } }, // Route110 TRIATHLETE
-    { TRAINER_ANTHONY, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 9, 0 }, 133, 0, { OBJ_EVENT_GFX_CYCLING_TRIATHLETE_M, 0 }, { Route110_EventScript_Anthony, NULL } }, // Route110 TRIATHLETE
-    { TRAINER_ABIGAIL_1, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 10, 0 }, 133, 0, { OBJ_EVENT_GFX_CYCLING_TRIATHLETE_F, 0 }, { Route110_EventScript_Abigail, NULL } }, // Route110 TRIATHLETE
-    { TRAINER_BENJAMIN_1, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 11, 0 }, 133, 0, { OBJ_EVENT_GFX_CYCLING_TRIATHLETE_M, 0 }, { Route110_EventScript_Benjamin, NULL } }, // Route110 TRIATHLETE
-    { TRAINER_EDWARD, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 12, 0 }, 124, 0, { OBJ_EVENT_GFX_PSYCHIC_M, 0 }, { Route110_EventScript_Edward, NULL } }, // Route110 PSYCHIC
-    { TRAINER_JACLYN, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 13, 0 }, 124, 0, { OBJ_EVENT_GFX_LASS, 0 }, { Route110_EventScript_Jaclyn, NULL } }, // Route110 PSYCHIC
-    { TRAINER_EDWIN_1, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 14, 0 }, 104, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route110_EventScript_Edwin, NULL } }, // Route110 COLLECTOR
-    { TRAINER_DALE, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 15, 0 }, 108, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route110_EventScript_Dale, NULL } }, // Route110 FISHERMAN
-    { TRAINER_JACOB, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 27, 0 }, 133, 0, { OBJ_EVENT_GFX_CYCLING_TRIATHLETE_M, 0 }, { Route110_EventScript_Jacob, NULL } }, // Route110 TRIATHLETE
-    { TRAINER_TIMMY, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 30, 0 }, 137, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route110_EventScript_Timmy, NULL } }, // Route110 YOUNGSTER
-    { TRAINER_ISABEL_1, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 31, 0 }, 122, 0, { OBJ_EVENT_GFX_POKEFAN_F, 0 }, { Route110_EventScript_Isabel, NULL } }, // Route110 POKEFAN
-    { TRAINER_KALEB, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 32, 0 }, 122, 0, { OBJ_EVENT_GFX_POKEFAN_M, 0 }, { Route110_EventScript_Kaleb, NULL } }, // Route110 POKEFAN
-    { TRAINER_ALYSSA, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 33, 0 }, 133, 0, { OBJ_EVENT_GFX_CYCLING_TRIATHLETE_F, 0 }, { Route110_EventScript_Alyssa, NULL } }, // Route110 TRIATHLETE
-    { TRAINER_JOSEPH, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 34, 0 }, 110, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route110_EventScript_Joseph, NULL } }, // Route110 GUITARIST
-    { TRAINER_HEIDI, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 5, 0 }, 93, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route111_EventScript_Heidi, NULL } }, // Route111 @desert
-    { TRAINER_DREW, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 9, 0 }, 103, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route111_EventScript_Drew, NULL } }, // Route111 CAMPER
-    { TRAINER_DUSTY_1, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 10, 0 }, 126, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route111_EventScript_Dusty, NULL } }, // Route111 RUIN_MANIAC
-    { TRAINER_BEAU, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 11, 0 }, 103, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route111_EventScript_Beau, NULL } }, // Route111 CAMPER
-    { TRAINER_BECKY, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 12, 0 }, 93, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route111_EventScript_Becky, NULL } }, // Route111 @desert
-    { TRAINER_TRAVIS, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 29, 0 }, 103, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route111_EventScript_Travis, NULL } }, // Route111 CAMPER
-    { TRAINER_DAISUKE, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 30, 0 }, 100, 0, { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { Route111_EventScript_Daisuke, NULL } }, // Route111 BLACK_BELT
-    { TRAINER_BROOKE_1, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 31, 0 }, 105, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route111_EventScript_Brooke, NULL } }, // Route111 COOLTRAINER
-    { TRAINER_WILTON_1, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 32, 0 }, 105, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { Route111_EventScript_Wilton, NULL } }, // Route111 COOLTRAINER
-    { TRAINER_TYRON, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 35, 0 }, 103, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route111_EventScript_Tyron, NULL } }, // Route111 CAMPER
-    { TRAINER_CELINA, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 36, 0 }, 96, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route111_EventScript_Celina, NULL } }, // Route111 AROMA_LADY
-    { TRAINER_HAYDEN, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 38, 0 }, 113, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route111_EventScript_Hayden, NULL } }, // Route111 KINDLER
-    { TRAINER_BRYAN, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 39, 0 }, 93, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route111_EventScript_Bryan, NULL } }, // Route111 @desert
-    { TRAINER_CELIA, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 40, 0 }, 119, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route111_EventScript_Celia, NULL } }, // Route111 PICNICKER
-    { TRAINER_BRANDEN, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 41, 0 }, 103, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route111_EventScript_Branden, NULL } }, // Route111 CAMPER
-    { TRAINER_BRICE, MAP_GROUP(MAP_ROUTE112), MAP_NUM(MAP_ROUTE112), { 2, 0 }, 112, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route112_EventScript_Brice, NULL } }, // Route112 HIKER
-    { TRAINER_LARRY, MAP_GROUP(MAP_ROUTE112), MAP_NUM(MAP_ROUTE112), { 3, 0 }, 103, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route112_EventScript_Larry, NULL } }, // Route112 CAMPER
-    { TRAINER_CAROL, MAP_GROUP(MAP_ROUTE112), MAP_NUM(MAP_ROUTE112), { 4, 0 }, 119, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route112_EventScript_Carol, NULL } }, // Route112 PICNICKER
-    { TRAINER_SHAYLA, MAP_GROUP(MAP_ROUTE112), MAP_NUM(MAP_ROUTE112), { 14, 0 }, 96, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route112_EventScript_Shayla, NULL } }, // Route112 AROMA_LADY
-    { TRAINER_DILLON, MAP_GROUP(MAP_ROUTE113), MAP_NUM(MAP_ROUTE113), { 4, 0 }, 137, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route113_EventScript_Dillon, NULL } }, // Route113 YOUNGSTER
-    { TRAINER_MADELINE_1, MAP_GROUP(MAP_ROUTE113), MAP_NUM(MAP_ROUTE113), { 5, 0 }, 118, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route113_EventScript_Madeline, NULL } }, // Route113 PARASOL_LADY
-    { TRAINER_TORI_AND_TIA, MAP_GROUP(MAP_ROUTE113), MAP_NUM(MAP_ROUTE113), { 10, 11 }, 136, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_TWIN, OBJ_EVENT_GFX_TWIN }, { Route113_EventScript_Tori, Route113_EventScript_Tia } }, // Route113 TWINS
-    { TRAINER_WYATT, MAP_GROUP(MAP_ROUTE113), MAP_NUM(MAP_ROUTE113), { 13, 0 }, 123, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route113_EventScript_Wyatt, NULL } }, // Route113 POKEMANIAC
-    { TRAINER_LAWRENCE, MAP_GROUP(MAP_ROUTE113), MAP_NUM(MAP_ROUTE113), { 14, 0 }, 103, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route113_EventScript_Lawrence, NULL } }, // Route113 CAMPER
-    { TRAINER_SOPHIE, MAP_GROUP(MAP_ROUTE113), MAP_NUM(MAP_ROUTE113), { 15, 0 }, 119, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route113_EventScript_Sophie, NULL } }, // Route113 PICNICKER
-    { TRAINER_COBY, MAP_GROUP(MAP_ROUTE113), MAP_NUM(MAP_ROUTE113), { 16, 0 }, 99, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route113_EventScript_Coby, NULL } }, // Route113 BIRD_KEEPER
-    { TRAINER_LENNY, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 3, 0 }, 112, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route114_EventScript_Lenny, NULL } }, // Route114 HIKER
-    { TRAINER_LUCAS_1, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 4, 0 }, 112, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route114_EventScript_Lucas, NULL } }, // Route114 HIKER
-    { TRAINER_SHANE, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 5, 0 }, 103, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route114_EventScript_Shane, NULL } }, // Route114 CAMPER
-    { TRAINER_NANCY, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 6, 0 }, 119, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route114_EventScript_Nancy, NULL } }, // Route114 PICNICKER
-    { TRAINER_STEVE_1, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 7, 0 }, 123, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route114_EventScript_Steve, NULL } }, // Route114 POKEMANIAC
-    { TRAINER_NOLAN, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 15, 0 }, 108, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route114_EventScript_Nolan, NULL } }, // Route114 FISHERMAN
-    { TRAINER_BERNIE_1, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 17, 0 }, 113, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route114_EventScript_Bernie, NULL } }, // Route114 KINDLER
-    { TRAINER_TYRA_AND_IVY, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 22, 23 }, 130, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_LASS, OBJ_EVENT_GFX_LASS }, { Route114_EventScript_Ivy, Route114_EventScript_Tyra } }, // Route114 SR_AND_JR
-    { TRAINER_CHARLOTTE, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 24, 0 }, 119, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route114_EventScript_Charlotte, NULL } }, // Route114 PICNICKER
-    { TRAINER_ANGELINA, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 25, 0 }, 119, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route114_EventScript_Angelina, NULL } }, // Route114 PICNICKER
-    { TRAINER_KAI, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 27, 0 }, 108, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route114_EventScript_Kai, NULL } }, // Route114 FISHERMAN
-    { TRAINER_TIMOTHY_1, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 2, 0 }, 107, 0, { OBJ_EVENT_GFX_EXPERT_M, 0 }, { Route115_EventScript_Timothy, NULL } }, // Route115 EXPERT
-    { TRAINER_NOB_1, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 3, 0 }, 100, 0, { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { Route115_EventScript_Nob, NULL } }, // Route115 BLACK_BELT
-    { TRAINER_CYNDY_1, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 7, 0 }, 92, 0, { OBJ_EVENT_GFX_GIRL_3, 0 }, { Route115_EventScript_Cyndy, NULL } }, // Route115 @coast
-    { TRAINER_KOICHI, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 8, 0 }, 100, 0, { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { Route115_EventScript_Koichi, NULL } }, // Route115 BLACK_BELT
-    { TRAINER_HECTOR, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 9, 0 }, 104, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route115_EventScript_Hector, NULL } }, // Route115 COLLECTOR
-    { TRAINER_KYRA, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 17, 0 }, 133, 0, { OBJ_EVENT_GFX_RUNNING_TRIATHLETE_F, 0 }, { Route115_EventScript_Kyra, NULL } }, // Route115 TRIATHLETE
-    { TRAINER_JAIDEN, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 18, 0 }, 116, 0, { OBJ_EVENT_GFX_NINJA_BOY, 0 }, { Route115_EventScript_Jaiden, NULL } }, // Route115 NINJA_BOY
-    { TRAINER_HELENE, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 19, 0 }, 97, 0, { OBJ_EVENT_GFX_GIRL_3, 0 }, { Route115_EventScript_Helene, NULL } }, // Route115 BATTLE_GIRL
-    { TRAINER_ALIX, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 20, 0 }, 124, 0, { OBJ_EVENT_GFX_LASS, 0 }, { Route115_EventScript_Alix, NULL } }, // Route115 PSYCHIC
-    { TRAINER_MARLENE, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 21, 0 }, 124, 0, { OBJ_EVENT_GFX_LASS, 0 }, { Route115_EventScript_Marlene, NULL } }, // Route115 PSYCHIC
-    { TRAINER_JOEY, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), { 3, 0 }, 137, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route116_EventScript_Joey, NULL } }, // Route116 YOUNGSTER
-    { TRAINER_JOSE, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), { 6, 0 }, 101, 0, { OBJ_EVENT_GFX_BUG_CATCHER, 0 }, { Route116_EventScript_Jose, NULL } }, // Route116 BUG_CATCHER
-    { TRAINER_JANICE, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), { 16, 0 }, 115, 0, { OBJ_EVENT_GFX_LASS, 0 }, { Route116_EventScript_Janice, NULL } }, // Route116 LASS
-    { TRAINER_KAREN_1, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), { 17, 0 }, 128, 0, { OBJ_EVENT_GFX_GIRL_3, 0 }, { Route116_EventScript_Karen, NULL } }, // Route116 SCHOOL_KID
-    { TRAINER_SARAH, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), { 23, 0 }, 114, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route116_EventScript_Sarah, NULL } }, // Route116 LADY
-    { TRAINER_DAWSON, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), { 24, 0 }, 125, 0, { OBJ_EVENT_GFX_BOY_2, 0 }, { Route116_EventScript_Dawson, NULL } }, // Route116 RICH_BOY
-    { TRAINER_JOHNSON, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), { 27, 0 }, 137, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route116_EventScript_Johnson, NULL } }, // Route116 YOUNGSTER
-    { TRAINER_DEVAN, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), { 28, 0 }, 112, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route116_EventScript_Devan, NULL } }, // Route116 HIKER
-    { TRAINER_DYLAN_1, MAP_GROUP(MAP_ROUTE117), MAP_NUM(MAP_ROUTE117), { 8, 0 }, 133, 0, { OBJ_EVENT_GFX_RUNNING_TRIATHLETE_M, 0 }, { Route117_EventScript_Dylan, NULL } }, // Route117 TRIATHLETE
-    { TRAINER_LYDIA_1, MAP_GROUP(MAP_ROUTE117), MAP_NUM(MAP_ROUTE117), { 9, 0 }, 120, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route117_EventScript_Lydia, NULL } }, // Route117 PKMN_BREEDER
-    { TRAINER_ISAAC_1, MAP_GROUP(MAP_ROUTE117), MAP_NUM(MAP_ROUTE117), { 10, 0 }, 120, 0, { OBJ_EVENT_GFX_MAN_4, 0 }, { Route117_EventScript_Isaac, NULL } }, // Route117 PKMN_BREEDER
-    { TRAINER_MARIA_1, MAP_GROUP(MAP_ROUTE117), MAP_NUM(MAP_ROUTE117), { 17, 0 }, 133, 0, { OBJ_EVENT_GFX_RUNNING_TRIATHLETE_F, 0 }, { Route117_EventScript_Maria, NULL } }, // Route117 TRIATHLETE
-    { TRAINER_DEREK, MAP_GROUP(MAP_ROUTE117), MAP_NUM(MAP_ROUTE117), { 18, 0 }, 102, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route117_EventScript_Derek, NULL } }, // Route117 BUG_MANIAC
-    { TRAINER_ANNA_AND_MEG_1, MAP_GROUP(MAP_ROUTE117), MAP_NUM(MAP_ROUTE117), { 19, 20 }, 130, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_LASS, OBJ_EVENT_GFX_LASS }, { Route117_EventScript_Meg, Route117_EventScript_Anna } }, // Route117 SR_AND_JR
-    { TRAINER_BRANDI, MAP_GROUP(MAP_ROUTE117), MAP_NUM(MAP_ROUTE117), { 22, 0 }, 124, 0, { OBJ_EVENT_GFX_LASS, 0 }, { Route117_EventScript_Brandi, NULL } }, // Route117 PSYCHIC
-    { TRAINER_AISHA, MAP_GROUP(MAP_ROUTE117), MAP_NUM(MAP_ROUTE117), { 23, 0 }, 97, 0, { OBJ_EVENT_GFX_GIRL_3, 0 }, { Route117_EventScript_Aisha, NULL } }, // Route117 BATTLE_GIRL
-    { TRAINER_MELINA, MAP_GROUP(MAP_ROUTE117), MAP_NUM(MAP_ROUTE117), { 24, 0 }, 133, 0, { OBJ_EVENT_GFX_RUNNING_TRIATHLETE_F, 0 }, { Route117_EventScript_Melina, NULL } }, // Route117 TRIATHLETE
-    { TRAINER_PERRY, MAP_GROUP(MAP_ROUTE118), MAP_NUM(MAP_ROUTE118), { 4, 0 }, 99, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route118_EventScript_Perry, NULL } }, // Route118 BIRD_KEEPER
-    { TRAINER_ROSE_1, MAP_GROUP(MAP_ROUTE118), MAP_NUM(MAP_ROUTE118), { 14, 0 }, 96, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route118_EventScript_Rose, NULL } }, // Route118 AROMA_LADY
-    { TRAINER_WADE, MAP_GROUP(MAP_ROUTE118), MAP_NUM(MAP_ROUTE118), { 15, 0 }, 108, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route118_EventScript_Wade, NULL } }, // Route118 FISHERMAN
-    { TRAINER_CHESTER, MAP_GROUP(MAP_ROUTE118), MAP_NUM(MAP_ROUTE118), { 16, 0 }, 99, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route118_EventScript_Chester, NULL } }, // Route118 BIRD_KEEPER
-    { TRAINER_BARNY, MAP_GROUP(MAP_ROUTE118), MAP_NUM(MAP_ROUTE118), { 17, 0 }, 108, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route118_EventScript_Barny, NULL } }, // Route118 FISHERMAN
-    { TRAINER_DALTON_1, MAP_GROUP(MAP_ROUTE118), MAP_NUM(MAP_ROUTE118), { 18, 0 }, 110, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route118_EventScript_Dalton, NULL } }, // Route118 GUITARIST
-    { TRAINER_DEANDRE, MAP_GROUP(MAP_ROUTE118), MAP_NUM(MAP_ROUTE118), { 21, 0 }, 137, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route118_EventScript_Deandre, NULL } }, // Route118 YOUNGSTER
-    { TRAINER_GREG, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 4, 0 }, 101, 0, { OBJ_EVENT_GFX_BUG_CATCHER, 0 }, { Route119_EventScript_Greg, NULL } }, // Route119 BUG_CATCHER
-    { TRAINER_TAYLOR, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 5, 0 }, 102, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route119_EventScript_Taylor, NULL } }, // Route119 BUG_MANIAC
-    { TRAINER_DONALD, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 6, 0 }, 102, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route119_EventScript_Donald, NULL } }, // Route119 BUG_MANIAC
-    { TRAINER_JACKSON_1, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 7, 0 }, 121, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route119_EventScript_Jackson, NULL } }, // Route119 PKMN_RANGER
-    { TRAINER_BRENT, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 8, 0 }, 102, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route119_EventScript_Brent, NULL } }, // Route119 BUG_MANIAC
-    { TRAINER_CATHERINE_1, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 9, 0 }, 121, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route119_EventScript_Catherine, NULL } }, // Route119 PKMN_RANGER
-    { TRAINER_DOUG, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 10, 0 }, 101, 0, { OBJ_EVENT_GFX_BUG_CATCHER, 0 }, { Route119_EventScript_Doug, NULL } }, // Route119 BUG_CATCHER
-    { TRAINER_KENT, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 11, 0 }, 101, 0, { OBJ_EVENT_GFX_BUG_CATCHER, 0 }, { Route119_EventScript_Kent, NULL } }, // Route119 BUG_CATCHER
-    { TRAINER_YASU, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 12, 0 }, 116, 0, { OBJ_EVENT_GFX_NINJA_BOY, 0 }, { Route119_EventScript_Yasu, NULL } }, // Route119 NINJA_BOY
-    { TRAINER_TAKASHI, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 13, 0 }, 116, 0, { OBJ_EVENT_GFX_NINJA_BOY, 0 }, { Route119_EventScript_Takashi, NULL } }, // Route119 NINJA_BOY
-    { TRAINER_HUGH, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 14, 0 }, 99, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route119_EventScript_Hugh, NULL } }, // Route119 BIRD_KEEPER
-    { TRAINER_PHIL, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 15, 0 }, 99, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route119_EventScript_Phil, NULL } }, // Route119 BIRD_KEEPER
-    { TRAINER_HIDEO, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 34, 0 }, 116, 0, { OBJ_EVENT_GFX_NINJA_BOY, 0 }, { Route119_EventScript_Hideo, NULL } }, // Route119 NINJA_BOY
-    { TRAINER_CHRIS, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 37, 0 }, 108, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route119_EventScript_Chris, NULL } }, // Route119 FISHERMAN
-    { TRAINER_RACHEL, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 38, 0 }, 118, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route119_EventScript_Rachel, NULL } }, // Route119 PARASOL_LADY
-    { TRAINER_DAYTON, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 39, 0 }, 113, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route119_EventScript_Dayton, NULL } }, // Route119 KINDLER
-    { TRAINER_FABIAN, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 40, 0 }, 110, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route119_EventScript_Fabian, NULL } }, // Route119 GUITARIST
-    { TRAINER_COLIN, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 11, 0 }, 99, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route120_EventScript_Colin, NULL } }, // Route120 BIRD_KEEPER
-    { TRAINER_ROBERT_1, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 12, 0 }, 99, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route120_EventScript_Robert, NULL } }, // Route120 BIRD_KEEPER
-    { TRAINER_LORENZO, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 13, 0 }, 121, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route120_EventScript_Lorenzo, NULL } }, // Route120 PKMN_RANGER
-    { TRAINER_JENNA, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 14, 0 }, 121, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route120_EventScript_Jenna, NULL } }, // Route120 PKMN_RANGER
-    { TRAINER_JEFFREY_1, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 15, 0 }, 102, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route120_EventScript_Jeffrey, NULL } }, // Route120 BUG_MANIAC
-    { TRAINER_JENNIFER, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 24, 0 }, 105, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route120_EventScript_Jennifer, NULL } }, // Route120 COOLTRAINER
-    { TRAINER_CHIP, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 25, 0 }, 126, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route120_EventScript_Chip, NULL } }, // Route120 RUIN_MANIAC
-    { TRAINER_CLARISSA, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 26, 0 }, 118, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route120_EventScript_Clarissa, NULL } }, // Route120 PARASOL_LADY
-    { TRAINER_ANGELICA, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 27, 0 }, 118, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route120_EventScript_Angelica, NULL } }, // Route120 PARASOL_LADY
-    { TRAINER_KEIGO, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 34, 0 }, 116, 0, { OBJ_EVENT_GFX_NINJA_BOY, 0 }, { Route120_EventScript_Keigo, NULL } }, // Route120 NINJA_BOY
-    { TRAINER_RILEY, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 35, 0 }, 116, 0, { OBJ_EVENT_GFX_NINJA_BOY, 0 }, { Route120_EventScript_Riley, NULL } }, // Route120 NINJA_BOY
-    { TRAINER_CALLIE, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 42, 0 }, 97, 0, { OBJ_EVENT_GFX_GIRL_3, 0 }, { Route120_EventScript_Callie, NULL } }, // Route120 BATTLE_GIRL
-    { TRAINER_LEONEL, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 43, 0 }, 105, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { Route120_EventScript_Leonel, NULL } }, // Route120 COOLTRAINER
-    { TRAINER_KATE_AND_JOY, MAP_GROUP(MAP_ROUTE121), MAP_NUM(MAP_ROUTE121), { 10, 11 }, 130, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_LASS, OBJ_EVENT_GFX_LASS }, { Route121_EventScript_Kate, Route121_EventScript_Joy } }, // Route121 SR_AND_JR
-    { TRAINER_WALTER_1, MAP_GROUP(MAP_ROUTE121), MAP_NUM(MAP_ROUTE121), { 18, 0 }, 109, 0, { OBJ_EVENT_GFX_GENTLEMAN, 0 }, { Route121_EventScript_Walter, NULL } }, // Route121 GENTLEMAN
-    { TRAINER_JESSICA_1, MAP_GROUP(MAP_ROUTE121), MAP_NUM(MAP_ROUTE121), { 20, 0 }, 98, 0, { OBJ_EVENT_GFX_BEAUTY, 0 }, { Route121_EventScript_Jessica, NULL } }, // Route121 BEAUTY
-    { TRAINER_MYLES, MAP_GROUP(MAP_ROUTE121), MAP_NUM(MAP_ROUTE121), { 24, 0 }, 120, 0, { OBJ_EVENT_GFX_MAN_4, 0 }, { Route121_EventScript_Myles, NULL } }, // Route121 PKMN_BREEDER
-    { TRAINER_PAT, MAP_GROUP(MAP_ROUTE121), MAP_NUM(MAP_ROUTE121), { 25, 0 }, 120, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route121_EventScript_Pat, NULL } }, // Route121 PKMN_BREEDER
-    { TRAINER_MARCEL, MAP_GROUP(MAP_ROUTE121), MAP_NUM(MAP_ROUTE121), { 26, 0 }, 105, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { Route121_EventScript_Marcel, NULL } }, // Route121 COOLTRAINER
-    { TRAINER_CRISTIN_1, MAP_GROUP(MAP_ROUTE121), MAP_NUM(MAP_ROUTE121), { 27, 0 }, 105, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route121_EventScript_Cristin, NULL } }, // Route121 COOLTRAINER
-    { TRAINER_WENDY, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 8, 0 }, 105, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route123_EventScript_Wendy, NULL } }, // Route123 COOLTRAINER
-    { TRAINER_BRAXTON, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 9, 0 }, 105, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { Route123_EventScript_Braxton, NULL } }, // Route123 COOLTRAINER
-    { TRAINER_VIOLET, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 26, 0 }, 96, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route123_EventScript_Violet, NULL } }, // Route123 AROMA_LADY
-    { TRAINER_MIU_AND_YUKI, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 27, 28 }, 136, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_TWIN, OBJ_EVENT_GFX_TWIN }, { Route123_EventScript_Yuki, Route123_EventScript_Miu } }, // Route123 TWINS
-    { TRAINER_JACKI_1, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 30, 0 }, 124, 0, { OBJ_EVENT_GFX_LASS, 0 }, { Route123_EventScript_Jacki, NULL } }, // Route123 PSYCHIC
-    { TRAINER_JONAS, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 34, 0 }, 116, 0, { OBJ_EVENT_GFX_NINJA_BOY, 0 }, { Route123_EventScript_Jonas, NULL } }, // Route123 NINJA_BOY
-    { TRAINER_KAYLEY, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 35, 0 }, 118, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route123_EventScript_Kayley, NULL } }, // Route123 PARASOL_LADY
-    { TRAINER_ED, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 36, 0 }, 104, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route123_EventScript_Ed, NULL } }, // Route123 COLLECTOR
-    { TRAINER_FERNANDO_1, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 37, 0 }, 110, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route123_EventScript_Fernando, NULL } }, // Route123 GUITARIST
-    { TRAINER_ALBERTO, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 38, 0 }, 99, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route123_EventScript_Alberto, NULL } }, // Route123 BIRD_KEEPER
-    { TRAINER_FREDRICK, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 39, 0 }, 107, 0, { OBJ_EVENT_GFX_EXPERT_M, 0 }, { Route123_EventScript_Frederick, NULL } }, // Route123 EXPERT
-    { TRAINER_JAZMYN, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 41, 0 }, 105, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route123_EventScript_Jazmyn, NULL } }, // Route123 COOLTRAINER
-    { TRAINER_DAVIS, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 42, 0 }, 101, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route123_EventScript_Davis, NULL } }, // Route123 BUG_CATCHER
-    { TRAINER_SPENCER, MAP_GROUP(MAP_ROUTE124), MAP_NUM(MAP_ROUTE124), { 1, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route124_EventScript_Spencer, NULL } }, // Route124 SWIMMER_M
-    { TRAINER_ROLAND, MAP_GROUP(MAP_ROUTE124), MAP_NUM(MAP_ROUTE124), { 2, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route124_EventScript_Roland, NULL } }, // Route124 SWIMMER_M
-    { TRAINER_GRACE, MAP_GROUP(MAP_ROUTE124), MAP_NUM(MAP_ROUTE124), { 4, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route124_EventScript_Grace, NULL } }, // Route124 SWIMMER_F
-    { TRAINER_LILA_AND_ROY_1, MAP_GROUP(MAP_ROUTE124), MAP_NUM(MAP_ROUTE124), { 9, 10 }, 129, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_SWIMMER_F, OBJ_EVENT_GFX_TUBER_M_SWIMMING }, { Route124_EventScript_Lila, Route124_EventScript_Roy } }, // Route124 SIS_AND_BRO
-    { TRAINER_DECLAN, MAP_GROUP(MAP_ROUTE124), MAP_NUM(MAP_ROUTE124), { 11, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route124_EventScript_Declan, NULL } }, // Route124 SWIMMER_M
-    { TRAINER_ISABELLA, MAP_GROUP(MAP_ROUTE124), MAP_NUM(MAP_ROUTE124), { 12, 0 }, 133, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route124_EventScript_Isabella, NULL } }, // Route124 TRIATHLETE
-    { TRAINER_NOLEN, MAP_GROUP(MAP_ROUTE125), MAP_NUM(MAP_ROUTE125), { 1, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route125_EventScript_Nolen, NULL } }, // Route125 SWIMMER_M
-    { TRAINER_STAN, MAP_GROUP(MAP_ROUTE125), MAP_NUM(MAP_ROUTE125), { 2, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route125_EventScript_Stan, NULL } }, // Route125 SWIMMER_M
-    { TRAINER_SHARON, MAP_GROUP(MAP_ROUTE125), MAP_NUM(MAP_ROUTE125), { 4, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route125_EventScript_Sharon, NULL } }, // Route125 SWIMMER_F
-    { TRAINER_PRESLEY, MAP_GROUP(MAP_ROUTE125), MAP_NUM(MAP_ROUTE125), { 8, 0 }, 99, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route125_EventScript_Presley, NULL } }, // Route125 BIRD_KEEPER
-    { TRAINER_AURON, MAP_GROUP(MAP_ROUTE125), MAP_NUM(MAP_ROUTE125), { 9, 0 }, 107, 0, { OBJ_EVENT_GFX_EXPERT_M, 0 }, { Route125_EventScript_Auron, NULL } }, // Route125 EXPERT
-    { TRAINER_BARRY, MAP_GROUP(MAP_ROUTE126), MAP_NUM(MAP_ROUTE126), { 1, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route126_EventScript_Barry, NULL } }, // Route126 SWIMMER_M
-    { TRAINER_NIKKI, MAP_GROUP(MAP_ROUTE126), MAP_NUM(MAP_ROUTE126), { 3, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route126_EventScript_Nikki, NULL } }, // Route126 SWIMMER_F
-    { TRAINER_BRENDA, MAP_GROUP(MAP_ROUTE126), MAP_NUM(MAP_ROUTE126), { 4, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route126_EventScript_Brenda, NULL } }, // Route126 SWIMMER_F
-    { TRAINER_SIENNA, MAP_GROUP(MAP_ROUTE126), MAP_NUM(MAP_ROUTE126), { 6, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route126_EventScript_Sienna, NULL } }, // Route126 SWIMMER_F
-    { TRAINER_PABLO_1, MAP_GROUP(MAP_ROUTE126), MAP_NUM(MAP_ROUTE126), { 7, 0 }, 133, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route126_EventScript_Pablo, NULL } }, // Route126 TRIATHLETE
-    { TRAINER_ISOBEL, MAP_GROUP(MAP_ROUTE126), MAP_NUM(MAP_ROUTE126), { 8, 0 }, 133, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route126_EventScript_Isobel, NULL } }, // Route126 TRIATHLETE
-    { TRAINER_LEONARDO, MAP_GROUP(MAP_ROUTE126), MAP_NUM(MAP_ROUTE126), { 9, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route126_EventScript_Leonardo, NULL } }, // Route126 SWIMMER_M
-    { TRAINER_CAMDEN, MAP_GROUP(MAP_ROUTE127), MAP_NUM(MAP_ROUTE127), { 1, 0 }, 133, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route127_EventScript_Camden, NULL } }, // Route127 TRIATHLETE
-    { TRAINER_DONNY, MAP_GROUP(MAP_ROUTE127), MAP_NUM(MAP_ROUTE127), { 2, 0 }, 133, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route127_EventScript_Donny, NULL } }, // Route127 TRIATHLETE
-    { TRAINER_JONAH, MAP_GROUP(MAP_ROUTE127), MAP_NUM(MAP_ROUTE127), { 5, 0 }, 108, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route127_EventScript_Jonah, NULL } }, // Route127 FISHERMAN
-    { TRAINER_ROGER, MAP_GROUP(MAP_ROUTE127), MAP_NUM(MAP_ROUTE127), { 6, 0 }, 108, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route127_EventScript_Roger, NULL } }, // Route127 FISHERMAN
-    { TRAINER_HENRY, MAP_GROUP(MAP_ROUTE127), MAP_NUM(MAP_ROUTE127), { 7, 0 }, 108, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route127_EventScript_Henry, NULL } }, // Route127 FISHERMAN
-    { TRAINER_AIDAN, MAP_GROUP(MAP_ROUTE127), MAP_NUM(MAP_ROUTE127), { 8, 0 }, 99, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route127_EventScript_Aidan, NULL } }, // Route127 BIRD_KEEPER
-    { TRAINER_KOJI_1, MAP_GROUP(MAP_ROUTE127), MAP_NUM(MAP_ROUTE127), { 9, 0 }, 100, 0, { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { Route127_EventScript_Koji, NULL } }, // Route127 BLACK_BELT
-    { TRAINER_ATHENA, MAP_GROUP(MAP_ROUTE127), MAP_NUM(MAP_ROUTE127), { 10, 0 }, 105, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route127_EventScript_Athena, NULL } }, // Route127 COOLTRAINER
-    { TRAINER_RUBEN, MAP_GROUP(MAP_ROUTE128), MAP_NUM(MAP_ROUTE128), { 7, 0 }, 105, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { Route128_EventScript_Ruben, NULL } }, // Route128 COOLTRAINER
-    { TRAINER_ALEXA, MAP_GROUP(MAP_ROUTE128), MAP_NUM(MAP_ROUTE128), { 8, 0 }, 105, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route128_EventScript_Alexa, NULL } }, // Route128 COOLTRAINER
-    { TRAINER_CARLEE, MAP_GROUP(MAP_ROUTE128), MAP_NUM(MAP_ROUTE128), { 9, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route128_EventScript_Carlee, NULL } }, // Route128 SWIMMER_F
-    { TRAINER_HARRISON, MAP_GROUP(MAP_ROUTE128), MAP_NUM(MAP_ROUTE128), { 10, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route128_EventScript_Harrison, NULL } }, // Route128 SWIMMER_M
-    { TRAINER_CHASE, MAP_GROUP(MAP_ROUTE129), MAP_NUM(MAP_ROUTE129), { 1, 0 }, 133, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route129_EventScript_Chase, NULL } }, // Route129 TRIATHLETE
-    { TRAINER_ALLISON, MAP_GROUP(MAP_ROUTE129), MAP_NUM(MAP_ROUTE129), { 2, 0 }, 133, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route129_EventScript_Allison, NULL } }, // Route129 TRIATHLETE
-    { TRAINER_TISHA, MAP_GROUP(MAP_ROUTE129), MAP_NUM(MAP_ROUTE129), { 3, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route129_EventScript_Tisha, NULL } }, // Route129 SWIMMER_F
-    { TRAINER_REED, MAP_GROUP(MAP_ROUTE129), MAP_NUM(MAP_ROUTE129), { 4, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route129_EventScript_Reed, NULL } }, // Route129 SWIMMER_M
-    { TRAINER_CLARENCE, MAP_GROUP(MAP_ROUTE129), MAP_NUM(MAP_ROUTE129), { 5, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route129_EventScript_Clarence, NULL } }, // Route129 SWIMMER_M
-    { TRAINER_RODNEY, MAP_GROUP(MAP_ROUTE130), MAP_NUM(MAP_ROUTE130), { 1, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route130_EventScript_Rodney, NULL } }, // Route130 SWIMMER_M
-    { TRAINER_KATIE, MAP_GROUP(MAP_ROUTE130), MAP_NUM(MAP_ROUTE130), { 2, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route130_EventScript_Katie, NULL } }, // Route130 SWIMMER_F
-    { TRAINER_SANTIAGO, MAP_GROUP(MAP_ROUTE130), MAP_NUM(MAP_ROUTE130), { 4, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route130_EventScript_Santiago, NULL } }, // Route130 SWIMMER_M
-    { TRAINER_RICHARD, MAP_GROUP(MAP_ROUTE131), MAP_NUM(MAP_ROUTE131), { 1, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route131_EventScript_Richard, NULL } }, // Route131 SWIMMER_M
-    { TRAINER_HERMAN, MAP_GROUP(MAP_ROUTE131), MAP_NUM(MAP_ROUTE131), { 2, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route131_EventScript_Herman, NULL } }, // Route131 SWIMMER_M
-    { TRAINER_SUSIE, MAP_GROUP(MAP_ROUTE131), MAP_NUM(MAP_ROUTE131), { 3, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route131_EventScript_Susie, NULL } }, // Route131 SWIMMER_F
-    { TRAINER_KARA, MAP_GROUP(MAP_ROUTE131), MAP_NUM(MAP_ROUTE131), { 4, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route131_EventScript_Kara, NULL } }, // Route131 SWIMMER_F
-    { TRAINER_TALIA, MAP_GROUP(MAP_ROUTE131), MAP_NUM(MAP_ROUTE131), { 8, 0 }, 133, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route131_EventScript_Talia, NULL } }, // Route131 TRIATHLETE
-    { TRAINER_GILBERT, MAP_GROUP(MAP_ROUTE132), MAP_NUM(MAP_ROUTE132), { 1, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route132_EventScript_Gilbert, NULL } }, // Route132 SWIMMER_M
-    { TRAINER_DANA, MAP_GROUP(MAP_ROUTE132), MAP_NUM(MAP_ROUTE132), { 2, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route132_EventScript_Dana, NULL } }, // Route132 SWIMMER_F
-    { TRAINER_KIYO, MAP_GROUP(MAP_ROUTE132), MAP_NUM(MAP_ROUTE132), { 4, 0 }, 100, 0, { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { Route132_EventScript_Kiyo, NULL } }, // Route132 BLACK_BELT
-    { TRAINER_RONALD, MAP_GROUP(MAP_ROUTE132), MAP_NUM(MAP_ROUTE132), { 5, 0 }, 108, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route132_EventScript_Ronald, NULL } }, // Route132 FISHERMAN
-    { TRAINER_PAXTON, MAP_GROUP(MAP_ROUTE132), MAP_NUM(MAP_ROUTE132), { 6, 0 }, 107, 0, { OBJ_EVENT_GFX_EXPERT_M, 0 }, { Route132_EventScript_Paxton, NULL } }, // Route132 EXPERT
-    { TRAINER_DARCY, MAP_GROUP(MAP_ROUTE132), MAP_NUM(MAP_ROUTE132), { 7, 0 }, 105, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route132_EventScript_Darcy, NULL } }, // Route132 COOLTRAINER
-    { TRAINER_MAKAYLA, MAP_GROUP(MAP_ROUTE132), MAP_NUM(MAP_ROUTE132), { 8, 0 }, 107, 0, { OBJ_EVENT_GFX_EXPERT_F, 0 }, { Route132_EventScript_Makayla, NULL } }, // Route132 EXPERT
-    { TRAINER_JONATHAN, MAP_GROUP(MAP_ROUTE132), MAP_NUM(MAP_ROUTE132), { 9, 0 }, 105, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { Route132_EventScript_Jonathan, NULL } }, // Route132 COOLTRAINER
-    { TRAINER_FRANKLIN, MAP_GROUP(MAP_ROUTE133), MAP_NUM(MAP_ROUTE133), { 1, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route133_EventScript_Franklin, NULL } }, // Route133 SWIMMER_M
-    { TRAINER_LINDA, MAP_GROUP(MAP_ROUTE133), MAP_NUM(MAP_ROUTE133), { 2, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route133_EventScript_Linda, NULL } }, // Route133 SWIMMER_F
-    { TRAINER_DEBRA, MAP_GROUP(MAP_ROUTE133), MAP_NUM(MAP_ROUTE133), { 3, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route133_EventScript_Debra, NULL } }, // Route133 SWIMMER_F
-    { TRAINER_WARREN, MAP_GROUP(MAP_ROUTE133), MAP_NUM(MAP_ROUTE133), { 7, 0 }, 105, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { Route133_EventScript_Warren, NULL } }, // Route133 COOLTRAINER
-    { TRAINER_MOLLIE, MAP_GROUP(MAP_ROUTE133), MAP_NUM(MAP_ROUTE133), { 8, 0 }, 107, 0, { OBJ_EVENT_GFX_EXPERT_F, 0 }, { Route133_EventScript_Mollie, NULL } }, // Route133 EXPERT
-    { TRAINER_CONOR, MAP_GROUP(MAP_ROUTE133), MAP_NUM(MAP_ROUTE133), { 9, 0 }, 107, 0, { OBJ_EVENT_GFX_EXPERT_M, 0 }, { Route133_EventScript_Conor, NULL } }, // Route133 EXPERT
-    { TRAINER_JACK, MAP_GROUP(MAP_ROUTE134), MAP_NUM(MAP_ROUTE134), { 1, 0 }, 132, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route134_EventScript_Jack, NULL } }, // Route134 SWIMMER_M
-    { TRAINER_LAUREL, MAP_GROUP(MAP_ROUTE134), MAP_NUM(MAP_ROUTE134), { 2, 0 }, 131, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route134_EventScript_Laurel, NULL } }, // Route134 SWIMMER_F
-    { TRAINER_ALEX, MAP_GROUP(MAP_ROUTE134), MAP_NUM(MAP_ROUTE134), { 4, 0 }, 99, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route134_EventScript_Alex, NULL } }, // Route134 BIRD_KEEPER
-    { TRAINER_HITOSHI, MAP_GROUP(MAP_ROUTE134), MAP_NUM(MAP_ROUTE134), { 5, 0 }, 100, 0, { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { Route134_EventScript_Hitoshi, NULL } }, // Route134 BLACK_BELT
-    { TRAINER_MARLEY, MAP_GROUP(MAP_ROUTE134), MAP_NUM(MAP_ROUTE134), { 6, 0 }, 105, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route134_EventScript_Marley, NULL } }, // Route134 COOLTRAINER
-    { TRAINER_KELVIN, MAP_GROUP(MAP_ROUTE134), MAP_NUM(MAP_ROUTE134), { 7, 0 }, 127, 0, { OBJ_EVENT_GFX_SAILOR, 0 }, { Route134_EventScript_Kelvin, NULL } }, // Route134 SAILOR
-    { TRAINER_REYNA, MAP_GROUP(MAP_ROUTE134), MAP_NUM(MAP_ROUTE134), { 8, 0 }, 97, 0, { OBJ_EVENT_GFX_GIRL_3, 0 }, { Route134_EventScript_Reyna, NULL } }, // Route134 BATTLE_GIRL
-    { TRAINER_HUDSON, MAP_GROUP(MAP_ROUTE134), MAP_NUM(MAP_ROUTE134), { 9, 0 }, 127, 0, { OBJ_EVENT_GFX_SAILOR, 0 }, { Route134_EventScript_Hudson, NULL } }, // Route134 SAILOR
-    { TRAINER_NICOLAS_1, MAP_GROUP(MAP_METEOR_FALLS_1F_2R), MAP_NUM(MAP_METEOR_FALLS_1F_2R), { 1, 0 }, 106, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { MeteorFalls_1F_2R_EventScript_Nicolas, NULL } }, // MeteorFalls_1F_2R DRAGON_TAMER
-    { TRAINER_JOHN_AND_JAY_1, MAP_GROUP(MAP_METEOR_FALLS_1F_2R), MAP_NUM(MAP_METEOR_FALLS_1F_2R), { 2, 3 }, 117, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_EXPERT_M, OBJ_EVENT_GFX_EXPERT_F }, { MeteorFalls_1F_2R_EventScript_John, MeteorFalls_1F_2R_EventScript_Jay } }, // MeteorFalls_1F_2R OLD_COUPLE
-    { TRAINER_MIKE_2, MAP_GROUP(MAP_RUSTURF_TUNNEL), MAP_NUM(MAP_RUSTURF_TUNNEL), { 9, 0 }, 112, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { RusturfTunnel_EventScript_Mike, NULL } }, // RusturfTunnel HIKER
-    { TRAINER_LYLE, MAP_GROUP(MAP_PETALBURG_WOODS), MAP_NUM(MAP_PETALBURG_WOODS), { 9, 0 }, 101, 0, { OBJ_EVENT_GFX_BUG_CATCHER, 0 }, { PetalburgWoods_EventScript_Lyle, NULL } }, // PetalburgWoods BUG_CATCHER
-    { TRAINER_JAMES_1, MAP_GROUP(MAP_PETALBURG_WOODS), MAP_NUM(MAP_PETALBURG_WOODS), { 10, 0 }, 101, 0, { OBJ_EVENT_GFX_BUG_CATCHER, 0 }, { PetalburgWoods_EventScript_James, NULL } }, // PetalburgWoods BUG_CATCHER
-    { TRAINER_AUTUMN, MAP_GROUP(MAP_JAGGED_PASS), MAP_NUM(MAP_JAGGED_PASS), { 6, 0 }, 119, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { JaggedPass_EventScript_Autumn, NULL } }, // JaggedPass PICNICKER
-    { TRAINER_JULIO, MAP_GROUP(MAP_JAGGED_PASS), MAP_NUM(MAP_JAGGED_PASS), { 7, 0 }, 133, 0, { OBJ_EVENT_GFX_CYCLING_TRIATHLETE_M, 0 }, { JaggedPass_EventScript_Julio, NULL } }, // JaggedPass TRIATHLETE
-    { TRAINER_MARK, MAP_GROUP(MAP_MT_PYRE_2F), MAP_NUM(MAP_MT_PYRE_2F), { 1, 0 }, 123, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { MtPyre_2F_EventScript_Mark, NULL } }, // MtPyre_2F POKEMANIAC
-    { TRAINER_DEZ_AND_LUKE, MAP_GROUP(MAP_MT_PYRE_2F), MAP_NUM(MAP_MT_PYRE_2F), { 5, 6 }, 138, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_WOMAN_4, OBJ_EVENT_GFX_MAN_4 }, { MtPyre_2F_EventScript_Dez, MtPyre_2F_EventScript_Luke } }, // MtPyre_2F YOUNG_COUPLE
-    { TRAINER_ZANDER, MAP_GROUP(MAP_MT_PYRE_2F), MAP_NUM(MAP_MT_PYRE_2F), { 7, 0 }, 100, 0, { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { MtPyre_2F_EventScript_Zander, NULL } }, // MtPyre_2F BLACK_BELT
-    { TRAINER_LEAH, MAP_GROUP(MAP_MT_PYRE_2F), MAP_NUM(MAP_MT_PYRE_2F), { 8, 0 }, 94, 0, { OBJ_EVENT_GFX_HEX_MANIAC, 0 }, { MtPyre_2F_EventScript_Leah, NULL } }, // MtPyre_2F @mountain
-    { TRAINER_WILLIAM, MAP_GROUP(MAP_MT_PYRE_3F), MAP_NUM(MAP_MT_PYRE_3F), { 1, 0 }, 124, 0, { OBJ_EVENT_GFX_PSYCHIC_M, 0 }, { MtPyre_3F_EventScript_William, NULL } }, // MtPyre_3F PSYCHIC
-    { TRAINER_KAYLA, MAP_GROUP(MAP_MT_PYRE_3F), MAP_NUM(MAP_MT_PYRE_3F), { 2, 0 }, 124, 0, { OBJ_EVENT_GFX_LASS, 0 }, { MtPyre_3F_EventScript_Kayla, NULL } }, // MtPyre_3F PSYCHIC
-    { TRAINER_GABRIELLE_1, MAP_GROUP(MAP_MT_PYRE_3F), MAP_NUM(MAP_MT_PYRE_3F), { 4, 0 }, 120, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { MtPyre_3F_EventScript_Gabrielle, NULL } }, // MtPyre_3F PKMN_BREEDER
-    { TRAINER_TASHA, MAP_GROUP(MAP_MT_PYRE_4F), MAP_NUM(MAP_MT_PYRE_4F), { 1, 0 }, 111, 0, { OBJ_EVENT_GFX_HEX_MANIAC, 0 }, { MtPyre_4F_EventScript_Tasha, NULL } }, // MtPyre_4F HEX_MANIAC
-    { TRAINER_ATSUSHI, MAP_GROUP(MAP_MT_PYRE_5F), MAP_NUM(MAP_MT_PYRE_5F), { 1, 0 }, 100, 0, { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { MtPyre_5F_EventScript_Atsushi, NULL } }, // MtPyre_5F BLACK_BELT
-    { TRAINER_VALERIE_1, MAP_GROUP(MAP_MT_PYRE_6F), MAP_NUM(MAP_MT_PYRE_6F), { 1, 0 }, 111, 0, { OBJ_EVENT_GFX_HEX_MANIAC, 0 }, { MtPyre_6F_EventScript_Valerie, NULL } }, // MtPyre_6F HEX_MANIAC
-    { TRAINER_CEDRIC, MAP_GROUP(MAP_MT_PYRE_6F), MAP_NUM(MAP_MT_PYRE_6F), { 3, 0 }, 124, 0, { OBJ_EVENT_GFX_PSYCHIC_M, 0 }, { MtPyre_6F_EventScript_Cedric, NULL } }, // MtPyre_6F PSYCHIC
-    { TRAINER_EDGAR, MAP_GROUP(MAP_VICTORY_ROAD_1F), MAP_NUM(MAP_VICTORY_ROAD_1F), { 1, 0 }, 105, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { VictoryRoad_1F_EventScript_Edgar, NULL } }, // VictoryRoad_1F COOLTRAINER
-    { TRAINER_HOPE, MAP_GROUP(MAP_VICTORY_ROAD_1F), MAP_NUM(MAP_VICTORY_ROAD_1F), { 2, 0 }, 105, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { VictoryRoad_1F_EventScript_Hope, NULL } }, // VictoryRoad_1F COOLTRAINER
-    { TRAINER_ALBERT, MAP_GROUP(MAP_VICTORY_ROAD_1F), MAP_NUM(MAP_VICTORY_ROAD_1F), { 3, 0 }, 105, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { VictoryRoad_1F_EventScript_Albert, NULL } }, // VictoryRoad_1F COOLTRAINER
-    { TRAINER_KATELYNN, MAP_GROUP(MAP_VICTORY_ROAD_1F), MAP_NUM(MAP_VICTORY_ROAD_1F), { 8, 0 }, 105, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { VictoryRoad_1F_EventScript_Katelynn, NULL } }, // VictoryRoad_1F COOLTRAINER
-    { TRAINER_SHANNON, MAP_GROUP(MAP_VICTORY_ROAD_B1F), MAP_NUM(MAP_VICTORY_ROAD_B1F), { 15, 0 }, 105, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { VictoryRoad_B1F_EventScript_Shannon, NULL } }, // VictoryRoad_B1F COOLTRAINER
-    { TRAINER_MITCHELL, MAP_GROUP(MAP_VICTORY_ROAD_B1F), MAP_NUM(MAP_VICTORY_ROAD_B1F), { 20, 0 }, 105, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { VictoryRoad_B1F_EventScript_Mitchell, NULL } }, // VictoryRoad_B1F COOLTRAINER
-    { TRAINER_VITO, MAP_GROUP(MAP_VICTORY_ROAD_B2F), MAP_NUM(MAP_VICTORY_ROAD_B2F), { 1, 0 }, 105, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { VictoryRoad_B2F_EventScript_Vito, NULL } }, // VictoryRoad_B2F COOLTRAINER
-    { TRAINER_JULIE, MAP_GROUP(MAP_VICTORY_ROAD_B2F), MAP_NUM(MAP_VICTORY_ROAD_B2F), { 4, 0 }, 105, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { VictoryRoad_B2F_EventScript_Julie, NULL } }, // VictoryRoad_B2F COOLTRAINER
-    { TRAINER_DIANNE, MAP_GROUP(MAP_VICTORY_ROAD_B2F), MAP_NUM(MAP_VICTORY_ROAD_B2F), { 6, 0 }, 91, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { VictoryRoad_B2F_EventScript_Dianne, NULL } }, // VictoryRoad_B2F @cave
-    { TRAINER_CHARLIE, MAP_GROUP(MAP_ABANDONED_SHIP_CORRIDORS_1F), MAP_NUM(MAP_ABANDONED_SHIP_CORRIDORS_1F), { 2, 0 }, 95, 0, { OBJ_EVENT_GFX_TUBER_M, 0 }, { AbandonedShip_Corridors_1F_EventScript_Charlie, NULL } }, // AbandonedShip_Corridors_1F @ship
-    { TRAINER_THALIA_1, MAP_GROUP(MAP_ABANDONED_SHIP_ROOMS_1F), MAP_NUM(MAP_ABANDONED_SHIP_ROOMS_1F), { 3, 0 }, 98, 0, { OBJ_EVENT_GFX_BEAUTY, 0 }, { AbandonedShip_Rooms_1F_EventScript_Thalia, NULL } }, // AbandonedShip_Rooms_1F BEAUTY
-    { TRAINER_DEMETRIUS, MAP_GROUP(MAP_ABANDONED_SHIP_ROOMS_1F), MAP_NUM(MAP_ABANDONED_SHIP_ROOMS_1F), { 4, 0 }, 137, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { AbandonedShip_Rooms_1F_EventScript_Demetrius, NULL } }, // AbandonedShip_Rooms_1F YOUNGSTER
-    { TRAINER_KIRA_AND_DAN_1, MAP_GROUP(MAP_ABANDONED_SHIP_ROOMS2_1F), MAP_NUM(MAP_ABANDONED_SHIP_ROOMS2_1F), { 1, 2 }, 138, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_MAN_4, OBJ_EVENT_GFX_WOMAN_4 }, { AbandonedShip_Rooms2_1F_EventScript_Dan, AbandonedShip_Rooms2_1F_EventScript_Kira } }, // AbandonedShip_Rooms2_1F YOUNG_COUPLE
-    { TRAINER_GARRISON, MAP_GROUP(MAP_ABANDONED_SHIP_ROOMS2_1F), MAP_NUM(MAP_ABANDONED_SHIP_ROOMS2_1F), { 4, 0 }, 126, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { AbandonedShip_Rooms2_1F_EventScript_Garrison, NULL } }, // AbandonedShip_Rooms2_1F RUIN_MANIAC
-    { TRAINER_JANI, MAP_GROUP(MAP_ABANDONED_SHIP_ROOMS2_1F), MAP_NUM(MAP_ABANDONED_SHIP_ROOMS2_1F), { 5, 0 }, 95, 0, { OBJ_EVENT_GFX_TUBER_F, 0 }, { AbandonedShip_Rooms2_1F_EventScript_Jani, NULL } }, // AbandonedShip_Rooms2_1F @ship
-    { TRAINER_WAYFARER_COAST_SCIENTIST_TED, MAP_GROUP(MAP_POKEMON_MANSION_1F), MAP_NUM(MAP_POKEMON_MANSION_1F), { 1, 0 }, 18, 0, { OBJ_EVENT_GFX_SCIENTIST, 0 }, { PokemonMansion_1F_EventScript_Ted, NULL } }, // PokemonMansion_1F_Frlg SCIENTIST
-    { TRAINER_WAYFARER_COAST_YOUNGSTER_JOHNSON, MAP_GROUP(MAP_POKEMON_MANSION_1F), MAP_NUM(MAP_POKEMON_MANSION_1F), { 5, 0 }, 23, 0, { OBJ_EVENT_GFX_YOUNGSTER_FRLG, 0 }, { PokemonMansion_1F_EventScript_Johnson, NULL } }, // PokemonMansion_1F_Frlg YOUNGSTER
-    { TRAINER_WAYFARER_COAST_BURGLAR_ARNIE, MAP_GROUP(MAP_POKEMON_MANSION_2F), MAP_NUM(MAP_POKEMON_MANSION_2F), { 1, 0 }, 1, 0, { OBJ_EVENT_GFX_SUPER_NERD, 0 }, { PokemonMansion_2F_EventScript_Arnie, NULL } }, // PokemonMansion_2F_Frlg @mansion
-    { TRAINER_WAYFARER_COAST_BURGLAR_SIMON, MAP_GROUP(MAP_POKEMON_MANSION_3F), MAP_NUM(MAP_POKEMON_MANSION_3F), { 1, 0 }, 1, 0, { OBJ_EVENT_GFX_SUPER_NERD, 0 }, { PokemonMansion_3F_EventScript_Simon, NULL } }, // PokemonMansion_3F_Frlg @mansion
-    { TRAINER_WAYFARER_COAST_SCIENTIST_BRAYDON, MAP_GROUP(MAP_POKEMON_MANSION_3F), MAP_NUM(MAP_POKEMON_MANSION_3F), { 2, 0 }, 18, 0, { OBJ_EVENT_GFX_SCIENTIST, 0 }, { PokemonMansion_3F_EventScript_Braydon, NULL } }, // PokemonMansion_3F_Frlg SCIENTIST
-    { TRAINER_WAYFARER_COAST_BURGLAR_LEWIS, MAP_GROUP(MAP_POKEMON_MANSION_B1F), MAP_NUM(MAP_POKEMON_MANSION_B1F), { 2, 0 }, 6, 0, { OBJ_EVENT_GFX_SUPER_NERD, 0 }, { PokemonMansion_B1F_EventScript_Lewis, NULL } }, // PokemonMansion_B1F_Frlg BURGLAR
-    { TRAINER_WAYFARER_COAST_SCIENTIST_IVAN, MAP_GROUP(MAP_POKEMON_MANSION_B1F), MAP_NUM(MAP_POKEMON_MANSION_B1F), { 3, 0 }, 1, 0, { OBJ_EVENT_GFX_SCIENTIST, 0 }, { PokemonMansion_B1F_EventScript_Ivan, NULL } }, // PokemonMansion_B1F_Frlg @mansion
-    { TRAINER_WAYFARER_SEVII_CRUSH_GIRL_JOCELYN, MAP_GROUP(MAP_MT_EMBER_EXTERIOR), MAP_NUM(MAP_MT_EMBER_EXTERIOR), { 4, 0 }, 32, 0, { OBJ_EVENT_GFX_BATTLE_GIRL, 0 }, { WayfarerSevii_Trainer_MtEmber_Exterior_EventScript_Jocelyn, NULL } }, // MtEmber_Exterior_Frlg CRUSH_GIRL
-    { TRAINER_WAYFARER_SEVII_PKMN_RANGER_LOGAN, MAP_GROUP(MAP_MT_EMBER_EXTERIOR), MAP_NUM(MAP_MT_EMBER_EXTERIOR), { 5, 0 }, 43, 0, { OBJ_EVENT_GFX_CAMPER_FRLG, 0 }, { WayfarerSevii_Trainer_MtEmber_Exterior_EventScript_Logan, NULL } }, // MtEmber_Exterior_Frlg PKMN_RANGER
-    { TRAINER_WAYFARER_SEVII_PKMN_RANGER_BETH, MAP_GROUP(MAP_MT_EMBER_EXTERIOR), MAP_NUM(MAP_MT_EMBER_EXTERIOR), { 6, 0 }, 43, 0, { OBJ_EVENT_GFX_PICNICKER_FRLG, 0 }, { WayfarerSevii_Trainer_MtEmber_Exterior_EventScript_Beth, NULL } }, // MtEmber_Exterior_Frlg PKMN_RANGER
-    { TRAINER_WAYFARER_SEVII_PKMN_BREEDER_BETHANY, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 1, 0 }, 42, 0, { OBJ_EVENT_GFX_WOMAN_2_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Bethany, NULL } }, // SixIsland_PatternBush_Frlg PKMN_BREEDER
-    { TRAINER_WAYFARER_SEVII_PKMN_BREEDER_ALLISON, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 2, 0 }, 42, 0, { OBJ_EVENT_GFX_WOMAN_2_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Allison, NULL } }, // SixIsland_PatternBush_Frlg PKMN_BREEDER
-    { TRAINER_WAYFARER_SEVII_BUG_CATCHER_JONAH, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 4, 0 }, 28, 0, { OBJ_EVENT_GFX_BUG_CATCHER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Jonah, NULL } }, // SixIsland_PatternBush_Frlg BUG_CATCHER
-    { TRAINER_WAYFARER_SEVII_BUG_CATCHER_VANCE, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 5, 0 }, 28, 0, { OBJ_EVENT_GFX_BUG_CATCHER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Vance, NULL } }, // SixIsland_PatternBush_Frlg BUG_CATCHER
-    { TRAINER_WAYFARER_SEVII_YOUNGSTER_NASH, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 6, 0 }, 52, 0, { OBJ_EVENT_GFX_YOUNGSTER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Nash, NULL } }, // SixIsland_PatternBush_Frlg YOUNGSTER
-    { TRAINER_WAYFARER_SEVII_YOUNGSTER_CORDELL, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 7, 0 }, 52, 0, { OBJ_EVENT_GFX_YOUNGSTER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Cordell, NULL } }, // SixIsland_PatternBush_Frlg YOUNGSTER
-    { TRAINER_WAYFARER_SEVII_LASS_DALIA, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 8, 0 }, 39, 0, { OBJ_EVENT_GFX_LASS_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Dalia, NULL } }, // SixIsland_PatternBush_Frlg LASS
-    { TRAINER_WAYFARER_SEVII_LASS_JOANA, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 9, 0 }, 39, 0, { OBJ_EVENT_GFX_LASS_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Joana, NULL } }, // SixIsland_PatternBush_Frlg LASS
-    { TRAINER_WAYFARER_SEVII_CAMPER_RILEY, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 10, 0 }, 29, 0, { OBJ_EVENT_GFX_CAMPER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Riley, NULL } }, // SixIsland_PatternBush_Frlg CAMPER
-    { TRAINER_WAYFARER_SEVII_PICNICKER_MARCY, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 11, 0 }, 41, 0, { OBJ_EVENT_GFX_PICNICKER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Marcy, NULL } }, // SixIsland_PatternBush_Frlg PICNICKER
-    { TRAINER_WAYFARER_SEVII_RUIN_MANIAC_LAWSON, MAP_GROUP(MAP_FIVE_ISLAND_LOST_CAVE_ROOM1), MAP_NUM(MAP_FIVE_ISLAND_LOST_CAVE_ROOM1), { 1, 0 }, 45, 0, { OBJ_EVENT_GFX_HIKER_FRLG, 0 }, { WayfarerSevii_Trainer_FiveIsland_LostCave_Room1_EventScript_Lawson, NULL } }, // FiveIsland_LostCave_Room1_Frlg RUIN_MANIAC
-    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_REECE, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 1, 0 }, 22, 0, { OBJ_EVENT_GFX_SWIMMER_M_LAND, 0 }, { Route19_EventScript_Reece, NULL } }, // Route19_Frlg SWIMMER_M
-    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_RICHARD, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 2, 0 }, 22, 0, { OBJ_EVENT_GFX_SWIMMER_M_LAND, 0 }, { Route19_EventScript_Richard, NULL } }, // Route19_Frlg SWIMMER_M
-    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_TONY, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 3, 0 }, 22, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route19_EventScript_Tony, NULL } }, // Route19_Frlg SWIMMER_M
-    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_MATTHEW, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 4, 0 }, 22, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route19_EventScript_Matthew, NULL } }, // Route19_Frlg SWIMMER_M
-    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_DOUGLAS, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 5, 0 }, 22, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route19_EventScript_Douglas, NULL } }, // Route19_Frlg SWIMMER_M
-    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_DAVID, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 6, 0 }, 22, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route19_EventScript_David, NULL } }, // Route19_Frlg SWIMMER_M
-    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_AXLE, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 7, 0 }, 0, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route19_EventScript_Axle, NULL } }, // Route19_Frlg @coast
-    { TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_CONNIE, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 9, 0 }, 21, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { Route19_EventScript_Connie, NULL } }, // Route19_Frlg SWIMMER_F
-    { TRAINER_WAYFARER_COAST_SIS_AND_BRO_LIA_LUC, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 11, 12 }, 19, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_SWIMMER_F_WATER, OBJ_EVENT_GFX_TUBER_M_WATER }, { Route19_EventScript_Lia, Route19_EventScript_Luc } }, // Route19_Frlg SIS_AND_BRO
-    { TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_NORA, MAP_GROUP(MAP_ROUTE20), MAP_NUM(MAP_ROUTE20), { 3, 0 }, 21, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { Route20_EventScript_Nora, NULL } }, // Route20_Frlg SWIMMER_F
-    { TRAINER_WAYFARER_COAST_BIRD_KEEPER_ROGER, MAP_GROUP(MAP_ROUTE20), MAP_NUM(MAP_ROUTE20), { 4, 0 }, 4, 0, { OBJ_EVENT_GFX_ROCKER, 0 }, { Route20_EventScript_Roger, NULL } }, // Route20_Frlg BIRD_KEEPER
-    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_DEAN, MAP_GROUP(MAP_ROUTE20), MAP_NUM(MAP_ROUTE20), { 5, 0 }, 22, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route20_EventScript_Dean, NULL } }, // Route20_Frlg SWIMMER_M
-    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_BARRY, MAP_GROUP(MAP_ROUTE20), MAP_NUM(MAP_ROUTE20), { 7, 0 }, 22, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route20_EventScript_Barry, NULL } }, // Route20_Frlg SWIMMER_M
-    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_DARRIN, MAP_GROUP(MAP_ROUTE20), MAP_NUM(MAP_ROUTE20), { 8, 0 }, 22, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route20_EventScript_Darrin, NULL } }, // Route20_Frlg SWIMMER_M
-    { TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_TIFFANY, MAP_GROUP(MAP_ROUTE20), MAP_NUM(MAP_ROUTE20), { 10, 0 }, 21, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { Route20_EventScript_Tiffany, NULL } }, // Route20_Frlg SWIMMER_F
-    { TRAINER_WAYFARER_COAST_FISHERMAN_RONALD, MAP_GROUP(MAP_ROUTE21_NORTH), MAP_NUM(MAP_ROUTE21_NORTH), { 1, 0 }, 10, 0, { OBJ_EVENT_GFX_FISHER, 0 }, { Route21_North_EventScript_Ronald, NULL } }, // Route21_North_Frlg FISHERMAN
-    { TRAINER_WAYFARER_COAST_FISHERMAN_WADE, MAP_GROUP(MAP_ROUTE21_NORTH), MAP_NUM(MAP_ROUTE21_NORTH), { 2, 0 }, 10, 0, { OBJ_EVENT_GFX_FISHER, 0 }, { Route21_North_EventScript_Wade, NULL } }, // Route21_North_Frlg FISHERMAN
-    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_SPENCER, MAP_GROUP(MAP_ROUTE21_NORTH), MAP_NUM(MAP_ROUTE21_NORTH), { 3, 0 }, 22, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route21_North_EventScript_Spencer, NULL } }, // Route21_North_Frlg SWIMMER_M
-    { TRAINER_WAYFARER_COAST_SIS_AND_BRO_LIL_IAN, MAP_GROUP(MAP_ROUTE21_NORTH), MAP_NUM(MAP_ROUTE21_NORTH), { 4, 5 }, 19, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_SWIMMER_F_WATER, OBJ_EVENT_GFX_TUBER_M_WATER }, { Route21_North_EventScript_Lil, Route21_North_EventScript_Ian } }, // Route21_North_Frlg SIS_AND_BRO
-    { TRAINER_WAYFARER_COAST_FISHERMAN_CLAUDE, MAP_GROUP(MAP_ROUTE21_SOUTH), MAP_NUM(MAP_ROUTE21_SOUTH), { 1, 0 }, 0, 0, { OBJ_EVENT_GFX_FISHER, 0 }, { Route21_South_EventScript_Claude, NULL } }, // Route21_South_Frlg @coast
-    { TRAINER_WAYFARER_COAST_FISHERMAN_NOLAN, MAP_GROUP(MAP_ROUTE21_SOUTH), MAP_NUM(MAP_ROUTE21_SOUTH), { 2, 0 }, 10, 0, { OBJ_EVENT_GFX_FISHER, 0 }, { Route21_South_EventScript_Nolan, NULL } }, // Route21_South_Frlg FISHERMAN
-    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_JACK, MAP_GROUP(MAP_ROUTE21_SOUTH), MAP_NUM(MAP_ROUTE21_SOUTH), { 3, 0 }, 22, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route21_South_EventScript_Jack, NULL } }, // Route21_South_Frlg SWIMMER_M
-    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_JEROME, MAP_GROUP(MAP_ROUTE21_SOUTH), MAP_NUM(MAP_ROUTE21_SOUTH), { 4, 0 }, 22, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route21_South_EventScript_Jerome, NULL } }, // Route21_South_Frlg SWIMMER_M
-    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_ROLAND, MAP_GROUP(MAP_ROUTE21_SOUTH), MAP_NUM(MAP_ROUTE21_SOUTH), { 5, 0 }, 22, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route21_South_EventScript_Roland, NULL } }, // Route21_South_Frlg SWIMMER_M
-    { TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_MARIA, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 1, 0 }, 47, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Maria, NULL } }, // OneIsland_KindleRoad_Frlg SWIMMER_F
-    { TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_ABIGAIL, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 2, 0 }, 47, 0, { OBJ_EVENT_GFX_SWIMMER_F_LAND, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Abigail, NULL } }, // OneIsland_KindleRoad_Frlg SWIMMER_F
-    { TRAINER_WAYFARER_SEVII_SWIMMER_MALE_GARRETT, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 4, 0 }, 48, 0, { OBJ_EVENT_GFX_SWIMMER_M_LAND, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Garrett, NULL } }, // OneIsland_KindleRoad_Frlg SWIMMER_M
-    { TRAINER_WAYFARER_SEVII_FISHERMAN_TOMMY, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 5, 0 }, 34, 0, { OBJ_EVENT_GFX_FISHER, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Tommy, NULL } }, // OneIsland_KindleRoad_Frlg FISHERMAN
-    { TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 6, 0 }, 32, 0, { OBJ_EVENT_GFX_BATTLE_GIRL, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Sharon, NULL } }, // OneIsland_KindleRoad_Frlg CRUSH_GIRL
-    { TRAINER_WAYFARER_SEVII_CRUSH_GIRL_TANYA, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 7, 0 }, 32, 0, { OBJ_EVENT_GFX_BATTLE_GIRL, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Tanya, NULL } }, // OneIsland_KindleRoad_Frlg CRUSH_GIRL
-    { TRAINER_WAYFARER_SEVII_BLACK_BELT_HUGH, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 9, 0 }, 27, 0, { OBJ_EVENT_GFX_BLACKBELT, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Hugh, NULL } }, // OneIsland_KindleRoad_Frlg BLACK_BELT
-    { TRAINER_WAYFARER_SEVII_CAMPER_BRYCE, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 10, 0 }, 29, 0, { OBJ_EVENT_GFX_CAMPER_FRLG, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Bryce, NULL } }, // OneIsland_KindleRoad_Frlg CAMPER
-    { TRAINER_WAYFARER_SEVII_PICNICKER_CLAIRE, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 11, 0 }, 41, 0, { OBJ_EVENT_GFX_PICNICKER_FRLG, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Claire, NULL } }, // OneIsland_KindleRoad_Frlg PICNICKER
-    { TRAINER_WAYFARER_SEVII_CRUSH_KIN_MIK_KIA, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 12, 13 }, 33, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_BLACKBELT, OBJ_EVENT_GFX_BATTLE_GIRL }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Mik, WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Kia } }, // OneIsland_KindleRoad_Frlg CRUSH_KIN
-    { TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_AMARA, MAP_GROUP(MAP_ONE_ISLAND_TREASURE_BEACH), MAP_NUM(MAP_ONE_ISLAND_TREASURE_BEACH), { 1, 0 }, 24, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { WayfarerSevii_Trainer_OneIsland_TreasureBeach_EventScript_Amara, NULL } }, // OneIsland_TreasureBeach_Frlg @coast
-    { TRAINER_WAYFARER_SEVII_AROMA_LADY_NIKKI, MAP_GROUP(MAP_THREE_ISLAND_BOND_BRIDGE), MAP_NUM(MAP_THREE_ISLAND_BOND_BRIDGE), { 1, 0 }, 25, 0, { OBJ_EVENT_GFX_WOMAN_2_FRLG, 0 }, { WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Nikki, NULL } }, // ThreeIsland_BondBridge_Frlg AROMA_LADY
-    { TRAINER_WAYFARER_SEVII_TUBER_AMIRA, MAP_GROUP(MAP_THREE_ISLAND_BOND_BRIDGE), MAP_NUM(MAP_THREE_ISLAND_BOND_BRIDGE), { 3, 0 }, 50, 0, { OBJ_EVENT_GFX_TUBER_F_FRLG, 0 }, { WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Amira, NULL } }, // ThreeIsland_BondBridge_Frlg TUBER
-    { TRAINER_WAYFARER_SEVII_TUBER_ALEXIS, MAP_GROUP(MAP_THREE_ISLAND_BOND_BRIDGE), MAP_NUM(MAP_THREE_ISLAND_BOND_BRIDGE), { 4, 0 }, 50, 0, { OBJ_EVENT_GFX_TUBER_F_FRLG, 0 }, { WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Alexis, NULL } }, // ThreeIsland_BondBridge_Frlg TUBER
-    { TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_TISHA, MAP_GROUP(MAP_THREE_ISLAND_BOND_BRIDGE), MAP_NUM(MAP_THREE_ISLAND_BOND_BRIDGE), { 5, 0 }, 47, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Tisha, NULL } }, // ThreeIsland_BondBridge_Frlg SWIMMER_F
-    { TRAINER_WAYFARER_SEVII_TWINS_JOY_MEG, MAP_GROUP(MAP_THREE_ISLAND_BOND_BRIDGE), MAP_NUM(MAP_THREE_ISLAND_BOND_BRIDGE), { 6, 7 }, 51, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_LITTLE_GIRL_FRLG, OBJ_EVENT_GFX_LITTLE_GIRL_FRLG }, { WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Joy, WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Meg } }, // ThreeIsland_BondBridge_Frlg TWINS
-    { TRAINER_WAYFARER_SEVII_PAINTER_DAISY, MAP_GROUP(MAP_FIVE_ISLAND_RESORT_GORGEOUS), MAP_NUM(MAP_FIVE_ISLAND_RESORT_GORGEOUS), { 1, 0 }, 40, 0, { OBJ_EVENT_GFX_LASS_FRLG, 0 }, { WayfarerSevii_Trainer_FiveIsland_ResortGorgeous_EventScript_Daisy, NULL } }, // FiveIsland_ResortGorgeous_Frlg PAINTER
-    { TRAINER_WAYFARER_SEVII_PAINTER_CELINA, MAP_GROUP(MAP_FIVE_ISLAND_RESORT_GORGEOUS), MAP_NUM(MAP_FIVE_ISLAND_RESORT_GORGEOUS), { 2, 0 }, 40, 0, { OBJ_EVENT_GFX_LASS_FRLG, 0 }, { WayfarerSevii_Trainer_FiveIsland_ResortGorgeous_EventScript_Celina, NULL } }, // FiveIsland_ResortGorgeous_Frlg PAINTER
-    { TRAINER_WAYFARER_SEVII_PAINTER_RAYNA, MAP_GROUP(MAP_FIVE_ISLAND_RESORT_GORGEOUS), MAP_NUM(MAP_FIVE_ISLAND_RESORT_GORGEOUS), { 3, 0 }, 40, 0, { OBJ_EVENT_GFX_LASS_FRLG, 0 }, { WayfarerSevii_Trainer_FiveIsland_ResortGorgeous_EventScript_Rayna, NULL } }, // FiveIsland_ResortGorgeous_Frlg PAINTER
-    { TRAINER_WAYFARER_SEVII_LADY_JACKI, MAP_GROUP(MAP_FIVE_ISLAND_RESORT_GORGEOUS), MAP_NUM(MAP_FIVE_ISLAND_RESORT_GORGEOUS), { 4, 0 }, 38, 0, { OBJ_EVENT_GFX_WOMAN_2_FRLG, 0 }, { WayfarerSevii_Trainer_FiveIsland_ResortGorgeous_EventScript_Jacki, NULL } }, // FiveIsland_ResortGorgeous_Frlg LADY
-    { TRAINER_WAYFARER_SEVII_LADY_GILLIAN, MAP_GROUP(MAP_FIVE_ISLAND_RESORT_GORGEOUS), MAP_NUM(MAP_FIVE_ISLAND_RESORT_GORGEOUS), { 5, 0 }, 38, 0, { OBJ_EVENT_GFX_WOMAN_2_FRLG, 0 }, { WayfarerSevii_Trainer_FiveIsland_ResortGorgeous_EventScript_Gillian, NULL } }, // FiveIsland_ResortGorgeous_Frlg LADY
-    { TRAINER_WAYFARER_SEVII_YOUNGSTER_DESTIN, MAP_GROUP(MAP_FIVE_ISLAND_RESORT_GORGEOUS), MAP_NUM(MAP_FIVE_ISLAND_RESORT_GORGEOUS), { 6, 0 }, 52, 0, { OBJ_EVENT_GFX_YOUNGSTER_FRLG, 0 }, { WayfarerSevii_Trainer_FiveIsland_ResortGorgeous_EventScript_Destin, NULL } }, // FiveIsland_ResortGorgeous_Frlg YOUNGSTER
-    { TRAINER_WAYFARER_SEVII_SWIMMER_MALE_TOBY, MAP_GROUP(MAP_FIVE_ISLAND_RESORT_GORGEOUS), MAP_NUM(MAP_FIVE_ISLAND_RESORT_GORGEOUS), { 7, 0 }, 48, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { WayfarerSevii_Trainer_FiveIsland_ResortGorgeous_EventScript_Toby, NULL } }, // FiveIsland_ResortGorgeous_Frlg SWIMMER_M
-    { TRAINER_WAYFARER_SEVII_PKMN_BREEDER_ALIZE, MAP_GROUP(MAP_FIVE_ISLAND_WATER_LABYRINTH), MAP_NUM(MAP_FIVE_ISLAND_WATER_LABYRINTH), { 2, 0 }, 42, 0, { OBJ_EVENT_GFX_WOMAN_2_FRLG, 0 }, { WayfarerSevii_Trainer_FiveIsland_WaterLabyrinth_EventScript_Alize, NULL } }, // FiveIsland_WaterLabyrinth_Frlg PKMN_BREEDER
-    { TRAINER_WAYFARER_SEVII_BIRD_KEEPER_CHAZ, MAP_GROUP(MAP_FIVE_ISLAND_MEMORIAL_PILLAR), MAP_NUM(MAP_FIVE_ISLAND_MEMORIAL_PILLAR), { 3, 0 }, 26, 0, { OBJ_EVENT_GFX_ROCKER, 0 }, { WayfarerSevii_Trainer_FiveIsland_MemorialPillar_EventScript_Chaz, NULL } }, // FiveIsland_MemorialPillar_Frlg BIRD_KEEPER
-    { TRAINER_WAYFARER_SEVII_BIRD_KEEPER_HAROLD, MAP_GROUP(MAP_FIVE_ISLAND_MEMORIAL_PILLAR), MAP_NUM(MAP_FIVE_ISLAND_MEMORIAL_PILLAR), { 4, 0 }, 26, 0, { OBJ_EVENT_GFX_ROCKER, 0 }, { WayfarerSevii_Trainer_FiveIsland_MemorialPillar_EventScript_Harold, NULL } }, // FiveIsland_MemorialPillar_Frlg BIRD_KEEPER
-    { TRAINER_WAYFARER_SEVII_FISHERMAN_TYLOR, MAP_GROUP(MAP_SIX_ISLAND_OUTCAST_ISLAND), MAP_NUM(MAP_SIX_ISLAND_OUTCAST_ISLAND), { 2, 0 }, 34, 0, { OBJ_EVENT_GFX_FISHER, 0 }, { WayfarerSevii_Trainer_SixIsland_OutcastIsland_EventScript_Tylor, NULL } }, // SixIsland_OutcastIsland_Frlg FISHERMAN
-    { TRAINER_WAYFARER_SEVII_SIS_AND_BRO_AVA_GEB, MAP_GROUP(MAP_SIX_ISLAND_OUTCAST_ISLAND), MAP_NUM(MAP_SIX_ISLAND_OUTCAST_ISLAND), { 5, 6 }, 46, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_SWIMMER_F_WATER, OBJ_EVENT_GFX_TUBER_M_WATER }, { WayfarerSevii_Trainer_SixIsland_OutcastIsland_EventScript_Ava, WayfarerSevii_Trainer_SixIsland_OutcastIsland_EventScript_Geb } }, // SixIsland_OutcastIsland_Frlg SIS_AND_BRO
-    { TRAINER_WAYFARER_SEVII_PSYCHIC_JACLYN, MAP_GROUP(MAP_SIX_ISLAND_GREEN_PATH), MAP_NUM(MAP_SIX_ISLAND_GREEN_PATH), { 1, 0 }, 44, 0, { OBJ_EVENT_GFX_WOMAN_1_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_GreenPath_EventScript_Jaclyn, NULL } }, // SixIsland_GreenPath_Frlg PSYCHIC
-    { TRAINER_WAYFARER_SEVII_JUGGLER_EDWARD, MAP_GROUP(MAP_SIX_ISLAND_WATER_PATH), MAP_NUM(MAP_SIX_ISLAND_WATER_PATH), { 2, 0 }, 37, 0, { OBJ_EVENT_GFX_ROCKER, 0 }, { WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Edward, NULL } }, // SixIsland_WaterPath_Frlg JUGGLER
-    { TRAINER_WAYFARER_SEVII_SWIMMER_MALE_SAMIR, MAP_GROUP(MAP_SIX_ISLAND_WATER_PATH), MAP_NUM(MAP_SIX_ISLAND_WATER_PATH), { 3, 0 }, 48, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Samir, NULL } }, // SixIsland_WaterPath_Frlg SWIMMER_M
-    { TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_DENISE, MAP_GROUP(MAP_SIX_ISLAND_WATER_PATH), MAP_NUM(MAP_SIX_ISLAND_WATER_PATH), { 4, 0 }, 47, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Denise, NULL } }, // SixIsland_WaterPath_Frlg SWIMMER_F
-    { TRAINER_WAYFARER_SEVII_TWINS_MIU_MIA, MAP_GROUP(MAP_SIX_ISLAND_WATER_PATH), MAP_NUM(MAP_SIX_ISLAND_WATER_PATH), { 5, 6 }, 51, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_LITTLE_GIRL_FRLG, OBJ_EVENT_GFX_LITTLE_GIRL_FRLG }, { WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Miu, WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Mia } }, // SixIsland_WaterPath_Frlg TWINS
-    { TRAINER_WAYFARER_SEVII_HIKER_EARL, MAP_GROUP(MAP_SIX_ISLAND_WATER_PATH), MAP_NUM(MAP_SIX_ISLAND_WATER_PATH), { 7, 0 }, 36, 0, { OBJ_EVENT_GFX_HIKER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Earl, NULL } }, // SixIsland_WaterPath_Frlg HIKER
-    { TRAINER_WAYFARER_SEVII_RUIN_MANIAC_STANLY, MAP_GROUP(MAP_SIX_ISLAND_RUIN_VALLEY), MAP_NUM(MAP_SIX_ISLAND_RUIN_VALLEY), { 2, 0 }, 45, 0, { OBJ_EVENT_GFX_HIKER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_RuinValley_EventScript_Stanly, NULL } }, // SixIsland_RuinValley_Frlg RUIN_MANIAC
-    { TRAINER_WAYFARER_SEVII_HIKER_DARYL, MAP_GROUP(MAP_SIX_ISLAND_RUIN_VALLEY), MAP_NUM(MAP_SIX_ISLAND_RUIN_VALLEY), { 5, 0 }, 36, 0, { OBJ_EVENT_GFX_HIKER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_RuinValley_EventScript_Daryl, NULL } }, // SixIsland_RuinValley_Frlg HIKER
-    { TRAINER_WAYFARER_SEVII_PSYCHIC_DARIO, MAP_GROUP(MAP_SEVEN_ISLAND_TRAINER_TOWER), MAP_NUM(MAP_SEVEN_ISLAND_TRAINER_TOWER), { 1, 0 }, 44, 0, { OBJ_EVENT_GFX_BOY, 0 }, { WayfarerSevii_Trainer_SevenIsland_TrainerTower_EventScript_Dario, NULL } }, // SevenIsland_TrainerTower_Frlg PSYCHIC
-    { TRAINER_WAYFARER_SEVII_AROMA_LADY_MIAH, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), { 1, 0 }, 25, 0, { OBJ_EVENT_GFX_WOMAN_2_FRLG, 0 }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Entrance_EventScript_Miah, NULL } }, // SevenIsland_SevaultCanyon_Entrance_Frlg AROMA_LADY
-    { TRAINER_WAYFARER_SEVII_YOUNG_COUPLE_EVE_JON, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), { 2, 3 }, 53, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_BEAUTY_FRLG, OBJ_EVENT_GFX_MAN }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Entrance_EventScript_Eve, WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Entrance_EventScript_Jon } }, // SevenIsland_SevaultCanyon_Entrance_Frlg YOUNG_COUPLE
-    { TRAINER_WAYFARER_SEVII_PKMN_RANGER_MADELINE, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), { 5, 0 }, 43, 0, { OBJ_EVENT_GFX_PICNICKER_FRLG, 0 }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Entrance_EventScript_Madeline, NULL } }, // SevenIsland_SevaultCanyon_Entrance_Frlg PKMN_RANGER
-    { TRAINER_WAYFARER_SEVII_JUGGLER_MASON, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), { 6, 0 }, 37, 0, { OBJ_EVENT_GFX_ROCKER, 0 }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Entrance_EventScript_Mason, NULL } }, // SevenIsland_SevaultCanyon_Entrance_Frlg JUGGLER
-    { TRAINER_WAYFARER_SEVII_TAMER_EVAN, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON), { 2, 0 }, 49, 0, { OBJ_EVENT_GFX_MAN, 0 }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Evan, NULL } }, // SevenIsland_SevaultCanyon_Frlg TAMER
-    { TRAINER_WAYFARER_SEVII_PKMN_RANGER_JACKSON, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON), { 3, 0 }, 43, 0, { OBJ_EVENT_GFX_CAMPER_FRLG, 0 }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Jackson, NULL } }, // SevenIsland_SevaultCanyon_Frlg PKMN_RANGER
-    { TRAINER_WAYFARER_SEVII_PKMN_RANGER_KATELYN, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON), { 4, 0 }, 43, 0, { OBJ_EVENT_GFX_PICNICKER_FRLG, 0 }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Katelyn, NULL } }, // SevenIsland_SevaultCanyon_Frlg PKMN_RANGER
-    { TRAINER_WAYFARER_SEVII_COOLTRAINER_LEROY, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON), { 5, 0 }, 30, 0, { OBJ_EVENT_GFX_COOLTRAINER_M, 0 }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Leroy, NULL } }, // SevenIsland_SevaultCanyon_Frlg COOLTRAINER
-    { TRAINER_WAYFARER_SEVII_COOLTRAINER_MICHELLE, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON), { 6, 0 }, 30, 0, { OBJ_EVENT_GFX_COOLTRAINER_F, 0 }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Michelle, NULL } }, // SevenIsland_SevaultCanyon_Frlg COOLTRAINER
-    { TRAINER_WAYFARER_SEVII_COOL_COUPLE_LEX_NYA, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON), { 7, 8 }, 31, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_COOLTRAINER_M, OBJ_EVENT_GFX_COOLTRAINER_F }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Lex, WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Nya } }, // SevenIsland_SevaultCanyon_Frlg COOL_COUPLE
-    { TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BENJAMIN, MAP_GROUP(MAP_SEVEN_ISLAND_TANOBY_RUINS), MAP_NUM(MAP_SEVEN_ISLAND_TANOBY_RUINS), { 2, 0 }, 45, 0, { OBJ_EVENT_GFX_HIKER_FRLG, 0 }, { WayfarerSevii_Trainer_SevenIsland_TanobyRuins_EventScript_Benjamin, NULL } }, // SevenIsland_TanobyRuins_Frlg RUIN_MANIAC
-    { TRAINER_WAYFARER_SEVII_PAINTER_EDNA, MAP_GROUP(MAP_SEVEN_ISLAND_TANOBY_RUINS), MAP_NUM(MAP_SEVEN_ISLAND_TANOBY_RUINS), { 3, 0 }, 40, 0, { OBJ_EVENT_GFX_LASS_FRLG, 0 }, { WayfarerSevii_Trainer_SevenIsland_TanobyRuins_EventScript_Edna, NULL } }, // SevenIsland_TanobyRuins_Frlg PAINTER
-    { TRAINER_WAYFARER_SEVII_GENTLEMAN_CLIFFORD, MAP_GROUP(MAP_SEVEN_ISLAND_TANOBY_RUINS), MAP_NUM(MAP_SEVEN_ISLAND_TANOBY_RUINS), { 4, 0 }, 35, 0, { OBJ_EVENT_GFX_GENTLEMAN_FRLG, 0 }, { WayfarerSevii_Trainer_SevenIsland_TanobyRuins_EventScript_Clifford, NULL } }, // SevenIsland_TanobyRuins_Frlg GENTLEMAN
+    { TRAINER_DON_HNS, MAP_GROUP(MAP_ROUTE30_HNS), MAP_NUM(MAP_ROUTE30_HNS), { 4, 0 }, 123, 0, { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { Route30_EventScript_Bugcatcher_Don, NULL } }, // Route30_hns BUG_CATCHER
+    { TRAINER_MIKEY_HNS, MAP_GROUP(MAP_ROUTE30_HNS), MAP_NUM(MAP_ROUTE30_HNS), { 7, 0 }, 145, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route30_EventScript_Youngster_Mikey, NULL } }, // Route30_hns YOUNGSTER
+    { TRAINER_WADE_HNS, MAP_GROUP(MAP_ROUTE31_HNS), MAP_NUM(MAP_ROUTE31_HNS), { 1, 0 }, 123, 0, { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { Route31_EventScript_Bugcatcher_Wade, NULL } }, // Route31_hns BUG_CATCHER
+    { TRAINER_ALBERT_HNS, MAP_GROUP(MAP_ROUTE32_HNS), MAP_NUM(MAP_ROUTE32_HNS), { 6, 0 }, 145, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route32_EventScript_YoungsterAlbert, NULL } }, // Route32_hns YOUNGSTER
+    { TRAINER_LIZ_HNS, MAP_GROUP(MAP_ROUTE32_HNS), MAP_NUM(MAP_ROUTE32_HNS), { 7, 0 }, 134, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route32_EventScript_PicnickerLiz, NULL } }, // Route32_hns PICNICKER
+    { TRAINER_ROLAND_HNS, MAP_GROUP(MAP_ROUTE32_HNS), MAP_NUM(MAP_ROUTE32_HNS), { 9, 0 }, 125, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route32_EventScript_CamperRoland, NULL } }, // Route32_hns CAMPER
+    { TRAINER_RALPH_HNS, MAP_GROUP(MAP_ROUTE32_HNS), MAP_NUM(MAP_ROUTE32_HNS), { 10, 0 }, 128, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route32_EventScript_FisherRalph, NULL } }, // Route32_hns FISHERMAN
+    { TRAINER_HENRY_HNS, MAP_GROUP(MAP_ROUTE32_HNS), MAP_NUM(MAP_ROUTE32_HNS), { 11, 0 }, 128, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route32_EventScript_FisherHenry, NULL } }, // Route32_hns FISHERMAN
+    { TRAINER_JUSTIN_HNS, MAP_GROUP(MAP_ROUTE32_HNS), MAP_NUM(MAP_ROUTE32_HNS), { 12, 0 }, 128, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route32_EventScript_FisherJustin, NULL } }, // Route32_hns FISHERMAN
+    { TRAINER_GORDON_HNS, MAP_GROUP(MAP_ROUTE32_HNS), MAP_NUM(MAP_ROUTE32_HNS), { 13, 0 }, 145, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route32_EventScript_YoungsterGordon, NULL } }, // Route32_hns YOUNGSTER
+    { TRAINER_PETER_HNS, MAP_GROUP(MAP_ROUTE32_HNS), MAP_NUM(MAP_ROUTE32_HNS), { 16, 0 }, 108, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { Route32_EventScript_BirdkeeperPeter, NULL } }, // Route32_hns !PETER_HNS
+    { TRAINER_ANTHONY_HNS, MAP_GROUP(MAP_ROUTE33_HNS), MAP_NUM(MAP_ROUTE33_HNS), { 1, 0 }, 87, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route33_EventScript_HikerAnthony, NULL } }, // Route33_hns !ANTHONY_HNS
+    { TRAINER_SAMUEL_HNS, MAP_GROUP(MAP_ROUTE34_HNS), MAP_NUM(MAP_ROUTE34_HNS), { 1, 0 }, 145, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route34_EventScript_YoungsterSamuel, NULL } }, // Route34_hns YOUNGSTER
+    { TRAINER_BRANDON_HNS, MAP_GROUP(MAP_ROUTE34_HNS), MAP_NUM(MAP_ROUTE34_HNS), { 2, 0 }, 135, 0, { OBJ_EVENT_GFX_BALDING_MAN_HNS, 0 }, { Route34_EventScript_PokefanMBrandon, NULL } }, // Route34_hns POKEFAN
+    { TRAINER_TODD_HNS, MAP_GROUP(MAP_ROUTE34_HNS), MAP_NUM(MAP_ROUTE34_HNS), { 3, 0 }, 125, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route34_EventScript_CamperTodd, NULL } }, // Route34_hns CAMPER
+    { TRAINER_IAN_HNS, MAP_GROUP(MAP_ROUTE34_HNS), MAP_NUM(MAP_ROUTE34_HNS), { 4, 0 }, 145, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route34_EventScript_YoungsterIan, NULL } }, // Route34_hns YOUNGSTER
+    { TRAINER_JENN_HNS, MAP_GROUP(MAP_ROUTE34_HNS), MAP_NUM(MAP_ROUTE34_HNS), { 5, 0 }, 126, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { Route34_EventScript_Jenn, NULL } }, // Route34_hns COOLTRAINER
+    { TRAINER_IRENE_HNS, MAP_GROUP(MAP_ROUTE34_HNS), MAP_NUM(MAP_ROUTE34_HNS), { 6, 0 }, 99, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { Route34_EventScript_Irene, NULL } }, // Route34_hns !IRENE_HNS
+    { TRAINER_KATE_HNS, MAP_GROUP(MAP_ROUTE34_HNS), MAP_NUM(MAP_ROUTE34_HNS), { 7, 0 }, 126, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { Route34_EventScript_Kate, NULL } }, // Route34_hns COOLTRAINER
+    { TRAINER_GINA_HNS, MAP_GROUP(MAP_ROUTE34_HNS), MAP_NUM(MAP_ROUTE34_HNS), { 11, 0 }, 134, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route34_EventScript_PicnickerGina, NULL } }, // Route34_hns PICNICKER
+    { TRAINER_KIM_HNS, MAP_GROUP(MAP_ROUTE35_HNS), MAP_NUM(MAP_ROUTE35_HNS), { 1, 0 }, 134, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route35_EventScript_PicnickerKim, NULL } }, // Route35_hns PICNICKER
+    { TRAINER_BRYAN_HNS, MAP_GROUP(MAP_ROUTE35_HNS), MAP_NUM(MAP_ROUTE35_HNS), { 2, 0 }, 121, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { Route35_EventScript_BirdKeeperBryan, NULL } }, // Route35_hns BIRD_KEEPER
+    { TRAINER_BROOKE_HNS, MAP_GROUP(MAP_ROUTE35_HNS), MAP_NUM(MAP_ROUTE35_HNS), { 3, 0 }, 134, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route35_EventScript_PicnickerBrooke, NULL } }, // Route35_hns PICNICKER
+    { TRAINER_ELLIOT_HNS, MAP_GROUP(MAP_ROUTE35_HNS), MAP_NUM(MAP_ROUTE35_HNS), { 4, 0 }, 125, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route35_EventScript_CamperElliot, NULL } }, // Route35_hns CAMPER
+    { TRAINER_IVAN_HNS, MAP_GROUP(MAP_ROUTE35_HNS), MAP_NUM(MAP_ROUTE35_HNS), { 5, 0 }, 125, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route35_EventScript_CamperIvan, NULL } }, // Route35_hns CAMPER
+    { TRAINER_WALT_HNS, MAP_GROUP(MAP_ROUTE35_HNS), MAP_NUM(MAP_ROUTE35_HNS), { 6, 0 }, 127, 0, { OBJ_EVENT_GFX_FIREBREATHER_HNS, 0 }, { Route35_EventScript_FirebreatherWalt, NULL } }, // Route35_hns FIREBREATHER
+    { TRAINER_IRWIN_HNS, MAP_GROUP(MAP_ROUTE35_HNS), MAP_NUM(MAP_ROUTE35_HNS), { 7, 0 }, 131, 0, { OBJ_EVENT_GFX_JUGGLER_HNS, 0 }, { Route35_EventScript_JugglerIrwin, NULL } }, // Route35_hns JUGGLER
+    { TRAINER_ARNIE_HNS, MAP_GROUP(MAP_ROUTE35_HNS), MAP_NUM(MAP_ROUTE35_HNS), { 9, 0 }, 88, 0, { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { Route35_EventScript_BugCatcherArnie, NULL } }, // Route35_hns !ARNIE_HNS
+    { TRAINER_MARK_HNS, MAP_GROUP(MAP_ROUTE36_HNS), MAP_NUM(MAP_ROUTE36_HNS), { 4, 0 }, 137, 0, { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { Route36_EventScript_Mark, NULL } }, // Route36_hns PSYCHIC_M
+    { TRAINER_ALAN_HNS, MAP_GROUP(MAP_ROUTE36_HNS), MAP_NUM(MAP_ROUTE36_HNS), { 5, 0 }, 140, 0, { OBJ_EVENT_GFX_LITTLE_BOY_HNS, 0 }, { Route36_EventScript_Schoolboy, NULL } }, // Route36_hns SCHOOL_KID
+    { TRAINER_ANN_AND_ANNE_HNS, MAP_GROUP(MAP_ROUTE37_HNS), MAP_NUM(MAP_ROUTE37_HNS), { 1, 2 }, 144, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_TWIN_HNS, OBJ_EVENT_GFX_TWIN_HNS }, { Route37_EventScript_TwinAnn, Route37_EventScript_TwinAnne } }, // Route37_hns TWINS
+    { TRAINER_GREG_HNS, MAP_GROUP(MAP_ROUTE37_HNS), MAP_NUM(MAP_ROUTE37_HNS), { 3, 0 }, 137, 0, { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { Route37_EventScript_Greg, NULL } }, // Route37_hns PSYCHIC_M
+    { TRAINER_HARRY_HNS, MAP_GROUP(MAP_ROUTE38_HNS), MAP_NUM(MAP_ROUTE38_HNS), { 1, 0 }, 139, 0, { OBJ_EVENT_GFX_SAILOR_HNS, 0 }, { Route38_EventScript_Harry, NULL } }, // Route38_hns SAILOR
+    { TRAINER_DANA_HNS, MAP_GROUP(MAP_ROUTE38_HNS), MAP_NUM(MAP_ROUTE38_HNS), { 2, 0 }, 132, 0, { OBJ_EVENT_GFX_LASS_HNS, 0 }, { Route38_EventScript_Dana, NULL } }, // Route38_hns LASS
+    { TRAINER_OLIVIA_HNS, MAP_GROUP(MAP_ROUTE38_HNS), MAP_NUM(MAP_ROUTE38_HNS), { 3, 0 }, 120, 0, { OBJ_EVENT_GFX_WOMAN_2_HNS, 0 }, { Route38_EventScript_Olivia, NULL } }, // Route38_hns BEAUTY
+    { TRAINER_TOBY_HNS, MAP_GROUP(MAP_ROUTE38_HNS), MAP_NUM(MAP_ROUTE38_HNS), { 4, 0 }, 117, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { Route38_EventScript_Toby, NULL } }, // Route38_hns !TOBY_HNS
+    { TRAINER_CHAD_HNS, MAP_GROUP(MAP_ROUTE38_HNS), MAP_NUM(MAP_ROUTE38_HNS), { 5, 0 }, 140, 0, { OBJ_EVENT_GFX_LITTLE_BOY_HNS, 0 }, { Route38_EventScript_Chad, NULL } }, // Route38_hns SCHOOL_KID
+    { TRAINER_VALERIE_HNS, MAP_GROUP(MAP_ROUTE38_HNS), MAP_NUM(MAP_ROUTE38_HNS), { 6, 0 }, 120, 0, { OBJ_EVENT_GFX_BEAUTY_HNS, 0 }, { Route38_EventScript_Valerie, NULL } }, // Route38_hns BEAUTY
+    { TRAINER_NORMAN_HNS, MAP_GROUP(MAP_ROUTE39_HNS), MAP_NUM(MAP_ROUTE39_HNS), { 1, 0 }, 137, 0, { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { Route39_EventScript_Norman, NULL } }, // Route39_hns PSYCHIC_M
+    { TRAINER_RUTH_HNS, MAP_GROUP(MAP_ROUTE39_HNS), MAP_NUM(MAP_ROUTE39_HNS), { 3, 0 }, 133, 0, { OBJ_EVENT_GFX_WOMAN_1_HNS, 0 }, { Route39_EventScript_Ruth, NULL } }, // Route39_hns PARASOL_LADY
+    { TRAINER_DEREK_HNS, MAP_GROUP(MAP_ROUTE39_HNS), MAP_NUM(MAP_ROUTE39_HNS), { 4, 0 }, 135, 0, { OBJ_EVENT_GFX_BALDING_MAN_HNS, 0 }, { Route39_EventScript_Derek, NULL } }, // Route39_hns POKEFAN
+    { TRAINER_EUGENE_HNS, MAP_GROUP(MAP_ROUTE39_HNS), MAP_NUM(MAP_ROUTE39_HNS), { 5, 0 }, 96, 0, { OBJ_EVENT_GFX_SAILOR_HNS, 0 }, { Route39_EventScript_Eugene, NULL } }, // Route39_hns !EUGENE_HNS
+    { TRAINER_ELAINE_HNS, MAP_GROUP(MAP_ROUTE40_HNS), MAP_NUM(MAP_ROUTE40_HNS), { 5, 0 }, 93, 0, { OBJ_EVENT_GFX_SWIMMER_F_HNS, 0 }, { Route40_EventScript_Elaine, NULL } }, // Route40_hns !ELAINE_HNS
+    { TRAINER_SIMON_HNS, MAP_GROUP(MAP_ROUTE40_HNS), MAP_NUM(MAP_ROUTE40_HNS), { 8, 0 }, 112, 0, { OBJ_EVENT_GFX_SWIMMER_M_HNS, 0 }, { Route40_EventScript_Simon, NULL } }, // Route40_hns !SIMON_HNS
+    { TRAINER_PAULA_HNS, MAP_GROUP(MAP_ROUTE40_HNS), MAP_NUM(MAP_ROUTE40_HNS), { 9, 0 }, 142, 0, { OBJ_EVENT_GFX_SWIMMER_F_HNS, 0 }, { Route40_EventScript_Paula, NULL } }, // Route40_hns SWIMMER_F
+    { TRAINER_RANDALL_HNS, MAP_GROUP(MAP_ROUTE40_HNS), MAP_NUM(MAP_ROUTE40_HNS), { 10, 0 }, 143, 0, { OBJ_EVENT_GFX_SWIMMER_M_HNS, 0 }, { Route40_EventScript_Randall, NULL } }, // Route40_hns SWIMMER_M
+    { TRAINER_BERKE_HNS, MAP_GROUP(MAP_ROUTE41_HNS), MAP_NUM(MAP_ROUTE41_HNS), { 1, 0 }, 89, 0, { OBJ_EVENT_GFX_SWIMMER_M_HNS, 0 }, { Route41_EventScript_Berke, NULL } }, // Route41_hns !BERKE_HNS
+    { TRAINER_CHARLIE_HNS, MAP_GROUP(MAP_ROUTE41_HNS), MAP_NUM(MAP_ROUTE41_HNS), { 2, 0 }, 143, 0, { OBJ_EVENT_GFX_SWIMMER_M_HNS, 0 }, { Route41_EventScript_Charlie, NULL } }, // Route41_hns SWIMMER_M
+    { TRAINER_DENISE_HNS, MAP_GROUP(MAP_ROUTE41_HNS), MAP_NUM(MAP_ROUTE41_HNS), { 3, 0 }, 142, 0, { OBJ_EVENT_GFX_SWIMMER_F_HNS, 0 }, { Route41_EventScript_Denise, NULL } }, // Route41_hns SWIMMER_F
+    { TRAINER_KARA_HNS, MAP_GROUP(MAP_ROUTE41_HNS), MAP_NUM(MAP_ROUTE41_HNS), { 4, 0 }, 101, 0, { OBJ_EVENT_GFX_SWIMMER_F_HNS, 0 }, { Route41_EventScript_Kara, NULL } }, // Route41_hns !KARA_HNS
+    { TRAINER_KAYLEE_HNS, MAP_GROUP(MAP_ROUTE41_HNS), MAP_NUM(MAP_ROUTE41_HNS), { 5, 0 }, 102, 0, { OBJ_EVENT_GFX_SWIMMER_F_HNS, 0 }, { Route41_EventScript_Kaylee, NULL } }, // Route41_hns !KAYLEE_HNS
+    { TRAINER_GEORGE_HNS, MAP_GROUP(MAP_ROUTE41_HNS), MAP_NUM(MAP_ROUTE41_HNS), { 6, 0 }, 98, 0, { OBJ_EVENT_GFX_SWIMMER_M_HNS, 0 }, { Route41_EventScript_George, NULL } }, // Route41_hns !GEORGE_HNS
+    { TRAINER_KIRK_HNS, MAP_GROUP(MAP_ROUTE41_HNS), MAP_NUM(MAP_ROUTE41_HNS), { 7, 0 }, 104, 0, { OBJ_EVENT_GFX_SWIMMER_M_HNS, 0 }, { Route41_EventScript_Kirk, NULL } }, // Route41_hns !KIRK_HNS
+    { TRAINER_SUSIE_HNS, MAP_GROUP(MAP_ROUTE41_HNS), MAP_NUM(MAP_ROUTE41_HNS), { 8, 0 }, 142, 0, { OBJ_EVENT_GFX_SWIMMER_F_HNS, 0 }, { Route41_EventScript_Susie, NULL } }, // Route41_hns SWIMMER_F
+    { TRAINER_MATHEW_HNS, MAP_GROUP(MAP_ROUTE41_HNS), MAP_NUM(MAP_ROUTE41_HNS), { 9, 0 }, 105, 0, { OBJ_EVENT_GFX_SWIMMER_M_HNS, 0 }, { Route41_EventScript_Mathew, NULL } }, // Route41_hns !MATHEW_HNS
+    { TRAINER_WENDY_HNS, MAP_GROUP(MAP_ROUTE41_HNS), MAP_NUM(MAP_ROUTE41_HNS), { 10, 0 }, 142, 0, { OBJ_EVENT_GFX_SWIMMER_F_HNS, 0 }, { Route41_EventScript_Wendy, NULL } }, // Route41_hns SWIMMER_F
+    { TRAINER_SHANE_HNS, MAP_GROUP(MAP_ROUTE42_HNS), MAP_NUM(MAP_ROUTE42_HNS), { 5, 0 }, 136, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { Route42_EventScript_Shane, NULL } }, // Route42_hns POKEMANIAC
+    { TRAINER_BENJAMIN_HNS, MAP_GROUP(MAP_ROUTE42_HNS), MAP_NUM(MAP_ROUTE42_HNS), { 6, 0 }, 130, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route42_EventScript_Ben, NULL } }, // Route42_hns HIKER
+    { TRAINER_SPENCER_HNS, MAP_GROUP(MAP_ROUTE43_HNS), MAP_NUM(MAP_ROUTE43_HNS), { 1, 0 }, 113, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route43_EventScript_Spencer, NULL } }, // Route43_hns !SPENCER_HNS
+    { TRAINER_TIFFANY_HNS, MAP_GROUP(MAP_ROUTE43_HNS), MAP_NUM(MAP_ROUTE43_HNS), { 2, 0 }, 116, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route43_EventScript_Tiffany, NULL } }, // Route43_hns !TIFFANY_HNS
+    { TRAINER_BEN_HNS, MAP_GROUP(MAP_ROUTE43_HNS), MAP_NUM(MAP_ROUTE43_HNS), { 3, 0 }, 136, 0, { OBJ_EVENT_GFX_FAT_MAN_HNS, 0 }, { Route43_EventScript_Ben, NULL } }, // Route43_hns POKEMANIAC
+    { TRAINER_MARVIN_HNS, MAP_GROUP(MAP_ROUTE43_HNS), MAP_NUM(MAP_ROUTE43_HNS), { 4, 0 }, 128, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route43_EventScript_Marvin, NULL } }, // Route43_hns FISHERMAN
+    { TRAINER_RON_HNS, MAP_GROUP(MAP_ROUTE43_HNS), MAP_NUM(MAP_ROUTE43_HNS), { 17, 0 }, 136, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { Route43_EventScript_Ron, NULL } }, // Route43_hns POKEMANIAC
+    { TRAINER_BRENT_HNS, MAP_GROUP(MAP_ROUTE43_HNS), MAP_NUM(MAP_ROUTE43_HNS), { 18, 0 }, 136, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { Route43_EventScript_Brent, NULL } }, // Route43_hns POKEMANIAC
+    { TRAINER_PHIL_HNS, MAP_GROUP(MAP_ROUTE44_HNS), MAP_NUM(MAP_ROUTE44_HNS), { 1, 0 }, 137, 0, { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { Route44_EventScript_Phil, NULL } }, // Route44_hns PSYCHIC_M
+    { TRAINER_EDGAR_HNS, MAP_GROUP(MAP_ROUTE44_HNS), MAP_NUM(MAP_ROUTE44_HNS), { 2, 0 }, 128, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route44_EventScript_Edgar, NULL } }, // Route44_hns FISHERMAN
+    { TRAINER_WILTON_HNS, MAP_GROUP(MAP_ROUTE44_HNS), MAP_NUM(MAP_ROUTE44_HNS), { 3, 0 }, 128, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route44_EventScript_Wilton, NULL } }, // Route44_hns FISHERMAN
+    { TRAINER_ZACH_HNS, MAP_GROUP(MAP_ROUTE44_HNS), MAP_NUM(MAP_ROUTE44_HNS), { 4, 0 }, 136, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { Route44_EventScript_Zach, NULL } }, // Route44_hns POKEMANIAC
+    { TRAINER_ALLEN_HNS, MAP_GROUP(MAP_ROUTE44_HNS), MAP_NUM(MAP_ROUTE44_HNS), { 5, 0 }, 86, 0, { OBJ_EVENT_GFX_COOLTRAINER_M_HNS, 0 }, { Route44_EventScript_Allen, NULL } }, // Route44_hns !ALLEN_HNS
+    { TRAINER_CYBIL_HNS, MAP_GROUP(MAP_ROUTE44_HNS), MAP_NUM(MAP_ROUTE44_HNS), { 6, 0 }, 126, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { Route44_EventScript_Cybil, NULL } }, // Route44_hns COOLTRAINER
+    { TRAINER_VANCE_HNS, MAP_GROUP(MAP_ROUTE44_HNS), MAP_NUM(MAP_ROUTE44_HNS), { 27, 0 }, 121, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { Route44_EventScript_Vance, NULL } }, // Route44_hns BIRD_KEEPER
+    { TRAINER_ERIK_HNS, MAP_GROUP(MAP_ROUTE45_HNS), MAP_NUM(MAP_ROUTE45_HNS), { 1, 0 }, 94, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route45_EventScript_Erik, NULL } }, // Route45_hns !ERIK_HNS
+    { TRAINER_RYAN_HNS, MAP_GROUP(MAP_ROUTE45_HNS), MAP_NUM(MAP_ROUTE45_HNS), { 2, 0 }, 126, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { Route45_EventScript_Ryan, NULL } }, // Route45_hns COOLTRAINER
+    { TRAINER_MICHAEL_HNS, MAP_GROUP(MAP_ROUTE45_HNS), MAP_NUM(MAP_ROUTE45_HNS), { 4, 0 }, 130, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route45_EventScript_Michael, NULL } }, // Route45_hns HIKER
+    { TRAINER_KELLY_HNS, MAP_GROUP(MAP_ROUTE45_HNS), MAP_NUM(MAP_ROUTE45_HNS), { 6, 0 }, 126, 0, { OBJ_EVENT_GFX_BATTLE_GIRL_HNS, 0 }, { Route45_EventScript_Kelly, NULL } }, // Route45_hns COOLTRAINER
+    { TRAINER_KENJI_HNS, MAP_GROUP(MAP_ROUTE45_HNS), MAP_NUM(MAP_ROUTE45_HNS), { 7, 0 }, 122, 0, { OBJ_EVENT_GFX_BLACK_BELT_HNS, 0 }, { Route45_EventScript_Kenji, NULL } }, // Route45_hns BLACK_BELT
+    { TRAINER_TIMOTHY_HNS, MAP_GROUP(MAP_ROUTE45_HNS), MAP_NUM(MAP_ROUTE45_HNS), { 9, 0 }, 130, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route45_EventScript_Timothy, NULL } }, // Route45_hns HIKER
+    { TRAINER_PARRY_HNS, MAP_GROUP(MAP_ROUTE45_HNS), MAP_NUM(MAP_ROUTE45_HNS), { 11, 0 }, 130, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route45_EventScript_Parry, NULL } }, // Route45_hns HIKER
+    { TRAINER_QUENTIN_HNS, MAP_GROUP(MAP_ROUTE45_HNS), MAP_NUM(MAP_ROUTE45_HNS), { 12, 0 }, 109, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route45_EventScript_Quentin, NULL } }, // Route45_hns !QUENTIN_HNS
+    { TRAINER_TED_HNS, MAP_GROUP(MAP_ROUTE46_HNS), MAP_NUM(MAP_ROUTE46_HNS), { 5, 0 }, 125, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route46_EventScript_Ted, NULL } }, // Route46_hns CAMPER
+    { TRAINER_ERIN_HNS, MAP_GROUP(MAP_ROUTE46_HNS), MAP_NUM(MAP_ROUTE46_HNS), { 6, 0 }, 95, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route46_EventScript_Erin, NULL } }, // Route46_hns !ERIN_HNS
+    { TRAINER_BAILEY_HNS, MAP_GROUP(MAP_ROUTE46_HNS), MAP_NUM(MAP_ROUTE46_HNS), { 7, 0 }, 130, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route46_EventScript_Bailey, NULL } }, // Route46_hns HIKER
+    { TRAINER_DEVIN_HNS, MAP_GROUP(MAP_ROUTE47_HNS), MAP_NUM(MAP_ROUTE47_HNS), { 1, 0 }, 130, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route47_EventScript_Hiker, NULL } }, // Route47_hns HIKER
+    { TRAINER_GRANT_HNS, MAP_GROUP(MAP_ROUTE47_HNS), MAP_NUM(MAP_ROUTE47_HNS), { 2, 0 }, 125, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route47_EventScript_Camper, NULL } }, // Route47_hns CAMPER
+    { TRAINER_THOM_AND_KAE_HNS, MAP_GROUP(MAP_ROUTE47_HNS), MAP_NUM(MAP_ROUTE47_HNS), { 4, 5 }, 146, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, OBJ_EVENT_GFX_COOLTRAINER_M_HNS }, { Route47_EventScript_Kae, Route47_EventScript_Thom } }, // Route47_hns YOUNG_COUPLE
+    { TRAINER_DUFF_AND_EDA_HNS, MAP_GROUP(MAP_ROUTE47_HNS), MAP_NUM(MAP_ROUTE47_HNS), { 8, 9 }, 146, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_WORKER_M_HNS, OBJ_EVENT_GFX_WORKER_F_HNS }, { Route47_EventScript_Duff, Route47_EventScript_Eda } }, // Route47_hns YOUNG_COUPLE
+    { TRAINER_JIMMY_HNS, MAP_GROUP(MAP_ROUTE3_HNS), MAP_NUM(MAP_ROUTE3_HNS), { 1, 0 }, 37, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route3_EventScript_Jimmy, NULL } }, // Route3_hns YOUNGSTER
+    { TRAINER_WARREN_HNS, MAP_GROUP(MAP_ROUTE3_HNS), MAP_NUM(MAP_ROUTE3_HNS), { 2, 0 }, 37, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route3_EventScript_Warren, NULL } }, // Route3_hns YOUNGSTER
+    { TRAINER_OTIS_HNS, MAP_GROUP(MAP_ROUTE3_HNS), MAP_NUM(MAP_ROUTE3_HNS), { 3, 0 }, 23, 0, { OBJ_EVENT_GFX_FIREBREATHER_HNS, 0 }, { Route3_EventScript_Otis, NULL } }, // Route3_hns FIREBREATHER
+    { TRAINER_BURT_HNS, MAP_GROUP(MAP_ROUTE3_HNS), MAP_NUM(MAP_ROUTE3_HNS), { 4, 0 }, 23, 0, { OBJ_EVENT_GFX_FIREBREATHER_HNS, 0 }, { Route3_EventScript_Burt, NULL } }, // Route3_hns FIREBREATHER
+    { TRAINER_HOPE_HNS, MAP_GROUP(MAP_ROUTE4_HNS), MAP_NUM(MAP_ROUTE4_HNS), { 2, 0 }, 28, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route4_EventScript_Hope, NULL } }, // Route4_hns PICNICKER
+    { TRAINER_HANK_HNS, MAP_GROUP(MAP_ROUTE4_HNS), MAP_NUM(MAP_ROUTE4_HNS), { 3, 0 }, 18, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { Route4_EventScript_Hank, NULL } }, // Route4_hns BIRD_KEEPER
+    { TRAINER_SHARON_HNS, MAP_GROUP(MAP_ROUTE4_HNS), MAP_NUM(MAP_ROUTE4_HNS), { 4, 0 }, 28, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route4_EventScript_Sharon, NULL } }, // Route4_hns PICNICKER
+    { TRAINER_ALLAN_HNS, MAP_GROUP(MAP_ROUTE6_HNS), MAP_NUM(MAP_ROUTE6_HNS), { 1, 0 }, 21, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route6_EventScript_Allan, NULL } }, // Route6_hns CAMPER
+    { TRAINER_REX_HNS, MAP_GROUP(MAP_ROUTE6_HNS), MAP_NUM(MAP_ROUTE6_HNS), { 2, 0 }, 29, 0, { OBJ_EVENT_GFX_BALDING_MAN_HNS, 0 }, { Route6_EventScript_Rex, NULL } }, // Route6_hns POKEFAN
+    { TRAINER_SAM_HNS, MAP_GROUP(MAP_ROUTE8_HNS), MAP_NUM(MAP_ROUTE8_HNS), { 1, 0 }, 34, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { Route8_EventScript_Sam, NULL } }, // Route8_hns SUPER_NERD
+    { TRAINER_TOM_HNS, MAP_GROUP(MAP_ROUTE8_HNS), MAP_NUM(MAP_ROUTE8_HNS), { 2, 0 }, 34, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { Route8_EventScript_Tom, NULL } }, // Route8_hns SUPER_NERD
+    { TRAINER_HARRIS_HNS, MAP_GROUP(MAP_ROUTE8_HNS), MAP_NUM(MAP_ROUTE8_HNS), { 5, 0 }, 3, 0, { OBJ_EVENT_GFX_BIKER_HNS, 0 }, { Route8_EventScript_Harris, NULL } }, // Route8_hns !HARRIS_HNS
+    { TRAINER_DWAYNE_HNS, MAP_GROUP(MAP_ROUTE8_HNS), MAP_NUM(MAP_ROUTE8_HNS), { 6, 0 }, 17, 0, { OBJ_EVENT_GFX_BIKER_HNS, 0 }, { Route8_EventScript_Dwayne, NULL } }, // Route8_hns BIKER
+    { TRAINER_ZEKE_HNS, MAP_GROUP(MAP_ROUTE8_HNS), MAP_NUM(MAP_ROUTE8_HNS), { 7, 0 }, 17, 0, { OBJ_EVENT_GFX_BIKER_HNS, 0 }, { Route8_EventScript_Zeke, NULL } }, // Route8_hns BIKER
+    { TRAINER_SID_HNS, MAP_GROUP(MAP_ROUTE9_HNS), MAP_NUM(MAP_ROUTE9_HNS), { 1, 0 }, 21, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route9_EventScript_Sid, NULL } }, // Route9_hns CAMPER
+    { TRAINER_EDNA_HNS, MAP_GROUP(MAP_ROUTE9_HNS), MAP_NUM(MAP_ROUTE9_HNS), { 2, 0 }, 28, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route9_EventScript_Edna, NULL } }, // Route9_hns PICNICKER
+    { TRAINER_HEIDI_HNS, MAP_GROUP(MAP_ROUTE9_HNS), MAP_NUM(MAP_ROUTE9_HNS), { 3, 0 }, 28, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route9_EventScript_Heidi, NULL } }, // Route9_hns PICNICKER
+    { TRAINER_DEAN_HNS, MAP_GROUP(MAP_ROUTE9_HNS), MAP_NUM(MAP_ROUTE9_HNS), { 4, 0 }, 2, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route9_EventScript_Dean, NULL } }, // Route9_hns !DEAN_HNS
+    { TRAINER_TIM_HNS, MAP_GROUP(MAP_ROUTE9_HNS), MAP_NUM(MAP_ROUTE9_HNS), { 5, 0 }, 25, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route9_EventScript_Tim, NULL } }, // Route9_hns HIKER
+    { TRAINER_SIDNEY_HNS, MAP_GROUP(MAP_ROUTE9_HNS), MAP_NUM(MAP_ROUTE9_HNS), { 6, 0 }, 7, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route9_EventScript_Sidney, NULL } }, // Route9_hns !SIDNEY_HNS
+    { TRAINER_JIM_HNS, MAP_GROUP(MAP_ROUTE10_HNS), MAP_NUM(MAP_ROUTE10_HNS), { 2, 0 }, 25, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route10_EventScript_Jim, NULL } }, // Route10_hns HIKER
+    { TRAINER_ROBERT_HNS, MAP_GROUP(MAP_ROUTE10_HNS), MAP_NUM(MAP_ROUTE10_HNS), { 3, 0 }, 29, 0, { OBJ_EVENT_GFX_BALDING_MAN_HNS, 0 }, { Route10_EventScript_Robert, NULL } }, // Route10_hns POKEFAN
+    { TRAINER_FIDEL_HNS, MAP_GROUP(MAP_ROUTE11_HNS), MAP_NUM(MAP_ROUTE11_HNS), { 1, 0 }, 30, 0, { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { Route11_EventScript_Fidel, NULL } }, // Route11_hns PSYCHIC_M
+    { TRAINER_OWEN_HNS, MAP_GROUP(MAP_ROUTE11_HNS), MAP_NUM(MAP_ROUTE11_HNS), { 2, 0 }, 37, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route11_EventScript_Owen, NULL } }, // Route11_hns YOUNGSTER
+    { TRAINER_JASON_HNS, MAP_GROUP(MAP_ROUTE11_HNS), MAP_NUM(MAP_ROUTE11_HNS), { 3, 0 }, 37, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route11_EventScript_Jason, NULL } }, // Route11_hns YOUNGSTER
+    { TRAINER_HERMAN_HNS, MAP_GROUP(MAP_ROUTE11_HNS), MAP_NUM(MAP_ROUTE11_HNS), { 5, 0 }, 30, 0, { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { Route11_EventScript_Herman, NULL } }, // Route11_hns PSYCHIC_M
+    { TRAINER_MARTIN_HNS, MAP_GROUP(MAP_ROUTE12_HNS), MAP_NUM(MAP_ROUTE12_HNS), { 1, 0 }, 24, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route12_EventScript_Martin, NULL } }, // Route12_hns FISHERMAN
+    { TRAINER_STEPHEN_HNS, MAP_GROUP(MAP_ROUTE12_HNS), MAP_NUM(MAP_ROUTE12_HNS), { 3, 0 }, 24, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route12_EventScript_Stephen, NULL } }, // Route12_hns FISHERMAN
+    { TRAINER_BARNEY_HNS, MAP_GROUP(MAP_ROUTE12_HNS), MAP_NUM(MAP_ROUTE12_HNS), { 4, 0 }, 0, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route12_EventScript_Barney, NULL } }, // Route12_hns !BARNEY_HNS
+    { TRAINER_KYLE_HNS, MAP_GROUP(MAP_ROUTE12_HNS), MAP_NUM(MAP_ROUTE12_HNS), { 5, 0 }, 24, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route12_EventScript_Kyle, NULL } }, // Route12_hns FISHERMAN
+    { TRAINER_KENNY_HNS, MAP_GROUP(MAP_ROUTE13_HNS), MAP_NUM(MAP_ROUTE13_HNS), { 1, 0 }, 5, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route13_EventScript_Kenny, NULL } }, // Route13_hns !KENNY_HNS
+    { TRAINER_BRET_HNS, MAP_GROUP(MAP_ROUTE13_HNS), MAP_NUM(MAP_ROUTE13_HNS), { 2, 0 }, 26, 0, { OBJ_EVENT_GFX_JUGGLER_HNS, 0 }, { Route13_EventScript_Bret, NULL } }, // Route13_hns JUGGLER
+    { TRAINER_PERRY_HNS, MAP_GROUP(MAP_ROUTE13_HNS), MAP_NUM(MAP_ROUTE13_HNS), { 3, 0 }, 18, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { Route13_EventScript_Perry, NULL } }, // Route13_hns BIRD_KEEPER
+    { TRAINER_JOSHUA_HNS, MAP_GROUP(MAP_ROUTE13_HNS), MAP_NUM(MAP_ROUTE13_HNS), { 4, 0 }, 29, 0, { OBJ_EVENT_GFX_BALDING_MAN_HNS, 0 }, { Route13_EventScript_Joshua, NULL } }, // Route13_hns POKEFAN
+    { TRAINER_ALEX_HNS, MAP_GROUP(MAP_ROUTE13_HNS), MAP_NUM(MAP_ROUTE13_HNS), { 5, 0 }, 16, 0, { OBJ_EVENT_GFX_BATTLE_GIRL_HNS, 0 }, { Route13_EventScript_Alex, NULL } }, // Route13_hns BATTLE_GIRL
+    { TRAINER_CARTER_HNS, MAP_GROUP(MAP_ROUTE14_HNS), MAP_NUM(MAP_ROUTE14_HNS), { 2, 0 }, 29, 0, { OBJ_EVENT_GFX_BALDING_MAN_HNS, 0 }, { Route14_EventScript_Carter, NULL } }, // Route14_hns POKEFAN
+    { TRAINER_ROY_HNS, MAP_GROUP(MAP_ROUTE14_HNS), MAP_NUM(MAP_ROUTE14_HNS), { 4, 0 }, 17, 0, { OBJ_EVENT_GFX_BIKER_HNS, 0 }, { Route14_EventScript_Roy, NULL } }, // Route14_hns BIKER
+    { TRAINER_TREVOR_HNS, MAP_GROUP(MAP_ROUTE14_HNS), MAP_NUM(MAP_ROUTE14_HNS), { 8, 0 }, 26, 0, { OBJ_EVENT_GFX_JUGGLER_HNS, 0 }, { Route14_EventScript_Trevor, NULL } }, // Route14_hns JUGGLER
+    { TRAINER_TOMMY_HNS, MAP_GROUP(MAP_ROUTE15_HNS), MAP_NUM(MAP_ROUTE15_HNS), { 2, 0 }, 31, 0, { OBJ_EVENT_GFX_LITTLE_BOY_HNS, 0 }, { Route15_EventScript_Tommy, NULL } }, // Route15_hns SCHOOL_KID
+    { TRAINER_JOHNNY_HNS, MAP_GROUP(MAP_ROUTE15_HNS), MAP_NUM(MAP_ROUTE15_HNS), { 3, 0 }, 4, 0, { OBJ_EVENT_GFX_BOY_2_HNS, 0 }, { Route15_EventScript_Johnny, NULL } }, // Route15_hns !JOHNNY_HNS
+    { TRAINER_HILLARY_HNS, MAP_GROUP(MAP_ROUTE15_HNS), MAP_NUM(MAP_ROUTE15_HNS), { 4, 0 }, 27, 0, { OBJ_EVENT_GFX_WOMAN_1_HNS, 0 }, { Route15_EventScript_Hillary, NULL } }, // Route15_hns LASS
+    { TRAINER_KIPP_HNS, MAP_GROUP(MAP_ROUTE15_HNS), MAP_NUM(MAP_ROUTE15_HNS), { 5, 0 }, 31, 0, { OBJ_EVENT_GFX_LITTLE_BOY_HNS, 0 }, { Route15_EventScript_Kipp, NULL } }, // Route15_hns SCHOOL_KID
+    { TRAINER_COLETTE_HNS, MAP_GROUP(MAP_ROUTE15_HNS), MAP_NUM(MAP_ROUTE15_HNS), { 6, 0 }, 22, 0, { OBJ_EVENT_GFX_WOMAN_2_HNS, 0 }, { Route15_EventScript_Colette, NULL } }, // Route15_hns EXPERT
+    { TRAINER_BILLY_HNS, MAP_GROUP(MAP_ROUTE15_HNS), MAP_NUM(MAP_ROUTE15_HNS), { 7, 0 }, 31, 0, { OBJ_EVENT_GFX_LITTLE_BOY_HNS, 0 }, { Route15_EventScript_Billy, NULL } }, // Route15_hns SCHOOL_KID
+    { TRAINER_RILEY_HNS, MAP_GROUP(MAP_ROUTE17_HNS), MAP_NUM(MAP_ROUTE17_HNS), { 1, 0 }, 17, 0, { OBJ_EVENT_GFX_BIKER_HNS, 0 }, { Route17_EventScript_Riley, NULL } }, // Route17_hns BIKER
+    { TRAINER_JOEL_HNS, MAP_GROUP(MAP_ROUTE17_HNS), MAP_NUM(MAP_ROUTE17_HNS), { 2, 0 }, 17, 0, { OBJ_EVENT_GFX_BIKER_HNS, 0 }, { Route17_EventScript_Joel, NULL } }, // Route17_hns BIKER
+    { TRAINER_GLENN_HNS, MAP_GROUP(MAP_ROUTE17_HNS), MAP_NUM(MAP_ROUTE17_HNS), { 3, 0 }, 17, 0, { OBJ_EVENT_GFX_BIKER_HNS, 0 }, { Route17_EventScript_Glenn, NULL } }, // Route17_hns BIKER
+    { TRAINER_CHARLES_HNS, MAP_GROUP(MAP_ROUTE17_HNS), MAP_NUM(MAP_ROUTE17_HNS), { 4, 0 }, 17, 0, { OBJ_EVENT_GFX_BIKER_HNS, 0 }, { Route17_EventScript_Charles, NULL } }, // Route17_hns BIKER
+    { TRAINER_BORIS_HNS, MAP_GROUP(MAP_ROUTE18_HNS), MAP_NUM(MAP_ROUTE18_HNS), { 1, 0 }, 18, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { Route18_EventScript_Boris, NULL } }, // Route18_hns BIRD_KEEPER
+    { TRAINER_BOB_HNS, MAP_GROUP(MAP_ROUTE18_HNS), MAP_NUM(MAP_ROUTE18_HNS), { 2, 0 }, 1, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { Route18_EventScript_Bob, NULL } }, // Route18_hns !BOB_HNS
+    { TRAINER_PAT_HNS, MAP_GROUP(MAP_ROUTE25_HNS), MAP_NUM(MAP_ROUTE25_HNS), { 7, 0 }, 34, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { Route25_EventScript_Pat, NULL } }, // Route25_hns SUPER_NERD
+    { TRAINER_RICHARD_HNS, MAP_GROUP(MAP_ROUTE26_HNS), MAP_NUM(MAP_ROUTE26_HNS), { 1, 0 }, 137, 0, { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { Route26_EventScript_Richard, NULL } }, // Route26_hns PSYCHIC_M
+    { TRAINER_GAVEN_HNS, MAP_GROUP(MAP_ROUTE26_HNS), MAP_NUM(MAP_ROUTE26_HNS), { 15, 0 }, 97, 0, { OBJ_EVENT_GFX_COOLTRAINER_M_HNS, 0 }, { Route26_EventScript_Gaven, NULL } }, // Route26_hns !GAVEN_HNS
+    { TRAINER_BETH_HNS, MAP_GROUP(MAP_ROUTE26NORTH_HNS), MAP_NUM(MAP_ROUTE26NORTH_HNS), { 1, 0 }, 126, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { Route26_EventScript_Beth, NULL } }, // Route26North_hns COOLTRAINER
+    { TRAINER_MEGAN_HNS, MAP_GROUP(MAP_ROUTE27_HNS), MAP_NUM(MAP_ROUTE27_HNS), { 2, 0 }, 126, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { Route27_EventScript_Megan, NULL } }, // Route27_hns COOLTRAINER
+    { TRAINER_BRIAN_HNS, MAP_GROUP(MAP_ROUTE27_HNS), MAP_NUM(MAP_ROUTE27_HNS), { 3, 0 }, 126, 0, { OBJ_EVENT_GFX_COOLTRAINER_M_HNS, 0 }, { Route27_EventScript_Brian, NULL } }, // Route27_hns COOLTRAINER
+    { TRAINER_JOSE_HNS, MAP_GROUP(MAP_ROUTE27_HNS), MAP_NUM(MAP_ROUTE27_HNS), { 4, 0 }, 100, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { Route27_EventScript_Jose, NULL } }, // Route27_hns !JOSE_HNS
+    { TRAINER_BLAKE_HNS, MAP_GROUP(MAP_ROUTE27_HNS), MAP_NUM(MAP_ROUTE27_HNS), { 5, 0 }, 126, 0, { OBJ_EVENT_GFX_COOLTRAINER_M_HNS, 0 }, { Route27_EventScript_Blake, NULL } }, // Route27_hns COOLTRAINER
+    { TRAINER_GILBERT_HNS, MAP_GROUP(MAP_ROUTE27_HNS), MAP_NUM(MAP_ROUTE27_HNS), { 8, 0 }, 137, 0, { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { Route27_EventScript_Gilbert, NULL } }, // Route27_hns PSYCHIC_M
+    { TRAINER_REENA_HNS, MAP_GROUP(MAP_ROUTE27_HNS), MAP_NUM(MAP_ROUTE27_HNS), { 9, 0 }, 126, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { Route27_EventScript_Reena, NULL } }, // Route27_hns COOLTRAINER
+    { TRAINER_SCOTT_HNS, MAP_GROUP(MAP_ROUTE27_HNS), MAP_NUM(MAP_ROUTE27_HNS), { 10, 0 }, 128, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route27_EventScript_Scott, NULL } }, // Route27_hns FISHERMAN
+    { TRAINER_DUNCAN_HNS, MAP_GROUP(MAP_GOLDENROD_CITY_UNDERGROUND_SWITCHES_HNS), MAP_NUM(MAP_GOLDENROD_CITY_UNDERGROUND_SWITCHES_HNS), { 4, 0 }, 124, 0, { OBJ_EVENT_GFX_BURGLAR_HNS, 0 }, { GoldenrodCity_UndergroundSwitches_EventScript_Duncan, NULL } }, // GoldenrodCity_UndergroundSwitches_hns BURGLAR
+    { TRAINER_EDDIE_HNS, MAP_GROUP(MAP_GOLDENROD_CITY_UNDERGROUND_SWITCHES_HNS), MAP_NUM(MAP_GOLDENROD_CITY_UNDERGROUND_SWITCHES_HNS), { 5, 0 }, 124, 0, { OBJ_EVENT_GFX_BURGLAR_HNS, 0 }, { GoldenrodCity_UndergroundSwitches_EventScript_Eddie, NULL } }, // GoldenrodCity_UndergroundSwitches_hns BURGLAR
+    { TRAINER_HUEY_HNS, MAP_GROUP(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), MAP_NUM(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), { 3, 0 }, 139, 0, { OBJ_EVENT_GFX_SAILOR_HNS, 0 }, { OlivineLighthouse_EventScript_Huey, NULL } }, // OlivineCity_Lighthouse_hns SAILOR
+    { TRAINER_ALFRED_HNS, MAP_GROUP(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), MAP_NUM(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), { 4, 0 }, 85, 0, { OBJ_EVENT_GFX_GENTLEMAN_HNS, 0 }, { OlivineLighthouse_EventScript_GentlemanAlfred, NULL } }, // OlivineCity_Lighthouse_hns !ALFRED_HNS
+    { TRAINER_TERRELL_HNS, MAP_GROUP(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), MAP_NUM(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), { 5, 0 }, 115, 0, { OBJ_EVENT_GFX_SAILOR_HNS, 0 }, { OlivineLighthouse_EventScript_SailorTerrell, NULL } }, // OlivineCity_Lighthouse_hns !TERRELL_HNS
+    { TRAINER_THEO_HNS, MAP_GROUP(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), MAP_NUM(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), { 6, 0 }, 121, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { OlivineLighthouse_EventScript_BirdKeeperTheo, NULL } }, // OlivineCity_Lighthouse_hns BIRD_KEEPER
+    { TRAINER_PRESTON_HNS, MAP_GROUP(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), MAP_NUM(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), { 7, 0 }, 129, 0, { OBJ_EVENT_GFX_GENTLEMAN_HNS, 0 }, { OlivineLighthouse_EventScript_GentlemanPreston, NULL } }, // OlivineCity_Lighthouse_hns GENTLEMAN
+    { TRAINER_KENT_HNS, MAP_GROUP(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), MAP_NUM(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), { 8, 0 }, 103, 0, { OBJ_EVENT_GFX_SAILOR_HNS, 0 }, { OlivineLighthouse_EventScript_SailorKent, NULL } }, // OlivineCity_Lighthouse_hns !KENT_HNS
+    { TRAINER_CONNIE_HNS, MAP_GROUP(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), MAP_NUM(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), { 9, 0 }, 90, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { OlivineLighthouse_EventScript_LassConnie, NULL } }, // OlivineCity_Lighthouse_hns !CONNIE_HNS
+    { TRAINER_DENIS_HNS, MAP_GROUP(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), MAP_NUM(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), { 10, 0 }, 92, 0, { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { OlivineLighthouse_EventScript_BirdKeeperDenis, NULL } }, // OlivineCity_Lighthouse_hns !DENIS_HNS
+    { TRAINER_ERNEST_HNS, MAP_GROUP(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), MAP_NUM(MAP_OLIVINE_CITY_LIGHTHOUSE_HNS), { 11, 0 }, 139, 0, { OBJ_EVENT_GFX_SAILOR_HNS, 0 }, { OlivineLighthouse_EventScript_SailorErnest, NULL } }, // OlivineCity_Lighthouse_hns SAILOR
+    { TRAINER_CHOW_HNS, MAP_GROUP(MAP_SPROUT_TOWER_1F_HNS), MAP_NUM(MAP_SPROUT_TOWER_1F_HNS), { 4, 0 }, 119, 0, { OBJ_EVENT_GFX_SAGE_HNS, 0 }, { SproutTower_1F_EventScript_SageChow, NULL } }, // SproutTower_1F_hns @tower
+    { TRAINER_EDMOND_HNS, MAP_GROUP(MAP_SPROUT_TOWER_2F_HNS), MAP_NUM(MAP_SPROUT_TOWER_2F_HNS), { 1, 0 }, 138, 0, { OBJ_EVENT_GFX_SAGE_HNS, 0 }, { SproutTower_2F_EventScript_SageEdmond, NULL } }, // SproutTower_2F_hns SAGE
+    { TRAINER_NICO_HNS, MAP_GROUP(MAP_SPROUT_TOWER_2F_HNS), MAP_NUM(MAP_SPROUT_TOWER_2F_HNS), { 2, 0 }, 107, 0, { OBJ_EVENT_GFX_SAGE_HNS, 0 }, { SproutTower_2F_EventScript_SageNico, NULL } }, // SproutTower_2F_hns !NICO_HNS
+    { TRAINER_NEAL_HNS, MAP_GROUP(MAP_SPROUT_TOWER_3F_HNS), MAP_NUM(MAP_SPROUT_TOWER_3F_HNS), { 1, 0 }, 138, 0, { OBJ_EVENT_GFX_SAGE_HNS, 0 }, { SproutTower_3F_EventScript_SageNeal, NULL } }, // SproutTower_3F_hns SAGE
+    { TRAINER_JIN_HNS, MAP_GROUP(MAP_SPROUT_TOWER_3F_HNS), MAP_NUM(MAP_SPROUT_TOWER_3F_HNS), { 2, 0 }, 138, 0, { OBJ_EVENT_GFX_SAGE_HNS, 0 }, { SproutTower_3F_EventScript_SageJin, NULL } }, // SproutTower_3F_hns SAGE
+    { TRAINER_TROY_HNS, MAP_GROUP(MAP_SPROUT_TOWER_3F_HNS), MAP_NUM(MAP_SPROUT_TOWER_3F_HNS), { 3, 0 }, 138, 0, { OBJ_EVENT_GFX_SAGE_HNS, 0 }, { SproutTower_3F_EventScript_SageTroy, NULL } }, // SproutTower_3F_hns SAGE
+    { TRAINER_NATHAN_HNS, MAP_GROUP(MAP_RUINS_OF_ALPH_OUTSIDE_HNS), MAP_NUM(MAP_RUINS_OF_ALPH_OUTSIDE_HNS), { 1, 0 }, 137, 0, { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { RuinsOfAlph_Outside_EventScript_Nathan, NULL } }, // RuinsOfAlph_Outside_hns PSYCHIC_M
+    { TRAINER_STAN_HNS, MAP_GROUP(MAP_RUINS_OF_ALPH_OUTSIDE_HNS), MAP_NUM(MAP_RUINS_OF_ALPH_OUTSIDE_HNS), { 2, 0 }, 114, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { RuinsOfAlph_Outside_EventScript_Stan, NULL } }, // RuinsOfAlph_Outside_hns !STAN_HNS
+    { TRAINER_DANIEL_HNS, MAP_GROUP(MAP_UNION_CAVE_1F_HNS), MAP_NUM(MAP_UNION_CAVE_1F_HNS), { 2, 0 }, 130, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { UnionCave_1F_EventScript_HikerDaniel, NULL } }, // UnionCave_1F_hns HIKER
+    { TRAINER_RUSSELL_HNS, MAP_GROUP(MAP_UNION_CAVE_1F_HNS), MAP_NUM(MAP_UNION_CAVE_1F_HNS), { 3, 0 }, 111, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { UnionCave_1F_EventScript_HikerRussell, NULL } }, // UnionCave_1F_hns !RUSSELL_HNS
+    { TRAINER_BILL_HNS, MAP_GROUP(MAP_UNION_CAVE_1F_HNS), MAP_NUM(MAP_UNION_CAVE_1F_HNS), { 5, 0 }, 118, 0, { OBJ_EVENT_GFX_FIREBREATHER_HNS, 0 }, { UnionCave_1F_EventScript_FirebreatherBill, NULL } }, // UnionCave_1F_hns @cave
+    { TRAINER_LARRY_HNS, MAP_GROUP(MAP_UNION_CAVE_1F_HNS), MAP_NUM(MAP_UNION_CAVE_1F_HNS), { 7, 0 }, 118, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { UnionCave_1F_EventScript_PokemaniacLarry, NULL } }, // UnionCave_1F_hns @cave
+    { TRAINER_RAY_HNS, MAP_GROUP(MAP_UNION_CAVE_1F_HNS), MAP_NUM(MAP_UNION_CAVE_1F_HNS), { 8, 0 }, 118, 0, { OBJ_EVENT_GFX_FIREBREATHER_HNS, 0 }, { UnionCave_1F_EventScript_FirebreatherRay, NULL } }, // UnionCave_1F_hns @cave
+    { TRAINER_PHILLIP_HNS, MAP_GROUP(MAP_UNION_CAVE_B1F_HNS), MAP_NUM(MAP_UNION_CAVE_B1F_HNS), { 1, 0 }, 130, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { UnionCave_B1F_EventScript_HikerPhillip, NULL } }, // UnionCave_B1F_hns HIKER
+    { TRAINER_LEONARD_HNS, MAP_GROUP(MAP_UNION_CAVE_B1F_HNS), MAP_NUM(MAP_UNION_CAVE_B1F_HNS), { 2, 0 }, 118, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { UnionCave_B1F_EventScript_HikerLeonard, NULL } }, // UnionCave_B1F_hns @cave
+    { TRAINER_CALVIN_HNS, MAP_GROUP(MAP_UNION_CAVE_B1F_HNS), MAP_NUM(MAP_UNION_CAVE_B1F_HNS), { 6, 0 }, 136, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { UnionCave_B1F_EventScript_PokemaniacCalvin, NULL } }, // UnionCave_B1F_hns POKEMANIAC
+    { TRAINER_ANDREW_HNS, MAP_GROUP(MAP_UNION_CAVE_B1F_HNS), MAP_NUM(MAP_UNION_CAVE_B1F_HNS), { 7, 0 }, 136, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { UnionCave_B1F_EventScript_PokemaniacAndrew, NULL } }, // UnionCave_B1F_hns POKEMANIAC
+    { TRAINER_NICK_HNS, MAP_GROUP(MAP_UNION_CAVE_B2F_HNS), MAP_NUM(MAP_UNION_CAVE_B2F_HNS), { 2, 0 }, 126, 0, { OBJ_EVENT_GFX_COOLTRAINER_M_HNS, 0 }, { UnionCave_B2F_EventScript_CooltrainerNick, NULL } }, // UnionCave_B2F_hns COOLTRAINER
+    { TRAINER_GWEN_HNS, MAP_GROUP(MAP_UNION_CAVE_B2F_HNS), MAP_NUM(MAP_UNION_CAVE_B2F_HNS), { 4, 0 }, 126, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { UnionCave_B2F_EventScript_CooltrainerfGwen, NULL } }, // UnionCave_B2F_hns COOLTRAINER
+    { TRAINER_EMMA_HNS, MAP_GROUP(MAP_UNION_CAVE_B2F_HNS), MAP_NUM(MAP_UNION_CAVE_B2F_HNS), { 5, 0 }, 126, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { UnionCave_B2F_EventScript_CooltrainerfEmma, NULL } }, // UnionCave_B2F_hns COOLTRAINER
+    { TRAINER_WAYNE_HNS, MAP_GROUP(MAP_ILEX_FOREST_HNS), MAP_NUM(MAP_ILEX_FOREST_HNS), { 7, 0 }, 123, 0, { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { IlexForest_EventScript_BugcatcherWayne, NULL } }, // IlexForest_hns BUG_CATCHER
+    { TRAINER_BEVERLY_HNS, MAP_GROUP(MAP_NATIONAL_PARK_NORMAL_HNS), MAP_NUM(MAP_NATIONAL_PARK_NORMAL_HNS), { 6, 0 }, 133, 0, { OBJ_EVENT_GFX_BEAUTY_HNS, 0 }, { NationalPark_Normal_EventScript_Beverly, NULL } }, // NationalPark_Normal_hns PARASOL_LADY
+    { TRAINER_JACK_HNS, MAP_GROUP(MAP_NATIONAL_PARK_NORMAL_HNS), MAP_NUM(MAP_NATIONAL_PARK_NORMAL_HNS), { 7, 0 }, 140, 0, { OBJ_EVENT_GFX_LITTLE_BOY_HNS, 0 }, { NationalPark_Normal_EventScript_Jack, NULL } }, // NationalPark_Normal_hns SCHOOL_KID
+    { TRAINER_KRISE_HNS, MAP_GROUP(MAP_NATIONAL_PARK_NORMAL_HNS), MAP_NUM(MAP_NATIONAL_PARK_NORMAL_HNS), { 8, 0 }, 132, 0, { OBJ_EVENT_GFX_LASS_HNS, 0 }, { NationalPark_Normal_EventScript_Krise, NULL } }, // NationalPark_Normal_hns LASS
+    { TRAINER_WILLIAM_HNS, MAP_GROUP(MAP_NATIONAL_PARK_NORMAL_HNS), MAP_NUM(MAP_NATIONAL_PARK_NORMAL_HNS), { 9, 0 }, 135, 0, { OBJ_EVENT_GFX_BALDING_MAN_HNS, 0 }, { NationalPark_Normal_EventScript_William, NULL } }, // NationalPark_Normal_hns POKEFAN
+    { TRAINER_NARD_HNS, MAP_GROUP(MAP_BURNED_TOWER_1F_HNS), MAP_NUM(MAP_BURNED_TOWER_1F_HNS), { 4, 0 }, 106, 0, { OBJ_EVENT_GFX_FIREBREATHER_HNS, 0 }, { BurnedTower_1F_EventScript_Nard, NULL } }, // BurnedTower_1F_hns !NARD_HNS
+    { TRAINER_RICHARDO_HNS, MAP_GROUP(MAP_BURNED_TOWER_1F_HNS), MAP_NUM(MAP_BURNED_TOWER_1F_HNS), { 5, 0 }, 110, 0, { OBJ_EVENT_GFX_BURGLAR_HNS, 0 }, { BurnedTower_1F_EventScript_Richardo, NULL } }, // BurnedTower_1F_hns !RICHARDO_HNS
+    { TRAINER_MARKUS_HNS, MAP_GROUP(MAP_MT_MORTAR_1F_NORTH_HNS), MAP_NUM(MAP_MT_MORTAR_1F_NORTH_HNS), { 8, 0 }, 141, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { MtMortar_1F_North_EventScript_Markus, NULL } }, // MtMortar_1F_North_hns SUPER_NERD
+    { TRAINER_MILLER_HNS, MAP_GROUP(MAP_MT_MORTAR_1F_NORTH_HNS), MAP_NUM(MAP_MT_MORTAR_1F_NORTH_HNS), { 9, 0 }, 136, 0, { OBJ_EVENT_GFX_FAT_MAN_HNS, 0 }, { MtMortar_1F_North_EventScript_Miller, NULL } }, // MtMortar_1F_North_hns POKEMANIAC
+    { TRAINER_HUGH_HNS, MAP_GROUP(MAP_MT_MORTAR_2F_HNS), MAP_NUM(MAP_MT_MORTAR_2F_HNS), { 7, 0 }, 141, 0, { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { MtMortar_2F_EventScript_Nerd, NULL } }, // MtMortar_2F_hns SUPER_NERD
+    { TRAINER_ANDRE_HNS, MAP_GROUP(MAP_LAKE_OF_RAGE_HNS), MAP_NUM(MAP_LAKE_OF_RAGE_HNS), { 2, 0 }, 128, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { LakeOfRage_EventScript_Andre, NULL } }, // LakeOfRage_hns FISHERMAN
+    { TRAINER_RAYMOND_HNS, MAP_GROUP(MAP_LAKE_OF_RAGE_HNS), MAP_NUM(MAP_LAKE_OF_RAGE_HNS), { 5, 0 }, 128, 0, { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { LakeOfRage_EventScript_Raymond, NULL } }, // LakeOfRage_hns FISHERMAN
+    { TRAINER_AARON_HNS, MAP_GROUP(MAP_LAKE_OF_RAGE_HNS), MAP_NUM(MAP_LAKE_OF_RAGE_HNS), { 9, 0 }, 126, 0, { OBJ_EVENT_GFX_COOLTRAINER_M_HNS, 0 }, { LakeOfRage_EventScript_Aaron, NULL } }, // LakeOfRage_hns COOLTRAINER
+    { TRAINER_DARIN_HNS, MAP_GROUP(MAP_DRAGONS_DEN_CAVERN_HNS), MAP_NUM(MAP_DRAGONS_DEN_CAVERN_HNS), { 1, 0 }, 91, 0, { OBJ_EVENT_GFX_COOLTRAINER_M_HNS, 0 }, { DragonsDen_Cavern_EventScript_Darin, NULL } }, // DragonsDen_Cavern_hns !DARIN_HNS
+    { TRAINER_LEA_AND_PIA_HNS, MAP_GROUP(MAP_DRAGONS_DEN_CAVERN_HNS), MAP_NUM(MAP_DRAGONS_DEN_CAVERN_HNS), { 2, 3 }, 144, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_TWIN_HNS, OBJ_EVENT_GFX_TWIN_HNS }, { DragonsDen_Cavern_EventScript_TwinPia, DragonsDen_Cavern_EventScript_TwinLea } }, // DragonsDen_Cavern_hns TWINS
+    { TRAINER_CARA_HNS, MAP_GROUP(MAP_DRAGONS_DEN_CAVERN_HNS), MAP_NUM(MAP_DRAGONS_DEN_CAVERN_HNS), { 4, 0 }, 126, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { DragonsDen_Cavern_EventScript_Cara, NULL } }, // DragonsDen_Cavern_hns COOLTRAINER
+    { TRAINER_DOUG_HNS, MAP_GROUP(MAP_VIRIDIAN_FOREST_HNS), MAP_NUM(MAP_VIRIDIAN_FOREST_HNS), { 1, 0 }, 19, 0, { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { Route2_EventScript_Doug, NULL } }, // ViridianForest_hns BUG_CATCHER
+    { TRAINER_ED_HNS, MAP_GROUP(MAP_VIRIDIAN_FOREST_HNS), MAP_NUM(MAP_VIRIDIAN_FOREST_HNS), { 2, 0 }, 19, 0, { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { Route2_EventScript_Ed, NULL } }, // ViridianForest_hns BUG_CATCHER
+    { TRAINER_ROB_HNS, MAP_GROUP(MAP_VIRIDIAN_FOREST_HNS), MAP_NUM(MAP_VIRIDIAN_FOREST_HNS), { 8, 0 }, 6, 0, { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { Route2_EventScript_Rob, NULL } }, // ViridianForest_hns !ROB_HNS
+    { TRAINER_PONI_SWIMMER_2_HNS, MAP_GROUP(MAP_PONI_ISLE_HNS), MAP_NUM(MAP_PONI_ISLE_HNS), { 4, 0 }, 161, 0, { OBJ_EVENT_GFX_TUBER_M_SWIMMING_HNS, 0 }, { Alola_Poni_TrainerBattleSwimmer2, NULL } }, // PoniIsle_hns TUBER_M
+    { TRAINER_PONI_SWIMMER_1_HNS, MAP_GROUP(MAP_PONI_ISLE_HNS), MAP_NUM(MAP_PONI_ISLE_HNS), { 5, 0 }, 159, 0, { OBJ_EVENT_GFX_SWIMMER_F_HNS, 0 }, { Alola_Poni_TrainerBattleSwimmer1, NULL } }, // PoniIsle_hns SWIMMER_F
+    { TRAINER_AKALA_HIKER_HNS, MAP_GROUP(MAP_AKALA_ISLE_HNS), MAP_NUM(MAP_AKALA_ISLE_HNS), { 7, 0 }, 147, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Alola_Akala_TrainerBattleHiker, NULL } }, // AkalaIsle_hns !AKALA_HIKER_HNS
+    { TRAINER_AKALA_SWIMMER_2_HNS, MAP_GROUP(MAP_AKALA_ISLE_HNS), MAP_NUM(MAP_AKALA_ISLE_HNS), { 8, 0 }, 150, 0, { OBJ_EVENT_GFX_SWIMMER_F_LAND_HNS, 0 }, { Alola_Akala_TrainerBattleSwimmerLand, NULL } }, // AkalaIsle_hns !AKALA_SWIMMER_2_HNS
+    { TRAINER_AKALA_PICNICKER_HNS, MAP_GROUP(MAP_AKALA_ISLE_HNS), MAP_NUM(MAP_AKALA_ISLE_HNS), { 9, 0 }, 148, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Alola_Akala_TrainerBattlePicnicker, NULL } }, // AkalaIsle_hns !AKALA_PICNICKER_HNS
+    { TRAINER_AKALA_CAMPER_HNS, MAP_GROUP(MAP_AKALA_ISLE_HNS), MAP_NUM(MAP_AKALA_ISLE_HNS), { 10, 0 }, 156, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Alola_Akala_TrainerBattleCamper, NULL } }, // AkalaIsle_hns CAMPER
+    { TRAINER_AKALA_SWIMMER_3_HNS, MAP_GROUP(MAP_AKALA_ISLE_HNS), MAP_NUM(MAP_AKALA_ISLE_HNS), { 11, 0 }, 160, 0, { OBJ_EVENT_GFX_SWIMMER_M_HNS, 0 }, { Alola_Akala_TrainerBattleSwimmerWaterM, NULL } }, // AkalaIsle_hns SWIMMER_M
+    { TRAINER_AKALA_SWIMMER_1_HNS, MAP_GROUP(MAP_AKALA_ISLE_HNS), MAP_NUM(MAP_AKALA_ISLE_HNS), { 12, 0 }, 149, 0, { OBJ_EVENT_GFX_SWIMMER_F_HNS, 0 }, { Alola_Akala_TrainerBattleSwimmerWater, NULL } }, // AkalaIsle_hns !AKALA_SWIMMER_1_HNS
+    { TRAINER_MELEMELE_SWIMMER_1_HNS, MAP_GROUP(MAP_MELEMELE_ISLE_HNS), MAP_NUM(MAP_MELEMELE_ISLE_HNS), { 10, 0 }, 159, 0, { OBJ_EVENT_GFX_SWIMMER_F_HNS, 0 }, { Alola_Melemele_TrainerBattleSwimmer, NULL } }, // MelemeleIsle_hns SWIMMER_F
+    { TRAINER_MELEMELE_SWIMMER_2_HNS, MAP_GROUP(MAP_ALOLA_WATER_HNS), MAP_NUM(MAP_ALOLA_WATER_HNS), { 1, 0 }, 160, 0, { OBJ_EVENT_GFX_SWIMMER_M_HNS, 0 }, { Alola_MelemeleSea_TrainerBattleSwimmer, NULL } }, // AlolaWater_hns SWIMMER_M
+    { TRAINER_ULAULA_PICNICKER_HNS, MAP_GROUP(MAP_ULAULA_ISLE_HNS), MAP_NUM(MAP_ULAULA_ISLE_HNS), { 5, 0 }, 158, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Alola_Ulaula_TrainerBattlePicnicker, NULL } }, // UlaulaIsle_hns PICNICKER
+    { TRAINER_ULAULA_YOUNGSTER_HNS, MAP_GROUP(MAP_ULAULA_ISLE_HNS), MAP_NUM(MAP_ULAULA_ISLE_HNS), { 6, 0 }, 153, 0, { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Alola_Ulaula_TrainerBattleYoungster, NULL } }, // UlaulaIsle_hns !ULAULA_YOUNGSTER_HNS
+    { TRAINER_ULAULA_HIKER_HNS, MAP_GROUP(MAP_ULAULA_ISLE_HNS), MAP_NUM(MAP_ULAULA_ISLE_HNS), { 8, 0 }, 152, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Alola_Ulaula_TrainerBattleHiker, NULL } }, // UlaulaIsle_hns !ULAULA_HIKER_HNS
+    { TRAINER_ULAULA_COOLTRAINER_HNS, MAP_GROUP(MAP_ULAULA_ISLE_HNS), MAP_NUM(MAP_ULAULA_ISLE_HNS), { 10, 0 }, 151, 0, { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { Alola_Ulaula_TrainerBattleCooltrainer, NULL } }, // UlaulaIsle_hns !ULAULA_COOLTRAINER_HNS
+    { TRAINER_AKALA_FOREST_BUGCATCHER_1_HNS, MAP_GROUP(MAP_AKALA_FOREST_HNS), MAP_NUM(MAP_AKALA_FOREST_HNS), { 1, 0 }, 155, 0, { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { Alola_AkalaForest_TrainerBattleBugCatcher1, NULL } }, // Akala_Forest_hns BUG_CATCHER
+    { TRAINER_AKALA_FOREST_BUGCATCHER_2_HNS, MAP_GROUP(MAP_AKALA_FOREST_HNS), MAP_NUM(MAP_AKALA_FOREST_HNS), { 2, 0 }, 155, 0, { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { Alola_AkalaForest_TrainerBattleBugCatcher2, NULL } }, // Akala_Forest_hns BUG_CATCHER
+    { TRAINER_AKALA_CAVE_CAMPER_HNS, MAP_GROUP(MAP_AKALA_CAVE_HNS), MAP_NUM(MAP_AKALA_CAVE_HNS), { 5, 0 }, 156, 0, { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Alola_AkalaCave_TrainerBattleCamper, NULL } }, // Akala_Cave_hns CAMPER
+    { TRAINER_AKALA_CAVE_PICNICKER_HNS, MAP_GROUP(MAP_AKALA_CAVE_HNS), MAP_NUM(MAP_AKALA_CAVE_HNS), { 6, 0 }, 154, 0, { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Alola_AkalaCave_TrainerBattlePicnicker, NULL } }, // Akala_Cave_hns @cave
+    { TRAINER_AKALA_CAVE_HIKER_HNS, MAP_GROUP(MAP_AKALA_CAVE_HNS), MAP_NUM(MAP_AKALA_CAVE_HNS), { 7, 0 }, 157, 0, { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Alola_AkalaCave_TrainerBattleHiker, NULL } }, // Akala_Cave_hns HIKER
+    { TRAINER_CALVIN_1, MAP_GROUP(MAP_ROUTE102), MAP_NUM(MAP_ROUTE102), { 2, 0 }, 251, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route102_EventScript_Calvin, NULL } }, // Route102 YOUNGSTER
+    { TRAINER_RICK, MAP_GROUP(MAP_ROUTE102), MAP_NUM(MAP_ROUTE102), { 3, 0 }, 215, 0, { OBJ_EVENT_GFX_BUG_CATCHER, 0 }, { Route102_EventScript_Rick, NULL } }, // Route102 BUG_CATCHER
+    { TRAINER_TIANA, MAP_GROUP(MAP_ROUTE102), MAP_NUM(MAP_ROUTE102), { 4, 0 }, 229, 0, { OBJ_EVENT_GFX_LASS, 0 }, { Route102_EventScript_Tiana, NULL } }, // Route102 LASS
+    { TRAINER_ALLEN, MAP_GROUP(MAP_ROUTE102), MAP_NUM(MAP_ROUTE102), { 9, 0 }, 251, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route102_EventScript_Allen, NULL } }, // Route102 YOUNGSTER
+    { TRAINER_DAISY, MAP_GROUP(MAP_ROUTE103), MAP_NUM(MAP_ROUTE103), { 3, 0 }, 210, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route103_EventScript_Daisy, NULL } }, // Route103 AROMA_LADY
+    { TRAINER_AMY_AND_LIV_1, MAP_GROUP(MAP_ROUTE103), MAP_NUM(MAP_ROUTE103), { 4, 5 }, 250, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_TWIN, OBJ_EVENT_GFX_TWIN }, { Route103_EventScript_Liv, Route103_EventScript_Amy } }, // Route103 TWINS
+    { TRAINER_ANDREW, MAP_GROUP(MAP_ROUTE103), MAP_NUM(MAP_ROUTE103), { 6, 0 }, 222, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route103_EventScript_Andrew, NULL } }, // Route103 FISHERMAN
+    { TRAINER_MIGUEL_1, MAP_GROUP(MAP_ROUTE103), MAP_NUM(MAP_ROUTE103), { 12, 0 }, 236, 0, { OBJ_EVENT_GFX_POKEFAN_M, 0 }, { Route103_EventScript_Miguel, NULL } }, // Route103 POKEFAN
+    { TRAINER_RHETT, MAP_GROUP(MAP_ROUTE103), MAP_NUM(MAP_ROUTE103), { 16, 0 }, 214, 0, { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { Route103_EventScript_Rhett, NULL } }, // Route103 BLACK_BELT
+    { TRAINER_MARCOS, MAP_GROUP(MAP_ROUTE103), MAP_NUM(MAP_ROUTE103), { 17, 0 }, 224, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route103_EventScript_Marcos, NULL } }, // Route103 GUITARIST
+    { TRAINER_ISABELLE, MAP_GROUP(MAP_ROUTE103), MAP_NUM(MAP_ROUTE103), { 18, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route103_EventScript_Isabelle, NULL } }, // Route103 SWIMMER_F
+    { TRAINER_PETE, MAP_GROUP(MAP_ROUTE103), MAP_NUM(MAP_ROUTE103), { 19, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route103_EventScript_Pete, NULL } }, // Route103 SWIMMER_M
+    { TRAINER_HALEY_1, MAP_GROUP(MAP_ROUTE104), MAP_NUM(MAP_ROUTE104), { 3, 0 }, 229, 0, { OBJ_EVENT_GFX_LASS, 0 }, { Route104_EventScript_Haley, NULL } }, // Route104 LASS
+    { TRAINER_IVAN, MAP_GROUP(MAP_ROUTE104), MAP_NUM(MAP_ROUTE104), { 10, 0 }, 222, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route104_EventScript_Ivan, NULL } }, // Route104 FISHERMAN
+    { TRAINER_GINA_AND_MIA_1, MAP_GROUP(MAP_ROUTE104), MAP_NUM(MAP_ROUTE104), { 24, 25 }, 250, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_TWIN, OBJ_EVENT_GFX_TWIN }, { Route104_EventScript_Gina, Route104_EventScript_Mia } }, // Route104 TWINS
+    { TRAINER_WINSTON_1, MAP_GROUP(MAP_ROUTE104), MAP_NUM(MAP_ROUTE104), { 26, 0 }, 239, 0, { OBJ_EVENT_GFX_RICH_BOY, 0 }, { Route104_EventScript_Winston, NULL } }, // Route104 RICH_BOY
+    { TRAINER_CINDY_1, MAP_GROUP(MAP_ROUTE104), MAP_NUM(MAP_ROUTE104), { 27, 0 }, 228, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route104_EventScript_Cindy, NULL } }, // Route104 LADY
+    { TRAINER_BILLY, MAP_GROUP(MAP_ROUTE104), MAP_NUM(MAP_ROUTE104), { 29, 0 }, 251, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route104_EventScript_Billy, NULL } }, // Route104 YOUNGSTER
+    { TRAINER_DARIAN, MAP_GROUP(MAP_ROUTE104), MAP_NUM(MAP_ROUTE104), { 34, 0 }, 222, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route104_EventScript_Darian, NULL } }, // Route104 FISHERMAN
+    { TRAINER_LUIS, MAP_GROUP(MAP_ROUTE105), MAP_NUM(MAP_ROUTE105), { 1, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route105_EventScript_Luis, NULL } }, // Route105 SWIMMER_M
+    { TRAINER_DOMINIK, MAP_GROUP(MAP_ROUTE105), MAP_NUM(MAP_ROUTE105), { 2, 0 }, 175, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route105_EventScript_Dominik, NULL } }, // Route105 !DOMINIK
+    { TRAINER_BEVERLY, MAP_GROUP(MAP_ROUTE105), MAP_NUM(MAP_ROUTE105), { 3, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route105_EventScript_Beverly, NULL } }, // Route105 SWIMMER_F
+    { TRAINER_IMANI, MAP_GROUP(MAP_ROUTE105), MAP_NUM(MAP_ROUTE105), { 4, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route105_EventScript_Imani, NULL } }, // Route105 SWIMMER_F
+    { TRAINER_FOSTER, MAP_GROUP(MAP_ROUTE105), MAP_NUM(MAP_ROUTE105), { 6, 0 }, 240, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route105_EventScript_Foster, NULL } }, // Route105 RUIN_MANIAC
+    { TRAINER_JOSUE, MAP_GROUP(MAP_ROUTE105), MAP_NUM(MAP_ROUTE105), { 7, 0 }, 213, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route105_EventScript_Josue, NULL } }, // Route105 BIRD_KEEPER
+    { TRAINER_ANDRES_1, MAP_GROUP(MAP_ROUTE105), MAP_NUM(MAP_ROUTE105), { 8, 0 }, 240, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route105_EventScript_Andres, NULL } }, // Route105 RUIN_MANIAC
+    { TRAINER_DOUGLAS, MAP_GROUP(MAP_ROUTE106), MAP_NUM(MAP_ROUTE106), { 1, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route106_EventScript_Douglas, NULL } }, // Route106 SWIMMER_M
+    { TRAINER_KYLA, MAP_GROUP(MAP_ROUTE106), MAP_NUM(MAP_ROUTE106), { 2, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route106_EventScript_Kyla, NULL } }, // Route106 SWIMMER_F
+    { TRAINER_ELLIOT_1, MAP_GROUP(MAP_ROUTE106), MAP_NUM(MAP_ROUTE106), { 3, 0 }, 222, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route106_EventScript_Elliot, NULL } }, // Route106 FISHERMAN
+    { TRAINER_NED, MAP_GROUP(MAP_ROUTE106), MAP_NUM(MAP_ROUTE106), { 4, 0 }, 222, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route106_EventScript_Ned, NULL } }, // Route106 FISHERMAN
+    { TRAINER_DARRIN, MAP_GROUP(MAP_ROUTE107), MAP_NUM(MAP_ROUTE107), { 1, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route107_EventScript_Darrin, NULL } }, // Route107 SWIMMER_M
+    { TRAINER_TONY_1, MAP_GROUP(MAP_ROUTE107), MAP_NUM(MAP_ROUTE107), { 2, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route107_EventScript_Tony, NULL } }, // Route107 SWIMMER_M
+    { TRAINER_DENISE, MAP_GROUP(MAP_ROUTE107), MAP_NUM(MAP_ROUTE107), { 3, 0 }, 173, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route107_EventScript_Denise, NULL } }, // Route107 !DENISE
+    { TRAINER_BETH, MAP_GROUP(MAP_ROUTE107), MAP_NUM(MAP_ROUTE107), { 4, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route107_EventScript_Beth, NULL } }, // Route107 SWIMMER_F
+    { TRAINER_LISA_AND_RAY, MAP_GROUP(MAP_ROUTE107), MAP_NUM(MAP_ROUTE107), { 5, 6 }, 243, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_SWIMMER_F, OBJ_EVENT_GFX_TUBER_M_SWIMMING }, { Route107_EventScript_Lisa, Route107_EventScript_Ray } }, // Route107 SIS_AND_BRO
+    { TRAINER_CAMRON, MAP_GROUP(MAP_ROUTE107), MAP_NUM(MAP_ROUTE107), { 7, 0 }, 247, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route107_EventScript_Camron, NULL } }, // Route107 TRIATHLETE
+    { TRAINER_JEROME, MAP_GROUP(MAP_ROUTE108), MAP_NUM(MAP_ROUTE108), { 1, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route108_EventScript_Jerome, NULL } }, // Route108 SWIMMER_M
+    { TRAINER_TARA, MAP_GROUP(MAP_ROUTE108), MAP_NUM(MAP_ROUTE108), { 2, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route108_EventScript_Tara, NULL } }, // Route108 SWIMMER_F
+    { TRAINER_MATTHEW, MAP_GROUP(MAP_ROUTE108), MAP_NUM(MAP_ROUTE108), { 3, 0 }, 193, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route108_EventScript_Matthew, NULL } }, // Route108 !MATTHEW
+    { TRAINER_MISSY, MAP_GROUP(MAP_ROUTE108), MAP_NUM(MAP_ROUTE108), { 4, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route108_EventScript_Missy, NULL } }, // Route108 SWIMMER_F
+    { TRAINER_CAROLINA, MAP_GROUP(MAP_ROUTE108), MAP_NUM(MAP_ROUTE108), { 5, 0 }, 219, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route108_EventScript_Carolina, NULL } }, // Route108 COOLTRAINER
+    { TRAINER_CORY_1, MAP_GROUP(MAP_ROUTE108), MAP_NUM(MAP_ROUTE108), { 6, 0 }, 241, 0, { OBJ_EVENT_GFX_SAILOR, 0 }, { Route108_EventScript_Cory, NULL } }, // Route108 SAILOR
+    { TRAINER_DAVID, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 4, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route109_EventScript_David, NULL } }, // Route109 SWIMMER_M
+    { TRAINER_ALICE, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 5, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route109_EventScript_Alice, NULL } }, // Route109 SWIMMER_F
+    { TRAINER_HUEY, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 6, 0 }, 183, 0, { OBJ_EVENT_GFX_SAILOR, 0 }, { Route109_EventScript_Huey, NULL } }, // Route109 !HUEY
+    { TRAINER_EDMOND, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 7, 0 }, 241, 0, { OBJ_EVENT_GFX_SAILOR, 0 }, { Route109_EventScript_Edmond, NULL } }, // Route109 SAILOR
+    { TRAINER_RICKY_1, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 8, 0 }, 198, 0, { OBJ_EVENT_GFX_TUBER_M, 0 }, { Route109_EventScript_Ricky, NULL } }, // Route109 !RICKY_1
+    { TRAINER_LOLA_1, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 9, 0 }, 248, 0, { OBJ_EVENT_GFX_TUBER_F, 0 }, { Route109_EventScript_Lola, NULL } }, // Route109 TUBER_F
+    { TRAINER_GWEN, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 12, 0 }, 248, 0, { OBJ_EVENT_GFX_TUBER_F, 0 }, { Route109_EventScript_Gwen, NULL } }, // Route109 TUBER_F
+    { TRAINER_AUSTINA, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 13, 0 }, 248, 0, { OBJ_EVENT_GFX_TUBER_F, 0 }, { Route109_EventScript_Austina, NULL } }, // Route109 TUBER_F
+    { TRAINER_CARTER, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 14, 0 }, 222, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route109_EventScript_Carter, NULL } }, // Route109 FISHERMAN
+    { TRAINER_MEL_AND_PAUL, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 18, 19 }, 252, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_WOMAN_4, OBJ_EVENT_GFX_MAN_4 }, { Route109_EventScript_Mel, Route109_EventScript_Paul } }, // Route109 YOUNG_COUPLE
+    { TRAINER_HAILEY, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 22, 0 }, 248, 0, { OBJ_EVENT_GFX_TUBER_F, 0 }, { Route109_EventScript_Hailey, NULL } }, // Route109 TUBER_F
+    { TRAINER_CHANDLER, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 23, 0 }, 249, 0, { OBJ_EVENT_GFX_TUBER_M, 0 }, { Route109_EventScript_Chandler, NULL } }, // Route109 TUBER_M
+    { TRAINER_ELIJAH, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), { 25, 0 }, 177, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route109_EventScript_Elijah, NULL } }, // Route109 !ELIJAH
+    { TRAINER_JASMINE, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 8, 0 }, 247, 0, { OBJ_EVENT_GFX_CYCLING_TRIATHLETE_F, 0 }, { Route110_EventScript_Jasmine, NULL } }, // Route110 TRIATHLETE
+    { TRAINER_ANTHONY, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 9, 0 }, 247, 0, { OBJ_EVENT_GFX_CYCLING_TRIATHLETE_M, 0 }, { Route110_EventScript_Anthony, NULL } }, // Route110 TRIATHLETE
+    { TRAINER_ABIGAIL_1, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 10, 0 }, 247, 0, { OBJ_EVENT_GFX_CYCLING_TRIATHLETE_F, 0 }, { Route110_EventScript_Abigail, NULL } }, // Route110 TRIATHLETE
+    { TRAINER_BENJAMIN_1, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 11, 0 }, 247, 0, { OBJ_EVENT_GFX_CYCLING_TRIATHLETE_M, 0 }, { Route110_EventScript_Benjamin, NULL } }, // Route110 TRIATHLETE
+    { TRAINER_EDWARD, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 12, 0 }, 238, 0, { OBJ_EVENT_GFX_PSYCHIC_M, 0 }, { Route110_EventScript_Edward, NULL } }, // Route110 PSYCHIC
+    { TRAINER_JACLYN, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 13, 0 }, 238, 0, { OBJ_EVENT_GFX_LASS, 0 }, { Route110_EventScript_Jaclyn, NULL } }, // Route110 PSYCHIC
+    { TRAINER_EDWIN_1, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 14, 0 }, 218, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route110_EventScript_Edwin, NULL } }, // Route110 COLLECTOR
+    { TRAINER_DALE, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 15, 0 }, 222, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route110_EventScript_Dale, NULL } }, // Route110 FISHERMAN
+    { TRAINER_JACOB, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 27, 0 }, 247, 0, { OBJ_EVENT_GFX_CYCLING_TRIATHLETE_M, 0 }, { Route110_EventScript_Jacob, NULL } }, // Route110 TRIATHLETE
+    { TRAINER_TIMMY, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 30, 0 }, 251, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route110_EventScript_Timmy, NULL } }, // Route110 YOUNGSTER
+    { TRAINER_ISABEL_1, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 31, 0 }, 236, 0, { OBJ_EVENT_GFX_POKEFAN_F, 0 }, { Route110_EventScript_Isabel, NULL } }, // Route110 POKEFAN
+    { TRAINER_KALEB, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 32, 0 }, 236, 0, { OBJ_EVENT_GFX_POKEFAN_M, 0 }, { Route110_EventScript_Kaleb, NULL } }, // Route110 POKEFAN
+    { TRAINER_ALYSSA, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 33, 0 }, 247, 0, { OBJ_EVENT_GFX_CYCLING_TRIATHLETE_F, 0 }, { Route110_EventScript_Alyssa, NULL } }, // Route110 TRIATHLETE
+    { TRAINER_JOSEPH, MAP_GROUP(MAP_ROUTE110), MAP_NUM(MAP_ROUTE110), { 34, 0 }, 224, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route110_EventScript_Joseph, NULL } }, // Route110 GUITARIST
+    { TRAINER_HEIDI, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 5, 0 }, 207, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route111_EventScript_Heidi, NULL } }, // Route111 @desert
+    { TRAINER_DREW, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 9, 0 }, 217, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route111_EventScript_Drew, NULL } }, // Route111 CAMPER
+    { TRAINER_DUSTY_1, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 10, 0 }, 240, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route111_EventScript_Dusty, NULL } }, // Route111 RUIN_MANIAC
+    { TRAINER_BEAU, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 11, 0 }, 217, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route111_EventScript_Beau, NULL } }, // Route111 CAMPER
+    { TRAINER_BECKY, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 12, 0 }, 207, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route111_EventScript_Becky, NULL } }, // Route111 @desert
+    { TRAINER_IRENE, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 28, 0 }, 184, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route111_EventScript_Irene, NULL } }, // Route111 !IRENE
+    { TRAINER_TRAVIS, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 29, 0 }, 217, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route111_EventScript_Travis, NULL } }, // Route111 CAMPER
+    { TRAINER_DAISUKE, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 30, 0 }, 214, 0, { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { Route111_EventScript_Daisuke, NULL } }, // Route111 BLACK_BELT
+    { TRAINER_BROOKE_1, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 31, 0 }, 219, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route111_EventScript_Brooke, NULL } }, // Route111 COOLTRAINER
+    { TRAINER_WILTON_1, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 32, 0 }, 219, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { Route111_EventScript_Wilton, NULL } }, // Route111 COOLTRAINER
+    { TRAINER_TYRON, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 35, 0 }, 217, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route111_EventScript_Tyron, NULL } }, // Route111 CAMPER
+    { TRAINER_CELINA, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 36, 0 }, 210, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route111_EventScript_Celina, NULL } }, // Route111 AROMA_LADY
+    { TRAINER_BIANCA, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 37, 0 }, 164, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route111_EventScript_Bianca, NULL } }, // Route111 !BIANCA
+    { TRAINER_HAYDEN, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 38, 0 }, 227, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route111_EventScript_Hayden, NULL } }, // Route111 KINDLER
+    { TRAINER_BRYAN, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 39, 0 }, 207, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route111_EventScript_Bryan, NULL } }, // Route111 @desert
+    { TRAINER_CELIA, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 40, 0 }, 233, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route111_EventScript_Celia, NULL } }, // Route111 PICNICKER
+    { TRAINER_BRANDEN, MAP_GROUP(MAP_ROUTE111), MAP_NUM(MAP_ROUTE111), { 41, 0 }, 217, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route111_EventScript_Branden, NULL } }, // Route111 CAMPER
+    { TRAINER_BRICE, MAP_GROUP(MAP_ROUTE112), MAP_NUM(MAP_ROUTE112), { 2, 0 }, 226, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route112_EventScript_Brice, NULL } }, // Route112 HIKER
+    { TRAINER_LARRY, MAP_GROUP(MAP_ROUTE112), MAP_NUM(MAP_ROUTE112), { 3, 0 }, 217, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route112_EventScript_Larry, NULL } }, // Route112 CAMPER
+    { TRAINER_CAROL, MAP_GROUP(MAP_ROUTE112), MAP_NUM(MAP_ROUTE112), { 4, 0 }, 233, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route112_EventScript_Carol, NULL } }, // Route112 PICNICKER
+    { TRAINER_TRENT_1, MAP_GROUP(MAP_ROUTE112), MAP_NUM(MAP_ROUTE112), { 5, 0 }, 202, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route112_EventScript_Trent, NULL } }, // Route112 !TRENT_1
+    { TRAINER_BRYANT, MAP_GROUP(MAP_ROUTE112), MAP_NUM(MAP_ROUTE112), { 13, 0 }, 165, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route112_EventScript_Bryant, NULL } }, // Route112 !BRYANT
+    { TRAINER_SHAYLA, MAP_GROUP(MAP_ROUTE112), MAP_NUM(MAP_ROUTE112), { 14, 0 }, 210, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route112_EventScript_Shayla, NULL } }, // Route112 AROMA_LADY
+    { TRAINER_JAYLEN, MAP_GROUP(MAP_ROUTE113), MAP_NUM(MAP_ROUTE113), { 3, 0 }, 186, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route113_EventScript_Jaylen, NULL } }, // Route113 !JAYLEN
+    { TRAINER_DILLON, MAP_GROUP(MAP_ROUTE113), MAP_NUM(MAP_ROUTE113), { 4, 0 }, 251, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route113_EventScript_Dillon, NULL } }, // Route113 YOUNGSTER
+    { TRAINER_MADELINE_1, MAP_GROUP(MAP_ROUTE113), MAP_NUM(MAP_ROUTE113), { 5, 0 }, 232, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route113_EventScript_Madeline, NULL } }, // Route113 PARASOL_LADY
+    { TRAINER_TORI_AND_TIA, MAP_GROUP(MAP_ROUTE113), MAP_NUM(MAP_ROUTE113), { 10, 11 }, 250, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_TWIN, OBJ_EVENT_GFX_TWIN }, { Route113_EventScript_Tori, Route113_EventScript_Tia } }, // Route113 TWINS
+    { TRAINER_WYATT, MAP_GROUP(MAP_ROUTE113), MAP_NUM(MAP_ROUTE113), { 13, 0 }, 237, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route113_EventScript_Wyatt, NULL } }, // Route113 POKEMANIAC
+    { TRAINER_LAWRENCE, MAP_GROUP(MAP_ROUTE113), MAP_NUM(MAP_ROUTE113), { 14, 0 }, 217, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route113_EventScript_Lawrence, NULL } }, // Route113 CAMPER
+    { TRAINER_SOPHIE, MAP_GROUP(MAP_ROUTE113), MAP_NUM(MAP_ROUTE113), { 15, 0 }, 233, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route113_EventScript_Sophie, NULL } }, // Route113 PICNICKER
+    { TRAINER_COBY, MAP_GROUP(MAP_ROUTE113), MAP_NUM(MAP_ROUTE113), { 16, 0 }, 213, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route113_EventScript_Coby, NULL } }, // Route113 BIRD_KEEPER
+    { TRAINER_LENNY, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 3, 0 }, 226, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route114_EventScript_Lenny, NULL } }, // Route114 HIKER
+    { TRAINER_LUCAS_1, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 4, 0 }, 226, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route114_EventScript_Lucas, NULL } }, // Route114 HIKER
+    { TRAINER_SHANE, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 5, 0 }, 217, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route114_EventScript_Shane, NULL } }, // Route114 CAMPER
+    { TRAINER_NANCY, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 6, 0 }, 233, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route114_EventScript_Nancy, NULL } }, // Route114 PICNICKER
+    { TRAINER_STEVE_1, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 7, 0 }, 237, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route114_EventScript_Steve, NULL } }, // Route114 POKEMANIAC
+    { TRAINER_NOLAN, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 15, 0 }, 222, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route114_EventScript_Nolan, NULL } }, // Route114 FISHERMAN
+    { TRAINER_CLAUDE, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 16, 0 }, 171, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route114_EventScript_Claude, NULL } }, // Route114 !CLAUDE
+    { TRAINER_BERNIE_1, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 17, 0 }, 227, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route114_EventScript_Bernie, NULL } }, // Route114 KINDLER
+    { TRAINER_TYRA_AND_IVY, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 22, 23 }, 244, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_LASS, OBJ_EVENT_GFX_LASS }, { Route114_EventScript_Ivy, Route114_EventScript_Tyra } }, // Route114 SR_AND_JR
+    { TRAINER_CHARLOTTE, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 24, 0 }, 233, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route114_EventScript_Charlotte, NULL } }, // Route114 PICNICKER
+    { TRAINER_ANGELINA, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 25, 0 }, 233, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route114_EventScript_Angelina, NULL } }, // Route114 PICNICKER
+    { TRAINER_KAI, MAP_GROUP(MAP_ROUTE114), MAP_NUM(MAP_ROUTE114), { 27, 0 }, 222, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route114_EventScript_Kai, NULL } }, // Route114 FISHERMAN
+    { TRAINER_TIMOTHY_1, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 2, 0 }, 221, 0, { OBJ_EVENT_GFX_EXPERT_M, 0 }, { Route115_EventScript_Timothy, NULL } }, // Route115 EXPERT
+    { TRAINER_NOB_1, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 3, 0 }, 214, 0, { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { Route115_EventScript_Nob, NULL } }, // Route115 BLACK_BELT
+    { TRAINER_CYNDY_1, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 7, 0 }, 206, 0, { OBJ_EVENT_GFX_GIRL_3, 0 }, { Route115_EventScript_Cyndy, NULL } }, // Route115 @coast
+    { TRAINER_KOICHI, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 8, 0 }, 214, 0, { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { Route115_EventScript_Koichi, NULL } }, // Route115 BLACK_BELT
+    { TRAINER_HECTOR, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 9, 0 }, 218, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route115_EventScript_Hector, NULL } }, // Route115 COLLECTOR
+    { TRAINER_KYRA, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 17, 0 }, 247, 0, { OBJ_EVENT_GFX_RUNNING_TRIATHLETE_F, 0 }, { Route115_EventScript_Kyra, NULL } }, // Route115 TRIATHLETE
+    { TRAINER_JAIDEN, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 18, 0 }, 230, 0, { OBJ_EVENT_GFX_NINJA_BOY, 0 }, { Route115_EventScript_Jaiden, NULL } }, // Route115 NINJA_BOY
+    { TRAINER_HELENE, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 19, 0 }, 211, 0, { OBJ_EVENT_GFX_GIRL_3, 0 }, { Route115_EventScript_Helene, NULL } }, // Route115 BATTLE_GIRL
+    { TRAINER_ALIX, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 20, 0 }, 238, 0, { OBJ_EVENT_GFX_LASS, 0 }, { Route115_EventScript_Alix, NULL } }, // Route115 PSYCHIC
+    { TRAINER_MARLENE, MAP_GROUP(MAP_ROUTE115), MAP_NUM(MAP_ROUTE115), { 21, 0 }, 238, 0, { OBJ_EVENT_GFX_LASS, 0 }, { Route115_EventScript_Marlene, NULL } }, // Route115 PSYCHIC
+    { TRAINER_JOEY, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), { 3, 0 }, 251, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route116_EventScript_Joey, NULL } }, // Route116 YOUNGSTER
+    { TRAINER_JOSE, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), { 6, 0 }, 215, 0, { OBJ_EVENT_GFX_BUG_CATCHER, 0 }, { Route116_EventScript_Jose, NULL } }, // Route116 BUG_CATCHER
+    { TRAINER_CLARK, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), { 13, 0 }, 170, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route116_EventScript_Clark, NULL } }, // Route116 !CLARK
+    { TRAINER_JANICE, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), { 16, 0 }, 229, 0, { OBJ_EVENT_GFX_LASS, 0 }, { Route116_EventScript_Janice, NULL } }, // Route116 LASS
+    { TRAINER_KAREN_1, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), { 17, 0 }, 242, 0, { OBJ_EVENT_GFX_GIRL_3, 0 }, { Route116_EventScript_Karen, NULL } }, // Route116 SCHOOL_KID
+    { TRAINER_JERRY_1, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), { 18, 0 }, 188, 0, { OBJ_EVENT_GFX_SCHOOL_KID_M, 0 }, { Route116_EventScript_Jerry, NULL } }, // Route116 !JERRY_1
+    { TRAINER_SARAH, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), { 23, 0 }, 228, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route116_EventScript_Sarah, NULL } }, // Route116 LADY
+    { TRAINER_DAWSON, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), { 24, 0 }, 239, 0, { OBJ_EVENT_GFX_BOY_2, 0 }, { Route116_EventScript_Dawson, NULL } }, // Route116 RICH_BOY
+    { TRAINER_JOHNSON, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), { 27, 0 }, 251, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route116_EventScript_Johnson, NULL } }, // Route116 YOUNGSTER
+    { TRAINER_DEVAN, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), { 28, 0 }, 226, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route116_EventScript_Devan, NULL } }, // Route116 HIKER
+    { TRAINER_DYLAN_1, MAP_GROUP(MAP_ROUTE117), MAP_NUM(MAP_ROUTE117), { 8, 0 }, 247, 0, { OBJ_EVENT_GFX_RUNNING_TRIATHLETE_M, 0 }, { Route117_EventScript_Dylan, NULL } }, // Route117 TRIATHLETE
+    { TRAINER_LYDIA_1, MAP_GROUP(MAP_ROUTE117), MAP_NUM(MAP_ROUTE117), { 9, 0 }, 234, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route117_EventScript_Lydia, NULL } }, // Route117 PKMN_BREEDER
+    { TRAINER_ISAAC_1, MAP_GROUP(MAP_ROUTE117), MAP_NUM(MAP_ROUTE117), { 10, 0 }, 234, 0, { OBJ_EVENT_GFX_MAN_4, 0 }, { Route117_EventScript_Isaac, NULL } }, // Route117 PKMN_BREEDER
+    { TRAINER_MARIA_1, MAP_GROUP(MAP_ROUTE117), MAP_NUM(MAP_ROUTE117), { 17, 0 }, 247, 0, { OBJ_EVENT_GFX_RUNNING_TRIATHLETE_F, 0 }, { Route117_EventScript_Maria, NULL } }, // Route117 TRIATHLETE
+    { TRAINER_DEREK, MAP_GROUP(MAP_ROUTE117), MAP_NUM(MAP_ROUTE117), { 18, 0 }, 216, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route117_EventScript_Derek, NULL } }, // Route117 BUG_MANIAC
+    { TRAINER_ANNA_AND_MEG_1, MAP_GROUP(MAP_ROUTE117), MAP_NUM(MAP_ROUTE117), { 19, 20 }, 244, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_LASS, OBJ_EVENT_GFX_LASS }, { Route117_EventScript_Meg, Route117_EventScript_Anna } }, // Route117 SR_AND_JR
+    { TRAINER_BRANDI, MAP_GROUP(MAP_ROUTE117), MAP_NUM(MAP_ROUTE117), { 22, 0 }, 238, 0, { OBJ_EVENT_GFX_LASS, 0 }, { Route117_EventScript_Brandi, NULL } }, // Route117 PSYCHIC
+    { TRAINER_AISHA, MAP_GROUP(MAP_ROUTE117), MAP_NUM(MAP_ROUTE117), { 23, 0 }, 211, 0, { OBJ_EVENT_GFX_GIRL_3, 0 }, { Route117_EventScript_Aisha, NULL } }, // Route117 BATTLE_GIRL
+    { TRAINER_MELINA, MAP_GROUP(MAP_ROUTE117), MAP_NUM(MAP_ROUTE117), { 24, 0 }, 247, 0, { OBJ_EVENT_GFX_RUNNING_TRIATHLETE_F, 0 }, { Route117_EventScript_Melina, NULL } }, // Route117 TRIATHLETE
+    { TRAINER_PERRY, MAP_GROUP(MAP_ROUTE118), MAP_NUM(MAP_ROUTE118), { 4, 0 }, 213, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route118_EventScript_Perry, NULL } }, // Route118 BIRD_KEEPER
+    { TRAINER_ROSE_1, MAP_GROUP(MAP_ROUTE118), MAP_NUM(MAP_ROUTE118), { 14, 0 }, 210, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route118_EventScript_Rose, NULL } }, // Route118 AROMA_LADY
+    { TRAINER_WADE, MAP_GROUP(MAP_ROUTE118), MAP_NUM(MAP_ROUTE118), { 15, 0 }, 222, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route118_EventScript_Wade, NULL } }, // Route118 FISHERMAN
+    { TRAINER_CHESTER, MAP_GROUP(MAP_ROUTE118), MAP_NUM(MAP_ROUTE118), { 16, 0 }, 213, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route118_EventScript_Chester, NULL } }, // Route118 BIRD_KEEPER
+    { TRAINER_BARNY, MAP_GROUP(MAP_ROUTE118), MAP_NUM(MAP_ROUTE118), { 17, 0 }, 222, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route118_EventScript_Barny, NULL } }, // Route118 FISHERMAN
+    { TRAINER_DALTON_1, MAP_GROUP(MAP_ROUTE118), MAP_NUM(MAP_ROUTE118), { 18, 0 }, 224, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route118_EventScript_Dalton, NULL } }, // Route118 GUITARIST
+    { TRAINER_DEANDRE, MAP_GROUP(MAP_ROUTE118), MAP_NUM(MAP_ROUTE118), { 21, 0 }, 251, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route118_EventScript_Deandre, NULL } }, // Route118 YOUNGSTER
+    { TRAINER_GREG, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 4, 0 }, 215, 0, { OBJ_EVENT_GFX_BUG_CATCHER, 0 }, { Route119_EventScript_Greg, NULL } }, // Route119 BUG_CATCHER
+    { TRAINER_TAYLOR, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 5, 0 }, 216, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route119_EventScript_Taylor, NULL } }, // Route119 BUG_MANIAC
+    { TRAINER_DONALD, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 6, 0 }, 216, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route119_EventScript_Donald, NULL } }, // Route119 BUG_MANIAC
+    { TRAINER_JACKSON_1, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 7, 0 }, 235, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route119_EventScript_Jackson, NULL } }, // Route119 PKMN_RANGER
+    { TRAINER_BRENT, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 8, 0 }, 216, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route119_EventScript_Brent, NULL } }, // Route119 BUG_MANIAC
+    { TRAINER_CATHERINE_1, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 9, 0 }, 235, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route119_EventScript_Catherine, NULL } }, // Route119 PKMN_RANGER
+    { TRAINER_DOUG, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 10, 0 }, 215, 0, { OBJ_EVENT_GFX_BUG_CATCHER, 0 }, { Route119_EventScript_Doug, NULL } }, // Route119 BUG_CATCHER
+    { TRAINER_KENT, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 11, 0 }, 215, 0, { OBJ_EVENT_GFX_BUG_CATCHER, 0 }, { Route119_EventScript_Kent, NULL } }, // Route119 BUG_CATCHER
+    { TRAINER_YASU, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 12, 0 }, 230, 0, { OBJ_EVENT_GFX_NINJA_BOY, 0 }, { Route119_EventScript_Yasu, NULL } }, // Route119 NINJA_BOY
+    { TRAINER_TAKASHI, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 13, 0 }, 230, 0, { OBJ_EVENT_GFX_NINJA_BOY, 0 }, { Route119_EventScript_Takashi, NULL } }, // Route119 NINJA_BOY
+    { TRAINER_HUGH, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 14, 0 }, 213, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route119_EventScript_Hugh, NULL } }, // Route119 BIRD_KEEPER
+    { TRAINER_PHIL, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 15, 0 }, 213, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route119_EventScript_Phil, NULL } }, // Route119 BIRD_KEEPER
+    { TRAINER_HIDEO, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 34, 0 }, 230, 0, { OBJ_EVENT_GFX_NINJA_BOY, 0 }, { Route119_EventScript_Hideo, NULL } }, // Route119 NINJA_BOY
+    { TRAINER_CHRIS, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 37, 0 }, 222, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route119_EventScript_Chris, NULL } }, // Route119 FISHERMAN
+    { TRAINER_RACHEL, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 38, 0 }, 232, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route119_EventScript_Rachel, NULL } }, // Route119 PARASOL_LADY
+    { TRAINER_DAYTON, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 39, 0 }, 227, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route119_EventScript_Dayton, NULL } }, // Route119 KINDLER
+    { TRAINER_FABIAN, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119), { 40, 0 }, 224, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route119_EventScript_Fabian, NULL } }, // Route119 GUITARIST
+    { TRAINER_COLIN, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 11, 0 }, 213, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route120_EventScript_Colin, NULL } }, // Route120 BIRD_KEEPER
+    { TRAINER_ROBERT_1, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 12, 0 }, 213, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route120_EventScript_Robert, NULL } }, // Route120 BIRD_KEEPER
+    { TRAINER_LORENZO, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 13, 0 }, 235, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { Route120_EventScript_Lorenzo, NULL } }, // Route120 PKMN_RANGER
+    { TRAINER_JENNA, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 14, 0 }, 235, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { Route120_EventScript_Jenna, NULL } }, // Route120 PKMN_RANGER
+    { TRAINER_JEFFREY_1, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 15, 0 }, 216, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route120_EventScript_Jeffrey, NULL } }, // Route120 BUG_MANIAC
+    { TRAINER_JENNIFER, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 24, 0 }, 219, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route120_EventScript_Jennifer, NULL } }, // Route120 COOLTRAINER
+    { TRAINER_CHIP, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 25, 0 }, 240, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { Route120_EventScript_Chip, NULL } }, // Route120 RUIN_MANIAC
+    { TRAINER_CLARISSA, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 26, 0 }, 232, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route120_EventScript_Clarissa, NULL } }, // Route120 PARASOL_LADY
+    { TRAINER_ANGELICA, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 27, 0 }, 232, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route120_EventScript_Angelica, NULL } }, // Route120 PARASOL_LADY
+    { TRAINER_KEIGO, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 34, 0 }, 230, 0, { OBJ_EVENT_GFX_NINJA_BOY, 0 }, { Route120_EventScript_Keigo, NULL } }, // Route120 NINJA_BOY
+    { TRAINER_RILEY, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 35, 0 }, 230, 0, { OBJ_EVENT_GFX_NINJA_BOY, 0 }, { Route120_EventScript_Riley, NULL } }, // Route120 NINJA_BOY
+    { TRAINER_CALLIE, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 42, 0 }, 211, 0, { OBJ_EVENT_GFX_GIRL_3, 0 }, { Route120_EventScript_Callie, NULL } }, // Route120 BATTLE_GIRL
+    { TRAINER_LEONEL, MAP_GROUP(MAP_ROUTE120), MAP_NUM(MAP_ROUTE120), { 43, 0 }, 219, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { Route120_EventScript_Leonel, NULL } }, // Route120 COOLTRAINER
+    { TRAINER_KATE_AND_JOY, MAP_GROUP(MAP_ROUTE121), MAP_NUM(MAP_ROUTE121), { 10, 11 }, 244, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_LASS, OBJ_EVENT_GFX_LASS }, { Route121_EventScript_Kate, Route121_EventScript_Joy } }, // Route121 SR_AND_JR
+    { TRAINER_VANESSA, MAP_GROUP(MAP_ROUTE121), MAP_NUM(MAP_ROUTE121), { 17, 0 }, 203, 0, { OBJ_EVENT_GFX_POKEFAN_F, 0 }, { Route121_EventScript_Vanessa, NULL } }, // Route121 !VANESSA
+    { TRAINER_WALTER_1, MAP_GROUP(MAP_ROUTE121), MAP_NUM(MAP_ROUTE121), { 18, 0 }, 223, 0, { OBJ_EVENT_GFX_GENTLEMAN, 0 }, { Route121_EventScript_Walter, NULL } }, // Route121 GENTLEMAN
+    { TRAINER_TAMMY, MAP_GROUP(MAP_ROUTE121), MAP_NUM(MAP_ROUTE121), { 19, 0 }, 200, 0, { OBJ_EVENT_GFX_HEX_MANIAC, 0 }, { Route121_EventScript_Tammy, NULL } }, // Route121 !TAMMY
+    { TRAINER_JESSICA_1, MAP_GROUP(MAP_ROUTE121), MAP_NUM(MAP_ROUTE121), { 20, 0 }, 212, 0, { OBJ_EVENT_GFX_BEAUTY, 0 }, { Route121_EventScript_Jessica, NULL } }, // Route121 BEAUTY
+    { TRAINER_CALE, MAP_GROUP(MAP_ROUTE121), MAP_NUM(MAP_ROUTE121), { 23, 0 }, 166, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route121_EventScript_Cale, NULL } }, // Route121 !CALE
+    { TRAINER_MYLES, MAP_GROUP(MAP_ROUTE121), MAP_NUM(MAP_ROUTE121), { 24, 0 }, 234, 0, { OBJ_EVENT_GFX_MAN_4, 0 }, { Route121_EventScript_Myles, NULL } }, // Route121 PKMN_BREEDER
+    { TRAINER_PAT, MAP_GROUP(MAP_ROUTE121), MAP_NUM(MAP_ROUTE121), { 25, 0 }, 234, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route121_EventScript_Pat, NULL } }, // Route121 PKMN_BREEDER
+    { TRAINER_MARCEL, MAP_GROUP(MAP_ROUTE121), MAP_NUM(MAP_ROUTE121), { 26, 0 }, 219, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { Route121_EventScript_Marcel, NULL } }, // Route121 COOLTRAINER
+    { TRAINER_CRISTIN_1, MAP_GROUP(MAP_ROUTE121), MAP_NUM(MAP_ROUTE121), { 27, 0 }, 219, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route121_EventScript_Cristin, NULL } }, // Route121 COOLTRAINER
+    { TRAINER_WENDY, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 8, 0 }, 219, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route123_EventScript_Wendy, NULL } }, // Route123 COOLTRAINER
+    { TRAINER_BRAXTON, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 9, 0 }, 219, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { Route123_EventScript_Braxton, NULL } }, // Route123 COOLTRAINER
+    { TRAINER_VIOLET, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 26, 0 }, 210, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route123_EventScript_Violet, NULL } }, // Route123 AROMA_LADY
+    { TRAINER_MIU_AND_YUKI, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 27, 28 }, 250, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_TWIN, OBJ_EVENT_GFX_TWIN }, { Route123_EventScript_Yuki, Route123_EventScript_Miu } }, // Route123 TWINS
+    { TRAINER_CAMERON_1, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 29, 0 }, 167, 0, { OBJ_EVENT_GFX_PSYCHIC_M, 0 }, { Route123_EventScript_Cameron, NULL } }, // Route123 !CAMERON_1
+    { TRAINER_JACKI_1, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 30, 0 }, 238, 0, { OBJ_EVENT_GFX_LASS, 0 }, { Route123_EventScript_Jacki, NULL } }, // Route123 PSYCHIC
+    { TRAINER_KINDRA, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 31, 0 }, 192, 0, { OBJ_EVENT_GFX_HEX_MANIAC, 0 }, { Route123_EventScript_Kindra, NULL } }, // Route123 !KINDRA
+    { TRAINER_JONAS, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 34, 0 }, 230, 0, { OBJ_EVENT_GFX_NINJA_BOY, 0 }, { Route123_EventScript_Jonas, NULL } }, // Route123 NINJA_BOY
+    { TRAINER_KAYLEY, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 35, 0 }, 232, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { Route123_EventScript_Kayley, NULL } }, // Route123 PARASOL_LADY
+    { TRAINER_ED, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 36, 0 }, 218, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { Route123_EventScript_Ed, NULL } }, // Route123 COLLECTOR
+    { TRAINER_FERNANDO_1, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 37, 0 }, 224, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route123_EventScript_Fernando, NULL } }, // Route123 GUITARIST
+    { TRAINER_ALBERTO, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 38, 0 }, 213, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route123_EventScript_Alberto, NULL } }, // Route123 BIRD_KEEPER
+    { TRAINER_FREDRICK, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 39, 0 }, 221, 0, { OBJ_EVENT_GFX_EXPERT_M, 0 }, { Route123_EventScript_Frederick, NULL } }, // Route123 EXPERT
+    { TRAINER_JAZMYN, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 41, 0 }, 219, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route123_EventScript_Jazmyn, NULL } }, // Route123 COOLTRAINER
+    { TRAINER_DAVIS, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), { 42, 0 }, 215, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route123_EventScript_Davis, NULL } }, // Route123 BUG_CATCHER
+    { TRAINER_SPENCER, MAP_GROUP(MAP_ROUTE124), MAP_NUM(MAP_ROUTE124), { 1, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route124_EventScript_Spencer, NULL } }, // Route124 SWIMMER_M
+    { TRAINER_ROLAND, MAP_GROUP(MAP_ROUTE124), MAP_NUM(MAP_ROUTE124), { 2, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route124_EventScript_Roland, NULL } }, // Route124 SWIMMER_M
+    { TRAINER_JENNY_1, MAP_GROUP(MAP_ROUTE124), MAP_NUM(MAP_ROUTE124), { 3, 0 }, 187, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route124_EventScript_Jenny, NULL } }, // Route124 !JENNY_1
+    { TRAINER_GRACE, MAP_GROUP(MAP_ROUTE124), MAP_NUM(MAP_ROUTE124), { 4, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route124_EventScript_Grace, NULL } }, // Route124 SWIMMER_F
+    { TRAINER_CHAD, MAP_GROUP(MAP_ROUTE124), MAP_NUM(MAP_ROUTE124), { 5, 0 }, 169, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route124_EventScript_Chad, NULL } }, // Route124 !CHAD
+    { TRAINER_LILA_AND_ROY_1, MAP_GROUP(MAP_ROUTE124), MAP_NUM(MAP_ROUTE124), { 9, 10 }, 243, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_SWIMMER_F, OBJ_EVENT_GFX_TUBER_M_SWIMMING }, { Route124_EventScript_Lila, Route124_EventScript_Roy } }, // Route124 SIS_AND_BRO
+    { TRAINER_DECLAN, MAP_GROUP(MAP_ROUTE124), MAP_NUM(MAP_ROUTE124), { 11, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route124_EventScript_Declan, NULL } }, // Route124 SWIMMER_M
+    { TRAINER_ISABELLA, MAP_GROUP(MAP_ROUTE124), MAP_NUM(MAP_ROUTE124), { 12, 0 }, 247, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route124_EventScript_Isabella, NULL } }, // Route124 TRIATHLETE
+    { TRAINER_NOLEN, MAP_GROUP(MAP_ROUTE125), MAP_NUM(MAP_ROUTE125), { 1, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route125_EventScript_Nolen, NULL } }, // Route125 SWIMMER_M
+    { TRAINER_STAN, MAP_GROUP(MAP_ROUTE125), MAP_NUM(MAP_ROUTE125), { 2, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route125_EventScript_Stan, NULL } }, // Route125 SWIMMER_M
+    { TRAINER_TANYA, MAP_GROUP(MAP_ROUTE125), MAP_NUM(MAP_ROUTE125), { 3, 0 }, 201, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route125_EventScript_Tanya, NULL } }, // Route125 !TANYA
+    { TRAINER_SHARON, MAP_GROUP(MAP_ROUTE125), MAP_NUM(MAP_ROUTE125), { 4, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route125_EventScript_Sharon, NULL } }, // Route125 SWIMMER_F
+    { TRAINER_ERNEST_1, MAP_GROUP(MAP_ROUTE125), MAP_NUM(MAP_ROUTE125), { 5, 0 }, 179, 0, { OBJ_EVENT_GFX_SAILOR, 0 }, { Route125_EventScript_Ernest, NULL } }, // Route125 !ERNEST_1
+    { TRAINER_KIM_AND_IRIS, MAP_GROUP(MAP_ROUTE125), MAP_NUM(MAP_ROUTE125), { 6, 7 }, 191, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_LASS, OBJ_EVENT_GFX_LASS }, { Route125_EventScript_Kim, Route125_EventScript_Iris } }, // Route125 !KIM_AND_IRIS
+    { TRAINER_PRESLEY, MAP_GROUP(MAP_ROUTE125), MAP_NUM(MAP_ROUTE125), { 8, 0 }, 213, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route125_EventScript_Presley, NULL } }, // Route125 BIRD_KEEPER
+    { TRAINER_AURON, MAP_GROUP(MAP_ROUTE125), MAP_NUM(MAP_ROUTE125), { 9, 0 }, 221, 0, { OBJ_EVENT_GFX_EXPERT_M, 0 }, { Route125_EventScript_Auron, NULL } }, // Route125 EXPERT
+    { TRAINER_BARRY, MAP_GROUP(MAP_ROUTE126), MAP_NUM(MAP_ROUTE126), { 1, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route126_EventScript_Barry, NULL } }, // Route126 SWIMMER_M
+    { TRAINER_DEAN, MAP_GROUP(MAP_ROUTE126), MAP_NUM(MAP_ROUTE126), { 2, 0 }, 172, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route126_EventScript_Dean, NULL } }, // Route126 !DEAN
+    { TRAINER_NIKKI, MAP_GROUP(MAP_ROUTE126), MAP_NUM(MAP_ROUTE126), { 3, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route126_EventScript_Nikki, NULL } }, // Route126 SWIMMER_F
+    { TRAINER_BRENDA, MAP_GROUP(MAP_ROUTE126), MAP_NUM(MAP_ROUTE126), { 4, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route126_EventScript_Brenda, NULL } }, // Route126 SWIMMER_F
+    { TRAINER_SIENNA, MAP_GROUP(MAP_ROUTE126), MAP_NUM(MAP_ROUTE126), { 6, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route126_EventScript_Sienna, NULL } }, // Route126 SWIMMER_F
+    { TRAINER_PABLO_1, MAP_GROUP(MAP_ROUTE126), MAP_NUM(MAP_ROUTE126), { 7, 0 }, 247, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route126_EventScript_Pablo, NULL } }, // Route126 TRIATHLETE
+    { TRAINER_ISOBEL, MAP_GROUP(MAP_ROUTE126), MAP_NUM(MAP_ROUTE126), { 8, 0 }, 247, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route126_EventScript_Isobel, NULL } }, // Route126 TRIATHLETE
+    { TRAINER_LEONARDO, MAP_GROUP(MAP_ROUTE126), MAP_NUM(MAP_ROUTE126), { 9, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route126_EventScript_Leonardo, NULL } }, // Route126 SWIMMER_M
+    { TRAINER_CAMDEN, MAP_GROUP(MAP_ROUTE127), MAP_NUM(MAP_ROUTE127), { 1, 0 }, 247, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route127_EventScript_Camden, NULL } }, // Route127 TRIATHLETE
+    { TRAINER_DONNY, MAP_GROUP(MAP_ROUTE127), MAP_NUM(MAP_ROUTE127), { 2, 0 }, 247, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route127_EventScript_Donny, NULL } }, // Route127 TRIATHLETE
+    { TRAINER_JONAH, MAP_GROUP(MAP_ROUTE127), MAP_NUM(MAP_ROUTE127), { 5, 0 }, 222, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route127_EventScript_Jonah, NULL } }, // Route127 FISHERMAN
+    { TRAINER_ROGER, MAP_GROUP(MAP_ROUTE127), MAP_NUM(MAP_ROUTE127), { 6, 0 }, 222, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route127_EventScript_Roger, NULL } }, // Route127 FISHERMAN
+    { TRAINER_HENRY, MAP_GROUP(MAP_ROUTE127), MAP_NUM(MAP_ROUTE127), { 7, 0 }, 222, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route127_EventScript_Henry, NULL } }, // Route127 FISHERMAN
+    { TRAINER_AIDAN, MAP_GROUP(MAP_ROUTE127), MAP_NUM(MAP_ROUTE127), { 8, 0 }, 213, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route127_EventScript_Aidan, NULL } }, // Route127 BIRD_KEEPER
+    { TRAINER_KOJI_1, MAP_GROUP(MAP_ROUTE127), MAP_NUM(MAP_ROUTE127), { 9, 0 }, 214, 0, { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { Route127_EventScript_Koji, NULL } }, // Route127 BLACK_BELT
+    { TRAINER_ATHENA, MAP_GROUP(MAP_ROUTE127), MAP_NUM(MAP_ROUTE127), { 10, 0 }, 219, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route127_EventScript_Athena, NULL } }, // Route127 COOLTRAINER
+    { TRAINER_ISAIAH_1, MAP_GROUP(MAP_ROUTE128), MAP_NUM(MAP_ROUTE128), { 1, 0 }, 185, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route128_EventScript_Isaiah, NULL } }, // Route128 !ISAIAH_1
+    { TRAINER_KATELYN_1, MAP_GROUP(MAP_ROUTE128), MAP_NUM(MAP_ROUTE128), { 2, 0 }, 189, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route128_EventScript_Katelyn, NULL } }, // Route128 !KATELYN_1
+    { TRAINER_WAYNE, MAP_GROUP(MAP_ROUTE128), MAP_NUM(MAP_ROUTE128), { 6, 0 }, 204, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route128_EventScript_Wayne, NULL } }, // Route128 !WAYNE
+    { TRAINER_RUBEN, MAP_GROUP(MAP_ROUTE128), MAP_NUM(MAP_ROUTE128), { 7, 0 }, 219, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { Route128_EventScript_Ruben, NULL } }, // Route128 COOLTRAINER
+    { TRAINER_ALEXA, MAP_GROUP(MAP_ROUTE128), MAP_NUM(MAP_ROUTE128), { 8, 0 }, 219, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route128_EventScript_Alexa, NULL } }, // Route128 COOLTRAINER
+    { TRAINER_CARLEE, MAP_GROUP(MAP_ROUTE128), MAP_NUM(MAP_ROUTE128), { 9, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route128_EventScript_Carlee, NULL } }, // Route128 SWIMMER_F
+    { TRAINER_HARRISON, MAP_GROUP(MAP_ROUTE128), MAP_NUM(MAP_ROUTE128), { 10, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route128_EventScript_Harrison, NULL } }, // Route128 SWIMMER_M
+    { TRAINER_CHASE, MAP_GROUP(MAP_ROUTE129), MAP_NUM(MAP_ROUTE129), { 1, 0 }, 247, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route129_EventScript_Chase, NULL } }, // Route129 TRIATHLETE
+    { TRAINER_ALLISON, MAP_GROUP(MAP_ROUTE129), MAP_NUM(MAP_ROUTE129), { 2, 0 }, 247, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route129_EventScript_Allison, NULL } }, // Route129 TRIATHLETE
+    { TRAINER_TISHA, MAP_GROUP(MAP_ROUTE129), MAP_NUM(MAP_ROUTE129), { 3, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route129_EventScript_Tisha, NULL } }, // Route129 SWIMMER_F
+    { TRAINER_REED, MAP_GROUP(MAP_ROUTE129), MAP_NUM(MAP_ROUTE129), { 4, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route129_EventScript_Reed, NULL } }, // Route129 SWIMMER_M
+    { TRAINER_CLARENCE, MAP_GROUP(MAP_ROUTE129), MAP_NUM(MAP_ROUTE129), { 5, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route129_EventScript_Clarence, NULL } }, // Route129 SWIMMER_M
+    { TRAINER_RODNEY, MAP_GROUP(MAP_ROUTE130), MAP_NUM(MAP_ROUTE130), { 1, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route130_EventScript_Rodney, NULL } }, // Route130 SWIMMER_M
+    { TRAINER_KATIE, MAP_GROUP(MAP_ROUTE130), MAP_NUM(MAP_ROUTE130), { 2, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route130_EventScript_Katie, NULL } }, // Route130 SWIMMER_F
+    { TRAINER_SANTIAGO, MAP_GROUP(MAP_ROUTE130), MAP_NUM(MAP_ROUTE130), { 4, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route130_EventScript_Santiago, NULL } }, // Route130 SWIMMER_M
+    { TRAINER_RICHARD, MAP_GROUP(MAP_ROUTE131), MAP_NUM(MAP_ROUTE131), { 1, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route131_EventScript_Richard, NULL } }, // Route131 SWIMMER_M
+    { TRAINER_HERMAN, MAP_GROUP(MAP_ROUTE131), MAP_NUM(MAP_ROUTE131), { 2, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route131_EventScript_Herman, NULL } }, // Route131 SWIMMER_M
+    { TRAINER_SUSIE, MAP_GROUP(MAP_ROUTE131), MAP_NUM(MAP_ROUTE131), { 3, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route131_EventScript_Susie, NULL } }, // Route131 SWIMMER_F
+    { TRAINER_KARA, MAP_GROUP(MAP_ROUTE131), MAP_NUM(MAP_ROUTE131), { 4, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route131_EventScript_Kara, NULL } }, // Route131 SWIMMER_F
+    { TRAINER_RELI_AND_IAN, MAP_GROUP(MAP_ROUTE131), MAP_NUM(MAP_ROUTE131), { 5, 6 }, 197, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_SWIMMER_F, OBJ_EVENT_GFX_TUBER_M_SWIMMING }, { Route131_EventScript_Reli, Route131_EventScript_Ian } }, // Route131 !RELI_AND_IAN
+    { TRAINER_KEVIN, MAP_GROUP(MAP_ROUTE131), MAP_NUM(MAP_ROUTE131), { 7, 0 }, 190, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route131_EventScript_Kevin, NULL } }, // Route131 !KEVIN
+    { TRAINER_TALIA, MAP_GROUP(MAP_ROUTE131), MAP_NUM(MAP_ROUTE131), { 8, 0 }, 247, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route131_EventScript_Talia, NULL } }, // Route131 TRIATHLETE
+    { TRAINER_GILBERT, MAP_GROUP(MAP_ROUTE132), MAP_NUM(MAP_ROUTE132), { 1, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route132_EventScript_Gilbert, NULL } }, // Route132 SWIMMER_M
+    { TRAINER_DANA, MAP_GROUP(MAP_ROUTE132), MAP_NUM(MAP_ROUTE132), { 2, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route132_EventScript_Dana, NULL } }, // Route132 SWIMMER_F
+    { TRAINER_KIYO, MAP_GROUP(MAP_ROUTE132), MAP_NUM(MAP_ROUTE132), { 4, 0 }, 214, 0, { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { Route132_EventScript_Kiyo, NULL } }, // Route132 BLACK_BELT
+    { TRAINER_RONALD, MAP_GROUP(MAP_ROUTE132), MAP_NUM(MAP_ROUTE132), { 5, 0 }, 222, 0, { OBJ_EVENT_GFX_FISHERMAN, 0 }, { Route132_EventScript_Ronald, NULL } }, // Route132 FISHERMAN
+    { TRAINER_PAXTON, MAP_GROUP(MAP_ROUTE132), MAP_NUM(MAP_ROUTE132), { 6, 0 }, 221, 0, { OBJ_EVENT_GFX_EXPERT_M, 0 }, { Route132_EventScript_Paxton, NULL } }, // Route132 EXPERT
+    { TRAINER_DARCY, MAP_GROUP(MAP_ROUTE132), MAP_NUM(MAP_ROUTE132), { 7, 0 }, 219, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route132_EventScript_Darcy, NULL } }, // Route132 COOLTRAINER
+    { TRAINER_MAKAYLA, MAP_GROUP(MAP_ROUTE132), MAP_NUM(MAP_ROUTE132), { 8, 0 }, 221, 0, { OBJ_EVENT_GFX_EXPERT_F, 0 }, { Route132_EventScript_Makayla, NULL } }, // Route132 EXPERT
+    { TRAINER_JONATHAN, MAP_GROUP(MAP_ROUTE132), MAP_NUM(MAP_ROUTE132), { 9, 0 }, 219, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { Route132_EventScript_Jonathan, NULL } }, // Route132 COOLTRAINER
+    { TRAINER_FRANKLIN, MAP_GROUP(MAP_ROUTE133), MAP_NUM(MAP_ROUTE133), { 1, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route133_EventScript_Franklin, NULL } }, // Route133 SWIMMER_M
+    { TRAINER_LINDA, MAP_GROUP(MAP_ROUTE133), MAP_NUM(MAP_ROUTE133), { 2, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route133_EventScript_Linda, NULL } }, // Route133 SWIMMER_F
+    { TRAINER_DEBRA, MAP_GROUP(MAP_ROUTE133), MAP_NUM(MAP_ROUTE133), { 3, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route133_EventScript_Debra, NULL } }, // Route133 SWIMMER_F
+    { TRAINER_BECK, MAP_GROUP(MAP_ROUTE133), MAP_NUM(MAP_ROUTE133), { 6, 0 }, 163, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route133_EventScript_Beck, NULL } }, // Route133 !BECK
+    { TRAINER_WARREN, MAP_GROUP(MAP_ROUTE133), MAP_NUM(MAP_ROUTE133), { 7, 0 }, 219, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { Route133_EventScript_Warren, NULL } }, // Route133 COOLTRAINER
+    { TRAINER_MOLLIE, MAP_GROUP(MAP_ROUTE133), MAP_NUM(MAP_ROUTE133), { 8, 0 }, 221, 0, { OBJ_EVENT_GFX_EXPERT_F, 0 }, { Route133_EventScript_Mollie, NULL } }, // Route133 EXPERT
+    { TRAINER_CONOR, MAP_GROUP(MAP_ROUTE133), MAP_NUM(MAP_ROUTE133), { 9, 0 }, 221, 0, { OBJ_EVENT_GFX_EXPERT_M, 0 }, { Route133_EventScript_Conor, NULL } }, // Route133 EXPERT
+    { TRAINER_JACK, MAP_GROUP(MAP_ROUTE134), MAP_NUM(MAP_ROUTE134), { 1, 0 }, 246, 0, { OBJ_EVENT_GFX_SWIMMER_M, 0 }, { Route134_EventScript_Jack, NULL } }, // Route134 SWIMMER_M
+    { TRAINER_LAUREL, MAP_GROUP(MAP_ROUTE134), MAP_NUM(MAP_ROUTE134), { 2, 0 }, 245, 0, { OBJ_EVENT_GFX_SWIMMER_F, 0 }, { Route134_EventScript_Laurel, NULL } }, // Route134 SWIMMER_F
+    { TRAINER_AARON, MAP_GROUP(MAP_ROUTE134), MAP_NUM(MAP_ROUTE134), { 3, 0 }, 162, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { Route134_EventScript_Aaron, NULL } }, // Route134 !AARON
+    { TRAINER_ALEX, MAP_GROUP(MAP_ROUTE134), MAP_NUM(MAP_ROUTE134), { 4, 0 }, 213, 0, { OBJ_EVENT_GFX_MAN_5, 0 }, { Route134_EventScript_Alex, NULL } }, // Route134 BIRD_KEEPER
+    { TRAINER_HITOSHI, MAP_GROUP(MAP_ROUTE134), MAP_NUM(MAP_ROUTE134), { 5, 0 }, 214, 0, { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { Route134_EventScript_Hitoshi, NULL } }, // Route134 BLACK_BELT
+    { TRAINER_MARLEY, MAP_GROUP(MAP_ROUTE134), MAP_NUM(MAP_ROUTE134), { 6, 0 }, 219, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { Route134_EventScript_Marley, NULL } }, // Route134 COOLTRAINER
+    { TRAINER_KELVIN, MAP_GROUP(MAP_ROUTE134), MAP_NUM(MAP_ROUTE134), { 7, 0 }, 241, 0, { OBJ_EVENT_GFX_SAILOR, 0 }, { Route134_EventScript_Kelvin, NULL } }, // Route134 SAILOR
+    { TRAINER_REYNA, MAP_GROUP(MAP_ROUTE134), MAP_NUM(MAP_ROUTE134), { 8, 0 }, 211, 0, { OBJ_EVENT_GFX_GIRL_3, 0 }, { Route134_EventScript_Reyna, NULL } }, // Route134 BATTLE_GIRL
+    { TRAINER_HUDSON, MAP_GROUP(MAP_ROUTE134), MAP_NUM(MAP_ROUTE134), { 9, 0 }, 241, 0, { OBJ_EVENT_GFX_SAILOR, 0 }, { Route134_EventScript_Hudson, NULL } }, // Route134 SAILOR
+    { TRAINER_NICOLAS_1, MAP_GROUP(MAP_METEOR_FALLS_1F_2R), MAP_NUM(MAP_METEOR_FALLS_1F_2R), { 1, 0 }, 220, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { MeteorFalls_1F_2R_EventScript_Nicolas, NULL } }, // MeteorFalls_1F_2R DRAGON_TAMER
+    { TRAINER_JOHN_AND_JAY_1, MAP_GROUP(MAP_METEOR_FALLS_1F_2R), MAP_NUM(MAP_METEOR_FALLS_1F_2R), { 2, 3 }, 231, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_EXPERT_M, OBJ_EVENT_GFX_EXPERT_F }, { MeteorFalls_1F_2R_EventScript_John, MeteorFalls_1F_2R_EventScript_Jay } }, // MeteorFalls_1F_2R OLD_COUPLE
+    { TRAINER_MIKE_2, MAP_GROUP(MAP_RUSTURF_TUNNEL), MAP_NUM(MAP_RUSTURF_TUNNEL), { 9, 0 }, 226, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { RusturfTunnel_EventScript_Mike, NULL } }, // RusturfTunnel HIKER
+    { TRAINER_LYLE, MAP_GROUP(MAP_PETALBURG_WOODS), MAP_NUM(MAP_PETALBURG_WOODS), { 9, 0 }, 215, 0, { OBJ_EVENT_GFX_BUG_CATCHER, 0 }, { PetalburgWoods_EventScript_Lyle, NULL } }, // PetalburgWoods BUG_CATCHER
+    { TRAINER_JAMES_1, MAP_GROUP(MAP_PETALBURG_WOODS), MAP_NUM(MAP_PETALBURG_WOODS), { 10, 0 }, 215, 0, { OBJ_EVENT_GFX_BUG_CATCHER, 0 }, { PetalburgWoods_EventScript_James, NULL } }, // PetalburgWoods BUG_CATCHER
+    { TRAINER_ERIC, MAP_GROUP(MAP_JAGGED_PASS), MAP_NUM(MAP_JAGGED_PASS), { 1, 0 }, 178, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { JaggedPass_EventScript_Eric, NULL } }, // JaggedPass !ERIC
+    { TRAINER_ETHAN_1, MAP_GROUP(MAP_JAGGED_PASS), MAP_NUM(MAP_JAGGED_PASS), { 2, 0 }, 180, 0, { OBJ_EVENT_GFX_CAMPER, 0 }, { JaggedPass_EventScript_Ethan, NULL } }, // JaggedPass !ETHAN_1
+    { TRAINER_DIANA_1, MAP_GROUP(MAP_JAGGED_PASS), MAP_NUM(MAP_JAGGED_PASS), { 4, 0 }, 174, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { JaggedPass_EventScript_Diana, NULL } }, // JaggedPass !DIANA_1
+    { TRAINER_AUTUMN, MAP_GROUP(MAP_JAGGED_PASS), MAP_NUM(MAP_JAGGED_PASS), { 6, 0 }, 233, 0, { OBJ_EVENT_GFX_PICNICKER, 0 }, { JaggedPass_EventScript_Autumn, NULL } }, // JaggedPass PICNICKER
+    { TRAINER_JULIO, MAP_GROUP(MAP_JAGGED_PASS), MAP_NUM(MAP_JAGGED_PASS), { 7, 0 }, 247, 0, { OBJ_EVENT_GFX_CYCLING_TRIATHLETE_M, 0 }, { JaggedPass_EventScript_Julio, NULL } }, // JaggedPass TRIATHLETE
+    { TRAINER_MARK, MAP_GROUP(MAP_MT_PYRE_2F), MAP_NUM(MAP_MT_PYRE_2F), { 1, 0 }, 237, 0, { OBJ_EVENT_GFX_MANIAC, 0 }, { MtPyre_2F_EventScript_Mark, NULL } }, // MtPyre_2F POKEMANIAC
+    { TRAINER_DEZ_AND_LUKE, MAP_GROUP(MAP_MT_PYRE_2F), MAP_NUM(MAP_MT_PYRE_2F), { 5, 6 }, 252, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_WOMAN_4, OBJ_EVENT_GFX_MAN_4 }, { MtPyre_2F_EventScript_Dez, MtPyre_2F_EventScript_Luke } }, // MtPyre_2F YOUNG_COUPLE
+    { TRAINER_ZANDER, MAP_GROUP(MAP_MT_PYRE_2F), MAP_NUM(MAP_MT_PYRE_2F), { 7, 0 }, 214, 0, { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { MtPyre_2F_EventScript_Zander, NULL } }, // MtPyre_2F BLACK_BELT
+    { TRAINER_LEAH, MAP_GROUP(MAP_MT_PYRE_2F), MAP_NUM(MAP_MT_PYRE_2F), { 8, 0 }, 208, 0, { OBJ_EVENT_GFX_HEX_MANIAC, 0 }, { MtPyre_2F_EventScript_Leah, NULL } }, // MtPyre_2F @mountain
+    { TRAINER_WILLIAM, MAP_GROUP(MAP_MT_PYRE_3F), MAP_NUM(MAP_MT_PYRE_3F), { 1, 0 }, 238, 0, { OBJ_EVENT_GFX_PSYCHIC_M, 0 }, { MtPyre_3F_EventScript_William, NULL } }, // MtPyre_3F PSYCHIC
+    { TRAINER_KAYLA, MAP_GROUP(MAP_MT_PYRE_3F), MAP_NUM(MAP_MT_PYRE_3F), { 2, 0 }, 238, 0, { OBJ_EVENT_GFX_LASS, 0 }, { MtPyre_3F_EventScript_Kayla, NULL } }, // MtPyre_3F PSYCHIC
+    { TRAINER_GABRIELLE_1, MAP_GROUP(MAP_MT_PYRE_3F), MAP_NUM(MAP_MT_PYRE_3F), { 4, 0 }, 234, 0, { OBJ_EVENT_GFX_WOMAN_2, 0 }, { MtPyre_3F_EventScript_Gabrielle, NULL } }, // MtPyre_3F PKMN_BREEDER
+    { TRAINER_TASHA, MAP_GROUP(MAP_MT_PYRE_4F), MAP_NUM(MAP_MT_PYRE_4F), { 1, 0 }, 225, 0, { OBJ_EVENT_GFX_HEX_MANIAC, 0 }, { MtPyre_4F_EventScript_Tasha, NULL } }, // MtPyre_4F HEX_MANIAC
+    { TRAINER_ATSUSHI, MAP_GROUP(MAP_MT_PYRE_5F), MAP_NUM(MAP_MT_PYRE_5F), { 1, 0 }, 214, 0, { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { MtPyre_5F_EventScript_Atsushi, NULL } }, // MtPyre_5F BLACK_BELT
+    { TRAINER_VALERIE_1, MAP_GROUP(MAP_MT_PYRE_6F), MAP_NUM(MAP_MT_PYRE_6F), { 1, 0 }, 225, 0, { OBJ_EVENT_GFX_HEX_MANIAC, 0 }, { MtPyre_6F_EventScript_Valerie, NULL } }, // MtPyre_6F HEX_MANIAC
+    { TRAINER_CEDRIC, MAP_GROUP(MAP_MT_PYRE_6F), MAP_NUM(MAP_MT_PYRE_6F), { 3, 0 }, 238, 0, { OBJ_EVENT_GFX_PSYCHIC_M, 0 }, { MtPyre_6F_EventScript_Cedric, NULL } }, // MtPyre_6F PSYCHIC
+    { TRAINER_EDGAR, MAP_GROUP(MAP_VICTORY_ROAD_1F), MAP_NUM(MAP_VICTORY_ROAD_1F), { 1, 0 }, 219, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { VictoryRoad_1F_EventScript_Edgar, NULL } }, // VictoryRoad_1F COOLTRAINER
+    { TRAINER_HOPE, MAP_GROUP(MAP_VICTORY_ROAD_1F), MAP_NUM(MAP_VICTORY_ROAD_1F), { 2, 0 }, 219, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { VictoryRoad_1F_EventScript_Hope, NULL } }, // VictoryRoad_1F COOLTRAINER
+    { TRAINER_ALBERT, MAP_GROUP(MAP_VICTORY_ROAD_1F), MAP_NUM(MAP_VICTORY_ROAD_1F), { 3, 0 }, 219, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { VictoryRoad_1F_EventScript_Albert, NULL } }, // VictoryRoad_1F COOLTRAINER
+    { TRAINER_KATELYNN, MAP_GROUP(MAP_VICTORY_ROAD_1F), MAP_NUM(MAP_VICTORY_ROAD_1F), { 8, 0 }, 219, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { VictoryRoad_1F_EventScript_Katelynn, NULL } }, // VictoryRoad_1F COOLTRAINER
+    { TRAINER_QUINCY, MAP_GROUP(MAP_VICTORY_ROAD_1F), MAP_NUM(MAP_VICTORY_ROAD_1F), { 9, 0 }, 196, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { VictoryRoad_1F_EventScript_Quincy, NULL } }, // VictoryRoad_1F !QUINCY
+    { TRAINER_SAMUEL, MAP_GROUP(MAP_VICTORY_ROAD_B1F), MAP_NUM(MAP_VICTORY_ROAD_B1F), { 14, 0 }, 199, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { VictoryRoad_B1F_EventScript_Samuel, NULL } }, // VictoryRoad_B1F !SAMUEL
+    { TRAINER_SHANNON, MAP_GROUP(MAP_VICTORY_ROAD_B1F), MAP_NUM(MAP_VICTORY_ROAD_B1F), { 15, 0 }, 219, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { VictoryRoad_B1F_EventScript_Shannon, NULL } }, // VictoryRoad_B1F COOLTRAINER
+    { TRAINER_MICHELLE, MAP_GROUP(MAP_VICTORY_ROAD_B1F), MAP_NUM(MAP_VICTORY_ROAD_B1F), { 16, 0 }, 194, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { VictoryRoad_B1F_EventScript_Michelle, NULL } }, // VictoryRoad_B1F !MICHELLE
+    { TRAINER_MITCHELL, MAP_GROUP(MAP_VICTORY_ROAD_B1F), MAP_NUM(MAP_VICTORY_ROAD_B1F), { 20, 0 }, 219, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { VictoryRoad_B1F_EventScript_Mitchell, NULL } }, // VictoryRoad_B1F COOLTRAINER
+    { TRAINER_HALLE, MAP_GROUP(MAP_VICTORY_ROAD_B1F), MAP_NUM(MAP_VICTORY_ROAD_B1F), { 21, 0 }, 182, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { VictoryRoad_B1F_EventScript_Halle, NULL } }, // VictoryRoad_B1F !HALLE
+    { TRAINER_VITO, MAP_GROUP(MAP_VICTORY_ROAD_B2F), MAP_NUM(MAP_VICTORY_ROAD_B2F), { 1, 0 }, 219, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { VictoryRoad_B2F_EventScript_Vito, NULL } }, // VictoryRoad_B2F COOLTRAINER
+    { TRAINER_OWEN, MAP_GROUP(MAP_VICTORY_ROAD_B2F), MAP_NUM(MAP_VICTORY_ROAD_B2F), { 2, 0 }, 195, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { VictoryRoad_B2F_EventScript_Owen, NULL } }, // VictoryRoad_B2F !OWEN
+    { TRAINER_CAROLINE, MAP_GROUP(MAP_VICTORY_ROAD_B2F), MAP_NUM(MAP_VICTORY_ROAD_B2F), { 3, 0 }, 168, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { VictoryRoad_B2F_EventScript_Caroline, NULL } }, // VictoryRoad_B2F !CAROLINE
+    { TRAINER_JULIE, MAP_GROUP(MAP_VICTORY_ROAD_B2F), MAP_NUM(MAP_VICTORY_ROAD_B2F), { 4, 0 }, 219, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { VictoryRoad_B2F_EventScript_Julie, NULL } }, // VictoryRoad_B2F COOLTRAINER
+    { TRAINER_DIANNE, MAP_GROUP(MAP_VICTORY_ROAD_B2F), MAP_NUM(MAP_VICTORY_ROAD_B2F), { 6, 0 }, 205, 0, { OBJ_EVENT_GFX_WOMAN_5, 0 }, { VictoryRoad_B2F_EventScript_Dianne, NULL } }, // VictoryRoad_B2F @cave
+    { TRAINER_FELIX, MAP_GROUP(MAP_VICTORY_ROAD_B2F), MAP_NUM(MAP_VICTORY_ROAD_B2F), { 7, 0 }, 181, 0, { OBJ_EVENT_GFX_MAN_3, 0 }, { VictoryRoad_B2F_EventScript_Felix, NULL } }, // VictoryRoad_B2F !FELIX
+    { TRAINER_CHARLIE, MAP_GROUP(MAP_ABANDONED_SHIP_CORRIDORS_1F), MAP_NUM(MAP_ABANDONED_SHIP_CORRIDORS_1F), { 2, 0 }, 209, 0, { OBJ_EVENT_GFX_TUBER_M, 0 }, { AbandonedShip_Corridors_1F_EventScript_Charlie, NULL } }, // AbandonedShip_Corridors_1F @ship
+    { TRAINER_THALIA_1, MAP_GROUP(MAP_ABANDONED_SHIP_ROOMS_1F), MAP_NUM(MAP_ABANDONED_SHIP_ROOMS_1F), { 3, 0 }, 212, 0, { OBJ_EVENT_GFX_BEAUTY, 0 }, { AbandonedShip_Rooms_1F_EventScript_Thalia, NULL } }, // AbandonedShip_Rooms_1F BEAUTY
+    { TRAINER_DEMETRIUS, MAP_GROUP(MAP_ABANDONED_SHIP_ROOMS_1F), MAP_NUM(MAP_ABANDONED_SHIP_ROOMS_1F), { 4, 0 }, 251, 0, { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { AbandonedShip_Rooms_1F_EventScript_Demetrius, NULL } }, // AbandonedShip_Rooms_1F YOUNGSTER
+    { TRAINER_DUNCAN, MAP_GROUP(MAP_ABANDONED_SHIP_CORRIDORS_B1F), MAP_NUM(MAP_ABANDONED_SHIP_CORRIDORS_B1F), { 2, 0 }, 176, 0, { OBJ_EVENT_GFX_SAILOR, 0 }, { AbandonedShip_Corridors_B1F_EventScript_Duncan, NULL } }, // AbandonedShip_Corridors_B1F !DUNCAN
+    { TRAINER_KIRA_AND_DAN_1, MAP_GROUP(MAP_ABANDONED_SHIP_ROOMS2_1F), MAP_NUM(MAP_ABANDONED_SHIP_ROOMS2_1F), { 1, 2 }, 252, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_MAN_4, OBJ_EVENT_GFX_WOMAN_4 }, { AbandonedShip_Rooms2_1F_EventScript_Dan, AbandonedShip_Rooms2_1F_EventScript_Kira } }, // AbandonedShip_Rooms2_1F YOUNG_COUPLE
+    { TRAINER_GARRISON, MAP_GROUP(MAP_ABANDONED_SHIP_ROOMS2_1F), MAP_NUM(MAP_ABANDONED_SHIP_ROOMS2_1F), { 4, 0 }, 240, 0, { OBJ_EVENT_GFX_HIKER, 0 }, { AbandonedShip_Rooms2_1F_EventScript_Garrison, NULL } }, // AbandonedShip_Rooms2_1F RUIN_MANIAC
+    { TRAINER_JANI, MAP_GROUP(MAP_ABANDONED_SHIP_ROOMS2_1F), MAP_NUM(MAP_ABANDONED_SHIP_ROOMS2_1F), { 5, 0 }, 209, 0, { OBJ_EVENT_GFX_TUBER_F, 0 }, { AbandonedShip_Rooms2_1F_EventScript_Jani, NULL } }, // AbandonedShip_Rooms2_1F @ship
+    { TRAINER_WAYFARER_COAST_SCIENTIST_TED, MAP_GROUP(MAP_POKEMON_MANSION_1F), MAP_NUM(MAP_POKEMON_MANSION_1F), { 1, 0 }, 32, 0, { OBJ_EVENT_GFX_SCIENTIST, 0 }, { PokemonMansion_1F_EventScript_Ted, NULL } }, // PokemonMansion_1F_Frlg SCIENTIST
+    { TRAINER_WAYFARER_COAST_YOUNGSTER_JOHNSON, MAP_GROUP(MAP_POKEMON_MANSION_1F), MAP_NUM(MAP_POKEMON_MANSION_1F), { 5, 0 }, 37, 0, { OBJ_EVENT_GFX_YOUNGSTER_FRLG, 0 }, { PokemonMansion_1F_EventScript_Johnson, NULL } }, // PokemonMansion_1F_Frlg YOUNGSTER
+    { TRAINER_WAYFARER_COAST_BURGLAR_ARNIE, MAP_GROUP(MAP_POKEMON_MANSION_2F), MAP_NUM(MAP_POKEMON_MANSION_2F), { 1, 0 }, 15, 0, { OBJ_EVENT_GFX_SUPER_NERD, 0 }, { PokemonMansion_2F_EventScript_Arnie, NULL } }, // PokemonMansion_2F_Frlg @mansion
+    { TRAINER_WAYFARER_COAST_BURGLAR_SIMON, MAP_GROUP(MAP_POKEMON_MANSION_3F), MAP_NUM(MAP_POKEMON_MANSION_3F), { 1, 0 }, 15, 0, { OBJ_EVENT_GFX_SUPER_NERD, 0 }, { PokemonMansion_3F_EventScript_Simon, NULL } }, // PokemonMansion_3F_Frlg @mansion
+    { TRAINER_WAYFARER_COAST_SCIENTIST_BRAYDON, MAP_GROUP(MAP_POKEMON_MANSION_3F), MAP_NUM(MAP_POKEMON_MANSION_3F), { 2, 0 }, 32, 0, { OBJ_EVENT_GFX_SCIENTIST, 0 }, { PokemonMansion_3F_EventScript_Braydon, NULL } }, // PokemonMansion_3F_Frlg SCIENTIST
+    { TRAINER_WAYFARER_COAST_BURGLAR_LEWIS, MAP_GROUP(MAP_POKEMON_MANSION_B1F), MAP_NUM(MAP_POKEMON_MANSION_B1F), { 2, 0 }, 20, 0, { OBJ_EVENT_GFX_SUPER_NERD, 0 }, { PokemonMansion_B1F_EventScript_Lewis, NULL } }, // PokemonMansion_B1F_Frlg BURGLAR
+    { TRAINER_WAYFARER_COAST_SCIENTIST_IVAN, MAP_GROUP(MAP_POKEMON_MANSION_B1F), MAP_NUM(MAP_POKEMON_MANSION_B1F), { 3, 0 }, 15, 0, { OBJ_EVENT_GFX_SCIENTIST, 0 }, { PokemonMansion_B1F_EventScript_Ivan, NULL } }, // PokemonMansion_B1F_Frlg @mansion
+    { TRAINER_WAYFARER_SEVII_CRUSH_GIRL_JOCELYN, MAP_GROUP(MAP_MT_EMBER_EXTERIOR), MAP_NUM(MAP_MT_EMBER_EXTERIOR), { 4, 0 }, 63, 0, { OBJ_EVENT_GFX_BATTLE_GIRL, 0 }, { WayfarerSevii_Trainer_MtEmber_Exterior_EventScript_Jocelyn, NULL } }, // MtEmber_Exterior_Frlg CRUSH_GIRL
+    { TRAINER_WAYFARER_SEVII_PKMN_RANGER_LOGAN, MAP_GROUP(MAP_MT_EMBER_EXTERIOR), MAP_NUM(MAP_MT_EMBER_EXTERIOR), { 5, 0 }, 74, 0, { OBJ_EVENT_GFX_CAMPER_FRLG, 0 }, { WayfarerSevii_Trainer_MtEmber_Exterior_EventScript_Logan, NULL } }, // MtEmber_Exterior_Frlg PKMN_RANGER
+    { TRAINER_WAYFARER_SEVII_PKMN_RANGER_BETH, MAP_GROUP(MAP_MT_EMBER_EXTERIOR), MAP_NUM(MAP_MT_EMBER_EXTERIOR), { 6, 0 }, 74, 0, { OBJ_EVENT_GFX_PICNICKER_FRLG, 0 }, { WayfarerSevii_Trainer_MtEmber_Exterior_EventScript_Beth, NULL } }, // MtEmber_Exterior_Frlg PKMN_RANGER
+    { TRAINER_WAYFARER_SEVII_PKMN_BREEDER_BETHANY, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 1, 0 }, 73, 0, { OBJ_EVENT_GFX_WOMAN_2_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Bethany, NULL } }, // SixIsland_PatternBush_Frlg PKMN_BREEDER
+    { TRAINER_WAYFARER_SEVII_PKMN_BREEDER_ALLISON, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 2, 0 }, 73, 0, { OBJ_EVENT_GFX_WOMAN_2_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Allison, NULL } }, // SixIsland_PatternBush_Frlg PKMN_BREEDER
+    { TRAINER_WAYFARER_SEVII_BUG_CATCHER_GARRET, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 3, 0 }, 42, 0, { OBJ_EVENT_GFX_BUG_CATCHER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Garret, NULL } }, // SixIsland_PatternBush_Frlg !WAYFARER_SEVII_BUG_CATCHER_GARRET
+    { TRAINER_WAYFARER_SEVII_BUG_CATCHER_JONAH, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 4, 0 }, 59, 0, { OBJ_EVENT_GFX_BUG_CATCHER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Jonah, NULL } }, // SixIsland_PatternBush_Frlg BUG_CATCHER
+    { TRAINER_WAYFARER_SEVII_BUG_CATCHER_VANCE, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 5, 0 }, 59, 0, { OBJ_EVENT_GFX_BUG_CATCHER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Vance, NULL } }, // SixIsland_PatternBush_Frlg BUG_CATCHER
+    { TRAINER_WAYFARER_SEVII_YOUNGSTER_NASH, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 6, 0 }, 83, 0, { OBJ_EVENT_GFX_YOUNGSTER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Nash, NULL } }, // SixIsland_PatternBush_Frlg YOUNGSTER
+    { TRAINER_WAYFARER_SEVII_YOUNGSTER_CORDELL, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 7, 0 }, 83, 0, { OBJ_EVENT_GFX_YOUNGSTER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Cordell, NULL } }, // SixIsland_PatternBush_Frlg YOUNGSTER
+    { TRAINER_WAYFARER_SEVII_LASS_DALIA, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 8, 0 }, 70, 0, { OBJ_EVENT_GFX_LASS_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Dalia, NULL } }, // SixIsland_PatternBush_Frlg LASS
+    { TRAINER_WAYFARER_SEVII_LASS_JOANA, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 9, 0 }, 70, 0, { OBJ_EVENT_GFX_LASS_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Joana, NULL } }, // SixIsland_PatternBush_Frlg LASS
+    { TRAINER_WAYFARER_SEVII_CAMPER_RILEY, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 10, 0 }, 60, 0, { OBJ_EVENT_GFX_CAMPER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Riley, NULL } }, // SixIsland_PatternBush_Frlg CAMPER
+    { TRAINER_WAYFARER_SEVII_PICNICKER_MARCY, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 11, 0 }, 72, 0, { OBJ_EVENT_GFX_PICNICKER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Marcy, NULL } }, // SixIsland_PatternBush_Frlg PICNICKER
+    { TRAINER_WAYFARER_SEVII_RUIN_MANIAC_LAYTON, MAP_GROUP(MAP_SIX_ISLAND_PATTERN_BUSH), MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH), { 12, 0 }, 51, 0, { OBJ_EVENT_GFX_HIKER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_PatternBush_EventScript_Layton, NULL } }, // SixIsland_PatternBush_Frlg !WAYFARER_SEVII_RUIN_MANIAC_LAYTON
+    { TRAINER_WAYFARER_SEVII_RUIN_MANIAC_LAWSON, MAP_GROUP(MAP_FIVE_ISLAND_LOST_CAVE_ROOM1), MAP_NUM(MAP_FIVE_ISLAND_LOST_CAVE_ROOM1), { 1, 0 }, 76, 0, { OBJ_EVENT_GFX_HIKER_FRLG, 0 }, { WayfarerSevii_Trainer_FiveIsland_LostCave_Room1_EventScript_Lawson, NULL } }, // FiveIsland_LostCave_Room1_Frlg RUIN_MANIAC
+    { TRAINER_WAYFARER_SEVII_PSYCHIC_LAURA, MAP_GROUP(MAP_FIVE_ISLAND_LOST_CAVE_ROOM4), MAP_NUM(MAP_FIVE_ISLAND_LOST_CAVE_ROOM4), { 1, 0 }, 46, 0, { OBJ_EVENT_GFX_WOMAN_1_FRLG, 0 }, { WayfarerSevii_Trainer_FiveIsland_LostCave_Room4_EventScript_Laura, NULL } }, // FiveIsland_LostCave_Room4_Frlg !WAYFARER_SEVII_PSYCHIC_LAURA
+    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_REECE, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 1, 0 }, 36, 0, { OBJ_EVENT_GFX_SWIMMER_M_LAND, 0 }, { Route19_EventScript_Reece, NULL } }, // Route19_Frlg SWIMMER_M
+    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_RICHARD, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 2, 0 }, 36, 0, { OBJ_EVENT_GFX_SWIMMER_M_LAND, 0 }, { Route19_EventScript_Richard, NULL } }, // Route19_Frlg SWIMMER_M
+    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_TONY, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 3, 0 }, 36, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route19_EventScript_Tony, NULL } }, // Route19_Frlg SWIMMER_M
+    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_MATTHEW, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 4, 0 }, 36, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route19_EventScript_Matthew, NULL } }, // Route19_Frlg SWIMMER_M
+    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_DOUGLAS, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 5, 0 }, 36, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route19_EventScript_Douglas, NULL } }, // Route19_Frlg SWIMMER_M
+    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_DAVID, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 6, 0 }, 36, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route19_EventScript_David, NULL } }, // Route19_Frlg SWIMMER_M
+    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_AXLE, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 7, 0 }, 14, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route19_EventScript_Axle, NULL } }, // Route19_Frlg @coast
+    { TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ALICE, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 8, 0 }, 10, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { Route19_EventScript_Alice, NULL } }, // Route19_Frlg !WAYFARER_COAST_SWIMMER_FEMALE_ALICE
+    { TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_CONNIE, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 9, 0 }, 35, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { Route19_EventScript_Connie, NULL } }, // Route19_Frlg SWIMMER_F
+    { TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ANYA, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 10, 0 }, 11, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { Route19_EventScript_Anya, NULL } }, // Route19_Frlg !WAYFARER_COAST_SWIMMER_FEMALE_ANYA
+    { TRAINER_WAYFARER_COAST_SIS_AND_BRO_LIA_LUC, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), { 11, 12 }, 33, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_SWIMMER_F_WATER, OBJ_EVENT_GFX_TUBER_M_WATER }, { Route19_EventScript_Lia, Route19_EventScript_Luc } }, // Route19_Frlg SIS_AND_BRO
+    { TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_MELISSA, MAP_GROUP(MAP_ROUTE20), MAP_NUM(MAP_ROUTE20), { 1, 0 }, 12, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { Route20_EventScript_Melissa, NULL } }, // Route20_Frlg !WAYFARER_COAST_SWIMMER_FEMALE_MELISSA
+    { TRAINER_WAYFARER_COAST_PICNICKER_MISSY, MAP_GROUP(MAP_ROUTE20), MAP_NUM(MAP_ROUTE20), { 2, 0 }, 9, 0, { OBJ_EVENT_GFX_PICNICKER_FRLG, 0 }, { Route20_EventScript_Missy, NULL } }, // Route20_Frlg !WAYFARER_COAST_PICNICKER_MISSY
+    { TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_NORA, MAP_GROUP(MAP_ROUTE20), MAP_NUM(MAP_ROUTE20), { 3, 0 }, 35, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { Route20_EventScript_Nora, NULL } }, // Route20_Frlg SWIMMER_F
+    { TRAINER_WAYFARER_COAST_BIRD_KEEPER_ROGER, MAP_GROUP(MAP_ROUTE20), MAP_NUM(MAP_ROUTE20), { 4, 0 }, 18, 0, { OBJ_EVENT_GFX_ROCKER, 0 }, { Route20_EventScript_Roger, NULL } }, // Route20_Frlg BIRD_KEEPER
+    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_DEAN, MAP_GROUP(MAP_ROUTE20), MAP_NUM(MAP_ROUTE20), { 5, 0 }, 36, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route20_EventScript_Dean, NULL } }, // Route20_Frlg SWIMMER_M
+    { TRAINER_WAYFARER_COAST_PICNICKER_IRENE, MAP_GROUP(MAP_ROUTE20), MAP_NUM(MAP_ROUTE20), { 6, 0 }, 8, 0, { OBJ_EVENT_GFX_PICNICKER_FRLG, 0 }, { Route20_EventScript_Irene, NULL } }, // Route20_Frlg !WAYFARER_COAST_PICNICKER_IRENE
+    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_BARRY, MAP_GROUP(MAP_ROUTE20), MAP_NUM(MAP_ROUTE20), { 7, 0 }, 36, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route20_EventScript_Barry, NULL } }, // Route20_Frlg SWIMMER_M
+    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_DARRIN, MAP_GROUP(MAP_ROUTE20), MAP_NUM(MAP_ROUTE20), { 8, 0 }, 36, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route20_EventScript_Darrin, NULL } }, // Route20_Frlg SWIMMER_M
+    { TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_SHIRLEY, MAP_GROUP(MAP_ROUTE20), MAP_NUM(MAP_ROUTE20), { 9, 0 }, 13, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { Route20_EventScript_Shirley, NULL } }, // Route20_Frlg !WAYFARER_COAST_SWIMMER_FEMALE_SHIRLEY
+    { TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_TIFFANY, MAP_GROUP(MAP_ROUTE20), MAP_NUM(MAP_ROUTE20), { 10, 0 }, 35, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { Route20_EventScript_Tiffany, NULL } }, // Route20_Frlg SWIMMER_F
+    { TRAINER_WAYFARER_COAST_FISHERMAN_RONALD, MAP_GROUP(MAP_ROUTE21_NORTH), MAP_NUM(MAP_ROUTE21_NORTH), { 1, 0 }, 24, 0, { OBJ_EVENT_GFX_FISHER, 0 }, { Route21_North_EventScript_Ronald, NULL } }, // Route21_North_Frlg FISHERMAN
+    { TRAINER_WAYFARER_COAST_FISHERMAN_WADE, MAP_GROUP(MAP_ROUTE21_NORTH), MAP_NUM(MAP_ROUTE21_NORTH), { 2, 0 }, 24, 0, { OBJ_EVENT_GFX_FISHER, 0 }, { Route21_North_EventScript_Wade, NULL } }, // Route21_North_Frlg FISHERMAN
+    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_SPENCER, MAP_GROUP(MAP_ROUTE21_NORTH), MAP_NUM(MAP_ROUTE21_NORTH), { 3, 0 }, 36, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route21_North_EventScript_Spencer, NULL } }, // Route21_North_Frlg SWIMMER_M
+    { TRAINER_WAYFARER_COAST_SIS_AND_BRO_LIL_IAN, MAP_GROUP(MAP_ROUTE21_NORTH), MAP_NUM(MAP_ROUTE21_NORTH), { 4, 5 }, 33, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_SWIMMER_F_WATER, OBJ_EVENT_GFX_TUBER_M_WATER }, { Route21_North_EventScript_Lil, Route21_North_EventScript_Ian } }, // Route21_North_Frlg SIS_AND_BRO
+    { TRAINER_WAYFARER_COAST_FISHERMAN_CLAUDE, MAP_GROUP(MAP_ROUTE21_SOUTH), MAP_NUM(MAP_ROUTE21_SOUTH), { 1, 0 }, 14, 0, { OBJ_EVENT_GFX_FISHER, 0 }, { Route21_South_EventScript_Claude, NULL } }, // Route21_South_Frlg @coast
+    { TRAINER_WAYFARER_COAST_FISHERMAN_NOLAN, MAP_GROUP(MAP_ROUTE21_SOUTH), MAP_NUM(MAP_ROUTE21_SOUTH), { 2, 0 }, 24, 0, { OBJ_EVENT_GFX_FISHER, 0 }, { Route21_South_EventScript_Nolan, NULL } }, // Route21_South_Frlg FISHERMAN
+    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_JACK, MAP_GROUP(MAP_ROUTE21_SOUTH), MAP_NUM(MAP_ROUTE21_SOUTH), { 3, 0 }, 36, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route21_South_EventScript_Jack, NULL } }, // Route21_South_Frlg SWIMMER_M
+    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_JEROME, MAP_GROUP(MAP_ROUTE21_SOUTH), MAP_NUM(MAP_ROUTE21_SOUTH), { 4, 0 }, 36, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route21_South_EventScript_Jerome, NULL } }, // Route21_South_Frlg SWIMMER_M
+    { TRAINER_WAYFARER_COAST_SWIMMER_MALE_ROLAND, MAP_GROUP(MAP_ROUTE21_SOUTH), MAP_NUM(MAP_ROUTE21_SOUTH), { 5, 0 }, 36, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { Route21_South_EventScript_Roland, NULL } }, // Route21_South_Frlg SWIMMER_M
+    { TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_MARIA, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 1, 0 }, 78, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Maria, NULL } }, // OneIsland_KindleRoad_Frlg SWIMMER_F
+    { TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_ABIGAIL, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 2, 0 }, 78, 0, { OBJ_EVENT_GFX_SWIMMER_F_LAND, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Abigail, NULL } }, // OneIsland_KindleRoad_Frlg SWIMMER_F
+    { TRAINER_WAYFARER_SEVII_SWIMMER_MALE_FINN, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 3, 0 }, 53, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Finn, NULL } }, // OneIsland_KindleRoad_Frlg !WAYFARER_SEVII_SWIMMER_MALE_FINN
+    { TRAINER_WAYFARER_SEVII_SWIMMER_MALE_GARRETT, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 4, 0 }, 79, 0, { OBJ_EVENT_GFX_SWIMMER_M_LAND, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Garrett, NULL } }, // OneIsland_KindleRoad_Frlg SWIMMER_M
+    { TRAINER_WAYFARER_SEVII_FISHERMAN_TOMMY, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 5, 0 }, 65, 0, { OBJ_EVENT_GFX_FISHER, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Tommy, NULL } }, // OneIsland_KindleRoad_Frlg FISHERMAN
+    { TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 6, 0 }, 63, 0, { OBJ_EVENT_GFX_BATTLE_GIRL, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Sharon, NULL } }, // OneIsland_KindleRoad_Frlg CRUSH_GIRL
+    { TRAINER_WAYFARER_SEVII_CRUSH_GIRL_TANYA, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 7, 0 }, 63, 0, { OBJ_EVENT_GFX_BATTLE_GIRL, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Tanya, NULL } }, // OneIsland_KindleRoad_Frlg CRUSH_GIRL
+    { TRAINER_WAYFARER_SEVII_BLACK_BELT_SHEA, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 8, 0 }, 41, 0, { OBJ_EVENT_GFX_BLACKBELT, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Shea, NULL } }, // OneIsland_KindleRoad_Frlg !WAYFARER_SEVII_BLACK_BELT_SHEA
+    { TRAINER_WAYFARER_SEVII_BLACK_BELT_HUGH, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 9, 0 }, 58, 0, { OBJ_EVENT_GFX_BLACKBELT, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Hugh, NULL } }, // OneIsland_KindleRoad_Frlg BLACK_BELT
+    { TRAINER_WAYFARER_SEVII_CAMPER_BRYCE, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 10, 0 }, 60, 0, { OBJ_EVENT_GFX_CAMPER_FRLG, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Bryce, NULL } }, // OneIsland_KindleRoad_Frlg CAMPER
+    { TRAINER_WAYFARER_SEVII_PICNICKER_CLAIRE, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 11, 0 }, 72, 0, { OBJ_EVENT_GFX_PICNICKER_FRLG, 0 }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Claire, NULL } }, // OneIsland_KindleRoad_Frlg PICNICKER
+    { TRAINER_WAYFARER_SEVII_CRUSH_KIN_MIK_KIA, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), { 12, 13 }, 64, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_BLACKBELT, OBJ_EVENT_GFX_BATTLE_GIRL }, { WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Mik, WayfarerSevii_Trainer_OneIsland_KindleRoad_EventScript_Kia } }, // OneIsland_KindleRoad_Frlg CRUSH_KIN
+    { TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_AMARA, MAP_GROUP(MAP_ONE_ISLAND_TREASURE_BEACH), MAP_NUM(MAP_ONE_ISLAND_TREASURE_BEACH), { 1, 0 }, 55, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { WayfarerSevii_Trainer_OneIsland_TreasureBeach_EventScript_Amara, NULL } }, // OneIsland_TreasureBeach_Frlg @coast
+    { TRAINER_WAYFARER_SEVII_AROMA_LADY_NIKKI, MAP_GROUP(MAP_THREE_ISLAND_BOND_BRIDGE), MAP_NUM(MAP_THREE_ISLAND_BOND_BRIDGE), { 1, 0 }, 56, 0, { OBJ_EVENT_GFX_WOMAN_2_FRLG, 0 }, { WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Nikki, NULL } }, // ThreeIsland_BondBridge_Frlg AROMA_LADY
+    { TRAINER_WAYFARER_SEVII_AROMA_LADY_VIOLET, MAP_GROUP(MAP_THREE_ISLAND_BOND_BRIDGE), MAP_NUM(MAP_THREE_ISLAND_BOND_BRIDGE), { 2, 0 }, 39, 0, { OBJ_EVENT_GFX_WOMAN_2_FRLG, 0 }, { WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Violet, NULL } }, // ThreeIsland_BondBridge_Frlg !WAYFARER_SEVII_AROMA_LADY_VIOLET
+    { TRAINER_WAYFARER_SEVII_TUBER_AMIRA, MAP_GROUP(MAP_THREE_ISLAND_BOND_BRIDGE), MAP_NUM(MAP_THREE_ISLAND_BOND_BRIDGE), { 3, 0 }, 81, 0, { OBJ_EVENT_GFX_TUBER_F_FRLG, 0 }, { WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Amira, NULL } }, // ThreeIsland_BondBridge_Frlg TUBER
+    { TRAINER_WAYFARER_SEVII_TUBER_ALEXIS, MAP_GROUP(MAP_THREE_ISLAND_BOND_BRIDGE), MAP_NUM(MAP_THREE_ISLAND_BOND_BRIDGE), { 4, 0 }, 81, 0, { OBJ_EVENT_GFX_TUBER_F_FRLG, 0 }, { WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Alexis, NULL } }, // ThreeIsland_BondBridge_Frlg TUBER
+    { TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_TISHA, MAP_GROUP(MAP_THREE_ISLAND_BOND_BRIDGE), MAP_NUM(MAP_THREE_ISLAND_BOND_BRIDGE), { 5, 0 }, 78, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Tisha, NULL } }, // ThreeIsland_BondBridge_Frlg SWIMMER_F
+    { TRAINER_WAYFARER_SEVII_TWINS_JOY_MEG, MAP_GROUP(MAP_THREE_ISLAND_BOND_BRIDGE), MAP_NUM(MAP_THREE_ISLAND_BOND_BRIDGE), { 6, 7 }, 82, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_LITTLE_GIRL_FRLG, OBJ_EVENT_GFX_LITTLE_GIRL_FRLG }, { WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Joy, WayfarerSevii_Trainer_ThreeIsland_BondBridge_EventScript_Meg } }, // ThreeIsland_BondBridge_Frlg TWINS
+    { TRAINER_WAYFARER_SEVII_PAINTER_DAISY, MAP_GROUP(MAP_FIVE_ISLAND_RESORT_GORGEOUS), MAP_NUM(MAP_FIVE_ISLAND_RESORT_GORGEOUS), { 1, 0 }, 71, 0, { OBJ_EVENT_GFX_LASS_FRLG, 0 }, { WayfarerSevii_Trainer_FiveIsland_ResortGorgeous_EventScript_Daisy, NULL } }, // FiveIsland_ResortGorgeous_Frlg PAINTER
+    { TRAINER_WAYFARER_SEVII_PAINTER_CELINA, MAP_GROUP(MAP_FIVE_ISLAND_RESORT_GORGEOUS), MAP_NUM(MAP_FIVE_ISLAND_RESORT_GORGEOUS), { 2, 0 }, 71, 0, { OBJ_EVENT_GFX_LASS_FRLG, 0 }, { WayfarerSevii_Trainer_FiveIsland_ResortGorgeous_EventScript_Celina, NULL } }, // FiveIsland_ResortGorgeous_Frlg PAINTER
+    { TRAINER_WAYFARER_SEVII_PAINTER_RAYNA, MAP_GROUP(MAP_FIVE_ISLAND_RESORT_GORGEOUS), MAP_NUM(MAP_FIVE_ISLAND_RESORT_GORGEOUS), { 3, 0 }, 71, 0, { OBJ_EVENT_GFX_LASS_FRLG, 0 }, { WayfarerSevii_Trainer_FiveIsland_ResortGorgeous_EventScript_Rayna, NULL } }, // FiveIsland_ResortGorgeous_Frlg PAINTER
+    { TRAINER_WAYFARER_SEVII_LADY_JACKI, MAP_GROUP(MAP_FIVE_ISLAND_RESORT_GORGEOUS), MAP_NUM(MAP_FIVE_ISLAND_RESORT_GORGEOUS), { 4, 0 }, 69, 0, { OBJ_EVENT_GFX_WOMAN_2_FRLG, 0 }, { WayfarerSevii_Trainer_FiveIsland_ResortGorgeous_EventScript_Jacki, NULL } }, // FiveIsland_ResortGorgeous_Frlg LADY
+    { TRAINER_WAYFARER_SEVII_LADY_GILLIAN, MAP_GROUP(MAP_FIVE_ISLAND_RESORT_GORGEOUS), MAP_NUM(MAP_FIVE_ISLAND_RESORT_GORGEOUS), { 5, 0 }, 69, 0, { OBJ_EVENT_GFX_WOMAN_2_FRLG, 0 }, { WayfarerSevii_Trainer_FiveIsland_ResortGorgeous_EventScript_Gillian, NULL } }, // FiveIsland_ResortGorgeous_Frlg LADY
+    { TRAINER_WAYFARER_SEVII_YOUNGSTER_DESTIN, MAP_GROUP(MAP_FIVE_ISLAND_RESORT_GORGEOUS), MAP_NUM(MAP_FIVE_ISLAND_RESORT_GORGEOUS), { 6, 0 }, 83, 0, { OBJ_EVENT_GFX_YOUNGSTER_FRLG, 0 }, { WayfarerSevii_Trainer_FiveIsland_ResortGorgeous_EventScript_Destin, NULL } }, // FiveIsland_ResortGorgeous_Frlg YOUNGSTER
+    { TRAINER_WAYFARER_SEVII_SWIMMER_MALE_TOBY, MAP_GROUP(MAP_FIVE_ISLAND_RESORT_GORGEOUS), MAP_NUM(MAP_FIVE_ISLAND_RESORT_GORGEOUS), { 7, 0 }, 79, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { WayfarerSevii_Trainer_FiveIsland_ResortGorgeous_EventScript_Toby, NULL } }, // FiveIsland_ResortGorgeous_Frlg SWIMMER_M
+    { TRAINER_WAYFARER_SEVII_PKMN_BREEDER_ALIZE, MAP_GROUP(MAP_FIVE_ISLAND_WATER_LABYRINTH), MAP_NUM(MAP_FIVE_ISLAND_WATER_LABYRINTH), { 2, 0 }, 73, 0, { OBJ_EVENT_GFX_WOMAN_2_FRLG, 0 }, { WayfarerSevii_Trainer_FiveIsland_WaterLabyrinth_EventScript_Alize, NULL } }, // FiveIsland_WaterLabyrinth_Frlg PKMN_BREEDER
+    { TRAINER_WAYFARER_SEVII_BIRD_KEEPER_MILO, MAP_GROUP(MAP_FIVE_ISLAND_MEMORIAL_PILLAR), MAP_NUM(MAP_FIVE_ISLAND_MEMORIAL_PILLAR), { 2, 0 }, 40, 0, { OBJ_EVENT_GFX_ROCKER, 0 }, { WayfarerSevii_Trainer_FiveIsland_MemorialPillar_EventScript_Milo, NULL } }, // FiveIsland_MemorialPillar_Frlg !WAYFARER_SEVII_BIRD_KEEPER_MILO
+    { TRAINER_WAYFARER_SEVII_BIRD_KEEPER_CHAZ, MAP_GROUP(MAP_FIVE_ISLAND_MEMORIAL_PILLAR), MAP_NUM(MAP_FIVE_ISLAND_MEMORIAL_PILLAR), { 3, 0 }, 57, 0, { OBJ_EVENT_GFX_ROCKER, 0 }, { WayfarerSevii_Trainer_FiveIsland_MemorialPillar_EventScript_Chaz, NULL } }, // FiveIsland_MemorialPillar_Frlg BIRD_KEEPER
+    { TRAINER_WAYFARER_SEVII_BIRD_KEEPER_HAROLD, MAP_GROUP(MAP_FIVE_ISLAND_MEMORIAL_PILLAR), MAP_NUM(MAP_FIVE_ISLAND_MEMORIAL_PILLAR), { 4, 0 }, 57, 0, { OBJ_EVENT_GFX_ROCKER, 0 }, { WayfarerSevii_Trainer_FiveIsland_MemorialPillar_EventScript_Harold, NULL } }, // FiveIsland_MemorialPillar_Frlg BIRD_KEEPER
+    { TRAINER_WAYFARER_SEVII_FISHERMAN_TYLOR, MAP_GROUP(MAP_SIX_ISLAND_OUTCAST_ISLAND), MAP_NUM(MAP_SIX_ISLAND_OUTCAST_ISLAND), { 2, 0 }, 65, 0, { OBJ_EVENT_GFX_FISHER, 0 }, { WayfarerSevii_Trainer_SixIsland_OutcastIsland_EventScript_Tylor, NULL } }, // SixIsland_OutcastIsland_Frlg FISHERMAN
+    { TRAINER_WAYFARER_SEVII_SWIMMER_MALE_MYMO, MAP_GROUP(MAP_SIX_ISLAND_OUTCAST_ISLAND), MAP_NUM(MAP_SIX_ISLAND_OUTCAST_ISLAND), { 3, 0 }, 54, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { WayfarerSevii_Trainer_SixIsland_OutcastIsland_EventScript_Mymo, NULL } }, // SixIsland_OutcastIsland_Frlg !WAYFARER_SEVII_SWIMMER_MALE_MYMO
+    { TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_NICOLE, MAP_GROUP(MAP_SIX_ISLAND_OUTCAST_ISLAND), MAP_NUM(MAP_SIX_ISLAND_OUTCAST_ISLAND), { 4, 0 }, 52, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { WayfarerSevii_Trainer_SixIsland_OutcastIsland_EventScript_Nicole, NULL } }, // SixIsland_OutcastIsland_Frlg !WAYFARER_SEVII_SWIMMER_FEMALE_NICOLE
+    { TRAINER_WAYFARER_SEVII_SIS_AND_BRO_AVA_GEB, MAP_GROUP(MAP_SIX_ISLAND_OUTCAST_ISLAND), MAP_NUM(MAP_SIX_ISLAND_OUTCAST_ISLAND), { 5, 6 }, 77, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_SWIMMER_F_WATER, OBJ_EVENT_GFX_TUBER_M_WATER }, { WayfarerSevii_Trainer_SixIsland_OutcastIsland_EventScript_Ava, WayfarerSevii_Trainer_SixIsland_OutcastIsland_EventScript_Geb } }, // SixIsland_OutcastIsland_Frlg SIS_AND_BRO
+    { TRAINER_WAYFARER_SEVII_PSYCHIC_JACLYN, MAP_GROUP(MAP_SIX_ISLAND_GREEN_PATH), MAP_NUM(MAP_SIX_ISLAND_GREEN_PATH), { 1, 0 }, 75, 0, { OBJ_EVENT_GFX_WOMAN_1_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_GreenPath_EventScript_Jaclyn, NULL } }, // SixIsland_GreenPath_Frlg PSYCHIC
+    { TRAINER_WAYFARER_SEVII_AROMA_LADY_ROSE, MAP_GROUP(MAP_SIX_ISLAND_WATER_PATH), MAP_NUM(MAP_SIX_ISLAND_WATER_PATH), { 1, 0 }, 38, 0, { OBJ_EVENT_GFX_WOMAN_2_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Rose, NULL } }, // SixIsland_WaterPath_Frlg !WAYFARER_SEVII_AROMA_LADY_ROSE
+    { TRAINER_WAYFARER_SEVII_JUGGLER_EDWARD, MAP_GROUP(MAP_SIX_ISLAND_WATER_PATH), MAP_NUM(MAP_SIX_ISLAND_WATER_PATH), { 2, 0 }, 68, 0, { OBJ_EVENT_GFX_ROCKER, 0 }, { WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Edward, NULL } }, // SixIsland_WaterPath_Frlg JUGGLER
+    { TRAINER_WAYFARER_SEVII_SWIMMER_MALE_SAMIR, MAP_GROUP(MAP_SIX_ISLAND_WATER_PATH), MAP_NUM(MAP_SIX_ISLAND_WATER_PATH), { 3, 0 }, 79, 0, { OBJ_EVENT_GFX_SWIMMER_M_WATER, 0 }, { WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Samir, NULL } }, // SixIsland_WaterPath_Frlg SWIMMER_M
+    { TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_DENISE, MAP_GROUP(MAP_SIX_ISLAND_WATER_PATH), MAP_NUM(MAP_SIX_ISLAND_WATER_PATH), { 4, 0 }, 78, 0, { OBJ_EVENT_GFX_SWIMMER_F_WATER, 0 }, { WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Denise, NULL } }, // SixIsland_WaterPath_Frlg SWIMMER_F
+    { TRAINER_WAYFARER_SEVII_TWINS_MIU_MIA, MAP_GROUP(MAP_SIX_ISLAND_WATER_PATH), MAP_NUM(MAP_SIX_ISLAND_WATER_PATH), { 5, 6 }, 82, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_LITTLE_GIRL_FRLG, OBJ_EVENT_GFX_LITTLE_GIRL_FRLG }, { WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Miu, WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Mia } }, // SixIsland_WaterPath_Frlg TWINS
+    { TRAINER_WAYFARER_SEVII_HIKER_EARL, MAP_GROUP(MAP_SIX_ISLAND_WATER_PATH), MAP_NUM(MAP_SIX_ISLAND_WATER_PATH), { 7, 0 }, 67, 0, { OBJ_EVENT_GFX_HIKER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_WaterPath_EventScript_Earl, NULL } }, // SixIsland_WaterPath_Frlg HIKER
+    { TRAINER_WAYFARER_SEVII_RUIN_MANIAC_STANLY, MAP_GROUP(MAP_SIX_ISLAND_RUIN_VALLEY), MAP_NUM(MAP_SIX_ISLAND_RUIN_VALLEY), { 2, 0 }, 76, 0, { OBJ_EVENT_GFX_HIKER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_RuinValley_EventScript_Stanly, NULL } }, // SixIsland_RuinValley_Frlg RUIN_MANIAC
+    { TRAINER_WAYFARER_SEVII_RUIN_MANIAC_FOSTER, MAP_GROUP(MAP_SIX_ISLAND_RUIN_VALLEY), MAP_NUM(MAP_SIX_ISLAND_RUIN_VALLEY), { 3, 0 }, 49, 0, { OBJ_EVENT_GFX_HIKER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_RuinValley_EventScript_Foster, NULL } }, // SixIsland_RuinValley_Frlg !WAYFARER_SEVII_RUIN_MANIAC_FOSTER
+    { TRAINER_WAYFARER_SEVII_RUIN_MANIAC_LARRY, MAP_GROUP(MAP_SIX_ISLAND_RUIN_VALLEY), MAP_NUM(MAP_SIX_ISLAND_RUIN_VALLEY), { 4, 0 }, 50, 0, { OBJ_EVENT_GFX_HIKER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_RuinValley_EventScript_Larry, NULL } }, // SixIsland_RuinValley_Frlg !WAYFARER_SEVII_RUIN_MANIAC_LARRY
+    { TRAINER_WAYFARER_SEVII_HIKER_DARYL, MAP_GROUP(MAP_SIX_ISLAND_RUIN_VALLEY), MAP_NUM(MAP_SIX_ISLAND_RUIN_VALLEY), { 5, 0 }, 67, 0, { OBJ_EVENT_GFX_HIKER_FRLG, 0 }, { WayfarerSevii_Trainer_SixIsland_RuinValley_EventScript_Daryl, NULL } }, // SixIsland_RuinValley_Frlg HIKER
+    { TRAINER_WAYFARER_SEVII_POKEMANIAC_HECTOR, MAP_GROUP(MAP_SIX_ISLAND_RUIN_VALLEY), MAP_NUM(MAP_SIX_ISLAND_RUIN_VALLEY), { 6, 0 }, 45, 0, { OBJ_EVENT_GFX_SUPER_NERD, 0 }, { WayfarerSevii_Trainer_SixIsland_RuinValley_EventScript_Hector, NULL } }, // SixIsland_RuinValley_Frlg !WAYFARER_SEVII_POKEMANIAC_HECTOR
+    { TRAINER_WAYFARER_SEVII_PSYCHIC_DARIO, MAP_GROUP(MAP_SEVEN_ISLAND_TRAINER_TOWER), MAP_NUM(MAP_SEVEN_ISLAND_TRAINER_TOWER), { 1, 0 }, 75, 0, { OBJ_EVENT_GFX_BOY, 0 }, { WayfarerSevii_Trainer_SevenIsland_TrainerTower_EventScript_Dario, NULL } }, // SevenIsland_TrainerTower_Frlg PSYCHIC
+    { TRAINER_WAYFARER_SEVII_PSYCHIC_RODETTE, MAP_GROUP(MAP_SEVEN_ISLAND_TRAINER_TOWER), MAP_NUM(MAP_SEVEN_ISLAND_TRAINER_TOWER), { 2, 0 }, 47, 0, { OBJ_EVENT_GFX_WOMAN_1_FRLG, 0 }, { WayfarerSevii_Trainer_SevenIsland_TrainerTower_EventScript_Rodette, NULL } }, // SevenIsland_TrainerTower_Frlg !WAYFARER_SEVII_PSYCHIC_RODETTE
+    { TRAINER_WAYFARER_SEVII_AROMA_LADY_MIAH, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), { 1, 0 }, 56, 0, { OBJ_EVENT_GFX_WOMAN_2_FRLG, 0 }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Entrance_EventScript_Miah, NULL } }, // SevenIsland_SevaultCanyon_Entrance_Frlg AROMA_LADY
+    { TRAINER_WAYFARER_SEVII_YOUNG_COUPLE_EVE_JON, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), { 2, 3 }, 84, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_BEAUTY_FRLG, OBJ_EVENT_GFX_MAN }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Entrance_EventScript_Eve, WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Entrance_EventScript_Jon } }, // SevenIsland_SevaultCanyon_Entrance_Frlg YOUNG_COUPLE
+    { TRAINER_WAYFARER_SEVII_PKMN_RANGER_NICOLAS, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), { 4, 0 }, 44, 0, { OBJ_EVENT_GFX_CAMPER_FRLG, 0 }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Entrance_EventScript_Nicolas, NULL } }, // SevenIsland_SevaultCanyon_Entrance_Frlg !WAYFARER_SEVII_PKMN_RANGER_NICOLAS
+    { TRAINER_WAYFARER_SEVII_PKMN_RANGER_MADELINE, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), { 5, 0 }, 74, 0, { OBJ_EVENT_GFX_PICNICKER_FRLG, 0 }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Entrance_EventScript_Madeline, NULL } }, // SevenIsland_SevaultCanyon_Entrance_Frlg PKMN_RANGER
+    { TRAINER_WAYFARER_SEVII_JUGGLER_MASON, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), { 6, 0 }, 68, 0, { OBJ_EVENT_GFX_ROCKER, 0 }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Entrance_EventScript_Mason, NULL } }, // SevenIsland_SevaultCanyon_Entrance_Frlg JUGGLER
+    { TRAINER_WAYFARER_SEVII_CRUSH_GIRL_CYNDY, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON), { 1, 0 }, 43, 0, { OBJ_EVENT_GFX_BATTLE_GIRL, 0 }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Cyndy, NULL } }, // SevenIsland_SevaultCanyon_Frlg !WAYFARER_SEVII_CRUSH_GIRL_CYNDY
+    { TRAINER_WAYFARER_SEVII_TAMER_EVAN, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON), { 2, 0 }, 80, 0, { OBJ_EVENT_GFX_MAN, 0 }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Evan, NULL } }, // SevenIsland_SevaultCanyon_Frlg TAMER
+    { TRAINER_WAYFARER_SEVII_PKMN_RANGER_JACKSON, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON), { 3, 0 }, 74, 0, { OBJ_EVENT_GFX_CAMPER_FRLG, 0 }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Jackson, NULL } }, // SevenIsland_SevaultCanyon_Frlg PKMN_RANGER
+    { TRAINER_WAYFARER_SEVII_PKMN_RANGER_KATELYN, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON), { 4, 0 }, 74, 0, { OBJ_EVENT_GFX_PICNICKER_FRLG, 0 }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Katelyn, NULL } }, // SevenIsland_SevaultCanyon_Frlg PKMN_RANGER
+    { TRAINER_WAYFARER_SEVII_COOLTRAINER_LEROY, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON), { 5, 0 }, 61, 0, { OBJ_EVENT_GFX_COOLTRAINER_M, 0 }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Leroy, NULL } }, // SevenIsland_SevaultCanyon_Frlg COOLTRAINER
+    { TRAINER_WAYFARER_SEVII_COOLTRAINER_MICHELLE, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON), { 6, 0 }, 61, 0, { OBJ_EVENT_GFX_COOLTRAINER_F, 0 }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Michelle, NULL } }, // SevenIsland_SevaultCanyon_Frlg COOLTRAINER
+    { TRAINER_WAYFARER_SEVII_COOL_COUPLE_LEX_NYA, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON), { 7, 8 }, 62, WORLD_TRAINER_SLOT_PAIR, { OBJ_EVENT_GFX_COOLTRAINER_M, OBJ_EVENT_GFX_COOLTRAINER_F }, { WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Lex, WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_EventScript_Nya } }, // SevenIsland_SevaultCanyon_Frlg COOL_COUPLE
+    { TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BRANDON, MAP_GROUP(MAP_SEVEN_ISLAND_TANOBY_RUINS), MAP_NUM(MAP_SEVEN_ISLAND_TANOBY_RUINS), { 1, 0 }, 48, 0, { OBJ_EVENT_GFX_HIKER_FRLG, 0 }, { WayfarerSevii_Trainer_SevenIsland_TanobyRuins_EventScript_Brandon, NULL } }, // SevenIsland_TanobyRuins_Frlg !WAYFARER_SEVII_RUIN_MANIAC_BRANDON
+    { TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BENJAMIN, MAP_GROUP(MAP_SEVEN_ISLAND_TANOBY_RUINS), MAP_NUM(MAP_SEVEN_ISLAND_TANOBY_RUINS), { 2, 0 }, 76, 0, { OBJ_EVENT_GFX_HIKER_FRLG, 0 }, { WayfarerSevii_Trainer_SevenIsland_TanobyRuins_EventScript_Benjamin, NULL } }, // SevenIsland_TanobyRuins_Frlg RUIN_MANIAC
+    { TRAINER_WAYFARER_SEVII_PAINTER_EDNA, MAP_GROUP(MAP_SEVEN_ISLAND_TANOBY_RUINS), MAP_NUM(MAP_SEVEN_ISLAND_TANOBY_RUINS), { 3, 0 }, 71, 0, { OBJ_EVENT_GFX_LASS_FRLG, 0 }, { WayfarerSevii_Trainer_SevenIsland_TanobyRuins_EventScript_Edna, NULL } }, // SevenIsland_TanobyRuins_Frlg PAINTER
+    { TRAINER_WAYFARER_SEVII_GENTLEMAN_CLIFFORD, MAP_GROUP(MAP_SEVEN_ISLAND_TANOBY_RUINS), MAP_NUM(MAP_SEVEN_ISLAND_TANOBY_RUINS), { 4, 0 }, 66, 0, { OBJ_EVENT_GFX_GENTLEMAN_FRLG, 0 }, { WayfarerSevii_Trainer_SevenIsland_TanobyRuins_EventScript_Clifford, NULL } }, // SevenIsland_TanobyRuins_Frlg GENTLEMAN
 };
 
 // The slots of each group in a fixed order (ascending slot index), flat; a group is a start and a count.
 static const u16 sWorldTrainerGroupSlots[] =
 {
-    477, 490, 452, 453, 456, 95, 77, 78, 97, 104, 105, 106,
-    107, 71, 93, 108, 481, 154, 155, 455, 73, 79, 102, 68,
-    69, 89, 90, 91, 486, 487, 491, 82, 83, 92, 98, 100,
-    70, 72, 80, 81, 74, 84, 94, 96, 85, 88, 99, 101,
-    103, 450, 454, 479, 489, 75, 76, 109, 478, 480, 485, 471,
-    472, 473, 474, 475, 476, 482, 483, 484, 488, 492, 493, 494,
-    66, 67, 86, 87, 451, 505, 506, 532, 519, 520, 501, 462,
-    463, 468, 502, 539, 540, 541, 457, 499, 500, 504, 498, 521,
-    544, 528, 530, 524, 535, 514, 515, 466, 467, 511, 512, 513,
-    543, 469, 503, 460, 461, 518, 458, 459, 534, 537, 538, 523,
-    531, 470, 529, 542, 522, 495, 496, 509, 526, 497, 517, 525,
-    536, 507, 508, 510, 527, 464, 465, 516, 533, 131, 132, 133,
-    135, 124, 30, 32, 18, 53, 121, 57, 0, 2, 141, 118,
-    119, 5, 12, 20, 21, 60, 63, 14, 15, 52, 54, 56,
-    111, 112, 113, 114, 116, 138, 139, 140, 151, 153, 22, 6,
-    7, 8, 45, 49, 50, 117, 149, 150, 122, 43, 55, 58,
-    59, 61, 62, 130, 134, 23, 29, 144, 34, 142, 4, 16,
-    17, 19, 11, 35, 145, 42, 44, 46, 47, 51, 136, 137,
-    147, 24, 27, 33, 48, 110, 115, 129, 125, 126, 127, 128,
-    28, 120, 123, 25, 31, 143, 146, 148, 36, 39, 40, 41,
-    37, 38, 26, 152, 1, 3, 9, 10, 13, 64, 65, 166,
-    163, 164, 158, 165, 167, 162, 157, 160, 159, 161, 156, 443,
-    270, 231, 235, 243, 427, 444, 449, 172, 241, 249, 296, 341,
-    275, 293, 330, 415, 334, 445, 191, 256, 295, 298, 312, 313,
-    319, 320, 348, 361, 375, 411, 176, 237, 269, 271, 376, 397,
-    412, 426, 432, 169, 279, 302, 308, 309, 351, 420, 421, 290,
-    303, 304, 306, 323, 232, 234, 236, 240, 245, 247, 254, 259,
-    223, 272, 346, 205, 238, 239, 324, 331, 337, 338, 339, 340,
-    350, 377, 378, 379, 400, 402, 406, 413, 435, 436, 437, 438,
-    439, 440, 441, 442, 417, 268, 349, 362, 399, 401, 407, 408,
-    174, 181, 186, 195, 196, 213, 224, 262, 267, 297, 299, 315,
-    372, 373, 374, 398, 333, 177, 230, 300, 318, 347, 431, 433,
-    246, 257, 258, 285, 419, 242, 263, 317, 184, 282, 170, 180,
-    280, 274, 310, 311, 314, 328, 329, 344, 418, 251, 316, 326,
-    327, 345, 244, 248, 255, 260, 265, 266, 422, 287, 288, 335,
-    336, 430, 305, 307, 321, 322, 175, 227, 228, 253, 261, 424,
-    221, 222, 276, 277, 292, 343, 428, 429, 434, 183, 283, 190,
-    192, 233, 325, 448, 206, 209, 414, 416, 281, 200, 355, 264,
-    291, 332, 178, 188, 189, 194, 199, 203, 204, 208, 354, 360,
-    364, 365, 366, 380, 384, 388, 392, 393, 396, 404, 405, 410,
-    179, 187, 193, 197, 198, 202, 207, 352, 353, 356, 358, 359,
-    363, 369, 381, 385, 386, 387, 389, 390, 391, 395, 403, 409,
-    201, 217, 218, 219, 220, 225, 229, 273, 286, 289, 294, 357,
-    367, 368, 370, 371, 382, 383, 394, 423, 210, 211, 212, 215,
-    216, 173, 182, 252, 342, 168, 171, 185, 226, 250, 278, 284,
-    301, 446, 214, 425, 447,
+    114, 135, 103, 97, 125, 116, 196, 105, 581, 577, 572, 574,
+    576, 584, 571, 590, 543, 544, 547, 120, 98, 99, 122, 130,
+    131, 132, 133, 91, 118, 134, 579, 194, 195, 546, 93, 100,
+    128, 88, 89, 112, 113, 115, 586, 587, 591, 104, 106, 117,
+    123, 126, 90, 92, 101, 102, 94, 107, 119, 121, 108, 111,
+    124, 127, 129, 541, 545, 575, 589, 95, 96, 136, 573, 578,
+    585, 565, 566, 567, 568, 569, 570, 580, 582, 583, 588, 592,
+    593, 594, 86, 87, 109, 110, 542, 630, 609, 622, 602, 553,
+    648, 645, 640, 564, 642, 655, 637, 638, 562, 627, 597, 626,
+    607, 608, 643, 623, 624, 603, 554, 555, 560, 604, 652, 653,
+    654, 548, 600, 601, 606, 599, 625, 658, 635, 639, 631, 647,
+    617, 618, 558, 559, 614, 615, 616, 657, 561, 605, 551, 552,
+    621, 549, 550, 646, 650, 651, 629, 641, 563, 636, 656, 628,
+    595, 596, 612, 633, 598, 620, 632, 649, 610, 611, 613, 634,
+    556, 557, 619, 644, 150, 68, 11, 27, 46, 155, 191, 156,
+    42, 71, 80, 41, 138, 51, 17, 142, 49, 50, 154, 52,
+    54, 183, 160, 10, 78, 184, 167, 43, 58, 165, 151, 59,
+    35, 168, 169, 170, 172, 158, 34, 37, 21, 70, 152, 75,
+    0, 2, 178, 147, 148, 5, 14, 23, 24, 79, 83, 16,
+    18, 69, 72, 74, 139, 140, 141, 143, 145, 175, 176, 177,
+    190, 193, 25, 6, 7, 8, 61, 65, 66, 146, 188, 189,
+    153, 57, 73, 76, 77, 81, 82, 166, 171, 26, 33, 181,
+    39, 179, 4, 19, 20, 22, 13, 40, 182, 56, 60, 62,
+    63, 67, 173, 174, 186, 28, 31, 38, 64, 137, 144, 164,
+    159, 161, 162, 163, 32, 149, 157, 29, 36, 180, 185, 187,
+    44, 48, 53, 55, 45, 47, 30, 192, 1, 3, 9, 12,
+    15, 84, 85, 199, 201, 204, 200, 210, 209, 208, 214, 211,
+    212, 202, 213, 215, 207, 198, 205, 203, 206, 197, 490, 484,
+    297, 306, 399, 408, 530, 423, 340, 322, 436, 248, 504, 236,
+    537, 270, 502, 431, 503, 533, 527, 260, 290, 451, 308, 421,
+    343, 452, 471, 432, 410, 254, 525, 529, 522, 470, 262, 523,
+    397, 429, 305, 395, 453, 532, 330, 285, 289, 299, 510, 534,
+    540, 220, 296, 307, 358, 406, 335, 355, 392, 495, 398, 535,
+    240, 315, 357, 360, 374, 375, 381, 382, 415, 433, 448, 491,
+    224, 292, 329, 331, 449, 475, 492, 509, 515, 217, 339, 364,
+    370, 371, 418, 500, 501, 352, 365, 366, 368, 385, 286, 288,
+    291, 295, 301, 303, 313, 318, 277, 332, 413, 256, 293, 294,
+    386, 393, 402, 403, 404, 405, 417, 450, 454, 455, 478, 480,
+    485, 493, 518, 519, 520, 521, 524, 526, 528, 531, 497, 328,
+    416, 434, 477, 479, 486, 487, 222, 229, 234, 244, 245, 266,
+    278, 321, 327, 359, 361, 377, 445, 446, 447, 476, 396, 225,
+    284, 362, 380, 414, 514, 516, 302, 316, 317, 347, 499, 298,
+    323, 379, 232, 344, 218, 228, 341, 334, 372, 373, 376, 390,
+    391, 411, 498, 310, 378, 388, 389, 412, 300, 304, 314, 319,
+    325, 326, 505, 349, 350, 400, 401, 513, 367, 369, 383, 384,
+    223, 281, 282, 312, 320, 507, 275, 276, 336, 337, 354, 409,
+    511, 512, 517, 231, 345, 239, 241, 287, 387, 539, 257, 261,
+    494, 496, 342, 250, 424, 324, 353, 394, 226, 237, 238, 243,
+    249, 253, 255, 259, 422, 430, 437, 438, 439, 456, 460, 464,
+    468, 469, 474, 482, 483, 489, 227, 235, 242, 246, 247, 252,
+    258, 419, 420, 425, 427, 428, 435, 442, 457, 461, 462, 463,
+    465, 466, 467, 473, 481, 488, 251, 271, 272, 273, 274, 279,
+    283, 333, 348, 351, 356, 426, 440, 441, 443, 444, 458, 459,
+    472, 506, 263, 264, 265, 268, 269, 221, 230, 311, 407, 216,
+    219, 233, 280, 309, 338, 346, 363, 536, 267, 508, 538,
 };
 
 static const struct WorldTrainerGroup sWorldTrainerGroups[WORLD_TRAINER_GROUP_COUNT] =
 {
-    { 0, 2 }, // 0: Kanto @coast
-    { 2, 3 }, // 1: Kanto @mansion
-    { 5, 1 }, // 2: Kanto BATTLE_GIRL
-    { 6, 7 }, // 3: Kanto BIKER
-    { 13, 4 }, // 4: Kanto BIRD_KEEPER
-    { 17, 2 }, // 5: Kanto BUG_CATCHER
-    { 19, 1 }, // 6: Kanto BURGLAR
-    { 20, 2 }, // 7: Kanto CAMPER
-    { 22, 1 }, // 8: Kanto EXPERT
-    { 23, 2 }, // 9: Kanto FIREBREATHER
-    { 25, 6 }, // 10: Kanto FISHERMAN
-    { 31, 2 }, // 11: Kanto HIKER
-    { 33, 2 }, // 12: Kanto JUGGLER
-    { 35, 1 }, // 13: Kanto LASS
-    { 36, 4 }, // 14: Kanto PICNICKER
-    { 40, 4 }, // 15: Kanto POKEFAN
-    { 44, 2 }, // 16: Kanto PSYCHIC_M
-    { 46, 3 }, // 17: Kanto SCHOOL_KID
-    { 49, 2 }, // 18: Kanto SCIENTIST
-    { 51, 2 }, // 19: Kanto SIS_AND_BRO (pairs)
-    { 53, 3 }, // 20: Kanto SUPER_NERD
-    { 56, 3 }, // 21: Kanto SWIMMER_F
-    { 59, 13 }, // 22: Kanto SWIMMER_M
-    { 72, 5 }, // 23: Kanto YOUNGSTER
-    { 77, 1 }, // 24: Sevii @coast
-    { 78, 2 }, // 25: Sevii AROMA_LADY
-    { 80, 2 }, // 26: Sevii BIRD_KEEPER
-    { 82, 1 }, // 27: Sevii BLACK_BELT
-    { 83, 2 }, // 28: Sevii BUG_CATCHER
-    { 85, 2 }, // 29: Sevii CAMPER
-    { 87, 2 }, // 30: Sevii COOLTRAINER
-    { 89, 1 }, // 31: Sevii COOL_COUPLE (pairs)
-    { 90, 3 }, // 32: Sevii CRUSH_GIRL
-    { 93, 1 }, // 33: Sevii CRUSH_KIN (pairs)
-    { 94, 2 }, // 34: Sevii FISHERMAN
-    { 96, 1 }, // 35: Sevii GENTLEMAN
-    { 97, 2 }, // 36: Sevii HIKER
-    { 99, 2 }, // 37: Sevii JUGGLER
-    { 101, 2 }, // 38: Sevii LADY
-    { 103, 2 }, // 39: Sevii LASS
-    { 105, 4 }, // 40: Sevii PAINTER
-    { 109, 2 }, // 41: Sevii PICNICKER
-    { 111, 3 }, // 42: Sevii PKMN_BREEDER
-    { 114, 5 }, // 43: Sevii PKMN_RANGER
-    { 119, 2 }, // 44: Sevii PSYCHIC
-    { 121, 3 }, // 45: Sevii RUIN_MANIAC
-    { 124, 1 }, // 46: Sevii SIS_AND_BRO (pairs)
-    { 125, 4 }, // 47: Sevii SWIMMER_F
-    { 129, 3 }, // 48: Sevii SWIMMER_M
-    { 132, 1 }, // 49: Sevii TAMER
-    { 133, 2 }, // 50: Sevii TUBER
-    { 135, 2 }, // 51: Sevii TWINS (pairs)
-    { 137, 3 }, // 52: Sevii YOUNGSTER
-    { 140, 1 }, // 53: Sevii YOUNG_COUPLE (pairs)
-    { 141, 4 }, // 54: Johto @cave
-    { 145, 1 }, // 55: Johto @tower
-    { 146, 2 }, // 56: Johto BEAUTY
-    { 148, 3 }, // 57: Johto BIRD_KEEPER
-    { 151, 1 }, // 58: Johto BLACK_BELT
-    { 152, 3 }, // 59: Johto BUG_CATCHER
-    { 155, 2 }, // 60: Johto BURGLAR
-    { 157, 6 }, // 61: Johto CAMPER
-    { 163, 15 }, // 62: Johto COOLTRAINER
-    { 178, 1 }, // 63: Johto FIREBREATHER
-    { 179, 9 }, // 64: Johto FISHERMAN
-    { 188, 1 }, // 65: Johto GENTLEMAN
-    { 189, 8 }, // 66: Johto HIKER
-    { 197, 1 }, // 67: Johto JUGGLER
-    { 198, 2 }, // 68: Johto LASS
-    { 200, 2 }, // 69: Johto PARASOL_LADY
-    { 202, 4 }, // 70: Johto PICNICKER
-    { 206, 3 }, // 71: Johto POKEFAN
-    { 209, 8 }, // 72: Johto POKEMANIAC
-    { 217, 7 }, // 73: Johto PSYCHIC_M
-    { 224, 4 }, // 74: Johto SAGE
-    { 228, 3 }, // 75: Johto SAILOR
-    { 231, 3 }, // 76: Johto SCHOOL_KID
-    { 234, 2 }, // 77: Johto SUPER_NERD
-    { 236, 4 }, // 78: Johto SWIMMER_F
-    { 240, 2 }, // 79: Johto SWIMMER_M
-    { 242, 2 }, // 80: Johto TWINS (pairs)
-    { 244, 5 }, // 81: Johto YOUNGSTER
-    { 249, 2 }, // 82: Johto YOUNG_COUPLE (pairs)
-    { 251, 1 }, // 83: Alola @cave
-    { 252, 2 }, // 84: Alola BUG_CATCHER
-    { 254, 2 }, // 85: Alola CAMPER
-    { 256, 1 }, // 86: Alola HIKER
-    { 257, 1 }, // 87: Alola PICNICKER
-    { 258, 2 }, // 88: Alola SWIMMER_F
-    { 260, 2 }, // 89: Alola SWIMMER_M
-    { 262, 1 }, // 90: Alola TUBER_M
-    { 263, 1 }, // 91: Hoenn @cave
-    { 264, 1 }, // 92: Hoenn @coast
-    { 265, 3 }, // 93: Hoenn @desert
-    { 268, 1 }, // 94: Hoenn @mountain
-    { 269, 2 }, // 95: Hoenn @ship
-    { 271, 5 }, // 96: Hoenn AROMA_LADY
-    { 276, 4 }, // 97: Hoenn BATTLE_GIRL
-    { 280, 2 }, // 98: Hoenn BEAUTY
-    { 282, 12 }, // 99: Hoenn BIRD_KEEPER
-    { 294, 9 }, // 100: Hoenn BLACK_BELT
-    { 303, 8 }, // 101: Hoenn BUG_CATCHER
-    { 311, 5 }, // 102: Hoenn BUG_MANIAC
-    { 316, 8 }, // 103: Hoenn CAMPER
-    { 324, 3 }, // 104: Hoenn COLLECTOR
-    { 327, 25 }, // 105: Hoenn COOLTRAINER
-    { 352, 1 }, // 106: Hoenn DRAGON_TAMER
-    { 353, 7 }, // 107: Hoenn EXPERT
-    { 360, 16 }, // 108: Hoenn FISHERMAN
-    { 376, 1 }, // 109: Hoenn GENTLEMAN
-    { 377, 5 }, // 110: Hoenn GUITARIST
-    { 382, 2 }, // 111: Hoenn HEX_MANIAC
-    { 384, 5 }, // 112: Hoenn HIKER
-    { 389, 3 }, // 113: Hoenn KINDLER
-    { 392, 2 }, // 114: Hoenn LADY
-    { 394, 3 }, // 115: Hoenn LASS
-    { 397, 7 }, // 116: Hoenn NINJA_BOY
-    { 404, 1 }, // 117: Hoenn OLD_COUPLE (pairs)
-    { 405, 5 }, // 118: Hoenn PARASOL_LADY
-    { 410, 7 }, // 119: Hoenn PICNICKER
-    { 417, 5 }, // 120: Hoenn PKMN_BREEDER
-    { 422, 4 }, // 121: Hoenn PKMN_RANGER
-    { 426, 3 }, // 122: Hoenn POKEFAN
-    { 429, 3 }, // 123: Hoenn POKEMANIAC
-    { 432, 9 }, // 124: Hoenn PSYCHIC
-    { 441, 2 }, // 125: Hoenn RICH_BOY
-    { 443, 5 }, // 126: Hoenn RUIN_MANIAC
-    { 448, 4 }, // 127: Hoenn SAILOR
-    { 452, 1 }, // 128: Hoenn SCHOOL_KID
-    { 453, 2 }, // 129: Hoenn SIS_AND_BRO (pairs)
-    { 455, 3 }, // 130: Hoenn SR_AND_JR (pairs)
-    { 458, 22 }, // 131: Hoenn SWIMMER_F
-    { 480, 24 }, // 132: Hoenn SWIMMER_M
-    { 504, 20 }, // 133: Hoenn TRIATHLETE
-    { 524, 4 }, // 134: Hoenn TUBER_F
-    { 528, 1 }, // 135: Hoenn TUBER_M
-    { 529, 4 }, // 136: Hoenn TWINS (pairs)
-    { 533, 9 }, // 137: Hoenn YOUNGSTER
-    { 542, 3 }, // 138: Hoenn YOUNG_COUPLE (pairs)
+    { 0, 1 }, // 0: Kanto !BARNEY_HNS
+    { 1, 1 }, // 1: Kanto !BOB_HNS
+    { 2, 1 }, // 2: Kanto !DEAN_HNS
+    { 3, 1 }, // 3: Kanto !HARRIS_HNS
+    { 4, 1 }, // 4: Kanto !JOHNNY_HNS
+    { 5, 1 }, // 5: Kanto !KENNY_HNS
+    { 6, 1 }, // 6: Kanto !ROB_HNS
+    { 7, 1 }, // 7: Kanto !SIDNEY_HNS
+    { 8, 1 }, // 8: Kanto !WAYFARER_COAST_PICNICKER_IRENE
+    { 9, 1 }, // 9: Kanto !WAYFARER_COAST_PICNICKER_MISSY
+    { 10, 1 }, // 10: Kanto !WAYFARER_COAST_SWIMMER_FEMALE_ALICE
+    { 11, 1 }, // 11: Kanto !WAYFARER_COAST_SWIMMER_FEMALE_ANYA
+    { 12, 1 }, // 12: Kanto !WAYFARER_COAST_SWIMMER_FEMALE_MELISSA
+    { 13, 1 }, // 13: Kanto !WAYFARER_COAST_SWIMMER_FEMALE_SHIRLEY
+    { 14, 2 }, // 14: Kanto @coast
+    { 16, 3 }, // 15: Kanto @mansion
+    { 19, 1 }, // 16: Kanto BATTLE_GIRL
+    { 20, 7 }, // 17: Kanto BIKER
+    { 27, 4 }, // 18: Kanto BIRD_KEEPER
+    { 31, 2 }, // 19: Kanto BUG_CATCHER
+    { 33, 1 }, // 20: Kanto BURGLAR
+    { 34, 2 }, // 21: Kanto CAMPER
+    { 36, 1 }, // 22: Kanto EXPERT
+    { 37, 2 }, // 23: Kanto FIREBREATHER
+    { 39, 6 }, // 24: Kanto FISHERMAN
+    { 45, 2 }, // 25: Kanto HIKER
+    { 47, 2 }, // 26: Kanto JUGGLER
+    { 49, 1 }, // 27: Kanto LASS
+    { 50, 4 }, // 28: Kanto PICNICKER
+    { 54, 4 }, // 29: Kanto POKEFAN
+    { 58, 2 }, // 30: Kanto PSYCHIC_M
+    { 60, 3 }, // 31: Kanto SCHOOL_KID
+    { 63, 2 }, // 32: Kanto SCIENTIST
+    { 65, 2 }, // 33: Kanto SIS_AND_BRO (pairs)
+    { 67, 3 }, // 34: Kanto SUPER_NERD
+    { 70, 3 }, // 35: Kanto SWIMMER_F
+    { 73, 13 }, // 36: Kanto SWIMMER_M
+    { 86, 5 }, // 37: Kanto YOUNGSTER
+    { 91, 1 }, // 38: Sevii !WAYFARER_SEVII_AROMA_LADY_ROSE
+    { 92, 1 }, // 39: Sevii !WAYFARER_SEVII_AROMA_LADY_VIOLET
+    { 93, 1 }, // 40: Sevii !WAYFARER_SEVII_BIRD_KEEPER_MILO
+    { 94, 1 }, // 41: Sevii !WAYFARER_SEVII_BLACK_BELT_SHEA
+    { 95, 1 }, // 42: Sevii !WAYFARER_SEVII_BUG_CATCHER_GARRET
+    { 96, 1 }, // 43: Sevii !WAYFARER_SEVII_CRUSH_GIRL_CYNDY
+    { 97, 1 }, // 44: Sevii !WAYFARER_SEVII_PKMN_RANGER_NICOLAS
+    { 98, 1 }, // 45: Sevii !WAYFARER_SEVII_POKEMANIAC_HECTOR
+    { 99, 1 }, // 46: Sevii !WAYFARER_SEVII_PSYCHIC_LAURA
+    { 100, 1 }, // 47: Sevii !WAYFARER_SEVII_PSYCHIC_RODETTE
+    { 101, 1 }, // 48: Sevii !WAYFARER_SEVII_RUIN_MANIAC_BRANDON
+    { 102, 1 }, // 49: Sevii !WAYFARER_SEVII_RUIN_MANIAC_FOSTER
+    { 103, 1 }, // 50: Sevii !WAYFARER_SEVII_RUIN_MANIAC_LARRY
+    { 104, 1 }, // 51: Sevii !WAYFARER_SEVII_RUIN_MANIAC_LAYTON
+    { 105, 1 }, // 52: Sevii !WAYFARER_SEVII_SWIMMER_FEMALE_NICOLE
+    { 106, 1 }, // 53: Sevii !WAYFARER_SEVII_SWIMMER_MALE_FINN
+    { 107, 1 }, // 54: Sevii !WAYFARER_SEVII_SWIMMER_MALE_MYMO
+    { 108, 1 }, // 55: Sevii @coast
+    { 109, 2 }, // 56: Sevii AROMA_LADY
+    { 111, 2 }, // 57: Sevii BIRD_KEEPER
+    { 113, 1 }, // 58: Sevii BLACK_BELT
+    { 114, 2 }, // 59: Sevii BUG_CATCHER
+    { 116, 2 }, // 60: Sevii CAMPER
+    { 118, 2 }, // 61: Sevii COOLTRAINER
+    { 120, 1 }, // 62: Sevii COOL_COUPLE (pairs)
+    { 121, 3 }, // 63: Sevii CRUSH_GIRL
+    { 124, 1 }, // 64: Sevii CRUSH_KIN (pairs)
+    { 125, 2 }, // 65: Sevii FISHERMAN
+    { 127, 1 }, // 66: Sevii GENTLEMAN
+    { 128, 2 }, // 67: Sevii HIKER
+    { 130, 2 }, // 68: Sevii JUGGLER
+    { 132, 2 }, // 69: Sevii LADY
+    { 134, 2 }, // 70: Sevii LASS
+    { 136, 4 }, // 71: Sevii PAINTER
+    { 140, 2 }, // 72: Sevii PICNICKER
+    { 142, 3 }, // 73: Sevii PKMN_BREEDER
+    { 145, 5 }, // 74: Sevii PKMN_RANGER
+    { 150, 2 }, // 75: Sevii PSYCHIC
+    { 152, 3 }, // 76: Sevii RUIN_MANIAC
+    { 155, 1 }, // 77: Sevii SIS_AND_BRO (pairs)
+    { 156, 4 }, // 78: Sevii SWIMMER_F
+    { 160, 3 }, // 79: Sevii SWIMMER_M
+    { 163, 1 }, // 80: Sevii TAMER
+    { 164, 2 }, // 81: Sevii TUBER
+    { 166, 2 }, // 82: Sevii TWINS (pairs)
+    { 168, 3 }, // 83: Sevii YOUNGSTER
+    { 171, 1 }, // 84: Sevii YOUNG_COUPLE (pairs)
+    { 172, 1 }, // 85: Johto !ALFRED_HNS
+    { 173, 1 }, // 86: Johto !ALLEN_HNS
+    { 174, 1 }, // 87: Johto !ANTHONY_HNS
+    { 175, 1 }, // 88: Johto !ARNIE_HNS
+    { 176, 1 }, // 89: Johto !BERKE_HNS
+    { 177, 1 }, // 90: Johto !CONNIE_HNS
+    { 178, 1 }, // 91: Johto !DARIN_HNS
+    { 179, 1 }, // 92: Johto !DENIS_HNS
+    { 180, 1 }, // 93: Johto !ELAINE_HNS
+    { 181, 1 }, // 94: Johto !ERIK_HNS
+    { 182, 1 }, // 95: Johto !ERIN_HNS
+    { 183, 1 }, // 96: Johto !EUGENE_HNS
+    { 184, 1 }, // 97: Johto !GAVEN_HNS
+    { 185, 1 }, // 98: Johto !GEORGE_HNS
+    { 186, 1 }, // 99: Johto !IRENE_HNS
+    { 187, 1 }, // 100: Johto !JOSE_HNS
+    { 188, 1 }, // 101: Johto !KARA_HNS
+    { 189, 1 }, // 102: Johto !KAYLEE_HNS
+    { 190, 1 }, // 103: Johto !KENT_HNS
+    { 191, 1 }, // 104: Johto !KIRK_HNS
+    { 192, 1 }, // 105: Johto !MATHEW_HNS
+    { 193, 1 }, // 106: Johto !NARD_HNS
+    { 194, 1 }, // 107: Johto !NICO_HNS
+    { 195, 1 }, // 108: Johto !PETER_HNS
+    { 196, 1 }, // 109: Johto !QUENTIN_HNS
+    { 197, 1 }, // 110: Johto !RICHARDO_HNS
+    { 198, 1 }, // 111: Johto !RUSSELL_HNS
+    { 199, 1 }, // 112: Johto !SIMON_HNS
+    { 200, 1 }, // 113: Johto !SPENCER_HNS
+    { 201, 1 }, // 114: Johto !STAN_HNS
+    { 202, 1 }, // 115: Johto !TERRELL_HNS
+    { 203, 1 }, // 116: Johto !TIFFANY_HNS
+    { 204, 1 }, // 117: Johto !TOBY_HNS
+    { 205, 4 }, // 118: Johto @cave
+    { 209, 1 }, // 119: Johto @tower
+    { 210, 2 }, // 120: Johto BEAUTY
+    { 212, 3 }, // 121: Johto BIRD_KEEPER
+    { 215, 1 }, // 122: Johto BLACK_BELT
+    { 216, 3 }, // 123: Johto BUG_CATCHER
+    { 219, 2 }, // 124: Johto BURGLAR
+    { 221, 6 }, // 125: Johto CAMPER
+    { 227, 15 }, // 126: Johto COOLTRAINER
+    { 242, 1 }, // 127: Johto FIREBREATHER
+    { 243, 9 }, // 128: Johto FISHERMAN
+    { 252, 1 }, // 129: Johto GENTLEMAN
+    { 253, 8 }, // 130: Johto HIKER
+    { 261, 1 }, // 131: Johto JUGGLER
+    { 262, 2 }, // 132: Johto LASS
+    { 264, 2 }, // 133: Johto PARASOL_LADY
+    { 266, 4 }, // 134: Johto PICNICKER
+    { 270, 3 }, // 135: Johto POKEFAN
+    { 273, 8 }, // 136: Johto POKEMANIAC
+    { 281, 7 }, // 137: Johto PSYCHIC_M
+    { 288, 4 }, // 138: Johto SAGE
+    { 292, 3 }, // 139: Johto SAILOR
+    { 295, 3 }, // 140: Johto SCHOOL_KID
+    { 298, 2 }, // 141: Johto SUPER_NERD
+    { 300, 4 }, // 142: Johto SWIMMER_F
+    { 304, 2 }, // 143: Johto SWIMMER_M
+    { 306, 2 }, // 144: Johto TWINS (pairs)
+    { 308, 5 }, // 145: Johto YOUNGSTER
+    { 313, 2 }, // 146: Johto YOUNG_COUPLE (pairs)
+    { 315, 1 }, // 147: Alola !AKALA_HIKER_HNS
+    { 316, 1 }, // 148: Alola !AKALA_PICNICKER_HNS
+    { 317, 1 }, // 149: Alola !AKALA_SWIMMER_1_HNS
+    { 318, 1 }, // 150: Alola !AKALA_SWIMMER_2_HNS
+    { 319, 1 }, // 151: Alola !ULAULA_COOLTRAINER_HNS
+    { 320, 1 }, // 152: Alola !ULAULA_HIKER_HNS
+    { 321, 1 }, // 153: Alola !ULAULA_YOUNGSTER_HNS
+    { 322, 1 }, // 154: Alola @cave
+    { 323, 2 }, // 155: Alola BUG_CATCHER
+    { 325, 2 }, // 156: Alola CAMPER
+    { 327, 1 }, // 157: Alola HIKER
+    { 328, 1 }, // 158: Alola PICNICKER
+    { 329, 2 }, // 159: Alola SWIMMER_F
+    { 331, 2 }, // 160: Alola SWIMMER_M
+    { 333, 1 }, // 161: Alola TUBER_M
+    { 334, 1 }, // 162: Hoenn !AARON
+    { 335, 1 }, // 163: Hoenn !BECK
+    { 336, 1 }, // 164: Hoenn !BIANCA
+    { 337, 1 }, // 165: Hoenn !BRYANT
+    { 338, 1 }, // 166: Hoenn !CALE
+    { 339, 1 }, // 167: Hoenn !CAMERON_1
+    { 340, 1 }, // 168: Hoenn !CAROLINE
+    { 341, 1 }, // 169: Hoenn !CHAD
+    { 342, 1 }, // 170: Hoenn !CLARK
+    { 343, 1 }, // 171: Hoenn !CLAUDE
+    { 344, 1 }, // 172: Hoenn !DEAN
+    { 345, 1 }, // 173: Hoenn !DENISE
+    { 346, 1 }, // 174: Hoenn !DIANA_1
+    { 347, 1 }, // 175: Hoenn !DOMINIK
+    { 348, 1 }, // 176: Hoenn !DUNCAN
+    { 349, 1 }, // 177: Hoenn !ELIJAH
+    { 350, 1 }, // 178: Hoenn !ERIC
+    { 351, 1 }, // 179: Hoenn !ERNEST_1
+    { 352, 1 }, // 180: Hoenn !ETHAN_1
+    { 353, 1 }, // 181: Hoenn !FELIX
+    { 354, 1 }, // 182: Hoenn !HALLE
+    { 355, 1 }, // 183: Hoenn !HUEY
+    { 356, 1 }, // 184: Hoenn !IRENE
+    { 357, 1 }, // 185: Hoenn !ISAIAH_1
+    { 358, 1 }, // 186: Hoenn !JAYLEN
+    { 359, 1 }, // 187: Hoenn !JENNY_1
+    { 360, 1 }, // 188: Hoenn !JERRY_1
+    { 361, 1 }, // 189: Hoenn !KATELYN_1
+    { 362, 1 }, // 190: Hoenn !KEVIN
+    { 363, 1 }, // 191: Hoenn !KIM_AND_IRIS (pairs)
+    { 364, 1 }, // 192: Hoenn !KINDRA
+    { 365, 1 }, // 193: Hoenn !MATTHEW
+    { 366, 1 }, // 194: Hoenn !MICHELLE
+    { 367, 1 }, // 195: Hoenn !OWEN
+    { 368, 1 }, // 196: Hoenn !QUINCY
+    { 369, 1 }, // 197: Hoenn !RELI_AND_IAN (pairs)
+    { 370, 1 }, // 198: Hoenn !RICKY_1
+    { 371, 1 }, // 199: Hoenn !SAMUEL
+    { 372, 1 }, // 200: Hoenn !TAMMY
+    { 373, 1 }, // 201: Hoenn !TANYA
+    { 374, 1 }, // 202: Hoenn !TRENT_1
+    { 375, 1 }, // 203: Hoenn !VANESSA
+    { 376, 1 }, // 204: Hoenn !WAYNE
+    { 377, 1 }, // 205: Hoenn @cave
+    { 378, 1 }, // 206: Hoenn @coast
+    { 379, 3 }, // 207: Hoenn @desert
+    { 382, 1 }, // 208: Hoenn @mountain
+    { 383, 2 }, // 209: Hoenn @ship
+    { 385, 5 }, // 210: Hoenn AROMA_LADY
+    { 390, 4 }, // 211: Hoenn BATTLE_GIRL
+    { 394, 2 }, // 212: Hoenn BEAUTY
+    { 396, 12 }, // 213: Hoenn BIRD_KEEPER
+    { 408, 9 }, // 214: Hoenn BLACK_BELT
+    { 417, 8 }, // 215: Hoenn BUG_CATCHER
+    { 425, 5 }, // 216: Hoenn BUG_MANIAC
+    { 430, 8 }, // 217: Hoenn CAMPER
+    { 438, 3 }, // 218: Hoenn COLLECTOR
+    { 441, 25 }, // 219: Hoenn COOLTRAINER
+    { 466, 1 }, // 220: Hoenn DRAGON_TAMER
+    { 467, 7 }, // 221: Hoenn EXPERT
+    { 474, 16 }, // 222: Hoenn FISHERMAN
+    { 490, 1 }, // 223: Hoenn GENTLEMAN
+    { 491, 5 }, // 224: Hoenn GUITARIST
+    { 496, 2 }, // 225: Hoenn HEX_MANIAC
+    { 498, 5 }, // 226: Hoenn HIKER
+    { 503, 3 }, // 227: Hoenn KINDLER
+    { 506, 2 }, // 228: Hoenn LADY
+    { 508, 3 }, // 229: Hoenn LASS
+    { 511, 7 }, // 230: Hoenn NINJA_BOY
+    { 518, 1 }, // 231: Hoenn OLD_COUPLE (pairs)
+    { 519, 5 }, // 232: Hoenn PARASOL_LADY
+    { 524, 7 }, // 233: Hoenn PICNICKER
+    { 531, 5 }, // 234: Hoenn PKMN_BREEDER
+    { 536, 4 }, // 235: Hoenn PKMN_RANGER
+    { 540, 3 }, // 236: Hoenn POKEFAN
+    { 543, 3 }, // 237: Hoenn POKEMANIAC
+    { 546, 9 }, // 238: Hoenn PSYCHIC
+    { 555, 2 }, // 239: Hoenn RICH_BOY
+    { 557, 5 }, // 240: Hoenn RUIN_MANIAC
+    { 562, 4 }, // 241: Hoenn SAILOR
+    { 566, 1 }, // 242: Hoenn SCHOOL_KID
+    { 567, 2 }, // 243: Hoenn SIS_AND_BRO (pairs)
+    { 569, 3 }, // 244: Hoenn SR_AND_JR (pairs)
+    { 572, 22 }, // 245: Hoenn SWIMMER_F
+    { 594, 24 }, // 246: Hoenn SWIMMER_M
+    { 618, 20 }, // 247: Hoenn TRIATHLETE
+    { 638, 4 }, // 248: Hoenn TUBER_F
+    { 642, 1 }, // 249: Hoenn TUBER_M
+    { 643, 4 }, // 250: Hoenn TWINS (pairs)
+    { 647, 9 }, // 251: Hoenn YOUNGSTER
+    { 656, 3 }, // 252: Hoenn YOUNG_COUPLE (pairs)
 };
 
 // Fixed contacts stay at home: where a rematch family's first trainer stands (WhereIsTrainerToday).
 static const struct WorldTrainerFixedHome sWorldTrainerFixedHomes[] =
 {
     { TRAINER_JOEY_HNS, MAP_GROUP(MAP_ROUTE30_HNS), MAP_NUM(MAP_ROUTE30_HNS), 2 }, // Route30_hns
-    { TRAINER_ANTHONY_HNS, MAP_GROUP(MAP_ROUTE33_HNS), MAP_NUM(MAP_ROUTE33_HNS), 1 }, // Route33_hns
-    { TRAINER_ARNIE_HNS, MAP_GROUP(MAP_ROUTE35_HNS), MAP_NUM(MAP_ROUTE35_HNS), 9 }, // Route35_hns
-    { TRAINER_TIFFANY_HNS, MAP_GROUP(MAP_ROUTE43_HNS), MAP_NUM(MAP_ROUTE43_HNS), 2 }, // Route43_hns
-    { TRAINER_ERIN_HNS, MAP_GROUP(MAP_ROUTE46_HNS), MAP_NUM(MAP_ROUTE46_HNS), 6 }, // Route46_hns
-    { TRAINER_KENNY_HNS, MAP_GROUP(MAP_ROUTE13_HNS), MAP_NUM(MAP_ROUTE13_HNS), 1 }, // Route13_hns
-    { TRAINER_GAVEN_HNS, MAP_GROUP(MAP_ROUTE26_HNS), MAP_NUM(MAP_ROUTE26_HNS), 15 }, // Route26_hns
-    { TRAINER_JOSE_HNS, MAP_GROUP(MAP_ROUTE27_HNS), MAP_NUM(MAP_ROUTE27_HNS), 4 }, // Route27_hns
-    { TRAINER_ROB_HNS, MAP_GROUP(MAP_VIRIDIAN_FOREST_HNS), MAP_NUM(MAP_VIRIDIAN_FOREST_HNS), 8 }, // ViridianForest_hns
-    { TRAINER_RICKY_1, MAP_GROUP(MAP_ROUTE109), MAP_NUM(MAP_ROUTE109), 8 }, // Route109
-    { TRAINER_TRENT_1, MAP_GROUP(MAP_ROUTE112), MAP_NUM(MAP_ROUTE112), 5 }, // Route112
     { TRAINER_LAO_1, MAP_GROUP(MAP_ROUTE113), MAP_NUM(MAP_ROUTE113), 8 }, // Route113
-    { TRAINER_JERRY_1, MAP_GROUP(MAP_ROUTE116), MAP_NUM(MAP_ROUTE116), 18 }, // Route116
-    { TRAINER_CAMERON_1, MAP_GROUP(MAP_ROUTE123), MAP_NUM(MAP_ROUTE123), 29 }, // Route123
-    { TRAINER_JENNY_1, MAP_GROUP(MAP_ROUTE124), MAP_NUM(MAP_ROUTE124), 3 }, // Route124
-    { TRAINER_ERNEST_1, MAP_GROUP(MAP_ROUTE125), MAP_NUM(MAP_ROUTE125), 5 }, // Route125
-    { TRAINER_ISAIAH_1, MAP_GROUP(MAP_ROUTE128), MAP_NUM(MAP_ROUTE128), 1 }, // Route128
-    { TRAINER_KATELYN_1, MAP_GROUP(MAP_ROUTE128), MAP_NUM(MAP_ROUTE128), 2 }, // Route128
     { TRAINER_SHELBY_1, MAP_GROUP(MAP_MT_CHIMNEY), MAP_NUM(MAP_MT_CHIMNEY), 25 }, // MtChimney
     { TRAINER_SAWYER_1, MAP_GROUP(MAP_MT_CHIMNEY), MAP_NUM(MAP_MT_CHIMNEY), 30 }, // MtChimney
-    { TRAINER_ETHAN_1, MAP_GROUP(MAP_JAGGED_PASS), MAP_NUM(MAP_JAGGED_PASS), 2 }, // JaggedPass
-    { TRAINER_DIANA_1, MAP_GROUP(MAP_JAGGED_PASS), MAP_NUM(MAP_JAGGED_PASS), 4 }, // JaggedPass
-    { TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ALICE, MAP_GROUP(MAP_ROUTE19), MAP_NUM(MAP_ROUTE19), 8 }, // Route19_Frlg
-    { TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_MELISSA, MAP_GROUP(MAP_ROUTE20), MAP_NUM(MAP_ROUTE20), 1 }, // Route20_Frlg
-    { TRAINER_WAYFARER_COAST_PICNICKER_MISSY, MAP_GROUP(MAP_ROUTE20), MAP_NUM(MAP_ROUTE20), 2 }, // Route20_Frlg
-    { TRAINER_WAYFARER_SEVII_SWIMMER_MALE_FINN, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), 3 }, // OneIsland_KindleRoad_Frlg
-    { TRAINER_WAYFARER_SEVII_BLACK_BELT_SHEA, MAP_GROUP(MAP_ONE_ISLAND_KINDLE_ROAD), MAP_NUM(MAP_ONE_ISLAND_KINDLE_ROAD), 8 }, // OneIsland_KindleRoad_Frlg
-    { TRAINER_WAYFARER_SEVII_AROMA_LADY_VIOLET, MAP_GROUP(MAP_THREE_ISLAND_BOND_BRIDGE), MAP_NUM(MAP_THREE_ISLAND_BOND_BRIDGE), 2 }, // ThreeIsland_BondBridge_Frlg
-    { TRAINER_WAYFARER_SEVII_BIRD_KEEPER_MILO, MAP_GROUP(MAP_FIVE_ISLAND_MEMORIAL_PILLAR), MAP_NUM(MAP_FIVE_ISLAND_MEMORIAL_PILLAR), 2 }, // FiveIsland_MemorialPillar_Frlg
-    { TRAINER_WAYFARER_SEVII_SWIMMER_MALE_MYMO, MAP_GROUP(MAP_SIX_ISLAND_OUTCAST_ISLAND), MAP_NUM(MAP_SIX_ISLAND_OUTCAST_ISLAND), 3 }, // SixIsland_OutcastIsland_Frlg
-    { TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_NICOLE, MAP_GROUP(MAP_SIX_ISLAND_OUTCAST_ISLAND), MAP_NUM(MAP_SIX_ISLAND_OUTCAST_ISLAND), 4 }, // SixIsland_OutcastIsland_Frlg
-    { TRAINER_WAYFARER_SEVII_AROMA_LADY_ROSE, MAP_GROUP(MAP_SIX_ISLAND_WATER_PATH), MAP_NUM(MAP_SIX_ISLAND_WATER_PATH), 1 }, // SixIsland_WaterPath_Frlg
-    { TRAINER_WAYFARER_SEVII_RUIN_MANIAC_FOSTER, MAP_GROUP(MAP_SIX_ISLAND_RUIN_VALLEY), MAP_NUM(MAP_SIX_ISLAND_RUIN_VALLEY), 3 }, // SixIsland_RuinValley_Frlg
-    { TRAINER_WAYFARER_SEVII_RUIN_MANIAC_LARRY, MAP_GROUP(MAP_SIX_ISLAND_RUIN_VALLEY), MAP_NUM(MAP_SIX_ISLAND_RUIN_VALLEY), 4 }, // SixIsland_RuinValley_Frlg
-    { TRAINER_WAYFARER_SEVII_POKEMANIAC_HECTOR, MAP_GROUP(MAP_SIX_ISLAND_RUIN_VALLEY), MAP_NUM(MAP_SIX_ISLAND_RUIN_VALLEY), 6 }, // SixIsland_RuinValley_Frlg
-    { TRAINER_WAYFARER_SEVII_PSYCHIC_RODETTE, MAP_GROUP(MAP_SEVEN_ISLAND_TRAINER_TOWER), MAP_NUM(MAP_SEVEN_ISLAND_TRAINER_TOWER), 2 }, // SevenIsland_TrainerTower_Frlg
-    { TRAINER_WAYFARER_SEVII_PKMN_RANGER_NICOLAS, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE), 4 }, // SevenIsland_SevaultCanyon_Entrance_Frlg
-    { TRAINER_WAYFARER_SEVII_CRUSH_GIRL_CYNDY, MAP_GROUP(MAP_SEVEN_ISLAND_SEVAULT_CANYON), MAP_NUM(MAP_SEVEN_ISLAND_SEVAULT_CANYON), 1 }, // SevenIsland_SevaultCanyon_Frlg
-    { TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BRANDON, MAP_GROUP(MAP_SEVEN_ISLAND_TANOBY_RUINS), MAP_NUM(MAP_SEVEN_ISLAND_TANOBY_RUINS), 1 }, // SevenIsland_TanobyRuins_Frlg
 };
 
 // Contact index of each Sevii rematch family (255: not a phone contact).

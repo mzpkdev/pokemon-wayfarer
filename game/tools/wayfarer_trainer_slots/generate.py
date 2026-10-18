@@ -71,7 +71,7 @@ def class_family(klass, aliases):
 class Unit:
     """One trainer slot: the objects (one, or two for a pair) that show one home trainer."""
     __slots__ = ('objects', 'map_const', 'map_name', 'map_value', 'home', 'home_id', 'pair', 'klass', 'family', 'region', 'policy',
-                 'status', 'reason', 'texts', 'group', 'index', 'lines', 'gift', 'contact', 'map_type', 'place', 'place_phrases')
+                 'status', 'reason', 'texts', 'group', 'index', 'lines', 'gift', 'contact', 'map_type', 'place', 'place_phrases', 'home_only')
 
     def __init__(self, **fields):
         for slot in self.__slots__:
@@ -198,8 +198,8 @@ def run_audit(units, labels, errors, reviewed):
     for row in reviewed['dialogue']:
         if row['trainer'] in resolutions:
             errors.append(f'reviewed.json dialogue lists {row["trainer"]} twice')
-        if row['resolution'] not in ('exclude', 'reword', 'place') or not row.get('reason'):
-            errors.append(f'reviewed.json dialogue {row["trainer"]}: needs resolution exclude, reword or place and a reason')
+        if row['resolution'] not in ('exclude', 'home', 'reword', 'place') or not row.get('reason'):
+            errors.append(f'reviewed.json dialogue {row["trainer"]}: needs resolution exclude, home, reword or place and a reason')
         elif row['resolution'] == 'place' and (row.get('place') not in specs or not row.get('phrases')):
             errors.append(f'reviewed.json dialogue {row["trainer"]}: a place resolution needs a known place type and the phrases that need it')
         resolutions[row['trainer']] = row
@@ -228,6 +228,9 @@ def run_audit(units, labels, errors, reviewed):
             errors.append(f'dialogue audit: {unit.label} is marked reworded but a line still names a place ({hits[0][3][1]!r}); fix the line or the resolution')
         if row is not None and row['resolution'] == 'exclude':
             unit.status, unit.reason = 'fixed', 'dialogue audit: ' + row['reason']
+        elif row is not None and row['resolution'] == 'home':
+            # Dialogue bound to its place: the trainer rotates only into its own slot, a group of one.
+            unit.home_only, unit.reason = True, row['reason']
         elif row is not None and row['resolution'] == 'place':
             if not hits:
                 errors.append(f'dialogue audit: {unit.label} is assigned a place type but no line is flagged any more; remove the resolution')
@@ -283,7 +286,10 @@ def check_places(units, errors, root=ROOT):
 
 # ---------- groups and contacts ----------
 def group_label(unit):
-    """The kind of group a slot belongs to: its place type (marked with @) when its lines need one, else its class family."""
+    """The kind of group a slot belongs to: its own (marked with !) when its lines are bound to its place, its place type (marked
+    with @) when its lines need one, else its class family."""
+    if unit.home_only:
+        return '!' + unit.home.removeprefix('TRAINER_')
     return '@' + unit.place if unit.place else unit.family
 
 
@@ -297,6 +303,8 @@ def make_groups(units, errors):
     for index, unit in enumerate(rotating):
         unit.index = index
     by_key = {key: gid for gid, key in enumerate(keys)}
+    if len(keys) > 255:
+        errors.append(f'{len(keys)} trainer groups do not fit the u8 group field of a slot row')
     members = defaultdict(list)
     for unit in rotating:
         if not group_label(unit) or unit.region not in REGIONS:
@@ -405,16 +413,19 @@ def render_report(units, rotating, members, keys, flagged, resolutions, reviewed
     by_region = defaultdict(lambda: Counter())
     for unit in units:
         region = unit.region or region_of(unit.map_name)
-        by_region[region]['rotating' if unit.status == 'rotating' else 'fixed' if unit.policy == 'ORDINARY' else 'other'] += 1
-    lines += ['## Totals by region', '', 'A slot is one trainer or one pair. Rotating slots are the save\'s trainer slots; fixed are `ORDINARY` trainers that stay',
-              'at home (with the reason below); other are trainers the scaling classification keeps out of rotation (Gym members, bosses, ...).', '',
-              '| Region | Rotating | Fixed (ORDINARY) | Other trainers |', '| --- | ---: | ---: | ---: |']
+        kind = ('home-only' if unit.home_only else 'rotating') if unit.status == 'rotating' else 'fixed' if unit.policy == 'ORDINARY' else 'other'
+        by_region[region][kind] += 1
+    lines += ['## Totals by region', '', 'A slot is one trainer or one pair. Rotating slots are the save\'s trainer slots, in a class or place-type group; home-only slots',
+              'are rotating slots whose dialogue is bound to the place, so each is a group of one (the trainer is at home or away each day);',
+              'fixed are `ORDINARY` trainers that never leave home (with the reason below); other are trainers the scaling classification keeps',
+              'out of rotation (Gym members, bosses, ...).', '',
+              '| Region | Rotating | Home-only | Fixed (ORDINARY) | Other trainers |', '| --- | ---: | ---: | ---: | ---: |']
     for region in REGIONS:
         counts = by_region.get(region)
         if counts:
-            lines.append(f"| {region} | {counts['rotating']} | {counts['fixed']} | {counts['other']} |")
-    lines.append(f"| total | {len(rotating)} | {sum(1 for u in units if u.status == 'fixed' and u.policy == 'ORDINARY')} | "
-                 f"{sum(1 for u in units if u.policy != 'ORDINARY')} |")
+            lines.append(f"| {region} | {counts['rotating']} | {counts['home-only']} | {counts['fixed']} | {counts['other']} |")
+    lines.append(f"| total | {len(rotating) - sum(1 for u in rotating if u.home_only)} | {sum(1 for u in rotating if u.home_only)} | "
+                 f"{sum(1 for u in units if u.status == 'fixed' and u.policy == 'ORDINARY')} | {sum(1 for u in units if u.policy != 'ORDINARY')} |")
     lines += ['']
     reasons = Counter()
     for unit in units:
@@ -427,22 +438,25 @@ def render_report(units, rotating, members, keys, flagged, resolutions, reviewed
     lines += ['## Trainer groups', '',
               'One group per class family and region, split into singles and pairs, and one group per place type and region for the trainers',
               'whose lines need a kind of place (marked @, mixing classes; each slot is checked against `place_types.json`). Wanderers of a group',
-              'are its defeated trainers and fill its rotating slots, so a group of one slot never shows anyone but its own trainer.', '',
+              'are its defeated trainers and fill its rotating slots, so a group of one slot never shows anyone but its own trainer. Home-only',
+              'trainers (marked !, one group each) are not listed here; they are in the audit\'s resolutions below.', '',
               '| Group | Region | Class family or @place type | Pairs | Slots |', '| ---: | --- | --- | --- | ---: |']
     for gid, (region, family, pair) in enumerate(keys):
-        lines.append(f'| {gid} | {REGIONS[region]} | {family} | {"yes" if pair else ""} | {len(members[gid])} |')
+        if not family.startswith('!'):
+            lines.append(f'| {gid} | {REGIONS[region]} | {family} | {"yes" if pair else ""} | {len(members[gid])} |')
     place_groups = [gid for gid, key in enumerate(keys) if key[1].startswith('@')]
     lines += ['', f'{len(place_groups)} place-type groups, {sum(1 for g in place_groups if len(members[g]) == 1)} of one slot (no rotation, the trainer keeps its own spot); '
               f'{sum(len(members[g]) for g in place_groups)} trainers in them.']
     sizes = Counter(len(members[g]) for g in members)
-    lines += ['', f'{len(keys)} groups; sizes: ' + ', '.join(f'{n} slot(s) x {c}' for n, c in sorted(sizes.items())), '']
+    lines += ['', f'{sum(1 for k in keys if k[1].startswith("!"))} home-only groups of one slot.']
+    lines += ['', f'{len(keys)} groups in all; sizes: ' + ', '.join(f'{n} slot(s) x {c}' for n, c in sorted(sizes.items())), '']
     lines += ['## Dialogue audit', '',
-              f'{sum(1 for u in rotating) + sum(1 for u in units if u.status == "fixed" and u.reason.startswith("dialogue audit"))} candidates were audited; '
+              f'{len(rotating) + sum(1 for u in units if u.status == "fixed" and u.reason.startswith("dialogue audit"))} candidates were audited; '
               f'{len(flagged)} have a line that names a map, landmark, building or local event. Each is resolved below: **exclude** keeps the trainer at',
-              'home (its line is about the place), **reword** means the line was edited to neutral wording in the script source (the audit then',
+              'home for good (its line is about the place and its absence would break a numbered sequence), **home** keeps it at its own slot but in the daily draw (a group of one: at home or away each day, battleable once a day), **reword** means the line was edited to neutral wording in the script source (the audit then',
               'finds nothing), **place** moves the trainer into the group of its place type, whose slots are all that kind of place.', '']
     counts = Counter(r['resolution'] for r in resolutions.values())
-    lines += [f'Resolutions: {counts["exclude"]} excluded, {counts["reword"]} reworded, {counts["place"]} placed in a place-type group.', '']
+    lines += [f'Resolutions: {counts["exclude"]} fixed at home, {counts["home"]} home-only, {counts["reword"]} reworded, {counts["place"]} placed in a place-type group.', '']
     lines += ['| Trainer | Slot | Resolution | Reason |', '| --- | --- | --- | --- |']
     by_home = {u.home: u for u in units}
     for trainer, row in sorted(resolutions.items()):
