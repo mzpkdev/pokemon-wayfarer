@@ -19191,7 +19191,7 @@
           "label": "UpdateFollowingPokemon",
           "kind": "native",
           "path": "src/event_object_movement.c",
-          "sha256": "766f6b5587623496a7fe844a5818a98b59932949f2acbad8cb8369b3c222696c"
+          "sha256": "acd68264fad243497247d043cdcfe71e3841367ef937d4e5a078dccdba0d8bb2"
         },
         {
           "label": "gText_HowMayIServeYou",

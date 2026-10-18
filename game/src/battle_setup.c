@@ -56,6 +56,7 @@
 #include "wayfarer_sevii_rematches.h"
 #include "wayfarer_sevii_trainer_defeats.h"
 #include "wayfarer_coast_trainers.h"
+#include "wayfarer_daily_slots.h"
 #include "wayfarer_coast_trainer_defeats.h"
 #include "wayfarer_ss_anne.h"
 #include "wayfarer_ss_anne_trainer_defeats.h"
@@ -1652,9 +1653,24 @@ void SetMapVarsToTrainerB(void)
     }
 }
 
+#if IS_WAYFARER
+// Daily trainer slots: remember which slot this opponent stands in, so a win clears it for the day, and let a
+// wanderer fight with its latest rematch team.
+static void NoteDailyTrainerBattle(void)
+{
+    if (gApproachingTrainerId == 0)
+        TRAINER_BATTLE_PARAM.opponentA = DailyTrainers_NoteBattle(0, gSpecialVar_LastTalked, TRAINER_BATTLE_PARAM.opponentA);
+    else
+        TRAINER_BATTLE_PARAM.opponentB = DailyTrainers_NoteBattle(1, gSpecialVar_LastTalked, TRAINER_BATTLE_PARAM.opponentB);
+}
+#endif
+
 // expects parameters have been loaded correctly with TrainerBattleLoadArgs
 const u8 *BattleSetup_ConfigureTrainerBattle(const u8 *data)
 {
+#if IS_WAYFARER
+    NoteDailyTrainerBattle();
+#endif
 #if WAYFARER_LEAGUE_EVENTS
     // A corrupt or incomplete accepted team must never use the carrier's old
     // authored party as a fallback. Its post-battle script will reject the
@@ -1818,12 +1834,20 @@ bool8 GetTrainerFlag(void)
         return GetBattlePyramidTrainerFlag(gSelectedObjectEvent);
     else if (InTrainerHill())
         return GetHillTrainerFlag(gSelectedObjectEvent);
+#if IS_WAYFARER
+    // A wanderer's battle is gated by its slot for the day, not by the trainer's permanent flag.
+    else if (DailyTrainers_ObjectIsRotating(gSelectedObjectEvent))
+        return DailyTrainers_ObjectIsDone(gSelectedObjectEvent);
+#endif
     else
         return HasTrainerBeenFought(TRAINER_BATTLE_PARAM.opponentA);
 }
 
 static void SetBattledTrainersFlags(void)
 {
+#if IS_WAYFARER
+    DailyTrainers_OnTrainersWon();
+#endif
     SetTrainerFlag(TRAINER_BATTLE_PARAM.opponentB);
     SetTrainerFlag(TRAINER_BATTLE_PARAM.opponentA);
 }
@@ -2343,7 +2367,11 @@ const u8 *BattleSetup_GetTrainerPostBattleScript(void)
     if (sShouldCheckTrainerBScript)
     {
         sShouldCheckTrainerBScript = FALSE;
-        if (TRAINER_BATTLE_PARAM.battleScriptRetAddrB != NULL)
+        if (TRAINER_BATTLE_PARAM.battleScriptRetAddrB != NULL
+#if IS_WAYFARER
+         && !DailyTrainers_NotedRotating(1)
+#endif
+        )
         {
             gWhichTrainerToFaceAfterBattle = 1;
             return TRAINER_BATTLE_PARAM.battleScriptRetAddrB;
@@ -2351,7 +2379,12 @@ const u8 *BattleSetup_GetTrainerPostBattleScript(void)
     }
     else
     {
-        if (TRAINER_BATTLE_PARAM.battleScriptRetAddrA != NULL)
+        // A wanderer runs no one-time after-battle script (phone registration, say): it only speaks.
+        if (TRAINER_BATTLE_PARAM.battleScriptRetAddrA != NULL
+#if IS_WAYFARER
+         && !DailyTrainers_NotedRotating(0)
+#endif
+        )
         {
             gWhichTrainerToFaceAfterBattle = 0;
             return TRAINER_BATTLE_PARAM.battleScriptRetAddrA;
@@ -2964,6 +2997,11 @@ u16 GetLastBeatenRematchTrainerId(u16 trainerId)
 
 bool8 ShouldTryRematchBattle(void)
 {
+#if IS_WAYFARER
+    // A wanderer is met once a day. Ready-for-rematch battles at rotating slots belong to the phone rematches.
+    if (DailyTrainers_ObjectIsRotating(gSelectedObjectEvent))
+        return FALSE;
+#endif
     return ShouldTryRematchBattleForTrainerId(TRAINER_BATTLE_PARAM.opponentA);
 }
 

@@ -88,6 +88,30 @@ static void SetStage(s32 family, u8 stage)
     *packed = (*packed & ~(3 << shift)) | ((stage & 3) << shift);
 }
 
+u16 WayfarerCoastRematchFamilyFirst(s32 family)
+{
+    return sWayfarerCoastRematchFamilies[family].trainerIds[0];
+}
+
+bool8 WayfarerCoastRematchFamilyIsReady(s32 family)
+{
+    return CoastFlagGet(WAYFARER_COAST_REMATCH_PENDING_SLOT_FIRST + family);
+}
+
+// The team the family fought last: its current stage's trainer (the first stage until a rematch is won).
+u16 WayfarerCoastRematchGetLatest(u16 trainerId)
+{
+    s32 family = WayfarerCoastRematchFamilyIndex(trainerId);
+    u8 stage;
+
+    if (family == -1)
+        return trainerId;
+    stage = GetStage(family);
+    if (stage >= WAYFARER_COAST_REMATCH_STAGES || sWayfarerCoastRematchFamilies[family].trainerIds[stage] == TRAINER_NONE)
+        return trainerId;
+    return sWayfarerCoastRematchFamilies[family].trainerIds[stage];
+}
+
 bool8 WayfarerCoastRematchHasFamily(u16 trainerId)
 {
     return WayfarerCoastRematchFamilyIndex(trainerId) != -1;

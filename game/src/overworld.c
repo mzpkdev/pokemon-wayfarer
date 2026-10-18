@@ -610,6 +610,7 @@ void LoadObjEventTemplatesFromHeader(void)
     // today's state before anything spawns.
     DailySlots_OnMapLoad();
     DailyItems_RewriteTemplates();
+    DailyTrainers_RewriteTemplates();
 #endif
 }
 
@@ -2404,8 +2405,9 @@ void CB2_ContinueSavedGame(void)
         LoadSaveblockObjEventScripts();
 #if IS_WAYFARER
     // The saved templates keep their old scripts and flags: rebuild today's item balls
-    // from the stamped day (Continue applies no day change).
+    // from the stamped day (Continue applies no day change); the trainer slots rebuild their occupants too.
     DailyItems_RewriteTemplates();
+    DailyTrainers_RewriteTemplates();
 #endif
 
     UnfreezeObjectEvents();

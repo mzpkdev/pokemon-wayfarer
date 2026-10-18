@@ -35,6 +35,7 @@
 #include "script.h"
 #include "sprite.h"
 #include "wayfarer_ambience.h"
+#include "wayfarer_daily_slots.h"
 #include "wayfarer_walker_beats.h"
 #include "wayfarer_world.h"
 #include "constants/event_object_movement.h"
@@ -531,6 +532,9 @@ static bool8 IsSpawnTile(s16 x, s16 y)
     u8 i;
 
     if (!IsFreeTile(x, y) || Distance(x, y, px, py) < WALKER_SPAWN_CLEARANCE)
+        return FALSE;
+    // A trainer slot's tile is the slot's, whoever stands there today (daily world slots).
+    if (DailyTrainers_IsSlotTile(x, y))
         return FALSE;
     if (facing >= DIR_SOUTH && facing <= DIR_EAST)
     {

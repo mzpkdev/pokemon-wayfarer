@@ -27,6 +27,9 @@ bool8 WayfarerCoastRematchCompleteIfReady(u16 trainerId);
 u16 WayfarerCoastRematchGetOpponent(u16 trainerId);
 void WayfarerCoastRematchAdvance(u16 trainerId);
 s32 WayfarerCoastRematchFamilyIndex(u16 trainerId);
+u16 WayfarerCoastRematchFamilyFirst(s32 family);
+bool8 WayfarerCoastRematchFamilyIsReady(s32 family);
+u16 WayfarerCoastRematchGetLatest(u16 trainerId);
 
 #endif  // IS_WAYFARER
 

@@ -80,6 +80,20 @@ u16 WayfarerSeviiRematchGetOpponent(u16 trainerId)
     return gWayfarerSeviiRematchFamilies[family].trainerIds[stage + 1];
 }
 
+// The team the family fought last: its current stage's trainer (the first stage until a rematch is won).
+u16 WayfarerSeviiRematchGetLatest(u16 trainerId)
+{
+    s32 family = WayfarerSeviiRematchFamilyIndex(trainerId);
+    u8 stage;
+
+    if (family == -1)
+        return trainerId;
+    stage = WayfarerSeviiRematchStageGet(family);
+    if (stage >= WAYFARER_SEVII_REMATCH_STAGES)
+        stage = 0;
+    return gWayfarerSeviiRematchFamilies[family].trainerIds[stage];
+}
+
 void WayfarerSeviiRematchAdvance(u16 trainerId)
 {
     s32 family = WayfarerSeviiRematchFamilyIndex(trainerId);

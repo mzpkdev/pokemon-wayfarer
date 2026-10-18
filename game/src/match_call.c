@@ -215,6 +215,20 @@ static const struct HnsMatchCallTrainerInfo sHnsMatchCallTrainers[] =
     HNS_MC_ENTRY2(Joel,     TRAINER_JOEL_HNS),
     HNS_MC_ENTRY2(Charles,  TRAINER_CHARLES_HNS),
 };
+
+// Whether an HNS gift contact holds a gift now (its has-item flag): the daily trainer slots place such a contact and
+// hand the gift over first, wherever it stands.
+bool8 MatchCall_HnsTrainerHasGift(u16 trainerId)
+{
+    u32 i;
+
+    for (i = 0; i < ARRAY_COUNT(sHnsMatchCallTrainers); i++)
+    {
+        if (sHnsMatchCallTrainers[i].trainerId == trainerId)
+            return sHnsMatchCallTrainers[i].itemFlag != 0 && FlagGet(sHnsMatchCallTrainers[i].itemFlag);
+    }
+    return FALSE;
+}
 #endif
 
 struct MatchCallText

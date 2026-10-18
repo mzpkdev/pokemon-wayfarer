@@ -123,7 +123,10 @@ void DailySlots_OnMapLoad(void)
     if (daily->stampDay != day)
     {
         memset(daily->clearedToday, 0, sizeof(daily->clearedToday));
+        memset(daily->homeBeatenToday, 0, sizeof(daily->homeBeatenToday));
         daily->stampDay = day;
+        // Who is ready for a rematch and who holds a gift is fixed for the whole day.
+        DailyContacts_TakeSnapshots();
     }
 }
 
